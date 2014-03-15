@@ -26,7 +26,7 @@ proc main( cGT )
       quit
    endif
 
-   if empty( cGT )
+   if Empty( cGT )
       cGT := THREAD_GT
    endif
 
@@ -38,19 +38,19 @@ proc main( cGT )
    ? "Starting threads..."
    aThreads := {}
    for i := 1 to 3
-      aadd( aThreads, hb_threadStart( @thFunc(), cGT ) )
-      ? i, "=>", atail( aThreads )
+      AAdd( aThreads, hb_threadStart( @thFunc(), cGT ) )
+      ? i, "=>", ATail( aThreads )
    next
 
    ? "Waiting for threads"
-   while inkey() != K_ESC
-      if hb_threadWait( aThreads, 0.1, .T. ) == len( aThreads )
+   while Inkey() != K_ESC
+      if hb_threadWait( aThreads, 0.1, .T. ) == Len( aThreads )
          wait
          exit
       endif
       ?? "."
    enddo
-return
+   return
 
 proc thFunc( cGT )
    /* allocate own GT driver */
@@ -60,5 +60,5 @@ proc thFunc( cGT )
    else
       use test shared
    endif
-   browse()
-return
+   Browse()
+   return

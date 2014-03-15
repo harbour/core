@@ -19,25 +19,25 @@ proc main()
    /* create table */
    dbCreate("_tst", { { "F1", "C", 1, 0 } } )
    use _tst
-   while lastRec() < 10000
+   while LastRec() < 10000
       dbAppend()
-      F1 := chr( recno() )
+      F1 := Chr( RecNo() )
    enddo
 
    ? "main thread ID:", s_mainThreadID
    thID := hb_threadStart( @thFunc() )
    ? "current thread ID:", thID
-   ? "work area in use, used() =>", used(), alias()
+   ? "work area in use, Used() =>", Used(), Alias()
    WAIT "Press a key to detach work area"
    hb_dbDetach( , {|| countRecords( {|| F1 == "A" } ) } )
-   ? "work area detached, used() =>", used(), alias()
+   ? "work area detached, Used() =>", Used(), Alias()
    ? "we will make some other things now..."
    hb_idleSleep( 1 )
    ? "let's check the result"
    ? "request for work area"
    hb_dbRequest( , , @bResult, .T. )
-   ? "work area atached, used() =>", used(), alias()
-   ? "query result:", eval( bResult )
+   ? "work area atached, Used() =>", Used(), Alias()
+   ? "query result:", Eval( bResult )
    close
    dbDrop("_tst")
    return
@@ -54,8 +54,8 @@ proc thFunc()
 static func countRecords( bFor )
    local nCount := 0
    dbGoTop()
-   while ! eof()
-      if eval( bFor )
+   while ! Eof()
+      if Eval( bFor )
          nCount ++
       endif
       dbSkip()

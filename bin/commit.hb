@@ -1233,33 +1233,18 @@ STATIC FUNCTION FixFuncCaseFilter( cFileName )
 
    /* TOFIX: Harbour repo specific */
    STATIC sc_hFileExceptions := { ;
-      "ChangeLog.txt" =>, ;
+      "ChangeLog.txt" =>, ;  /* not much reason to except this one */
       "std.ch"        =>, ;  /* compatibility */
-      "big5_gen.prg"  =>, ;  /* new style code */
-      "clsccast.prg"  =>, ;  /* new style code */
-      "clsicast.prg"  =>, ;  /* new style code */
-      "clsscast.prg"  =>, ;  /* new style code */
-      "clsscope.prg"  =>, ;  /* new style code */
-      "cpinfo.prg"    =>, ;  /* new style code */
-      "foreach2.prg"  =>, ;  /* new style code */
-      "keywords.prg"  =>, ;  /* new style code */
-      "speedstr.prg"  =>, ;  /* new style code */
-      "speedtst.prg"  =>, ;  /* new style code */
-      "uc16_gen.prg"  =>, ;  /* new style code */
-      "wcecon.prg"    =>, ;  /* new style code */
+      "keywords.prg"  =>, ;  /* test code */
       "c_std.txt"     =>, ;  /* C level doc */
       "locks.txt"     =>, ;  /* C level doc */
       "pcode.txt"     =>, ;  /* C level doc */
-      "tracing.txt"   =>, ;  /* C level doc */
-      "xhb-diff.txt"  => }
+      "tracing.txt"   => }   /* C level doc */
 
    /* TOFIX: Harbour repo specific */
    STATIC sc_aMaskExceptions := { ;
       "*/3rd/*"          , ;  /* foreign code */
-      "tests/hbpptest/*" , ;  /* test code, must be kept as is */
-      "tests/mt/*"       , ;  /* new style code */
-      "tests/multifnc/*" , ;
-      "tests/rddtest/*"  }
+      "tests/hbpptest/*" }    /* test code, must be kept as is */
 
    RETURN ;
       ! Empty( hb_FNameExt( cFileName ) ) .AND. ;

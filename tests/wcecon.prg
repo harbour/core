@@ -23,7 +23,7 @@ proc main()
 
    /* Set EN CP-437 encoding */
    hb_cdpSelect( "EN" )
-   hb_setTermCP( "EN" )
+   hb_SetTermCP( "EN" )
 
    /* Set font size */
    hb_gtInfo( HB_GTI_FONTWIDTH, 6 )
@@ -40,12 +40,12 @@ proc main()
    SetMode( nMaxScrRow, nMaxScrCol )
 
    /* display console window size */
-   ? "rows =", hb_ntos( maxrow() + 1 )
-   ? "cols =", hb_ntos( maxcol() + 1 )
-   inkey( 0 )
+   ? "rows =", hb_ntos( MaxRow() + 1 )
+   ? "cols =", hb_ntos( MaxCol() + 1 )
+   Inkey( 0 )
 
    /* display infomration aboout used OS, harbour version and GT driver */
-   alert( OS() + ";" + Version() + ";GT" + hb_gtVersion() )
+   Alert( OS() + ";" + Version() + ";GT" + hb_gtVersion() )
 
    /* database test */
    hb_FNameSplit( hb_ProgName(), @cPath, @cName, @cExt, @cDrive )
@@ -54,8 +54,8 @@ proc main()
    Alert( "Database path:;;" + cPath )
 
    rddSetDefault("DBFCDX")
-   if ! hb_dirExists( cPath )
-      hb_dirCreate( cPath )
+   if ! hb_DirExists( cPath )
+      hb_DirCreate( cPath )
    endif
    dbCreate( cPath + "mydata", { ;
       { "F1", "C", 10, 0 }, ;
@@ -64,37 +64,37 @@ proc main()
    use ( cPath + "mydata" )
    index on F1 tag T1
    index on F2 tag T2
-   while lastrec() < 10
-      dbappend()
-      F1 := "rec:" + str( recno(), 3 )
-      FX := "[rec:" + str( recno(), 3 ) + "]"
+   while LastRec() < 10
+      dbAppend()
+      F1 := "rec:" + Str( RecNo(), 3 )
+      FX := "[rec:" + Str( RecNo(), 3 ) + "]"
    enddo
    dbCommit()
    dbGoTop()
-   browse()
+   Browse()
 
    /* display all characters */
    CLS
    for i := 0 to 15
       for j := 0 to 15
-         dispout( " " + chr( i * 16 + j ) )
+         DispOut( " " + Chr( i * 16 + j ) )
       next
       ?
    next
-   inkey( 0 )
+   Inkey( 0 )
 
    /* display boxes */
-   ?; devout( hb_UTF8ToStr( "┌─┬─┐  ╔═╦═╗  ╒═╤═╕  ╓─╥─╖  ▄▄▄" ) )
-   ?; devout( hb_UTF8ToStr( "│ │ │  ║ ║ ║  ├─┼─┤  ╟─╫─╢  ▌■▐" ) )
-   ?; devout( hb_UTF8ToStr( "├─┼─┤  ╠═╬═╣  │ │ │  ║ ║ ║  ▌█▐" ) )
-   ?; devout( hb_UTF8ToStr( "│ │ │  ║ ║ ║  ╞═╪═╡  ╠═╬═╣  ▌■▐" ) )
-   ?; devout( hb_UTF8ToStr( "└─┴─┘  ╚═╩═╝  ╘═╧═╛  ╙─╨─╜  ▀▀▀" ) )
-   inkey( 0 )
+   ?; DevOut( hb_UTF8ToStr( "┌─┬─┐  ╔═╦═╗  ╒═╤═╕  ╓─╥─╖  ▄▄▄" ) )
+   ?; DevOut( hb_UTF8ToStr( "│ │ │  ║ ║ ║  ├─┼─┤  ╟─╫─╢  ▌■▐" ) )
+   ?; DevOut( hb_UTF8ToStr( "├─┼─┤  ╠═╬═╣  │ │ │  ║ ║ ║  ▌█▐" ) )
+   ?; DevOut( hb_UTF8ToStr( "│ │ │  ║ ║ ║  ╞═╪═╡  ╠═╬═╣  ▌■▐" ) )
+   ?; DevOut( hb_UTF8ToStr( "└─┴─┘  ╚═╩═╝  ╘═╧═╛  ╙─╨─╜  ▀▀▀" ) )
+   Inkey( 0 )
 
    ?
    ? "@ - interrupt, keycodes test "
-   while ( k := inkey( 0 ) ) != hb_keyCode( "@" )
-      ? ; devout( "key=" + str( k, 12 ) + ", char='" + hb_keyChar( k ) + "'" )
+   while ( k := Inkey( 0 ) ) != hb_keyCode( "@" )
+      ? ; DevOut( "key=" + Str( k, 12 ) + ", char='" + hb_keyChar( k ) + "'" )
    enddo
 
    dbCloseAll()

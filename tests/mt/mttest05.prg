@@ -19,21 +19,21 @@ proc main()
    t_var := N_INIT * 25
    ? "Starting threads:", ""
    for i := 1 to N_THREADS
-      aadd( aThreads, hb_threadStart( @thFunc() ) )
+      AAdd( aThreads, hb_threadStart( @thFunc() ) )
       ?? "<" + hb_ntos( i ) + ">"
    next
    ? "Waiting for threads..."
    nSum := 0
-   aEval( aThreads, {| x | hb_threadJoin( x, @i ), nSum += i } )
+   AEval( aThreads, {| x | hb_threadJoin( x, @i ), nSum += i } )
    ? "Threads joined"
    ? "Sum of results:", nSum
    ? "     should be:", N_THREADS * ( N_INIT + N_COUNT ), ;
       iif( nSum == N_THREADS * ( N_INIT + N_COUNT ), "OK", "ERROR" )
-return
+   return
 
 func thFunc()
    local i
    for i := 1 to N_COUNT
       ++t_var
    next
-return t_var
+   return t_var

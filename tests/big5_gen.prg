@@ -55,15 +55,15 @@ proc main()
    local cLine, aVal, aVal2, aValU, aValU2, hVal, aInd, ;
          n, nn, nBG5, nU16, nMin, nMax, nUMin, nUMax, cResult, nBit
 
-   aVal  := afill( array( 0x10000 ), 0 )
-   aValU := afill( array( 0x10000 ), 0 )
+   aVal  := AFill( Array( 0x10000 ), 0 )
+   aValU := AFill( Array( 0x10000 ), 0 )
    nMin  := nUMin := 0xFFFF
    nMax  := nUMax := 0x0000
 
-   for each cLine in hb_aTokens( hb_memoRead( "BIG5.TXT" ), hb_eol() )
-      if hb_lefteq( cLine, "0x" ) .and. ( n := hb_at( "0x", cLine, 7 ) ) != 0
-         nBG5 := hb_hexToNum( substr( cLine, 3, 4 ) )
-         nU16 := hb_hexToNum( substr( cLine, n + 2, 4 ) )
+   for each cLine in hb_ATokens( hb_MemoRead( "BIG5.TXT" ), hb_eol() )
+      if hb_LeftEq( cLine, "0x" ) .and. ( n := hb_At( "0x", cLine, 7 ) ) != 0
+         nBG5 := hb_HexToNum( SubStr( cLine, 3, 4 ) )
+         nU16 := hb_HexToNum( SubStr( cLine, n + 2, 4 ) )
          if nBG5 == 0 .or. nU16 == 0
             ? "unrecognized line:", cLine:__enumIndex()
             return
@@ -87,7 +87,7 @@ proc main()
       endif
    next
 
-   for n := 1 to len( aVal )
+   for n := 1 to Len( aVal )
       if aVal[ n ] != 0
          aValU[ aVal[ n ] ] := n
       endif
@@ -109,7 +109,7 @@ proc main()
          cResult += ", "
       endif
       cResult += "0x"
-      cResult += hb_numToHex( aVal[ n ], 4 )
+      cResult += hb_NumToHex( aVal[ n ], 4 )
    next
    cResult += hb_eol()
    cResult += "};" + hb_eol()
@@ -118,11 +118,11 @@ proc main()
    ? "BIG5->UCS16 tables."
    ? "raw size:", hb_ntos( ( nMax - nMin + 1 ) * 2 )
 #ifndef DO_START_OPT
-   nMin := min( nMin, 41280 ) // optimal
+   nMin := Min( nMin, 41280 ) // optimal
 #endif
    n := min_size( aVal, @nMin, nMax, @nBit )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: " + hb_ntos( nMin ) + ")"
+     "for", hb_ntos( hb_bitShift( 1, nBit ) ), "byte blocks, (from: " + hb_ntos( nMin ) + ")"
    calc_size( aVal, nMin, nMax, nBit, @hVal, @aInd, @nn )
    aVal2 := hash_to_array( hVal )
 
@@ -141,8 +141,8 @@ proc main()
 
    cResult += '#include "hbapi.h"' + hb_eol()
    cResult += hb_eol()
-   cResult += "#define HB_BIG5_FIRST   0x" + hb_numToHex( nMin, 4 ) + hb_eol()
-   cResult += "#define HB_BIG5_LAST    0x" + hb_numToHex( nMax, 4 ) + hb_eol()
+   cResult += "#define HB_BIG5_FIRST   0x" + hb_NumToHex( nMin, 4 ) + hb_eol()
+   cResult += "#define HB_BIG5_LAST    0x" + hb_NumToHex( nMax, 4 ) + hb_eol()
    cResult += "#define HB_BIG5_BITS    " + hb_ntos( nBit ) + hb_eol()
    cResult += hb_eol()
 
@@ -159,17 +159,17 @@ proc main()
    ? "UCS16->BIG5 tables."
    ? "raw size:", hb_ntos( ( nUMax - nUMin + 1 ) * 2 )
 #ifndef DO_START_OPT
-   nUMin := min( nUMin, 160 ) // optimal
+   nUMin := Min( nUMin, 160 ) // optimal
 #endif
    n := min_size( aValU, @nUMin, nUMax, @nBit )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: " + hb_ntos( nUMin ) + ")"
+     "for", hb_ntos( hb_bitShift( 1, nBit ) ), "byte blocks, (from: " + hb_ntos( nUMin ) + ")"
    calc_size( aValU, nUMin, nUMax, nBit, @hVal, @aInd, @nn )
    aValU2 := hash_to_array( hVal )
 
    cResult += hb_eol()
-   cResult += "#define HB_U16_FIRST    0x" + hb_numToHex( nUMin, 4 ) + hb_eol()
-   cResult += "#define HB_U16_LAST     0x" + hb_numToHex( nUMax, 4 ) + hb_eol()
+   cResult += "#define HB_U16_FIRST    0x" + hb_NumToHex( nUMin, 4 ) + hb_eol()
+   cResult += "#define HB_U16_LAST     0x" + hb_NumToHex( nUMax, 4 ) + hb_eol()
    cResult += "#define HB_U16_BITS     " + hb_ntos( nBit ) + hb_eol()
    cResult += hb_eol()
    cResult += array_to_code( aInd, "s_ucs16index", nn )
@@ -181,7 +181,7 @@ proc main()
 
    check_conv( aValU, aInd, aValU2, nUMin, nUMax, nBit )
 
-   hb_memowrit( "big5.c", cResult )
+   hb_MemoWrit( "big5.c", cResult )
 return
 
 static function array_to_code( aVal, cName, nn )
@@ -189,10 +189,10 @@ static function array_to_code( aVal, cName, nn )
 
    cResult := "static const " + ;
               iif( nn == 1, "HB_BYTE", "HB_USHORT" ) + " " + ;
-              cName + "[ " + hb_ntos( len( aVal ) ) + " ] =" + hb_eol()
+              cName + "[ " + hb_ntos( Len( aVal ) ) + " ] =" + hb_eol()
    cResult += "{" + hb_eol()
    l := 0
-   for n := 1 to len( aVal )
+   for n := 1 to Len( aVal )
       if ++l > iif( nn == 1, 12, 8 )
          l := 1
          cResult += ","
@@ -204,7 +204,7 @@ static function array_to_code( aVal, cName, nn )
          cResult += ", "
       endif
       cResult += "0x"
-      cResult += hb_numToHex( aVal[ n ], nn * 2 )
+      cResult += hb_NumToHex( aVal[ n ], nn * 2 )
    next
    cResult += hb_eol()
    cResult += "};" + hb_eol()
@@ -213,8 +213,8 @@ return cResult;
 static function hash_to_array( hVal )
    local aVal := {}, cLine, n
    for each cLine in hVal
-      for n := 1 to len( cLine ) step( 2 )
-         aadd( aVal, bin2w( substr( cLine, n, 2 ) ) )
+      for n := 1 to Len( cLine ) step( 2 )
+         AAdd( aVal, Bin2W( SubStr( cLine, n, 2 ) ) )
       next
    next
 return aVal
@@ -249,27 +249,27 @@ static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    hVal := { => }
    aInd := {}
    for n := nMin to nMax
-      cLine += i2bin( iif( n == 0, 0, aVal[ n ] ) )
-      if len( cLine ) == nLine * 2
+      cLine += I2Bin( iif( n == 0, 0, aVal[ n ] ) )
+      if Len( cLine ) == nLine * 2
          hVal[ cLine ] := cLine
-         aadd( aInd, hb_hpos( hVal, cLine ) - 1 )
+         AAdd( aInd, hb_HPos( hVal, cLine ) - 1 )
          cLine := ""
       endif
    next
    if ! cLine == ""
       for each c in hVal
-         if hb_lefteq( c, cLine )
+         if hb_LeftEq( c, cLine )
             cLine := c
             exit
          endif
       next
       hVal[ cLine ] := cLine
-      aadd( aInd, hb_hpos( hVal, cLine ) - 1 )
+      AAdd( aInd, hb_HPos( hVal, cLine ) - 1 )
    endif
-   nn := iif( len( aInd ) > 256, 2, 1 )
-   n := len( aInd ) * nn
+   nn := iif( Len( aInd ) > 256, 2, 1 )
+   n := Len( aInd ) * nn
    for each c in hVal
-      n += len( c )
+      n += Len( c )
    next
 
 return n
@@ -284,7 +284,7 @@ static function index_func( cName, cNameInd, cNameConv, cMin, cMax, cBit )
               "   {" + hb_eol() + ;
               "      return " + cNameConv + "[ ( " + cNameInd + ;
                      "[ n >> " + cBit + " ] << " + cBit + " ) +" + hb_eol() + ;
-              space( len( cNameConv ) + 15 ) + ;
+              Space( Len( cNameConv ) + 15 ) + ;
                      "( n & ( ( 1 << " + cBit + " ) - 1 ) ) ];" + hb_eol() + ;
               "   }" + hb_eol() + ;
               "   return 0;" + hb_eol() + ;
@@ -303,10 +303,10 @@ return 0
 
 static function check_conv( aVal, aInd, aVal2, nMin, nMax, nBit )
    local n, nVal
-   for n := 1 to len( aVal )
+   for n := 1 to Len( aVal )
       nVal := conv_get( n, aInd, aVal2, nMin, nMax, nBit )
       if aVal[ n ] != nVal
-         ? "Wrong decoding:", n, aVal[ n ], nVal, len( aVal ), nMax, hb_eol()
+         ? "Wrong decoding:", n, aVal[ n ], nVal, Len( aVal ), nMax, hb_eol()
          break
       endif
    next

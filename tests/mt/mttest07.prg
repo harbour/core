@@ -22,8 +22,8 @@ proc main()
    ? Version()
    ? "Main start"
 
-   s_aCounters := array( N_THREADS )
-   aFill( s_aCounters, 0 )
+   s_aCounters := Array( N_THREADS )
+   AFill( s_aCounters, 0 )
    aThreads := {}
    aResults := {}
    s_mtxJobs := hb_mutexCreate()
@@ -31,7 +31,7 @@ proc main()
 
    ? "Starting threads:", ""
    for i := 1 to N_THREADS
-      aadd( aThreads, hb_threadStart( @thFunc() ) )
+      AAdd( aThreads, hb_threadStart( @thFunc() ) )
       ?? "<" + hb_ntos( i ) + ">"
    next
 
@@ -53,11 +53,11 @@ proc main()
    for i := 1 to N_JOBS
       hb_mutexSubscribe( s_mtxResults,, @nDigit )
       //?? "<" + hb_ntos( i ) + ">"
-      aadd( aResults, nDigit )
+      AAdd( aResults, nDigit )
    next
 
    ? "Waiting for threads..."
-   aEval( aThreads, {| x | hb_threadJoin( x ) } )
+   AEval( aThreads, {| x | hb_threadJoin( x ) } )
    ? "Threads joined"
 
    nSum := 0
@@ -65,17 +65,17 @@ proc main()
       nSum += nDigit
    next
 
-   nSum := round( nSum, 2 )
-   nExpected := round( ( 10 + 10 + N_JOBS - 1 ) / 2 / 3 * N_JOBS, 2 )
+   nSum := Round( nSum, 2 )
+   nExpected := Round( ( 10 + 10 + N_JOBS - 1 ) / 2 / 3 * N_JOBS, 2 )
 
-   if round( nSum - nExpected, 2 ) == 0
+   if Round( nSum - nExpected, 2 ) == 0
       ? "OK, final sum:", hb_ntos( nSum )
    else
       ? "ERROR, final sum:", hb_ntos( nSum ), ;
         "expected:", hb_ntos( nExpected )
    endif
    ? "End of main"
-return
+   return
 
 proc thFunc()
    local xJob, xResult
@@ -87,4 +87,4 @@ proc thFunc()
       xResult := xJob / 3
       hb_mutexNotify( s_mtxResults, xResult )
    enddo
-return
+   return

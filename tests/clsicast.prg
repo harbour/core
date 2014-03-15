@@ -16,12 +16,12 @@
 proc main()
    local o := myclass4():new(), i, cbErr
 
-   ? DATE(), TIME(), VERSION(), OS()
+   ? Date(), Time(), Version(), OS()
    ?
 
    /* direct assignment, possible because the variables have differ names */
-   ? "instance variables [" + hb_ntos( len( o ) ) + "]:"; ?
-   for i := 1 to len( o ); ?? "", o[ i ]; next
+   ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
+   for i := 1 to Len( o ); ?? "", o[ i ]; next
    ? " => shoule be [12]:"
    ? " (x1) (y1) (z1) (x2) (y2) (z2) (x3) (y3) (z3) (x4) (y4) (z4)"
    ?
@@ -36,8 +36,8 @@ proc main()
    ? "MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be:  X3   Y3   Z3"
    ? "MYCLASS4 VARS:", o:x4, o:y4, o:z4, "  => should be:  X4   Y4   Z4"
    ?
-   ? "instance variables [" + hb_ntos( len( o ) ) + "]:"; ?
-   for i := 1 to len( o ); ?? "", o[ i ]; next
+   ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
+   for i := 1 to Len( o ); ?? "", o[ i ]; next
    ? " => shoule be [12]:"
    ? "  X1   Y1   Z1   X2   Y2   Z2   X3   Y3   Z3   X4   Y4   Z4"
    ?
@@ -72,7 +72,7 @@ proc main()
    ? "MYCLASS4 VARS:", o:x4, o:y4, o:z4, "  => should be:  X4   Y4   Z4"
    ?
 
-   cbErr := errorBlock( {| oErr | break( oErr ) } )
+   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
    begin sequence
       ? "Setting MYCLASS4 instance variables..."
       o:myclass4:x4 := "[X4]"
@@ -81,7 +81,7 @@ proc main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   errorBlock( cbErr )
+   ErrorBlock( cbErr )
    ? "MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be: [X1] [Y1] [Z1]"
    ? "MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be: [X2] [Y2] [Z2]"
    ? "MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be: [X3] [Y3] [Z3]"
@@ -124,8 +124,8 @@ proc main()
    ? "MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be: {X3} {Y3} {Z3}"
    ? "MYCLASS4 VARS:", o:x4, o:y4, o:z4, "  => should be: [X4] [Y4] [Z4]"
    ?
-   ? "instance variables [" + hb_ntos( len( o ) ) + "]:"; ?
-   for i := 1 to len( o ); ?? "", o[ i ]; next
+   ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
+   for i := 1 to Len( o ); ?? "", o[ i ]; next
    ? " => shoule be [12]:"
    ? " {X1} {Y1} {Z1} {X2} {Y2} {Z2} {X3} {Y3} {Z3} [X4] [Y4] [Z4]"
    ?

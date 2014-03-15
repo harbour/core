@@ -41,7 +41,7 @@
       #define __ST__
    #endif
    /* Clipper does not have function to extract process time */
-   #xtranslate hb_secondsCPU([<x>]) => seconds()
+   #xtranslate hb_SecondsCPU([<x>]) => Seconds()
 #endif
 
 #ifdef FlagShip
@@ -50,15 +50,15 @@
    #ifndef __ST__
       #define __ST__
    #endif
-   #xtranslate hb_secondsCPU([<x>]) => secondsCPU(<x>)
-   /* the FlagShip version of seconds() returns integer values */
-   #xtranslate seconds() => fs_seconds()
+   #xtranslate hb_SecondsCPU([<x>]) => SecondsCPU(<x>)
+   /* the FlagShip version of Seconds() returns integer values */
+   #xtranslate Seconds() => fs_seconds()
 #endif
 
 #ifdef __XPP__
    #define __NO_OBJ_ARRAY__
    /* Has xBase++ function to extract process time? */
-   #xtranslate hb_secondsCPU([<x>]) => seconds()
+   #xtranslate hb_SecondsCPU([<x>]) => Seconds()
 #endif
 
 #ifdef __CLIP__
@@ -67,7 +67,7 @@
    #ifndef __ST__
       #define __ST__
    #endif
-   #xtranslate hb_secondsCPU([<x>]) => secondsCPU(<x>)
+   #xtranslate hb_SecondsCPU([<x>]) => SecondsCPU(<x>)
 #endif
 
 #ifdef __XHARBOUR__
@@ -84,7 +84,7 @@
          #endif
       #endif
    #endif
-   #xtranslate hb_secondsCPU([<x>]) => secondsCPU(<x>)
+   #xtranslate hb_SecondsCPU([<x>]) => SecondsCPU(<x>)
 #endif
 
 /* by default create MT version */
@@ -107,7 +107,7 @@
    #endif
 #else
    #ifndef EOL
-      #define EOL chr(10)
+      #define EOL Chr(10)
    #endif
 #endif
 
@@ -131,13 +131,13 @@
       [ private <privates> ; ]            ;
       [ public <publics> ; ]              ;
       [ <init> ; ]                        ;
-      time := hb_secondsCPU() ;           ;
+      time := hb_SecondsCPU() ;           ;
       for i:=1 to N_LOOPS ;               ;
          [ ( <testExp> ) ; ]              ;
       next ;                              ;
-      time := hb_secondsCPU() - time ;    ;
+      time := hb_SecondsCPU() - time ;    ;
       [ <exit> ; ]                        ;
-   return { procname() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
+   return { ProcName() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
 
 STATIC s_lStdOut := .F.
 
@@ -149,14 +149,14 @@ STATIC s_lStdOut := .F.
 
 #ifdef __HARBOUR__
 proc main( ... )
-   local aParams := hb_aparams()
+   local aParams := hb_AParams()
 #else
 proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
            _p11, _p12, _p13, _p14, _p15, _p16, _p17, _p18, _p19, _p20 )
    local aParams := ;
-      asize( { _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
+      ASize( { _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
                _p11, _p12, _p13, _p14, _p15, _p16, _p17, _p18, _p19, _p20 }, ;
-             min( pCount(), 20 ) )
+             Min( PCount(), 20 ) )
 #endif
    local nMT, cExclude, lScale, cParam, cMemTests, lSyntax, i, j
 
@@ -166,37 +166,37 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
    cMemTests := "030 031 023 025 027 041 042 044 053 054 019 022 032 033 055 056 "
    cExclude := ""
    nMT := 0
-   for j := 1 to len( aParams )
-      cParam := lower( aParams[ j ] )
-      if left( cParam, len( "--thread" ) ) == "--thread"  /* hb_LeftEq() */
-         if substr( cParam, 9, 1 ) == "="
-            if isdigit( substr( cParam, 10, 1 ) )
-               nMT := val( substr( cParam, 10 ) )
-            elseif substr( cParam, 10 ) == "all"
+   for j := 1 to Len( aParams )
+      cParam := Lower( aParams[ j ] )
+      if Left( cParam, Len( "--thread" ) ) == "--thread"  /* hb_LeftEq() */
+         if SubStr( cParam, 9, 1 ) == "="
+            if IsDigit( SubStr( cParam, 10, 1 ) )
+               nMT := Val( SubStr( cParam, 10 ) )
+            elseif SubStr( cParam, 10 ) == "all"
                nMT := -1
             else
                lSyntax := .t.
             endif
-         elseif empty( substr( cParam, 9 ) )
+         elseif Empty( SubStr( cParam, 9 ) )
             nMT := -1
          else
             lSyntax := .t.
          endif
-      elseif left( cParam, len( "--exclude=" ) ) == "--exclude="  /* hb_LeftEq() */
-         if substr( cParam, 11 ) == "mem"
+      elseif Left( cParam, Len( "--exclude=" ) ) == "--exclude="  /* hb_LeftEq() */
+         if SubStr( cParam, 11 ) == "mem"
             cExclude += cMemTests
          else
-            cExclude += strtran( strtran( strtran( substr( cParam, 11 ), ;
+            cExclude += StrTran( StrTran( StrTran( SubStr( cParam, 11 ), ;
                         ".", " " ), ".", " " ), "/", " " ) + " "
          endif
-      elseif left( cParam, len( "--only=" ) ) == "--only="  /* hb_LeftEq() */
+      elseif Left( cParam, Len( "--only=" ) ) == "--only="  /* hb_LeftEq() */
          cExclude := ""
-         if substr( cParam, 8 ) == "mem"
+         if SubStr( cParam, 8 ) == "mem"
             cParam := cMemTests
          endif
          for i := 1 to N_TESTS
-            if ! strzero( i, 3 ) $ cParam
-               cExclude += strzero( i, 3 ) + " "
+            if ! StrZero( i, 3 ) $ cParam
+               cExclude += StrZero( i, 3 ) + " "
             endif
          next
       elseif cParam == "--scale"
@@ -268,14 +268,14 @@ STATIC FUNCTION spd_logfile()
 
 TEST t000 INFO "empty loop overhead" CODE
 
-TEST t001 WITH L_C:=dtos(date()) CODE x := L_C
+TEST t001 WITH L_C:=DToS(Date()) CODE x := L_C
 
 TEST t002 WITH L_N:=112345.67    CODE x := L_N
 
-TEST t003 WITH L_D:=date()       CODE x := L_D
+TEST t003 WITH L_D:=Date()       CODE x := L_D
 
 TEST t004 STATIC s_once := NIL, S_C ;
-          INIT hb_threadOnce( @s_once, {|| S_C := dtos( date() ) } ) ;
+          INIT hb_threadOnce( @s_once, {|| S_C := DToS( Date() ) } ) ;
           CODE x := S_C
 
 TEST t005 STATIC s_once := NIL, S_N ;
@@ -283,11 +283,11 @@ TEST t005 STATIC s_once := NIL, S_N ;
           CODE x := S_N
 
 TEST t006 STATIC s_once := NIL, S_D ;
-          INIT hb_threadOnce( @s_once, {|| S_D := date() } ) ;
+          INIT hb_threadOnce( @s_once, {|| S_D := Date() } ) ;
           CODE x := S_D
 
 TEST t007 MEMVAR M_C ;
-          PRIVATE M_C := dtos( date() ) ;
+          PRIVATE M_C := DToS( Date() ) ;
           CODE x := M->M_C
 
 TEST t008 MEMVAR M_N ;
@@ -295,13 +295,13 @@ TEST t008 MEMVAR M_N ;
           CODE x := M->M_N
 
 TEST t009 MEMVAR M_D ;
-          PRIVATE M_D := date() ;
+          PRIVATE M_D := Date() ;
           CODE x := M->M_D
 
 TEST t010 STATIC s_once := NIL ;
           MEMVAR P_C ;
           PUBLIC P_C ;
-          INIT hb_threadOnce( @s_once, {|| M->P_C := dtos( date() ) } ) ;
+          INIT hb_threadOnce( @s_once, {|| M->P_C := DToS( Date() ) } ) ;
           CODE x := M->P_C
 
 TEST t011 STATIC s_once := NIL ;
@@ -313,7 +313,7 @@ TEST t011 STATIC s_once := NIL ;
 TEST t012 STATIC s_once := NIL ;
           MEMVAR P_D ;
           PUBLIC P_D ;
-          INIT hb_threadOnce( @s_once, {|| M->P_D := date() } ) ;
+          INIT hb_threadOnce( @s_once, {|| M->P_D := Date() } ) ;
           CODE x := M->P_D
 
 TEST t013 FIELD  F_C ;
@@ -328,89 +328,89 @@ TEST t015 FIELD F_D ;
           INIT use_dbsh() EXIT close_db() ;
           CODE x := F_D
 
-TEST t016 WITH o := errorNew() CODE x := o:Args
+TEST t016 WITH o := ErrorNew() CODE x := o:Args
 
 TEST t017 WITH o := errorArray() CODE x := o[2]
 
-TEST t018 CODE round( i / 1000, 2 )
+TEST t018 CODE Round( i / 1000, 2 )
 
-TEST t019 CODE str( i / 1000 )
+TEST t019 CODE Str( i / 1000 )
 
-TEST t020 WITH s := stuff( dtos( date() ), 7, 0, "." ) CODE val( s )
+TEST t020 WITH s := Stuff( DToS( Date() ), 7, 0, "." ) CODE Val( s )
 
-TEST t021 WITH a := afill( array( ARR_LEN ), ;
-                           stuff( dtos( date() ), 7, 0, "." ) ) ;
-          CODE val( a [ i % ARR_LEN + 1 ] )
+TEST t021 WITH a := AFill( Array( ARR_LEN ), ;
+                           Stuff( DToS( Date() ), 7, 0, "." ) ) ;
+          CODE Val( a [ i % ARR_LEN + 1 ] )
 
-TEST t022 WITH d := date() CODE dtos( d - i % 10000 )
+TEST t022 WITH d := Date() CODE DToS( d - i % 10000 )
 
-TEST t023 CODE eval( {|| i % ARR_LEN } )
+TEST t023 CODE Eval( {|| i % ARR_LEN } )
 
 TEST t024 WITH bc := {|| i % ARR_LEN } ;
-          INFO eval( bc := {|| i % ARR_LEN } ) ;
-          CODE eval( bc )
+          INFO Eval( bc := {|| i % ARR_LEN } ) ;
+          CODE Eval( bc )
 
-TEST t025 CODE eval( {| x | x % ARR_LEN }, i )
+TEST t025 CODE Eval( {| x | x % ARR_LEN }, i )
 
 TEST t026 WITH bc := {| x | x % ARR_LEN } ;
-          INFO eval( bc := {| x | x % ARR_LEN }, i ) ;
-          CODE eval( bc, i )
+          INFO Eval( bc := {| x | x % ARR_LEN }, i ) ;
+          CODE Eval( bc, i )
 
-TEST t027 CODE eval( {| x | f1( x ) }, i )
+TEST t027 CODE Eval( {| x | f1( x ) }, i )
 
 TEST t028 WITH bc := {| x | f1( x ) } ;
-          INFO eval( bc := {| x | f1( x ) }, i ) ;
-          CODE eval( bc, i )
+          INFO Eval( bc := {| x | f1( x ) }, i ) ;
+          CODE Eval( bc, i )
 
 TEST t029 WITH bc := mkBlock( "{| x | f1( x ) }" ) ;
-          INFO eval( bc := &("{| x | f1( x ) }"), i ) ;
-          CODE eval( bc, i )
+          INFO Eval( bc := &("{| x | f1( x ) }"), i ) ;
+          CODE Eval( bc, i )
 
-TEST t030 CODE x := &( 'f1(' + str(i) + ')' )
+TEST t030 CODE x := &( 'f1(' + Str(i) + ')' )
 
-TEST t031 WITH bc CODE bc := &( '{| x |f1(x)}' ), eval( bc, i )
+TEST t031 WITH bc CODE bc := &( '{| x |f1(x)}' ), Eval( bc, i )
 
-TEST t032 CODE x := valtype( x ) +  valtype( i )
+TEST t032 CODE x := ValType( x ) +  ValType( i )
 
-TEST t033 WITH a := afill( array( ARR_LEN ), ;
-                           stuff( dtos( date() ), 7, 0, "." ) ) ;
-          CODE x := strzero( i % 100, 2 ) $ a[ i % ARR_LEN + 1 ]
+TEST t033 WITH a := AFill( Array( ARR_LEN ), ;
+                           Stuff( DToS( Date() ), 7, 0, "." ) ) ;
+          CODE x := StrZero( i % 100, 2 ) $ a[ i % ARR_LEN + 1 ]
 
-TEST t034 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
+TEST t034 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
+          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] == s
 
-TEST t035 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
+TEST t035 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
+          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] = s  /* hb_LeftEq() */
 
-TEST t036 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
+TEST t036 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
+          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] >= s
 
-TEST t037 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
+TEST t037 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
+          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] <= s
 
-TEST t038 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
+TEST t038 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
+          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] < s
 
-TEST t039 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
+TEST t039 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
+          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] > s
 
-TEST t040 WITH a := array( ARR_LEN ) ;
-          INIT aeval( a, {| x, i | a[i] := i, x } ) ;
-          CODE ascan( a, i % ARR_LEN )
+TEST t040 WITH a := Array( ARR_LEN ) ;
+          INIT AEval( a, {| x, i | a[i] := i, x } ) ;
+          CODE AScan( a, i % ARR_LEN )
 
-TEST t041 WITH a := array( ARR_LEN ) ;
-          INIT aeval( a, {| x, i | a[i] := i, x } ) ;
-          CODE ascan( a, {| x | x == i % ARR_LEN } )
+TEST t041 WITH a := Array( ARR_LEN ) ;
+          INIT AEval( a, {| x, i | a[i] := i, x } ) ;
+          CODE AScan( a, {| x | x == i % ARR_LEN } )
 
 TEST t042 WITH a := {}, a2 := { 1, 2, 3 }, bc := {| x | f1(x) }, ;
-               s := dtos( date() ), s2 := "static text" ;
-          CODE iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.t.,s,s2,a2,bc})
+               s := DToS( Date() ), s2 := "static text" ;
+          CODE iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.t.,s,s2,a2,bc})
 
 TEST t043 WITH a := {} CODE x := a
 
@@ -420,24 +420,24 @@ TEST t045 CODE f0()
 
 TEST t046 CODE f1( i )
 
-TEST t047 WITH c := dtos( date() ) ;
+TEST t047 WITH c := DToS( Date() ) ;
           INFO "f2( c[1...8] )" ;
           CODE f2( c )
 
-TEST t048 WITH c := replicate( dtos( date() ), 5000 ) ;
+TEST t048 WITH c := Replicate( DToS( Date() ), 5000 ) ;
           INFO "f2( c[1...40000] )" ;
           CODE f2( c )
 
-TEST t049 WITH c := replicate( dtos( date() ), 5000 ) ;
+TEST t049 WITH c := Replicate( DToS( Date() ), 5000 ) ;
           INFO "f2( @c[1...40000] )" ;
           CODE f2( @c )
 
-TEST t050 WITH c := replicate( dtos( date() ), 5000 ), c2 ;
+TEST t050 WITH c := Replicate( DToS( Date() ), 5000 ), c2 ;
           INFO "f2( @c[1...40000] ), c2 := c" ;
           CODE f2( @c ), c2 := c
 
 TEST t051 WITH a := {}, a2 := { 1, 2, 3 }, bc := {| x | f1(x) }, ;
-               s := dtos( date() ), s2 := "static text", n := 1.23 ;
+               s := DToS( Date() ), s2 := "static text", n := 1.23 ;
           CODE f3( a, a2, s, i, s2, bc, i, n, x )
 
 TEST t052 WITH a := { 1, 2, 3 } CODE f2( a )
@@ -446,9 +446,9 @@ TEST t053 CODE x := f4()
 
 TEST t054 CODE x := f5()
 
-TEST t055 CODE x := space(16)
+TEST t055 CODE x := Space(16)
 
-TEST t056 WITH c := dtos( date() ) CODE f_prv( c )
+TEST t056 WITH c := DToS( Date() ) CODE f_prv( c )
 
 /*** end of tests ***/
 
@@ -462,7 +462,7 @@ function thTest( mtxJobs, aResults )
       if xJob == NIL
          exit
       endif
-      aResults[ xJob ] := &( "t" + strzero( xJob, 3 ) )()
+      aResults[ xJob ] := &( "t" + StrZero( xJob, 3 ) )()
    enddo
 return nil
 
@@ -473,7 +473,7 @@ function thTestScale( mtxJobs, mtxResults )
       if xJob == NIL
          exit
       endif
-      hb_mutexNotify( mtxResults, &( "t" + strzero( xJob, 3 ) )() )
+      hb_mutexNotify( mtxResults, &( "t" + StrZero( xJob, 3 ) )() )
    enddo
 return nil
 
@@ -489,18 +489,18 @@ create_db()
 
 #ifdef __HARBOUR__
    #include "hbmemory.ch"
-   if MEMORY( HB_MEM_USEDMAX ) != 0
+   if Memory( HB_MEM_USEDMAX ) != 0
       ? "Warning !!! Memory statistic enabled."
       ?
    endif
-   if type( "__DBGENTRY()" ) == "UI"
+   if Type( "__DBGENTRY()" ) == "UI"
       ? "Warning !!! HVM debugger enabled."
       ?
    endif
 #endif
 
 //? "Startup loop to increase CPU clock..."
-//x := seconds() + 5; while x > seconds(); enddo
+//x := Seconds() + 5; while x > Seconds(); enddo
 
 #ifdef __MT__
 if ! hb_mtvm()
@@ -517,10 +517,10 @@ if .t.
       nMT := 0
    endif
 endif
-? date(), time(), os()
-? version() + iif( hb_mtvm(), " (MT)" + iif( nMT != 0, "+", "" ), "" ), ""
+? Date(), Time(), OS()
+? Version() + iif( hb_mtvm(), " (MT)" + iif( nMT != 0, "+", "" ), "" ), ""
 #ifdef __HARBOUR__
-   ?? hb_compiler(), ""
+   ?? hb_Compiler(), ""
 #endif
 ?? spd_cpu()
 
@@ -528,9 +528,9 @@ if lScale .and. nMT < 1
    nMT := 1
 endif
 
-? "THREADS:", iif( nMT < 0, "all->" + ltrim( str( N_TESTS ) ), ltrim( str( nMT ) ) )
-? "N_LOOPS:", ltrim( str( N_LOOPS ) )
-if ! empty( cExclude )
+? "THREADS:", iif( nMT < 0, "all->" + LTrim( Str( N_TESTS ) ), LTrim( Str( nMT ) ) )
+? "N_LOOPS:", LTrim( Str( N_LOOPS ) )
+if ! Empty( cExclude )
    ? "excluded tests:", cExclude
 endif
 
@@ -538,42 +538,42 @@ x :=t000()
 nLoopOverHead := x[2]
 
 if lScale
-   ? space(56) + "1 th." + str(nMT,3) + " th.  factor"
-   ? replicate("=",76)
+   ? Space(56) + "1 th." + Str(nMT,3) + " th.  factor"
+   ? Replicate("=",76)
 else
    ? dsp_result( x, 0 )
-   ? replicate("=",68)
+   ? Replicate("=",68)
 endif
 
-nSeconds := seconds()
-nTimes := hb_secondsCPU()
+nSeconds := Seconds()
+nTimes := hb_SecondsCPU()
 
 nTimeTotST := nTimeTotMT := 0
 
 #ifdef __MT__
    if lScale
-      aThreads := array( nMT )
+      aThreads := Array( nMT )
       mtxJobs := hb_mutexCreate()
       mtxResults := hb_mutexCreate()
       for i:=1 to nMT
          aThreads[ i ] := hb_threadStart( "thTestScale", mtxJobs, mtxResults )
       next
       for i:=1 to N_TESTS
-         cTest := strzero( i, 3 )
+         cTest := StrZero( i, 3 )
          if ! cTest $ cExclude
 
             /* linear execution */
-            nTimeST := seconds()
+            nTimeST := Seconds()
             for j:=1 to nMT
                hb_mutexNotify( mtxJobs, i )
                hb_mutexSubscribe( mtxResults,, @x )
                cTest := x[ 1 ]
             next
-            nTimeST := seconds() - nTimeST
+            nTimeST := Seconds() - nTimeST
             nTimeTotST += nTimeST
 
             /* simultaneous execution */
-            nTimeMT := seconds()
+            nTimeMT := Seconds()
             for j:=1 to nMT
                hb_mutexNotify( mtxJobs, i )
             next
@@ -581,7 +581,7 @@ nTimeTotST := nTimeTotMT := 0
                hb_mutexSubscribe( mtxResults,, @x )
                cTest := x[ 1 ]
             next
-            nTimeMT := seconds() - nTimeMT
+            nTimeMT := Seconds() - nTimeMT
             nTimeTotMT += nTimeMT
 
             ? dsp_scaleResult( cTest, nTimeST, nTimeMT, nMT, nLoopOverHead )
@@ -593,9 +593,9 @@ nTimeTotST := nTimeTotMT := 0
       next
       hb_threadWaitForAll( aThreads )
    elseif nMT < 0
-      aThreads := array( N_TESTS )
+      aThreads := Array( N_TESTS )
       for i:=1 to N_TESTS
-         cNum := strzero( i, 3 )
+         cNum := StrZero( i, 3 )
          if ! cNum $ cExclude
             aThreads[ i ] := hb_threadStart( "t" + cNum )
          endif
@@ -606,14 +606,14 @@ nTimeTotST := nTimeTotMT := 0
          endif
       next
    elseif nMT > 0
-      aThreads := array( nMT )
-      aResults := array( N_TESTS )
+      aThreads := Array( nMT )
+      aResults := Array( N_TESTS )
       mtxJobs := hb_mutexCreate()
       for i:=1 to nMT
          aThreads[ i ] := hb_threadStart( "thTest", mtxJobs, aResults )
       next
       for i:=1 to N_TESTS
-         if ! strzero( i, 3 ) $ cExclude
+         if ! StrZero( i, 3 ) $ cExclude
             hb_mutexNotify( mtxJobs, i )
          endif
       next
@@ -629,7 +629,7 @@ nTimeTotST := nTimeTotMT := 0
       mtxJobs := NIL
    else
       for i:=1 to N_TESTS
-         cNum := strzero( i, 3 )
+         cNum := StrZero( i, 3 )
          if ! cNum $ cExclude
             ? dsp_result( &( "t" + cNum )(), nLoopOverHead )
          endif
@@ -637,22 +637,22 @@ nTimeTotST := nTimeTotMT := 0
    endif
 #else
    for i:=1 to N_TESTS
-      cNum := strzero( i, 3 )
+      cNum := StrZero( i, 3 )
       if ! cNum $ cExclude
          ? dsp_result( &( "t" + cNum )(), nLoopOverHead )
       endif
    next
 #endif
 
-nTimes := hb_secondsCPU() - nTimes
-nSeconds := seconds() - nSeconds
+nTimes := hb_SecondsCPU() - nTimes
+nSeconds := Seconds() - nSeconds
 
 if lScale
-   ? replicate("=",76)
+   ? Replicate("=",76)
    ? dsp_scaleResult( "  TOTAL  ", nTimeTotST, nTimeTotMT, nMT, 0 )
-   ? replicate("=",76)
+   ? Replicate("=",76)
 else
-   ? replicate("=",68)
+   ? Replicate("=",68)
 endif
 ? dsp_result( { "total application time:", nTimes }, 0)
 ? dsp_result( { "total real time:", nSeconds }, 0 )
@@ -674,10 +674,10 @@ function f3(a,b,c,d,e,f,g,h,i)
 return nil
 
 function f4()
-return space(4000)
+return Space(4000)
 
 function f5()
-return space(5)
+return Space(5)
 
 function f_prv(x)
    memvar PRV_C
@@ -701,45 +701,45 @@ return &x
 
 static function errorArray()
 #ifdef __NO_OBJ_ARRAY__
-   return array(16)
+   return Array(16)
 #else
-   return errorNew()
+   return ErrorNew()
 #endif
 
 static func dsp_result( aResult, nLoopOverHead )
-   return padr( "[ " + left( aResult[ 1 ], 56 ) + " ]", 60, "." ) + ;
-          strtran( str( max( aResult[ 2 ] - nLoopOverHead, 0 ), 8, 2 ), " ", "." )
+   return PadR( "[ " + Left( aResult[ 1 ], 56 ) + " ]", 60, "." ) + ;
+          StrTran( Str( Max( aResult[ 2 ] - nLoopOverHead, 0 ), 8, 2 ), " ", "." )
 
 static func dsp_scaleResult( cTest, nTimeST, nTimeMT, nMT, nLoopOverHead )
    if .f.
-      nTimeST := max( 0, nTimeST - nMT * nLoopOverHead )
-      nTimeMT := max( 0, nTimeMT - nMT * nLoopOverHead )
+      nTimeST := Max( 0, nTimeST - nMT * nLoopOverHead )
+      nTimeMT := Max( 0, nTimeMT - nMT * nLoopOverHead )
    endif
-   return padr( "[ " + left( cTest, 50 ) + " ]", 54, "_" ) + ;
-          str( nTimeST, 6, 2 ) + " " + str( nTimeMT, 6, 2 ) + " ->" + ;
-          str( nTimeST / nTimeMT, 6, 2 )
+   return PadR( "[ " + Left( cTest, 50 ) + " ]", 54, "_" ) + ;
+          Str( nTimeST, 6, 2 ) + " " + Str( nTimeMT, 6, 2 ) + " ->" + ;
+          Str( nTimeST / nTimeMT, 6, 2 )
 
 
 #define TMP_FILE "_tst_tmp.dbf"
 static proc create_db()
    remove_db()
-   dbcreate( TMP_FILE, { {"F_C", "C", 10, 0},;
+   dbCreate( TMP_FILE, { {"F_C", "C", 10, 0},;
                          {"F_N", "N", 10, 2},;
                          {"F_D", "D",  8, 0} } )
    use TMP_FILE exclusive
-   dbappend()
-   field->F_C := dtos(date())
+   dbAppend()
+   field->F_C := DToS(Date())
    field->F_N := 112345.67
-   field->F_D := date()
-   dbclosearea()
+   field->F_D := Date()
+   dbCloseArea()
 return
 
 static proc remove_db()
-   ferase( TMP_FILE )
+   FErase( TMP_FILE )
 return
 
 static proc close_db()
-   dbclosearea()
+   dbCloseArea()
 return
 
 static proc use_dbsh()
@@ -749,7 +749,7 @@ return
 #ifdef __HARBOUR__
 #ifndef __XHARBOUR__
    static function spd_cpu()
-   return hb_version( HB_VERSION_CPU )
+   return hb_Version( HB_VERSION_CPU )
 #endif
 #endif
 #ifdef __CLIPPER__
@@ -791,7 +791,7 @@ return
 #endif
 #ifdef __XHARBOUR__
    static function hb_mtvm()
-   return hb_multiThread()    /* check for MT support in xHarbour VM */
+   return hb_MultiThread()    /* check for MT support in xHarbour VM */
 #endif
 
 
@@ -802,7 +802,7 @@ return
       local lFirstCall := .f.
       if xOnceControl == NIL
          if bAction != NIL
-            eval( bAction )
+            Eval( bAction )
          endif
          xOnceControl := .t.
          lFirstCall := .t.
@@ -818,8 +818,8 @@ return
 
    static function hb_mutexSubscribe( mtx, nTimeOut, xSubscribed )
       local lSubscribed
-      if valtype( nTimeOut ) == "N"
-         nTimeOut := round( nTimeOut * 1000, 0 )
+      if ValType( nTimeOut ) == "N"
+         nTimeOut := Round( nTimeOut * 1000, 0 )
          xSubscribed := Subscribe( mtx, nTimeOut, @lSubscribed )
       else
          xSubscribed := Subscribe( mtx )
@@ -844,11 +844,11 @@ return
       /* For some reasons codeblocks as thread startup entry are broken
        * in xHarbour so we use intermediate function instead
        */
-      StartThread( @_thFuncFirst(), thId, hb_aParams() )
+      StartThread( @_thFuncFirst(), thId, hb_AParams() )
    return thId
 
    static function _thFuncFirst( thID, aParams )
-      Notify( thId, hb_execFromArray( aParams ) )
+      Notify( thId, hb_ExecFromArray( aParams ) )
    return nil
 
    static function hb_threadJoin( thId, xResult )
@@ -869,7 +869,7 @@ return
          hb_mutexLock( s_mutex )
          if xOnceControl == NIL
             if bAction != NIL
-               eval( bAction )
+               Eval( bAction )
             endif
             xOnceControl := .t.
             lFirstCall := .t.
@@ -887,7 +887,7 @@ return
        * when two threads try to create new error class simultaneously.
        * xHarbour does not have any protection against such situation
        */
-      errorNew()
+      ErrorNew()
    return
 
 #endif /* __XHARBOUR__ */

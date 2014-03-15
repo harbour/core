@@ -27,38 +27,38 @@ proc main()
    local aThreads, i, lEnd, nSum
    ? Version()
    ? "Main start"
-   s_aCounters := array( N_THREADS )
-   aFill( s_aCounters, 0 )
+   s_aCounters := Array( N_THREADS )
+   AFill( s_aCounters, 0 )
    aThreads := {}
    s_hMutex := hb_mutexCreate()
    lEnd := .F.
    ? "Starting threads:", ""
    for i := 1 to N_THREADS
-      aadd( aThreads, hb_threadStart( @thFunc(), i, @lEnd ) )
+      AAdd( aThreads, hb_threadStart( @thFunc(), i, @lEnd ) )
       ?? "<" + hb_ntos( i ) + ">"
    next
    ? "Wait 5 seconds or hit any key..."
-   inkey( 5 )
+   Inkey( 5 )
    lEnd := .T.
    ? "Waiting for threads..."
-   aEval( aThreads, {| x | hb_threadJoin( x ) } )
+   AEval( aThreads, {| x | hb_threadJoin( x ) } )
    ? "Threads joined"
    nSum := 0
-   aEval( s_aCounters, {| x | nSum += x } )
+   AEval( s_aCounters, {| x | nSum += x } )
    ? "Sum of thread local counters:", nSum
    ? "Protected item result.......:", s_nVar2, ;
       iif( nSum == s_nVar2, "OK", "ERROR" )
    ? "Unprotected item result.....:", s_nVar1, "*"
    ? " * - can be different then local sum on real multi-CPU systems"
    ? "End of main"
-return
+   return
 
 proc thFunc( nThread, lEnd )
    while ! lEnd
       s_nVar1++
       hb_mutexLock( s_hMutex )
       s_nVar2++
-      hb_mutexUnLock( s_hMutex )
+      hb_mutexUnlock( s_hMutex )
       s_aCounters[ nThread ]++
    enddo
-return
+   return

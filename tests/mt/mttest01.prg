@@ -21,12 +21,12 @@ proc main()
    ? Version()
    ? "join:", hb_threadJoin( hb_threadStart( @thFunc() ), @xResult )
    ? "result:", xResult
-   ? "static var type:", valtype( s_var )
-   ? eval( s_var )
-   ? eval( s_var )
-return
+   ? "static var type:", ValType( s_var )
+   ? Eval( s_var )
+   ? Eval( s_var )
+   return
 
 func thFunc()
    local i := 12345.678
    s_var := {|| i++ }
-return replicate( "Hello World!!! ", 3 )
+   return Replicate( "Hello World!!! ", 3 )

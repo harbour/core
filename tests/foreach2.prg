@@ -25,7 +25,7 @@ proc main()
 
    ?
    ? "FOR EACH e IN myclass2()"
-   o:=myclass2()
+   o := myclass2()
    for each e in o
       ? e:__enumIndex(), "=>", e
    next
@@ -90,8 +90,8 @@ METHOD __enumSkip( enum, lDescend ) CLASS myclass2
    else
       ::value += 3
    endif
-   /* stop iteration when abs( ::value ) > 20 */
-   if abs( ::value ) > 20
+   /* stop iteration when Abs( ::value ) > 20 */
+   if Abs( ::value ) > 20
       return .F.
    endif
    /* set enumerator value */

@@ -14,13 +14,13 @@
 #endif
 
 #ifndef EOL
-   #define EOL chr( 13 ) + chr( 10 )
+   #define EOL Chr( 13 ) + Chr( 10 )
 #endif
 
-#command ? => outstd( EOL )
-#command ? <xx,...> => outstd( <xx>, EOL )
+#command ? => OutStd( EOL )
+#command ? <xx,...> => OutStd( <xx>, EOL )
 #command ?? =>
-#command ?? <xx,...> => outstd( <xx> )
+#command ?? <xx,...> => OutStd( <xx> )
 
 // #command RDDTEST <x> => rdd_test( <x> )
 // #command RDDTEST <f>, <r>, <x> => rdd_test( #<f>, <{f}>, <r>, <x> )
@@ -70,7 +70,7 @@ init proc adstest_init()
 #endif
 #endif
 
-// REQUEST DBSEEK, DBGOTO, DBGOTOP, DBGOBOTTOM, ORDSETFOCUS, ORDSCOPE
+// REQUEST dbSeek, DBGOTO, DBGOTOP, DBGOBOTTOM, ORDSETFOCUS, ORDSCOPE
 
 #ifdef _TEST_CREATE_
 procedure main( cOutFile, rdd )
@@ -89,7 +89,7 @@ procedure main( rdd )
 static procedure test_init( rdd, cOutFile )
    local n, cOut, aDb := { { "FSTR", "C", 10, 0 }, { "FNUM", "N", 10, 0 } }
 
-if empty( rdd )
+if Empty( rdd )
    #ifdef _TESTRDD
       rdd := _TESTRDD
    #else
@@ -98,10 +98,10 @@ if empty( rdd )
 endif
 rddSetDefault( rdd )
 #ifdef _TEST_CREATE_
-   if empty( cOutFile )
+   if Empty( cOutFile )
       ? "Syntax: <outfile.prg> [<rddname>]"
       quit
-   elseif ( s_hMake := fcreate( cOutFile ) ) == F_ERROR
+   elseif ( s_hMake := FCreate( cOutFile ) ) == F_ERROR
       ? "Cannot create file:", cOutFile
       quit
    endif
@@ -116,30 +116,30 @@ rddSetDefault( rdd )
       EOL + ;
       'PROCEDURE test_main()' + EOL + ;
       EOL
-   if ! fwrite( s_hMake, cOut ) == len( cOut )
+   if ! FWrite( s_hMake, cOut ) == Len( cOut )
       ? "write error."
       quit
    endif
 #endif
 
-   aeval( directory( "./" + _DBNAME + ".??x" ), {| x | ferase( x[ 1 ] ) } )
-   aeval( directory( "./TG_?.??x" ), {| x | ferase( x[ 1 ] ) } )
-   ferase( "./"+_DBNAME+".dbf" )
+   AEval( Directory( "./" + _DBNAME + ".??x" ), {| x | FErase( x[ 1 ] ) } )
+   AEval( Directory( "./TG_?.??x" ), {| x | FErase( x[ 1 ] ) } )
+   FErase( "./"+_DBNAME+".dbf" )
    ? "RDD:", rdd
    ? "creating database and index..."
-   dbcreate( _DBNAME, aDb )
+   dbCreate( _DBNAME, aDb )
 /*
    USE _DBNAME SHARED
 
-   flock()
+   FLock()
    for n := 1 to N_LOOP
-      dbappend()
+      dbAppend()
       field->FNUM := int( ( n + 2 ) / 3 )
-      field->FSTR := chr( FNUM + 48 )
-      // ? FNUM, FSTR, recno(), eof(), bof()
+      field->FSTR := Chr( FNUM + 48 )
+      // ? FNUM, FSTR, RecNo(), Eof(), Bof()
    next
-   dbcommit()
-   dbunlock()
+   dbCommit()
+   dbUnlock()
 */
    return
 
@@ -150,21 +150,21 @@ static procedure test_close()
    if s_hMake != F_ERROR
       cOut := EOL + ;
          'RETURN' + EOL
-      if ! fwrite( s_hMake, cOut ) == len( cOut )
+      if ! FWrite( s_hMake, cOut ) == Len( cOut )
          ? "write error."
          quit
       endif
-      fclose( s_hMake )
+      FClose( s_hMake )
    endif
 #else
    ?
-   ? "Number of tests:", ltrim( str( s_nTested ) )
-   ? "Number of errors:", ltrim( str( s_nErrors ) )
+   ? "Number of tests:", LTrim( Str( s_nTested ) )
+   ? "Number of errors:", LTrim( Str( s_nErrors ) )
 #endif
-   dbclosearea()
-   aeval( directory( "./" + _DBNAME + ".??x" ), {| x | ferase( x[ 1 ] ) } )
-   aeval( directory( "./TG_?.??x" ), {| x | ferase( x[ 1 ] ) } )
-   ferase( "./" + _DBNAME + ".dbf" )
+   dbCloseArea()
+   AEval( Directory( "./" + _DBNAME + ".??x" ), {| x | FErase( x[ 1 ] ) } )
+   AEval( Directory( "./TG_?.??x" ), {| x | FErase( x[ 1 ] ) } )
+   FErase( "./" + _DBNAME + ".dbf" )
    ?
    return
 
@@ -172,7 +172,7 @@ static procedure rdd_retval()
    return
 
 static function rdd_state()
-   return { recno(), bof(), eof(), found() }
+   return { RecNo(), Bof(), Eof(), Found() }
 
 
 static function itm2str( itm )
@@ -180,19 +180,19 @@ static function itm2str( itm )
    do case
    case itm == NIL
       cStr += "NIL"
-   case valtype( itm ) == "C"
-      cStr += '"' + strtran( itm, '"', '" + chr( 34 ) + "') + '"'
-   case valtype( itm ) == "N"
-      cStr += ltrim( str( itm ) )
-   case valtype( itm ) == "L"
+   case ValType( itm ) == "C"
+      cStr += '"' + StrTran( itm, '"', '" + Chr( 34 ) + "') + '"'
+   case ValType( itm ) == "N"
+      cStr += LTrim( Str( itm ) )
+   case ValType( itm ) == "L"
       cStr += iif( itm, ".T.", ".F." )
-   case valtype( itm ) == "D"
-      cStr += "CTOD(" + DTOC( itm ) + ")"
-   case valtype( itm ) == "B"
-      cStr += "{||" + itm2str( eval( itm ) ) + "}"
-   case valtype( itm ) == "A"
+   case ValType( itm ) == "D"
+      cStr += "CToD(" + DToC( itm ) + ")"
+   case ValType( itm ) == "B"
+      cStr += "{||" + itm2str( Eval( itm ) ) + "}"
+   case ValType( itm ) == "A"
       cStr += "{"
-      for i := 1 to len( itm )
+      for i := 1 to Len( itm )
          cStr += iif( i == 1, "", "," ) + itm2str( itm[ i ] )
       next
       cStr += "}"
@@ -204,16 +204,16 @@ static function itm2str( itm )
 static procedure rddtst_wr( cAction, xRet )
    local aState, cOut
 
-   if ascan( aBadRetFunc, {| x | upper( cAction ) = x + "(" } ) != 0
+   if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) != 0
       xRet := NIL
    endif
    aState := rdd_state()
-   if pcount() > 1
+   if PCount() > 1
       cOut := "RDDTESTF " + itm2str( xRet ) + ", " + itm2str( aState ) + ", " + cAction + EOL
    else
       cOut := "RDDTESTC " + itm2str( aState ) + ", " + cAction + EOL
    endif
-   if ! fwrite( s_hMake, cOut ) == len( cOut )
+   if ! FWrite( s_hMake, cOut ) == Len( cOut )
       ? "write error."
       quit
    endif
@@ -224,24 +224,24 @@ static procedure rddtst_tst( cAction, aExState, xRet, xExRet )
    local aState, lOK := ( .T. ), s1, s2, i
 
    aState := rdd_state()
-   if pcount() >= 4
-      if ascan( aBadRetFunc, {| x | upper( cAction ) = x + "(" } ) != 0
+   if PCount() >= 4
+      if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) != 0
          xRet := NIL
       endif
-      if ! valtype( xRet ) == valtype( xExRet ) .or. ;
-         ! iif( valtype( xRet ) == "B", eval( xRet ) == eval( xExRet ), xRet == xExRet )
+      if ! ValType( xRet ) == ValType( xExRet ) .or. ;
+         ! iif( ValType( xRet ) == "B", Eval( xRet ) == Eval( xExRet ), xRet == xExRet )
          lOK := .F.
       endif
       s1 := itm2str( xRet )
       s2 := itm2str( xExRet )
-      s1 := padr( s1, max( len( s1 ), len( s2 ) ) + 1 )
-      s2 := padr( s2, len( s1 ) )
+      s1 := PadR( s1, Max( Len( s1 ), Len( s2 ) ) + 1 )
+      s2 := PadR( s2, Len( s1 ) )
    else
       s1 := s2 := ""
    endif
-   if ! empty( aExState ) .and. lOK
-      for i := 1 to len( aExState )
-         if ! valtype( aState[ i ] ) == valtype( aExState[ i ] ) .or. ! aState[ i ] == aExState[ i ]
+   if ! Empty( aExState ) .and. lOK
+      for i := 1 to Len( aExState )
+         if ! ValType( aState[ i ] ) == ValType( aExState[ i ] ) .or. ! aState[ i ] == aExState[ i ]
             lOK := .F.
             exit
          endif

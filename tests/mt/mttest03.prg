@@ -38,13 +38,13 @@ proc main()
       ?
    endsequence
    ? "End of main"
-return
+   return
 
 proc thFunc( ... )
    local i
    ? "Thread begin"
    ? "Parameters:"
-   aeval( hb_aParams(), {| x | qqout( "", x ) } )
+   AEval( hb_AParams(), {| x | QQOut( "", x ) } )
    ?
    begin sequence
       for i := 1 to 10
@@ -57,7 +57,8 @@ proc thFunc( ... )
    endsequence
    ? "Thread end"
    ?
-return
+   return
 
 exit proc p
-? "I'm EXIT procedure"
+   ? "I'm EXIT procedure"
+   return

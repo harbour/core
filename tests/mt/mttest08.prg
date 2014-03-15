@@ -36,7 +36,7 @@ proc main()
    initVars()
    ? "main thread:"
    testAllVars()
-   hb_threadJoin( hb_threadStart( HB_BITOR( HB_THREAD_INHERIT_PUBLIC, ;
+   hb_threadJoin( hb_threadStart( hb_bitOr( HB_THREAD_INHERIT_PUBLIC, ;
                                             HB_THREAD_MEMVARS_COPY ), ;
                                   @thFunc() ) )
    ? "main thread:"
@@ -48,7 +48,7 @@ proc main()
    initVars()
    ? "main thread:"
    testAllVars()
-   hb_threadJoin( hb_threadStart( HB_BITOR( HB_THREAD_INHERIT_PRIVATE, ;
+   hb_threadJoin( hb_threadStart( hb_bitOr( HB_THREAD_INHERIT_PRIVATE, ;
                                             HB_THREAD_MEMVARS_COPY ), ;
                                   @thFunc() ) )
    ? "main thread:"
@@ -60,7 +60,7 @@ proc main()
    initVars()
    ? "main thread:"
    testAllVars()
-   hb_threadJoin( hb_threadStart( HB_BITOR( HB_THREAD_INHERIT_MEMVARS, ;
+   hb_threadJoin( hb_threadStart( hb_bitOr( HB_THREAD_INHERIT_MEMVARS, ;
                                             HB_THREAD_MEMVARS_COPY ), ;
                                   @thFunc() ) )
    ? "main thread:"
@@ -97,28 +97,28 @@ proc main()
    testAllVars()
    wait
 
-return
+   return
 
 static proc initVars()
    pub1 := "main:public1"
    pub2 := "main:public2"
    prv1 := "main:private1"
    prv2 := "main:private2"
-return
+   return
 
 static proc testAllVars()
    test_var( "PUB1" )
    test_var( "PUB2" )
    test_var( "PRV1" )
    test_var( "PRV2" )
-return
+   return
 
 static proc test_var( cVarName )
-   ? "    " + cVarName + ":", type( cVarName )
-   if ! type( cVarName ) == "U"
+   ? "    " + cVarName + ":", Type( cVarName )
+   if ! Type( cVarName ) == "U"
       ?? " ->", &cVarName
    endif
-return
+   return
 
 static proc thFunc()
    ? "child thread:"
@@ -130,4 +130,4 @@ static proc thFunc()
    prv2 := "thread:private2"
    ? "child thread:"
    testAllVars()
-return
+   return
