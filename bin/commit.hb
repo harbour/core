@@ -596,12 +596,13 @@ STATIC FUNCTION CheckFileList( xName, cLocalRoot, lRebase )
       IF "--fixup-case" $ cli_Options()
          tmp := ""
          FOR EACH file IN xName
-            IF "|" + hb_FNameExt( file ) + "|" $ "|.c|.cpp|.h|.api|.ch|.hb|.po|.prg|.md|.txt|"
-               tmp += " " + file
+            IF "|" + hb_FNameExt( file ) + "|" $ "|.c|.cpp|.h|.api|.ch|.hb|.po|.prg|.md|.txt|" .AND. ;
+               FixFuncCaseFilter( file )
+               tmp += file + " "
             ENDIF
          NEXT
          IF ! Empty( tmp )
-            hb_run( hbshell_ProgName() + " -fixcase" + tmp )
+            hb_run( hbshell_ProgName() + " -fixcase " + tmp )
          ENDIF
       ELSE
          FOR EACH file IN xName
@@ -1102,15 +1103,15 @@ STATIC PROCEDURE ProcFile( cFileName )
    LOCAL hProc := { ;
       ".png" => { "advpng -z -4 %1$s", "optipng -o7 %1$s" }, ;
       ".jpg" => { "jpegoptim --strip-all %1$s" }, ;
-      ".c"   => { hb_StrFormat( "uncrustify -c %1$s %%1$s", hb_DirSepToOS( _HBROOT_ + "bin/harbour.ucf" ) ), hbshell_ProgName() + " -fixcase %1$s" }, ;
+      ".c"   => { hb_StrFormat( "uncrustify -c %1$s %%1$s", hb_DirSepToOS( _HBROOT_ + "bin/harbour.ucf" ) ), @FixFuncCase() }, ;
       ".cpp" => ".c", ;
       ".h"   => ".c", ;
       ".api" => ".c", ;
       ".go"  => { "go fmt %1$s" }, ;
-      ".txt" => { hbshell_ProgName() + " -fixcase %1$s" }, ;
+      ".txt" => { @FixFuncCase() }, ;
       ".md"  => ".txt", ;
       ".po"  => ".txt", ;
-      ".prg" => { hbshell_ProgName() + " -fixcase %1$s" /*, "hbformat %1$s" */ }, ;  /* NOTE: hbformat has bugs which make it unsuitable for unattended use */
+      ".prg" => { @FixFuncCase() /*, "hbformat %1$s" */ }, ;  /* NOTE: hbformat has bugs which make it unsuitable for unattended use */
       ".hb"  => ".prg", ;
       ".ch"  => ".prg" }
 
@@ -1227,3 +1228,48 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
    ENDIF
 
    RETURN aList
+
+STATIC FUNCTION FixFuncCaseFilter( cFileName )
+
+   /* TOFIX: Harbour repo specific */
+   STATIC sc_hFileExceptions := { ;
+      "ChangeLog.txt" =>, ;
+      "std.ch"        =>, ;  /* compatibility */
+      "big5_gen.prg"  =>, ;  /* new style code */
+      "clsccast.prg"  =>, ;  /* new style code */
+      "clsicast.prg"  =>, ;  /* new style code */
+      "clsscast.prg"  =>, ;  /* new style code */
+      "clsscope.prg"  =>, ;  /* new style code */
+      "cpinfo.prg"    =>, ;  /* new style code */
+      "foreach2.prg"  =>, ;  /* new style code */
+      "keywords.prg"  =>, ;  /* new style code */
+      "speedstr.prg"  =>, ;  /* new style code */
+      "speedtst.prg"  =>, ;  /* new style code */
+      "uc16_gen.prg"  =>, ;  /* new style code */
+      "wcecon.prg"    =>, ;  /* new style code */
+      "c_std.txt"     =>, ;  /* C level doc */
+      "locks.txt"     =>, ;  /* C level doc */
+      "pcode.txt"     =>, ;  /* C level doc */
+      "tracing.txt"   =>, ;  /* C level doc */
+      "xhb-diff.txt"  => }
+
+   /* TOFIX: Harbour repo specific */
+   STATIC sc_aMaskExceptions := { ;
+      "*/3rd/*"          , ;  /* foreign code */
+      "tests/hbpptest/*" , ;  /* test code, must be kept as is */
+      "tests/mt/*"       , ;  /* new style code */
+      "tests/multifnc/*" , ;
+      "tests/rddtest/*"  }
+
+   RETURN ;
+      ! Empty( hb_FNameExt( cFileName ) ) .AND. ;
+      ! hb_FNameNameExt( cFileName ) $ sc_hFileExceptions .AND. ;
+      AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( cFileName, hb_DirSepToOS( tmp ) ) } ) == 0
+
+STATIC PROCEDURE FixFuncCase( cFileName )
+
+   IF FixFuncCaseFilter( cFileName )
+      hb_run( hbshell_ProgName() + " -fixcase " + cFileName )
+   ENDIF
+
+   RETURN
