@@ -233,8 +233,8 @@
 #command CLEAR SCREEN               => CLS
 #command SAVE SCREEN                => __XSaveScreen()
 #command RESTORE SCREEN             => __XRestScreen()
-#command SAVE SCREEN TO <v>         => <v> := SaveScreen( 0, 0, Maxrow(), Maxcol() )
-#command RESTORE SCREEN FROM <v>    => RestScreen( 0, 0, Maxrow(), Maxcol(), <v> )
+#command SAVE SCREEN TO <v>         => <v> := SaveScreen( 0, 0, MaxRow(), MaxCol() )
+#command RESTORE SCREEN FROM <v>    => RestScreen( 0, 0, MaxRow(), MaxCol(), <v> )
 
 #command @ <row>, <col>             => Scroll( <row>, <col>, <row> ) ;;
                                        SetPos( <row>, <col> )
@@ -264,24 +264,24 @@
          if ( !Empty(__Accept(<msg>)) ) ; <v> := &( __AcceptStr() ) ; end
 #command KEYBOARD <x>                  => __Keyboard( <x> )
 #command CLEAR TYPEAHEAD               => __Keyboard()
-#command CLEAR MEMORY                  => __MVClear()
-#command RELEASE <v,...>               => __MVXRelease( <"v"> )
-#command RELEASE ALL                   => __MVRelease( "*", .t. )
-#command RELEASE ALL LIKE <p>          => __MVRelease( #<p>, .t. )
-#command RELEASE ALL EXCEPT <p>        => __MVRelease( #<p>, .f. )
-#command RESTORE [FROM <(f)>] [<a:ADDITIVE>] => __MVRestore( <(f)>, <.a.> )
-#command SAVE TO <(f)> ALL LIKE <p>    => __MVSave( <(f)>, <(p)>, .t. )
-#command SAVE ALL LIKE <p> TO <(f)>    => __MVSave( <(f)>, <(p)>, .t. )
-#command SAVE ALL EXCEPT <p> TO <(f)>  => __MVSave( <(f)>, <(p)>, .f. )
-#command SAVE TO <(f)> ALL EXCEPT <p>  => __MVSave( <(f)>, <(p)>, .f. )
-#command SAVE [TO <(f)>] [ALL]         => __MVSave( <(f)>, "*", .t. )
+#command CLEAR MEMORY                  => __mvClear()
+#command RELEASE <v,...>               => __mvXRelease( <"v"> )
+#command RELEASE ALL                   => __mvRelease( "*", .t. )
+#command RELEASE ALL LIKE <p>          => __mvRelease( #<p>, .t. )
+#command RELEASE ALL EXCEPT <p>        => __mvRelease( #<p>, .f. )
+#command RESTORE [FROM <(f)>] [<a:ADDITIVE>] => __mvRestore( <(f)>, <.a.> )
+#command SAVE TO <(f)> ALL LIKE <p>    => __mvSave( <(f)>, <(p)>, .t. )
+#command SAVE ALL LIKE <p> TO <(f)>    => __mvSave( <(f)>, <(p)>, .t. )
+#command SAVE ALL EXCEPT <p> TO <(f)>  => __mvSave( <(f)>, <(p)>, .f. )
+#command SAVE TO <(f)> ALL EXCEPT <p>  => __mvSave( <(f)>, <(p)>, .f. )
+#command SAVE [TO <(f)>] [ALL]         => __mvSave( <(f)>, "*", .t. )
 
-#command RESTORE HBV [FROM <(f)>] [<a:ADDITIVE>] => hb_MVRestore( <(f)>, <.a.> )
-#command SAVE HBV TO <(f)> ALL LIKE <p>    => hb_MVSave( <(f)>, <(p)>, .t. )
-#command SAVE HBV ALL LIKE <p> TO <(f)>    => hb_MVSave( <(f)>, <(p)>, .t. )
-#command SAVE HBV ALL EXCEPT <p> TO <(f)>  => hb_MVSave( <(f)>, <(p)>, .f. )
-#command SAVE HBV TO <(f)> ALL EXCEPT <p>  => hb_MVSave( <(f)>, <(p)>, .f. )
-#command SAVE HBV [TO <(f)>] [ALL]         => hb_MVSave( <(f)>, "*", .t. )
+#command RESTORE HBV [FROM <(f)>] [<a:ADDITIVE>] => hb_mvRestore( <(f)>, <.a.> )
+#command SAVE HBV TO <(f)> ALL LIKE <p>    => hb_mvSave( <(f)>, <(p)>, .t. )
+#command SAVE HBV ALL LIKE <p> TO <(f)>    => hb_mvSave( <(f)>, <(p)>, .t. )
+#command SAVE HBV ALL EXCEPT <p> TO <(f)>  => hb_mvSave( <(f)>, <(p)>, .f. )
+#command SAVE HBV TO <(f)> ALL EXCEPT <p>  => hb_mvSave( <(f)>, <(p)>, .f. )
+#command SAVE HBV [TO <(f)>] [ALL]         => hb_mvSave( <(f)>, "*", .t. )
 
 #command ERASE <(f)>                   => FErase( <(f)> )
 #command DELETE FILE <(f)>             => FErase( <(f)> )
@@ -371,19 +371,19 @@
 #command REPLACE [ <f1> WITH <x1> [, <fN> WITH <xN>] ] ;
                  [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                  [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         DBEval( {|| _FIELD-><f1> := <x1> [, _FIELD-><fN> := <xN>]}, ;
+         dbEval( {|| _FIELD-><f1> := <x1> [, _FIELD-><fN> := <xN>]}, ;
                  <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 #command REPLACE <f1> WITH <v1> [, <fN> WITH <vN> ] => ;
          _FIELD-><f1> := <v1> [; _FIELD-><fN> := <vN>]
 
 #command DELETE [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                 [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         DBEval( {|| dbDelete()}, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
+         dbEval( {|| dbDelete()}, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 #command DELETE                  =>  dbDelete()
 
 #command RECALL [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                 [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         DBEval( {|| dbRecall()}, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
+         dbEval( {|| dbRecall()}, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 #command RECALL                  =>  dbRecall()
 
 #command CREATE <(db)> [FROM <(src)>] [VIA <rdd>] [ALIAS <a>] ;
@@ -452,26 +452,26 @@
 
 #command JOIN [WITH <(alias)>] [TO <f>] [FIELDS <fields,...>] [FOR <for>] => ;
          __dbJoin( <(alias)>, <(f)>, { <(fields)> }, ;
-                   if(EMPTY(#<for>), {|| .T. }, <{for}> ) )
+                   if(Empty(#<for>), {|| .T. }, <{for}> ) )
 
 #command COUNT [TO <v>] ;
                [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         <v> := 0 ; DBEval( {|| <v> := <v> + 1}, ;
+         <v> := 0 ; dbEval( {|| <v> := <v> + 1}, ;
                             <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
 #command SUM [ <x1> [, <xN>]  TO  <v1> [, <vN>] ] ;
              [FOR <for>] [WHILE <while>] [NEXT <next>] ;
              [RECORD <rec>] [<rest:REST>] [ALL] => ;
          <v1> := [ <vN> := ] 0 ;;
-         DBEval( {|| <v1> := <v1> + <x1> [, <vN> := <vN> + <xN> ]}, ;
+         dbEval( {|| <v1> := <v1> + <x1> [, <vN> := <vN> + <xN> ]}, ;
                  <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
 #command AVERAGE [ <x1> [, <xN>]  TO  <v1> [, <vN>] ] ;
                  [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                  [RECORD <rec>] [<rest:REST>] [ALL] => ;
          M->__Avg := <v1> := [ <vN> := ] 0 ;;
-         DBEval( {|| M->__Avg := M->__Avg + 1, ;
+         dbEval( {|| M->__Avg := M->__Avg + 1, ;
                  <v1> := <v1> + <x1> [, <vN> := <vN> + <xN>] }, ;
                  <{for}>, <{while}>, <next>, <rec>, <.rest.> ) ;;
          <v1> := <v1> / M->__Avg [ ; <vN> := <vN> / M->__Avg ]
@@ -516,7 +516,7 @@
                [<noopt: NOOPTIMIZE>] [<mem: MEMORY, TEMPORARY>] ;
                [<filter: USEFILTER>] [<ex: EXCLUSIVE>] => ;
          ordCondSet( <"for">, <{for}>, [<.all.>], <{while}>, ;
-                     <{eval}>, <every>, RECNO(), <next>, <rec>, ;
+                     <{eval}>, <every>, RecNo(), <next>, <rec>, ;
                      [<.rest.>], [<.descend.>],, ;
                      [<.add.>], [<.cur.>], [<.cust.>], [<.noopt.>], ;
                      <"while">, [<.mem.>], [<.filter.>], [<.ex.>] ) ;;
@@ -531,7 +531,7 @@
                [<noopt: NOOPTIMIZE>] [<mem: MEMORY, TEMPORARY>] ;
                [<filter: USEFILTER>] [<ex: EXCLUSIVE>] => ;
          ordCondSet( <"for">, <{for}>, [<.all.>], <{while}>, ;
-                     <{eval}>, <every>, RECNO(), <next>, <rec>, ;
+                     <{eval}>, <every>, RecNo(), <next>, <rec>, ;
                      [<.rest.>], [<.descend.>],, ;
                      [<.add.>], [<.cur.>], [<.cust.>], [<.noopt.>], ;
                      <"while">, [<.mem.>], [<.filter.>], [<.ex.>] ) ;;
@@ -591,9 +591,9 @@
                            [SEND <snd>] [GUISEND <gsnd>] [BITMAPS <bmaps>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail(GetList):Control := _CheckBox_( <v>, <cap>, ;
+         ATail(GetList):Control := _CHECKBOX_( <v>, <cap>, ;
                      <msg>, <clr>, <{fb}>, <{sb}>, <stl>, <bmaps> ) ;;
-         ATail(GetList):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail(GetList):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
          ATail(GetList):Control:Display()
 
@@ -604,10 +604,10 @@
                   [SEND <snd>] [GUISEND <gsnd>] [BITMAP <bmap>] => ;
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail(GetList):Control := _ListBox_( ATail(Getlist):row, ;
+         ATail(GetList):Control := _LISTBOX_( ATail(Getlist):row, ;
                ATail(Getlist):col, <bottom>, <right>, <v>, <items>, <cap>, ;
                <msg>, <clr>, <{fb}>, <{sb}>, <.dd.>, <.sbar.>, <bmap> ) ;;
-         ATail(GetList):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail(GetList):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
          ATail(GetList):Control:Display()
 
@@ -620,9 +620,9 @@
                   [BMPOFF X <bX> Y <bY>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail(GetList):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>,;
+         ATail(GetList):Control := _PUSHBUTT_( <cap>, <msg>, <clr>, <{fb}>,;
                <{sb}>, <stl>, <sX>, <sY>, <cX>, <cY>, <bmap>, <bX>, <bY> ) ;;
-         ATail(GetList):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail(GetList):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
          ATail(GetList):Control:Display()
 
@@ -633,10 +633,10 @@
                   [SEND <snd>] [GUISEND <gsnd>] => ;
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail(GetList):Control := _RadioGrp_( ATail(Getlist):row, ;
+         ATail(GetList):Control := _RADIOGRP_( ATail(Getlist):row, ;
                ATail(Getlist):col, <bottom>, <right>, <v>, <buttons>, <cap>,;
                <msg>, <clr>, <{fb}>, <stl> ) ;;
-         ATail(GetList):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail(GetList):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
          ATail(GetList):Control:Display()
 

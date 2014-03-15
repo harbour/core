@@ -1235,7 +1235,6 @@ STATIC FUNCTION FixFuncCaseFilter( cFileName )
    /* TOFIX: Harbour repo specific */
    STATIC sc_hFileExceptions := { ;
       "ChangeLog.txt" =>, ;  /* not much reason to except this one */
-      "std.ch"        =>, ;  /* compatibility */
       "keywords.prg"  =>, ;  /* test code */
       "c_std.txt"     =>, ;  /* C level doc */
       "locks.txt"     =>, ;  /* C level doc */
