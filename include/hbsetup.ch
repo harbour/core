@@ -52,7 +52,7 @@
 #ifndef HB_SETUP_CH_
 #define HB_SETUP_CH_
 
-/* NOTE: You can fine-tune here, which Clipper features you want to include. */
+/* NOTE: You can fine-tune here, which Cl*pper features you want to include. */
 
 /* #define HB_CLP_STRICT */       /* Enable Cl*pper 5.2e/5.3b strict compatibility */
 #define HB_CLP_UNDOC              /* Enable Cl*pper 5.2e/5.3b undocumented features */

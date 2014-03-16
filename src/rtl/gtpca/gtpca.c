@@ -734,7 +734,7 @@ static const char * hb_gt_pca_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: PC ANSI";
+   return "Terminal: ANSI (PCA)";
 }
 
 static HB_BOOL hb_gt_pca_Suspend( PHB_GT pGT )

@@ -752,7 +752,7 @@ static const char * hb_gt_def_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return "NUL";
 
-   return "Harbour Terminal: NULL";
+   return "Terminal: NULL";
 }
 
 static HB_BOOL hb_gt_def_GetChar( PHB_GT pGT, int iRow, int iCol,

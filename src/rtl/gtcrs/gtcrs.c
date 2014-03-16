@@ -2583,7 +2583,7 @@ static const char * hb_gt_crs_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: nCurses";
+   return "Terminal: nCurses (CRS)";
 }
 
 /* *********************************************************************** */

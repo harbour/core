@@ -8,11 +8,11 @@ PROCEDURE Main()
    LOCAL cWelcome
 
 #if defined( __HBSCRIPT__HBSHELL )
-#  if defined( __PLATFORM__WINDOWS )
+   #if defined( __PLATFORM__WINDOWS )
       hbshell_gtSelect( "GTWVT" )
-#  elif defined( __PLATFORM__UNIX )
+   #elif defined( __PLATFORM__UNIX )
       hbshell_gtSelect( "GTXWC" )
-#  endif
+   #endif
 #endif
 
    IF ! hb_gtInfo( HB_GTI_ISGRAPHIC )

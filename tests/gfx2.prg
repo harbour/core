@@ -15,17 +15,17 @@ PROCEDURE Main()
    LOCAL nRed, nGreen, nBlue
 
 #if defined( __HBSCRIPT__HBSHELL )
-#  if defined( __PLATFORM__WINDOWS )
+   #if defined( __PLATFORM__WINDOWS )
       hbshell_gtSelect( "GTWVT" )
-#  elif defined( __PLATFORM__UNIX )
+   #elif defined( __PLATFORM__UNIX )
       hbshell_gtSelect( "GTXWC" )
-#  endif
+   #endif
 #else
-#  if defined( __PLATFORM__WINDOWS )
+   #if defined( __PLATFORM__WINDOWS )
      REQUEST HB_GT_WVT_DEFAULT
-#  elif defined( __PLATFORM__UNIX )
+   #elif defined( __PLATFORM__UNIX )
      REQUEST HB_GT_XWC_DEFAULT
-#  endif
+   #endif
 #endif
 
    ? "GT" + hb_gtVersion()
@@ -34,7 +34,9 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-// SetMode( 30, 80 )
+#if 0
+   SetMode( 30, 80 )
+#endif
 
    nRed   := hb_gfxMakeColor( 200, 32, 32 )
    nGreen := hb_gfxMakeColor( 32, 200, 32 )

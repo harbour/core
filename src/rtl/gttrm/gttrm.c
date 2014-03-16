@@ -3353,7 +3353,7 @@ static const char * hb_gt_trm_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour terminal driver";
+   return "Terminal: *nix native";
 }
 
 static HB_BOOL hb_gt_trm_Suspend( PHB_GT pGT )

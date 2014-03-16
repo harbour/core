@@ -490,7 +490,7 @@ static const char * hb_gt_std_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Standard stream console";
+   return "Terminal: Standard stream I/O";
 }
 
 static HB_BOOL hb_gt_std_Suspend( PHB_GT pGT )

@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * Video subsystem for Windows using GUI windows instead of Console
+ * Video subsystem for Windows using GDI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
  * based on
@@ -3280,7 +3280,7 @@ static const char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Windows GUI console (WVT)";
+   return "Terminal: Windows native GDI (WVT)";
 }
 
 /* ********************************************************************** */

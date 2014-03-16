@@ -365,12 +365,12 @@
 
 /* LOCK SCHEMES */
 #define DB_DBFLOCK_DEFAULT      0
-#define DB_DBFLOCK_CLIPPER      1   /* default Clipper locking scheme */
+#define DB_DBFLOCK_CLIPPER      1   /* default Cl*pper locking scheme */
 #define DB_DBFLOCK_COMIX        2   /* COMIX and CL53 DBFCDX hyper locking scheme */
 #define DB_DBFLOCK_VFP          3   /* [V]FP, CL52 DBFCDX, SIx3 SIXCDX, CDXLOCK.OBJ */
 #define DB_DBFLOCK_HB32         4   /* Harbour hyper locking scheme for 32bit file API */
 #define DB_DBFLOCK_HB64         5   /* Harbour hyper locking scheme for 64bit file API */
-#define DB_DBFLOCK_CLIPPER2     6   /* extended Clipper locking scheme NTXLOCK2.OBJ */
+#define DB_DBFLOCK_CLIPPER2     6   /* extended Cl*pper locking scheme NTXLOCK2.OBJ */
 
 /* for backward compatibility */
 #ifdef HB_LEGACY_LEVEL5

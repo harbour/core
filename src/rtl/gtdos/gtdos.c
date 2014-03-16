@@ -963,7 +963,7 @@ static const char * hb_gt_dos_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: DOS console";
+   return "Terminal: MS-DOS native";
 }
 
 /* some definitions */

@@ -74,9 +74,9 @@ FUNCTION CallDll32( ... )
    /* Use Windows system .dll calling convention on Windows systems,
       like in original lib. Original .lib was a Windows-only solution.
       [vszakats] */
-#  define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
+   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
 #else
-#  define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
+   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
 #endif
 
 FUNCTION hb_DynaCall1( cFunction, cLibrary, nCount, ... )

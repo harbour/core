@@ -54,9 +54,9 @@
 #include "fileio.ch"
 
 #ifdef __PLATFORM__DOS
-#  define EXTENSION ".htm"
+   #define EXTENSION ".htm"
 #else
-#  define EXTENSION ".html"
+   #define EXTENSION ".html"
 #endif
 
 #define STYLEFILE "hbdoc.css"

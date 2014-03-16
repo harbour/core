@@ -47,7 +47,9 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ? "Host codpage:", cHostCP + ", terminal codepage:", cTermCP
    ?
 
-// hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
+#if 0
+   hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
+#endif
    ?
    FOR i := 0 TO 15
       FOR j := 0 TO 15

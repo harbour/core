@@ -10,15 +10,15 @@
 #define N_LOOP 200000
 
 #ifndef __XHARBOUR__
-#  translate SecondsCPU( => hb_SecondsCPU(
+   #translate SecondsCPU( => hb_SecondsCPU(
 #endif
 #ifdef __XPP__
-#  translate SecondsCPU( => Seconds(
+   #translate SecondsCPU( => Seconds(
 #endif
 #ifdef __HARBOUR__
-#  include "hbclass.ch"
+   #include "hbclass.ch"
 #else
-#  translate hb_BChar( => Chr(
+   #translate hb_BChar( => Chr(
 #endif
 
 PROCEDURE Main()

@@ -713,7 +713,7 @@ static const char * hb_gt_os2_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: OS/2 console";
+   return "Terminal: OS/2 native console";
 }
 
 static HB_BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )

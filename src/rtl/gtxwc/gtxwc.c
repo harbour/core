@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- *    XWindow Console
+ *    X11 (X Window System) console
  * Copyright 2003 - Giancarlo Niccolai <antispam /at/ niccolai.ws>
  * Copyright 2004/2006 - Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *
@@ -153,7 +153,7 @@ typedef struct
    Window window;
    GC gc;
    Colormap colorsmap;
-   WND_COLORS colors[16];
+   WND_COLORS colors[ 16 ];
    Pixmap pm;
    Drawable drw;
 
@@ -4939,7 +4939,7 @@ static const char * hb_gt_xwc_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: XWindow GUI console (XWC)";
+   return "Terminal: X11 (XWC)";
 }
 
 /* *********************************************************************** */

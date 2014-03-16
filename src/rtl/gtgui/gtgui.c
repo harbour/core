@@ -250,7 +250,7 @@ static const char * hb_gt_gui_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Windows dummy console for GUI programs";
+   return "Terminal: Windows stub for pure GUI apps (GUI)";
 }
 
 /* *********************************************************************** */
