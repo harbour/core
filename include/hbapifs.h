@@ -304,6 +304,9 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
  */
 
 #if defined( _HB_FILE_IMPLEMENTATION_ ) || defined( _HB_FILE_INTERNAL_ )
+
+#  define HB_FILE_TYPE_MAX    64
+
    struct _HB_FILE;
    typedef struct _HB_FILE * PHB_FILE;
 

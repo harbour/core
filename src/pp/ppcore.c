@@ -769,6 +769,8 @@ static HB_BOOL hb_pp_canQuote( HB_BOOL fQuote, char * pBuffer, HB_SIZE nLen,
             cQuote = '\'';
          else if( pBuffer[ n ] == '\'' || pBuffer[ n ] == '"' )
             cQuote = pBuffer[ n ];
+         else if( HB_PP_ISILLEGAL( pBuffer[ n ] ) )
+            fQuote = HB_TRUE;
       }
       ++n;
    }
