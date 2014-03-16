@@ -1092,7 +1092,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    HB_BYTE    bType;
    UNSIGNED16 bValidExpr;
    HB_BOOL    bKeyADS, bForADS, bWhileADS;
-   ADSHANDLE  hIndex = NULL;
+   ADSHANDLE  hIndex = ( ADSHANDLE ) 0;
 
    bForADS = bWhileADS = HB_TRUE;
 
@@ -1130,8 +1130,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    }
 
    if( pArea->adsarea.area.lpdbOrdCondInfo &&
-       ( bForADS && pArea->adsarea.area.lpdbOrdCondInfo->abFor || 
-         bWhileADS && pArea->adsarea.area.lpdbOrdCondInfo->abWhile ) )
+       ( ( bForADS && pArea->adsarea.area.lpdbOrdCondInfo->abFor ) ||
+         ( bWhileADS && pArea->adsarea.area.lpdbOrdCondInfo->abWhile ) ) )
    {
       /* We can use server side indexing to filter records. This improves speed */
       UNSIGNED32 u32RetVal;
