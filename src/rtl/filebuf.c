@@ -56,12 +56,10 @@
 #include "hbthread.h"
 #include "hbvm.h"
 
-#if ! defined( HB_OS_WIN_CE )
+#if defined( HB_OS_UNIX )
 #  include <sys/types.h>
 #  include <sys/stat.h>
-#  if defined( HB_OS_UNIX )
-#     include <unistd.h>
-#  endif
+#  include <unistd.h>
 #endif
 
 
@@ -897,8 +895,6 @@ static PHB_FILE hb_fileposNew( PHB_FILE pFile )
 }
 
 #endif /* HB_OS_UNIX */
-
-#define HB_FILE_TYPE_MAX  64
 
 static const HB_FILE_FUNCS * s_pFileTypes[ HB_FILE_TYPE_MAX ];
 static int s_iFileTypes = 0;
