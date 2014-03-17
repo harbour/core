@@ -8,6 +8,8 @@
 
 -stop{pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm|(win&clang)}
 
+-deppkgname=allegro:allegro-devel{rpm}
+-deppkgname=allegro:liballegro4.2-dev{deb}
 -depkeyhead=allegro:allegro.h
 -depcontrol=allegro:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=allegro:${HB_WITH_ALLEGRO}

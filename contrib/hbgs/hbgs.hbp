@@ -7,6 +7,9 @@
 
 -stop{dos|wce}
 
+-deppkgname=gs:ghostscript-devel{rpm}
+-deppkgname=gs:libgs-dev{deb}
+-deppkgname=gs:ghostscript{homebrew}
 -depkeyhead=gs:iapi.h
 -depcontrol=gs:${HB_WITH_GS}
 -depincpath=gs:/usr/include
@@ -16,6 +19,8 @@
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll64.dll{win&x86_64}
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll2.dll{os2}
 -depimplibd=gs:gs
+
+"-echo=Hint: Point HB_WITH_GS_BIN envvar to the Ghostscript .dll directory{(win|os2)&!HB_WITH_GS_BIN}"
 
 -hbx=${hb_name}
 

@@ -3733,7 +3733,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
 
          IF dep_split_arg( hbmk, tmp1, @cParam, @tmp )
-            hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aControlMacro ] := MacroList( tmp )
+            AAddNewA( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aControlMacro ], MacroList( tmp ) )
          ENDIF
 
       CASE hb_LeftEq( cParam, "-depincroot=" )
@@ -9674,7 +9674,6 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
 STATIC FUNCTION dep_evaluate( hbmk )
 
    LOCAL dep
-   LOCAL tmp
 
    LOCAL hREQ := { => }
    LOCAL hOPT := { => }
@@ -9704,7 +9703,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
             ENDIF
          ENDIF
          IF dep[ _HBMKDEP_lOptional ]
-            hOPT[ dep[ _HBMKDEP_cName ] ] := dep[ _HBMKDEP_aControlMacro ]
+            hOPT[ dep[ _HBMKDEP_cName ] ] := dep
          ELSE
             /* Do not issue a missing dependency error (just warning) for non-*nix
                platforms if no manual dependency location and no local dir were
@@ -9714,42 +9713,58 @@ STATIC FUNCTION dep_evaluate( hbmk )
             IF HBMK_ISPLAT( "win|wce|os2|dos" ) .AND. ;
                Empty( dep[ _HBMKDEP_cControl ] ) .AND. ;
                Empty( dep[ _HBMKDEP_aINCPATHLOCAL ] )
-               hWRN[ dep[ _HBMKDEP_cName ] ] := dep[ _HBMKDEP_aControlMacro ]
+               hWRN[ dep[ _HBMKDEP_cName ] ] := dep
             ELSE
-               hREQ[ dep[ _HBMKDEP_cName ] ] := dep[ _HBMKDEP_aControlMacro ]
+               hREQ[ dep[ _HBMKDEP_cName ] ] := dep
             ENDIF
          ENDIF
       ENDIF
    NEXT
 
    IF hbmk[ _HBMK_lInfo ]
-      FOR EACH tmp IN hOPT
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing optional dependency: %1$s" ), tmp:__enumKey() ) )
-         #if ! defined( __PLATFORM__UNIX )
-            IF ! Empty( tmp )
-               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
-            ENDIF
-         #endif
+      FOR EACH dep IN hOPT
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing optional dependency: %1$s" ), dep:__enumKey() ) )
+         dep_show_hint( hbmk, dep )
       NEXT
    ENDIF
 
-   FOR EACH tmp IN hREQ
-      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Missing dependency: %1$s" ), tmp:__enumKey() ) )
-      #if ! defined( __PLATFORM__UNIX )
-         IF ! Empty( tmp )
-            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
-         ENDIF
-      #endif
+   FOR EACH dep IN hREQ
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Missing dependency: %1$s" ), dep:__enumKey() ) )
+      dep_show_hint( hbmk, dep )
    NEXT
 
-   FOR EACH tmp IN hWRN
-      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing dependency: %1$s" ), tmp:__enumKey() ) )
-      IF ! Empty( tmp )
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
-      ENDIF
+   FOR EACH dep IN hWRN
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing dependency: %1$s" ), dep:__enumKey() ) )
+      dep_show_hint( hbmk, dep )
    NEXT
 
    RETURN Empty( hREQ ) .AND. Empty( hWRN ) .AND. ! lAnyForcedOut
+
+STATIC PROCEDURE dep_show_hint( hbmk, dep )
+
+   LOCAL aPKG := AClone( dep[ _HBMKDEP_aPKG ] )
+   LOCAL tmp
+
+   /* do not show the dependency's name as suggested package name */
+   FOR EACH tmp IN aPKG
+      IF tmp == dep[ _HBMKDEP_cName ]
+         hb_ADel( aPKG, tmp:__enumIndex(), .T. )
+         EXIT
+      ENDIF
+   NEXT
+
+   IF ! Empty( aPKG )
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Install %1$s package(s): %2$s" ), hbmk[ _HBMK_cPKGM ], ArrayToList( aPKG, ", " ) ) )
+   ENDIF
+   IF ! Empty( dep[ _HBMKDEP_aControlMacro ] )
+      /* show envvars on *nix only if we have no knowledge about the package names */
+      IF ! hb_Version( HB_VERSION_UNIX_COMPAT ) .OR. ;
+         Empty( dep[ _HBMKDEP_aPKG ] )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( dep[ _HBMKDEP_aControlMacro ], ", " ) ) )
+      ENDIF
+   ENDIF
+
+   RETURN
 
 STATIC PROCEDURE dep_try_detection( hbmk, dep )
 
@@ -10745,6 +10760,16 @@ STATIC PROCEDURE AAddNew( array, xItem )
    IF AScan( array, {| tmp | tmp == xItem } ) == 0
       AAdd( array, xItem )
    ENDIF
+
+   RETURN
+
+STATIC PROCEDURE AAddNewA( array, aItem )
+
+   LOCAL xItem
+
+   FOR EACH xItem IN aItem
+      AAddNew( array, xItem )
+   NEXT
 
    RETURN
 
@@ -11871,7 +11896,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
          IF dep_split_arg( hbmk, cLine, @cName, @cLine )
             hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_cControl ] := AllTrim( MacroProc( hbmk, cLine, cFileName ) )
-            hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aControlMacro ] := MacroList( cLine )
+            AAddNewA( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aControlMacro ], MacroList( cLine ) )
             AAddNew( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
          ENDIF
 
