@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,6 +49,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
+#include "../hbpgsql/hbpgsql.h"
 
 #include "hbrddsql.h"
 
@@ -83,6 +84,7 @@
 typedef struct
 {
    PGconn * pConn;
+   int existingConnection;
 } SDDCONN;
 
 typedef struct
@@ -96,10 +98,11 @@ static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE pgsqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea );
+static HB_ERRCODE pgsqlGoto( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
-static SDDNODE pgsqldd = {
+static SDDNODE s_pgsqldd = {
    NULL,
    "POSTGRESQL",
    ( SDDFUNC_CONNECT ) pgsqlConnect,
@@ -107,7 +110,7 @@ static SDDNODE pgsqldd = {
    ( SDDFUNC_EXECUTE ) pgsqlExecute,
    ( SDDFUNC_OPEN ) pgsqlOpen,
    ( SDDFUNC_CLOSE ) pgsqlClose,
-   ( SDDFUNC_GOTO ) NULL,
+   ( SDDFUNC_GOTO ) pgsqlGoto,
    ( SDDFUNC_GETVALUE ) pgsqlGetValue,
    ( SDDFUNC_GETVARLEN ) NULL
 };
@@ -117,7 +120,7 @@ static void hb_pgsqldd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &pgsqldd ) )
+   if( ! hb_sddRegister( &s_pgsqldd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
@@ -167,37 +170,56 @@ static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSub
 
 static HB_ERRCODE pgsqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
+   void ** hbConn;
    PGconn *       pConn;
    ConnStatusType status;
    const char *   pszHost;
+   PHB_ITEM       pItem2;
+   int existingConnection = 0;
 
-   pszHost = hb_arrayGetCPtr( pItem, 2 );
-   if( pszHost && ( strncmp( pszHost, "postgresql://", 13 ) == 0 || strchr( pszHost, '=' ) ) )
-      pConn = PQconnectdb( pszHost );
-   else
-      pConn = PQsetdbLogin( pszHost, hb_arrayGetCPtr( pItem, 6 ), hb_arrayGetCPtr( pItem, 7 ), hb_arrayGetCPtr( pItem, 8 ), hb_arrayGetCPtr( pItem, 5 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ) );
+   pItem2 = hb_itemArrayGet( pItem, 2 );
+
+   if HB_IS_POINTER( pItem2 )  {
+       //existing connection
+       hbConn = (void **) hb_itemGetPtr( pItem2 );
+       pConn = (PGconn *) *hbConn;
+       existingConnection = 1;
+   } else {
+
+      pszHost = hb_arrayGetCPtr( pItem, 2 );
+      //printf("making new connection on %s\n", pszHost);
+      if( pszHost && ( strncmp( pszHost, "postgresql://", 13 ) == 0 || strchr( pszHost, '=' ) ) )
+         pConn = PQconnectdb( pszHost );
+      else
+         pConn = PQsetdbLogin( pszHost, hb_arrayGetCPtr( pItem, 6 ), hb_arrayGetCPtr( pItem, 7 ), hb_arrayGetCPtr( pItem, 8 ), hb_arrayGetCPtr( pItem, 5 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ) );
+   }
 
    if( ! pConn )   /* Low memory, etc */
    {
       /* TODO: error */
+      printf("pConn not OK ?!\n");
       return HB_FAILURE;
    }
    status = PQstatus( pConn );
    if( status != CONNECTION_OK )
    {
       /* TODO: error */
+      printf("pConn NOT CONNECTION_OK %d?!\n", status);
       PQfinish( pConn );
       return HB_FAILURE;
    }
    pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
    ( ( SDDCONN * ) pConnection->pSDDConn )->pConn = pConn;
+   ( ( SDDCONN * ) pConnection->pSDDConn )->existingConnection = existingConnection;
    return HB_SUCCESS;
 }
 
 
 static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION * pConnection )
 {
-   PQfinish( ( ( SDDCONN * ) pConnection->pSDDConn )->pConn );
+  if ( ! ( ( SDDCONN * ) pConnection->pSDDConn )->existingConnection )
+      PQfinish( ( ( SDDCONN * ) pConnection->pSDDConn )->pConn );
+
    hb_xfree( pConnection->pSDDConn );
    return HB_SUCCESS;
 }
@@ -390,7 +412,9 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             bError = HB_TRUE;
             break;
       }
-      /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", pFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
+#if 0
+      HB_TRACE( HB_TR_ALWAYS, ( "field:%s type=%d size=%d format=%d mod=%d err=%d", pFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ), PQfmod( pResult, uiCount ), bError ) );
+#endif
 
       if( ! bError )
       {
@@ -441,9 +465,10 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
 
-/*       if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
+#if 0
+         if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
             pFieldInfo.uiType = HB_IT_LONG;
- */
+#endif
 
          if( ! bError )
             bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
@@ -469,7 +494,9 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
-   *pArea->pRow = pItemEof;
+   pArea->ulRecMax = pArea->ulRecCount + 1;
+
+   pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
    pArea->fFetched       = HB_TRUE;
 
@@ -493,6 +520,25 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 }
 
 
+static HB_ERRCODE pgsqlGoto( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
+{
+   if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
+   {
+      pArea->pRecord      = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
+      pArea->fPositioned  = HB_FALSE;
+   }
+   else
+   {
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
+      pArea->fPositioned  = HB_TRUE;
+   }
+
+   return HB_SUCCESS;
+}
+
+
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -507,12 +553,17 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    pField = pArea->area.lpFields + uiIndex;
 
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
+   {
+      hb_itemClear( pItem );
       return HB_SUCCESS;
+   }
 
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
    ulLen  = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
 
-/*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen ); */
+#if 0
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldget recno=%d index=%d value=%s len=%d", pFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), pArea->ulRecNo, uiIndex, pValue, ulLen ) );
+#endif
 
    switch( pField->uiType )
    {
