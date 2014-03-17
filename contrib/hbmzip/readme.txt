@@ -1,9 +1,3 @@
-Name:                  minizip library [multiplatform, free, open-source]
-URL:                   http://zlib.net/
-                       http://winimage.com/zLibDll/minizip.html
-Environment variable:  HB_WITH_MINIZIP=C:\zlib\contrib\minizip (defaults to locally hosted version if not found)
-
-
 This folder contains compression related files including:
    * wrapper functions for minizip
    * some additionl functions to provide a higher level API for zip files

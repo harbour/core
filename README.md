@@ -412,7 +412,8 @@ locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
 
-See contrib-specific dependencies in their own local readme.txt.
+See contrib-specific dependencies and build notes in the projects'
+.hbp file and find occasional link notes inside their .hbc files.
 
 
 > NOTES:

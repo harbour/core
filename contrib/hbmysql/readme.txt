@@ -1,9 +1,5 @@
-See component details in readme.txt of sddmy contrib.
-
-
-                +---------------------------------------------------------+
-                | 2001-11-22 - Harbour MySQL access classes - readme file |
-                +---------------------------------------------------------+
+2001-11-22 - Harbour MySQL access classes - readme
+==================================================
 
 
 This is work in progress, so it has to be fully tested and needs a few more methods to cover MySQL possibilities.
@@ -14,9 +10,8 @@ recompile programs in utils and tests subdirs just to test everything)
 and be sure to have MySQL dynamic libraries configured.
 
 
-                              +---------------------+
-                              |  Available Classes  |
-                              +---------------------+
+Available Classes
+=================
 
 
 TMySQLServer:  manages access to a MySQL server and returns an oServer object to which you'll send all your

@@ -1,9 +1,3 @@
-Name:                  Advantage Client Engine API [win, linux, free, closed-source]
-URL:                   https://www.sap.com/pc/tech/database/software/advantage-database-server/index.html
-Environment variable:  HB_WITH_ADS=C:\ads\acesdk
-Install (Linux):       Download 'Advantage Client Engine API for Linux' (f.e. 'aceapi-11.10.0.10.tar.gz')
-
-
 RDD for Advantage Database Server
 Alexander Kresin <alex@belacy.belgorod.su>
 

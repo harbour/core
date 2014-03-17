@@ -9,6 +9,13 @@
 
 -pic
 
+# NOTE: You can override autodetection of QT 'moc' tool by using HB_QTPATH and
+#       optionally HB_QTPOSTFIX envvars. This may only be necessary on some *nix
+#       systems. F.e.:
+#
+#       HB_QTPATH=/opt/qt5/bin/
+#       HB_QTPOSTFIX=
+
 -plugin=hbmk2_qtmoc.hb
 
 -deppkgname=qt5:libqt5-dev{deb}
