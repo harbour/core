@@ -9764,7 +9764,12 @@ STATIC PROCEDURE dep_show_hint( hbmk, dep )
    LOCAL tmp
 
    IF ! Empty( dep[ _HBMKDEP_aPKG ] ) .AND. ! Empty( hbmk[ _HBMK_cPKGM ] )
-      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Install %1$s package(s): %2$s" ), hbmk[ _HBMK_cPKGM ], ArrayToList( dep[ _HBMKDEP_aPKG ], ", " ) ) )
+      _hbmk_OutErr( hbmk, hb_StrFormat( ;
+         iif( Len( dep[ _HBMKDEP_aPKG ] ) > 1, ;
+            I_( "Hint: Install one of these %1$s packages: %2$s" ), ;
+            I_( "Hint: Install this %1$s package: %2$s" ) ), ;
+         hbmk[ _HBMK_cPKGM ], ;
+         ArrayToList( dep[ _HBMKDEP_aPKG ], ", " ) ) )
    ENDIF
 
    /* show envvars/urls on *nix _only_ if we have no knowledge about the package names */
