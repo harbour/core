@@ -573,23 +573,24 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
 #define _HBMKDEP_cName          1
-#define _HBMKDEP_aPKG           2
-#define _HBMKDEP_aKeyHeader     3
-#define _HBMKDEP_cControl       4
-#define _HBMKDEP_aControlMacro  5
-#define _HBMKDEP_lOptional      6
-#define _HBMKDEP_cINCROOT       7
-#define _HBMKDEP_aINCPATH       8
-#define _HBMKDEP_aINCPATHLOCAL  9
-#define _HBMKDEP_aIMPLIBSRC     10
-#define _HBMKDEP_cIMPLIBDST     11
-#define _HBMKDEP_cFound         12
-#define _HBMKDEP_lFound         13
-#define _HBMKDEP_lFoundLOCAL    14
-#define _HBMKDEP_cVersion       15
-#define _HBMKDEP_lForced        16
-#define _HBMKDEP_lDetected      17
-#define _HBMKDEP_MAX_           17
+#define _HBMKDEP_aURLBase       2
+#define _HBMKDEP_aPKG           3
+#define _HBMKDEP_aKeyHeader     4
+#define _HBMKDEP_cControl       5
+#define _HBMKDEP_aControlMacro  6
+#define _HBMKDEP_lOptional      7
+#define _HBMKDEP_cINCROOT       8
+#define _HBMKDEP_aINCPATH       9
+#define _HBMKDEP_aINCPATHLOCAL  10
+#define _HBMKDEP_aIMPLIBSRC     11
+#define _HBMKDEP_cIMPLIBDST     12
+#define _HBMKDEP_cFound         13
+#define _HBMKDEP_lFound         14
+#define _HBMKDEP_lFoundLOCAL    15
+#define _HBMKDEP_cVersion       16
+#define _HBMKDEP_lForced        17
+#define _HBMKDEP_lDetected      18
+#define _HBMKDEP_MAX_           18
 
 #define _EXIT_OK                0
 #define _EXIT_UNKNPLAT          1
@@ -1412,6 +1413,14 @@ STATIC FUNCTION DetectPackageManager()
       OTHERWISE
          RETURN "rpm"
       ENDCASE
+   /* extend below as needed */
+   #elif defined( __PLATFORM__BSD )
+   #elif defined( __PLATFORM__SUNOS )
+      RETURN "pkg"
+   #elif defined( __PLATFORM__HPUX )
+   #elif defined( __PLATFORM__CYGWIN )
+      RETURN "cygwin"
+   #elif defined( __PLATFORM__AIX )
    #endif
 
    RETURN ""
@@ -3698,6 +3707,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
 
             hbmk[ _HBMK_hAUTOHBC ][ AllTrim( StrTran( tmp, "\", "/" ) ) ] := cParam
+         ENDIF
+
+      CASE hb_LeftEq( cParam, "-depurlbase=" )
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depurlbase=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aURLBase ], AllTrim( tmp ) )
          ENDIF
 
       CASE hb_LeftEq( cParam, "-deppkgname=" )
@@ -9579,6 +9595,7 @@ STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
       IF !( cName $ hbmk[ _HBMK_hDEP ] )
          dep := Array( _HBMKDEP_MAX_ )
          dep[ _HBMKDEP_cName ] := cName
+         dep[ _HBMKDEP_aURLBase ] := {}
          dep[ _HBMKDEP_aPKG ] := {}
          dep[ _HBMKDEP_aKeyHeader ] := {}
          dep[ _HBMKDEP_cControl ] := NIL
@@ -9626,6 +9643,7 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
       dep[ _HBMKDEP_cControl ] := cControlL
       dep[ _HBMKDEP_aKeyHeader ] := {}
       dep[ _HBMKDEP_aPKG ] := {}
+      dep[ _HBMKDEP_aURLBase ] := {}
       dep[ _HBMKDEP_cINCROOT ] := ""
       dep[ _HBMKDEP_aINCPATH ] := {}
       dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
@@ -9648,6 +9666,7 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
    CASE cControlL == "force"
       dep[ _HBMKDEP_aKeyHeader ] := {}
       dep[ _HBMKDEP_aPKG ] := {}
+      dep[ _HBMKDEP_aURLBase ] := {}
       dep[ _HBMKDEP_cINCROOT ] := ""
       dep[ _HBMKDEP_aINCPATH ] := {}
       dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
@@ -9747,7 +9766,7 @@ STATIC PROCEDURE dep_show_hint( hbmk, dep )
 
    /* do not show the dependency's name as suggested package name */
    FOR EACH tmp IN aPKG
-      IF tmp == dep[ _HBMKDEP_cName ]
+      IF tmp == Lower( dep[ _HBMKDEP_cName ] )
          hb_ADel( aPKG, tmp:__enumIndex(), .T. )
          EXIT
       ENDIF
@@ -9756,11 +9775,19 @@ STATIC PROCEDURE dep_show_hint( hbmk, dep )
    IF ! Empty( aPKG )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Install %1$s package(s): %2$s" ), hbmk[ _HBMK_cPKGM ], ArrayToList( aPKG, ", " ) ) )
    ENDIF
-   IF ! Empty( dep[ _HBMKDEP_aControlMacro ] )
-      /* show envvars on *nix only if we have no knowledge about the package names */
-      IF ! hb_Version( HB_VERSION_UNIX_COMPAT ) .OR. ;
-         Empty( dep[ _HBMKDEP_aPKG ] )
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( dep[ _HBMKDEP_aControlMacro ], ", " ) ) )
+
+   /* show envvars/urls on *nix _only_ if we have no knowledge about the package names */
+   IF ! hb_Version( HB_VERSION_UNIX_COMPAT ) .OR. ;
+      Empty( dep[ _HBMKDEP_aPKG ] )
+
+      IF ! Empty( dep[ _HBMKDEP_aControlMacro ] )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Point envvar %1$s to the directory containing header %2$s" ), ;
+            ArrayToList( dep[ _HBMKDEP_aControlMacro ], " " + I_( "or" ) + " " ), ;
+            ArrayToList( dep[ _HBMKDEP_aKeyHeader ], " " + I_( "or" ) + " ",,, "'", "'" ) ) )
+      ENDIF
+      IF ! Empty( dep[ _HBMKDEP_aURLBase ] )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Project URL(s): %1$s" ), ;
+            ArrayToList( dep[ _HBMKDEP_aURLBase ] ) ) )
       ENDIF
    ENDIF
 
@@ -11866,6 +11893,13 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       CASE hb_LeftEq( cLineL, "env="          ) ; cLine := SubStr( cLine, Len( "env="          ) + 1 )
 
          ProcEnvOption( cLine )
+
+      CASE hb_LeftEq( cLineL, "depurlbase="   ) ; cLine := SubStr( cLine, Len( "depurlbase="   ) + 1 )
+
+         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
+            cLine := MacroProc( hbmk, cLine, cFileName )
+            AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aURLBase ], StrStripQuote( AllTrim( cLine ) ) )
+         ENDIF
 
       CASE hb_LeftEq( cLineL, "deppkgname="   ) ; cLine := SubStr( cLine, Len( "deppkgname="   ) + 1 )
 
@@ -16981,6 +17015,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-hbx[-]"            , H_( "update (or don't) .hbx file specified in -hbx= option (default: update)" ) }, ;
       { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. (EXPERIMENTAL)" ) }, ;
       NIL, ;
+      { "-depurlbase=<d:u>"      , I_( "<d> is the name of the dependency. <u> is the URL of the project. Can be specified multiple times." ) }, ;
       { "-deppkgname=<d:n>"      , I_( "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times." ) }, ;
       { "-depkeyhead=<d:h>"      , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified." ) }, ;
       { "-depoptional=<d:f>"     , I_( "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) }, ;
@@ -17236,7 +17271,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "{<compiler>}"            , I_( "target C compiler. Where <compiler> can be any value accepted by -comp= option." ) }, ;
       { "{<cpu>}"                 , I_( "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh" ) }, ;
       { "{<targettype>}"          , I_( "build target type. Where <targettype> is any of the values returned by macro variable ${hb_targettype}." ) }, ;
-      { "{<package-manager>}"     , I_( "package manager. Where <package-manager> can be any of: deb, rpm, portage, homebrew, rudix, macports, fink" ) }, ;
+      { "{<package-manager>}"     , I_( "package manager. Where <package-manager> can be any of: deb, rpm, portage, homebrew, rudix, macports, fink, pkg, cygwin" ) }, ;
       { "{mt}"                    , H_( "build target is multi-threaded (see -mt option)" ) }, ;
       { "{st}"                    , H_( "build target is single-threaded (see -st option)" ) }, ;
       { "{gui}"                   , I_( "GUI target (see -gui option)" ) }, ;
@@ -17323,6 +17358,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "gt=<name>"         , hb_StrFormat( H_( "same as %1$s option" ), "-gt<name>"         ) }, ;
       { "gtdef=<name>"      , H_( "set the default GT to be used" ) }, ;
       { "env="              , hb_StrFormat( I_( "same as %1$s option" ), "-env:"             ) }, ;
+      { "depurlbase="       , hb_StrFormat( I_( "same as %1$s option" ), "-depurlbase="      ) }, ;
       { "deppkgname="       , hb_StrFormat( I_( "same as %1$s option" ), "-deppkgname="      ) }, ;
       { "depkeyhead="       , hb_StrFormat( I_( "same as %1$s option" ), "-depkeyhead="      ) }, ;
       { "depoptional="      , hb_StrFormat( I_( "same as %1$s option" ), "-depoptional="     ) }, ;

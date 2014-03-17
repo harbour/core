@@ -2,7 +2,6 @@ Name:                  Advantage Client Engine API [win, linux, free, closed-sou
 URL:                   http://www.sybase.com/products/databasemanagement/advantagedatabaseserver/client-engine-api
 Environment variable:  HB_WITH_ADS=C:\ads\acesdk
 Install (Linux):       Download 'Advantage Client Engine API for Linux' (f.e. 'aceapi-11.10.0.10.tar.gz')
-mpkg_rpm.sh option:    --with ads
 
 
 RDD for Advantage Database Server

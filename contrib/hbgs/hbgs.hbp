@@ -7,6 +7,8 @@
 
 -stop{dos|wce}
 
+-depurlbase=gs:http://ghostscript.com/
+-depurlbase=gs:http://pages.cs.wisc.edu/~ghost/
 -deppkgname=gs:ghostscript-devel{rpm}
 -deppkgname=gs:libgs-dev{deb}
 -deppkgname=gs:ghostscript{homebrew}

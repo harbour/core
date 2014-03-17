@@ -6,5 +6,4 @@ Environment variable:  HB_WITH_OPENSSL=C:\openssl\include
 Install (debian):      sudo apt-get install libssl-dev
 Install (rpm):         openssl-devel
 Install (OS X):        brew install openssl
-mpkg_rpm.sh option:    --with openssl
 Options:               HB_STATIC_OPENSSL=yes

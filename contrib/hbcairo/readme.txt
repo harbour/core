@@ -4,4 +4,3 @@ Environment variable:  HB_WITH_CAIRO=C:\cairo\include\cairo
 Install (debian):      sudo apt-get install libcairo2-dev
 Install (rpm):         cairo-devel
 Install (OS X):        brew install cairo
-mpkg_rpm.sh option:    --with cairo

@@ -3,7 +3,6 @@ URL:                   http://cups.org/
 Environment variable:  HB_WITH_CUPS= (on *nix only)
 Install (debian):      sudo apt-get install libcups2-dev
 Install (rpm):         libcups2-devel
-mpkg_rpm.sh option:    --with cups
 
 
 hbcups provides access to the CUPS printing library.

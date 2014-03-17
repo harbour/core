@@ -4,7 +4,6 @@ Environment variable:  HB_WITH_FREEIMAGE=C:\FreeImage\Dist
 Install (debian):      sudo apt-get install libfreeimage-dev
 Install (rpm):         freeimage-devel
 Install (OS X):        brew install freeimage
-mpkg_rpm.sh option:    --with freeimage
 
 
 USAGE
