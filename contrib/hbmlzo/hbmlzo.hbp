@@ -5,6 +5,7 @@
 
 -w3 -es2
 
+-depurlbase=minilzo:http://www.oberhumer.com/opensource/lzo/
 -depkeyhead=minilzo:minilzo.h
 -depcontrol=minilzo:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=minilzo:${HB_WITH_MINILZO}

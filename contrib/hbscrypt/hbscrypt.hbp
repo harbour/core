@@ -9,6 +9,7 @@
 
 -cflag=-DHAVE_CONFIG_H
 
+-depurlbase=scrypt:https://www.tarsnap.com/scrypt/
 # Harbour specific short filename
 -depkeyhead=scrypt:scrypt_p.h
 -depcontrol=scrypt:local{HB_BUILD_3RDEXT='no'}

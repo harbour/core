@@ -7,6 +7,7 @@
 
 -stop{!win}
 
+-depurlbase=blat:http://www.blat.net/
 -depoptional=blat:yes{!hbdyn}
 -depkeyhead=blat:blat.h
 -depcontrol=blat:${HB_WITH_BLAT}

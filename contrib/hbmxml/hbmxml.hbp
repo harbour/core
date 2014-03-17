@@ -5,6 +5,7 @@
 
 -w3 -es2
 
+-depurlbase=mxml:http://www.minixml.org
 -depkeyhead=mxml:mxml.h
 -depcontrol=mxml:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=mxml:${HB_WITH_MXML}

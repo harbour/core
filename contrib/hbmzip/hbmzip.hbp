@@ -8,6 +8,8 @@
 # localtime_r, gmtime_r
 -c=gnu90
 
+-depurlbase=minizip:http://zlib.net/
+-depurlbase=minizip:http://winimage.com/zLibDll/minizip.html
 # component named libzip also has a header
 # named zip.h, so we look for unzip.h to detect minizip
 -depkeyhead=minizip:unzip.h
@@ -19,6 +21,7 @@
 -depfinish=minizip
 
 # This is a dependency of minizip
+-depurlbase=zlib:http://zlib.net/
 -depkeyhead=zlib:zlib.h
 -depcontrol=zlib:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=zlib:${HB_WITH_ZLIB}
