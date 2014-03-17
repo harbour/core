@@ -1615,27 +1615,27 @@ Supported shells per host platforms:
 
         MS-DOS binary + source:
 
-         * <ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/>
-         * <ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip>
-         * <ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip>
+         * <http://www.delorie.com/pub/djgpp/beta/v2gnu/>
+         * <http://www.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip>
+         * <http://www.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip>
           <br />(included in Harbour as [dos-make.exe](dos-make.exe))
 
         OS/2 binary + source (3.81r3 or upper):
 
-         * <ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r3-bin-static.zip>
-         * <ftp://hobbes.nmsu.edu/pub/os2/dev/util/>
+         * <http://hobbes.nmsu.edu/download/pub/os2/dev/util/make-3.81-r3-bin-static.zip>
+         * <http://hobbes.nmsu.edu/h-browse.php?dir=/pub/os2/dev/util>
           <br />(included in Harbour as [os2-make.exe](os2-make.exe))
      * GNU core utils (mkdir, rm, cp, echo)
 
         MS-DOS binary + source:
 
-         * <ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/>
-         * <ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip>
-         * <ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip>
-         * <ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/shl2011b.zip>
-         * <ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/shtl208s.zip>
-         * <ftp://ftp.delorie.com/pub/djgpp/current/v2/djdev203.zip>
-         * <ftp://ftp.delorie.com/pub/djgpp/current/v2/djlsr203.zip>
+         * <http://www.delorie.com/pub/djgpp/current/v2gnu/>
+         * <http://www.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip>
+         * <http://www.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip>
+         * <http://www.delorie.com/pub/djgpp/current/v2gnu/shl2011b.zip>
+         * <http://www.delorie.com/pub/djgpp/current/v2gnu/shtl208s.zip>
+         * <http://www.delorie.com/pub/djgpp/current/v2/djdev203.zip>
+         * <http://www.delorie.com/pub/djgpp/current/v2/djlsr203.zip>
           <br />(included in Harbour as [dosmkdir.exe](config/dosmkdir.exe), [dosrm.exe](config/dosrm.exe), [doscp.exe](config/doscp.exe), [dosecho.exe](config/dosecho.exe))
 
         OS/2 binary:

@@ -116,7 +116,7 @@ PROCEDURE Main( cDL, cUL )
 
       WAIT
 
-      hb_default( @cDL, "ftp://ftp.cisco.com/pub/mibs/README-MIB.txt" )
+      hb_default( @cDL, "ftp://ftp.mozilla.org/README" )
 
       /* Now let's download to a file */
 
@@ -153,7 +153,7 @@ PROCEDURE Main( cDL, cUL )
 
       WAIT
 
-      hb_default( @cDL, "ftp://ftp.cisco.com/" )
+      hb_default( @cDL, "ftp://ftp.mozilla.org/" )
 
       /* Now let's download a dirlist to memory */
 

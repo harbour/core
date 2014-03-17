@@ -8,7 +8,7 @@
  * NO COPYRIGHT - THIS IS 100% IN THE PUBLIC DOMAIN
  *
  * The original unmodified version is available at:
- *    ftp://ftp.funet.fi/pub/crypt/hash/sha/sha1.c
+ *    http://www.nic.funet.fi/pub/crypt/hash/sha/sha1.c
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE

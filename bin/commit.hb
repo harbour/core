@@ -1046,40 +1046,6 @@ STATIC FUNCTION StripCComments( cFile )
 
    RETURN cFile
 
-/* retains positions in file */
-/* similar to StripCComments() but gathers the comments in a new string */
-STATIC FUNCTION GetCComments( cFile )
-
-   LOCAL nPos := 1
-   LOCAL aHits := {}
-   LOCAL tmp
-   LOCAL tmp1
-   LOCAL lStart := .T.
-
-   LOCAL cComments
-
-   /* bare bones */
-   DO WHILE ( tmp := hb_BAt( iif( lStart, "/*", "*/" ), cFile, nPos ) ) > 0
-      AAdd( aHits, tmp + iif( lStart, 0, 2 ) )
-      nPos := tmp
-      lStart := ! lStart
-   ENDDO
-
-   /* unbalanced */
-   IF Len( aHits ) % 2 != 0
-      AAdd( aHits, hb_BLen( cFile ) )
-   ENDIF
-
-   cComments := Space( hb_BLen( cFile ) )
-
-   FOR tmp := 1 TO Len( aHits ) STEP 2
-      FOR tmp1 := aHits[ tmp ] TO aHits[ tmp + 1 ]
-         hb_BPoke( @cComments, tmp1, hb_BPeek( cFile, tmp1 ) )
-      NEXT
-   NEXT
-
-   RETURN cComments
-
 STATIC FUNCTION FNameExc( cName, aList )
 
    LOCAL tmp, tmp1

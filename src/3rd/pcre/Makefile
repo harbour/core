@@ -71,7 +71,7 @@ endif
 
 # ORIGIN http://pcre.org/
 # VER    8.34
-# URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.34.tar.gz
+# URL    https://downloads.sourceforge.net/pcre/pcre/8.34/pcre-8.34.tar.gz
 # DIFF   pcre.dif
 #
 # MAP    LICENCE
