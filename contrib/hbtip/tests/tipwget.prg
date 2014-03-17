@@ -10,30 +10,30 @@
  * retrieved from the file and sent to Internet.
  *
  * Usage of URI.
- * HTTP Protocol
- *   http://<sitename>/<path>?<query>
+ * HTTP[S] Protocol
+ *   http[s]://<sitename>/<path>?<query>
  *   - at the moment HTTP URI is not able to send data,
  *     (f.e. a form)
  *
- * POP Protocol
- *    pop://<username>:<password>@<popserver>/[-][MsgNum]
+ * POP[S] Protocol
+ *    pop[s]://<username>:<password>@<popserver>/[-][MsgNum]
  *    - Without MsgNum, you get the list of messages
  *    - With MsgNum get Message MsgNum
  *    - With -MsgNum deletes message MsgNum
  *
- * SMTP Protocol
- *    smtp://<mail-from>@<server>/RCPT
+ * SMTP[S] Protocol
+ *    smtp[s]://<mail-from>@<server>/RCPT
  *    - (You have to provide a filename)
  *    - use &at; in mail-from message
  *    - Send the mail in filename (that must include
  *      headers) to RCPT f.e.
- *      stmp://user&at;example.com@smtp.example.com/gian@niccolai.ws
+ *      stmp[s]://user&at;example.com@smtp.example.com/gian@niccolai.ws
  *
  *      NOTE: In Unix, to use '&' from command line you have to surround
- *      the URL with "", f.e. "smtp://...&at;...@server/dest"
+ *      the URL with "", f.e. "smtp[s]://...&at;...@server/dest"
  *
- * FTP Protocol
- *    ftp://user:passwd@<ftpserver>/[<path>]
+ * FTP[S] Protocol
+ *    ftp[s]://user:passwd@<ftpserver>/[<path>]
  *    - without path, get the list of files (use path/ to get the list of
  *      files in a dir.
  *    - with path, get a file. If the target file (second param) starts with '+'

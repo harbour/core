@@ -57,7 +57,7 @@
    http://www.itsc.org.sg/pdf/synthesis08/Three_QR_Code.pdf
    http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
    http://www.swetake.com/qr/index-e.html
-   http://www.codeproject.com/KB/cs/qrcode.aspx
+   https://www.codeproject.com/Articles/20574/Open-Source-QRCode-Library
    https://sourceforge.jp/projects/reedsolomon
    http://twit88.com/home/
    http://qrcode.sourceforge.jp/

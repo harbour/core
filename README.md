@@ -1527,14 +1527,14 @@ Supported shells per host platforms:
         * <https://itunes.apple.com/us/app/xcode/id497799835>
         * <https://developer.apple.com/downloads/>
      * MS Windows SDK [win, free, closed-source]
-        * <http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx>
+        * <https://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx>
          (7.0 and above contains compilers for x86, x86_64 and IA-64)
      * MS Windows Mobile SDK [wce, free]
-        * <http://www.microsoft.com/downloads/details.aspx?familyid=83A52AF2-F524-4EC5-9155-717CBE5D25ED>
+        * <https://www.microsoft.com/en-us/download/details.aspx?id=42>
      * MS Visual Studio Express [win, free, closed-source]
-        * <http://www.microsoft.com/express/>
+        * <https://www.visualstudio.com/en-US/products/visual-studio-express-vs>
      * MS Visual Studio [win, commercial, closed-source]
-        * <http://www.microsoft.com/visualstudio/>
+        * <https://www.visualstudio.com/en-us>
      * Pelles C [win, wce, free, closed-source]
         * <http://smorgasbordet.com/pellesc/>
      * Borland/CodeGear/Embarcadero Compiler [win, free, closed-source]
@@ -1562,7 +1562,7 @@ Supported shells per host platforms:
         * Search for `w95ws2setup.exe`: <https://duckduckgo.com/?q=w95ws2setup.exe>
             (required for Win95 support to run applications built with Harbour)
      * Windows UNICOWS .dll [win, free, closed-source]
-        * <http://go.microsoft.com/fwlink/?LinkId=14851>
+        * <https://www.microsoft.com/en-us/download/details.aspx?id=4237>
             (required for Win9x/ME support to run applications built with Harbour in UNICODE mode)
      * Windows UNICOWS runtime/import library [win, free, open-source]
         * <http://libunicows.sourceforge.net/>

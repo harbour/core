@@ -526,7 +526,7 @@ STATIC PROCEDURE GoogleMap()
          EXIT
       ENDIF
 
-      mweb := "http://maps.google.com/maps?q=from "         + ;
+      mweb := "https://maps.google.com/maps?q=from " + ;
          AllTrim( mfrom3 ) + " " + AllTrim( mfrom2 ) + " " + AllTrim( mfrom1 ) + " to " + ;
          AllTrim( mto3 )   + " " + AllTrim( mto2 )   + " " + AllTrim( mto1 )
 

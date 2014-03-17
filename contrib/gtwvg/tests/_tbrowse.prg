@@ -423,7 +423,7 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
    oXbp:returnPressed := {| m1, m2, o | m1 := m2, oCom:navigate( RTrim( o:getData() ) ) }
-   oXbp:tooltipText := "Type-in a http:// address and press ENTER"
+   oXbp:tooltipText := "Type-in a web address and press ENTER"
    oXbp:setData( "http://harbour-project.org/" )
 
    RETURN { oLbl, oXbp }

@@ -345,7 +345,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
       // RMChart does not have event interface.
       // Trying to set it generates GPF.
-      // Please download RMChart.ocx from http://www.rmchart.com/ . It is free in everysense.
+      // Please download RMChart.ocx from http://www.rmchart.com/ . It is free in every sense.
 
    CASE nActiveX == 5
       hb_gtInfo( HB_GTI_WINTITLE, "Image Viewer" )

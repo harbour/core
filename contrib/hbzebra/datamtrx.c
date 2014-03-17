@@ -56,7 +56,7 @@
    Open source projects, that implements DataMatrix:
      http://www.datenfreihafen.org/projects/iec16022.html
      http://www.libdmtx.org/
-     http://www.codeproject.com/Articles/66495/DataMatrixNet-ported-to-Compact-Framework.aspx
+     https://www.codeproject.com/Articles/66495/DataMatrixNet-ported-to-Compact-Framework.aspx
 
    Online encoder:
      http://www.bcgen.com/datamatrix-barcode-creator.html

@@ -81,7 +81,7 @@ endif
 
 ifeq ($(HB_SHELL),nt)
 
-# NOTE: According to http://support.microsoft.com/kb/830473
+# NOTE: According to https://support.microsoft.com/kb/830473
 #       The command line length limit for cmd.exe is 8191 chars
 #       for Windows XP and upper and 2047 for Windows NT and 2000.
 #       This is true for commands which are recognized as shell

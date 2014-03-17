@@ -58,7 +58,7 @@
  *   file it is working with, so a URL containing this sort if information must
  *   be picked. As an example, SourceForge-style distributed download URLs like
  *   `https://downloads.sourceforge.net/libpng/libpng-1.6.6.tar.gz'
- *   are OK, but `http://example.com/download/latest' is not, even if latter
+ *   are OK, but `https://example.com/download/latest' is not, even if latter
  *   would ultimately result (perhaps by the server using Content-Disposition
  *   or similar headers) in a file named `example-pkg-54.tar.gz'.
  *

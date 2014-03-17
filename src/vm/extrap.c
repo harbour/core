@@ -167,7 +167,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
 
       /* TODO: 64-bit stack trace.
                See: - StackWalk64()
-                    - http://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
+                    - https://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
    }
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
    {
