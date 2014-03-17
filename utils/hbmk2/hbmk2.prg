@@ -3516,19 +3516,23 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          hbmk[ _HBMK_lRUN ] := .F.
          hbmk[ _HBMK_nExitCode ] := _EXIT_STOP
 
-         IF hb_LeftEq( cParamL, "-stop=" )
-            cParam := MacroProc( hbmk, SubStr( cParam, Len( "-stop=" ) + 1 ), aParam[ _PAR_cFileName ] )
-            IF ! Empty( cParam )
-               OutStd( hb_StrFormat( I_( "%1$s" ), cParam ) + _OUT_EOL )
+         IF ! hbmk[ _HBMK_lDumpInfo ]
+            IF hb_LeftEq( cParamL, "-stop=" )
+               cParam := MacroProc( hbmk, SubStr( cParam, Len( "-stop=" ) + 1 ), aParam[ _PAR_cFileName ] )
+               IF ! Empty( cParam )
+                  OutStd( hb_StrFormat( I_( "%1$s" ), cParam ) + _OUT_EOL )
+               ENDIF
             ENDIF
          ENDIF
          EXIT
 
       CASE hb_LeftEq( cParamL, "-echo=" )
 
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-echo=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF ! Empty( cParam )
-            OutStd( hb_StrFormat( I_( "%1$s" ), cParam ) + _OUT_EOL )
+         IF ! hbmk[ _HBMK_lDumpInfo ]
+            cParam := MacroProc( hbmk, SubStr( cParam, Len( "-echo=" ) + 1 ), aParam[ _PAR_cFileName ] )
+            IF ! Empty( cParam )
+               OutStd( hb_StrFormat( I_( "%1$s" ), cParam ) + _OUT_EOL )
+            ENDIF
          ENDIF
 
 #ifdef HARBOUR_SUPPORT
@@ -9624,11 +9628,6 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
    LOCAL tmp
    LOCAL cControlL
 
-   /* Add our given name of the dependency to the list of
-      package names to check. Little convenience also
-      encouraging usage of standard package names. [vszakats] */
-   AAddNew( dep[ _HBMKDEP_aPKG ], Lower( dep[ _HBMKDEP_cName ] ) )
-
    /* Process "control" value. It can be a control keyword,
       or a custom header include path. */
    IF dep[ _HBMKDEP_cControl ] == NIL
@@ -9761,20 +9760,11 @@ STATIC FUNCTION dep_evaluate( hbmk )
 
 STATIC PROCEDURE dep_show_hint( hbmk, dep )
 
-   LOCAL aPKG := AClone( dep[ _HBMKDEP_aPKG ] )
    LOCAL aKeyHeader
    LOCAL tmp
 
-   /* do not show the dependency's name as suggested package name */
-   FOR EACH tmp IN aPKG
-      IF tmp == Lower( dep[ _HBMKDEP_cName ] )
-         hb_ADel( aPKG, tmp:__enumIndex(), .T. )
-         EXIT
-      ENDIF
-   NEXT
-
-   IF ! Empty( aPKG ) .AND. ! Empty( hbmk[ _HBMK_cPKGM ] )
-      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Install %1$s package(s): %2$s" ), hbmk[ _HBMK_cPKGM ], ArrayToList( aPKG, ", " ) ) )
+   IF ! Empty( dep[ _HBMKDEP_aPKG ] ) .AND. ! Empty( hbmk[ _HBMK_cPKGM ] )
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Install %1$s package(s): %2$s" ), hbmk[ _HBMK_cPKGM ], ArrayToList( dep[ _HBMKDEP_aPKG ], ", " ) ) )
    ENDIF
 
    /* show envvars/urls on *nix _only_ if we have no knowledge about the package names */
@@ -9834,46 +9824,50 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
             cName := AllTrim( cName )
 
             cStdOut := ""
-            hb_processRun( "pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+            cVersion := ""
+            hb_processRun( "pkg-config --libs --cflags " + cName,, @cStdOut, @cStdErr )
+            hb_processRun( "pkg-config --modversion " + cName,, @cVersion, @cStdErr )
             IF Empty( cStdOut )
-               hb_processRun( cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               hb_processRun( cName + "-config --libs --cflags",, @cStdOut, @cStdErr )
+               hb_processRun( cName + "-config --version",, @cVersion, @cStdErr )
             ENDIF
 #if defined( __PLATFORM__DARWIN )
             /* Homebrew */
             IF Empty( cStdOut )
-               IF hb_FileExists( "/usr/local/bin/pkg-config" )
-                  hb_processRun( "/usr/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+               IF hb_FileExists( tmp := "/usr/local/bin/pkg-config" )
+                  hb_processRun( tmp + " --libs --cflags " + cName,, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --modversion " + cName,, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             IF Empty( cStdOut )
-               IF hb_FileExists( "/usr/local/bin/" + cName + "-config" )
-                  hb_processRun( "/usr/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               IF hb_FileExists( tmp := "/usr/local/bin/" + cName + "-config" )
+                  hb_processRun( tmp + " --libs --cflags",, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --version",, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             /* MacPorts/DarwinPorts */
             IF Empty( cStdOut )
-               IF hb_FileExists( "/opt/local/bin/pkg-config" )
-                  hb_processRun( "/opt/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+               IF hb_FileExists( tmp := "/opt/local/bin/pkg-config" )
+                  hb_processRun( tmp + " --libs --cflags " + cName,, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --modversion " + cName,, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             IF Empty( cStdOut )
-               IF hb_FileExists( "/opt/local/bin/" + cName + "-config" )
-                  hb_processRun( "/opt/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               IF hb_FileExists( tmp := "/opt/local/bin/" + cName + "-config" )
+                  hb_processRun( tmp + " --libs --cflags",, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --version",, @cVersion, @cStdErr )
                ENDIF
             ENDIF
 #endif
 
             IF ! Empty( cStdOut )
 
-               cStdOut := StrTran( cStdOut, Chr( 13 ) )
-               IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
-                  cVersion := Left( cStdOut, tmp - 1 )
-                  cStdOut := SubStr( cStdOut, tmp + 1 )
-               ELSE
+               cVersion := hb_StrReplace( cVersion, Chr( 13 ) + Chr( 10 ) )
+               IF Empty( cVersion )
                   cVersion := "unknown version"
                ENDIF
 
-               cStdOut := StrTran( cStdOut, Chr( 10 ), " " )
+               cStdOut := StrTran( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ), " " )
 
                FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
                   IF hb_LeftEq( cItem, "-I" )

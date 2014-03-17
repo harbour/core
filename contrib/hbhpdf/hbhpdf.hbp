@@ -5,6 +5,8 @@
 
 -w3 -es2
 
+# NOTE: On *nix systems, download libharu sources -> `./configure` -> `make install`
+
 -depurlbase=libharu:http://libharu.org/
 -depkeyhead=libharu:hpdf.h
 -depcontrol=libharu:local{HB_BUILD_3RDEXT='no'}

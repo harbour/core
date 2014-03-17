@@ -10,6 +10,9 @@
 -w3 -es2
 
 -depurlbase=cityhash:https://code.google.com/p/cityhash/
+-deppkgname=cityhash:libcityhash-dev{deb}
+-deppkgname=cityhash:cityhash-devel{rpm}
+-deppkgname=cityhash:cityhash{homebrew}
 -depkeyhead=cityhash:city.h
 -depcontrol=cityhash:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=cityhash:${HB_WITH_CITYHASH}

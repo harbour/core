@@ -5,6 +5,9 @@
 
 -w3 -es2
 
+-deppkgname=libmagic:file-libs{rpm}
+-deppkgname=libmagic:libmagic-dev{deb}
+-deppkgname=libmagic:libmagic{homebrew}
 -depkeyhead=libmagic:magic.h
 -depcontrol=libmagic:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=libmagic:${HB_WITH_LIBMAGIC}

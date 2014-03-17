@@ -7,6 +7,9 @@
 
 # Look for these components: cairo-dev_*_win*.zip, cairo_*_win*.zip, libpng_*_win*.zip
 -depurlbase=cairo:http://www.gtk.org/download/index.php
+-deppkgname=cairo:libcairo2-dev{deb}
+-deppkgname=cairo:cairo-devel{rpm}
+-deppkgname=cairo:cairo{homebrew}
 -depkeyhead=cairo:cairo.h
 -depcontrol=cairo:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=cairo:${HB_WITH_CAIRO}

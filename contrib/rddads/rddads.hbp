@@ -7,6 +7,8 @@
 
 -stop{!(linux|win)}
 
+# NOTE: On Linux, download 'Advantage Client Engine API for Linux' (f.e. 'aceapi-11.10.0.10.tar.gz')
+
 -depurlbase=ads:https://www.sap.com/pc/tech/database/software/advantage-database-server/index.html
 -depkeyhead=ads:ace.h
 -depcontrol=ads:${HB_WITH_ADS}
