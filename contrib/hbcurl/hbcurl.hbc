@@ -1,5 +1,7 @@
 description=libcurl wrapper (IP communication)
 
+# NOTE: use HB_STATIC_CURL=yes envvar to link curl lib statically
+
 incpaths=.
 
 headers=${hb_name}.ch

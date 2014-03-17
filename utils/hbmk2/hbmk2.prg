@@ -9762,6 +9762,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
 STATIC PROCEDURE dep_show_hint( hbmk, dep )
 
    LOCAL aPKG := AClone( dep[ _HBMKDEP_aPKG ] )
+   LOCAL aKeyHeader
    LOCAL tmp
 
    /* do not show the dependency's name as suggested package name */
@@ -9772,7 +9773,7 @@ STATIC PROCEDURE dep_show_hint( hbmk, dep )
       ENDIF
    NEXT
 
-   IF ! Empty( aPKG )
+   IF ! Empty( aPKG ) .AND. ! Empty( hbmk[ _HBMK_cPKGM ] )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Install %1$s package(s): %2$s" ), hbmk[ _HBMK_cPKGM ], ArrayToList( aPKG, ", " ) ) )
    ENDIF
 
@@ -9781,9 +9782,13 @@ STATIC PROCEDURE dep_show_hint( hbmk, dep )
       Empty( dep[ _HBMKDEP_aPKG ] )
 
       IF ! Empty( dep[ _HBMKDEP_aControlMacro ] )
+         aKeyHeader := AClone( dep[ _HBMKDEP_aKeyHeader ] )
+         FOR EACH tmp IN aKeyHeader
+            tmp := hb_DirSepToOS( tmp )
+         NEXT
          _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Point envvar %1$s to the directory containing header %2$s" ), ;
             ArrayToList( dep[ _HBMKDEP_aControlMacro ], " " + I_( "or" ) + " " ), ;
-            ArrayToList( dep[ _HBMKDEP_aKeyHeader ], " " + I_( "or" ) + " ",,, "'", "'" ) ) )
+            ArrayToList( aKeyHeader, " " + I_( "or" ) + " ",,, "'", "'" ) ) )
       ENDIF
       IF ! Empty( dep[ _HBMKDEP_aURLBase ] )
          _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Project URL(s): %1$s" ), ;
@@ -16568,7 +16573,7 @@ STATIC FUNCTION FixFuncCase( hbmk, cFileName )
    #define _MATCH_nStart  2
    #define _MATCH_nEnd    3
 
-   FOR EACH match IN en_hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
+   FOR EACH match IN en_hb_regexAll( R_( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()" ), cFileStripped,,,,, .F. )
       IF Len( match[ 2 ][ _MATCH_cStr ] ) != 2 .OR. !( Left( match[ 2 ][ _MATCH_cStr ], 1 ) $ "D" /* "METHOD" */ )
          cProper := ProperCase( hAll, hb_StrShrink( match[ 3 ][ _MATCH_cStr ] ) ) + "("
          IF !( cProper == match[ 3 ][ _MATCH_cStr ] ) .AND. ;
@@ -16586,7 +16591,7 @@ STATIC FUNCTION FixFuncCase( hbmk, cFileName )
    NEXT
 
    IF ! lInCommentOnly
-      FOR EACH match IN en_hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
+      FOR EACH match IN en_hb_regexAll( R_( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)" ), cFile,,,,, .F. )
          cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
          IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
             cFile := hb_BLeft( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + hb_BSubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )

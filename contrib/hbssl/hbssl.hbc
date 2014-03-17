@@ -1,5 +1,7 @@
 description=OpenSSL wrapper (encryption)
 
+# NOTE: use HB_STATIC_OPENSSL=yes envvar to link openssl lib statically
+
 incpaths=.
 
 headers=${hb_name}.ch

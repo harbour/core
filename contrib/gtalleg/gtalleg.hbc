@@ -1,5 +1,7 @@
 description=GT for Allegro GUI backend
 
+# NOTE: use HB_STATIC_ALLEGRO=yes envvar to link allegro lib statically
+
 gt=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 {!HB_STATIC_ALLEGRO}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

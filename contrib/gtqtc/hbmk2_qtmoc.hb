@@ -34,6 +34,7 @@
 #if defined( __HBSCRIPT__HBMK_PLUGIN )
 
 FUNCTION hbmk_plugin_qt( hbmk )
+
    LOCAL cRetVal := ""
 
    LOCAL cSrc
@@ -150,10 +151,11 @@ FUNCTION hbmk_plugin_qt( hbmk )
    RETURN cRetVal
 
 STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
+
    LOCAL cBIN
    LOCAL cEnv
    LOCAL aEnvList
-   LOCAL cStdErr
+   LOCAL cVer
 
    cBIN := GetEnv( cEnvQT )
    IF Empty( cBIN )
@@ -185,8 +187,7 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
                   ENDIF
                ENDIF
             ELSE
-               cBIN := hb_DirSepAdd( hb_DirBase() ) + cName
-               IF ! hb_FileExists( cBIN )
+               IF ! hb_FileExists( cBIN := hb_DirSepAdd( hb_DirBase() ) + cName )
                   cBIN := ""
                ENDIF
             ENDIF
@@ -195,26 +196,48 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
          #endif
 
          IF Empty( cBIN )
-            cBIN := hbmk_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )
-            IF Empty( cBIN )
+            IF Empty( cBIN := hbmk_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" ) )
                hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not set, could not autodetect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )
                RETURN NIL
             ENDIF
          ENDIF
       ENDIF
+
+      IF ! IsVersionOK( cBIN, @cVer )
+         hbmk_OutErr( hbmk, hb_StrFormat( "QT 4.5 or upper is required (found %1$s)", cVer ) )
+         RETURN NIL
+      ENDIF
+
       IF hbmk[ "lINFO" ]
-         cStdErr := ""
-         IF ! hbmk[ "lDONTEXEC" ]
-            hb_processRun( cBIN + " -v",,, @cStdErr )
-            IF ! Empty( cStdErr )
-               cStdErr := " [" + hb_StrReplace( cStdErr, Chr( 13 ) + Chr( 10 ) ) + "]"
-            ENDIF
-         ENDIF
-         hbmk_OutStd( hbmk, hb_StrFormat( "Using QT '%1$s' executable: %2$s%3$s (autodetected)", cName, cBIN, cStdErr ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( "Using QT '%1$s' executable: %2$s (%3$s) (autodetected)", cName, cBIN, cVer ) )
       ENDIF
    ENDIF
 
    RETURN cBIN
+
+STATIC FUNCTION IsVersionOK( cBIN, /* @ */ cVer )
+
+   LOCAL aHit
+
+   LOCAL cStdErr := "", cStdOut
+
+   hb_processRun( cBIN + " -v",, @cStdOut, @cStdErr )
+
+   aHit := hb_regexAll( "([0-9]+)\.([0-9]+)\.([0-9]+)", hb_StrReplace( cStdErr, Chr( 13 ) + Chr( 10 ) ) )
+
+   IF Len( aHit ) >= 1
+      cVer := aHit[ 1 ][ 1 ]
+      DO CASE
+      CASE Val( aHit[ 1 ][ 2 ] ) >= 5
+         RETURN .T.
+      CASE Val( aHit[ 1 ][ 2 ] ) == 4 .AND. Val( aHit[ 1 ][ 3 ] ) >= 5
+         RETURN .T.
+      ENDCASE
+   ELSE
+      cVer := "?"
+   ENDIF
+
+   RETURN .F.
 
 #else
 
