@@ -1,4 +1,5 @@
 # F18 build
 
-- contrib/sddpg ruèno merdirano iz sddpg_existconn
+- src/rtl/gtxwc font_width = 100 (bold fontna linux destkopu)
+- contrib/sddpg ruÄno merdÅ¾irano iz sddpg_existconn
 
