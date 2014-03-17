@@ -7,6 +7,7 @@
 
 -stop{!(linux|win)}
 
+-depurlbase=ads:https://www.sap.com/pc/tech/database/software/advantage-database-server/index.html
 -depkeyhead=ads:ace.h
 -depcontrol=ads:${HB_WITH_ADS}
 -depincpath=ads:/usr/local/ads/acesdk

@@ -7,6 +7,7 @@
 
 rddsql.hbc
 
+-depurlbase=pgsql:https://www.postgresql.org/
 -depkeyhead=pgsql:libpq-fe.h
 -depcontrol=pgsql:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=pgsql:${HB_WITH_PGSQL}

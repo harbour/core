@@ -9,6 +9,8 @@ rddsql.hbc
 
 -stop{dos|os2|wce}
 
+-depurlbase=ocilib:http://orclib.sourceforge.net/
+-depurlbase=ocilib:https://www.oracle.com/technetwork/database/features/oci/index.html
 -depkeyhead=ocilib:ocilib.h
 -depcontrol=ocilib:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=ocilib:${HB_WITH_OCILIB}

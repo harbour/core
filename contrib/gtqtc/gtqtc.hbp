@@ -16,6 +16,8 @@
 -depoptional=qt5:yes
 -depfinish=qt5
 
+-depurlbase=qt:https://qt-project.org/
+-depurlbase=qt:https://download.qt-project.org/official_releases/qt/
 {!HBMK_HAS_QT5&!android}-deppkgname=qt:QtCore
 {!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
 {!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}

@@ -5,6 +5,7 @@
 
 -w3 -es2
 
+-depurlbase=sqlite3:https://sqlite.org/
 -depkeyhead=sqlite3:sqlite3.h
 -depcontrol=sqlite3:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=sqlite3:${HB_WITH_SQLITE3}

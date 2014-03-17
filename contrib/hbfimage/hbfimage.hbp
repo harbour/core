@@ -7,6 +7,7 @@
 
 -stop{dos|os2}
 
+-depurlbase=freeimage:http://freeimage.sourceforge.net/
 -depkeyhead=freeimage:FreeImage.h
 -depcontrol=freeimage:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=freeimage:${HB_WITH_FREEIMAGE}

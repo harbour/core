@@ -7,6 +7,7 @@
 
 -stop{win|wce|dos}
 
+-depurlbase=cups:http://cups.org/
 -depkeyhead=cups:cups/cups.h
 -depcontrol=cups:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=cups:${HB_WITH_CUPS}

@@ -8,6 +8,9 @@
 
 -w3 -es2
 
+-depurlbase=openssl:https://www.openssl.org/
+-depurlbase=openssl:https://www.openssl.org/related/binaries.html
+-depurlbase=openssl:http://wiki.opensslfoundation.com/
 -depkeyhead=openssl:openssl/ssl.h
 -depcontrol=openssl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=openssl:${HB_WITH_OPENSSL}

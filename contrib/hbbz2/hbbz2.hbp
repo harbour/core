@@ -7,6 +7,7 @@
 
 -stop{wce}
 
+-depurlbase=bzip2:http://bzip.org/
 -depkeyhead=bzip2:bzlib.h
 -depcontrol=bzip2:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=bzip2:${HB_WITH_BZIP2}

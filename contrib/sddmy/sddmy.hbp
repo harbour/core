@@ -7,6 +7,8 @@
 
 rddsql.hbc
 
+-depurlbase=mysql:https://downloads.mariadb.org/mariadb/
+-depurlbase=mysql:https://dev.mysql.com/downloads/
 -depkeyhead=mysql:mysql.h
 -depcontrol=mysql:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=mysql:${HB_WITH_MYSQL}
