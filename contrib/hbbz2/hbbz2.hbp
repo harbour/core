@@ -8,6 +8,7 @@
 -stop{wce}
 
 -depurlbase=bzip2:http://bzip.org/
+-deppkgname=bzip2:libbz2-dev{deb}
 -depkeyhead=bzip2:bzlib.h
 -depcontrol=bzip2:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=bzip2:${HB_WITH_BZIP2}

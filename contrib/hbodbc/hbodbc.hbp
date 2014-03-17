@@ -8,6 +8,10 @@
 
 -stop{dos|os2|rsxnt}
 
+-deppkgname=odbc:unixodbc-devel{rpm}
+-deppkgname=odbc:unixODBC-devel{rpm}
+-deppkgname=odbc:unixodbc-dev{deb}
+-deppkgname=odbc:unixodbc{homebrew}
 -depkeyhead=odbc:sql.h
 -depcontrol=odbc:no{!allwin&HB_BUILD_3RDEXT='no'}
 -depcontrol=odbc:${HB_WITH_ODBC}{!allwin}

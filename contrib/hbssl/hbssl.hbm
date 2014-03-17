@@ -11,6 +11,9 @@
 -depurlbase=openssl:https://www.openssl.org/
 -depurlbase=openssl:https://www.openssl.org/related/binaries.html
 -depurlbase=openssl:http://wiki.opensslfoundation.com/
+-deppkgname=openssl:libssl-dev{deb}
+-deppkgname=openssl:openssl-devel{rpm}
+-deppkgname=openssl:openssl{homebrew}
 -depkeyhead=openssl:openssl/ssl.h
 -depcontrol=openssl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=openssl:${HB_WITH_OPENSSL}

@@ -11,6 +11,9 @@
 
 -plugin=hbmk2_qtmoc.hb
 
+-deppkgname=qt5:libqt5-dev{deb}
+-deppkgname=qt5:qt5-devel{rpm}
+-deppkgname=qt5:qt5{homebrew}
 -depcontrol=qt5:${HB_WITH_QT}
 -depkeyhead=qt5:QtCore/QJsonObject
 -depoptional=qt5:yes

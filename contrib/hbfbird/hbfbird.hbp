@@ -8,6 +8,8 @@
 -stop{pocc64|poccarm}
 
 -depurlbase=firebird:http://firebirdsql.org/
+-deppkgname=firebird:firebird2.1-dev{deb}
+-deppkgname=firebird:firebird-devel{rpm}
 -depkeyhead=firebird:ibase.h
 -depcontrol=firebird:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=firebird:${HB_WITH_FIREBIRD}

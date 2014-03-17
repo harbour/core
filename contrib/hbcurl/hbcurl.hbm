@@ -7,6 +7,8 @@
 -w3 -es2
 
 -depurlbase=curl:http://curl.haxx.se/
+-deppkgname=curl:libcurl4-openssl-dev{deb}
+-deppkgname=curl:curl-devel{rpm}
 -depkeyhead=curl:curl/curl.h
 -depcontrol=curl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=curl:${HB_WITH_CURL}

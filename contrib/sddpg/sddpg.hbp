@@ -8,6 +8,9 @@
 rddsql.hbc
 
 -depurlbase=pgsql:https://www.postgresql.org/
+-deppkgname=pgsql:libpq-dev{deb}
+-deppkgname=pgsql:postgresql-devel{rpm}
+-deppkgname=pgsql:postgresql{homebrew}
 -depkeyhead=pgsql:libpq-fe.h
 -depcontrol=pgsql:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=pgsql:${HB_WITH_PGSQL}

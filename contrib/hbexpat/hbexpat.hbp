@@ -6,6 +6,7 @@
 -w3 -es2
 
 -depurlbase=expat:http://www.libexpat.org
+-deppkgname=expat:libexpat1-dev{deb}
 -depkeyhead=expat:expat.h
 -depcontrol=expat:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=expat:${HB_WITH_EXPAT}

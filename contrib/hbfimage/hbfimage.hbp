@@ -8,6 +8,9 @@
 -stop{dos|os2}
 
 -depurlbase=freeimage:http://freeimage.sourceforge.net/
+-deppkgname=freeimage:libfreeimage-dev{deb}
+-deppkgname=freeimage:freeimage-devel{rpm}
+-deppkgname=freeimage:freeimage{homebrew}
 -depkeyhead=freeimage:FreeImage.h
 -depcontrol=freeimage:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=freeimage:${HB_WITH_FREEIMAGE}

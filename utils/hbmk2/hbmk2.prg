@@ -9632,7 +9632,7 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
       or a custom header include path. */
    IF dep[ _HBMKDEP_cControl ] == NIL
       dep[ _HBMKDEP_cControl ] := GetEnv( hb_StrFormat( _HBMK_WITH_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
-      AAddNew( dep[ _HBMKDEP_aControlMacro ], hb_StrFormat( _HBMK_WITH_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
+      AAddNewAtTop( dep[ _HBMKDEP_aControlMacro ], hb_StrFormat( _HBMK_WITH_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
    ENDIF
 
    cControlL := Lower( dep[ _HBMKDEP_cControl ] )
