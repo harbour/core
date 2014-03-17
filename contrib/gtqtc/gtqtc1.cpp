@@ -1758,7 +1758,7 @@ static const char * hb_gt_qtc_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: QT GUI console (QTC)";
+   return "Terminal: QT (QTC)";
 }
 
 /* *********************************************************************** */

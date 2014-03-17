@@ -566,8 +566,9 @@ EXTERNAL hbmk_KEYW
 
 #define _HBMK_cSignTime         161
 #define _HBMK_lCLI              162
+#define _HBMK_cPKGM             163
 
-#define _HBMK_MAX_              162
+#define _HBMK_MAX_              163
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1061,6 +1062,7 @@ STATIC FUNCTION hbmk_new( lShellMode )
    hbmk[ _HBMK_hAUTOHBCFOUND ] := { => }
    hbmk[ _HBMK_aDEPTHBC ] := {}
    hbmk[ _HBMK_lDEPIMPLIB ] := .T.
+   hbmk[ _HBMK_cPKGM ] := ""
 
    hb_HCaseMatch( hbmk[ _HBMK_hDEP ], .F. )
 
@@ -1381,8 +1383,38 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
       ENDIF
    #endif
 
+   IF Empty( hbmk[ _HBMK_cPKGM ] )
+      hbmk[ _HBMK_cPKGM ] := DetectPackageManager()
+   ENDIF
+
    RETURN
 #endif
+
+STATIC FUNCTION DetectPackageManager()
+
+   #if defined( __PLATFORM__DARWIN )
+      DO CASE
+      CASE hb_FileExists( "/usr/local/bin/brew" )
+         RETURN "homebrew"
+      CASE hb_FileExists( "/usr/local/bin/rudix" )
+         RETURN "rudix"
+      CASE hb_FileExists( "/opt/local/bin/port" )
+         RETURN "macports"
+      CASE hb_FileExists( "/sw/bin/fink" )
+         RETURN "fink"
+      ENDCASE
+   #elif defined( __PLATFORM__LINUX )
+      DO CASE
+      CASE hb_FileExists( "/etc/debian_version" )
+         RETURN "deb"
+      CASE hb_FileExists( "/etc/gentoo-release" )
+         RETURN "portage"
+      OTHERWISE
+         RETURN "rpm"
+      ENDCASE
+   #endif
+
+   RETURN ""
 
 STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExitStr )
 
@@ -9693,20 +9725,20 @@ STATIC FUNCTION dep_evaluate( hbmk )
    IF hbmk[ _HBMK_lInfo ]
       FOR EACH tmp IN hOPT
          _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing optional dependency: %1$s" ), tmp:__enumKey() ) )
-         #ifndef __PLATFORM__UNIX
-         IF ! Empty( tmp )
-            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
-         ENDIF
+         #if ! defined( __PLATFORM__UNIX )
+            IF ! Empty( tmp )
+               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
+            ENDIF
          #endif
       NEXT
    ENDIF
 
    FOR EACH tmp IN hREQ
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Missing dependency: %1$s" ), tmp:__enumKey() ) )
-      #ifndef __PLATFORM__UNIX
-      IF ! Empty( tmp )
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
-      ENDIF
+      #if ! defined( __PLATFORM__UNIX )
+         IF ! Empty( tmp )
+            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
+         ENDIF
       #endif
    NEXT
 
@@ -13850,7 +13882,8 @@ FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
    ENDSWITCH
 
    IF cKeyword == hbmk_CPU( hbmk ) .OR. ;
-      cKeyword == hbmk_TARGETTYPE( hbmk )
+      cKeyword == hbmk_TARGETTYPE( hbmk ) .OR. ;
+      ( ! Empty( hbmk[ _HBMK_cPKGM ] ) .AND. cKeyword == hbmk[ _HBMK_cPKGM ] )
       RETURN .T.
    ENDIF
 
@@ -17178,6 +17211,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "{<compiler>}"            , I_( "target C compiler. Where <compiler> can be any value accepted by -comp= option." ) }, ;
       { "{<cpu>}"                 , I_( "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh" ) }, ;
       { "{<targettype>}"          , I_( "build target type. Where <targettype> is any of the values returned by macro variable ${hb_targettype}." ) }, ;
+      { "{<package-manager>}"     , I_( "package manager. Where <package-manager> can be any of: deb, rpm, portage, homebrew, rudix, macports, fink" ) }, ;
       { "{mt}"                    , H_( "build target is multi-threaded (see -mt option)" ) }, ;
       { "{st}"                    , H_( "build target is single-threaded (see -st option)" ) }, ;
       { "{gui}"                   , I_( "GUI target (see -gui option)" ) }, ;

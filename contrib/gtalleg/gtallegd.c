@@ -580,7 +580,7 @@ static const char * hb_gt_alleg_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Portable Allegro GUI console";
+   return "Terminal: Portable Allegro GUI";
 }
 
 static HB_BOOL hb_gt_alleg_SetMode( PHB_GT pGT, int iRows, int iCols )
