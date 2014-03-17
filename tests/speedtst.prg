@@ -503,7 +503,7 @@ procedure test( nMT, cExclude, lScale )
 #ifdef __HARBOUR__
    #include "hbmemory.ch"
    if Memory( HB_MEM_USEDMAX ) != 0
-      ? "Warning !!! Memory statistic enabled."
+      ? "Warning !!! Memory statistics enabled."
       ?
    endif
    if Type( "__DBGENTRY()" ) == "UI"
@@ -661,11 +661,11 @@ procedure test( nMT, cExclude, lScale )
    nSeconds := Seconds() - nSeconds
 
    if lScale
-      ? Replicate( "=",76 )
+      ? Replicate( "=", 76 )
       ? dsp_scaleResult( "  TOTAL  ", nTimeTotST, nTimeTotMT, nMT, 0 )
-      ? Replicate( "=",76 )
+      ? Replicate( "=", 76 )
    else
-      ? Replicate( "=",68 )
+      ? Replicate( "=", 68 )
    endif
    ? dsp_result( { "total application time:", nTimes }, 0 )
    ? dsp_result( { "total real time:", nSeconds }, 0 )

@@ -66,10 +66,10 @@ PROCEDURE Main()
 #endif
 
 #ifdef _SET_LANGUAGE
-   TestLine( "_SET_LANGUAGE",    100 )
-   TestLine( "_SET_IDLEREPEAT",  101 )
-   TestLine( "_SET_FILECASE",    102 )
-   TestLine( "_SET_DIRCASE",     103 )
+   TestLine( "_SET_LANGUAGE",     100 )
+   TestLine( "_SET_IDLEREPEAT",   101 )
+   TestLine( "_SET_FILECASE",     102 )
+   TestLine( "_SET_DIRCASE",      103 )
    TestLine( "_SET_DIRSEPARATOR", 104 )
    Set( _SET_DIRSEPARATOR, "/" )
    TestLine( "_SET_DIRSEPARATOR", 104 )

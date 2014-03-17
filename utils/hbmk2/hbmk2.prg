@@ -575,19 +575,20 @@ EXTERNAL hbmk_KEYW
 #define _HBMKDEP_aPKG           2
 #define _HBMKDEP_aKeyHeader     3
 #define _HBMKDEP_cControl       4
-#define _HBMKDEP_lOptional      5
-#define _HBMKDEP_cINCROOT       6
-#define _HBMKDEP_aINCPATH       7
-#define _HBMKDEP_aINCPATHLOCAL  8
-#define _HBMKDEP_aIMPLIBSRC     9
-#define _HBMKDEP_cIMPLIBDST     10
-#define _HBMKDEP_cFound         11
-#define _HBMKDEP_lFound         12
-#define _HBMKDEP_lFoundLOCAL    13
-#define _HBMKDEP_cVersion       14
-#define _HBMKDEP_lForced        15
-#define _HBMKDEP_lDetected      16
-#define _HBMKDEP_MAX_           16
+#define _HBMKDEP_aControlMacro  5
+#define _HBMKDEP_lOptional      6
+#define _HBMKDEP_cINCROOT       7
+#define _HBMKDEP_aINCPATH       8
+#define _HBMKDEP_aINCPATHLOCAL  9
+#define _HBMKDEP_aIMPLIBSRC     10
+#define _HBMKDEP_cIMPLIBDST     11
+#define _HBMKDEP_cFound         12
+#define _HBMKDEP_lFound         13
+#define _HBMKDEP_lFoundLOCAL    14
+#define _HBMKDEP_cVersion       15
+#define _HBMKDEP_lForced        16
+#define _HBMKDEP_lDetected      17
+#define _HBMKDEP_MAX_           17
 
 #define _EXIT_OK                0
 #define _EXIT_UNKNPLAT          1
@@ -3693,10 +3694,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       CASE hb_LeftEq( cParam, "-depcontrol=" )
 
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depcontrol=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         cParam := MacroProc( hbmk, tmp1 := SubStr( cParam, Len( "-depcontrol=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
             hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_cControl ] := AllTrim( tmp )
             AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
+         ENDIF
+
+         IF dep_split_arg( hbmk, tmp1, @cParam, @tmp )
+            hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aControlMacro ] := MacroList( tmp )
          ENDIF
 
       CASE hb_LeftEq( cParam, "-depincroot=" )
@@ -6043,6 +6048,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDIF
       RETURN _EXIT_PLUGINPREALL
    ENDIF
+
+   /* discourage users to manually "tweak" macros defined dynamically by the build process */
+   FOR EACH tmp IN hbmk[ _HBMK_hDEPTMACRO ]
+      IF ! Empty( GetEnv( tmp:__enumKey() ) )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Collision of user-defined environment variable with dynamic macro: %1$s (value '%2$s')" ), ;
+            tmp:__enumKey(), GetEnv( tmp:__enumKey() ) ) )
+      ENDIF
+   NEXT
 
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
       /* OBSOLETE functionality */
@@ -9537,6 +9550,7 @@ STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
          dep[ _HBMKDEP_aPKG ] := {}
          dep[ _HBMKDEP_aKeyHeader ] := {}
          dep[ _HBMKDEP_cControl ] := NIL
+         dep[ _HBMKDEP_aControlMacro ] := {}
          dep[ _HBMKDEP_lOptional ] := .F.
          dep[ _HBMKDEP_cINCROOT ] := ""
          dep[ _HBMKDEP_aINCPATH ] := {}
@@ -9570,6 +9584,7 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
       or a custom header include path. */
    IF dep[ _HBMKDEP_cControl ] == NIL
       dep[ _HBMKDEP_cControl ] := GetEnv( hb_StrFormat( _HBMK_WITH_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
+      AAddNew( dep[ _HBMKDEP_aControlMacro ], hb_StrFormat( _HBMK_WITH_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
    ENDIF
 
    cControlL := Lower( dep[ _HBMKDEP_cControl ] )
@@ -9627,10 +9642,11 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
 STATIC FUNCTION dep_evaluate( hbmk )
 
    LOCAL dep
+   LOCAL tmp
 
-   LOCAL aREQ := {}
-   LOCAL aOPT := {}
-   LOCAL aWRN := {}
+   LOCAL hREQ := { => }
+   LOCAL hOPT := { => }
+   LOCAL hWRN := { => }
    LOCAL lAnyForcedOut := .F.
 
    FOR EACH dep IN hbmk[ _HBMK_hDEP ]
@@ -9656,49 +9672,52 @@ STATIC FUNCTION dep_evaluate( hbmk )
             ENDIF
          ENDIF
          IF dep[ _HBMKDEP_lOptional ]
-            AAdd( aOPT, dep[ _HBMKDEP_cName ] )
+            hOPT[ dep[ _HBMKDEP_cName ] ] := dep[ _HBMKDEP_aControlMacro ]
          ELSE
             /* Do not issue a missing dependency error (just warning) for non-*nix
                platforms if no manual dependency location and no local dir were
-               specified. This assumes that on these platforms dependencies can never
+               specified. This assumes that on these platforms' dependencies can never
                be found on locations known in advance and specified in make
                files. [vszakats] */
             IF HBMK_ISPLAT( "win|wce|os2|dos" ) .AND. ;
                Empty( dep[ _HBMKDEP_cControl ] ) .AND. ;
                Empty( dep[ _HBMKDEP_aINCPATHLOCAL ] )
-               AAdd( aWRN, dep[ _HBMKDEP_cName ] )
+               hWRN[ dep[ _HBMKDEP_cName ] ] := dep[ _HBMKDEP_aControlMacro ]
             ELSE
-               AAdd( aREQ, dep[ _HBMKDEP_cName ] )
+               hREQ[ dep[ _HBMKDEP_cName ] ] := dep[ _HBMKDEP_aControlMacro ]
             ENDIF
          ENDIF
       ENDIF
    NEXT
 
-   IF ! Empty( aOPT ) .AND. hbmk[ _HBMK_lInfo ]
-      IF Len( aOPT ) > 1
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing optional dependencies: %1$s" ), ArrayToList( aOPT, ", " ) ) )
-      ELSE
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing optional dependency: %1$s" ), ArrayToList( aOPT, ", " ) ) )
-      ENDIF
+   IF hbmk[ _HBMK_lInfo ]
+      FOR EACH tmp IN hOPT
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing optional dependency: %1$s" ), tmp:__enumKey() ) )
+         #ifndef __PLATFORM__UNIX
+         IF ! Empty( tmp )
+            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
+         ENDIF
+         #endif
+      NEXT
    ENDIF
 
-   IF ! Empty( aREQ )
-      IF Len( aREQ ) > 1
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Missing dependencies: %1$s" ), ArrayToList( aREQ, ", " ) ) )
-      ELSE
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Missing dependency: %1$s" ), ArrayToList( aREQ, ", " ) ) )
+   FOR EACH tmp IN hREQ
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Missing dependency: %1$s" ), tmp:__enumKey() ) )
+      #ifndef __PLATFORM__UNIX
+      IF ! Empty( tmp )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
       ENDIF
-   ENDIF
+      #endif
+   NEXT
 
-   IF ! Empty( aWRN )
-      IF Len( aWRN ) > 1
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing dependencies: %1$s" ), ArrayToList( aWRN, ", " ) ) )
-      ELSE
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing dependency: %1$s" ), ArrayToList( aWRN, ", " ) ) )
+   FOR EACH tmp IN hWRN
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing dependency: %1$s" ), tmp:__enumKey() ) )
+      IF ! Empty( tmp )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Hint: Set corresponding envvar(s): %1$s" ), ArrayToList( tmp, ", " ) ) )
       ENDIF
-   ENDIF
+   NEXT
 
-   RETURN Empty( aREQ ) .AND. Empty( aWRN ) .AND. ! lAnyForcedOut
+   RETURN Empty( hREQ ) .AND. Empty( hWRN ) .AND. ! lAnyForcedOut
 
 STATIC PROCEDURE dep_try_detection( hbmk, dep )
 
@@ -11820,6 +11839,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
          IF dep_split_arg( hbmk, cLine, @cName, @cLine )
             hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_cControl ] := AllTrim( MacroProc( hbmk, cLine, cFileName ) )
+            hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aControlMacro ] := MacroList( cLine )
             AAddNew( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
          ENDIF
 
@@ -12250,6 +12270,25 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
    ENDIF
 
    RETURN cItem
+
+STATIC FUNCTION MacroList( cString )
+
+   LOCAL aMacro := {}
+
+   LOCAL nStart
+   LOCAL nEnd
+
+   LOCAL cStart := _MACRO_NORM_PREFIX + _MACRO_OPEN
+
+   WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
+         ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + Len( cStart ) ) ) > 0
+
+      AAddNew( aMacro, Upper( SubStr( cString, nStart + Len( cStart ), nEnd - nStart - Len( cStart ) ) ) )
+
+      cString := Left( cString, nStart - 1 ) + SubStr( cString, nEnd + Len( _MACRO_CLOSE ) )
+   ENDDO
+
+   RETURN aMacro
 
 STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
 
