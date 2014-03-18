@@ -77,7 +77,6 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
 
    IF !Empty( cHBXList )
       FOR EACH cName IN hb_ATokens( cHBXList )
-         ? hb_DirBase(), cName
          HBXToFuncList( @cFunctions, hb_MemoRead( hb_PathJoin( hb_DirBase(), cName ) ) )
       NEXT
    ENDIF
