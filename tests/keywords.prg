@@ -38,7 +38,7 @@ FUNCTION NoTestMain()
    case :=CASE( CASE ) //this is valid
 
    //DO is reserved function name in Clipper!
-   DO( nExt+bEgin/bReak-do*wHile%cAse $ wIth )
+   Do( nExt+bEgin/bReak-do*wHile%cAse $ wIth )
 
    WHILE( while ) //it is not possible to call while() in this context
    END
@@ -140,7 +140,7 @@ bEgin1
 BEGIN SEQUENCE
     bEgin :=0
     FOR bEgin:=1 TO 10
-      QOUT( bEgin )
+      QOut( bEgin )
       bEgin :=bEgin[ 1 ]
       bEgin[ 1 ] :=bEgin
       bEgin :=bEgin * 10
@@ -204,18 +204,18 @@ begin sequence
   FOR bReak:=1 To 10
     QOut( bReak * bReak )
     break->break :=1
-    ( break )->( break(0) )
+    ( break )->( Break(0) )
   NEXT bReak
   break->break :=break->break +break->break
   BREAK
   break :=break[ 2 ] //not allowed in Clipper
-  bReak :=iif( bReak==1, BREAK(0), BREAK(bReak) )
+  bReak :=iif( bReak==1, Break(0), Break(bReak) )
 recover USING bReak
-  BREAK( Break( break(0) ) )
+  Break( Break( Break(0) ) )
 end
 
 BREAK
-RETURN bReak( bReak )
+RETURN Break( bReak )
 
 /*====================================================================
 * Test for CASE/DO CASE
@@ -225,7 +225,7 @@ LOCAL case
 
   FOR case:=1 TO 15
     QUOT( case )
-    QOUT( case * ; ////
+    QOut( case * ; ////
 case )
   NEXT case
 
@@ -311,8 +311,8 @@ LOCAL with
   do :={|do| do}
 
   do while do
-    do()
-    do->do :=do()
+    Do()
+    do->do :=Do()
     do++
     do--
   enddo
@@ -324,12 +324,12 @@ LOCAL with
   do++
   do +=do
   do->do :=do->do +1
-  ( do )->( do() )
+  ( do )->( Do() )
   do[ 1 ] :=do
   do[ do ] :=do[ do ][ do ]
 
   DO do WITH do
-  DO do WITH do()
+  DO do WITH Do()
   DO do
 
   DO while;
@@ -410,7 +410,7 @@ LOCAL with
   DO with WITH with()
   DO with WITH do
   DO with WITH while
-  DO with WITH do()
+  DO with WITH Do()
   DO with WITH while()
 
 RETURN DO
@@ -608,7 +608,7 @@ FUNCTION FOR( for )
   for :=for( for( for ) )
 
   for :={|for| for}
-  EVAL( {|for| for}, for )
+  Eval( {|for| for}, for )
 
   for->for :=for
   for :=for->for
@@ -650,7 +650,7 @@ FIELD field IN field
   ( in )->in :=in
 
   in :={|in| in}
-  EVAL( {|in| in}, in )
+  Eval( {|in| in}, in )
 
   DO in
 #ifndef HB_CLIPPER_COMPATIBLE
@@ -676,7 +676,7 @@ FUNCTION include( include )
   include := include[ include ]
 
   include :={|include| include}
-  EVAL( {|include| include}, include )
+  Eval( {|include| include}, include )
 
   DO include
   DO include WITH include
@@ -708,7 +708,7 @@ INIT fUNCTION Init( init )
   ( init )->init :=INIT( init[ init->init ] )
 
   init :={|init| init}
-  EVAL( {|init| init}, init )
+  Eval( {|init| init}, init )
 
   DO INIT WITH init
   DO INIT
@@ -728,7 +728,7 @@ LOCAL local
   NEXT local
 
   local :={|local| local}
-  EVAL( {|local| local}, local )
+  Eval( {|local| local}, local )
 
   WHILE local
   ENDDO
@@ -754,37 +754,37 @@ FUNCTION loop( loop )
     --loop
     QOut( loop )
     IF( loop == 5 )
-      Qout( "LOOP to begginig" )
+      QOut( "LOOP to begginig" )
       loop
     ENDIF
     IF( loop == 9 )
-      Qout( "EXIT from FOR statement" )
+      QOut( "EXIT from FOR statement" )
       EXIT
     ENDIF
   NEXT loop
-  Qout( "After ", loop, "loops" )
+  QOut( "After ", loop, "loops" )
 
 
 //  LOOP
 
   loop :={|loop| loop}
-  EVAL( {|loop| loop}, loop )
+  Eval( {|loop| loop}, loop )
 
   loop =1
   WHILE loop <= 10
-    Qout( loop )
+    QOut( loop )
     IF( loop == 5 )
-        Qout( "LOOP to 7" )
+        QOut( "LOOP to 7" )
         loop :=7
         LOOP
     ENDIF
     IF( loop == 9 )
-      Qout( "EXIT form while" )
+      QOut( "EXIT form while" )
       EXIT
     ENDIF
     ++loop
   ENDDO
-  Qout( "After ", loop, " loops" )
+  QOut( "After ", loop, " loops" )
 
   loop[ 1 ] :=1
   loop :=loop[ loop ]
@@ -805,7 +805,7 @@ FUNCTION using
 LOCAL using
 PRIVATE &using
 
-  EVAL( using )
+  Eval( using )
 
   FOR using:=1 TO 10
     ? using
@@ -835,7 +835,7 @@ STATI stati
 STATIC static
 PRIVATE &STATIC
 
-  EVAL( STATIC )
+  Eval( STATIC )
 
   FOR static:=1 TO 10
     ? static
@@ -874,7 +874,7 @@ STAT return
 LOCAL Self
 PRIVATE &return
 
-  EVAL( return )
+  Eval( return )
 
   FOR return:=1 TO 10
     ? return
@@ -931,7 +931,7 @@ FUNCTION RECOVER
 STAT RECOVER
 PRIVATE &RECOVER
 
-  EVAL( RECOVER )
+  Eval( RECOVER )
 
   FOR RECOVER:=1 TO 10
     ? RECOVER
@@ -978,7 +978,7 @@ FUNCTION OTHERWISE
 STAT OTHERWISE
 PRIVATE &OTHERWISE
 
-  EVAL( OTHERWISE )
+  Eval( OTHERWISE )
 
   FOR OTHERWISE:=1 TO 10
     ? OTHERWISE

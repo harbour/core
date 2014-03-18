@@ -5,6 +5,10 @@
 
 -w3 -es2
 
+-depurlbase=libusb:http://libusb.org/
+-deppkgname=libusb:libusb-devel{rpm}
+-deppkgname=libusb:libusb-dev{deb}
+-deppkgname=libusb:libusb{homebrew}
 -depkeyhead=libusb:libusb.h
 -depcontrol=libusb:${HB_WITH_LIBUSB}
 -depincpath=libusb:/usr/include

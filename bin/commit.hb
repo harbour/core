@@ -1200,17 +1200,14 @@ STATIC FUNCTION FixFuncCaseFilter( cFileName )
 
    /* TOFIX: Harbour repo specific */
    STATIC sc_hFileExceptions := { ;
-      "ChangeLog.txt" =>, ;  /* not much reason to except this one */
-      "keywords.prg"  =>, ;  /* test code */
-      "c_std.txt"     =>, ;  /* C level doc */
-      "locks.txt"     =>, ;  /* C level doc */
-      "pcode.txt"     =>, ;  /* C level doc */
-      "tracing.txt"   => }   /* C level doc */
+      "c_std.txt"   =>, ;  /* C level doc */
+      "locks.txt"   =>, ;  /* C level doc */
+      "pcode.txt"   =>, ;  /* C level doc */
+      "tracing.txt" => }   /* C level doc */
 
    /* TOFIX: Harbour repo specific */
    STATIC sc_aMaskExceptions := { ;
-      "*/3rd/*"          , ;  /* foreign code */
-      "tests/hbpptest/*" }    /* test code, must be kept as is */
+      "*/3rd/*" }  /* foreign code */
 
    RETURN ;
       ! Empty( hb_FNameExt( cFileName ) ) .AND. ;

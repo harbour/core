@@ -89,7 +89,7 @@ CREATE CLASS GenerateText FROM TPLGenerate
    METHOD AddIndex( oEntry ) HIDDEN
    METHOD BeginSection( cSection, cFilename )
 #if 0
-   METHOD EndSection( cSection, cFilename )  // will use inherited method
+   METHOD EndSection( cSection, cFilename )  /* will use inherited method */
 #endif
    METHOD Generate()
 

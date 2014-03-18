@@ -8,6 +8,10 @@
 -w3 -es2
 
 # NOTE: Adapt and uncomment, if the library has a 3rd party lib dependency
+# -depurlbase=lib3rd:https://example.org/
+# -deppkgname=lib3rd:lib3rd-devel{rpm}
+# -deppkgname=lib3rd:lib3rd-dev{deb}
+# -deppkgname=lib3rd:lib3rd{homebrew}
 # -depkeyhead=lib3rd:lib3rd.h
 # -depcontrol=lib3rd:${HB_WITH_LIB3RD}
 # -depincpath=lib3rd:/usr/include

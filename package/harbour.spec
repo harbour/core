@@ -99,7 +99,7 @@ License:        GPL (plus exception)
 Group:          Development/Languages
 URL:            http://harbour-project.org/
 Source:         %{name}-%{version}.src.tar.gz
-BuildPrereq:    gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
+BuildRequires:  gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name} harbour lib%{name}.so
 BuildRoot:      /tmp/%{name}-%{version}-root
@@ -419,7 +419,8 @@ rm -f $HB_INSTALL_LIB/libbz2.a \
       $HB_INSTALL_LIB/libexpat.a \
       $HB_INSTALL_LIB/liblzf.a \
       $HB_INSTALL_LIB/libminilzo.a \
-      $HB_INSTALL_LIB/libmxml.a
+      $HB_INSTALL_LIB/libmxml.a \
+      $HB_INSTALL_LIB/libtiff.a
 
 ######################################################################
 ## Post install/uninstall scripts

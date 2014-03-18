@@ -97,9 +97,8 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
    ENDIF
 
    hb_default( @lDataMethod, .T. )
-   hb_default( @nClasstype, HB_MSGLISTALL )
 
-   aInfo := oObject:ClassSel( nClassType )
+   aInfo := oObject:ClassSel( hb_defaultValue( nClasstype, HB_MSGLISTALL ) )
    aData := {}
    nFirst := AScan( aInfo, {| n | hb_LeftEq( n, "_" ) } )
 

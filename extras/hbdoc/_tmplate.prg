@@ -90,8 +90,7 @@ CREATE CLASS Entry
 #define _P TPL_PREFORMATTED
 #define _U TPL_OUTPUT
 
-   // this is best viewed with a fixed-width font
-   // the columns of this array correspond to the elements of Fields
+   /* the columns of this array correspond to the elements of Fields */
    CLASS VAR Templates AS ARRAY INIT { ;
       { "Template"      , { _S, _T,  0+_U,  0, _O   ,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0   +_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U, _E } }, ;
       { "Document"      , { _S, _T, _R+_U, _R, _O+_U, _O+_U,  0+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0   +_U,  0   +_U,  0+_U,  0+_U, _O+_U, _O+_U, _O+_U, _E } }, ;

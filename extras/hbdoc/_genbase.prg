@@ -62,9 +62,9 @@ CREATE CLASS TPLGenerate
    METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
    METHOD AddReference( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
    METHOD BeginSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth++
-   METHOD EndSection( cSection, cFilename ) INLINE  HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth--
+   METHOD EndSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth--
    METHOD Generate() INLINE NIL
-   METHOD IsIndex() INLINE ( ::nType == INDEX_ )
+   METHOD IsIndex() INLINE ::nType == INDEX_
 
    PROTECTED:
 

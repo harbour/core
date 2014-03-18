@@ -17,14 +17,14 @@
 PROCEDURE Main()
 
 #ifdef __HARBOUR__
-#xtranslate CCC <v> => QOUT( <v>[2] [, <v>[<v>]\[3\]] )
+#xtranslate CCC <v> => QOut( <v>[2] [, <v>[<v>]\[3\]] )
 CCC b
 #endif
 
-#xtranslate CCCC <v> => QOUT(  <v><v>\[3\] )
+#xtranslate CCCC <v> => QOut(  <v><v>\[3\] )
 CCCC c
 
-#xtranslate AAA [A <a> [B <b>] ] => Qout([<a>][, <b>])
+#xtranslate AAA [A <a> [B <b>] ] => QOut([<a>][, <b>])
   AAA
   AAA A a
   AAA A a B b
@@ -52,7 +52,7 @@ CCCC c
 
 /* ---------------------------------------------------------------------*/
 /* simple optional clause */
-#command ZZZ [<v>] => QOUT( [ <v>\[1\] ] )
+#command ZZZ [<v>] => QOut( [ <v>\[1\] ] )
    ZZZ a
    ZZZ
    ZZZ a[1]+2
@@ -60,7 +60,7 @@ CCCC c
    ZZZ 'z'
    ZZZ "z"
 
-#translate TZZZ [<v>] => QOUT( [ <v>\[1\] ] )
+#translate TZZZ [<v>] => QOut( [ <v>\[1\] ] )
    TZZZ a
    TZZZ
    TZZZ a[1]+2
@@ -182,23 +182,23 @@ _DUMB_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a
 /* Notice that Clipper and Harbour doesn't remove spaces from
  * expressions passed for stingify
 */
- index on LEFT(   f1  ,  10   )      to _tst
+ index on Left(   f1  ,  10   )      to _tst
 
 /* ---------------------------------------------------------------------*/
 /* repeated optinal clauses */
 #xcommand INSERT INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) => ;
-if <table>->( dbappend() ) ;;
+if <table>->( dbAppend() ) ;;
  replace <table>-><uField1> with <uVal1> ;;
  [ replace <table>-><uFieldN> with <uValN> ; ] ;
- <table>->( dbunlock() ) ;;
+ <table>->( dbUnlock() ) ;;
 endif
    insert into test ( FIRST, LAST, STREET ) values ( "first", "last", "street" )
 
 #xcommand INSERT2 INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) => ;
-if <table>->( dbappend() ) ;;
+if <table>->( dbAppend() ) ;;
  <table>-><uField1> := <uVal1> ;;
  [ <table>-><uFieldN> := <uValN> ; ] ;
- <table>->( dbunlock() ) ;;
+ <table>->( dbUnlock() ) ;;
 endif
    insert2 into test ( FIRST, LAST, STREET ) ;
    values ( "first", "last", "street" )
@@ -447,12 +447,12 @@ endif
       => SetPos( <row>, <col> )                                             ;
        ; AAdd( GetList,                                                     ;
               _GET_( <var>, <(var)>, NIL, <{valid}>, <{when}> ) )           ;
-       ; ATail(GetList):Control := _PushButt_( <caption>, <message>,        ;
+       ; ATail(GetList):Control := _PUSHBUTT_( <caption>, <message>,        ;
                        <color>, <{fblock}>, <{sblock}>, <style>,            ;
                        <sizex>, <sizey>, <capxoff>, <capyoff>,              ;
                        <bitmap>, <bmpxoff>, <bmpyoff> )                     ;
        ; ATail(GetList):reader  := { | a, b, c, d |                         ;
-                                    GuiReader( a, b, c, d ) }               ;
+                                    GUIReader( a, b, c, d ) }               ;
       [; ATail(GetList):<msg>]                                              ;
       [; ATail(GetList):Control:<guimsg>]                                   ;
        ; ATail(GetList):Control:Display()
@@ -481,7 +481,7 @@ endif
    [ FORMAT <format:TEXT,OEMTEXT,BITMAP,DIF> ] ;
    [ OF <oWnd> ]                               ;
    => ;
-   <oClp> := TClipboard():New( [UPPER(<(format)>)], <oWnd> )
+   <oClp> := TClipboard():New( [Upper(<(format)>)], <oWnd> )
 DEFINE CLIPBOARD oC OF oD FORMAT TEXT
 
 #xcommand DECLARE WINDOW <w> ;

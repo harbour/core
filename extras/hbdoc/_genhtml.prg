@@ -216,7 +216,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
    LOCAL cCaption := oEntry:FieldName( cField )
    LOCAL cEntry := oEntry:&( cField )
 
-   // TODO: change this to search the CSS document itself
+   /* TODO: change this to search the CSS document itself */
    LOCAL cTagClass := iif( Lower( cField ) + "|" $ "name|oneliner|examples|tests|", Lower( cField ), "itemtext" )
 
    IF ! Empty( cEntry )
@@ -329,7 +329,7 @@ METHOD RecreateStyleDocument( cStyleFile ) CLASS GenerateHTML
    #pragma __streaminclude "hbdoc.css" | cString := %s
 
    IF ! hb_MemoWrit( ::cFolder + hb_ps() + cStyleFile, cString )
-      // TODO: raise an error, could not create style file
+      /* TODO: raise an error, could not create style file */
    ENDIF
 
    RETURN self

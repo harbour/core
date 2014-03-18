@@ -151,7 +151,7 @@ PROCEDURE Main( ... )
       "not in hbextern"     => {}, ;
       "<eol>"               => NIL }
 
-   // remove formats that have not been implemented yet
+   /* remove formats that have not been implemented yet */
    FOR EACH item IN s_hSwitches[ "format-list" ] DESCEND
       IF item == "all"
       ELSEIF ! hb_IsFunction( "Generate" + item )
@@ -207,7 +207,7 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   // load hbextern.ch
+   /* load hbextern.ch */
    FileEval( s_hSwitches[ "basedir" ] + "include" + hb_ps() + "hbextern.ch", ;
       {| c | iif( hb_LeftEq( c, "EXTERNAL " ), ;
                   AAdd( s_hSwitches[ "hbextern.ch" ], SubStr( c, Len( "EXTERNAL " ) + 1 ) ), ;
@@ -232,10 +232,10 @@ PROCEDURE Main( ... )
       hb_ntos( oR:CategoryIndex( oR:Category ) ) + " " + hb_ntos( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + Chr( 1 ) + oR:Name + " " ;
       } )
 
-   // TODO: what is this for?  it is sorting the category sub-arrays and removing empty (?) sub-arrays, but why?
+   /* TODO: what is this for?  it is sorting the category sub-arrays and removing empty (?) sub-arrays, but why? */
    FOR EACH item IN sc_hConstraint[ "categories" ]
       IF ! Empty( item )
-         IF Len( item ) == 4  // category, list of subcategory, list of entries, handle
+         IF Len( item ) == 4  /* category, list of subcategory, list of entries, handle */
             FOR idx2 := Len( item[ 3 ] ) TO 1 STEP -1
                IF HB_ISARRAY( item[ 3 ][ idx2 ] )
                   ASort( item[ 3 ][ idx2 ], , , ;
@@ -334,7 +334,7 @@ PROCEDURE Main( ... )
                                  oDocument:AddEntry( item4 )
                                  IF oIndex != NIL
                                     oDocument:AddReference( "Index", oIndex:cFilename )
-                                    // this kind of works; the reference is outputed but it is not what I meant
+                                    /* this kind of works; the reference is outputed but it is not what I meant */
                                     oDocument:AddReference( item[ 1 ], oIndex:cFilename, item[ 4 ] )
                                  ENDIF
                               ENDIF
@@ -383,7 +383,7 @@ PROCEDURE Main( ... )
 
    RETURN
 
-STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive procedure
+STATIC PROCEDURE ProcessFolder( cFolder, aContent )  /* this is a recursive procedure */
 
    LOCAL file
 
@@ -415,7 +415,7 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
 
 STATIC FUNCTION ProcessFile( cFile, aContent )
 
-   LOCAL aHandle := { F_ERROR, 0 } // file handle and position
+   LOCAL aHandle := { F_ERROR, 0 } /* file handle and position */
    LOCAL cSectionName
    LOCAL cVersion
    LOCAL o
@@ -497,7 +497,9 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
             IF ( idxCategory := AScan( sc_hConstraint[ "categories" ], {| c | ! Empty( c ) .AND. iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) } ) ) == 0
                AddErrorCondition( cFile, "Unknown CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
-               // lAccepted := .F.
+#if 0
+               lAccepted := .F.
+#endif
             ENDIF
 
          CASE cSectionName == "SUBCATEGORY" .AND. o:IsField( "SUBCATEGORY" )
@@ -505,12 +507,16 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             IF idxCategory <= 0 .OR. o:Category == ""
 
                AddErrorCondition( cFile, "SUBCATEGORY '" + cSection + "' defined before CATEGORY", aHandle[ 2 ] )
-               // lAccepted := .F.
+#if 0
+               lAccepted := .F.
+#endif
 
             ELSEIF ( idxSubCategory := AScan( sc_hConstraint[ "categories" ][ idxCategory ][ 2 ], {| c | c != NIL .AND. iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) } ) ) == 0
 
                AddErrorCondition( cFile, "Unknown SUBCATEGORY '" + sc_hConstraint[ "categories" ][ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
-               // lAccepted := .F.
+#if 0
+               lAccepted := .F.
+#endif
 
             ENDIF
 
@@ -521,7 +527,9 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                   Lower( cSection ) == "none." )
 
             AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + cSection + ")", aHandle[ 2 ] - 1 )
-            // lAccepted := .F.
+#if 0
+            lAccepted := .F.
+#endif
 
          CASE ! o:IsConstraint( cSectionName, cSection )
 
@@ -628,12 +636,12 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
             lLastPreformatted := lPreformatted := o:IsPreformatted( cSectionName )
             nLastIndent := -1
             DO WHILE ( nPosition := FSeek( aHandle[ 1 ], 0, FS_RELATIVE ) ), FReadLn( @aHandle, @cBuffer )
-               // TOFIX: this assumes that every line starts with " *"
+               /* TOFIX: this assumes that every line starts with " *" */
                cBuffer := RTrim( SubStr( cBuffer, 3 ) )
                IF Left( LTrim( cBuffer ), 1 ) == s_hSwitches[ "DELIMITER" ] .AND. ;
                   Right( cBuffer, 1 ) == s_hSwitches[ "DELIMITER" ]
                   FSeek( aHandle[ 1 ], nPosition, FS_SET )
-                  aHandle[ 2 ]-- // decrement the line number when rewinding the file
+                  aHandle[ 2 ]-- /* decrement the line number when rewinding the file */
                   EXIT
                ELSEIF Len( AllTrim( cBuffer ) ) == 0
                   IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() )
@@ -919,21 +927,21 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
          "", ;
          "Options:", ;
          { ;
-            "-? or --help // this screen", ;
-            "-? <option> or --help <option> // help on <option>, <option> is one of:", ;
+            "-? or --help                    this screen", ;
+            "-? <option> or --help <option>  help on <option>, <option> is one of:", ;
             2, ;
             { "Categories", "Templates", "Compliance", "Platforms" }, ;
             1, ;
-            "-[format=]<type> // output type, default is text, or one of:", ;
+            "-[format=]<type>                output type, default is text, or one of:", ;
             2, ;
             s_hSwitches[ "format-list" ], ;
             1, ;
-            "-output-single // output is one file" + IsDefault( s_hSwitches[ "output" ] == "single" ), ;
-            "-output-category // output is one file per category" + IsDefault( s_hSwitches[ "output" ] == "category" ), ;
-            "-output-entry // output is one file per entry (function, command, etc)" + IsDefault( s_hSwitches[ "output" ] == "entry" ), ;
-            "-source=<folder> // source folder, default is .." + hb_ps() + "..", ;
-            "-include-doc-source // output is to indicate the document source file name", ;
-            "-include-doc-version // output is to indicate the document source file version" ;
+            "-output-single                  output is one file" + IsDefault( s_hSwitches[ "output" ] == "single" ), ;
+            "-output-category                output is one file per category" + IsDefault( s_hSwitches[ "output" ] == "category" ), ;
+            "-output-entry                   output is one file per entry (function, command, etc)" + IsDefault( s_hSwitches[ "output" ] == "entry" ), ;
+            "-source=<folder>                source folder, default is .." + hb_ps() + "..", ;
+            "-include-doc-source             output is to indicate the document source file name", ;
+            "-include-doc-version            output is to indicate the document source file version" ;
          } }
 
    CASE aArgs[ 2 ] == "Categories"
@@ -966,7 +974,7 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
 
    ENDCASE
 
-   // using hbmk2 style
+   /* using hbmk2 style */
    AEval( aHelp, {| x | ShowSubHelp( x, @nMode, 0 ) } )
 
    RETURN
@@ -1040,7 +1048,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
                   idx--
                   DO CASE
                   CASE ! SubStr( cLine, idx, 1 ) $ " ,;.!?"
-                     //
+                     /* do nothing */
                   CASE Upper( SubStr( cLine, idx, 3 ) ) == ".T." .OR. Upper( SubStr( cLine, idx, 3 ) ) == ".F."
                      idx--
                   CASE Upper( SubStr( cLine, idx - 2, 3 ) ) == ".T." .OR. Upper( SubStr( cLine, idx - 1, 3 ) ) == ".F."
@@ -1228,8 +1236,8 @@ PROCEDURE init_Templates()
 
    FOR EACH item IN aCategories
       IF ! Empty( item )
-         AAdd( item, Array( Len( item[ 2 ] ) ) ) // holder array of sub-category entries
-         AAdd( item, "" ) // holder for sub-category file name
+         AAdd( item, Array( Len( item[ 2 ] ) ) )  /* holder array of sub-category entries */
+         AAdd( item, "" )  /* holder for sub-category file name */
       ENDIF
    NEXT
 

@@ -32,7 +32,7 @@ License:        GPL (plus exception)
 Group:          Development/Languages
 URL:            http://harbour-project.org/
 Source:         harbour-%{version}.src.tar.gz
-BuildPrereq:    gcc binutils
+BuildRequires:  gcc binutils
 Requires:       gcc binutils sh-utils harbour = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name}
 BuildRoot:      /tmp/%{name}-%{version}-root

@@ -7,6 +7,8 @@
 
 #-stop{!android}
 
+-depurlbase=jni:https://developer.android.com/sdk/
+-deppkgname=jni:android-sdk{homebrew}
 -depkeyhead=jni:jni.h
 -depcontrol=jni:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=jni:${JAVA_HOME}/include
