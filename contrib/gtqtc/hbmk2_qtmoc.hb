@@ -219,11 +219,11 @@ STATIC FUNCTION IsVersionOK( cBIN, /* @ */ cVer )
 
    LOCAL aHit
 
-   LOCAL cStdErr := "", cStdOut
+   LOCAL cStdOutErr := ""
 
-   hb_processRun( cBIN + " -v",, @cStdOut, @cStdErr )
+   hb_processRun( cBIN + " -v",, @cStdOutErr, @cStdOutErr )
 
-   aHit := hb_regexAll( "([0-9]+)\.([0-9]+)\.([0-9]+)", hb_StrReplace( cStdErr, Chr( 13 ) + Chr( 10 ) ) )
+   aHit := hb_regexAll( "([0-9]+)\.([0-9]+)\.([0-9]+)", hb_StrReplace( cStdOutErr, Chr( 13 ) + Chr( 10 ) ) )
 
    IF Len( aHit ) >= 1
       cVer := aHit[ 1 ][ 1 ]
