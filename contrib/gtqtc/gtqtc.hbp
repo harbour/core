@@ -24,6 +24,7 @@
 -depcontrol=qt5:${HB_WITH_QT}
 -depkeyhead=qt5:QtCore/QJsonObject
 -depoptional=qt5:yes
+-depincpath=qt5:/usr/local/opt/qt5/include{darwin}
 -depfinish=qt5
 
 {!HBMK_HAS_QT5}-depurlbase=qt:https://qt-project.org/
