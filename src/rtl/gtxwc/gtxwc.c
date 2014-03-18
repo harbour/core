@@ -5158,6 +5158,10 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 ) /* TODO */
             wnd->fontWidth = iVal;
+
+         if( iVal == 100 )
+             wnd->szFontWeight = hb_strdup( "bold" ); /* TODO: hernad hack */
+
          break;
 
       case HB_GTI_FONTNAME:

@@ -75,9 +75,11 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
 
    /* from specified list of .hbx files */
 
-   FOR EACH cName IN hb_ATokens( cHBXList )
-      HBXToFuncList( @cFunctions, hb_MemoRead( hb_PathJoin( hb_DirBase(), cName ) ) )
-   NEXT
+   IF !Empty( cHBXList )
+      FOR EACH cName IN hb_ATokens( cHBXList )
+         HBXToFuncList( @cFunctions, hb_MemoRead( hb_PathJoin( hb_DirBase(), cName ) ) )
+      NEXT
+   ENDIF
 
    RETURN
 
@@ -94,6 +96,7 @@ STATIC PROCEDURE WalkDir( cDir, /* @ */ cFunctions )
    RETURN
 
 STATIC PROCEDURE HBXToFuncList( /* @ */ cFunctions, cHBX )
+
    LOCAL cLine
 
    FOR EACH cLine IN hb_ATokens( StrTran( cHBX, Chr( 13 ) ), Chr( 10 ) )

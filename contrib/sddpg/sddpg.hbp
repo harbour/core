@@ -22,6 +22,6 @@ rddsql.hbc
 
 -iflag={bcc}-a
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
