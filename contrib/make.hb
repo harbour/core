@@ -556,7 +556,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( hb_DirSepToOS( cProjectPath ) ) )
 
    cCommand := s_cBinDir + "hbmk2" + ;
-      " -quiet -width=0 -autohbm-" + ;
+      " -lang=en -quiet -width=0 -autohbm-" + ;
       " @" + StrTran( s_cHome + "hbpre", "\", "/" ) + ;
       cOptionsPre + ;
       " " + StrTran( cProjectPath, "\", "/" ) + ;

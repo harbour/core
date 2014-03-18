@@ -3541,11 +3541,11 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor * pColor )
                 * as the objective function, this accounts for differences
                 * in the color sensitivity of the eye.
                 */
-               dDiff = 0.30 * ( ( ( int ) pColor->red  ) - ( int ) colorTable[i].red );
+               dDiff = 0.30 * ( ( ( int ) pColor->red   ) - ( int ) colorTable[ i ].red );
                dDistance = dDiff * dDiff;
-               dDiff = 0.61 * ( ( ( int ) pColor->green) - ( int ) colorTable[i].green );
+               dDiff = 0.61 * ( ( ( int ) pColor->green ) - ( int ) colorTable[ i ].green );
                dDistance += dDiff * dDiff;
-               dDiff = 0.11 * ( ( ( int ) pColor->blue ) - ( int ) colorTable[i].blue );
+               dDiff = 0.11 * ( ( ( int ) pColor->blue  ) - ( int ) colorTable[ i ].blue );
                dDistance += dDiff * dDiff;
                if( dDistance < dClosestColorDist )
                {
