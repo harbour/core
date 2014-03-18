@@ -438,7 +438,7 @@ You'll need these base packages to build/package/test/use Harbour:
 
     $ sudo apt-get install bash git gcc binutils fakeroot debhelper valgrind upx uncrustify
 
-You'll need these packages to compile certain contribs and optional Harbour features:
+You'll need these packages to compile certain optional Harbour features:
 
       for gtcrs terminal lib:    $ sudo apt-get install libncurses-dev
       for gtsln terminal lib:    $ sudo apt-get install libslang2-dev OR
@@ -458,7 +458,7 @@ You'll need these base packages to build/package/test/use Harbour:
 
     bash git gcc make glibc-devel rpm valgrind upx uncrustify
 
-You'll need these packages to compile certain contribs and optional Harbour features:
+You'll need these packages to compile certain optional Harbour features:
 
       for gtcrs terminal lib:    ncurses-devel ncurses
       for gtsln terminal lib:    slang-devel slang
@@ -1686,7 +1686,7 @@ Supported shells per host platforms:
    Contributors are NOT LIABLE for any damages that result from using
    Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
 
-   If you think you can make Harbour better: contribute.
+   If you feel you can make Harbour better: contribute.
    [See how](CONTRIBUTING.md).
 
    The information this document is subject to change without notice

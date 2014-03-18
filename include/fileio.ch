@@ -52,10 +52,10 @@
 #define _FILEIO_CH
 
 /* File create flags */
-#define FC_NORMAL          0           /* No file attributes are set      */
+#define FC_NORMAL          0           /* No file attributes are set */
 #define FC_READONLY        1           /* Read-only file attribute is set */
-#define FC_HIDDEN          2           /* Hidden file attribute is set    */
-#define FC_SYSTEM          4           /* System file attribute is set    */
+#define FC_HIDDEN          2           /* Hidden file attribute is set */
+#define FC_SYSTEM          4           /* System file attribute is set */
 
 /* File attributes flags */
 #define HB_FA_ALL          0x00000000
@@ -95,8 +95,8 @@
 #define HB_FA_XOTH         0x00010000  /* 0001 execute/search by others */
 
 /* File access flags */
-#define FO_READ            0           /* File is opened for reading             */
-#define FO_WRITE           1           /* File is opened for writing             */
+#define FO_READ            0           /* File is opened for reading */
+#define FO_WRITE           1           /* File is opened for writing */
 #define FO_READWRITE       2           /* File is opened for reading and writing */
 
 /* File open flags */
@@ -105,20 +105,20 @@
 #define FO_EXCL            0x0400      /* create and open only if file doesn't exist */
 
 /* File sharing flags */
-#define FO_COMPAT          0           /* No sharing specified                               */
-#define FO_EXCLUSIVE       16          /* Deny further attempts to open the file             */
+#define FO_COMPAT          0           /* No sharing specified */
+#define FO_EXCLUSIVE       16          /* Deny further attempts to open the file */
 #define FO_DENYWRITE       32          /* Deny further attempts to open the file for writing */
 #define FO_DENYREAD        48          /* Deny further attempts to open the file for reading */
-#define FO_DENYNONE        64          /* Do not deny any further attempts to open the file  */
+#define FO_DENYNONE        64          /* Do not deny any further attempts to open the file */
 #define FO_SHARED          FO_DENYNONE
 
 /* File seek mode flags */
-#define FS_SET             0           /* Seek from beginning of file    */
+#define FS_SET             0           /* Seek from beginning of file */
 #define FS_RELATIVE        1           /* Seek from current file pointer */
-#define FS_END             2           /* Seek from end of file          */
+#define FS_END             2           /* Seek from end of file */
 
 /* File mode flags */
-#define FD_BINARY          1           /* Binary mode (raw)  */
+#define FD_BINARY          1           /* Binary mode (raw) */
 #define FD_RAW             FD_BINARY
 #define FD_TEXT            2           /* Text mode (cooked) */
 #define FD_COOKED          FD_TEXT
@@ -126,6 +126,12 @@
 
 /* File system error codes */
 #define F_ERROR            ( -1 )      /* Unspecified error */
+
+/* hb_FLock() extended file locking flags */
+#define HB_FLX_EXCLUSIVE   0x0000      /* Exclusive lock */
+#define HB_FLX_SHARED      0x0100      /* Shared lock */
+#define HB_FLX_NO_WAIT     0x0000      /* Do not wait for successful lock */
+#define HB_FLX_WAIT        0x0200      /* Wait for lock until success */
 
 /* hb_DiskSpace() types */
 #define HB_DISK_AVAIL      0

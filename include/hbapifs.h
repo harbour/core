@@ -57,30 +57,30 @@ HB_EXTERN_BEGIN
 #define FS_ERROR ( HB_FHANDLE ) F_ERROR
 
 /* File locking flags */
-#define FL_LOCK       0x0000   /* Lock a region   */
+#define FL_LOCK       0x0000   /* Lock a region */
 #define FL_UNLOCK     0x0001   /* Unlock a region */
 #define FL_MASK       0x00FF   /* Mask for lock type */
 
 /* Extended file locking flags */
-#define FLX_EXCLUSIVE 0x0000   /* Exclusive lock  */
-#define FLX_SHARED    0x0100   /* Shared lock     */
-#define FLX_WAIT      0x0200   /* Wait for lock until success */
+#define FLX_EXCLUSIVE HB_FLX_EXCLUSIVE  /* Exclusive lock */
+#define FLX_SHARED    HB_FLX_SHARED     /* Shared lock */
+#define FLX_WAIT      HB_FLX_WAIT       /* Wait for lock until success */
 
 /* File inheritance flags */
-#define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle     */
+#define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle */
 #define FO_PRIVATE    0x0080   /* Spawned processes can not inherit this file handle */
 
 /* Extended file open mode flags */
 #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
-#define FXO_APPEND    0x0200   /* Create (append if exists)   */
+#define FXO_APPEND    0x0200   /* Create (append if exists) */
 #define FXO_UNIQUE    0x0400   /* Create unique file FO_EXCL ??? */
-#define FXO_FORCEEXT  0x0800   /* Force default extension     */
-#define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
-#define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
+#define FXO_FORCEEXT  0x0800   /* Force default extension */
+#define FXO_DEFAULTS  0x1000   /* Use SET command defaults */
+#define FXO_DEVICERAW 0x2000   /* Open devices in raw mode */
 /* Harbour extension */
 #define FXO_NOSEEKPOS FXO_DEVICERAW /* seek pos not needed in regular file */
-#define FXO_SHARELOCK 0x4000   /* emulate MS-DOS SH_DENY* mode in POSIX OS */
-#define FXO_COPYNAME  0x8000   /* copy final szPath into pszFileName */
+#define FXO_SHARELOCK 0x4000        /* emulate MS-DOS SH_DENY* mode in POSIX OS */
+#define FXO_COPYNAME  0x8000        /* copy final szPath into pszFileName */
 
 /* these definitions should be cleared,
  * now they only help to clean lower level code

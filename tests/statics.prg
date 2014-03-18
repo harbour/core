@@ -8,9 +8,10 @@ STATIC s_z := "First"
 
 PROCEDURE Main()
 
-   LOCAL i, cb
+   STATIC a := "Hello"
+   STATIC b := { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
 
-   STATIC a := "Hello", b := { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+   LOCAL i, cb
 
    ? a
    ? b[ 2 ]
@@ -50,8 +51,8 @@ STATIC PROCEDURE NumStat( a )
 
    LOCAL cb
 
-// STATIC m := s_n    // uncomment it to see an error
-// STATIC m := Time() // uncomment it to see an error
+// STATIC s_m := s_n    // uncomment it to see an error
+// STATIC s_m := Time() // uncomment it to see an error
 
    HB_SYMBOL_UNUSED( a )
 
@@ -63,6 +64,6 @@ STATIC PROCEDURE NumStat( a )
 
 STATIC FUNCTION DetachVar( xLocal )
 
-   STATIC xStatic := 100
+   STATIC s_nStatic := 100
 
-   RETURN {| x | ++xStatic, x + xStatic + xLocal }
+   RETURN {| x | ++s_nStatic, x + s_nStatic + xLocal }

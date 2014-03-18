@@ -197,7 +197,7 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
 
          IF Empty( cBIN )
             IF Empty( cBIN := hbmk_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" ) )
-               hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not set, could not autodetect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not or wrongly set, could not autodetect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )
                RETURN NIL
             ENDIF
          ENDIF
@@ -209,7 +209,7 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
       ENDIF
 
       IF hbmk[ "lINFO" ]
-         hbmk_OutStd( hbmk, hb_StrFormat( "Using QT '%1$s' executable: %2$s (%3$s) (autodetected)", cName, cBIN, cVer ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( "Using QT '%1$s' executable: %2$s (%3$s)", cName, cBIN, cVer ) )
       ENDIF
    ENDIF
 

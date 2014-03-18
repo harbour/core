@@ -1242,7 +1242,7 @@ FUNCTION PreResult( pre, out, pCnt )
    ELSE
       OutStd( pre, hb_eol() )
       OutStd( out, hb_eol() )
-      OutStd( " => FAILED in LINE: ", ProcLine( 1 ), hb_eol() )
+      OutStd( " => FAILED in LINE:", ProcLine( 1 ), hb_eol() )
       i := 1
       DO WHILE SubStr( pre, i, 1 ) == SubStr( out, i, 1 )
          i++

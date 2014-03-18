@@ -28,7 +28,7 @@
 
 {!HBMK_HAS_QT5}-depurlbase=qt:https://qt-project.org/
 {!HBMK_HAS_QT5}-depurlbase=qt:https://download.qt-project.org/official_releases/qt/
-{!HBMK_HAS_QT5&!android}-deppkgname=qt:QtCore
+{!HBMK_HAS_QT5&!darwin&!android}-deppkgname=qt:QtCore
 {!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
 {!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}
 {!HBMK_HAS_QT5&HB_BUILD_3RDEXT='no'}-depcontrol=qt:no
@@ -37,9 +37,9 @@
 {!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/include
 {!HBMK_HAS_QT5&bsd}-depincpath=qt:/usr/local/include/qt4
 {!HBMK_HAS_QT5&beos}-depincpath=qt:/boot/common/include
-{darwin}-depincpath=qt:/Developer/qt/include
-{darwin}-depincpath=qt:/Library/Frameworks
-{darwin}-depincpath=qt:/usr/local/include
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/Developer/qt/include
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/Library/Frameworks
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/usr/local/include
 
 -hbx=${hb_name}
 

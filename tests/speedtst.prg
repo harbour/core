@@ -41,7 +41,7 @@
       #define __ST__
    #endif
    /* Clipper does not have function to extract process time */
-   #xtranslate hb_SecondsCPU([<x>]) => Seconds()
+   #xtranslate hb_SecondsCPU( [<x>] ) => Seconds()
 #endif
 
 #ifdef FlagShip
@@ -50,7 +50,7 @@
    #ifndef __ST__
       #define __ST__
    #endif
-   #xtranslate hb_SecondsCPU([<x>]) => SecondsCPU(<x>)
+   #xtranslate hb_SecondsCPU( [<x>] ) => SecondsCPU( <x> )
    /* the FlagShip version of Seconds() returns integer values */
    #xtranslate Seconds() => fs_seconds()
 #endif
@@ -58,7 +58,7 @@
 #ifdef __XPP__
    #define __NO_OBJ_ARRAY__
    /* Has xBase++ function to extract process time? */
-   #xtranslate hb_SecondsCPU([<x>]) => Seconds()
+   #xtranslate hb_SecondsCPU( [<x>] ) => Seconds()
 #endif
 
 #ifdef __CLIP__
@@ -67,7 +67,7 @@
    #ifndef __ST__
       #define __ST__
    #endif
-   #xtranslate hb_SecondsCPU([<x>]) => SecondsCPU(<x>)
+   #xtranslate hb_SecondsCPU( [<x>] ) => SecondsCPU( <x> )
 #endif
 
 #ifdef __XHARBOUR__
@@ -96,8 +96,8 @@
 
 
 #command ? => spd_out()
-#command ? <xx,...> => spd_out();spd_out(<xx>)
-#command ?? <xx,...> => spd_out(<xx>)
+#command ? <xx,...> => spd_out(); spd_out( <xx> )
+#command ?? <xx,...> => spd_out( <xx> )
 
 #ifdef __HARBOUR__
    #ifdef __XHARBOUR__
@@ -702,13 +702,13 @@ function f_prv( x )
 
 /*
 function f_pub( x )
-   memvar PUB_C
-   public PUB_C := x
+   memvar p_PUB_C
+   public p_PUB_C := x
    return nil
 
 function f_stat( x )
-   static STAT_C
-   STAT_C := x
+   static s_STAT_C
+   s_STAT_C := x
    return nil
 */
 
@@ -743,8 +743,8 @@ static procedure create_db()
 
    remove_db()
    dbCreate( TMP_FILE, { ;
-      { "F_C", "C", 10, 0 },;
-      { "F_N", "N", 10, 2 },;
+      { "F_C", "C", 10, 0 }, ;
+      { "F_N", "N", 10, 2 }, ;
       { "F_D", "D",  8, 0 } } )
    use TMP_FILE exclusive
    dbAppend()
