@@ -21,7 +21,7 @@ PROCEDURE Main()
 
    LOCAL tmp, n
 
-   ? "Testing Harbour For Next loops."
+   ? "Testing FOR NEXT loops."
 
    FOR tmp := 1 TO Len( array )
 

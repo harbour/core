@@ -1390,7 +1390,7 @@ HB_FUNC( WVG_PICTURE )
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
       gObj->iPicture        = pWVT->pGUI->iPicture[ hb_parni( 6 ) - 1 ];
-      gObj->iData           = ( hb_parl( 7 ) ? 1 : 0 );
+      gObj->iData           = hb_parl( 7 ) ? 1 : 0;
       gObj->bDestroyPicture = HB_FALSE;
 
       gObj->gObjNext = pWVT->gObjs;
@@ -1424,7 +1424,7 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
       gObj->iPicture        = ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 6 );
-      gObj->iData           = ( hb_parl( 7 ) ? 1 : 0 );
+      gObj->iData           = hb_parl( 7 ) ? 1 : 0;
       gObj->bDestroyPicture = HB_FALSE;
 
       gObj->gObjNext = pWVT->gObjs;
@@ -1493,8 +1493,8 @@ HB_FUNC( WVG_IMAGE )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture = iPicture;
-      gObj->iData           = ( hb_parl( 9 ) ? 1 : 0 );
+      gObj->iPicture        = iPicture;
+      gObj->iData           = hb_parl( 9 ) ? 1 : 0;
 
       if( iSource == GOBJ_IMAGESOURCE_SLOT )
          gObj->bDestroyPicture = HB_FALSE;

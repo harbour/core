@@ -80,7 +80,9 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
    /* from specified list of .hbx files */
 
    FOR EACH cName IN hb_ATokens( cHBXList )
-      HBXToFuncList( @cFunctions, hb_MemoRead( hb_PathJoin( hb_DirBase(), cName ) ) )
+      IF ! Empty( cName )
+         HBXToFuncList( @cFunctions, hb_MemoRead( hb_PathJoin( hb_DirBase(), cName ) ) )
+      ENDIF
    NEXT
 
    RETURN
