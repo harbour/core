@@ -99,7 +99,7 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 /* Font definition */
 #define XWC_DEFAULT_FONT_HEIGHT     18
 #define XWC_DEFAULT_FONT_WIDTH      9
-#define XWC_DEFAULT_FONT_WEIGHT     "medium"
+#define XWC_DEFAULT_FONT_WEIGHT     HB_GTI_FONTW_NORMAL
 #define XWC_DEFAULT_FONT_NAME       "fixed"
 #define XWC_DEFAULT_FONT_ENCODING   "iso10646-1"
 

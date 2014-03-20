@@ -64,12 +64,20 @@ typedef struct
    PGconn * connection;
 } pgCopyContext;
 
+#define HB_VM_UNLOCK()  do { hb_vmUnlock()
+#define HB_VM_LOCK()    hb_vmLock(); } while( 0 )
+
 #if PG_VERSION_NUM >= 80000
 static HB_BOOL addToContext( pgCopyContext * context, const char c )
 {
    if( context->position == context->length )
    {
-      if( PQputCopyData( context->connection, context->buffer, context->position ) == -1 )
+      HB_BOOL fOK;
+
+      HB_VM_UNLOCK();
+      fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
+      HB_VM_LOCK();
+      if( fOK )
          return HB_FALSE;
 
       context->position = 0;
@@ -78,13 +86,19 @@ static HB_BOOL addToContext( pgCopyContext * context, const char c )
 
    return HB_TRUE;
 }
+
 static HB_BOOL addStrToContext( pgCopyContext * context, const char * str )
 {
    while( *str )
    {
       if( context->position == context->length )
       {
-         if( PQputCopyData( context->connection, context->buffer, context->position ) == -1 )
+         HB_BOOL fOK;
+
+         HB_VM_UNLOCK();
+         fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
+         HB_VM_LOCK();
+         if( fOK )
             return HB_FALSE;
 
          context->position = 0;
@@ -100,10 +114,16 @@ static HB_BOOL addStrnToContext( pgCopyContext * context, const char * str, HB_S
 
    while( nSize < size )
    {
-      if( context->connection == NULL || context->position == context->length )
+      if( context->position == context->length )
       {
-         if( PQputCopyData( context->connection, context->buffer, context->position ) == -1 )
+         HB_BOOL fOK;
+
+         HB_VM_UNLOCK();
+         fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
+         HB_VM_LOCK();
+         if( fOK )
             return HB_FALSE;
+
          context->position = 0;
       }
       context->buffer[ context->position++ ] = ( HB_BYTE ) str[ nSize++ ];
@@ -194,9 +214,12 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
 
       case HB_IT_LOGICAL:
 #if 0
-         if( ! addStrToContext( context, szQuote ) || ! addToContext( context, hb_itemGetL( pValue ) ? 'Y' : 'N' ) || ! addStrToContext( context, szQuote ) )
-#endif
+         if( ! addStrToContext( context, szQuote ) ||
+             ! addToContext( context, hb_itemGetL( pValue ) ? 'Y' : 'N' ) ||
+             ! addStrToContext( context, szQuote ) )
+#else
          if( ! addToContext( context, hb_itemGetL( pValue ) ? 'Y' : 'N' ) )
+#endif
             return HB_FALSE;
          break;
 
@@ -220,8 +243,7 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
             if( ! addStrnToContext( context, &szResult[ iPos ], iSize ) )
                return HB_FALSE;
          }
-         else
-         if( ! addToContext( context, '0' ) )
+         else if( ! addToContext( context, '0' ) )
             return HB_FALSE;
          break;
       }
@@ -238,14 +260,17 @@ HB_FUNC( HB_PQCOPYFROMWA )
 {
 #if PG_VERSION_NUM >= 80000
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   PGconn * pConn = hb_PGconn_par( 1 );
 
-   if( pArea )
+   if( pConn == NULL )
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else if( pArea == NULL )
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+   else
    {
       static const char * sc_szQuote = "\"";
       static const char * sc_szEsc   = "\"";
       static const char * sc_szDelim = ",";
-
-      PGconn * pConn = hb_PGconn_par( 1 );
 
       const char *    szTable   = hb_parcx( 2 );
       PHB_ITEM        pWhile    = hb_param( 3, HB_IT_BLOCK );
@@ -255,7 +280,7 @@ HB_FUNC( HB_PQCOPYFROMWA )
       HB_BOOL         str_rtrim = hb_parldef( 7, HB_TRUE );
       HB_ULONG        nBufLen   = hb_parnldef( 8, 1 );
       HB_USHORT       uiFields;
-      HB_ULONG        uiRecCount;
+      HB_ULONG        uiRecCount = 0;
       HB_BOOL         bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
       HB_BOOL         bEof = HB_FALSE;
       PHB_ITEM        pItem;
@@ -334,21 +359,15 @@ HB_FUNC( HB_PQCOPYFROMWA )
       else
          szInit = hb_xstrcpy( NULL, "COPY ", szTable, " FROM STDIN WITH DELIMITER '", sc_szDelim, "' CSV  QUOTE AS '", sc_szQuote, "' ESCAPE AS '", sc_szEsc, "'", NULL );
 
+      HB_VM_UNLOCK();
       pgResult = PQexec( context->connection, szInit );
       if( PQresultStatus( pgResult ) != PGRES_COPY_IN )
-      {
-         PQclear( pgResult );
-         hb_xfree( szInit );
-         hb_xfree( context );
-         hb_retl( HB_FALSE );
-         return;
-      }
-
+         bFail = HB_TRUE;
       PQclear( pgResult );
       hb_xfree( szInit );
+      HB_VM_LOCK();
 
-      uiRecCount = 0;
-      while( ( nCount == 0 || uiRecCount < nCount ) &&
+      while( !bFail && ( nCount == 0 || uiRecCount < nCount ) &&
              ( ! pWhile || hb_itemGetL( hb_vmEvalBlock( pWhile ) ) ) )
       {
 
@@ -365,7 +384,8 @@ HB_FUNC( HB_PQCOPYFROMWA )
                for( uiIter = 1; uiIter <= uiFields; uiIter++ )
                {
                   SELF_GETVALUE( pArea, uiIter, pItem );
-                  if( ! exportBufSqlVar( context, pItem, sc_szQuote, sc_szEsc ) || ! addStrToContext( context, sc_szDelim ) )
+                  if( ! exportBufSqlVar( context, pItem, sc_szQuote, sc_szEsc ) ||
+                      ! addStrToContext( context, sc_szDelim ) )
                   {
                      bFail = HB_TRUE;
                      break;
@@ -377,7 +397,8 @@ HB_FUNC( HB_PQCOPYFROMWA )
                for( uiIter = 1; uiIter <= uiFieldCopy; uiIter++ )
                {
                   SELF_GETVALUE( pArea, ( HB_USHORT ) hb_arrayGetNI( pFields, uiIter ), pItem );
-                  if( ! exportBufSqlVar( context, pItem, sc_szQuote, sc_szEsc ) || ! addStrToContext( context, sc_szDelim ) )
+                  if( ! exportBufSqlVar( context, pItem, sc_szQuote, sc_szEsc ) ||
+                      ! addStrToContext( context, sc_szDelim ) )
                   {
                      bFail = HB_TRUE;
                      break;
@@ -402,60 +423,33 @@ HB_FUNC( HB_PQCOPYFROMWA )
             break;
       }
 
-      for(;; )
+      if( ! bFail && ! addStrnToContext( context, "\\.\n", 3 ) ) /* end CSV transfer */
+         bFail = HB_TRUE;
+
+      HB_VM_UNLOCK();
+      if( bFail )
+         PQputCopyEnd( context->connection, "export buffer problems" );
+      else if( PQputCopyData( context->connection, context->buffer, context->position ) == -1 ||
+               PQputCopyEnd( context->connection, NULL ) == -1 )
+         bFail = HB_TRUE;
+      else
       {
-         if( bFail )
-         {
-            PQputCopyEnd( context->connection, "export buffer problems" );
-            hb_retl( HB_FALSE );
-            break;
-         }
-
-         if( ! addStrnToContext( context, "\\.\n", 3 ) ) /* end CSV transfer */
-         {
-            hb_retl( HB_FALSE );
-            break;
-         }
-
-         if( PQputCopyData( context->connection, context->buffer, context->position ) == -1 )
-         {
-            hb_retl( HB_FALSE );
-            break;
-         }
-
-         if( PQputCopyEnd( context->connection, NULL ) == -1 )
-         {
-            hb_retl( HB_FALSE );
-            break;
-         }
-
-         pgResult = PQgetResult( context->connection );
-         while( pgResult )
+         while( ( pgResult = PQgetResult( context->connection ) ) )
          {
             if( PQresultStatus( pgResult ) != PGRES_COMMAND_OK )
                bFail = HB_TRUE;
-
             PQclear( pgResult );
-            pgResult = PQgetResult( context->connection );
          }
-
-         if( bFail )
-         {
-            hb_retl( HB_FALSE );
-            break;
-         }
-
-         hb_retl( HB_TRUE );
-         break;
       }
+      HB_VM_LOCK();
 
       hb_itemRelease( pItem );
       hb_xfree( context->buffer );
       hb_xfree( context );
+
+      hb_retl( ! bFail );
    }
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 #else
-   hb_retc_null();
+   hb_retl( HB_FALSE );
 #endif
 }

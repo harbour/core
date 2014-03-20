@@ -309,37 +309,38 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
 
    struct _HB_FILE;
    typedef struct _HB_FILE * PHB_FILE;
+   typedef const struct _HB_FILE_FUNCS * PHB_FILE_FUNCS;
 
    typedef struct _HB_FILE_FUNCS
    {
-      HB_BOOL     ( * Accept )      ( const char * pszFileName );
+      HB_BOOL     ( * Accept )      ( PHB_FILE_FUNCS pFuncs, const char * pszFileName );
 
-      HB_BOOL     ( * Exists )      ( const char * pszFileName, char * pRetPath );
-      HB_BOOL     ( * Delete )      ( const char * pszFileName );
-      HB_BOOL     ( * Rename )      ( const char * pszFileName, const char * pszNewName );
-      HB_BOOL     ( * Copy )        ( const char * pszSrcFile, const char * pszDstFile );
+      HB_BOOL     ( * Exists )      ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, char * pRetPath );
+      HB_BOOL     ( * Delete )      ( PHB_FILE_FUNCS pFuncs, const char * pszFileName );
+      HB_BOOL     ( * Rename )      ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, const char * pszNewName );
+      HB_BOOL     ( * Copy )        ( PHB_FILE_FUNCS pFuncs, const char * pszSrcFile, const char * pszDstFile );
 
-      HB_BOOL     ( * DirExists )   ( const char * pszDirName );
-      HB_BOOL     ( * DirMake )     ( const char * pszDirName );
-      HB_BOOL     ( * DirRemove )   ( const char * pszDirName );
-      double      ( * DirSpace )    ( const char * pszDirName, HB_USHORT uiType );
-      PHB_ITEM    ( * Directory )   ( const char * pszDirSpec, const char * pszAttr );
+      HB_BOOL     ( * DirExists )   ( PHB_FILE_FUNCS pFuncs, const char * pszDirName );
+      HB_BOOL     ( * DirMake )     ( PHB_FILE_FUNCS pFuncs, const char * pszDirName );
+      HB_BOOL     ( * DirRemove )   ( PHB_FILE_FUNCS pFuncs, const char * pszDirName );
+      double      ( * DirSpace )    ( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB_USHORT uiType );
+      PHB_ITEM    ( * Directory )   ( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr );
 
-      HB_BOOL     ( * TimeGet )     ( const char * pszFileName, long * plJulian, long * plMillisec );
-      HB_BOOL     ( * TimeSet )     ( const char * pszFileName, long lJulian, long lMillisec );
-      HB_BOOL     ( * AttrGet )     ( const char * pszFileName, HB_FATTR * pulAttr );
-      HB_BOOL     ( * AttrSet )     ( const char * pszFileName, HB_FATTR ulAttr );
+      HB_BOOL     ( * TimeGet )     ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long * plJulian, long * plMillisec );
+      HB_BOOL     ( * TimeSet )     ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long lJulian, long lMillisec );
+      HB_BOOL     ( * AttrGet )     ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, HB_FATTR * pulAttr );
+      HB_BOOL     ( * AttrSet )     ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, HB_FATTR ulAttr );
 
-      HB_BOOL     ( * Link )        ( const char * pszExisting, const char * pszNewName );
-      HB_BOOL     ( * LinkSym )     ( const char * pszTarget, const char * pszNewName );
-      char *      ( * LinkRead )    ( const char * pszFileName );
+      HB_BOOL     ( * Link )        ( PHB_FILE_FUNCS pFuncs, const char * pszExisting, const char * pszNewName );
+      HB_BOOL     ( * LinkSym )     ( PHB_FILE_FUNCS pFuncs, const char * pszTarget, const char * pszNewName );
+      char *      ( * LinkRead )    ( PHB_FILE_FUNCS pFuncs, const char * pszFileName );
 
-      PHB_FILE    ( * Open )        ( const char * pszFileName, const char * pDefExt,
-                                      HB_USHORT uiExFlags, const char * pPaths,
-                                      PHB_ITEM pError );
+      PHB_FILE    ( * Open )        ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, const char * pDefExt,
+                                      HB_USHORT uiExFlags, const char * pPaths, PHB_ITEM pError );
+
       void        ( * Close )       ( PHB_FILE pFile );
-      HB_BOOL     ( * Lock )        ( PHB_FILE, HB_FOFFSET nStart, HB_FOFFSET nLen, int iType );
-      int         ( * LockTest )    ( PHB_FILE, HB_FOFFSET nStart, HB_FOFFSET nLen, int iType );
+      HB_BOOL     ( * Lock )        ( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen, int iType );
+      int         ( * LockTest )    ( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen, int iType );
       HB_SIZE     ( * Read )        ( PHB_FILE pFile, void * buffer, HB_SIZE nSize, HB_MAXINT nTimeout );
       HB_SIZE     ( * Write )       ( PHB_FILE pFile, const void * buffer, HB_SIZE nSize, HB_MAXINT nTimeout );
       HB_SIZE     ( * ReadAt )      ( PHB_FILE pFile, void * buffer, HB_SIZE nSize, HB_FOFFSET nOffset );

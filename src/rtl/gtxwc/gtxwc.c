@@ -211,9 +211,9 @@ typedef struct
    /* used font informations */
    XFontStruct * xfs;
    char * szFontName;
-   char * szFontWeight;
    char * szFontEncoding;
    char * szFontSel;
+   int fontWeight;
    int fontHeight;
    int fontWidth;
    /* if font has bad metric then try to fix it and display only single
@@ -4229,19 +4229,33 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
 }
 
 static HB_BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char * fontFace,
-                                  const char * weight, int size,
-                                  const char * encoding )
+                                  int weight, int size, const char * encoding )
 {
    char fontString[ 250 ];
    XFontStruct * xfs;
 
-   if( weight )
+   if( weight || size )
+   {
+      const char * szWeight;
+
+      switch( weight )
+      {
+         case HB_GTI_FONTW_BOLD:
+            szWeight = "bold";
+            break;
+         case HB_GTI_FONTW_THIN:
+         case HB_GTI_FONTW_NORMAL:
+         default:
+            szWeight = "medium";
+            break;
+      }
 /*
       "-*-%s-%s-r-normal-*-%d-*-*-*-*-*-%s"
  */
       hb_snprintf( fontString, sizeof( fontString ),
                    "-*-%s-%s-r-*-*-%d-*-*-*-*-*-%s",
-                   fontFace, weight, size, encoding == NULL ? "*-*" : encoding );
+                   fontFace, szWeight, size, encoding == NULL ? "*-*" : encoding );
+   }
    else
       hb_strncpy( fontString, fontFace, sizeof( fontString ) - 1 );
 
@@ -4453,8 +4467,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    /* Font parameters */
    wnd->fontHeight = XWC_DEFAULT_FONT_HEIGHT;
    wnd->fontWidth = XWC_DEFAULT_FONT_WIDTH;
+   wnd->fontWeight = XWC_DEFAULT_FONT_WEIGHT;
    wnd->szFontName = hb_strdup( XWC_DEFAULT_FONT_NAME );
-   wnd->szFontWeight = hb_strdup( XWC_DEFAULT_FONT_WEIGHT );
    wnd->szFontEncoding = hb_strdup( XWC_DEFAULT_FONT_ENCODING );
    /* set GTXWC extension for chosen font */
    wnd->fFixMetric = XWC_DEFAULT_FONT_FIXMETRIC;
@@ -4598,8 +4612,6 @@ static void hb_gt_xwc_DestroyWndDef( PXWND_DEF wnd )
       hb_xfree( wnd->szTitle );
    if( wnd->szFontName )
       hb_xfree( wnd->szFontName );
-   if( wnd->szFontWeight )
-      hb_xfree( wnd->szFontWeight );
    if( wnd->szFontEncoding )
       hb_xfree( wnd->szFontEncoding );
    if( wnd->szFontSel )
@@ -4661,7 +4673,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
    /* load the standard font */
    if( ! wnd->szFontSel )
    {
-      if( ! hb_gt_xwc_SetFont( wnd, wnd->szFontName, wnd->szFontWeight, wnd->fontHeight, wnd->szFontEncoding ) )
+      if( ! hb_gt_xwc_SetFont( wnd, wnd->szFontName, wnd->fontWeight, wnd->fontHeight, wnd->szFontEncoding ) )
       {
          if( ! hb_gt_xwc_SetFont( wnd, XWC_DEFAULT_FONT_NAME, XWC_DEFAULT_FONT_WEIGHT, XWC_DEFAULT_FONT_HEIGHT, XWC_DEFAULT_FONT_ENCODING ) )
          {
@@ -5160,6 +5172,21 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             wnd->fontWidth = iVal;
          break;
 
+      case HB_GTI_FONTWEIGHT:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->fontWeight );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            switch( iVal )
+            {
+               case HB_GTI_FONTW_THIN:
+               case HB_GTI_FONTW_NORMAL:
+               case HB_GTI_FONTW_BOLD:
+                  wnd->fontWeight = iVal;
+            }
+         }
+         break;
+
       case HB_GTI_FONTNAME:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szFontName );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
@@ -5175,7 +5202,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             HB_XWC_XLIB_LOCK();
-            if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), NULL, 0, NULL ) &&
+            if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), 0, 0, NULL ) &&
                 wnd->fInit )
                hb_gt_xwc_CreateWindow( wnd );
             HB_XWC_XLIB_UNLOCK();

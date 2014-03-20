@@ -228,8 +228,10 @@ static int s_filePortParams( const char * pszName, int * piTimeout,
    return iPort;
 }
 
-static HB_BOOL s_fileAccept( const char * pszFileName )
+static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
+
    if( HB_TOUPPER( pszFileName[ 0 ] ) == 'C' &&
        HB_TOUPPER( pszFileName[ 1 ] ) == 'O' &&
        HB_TOUPPER( pszFileName[ 2 ] ) == 'M' )
@@ -247,8 +249,8 @@ static HB_BOOL s_fileAccept( const char * pszFileName )
    return HB_FALSE;
 }
 
-static PHB_FILE s_fileOpen( const char * pszName, const char * pszDefExt,
-                            HB_USHORT uiExFlags,
+static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
+                            const char * pszDefExt, HB_USHORT uiExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
@@ -256,6 +258,7 @@ static PHB_FILE s_fileOpen( const char * pszName, const char * pszDefExt,
    int iPort, iTimeout, iBaud, iParity, iSize, iStop, iFlow;
    HB_BOOL fRead, fWrite;
 
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDefExt );
    HB_SYMBOL_UNUSED( pPaths );
 

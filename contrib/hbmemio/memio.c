@@ -771,14 +771,18 @@ HB_FILE;
 static PHB_FILE s_fileNew( HB_FHANDLE hFile );
 
 
-static HB_BOOL s_fileAccept( const char * pszFileName )
+static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
+
    return hb_strnicmp( pszFileName, FILE_PREFIX, FILE_PREFIX_LEN ) == 0;
 }
 
 
-static HB_BOOL s_fileExists( const char * pszFileName, char * pRetPath )
+static HB_BOOL s_fileExists( PHB_FILE_FUNCS pFuncs, const char * pszFileName, char * pRetPath )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
+
    if( hb_memfsFileExists( pszFileName + FILE_PREFIX_LEN ) )
    {
       /* Warning: return buffer could be the same memory place as filename parameter! */
@@ -790,16 +794,17 @@ static HB_BOOL s_fileExists( const char * pszFileName, char * pRetPath )
 }
 
 
-static HB_BOOL s_fileDelete( const char * pszFileName )
+static HB_BOOL s_fileDelete( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    return hb_memfsDelete( pszFileName + FILE_PREFIX_LEN );
 }
 
 
-static HB_BOOL s_fileRename( const char * szName, const char * szNewName )
+static HB_BOOL s_fileRename( PHB_FILE_FUNCS pFuncs, const char * szName, const char * szNewName )
 {
    szName += FILE_PREFIX_LEN;
-   if( s_fileAccept( szNewName ) )
+   if( s_fileAccept( pFuncs, szNewName ) )
    {
       szNewName += FILE_PREFIX_LEN;
       return hb_memfsRename( szName, szNewName );
@@ -808,36 +813,41 @@ static HB_BOOL s_fileRename( const char * szName, const char * szNewName )
 }
 
 
-static HB_BOOL s_fileCopy( const char * pSrcFile, const char * pszDstFile )
+static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pSrcFile, const char * pszDstFile )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    /* TODO: optimize it when both points to MEMIO files */
    return hb_fsCopy( pSrcFile, pszDstFile );
 }
 
 
-static HB_BOOL s_fileDirExists( const char * pszDirName )
+static HB_BOOL s_fileDirExists( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirName );
    return HB_FALSE;
 }
 
 
-static HB_BOOL s_fileDirMake( const char * pszDirName )
+static HB_BOOL s_fileDirMake( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirName );
    return HB_FALSE;
 }
 
 
-static HB_BOOL s_fileDirRemove( const char * pszDirName )
+static HB_BOOL s_fileDirRemove( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirName );
    return HB_FALSE;
 }
 
 
-static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
+static double s_fileDirSpace( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB_USHORT uiType )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirName );
    HB_SYMBOL_UNUSED( uiType );
    /* TODO: return allocated memory and free memory */
@@ -845,14 +855,16 @@ static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
 }
 
 
-static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr )
+static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    return hb_memfsDirectory( pszDirSpec + FILE_PREFIX_LEN, pszAttr );
 }
 
 
-static HB_BOOL s_fileTimeGet( const char * pszFileName, long * plJulian, long * plMillisec )
+static HB_BOOL s_fileTimeGet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long * plJulian, long * plMillisec )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( plJulian );
    HB_SYMBOL_UNUSED( plMillisec );
@@ -860,8 +872,9 @@ static HB_BOOL s_fileTimeGet( const char * pszFileName, long * plJulian, long * 
 }
 
 
-static HB_BOOL s_fileTimeSet( const char * pszFileName, long lJulian, long lMillisec )
+static HB_BOOL s_fileTimeSet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long lJulian, long lMillisec )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( lJulian );
    HB_SYMBOL_UNUSED( lMillisec );
@@ -869,52 +882,60 @@ static HB_BOOL s_fileTimeSet( const char * pszFileName, long lJulian, long lMill
 }
 
 
-static HB_BOOL s_fileAttrGet( const char * pszFileName, HB_FATTR * pulAttr )
+static HB_BOOL s_fileAttrGet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, HB_FATTR * pulAttr )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( pulAttr );
    return HB_FALSE;
 }
 
 
-static HB_BOOL s_fileAttrSet( const char * pszFileName, HB_FATTR ulAttr )
+static HB_BOOL s_fileAttrSet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, HB_FATTR ulAttr )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( ulAttr );
    return HB_FALSE;
 }
 
 
-static HB_BOOL s_fileLink( const char * pszExisting, const char * pszNewName )
+static HB_BOOL s_fileLink( PHB_FILE_FUNCS pFuncs, const char * pszExisting, const char * pszNewName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszExisting );
    HB_SYMBOL_UNUSED( pszNewName );
    return HB_FALSE;
 }
 
 
-static HB_BOOL s_fileLinkSym( const char * pszTarget, const char * pszNewName )
+static HB_BOOL s_fileLinkSym( PHB_FILE_FUNCS pFuncs, const char * pszTarget, const char * pszNewName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszTarget );
    HB_SYMBOL_UNUSED( pszNewName );
    return HB_FALSE;
 }
 
 
-static char * s_fileLinkRead( const char * pszFileName )
+static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    return NULL;
 }
 
 
-static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, HB_USHORT uiExFlags, const char * pPaths, PHB_ITEM pError )
+static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
+                            const char * szDefExt, HB_USHORT uiExFlags,
+                            const char * pPaths, PHB_ITEM pError )
 {
    HB_FHANDLE hFile;
    char       szNameNew[ HB_PATH_MAX + 1 ];
    HB_USHORT  uiFlags;
    HB_SIZE    nLen;
 
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );
 

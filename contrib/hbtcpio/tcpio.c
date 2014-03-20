@@ -70,13 +70,15 @@ HB_FILE;
 
 static PHB_FILE s_fileNew( HB_SOCKET sd, int timeout );
 
-static HB_BOOL s_fileAccept( const char * pszFileName )
+static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
+
    return hb_strnicmp( pszFileName, FILE_PREFIX, FILE_PREFIX_LEN ) == 0;
 }
 
-static PHB_FILE s_fileOpen( const char * pszName, const char * pszDefExt,
-                            HB_USHORT uiExFlags,
+static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
+                            const char * pszDefExt, HB_USHORT uiExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    const char * pszHost = pszName + FILE_PREFIX_LEN, * ptr;
@@ -86,6 +88,7 @@ static PHB_FILE s_fileOpen( const char * pszName, const char * pszDefExt,
    int iPort = 0;
    int timeout = -1;
 
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDefExt );
    HB_SYMBOL_UNUSED( pPaths );
 
