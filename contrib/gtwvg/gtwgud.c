@@ -1045,7 +1045,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             PHB_ITEM pEvParams = hb_itemNew( NULL );
             if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams ) == 0 )
             {
-               hb_gt_wvt_AddCharToInputQueue( pWVT, K_ESC );
+               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
             }
             return 0;
          }
