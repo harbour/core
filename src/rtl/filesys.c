@@ -2906,6 +2906,16 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
    {
       ulPos = lseek( hFileHandle, lOffset, nFlags );
       hb_fsSetIOError( ulPos != ( HB_ULONG ) -1, 0 );
+#  if defined( HB_OS_UNIX )
+      /* small trick to resolve problem with position reported for directories */
+      if( ulPos == LONG_MAX && lOffset == 0 && nFlags == SEEK_END )
+      {
+         struct stat st;
+
+         if( fstat( hFileHandle, &st ) == 0 )
+            ulPos = st.st_size;
+      }
+#  endif
    }
 
    if( ulPos == ( HB_ULONG ) -1 )
@@ -2973,6 +2983,16 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
       {
          nPos = lseek64( hFileHandle, nOffset, nFlags );
          hb_fsSetIOError( nPos != ( HB_FOFFSET ) -1, 0 );
+#  if defined( HB_OS_UNIX )
+         /* small trick to resolve problem with position reported for directories */
+         if( nPos == LONG_MAX && nOffset == 0 && nFlags == SEEK_END )
+         {
+            struct stat64 st;
+
+            if( fstat64( hFileHandle, &st ) == 0 )
+               nPos = st.st_size;
+         }
+#  endif
       }
 
       if( nPos == ( HB_FOFFSET ) -1 )
