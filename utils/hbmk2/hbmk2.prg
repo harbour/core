@@ -4161,7 +4161,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          /opt/include                                (FHS)
          /usr/local/<pkg>/include                    (FHS)
          /usr/local/include                          (FHS)
-      */
+       */
 
       /* Process any package requirements */
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]

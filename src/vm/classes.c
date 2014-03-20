@@ -4097,7 +4097,7 @@ HB_FUNC( __CLSINSTSUPER )
                hb_snprintf( szDesc, sizeof( szDesc ),
                             "Super class '%s' does not return an object",
                             pClassFuncSym->szName );
-               hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", HB_ERR_FUNCNAME, 0 );
+               hb_errRT_BASE( EG_ARG, 3002, szDesc, HB_ERR_FUNCNAME, 0 );
             }
          }
       }

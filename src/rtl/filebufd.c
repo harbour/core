@@ -54,15 +54,17 @@
 
 #define HB_FILE_ERR_UNSUPPORTED  ( ( HB_ERRCODE ) FS_ERROR )
 
-static HB_BOOL s_fileAccept( const char * pszFileName )
+static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
 
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileExists( const char * pszFileName, char * pRetPath )
+static HB_BOOL s_fileExists( PHB_FILE_FUNCS pFuncs, const char * pszFileName, char * pRetPath )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( pRetPath );
 
@@ -71,8 +73,9 @@ static HB_BOOL s_fileExists( const char * pszFileName, char * pRetPath )
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileDelete( const char * pszFileName )
+static HB_BOOL s_fileDelete( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
 
    hb_fsSetError( HB_FILE_ERR_UNSUPPORTED );
@@ -80,8 +83,9 @@ static HB_BOOL s_fileDelete( const char * pszFileName )
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileRename( const char * pszName, const char * pszNewName )
+static HB_BOOL s_fileRename( PHB_FILE_FUNCS pFuncs, const char * pszName, const char * pszNewName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszName );
    HB_SYMBOL_UNUSED( pszNewName );
 
@@ -90,18 +94,16 @@ static HB_BOOL s_fileRename( const char * pszName, const char * pszNewName )
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileCopy( const char * pSrcFile, const char * pszDstFile )
+static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pSrcFile, const char * pszDstFile )
 {
-   HB_SYMBOL_UNUSED( pSrcFile );
-   HB_SYMBOL_UNUSED( pszDstFile );
+   HB_SYMBOL_UNUSED( pFuncs );
 
-   hb_fsSetError( HB_FILE_ERR_UNSUPPORTED );
-
-   return HB_FALSE;
+   return hb_fsCopy( pSrcFile, pszDstFile );
 }
 
-static HB_BOOL s_fileDirExists( const char * pszDirName )
+static HB_BOOL s_fileDirExists( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirName );
 
    hb_fsSetError( HB_FILE_ERR_UNSUPPORTED );
@@ -109,8 +111,9 @@ static HB_BOOL s_fileDirExists( const char * pszDirName )
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileDirMake( const char * pszDirName )
+static HB_BOOL s_fileDirMake( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirName );
 
    hb_fsSetError( HB_FILE_ERR_UNSUPPORTED );
@@ -118,8 +121,9 @@ static HB_BOOL s_fileDirMake( const char * pszDirName )
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileDirRemove( const char * pszDirName )
+static HB_BOOL s_fileDirRemove( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirName );
 
    hb_fsSetError( HB_FILE_ERR_UNSUPPORTED );
@@ -127,8 +131,9 @@ static HB_BOOL s_fileDirRemove( const char * pszDirName )
    return HB_FALSE;
 }
 
-static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
+static double s_fileDirSpace( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB_USHORT uiType )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirName );
    HB_SYMBOL_UNUSED( uiType );
 
@@ -137,8 +142,9 @@ static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
    return 0.0;
 }
 
-static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
+static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirSpec );
    HB_SYMBOL_UNUSED( pszAttr );
    HB_SYMBOL_UNUSED( fDateTime );
@@ -148,8 +154,9 @@ static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr, 
    return NULL;
 }
 
-static HB_BOOL s_fileTimeGet( const char * pszFileName, long * plJulian, long * plMillisec )
+static HB_BOOL s_fileTimeGet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long * plJulian, long * plMillisec )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( plJulian );
    HB_SYMBOL_UNUSED( plMillisec );
@@ -159,8 +166,9 @@ static HB_BOOL s_fileTimeGet( const char * pszFileName, long * plJulian, long * 
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileTimeSet( const char * pszFileName, long lJulian, long lMillisec )
+static HB_BOOL s_fileTimeSet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long lJulian, long lMillisec )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( lJulian );
    HB_SYMBOL_UNUSED( lMillisec );
@@ -170,8 +178,9 @@ static HB_BOOL s_fileTimeSet( const char * pszFileName, long lJulian, long lMill
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileAttrGet( const char * pszFileName, HB_FATTR * pnAttr )
+static HB_BOOL s_fileAttrGet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, HB_FATTR * pnAttr )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( pnAttr );
 
@@ -180,8 +189,9 @@ static HB_BOOL s_fileAttrGet( const char * pszFileName, HB_FATTR * pnAttr )
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileAttrSet( const char * pszFileName, HB_FATTR nAttr )
+static HB_BOOL s_fileAttrSet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, HB_FATTR nAttr )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( nAttr );
 
@@ -190,8 +200,9 @@ static HB_BOOL s_fileAttrSet( const char * pszFileName, HB_FATTR nAttr )
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileLink( const char * pszExisting, const char * pszNewName )
+static HB_BOOL s_fileLink( PHB_FILE_FUNCS pFuncs, const char * pszExisting, const char * pszNewName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszExisting );
    HB_SYMBOL_UNUSED( pszNewName );
 
@@ -200,8 +211,9 @@ static HB_BOOL s_fileLink( const char * pszExisting, const char * pszNewName )
    return HB_FALSE;
 }
 
-static HB_BOOL s_fileLinkSym( const char * pszTarget, const char * pszNewName )
+static HB_BOOL s_fileLinkSym( PHB_FILE_FUNCS pFuncs, const char * pszTarget, const char * pszNewName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszTarget );
    HB_SYMBOL_UNUSED( pszNewName );
 
@@ -210,8 +222,9 @@ static HB_BOOL s_fileLinkSym( const char * pszTarget, const char * pszNewName )
    return HB_FALSE;
 }
 
-static char * s_fileLinkRead( const char * pszFileName )
+static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszFileName );
 
    hb_fsSetError( HB_FILE_ERR_UNSUPPORTED );
@@ -219,9 +232,11 @@ static char * s_fileLinkRead( const char * pszFileName )
    return NULL;
 }
 
-static PHB_FILE s_fileOpen( const char * pszName, const char * pszDefExt, HB_USHORT uiExFlags,
+static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
+                            const char * pszDefExt, HB_USHORT uiExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszName );
    HB_SYMBOL_UNUSED( pszDefExt );
    HB_SYMBOL_UNUSED( uiExFlags );

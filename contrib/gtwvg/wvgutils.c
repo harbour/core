@@ -112,6 +112,8 @@ HB_FUNC( WVT_UTILS )
 /*
  *     Wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
  *                                    lItalic, lUnderline, lStrikeout )
+ *              ->
+ *    { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
  */
 HB_FUNC( WVT_CHOOSEFONT )
 {
@@ -175,7 +177,8 @@ HB_FUNC( WVT_CHOOSEFONT )
          hb_arraySetNI( ary, 5, lf.lfQuality );
          hb_arraySetL( ary, 6, lf.lfItalic );
          hb_arraySetL( ary, 7, lf.lfUnderline );
-         hb_arraySetNI( ary, 8, cf.rgbColors );
+         hb_arraySetL( ary, 8, lf.lfStrikeOut );
+         hb_arraySetNI( ary, 9, cf.rgbColors );
 
          hb_itemReturnRelease( ary );
       }
@@ -191,7 +194,8 @@ HB_FUNC( WVT_CHOOSEFONT )
          hb_arraySetNI( ary, 5, 0 );
          hb_arraySetL( ary, 6, 0 );
          hb_arraySetL( ary, 7, 0 );
-         hb_arraySetNI( ary, 8, 0 );
+         hb_arraySetL( ary, 8, 0 );
+         hb_arraySetNI( ary, 9, 0 );
 
          hb_itemReturnRelease( ary );
       }
@@ -208,7 +212,8 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_arraySetNI( ary, 5, 0 );
       hb_arraySetL( ary, 6, 0 );
       hb_arraySetL( ary, 7, 0 );
-      hb_arraySetNI( ary, 8, 0 );
+      hb_arraySetL( ary, 8, 0 );
+      hb_arraySetNI( ary, 9, 0 );
 
       hb_itemReturnRelease( ary );
    }

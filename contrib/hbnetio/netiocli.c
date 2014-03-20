@@ -1439,15 +1439,19 @@ HB_FUNC( NETIO_GETDATA )
 
 /* Client methods
  */
-static HB_BOOL s_fileAccept( const char * pszFileName )
+static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
+   HB_SYMBOL_UNUSED( pFuncs );
+
    return hb_strnicmp( pszFileName, NETIO_FILE_PREFIX, NETIO_FILE_PREFIX_LEN ) == 0;
 }
 
-static HB_BOOL s_fileDirExists( const char * pszDirName )
+static HB_BOOL s_fileDirExists( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszDirName += NETIO_FILE_PREFIX_LEN;
 
@@ -1472,10 +1476,12 @@ static HB_BOOL s_fileDirExists( const char * pszDirName )
    return fResult;
 }
 
-static HB_BOOL s_fileDirMake( const char * pszDirName )
+static HB_BOOL s_fileDirMake( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszDirName += NETIO_FILE_PREFIX_LEN;
 
@@ -1500,10 +1506,12 @@ static HB_BOOL s_fileDirMake( const char * pszDirName )
    return fResult;
 }
 
-static HB_BOOL s_fileDirRemove( const char * pszDirName )
+static HB_BOOL s_fileDirRemove( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszDirName += NETIO_FILE_PREFIX_LEN;
 
@@ -1528,10 +1536,12 @@ static HB_BOOL s_fileDirRemove( const char * pszDirName )
    return fResult;
 }
 
-static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
+static double s_fileDirSpace( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB_USHORT uiType )
 {
    double dResult = 0.0;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszDirName += NETIO_FILE_PREFIX_LEN;
 
@@ -1561,11 +1571,12 @@ static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
    return dResult;
 }
 
-static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
+static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
 {
    PHB_ITEM pDirArray = NULL;
    PHB_CONCLI conn;
 
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( fDateTime );
 
    pszDirSpec += NETIO_FILE_PREFIX_LEN;
@@ -1635,10 +1646,12 @@ static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr, 
    return pDirArray;
 }
 
-static HB_BOOL s_fileExists( const char * pszFileName, char * pRetPath )
+static HB_BOOL s_fileExists( PHB_FILE_FUNCS pFuncs, const char * pszFileName, char * pRetPath )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    if( pRetPath )
       hb_strncpy( pRetPath, pszFileName, HB_PATH_MAX - 1 );
@@ -1666,10 +1679,12 @@ static HB_BOOL s_fileExists( const char * pszFileName, char * pRetPath )
    return fResult;
 }
 
-static HB_BOOL s_fileDelete( const char * pszFileName )
+static HB_BOOL s_fileDelete( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszFileName += NETIO_FILE_PREFIX_LEN;
 
@@ -1694,13 +1709,13 @@ static HB_BOOL s_fileDelete( const char * pszFileName )
    return fResult;
 }
 
-static HB_BOOL s_fileRename( const char * pszFileName, const char * pszNewName )
+static HB_BOOL s_fileRename( PHB_FILE_FUNCS pFuncs, const char * pszFileName, const char * pszNewName )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
 
    pszFileName += NETIO_FILE_PREFIX_LEN;
-   if( s_fileAccept( pszNewName ) )
+   if( s_fileAccept( pFuncs, pszNewName ) )
       pszNewName += NETIO_FILE_PREFIX_LEN;
 
    conn = s_fileConnect( &pszFileName, NULL, 0, 0, HB_FALSE,
@@ -1731,14 +1746,14 @@ static HB_BOOL s_fileRename( const char * pszFileName, const char * pszNewName )
    return fResult;
 }
 
-static HB_BOOL s_fileCopy( const char * pszSrcFile, const char * pszDstFile )
+static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pszSrcFile, const char * pszDstFile )
 {
    HB_BOOL fResult = HB_FALSE;
    const char * pszSource = pszSrcFile + NETIO_FILE_PREFIX_LEN;
    const char * pszDestin = pszDstFile + NETIO_FILE_PREFIX_LEN;
    PHB_CONCLI conn;
 
-   if( ! s_fileAccept( pszDstFile ) )
+   if( ! s_fileAccept( pFuncs, pszDstFile ) )
       return hb_fsCopy( pszSrcFile, pszDstFile );
 
    conn = s_fileConnect( &pszSource, NULL, 0, 0, HB_FALSE,
@@ -1746,7 +1761,7 @@ static HB_BOOL s_fileCopy( const char * pszSrcFile, const char * pszDstFile )
    if( conn )
    {
       if( s_fileConnCheck( conn, &pszDestin ) == NULL )
-         return hb_fsCopy( pszSrcFile, pszDstFile );
+         fResult = hb_fsCopy( pszSrcFile, pszDstFile );
       else if( s_fileConLock( conn ) )
       {
          HB_BYTE msgbuf[ NETIO_MSGLEN ];
@@ -1771,10 +1786,12 @@ static HB_BOOL s_fileCopy( const char * pszSrcFile, const char * pszDstFile )
    return fResult;
 }
 
-static HB_BOOL s_fileAttrGet( const char * pszFileName, HB_FATTR * pulAttr )
+static HB_BOOL s_fileAttrGet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, HB_FATTR * pulAttr )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszFileName += NETIO_FILE_PREFIX_LEN;
 
@@ -1803,10 +1820,12 @@ static HB_BOOL s_fileAttrGet( const char * pszFileName, HB_FATTR * pulAttr )
    return fResult;
 }
 
-static HB_BOOL s_fileAttrSet( const char * pszFileName, HB_FATTR ulAttr )
+static HB_BOOL s_fileAttrSet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, HB_FATTR ulAttr )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszFileName += NETIO_FILE_PREFIX_LEN;
 
@@ -1832,10 +1851,12 @@ static HB_BOOL s_fileAttrSet( const char * pszFileName, HB_FATTR ulAttr )
    return fResult;
 }
 
-static HB_BOOL s_fileTimeGet( const char * pszFileName, long * plJulian, long * plMillisec )
+static HB_BOOL s_fileTimeGet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long * plJulian, long * plMillisec )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszFileName += NETIO_FILE_PREFIX_LEN;
 
@@ -1865,10 +1886,12 @@ static HB_BOOL s_fileTimeGet( const char * pszFileName, long * plJulian, long * 
    return fResult;
 }
 
-static HB_BOOL s_fileTimeSet( const char * pszFileName, long lJulian, long lMillisec )
+static HB_BOOL s_fileTimeSet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long lJulian, long lMillisec )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszFileName += NETIO_FILE_PREFIX_LEN;
 
@@ -1895,13 +1918,13 @@ static HB_BOOL s_fileTimeSet( const char * pszFileName, long lJulian, long lMill
    return fResult;
 }
 
-static HB_BOOL s_fileLink( const char * pszExisting, const char * pszNewName )
+static HB_BOOL s_fileLink( PHB_FILE_FUNCS pFuncs, const char * pszExisting, const char * pszNewName )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
 
    pszExisting += NETIO_FILE_PREFIX_LEN;
-   if( s_fileAccept( pszNewName ) )
+   if( s_fileAccept( pFuncs, pszNewName ) )
       pszNewName += NETIO_FILE_PREFIX_LEN;
 
    conn = s_fileConnect( &pszExisting, NULL, 0, 0, HB_FALSE,
@@ -1932,13 +1955,13 @@ static HB_BOOL s_fileLink( const char * pszExisting, const char * pszNewName )
    return fResult;
 }
 
-static HB_BOOL s_fileLinkSym( const char * pszTarget, const char * pszNewName )
+static HB_BOOL s_fileLinkSym( PHB_FILE_FUNCS pFuncs, const char * pszTarget, const char * pszNewName )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_CONCLI conn;
 
    pszTarget += NETIO_FILE_PREFIX_LEN;
-   if( s_fileAccept( pszNewName ) )
+   if( s_fileAccept( pFuncs, pszNewName ) )
       pszNewName += NETIO_FILE_PREFIX_LEN;
 
    conn = s_fileConnect( &pszTarget, NULL, 0, 0, HB_FALSE,
@@ -1969,10 +1992,12 @@ static HB_BOOL s_fileLinkSym( const char * pszTarget, const char * pszNewName )
    return fResult;
 }
 
-static char * s_fileLinkRead( const char * pszFileName )
+static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
    char * pszResult = NULL;
    PHB_CONCLI conn;
+
+   HB_SYMBOL_UNUSED( pFuncs );
 
    pszFileName += NETIO_FILE_PREFIX_LEN;
    conn = s_fileConnect( &pszFileName, NULL, 0, 0, HB_FALSE,
@@ -2019,14 +2044,15 @@ static char * s_fileLinkRead( const char * pszFileName )
    return pszResult;
 }
 
-static PHB_FILE s_fileOpen( const char * pszFileName, const char * pDefExt,
-                            HB_USHORT uiExFlags, const char * pPaths,
-                            PHB_ITEM pError )
+static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName,
+                            const char * pDefExt, HB_USHORT uiExFlags,
+                            const char * pPaths, PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
    PHB_CONCLI conn;
    const char * pszFile = pszFileName + NETIO_FILE_PREFIX_LEN;
 
+   HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pPaths );
 
    conn = s_fileConnect( &pszFile, NULL, 0, 0, HB_FALSE,

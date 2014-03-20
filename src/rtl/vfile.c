@@ -416,22 +416,43 @@ HB_FUNC( HB_VFOPEN )
 
    if( pszFile )
    {
+      char szName[ HB_PATH_MAX ];
+      HB_USHORT uiModeAttr = 0;
       PHB_FILE pFile;
+      int iMode;
+
+      iMode = hb_parnidef( 2, FO_READWRITE | FO_DENYNONE | FO_PRIVATE ) &
+              ( 0xFF | FO_CREAT | FO_TRUNC | FO_EXCL );
+
+      if( iMode & FO_CREAT )
+      {
+         if( iMode & FO_TRUNC )
+            uiModeAttr |= FXO_TRUNCATE;
+         else
+            uiModeAttr |= FXO_APPEND;
+         if( iMode & FO_EXCL )
+            uiModeAttr |= FXO_UNIQUE;
+      }
+      if( iMode & ( FO_EXCLUSIVE | FO_DENYWRITE | FO_DENYREAD | FO_DENYNONE ) )
+         uiModeAttr |= FXO_SHARELOCK;
+
+      uiModeAttr |= ( HB_USHORT ) ( iMode & 0xFF );
 
       if( HB_ISBYREF( 1 ) )
       {
-         char szName[ HB_PATH_MAX ];
 
          hb_strncpy( szName, pszFile, sizeof( szName ) - 1 );
-         pFile = hb_fileExtOpen( szName, NULL /* pDefExt */,
-                                 ( HB_USHORT ) ( hb_parnidef( 2, FO_READ | FO_COMPAT ) | FXO_COPYNAME ),
-                                 NULL /* pPaths */, NULL /* pError */ );
-         hb_storc( szName, 1 );
+         uiModeAttr |= FXO_COPYNAME;
+         pszFile = szName;
       }
       else
-         pFile = hb_fileExtOpen( pszFile, NULL /* pDefExt */,
-                                 ( HB_USHORT ) hb_parnidef( 2, FO_READ | FO_COMPAT ),
-                                 NULL /* pPaths */, NULL /* pError */ );
+         uiModeAttr &= ( HB_USHORT ) ~FXO_COPYNAME;
+
+      pFile = hb_fileExtOpen( pszFile, NULL /* pDefExt */, uiModeAttr,
+                              NULL /* pPaths */, NULL /* pError */ );
+
+      if( pszFile == szName )
+         hb_storc( szName, 1 );
 
       hb_fsSetFError( hb_fsError() );
       hb_fileReturn( pFile );
