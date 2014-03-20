@@ -9,12 +9,7 @@ STATIC s_nStep
 
 PROCEDURE Main()
 
-   LOCAL array
-   LOCAL tmp, n
-
-   ? "Testing Harbour For Next loops."
-
-   array := { ;
+   LOCAL array := { ;
       {  1, 10,  1 }, ;
       { 10,  1, -1 }, ;
       {  1, 10, -1 }, ;
@@ -23,6 +18,10 @@ PROCEDURE Main()
       { 10,  1, -4 }, ;
       {  1, 10, -4 }, ;
       { 10,  1,  4 } }
+
+   LOCAL tmp, n
+
+   ? "Testing Harbour For Next loops."
 
    FOR tmp := 1 TO Len( array )
 
@@ -36,7 +35,7 @@ PROCEDURE Main()
          " Step:", s_nStep
 
       FOR n := Eval( {|| ValFrom() } ) TO Eval( {|| ValTo() } ) STEP Eval( {|| ValStep() } )
-         ? "Exec", n
+         ? "Loop", n
       NEXT
 
    NEXT

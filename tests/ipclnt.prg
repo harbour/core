@@ -1,8 +1,8 @@
 #include "hbsocket.ch"
 
-#define ADDRESS                     "localhost"
-#define PORT                        10000
-#define EOT                         hb_BChar( 4 )
+#define ADDRESS         "localhost"
+#define PORT            10000
+#define EOT             hb_BChar( 4 )
 
 PROCEDURE Main()
 
@@ -17,7 +17,7 @@ PROCEDURE Main()
 
    ? hb_socketSend( hSocket, "hi" + EOT )
    ? hb_socketSend( hSocket, "how" + EOT )
-   ? hb_socketSend( hSocket, "you doing?" + EOT )
+   ? hb_socketSend( hSocket, "are you doing?" + EOT )
    ? hb_socketSend( hSocket, "quit" + EOT )
 
    hb_socketShutdown( hSocket )

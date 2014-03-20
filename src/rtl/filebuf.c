@@ -391,11 +391,11 @@ static double s_fileDirSpace( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB
    return hb_fsDiskSpace( pszDirName, uiType );
 }
 
-static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr )
+static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
 {
    HB_SYMBOL_UNUSED( pFuncs );
 
-   return hb_fsDirectory( pszDirSpec, pszAttr );
+   return hb_fsDirectory( pszDirSpec, pszAttr, fDateTime );
 }
 
 static HB_BOOL s_fileTimeGet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long * plJulian, long * plMillisec )

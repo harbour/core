@@ -5,6 +5,8 @@ REQUEST HB_LANG_KO
 
 PROCEDURE Main()
 
+   hb_langSelect( "en" )
+
    ? "Prev:", hb_langSelect()
    ? hb_langName()
    ? NationMsg( 1 )

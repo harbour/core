@@ -2,10 +2,10 @@
 
 #include "hbsocket.ch"
 
-#define ADDRESS                     "0.0.0.0"
-#define PORT                        10000
-#define EOT                         hb_BChar( 4 )
-#define TIMEOUT                     3000    // 3 seconds
+#define ADDRESS         "0.0.0.0"
+#define PORT            10000
+#define EOT             hb_BChar( 4 )
+#define TIMEOUT         3000    // 3 seconds
 
 PROCEDURE Main()
 
