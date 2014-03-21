@@ -4200,7 +4200,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    for( uiCount = 0; uiCount < uiFields + uiSkip; uiCount++ )
    {
       pField = ( LPDBFFIELD ) ( pBuffer + uiCount * sizeof( DBFFIELD ) );
-      pField->bName[10] = '\0';
+      pField->bName[ 10 ] = '\0';
       /* hb_strupp( ( char * ) pField->bName ); */
       dbFieldInfo.atomName = ( const char * ) pField->bName;
       dbFieldInfo.uiLen = pField->bLen;

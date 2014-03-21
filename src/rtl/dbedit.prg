@@ -184,9 +184,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
 
    nOldCUrsor := SetCursor( SC_NONE )
 
-   /* --------------------------- */
    /* Go into the processing loop */
-   /* --------------------------- */
 
    lAppend := .F.
    lFlag := .T.
@@ -296,8 +294,8 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
 
    LOCAL nAction
    LOCAL nMode := ;
-      iif( nKey != 0,                   DE_EXCEPT,    ;
-      iif( ! lAppend .AND. IsDbEmpty(), DE_EMPTY,     ;
+      iif( nKey != 0,                   DE_EXCEPT, ;
+      iif( ! lAppend .AND. IsDbEmpty(), DE_EMPTY, ;
       iif( oBrowse:hitBottom,           DE_HITBOTTOM, ;
       iif( oBrowse:hitTop,              DE_HITTOP, DE_IDLE ) ) ) )
 

@@ -82,12 +82,12 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             supplied with Clipper 5.x. 6th parameter is the
             user function and 7th parameter is zero (empty I
             suppose). [vszakats] */
-   IF Empty( xUserFunc ) .AND. ValType( xSelect ) $ "CB"
+   IF Empty( xUserFunc ) .AND. ValType( xSelect ) $ "CBS"
       xUserFunc := xSelect
       xSelect := NIL
    ENDIF
 
-   lUserFunc := ! Empty( xUserFunc ) .AND. ValType( xUserFunc ) $ "CB"
+   lUserFunc := ! Empty( xUserFunc ) .AND. ValType( xUserFunc ) $ "CBS"
 
    IF ! HB_ISARRAY( xSelect ) .AND. ! HB_ISLOGICAL( xSelect )
       xSelect := .T.               // Array or logical, what is selectable

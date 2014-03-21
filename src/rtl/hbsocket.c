@@ -3420,7 +3420,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                {
                   char hwaddr[ 24 ];
                   unsigned char * data;
-                  data = ( unsigned char * ) &pifr->ifr_hwaddr.sa_data[0];
+                  data = ( unsigned char * ) &pifr->ifr_hwaddr.sa_data[ 0 ];
                   hb_snprintf( hwaddr, sizeof( hwaddr ),
                                "%02X:%02X:%02X:%02X:%02X:%02X",
                                data[ 0 ], data[ 1 ], data[ 2 ],
@@ -3432,7 +3432,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                {
                   char hwaddr[ 24 ];
                   unsigned char * data;
-                  data = ( unsigned char * ) &pifr->ifr_enaddr[0];
+                  data = ( unsigned char * ) &pifr->ifr_enaddr[ 0 ];
                   hb_snprintf( hwaddr, sizeof( hwaddr ),
                                "%02X:%02X:%02X:%02X:%02X:%02X",
                                data[ 0 ], data[ 1 ], data[ 2 ],

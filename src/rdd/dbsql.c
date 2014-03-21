@@ -151,7 +151,9 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
                hb_addToFBuffer( pFileBuf, *szVal );
             else
             {
-               /* printf( "%d %c", *szVal, *szVal ); */
+#if 0
+               printf( "%d %c", *szVal, *szVal );
+#endif
             }
             szVal++;
          }
@@ -171,11 +173,11 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
          }
          else
          {
-            hb_addStrnToFBuffer( pFileBuf, &szDate[0], 4 );
+            hb_addStrnToFBuffer( pFileBuf, &szDate[ 0 ], 4 );
             hb_addToFBuffer( pFileBuf, '-' );
-            hb_addStrnToFBuffer( pFileBuf, &szDate[4], 2 );
+            hb_addStrnToFBuffer( pFileBuf, &szDate[ 4 ], 2 );
             hb_addToFBuffer( pFileBuf, '-' );
-            hb_addStrnToFBuffer( pFileBuf, &szDate[6], 2 );
+            hb_addStrnToFBuffer( pFileBuf, &szDate[ 6 ], 2 );
          }
          hb_addStrToFBuffer( pFileBuf, szDelim );
          break;
@@ -334,8 +336,10 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
    hb_destroyFBuffer( pFileBuf );
    hb_itemRelease( pTmp );
 
+#if 0
    /* Writing EOF */
-   /* hb_fileWrite( pFile, "\x1A", 1, -1 ); */
+   hb_fileWrite( pFile, "\x1A", 1, -1 );
+#endif
 
    return ulRecords;
 }

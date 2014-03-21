@@ -258,8 +258,8 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
                             s[ 1 ] == '|' || s[ 1 ] == '^' || s[ 1 ] == '=' ||
                             s[ 1 ] == ' ' ) )
          {
-            *op = s[1];
-            s+=2;
+            *op = s[ 1 ];
+            s += 2;
          }
          *val = *op == ' ' ? 0 : get_val( &s );
          if( *val >= 0 )
