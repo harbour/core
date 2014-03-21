@@ -285,8 +285,10 @@ static void   hb_wvw_vmouse_SetPos( WIN_DATA * pWindowData, USHORT usRow, USHORT
 static int    hb_gt_wvw_usDispCount( WIN_DATA * pWindowData );
 static void   hb_gt_wvw_vDispBegin( WIN_DATA * pWindowData );
 static void   hb_gt_wvw_vDispEnd( WIN_DATA * pWindowData );
+#if 0
 static void  hb_gt_wvw_vGetText( WIN_DATA * pWindowData, USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer );
 static void  hb_gt_wvw_vPuts( WIN_DATA * pWindowData, int iRow, int iCol, BYTE byColor, BYTE byAttr, BYTE * pbyStr, ULONG ulLen );
+#endif
 static void  hb_gt_wvw_vReplicate( WIN_DATA * pWindowData, int iRow, int iCol, int bColor, BYTE bAttr, USHORT usChar, ULONG ulLen );
 static void  hb_gt_wvw_vPutText( WIN_DATA * pWindowData, USHORT top, USHORT left, USHORT bottom, USHORT right, const char * sBuffer, int bColor );
 static void  hb_gt_wvw_vSetAttribute( WIN_DATA * pWindowData, int iTop, int iLeft, int iBottom, int iRight, int bColor );
@@ -823,7 +825,7 @@ static void hb_gt_wvw_Replicate( PHB_GT pGT, int iRow, int iCol, int bColor, BYT
 }
 
 
-static void hb_gt_wvw_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, ULONG ulLen )
+static int hb_gt_wvw_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const char * pText, HB_SIZE ulLen )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_PutText(%hu, %hu, %p, %lu, %hu)", iRow, iCol, pText, ulLen, bColor ) );
 
@@ -837,6 +839,8 @@ static void hb_gt_wvw_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const
 
    if( s_pWvwData->s_bMainCoordMode )
       hb_gt_wvwFUNCEpilogue();
+
+   return 0;
 }
 
 
@@ -855,6 +859,8 @@ static void hb_gt_wvw_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom
       hb_gt_wvwFUNCEpilogue();
 }
 
+
+#if 0
 
 /* copied from gtwin... */
 
@@ -929,7 +935,7 @@ static void hb_gt_wvw_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 
       /* Write the scrolled text to the current row */
       if( ( iRows || iCols ) && iRowPos <= iBottom && iRowPos >= iTop )
-         hb_gt_wvw_vPutText( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], ( USHORT ) iCount, ( USHORT ) iColNew, ( USHORT ) iCount, ( USHORT ) iColNew + ( USHORT ) iColSize, fpBuff, 0 );
+         hb_gt_wvw_vPutText( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], ( USHORT ) iCount, ( USHORT ) iColNew, ( USHORT ) iCount, ( USHORT ) iColNew + ( USHORT ) iColSize, ( char * ) fpBuff, 0 );
    }
 
    hb_gt_wvw_vSetPos( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], usSaveRow, usSaveCol );
@@ -971,6 +977,7 @@ static void hb_gt_wvw_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 #endif
 }
 
+#endif
 
 /* resize the ( existing ) window */
 
@@ -1909,7 +1916,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
             /* eval the codeblock */
 
 #if 0
-            if( s_pWvwData->s_sApp->pFunc[ iIndex ]->type == HB_IT_BLOCK )
+            if( s_pWvwData->s_sApp->pFunc[ iIndex ]->type & HB_IT_EVALITEM )
             {
                HB_ITEM hihDlg, himessage, hiwParam, hilParam;
                PHB_ITEM pReturn;
@@ -1932,7 +1939,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
                hb_itemRelease( pReturn );
             }
 #endif
-            if( HB_IS_BLOCK( pFunc ) )
+            if( HB_IS_EVALITEM( pFunc ) )
             {
                if( hb_vmRequestReenter() )
                {
@@ -2046,7 +2053,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
          case 2:
             /* eval the codeblock */
 #if 0
-            if( s_pWvwData->s_sApp->pFuncModal[ iIndex ]->type == HB_IT_BLOCK )
+            if( s_pWvwData->s_sApp->pFuncModal[ iIndex ]->type & HB_IT_EVALITEM )
             {
                HB_ITEM hihDlg, himessage, hiwParam, hilParam;
                PHB_ITEM pReturn;
@@ -2068,7 +2075,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
                hb_itemRelease( pReturn );
             }
 #endif
-            if( HB_IS_BLOCK( pFunc ) )
+            if( HB_IS_EVALITEM( pFunc ) )
             {
                if( hb_vmRequestReenter() )
                {
@@ -5583,6 +5590,8 @@ static void   hb_gt_wvw_vDispEnd( WIN_DATA * pWindowData )
       hb_gt_wvwDoInvalidateRect( pWindowData );
 }
 
+#if 0
+
 static void hb_gt_wvw_vGetText( WIN_DATA * pWindowData, USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer )
 {
    USHORT irow, icol, index, j;
@@ -5612,6 +5621,8 @@ static void  hb_gt_wvw_vPuts( WIN_DATA * pWindowData, int iRow, int iCol, BYTE b
    nCountPuts++;
 #endif
 }
+
+#endif
 
 static void  hb_gt_wvw_vReplicate( WIN_DATA * pWindowData, int iRow, int iCol, int bColor, BYTE bAttr, USHORT usChar, ULONG ulLen )
 {
@@ -6984,8 +6995,8 @@ HB_FUNC( WVW_NOPENWINDOW )
    RECT       wi = { 0 }, rcWorkArea = { 0 };
    UINT       usWinNum;
 
-   DWORD     dwStyle    = ( HB_ISNIL( 6 ) ? ( ( DWORD ) ( WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN ) ) : ( ( DWORD ) hb_parnl( 6 ) ) );
-   INT       iParentWin = ( HB_ISNIL( 7 ) ? ( s_pWvwData->s_bMainCoordMode ? s_pWvwData->s_usNumWindows - 1 : s_pWvwData->s_usCurWindow ) : ( ( INT ) hb_parni( 7 ) ) );
+   DWORD     dwStyle    = HB_ISNIL( 6 ) ? ( ( DWORD ) ( WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN ) ) : ( ( DWORD ) hb_parnl( 6 ) );
+   INT       iParentWin = HB_ISNIL( 7 ) ? ( s_pWvwData->s_bMainCoordMode ? ( INT ) s_pWvwData->s_usNumWindows - 1 : ( INT ) s_pWvwData->s_usCurWindow ) : ( ( INT ) hb_parni( 7 ) );
    PHB_FNAME pFileName;
 
    if( s_pWvwData->s_usNumWindows == 0 )
@@ -10295,7 +10306,7 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
       hb_itemPutNI( hiKey, iKey );
 
       pCodeblock = hb_itemDoC( "SETKEY", 1, hiKey );
-      if( HB_IS_BLOCK( pCodeblock ) )
+      if( HB_IS_EVALITEM( pCodeblock ) )
       {
          SetFocus( hWndParent );
          pReturn = hb_itemDo( pCodeblock, 0 );

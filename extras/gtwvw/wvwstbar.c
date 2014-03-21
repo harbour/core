@@ -538,7 +538,7 @@ HB_FUNC( WVW_XBCREATE )
       SetScrollRange( hWndXB, SB_CTL, 0, 99, FALSE );
       SetScrollPos( hWndXB, SB_CTL, 0, TRUE );
 
-      AddControlHandle( usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, uiXBid, ( PHB_ITEM ) hb_param( 6, HB_IT_BLOCK ), rXB, rOffXB, ( byte ) iStyle );
+      AddControlHandle( usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, uiXBid, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( byte ) iStyle );
 
       OldProc = ( WNDPROC ) SetWindowLongPtr( hWndXB,
                                               GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvwXBProc );

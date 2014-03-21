@@ -244,7 +244,7 @@ HB_FUNC( WVW_EBCREATE )
       rOffXB.top    = iOffTop;     rOffXB.left = iOffLeft;
       rOffXB.bottom = iOffBottom; rOffXB.right = iOffRight;
 
-      AddControlHandle( usWinNum, WVW_CONTROL_EDITBOX, hWndEB, uiEBid, ( PHB_ITEM ) hb_param( 7, HB_IT_BLOCK ), rXB, rOffXB, ( byte ) bEBType );
+      AddControlHandle( usWinNum, WVW_CONTROL_EDITBOX, hWndEB, uiEBid, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, ( byte ) bEBType );
 
       OldProc = ( WNDPROC ) SetWindowLongPtr( hWndEB,
                                               GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvwEBProc );
@@ -394,7 +394,7 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
    UINT uiEBid                 = ( UINT ) ( HB_ISNIL( 2 ) ? 0  : hb_parni( 2 ) );
    CONTROL_DATA * pcd          = GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, uiEBid );
    WVW_DATA *     pData        = hb_getWvwData();
-   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_BLOCK );
+   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL bOldSetting            = pData->s_bRecurseCBlock;
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )

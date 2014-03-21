@@ -144,7 +144,7 @@ HB_FUNC( WVW_CXCREATE )
    iOffRight  = ! HB_ISNIL( 9 ) ? hb_parvni( 9, 4 ) : +2;
 
    uiPBid = ButtonCreate( usWinNum, usTop, usLeft, usBottom, usRight, lpszCaption,
-                          szBitmap, uiBitmap, hb_param( 8, HB_IT_BLOCK ),
+                          szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
                           iOffTop, iOffLeft, iOffBottom, iOffRight,
                           dStretch, bMap3Dcolors,
                           BS_AUTOCHECKBOX );
@@ -240,7 +240,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
    WVW_DATA *     pData        = hb_getWvwData();
    UINT           uiCXid       = ( UINT ) ( HB_ISNIL( 2 ) ? 0  : hb_parni( 2 ) );
    CONTROL_DATA * pcd          = GetControlData( usWinNum, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
-   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_BLOCK );
+   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL           bOldSetting  = pData->s_bRecurseCBlock;
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
@@ -254,7 +254,6 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
 
    if( pcd->phiCodeBlock )
       hb_itemRelease( pcd->phiCodeBlock );
-
 
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
@@ -548,7 +547,6 @@ HB_FUNC( WVW_PGDESTROY )
 
    if( pcd->phiCodeBlock )
       hb_itemRelease( pcd->phiCodeBlock );
-
 
    hb_xfree( pcd );
 }

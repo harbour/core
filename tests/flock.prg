@@ -12,15 +12,16 @@ STATIC s_nBlocking    := HB_FLX_NO_WAIT
 PROCEDURE Main()
 
    LOCAL hLockFile
+   LOCAL cLockFile := hb_FNameExtSet( __FILE__, ".lck" )
 
    CLS
 
-   IF ! hb_FileExists( "emphasis.lck" )
-      hb_MemoWrit( "emphasis.lck", "" )
+   IF ! hb_FileExists( cLockFile )
+      hb_MemoWrit( cLockFile, "" )
    ENDIF
 
    ? "Opening lock file"
-   IF ( hLockFile := FOpen( "emphasis.lck", FO_READWRITE ) ) == F_ERROR
+   IF ( hLockFile := FOpen( cLockFile, FO_READWRITE ) ) == F_ERROR
       ? "ERROR: Cannot open Lock File"
       RETURN
    ENDIF

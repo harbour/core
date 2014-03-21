@@ -229,7 +229,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
    hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
-                            HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( UINT ) hb_parl( 3 ) ) );
+                            HB_ISNUM( 3 ) ? ( UINT ) hb_parni( 3 ) : ( UINT ) hb_parl( 3 ) ) );
 }
 
 
@@ -415,7 +415,7 @@ HB_FUNC( WVW_GBCREATE )
    iOffRight  = ! HB_ISNIL( 9 ) ? hb_parvni( 9, 4 ) : +1;
 
    uiPBid = ButtonCreate( usWinNum, usTop, usLeft, usBottom, usRight, lpszCaption,
-                          szBitmap, uiBitmap, hb_param( 8, HB_IT_BLOCK ),
+                          szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
                           iOffTop, iOffLeft, iOffBottom, iOffRight,
                           dStretch, bMap3Dcolors,
                           BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE );
@@ -453,7 +453,7 @@ HB_FUNC( WVW_RBCREATE )
    iOffRight  = ! HB_ISNIL( 9 ) ? hb_parvni( 9, 4 ) : +2;
 
    uiPBid = ButtonCreate( usWinNum, usTop, usLeft, usBottom, usRight, lpszCaption,
-                          szBitmap, uiBitmap, hb_param( 8, HB_IT_BLOCK ),
+                          szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
                           iOffTop, iOffLeft, iOffBottom, iOffRight,
                           dStretch, bMap3Dcolors,
                           BS_AUTORADIOBUTTON /*| WS_GROUP*/ );
@@ -875,6 +875,8 @@ HB_FUNC( OPENIMAGE )
    OleLoadPicture( pStream, 0, 0, &IID_IPicture, ( void ** ) &pPic );
    pStream->lpVtbl->Release( pStream );
 #endif
+#else
+   pPic = NULL;
 #endif
 
    GlobalFree( hG );
@@ -1176,7 +1178,9 @@ HB_FUNC( TOOLBARADDBUTTONS )
    /* BOOL bSystem; */
 
    ULONG  ulCount;
+#if 0
    ULONG  ulID;
+#endif
    DWORD  style = GetWindowLong( hWndCtrl, GWL_STYLE );
    USHORT usOldHeight;
 
@@ -1188,10 +1192,10 @@ HB_FUNC( TOOLBARADDBUTTONS )
    {
 
       pTemp = hb_arrayGetItemPtr( pArray, ulCount + 1 );
+#if 0
       ulID  = hb_arrayGetNI( pTemp, 1 );
       /* bSystem = hb_arrayGetL( pTemp, 9 ); */
 
-#if 0
       if( bSystem )
          if( ulID > 0 && ulID < 31 )
          {
@@ -1284,7 +1288,7 @@ HB_FUNC( DRAWBITMAP )
 {
    HDC     hDC      = ( HDC ) HB_PARHANDLE( 1 );
    HDC     hDCmem   = CreateCompatibleDC( hDC );
-   DWORD   dwraster = HB_ISNIL( 3 ) ? SRCCOPY : hb_parnl( 3 );
+   DWORD   dwraster = HB_ISNIL( 3 ) ? SRCCOPY : ( DWORD ) hb_parnl( 3 );
    HBITMAP hBitmap  = ( HBITMAP ) HB_PARHANDLE( 2 );
    BITMAP  bitmap;
    int     nWidthDest  = ( hb_pcount() >= 5 && ! HB_ISNIL( 6 ) ) ? hb_parni( 6 ) : 0;
@@ -2174,7 +2178,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
       return;
    }
 
-   if( HB_IS_BLOCK( pFirst ) )
+   if( HB_IS_EVALITEM( pFirst ) )
    {
 
       /* pFunc is pointing to stored code block (later) */
@@ -2231,7 +2235,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
          {
 
             /* if codeblock, store the codeblock and lock it there */
-            if( HB_IS_BLOCK( pFirst ) )
+            if( HB_IS_EVALITEM( pFirst ) )
                p->s_sApp->pcbFunc[ iIndex ] = pFunc;
 
 
@@ -2282,7 +2286,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
       return;
    }
 
-   if( HB_IS_BLOCK( pFirst ) )
+   if( HB_IS_EVALITEM( pFirst ) )
    {
       /* pFunc is pointing to stored code block (later) */
 

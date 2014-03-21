@@ -143,7 +143,7 @@ HB_FUNC( WVW_PBCREATE )
    iOffRight  = ! HB_ISNIL( 9 ) ? hb_parvni( 9, 4 ) : +2;
 
    uiPBid = ButtonCreate( usWinNum, usTop, usLeft, usBottom, usRight, lpszCaption,
-                          szBitmap, uiBitmap, hb_param( 8, HB_IT_BLOCK ),
+                          szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
                           iOffTop, iOffLeft, iOffBottom, iOffRight,
                           dStretch, bMap3Dcolors,
                           BS_PUSHBUTTON );
@@ -252,7 +252,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    WVW_DATA *     pData        = hb_getWvwData();
    UINT           uiPBid       = ( UINT ) ( HB_ISNIL( 2 ) ? 0  : hb_parni( 2 ) );
    CONTROL_DATA * pcd          = GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
-   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_BLOCK );
+   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL           bOldSetting  = pData->s_bRecurseCBlock;
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
@@ -588,7 +588,7 @@ HB_FUNC( WVW_CBCREATE )
 
       rOffXB.bottom = iOffBottom; rOffXB.right = iOffRight;
 
-      AddControlHandle( usWinNum, WVW_CONTROL_COMBOBOX, hWndCB, uiCBid, ( PHB_ITEM ) hb_param( 6, HB_IT_BLOCK ), rXB, rOffXB, ( byte ) bKbdType );
+      AddControlHandle( usWinNum, WVW_CONTROL_COMBOBOX, hWndCB, uiCBid, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( byte ) bKbdType );
 
       OldProc = ( WNDPROC ) SetWindowLongPtr( hWndCB,
                                               GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvwCBProc );
@@ -706,7 +706,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
 
    UINT uiCBid        = ( UINT ) ( HB_ISNIL( 2 ) ? 0  : hb_parni( 2 ) );
    CONTROL_DATA * pcd = GetControlData( usWinNum, WVW_CONTROL_COMBOBOX, NULL, uiCBid );
-   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_BLOCK );
+   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    WVW_DATA *     pData        = hb_getWvwData();
    BOOL bOldSetting = pData->s_bRecurseCBlock;
 
