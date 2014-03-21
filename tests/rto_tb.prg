@@ -607,8 +607,8 @@ STATIC FUNCTION XToStr( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...} -> ' + XToStr( Eval( xValue ) )
-   CASE cType == "A" ; RETURN '{ ' + ArrayToList( xValue ) + ' }'
+   CASE cType == "B" ; RETURN "{||...} -> " + XToStr( Eval( xValue ) )
+   CASE cType == "A" ; RETURN "{ " + ArrayToList( xValue ) + " }"
    CASE cType == "M" ; RETURN 'M:"' + xValue + '"'
    ENDCASE
 
@@ -646,9 +646,9 @@ STATIC FUNCTION XToStrE( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...} -> ' + XToStrE( Eval( xValue ) )
-   CASE cType == "A" ; RETURN '{ ' + ArrayToEList( xValue ) + ' }'
-   CASE cType == "M" ; RETURN 'M:' + xValue
+   CASE cType == "B" ; RETURN "{||...} -> " + XToStrE( Eval( xValue ) )
+   CASE cType == "A" ; RETURN "{ " + ArrayToEList( xValue ) + " }"
+   CASE cType == "M" ; RETURN "M:" + xValue
    ENDCASE
 
    RETURN ""
@@ -675,10 +675,10 @@ STATIC FUNCTION XToStrX( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...} -> ' + XToStrX( Eval( xValue ) )
+   CASE cType == "B" ; RETURN "{||...} -> " + XToStrX( Eval( xValue ) )
    CASE cType == "A"
 
-      cRetVal := '{ '
+      cRetVal := "{ "
 
       FOR tmp := 1 TO Len( xValue )
          cRetVal += XToStrX( xValue[ tmp ] )
@@ -687,9 +687,9 @@ STATIC FUNCTION XToStrX( xValue )
          ENDIF
       NEXT
 
-      RETURN cRetVal + ' }'
+      RETURN cRetVal + " }"
 
-   CASE cType == "M" ; RETURN 'M:' + xValue
+   CASE cType == "M" ; RETURN "M:" + xValue
    ENDCASE
 
    RETURN ""

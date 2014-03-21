@@ -950,7 +950,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          return;
       }
 
-      if( HB_IS_BLOCK( pFirst ) )
+      if( HB_IS_EVALITEM( pFirst ) )
       {
          /* pFunc is pointing to stored code block (later) */
          pFunc = hb_itemNew( pFirst );
@@ -1013,7 +1013,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             if( pFunc )
             {
                /* if codeblock, store the codeblock and lock it there */
-               if( HB_IS_BLOCK( pFirst ) )
+               if( HB_IS_EVALITEM( pFirst ) )
                   _s->pcbFunc[ iIndex ] = pFunc;
 
                _s->pFunc[ iIndex ] = pFunc;
@@ -1068,7 +1068,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          return;
       }
 
-      if( HB_IS_BLOCK( pFirst ) )
+      if( HB_IS_EVALITEM( pFirst ) )
       {
          /* pFunc is pointing to stored code block (later) */
 

@@ -858,7 +858,7 @@ HB_FUNC( WIN_OLESERVERINIT )
                s_pMsgHash = NULL;
             }
 
-            pAction = hb_param( 3, HB_IT_HASH | HB_IT_BLOCK | HB_IT_SYMBOL );
+            pAction = hb_param( 3, HB_IT_HASH | HB_IT_EVALITEM );
             if( ! pAction && HB_ISOBJECT( 3 ) )
                pAction = hb_param( 3, HB_IT_OBJECT );
             if( pAction )

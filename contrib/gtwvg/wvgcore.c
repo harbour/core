@@ -362,7 +362,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
 
             case 2: /* Block */
                /* eval the codeblock */
-               if( HB_IS_BLOCK( pFunc ) )
+               if( HB_IS_EVALITEM( pFunc ) )
                {
                   if( hb_vmRequestReenter() )
                   {
@@ -474,7 +474,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
 
             case 2: /* Block */
                /* eval the codeblock */
-               if( HB_IS_BLOCK( pFunc ) )
+               if( HB_IS_EVALITEM( pFunc ) )
                {
                   if( hb_vmRequestReenter() )
                   {

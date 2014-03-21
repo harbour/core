@@ -12919,15 +12919,11 @@ STATIC PROCEDURE rtlnk_filetrans( aFileList )
 STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
 
    LOCAL cFileBody
-   LOCAL cPath, cFile, cExt
+   LOCAL cPath, cFile
    LOCAL hFile
 
-   hb_FNameSplit( cFileName, @cPath, @cFile, @cExt )
-   IF Empty( cExt )
-      cExt := ".lnk"
-   ENDIF
+   cFileName := hb_FNameExtSetDef( cFileName, ".lnk" )  /* QUESTION: Or hb_FNameExtSet()? intent ambiguous in original commit */
 
-   cFileName := hb_FNameMerge( cPath, cFile, ".lnk" )
    /* it is Blinker extension, look for .lnk file in paths
     * specified by LIB envvar
     */
@@ -12935,8 +12931,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
       !( Left( cFileName, 1 ) $ hb_osPathDelimiters() ) .AND. ;
       !( SubStr( cFileName, 2, 1 ) == hb_osDriveSeparator() )
       FOR EACH cPath IN hb_ATokens( GetEnv( "LIB" ), hb_osPathListSeparator() )
-         cFile := hb_FNameMerge( cPath, cFileName )
-         IF hb_FileExists( cFile )
+         IF hb_FileExists( cFile := hb_FNameMerge( cPath, cFileName ) )
             cFileName := cFile
             EXIT
          ENDIF
@@ -13973,12 +13968,9 @@ FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
       tmp := MacroGet( hbmk, cKeyWord, "" )
       IF cValue != NIL
          SWITCH cOperator
-         CASE "="
-            RETURN Lower( tmp ) == Lower( cValue )
-         CASE ">"
-            RETURN Lower( tmp ) > Lower( cValue )
-         CASE "<"
-            RETURN Lower( tmp ) < Lower( cValue )
+         CASE "=" ; RETURN Lower( tmp ) == Lower( cValue )
+         CASE ">" ; RETURN Lower( tmp ) > Lower( cValue )
+         CASE "<" ; RETURN Lower( tmp ) < Lower( cValue )
          ENDSWITCH
       ELSE
          IF ! Empty( tmp ) .AND. !( tmp == "0" ) .AND. !( Lower( tmp ) == "no" )
@@ -14010,9 +14002,9 @@ STATIC PROCEDURE ParseCOMPPLATCPU( hbmk, cString, nMainTarget )
             CASE 2 ; hbmk[ _HBMK_cCOMP ] := AllTrim( cToken ) ; EXIT
             CASE 3 ; hbmk[ _HBMK_cCPU ]  := AllTrim( cToken ) ; EXIT
             ENDSWITCH
-            IF cToken:__enumIndex() > 3
-               EXIT
-            ENDIF
+         ENDIF
+         IF cToken:__enumIndex() > 3
+            EXIT
          ENDIF
       NEXT
    ENDIF

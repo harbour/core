@@ -372,9 +372,9 @@ TEST t029 WITH bc := mkBlock( "{| x | f1( x ) }" ) ;
           INFO Eval( bc := &( "{| x | f1( x ) }" ), i ) ;
           CODE Eval( bc, i )
 
-TEST t030 CODE x := &( 'f1(' + Str( i ) + ')' )
+TEST t030 CODE x := &( "f1(" + Str( i ) + ")" )
 
-TEST t031 WITH bc CODE bc := &( '{| x | f1( x ) }' ), Eval( bc, i )
+TEST t031 WITH bc CODE bc := &( "{| x | f1( x ) }" ), Eval( bc, i )
 
 TEST t032 CODE x := ValType( x ) + ValType( i )
 

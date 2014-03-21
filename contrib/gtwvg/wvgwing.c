@@ -867,7 +867,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    cf.Flags       = Flags;
    cf.rgbColors   = RGB( 0, 0, 0 );
 
-   cf.lCustData = ( HB_PTRDIFF ) hb_param( 2, HB_IT_BLOCK );
+   cf.lCustData = ( HB_PTRDIFF ) hb_param( 2, HB_IT_EVALITEM );
    cf.lpfnHook  = ( LPCFHOOKPROC ) WvgDialogProcChooseFont;
 
    cf.lpTemplateName = ( LPTSTR ) NULL;
@@ -1139,7 +1139,7 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 {
    WNDPROC  oldProc;
    HWND     hWnd   = hbwapi_par_raw_HWND( 1 );
-   PHB_ITEM pBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+   PHB_ITEM pBlock = hb_itemNew( hb_param( 2, HB_IT_EVALITEM ) );
 
    SetProp( hWnd, TEXT( "BLOCKCALLBACK" ), pBlock );
 

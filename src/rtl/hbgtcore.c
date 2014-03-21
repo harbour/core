@@ -1767,7 +1767,7 @@ static void hb_gt_def_SetBlock( PHB_ITEM * pItemPtr, PHB_GT_INFO pInfo )
          hb_itemRelease( *pItemPtr );
          *pItemPtr = NULL;
       }
-      if( hb_itemType( pInfo->pNewVal ) & HB_IT_BLOCK )
+      if( hb_itemType( pInfo->pNewVal ) & HB_IT_EVALITEM )
       {
          *pItemPtr = hb_itemNew( pInfo->pNewVal );
          hb_gcUnlock( *pItemPtr );

@@ -4019,7 +4019,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_itemRelease( pWVT->pNotifierGUI );
             pWVT->pNotifierGUI = NULL;
          }
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_BLOCK )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_EVALITEM )
             pWVT->pNotifierGUI = hb_itemNew( pInfo->pNewVal );
          break;
 

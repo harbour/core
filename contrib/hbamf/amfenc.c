@@ -1109,8 +1109,8 @@ static void context_release( amfContext * context, amfContext * outer_context )
 
 HB_FUNC( AMF3_FROMWA )
 {
-   PHB_ITEM     pWhile        = hb_param( 1, HB_IT_BLOCK );
-   PHB_ITEM     pFor          = hb_param( 2, HB_IT_BLOCK );
+   PHB_ITEM     pWhile        = hb_param( 1, HB_IT_EVALITEM );
+   PHB_ITEM     pFor          = hb_param( 2, HB_IT_EVALITEM );
    PHB_ITEM     pFields       = hb_param( 3, HB_IT_ARRAY );
    HB_ULONG     nCount        = hb_parnldef( 4, 0 );
    HB_BOOL      str_rtrim     = hb_parldef( 5, HB_TRUE );

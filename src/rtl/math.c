@@ -606,7 +606,7 @@ HB_FUNC( HB_MATHERBLOCK )       /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
    if( hb_pcount() > 0 )
    {
       /* set new error block */
-      PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_BLOCK );
+      PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_EVALITEM );
 
       if( pNewErrorBlock )
       {

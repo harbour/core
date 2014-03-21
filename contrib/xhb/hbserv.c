@@ -864,7 +864,7 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
    PHB_ITEM pFunc = hb_param( 2, HB_IT_ANY ), pHandEntry;
 
    if( pFunc == NULL || iMask == 0 ||
-       ( ! HB_IS_POINTER( pFunc ) && ! HB_IS_STRING( pFunc ) && ! HB_IS_BLOCK( pFunc ) )
+       ( ! HB_IS_POINTER( pFunc ) && ! HB_IS_STRING( pFunc ) && ! HB_IS_EVALITEM( pFunc ) )
        )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type", NULL, HB_ERR_ARGS_BASEPARAMS );

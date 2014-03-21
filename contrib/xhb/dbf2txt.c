@@ -149,8 +149,8 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
 
 HB_FUNC( DBF2TEXT )
 {
-   PHB_ITEM pWhile  = hb_param( 1, HB_IT_BLOCK );
-   PHB_ITEM pFor    = hb_param( 2, HB_IT_BLOCK );
+   PHB_ITEM pWhile  = hb_param( 1, HB_IT_EVALITEM );
+   PHB_ITEM pFor    = hb_param( 2, HB_IT_EVALITEM );
    PHB_ITEM pFields = hb_param( 3, HB_IT_ARRAY );
 
    const char * cDelim = hb_parc( 4 );

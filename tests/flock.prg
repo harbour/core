@@ -15,12 +15,12 @@ PROCEDURE Main()
 
    CLS
 
-   IF ! hb_FileExists( "emphasis.6lo" )
-      hb_MemoWrit( "emphasis.6lo", "" )
+   IF ! hb_FileExists( "emphasis.lck" )
+      hb_MemoWrit( "emphasis.lck", "" )
    ENDIF
 
    ? "Opening lock file"
-   IF ( hLockFile := FOpen( "emphasis.6lo", FO_READWRITE ) ) == F_ERROR
+   IF ( hLockFile := FOpen( "emphasis.lck", FO_READWRITE ) ) == F_ERROR
       ? "ERROR: Cannot open Lock File"
       RETURN
    ENDIF

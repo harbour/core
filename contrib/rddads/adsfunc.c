@@ -1504,7 +1504,7 @@ HB_FUNC( ADSREGCALLBACK )
             NOT make any Advantage Client Engine calls. If it does,
             it is possible to get error code 6619 "Communication Layer is busy". */
 
-   PHB_ITEM pCallBack = hb_param( 1, HB_IT_BLOCK );
+   PHB_ITEM pCallBack = hb_param( 1, HB_IT_EVALITEM );
 
    if( pCallBack )
    {

@@ -106,7 +106,7 @@ int hb_zebra_draw( PHB_ZEBRA pZebra, HB_ZEBRA_CALLBACK pCallback, void * cargo, 
 
 static void hb_zebra_draw_codeblock_callback( void * pDrawBlock, double dX, double dY, double dWidth, double dHeight )
 {
-   if( pDrawBlock && HB_IS_BLOCK( pDrawBlock ) && hb_vmRequestReenter() )
+   if( pDrawBlock && HB_IS_EVALITEM( pDrawBlock ) && hb_vmRequestReenter() )
    {
       hb_vmPushEvalSym();
       hb_vmPush( ( PHB_ITEM ) pDrawBlock );
@@ -130,7 +130,7 @@ HB_FUNC( HB_ZEBRA_DRAW )
 
    if( pZebra )
    {
-      PHB_ITEM pDrawBlock = hb_param( 2, HB_IT_BLOCK );
+      PHB_ITEM pDrawBlock = hb_param( 2, HB_IT_EVALITEM );
       if( pDrawBlock )
          hb_retni( hb_zebra_draw_codeblock( pZebra, pDrawBlock, hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parni( 7 ) ) );
       else

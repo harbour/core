@@ -273,8 +273,8 @@ HB_FUNC( HB_PQCOPYFROMWA )
       static const char * sc_szDelim = ",";
 
       const char *    szTable   = hb_parcx( 2 );
-      PHB_ITEM        pWhile    = hb_param( 3, HB_IT_BLOCK );
-      PHB_ITEM        pFor      = hb_param( 4, HB_IT_BLOCK );
+      PHB_ITEM        pWhile    = hb_param( 3, HB_IT_EVALITEM );
+      PHB_ITEM        pFor      = hb_param( 4, HB_IT_EVALITEM );
       PHB_ITEM        pFields   = hb_param( 5, HB_IT_ARRAY );
       HB_ULONG        nCount    = hb_parnldef( 6, 0 );
       HB_BOOL         str_rtrim = hb_parldef( 7, HB_TRUE );

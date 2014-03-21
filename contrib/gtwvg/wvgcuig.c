@@ -286,7 +286,7 @@ HB_FUNC( WVG_SETGOBJDATA )
                case GOBJ_OBJDATA_BLOCK:
                   if( gObj->bBlock )
                      hb_itemRelease( gObj->bBlock );
-                  gObj->bBlock = hb_itemNew( hb_param( 3, HB_IT_BLOCK ) );
+                  gObj->bBlock = hb_itemNew( hb_param( 3, HB_IT_EVALITEM ) );
                   break;
                default:
                   bSuccess = HB_FALSE;
@@ -1583,7 +1583,7 @@ HB_FUNC( WVG_OBJECT )
    gObj->iObjType = GOBJ_OBJTYPE_OBJECT;
 
    gObj->iData  = hb_parni( 1 );        /* Object to be executed */
-   gObj->bBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+   gObj->bBlock = hb_itemNew( hb_param( 2, HB_IT_EVALITEM ) );
 
    gObj->gObjNext = pWVT->gObjs;
    pWVT->gObjs    = gObj;

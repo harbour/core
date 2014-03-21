@@ -606,7 +606,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
 
    if( pDisp )
    {
-      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL | HB_IT_HASH );
+      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_EVALITEM | HB_IT_HASH );
 
       if( pItemBlock )
       {

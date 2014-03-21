@@ -231,7 +231,7 @@ HB_FUNC( HB_SETKEY )
       {
          /* Set a SETKEY value */
          sk_add( &sk_data->sk_list, HB_TRUE, hb_itemGetNI( pKeyCode ),
-                 hb_param( 2, HB_IT_BLOCK ), hb_param( 3, HB_IT_BLOCK ) );
+                 hb_param( 2, HB_IT_EVALITEM ), hb_param( 3, HB_IT_EVALITEM ) );
       }
    }
 }
@@ -241,12 +241,12 @@ HB_FUNC( HB_SETKEY )
 HB_FUNC( HB_SETKEYARRAY )
 {
    PHB_ITEM pKeyCodeArray = hb_param( 1, HB_IT_ARRAY );
-   PHB_ITEM pAction = hb_param( 2, HB_IT_BLOCK );
+   PHB_ITEM pAction = hb_param( 2, HB_IT_EVALITEM );
 
    if( pKeyCodeArray && pAction )
    {
       PHB_SK_DATA sk_data = ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData );
-      PHB_ITEM pIsActive = hb_param( 3, HB_IT_BLOCK );
+      PHB_ITEM pIsActive = hb_param( 3, HB_IT_EVALITEM );
       HB_SIZE nLen = hb_arrayLen( pKeyCodeArray );
       HB_SIZE nPos;
 

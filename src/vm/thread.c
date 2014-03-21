@@ -1562,7 +1562,7 @@ HB_FUNC( HB_THREADONCE )
       HB_BOOL fFirstCall = HB_FALSE;
       if( HB_IS_NIL( pItem ) || ! hb_itemGetL( pItem ) )
       {
-         PHB_ITEM pAction = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pAction = hb_param( 2, HB_IT_EVALITEM );
 
 #if defined( HB_MT_VM )
          if( ! s_pOnceMutex )
