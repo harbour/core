@@ -880,7 +880,7 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
    CASE xLine == NIL
    CASE HB_ISNUMERIC( xLine )
       nMode := xLine
-   CASE HB_ISBLOCK( xLine )
+   CASE HB_ISEVALITEM( xLine )
       Eval( xLine )
    CASE HB_ISARRAY( xLine )
       IF nMode == 2

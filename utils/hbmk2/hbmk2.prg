@@ -2406,7 +2406,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   hbmk[ _HBMK_cCOMP ] := tmp[ _COMPDETE_cCOMP ]
                   hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDETE_cCCPREFIX ]
                   hbmk[ _HBMK_cCCPATH ] := cPath_CompC
-                  IF HB_ISBLOCK( tmp[ _COMPDETE_bSetup ] )
+                  IF HB_ISEVALITEM( tmp[ _COMPDETE_bSetup ] )
                      Eval( tmp[ _COMPDETE_bSetup ], hbmk[ _HBMK_cPLAT ], hbmk[ _HBMK_cCOMP ], cPath_CompC )
                   ENDIF
                   EXIT
@@ -2439,7 +2439,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ! Empty( cPath_CompC := Eval( tmp[ _COMPDETE_bBlock ], tmp[ _COMPDETE_cCCPREFIX ], tmp[ _COMPDETE_cCCPATH ] ) )
                hbmk[ _HBMK_cCCPATH ] := cPath_CompC
                hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDETE_cCCPREFIX ]
-               IF HB_ISBLOCK( tmp[ _COMPDETE_bSetup ] )
+               IF HB_ISEVALITEM( tmp[ _COMPDETE_bSetup ] )
                   Eval( tmp[ _COMPDETE_bSetup ], hbmk[ _HBMK_cPLAT ], hbmk[ _HBMK_cCOMP ], cPath_CompC )
                ENDIF
                EXIT
@@ -6467,7 +6467,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    /* Creating implibs requested in dependency specification */
 
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. HB_ISBLOCK( bBlk_ImpLib )
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. HB_ISEVALITEM( bBlk_ImpLib )
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
          IF tmp[ _HBMKDEP_lFound ] .AND. ! Empty( tmp[ _HBMKDEP_aIMPLIBSRC ] )
             DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ], "depimplib", ! hbmk[ _HBMK_lDEPIMPLIB ] )
@@ -8629,7 +8629,7 @@ STATIC FUNCTION DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBS
    LOCAL aToDelete
    LOCAL lRetVal := .F.
 
-   IF HB_ISBLOCK( bBlk_ImpLib )
+   IF HB_ISEVALITEM( bBlk_ImpLib )
       IF ! Empty( aIMPLIBSRC )
          hb_default( @lDoSrc, .F. )
          aToDelete := {}
@@ -16791,11 +16791,11 @@ STATIC PROCEDURE ShowHeader( hbmk )
 #endif
 
    IF hbmk[ _HBMK_lMarkdown ]
-      hb_SetTermCP( "UTF8EX" ) /* UTF-8 output for Markdown */
+      hb_SetTermCP( "UTF8EX" )  /* UTF-8 output for Markdown */
       cText := ToMarkdown( cText )
    ELSE
-      IF ! hb_FIsDevice( hb_GetStdOut() ) .OR. HB_ISBLOCK( hbmk[ _HBMK_bOut ] )
-         hb_SetTermCP( "UTF8EX" ) /* UTF-8 output when redirected or directly writing to file */
+      IF ! hb_FIsDevice( hb_GetStdOut() ) .OR. HB_ISEVALITEM( hbmk[ _HBMK_bOut ] )
+         hb_SetTermCP( "UTF8EX" )  /* UTF-8 output when redirected or directly writing to file */
       ENDIF
       cText := StrTran( cText, e"\n", _OUT_EOL )
    ENDIF

@@ -131,7 +131,7 @@ HB_FUNC( WVW_PBCREATE )
    double  dStretch     = ! HB_ISNIL( 10 ) ? hb_parnd( 10 ) : 1;
    BOOL    bMap3Dcolors = HB_ISLOG( 11 ) ? ( BOOL ) hb_parl( 11 ) : FALSE;
 
-   if( ! HB_ISBLOCK( 8 ) )
+   if( ! HB_ISEVALITEM( 8 ) )
    {
       hb_retnl( 0 );
       return;
@@ -259,7 +259,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    {
 
 #if 0
-      if( ! HB_ISBLOCK( 3 ) )
+      if( ! HB_ISEVALITEM( 3 ) )
          MessageBox( NULL, TEXT( "Codeblock Expected" ),
                      pData->szAppName, MB_ICONERROR );
 

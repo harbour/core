@@ -330,7 +330,7 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
    nFocus := 1
    ch := Inkey( 0.5 )
    DO WHILE ! lDone
-      IF HB_ISBLOCK( SetKey( ch ) )
+      IF HB_ISEVALITEM( SetKey( ch ) )
          Eval( SetKey( ch ) )
       ELSEIF ch != 0
          lchangefocus := .T.
@@ -387,7 +387,7 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
    LOCAL nNumGets := Len( aEBGets )
    LOCAL nFocus, lchangefocus
 
-   IF HB_ISBLOCK( SetKey( ch ) )
+   IF HB_ISEVALITEM( SetKey( ch ) )
       Eval( SetKey( ch ) )
       RETURN
    ELSEIF ch == 0
@@ -928,7 +928,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
    CASE message == WM_CHAR
       ch := wParam
       bhandler := inp_handler( nWinNum )
-      IF HB_ISBLOCK( bhandler )
+      IF HB_ISEVALITEM( bhandler )
          Eval( bhandler, nWinNum, ch )
          RETURN .T.
       ELSE
@@ -946,7 +946,7 @@ STATIC FUNCTION inp_handler( nwinnum, bhandler )
    STATIC s_bhandlers := {}
    LOCAL retval := iif( Len( s_bhandlers ) >= nwinnum + 1, s_bhandlers[ nwinnum + 1 ], NIL )
 
-   IF HB_ISBLOCK( bhandler )
+   IF HB_ISEVALITEM( bhandler )
       IF Len( s_bhandlers ) < nwinnum + 1
          ASize( s_bhandlers, nwinnum + 1 )
       ENDIF

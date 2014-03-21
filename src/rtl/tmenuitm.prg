@@ -123,7 +123,7 @@ METHOD checked( lChecked ) CLASS MenuItem
 METHOD data( boData ) CLASS MenuItem
 
    IF boData != NIL
-      IF HB_ISBLOCK( boData )
+      IF HB_ISEVALITEM( boData )
          ::boData := boData
       ELSE
          ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| IS_IN( boData:ClassName(), "POPUPMENU|HB_POPUPMENU" ) } )

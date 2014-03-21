@@ -224,24 +224,20 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
                ::nCurwindow--
             ENDIF
          ENDIF
-      ELSEIF HB_ISBLOCK( uValue ) .OR. HB_ISPOINTER( uValue )
+      ELSEIF HB_ISPOINTER( uValue ) .OR. ! ::lEditable
          __dbgAlert( "Value cannot be edited" )
       ELSE
-         IF ::lEditable
-            oBrwSets:RefreshCurrent()
-            DO CASE
-            CASE HB_ISOBJECT( uValue )
-               __dbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
-            CASE HB_ISARRAY( uValue )
-               __dbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
-            OTHERWISE
-               ::doGet( oBrwSets, hHash, nSet )
-            ENDCASE
-            oBrwSets:RefreshCurrent()
-            oBrwSets:ForceStable()
-         ELSE
-            __dbgAlert( "Value cannot be edited" )
-         ENDIF
+         oBrwSets:RefreshCurrent()
+         DO CASE
+         CASE HB_ISOBJECT( uValue )
+            __dbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+         CASE HB_ISARRAY( uValue )
+            __dbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+         OTHERWISE
+            ::doGet( oBrwSets, hHash, nSet )
+         ENDCASE
+         oBrwSets:RefreshCurrent()
+         oBrwSets:ForceStable()
       ENDIF
 
    ENDCASE

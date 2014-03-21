@@ -126,7 +126,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          LI_MSLEN := Array( LI_COLCOUNT )
          LI_MSDEC := Array( LI_COLCOUNT )
          FOR i := 1 TO LI_COLCOUNT
-            IF HB_ISBLOCK( LI_MSF[ i ] )
+            IF HB_ISEVALITEM( LI_MSF[ i ] )
                vartmp := Eval( LI_MSF[ i ], mslist, i )
                SWITCH LI_MSTYP[ i ] := ValType( vartmp )
                CASE "C"
@@ -557,7 +557,7 @@ STATIC FUNCTION FLDSTR( mslist, numf )
    IF LI_MSF != NIL
       IF numf <= Len( LI_MSF )
          vartmp := LI_MSF[ numf ]
-         IF ( fldtype := ValType( vartmp ) ) == "B"
+         IF ( fldtype := ValType( vartmp ) ) $ "BS"
             vartmp := Eval( vartmp, mslist, numf )
             SWITCH LI_MSTYP[ numf ]
             CASE "C"

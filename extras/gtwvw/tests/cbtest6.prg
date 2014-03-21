@@ -254,7 +254,7 @@ STATIC PROCEDURE CBreader( oGet )
          oGet:exitState := GE_NOEXIT
       ENDIF
 
-   CASE HB_ISBLOCK( bKeyBlock := SetKey( nKey ) )
+   CASE HB_ISEVALITEM( bKeyBlock := SetKey( nKey ) )
       oGetList:GetDoSetKey( bKeyBlock )  // Eval(bKeyBlock)
       oGet:exitState := GE_NOEXIT
 

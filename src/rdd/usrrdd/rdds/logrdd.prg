@@ -57,13 +57,13 @@
 #include "fileio.ch"
 #include "dbinfo.ch"
 
-#define ARRAY_FILENAME     1
-#define ARRAY_FHANDLE      2
-#define ARRAY_TAG          3
-#define ARRAY_ACTIVE       4
-#define ARRAY_RDDNAME      5
-#define ARRAY_MSGLOGBLOCK  6
-#define ARRAY_USERLOGBLOCK 7
+#define ARRAY_FILENAME      1
+#define ARRAY_FHANDLE       2
+#define ARRAY_TAG           3
+#define ARRAY_ACTIVE        4
+#define ARRAY_RDDNAME       5
+#define ARRAY_MSGLOGBLOCK   6
+#define ARRAY_USERLOGBLOCK  7
 
 ANNOUNCE LOGRDD
 
@@ -315,7 +315,7 @@ FUNCTION hb_LogRddMsgLogBlock( bMsgLogBlock )
 
       bOldMsgLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
 
-      IF HB_ISBLOCK( bMsgLogBlock )
+      IF HB_ISEVALITEM( bMsgLogBlock )
          aRDDData[ ARRAY_MSGLOGBLOCK ] := bMsgLogBlock
       ENDIF
 
@@ -334,7 +334,7 @@ FUNCTION hb_LogRddUserLogBlock( bUserLogBlock )
 
       bOldUserLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
 
-      IF HB_ISBLOCK( bUserLogBlock )
+      IF HB_ISEVALITEM( bUserLogBlock )
          aRDDData[ ARRAY_USERLOGBLOCK ] := bUserLogBlock
       ENDIF
 
@@ -374,7 +374,9 @@ STATIC PROCEDURE OpenLogFile( nWA )
    LOCAL nHandle   := aRDDData[ ARRAY_FHANDLE  ]
    LOCAL lActive   := aRDDData[ ARRAY_ACTIVE   ]
 
-   // TraceLog( "nHandle " + CStr( nHandle ) )
+#if 0
+   TraceLog( "nHandle " + CStr( nHandle ) )
+#endif
 
    IF lActive .AND. nHandle == NIL
 
@@ -449,9 +451,9 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
       bUserLogBlock := aRDDData[ ARRAY_USERLOGBLOCK ]
 
       // If not defined a User codeblock
-      IF ! HB_ISBLOCK( bUserLogBlock )
+      IF ! HB_ISEVALITEM( bUserLogBlock )
 
-         nHandle      := aRDDData[ ARRAY_FHANDLE ]
+         nHandle := aRDDData[ ARRAY_FHANDLE ]
 
          // If log file is not already open I open now
          IF nHandle == NIL
@@ -464,7 +466,7 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
 
             // If defined a codeblock I send to user infos and he has to return a formatted string
             // Look at local ToString() function for details
-            IF HB_ISBLOCK( bMsgLogBlock )
+            IF HB_ISEVALITEM( bMsgLogBlock )
                cLog := Eval( bMsgLogBlock, cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 )
             ELSE
                cLog := DToS( Date() ) + " " + Time() + " " + cTag + ": " + PadR( cRDDName + "_" + cCmd, 20 ) + " - " + ToString( cCmd, nWA, xPar1, xPar2, xPar3 )
@@ -476,12 +478,9 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
          ENDIF
 
       ELSE
-
          // Otherwise I send all to user that is responsible to log everywhere
          Eval( bUserLogBlock, cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 )
-
       ENDIF
-
    ENDIF
 
    RETURN

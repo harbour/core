@@ -50,7 +50,7 @@
 #include "error.ch"
 
 /* NOTE: Compared to CA-Cl*pper, Harbour:
-         - will accept character expressions for xKey, xFor and xWhile.
+         - will accept character expressions and symbols for xKey, xFor and xWhile.
          - has three extra parameters (cRDD, nConnection, cCodePage).
          - will default to active index key for xKey parameter.
          - won't crash with "No exported method: EVAL" if xKey is not
@@ -79,7 +79,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    IF HB_ISSTRING( xWhile )
       bWhileBlock := hb_macroBlock( xWhile )
       lRest := .T.
-   ELSEIF HB_ISBLOCK( xWhile )
+   ELSEIF HB_ISEVALITEM( xWhile )
       bWhileBlock := xWhile
       lRest := .T.
    ELSE
@@ -88,7 +88,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
 
    IF HB_ISSTRING( xFor )
       bForBlock := hb_macroBlock( xFor )
-   ELSEIF HB_ISBLOCK( xFor )
+   ELSEIF HB_ISEVALITEM( xFor )
       bForBlock := xFor
    ELSE
       bForBlock := {|| .T. }
@@ -126,7 +126,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
 
       IF HB_ISSTRING( xKey )
          bKeyBlock := hb_macroBlock( xKey )
-      ELSEIF HB_ISBLOCK( xKey )
+      ELSEIF HB_ISEVALITEM( xKey )
          bKeyBlock := xKey
       ELSE
          bKeyBlock := {|| .T. }

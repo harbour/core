@@ -1901,7 +1901,7 @@ HB_FUNC( SQLITE3_PROGRESS_HANDLER )
          pHbSqlite3->cbProgressHandler = NULL;
       }
 
-      if( HB_ISNUM( 2 ) && HB_ISBLOCK( 3 ) )
+      if( HB_ISNUM( 2 ) && HB_ISEVALITEM( 3 ) )
       {
          pHbSqlite3->cbProgressHandler = hb_itemNew( hb_param( 3, HB_IT_EVALITEM ) );
          hb_gcUnlock( pHbSqlite3->cbProgressHandler );

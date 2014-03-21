@@ -441,7 +441,7 @@ HB_FUNC( WVW_RBCREATE )
    double  dStretch     = ! HB_ISNIL( 10 ) ? hb_parnd( 10 ) : 1;
    BOOL    bMap3Dcolors = HB_ISLOG( 11 ) ? ( BOOL ) hb_parl( 11 ) : FALSE;
 
-   if( ! HB_ISBLOCK( 8 ) )
+   if( ! HB_ISEVALITEM( 8 ) )
    {
       hb_retnl( 0 );
       return;

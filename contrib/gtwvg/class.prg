@@ -567,7 +567,7 @@ METHOD WvtDialog:Inkey()
       ENDIF
 
       IF ! ::lEventHandled
-         IF HB_ISBLOCK( SetKey( ::nKey ) )
+         IF HB_ISEVALITEM( SetKey( ::nKey ) )
             Eval( SetKey( ::nKey ) )
          ENDIF
       ENDIF

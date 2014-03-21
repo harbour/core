@@ -128,7 +128,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             xMsg := t_aLevel[ nPointer - 1, n, 4 ]
 
             // Code Block messages ( yes, they are documented! )
-            IF HB_ISBLOCK( xMsg )
+            IF HB_ISEVALITEM( xMsg )
                xMsg := Eval( xMsg )
             ENDIF
 

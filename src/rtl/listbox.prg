@@ -514,7 +514,7 @@ METHOD killFocus() CLASS ListBox
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -737,7 +737,7 @@ METHOD select( xPos ) CLASS ListBox
 
    ::display()
 
-   IF HB_ISBLOCK( ::bSBlock )
+   IF HB_ISEVALITEM( ::bSBlock )
       Eval( ::bSBlock )
    ENDIF
 
@@ -760,7 +760,7 @@ METHOD setFocus() CLASS ListBox
 
       ::display()
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -823,7 +823,7 @@ METHOD changeItem( nOldPos, nNewPos ) CLASS ListBox
 
       ::display()
 
-      IF HB_ISBLOCK( ::bSBlock )
+      IF HB_ISEVALITEM( ::bSBlock )
          Eval( ::bSBlock )
       ENDIF
    ENDIF

@@ -453,7 +453,7 @@ HB_FUNC( WVW_XBCREATE )
               usBottom,
               usRight;
 
-   if( iStyle < SBS_HORZ || iStyle > SBS_VERT || ! HB_ISBLOCK( 6 ) )
+   if( iStyle < SBS_HORZ || iStyle > SBS_VERT || ! HB_ISEVALITEM( 6 ) )
    {
       hb_retnl( 0 );
       return;

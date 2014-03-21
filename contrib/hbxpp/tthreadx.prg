@@ -71,16 +71,20 @@ EXPORTED:
 
 ENDCLASS
 
-METHOD new( ... ) CLASS SIGNAL
+METHOD new( ... ) CLASS Signal
+
    ::mutex := hb_mutexCreate()
    ::Init( ... )
+
    RETURN Self
 
 METHOD wait( nTimeOut ) CLASS SIGNAL
    RETURN __clsSyncWait( ::mutex, nTimeOut )
 
-METHOD signal() CLASS SIGNAL
+METHOD signal() CLASS Signal
+
    __clsSyncSignal( ::mutex )
+
    RETURN Self
 
 
@@ -129,7 +133,8 @@ EXPORTED:
 
 ENDCLASS
 
-METHOD new( ... ) CLASS THREAD
+METHOD new( ... ) CLASS Thread
+
    LOCAL nMaxStackSize
 
    IF PCount() == 1
@@ -145,14 +150,19 @@ METHOD new( ... ) CLASS THREAD
 
       /* TODO: do not ignore thread stack size set by user in ::maxStackSize */
    ENDIF
+
    ::Init( ... )
+
    RETURN Self
 
-METHOD execute() CLASS THREAD
+METHOD execute() CLASS Thread
+
    HB_SYMBOL_UNUSED( Self )
+
    RETURN NIL
 
-METHOD quit( xResult, nRestart ) CLASS THREAD
+METHOD quit( xResult, nRestart ) CLASS Thread
+
    IF hb_threadSelf() == ::pThreadID
       IF PCount() > 0
          ::result := xResult
@@ -162,9 +172,11 @@ METHOD quit( xResult, nRestart ) CLASS THREAD
       ENDIF
       QUIT
    ENDIF
+
    RETURN NIL
 
-METHOD setInterval( nHSeconds ) CLASS THREAD
+METHOD setInterval( nHSeconds ) CLASS Thread
+
    IF HB_ISNUMERIC( nHSeconds ) .AND. Int( nHSeconds ) >= 0
       ::interval := Int( nHSeconds )
    ELSEIF PCount() > 0 .OR. nHSeconds == NIL
@@ -173,16 +185,20 @@ METHOD setInterval( nHSeconds ) CLASS THREAD
       /* TODO: RT Error */
       RETURN .F.
    ENDIF
+
    RETURN .T.
 
-METHOD setPriority( nPriority ) CLASS THREAD
+METHOD setPriority( nPriority ) CLASS Thread
+
    /* TODO: add thread priority setting */
    IF HB_ISNUMERIC( nPriority )
       ::priority := nPriority
    ENDIF
+
    RETURN .F.
 
-METHOD setStartTime( nSeconds ) CLASS THREAD
+METHOD setStartTime( nSeconds ) CLASS Thread
+
    IF HB_ISNUMERIC( nSeconds )
       IF nSeconds < 0 .OR. nSeconds > 86400
          RETURN .F.
@@ -194,13 +210,13 @@ METHOD setStartTime( nSeconds ) CLASS THREAD
       /* TODO: RT Error */
       RETURN .F.
    ENDIF
+
    RETURN .T.
 
-METHOD start( xAction, ... ) CLASS THREAD
+METHOD start( xAction, ... ) CLASS Thread
 
    IF ::active
       RETURN .F.
-
    ELSE
       ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
             {| ... |
@@ -221,7 +237,7 @@ METHOD start( xAction, ... ) CLASS THREAD
                ENDIF
 
                ::atStart( ... )
-               IF HB_ISBLOCK( ::_atStart )
+               IF HB_ISEVALITEM( ::_atStart )
                   Eval( ::_atStart, ... )
                ENDIF
 
@@ -260,7 +276,7 @@ METHOD start( xAction, ... ) CLASS THREAD
                ENDDO
 
                ::atEnd( ... )
-               IF HB_ISBLOCK( ::_atEnd )
+               IF HB_ISEVALITEM( ::_atEnd )
                   Eval( ::_atEnd, ... )
                ENDIF
                ::active := .F.
@@ -268,27 +284,30 @@ METHOD start( xAction, ... ) CLASS THREAD
                RETURN NIL
             }, ... )
 
-      ::threadID := IIF( ::pThreadID == NIL, 0, hb_threadID( ::pThreadID ) )
+      ::threadID := iif( ::pThreadID == NIL, 0, hb_threadID( ::pThreadID ) )
 
    ENDIF
 
-RETURN .T.
+   RETURN .T.
 
-METHOD synchronize( nTimeOut ) CLASS THREAD
+METHOD synchronize( nTimeOut ) CLASS Thread
    LOCAL pThreadID := ::pThreadID
 
    IF hb_threadSelf() != pThreadID
       RETURN hb_threadWait( pThreadID, ;
-                            iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
-                            nTimeOut / 100, ) )
+         iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
+         nTimeOut / 100, ) )
    ENDIF
+
    RETURN .F.
 
-METHOD threadSelf() CLASS THREAD
+METHOD threadSelf() CLASS Thread
    RETURN ::pThreadID
 
-/*
-METHOD threadID() CLASS THREAD
+#if 0
+METHOD threadID() CLASS Thread
+
    LOCAL pThreadID := ::pThreadID
-   RETURN IIF( pThreadID == NIL, 0, hb_threadID( pThreadID ) )
-*/
+
+   RETURN iif( pThreadID == NIL, 0, hb_threadID( pThreadID ) )
+#endif

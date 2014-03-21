@@ -315,7 +315,7 @@ METHOD killFocus() CLASS RadioGroup
 
       ::lHasFocus := .F.
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -363,7 +363,7 @@ METHOD setFocus() CLASS RadioGroup
 
       MSetCursor( nOldMCur )
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF

@@ -1356,7 +1356,7 @@ METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWi
    ::nRow2 := nRow2
    ::nCol2 := nCol2
 
-   ::bClickBlock   := iif( HB_ISBLOCK( bClickBlock ), bClickBlock, NIL )
+   ::bClickBlock   := iif( HB_ISEVALITEM( bClickBlock ), bClickBlock, NIL )
    ::bPressBlock   := NIL
 
    ::lRepeatPress  := .F.
@@ -1434,7 +1434,7 @@ METHOD OnPress() CLASS WVWMouseButton
       wvwm_SetKeyRepeater( .T. )   // activate key repeater
    ENDIF
 
-   IF HB_ISBLOCK( ::bPressBlock )
+   IF HB_ISEVALITEM( ::bPressBlock )
       Eval( ::bPressBlock )
    ENDIF
 
@@ -1448,7 +1448,7 @@ METHOD OnClick() CLASS WVWMouseButton
       RETURN Self
    ENDIF
 
-   IF HB_ISBLOCK( ::bClickBlock )
+   IF HB_ISEVALITEM( ::bClickBlock )
       Eval( ::bClickBlock )
    ENDIF
 

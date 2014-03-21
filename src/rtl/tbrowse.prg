@@ -2647,11 +2647,11 @@ METHOD setKey( nKey, bBlock ) CLASS TBrowse
    ENDIF
 
    IF ( nPos := AScan( ::keys, {| x | x[ _TBC_SETKEY_KEY ] == nKey } ) ) == 0
-      IF HB_ISBLOCK( bBlock )
+      IF HB_ISEVALITEM( bBlock )
          AAdd( ::keys, { nKey, bBlock } )
       ENDIF
       bReturn := bBlock
-   ELSEIF HB_ISBLOCK( bBlock )
+   ELSEIF HB_ISEVALITEM( bBlock )
       ::keys[ nPos ][ _TBC_SETKEY_BLOCK ] := bBlock
       bReturn := bBlock
    ELSEIF PCount() == 1

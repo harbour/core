@@ -382,8 +382,7 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
          EXIT
 
       OTHERWISE
-         bKey := SetKey( nKey )
-         IF HB_ISBLOCK( bKey )
+         IF HB_ISEVALITEM( bKey := SetKey( nKey ) )
             Eval( bKey, oEdit )
          ELSE
             IF oEdit[ E_MODE ]

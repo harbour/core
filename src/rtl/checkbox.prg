@@ -119,7 +119,7 @@ METHOD setFocus() CLASS CheckBox
       ::lHasFocus := .T.
       ::display()
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -135,7 +135,7 @@ METHOD select( lState ) CLASS CheckBox
    IF lOldState != ::lBuffer
       ::display()
 
-      IF HB_ISBLOCK( ::bSBlock )
+      IF HB_ISEVALITEM( ::bSBlock )
          Eval( ::bSBlock )
       ENDIF
    ENDIF
@@ -147,7 +147,7 @@ METHOD killFocus() CLASS CheckBox
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 

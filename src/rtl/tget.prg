@@ -501,7 +501,7 @@ METHOD varPut( xValue ) CLASS Get
    LOCAL i
    LOCAL aValue
 
-   IF HB_ISBLOCK( ::bBlock ) .AND. ValType( xValue ) $ "CNDTLU"
+   IF HB_ISEVALITEM( ::bBlock ) .AND. ValType( xValue ) $ "CNDTLU"
       aSubs := ::xSubScript
       IF HB_ISARRAY( aSubs ) .AND. ! Empty( aSubs )
          nLen := Len( aSubs )
@@ -534,7 +534,7 @@ METHOD varGet() CLASS Get
    LOCAL i
    LOCAL xValue
 
-   IF HB_ISBLOCK( ::bBlock )
+   IF HB_ISEVALITEM( ::bBlock )
       aSubs := ::xSubScript
       IF HB_ISARRAY( aSubs ) .AND. ! Empty( aSubs )
          nLen := Len( aSubs )

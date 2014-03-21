@@ -272,18 +272,14 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
             HBDbObject():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
          ELSEIF ( HB_ISSTRING( aArray[ nSet, 2 ] ) .AND. ;
             ! aArray[ nSet, 3 ] ) .OR. ;
-            HB_ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
-            HB_ISPOINTER( aArray[ nSet, 2 ] )
+            HB_ISPOINTER( aArray[ nSet, 2 ] ) .OR. ;
+            ! ::lEditable
             __dbgAlert( "Value cannot be edited" )
          ELSE
-            IF ::lEditable
-               oBrwSets:RefreshCurrent()
-               ::doGet( oBrwSets, ::arrayReference, nSet )
-               oBrwSets:RefreshCurrent()
-               oBrwSets:ForceStable()
-            ELSE
-               __dbgAlert( "Value cannot be edited" )
-            ENDIF
+            oBrwSets:RefreshCurrent()
+            ::doGet( oBrwSets, ::arrayReference, nSet )
+            oBrwSets:RefreshCurrent()
+            oBrwSets:ForceStable()
          ENDIF
       ENDIF
 

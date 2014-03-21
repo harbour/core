@@ -214,23 +214,19 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
                ::nCurWindow--
             ENDIF
          ENDIF
-      ELSEIF HB_ISBLOCK( aArray[ nSet ] ) .OR. HB_ISPOINTER( aArray[ nSet ] )
+      ELSEIF HB_ISPOINTER( aArray[ nSet ] ) .OR. ! ::lEditable
          __dbgAlert( "Value cannot be edited" )
       ELSE
-         IF ::lEditable
-            oBrwSets:RefreshCurrent()
-            IF HB_ISOBJECT( aArray[ nSet ] )
-               __dbgObject( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
-            ELSEIF HB_ISHASH( aArray[ nSet ] )
-               __dbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
-            ELSE
-               ::doGet( oBrwsets, aArray, nSet )
-            ENDIF
-            oBrwSets:RefreshCurrent()
-            oBrwSets:ForceStable()
+         oBrwSets:RefreshCurrent()
+         IF HB_ISOBJECT( aArray[ nSet ] )
+            __dbgObject( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
+         ELSEIF HB_ISHASH( aArray[ nSet ] )
+            __dbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
          ELSE
-            __dbgAlert( "Value cannot be edited" )
+            ::doGet( oBrwsets, aArray, nSet )
          ENDIF
+         oBrwSets:RefreshCurrent()
+         oBrwSets:ForceStable()
       ENDIF
 
    ENDCASE

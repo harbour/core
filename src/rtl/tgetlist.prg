@@ -204,13 +204,13 @@ METHOD ReadModal() CLASS HBGetList
       ::PostActiveGet()
 
 #ifdef HB_COMPAT_C53
-      IF HB_ISBLOCK( ::oGet:reader )
+      IF HB_ISEVALITEM( ::oGet:reader )
          Eval( ::oGet:reader, ::oGet, Self, oMenu, aMsg )
       ELSE
          ::Reader( oMenu, aMsg )
       ENDIF
 #else
-      IF HB_ISBLOCK( ::oGet:reader )
+      IF HB_ISEVALITEM( ::oGet:reader )
          Eval( ::oGet:reader, ::oGet )
       ELSE
          ::Reader()
@@ -776,7 +776,7 @@ METHOD SetFormat( bFormat ) CLASS HBGetList
 
    LOCAL bSavFormat := ::bFormat
 
-   IF HB_ISBLOCK( bFormat )
+   IF HB_ISEVALITEM( bFormat )
       ::bFormat := bFormat
    ENDIF
 
