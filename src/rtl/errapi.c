@@ -454,7 +454,7 @@ HB_FUNC( __ERRINHANDLER )
 
 HB_FUNC( ERRORBLOCK )
 {
-   PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_BLOCK );
+   PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_EVALITEM );
    PHB_ITEM pErrorBlock = hb_errorBlock();
 
    hb_itemReturn( pErrorBlock );
@@ -543,7 +543,7 @@ HB_USHORT hb_errLaunch( PHB_ITEM pError )
       PHB_ITEM pResult;
 
       /* Check if we have a valid error handler */
-      if( ! pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
+      if( ! pErrData->errorBlock || !( hb_itemType( pErrData->errorBlock ) & HB_IT_EVALITEM ) )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -637,7 +637,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       HB_USHORT uiFlags = hb_errGetFlags( pError );
 
       /* Check if we have a valid error handler */
-      if( ! pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
+      if( ! pErrData->errorBlock || !( hb_itemType( pErrData->errorBlock ) & HB_IT_EVALITEM ) )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */

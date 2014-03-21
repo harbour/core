@@ -90,7 +90,7 @@ static HB_BOOL hb_usrIsMethod( PHB_ITEM pMethods, HB_USHORT uiMethod )
 {
    PHB_ITEM pItem = hb_arrayGetItemPtr( pMethods, uiMethod );
 
-   return pItem && ( HB_IS_SYMBOL( pItem ) || HB_IS_BLOCK( pItem ) );
+   return pItem && HB_IS_EVALITEM( pItem );
 }
 
 static HB_BOOL hb_usrPushMethod( PHB_ITEM pMethods, HB_USHORT uiMethod )

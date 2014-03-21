@@ -55,6 +55,7 @@ PROCEDURE Main( cFileName )
    XML_SetElementHandler( p, {| x, e, a | cb_start( x, e, a ) }, {| x | cb_end( x ) } )
    XML_SetCharacterDataHandler( p, {| x, d | cb_data( x, d ) } )
    XML_SetUnknownEncodingHandler( p, {| x, e, i | cb_unknownencoding( x, e, i ) } )
+   XML_SetEndDoctypeDeclHandler( p, @cb_enddoctype() )
 
    IF XML_Parse( p, MemoRead( cFileName ), .T. ) == HB_XML_STATUS_ERROR
       ? hb_StrFormat( e"Parse error at line %1$d:\n%2$s", ;
@@ -98,6 +99,9 @@ STATIC FUNCTION DUMPATTR( hAttr )
    ENDIF
 
    RETURN s
+
+STATIC FUNCTION cb_enddoctype()
+   RETURN 0
 
 STATIC FUNCTION cb_unknownencoding( xEData, cEncoding, aMap )
 

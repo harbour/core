@@ -113,9 +113,9 @@ static void sk_add( PHB_SETKEY * sk_list_ptr, HB_BOOL bReturn,
    {
       PHB_SETKEY sk_list_tmp, sk_list_end;
 
-      if( pIsActive && ! HB_IS_BLOCK( pIsActive ) )
+      if( pIsActive && ! HB_IS_EVALITEM( pIsActive ) )
          pIsActive = NULL;
-      if( pAction && ! HB_IS_BLOCK( pAction ) )
+      if( pAction && ! HB_IS_EVALITEM( pAction ) )
          pAction = NULL;
 
       sk_list_tmp = sk_findkey( iKeyCode, *sk_list_ptr, &sk_list_end );
@@ -198,7 +198,7 @@ HB_FUNC( SETKEY )
       {
          /* Set a SETKEY value */
          sk_add( &sk_data->sk_list, HB_TRUE, hb_itemGetNI( pKeyCode ),
-                 hb_param( 2, HB_IT_BLOCK ), NULL );
+                 hb_param( 2, HB_IT_EVALITEM ), NULL );
       }
    }
 }
