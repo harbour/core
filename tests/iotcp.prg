@@ -54,7 +54,7 @@
 
 ANNOUNCE HB_IOTCP
 
-#define IOTCP_SCOKET          1
+#define IOTCP_SOCKET          1
 #define IOTCP_EOF             2
 #define IOTCP_TIMEOUT         3
 
@@ -144,7 +144,7 @@ RETURN aFile /* if aFile == NIL indicates error */
 
 
 STATIC FUNCTION IOTCP_Close( aFile )
-   hb_socketClose( aFile[ IOTCP_SCOKET ] )
+   hb_socketClose( aFile[ IOTCP_SOCKET ] )
    IOUSR_SetError( hb_socketGetError(), IOTCP_ERRORBASE )
 RETURN NIL
 
@@ -156,7 +156,7 @@ STATIC FUNCTION IOTCP_Read( aFile, /*@*/ cData, nLen, nTimeout )
       IF nTimeout == -1
          nTimeout := aFile[ IOTCP_TIMEOUT ]
       ENDIF
-      nRead := hb_socketRecv( aFile[ IOTCP_SCOKET ], @cData, nLen, 0, nTimeout )
+      nRead := hb_socketRecv( aFile[ IOTCP_SOCKET ], @cData, nLen, 0, nTimeout )
       nError := hb_socketGetError()
       IF nRead <= 0
          SWITCH nError
@@ -178,7 +178,7 @@ STATIC FUNCTION IOTCP_Write( aFile, cData, nLen, nTimeout )
    IF nTimeout == -1
       nTimeout := aFile[ IOTCP_TIMEOUT ]
    ENDIF
-   nLen := hb_socketSend( aFile[ IOTCP_SCOKET ], cData, nLen, 0, nTimeout )
+   nLen := hb_socketSend( aFile[ IOTCP_SOCKET ], cData, nLen, 0, nTimeout )
    IOUSR_SetError( hb_socketGetError(), IOTCP_ERRORBASE )
 RETURN iif( nLen < 0, 0, nLen )
 
@@ -196,7 +196,7 @@ RETURN .F.
 
 STATIC FUNCTION IOTCP_Handle( aFile )
    IOUSR_SetError( 0, IOTCP_ERRORBASE )
-RETURN hb_socketGetFD( aFile[ IOTCP_SCOKET ] )
+RETURN hb_socketGetFD( aFile[ IOTCP_SOCKET ] )
 
 
 INIT PROCEDURE CLIPINIT
