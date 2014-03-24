@@ -155,16 +155,20 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
 
          while( *szVal && nCnt++ < nLen )
          {
-            /* if( *szVal == *szDelim || *szVal == *szEsc || *szVal == *szQuote )
-               we don't need to escape delim in CSV mode,
-               only the quote and the escape itself */
-
-            if( *szVal == *szQuote || *szVal == *szEsc )
-               if( ! addToContext( context, *szEsc ) )
-                  return HB_FALSE;
             if( ( HB_UCHAR ) *szVal >= 32 )
+            {
+               /* if( *szVal == *szDelim || *szVal == *szEsc || *szVal == *szQuote )
+                  we don't need to escape delim in CSV mode,
+                  only the quote and the escape itself */
+
+               if( *szVal == *szQuote || *szVal == *szEsc )
+               {
+                  if( ! addToContext( context, *szEsc ) )
+                     return HB_FALSE;
+               }
                if( ! addToContext( context, *szVal ) )
                   return HB_FALSE;
+            }
             szVal++;
          }
          if( ! addStrToContext( context, szQuote ) )
