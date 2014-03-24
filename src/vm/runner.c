@@ -75,7 +75,7 @@
 typedef struct
 {
    char *        szName;                        /* Name of the function     */
-   PHB_PCODEFUNC pCodeFunc;                     /* Dynamic function info    */
+   HB_PCODEFUNC  pcodeFunc;                     /* Dynamic function info    */
    HB_BYTE *     pCode;                         /* P-code                   */
 } HB_DYNF, * PHB_DYNF;
 
@@ -299,17 +299,15 @@ static void hb_hrbUnLoad( PHRB_BODY pHrbBody )
          PHB_DYNS pDyn;
 
          if( pHrbBody->pDynFunc[ ul ].szName &&
-             pHrbBody->pDynFunc[ ul ].pCodeFunc )
+             pHrbBody->pDynFunc[ ul ].pcodeFunc.pCode )
          {
             pDyn = hb_dynsymFind( pHrbBody->pDynFunc[ ul ].szName );
             if( pDyn && pDyn->pSymbol->value.pCodeFunc ==
-                        pHrbBody->pDynFunc[ ul ].pCodeFunc )
+                        &pHrbBody->pDynFunc[ ul ].pcodeFunc )
             {
                pDyn->pSymbol->value.pCodeFunc = NULL;
             }
          }
-         if( pHrbBody->pDynFunc[ ul ].pCodeFunc )
-            hb_xfree( pHrbBody->pDynFunc[ ul ].pCodeFunc );
          if( pHrbBody->pDynFunc[ ul ].pCode )
             hb_xfree( pHrbBody->pDynFunc[ ul ].pCode );
          if( pHrbBody->pDynFunc[ ul ].szName )
@@ -452,9 +450,8 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
             memcpy( ( char * ) pDynFunc[ ul ].pCode, szHrbBody + nBodyOffset, nSize );
             nBodyOffset += nSize;
 
-            pDynFunc[ ul ].pCodeFunc = ( PHB_PCODEFUNC ) hb_xgrab( sizeof( HB_PCODEFUNC ) );
-            pDynFunc[ ul ].pCodeFunc->pCode    = pDynFunc[ ul ].pCode;
-            pDynFunc[ ul ].pCodeFunc->pSymbols = pSymRead;
+            pDynFunc[ ul ].pcodeFunc.pCode    = pDynFunc[ ul ].pCode;
+            pDynFunc[ ul ].pcodeFunc.pSymbols = pSymRead;
          }
 
          if( ul < pHrbBody->ulFuncs )
@@ -479,7 +476,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
             }
             else
             {
-               pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) pHrbBody->pDynFunc[ nPos ].pCodeFunc;
+               pSymRead[ ul ].value.pCodeFunc = &pHrbBody->pDynFunc[ nPos ].pcodeFunc;
                pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL |
                   ( usBind == HB_HRB_BIND_FORCELOCAL ? HB_FS_STATIC : 0 );
             }
@@ -556,7 +553,8 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
             pHrbBody->pSymRead = pHrbBody->pModuleSymbols->pModuleSymbols;
             hb_xfree( pSymRead );
 
-            pHrbBody->fInit = HB_TRUE;
+            if( ! pHrbBody->pModuleSymbols->fInitStatics )
+               pHrbBody->fInit = HB_TRUE;
          }
          else
          {

@@ -120,6 +120,7 @@ C_SOURCES := \
    idle.c \
    inkey.c \
    inkeyapi.c \
+   iousr.c \
    is.c \
    isprint.c \
    itemseri.c \

@@ -116,6 +116,7 @@ PRG_HEADERS := \
    hbhash.ch \
    hbhrb.ch \
    hbinkey.ch \
+   hbiousr.ch \
    hblang.ch \
    hblpp.ch \
    hbmacro.ch \
