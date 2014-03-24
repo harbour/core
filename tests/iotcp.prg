@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -66,6 +66,7 @@ ANNOUNCE HB_IOTCP
  * NOTE: cDefExt, cPaths and oError can be NIL
  */
 STATIC FUNCTION IOTCP_Open( cFile, cDefExt, nFlags, cPaths, oError )
+
    LOCAL nTimeout := 10000, nError, hSock := NIL, aFile := NIL
    LOCAL cAddr, cRest, nPort := 0, aAddr
    LOCAL nAt
@@ -74,7 +75,7 @@ STATIC FUNCTION IOTCP_Open( cFile, cDefExt, nFlags, cPaths, oError )
    HB_SYMBOL_UNUSED( cPaths )
 
    /* strip "tcp:" prefix */
-   cAddr := substr( cFile, 5 )
+   cAddr := SubStr( cFile, 5 )
 
    /* take host, port and timeout from "<host>:<port>[:<timeout>]" string */
    IF ( nAt := At( ":", cAddr ) ) > 1
@@ -102,11 +103,11 @@ STATIC FUNCTION IOTCP_Open( cFile, cDefExt, nFlags, cPaths, oError )
    ENDIF
 
    IF nPort != 0
-      IF !Empty( aAddr := hb_socketResolveInetAddr( cAddr, nPort ) ) .AND. ;
-         !Empty( hSock := hb_socketOpen() )
+      IF ! Empty( aAddr := hb_socketResolveINetAddr( cAddr, nPort ) ) .AND. ;
+         ! Empty( hSock := hb_socketOpen() )
          hb_socketSetKeepAlive( hSock, .T. )
          IF hb_socketConnect( hSock, aAddr, nTimeout )
-            IF !Empty( hSock )
+            IF ! Empty( hSock )
                SWITCH hb_bitAnd( nFlags, hb_bitOr( FO_READ, FO_WRITE, FO_READWRITE ) )
                CASE FO_READ
                   hb_socketShutdown( hSock, HB_SOCKET_SHUT_WR )
@@ -140,19 +141,22 @@ STATIC FUNCTION IOTCP_Open( cFile, cDefExt, nFlags, cPaths, oError )
       ENDIF
    ENDIF
 
-RETURN aFile /* if aFile == NIL indicates error */
+   RETURN aFile /* if aFile == NIL indicates error */
 
 
 STATIC FUNCTION IOTCP_Close( aFile )
+
    hb_socketClose( aFile[ IOTCP_SCOKET ] )
    IOUSR_SetError( hb_socketGetError(), IOTCP_ERRORBASE )
-RETURN NIL
+
+   RETURN NIL
 
 
 STATIC FUNCTION IOTCP_Read( aFile, /*@*/ cData, nLen, nTimeout )
+
    LOCAL nRead := 0, nError
 
-   IF !aFile[ IOTCP_EOF ]
+   IF ! aFile[ IOTCP_EOF ]
       IF nTimeout == -1
          nTimeout := aFile[ IOTCP_TIMEOUT ]
       ENDIF
@@ -171,35 +175,43 @@ STATIC FUNCTION IOTCP_Read( aFile, /*@*/ cData, nLen, nTimeout )
       ENDIF
       IOUSR_SetError( nError, IOTCP_ERRORBASE )
    ENDIF
-RETURN nRead
+
+   RETURN nRead
 
 
 STATIC FUNCTION IOTCP_Write( aFile, cData, nLen, nTimeout )
+
    IF nTimeout == -1
       nTimeout := aFile[ IOTCP_TIMEOUT ]
    ENDIF
    nLen := hb_socketSend( aFile[ IOTCP_SCOKET ], cData, nLen, 0, nTimeout )
    IOUSR_SetError( hb_socketGetError(), IOTCP_ERRORBASE )
-RETURN iif( nLen < 0, 0, nLen )
+
+   RETURN iif( nLen < 0, 0, nLen )
 
 
 STATIC FUNCTION IOTCP_Eof( aFile )
-RETURN aFile[ IOTCP_EOF ]
+   RETURN aFile[ IOTCP_EOF ]
 
 
 STATIC FUNCTION IOTCP_Configure( aFile, nIndex, xValue )
+
    HB_SYMBOL_UNUSED( aFile )
    HB_SYMBOL_UNUSED( nIndex )
    HB_SYMBOL_UNUSED( xValue )
-RETURN .F.
+
+   RETURN .F.
 
 
 STATIC FUNCTION IOTCP_Handle( aFile )
+
    IOUSR_SetError( 0, IOTCP_ERRORBASE )
-RETURN hb_socketGetFD( aFile[ IOTCP_SCOKET ] )
+
+   RETURN hb_socketGetFD( aFile[ IOTCP_SCOKET ] )
 
 
 INIT PROCEDURE CLIPINIT
+
    LOCAL aMethods[ IOUSR_METHODCOUNT ]
 
    aMethods[ IOUSR_OPEN      ] := @IOTCP_Open()
@@ -211,7 +223,8 @@ INIT PROCEDURE CLIPINIT
    aMethods[ IOUSR_HANDLE    ] := @IOTCP_Handle()
 
    IOUSR_Register( aMethods, "tcp:" )
-RETURN
+
+   RETURN
 
 
 
@@ -220,6 +233,7 @@ RETURN
 REQUEST HB_IOTCP
 
 PROCEDURE Main( cAddr )
+
    LOCAL hFile, cData, cSend, cEOL, nLen
 
    IF Empty( cAddr )
@@ -227,36 +241,36 @@ PROCEDURE Main( cAddr )
    ENDIF
 
    ? "open:", cAddr
-   hFile := hb_vfOpen( cAddr, FO_READWRITE )
-   IF Empty( hFile )
+   IF Empty( hFile := hb_vfOpen( cAddr, FO_READWRITE ) )
       ? "Open error:", FError()
    ELSE
       cData := Space( 1024 )
       cEOL := e"\r\n"
       IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
-         ? "<< " + StrTran( HB_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
+         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
       ENDIF
       cSend := "EHLO" + cEOL
       nLen := hb_vfWrite( hFile, cSend,, 1000 )
-      ? ">> " + StrTran( HB_BLeft( cSend, nLen ), cEOL, cEOL + ">> " )
+      ? ">>", StrTran( hb_BLeft( cSend, nLen ), cEOL, cEOL + ">> " )
       IF nLen != hb_BLen( cSend )
          ? "WRITE ERROR:", FError()
       ENDIF
       IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
-         ? "<< " + StrTran( HB_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
+         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
       ENDIF
       cSend := "QUIT" + cEOL
       nLen := hb_vfWrite( hFile, cSend,, 1000 )
-      ? ">> " + StrTran( HB_BLeft( cSend, nLen ), cEOL, cEOL + ">> " )
+      ? ">>", StrTran( hb_BLeft( cSend, nLen ), cEOL, cEOL + ">> " )
       IF nLen != hb_BLen( cSend )
          ? "WRITE ERROR:", FError()
       ENDIF
       IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
-         ? "<< " + StrTran( HB_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
+         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
       ENDIF
       hb_vfClose( hFile )
       ? "closed, error:", FError()
    ENDIF
    ?
    WAIT
-RETURN
+
+   RETURN
