@@ -391,11 +391,11 @@ static double s_fileDirSpace( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB
    return hb_fsDiskSpace( pszDirName, uiType );
 }
 
-static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
+static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr )
 {
    HB_SYMBOL_UNUSED( pFuncs );
 
-   return hb_fsDirectory( pszDirSpec, pszAttr, fDateTime );
+   return hb_fsDirectory( pszDirSpec, pszAttr, HB_TRUE );
 }
 
 static HB_BOOL s_fileTimeGet( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long * plJulian, long * plMillisec )
@@ -1131,14 +1131,14 @@ double hb_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
    return hb_fsDiskSpace( pszDirName, uiType );
 }
 
-PHB_ITEM hb_fileDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
+PHB_ITEM hb_fileDirectory( const char * pszDirSpec, const char * pszAttr )
 {
    int i = s_fileFindDrv( pszDirSpec );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->Directory( s_pFileTypes[ i ], pszDirSpec, pszAttr, fDateTime );
+      return s_pFileTypes[ i ]->Directory( s_pFileTypes[ i ], pszDirSpec, pszAttr );
 
-   return hb_fsDirectory( pszDirSpec, pszAttr, fDateTime );
+   return hb_fsDirectory( pszDirSpec, pszAttr, HB_TRUE );
 }
 
 HB_BOOL hb_fileTimeGet( const char * pszFileName, long * plJulian, long * plMillisec )

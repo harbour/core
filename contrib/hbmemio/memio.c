@@ -363,7 +363,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewN
 }
 
 
-HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
+HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char * pszAttr )
 {
    char *   pszFree = NULL;
    PHB_ITEM pDirArray;
@@ -398,13 +398,9 @@ HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char 
          hb_arrayNew    ( pSubarray, F_LEN );
          hb_arraySetC   ( pSubarray, F_NAME, s_fs.pInodes[ ul ]->szName );
          hb_arraySetNInt( pSubarray, F_SIZE, s_fs.pInodes[ ul ]->llSize );
+         hb_arraySetTDT ( pSubarray, F_DATE, 0, 0 );
          hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
          hb_arraySetC   ( pSubarray, F_ATTR, "" );
-
-         if( fDateTime )
-            hb_arraySetTDT( pSubarray, F_DATE, 0, 0 );
-         else
-            hb_arraySetDL ( pSubarray, F_DATE, 0 );
       }
    }
    HB_MEMFSMT_UNLOCK();
@@ -859,10 +855,10 @@ static double s_fileDirSpace( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB
 }
 
 
-static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
+static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr )
 {
    HB_SYMBOL_UNUSED( pFuncs );
-   return hb_memfsDirectory( pszDirSpec + FILE_PREFIX_LEN, pszAttr, fDateTime );
+   return hb_memfsDirectory( pszDirSpec + FILE_PREFIX_LEN, pszAttr );
 }
 
 

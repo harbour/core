@@ -200,7 +200,7 @@ static HB_BOOL hb_cdpStd_get( PHB_CODEPAGE cdp,
 {
    if( *pnIndex < nLen )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ( * pnIndex )++ ];
+      HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ( *pnIndex )++ ];
 
       *wc = cdp->uniTable->uniCodes[ uc ];
       if( *wc == 0 )

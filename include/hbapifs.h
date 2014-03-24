@@ -325,7 +325,7 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
       HB_BOOL     ( * DirMake )     ( PHB_FILE_FUNCS pFuncs, const char * pszDirName );
       HB_BOOL     ( * DirRemove )   ( PHB_FILE_FUNCS pFuncs, const char * pszDirName );
       double      ( * DirSpace )    ( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB_USHORT uiType );
-      PHB_ITEM    ( * Directory )   ( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime );
+      PHB_ITEM    ( * Directory )   ( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr );
 
       HB_BOOL     ( * TimeGet )     ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long * plJulian, long * plMillisec );
       HB_BOOL     ( * TimeSet )     ( PHB_FILE_FUNCS pFuncs, const char * pszFileName, long lJulian, long lMillisec );
@@ -372,7 +372,7 @@ extern HB_EXPORT HB_BOOL      hb_fileDirExists  ( const char * pszDirName );
 extern HB_EXPORT HB_BOOL      hb_fileDirMake    ( const char * pszDirName );
 extern HB_EXPORT HB_BOOL      hb_fileDirRemove  ( const char * pszDirName );
 extern HB_EXPORT double       hb_fileDirSpace   ( const char * pszDirName, HB_USHORT uiType );
-extern HB_EXPORT PHB_ITEM     hb_fileDirectory  ( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime );
+extern HB_EXPORT PHB_ITEM     hb_fileDirectory  ( const char * pszDirSpec, const char * pszAttr );
 
 extern HB_EXPORT HB_BOOL      hb_fileTimeGet    ( const char * pszFileName, long * plJulian, long * plMillisec );
 extern HB_EXPORT HB_BOOL      hb_fileTimeSet    ( const char * pszFileName, long lJulian, long lMillisec );

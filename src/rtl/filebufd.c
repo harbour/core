@@ -142,12 +142,11 @@ static double s_fileDirSpace( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB
    return 0.0;
 }
 
-static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
+static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr )
 {
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDirSpec );
    HB_SYMBOL_UNUSED( pszAttr );
-   HB_SYMBOL_UNUSED( fDateTime );
 
    hb_fsSetError( HB_FILE_ERR_UNSUPPORTED );
 

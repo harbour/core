@@ -1571,13 +1571,12 @@ static double s_fileDirSpace( PHB_FILE_FUNCS pFuncs, const char * pszDirName, HB
    return dResult;
 }
 
-static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
+static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec, const char * pszAttr )
 {
    PHB_ITEM pDirArray = NULL;
    PHB_CONCLI conn;
 
    HB_SYMBOL_UNUSED( pFuncs );
-   HB_SYMBOL_UNUSED( fDateTime );
 
    pszDirSpec += NETIO_FILE_PREFIX_LEN;
    conn = s_fileConnect( &pszDirSpec, NULL, 0, 0, HB_FALSE,

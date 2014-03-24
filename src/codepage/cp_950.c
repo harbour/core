@@ -56,15 +56,15 @@ static HB_CDP_GET_FUNC( CP950_get )
    *wc = 0;
    if( *pnIndex < nLen )
    {
-      HB_UCHAR uc = pSrc[ ( * pnIndex )++ ];
+      HB_UCHAR uc = pSrc[ ( *pnIndex )++ ];
 
       if( uc >= ( HB_CP950_FIRST >> 8 ) && uc <= ( HB_CP950_LAST >> 8 ) &&
           *pnIndex < nLen )
       {
-         *wc = s_cp950_to_ucs16( ( ( int ) uc << 8 ) | ( HB_UCHAR ) pSrc[ * pnIndex ] );
+         *wc = s_cp950_to_ucs16( ( ( int ) uc << 8 ) | ( HB_UCHAR ) pSrc[ *pnIndex ] );
          if( *wc )
          {
-            ( * pnIndex )++;
+            ( *pnIndex )++;
             return HB_TRUE;
          }
       }
@@ -78,16 +78,16 @@ static HB_CDP_GET_FUNC( CP950_get )
 
 static HB_CDP_PUT_FUNC( CP950_put )
 {
-   if( * pnIndex < nLen )
+   if( *pnIndex < nLen )
    {
       HB_USHORT b5 = s_ucs16_to_cp950( wc );
 
       if( b5 )
       {
-         if( * pnIndex + 1 < nLen )
+         if( *pnIndex + 1 < nLen )
          {
-            HB_PUT_BE_UINT16( &pDst[ ( * pnIndex ) ], b5 );
-            * pnIndex += 2;
+            HB_PUT_BE_UINT16( &pDst[ ( *pnIndex ) ], b5 );
+            *pnIndex += 2;
             return HB_TRUE;
          }
       }
@@ -98,9 +98,9 @@ static HB_CDP_PUT_FUNC( CP950_put )
 
          if( wc <= cdp->uniTable->wcMax &&
              cdp->uniTable->uniTrans[ wc ] )
-            pDst[ ( * pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
+            pDst[ ( *pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
          else
-            pDst[ ( * pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
+            pDst[ ( *pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
          return HB_TRUE;
       }
    }

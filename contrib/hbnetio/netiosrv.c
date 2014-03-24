@@ -895,7 +895,7 @@ HB_FUNC( NETIO_SERVER )
                         HB_SIZE itmSize = 0;
                         char * itmData = NULL;
                         const char * pszAttr = size2 ? ( const char * ) msg : NULL;
-                        PHB_ITEM pResult = hb_fileDirectory( pszDirSpec, pszAttr, HB_TRUE );
+                        PHB_ITEM pResult = hb_fileDirectory( pszDirSpec, pszAttr );
 
                         errFsCode = hb_fsError();
 

@@ -53,10 +53,10 @@ static HB_CDP_GET_FUNC( UTF16LE_get )
 {
    HB_SYMBOL_UNUSED( cdp );
 
-   if( * pnIndex + 1 < nLen )
+   if( *pnIndex + 1 < nLen )
    {
-      * wc = HB_GET_LE_UINT16( &pSrc[ * pnIndex ] );
-      * pnIndex += 2;
+      * wc = HB_GET_LE_UINT16( &pSrc[ *pnIndex ] );
+      *pnIndex += 2;
       return HB_TRUE;
    }
    else
@@ -68,10 +68,10 @@ static HB_CDP_PUT_FUNC( UTF16LE_put )
 {
    HB_SYMBOL_UNUSED( cdp );
 
-   if( * pnIndex + 1 < nLen )
+   if( *pnIndex + 1 < nLen )
    {
-      HB_PUT_LE_UINT16( &pDst[ * pnIndex ], wc );
-      * pnIndex += 2;
+      HB_PUT_LE_UINT16( &pDst[ *pnIndex ], wc );
+      *pnIndex += 2;
       return HB_TRUE;
    }
    return HB_FALSE;
