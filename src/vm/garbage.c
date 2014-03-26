@@ -598,7 +598,7 @@ void hb_gcCollectAll( HB_BOOL fForce )
    {
       PHB_GARBAGE pAlloc, pDelete;
 
-      if( ! s_pCurrBlock )
+      if( ! s_pCurrBlock || s_bCollecting )
       {
          hb_vmResumeThreads();
          return;
