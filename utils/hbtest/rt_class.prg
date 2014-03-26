@@ -137,7 +137,7 @@ PROCEDURE Main_CLASS()
    HBTEST oValue := NIL                   IS NIL
    HBTEST objHolder                       IS NIL
    HBTEST cDtorResult                     IS ""
-   HBTEST hb_gcAll()                      IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
+   HBTEST hb_gcAll()                      IS "E 45 BASE 1302 Object destructor failure (Reference to freed block) OS:0 #:0 "
    HBTEST objHolder                       IS NIL
    HBTEST cDtorResult                     IS "Reference to self in class variable."
 
@@ -150,7 +150,7 @@ PROCEDURE Main_CLASS()
    HBTEST oValue := NIL                   IS NIL
    HBTEST objHolder                       IS NIL
    HBTEST cDtorResult                     IS ""
-   HBTEST hb_gcAll()                      IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
+   HBTEST hb_gcAll()                      IS "E 45 BASE 1302 Object destructor failure (Reference to freed block) OS:0 #:0 "
    HBTEST ValType( objHolder )            IS "A"
    HBTEST Len( objHolder )                IS 0
    HBTEST cDtorResult                     IS "Reference to self in private memvar."
