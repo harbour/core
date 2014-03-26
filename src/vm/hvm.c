@@ -533,7 +533,6 @@ HB_BOOL hb_vmSuspendThreads( HB_BOOL fWait )
       {
          if( s_iRunningCount <= 0 )
          {
-            hb_vmThreadRequest &= ~HB_THREQUEST_STOP;
             ++s_iRunningCount;
             return HB_TRUE;
          }
