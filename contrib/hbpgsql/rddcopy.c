@@ -77,7 +77,7 @@ static HB_BOOL addToContext( pgCopyContext * context, const char c )
       HB_VM_UNLOCK();
       fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
       HB_VM_LOCK();
-      if( fOK )
+      if( !fOK )
          return HB_FALSE;
 
       context->position = 0;
@@ -98,7 +98,7 @@ static HB_BOOL addStrToContext( pgCopyContext * context, const char * str )
          HB_VM_UNLOCK();
          fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
          HB_VM_LOCK();
-         if( fOK )
+         if( !fOK )
             return HB_FALSE;
 
          context->position = 0;
@@ -121,7 +121,7 @@ static HB_BOOL addStrnToContext( pgCopyContext * context, const char * str, HB_S
          HB_VM_UNLOCK();
          fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
          HB_VM_LOCK();
-         if( fOK )
+         if( !fOK )
             return HB_FALSE;
 
          context->position = 0;
@@ -336,9 +336,7 @@ HB_FUNC( HB_PQCOPYFROMWA )
 
                if( iPos )
                {
-                  PHB_ITEM pFieldNum = hb_itemPutNI( NULL, iPos );
-                  hb_itemArrayPut( pFields, uiIter, pFieldNum );
-                  hb_itemRelease( pFieldNum );
+                  hb_arraySetNI( pFields, uiIter, iPos );
                   continue;
                }
             }
@@ -387,9 +385,9 @@ HB_FUNC( HB_PQCOPYFROMWA )
             {
                for( uiIter = 1; uiIter <= uiFields; uiIter++ )
                {
-                  SELF_GETVALUE( pArea, uiIter, pItem );
-                  if( ! exportBufSqlVar( context, pItem, sc_szQuote, sc_szEsc ) ||
-                      ! addStrToContext( context, sc_szDelim ) )
+                  if( SELF_GETVALUE( pArea, uiIter, pItem ) != HB_SUCCESS ||
+                      ! exportBufSqlVar( context, pItem, sc_szQuote, sc_szEsc ) ||
+                      ! addStrToContext( context, uiIter == uiFields ? "\n" : sc_szDelim ) )
                   {
                      bFail = HB_TRUE;
                      break;
@@ -400,9 +398,9 @@ HB_FUNC( HB_PQCOPYFROMWA )
             {
                for( uiIter = 1; uiIter <= uiFieldCopy; uiIter++ )
                {
-                  SELF_GETVALUE( pArea, ( HB_USHORT ) hb_arrayGetNI( pFields, uiIter ), pItem );
-                  if( ! exportBufSqlVar( context, pItem, sc_szQuote, sc_szEsc ) ||
-                      ! addStrToContext( context, sc_szDelim ) )
+                  if( SELF_GETVALUE( pArea, ( HB_USHORT ) hb_arrayGetNI( pFields, uiIter ), pItem ) != HB_SUCCESS ||
+                      ! exportBufSqlVar( context, pItem, sc_szQuote, sc_szEsc ) ||
+                      ! addStrToContext( context, uiIter == uiFields ? "\n" : sc_szDelim ) )
                   {
                      bFail = HB_TRUE;
                      break;
@@ -412,13 +410,6 @@ HB_FUNC( HB_PQCOPYFROMWA )
 
             if( bFail )
                break;
-
-            context->position--;                         /* overwrite last comma with newline */
-            if( ! addStrnToContext( context, "\n", 1 ) ) /* PostgreSQL handles both \r\n & \n, use shorter */
-            {
-               bFail = HB_TRUE;
-               break;
-            }
 
             uiRecCount++;
          }
