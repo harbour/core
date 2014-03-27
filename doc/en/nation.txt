@@ -89,7 +89,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      Language and Nation MSG()
+      NationMsg()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -97,15 +97,15 @@
    $ONELINER$
       Returns international strings messages.
    $SYNTAX$
-      Language and Nation MSG( <nMsg> ) --> <cMessage>
+      NationMsg( <nMsg> ) --> <cMessage>
    $ARGUMENTS$
       <nMsg> is the message number you want to get.   </par>
    $RETURNS$
-      <cMessage> If <nMsg> is a valid message selector, returns the message.
-      If <nMsg> is nil returns "Invalid Argument", and if <nMsg> is any
+      <cMessage> if <nMsg> is a valid message selector, returns the message.
+      If <nMsg> is NIL, it returns "Invalid Argument", and if <nMsg> is any
       other type it returns an empty string.   </par>
    $DESCRIPTION$
-      Language and Nation MSG() returns international message descriptions.   </par>
+      NationMsg() returns international message descriptions.   </par>
    $EXAMPLES$
       // Displays "Sure Y/N: "  and waits until user enters Y
       // Y/N is the string for NationMsg( 12 ) with default natmsg module.
