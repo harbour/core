@@ -17,9 +17,9 @@ PROCEDURE Main( cFrom, cPassword, cTo )
       RETURN
    ENDIF
 
-   hb_default( @cFrom    , "<example@gmail.com>" )
-   hb_default( @cPassword, "<mypassword>" )
-   hb_default( @cTo      , "addressee@example.com" )
+   hb_default( @cFrom    , "<from@gmail.com>" )
+   hb_default( @cPassword, "password" )
+   hb_default( @cTo      , "to@example.com" )
 
    ? tip_MailSend( ;
       "smtp.gmail.com", ;

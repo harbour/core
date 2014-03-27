@@ -17,9 +17,9 @@ PROCEDURE Main( cFrom, cPassword, cTo )
       RETURN
    ENDIF
 
-   hb_default( @cFrom    , "<example@gmail.com>" )
-   hb_default( @cPassword, "<mypassword>" )
-   hb_default( @cTo      , "addressee@example.com" )
+   hb_default( @cFrom    , "from@gmail.com" )
+   hb_default( @cPassword, "password" )
+   hb_default( @cTo      , "to@example.com" )
 
    cMessage := tip_MailAssemble( cFrom, ;
       { cTo }, ;
@@ -49,18 +49,18 @@ PROCEDURE Main( cFrom, cPassword, cTo )
          ENDIF
          curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
       #endif
+      curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       curl_easy_setopt( curl, HB_CURLOPT_URL, "smtps://smtp.gmail.com" )
       curl_easy_setopt( curl, HB_CURLOPT_PORT, 465 )
       curl_easy_setopt( curl, HB_CURLOPT_USERNAME, cFrom )
       curl_easy_setopt( curl, HB_CURLOPT_PASSWORD, cPassword )
-      curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       curl_easy_setopt( curl, HB_CURLOPT_UL_BUFF_SETUP, cMessage )
       curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE_LARGE, hb_BLen( cMessage ) )
       curl_easy_setopt( curl, HB_CURLOPT_MAIL_FROM, cFrom )
       curl_easy_setopt( curl, HB_CURLOPT_MAIL_RCPT, { cTo } )
       curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .T. )
 
-      ? "Result", curl_easy_perform( curl )
+      ? "Result:", curl_easy_perform( curl )
 
       curl_easy_cleanup( curl )
    ELSE
