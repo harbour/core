@@ -5,6 +5,8 @@
 
 #include "simpleio.ch"
 
+#define _CA_FN_  "cacert.pem"
+
 PROCEDURE Main( cFrom, cPassword, cTo )
 
    LOCAL curl
@@ -37,12 +39,15 @@ PROCEDURE Main( cFrom, cPassword, cTo )
 
    IF ! Empty( curl := curl_easy_init() )
       #if ! defined( __PLATFORM__UNIX )
-         IF ! hb_FileExists( "cacert.pem" )
-            ? "cacert.pem missing. Get it using this command:"
-            ? "curl http://curl.haxx.se/ca/cacert.pem -O"
-            ?
+         IF ! hb_FileExists( _CA_FN_ )
+            ? "Downloading", _CA_FN_
+            curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
+            curl_easy_setopt( curl, HB_CURLOPT_URL, "http://curl.haxx.se/ca/cacert.pem" )
+            curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, _CA_FN_ )
+            curl_easy_perform( curl )
+            curl_easy_reset( curl )
          ENDIF
-         curl_easy_setopt( curl, HB_CURLOPT_CAINFO, "cacert.pem" )
+         curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
       #endif
       curl_easy_setopt( curl, HB_CURLOPT_URL, "smtps://smtp.gmail.com" )
       curl_easy_setopt( curl, HB_CURLOPT_PORT, 465 )
