@@ -7719,13 +7719,13 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
             if( ! hb_cdxIndexLoad( pIndex, szCpndTagName ) )
             {
                /* TODO: What should be default? */
-               /*
+#if 0
                hb_cdxIndexFree( pIndex );
                hb_fileClose( pFile );
                pFile = NULL;
                hb_cdxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT,
                               szFileName, hb_fsError(), EF_CANDEFAULT, NULL );
-               */
+#endif
                hb_cdxIndexFreeTags( pIndex );
                fNewFile = HB_TRUE;
             }
