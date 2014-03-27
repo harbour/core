@@ -664,7 +664,6 @@ void hb_gcCollectAll( HB_BOOL fForce )
                pAlloc = s_pCurrBlock;
             s_pCurrBlock = s_pCurrBlock->pNext;
          }
-
       }
       while( pAlloc != s_pCurrBlock );
 
@@ -703,7 +702,6 @@ void hb_gcCollectAll( HB_BOOL fForce )
             s_pDeletedBlock->pFuncs->clear( HB_BLOCK_PTR( s_pDeletedBlock ) );
 
             s_pDeletedBlock = s_pDeletedBlock->pNext;
-
          }
          while( pAlloc != s_pDeletedBlock );
 
@@ -725,10 +723,10 @@ void hb_gcCollectAll( HB_BOOL fForce )
             }
             else
                HB_GARBAGE_FREE( pDelete );
-
          }
          while( s_pDeletedBlock );
       }
+
       s_bCollecting = HB_FALSE;
    }
 }

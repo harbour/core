@@ -729,8 +729,8 @@ HB_FUNC( IOUSR_REGISTER )
             const HB_FILE_FUNC * pDummyFunc;
             HB_FILE_FUNC * pFunction;
 
-            pDummyFunc = ( const HB_FILE_FUNC * ) &s_fileFuncs;
-            pFunction = ( HB_FILE_FUNC * ) &pIO->funcs;
+            pDummyFunc = ( const HB_FILE_FUNC * ) &s_fileFuncs.Accept;
+            pFunction = ( HB_FILE_FUNC * ) &pIO->funcs.Accept;
             for( nAt = 1; nAt <= nMethods; ++nAt, pDummyFunc++, pFunction++ )
             {
                pIO->prg_funcs[ nAt - 1 ] = hb_arrayGetSymbol( pMthItm, nAt );
