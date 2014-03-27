@@ -1045,6 +1045,33 @@ HB_SIZE hb_xsize( void * pMem ) /* returns the size of an allocated memory block
 #endif
 }
 
+/* NOTE: Debug function, it will always return NULL when HB_FM_STATISTICS is
+         not defined, don't use it for final code */
+
+const char * hb_xinfo( void * pMem, HB_USHORT * puiLine )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xinfo(%p,%p)", pMem, puiLine ) );
+
+#ifdef HB_FM_STATISTICS
+   {
+      PHB_MEMINFO pMemBlock = HB_FM_PTR( pMem );
+
+      if( puiLine )
+         * puiLine = pMemBlock->uiProcLine;
+
+      return pMemBlock->szProcName;
+   }
+#else
+
+   HB_SYMBOL_UNUSED( pMem );
+
+   if( puiLine )
+      * puiLine = 0;
+
+   return NULL;
+#endif
+}
+
 void hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_xinit()" ) );

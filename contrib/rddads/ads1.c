@@ -2171,21 +2171,12 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
       case HB_FT_VARLENGTH:
          u32Length = pArea->maxFieldLen + 1;
          if( ! pArea->fPositioned )
-         {
-            u32Length = pField->uiType == HB_FT_STRING ? pField->uiLen : 0;
-            memset( pBuffer, ' ', u32Length );
             u32RetVal = AE_SUCCESS;
-         }
 #if ADS_LIB_VERSION >= 1000
          else if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
          {
             u32RetVal = AdsGetFieldW( pArea->hTable, ADSFIELD( uiIndex ), ( WCHAR * ) pBuffer, &u32Length, ADS_NONE );
-            if( u32RetVal != AE_SUCCESS )
-            {
-               u32Length = pField->uiType == HB_FT_STRING ? pField->uiLen : 0;
-               memset( pBuffer, ' ', u32Length );
-            }
-            else
+            if( u32RetVal == AE_SUCCESS )
             {
                hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_LITTLE, ( const HB_WCHAR * ) pBuffer, u32Length );
                break;
@@ -2197,19 +2188,9 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          {
 #if ADS_LIB_VERSION >= 600
             u32RetVal = AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length );
-            if( u32RetVal != AE_SUCCESS )
-            {
-               u32Length = pField->uiType == HB_FT_STRING ? pField->uiLen : 0;
-               memset( pBuffer, ' ', u32Length );
-            }
 #else
             u32RetVal = AdsGetField( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length, ADS_NONE );
-            if( u32RetVal != AE_SUCCESS )
-            {
-               u32Length = pField->uiType == HB_FT_STRING ? pField->uiLen : 0;
-               memset( pBuffer, ' ', u32Length );
-            }
-            else
+            if( u32RetVal == AE_SUCCESS )
             {
                char * pBufOem = hb_adsAnsiToOem( ( char * ) pBuffer, u32Length );
                memcpy( pBuffer, pBufOem, u32Length );
@@ -2219,13 +2200,17 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          }
 #endif
          else
-         {
             u32RetVal = AdsGetField( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length, ADS_NONE );
-            if( u32RetVal != AE_SUCCESS )
+
+         if( ! pArea->fPositioned || u32RetVal != AE_SUCCESS )
+         {
+            if( pField->uiType == HB_FT_STRING )
             {
-               u32Length = pField->uiType == HB_FT_STRING ? pField->uiLen : 0;
+               u32Length = pField->uiLen;
                memset( pBuffer, ' ', u32Length );
             }
+            else
+               u32Length = 0;
          }
          hb_itemPutCL( pItem, ( char * ) pBuffer, u32Length );
          break;
