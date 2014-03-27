@@ -4,19 +4,6 @@
 //
 // Placed in the public domain
 //
-//    Functions: PROCEDURE Main()
-//               FUNCTION DBFLIST()
-//               STATIC FUNCTION FLDCOUNT()
-//               STATIC FUNCTION VIVNAMES()
-//               STATIC FUNCTION WNDVIVOD()
-//               STATIC PROCEDURE VIVSTR()
-//               STATIC FUNCTION FLDSTR()
-//               STATIC FUNCTION InitList()
-//               STATIC FUNCTION Defpict()
-//               STATIC FUNCTION NUM_STR()
-//
-//       Tables: USE ( filename )
-//
 //    Reformatted by Click! 2.00
 
 #include "fileio.ch"
@@ -69,27 +56,32 @@
 
 PROCEDURE Main( filename )
 
-   LOCAL vybkey := 1
+   LOCAL vybkey
 
    IF filename == NIL
       ? "Dbf browse demo"
       ? "Syntax:"
-      ? "", "db_brows filename"
+      ? "", hb_FNameName( hb_ProgName() ), "filename"
       RETURN
    ENDIF
+
    SetBlink( .F. )
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    USE ( filename )
-   DO WHILE vybkey != 0
-      vybkey := DBFLIST( , 3, 1, 76, 20, filename )
-      DO CASE
-      CASE vybkey == K_ENTER
+
+   DO WHILE ( vybkey := DBFLIST( , 3, 1, 76, 20, filename ) ) != 0
+      SWITCH vybkey
+      CASE K_ENTER
          // ...
-      CASE vybkey == K_F3
+         EXIT
+      CASE K_F3
          // ...
-      CASE vybkey == K_F5
+         EXIT
+      CASE K_F5
          // ...
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ENDDO
 
    RETURN
