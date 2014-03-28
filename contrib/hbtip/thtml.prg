@@ -1031,9 +1031,7 @@ METHOD nextNode() CLASS THtmlNode
       RETURN ::htmlContent[ 1 ]
    ENDIF
 
-   nPos := AScan( ::parent:htmlContent, {| o | o == Self } )
-
-   IF nPos < Len( ::parent:htmlContent )
+   IF ( nPos := AScan( ::parent:htmlContent, {| o | o == Self } ) ) < Len( ::parent:htmlContent )
       RETURN ::parent:htmlContent[ nPos + 1 ]
    ENDIF
 

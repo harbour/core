@@ -314,11 +314,8 @@ METHOD QueryFields( cQueryName ) CLASS THTML
 
    ::ProcessCGI()
 
-   nRet := AScan( ::aQueryFields, ;
-      {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } )
-
-   IF nRet > 0
-      cRet := ::aQueryFields[ nRet, 2 ]
+   IF ( nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } ) ) > 0
+      cRet := ::aQueryFields[ nRet ][ 2 ]
    ENDIF
 
    RETURN cRet

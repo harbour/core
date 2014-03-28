@@ -435,9 +435,7 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
    lAuto := Set( _SET_AUTOPEN, .F. )
 
    IF ( nPos := AScan( s_aTables, {| e | e[ 1 ] == Upper( cALIAS ) } ) ) > 0
-
-      oDB := s_aTables[ nPos, 2 ]
-
+      oDB := s_aTables[ nPos ][ 2 ]
    ELSE
       o := HBTable():New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
          lNET, cPATH, lNEW, lREADONLY )
@@ -446,7 +444,6 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
       ENDIF
 
       AAdd( s_aTables, { Upper( cAlias ), oDB } )
-
    ENDIF
 
    Set( _SET_AUTOPEN, lAuto )
@@ -459,7 +456,7 @@ FUNCTION GetTable( cAlias )
    LOCAL oDB
 
    IF ( nPos := AScan( s_aTables, {| e | e[ 1 ] == Upper( cALIAS ) } ) ) > 0
-      oDB := s_aTables[ nPos, 2 ]
+      oDB := s_aTables[ nPos ][ 2 ]
    ENDIF
 
    RETURN oDB
@@ -877,8 +874,8 @@ METHOD PROCEDURE Read( lKeepBuffer ) CLASS HBTable
       i      := Buffer:__enumIndex()
       Buffer := ( ::Alias )->( FieldGet( i ) )
 
-      adata[ 1, 1 ] := ( ::Alias )->( FieldName( i ) )
-      adata[ 1, 2 ] := ( ::Alias )->( FieldGet( i ) )
+      adata[ 1 ][ 1 ] := ( ::Alias )->( FieldName( i ) )
+      adata[ 1 ][ 2 ] := ( ::Alias )->( FieldGet( i ) )
       __objSetValueList( Self, aData )
 
    NEXT
@@ -908,8 +905,8 @@ METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
       i      := Buffer:__enumIndex()
       Buffer := ( ::Alias )->( FieldGet( i ) )
 
-      adata[ 1, 1 ] := ( ::Alias )->( FieldName( i ) )
-      adata[ 1, 2 ] := ( ::Alias )->( FieldGet( i ) )
+      adata[ 1 ][ 1 ] := ( ::Alias )->( FieldName( i ) )
+      adata[ 1 ][ 2 ] := ( ::Alias )->( FieldGet( i ) )
       __objSetValueList( Self, aData )
 
    NEXT
@@ -954,7 +951,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
 
    FOR i := 1 TO ( ::Alias )->( FCount() )
       n := AScan( adata, {| a | a[ 1 ] == ( ::Alias )->( FieldName( i ) ) } )
-      ( ::Alias )->( FieldPut( i, adata[ n, 2 ] ) )
+      ( ::Alias )->( FieldPut( i, adata[ n ][ 2 ] ) )
    NEXT
 
    ( ::Alias )->( dbSkip( 0 ) )         // same as commit

@@ -310,9 +310,7 @@ STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
    // ...
 
    // exist nType + cId ?
-   i := AScan( s_aPObjList[ nWinNum + 1 ], {| x | x:nType == oWPaint:nType .AND. x:cId == oWPaint:cId } )
-
-   IF i > 0
+   IF ( i := AScan( s_aPObjList[ nWinNum + 1 ], {| x | x:nType == oWPaint:nType .AND. x:cId == oWPaint:cId } ) ) > 0
       // so we are about to overwrite now...
       // ::Hide() is ideal, but it can be slow
       // let's do it only of user want strict/perfect operation

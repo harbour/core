@@ -183,21 +183,14 @@ METHOD ReadString( cSection, cIdent, cDefault ) CLASS TIniFile
 
    IF Empty( cSection )
       cFind := Lower( cIdent )
-      j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } )
-
-      IF j > 0
+      IF ( j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } ) ) > 0
          cResult := ::Contents[ j ][ 2 ]
       ENDIF
-
    ELSE
       cFind := Lower( cSection )
-      i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
-
-      IF i > 0
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } ) ) > 0
          cFind := Lower( cIdent )
-         j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
-
-         IF j > 0
+         IF ( j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } ) ) > 0
             cResult := ::Contents[ i ][ 2 ][ j ][ 2 ]
          ENDIF
       ENDIF
@@ -214,26 +207,20 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
 
    ELSEIF Empty( cSection )
       cFind := Lower( cIdent )
-      j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } )
-
-      IF j > 0
+      IF ( j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } ) ) > 0
          ::Contents[ j ][ 2 ] := cString
       ELSE
          hb_AIns( ::Contents, 1, { cIdent, cString }, .T. )
       ENDIF
-
    ELSE
       cFind := Lower( cSection )
       IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
          cFind := Lower( cIdent )
-         j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
-
-         IF j > 0
+         IF ( j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } ) ) > 0
             ::Contents[ i ][ 2 ][ j ][ 2 ] := cString
          ELSE
             AAdd( ::Contents[ i ][ 2 ], { cIdent, cString } )
          ENDIF
-
       ELSE
          AAdd( ::Contents, { cSection, { { cIdent, cString } } } )
       ENDIF
@@ -276,12 +263,9 @@ METHOD PROCEDURE DeleteKey( cSection, cIdent ) CLASS TIniFile
    LOCAL i, j
 
    cSection := Lower( cSection )
-   i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cSection } )
-
-   IF i > 0
+   IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cSection } ) ) > 0
       cIdent := Lower( cIdent )
       j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cIdent } )
-
       hb_ADel( ::Contents[ i ][ 2 ], j, .T. )
    ENDIF
 
@@ -295,7 +279,6 @@ METHOD PROCEDURE EraseSection( cSection ) CLASS TIniFile
       DO WHILE ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. HB_ISSTRING( x[ 2 ] ) } ) ) > 0
          hb_ADel( ::Contents, i, .T. )
       ENDDO
-
    ELSE
       cSection := Lower( cSection )
       IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cSection .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0

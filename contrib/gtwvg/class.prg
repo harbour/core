@@ -582,17 +582,16 @@ METHOD WvtDialog:MouseOver()
    LOCAL nObj
 
    nObj := AScan( ::aObjects, ;
-      {| o | o:nType != DLG_OBJ_STATIC               .AND. ;
-      o:nType != DLG_OBJ_TOOLBAR              .AND. ;
+      {| o | o:nType != DLG_OBJ_STATIC .AND. ;
+      o:nType != DLG_OBJ_TOOLBAR .AND. ;
       mRow >= o:nTop  .AND. mRow <= o:nBottom .AND. ;
-      mCol >= o:nLeft .AND. mCol <= o:nRight      } )
+      mCol >= o:nLeft .AND. mCol <= o:nRight } )
 
    ::nObjOver := nObj
    ::oObjOver := iif( nObj > 0, ::aObjects[ nObj ], NIL )
    IF nObj > 0
       ::aObjects[ nObj ]:nmRow := mRow
       ::aObjects[ nObj ]:nmCol := mCol
-
    ENDIF
 
    RETURN Self

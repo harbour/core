@@ -172,9 +172,7 @@ FUNCTION hb_Decode( ... )
          // Check if value exists (valtype of values MUST be same of xVal,
          // otherwise I will get a runtime error)
          // TODO: Have I to check also between different valtypes, jumping different ?
-         nPos := AScan( aValues, {| e | e == xVal } )
-
-         IF nPos == 0 // Not Found, returning default
+         IF ( nPos := AScan( aValues, {| e | e == xVal } ) ) == 0 // Not Found, returning default
             xRet := xDefault   // it could be also nil because not present
          ELSE
             xRet := aResults[ nPos ]

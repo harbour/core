@@ -449,9 +449,7 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
       DO CASE
       CASE cModeCode == "C"
 
-         nPos := AScan( ::KeysmodeC, {| x | x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i + 1, 1 ) } )
-
-         IF nPos == 0
+         IF ( nPos := AScan( ::KeysmodeC, {| x | x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i + 1, 1 ) } ) ) == 0
             ::DrawError( "With Code C, you must provide always pair of two integers. Character " + SubStr( ::text, i, 1 ) + SubStr( ::text, i + 1, 1 ) + " not allowed." )
             lError := .T.
          ENDIF

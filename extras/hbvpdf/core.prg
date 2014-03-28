@@ -594,8 +594,7 @@ STATIC PROCEDURE pdfClosePage()
    IF Len( t_aReport[ PAGEIMAGES ] ) > 0
       cTemp += CRLF + "/XObject" + CRLF + "<<"
       FOR nI := 1 TO Len( t_aReport[ PAGEIMAGES ] )
-         nImage := AScan( t_aReport[ IMAGES ], {| arr | arr[ 1 ] == t_aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
-         IF nImage == 0
+         IF ( nImage := AScan( t_aReport[ IMAGES ], {| arr | arr[ 1 ] == t_aReport[ PAGEIMAGES ][ nI ][ 1 ] } ) ) == 0
             AAdd( t_aReport[ IMAGES ], { t_aReport[ PAGEIMAGES ][ nI ][ 1 ], ++t_aReport[ NEXTOBJ ], pdfImageInfo( t_aReport[ PAGEIMAGES ][ nI ][ 1 ] ) } )
             nImage := Len( t_aReport[ IMAGES ] )
          ENDIF
@@ -1002,9 +1001,7 @@ PROCEDURE pdfPageSize( _cPageSize, _nWidth, _nHeight )
 
    IF Empty( _nWidth ) .OR. Empty( _nHeight )
 
-      nSize := AScan( aSize, {| arr | arr[ 1 ] == _cPageSize } )
-
-      IF nSize == 0
+      IF ( nSize := AScan( aSize, {| arr | arr[ 1 ] == _cPageSize } ) ) == 0
          nSize := 1
       ENDIF
 
@@ -1018,9 +1015,7 @@ PROCEDURE pdfPageSize( _cPageSize, _nWidth, _nHeight )
       _nWidth := Val( hb_ntos( _nWidth ) )
       _nHeight := Val( hb_ntos( _nHeight ) )
 
-      nSize := AScan( aSize, {| arr | ( arr[ 2 ] == _nWidth  ) .AND. ( arr[ 3 ] == _nHeight ) } )
-
-      IF nSize == 0
+      IF ( nSize := AScan( aSize, {| arr | ( arr[ 2 ] == _nWidth  ) .AND. ( arr[ 3 ] == _nHeight ) } ) ) == 0
          nSize := AScan( aSize, {| arr | ( arr[ 3 ] == _nWidth ) .AND. ( arr[ 2 ] == _nHeight ) } )
       ENDIF
 
@@ -1404,8 +1399,8 @@ FUNCTION pdfDeleteHeader( cId )
    LOCAL nRet := -1, nId
 
    cId := Upper( cId )
-   nId := AScan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId } )
-   IF nId > 0
+
+   IF ( nId := AScan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId } ) ) > 0
       hb_ADel( t_aReport[ HEADER ], nId, .T. )
       nRet := Len( t_aReport[ HEADER ] )
       t_aReport[ MARGINS ] := .T.
@@ -1418,8 +1413,8 @@ PROCEDURE pdfEnableHeader( cId )
    LOCAL nId
 
    cId := Upper( cId )
-   nId := AScan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId } )
-   IF nId > 0
+
+   IF ( nId := AScan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId } ) ) > 0
       t_aReport[ HEADER ][ nId ][ 1 ] := .T.
       t_aReport[ MARGINS ] := .T.
    ENDIF
@@ -1431,8 +1426,8 @@ PROCEDURE pdfDisableHeader( cId )
    LOCAL nId
 
    cId := Upper( cId )
-   nId := AScan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId } )
-   IF nId > 0
+
+   IF ( nId := AScan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId } ) ) > 0
       t_aReport[ HEADER ][ nId ][ 1 ] := .F.
       t_aReport[ MARGINS ] := .T.
    ENDIF
@@ -2542,18 +2537,12 @@ STATIC FUNCTION WriteData( hFile, xData )
    LOCAL cData := ValType( xData )
 
    DO CASE
-   CASE HB_ISSTRING( xData )
-      cData += I2Bin( hb_BLen( xData ) ) + xData
-   CASE HB_ISNUMERIC( xData )
-      cData += I2Bin( hb_BLen( hb_ntos( xData ) ) ) + hb_ntos( xData )
-   CASE HB_ISDATE( xData )
-      cData += I2Bin( 8 ) + DToS( xData )
-   CASE HB_ISLOGICAL( xData )
-      cData += I2Bin( 1 ) + iif( xData, "T", "F" )
-   CASE HB_ISARRAY( xData )
-      cData += I2Bin( hb_BLen( xData ) )
-   OTHERWISE
-      cData += I2Bin( 0 )   // NIL
+   CASE HB_ISSTRING( xData )  ; cData += I2Bin( hb_BLen( xData ) ) + xData
+   CASE HB_ISNUMERIC( xData ) ; cData += I2Bin( hb_BLen( hb_ntos( xData ) ) ) + hb_ntos( xData )
+   CASE HB_ISDATE( xData )    ; cData += I2Bin( 8 ) + DToS( xData )
+   CASE HB_ISLOGICAL( xData ) ; cData += I2Bin( 1 ) + iif( xData, "T", "F" )
+   CASE HB_ISARRAY( xData )   ; cData += I2Bin( hb_BLen( xData ) )
+   OTHERWISE                  ; cData += I2Bin( 0 )   // NIL
    ENDCASE
 
    RETURN FWrite( hFile, cData )
@@ -2593,16 +2582,11 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )
       nDepth++
       AAdd( aRay, NIL )
       DO CASE
-      CASE cType == "C"
-         aRay[ nDepth ] := cData
-      CASE cType == "N"
-         aRay[ nDepth ] := Val( cData )
-      CASE cType == "D"
-         aRay[ nDepth ] := hb_SToD( cData )
-      CASE cType == "L"
-         aRay[ nDepth ] := ( cData == "T" )
-      CASE cType == "A"
-         aRay[ nDepth ] := File2Array(, nDataLen, hFile )
+      CASE cType == "C" ; aRay[ nDepth ] := cData
+      CASE cType == "N" ; aRay[ nDepth ] := Val( cData )
+      CASE cType == "D" ; aRay[ nDepth ] := hb_SToD( cData )
+      CASE cType == "L" ; aRay[ nDepth ] := ( cData == "T" )
+      CASE cType == "A" ; aRay[ nDepth ] := File2Array(, nDataLen, hFile )
       ENDCASE
    ENDDO
    IF cFile != NIL

@@ -568,14 +568,10 @@ METHOD Error() CLASS TMySQLQuery
 // Given a field name returns it's position
 METHOD FieldPos( cFieldName ) CLASS TMySQLQuery
 
-   LOCAL cUpperName, nPos
-
-   cUpperName := Upper( cFieldName )
-
-   nPos := AScan( ::aFieldStruct, {| aItem | Upper( aItem[ MYSQL_FS_NAME ] ) == cUpperName } )
-
+   LOCAL cUpperName := Upper( cFieldName )
 #if 0
-   nPos := 0
+   LOCAL nPos := 0
+
    DO WHILE ++nPos <= Len( ::aFieldStruct )
       IF Upper( ::aFieldStruct[ nPos ][ MYSQL_FS_NAME ] ) == cUpperName
          EXIT
@@ -586,9 +582,11 @@ METHOD FieldPos( cFieldName ) CLASS TMySQLQuery
    IF nPos > Len( ::aFieldStruct )
       nPos := 0
    ENDIF
-#endif
 
    RETURN nPos
+#else
+   RETURN AScan( ::aFieldStruct, {| aItem | Upper( aItem[ MYSQL_FS_NAME ] ) == cUpperName } )
+#endif
 
 
 // Returns name of field N

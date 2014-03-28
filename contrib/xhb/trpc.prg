@@ -1270,8 +1270,7 @@ METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
    ENDIF
 
    hb_mutexLock( ::mtxBusy )
-   nElem := AScan( ::aFunctions, {| x | oFunction:cName == x:cName } )
-   IF nElem == 0
+   IF ( nElem := AScan( ::aFunctions, {| x | oFunction:cName == x:cName } ) ) == 0
       AAdd( ::aFunctions, oFunction )
       lRet := .T.
    ENDIF
@@ -1285,8 +1284,7 @@ METHOD Find( cName ) CLASS TRPCService
    LOCAL oRet := NIL
 
    hb_mutexLock( ::mtxBusy )
-   nElem := AScan( ::aFunctions, {| x | Upper( cName ) == Upper( x:cName ) } )
-   IF nElem != 0
+   IF ( nElem := AScan( ::aFunctions, {| x | Upper( cName ) == Upper( x:cName ) } ) ) != 0
       oRet := ::aFunctions[ nElem ]
    ENDIF
    hb_mutexUnlock( ::mtxBusy )
@@ -1299,8 +1297,7 @@ METHOD Remove( cName ) CLASS TRPCService
    LOCAL lRet := .F.
 
    hb_mutexLock( ::mtxBusy )
-   nElem := AScan( ::aFunctions, {| x | cName == x:cName } )
-   IF nElem != 0
+   IF ( nElem := AScan( ::aFunctions, {| x | cName == x:cName } ) ) != 0
       hb_ADel( ::aFunctions, nElem, .T. )
       lRet := .T.
    ENDIF
@@ -1456,7 +1453,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS TRPCService
       RETURN .F.
    ENDIF
 
-   cCode := hb_BSubStr( cData, 1, 6 )
+   cCode := hb_BLeft( cData, 6 )
 
    DO CASE
    CASE cCode == "XHBR00"  /* XHRB00 - server scan */

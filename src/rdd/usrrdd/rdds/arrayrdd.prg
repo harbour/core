@@ -974,8 +974,7 @@ STATIC FUNCTION AR_UNLOCK( nWA, nRec )
          NEXT
          ASize( aRecords, 0 )
       ELSE
-         nPos := AScan( aRecords, nRec )
-         IF nPos > 0
+         IF ( nPos := AScan( aRecords, nRec ) ) > 0
             aRecInfo[ nRec, RECDATA_LOCKED ] := 0
             hb_ADel( aRecords, nPos, .T. )
          ENDIF
@@ -1257,8 +1256,7 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
    aIndex := AR_INDEXINIT()
    aIndex[ INDEX_TAG ]  := cIndex
    aIndex[ INDEX_ORCR ] := aOrderCreate
-   nIndex := AScan( aIndexes, {| x | x[ INDEX_TAG ] == cIndex } )
-   IF nIndex > 0
+   IF ( nIndex := AScan( aIndexes, {| x | x[ INDEX_TAG ] == cIndex } ) ) > 0
       ADel( aIndexes, nIndex )
       aIndexes[ Len( aIndexes ) ] := aIndex
    ELSE
@@ -1837,14 +1835,10 @@ STATIC FUNCTION hb_Decode( ... )
          /* Check if value exists (valtype of values MUST be same of xVal,
           * otherwise I will get a runtime error)
           * TODO: Have I to check also between different valtypes, jumping different ? */
-         nPos := AScan( aValues, {| e | e == xVal } )
-
-         IF nPos == 0   /* Not Found, returning DEFAULT */
+         IF ( nPos := AScan( aValues, {| e | e == xVal } ) ) == 0   /* Not Found, returning DEFAULT */
             xRet := xDefault   /* it could be also NIL because not present */
-
          ELSE
             xRet := aResults[ nPos ]
-
          ENDIF
       ENDIF
 

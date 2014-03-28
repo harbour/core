@@ -273,18 +273,18 @@ METHOD getPrev() CLASS TopBarMenu
 
 METHOD getAccel( nKey ) CLASS TopBarMenu
 
-   LOCAL nIndex := AScan( { ;
+   LOCAL nIndex
+   LOCAL cKey
+   LOCAL item
+
+   IF ( nIndex := AScan( { ;
       K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F, ;
       K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L, ;
       K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R, ;
       K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X, ;
       K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4, ;
-      K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
+      K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey ) ) > 0
 
-   LOCAL cKey
-   LOCAL item
-
-   IF nIndex > 0
       cKey := "&" + SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
       FOR EACH item IN ::aItems
          IF hb_AtI( cKey, item:caption ) > 0

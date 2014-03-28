@@ -179,11 +179,8 @@ FUNCTION hb_CStructureId( cStructure, lInplace )
 
    cStructure := Upper( cStructure )
 
-   nID := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } )
-
-   IF nID == 0
-      nID := AScan( s_aSynonyms, {| aSynonym | aSynonym[ 1 ] == cStructure } )
-      IF nID == 0
+   IF ( nID := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } ) ) == 0
+      IF ( nID := AScan( s_aSynonyms, {| aSynonym | aSynonym[ 1 ] == cStructure } ) ) == 0
          oErr := ErrorNew()
          oErr:Args          := { cStructure, lInplace }
          oErr:CanDefault    := .F.
@@ -308,9 +305,8 @@ FUNCTION hb_CStructure( cStructure, nAlign )
    LOCAL oErr
 
    cStructure := Upper( cStructure )
-   nID        := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } )
 
-   IF nID == 0
+   IF ( nID := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } ) ) == 0
       oErr := ErrorNew()
       oErr:Args          := { cStructure, nAlign }
       oErr:CanDefault    := .F.
@@ -394,9 +390,8 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
    LOCAL aCTypes, acMembers, cMember
    LOCAL cArrayClassName := "C Array of [" + hb_ntos( nLen ) + "] CType: " + Str( CType )
 
-   nID := AScan( s_aArrayClasses, {| aArrayDefinitions | aArrayDefinitions[ 1 ] == CType .AND. aArrayDefinitions[ 2 ] == nLen } )
+   IF ( nID := AScan( s_aArrayClasses, {| aArrayDefinitions | aArrayDefinitions[ 1 ] == CType .AND. aArrayDefinitions[ 2 ] == nLen } ) ) == 0
 
-   IF nID == 0
       hClass := __clsNew( "C Structure " + cArrayClassName, nLen + CLASS_PROPERTIES )
       // __clsDelMsg( hClass, "C" )
 

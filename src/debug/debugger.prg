@@ -1925,8 +1925,7 @@ METHOD LoadCallStack() CLASS HBDebugger
 
    FOR i := nDebugLevel TO nCurrLevel
       nLevel := nCurrLevel - i + 1
-      nPos := AScan( ::aCallStack, {| a | a[ CSTACK_LEVEL ] == nLevel } )
-      IF nPos > 0
+      IF ( nPos := AScan( ::aCallStack, {| a | a[ CSTACK_LEVEL ] == nLevel } ) ) > 0
          // a procedure with debug info
          ::aProcStack[ i - nDebugLevel + 1 ] := ::aCallStack[ nPos ]
       ELSE
@@ -2027,8 +2026,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
 
       IF ::lShowStatics
          cName := ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ]
-         n := AScan( ::aModules, {| a | ::ModuleMatch( a[ MODULE_NAME ], cName ) } )
-         IF n > 0
+         IF ( n := AScan( ::aModules, {| a | ::ModuleMatch( a[ MODULE_NAME ], cName ) } ) ) > 0
             FOR EACH m IN ::aModules[ n ][ MODULE_STATICS ]
                AAdd( aBVars, m )
             NEXT
@@ -2041,9 +2039,8 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
       IF ::lShowLocals
          FOR EACH n IN ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_LOCALS ]
             cName := n[ VAR_NAME ]
-            m := AScan( aBVars, ; // Is there another var with this name ?
-               {| aVar | aVar[ VAR_NAME ] == cName .AND. hb_LeftEq( aVar[ VAR_TYPE ], "S" ) } )
-            IF m > 0
+            // Is there another var with this name ?
+            IF ( m := AScan( aBVars, {| aVar | aVar[ VAR_NAME ] == cName .AND. hb_LeftEq( aVar[ VAR_TYPE ], "S" ) } ) ) > 0
                aBVars[ m ] := n
             ELSE
                AAdd( aBVars, n )
@@ -2382,9 +2379,9 @@ METHOD RefreshVars() CLASS HBDebugger
 
 METHOD RemoveWindow( oWnd ) CLASS HBDebugger
 
-   LOCAL n := AScan( ::aWindows, {| o | o == oWnd } )
+   LOCAL n
 
-   IF n != 0
+   IF ( n := AScan( ::aWindows, {| o | o == oWnd } ) ) != 0
       ::aWindows := hb_ADel( ::aWindows, n, .T. )
    ENDIF
 

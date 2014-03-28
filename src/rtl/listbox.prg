@@ -346,8 +346,7 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS ListBox
       ENDIF
    ENDIF
 
-   nPosFound := AScan( ::aItems, bSearch, nPos, Len( ::aItems ) - nPos + 1 )
-   IF nPosFound == 0 .AND. nPos > 1
+   IF ( nPosFound := AScan( ::aItems, bSearch, nPos, Len( ::aItems ) - nPos + 1 ) ) == 0 .AND. nPos > 1
       nPosFound := AScan( ::aItems, bSearch, 1, nPos - 1 )
    ENDIF
 
@@ -387,8 +386,7 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS ListBox
       ENDIF
    ENDIF
 
-   nPosFound := AScan( ::aItems, bSearch, nPos, Len( ::aItems ) - nPos + 1 )
-   IF nPosFound == 0 .AND. nPos > 1
+   IF ( nPosFound := AScan( ::aItems, bSearch, nPos, Len( ::aItems ) - nPos + 1 ) ) == 0 .AND. nPos > 1
       nPosFound := AScan( ::aItems, bSearch, 1, nPos - 1 )
    ENDIF
 

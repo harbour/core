@@ -935,9 +935,7 @@ STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 
    // TODO: support outdated compatibility format RFC2616
    IF Len( cDate ) == 29 .AND. Right( cDate, 4 ) == " GMT" .AND. SubStr( cDate, 4, 2 ) == ", "
-      nMonth := AScan( { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", ;
-         "Oct", "Nov", "Dec" }, SubStr( cDate, 9, 3 ) )
-      IF nMonth > 0
+      IF ( nMonth := AScan( { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }, SubStr( cDate, 9, 3 ) ) ) > 0
          tI := hb_SToT( SubStr( cDate, 13, 4 ) + PadL( nMonth, 2, "0" ) + SubStr( cDate, 6, 2 ) + StrTran( SubStr( cDate, 18, 8 ), ":" ) )
          IF ! Empty( tI )
             tDate := tI + hb_UTCOffset() / ( 3600 * 24 )
@@ -1573,16 +1571,11 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             IF aInstr[ 2 ] $ aData
                xValue := aData[ aInstr[ 2 ] ]
                DO CASE
-               CASE HB_ISSTRING( xValue )
-                  cRet += xValue
-               CASE HB_ISNUMERIC( xValue )
-                  cRet += Str( xValue )
-               CASE HB_ISDATE( xValue )
-                  cRet += DToC( xValue )
-               CASE HB_ISTIMESTAMP( xValue )
-                  cRet += hb_TToC( xValue )
-               CASE HB_ISOBJECT( xValue )
-                  cRet += xValue:Output()
+               CASE HB_ISSTRING( xValue )    ; cRet += xValue
+               CASE HB_ISNUMERIC( xValue )   ; cRet += Str( xValue )
+               CASE HB_ISDATE( xValue )      ; cRet += DToC( xValue )
+               CASE HB_ISTIMESTAMP( xValue ) ; cRet += hb_TToC( xValue )
+               CASE HB_ISOBJECT( xValue )    ; cRet += xValue:Output()
                OTHERWISE
                   Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%1$s'", ValType( xValue ) ) )
                ENDCASE
