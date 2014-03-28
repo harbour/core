@@ -14677,6 +14677,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       ADD HEADER TO t_hHeaders FILE "hbhash.ch"
       ADD HEADER TO t_hHeaders FILE "hbhrb.ch"
       ADD HEADER TO t_hHeaders FILE "hbinkey.ch"
+      ADD HEADER TO t_hHeaders FILE "hbiousr.ch"
       ADD HEADER TO t_hHeaders FILE "hblang.ch"
       ADD HEADER TO t_hHeaders FILE "hblpp.ch"
       ADD HEADER TO t_hHeaders FILE "hbmacro.ch"
