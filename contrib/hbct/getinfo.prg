@@ -67,10 +67,7 @@ FUNCTION CountGets()
    RETURN Len( GetList )
 
 FUNCTION CurrentGet()
-
-   LOCAL oActive := GetActive()
-
-   RETURN AScan( GetList, {| oGet | oGet == oActive } )
+   RETURN hb_AScan( GetList, GetActive(),,, .T. )
 
 FUNCTION GetFldRow( nField )
 

@@ -624,7 +624,7 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
          s := StrTran( s, "*" )
          s := StrTran( s, "+" )
       ENDIF
-      IF ( nIndex := AScan( a_, {| e | e == s } ) ) > 0
+      IF ( nIndex := hb_AScan( a_, s,,, .T. ) ) > 0
          IF lEnh
             nIndex += 8
          ENDIF

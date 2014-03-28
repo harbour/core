@@ -384,13 +384,9 @@ FUNCTION NetCommitAll()
    RETURN n
 
 FUNCTION IsLocked( nRecId )
-
-   hb_default( @nRecID, RecNo() )
-
-   RETURN AScan( dbRLockList(), {| n | n == nRecID } ) > 0
+   RETURN AScan( dbRLockList(), hb_defaultValue( nRecID, RecNo() ) ) > 0
 
 FUNCTION NetError()
-
    RETURN ! s_lNetOk
 
 FUNCTION SetNetDelay( nSecs )

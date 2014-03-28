@@ -197,8 +197,8 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       oUrl := TUrl():New( oUrl )
    ENDIF
 
-   IF AScan( { "ftp", "http", "pop", "smtp" }, {| tmp | tmp == oURL:cProto } ) == 0 .AND. ;
-      ( ! ::lHasSSL .OR. AScan( aProtoSSL, {| tmp | tmp == oURL:cProto } ) == 0 )
+   IF hb_AScan( { "ftp", "http", "pop", "smtp" }, oURL:cProto,,, .T. ) == 0 .AND. ;
+      ( ! ::lHasSSL .OR. hb_AScan( aProtoSSL, oURL:cProto,,, .T. ) == 0 )
 
       oErr := ErrorNew()
       oErr:Args          := { Self, oURL:cProto }
@@ -223,7 +223,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       ::bInitSocks := .T.
    ENDIF
 
-   IF ::lHasSSL .AND. AScan( aProtoSSL, {| tmp | tmp == oURL:cProto } ) > 0
+   IF ::lHasSSL .AND. hb_AScan( aProtoSSL, oURL:cProto,,, .T. ) > 0
       ::EnableTLS( .T. )
    ENDIF
 

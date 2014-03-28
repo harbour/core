@@ -174,7 +174,7 @@ METHOD WvgPartHandler:removeChild( oChild )
 
    LOCAL n
 
-   IF ( n := AScan( ::aChildren, {| o | o == oChild } ) ) > 0
+   IF ( n := hb_AScan( ::aChildren, oChild,,, .T. ) ) > 0
       hb_ADel( ::aChildren, n, .T. )
    ENDIF
 
@@ -184,7 +184,7 @@ METHOD WvgPartHandler:delChild( oWvg )
 
    LOCAL n
 
-   IF ( n := AScan( ::aChildren, {| o | o == oWvg } ) ) > 0
+   IF ( n := hb_AScan( ::aChildren, oWvg,,, .T. ) ) > 0
       oWvg:destroy()
       hb_ADel( ::aChildren, n, .T. )
    ENDIF

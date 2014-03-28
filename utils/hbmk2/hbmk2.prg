@@ -2339,7 +2339,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ELSEIF HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|linux|cygwin|minix|aix" ) .OR. ;
                 hbmk[ _HBMK_cCOMP ] == "bld"
             hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
-            IF AScan( aCOMPSUP, {| tmp | tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
+            IF hb_AScan( aCOMPSUP, hbmk[ _HBMK_cCOMP ],,, .T. ) == 0
                hbmk[ _HBMK_cCOMP ] := NIL
             ENDIF
          ELSE
@@ -2427,7 +2427,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             RETURN _EXIT_UNKNCOMP
          ENDIF
       ELSE
-         IF AScan( aCOMPSUP, {| tmp | tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
+         IF hb_AScan( aCOMPSUP, hbmk[ _HBMK_cCOMP ],,, .T. ) == 0
             _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Compiler value unknown: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             RETURN _EXIT_UNKNCOMP
          ENDIF
@@ -5417,7 +5417,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             /* Adding weird hack for xhb to make it possible to force ST C mode. */
-            IF AScan( hbmk[ _HBMK_aOPTC ], {| tmp | tmp == "-tW" } ) == 0
+            IF hb_AScan( hbmk[ _HBMK_aOPTC ], "-tW",,, .T. ) == 0
                AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
             ELSE
                IF hbmk[ _HBMK_cCOMP ] == "bcc64"
@@ -6325,7 +6325,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       /* Add -hbx= file to the list of sources automatically */
       IF ! Empty( hbmk[ _HBMK_cHBX ] ) .AND. hb_FileExists( hbmk[ _HBMK_cHBX ] )
 #ifdef HB_LEGACY_LEVEL5
-         IF AScan( hbmk[ _HBMK_aPRG ], {| tmp | tmp == hbmk[ _HBMK_cHBX ] } ) > 0
+         IF hb_AScan( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cHBX ],,, .T. ) > 0
             _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored redundant input file already added automatically by -hbx= option: %1$s" ), hbmk[ _HBMK_cHBX ] ) )
          ENDIF
 #endif
@@ -10772,7 +10772,7 @@ STATIC FUNCTION ArraySplit( arrayIn, nChunksReq )
 
 STATIC PROCEDURE AAddNewNotEmpty( array, xItem )
 
-   IF ! Empty( xItem ) .AND. AScan( array, {| tmp | tmp == xItem } ) == 0
+   IF ! Empty( xItem ) .AND. hb_AScan( array, xItem,,, .T. ) == 0
       AAdd( array, xItem )
    ENDIF
 
@@ -10780,7 +10780,7 @@ STATIC PROCEDURE AAddNewNotEmpty( array, xItem )
 
 STATIC PROCEDURE AAddNewAtTop( array, xItem )
 
-   IF AScan( array, {| tmp | tmp == xItem } ) == 0
+   IF hb_AScan( array, xItem,,, .T. ) == 0
       hb_AIns( array, 1, xItem, .T. )
    ENDIF
 
@@ -10788,7 +10788,7 @@ STATIC PROCEDURE AAddNewAtTop( array, xItem )
 
 STATIC PROCEDURE AAddNew( array, xItem )
 
-   IF AScan( array, {| tmp | tmp == xItem } ) == 0
+   IF hb_AScan( array, xItem,,, .T. ) == 0
       AAdd( array, xItem )
    ENDIF
 
@@ -12805,7 +12805,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
 
       /* Delete macros present in both lists */
       FOR EACH cMacro IN aUn DESCEND
-         IF ( nPos := AScan( aDf, {| tmp | tmp == cMacro } ) ) > 0
+         IF ( nPos := hb_AScan( aDf, cMacro,,, .T. ) ) > 0
             hb_ADel( aUn, cMacro:__enumIndex(), .T. )
             hb_ADel( aDf, nPos, .T. )
          ENDIF
@@ -12939,7 +12939,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
    ENDIF
 
    /* protection against recursive calls */
-   IF AScan( aPrevFiles, {| x | x == cFileName } ) == 0
+   IF hb_AScan( aPrevFiles, cFileName,,, .T. ) == 0
       IF ( hFile := FOpen( cFileName ) ) != F_ERROR
          cFileBody := Space( FSeek( hFile, 0, FS_END ) )
          FSeek( hFile, 0, FS_SET )
@@ -12994,7 +12994,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
                nMode := RTLNK_MODE_FILENEXT
             CASE nMode == RTLNK_MODE_FILE
                IF !( cWord == "," )
-                  IF AScan( aFileList, {| x | x == cWord } ) == 0
+                  IF hb_AScan( aFileList, cWord,,, .T. ) == 0
                      AAdd( aFileList, hb_DirSepToOS( cWord ) )
                   ENDIF
                   nMode := RTLNK_MODE_FILENEXT
@@ -16211,8 +16211,7 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
                EXIT
             CASE "TOPMODULE"
                IF !( cValue == cMAIN )
-                  tmp := AScan( aDst, {| tmp | tmp == cValue } )
-                  IF tmp > 0
+                  IF ( tmp := hb_AScan( aDst, cValue,,, .T. ) ) > 0
                      hb_ADel( aDst, tmp, .T. )
                      hb_AIns( aDst, 1, cValue, .T. )
                   ENDIF

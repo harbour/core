@@ -954,7 +954,7 @@ METHOD insertAfter( oTHtmlNode ) CLASS THtmlNode
       ::root:_document:changed := .T.
    ENDIF
 
-   IF ( nPos := AScan( ::parent:htmlContent, Self ) + 1 ) > Len( ::parent:htmlContent )
+   IF ( nPos := hb_AScan( ::parent:htmlContent, Self,,, .T. ) + 1 ) > Len( ::parent:htmlContent )
       ::parent:addNode( oTHtmlNode )
    ELSE
       hb_AIns( ::parent:htmlContent, nPos, oTHtmlNode, .T. )
@@ -977,7 +977,7 @@ METHOD Delete()  CLASS THtmlNode
    ENDIF
 
    IF HB_ISARRAY( ::parent:htmlContent )
-      nPos := AScan( ::parent:htmlContent, Self )
+      nPos := hb_AScan( ::parent:htmlContent, Self,,, .T. )
       hb_ADel( ::parent:htmlContent, nPos, .T. )
    ENDIF
 
@@ -1031,12 +1031,12 @@ METHOD nextNode() CLASS THtmlNode
       RETURN ::htmlContent[ 1 ]
    ENDIF
 
-   IF ( nPos := AScan( ::parent:htmlContent, {| o | o == Self } ) ) < Len( ::parent:htmlContent )
+   IF ( nPos := hb_AScan( ::parent:htmlContent, Self,,, .T. ) ) < Len( ::parent:htmlContent )
       RETURN ::parent:htmlContent[ nPos + 1 ]
    ENDIF
 
    aNodes := ::parent:parent:collect()
-   nPos   := AScan( aNodes, {| o | o == Self } )
+   nPos   := hb_AScan( aNodes, Self,,, .T. )
 
    RETURN iif( nPos == Len( aNodes ), NIL, aNodes[ nPos + 1 ] )
 
@@ -1051,7 +1051,7 @@ METHOD prevNode() CLASS THtmlNode
    ENDIF
 
    aNodes := ::parent:collect( Self )
-   nPos   := AScan( aNodes, {| o | o == Self } )
+   nPos   := hb_AScan( aNodes, Self,,, .T. )
 
    RETURN iif( nPos == 1, ::parent, aNodes[ nPos - 1 ] )
 
@@ -1198,7 +1198,7 @@ METHOD getText( cEOL ) CLASS THtmlNode
 
    FOR EACH oNode IN ::htmlContent
       cText += oNode:getText( cEOL )
-      IF Lower( ::htmlTagName ) $ "td,th" .AND. AScan( ::parent:htmlContent, {| o | o == Self } ) < Len( ::parent:htmlContent )
+      IF Lower( ::htmlTagName ) $ "td,th" .AND. hb_AScan( ::parent:htmlContent, Self,,, .T. ) < Len( ::parent:htmlContent )
          // leave table rows in one line, cells separated by Tab
          cText := hb_StrShrink( cText, Len( cEol ) ) + Chr( 9 )
       ENDIF
@@ -1599,7 +1599,7 @@ METHOD popNode( cName ) CLASS THtmlNode
       this allows to properly close the tags "tr,th,td" by simply using:
       node - ["tr","th","td"]
     */
-   IF AScan( { "tr", "th", "td" }, cName ) > 0
+   IF hb_AScan( { "tr", "th", "td" }, cName,,, .T. ) > 0
       endTag := "</" + cName + ">"
       IF ! Right( ::toString(), 3 + Len( cName ) ) == endTag
          ::addNode( THtmlNode():new( Self, "/" + cName, ,  ) )
@@ -1674,7 +1674,7 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
       aValue := t_hHT[ cTagName ]
       IF cAttrName != NIL
          aValue := aValue[ 1 ]:exec()
-         lRet   := ( AScan( aValue, {| a | Lower( a[ 1 ] ) == Lower( cAttrName ) } ) > 0 )
+         lRet   := AScan( aValue, {| a | Lower( a[ 1 ] ) == Lower( cAttrName ) } ) > 0
       ENDIF
    RECOVER
       lRet := .F.

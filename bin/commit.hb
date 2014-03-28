@@ -79,7 +79,7 @@ PROCEDURE Main()
       IF "--check-only" $ cli_Options() .OR. ;
          "--prepare-commit" $ cli_Options()
 
-         IF AScan( aFiles, {| tmp | tmp == hb_FNameNameExt( cLogName ) } ) == 0
+         IF hb_AScan( aFiles, hb_FNameNameExt( cLogName ),,, .T. ) == 0
             OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun %2$s' and retry.", cLogName, CommitScript() ) + hb_eol() )
             ErrorLevel( 3 )
             RETURN

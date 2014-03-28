@@ -138,7 +138,7 @@ FUNCTION __objGetValueList( oObject, aExcept )
 
    aData := {}
    FOR EACH cSymbol IN __objGetMsgList( oObject )
-      IF AScan( aExcept, {| tmp | tmp == cSymbol } ) == 0
+      IF hb_AScan( aExcept, cSymbol,,, .T. ) == 0
          AAdd( aData, { cSymbol, __objSendMsg( oObject, cSymbol ) } )
       ENDIF
    NEXT
