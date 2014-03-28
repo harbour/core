@@ -1260,7 +1260,7 @@ METHOD New() CLASS TRPCService
 
 METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
 
-   LOCAL nElem, lRet := .F.
+   LOCAL lRet := .F.
    LOCAL oFunction
 
    IF HB_ISSTRING( xFunction )
@@ -1270,7 +1270,7 @@ METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
    ENDIF
 
    hb_mutexLock( ::mtxBusy )
-   IF ( nElem := AScan( ::aFunctions, {| x | oFunction:cName == x:cName } ) ) == 0
+   IF AScan( ::aFunctions, {| x | oFunction:cName == x:cName } ) == 0
       AAdd( ::aFunctions, oFunction )
       lRet := .T.
    ENDIF
