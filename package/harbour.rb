@@ -5,7 +5,7 @@ class Harbour < Formula
   homepage 'harbour-project.org/'
   sha1 '66c21d666ac24c45485179eeaa9f90458b552e92'
 
-  head 'https://github.com/harbour/core.git'
+  head 'https://github.com/vszakats/harbour-core.git'
 
   # depends_on 'pcre' if ARGV.include? '--with-pcre'
 
