@@ -12,7 +12,7 @@ PROCEDURE Main( cFrom, cPassword, cTo )
    LOCAL curl
    LOCAL cMessage
 
-   IF AScan( curl_version_info()[ 8 ], "smtps" ) == 0
+   IF hb_AScan( curl_version_info()[ 8 ], "smtps",,, .T. ) == 0
       ? "Error: Requires libcurl 7.20.0 or newer, built with SSL and smtp protocol support"
       RETURN
    ENDIF

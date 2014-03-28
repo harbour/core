@@ -534,6 +534,7 @@ char * hb_verPlatform( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin8     = HB_FALSE;
 static HB_BOOL s_fWinVista = HB_FALSE;
 static HB_BOOL s_fWin2K3   = HB_FALSE;
 static HB_BOOL s_fWin2K    = HB_FALSE;
@@ -547,6 +548,7 @@ static void s_hb_winVerInit( void )
    osvi.dwOSVersionInfoSize = sizeof( osvi );
    if( GetVersionEx( &osvi ) )
    {
+      s_fWin8     = osvi.dwMajorVersion > 6 || ( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion >= 2 );
       s_fWinVista = osvi.dwMajorVersion >= 6;
       s_fWin2K3   = s_fWinVista;
       s_fWin2K    = osvi.dwMajorVersion >= 5;
@@ -572,6 +574,7 @@ static void s_hb_winVerInit( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin8     = HB_FALSE;
 static HB_BOOL s_fWinVista = HB_FALSE;
 static HB_BOOL s_fWin2K3   = HB_FALSE;
 static HB_BOOL s_fWin2K    = HB_FALSE;
@@ -583,6 +586,7 @@ static void s_hb_winVerInit( void )
    union REGS regs;
 
    /* TODO */
+   s_fWin8     = HB_FALSE;
    s_fWinVista = HB_FALSE;
    s_fWin2K3   = s_fWinVista;
    s_fWin2K    = HB_FALSE;
@@ -614,6 +618,17 @@ static void s_hb_winVerInit( void )
 }
 
 #endif
+
+HB_BOOL hb_iswin8( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin8;
+#else
+   return HB_FALSE;
+#endif
+}
 
 HB_BOOL hb_iswinvista( void )
 {

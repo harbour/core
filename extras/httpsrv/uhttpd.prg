@@ -1915,8 +1915,7 @@ STATIC FUNCTION uproc_default()
             ENDIF
 
             // Search for directory index file, i.e.: index.html
-            IF AScan( s_aDirectoryIndex, ;
-                  {| x | iif( hb_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
+            IF AScan( s_aDirectoryIndex, {| x | iif( hb_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
 
                // I have to check filename again (behaviour changes on extension file name)
                // resetting extension

@@ -104,8 +104,7 @@ STATIC FUNCTION _HSX_GOCOLD( nWA )
 
    LOCAL nResult, aWData, nHSX, nRecNo, nKeyNo
 
-   nResult := UR_SUPER_GOCOLD( nWA )
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_GOCOLD( nWA ) ) == HB_SUCCESS
       aWData := USRRDD_AREADATA( nWA )
       IF aWData[ 1 ]
          IF ! Empty( aWData[ 2 ] )
@@ -131,8 +130,7 @@ STATIC FUNCTION _HSX_GOHOT( nWA )
 
    LOCAL nResult, aWData
 
-   nResult := UR_SUPER_GOHOT( nWA )
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_GOHOT( nWA ) ) == HB_SUCCESS
       aWData := USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
@@ -143,8 +141,7 @@ STATIC FUNCTION _HSX_APPEND( nWA, lUnlockAll )
 
    LOCAL nResult, aWData
 
-   nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_APPEND( nWA, lUnlockAll ) ) == HB_SUCCESS
       aWData := USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
@@ -166,9 +163,7 @@ FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
       aWData := USRRDD_AREADATA( Select() )
       nOpenMode := iif( dbInfo( DBI_SHARED ), 1, 0 ) + ;
          iif( dbInfo( DBI_ISREADONLY ), 2, 0 )
-      nHsx := hs_Index( cFile, cExpr, nKeySize, nOpenMode, ;
-         nBufSize, lCase, nFiltSet )
-      IF nHsx >= 0
+      IF ( nHsx := hs_Index( cFile, cExpr, nKeySize, nOpenMode, nBufSize, lCase, nFiltSet ) ) >= 0
          AAdd( aWData[ 2 ], nHsx )
          AAdd( aWData[ 3 ], cFile )
       ENDIF
@@ -186,8 +181,7 @@ PROCEDURE HSX_OPEN( cFile, nBufSize )
       aWData := USRRDD_AREADATA( Select() )
       nOpenMode := iif( dbInfo( DBI_SHARED ), 1, 0 ) + ;
          iif( dbInfo( DBI_ISREADONLY ), 2, 0 )
-      nHsx := hs_Open( cFile, nBufSize, nOpenMode )
-      IF nHsx >= 0
+      IF ( nHsx := hs_Open( cFile, nBufSize, nOpenMode ) ) >= 0
          AAdd( aWData[ 2 ], nHsx )
          AAdd( aWData[ 3 ], cFile )
       ENDIF

@@ -785,7 +785,7 @@ FUNCTION Sp_Quick( cWord )
          // to see if it is a valid word.
          //
 
-         IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+         IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
             AAdd( arr_, cHold )
          ENDIF
       ENDIF
@@ -802,7 +802,7 @@ FUNCTION Sp_Quick( cWord )
       // to see if it is a valid word.
       //
 
-      IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+      IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
          AAdd( arr_, cHold )
       ENDIF
    NEXT
@@ -814,7 +814,7 @@ FUNCTION Sp_Quick( cWord )
    FOR jj := 2 TO zz
       cHold := Left( cWord, jj - 2 ) + SubStr( cWord, jj, 1 ) + ;
          SubStr( cWord, jj - 1, 1 ) + SubStr( cWord, jj + 1 )
-      IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+      IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
          AAdd( arr_, cHold )
       ENDIF
    NEXT
@@ -824,7 +824,7 @@ FUNCTION Sp_Quick( cWord )
    //
 
    cHold := cWord + "E"
-   IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+   IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
       AAdd( arr_, cHold )
    ENDIF
 
@@ -841,7 +841,7 @@ FUNCTION Sp_Quick( cWord )
                cTemp := SubStr( sc_aTryThese[ jj ], nOld, ll - nOld )
                nOld  := ll + 1
                cHold := Left( cWord, ii - 1 ) + cTemp + SubStr( cWord, ii + 1 )
-               IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+               IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
                   AAdd( arr_, cHold )
                ENDIF
             NEXT

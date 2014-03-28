@@ -283,7 +283,7 @@ METHOD CheckCode() CLASS GDBar
 
 METHOD CheckValInArray( cChar ) CLASS GDBar
 
-   LOCAL nPos := AScan( ::keys, {| x | Left( x, 1 ) == cChar } )
+   LOCAL nPos := AScan( ::keys, {| x | hb_LeftEq( x, cChar ) } )
 
    RETURN iif( nPos > 0, nPos, NIL )
 

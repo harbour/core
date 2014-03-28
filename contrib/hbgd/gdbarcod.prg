@@ -655,4 +655,4 @@ METHOD MixCode( value ) CLASS GDBarCode
    RETURN bar_string
 
 METHOD Findcode( uVal ) CLASS GDBarCode
-   RETURN ::acode[ AScan( ::keys, {| x | Left( x, 1 ) == uVal } ) ]
+   RETURN ::acode[ AScan( ::keys, {| x | hb_LeftEq( x, uVal ) } ) ]

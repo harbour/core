@@ -369,8 +369,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                      IF nState > 0
                         nState := RF_STATE_CODE
                      ENDIF
-                     IF ( nContrState := AScan( ::aContr, ;
-                           {| a | a[ 1 ] == cToken1 .AND. ( Empty( a[ 2 ] ) .OR. a[ 2 ] == cToken2 ) } ) ) != 0
+                     IF ( nContrState := AScan( ::aContr, {| a | a[ 1 ] == cToken1 .AND. ( Empty( a[ 2 ] ) .OR. a[ 2 ] == cToken2 ) } ) ) != 0
                         IF Len( aDeep ) < ++nDeep
                            AAdd( aDeep, NIL )
                         ENDIF

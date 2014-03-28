@@ -16,7 +16,7 @@ PROCEDURE Main()
    FIELD FIRST, LAST, STREET, CITY
    LOCAL n, hs
 
-   IF AScan( rddList( 1 ), "RMDBFCDX" ) != 0
+   IF hb_AScan( rddList( 1 ), "RMDBFCDX",,, .T. ) != 0
       rddSetDefault( "RMDBFCDX" )
    ENDIF
 

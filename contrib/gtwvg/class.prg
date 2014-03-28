@@ -581,8 +581,7 @@ METHOD WvtDialog:MouseOver()
    LOCAL mCol := MCol()
    LOCAL nObj
 
-   nObj := AScan( ::aObjects, ;
-      {| o | o:nType != DLG_OBJ_STATIC .AND. ;
+   nObj := AScan( ::aObjects, {| o | o:nType != DLG_OBJ_STATIC .AND. ;
       o:nType != DLG_OBJ_TOOLBAR .AND. ;
       mRow >= o:nTop  .AND. mRow <= o:nBottom .AND. ;
       mCol >= o:nLeft .AND. mCol <= o:nRight } )
