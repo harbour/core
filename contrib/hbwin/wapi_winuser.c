@@ -879,3 +879,8 @@ HB_FUNC( WAPI_GETKEYBOARDLAYOUTNAME )
    HB_STORSTR( szName, 1 );
    hbwapi_ret_L( bResult );
 }
+
+HB_FUNC( WAPI_GETSYSCOLOR )
+{
+   hbwapi_ret_DWORD( GetSysColor( hb_parni( 1 ) ) );
+}

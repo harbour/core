@@ -679,9 +679,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
    LOCAL bKeyBlock
    LOCAL lSingleKeyProcess := .F.         // .T. if I have to process passed key and then exit
 
-   IF ! ::lEditAllow
-      ::BrowseText( nPassedKey )
-   ELSE
+   IF ::lEditAllow
 
       // If user pressed an exiting key (K_ESC or K_ALT_W) or I've received a key to handle and then exit
       DO WHILE ! ::lExitEdit .AND. ! lSingleKeyProcess
@@ -770,7 +768,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
 
          CASE nKey == K_TAB
             // insert char if in insert mode or at end of current line
-            IF Set( _SET_INSERT ) .OR. ( ::nCol == ::LineLen( ::nRow ) )
+            IF Set( _SET_INSERT ) .OR. ::nCol == ::LineLen( ::nRow )
                ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, Space( ::nTabWidth ) )
                ::lDirty := .T.
             ENDIF
@@ -831,6 +829,8 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
             ::KeyboardHook( nKey )
          ENDCASE
       ENDDO
+   ELSE
+      ::BrowseText( nPassedKey )
    ENDIF
 
    RETURN Self

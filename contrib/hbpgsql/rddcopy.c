@@ -2,7 +2,6 @@
  * Harbour Project source code:
  * PostgreSQL RDBMS low level (client api) interface code.
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (GC support)
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  * www - http://harbour-project.org
  *
@@ -77,7 +76,7 @@ static HB_BOOL addToContext( pgCopyContext * context, const char c )
       HB_VM_UNLOCK();
       fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
       HB_VM_LOCK();
-      if( !fOK )
+      if( ! fOK )
          return HB_FALSE;
 
       context->position = 0;
@@ -98,7 +97,7 @@ static HB_BOOL addStrToContext( pgCopyContext * context, const char * str )
          HB_VM_UNLOCK();
          fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
          HB_VM_LOCK();
-         if( !fOK )
+         if( ! fOK )
             return HB_FALSE;
 
          context->position = 0;
@@ -121,7 +120,7 @@ static HB_BOOL addStrnToContext( pgCopyContext * context, const char * str, HB_S
          HB_VM_UNLOCK();
          fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
          HB_VM_LOCK();
-         if( !fOK )
+         if( ! fOK )
             return HB_FALSE;
 
          context->position = 0;

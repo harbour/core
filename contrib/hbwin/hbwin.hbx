@@ -92,6 +92,7 @@ DYNAMIC wapi_GetScrollPos
 DYNAMIC wapi_GetScrollRange
 DYNAMIC wapi_GetShortPathName
 DYNAMIC wapi_GetSubMenu
+DYNAMIC wapi_GetSysColor
 DYNAMIC wapi_GetSystemDirectory
 DYNAMIC wapi_GetSystemMenu
 DYNAMIC wapi_GetSystemMetrics

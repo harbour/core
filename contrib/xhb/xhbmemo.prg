@@ -65,7 +65,7 @@ CREATE CLASS xhb_TMemoEditor FROM XHBEditor
    METHOD Edit()                                   // Calls ::Super:Edit( nKey ) but is needed to handle configurable keys
    METHOD KeyboardHook( nKey )                     // Gets called every time there is a key not handled directly by HBEditor
 
-   METHOD ExistUdf() INLINE HB_ISSTRING( ::xUserFunction )
+   METHOD ExistUdf() INLINE HB_ISSTRING( ::xUserFunction ) .OR. HB_ISEVALITEM( ::xUserFunction )
    METHOD HandleUdf( nKey, nUdfReturn, lEdited )   // Handles requests returned to MemoEdit() by UDF
    METHOD CallUdf( nMode )                         // Call user function. (old xDo)
 
@@ -127,7 +127,7 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
       DO WHILE AScan( { ME_DEFAULT, NIL }, nUdfReturn := ::CallUdf( ME_INIT ) ) == 0
 
          // At this time there is no input from user of MemoEdit() only handling
-         // of values returned by ::xUserFunction, so I pass these value on both
+         // of values returned by ::xUserFunction, so I pass this value on both
          // parameters of ::HandleUdf()
 
          ::HandleUdf( nUdfReturn, nUdfReturn, .F. )

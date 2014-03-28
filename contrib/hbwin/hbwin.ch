@@ -798,4 +798,48 @@
 #define WIN_RT_ANIICON                     22
 #define WIN_RT_HTML                        23
 
+/* Color indexes (wapi_GetSysColor() parameter) */
+#define WIN_CTLCOLOR_MSGBOX                0
+#define WIN_CTLCOLOR_EDIT                  1
+#define WIN_CTLCOLOR_LISTBOX               2
+#define WIN_CTLCOLOR_BTN                   3
+#define WIN_CTLCOLOR_DLG                   4
+#define WIN_CTLCOLOR_SCROLLBAR             5
+#define WIN_CTLCOLOR_STATIC                6
+#define WIN_CTLCOLOR_MAX                   7
+#define WIN_COLOR_SCROLLBAR                0
+#define WIN_COLOR_BACKGROUND               1
+#define WIN_COLOR_ACTIVECAPTION            2
+#define WIN_COLOR_INACTIVECAPTION          3
+#define WIN_COLOR_MENU                     4
+#define WIN_COLOR_WINDOW                   5
+#define WIN_COLOR_WINDOWFRAME              6
+#define WIN_COLOR_MENUTEXT                 7
+#define WIN_COLOR_WINDOWTEXT               8
+#define WIN_COLOR_CAPTIONTEXT              9
+#define WIN_COLOR_ACTIVEBORDER             10
+#define WIN_COLOR_INACTIVEBORDER           11
+#define WIN_COLOR_APPWORKSPACE             12
+#define WIN_COLOR_HIGHLIGHT                13
+#define WIN_COLOR_HIGHLIGHTTEXT            14
+#define WIN_COLOR_BTNFACE                  15
+#define WIN_COLOR_BTNSHADOW                16
+#define WIN_COLOR_GRAYTEXT                 17
+#define WIN_COLOR_BTNTEXT                  18
+#define WIN_COLOR_INACTIVECAPTIONTEXT      19
+#define WIN_COLOR_BTNHIGHLIGHT             20
+#define WIN_COLOR_3DDKSHADOW               21
+#define WIN_COLOR_3DLIGHT                  22
+#define WIN_COLOR_INFOTEXT                 23
+#define WIN_COLOR_INFOBK                   24
+#define WIN_COLOR_HOTLIGHT                 26
+#define WIN_COLOR_GRADIENTACTIVECAPTION    27
+#define WIN_COLOR_GRADIENTINACTIVECAPTION  28
+#define WIN_COLOR_DESKTOP                  WIN_COLOR_BACKGROUND
+#define WIN_COLOR_3DFACE                   WIN_COLOR_BTNFACE
+#define WIN_COLOR_3DSHADOW                 WIN_COLOR_BTNSHADOW
+#define WIN_COLOR_3DHIGHLIGHT              WIN_COLOR_BTNHIGHLIGHT
+#define WIN_COLOR_3DHILIGHT                WIN_COLOR_BTNHIGHLIGHT
+#define WIN_COLOR_BTNHILIGHT               WIN_COLOR_BTNHIGHLIGHT
+
 #endif /* HBWIN_CH_ */
