@@ -56,10 +56,8 @@ REQUEST DBFFPT
 
 ANNOUNCE VFPCDX
 
+/* We are inheriting from DBFCDX */
 FUNCTION VFPCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
-
-   /* We are inheriting from DBFCDX */
-
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, "DBFCDX", {}, pSuperRddID )
 
 INIT PROCEDURE VFPCDX_INIT()

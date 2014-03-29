@@ -88,10 +88,8 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
 
    /* Convert EXCLUSIVE locks to DBLM_MULTIPLE */
    IF aLockInfo[ UR_LI_METHOD ] == DBLM_EXCLUSIVE
-
       aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
       aLockInfo[ UR_LI_RECORD ] := RecNo()
-
    ENDIF
 
    IF aLockInfo[ UR_LI_METHOD ] == DBLM_MULTIPLE      /* RLOCK */
@@ -115,8 +113,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
          RETURN HB_SUCCESS
       ENDIF
 
-      nResult := UR_SUPER_LOCK( nWA, aLockInfo )
-      IF nResult == HB_SUCCESS
+      IF ( nResult := UR_SUPER_LOCK( nWA, aLockInfo ) ) == HB_SUCCESS
          IF aLockInfo[ UR_LI_RESULT ]
             AAdd( aWData[ 2 ], { xRecID, 1 } )
          ENDIF
@@ -131,8 +128,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
          RETURN HB_SUCCESS
       ENDIF
 
-      nResult := UR_SUPER_LOCK( nWA, aLockInfo )
-      IF nResult == HB_SUCCESS
+      IF ( nResult := UR_SUPER_LOCK( nWA, aLockInfo ) ) == HB_SUCCESS
 
          /* FLOCK always first remove all RLOCKs, even if it fails */
          ASize( aWData[ 2 ], 0 )
@@ -182,8 +178,7 @@ STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
 
    lUnlockAll := .F.
 
-   nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_APPEND( nWA, lUnlockAll ) ) == HB_SUCCESS
 
       aWData := USRRDD_AREADATA( nWA )
       IF aWData[ 1 ] == 0

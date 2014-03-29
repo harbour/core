@@ -362,7 +362,6 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
       aField[ UR_FI_LEN ]     := aFieldStruct[ DBS_LEN ]
       aField[ UR_FI_DEC ]     := aFieldStruct[ DBS_DEC ]
       UR_SUPER_ADDFIELD( nWA, aField )
-
    NEXT
 
    /* Call SUPER OPEN to finish allocating work area (f.e.: alias settings) */
@@ -384,14 +383,12 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
       NetErr( .T. )
       UR_SUPER_ERROR( nWA, oError )
       RETURN HB_FAILURE
-
    ENDIF
 
    /* Open file in exclusive mode */
    IF ! aOpenInfo[ UR_OI_SHARED ]
       IF aDBFData[ DATABASE_OPENNUMBER ] == 1
          aDBFData[ DATABASE_LOCKED ] := .T.
-
       ELSE
          oError := ErrorNew()
          oError:GenCode     := EG_OPEN
@@ -403,7 +400,6 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
          UR_SUPER_ERROR( nWA, oError )
          NetErr( .T. )
          RETURN HB_FAILURE
-
       ENDIF
    ENDIF
 
@@ -480,7 +476,6 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
       AEval( aIndexes, {| aInd, n | ModifyIndex( n, Eval( aInd[ INDEX_ORCR, UR_ORCR_BKEY ] ), aInd, aWAData, aKeys[ n ] ) } )
 
       RETURN HB_SUCCESS
-
    ENDIF
 
    RETURN HB_FAILURE
@@ -497,21 +492,17 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
    IF nRecord >= 1 .AND. nRecord <= nRecCount
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .F.
       aWAData[ WADATA_RECNO ] := nRecord
-
    ELSEIF nRecCount == 0
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
       aWAData[ WADATA_RECNO ] := 1
-
    ELSEIF nRecord < 0
       aWAData[ WADATA_BOF ]   := .T.
       aWAData[ WADATA_EOF ]   := .F.
       aWAData[ WADATA_RECNO ] := 1
-
    ELSEIF nRecord == 0 .OR. nRecord > nRecCount
       aWAData[ WADATA_BOF ]   := .F.
       aWAData[ WADATA_EOF ]   := .T.
       aWAData[ WADATA_RECNO ] := nRecCount + 1
-
    ENDIF
 
    AR_UNLOCK( nWA )
@@ -606,7 +597,6 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
       IF Set( _SET_DELETED ) .AND. aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ]
          RETURN AR_SKIPFILTER( nWA, -1 )
       ENDIF
-
    ENDIF
 
    AR_UNLOCK( nWA )
@@ -664,7 +654,6 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
       IF lBof != NIL
          aWAData[ WADATA_BOF ] := .T.
       ENDIF
-
    ENDIF
 
    RETURN HB_SUCCESS
@@ -796,8 +785,8 @@ STATIC FUNCTION AR_DELETE( nWA )
    ENDIF
 
    IF ! aWAData[ WADATA_EOF ]
-      IF aOpenInfo[ UR_OI_SHARED ] .AND. AScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) == 0
 
+      IF aOpenInfo[ UR_OI_SHARED ] .AND. AScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) == 0
          oError := ErrorNew()
          oError:GenCode     := EG_UNLOCKED
          oError:SubCode     := 1022            /* EDBF_UNLOCKED */
@@ -805,7 +794,6 @@ STATIC FUNCTION AR_DELETE( nWA )
          oError:FileName    := aOpenInfo[ UR_OI_NAME ]
          UR_SUPER_ERROR( nWA, oError )
          RETURN HB_FAILURE
-
       ENDIF
 
       IF Len( aRecInfo ) > 0 .AND. aWAData[ WADATA_RECNO ] <= Len( aRecInfo )
@@ -814,9 +802,7 @@ STATIC FUNCTION AR_DELETE( nWA )
          aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ] := .T.
 
          AEval( aIndexes, {| aInd, n | ModifyIndex( n, Eval( aInd[ INDEX_ORCR, UR_ORCR_BKEY ] ), aInd, aWAData, aKeys[ n ] ) } )
-
       ENDIF
-
    ENDIF
 
    RETURN HB_SUCCESS
@@ -1169,13 +1155,11 @@ STATIC FUNCTION AR_ORDLSTADD( nWA, aOrderInfo )
 
    IF Empty( aIndexes )
       aWAData[ WADATA_INDEX ] := 0
-
    ELSE
       aWAData[ WADATA_INDEX ] := 1
       IF Empty( aWAData[ WADATA_WAORDINFO ] )
          AEval( aWAData[ WADATA_WAORDINFO ] := Array( Len( aIndexes ) ), {| x, y | HB_SYMBOL_UNUSED( x ), aWAData[ WADATA_WAORDINFO, y ] := AR_WAOIINIT() } )
       ENDIF
-
    ENDIF
 
    RETURN HB_SUCCESS
@@ -1529,13 +1513,9 @@ INIT PROCEDURE ARRAYRDD_INIT()
 
    RETURN
 
-/* -------------------------------------- */
-/*           UTILITY FUNCTIONS            */
-/* -------------------------------------- */
+/* UTILITY FUNCTIONS */
 
-/*
-  hb_EraseArrayRdd() function is equivalent of FErase() function, but works here in memory
- */
+/* hb_EraseArrayRdd() function is equivalent of FErase() function, but works here in memory */
 
 FUNCTION hb_EraseArrayRdd( cFullName )
 
@@ -1568,16 +1548,13 @@ FUNCTION hb_EraseArrayRdd( cFullName )
                   Throw( oError )
 
                   nReturn := HB_FAILURE
-
                ELSE
                   /* Delete database from slot */
                   hb_HDel( hRDDData, cFullName )
                   nReturn := HB_SUCCESS
-
                ENDIF
             ENDIF
          ENDIF
-
       ELSE
          oError := ErrorNew()
 
@@ -1591,9 +1568,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
          Throw( oError )
 
          nReturn := HB_FAILURE
-
       ENDIF
-
    ELSE
       oError := ErrorNew()
 
@@ -1606,7 +1581,6 @@ FUNCTION hb_EraseArrayRdd( cFullName )
       Throw( oError )
 
       nReturn := HB_FAILURE
-
    ENDIF
 
    RETURN nReturn
@@ -1633,7 +1607,6 @@ FUNCTION hb_FileArrayRdd( cFullName )
                nReturn := HB_SUCCESS
             ENDIF
          ENDIF
-
       ELSE
          oError := ErrorNew()
 
@@ -1647,7 +1620,6 @@ FUNCTION hb_FileArrayRdd( cFullName )
 
          nReturn := HB_FAILURE
       ENDIF
-
    ELSE
       oError := ErrorNew()
 
@@ -1660,7 +1632,6 @@ FUNCTION hb_FileArrayRdd( cFullName )
       Throw( oError )
 
       nReturn := HB_FAILURE
-
    ENDIF
 
    RETURN nReturn == HB_SUCCESS
@@ -1720,13 +1691,11 @@ STATIC FUNCTION EmptyValue( cType, nLen, nDec )
 
 /**
  * Function .......: hb_Decode( <var>, [ <case1,ret1 [,...,caseN,retN] ] [, <def> ]> ) ---> <xRet>
- * Author .........: Francesco Saverio Giudice
  * Date of creation: 1991-01-25
  * Last revision ..: 2006-01-24 1.13 - rewritten for xHarbour and renamed in hb_Decode()
  *
  *                   Decode a value from a list.
  */
-
 STATIC FUNCTION hb_Decode( ... )
 
    LOCAL aParams, nParams, xDefault
@@ -1738,13 +1707,13 @@ STATIC FUNCTION hb_Decode( ... )
    xDefault := NIL
 
    DO CASE
-   CASE nParams > 1     /* More parameters, real CASE */
+   CASE nParams > 1     /* More parameters, real case */
       xVal := aParams[ 1 ]
 
       hb_ADel( aParams, 1, .T. ) /* Resize params */
       nParams := Len( aParams )
 
-      /* if I have a odd number of members, last is DEFAULT */
+      /* if I have a odd number of members, last is default */
       IF ( nParams % 2 ) != 0
          xDefault := ATail( aParams )
          /* Resize again deleting last */
@@ -1772,7 +1741,7 @@ STATIC FUNCTION hb_Decode( ... )
 
                /* Check if array has a default value, this will be last value and has a value */
                /* different from an array */
-               IF ! HB_ISARRAY( ValType( xDefault[ nLen ] ) )
+               IF ! HB_ISARRAY( xDefault[ nLen ] )
                   aParams := Array( ( nLen - 1 ) * 2 )
 
                   n := 1
@@ -1784,7 +1753,7 @@ STATIC FUNCTION hb_Decode( ... )
                   AAdd( aParams, xDefault[ nLen ] )
 
                ELSE
-                  /* I haven't a DEFAULT */
+                  /* I haven't a default */
                   aParams := Array( Len( xDefault ) * 2 )
 
                   n := 1
@@ -1797,7 +1766,6 @@ STATIC FUNCTION hb_Decode( ... )
             ELSE
                /* I have a linear array */
                aParams := xDefault
-
             ENDIF
 
          ELSEIF HB_ISHASH( xDefault ) /* If it is an hash, translate it in an array */
@@ -1819,7 +1787,7 @@ STATIC FUNCTION hb_Decode( ... )
          xRet := hb_ExecFromArray( @hb_Decode(), aParams )
 
       ELSE
-         /* Ok let's go ahead with real FUNCTION */
+         /* Ok let's go ahead with real function */
 
          /* Combine in 2 lists having elements as { value } and { decode } */
          aValues  := Array( nParams / 2 )
@@ -1834,8 +1802,8 @@ STATIC FUNCTION hb_Decode( ... )
 
          /* Check if value exists (valtype of values MUST be same of xVal,
           * otherwise I will get a runtime error)
-          * TODO: Have I to check also between different valtypes, jumping different ? */
-         IF ( nPos := AScan( aValues, {| e | e == xVal } ) ) == 0   /* Not Found, returning DEFAULT */
+          * TODO: Do I have to check also between different valtypes, skipping different? */
+         IF ( nPos := AScan( aValues, {| e | e == xVal } ) ) == 0   /* Not Found, returning default */
             xRet := xDefault   /* it could be also NIL because not present */
          ELSE
             xRet := aResults[ nPos ]
@@ -1854,8 +1822,6 @@ STATIC FUNCTION hb_Decode( ... )
 
 STATIC FUNCTION DecEmptyValue( xVal )
 
-   LOCAL xRet
-
    SWITCH ValType( xVal )
    CASE "C"
    CASE "M" ; RETURN ""
@@ -1865,16 +1831,11 @@ STATIC FUNCTION DecEmptyValue( xVal )
    CASE "B" ; RETURN {|| NIL }
    CASE "A" ; RETURN {}
    CASE "H" ; RETURN { => }
-   CASE "U" ; RETURN NIL
-   CASE "O" ; RETURN NIL   /* Or better another value ? */
+   CASE "U"
+   CASE "O" ; RETURN NIL  /* Or better another value ? */
    ENDSWITCH
 
-   /* Create a runtime error for new datatypes */
-   xRet := ""
-   IF xRet == 0 /* BANG! */
-   ENDIF
-
-   RETURN xRet
+   RETURN "" == 0  /* BANG! Create a runtime error for new datatypes */
 
 STATIC PROCEDURE ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
 
@@ -2001,7 +1962,6 @@ STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
             nPos := 0
          ENDIF
       ENDIF
-      EXIT
 
    ENDSWITCH
 

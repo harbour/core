@@ -61,12 +61,16 @@ STATIC FUNCTION MyToString( cCmd, nWA, xPar1, xPar2, xPar3 )
       RETURN hb_ValToExp( xPar1 )
    CASE "OPEN"
       // Parameters received: xPar1: aOpenInfo
-      // RETURN 'Table: "' + xPar1[ UR_OI_NAME ] + '", Alias: "' + Alias() + '", WorkArea: ' + hb_ntos( nWA )
+#if 0
       // In this example I don't want to log Open Command
+      RETURN 'Table: "' + xPar1[ UR_OI_NAME ] + '", Alias: "' + Alias() + '", WorkArea: ' + hb_ntos( nWA )
+#endif
    CASE "CLOSE"
       // Parameters received: xPar1: cTableName, xPar2: cAlias
-      // RETURN 'Table: "' + xPar1 + '", Alias: "' + xPar2 + '", WorkArea: ' + hb_ntos( nWA )
+#if 0
       // In this example I don't want to log Close Command
+      RETURN 'Table: "' + xPar1 + '", Alias: "' + xPar2 + '", WorkArea: ' + hb_ntos( nWA )
+#endif
    CASE "APPEND"
       // Parameters received: xPar1: lUnlockAll
       RETURN Alias() + "->RecNo() == " + hb_ntos( RecNo() )

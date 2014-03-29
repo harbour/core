@@ -67,7 +67,7 @@
 
 ANNOUNCE LOGRDD
 
-DYNAMIC HB_LOGRDDINHERIT  /* To be defined at user level */
+DYNAMIC hb_LogRddInherit  /* To be defined at user level */
 
 STATIC s_nRddID := -1
 
@@ -107,9 +107,9 @@ STATIC FUNCTION LOGRDD_EXIT( nRDD )
 
 STATIC FUNCTION LOGRDD_CREATE( nWA, aOpenInfo )
 
-   LOCAL nResult := UR_SUPER_CREATE( nWA, aOpenInfo )
+   LOCAL nResult
 
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_CREATE( nWA, aOpenInfo ) ) == HB_SUCCESS
       ToLog( "CREATE", nWA, aOpenInfo )
    ENDIF
 
@@ -119,9 +119,9 @@ STATIC FUNCTION LOGRDD_CREATE( nWA, aOpenInfo )
 
 STATIC FUNCTION LOGRDD_CREATEFIELDS( nWA, aStruct )
 
-   LOCAL nResult := UR_SUPER_CREATEFIELDS( nWA, aStruct )
+   LOCAL nResult
 
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_CREATEFIELDS( nWA, aStruct ) ) == HB_SUCCESS
       ToLog( "CREATEFIELDS", nWA, aStruct )
    ENDIF
 
@@ -131,9 +131,9 @@ STATIC FUNCTION LOGRDD_CREATEFIELDS( nWA, aStruct )
 
 STATIC FUNCTION LOGRDD_OPEN( nWA, aOpenInfo )
 
-   LOCAL nResult := UR_SUPER_OPEN( nWA, aOpenInfo )
+   LOCAL nResult
 
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_OPEN( nWA, aOpenInfo ) ) == HB_SUCCESS
       ToLog( "OPEN", nWA, aOpenInfo )
    ENDIF
 
@@ -143,11 +143,11 @@ STATIC FUNCTION LOGRDD_OPEN( nWA, aOpenInfo )
 
 STATIC FUNCTION LOGRDD_CLOSE( nWA )
 
-   LOCAL cFile   := dbInfo( DBI_FULLPATH )
-   LOCAL cAlias  := Alias()
-   LOCAL nResult := UR_SUPER_CLOSE( nWA )
+   LOCAL cFile  := dbInfo( DBI_FULLPATH )
+   LOCAL cAlias := Alias()
+   LOCAL nResult
 
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_CLOSE( nWA ) ) == HB_SUCCESS
       ToLog( "CLOSE", nWA, cFile, cAlias )
    ENDIF
 
@@ -155,9 +155,9 @@ STATIC FUNCTION LOGRDD_CLOSE( nWA )
 
 STATIC FUNCTION LOGRDD_APPEND( nWA, lUnlockAll )
 
-   LOCAL nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
+   LOCAL nResult
 
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_APPEND( nWA, lUnlockAll ) ) == HB_SUCCESS
       ToLog( "APPEND", nWA, lUnlockAll )
    ENDIF
 
@@ -165,9 +165,9 @@ STATIC FUNCTION LOGRDD_APPEND( nWA, lUnlockAll )
 
 STATIC FUNCTION LOGRDD_DELETE( nWA )
 
-   LOCAL nResult := UR_SUPER_DELETE( nWA )
+   LOCAL nResult
 
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_DELETE( nWA ) ) == HB_SUCCESS
       ToLog( "DELETE", nWA )
    ENDIF
 
@@ -175,9 +175,9 @@ STATIC FUNCTION LOGRDD_DELETE( nWA )
 
 STATIC FUNCTION LOGRDD_RECALL( nWA )
 
-   LOCAL nResult := UR_SUPER_RECALL( nWA )
+   LOCAL nResult
 
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_RECALL( nWA ) ) == HB_SUCCESS
       ToLog( "RECALL", nWA )
    ENDIF
 
@@ -198,9 +198,9 @@ STATIC FUNCTION LOGRDD_PUTVALUE( nWA, nField, xValue )
 
 STATIC FUNCTION LOGRDD_ZAP( nWA )
 
-   LOCAL nResult := UR_SUPER_ZAP( nWA )
+   LOCAL nResult
 
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_ZAP( nWA ) ) == HB_SUCCESS
       ToLog( "ZAP", nWA )
    ENDIF
 
@@ -243,9 +243,7 @@ INIT PROCEDURE _LOGRDD_INIT()
 
    RETURN
 
-/* -------------------------------------------------- */
-/*           USER UTILITY FUNCTIONS                   */
-/* -------------------------------------------------- */
+/* USER UTILITY FUNCTIONS */
 
 FUNCTION hb_LogRddLogFileName( cFileName )
 
@@ -261,7 +259,6 @@ FUNCTION hb_LogRddLogFileName( cFileName )
       IF HB_ISSTRING( cFileName )
          aRDDData[ ARRAY_FILENAME ] := cFileName
       ENDIF
-
    ENDIF
 
    RETURN cOldFileName
@@ -280,7 +277,6 @@ FUNCTION hb_LogRddTag( cTag )
       IF HB_ISSTRING( cTag )
          aRDDData[ ARRAY_TAG ] := cTag
       ENDIF
-
    ENDIF
 
    RETURN cOldTag
@@ -299,7 +295,6 @@ FUNCTION hb_LogRddActive( lActive )
       IF HB_ISLOGICAL( lActive )
          aRDDData[ ARRAY_ACTIVE ] := lActive
       ENDIF
-
    ENDIF
 
    RETURN lOldActive
@@ -337,7 +332,6 @@ FUNCTION hb_LogRddUserLogBlock( bUserLogBlock )
       IF HB_ISEVALITEM( bUserLogBlock )
          aRDDData[ ARRAY_USERLOGBLOCK ] := bUserLogBlock
       ENDIF
-
    ENDIF
 
    RETURN bOldUserLogBlock
@@ -348,24 +342,15 @@ FUNCTION hb_LogRddValueToText( uValue )
    LOCAL cText
 
    SWITCH cType := ValType( uValue )
-   CASE "C"
-      cText := hb_StrToExp( uValue )
-      EXIT
-   CASE "N"
-      cText := hb_ntos( uValue )
-      EXIT
-   CASE "D"
-      cText := "0d" + iif( Empty( uValue ), "0", DToS( uValue ) )
-      EXIT
-   OTHERWISE
-      cText := hb_ValToStr( uValue )
+   CASE "C"  ; cText := hb_StrToExp( uValue ) ; EXIT
+   CASE "N"  ; cText := hb_ntos( uValue ) ; EXIT
+   CASE "D"  ; cText := "0d" + iif( Empty( uValue ), "0", DToS( uValue ) ) ; EXIT
+   OTHERWISE ; cText := hb_ValToStr( uValue )
    ENDSWITCH
 
    RETURN "[" + cType + "]>>>" + cText + "<<<"
 
-/* -------------------------------------------------- */
-/*           LOCAL UTILITY FUNCTIONS                  */
-/* -------------------------------------------------- */
+/* LOCAL UTILITY FUNCTIONS */
 
 STATIC PROCEDURE OpenLogFile( nWA )
 
@@ -394,47 +379,44 @@ STATIC PROCEDURE OpenLogFile( nWA )
       ENDIF
 
       aRDDData[ ARRAY_FHANDLE  ] := nHandle
-
    ENDIF
 
    RETURN
 
 STATIC FUNCTION ToString( cCmd, nWA, xPar1, xPar2, xPar3 )
 
-   LOCAL cString
-
-   DO CASE
-   CASE cCmd == "CREATE"
+   SWITCH cCmd
+   CASE "CREATE"
       // Parameters received: xPar1: aOpenInfo
-      cString := xPar1[ UR_OI_NAME ]
-   CASE cCmd == "CREATEFIELDS"
+      RETURN xPar1[ UR_OI_NAME ]
+   CASE "CREATEFIELDS"
       // Parameters received: xPar1: aStruct
-      cString := hb_ValToExp( xPar1 )
-   CASE cCmd == "OPEN"
+      RETURN hb_ValToExp( xPar1 )
+   CASE "OPEN"
       // Parameters received: xPar1: aOpenInfo
-      cString := 'Table: "' + xPar1[ UR_OI_NAME ] + '", Alias: "' + Alias() + '", WorkArea: ' + hb_ntos( nWA )
-   CASE cCmd == "CLOSE"
+      RETURN 'Table: "' + xPar1[ UR_OI_NAME ] + '", Alias: "' + Alias() + '", WorkArea: ' + hb_ntos( nWA )
+   CASE "CLOSE"
       // Parameters received: xPar1: cTableName, xPar2: cAlias
-      cString := 'Table: "' + xPar1 + '", Alias: "' + xPar2 + '", WorkArea: ' + hb_ntos( nWA )
-   CASE cCmd == "APPEND"
+      RETURN 'Table: "' + xPar1 + '", Alias: "' + xPar2 + '", WorkArea: ' + hb_ntos( nWA )
+   CASE "APPEND"
       // Parameters received: xPar1: lUnlockAll
-      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
-   CASE cCmd == "DELETE"
+      RETURN Alias() + "->RecNo() == " + hb_ntos( RecNo() )
+   CASE "DELETE"
       // Parameters received: none
-      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
-   CASE cCmd == "RECALL"
+      RETURN Alias() + "->RecNo() == " + hb_ntos( RecNo() )
+   CASE "RECALL"
       // Parameters received: none
-      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
-   CASE cCmd == "PUTVALUE"
+      RETURN Alias() + "->RecNo() == " + hb_ntos( RecNo() )
+   CASE "PUTVALUE"
       // Parameters received: xPar1: nField, xPar2: xValue, xPar3: xOldValue
       HB_SYMBOL_UNUSED( xPar3 ) // Here don't log previous value
-      cString := Alias() + "(" + hb_ntos( RecNo() ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
-   CASE cCmd == "ZAP"
+      RETURN Alias() + "(" + hb_ntos( RecNo() ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
+   CASE "ZAP"
       // Parameters received: none
-      cString := 'Alias: "' + Alias() + ' Table: "' + dbInfo( DBI_FULLPATH ) + '"'
-   ENDCASE
+      RETURN 'Alias: "' + Alias() + ' Table: "' + dbInfo( DBI_FULLPATH ) + '"'
+   ENDSWITCH
 
-   RETURN cString
+   RETURN NIL
 
 STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
 
@@ -476,7 +458,6 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
                FWrite( nHandle, cLog + hb_eol() )
             ENDIF
          ENDIF
-
       ELSE
          // Otherwise I send all to user that is responsible to log everywhere
          Eval( bUserLogBlock, cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 )

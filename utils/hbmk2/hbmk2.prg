@@ -16585,7 +16585,7 @@ STATIC FUNCTION FixFuncCase( hbmk, cFileName )
    NEXT
 
    IF ! lInCommentOnly
-      FOR EACH match IN en_hb_regexAll( R_( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)" ), cFile,,,,, .F. )
+      FOR EACH match IN en_hb_regexAll( R_( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN|DYNAMIC)[ \t]+([A-Za-z_][A-Za-z0-9_]+)" ), cFile,,,,, .F. )
          cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
          IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
             cFile := hb_BLeft( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + hb_BSubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )
