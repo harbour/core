@@ -89,7 +89,7 @@ else
 endif
 
 # ORIGIN http://remotesensing.org/libtiff/
-# VER    4.0.3
+# VER    4.0.4devel-2013-11-30
 # URL    http://download.osgeo.org/libtiff/tiff-4.0.3.zip
 # DIFF   tiff.dif
 #
