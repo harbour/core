@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * __DBTOTAL FUNCTION
+ * __dbTotal() FUNCTION
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://harbour-project.org

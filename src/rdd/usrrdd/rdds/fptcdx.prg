@@ -46,9 +46,9 @@
  *
  */
 
-#include "rddsys.ch"
-#include "hbusrrdd.ch"
 #include "dbinfo.ch"
+#include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 /*
  * FPTCDX RDD

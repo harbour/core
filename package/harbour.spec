@@ -9,7 +9,7 @@
 # ---------------------------------------------------------------
 # HOWTO .rpm docs:
 #    https://fedoraproject.org/wiki/PackageMaintainers/CreatingPackageHowTo
-#    https://www.gurulabs.com/downloads/GURULABS-RPM-LAB/GURULABS-RPM-GUIDE-v1.0.PDF
+#    https://gurulabs.com/downloads/GURULABS-RPM-LAB/GURULABS-RPM-GUIDE-v1.0.PDF
 # ---------------------------------------------------------------
 
 ######################################################################

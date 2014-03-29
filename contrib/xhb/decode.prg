@@ -99,7 +99,16 @@ FUNCTION hb_Decode( ... )
 
                /* Check if array has a default value, this will be last value and has a value */
                /* different from an array */
-               IF ! HB_ISARRAY( xDefault[ nLen ] )
+               IF HB_ISARRAY( xDefault[ nLen ] )
+                  /* I haven't a default */
+                  aParams := Array( Len( xDefault ) * 2 )
+
+                  n := 1
+                  FOR EACH i IN xDefault
+                     aParams[ n++ ] := i[ 1 ]
+                     aParams[ n++ ] := i[ 2 ]
+                  NEXT
+               ELSE
                   aParams := Array( ( nLen - 1 ) * 2 )
 
                   n := 1
@@ -109,17 +118,6 @@ FUNCTION hb_Decode( ... )
                   NEXT
 
                   AAdd( aParams, xDefault[ nLen ] )
-
-               ELSE
-                  /* I haven't a default */
-                  aParams := Array( Len( xDefault ) * 2 )
-
-                  n := 1
-                  FOR EACH i IN xDefault
-                     aParams[ n++ ] := i[ 1 ]
-                     aParams[ n++ ] := i[ 2 ]
-                  NEXT
-
                ENDIF
             ELSE
                /* I have a linear array */

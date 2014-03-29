@@ -51,8 +51,8 @@
 
 // #define HB_USE_HBTIP    // Use functions from HBTIP - TOIMPLEMENT
 
-#define CRLF ( Chr( 13 ) + Chr( 10 ) )
-#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
+#define CRLF           ( Chr( 13 ) + Chr( 10 ) )
+#define THROW( oErr )  ( Eval( ErrorBlock(), oErr ), Break( oErr ) )
 
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 
@@ -603,7 +603,7 @@ FUNCTION uhttpd_AppFullName()
 FUNCTION uhttpd_CStrToVal( cExp, cType )
 
    IF ! HB_ISSTRING( cExp )
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDIF
 
    SWITCH cType
@@ -634,17 +634,17 @@ FUNCTION uhttpd_CStrToVal( cExp, cType )
 
 #if 0
    CASE "A"
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
    CASE "B"
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
    CASE "O"
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 #endif
 
    OTHERWISE
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDSWITCH
 
    RETURN NIL

@@ -52,9 +52,9 @@
  * set default memo type to SMT
  */
 
-#include "rddsys.ch"
-#include "hbusrrdd.ch"
 #include "dbinfo.ch"
+#include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 /* Force linking DBFCDX and DBFFPT from which our RDD inherits */
 REQUEST DBFCDX

@@ -54,8 +54,8 @@
  * This idea comes from one of messages sent by Mindaugas Kavaliauskas.
  */
 
-#include "rddsys.ch"
 #include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 ANNOUNCE RLCDX
 

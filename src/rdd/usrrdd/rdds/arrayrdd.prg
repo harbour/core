@@ -50,21 +50,19 @@
 /*
  * This is a Array RDD, or Memory RDD.
  * It works only in memory and actually supports standard dbf commands
- * excepts relations
+ * except relations
  */
 
-#include "rddsys.ch"
-#include "hbusrrdd.ch"
-#include "fileio.ch"
-#include "error.ch"
-#include "dbstruct.ch"
 #include "dbinfo.ch"
-
+#include "dbstruct.ch"
+#include "error.ch"
+#include "fileio.ch"
 #include "hbtrace.ch"
+#include "hbusrrdd.ch"
+#include "rddsys.ch"
 
-#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
-
-#define LEFTEQUAL( l, r )    iif( ValType( l ) $ "CM", hb_LeftEq( l, r ), l == r )
+#define THROW( oErr )      ( Eval( ErrorBlock(), oErr ), Break( oErr ) )
+#define LEFTEQUAL( l, r )  iif( ValType( l ) $ "CM", hb_LeftEq( l, r ), l == r )
 
 ANNOUNCE ARRAYRDD
 
@@ -846,6 +844,7 @@ STATIC FUNCTION AR_RECALL( nWA )
    ENDIF
 
    IF ! aWAData[ WADATA_EOF ]
+
       IF aOpenInfo[ UR_OI_SHARED ] .AND. AScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) == 0
          oError := ErrorNew()
          oError:GenCode     := EG_UNLOCKED
@@ -1019,7 +1018,6 @@ STATIC FUNCTION AR_PACK( nWA )
       oError:Description := hb_langErrMsg( EG_UNLOCKED )
       UR_SUPER_ERROR( nWA, oError )
       RETURN FAILURE
-
    ENDIF
 
    AEval( aIndexes, {| aIndex, n | ModifyIndex( n, Eval( aIndex[ INDEX_ORCR, UR_ORCR_BKEY ] ), aIndex, aWAData ) } )
@@ -1545,7 +1543,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
                      "database in use)"
                   oError:FileName    := cFullName
                   oError:CanDefault  := .T.
-                  Throw( oError )
+                  THROW( oError )
 
                   nReturn := HB_FAILURE
                ELSE
@@ -1565,7 +1563,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
          oError:FileName    := cFullName
          oError:CanDefault  := .T.
          /* UR_SUPER_ERROR( 0, oError ) */
-         Throw( oError )
+         THROW( oError )
 
          nReturn := HB_FAILURE
       ENDIF
@@ -1578,7 +1576,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
          "ARRAYRDD not in use)"
       oError:FileName    := cFullName
       oError:CanDefault  := .T.
-      Throw( oError )
+      THROW( oError )
 
       nReturn := HB_FAILURE
    ENDIF
@@ -1616,7 +1614,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
             "ARRAYRDD not inizialized)"
          oError:FileName    := cFullName
          oError:CanDefault  := .T.
-         Throw( oError )
+         THROW( oError )
 
          nReturn := HB_FAILURE
       ENDIF
@@ -1629,7 +1627,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
          "ARRAYRDD not in use)"
       oError:FileName    := cFullName
       oError:CanDefault  := .T.
-      Throw( oError )
+      THROW( oError )
 
       nReturn := HB_FAILURE
    ENDIF
@@ -1741,7 +1739,16 @@ STATIC FUNCTION hb_Decode( ... )
 
                /* Check if array has a default value, this will be last value and has a value */
                /* different from an array */
-               IF ! HB_ISARRAY( xDefault[ nLen ] )
+               IF HB_ISARRAY( xDefault[ nLen ] )
+                  /* I haven't a default */
+                  aParams := Array( Len( xDefault ) * 2 )
+
+                  n := 1
+                  FOR EACH i IN xDefault
+                     aParams[ n++ ] := i[ 1 ]
+                     aParams[ n++ ] := i[ 2 ]
+                  NEXT
+               ELSE
                   aParams := Array( ( nLen - 1 ) * 2 )
 
                   n := 1
@@ -1751,17 +1758,6 @@ STATIC FUNCTION hb_Decode( ... )
                   NEXT
 
                   AAdd( aParams, xDefault[ nLen ] )
-
-               ELSE
-                  /* I haven't a default */
-                  aParams := Array( Len( xDefault ) * 2 )
-
-                  n := 1
-                  FOR EACH i IN xDefault
-                     aParams[ n++ ] := i[ 1 ]
-                     aParams[ n++ ] := i[ 2 ]
-                  NEXT
-
                ENDIF
             ELSE
                /* I have a linear array */

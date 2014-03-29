@@ -52,10 +52,10 @@
  * on tables it writes changes in a log file.
  */
 
-#include "rddsys.ch"
-#include "hbusrrdd.ch"
-#include "fileio.ch"
 #include "dbinfo.ch"
+#include "fileio.ch"
+#include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 #define ARRAY_FILENAME      1
 #define ARRAY_FHANDLE       2
@@ -313,7 +313,6 @@ FUNCTION hb_LogRddMsgLogBlock( bMsgLogBlock )
       IF HB_ISEVALITEM( bMsgLogBlock )
          aRDDData[ ARRAY_MSGLOGBLOCK ] := bMsgLogBlock
       ENDIF
-
    ENDIF
 
    RETURN bOldMsgLogBlock
@@ -356,8 +355,8 @@ STATIC PROCEDURE OpenLogFile( nWA )
 
    LOCAL aRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL cFileName := aRDDData[ ARRAY_FILENAME ]
-   LOCAL nHandle   := aRDDData[ ARRAY_FHANDLE  ]
-   LOCAL lActive   := aRDDData[ ARRAY_ACTIVE   ]
+   LOCAL nHandle   := aRDDData[ ARRAY_FHANDLE ]
+   LOCAL lActive   := aRDDData[ ARRAY_ACTIVE ]
 
 #if 0
    TraceLog( "nHandle " + CStr( nHandle ) )
