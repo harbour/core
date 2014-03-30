@@ -15465,7 +15465,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    LOCAL cLine
    LOCAL nMaxRow, nMaxCol
    LOCAL nHistIndex
-   LOCAL bKeyUP, bKeyDown, bKeyIns, bKeyResize
+   LOCAL bKeyUP, bKeyDown, bKeyIns, bKeyCompletion, bKeyResize
    LOCAL lResize := .F.
    LOCAL plugins
    LOCAL cCommand
@@ -15543,6 +15543,8 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
          {|| cLine := iif( nHistIndex < Len( hbsh[ _HBSH_aHistory ] ), ;
              hbsh[ _HBSH_aHistory ][ ++nHistIndex ], ;
              ( nHistIndex := Len( hbsh[ _HBSH_aHistory ] ) + 1, Space( HB_LINE_LEN ) ) ) } )
+      bKeyCompletion := SetKey( K_TAB, ;
+         {|| __hbshell_Completion( hbsh[ _HBSH_hbmk ] ) } )
       bKeyResize := SetKey( HB_K_RESIZE, ;
          {|| lResize := .T., hb_keyPut( K_ENTER ) } )
 
@@ -15551,6 +15553,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
       SetKey( K_DOWN, bKeyDown )
       SetKey( K_UP, bKeyUp )
       SetKey( K_INS, bKeyIns )
+      SetKey( K_TAB, bKeyCompletion )
       SetKey( HB_K_RESIZE, bKeyResize )
 
       IF LastKey() == K_ESC .OR. Empty( cLine ) .OR. ;
@@ -15609,6 +15612,94 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    __hbshell_plugins_unload( plugins )
 
    RETURN
+
+STATIC PROCEDURE __hbshell_Completion( hbmk )
+
+   LOCAL oGet := GetActive()
+   LOCAL cGet := oGet:VarGet()
+   LOCAL lComplete
+   LOCAL nPos, cChar
+   LOCAL cWord
+
+   cWord := ""
+   FOR nPos := oGet:pos - 1 TO 1 STEP -1
+      cChar := SubStr( cGet, nPos, 1 )
+      IF !( hb_asciiIsAlpha( cChar ) .OR. hb_asciiIsDigit( cChar ) .OR. cChar == "_" )
+         EXIT
+      ENDIF
+      cWord := cChar + cWord
+   NEXT
+
+   IF ! Empty( cWord := __hbshell_CompletionFunc( hbmk, cWord, @lComplete ) )
+      IF lComplete
+         cWord += "()"
+      ENDIF
+      oGet:VarPut( PadR( Left( cGet, nPos ) + cWord + SubStr( cGet, oGet:pos ), Len( cGet ) ) )
+      oGet:pos := nPos + Len( cWord ) + 1 + iif( lComplete, -1, 0 )
+   ENDIF
+
+   RETURN
+
+/* BEWARE: Rough code. Likely suboptimal and misses or gets wrong some cases. */
+STATIC FUNCTION __hbshell_CompletionFunc( hbmk, cFunc, /* @ */ lComplete )
+
+   THREAD STATIC t_aAll
+
+   LOCAL cFunc1, nMaxLen
+   LOCAL nPos, nCount
+   LOCAL tmp, tmp1, tmp2, tmp3
+
+   LOCAL cResult := ""
+
+   lComplete := .F.
+
+   IF t_aAll == NIL
+      t_aAll := ASort( hb_HKeys( GetListOfFunctionsKnown( hbmk, .T. ) ),,, {| x, y | hb_asciiUpper( x ) < hb_asciiUpper( y ) } )
+   ENDIF
+
+   IF ( tmp := AScan( t_aAll, {| tmp | hb_LeftEqI( tmp, cFunc ) } ) ) > 0
+      IF ( tmp1 := hb_RAScan( t_aAll, {| tmp | hb_LeftEqI( tmp, cFunc ) },, Len( t_aAll ) - tmp + 1 ) ) > 0
+         nMaxLen := 0
+         FOR tmp2 := tmp TO tmp1
+            IF nMaxLen < Len( t_aAll[ tmp2 ] )
+               nMaxLen := Len( t_aAll[ tmp2 ] )
+            ENDIF
+         NEXT
+         cFunc1 := cFunc
+         lComplete := .T.
+         FOR tmp3 := Len( cFunc ) + 1 TO nMaxLen
+            cFunc1 := Left( t_aAll[ tmp ], tmp3 )
+            lComplete := tmp3 == Len( t_aAll[ tmp ] )
+            nPos := NIL
+            nCount := 0
+            FOR tmp2 := tmp TO tmp1
+               IF ! hb_asciiUpper( t_aAll[ tmp2 ] ) == hb_asciiUpper( cFunc )
+                  nCount++
+                  nPos := tmp2
+                  IF ! hb_LeftEqI( t_aAll[ tmp2 ], cFunc1 )
+                     EXIT
+                  ENDIF
+               ENDIF
+            NEXT
+            IF tmp2 < tmp1 + 1
+               cFunc1 := hb_StrShrink( cFunc1, 1 )
+               EXIT
+            ELSE
+               IF hb_asciiUpper( cFunc1 ) == hb_asciiUpper( cFunc ) .AND. nCount == 1
+                  cFunc1 := t_aAll[ nPos ]
+                  lComplete := .T.
+                  EXIT
+               ENDIF
+            ENDIF
+         NEXT
+         cResult := cFunc1
+      ELSE
+         cResult := t_aAll[ tmp ]
+         lComplete := .T.
+      ENDIF
+   ENDIF
+
+   RETURN cResult
 
 STATIC PROCEDURE __hbshell_ToConsole( cText )
 
