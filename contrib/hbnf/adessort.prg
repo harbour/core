@@ -30,5 +30,4 @@ FUNCTION ft_ADesSort( aArray, nStartIndex, nEndIndex )
    FORCE_BETWEEN( 1, nEndIndex,   Len( aArray ) )
    FORCE_BETWEEN( 1, nStartIndex, nEndIndex )
 
-   RETURN ASort( aArray, nStartIndex, nEndIndex, ;
-      {| xElement1, xElement2 | xElement1 > xElement2 } )
+   RETURN ASort( aArray, nStartIndex, nEndIndex, {| xElement1, xElement2 | xElement1 > xElement2 } )

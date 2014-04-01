@@ -421,7 +421,7 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
    LOCAL cFile
    LOCAL tmp
 
-   ASort( aChanges,,, {| x, y | x < y } )
+   ASort( aChanges )
 
    SWITCH cVCS
    CASE "svn"

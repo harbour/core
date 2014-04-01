@@ -676,10 +676,8 @@ static HB_GARBAGE_FUNC( PHB_EXPAT_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( hb_expat_ptr && *hb_expat_ptr )
    {
-      PHB_EXPAT hb_expat = *hb_expat_ptr;
-
       /* Destroy the object */
-      PHB_EXPAT_free( hb_expat, HB_TRUE );
+      PHB_EXPAT_free( *hb_expat_ptr, HB_TRUE );
       *hb_expat_ptr = NULL;
    }
 }

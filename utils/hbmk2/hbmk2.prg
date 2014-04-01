@@ -14408,7 +14408,7 @@ STATIC FUNCTION __hb_extern_get_list_hrb( cInputName )
       NEXT
 
       tmp := hb_cdpSelect( "EN" )
-      ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+      ASort( aExtern )
       hb_cdpSelect( tmp )
    ENDIF
 
@@ -14467,7 +14467,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
                   ENDIF
                NEXT
                tmp := hb_cdpSelect( "EN" )
-               ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+               ASort( aExtern )
                hb_cdpSelect( tmp )
             ENDIF
          ENDIF

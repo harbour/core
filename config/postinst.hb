@@ -657,7 +657,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                   ENDIF
                NEXT
                tmp := hb_cdpSelect( "EN" )
-               ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+               ASort( aExtern )
                hb_cdpSelect( tmp )
 
                /* Filter out Cl*pper short names (not foolproof method,
