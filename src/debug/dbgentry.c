@@ -84,7 +84,7 @@ static HB_BOOL hb_clsSetScope( HB_BOOL fScope )
          memmove( array + index, array + index + 1, sizeof( type ) * ( length - index ) ); \
    } while( 0 )
 
-#define HB_DBGCOMMON_LOCK()       hb_threadEnterCriticalSection( &s_dbgMtx )
+#define HB_DBGCOMMON_LOCK()       hb_threadEnterCriticalSectionGC( &s_dbgMtx )
 #define HB_DBGCOMMON_UNLOCK()     hb_threadLeaveCriticalSection( &s_dbgMtx )
 static HB_CRITICAL_NEW( s_dbgMtx );
 

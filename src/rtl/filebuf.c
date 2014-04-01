@@ -467,11 +467,10 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    fReadonly = ( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ;
    pszFile = hb_fsExtName( pszFileName, pDefExt, uiExFlags, pPaths );
 
-#if defined( HB_OS_UNIX )
    hb_vmUnlock();
+#if defined( HB_OS_UNIX )
    fResult = stat( ( char * ) pszFile, &statbuf ) == 0;
    hb_fsSetIOError( fResult, 0 );
-   hb_vmLock();
 
    if( fResult )
    {
@@ -526,7 +525,6 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
       {
          HB_ULONG device = 0, inode = 0;
 #if defined( HB_OS_UNIX )
-         hb_vmUnlock();
          if( fstat( hFile, &statbuf ) == 0 )
          {
             device = ( HB_ULONG ) statbuf.st_dev;
@@ -540,7 +538,6 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 #  endif
             }
          }
-         hb_vmLock();
 #endif
 
          hb_threadEnterCriticalSection( &s_fileMtx );
@@ -594,7 +591,9 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 #if defined( HB_OS_UNIX )
    if( pFile && fSeek )
       pFile = hb_fileposNew( pFile );
+
 #endif
+   hb_vmLock();
 
    return pFile;
 }
@@ -603,6 +602,7 @@ static void s_fileClose( PHB_FILE pFile )
 {
    HB_FHANDLE hFile = FS_ERROR, hFileRO = FS_ERROR;
 
+   hb_vmUnlock();
    hb_threadEnterCriticalSection( &s_fileMtx );
 
    if( --pFile->used == 0 )
@@ -629,6 +629,7 @@ static void s_fileClose( PHB_FILE pFile )
    }
 
    hb_threadLeaveCriticalSection( &s_fileMtx );
+   hb_vmLock();
 
    hb_fsSetError( 0 );
 
@@ -643,6 +644,7 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
 {
    HB_BOOL fResult, fLockFS = HB_FALSE;
 
+   hb_vmUnlock();
    if( ( iType & FL_MASK ) == FL_UNLOCK )
    {
       hb_threadEnterCriticalSection( &s_fileMtx );
@@ -680,6 +682,7 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
       else
          hb_fsSetError( fResult ? 0 : 33 );
    }
+   hb_vmLock();
 
    return fResult;
 }
@@ -689,6 +692,8 @@ static int s_fileLockTest( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
 {
    HB_BOOL fLocked;
    int iResult;
+
+   hb_vmUnlock();
 
    hb_threadEnterCriticalSection( &s_fileMtx );
    fLocked = hb_fileTestLock( pFile, nStart, nLen );
@@ -703,6 +708,8 @@ static int s_fileLockTest( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
    }
    else
       iResult = hb_fsLockTest( pFile->hFile, nStart, nLen, ( HB_USHORT ) iType );
+
+   hb_vmLock();
 
    return iResult;
 }
@@ -1037,6 +1044,7 @@ HB_BOOL hb_fileRegisterFull( const HB_FILE_FUNCS * pFuncs )
 {
    HB_BOOL fResult = HB_FALSE;
 
+   hb_vmUnlock();
    hb_threadEnterCriticalSection( &s_fileMtx );
 
    if( s_iFileTypes < HB_FILE_TYPE_MAX )
@@ -1047,6 +1055,7 @@ HB_BOOL hb_fileRegisterFull( const HB_FILE_FUNCS * pFuncs )
    }
 
    hb_threadLeaveCriticalSection( &s_fileMtx );
+   hb_vmLock();
 
    return fResult;
 }

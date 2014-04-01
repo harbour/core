@@ -163,7 +163,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    #endif
 
    /* let's find the right signal handler. */
-   hb_threadEnterCriticalSection( &s_ServiceMutex );
+   hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
    /* avoid working if PRG signal handling has been disabled */
    if( ! bSignalEnabled )
@@ -417,7 +417,7 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
    int      iRet;
 
    /* let's find the right signal handler. */
-   hb_threadEnterCriticalSection( &s_ServiceMutex );
+   hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
    /* avoid working if PRG signal handling has been disabled */
    if( ! bSignalEnabled )
@@ -885,7 +885,7 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
       s_signalHandlersInit();
    }
 
-   hb_threadEnterCriticalSection( &s_ServiceMutex );
+   hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
    hb_arrayAddForward( sp_hooks, pHandEntry );
 
@@ -901,7 +901,7 @@ HB_FUNC( HB_POPSIGNALHANDLER )
 
    if( sp_hooks != NULL )
    {
-      hb_threadEnterCriticalSection( &s_ServiceMutex );
+      hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
       nLen = hb_arrayLen( sp_hooks );
       if( nLen > 0 )

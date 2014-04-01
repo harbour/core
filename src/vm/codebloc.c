@@ -83,21 +83,14 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
     */
    if( pCBlock->pLocals )
    {
-      PHB_ITEM pLocals = pCBlock->pLocals;
-      HB_USHORT uiLocals = pCBlock->uiLocals;
-
-      /* clear pCBlock->pLocals to avoid infinit loop in cross
-       * referenced items
-       */
+      if( hb_xRefDec( pCBlock->pLocals ) )
+      {
+         while( pCBlock->uiLocals )
+            hb_memvarValueDecRef( pCBlock->pLocals[ pCBlock->uiLocals-- ].item.asMemvar.value );
+         hb_xfree( pCBlock->pLocals );
+      }
       pCBlock->pLocals = NULL;
       pCBlock->uiLocals = 0;
-
-      if( hb_xRefDec( pLocals ) )
-      {
-         while( uiLocals )
-            hb_memvarValueDecRef( pLocals[ uiLocals-- ].item.asMemvar.value );
-         hb_xfree( pLocals );
-      }
    }
 }
 

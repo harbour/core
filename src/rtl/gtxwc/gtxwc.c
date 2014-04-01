@@ -5420,6 +5420,8 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( wnd->window )
          {
             XWindowAttributes wndAttr;
+
+            HB_XWC_XLIB_LOCK();
             if( XGetWindowAttributes( wnd->dpy, wnd->window, &wndAttr ) )
             {
                Window wndChild;
@@ -5431,6 +5433,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   y = wndAttr.y;
                }
             }
+            HB_XWC_XLIB_UNLOCK();
          }
 
          if( ! pInfo->pResult )
@@ -5438,7 +5441,11 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          hb_arrayNew( pInfo->pResult, 2 );
 
          if( wnd->fInit )
+         {
+            HB_XWC_XLIB_LOCK();
             hb_gt_xwc_UpdateWindowCords( wnd, &x, &y );
+            HB_XWC_XLIB_UNLOCK();
+         }
 
          if( iType == HB_GTI_SETPOS_ROWCOL )
          {
@@ -5472,7 +5479,9 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          if( wnd->fInit )
          {
+            HB_XWC_XLIB_LOCK();
             XMoveWindow( wnd->dpy, wnd->window, x, y );
+            HB_XWC_XLIB_UNLOCK();
          }
          else
          {
@@ -5495,10 +5504,15 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   {
                      wnd->colors[ iVal ].value = iColor;
                      wnd->colors[ iVal ].set = HB_FALSE;
-                     if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
+                     if( wnd->fInit )
                      {
-                        memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_U32 ) );
-                        hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
+                        HB_XWC_XLIB_LOCK();
+                        if( hb_gt_xwc_setPalette( wnd ) )
+                        {
+                           memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_U32 ) );
+                           hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
+                        }
+                        HB_XWC_XLIB_UNLOCK();
                      }
                   }
                }
@@ -5523,10 +5537,15 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      wnd->colors[ iVal ].set = HB_FALSE;
                   }
                }
-               if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
+               if( wnd->fInit )
                {
-                  memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_U32 ) );
-                  hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
+                  HB_XWC_XLIB_LOCK();
+                  if( hb_gt_xwc_setPalette( wnd ) )
+                  {
+                     memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_U32 ) );
+                     hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
+                  }
+                  HB_XWC_XLIB_UNLOCK();
                }
             }
          }
