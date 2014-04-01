@@ -678,11 +678,9 @@ static HB_GARBAGE_FUNC( PHB_EXPAT_release )
    {
       PHB_EXPAT hb_expat = *hb_expat_ptr;
 
-      /* set pointer to NULL to avoid multiple freeing */
-      *hb_expat_ptr = NULL;
-
       /* Destroy the object */
       PHB_EXPAT_free( hb_expat, HB_TRUE );
+      *hb_expat_ptr = NULL;
    }
 }
 
@@ -810,11 +808,9 @@ HB_FUNC( XML_PARSERFREE )
       {
          PHB_EXPAT hb_expat = ( PHB_EXPAT ) *ph;
 
-         /* set pointer to NULL to avoid multiple freeing */
-         *ph = NULL;
-
          /* Destroy the object */
          PHB_EXPAT_free( hb_expat, HB_TRUE );
+         *ph = NULL;
       }
    }
    else

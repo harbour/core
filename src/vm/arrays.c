@@ -77,23 +77,20 @@ static void hb_arrayReleaseItems( PHB_BASEARRAY pBaseArray )
 {
    if( pBaseArray->nLen )
    {
-      PHB_ITEM pItems = pBaseArray->pItems;
-      HB_SIZE nLen = pBaseArray->nLen;
-
-      /*
-       * clear the pBaseArray->pItems to avoid infinite loop in cross
-       * referenced items when pBaseArray is not freed due to buggy
-       * object destructor [druzus]
-       */
-      pBaseArray->pItems = NULL;
-      pBaseArray->nLen = 0;
-
-      while( nLen-- )
+      do
       {
-         if( HB_IS_COMPLEX( pItems + nLen ) )
-            hb_itemClear( pItems + nLen );
+         pBaseArray->nLen--;
+         if( HB_IS_COMPLEX( pBaseArray->pItems + pBaseArray->nLen ) )
+            hb_itemClear( pBaseArray->pItems + pBaseArray->nLen );
       }
-      hb_xfree( pItems );
+      while( pBaseArray->nLen );
+
+      /* protection against possible base array resizing in user destructors */
+      if( pBaseArray->pItems )
+      {
+         hb_xfree( pBaseArray->pItems );
+         pBaseArray->pItems = NULL;
+      }
    }
 }
 
@@ -123,19 +120,11 @@ static HB_GARBAGE_FUNC( hb_arrayGarbageRelease )
          HB_STACK_TLS_PRELOAD
          hb_arrayPushBase( pBaseArray );
          hb_objDestructorCall( hb_stackItemFromTop( -1 ) );
-
+#if 0
          /* Clear object properities before hb_stackPop(), [druzus] */
          pBaseArray->uiClass = 0;
+#endif
          hb_stackPop();
-
-         /*
-          * release array items before hb_gcRefCheck() to avoid double
-          * pBaseArray freeing when it will have cross references to
-          * self after executing buggy destructor [druzus]
-          */
-         hb_arrayReleaseItems( pBaseArray );
-         hb_gcRefCheck( pBaseArray );
-         return;
       }
 
       /*

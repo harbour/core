@@ -175,6 +175,7 @@ extern HB_EXPORT void     hb_vmPushItemRef( PHB_ITEM pItem ); /* push item refer
 
 extern HB_EXPORT HB_BOOL  hb_vmIsMt( void ); /* return HB_TRUE if HVM is compiled with thread support */
 extern HB_EXPORT void     hb_vmLock( void ); /* lock VM blocking GC execution by other threads */
+extern HB_EXPORT void     hb_vmLockForce( void ); /* lock VM blocking GC execution by other threads, ignore GC request */
 extern HB_EXPORT void     hb_vmUnlock( void ); /* unlock VM, allow GC execution */
 #ifdef _HB_API_INTERNAL_
 extern HB_EXPORT HB_BOOL  hb_vmSuspendThreads( HB_BOOL fWait ); /* (try to) stop all threads except current one */

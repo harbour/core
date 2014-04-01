@@ -62,7 +62,6 @@
 typedef struct
 {
    PHB_ITEM pLibraryHandle;
-   HB_BOOL  bFreeLibrary; /* Free library handle on destroy? */
    int      iFuncFlags;
    void *   pFunctionPtr; /* Function Address */
 } HB_DLLEXEC, * PHB_DLLEXEC;
@@ -71,8 +70,12 @@ static HB_GARBAGE_FUNC( _DLLUnload )
 {
    PHB_DLLEXEC xec = ( PHB_DLLEXEC ) Cargo;
 
-   if( xec->pLibraryHandle && xec->bFreeLibrary )
+   if( xec->pLibraryHandle )
    {
+      /* by default we do not free library in pLibraryHandle destructor
+       * (look at hb_libRelease() in dynlibhb.c). If you want to free
+       * library call here hb_libFree( xec->pLibraryHandle ).
+       */
       hb_gcRefFree( xec->pLibraryHandle );
       xec->pLibraryHandle = NULL;
    }
@@ -146,44 +149,46 @@ HB_FUNC( DLLCALL )
 
 HB_FUNC( DLLPREPARECALL )
 {
-   PHB_DLLEXEC  xec      = ( PHB_DLLEXEC ) hb_gcAllocate( sizeof( HB_DLLEXEC ), &s_gcDllFuncs );
-   PHB_ITEM     pLibrary = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pLibrary       = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pLibraryHandle = NULL;
+   HB_BOOL  bFreeLibrary   = HB_FALSE;
    const char * pszErrorText;
-
-   memset( xec, 0, sizeof( HB_DLLEXEC ) );
 
    if( pLibrary )
    {
       if( HB_IS_STRING( pLibrary ) )
       {
-         xec->pLibraryHandle = hb_libLoad( pLibrary, NULL );
-         if( xec->pLibraryHandle )
-         {
-            hb_gcRefInc( xec->pLibraryHandle );
-            xec->bFreeLibrary = HB_TRUE;
-         }
+         pLibraryHandle = hb_libLoad( pLibrary, NULL );
+         if( pLibraryHandle )
+            bFreeLibrary = HB_TRUE;
       }
       else if( hb_libHandle( pLibrary ) )
-      {
-         xec->pLibraryHandle = pLibrary;
-         hb_gcRefInc( xec->pLibraryHandle );
-      }
+         pLibraryHandle = pLibrary;
    }
 
-   if( xec->pLibraryHandle )
+   if( pLibraryHandle )
    {
-      xec->pFunctionPtr = hb_libSymAddr( xec->pLibraryHandle, hb_parcx( 3 ) );
-      if( xec->pFunctionPtr )
+      void * pFunctionPtr = hb_libSymAddr( pLibraryHandle, hb_parcx( 3 ) );
+
+      if( pFunctionPtr )
       {
-         int iXPPFlags = hb_parni( 2 );
+         int iXPPFlags = hb_parni( 2 ), iFuncFlags = 0;
+         PHB_DLLEXEC xec;
 
          if( ( iXPPFlags & DLL_CDECL ) != 0 )
-            xec->iFuncFlags |= HB_DYN_CALLCONV_CDECL;
+            iFuncFlags |= HB_DYN_CALLCONV_CDECL;
          if( ( iXPPFlags & DLL_STDCALL ) != 0 )
-            xec->iFuncFlags |= HB_DYN_CALLCONV_STDCALL;
+            iFuncFlags |= HB_DYN_CALLCONV_STDCALL;
          if( ( iXPPFlags & DLL_SYSTEM ) != 0 )
-            xec->iFuncFlags |= HB_DYN_CALLCONV_SYSCALL;
+            iFuncFlags |= HB_DYN_CALLCONV_SYSCALL;
 
+         if( !bFreeLibrary )
+            hb_gcRefInc( pLibraryHandle );
+
+         xec = ( PHB_DLLEXEC ) hb_gcAllocate( sizeof( HB_DLLEXEC ), &s_gcDllFuncs );
+         xec->pLibraryHandle = pLibraryHandle;
+         xec->iFuncFlags     = iFuncFlags;
+         xec->pFunctionPtr   = pFunctionPtr;
          hb_retptrGC( xec );
          return;
       }
@@ -192,7 +197,8 @@ HB_FUNC( DLLPREPARECALL )
    else
       pszErrorText = HB_ISCHAR( 1 ) ? "Invalid library name" : "Invalid library handle";
 
-   hb_gcFree( xec );
+   if( bFreeLibrary )
+      hb_libFree( pLibraryHandle );
 
    hb_errRT_BASE( EG_ARG, 2010, pszErrorText, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

@@ -160,6 +160,32 @@ static void hb_gt_def_Free( PHB_GT pGT )
    if( pGT == ( PHB_GT ) hb_stackGetGT() )
       hb_stackSetGT( NULL );
 
+   if( pGT->pNotifierBlock )
+   {
+      hb_itemRelease( pGT->pNotifierBlock );
+      pGT->pNotifierBlock = NULL;
+   }
+   if( pGT->pInkeyFilterBlock )
+   {
+      hb_itemRelease( pGT->pInkeyFilterBlock );
+      pGT->pInkeyFilterBlock = NULL;
+   }
+   if( pGT->pInkeyReadBlock )
+   {
+      hb_itemRelease( pGT->pInkeyReadBlock );
+      pGT->pInkeyReadBlock = NULL;
+   }
+   if( pGT->pCargo )
+   {
+      hb_itemRelease( pGT->pCargo );
+      pGT->pCargo = NULL;
+   }
+   if( pGT->pMutex )
+   {
+      hb_itemRelease( pGT->pMutex );
+      pGT->pMutex = NULL;
+   }
+
    if( pGT->screenBuffer )
       hb_xfree( pGT->screenBuffer );
    if( pGT->prevBuffer )
@@ -168,19 +194,6 @@ static void hb_gt_def_Free( PHB_GT pGT )
       hb_xfree( pGT->pLines );
    if( pGT->iColorCount > 0 )
       hb_xfree( pGT->pColor );
-
-   if( pGT->pNotifierBlock )
-      hb_itemRelease( pGT->pNotifierBlock );
-   if( pGT->pInkeyFilterBlock )
-      hb_itemRelease( pGT->pInkeyFilterBlock );
-   if( pGT->pInkeyReadBlock )
-      hb_itemRelease( pGT->pInkeyReadBlock );
-   if( pGT->pCargo )
-      hb_itemRelease( pGT->pCargo );
-
-   if( pGT->pMutex )
-      hb_itemRelease( pGT->pMutex );
-
    if( pGT->pFuncTable )
       hb_xfree( pGT->pFuncTable );
 

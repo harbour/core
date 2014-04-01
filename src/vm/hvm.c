@@ -520,6 +520,29 @@ void hb_vmLock( void )
    }
 }
 
+void hb_vmLockForce( void )
+{
+   HB_STACK_TLS_PRELOAD
+
+   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   {
+      if( hb_stackLock() == 0 )
+      {
+         HB_VM_LOCK();
+         if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+         {
+            if( ! hb_stackQuitState() )
+            {
+               hb_stackSetQuitState( HB_TRUE );
+               hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+            }
+         }
+         s_iRunningCount++;
+         HB_VM_UNLOCK();
+      }
+   }
+}
+
 /* (try to) stop all threads except current one */
 HB_BOOL hb_vmSuspendThreads( HB_BOOL fWait )
 {
@@ -542,8 +565,8 @@ HB_BOOL hb_vmSuspendThreads( HB_BOOL fWait )
          if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
             break;
       }
-      hb_vmThreadRequest &= ~HB_THREQUEST_STOP;
       ++s_iRunningCount;
+      hb_vmThreadRequest &= ~HB_THREQUEST_STOP;
       hb_threadCondBroadcast( &s_vmCond );
    }
 
@@ -12027,6 +12050,7 @@ void hb_vmIsStackRef( void )
       PHB_THREADSTATE pStack = s_vmStackLst;
       do
       {
+         hb_gcMark( pStack );
          if( pStack->fActive && pStack->pStackId )
             hb_stackIsStackRef( pStack->pStackId, hb_vmTSVarClean );
          pStack = pStack->pNext;

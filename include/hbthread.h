@@ -375,6 +375,7 @@ extern HB_EXPORT HB_BOOL     hb_atomic_dec( volatile HB_COUNTER * pCounter ); /*
 
 /* Critical sections or fast non recursive MUTEXes */
 extern HB_EXPORT void     hb_threadEnterCriticalSection( HB_CRITICAL_T * critical );
+extern HB_EXPORT void     hb_threadEnterCriticalSectionGC( HB_CRITICAL_T * critical );
 extern HB_EXPORT void     hb_threadLeaveCriticalSection( HB_CRITICAL_T * critical );
 
 /* conditional variables */

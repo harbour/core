@@ -608,7 +608,6 @@ extern void       hb_vmIsStackRef( void ); /* hvm.c - mark all local variables a
 extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
 extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
 
-extern void       hb_gcRefCheck( void * pBlock ); /* Check if block still cannot be access after destructor execution */
 extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of references */
 
 #if 0

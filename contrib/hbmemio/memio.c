@@ -118,6 +118,11 @@ typedef struct _HB_MEMFS_FS
    PHB_MEMFS_FILE *  pFiles;
 } HB_MEMFS_FS, * PHB_MEMFS_FS;
 
+typedef struct _HB_MEMFS_DIRENTRY
+{
+   char *     szName;
+   HB_FOFFSET llSize;
+} HB_MEMFS_DIRENTRY, * PHB_MEMFS_DIRENTRY;
 
 static HB_MEMFS_FS s_fs;
 static HB_ERRCODE  s_error;
@@ -365,10 +370,11 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewN
 
 HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char * pszAttr )
 {
+   PHB_MEMFS_DIRENTRY pDirEn = NULL;
    char *   pszFree = NULL;
    PHB_ITEM pDirArray;
    HB_SIZE  nLen;
-   HB_ULONG ul;
+   HB_ULONG ulCount, ul;
 
    HB_SYMBOL_UNUSED( pszAttr );
 
@@ -387,25 +393,38 @@ HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char 
       pszDirSpec = HB_OS_ALLFILE_MASK;
 
    HB_MEMFSMT_LOCK();
-   pDirArray = hb_itemArrayNew( s_fs.ulInodeCount );
+   ulCount = s_fs.ulInodeCount;
    nLen = 0;
-   for( ul = 0; ul < s_fs.ulInodeCount; ul++ )
+   if( ulCount )
    {
-      if( hb_strMatchFile( s_fs.pInodes[ ul ]->szName, pszDirSpec ) )
+      pDirEn = ( PHB_MEMFS_DIRENTRY ) hb_xgrab( ulCount * sizeof( HB_MEMFS_DIRENTRY ) );
+      for( ul = 0; ul < ulCount; ul++ )
       {
-         PHB_ITEM pSubarray = hb_arrayGetItemPtr( pDirArray, ++nLen );
-
-         hb_arrayNew    ( pSubarray, F_LEN );
-         hb_arraySetC   ( pSubarray, F_NAME, s_fs.pInodes[ ul ]->szName );
-         hb_arraySetNInt( pSubarray, F_SIZE, s_fs.pInodes[ ul ]->llSize );
-         hb_arraySetTDT ( pSubarray, F_DATE, 0, 0 );
-         hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
-         hb_arraySetC   ( pSubarray, F_ATTR, "" );
+         if( hb_strMatchFile( s_fs.pInodes[ ul ]->szName, pszDirSpec ) )
+         {
+            pDirEn[ nLen ].szName = hb_strdup( s_fs.pInodes[ ul ]->szName );
+            pDirEn[ nLen ].llSize = s_fs.pInodes[ ul ]->llSize;
+            nLen++;
+         }
       }
    }
    HB_MEMFSMT_UNLOCK();
-   hb_arraySize( pDirArray, nLen );
 
+   pDirArray = hb_itemArrayNew( nLen );
+   for( ul = 0; ( HB_SIZE ) ul < nLen; ul++ )
+   {
+      PHB_ITEM pSubarray = hb_arrayGetItemPtr( pDirArray, ++nLen );
+
+      hb_arrayNew    ( pSubarray, F_LEN );
+      hb_arraySetCPtr( pSubarray, F_NAME, pDirEn[ ul ].szName );
+      hb_arraySetNInt( pSubarray, F_SIZE, pDirEn[ ul ].llSize );
+      hb_arraySetTDT ( pSubarray, F_DATE, 0, 0 );
+      hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
+      hb_arraySetC   ( pSubarray, F_ATTR, "" );
+   }
+
+   if( pDirEn )
+      hb_xfree( pDirEn );
    if( pszFree )
       hb_xfree( pszFree );
 

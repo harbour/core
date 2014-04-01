@@ -597,13 +597,9 @@ static HB_GARBAGE_FUNC( PHB_CURL_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( hb_curl_ptr && *hb_curl_ptr )
    {
-      PHB_CURL hb_curl = *hb_curl_ptr;
-
-      /* set pointer to NULL to avoid multiple freeing */
-      *hb_curl_ptr = NULL;
-
       /* Destroy the object */
-      PHB_CURL_free( hb_curl, HB_TRUE );
+      PHB_CURL_free( *hb_curl_ptr, HB_TRUE );
+      *hb_curl_ptr = NULL;
    }
 }
 
@@ -672,13 +668,9 @@ HB_FUNC( CURL_EASY_CLEANUP )
 
       if( ph && *ph )
       {
-         PHB_CURL hb_curl = ( PHB_CURL ) *ph;
-
-         /* set pointer to NULL to avoid multiple freeing */
-         *ph = NULL;
-
          /* Destroy the object */
-         PHB_CURL_free( hb_curl, HB_TRUE );
+         PHB_CURL_free( ( PHB_CURL ) *ph, HB_TRUE );
+         *ph = NULL;
       }
    }
    else

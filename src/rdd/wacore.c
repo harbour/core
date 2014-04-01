@@ -498,7 +498,7 @@ void hb_rddCloseDetachedAreas( void )
    PHB_ITEM pDetachedArea;
 
    /* protect by critical section access to s_pDetachedAreas array */
-   hb_threadEnterCriticalSection( &s_waMtx );
+   hb_threadEnterCriticalSectionGC( &s_waMtx );
    pDetachedArea = s_pDetachedAreas;
    s_pDetachedAreas = NULL;
    /* leave critical section */
@@ -545,7 +545,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    hb_rddSelectWorkAreaNumber( iArea );
 
    /* protect by critical section access to s_pDetachedAreas array */
-   hb_threadEnterCriticalSection( &s_waMtx );
+   hb_threadEnterCriticalSectionGC( &s_waMtx );
    if( ! s_pDetachedAreas )
    {
       s_pDetachedAreas = hb_itemArrayNew( 1 );
@@ -610,7 +610,7 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
    }
 
    /* protect by critical section access to s_pDetachedAreas array */
-   hb_threadEnterCriticalSection( &s_waMtx );
+   hb_threadEnterCriticalSectionGC( &s_waMtx );
    for( ;; )
    {
       if( s_pDetachedAreas )
@@ -677,7 +677,7 @@ PHB_ITEM hb_rddDetachedList( void )
 
    pArray = hb_itemArrayNew( 0 );
    /* protect by critical section access to s_pDetachedAreas array */
-   hb_threadEnterCriticalSection( &s_waMtx );
+   hb_threadEnterCriticalSectionGC( &s_waMtx );
    if( s_pDetachedAreas )
    {
       HB_SIZE nLen = hb_arrayLen( s_pDetachedAreas ), nPos;

@@ -76,20 +76,20 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    LOCAL oError
    LOCAL lError := .F.
 
-   IF HB_ISSTRING( xWhile )
-      bWhileBlock := hb_macroBlock( xWhile )
-      lRest := .T.
-   ELSEIF HB_ISEVALITEM( xWhile )
+   IF HB_ISEVALITEM( xWhile )
       bWhileBlock := xWhile
+      lRest := .T.
+   ELSEIF HB_ISSTRING( xWhile ) .AND. ! Empty( xWhile )
+      bWhileBlock := hb_macroBlock( xWhile )
       lRest := .T.
    ELSE
       bWhileBlock := {|| .T. }
    ENDIF
 
-   IF HB_ISSTRING( xFor )
-      bForBlock := hb_macroBlock( xFor )
-   ELSEIF HB_ISEVALITEM( xFor )
+   IF HB_ISEVALITEM( xFor )
       bForBlock := xFor
+   ELSEIF HB_ISSTRING( xFor ) .AND. ! Empty( xFor )
+      bForBlock := hb_macroBlock( xFor )
    ELSE
       bForBlock := {|| .T. }
    ENDIF
@@ -120,16 +120,17 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
 
    BEGIN SEQUENCE
 
-      IF Empty( xKey )
-         xKey := ordKey()
-      ENDIF
-
-      IF HB_ISSTRING( xKey )
-         bKeyBlock := hb_macroBlock( xKey )
-      ELSEIF HB_ISEVALITEM( xKey )
+      IF HB_ISEVALITEM( xKey )
          bKeyBlock := xKey
       ELSE
-         bKeyBlock := {|| .T. }
+         IF Empty( xKey )
+            xKey := ordKey()
+         ENDIF
+         IF HB_ISSTRING( xKey ) .AND. ! Empty( xKey )
+            bKeyBlock := hb_macroBlock( xKey )
+         ELSE
+            bKeyBlock := {|| NIL }
+         ENDIF
       ENDIF
 
       aGetField := {}

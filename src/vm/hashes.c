@@ -88,16 +88,31 @@ static HB_GARBAGE_FUNC( hb_hashGarbageRelease )
 
    if( pBaseHash->nSize > 0 )
    {
-      PHB_HASHPAIR pPairs = pBaseHash->pPairs;
-      HB_SIZE nLen = pBaseHash->nLen;
+      while( pBaseHash->nLen )
+      {
+         PHB_ITEM pKey, pVal;
 
-      /*
-       * clear the pBaseHash->pPairs to avoid infinite loop in cross
-       * referenced items when pBaseArray is not freed due to buggy
-       * object destructor [druzus]
-       */
-      pBaseHash->pPairs = NULL;
-      pBaseHash->nLen  = 0;
+         pBaseHash->nLen--;
+         pKey = &pBaseHash->pPairs[ pBaseHash->nLen ].key;
+         pVal = &pBaseHash->pPairs[ pBaseHash->nLen ].value;
+
+         /* small hack for buggy destructors in hash items */
+         pBaseHash->iFlags |= HB_HASH_RESORT;
+
+         if( HB_IS_GCITEM( pKey ) && HB_IS_GCITEM( pVal ) )
+         {
+            hb_itemRawMove( hb_stackAllocItem(), pVal );
+            hb_itemClear( pKey );
+            hb_stackPop();
+         }
+         else
+         {
+            if( HB_IS_COMPLEX( pKey ) )
+               hb_itemClear( pKey );
+            if( HB_IS_COMPLEX( pVal ) )
+               hb_itemClear( pVal );
+         }
+      }
 
       if( pBaseHash->pnPos )
       {
@@ -105,15 +120,13 @@ static HB_GARBAGE_FUNC( hb_hashGarbageRelease )
          pBaseHash->pnPos = NULL;
       }
 
-      while( nLen-- )
+      if( pBaseHash->pPairs )
       {
-         if( HB_IS_COMPLEX( &pPairs[ nLen ].key ) )
-            hb_itemClear( &pPairs[ nLen ].key );
-         if( HB_IS_COMPLEX( &pPairs[ nLen ].value ) )
-            hb_itemClear( &pPairs[ nLen ].value );
+         hb_xfree( pBaseHash->pPairs );
+         pBaseHash->pPairs = NULL;
       }
-      hb_xfree( pPairs );
    }
+
    if( pBaseHash->pDefault )
    {
       PHB_ITEM pDefault = pBaseHash->pDefault;
