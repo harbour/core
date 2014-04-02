@@ -697,7 +697,8 @@ static const HB_FILE_FUNCS s_fileFuncs =
    s_fileHandle
 };
 
-typedef void * ( * HB_FILE_FUNC )( PHB_FILE );
+typedef HB_BOOL ( * HB_FILE_FUNC )( PHB_FILE_FUNCS pFuncs, const char * );
+#define HB_FILE_FUNC_COUNT ( sizeof( HB_FILE_FUNCS ) / sizeof( HB_FILE_FUNC ) )
 
 /* IOUSR_Register( <aMethods>, <cPrefix> ) */
 HB_FUNC( IOUSR_REGISTER )
@@ -709,8 +710,8 @@ HB_FUNC( IOUSR_REGISTER )
    {
       HB_SIZE nMethods = hb_arrayLen( pMthItm ), nAt;
 
-      if( nMethods > IOUSR_METHODCOUNT )
-         nMethods = IOUSR_METHODCOUNT;
+      if( nMethods > HB_MIN( IOUSR_METHODCOUNT, HB_FILE_FUNC_COUNT ) )
+         nMethods = HB_MIN( IOUSR_METHODCOUNT, HB_FILE_FUNC_COUNT );
 
       for( nAt = 1; nAt <= nMethods; ++nAt )
       {
@@ -729,8 +730,8 @@ HB_FUNC( IOUSR_REGISTER )
             const HB_FILE_FUNC * pDummyFunc;
             HB_FILE_FUNC * pFunction;
 
-            pDummyFunc = ( const HB_FILE_FUNC * ) &s_fileFuncs.Accept;
-            pFunction = ( HB_FILE_FUNC * ) &pIO->funcs.Accept;
+            pDummyFunc = &s_fileFuncs.Accept;
+            pFunction = &pIO->funcs.Accept;
             for( nAt = 1; nAt <= nMethods; ++nAt, pDummyFunc++, pFunction++ )
             {
                pIO->prg_funcs[ nAt - 1 ] = hb_arrayGetSymbol( pMthItm, nAt );
