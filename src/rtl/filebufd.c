@@ -450,7 +450,7 @@ static const HB_FILE_FUNCS s_fileFuncs =
    s_fileHandle
 };
 
-typedef void * ( * HB_FILE_FUNC )( PHB_FILE );
+typedef HB_BOOL ( * HB_FILE_FUNC )( PHB_FILE_FUNCS pFuncs, const char * );
 #define HB_FILE_FUNC_COUNT ( sizeof( HB_FILE_FUNCS ) / sizeof( HB_FILE_FUNC ) )
 
 HB_BOOL hb_fileRegisterPart( HB_FILE_FUNCS * pFuncs )
@@ -459,8 +459,8 @@ HB_BOOL hb_fileRegisterPart( HB_FILE_FUNCS * pFuncs )
    HB_FILE_FUNC * pFunction;
    int iCount;
 
-   pDummyFunc = ( const HB_FILE_FUNC * ) &s_fileFuncs.Accept;
-   pFunction = ( HB_FILE_FUNC * ) pFuncs;
+   pDummyFunc = &s_fileFuncs.Accept;
+   pFunction = &pFuncs->Accept;
 
    for( iCount = 0; iCount < ( int ) HB_FILE_FUNC_COUNT;
         iCount++, pDummyFunc++, pFunction++ )
