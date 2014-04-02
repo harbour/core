@@ -101,6 +101,8 @@ static HB_GARBAGE_FUNC( hb_hashGarbageRelease )
 
          if( HB_IS_GCITEM( pKey ) && HB_IS_GCITEM( pVal ) )
          {
+            HB_STACK_TLS_PRELOAD
+
             hb_itemRawMove( hb_stackAllocItem(), pVal );
             hb_itemClear( pKey );
             hb_stackPop();
