@@ -372,7 +372,8 @@ static long s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
          l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, 1000 );
       if( l <= 0 )
       {
-         if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
+         if( l == 0 ||
+             hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
              hb_vmRequestQuery() != 0 ||
              ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
             break;
