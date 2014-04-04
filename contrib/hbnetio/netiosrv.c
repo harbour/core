@@ -1449,11 +1449,6 @@ HB_FUNC( NETIO_SERVER )
             case NETIO_PROCW:
             case NETIO_FUNC:
             case NETIO_FUNCCTRL:
-               if( ! conn->rpc )
-               {
-                  errCode = NETIO_ERR_UNSUPPORTED;
-                  break;
-               }
                size = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
                if( size < 2 )
                   errCode = NETIO_ERR_WRONG_PARAM;
@@ -1463,6 +1458,8 @@ HB_FUNC( NETIO_SERVER )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size );
                   if( s_srvRecvAll( conn, msg, size ) != size )
                      errCode = NETIO_ERR_READ;
+                  else if( ! conn->rpc )
+                     errCode = NETIO_ERR_UNSUPPORTED;
                   else
                   {
                      const char * data = ( const char * ) msg;
