@@ -41,6 +41,8 @@
   - Use platform native newline (CRLF or LF)
 - See this good guideline on how to contribute:
   <https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md>
+- And this:
+  <https://guides.github.com/overviews/os-contributing/>
 
 
 # Troubleshooting
