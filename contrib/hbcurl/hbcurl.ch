@@ -260,6 +260,8 @@
 #define HB_CURLOPT_EXPECT_100_TIMEOUT_MS      210
 #define HB_CURLOPT_SSL_ENABLE_ALPN            211
 #define HB_CURLOPT_SSL_ENABLE_NPN             212
+#define HB_CURLOPT_HEADEROPT                  213
+#define HB_CURLOPT_PROXYHEADER                214
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -367,6 +369,10 @@
 #define HB_CURL_IPRESOLVE_V4                  1  /* resolve to ipv4 addresses */
 #define HB_CURL_IPRESOLVE_V6                  2  /* resolve to ipv6 addresses */
 
+/* HB_CURLOPT_HEADEROPT */
+#define HB CURLHEADER_UNIFIED                 0
+#define HB_CURLHEADER_SEPARATE                1
+
 /* HB_CURLOPT_SSLVERSION option */
 #define HB_CURL_SSLVERSION_DEFAULT            0
 #define HB_CURL_SSLVERSION_TLSv1              1
@@ -376,7 +382,7 @@
 #define HB_CURL_SSLVERSION_TLSv1_1            5
 #define HB_CURL_SSLVERSION_TLSv1_2            6
 
-/*  HB_CURLOPT_SSH_AUTH_TYPES option */
+/* HB_CURLOPT_SSH_AUTH_TYPES option */
 #define HB_CURL_CURLSSH_AUTH_ANY              hb_bitNot( 0 )      /* all types supported by the server */
 #define HB_CURL_CURLSSH_AUTH_NONE             0                   /* none allowed, silly but complete */
 #define HB_CURL_CURLSSH_AUTH_PUBLICKEY        1                   /* public/private key files */
@@ -430,7 +436,6 @@
 
 /* curl_easy_getinfo() parameters.
    NOTE: The actual values may be different from the libcurl equivalent. */
-
 #define HB_CURLINFO_EFFECTIVE_URL             1
 #define HB_CURLINFO_RESPONSE_CODE             2
 #define HB_CURLINFO_HTTP_CONNECTCODE          3
