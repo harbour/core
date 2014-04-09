@@ -1,6 +1,6 @@
 diff -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
---- pcre.orig/pcrejitc.c	2014-02-03 09:05:44.496039042 +0100
-+++ pcre/pcrejitc.c	2014-02-03 09:05:44.496039042 +0100
+--- pcre.orig/pcrejitc.c	2014-04-09 22:19:25.014804500 +0200
++++ pcre/pcrejitc.c	2014-04-09 22:19:25.560773000 +0200
 @@ -59,7 +59,7 @@
  #define SLJIT_VERBOSE 0
  #define SLJIT_DEBUG 0
@@ -11,9 +11,9 @@ diff -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
  #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
  #error Unsupported architecture
 diff -urN pcre.orig/sjconfi.h pcre/sjconfi.h
---- pcre.orig/sjconfi.h	2014-02-03 09:05:44.536039042 +0100
-+++ pcre/sjconfi.h	2014-02-03 09:05:44.536039042 +0100
-@@ -323,8 +323,12 @@
+--- pcre.orig/sjconfi.h	2014-04-09 22:19:25.108399100 +0200
++++ pcre/sjconfi.h	2014-04-09 22:19:25.560773000 +0200
+@@ -333,8 +333,12 @@
  
  #if defined(__GNUC__) && !defined(__APPLE__)
  
