@@ -16,7 +16,7 @@
 lzf_c.c
 lzf_d.c
 
-# ORIGIN http://liblzf.plan9.de
+# ORIGIN http://oldhome.schmorp.de/marc/liblzf.html
 # VER    3.6
 # URL    http://dist.schmorp.de/liblzf/liblzf-3.6.tar.gz
 # DIFF   liblzf.dif
