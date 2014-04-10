@@ -1,14 +1,14 @@
 @echo off
 
 rem ---------------------------------------------------------------
-rem Copyright 2010-2013 Viktor Szakats (vszakats.net/harbour)
+rem Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
 rem See COPYING.txt for licensing terms.
 rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
 rem REQUIREMENTS FOR BUILD MACHINE:
 rem   - online 24/7 (reliable)
-rem   - Windows XP or higher (server preferred)
+rem   - Windows 7 or higher (server preferred)
 rem   - 8GB free disk space
 rem   - downstream internet traffic 100MB per day
 rem   - upstream internet traffic 100MB per day
@@ -16,7 +16,7 @@ rem   - 1-5 hours CPU time per day
 rem   - multi-core CPU recommended
 rem   - admin rights for MSVC setup
 rem   - admin rights for Scheduled Task setup
-rem   - remote admin (via RDP or VNC protocol, RDP preferred)
+rem   - remote admin (via RDP protocol)
 rem
 rem NOTES:
 rem   - The first run under a new (or reinstalled) user account

@@ -733,7 +733,7 @@ Windows 98's DC
 
 Thanks to Anatole Kolotovkin who reported this bug in Win98, where
 GDI objects are display incorrectly after opening some 5 windows or
-more. (In WinXP this bug doesn't occur.)
+more. (On Windows XP this bug doesn't occur.)
 
 This bug has now been fixed in current release.
 

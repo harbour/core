@@ -101,7 +101,7 @@ For all platforms you'll need:
 
 Platform specific prerequisites:
 
-1. Windows XP or upper system is recommended to build Harbour.
+1. Windows 7 or upper system is recommended to build Harbour.
 2. Make sure to have your C compiler of choice installed
    in PATH. Refer to your C compiler installation and setup
    instructions for details. It's recommended to make sure no tools

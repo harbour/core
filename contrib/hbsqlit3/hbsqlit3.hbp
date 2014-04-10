@@ -5,7 +5,7 @@
 
 -w3 -es2
 
--depurlbase=sqlite3:https://sqlite.org/
+-depurlbase=sqlite3:http://sqlite.org/
 -deppkgname=sqlite3:libsqlite3-dev{deb}
 -depkeyhead=sqlite3:sqlite3.h
 -depcontrol=sqlite3:local{HB_BUILD_3RDEXT='no'}
