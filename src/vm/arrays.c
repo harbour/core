@@ -120,8 +120,6 @@ static HB_GARBAGE_FUNC( hb_arrayGarbageRelease )
          HB_STACK_TLS_PRELOAD
          hb_arrayPushBase( pBaseArray );
          hb_objDestructorCall( hb_stackItemFromTop( -1 ) );
-//         /* Clear object properities before hb_stackPop(), [druzus] */
-//         pBaseArray->uiClass = 0;
          hb_stackPop();
       }
 

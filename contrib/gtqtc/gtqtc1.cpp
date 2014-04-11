@@ -2474,6 +2474,10 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent 
     */
    /* setAttribute( Qt::WA_InputMethodEnabled ); */
 
+#if defined( HB_OS_ANDROID ) || defined( HB_OS_WIN_CE )
+   setInputMethodHints( Qt::ImhNoPredictiveText );
+#endif
+
    setFocusPolicy( Qt::StrongFocus );
    setMouseTracking( true );
 
@@ -3056,6 +3060,25 @@ bool QTConsole::event( QEvent * event )
    }
 
    return QWidget::event( event );
+}
+
+void QTConsole::inputMethodEvent( QInputMethodEvent * event )
+{
+   /* It's for SoftwareInputPanel in Andorid. */
+
+   QString qStr = event->commitString();
+
+   if( qStr.size() > 0 )
+   {
+      for( int i = 0; i < qStr.size(); ++i )
+      {
+         HB_WCHAR wc = qStr[ i ].unicode();
+         hb_gt_qtc_addKeyToInputQueue( pQTC, HB_INKEY_NEW_UNICODE( wc ) );
+      }
+      event->accept();
+   }
+   else
+      QWidget::inputMethodEvent( event );
 }
 
 void QTConsole::keyReleaseEvent( QKeyEvent * event )
