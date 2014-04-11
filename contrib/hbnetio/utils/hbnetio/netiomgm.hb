@@ -22,6 +22,8 @@
  *
  */
 
+#include "hbver.ch"
+
 #define _NETIOMGM_IPV4_DEF  "127.0.0.1"
 #define _NETIOMGM_PORT_DEF  2940
 
@@ -326,11 +328,20 @@ STATIC FUNCTION XToStrX( xValue )
 
 STATIC PROCEDURE cmdAbout( netiocli )
 
-   hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) )
+   hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + HBRawVersion() )
    hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2014, Viktor Szakats" )
    hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
 
    RETURN
+
+STATIC FUNCTION HBRawVersion()
+   RETURN hb_StrFormat( "%d.%d.%d%s (%s) (%s)", ;
+      hb_Version( HB_VERSION_MAJOR ), ;
+      hb_Version( HB_VERSION_MINOR ), ;
+      hb_Version( HB_VERSION_RELEASE ), ;
+      hb_Version( HB_VERSION_STATUS ), ;
+      hb_Version( HB_VERSION_CHANGELOG_ID ), ;
+      "20" + Transform( hb_Version( HB_VERSION_REVISION ), "99-99-99 99:99" ) )
 
 STATIC PROCEDURE cmdHelp( netiocli )
 

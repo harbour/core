@@ -322,7 +322,7 @@ static char * hb_pp_escapeString( char * szString )
    return szResult;
 }
 
-static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeLogID, char * szLastEntry )
+static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szLastEntry, char * szRepoVer )
 {
    int iResult = 0;
    char * pszEnv;
@@ -351,14 +351,14 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
                " * and is covered by the same license as Harbour PP\n"
                " */\n\n" );
 
-      fprintf( fout, "#define HB_VER_REVID             %d\n", iRevID );
-
-      if( szChangeLogID )
+      if( szRepoVer )
       {
-         pszEscaped = hb_pp_escapeString( szChangeLogID );
+         pszEscaped = hb_pp_escapeString( szRepoVer );
          fprintf( fout, "#define HB_VER_CHLID             \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
       }
+
+      fprintf( fout, "#define HB_VER_REVID             %d\n", iRevID );
 
       if( szLastEntry )
       {
@@ -437,8 +437,7 @@ static char * hb_fsFileFind( const char * pszFileMask )
 }
 
 static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
-                                 int iQuiet, int * piRevID,
-                                 char ** pszChangeLogID, char ** pszLastEntry )
+                                 int iQuiet, int * piRevID, char ** pszLastEntry )
 {
    char * pszFree = NULL;
    int iResult = 0;
@@ -512,46 +511,20 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    else
    {
       char szLine[ 256 ];
-      char szId[ 128 ];
       char szLog[ 128 ];
-      char * szFrom, * szTo;
       int iLen;
 
       if( iQuiet == 0 )
          fprintf( stdout, "Reading ChangeLog file: %s\n", pszFileName );
 
-      *szId = *szLog = '\0';
+      *szLog = '\0';
 
       do
       {
          if( ! fgets( szLine, sizeof( szLine ), file_in ) )
             break;
 
-         if( ! *szId )
-         {
-            szFrom = strstr( szLine, "$" "Id" );
-            if( szFrom )
-            {
-               szFrom += 3;
-               szTo = strchr( szFrom, '$' );
-               if( szTo )
-               {
-                  /* Is it tarball source package? */
-                  if( szTo == szFrom )
-                  {
-                     /* we do not have revision number :-( */
-                     hb_strncpy( szId, "unknown -1 (source tarball without keyword expanding)", sizeof( szId ) - 1 );
-                  }
-                  else if( szTo - szFrom > 3 && szTo[ -1 ] == ' ' &&
-                           szFrom[ 0 ] == ':' && szFrom[ 1 ] == ' ' )
-                  {
-                     szTo[ -1 ] = '\0';
-                     hb_strncpy( szId, szFrom + 2, sizeof( szId ) - 1 );
-                  }
-               }
-            }
-         }
-         else if( ! *szLog )
+         if( ! *szLog )
          {
             if( szLine[ 4 ] == '-' && szLine[ 7 ] == '-' &&
                 szLine[ 10 ] == ' ' && szLine[ 13 ] == ':' )
@@ -584,13 +557,6 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          szLine[ ++iLen ] = '\0';
          hb_pp_addDefine( pState, "HB_VER_LENTRY", szLine );
          *pszLastEntry = hb_strdup( szLog );
-
-         hb_strncpy( szLine + 1, szId, sizeof( szLine ) - 3 );
-         iLen = ( int ) strlen( szLine );
-         szLine[ iLen ] = '"';
-         szLine[ ++iLen ] = '\0';
-         hb_pp_addDefine( pState, "HB_VER_CHLID", szLine );
-         *pszChangeLogID = hb_strdup( szId );
 
          if( strlen( szLog ) >= 16 )
          {
@@ -654,6 +620,49 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    return iResult;
 }
 
+static int hb_pp_parseRepoVer( PHB_PP_STATE pState, const char * pszFileName,
+                               int iQuiet, char ** pszRepoVer )
+{
+   FILE * file_in;
+
+   char szLine[ 256 ];
+   char szId[ 128 ];
+   int iLen;
+
+   *szId = '\0';
+
+   file_in = hb_fopen( pszFileName, "r" );
+   if( ! file_in )
+   {
+      if( iQuiet < 2 )
+         fprintf( stderr, "'%s' not found. Skipping.\n", pszFileName );
+   }
+   else
+   {
+      if( iQuiet == 0 )
+         fprintf( stdout, "Reading repository revision file: %s\n", pszFileName );
+
+      fgets( szId, sizeof( szId ), file_in );
+      fclose( file_in );
+   }
+
+   iLen = ( int ) strlen( szId );
+   if( iLen && szId[ iLen - 1 ] == '\r' )
+      szId[ --iLen ] = '\0';
+   if( iLen && szId[ iLen - 1 ] == '\n' )
+      szId[ --iLen ] = '\0';
+
+   *szLine = '"';
+   hb_strncpy( szLine + 1, szId, sizeof( szLine ) - 3 );
+   iLen = ( int ) strlen( szLine );
+   szLine[ iLen ] = '"';
+   szLine[ ++iLen ] = '\0';
+   hb_pp_addDefine( pState, "HB_VER_CHLID", szLine );
+   *pszRepoVer = hb_strdup( szId );
+
+   return 0;
+}
+
 /*
  * ppgen only functions
  */
@@ -666,6 +675,7 @@ static void hb_pp_usage( char * szName )
            "          -i<path>      \tadd #include file search path\n"
            "          -u[<file>]    \tuse command def set in <file> (or none)\n"
            "          -c[<file>]    \tlook for ChangeLog file\n"
+           "          -r[<file>]    \tlook for repo revision file\n"
            "          -o<file>      \tcreates .c file with PP rules\n"
            "          -v<file>      \tcreates .h file with version information\n"
            "          -w            \twrite preprocessed (.ppo) file\n"
@@ -677,9 +687,9 @@ static void hb_pp_usage( char * szName )
 int main( int argc, char * argv[] )
 {
    char * szFile = NULL, * szRuleFile = NULL, * szVerFile = NULL;
-   char * szStdCh = NULL, * szLogFile = NULL, * szInclude;
-   HB_BOOL fWrite = HB_FALSE, fChgLog = HB_FALSE;
-   char * szChangeLogID = NULL, * szLastEntry = NULL;
+   char * szStdCh = NULL, * szLogFile = NULL, * szRepoVerFile = NULL, * szInclude;
+   HB_BOOL fWrite = HB_FALSE, fChgLog = HB_FALSE, fRepoVer = HB_FALSE;
+   char * szRepoVer = NULL, * szLastEntry = NULL;
    int iRevID = 0, iResult = 0, iQuiet = 0, i;
    char * szPPRuleFuncName = NULL;
    PHB_PP_STATE pState;
@@ -746,6 +756,13 @@ int main( int argc, char * argv[] )
                   fChgLog = HB_TRUE;
                   if( argv[ i ][ 2 ] )
                      szLogFile = argv[ i ] + 2;
+                  break;
+
+               case 'r':
+               case 'R':
+                  fRepoVer = HB_TRUE;
+                  if( argv[ i ][ 2 ] )
+                     szRepoVerFile = argv[ i ] + 2;
                   break;
 
                case 'i':
@@ -830,14 +847,17 @@ int main( int argc, char * argv[] )
 
          if( fChgLog )
             iResult = hb_pp_parseChangelog( pState, szLogFile, iQuiet,
-                                            &iRevID, &szChangeLogID, &szLastEntry );
+                                            &iRevID, &szLastEntry );
+         if( fRepoVer )
+            iResult = hb_pp_parseRepoVer( pState, szRepoVerFile, iQuiet,
+                                          &szRepoVer );
 
          if( iResult == 0 )
             iResult = hb_pp_preprocesfile( pState, szRuleFile, szPPRuleFuncName );
 
-         if( iResult == 0 && szVerFile )
-            iResult = hb_pp_generateVerInfo( szVerFile, iRevID,
-                                             szChangeLogID, szLastEntry );
+         if( iResult == 0 && szVerFile && szRepoVerFile )
+            iResult = hb_pp_generateVerInfo( szVerFile, iRevID, szLastEntry, szRepoVer );
+
          if( iResult == 0 && hb_pp_errorCount( pState ) > 0 )
             iResult = 1;
       }
@@ -850,8 +870,8 @@ int main( int argc, char * argv[] )
       iResult = 1;
    }
 
-   if( szChangeLogID )
-      hb_xfree( szChangeLogID );
+   if( szRepoVer )
+      hb_xfree( szRepoVer );
    if( szLastEntry )
       hb_xfree( szLastEntry );
 

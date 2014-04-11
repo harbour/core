@@ -1803,14 +1803,15 @@ ifeq ($(HB_INIT_DONE),)
    ifeq ($(ROOT),./)
       ifneq ($(wildcard .git),)
          ifneq ($(call find_in_path,git),)
-            _tmp := $(shell git diff --name-only --quiet)
-            ifneq ($(_tmp),)
+            ifneq ($(shell git diff --name-only --quiet),)
                $(info ! === WARNING: Locally modified source code ===)
             endif
-            _tmp := $(shell git rev-parse --short HEAD)
-            $(info ! GIT_REVISION: $(_tmp))
+            $(info ! GIT_REVISION: $(shell git rev-parse --short HEAD))
          endif
       endif
+   endif
+   ifneq ($(wildcard $(TOP)$(ROOT).git),)
+      $(shell git rev-parse --short HEAD > $(TOP)$(ROOT)include$(DIRSEP)_repover.txt)
    endif
 endif
 

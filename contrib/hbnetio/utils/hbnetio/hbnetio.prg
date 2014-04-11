@@ -36,6 +36,7 @@
 
 #include "hbhrb.ch"
 #include "hbsocket.ch"
+#include "hbver.ch"
 
 #include "hbnetio.ch"
 
@@ -830,12 +831,21 @@ STATIC PROCEDURE ShowConfig( netiosrv, netiomgm )
 STATIC PROCEDURE HB_Logo()
 
    OutStd( ;
-      "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() + ;
+      "Harbour NETIO Server " + HBRawVersion() + hb_eol() + ;
       "Copyright (c) 2009-2014, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
       "http://harbour-project.org/" + hb_eol() + ;
       hb_eol() )
 
    RETURN
+
+STATIC FUNCTION HBRawVersion()
+   RETURN hb_StrFormat( "%d.%d.%d%s (%s) (%s)", ;
+      hb_Version( HB_VERSION_MAJOR ), ;
+      hb_Version( HB_VERSION_MINOR ), ;
+      hb_Version( HB_VERSION_RELEASE ), ;
+      hb_Version( HB_VERSION_STATUS ), ;
+      hb_Version( HB_VERSION_CHANGELOG_ID ), ;
+      "20" + Transform( hb_Version( HB_VERSION_REVISION ), "99-99-99 99:99" ) )
 
 STATIC PROCEDURE HB_Usage()
 
