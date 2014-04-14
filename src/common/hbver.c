@@ -1095,13 +1095,35 @@ char * hb_verCompiler( void )
 char * hb_verHarbour( void )
 {
    char * pszVersion;
+   char szDateRaw[ 11 ];
+   char szDate[ 17 ];
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_verHarbour()" ) );
 
+   hb_snprintf( szDateRaw, sizeof( szDateRaw ), "%d", hb_verCommitRev() );
+
+   szDate[ 0 ] = '2';
+   szDate[ 1 ] = '0';
+   szDate[ 2 ] = szDateRaw[ 0 ];
+   szDate[ 3 ] = szDateRaw[ 1 ];
+   szDate[ 4 ] = '-';
+   szDate[ 5 ] = szDateRaw[ 2 ];
+   szDate[ 6 ] = szDateRaw[ 3 ];
+   szDate[ 7 ] = '-';
+   szDate[ 8 ] = szDateRaw[ 4 ];
+   szDate[ 9 ] = szDateRaw[ 5 ];
+   szDate[ 10 ] = ' ';
+   szDate[ 11 ] = szDateRaw[ 6 ];
+   szDate[ 12 ] = szDateRaw[ 7 ];
+   szDate[ 13 ] = ':';
+   szDate[ 14 ] = szDateRaw[ 8 ];
+   szDate[ 15 ] = szDateRaw[ 9 ];
+   szDate[ 16 ] = '\0';
+
    pszVersion = ( char * ) hb_xgrab( 80 );
-   hb_snprintf( pszVersion, 80, "Harbour %d.%d.%d%s (r%d)",
+   hb_snprintf( pszVersion, 80, "Harbour %d.%d.%d%s (%s) (%s)",
                 HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS,
-                hb_verRevision() );
+                hb_verCommitID(), szDate );
 
    return pszVersion;
 }

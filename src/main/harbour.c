@@ -49,22 +49,22 @@
 #include "hbcomp.h"
 #include "hbverbld.h"
 
+/* Source repository ID string */
+const char * hb_verCommitID( void )
+{
+   return HB_VER_COMMIT_ID;
+}
+
 /* Source repository revision number */
-int hb_verRevision( void )
+int hb_verCommitRev( void )
 {
-   return HB_VER_REVID;
+   return HB_VER_COMMIT_REV;
 }
 
-/* ChangeLog ID string */
-const char * hb_verChangeLogID( void )
+/* Last commit string */
+const char * hb_verCommitInfo( void )
 {
-   return HB_VER_CHLID;
-}
-
-/* ChangeLog last entry string */
-const char * hb_verChangeLogLastEntry( void )
-{
-   return HB_VER_LENTRY;
+   return HB_VER_COMMIT_INFO;
 }
 
 /* build time C compiler flags in HB_USER_CFLAGS envvar */

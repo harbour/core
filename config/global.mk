@@ -1811,7 +1811,7 @@ ifeq ($(HB_INIT_DONE),)
       endif
    endif
    ifneq ($(wildcard $(TOP)$(ROOT).git),)
-      $(shell git rev-parse --short HEAD > $(TOP)$(ROOT)include$(DIRSEP)_repover.txt)
+      $(shell git show --summary --format="%%h%%n%%ai%%n%%an%%n%%ae" HEAD > $(TOP)$(ROOT)include$(DIRSEP)_repover.txt)
    endif
 endif
 

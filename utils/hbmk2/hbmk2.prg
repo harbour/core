@@ -16877,8 +16877,11 @@ STATIC PROCEDURE ShowHeader( hbmk )
          "Copyright © 2003-2007, Przemysław Czerpak" + e"\n"
    ELSE
 #endif
-      cText := ;
-         _SELF_NAME_LONG_ + " (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
+      cText := _SELF_NAME_LONG_
+      IF !( _SELF_NAME_ == _SELF_NAME_LONG_ )
+         cText += " (" + _SELF_NAME_ + ")"
+      ENDIF
+      cText += " " + HBRawVersion() + e"\n" + ;
          "Copyright © 1999-2014, Viktor Szakáts" + e"\n"
 #ifdef HARBOUR_SUPPORT
    ENDIF
@@ -16929,7 +16932,7 @@ STATIC FUNCTION HBRawVersion()
       hb_Version( HB_VERSION_MINOR ), ;
       hb_Version( HB_VERSION_RELEASE ), ;
       hb_Version( HB_VERSION_STATUS ), ;
-      hb_Version( HB_VERSION_CHANGELOG_ID ), ;
+      hb_Version( HB_VERSION_ID ), ;
       "20" + Transform( hb_Version( HB_VERSION_REVISION ), "99-99-99 99:99" ) )
 
 STATIC FUNCTION ExitCodeStr( nResult )

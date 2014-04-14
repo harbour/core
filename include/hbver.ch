@@ -59,8 +59,8 @@
 #define HB_VERSION_RELEASE          4
 #define HB_VERSION_STATUS           5
 #define HB_VERSION_REVISION         6
-#define HB_VERSION_CHANGELOG_LAST   7
-#define HB_VERSION_CHANGELOG_ID     8
+#define HB_VERSION_COMMIT_INFO      7
+#define HB_VERSION_ID               8
 #define HB_VERSION_PCODE_VER        9
 #define HB_VERSION_PCODE_VER_STR    10
 #define HB_VERSION_BUILD_DATE_STR   11
@@ -80,6 +80,11 @@
 #define HB_VERSION_CPU              24
 #define HB_VERSION_COMPILER_CPP     25
 #define HB_VERSION_MAX_             26
+
+#if defined( HB_LEGACY_LEVEL5 )
+#define HB_VERSION_CHANGELOG_LAST   HB_VERSION_COMMIT_INFO
+#define HB_VERSION_CHANGELOG_ID     HB_VERSION_ID
+#endif
 
 /* hb_Version( HB_VERSION_ENDIANNESS ) return values. */
 #define HB_VERSION_ENDIAN_LITTLE    1

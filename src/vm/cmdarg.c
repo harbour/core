@@ -854,42 +854,60 @@ void hb_cmdargProcess( void )
    }
 }
 
+/* Source repository ID string */
+const char * hb_verCommitID( void )
+{
+   return HB_VER_COMMIT_ID;
+}
+
 /* Source repository revision number */
-int hb_verRevision( void )
+int hb_verCommitRev( void )
 {
-   return HB_VER_REVID;
+   return HB_VER_COMMIT_REV;
 }
 
-/* ChangeLog ID string */
-const char * hb_verChangeLogID( void )
+/* Last commit string */
+const char * hb_verCommitInfo( void )
 {
-   return HB_VER_CHLID;
-}
-
-/* ChangeLog last entry string */
-const char * hb_verChangeLogLastEntry( void )
-{
-   return HB_VER_LENTRY;
+   return HB_VER_COMMIT_INFO;
 }
 
 #if defined( HB_LEGACY_LEVEL4 )
 
 /* Source repository revision number */
+int hb_verRevision( void )
+{
+   return HB_VER_COMMIT_REV;
+}
+
+/* Source repository revision number */
 int hb_verSvnID( void )
 {
-   return HB_VER_REVID;
+   return HB_VER_COMMIT_REV;
+}
+
+/* ChangeLog ID string */
+const char * hb_verChangeLogID( void )
+{
+   return HB_VER_COMMIT_ID;
 }
 
 /* ChangeLog ID string */
 const char * hb_verSvnChangeLogID( void )
 {
-   return HB_VER_CHLID;
+   return HB_VER_COMMIT_ID;
+}
+
+/* ChangeLog last entry string */
+const char * hb_verChangeLogLastEntry( void )
+{
+   return HB_VER_COMMIT_INFO;
 }
 
 /* ChangeLog last entry string */
 const char * hb_verSvnLastEntry( void )
 {
-   return HB_VER_LENTRY;
+   return HB_VER_COMMIT_INFO;
 }
 
 #endif

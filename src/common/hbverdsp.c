@@ -87,12 +87,12 @@ void hb_verBuildInfo( void )
       hb_xfree( pszPCode );
    }
 
-   hb_conOutErr( "ChangeLog last entry: ", 0 );
-   hb_conOutErr( hb_verChangeLogLastEntry(), 0 );
+   hb_conOutErr( "Commit info: ", 0 );
+   hb_conOutErr( hb_verCommitInfo(), 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "ChangeLog ID: ", 0 );
-   hb_conOutErr( hb_verChangeLogID(), 0 );
+   hb_conOutErr( "Commit ID: ", 0 );
+   hb_conOutErr( hb_verCommitID(), 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
    {
