@@ -1572,7 +1572,7 @@ Supported shells per host platforms:
 
      * Git (1.7 or upper) [multiplatform, free, open-source]
         * <http://git-scm.com/>
-        * <https://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git> (Windows binaries)
+        * <http://msysgit.github.io> (Windows binaries)
      * GitHub Client [multiplatform, free]
         * <https://windows.github.com/>
         * <https://mac.github.com/>
