@@ -1825,7 +1825,19 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          __extra_initenv( hbmk, aArgs, cParam )
          FOR EACH tmp IN aArgs
-            FixFuncCase( hbmk, tmp )
+            FOR EACH tmp1 IN FN_Expand( tmp, .T. )
+               FixFuncCase( hbmk, tmp1 )
+            NEXT
+         NEXT
+         RETURN _EXIT_OK
+
+      CASE cParamL == "-sanitize"
+
+         __extra_initenv( hbmk, aArgs, cParam )
+         FOR EACH tmp IN aArgs
+            FOR EACH tmp1 IN FN_Expand( tmp, .T. )
+               FixSanitize( tmp1 )
+            NEXT
          NEXT
          RETURN _EXIT_OK
 
@@ -16740,6 +16752,31 @@ STATIC FUNCTION GetCComments( cFile )
 
    RETURN cComments
 
+STATIC PROCEDURE FixSanitize( cFileName )
+
+   LOCAL cFile := StrTran( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ), hb_eol() )
+
+   FErase( cFileName )
+   hb_MemoWrit( hb_asciiLower( cFileName ), cFile )
+
+   RETURN
+
+#if 0
+STATIC FUNCTION RemoveEndingWhitespace( cFile )
+
+   LOCAL cResult := ""
+   LOCAL cLine
+
+   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
+      cResult += RTrim( cLine )
+      IF ! cLine:__enumIsLast()
+         cResult += hb_eol()
+      ENDIF
+   NEXT
+
+   RETURN cResult
+#endif
+
 #endif
 
 STATIC FUNCTION GetUILang()
@@ -17155,7 +17192,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-find <text>"       , H_( "list all known Harbour functions that contain <text> in their name, along with their package (case insensitive, accepts multiple values, can contain wildcard characters)" ) }, ;
       { "-doc <text>"        , H_( "show documentation for function[s]/command[s] in <text> [EXPERIMENTAL]" ) }, ;
       { "-docjson <text>"    , H_( "output documentation in JSON format for function[s]/command[s] in <text> [EXPERIMENTAL]" ) }, ;
-      { "-fixcase <.prg[s]>" , H_( "fix casing of Harbour function names to their 'official' format. Core functions and functions belonging to all active contribs/addons with an .hbx file will be processed. [EXPERIMENTAL]" ) }, ;
+      { "-fixcase <file[s]>" , H_( "fix casing of Harbour function names to their 'official' format. Core functions and functions belonging to all active contribs/addons with an .hbx file will be processed. [EXPERIMENTAL]" ) }, ;
+      { "-sanitize <file[s]>", H_( "convert filenames to lowercase, EOLs to platform native and remove EOF character, if present. [EXPERIMENTAL]" ) }, ;
       NIL, ; /* HARBOUR_SUPPORT */
       { "-hbmake=<file>"     , H_( "convert hbmake project <file> to .hbp file" ) }, ;
       { "-xbp=<file>"        , H_( "convert .xbp (xbuild) project <file> to .hbp file" ) }, ;

@@ -157,8 +157,7 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
    LOCAL aEnvList
    LOCAL cVer
 
-   cBIN := GetEnv( cEnvQT )
-   IF Empty( cBIN )
+   IF Empty( cBIN := GetEnv( cEnvQT ) )
 
       IF lPostfix
          cName += GetEnv( "HB_QTPOSTFIX" )
