@@ -14231,6 +14231,7 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
 
    STATIC sc_aException := { ;
       "multiple definition", ; /* gcc */
+      "in function", ; /* gcc */
       "duplicate symbol", ; /* clang */
       "already defined", ; /* msvc */
       "defined in both", ; /* bcc */
