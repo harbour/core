@@ -1811,7 +1811,11 @@ ifeq ($(HB_INIT_DONE),)
       endif
    endif
    ifneq ($(wildcard $(TOP)$(ROOT).git),)
-      $(shell git show --summary --format="%%h%%n%%ai%%n%%an%%n%%ae" HEAD > $(TOP)$(ROOT)include$(DIRSEP)_repover.txt)
+      ifneq ($(call find_in_path,git),)
+         $(shell git show --summary --format="%%h%%n%%ai%%n%%an%%n%%ae" HEAD > $(TOP)$(ROOT)include$(DIRSEP)_repover.txt)
+      else
+         $(info ! WARNING: git not found in PATH. Version information might not be accurate.)
+      endif
    endif
 endif
 
