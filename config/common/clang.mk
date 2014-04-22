@@ -31,7 +31,7 @@ CFLAGS += -I. -I$(HB_HOST_INC)
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Weverything
    CFLAGS += -Wno-padded -Wno-cast-align -Wno-float-equal -Wno-missing-prototypes
-   CFLAGS += -Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-documentation
+   CFLAGS += -Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-variadic-macros -Wno-documentation
    # these are potentially useful. -Wsign-conversion would require proper HB_SIZE/HB_ISIZ cleanup.
    CFLAGS += -Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast
 else
