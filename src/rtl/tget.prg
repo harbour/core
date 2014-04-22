@@ -1954,21 +1954,20 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    IF bVarBlock == NIL
       bVarBlock := iif( HB_ISSTRING( cVarName ), MemVarBlock( cVarName ), NIL )
    ENDIF
+   IF cColorSpec == NIL
 #ifdef HB_COMPAT_C53
-   IF cColorSpec == NIL
       cColorSpec := ;
-         hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + ;
-         hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," + ;
+         hb_ColorIndex( SetColor(), iif( Set( _SET_INTENSITY ), CLR_UNSELECTED, CLR_STANDARD ) ) + "," + ;
+         hb_ColorIndex( SetColor(), iif( Set( _SET_INTENSITY ), CLR_ENHANCED, CLR_STANDARD ) ) + "," + ;
          hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + ;
-         iif( IsDefColor(), iif( Set( _SET_INTENSITY ), "W+/N", "W/N" ), hb_ColorIndex( SetColor(), CLR_BACKGROUND ) )
-   ENDIF
+         iif( IsDefColor(), iif( Set( _SET_INTENSITY ), "W+/N", "W/N" ), ;
+            hb_ColorIndex( SetColor(), iif( Set( _SET_INTENSITY ), CLR_BACKGROUND, CLR_STANDARD ) ) )
 #else
-   IF cColorSpec == NIL
       cColorSpec := ;
-         hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + ;
-         hb_ColorIndex( SetColor(), CLR_ENHANCED )
-   ENDIF
+         hb_ColorIndex( SetColor(), iif( Set( _SET_INTENSITY ), CLR_UNSELECTED, CLR_STANDARD ) ) + "," + ;
+         hb_ColorIndex( SetColor(), iif( Set( _SET_INTENSITY ), CLR_ENHANCED, CLR_STANDARD ) )
 #endif
+   ENDIF
 
    ::nRow      := nRow
    ::nCol      := nCol

@@ -1054,6 +1054,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->hb_set_century = HB_FALSE;
    pSet->hb_set_prndevice = HB_FALSE;
    pSet->HB_SET_COLOR = ( char * ) hb_xgrab( HB_CLRSTR_LEN + 1 );
+   /* NOTE: color must be synced with the one in IsDefColor() function */
    hb_strncpy( pSet->HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", HB_CLRSTR_LEN );
    pSet->HB_SET_CONFIRM = HB_FALSE;
    pSet->HB_SET_CONSOLE = HB_TRUE;

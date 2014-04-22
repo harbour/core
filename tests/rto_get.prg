@@ -68,6 +68,7 @@ STATIC s_lRTEDetails
 STATIC s_lObjectDump
 
 PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
+
    LOCAL uNIL := NIL
    LOCAL nInt01 := 98
    LOCAL nInt02 := 0
@@ -87,6 +88,9 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    LOCAL nOldRow
    LOCAL nOldCol
+
+   LOCAL tmp1
+   LOCAL tmp2
 
    IF cArg01 == NIL
       cArg01 := ""
@@ -290,21 +294,21 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    // Edmer #1
 
-   cStr07 := Space(10)
+   cStr07 := Space( 10 )
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R   999 9999 999999",, )
    o:display()
    o:setFocus()
    TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
-   cStr07 := Space(10)
+   cStr07 := Space( 10 )
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R  999  9999 999999",, )
    o:display()
    o:setFocus()
    TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
-   cStr07 := Space(10)
+   cStr07 := Space( 10 )
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R  999 9999  999999",, )
    o:display()
    o:setFocus()
@@ -313,21 +317,21 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    //
 
-   cStr07 := Space(10)
+   cStr07 := Space( 10 )
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER   999 9999 999999",, )
    o:display()
    o:setFocus()
    TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
-   cStr07 := Space(10)
+   cStr07 := Space( 10 )
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER  999  9999 999999",, )
    o:display()
    o:setFocus()
    TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
-   cStr07 := Space(10)
+   cStr07 := Space( 10 )
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER  999 9999  999999",, )
    o:display()
    o:setFocus()
@@ -549,6 +553,38 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:Changed := .F. )
    TEST_LINE( o:Changed := .T. )
+
+   // Intensity
+
+   tmp1 := Set( _SET_INTENSITY )
+   tmp2 := SetColor()
+
+   Set( _SET_INTENSITY, .F. )
+   SetColor( "GR+/B,N/W,B,RB,R/W" )
+   cStr01 := Space( 1 )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" )
+   TEST_LINE( o:ColorSpec )
+
+   Set( _SET_INTENSITY, .T. )
+   SetColor( "GR+/B,N/W,B,RB,R/W" )
+   cStr01 := Space( 1 )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" )
+   TEST_LINE( o:ColorSpec )
+
+   Set( _SET_INTENSITY, .F. )
+   SetColor( "W/N,N/W,N/N,N/N,N/W" )
+   cStr01 := Space( 1 )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" )
+   TEST_LINE( o:ColorSpec )
+
+   Set( _SET_INTENSITY, .T. )
+   SetColor( "W/N,N/W,N/N,N/N,N/W" )
+   cStr01 := Space( 1 )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" )
+   TEST_LINE( o:ColorSpec )
+
+   Set( _SET_INTENSITY, tmp1 )
+   SetColor( tmp2 )
 
    // ColorSpec
 
