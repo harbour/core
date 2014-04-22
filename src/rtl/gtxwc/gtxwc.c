@@ -2292,8 +2292,6 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          case CH_NONE:
          case CH_IMG:
             break;
-         default:
-            break;
       }
       return HB_TRUE;
    }
@@ -2328,8 +2326,6 @@ static void hb_gt_xwc_ResetCharTrans( PXWND_DEF wnd )
          case CH_CHAR:
          case CH_CHBX:
          case CH_NONE:
-            break;
-         default:
             break;
       }
    }
