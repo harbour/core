@@ -754,7 +754,7 @@ HB_FUNC( IOUSR_REGISTER )
 /* IOUSR_SetError( [<nError> [, <nBase> ]] ) -> <nPrevError> */
 HB_FUNC( IOUSR_SETERROR )
 {
-   HB_ERRCODE errCode = hb_fsError();
+   HB_ERRCODE errCodePrev = hb_fsError();
 
    if( HB_ISNUM( 1 ) )
    {
@@ -764,5 +764,5 @@ HB_FUNC( IOUSR_SETERROR )
       hb_fsSetError( errCode );
    }
 
-   hb_retni( errCode );
+   hb_retni( errCodePrev );
 }
