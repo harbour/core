@@ -53,56 +53,56 @@
  */
 void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
 {
-   static const char * szOptions[] =
+   static const char * s_szOptions[] =
    {
-      "\nOptions:  %ca               automatic memvar declaration",
-      "\n          %cb               debug info",
-      "\n          %cbuild           display detailed version info",
-      "\n          %ccredits         display credits",
-      "\n          %cd<id>[=<val>]   #define <id>",
-      "\n          %ces[<level>]     set exit severity",
-      "\n          %cfn[:[l|u]|-]    set filename casing (l=lower u=upper)",
-      "\n          %cfd[:[l|u]|-]    set directory casing (l=lower u=upper)",
-      "\n          %cfp[:<char>]     set path separator",
-      "\n          %cfs[-]           turn filename space trimming on or off (default)",
-      "\n          %cg<type>         output type generated is <type> (see below)",
-      "\n          %cgc[<type>]      output type: C source (.c) (default)",
+      "\nOptions:  -a               automatic memvar declaration",
+      "\n          -b               debug info",
+      "\n          -build           display detailed version info",
+      "\n          -credits         display credits",
+      "\n          -d<id>[=<val>]   #define <id>",
+      "\n          -es[<level>]     set exit severity",
+      "\n          -fn[:[l|u]|-]    set filename casing (l=lower u=upper)",
+      "\n          -fd[:[l|u]|-]    set directory casing (l=lower u=upper)",
+      "\n          -fp[:<char>]     set path separator",
+      "\n          -fs[-]           turn filename space trimming on or off (default)",
+      "\n          -g<type>         output type generated is <type> (see below)",
+      "\n          -gc[<type>]      output type: C source (.c) (default)",
       "\n                           <type>: 0=compact (default) 1=normal 2=verbose",
       "\n                                   3=generate real C code",
-      "\n          %cgh              output type: Harbour Portable Object (.hrb)",
-      "\n          %cgd[.<destext>]  generate dependencies list into (.d) file",
-      "\n          %cge[<mode>]      error output <mode>: 0=Clipper (default)",
+      "\n          -gh              output type: Harbour Portable Object (.hrb)",
+      "\n          -gd[.<destext>]  generate dependencies list into (.d) file",
+      "\n          -ge[<mode>]      error output <mode>: 0=Clipper (default)",
       "\n                                                1=IDE friendly",
-      "\n          %ci<path>         #include file search path",
-      "\n          %ci[-|+]          disable/enable support for INCLUDE envvar",
-      "\n          %cj[<file>]       generate i18n gettext file (.pot)",
-      "\n          %ck               compilation mode (type -k? for more data)",
-      "\n          %cl               suppress line number information",
-      "\n          %cm               compile module only",
-      "\n          %cn[<type>]       no implicit starting procedure",
+      "\n          -i<path>         #include file search path",
+      "\n          -i[-|+]          disable/enable support for INCLUDE envvar",
+      "\n          -j[<file>]       generate i18n gettext file (.pot)",
+      "\n          -k               compilation mode (type -k? for more data)",
+      "\n          -l               suppress line number information",
+      "\n          -m               compile module only",
+      "\n          -n[<type>]       no implicit starting procedure",
       "\n                           <type>: 0=no implicit starting procedure",
       "\n                                   1=no starting procedure at all",
       "\n                                   2=add starting procedure if necessary",
-      "\n          %co<path>         object file drive and/or path",
-      "\n          %cp[<path>]       generate pre-processed output (.ppo) file",
-      "\n          %cp+              generate pre-processor trace (.ppt) file",
-      "\n          %cq               quiet",
-      "\n          %cq0              quiet and don't display program header",
-      "\n          %cq2              disable all output messages",
-      "\n          %cr:<max>         set maximum number of preprocessor iterations",
-/* TODO:   "\n          %cr[<lib>]        request linker to search <lib> (or none)", */
-      "\n          %cs[m]            syntax check only [minimal for dependencies list]",
-/* TODO:   "\n          %ct<path>         path for temp file creation", */
-      "\n          %cu[<file>]       use command def set in <file> (or none)",
-      "\n          %cu+<file>        add command def set from <file>",
-      "\n          %cundef:<id>      #undef <id>",
-      "\n          %cv               variables are assumed M->",
-      "\n          %cw[<level>]      set warning level number (0..3, default 1)",
-      "\n          %cx[<prefix>]     set symbol init function name prefix (for .c only)",
+      "\n          -o<path>         object file drive and/or path",
+      "\n          -p[<path>]       generate pre-processed output (.ppo) file",
+      "\n          -p+              generate pre-processor trace (.ppt) file",
+      "\n          -q               quiet",
+      "\n          -q0              quiet and don't display program header",
+      "\n          -q2              disable all output messages",
+      "\n          -r:<max>         set maximum number of preprocessor iterations",
+/* TODO:   "\n          -r[<lib>]        request linker to search <lib> (or none)", */
+      "\n          -s[m]            syntax check only [minimal for dependencies list]",
+/* TODO:   "\n          -t<path>         path for temp file creation", */
+      "\n          -u[<file>]       use command def set in <file> (or none)",
+      "\n          -u+<file>        add command def set from <file>",
+      "\n          -undef:<id>      #undef <id>",
+      "\n          -v               variables are assumed M->",
+      "\n          -w[<level>]      set warning level number (0..3, default 1)",
+      "\n          -x[<prefix>]     set symbol init function name prefix (for .c only)",
 #ifdef YYDEBUG
-      "\n          %cy               trace lex & yacc activity",
+      "\n          -y               trace lex & yacc activity",
 #endif
-      "\n          %cz               suppress shortcutting (.and. & .or.)",
+      "\n          -z               suppress shortcutting (.and. & .or.)",
       "\n          @<file>          compile list of modules in <file>",
       "\n"
    };
@@ -113,12 +113,8 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
                 "\nSyntax:  %s <file[s][.prg]|@file> [options]\n", szSelf );
    hb_compOutStd( HB_COMP_PARAM, buffer );
 
-   for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
-   {
-      hb_snprintf( buffer, sizeof( buffer ),
-                   szOptions[ iLine ], HB_OS_OPT_DELIM_LIST[ 0 ] );
-      hb_compOutStd( HB_COMP_PARAM, buffer );
-   }
+   for( iLine = 0; iLine < ( int ) ( sizeof( s_szOptions ) / sizeof( char * ) ); iLine++ )
+      hb_compOutStd( HB_COMP_PARAM, s_szOptions[ iLine ] );
 }
 
 /*
@@ -126,7 +122,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
  */
 void hb_compPrintModes( HB_COMP_DECL )
 {
-   static const char * szOptions[] =
+   static const char * s_szOptions[] =
    {
       "\nOptions:  c               clear all flags (strict Clipper mode)",
       "\n          h[-]            Harbour mode",
@@ -142,7 +138,7 @@ void hb_compPrintModes( HB_COMP_DECL )
       "\n          ?               this info",
       "\n"
    };
-   static const int flags[] =
+   static const int s_flags[] =
    {
       0,
       HB_COMPFLAG_HARBOUR,
@@ -161,12 +157,12 @@ void hb_compPrintModes( HB_COMP_DECL )
    hb_compOutStd( HB_COMP_PARAM,
                   "\nCompatibility flags: -k[options]\n" );
 
-   for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
+   for( iLine = 0; iLine < ( int ) ( sizeof( s_szOptions ) / sizeof( char * ) ); iLine++ )
    {
-      hb_compOutStd( HB_COMP_PARAM, szOptions[ iLine ] );
-      if( iLine < ( int ) ( sizeof( flags ) / sizeof( int ) ) &&
-          ( flags[ iLine ] < 0 ? HB_COMP_ISSUPPORTED( ~flags[ iLine ] ) == 0 :
-                                 HB_COMP_ISSUPPORTED( flags[ iLine ] ) != 0 ) )
+      hb_compOutStd( HB_COMP_PARAM, s_szOptions[ iLine ] );
+      if( iLine < ( int ) ( sizeof( s_flags ) / sizeof( int ) ) &&
+          ( s_flags[ iLine ] < 0 ? HB_COMP_ISSUPPORTED( ~s_flags[ iLine ] ) == 0 :
+                                   HB_COMP_ISSUPPORTED( s_flags[ iLine ] ) != 0 ) )
          hb_compOutStd( HB_COMP_PARAM, " (default)" );
    }
 }

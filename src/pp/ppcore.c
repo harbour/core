@@ -94,14 +94,14 @@
 
 
 /* warning messages */
-static const char * const hb_pp_szWarnings[] =
+static const char * const s_pp_szWarnings[] =
 {
    "1%s",                                                               /* C10?? */
    "1Redefinition or duplicate definition of #define %s"                /* C1005 */
 };
 
 /* error messages */
-static const char * const hb_pp_szErrors[] =
+static const char * const s_pp_szErrors[] =
 {
    "Illegal character '\\x%s'",                                         /* C2004 */
    "Unterminated string '%s'",                                          /* C2007 */
@@ -214,7 +214,7 @@ static void hb_pp_disp( PHB_PP_STATE pState, const char * szMessage )
 
 static void hb_pp_error( PHB_PP_STATE pState, char type, int iError, const char * szParam )
 {
-   const char * const * szMsgTable = type == 'W' ? hb_pp_szWarnings : hb_pp_szErrors;
+   const char * const * szMsgTable = type == 'W' ? s_pp_szWarnings : s_pp_szErrors;
 
    if( pState->pErrorFunc )
    {
@@ -5654,19 +5654,19 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs )
 
    if( fArchDefs )
    {
-      static const char * szPlatform = "__PLATFORM__%s";
+      static const char * s_szPlatform = "__PLATFORM__%s";
 
       if( hb_verPlatformMacro() )
       {
-         hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, hb_verPlatformMacro() );
+         hb_snprintf( szDefine, sizeof( szDefine ), s_szPlatform, hb_verPlatformMacro() );
          hb_pp_addDefine( pState, szDefine, NULL );
       }
 #if defined( HB_OS_UNIX )
-      hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, "UNIX" );
+      hb_snprintf( szDefine, sizeof( szDefine ), s_szPlatform, "UNIX" );
       hb_pp_addDefine( pState, szDefine, NULL );
 #endif
 #if defined( HB_OS_WIN_CE )
-      hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, "WINDOWS" );
+      hb_snprintf( szDefine, sizeof( szDefine ), s_szPlatform, "WINDOWS" );
       hb_pp_addDefine( pState, szDefine, NULL );
 #endif
 
