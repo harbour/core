@@ -10,18 +10,19 @@ rem REQUIREMENTS FOR BUILD MACHINE:
 rem   - online 24/7 (reliable)
 rem   - Windows 7 or higher (server preferred)
 rem   - 8GB free disk space
-rem   - downstream internet traffic 100MB per day
+rem   - downstream internet traffic 20MB per day
 rem   - upstream internet traffic 100MB per day
 rem   - 1-5 hours CPU time per day
 rem   - multi-core CPU recommended
-rem   - admin rights for MSVC setup
+rem   - admin rights for MSVC setup (optional)
 rem   - admin rights for Scheduled Task setup
 rem   - remote admin (via RDP protocol)
 rem
 rem NOTES:
 rem   - The first run under a new (or reinstalled) user account
 rem     must be done interactively to confirm server identity
-rem     when doing SCP uploads.
+rem     when doing SCP uploads. This has to be repeated each time
+rem     the server certificate gets updated.
 rem ---------------------------------------------------------------
 
 pushd

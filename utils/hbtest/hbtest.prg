@@ -103,7 +103,7 @@ STATIC s_lDBFAvail := .F.
 
 PROCEDURE Main( cPar1, cPar2 )
 
-   OutStd( "Harbour Regression Test Suite" + hb_eol() + ;
+   OutStd( "Harbour Compatibility and Regression Test Suite" + hb_eol() + ;
            "Copyright (c) 1999-2014, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() )
 
