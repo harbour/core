@@ -432,6 +432,10 @@ See contrib-specific dependencies and build notes in the projects'
         $ brew install pcre slang
         $ brew install upx uncrustify ack optipng jpegoptim
 
+3. Install X11 (optional, for gtxwc):
+
+        https://xquartz.macosforge.org/landing/
+
 ## Linux (.deb based distros: Debian, Ubuntu)
 
 You'll need these base packages to build/package/test/use Harbour:
