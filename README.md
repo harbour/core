@@ -216,8 +216,6 @@ You should see ``Hello, world!`` on screen.
 > <br />
 > Intel 32-bit: `-arch i386`<br />
 > Intel 64-bit: `-arch x86_64`<br />
-> PPC 32-bit:   `-arch ppc`<br />
-> PPC 64-bit:   `-arch ppc64`
 
 ## on FreeBSD hosts
 
@@ -1171,8 +1169,8 @@ make
 ## on Darwin (OS X) hosts
 
 ```bash
-# To create "Universal" binaries, compatible with pre-Snow Leopard PowerPC and Intel systems
-export HB_USER_LDFLAGS="-arch i386 -arch ppc"
+# To create "Universal" binaries, compatible with pre-Lion 32-bit Intel systems
+export HB_USER_LDFLAGS="-arch x86_64 -arch i386"
 export HB_USER_CFLAGS="$HB_USER_LDFLAGS"
 export HB_COMPILER=gcc
 make
