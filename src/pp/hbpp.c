@@ -709,7 +709,13 @@ static int hb_pp_parseRepoVer( PHB_PP_STATE pState, const char * pszFileName,
          if( szMail[ iLen ] == '@' )
             szMail[ iLen ] = ' ';
       }
+#if defined( __HB_INCLUDE_MORE_COMMIT_INFO )
       hb_snprintf( szCommitInfo, sizeof( szCommitInfo ), "%s %s (%s)", szDate, szName, szMail );
+#else
+      hb_snprintf( szCommitInfo, sizeof( szCommitInfo ), "%s", szDate );
+      HB_SYMBOL_UNUSED( szName );
+      HB_SYMBOL_UNUSED( szMail );
+#endif
       if( *pszCommitInfo )
          hb_xfree( *pszCommitInfo );
 
