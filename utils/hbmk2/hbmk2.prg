@@ -4769,8 +4769,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             IF hbmk[ _HBMK_cPLAT ] == "win"
                DO CASE
                CASE hbmk[ _HBMK_nCOMPVer ] >= 49
+#if 0
                   AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-strong" )
                   AAdd( l_aLIBSYS, "ssp" )
+#endif
                CASE hbmk[ _HBMK_nCOMPVer ] >= 41
 #if 0
                   /* too slow */

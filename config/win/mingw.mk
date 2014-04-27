@@ -28,8 +28,8 @@ CFLAGS += -I. -I$(HB_HOST_INC)
 
 # Similar to MSVC -GS (default) option:
 ifeq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43 44 45 46 47 48),)
-   CFLAGS += -fstack-protector-strong
-   SYSLIBS += ssp
+   #CFLAGS += -fstack-protector-strong
+   #SYSLIBS += ssp
 else
 ifeq ($(filter $(HB_COMPILER_VER),29 34 40),)
    # too weak
