@@ -111,7 +111,7 @@ Platform specific prerequisites:
    in PATH at the same time. For the list of supported compilers,
    look up [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers).
 3. GNU Make 3.81 or upper is required. A copy of this tool
-   is included in all Harbour packages, so you don't have to do
+   is included in the source package, so you don't have to do
    anything.
    If you want to get it separately, you can find it [here](https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/)
    Unpack it to your PATH or Harbour source root directory,
@@ -641,8 +641,8 @@ sensitive.
 
      Copy import libraries created for external .dll
      dependencies to the library install directory in
-     ``install`` build phase. Default: `yes`
-     For Windows/OS/2 targets only. Please note
+     ``install`` build phase. Default: `yes`<br />
+     For Windows and OS/2 targets only. Please note
      that this feature doesn't work with all possible
      binary distributions of 3rd party packages.
      We test only the official/mainstream ones. Also
@@ -1179,17 +1179,17 @@ make
 ## on *nix hosts in general
 
 ```bash
-[g]make
+make
 ```
 
 ```bash
 # MinGW GCC for Windows x86
-[g]make HB_PLATFORM=win
+make HB_PLATFORM=win
 ```
 
 ```bash
 # MinGW GCC for Windows CE ARM
-[g]make HB_PLATFORM=wce
+make HB_PLATFORM=wce
 ```
 
 
@@ -1213,7 +1213,7 @@ For all platforms you'll need two things:
     make any extra steps here.
 
 Use hbmk2 to build your app from source. It's recommended to put
-it in the PATH (f.e. by using `set PATH=C:\harbour\bin;%PATH%` on Windows).
+it in the PATH (f.e. by using `set PATH=C:\hb\bin;%PATH%` on Windows).
 
 See hbmk2 [documentation, with examples](utils/hbmk2/doc/hbmk2.en.md).
 
