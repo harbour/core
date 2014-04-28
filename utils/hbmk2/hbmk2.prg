@@ -1825,9 +1825,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          __extra_initenv( hbmk, aArgs, cParam )
          FOR EACH tmp IN aArgs
-            FOR EACH tmp1 IN FN_Expand( tmp, .T. )
-               FixFuncCase( hbmk, tmp1 )
-            NEXT
+            IF ! AllFilesWarning( hbmk, tmp )
+               FOR EACH tmp1 IN FN_Expand( tmp, .T. )
+                  FixFuncCase( hbmk, tmp1 )
+               NEXT
+            ENDIF
          NEXT
          RETURN _EXIT_OK
 
@@ -1835,9 +1837,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          __extra_initenv( hbmk, aArgs, cParam )
          FOR EACH tmp IN aArgs
-            FOR EACH tmp1 IN FN_Expand( tmp, .T. )
-               FixSanitize( tmp1 )
-            NEXT
+            IF ! AllFilesWarning( hbmk, tmp )
+               FOR EACH tmp1 IN FN_Expand( tmp, .T. )
+                  FixSanitize( tmp1 )
+               NEXT
+            ENDIF
          NEXT
          RETURN _EXIT_OK
 
@@ -8259,6 +8263,15 @@ STATIC PROCEDURE ProcEnvOption( cValue )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION AllFilesWarning( hbmk, cArg )
+
+   IF HBMK_IS_IN( cArg, hb_osFileMask() + "|*|*.*" )
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored potentially harmful wildcard-only argument: '%1$s'" ), cArg ) )
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 STATIC PROCEDURE PointlessPairWarning( hbmk, /* @ */ aParam1, aParam2, cParam2L, cOption )
 
