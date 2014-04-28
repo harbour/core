@@ -653,7 +653,7 @@ sensitive.
 
      Copy dynamic libraries of external .dll dependencies
      to the dynamic library directory in ``install`` build
-     phase. Default: no
+     phase. Default: `no`
 
    - `HB_SRC_ROOTPATH=<dir>`
 
@@ -668,7 +668,7 @@ sensitive.
 
      Rebuild extern headers. It is meant for developers
      doing Harbour code modifications and releases.
-     Default: no
+     Default: `no`
 
    - `HB_REBUILD_PARSER=yes`
 
@@ -676,7 +676,7 @@ sensitive.
      you only need this if your are Harbour core
      developer modifying grammar rules (.y).
      Requires GNU Bison 1.28 or upper in PATH.
-     Default: no
+     Default: `no`
 
    - `HB_CCPATH=[<dir>/]`
 
