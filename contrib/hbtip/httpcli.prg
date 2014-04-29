@@ -432,7 +432,7 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
    hb_default( @cHost, ::oUrl:cServer )
 
-   IF cPath == NIL
+   IF ! HB_ISSTRING( cPath )
       cPath := ::oUrl:cPath
       IF Empty( cPath )
          cPath := "/"

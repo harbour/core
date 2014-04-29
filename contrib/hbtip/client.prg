@@ -429,7 +429,9 @@ METHOD Read( nLen ) CLASS TIPClient
       IF ::nLastRead != nLen
          ::bEof := .T.
          cStr0 := hb_BLeft( cStr0, ::nLastRead )
-         // S.R.         RETURN NIL
+#if 0
+         RETURN NIL
+#endif
       ENDIF
 
       IF ::nRead == ::nLength

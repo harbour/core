@@ -379,17 +379,18 @@ METHOD List( cSpec ) CLASS TIPClientFTP
 
    LOCAL cStr
 
-   IF cSpec == NIL
-      cSpec := ""
-   ELSE
-      cSpec := " " + cSpec
-   ENDIF
    IF ::bUsePasv .AND. ! ::Pasv()
       // ::bUsePasv := .F.
       RETURN NIL
    ENDIF
    IF ! ::bUsePasv .AND. ! ::Port()
       RETURN NIL
+   ENDIF
+
+   hb_default( @cSpec, "" )
+
+   IF ! Empty( cSpec )
+      cSpec := " " + cSpec
    ENDIF
 
    ::inetSendAll( ::SocketCon, "LIST" + cSpec + ::cCRLF )
