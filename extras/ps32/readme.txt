@@ -1,5 +1,5 @@
-1.) Obtain PageScript32 installation and install it.
-    (even the evaluation version will do)
+1.) Download PageScript32 package and unzip it:
+    http://www.abeelabs.com/downloads/PS32.zip
 
 2.) Copy these files from PageScript32 installation
     to this folder:
