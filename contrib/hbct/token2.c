@@ -92,7 +92,7 @@ static TOKEN_ENVIRONMENT sTokEnvNew( void )
 /* add a tokenizing position to a token environment */
 static int sTokEnvAddPos( TOKEN_ENVIRONMENT * pEnv, TOKEN_POSITION * pPos )
 {
-   HB_SIZE index;
+   HB_SIZE nIndex;
    TOKEN_ENVIRONMENT env = *pEnv;
 
    /* new memory needed ? */
@@ -105,9 +105,9 @@ static int sTokEnvAddPos( TOKEN_ENVIRONMENT * pEnv, TOKEN_POSITION * pPos )
       env[ 0 ].sEndPos += TOKEN_ENVIRONMENT_STEP;
    }
 
-   index = env[ 0 ].sStartPos + 2;        /* +2  because of extra elements */
-   env[ index ].sStartPos = pPos->sStartPos;
-   env[ index ].sEndPos = pPos->sEndPos;
+   nIndex = env[ 0 ].sStartPos + 2;        /* +2  because of extra elements */
+   env[ nIndex ].sStartPos = pPos->sStartPos;
+   env[ nIndex ].sEndPos = pPos->sEndPos;
    env[ 0 ].sStartPos++;
 
    return 1;
@@ -135,12 +135,12 @@ static TOKEN_POSITION * sTokEnvGetPos( TOKEN_ENVIRONMENT env )
 }
 
 /* get position element pointed to by given 0-based index */
-static TOKEN_POSITION * sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE index )
+static TOKEN_POSITION * sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE nIndex )
 {
-   if( index >= env[ 0 ].sStartPos )
+   if( nIndex >= env[ 0 ].sStartPos )
       return NULL;
 
-   return env + 2 + index; /* "+2" because of extra elements */
+   return env + 2 + nIndex; /* "+2" because of extra elements */
 }
 
 /* increment tokenizing pointer by one */

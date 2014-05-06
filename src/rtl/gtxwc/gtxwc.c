@@ -2418,12 +2418,12 @@ static void hb_gt_xwc_AddCharToInputQueue( PXWND_DEF wnd, int keyCode )
 {
    if( wnd->keyBuffNO > 0 && HB_INKEY_ISMOUSEPOS( keyCode ) )
    {
-      int index = wnd->keyBuffPointer - 1;
-      if( index < 0 )
-         index += XWC_CHAR_QUEUE_SIZE;
-      if( HB_INKEY_ISMOUSEPOS( wnd->KeyBuff[ index ] ) )
+      int keyBuffPtr = wnd->keyBuffPointer - 1;
+      if( keyBuffPtr < 0 )
+         keyBuffPtr += XWC_CHAR_QUEUE_SIZE;
+      if( HB_INKEY_ISMOUSEPOS( wnd->KeyBuff[ keyBuffPtr ] ) )
       {
-         wnd->KeyBuff[ index ] = keyCode;
+         wnd->KeyBuff[ keyBuffPtr ] = keyCode;
          return;
       }
    }
@@ -2444,10 +2444,10 @@ static HB_BOOL hb_gt_xwc_GetCharFromInputQueue( PXWND_DEF wnd, int * keyCode )
    *keyCode = 0;
    if( wnd->keyBuffNO > 0 )
    {
-      int index = wnd->keyBuffPointer - wnd->keyBuffNO;
-      if( index < 0 )
-         index += XWC_CHAR_QUEUE_SIZE;
-      *keyCode = wnd->KeyBuff[ index ];
+      int keyBuffPtr = wnd->keyBuffPointer - wnd->keyBuffNO;
+      if( keyBuffPtr < 0 )
+         keyBuffPtr += XWC_CHAR_QUEUE_SIZE;
+      *keyCode = wnd->KeyBuff[ keyBuffPtr ];
       wnd->keyBuffNO--;
       return HB_TRUE;
    }
@@ -3650,7 +3650,7 @@ static HB_U32 hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, HB_USHORT chr
 
 static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, int colStop, int rowStop )
 {
-   HB_USHORT irow, icol, index, startCol = 0, len, basex, basey, nsize;
+   HB_USHORT irow, icol, scridx, startCol = 0, len, basex, basey, nsize;
    HB_BYTE oldColor = 0, color, attr;
    HB_USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
    HB_U32 u32Curr = 0xFFFFFFFF;
@@ -3673,7 +3673,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
    for( irow = rowStart; irow <= rowStop; irow++ )
    {
       icol = colStart;
-      index = icol +  irow * wnd->cols;
+      scridx = icol +  irow * wnd->cols;
       len = 0;
       /* attribute may change mid line...
        * so buffer up text with same attrib, and output it
@@ -3704,12 +3704,12 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
             color = ( color << 4 ) | ( color >> 4 );
          }
          if( len > 0 && ( chTrans->type != CH_CHAR ||
-                          color != oldColor || u32Curr == wnd->pCurrScr[ index ] ) )
+                          color != oldColor || u32Curr == wnd->pCurrScr[ scridx ] ) )
          {
             hb_gt_xwc_DrawString( wnd, startCol, irow, oldColor, usChBuf, len );
             len = 0;
          }
-         if( wnd->pCurrScr[ index ] != u32Curr )
+         if( wnd->pCurrScr[ scridx ] != u32Curr )
          {
             switch( chTrans->type )
             {
@@ -3834,10 +3834,10 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   break;
 
             }
-            wnd->pCurrScr[ index ] = u32Curr;
+            wnd->pCurrScr[ scridx ] = u32Curr;
          }
          icol++;
-         index++;
+         scridx++;
       }
       if( len > 0 )
       {

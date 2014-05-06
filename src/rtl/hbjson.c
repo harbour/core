@@ -334,7 +334,6 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
             if( HB_IS_STRING( pKey ) )
             {
                PHB_ITEM pItem = hb_hashGetValueAt( pValue, nIndex );
-               HB_BOOL fEOL = HB_FALSE;
 
                if( nIndex > 1 )
                   _hb_jsonCtxAdd( pCtx, ",", 1 );
@@ -352,7 +351,10 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
                   fEOL = ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0;
                }
                else
+               {
                   _hb_jsonCtxAdd( pCtx, ":", 1 );
+                  fEOL = HB_FALSE;
+               }
 
                _hb_jsonEncode( pItem, pCtx, nLevel + 1, fEOL );
             }

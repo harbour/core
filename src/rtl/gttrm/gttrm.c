@@ -458,13 +458,13 @@ static int getClipKey( int nKey )
 
 static void sig_handler( int iSigNo )
 {
-   int e = errno, stat;
+   int e = errno, status;
    pid_t pid;
 
    switch( iSigNo )
    {
       case SIGCHLD:
-         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 )
+         while( ( pid = waitpid( -1, &status, WNOHANG ) ) > 0 )
             ;
          break;
       case SIGWINCH:
@@ -1799,7 +1799,7 @@ static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iC
    {
       char rdbuf[ 64 ];
       int i, j, n, d, y, x;
-      HB_MAXUINT end_timer, time;
+      HB_MAXUINT end_timer, cur_time;
 
       hb_gt_trm_termOut( pTerm, "\x1B[6n", 4 );
       if( szPost )
@@ -1858,8 +1858,8 @@ static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iC
          }
          if( n == sizeof( rdbuf ) )
             break;
-         time = hb_dateMilliSeconds();
-         if( time > end_timer )
+         cur_time = hb_dateMilliSeconds();
+         if( cur_time > end_timer )
             break;
          else
          {
@@ -1870,7 +1870,7 @@ static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iC
 
             FD_ZERO( &rdfds );
             FD_SET( pTerm->hFilenoStdin, &rdfds );
-            iMilliSec = ( int ) ( end_timer - time );
+            iMilliSec = ( int ) ( end_timer - cur_time );
             tv.tv_sec = iMilliSec / 1000;
             tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
 

@@ -822,12 +822,12 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
  * Retrieve information about the current order that SELF could not.
  * Called by SELF_ORDINFO if uiIndex is not supported.
  */
-static HB_ERRCODE hb_waOrderInfo( AREAP pArea, HB_USHORT index, LPDBORDERINFO pInfo )
+static HB_ERRCODE hb_waOrderInfo( AREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_waOrderInfo(%p, %hu, %p)", pArea, index, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_waOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo ) );
 
    HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( index );
+   HB_SYMBOL_UNUSED( uiIndex );
 
    if( pInfo->itmResult )
       hb_itemClear( pInfo->itmResult );

@@ -488,7 +488,7 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
       {
          char rdbuf[ 64 ];
          int i, j, n, d, y, x;
-         HB_MAXUINT end_timer, time;
+         HB_MAXUINT end_timer, cur_time;
 
          n = j = x = y = 0;
          /* wait up to 2 seconds for answer */
@@ -527,8 +527,8 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
             }
             if( n == sizeof( rdbuf ) )
                break;
-            time = hb_dateMilliSeconds();
-            if( time > end_timer )
+            cur_time = hb_dateMilliSeconds();
+            if( cur_time > end_timer )
                break;
             else
             {
@@ -538,7 +538,7 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
 
                FD_ZERO( &rdfds );
                FD_SET( iStdIn, &rdfds );
-               iMilliSec = ( int ) ( end_timer - time );
+               iMilliSec = ( int ) ( end_timer - cur_time );
                tv.tv_sec = iMilliSec / 1000;
                tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
 

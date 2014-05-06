@@ -758,10 +758,10 @@ HB_FUNC( IOUSR_SETERROR )
 
    if( HB_ISNUM( 1 ) )
    {
-      HB_ERRCODE errCode = ( HB_ERRCODE ) hb_parni( 1 );
-      if( errCode != 0 )
-         errCode += ( HB_ERRCODE ) hb_parni( 2 );
-      hb_fsSetError( errCode );
+      HB_ERRCODE errCodeNew = ( HB_ERRCODE ) hb_parni( 1 );
+      if( errCodeNew != 0 )
+         errCodeNew += ( HB_ERRCODE ) hb_parni( 2 );
+      hb_fsSetError( errCodeNew );
    }
 
    hb_retni( errCode );

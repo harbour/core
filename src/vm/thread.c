@@ -2053,34 +2053,43 @@ HB_BOOL hb_threadMutexLock( PHB_ITEM pItem )
       pMutex->owner = ( HB_THREAD_ID ) 1;
       fResult = HB_TRUE;
 #else
+#  if ! defined( HB_HELGRIND_FRIENDLY )
       if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
       {
          pMutex->lock_count++;
          fResult = HB_TRUE;
       }
       else
+#endif
       {
          hb_vmUnlock();
 
          HB_CRITICAL_LOCK( pMutex->mutex );
-         while( pMutex->lock_count != 0 )
-         {
-            pMutex->lockers++;
-#  if defined( HB_PTHREAD_API )
-            pthread_cond_wait( &pMutex->cond_l, &pMutex->mutex );
-#  elif defined( HB_TASK_THREAD )
-            hb_taskWait( &pMutex->cond_l, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
-#  elif defined( HB_COND_HARBOUR_SUPPORT )
-            _hb_thread_cond_wait( &pMutex->cond_l, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
-#  else
-            HB_CRITICAL_UNLOCK( pMutex->mutex );
-            ( void ) HB_COND_WAIT( pMutex->cond_l );
-            HB_CRITICAL_LOCK( pMutex->mutex );
+#  if defined( HB_HELGRIND_FRIENDLY )
+         if( HB_THREAD_EQUAL( pMutex->owner, HB_THREAD_SELF() ) )
+            pMutex->lock_count++;
+         else
 #  endif
-            pMutex->lockers--;
+         {
+            while( pMutex->lock_count != 0 )
+            {
+               pMutex->lockers++;
+#  if defined( HB_PTHREAD_API )
+               pthread_cond_wait( &pMutex->cond_l, &pMutex->mutex );
+#  elif defined( HB_TASK_THREAD )
+               hb_taskWait( &pMutex->cond_l, &pMutex->mutex, HB_TASK_INFINITE_WAIT );
+#  elif defined( HB_COND_HARBOUR_SUPPORT )
+               _hb_thread_cond_wait( &pMutex->cond_l, &pMutex->mutex, HB_THREAD_INFINITE_WAIT );
+#  else
+               HB_CRITICAL_UNLOCK( pMutex->mutex );
+               ( void ) HB_COND_WAIT( pMutex->cond_l );
+               HB_CRITICAL_LOCK( pMutex->mutex );
+#  endif
+               pMutex->lockers--;
+            }
+            pMutex->lock_count = 1;
+            pMutex->owner = HB_THREAD_SELF();
          }
-         pMutex->lock_count = 1;
-         pMutex->owner = HB_THREAD_SELF();
          HB_CRITICAL_UNLOCK( pMutex->mutex );
          fResult = HB_TRUE;
 
