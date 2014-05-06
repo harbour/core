@@ -53,7 +53,7 @@
 
 /*
    The application/json Media Type for JavaScript Object Notation (JSON)
-   https://www.ietf.org/rfc/rfc4627.txt
+   http://www.ietf.org/rfc/rfc4627.txt
 
       C level functions:
         char * hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman );
@@ -334,7 +334,6 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
             if( HB_IS_STRING( pKey ) )
             {
                PHB_ITEM pItem = hb_hashGetValueAt( pValue, nIndex );
-               HB_BOOL fEOLLocal = HB_FALSE;
 
                if( nIndex > 1 )
                   _hb_jsonCtxAdd( pCtx, ",", 1 );
@@ -349,12 +348,15 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
                if( pCtx->fHuman )
                {
                   _hb_jsonCtxAdd( pCtx, ": ", 2 );
-                  fEOLLocal = ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0;
+                  fEOL = ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0;
                }
                else
+               {
                   _hb_jsonCtxAdd( pCtx, ":", 1 );
+                  fEOL = HB_FALSE;
+               }
 
-               _hb_jsonEncode( pItem, pCtx, nLevel + 1, fEOLLocal );
+               _hb_jsonEncode( pItem, pCtx, nLevel + 1, fEOL );
             }
          }
          if( pCtx->fHuman )
@@ -654,8 +656,6 @@ char * hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman )
    pCtx->iEolLen = ( int ) strlen( pCtx->szEol );
 
    _hb_jsonEncode( pValue, pCtx, 0, HB_FALSE );
-   if( fHuman )
-      _hb_jsonCtxAdd( pCtx, pCtx->szEol, pCtx->iEolLen );
 
    nLen = pCtx->pHead - pCtx->pBuffer;
    szRet = ( char * ) hb_xrealloc( pCtx->pBuffer, nLen + 1 );

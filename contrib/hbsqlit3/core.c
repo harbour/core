@@ -1301,9 +1301,9 @@ HB_FUNC( SQLITE3_COLUMN_BLOB )
 
    if( pStmt )
    {
-      int index = hb_parni( 2 ) - 1;
+      int iIndex = hb_parni( 2 ) - 1;
       hb_retclen( ( const char * ) sqlite3_column_blob( pStmt,
-                                                        index ), sqlite3_column_bytes( pStmt, index ) );
+                                                        iIndex ), sqlite3_column_bytes( pStmt, iIndex ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1345,10 +1345,10 @@ HB_FUNC( SQLITE3_COLUMN_TEXT )
 
    if( pStmt )
    {
-      int index = hb_parni( 2 ) - 1;
+      int iIndex = hb_parni( 2 ) - 1;
       hb_retstrlen_utf8( ( const char * ) sqlite3_column_text( pStmt,
-                                                               index ),
-                         sqlite3_column_bytes( pStmt, index ) );
+                                                               iIndex ),
+                         sqlite3_column_bytes( pStmt, iIndex ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

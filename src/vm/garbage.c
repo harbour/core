@@ -69,7 +69,7 @@
 
 /* Use spinlock instead of mutex */
 
-#  if defined( HB_SPINLOCK_INIT ) && 1
+#  if defined( HB_SPINLOCK_INIT ) && ! defined( HB_HELGRIND_FRIENDLY )
 
       static HB_SPINLOCK_T s_gcSpinLock = HB_SPINLOCK_INIT;
 #     define HB_GC_LOCK()       HB_SPINLOCK_ACQUIRE( &s_gcSpinLock )

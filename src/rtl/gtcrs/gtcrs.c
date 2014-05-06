@@ -395,9 +395,9 @@ static void sig_handler( int signo )
    {
       case SIGCHLD:
       {
-         int stat;
+         int status;
          pid_t pid;
-         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
+         while( ( pid = waitpid( -1, &status, WNOHANG ) ) > 0 ) ;
          break;
       }
       case SIGWINCH:
@@ -447,10 +447,10 @@ static void sig_handler( int signo )
    {
       case SIGCHLD:
       {
-         int stat;
+         int status;
          pid_t pid;
          pszSig = "SIGCHLD";
-         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
+         while( ( pid = waitpid( -1, &status, WNOHANG ) ) > 0 ) ;
          break;
       }
       case SIGWINCH:
@@ -1864,7 +1864,7 @@ static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE 
    }
 }
 
-static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int box )
+static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int transBox )
 {
    int i, aSet;
    chtype ch;
@@ -1923,7 +1923,7 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
                                hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
 
             ioBase->std_chmap[ i ] = uc | A_NORMAL;
-            if( box )
+            if( transBox )
                ioBase->box_chmap[ i ] = uc | A_NORMAL;
             if( i != ( int ) uc )
             {
