@@ -1540,7 +1540,7 @@ Supported shells per host platforms:
      * Borland/CodeGear/Embarcadero Compiler [win, free, closed-source]
         * <https://downloads.embarcadero.com/free/c_builder>
      * Intel Compiler [win, linux, darwin, commercial, closed-source]
-        * <http://software.intel.com/en-us/intel-compilers/>
+        * <https://software.intel.com/en-us/intel-compilers/>
 
 * Libraries:
 
