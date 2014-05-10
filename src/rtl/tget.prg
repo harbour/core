@@ -1105,7 +1105,7 @@ METHOD picture( cPicture ) CLASS Get
 
          CASE "T"
 
-            ::cPicMask := Set( _SET_TIMEFORMAT )
+            ::cPicMask := Set( _SET_DATEFORMAT ) + " " + Set( _SET_TIMEFORMAT )
             FOR EACH cChar IN "yYmMdDhHsSfF"
                ::cPicMask := StrTran( ::cPicMask, cChar, "9" )
             NEXT
