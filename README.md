@@ -1660,9 +1660,9 @@ Supported shells per host platforms:
 
 # Harbour Links
 
-  * [Homepage - for non-fork/mainstream](http://harbour-project.org/)
-  * [Users' Mailing List - for non-fork/mainstream](https://groups.google.com/group/harbour-users/) (English language)
-  * [Development Mailing List - for non-fork/mainstream](https://groups.google.com/group/harbour-devel/) (English language)
+  * [Homepage - __for non-fork/mainstream version__](http://harbour-project.org/)
+  * [Users' Mailing List - __for non-fork/mainstream version__](https://groups.google.com/group/harbour-users/) (English language)
+  * [Development Mailing List - __for non-fork/mainstream version__](https://groups.google.com/group/harbour-devel/) (English language)
   * [Source code](https://github.com/vszakats/harbour-core)
   * [Localization](https://www.transifex.com/projects/p/harbour/)
   * [Issues](https://github.com/vszakats/harbour-core/issues)
