@@ -306,15 +306,9 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
    }
 #elif defined( HB_CPU_X86 )
    {
-      char              buf[ 64 + MAX_PATH ];
-      PCONTEXT          pCtx = pExceptionInfo->ContextRecord;
-      unsigned char *   pc;
-      unsigned int *    sc;
-      unsigned int *    ebp;
-      unsigned int      eip;
-      unsigned int      j;
-      int               i;
-      const char *      szCode;
+      char         buf[ 64 + MAX_PATH ];
+      PCONTEXT     pCtx = pExceptionInfo->ContextRecord;
+      const char * szCode;
 
       /* two most common codes */
       switch( pExceptionInfo->ExceptionRecord->ExceptionCode )
@@ -360,51 +354,60 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          hb_strncat( errmsg, "\n", errmsglen );
       }
 
-      hb_strncat( errmsg, "    CS:EIP:", errmsglen );
-      pc = ( unsigned char * ) pCtx->Eip;
-      for( i = 0; i < 16; i++ )
       {
-         /* TOFIX: Unsafe funcion. */
-         if( IsBadReadPtr( pc, 1 ) )
-            break;
-         hb_snprintf( buf, sizeof( buf ), " %02X", ( int ) pc[ i ] );
-         hb_strncat( errmsg, buf, errmsglen );
-      }
-      hb_strncat( errmsg, "\n    SS:ESP:", errmsglen );
-      sc = ( unsigned int * ) pCtx->Esp;
-      for( i = 0; i < 16; i++ )
-      {
-         /* TOFIX: Unsafe funcion. */
-         if( IsBadReadPtr( sc, 4 ) )
-            break;
-         hb_snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
-         hb_strncat( errmsg, buf, errmsglen );
-      }
-      hb_strncat( errmsg, "\n\n", errmsglen );
-      hb_strncat( errmsg, "    C stack:\n", errmsglen );
-      hb_strncat( errmsg, "    EIP:     EBP:       Frame: OldEBP, RetAddr, Params...\n", errmsglen );
-      eip = pCtx->Eip;
-      ebp = ( unsigned int * ) pCtx->Ebp;
-      /* TOFIX: Unsafe funcion. */
-      if( ! IsBadWritePtr( ebp, 8 ) )
-      {
-         for( i = 0; i < 20; i++ )
+         unsigned char * pc;
+         unsigned int *  sc;
+         unsigned int *  ebp;
+         unsigned int    eip;
+         unsigned int    j;
+         int             i;
+
+         hb_strncat( errmsg, "    CS:EIP:", errmsglen );
+         pc = ( unsigned char * ) pCtx->Eip;
+         for( i = 0; i < 16; i++ )
          {
             /* TOFIX: Unsafe funcion. */
-            if( ( unsigned int ) ebp % 4 != 0 || IsBadWritePtr( ebp, 40 ) || ( unsigned int ) ebp >= ebp[ 0 ] )
+            if( IsBadReadPtr( pc, 1 ) )
                break;
-            hb_snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
+            hb_snprintf( buf, sizeof( buf ), " %02X", ( int ) pc[ i ] );
             hb_strncat( errmsg, buf, errmsglen );
-            for( j = 0; j < 10 && ( unsigned int ) ( ebp + j ) < ebp[ 0 ]; j++ )
+         }
+         hb_strncat( errmsg, "\n    SS:ESP:", errmsglen );
+         sc = ( unsigned int * ) pCtx->Esp;
+         for( i = 0; i < 16; i++ )
+         {
+            /* TOFIX: Unsafe funcion. */
+            if( IsBadReadPtr( sc, 4 ) )
+               break;
+            hb_snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
+            hb_strncat( errmsg, buf, errmsglen );
+         }
+         hb_strncat( errmsg, "\n\n", errmsglen );
+         hb_strncat( errmsg, "    C stack:\n", errmsglen );
+         hb_strncat( errmsg, "    EIP:     EBP:       Frame: OldEBP, RetAddr, Params...\n", errmsglen );
+         eip = pCtx->Eip;
+         ebp = ( unsigned int * ) pCtx->Ebp;
+         /* TOFIX: Unsafe funcion. */
+         if( ! IsBadWritePtr( ebp, 8 ) )
+         {
+            for( i = 0; i < 20; i++ )
             {
-               hb_snprintf( buf, sizeof( buf ), " %08X", ebp[ j ] );
+               /* TOFIX: Unsafe funcion. */
+               if( ( unsigned int ) ebp % 4 != 0 || IsBadWritePtr( ebp, 40 ) || ( unsigned int ) ebp >= ebp[ 0 ] )
+                  break;
+               hb_snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
                hb_strncat( errmsg, buf, errmsglen );
+               for( j = 0; j < 10 && ( unsigned int ) ( ebp + j ) < ebp[ 0 ]; j++ )
+               {
+                  hb_snprintf( buf, sizeof( buf ), " %08X", ebp[ j ] );
+                  hb_strncat( errmsg, buf, errmsglen );
+               }
+               hb_strncat( errmsg, "\n", errmsglen );
+               eip = ebp[ 1 ];
+               ebp = ( unsigned int * ) ebp[ 0 ];
             }
             hb_strncat( errmsg, "\n", errmsglen );
-            eip = ebp[ 1 ];
-            ebp = ( unsigned int * ) ebp[ 0 ];
          }
-         hb_strncat( errmsg, "\n", errmsglen );
       }
    }
 #endif
