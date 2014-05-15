@@ -31,6 +31,7 @@ and interfaces to many popular APIs.
 
   You can donate to fund further maintenance of this fork:
 
+  * [Gittip](https://www.gittip.com/vszakats/) [![Gittip](http://img.shields.io/gittip/vszakats.svg)](https://www.gittip.com/vszakats/)
   * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
   * [Bitcoin](https://coinbase.com/checkouts/b90e7d8467c3d17f0083f9ad186c3c36)
 
