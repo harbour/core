@@ -55,7 +55,7 @@ Evaluate these points before reporting an issue:
 2.  Make sure to do a ``make clean`` before doing a build after refreshing
     the sources.
 3.  If that still fails, make sure to install fresh source tree in a new
-    local directory and start over. See [How to Get](README.md##how-to-get)
+    local directory and start over. See [How to Get](README.md#how-to-get)
     for instructions to get the source.
     In case you installed Harbour into system locations (this used to be
     the case with some *nix users, albeit mostly completely unnecessarily
@@ -79,7 +79,7 @@ Evaluate these points before reporting an issue:
     Use only those documented in this file.
 7.  Remove any Harbour build settings documented in [Build Options](README.md#build-options).
 8.  Do no or only small modifications at once to the examples
-    included in [Build Examples](README.md##build-examples).
+    included in [Build Examples](README.md#build-examples).
     If it doesn't work, fall back to documented examples _as is_.
 9.  If everything fails and you are to report a build problem to Harbour
     developers, make sure to include your OS version/language/CPU architecture,
