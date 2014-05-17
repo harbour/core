@@ -3198,8 +3198,6 @@ static void hb_gt_def_MouseSetBounds( PHB_GT pGT, int iTop, int iLeft, int iBott
 
 static void hb_gt_def_MouseGetBounds( PHB_GT pGT, int * piTop, int * piLeft, int * piBottom, int * piRight )
 {
-   HB_SYMBOL_UNUSED( pGT );
-
    *piTop = *piLeft = 0;
    HB_GTSELF_GETSIZE( pGT, piBottom, piRight );
    --( *piBottom );
