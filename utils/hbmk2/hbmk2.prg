@@ -8249,16 +8249,11 @@ STATIC PROCEDURE ProcEnvOption( cValue )
 
    IF ! Empty( cValue )
       DO CASE
-      CASE ( tmp := At( "=", cValue ) ) > 1
-         hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) )
-      CASE ( tmp := At( "+", cValue ) ) > 1
-         hb_SetEnv( Left( cValue, tmp - 1 ), GetEnv( Left( cValue, tmp - 1 ) ) + SubStr( cValue, tmp + 1 ) )
-      CASE ( tmp := At( "#", cValue ) ) > 1
-         hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) + GetEnv( Left( cValue, tmp - 1 ) ) )
-      CASE ( tmp := At( "-", cValue ) ) > 1
-         hb_SetEnv( Left( cValue, tmp - 1 ) )
-      OTHERWISE
-         hb_SetEnv( cValue, "" )
+      CASE ( tmp := At( "=", cValue ) ) > 1 ; hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) )
+      CASE ( tmp := At( "+", cValue ) ) > 1 ; hb_SetEnv( Left( cValue, tmp - 1 ), GetEnv( Left( cValue, tmp - 1 ) ) + SubStr( cValue, tmp + 1 ) )
+      CASE ( tmp := At( "#", cValue ) ) > 1 ; hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) + GetEnv( Left( cValue, tmp - 1 ) ) )
+      CASE ( tmp := At( "-", cValue ) ) > 1 ; hb_SetEnv( Left( cValue, tmp - 1 ) )
+      OTHERWISE                             ; hb_SetEnv( cValue, "" )
       ENDCASE
    ENDIF
 

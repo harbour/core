@@ -28,24 +28,34 @@
 
 FUNCTION hb_udpds_Find( nPort, cName )
 
-   LOCAL hSocket, aRet, nEnd, nTime, cBuffer, nLen, aAddr
+   LOCAL hSocket, aRet, nEnd, nTime, cBuffer, nLen, aAddr, iface
 
    IF ! Empty( hSocket := hb_socketOpen( , HB_SOCKET_PT_DGRAM ) )
+
       hb_socketSetBroadcast( hSocket, .T. )
       cName := hb_StrToUTF8( cName )
-      IF hb_socketSendTo( hSocket, hb_BChar( 5 ) + cName + hb_BChar( 0 ), , , { HB_SOCKET_AF_INET, "255.255.255.255", nPort } ) == hb_BLen( cName ) + 2
-         nTime := hb_MilliSeconds()
-         nEnd := nTime + 100   /* 100ms delay is enough on LAN */
-         aRet := {}
-         DO WHILE nEnd > nTime
-            cBuffer := Space( 2000 )
-            nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, nEnd - nTime )
-            IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 )
-               AAdd( aRet, { aAddr[ 2 ], hb_BSubStr( cBuffer, hb_BLen( cName ) + 3, nLen - hb_BLen( cName ) - 2 ) } )
+
+      FOR EACH iface IN hb_socketGetIFaces( HB_SOCKET_AF_INET, .T. )
+
+         IF HB_ISSTRING( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .AND. ;
+            ! Empty( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .AND. ;
+            !( iface[ HB_SOCKET_IFINFO_BROADCAST ] == "0.0.0.0" )
+
+            IF hb_socketSendTo( hSocket, hb_BChar( 5 ) + cName + hb_BChar( 0 ), , , { HB_SOCKET_AF_INET, iface[ HB_SOCKET_IFINFO_BROADCAST ], nPort } ) == hb_BLen( cName ) + 2
+               nTime := hb_MilliSeconds()
+               nEnd := nTime + 100   /* 100ms delay is enough on LAN */
+               aRet := {}
+               DO WHILE nEnd > nTime
+                  cBuffer := Space( 2000 )
+                  nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, nEnd - nTime )
+                  IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 )
+                     AAdd( aRet, { aAddr[ 2 ], hb_BSubStr( cBuffer, hb_BLen( cName ) + 3, nLen - hb_BLen( cName ) - 2 ) } )
+                  ENDIF
+                  nTime := hb_MilliSeconds()
+               ENDDO
             ENDIF
-            nTime := hb_MilliSeconds()
-         ENDDO
-      ENDIF
+         ENDIF
+      NEXT
       hb_socketClose( hSocket )
    ENDIF
 
