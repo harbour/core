@@ -28,14 +28,19 @@
 
 FUNCTION hb_udpds_Find( nPort, cName )
 
-   LOCAL hSocket, aRet, nEnd, nTime, cBuffer, nLen, aAddr, iface
+   LOCAL hSocket, aRet, nEnd, nTime, cBuffer, nLen, aAddr, iface, aIFaces
 
    IF ! Empty( hSocket := hb_socketOpen( , HB_SOCKET_PT_DGRAM ) )
 
       hb_socketSetBroadcast( hSocket, .T. )
       cName := hb_StrToUTF8( cName )
 
-      FOR EACH iface IN hb_socketGetIFaces( HB_SOCKET_AF_INET, .T. )
+      IF Empty( aIFaces := hb_socketGetIFaces() )
+         aIFaces := { Array( HB_SOCKET_IFINFO_LEN ) }
+         aIFaces[ 1 ][ HB_SOCKET_IFINFO_BROADCAST ] := "255.255.255.255"
+      ENDIF
+
+      FOR EACH iface IN aIFaces
 
          IF HB_ISSTRING( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .AND. ;
             ! Empty( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .AND. ;
