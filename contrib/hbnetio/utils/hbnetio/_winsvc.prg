@@ -28,25 +28,14 @@
 
 PROCEDURE WinMain( ... )
 
-   LOCAL cMode := hb_PValue( 1 )
-
-   LOCAL cMsg, nError
-
-   IF cMode == NIL
-      cMode := ""
-   ENDIF
-
-   SWITCH Lower( cMode )
+   SWITCH Lower( hb_defaultValue( hb_PValue( 1 ), "" ) )
    CASE "-i"
    CASE "-install"
 
       IF win_serviceInstall( _SERVICE_NAME, "Harbour NetIO Service", '"' + hb_ProgName() + '"' + " -service", WIN_SERVICE_AUTO_START )
          OutStd( "Service has been successfully installed" + hb_eol() )
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         OutStd( hb_StrFormat( "Error installing service: %1$d %2$s", nError, cMsg ) + hb_eol() )
+         OutStd( hb_StrFormat( "Error installing service: %1$d %2$s", wapi_GetLastError(), win_ErrorDesc() ) + hb_eol() )
       ENDIF
       EXIT
 
@@ -56,10 +45,7 @@ PROCEDURE WinMain( ... )
       IF win_serviceDelete( _SERVICE_NAME )
          OutStd( "Service has been deleted" + hb_eol() )
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         OutStd( hb_StrFormat( "Error uninstalling service: %1$d %2$s", nError, cMsg ) + hb_eol() )
+         OutStd( hb_StrFormat( "Error uninstalling service: %1$d %2$s", wapi_GetLastError(), win_ErrorDesc() ) + hb_eol() )
       ENDIF
       EXIT
 
@@ -75,7 +61,7 @@ PROCEDURE WinMain( ... )
 
    OTHERWISE
 
-      netiosrv_Main( .T., ... ) /* Interactive */
+      netiosrv_Main( .T., ... )  /* Interactive */
       EXIT
 
    ENDSWITCH
@@ -88,7 +74,7 @@ STATIC PROCEDURE hbnetio_WinServiceEntry( ... )
    LOCAL bSignal := {|| win_serviceGetStatus() != WIN_SERVICE_RUNNING }
 #endif
 
-   netiosrv_Main( .F., ... ) /* Non-interactive */
+   netiosrv_Main( .F., ... )  /* Non-interactive */
 
    win_serviceSetExitCode( 0 )
    win_serviceStop()

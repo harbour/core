@@ -52,9 +52,7 @@
 
 PROCEDURE Main( cMode )
 
-   hb_default( @cMode, "S" ) /* NOTE: Must be the default action */
-
-   SWITCH Upper( cMode )
+   SWITCH Upper( hb_defaultValue( cMode, "S" /* NOTE: Must be the default action */ ) )
    CASE "I"
 
       IF win_serviceInstall( _SERVICE_NAME, "Harbour Windows Test Service" )
@@ -97,12 +95,9 @@ STATIC PROCEDURE SrvMain( cParam1, cParam2 )
    LOCAL fhnd := hb_FCreate( hb_FNameExtSet( hb_ProgName(), ".out" ),, FO_DENYNONE + FO_WRITE )
    LOCAL cParam
 
-   hb_default( @cParam1, "" )
-   hb_default( @cParam2, "" )
-
    FWrite( fhnd, "Startup" + hb_eol() )
    FWrite( fhnd, "|" + hb_CmdLine() + "|" + hb_eol() )
-   FWrite( fhnd, "|" + cParam1 + "|" + cParam2 + "|" + hb_eol() )
+   FWrite( fhnd, "|" + hb_defaultValue( cParam1, "" ) + "|" + hb_defaultValue( cParam2, "" ) + "|" + hb_eol() )
 
    FOR EACH cParam IN hb_AParams()
       FWrite( fhnd, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_eol() )
