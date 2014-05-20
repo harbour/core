@@ -1893,10 +1893,10 @@ METHOD ListBox( cCaption, aItems ) CLASS HBDebugger
    AEval( aItems, {| x | nMaxWid := Max( Len( x ), nMaxWid ) } )
    nMaxWid += 2
 
-   nTop    := ( ::nMaxRow / 2 ) - Min( nItems, ::nMaxRow - 5 ) / 2
-   nBottom := ( ::nMaxRow / 2 ) + Min( nItems, ::nMaxRow - 5 ) / 2 + 1
-   nLeft   := ( ::nMaxCol / 2 ) - Min( nMaxWid, ::nMaxCol * 3 / 2 ) / 2
-   nRight  := ( ::nMaxCol / 2 ) + Min( nMaxWid, ::nMaxCol * 3 / 2 ) / 2
+   nTop    := Int( ( ::nMaxRow / 2 ) - Min( nItems, ::nMaxRow - 5 ) / 2 )
+   nBottom := Int( ( ::nMaxRow / 2 ) + Min( nItems, ::nMaxRow - 5 ) / 2 + 1 )
+   nLeft   := Int( ( ::nMaxCol / 2 ) - Min( nMaxWid, ::nMaxCol * 3 / 2 ) / 2 )
+   nRight  := Int( ( ::nMaxCol / 2 ) + Min( nMaxWid, ::nMaxCol * 3 / 2 ) / 2 )
    oWndList := HBDbWindow():new( nTop, nLeft, nBottom, nRight, cCaption, ;
       ::oPullDown:cClrPopup )
    oWndList:lShadow := .T.

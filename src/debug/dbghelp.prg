@@ -175,15 +175,11 @@ STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
 
    LOCAL oDebug := __Dbg()
    LOCAL nRows  := oDlg:nBottom - oDlg:nTop - 1
-   LOCAL nPages := Len( aTopics[ nTopic ][ 2 ] ) / nRows
+   LOCAL nPages := Int( ( Len( aTopics[ nTopic ][ 2 ] ) + nRows - 1 ) / nRows )
    LOCAL nRowsToPaint
    LOCAL n
 
-   IF nPages > 1 .AND. Int( nPages ) < nPages
-      nPages := Int( nPages ) + 1
-   ENDIF
-
-   IF nPages == 1
+   IF nPages <= 1
       IF nPageOp == -1 .OR. nPageOp == 1
          RETURN
       ENDIF
