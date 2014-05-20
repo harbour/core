@@ -125,6 +125,10 @@ METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
 METHOD Configure()
 
    ::rowCount := ::nBottom - ::nTop + 1
+   IF ::rowPos > ::rowCount
+      ::nFirstVisible -= ::rowPos - ::rowCount
+      ::rowPos := ::rowCount
+   ENDIF
    AFill( ASize( ::aRowState, ::rowCount ), .F. )
    ::lConfigured := .T.
 
