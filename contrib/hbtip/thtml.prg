@@ -82,12 +82,12 @@
 #xtrans S_TOP( <a> )          => ( <a>\[S_DATA, <a>\[S_NUM]] )
 
 
-THREAD STATIC t_aHA                        // data for HTML attributes
-THREAD STATIC t_hHT                  // data for HTML tags
+THREAD STATIC t_aHA                // data for HTML attributes
+THREAD STATIC t_hHT                // data for HTML tags
 THREAD STATIC t_cHtmlCP := ""
-THREAD STATIC t_aHtmlEntities              // HTML character entities
-THREAD STATIC t_aHtmlAnsiEntities          // HTML character entities (ANSI character set)
-THREAD STATIC t_lInit := .F.               // initilization flag for HTML data
+THREAD STATIC t_aHtmlEntities      // HTML character entities
+THREAD STATIC t_aHtmlAnsiEntities  // HTML character entities (ANSI character set)
+THREAD STATIC t_lInit := .F.       // initilization flag for HTML data
 
 #ifdef _DEBUG_
 #xtranslate HIDDEN: => EXPORTED:   // debugger can't see HIDDEN iVars
@@ -1138,7 +1138,7 @@ STATIC FUNCTION __AttrToStr( cName, cValue, aAttr, oTHtmlNode )
 
    LOCAL nPos
 
-   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
+   IF ( nPos := hb_AScan( aAttr, Lower( cName ),,, .T. ) ) == 0
       // Tag doesn't have this attribute
       RETURN oTHtmlNode:error( "Invalid HTML attribute for: <" + oTHtmlNode:htmlTagName + ">", oTHtmlNode:className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
@@ -1370,7 +1370,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       aAttr := {}
    END SEQUENCE
 
-   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
+   IF ( nPos := hb_AScan( aAttr, Lower( cName ),,, .T. ) ) == 0
       // Tag doesn't have this attribute
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
