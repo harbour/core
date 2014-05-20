@@ -653,13 +653,13 @@ METHOD CallStackProcessKey( nKey ) CLASS HBDebugger
 
       // jump to source line for a function
 
-      /*
+#if 0
       IF ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ] != NIL
          ::ShowCodeLine( ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ], ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ] )
       ELSE
          ::GotoLine( 1 )
       ENDIF
-      */
+#endif
 
       ::ShowCodeLine( ::oBrwStack:Cargo )
    ENDIF
@@ -1471,11 +1471,11 @@ METHOD GotoLine( nLine ) CLASS HBDebugger
    LOCAL nRow
    LOCAL nCol
 
-   /*
+#if 0
    IF ::oBrwVars != NIL
       ::ShowVars()
    ENDIF
-   */
+#endif
 
    ::oBrwText:GotoLine( nLine )
    nRow := Row()
@@ -1483,12 +1483,12 @@ METHOD GotoLine( nLine ) CLASS HBDebugger
 
    // no source code line stored yet
 
-   /*
+#if 0
    IF ::oBrwStack != NIL .AND. Len( ::aCallStack ) > 0 .AND. ;
       ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ] == NIL
       ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ] := nLine
    ENDIF
-   */
+#endif
 
    IF ::oWndStack != NIL .AND. ! ::oBrwStack:Stable
       ::oBrwStack:ForceStable()

@@ -93,7 +93,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    LOCAL nKeyLen
 
    IF nSize < MaxRow() - 2
-      IF nRow != NIL
+      IF HB_ISNUMERIC( nRow )
          oWndSets := HBDbWindow():New( GetTopPos( nRow ), 5, getBottomPos( nRow + nSize + 1 ), MaxCol() - 5, ::hashName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
       ELSE
          oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::hashName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )

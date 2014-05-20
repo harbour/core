@@ -120,7 +120,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    LOCAL nMaxLen
 
    IF nSize < MaxRow() - 2
-      IF nRow != NIL
+      IF HB_ISNUMERIC( nRow )
          oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
       ELSE
          oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )

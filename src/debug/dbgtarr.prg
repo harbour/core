@@ -92,7 +92,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    LOCAL oCol
 
    IF nSize < MaxRow() - 2
-      IF nRow != NIL
+      IF HB_ISNUMERIC( nRow )
          oWndSets := HBDbWindow():New( GetTopPos( nRow ), 5, getBottomPos( nRow + nSize + 1 ), MaxCol() - 5, ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
       ELSE
          oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )

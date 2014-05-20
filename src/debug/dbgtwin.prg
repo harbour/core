@@ -177,13 +177,13 @@ METHOD ShowCaption() CLASS HBDbWindow
 
 METHOD SetFocus( lOnOff ) CLASS HBDbWindow
 
-   IF ! lOnOff .AND. ::bLostFocus != NIL
+   IF ! lOnOff .AND. HB_ISEVALITEM( ::bLostFocus )
       Eval( ::bLostFocus, Self )
    ENDIF
 
    ::lFocused := lOnOff
 
-   IF lOnOff .AND. ::bGotFocus != NIL
+   IF lOnOff .AND. HB_ISEVALITEM( ::bGotFocus )
       Eval( ::bGotFocus, Self )
    ENDIF
 
@@ -198,7 +198,7 @@ METHOD Refresh() CLASS HBDbWindow
 
    ::ShowCaption( ::cCaption )
 
-   IF ::bPainted != NIL
+   IF HB_ISEVALITEM( ::bPainted )
       Eval( ::bPainted, Self )
    ENDIF
 
@@ -241,7 +241,7 @@ METHOD ShowModal() CLASS HBDbWindow
    DO WHILE ! lExit
       nKey := Inkey( 0, INKEY_ALL )
 
-      IF ::bKeyPressed != NIL
+      IF HB_ISEVALITEM( ::bKeyPressed )
          Eval( ::bKeyPressed, nKey )
       ENDIF
 
@@ -263,7 +263,7 @@ METHOD ShowModal() CLASS HBDbWindow
 
 METHOD LButtonDown( nMRow, nMCol ) CLASS HBDbWindow
 
-   IF ::bLButtonDown != NIL
+   IF HB_ISEVALITEM( ::bLButtonDown )
       Eval( ::bLButtonDown, nMRow, nMCol )
    ENDIF
 
@@ -271,7 +271,7 @@ METHOD LButtonDown( nMRow, nMCol ) CLASS HBDbWindow
 
 METHOD LDblClick( nMRow, nMCol ) CLASS HBDbWindow
 
-   IF ::bLDblClick != NIL
+   IF HB_ISEVALITEM( ::bLDblClick )
       Eval( ::bLDblClick, nMRow, nMCol )
    ENDIF
 
@@ -334,13 +334,16 @@ METHOD Move() CLASS HBDbWindow
       ENDIF
    ENDDO
 
-   // hb_keyPut( 0 ); Inkey()
+#if 0
+   hb_keyPut( 0 )
+   Inkey()
+#endif
 
    RETURN NIL
 
 METHOD KeyPressed( nKey ) CLASS HBDbWindow
 
-   IF ::bKeyPressed != NIL
+   IF HB_ISEVALITEM( ::bKeyPressed )
       Eval( ::bKeyPressed, nKey, Self )
    ENDIF
 
@@ -362,10 +365,10 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbWindow
 
    LOCAL lShow
 
-   IF ( nTop == NIL .OR. nTop == ::nTop ) .AND. ;
-      ( nLeft == NIL .OR. nLeft == ::nLeft ) .AND. ;
-      ( nBottom == NIL .OR. nBottom == ::nBottom ) .AND. ;
-      ( nRight == NIL .OR. nRight == ::nRight )
+   IF ( ! HB_ISNUMERIC( nTop ) .OR. nTop == ::nTop ) .AND. ;
+      ( ! HB_ISNUMERIC( nLeft ) .OR. nLeft == ::nLeft ) .AND. ;
+      ( ! HB_ISNUMERIC( nBottom ) .OR. nBottom == ::nBottom ) .AND. ;
+      ( ! HB_ISNUMERIC( nRight ) .OR. nRight == ::nRight )
       RETURN Self
    ENDIF
 
@@ -373,16 +376,16 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbWindow
       ::Hide()
    ENDIF
 
-   IF nTop != NIL
+   IF HB_ISNUMERIC( nTop )
       ::nTop := nTop
    ENDIF
-   IF nBottom != NIL
+   IF HB_ISNUMERIC( nBottom )
       ::nBottom := nBottom
    ENDIF
-   IF nLeft != NIL
+   IF HB_ISNUMERIC( nLeft )
       ::nLeft := nLeft
    ENDIF
-   IF nRight != NIL
+   IF HB_ISNUMERIC( nRight )
       ::nRight := nRight
    ENDIF
 
