@@ -82,7 +82,7 @@ CREATE CLASS THtml
    VAR FontColor INIT "black"
    VAR aImages
    VAR lCgi  INIT .F.
-   VAR cStr    Init ""
+   VAR cStr    INIT ""
    VAR BaseURL, BaseTarget
    VAR lFont INIT .F.
    VAR cEncoding
@@ -116,9 +116,9 @@ CREATE CLASS THtml
       nMarginWidth, nMarginLeft, lCgi, cFile )
 
    METHOD CGIClose()
-   METHOD SetPageColor( cColor, lBody ) INLINE hb_default( @lBody, .T. ), ::cStr += iif( lBody, '<body bgcolor="' + cColor + '">', ' bgcolor="' + cColor + '" ' )
-   METHOD SetTextColor( cColor, lBody ) INLINE hb_default( @lBody, .T. ), ::cStr += iif( lBody, '<body text="' + cColor + '">', ' text="' + cColor + '" ' )
-   METHOD SetBgImage( cImage, lBody ) INLINE hb_default( @lBody, .T. ), ::cStr += iif( lBody, '<body background="' + cImage + '">', ' background="' + cImage + '" ' )
+   METHOD SetPageColor( cColor, lBody ) INLINE hb_default( @lBody, .T. ), ::cStr += iif( lBody, "<body bgcolor=" + '"' + cColor + '"' + ">", " bgcolor=" + '"' + cColor + '"' + " " )
+   METHOD SetTextColor( cColor, lBody ) INLINE hb_default( @lBody, .T. ), ::cStr += iif( lBody, "<body text=" + '"' + cColor + '"' + ">", " text=" + '"' + cColor + '"' + " " )
+   METHOD SetBgImage( cImage, lBody ) INLINE hb_default( @lBody, .T. ), ::cStr += iif( lBody, "<body background=" + '"' + cImage + '"' + ">", " background=" + '"' + cImage + '"' + " " )
    METHOD Close()
    METHOD SetCenter( lOn ) INLINE ::cStr += iif( lOn, "<center>", "</center>" )
    METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet )
@@ -132,17 +132,17 @@ CREATE CLASS THtml
    METHOD WriteData( c ) INLINE hb_default( @c, "" ), iif( ::cEncoding == NIL, ::cStr += c, ::cStr += hb_Translate( c,, ::cEncoding ) )
    METHOD WriteLN( c ) INLINE hb_default( @c, "" ), ::cStr += CRLF() + c + "<br />" + CRLF()
    METHOD SayColor( t, c ) INLINE hb_default( @t, "" ), hb_default( @c, "black" ), ;
-      ::cStr += '<font color="' + c + '">' + t + "</font>"
+      ::cStr += "<font color=" + '"' + c + '"' + ">" + t + "</font>"
    METHOD Space( n ) INLINE hb_default( @n, 1 ), ::cStr += Replicate( "&nbsp;", n  )
    METHOD PutImage( cImage, nBorder, nHeight, cOnclick, cOnMsOver, cOnMsOut, ;
       cName, cAlt, cTarget, nWidth, lBreak, ID, MAP, ALING, HSPACE )
    METHOD Text( cText, nCols, lWrap ) INLINE hb_default( @lWrap, .T. ), hb_default( @nCols, 80 ), ;
-      ::cStr += "<pre" + iif( HB_ISNUMERIC( nCols ), ' cols="' + hb_ntos( nCols ) + "'", "" ) + iif( lWrap, " WRAP>", ">" ) + CRLF() + cText + CRLF() + "</pre>" + CRLF()
+      ::cStr += "<pre" + iif( HB_ISNUMERIC( nCols ), " cols=" + '"' + hb_ntos( nCols ) + '"', "" ) + iif( lWrap, " WRAP>", ">" ) + CRLF() + cText + CRLF() + "</pre>" + CRLF()
    METHOD MultiCol( txt, cols, gutter, width ) INLINE hb_default( @txt, "" ), ;
       hb_default( @cols, 2 ), ;
       hb_default( @gutter, 5 ), ;
       hb_default( @width, 100 ), ;
-      ::cStr += '<multicol cols="' + hb_ntos( cols ) + '" gutter="' + hb_ntos( gutter ) + '" width="' + hb_ntos( width ) + '">', ;
+      ::cStr += "<multicol cols=" + '"' + hb_ntos( cols ) + '"' + " gutter=" + '"' + hb_ntos( gutter ) + '"' + " width=" + '"' + hb_ntos( width ) + '"' + ">", ;
       ::cStr += txt, ;
       ::cStr += "</multicol>"
    METHOD PutHeading( cText, nWeight, lCentered )
@@ -189,7 +189,7 @@ CREATE CLASS THtml
    METHOD Button( cName, cCaption, cOnClick, cCgiApp, cOnMsOver, cOnMsOut, style, ID )
    METHOD iFrame( name, src, border, marginwidth, marginheight, scrolling, align, WIDTH, HEIGHT )
    METHOD StartJava() INLINE ::cStr += '<script language="JavaScript">' + CRLF() + "<!--" + CRLF()
-   METHOD PutJavaSource( c ) INLINE ::cStr += Space( 5 ) + 'src="' + c + '"' + CRLF()
+   METHOD PutJavaSource( c ) INLINE ::cStr += Space( 5 ) + "src=" + '"' + c + '"' + CRLF()
    METHOD PutJava( c ) INLINE ::cStr += Space( 5 ) + c + CRLF()
    METHOD EndJava() INLINE ::cStr += "                  //-->" + CRLF() + "</script>" + CRLF()
    METHOD serverCode( c ) INLINE ::cStr += "<server>" + Space( 9 ) + c + CRLF() + "</server>" + CRLF()
@@ -273,17 +273,17 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       ::cStr += "Content-Type: text/html" + CRLF() + CRLF()
       FWrite( ::nh, ::cStr )
    ENDIF
-   ::cStr := ''
+   ::cStr := ""
 
-   ::cStr += '<html>' + CRLF() + ;
+   ::cStr += "<html>" + CRLF() + ;
       "<head>" + CRLF() + ;
       "   <title>" + cTitle + "</title>" + CRLF()
 
    IF HB_ISSTRING( cBaseURL )
-      ::cStr += "<base href='" + cBaseURL + "'"
+      ::cStr += "<base href=" + '"' + cBaseURL + '"'
 
       IF HB_ISSTRING( cBaseTarget )
-         ::cStr += " target='" + cBaseTarget + "'"
+         ::cStr += " target=" + '"' + cBaseTarget + '"'
       ENDIF
 
       ::cStr += ">" + CRLF()
@@ -291,16 +291,16 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 #if 0
 /* TOFIX: Luiz please review it */
    ::cStr += ;
-      '   <link title="' + cLinkTitle + '"' + CRLF() + ;
-      '                href="mailto:mail@example.net" >' + CRLF() + ;
-      '   <meta http-equiv="Content-Type" content="text/html; charset=' + cCharset + '" />' + CRLF() )
+      "   <link title=" + '"' + cLinkTitle + '"' + CRLF() + ;
+      '                href="mailto:mail@example.net">' + CRLF() + ;
+      '   <meta http-equiv="Content-Type" content="text/html; charset=' + cCharset + '"' + " />" + CRLF() )
 #endif
    IF HB_ISSTRING( cStyleScr )
-      ::cStr += '   <link href="' + cStyleScr + '"' + " rel='STYLESHEET' type='text/css' />" + CRLF()
+      ::cStr += "   <link href=" + '"' + cStyleScr + '"' + " rel='STYLESHEET' type='text/css' />" + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( nRefresh )
-      ::cStr += '   <meta http-equiv="Refresh" content="' + hb_ntos( nRefresh ) + "; url=" + cRefreshURL + '" />'
+      ::cStr += '   <meta http-equiv="Refresh" content=' + '"' + hb_ntos( nRefresh ) + "; url=" + cRefreshURL + '"' + " />"
    ENDIF
 
    IF lnocache
@@ -313,13 +313,13 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
    IF HB_ISARRAY( aScriptSrc ) .OR. HB_ISHASH( aScriptSrc )
       FOR EACH i IN aScriptSrc
-         ::cStr += '<script language=JavaScript src="' + i + '" />' + CRLF()
+         ::cStr += "<script language=JavaScript src=" + '"' + i + '"' + " />" + CRLF()
       NEXT
    ENDIF
 
    IF HB_ISARRAY( aServerSrc ) .OR. HB_ISHASH( aServerSrc )
       FOR EACH i IN aServerSrc
-         ::cStr += '<script language=JavaScript src="' + i + '" runat=SERVER />' + CRLF()
+         ::cStr += "<script language=JavaScript src=" + '"' + i + '"' + " runat=SERVER />" + CRLF()
       NEXT
    ENDIF
 
@@ -336,7 +336,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
       FOR EACH i IN aImages
          ::cStr += Space( 5 ) + i[ 1 ] + "=new Image(100,50);" + CRLF()
-         ::cStr += Space( 5 ) + i[ 1 ] + '.src="' + i[ 2 ] + '";' + CRLF()
+         ::cStr += Space( 5 ) + i[ 1 ] + ".src=" + '"' + i[ 2 ] + '"' + ";" + CRLF()
       NEXT
 
       ::cStr += "}" + CRLF()
@@ -345,29 +345,29 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
          Space( 5 ) + "// Function to 'activate' images." + CRLF() + ;
          Space( 5 ) + "function imageOn(imgName) {" + CRLF() + ;
          Space( 5 ) + "        if (document.images) {" + CRLF() + ;
-         Space( 5 ) + '            imgOn=eval' + '(imgName + "on.src");' + CRLF() + ;
-         Space( 5 ) + '            document[imgName].src = imgOn;' + CRLF() + ;
+         Space( 5 ) + "            imgOn=eval" + '(imgName + "on.src");' + CRLF() + ;
+         Space( 5 ) + "            document[imgName].src = imgOn;" + CRLF() + ;
          Space( 5 ) + "        }" + CRLF() + ;
          Space( 5 ) + "}" + CRLF() + ;
          CRLF() + ;
          Space( 5 ) + "// Function to 'deactivate' images." + CRLF() + ;
          Space( 5 ) + "function imageOff(imgName) {" + CRLF() + ;
          Space( 5 ) + "        if (document.images) {" + CRLF() + ;
-         Space( 5 ) + '            imgOff=eval' + '(imgName + "off.src");' + CRLF() + ;
-         Space( 5 ) + '            document[imgName].src = imgOff;' + CRLF() + ;
+         Space( 5 ) + "            imgOff=eval" + '(imgName + "off.src");' + CRLF() + ;
+         Space( 5 ) + "            document[imgName].src = imgOff;" + CRLF() + ;
          Space( 5 ) + "        }" + CRLF() + ;
          Space( 5 ) + "}" + CRLF() + ;
          CRLF() + ;
          Space( 5 ) + "// Function for 'pressed' images." + CRLF() + ;
          Space( 5 ) + "function imagePress(imgName) {" + CRLF() + ;
          Space( 5 ) + "        if (document.images) {" + CRLF() + ;
-         Space( 5 ) + '            imgPress=eval' + '(imgName + "press.src");' + CRLF() + ;
-         Space( 5 ) + '            document[imgName].src = imgPress;' + CRLF() + ;
+         Space( 5 ) + "            imgPress=eval" + '(imgName + "press.src");' + CRLF() + ;
+         Space( 5 ) + "            document[imgName].src = imgPress;" + CRLF() + ;
          Space( 5 ) + "        }" + CRLF() + ;
          Space( 5 ) + "}" + CRLF() + ;
          CRLF() + ;
-         '//-->' + CRLF() + ;
-         '</script>' + CRLF()
+         "//-->" + CRLF() + ;
+         "</script>" + CRLF()
 
    ENDIF
 
@@ -376,26 +376,26 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
 
    ::cStr += ;
-      '</head>' + CRLF() + ;
-      '<body'
+      "</head>" + CRLF() + ;
+      "<body"
 
    IF HB_ISSTRING( onLoad )
-      ::cStr += '   onLoad="' + onLoad + '"'
+      ::cStr += "   onLoad=" + '"' + onLoad + '"'
    ENDIF
    IF HB_ISSTRING( NOF )
-      ::cStr += '   nof="' + nof + '"'
+      ::cStr += "   nof=" + '"' + nof + '"'
    ENDIF
    IF HB_ISSTRING( onUnLoad )
-      ::cStr += ' onUnload="' + onUnLoad + '"'
+      ::cStr += " onUnload=" + '"' + onUnLoad + '"'
    ENDIF
    IF HB_ISSTRING( cLinkClr )
-      ::cStr += ' link="' + cLinkClr + '"'
+      ::cStr += " link=" + '"' + cLinkClr + '"'
    ENDIF
    IF HB_ISSTRING( cVLinkClr )
-      ::cStr += ' vlnk="' + cVLinkClr + '"'
+      ::cStr += " vlnk=" + '"' + cVLinkClr + '"'
    ENDIF
    IF HB_ISSTRING( cALinkClr )
-      ::cStr += ' alink="' + cALinkClr + '"'
+      ::cStr += " alink=" + '"' + cALinkClr + '"'
    ENDIF
 
    IF HB_ISSTRING( BGIMAGE )
@@ -409,16 +409,16 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
 
    IF HB_ISNUMERIC( nMarginTop )
-      ::cStr += ' topMargin=' + hb_ntos( nMarginTop )
+      ::cStr += " topMargin=" + hb_ntos( nMarginTop )
    ENDIF
    IF HB_ISNUMERIC( nMarginLeft )
-      ::cStr += ' LeftMargin=' + hb_ntos( nMarginLeft )
+      ::cStr += " LeftMargin=" + hb_ntos( nMarginLeft )
    ENDIF
    IF HB_ISNUMERIC( nMarginHeight )
-      ::cStr += ' marginheight=' + hb_ntos( nMarginHeight )
+      ::cStr += " marginheight=" + hb_ntos( nMarginHeight )
    ENDIF
    IF HB_ISNUMERIC( nMarginWidth )
-      ::cStr += ' marginwidth=' + hb_ntos( nMarginWidth )
+      ::cStr += " marginwidth=" + hb_ntos( nMarginWidth )
    ENDIF
 
    ::cStr += ">" + CRLF()
@@ -432,7 +432,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 METHOD NewAlt( cType ) CLASS THtml
 
    ::nH    := hb_GetStdOut()
-   ::cStr += 'Content-Type: ' + cType + CRLF() + CRLF()
+   ::cStr += "Content-Type: " + cType + CRLF() + CRLF()
 
    t_nHtm := ::nH
 
@@ -443,7 +443,7 @@ METHOD NewAlt( cType ) CLASS THtml
 
 METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
 
-   LOCAL cStr := CRLF() + '<font'
+   LOCAL cStr := CRLF() + "<font"
 
    hb_default( @lset, HB_ISSTRING( cFont ) )  /* keep it on top */
    hb_default( @cFont, ::fontFace )
@@ -451,7 +451,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    hb_default( @cColor, ::fontColor )
 
    IF HB_ISSTRING( cFont )
-      cStr += ' face="' + cFont + '"'
+      cStr += " face=" + '"' + cFont + '"'
 
       IF lSet
          ::fontFace := cFont
@@ -459,7 +459,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF HB_ISNUMERIC( nSize )
-      cStr += ' size="' + hb_ntos( nSize ) + '"'
+      cStr += " size=" + '"' + hb_ntos( nSize ) + '"'
 
       IF lSet
          ::fontSize := nSize
@@ -467,7 +467,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF HB_ISSTRING( cColor )
-      cStr += ' color= "' + cColor + '">'
+      cStr += " color=" + '"' + cColor + '"' + ">"
 
       IF lset
          ::fontColor := cColor
@@ -477,18 +477,18 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF HB_ISLOGICAL( lBold )
-      iif( lBold, cStr += '<b>', cStr += '</b>' )
+      iif( lBold, cStr += "<b>", cStr += "</b>" )
    ENDIF
 
    IF HB_ISLOGICAL( lItalic )
-      iif( lItalic, cStr += '<i>', cStr += '</i>' )
+      iif( lItalic, cStr += "<i>", cStr += "</i>" )
    ENDIF
 
    IF HB_ISLOGICAL( lULine )
-      iif( lULine, cStr += '<u>', cStr += '</u>' )
+      iif( lULine, cStr += "<u>", cStr += "</u>" )
    ENDIF
 
-   cStr += '</font>'
+   cStr += "</font>"
    ::cStr += cStr + CRLF()
 
    RETURN Self
@@ -509,7 +509,7 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    hb_default( @cColor, ::fontColor )
 
    IF HB_ISSTRING( cFont )
-      cStr += ' face="' + cFont + '"'
+      cStr += " face=" + '"' + cFont + '"'
 
       IF lSet
          ::fontFace := cFont
@@ -519,7 +519,7 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    IF lPut
 
       IF HB_ISNUMERIC( nSize )
-         cStr += ' size="' + hb_ntos( nSize ) + '"'
+         cStr += " size=" + '"' + hb_ntos( nSize ) + '"'
 
          IF lSet
             ::fontSize := nSize
@@ -527,7 +527,7 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
       ENDIF
 
       IF HB_ISSTRING( cColor )
-         cStr += ' color= "' + cColor + '">'
+         cStr += " color=" + '"' + cColor + '"' + ">"
 
          IF lSet
             ::fontColor := cColor
@@ -541,15 +541,15 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    ENDIF
 
    IF HB_ISLOGICAL( lBold )
-      iif( lBold, cStr += '<b>', cStr += '</b>' )
+      iif( lBold, cStr += "<b>", cStr += "</b>" )
    ENDIF
 
    IF HB_ISLOGICAL( lItalic )
-      iif( lItalic, cStr += '<i>', cStr += '</i>' )
+      iif( lItalic, cStr += "<i>", cStr += "</i>" )
    ENDIF
 
    IF HB_ISLOGICAL( lULine )
-      iif( lULine, cStr += '<u>', cStr += '</u>' )
+      iif( lULine, cStr += "<u>", cStr += "</u>" )
    ENDIF
 
    ::cStr += cStr + CRLF()
@@ -571,7 +571,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
    hb_default( @cColor, ::fontColor )
 
    IF HB_ISSTRING( cFont )
-      cStr += ' face="' + cFont + '"'
+      cStr += " face=" + '"' + cFont + '"'
 
       IF lSet
          ::fontFace := cFont
@@ -579,7 +579,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF HB_ISNUMERIC( nSize )
-      cStr += ' size="' + hb_ntos( nSize ) + '"'
+      cStr += " size=" + '"' + hb_ntos( nSize ) + '"'
 
       IF lSet
          ::fontSize := nSize
@@ -587,7 +587,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF HB_ISSTRING( cColor )
-      cStr += ' color= "' + cColor + '">'
+      cStr += " color=" + '"' + cColor + '"' + ">"
 
       IF lset
          ::fontColor := cColor
@@ -608,7 +608,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
 */
 METHOD EndFont() CLASS THtml
 
-   ::cStr += '</font>' + CRLF()
+   ::cStr += "</font>" + CRLF()
 
    RETURN Self
 
@@ -627,13 +627,13 @@ METHOD Say( str, cFont, nSize, type, cColor, cStyle ) CLASS THtml
    hb_default( @cCOLOR, ::FontColor )
 
    IF HB_ISSTRING( cFONT ) .OR. HB_ISNUMERIC( nSize ) .OR. HB_ISSTRING( cCOLOR )
-      cOut := '<font ' + ;
-         iif( HB_ISSTRING( cFont ), 'face="' + cFont + '"', '' ) + ;
-         iif( HB_ISSTRING( cColor ), ' color=' + cColor, '' ) + ;
-         iif( HB_ISNUMERIC( nSize ), ' size=' + hb_ntos( nSize ), "" )
+      cOut := "<font " + ;
+         iif( HB_ISSTRING( cFont ), "face=" + '"' + cFont + '"', "" ) + ;
+         iif( HB_ISSTRING( cColor ), " color=" + cColor, "" ) + ;
+         iif( HB_ISNUMERIC( nSize ), " size=" + hb_ntos( nSize ), "" )
 
       IF HB_ISSTRING( cStyle )
-         cOut += '" Style="' + cStyle + '">'
+         cOut += " style=" + '"' + cStyle + '"' + ">"
       ELSE
          cOut += ">"
       ENDIF
@@ -708,10 +708,10 @@ METHOD Paragraph( lStart, cAlign, cStyle ) CLASS THtml
    hb_default( @cAlign, "LEFT" )
 
    IF lStart
-      cStr := "<p align='" + cAlign + "'"
+      cStr := "<p align=" + '"' + cAlign + '"'
 
       IF HB_ISSTRING( cStyle )
-         cStr += ' style="' + cStyle + '"'
+         cStr += " style=" + '"' + cStyle + '"'
       ENDIF
 
       cStr += ">"
@@ -734,11 +734,11 @@ METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
    IF lShade
       ::cStr += CRLF() + ;
-         "<hr size=" + hb_ntos( nSize ) + iif( HB_ISSTRING( cColor ), " COLOR  " + cColor, "" ) + " width=" + hb_ntos( nWidth ) + '%>' + ;
+         "<hr size=" + hb_ntos( nSize ) + iif( HB_ISSTRING( cColor ), " COLOR  " + cColor, "" ) + " width=" + hb_ntos( nWidth ) + "%>" + ;
          CRLF()
    ELSE
       ::cStr += CRLF() + ;
-         "<hr noshade size=" + hb_ntos( nSize ) + iif( HB_ISSTRING( cColor ), " COLOR  " + cColor, "" ) + " width=" + hb_ntos( nWidth ) + '%>' + ;
+         "<hr noshade size=" + hb_ntos( nSize ) + iif( HB_ISSTRING( cColor ), " COLOR  " + cColor, "" ) + " width=" + hb_ntos( nWidth ) + "%>" + ;
          CRLF()
    ENDIF
 
@@ -773,24 +773,24 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
    hb_default( @bld, .F. )
    hb_default( @lBreak, .F. )
 
-   ::cStr += '<a href="' + cUrl + '"' + CRLF()
+   ::cStr += "<a href=" + '"' + cUrl + '"' + CRLF()
 
    IF HB_ISSTRING( cOnClick )
-      ::cStr += Space( 5 ) + 'onClick="' + cOnClick + '"' + CRLF()
+      ::cStr += Space( 5 ) + "onClick=" + '"' + cOnClick + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      ::cStr += Space( 5 ) + 'onMouseOver="' + cOnMsOver + '"' + CRLF()
+      ::cStr += Space( 5 ) + "onMouseOver=" + '"' + cOnMsOver + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      ::cStr += Space( 5 ) + 'onMouseOut="' + cOnMsOut + '"' + CRLF()
+      ::cStr += Space( 5 ) + "onMouseOut=" + '"' + cOnMsOut + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cTarget )
-      ::cStr += Space( 5 ) + 'target=' + cTarget + CRLF()
+      ::cStr += Space( 5 ) + "target=" + cTarget + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cClass )
-      ::cStr += Space( 5 ) + 'class=' + cClass + CRLF()
+      ::cStr += Space( 5 ) + "class=" + cClass + CRLF()
    ENDIF
 
    IF bld
@@ -801,16 +801,16 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
       cStr += " <font " + CRLF()
 
       IF HB_ISSTRING( FONT )
-         cStr += ' face="' + FONT + '"'
+         cStr += " face=" + '"' + FONT + '"'
       ENDIF
       IF HB_ISSTRING( clr )
-         cStr += ' color=' + clr
+         cStr += " color=" + clr
       ENDIF
       IF HB_ISNUMERIC( size )
-         cStr += ' size=' + hb_ntos( size )
+         cStr += " size=" + hb_ntos( size )
       ENDIF
       IF HB_ISSTRING( style )
-         cStr += ' style="' + style + '"'
+         cStr += " style=" + '"' + style + '"'
       ENDIF
 
       cStr += ">"
@@ -820,14 +820,14 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
 
    ::cStr += ">" + cStr
    IF HB_ISSTRING( FONT ) .OR. HB_ISSTRING( clr ) .OR. HB_ISNUMERIC( size ) .OR. HB_ISSTRING( style )
-      ::cStr += '</font>'
+      ::cStr += "</font>"
    ENDIF
 
    IF bld
-      ::cStr += '</b>'
+      ::cStr += "</b>"
    ENDIF
 
-   ::cStr += '</a>' + iif( lBreak, "<br />" + CRLF(), CRLF() )
+   ::cStr += "</a>" + iif( lBreak, "<br />" + CRLF(), CRLF() )
 
    RETURN Self
 
@@ -842,10 +842,10 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
    hb_default( @lbreak, .F. )
 
    IF HB_ISSTRING( cName )
-      cStr += ' name="' + cName + '"' + CRLF()
+      cStr += " name=" + '"' + cName + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cAlt )
-      cStr += ' alt="' + cAlt + '"' + CRLF()
+      cStr += " alt=" + '"' + cAlt + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( nBorder )
@@ -867,30 +867,30 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    IF HB_ISSTRING( cOnClick )
-      cStr += ' onClick="' + cOnClick + '"' + CRLF()
+      cStr += " onClick=" + '"' + cOnClick + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      cStr += ' onMouseOver="' + cOnMsOver + '"' + CRLF()
+      cStr += " onMouseOver=" + '"' + cOnMsOver + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      cStr += ' onMouseOut="' + cOnMsOut + '"' + CRLF()
+      cStr += " onMouseOut=" + '"' + cOnMsOut + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cTarget )
-      cStr += ' target=' + cTarget + CRLF()
+      cStr += " target=" + cTarget + CRLF()
    ENDIF
    IF HB_ISSTRING( Id )
       cstr += " id=" + Id
    ENDIF
    IF HB_ISSTRING( Aling )
-      cStr += ' align="' + Aling + '"'
+      cStr += " align=" + '"' + Aling + '"'
    ENDIF
    IF HB_ISNUMERIC( hSpace )
       cStr += " hSpace= " + hb_ntos( hSpace ) + " "
    ENDIF
 
    ::cStr += ;
-      '<a href=' + cUrl + iif( HB_ISSTRING( cClass ), ' class="' + cClass + '"', "" ) + '><img src="' + cImage + '"' + ;
-      cStr + '></a>' + iif( lBreak, "<br />" + CRLF(), "" )
+      "<a href=" + cUrl + iif( HB_ISSTRING( cClass ), " class=" + '"' + cClass + '"', "" ) + "><img src=" + '"' + cImage + '"' + ;
+      cStr + "></a>" + iif( lBreak, "<br />" + CRLF(), "" )
 
    RETURN Self
 
@@ -902,10 +902,10 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
    hb_default( @lbreak, .F. )
 
    IF HB_ISSTRING( cName )
-      cStr += ' name= "' + cName + '"'
+      cStr += " name=" + '"' + cName + '"'
    ENDIF
    IF HB_ISSTRING( cAlt )
-      cStr += ' alt= "' + cAlt + '"'
+      cStr += " alt=" + '"' + cAlt + '"'
    ENDIF
    IF HB_ISNUMERIC( nBorder )
       cStr += " border=" + hb_ntos( nBorder )
@@ -924,21 +924,21 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    IF HB_ISSTRING( cOnClick )
-      cStr += ' onClick="' + cOnClick + '"'
+      cStr += " onClick=" + '"' + cOnClick + '"'
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      cStr += ' onMouseOver="' + cOnMsOver + '"'
+      cStr += " onMouseOver=" + '"' + cOnMsOver + '"'
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      cStr += ' onMouseOut="' + cOnMsOut + '"'
+      cStr += " onMouseOut=" + '"' + cOnMsOut + '"'
    ENDIF
    IF HB_ISSTRING( cTarget )
-      cStr += ' target=' + cTarget
+      cStr += " target=" + cTarget
    ENDIF
 
    ::cStr += ;
-      '<a href=' + cUrl + iif( HB_ISSTRING( cClass ), ' class="' + cClass + '"', "" ) + ">" + cText + '<img src="' + cImage + '"' + ;
-      cStr + '></a>' + iif( lBreak, "<br />" + CRLF(), "" )
+      "<a href=" + cUrl + iif( HB_ISSTRING( cClass ), " class=" + '"' + cClass + '"', "" ) + ">" + cText + "<img src=" + '"' + cImage + '"' + ;
+      cStr + "></a>" + iif( lBreak, "<br />" + CRLF(), "" )
 
    RETURN Self
 
@@ -953,57 +953,57 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
    hb_default( @lbreak, .F. )
 
    IF HB_ISSTRING( cName )
-      cStr += ' name= "' + cName + '"'
+      cStr += " name=" + '"' + cName + '"'
    ENDIF
    IF HB_ISSTRING( cAlt )
-      cStr += ' alt= "' + cAlt + '"'
+      cStr += " alt=" + '"' + cAlt + '"'
    ENDIF
 
    IF HB_ISNUMERIC( nBorder )
-      cStr += " border= " + hb_ntos( nBorder )
+      cStr += " border=" + hb_ntos( nBorder )
    ELSEIF HB_ISSTRING( nBorder )
-      cStr += " border= " + '"' + nBorder + '"'
+      cStr += " border=" + '"' + nBorder + '"'
    ENDIF
 
    IF HB_ISNUMERIC( nHeight )
-      cStr += " height= " + hb_ntos( nHeight ) + " "
+      cStr += " height=" + hb_ntos( nHeight ) + " "
    ELSEIF HB_ISSTRING( nHeight )
-      cStr += " height= " + '"' + nHeight + '"'
+      cStr += " height=" + '"' + nHeight + '"'
    ENDIF
 
    IF HB_ISNUMERIC( nWidth )
-      cStr += " width= " + hb_ntos( nWidth ) + " "
+      cStr += " width=" + hb_ntos( nWidth ) + " "
    ELSEIF HB_ISSTRING( nWidth )
-      cStr += " width= " + nWidth + " "
+      cStr += " width=" + nWidth + " "
    ENDIF
 
    IF HB_ISSTRING( cOnClick )
-      cStr += ' onClick="' + cOnClick + '"'
+      cStr += " onClick=" + '"' + cOnClick + '"'
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      cStr += ' onMouseOver="' + cOnMsOver + '"'
+      cStr += " onMouseOver=" + '"' + cOnMsOver + '"'
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      cStr += ' onMouseOut="' + cOnMsOut + '"'
+      cStr += " onMouseOut=" + '"' + cOnMsOut + '"'
    ENDIF
    IF HB_ISSTRING( Map )
       cStr += " usemap=" + Map
    ENDIF
    IF HB_ISSTRING( cTarget )
-      cStr += ' target="' + cTarget + '"'
+      cStr += " target=" + '"' + cTarget + '"'
    ENDIF
    IF HB_ISSTRING( Id )
       cstr += " id=" + Id
    ENDIF
    IF HB_ISSTRING( Aling )
-      cStr += ' align="' + Aling + '"'
+      cStr += " align=" + '"' + Aling + '"'
    ENDIF
    IF HB_ISNUMERIC( hSpace )
       cStr += " hSpace= " + hb_ntos( hSpace ) + " "
    ENDIF
 
    ::cStr += ;
-      '<img src="' + cImage + '"' + ;
+      "<img src=" + '"' + cImage + '"' + ;
       cStr + ">" + iif( lBreak, "<br />" + CRLF(), "" )
 
    RETURN Self
@@ -1064,15 +1064,15 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    cStr += iif( HB_ISNUMERIC( nBorder ), "border=" + hb_ntos( nBorder ) + " ", "border " )
 
    IF HB_ISNUMERIC( ncellpadding )
-      cStr += ' CellPadding=' + hb_ntos( nCellPadding )
+      cStr += " CellPadding=" + hb_ntos( nCellPadding )
    ENDIF
 
    IF HB_ISNUMERIC( nCellSpacing )
-      cStr += ' CellSpacing=' + hb_ntos( nCellSpacing )
+      cStr += " CellSpacing=" + hb_ntos( nCellSpacing )
    ENDIF
 
    IF HB_ISSTRING( cAling )
-      cStr += ' aling=' + '"' + cAling + '"'
+      cStr += " aling=" + '"' + cAling + '"'
    ENDIF
 
    cStr += iif( HB_ISNUMERIC( xCols ), " cols=" + hb_ntos( nCols ), "" )
@@ -1090,20 +1090,20 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    ENDIF
 
    IF l3d
-      cStr += ' bordercolorlight=#000000 ' + ;
-         ' bordercolordark=#FFFFFF '
+      cStr += " bordercolorlight=#000000 " + ;
+         " bordercolordark=#FFFFFF "
    ENDIF
 
    IF HB_ISSTRING( cClrDark )
-      cStr += ' bordercolordark=' + cClrDark
+      cStr += " bordercolordark=" + cClrDark
    ENDIF
 
    IF HB_ISSTRING( cClrLight )
-      cStr += ' bordercolorlight=' + cClrLight
+      cStr += " bordercolorlight=" + cClrLight
    ENDIF
 
    IF HB_ISSTRING( cClrBorder )
-      cStr += ' bordercolor=' + cClrBorder
+      cStr += " bordercolor=" + cClrBorder
    ENDIF
 
    IF lRuleCols
@@ -1115,16 +1115,16 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    ENDIF
 
    IF HB_ISSTRING( bgImage )
-      cStr += ' background="' + bgImage + '" '
+      cStr += " background=" + '"' + bgImage + '"' + " "
    ENDIF
    IF HB_ISSTRING( cStyle )
-      cStr += ' style="' + cStyle + '" '
+      cStr += " style=" + '"' + cStyle + '"' + " "
    ENDIF
    IF HB_ISSTRING( Id )
-      cStr += ' id=' + Id
+      cStr += " id=" + Id
    ENDIF
    IF HB_ISSTRING( NOF )
-      cStr += ' nof="' + NOF + '"'
+      cStr += " nof=" + '"' + NOF + '"'
    ENDIF
 
    cStr += ">" + CRLF()
@@ -1160,19 +1160,19 @@ METHOD TableHead( cHead, cColor, cAlign, ;
    cStr += ">"
 
    IF HB_ISSTRING( cFont )
-      cStr += '<font face="' + cFont + '"'
+      cStr += "<font face=" + '"' + cFont + '"'
 
       IF HB_ISNUMERIC( nSize )
-         cStr += ' size="' + hb_ntos( nSize ) + '"'
+         cStr += " size=" + '"' + hb_ntos( nSize ) + '"'
       ENDIF
       IF HB_ISSTRING( cFntColor )
-         cStr += ' color="' + cFntColor + '"'
+         cStr += " color=" + '"' + cFntColor + '"'
       ENDIF
 
       cStr += ">"
    ENDIF
 
-   cStr += cHead + iif( HB_ISSTRING( cFont ), '</font>', "" ) + "</th>" + CRLF()
+   cStr += cHead + iif( HB_ISSTRING( cFont ), "</font>", "" ) + "</th>" + CRLF()
 
    ::cStr += cStr
 
@@ -1261,7 +1261,7 @@ METHOD NewTableCell( cAlign, cColor, ;
       cStr += " bordercolorlight=" + clrlt
    ENDIF
    IF HB_ISSTRING( cClass )
-      cStr += ' Class="' + cClass + '" '
+      cStr += " Class=" + '"' + cClass + '"' + " "
    ENDIF
 
    IF HB_ISNUMERIC( nRowspan )
@@ -1277,18 +1277,18 @@ METHOD NewTableCell( cAlign, cColor, ;
    cStr += ">"
 
    IF ! lNoFont
-      cStr += '<font '
+      cStr += "<font "
 
       IF HB_ISNUMERIC( nSize )
-         cStr += 'size=' + hb_ntos( nSize )
+         cStr += "size=" + hb_ntos( nSize )
       ENDIF
 
       IF HB_ISSTRING( cFntColor )
-         cStr += ' color=' + cFntColor
+         cStr += " color=" + cFntColor
       ENDIF
 
       IF ! Empty( cFont )
-         cStr += ' face="' + cFont + '"' + ">"
+         cStr += " face=" + '"' + cFont + '"' + ">"
       ELSE
          cStr += ">"
       ENDIF
@@ -1334,13 +1334,13 @@ METHOD NewForm( cMethod, cAction, cName ) CLASS THtml
    ::cStr += CRLF() + "<form"
 
    IF HB_ISSTRING( cMethod )
-      ::cStr += ' method="' + cMethod + '"'
+      ::cStr += " method=" + '"' + cMethod + '"'
    ENDIF
    IF HB_ISSTRING( cName )
-      ::cStr += ' name="' + cName + '"'
+      ::cStr += " name=" + '"' + cName + '"'
    ENDIF
    IF HB_ISSTRING( cAction )
-      ::cStr += ' action="' + cAction + '"'
+      ::cStr += " action=" + '"' + cAction + '"'
    ENDIF
 
    ::cStr += ">" + CRLF()
@@ -1355,18 +1355,18 @@ METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
 
    hb_default( @cType, "edit" )
 
-   ::cStr += '<input type="' + cType + '"'
+   ::cStr += "<input type=" + '"' + cType + '"'
 
    IF HB_ISSTRING( cName )
-      ::cStr += ' Name="' + cName + '"'
+      ::cStr += " Name=" + '"' + cName + '"'
    ENDIF
 
    IF xValue != NIL
-      ::cStr += ' Value="' + HtmlAny2Str( xValue ) + '"'
+      ::cStr += " Value=" + '"' + HtmlAny2Str( xValue ) + '"'
    ENDIF
 
    IF HB_ISNUMERIC( nSize )
-      ::cStr += ' Size="' + HtmlAny2Str( nSize ) + '"'
+      ::cStr += " Size=" + '"' + HtmlAny2Str( nSize ) + '"'
    ENDIF
 
    ::cStr += ">"
@@ -1377,7 +1377,7 @@ METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
 */
 METHOD FormSubmit( cText ) CLASS THtml
 
-   ::cStr += '<input type="submit" Value="' + cText + '">' + CRLF()
+   ::cStr += '<input type="submit" Value=' + '"' + cText + '"' + ">" + CRLF()
 
    RETURN Self
 
@@ -1387,7 +1387,7 @@ METHOD FormImage( cText, name, file ) CLASS THtml
 
    HB_SYMBOL_UNUSED( cText )
 
-   ::cStr += '<input type="IMAGE" name="' + name + '" src="' + file + '">' + CRLF()
+   ::cStr += '<input type="IMAGE" name=' + '"' + name + '"' + ' src=' + '"' + file + '"' + ">" + CRLF()
 
    RETURN Self
 
@@ -1395,7 +1395,7 @@ METHOD FormImage( cText, name, file ) CLASS THtml
 */
 METHOD FormReset( cText ) CLASS THtml
 
-   ::cStr += '<input type="Reset" Value="' + cText + '">' + CRLF()
+   ::cStr += '<input type="Reset" Value=' + '"' + cText + '"' + ">" + CRLF()
 
    RETURN Self
 
@@ -1421,25 +1421,25 @@ METHOD PushButton( cName, cCaption, ;
       cStr += "       value=" + cCaption
    ENDIF
    IF HB_ISSTRING( style )
-      cStr += '       style="' + style + '"'
+      cStr += "       style=" + '"' + style + '"'
    ENDIF
    IF HB_ISSTRING( ID )
-      cStr += '          id="' + ID + '"'
+      cStr += "          id=" + '"' + ID + '"'
    ENDIF
    IF HB_ISSTRING( cOnClick )
-      cStr += '     onClick="' + cOnClick + '"'
+      cStr += "     onClick=" + '"' + cOnClick + '"'
    ENDIF
    IF HB_ISSTRING( cOnFocus )
-      cStr += '     onFocus="' + cOnFocus + '"'
+      cStr += "     onFocus=" + '"' + cOnFocus + '"'
    ENDIF
    IF HB_ISSTRING( cOnBlur )
-      cStr += '      onBlur="' + cOnBlur + '"'
+      cStr += "      onBlur=" + '"' + cOnBlur + '"'
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      cStr += ' onMouseOver="' + cOnMsover + '"'
+      cStr += " onMouseOver=" + '"' + cOnMsover + '"'
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      cStr += '  onMouseOut="' + cOnMsout + '"'
+      cStr += "  onMouseOut=" + '"' + cOnMsout + '"'
    ENDIF
    IF HB_ISSTRING( cCgiApp )
       cStr += '     onClick="location.href=' + cCgiApp + ';"'
@@ -1469,19 +1469,19 @@ METHOD Button( cName, cCaption, ;
       cStr += "       title=" + cCaption
    ENDIF
    IF HB_ISSTRING( style )
-      cStr += '       style="' + style + '"'
+      cStr += "       style=" + '"' + style + '"'
    ENDIF
    IF HB_ISSTRING( ID )
-      cStr += '          id="' + ID + '"'
+      cStr += "          id=" + '"' + ID + '"'
    ENDIF
    IF HB_ISSTRING( cOnClick )
-      cStr += '     onClick="' + cOnClick + '"'
+      cStr += "     onClick=" + '"' + cOnClick + '"'
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      cStr += ' onMouseOver="' + cOnMsover + '"'
+      cStr += " onMouseOver=" + '"' + cOnMsover + '"'
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      cStr += '  onMouseOut="' + cOnMsout + '"'
+      cStr += "  onMouseOut=" + '"' + cOnMsout + '"'
    ENDIF
    IF HB_ISSTRING( cCgiApp )
       cStr += '     onClick="location.href=' + cCgiApp + ';"'
@@ -1523,20 +1523,20 @@ METHOD Marquee( cText, cFont, cFntColor, nFntSize, ;
    ::StartFont( cFont, , , , nFntSize, cFntColor )
 
    ::cStr += ;
-      '<marquee align="' + cAlign + '" ' + ;
-      'behavior="' + cBehavior + '" ' + ;
-      'width="' + hb_ntos( nWidth ) + '%" ' + ;
-      iif( HB_ISNUMERIC( nHeight ), 'height=' + hb_ntos( nHeight ) + " ", "" ) + ;
-      'bgColor="' + cBgColor + '" ' + ;
-      'scrollamount="' + hb_ntos( nScrollAmt ) + '" ' + ;
-      'scrolldelay="' + hb_ntos( nScrollDelay ) + '" ' + ;
-      'loop=' + iif( HB_ISNUMERIC( loop ), hb_ntos( loop ), loop ) + " " + ;
-      'direction="' + cDirection + '" ' + ;
-      iif( HB_ISSTRING( onMsOver ), 'onMouseOver="' + onMsOver + '" ', "" ) + ;
-      iif( HB_ISSTRING( onMsOut ), 'onMouseOut="' + onMsOut + '" ', "" ) + ;
-      iif( HB_ISSTRING( onClick ), 'onClick="' + onClick + '" ', "" ) + ;
-      iif( HB_ISSTRING( onStart ), 'onStart="' + onStart + '" ', "" ) + ;
-      iif( HB_ISSTRING( onFinish ), 'onFinish="' + onFinish + '" ', "" ) + ;
+      "<marquee align=" + '"' + cAlign + '"' + " " + ;
+      "behavior=" + '"' + cBehavior + '"' + " " + ;
+      "width=" + '"' + hb_ntos( nWidth ) + "%" + '"' + " " + ;
+      iif( HB_ISNUMERIC( nHeight ), "height=" + hb_ntos( nHeight ) + " ", "" ) + ;
+      "bgColor=" + '"' + cBgColor + '"' + " " + ;
+      "scrollamount=" + '"' + hb_ntos( nScrollAmt ) + '"' + " " + ;
+      "scrolldelay=" + '"' + hb_ntos( nScrollDelay ) + '"' + " " + ;
+      "loop=" + iif( HB_ISNUMERIC( loop ), hb_ntos( loop ), loop ) + " " + ;
+      "direction=" + '"' + cDirection + '"' + " " + ;
+      iif( HB_ISSTRING( onMsOver ), "onMouseOver=" + '"' + onMsOver + '"' + " ", "" ) + ;
+      iif( HB_ISSTRING( onMsOut ), "onMouseOut=" + '"' + onMsOut + '"' + " ", "" ) + ;
+      iif( HB_ISSTRING( onClick ), "onClick=" + '"' + onClick + '"' + " ", "" ) + ;
+      iif( HB_ISSTRING( onStart ), "onStart=" + '"' + onStart + '"' + " ", "" ) + ;
+      iif( HB_ISSTRING( onFinish ), "onFinish=" + '"' + onFinish + '"' + " ", "" ) + ;
       ">" + ;
       cText + ;
       "</marquee>" + CRLF()
@@ -1568,20 +1568,20 @@ METHOD StartMarquee( cFont, cFntColor, nFntSize, ;
 
    ::StartFont( cFont, , , , nFntSize, cFntColor )
 
-   cStr += '<marquee align="' + cAlign + '" ' + ;
-      'behavior="' + cBehavior + '" ' + ;
-      'width="' + hb_ntos( nWidth ) + '%" ' + ;
-      iif( HB_ISNUMERIC( nHeight ), 'height=' + hb_ntos( nHeight ) + " ", "" ) + ;
-      'bgColor="' + cBgColor + '" ' + ;
-      'scrollamount="' + hb_ntos( nScrollAmt ) + '" ' + ;
-      'scrolldelay="' + hb_ntos( nScrollDelay ) + '" ' + ;
-      'loop=' + iif( HB_ISNUMERIC( loop ), hb_ntos( loop ), loop ) + " " + ;
-      'direction="' + cDirection + '" ' + ;
-      iif( HB_ISSTRING( onMsOver ), 'onMouseOver="' + onMsOver + '" ', "" ) + ;
-      iif( HB_ISSTRING( onMsOut ), 'onMouseOut="' + onMsOut + '" ', "" ) + ;
-      iif( HB_ISSTRING( onClick ), 'onClick="' + onClick + '" ', "" ) + ;
-      iif( HB_ISSTRING( onStart ), 'onStart="' + onStart + '" ', "" ) + ;
-      iif( HB_ISSTRING( onFinish ), 'onFinish="' + onFinish + '" ', "" ) + ;
+   cStr += "<marquee align=" + '"' + cAlign + '"' + " " + ;
+      "behavior=" + '"' + cBehavior + '"' + " " + ;
+      "width=" + '"' + hb_ntos( nWidth ) + "%" + '"' + " " + ;
+      iif( HB_ISNUMERIC( nHeight ), "height=" + hb_ntos( nHeight ) + " ", "" ) + ;
+      "bgColor=" + '"' + cBgColor + '"' + " " + ;
+      "scrollamount=" + '"' + hb_ntos( nScrollAmt ) + '"' + " " + ;
+      "scrolldelay=" + '"' + hb_ntos( nScrollDelay ) + '"' + " " + ;
+      "loop=" + iif( HB_ISNUMERIC( loop ), hb_ntos( loop ), loop ) + " " + ;
+      "direction=" + '"' + cDirection + '"' + " " + ;
+      iif( HB_ISSTRING( onMsOver ), "onMouseOver=" + '"' + onMsOver + '"' + " ", "" ) + ;
+      iif( HB_ISSTRING( onMsOut ), "onMouseOut=" + '"' + onMsOut + '"' + " ", "" ) + ;
+      iif( HB_ISSTRING( onClick ), "onClick=" + '"' + onClick + '"' + " ", "" ) + ;
+      iif( HB_ISSTRING( onStart ), "onStart=" + '"' + onStart + '"' + " ", "" ) + ;
+      iif( HB_ISSTRING( onFinish ), "onFinish=" + '"' + onFinish + '"' + " ", "" ) + ;
       ">" + ;
       CRLF()
 
@@ -1605,45 +1605,43 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
 
    hb_default( @BORDER, .T. )
    hb_default( @name, "Frame01" )
-// hb_default( @align, "vertical" )
+#if 0
+   hb_default( @align, "vertical" )
+#endif
 
    IF HB_ISSTRING( name )
-      cStr += Space( 5 ) + '        name="' + name + '"' + CRLF()
+      cStr += Space( 5 ) + "        name=" + '"' + name + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( src )
-      cStr += Space( 5 ) + '         src="' + src + '"' + CRLF()
+      cStr += Space( 5 ) + "         src=" + '"' + src + '"' + CRLF()
    ENDIF
 
    IF BORDER
-      cStr += Space( 5 ) + " frameborder='1'" + CRLF()
+      cStr += Space( 5 ) + " frameborder=1" + CRLF()
    ELSE
-      cStr += Space( 5 ) + " frameborder='0'" + CRLF()
+      cStr += Space( 5 ) + " frameborder=0" + CRLF()
    ENDIF
 
-   IF scrolling
-      cStr += Space( 5 ) + "   scrolling='yes'" + CRLF()
-   ELSE
-      cStr += Space( 5 ) + "   scrolling='no'" + CRLF()
-   ENDIF
+   cStr += Space( 5 ) + "   scrolling=" + '"' + iif( scrolling, "yes", "no" ) + '"' + CRLF()
 
    IF HB_ISNUMERIC( marginwidth )
-      cStr += Space( 5 ) + " marginwidth='" + hb_ntos( marginWidth ) + "'" + CRLF()
+      cStr += Space( 5 ) + " marginwidth=" + '"' + hb_ntos( marginWidth ) + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( marginheight )
-      cStr += Space( 5 ) + "marginheight='" + hb_ntos( marginheight ) + "'" + CRLF()
+      cStr += Space( 5 ) + "marginheight=" + '"' + hb_ntos( marginheight ) + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( WIDTH )
-      cStr += Space( 5 ) + "       width='" + hb_ntos( Width ) + "'" + CRLF()
+      cStr += Space( 5 ) + "       width=" + '"' + hb_ntos( Width ) + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( HEIGHT )
-      cStr += Space( 5 ) + "      height='" + hb_ntos( height ) + "'" + CRLF()
+      cStr += Space( 5 ) + "      height=" + '"' + hb_ntos( height ) + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( align )
-      cStr += Space( 5 ) + "       align='" + align + "'" + CRLF()
+      cStr += Space( 5 ) + "       align=" + '"' + align + '"' + CRLF()
    ENDIF
 
    cStr += ">" + CRLF()
@@ -1658,9 +1656,9 @@ METHOD Span( c, Style ) CLASS THtml
    LOCAL cStr := "<span "
 
    IF HB_ISSTRING( style )
-      cStr += ' style="' + Style + '"'
+      cStr += " style=" + '"' + Style + '"'
    ENDIF
-   cStr += ">" + c + '</span>'
+   cStr += ">" + c + "</span>"
    ::cStr += cStr
 
    RETURN Self
@@ -1679,31 +1677,31 @@ METHOD AddObject( cType, cClassid, cAling, cCode, lDisable, cCodeBase, cName, nW
    LOCAL cStr := "<object "
 
    IF HB_ISSTRING( cType )
-      cStr += ' type="' + cType + '"' + CRLF()
+      cStr += " type=" + '"' + cType + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cClassId )
-      cStr += ' classid="' + cClassId + '"' + CRLF()
+      cStr += " classid=" + '"' + cClassId + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cAling )
-      cStr += ' aling="' + cAling + '"' + CRLF()
+      cStr += " aling=" + '"' + cAling + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cCode )
-      cStr += ' code="' + cCode + '"' + CRLF()
+      cStr += " code=" + '"' + cCode + '"' + CRLF()
    ENDIF
 
    IF lDisable
-      cStr += ' DISABLED ' + CRLF()
+      cStr += " DISABLED " + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cCodebase )
-      cStr += ' codebase="' + cCodebase + '"' + CRLF()
+      cStr += " codebase=" + '"' + cCodebase + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cName )
-      cStr += ' name="' + cName + '"' + CRLF()
+      cStr += " name=" + '"' + cName + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( nHeight )
@@ -1731,13 +1729,13 @@ METHOD EndObject() CLASS THtml
 
 METHOD ADDPARAM( cType, cValue ) CLASS THtml
 
-   ::cStr += '<param name="' + cType + '" value="' + cValue + '">' + CRLF()
+   ::cStr += "<param name=" + '"' + cType + '"' + " value=" + '"' + cValue + '"' + ">" + CRLF()
 
    RETURN Self
 
 METHOD PutLinkName( cName ) CLASS THtml
 
-   ::cStr += '<a name="' + cName + '"></a>'
+   ::cStr += "<a name=" + '"' + cName + '"' + "></a>"
 
    RETURN Self
 
@@ -1782,7 +1780,7 @@ FUNCTION HtmlDecodeUrl( cString )
 PROCEDURE HtmlJSCmd( nH, cCmd )
 
    FWrite( hb_defaultValue( nH, HtmlPageHandle() ), ;
-      '<script language=JavaScript 1.2>' + CRLF() + "<!--" + CRLF() + ;
+      "<script language=JavaScript 1.2>" + CRLF() + "<!--" + CRLF() + ;
       hb_defaultValue( cCmd, "" ) + CRLF() + ;
       "//-->" + CRLF() + "</script>" + CRLF() )
 

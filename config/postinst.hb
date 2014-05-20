@@ -410,8 +410,6 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
 
    LOCAL cDir, cName, cExt
 
-   hb_default( @l644, .F. )
-
    cSrc := hb_DirSepToOS( cSrc )
    cDst := hb_DirSepToOS( cDst )
 
@@ -425,7 +423,7 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
 #if 0
       OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
 #endif
-      IF l644
+      IF hb_defaultValue( l644, .F. )
          hb_FSetAttr( cDst, hb_bitOr( HB_FA_RUSR, HB_FA_WUSR, HB_FA_RGRP, HB_FA_ROTH ) )
       ENDIF
 #if 0
