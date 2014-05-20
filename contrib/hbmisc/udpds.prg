@@ -35,30 +35,33 @@ FUNCTION hb_udpds_Find( nPort, cName )
       hb_socketSetBroadcast( hSocket, .T. )
       cName := hb_StrToUTF8( cName )
 
-      IF Empty( aIFaces := hb_socketGetIFaces() )
+      aIFaces := hb_socketGetIFaces()
+      FOR EACH iface IN aIFaces DESCEND
+         IF ! HB_ISSTRING( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .OR. ;
+            Empty( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .AND. ;
+            iface[ HB_SOCKET_IFINFO_BROADCAST ] == "0.0.0.0"
+            hb_ADel( aIFaces, iface:__enumIndex(), .T. )
+         ENDIF
+      NEXT
+
+      IF Empty( aIFaces )
          aIFaces := { Array( HB_SOCKET_IFINFO_LEN ) }
          aIFaces[ 1 ][ HB_SOCKET_IFINFO_BROADCAST ] := "255.255.255.255"
       ENDIF
 
       FOR EACH iface IN aIFaces
-
-         IF HB_ISSTRING( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .AND. ;
-            ! Empty( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .AND. ;
-            !( iface[ HB_SOCKET_IFINFO_BROADCAST ] == "0.0.0.0" )
-
-            IF hb_socketSendTo( hSocket, hb_BChar( 5 ) + cName + hb_BChar( 0 ), , , { HB_SOCKET_AF_INET, iface[ HB_SOCKET_IFINFO_BROADCAST ], nPort } ) == hb_BLen( cName ) + 2
+         IF hb_socketSendTo( hSocket, hb_BChar( 5 ) + cName + hb_BChar( 0 ), , , { HB_SOCKET_AF_INET, iface[ HB_SOCKET_IFINFO_BROADCAST ], nPort } ) == hb_BLen( cName ) + 2
+            nTime := hb_MilliSeconds()
+            nEnd := nTime + 100   /* 100ms delay is enough on LAN */
+            aRet := {}
+            DO WHILE nEnd > nTime
+               cBuffer := Space( 2000 )
+               nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, nEnd - nTime )
+               IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 )
+                  AAdd( aRet, { aAddr[ 2 ], hb_BSubStr( cBuffer, hb_BLen( cName ) + 3, nLen - hb_BLen( cName ) - 2 ) } )
+               ENDIF
                nTime := hb_MilliSeconds()
-               nEnd := nTime + 100   /* 100ms delay is enough on LAN */
-               aRet := {}
-               DO WHILE nEnd > nTime
-                  cBuffer := Space( 2000 )
-                  nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, nEnd - nTime )
-                  IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 )
-                     AAdd( aRet, { aAddr[ 2 ], hb_BSubStr( cBuffer, hb_BLen( cName ) + 3, nLen - hb_BLen( cName ) - 2 ) } )
-                  ENDIF
-                  nTime := hb_MilliSeconds()
-               ENDDO
-            ENDIF
+            ENDDO
          ENDIF
       NEXT
       hb_socketClose( hSocket )
