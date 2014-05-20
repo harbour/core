@@ -567,9 +567,7 @@ METHOD generate( bFilter, cFile ) CLASS HBProfileReportToFile
 
    LOCAL lProfile := __SetProfiler( .F. )
 
-   hb_default( @cFile, "hbprof.txt" )
-
-   IF ( ::hFile := FCreate( cFile ) ) != F_ERROR
+   IF ( ::hFile := FCreate( hb_defaultValue( cFile, "hbprof.txt" ) ) ) != F_ERROR
       ::super:generate( bFilter )
       FClose( ::hFile )
    ELSE

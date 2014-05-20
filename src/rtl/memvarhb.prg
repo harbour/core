@@ -183,9 +183,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
    IF HB_ISSTRING( cFileName )
 
-      hb_default( @lAdditive, .T. )
-
-      IF ! lAdditive
+      IF ! hb_defaultValue( lAdditive, .T. )
          __mvClear()
       ENDIF
 

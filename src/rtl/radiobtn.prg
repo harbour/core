@@ -327,11 +327,9 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RadioButtn
       RETURN NIL
    ENDIF
 
-   hb_default( @cCaption, "" )
-
    ::nCapRow  := nRow
    ::nCapCol  := nCol + 3 + 1
-   ::cCaption := cCaption
+   ::cCaption := hb_defaultValue( cCaption, "" )
    ::nCol     := nCol
    ::nRow     := nRow
    ::cData    := cData /* NOTE: Every type is allowed here to be fully compatible */

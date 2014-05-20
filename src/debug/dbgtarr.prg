@@ -72,11 +72,9 @@ ENDCLASS
 
 METHOD New( aArray, cVarName, lEditable ) CLASS HBDbArray
 
-   hb_default( @lEditable, .T. )
-
    ::arrayName := cVarName
    ::TheArray := aArray
-   ::lEditable := lEditable
+   ::lEditable := hb_defaultValue( lEditable, .T. )
 
    ::addWindows( ::TheArray )
 

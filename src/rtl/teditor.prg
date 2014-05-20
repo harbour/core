@@ -1004,25 +1004,15 @@ METHOD BrowseText( nPassedKey )
 
 METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS HBEditor
 
-   hb_default( @cString     , ""       )
-   hb_default( @nTop        , 0        )
-   hb_default( @nLeft       , 0        )
-   hb_default( @nBottom     , MaxRow() )
-   hb_default( @nRight      , MaxCol() )
-   hb_default( @lEditMode   , .T.      )
-   hb_default( @nTextRow    , 1        )
-   hb_default( @nTextCol    , 0        )
-   hb_default( @nWndRow     , 0        )
-   hb_default( @nWndCol     , 0        )
-
-   IF ! HB_ISNUMERIC( nLineLength )
+   // is word wrap required?
+   IF HB_ISNUMERIC( nLineLength )
+      ::lWordWrap := .T.
+      ::nWordWrapCol := nLineLength
+   ELSE
       nLineLength := NIL
    ENDIF
-   IF ! HB_ISNUMERIC( nTabSize )
-      nTabSize := NIL
-   ENDIF
 
-   ::aText := Text2Array( cString, nLineLength )
+   ::aText := Text2Array( hb_defaultValue( cString, "" ), nLineLength )
    ::naTextLen := Len( ::aText )
 
    IF ::naTextLen == 0
@@ -1031,10 +1021,10 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ENDIF
 
    // editor window boundaries
-   ::nTop := nTop
-   ::nLeft := nLeft
-   ::nBottom := nBottom
-   ::nRight := nRight
+   ::nTop    := nTop    := hb_defaultValue( nTop, 0 )
+   ::nLeft   := nLeft   := hb_defaultValue( nLeft, 0 )
+   ::nBottom := nBottom := hb_defaultValue( nBottom, MaxRow() )
+   ::nRight  := nRight  := hb_defaultValue( nRight, MaxCol() )
 
    ::cColorSpec := SetColor()
 
@@ -1042,15 +1032,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ::nNumCols := nRight - nLeft + 1
    ::nNumRows := nBottom - nTop + 1
 
-   IF HB_ISLOGICAL( lEditMode )
-      ::lEditAllow := lEditMode
-   ENDIF
-
-   // is word wrap required?
-   IF HB_ISNUMERIC( nLineLength )
-      ::lWordWrap := .T.
-      ::nWordWrapCol := nLineLength
-   ENDIF
+   ::lEditAllow := hb_defaultValue( lEditMode, .T. )
 
    // how many spaces for each tab?
    IF HB_ISNUMERIC( nTabSize )
@@ -1058,10 +1040,10 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ENDIF
 
    // textrow/col, wndrow/col management
-   nTextRow    := Max( 1, nTextRow )
-   nTextCol    := Max( 0, nTextCol )
-   nWndRow     := Max( 0, nWndRow  )
-   nWndCol     := Max( 0, nWndCol  )
+   nTextRow    := Max( 1, hb_defaultValue( nTextRow, 1 ) )
+   nTextCol    := Max( 0, hb_defaultValue( nTextCol, 0 ) )
+   nWndRow     := Max( 0, hb_defaultValue( nWndRow, 0 ) )
+   nWndCol     := Max( 0, hb_defaultValue( nWndCol, 0 ) )
 
    ::nFirstRow := Max( 1, nTextRow - nWndRow )
    ::nFirstCol := nTextCol - nWndCol + 1

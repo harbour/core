@@ -91,9 +91,7 @@ FUNCTION hb_iniNew( lAutoMain )
 
    LOCAL hIni := { => }
 
-   hb_default( @lAutoMain, .T. )
-
-   IF lAutoMain
+   IF hb_defaultValue( lAutoMain, .T. )
       hIni[ "MAIN" ] := { => }
    ENDIF
 
@@ -108,9 +106,6 @@ FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
 
    /* Default case sensitiveness for keys */
    hb_default( @lKeyCaseSens, .T. )
-   hb_default( @cSplitters, "=" )
-   hb_default( @lAutoMain, .T. )
-   hb_default( @cData, "" )
 
    hb_HCaseMatch( hIni, lKeyCaseSens )
 
@@ -118,7 +113,11 @@ FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
       hIni[ "MAIN" ] := { => }
    ENDIF
 
-   RETURN hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
+   RETURN hb_iniStringLow( hIni, ;
+      hb_defaultValue( cData, "" ), ;
+      lKeyCaseSens, ;
+      hb_defaultValue( cSplitters, "=" ), ;
+      hb_defaultValue( lAutoMain, .T. ) )
 
 STATIC FUNCTION hb_iniFileLow( cFileSpec )
 

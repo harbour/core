@@ -268,12 +268,10 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
    LOCAL xResult := Do( ::xUserFunction, nStatus, ::nRow, ::nCol - 1 )
 
-   hb_default( @xResult, ME_DEFAULT )
-
    ::SetPos( nOldRow, nOldCol )
    SetCursor( nOldCur )
 
-   RETURN xResult
+   RETURN hb_defaultValue( xResult, ME_DEFAULT )
 
 METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 

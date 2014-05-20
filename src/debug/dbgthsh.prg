@@ -72,11 +72,9 @@ ENDCLASS
 
 METHOD New( hHash, cVarName, lEditable ) CLASS HBDbHash
 
-   hb_default( @lEditable, .T. )
-
    ::hashName := cVarName
    ::TheHash := hHash
-   ::lEditable := lEditable
+   ::lEditable := hb_defaultValue( lEditable, .T. )
 
    ::addWindows( ::TheHash )
 

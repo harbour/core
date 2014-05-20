@@ -79,8 +79,6 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
    LOCAL aMessages, aMethods
    LOCAL xValue
 
-   hb_default( @lEditable, .T. )
-
    __dbgSetGo( __dbg():pInfo )
 
    /* create list of object messages */
@@ -104,7 +102,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
 
    ::objname := cVarName
    ::TheObj := oObject
-   ::lEditable := lEditable
+   ::lEditable := hb_defaultValue( lEditable, .T. )
 
    ::addWindows( ::pItems )
 

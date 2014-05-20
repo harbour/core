@@ -73,10 +73,7 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
    RETURN aResult
 
 FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
-
-   hb_default( @cPath, "" )
-
-   RETURN HB_DoScan( hb_DirSepAdd( cPath ), ;
+   RETURN HB_DoScan( hb_DirSepAdd( hb_defaultValue( cPath, "" ) ), ;
       iif( HB_ISSTRING( cFileMask ), cFileMask, hb_osFileMask() ), ;
       iif( HB_ISSTRING( cAttr ), cAttr, "" ), ;
       hb_ps() )

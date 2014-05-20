@@ -437,9 +437,7 @@ FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
 STATIC PROCEDURE PrintIt( cString )
 
-   hb_default( @cString, "" )
-
-   QQOut( cString )
+   QQOut( hb_defaultValue( cString, "" ) )
    QOut()
 
    RETURN

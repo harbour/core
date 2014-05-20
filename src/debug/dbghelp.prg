@@ -67,8 +67,6 @@ PROCEDURE __dbgHelp( nTopic )
    LOCAL oBrw
    LOCAL aTopics := GetTopics()
 
-   hb_default( @nTopic, 1 )
-
    oDlg := HBDbWindow():New( 2, 2, MaxRow() - 2, MaxCol() - 2, "Help", cColor )
 
    oBrw := HBDbBrowser():New( oDlg:nTop + 1, oDlg:nLeft + 1, oDlg:nBottom - 1, oDlg:nLeft + 12 )
@@ -81,6 +79,7 @@ PROCEDURE __dbgHelp( nTopic )
    oBrw:GoTopBlock := {|| oBrw:Cargo := 1 }
    oBrw:GoBottomBlock := {|| oBrw:Cargo := Len( aTopics ) }
 
+   hb_default( @nTopic, 1 )
    IF nTopic > 1
       Eval( oBrw:SkipBlock, nTopic - 1 )
    ENDIF

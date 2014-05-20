@@ -170,8 +170,6 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    LOCAL Self := QSelf()
    LOCAL i
 
-   hb_default( @lModuleFriendly, .F. )
-
    IF HB_ISSYMBOL( xSuper )
       ::asSuper := { xSuper }
    ELSEIF Empty( xSuper )
@@ -191,7 +189,7 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    ::cName         := hb_asciiUpper( cClassName )
    ::sClassFunc    := sClassFunc
-   ::lModFriendly  := lModuleFriendly
+   ::lModFriendly  := hb_defaultValue( lModuleFriendly, .F. )
 
    ::aDatas        := {}
    ::aMethods      := {}
@@ -307,11 +305,10 @@ STATIC FUNCTION Instance()
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
-   hb_default( @lNoInit, .F. )
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
    /* Default Init for Logical and numeric */
-   IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
+   IF ! hb_defaultValue( lNoInit, .F. ) .AND. ;
+      cType != NIL .AND. xInit == NIL
+
       SWITCH Asc( cType )
       CASE Asc( "L" )   /* Logical */
       CASE Asc( "l" )   /* Logical */
@@ -334,7 +331,7 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
       ENDSWITCH
    ENDIF
 
-   AAdd( QSelf():aDatas, { cData, xInit, cType, nScope } )
+   AAdd( QSelf():aDatas, { cData, xInit, cType, hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ) } )
 
    RETURN
 
@@ -352,13 +349,10 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
-   hb_default( @lNoInit, .F. )
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
-   nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
-
    /* Default Init for Logical and numeric */
-   IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
+   IF ! hb_defaultValue( lNoInit, .F. ) .AND. ;
+      cType != NIL .AND. xInit == NIL
+
       SWITCH Asc( cType )
       CASE Asc( "L" )   /* Logical */
       CASE Asc( "l" )   /* Logical */
@@ -381,7 +375,7 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
       ENDSWITCH
    ENDIF
 
-   AAdd( QSelf():aClsDatas, { cData, xInit, cType, nScope } )
+   AAdd( QSelf():aClsDatas, { cData, xInit, cType, hb_bitOr( hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ), HB_OO_CLSTP_CLASS ) } )
 
    RETURN
 
@@ -399,27 +393,19 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
-   AAdd( QSelf():aInlines, { cMethod, bCode, nScope } )
+   AAdd( QSelf():aInlines, { cMethod, bCode, hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ) } )
 
    RETURN
 
 STATIC PROCEDURE AddMethod( cMethod, sFuncSym, nScope )
 
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
-   AAdd( QSelf():aMethods, { cMethod, sFuncSym, nScope } )
+   AAdd( QSelf():aMethods, { cMethod, sFuncSym, hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ) } )
 
    RETURN
 
 STATIC PROCEDURE AddClsMethod( cMethod, sFuncSym, nScope )
 
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
-   nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
-
-   AAdd( QSelf():aClsMethods, { cMethod, sFuncSym, nScope } )
+   AAdd( QSelf():aClsMethods, { cMethod, sFuncSym, hb_bitOr( hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ), HB_OO_CLSTP_CLASS ) } )
 
    RETURN
 

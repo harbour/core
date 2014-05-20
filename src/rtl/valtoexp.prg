@@ -72,10 +72,7 @@ FUNCTION hb_CStr( xVal )
    RETURN "???:" + v
 
 FUNCTION hb_ValToExp( xVal, lRaw )
-
-   hb_default( @lRaw, .F. )
-
-   RETURN s_valToExp( xVal, lRaw )
+   RETURN s_valToExp( xVal, hb_defaultValue( lRaw, .F. ) )
 
 STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
 

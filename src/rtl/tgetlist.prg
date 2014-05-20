@@ -654,8 +654,6 @@ METHOD GetDoSetKey( bKeyBlock, oGet ) CLASS HBGetList
 
    lSetKey := Eval( bKeyBlock, ::cReadProcName, ::nReadProcLine, ::ReadVar() )
 
-   hb_default( @lSetKey, .T. )
-
    ::ShowScoreboard()
    oGet:updateBuffer()
 
@@ -667,18 +665,17 @@ METHOD GetDoSetKey( bKeyBlock, oGet ) CLASS HBGetList
       oGet:exitState := GE_ESCAPE
    ENDIF
 
-   RETURN lSetKey
+   RETURN hb_defaultValue( lSetKey, .T. )
 
 METHOD Settle( nPos, lInit ) CLASS HBGetList
 
    LOCAL nExitState
 
    hb_default( @nPos, ::nPos )
-   hb_default( @lInit, .F. )
 
    IF nPos == 0
       nExitState := GE_DOWN
-   ELSEIF nPos > 0 .AND. lInit /* NOTE: Never .T. in C5.2 mode. */
+   ELSEIF nPos > 0 .AND. hb_defaultValue( lInit, .F. )  /* NOTE: Never .T. in C5.2 mode. */
       nExitState := GE_NOEXIT
    ELSE
       nExitState := ::aGetList[ nPos ]:exitState

@@ -118,14 +118,12 @@ ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
 
-   hb_default( @cColor, __dbgColors()[ 1 ] )
-
    ::nTop     := nTop
    ::nLeft    := nLeft
    ::nBottom  := nBottom
    ::nRight   := nRight
    ::cCaption := cCaption
-   ::cColor   := cColor
+   ::cColor   := hb_defaultValue( cColor, __dbgColors()[ 1 ] )
 
    RETURN Self
 
@@ -152,10 +150,8 @@ METHOD IsOver( nRow, nCol ) CLASS HBDbWindow
 
 METHOD ScrollUp( nLines ) CLASS HBDbWindow
 
-   hb_default( @nLines, 1 )
-
    SetColor( ::cColor )
-   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines )
+   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, hb_defaultValue( nLines, 1 ) )
 
    RETURN NIL
 
@@ -211,13 +207,11 @@ METHOD Show( lFocused ) CLASS HBDbWindow
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
-   hb_default( @lFocused, ::lFocused )
-
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ), ;
       ::nRight + iif( ::lShadow, 2, 0 ) )
    SetColor( ::cColor )
    hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
-   ::SetFocus( lFocused )
+   ::SetFocus( hb_defaultValue( lFocused, ::lFocused ) )
 
    IF ::lShadow
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )

@@ -1762,8 +1762,6 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
    LOCAL oWndInput := HBDbWindow():New( nTop, nLeft, nBottom, nRight, cMsg, ;
       ::oPullDown:cClrPopup )
 
-   hb_default( @lEditable, .T. )
-
    oWndInput:lShadow := .T.
    oWndInput:Show()
 
@@ -1773,7 +1771,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
 
    uTemp := uValue
 
-   IF lEditable
+   IF hb_defaultValue( lEditable, .T. )
 
       IF !( cType == "C" ) .OR. Len( uValue ) < nWidth
          uTemp := PadR( uValue, nWidth )
@@ -1854,9 +1852,7 @@ METHOD IsValidStopLine( cName, nLine ) CLASS HBDebugger
 
 METHOD RunAtStartup( lRunAtStartup ) CLASS HBDebugger
 
-   hb_default( @lRunAtStartup, ! ::lRunAtStartup )
-
-   ::lRunAtStartup := lRunAtStartup
+   ::lRunAtStartup := hb_defaultValue( lRunAtStartup, ! ::lRunAtStartup )
    ::oPulldown:GetItemByIdent( "ALTD" ):checked := ::lRunAtStartup
 
    RETURN Self
@@ -1864,12 +1860,10 @@ METHOD RunAtStartup( lRunAtStartup ) CLASS HBDebugger
 
 METHOD LineNumbers( lLineNumbers ) CLASS HBDebugger
 
-   hb_default( @lLineNumbers, ! ::lLineNumbers )
-
-   ::lLineNumbers := lLineNumbers
+   ::lLineNumbers := hb_defaultValue( lLineNumbers, ! ::lLineNumbers )
    ::oPulldown:GetItemByIdent( "LINE" ):checked := ::lLineNumbers
    IF ::oBrwText != NIL
-      ::oBrwText:lLineNumbers := lLineNumbers
+      ::oBrwText:lLineNumbers := ::lLineNumbers
       ::oBrwText:RefreshAll()
    ENDIF
 
@@ -2072,8 +2066,6 @@ METHOD Locate( nMode, cValue ) CLASS HBDebugger
 
    LOCAL lFound
 
-   hb_default( @nMode, 0 )
-
    IF Empty( cValue )
       ::cSearchString := PadR( ::cSearchString, 256 )
       cValue := ::InputBox( "Search string", ::cSearchString )
@@ -2084,7 +2076,7 @@ METHOD Locate( nMode, cValue ) CLASS HBDebugger
 
    ::cSearchString := cValue
 
-   lFound := ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, nMode )
+   lFound := ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, hb_defaultValue( nMode, 0 ) )
 
    // Save cursor position to be restored by ::oWndCode:bGotFocus
    ::oWndCode:cargo[ 1 ] := Row()

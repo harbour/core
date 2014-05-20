@@ -75,11 +75,9 @@ ENDCLASS
 
 METHOD New( cPrompt, bAction, lChecked, xIdent ) CLASS HBDbMenuItem
 
-   hb_default( @lChecked, .F. )
-
    ::cPrompt  := cPrompt
    ::bAction  := bAction
-   ::lChecked := lChecked
+   ::lChecked := hb_defaultValue( lChecked, .F. )
    ::Ident    := xIdent
 
    RETURN Self

@@ -62,8 +62,6 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
 
    cMessage := StrTran( cMessage, ";", Chr( 10 ) )
 
-   hb_default( @aOptions, {} )
-
    IF ! HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
@@ -76,7 +74,7 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
    ENDIF
 
    aOptionsOK := {}
-   FOR EACH cOption IN aOptions
+   FOR EACH cOption IN hb_defaultValue( aOptions, {} )
       IF HB_ISSTRING( cOption ) .AND. ! Empty( cOption )
          AAdd( aOptionsOK, cOption )
       ENDIF
@@ -130,8 +128,6 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
       cMessage := hb_CStr( xMessage )
    ENDIF
 
-   hb_default( @aOptions, {} )
-
    IF ! HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
@@ -144,7 +140,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    ENDIF
 
    aOptionsOK := {}
-   FOR EACH cString IN aOptions
+   FOR EACH cString IN hb_defaultValue( aOptions, {} )
       IF HB_ISSTRING( cString ) .AND. ! Empty( cString )
          AAdd( aOptionsOK, cString )
       ENDIF

@@ -442,9 +442,7 @@ METHOD New( cFrmName AS STRING, ;
 
 METHOD PrintIt( cString AS STRING ) CLASS HBReportForm
 
-   hb_default( @cString, "" )
-
-   QQOut( cString )
+   QQOut( hb_defaultValue( cString, "" ) )
    QOut()
 
    RETURN Self
@@ -1187,13 +1185,12 @@ STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
 
    hb_default( @nLineLength, 79 )
    hb_default( @nTabSize, 4 )
-   hb_default( @lWrap, .T. )
 
    IF nTabSize >= nLineLength
       nTabSize := nLineLength - 1
    ENDIF
 
-   RETURN MLCount( RTrim( cString ), nLineLength, nTabSize, lWrap )
+   RETURN MLCount( RTrim( cString ), nLineLength, nTabSize, hb_defaultValue( lWrap, .T. ) )
 
 /***
 *
@@ -1205,15 +1202,13 @@ STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
 STATIC FUNCTION XMEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
    hb_default( @nLineLength, 79 )
-   hb_default( @nLineNumber, 1 )
    hb_default( @nTabSize, 4 )
-   hb_default( @lWrap, .T. )
 
    IF nTabSize >= nLineLength
       nTabSize := nLineLength - 1
    ENDIF
 
-   RETURN MemoLine( cString, nLineLength, nLineNumber, nTabSize, lWrap )
+   RETURN MemoLine( cString, nLineLength, hb_defaultValue( nLineNumber, 1 ), nTabSize, hb_defaultValue( lWrap, .T. ) )
 
 STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 
