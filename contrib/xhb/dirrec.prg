@@ -83,6 +83,8 @@ FUNCTION DirectoryRecurse( cPath, cAttr )
    aResult := hb_DirScan( cFilePath, cMask, ;
       StrTran( Upper( hb_defaultValue( cAttr, "" ) ), "D" ) )
 
-   AEval( aResult, {| x | x[ F_NAME ] := cFilePath + x[ F_NAME ] } )
+   AEval( aResult, {| x | ;
+      x[ F_NAME ] := cFilePath + x[ F_NAME ], ;
+      x[ F_DATE ] := hb_TToD( x[ F_DATE ] ) } )
 
    RETURN aResult

@@ -48,6 +48,7 @@
 
 #require "hbmzip"
 
+#include "directry.ch"
 #include "simpleio.ch"
 
 REQUEST HB_CODEPAGE_UTF8EX
@@ -109,9 +110,9 @@ PROCEDURE Main( ... )
             hb_FNameSplit( cWild, @cPath, @cFileName, @cExt )
             aDir := hb_DirScan( cPath, cFileName + cExt )
             FOR EACH aFile IN aDir
-               IF ! cPath + aFile[ 1 ] == cZipName
-                  ? "Adding", cPath + aFile[ 1 ]
-                  hb_zipStoreFile( hZip, cPath + aFile[ 1 ], cPath + aFile[ 1 ], cPassword,, lUnicode )
+               IF ! cPath + aFile[ F_NAME ] == cZipName
+                  ? "Adding", cPath + aFile[ F_NAME ]
+                  hb_zipStoreFile( hZip, cPath + aFile[ F_NAME ], cPath + aFile[ F_NAME ], cPassword,, lUnicode )
                ENDIF
             NEXT
          ENDIF
