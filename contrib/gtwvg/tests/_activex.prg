@@ -405,7 +405,7 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
       IF nKey == K_F12
          SWITCH nActiveX
          CASE 1
-            oCom:Navigate( "harbour-project.org" )
+            oCom:Navigate( "http://harbour-project.org" )
             EXIT
 
          CASE 11

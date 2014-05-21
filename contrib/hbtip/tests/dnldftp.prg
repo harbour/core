@@ -17,15 +17,13 @@ PROCEDURE Main( cMask )
    LOCAL cPassword
    LOCAL aFile
 
-   hb_default( @cMask, __FILE__ )
-
    cServer   := "ftp.example.com"  /* change this to the real name or IP of your FTP server */
    cUser     := "ftpuser"          /* change this to a valid user on the server */
    cPassword := "ftppass"          /* change this to a valid password for the user */
    cUrl      := "ftp://" + cUser + ":" + cPassword + "@" + cServer
 
    /* fetch files to transfer */
-   aFiles := { { cMask, 1, 2, 3 } }
+   aFiles := { { hb_defaultValue( cMask, __FILE__ ), 1, 2, 3 } }
 
    IF ! Empty( aFiles )
 

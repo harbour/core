@@ -19,15 +19,13 @@ PROCEDURE Main( cMask )
    LOCAL cPassword
    LOCAL aFile
 
-   hb_default( @cMask, hb_osFileMask() )
-
    cServer   := "ftp.example.com"  /* change this to the real name or IP of your FTP server */
    cUser     := "ftpuser"          /* change this to a valid user on the server */
    cPassword := "ftppass"          /* change this to a valid password for the user */
    cUrl      := "ftp://" + cUser + ":" + cPassword + "@" + cServer
 
    /* fetch files to transfer */
-   aFiles := Directory( cMask )
+   aFiles := Directory( hb_defaultValue( cMask, hb_osFileMask() ) )
 
    IF ! Empty( aFiles )
 

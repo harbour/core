@@ -5,8 +5,6 @@ PROCEDURE Main( cFile )
    LOCAL i
    LOCAL aPrinter
 
-   hb_default( @cFile, __FILE__ )
-
    IF Empty( cupsGetDefault() )
       ? "No default printer configured"
    ELSE
@@ -19,6 +17,8 @@ PROCEDURE Main( cFile )
    FOR EACH i IN cupsGetDests()
       ? i:__enumIndex(), i
    NEXT
+
+   hb_default( @cFile, __FILE__ )
 
    IF Empty( cupsGetDefault() )
       WAIT

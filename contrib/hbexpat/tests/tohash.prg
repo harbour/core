@@ -24,8 +24,6 @@ PROCEDURE Main( cFileName )
    hb_cdpSelect( "UTF8EX" )
    hb_SetTermCP( hb_cdpTerm() )
 
-   hb_default( @cFileName, hb_DirBase() + "test.xml" )
-
    ? XML_ExpatVersion()
    XML_ExpatVersionInfo( @v1, @v2, @v3 )
    ? hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 )
@@ -57,7 +55,7 @@ PROCEDURE Main( cFileName )
    XML_SetUnknownEncodingHandler( p, {| x, e, i | cb_unknownencoding( x, e, i ) } )
    XML_SetEndDoctypeDeclHandler( p, @cb_enddoctype() )
 
-   IF XML_Parse( p, MemoRead( cFileName ), .T. ) == HB_XML_STATUS_ERROR
+   IF XML_Parse( p, MemoRead( hb_defaultValue( cFileName, hb_DirBase() + "test.xml" ) ), .T. ) == HB_XML_STATUS_ERROR
       ? hb_StrFormat( e"Parse error at line %1$d:\n%2$s", ;
          XML_GetCurrentLineNumber( p ), ;
          XML_ErrorString( XML_GetErrorCode( p ) ) )
