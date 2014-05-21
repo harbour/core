@@ -57,14 +57,10 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
 
    LOCAL pEdit, oEdit
 
-   hb_default( @nSize, t_nESize )
    hb_default( @nLength, 80 )
 
-   pEdit := ed_New( nLength, 4, nSize, nEscape )
+   pEdit := ed_New( nLength, 4, hb_defaultValue( nSize, t_nESize ), nEscape )
    IF ! Empty( pEdit )
-
-      hb_default( @cFrame, HB_B_DOUBLE_UNI )
-      hb_default( @cColor, "W/N,W+/N,W+/R,GR+/N,G+/N" )
 
       oEdit := Array( E_STRUCT_LEN )
       oEdit[ E_EDIT ]    := pEdit
@@ -73,9 +69,9 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
       oEdit[ E_BOTTOM ]  := nBottom
       oEdit[ E_RIGHT ]   := nRight
       oEdit[ E_LINELEN ] := nLength
-      oEdit[ E_FRAME ]   := cFrame
+      oEdit[ E_FRAME ]   := hb_defaultValue( cFrame, HB_B_DOUBLE_UNI )
       oEdit[ E_TITLE ]   := cTitle
-      oEdit[ E_COLOR ]   := cColor
+      oEdit[ E_COLOR ]   := hb_defaultValue( cColor, "W/N,W+/N,W+/R,GR+/N,G+/N" )
       oEdit[ E_MODE ]    := EDIT_VIEW
 
       ed_Config( pEdit, nTop, nLeft, nBottom, nRight, 0, 0 )
@@ -176,17 +172,13 @@ PROCEDURE EditorInsText( oEdit, cText, nLine )
 //
 
 FUNCTION EditorGetText( oEdit, nCarret )
-
-   hb_default( @nCarret, EDIT_HARD )
-
-   RETURN ed_GetText( oEdit[ E_EDIT ], nCarret )
+   RETURN ed_GetText( oEdit[ E_EDIT ], hb_defaultValue( nCarret, EDIT_HARD ) )
 
 //
 // Returns the line count stored in editor
 //
 
 FUNCTION EditorLCount( oEdit )
-
    RETURN ed_LCount( oEdit[ E_EDIT ] )
 
 //
@@ -194,7 +186,6 @@ FUNCTION EditorLCount( oEdit )
 //
 
 FUNCTION EditorGetLine( oEdit, nLine )
-
    RETURN ed_GetLine( oEdit[ E_EDIT ], nLine )
 
 //
@@ -209,7 +200,6 @@ FUNCTION EditorGetLine( oEdit, nLine )
 //
 
 FUNCTION EditorNextLine( oEdit )
-
    RETURN ed_GetNext( oEdit[ E_EDIT ] )
 
 //
@@ -222,16 +212,12 @@ FUNCTION EditorNextLine( oEdit )
 // lPrint - specifies if edited file can be printed
 // lConv - it was used to convert some unprintable characters
 // nEscape - the code of color escape character
-// lSave - specifies if edited file can be saved under a different name
 //
 
-FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
-      lConv, nEscape, lSave )
+FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
 
    LOCAL nHandle, nLen, oEdit, lSaved, lClose := .F.
    LOCAL nSize
-
-   hb_default( @lSave, .T. )
 
    IF HB_ISSTRING( xInput )
       nHandle := FOpen( xInput )

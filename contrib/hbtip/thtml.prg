@@ -125,7 +125,7 @@ ENDCLASS
 
 METHOD new( cHtmlString ) CLASS THtmlDocument
 
-   LOCAL oNode, oSubNode, oErrNode, aHead, aBody, nMode := 0
+   LOCAL oSubNode, oErrNode, aHead, aBody, nMode := 0
 
    LOCAL cEmptyHtmlDoc := ;
       "<!DOCTYPE html>" + hb_eol() + ;
@@ -138,13 +138,11 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
 
    IF ! HB_ISSTRING( cHtmlString )
       ::root := THtmlNode():new( cEmptyHtmlDoc )
+   ELSEIF "<html" $ Lower( Left( cHtmlString, 4096 ) )
+      ::root := THtmlNode():new( cHtmlString )
    ELSE
-      IF "<html" $ Lower( Left( cHtmlString, 4096 ) )
-         ::root := THtmlNode():new( cHtmlString )
-      ELSE
-         ::root := THtmlNode():new( cEmptyHtmlDoc )
-         nMode := 1
-      ENDIF
+      ::root := THtmlNode():new( cEmptyHtmlDoc )
+      nMode := 1
    ENDIF
 
    ::root:document := Self
@@ -205,9 +203,7 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
    ENDIF
 
    IF nMode == 1
-      oNode := THtmlNode():new( cHtmlString )
-
-      FOR EACH oSubNode IN oNode:htmlContent
+      FOR EACH oSubNode IN THtmlNode():new( cHtmlString ):htmlContent
          IF oSubNode:isType( CM_HEAD )
             ::head:addNode( oSubNode )
          ELSE
@@ -350,7 +346,7 @@ METHOD New( oHtml ) CLASS THtmlIterator
       ::oNode := oHtml:root
       ::aNodes := oHtml:nodes
    ELSE
-      ::oNode  := oHtml
+      ::oNode := oHtml
       ::aNodes := ::oNode:collect()
    ENDIF
 
@@ -990,9 +986,7 @@ METHOD Delete()  CLASS THtmlNode
 
 METHOD firstNode( lRoot ) CLASS THtmlNode
 
-   hb_default( @lRoot, .F. )
-
-   IF lRoot
+   IF hb_defaultValue( lRoot, .F. )
       RETURN ::root:htmlContent[ 1 ]
    ELSEIF ::htmlTagName == "_text_"
       RETURN ::parent:htmlContent[ 1 ]
@@ -1004,17 +998,13 @@ METHOD firstNode( lRoot ) CLASS THtmlNode
 
 METHOD lastNode( lRoot ) CLASS THtmlNode
 
-   LOCAL aNodes
-
    hb_default( @lRoot, .F. )
 
    IF ::htmlTagName == "_text_"
       RETURN ::parent:lastNode( lRoot )
    ENDIF
 
-   aNodes := iif( lRoot, ::root:collect(), ::collect() )
-
-   RETURN ATail( aNodes )
+   RETURN ATail( iif( lRoot, ::root:collect(), ::collect() ) )
 
 // returns next node
 
@@ -1200,7 +1190,7 @@ METHOD getText( cEOL ) CLASS THtmlNode
       cText += oNode:getText( cEOL )
       IF Lower( ::htmlTagName ) $ "td,th" .AND. hb_AScan( ::parent:htmlContent, Self,,, .T. ) < Len( ::parent:htmlContent )
          // leave table rows in one line, cells separated by Tab
-         cText := hb_StrShrink( cText, Len( cEol ) ) + Chr( 9 )
+         cText := hb_StrShrink( cText, Len( cEOL ) ) + Chr( 9 )
       ENDIF
    NEXT
 

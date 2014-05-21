@@ -62,7 +62,6 @@ FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
 
    hb_default( @nRow, nCursorRow )
    hb_default( @nCol, nCursorCol )
-   hb_default( @lSay, .F. )
 
    SetPos( nRow, nCol )
    IF xPrompt != NIL
@@ -78,7 +77,7 @@ FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
    ATail( GetList ):block := {| xNew | _VALUE( @_cGetSecret, lHide, xNew ) }
    READ
 
-   IF lSay
+   IF hb_defaultValue( lSay, .F. )
       SetPos( nRow, nCol )
       DevOut( _HIDE( _cGetSecret ) )
    ENDIF

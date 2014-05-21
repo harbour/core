@@ -101,12 +101,10 @@ ENDCLASS
 
 METHOD New( cServer, cUser, cPassword, nDialect ) CLASS TFbServer
 
-   hb_default( @nDialect, 1 )
-
    ::lError := .F.
    ::nError := 0
    ::StartedTrans := .F.
-   ::Dialect := nDialect
+   ::Dialect := hb_defaultValue( nDialect, 1 )
 
    ::db := FBConnect( cServer, cUser, cPassword )
 

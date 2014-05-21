@@ -532,9 +532,6 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
    LOCAL i
    LOCAL cType, nDec, nSize
 
-   hb_default( @lQuery, .T. )
-   hb_default( @lMeta, .T. )
-
    ::Destroy()
 
    ::lBof     := .T.
@@ -544,7 +541,7 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
    ::nLastrec := 0
    ::Rows     := 0
 
-   IF lQuery
+   IF hb_defaultValue( lQuery, .T. )
       res := PQexec( ::pDB, ::cQuery )
    ELSE
       res := ::pQuery
@@ -554,7 +551,7 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
 
    IF ::nResultStatus == PGRES_TUPLES_OK
 
-      IF lMeta
+      IF hb_defaultValue( lMeta, .T. )
 
          ::aStruct := {}
          ::nFields := 0

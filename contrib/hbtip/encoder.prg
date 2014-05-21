@@ -69,8 +69,7 @@ ENDCLASS
 
 METHOD New( cMode ) CLASS TIPEncoder
 
-   hb_default( @cMode, MODE_PASSTHROUGH )
-   ::cName := cMode
+   ::cName := Lower( hb_defaultValue( cMode, MODE_PASSTHROUGH ) )
 
    RETURN Self
 
@@ -82,9 +81,7 @@ METHOD Decode( cData ) CLASS TIPEncoder
 
 FUNCTION tip_GetEncoder( cMode )
 
-   hb_default( @cMode, MODE_PASSTHROUGH )
-
-   SWITCH Lower( cMode )
+   SWITCH Lower( hb_defaultValue( cMode, MODE_PASSTHROUGH ) )
    CASE "base64"           ; RETURN TIPEncoderBase64():New()
    CASE "quoted-printable" ; RETURN TIPEncoderQP():New()
    CASE "url"

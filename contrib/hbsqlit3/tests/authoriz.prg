@@ -166,10 +166,7 @@ STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 */
 
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
-
-   hb_default( @lShortMsg, .T. )
-
-   RETURN iif( lShortMsg, hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
+   RETURN iif( hb_defaultValue( lShortMsg, .T. ), hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
 /**
 */

@@ -84,14 +84,11 @@ ENDCLASS
 
 METHOD New( aRow, aFStruct, cTableName ) CLASS TMySQLRow
 
-   hb_default( @cTableName, "" )
-   hb_default( @aFStruct, {} )
-
    ::aRow := aRow
    ::aOriValue := AClone( aRow )    // Original values ( same as TMySQLtable:aOldValue )
 
-   ::aFieldStruct := aFStruct
-   ::cTable := cTableName
+   ::aFieldStruct := hb_defaultValue( aFStruct, {} )
+   ::cTable := hb_defaultValue( cTableName, "" )
 
    ::aDirty := Array( Len( ::aRow ) )
    ::aOldValue := Array( Len( ::aRow ) )
@@ -170,12 +167,11 @@ METHOD FieldLen( nNum ) CLASS TMySQLRow
 */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
-   hb_default( @lFormat, .F. )
-
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
 
-      IF ! lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
-                           ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
+      IF ! hb_defaultValue( lFormat, .F. ) .AND. ;
+         ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
+           ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
          RETURN Set( _SET_DECIMALS )
       ELSE
          RETURN ::aFieldStruct[ nNum ][ MYSQL_FS_DECIMALS ]
@@ -637,11 +633,10 @@ METHOD FieldLen( nNum ) CLASS TMySQLQuery
 */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
-   hb_default( @lFormat, .F. )
-
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
-      IF ! lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
-                           ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
+      IF ! hb_defaultValue( lFormat, .F. ) .AND. ;
+         ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
+           ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
          RETURN Set( _SET_DECIMALS )
       ELSE
          RETURN ::aFieldStruct[ nNum ][ MYSQL_FS_DECIMALS ]
@@ -1074,9 +1069,6 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
    LOCAL i
    LOCAL aRow := Array( ::nNumFields )
 
-   // It is not current row, so do not change it
-   hb_default( @lSetValues, .F. )
-
    // crate an array of empty fields
    FOR i := 1 TO ::nNumFields
 
@@ -1112,7 +1104,8 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
       ENDSWITCH
    NEXT
 
-   IF lSetValues   // Assign values as current row values
+   // It is not current row, so do not change it
+   IF hb_defaultValue( lSetValues, .F. )  // Assign values as current row values
       FOR i := 1 TO ::nNumFields
          ::FieldPut( i, aRow[ i ] )
          ::aOldValue[ i ] := aRow[ i ]

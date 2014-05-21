@@ -103,9 +103,7 @@ METHOD Open( cUrl, lTLS ) CLASS TIPClientSMTP
       RETURN .F.
    ENDIF
 
-   hb_default( @lTLS, .F. )
-
-   IF lTLS
+   IF hb_defaultValue( lTLS, .F. )
       ::inetSendAll( ::SocketCon, "STARTTLS" + ::cCRLF )
       IF ::GetOk()
          ::EnableTLS( .T. )
@@ -126,9 +124,7 @@ METHOD OpenSecure( cUrl, lTLS ) CLASS TIPClientSMTP
       RETURN .F.
    ENDIF
 
-   hb_default( @lTLS, .F. )
-
-   IF lTLS
+   IF hb_defaultValue( lTLS, .F. )
       ::inetSendAll( ::SocketCon, "STARTTLS" + ::cCRLF )
       IF ::GetOk()
          ::EnableTLS( .T. )

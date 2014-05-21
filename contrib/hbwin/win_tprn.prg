@@ -412,10 +412,8 @@ METHOD CheckPage() CLASS win_Prn
 
 METHOD EndPage( lStartNewPage ) CLASS win_Prn
 
-   hb_default( @lStartNewPage, .T. )
-
    win_EndPage( ::hPrinterDC )
-   IF lStartNewPage
+   IF hb_defaultValue( lStartNewPage, .T. )
       IF ::PageInit
          ::PosX := ::LeftMargin
          ::PosY := ::TopMargin
@@ -438,10 +436,8 @@ METHOD NewLine() CLASS win_Prn
 
 METHOD NewPage( lDelay ) CLASS win_Prn
 
-   hb_default( @lDelay, .F. )
-
    IF ::Printing
-      IF lDelay
+      IF hb_defaultValue( lDelay, .F. )
          ::PageInit := .T.
       ENDIF
       ::EndPage( .T. )
@@ -639,18 +635,15 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS win_Prn
 
    IF cString != NIL .AND. ::CheckPage()
 
-      hb_default( @lNewLine, .F. )
-      hb_default( @lUpdatePosX, .T. )
-      hb_default( @nAlign, hb_bitOr( WIN_TA_BOTTOM, WIN_TA_LEFT ) )
-
-      nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, Len( cString ), ::fCharWidth, nAlign )
+      nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, Len( cString ), ;
+         ::fCharWidth, hb_defaultValue( nAlign, hb_bitOr( WIN_TA_BOTTOM, WIN_TA_LEFT ) ) )
 
       ::HavePrinted := lResult := .T.
 
-      IF lUpdatePosX
+      IF hb_defaultValue( lUpdatePosX, .T. )
          ::PosX += nPosX
       ENDIF
-      IF lNewLine
+      IF hb_defaultValue( lNewLine, .F. )
          ::NewLine()
       ENDIF
 

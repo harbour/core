@@ -50,13 +50,9 @@
 
 FUNCTION hb_magic_simple( cFileName, nFlags )
 
-   LOCAL hMagic
+   LOCAL hMagic := magic_open( hb_defaultValue( nFlags, MAGIC_MIME_TYPE ) )
 
-   hb_default( @nFlags, MAGIC_MIME_TYPE )
-
-   hMagic := magic_open( nFlags )
-   IF Empty( hMagic ) .OR.;
-      magic_load( hMagic ) != 0
+   IF Empty( hMagic ) .OR. magic_load( hMagic ) != 0
       RETURN ""
    ENDIF
 

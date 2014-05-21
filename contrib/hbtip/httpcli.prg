@@ -164,13 +164,11 @@ METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
       RETURN .F.
    ENDCASE
 
-   hb_default( @cVerb, "POST" )
-
    IF ! HB_ISSTRING( cQuery )
       cQuery := ::oUrl:BuildQuery()
    ENDIF
 
-   ::inetSendAll( ::SocketCon, cVerb + " " + cQuery + " HTTP/1.1" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, hb_defaultValue( cVerb, "POST" ) + " " + cQuery + " HTTP/1.1" + ::cCRLF )
 
    ::StandardFields()
    IF ! "Content-Type" $ ::hFields
@@ -487,8 +485,6 @@ METHOD Boundary( nType ) CLASS TIPClientHTTP
    LOCAL cBound := ::cBoundary
    LOCAL i
 
-   hb_default( @nType, 0 )
-
    IF Empty( cBound )
       cBound := Replicate( "-", 27 )
       FOR i := 1 TO 11
@@ -496,6 +492,8 @@ METHOD Boundary( nType ) CLASS TIPClientHTTP
       NEXT
       ::cBoundary := cBound
    ENDIF
+
+   hb_default( @nType, 0 )
 
    RETURN iif( nType < 2, "--", "" ) + cBound + iif( nType == 1, "--", "" )
 

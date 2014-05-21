@@ -58,9 +58,6 @@ FUNCTION ScreenMark( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
    LOCAL nAt, nLen, nLast, nRow, nCol, nEnd, nCols
    LOCAL cScreen
 
-   hb_default( @lUpperLower, .F. )
-   hb_default( @lAll, .F. )
-
    IF ! HB_ISSTRING( cForward ) .OR. cForward == ""
       cForward := NIL
    ENDIF
@@ -73,10 +70,12 @@ FUNCTION ScreenMark( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
    nLen := Len( cSearch )
    nLast := Len( cScreen ) - nLen + 1
 
-   IF ! lUpperLower
+   IF ! hb_defaultValue( lUpperLower, .F. )
       cSearch := Upper( cSearch )
       cScreen := Upper( cScreen )
    ENDIF
+
+   hb_default( @lAll, .F. )
 
    DO WHILE ( nAt := AtNum( cSearch, cScreen, nCount ) ) != 0
 

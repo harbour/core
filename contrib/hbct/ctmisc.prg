@@ -52,10 +52,7 @@
 #include "hbmemory.ch"
 
 FUNCTION AlloFree( lMode )
-
-   hb_default( @lMode, .F. )
-
-   RETURN Memory( iif( lMode, HB_MEM_CHAR, HB_MEM_BLOCK ) )
+   RETURN Memory( iif( hb_defaultValue( lMode, .F. ), HB_MEM_CHAR, HB_MEM_BLOCK ) )
 
 FUNCTION Center( c, n, p, lMode )
 

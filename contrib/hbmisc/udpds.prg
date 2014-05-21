@@ -37,8 +37,7 @@ FUNCTION hb_udpds_Find( nPort, cName )
 
       aIFaces := hb_socketGetIFaces()
       FOR EACH iface IN aIFaces DESCEND
-         IF ! HB_ISSTRING( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .OR. ;
-            Empty( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .OR. ;
+         IF Empty( iface[ HB_SOCKET_IFINFO_BROADCAST ] ) .OR. ;
             iface[ HB_SOCKET_IFINFO_BROADCAST ] == "0.0.0.0"
             hb_ADel( aIFaces, iface:__enumIndex(), .T. )
          ENDIF

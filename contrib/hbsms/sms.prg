@@ -62,14 +62,9 @@ STATIC FUNCTION port_send( h, s )
 
 STATIC FUNCTION port_rece( h, n, t )
 
-   LOCAL cString
+   LOCAL cString := Space( hb_defaultValue( n, 64 ) )
 
-   hb_default( @n, 64 )
-   hb_default( @t, 5 )
-
-   cString := Space( n )
-
-   hb_comRecv( h, @cString,, t )
+   hb_comRecv( h, @cString,, hb_defaultValue( t, 5 ) )
 
    RETURN cString
 

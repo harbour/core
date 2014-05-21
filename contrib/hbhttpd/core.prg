@@ -1167,9 +1167,7 @@ PROCEDURE UAddHeader( cType, cValue )
 
 PROCEDURE URedirect( cURL, nCode )
 
-   hb_default( @nCode, 303 )
-
-   USetStatusCode( nCode )
+   USetStatusCode( hb_defaultValue( nCode, 303 ) )
    UAddHeader( "Location", cURL )
 
    RETURN
@@ -1353,8 +1351,6 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
    LOCAL aDir, aF, cI, tDate, tHDate
 
-   hb_default( @lIndex, .F. )
-
    cFileName := StrTran( cFileName, "//", "/" )
 
    // Security
@@ -1444,7 +1440,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
          UWrite( hb_MemoRead( UOsFileName( cFileName ) ) )
          RETURN
       ENDIF
-      IF ! lIndex
+      IF ! hb_defaultValue( lIndex, .F. )
          USetStatusCode( 403 )
          RETURN
       ENDIF

@@ -54,13 +54,10 @@ PROCEDURE Main( cPortName )
    LOCAL cString := "ATE0" + Chr( 13 ) + "ATI3" + Chr( 13 )
    LOCAL nResult
 
-   hb_default( @cPortName, "COM1" )
+   oWinPort := win_com():Init( hb_defaultValue( cPortName, "COM1" ), ;
+      WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )
 
-   oWinPort := win_com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )
-
-   IF ! oWinPort:Open()
-      ? "Open() failed"
-   ELSE
+   IF oWinPort:Open()
       ? "Open() succeeded"
       ?
       IF oWinPort:SetDTR( .T. )
@@ -78,6 +75,8 @@ PROCEDURE Main( cPortName )
       ? "Read()", oWinPort:Read( @cString, 32 ), hb_ntos( hb_BLen( cString ) ), cString
       ? oWinPort:ErrorText()
       ? "Close", oWinPort:Close()
+   ELSE
+      ? "Open() failed"
    ENDIF
 
    RETURN

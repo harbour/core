@@ -64,8 +64,7 @@ FUNCTION Sys( nValue, xPar1 )
       CASE 6
          RETURN Set( _SET_PRINTFILE )
       CASE 10
-         hb_default( @xPar1, 0 )
-         RETURN CToD( "" ) + xPar1
+         RETURN CToD( "" ) + hb_defaultValue( xPar1, 0 )
       CASE 100
          RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
       CASE 101
@@ -73,8 +72,7 @@ FUNCTION Sys( nValue, xPar1 )
       CASE 102
          RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
       CASE 2002
-         hb_default( @xPar1, SC_NONE )
-         RETURN SetCursor( xPar1 )
+         RETURN SetCursor( hb_defaultValue( xPar1, SC_NONE ) )
       CASE 2011
          RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
                 iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;

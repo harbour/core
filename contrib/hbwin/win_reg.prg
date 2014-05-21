@@ -124,9 +124,7 @@ FUNCTION win_regDelete( cRegPath, nRegSam )
    IF Empty( cEntry )
       lRetVal := win_regDeleteKey( nHKEY, cKey )
    ELSE
-      hb_default( @nRegSam, 0 )
-
-      IF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, nRegSam ), @pKeyHandle )
+      IF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, hb_defaultValue( nRegSam, 0 ) ), @pKeyHandle )
          lRetVal := win_regDeleteValue( pKeyHandle, cEntry )
          win_regCloseKey( pKeyHandle )
       ELSE
@@ -143,8 +141,6 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt, nRegSam )
    LOCAL cValType := ValType( xValue )
    LOCAL lRetVal
 
-   hb_default( @lSetIt, .F. )
-
    DO CASE
    CASE cValType == "L"
       xValue := iif( xValue, 1, 0 )
@@ -155,7 +151,7 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt, nRegSam )
    ENDCASE
 
    lRetVal := ( xKey != NIL .AND. xValue != NIL .AND. cValType == ValType( xKey ) .AND. xValue == xKey )
-   IF ! lRetVal .AND. lSetIt
+   IF ! lRetVal .AND. hb_defaultValue( lSetIt, .F. )
       lRetVal := win_regSet( nHKEY, cKeyName, cEntryName, xValue,, nRegSam )
    ENDIF
 
@@ -173,9 +169,7 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
    LOCAL pKeyHandle
    LOCAL nValueType
 
-   hb_default( @nRegSam, 0 )
-
-   IF win_regOpenKeyEx( nHKEY, cKeyName, 0, hb_bitOr( KEY_QUERY_VALUE, nRegSam ), @pKeyHandle )
+   IF win_regOpenKeyEx( nHKEY, cKeyName, 0, hb_bitOr( KEY_QUERY_VALUE, hb_defaultValue( nRegSam, 0 ) ), @pKeyHandle )
 
       /* retrieve the length of the value */
 
@@ -216,9 +210,7 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle
 
-   hb_default( @nRegSam, 0 )
-
-   IF win_regCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, hb_bitOr( KEY_SET_VALUE, nRegSam ), 0, @pKeyHandle )
+   IF win_regCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, hb_bitOr( KEY_SET_VALUE, hb_defaultValue( nRegSam, 0 ) ), 0, @pKeyHandle )
 
       /* no support for Arrays, Codeblock ... */
       SWITCH ValType( xValue )

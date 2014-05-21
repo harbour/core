@@ -62,9 +62,7 @@ THREAD STATIC t_lReadOnly := .F.
 
 PROCEDURE SetZipReadOnly( lReadOnly )
 
-   hb_default( @lReadOnly, .F. )
-
-   t_lReadOnly := lReadOnly
+   t_lReadOnly := hb_defaultValue( lReadOnly, .F. )
 
    /* TODO: Implement. */
 
@@ -298,16 +296,9 @@ FUNCTION hb_ZipFile( ;
          acExclude := { acExclude }
       ENDIF
 
-      hb_default( @acFiles, {} )
-      hb_default( @acExclude, {} )
-      hb_default( @lWithPath, .F. )
-      hb_default( @lWithDrive, .F. )
-
-      //
-
       /* NOTE: Try not to add the .zip file to itself. */
       aExclFile := { hb_FNameNameExt( cFileName ) }
-      FOR EACH cFN IN acExclude
+      FOR EACH cFN IN hb_defaultValue( acExclude, {} )
          IF "?" $ cFN .OR. "*" $ cFN
             tmp := Directory( cFN )
             FOR EACH aFile IN tmp
@@ -319,7 +310,7 @@ FUNCTION hb_ZipFile( ;
       NEXT
 
       aProcFile := {}
-      FOR EACH cFN IN acFiles
+      FOR EACH cFN IN hb_defaultValue( acFiles, {} )
          IF "?" $ cFN .OR. "*" $ cFN
             tmp := Directory( cFN )
             FOR EACH aFile IN tmp
@@ -336,6 +327,9 @@ FUNCTION hb_ZipFile( ;
       NEXT
 
       aExclFile := NIL
+
+      hb_default( @lWithPath, .F. )
+      hb_default( @lWithDrive, .F. )
 
       //
 
@@ -400,9 +394,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    LOCAL cTime
    LOCAL cBuffer := Space( t_nReadBuffer )
 
-   hb_default( @lWithPath, .F. )
-
-   IF lWithPath .AND. ! hb_DirExists( cPath ) .AND. hb_DirCreate( cPath ) != 0
+   IF hb_defaultValue( lWithPath, .F. ) .AND. ! hb_DirExists( cPath ) .AND. hb_DirCreate( cPath ) != 0
       lRetVal := .F.
    ENDIF
 
