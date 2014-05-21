@@ -27,16 +27,15 @@ PROCEDURE Main( cValue, cBaseImage )
    LOCAL aNumberImages := {}
    LOCAL n, nValue
 
-   // A value if not passed
-   hb_default( @cValue, Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
-   hb_default( @cBaseImage, "d57chevy.gif" )
+   cBaseImage := IMAGES_IN + hb_defaultValue( cBaseImage, "d57chevy.gif" )
 
-   IF ! hb_FileExists( IMAGES_IN + cBaseImage )
-      ? "ERROR: Base Image File", "'" + IMAGES_IN + cBaseImage + "'", "not found"
+   IF ! hb_FileExists( cBaseImage )
+      ? "ERROR: Base Image File", "'" + cBaseImage + "'", "not found"
       RETURN
    ENDIF
 
-   nValue := Val( cValue )
+   // A value if not passed
+   nValue := Val( hb_defaultValue( cValue, Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) ) )
 
    // Fix num length
    IF nValue > 10 ^ DISPLAY_NUM
@@ -53,7 +52,7 @@ PROCEDURE Main( cValue, cBaseImage )
    ENDIF
 
    /* Load a digits image in memory from file */
-   oIDigits := GDImage():LoadFromGif( IMAGES_IN + cBaseImage )
+   oIDigits := GDImage():LoadFromGif( cBaseImage )
 
    /* Get single number images */
 

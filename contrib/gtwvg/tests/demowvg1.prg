@@ -117,14 +117,10 @@ STATIC FUNCTION SetGT( nIndex, pGT )
 
 STATIC FUNCTION MyChoice( aChoices )
 
-   LOCAL scr, clr, nChoice
+   LOCAL scr := SaveScreen( 7, 48, 13, 55 )
+   LOCAL clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )
 
-   hb_default( @aChoices, { "One", "Two", "Three", "Four", "Five", "Six", "Seven" } )
-
-   scr := SaveScreen( 7, 48, 13, 55 )
-   clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )
-
-   nChoice := AChoice( 7, 48, 13, 55, aChoices )
+   LOCAL nChoice := AChoice( 7, 48, 13, 55, hb_defaultValue( aChoices, { "One", "Two", "Three", "Four", "Five", "Six", "Seven" } ) )
 
    SetColor( clr )
    RestScreen( 7, 48, 13, 55, scr )

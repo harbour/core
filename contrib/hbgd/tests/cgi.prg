@@ -130,8 +130,6 @@ STATIC PROCEDURE EndHTML()
 
 STATIC PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
-   LOCAL cType
-
    LOCAL oImage := GDImage():LoadFromFile( cPhoto )
 
    DO CASE
@@ -150,16 +148,18 @@ STATIC PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 #endif
 
    WRITE "content-type: " + oImage:cMime + hb_eol()
-   cType := oImage:cType
 
-   DO CASE
-   CASE cType == "jpeg"
+   SWITCH oImage:cType
+   CASE "jpeg"
       oImage:OutputJpeg()
-   CASE cType == "gif"
+      EXIT
+   CASE "gif"
       oImage:OutputGif()
-   CASE cType == "png"
+      EXIT
+   CASE "png"
       oImage:OutputPng()
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN
 

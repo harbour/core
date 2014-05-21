@@ -40,7 +40,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    ActiveXBuildMenu( oCrt, @oStatic, @oStatic2 )
 
    // --------------------------- ToolBar -----------------------------
-   oTBar := BuildWvgToolBar( oDA, nActiveX )
+   oTBar := BuildWvgToolBar( oDA )
 
    // --------------------------- StatusBar ---------------------------
    oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .T. )
@@ -218,6 +218,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
       ExeActiveX( nActiveX, oCom, xParam )
    ENDIF
 #else
+   HB_SYMBOL_UNUSED( nActiveX )
    oCrt:show()
    DO WHILE Inkey() != K_ESC
    ENDDO
@@ -294,25 +295,23 @@ STATIC PROCEDURE ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
 
 STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
-   LOCAL oCom
+   LOCAL oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
 
-   hb_default( @nActiveX, 2 )
-
-   oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
-
-   DO CASE
-   CASE nActiveX == 1
+   SWITCH hb_defaultValue( nActiveX, 2 )
+   CASE 1
       hb_gtInfo( HB_GTI_WINTITLE, "Shell.Explorer.2" + "  [  " + "http://harbour-project.org" + "  ]" )
       oCom:CLSID := "Shell.Explorer.2"
       oCom:mapEvent( 269, {|| wapi_OutputDebugString( "EXPLORER-269" ) } )
       oCom:mapEvent( 105, {|| wapi_OutputDebugString( "EXPLORER-105" ) } )
+      EXIT
 
-   CASE nActiveX == 11
+   CASE 11
       hb_gtInfo( HB_GTI_WINTITLE, "Shell.Explorer.2" + "  [  " + "MSHTML Demo" + "  ]" )
       oCom:CLSID := "MSHTML:" + "<html><h1>Stream Test</h1><p>This HTML content is being loaded from a stream.</html>"
       oCom:mapEvent( 269, {|| QOut( "EXPLORER-269" ) } )
+      EXIT
 
-   CASE nActiveX == 2
+   CASE 2
 #define evClick     1
 #define evDblClk    2
 #define evBtnDown   3
@@ -333,13 +332,15 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
          } )
 
       oCom:mapEvent( evBtnUp, {| nBtn | iif( nBtn == 2, oCom:oParent:sendMessage( WM_CLOSE, 0, 0 ), NIL ) } )
+      EXIT
 
-   CASE nActiveX == 3
+   CASE 3
       hb_gtInfo( HB_GTI_WINTITLE, "file://" + hb_DirBase() + "myharu.pdf" )
       oCom:CLSID := "file://" + hb_DirBase() + "myharu.pdf"
       oCom:mapEvent( 269, {|| QOut( "EXPLORER-269" ) } )
+      EXIT
 
-   CASE nActiveX == 4
+   CASE 4
       hb_gtInfo( HB_GTI_WINTITLE, "RM Chart [ <F12> Attributes  <F11> Next Charts ]" )
       oCom:CLSID := "RMChart.RMChartX"
 
@@ -347,11 +348,14 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
       // Trying to set it generates GPF.
       // Please download RMChart.ocx from http://www.rmchart.com/ . It is free in every sense.
 
-   CASE nActiveX == 5
+      EXIT
+
+   CASE 5
       hb_gtInfo( HB_GTI_WINTITLE, "Image Viewer" )
       oCom:CLSID := "SCRIBBLE.ScribbleCtrl.1"
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    oCom:create()
 
@@ -364,18 +368,20 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
    STATIC s_nTurn := 0
 
    // After :Create() Messages
-   DO CASE
-   CASE nActiveX == 1
+   SWITCH nActiveX
+   CASE 1
       hb_gtInfo( HB_GTI_WINTITLE, iif( Empty( xParam ), "http://harbour-project.org", xParam ) )
       oCom:AddressBar := .T.
       oCom:Navigate( iif( Empty( xParam ), "http://harbour-project.org", xParam ) )
+      EXIT
 
-   CASE nActiveX == 4
+   CASE 4
       ConfigureRMChart( oCom )
       oCom:Draw( .T. )
       oCom:Draw2Clipboard()
+      EXIT
 
-   CASE nActiveX == 5
+   CASE 5
       oCom:loadMultiPage( hb_DirBase() + "myharu.pdf", 2 )
       oCom:addGradientBorder( 10, RGB( 12, 20, 233 ), RGB( 100, 255, 20 ), 0 )
       oCom:drawText( 10, 10, "Vouch" )
@@ -383,9 +389,12 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
       oCom:copy2ClipBoard()
       oCom:view := 11
       oCom:setBackGroundColor( RGB( 225, 225, 225 ) )
-      // oCom:rotate90()
+#if 0
+      oCom:rotate90()
+#endif
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    DO WHILE ( nKey := Inkey() ) != K_ESC
 
@@ -394,14 +403,18 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
       ENDIF
 
       IF nKey == K_F12
-         DO CASE
-         CASE nActiveX == 1
-            oCom:Navigate( "www.vouch.info" )
+         SWITCH nActiveX
+         CASE 1
+            oCom:Navigate( "harbour-project.org" )
+            EXIT
 
-         CASE nActiveX == 11
-            // oCom:document( 0 ):InnerHTML := "<html><h1>Stream Test</h1><p>This HTML content in a document.</html>"
+         CASE 11
+#if 0
+            oCom:document( 0 ):InnerHTML := "<html><h1>Stream Test</h1><p>This HTML content in a document.</html>"
+#endif
+            EXIT
 
-         CASE nActiveX == 4
+         CASE 4
             oCom:RMCBackColor     := 23456142
             oCom:RMCStyle         := 2
             oCom:RMCUserWatermark := "Vouch"
@@ -409,7 +422,8 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
             oCom:Region( 1 ):SetProperties( 5.0, 5.0, -5.0, -5.0 )
 
             oCom:Draw( .T. )
-         ENDCASE
+            EXIT
+         ENDSWITCH
 
       ELSEIF nKey == K_F11
          IF nActiveX == 4
@@ -419,8 +433,8 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
             ENDIF
             sData := ""
 
-            DO CASE
-            CASE s_nTurn == 1
+            SWITCH s_nTurn
+            CASE 1
                hb_gtInfo( HB_GTI_WINTITLE, "RMChart [ Next:F11 ] " + "Stacked Bars" )
                // SetMode( 30, 100 )
 
@@ -441,8 +455,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
                   "8608|1302111|130221|130236|1305310000*3000*12000*10000*5000*20000|140011|140023|" + ;
                   "140033|140045|140055|14006-1|1400925|140131|14014-1|140171|14019-4684277|1402111" + ;
                   "|140221|140236|140535000*9000*12000*6000*10000*5000"
+               EXIT
 
-            CASE s_nTurn == 2
+            CASE 2
                hb_gtInfo( HB_GTI_WINTITLE, "RMChart [ Next:F11 ] " + "Floating Bars" )
                // SetMode( 20, 90 )
 
@@ -457,8 +472,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
                   "5/01|110011|110026|110044|110101|110131|11019-6751336|1102111|110221|1102312|110" + ;
                   "531*3*4*6*6*4*7*4*9*3*10*3|120011|120026|120044|120101|120132|12019-47872|120211" + ;
                   "1|120221|1202312|120531*.5*1.5*10.5*12*1*12*1*12.5*.5*2*11"
+               EXIT
 
-            CASE s_nTurn == 3
+            CASE 3
                hb_gtInfo( HB_GTI_WINTITLE, "RMChart [ Next:F11 ] " + "Four Regions" )
                // SetMode( 40, 120 )
 
@@ -491,8 +507,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
                   "011|4200221|420035|4200422|420052|420061|420071|4200963|420111|420121|420131|420" + ;
                   "171|42019-16744448|4202115|420221|4202310|420261|420538.1*6.2*4.3*2.2*1.2*3.1*5." + ;
                   "2*11.4*7.3*4.2"
+               EXIT
 
-            CASE s_nTurn == 4
+            CASE 4
                hb_gtInfo( HB_GTI_WINTITLE, "RMChart [ Next:F11 ] " + "10 Biggest Companies" )
                // SetMode( 25, 90 )
 
@@ -510,8 +527,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
                   "85524*170457*164196*149321*132797*130067*119703|120011|1200221|120035|1200422|12" + ;
                   "0052|120061|120071|1200970|120111|120121|120131|1201421|120171|12019-16744448|12" + ;
                   "02115|120221|1202310|120261|120538.9*4.1*4.4*2.1*.3*.3*5.9*11.3*6.7*6"
+               EXIT
 
-            CASE s_nTurn == 5
+            CASE 5
                hb_gtInfo( HB_GTI_WINTITLE, "RMChart [ Next:F11 ] " + "Grouped Bars" )
                // SetMode( 25, 80 )
 
@@ -524,8 +542,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
                   "|1105330*20*40*60*10|120011|120022|120044|120131|1202111|120221|120235|1205330*2" + ;
                   "0*50*70*60|130011|130022|130044|130131|1302111|130221|130235|1305340*10*30*20*80" + ;
                   "|140011|140022|140044|140131|1402111|140221|140235|1405370*50*80*40*30"
+               EXIT
 
-            CASE s_nTurn == 6
+            CASE 6
                hb_gtInfo( HB_GTI_WINTITLE, "RMChart [ Next:F11 ] " + "Flow Chart" )
                // SetMode( 30, 50 )
 
@@ -561,8 +580,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
                   "91|0102010|01026no|01030-16777216|0100120|010051|010079|01010180|01011280|010121" + ;
                   "20|01013100|01015-39322|010191|010209|01026RMChart is not a flowchart tool. This" + ;
                   " is just an example for the use of CustomObjects!|01030-256"
+               EXIT
 
-            ENDCASE
+            ENDSWITCH
 
             oCom:Reset()
             oCom:RMCFile := sData
@@ -620,28 +640,34 @@ STATIC PROCEDURE MyFunction( nMode )
 
 #define MUSIC_WAITON          { 800, 1600 }
 
-   DO CASE
-   CASE nMode == 1
+   SWITCH nMode
+   CASE 1
       Tone( MUSIC_WAITON[ 1 ], 1 )
       Tone( MUSIC_WAITON[ 2 ], 1 )
+      EXIT
 
-   CASE nMode == 2
+   CASE 2
       Tone( MUSIC_WAITON[ 2 ], 1 )
       Tone( MUSIC_WAITON[ 1 ], 1 )
+      EXIT
 
-   CASE nMode == 3
+   CASE 3
       Wvg_MessageBox( , "Button clicked!" )
+      EXIT
 
-   CASE nMode == 101  // Charge
+   CASE 101  // Charge
       Eval( {|| Tone( 523, 2 ), Tone( 698, 2 ), Tone( 880, 2 ), Tone( 1046, 4 ), Tone( 880, 2 ), Tone( 1046, 8 ) } )
+      EXIT
 
-   CASE nMode == 102  // NannyBoo
+   CASE 102  // NannyBoo
       AEval( { { 196, 2 }, { 196, 2 }, { 164, 2 }, { 220, 2 }, { 196, 4 }, { 164, 4 } }, {| a | Tone( a[ 1 ], a[ 2 ] ) } )
+      EXIT
 
-   CASE nMode == 103  // BADKEY
+   CASE 103  // BADKEY
       Tone( 480, 0.25 )
       Tone( 240, 0.25 )
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN

@@ -127,8 +127,8 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       EXIT
 
    CASE WM_COMMAND
-      DO CASE
 
+      DO CASE
       CASE wParam == ID_CHK_SATIS
          lClicked := ( Wvg_IsDlgButtonChecked( hDlg, ID_CHK_SATIS ) == 1 )
          Wvg_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
@@ -168,15 +168,16 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       EXIT
 
    CASE WM_CTLCOLOREDIT
-      IF Wvg_GetDlgItem( hDlg, ID_MLE ) == lParam
+      DO CASE
+      CASE Wvg_GetDlgItem( hDlg, ID_MLE ) == lParam
          Wvg_SetTextColor( wParam, RGB( 0, 0, 255 ) )
          Wvg_SetBkColor( wParam, RGB( 255, 255, 200 ) )
          RETURN 1
-      ELSEIF Wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam
+      CASE Wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam
          Wvg_SetTextColor( wParam, RGB( 255, 255, 255 ) )
          Wvg_SetBkColor( wParam, RGB( 10, 200, 45 ) )
          RETURN 1
-      ENDIF
+      ENDCASE
       EXIT
 
    CASE WM_CTLCOLORSTATIC

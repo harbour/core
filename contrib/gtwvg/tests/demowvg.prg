@@ -183,12 +183,10 @@ PROCEDURE Main()
 
 STATIC PROCEDURE WvtConsoleGets( nMode )
 
-   hb_default( @nMode, 0 )
-
    IF hb_mtvm()
       hb_threadStart( {| oCrt | hb_gtReload( "WVT" ), ;
          oCrt := hb_gtSelect(), ;
-         iif( nMode == 0, WvtNextGetsConsole(), GoogleMap() ), ;
+         iif( hb_defaultValue( nMode, 0 ) == 0, WvtNextGetsConsole(), GoogleMap() ), ;
          oCrt := NIL } )
    ENDIF
 
@@ -692,26 +690,24 @@ STATIC PROCEDURE GCUIConsole( oCrt )
 
 STATIC FUNCTION FetchText( nMode )
 
-   LOCAL cText
-
-   DO CASE
-   CASE nMode == 1
-      cText := ;
+   SWITCH nMode
+   CASE 1
+      RETURN ;
          "Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! " + ;
          "Enjoy it."
-   CASE nMode == 2
-      cText := ;
+   CASE 2
+      RETURN ;
          "Do you know Harbour can host pure console, cui+gui console, pure gui consoles applications? " + ;
          "This demonstration is a proof of that."
-   CASE nMode == 3
-      cText := ;
+   CASE 3
+      RETURN ;
          "Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! " + ;
          "And is FREE."
-   CASE nMode == 4
-      cText := "Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!"
-   ENDCASE
+   CASE 4
+      RETURN "Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!"
+   ENDSWITCH
 
-   RETURN cText
+   RETURN NIL
 
 SET PROCEDURE TO "_activex.prg"
 SET PROCEDURE TO "_dyndlgs.prg"

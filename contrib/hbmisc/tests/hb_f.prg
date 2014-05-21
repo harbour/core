@@ -4,10 +4,8 @@
 
 PROCEDURE Main( cFile )
 
-   hb_default( @cFile, __FILE__ )
-
    // open a text file here
-   IF hb_FUse( cFile, FO_READ ) != F_ERROR
+   IF hb_FUse( hb_defaultValue( cFile, __FILE__ ), FO_READ ) != F_ERROR
 
       DO WHILE ! hb_FAtEof()
          ? "line", Str( hb_FRecNo(), 2 ), hb_FReadLn()

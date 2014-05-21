@@ -17,9 +17,8 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL i
 
-   hb_default( @cDatabase, "postgres" )
+   IF SQLConnect( cHost, hb_defaultValue( cDatabase, "postgres" ), cUser, cPass )
 
-   IF SQLConnect( cHost, cDatabase, cUser, cPass )
       QuickQuery( "DROP TABLE test" )
 
       SQLQuery( "CREATE TABLE test (" + ;

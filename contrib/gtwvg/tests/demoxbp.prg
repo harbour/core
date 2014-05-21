@@ -358,29 +358,35 @@ STATIC PROCEDURE MyFunctionXbp( nMode )
 
 #define MUSIC_WAITON          { 800, 1600 }
 
-   DO CASE
-   CASE nMode == 1
+   SWITCH nMode
+   CASE 1
       Tone( MUSIC_WAITON[ 1 ], 1 )
       Tone( MUSIC_WAITON[ 2 ], 1 )
+      EXIT
 
-   CASE nMode == 2
+   CASE 2
       Tone( MUSIC_WAITON[ 2 ], 1 )
       Tone( MUSIC_WAITON[ 1 ], 1 )
+      EXIT
 
-   CASE nMode == 3
+   CASE 3
       Wvg_MessageBox( , "Button clicked!" )
+      EXIT
 
-   CASE nMode == 101  // Charge
+   CASE 101  // Charge
       Eval( {|| Tone( 523, 2 ), Tone( 698, 2 ), Tone( 880, 2 ), Tone( 1046, 4 ), Tone( 880, 2 ), Tone( 1046, 8 ) } )
+      EXIT
 
-   CASE nMode == 102  // NannyBoo
+   CASE 102  // NannyBoo
       AEval( { { 196, 2 }, { 196, 2 }, { 164, 2 }, { 220, 2 }, { 196, 4 }, { 164, 4 } }, {| a | Tone( a[ 1 ], a[ 2 ] ) } )
+      EXIT
 
-   CASE nMode == 103  // BADKEY
+   CASE 103  // BADKEY
       Tone( 480, 0.25 )
       Tone( 240, 0.25 )
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN
 

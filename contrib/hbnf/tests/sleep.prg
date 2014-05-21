@@ -4,10 +4,8 @@
 
 PROCEDURE Main( nSleep )
 
-   hb_default( @nSleep, hb_ntos( 1 ) )
-
    ? "Time is now:", Time()
-   ft_Sleep( Val( nSleep ) )
+   ft_Sleep( Val( hb_defaultValue( nSleep, hb_ntos( 1 ) ) ) )
    ? "Time is now:", Time()
 
    RETURN

@@ -198,11 +198,9 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
 
 FUNCTION WvtSetBlocks( a_ )
 
-   LOCAL o
-
    THREAD STATIC t := {}
 
-   o := AClone( t )
+   LOCAL o := AClone( t )
 
    IF a_ != NIL
       t := AClone( a_ )
@@ -214,11 +212,9 @@ FUNCTION WvtSetBlocks( a_ )
 
 FUNCTION WvtSetObjects( aObject )
 
-   LOCAL oObjects
-
    THREAD STATIC t_aObjects := {}
 
-   oObjects := AClone( t_aObjects )
+   LOCAL oObjects := AClone( t_aObjects )
 
    IF aObject != NIL
       IF Empty( aObject )
@@ -240,10 +236,10 @@ FUNCTION WvtSetObjects( aObject )
 
 FUNCTION SetMouseCheck( lYes )
 
-   LOCAL lOYes
    STATIC s_lSYes := .T.
 
-   lOYes := s_lSYes
+   LOCAL lOYes := s_lSYes
+
    IF lYes != NIL
       s_lSYes := lYes
    ENDIF
@@ -262,14 +258,10 @@ FUNCTION WvtWindowExpand( nUnits )
 
 FUNCTION VouChoice( aChoices )
 
-   LOCAL scr, clr, nChoice
+   LOCAL scr := SaveScreen( 7, 48, 13, 55 )
+   LOCAL clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )
 
-   hb_default( @aChoices, { "One", "Two", "Three", "Four", "Five", "Six", "Seven" } )
-
-   scr := SaveScreen( 7, 48, 13, 55 )
-   clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )
-
-   nChoice := AChoice( 7, 48, 13, 55, aChoices )
+   LOCAL nChoice := AChoice( 7, 48, 13, 55, hb_defaultValue( aChoices, { "One", "Two", "Three", "Four", "Five", "Six", "Seven" } ) )
 
    SetColor( clr )
    RestScreen( 7, 48, 13, 55, scr )
@@ -284,22 +276,20 @@ FUNCTION Hb_Clear()
 
 FUNCTION MyMenuProcedure( nID )
 
-   DO CASE
-   CASE nID == 101
+   SWITCH nID
+   CASE 101
       Alert( "Procedure 101" )
-   CASE nID == 102
+      EXIT
+   CASE 102
       Alert( "Procedure 102" )
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN .T.
 
-FUNCTION BuildWvgToolBar( oDA, nActiveX )
+FUNCTION BuildWvgToolBar( oDA )
 
-   LOCAL oTBar
-
-   hb_default( @nActiveX, 0 )
-
-   oTBar := WvgToolBar():new( oDA, , { 0, 0 }, { oDA:currentSize()[ 1 ], 30 }, , .T. )
+   LOCAL oTBar := WvgToolBar():new( oDA, , { 0, 0 }, { oDA:currentSize()[ 1 ], 30 }, , .T. )
 
    oTBar:style        := WVGTOOLBAR_STYLE_FLAT
    oTBar:borderStyle  := WVGFRAME_RECT
@@ -327,10 +317,10 @@ FUNCTION BuildWvgToolBar( oDA, nActiveX )
 
 FUNCTION SetGT( nIndex, pGT )
 
-   LOCAL oldGT
    STATIC s_pGT_ := { NIL, NIL, NIL }
 
-   oldGT := s_pGT_[ nIndex ]
+   LOCAL oldGT := s_pGT_[ nIndex ]
+
    IF PCount() == 2
       s_pGT_[ nIndex ] := pGT
    ENDIF
@@ -339,34 +329,30 @@ FUNCTION SetGT( nIndex, pGT )
 
 FUNCTION SetFonts( hFont )
 
-   LOCAL oldFont
-
    THREAD STATIC t_ahFonts := {}
-   oldFont := t_ahFonts
+
    IF ! Empty( hFont )
       AAdd( t_ahFonts, hFont )
    ENDIF
 
-   RETURN oldFont
+   RETURN t_ahFonts
 
 FUNCTION SetIcons( hIcon )
 
-   LOCAL oldIcon
-
    THREAD STATIC t_ahIcons := {}
-   oldIcon := t_ahIcons
+
    IF ! Empty( hIcon )
       AAdd( t_ahIcons, hIcon )
    ENDIF
 
-   RETURN oldIcon
+   RETURN t_ahIcons
 
 FUNCTION Popups( nID, lDestroy )
 
+   THREAD STATIC t_hPop_ := { , , , , , , , , }
+
    LOCAL hPop, hPop1
    LOCAL nPrompt := MF_ENABLED + MF_STRING
-
-   THREAD STATIC t_hPop_ := { , , , , , , , , }
 
    IF nID == NIL
       Wvt_SetPopupMenu()
@@ -380,8 +366,8 @@ FUNCTION Popups( nID, lDestroy )
 
    hPop := t_hPop_[ nID ]
 
-   DO CASE
-   CASE nID == 1   //  Data Entry Module
+   SWITCH nID
+   CASE 1   //  Data Entry Module
 
       IF hPop == NIL
          hPop := Wvt_CreatePopupMenu()
@@ -400,8 +386,9 @@ FUNCTION Popups( nID, lDestroy )
          Wvt_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
 
       ENDIF
+      EXIT
 
-   CASE nID == 2   //  Browser
+   CASE 2   //  Browser
 
       IF hPop == NIL
          hPop := Wvt_CreatePopupMenu()
@@ -423,8 +410,9 @@ FUNCTION Popups( nID, lDestroy )
          Wvt_AppendMenu( hPop, MF_ENABLED + MF_POPUP, hPop1, "Column Movement" )
 
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    t_hPop_[ nID ] := hPop
 

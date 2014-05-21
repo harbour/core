@@ -22,9 +22,8 @@ PROCEDURE Main( cFileName )
    ? "RDDs:"; AEval( rddList(), {| x | QQOut( "", x ) } )
 
    cTable := iif( HB_ISSTRING( cFileName ), "attachment", "t1" )
-   hb_default( @cFileName, hb_DirBase() + "test.sq3" )
 
-   ? "Connect:", hb_ntos( tmp := rddInfo( RDDI_CONNECT, { "SQLITE3", cFileName } ) )
+   ? "Connect:", hb_ntos( tmp := rddInfo( RDDI_CONNECT, { "SQLITE3", hb_defaultValue( cFileName, hb_DirBase() + "test.sq3" ) } ) )
    IF tmp == 0
       ? "Error connecting"
       RETURN

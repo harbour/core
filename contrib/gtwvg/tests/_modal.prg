@@ -75,8 +75,6 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
    LOCAL aTrg_, x_ := {}
 
    hb_default( @cCaption  , "Your Attention Please!" )
-   hb_default( @aButtons_ , { "OK" } )
-   hb_default( @aText_    , {} )
    hb_default( @aMessage_ , {} )
    hb_default( @sel       , 1 )
    hb_default( @nTime     , 10 )
@@ -89,9 +87,13 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
       aText_ := { aText_ }
    ENDIF
 
+   hb_default( @aText_, {} )
+
    IF HB_ISSTRING( aButtons_ )
       aButtons_ := { aButtons_ }
    ENDIF
+
+   hb_default( @aButtons_, { "OK" } )
 
    nLinesRqd := Len( aText_ ) + iif( Len( aText_ ) == 0, 4, 5 )
    nTopReq   := Int( ( maxRow - nLinesRqd ) / 2 )

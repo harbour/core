@@ -20,9 +20,7 @@ PROCEDURE Main( cInFile )
 
    CLS
 
-   hb_default( @cInFile, __FILE__ )
-
-   cInFile := PadR( cInFile, 128 )
+   cInFile := PadR( hb_defaultValue( cInFile, __FILE__ ), 128 )
 
    @ 0,  0 SAY "ENTER FILENAME:"   GET cInFile   PICTURE "@S30"
    @ 1,  0 SAY "    FOREGROUND:"   GET nNColor   PICTURE "999"

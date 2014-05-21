@@ -2,13 +2,9 @@
 
 PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
-   LOCAL oServer, oQuery, oRow, i, x
+   LOCAL cQuery, oQuery, oRow, i, x
 
-   LOCAL cQuery
-
-   hb_default( @cDatabase, "postgres" )
-
-   oServer := TPQServer():New( cHost, cDatabase, cUser, cPass )
+   LOCAL oServer := TPQServer():New( cHost, hb_defaultValue( cDatabase, "postgres" ), cUser, cPass )
 
    IF oServer:NetErr()
       ? oServer:ErrorMsg()
