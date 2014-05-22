@@ -429,17 +429,13 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
    LOCAL cBarCode   := ""
    LOCAL cConc      := ""
 
-   hb_default( @cModeCode, "B" )
-
    ::settext( cText )
 
-   IF ! Empty( cModeCode )
-      IF HB_ISSTRING( cModeCode ) .AND. Upper( cModeCode ) $ "ABC"
-         cModeCode := Upper( cModeCode )
-      ELSE
-         ::DrawError( "Code 128 Modes are A, B or C character values." )
-         lError := .T.
-      ENDIF
+   cModeCode := Upper( hb_defaultValue( cModeCode, "B" ) )
+
+   IF ! Empty( cModeCode ) .AND. !( cModeCode $ "ABC" )
+      ::DrawError( "Code 128 Modes are A, B or C character values." )
+      lError := .T.
    ENDIF
 
    // Checking if all chars are allowed

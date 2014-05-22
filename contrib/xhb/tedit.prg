@@ -438,8 +438,6 @@ METHOD New( cName, cAction, cMethod, lFrame, cCaption, nWidth ) CLASS THtmlForm
 
 METHOD Put( lPutControls ) CLASS THtmlForm
 
-   hb_default( @lPutControls, .F. )
-
    hb_default( @::width, 90 )
    hb_default( @::Color, "#9196A0" )
    hb_default( @::fontColor, "black" )
@@ -543,7 +541,7 @@ METHOD Put( lPutControls ) CLASS THtmlForm
    ::cOutPut := ">" + CRLF()
 
    ::oHtm:cStr += ::cOutput
-   IF lPutControls
+   IF hb_defaultValue( lPutControls, .F. )
       AEval( ::aControls, {| e | iif( HB_ISOBJECT( e ), e:Put(), ::oHtm:cStr += e ) } )
    ENDIF
 

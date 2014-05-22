@@ -233,7 +233,7 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
    oHtm:endTable()
 #endif
 
-   oquery := oServer:query( 'select * from rafael' )
+   oquery := oServer:query( "select * from rafael" )
 
    oHtm:defineTable( oQuery:FCount(), 1, 98 )
    oCurRow := oQuery:getRow( 1 )
@@ -526,13 +526,13 @@ METHOD Begin() CLASS JWindow
 
    IF HB_ISARRAY( ::aScriptSrc ) .OR. HB_ISHASH( ::aScriptSrc )
       FOR EACH i IN ::aScriptSrc
-         ::QOut( '<script language=JavaScript src="' + i + '"></script>' )
+         ::QOut( "<script language=JavaScript src=" + '"' + i + '"' + "></script>" )
       NEXT
    ENDIF
 
    IF HB_ISARRAY( ::aServerSrc ) .OR. HB_ISHASH( ::aServerSrc )
       FOR EACH i IN ::aServerSrc
-         ::QOut( '<script language=JavaScript src="' + i + '" runat=SERVER></script>' )
+         ::QOut( "<script language=JavaScript src=" + '"' + i + '"' + " runat=SERVER></script>" )
       NEXT
    ENDIF
 
@@ -543,25 +543,25 @@ METHOD Begin() CLASS JWindow
    ::QOut( "</head>" + "<body" )
 
    IF HB_ISSTRING( ::onLoad )
-      ::QOut( '   onLoad="' + ::onLoad + '"' )
+      ::QOut( "   onLoad=" + '"' + ::onLoad + '"' )
    ENDIF
 
    IF HB_ISSTRING( ::onUnLoad )
-      ::QOut( ' onUnload="' + ::onUnLoad + '"' )
+      ::QOut( " onUnload=" + '"' + ::onUnLoad + '"' )
    ENDIF
 
-   ::QOut( '>' )
+   ::QOut( ">" )
 
    IF HB_ISSTRING( ::bgColor )
-      ::QOut( '<body bgcolor="' + ::bgColor + '">' )
+      ::QOut( "<body bgcolor=" + '"' + ::bgColor + '"' + ">" )
    ENDIF
 
    IF HB_ISSTRING( ::fontColor )
-      ::QOut( '<body text="' + ::fontColor + '">' )
+      ::QOut( "<body text=" + '"' + ::fontColor + '"' + ">" )
    ENDIF
 
    IF HB_ISSTRING( ::bgImage )
-      ::QOut( '<body background="' + ::bgImage + '">' )
+      ::QOut( "<body background=" + '"' + ::bgImage + '"' + ">" )
    ENDIF
 
    FWrite( ::nH, "//-->" )
@@ -586,34 +586,34 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    LOCAL cStr := ""
 
    IF HB_ISSTRING( cName )
-      cStr += ' name= "' + cName + '"' + CRLF()
+      cStr += " name=" + '"' + cName + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cAlt )
-      cStr += ' alt= "' + cAlt + '"' + CRLF()
+      cStr += " alt=" + '"' + cAlt + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( nBorder )
-      cStr += " border= " + hb_ntos( nBorder ) + CRLF()
+      cStr += " border=" + hb_ntos( nBorder ) + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( nHeight )
-      cStr += " height= " + hb_ntos( nHeight ) + "% " + CRLF()
+      cStr += " height=" + hb_ntos( nHeight ) + "% " + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cOnClick )
-      cStr += ' onClick="' + cOnClick + '"' + CRLF()
+      cStr += " onClick=" + '"' + cOnClick + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      cStr += ' onMouseOver="' + cOnMsOver + '"' + CRLF()
+      cStr += " onMouseOver=" + '"' + cOnMsOver + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      cStr += ' onMouseOut="' + cOnMsOut + '"' + CRLF()
+      cStr += " onMouseOut=" + '"' + cOnMsOut + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cURL )
-      ::QOut( '<a href=' + cUrl + '><img src="' + cImage + '"' + cStr + '></a>' )
+      ::QOut( "<a href=" + cUrl + "><img src=" + '"' + cImage + '"' + cStr + "></a>" )
    ELSE
-      ::QOut( '<img src="' + cImage + '"' + cStr + '></a>' )
+      ::QOut( "<img src=" + '"' + cImage + '"' + cStr + "></a>" )
    ENDIF
 
    RETURN Self

@@ -73,17 +73,13 @@ STATIC s_lNetOk       := .F.
 STATIC s_cNetMsgColor := "GR+/R"
 
 FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
-      lNew, lOpenMode, lReadOnly )
+      lNew, lShared, lReadOnly )
 
    LOCAL nKey
    LOCAL lForever
    LOCAL cOldScreen := SaveScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1 )
    LOCAL lFirstPass := .T.
 
-   hb_default( @cDriver, "DBFCDX" )
-   hb_default( @lNew, .T. )
-   hb_default( @lOpenMode, NET_OPEN_MODE )
-   hb_default( @lReadOnly, .F. )
    hb_default( @nSeconds, s_nNetDelay )
 
    s_lNetOk := .F.
@@ -102,7 +98,12 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
          lFirstPass := .F.
       ENDIF
 
-      dbUseArea( lNew, cDriver, cDatabase, cAlias, lOpenMode, .F. )
+      dbUseArea( ;
+         hb_defaultValue( lNew, .T. ), ;
+         hb_defaultValue( cDriver, "DBFCDX" ), ;
+         cDatabase, cAlias, ;
+         hb_defaultValue( lShared, .T. ), ;
+         hb_defaultValue( lReadOnly, .F. ) )
 
       IF NetErr()
          lFirstPass := .F.
@@ -347,12 +348,11 @@ FUNCTION NetFileLock( nSeconds )
 
 FUNCTION NetAppend( nSeconds, lReleaseLocks )
 
-   LOCAL nOrd
+   LOCAL nOrd := ordSetFocus( 0 )      // --> set order to 0 to append ???
 
    HB_SYMBOL_UNUSED( lReleaseLocks )
 
    s_lNetOk := .F.
-   nOrd := ordSetFocus( 0 )          // --> set order to 0 to append ???
 
    IF NetLock( NET_APPEND,, hb_defaultValue( nSeconds, s_nNetDelay ) )
       // dbGoBottom()
@@ -415,26 +415,18 @@ FUNCTION SetNetMsgColor( cColor )
 FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
       lNET, cPATH, lNEW, lREADONLY )
 
+   LOCAL lAuto := Set( _SET_AUTOPEN, .F. )
    LOCAL nPos
-   LOCAL lAuto
    LOCAL oDB
    LOCAL o
 
-   hb_default( @lNET, .T. )
-   hb_default( @lNEW, .T. )
-   hb_default( @lREADONLY, .F. )
-   hb_default( @cDRIVER, "DBFCDX" )
-   hb_default( @cPATH, Set( _SET_DEFAULT ) )
    hb_default( @cAlias, hb_FNameName( cDbf ) )
-   hb_default( @cOrderBag, hb_FNameName( cDbf ) )
-
-   lAuto := Set( _SET_AUTOPEN, .F. )
 
    IF ( nPos := AScan( s_aTables, {| e | e[ 1 ] == Upper( cALIAS ) } ) ) > 0
       oDB := s_aTables[ nPos ][ 2 ]
    ELSE
       o := HBTable():New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
-         lNET, cPATH, lNEW, lREADONLY )
+         hb_defaultValue( lNET, .T. ), cPATH, lNEW, lREADONLY )
       IF o:Open()
          oDB := o:FldInit()
       ENDIF
@@ -689,7 +681,7 @@ CREATE CLASS HBTable
    METHOD AddOrder( cTag, cKey, cLabel, ;
       cFor, cWhile, ;
       lUnique, ;
-      bEval, nInterval, cOrderFile )
+      bEval, nInterval )
    METHOD GetOrderLabels()
    METHOD SetOrder( xTag )
    METHOD GetOrder( xOrder )
@@ -731,14 +723,11 @@ METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
 
 METHOD Open() CLASS HBTable
 
-   LOCAL lSuccess := .T.
-
    dbUseArea( ::IsNew, ::Driver, ::cDBF, ::Alias, ::IsNET, ::IsREADONLY )
 
    IF ::IsNET .AND. NetErr()
       Alert( _NET_USE_FAIL_MSG )
-      lSuccess := .F.
-      RETURN lSuccess
+      RETURN .F.
    ENDIF
 
    Select( ::Alias )
@@ -755,7 +744,7 @@ METHOD Open() CLASS HBTable
 
    ::dbMove( _DB_TOP )
 
-   RETURN lSuccess
+   RETURN .T.
 
 METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
 
@@ -796,7 +785,7 @@ METHOD FldInit() CLASS HBTable
    LOCAL i
    LOCAL aDb
    LOCAL oNew
-   LOCAL nScope    := 1
+   LOCAL nScope := 1
 
    ::nDataOffset := Len( self ) - 1
 
@@ -861,10 +850,6 @@ METHOD PROCEDURE Read( lKeepBuffer ) CLASS HBTable
    LOCAL adata  := Array( 1, 2 )
    LOCAL Buffer
 
-   hb_default( @lKeepBuffer, .F. )
-
-   // ? Len( ::Buffer )
-
    FOR EACH Buffer in ::Buffer
 
       i      := Buffer:__enumIndex()
@@ -876,7 +861,7 @@ METHOD PROCEDURE Read( lKeepBuffer ) CLASS HBTable
 
    NEXT
 
-   IF lKeepBuffer .OR. ::lMonitor
+   IF hb_defaultValue( lKeepBuffer, .F. ) .OR. ::lMonitor
       AAdd( ::ReadBuffers, { ( ::Alias )->( RecNo() ), ::Buffer } )
    ENDIF
 
@@ -892,8 +877,6 @@ METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
    LOCAL adata  := Array( 1, 2 )
    LOCAL Buffer
 
-   hb_default( @lKeepBuffer, .F. )
-
    ( ::Alias )->( dbGoBottom() )
    ( ::Alias )->( dbSkip() )         // go EOF
 
@@ -907,7 +890,7 @@ METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
 
    NEXT
 
-   IF lKeepBuffer .OR. ::lMonitor
+   IF hb_defaultValue( lKeepBuffer, .F. ) .OR. ::lMonitor
       AAdd( ::ReadBuffers, { ( ::Alias )->( RecNo() ), ::Buffer } )
    ENDIF
 
@@ -926,9 +909,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
    LOCAL xBuffer
    LOCAL n
 
-   hb_default( @lKeepBuffer, .F. )
-
-   IF lKeepBuffer .OR. ::lMonitor
+   IF hb_defaultValue( lKeepBuffer, .F. ) .OR. ::lMonitor
 
       // --> save old record in temp buffer
       FOR EACH xBuffer IN aOldBuffer
@@ -961,11 +942,9 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
 
 METHOD BUFWrite( aBuffer ) CLASS HBTable
 
-   LOCAL nSel       := Select( ::Alias )
-   LOCAL nOrd       := ( ::Alias )->( ordSetFocus() )
+   LOCAL nSel := Select( ::Alias )
+   LOCAL nOrd := ( ::Alias )->( ordSetFocus() )
    LOCAL Buffer
-
-   hb_default( @aBuffer, ::Buffer )
 
    IF ::isNet .AND. !( ::Alias )->( NetRecLock() )
       RETURN .F.
@@ -973,7 +952,7 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
 
    ( ::Alias )->( ordSetFocus( 0 ) )
 
-   FOR EACH Buffer in aBuffer
+   FOR EACH Buffer IN hb_defaultValue( aBuffer, ::Buffer )
       ( ::Alias )->( FieldPut( Buffer:__enumIndex(), Buffer ) )
    NEXT
 
@@ -991,9 +970,6 @@ METHOD __oTDelete( lKeepBuffer )        // ::Delete()
    LOCAL lRet
    LOCAL lDeleted := Set( _SET_DELETED, .F. )                  // make deleted records visible
 
-   // temporarily...
-   hb_default( @lKeepBuffer, .F. )
-
    ::Read()
 
    IF ::isNet
@@ -1003,7 +979,7 @@ METHOD __oTDelete( lKeepBuffer )        // ::Delete()
       lRet := .T.
    ENDIF
 
-   IF ( lKeepBuffer .OR. ::lMonitor ) .AND. lRet
+   IF ( hb_defaultValue( lKeepBuffer, .F. ) .OR. ::lMonitor ) .AND. lRet
       AAdd( ::DeleteBuffers, { ( ::Alias )->( RecNo() ), ::Buffer } )
    ENDIF
 
@@ -1035,9 +1011,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
    LOCAL nRec      := ::RecNo()
    LOCAL aBuffers
 
-   hb_default( @nBuffer, _WRITE_BUFFER )
-
-   SWITCH nBuffer
+   SWITCH hb_defaultValue( nBuffer, _WRITE_BUFFER )
    CASE _DELETE_BUFFER
 
       IF ! Empty( ::DeleteBuffers )
@@ -1150,13 +1124,9 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 METHOD AddOrder( cTag, cKey, cLabel, ;
       cFor, cWhile, ;
       lUnique, ;
-      bEval, nInterval, cOrderFile ) CLASS HBTable
+      bEval, nInterval ) CLASS HBTable
 
-   LOCAL oOrd
-
-   __defaultNIL( @cOrderFile, ::cOrderBag )
-
-   oOrd := HBOrder():New( cTag, cKey, cLabel, ;
+   LOCAL oOrd := HBOrder():New( cTag, cKey, cLabel, ;
       cFor, cWhile, ;
       lUnique, ;
       bEval, nInterval )
@@ -1351,7 +1321,6 @@ METHOD OnError( uParam ) CLASS HBTable
    IF nPos != 0
       uRet := ( ::Alias )->( iif( uParam == NIL, FieldGet( nPos ), FieldPut( nPos, uParam ) ) )
    ELSE
-
       oErr := ErrorNew()
       oErr:Args          := { Self, cMsg, uParam }
       oErr:CanDefault    := .F.
@@ -1364,7 +1333,6 @@ METHOD OnError( uParam ) CLASS HBTable
       oErr:SubCode       := -1
       oErr:SubSystem     := "HBTable"
       uRet := Eval( ErrorBlock(), oErr )
-
    ENDIF
 
    RETURN uRet

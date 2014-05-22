@@ -102,20 +102,18 @@ METHOD New( name, lOpen, width, height, bgColor, ;
    LOCAL cStr
 
    hb_default( @name, "l" )
-   hb_default( @lOpen, .F. )
    hb_default( @WIDTH, 200 )
    hb_default( @HEIGHT, 22 )
    hb_default( @BGCOLOR, "white" )
    hb_default( @FONT, "Verdana" )
    hb_default( @fntColor, "black" )
    hb_default( @fntSize, 2 )
-   hb_default( @cMinusImg, "minus.gif" )
-   hb_default( @cPlusImg, "plus.gif" )
 
    ::font      := FONT
    ::size      := fntSize
    ::fontColor := fntColor
    ::bgColor   := BGCOLOR
+   ::cMainNode := name
 
    cStr := "<html>" + CRLF() + "<head>" + CRLF() + ;
       "<style>" + ::Style + "</style>" + CRLF() + ;
@@ -129,18 +127,18 @@ METHOD New( name, lOpen, width, height, bgColor, ;
       "function listInit() {" + CRLF() + ;
       "var width =" + hb_ntos( width ) + ";" + ;
       "var height=" + hb_ntos( height ) + ";" + CRLF() + ;
-      'listSetImages( "' + cMinusImg + '", "' + cPlusImg + '" );' + CRLF() + CRLF()
-
-   ::cMainNode := name
+      'listSetImages( "' + hb_defaultValue( cMinusImg, "minus.gif" ) + '", "' + ;
+      hb_defaultValue( cPlusImg, "plus.gif" ) + '" );' + CRLF() + CRLF()
 
    cStr += ""       // Space( 10 )
    cStr += name + " = new List("
-   cStr += iif( lOpen, "true,", "false," )
+   cStr += iif( hb_defaultValue( lOpen, .F. ), "true,", "false," )
    cStr += hb_ntos( width ) + ","
    cStr += hb_ntos( height ) + ","
    cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
    cStr += ""       // Space( 10 )
-   cStr += name + '.SetFont("<font face=' + "'" + FONT + "' size=" + hb_ntos( fntSize ) + "' color='" + fntColor + "'" + '>","</font>");' + CRLF()
+   cStr += name + '.SetFont("<font face=' + ;
+      "'" + FONT + "' size=" + hb_ntos( fntSize ) + "' color='" + fntColor + "'" + '>","</font>");' + CRLF()
 
    ::nItems++
    AAdd( ::aScript, cStr )
@@ -151,25 +149,20 @@ METHOD New( name, lOpen, width, height, bgColor, ;
 */
 METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJSList
 
-   LOCAL cStr := ""
-
-   hb_default( @lOpen, .F. )
-   hb_default( @WIDTH, 200 )
-   hb_default( @HEIGHT, 22 )
-   hb_default( @BGCOLOR, "white" )
-
-   cStr += ""       // Space( 10 )
-   cStr += name + "= new List("
-   cStr += iif( lOpen, "true,", "false," )
-   cStr += hb_ntos( width ) + ","
-   cStr += hb_ntos( height ) + ","
-   cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
-
    IF HB_ISSTRING( name )
       ::cCurrentNode := name
+   ELSE
+      name := "x"
    ENDIF
+
    ::nItems++
-   AAdd( ::aScript, cStr )
+
+   AAdd( ::aScript, ;
+      name + "= new List(" + ;
+      iif( hb_defaultValue( lOpen, .F. ), "true,", "false," ) + ;
+      hb_ntos( hb_defaultValue( WIDTH, 200 ) ) + "," + ;
+      hb_ntos( hb_defaultValue( HEIGHT, 22 ) ) + "," + ;
+      '"' + hb_defaultValue( BGCOLOR, "white" ) + '"' + ");" + CRLF() )
 
    ::setFont()
 
@@ -179,20 +172,12 @@ METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJSList
 */
 METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 
-   LOCAL cStr
-
-   hb_default( @name, ::cCurrentNode )
-   hb_default( @FONT, ::font )
-   hb_default( @fntColor, ::fontColor )
-   hb_default( @fntSize, ::Size )
-
-   cStr := name + '.SetFont("<font ' + ;
-      " face= '" + font + "' " + ;
-      " size= " + hb_ntos( fntSize ) + "'" + ;
-      " color= '" + fntColor + "' " + ;
-      ' > ","</font>");' + CRLF()
-
-   AAdd( ::aScript, cStr )
+   AAdd( ::aScript, ;
+      hb_defaultValue( name, ::cCurrentNode ) + '.SetFont("<font ' + ;
+      " face='" + hb_defaultValue( FONT, ::font ) + "' " + ;
+      " size=" + hb_ntos( hb_defaultValue( fntSize, ::Size ) ) + "'" + ;
+      " color='" + hb_defaultValue( fntColor, ::fontColor ) + "' " + ;
+      ' > ","</font>");' + CRLF() )
 
    RETURN self
 
@@ -200,16 +185,12 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 */
 METHOD AddItem( name, url, bgColor ) CLASS TJSList
 
-   LOCAL cStr
-   LOCAL cUrl
+   LOCAL cUrl := ;
+      "<a href='" + hb_defaultValue( url, "" ) + "'>" + ;
+      htmlSpace( 2 ) + hb_defaultValue( name, "o" ) + htmlSpace( 2 )
 
-   hb_default( @name, "o" )
-   hb_default( @url, "" )
-
-   cUrl := "<a href='" + url + "'>" + htmlSpace( 2 ) + name + htmlSpace( 2 )
-   cStr := ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( HB_ISSTRING( bgColor ), ',"' + bgColor + '"', "" ) + ');' + CRLF()
    ::nItems++
-   AAdd( ::aScript, cStr )
+   AAdd( ::aScript, ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( HB_ISSTRING( bgColor ), ',"' + bgColor + '"', "" ) + ');' + CRLF() )
 
    RETURN self
 
@@ -217,58 +198,46 @@ METHOD AddItem( name, url, bgColor ) CLASS TJSList
 */
 METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
 
-   LOCAL cStr
-   LOCAL cUrl
+   LOCAL cUrl := ;
+      "<a href='" + hb_defaultValue( url, "" ) + "'>" + ;
+      "<img src='" + hb_defaultValue( img, "webpage.jpg" ) + "' border=0 align=absmiddle>" + ;
+      htmlSpace( 2 ) + hb_defaultValue( name, "o" ) + htmlSpace( 2 )
 
-   hb_default( @name, "o" )
-   hb_default( @url, "" )
-   hb_default( @img, "webpage.jpg" )
-
-   cUrl := "<a href='" + url + "'><img src='" + img + "' border=0 align=absmiddle>" + htmlSpace( 2 ) + name + htmlSpace( 2 )
-   cStr := ::cCurrentNode + '.addItem( "' + curl + '"' + iif( HB_ISSTRING( bgColor ), ',"' + bgColor + '"', "" ) + ');' + CRLF()
    ::nItems++
-   AAdd( ::aScript, cStr )
+   AAdd( ::aScript, ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( HB_ISSTRING( bgColor ), ',"' + bgColor + '"', "" ) + ');' + CRLF() )
 
    RETURN self
 
 METHOD EndNode( name, caption ) CLASS TJSList
 
-   LOCAL cStr
-
    ::cCurrentNode := ::cMainNode
-   cStr           := ::cMainNode + ".addList( " + name + ", '<b>" + caption + "</b>' );" + CRLF()
 
-   ::nItems++
-   AAdd( ::aScript, cStr )
+   AAdd( ::aScript, ::cMainNode + ".addList( " + name + ", '<b>" + caption + "</b>' );" + CRLF() )
 
    RETURN self
 
 METHOD Build( xPos, yPos ) CLASS TJSList
 
    LOCAL i
-   LOCAL cStr := ""
 
-   hb_default( @xPos, 5 )
-   hb_default( @yPos, 5 )
-
-   cStr += ;
-      ::cMainNode + ".build(" + hb_ntos( xPos ) + "," + hb_ntos( yPos ) + ");" + CRLF() + ;
+   LOCAL cStr := ;
+      ::cMainNode + ".build(" + hb_ntos( hb_defaultValue( xPos, 5 ) ) + "," + hb_ntos( hb_defaultValue( yPos, 5 ) ) + ");" + CRLF() + ;
       "}" + CRLF() + ;
-      "// -->" + crlf() + ;
+      "// -->" + CRLF() + ;
       "</script>" + CRLF() + ;
       '<style type="text/css">' + CRLF() + ;
       "#spacer { position: absolute; height: 1120; }" + CRLF() + ;
       "</style>" + CRLF() + ;
       '<style type="text/css">' + CRLF()
+
    FOR i := 0 TO ::nItems + 6
       cStr += "#" + ::cMainNode + "Item" + hb_ntos( i ) + " { position:absolute; }" + CRLF()
    NEXT
    cStr += "</style>" + CRLF()
 
    AAdd( ::aScript, cStr )
-   cStr := ""
 
-   cStr += ;
+   cStr := ;
       "<title>Collapsable Lists: Basic Example</title>" + CRLF() + ;
       "</head>" + CRLF() + ;
       '<body onload="listInit();" bgcolor="#FFFFFF">' + CRLF() + ;

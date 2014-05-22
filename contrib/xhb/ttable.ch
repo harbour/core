@@ -89,7 +89,7 @@
            [<ro: READONLY>] ;
            => ;
            NetDbUse( <(cDBF)>, <(cAlias)>, <nSecs>, <cRDD>, ;
-                   <.new.>, NET_OPEN_MODE, <.ro.> )
+                   <.new.>, .T., <.ro.> )
 
 
 // --> new table object

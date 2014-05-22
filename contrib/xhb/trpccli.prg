@@ -292,15 +292,13 @@ METHOD ScanFunctions( cFunc, cSerial ) CLASS TRPCClient
       RETURN .F.
    ENDIF
 
-   hb_default( @cSerial, "00000000.0" )
-
    hb_mutexLock( ::mtxBusy )
    ::aFunctions := {}
    ::aServers := {}
    hb_mutexUnlock( ::mtxBusy )
 
    hb_inetDGramSend( ::skUDP, ::cNetwork, ::nUdpPort, ;
-      "XHBR01" + hb_Serialize( cFunc ) + hb_Serialize( cSerial ) )
+      "XHBR01" + hb_Serialize( cFunc ) + hb_Serialize( hb_defaultValue( cSerial, "00000000.0" ) ) )
    ::StartScan()
 
    RETURN .F.

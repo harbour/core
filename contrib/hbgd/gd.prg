@@ -177,6 +177,7 @@ FUNCTION gdImageFromFile( cFile )
 FUNCTION gdImageToString( oImage )
 
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) ) .AND. oImage:cType != NIL
+
       SWITCH oImage:cType
       CASE "jpeg"
          RETURN oImage:ToStringJpeg()
@@ -194,6 +195,7 @@ PROCEDURE gdImageToFile( oImage, cFile )
    LOCAL cString, cExt
 
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) ) .AND. oImage:cType != NIL
+
       SWITCH oImage:cType
       CASE "jpeg"
          cString := oImage:ToStringJpeg()
@@ -210,6 +212,7 @@ PROCEDURE gdImageToFile( oImage, cFile )
       OTHERWISE
          cExt := ""
       ENDSWITCH
+
       IF cString != NIL
          hb_MemoWrit( hb_defaultValue( cFile, "image" ) + cExt, cString )
       ENDIF
@@ -219,23 +222,19 @@ PROCEDURE gdImageToFile( oImage, cFile )
 
 PROCEDURE gdImageToHandle( oImage, nHandle )
 
-   IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
-      IF oImage:cType != NIL
+   IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) ) .AND. oImage:cType != NIL
 
-         hb_default( @nHandle, hb_GetStdOut() )
-
-         SWITCH oImage:cType
-         CASE "jpeg"
-            oImage:OutputJpeg( nHandle )
-            EXIT
-         CASE "gif"
-            oImage:OutputGif( nHandle )
-            EXIT
-         CASE "png"
-            oImage:OutputPng( nHandle )
-            EXIT
-         ENDSWITCH
-      ENDIF
+      SWITCH oImage:cType
+      CASE "jpeg"
+         oImage:OutputJpeg( nHandle )
+         EXIT
+      CASE "gif"
+         oImage:OutputGif( nHandle )
+         EXIT
+      CASE "png"
+         oImage:OutputPng( nHandle )
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN

@@ -43,7 +43,7 @@ FUNCTION hb_udpds_Find( nPort, cName )
          ENDIF
       NEXT
 
-      IF Empty( aIFaces )
+      IF Len( aIFaces ) == 0
          aIFaces := { Array( HB_SOCKET_IFINFO_LEN ) }
          aIFaces[ 1 ][ HB_SOCKET_IFINFO_BROADCAST ] := "255.255.255.255"
       ENDIF

@@ -1128,7 +1128,7 @@ STATIC FUNCTION __AttrToStr( cName, cValue, aAttr, oTHtmlNode )
 
    LOCAL nPos
 
-   IF ( nPos := hb_AScan( aAttr, Lower( cName ),,, .T. ) ) == 0
+   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
       // Tag doesn't have this attribute
       RETURN oTHtmlNode:error( "Invalid HTML attribute for: <" + oTHtmlNode:htmlTagName + ">", oTHtmlNode:className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
@@ -1360,7 +1360,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       aAttr := {}
    END SEQUENCE
 
-   IF ( nPos := hb_AScan( aAttr, Lower( cName ),,, .T. ) ) == 0
+   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
       // Tag doesn't have this attribute
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
