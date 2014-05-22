@@ -1048,14 +1048,16 @@ STATIC PROCEDURE Page_CodePages( pdf )
       HPDF_Page_ShowText( page, cEncoding + " Encoding" )
       HPDF_Page_EndText( page )
 
-      DO CASE
-      CASE cEncoding == "Symbol-Set"
+      SWITCH cEncoding
+      CASE "Symbol-Set"
          font2 := HPDF_GetFont( pdf, "Symbol", NIL )
-      CASE cEncoding == "ZapfDingbats-Set"
+         EXIT
+      CASE "ZapfDingbats-Set"
          font2 := HPDF_GetFont( pdf, "ZapfDingbats", NIL )
+         EXIT
       OTHERWISE
          font2 := HPDF_GetFont( pdf, font_name, cEncoding )
-      ENDCASE
+      ENDSWITCH
 
       HPDF_Page_SetFontAndSize( page, font2, 14 )
       draw_fonts( page, cEncoding == "UTF-8" )

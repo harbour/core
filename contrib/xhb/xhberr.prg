@@ -173,14 +173,14 @@ STATIC FUNCTION xhb_DefError( oError )
       ENDDO
 
       IF ! Empty( nChoice )
-         DO CASE
-         CASE aOptions[ nChoice ] == "Break"
+         SWITCH aOptions[ nChoice ]
+         CASE "Break"
             Break( oError )
-         CASE aOptions[ nChoice ] == "Retry"
+         CASE "Retry"
             RETURN .T.
-         CASE aOptions[ nChoice ] == "Default"
+         CASE "Default"
             RETURN .F.
-         ENDCASE
+         ENDSWITCH
       ENDIF
    ELSE
       IF Empty( oError:osCode )

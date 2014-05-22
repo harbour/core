@@ -365,18 +365,16 @@ METHOD UDPAccept() CLASS TRPCClient
 
 METHOD UDPParse( cData, nLen ) CLASS TRPCClient
 
-   LOCAL cCode, cSer, cFunc, cName
+   LOCAL cSer, cFunc, cName
    LOCAL aLoc
 
    IF nLen < 12
       RETURN .F.
    ENDIF
 
-   cCode := hb_BLeft( cData, 6 )
-
-   DO CASE
+   SWITCH hb_BLeft( cData, 6 )
       /* XHRB00 - server scan */
-   CASE cCode == "XHBR10"
+   CASE "XHBR10"
       cData := hb_BSubStr( cData, 7 )
       cData := hb_Deserialize( cData, 512 )
       // deserialization error checking
@@ -388,8 +386,7 @@ METHOD UDPParse( cData, nLen ) CLASS TRPCClient
          RETURN .F.
       ENDIF
 
-
-   CASE cCode == "XHBR11"
+   CASE "XHBR11"
       cData := hb_BSubStr( cData, 7 )
       cSer := hb_DeserialBegin( cData )
       cName := hb_DeserialNext( @cSer, 64 )
@@ -402,7 +399,7 @@ METHOD UDPParse( cData, nLen ) CLASS TRPCClient
          RETURN .F.
       ENDIF
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN .F.
 
@@ -538,23 +535,22 @@ METHOD SetLoopMode( nMethod, xData, nEnd, nStep ) CLASS TRPCClient
       RETURN .T.
    ENDIF
 
-   IF HB_ISARRAY( xData )
+   DO CASE
+   CASE HB_ISARRAY( xData )
       ::aLoopData := xData
-   ELSE
-      IF HB_ISNUMERIC( xData )
-         // this is to allow garbage collecting
-         ::aLoopData := NIL
-         ::nLoopStart := xData
-         ::nLoopEnd := nEnd
-         IF HB_ISNUMERIC( nStep )
-            ::nLoopStep := nStep
-         ELSE
-            ::nLoopStep := 1
-         ENDIF
+   CASE HB_ISNUMERIC( xData )
+      // this is to allow garbage collecting
+      ::aLoopData := NIL
+      ::nLoopStart := xData
+      ::nLoopEnd := nEnd
+      IF HB_ISNUMERIC( nStep )
+         ::nLoopStep := nStep
       ELSE
-         RETURN .F.
+         ::nLoopStep := 1
       ENDIF
-   ENDIF
+   OTHERWISE
+      RETURN .F.
+   ENDCASE
 
    ::nLoopMode := nMethod
 
@@ -852,16 +848,15 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
 
    ::nErrorCode := 0
 
-   DO CASE
-      /* Warn error codes */
-   CASE cCode == "XHBR40"
+   SWITCH hb_defaultValue( cCode, "" )
+   CASE "XHBR40"  /* Warn error codes */
       cData := Space( 2 )
       hb_inetRecvAll( ::skTCP, @cData, 2 )
       ::nErrorCode := Val( cData )
       ::OnFunctionFail( ::nErrorCode, "No description for now" )
+      EXIT
 
-      /* We have a reply */
-   CASE cCode == "XHBR30"
+   CASE "XHBR30"  /* We have a reply */
       IF hb_inetRecvAll( ::skTCP, @cDataLen ) == hb_BLen( cDataLen )
          nDataLen := hb_GetLen8( cDataLen )
          cData := Space( nDataLen )
@@ -873,9 +868,9 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
             // TODO: rise an error if ::oResult is NIL
          ENDIF
       ENDIF
+      EXIT
 
-      /* We have a reply */
-   CASE cCode == "XHBR31"
+   CASE "XHBR31"  /* We have a reply */
       IF hb_inetRecvAll( ::skTCP, @cOrigLen ) == hb_BLen( cOrigLen )
          nOrigLen := hb_GetLen8( cOrigLen )
          IF hb_inetRecvAll( ::skTCP, @cDataLen ) == hb_BLen( cDataLen )
@@ -892,9 +887,9 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
             ENDIF
          ENDIF
       ENDIF
+      EXIT
 
-      /* We have a progress */
-   CASE cCode == "XHBR33"
+   CASE "XHBR33"  /* We have a progress */
       IF hb_inetRecvAll( ::skTCP, @cProgress, 10 ) == 10
          nProgress := hb_Deserialize( cProgress, 10 )
          IF nProgress != NIL
@@ -902,9 +897,9 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
             ::OnFunctionProgress( nProgress )
          ENDIF
       ENDIF
+      EXIT
 
-      /* We have a progress with data*/
-   CASE cCode == "XHBR34"
+   CASE "XHBR34"  /* We have a progress with data */
       IF hb_inetRecvAll( ::skTCP, @cProgress ) == hb_BLen( cProgress )
          nProgress := hb_Deserialize( cProgress, hb_BLen( cProgress ) )
          IF nProgress != NIL .AND. hb_inetRecvAll( ::skTCP, @cDataLen ) == hb_BLen( cDataLen )
@@ -919,9 +914,9 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
             ENDIF
          ENDIF
       ENDIF
+      EXIT
 
-      /* We have a progress with compressed data*/
-   CASE cCode == "XHBR35"
+   CASE "XHBR35"  /* We have a progress with compressed data */
       IF hb_inetRecvAll( ::skTCP, @cProgress ) == hb_BLen( cProgress )
          nProgress := hb_Deserialize( cProgress, hb_BLen( cProgress ) )
          IF nProgress != NIL .AND. hb_inetRecvAll( ::skTCP, @cOrigLen ) == hb_BLen( cOrigLen )
@@ -942,7 +937,9 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
             ENDIF
          ENDIF
       ENDIF
-   ENDCASE
+      EXIT
+
+   ENDSWITCH
 
    RETURN lContinue
 

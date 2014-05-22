@@ -54,14 +54,16 @@ STATIC PROCEDURE path_debug( hCairo, nTolerance )
    hIterator := cairo_path_iterator_create( hPath )
    DO WHILE ( nType := cairo_path_iterator_next( hIterator ) ) != NIL
       aPoints := cairo_path_iterator_get_points( hIterator )
-      DO CASE
-      CASE nType == CAIRO_PATH_MOVE_TO
+      SWITCH nType
+      CASE CAIRO_PATH_MOVE_TO
          cairo_move_to( hCairo, aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
          cairo_rel_line_to( hCairo, 0, 0 )
-      CASE nType == CAIRO_PATH_LINE_TO
+         EXIT
+      CASE CAIRO_PATH_LINE_TO
          cairo_move_to( hCairo, aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
          cairo_rel_line_to( hCairo, 0, 0 )
-      CASE nType == CAIRO_PATH_CURVE_TO
+         EXIT
+      CASE CAIRO_PATH_CURVE_TO
          cairo_stroke( hCairo )
          cairo_set_source_rgb( hCairo, 0.5, 0.5, 0.5 )
          cairo_move_to( hCairo, aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
@@ -72,7 +74,8 @@ STATIC PROCEDURE path_debug( hCairo, nTolerance )
          cairo_set_source_rgb( hCairo, 0, 0, 0 )
          cairo_move_to( hCairo, aPoints[ 3, 1 ], aPoints[ 3, 2 ] )
          cairo_rel_line_to( hCairo, 0, 0 )
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ENDDO
    cairo_path_iterator_destroy( hIterator )
    cairo_stroke( hCairo )

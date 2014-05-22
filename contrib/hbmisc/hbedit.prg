@@ -392,63 +392,68 @@ STATIC PROCEDURE EditorKeys( oEdit, nKey )
 
    LOCAL i
 
-   DO CASE
-   CASE nKey == K_CTRL_Y
+   SWITCH nKey
+   CASE K_CTRL_Y
       ed_DelLine( oEdit[ E_EDIT ] )
+      EXIT
 
-   CASE nKey == K_CTRL_T
+   CASE K_CTRL_T
       ed_DelWord( oEdit[ E_EDIT ] )
+      EXIT
 
-   CASE nKey == K_DEL
+   CASE K_DEL
       ed_DelChar( oEdit[ E_EDIT ] )
+      EXIT
 
-   CASE nKey == K_BS
+   CASE K_BS
       ed_BSpace( oEdit[ E_EDIT ], oEdit[ E_INSERT ] )
+      EXIT
 
-   CASE nKey == K_ENTER
+   CASE K_ENTER
       ed_Return( oEdit[ E_EDIT ], oEdit[ E_INSERT ] )
+      EXIT
 
-   CASE nKey == K_TAB
+   CASE K_TAB
 #if 0
       ed_Tab( oEdit[ E_EDIT ], oEdit[ E_INSERT ] )
 #endif
       FOR i := 1 TO 4
          ed_PutChar( oEdit[ E_EDIT ], Asc( " " ), oEdit[ E_INSERT ] )
       NEXT
+      EXIT
 
-   CASE nKey == K_INS
+   CASE K_INS
       oEdit[ E_INSERT ] := ! oEdit[ E_INSERT ]
       Set( _SET_INSERT, oEdit[ E_INSERT ] )
       SetCursor( iif( oEdit[ E_INSERT ], SC_NORMAL, SC_SPECIAL1 ) )
 #if 0
       SayInsert()
 #endif
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN
 
 STATIC FUNCTION EditorMove( pEdit, nKey )
 
-   LOCAL lMoved := .T.
+   SWITCH nKey
+   CASE K_PGDN       ; ed_PgDown( pEdit ) ; EXIT
+   CASE K_PGUP       ; ed_PgUp( pEdit ) ; EXIT
+   CASE K_CTRL_PGUP  ; ed_Top( pEdit ) ; EXIT
+   CASE K_CTRL_PGDN  ; ed_Bottom( pEdit ) ; EXIT
+   CASE K_RIGHT      ; ed_Right( pEdit ) ; EXIT
+   CASE K_LEFT       ; ed_Left( pEdit ) ; EXIT
+   CASE K_HOME       ; ed_Home( pEdit ) ; EXIT
+   CASE K_CTRL_HOME  ; ed_Home( pEdit ) ; EXIT
+   CASE K_END        ; ed_End( pEdit ) ; EXIT
+   CASE K_CTRL_END   ; ed_End( pEdit ) ; EXIT
+   CASE K_CTRL_RIGHT // ; ed_NWord( pEdit ) ; EXIT   // there are some problems with it
+   CASE K_CTRL_LEFT  ; ed_PWord( pEdit ) ; EXIT
+   OTHERWISE         ; RETURN .F.
+   ENDSWITCH
 
-   DO CASE
-   CASE nKey == K_PGDN       ; ed_PgDown( pEdit )
-   CASE nKey == K_PGUP       ; ed_PgUp( pEdit )
-   CASE nKey == K_CTRL_PGUP  ; ed_Top( pEdit )
-   CASE nKey == K_CTRL_PGDN  ; ed_Bottom( pEdit )
-   CASE nKey == K_RIGHT      ; ed_Right( pEdit )
-   CASE nKey == K_LEFT       ; ed_Left( pEdit )
-   CASE nKey == K_HOME       ; ed_Home( pEdit )
-   CASE nKey == K_CTRL_HOME  ; ed_Home( pEdit )
-   CASE nKey == K_END        ; ed_End( pEdit )
-   CASE nKey == K_CTRL_END   ; ed_End( pEdit )
-   CASE nKey == K_CTRL_RIGHT // ; ed_NWord( pEdit )   // there are some problems with it
-   CASE nKey == K_CTRL_LEFT  ; ed_PWord( pEdit )
-   OTHERWISE                 ; lMoved := .F.
-   ENDCASE
-
-   RETURN lMoved
+   RETURN .T.
 
 STATIC FUNCTION EditorSave( oEdit )
 

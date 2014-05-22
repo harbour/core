@@ -2338,17 +2338,20 @@ METHOD GetTextSelection( lSoftCr ) CLASS XHBEditor
 //
 METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
 
+   hb_default( @cAction, "" )
+
    IF ::lSelActive
 
-      DO CASE
-      CASE cAction == "ALL"
+      SWITCH cAction
+      CASE "ALL"
 
          ::nRowSelStart := 1
          ::nRowSelEnd := ::LastRow()
          ::nColSelStart := ::nColSelEnd := 0
          ::RefreshWindow()
+         EXIT
 
-      CASE cAction == "ROW"
+      CASE "ROW"
 
          IF nCount > 0     // Shift+Down
 
@@ -2434,8 +2437,9 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
             ::RefreshLine()
 
          ENDIF
+         EXIT
 
-      CASE cAction == "COL"
+      CASE "COL"
 
          IF nCount > 0     // Shift+Right
             IF ::nCol < ::nWordWrapCol + 1
@@ -2476,10 +2480,10 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
                ENDIF
                ::lSelActive := .F.
             ENDIF
-
          ENDIF
+         EXIT
 
-      CASE cAction == "END"
+      CASE "END"
 
          IF ::nColSelStart == 0
             ::nColSelStart := Max( 1, ::nCol - 1 )
@@ -2487,29 +2491,32 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
          ::End()
          ::nColSelEnd := Max( 1, ::nCol - 1 )
          ::RefreshLine( .T. )
+         EXIT
 
-      CASE cAction == "HOME"
+      CASE "HOME"
 
          ::nColSelEnd := ::nCol
          ::nColSelStart := 1
          ::GotoCol( 1 )
          ::RefreshLine( .T. )
+         EXIT
 
-      ENDCASE
+      ENDSWITCH
 
    ELSE
 
       ::lSelActive := .T.
 
-      DO CASE
-      CASE cAction == "ALL"
+      SWITCH cAction
+      CASE "ALL"
 
          ::nRowSelStart := 1
          ::nRowSelEnd := ::LastRow()
          ::nColSelStart := ::nColSelEnd := 0
          ::RefreshWindow()
+         EXIT
 
-      CASE cAction == "ROW"
+      CASE "ROW"
 
          ::GotoCol( 1 )
 
@@ -2529,8 +2536,9 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
             ::nRowSelEnd   := ::nRowSelStart
             ::RefreshLine()
          ENDIF
+         EXIT
 
-      CASE cAction == "COL"
+      CASE "COL"
 
          IF nCount > 0   // Shift+Right
             IF ::nCol < ::nWordWrapCol + 1
@@ -2557,8 +2565,9 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
             ENDIF
             ::RefreshLine( .T. )
          ENDIF
+         EXIT
 
-      CASE cAction == "END"
+      CASE "END"
 
          IF ::nColSelStart == 0
             ::nColSelRow := ::nRow
@@ -2567,16 +2576,18 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
          ::End()
          ::nColSelEnd := Max( 1, ::nCol - 1 )
          ::RefreshLine( .T. )
+         EXIT
 
-      CASE cAction == "HOME"
+      CASE "HOME"
 
          ::nColSelRow := ::nRow
          ::nColSelEnd := ::nCol
          ::nColSelStart := 1
          ::GotoCol( 1 )
          ::RefreshLine( .T. )
+         EXIT
 
-      ENDCASE
+      ENDSWITCH
 
    ENDIF
 

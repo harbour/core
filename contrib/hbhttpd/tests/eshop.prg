@@ -332,12 +332,14 @@ STATIC FUNCTION proc_account_edit()
 
    aRet := { "user" => users->USER, "name" => cName }
    IF "err" $ get
-      DO CASE
-      CASE get[ "err" ] == "1"
+      SWITCH get[ "err" ]
+      CASE "1"
          aRet[ "errtext" ] := "Name value should not be empty!"
-      CASE get[ "err" ] == "2"
+         EXIT
+      CASE "2"
          aRet[ "errtext" ] := "Passwords do not match!"
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN aRet
@@ -386,14 +388,17 @@ STATIC FUNCTION proc_register()
    ENDIF
    aRet := { "user" => cUser, "name" => cName }
    IF "err" $ get
-      DO CASE
-      CASE get[ "err" ] == "1"
+      SWITCH get[ "err" ]
+      CASE "1"
          aRet[ "errtext" ] := "All fields are required!"
-      CASE get[ "err" ] == "2"
-         aRet[ "errtext" ]  := "Passwords does not match!"
-      CASE get[ "err" ] == "3"
-         aRet[ "errtext" ]  := "This user already exists!"
-      ENDCASE
+         EXIT
+      CASE "2"
+         aRet[ "errtext" ] := "Passwords does not match!"
+         EXIT
+      CASE "3"
+         aRet[ "errtext" ] := "This user already exists!"
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN aRet

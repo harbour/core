@@ -501,12 +501,13 @@ METHOD Run() CLASS TRPCServeCon
       nSafeStatus := ::nStatus
       hb_mutexUnlock( ::mtxBusy )
 
-      DO CASE
-      CASE cCode == "XHBR00"  /* Check for TCP server scan */
+      SWITCH cCode
+      CASE "XHBR00"  /* Check for TCP server scan */
          hb_inetSendAll( ::skRemote, ;
             "XHBR10" + hb_Serialize( ::oServer:cServerName ) )
+         EXIT
 
-      CASE cCode == "XHBR90"  /* Read autorization request */
+      CASE "XHBR90"  /* Read autorization request */
          IF nSafeStatus == RPCS_STATUS_NONE
             lBreak := ! ::RecvAuth( .F. )
             IF ! lBreak
@@ -515,8 +516,9 @@ METHOD Run() CLASS TRPCServeCon
          ELSE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDIF
+         EXIT
 
-      CASE cCode == "XHBR93"  /* Read encrypted autorization request */
+      CASE "XHBR93"  /* Read encrypted autorization request */
          IF nSafeStatus == RPCS_STATUS_NONE
             lBreak := ! ::RecvAuth( .T. )
             IF ! lBreak
@@ -525,8 +527,9 @@ METHOD Run() CLASS TRPCServeCon
          ELSE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDIF
+         EXIT
 
-      CASE cCode == "XHBR95"  /* Challeng reply */
+      CASE "XHBR95"  /* Challeng reply */
          IF nSafeStatus == RPCS_STATUS_CHALLENGE
             lBreak := ! ::RecvChallenge()
             IF ! lBreak
@@ -535,12 +538,14 @@ METHOD Run() CLASS TRPCServeCon
          ELSE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDIF
+         EXIT
 
-      CASE cCode == "XHBR92"  /* Close connection */
+      CASE "XHBR92"  /* Close connection */
          ::oServer:OnClientLogout( Self )
          lBreak := .T.
+         EXIT
 
-      CASE cCode == "XHBR20"  /* Execute function */
+      CASE "XHBR20"  /* Execute function */
          DO CASE
          CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F., .F. )
@@ -554,8 +559,9 @@ METHOD Run() CLASS TRPCServeCon
          OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDCASE
+         EXIT
 
-      CASE cCode == "XHBR21"  /* Execute function */
+      CASE "XHBR21"  /* Execute function */
          DO CASE
          CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .T., .F. )
@@ -569,8 +575,9 @@ METHOD Run() CLASS TRPCServeCon
          OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDCASE
+         EXIT
 
-      CASE cCode == "XHBR22"  /* Loop function */
+      CASE "XHBR22"  /* Loop function */
          DO CASE
          CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F., .T. )
@@ -584,8 +591,9 @@ METHOD Run() CLASS TRPCServeCon
          OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDCASE
+         EXIT
 
-      CASE cCode == "XHBR23"  /* Loop function - compressed */
+      CASE "XHBR23"  /* Loop function - compressed */
          IF nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .T., .T. )
             IF aData != NIL
@@ -598,8 +606,9 @@ METHOD Run() CLASS TRPCServeCon
          ELSE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDIF
+         EXIT
 
-      CASE cCode == "XHBR24"  /* Foreach function */
+      CASE "XHBR24"  /* Foreach function */
          DO CASE
          CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F., .T. )
@@ -613,8 +622,9 @@ METHOD Run() CLASS TRPCServeCon
          OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDCASE
+         EXIT
 
-      CASE cCode == "XHBR25"  /* Foreach function - compressed */
+      CASE "XHBR25"  /* Foreach function - compressed */
          DO CASE
          CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .T., .T. )
@@ -628,8 +638,9 @@ METHOD Run() CLASS TRPCServeCon
          OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
          ENDCASE
+         EXIT
 
-      CASE cCode == "XHBR29"  /* Function execution cancelation request */
+      CASE "XHBR29"  /* Function execution cancelation request */
 
          /* Note: even if the function is already terminated in the
             meanwhile, and the -real- status is not RUNNING anymore,
@@ -645,10 +656,11 @@ METHOD Run() CLASS TRPCServeCon
             hb_mutexUnlock( ::mtxBusy )
             hb_inetSendAll( ::skRemote, "XHBR34" )
          ENDIF
+         EXIT
 
       OTHERWISE
          lBreak := .T.
-      ENDCASE
+      ENDSWITCH
 
       /* Analisys of the nSafeStatus code */
       DO CASE
@@ -952,12 +964,13 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS TRPCServe
    LOCAL aSubst, nSubstPos
 
    // ? "TH:", ::thFunction
-   DO CASE
-   CASE nMode == 0  // just run the function
+   SWITCH hb_defaultValue( nMode, -1 )
+   CASE 0  // just run the function
       oRet := oFunc:Run( aParams, Self )
       // Notice: SendResult checks for lCanceled before really sending
+      EXIT
 
-   CASE nMode == 1 // run in loop
+   CASE 1 // run in loop
       aSubst := AClone( aParams )
       nSubstPos := AScan( aParams, {| x | HB_ISSTRING( x ) .AND. x == "$." } )
 
@@ -1008,9 +1021,12 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS TRPCServe
             oRet := "Done"
          ENDIF
          EXIT
+
       ENDSWITCH
 
-   CASE nMode == 2 // Run in a foreach loop
+      EXIT
+
+   CASE 2 // Run in a foreach loop
       aSubst := AClone( aParams )
       nSubstPos := AScan( aParams, {| x | HB_ISSTRING( x ) .AND. x == "$." } )
 
@@ -1057,8 +1073,12 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS TRPCServe
             ENDIF
          NEXT
          EXIT
+
       ENDSWITCH
-   ENDCASE
+
+      EXIT
+
+   ENDSWITCH
 
    // Now we can signal that execution terminated
    hb_mutexLock( ::mtxBusy )
@@ -1446,17 +1466,15 @@ METHOD UDPParseRequest( cData, nPacketLen ) CLASS TRPCService
 
 METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS TRPCService
 
-   LOCAL cCode, cMatch, cNumber, cSerial
+   LOCAL cMatch, cNumber, cSerial
    LOCAL oFunc
 
    IF nPacketLen < 6
       RETURN .F.
    ENDIF
 
-   cCode := hb_BLeft( cData, 6 )
-
-   DO CASE
-   CASE cCode == "XHBR00"  /* XHRB00 - server scan */
+   SWITCH hb_BLeft( cData, 6 )
+   CASE "XHBR00"  /* XHRB00 - server scan */
       IF ! ::OnServerScan()
          RETURN .F.
       ENDIF
@@ -1470,7 +1488,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS TRPCService
       ENDIF
       RETURN .T.
 
-   CASE cCode == "XHBR01"  /* XRB01 - Function scan */
+   CASE "XHBR01"  /* XRB01 - Function scan */
       IF ! ::OnFunctionScan()
          RETURN .F.
       ENDIF
@@ -1501,7 +1519,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS TRPCService
       /* If we don't have the function, we cannot reply */
       RETURN .F.
 
-   ENDCASE
+   ENDSWITCH
 
    /* Ignore malformed requests. */
 

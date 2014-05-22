@@ -420,17 +420,17 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
 FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 
-   LOCAL nResult, cType, xTemplate, nDlgMode
+   LOCAL nResult, xTemplate, nDlgMode
 
    IF HB_ISSTRING( cbDlgProc )
       cbDlgProc := Upper( cbDlgProc )
    ENDIF
 
-   cType    := ValType( acnDlg )
-   nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
+   nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
-   IF cType == "A"
-      xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ], acnDlg[  2 ], acnDlg[  3 ], acnDlg[  4 ], ;
+   IF HB_ISARRAY( acnDlg )
+      xTemplate := Wvt__MakeDlgTemplate( ;
+         acnDlg[ 1 ], acnDlg[  2 ], acnDlg[  3 ], acnDlg[  4 ], ;
          acnDlg[ 5 ], acnDlg[  6 ], acnDlg[  7 ], acnDlg[  8 ], ;
          acnDlg[ 9 ], acnDlg[ 10 ], acnDlg[ 11 ], acnDlg[ 12 ] )
    ELSE

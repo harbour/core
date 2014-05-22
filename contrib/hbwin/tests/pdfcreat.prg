@@ -69,16 +69,19 @@ PROCEDURE Main()
       oPC:cOption( "UseAutosave" )
    ENDDO
 
-   DO CASE
-   CASE nEvent == 0
+   SWITCH nEvent
+   CASE 0
       ? "Print timeout"
-   CASE nEvent == 1
+      EXIT
+   CASE 1
       ? "Printed successfully"
-   CASE nEvent == 2
+      EXIT
+   CASE 2
       ? "Error:", oPC:cError():Description
+      EXIT
    OTHERWISE
       ? "Unknown event"
-   ENDCASE
+   ENDSWITCH
 
    oPC:cDefaultPrinter := cDefaultPrinter
    oPC:cClose()

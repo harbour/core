@@ -132,7 +132,6 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
    hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    DO CASE
-
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
          ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
@@ -143,7 +142,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
          ENDIF
       ENDIF
 
-   CASE nMessage ==  HB_GTE_CTLCOLOR
+   CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
          Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF

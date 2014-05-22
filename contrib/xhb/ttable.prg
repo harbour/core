@@ -189,12 +189,12 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
             s_lNetOk  := .T.
             EXIT
          ELSE
-            DO CASE
-            CASE nType == 1 ; cWord := "( " + dbInfo( DBI_ALIAS ) + " - Record Lock )"
-            CASE nType == 2 ; cWord := "( " + dbInfo( DBI_ALIAS ) + " - File Lock )"
-            CASE nType == 3 ; cWord := "( " + dbInfo( DBI_ALIAS ) + " - File Append )"
-            OTHERWISE       ; cWord := "( " + dbInfo( DBI_ALIAS ) + " - ???"
-            ENDCASE
+            SWITCH nType
+            CASE 1    ; cWord := "( " + dbInfo( DBI_ALIAS ) + " - Record Lock )" ; EXIT
+            CASE 2    ; cWord := "( " + dbInfo( DBI_ALIAS ) + " - File Lock )" ; EXIT
+            CASE 3    ; cWord := "( " + dbInfo( DBI_ALIAS ) + " - File Append )" ; EXIT
+            OTHERWISE ; cWord := "( " + dbInfo( DBI_ALIAS ) + " - ???" ; EXIT
+            ENDSWITCH
 
             hb_DispOutAt( MaxRow(), 0, ;
                PadC( "Network Retry " + cWord + " | " + Str( nSeconds, 3 ) + " | ESC Exit", MaxCol() + 1 ), ;

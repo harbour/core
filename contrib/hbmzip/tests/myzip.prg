@@ -84,22 +84,25 @@ PROCEDURE Main( ... )
    hb_ADel( aWild, 1, .T. )
 
    FOR tmp := Len( aWild ) - 1 TO 1 STEP -1
-      DO CASE
-      CASE Lower( aWild[ tmp ] ) == "--pass"
+      SWITCH Lower( aWild[ tmp ] )
+      CASE "--pass"
          IF Empty( cPassword )
             cPassword := aWild[ tmp + 1 ]
          ENDIF
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
-      CASE Lower( aWild[ tmp ] ) == "--comment"
+         EXIT
+      CASE "--comment"
          IF Empty( cComment )
             cComment := aWild[ tmp + 1 ]
          ENDIF
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
-      CASE Lower( aWild[ tmp ] ) == "--unicode"
+         EXIT
+      CASE "--unicode"
          /* skip */
-      ENDCASE
+         EXIT
+      ENDSWITCH
    NEXT
 
    hZip := hb_zipOpen( cZipName )

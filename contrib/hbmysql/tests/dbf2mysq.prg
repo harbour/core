@@ -52,7 +52,6 @@
 
 PROCEDURE Main()
 
-   LOCAL cTok
    LOCAL cHostName := "localhost"
    LOCAL cUser := "root"
    LOCAL cPassword := ""
@@ -69,21 +68,18 @@ PROCEDURE Main()
 
    // Scan parameters and setup workings
    FOR i := 1 TO PCount()
-
-      cTok := hb_PValue( i )
-
-      DO CASE
-      CASE cTok == "-h" ; cHostName := hb_PValue( ++i )
-      CASE cTok == "-d" ; cDatabase := hb_PValue( ++i )
-      CASE cTok == "-t" ; cTable := AllTrim( hb_PValue( ++i ) )
-      CASE cTok == "-f" ; cFile := hb_PValue( ++i )
-      CASE cTok == "-u" ; cUser := hb_PValue( ++i )
-      CASE cTok == "-p" ; cPassword := hb_PValue( ++i )
-      CASE cTok == "-c" ; lCreateTable := .T.
+      SWITCH hb_PValue( i )
+      CASE "-h" ; cHostName := hb_PValue( ++i ) ; EXIT
+      CASE "-d" ; cDatabase := hb_PValue( ++i ) ; EXIT
+      CASE "-t" ; cTable := AllTrim( hb_PValue( ++i ) ) ; EXIT
+      CASE "-f" ; cFile := hb_PValue( ++i ) ; EXIT
+      CASE "-u" ; cUser := hb_PValue( ++i ) ; EXIT
+      CASE "-p" ; cPassword := hb_PValue( ++i ) ; EXIT
+      CASE "-c" ; lCreateTable := .T. ; EXIT
       OTHERWISE
          help()
          RETURN
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    IF Empty( cTable ) .OR. Empty( cFile ) .OR. Empty( cDatabase )

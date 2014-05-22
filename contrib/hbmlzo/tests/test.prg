@@ -105,15 +105,18 @@ PROCEDURE Main()
 
 STATIC PROCEDURE ShowResult( cStr, cCompressed, nLen, nResult )
 
-   DO CASE
-   CASE nResult == LZO_E_OK
+   SWITCH nResult
+   CASE LZO_E_OK
       ? hb_StrFormat( FMT_STRING, Len( cStr ), nLen, Len( cCompressed ) )
-   CASE nResult == LZO_E_OUT_OF_MEMORY
+      EXIT
+   CASE LZO_E_OUT_OF_MEMORY
       ? "Out of memory.."
-   CASE nResult == LZO_E_NOT_COMPRESSIBLE
+      EXIT
+   CASE LZO_E_NOT_COMPRESSIBLE
       ? "This block contains incompressible data", hb_ntos( nLen )
+      EXIT
    OTHERWISE
       ? "Internal error - compression failed:", hb_ntos( nResult )
-   ENDCASE
+   ENDSWITCH
 
    RETURN

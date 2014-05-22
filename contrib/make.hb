@@ -415,13 +415,15 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    /* Convert action to hbmk2 options */
 
    cOptions := " -inc"
-   DO CASE
-   CASE nAction == _ACT_INC_CLEAN
+   SWITCH nAction
+   CASE _ACT_INC_CLEAN
       cOptions += " -clean"
-   CASE nAction == _ACT_INC_REBUILD .OR. ;
-        nAction == _ACT_INC_REBUILD_INST
+      EXIT
+   CASE _ACT_INC_REBUILD
+   CASE _ACT_INC_REBUILD_INST
       cOptions += " -rebuildall"
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    cMakeFlags := GetEnv( "MAKEFLAGS" )
    IF " -j " $ " " + cMakeFlags + " "

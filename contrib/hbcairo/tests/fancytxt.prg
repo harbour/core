@@ -93,18 +93,21 @@ STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
       ENDIF
       nNX -= aLengths[ nI ]
       nI++
-      DO CASE
-      CASE nType == CAIRO_PATH_MOVE_TO .OR. ;
-           nType == CAIRO_PATH_LINE_TO
+      SWITCH nType
+      CASE CAIRO_PATH_MOVE_TO
+      CASE CAIRO_PATH_LINE_TO
          aLast := aPoints[ 1 ]
-      CASE nType == CAIRO_PATH_CURVE_TO
+         EXIT
+      CASE CAIRO_PATH_CURVE_TO
          aLast := aPoints[ 3 ]
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ENDDO
 
-   DO CASE
-   CASE nType == CAIRO_PATH_MOVE_TO
-   CASE nType == CAIRO_PATH_LINE_TO
+   SWITCH nType
+   CASE CAIRO_PATH_MOVE_TO
+      EXIT
+   CASE CAIRO_PATH_LINE_TO
       nRatio := nNX / aLengths[ nI ]
       nX := aLast[ 1 ] * ( 1 - nRatio ) + aPoints[ 1, 1 ] * nRatio
       nY := aLast[ 2 ] * ( 1 - nRatio ) + aPoints[ 1, 2 ] * nRatio
@@ -115,7 +118,8 @@ STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
       nRatio := nNY / aLengths[ nI ]
       nX += -nDY * nRatio
       nY += nDX * nRatio
-   CASE nType == CAIRO_PATH_CURVE_TO
+      EXIT
+   CASE CAIRO_PATH_CURVE_TO
       nX := aLast[ 1 ] * ( 1 - nRatio ) ^ 3 + 3 * aPoints[ 1, 1 ] * ( 1 - nRatio ) ^ 2 * nRatio + 3 * aPoints[ 2, 1 ] * ( 1 - nRatio ) * nRatio ^ 2 + aPoints[ 3, 1 ] * nRatio ^ 3
       nY := aLast[ 2 ] * ( 1 - nRatio ) ^ 3 + 3 * aPoints[ 1, 2 ] * ( 1 - nRatio ) ^ 2 * nRatio + 3 * aPoints[ 2, 2 ] * ( 1 - nRatio ) * nRatio ^ 2 + aPoints[ 3, 2 ] * nRatio ^ 3
 
@@ -128,7 +132,8 @@ STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
       nRatio := nNY / Sqrt( nDX * nDX + nDY * nDY )
       nX += -nDY * nRatio
       nY += nDX * nRatio
-   ENDCASE
+      EXIT
+   ENDSWITCH
    cairo_path_iterator_destroy( hIterator )
 
    RETURN
@@ -142,17 +147,20 @@ STATIC FUNCTION path_lengths( hPath )
    DO WHILE ( nType := cairo_path_iterator_next( hIterator ) ) != NIL
       aPoints := cairo_path_iterator_get_points( hIterator )
       nLen := 0
-      DO CASE
-      CASE nType == CAIRO_PATH_MOVE_TO
+      SWITCH nType
+      CASE CAIRO_PATH_MOVE_TO
          aLast := aPoints[ 1 ]
-      CASE nType == CAIRO_PATH_LINE_TO
+         EXIT
+      CASE CAIRO_PATH_LINE_TO
          nLen := distance( aLast[ 1 ], aLast[ 2 ], aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
          aLast := aPoints[ 1 ]
-      CASE nType == CAIRO_PATH_CURVE_TO
+         EXIT
+      CASE CAIRO_PATH_CURVE_TO
          nLen := curve_length( aLast[ 1 ], aLast[ 2 ], aPoints[ 1, 1 ], aPoints[ 1, 2 ], ;
             aPoints[ 2, 1 ], aPoints[ 2, 2 ], aPoints[ 3, 1 ], aPoints[ 3, 2 ] )
          aLast := aPoints[ 3 ]
-      ENDCASE
+         EXIT
+      ENDSWITCH
       AAdd( aRet, nLen )
    ENDDO
    cairo_path_iterator_destroy( hIterator )
@@ -173,13 +181,15 @@ STATIC FUNCTION curve_length( nX1, nY1, nX2, nY2, nX3, nY3, nX4, nY4 )
    hPath := cairo_copy_path_flat( hCairo )
    hIterator := cairo_path_iterator_create( hPath )
    DO WHILE ( nType := cairo_path_iterator_next( hIterator, @aPoints ) ) != NIL
-      DO CASE
-      CASE nType == CAIRO_PATH_MOVE_TO
+      SWITCH nType
+      CASE CAIRO_PATH_MOVE_TO
          aLast := aPoints
-      CASE nType == CAIRO_PATH_LINE_TO
+         EXIT
+      CASE CAIRO_PATH_LINE_TO
          nLength += distance( aLast[ 1 ], aLast[ 2 ], aPoints[ 1 ], aPoints[ 2 ] )
          aLast := aPoints
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ENDDO
    cairo_path_iterator_destroy( hIterator )
    cairo_path_destroy( hPath )

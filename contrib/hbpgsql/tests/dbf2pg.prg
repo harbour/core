@@ -56,7 +56,6 @@
 
 PROCEDURE Main()
 
-   LOCAL cTok
    LOCAL cHostName
    LOCAL cUser
    LOCAL cPassword
@@ -82,26 +81,24 @@ PROCEDURE Main()
    /* Scan parameters and setup workings */
    FOR i := 1 TO PCount()
 
-      cTok := hb_PValue( i )
-
-      DO CASE
-      CASE cTok == "-h" ; cHostName := hb_PValue( ++i )
-      CASE cTok == "-d" ; cDatabase := hb_PValue( ++i )
-      CASE cTok == "-t" ; cTable := AllTrim( hb_PValue( ++i ) )
-      CASE cTok == "-f" ; cFile := hb_PValue( ++i )
-      CASE cTok == "-u" ; cUser := hb_PValue( ++i )
-      CASE cTok == "-p" ; cPassword := hb_PValue( ++i )
-      CASE cTok == "-c" ; lCreateTable := .T.
-      CASE cTok == "-x" ; lTruncate := .T.
-      CASE cTok == "-s" ; lUseTrans := .T.
-      CASE cTok == "-m" ; nCommit := Val( hb_PValue( ++i ) )
-      CASE cTok == "-r" ; nRecno := Val( hb_PValue( ++i ) )
-      CASE cTok == "-e" ; cPath := hb_PValue( ++i )
-      CASE cTok == "-cp" ; Set( _SET_DBCODEPAGE, hb_PValue( ++i ) )
+      SWITCH hb_PValue( i )
+      CASE "-h" ; cHostName := hb_PValue( ++i ) ; EXIT
+      CASE "-d" ; cDatabase := hb_PValue( ++i ) ; EXIT
+      CASE "-t" ; cTable := AllTrim( hb_PValue( ++i ) ) ; EXIT
+      CASE "-f" ; cFile := hb_PValue( ++i ) ; EXIT
+      CASE "-u" ; cUser := hb_PValue( ++i ) ; EXIT
+      CASE "-p" ; cPassword := hb_PValue( ++i ) ; EXIT
+      CASE "-c" ; lCreateTable := .T. ; EXIT
+      CASE "-x" ; lTruncate := .T. ; EXIT
+      CASE "-s" ; lUseTrans := .T. ; EXIT
+      CASE "-m" ; nCommit := Val( hb_PValue( ++i ) ) ; EXIT
+      CASE "-r" ; nRecno := Val( hb_PValue( ++i ) ) ; EXIT
+      CASE "-e" ; cPath := hb_PValue( ++i ) ; EXIT
+      CASE "-cp" ; Set( _SET_DBCODEPAGE, hb_PValue( ++i ) ) ; EXIT
       OTHERWISE
          help()
          RETURN
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    IF Empty( cTable ) .OR. Empty( cFile )

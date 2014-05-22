@@ -151,10 +151,10 @@ FUNCTION hb_BldLogMsg( ... )
       DO CASE
       CASE HB_ISNUMERIC( xVar )
          cMsg += AllTrim( hb_CStr( xVar ) )
-      CASE ! HB_ISSTRING( xVar )
-         cMsg += hb_CStr( xVar )
-      OTHERWISE
+      CASE HB_ISSTRING( xVar )
          cMsg += xVar
+      OTHERWISE
+         cMsg += hb_CStr( xVar )
       ENDCASE
 
       IF ! xVar:__enumIsLast()
