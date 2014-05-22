@@ -93,9 +93,9 @@ METHOD New( nTypeCode ) CLASS GDBarCode
 
    LOCAL ii
 
-   DO CASE
-   CASE nTypeCode == 13 .OR. ;
-        nTypeCode == 8
+   SWITCH hb_defaultValue( nTypeCode, -1 /* Should be an invalid value */ )
+   CASE 13
+   CASE 8
 
       ::LeftHand_Odd  := { "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011", "0001101" }
       ::LeftHand_Even := { "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111", "0100111" }
@@ -103,7 +103,9 @@ METHOD New( nTypeCode ) CLASS GDBarCode
       ::Parity        := { "OOEOEE",  "OOEEOE",  "OOEEEO",  "OEOOEE",  "OEEOOE",  "OEEEOO",  "OEOEOE",  "OEOEEO",  "OEEOEO",  "OOOOOO"  }
       ::keys          := { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
 
-   CASE nTypeCode == 128
+      EXIT
+
+   CASE 128
 
       ::aCode := { ;
          "212222", "222122", "222221", "121223", "121322", "131222", "122213", "122312", "132212", "221213", ;
@@ -127,7 +129,9 @@ METHOD New( nTypeCode ) CLASS GDBarCode
          ::KeysmodeC[ ii ] := StrZero( ii, 2 )
       NEXT
 
-   CASE nTypeCode == 25
+      EXIT
+
+   CASE 25
 
       ::keys := { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
 
@@ -144,10 +148,13 @@ METHOD New( nTypeCode ) CLASS GDBarCode
          "00110", ;   // 0 digit
          "10000", ;   // pre-amble
          "100" }      // post-amble
+
+      EXIT
+
    OTHERWISE
       ::DrawError( "Invalid type to barcode." )
       RETURN NIL
-   ENDCASE
+   ENDSWITCH
 
    ::nType := nTypeCode
 
@@ -155,12 +162,12 @@ METHOD New( nTypeCode ) CLASS GDBarCode
 
 METHOD Draw( cText ) CLASS GDBarCode
 
-   DO CASE
-   CASE ::nType == 8   ; ::Draw8( cText )
-   CASE ::nType == 13  ; ::Draw13( cText )
-   CASE ::nType == 25  ; ::DrawI25( cText )
-   CASE ::nType == 128 ; ::Draw128( cText )
-   ENDCASE
+   SWITCH ::nType
+   CASE 8   ; ::Draw8( cText ); EXIT
+   CASE 13  ; ::Draw13( cText ); EXIT
+   CASE 25  ; ::DrawI25( cText ); EXIT
+   CASE 128 ; ::Draw128( cText ); EXIT
+   ENDSWITCH
 
    RETURN NIL
 
@@ -441,29 +448,32 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
    // Checking if all chars are allowed
    FOR i := 1 TO Len( ::text )
 
-      DO CASE
-      CASE cModeCode == "C"
+      SWITCH cModeCode
+      CASE "C"
 
          IF AScan( ::KeysmodeC, {| x | x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i + 1, 1 ) } ) == 0
             ::DrawError( "With Code C, you must provide always pair of two integers. Character " + SubStr( ::text, i, 1 ) + SubStr( ::text, i + 1, 1 ) + " not allowed." )
             lError := .T.
          ENDIF
+         EXIT
 
-      CASE cModeCode == "B"
+      CASE "B"
 
          IF ::FindCharCode( ::KeysmodeB, SubStr( ::Text, i, 1 ) ) == 0
             ::DrawError( "Character " + SubStr( ::text, i, 1 ) + " not allowed." )
             lError := .T.
          ENDIF
+         EXIT
 
-      CASE cModeCode == "A"
+      CASE "A"
 
          IF ::FindCharCode( ::KeysmodeA, SubStr( ::text, i, 1 ) ) == 0
             ::DrawError( "Character " + SubStr( ::text, i, 1 ) + " not allowed." )
             lError := .T.
          ENDIF
+         EXIT
 
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    IF ! lError
@@ -489,19 +499,21 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
             ENDIF
          ENDIF
       ELSE
-         DO CASE
-         CASE cModeCode == "C"
+         SWITCH cModeCode
+         CASE "C"
             lTypeCodeC := .T.
             cConc      := ::aCode[ STARTC ]
             nSum       := STARTB
-         CASE cModeCode == "A"
+            EXIT
+         CASE "A"
             lTypeCodeA := .T.
             cConc      := ::aCode[ STARTB ]
             nSum       := FNC1
+            EXIT
          OTHERWISE
             cConc      := ::aCode[ STARTB ]
             nSum       := STARTA
-         ENDCASE
+         ENDSWITCH
       ENDIF
 
       nC := 0
@@ -512,7 +524,8 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
 
          cChar := SubStr( ::text, n, 1 )
 
-         IF lTypeCodeC
+         DO CASE
+         CASE lTypeCodeC
 
             IF Len( ::text ) == n
                cConc += ::aCode[ CODEB ]
@@ -522,7 +535,7 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
                ++n
             ENDIF
 
-         ELSEIF lTypeCodeA
+         CASE lTypeCodeA
 
             IF cChar > "_"
                cConc += ::aCode[ CODEB ]
@@ -533,7 +546,7 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
                nValChar := Asc( cChar ) - 31
             ENDIF
 
-         ELSE
+         OTHERWISE
 
             IF cChar < " "
                cConc += ::aCode[ CODEA ]
@@ -542,7 +555,7 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
                nValChar := Asc( cChar ) - 31
             ENDIF
 
-         ENDIF
+         ENDCASE
 
          nSum += ( nValChar - 1 ) * nC
          cConc += ::aCode[ nValChar ]
