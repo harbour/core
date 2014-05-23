@@ -126,7 +126,7 @@ METHOD Configure()
 
    ::rowCount := ::nBottom - ::nTop + 1
    IF ::rowPos > ::rowCount
-      ::nFirstVisible -= ::rowPos - ::rowCount
+      ::nFirstVisible += ::rowPos - ::rowCount
       ::rowPos := ::rowCount
    ENDIF
    AFill( ASize( ::aRowState, ::rowCount ), .F. )
@@ -148,7 +148,7 @@ METHOD MoveCursor( nSkip )
    LOCAL nSkipped
 
    nSkipped := ::GoTo( ::rowPos + ::nFirstVisible - 1 + nSkip )
-   IF ! ::hitBottom .OR. Abs( nSkipped ) > 0
+   IF ! ::hitBottom .OR. nSkipped != 0
       IF iif( nSkipped > 0, ::rowPos + nSkipped <= ::rowCount, ::rowPos + nSkipped >= 1 )
          ::RefreshCurrent()
          ::rowPos += nSkipped

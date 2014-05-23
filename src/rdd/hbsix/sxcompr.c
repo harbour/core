@@ -631,7 +631,7 @@ HB_FUNC( SX_FCOMPRESS )
             /* store uncompressed file size in first 4 bytes of destination
              * file in little endian order - for SIX3 compatibility
              */
-            nSize = hb_fileSize( pInput );
+            nSize = ( HB_SIZE ) hb_fileSize( pInput );
             if( hb_fileSeek( pInput, 0, FS_SET ) == 0 )
             {
                HB_PUT_LE_UINT32( buf, nSize );
