@@ -1392,7 +1392,7 @@ HB_BOOL hb_fileIsLocal( PHB_FILE pFile )
 
 HB_BOOL hb_fileIsLocalName( const char * pszFileName )
 {
-   return s_fileFindDrv( pszFileName ) >= 0;
+   return s_fileFindDrv( pszFileName ) < 0;
 }
 
 PHB_FILE hb_filePOpen( const char * pszFileName, const char * pszMode )

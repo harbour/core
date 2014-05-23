@@ -223,7 +223,7 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
    HB_ULONG ulRecCount;
    AREAP pArea;
 
-   ulRecCount = hb_fileSize( pQuickSort->pFile ) / pQuickSort->uiRecordLen;
+   ulRecCount = ( HB_ULONG ) ( hb_fileSize( pQuickSort->pFile ) / pQuickSort->uiRecordLen );
    if( ulRecCount >= 1 )
    {
       hb_dbQSortDo( pQuickSort, 1, ulRecCount );
