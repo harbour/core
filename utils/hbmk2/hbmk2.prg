@@ -10450,8 +10450,7 @@ FUNCTION hbmk_AddInput_INSTFILE( ctx, cFileName, cGroup )
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
-      hb_default( @cGroup, "" )
-      AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cGroup, hb_DirSepToOS( cFileName ) } )
+      AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { hb_defaultValue( cGroup, "" ), hb_DirSepToOS( cFileName ) } )
    ENDIF
 
    RETURN NIL
@@ -10876,9 +10875,7 @@ STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew, lStripClpAt )
    LOCAL array := AClone( arraySrc )
    LOCAL cFileName
 
-   hb_default( @lStripClpAt, .F. )
-
-   IF lStripClpAt
+   IF hb_defaultValue( lStripClpAt, .F. )
       FOR EACH cFileName IN array
          IF hb_LeftEq( cFileName, "@" ) .AND. ;
             Lower( hb_FNameExt( cFileName ) ) == ".clp"
@@ -11049,8 +11046,6 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
 
    LOCAL cDir, cName, cExt, cDrive
 
-   hb_default( @nEscapeMode, _ESC_NONE )
-
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;
     defined( __PLATFORM__OS2 )
@@ -11092,7 +11087,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
       EXIT
    ENDSWITCH
 
-   SWITCH nEscapeMode
+   SWITCH hb_defaultValue( nEscapeMode, _ESC_NONE )
    CASE _ESC_DBLQUOTE
       IF " " $ cFileName .OR. "-" $ cFileName
          /* Sloppy */
@@ -12571,9 +12566,7 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       ENDIF
    ENDSWITCH
 
-   hb_default( @cMacro, "" )
-
-   RETURN cMacro
+   RETURN hb_defaultValue( cMacro, "" )
 
 STATIC FUNCTION IsValidHarbourID( cName )
 
@@ -13339,10 +13332,8 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFla
       RETURN _HBMK_IMPLIB_NOTFOUND
    ENDIF
 
-   hb_default( @cFlags, "" )
-
    cCommand := AllTrim( hb_StrReplace( cCommand, { ;
-      "{FI}" => cFlags, ;
+      "{FI}" => hb_defaultValue( cFlags, "" ), ;
       "{ID}" => FNameEscape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ), ;
       "{OL}" => FNameEscape( cTargetLib, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) } ) )
 

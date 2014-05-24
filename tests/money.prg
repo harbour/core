@@ -67,12 +67,9 @@ ENDCLASS
 
 METHOD new( nValue, nDec ) CLASS Money
 
-   hb_default( @nDec, 2 )
-   hb_default( @nValue, 0 )
-
-   ::nDec := nDec
-   ::nMul := Int( 10 ^ nDec )
-   ::Set( nValue )
+   ::nDec := hb_defaultValue( nDec, 2 )
+   ::nMul := Int( 10 ^ ::nDec )
+   ::Set( hb_defaultValue( nValue, 0 ) )
 
    RETURN Self
 

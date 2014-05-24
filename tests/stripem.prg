@@ -18,19 +18,13 @@
 
 PROCEDURE Main( cFrom, cTo )
 
-   LOCAL oFrom
-   LOCAL oTo
+   LOCAL oFrom := TTextFile():New( hb_defaultValue( cFrom, __FILE__ ), "R" )
+   LOCAL oTo   := TTextFile():New( hb_defaultValue( cTo, hb_FNameExtSet( __FILE__, ".out" ) ), "W" )
+
    LOCAL cOut
 
-   hb_default( @cFrom, __FILE__ )
-   hb_default( @cTo, hb_FNameExtSet( __FILE__, ".out" ) )
-
-   oFrom := TTextFile():New( cFrom, "R" )
-   oTo   := TTextFile():New( cTo, "W" )
-
    DO WHILE ! oFrom:Eof()
-      cOut := oFrom:Run()
-      IF ! Empty( cOut )
+      IF ! Empty( cOut := oFrom:Run() )
          oTo:Run( cOut )
       ENDIF
    ENDDO
@@ -77,14 +71,11 @@ END CLASS
 //
 METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
-   hb_default( @cMode, "R" )
-   hb_default( @nBlock, 4096 )
-
    ::nLine     := 0
    ::lEoF      := .F.
    ::cBlock    := ""
    ::cFileName := cFileName
-   ::cMode     := cMode
+   ::cMode     := hb_defaultValue( cMode, "R" )
 
    IF ::cMode == "R"
       ::hFile := FOpen( cFileName )
@@ -99,7 +90,7 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
       ::lEoF := .T.
       ? "Error", ::nError
    ENDIF
-   ::nBlockSize := nBlock
+   ::nBlockSize := hb_defaultValue( nBlock, 4096 )
 
    RETURN self
 
@@ -182,9 +173,8 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
    ELSEIF !( ::cMode == "W" )
       ? "File", ::cFileName, "not opened for writing"
    ELSE
-      hb_default( @lCRLF, .T. )
       cBlock := hb_ValToExp( xTxt )              // Convert to string
-      IF lCRLF
+      IF hb_defaultValue( lCRLF, .T. )
          cBlock += hb_eol()
       ENDIF
       FWrite( ::hFile, cBlock )

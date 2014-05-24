@@ -273,7 +273,6 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
 METHOD ExcelWriterXML_Sheet:cellWidth( row, col, width )
 
    HB_SYMBOL_UNUSED( row )
-   HB_SYMBOL_UNUSED( col )
 
    ::columnWidth( col, hb_defaultValue( width, 48 ) )
 

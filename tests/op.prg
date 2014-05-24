@@ -76,11 +76,8 @@ ENDCLASS
 
 METHOD New( cColor, nDoors ) CLASS TCar
 
-   hb_default( @cColor, "White" )
-   hb_default( @nDoors, 4 )
-
-   ::cColor := cColor
-   ::nDoors := nDoors
+   ::cColor := hb_defaultValue( cColor, "White" )
+   ::nDoors := hb_defaultValue( nDoors, 4 )
 
    RETURN Self
 

@@ -89,10 +89,8 @@ METHOD AddHead( cDescr ) CLASS THTML
 
 METHOD AddPara( cPara, cAlign ) CLASS THTML
 
-   hb_default( @cAlign, "Left" )
-
    ::cBody += ;
-      "<p align='" + cAlign + "'>" + hb_eol() + ;
+      "<p align='" + hb_defaultValue( cAlign, "Left" ) + "'>" + hb_eol() + ;
       cPara + hb_eol() + ;
       "</p>"
 

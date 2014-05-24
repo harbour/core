@@ -50,24 +50,18 @@
 
 PROCEDURE Main( cFilename, cSection )
 
-   LOCAL oIni
-   LOCAL s, n
+   LOCAL oIni := TIniFile():New( hb_defaultValue( cFilename, hb_FNameExtSet( __FILE__, ".ini" ) ) )
 
-   hb_default( @cFilename, hb_FNameExtSet( __FILE__, ".ini" ) )
-   hb_default( @cSection, "1" )
-
-   oIni := TIniFile():New( cFileName )
-   n := Val( cSection )
+   LOCAL n := Val( hb_defaultValue( cSection, "1" ) )
+   LOCAL s
 
    ?
    ? "Sections:"
-   s := oIni:ReadSections()
-   AEval( s, {| x | QOut( "[" + x + "]" ) } )
+   AEval( s := oIni:ReadSections(), {| x | QOut( "[" + x + "]" ) } )
 
    ?
    ? "[" + s[ n ] + "]"
-   s := oIni:ReadSection( s[ n ] )
-   AEval( s, {| x | QOut( x ) } )
+   AEval( oIni:ReadSection( s[ n ] ), {| x | QOut( x ) } )
 
    oIni:WriteDate( "Date Test", "Today", Date() )
    oIni:WriteBool( "Bool Test", "True", .T. )

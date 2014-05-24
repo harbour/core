@@ -55,9 +55,7 @@ PROCEDURE Main( cFrom )
    LOCAL cSymbol
    LOCAL cBorder
 
-   hb_default( @cFrom, hb_FNameName( __FILE__ ) )
-
-   cFrom := hb_FNameExtSetDef( cFrom, ".hrb" )
+   cFrom := hb_FNameExtSetDef( hb_defaultValue( cFrom, hb_FNameName( __FILE__ ) ), ".hrb" )
 
    IF ( hFile := FOpen( cFrom ) ) == F_ERROR
       ? "No such file:", cFrom
