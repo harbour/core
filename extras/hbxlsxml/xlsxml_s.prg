@@ -275,17 +275,13 @@ METHOD ExcelWriterXML_Sheet:cellWidth( row, col, width )
    HB_SYMBOL_UNUSED( row )
    HB_SYMBOL_UNUSED( col )
 
-   hb_default( @width, 48 )
-
-   ::columnWidth( col, width )
+   ::columnWidth( col, hb_defaultValue( width, 48 ) )
 
    RETURN NIL
 
 METHOD ExcelWriterXML_Sheet:columnWidth( col, width )
 
-   hb_default( @width, 48 )
-
-   ::colWidth[ col ] := width
+   ::colWidth[ col ] := hb_defaultValue( width, 48 )
 
    RETURN NIL
 
@@ -293,17 +289,13 @@ METHOD ExcelWriterXML_Sheet:cellHeight( row, col, height )
 
    HB_SYMBOL_UNUSED( col )
 
-   hb_default( @height, 12.5 )
-
-   ::setRowHeight( row, height )
+   ::setRowHeight( row, hb_defaultValue( height, 12.5 ) )
 
    RETURN NIL
 
 METHOD ExcelWriterXML_Sheet:setRowHeight( row, height )
 
-   hb_default( @height, 12.5 )
-
-   ::rowHeight[ row ] := height
+   ::rowHeight[ row ] := hb_defaultValue( height, 12.5 )
 
    RETURN NIL
 

@@ -107,17 +107,13 @@ METHOD ExcelWriterXML:new( fileName )
 
 METHOD ExcelWriterXML:setOverwriteFile( overwrite )
 
-   hb_default( @overwrite, .F. )
-
-   ::overwriteFile := overwrite
+   ::overwriteFile := hb_defaultValue( overwrite, .F. )
 
    RETURN NIL
 
 METHOD ExcelWriterXML:showErrorSheet( show )
 
-   hb_default( @show, .T. )
-
-   ::lShowErrorSheet := show
+   ::lShowErrorSheet := hb_defaultValue( show, .T. )
 
    RETURN NIL
 

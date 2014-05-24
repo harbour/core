@@ -1478,7 +1478,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
    RETURN
 
-STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
+STATIC FUNCTION CGIExec( cProc, /* @ */ cOutPut )
 
    LOCAL hIn, hOut
    LOCAL cData, nLen, cSend, v
@@ -2195,7 +2195,7 @@ STATIC PROCEDURE SysSettings()
 
    RETURN
 
-STATIC PROCEDURE Progress( /*@*/ nProgress )
+STATIC PROCEDURE Progress( /* @ */ nProgress )
 
    LOCAL cString := "["
 

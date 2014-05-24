@@ -736,12 +736,10 @@ STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
 
    LOCAL cLine, nSavePos, nEol, nNumRead, nLenEol, cEOL
 
-   hb_default( @nMaxLine, 256 )
-
    cBuffer := ""
 
    nSavePos := FSeek( aHandle[ 1 ], 0, FS_RELATIVE )
-   cLine := Space( nMaxLine )
+   cLine := Space( hb_defaultValue( nMaxLine, 256 ) )
    nNumRead := FRead( aHandle[ 1 ], @cLine, hb_BLen( cLine ) )
    cLine := hb_BLeft( cLine, nNumRead )
 

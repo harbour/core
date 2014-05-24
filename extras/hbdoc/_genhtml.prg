@@ -103,7 +103,7 @@ CREATE CLASS GenerateHTML FROM TPLGenerate
    METHOD EndSection( cSection, cFilename )
    METHOD Generate()
 
-   METHOD WriteEntry( cField, oEntry, lPreformatted, nIndent ) HIDDEN
+   METHOD WriteEntry( cField, oEntry, lPreformatted ) HIDDEN
 
 ENDCLASS
 
@@ -211,7 +211,7 @@ METHOD Generate() CLASS GenerateHTML
 
    RETURN self
 
-METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS GenerateHTML
+METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted ) CLASS GenerateHTML
 
    LOCAL cCaption := oEntry:FieldName( cField )
    LOCAL cEntry := oEntry:&( cField )
@@ -221,14 +221,13 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
 
    IF ! Empty( cEntry )
 
-      hb_default( @cCaption, "" )
-      hb_default( @nIndent, 0 )
 #if 0
       hb_default( @lPreformatted, .F. )
       hb_default( @cTagClass, "itemtext" )
 #endif
 
-      IF Len( cCaption ) > 0 /* .AND. nIndent > 0 */
+      hb_default( @cCaption, "" )
+      IF Len( cCaption ) > 0
          ::Tagged( cCaption, "div", "class", "itemtitle" )
       ENDIF
 
@@ -255,6 +254,8 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
          ENDDO
       ENDIF
    ENDIF
+
+   RETURN
 
 METHOD OpenTag( cText, ... ) CLASS GenerateHTML
 

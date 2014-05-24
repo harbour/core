@@ -1490,9 +1490,7 @@ PROCEDURE hb_adoSetPassword( cPassword )
 
 PROCEDURE hb_adoSetQuery( cQuery )
 
-   hb_default( @cQuery, "SELECT * FROM " )
-
-   t_cQuery := cQuery
+   t_cQuery := hb_defaultValue( cQuery, "SELECT * FROM " )
 
    RETURN
 

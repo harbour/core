@@ -396,9 +396,7 @@ METHOD ExcelWriterXML_Style:setFontColor( fontColor )
 
 METHOD ExcelWriterXML_Style:setFontName( fontName )
 
-   hb_default( @fontname, "Arial" )
-
-   ::fontName := fontName
+   ::fontName := hb_defaultValue( fontname, "Arial" )
    ::useFont := .T.
 
    RETURN NIL
