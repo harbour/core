@@ -1,7 +1,5 @@
 /*
  * Written by Eddie Runia <eddie@runia.com>
- * www - http://harbour-project.org
- *
  * Placed in the public domain
  */
 
@@ -29,7 +27,7 @@ PROCEDURE Main( cFrom, cTo )
       ENDIF
    ENDDO
 
-   ? "Number of lines", oTo:nLine
+   ? "Number of lines:", hb_ntos( oTo:nLine )
 
    oFrom:Dispose()
    oTo:Dispose()
@@ -77,16 +75,18 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
    ::cFileName := cFileName
    ::cMode     := hb_defaultValue( cMode, "R" )
 
-   IF ::cMode == "R"
+   SWITCH ::cMode
+   CASE "R"
       ::hFile := FOpen( cFileName )
-   ELSEIF ::cMode == "W"
+      EXIT
+   CASE "W"
       ::hFile := FCreate( cFileName )
-   ELSE
+      EXIT
+   OTHERWISE
       ? "File Init: Unknown file mode:", ::cMode
-   ENDIF
+   ENDSWITCH
 
-   ::nError := FError()
-   IF ::nError != 0
+   IF ( ::nError := FError() ) != 0
       ::lEoF := .T.
       ? "Error", ::nError
    ENDIF
@@ -100,11 +100,9 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 METHOD Dispose() CLASS TTextFile
 
    ::cBlock := NIL
-   IF ::hFile != F_ERROR
-      IF ! FClose( ::hFile )
-         ::nError := FError()
-         ? "OS Error closing", ::cFileName, " Code", ::nError
-      ENDIF
+   IF ::hFile != F_ERROR .AND. ! FClose( ::hFile )
+      ::nError := FError()
+      ? "OS Error closing", ::cFileName, " Code", ::nError
    ENDIF
 
    RETURN self
@@ -177,8 +175,7 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
       IF hb_defaultValue( lCRLF, .T. )
          cBlock += hb_eol()
       ENDIF
-      FWrite( ::hFile, cBlock )
-      IF FError() != 0
+      IF FWrite( ::hFile, cBlock ) != hb_BLen( cBlock )
          ::nError := FError()                   // Not completely written !
       ENDIF
       ::nLine++

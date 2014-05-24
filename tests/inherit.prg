@@ -1,7 +1,5 @@
 /*
  * Written by Eddie Runia <eddie@runia.com>
- * www - http://harbour-project.org
- *
  * Placed in the public domain
  */
 
@@ -13,12 +11,10 @@
 //
 PROCEDURE Main()
 
-   LOCAL oFrom
-   LOCAL oTo
-   LOCAL cOut
+   LOCAL oFrom := TOnTop():New( __FILE__, "R" )
+   LOCAL oTo   := TTextFile():New( hb_FNameExtSet( __FILE__, ".out" ), "W" )
 
-   oFrom := TOnTop():New( __FILE__, "R" )
-   oTo   := TTextFile():New( hb_FNameExtSet( __FILE__, ".out" ), "W" )
+   LOCAL cOut
 
    ? "What's in oFrom"
    ? hb_ValToExp( { oFrom, __objGetMethodList( oFrom ) } )
@@ -33,21 +29,22 @@ PROCEDURE Main()
 
    ?
    ? "Let's call a method from TEmpty and one from TOnTop"
-   oFrom:Set( "Done !" )
+   oFrom:Set( "Done!" )
    oFrom:Say( "Out" )
 
    ?
    ? "Basic copy loop using the default Run() from TTextFile"
    DO WHILE ! oFrom:lEoF
-      cOut := oFrom:Run()
-      ? cOut
+      ? cOut := oFrom:Run()
       oTo:Run( cOut )
    ENDDO
 
    oFrom:Dispose()
    oTo:Dispose()
 
-   // ? hb_ValToExp( __dbgVMStkGList() )  // Stack is OK!
+#if 0
+   ? hb_ValToExp( __dbgVMStkGList() )  // Stack is OK!
+#endif
 
    RETURN
 
@@ -58,7 +55,7 @@ CREATE CLASS TEmpty STATIC /* must be a public function */
 
    METHOD New()         INLINE Self
 
-   METHOD Run()         INLINE QOut( "Run !" )     // Test command
+   METHOD Run()         INLINE QOut( "Run!" )      // Test command
    METHOD Set( xParam ) INLINE ::Out := xParam
 
    VAR Out INIT "Hi there"
@@ -115,16 +112,18 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
    ::cFileName := cFileName
    ::cMode     := hb_defaultValue( cMode, "R" )
 
-   IF ::cMode == "R"
+   SWITCH ::cMode
+   CASE "R"
       ::hFile := FOpen( cFileName )
-   ELSEIF ::cMode == "W"
+      EXIT
+   CASE "W"
       ::hFile := FCreate( cFileName )
-   ELSE
+      EXIT
+   OTHERWISE
       ? "File Init: Unknown file mode:", ::cMode
-   ENDIF
+   ENDSWITCH
 
-   ::nError := FError()
-   IF ::nError != 0
+   IF ( ::nError := FError() ) != 0
       ::lEoF := .T.
       ? "Error", ::nError
    ENDIF
@@ -150,11 +149,9 @@ METHOD RUN( xTxt, lCRLF ) CLASS TTextFile
 METHOD Dispose() CLASS TTextFile
 
    ::cBlock := NIL
-   IF ::hFile != F_ERROR
-      IF ! FClose( ::hFile )
-         ::nError := FError()
-         ? "OS Error closing", ::cFileName, " Code", ::nError
-      ENDIF
+   IF ::hFile != F_ERROR .AND. ! FClose( ::hFile )
+      ::nError := FError()
+      ? "OS Error closing", ::cFileName, " Code", ::nError
    ENDIF
 
    RETURN self
@@ -227,9 +224,8 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
       IF hb_defaultValue( lCRLF, .T. )
          cBlock += hb_eol()
       ENDIF
-      FWrite( ::hFile, cBlock )
-      IF FError() != 0
-         ::nError := FError()                   // Not completely written !
+      IF FWrite( ::hFile, cBlock ) != hb_BLen( cBlock )
+         ::nError := FError()                   // Not completely written!
       ENDIF
       ::nLine++
    ENDIF
@@ -254,7 +250,7 @@ METHOD Goto( nLine ) CLASS TTextFile
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning
       ::cBlock := ""
-      FSeek( ::hFile, 0 )                         // Go top
+      FSeek( ::hFile, 0 )                       // Go top
       DO WHILE ! ::lEoF .AND. nWhere < nLine
          nWhere++
          ::Read()
