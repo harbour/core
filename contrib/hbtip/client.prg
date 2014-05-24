@@ -739,13 +739,13 @@ METHOD inetErrorDesc( SocketCon ) CLASS TIPClient
    RETURN cMsg
 
 /* BROKEN, should test number of parameters and act accordingly, see doc\inet.txt */
-METHOD inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
+METHOD PROCEDURE inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
 
    hb_inetConnect( cServer, nPort, SocketCon )
 
    /* IMPORTANT: if internet connection is off and address is not resolved and it is SSL compliant, then RTE must be avoided [pritpal] */
    IF hb_inetStatus( SocketCon ) == -1
-      RETURN NIL
+      RETURN
    ENDIF
 
    IF ! Empty( ::nDefaultSndBuffSize )
@@ -767,7 +767,7 @@ METHOD inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
       ::Log( cServer, nPort, SocketCon )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /* Methods to manage buffers */
 METHOD InetRcvBufSize( SocketCon, nSizeBuff ) CLASS TIPClient

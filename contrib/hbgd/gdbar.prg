@@ -151,7 +151,7 @@ METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
 
    RETURN Self
 
-METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue ) CLASS GDBar
+METHOD PROCEDURE Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue ) CLASS GDBar
 
    ::book       := hb_defaultValue( lBook, .F. )
    ::maxHeight  := hb_defaultValue( nMaxHeight, 25 )
@@ -162,25 +162,25 @@ METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lD
    ::color_b    := AClone( hb_defaultValue( aBackColor, { 255, 255, 255 } ) )
    ::color_f    := AClone( hb_defaultValue( aFillColor, { 0, 0, 0 } ) )
 
-   RETURN NIL
+   RETURN
 
-METHOD SetText( ptext ) CLASS GDBar
+METHOD PROCEDURE SetText( ptext ) CLASS GDBar
 
    ::text := ptext
 
-   RETURN NIL
+   RETURN
 
-METHOD ResetColor() CLASS GDBar
+METHOD PROCEDURE ResetColor() CLASS GDBar
 
    ::FillColor := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
    ::BackColor := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
 
-   RETURN NIL
+   RETURN
 
 METHOD Allocate() CLASS GDBar
    RETURN ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
 
-METHOD DrawSingleBar( pcode ) CLASS GDBar
+METHOD PROCEDURE DrawSingleBar( pcode ) CLASS GDBar
 
    LOCAL i
    LOCAL j
@@ -195,9 +195,9 @@ METHOD DrawSingleBar( pcode ) CLASS GDBar
       ::NextX()
    NEXT
 
-   RETURN NIL
+   RETURN
 
-METHOD DrawSingleI25( pcode ) CLASS GDBar
+METHOD PROCEDURE DrawSingleI25( pcode ) CLASS GDBar
 
    LOCAL j
 
@@ -224,9 +224,9 @@ METHOD DrawSingleI25( pcode ) CLASS GDBar
       NEXT
    NEXT
 
-   RETURN NIL
+   RETURN
 
-METHOD DrawError( ptext ) CLASS GDBar
+METHOD PROCEDURE DrawError( ptext ) CLASS GDBar
 
    ::Say( 5, ::error * 15, ptext, ::FillColor )
 
@@ -235,9 +235,9 @@ METHOD DrawError( ptext ) CLASS GDBar
    ::lastX := Max( ::GetFontWidth() * Len( ptext ), ::lastX )
    ::lastY := ::error * 15
 
-   RETURN NIL
+   RETURN
 
-METHOD nextX( lI25 ) CLASS GDBar
+METHOD PROCEDURE nextX( lI25 ) CLASS GDBar
 
    IF hb_defaultValue( li25, .F. )
       ::positionX++
@@ -245,7 +245,7 @@ METHOD nextX( lI25 ) CLASS GDBar
       ::positionX += ::res
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD DrawText( lIsI25 ) CLASS GDBar
 

@@ -796,11 +796,11 @@ METHOD DrawBitmap( oBmp ) CLASS win_Prn
 
    RETURN lResult
 
-METHOD SetPRC( nRow, nCol ) CLASS win_Prn
+METHOD PROCEDURE SetPRC( nRow, nCol ) CLASS win_Prn
 
    ::SetPos( ( nCol * ::CharWidth ) + ::LeftMArgin, ( nRow * ::LineHeight ) + ::TopMargin )
 
-   RETURN NIL
+   RETURN
 
 METHOD PRow() CLASS win_Prn
    RETURN Int( ( ::PosY - ::TopMargin ) / ::LineHeight )   // No test for Div by ZERO

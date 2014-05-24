@@ -80,7 +80,7 @@ FUNCTION Wvt_Paint()  /* must be a public function */
 
 #if 0
 
-FUNCTION Wvt_SetFocus()  /* must be a public function */
+PROCEDURE Wvt_SetFocus()  /* must be a public function */
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -89,7 +89,7 @@ FUNCTION Wvt_SetFocus()  /* must be a public function */
 
    DevPos( nRow, nCol )
 
-   RETURN NIL
+   RETURN
 
 #endif
 
@@ -99,7 +99,7 @@ FUNCTION Wvt_SetFocus()  /* must be a public function */
 
 #if 0
 
-FUNCTION Wvt_KillFocus()  /* must be a public function */
+PROCEDURE Wvt_KillFocus()  /* must be a public function */
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -108,27 +108,27 @@ FUNCTION Wvt_KillFocus()  /* must be a public function */
 
    DevPos( nRow, nCol )
 
-   RETURN NIL
+   RETURN
 
 #endif
 
 // Wvt_Mouse() must be present if you want to catch and fire
 // mouse call back outside of the Inkey() loop.
 
-FUNCTION Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
-
-   LOCAL nLen, aObjects := WvtSetObjects()
-   LOCAL nObj
+PROCEDURE Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
 
    STATIC s_nLastObj := 0
    STATIC s_nLastKey := 0
 
+   LOCAL nLen, aObjects := WvtSetObjects()
+   LOCAL nObj
+
    IF ( nLen := Len( aObjects ) ) == 0
-      RETURN NIL
+      RETURN
    ENDIF
 
    IF ! SetMouseCheck()
-      RETURN NIL
+      RETURN
    ENDIF
 
    IF nKey == -1000001
@@ -146,7 +146,7 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
 
          ENDCASE
       NEXT
-      RETURN NIL
+      RETURN
    ENDIF
 
    nObj := AScan( aObjects, {| e_ | e_[ WVT_OBJ_ROW   ] <= nRow .AND. ;
@@ -159,11 +159,11 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
          Eval( aObjects[ s_nLastObj, WVT_OBJ_ONDISP ] )
          s_nLastObj := 0
       ENDIF
-      RETURN NIL
+      RETURN
    ENDIF
 
    IF s_nLastObj == nObj .AND. s_nLastKey == nKey
-      RETURN NIL
+      RETURN
    ENDIF
 
    s_nLastObj := nObj
@@ -192,7 +192,7 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
 
    ENDCASE
 
-   RETURN NIL
+   RETURN
 
 //  WvtSetBlocks() is a get/set FUNCTION to be used by Wvt_Paint()
 

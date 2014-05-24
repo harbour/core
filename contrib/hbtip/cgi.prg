@@ -291,7 +291,7 @@ METHOD DestroySession( cID ) CLASS TIPCgi
 
    RETURN lOk
 
-METHOD ErrHandler( xError ) CLASS TIPCgi
+METHOD PROCEDURE ErrHandler( xError ) CLASS TIPCgi
 
    LOCAL nCalls
 
@@ -325,7 +325,7 @@ METHOD ErrHandler( xError ) CLASS TIPCgi
 
    QUIT
 
-   RETURN NIL
+   RETURN
 
 METHOD Write( cString ) CLASS TIPCgi
 

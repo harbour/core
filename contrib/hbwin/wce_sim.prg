@@ -172,10 +172,10 @@ METHOD lDelSimPhoneEntry( nPos, nType ) CLASS wce_Sim
 
    RETURN ::nLastError == SIM_E_OK
 
-METHOD End() CLASS wce_Sim
+METHOD PROCEDURE End() CLASS wce_Sim
 
    IF ::lInitialized
       ::lDeInitialize()
    ENDIF
 
-   RETURN NIL
+   RETURN

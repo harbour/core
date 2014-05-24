@@ -98,8 +98,8 @@ METHOD LoadFile( cFileName, aDimXY ) CLASS win_BMP
 METHOD Create() CLASS win_BMP  // Compatibility function for Alaska Xbase++
    RETURN Self
 
-METHOD Destroy() CLASS win_BMP  // Compatibility function for Alaska Xbase++
-   RETURN NIL
+METHOD PROCEDURE Destroy() CLASS win_BMP  // Compatibility function for Alaska Xbase++
+   RETURN
 
 METHOD IsSupported( oPrn, /* @ */ nError ) CLASS win_BMP
    RETURN ( nError := win_bitmapIsSupported( oPrn:hPrinterDc, ::Bitmap ) ) == 0

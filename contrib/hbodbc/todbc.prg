@@ -197,14 +197,14 @@ METHOD SetAutoCommit( lEnable ) CLASS TODBC
 
    RETURN lOld
 
-METHOD Destroy() CLASS TODBC
+METHOD PROCEDURE Destroy() CLASS TODBC
 
    SQLDisconnect( ::hDbc )                     // Disconnects from Driver
 
    ::hDbc := NIL                               // Frees the connection
    ::hEnv := NIL                               // Frees the environment
 
-   RETURN NIL
+   RETURN
 
 METHOD GetCnnOptions( nType ) CLASS TODBC
 
@@ -238,7 +238,7 @@ METHOD SetStmtOptions( nType, uBuffer ) CLASS TODBC
 
    RETURN ::nRetCode := SQLSetStmtAttr( ::hStmt, nType, uBuffer )
 
-METHOD SetSQL( cSQL ) CLASS TODBC
+METHOD PROCEDURE SetSQL( cSQL ) CLASS TODBC
 
    // If the DataSet is active, close it
    // before assigning new statement
@@ -249,7 +249,7 @@ METHOD SetSQL( cSQL ) CLASS TODBC
 
    ::cSQL := cSQL
 
-   RETURN NIL
+   RETURN
 
 METHOD Open() CLASS TODBC
 
@@ -370,7 +370,7 @@ METHOD ExecSQL() CLASS TODBC
    RETURN nRet
 
 // Closes the dataset
-METHOD Close() CLASS TODBC
+METHOD PROCEDURE Close() CLASS TODBC
 
    // Frees the statement
    ::hStmt := NIL
@@ -384,7 +384,7 @@ METHOD Close() CLASS TODBC
    ::nRecNo    := 0
    ::lBof      := .T.
 
-   RETURN NIL
+   RETURN
 
 // Returns the Field object for a named field
 METHOD FieldByName( cField ) CLASS TODBC
@@ -605,7 +605,7 @@ METHOD RecCount() CLASS TODBC
    RETURN ::nRecCount
 
 // Loads current record data into the Fields collection
-METHOD LoadData( nPos ) CLASS TODBC
+METHOD PROCEDURE LoadData( nPos ) CLASS TODBC
 
    LOCAL uData
    LOCAL i
@@ -663,4 +663,4 @@ METHOD LoadData( nPos ) CLASS TODBC
 
    NEXT
 
-   RETURN NIL
+   RETURN

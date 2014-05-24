@@ -160,7 +160,7 @@ METHOD New( nTypeCode ) CLASS GDBarCode
 
    RETURN Self
 
-METHOD Draw( cText ) CLASS GDBarCode
+METHOD PROCEDURE Draw( cText ) CLASS GDBarCode
 
    SWITCH ::nType
    CASE 8   ; ::Draw8( cText ); EXIT
@@ -169,9 +169,9 @@ METHOD Draw( cText ) CLASS GDBarCode
    CASE 128 ; ::Draw128( cText ); EXIT
    ENDSWITCH
 
-   RETURN NIL
+   RETURN
 
-METHOD Draw13( cText ) CLASS GDBarCode
+METHOD PROCEDURE Draw13( cText ) CLASS GDBarCode
 
    LOCAL lError  := .F.
    LOCAL nChkSum := 0
@@ -282,14 +282,12 @@ METHOD Draw13( cText ) CLASS GDBarCode
             ::Settext( cText )
             ::DrawText13()
          ENDIF
-
       ENDIF
-
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD DrawText13() CLASS GDBarCode
+METHOD PROCEDURE DrawText13() CLASS GDBarCode
 
    IF ::textfont != 0
 
@@ -301,9 +299,9 @@ METHOD DrawText13() CLASS GDBarCode
 
    ::lastY := ::maxHeight + ::GetFontHeight()
 
-   RETURN NIL
+   RETURN
 
-METHOD Draw8( cText ) CLASS GDBarCode
+METHOD PROCEDURE Draw8( cText ) CLASS GDBarCode
 
    LOCAL lError := .F.
    LOCAL ii, jj
@@ -392,22 +390,22 @@ METHOD Draw8( cText ) CLASS GDBarCode
 
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD DrawText8() CLASS GDBarCode
+METHOD PROCEDURE DrawText8() CLASS GDBarCode
 
    ::say( 10 + ( ( 3 * ::res + 34 * ::res ) / 2 - ::GetFontWidth() * ( 4 / 2 ) ), ::maxHeight + 1, Left( ::text, 4 ), ::fillcolor )
    ::say( 10 + ( 32 * ::res + ( 3 * ::res + 32 * ::res ) / 2 - ::GetFontWidth() * ( 4 / 2 ) ), ::maxHeight + 1, SubStr( ::text, 5, 4 ), ::fillcolor )
 
    ::lastY := ::maxHeight + ::GetFontHeight()
 
-   RETURN NIL
+   RETURN
 
 METHOD FindCharCode( cString, cChar ) CLASS GDBarCode
 
    LOCAL i
    LOCAL nC   := 0
-   LOCAL nret := 0
+   LOCAL nRet := 0
 
    FOR i := 1 TO Len( cString )
 
@@ -421,9 +419,9 @@ METHOD FindCharCode( cString, cChar ) CLASS GDBarCode
 
    NEXT
 
-   RETURN nret
+   RETURN nRet
 
-METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
+METHOD PROCEDURE Draw128( cText, cModeCode ) CLASS GDBarCode
 
    LOCAL cChar, nValChar, n, i
 
@@ -582,17 +580,17 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
 
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD DrawI25( cText ) CLASS GDBarCode
+METHOD PROCEDURE DrawI25( cText ) CLASS GDBarCode
 
    ::settext( cText )
 
    ::GenCodei25()
 
-   RETURN NIL
+   RETURN
 
-METHOD GenCodei25() CLASS GDBarCode
+METHOD PROCEDURE GenCodei25() CLASS GDBarCode
 
    LOCAL lError := .F.
    LOCAL bc_string
@@ -622,7 +620,7 @@ METHOD GenCodei25() CLASS GDBarCode
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /* It makes mixe of the value to be codified by the Bar code I25 */
 

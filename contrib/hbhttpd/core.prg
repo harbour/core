@@ -190,22 +190,22 @@ METHOD Run( hConfig ) CLASS UHttpd
 
    RETURN .T.
 
-METHOD Stop() CLASS UHttpd
+METHOD PROCEDURE Stop() CLASS UHttpd
 
    Eval( ::hConfig[ "Trace" ], "stopping" )
    ::lStop := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD LogError( cError ) CLASS UHttpd
+METHOD PROCEDURE LogError( cError ) CLASS UHttpd
 
    hb_mutexLock( ::hmtxLog )
    Eval( ::hConfig[ "LogError" ], DToS( Date() ) + " " + Time() + " " + cError )
    hb_mutexUnlock( ::hmtxLog )
 
-   RETURN NIL
+   RETURN
 
-METHOD LogAccess() CLASS UHttpd
+METHOD PROCEDURE LogAccess() CLASS UHttpd
 
    LOCAL cDate := DToS( Date() ), cTime := Time()
 
@@ -219,7 +219,7 @@ METHOD LogAccess() CLASS UHttpd
       '"' )
    hb_mutexUnlock( ::hmtxLog )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION IPAddr2Num( cIP )
 
@@ -815,7 +815,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
 
    RETURN nContentLength
 
-STATIC FUNCTION ParseRequestBody( cRequest )
+STATIC PROCEDURE ParseRequestBody( cRequest )
 
    LOCAL nI, cPart, cEncoding
 
@@ -846,7 +846,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION MakeResponse( hConfig )
 

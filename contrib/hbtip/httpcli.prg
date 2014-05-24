@@ -372,7 +372,7 @@ METHOD ReadAll() CLASS TIPClientHTTP
 
    RETURN cOut
 
-METHOD setCookie( cLine ) CLASS TIPClientHTTP
+METHOD PROCEDURE setCookie( cLine ) CLASS TIPClientHTTP
 
    // docs from https://www.ietf.org/rfc/rfc2109.txt
    LOCAL cHost, cPath, cName, cValue, aElements
@@ -421,7 +421,7 @@ METHOD setCookie( cLine ) CLASS TIPClientHTTP
       ::hCookies[ cHost ][ cPath ][ cName ] := cValue
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
@@ -497,11 +497,11 @@ METHOD Boundary( nType ) CLASS TIPClientHTTP
 
    RETURN iif( nType < 2, "--", "" ) + cBound + iif( nType == 1, "--", "" )
 
-METHOD Attach( cName, cFileName, cType ) CLASS TIPClientHTTP
+METHOD PROCEDURE Attach( cName, cFileName, cType ) CLASS TIPClientHTTP
 
    AAdd( ::aAttachments, { cName, cFileName, cType } )
 
-   RETURN NIL
+   RETURN
 
 /* https://tools.ietf.org/html/rfc2388 */
 METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP

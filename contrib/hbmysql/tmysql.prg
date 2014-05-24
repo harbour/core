@@ -393,7 +393,7 @@ METHOD Refresh() CLASS TMySQLQuery
    RETURN ! ::lError
 
 
-METHOD Skip( nRows ) CLASS TMySQLQuery
+METHOD PROCEDURE Skip( nRows ) CLASS TMySQLQuery
 
    LOCAL lbof
 
@@ -432,7 +432,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
       ::lBof := .T.
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Get row n of a query and return it as a TMySQLRow object
 METHOD GetRow( nRow ) CLASS TMySQLQuery
@@ -745,7 +745,7 @@ METHOD GetRow( nRow ) CLASS TMySQLTable
    RETURN oRow
 
 
-METHOD Skip( nRow ) CLASS TMySQLTable
+METHOD PROCEDURE Skip( nRow ) CLASS TMySQLTable
 
    LOCAL i
 
@@ -755,7 +755,7 @@ METHOD Skip( nRow ) CLASS TMySQLTable
       ::aOldValue[ i ] := ::FieldGet( i )
    NEXT
 
-   RETURN NIL
+   RETURN
 
 
 /* Creates an update query for changed fields and submits it to server */
