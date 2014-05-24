@@ -149,7 +149,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 
    RETURN Self
 
-METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
+METHOD PROCEDURE doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
 
    LOCAL oErr
    LOCAL cValue := PadR( __dbgValToStr( pItem[ nSet ] ), ;
@@ -168,33 +168,43 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
       END SEQUENCE
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
 
    LOCAL nSet := oBrwSets:cargo[ 1 ]
    LOCAL cOldName := ::arrayName
 
-   DO CASE
-   CASE nKey == K_UP
+   SWITCH nKey
+   CASE K_UP
       oBrwSets:Up()
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
       oBrwSets:Down()
+      EXIT
 
-   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+   CASE K_HOME
+   CASE K_CTRL_PGUP
+   CASE K_CTRL_HOME
       oBrwSets:GoTop()
+      EXIT
 
-   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+   CASE K_END
+   CASE K_CTRL_PGDN
+   CASE K_CTRL_END
       oBrwSets:GoBottom()
+      EXIT
 
-   CASE nKey == K_PGDN
+   CASE K_PGDN
       oBrwSets:pageDown()
+      EXIT
 
-   CASE nKey == K_PGUP
+   CASE K_PGUP
       oBrwSets:PageUp()
+      EXIT
 
-   CASE nKey == K_ENTER
+   CASE K_ENTER
       IF HB_ISARRAY( aArray[ nSet ] )
          IF Len( aArray[ nSet ] ) == 0
             __dbgAlert( "Array is empty" )
@@ -226,8 +236,9 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          oBrwSets:RefreshCurrent()
          oBrwSets:ForceStable()
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RefreshVarsS( oBrwSets )
 

@@ -185,7 +185,7 @@ METHOD GetLineColor() CLASS HBBrwText
 
    RETURN aColor
 
-METHOD LoadFile( cFileName ) CLASS HBBrwText
+METHOD PROCEDURE LoadFile( cFileName ) CLASS HBBrwText
 
    LOCAL nMaxLineLen := 0
    LOCAL cLine
@@ -195,14 +195,14 @@ METHOD LoadFile( cFileName ) CLASS HBBrwText
    ::nRows := Len( ::aRows )
    ::nLineNoLen := Len( hb_ntos( ::nRows ) ) + 2
 
-   FOR EACH cLine in ::aRows
+   FOR EACH cLine IN ::aRows
       nMaxLineLen := Max( nMaxLineLen, ;
          Len( RTrim( MemoLine( cLine, Len( cLine ) + 256, 1, ::nTabWidth, .F. ) ) ) )
    NEXT
    ::nMaxLineLen := nMaxLineLen
    ::nLineOffset := 1
 
-   RETURN NIL
+   RETURN
 
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBBrwText
 
@@ -241,15 +241,18 @@ METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
       cString := Upper( cString )
    ENDIF
 
-   DO CASE
-   CASE nMode == 0 // From Top
+   SWITCH hb_defaultValue( nMode, 0 )
+   CASE 0  // From Top
       ::GoTop()
       bMove := {|| ::Skip( 1 ) }
-   CASE nMode == 1 // Forward
+      EXIT
+   CASE 1  // Forward
       bMove := {|| ::Skip( 1 ) }
-   CASE nMode == 2 // Backward
+      EXIT
+   CASE 2  // Backward
       bMove := {|| ::Skip( -1 ) }
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    n := ::nRow
 

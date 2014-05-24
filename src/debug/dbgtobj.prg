@@ -169,7 +169,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
 
    RETURN Self
 
-METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
+METHOD PROCEDURE doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
 
    LOCAL column
    LOCAL cValue
@@ -187,7 +187,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    cValue := __dbgObjGetValue( ::TheObj, pitem[ nSet, 1 ], @lCanAcc )
    IF ! lCanAcc
       __dbgAlert( cValue )
-      RETURN NIL
+      RETURN
    ENDIF
    cValue := PadR( __dbgValToStr( cValue ), column:Width )
 
@@ -200,14 +200,14 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
       END SEQUENCE
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
+METHOD PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
 
    LOCAL nSet := oBrwSets:Cargo
 
-   DO CASE
-   CASE nKey == K_UP
+   SWITCH nKey
+   CASE K_UP
 
       IF oBrwSets:Cargo > 1
          oBrwSets:Cargo--
@@ -215,8 +215,9 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
          oBrwSets:Up()
          oBrwSets:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
 
       IF oBrwSets:Cargo < nSets
          oBrwSets:Cargo++
@@ -224,38 +225,47 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
          oBrwSets:Down()
          oBrwSets:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+   CASE K_HOME
+   CASE K_CTRL_PGUP
+   CASE K_CTRL_HOME
 
       IF oBrwSets:Cargo > 1
          oBrwSets:Cargo := 1
          oBrwSets:GoTop()
          oBrwSets:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+   CASE K_END
+   CASE K_CTRL_PGDN
+   CASE K_CTRL_END
 
       IF oBrwSets:Cargo < nSets
          oBrwSets:Cargo := nSets
          oBrwSets:GoBottom()
          oBrwSets:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_PGUP
+   CASE K_PGUP
 
       oBrwSets:PageUp()
       oBrwSets:Cargo := ::ArrayIndex
       oBrwSets:RefreshCurrent()
       oBrwSets:ForceStable()
+      EXIT
 
-   CASE nKey == K_PGDN
+   CASE K_PGDN
 
       oBrwSets:PageDown()
       oBrwSets:Cargo := ::ArrayIndex
       oBrwSets:RefreshCurrent()
       oBrwSets:ForceStable()
+      EXIT
 
-   CASE nKey == K_ENTER
+   CASE K_ENTER
 
       IF nSet == oBrwSets:Cargo
          IF HB_ISARRAY( aArray[ nSet, 2 ] )
@@ -280,10 +290,11 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
             oBrwSets:ForceStable()
          ENDIF
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
-   RETURN NIL
+   RETURN
 
 FUNCTION __dbgObject( aArray, cVarName, lEditable )
    RETURN HBDbObject():New( aArray, cVarName, lEditable )

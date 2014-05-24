@@ -107,48 +107,59 @@ STATIC PROCEDURE ProcessKey( nKey, oDlg, oBrw, aTopics )
    LOCAL n
    LOCAL nSkip
 
-   DO CASE
-   CASE nKey == K_UP
+   SWITCH nKey
+   CASE K_UP
 
       IF oBrw:Cargo > 1
          oBrw:Up()
          oBrw:ForceStable()
          ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
       ENDIF
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
 
       IF oBrw:Cargo < Len( aTopics )
          oBrw:Down()
          oBrw:ForceStable()
          ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
       ENDIF
+      EXIT
 
-   CASE nKey == K_HOME
+   CASE K_HOME
 
       IF oBrw:Cargo > 1
          oBrw:GoTop()
          oBrw:ForceStable()
          ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
       ENDIF
+      EXIT
 
-   CASE nKey == K_END
+   CASE K_END
 
       IF oBrw:Cargo < Len( aTopics )
          oBrw:GoBottom()
          oBrw:ForceStable()
          ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
       ENDIF
+      EXIT
 
-   CASE nKey == K_PGUP .OR. nKey == K_CTRL_B
+   CASE K_PGUP
+   CASE K_CTRL_B
 
-      ShowTopic( oDlg, aTopics, oBrw:Cargo, -1 ) // Skip to prev page
+      ShowTopic( oDlg, aTopics, oBrw:Cargo, -1 )  // Skip to prev page
+      EXIT
 
-   CASE nKey == K_PGDN .OR. nKey == K_CTRL_F .OR. nKey == K_SPACE
+   CASE K_PGDN
+#if 0
+   CASE K_CTRL_F
+#endif
+   CASE K_SPACE
 
       ShowTopic( oDlg, aTopics, oBrw:Cargo, 1 )  // Skip to next page
+      EXIT
 
-   CASE nKey == K_LBUTTONDOWN
+   CASE K_LBUTTONDOWN
 
       IF ( nSkip := MRow() - oDlg:nTop - oBrw:RowPos ) != 0
          IF nSkip > 0
@@ -165,8 +176,9 @@ STATIC PROCEDURE ProcessKey( nKey, oDlg, oBrw, aTopics )
          oBrw:ForceStable()
          ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN
 
@@ -184,28 +196,31 @@ STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
       ENDIF
       oDebug:nHelpPage := 1
    ELSE
-      DO CASE
-      CASE nPageOp == 0 // Show first page
+      SWITCH nPageOp
+      CASE 0  // Show first page
 
          oDebug:nHelpPage := 1
+         EXIT
 
-      CASE nPageOp == 1 // Show next page
+      CASE 1  // Show next page
 
          IF oDebug:nHelpPage < nPages
             oDebug:nHelpPage++
          ELSE
             RETURN
          ENDIF
+         EXIT
 
-      CASE nPageOp == -1 // Show prev page
+      CASE -1  // Show prev page
 
          IF oDebug:nHelpPage > 1
             oDebug:nHelpPage--
          ELSE
             RETURN
          ENDIF
+         EXIT
 
-      ENDCASE
+      ENDSWITCH
    ENDIF
 
    hb_Scroll( oDlg:nTop + 1, oDlg:nLeft + 14, oDlg:nBottom - 1, oDlg:nRight - 1 )
@@ -635,10 +650,10 @@ STATIC FUNCTION GetTopics()
       "    i.e.:", ;
       "", ;
       "        s                   // variable", ;
-      "        a[n]                // array element", ;
+      "        a[ n ]              // array element", ;
       "        g:buffer            // object instance variable", ;
-      "        At(s, t)            // return value of function call", ;
-      "        ValType(s) == 'C'   // value of expression", ;
+      "        At( s, t )          // return value of function call", ;
+      "        ValType( s ) == 'C' // value of expression", ;
       "", ;
       "", ;
       "    Tracepoint...", ;

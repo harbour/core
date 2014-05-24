@@ -153,7 +153,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
 
    RETURN Self
 
-METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
+METHOD PROCEDURE doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
 
    LOCAL oErr
    LOCAL cValue := PadR( __dbgValToStr( hb_HValueAt( pItem, nSet ) ), ;
@@ -172,7 +172,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
       END SEQUENCE
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
 
@@ -180,26 +180,36 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
    LOCAL cOldname := ::hashName
    LOCAL uValue
 
-   DO CASE
-   CASE nKey == K_UP
+   SWITCH nKey
+   CASE K_UP
       oBrwSets:Up()
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
       oBrwSets:Down()
+      EXIT
 
-   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+   CASE K_HOME
+   CASE K_CTRL_PGUP
+   CASE K_CTRL_HOME
       oBrwSets:GoTop()
+      EXIT
 
-   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+   CASE K_END
+   CASE K_CTRL_PGDN
+   CASE K_CTRL_END
       oBrwSets:GoBottom()
+      EXIT
 
-   CASE nKey == K_PGDN
+   CASE K_PGDN
       oBrwSets:pageDown()
+      EXIT
 
-   CASE nKey == K_PGUP
+   CASE K_PGUP
       oBrwSets:PageUp()
+      EXIT
 
-   CASE nKey == K_ENTER
+   CASE K_ENTER
 
       uValue := hb_HValueAt( hHash, nSet )
 
@@ -237,8 +247,9 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
          oBrwSets:RefreshCurrent()
          oBrwSets:ForceStable()
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RefreshVarsS( oBrwSets )
 

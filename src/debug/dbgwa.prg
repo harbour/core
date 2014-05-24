@@ -222,8 +222,8 @@ STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
       RETURN
    ENDIF
 
-   DO CASE
-   CASE oDebug:nWaFocus == 1
+   SWITCH oDebug:nWaFocus
+   CASE 1
       nAlias := aBrw[ 1 ]:Cargo
       WorkAreasKeyPressed( nKey, aBrw[ 1 ], Len( aAlias ) )
       IF nAlias != aBrw[ 1 ]:Cargo
@@ -247,18 +247,21 @@ STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          aBrw[ 3 ]:Dehilite()
          UpdateInfo( oDlg, aAlias[ aBrw[ 1 ]:Cargo ][ 2 ] )
       ENDIF
-   CASE oDebug:nWaFocus == 2
+      EXIT
+   CASE 2
       WorkAreasKeyPressed( nKey, aBrw[ 2 ], Len( aInfo ) )
-   CASE oDebug:nWaFocus == 3
+      EXIT
+   CASE 3
       WorkAreasKeyPressed( nKey, aBrw[ 3 ], Len( aStruc ) )
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN
 
 STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
 
-   DO CASE
-   CASE nKey == K_UP
+   SWITCH nKey
+   CASE K_UP
 
       IF oBrw:Cargo > 1
          oBrw:Cargo--
@@ -266,8 +269,9 @@ STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
          oBrw:Up()
          oBrw:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
 
       IF oBrw:Cargo < nTotal
          oBrw:Cargo++
@@ -275,24 +279,31 @@ STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
          oBrw:Down()
          oBrw:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+   CASE K_HOME
+   CASE K_CTRL_PGUP
+   CASE K_CTRL_HOME
 
       IF oBrw:Cargo > 1
          oBrw:Cargo := 1
          oBrw:GoTop()
          oBrw:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+   CASE K_END
+   CASE K_CTRL_PGDN
+   CASE K_CTRL_END
 
       IF oBrw:Cargo < nTotal
          oBrw:Cargo := nTotal
          oBrw:GoBottom()
          oBrw:ForceStable()
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN
 

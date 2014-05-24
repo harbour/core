@@ -157,7 +157,7 @@ METHOD AddItem( oMenuItem ) CLASS HBDbMenu
 
    RETURN oMenuItem
 
-METHOD Build() CLASS HBDbMenu
+METHOD PROCEDURE Build() CLASS HBDbMenu
 
    LOCAL nPos := 0
    LOCAL oMenuItem
@@ -189,9 +189,9 @@ METHOD Build() CLASS HBDbMenu
       ::aMenus := ASize( ::aMenus, Len( ::aMenus ) - 1 )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD ClosePopup( nPopup ) CLASS HBDbMenu
+METHOD PROCEDURE ClosePopup( nPopup ) CLASS HBDbMenu
 
    LOCAL oPopup
 
@@ -205,17 +205,17 @@ METHOD ClosePopup( nPopup ) CLASS HBDbMenu
       ::aItems[ nPopup ]:Display( ::cClrPopup, ::cClrHotKey )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD DeHilite() CLASS HBDbMenu
+METHOD PROCEDURE DeHilite() CLASS HBDbMenu
 
    LOCAL oMenuItem := ::aItems[ ::nOpenPopup ]
 
    oMenuItem:Display( ::cClrPopup, ::cClrHotKey )
 
-   RETURN NIL
+   RETURN
 
-METHOD Display() CLASS HBDbMenu
+METHOD PROCEDURE Display() CLASS HBDbMenu
 
    LOCAL oMenuItem
 
@@ -239,9 +239,9 @@ METHOD Display() CLASS HBDbMenu
       ENDIF
    NEXT
 
-   RETURN NIL
+   RETURN
 
-METHOD EvalAction() CLASS HBDbMenu
+METHOD PROCEDURE EvalAction() CLASS HBDbMenu
 
    LOCAL oPopup, oMenuItem
 
@@ -253,7 +253,7 @@ METHOD EvalAction() CLASS HBDbMenu
       Eval( oMenuItem:bAction, oMenuItem )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD GetHotKeyPos( cKey ) CLASS HBDbMenu
 
@@ -288,8 +288,7 @@ METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
 
    FOR EACH oMenuItem IN ::aItems
       IF HB_ISOBJECT( oMenuItem:bAction )
-         oItem := oMenuItem:bAction:GetItemByIdent( uIdent )
-         IF oItem != NIL
+         IF ( oItem := oMenuItem:bAction:GetItemByIdent( uIdent ) ) != NIL
             RETURN oItem
          ENDIF
       ELSE
@@ -302,7 +301,7 @@ METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
 
    RETURN NIL
 
-METHOD GoBottom() CLASS HBDbMenu
+METHOD PROCEDURE GoBottom() CLASS HBDbMenu
 
    LOCAL oPopup
 
@@ -312,9 +311,9 @@ METHOD GoBottom() CLASS HBDbMenu
       oPopup:ShowPopup( Len( oPopup:aItems ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD GoLeft() CLASS HBDbMenu
+METHOD PROCEDURE GoLeft() CLASS HBDbMenu
 
    LOCAL oMenuItem := ::aItems[ ::nOpenPopup ]
 
@@ -336,9 +335,9 @@ METHOD GoLeft() CLASS HBDbMenu
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD GoRight() CLASS HBDbMenu
+METHOD PROCEDURE GoRight() CLASS HBDbMenu
 
    LOCAL oMenuItem := ::aItems[ ::nOpenPopup ]
 
@@ -360,9 +359,9 @@ METHOD GoRight() CLASS HBDbMenu
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD GoTop() CLASS HBDbMenu
+METHOD PROCEDURE GoTop() CLASS HBDbMenu
 
    LOCAL oPopup
 
@@ -372,9 +371,9 @@ METHOD GoTop() CLASS HBDbMenu
       oPopup:ShowPopup( 1 )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD LoadColors() CLASS HBDbMenu
+METHOD PROCEDURE LoadColors() CLASS HBDbMenu
 
    LOCAL aColors := __dbgColors()
    LOCAL oMenuItem
@@ -390,9 +389,9 @@ METHOD LoadColors() CLASS HBDbMenu
       ENDIF
    NEXT
 
-   RETURN NIL
+   RETURN
 
-METHOD Refresh() CLASS HBDbMenu
+METHOD PROCEDURE Refresh() CLASS HBDbMenu
 
    LOCAL oMenuItem
 
@@ -409,9 +408,9 @@ METHOD Refresh() CLASS HBDbMenu
 
    DispEnd()
 
-   RETURN NIL
+   RETURN
 
-METHOD ShowPopup( nPopup ) CLASS HBDbMenu
+METHOD PROCEDURE ShowPopup( nPopup ) CLASS HBDbMenu
 
    ::aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
    ::nOpenPopup := nPopup
@@ -421,15 +420,15 @@ METHOD ShowPopup( nPopup ) CLASS HBDbMenu
       ::aItems[ nPopup ]:bAction:ShowPopup( 1 )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD ProcessKey( nKey ) CLASS HBDbMenu
+METHOD PROCEDURE ProcessKey( nKey ) CLASS HBDbMenu
 
    LOCAL nPopup
    LOCAL oPopup
 
-   DO CASE
-   CASE nKey == K_LBUTTONDOWN
+   SWITCH nKey
+   CASE K_LBUTTONDOWN
       IF MRow() == 0
          IF ( nPopup := ::GetItemOrdByCoors( 0, MCol() ) ) != 0
             IF nPopup != ::nOpenPopup
@@ -448,38 +447,46 @@ METHOD ProcessKey( nKey ) CLASS HBDbMenu
             ::EvalAction()
          ENDIF
       ENDIF
+      EXIT
 
-   CASE nKey == K_ESC
+   CASE K_ESC
       ::Close()
+      EXIT
 
-   CASE nKey == K_LEFT
+   CASE K_LEFT
       ::GoLeft()
+      EXIT
 
-   CASE nKey == K_RIGHT
+   CASE K_RIGHT
       ::GoRight()
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
       ::GoDown()
+      EXIT
 
-   CASE nKey == K_UP
+   CASE K_UP
       ::GoUp()
+      EXIT
 
-   CASE nKey == K_ENTER
+   CASE K_ENTER
       ::EvalAction()
+      EXIT
 
-   CASE nKey == K_HOME
+   CASE K_HOME
       ::GoTop()
+      EXIT
 
-   CASE nKey == K_END
+   CASE K_END
       ::GoBottom()
+      EXIT
 
    OTHERWISE
 
       IF ::nOpenPopup > 0
          IF IsAlpha( hb_keyChar( nKey ) )
             oPopup := ::aItems[ ::nOpenPopup ]:bAction
-            nPopup := oPopup:GetHotKeyPos( Upper( hb_keyChar( nKey ) ) )
-            IF nPopup > 0
+            IF ( nPopup := oPopup:GetHotKeyPos( Upper( hb_keyChar( nKey ) ) ) ) > 0
                IF oPopup:nOpenPopup != nPopup
                   oPopup:DeHilite()
                   oPopup:ShowPopup( nPopup )
@@ -488,16 +495,15 @@ METHOD ProcessKey( nKey ) CLASS HBDbMenu
             ENDIF
          ENDIF
       ELSE
-         nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) )
-         IF nPopup != ::nOpenPopup
+         IF ( nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != ::nOpenPopup
             ::Close()
             ::ShowPopup( nPopup )
          ENDIF
       ENDIF
 
-   ENDCASE
+   ENDSWITCH
 
-   RETURN NIL
+   RETURN
 
 FUNCTION __dbgAltToKey( nKey )
 
