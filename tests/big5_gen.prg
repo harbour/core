@@ -132,7 +132,7 @@ procedure main()
       "/*" + hb_eol() + ;
       " * Harbour Project source code:" + hb_eol() + ;
       " *    BIG5 <-> UCS16 conversion tables" + hb_eol() + ;
-      " *    code generated automatically by tests/big5_gen.prg" + hb_eol() + ;
+      " *    code generated automatically by " + __FILE__ + hb_eol() + ;
       " *" + hb_eol() + ;
       " * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>" + hb_eol() + ;
       " * www - http://harbour-project.org" + hb_eol() + ;

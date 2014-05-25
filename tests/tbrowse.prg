@@ -14,7 +14,6 @@ PROCEDURE Main()
    LOCAL cColor
    LOCAL nRow, nCol
 #ifndef HB_COMPAT_C53
-   LOCAL nKey
    LOCAL nTmpRow, nTmpCol
    LOCAL lEnd    := .F.
 #endif
@@ -67,43 +66,57 @@ PROCEDURE Main()
    DO WHILE ! lEnd
       oBrowse:ForceStable()
 
-      nKey := Inkey( 0 )
-
-      DO CASE
-      CASE nKey == K_ESC
+      SWITCH Inkey( 0 )
+      CASE K_ESC
          SetPos( 17, 0 )
          lEnd := .T.
-      CASE nKey == K_DOWN
+         EXIT
+      CASE K_DOWN
          oBrowse:Down()
-      CASE nKey == K_UP
+         EXIT
+      CASE K_UP
          oBrowse:Up()
-      CASE nKey == K_LEFT
+         EXIT
+      CASE K_LEFT
          oBrowse:Left()
-      CASE nKey == K_RIGHT
+         EXIT
+      CASE K_RIGHT
          oBrowse:Right()
-      CASE nKey == K_PGDN
+         EXIT
+      CASE K_PGDN
          oBrowse:pageDown()
-      CASE nKey == K_PGUP
+         EXIT
+      CASE K_PGUP
          oBrowse:pageUp()
-      CASE nKey == K_CTRL_PGUP
+         EXIT
+      CASE K_CTRL_PGUP
          oBrowse:goTop()
-      CASE nKey == K_CTRL_PGDN
+         EXIT
+      CASE K_CTRL_PGDN
          oBrowse:goBottom()
-      CASE nKey == K_HOME
+         EXIT
+      CASE K_HOME
          oBrowse:home()
-      CASE nKey == K_END
+         EXIT
+      CASE K_END
          oBrowse:end()
-      CASE nKey == K_CTRL_LEFT
+         EXIT
+      CASE K_CTRL_LEFT
          oBrowse:panLeft()
-      CASE nKey == K_CTRL_RIGHT
+         EXIT
+      CASE K_CTRL_RIGHT
          oBrowse:panRight()
-      CASE nKey == K_CTRL_HOME
+         EXIT
+      CASE K_CTRL_HOME
          oBrowse:panHome()
-      CASE nKey == K_CTRL_END
+         EXIT
+      CASE K_CTRL_END
          oBrowse:panEnd()
-      CASE nKey == K_TAB
+         EXIT
+      CASE K_TAB
          hb_DispOutAt( 0, 0, Time() )
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ENDDO
 #endif
    SetPos( nRow, nCol )

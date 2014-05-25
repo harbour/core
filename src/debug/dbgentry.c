@@ -1354,7 +1354,9 @@ PHB_ITEM hb_dbgGetSourceFiles( void * handle )
    HB_ISIZ nModules;
    HB_ISIZ i;
 
-   /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
+#if 0
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+#endif
    HB_SYMBOL_UNUSED( handle );
 
    HB_DBGCOMMON_LOCK();
@@ -1408,7 +1410,9 @@ HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
    HB_ISIZ nModules;
    HB_ISIZ i;
 
-   /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
+#if 0
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+#endif
    HB_SYMBOL_UNUSED( handle );
 
    szModule = hb_dbgStripModuleName( szModule );

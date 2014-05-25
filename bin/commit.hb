@@ -574,7 +574,6 @@ STATIC FUNCTION CheckFileList( xName, cLocalRoot, lRebase )
 
    LOCAL lApplyFixes := "--fixup" $ cli_Options()
 
-   hb_default( @cLocalRoot, "" )
    hb_default( @lRebase, .T. )
 
    IF HB_ISSTRING( xName )
@@ -606,7 +605,7 @@ STATIC FUNCTION CheckFileList( xName, cLocalRoot, lRebase )
          ENDIF
       ELSE
          FOR EACH file IN xName
-            IF ! CheckFile( file, @aErr, lApplyFixes, cLocalRoot, lRebase )
+            IF ! CheckFile( file, @aErr, lApplyFixes, hb_defaultValue( cLocalRoot, "" ), lRebase )
                lPassed := .F.
                FOR EACH s IN aErr
                   OutStd( file + ": " + s + hb_eol() )

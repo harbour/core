@@ -151,18 +151,14 @@ METHOD Divide( xArg ) CLASS Money
 
 METHOD Str( nLen, nDec ) CLASS Money
 
-   LOCAL cStr
    LOCAL nValue := ::value()
 
-   IF nLen == NIL
-      cStr := Str( nValue )
-   ELSEIF nDec == NIL
-      cStr := Str( nValue, nLen )
-   ELSE
-      cStr := Str( nValue, nLen, nDec )
-   ENDIF
+   DO CASE
+   CASE nLen == NIL ; RETURN Str( nValue )
+   CASE nDec == NIL ; RETURN Str( nValue, nLen )
+   ENDCASE
 
-   RETURN cStr
+   RETURN Str( nValue, nLen, nDec )
 
 STATIC FUNCTION IsMoney( xArg )
    RETURN HB_ISOBJECT( xArg ) .AND. xArg:className() == "MONEY"

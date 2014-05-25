@@ -10,7 +10,7 @@ PROCEDURE Main()
    ? "Statics overlapped!"
    ? "==================="
    ?
-   ? "INSIDE statics1.prg"
+   ? "INSIDE", __FILE__
    ? "   STATIC uOne, uTwo"
    ?
    ? "   uOne, uTwo =>", uOne, ",", uTwo
@@ -21,7 +21,7 @@ PROCEDURE Main()
    ? "   uOne, uTwo =>", uOne, ",", uTwo
    ?
    Test()
-   ? "INSIDE statics1.prg"
+   ? "INSIDE", __FILE__
    ? "   uOne, uTwo =>", uOne, ",", uTwo
    ?
 

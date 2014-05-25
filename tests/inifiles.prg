@@ -63,7 +63,7 @@ PROCEDURE Main( cFilename, cSection )
    ? "[" + s[ n ] + "]"
    AEval( oIni:ReadSection( s[ n ] ), {| x | QOut( x ) } )
 
-   oIni:WriteDate( "Date Test", "Today", Date() )
+   oIni:WriteDate( "Date Test", "Today", 0d20121208 )
    oIni:WriteBool( "Bool Test", "True", .T. )
    ? oIni:ReadBool( "Bool Test", "True", .F. )
 
@@ -287,20 +287,18 @@ METHOD ReadSection( cSection ) CLASS TIniFile
    LOCAL i, j, aSection := {}
 
    IF Empty( cSection )
-      FOR i := 1 TO Len( ::Contents )
-         IF HB_ISSTRING( ::Contents[ i ][ 1 ] ) .AND. HB_ISSTRING( ::Contents[ i ][ 2 ] )
-            AAdd( aSection, ::Contents[ i ][ 1 ] )
+      FOR EACH i IN ::Contents
+         IF HB_ISSTRING( i[ 1 ] ) .AND. HB_ISSTRING( i[ 2 ] )
+            AAdd( aSection, i[ 1 ] )
          ENDIF
       NEXT
-
    ELSE
       cSection := Lower( cSection )
       IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. x[ 1 ] == cSection .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
 
-         FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
-
-            IF ::Contents[ i ][ 2 ][ j ][ 1 ] != NIL
-               AAdd( aSection, ::Contents[ i ][ 2 ][ j ][ 1 ] )
+         FOR EACH j IN ::Contents[ i ][ 2 ]
+            IF j[ 1 ] != NIL
+               AAdd( aSection, j[ 1 ] )
             ENDIF
          NEXT
       ENDIF
@@ -312,10 +310,9 @@ METHOD ReadSections() CLASS TIniFile
 
    LOCAL i, aSections := {}
 
-   FOR i := 1 TO Len( ::Contents )
-
-      IF HB_ISARRAY( ::Contents[ i ][ 2 ] )
-         AAdd( aSections, ::Contents[ i ][ 1 ] )
+   FOR EACH i IN ::Contents
+      IF HB_ISARRAY( i[ 2 ] )
+         AAdd( aSections, i[ 1 ] )
       ENDIF
    NEXT
 
@@ -327,24 +324,24 @@ METHOD PROCEDURE UpdateFile() CLASS TIniFile
 
    LOCAL hFile := FCreate( ::Filename )
 
-   FOR i := 1 TO Len( ::Contents )
-      IF ::Contents[ i ][ 1 ] == NIL
-         FWrite( hFile, ::Contents[ i ][ 2 ] + hb_eol() )
+   FOR EACH i IN ::Contents
+      IF i[ 1 ] == NIL
+         FWrite( hFile, i[ 2 ] + hb_eol() )
 
-      ELSEIF HB_ISARRAY( ::Contents[ i ][ 2 ] )
-         FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + hb_eol() )
-         FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
+      ELSEIF HB_ISARRAY( i[ 2 ] )
+         FWrite( hFile, "[" + i[ 1 ] + "]" + hb_eol() )
 
-            IF ::Contents[ i ][ 2 ][ j ][ 1 ] == NIL
-               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 2 ] + hb_eol() )
+         FOR EACH j IN i[ 2 ]
+            IF j[ 1 ] == NIL
+               FWrite( hFile, j[ 2 ] + hb_eol() )
             ELSE
-               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 1 ] + "=" + ::Contents[ i ][ 2 ][ j ][ 2 ] + hb_eol() )
+               FWrite( hFile, j[ 1 ] + "=" + j[ 2 ] + hb_eol() )
             ENDIF
          NEXT
          FWrite( hFile, hb_eol() )
 
-      ELSEIF HB_ISSTRING( ::Contents[ i ][ 2 ] )
-         FWrite( hFile, ::Contents[ i ][ 1 ] + "=" + ::Contents[ i ][ 2 ] + hb_eol() )
+      ELSEIF HB_ISSTRING( i[ 2 ] )
+         FWrite( hFile, i[ 1 ] + "=" + i[ 2 ] + hb_eol() )
 
       ENDIF
    NEXT

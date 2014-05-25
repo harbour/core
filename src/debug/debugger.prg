@@ -1455,7 +1455,7 @@ METHOD PROCEDURE Go() CLASS HBDebugger
 
    // we are starting to run again so reset to the deepest call if
    // displaying stack
-   IF ! ::oBrwStack == NIL
+   IF ::oBrwStack != NIL
       ::oBrwStack:GoTop()
    ENDIF
    ::RestoreAppScreen()
@@ -2992,7 +2992,7 @@ METHOD PROCEDURE Static() CLASS HBDebugger
 METHOD PROCEDURE Step() CLASS HBDebugger
 
    // we are starting to run again so reset to the deepest call if displaying stack
-   IF ! ::oBrwStack == NIL
+   IF ::oBrwStack != NIL
       ::oBrwStack:GoTop()
    ENDIF
 

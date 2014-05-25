@@ -34,9 +34,7 @@ PROCEDURE Main( cFrom, cTo )
 
    RETURN
 
-//
 // Generic file handler
-//
 CREATE CLASS TTextFile STATIC
 
    VAR cFileName               // Filename spec. by user
@@ -55,13 +53,12 @@ CREATE CLASS TTextFile STATIC
    METHOD Goto( nLine )                   // Go to line
 
    METHOD Run( xTxt, lCRLF ) INLINE iif( ::cMode == "R", ::Read(), ::WriteLn( xTxt, lCRLF ) )
-   METHOD Write( xTxt )      INLINE ::WriteLn( xTxt, .F. ) // Write without CR
+   METHOD Write( xTxt )      INLINE ::WriteLn( xTxt, .F. )  // Write without CR
    METHOD Eof()              INLINE ::lEoF
 
 END CLASS
 
-//
-// Method TextFile:New -> Create a new text file
+// Create a new text file
 //
 // <cFile>      file name. No wild characters
 // <cMode>      mode for opening. Default "R"
@@ -94,9 +91,7 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
    RETURN self
 
-//
-// Dispose -> Close the file handle
-//
+// Close the file handle
 METHOD Dispose() CLASS TTextFile
 
    ::cBlock := NIL
@@ -107,9 +102,7 @@ METHOD Dispose() CLASS TTextFile
 
    RETURN self
 
-//
 // Read a single line
-//
 METHOD Read() CLASS TTextFile
 
    LOCAL cRet := ""
@@ -125,7 +118,7 @@ METHOD Read() CLASS TTextFile
 
       IF Len( ::cBlock ) == 0                     // Read new block
          IF Len( cBlock := hb_FReadLen( ::hFile, ::nBlockSize ) ) == 0
-            ::nError := FError()                // Error or EOF
+            ::nError := FError()                  // Error or EOF
             ::lEoF   := .T.
          ELSE
             ::cBlock := cBlock
@@ -149,18 +142,17 @@ METHOD Read() CLASS TTextFile
             cRet   := hb_BLeft( cRet, nEoFPos - 1 )
             ::lEoF := .T.
          ENDIF
-         cRet := StrTran( cRet, Chr( 13 ) )   // Remove CR
+         cRet := StrTran( cRet, Chr( 13 ) )     // Remove CR
       ENDIF
    ENDIF
 
    RETURN cRet
 
-//
-// WriteLn -> Write a line to a file
+// Write a line to a file
 //
 // <xTxt>  Text to write. May be any type. May also be an array containing
 //         one or more strings
-// <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
+// <lCRLF> End with Carriage Return/Line Feed (Default == .T.)
 //
 METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 
@@ -171,7 +163,7 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
    ELSEIF !( ::cMode == "W" )
       ? "File", ::cFileName, "not opened for writing"
    ELSE
-      cBlock := hb_ValToExp( xTxt )              // Convert to string
+      cBlock := hb_ValToExp( xTxt )             // Convert to string
       IF hb_defaultValue( lCRLF, .T. )
          cBlock += hb_eol()
       ENDIF
@@ -183,9 +175,7 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 
    RETURN self
 
-//
 // Go to a specified line number
-//
 METHOD Goto( nLine ) CLASS TTextFile
 
    LOCAL nWhere := 1
@@ -198,7 +188,7 @@ METHOD Goto( nLine ) CLASS TTextFile
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning
       ::cBlock := ""
-      FSeek( ::hFile, 0 )                         // Go top
+      FSeek( ::hFile, 0 )                       // Go top
       DO WHILE ! ::lEoF .AND. nWhere < nLine
          nWhere++
          ::Run()

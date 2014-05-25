@@ -1,4 +1,4 @@
-// Harbour Extended Features Demo
+// Harbour Extended GT Features Demo
 // Pritpal Bedi <pritpal@vouchcac.com>
 
 #include "hbgtinfo.ch"
@@ -6,7 +6,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#define RGB( r, g, b ) ( r + ( g * 256 ) + ( b * 256 * 256 ) )
+#define RGB( r, g, b )  ( r + ( g * 256 ) + ( b * 256 * 256 ) )
 
 //
 
@@ -18,10 +18,9 @@ STATIC s_nColorIndex := 1
 
 PROCEDURE Main()
 
-   LOCAL nKey, lMark, lResize, lClose, aKeys[ 50 ], nI, lAltEnter
+   LOCAL nKey, lMark, lResize, lClose, aKeys[ 50 ], nI
    LOCAL nHeight := 20
    LOCAL nWidth  := Int( nHeight / 2 )
-   LOCAL cFontName
    LOCAL GetList := {}
    LOCAL nModeCols, nModeRows, nWndHeight, nWndWidth, nMaxWHeight, nMaxWWidth, aWndSize := { 0, 0 }
 
@@ -100,10 +99,10 @@ PROCEDURE Main()
             IF LastKey() == K_ESC
                EXIT
             ENDIF
-            IF ! SetMode( nModeRows, nModeCols )
-               Alert( "SetMode() Failed!" )
-            ELSE
+            IF SetMode( nModeRows, nModeCols )
                EXIT
+            ELSE
+               Alert( "SetMode() Failed!" )
             ENDIF
          ENDDO
          DispScreen()
@@ -123,31 +122,31 @@ PROCEDURE Main()
          ENDIF
          DispScreen()
 
-      CASE nKey == hb_keyCode( "2" )  // get/set Window-WIDTH
-         nWndWIDTH := hb_gtInfo( HB_GTI_SCREENWIDTH )
-         nMaxWWIDTH := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
+      CASE nKey == hb_keyCode( "2" )  // get/set window width
+         nWndWidth := hb_gtInfo( HB_GTI_SCREENWIDTH )
+         nMaxWWidth := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
          hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
          hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
          hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
-         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window WIDTH: 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + ")" )
-         @ MaxRow() / 2, 24 GET nWndWIDTH PICTURE "9999" RANGE 100, nMaxWWIDTH
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Width: 9999 (Max: " + hb_ntos( nMaxWWidth ) + ")" )
+         @ MaxRow() / 2, 24 GET nWndWidth PICTURE "9999" RANGE 100, nMaxWWidth
          READ
          IF LastKey() != K_ESC
-            hb_gtInfo( HB_GTI_SCREENWIDTH, nWndWIDTH )
+            hb_gtInfo( HB_GTI_SCREENWIDTH, nWndWidth )
          ENDIF
          DispScreen()
 
       CASE nKey == hb_keyCode( "3" ) // get/set Window-Size
          aWndSize := hb_gtInfo( HB_GTI_SCREENSIZE )
-         nMaxWWIDTH := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
+         nMaxWWidth := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
          nMaxWHeight := hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
          hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
          hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
          hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
-         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Size(WxH): 9999 x 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + " x " + hb_ntos( nMaxWHeight ) + ")" )
-         @ MaxRow() / 2, 28 GET aWndSize[ 1 ] PICTURE "9999" RANGE 100, nMaxWWIDTH
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Size(WxH): 9999 x 9999 (Max: " + hb_ntos( nMaxWWidth ) + " x " + hb_ntos( nMaxWHeight ) + ")" )
+         @ MaxRow() / 2, 28 GET aWndSize[ 1 ] PICTURE "9999" RANGE 100, nMaxWWidth
          @ MaxRow() / 2, 35 GET aWndSize[ 2 ] PICTURE "9999" RANGE 100, nMaxWHeight
          READ
          IF LastKey() != K_ESC
@@ -233,18 +232,16 @@ PROCEDURE Main()
          ENDIF
 
       CASE nKey == K_F11
-         lAltEnter := hb_gtInfo( HB_GTI_ALTENTER )
-         hb_gtInfo( HB_GTI_ALTENTER, ! lAltEnter )
+         hb_gtInfo( HB_GTI_ALTENTER, ! hb_gtInfo( HB_GTI_ALTENTER ) )
          DispScreen()
 
       CASE nKey == K_F12
-         cFontName := hb_gtInfo( HB_GTI_FONTNAME )
-         DO CASE
-         CASE cFontName == "Lucida Console" ; hb_gtInfo( HB_GTI_FONTNAME, "Courier New" )
-         CASE cFontName == "Courier New"    ; hb_gtInfo( HB_GTI_FONTNAME, "Terminal" )
-         CASE cFontName == "Terminal"       ; hb_gtInfo( HB_GTI_FONTNAME, "DejaVu Sans Mono" )
-         OTHERWISE                          ; hb_gtInfo( HB_GTI_FONTNAME, "Lucida Console" )
-         ENDCASE
+         SWITCH hb_gtInfo( HB_GTI_FONTNAME )
+         CASE "Lucida Console" ; hb_gtInfo( HB_GTI_FONTNAME, "Courier New" ) ; EXIT
+         CASE "Courier New"    ; hb_gtInfo( HB_GTI_FONTNAME, "Terminal" ) ; EXIT
+         CASE "Terminal"       ; hb_gtInfo( HB_GTI_FONTNAME, "DejaVu Sans Mono" ) ; EXIT
+         OTHERWISE             ; hb_gtInfo( HB_GTI_FONTNAME, "Lucida Console" ) ; EXIT
+         ENDSWITCH
          IF hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS
             hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
             SetMode( MaxRow(), MaxCol() )
@@ -383,7 +380,7 @@ STATIC PROCEDURE thFunc()
    STATIC s_nZx := 0
    STATIC s_nZy := 0
 
-   LOCAL cTitle, oBrowse, lEnd, nKey, i
+   LOCAL oBrowse, lEnd, nKey, i
    LOCAL aColor := { "W+/N", "W+/B", "W+/G", "W+/BG", "W+/N*", "W+/RB", "N/W*", "N/GR*" }
 
    s_nBrowser++
@@ -415,11 +412,9 @@ STATIC PROCEDURE thFunc()
 
    SetColor( aColor[ s_nColorIndex ] )
 
-   cTitle := "New Window with " + hb_ntos( MaxRow() ) + ;
-      " Rows and " + hb_ntos( MaxCol() ) + " Columns"
-   hb_DispOutAt( 0, 0, PadC( cTitle, MaxCol() + 1 ), "N/GR*" )
+   hb_DispOutAt( 0, 0, PadC( "New Window with " + hb_ntos( MaxRow() ) + " Rows and " + hb_ntos( MaxCol() ) + " Columns", MaxCol() + 1 ), "N/GR*" )
 
-   hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy ) // this does not work until something is displayed
+   hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy )  // this does not work until something is displayed
 
    USE test.dbf READONLY SHARED NEW
 
@@ -444,23 +439,26 @@ STATIC PROCEDURE thFunc()
       nKey := Inkey( 0, HB_INKEY_ALL )
 
       IF ! BrwHandleKey( oBrowse, nKey, @lEnd )
-         DO CASE
-         CASE nKey == HB_K_GOTFOCUS
+
+         SWITCH nKey
+         CASE HB_K_GOTFOCUS
             ChgPalette( .T. )
+            EXIT
 
-         CASE nKey == HB_K_LOSTFOCUS
+         CASE HB_K_LOSTFOCUS
             ChgPalette( .F. )
+            EXIT
 
-         CASE nKey == HB_K_RESIZE
-            cTitle := "New Window with " + hb_ntos( MaxRow() ) + ;
-               " Rows and " + hb_ntos( MaxCol() ) + " Columns"
-            hb_DispOutAt( 0, 0, PadC( cTitle, MaxCol() + 1 ), "N/GR*" )
+         CASE HB_K_RESIZE
+            hb_DispOutAt( 0, 0, PadC( "New Window with " + hb_ntos( MaxRow() ) + " Rows and " + hb_ntos( MaxCol() ) + " Columns", MaxCol() + 1 ), "N/GR*" )
 
             oBrowse:nBottom := MaxRow()
             oBrowse:nRight := MaxCol()
             oBrowse:Configure()
             oBrowse:RefreshAll()
-         ENDCASE
+            EXIT
+
+         ENDSWITCH
       ENDIF
    ENDDO
 
@@ -474,18 +472,18 @@ STATIC FUNCTION DbSkipBlock( n )
 
    LOCAL nSkipped := 0
 
-   IF n == 0
+   DO CASE
+   CASE n == 0
       dbSkip( 0 )
-
-   ELSEIF n > 0
+   CASE n > 0
       DO WHILE nSkipped != n .AND. TBNext()
          nSkipped++
       ENDDO
-   ELSE
+   OTHERWISE
       DO WHILE nSkipped != n .AND. TBPrev()
          nSkipped--
       ENDDO
-   ENDIF
+   ENDCASE
 
    RETURN nSkipped
 
@@ -494,35 +492,33 @@ STATIC FUNCTION DbSkipBlock( n )
 STATIC FUNCTION TBNext()
 
    LOCAL nSaveRecNum := RecNo()
-   LOCAL lMoved := .T.
 
    IF Eof()
-      lMoved := .F.
+      RETURN .F.
    ELSE
       dbSkip()
       IF Eof()
          dbGoto( nSaveRecNum )
-         lMoved := .F.
+         RETURN .F.
       ENDIF
    ENDIF
 
-   RETURN lMoved
+   RETURN .T.
 
 //
 
 STATIC FUNCTION TBPrev()
 
    LOCAL nSaveRecNum := RecNo()
-   LOCAL lMoved := .T.
 
    dbSkip( -1 )
 
    IF Bof()
       dbGoto( nSaveRecNum )
-      lMoved := .F.
+      RETURN .F.
    ENDIF
 
-   RETURN lMoved
+   RETURN .T.
 
 //
 

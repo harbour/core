@@ -7,7 +7,7 @@ STATIC uB
 
 PROCEDURE Test()
 
-   ? "INSIDE statics2.prg"
+   ? "INSIDE", __FILE__
    ? "   STATIC uA, uB"
    ?
    ? "   ValType( uA ), ValType( uB ) =>", ValType( uA ), ",", ValType( uB )

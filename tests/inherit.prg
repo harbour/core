@@ -6,9 +6,7 @@
 #include "fileio.ch"
 #include "hbclass.ch"
 
-//
 // Test of inheritance
-//
 PROCEDURE Main()
 
    LOCAL oFrom := TOnTop():New( __FILE__, "R" )
@@ -48,9 +46,7 @@ PROCEDURE Main()
 
    RETURN
 
-//
 // Generic Empty Class
-//
 CREATE CLASS TEmpty STATIC /* must be a public function */
 
    METHOD New()         INLINE Self
@@ -64,18 +60,14 @@ CREATE CLASS TEmpty STATIC /* must be a public function */
 
 END CLASS
 
-//
 // Let's add another one on top
-//
 CREATE CLASS TOnTop STATIC INHERIT TTextFile
 
    METHOD Say( cArg ) INLINE QOut( __objSendMsg( self, cArg ) )
 
 END CLASS
 
-//
 // Generic Text file handler
-//
 CREATE CLASS TTextFile STATIC INHERIT TEmpty
 
    VAR cFileName               // Filename spec. by user
@@ -97,8 +89,7 @@ CREATE CLASS TTextFile STATIC INHERIT TEmpty
 
 END CLASS
 
-//
-// Method TextFile:New -> Create a new text file
+// Create a new text file
 //
 // <cFile>      file name. No wild characters
 // <cMode>      mode for opening. Default "R"
@@ -143,9 +134,7 @@ METHOD RUN( xTxt, lCRLF ) CLASS TTextFile
 
    RETURN xRet
 
-//
-// Dispose -> Close the file handle
-//
+// Close the file handle
 METHOD Dispose() CLASS TTextFile
 
    ::cBlock := NIL
@@ -156,9 +145,7 @@ METHOD Dispose() CLASS TTextFile
 
    RETURN self
 
-//
 // Read a single line
-//
 METHOD Read() CLASS TTextFile
 
    LOCAL cRet := ""
@@ -172,7 +159,7 @@ METHOD Read() CLASS TTextFile
       ? "File", ::cFileName, "not open for reading"
    ELSEIF ! ::lEoF
 
-      IF Len( ::cBlock ) == 0                     // Read new block
+      IF Len( ::cBlock ) == 0                   // Read new block
          IF Len( cBlock := hb_FReadLen( ::hFile, ::nBlockSize ) ) == 0
             ::nError := FError()                // Error or EOF
             ::lEoF   := .T.
@@ -198,18 +185,17 @@ METHOD Read() CLASS TTextFile
             cRet   := hb_BLeft( cRet, nEoFPos - 1 )
             ::lEoF := .T.
          ENDIF
-         cRet := StrTran( cRet, Chr( 13 ) )   // Remove CR
+         cRet := StrTran( cRet, Chr( 13 ) )     // Remove CR
       ENDIF
    ENDIF
 
    RETURN cRet
 
-//
-// WriteLn -> Write a line to a file
+// Write a line to a file
 //
 // <xTxt>  Text to write. May be any type. May also be an array containing
 //         one or more strings
-// <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
+// <lCRLF> End with Carriage Return/Line Feed (Default == .T.)
 //
 METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 
@@ -220,7 +206,7 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
    ELSEIF !( ::cMode == "W" )
       ? "File", ::cFileName, "not opened for writing"
    ELSE
-      cBlock := hb_ValToExp( xTxt )              // Convert to string
+      cBlock := hb_ValToExp( xTxt )             // Convert to string
       IF hb_defaultValue( lCRLF, .T. )
          cBlock += hb_eol()
       ENDIF
@@ -235,9 +221,7 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 METHOD Write( xTxt ) CLASS TTextFile
    RETURN ::WriteLn( xTxt, .F. )
 
-//
 // Go to a specified line number
-//
 METHOD Goto( nLine ) CLASS TTextFile
 
    LOCAL nWhere := 1

@@ -269,7 +269,6 @@ METHOD ReadSection( cSection ) CLASS TIniFile
             AAdd( aSection, i[ 1 ] )
          ENDIF
       NEXT
-
    ELSE
       cSection := Lower( cSection )
       IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. x[ 1 ] == cSection .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
@@ -308,6 +307,7 @@ METHOD PROCEDURE UpdateFile() CLASS TIniFile
 
       ELSEIF HB_ISARRAY( i[ 2 ] )
          FWrite( hFile, "[" + i[ 1 ] + "]" + hb_eol() )
+
          FOR EACH j IN i[ 2 ]
             IF j[ 1 ] == NIL
                FWrite( hFile, j[ 2 ] + hb_eol() )
