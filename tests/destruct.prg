@@ -46,7 +46,7 @@ STATIC PROCEDURE SIMPLETEST( type )
    LOCAL o
 
    ?
-   ? "=> o := myClass():new( " + hb_ntos( type ) + " )"
+   ? "=> o := myClass():new(", hb_ntos( type ), ")"
    o := myClass():new( type )
    ? "=> o:className() ->", o:className()
    ? "=> o := NIL"
@@ -61,7 +61,7 @@ STATIC PROCEDURE GCFREETEST( type )
    LOCAL o, a
 
    ?
-   ? "=> o := myClass():new( " + hb_ntos( type ) + " )"
+   ? "=> o := myClass():new(", hb_ntos( type ), ")"
    o := myClass():new( type )
    ? "=> o:className() ->", o:className()
    ? "=> create corss reference: a := { o, NIL }; a[ 2 ] := a; a := NIL"

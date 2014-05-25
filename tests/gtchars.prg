@@ -10,8 +10,8 @@
 
 #include "hbgtinfo.ch"
 
-#define NAT_STR   "ĄĆĘŁŃÓŚŹŻąćęłńóśźż"
-#define NAT_CP    { "PLISO", "PLMAZ", "PLWIN", "PL852" }
+#define NAT_STR  "ĄĆĘŁŃÓŚŹŻąćęłńóśźż"
+#define NAT_CP   { "PLISO", "PLMAZ", "PLWIN", "PL852" }
 
 REQUEST HB_CODEPAGE_PLMAZ
 REQUEST HB_CODEPAGE_PLISO
@@ -81,7 +81,8 @@ STATIC PROCEDURE dspboxch( cStr )
    LOCAL i, r, c
 
    FOR i := 1 TO Len( cStr )
-      r := Row(); c := Col()
+      r := Row()
+      c := Col()
       DispBox( r, c, r, c, SubStr( cStr, i, 1 ) )
       SetPos( r, c + 1 )
    NEXT

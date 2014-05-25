@@ -15,7 +15,9 @@ PROCEDURE Main()
    @ 12, 10 SAY "m_cMacro[ 1 ]          :" GET &m_cMacro[ 1 ]
    @ 14, 10 SAY "m_cMacro.2[ 1 ]        :" GET &m_cMacro.2[ 1 ]
    @ 16, 10 SAY "m_cEarly[ 1 ]          :" GET m_cEarly[ 1 ]
-// @ 14, 10 SAY "m_cMacro               :" GET &( m_cMacro )[ 1 ]
+#ifdef _COMMENT_
+   @ 14, 10 SAY "m_cMacro               :" GET &( m_cMacro )[ 1 ]
+#endif
    m_nIndex := 2
    @ 18, 10 SAY "m_aVar                 :" GET m_aVar[ m_nIndex ]
    @ 20, 10 SAY "PICTURE of GetList[ 1 ]:" GET GetList[ 1 ]:Picture
@@ -25,7 +27,7 @@ PROCEDURE Main()
 
    CLS
 
-#ifdef COMMENT
+#ifdef _COMMENT_
    /* RTE: "GET contains complex macro" */
    ? "This GET should say 'Late!'."
    m_cMacro := "m_cEarly"

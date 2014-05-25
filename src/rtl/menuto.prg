@@ -125,9 +125,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
                DispOutAt( nMsgRow, nMsgCol, Space( Len( xMsg ) ) )
             ENDIF
 
-            xMsg := t_aLevel[ nPointer - 1, n, 4 ]
+            xMsg := t_aLevel[ nPointer - 1 ][ n ][ 4 ]
 
-            // Code Block messages ( yes, they are documented! )
+            // Codeblock messages (yes, they are documented!)
             IF HB_ISEVALITEM( xMsg )
                xMsg := Eval( xMsg )
             ENDIF
@@ -145,7 +145,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
          // save the current row
          q := n
 
-         cColor := t_aLevel[ t_nPointer - 1, n, 5 ]
+         cColor := t_aLevel[ t_nPointer - 1 ][ n ][ 5 ]
          cColorNormal := hb_ColorIndex( iif( Empty( hb_ColorIndex( cColor, CLR_STANDARD ) ), SetColor(), cColor ), CLR_STANDARD )
          IF Set( _SET_INTENSITY )
             cColorSelect := hb_ColorIndex( iif( Empty( hb_ColorIndex( cColor, CLR_ENHANCED ) ), SetColor(), cColor ), CLR_ENHANCED )
@@ -160,9 +160,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
 #endif
             // highlight the prompt
             DispOutAt( ;
-               t_aLevel[ nPointer - 1, n, 1 ], ;
-               t_aLevel[ nPointer - 1, n, 2 ], ;
-               t_aLevel[ nPointer - 1, n, 3 ], ;
+               t_aLevel[ nPointer - 1 ][ n ][ 1 ], ;
+               t_aLevel[ nPointer - 1 ][ n ][ 2 ], ;
+               t_aLevel[ nPointer - 1 ][ n ][ 3 ], ;
                cColorSelect )
 #ifndef HB_CLP_STRICT
          ENDIF
@@ -243,7 +243,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             // did user hit a hot key?
             IF Len( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
                FOR y := 1 TO nArrLen
-                  IF hb_LeftEqI( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), cKey )
+                  IF hb_LeftEqI( LTrim( t_aLevel[ nPointer - 1 ][ y ][ 3 ] ), cKey )
                      n := y
                      lExit := .T.
                      EXIT
@@ -259,9 +259,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
                nHiLited := 0
 #endif
                DispOutAt( ;
-                  t_aLevel[ nPointer - 1, q, 1 ], ;
-                  t_aLevel[ nPointer - 1, q, 2 ], ;
-                  t_aLevel[ nPointer - 1, q, 3 ], ;
+                  t_aLevel[ nPointer - 1 ][ q ][ 1 ], ;
+                  t_aLevel[ nPointer - 1 ][ q ][ 2 ], ;
+                  t_aLevel[ nPointer - 1 ][ q ][ 3 ], ;
                   cColorNormal )
 #ifndef HB_CLP_STRICT
             ENDIF

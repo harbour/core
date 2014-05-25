@@ -9,7 +9,7 @@ PROCEDURE Main( cLng )
 
    LOCAL i, a, aDay, aMnt, aErr, aInt, cDtFrm, cTrue, cFalse
 
-   hb_langSelect( "EN" )
+   hb_langSelect( "en" )
    aDay := GET_DAYS()
    aMnt := GET_MONTHS()
    aErr := GET_ERR()
@@ -42,7 +42,7 @@ PROCEDURE Main( cLng )
    ? "-------"
    a := GET_ERR()
    FOR i := 1 TO Len( a )
-      ? PadR( a[ i, 1 ], 15 ) + "|" + PadR( aErr[ i, 2 ], 30 ) + "|" + PadR( a[ i, 2 ], 32 )
+      ? PadR( a[ i ][ 1 ], 15 ) + "|" + PadR( aErr[ i ][ 2 ], 30 ) + "|" + PadR( a[ i ][ 2 ], 32 )
    NEXT
    ?
    Inkey( 0 )
@@ -51,7 +51,7 @@ PROCEDURE Main( cLng )
    ? "----------------"
    a := GET_IERR()
    FOR i := 1 TO Len( a )
-      ? PadR( a[ i, 1 ], 15 ) + "|" + PadR( aInt[ i, 2 ], 30 ) + "|" + PadR( a[ i, 2 ], 32 )
+      ? PadR( a[ i ][ 1 ], 15 ) + "|" + PadR( aInt[ i ][ 2 ], 30 ) + "|" + PadR( a[ i ][ 2 ], 32 )
    NEXT
    ?
    Inkey( 0 )

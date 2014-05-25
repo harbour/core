@@ -116,6 +116,7 @@
 #xtranslate hb_NToColor( <n> )             => LTrim( Str( Int( <n> % 16 ), 2 ) ) + "/" + LTrim( Str( Int( <n> / 16 ), 2 ) )
 #xtranslate __mvScope()                    => -1
 #xtranslate HB_SYMBOL_UNUSED( <v> )        =>
+#xtranslate hb_langSelect( [<x>] )         =>
 
 #ifdef __CLIP__
    #xtranslate hb_SecondsCPU( [<x>] )      => SecondsCPU( [<x>] )

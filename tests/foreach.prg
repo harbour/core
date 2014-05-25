@@ -147,7 +147,8 @@ PROCEDURE Main()
 
 STATIC PROCEDURE TESTbreak( v )
 
-   IF hb_LeftEq( v, "2" ) .OR. hb_LeftEq( v, "d" )
+   IF hb_LeftEq( v, "2" ) .OR. ;
+      hb_LeftEq( v, "d" )
       ? "issuing break"
       Break( v )
    ENDIF

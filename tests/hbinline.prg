@@ -9,14 +9,14 @@
 
 PROCEDURE Main()
 
-   LOCAL hb_inline := " (var) "
+   LOCAL hb_inline := "(var)"
 
-   ? hb_inline { hb_retc("inLine"); } + hb_inline( " parameter " ) {
+   ? hb_inline { hb_retc("inline"); }, hb_inline( "parameter" ) {
         hb_retc( hb_parc( 1 ) );
-        } + "!" + hb_inline + hb_inline() { hb_retc( ":-)" ); } + ;
-   hb_inline() + "{}"
+        } + "!", hb_inline, hb_inline() { hb_retc( ":-)" ); }, ;
+        hb_inline(), "{}"
 
    RETURN
 
 STATIC FUNCTION hb_inline()
-   RETURN " func() "
+   RETURN "func()"

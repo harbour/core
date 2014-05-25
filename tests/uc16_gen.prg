@@ -459,7 +459,9 @@ static procedure check_conv16( aConv, aInd, aVal, nMin, nMax, nBit )
       if aConv[ n ] != nVal
          ? "Wrong decoding:", n, aConv[ n ], nVal, Len( aConv ), nMax //, hb_eol()
          break
-//       exit
+#if 0
+         exit
+#endif
       endif
    next
 
@@ -498,8 +500,10 @@ static procedure check_conv04( aConv, aInd, aVal, nMin, nMax, nBit )
       nVal := conv_get04( n, aInd, aVal, nMin, nMax, nBit )
       if aConv[ n ] != nVal
          ? "Wrong decoding:", n, aConv[ n ], nVal, Len( aConv ), nMax //, hb_eol()
-//       break
-//       exit
+#if 0
+         break
+         exit
+#endif
       endif
    next
 

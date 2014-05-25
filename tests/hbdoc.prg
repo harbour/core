@@ -23,7 +23,9 @@ PROCEDURE Main( cRoot )
    LOCAL aErrMsg
    LOCAL tmp
 
-   IF ! HB_ISSTRING( cRoot )
+   IF HB_ISSTRING( cRoot )
+      cDir := hb_DirSepAdd( cDir )
+   ELSE
       /* Detect Harbour root */
       cRoot := "." + hb_ps()
       DO WHILE hb_DirExists( cRoot + ".." )
@@ -34,8 +36,6 @@ PROCEDURE Main( cRoot )
          ENDIF
          cRoot += ".." + hb_ps()
       ENDDO
-   ELSE
-      cDir := hb_DirSepAdd( cDir )
    ENDIF
 
    ? "Root:", cRoot

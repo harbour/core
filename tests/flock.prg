@@ -45,15 +45,15 @@ PROCEDURE Main()
          ENDIF
          EXIT
       CASE hb_keyCode( "-" )
-         IF ! s_lLocked
-            ? "Lock not currently held"
-         ELSE
+         IF s_lLocked
             IF hb_FUnlock( hLockFile, 0, 1 )
                ? "Lock has been released"
                s_lLocked := .F.
             ELSE
                ? "Unlock Request Failed - Error Code:", FError()
             ENDIF
+         ELSE
+            ? "Lock not currently held"
          ENDIF
          EXIT
       CASE hb_keyCode( "E" )

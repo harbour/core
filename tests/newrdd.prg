@@ -240,9 +240,10 @@ PROCEDURE Main()
    ? "   NEWRDD->AGE := TESTDBF->AGE"
    ? "   NEWRDD->DATE := TESTDBF->HIREDATE"
    ? "   NEWRDD->RATE := Val( Right( hb_ntos( Seconds() ), 5 ) )"
-   ? "   NEWRDD->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;"
-   ? "                   TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;"
-   ? "                   TESTDBF->STREET"
+   ? "   NEWRDD->MEMO := ;"
+   ? "      TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;"
+   ? "      TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;"
+   ? "      TESTDBF->STREET"
    ? "   NEWRDD->STUDENT := TESTDBF->MARRIED"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
@@ -266,7 +267,8 @@ PROCEDURE Main()
       NEWRDD->AGE := TESTDBF->AGE
       NEWRDD->DATE := TESTDBF->HIREDATE
       NEWRDD->RATE := Val( Right( hb_ntos( Seconds() ), 5 ) )
-      NEWRDD->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
+      NEWRDD->MEMO := ;
+         TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
          TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
          TESTDBF->STREET
       NEWRDD->STUDENT := TESTDBF->MARRIED

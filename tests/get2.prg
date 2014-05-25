@@ -5,7 +5,7 @@ PROCEDURE Main()
 
    CLS
 
-   COPY FILE ( "test.dbf" ) TO ( "test1.dbf" )
+   COPY FILE test.dbf TO test1.dbf
 
    USE test1.dbf ALIAS w_TEST
 

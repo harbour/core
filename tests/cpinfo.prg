@@ -56,13 +56,13 @@ procedure main( cdp, info, unicode )
    lBin := lWarn := lMixed := .f.
    cUp := cLo := cOrd := ""
    for i := 1 to Len( a )
-      if i < Len(a) .and. a[i] > a[ i + 1 ] .and. ! IsAlpha( Chr( a[ i ] ) )
+      if i < Len( a ) .and. a[ i ] > a[ i + 1 ] .and. ! IsAlpha( Chr( a[ i ] ) )
          ? "non alpha character", charval( Chr( a[ i ] ) ), ;
            "sorted in non ASCII order !!!"
          lBin := lWarn := .t.
       endif
       c := Chr( a[ i ] )
-      if i < Len(a)
+      if i < Len( a )
          if c + Chr( 0 ) > Chr( a[ i + 1 ] ) + Chr( 0 )
             ? "character", charis( c ), "is wrongly sorted"
             lBin := lWarn := .t.
@@ -330,10 +330,10 @@ static function charinfo( c )
 
 #ifdef __HARBOUR__
    #include "hbextcdp.ch"
-   #define EOL          hb_eol()
+   #define EOL           hb_eol()
 #else
-   #define EOL          Chr( 13 ) + Chr( 10 )
-   #define hb_BLen( s ) Len( s )
+   #define EOL           Chr( 13 ) + Chr( 10 )
+   #define hb_BLen( s )  Len( s )
 #endif
 
 #define HB_CDP_DIGIT    1

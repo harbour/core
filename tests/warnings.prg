@@ -159,7 +159,7 @@ FUNCTION Test3()  /* must be a public function */
 
    LOCAL n AS NUMERIC, cVar AS STRING, a[ 5, 5, 5 ] AS ARRAY OF STRING
 
-   cVar := a[1]
+   cVar := a[ 1 ]
 
    n := &SomeFun( 2, 3 )
    n := ExtFun()

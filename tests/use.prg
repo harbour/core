@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   hb_langSelect( "EN" )
+   hb_langSelect( "en" )
 
    ? OS(), Version()
    IF ! hb_dbExists( "_tst.dbf" )

@@ -2,7 +2,7 @@
 
 PROCEDURE Main()
 
-   hb_langSelect( "EN" )
+   hb_langSelect( "en" )
 
    ? "Testing logical shortcuts"
 

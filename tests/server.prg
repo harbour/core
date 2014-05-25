@@ -56,7 +56,7 @@ PROCEDURE Main( cPort )
       hb_inetTimeout( s, 500 )
 
       @ 6, 5 SAY "Connection from: " + hb_inetAddress( s ) + ":" + hb_ntos( hb_inetPort( s ) )
-      @ 7, 5 SAY "Receiving: "
+      @ 7, 5 SAY "Receiving:"
       @ 8, 5
 
       nResponse := hb_inetSend( s, "Welcome to my server!" + hb_eol() )

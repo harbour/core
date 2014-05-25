@@ -221,20 +221,20 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
 METHOD ExecuteLabel() CLASS HBLabelForm
 
-   LOCAL nField, nMoreLines, aBuffer := {}, cBuffer
+   LOCAL nField, aField, nMoreLines, aBuffer := {}, cBuffer
    LOCAL item
 
    // Load the current record into aBuffer
 
-   FOR nField := 1 TO Len( ::aLabelData[ LBL_FIELDS ] )
+   FOR EACH aField IN ::aLabelData[ LBL_FIELDS ]
 
-      IF ::aLabelData[ LBL_FIELDS, nField ] != NIL
+      IF aField != NIL
 
          cBuffer := ;
-            PadR( Eval( ::aLabelData[ LBL_FIELDS, nField, LF_EXP ] ), ::aLabelData[ LBL_WIDTH ] ) + ;
+            PadR( Eval( aField[ LF_EXP ] ), ::aLabelData[ LBL_WIDTH ] ) + ;
             Space( ::aLabelData[ LBL_SPACES ] )
 
-         IF ::aLabelData[ LBL_FIELDS, nField, LF_BLANK ]
+         IF aField[ LF_BLANK ]
             IF ! Empty( cBuffer )
                AAdd( aBuffer, cBuffer )
             ENDIF
@@ -405,23 +405,15 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
          cFieldText := RTrim( hb_BSubStr( cBuff, nOffset, FIELDSIZE ) )
          nOffset += 60
 
-         IF ! Empty( cFieldText )
-
-            AAdd( aLabel[ LBL_FIELDS ], {} )
-
-            // Field expression
-            AAdd( aLabel[ LBL_FIELDS, i ], hb_macroBlock( cFieldText ) )
-
-            // Text of field
-            AAdd( aLabel[ LBL_FIELDS, i ], cFieldText )
-
-            // Compression option
-            AAdd( aLabel[ LBL_FIELDS, i ], .T. )
-         ELSE
+         IF Empty( cFieldText )
             AAdd( aLabel[ LBL_FIELDS ], NIL )
+         ELSE
+            AAdd( aLabel[ LBL_FIELDS ], { ;
+               /* LF_EXP */ hb_macroBlock( cFieldText ), ;
+               /* LF_TEXT */ cFieldText, ;
+               /* LF_BLANK */ .T. } )
          ENDIF
       NEXT
-
    ENDIF
 
    // Close file
@@ -431,7 +423,6 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
 FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample )
-
    RETURN HBLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample )
 
@@ -458,10 +449,10 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
       IF SubStr( cList, nPos, 1 ) == cDelimiter
          lDelimLast := .T.
-         AAdd( aList, Left( cList, nPos - 1 ) ) // Add a new element
+         AAdd( aList, Left( cList, nPos - 1 ) )  // Add a new element
       ELSE
          lDelimLast := .F.
-         AAdd( aList, Left( cList, nPos ) ) // Add a new element
+         AAdd( aList, Left( cList, nPos ) )  // Add a new element
       ENDIF
 
       cList := SubStr( cList, nPos + 1 )

@@ -13,11 +13,11 @@ PROCEDURE Main( filespec, attribs )
 
    FOR x := 1 TO Len( aDir )
       ? ;
-         PadR( aDir[ x, F_NAME ], 20 ), "|", ;
-         Transform( aDir[ x, F_SIZE ], "9,999,999,999" ), "|", ;
-         aDir[ x, F_DATE ], "|", ;
-         aDir[ x, F_TIME ], "|", ;
-         aDir[ x, F_ATTR ]
+         PadR( aDir[ x ][ F_NAME ], 20 ), "|", ;
+         Transform( aDir[ x ][ F_SIZE ], "9,999,999,999" ), "|", ;
+         aDir[ x ][ F_DATE ], "|", ;
+         aDir[ x ][ F_TIME ], "|", ;
+         aDir[ x ][ F_ATTR ]
    NEXT
 
 #ifdef __HARBOUR__

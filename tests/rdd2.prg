@@ -362,7 +362,7 @@ STATIC FUNCTION CompareArray( a1, a2 )
 
    FOR i := 1 TO Len( a1 )
       FOR j := 1 TO Len( a1[ i ] )
-         IF ! a1[ i, j ] == a2[ i, j ]
+         IF ! a1[ i ][ j ] == a2[ i ][ j ]
             RETURN .F.
          ENDIF
       NEXT

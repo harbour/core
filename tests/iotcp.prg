@@ -85,13 +85,13 @@ STATIC FUNCTION IOTCP_Open( cFile, cDefExt, nFlags, cPaths, oError )
          WHILE IsDigit( cRest )
             cRest := SubStr( cRest, 2 )
          ENDDO
-         IF cRest = ":"
+         IF hb_LeftEq( cRest, ":" )
             cRest := SubStr( cRest, 2 )
             IF IsDigit( cRest ) .AND. ( nTimeout := Val( cRest ) ) > 0
                WHILE IsDigit( cRest )
                   cRest := SubStr( cRest, 2 )
                ENDDO
-               IF cRest = ":"
+               IF hb_LeftEq( cRest, ":" )
                   cRest := ""
                ENDIF
             ENDIF
@@ -141,15 +141,15 @@ STATIC FUNCTION IOTCP_Open( cFile, cDefExt, nFlags, cPaths, oError )
       ENDIF
    ENDIF
 
-   RETURN aFile /* if aFile == NIL indicates error */
+   RETURN aFile  /* if aFile == NIL indicates error */
 
 
-STATIC FUNCTION IOTCP_Close( aFile )
+STATIC PROCEDURE IOTCP_Close( aFile )
 
    hb_socketClose( aFile[ IOTCP_SOCKET ] )
    IOUSR_SetError( hb_socketGetError(), IOTCP_ERRORBASE )
 
-   RETURN NIL
+   RETURN
 
 
 STATIC FUNCTION IOTCP_Read( aFile, /*@*/ cData, nLen, nTimeout )
