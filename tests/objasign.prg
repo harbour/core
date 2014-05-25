@@ -1,11 +1,9 @@
-//
 // Object Array syntax test
 //
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org
 //
 // Placed in the public domain
-//
 
 #include "hbclass.ch"
 

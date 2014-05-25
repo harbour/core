@@ -19,6 +19,7 @@
 #require "gtwvg"
 
 #include "inkey.ch"
+#include "setcurs.ch"
 #include "hbgtinfo.ch"
 #include "wvgparts.ch"
 
@@ -496,7 +497,7 @@ STATIC FUNCTION BuildMainMenu()
 STATIC PROCEDURE GoogleMap()
 
    LOCAL mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
-   LOCAL nCursor := SetCursor()
+   LOCAL nCursor
    LOCAL getlist := {}
 
    SetMode( 22, 65 )
@@ -518,7 +519,9 @@ STATIC PROCEDURE GoogleMap()
       @ 14, 01 SAY "City ....:" GET mto2    PICTURE "@!"
       @ 15, 01 SAY "Street ..:" GET mto3    PICTURE "@!"
 
-      SetCursor( 1 ); read; SetCursor( nCursor )
+      nCursor := SetCursor( SC_NORMAL )
+      READ
+      SetCursor( nCursor )
 
       IF LastKey() == K_ESC
          EXIT
@@ -615,14 +618,14 @@ STATIC PROCEDURE ExecGCUI()
 
 STATIC PROCEDURE GCUIConsole( oCrt )
 
-   LOCAL dDate      := Date()
-   LOCAL cName      := PadR( "Some Usefule Name", 35 )
-   LOCAL cAdd1      := PadR( "Linda Goldman Avenue", 35 )
-   LOCAL cAdd2      := PadR( "Excellent Street", 35 )
-   LOCAL cAdd3      := PadR( "Suit #415", 35 )
-   LOCAL nSlry      := 9000
-   LOCAL nColGet    := 8
-   LOCAL GetList    := {}
+   LOCAL dDate   := Date()
+   LOCAL cName   := PadR( "Some Usefule Name", 35 )
+   LOCAL cAdd1   := PadR( "Linda Goldman Avenue", 35 )
+   LOCAL cAdd2   := PadR( "Excellent Street", 35 )
+   LOCAL cAdd3   := PadR( "Suit #415", 35 )
+   LOCAL nSlry   := 9000
+   LOCAL nColGet := 8
+   LOCAL GetList := {}
    LOCAL hBoxR, hTxt
 
    SET SCOREBOARD OFF

@@ -3,6 +3,7 @@
  */
 
 #include "inkey.ch"
+#include "setcurs.ch"
 #include "hbgtinfo.ch"
 
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
@@ -31,7 +32,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS
    oCrt:closable := .T.
    oCrt:create()
-   SetCursor( .F. )
+   SetCursor( SC_NONE )
 #endif
 
    oDA := oCrt:drawingArea

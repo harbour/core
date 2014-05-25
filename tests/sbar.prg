@@ -1,9 +1,6 @@
 /*
  * ScrollBar class test
  *
- * Harbour Project source code
- * http://harbour-project.org/
- *
  * Example donated by Diego Pego, modified by Alejandro de Garate
  */
 

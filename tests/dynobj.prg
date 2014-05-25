@@ -1,4 +1,3 @@
-//
 // DynObj
 //
 // Implementation of dynamic objects in Harbour
@@ -7,7 +6,6 @@
 // www - http://harbour-project.org
 //
 // Placed in the public domain
-//
 
 #include "hbclass.ch"
 

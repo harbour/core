@@ -2351,18 +2351,20 @@ METHOD wvtScrollbar:ThumbPos()
       nRecPerUnit := ::nTotal / ::nScrollUnits
       nCurUnit    := Int( ::nCurrent / nRecPerUnit )
 
-      IF ::nCurrent == 1
+      DO CASE
+      CASE ::nCurrent == 1
          nCurUnit := 0
-      ELSEIF ::nCurrent == ::nTotal
+      CASE ::nCurrent == ::nTotal
          nCurUnit := ::nScrollUnits
-      ENDIF
+      ENDCASE
       nNewPos     := ::nSTop + nCurUnit
 
-      IF nNewPos < ::nSTop
+      DO CASE
+      CASE nNewPos < ::nSTop
          nNewPos  := ::nSTop
-      ELSEIF nNewPos > ::nSBottom
+      CASE nNewPos > ::nSBottom
          nNewPos  := ::nSBottom
-      ENDIF
+      ENDCASE
 
    ELSE
       IF ::nTotal < ::nScrollUnits
@@ -2372,19 +2374,21 @@ METHOD wvtScrollbar:ThumbPos()
          nCurUnit    := Int( ::nCurrent / nRecPerUnit )
       ENDIF
 
-      IF ::nCurrent == 1
+      DO CASE
+      CASE ::nCurrent == 1
          nCurUnit := 0
-      ELSEIF ::nCurrent == ::nTotal
+      CASE ::nCurrent == ::nTotal
          nCurUnit := ::nScrollUnits
-      ENDIF
+      ENDCASE
 
       nNewPos := ::nSLeft + nCurUnit
 
-      IF nNewPos < ::nSLeft
+      DO CASE
+      CASE nNewPos < ::nSLeft
          nNewPos := ::nSLeft
-      ELSEIF nNewPos > ::nSRight - 1
+      CASE nNewPos > ::nSRight - 1
          nNewPos := ::nSRight - 1
-      ENDIF
+      ENDCASE
 
    ENDIF
 

@@ -1,7 +1,8 @@
-// Testing Harbour For Next loops for Clipper compatibility
-// Donated to the public domain by Viktor Szakats (vszakats.net/harbour)
+/* Donated to the public domain by Viktor Szakats (vszakats.net/harbour) */
 
-// TODO: add test for "step 0"
+/* Testing Harbour For Next loops for Clipper compatibility */
+
+/* TODO: add test for "step 0" */
 
 STATIC s_nFrom
 STATIC s_nTo

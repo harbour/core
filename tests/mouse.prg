@@ -1,8 +1,6 @@
-/*
- * Copyright 2000 Alejandro de Garate <alex_degarate hotmail com>
- *
- * Test mouse for Harbour
- */
+/* Copyright 2000 Alejandro de Garate <alex_degarate hotmail com> */
+
+/* Test mouse for Harbour */
 
 #include "inkey.ch"
 #include "setcurs.ch"

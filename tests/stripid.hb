@@ -1,10 +1,6 @@
-/*
- * Strips VCS id headers from source files
- *
- * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- */
+/* Copyright 2013 Viktor Szakats (vszakats.net/harbour) */
+
+/* Strips VCS id headers from source files */
 
 #pragma -w3
 #pragma -km+

@@ -4,7 +4,6 @@
 // www - http://harbour-project.org
 //
 // Placed in the public domain
-//
 
 PROCEDURE Main()
 

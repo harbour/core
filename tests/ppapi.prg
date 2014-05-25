@@ -4,7 +4,7 @@ PROCEDURE Main()
 
    LOCAL j, aScript, cString
 
-   LOCAL l_pp := __pp_Init()
+   LOCAL pPP := __pp_Init()
 
    CLS
 
@@ -13,30 +13,30 @@ PROCEDURE Main()
    ?
 
    ? cString := "@ 10, 10 SAY 'Hello!'"
-   ? __pp_Process( l_pp, cString )
+   ? __pp_Process( pPP, cString )
    ?
 
    ? cString := "? 'Hello mom'"
-   ? __pp_Process( l_pp, cString )
+   ? __pp_Process( pPP, cString )
    ?
 
    ? cString := "SET RELATION TO Something INTO MySelf"
-   ? __pp_Process( l_pp, cString )
+   ? __pp_Process( pPP, cString )
    ?
 
    ? cString := "SET RELATION ADDITIVE TO Something INTO YourSelf"
-   ? __pp_Process( l_pp, cString )
+   ? __pp_Process( pPP, cString )
    ?
 
    ? cString := "#xcommand DEFAULT <v1> := <x1> => IF <v1> == NIL ; <v1> := <x1> ; END"
-   IF __pp_AddRule( l_pp, cString )
+   IF __pp_AddRule( pPP, cString )
       ? "Rule added successfully!"
    ELSE
       ? "Rule addition failed..."
    ENDIF
 
    ? cString := "DEFAULT x := 100"
-   ? __pp_Process( l_pp, cString )
+   ? __pp_Process( pPP, cString )
    ?
 
    WAIT
@@ -58,7 +58,7 @@ PROCEDURE Main()
       ? "==================="
       ?
       FOR EACH cString IN aScript
-         ? iif( j == 1, cString, __pp_Process( l_pp, cString ) )
+         ? iif( j == 1, cString, __pp_Process( pPP, cString ) )
       NEXT
       ?
       WAIT

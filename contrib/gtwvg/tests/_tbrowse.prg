@@ -10,6 +10,7 @@
 
 #include "dbstruct.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 #include "hbgtinfo.ch"
 
 #define K_MOVING                1001
@@ -55,7 +56,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    LOCAL nLeft      :=  3
    LOCAL nBottom    := MaxRow() - 2
    LOCAL nRight     := MaxCol() - 3
-   LOCAL nCursor    := SetCursor( 0 )
+   LOCAL nCursor    := SetCursor( SC_NONE )
    LOCAL nRow       := Row()
    LOCAL nCol       := Col()
    LOCAL cColor     := SetColor( "N/W*,N/GR*,,,N/W*" )

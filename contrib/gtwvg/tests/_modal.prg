@@ -4,12 +4,13 @@
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "setcurs.ch"
 
 FUNCTION Just_Alert( cMsg, aOpt )
    RETURN Alert( cMsg, aOpt )
 
 FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
-   RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , , nTime )
+   RETURN DialogAlert( cCaption, cMessage, aOptions, nInit,, nTime )
 
 FUNCTION MyAlert( cMsg, aOpt )
 
@@ -56,14 +57,13 @@ FUNCTION MyAlert( cMsg, aOpt )
       [ <lHidden:HIDDEN>   ] ;
       [ <lCenter:CENTER>   ] ;
       [ AT <nRow>,<nCol>   ] ;
-      [ <lNoTitleBar:NOTITLEBAR> ] ;
       INTO <oCrt> ;
       => ;
       <oCrt > := CreateOCrt( <nTop>, <nLeft>, <nBottom>, <nRight>, <ttl>, <icon>, ;
       <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
-      <nRow>, <nCol>, <.lNoTitleBar.> )
+      <nRow>, <nCol> )
 
-STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
+STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
 
    LOCAL nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt
    LOCAL nColTxt, nColCap, nColBut, nBtnRow
@@ -74,10 +74,9 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
    LOCAL pal_    := { "w+/n", "w/r", "n/w", "n/bg", "r/bg", "N/W", "n/B", "w+/B" }
    LOCAL aTrg_, x_ := {}
 
-   hb_default( @cCaption  , "Your Attention Please!" )
-   hb_default( @aMessage_ , {} )
-   hb_default( @sel       , 1 )
-   hb_default( @nTime     , 10 )
+   hb_default( @cCaption, "Your Attention Please!" )
+   hb_default( @sel     , 1 )
+   hb_default( @nTime   , 10 )
 
    IF nTime == 0
       nTime := 10000   //  Seconds
@@ -97,7 +96,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
 
    nLinesRqd := Len( aText_ ) + iif( Len( aText_ ) == 0, 4, 5 )
    nTopReq   := Int( ( maxRow - nLinesRqd ) / 2 )
-   nTop      := iif( nTop == NIL, nTopReq, iif( nTop >  nTopReq, nTop, nTopReq ) )
+   nTop      := iif( HB_ISNUMERIC( nTop ), iif( nTop > nTopReq, nTop, nTopReq ), nTopReq )
    nBottom   := nTop + nLinesRqd - 1   // 1 for shadow
 
    // check for columns
@@ -141,7 +140,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
       NEXT
    ENDIF
 
-   SetCursor( 0 )
+   SetCursor( SC_NONE )
    SetColor( "N/W" )
    CLS
 
@@ -152,7 +151,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
 
    SetColor( pal_[ DLG_CLR_TEXT ] )
    IF ! Empty( aText_ )
-      FOR  i := 1 TO Len( aText_ )
+      FOR i := 1 TO Len( aText_ )
          @ nTop + 1 + i, nLeft SAY PadC( aText_[ i ], nRight - nLeft + 1 )
       NEXT
    ENDIF
@@ -254,41 +253,31 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
    RETURN sel
 
 STATIC FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
-      lCenter, nRow, nCol, lNoTitleBar )
+      lCenter, nRow, nCol )
 
    LOCAL oCrt, aPos
 
-   hb_default( @cTitle      , "Info" )
-   hb_default( @xIcon       , "VW_DFT" )
-   hb_default( @lModal      , .T. )
-   hb_default( @lHidden     , .F. )
-   hb_default( @lCenter     , .F. )
-   hb_default( @lNoTitleBar , .F. )
+   aPos := iif( hb_defaultValue( lCenter, .F. ), { -1, -1 }, iif( HB_ISNUMERIC( nRow ), { nRow, nCol }, { nT, nL } ) )
 
-   aPos := iif( lCenter, { -1, -1 }, iif( nRow == NIL, { nT, nL }, { nRow, nCol } ) )
-
-   oCrt := WvgCrt():new( ,, aPos, { nB - nT, nR - nL },, ! lHidden )
-   oCrt:lModal := lModal
+   oCrt := WvgCrt():new( ,, aPos, { nB - nT, nR - nL },, ! hb_defaultValue( lHidden, .F. ) )
+   oCrt:lModal := hb_defaultValue( lModal, .T. )
    IF lRowCols
       oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS
    ENDIF
    oCrt:create()
-   SetCursor( 0 )
+   SetCursor( SC_NONE )
 
    IF HB_ISNUMERIC( xIcon )
       hb_gtInfo( HB_GTI_ICONRES, xIcon )
    ELSE
-      IF ".ico" $ Lower( xIcon )
-         hb_gtInfo( HB_GTI_ICONFILE, xIcon )
-      ELSE
-         IF ".bmp" $ Lower( xIcon )
-            xIcon := "VW_DFT"
-         ENDIF
-         hb_gtInfo( HB_GTI_ICONRES, xIcon )
+      hb_default( @xIcon, "VW_DFT" )
+      IF ".bmp" $ Lower( xIcon )
+         xIcon := "VW_DFT"
       ENDIF
+      hb_gtInfo( HB_GTI_ICONRES, xIcon )
    ENDIF
 
-   hb_gtInfo( HB_GTI_WINTITLE, cTitle )
+   hb_gtInfo( HB_GTI_WINTITLE, hb_defaultValue( cTitle, "Info" ) )
 
    SetColor( "N/W" )
    CLS

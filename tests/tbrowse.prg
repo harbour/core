@@ -1,6 +1,7 @@
 // Harbour Class TBrowse() and TBColumn() sample
 
 #include "inkey.ch"
+#include "setcurs.ch"
 
 PROCEDURE Main()
 
@@ -49,7 +50,7 @@ PROCEDURE Main()
    Alert( oBrowse:GetColumn( 1 ):ClassName() )
 
    oBrowse:Freeze := 1
-   nCursor := SetCursor( 0 )
+   nCursor := SetCursor( SC_NONE )
    cColor := SetColor( "W+/B" )
    nRow := Row()
    nCol := Col()

@@ -1,4 +1,4 @@
-// Donated to the public domain by Viktor Szakats (vszakats.net/harbour)
+/* Donated to the public domain by Viktor Szakats (vszakats.net/harbour) */
 
 #ifndef __HARBOUR__
 #include "clipper.ch"

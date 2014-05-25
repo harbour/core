@@ -1,11 +1,6 @@
-/*
- * Harbour Project source code:
- *    Dynamic library call test.
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
+
+/* Dynamic library call test. */
 
 /* Build with:
       hbmk2 -hbdyn dyn.c -otest_32
