@@ -48,6 +48,10 @@
  *
  */
 
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
+#endif
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -82,6 +86,19 @@
    #define INCL_DOSFILEMGR
    #define INCL_ERRORS
    #include <os2.h>
+#endif
+
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
 #endif
 
 #define _ZIP_FLAG_UNICODE  ( 1 << 11 ) /* Language encoding flag (EFS) */
@@ -818,12 +835,16 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
 #elif defined( HB_OS_UNIX )
    if( hb_fileIsLocalName( szFileName ) )
    {
-      struct stat statbuf;
       struct tm   st;
       time_t      ftime;
       char *      pszFree;
-
+#  if defined( HB_USE_LARGEFILE64 )
+      struct stat64 statbuf;
+      if( stat64( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
+#  else
+      struct stat statbuf;
       if( stat( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
+#  endif
       {
          if( S_ISDIR( statbuf.st_mode ) )
          {

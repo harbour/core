@@ -50,6 +50,10 @@
 /* this has to be declared before hbapifs.h is included */
 #define _HB_FILE_INTERNAL_
 
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
+#endif
+
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
@@ -62,6 +66,18 @@
 #  include <unistd.h>
 #endif
 
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
+#endif
 
 #define HB_FLOCK_RESIZE  16
 
@@ -455,7 +471,11 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 
 #if defined( HB_OS_UNIX )
    HB_BOOL fResult, fSeek = HB_FALSE;
+#  if defined( HB_USE_LARGEFILE64 )
+   struct stat64 statbuf;
+#  else
    struct stat statbuf;
+#  endif
 #endif
    HB_BOOL fShared, fReadonly;
    HB_FHANDLE hFile;
@@ -469,7 +489,11 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 
    hb_vmUnlock();
 #if defined( HB_OS_UNIX )
+#  if defined( HB_USE_LARGEFILE64 )
+   fResult = stat64( ( char * ) pszFile, &statbuf ) == 0;
+#  else
    fResult = stat( ( char * ) pszFile, &statbuf ) == 0;
+#  endif
    hb_fsSetIOError( fResult, 0 );
 
    if( fResult )
@@ -525,7 +549,11 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
       {
          HB_ULONG device = 0, inode = 0;
 #if defined( HB_OS_UNIX )
+#  if defined( HB_USE_LARGEFILE64 )
+         if( fstat64( hFile, &statbuf ) == 0 )
+#  else
          if( fstat( hFile, &statbuf ) == 0 )
+#  endif
          {
             device = ( HB_ULONG ) statbuf.st_dev;
             inode  = ( HB_ULONG ) statbuf.st_ino;

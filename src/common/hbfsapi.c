@@ -46,6 +46,10 @@
  *
  */
 
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
+#endif
+
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hb_io.h"
@@ -71,6 +75,19 @@
 #endif
 #if ! defined( HB_OS_WIN )
    #include <errno.h>
+#endif
+
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
 #endif
 
 /*
@@ -323,8 +340,13 @@ HB_BOOL hb_fsNameExists( const char * pszFileName )
          fExist = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD,
                                     &fs3, sizeof( fs3 ) ) == NO_ERROR;
 #  elif defined( HB_OS_UNIX )
+#     if defined( HB_USE_LARGEFILE64 )
+         struct stat64 statbuf;
+         fExist = stat64( pszFileName, &statbuf ) == 0;
+#     else
          struct stat statbuf;
          fExist = stat( pszFileName, &statbuf ) == 0;
+#     endif
 #  else
          int iTODO; /* To force warning */
 #  endif
@@ -379,10 +401,15 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
                                     &fs3, sizeof( fs3 ) ) == NO_ERROR &&
                   ( fs3.attrFile & FILE_DIRECTORY ) == 0;
 #  elif defined( HB_OS_UNIX )
+#     if defined( HB_USE_LARGEFILE64 )
+         struct stat64 statbuf;
+         fExist = stat64( pszFileName, &statbuf ) == 0 &&
+                  S_ISREG( statbuf.st_mode );
+#     else
          struct stat statbuf;
-
          fExist = stat( pszFileName, &statbuf ) == 0 &&
                   S_ISREG( statbuf.st_mode );
+#     endif
 #  else
          int iTODO; /* To force warning */
 #  endif
@@ -436,9 +463,15 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
                                     &fs3, sizeof( fs3 ) ) == NO_ERROR &&
                   ( fs3.attrFile & FILE_DIRECTORY ) != 0;
 #  elif defined( HB_OS_UNIX )
+#     if defined( HB_USE_LARGEFILE64 )
+         struct stat64 statbuf;
+         fExist = stat64( pszDirName, &statbuf ) == 0 &&
+                  S_ISDIR( statbuf.st_mode );
+#     else
          struct stat statbuf;
          fExist = stat( pszDirName, &statbuf ) == 0 &&
                   S_ISDIR( statbuf.st_mode );
+#     endif
 #  else
          int iTODO; /* To force warning */
 #  endif

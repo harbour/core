@@ -52,6 +52,10 @@
 #include "hbdate.h"
 #include "hbapierr.h"
 
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
+#endif
+
 #if defined( HB_OS_UNIX )
    #include <unistd.h>
    #include <sys/types.h>
@@ -64,6 +68,19 @@
       #define INVALID_FILE_ATTRIBUTES  ( ( DWORD ) ( -1 ) )
    #endif
    #include "hbwinuni.h"
+#endif
+
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
 #endif
 
 HB_FUNC( FILESTATS )
@@ -83,9 +100,13 @@ HB_FUNC( FILESTATS )
 
 #if defined( HB_OS_UNIX )
    {
+#  if defined( HB_USE_LARGEFILE64 )
+      struct stat64 statbuf;
+      if( stat64( hb_parc( 1 ), &statbuf ) == 0 )
+#  else
       struct stat statbuf;
-
       if( stat( hb_parc( 1 ), &statbuf ) == 0 )
+#  endif
       {
          /* determine if we can read/write/execute the file */
          HB_FATTR usAttr, ushbAttr = 0;
