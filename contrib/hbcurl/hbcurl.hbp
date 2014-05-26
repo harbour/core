@@ -4,6 +4,7 @@ hbcurl.hbm
 
 -depimplibs=curl:../libcurl.dll
 -depimplibs=curl:../bin/libcurl.dll
+-depimplibs=curl:../dlls/libcurl.dll
 -depfinish=curl
 
 -iflag={bcc}-a
