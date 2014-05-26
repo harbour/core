@@ -222,7 +222,7 @@ static void * hb_curl_calloc( size_t nelem, size_t elsize )
    size_t size = nelem * elsize;
    void * ptr  = hb_xgrab( size );
 
-   memset( ptr, '\0', size );
+   memset( ptr, 0, size );
 
    return ptr;
 }
@@ -529,6 +529,12 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
    curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, NULL );
 #if LIBCURL_VERSION_NUM >= 0x071400
    curl_easy_setopt( hb_curl->curl, CURLOPT_MAIL_RCPT, NULL );
+#endif
+#if LIBCURL_VERSION_NUM >= 0x071503
+   curl_easy_setopt( hb_curl->curl, CURLOPT_RESOLVE, NULL );
+#endif
+#if LIBCURL_VERSION_NUM >= 0x072500
+   curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYHEADER, NULL );
 #endif
 
    hb_curl_form_free( &hb_curl->pHTTPPOST_First );
