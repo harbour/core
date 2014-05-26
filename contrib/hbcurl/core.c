@@ -101,6 +101,7 @@ typedef struct _HB_CURL
    struct curl_slist *    pTELNETOPTIONS;
    struct curl_slist *    pMAIL_RCPT;
    struct curl_slist *    pRESOLVE;
+   struct curl_slist *    pPROXYHEADER;
 
    char *     ul_name;
    HB_FHANDLE ul_handle;
@@ -540,6 +541,7 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
    hb_curl_slist_free( &hb_curl->pTELNETOPTIONS );
    hb_curl_slist_free( &hb_curl->pMAIL_RCPT );
    hb_curl_slist_free( &hb_curl->pRESOLVE );
+   hb_curl_slist_free( &hb_curl->pPROXYHEADER );
 
    hb_curl_file_ul_free( hb_curl );
    hb_curl_file_dl_free( hb_curl );
