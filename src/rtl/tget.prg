@@ -1627,7 +1627,7 @@ METHOD backSpaceLow() CLASS Get
 
    RETURN .F.
 
-METHOD deleteLow() CLASS Get
+METHOD PROCEDURE deleteLow() CLASS Get
 
    LOCAL nMaxLen := ::nMaxLen
    LOCAL n
@@ -1656,7 +1656,7 @@ METHOD deleteLow() CLASS Get
 
    ::lChanged := .T.
 
-   RETURN NIL
+   RETURN
 
 METHOD DeleteAll() CLASS Get
 

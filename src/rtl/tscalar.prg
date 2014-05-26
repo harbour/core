@@ -100,12 +100,14 @@ METHOD AsExpStr() CLASS ScalarObject
 
    RETURN ::AsString()
 
-METHOD BecomeErr() CLASS ScalarObject
+METHOD PROCEDURE BecomeErr() CLASS ScalarObject
 
+#if 0
    // Not implemented yet
-   // ::error( CSYERR_BECOME, "Message 'become' illegally sent to scalar", ::ClassName() )
+   ::error( CSYERR_BECOME, "Message 'become' illegally sent to scalar", ::ClassName() )
+#endif
 
-   RETURN NIL
+   RETURN
 
 /* -------------------------------------------- */
 
@@ -220,11 +222,11 @@ METHOD IndexOf( x ) CLASS Array
 
    RETURN 0
 
-METHOD Remove( e ) CLASS Array
+METHOD PROCEDURE Remove( e ) CLASS Array
 
    ::DeleteAt( ::IndexOf( e ) )
 
-   RETURN NIL
+   RETURN
 
 METHOD Scan( b ) CLASS Array
    RETURN AScan( Self, b )

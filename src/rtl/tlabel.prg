@@ -116,7 +116,7 @@ CREATE CLASS HBLabelForm
 
 ENDCLASS
 
-METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+METHOD PROCEDURE New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample ) CLASS HBLabelForm
 
    LOCAL lPrintOn := .F.               // PRINTER status
@@ -217,7 +217,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
    Set( _SET_MARGIN, OldMargin )
 
-   RETURN Self
+   RETURN
 
 METHOD ExecuteLabel() CLASS HBLabelForm
 
@@ -421,10 +421,13 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
    RETURN aLabel
 
-FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+PROCEDURE __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample )
-   RETURN HBLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+
+   HBLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample )
+
+   RETURN
 
 STATIC PROCEDURE PrintIt( cString )
 

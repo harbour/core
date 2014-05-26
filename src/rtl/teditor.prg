@@ -1084,7 +1084,7 @@ STATIC FUNCTION WhichEOL( cString )
    DO CASE
    CASE nCRPos > 0 .AND. nLFPos == 0
       RETURN Chr( 13 )
-   CASE nCRPos == 0 .AND. nLFPos >  0
+   CASE nCRPos == 0 .AND. nLFPos > 0
       RETURN Chr( 10 )
    CASE nCRPos > 0 .AND. nLFPos == nCRPos + 1
       RETURN Chr( 13 ) + Chr( 10 )

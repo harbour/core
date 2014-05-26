@@ -425,29 +425,33 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
 
       DO CASE
       CASE nMRow == nTop
-         IF nMCol == ::nLeft
+         DO CASE
+         CASE nMCol == ::nLeft
             RETURN HTTOPLEFT
-         ELSEIF nMCol == ::nRight
+         CASE nMCol == ::nRight
             RETURN HTTOPRIGHT
-         ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
+         CASE nMCol >= ::nLeft .AND. nMCol <= ::nRight
             RETURN HTTOP
-         ENDIF
+         ENDCASE
       CASE nMRow == ::nBottom
-         IF nMCol == ::nLeft
+         DO CASE
+         CASE nMCol == ::nLeft
             RETURN HTBOTTOMLEFT
-         ELSEIF nMCol == ::nRight
+         CASE nMCol == ::nRight
             RETURN HTBOTTOMRIGHT
-         ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
+         CASE nMCol >= ::nLeft .AND. nMCol <= ::nRight
             RETURN HTBOTTOM
-         ENDIF
+         ENDCASE
       CASE nMCol == ::nLeft
-         IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
+         IF nMRow >= ::nTop .AND. ;
+            nMRow <= ::nBottom
             RETURN HTLEFT
          ELSE
             RETURN HTNOWHERE
          ENDIF
       CASE nMCol == ::nRight
-         IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
+         IF nMRow >= ::nTop .AND. ;
+            nMRow <= ::nBottom
             RETURN HTRIGHT
          ELSE
             RETURN HTNOWHERE
@@ -718,9 +722,7 @@ METHOD select( xPos ) CLASS ListBox
 
    ::cTextValue := iif( nPos == 0, "", _LISTBOX_ITEMDATA( ::aItems[ nPos ] ) )
 
-   nPos := iif( Empty( ::cHotBox + ::cColdBox ), 0, 2 )
-
-   nValue := ::nValue - ( ::nBottom - ::nTop - nPos )
+   nValue := ::nValue - ( ::nBottom - ::nTop - iif( Empty( ::cHotBox + ::cColdBox ), 0, 2 ) )
    IF ::nTopItem <= nValue
       ::nTopItem := nValue
       IF ::oVScroll != NIL

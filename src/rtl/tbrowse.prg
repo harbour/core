@@ -326,7 +326,6 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS TBrowse
    RETURN Self
 
 STATIC FUNCTION _SKIP_RESULT( xResult )
-
    RETURN iif( HB_ISNUMERIC( xResult ), Int( xResult ), 0 )
 
 
@@ -1124,7 +1123,7 @@ METHOD left() CLASS TBrowse
    DO WHILE .T.
       ::nColPos--
       IF ::nColPos < 1 .OR. ::nColPos > ::colCount .OR. ;
-         ::aColData[ ::nColPos, _TBCI_CELLWIDTH ] != 0
+         ::aColData[ ::nColPos ][ _TBCI_CELLWIDTH ] != 0
          EXIT
       ENDIF
    ENDDO
@@ -1138,7 +1137,7 @@ METHOD right() CLASS TBrowse
    DO WHILE .T.
       ::nColPos++
       IF ::nColPos < 1 .OR. ::nColPos > ::colCount .OR. ;
-         ::aColData[ ::nColPos, _TBCI_CELLWIDTH ] != 0
+         ::aColData[ ::nColPos ][ _TBCI_CELLWIDTH ] != 0
          EXIT
       ENDIF
    ENDDO
@@ -2209,7 +2208,6 @@ METHOD setColumn( nColumn, oCol ) CLASS TBrowse
 
 /* Gets a specific TBColumn object */
 METHOD getColumn( nColumn ) CLASS TBrowse
-
 #ifdef HB_CLP_STRICT
    RETURN ::columns[ nColumn ]
 #else
@@ -2695,25 +2693,27 @@ FUNCTION TBMouse( oBrw, nMRow, nMCol )
 
    IF oBrw:hitTest( nMRow, nMCol ) == HTCELL
 
-      IF ( n := oBrw:mRowPos - oBrw:rowPos ) < 0
+      DO CASE
+      CASE ( n := oBrw:mRowPos - oBrw:rowPos ) < 0
          DO WHILE ++n <= 0
             oBrw:up()
          ENDDO
-      ELSEIF n > 0
+      CASE n > 0
          DO WHILE --n >= 0
             oBrw:down()
          ENDDO
-      ENDIF
+      ENDCASE
 
-      IF ( n := oBrw:mColPos - oBrw:colPos ) < 0
+      DO CASE
+      CASE ( n := oBrw:mColPos - oBrw:colPos ) < 0
          DO WHILE ++n <= 0
             oBrw:left()
          ENDDO
-      ELSEIF n > 0
+      CASE n > 0
          DO WHILE --n >= 0
             oBrw:right()
          ENDDO
-      ENDIF
+      ENDCASE
 
       RETURN TBR_CONTINUE
    ENDIF

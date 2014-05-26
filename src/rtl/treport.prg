@@ -184,7 +184,7 @@ CREATE CLASS HBReportForm
 
 ENDCLASS
 
-METHOD New( cFrmName AS STRING, ;
+METHOD PROCEDURE New( cFrmName AS STRING, ;
       lPrinter AS LOGICAL, ;
       cAltFile AS STRING, ;
       lNoConsole AS LOGICAL, ;
@@ -241,7 +241,6 @@ METHOD New( cFrmName AS STRING, ;
       cExtraFile := Set( _SET_EXTRAFILE, cAltFile )
    ENDIF
 
-
    BEGIN SEQUENCE
 
       ::aReportData := ::LoadReportFile( cFRMName )  // Load the frm into an array
@@ -267,7 +266,7 @@ METHOD New( cFrmName AS STRING, ;
       // ::aReportData[ RPT_LMARGIN ] += Set( _SET_MARGIN )
 
       ::nPageNumber := 1                  // Set the initial page number
-      ::lFirstPass  := .T.             // Set the first pass flag
+      ::lFirstPass  := .T.                // Set the first pass flag
 
       ::nLinesLeft  := ::aReportData[ RPT_LINES ]
 
@@ -321,7 +320,6 @@ METHOD New( cFrmName AS STRING, ;
             LOOP                 // NOTE
          ENDIF
 
-
          // Check to see if we need to eject the page
          IF ::nLinesLeft < 2
             ::EjectPage()
@@ -364,7 +362,6 @@ METHOD New( cFrmName AS STRING, ;
          ENDIF
       NEXT
 
-
       IF lAnyTotals
 
          // Check to see if we need to eject the page
@@ -404,13 +401,11 @@ METHOD New( cFrmName AS STRING, ;
          ::EjectPage()
       ENDIF
 
-
    RECOVER USING xBreakVal
 
       lBroke := .T.
 
    END SEQUENCE
-
 
    // Clean up and leave
    ::aReportData    := NIL          // Recover the space
@@ -436,7 +431,7 @@ METHOD New( cFrmName AS STRING, ;
       BREAK xBreakVal
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD PrintIt( cString AS STRING ) CLASS HBReportForm
 
@@ -547,9 +542,9 @@ METHOD ReportHeader() CLASS HBReportForm
    ::nLinesLeft := ::aReportData[ RPT_LINES ] - Len( aPageHeader )
    ::nMaxLinesAvail := ::aReportData[ RPT_LINES ] - Len( aPageHeader )
 
-   RETURN SELF
+   RETURN Self
 
-METHOD ExecuteReport() CLASS HBReportForm
+METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
 
    LOCAL aRecordHeader  := {}          // Header for the current record
    LOCAL aRecordToPrint := {}          // Current record to print
@@ -830,7 +825,6 @@ METHOD ExecuteReport() CLASS HBReportForm
          ::nLinesLeft -= Len( aRecordToPrint )
       ENDIF
 
-
       // Tack on the spacing for double/triple/etc.
       IF ::aReportData[ RPT_SPACING ] > 1
 
@@ -846,7 +840,7 @@ METHOD ExecuteReport() CLASS HBReportForm
 
    ENDIF    // Was this a summary report?
 
-   RETURN NIL
+   RETURN
 
 METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
@@ -1095,21 +1089,13 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
    RETURN aReport
 
-/***
-*  GetExpr( nPointer ) --> cString
-*
-*  Reads an expression from EXPR_BUFF via the OFFSETS_BUFF and returns
-*  a pointer to offset contained in OFFSETS_BUFF that in turn points
-*  to an expression located in the EXPR_BUFF string.
-*
-*  Notes:
-*
-*     1. The expression is empty if:
-*         a. Passed pointer is equal to 65535
-*         b. Character following character pointed to by pointer is Chr( 0 )
-*
-*/
-
+/* Reads an expression from EXPR_BUFF via the OFFSETS_BUFF and returns
+   a pointer to offset contained in OFFSETS_BUFF that in turn points
+   to an expression located in the EXPR_BUFF string.
+   Notes:
+      1. The expression is empty if:
+          a. Passed pointer is equal to 65535
+          b. Character following character pointed to by pointer is Chr( 0 ) */
 METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
 
    LOCAL nExprOffset
@@ -1177,13 +1163,6 @@ STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
 
    RETURN MLCount( RTrim( cString ), nLineLength, nTabSize, hb_defaultValue( lWrap, .T. ) )
 
-/***
-*
-*  XMEMOLINE( <cString>, [<nLineLength>], [<nLineNumber>],
-*         [<nTabSize>], [<lWrap>] ) --> cLine
-*
-*/
-
 STATIC FUNCTION XMEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
    hb_default( @nLineLength, 79 )
@@ -1229,20 +1208,13 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 
    RETURN aPageHeader
 
-/***
-*  GetColumn( <cFieldBuffer>, @<nOffset> ) --> aColumn
-*
-*  Get a COLUMN element from FIELDS_BUFF string using nOffset to point to
-*  the current FIELDS_OFFSET block.
-*
-*  Notes:
-*     1. The Header or Contents expressions are empty if:
-*        a. Passed pointer is equal to 65535
-*        b. Character following character pointed to by pointer is Chr( 0 )
-*
-*/
-
-METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportForm
+/* Get a COLUMN element from FIELDS_BUFF string using nOffset to point to
+   the current FIELDS_OFFSET block.
+   Notes:
+      1. The Header or Contents expressions are empty if:
+         a. Passed pointer is equal to 65535
+         b. Character following character pointed to by pointer is Chr( 0 ) */
+METHOD GetColumn( cFieldsBuffer AS STRING, /* @ */ nOffset AS NUMERIC ) CLASS HBReportForm
 
    LOCAL nPointer, aColumn[ RCT_COUNT ], cExpr
 
@@ -1308,13 +1280,7 @@ METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportFo
 
    RETURN aColumn
 
-/***
-*
-*  ListAsArray( <cList>, <cDelimiter> ) --> aList
-*  Convert a delimited string to an array
-*
-*/
-
+/* Convert a delimited string to an array */
 STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
    LOCAL nPos
@@ -1366,8 +1332,11 @@ STATIC FUNCTION MakeAStr( uVar, cType )
 
    RETURN "INVALID EXPRESSION"
 
-FUNCTION __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
+PROCEDURE __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lPlain, cHeading, ;
       lBEject, lSummary )
-   RETURN HBReportForm():New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nRecord, ;
+
+   HBReportForm():New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nRecord, ;
       lRest, lPlain, cHeading, lBEject, lSummary )
+
+   RETURN
