@@ -987,8 +987,8 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          DBL_SPACE_OFFSET, 1 ) $ "YyTt", 2, 1 )
 
       // Summary report flag
-      aReport[ RPT_SUMMARY ] := iif( hb_BSubStr( cParamsBuff, ;
-         SUMMARY_RPT_OFFSET, 1 ) $ "YyTt", .T., .F. )
+      aReport[ RPT_SUMMARY ] := hb_BSubStr( cParamsBuff, ;
+         SUMMARY_RPT_OFFSET, 1 ) $ "YyTt"
 
       // Process report eject and plain attributes option byte
       nOptionByte := hb_BPeek( cParamsBuff, OPTION_OFFSET )
@@ -1050,8 +1050,8 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          aReport[ RPT_GROUPS ][ 1 ][ RGT_HEADER ] := ::GetExpr( nPointer )
 
          // Page eject after group
-         aReport[ RPT_GROUPS ][ 1 ][ RGT_AEJECT ] := iif( hb_BSubStr( cParamsBuff, ;
-            PE_OFFSET, 1 ) $ "YyTt", .T., .F. )
+         aReport[ RPT_GROUPS ][ 1 ][ RGT_AEJECT ] := hb_BSubStr( cParamsBuff, ;
+            PE_OFFSET, 1 ) $ "YyTt"
 
       ENDIF
 
@@ -1219,13 +1219,12 @@ METHOD GetColumn( cFieldsBuffer AS STRING, /* @ */ nOffset AS NUMERIC ) CLASS HB
    LOCAL nPointer, aColumn[ RCT_COUNT ], cExpr
 
    // Column width
-
    aColumn[ RCT_WIDTH ] := Bin2W( hb_BSubStr( cFieldsBuffer, nOffset + ;
       FIELD_WIDTH_OFFSET, 2 ) )
 
    // Total column?
-   aColumn[ RCT_TOTAL ] := iif( hb_BSubStr( cFieldsBuffer, nOffset + ;
-      FIELD_TOTALS_OFFSET, 1 ) $ "YyTt", .T., .F. )
+   aColumn[ RCT_TOTAL ] := hb_BSubStr( cFieldsBuffer, nOffset + ;
+      FIELD_TOTALS_OFFSET, 1 ) $ "YyTt"
 
    // Decimals width
    aColumn[ RCT_DECIMALS ] := Bin2W( hb_BSubStr( cFieldsBuffer, nOffset + ;
@@ -1263,7 +1262,8 @@ METHOD GetColumn( cFieldsBuffer AS STRING, /* @ */ nOffset AS NUMERIC ) CLASS HB
          EXIT
       CASE "N"
          IF aColumn[ RCT_DECIMALS ] != 0
-            aColumn[ RCT_PICT ] := Replicate( "9", aColumn[ RCT_WIDTH ] - aColumn[ RCT_DECIMALS ] - 1 ) + "." + ;
+            aColumn[ RCT_PICT ] := ;
+               Replicate( "9", aColumn[ RCT_WIDTH ] - aColumn[ RCT_DECIMALS ] - 1 ) + "." + ;
                Replicate( "9", aColumn[ RCT_DECIMALS ] )
          ELSE
             aColumn[ RCT_PICT ] := Replicate( "9", aColumn[ RCT_WIDTH ] )
@@ -1295,11 +1295,9 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
          nPos := Len( cList )
       ENDIF
 
-      IF SubStr( cList, nPos, 1 ) == cDelimiter
-         lDelimLast := .T.
+      IF lDelimLast := ( SubStr( cList, nPos, 1 ) == cDelimiter )
          AAdd( aList, Left( cList, nPos - 1 ) )  // Add a new element
       ELSE
-         lDelimLast := .F.
          AAdd( aList, Left( cList, nPos ) )  // Add a new element
       ENDIF
 

@@ -607,45 +607,29 @@ FUNCTION uhttpd_CStrToVal( cExp, cType )
    ENDIF
 
    SWITCH cType
+   CASE "M"
    CASE "C"
       RETURN cExp
-
    CASE "P"
       RETURN hb_HexToNum( cExp )
-
    CASE "D"
-      IF cExp[ 3 ] >= "0" .AND. cExp[ 3 ] <= "9" .AND. cExp[ 5 ] >= "0" .AND. cExp[ 5 ] <= "9"
+      IF SubStr( cExp, 3, 1 ) >= "0" .AND. ;
+         SubStr( cExp, 3, 1 ) <= "9" .AND. ;
+         SubStr( cExp, 5, 1 ) >= "0" .AND. ;
+         SubStr( cExp, 5, 1 ) <= "9"
          RETURN hb_SToD( cExp )
       ELSE
          RETURN CToD( cExp )
       ENDIF
-
    CASE "L"
-      RETURN iif( cExp[ 1 ] == "T" .OR. cExp[ 1 ] == "Y" .OR. cExp[ 2 ] == "T" .OR. cExp[ 2 ] == "Y", .T., .F. )
-
+      RETURN Left( cExp, 1 ) $ "TY" .OR. SubStr( cExp, 2, 1 ) $ "TY"
    CASE "N"
       RETURN Val( cExp )
-
-   CASE "M"
-      RETURN cExp
-
    CASE "U"
       RETURN NIL
-
-#if 0
-   CASE "A"
-      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-
-   CASE "B"
-      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-
-   CASE "O"
-      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-#endif
-
-   OTHERWISE
-      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDSWITCH
+
+   THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
    RETURN NIL
 

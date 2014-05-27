@@ -194,7 +194,7 @@ PROCEDURE Main()
                CASE dType == "D" .AND. sType == "C" ; cValue := CToD( cValue )
                CASE dType == "D" .AND. sType == "N" ; cValue := hb_SToD( hb_ntos( cValue ) )
                CASE dType == "L" .AND. sType == "N" ; cValue := ! Empty( cValue )
-               CASE dType == "L" .AND. sType == "C" ; cValue := iif( AllTrim( cValue ) $ "YySs1", .T., .F. )
+               CASE dType == "L" .AND. sType == "C" ; cValue := AllTrim( cValue ) $ "YySs1"
                ENDCASE
             ENDIF
 
