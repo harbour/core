@@ -111,7 +111,7 @@ HB_FUNC( POSIX_GETGRNAM )
    {
 #if ( defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 1 ) || \
       defined( _XOPEN_SOURCE ) || defined( _BSD_SOURCE ) || \
-      defined( _SVID_SOURCE ) || defined( _POSIX_SOURCE ) || 1 /* adjust as needed */
+      defined( _SVID_SOURCE ) || defined( _POSIX_SOURCE )  /* adjust as needed */
 
       struct group   grp;
       struct group * result = NULL;
@@ -147,7 +147,7 @@ HB_FUNC( POSIX_GETPWNAM )
    {
 #if ( defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 1 ) || \
       defined( _XOPEN_SOURCE ) || defined( _BSD_SOURCE ) || \
-      defined( _SVID_SOURCE ) || defined( _POSIX_SOURCE ) || 1 /* adjust as needed */
+      defined( _SVID_SOURCE ) || defined( _POSIX_SOURCE )  /* adjust as needed */
       struct passwd   pwd;
       struct passwd * result = NULL;
       char *          buf;
