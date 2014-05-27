@@ -90,14 +90,14 @@ METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
       cStr := ""
       ::nH := FCreate( ::FName )
    ELSE
-      cStr := "Content-Type: text/html" + CRLF() + CRLF()
+      cStr := "Content-Type: text/html" + hb_eol() + hb_eol()
       ::nH := hb_GetStdOut()
    ENDIF
 
-   cStr += "<html>" + CRLF() + ;
-      " <head>" + CRLF() + ;
-      "  <title>" + ::Title + "</title>" + CRLF() + ;
-      " </head>" + CRLF()
+   cStr += "<html>" + hb_eol() + ;
+      " <head>" + hb_eol() + ;
+      "  <title>" + ::Title + "</title>" + hb_eol() + ;
+      " </head>" + hb_eol()
 
    ::cStr += cStr
 
@@ -108,7 +108,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
    LOCAL cStr
    LOCAL cItem
 
-   cStr := CRLF() + " <frameset "
+   cStr := hb_eol() + " <frameset "
 
    IF HB_ISARRAY( aRows ) .AND. ! Empty( aRows )
 
@@ -146,7 +146,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += Space( 5 ) + " onUnLoad=" + '"' + onUnLoad + '"'
    ENDIF
 
-   cStr += " >" + CRLF()
+   cStr += " >" + hb_eol()
 
    ::cStr += cStr
 
@@ -154,13 +154,13 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
 METHOD Endset() CLASS THtmlFrameSet
 
-   ::cStr += " </frameset>" + CRLF()
+   ::cStr += " </frameset>" + hb_eol()
 
    RETURN Self
 
 METHOD End() CLASS THtmlFrameSet
 
-   ::cStr += "</html>" + CRLF()
+   ::cStr += "</html>" + hb_eol()
 
    IF ::nH != F_ERROR
       FWrite( ::nH, ::cStr )
@@ -219,7 +219,7 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       cStr += " marginheight= " + hb_ntos( marginheight )
    ENDIF
 
-   cStr += ">" + CRLF()
+   cStr += ">" + hb_eol()
 
    ::cStr += cStr
 

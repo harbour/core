@@ -112,37 +112,37 @@ STATIC FUNCTION xhb_cgi_DefError( e )
    ENDIF
 
    cErrString := ;
-      CRLF() + ;
-      "</td></tr></table>" + CRLF() + ;
+      hb_eol() + ;
+      "</td></tr></table>" + hb_eol() + ;
       '<table bgcolor="white" border cellpadding=1 cellspacing=1 cols=2 width=80%>' + ;
       '<tr><td bgcolor="black" align="center">' + ;
-      '<font face="verdana" size="5" color="white">' + CRLF() + ;
+      '<font face="verdana" size="5" color="white">' + hb_eol() + ;
       "<b>ERROR REPORT</b>" + ;
       "</td></tr>" + ;
       '<tr><td bgcolor="blue">' + ;
-      '<font face="verdana" size="2" color="white">' + CRLF() + ;
+      '<font face="verdana" size="2" color="white">' + hb_eol() + ;
       "Date: " + hb_DToC( Date(), "yyyy-mm-dd" ) + "<br />" + "Time: " + Time() + "<br />" + ;
       "</td></tr>" + ;
       '<tr><td bgcolor="red">' + ;
-      '<font face="verdana" size="2" color="white">' + CRLF() + ;
+      '<font face="verdana" size="2" color="white">' + hb_eol() + ;
       '<em>' + cMessage + '</em>' + ;
-      '</td></tr><tr><td bgcolor="cyan">' + CRLF() + ;
-      '<font face="verdana" size="2" color="black">' + CRLF() + ;
-      "ERRORCODE: " + hb_ntos( e:GenCode ) + "<br />" + CRLF() + ;
-      "SUBSYSTEM: " + e:SubSystem + "<br />" + CRLF() + ;
-      "DESCRIPTION: " + e:Description + "<br />" + CRLF() + ;
-      "OPERATION: " + e:Operation + "<br />" + CRLF() + ;
-      "FILENAME: " + e:FileName + "<br />" + CRLF() + ;
-      "TRIES: " + hb_ntos( e:Tries ) + CRLF() + ;
+      '</td></tr><tr><td bgcolor="cyan">' + hb_eol() + ;
+      '<font face="verdana" size="2" color="black">' + hb_eol() + ;
+      "ERRORCODE: " + hb_ntos( e:GenCode ) + "<br />" + hb_eol() + ;
+      "SUBSYSTEM: " + e:SubSystem + "<br />" + hb_eol() + ;
+      "DESCRIPTION: " + e:Description + "<br />" + hb_eol() + ;
+      "OPERATION: " + e:Operation + "<br />" + hb_eol() + ;
+      "FILENAME: " + e:FileName + "<br />" + hb_eol() + ;
+      "TRIES: " + hb_ntos( e:Tries ) + hb_eol() + ;
       '</td></tr>' + ;
       '<tr><td bgcolor="red">' + ;
-      '<font face="verdana" size="2" color="white">' + CRLF() + ;
+      '<font face="verdana" size="2" color="white">' + hb_eol() + ;
       '<em>'
 
    i := 2
    DO WHILE ! Empty( ProcName( i ) )
       cErrString += "Called from " + RTrim( ProcName( i ) ) + ;
-         "(" + hb_ntos( ProcLine( i ) ) + ") <br />" + CRLF()
+         "(" + hb_ntos( ProcLine( i ) ) + ") <br />" + hb_eol()
       i++
    ENDDO
 
@@ -150,20 +150,20 @@ STATIC FUNCTION xhb_cgi_DefError( e )
       '</em>' + ;
       '</td></tr>' + ;
       '<tr><td bgcolor="black">' + ;
-      '<font face="verdana" size="2" color="white">' + CRLF() + ;
+      '<font face="verdana" size="2" color="white">' + hb_eol() + ;
       "Extra notes..." + ;
-      "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF()
+      "</td>" + hb_eol() + "</tr>" + hb_eol() + "</table>" + hb_eol()
 
-   FWrite( nH, "<br />" + cErrString + CRLF() )
-   hb_MemoWrit( "error.Log", HardCR( cErrString ) + CRLF() + ;
+   FWrite( nH, "<br />" + cErrString + hb_eol() )
+   hb_MemoWrit( "error.Log", HardCR( cErrString ) + hb_eol() + ;
       HardCR( MemoRead( "error.Log" ) ) )
 
-   FWrite( nH, "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF() )
+   FWrite( nH, "</td>" + hb_eol() + "</tr>" + hb_eol() + "</table>" + hb_eol() )
 
    HtmlJSCmd( nH, 'Alert("There was an error processing your request:\n' + ;
       'Look at the bottom of this page for\n' + ;
       'error description and parameters...");' )
-   FWrite( nH, "</font>" + CRLF() + "</body></html>" + CRLF() )
+   FWrite( nH, "</font>" + hb_eol() + "</body></html>" + hb_eol() )
 
    CLOSE ALL
 
@@ -222,7 +222,7 @@ STATIC FUNCTION ErrorMessage( e )
       cMessage += ": " + e:operation
 
    ENDIF
-   cMessage += CRLF()
+   cMessage += hb_eol()
 
    RETURN cMessage
 

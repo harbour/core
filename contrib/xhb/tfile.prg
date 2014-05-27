@@ -331,8 +331,9 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
    LOCAL nNewPos
    LOCAL lMoved
    LOCAL cBuff
-   LOCAL nWhereCrLf
+   LOCAL nWhereEOL
    LOCAL nPrev
+   LOCAL cEOL
 
    IF FSeek( fHandle, 0, FS_RELATIVE ) == 0
 
@@ -342,10 +343,12 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
 
       lMoved := .T.
 
-      // Check preceeding 2 chars for CR+LF
-      FSeek( fHandle, -2, FS_RELATIVE )
-      IF hb_FReadLen( fHandle, 2 ) == CRLF()
-         FSeek( fHandle, -2, FS_RELATIVE )
+      cEOL := Chr( 13 ) + Chr( 10 )  /* TOFIX: EOL detection to be multiplatform */
+
+      // Check preceeding chars for EOL
+      FSeek( fHandle, -hb_BLen( cEOL ), FS_RELATIVE )
+      IF hb_FReadLen( fHandle, hb_BLen( cEOL ) ) == cEOL
+         FSeek( fHandle, -hb_BLen( cEOL ), FS_RELATIVE )
       ENDIF
 
       nMaxRead := Min( hb_defaultValue( nBytes, 256 ), FSeek( fHandle, 0, FS_RELATIVE ) )
@@ -353,12 +356,12 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
       cBuff   := Space( nMaxRead )
       nNewPos := FSeek( fHandle, -nMaxRead, FS_RELATIVE )
       FRead( fHandle, @cBuff, nMaxRead )
-      IF ( nWhereCrLf := RAt( CRLF(), cBuff ) ) == 0  /* TOFIX: should be hb_BRAt() */
+      IF ( nWhereEOL := RAt( cEOL, cBuff ) ) == 0  /* TOFIX: should be hb_BRAt() */
          nPrev    := nNewPos
          ::Buffer := cBuff
       ELSE
-         nPrev    := nNewPos + nWhereCrLf + 1
-         ::Buffer := SubStr( cBuff, nWhereCrLf + 2 )  /* TOFIX: should be hb_BSubStr() */
+         nPrev    := nNewPos + nWhereEOL + 1
+         ::Buffer := SubStr( cBuff, nWhereEOL + hb_BLen( cEOL ) )  /* TOFIX: should be hb_BSubStr() */
       ENDIF
 
       FSeek( fHandle, nPrev, FS_SET )

@@ -261,7 +261,7 @@ METHOD Put() CLASS TJSWindow
 /* Output stand alone Javascript code in the current document */
 METHOD Write( c ) CLASS TJSWindow
 
-   HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + hb_eol() )
 
    RETURN Self
 
@@ -269,7 +269,7 @@ METHOD Write( c ) CLASS TJSWindow
    in the current script */
 METHOD QOut( c ) CLASS TJSWindow
 
-   FWrite( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
+   FWrite( ::nH, ::varName + ".document.write('" + c + "')" + hb_eol() )
 
    RETURN Self
 
@@ -279,8 +279,8 @@ METHOD Begin() CLASS TJSWindow
 
    LOCAL i
 
-   FWrite( ::nH, "<script language=JavaScript 1.2>" + CRLF() )
-   FWrite( ::nH, "<!--" + CRLF() )
+   FWrite( ::nH, "<script language=JavaScript 1.2>" + hb_eol() )
+   FWrite( ::nH, "<!--" + hb_eol() )
    ::QOut( "<html><head>" )
 
    IF HB_ISSTRING( ::Title )
@@ -335,7 +335,7 @@ METHOD Begin() CLASS TJSWindow
 /* End HTML output to the window */
 METHOD End() CLASS TJSWindow
 
-   HtmlJSCmd( ::nH, ::varName + ".document.write('</body></html>')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('</body></html>')" + hb_eol() )
 
    RETURN Self
 
@@ -347,28 +347,28 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    LOCAL cStr := ""
 
    IF HB_ISSTRING( cName )
-      cStr += " name=" + '"' + cName + '"' + CRLF()
+      cStr += " name=" + '"' + cName + '"' + hb_eol()
    ENDIF
    IF HB_ISSTRING( cAlt )
-      cStr += " alt=" + '"' + cAlt + '"' + CRLF()
+      cStr += " alt=" + '"' + cAlt + '"' + hb_eol()
    ENDIF
 
    IF HB_ISNUMERIC( nBorder )
-      cStr += " border=" + hb_ntos( nBorder ) + CRLF()
+      cStr += " border=" + hb_ntos( nBorder ) + hb_eol()
    ENDIF
 
    IF HB_ISNUMERIC( nHeight )
-      cStr += " height=" + hb_ntos( nHeight ) + "%" + CRLF()
+      cStr += " height=" + hb_ntos( nHeight ) + "%" + hb_eol()
    ENDIF
 
    IF HB_ISSTRING( cOnClick )
-      cStr += " onClick=" + '"' + cOnClick + '"' + CRLF()
+      cStr += " onClick=" + '"' + cOnClick + '"' + hb_eol()
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      cStr += " onMouseOver=" + '"' + cOnMsOver + '"' + CRLF()
+      cStr += " onMouseOver=" + '"' + cOnMsOver + '"' + hb_eol()
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      cStr += " onMouseOut=" + '"' + cOnMsOut + '"' + CRLF()
+      cStr += " onMouseOut=" + '"' + cOnMsOut + '"' + hb_eol()
    ENDIF
 
    IF HB_ISSTRING( cURL )
