@@ -67,7 +67,7 @@
 #xtranslate CRLF( <str> ) => ( <str> + Chr( 13 ) + Chr( 10 ) )
 #xtranslate CRLF()        => ( Chr( 13 ) + Chr( 10 ) )
 
-/*
+#if 0
 #xcommand DEFINE HTML                ;
           [FILE <file>]              ;
           [TITLE <title>]            ;
@@ -91,8 +91,8 @@
           [BASETARGET <basetarget>]  ;
           [STYLESHEET <cStyleScr>]   ;
           [REFRESH <nRefresh>]       ;
-          [REFRESHURL <cRefreshURL>]            ;
-          [<lcache:NOCACHE>]           ;
+          [REFRESHURL <cRefreshURL>] ;
+          [<lcache:NOCACHE>]         ;
           OF <oHtml>                 ;
           =>                         ;
           <oHtml> := THtml():new( <file>, <title>, <linktitle>, <charset>, ;
@@ -105,8 +105,9 @@
                                  [<baseurl>], [<basetarget>], ;
                                  [<nRefresh>], [<cRefreshURL>], ;
                                  <cStyleScr>, <.lcache.> )
-*/
-#xcommand DEFINE HTML                 ;
+#endif
+
+#xcommand DEFINE HTML                ;
           [FILE <file>]              ;
           [TITLE <title>]            ;
           [LINKTITLE <linktitle>]    ;
@@ -130,7 +131,7 @@
           [BASETARGET <basetarget>]  ;
           [REFRESH <nrefr> [REFRESHURL <refrURL>] ] ;
           [STYLESHEET <cStyleScr>]   ;
-          [<lcache:NOCACHE>]           ;
+          [<lcache:NOCACHE>]         ;
           [NOF <nof> ]               ;
           [TOPMARGIN  <nMarginTop>];
           [LEFTMARGIN  <nMarginLeft>] ;

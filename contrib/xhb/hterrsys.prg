@@ -65,9 +65,6 @@
 STATIC s_bFixCorrupt
 STATIC s_cErrFooter := " "
 
-/* DefError()
-*/
-
 #if 0
 
 STATIC FUNCTION xhb_cgi_DefError( e )
@@ -188,10 +185,6 @@ FUNCTION SetCorruptFunc( bFunc )
 FUNCTION SetErrorFooter()
 
    RETURN s_cErrFooter
-
-/***
-* ErrorMessage()
-*/
 
 #if 0
 

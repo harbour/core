@@ -87,8 +87,7 @@ CREATE CLASS TXMLNode
    METHOD Write( fHandle, nStyle )  INLINE hbxml_node_write( Self, fHandle, nStyle )
 
    // Useful for debugging purposes
-   METHOD ToArray()                 INLINE;
-      { ::nType, ::cName, ::aAttributes, ::cData }
+   METHOD ToArray()                 INLINE { ::nType, ::cName, ::aAttributes, ::cData }
 
 ENDCLASS
 
@@ -148,18 +147,16 @@ METHOD Path() CLASS TXmlNode
 
    RETURN NIL
 
-/********************************************
-   Iterator class
-*********************************************/
+/* Iterator class */
 
 CREATE CLASS TXmlIterator
 
    METHOD New( oNodeTop )           CONSTRUCTOR
    METHOD Next()
-   METHOD Rewind()                  INLINE   ::oNode := ::oTop
+   METHOD Rewind()                  INLINE ::oNode := ::oTop
    METHOD Find( cName, cAttribute, cValue, cData )
 
-   METHOD GetNode()                 INLINE   ::oNode
+   METHOD GetNode()                 INLINE ::oNode
    METHOD SetContext()
    METHOD Clone()
 
@@ -189,9 +186,8 @@ METHOD New( oNodeTop ) CLASS TXmlIterator
 
 METHOD Clone() CLASS TXmlIterator
 
-   LOCAL oRet
+   LOCAL oRet := TXMLIterator():New( ::oNodeTop )
 
-   oRet := TXMLIterator():New( ::oNodeTop )
    oRet:cName := ::cName
    oRet:cAttribute := ::cAttribute
    oRet:cValue := ::cValue
@@ -251,9 +247,7 @@ METHOD MatchCriteria( oNode ) CLASS TXmlIterator
    RETURN .T.
 
 
-/********************************************
-   Iterator scan class
-*********************************************/
+/* Iterator scan class */
 
 CREATE CLASS TXmlIteratorScan FROM TXmlIterator
 
@@ -290,9 +284,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
 
    RETURN .T.
 
-/********************************************
-   Iterator regex class
-*********************************************/
+/* Iterator regex class */
 
 CREATE CLASS TXmlIteratorRegex FROM TXmlIterator
 
@@ -311,31 +303,29 @@ METHOD New( oNodeTop ) CLASS TXmlIteratorRegex
 METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
 
    IF ::cName != NIL .AND. ;
-         ( oFound:cName == NIL .OR. ! hb_regexLike( ::cName, oFound:cName, .T. ) )
+      ( oFound:cName == NIL .OR. ! hb_regexLike( ::cName, oFound:cName, .T. ) )
       RETURN .F.
    ENDIF
 
    IF ::cAttribute != NIL .AND. ;
-         hb_HScan( oFound:aAttributes, {| cKey | hb_regexLike( ::cAttribute, cKey, .T. ) } ) == 0
+      hb_HScan( oFound:aAttributes, {| cKey | hb_regexLike( ::cAttribute, cKey, .T. ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cValue != NIL .AND. ;
-         hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), hb_regexLike( ::cValue, cValue, .T. ) } ) == 0
+      hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), hb_regexLike( ::cValue, cValue, .T. ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cData != NIL .AND. ;
-         ( oFound:cData == NIL .OR. ! hb_regexHas( ::cData, oFound:cData, .F. ) )
+      ( oFound:cData == NIL .OR. ! hb_regexHas( ::cData, oFound:cData, .F. ) )
       RETURN .F.
    ENDIF
 
    RETURN .T.
 
 
-/********************************************
-   Document Class
-*********************************************/
+/* Document Class */
 
 CREATE CLASS TXMLDocument
 

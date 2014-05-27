@@ -178,25 +178,25 @@ METHOD Put() CLASS THtmlControl
    ENDIF
 
    IF ::Type == "SELECT"
-      ::cOutPut += CRLF() + ' <select ' + CRLF()
+      ::cOutPut += CRLF() + " <select " + CRLF()
    ELSE
-      ::cOutPut += CRLF() + ' <input type="'
+      ::cOutPut += CRLF() + " <input type=" + '"'
       ::cOutput += ::Type + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::Name )
-      ::cOutput += Space( 2 ) + '     name="' + ::Name + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "     name=" + '"' + ::Name + '"' + CRLF()
    ENDIF
 
    IF ::Type == "TEXTAREA"
       IF HB_ISNUMERIC( ::Rows )
-         ::cOutput += Space( 2 ) + '     rows="' + hb_ntos( ::Rows ) + '"' + CRLF()
+         ::cOutput += Space( 2 ) + "     rows=" + '"' + hb_ntos( ::Rows ) + '"' + CRLF()
       ENDIF
       IF HB_ISNUMERIC( ::Cols )
-         ::cOutput += Space( 2 ) + '     cols="' + hb_ntos( ::Cols ) + '"' + CRLF()
+         ::cOutput += Space( 2 ) + "     cols=" + '"' + hb_ntos( ::Cols ) + '"' + CRLF()
       ENDIF
       IF HB_ISSTRING( ::Wrap )
-         ::cOutput += Space( 2 ) + '     wrap="' + ::Wrap + '"' + CRLF()
+         ::cOutput += Space( 2 ) + "     wrap=" + '"' + ::Wrap + '"' + CRLF()
       ENDIF
    ENDIF
 
@@ -206,91 +206,91 @@ METHOD Put() CLASS THtmlControl
          ::Picture := "@X"
       ENDIF
 
-      ::cOutput += Space( 2 ) + '    value="' + Transform( ::Value, ::Picture ) + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "    value=" + '"' + Transform( ::Value, ::Picture ) + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( ::maxChars )
-      ::cOutput += Space( 2 ) + 'maxlength="' + hb_ntos( ::maxChars ) + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "maxlength=" + '"' + hb_ntos( ::maxChars ) + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( ::Size )
-      ::cOutput += Space( 2 ) + '     size="' + hb_ntos( ::Size ) + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "     size=" + '"' + hb_ntos( ::Size ) + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::Id )
-      ::cOutput += Space( 2 ) + '       id="' + ::Id + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "       id=" + '"' + ::Id + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::Style )
-      ::cOutput += Space( 2 ) + '    style="' + ::Style + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "    style=" + '"' + ::Style + '"' + CRLF()
    ENDIF
 
    IF ::type == "IMAGE" .AND. HB_ISSTRING( ::Source )
-      ::cOutput += Space( 2 ) + '      src="' + ::Source + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "      src=" + '"' + ::Source + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::Align )
-      ::cOutput += Space( 2 ) + '    align="' + ::Align + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "    align=" + '"' + ::Align + '"' + CRLF()
    ENDIF
 
    IF ::type == "RADIO" .OR. ::type == "CHECKBOX" .AND. ::Checked
-      ::cOutput += Space( 2 ) + '   CHECKED' + CRLF()
+      ::cOutput += Space( 2 ) + "   CHECKED" + CRLF()
    ENDIF
 
    IF ::Disabled
-      ::cOutput += Space( 2 ) + '  DISABLED' + CRLF()
+      ::cOutput += Space( 2 ) + "  DISABLED" + CRLF()
    ENDIF
 
    IF ::Readonly
-      ::cOutput += Space( 2 ) + '  READONLY' + CRLF()
+      ::cOutput += Space( 2 ) + "  READONLY" + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onChange )
-      ::cOutput += Space( 2 ) + ' onChange="' + ::onChange + '"' + CRLF()
+      ::cOutput += Space( 2 ) + " onChange=" + '"' + ::onChange + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onFocus )
-      ::cOutput += Space( 2 ) + '  onFocus="' + ::onFocus + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "  onFocus=" + '"' + ::onFocus + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onBlur )
-      ::cOutput += Space( 2 ) + '   onBlur="' + ::onBlur + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "   onBlur=" + '"' + ::onBlur + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onSelect )
-      ::cOutput += Space( 2 ) + ' onSelect="' + ::onSelect + '"' + CRLF()
+      ::cOutput += Space( 2 ) + " onSelect=" + '"' + ::onSelect + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onClick )
-      ::cOutput += Space( 2 ) + '  onClick="' + ::onClick + '"' + CRLF()
+      ::cOutput += Space( 2 ) + "  onClick=" + '"' + ::onClick + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onMouseOver )
-      ::cOutput += 'onMouseOver="' + ::onMouseOver + '"' + CRLF()
+      ::cOutput += "onMouseOver=" + '"' + ::onMouseOver + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onMouseOut )
-      ::cOutput += Space( 1 ) + 'onMouseOut="' + ::onMouseOut + '"' + CRLF()
+      ::cOutput += Space( 1 ) + "onMouseOut=" + '"' + ::onMouseOut + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onMouseDown )
-      ::cOutput += 'onMouseDown="' + ::onMouseDown + '"' + CRLF()
+      ::cOutput += "onMouseDown=" + '"' + ::onMouseDown + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onMouseUp )
-      ::cOutput += Space( 1 ) + 'onMouseUp="' + ::onMouseUp + '"' + CRLF()
+      ::cOutput += Space( 1 ) + "onMouseUp=" + '"' + ::onMouseUp + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onKeyDown )
-      ::cOutput += 'onKeyDown="' + ::onKeyDown + '"' + CRLF()
+      ::cOutput += "onKeyDown=" + '"' + ::onKeyDown + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onKeyUp )
-      ::cOutput += Space( 1 ) + 'onKeyUp="' + ::onKeyUp + '"' + CRLF()
+      ::cOutput += Space( 1 ) + "onKeyUp=" + '"' + ::onKeyUp + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( ::onKeyPress )
-      ::cOutput += Space( 1 ) + 'onKeyPress="' + ::onKeyPress + '"' + CRLF()
+      ::cOutput += Space( 1 ) + "onKeyPress=" + '"' + ::onKeyPress + '"' + CRLF()
    ENDIF
 
    ::cOutput += " >" + CRLF()
@@ -325,8 +325,7 @@ METHOD AddOption( cOption, cValue, cLabel, lSelected, lDisabled ) CLASS THtmlCon
 
    RETURN Self
 
-/* Batch set control properties/methods
-*/
+/* Batch set control properties/methods */
 METHOD SetControl( name, rows, cols, size, maxchars, value, onfocus, ;
       onblur, onchange, onselect, onclick, onmsover, onmsout, ;
       onmsdown, onmsup, onkdown, onkup, onkprs, ;
@@ -446,33 +445,33 @@ METHOD Put( lPutControls ) CLASS THtmlForm
    IF ::Frame
       ::cOutPut := CRLF() + CRLF() + CRLF() + "<!-------  Start of Form ------->" + CRLF() + CRLF()
       ::oHtm:cStr += ::cOutput
-      ::cOutPut := '<table bgcolor="#9196A0" ' + CRLF() + ;
-         "       cols=1 " + CRLF() + ;
-         "       rows=1 " + CRLF() + ;
-         "       cellpadding=3 " + CRLF() + ;
-         "       cellspacing=3 " + CRLF() + ;
-         "       width=" + hb_ntos( ::width ) + "% " + CRLF() + ;
-         '       bordercolorlight="#000000" ' + CRLF() + ;
-         '       bordercolordark="#FFFFFF" ' + CRLF() + ;
-         "       border " + CRLF() + ;
+      ::cOutPut := "<table bgcolor=" + '"' + "#9196A0" + '"' + CRLF() + ;
+         "       cols=1" + CRLF() + ;
+         "       rows=1" + CRLF() + ;
+         "       cellpadding=3" + CRLF() + ;
+         "       cellspacing=3" + CRLF() + ;
+         "       width=" + hb_ntos( ::width ) + "%" + CRLF() + ;
+         "       bordercolorlight=" + '"' + "#000000" + '"' + CRLF() + ;
+         "       bordercolordark=" + '"' + "#FFFFFF" + '"' + CRLF() + ;
+         "       border" + CRLF() + ;
          "       >" + CRLF()
       ::oHtm:cStr += ::cOutput
-      ::cOutPut := '<tr bgcolor="' + ::captionColor + '">' + CRLF()
+      ::cOutPut := "<tr bgcolor=" + '"' + ::captionColor + '"' + ">" + CRLF()
 
       IF HB_ISSTRING( ::Caption )
          ::cOutPut := "<td"
          ::oHtm:cStr += ::cOutput
 
          IF HB_ISSTRING( ::captionImage )
-            ::cOutPut := ' background="' + ::captionImage + '"' + CRLF()
+            ::cOutPut := " background=" + '"' + ::captionImage + '"' + CRLF()
             ::oHtm:cStr += ::cOutput
          ENDIF
 
-         ::cOutPut := '>'
+         ::cOutPut := ">"
          ::oHtm:cStr += ::cOutput
 
          IF HB_ISSTRING( ::capFontColor )
-            ::cOutPut := '<font color="' + ::capFontColor + '">' + CRLF()
+            ::cOutPut := "<font color=" + '"' + ::capFontColor + '"' + ">" + CRLF()
             ::oHtm:cStr += ::cOutput
          ENDIF
 
@@ -482,19 +481,19 @@ METHOD Put( lPutControls ) CLASS THtmlForm
          ::oHtm:cStr += ::cOutput
       ENDIF
 
-      ::cOutPut := '<tr bgcolor="' + ::color + '">' + CRLF()
+      ::cOutPut := "<tr bgcolor=" + '"' + ::color + '"' + ">" + CRLF()
       ::oHtm:cStr += ::cOutput
-      ::cOutPut := '<td'
+      ::cOutPut := "<td"
       ::oHtm:cStr += ::cOutput
       IF HB_ISSTRING( ::bgImage )
-         ::cOutPut := ' background="' + ::bgImage + '"' + CRLF()
+         ::cOutPut := " background=" + '"' + ::bgImage + '"' + CRLF()
          ::oHtm:cStr += ::cOutput
       ENDIF
 
-      ::cOutPut := '>'
+      ::cOutPut := ">"
       ::oHtm:cStr += ::cOutput
       IF HB_ISSTRING( ::fontColor )
-         ::cOutPut := '<font color="' + ::FontColor + '">' + CRLF()
+         ::cOutPut := "<font color=" + '"' + ::FontColor + '"' + ">" + CRLF()
          ::oHtm:cStr += ::cOutput
       ENDIF
 
@@ -504,37 +503,37 @@ METHOD Put( lPutControls ) CLASS THtmlForm
    ::oHtm:cStr += ::cOutput
 
    IF HB_ISSTRING( ::name )
-      ::cOutPut := Space( 5 ) + '    name="' + ::Name + '"' + CRLF()
+      ::cOutPut := Space( 5 ) + "    name=" + '"' + ::Name + '"' + CRLF()
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF HB_ISSTRING( ::method )
-      ::cOutPut := Space( 5 ) + '  method="' + ::Method + '"' + CRLF()
+      ::cOutPut := Space( 5 ) + "  method=" + '"' + ::Method + '"' + CRLF()
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF HB_ISSTRING( ::Action )
-      ::cOutPut := Space( 5 ) + '  action=' + ::Action + '' + CRLF()
+      ::cOutPut := Space( 5 ) + "  action=" + ::Action + CRLF()
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF HB_ISSTRING( ::Target )
-      ::cOutPut := Space( 5 ) + '  target=' + ::Target + '' + CRLF()
+      ::cOutPut := Space( 5 ) + "  target=" + ::Target + CRLF()
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF HB_ISSTRING( ::Enctype )
-      ::cOutPut := Space( 5 ) + ' enctype="' + ::encType + '"' + CRLF()
+      ::cOutPut := Space( 5 ) + " enctype=" + '"' + ::encType + '"' + CRLF()
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF HB_ISSTRING( ::onSubmit )
-      ::cOutPut := Space( 5 ) + 'onSubmit="' + ::onSubmit + '"' + CRLF()
+      ::cOutPut := Space( 5 ) + "onSubmit=" + '"' + ::onSubmit + '"' + CRLF()
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF HB_ISSTRING( ::onReset )
-      ::cOutPut := Space( 5 ) + ' onReset="' + ::onReset + '"' + CRLF()
+      ::cOutPut := Space( 5 ) + " onReset=" + '"' + ::onReset + '"' + CRLF()
       ::oHtm:cStr += ::cOutput
    ENDIF
 
@@ -561,8 +560,7 @@ METHOD End() CLASS THtmlForm
 
    RETURN Self
 
-/* Retrieve a form control object by name
-*/
+/* Retrieve a form control object by name */
 METHOD GetControl( cName ) CLASS THtmlForm
 
    LOCAL nPos
@@ -573,7 +571,6 @@ METHOD GetControl( cName ) CLASS THtmlForm
 
    RETURN NIL
 
-/* Return current form object
-*/
+/* Return current form object */
 FUNCTION HtmlFormObject()
    RETURN s_oForm

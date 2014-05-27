@@ -233,16 +233,13 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
    RETURN aElem[ nRet ]
 
-/* Separates elements of a CGI query environment variable
-*/
+/* Separates elements of a CGI query environment variable */
 FUNCTION CgiParseVar( cEnvVar )
 
    cEnvVar := HtmlDecodeUrl( cEnvVar )
 
    IF "=" $ cEnvVar
-      cEnvVar := AllTrim( SubStr( cEnvVar, At( "=", cEnvVar ) + 1 ) )
-   ELSE
-      cEnvVar := ""
+      RETURN AllTrim( SubStr( cEnvVar, At( "=", cEnvVar ) + 1 ) )
    ENDIF
 
-   RETURN cEnvVar
+   RETURN ""

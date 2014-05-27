@@ -112,7 +112,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
    IF HB_ISARRAY( aRows ) .AND. ! Empty( aRows )
 
-      cStr += ' rows="'
+      cStr += " rows=" + '"'
 
       FOR EACH cItem in aRows
          IF ! cItem:__enumIsFirst()
@@ -126,7 +126,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
    IF HB_ISARRAY( aCols ) .AND. ! Empty( aCols )
 
-      cStr += ' cols="'
+      cStr += " cols=" + '"'
 
       FOR EACH cItem IN aCols
          IF ! cItem:__enumIsFirst()
@@ -139,11 +139,11 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
    ENDIF
 
    IF HB_ISSTRING( onLoad )
-      cStr += Space( 7 ) + ' onLoad="' + onLoad + '"'
+      cStr += Space( 7 ) + " onLoad=" + '"' + onLoad + '"'
    ENDIF
 
    IF HB_ISSTRING( onUnLoad )
-      cStr += Space( 5 ) + ' onUnLoad="' + onUnLoad + '"'
+      cStr += Space( 5 ) + " onUnLoad=" + '"' + onUnLoad + '"'
    ENDIF
 
    cStr += " >" + CRLF()
@@ -182,21 +182,21 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
    cStr := "  <frame "
 
    IF HB_ISSTRING( cName )
-      cStr += ' name="' + cName + '"'
+      cStr += " name=" + '"' + cName + '"'
    ENDIF
 
    IF HB_ISSTRING( cUrl )
-      cStr += ' src="' + cURL + '"'
+      cStr += " src=" + '"' + cURL + '"'
    ENDIF
 
    IF HB_ISSTRING( cTarget )
-      cStr += ' target="' + cTarget + '"'
+      cStr += " target=" + '"' + cTarget + '"'
    ENDIF
 
    IF hb_defaultValue( lBorder, .T. )
-      cStr += ' frameborder="1"'
+      cStr += " frameborder=1"
    ELSE
-      cStr += ' frameborder="0"'
+      cStr += " frameborder=0"
    ENDIF
 
    IF ! hb_defaultValue( lResize, .T. )
@@ -204,11 +204,11 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
    ENDIF
 
    IF HB_ISSTRING( cScrolling )
-      cStr += ' scrolling="' + cScrolling + '"'
+      cStr += " scrolling=" + '"' + cScrolling + '"'
    ELSEIF HB_ISLOGICAL( lScrolling )
-      cStr += ' scrolling=' + iif( lScrolling, '"yes"', '"no"' )
+      cStr += " scrolling=" + '"' + iif( lScrolling, "yes", "no" ) + '"'
    ELSE
-      cStr += ' scrolling="auto"'
+      cStr += " scrolling=" + '"' + "auto" + '"'
    ENDIF
 
    IF HB_ISNUMERIC( marginwidth )

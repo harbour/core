@@ -94,8 +94,7 @@ CREATE CLASS TJSList
 
 ENDCLASS
 
-/* Create main node
-*/
+/* Create main node */
 METHOD New( name, lOpen, width, height, bgColor, ;
       FONT, fntColor, fntSize, cMinusImg, cPlusImg ) CLASS TJSList
 
@@ -145,8 +144,7 @@ METHOD New( name, lOpen, width, height, bgColor, ;
 
    RETURN Self
 
-/* Add a new sub-node
-*/
+/* Add a new sub-node */
 METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJSList
 
    IF HB_ISSTRING( name )
@@ -168,8 +166,7 @@ METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJSList
 
    RETURN Self
 
-/* Set the font for an item or node
-*/
+/* Set the font for an item or node */
 METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 
    AAdd( ::aScript, ;
@@ -181,8 +178,7 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 
    RETURN self
 
-/* Add a menu item
-*/
+/* Add a menu item */
 METHOD AddItem( name, url, bgColor ) CLASS TJSList
 
    LOCAL cUrl := ;
@@ -194,8 +190,7 @@ METHOD AddItem( name, url, bgColor ) CLASS TJSList
 
    RETURN self
 
-/* Add a menu item
-*/
+/* Add a menu item */
 METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
 
    LOCAL cUrl := ;

@@ -344,8 +344,7 @@ CREATE CLASS JWindow
 
 ENDCLASS
 
-/* Start a new window definition
-*/
+/* Start a new window definition */
 METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS JWindow
 
    ::nH      := HtmlPageHandle()
@@ -363,8 +362,7 @@ METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS JWindow
 
    RETURN Self
 
-/* Set the properties of the window
-*/
+/* Set the properties of the window */
 METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
       Resizable, Menubar, personalBar, ;
       dependent, location, directories, ;
@@ -442,8 +440,7 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 
    RETURN Self
 
-/* set the size for the window
-*/
+/* set the size for the window */
 METHOD SetSize( x, y, h, w ) CLASS JWindow
 
    LOCAL cStr
@@ -463,8 +460,7 @@ METHOD SetSize( x, y, h, w ) CLASS JWindow
 
    RETURN Self
 
-/* Open the window from within the current document
-*/
+/* Open the window from within the current document */
 METHOD Put() CLASS JWindow
 
    LOCAL cStr
@@ -492,8 +488,7 @@ METHOD Put() CLASS JWindow
 
    RETURN Self
 
-/* Output stand alone Javascript code in the current document
-*/
+/* Output stand alone Javascript code in the current document */
 METHOD Write( c ) CLASS JWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
@@ -501,8 +496,7 @@ METHOD Write( c ) CLASS JWindow
    RETURN Self
 
 /* Output Javascript (or HTML) code in the current document and
-*  in the current script
-*/
+   in the current script */
 METHOD QOut( c ) CLASS JWindow
 
    FWrite( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
@@ -510,8 +504,7 @@ METHOD QOut( c ) CLASS JWindow
    RETURN Self
 
 /* Begin HTML output to the window from within the current document
-*  and the current script
-*/
+   and the current script */
 METHOD Begin() CLASS JWindow
 
    LOCAL i
@@ -569,16 +562,14 @@ METHOD Begin() CLASS JWindow
 
    RETURN Self
 
-/* End HTML output to the window
-*/
+/* End HTML output to the window */
 METHOD End() CLASS JWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('</body></html>')" + CRLF() )
 
    RETURN Self
 
-/* Place an image link to the window
-*/
+/* Place an image link to the window */
 METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
       cOnClick, cOnMsover, cOnMsout, ;
       cName, cAlt ) CLASS JWindow
@@ -597,7 +588,7 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    ENDIF
 
    IF HB_ISNUMERIC( nHeight )
-      cStr += " height=" + hb_ntos( nHeight ) + "% " + CRLF()
+      cStr += " height=" + hb_ntos( nHeight ) + "%" + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cOnClick )

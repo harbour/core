@@ -65,12 +65,10 @@ THREAD STATIC t_cForm := 0
 THREAD STATIC t_oPage := 0
 
 /****
+*  Constructors :
 *
-*     Constructors :
-*
-*     THtml():New()          Creates a new HTML document
-*     THtml():CGINew()       Creates a new CGI-HTML document
-*
+*  THtml():New()          Creates a new HTML document
+*  THtml():CGINew()       Creates a new CGI-HTML document
 */
 
 CREATE CLASS THtml
@@ -206,8 +204,7 @@ CREATE CLASS THtml
 
 ENDCLASS
 
-/* Starts a new CGI-HTML stream file.
-*/
+/* Starts a new CGI-HTML stream file. */
 METHOD cgiNew( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
       onLoad, onUnload, ;
@@ -487,10 +484,9 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    RETURN Self
 
 /****
-*     Begin a font definition. They may be nested but make sure you
-*     end the definition appropriately later
+*  Begin a font definition. They may be nested but make sure you
+*  end the definition appropriately later
 */
-
 METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLASS THtml
 
    LOCAL cStr := "<font "
@@ -550,10 +546,9 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    RETURN Self
 
 /****
-*     Begin a font definition by font type "name".
-*     Use ::endFont() to cancel this font
+*  Begin a font definition by font type "name".
+*  Use ::endFont() to cancel this font
 */
-
 METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
 
    LOCAL cStr := "<font "
@@ -597,8 +592,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
 
    RETURN Self
 
-/* End a font definition
-*/
+/* End a font definition */
 METHOD EndFont() CLASS THtml
 
    ::cStr += "</font>" + CRLF()
@@ -714,8 +708,7 @@ METHOD Paragraph( lStart, cAlign, cStyle ) CLASS THtml
 
    RETURN Self
 
-/* Put a Horizontal line
-*/
+/* Put a Horizontal line */
 METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
    ::cStr += CRLF() + ;
@@ -726,8 +719,7 @@ METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
    RETURN Self
 
-/* Put an HTML heading ( large text )
-*/
+/* Put an HTML heading ( large text ) */
 METHOD PutHeading( cText, nWeight, lCentered ) CLASS THtml
 
    hb_default( @nWeight, 3 )
@@ -745,8 +737,7 @@ METHOD PutHeading( cText, nWeight, lCentered ) CLASS THtml
 
    RETURN Self
 
-/* Put a text link.
-*/
+/* Put a text link. */
 METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, clr, size, style, bld, lbreak, cClass ) CLASS THtml
 
    LOCAL cStr := ""
@@ -811,8 +802,7 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
 
    RETURN Self
 
-/* Put an Image link.
-*/
+/* Put an Image link. */
 METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
       cOnclick, cOnMsOver, cOnMsOut, cName, cAlt, cTarget, nWidth, lbreak, cClass, ;
       Id, hSpace, Aling ) CLASS THtml
@@ -918,8 +908,7 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
 
    RETURN Self
 
-/* Put an Image.
-*/
+/* Put an Image. */
 METHOD PutImage( cImage, nBorder, nHeight, ;
       cOnclick, cOnMsOver, cOnMsOut, cName, cAlt, cTarget, ;
       nWidth, lbreak, Id, Map, Aling, hSpace ) CLASS THtml
@@ -982,8 +971,7 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
 
    RETURN Self
 
-/* Close an HTML disk file
-*/
+/* Close an HTML disk file */
 METHOD Close() CLASS THtml
 
 #if 0
@@ -1002,8 +990,7 @@ METHOD Close() CLASS THtml
 
    RETURN Self
 
-/* Close a CGI-HTML stream file
-*/
+/* Close a CGI-HTML stream file */
 METHOD cgiClose() CLASS THtml
 
    ::cStr += "</body>" + CRLF()
@@ -1013,8 +1000,7 @@ METHOD cgiClose() CLASS THtml
 
    RETURN Self
 
-/* Start an HTML table definition.
-*/
+/* Start an HTML table definition. */
 METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       l3d, lRuleCols, lRuleRows, cClrDark, cClrLight, cClrBorder, ;
       nCellPadding, nCellSpacing, cAling, lRules, ;
@@ -1103,8 +1089,7 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
 
    RETURN Self
 
-/* Define a table column Header.
-*/
+/* Define a table column Header. */
 METHOD TableHead( cHead, cColor, cAlign, ;
       cFont, nSize, cFntColor, nHeight, cBgPic ) CLASS THtml
 
@@ -1148,8 +1133,7 @@ METHOD TableHead( cHead, cColor, cAlign, ;
 
    RETURN Self
 
-/* Start a table row definition.
-*/
+/* Start a table row definition. */
 METHOD NewTableRow( cColor, vAling, aLing ) CLASS THtml
 
    LOCAL cStr := Space( 5 ) + "<tr"
@@ -1169,16 +1153,14 @@ METHOD NewTableRow( cColor, vAling, aLing ) CLASS THtml
 
    RETURN Self
 
-/* End a table row definition.
-*/
+/* End a table row definition. */
 METHOD EndTableRow() CLASS THtml
 
    ::cStr += Space( 5 ) + "</tr>" + CRLF()
 
    RETURN Self
 
-/* Start a table cell definition.
-*/
+/* Start a table cell definition. */
 METHOD NewTableCell( cAlign, cColor, ;
       cFont, nSize, cFntColor, nHeight, ;
       cBgPic, nWidth, lWrap, ;
@@ -1268,8 +1250,7 @@ METHOD NewTableCell( cAlign, cColor, ;
 
    RETURN Self
 
-/* End a table cell definition.
-*/
+/* End a table cell definition. */
 METHOD EndTableCell() CLASS THtml
 
    IF ::lFont
@@ -1282,8 +1263,7 @@ METHOD EndTableCell() CLASS THtml
 
    RETURN Self
 
-/* End a table definition.
-*/
+/* End a table definition. */
 METHOD EndTable() CLASS THtml
 
    ::cStr += ;
@@ -1292,8 +1272,7 @@ METHOD EndTable() CLASS THtml
 
    RETURN Self
 
-/* Creates a new form
-*/
+/* Creates a new form */
 METHOD NewForm( cMethod, cAction, cName ) CLASS THtml
 
    __defaultNIL( @cMethod, "POST" )
@@ -1317,8 +1296,7 @@ METHOD NewForm( cMethod, cAction, cName ) CLASS THtml
 
    RETURN Self
 
-/* Adds a form edit field
-*/
+/* Adds a form edit field */
 METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
 
    ::cStr += "<input type=" + '"' + hb_defaultValue( cType, "edit" ) + '"'
@@ -1339,16 +1317,14 @@ METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
 
    RETURN Self
 
-/* Adds a form submit button
-*/
+/* Adds a form submit button */
 METHOD FormSubmit( cText ) CLASS THtml
 
    ::cStr += '<input type="submit" Value=' + '"' + cText + '"' + ">" + CRLF()
 
    RETURN Self
 
-/* Adds a form image button
-*/
+/* Adds a form image button */
 METHOD FormImage( cText, name, file ) CLASS THtml
 
    HB_SYMBOL_UNUSED( cText )
@@ -1357,8 +1333,7 @@ METHOD FormImage( cText, name, file ) CLASS THtml
 
    RETURN Self
 
-/* Adds a reset button
-*/
+/* Adds a reset button */
 METHOD FormReset( cText ) CLASS THtml
 
    ::cStr += '<input type="Reset" Value=' + '"' + cText + '"' + ">" + CRLF()
@@ -1366,8 +1341,7 @@ METHOD FormReset( cText ) CLASS THtml
    RETURN Self
 
 /* Insert a standalone push button and assign an action to it
-*  Either pass onClick or cCgiApp - not both
-*/
+   Either pass onClick or cCgiApp - not both */
 METHOD PushButton( cName, cCaption, ;
       cCgiApp, ;
       cOnClick, ;
@@ -1415,8 +1389,7 @@ METHOD PushButton( cName, cCaption, ;
 
    RETURN Self
 
-/* Insert a standalone <button> push button and assign an action to it
-*/
+/* Insert a standalone <button> push button and assign an action to it */
 METHOD Button( cName, cCaption, ;
       cOnClick, ;
       cCGIApp, ;
@@ -1457,16 +1430,14 @@ METHOD Button( cName, cCaption, ;
 
    RETURN Self
 
-/* End a <button> definition
-*/
+/* End a <button> definition */
 METHOD EndButton() CLASS THtml
 
    ::cStr += CRLF() + CRLF() + "</button>" + CRLF()
 
    RETURN Self
 
-/* Display a scrolling marquee effect
-*/
+/* Display a scrolling marquee effect */
 METHOD Marquee( cText, cFont, cFntColor, nFntSize, ;
       cAlign, nWidth, nHeight, cbgColor, ;
       cBehavior, cDirection, ;
@@ -1511,8 +1482,7 @@ METHOD Marquee( cText, cFont, cFntColor, nFntSize, ;
 
    RETURN Self
 
-/* Start a scrolling marquee effect definition
-*/
+/* Start a scrolling marquee effect definition */
 METHOD StartMarquee( cFont, cFntColor, nFntSize, ;
       cAlign, nWidth, nHeight, cbgColor, ;
       cBehavior, cDirection, ;
@@ -1562,8 +1532,7 @@ METHOD EndMarquee() CLASS THtml
 
    RETURN Self
 
-/* Define an inline frame.
-*/
+/* Define an inline frame. */
 METHOD iFrame( name, src, border, marginwidth, marginheight, ;
       scrolling, align, WIDTH, HEIGHT ) CLASS THtml
 
@@ -1704,23 +1673,19 @@ METHOD PutLinkName( cName ) CLASS THtml
 
    RETURN Self
 
-/* Returns the current HTML page handle
-*/
+/* Returns the current HTML page handle */
 FUNCTION HtmlPageHandle()
    RETURN t_nHtm
 
-/* Returns the current ( or last ) form name
-*/
+/* Returns the current ( or last ) form name */
 FUNCTION HtmlFormName()
    RETURN t_cForm
 
-/* Return the current THtml() object.
-*/
+/* Return the current THtml() object. */
 FUNCTION HtmlPageObject()
    RETURN t_oPage
 
-/* Decodes a URL encoded string. Also handles international charsets.
-*/
+/* Decodes a URL encoded string. Also handles international charsets. */
 FUNCTION HtmlDecodeUrl( cString )
    RETURN hb_StrReplace( cString, { ;
       "%26" => "&", ;
@@ -1740,8 +1705,7 @@ FUNCTION HtmlDecodeUrl( cString )
       "%60" => "`", ;
       "%2F" => "/" } )
 
-/* Inserts inline Javascript source
-*/
+/* Inserts inline Javascript source */
 PROCEDURE HtmlJSCmd( nH, cCmd )
 
    FWrite( hb_defaultValue( nH, HtmlPageHandle() ), ;
@@ -1751,8 +1715,7 @@ PROCEDURE HtmlJSCmd( nH, cCmd )
 
    RETURN
 
-/* HtmlLinkStyle()
-*/
+/* HtmlLinkStyle() */
 FUNCTION HtmlLinkStyle( cHoverStyle, cHoverClr, cHoverBG, cLinkStyle, cLinkClr, cLinkBG )
    RETURN ;
       "<!-- A:hover {text-decoration:" + hb_defaultValue( cHoverStyle, "normal" ) + ;

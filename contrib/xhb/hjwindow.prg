@@ -116,8 +116,7 @@ CREATE CLASS TJSWindow
 
 ENDCLASS
 
-/* Start a new window definition
-*/
+/* Start a new window definition */
 METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJSWindow
 
    ::nH      := HtmlPageHandle()
@@ -133,8 +132,7 @@ METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJSWindow
 
    RETURN Self
 
-/* Set the properties of the window
-*/
+/* Set the properties of the window */
 METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
       Resizable, Menubar, personalBar, ;
       dependent, location, directories, ;
@@ -212,8 +210,7 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 
    RETURN Self
 
-/* set the size for the window
-*/
+/* set the size for the window */
 METHOD SetSize( x, y, h, w ) CLASS TJSWindow
 
    LOCAL cStr
@@ -233,8 +230,7 @@ METHOD SetSize( x, y, h, w ) CLASS TJSWindow
 
    RETURN Self
 
-/* Open the window from within the current document
-*/
+/* Open the window from within the current document */
 METHOD Put() CLASS TJSWindow
 
    LOCAL cStr := ""
@@ -262,8 +258,7 @@ METHOD Put() CLASS TJSWindow
 
    RETURN Self
 
-/* Output stand alone Javascript code in the current document
-*/
+/* Output stand alone Javascript code in the current document */
 METHOD Write( c ) CLASS TJSWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
@@ -271,8 +266,7 @@ METHOD Write( c ) CLASS TJSWindow
    RETURN Self
 
 /* Output Javascript (or HTML) code in the current document and
-*  in the current script
-*/
+   in the current script */
 METHOD QOut( c ) CLASS TJSWindow
 
    FWrite( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
@@ -280,8 +274,7 @@ METHOD QOut( c ) CLASS TJSWindow
    RETURN Self
 
 /* Begin HTML output to the window from within the current document
-*  and the current script
-*/
+   and the current script */
 METHOD Begin() CLASS TJSWindow
 
    LOCAL i
@@ -296,13 +289,13 @@ METHOD Begin() CLASS TJSWindow
 
    IF HB_ISARRAY( ::aScriptSrc ) .OR. HB_ISHASH( ::aScriptSrc )
       FOR EACH i IN ::aScriptSrc
-         ::QOut( '<script language=JavaScript src="' + i + '"></script>' )
+         ::QOut( "<script language=JavaScript src=" + '"' + i + '"' + "></script>" )
       NEXT
    ENDIF
 
    IF HB_ISARRAY( ::aServerSrc ) .OR. HB_ISHASH( ::aServerSrc )
       FOR EACH i IN ::aServerSrc
-         ::QOut( '<script language=JavaScript src="' + i + '" runat=SERVER></script>' )
+         ::QOut( "<script language=JavaScript src=" + '"' + i + '"' + " runat=SERVER></script>" )
       NEXT
    ENDIF
 
@@ -313,25 +306,25 @@ METHOD Begin() CLASS TJSWindow
    ::QOut( "</head>" + "<body" )
 
    IF HB_ISSTRING( ::onLoad )
-      ::QOut( '   onLoad="' + ::onLoad + '"' )
+      ::QOut( "   onLoad=" + '"' + ::onLoad + '"' )
    ENDIF
 
    IF HB_ISSTRING( ::onUnLoad )
-      ::QOut( ' onUnload="' + ::onUnLoad + '"' )
+      ::QOut( " onUnload=" + '"' + ::onUnLoad + '"' )
    ENDIF
 
-   ::QOut( '>' )
+   ::QOut( ">" )
 
    IF HB_ISSTRING( ::bgColor )
-      ::QOut( '<body bgcolor="' + ::bgColor + '">' )
+      ::QOut( "<body bgcolor=" + '"' + ::bgColor + '"' + ">" )
    ENDIF
 
    IF HB_ISSTRING( ::fontColor )
-      ::QOut( '<body text="' + ::fontColor + '">' )
+      ::QOut( "<body text=" + '"' + ::fontColor + '"' + ">" )
    ENDIF
 
    IF HB_ISSTRING( ::bgImage )
-      ::QOut( '<body background="' + ::bgImage + '">' )
+      ::QOut( "<body background=" + '"' + ::bgImage + '"' + ">" )
    ENDIF
 
    FWrite( ::nH, "//-->" )
@@ -339,16 +332,14 @@ METHOD Begin() CLASS TJSWindow
 
    RETURN Self
 
-/* End HTML output to the window
-*/
+/* End HTML output to the window */
 METHOD End() CLASS TJSWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('</body></html>')" + CRLF() )
 
    RETURN Self
 
-/* Place an image link to the window
-*/
+/* Place an image link to the window */
 METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
       cOnClick, cOnMsover, cOnMsout, ;
       cName, cAlt ) CLASS TJSWindow
@@ -356,34 +347,34 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    LOCAL cStr := ""
 
    IF HB_ISSTRING( cName )
-      cStr += ' name= "' + cName + '"' + CRLF()
+      cStr += " name=" + '"' + cName + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cAlt )
-      cStr += ' alt= "' + cAlt + '"' + CRLF()
+      cStr += " alt=" + '"' + cAlt + '"' + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( nBorder )
-      cStr += " border= " + hb_ntos( nBorder ) + CRLF()
+      cStr += " border=" + hb_ntos( nBorder ) + CRLF()
    ENDIF
 
    IF HB_ISNUMERIC( nHeight )
-      cStr += " height= " + hb_ntos( nHeight ) + "% " + CRLF()
+      cStr += " height=" + hb_ntos( nHeight ) + "%" + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cOnClick )
-      cStr += ' onClick="' + cOnClick + '"' + CRLF()
+      cStr += " onClick=" + '"' + cOnClick + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      cStr += ' onMouseOver="' + cOnMsOver + '"' + CRLF()
+      cStr += " onMouseOver=" + '"' + cOnMsOver + '"' + CRLF()
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      cStr += ' onMouseOut="' + cOnMsOut + '"' + CRLF()
+      cStr += " onMouseOut=" + '"' + cOnMsOut + '"' + CRLF()
    ENDIF
 
    IF HB_ISSTRING( cURL )
-      ::QOut( '<a href=' + cUrl + '><img src="' + cImage + '"' + cStr + '></a>' )
+      ::QOut( "<a href=" + cUrl + "><img src=" + '"' + cImage + '"' + cStr + "></a>" )
    ELSE
-      ::QOut( '<img src="' + cImage + '"' + cStr + '></a>' )
+      ::QOut( "<img src=" + '"' + cImage + '"' + cStr + "></a>" )
    ENDIF
 
    RETURN Self
