@@ -108,9 +108,6 @@ PROCEDURE Main()
 
    RETURN
 
-/**
-*/
-
 STATIC FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    LOCAL oldColor := SetColor( "R/N" )
@@ -120,9 +117,6 @@ STATIC FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrVi
    SetColor( oldColor )
 
    RETURN SQLITE_OK
-
-/**
-*/
 
 STATIC FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
@@ -134,9 +128,6 @@ STATIC FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrV
 
    RETURN iif( cName2 == "pasw", SQLITE_IGNORE, SQLITE_OK )
 
-/**
-*/
-
 STATIC FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    HB_SYMBOL_UNUSED( cName1 )
@@ -145,9 +136,6 @@ STATIC FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrV
    HB_SYMBOL_UNUSED( cTriggerOrViewName )
 
    RETURN iif( nAction == SQLITE_SELECT, SQLITE_DENY, SQLITE_OK )
-
-/**
-*/
 
 STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
@@ -162,14 +150,8 @@ STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    RETURN 0
 
-/**
-*/
-
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
    RETURN iif( hb_defaultValue( lShortMsg, .T. ), hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
-
-/**
-*/
 
 STATIC FUNCTION PrepareDB( cFile )
 

@@ -181,7 +181,7 @@ _DUMB_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a
 /* test of preserving spaces in expressions */
 /* Notice that Clipper and Harbour doesn't remove spaces from
  * expressions passed for stingify
-*/
+ */
  index on Left(   f1  ,  10   )      to _tst
 
 /* ---------------------------------------------------------------------*/

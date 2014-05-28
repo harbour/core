@@ -64,12 +64,11 @@ THREAD STATIC t_nHtm  := NIL
 THREAD STATIC t_cForm := 0
 THREAD STATIC t_oPage := 0
 
-/****
-*  Constructors :
-*
-*  THtml():New()          Creates a new HTML document
-*  THtml():CGINew()       Creates a new CGI-HTML document
-*/
+/* Constructors:
+
+   THtml():New()          Creates a new HTML document
+   THtml():CGINew()       Creates a new CGI-HTML document
+ */
 
 CREATE CLASS THtml
 
@@ -483,10 +482,8 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
 
    RETURN Self
 
-/****
-*  Begin a font definition. They may be nested but make sure you
-*  end the definition appropriately later
-*/
+/* Begin a font definition. They may be nested but make sure you
+   end the definition appropriately later */
 METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLASS THtml
 
    LOCAL cStr := "<font "
@@ -545,10 +542,8 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
 
    RETURN Self
 
-/****
-*  Begin a font definition by font type "name".
-*  Use ::endFont() to cancel this font
-*/
+/* Begin a font definition by font type "name".
+   Use ::endFont() to cancel this font */
 METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
 
    LOCAL cStr := "<font "

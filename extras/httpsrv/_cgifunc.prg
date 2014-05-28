@@ -124,7 +124,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
                QUERY    - part after question mark ?
                FRAGMENT - part after hashmark #
 
-*/
+ */
 FUNCTION uhttpd_SplitUrl( cUrl )
 
    LOCAL hUrl := { => }
@@ -269,7 +269,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
   Sample:
   SplitString( "this=is=a=line=with=equals", "=" ) -> { "this", "is", "a", "line", "with", "equals" }
 
-*/
+ */
 FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
 
    LOCAL nEOLPos
@@ -307,9 +307,6 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
 
    RETURN aLines
 
-/************************************************************
-* Encoding URL
-*/
 FUNCTION uhttpd_URLEncode( cString, lComplete )
 
 #ifdef HB_USE_HBTIP
@@ -346,9 +343,6 @@ FUNCTION uhttpd_URLEncode( cString, lComplete )
 
    RETURN cRet
 
-/************************************************************
-* Decoding URL
-*/
 FUNCTION uhttpd_URLDecode( cString )
 
 #ifdef HB_USE_HBTIP

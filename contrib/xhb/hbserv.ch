@@ -74,7 +74,7 @@
    4: address that rised the signal
    5: process id of the signal riser
    6: UID of the riser
-*/
+ */
 
 #define HB_SERVICE_OSSIGNAL  1
 #define HB_SERVICE_OSSUBSIG  2

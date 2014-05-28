@@ -1,5 +1,4 @@
-/*
-   This program demonstrates that the 4 diskspace related functions work
+/* This program demonstrates that the 4 diskspace related functions work
    correctly for disks of any size.
 
    Certain OS's may allow limits to the amount of disk space available to
@@ -12,7 +11,7 @@
    www - http://harbour-project.org
 
    This test program placed in the public domain
-*/
+ */
 
 #include "fileio.ch"
 

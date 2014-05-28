@@ -130,10 +130,8 @@ METHOD Block() CLASS TBColumnSQL
 
 /* -------------------------------------------------------- */
 
-/*
-   This class is more or less like a TBrowseDB() object in that it receives an oQuery/oTable
-   object and gives back a browseable view of it
-*/
+/* This class is more or less like a TBrowseDB() object in that it receives an oQuery/oTable
+   object and gives back a browseable view of it */
 CREATE CLASS TBrowseSQL FROM TBrowse
 
    VAR oCurRow                       // Active row inside table / sql query

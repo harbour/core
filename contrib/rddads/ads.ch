@@ -64,7 +64,7 @@
 
    2) Set this "define" when compiling rddads:
       -DADS_LIB_VERSION=500
-*/
+ */
 
 #ifndef ADS_CH_
 #define ADS_CH_

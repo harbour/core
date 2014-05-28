@@ -8,7 +8,7 @@
  */
 
 /* Harbour MT functions used in this test */
-/*
+#ifdef _COMMENT_
 #xtranslate hb_mutexSubscribe(      => mt_mutexSubscribe(
 #xtranslate hb_mutexNotify(         => mt_mutexNotify(
 #xtranslate hb_mutexCreate(         => mt_mutexCreate(
@@ -16,7 +16,7 @@
 #xtranslate hb_threadStart(         => mt_threadStart(
 #xtranslate hb_threadJoin(          => mt_threadJoin(
 #xtranslate hb_threadWaitForAll(    => mt_threadWaitForAll(
-*/
+#endif
 
 #define N_TESTS 56
 #define N_LOOPS 1000000
@@ -700,7 +700,7 @@ function f_prv( x )
 
    return nil
 
-/*
+#ifdef _COMMENT_
 function f_pub( x )
    memvar p_PUB_C
    public p_PUB_C := x
@@ -710,7 +710,7 @@ function f_stat( x )
    static s_STAT_C
    s_STAT_C := x
    return nil
-*/
+#endif
 
 static function mkBlock( x )
    return &x
@@ -1061,7 +1061,7 @@ static function hb_threadWaitForAll( aThreads )
 #endif /* __XPP__ */
 
 
-/*
+#ifdef _COMMENT_
 static function hb_threadStart( cFunc, xPar1, xPar2, xPar3 )
    return nil
 static function hb_threadJoin( thId, xResult )
@@ -1080,7 +1080,7 @@ static function hb_threadWaitForAll()
    return nil
 static function hb_mtvm()
    return .f.
-*/
+#endif
 
 #endif
 

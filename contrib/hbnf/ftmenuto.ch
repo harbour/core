@@ -23,12 +23,10 @@
  *
  */
 
-/*
-   These commands will simplify use of the ft_Prompt() and
+/* These commands will simplify use of the ft_Prompt() and
    ft_MenuTo() functions.  Refer to menuto.prg for more info.
    These commands can replace the existing Clipper @ PROMPT and
-   MENU TO commands.
-*/
+   MENU TO commands. */
 
 #xcommand @ <Row>, <Col> PROMPT <Prompt>                    ;
                         [COLOR <Attr>]                      ;

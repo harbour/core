@@ -187,9 +187,7 @@
 
    95 - Challenge reply
       <NUM8> - the CRC32 checksum of challenge.
-
-
-*/
+ */
 
 #include "hbclass.ch"
 

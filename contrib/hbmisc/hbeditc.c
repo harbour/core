@@ -2361,9 +2361,7 @@ static void Tab( PHB_EDITOR pEd, HB_BOOL fInsert )
 }
 #endif
 
-/*
-**
-*/
+/* ---- */
 
 #if 0
 HB_FUNC( ED_TAB )

@@ -48,11 +48,9 @@
  *
  */
 
-/*
-   This is based upon a library originally made by Dan Levitt <dan@boba-fett.net>
+/* This is based upon a library originally made by Dan Levitt <dan@boba-fett.net>
    The original files have been committed as v1.0. So you can always retrieve them
-   (see VCS docs on how to)
-*/
+   (see VCS docs on how to) */
 
 #include "telepath.ch"
 

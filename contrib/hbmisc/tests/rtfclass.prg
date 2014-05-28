@@ -4,7 +4,7 @@
  * initial release: 1999-06-23 Andi Jahja
  * works with printable ASCII only
  * placed in the public domain
-*/
+ */
 
 #require "hbmisc"
 

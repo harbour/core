@@ -30,13 +30,12 @@
 
 #xtranslate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => hb_DispBox( <top>, <left>, <bottom>, <right>, HB_B_DOUBLE_UNI + " " )
 
-/*
-   here's the board array -- structure of which is:
+/* here's the board array -- structure of which is:
    board_[ xx, 1 ] - subarray containing box coordinates for this peg
    board_[ xx, 2 ] - subarray containing all adjacent locations
    board_[ xx, 3 ] - subarray containing all target locations
    board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No
-*/
+ */
 
 PROCEDURE ft_Pegs()
 

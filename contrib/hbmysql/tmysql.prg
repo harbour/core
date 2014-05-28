@@ -161,10 +161,9 @@ METHOD FieldLen( nNum ) CLASS TMySQLRow
 
    RETURN iif( nNum >= 1 .AND. nNum <= Len( ::aFieldStruct ), ::aFieldStruct[ nNum ][ MYSQL_FS_LENGTH ], 0 )
 
-/*
-   lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
+/* lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
    lFormat is usefull for copying table structure from mysql to dbf
-*/
+ */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
@@ -551,7 +550,6 @@ METHOD Destroy() CLASS TMySQLQuery
 
 
 METHOD FCount() CLASS TMySQLQuery
-
    RETURN ::nNumFields
 
 
@@ -583,7 +581,6 @@ METHOD FieldPos( cFieldName ) CLASS TMySQLQuery
 #else
    RETURN AScan( ::aFieldStruct, {| aItem | Upper( aItem[ MYSQL_FS_NAME ] ) == cUpperName } )
 #endif
-
 
 // Returns name of field N
 METHOD FieldName( nNum ) CLASS TMySQLQuery
@@ -617,7 +614,6 @@ METHOD FieldGet( cnField ) CLASS TMySQLQuery
 
    RETURN NIL
 
-
 METHOD FieldLen( nNum ) CLASS TMySQLQuery
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
@@ -626,11 +622,8 @@ METHOD FieldLen( nNum ) CLASS TMySQLQuery
 
    RETURN 0
 
-
-/*
-   lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
-   lFormat is usefull for copying table structure from mysql to dbf
-*/
+/* lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
+   lFormat is usefull for copying table structure from mysql to dbf */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
@@ -644,7 +637,6 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
    ENDIF
 
    RETURN 0
-
 
 METHOD FieldType( nNum ) CLASS TMySQLQuery
 

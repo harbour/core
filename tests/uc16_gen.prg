@@ -159,7 +159,6 @@ procedure main()
    ? "minimal size:", hb_ntos( n ), ;
      "for", hb_ntos( hb_bitShift( 1, nBitCh ) ), "byte blocks, (from: " + hb_ntos( nMinCh ) + ")"
    ?
-*/
 
 
    cResult := ;

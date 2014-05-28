@@ -128,7 +128,7 @@ rddSetDefault( rdd )
    ? "RDD:", rdd
    ? "creating database and index..."
    dbCreate( _DBNAME, aDb )
-/*
+#ifdef _COMMENT_
    USE _DBNAME SHARED
 
    FLock()
@@ -140,7 +140,7 @@ rddSetDefault( rdd )
    next
    dbCommit()
    dbUnlock()
-*/
+#endif
    return
 
 

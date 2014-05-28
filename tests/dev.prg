@@ -1,7 +1,7 @@
 /* Harbour Project source code
    http://harbour-project.org/
    Public domain program written by David G. Holm <dholm@jsd-llc.com>
-*/
+ */
 
 // Test program for DevPos() and DevOut() Clipper compatibility
 // The result is either dev_cl.prn or dev_hb.prn, depending upon

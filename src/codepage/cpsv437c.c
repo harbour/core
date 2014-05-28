@@ -75,7 +75,7 @@
           between Clipper and Harbour applications.
  */
 
-/*
+#if 0
 #define HB_CP_ID        SVCLIP
 #define HB_CP_INFO      "Swedish CP-437"
 #define HB_CP_UNITB     HB_UNITB_437
@@ -83,7 +83,7 @@
 #define HB_CP_UPPER     "ABCDEÉFGHIJKLMNOPQRSTUVWXYÜZÅÄÖ"
 #define HB_CP_LOWER     "abcdeèfghijklmnopqrstuvwxyüzåäö"
 #define HB_CP_UTF8
-*/
+#endif
 
 #define HB_CP_ID        SV437C
 #define HB_CP_INFO      "Swedish CP-437 (ntxswe.obj compatible)"

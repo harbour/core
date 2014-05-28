@@ -5,8 +5,7 @@
    USA.  A summary of the license and the full legal text is included
    in file: COPYING.txt.  If you wish to distribute some or all of this
    work under different terms, please contact respective author(s).
-   The license applies to all entries on or after Version 1.1.0.
-*/
+   The license applies to all entries on or after Version 1.1.0. */
 
 Version 3.0.0 (2011-07-17)
 
