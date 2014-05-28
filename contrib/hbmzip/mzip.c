@@ -59,7 +59,7 @@
 #include "hbdate.h"
 #include "hbset.h"
 
-#if defined( HB_OS_UNIX )
+#if ! defined( HB_OS_UNIX )
 #  undef _LARGEFILE64_SOURCE
 #endif
 
