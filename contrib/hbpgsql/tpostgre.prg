@@ -743,8 +743,6 @@ METHOD FieldPos( cField ) CLASS TPQquery
 
 METHOD FieldName( nField ) CLASS TPQquery
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ELSEIF nField < 1 .OR. nField > Len( ::aStruct )
@@ -752,15 +750,13 @@ METHOD FieldName( nField ) CLASS TPQquery
    ENDIF
 
    IF nField > 0
-      result := ::aStruct[ nField ][ _STRU_FIELDNAME ]
+      RETURN ::aStruct[ nField ][ _STRU_FIELDNAME ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldType( nField ) CLASS TPQquery
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ELSEIF nField < 1 .OR. nField > Len( ::aStruct )
@@ -768,15 +764,13 @@ METHOD FieldType( nField ) CLASS TPQquery
    ENDIF
 
    IF nField > 0
-      result := ::aStruct[ nField ][ _STRU_FIELDTYPE ]
+      RETURN ::aStruct[ nField ][ _STRU_FIELDTYPE ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldLen( nField ) CLASS TPQquery
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ELSEIF nField < 1 .OR. nField > Len( ::aStruct )
@@ -784,15 +778,13 @@ METHOD FieldLen( nField ) CLASS TPQquery
    ENDIF
 
    IF nField > 0
-      result := ::aStruct[ nField ][ _STRU_FIELDLEN ]
+      RETURN ::aStruct[ nField ][ _STRU_FIELDLEN ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldDec( nField ) CLASS TPQquery
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ELSEIF nField < 1 .OR. nField > Len( ::aStruct )
@@ -800,10 +792,10 @@ METHOD FieldDec( nField ) CLASS TPQquery
    ENDIF
 
    IF nField > 0
-      result := ::aStruct[ nField ][ _STRU_FIELDDEC ]
+      RETURN ::aStruct[ nField ][ _STRU_FIELDDEC ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD Delete( oRow ) CLASS TPQquery
 
@@ -1180,7 +1172,7 @@ CREATE CLASS TPQRow
 ENDCLASS
 
 
-METHOD new( row, old, struct ) CLASS TPQrow
+METHOD New( row, old, struct ) CLASS TPQrow
 
    ::aRow := row
    ::aOld := old
@@ -1190,45 +1182,39 @@ METHOD new( row, old, struct ) CLASS TPQrow
 
 METHOD FieldGet( nField ) CLASS TPQrow
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ENDIF
 
    IF nField >= 1 .AND. nField <= Len( ::aRow )
-      result := ::aRow[ nField ]
+      RETURN ::aRow[ nField ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldPut( nField, Value ) CLASS TPQrow
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ENDIF
 
    IF nField >= 1 .AND. nField <= Len( ::aRow )
-      result := ::aRow[ nField ] := Value
+      RETURN ::aRow[ nField ] := Value
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldName( nField ) CLASS TPQrow
-
-   LOCAL result
 
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ENDIF
 
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ _STRU_FIELDNAME ]
+      RETURN ::aStruct[ nField ][ _STRU_FIELDNAME ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldPos( cField ) CLASS TPQrow
 
@@ -1238,45 +1224,39 @@ METHOD FieldPos( cField ) CLASS TPQrow
 
 METHOD FieldType( nField ) CLASS TPQrow
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ENDIF
 
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ _STRU_FIELDTYPE ]
+      RETURN ::aStruct[ nField ][ _STRU_FIELDTYPE ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldLen( nField ) CLASS TPQrow
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ENDIF
 
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ _STRU_FIELDLEN ]
+      RETURN ::aStruct[ nField ][ _STRU_FIELDLEN ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldDec( nField ) CLASS TPQrow
 
-   LOCAL result
-
    IF HB_ISSTRING( nField )
       nField := ::FieldPos( nField )
    ENDIF
 
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ _STRU_FIELDDEC ]
+      RETURN ::aStruct[ nField ][ _STRU_FIELDDEC ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 STATIC FUNCTION EscapeParam( cString )
 

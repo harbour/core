@@ -59,13 +59,11 @@
  * METHOD SetStmtOptions( nType, uBuffer )
  * METHOD GetStmtOptions( nType )
  * METHOD SetAutoCommit( lEnable )
- *
  */
 
 #include "hbclass.ch"
 #include "sql.ch"
 
-//
 // Class TODBCField
 // Fields information collection
 // -----------------------------------------------------------------
@@ -87,7 +85,6 @@ ENDCLASS
 METHOD New() CLASS TODBCField
    RETURN Self
 
-//
 // Class TODBC
 // Manages ODBC access
 // -----------------------------------------------------------------
@@ -199,10 +196,10 @@ METHOD SetAutoCommit( lEnable ) CLASS TODBC
 
 METHOD PROCEDURE Destroy() CLASS TODBC
 
-   SQLDisconnect( ::hDbc )                     // Disconnects from Driver
+   SQLDisconnect( ::hDbc )     // Disconnects from Driver
 
-   ::hDbc := NIL                               // Frees the connection
-   ::hEnv := NIL                               // Frees the environment
+   ::hDbc := NIL               // Frees the connection
+   ::hEnv := NIL               // Frees the environment
 
    RETURN
 
@@ -215,15 +212,12 @@ METHOD GetCnnOptions( nType ) CLASS TODBC
    RETURN cBuffer
 
 METHOD SetCnnOptions( nType, uBuffer ) CLASS TODBC
-
    RETURN ::nRetCode := SQLSetConnectAttr( ::hDbc, nType, uBuffer )
 
 METHOD Commit() CLASS TODBC
-
    RETURN ::nRetCode := SQLCommit( ::hEnv, ::hDbc )
 
 METHOD RollBack() CLASS TODBC
-
    RETURN ::nRetCode := SQLRollback( ::hEnv, ::hDbc )
 
 METHOD GetStmtOptions( nType ) CLASS TODBC
@@ -235,14 +229,11 @@ METHOD GetStmtOptions( nType ) CLASS TODBC
    RETURN cBuffer
 
 METHOD SetStmtOptions( nType, uBuffer ) CLASS TODBC
-
    RETURN ::nRetCode := SQLSetStmtAttr( ::hStmt, nType, uBuffer )
 
 METHOD PROCEDURE SetSQL( cSQL ) CLASS TODBC
 
-   // If the DataSet is active, close it
-   // before assigning new statement
-
+   // If the DataSet is active, close it before assigning new statement
    IF ::Active
       ::Close()
    ENDIF
@@ -573,35 +564,28 @@ METHOD GoTo( nRecNo ) CLASS TODBC
 
 // Skips dataset to the next record - wrapper to Next()
 METHOD Skip() CLASS TODBC
-
    RETURN ::Next()
 
 // Checks for End of File (End of DataSet, actually)
 // NOTE: Current implementation usable only with drivers that report number of records in last select
 METHOD Eof() CLASS TODBC
-
    // Do we have any data in recordset?
-
    RETURN ::nRecCount == 0 .OR. ::nRecNo > ::nRecCount
 
 // Checks for Begining of File
 METHOD Bof() CLASS TODBC
-
    RETURN ::lBof
 
 // Returns the current row in dataset
 METHOD RecNo() CLASS TODBC
-
    RETURN ::nRecNo
 
 // Returns number of rows ( if that function is supported by ODBC driver )
 METHOD LastRec() CLASS TODBC
-
    RETURN ::nRecCount
 
 // Returns number of rows ( if that function is supported by ODBC driver )
 METHOD RecCount() CLASS TODBC
-
    RETURN ::nRecCount
 
 // Loads current record data into the Fields collection

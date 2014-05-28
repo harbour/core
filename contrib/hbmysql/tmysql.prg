@@ -1278,47 +1278,30 @@ METHOD sql_version() CLASS TMySQLServer
 METHOD ssl_cipher() CLASS TMySQLServer
    RETURN mysql_get_ssl_cipher( ::nSocket )
 
-
 #if 0
 METHOD SelectDB( cDBName ) CLASS TMySQLServer
 
-  IF mysql_select_db( ::nSocket, cDBName ) == 0
-     ::cDBName := cDBName
-     RETURN .T.
-  ELSE
-     ::cDBName := ""
-  ENDIF
+   IF mysql_select_db( ::nSocket, cDBName ) == 0
+      ::cDBName := cDBName
+      RETURN .T.
+   ENDIF
 
-  RETURN .F.
+   ::cDBName := ""
+   RETURN .F.
 #endif
 
-// === alterado ===
 METHOD SelectDB( cDBName ) CLASS TMySQLServer
 
-   ::lError := .F.
-
-   IF mysql_select_db( ::nSocket, cDBName ) != 0     /* table doesn't exist */
-      ::cDBName := ""
-      ::lError := .T.
-   ELSE                                       /* table exists */
+   IF mysql_select_db( ::nSocket, cDBName ) == 0     /* table exists */
       ::cDBName := cDBName
-      ::lError := .F.
-      RETURN .T.
+      RETURN ::lError := .F.
    ENDIF
 
-   RETURN .F.
-
+   ::cDBName := ""
+   RETURN ::lError := .T.
 
 METHOD CreateDatabase( cDataBase ) CLASS TMySQLServer
-
-   LOCAL cCreateQuery := "CREATE DATABASE " + Lower( cDatabase )
-
-   IF mysql_query( ::nSocket, cCreateQuery ) == 0
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
-
+   RETURN mysql_query( ::nSocket, "CREATE DATABASE " + Lower( cDatabase ) ) == 0
 
 // NOTE: OS/2 port of MySQL is picky about table names, that is if you create a table with
 // an upper case name you cannot alter it (for example) using a lower case name, this violates
@@ -1407,7 +1390,6 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
 
    RETURN .F.
 
-
 METHOD CreateIndex( cName, cTable, aFNames, lUnique ) CLASS TMySQLServer
 
    LOCAL cCreateQuery := "CREATE "
@@ -1425,45 +1407,16 @@ METHOD CreateIndex( cName, cTable, aFNames, lUnique ) CLASS TMySQLServer
    // remove last comma from list
    cCreateQuery := hb_StrShrink( cCreateQuery ) + ")"
 
-   IF mysql_query( ::nSocket, cCreateQuery ) == 0
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
-
+   RETURN mysql_query( ::nSocket, cCreateQuery ) == 0
 
 METHOD DeleteIndex( cName, cTable ) CLASS TMySQLServer
-
-   LOCAL cDropQuery := "DROP INDEX " + cName + " FROM " + Lower( cTable )
-
-   IF mysql_query( ::nSocket, cDropQuery ) == 0
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
-
+   RETURN mysql_query( ::nSocket, "DROP INDEX " + cName + " FROM " + Lower( cTable ) ) == 0
 
 METHOD DeleteTable( cTable ) CLASS TMySQLServer
-
-   LOCAL cDropQuery := "DROP TABLE " + Lower( cTable )
-
-   IF mysql_query( ::nSocket, cDropQuery ) == 0
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
-
+   RETURN mysql_query( ::nSocket, "DROP TABLE " + Lower( cTable ) ) == 0
 
 METHOD DeleteDatabase( cDataBase ) CLASS TMySQLServer
-
-   LOCAL cDropQuery := "DROP DATABASE " + Lower( cDataBase )
-
-   IF mysql_query( ::nSocket, cDropQuery ) == 0
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
-
+   RETURN mysql_query( ::nSocket, "DROP DATABASE " + Lower( cDataBase ) ) == 0
 
 METHOD Query( cQuery ) CLASS TMySQLServer
 
@@ -1501,23 +1454,17 @@ METHOD Query( cQuery ) CLASS TMySQLServer
 
    RETURN oQuery
 
-
 METHOD Error() CLASS TMySQLServer
 
    ::lError := .F.
 
    RETURN iif( Empty( ::nSocket ), "No connection to server", mysql_error( ::nSocket ) )
 
-
 METHOD ListDBs() CLASS TMySQLServer
-
    RETURN mysql_list_dbs( ::nSocket )
 
-
 METHOD ListTables() CLASS TMySQLServer
-
    RETURN mysql_list_tables( ::nSocket )
-
 
 /* TOFIX: Conversion creates a .dbf with fields of wrong dimension (often) */
 METHOD TableStruct( cTable ) CLASS TMySQLServer

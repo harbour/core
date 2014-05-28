@@ -67,8 +67,7 @@
    ASSIGN Block( x ) METHOD Block( x )
    or
    ASSIGN Block( x ) INLINE ::MyVal := x
-
-*/
+ */
 
 CREATE CLASS TBColumnSQL FROM TBColumn
 
@@ -177,10 +176,10 @@ METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable ) CLASS TBrows
       // No bBlock now since New() would use it to find column length, but column is not ready yet at this point
       oCol := TBColumnSQL():New( ::oCurRow:FieldName( i ),, Self )
 
-      IF !( ::oCurRow:FieldType( i ) == "M" )
-         oCol:Width := Max( ::oCurRow:FieldLen( i ), Len( oCol:Heading ) )
-      ELSE
+      IF ::oCurRow:FieldType( i ) == "M"
          oCol:Width := 10
+      ELSE
+         oCol:Width := Max( ::oCurRow:FieldLen( i ), Len( oCol:Heading ) )
       ENDIF
 
       // which field does this column display
@@ -292,8 +291,7 @@ METHOD EditField() CLASS TBrowseSQL
       IF ! ::oQuery:Update( ::oCurRow )
          Alert( Left( ::oQuery:Error(), 60 ) )
       ENDIF
-
-   endif
+   ENDIF
 
    IF ! ::oQuery:Refresh()
       Alert( ::oQuery:Error() )
@@ -303,14 +301,12 @@ METHOD EditField() CLASS TBrowseSQL
 
    // Check exit key from get
    nKey := LastKey()
-   IF nKey == K_UP   .OR. ;
+   IF nKey == K_UP .OR. ;
       nKey == K_DOWN .OR. ;
       nKey == K_PGUP .OR. ;
       nKey == K_PGDN
 
-      // Ugh
-      hb_keyIns( nKey )
-
+      hb_keyIns( nKey )  // Ugh
    ENDIF
 
    RETURN Self
