@@ -66,8 +66,7 @@ METHOD Open( nMode ) CLASS TFileRead
    IF ::nHan == F_ERROR
       // Only open the file if it isn't already open.
       ::nLastOp := O_F_OPEN_FILE
-      ::nHan := FOpen( ::cFile, hb_defaultValue( nMode, FO_READ + FO_SHARED ) )   // Try to open the file
-      IF ::nHan == F_ERROR
+      IF ( ::nHan := FOpen( ::cFile, hb_defaultValue( nMode, FO_READ + FO_SHARED ) ) ) == F_ERROR
          ::nError := FError()       // It didn't work
          ::lEOF   := .T.            // So force EOF
       ELSE
@@ -193,35 +192,25 @@ METHOD Close() CLASS TFileRead
 
    RETURN Self
 
+// Returns the filename associated with this class instance.
 METHOD Name() CLASS TFileRead
-
-   // Returns the filename associated with this class instance.
-
    RETURN ::cFile
 
+// Returns .T. if the file is open.
 METHOD IsOpen() CLASS TFileRead
-
-   // Returns .T. if the file is open.
-
    RETURN ::nHan != F_ERROR
 
+// Returns .T. if there is more to be read from either the file or the
+// readahead buffer. Only when both are exhausted is there no more to read.
 METHOD MoreToRead() CLASS TFileRead
-
-   // Returns .T. if there is more to be read from either the file or the
-   // readahead buffer. Only when both are exhausted is there no more to read.
-
    RETURN ! ::lEOF .OR. ! Empty( ::cBuffer )
 
+// Returns .T. if an error was recorded.
 METHOD Error() CLASS TFileRead
-
-   // Returns .T. if an error was recorded.
-
    RETURN ::nError != 0
 
+// Returns the last error code that was recorded.
 METHOD ErrorNo() CLASS TFileRead
-
-   // Returns the last error code that was recorded.
-
    RETURN ::nError
 
 METHOD ErrorMsg( cText ) CLASS TFileRead

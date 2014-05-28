@@ -153,18 +153,15 @@ FUNCTION hb_Uncompress( nDestLen, cSource, nSourceLen, /* @ */ cDest )
 
    RETURN hb_ZUncompress( cSource, nDestLen, @t_nLastError )
 
-/* hb_CompressError() --> nError
- */
+/* hb_CompressError() --> nError */
 FUNCTION hb_CompressError()
    RETURN t_nLastError
 
-/* hb_CompressErrorDesc( nErrorCode ) --> cDesc
- */
+/* hb_CompressErrorDesc( nErrorCode ) --> cDesc */
 FUNCTION hb_CompressErrorDesc( nError )
    RETURN hb_ZError( nError )
 
-/* hb_CompressBufLen( nSrcLen ) --> nDestLen
- */
+/* hb_CompressBufLen( nSrcLen ) --> nDestLen */
 FUNCTION hb_CompressBufLen( nSrcLen )
 
    LOCAL nRet

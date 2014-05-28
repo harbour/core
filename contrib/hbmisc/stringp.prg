@@ -73,9 +73,7 @@
 FUNCTION ToChar( xTxt, cSeparator, lDebug )
 
    LOCAL cOut
-   LOCAL n
-   LOCAL nLen
-   LOCAL aData
+   LOCAL x
 
    hb_default( @cSeparator, " " )
    hb_default( @lDebug, .F. )
@@ -94,10 +92,9 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
       IF lDebug
          cOut += "{"
       ENDIF
-      nLen := Len( xTxt )
-      FOR n := 1 TO nLen                     // For each item : Recurse !
-         cOut += ToChar( xTxt[ n ], cSeparator, lDebug )
-         IF n != nLen
+      FOR EACH x IN xTxt
+         cOut += ToChar( x, cSeparator, lDebug )  // For each item: Recurse!
+         IF ! x:__enumIsLast()
             cOut += cSeparator
          ENDIF
       NEXT
@@ -108,13 +105,11 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
 
    CASE "O"
       IF lDebug
-         cOut  := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
-         aData := __objGetValueList( xTxt )
-         nLen  := Len( aData )
-         FOR n := 1 TO nLen                     // For each item : Recurse !
-            cOut += aData[ n ][ HB_OO_DATA_SYMBOL ] + ":" + ;
-               ToChar( aData[ n ][ HB_OO_DATA_VALUE ], cSeparator, lDebug )
-            IF n != nLen
+         cOut := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
+         FOR EACH x IN __objGetValueList( xTxt )
+            cOut += x[ HB_OO_DATA_SYMBOL ] + ":" + ;
+               ToChar( x[ HB_OO_DATA_VALUE ], cSeparator, lDebug )  // For each item: Recurse!
+            IF ! x:__enumIsLast()
                cOut += cSeparator
             ENDIF
          NEXT

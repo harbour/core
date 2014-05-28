@@ -166,7 +166,11 @@ HB_FUNC( POSIX_GETPWNAM )
       {
          hb_retnl( pwd.pw_uid );
          hb_stornl( pwd.pw_gid, 2 );
+#if defined( HB_OS_ANDROID )
+         hb_storc( NULL, 3 );
+#else
          hb_storc( pwd.pw_gecos, 3 );
+#endif
          hb_storc( pwd.pw_dir, 4 );
          hb_storc( pwd.pw_shell, 5 );
       }
@@ -187,7 +191,11 @@ HB_FUNC( POSIX_GETPWNAM )
       {
          hb_retnl( pwd->pw_uid );
          hb_stornl( pwd->pw_gid, 2 );
+#if defined( HB_OS_ANDROID )
+         hb_storc( NULL, 3 );
+#else
          hb_storc( pwd->pw_gecos, 3 );
+#endif
          hb_storc( pwd->pw_dir, 4 );
          hb_storc( pwd->pw_shell, 5 );
       }

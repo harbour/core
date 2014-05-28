@@ -81,7 +81,6 @@ FUNCTION CallDll32( ... )
 
 FUNCTION hb_DynaCall1( cFunction, cLibrary, nCount, ... )
 
-   LOCAL aParams
    LOCAL hHandle
 
    IF HB_ISSTRING( cFunction ) .AND. ;
@@ -98,8 +97,7 @@ FUNCTION hb_DynaCall1( cFunction, cLibrary, nCount, ... )
       hb_mutexUnlock( s_mutex )
 
       IF HB_ISNUMERIC( nCount ) .AND. nCount >= 0 .AND. nCount < PCount() - 3
-         aParams := ASize( hb_AParams(), nCount )
-         RETURN hb_DynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, hb_ArrayToParams( aParams ) )
+         RETURN hb_DynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, hb_ArrayToParams( ASize( hb_AParams(), nCount ) ) )
       ELSE
          RETURN hb_DynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, ... )
       ENDIF

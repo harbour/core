@@ -48,8 +48,7 @@
 
 #include "hbclass.ch"
 
-/* Send to hb_OutDebug() more parameters
- */
+/* Send to hb_OutDebug() more parameters */
 PROCEDURE __OutDebug( ... )
 
    LOCAL xVal
@@ -68,14 +67,9 @@ PROCEDURE __OutDebug( ... )
  */
 FUNCTION hb_DumpVar( xVar, lRecursive, nMaxRecursionLevel )
 
-   LOCAL nRecursionLevel := 1
-   LOCAL nIndent         := 0
-
    // TraceLog( "HB_DumpVariable: xVar, lAssocAsObj, lRecursive", xVar, lAssocAsObj, lRecursive )
 
-   hb_default( @nMaxRecursionLevel, 0 )
-
-   RETURN __HB_DumpVar( xVar, , lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )
+   RETURN __HB_DumpVar( xVar,, lRecursive, 0, 1, hb_defaultValue( nMaxRecursionLevel, 0 ) )
 
 STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )
 
@@ -88,8 +82,7 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
    // TraceLog( "Recursion: xVar, nRecursionLevel, nMaxRecursionLevel", xVar, nRecursionLevel, nMaxRecursionLevel )
 
    // return if there is limit in recursion
-   IF nMaxRecursionLevel > 0 .AND. ;
-         nRecursionLevel > nMaxRecursionLevel
+   IF nMaxRecursionLevel > 0 .AND. nRecursionLevel > nMaxRecursionLevel
       RETURN AsString( xVar )
    ENDIF
 
@@ -327,8 +320,7 @@ STATIC FUNCTION asString( x )
 
 #include "error.ch"
 
-/* return all informations about classes, included type and scope
- */
+/* return all informations about classes, included type and scope */
 STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
 
    LOCAL aMessages
@@ -362,8 +354,7 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
 
    RETURN aReturn
 
-/* return all values from classes, included type and scope
- */
+/* return all values from classes, included type and scope */
 STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
 
    LOCAL aVars
