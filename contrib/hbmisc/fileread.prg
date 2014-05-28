@@ -1,7 +1,7 @@
 /* Harbour Project source code
-   A class that reads a file one line at a time
    http://harbour-project.org/
    Donated to the public domain on 2001-04-03 by David G. Holm <dholm@jsd-llc.com>
+   A class that reads a file one line at a time
  */
 
 #include "hbclass.ch"
@@ -18,14 +18,6 @@
 
 CREATE CLASS TFileRead
 
-   VAR cFile                   // The filename
-   VAR nHan                    // The open file handle
-   VAR lEOF                    // The end of file reached flag
-   VAR nError                  // The current file error code
-   VAR nLastOp                 // The last operation done (for error messages)
-   VAR cBuffer                 // The readahead buffer
-   VAR nReadSize               // How much to add to the readahead buffer on each read from the file
-
    METHOD New( cFile, nSize )  // Create a new class instance
    METHOD Open( nMode )        // Open the file for reading
    METHOD Close()              // Close the file when done
@@ -38,6 +30,14 @@ CREATE CLASS TFileRead
    METHOD ErrorMsg( cText )    // Returns formatted error message
 
    PROTECTED:
+
+   VAR cFile                   // The filename
+   VAR nHan                    // The open file handle
+   VAR lEOF                    // The end of file reached flag
+   VAR nError                  // The current file error code
+   VAR nLastOp                 // The last operation done (for error messages)
+   VAR cBuffer                 // The readahead buffer
+   VAR nReadSize               // How much to add to the readahead buffer on each read from the file
 
    METHOD EOL_pos()
 
@@ -215,7 +215,12 @@ METHOD ErrorNo() CLASS TFileRead
 
 METHOD ErrorMsg( cText ) CLASS TFileRead
 
-   STATIC sc_cAction := { "on", "creating object for", "opening", "reading from", "closing" }
+   STATIC sc_cAction := { ;
+      "on", ;
+      "creating object for", ;
+      "opening", ;
+      "reading from", ;
+      "closing" }
 
    LOCAL cMessage, nTemp
 
@@ -230,7 +235,7 @@ METHOD ErrorMsg( cText ) CLASS TFileRead
       ELSE
          nTemp := ::nLastOp + 1
       ENDIF
-      cMessage := iif( Empty( cText ), "", cText ) + "Error " + hb_ntos( ::nError ) + " " + sc_cAction[ nTemp ] + " " + ::cFile
+      cMessage := hb_defaultValue( cText, "" ) + "Error " + hb_ntos( ::nError ) + " " + sc_cAction[ nTemp ] + " " + ::cFile
    ENDIF
 
    RETURN cMessage

@@ -270,11 +270,6 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
       oEdit[ E_MODE ] := lEdit
    ENDIF
    lSaveAllowed := ( SetKey( K_F2 ) == NIL )
-#if 0
-   IF lSaveAllowed
-      DisplayHelp( 73 )     // F2-save
-   ENDIF
-#endif
 
    nTop    := oEdit[ E_TOP ] + 1
    nLeft   := oEdit[ E_LEFT ] + 1
@@ -353,7 +348,6 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
    SetCursor( nCursor )
    RestBox( oBox )
-   // HELPREST.
 
    RETURN lSaved
 

@@ -5,13 +5,15 @@
 
 FUNCTION NumToTxtEN( nValue )
 
-   LOCAL cRetVal := ""
+   LOCAL cRetVal
 
    hb_default( @nValue, 0 )
 
    IF nValue == 0
       RETURN "zero"
    ENDIF
+
+   cRetVal := ""
 
    IF nValue < 0
       nValue := -nValue

@@ -1,5 +1,4 @@
-/*
- * Harbour rtfclass demo
+/* Harbour rtfclass demo
  * notes: - raw enough but it works
  * initial release: 1999-06-23 Andi Jahja
  * works with printable ASCII only

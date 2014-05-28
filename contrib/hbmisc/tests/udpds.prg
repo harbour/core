@@ -1,6 +1,4 @@
-/*
- * This module demonstrates a simple UDP Discovery Server
- */
+/* This module demonstrates a simple UDP Discovery Server */
 
 #require "hbmisc"
 
@@ -13,7 +11,7 @@ PROCEDURE Main( cParam )
       RETURN
    ENDIF
 
-   IF cParam == NIL
+   IF ! HB_ISSTRING( cParam )
       ? "udpds {c|s|cs}"
       ? "Parameter:"
       ? "   s - run as a server"

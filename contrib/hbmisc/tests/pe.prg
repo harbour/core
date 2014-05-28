@@ -25,8 +25,7 @@ STATIC FUNCTION MyMemoEdit( cText, nTop, nLeft, nBottom, nRight, lEdit )
    /* NOTE: In current design of editor it doesn't reallocate the memory
       buffer used to hold the text */
 
-   oED := EditorNew( nTop, nLeft, nBottom, nRight, 254, , , , Len( cText ) * 2, 168 )
-   IF oED != NIL
+   IF ( oED := EditorNew( nTop, nLeft, nBottom, nRight, 254, , , , Len( cText ) * 2, 168 ) ) != NIL
       EditorSetText( oED, cText )
       EditorEdit( oED, lEdit, .T. )
       cText := EditorGetText( oED )

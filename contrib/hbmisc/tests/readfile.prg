@@ -1,7 +1,7 @@
 /* Harbour Project source code
-   Test program for new class that reads a file one line at a time
    http://harbour-project.org/
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
+   Test program for new class that reads a file one line at a time
  */
 
 #require "hbmisc"

@@ -1,39 +1,38 @@
 /* Harbour Project source code
-   New libmisc twirler class
    http://harbour-project.org/
    Donated to the public domain on 2001-04-03 by David G. Holm <dholm@jsd-llc.com>
+   New libmisc twirler class
  */
 
 #include "hbclass.ch"
 
 CREATE CLASS Twirler
 
-   VAR n_Row
-   VAR n_Col
-   VAR n_Index
-   VAR n_Seconds
-   VAR n_Smooth
-   VAR c_Chars
-   VAR c_Title
-
    METHOD new( nRow, nCol, cTitle, cChars, nSmooth )
    METHOD twirl()
    METHOD show()
    METHOD hide()
 
+   PROTECTED:
+
+   VAR nRow
+   VAR nCol
+   VAR nIndex
+   VAR nSeconds
+   VAR nSmooth
+   VAR cChars
+   VAR cTitle
+
 END CLASS
 
 METHOD new( nRow, nCol, cTitle, cChars, nSmooth ) CLASS Twirler
 
-   ::n_Row := nRow
-   ::n_Col := nCol
-   ::n_Smooth := nSmooth
-   ::c_Chars := iif( Empty( cChars ), "|/-\", cChars )
-   ::c_Title := cTitle
-   IF Empty( ::c_Title )
-      ::c_Title := ""
-   ENDIF
-   ::n_Col += Len( ::c_Title )
+   ::nRow := nRow
+   ::nCol := nCol
+   ::nSmooth := hb_defaultValue( nSmooth, 0 )
+   ::cChars := hb_defaultValue( cChars, "|/-\" )
+   ::cTitle := hb_defaultValue( cTitle, "" )
+   ::nCol += Len( ::cTitle )
 
    RETURN Self
 
@@ -41,14 +40,14 @@ METHOD twirl() CLASS Twirler
 
    LOCAL nSeconds := Seconds()
 
-   IF Empty( ::n_Seconds ) .OR. nSeconds - ::n_Seconds >= ::n_Smooth .OR. nSeconds < ::n_Seconds
-      hb_DispOutAt( ::n_Row, ::n_Col, SubStr( ::c_Chars, ::n_Index, 1 ) )
-      ::n_Index++
-      if ::n_Index > Len( ::c_Chars )
-         ::n_Index := 1
+   IF Empty( ::nSeconds ) .OR. nSeconds - ::nSeconds >= ::nSmooth .OR. nSeconds < ::nSeconds
+      hb_DispOutAt( ::nRow, ::nCol, SubStr( ::cChars, ::nIndex, 1 ) )
+      ::nIndex++
+      if ::nIndex > Len( ::cChars )
+         ::nIndex := 1
       ENDIF
-      IF ! Empty( ::n_Seconds )
-         ::n_Seconds := nSeconds
+      IF ! Empty( ::nSeconds )
+         ::nSeconds := nSeconds
       ENDIF
    ENDIF
 
@@ -56,16 +55,16 @@ METHOD twirl() CLASS Twirler
 
 METHOD show() CLASS Twirler
 
-   ::n_Index := 1
-   IF ! Empty( ::n_Smooth )
-      ::n_Seconds := - ::n_Smooth
+   ::nIndex := 1
+   IF ! Empty( ::nSmooth )
+      ::nSeconds := - ::nSmooth
    ENDIF
-   hb_DispOutAt( ::n_Row, ::n_Col - Len( ::c_Title ), ::c_Title )
+   hb_DispOutAt( ::nRow, ::nCol - Len( ::cTitle ), ::cTitle )
 
    RETURN Self
 
 METHOD hide() CLASS Twirler
 
-   hb_DispOutAt( ::n_Row, ::n_Col - Len( ::c_Title ), Space( Len( ::c_Title ) + 1 ) )
+   hb_DispOutAt( ::nRow, ::nCol - Len( ::cTitle ), Space( Len( ::cTitle ) + 1 ) )
 
    RETURN Self

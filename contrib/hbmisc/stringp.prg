@@ -48,8 +48,7 @@
 
 #include "hboo.ch"
 
-/*
- * Convert to character
+/* Convert to character
  *
  * ToChar( <xValue>, [<cSeparator>], [<lDebug>] ) --> <cOut>
  *   <xValue>     : Item to write
@@ -67,7 +66,6 @@
  * NIL        NIL
  * Logical    .T. / .F.
  * Object     <ClassName>(<ClassH>):{<DataSymbol1>:<val1>, ...}
- *
  */
 
 FUNCTION ToChar( xTxt, cSeparator, lDebug )
@@ -125,7 +123,6 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
 
 // Non-volatile debugging function showing contents of xItem and returing
 // passed argument.
-
 FUNCTION Debug( xItem )
 
    ? ToChar( xItem, ", ", .T. )
