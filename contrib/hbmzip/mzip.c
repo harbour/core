@@ -58,6 +58,11 @@
 #include "hbapistr.h"
 #include "hbdate.h"
 #include "hbset.h"
+
+#if defined( HB_OS_UNIX )
+#  undef _LARGEFILE64_SOURCE
+#endif
+
 #include "zip.h"
 #include "unzip.h"
 
