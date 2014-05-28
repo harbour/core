@@ -1,11 +1,8 @@
-/**
+/* Harbour Test of a HTML-Generator class.
  *
- *  Harbour Test of a HTML-Generator class.
- *
- *              Tips: - Use ShowResults to make dynamic html (to test dynamic
- *                      results, put the exe file on CGI-BIN dir or equivalent);
- *                    - Use SaveToFile to make static html page
- *
+ * Tips: - Use ShowResults to make dynamic html (to test dynamic
+ *         results, put the exe file on CGI-BIN dir or equivalent);
+ *       - Use SaveToFile to make static html page
  */
 
 #include "hbclass.ch"
@@ -21,27 +18,25 @@ PROCEDURE Main()
    oHTML:AddLink( "http://harbour-project.org", "Meet the Harbour power!" )
    oHTML:Generate()
 
+#if 0
    // Uncomment the following if you don't have a Web Server to test
    // this sample
-
-#if 0
    oHTML:SaveToFile( "test.htm" )
 #endif
 
    // If the above is uncommented, you may comment this line:
-
    oHTML:ShowResult()
 
    RETURN
 
 CREATE CLASS THTML STATIC
 
-   VAR cTitle                             // Page Title
-   VAR cBody                              // HTML Body Handler
-   VAR cBGColor                           // Background Color
-   VAR cLinkColor                         // Link Color
-   VAR cvLinkColor                        // Visited Link Color
-   VAR cContent                           // Page Content Handler
+   VAR cTitle      INIT "Untitled"        // Page Title
+   VAR cBody       INIT ""                // HTML Body Handler
+   VAR cBGColor    INIT "#FFFFFF"         // Background Color
+   VAR cLinkColor  INIT "#0000FF"         // Link Color
+   VAR cvLinkColor INIT "#FF0000"         // Visited Link Color
+   VAR cContent    INIT ""                // Page Content Handler
 
    METHOD New()                           // New Method
    METHOD SetTitle( cTitle )              // Set Page Title
@@ -52,17 +47,9 @@ CREATE CLASS THTML STATIC
    METHOD ShowResult()                    // Saves Content to File
    METHOD SaveToFile( cFile )             // Show Result
 
-END CLASS
+ENDCLASS
 
 METHOD New() CLASS THTML
-
-   ::cTitle      := "Untitled"
-   ::cBGColor    := "#FFFFFF"
-   ::cLinkColor  := "#0000FF"
-   ::cvLinkColor := "#FF0000"
-   ::cContent    := ""
-   ::cBody       := ""
-
    RETURN Self
 
 METHOD SetTitle( cTitle ) CLASS THTML

@@ -41,7 +41,7 @@ CREATE CLASS TFileRead
 
    METHOD EOL_pos()
 
-END CLASS
+ENDCLASS
 
 METHOD New( cFile, nSize ) CLASS TFileRead
 

@@ -119,7 +119,7 @@ CREATE CLASS THTML
    METHOD SetHTMLFile( cFile )
    METHOD AddReplaceTag( cTag, cReplaceText )
 
-END CLASS
+ENDCLASS
 
 METHOD New() CLASS THTML
 

@@ -58,14 +58,14 @@ CREATE CLASS TEmpty STATIC /* must be a public function */
 
    METHOD Dispose() VIRTUAL                        // Clean up code
 
-END CLASS
+ENDCLASS
 
 // Let's add another one on top
 CREATE CLASS TOnTop STATIC INHERIT TTextFile
 
    METHOD Say( cArg ) INLINE QOut( __objSendMsg( self, cArg ) )
 
-END CLASS
+ENDCLASS
 
 // Generic Text file handler
 CREATE CLASS TTextFile STATIC INHERIT TEmpty
@@ -87,7 +87,7 @@ CREATE CLASS TTextFile STATIC INHERIT TEmpty
    METHOD Write( xTxt )                   // Write without CR
    METHOD Goto( nLine )                   // Go to line
 
-END CLASS
+ENDCLASS
 
 // Create a new text file
 //

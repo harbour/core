@@ -69,7 +69,7 @@ CREATE CLASS amf_Obj
    ACCESS RealClass INLINE ::cRealClass
    ACCESS RpcOid INLINE ::nRpcOid
 
-END CLASS
+ENDCLASS
 
 METHOD New( hCachedData ) CLASS amf_Obj
 
@@ -104,7 +104,7 @@ CREATE CLASS amf_Raw
    PROTECTED:
    VAR cData
 
-END CLASS
+ENDCLASS
 
 METHOD New( cData ) CLASS amf_Raw
 

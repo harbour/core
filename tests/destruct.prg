@@ -13,11 +13,9 @@ MEMVAR P
 
 PROCEDURE Main()
 
-   LOCAL bError
+   LOCAL bError := ErrorBlock( {| oErr | myErrorHandler( oErr ) } )
 
    PUBLIC P := NIL
-
-   bError := ErrorBlock( {| oErr | myErrorHandler( oErr ) } )
 
    ? "First simple tests when object is not destroyed by GC"
    ? "====================================================="
@@ -79,8 +77,7 @@ STATIC PROCEDURE GCFREETEST( type )
 
 STATIC PROCEDURE myErrorHandler( oErr )
 
-   ? "Error ->", hb_ntos( oErr:gencode ), ;
-      oErr:description + ":", oErr:operation
+   ? "Error ->", hb_ntos( oErr:gencode ), oErr:description + ":", oErr:operation
    BREAK oErr
 
    RETURN
@@ -95,7 +92,7 @@ CREATE CLASS myClass
    METHOD      init()
    DESTRUCTOR  dtor()
 
-END CLASS
+ENDCLASS
 
 METHOD init( type ) CLASS myClass
 
@@ -108,22 +105,25 @@ PROCEDURE dtor() CLASS myClass
 
    ? "   Hi, I'm desturctor of class:", ::classname()
 
-   DO CASE
-   CASE ::type == 1
+   SWITCH ::type
+   CASE 1
       ? "   I'm storing reference to self in instance variable."
       ? "   Bad practice but safe in Harbour because it will be destroyed."
       ::var1 := self
-   CASE ::Type == 2
+      EXIT
+   CASE 2
       ? "   I'm storing reference to self in class variable."
       ? "   It's programmer bug which should cause RT error."
       ::var2 := self
-   CASE ::Type == 3
+      EXIT
+   CASE 3
       ? "   I'm storing reference to self in public variable."
       ? "   It's programmer bug which should cause RT error."
       P := self
+      EXIT
    OTHERWISE
       ? "   I do not store any references to self."
       ? "   It's a safe destructor."
-   ENDCASE
+   ENDSWITCH
 
    RETURN

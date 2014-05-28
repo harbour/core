@@ -36,13 +36,15 @@ PROCEDURE Main()
 
 CREATE CLASS TRtf
 
-   VAR nHandle
-
    METHOD new( cFilename )
    METHOD write( cSource )
    METHOD close()
 
-END CLASS
+   PROTECTED:
+
+   VAR nHandle
+
+ENDCLASS
 
 METHOD new( cFilename ) CLASS TRtf
 

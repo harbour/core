@@ -56,7 +56,7 @@ CREATE CLASS TTextFile STATIC
    METHOD Write( xTxt )      INLINE ::WriteLn( xTxt, .F. )  // Write without CR
    METHOD Eof()              INLINE ::lEoF
 
-END CLASS
+ENDCLASS
 
 // Create a new text file
 //

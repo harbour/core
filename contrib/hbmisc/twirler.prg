@@ -23,7 +23,7 @@ CREATE CLASS Twirler
    VAR cChars
    VAR cTitle
 
-END CLASS
+ENDCLASS
 
 METHOD new( nRow, nCol, cTitle, cChars, nSmooth ) CLASS Twirler
 

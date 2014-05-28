@@ -68,7 +68,7 @@ CREATE CLASS TIniFile
    METHOD ReadSections()
    METHOD UpdateFile()
 
-END CLASS
+ENDCLASS
 
 METHOD New( cFileName ) CLASS TIniFile
 

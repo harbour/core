@@ -55,7 +55,7 @@ CREATE CLASS TNumber STATIC         // Very simple class
 
    METHOD New()
 
-END CLASS
+ENDCLASS
 
 METHOD New() CLASS TNumber
 

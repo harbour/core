@@ -98,8 +98,6 @@ STATIC PROCEDURE FuncSecond( nParam, cParam, uParam )
 
    RETURN
 
-/* TForm() -> <oTForm> */
-
 CREATE CLASS TForm STATIC
 
    VAR cName
@@ -114,7 +112,7 @@ CREATE CLASS TForm STATIC
    METHOD Show()
    METHOD Transfer( ... )
 
-END CLASS
+ENDCLASS
 
 METHOD New() CLASS TForm
 
@@ -131,7 +129,6 @@ PROCEDURE Show() CLASS TForm
 
    RETURN
 
-//
 // <xRet> TForm:Transfer( [<xArg,..>] )
 //
 // Generic object import and export function
@@ -189,7 +186,6 @@ PROCEDURE Show() CLASS TForm
 //
 // oTarget := TTarget():New()
 // oTarget:Transfer( DbObject->Memo )
-//
 
 METHOD Transfer( ... ) CLASS TForm
 

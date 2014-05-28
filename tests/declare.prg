@@ -23,7 +23,7 @@ CREATE CLASS MyClass
    METHOD New() Constructor
    VAR While AS STRING
    VAR cVar  AS STRING
-END CLASS
+ENDCLASS
 
 INIT PROCEDURE Main()
 
