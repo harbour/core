@@ -92,7 +92,7 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * defined and effectively enables lseek64/flock64/ftruncate64 functions
        * on 32bit machines.
        */
       #define HB_USE_LARGEFILE64
@@ -101,10 +101,10 @@
    #endif
 #endif
 
-#define _ZIP_FLAG_UNICODE  ( 1 << 11 ) /* Language encoding flag (EFS) */
+#define _ZIP_FLAG_UNICODE  ( 1 << 11 )  /* Language encoding flag (EFS) */
 
 #if defined( HB_OS_UNIX )
-   #define _VER_PLATFORM   0x03 /* it's necessary for file attributes in unzip */
+   #define _VER_PLATFORM   0x03  /* it's necessary for file attributes in unzip */
 #else
    #define _VER_PLATFORM   0x00
 #endif
