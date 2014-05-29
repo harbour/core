@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * curl_getdate()
+ * curl_global_*()
  *
  * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
@@ -47,18 +47,57 @@
  */
 
 #include <curl/curl.h>
-#if LIBCURL_VERSION_NUM < 0x070C00
-#  include <curl/types.h>
-#endif
 
 #include "hbapi.h"
-#include "hbapierr.h"
 
-/* NOTE: This returns the number of seconds since January 1st 1970 in the UTC time zone. */
-HB_FUNC( CURL_GETDATE )
+/* Global initialization/deinitialization */
+/* -------------------------------------- */
+
+static void * hb_curl_xgrab( size_t size )
 {
-   if( HB_ISCHAR( 1 ) )
-      hb_retnint( ( HB_MAXINT ) curl_getdate( hb_parc( 1 ), NULL ) );
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   return hb_xgrab( size );
+}
+
+static void hb_curl_xfree( void * p )
+{
+   hb_xfree( p );
+}
+
+static void * hb_curl_xrealloc( void * p, size_t size )
+{
+   return hb_xrealloc( p, size );
+}
+
+static char * hb_curl_strdup( const char * s )
+{
+   return hb_strdup( s );
+}
+
+static void * hb_curl_calloc( size_t nelem, size_t elsize )
+{
+   size_t size = nelem * elsize;
+   void * ptr  = hb_xgrab( size );
+
+   memset( ptr, 0, size );
+
+   return ptr;
+}
+
+HB_FUNC( CURL_GLOBAL_INIT )
+{
+#if LIBCURL_VERSION_NUM >= 0x070C00
+   hb_retnl( ( long ) curl_global_init_mem( hb_parnldef( 1, CURL_GLOBAL_ALL ),
+                                            hb_curl_xgrab,
+                                            hb_curl_xfree,
+                                            hb_curl_xrealloc,
+                                            hb_curl_strdup,
+                                            hb_curl_calloc ) );
+#else
+   hb_retnl( ( long ) curl_global_init( hb_parnldef( 1, CURL_GLOBAL_ALL ) ) );
+#endif
+}
+
+HB_FUNC( CURL_GLOBAL_CLEANUP )
+{
+   curl_global_cleanup();
 }

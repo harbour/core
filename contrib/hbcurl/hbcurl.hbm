@@ -14,7 +14,8 @@
 -depcontrol=curl:${HB_WITH_CURL}
 -depincpath=curl:/usr/include
 
-core.c
 date.c
+easy.c
 escold.c
+global.c
 ver.c
