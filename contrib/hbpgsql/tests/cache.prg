@@ -9,8 +9,8 @@
 #define DB_ROW              3  // Current Row
 #define DB_FETCH            4  // Fetch Status
 
-STATIC s_oServer
-STATIC s_aTableTemp := {}
+THREAD STATIC t_oServer
+THREAD STATIC t_aTableTemp := {}
 
 PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
@@ -71,9 +71,9 @@ FUNCTION SQLApplyUpdates()
    LOCAL lError := .F.
    LOCAL cError
 
-   IF ( i := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
+   IF ( i := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
 
-      oQuery := s_aTableTemp[ i ][ DB_QUERY ]
+      oQuery := t_aTableTemp[ i ][ DB_QUERY ]
 
       FOR i := 1 TO LastRec()
 
@@ -151,8 +151,8 @@ PROCEDURE SQLCloseTemp( cAlias )
       ( cAlias )->( dbCloseArea() )
    ENDIF
 
-   IF ( x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
-      hb_ADel( s_aTableTemp, x, .F. /* .T. */ )
+   IF ( x := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
+      hb_ADel( t_aTableTemp, x, .F. /* .T. */ )
    ENDIF
 
    RETURN
@@ -165,13 +165,13 @@ PROCEDURE SQLGarbageCollector()
 
    dbCloseAll()
 
-   FOR EACH item IN s_aTableTemp
+   FOR EACH item IN t_aTableTemp
       IF ( oQuery := item[ DB_QUERY ] ) != NIL
          oQuery:Destroy()
       ENDIF
    NEXT
 
-   ASize( s_aTableTemp, 0 )
+   ASize( t_aTableTemp, 0 )
 
    RETURN
 
@@ -189,14 +189,14 @@ FUNCTION SQLFetch( lFetchAll )
 
    /* Procura pela tabela no array */
 
-   IF ( i := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
+   IF ( i := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
       /* Traz registros da base de dados */
 
-      oQuery := s_aTableTemp[ i ][ DB_QUERY ]
-      nPos   := s_aTableTemp[ i ][ DB_ROW ] + 1
+      oQuery := t_aTableTemp[ i ][ DB_QUERY ]
+      nPos   := t_aTableTemp[ i ][ DB_ROW ] + 1
 
       IF lFetchAll
-         s_aTableTemp[ i ][ DB_FETCH ] := .T.
+         t_aTableTemp[ i ][ DB_FETCH ] := .T.
       ENDIF
 
       IF oQuery:LastRec() >= nPos
@@ -211,7 +211,7 @@ FUNCTION SQLFetch( lFetchAll )
                FieldPut( FieldPos( oRow:FieldName( x ) ), oRow:FieldGet( x ) )
             NEXT
 
-            s_aTableTemp[ i ][ DB_ROW ] := nPos
+            t_aTableTemp[ i ][ DB_ROW ] := nPos
             nPos++
          ENDDO
 
@@ -237,16 +237,16 @@ PROCEDURE SQLFetchAll()
 FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
 
    LOCAL x
-   LOCAL s_oServer
+   LOCAL oServer
    LOCAL oQuery
    LOCAL lFetch
 
-   s_oServer := SQLCurrentServer()
+   oServer := SQLCurrentServer()
    cAlias := Upper( cAlias )
 
    /* Procura por query na area temporaria */
-   IF ( x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
-      oQuery := s_aTableTemp[ x ][ DB_QUERY ]
+   IF ( x := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
+      oQuery := t_aTableTemp[ x ][ DB_QUERY ]
       oQuery:Destroy()
    ENDIF
 
@@ -257,7 +257,7 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
       ENDIF
    ENDIF
 
-   oQuery := s_oServer:Query( cQuery )
+   oQuery := oServer:Query( cQuery )
 
    IF oQuery:NetErr()
       ? oQuery:ErrorMsg()
@@ -279,16 +279,16 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
 
    /* Se nao houver query na area temporaria entao adiciona, caso contrario, apenas atualiza */
    IF x == 0
-      AAdd( s_aTableTemp, { ;
+      AAdd( t_aTableTemp, { ;
          cAlias, ;  // DB_ALIAS
          oQuery, ;  // DB_QUERY
          0, ;       // DB_ROW
          lFetch } ) // DB_FETCH
    ELSE
 
-      s_aTableTemp[ x ][ DB_QUERY ] := oQuery
-      s_aTableTemp[ x ][ DB_ROW ]   := 0
-      s_aTableTemp[ x ][ DB_FETCH ] := lFetch
+      t_aTableTemp[ x ][ DB_QUERY ] := oQuery
+      t_aTableTemp[ x ][ DB_ROW ]   := 0
+      t_aTableTemp[ x ][ DB_FETCH ] := lFetch
 
    ENDIF
 
@@ -306,32 +306,32 @@ FUNCTION SQLConnect( cHost, cDatabase, cUser, cPassword, cSchema )
 
    LOCAL lRetval := .T.
 
-   s_oServer := TPQServer():New( cHost, cDatabase, cUser, cPassword, 5432, cSchema )
-   IF s_oServer:NetErr()
-      ? s_oServer:ErrorMsg()
+   t_oServer := TPQServer():New( cHost, cDatabase, cUser, cPassword, 5432, cSchema )
+   IF t_oServer:NetErr()
+      ? t_oServer:ErrorMsg()
       lRetval := .F.
    ENDIF
-   s_oServer:lAllCols := .F.
+   t_oServer:lAllCols := .F.
 
    RETURN lRetval
 
 
 PROCEDURE SQLDestroy()
 
-   IF s_oServer != NIL
-      s_oServer:Destroy()
+   IF t_oServer != NIL
+      t_oServer:Destroy()
    ENDIF
 
    RETURN
 
 
 FUNCTION SQLCurrentServer
-   RETURN s_oServer
+   RETURN t_oServer
 
 
 FUNCTION SQLQuery( cQuery )
 
-   LOCAL oQuery := s_oServer:Query( cQuery )
+   LOCAL oQuery := t_oServer:Query( cQuery )
 
    IF oQuery:NetErr()
       ? cQuery + ":" + oQuery:ErrorMsg()
@@ -342,7 +342,7 @@ FUNCTION SQLQuery( cQuery )
 
 FUNCTION SQLExecQuery( cQuery )
 
-   LOCAL oQuery := s_oServer:Query( cQuery )
+   LOCAL oQuery := t_oServer:Query( cQuery )
 
    IF oQuery:NetErr()
       ? "Cannot execute", cQuery + ":" + oQuery:ErrorMsg()
@@ -415,27 +415,27 @@ FUNCTION SQLSequence( Sequence_name )
 
 PROCEDURE SQLStartTrans()
 
-   IF PQtransactionStatus( s_oServer:pDB ) != PQTRANS_INTRANS
-      s_oServer:StartTransaction()
+   IF PQtransactionStatus( t_oServer:pDB ) != PQTRANS_INTRANS
+      t_oServer:StartTransaction()
    ENDIF
 
    RETURN
 
 
 FUNCTION SQLInTrans()
-   RETURN PQtransactionStatus( s_oServer:pDB ) == PQTRANS_INTRANS
+   RETURN PQtransactionStatus( t_oServer:pDB ) == PQTRANS_INTRANS
 
 
 PROCEDURE SQLCommitTrans()
 
-   s_oServer:Commit()
+   t_oServer:Commit()
 
    RETURN
 
 
 PROCEDURE SQLRollbackTrans()
 
-   s_oServer:rollback()
+   t_oServer:rollback()
 
    RETURN
 
@@ -447,7 +447,7 @@ FUNCTION QuickQuery( cQuery )
    LOCAL temp, aTemp
    LOCAL x, y
 
-   LOCAL pQuery := PQexec( s_oServer:pDB, cQuery )
+   LOCAL pQuery := PQexec( t_oServer:pDB, cQuery )
 
    IF PQresultStatus( pQuery ) == PGRES_TUPLES_OK
       IF PQlastrec( pQuery ) != 0
