@@ -159,14 +159,14 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
    IF lRTE
       lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
    ELSE
-      IF !( ValType( xResult ) == ValType( xResultExpected ) )
+      IF ValType( xResult ) == ValType( xResultExpected )
+         lFailed := !( xResult == xResultExpected )
+      ELSE
          IF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
             lFailed := !( XToStr( xResult ) == xResultExpected )
          ELSE
             lFailed := .T.
          ENDIF
-      ELSE
-         lFailed := !( xResult == xResultExpected )
       ENDIF
    ENDIF
 

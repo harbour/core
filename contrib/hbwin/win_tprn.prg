@@ -245,9 +245,7 @@ METHOD Create() CLASS win_Prn
             ::PaperLength, ::PaperWidth )
       ENDIF
 
-      IF ! lResult
-         ::hPrinterDC := NIL
-      ELSE
+      IF lResult
          IF ::BkMode != NIL
             win_SetBkMode( ::hPrinterDc, ::BkMode )
          ENDIF
@@ -284,6 +282,8 @@ METHOD Create() CLASS win_Prn
          ::fNewPrintQuality := ::fPrintQuality
          ::fOldPaperLength  := ::PaperLength
          ::fOldPaperWidth   := ::PaperWidth
+      ELSE
+         ::hPrinterDC := NIL
       ENDIF
    ENDIF
 
@@ -315,10 +315,10 @@ METHOD StartDoc( cDocName ) CLASS win_Prn
    ENDIF
 
    IF ( lResult := win_StartDoc( ::hPrinterDc, cDocName ) )
-      IF !( lResult := ::StartPage( ::hPrinterDc ) )
-         ::EndDoc( .T. )
-      ELSE
+      IF ( lResult := ::StartPage( ::hPrinterDc ) )
          ::Printing := .T.
+      ELSE
+         ::EndDoc( .T. )
       ENDIF
    ENDIF
 
@@ -646,7 +646,6 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS win_Prn
       IF hb_defaultValue( lNewLine, .F. )
          ::NewLine()
       ENDIF
-
    ENDIF
 
    RETURN lResult
@@ -691,7 +690,6 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
       IF nColor != NIL
          win_SetColor( ::hPrinterDC, nColor )  // Reset Color
       ENDIF
-
    ENDIF
 
    RETURN lResult
@@ -709,8 +707,7 @@ METHOD Line( nX1, nY1, nX2, nY2 ) CLASS win_Prn
    LOCAL lResult := .F.
 
    IF ::CheckPage()
-      lResult := win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-      IF lResult
+      IF ( lResult := win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 ) )
          ::HavePrinted := .T.
       ENDIF
    ENDIF
@@ -722,8 +719,7 @@ METHOD Box( nX1, nY1, nX2, nY2, nWidth, nHeight ) CLASS win_Prn
    LOCAL lResult := .F.
 
    IF ::CheckPage()
-      lResult := win_Rectangle( ::hPrinterDC, nX1, nY1, nX2, nY2, nWidth, nHeight )
-      IF lResult
+      IF ( lResult := win_Rectangle( ::hPrinterDC, nX1, nY1, nX2, nY2, nWidth, nHeight ) )
          ::HavePrinted := .T.
       ENDIF
    ENDIF
@@ -735,8 +731,7 @@ METHOD Arc( nX1, nY1, nX2, nY2 ) CLASS win_Prn
    LOCAL lResult := .F.
 
    IF ::CheckPage()
-      lResult := win_Arc( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-      IF lResult
+      IF ( lResult := win_Arc( ::hPrinterDC, nX1, nY1, nX2, nY2 ) )
          ::HavePrinted := .T.
       ENDIF
    ENDIF
@@ -748,8 +743,7 @@ METHOD Ellipse( nX1, nY1, nX2, nY2 ) CLASS win_Prn
    LOCAL lResult := .F.
 
    IF ::CheckPage()
-      lResult := win_Ellipse( ::hPrinterDC, nX1, nY1, nX2, nY2 )
-      IF lResult
+      IF ( lResult := win_Ellipse( ::hPrinterDC, nX1, nY1, nX2, nY2 ) )
          ::HavePrinted := .T.
       ENDIF
    ENDIF
@@ -761,8 +755,7 @@ METHOD FillRect( nX1, nY1, nX2, nY2, nColor ) CLASS win_Prn
    LOCAL lResult := .F.
 
    IF ::CheckPage()
-      lResult := win_FillRect( ::hPrinterDC, nX1, nY1, nX2, nY2, nColor )
-      IF lResult
+      IF ( lResult := win_FillRect( ::hPrinterDC, nX1, nY1, nX2, nY2, nColor ) )
          ::HavePrinted := .T.
       ENDIF
    ENDIF

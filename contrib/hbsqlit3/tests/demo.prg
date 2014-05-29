@@ -65,8 +65,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE t1()
 
-   LOCAL lCreateIfNotExist := .F.
-   LOCAL db := sqlite3_open( "new.s3db", lCreateIfNotExist )
+   LOCAL db := sqlite3_open( "new.s3db", .F. /* lCreateIfNotExist */ )
 
    IF ! Empty( db )
       sqlite3_exec( db, "DROP TABLE t1" )
@@ -76,8 +75,7 @@ STATIC PROCEDURE t1()
 
 STATIC PROCEDURE t2()
 
-   LOCAL lCreateIfNotExist := .T.
-   LOCAL db := sqlite3_open( "new.s3db", lCreateIfNotExist )
+   LOCAL db := sqlite3_open( "new.s3db", .T. /* lCreateIfNotExist */ )
    LOCAL stmt
    LOCAL nCCount, nCType, nI, nJ
    LOCAL aCType :=  { "SQLITE_INTEGER", "SQLITE_FLOAT", "SQLITE_TEXT", "SQLITE_BLOB", "SQLITE_NULL" }

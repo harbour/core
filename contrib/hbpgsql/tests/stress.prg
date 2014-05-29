@@ -1,6 +1,4 @@
-/*
- * VERY IMPORTANT: Don't use this querys as sample, they are used for stress tests !!!
- */
+/* VERY IMPORTANT: Don't use this querys as sample, they are used for stress tests !!! */
 
 #require "hbpgsql"
 

@@ -55,9 +55,6 @@
 #include "thread.ch"
 
 
-/*
- * SIGNAL class
- */
 CREATE CLASS Signal
 
    VAR cargo      AS USUAL EXPORTED
@@ -87,10 +84,6 @@ METHOD signal() CLASS Signal
 
    RETURN Self
 
-
-/*
- * THREAD class
- */
 
 CREATE CLASS Thread
 
@@ -155,13 +148,13 @@ METHOD new( ... ) CLASS Thread
 
    RETURN Self
 
-METHOD execute() CLASS Thread
+METHOD PROCEDURE execute() CLASS Thread
 
    HB_SYMBOL_UNUSED( Self )
 
-   RETURN NIL
+   RETURN
 
-METHOD quit( xResult, nRestart ) CLASS Thread
+METHOD PROCEDURE quit( xResult, nRestart ) CLASS Thread
 
    IF hb_threadSelf() == ::pThreadID
       IF PCount() > 0
@@ -173,7 +166,7 @@ METHOD quit( xResult, nRestart ) CLASS Thread
       QUIT
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD setInterval( nHSeconds ) CLASS Thread
 
@@ -285,12 +278,12 @@ METHOD start( xAction, ... ) CLASS Thread
             }, ... )
 
       ::threadID := iif( ::pThreadID == NIL, 0, hb_threadID( ::pThreadID ) )
-
    ENDIF
 
    RETURN .T.
 
 METHOD synchronize( nTimeOut ) CLASS Thread
+
    LOCAL pThreadID := ::pThreadID
 
    IF hb_threadSelf() != pThreadID

@@ -74,13 +74,12 @@
 
 PROCEDURE Main()
 
-   LOCAL cFile := ":memory:"
    LOCAL cSQLTEXT
    LOCAL pDb, cb
 
    CLS
 
-   IF Empty( pDb := PrepareDB( cFile ) )
+   IF Empty( pDb := PrepareDB( ":memory:" ) )
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -165,10 +164,8 @@ STATIC FUNCTION PrepareDB( cFile )
       "Ivet" => 28 ;
       }, enum
 
-   pDb := sqlite3_open( cFile, .T. )
-   IF Empty( pDb )
+   IF Empty( pDb := sqlite3_open( cFile, .T. ) )
       ? "Can't open/create database : ", cFile
-
       RETURN NIL
    ENDIF
 
@@ -176,7 +173,6 @@ STATIC FUNCTION PrepareDB( cFile )
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
       ? "Can't create table : person"
       pDb := NIL // close database
-
       RETURN NIL
    ENDIF
 
@@ -185,7 +181,6 @@ STATIC FUNCTION PrepareDB( cFile )
    IF Empty( pStmt )
       ? "Can't prepare statement : ", cSQLTEXT
       pDb := NIL
-
       RETURN NIL
    ENDIF
 

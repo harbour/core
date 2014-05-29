@@ -7,7 +7,6 @@
 
 #require "hbwin"
 
-// Some constants
 #define IDD_DIALOG1         101
 #define IDC_BUTTON1         4001
 #define IDC_STATIC1         1002
@@ -20,7 +19,6 @@
 #define WM_CLOSE            0x0010
 #define MB_ICONASTERISK     0x00000040
 
-// Main entry point
 PROCEDURE Main()
 
    IF Empty( win_LoadResource( IDD_DIALOG1, WIN_RT_DIALOG ) )

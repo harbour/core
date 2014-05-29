@@ -48,10 +48,11 @@
 
 PROCEDURE Main()
 
-   LOCAL cSQLTEXT, cFile := ":memory:"
-   LOCAL pDb, cb := @CallBack()
+   LOCAL cSQLTEXT
+   LOCAL pDb
+   LOCAL cb := @CallBack()
 
-   IF Empty( pDb := PrepareDB( cFile ) )
+   IF Empty( pDb := PrepareDB( ":memory:" ) )
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -114,7 +115,6 @@ STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    RETURN 0
 
-/* */
 STATIC FUNCTION HookCommitY()
 
    LOCAL oldColor := SetColor( "R+/N" )
@@ -145,11 +145,9 @@ STATIC FUNCTION HookRollback()
 
    RETURN 1
 
-/* */
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
    RETURN iif( hb_defaultValue( lShortMsg, .T. ), hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
-/* */
 STATIC FUNCTION PrepareDB( cFile )
 
    LOCAL cSQLTEXT, cMsg
@@ -162,20 +160,16 @@ STATIC FUNCTION PrepareDB( cFile )
       "Ivet" => 28 ;
       }, enum
 
-   pDb := sqlite3_open( cFile, .T. )
-   IF Empty( pDb )
+   IF Empty( pDb := sqlite3_open( cFile, .T. ) )
       ? "Can't open/create database:", cFile
-
       RETURN NIL
    ENDIF
 
    ? cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
    cMsg := cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
-
    IF !( cMsg == "SQLITE_OK" )
       ? "Can't create table: person"
       pDb := NIL // close database
-
       RETURN NIL
    ENDIF
 
@@ -184,7 +178,6 @@ STATIC FUNCTION PrepareDB( cFile )
    IF Empty( pStmt )
       ? "Can't prepare statement:", cSQLTEXT
       pDb := NIL
-
       RETURN NIL
    ENDIF
 
