@@ -65,15 +65,14 @@
 #include "dbstruct.ch"
 #include "error.ch"
 
-STATIC s_aTables := {}
+THREAD STATIC t_aTables := {}
 
 /* Network functions */
 STATIC s_nNetDelay    := 30
 STATIC s_lNetOk       := .F.
 STATIC s_cNetMsgColor := "GR+/R"
 
-FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
-      lNew, lShared, lReadOnly )
+FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, lNew, lShared, lReadOnly )
 
    LOCAL nKey
    LOCAL lForever
@@ -133,14 +132,12 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
 
 FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
-   LOCAL cSave       := SaveScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1 )
-   LOCAL lContinue   := .T.
-   LOCAL lSuccess    := .F.
+   LOCAL cSave     := SaveScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1 )
+   LOCAL lContinue := .T.
+   LOCAL lSuccess  := .F.
    LOCAL nWaitTime
    LOCAL bOperation
    LOCAL xIdentifier
-   LOCAL nKey
-   LOCAL nCh
    LOCAL cWord
 
    IF ! HB_ISNUMERIC( nType ) .OR. ;
@@ -175,13 +172,14 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
    DO WHILE lContinue
 
 #if 0
-      IF ( nKey := Inkey() ) == K_ESC
+      IF Inkey() == K_ESC
          RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
          EXIT
       ENDIF
 #endif
 
       DO WHILE nSeconds > 0 .AND. lContinue
+
          IF Eval( bOperation, xIdentifier )
             nSeconds  := 0
             lSuccess  := .T.
@@ -200,9 +198,8 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
                PadC( "Network Retry " + cWord + " | " + Str( nSeconds, 3 ) + " | ESC Exit", MaxCol() + 1 ), ;
                s_cNetMsgColor )
 
-            nKey := Inkey( 1 )
             nSeconds--
-            IF nKey == K_ESC
+            IF Inkey( 1 ) == K_ESC
                RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
                EXIT
             ENDIF
@@ -216,14 +213,8 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
       IF ! lSuccess
          nSeconds := nWaitTime
-         nCh := Alert( RETRY_MSG, { "  Yes  ", "  No  " } )
-
-         lContinue := ( nCh == 1 )
-
-         IF ! lContinue
-            // EXIT
-            RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
-            RETURN lSuccess
+         IF Alert( "NETWORK ERROR;Continue Attempt to Lock Record/File ?", { "  Yes  ", "  No  " } ) != 1
+            EXIT
          ENDIF
       ENDIF
    ENDDO
@@ -285,7 +276,7 @@ FUNCTION NetOpenFiles( aFiles )
 
    RETURN 0
 
-/* NETWORK METHODS */
+/* Network methods */
 
 FUNCTION NetDelete()
 
@@ -333,7 +324,7 @@ FUNCTION NetFileLock( nSeconds )
 
 FUNCTION NetAppend( nSeconds, lReleaseLocks )
 
-   LOCAL nOrd := ordSetFocus( 0 )      // --> set order to 0 to append ???
+   LOCAL nOrd := ordSetFocus( 0 )      // Set order to 0 to append ???
 
    HB_SYMBOL_UNUSED( lReleaseLocks )
 
@@ -358,7 +349,7 @@ PROCEDURE NetFlush()
 
    RETURN
 
-FUNCTION NetCommitAll()
+PROCEDURE NetCommitAll()
 
    LOCAL n
 
@@ -368,7 +359,7 @@ FUNCTION NetCommitAll()
       ENDIF
    NEXT
 
-   RETURN n
+   RETURN
 
 FUNCTION IsLocked( nRecId )
    RETURN AScan( dbRLockList(), hb_defaultValue( nRecID, RecNo() ) ) > 0
@@ -399,8 +390,7 @@ FUNCTION SetNetMsgColor( cColor )
 
 /* Utility functions */
 
-FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
-      lNET, cPATH, lNEW, lREADONLY )
+FUNCTION TableNew( cDbf, cAlias, cOrderBag, cDriver, lNet, cPath, lNew, lReadOnly )
 
    LOCAL lAuto := Set( _SET_AUTOPEN, .F. )
    LOCAL nPos
@@ -409,16 +399,16 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
 
    hb_default( @cAlias, hb_FNameName( cDbf ) )
 
-   IF ( nPos := AScan( s_aTables, {| e | e[ 1 ] == Upper( cALIAS ) } ) ) > 0
-      oDB := s_aTables[ nPos ][ 2 ]
+   IF ( nPos := AScan( t_aTables, {| e | e[ 1 ] == Upper( cAlias ) } ) ) > 0
+      oDB := t_aTables[ nPos ][ 2 ]
    ELSE
-      o := HBTable():New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
-         hb_defaultValue( lNET, .T. ), cPATH, lNEW, lREADONLY )
+      o := HBTable():New( cDbf, cAlias, cOrderBag, cDriver, ;
+         hb_defaultValue( lNet, .T. ), cPath, lNew, lReadOnly )
       IF o:Open()
          oDB := o:FldInit()
       ENDIF
 
-      AAdd( s_aTables, { Upper( cAlias ), oDB } )
+      AAdd( t_aTables, { Upper( cAlias ), oDB } )
    ENDIF
 
    Set( _SET_AUTOPEN, lAuto )
@@ -428,22 +418,21 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
 FUNCTION GetTable( cAlias )
 
    LOCAL nPos
-   LOCAL oDB
 
-   IF ( nPos := AScan( s_aTables, {| e | e[ 1 ] == Upper( cALIAS ) } ) ) > 0
-      oDB := s_aTables[ nPos ][ 2 ]
+   IF ( nPos := AScan( t_aTables, {| e | e[ 1 ] == Upper( cAlias ) } ) ) > 0
+      RETURN t_aTables[ nPos ][ 2 ]
    ENDIF
 
-   RETURN oDB
+   RETURN NIL
 
 
 CREATE CLASS HBField
 
-   VAR ALIAS INIT Alias()
-   VAR Name INIT ""
-   VAR TYPE INIT "C"
-   VAR Len INIT 0
-   VAR Dec INIT 0
+   VAR Alias INIT Alias()
+   VAR Name  INIT ""
+   VAR TYPE  INIT "C"
+   VAR Len   INIT 0
+   VAR Dec   INIT 0
    VAR ORDER INIT 0
    VAR Value
 
@@ -456,9 +445,9 @@ ENDCLASS
 
 CREATE CLASS HBRecord
 
-   VAR Buffer INIT {}
-   VAR ALIAS INIT Alias()
-   VAR Number INIT 0
+   VAR Buffer  INIT {}
+   VAR Alias   INIT Alias()
+   VAR Number  INIT 0
    VAR aFields INIT {}
 
    METHOD New( cAlias )
@@ -520,49 +509,32 @@ METHOD PROCEDURE Put() CLASS HBRecord
 
 /* CLASS HBTable */
 
-// METHOD SetFocus()    INLINE ( ::Alias )->( Select( ::Area ) )
-//
-//
-// encapsulated methods
-//
-//
-// Methods
-//
-//
-// table movement
-//
-//
-// RELATION
-//
-//
-// ORDER Management
-
 CREATE CLASS HBTable
 
-   VAR Buffer INIT {}                  // 1
-   VAR ALIAS INIT Alias()              // 2
-   VAR Area INIT 0                     // 3
+   VAR Buffer        INIT {}       // 1
+   VAR Alias         INIT Alias()  // 2
+   VAR Area          INIT 0        // 3
 
    VAR oRec
-   VAR aStruc INIT {}
-   VAR nRecno INIT 0
-   VAR cDBF INIT ""
-   VAR cOrderBag INIT ""
-   VAR cOrderFile INIT ""
-   VAR cPATH INIT ""
-   VAR Driver INIT "DBFCDX"
-   VAR IsNew INIT .T.
-   VAR IsReadOnly INIT .F.
-   VAR IsNet INIT .T.
-   VAR aSaveState INIT {}
-   VAR lMonitor INIT .F.
-   VAR ReadBuffers INIT {}
-   VAR WriteBuffers INIT {}
+   VAR aStruc        INIT {}
+   VAR nRecno        INIT 0
+   VAR cDbf          INIT ""
+   VAR cOrderBag     INIT ""
+   VAR cOrderFile    INIT ""
+   VAR cPath         INIT ""
+   VAR Driver        INIT "DBFCDX"
+   VAR IsNew         INIT .T.
+   VAR IsReadOnly    INIT .F.
+   VAR IsNet         INIT .T.
+   VAR aSaveState    INIT {}
+   VAR lMonitor      INIT .F.
+   VAR ReadBuffers   INIT {}
+   VAR WriteBuffers  INIT {}
    VAR DeleteBuffers INIT {}
-   VAR nDataOffset INIT 0
-   VAR BlankBuffer INIT {}
-   VAR aOrders INIT {}
-   VAR aChildren INIT {}
+   VAR nDataOffset   INIT 0
+   VAR BlankBuffer   INIT {}
+   VAR aOrders       INIT {}
+   VAR aChildren     INIT {}
    VAR oParent
 
    METHOD Eof() INLINE ( ::Alias )->( Eof() )
@@ -575,7 +547,7 @@ CREATE CLASS HBTable
    METHOD Goto( n ) INLINE ( ::Alias )->( dbGoto( n ) )
    METHOD goTop() INLINE ( ::Alias )->( dbGoTop() )
    METHOD goBottom() INLINE ( ::Alias )->( dbGoBottom() )
-   METHOD SetFocus() INLINE ( ::Alias )->( Select( ::ALias ) )
+   METHOD SetFocus() INLINE ( ::Alias )->( Select( ::Alias ) )
    METHOD Append( l ) INLINE iif( ::isNet, ( ::Alias )->( NetAppend( l ) ), ;
       ( ::alias )->( dbAppend() ) )
    METHOD Recall() INLINE ( ::Alias )->( NetRecall() )
@@ -621,14 +593,14 @@ CREATE CLASS HBTable
       ( ::alias )->( ordScope( TOPSCOPE, NIL ) ), ;
       ( ::alias )->( ordScope( BOTTOMSCOPE, NIL ) )
 
-   METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, lNET, cPATH, lNEW, lREADONLY )
+   METHOD New( cDbf, cAlias, cOrderBag, cDriver, lNet, cPath, lNew, lReadOnly )
 
    METHOD Open()
 
    METHOD dbMove( nDirection )
    METHOD FldInit()
    METHOD Read( lKeepBuffer )
-   METHOD ReadBLANK( lKeepBuffer )
+   METHOD ReadBlank( lKeepBuffer )
    METHOD Write( lKeepBuffer )
    METHOD BufWrite( aBuffer )
    METHOD Delete( lKeepBuffer )
@@ -656,7 +628,7 @@ CREATE CLASS HBTable
    METHOD SetOrder( xTag )
    METHOD GetOrder( xOrder )
    METHOD FastReindex()
-   METHOD REINDEX()
+   METHOD ReIndex()
    METHOD CreateTable( cFile )
    METHOD AddField( f, t, l, d )
    METHOD Gentable()
@@ -665,24 +637,22 @@ CREATE CLASS HBTable
 
 ENDCLASS
 
-// ---------------------
 // Constructor
-// ---------------------
 
-METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, lNET, cPATH, lNEW, lREADONLY ) CLASS HBTable
+METHOD New( cDbf, cAlias, cOrderBag, cDriver, lNet, cPath, lNew, lReadOnly ) CLASS HBTable
 
    LOCAL cOldRdd
 
-   ::IsNew      := hb_defaultValue( lNEW, .T. )
-   ::IsNet      := hb_defaultValue( lNET, .F. )
-   ::IsReadOnly := hb_defaultValue( lREADONLY, .F. )
-   ::cDBF       := cDbf
-   ::cPath      := hb_defaultValue( cPATH, Set( _SET_DEFAULT ) )
+   ::IsNew      := hb_defaultValue( lNew, .T. )
+   ::IsNet      := hb_defaultValue( lNet, .F. )
+   ::IsReadOnly := hb_defaultValue( lReadOnly, .F. )
+   ::cDbf       := cDbf
+   ::cPath      := hb_defaultValue( cPath, Set( _SET_DEFAULT ) )
    ::cOrderBag  := hb_FNameName( hb_defaultValue( cOrderBag, hb_FNameName( cDbf ) ) )
    cOldRdd      := rddSetDefault( ::driver )
    ::cOrderFile := ::cOrderBag + ordBagExt()
    rddSetDefault( cOldRdd )
-   ::Driver      := hb_defaultValue( cDRIVER, "DBFCDX" )
+   ::Driver      := hb_defaultValue( cDriver, "DBFCDX" )
    ::aOrders     := {}
    ::Area        := 0
    ::Alias       := hb_defaultValue( cAlias, hb_FNameName( cDbf ) )
@@ -692,20 +662,18 @@ METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, lNET, cPATH, lNEW, lREADONLY ) CLA
 
 METHOD Open() CLASS HBTable
 
-   dbUseArea( ::IsNew, ::Driver, ::cDBF, ::Alias, ::IsNET, ::IsREADONLY )
+   dbUseArea( ::IsNew, ::Driver, ::cDbf, ::Alias, ::IsNET, ::IsREADONLY )
 
    IF ::IsNET .AND. NetErr()
-      Alert( _NET_USE_FAIL_MSG )
+      Alert( "Net Open Fail !!!" )
       RETURN .F.
    ENDIF
 
    Select( ::Alias )
    ::Area := Select()
    IF HB_ISSTRING( ::cOrderBag ) .AND. hb_dbExists( ::cPath + ::cOrderFile )
-
       SET INDEX TO ( ::cPath + ::cOrderBag )
       ( ::Alias )->( ordSetFocus( 1 ) )
-
    ENDIF
 
    ::Buffer := Array( ( ::Alias )->( FCount() ) )
@@ -741,9 +709,7 @@ METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
 
    RETURN
 
-// -->
-// --> Insert field definitions and generate virtual child class...
-// -->
+// Insert field definitions and generate virtual child class
 
 METHOD FldInit() CLASS HBTable
 
@@ -759,7 +725,7 @@ METHOD FldInit() CLASS HBTable
       ::Read()
    ENDIF
 
-   // --> create new oObject class from this one...
+   // Create new oObject class from this one
 
    adb := HBClass():new( ::alias, { "hbtable" } )
 
@@ -774,7 +740,7 @@ METHOD FldInit() CLASS HBTable
    oNew:IsNew       := ::IsNew
    oNew:IsNet       := ::IsNet
    oNew:IsReadOnly  := ::IsReadOnly
-   oNew:cDBF        := ::cDBF
+   oNew:cDbf        := ::cDbf
    oNew:cPath       := ::cPath
    oNew:cOrderBag   := ::cOrderBag
    oNew:cOrderFile  := ::cOrderFile
@@ -811,19 +777,17 @@ METHOD FldInit() CLASS HBTable
 METHOD PROCEDURE Read( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
-   LOCAL nSel   := Select( ::Alias )
-   LOCAL adata  := Array( 1, 2 )
+   LOCAL nSel  := Select( ::Alias )
+   LOCAL adata := Array( 1, 2 )
    LOCAL Buffer
 
    FOR EACH Buffer in ::Buffer
-
       i      := Buffer:__enumIndex()
       Buffer := ( ::Alias )->( FieldGet( i ) )
 
       adata[ 1 ][ 1 ] := ( ::Alias )->( FieldName( i ) )
       adata[ 1 ][ 2 ] := ( ::Alias )->( FieldGet( i ) )
       __objSetValueList( Self, aData )
-
    NEXT
 
    IF hb_defaultValue( lKeepBuffer, .F. ) .OR. ::lMonitor
@@ -874,14 +838,12 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
    LOCAL n
 
    IF hb_defaultValue( lKeepBuffer, .F. ) .OR. ::lMonitor
-
       // --> save old record in temp buffer
       FOR EACH xBuffer IN aOldBuffer
          xBuffer := ( ::Alias )->( FieldGet( xBuffer:__enumIndex() ) )
       NEXT
 
       AAdd( ::WriteBuffers, { ( ::Alias )->( RecNo() ), aOldBuffer } )
-
    ENDIF
 
    IF ::isNet .AND. !( ::Alias )->( NetRecLock() )
@@ -963,9 +925,7 @@ METHOD SetMonitor( l ) CLASS HBTable
 
    RETURN lTemp
 
-//
-// Transaction control subsystem...
-//
+// Transaction control subsystem
 
 METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
@@ -980,32 +940,27 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
       IF ! Empty( ::DeleteBuffers )
 
-         Set( _SET_DELETED, .F. )       // make deleted records visible temporarily...
+         Set( _SET_DELETED, .F. )       // make deleted records visible temporarily
 
          nLen := Len( ::deleteBuffers )
          hb_default( @nLevel, nLen )
 
-         IF nLevel == 0 .OR. nLevel == nLen     // DO ALL...
+         IF nLevel == 0 .OR. nLevel == nLen     // DO ALL
 
             FOR EACH aBuffers IN ::deleteBuffers
-
                ( ::Alias )->( dbGoto( aBuffers[ 1 ] ) )
-
                lRet := ( ::Alias )->( NetRecall() )
-
             NEXT
 
             IF lRet
                ::deleteBuffers := {}
             ENDIF
 
-         ELSE       // DO CONTROLLED...
+         ELSE  // DO CONTROLLED
 
             FOR EACH aBuffers IN ::deleteBuffers
                IF aBuffers:__enumIndex() > ( nLen - nLevel )
-
                   ( ::Alias )->( dbGoto( aBuffers[ 1 ] ) )
-
                   lRet := ( ::Alias )->( NetRecall() )
                ENDIF
             NEXT
@@ -1013,11 +968,9 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
             IF lRet
                ASize( ::deleteBuffers, nLen - nLevel )
             ENDIF
-
          ENDIF
 
          Set( _SET_DELETED, lDelState )
-
       ENDIF
       EXIT
 
@@ -1028,7 +981,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
          nLen := Len( ::WriteBuffers )
          hb_default( @nLevel, nLen )
 
-         IF nLevel == 0 .OR. nLen == nLevel   // Do All...
+         IF nLevel == 0 .OR. nLen == nLevel   // Do All
 
             FOR EACH aBuffers IN ::writeBuffers
 
@@ -1043,11 +996,10 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
             NEXT
 
             IF lRet
-               // erase entries
-               ::WriteBuffers := {}
+               ::WriteBuffers := {}  // erase entries
             ENDIF
 
-         ELSE       // do controlled...
+         ELSE       // do controlled
 
             FOR EACH aBuffers IN ::writeBuffers
                IF aBuffers:__enumIndex() > ( nLen - nLevel )
@@ -1067,9 +1019,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
             IF lRet
                ASize( ::WriteBuffers, nLen - nLevel )
             ENDIF
-
          ENDIF
-
       ENDIF
       EXIT
 
@@ -1081,9 +1031,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
    RETURN lRet
 
-//
-//   ORDER MANAGEMENT
-//
+// Order management
 
 METHOD AddOrder( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval ) CLASS HBTable
 
@@ -1111,7 +1059,9 @@ METHOD Reindex() CLASS HBTable
 
       IF hb_dbExists( ::cPath + ::cOrderFile )
          IF ! hb_dbDrop( ::cPath + ::cOrderFile )
-            // --> Alert(".cdx *NOT* Deleted !!!" )
+#if 0
+            Alert( ".cdx *NOT* Deleted !!!" )
+#endif
          ENDIF
       ENDIF
 
@@ -1127,7 +1077,6 @@ METHOD Reindex() CLASS HBTable
       IF ! ::Open()
          RETURN .F.
       ENDIF
-
    ENDIF
 
    ( ::Alias )->( dbSetIndex( ::cOrderBag ) )
@@ -1150,7 +1099,9 @@ METHOD FastReindex() CLASS HBTable
       ::Isnet := .F.
       IF hb_dbExists( ::cPath + ::cOrderFile )
          IF ! hb_dbDrop( ::cPath + ::cOrderFile )
-            // --> Alert(".cdx *NOT* Deleted !!!" )
+#if 0
+            Alert( ".cdx *NOT* Deleted !!!" )
+#endif
          ENDIF
       ENDIF
 
@@ -1166,7 +1117,6 @@ METHOD FastReindex() CLASS HBTable
       IF ! ::Open()
          RETURN .F.
       ENDIF
-
    ENDIF
 
    ( ::Alias )->( dbSetIndex( ::cOrderBag ) )
@@ -1195,7 +1145,7 @@ METHOD GetOrder( xOrder ) CLASS HBTable
       nPos := 1
    ENDIF
 
-   RETURN ::aOrders[ nPos ]                // returns oOrder
+   RETURN ::aOrders[ nPos ]    // returns oOrder
 
 METHOD SetOrder( xTag ) CLASS HBTable
 
@@ -1231,9 +1181,7 @@ METHOD GetOrderLabels() CLASS HBTable
 
    RETURN aRet
 
-//
 // Relation Methods
-//
 
 PROCEDURE AddChild( oChild, cKey ) CLASS HBTable
 
@@ -1269,16 +1217,14 @@ METHOD OnError( uParam ) CLASS HBTable
 
    LOCAL cMsg := __GetMessage()
    LOCAL nPos
-   LOCAL uRet, oErr
+   LOCAL oErr
 
    IF uParam != NIL .AND. hb_LeftEq( cMsg, "_" )
       cMsg := SubStr( cMsg, 2 )
    ENDIF
-   nPos := ( ::Alias )->( FieldPos( cMsg ) )
 
-   IF nPos != 0
-      uRet := ( ::Alias )->( iif( uParam == NIL, FieldGet( nPos ), FieldPut( nPos, uParam ) ) )
-   ELSE
+   IF ( nPos := ( ::Alias )->( FieldPos( cMsg ) ) ) == 0
+
       oErr := ErrorNew()
       oErr:Args          := { Self, cMsg, uParam }
       oErr:CanDefault    := .F.
@@ -1290,10 +1236,11 @@ METHOD OnError( uParam ) CLASS HBTable
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := -1
       oErr:SubSystem     := "HBTable"
-      uRet := Eval( ErrorBlock(), oErr )
+
+      RETURN Eval( ErrorBlock(), oErr )
    ENDIF
 
-   RETURN uRet
+   RETURN ( ::Alias )->( iif( uParam == NIL, FieldGet( nPos ), FieldPut( nPos, uParam ) ) )
 
 CREATE CLASS HBOrder
 
