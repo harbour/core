@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * curl_global_*()
+ * curl_global_*() - Global initialization/deinitialization
  *
  * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
@@ -49,9 +49,6 @@
 #include <curl/curl.h>
 
 #include "hbapi.h"
-
-/* Global initialization/deinitialization */
-/* -------------------------------------- */
 
 static void * hb_curl_xgrab( size_t size )
 {

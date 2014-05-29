@@ -456,7 +456,6 @@ static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
 }
 
 /* Constructor/Destructor */
-/* ---------------------- */
 
 static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 {
@@ -601,7 +600,6 @@ static PHB_CURL PHB_CURL_par( int iParam )
 }
 
 /* Harbour interface */
-/* ----------------- */
 
 HB_FUNC( CURL_EASY_INIT )
 {
