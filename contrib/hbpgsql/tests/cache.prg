@@ -4,11 +4,10 @@
 
 #require "hbpgsql"
 
-#define DB_ALIAS            1
-#define DB_FILE             2
-#define DB_QUERY            3
-#define DB_ROW              4
-#define DB_FETCH            5
+#define DB_ALIAS            1  // Table Name
+#define DB_QUERY            2  // Object Query
+#define DB_ROW              3  // Current Row
+#define DB_FETCH            4  // Fetch Status
 
 STATIC s_oServer
 STATIC s_aTableTemp := {}
@@ -74,7 +73,7 @@ FUNCTION SQLApplyUpdates()
 
    IF ( i := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
 
-      oQuery := s_aTableTemp[ i ][ 3 ]
+      oQuery := s_aTableTemp[ i ][ DB_QUERY ]
 
       FOR i := 1 TO LastRec()
 
@@ -94,11 +93,8 @@ FUNCTION SQLApplyUpdates()
                NEXT
 
                oQuery:Append( oRow )
-
                cError := oQuery:ErrorMsg()
-
                lError := oQuery:NetErr()
-
             ENDIF
          ELSE
 
@@ -127,11 +123,9 @@ FUNCTION SQLApplyUpdates()
                NEXT
 
                IF lUpdate
-
                   oQuery:Update( oRow )
                   cError := oQuery:ErrorMsg()
                   lError := oQuery:NetErr()
-
                ENDIF
             ENDIF
          ENDIF
@@ -158,8 +152,7 @@ PROCEDURE SQLCloseTemp( cAlias )
    ENDIF
 
    IF ( x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
-      ADel( s_aTableTemp, x )
-      // ASize( s_aTableTemp, Len( s_aTableTemp ) - 1 )
+      hb_ADel( s_aTableTemp, x, .F. /* .T. */ )
    ENDIF
 
    RETURN
@@ -243,8 +236,6 @@ PROCEDURE SQLFetchAll()
 
 FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
 
-   LOCAL cFile
-   LOCAL Result := .T.
    LOCAL x
    LOCAL s_oServer
    LOCAL oQuery
@@ -255,7 +246,7 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
 
    /* Procura por query na area temporaria */
    IF ( x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
-      oQuery := s_aTableTemp[ x ][ 3 ]
+      oQuery := s_aTableTemp[ x ][ DB_QUERY ]
       oQuery:Destroy()
    ENDIF
 
@@ -289,11 +280,10 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
    /* Se nao houver query na area temporaria entao adiciona, caso contrario, apenas atualiza */
    IF x == 0
       AAdd( s_aTableTemp, { ;
-         cAlias, ;  // Table Name
-         cFile, ;   // Temporary File Name
-         oQuery, ;  // Object Query
-         0, ;       // Current Row
-         lFetch } ) // Fetch Status
+         cAlias, ;  // DB_ALIAS
+         oQuery, ;  // DB_QUERY
+         0, ;       // DB_ROW
+         lFetch } ) // DB_FETCH
    ELSE
 
       s_aTableTemp[ x ][ DB_QUERY ] := oQuery
@@ -309,7 +299,7 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
       dbGoTop()
    ENDIF
 
-   RETURN result
+   RETURN .T.
 
 
 FUNCTION SQLConnect( cHost, cDatabase, cUser, cPassword, cSchema )
@@ -352,19 +342,16 @@ FUNCTION SQLQuery( cQuery )
 
 FUNCTION SQLExecQuery( cQuery )
 
-   LOCAL oQuery
-   LOCAL result := .T.
+   LOCAL oQuery := s_oServer:Query( cQuery )
 
-   oQuery := s_oServer:Query( cQuery )
    IF oQuery:NetErr()
       ? "Cannot execute", cQuery + ":" + oQuery:ErrorMsg()
-
-      result := .F.
-   ELSE
-      oQuery:Destroy()
+      RETURN .F.
    ENDIF
 
-   RETURN result
+   oQuery:Destroy()
+
+   RETURN .T.
 
 
 FUNCTION SQLPrepare( cQuery, ... )
@@ -456,12 +443,11 @@ PROCEDURE SQLRollbackTrans()
 /* Faz querie que retorna apenas 1 valor de coluna */
 FUNCTION QuickQuery( cQuery )
 
-   LOCAL pQuery
    LOCAL result := ""
    LOCAL temp, aTemp
    LOCAL x, y
 
-   pQuery := PQexec( s_oServer:pDB, cQuery )
+   LOCAL pQuery := PQexec( s_oServer:pDB, cQuery )
 
    IF PQresultStatus( pQuery ) == PGRES_TUPLES_OK
       IF PQlastrec( pQuery ) != 0

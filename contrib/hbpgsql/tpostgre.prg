@@ -679,15 +679,15 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
 
 METHOD Struct() CLASS TPQquery
 
-   LOCAL result := Array( Len( ::aStruct ) )
+   LOCAL result := {}
    LOCAL i
 
-   FOR i := 1 TO Len( ::aStruct )
-      result[ i ] := { ;
-         ::aStruct[ i ][ _STRU_FIELDNAME ], ;
-         ::aStruct[ i ][ _STRU_FIELDTYPE ], ;
-         ::aStruct[ i ][ _STRU_FIELDLEN ], ;
-         ::aStruct[ i ][ _STRU_FIELDDEC ] }
+   FOR EACH i IN ::aStruct
+      AAdd( result, { ;
+         i[ _STRU_FIELDNAME ], ;
+         i[ _STRU_FIELDTYPE ], ;
+         i[ _STRU_FIELDLEN ], ;
+         i[ _STRU_FIELDDEC ] } )
    NEXT
 
    RETURN result

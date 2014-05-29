@@ -52,8 +52,8 @@
 CREATE CLASS amf_Obj
 
    METHOD New( hCachedData ) CONSTRUCTOR
-   ERROR HANDLER noMessage
-   METHOD msgNotFound
+   ERROR HANDLER noMessage( ... )
+   METHOD msgNotFound( cMessage, ... )
 
    PROTECTED:
 
@@ -78,21 +78,21 @@ METHOD New( hCachedData ) CLASS amf_Obj
    RETURN self
 
 METHOD noMessage( ... ) CLASS amf_Obj
-
    RETURN ::msgNotFound( __GetMessage(), ... )
 
 METHOD msgNotFound( cMessage, ... ) CLASS amf_Obj
 
-   IF PCount() == 1 .AND. !( hb_BLeft( cMessage, 1 ) == "_" )
+   DO CASE
+   CASE PCount() == 1 .AND. ! hb_LeftEq( cMessage, "_" )
       IF ! Empty( ::hCachedData ) .AND. cMessage $ ::hCachedData
          RETURN ::hCachedData[ cMessage ]
       ENDIF
-   ELSEIF PCount() > 1 .AND. hb_BLeft( cMessage, 1 ) == "_"
+   CASE PCount() > 1 .AND. hb_LeftEq( cMessage, "_" )
       IF Empty( ::hCachedData )
          ::hCachedData := { => }
       ENDIF
-      RETURN ::hCachedData[ hb_BSubStr( cMessage, 2 ) ] := hb_PValue( 2 )
-   ENDIF
+      RETURN ::hCachedData[ SubStr( cMessage, 2 ) ] := hb_PValue( 2 )
+   ENDCASE
 
    RETURN NIL
 
