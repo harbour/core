@@ -941,7 +941,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS HBEditor
 /* -------------------------------------------- */
 
 // Rebuild a long line from multiple short ones (wrapped at soft CR)
-METHOD GetParagraph( nRow )
+METHOD GetParagraph( nRow ) CLASS HBEditor
 
    LOCAL cLine := ""
 
@@ -962,7 +962,7 @@ METHOD GetParagraph( nRow )
 
 // if editing isn't allowed we enter this loop which
 // handles only movement keys and discards all the others
-METHOD BrowseText( nPassedKey )
+METHOD BrowseText( nPassedKey ) CLASS HBEditor
 
    LOCAL nKey
    LOCAL bKeyBlock

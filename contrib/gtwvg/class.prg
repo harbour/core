@@ -462,24 +462,19 @@ METHOD WvtDialog:Inkey()
 
          IF ::nObjOver == 0
             Wvt_SetToolTip( 0, 0, 0, 0, "" )
-
          ELSEIF ::oObjOver:lActive
             ::oObjOver:SetTooltip()
-
          ELSE
             Wvt_SetToolTip( 0, 0, 0, 0, "" )
-
          ENDIF
       ENDIF
 
       IF ::nCurObj != ::nLastObj
          IF ::nLastObj == 0
             ::aObjects[ ::nCurObj  ]:Hilite()
-
          ELSE
             ::aObjects[ ::nLastObj ]:DeHilite()
             ::aObjects[ ::nCurObj  ]:Hilite()
-
          ENDIF
 
          ::nLastObj := ::nCurObj
@@ -2331,7 +2326,7 @@ METHOD wvtScrollbar:SetPos( nTotal, nCurrent )
 
 METHOD wvtScrollbar:ThumbPos()
 
-   LOCAL  nNewPos, nRecPerUnit, nCurUnit
+   LOCAL nNewPos, nRecPerUnit, nCurUnit
 
    IF ::nBarType == WVT_SCROLLBAR_VERT
       nRecPerUnit := ::nTotal / ::nScrollUnits
@@ -3074,11 +3069,11 @@ METHOD wvtMenu:FindMenuItemById( nId )
 
    RETURN aResult
 
-METHOD wvtMenu:DrawMenuBar()
+METHOD PROCEDURE wvtMenu:DrawMenuBar()
 
    Wvt_DrawMenuBar()
 
-   RETURN NIL
+   RETURN
 
 /* Class WvtConsole */
 CREATE CLASS WvtConsole FROM WvtObject

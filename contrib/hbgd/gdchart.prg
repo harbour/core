@@ -919,7 +919,7 @@ METHOD Clone() CLASS GDChart
 
    RETURN oDestImage
 
-METHOD CloneDataFrom( oSrc )
+METHOD CloneDataFrom( oSrc ) CLASS GDChart
 
    // copy values from Source to Dest
    // please update in case of new datas

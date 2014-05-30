@@ -668,7 +668,7 @@ METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
    RETURN Self
 
 METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
-      nLineSpacing, nCharMap, nResolution )  CLASS GDImage
+      nLineSpacing, nCharMap, nResolution ) CLASS GDImage
 
    LOCAL nWidth, nLen
    LOCAL nPosX
@@ -698,7 +698,7 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
 
    RETURN Self
 
-METHOD CloneDataFrom( oSrc )
+METHOD CloneDataFrom( oSrc ) CLASS GDImage
 
    // copy values from Source to Dest
    // please update in case of new datas

@@ -261,7 +261,7 @@ METHOD WvgActiveXControl:setInputFocus()
    RETURN Self
 
 METHOD WvgActiveXControl:subscribeStdEvents()
-   RETURN NIL
+   RETURN Self
 
 METHOD WvgActiveXControl:unsubscribeStdEvents()
    RETURN Self

@@ -891,7 +891,7 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
 
    RETURN .T.
 
-METHOD Delete( lKeepBuffer )
+METHOD Delete( lKeepBuffer ) CLASS HBTable
 
    LOCAL lRet
    LOCAL lDeleted := Set( _SET_DELETED, .F. )  // make deleted records visible

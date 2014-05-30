@@ -667,7 +667,7 @@ METHOD PROCEDURE CallStackProcessKey( nKey ) CLASS HBDebugger
    RETURN
 
 
-METHOD PROCEDURE CodeblockTrace()
+METHOD PROCEDURE CodeblockTrace() CLASS HBDebugger
 
    ::oPullDown:GetItemByIdent( "CODEBLOCK" ):checked := ::lCBTrace := ! ::lCBTrace
    __dbgSetCBTrace( ::pInfo, ::lCBTrace )
