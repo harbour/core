@@ -243,13 +243,14 @@ FUNCTION __objDerivedFrom( oObject, xSuper )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   IF HB_ISOBJECT( xSuper )
+   DO CASE
+   CASE HB_ISOBJECT( xSuper )
       cClassName := xSuper:ClassName()
-   ELSEIF HB_ISSTRING( xSuper )
+   CASE HB_ISSTRING( xSuper )
       cClassName := hb_asciiUpper( xSuper )
-   ELSE
+   OTHERWISE
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
-   ENDIF
+   ENDCASE
 
    RETURN __clsParent( oObject:ClassH, cClassName )
 

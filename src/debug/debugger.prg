@@ -1326,8 +1326,8 @@ METHOD PROCEDURE EditColor( nColor, oBrwColors ) CLASS HBDebugger
    oBrwColors:ForceStable()
 
    IF __dbgInput( Row(), Col() + 15,, @cColor, ;
-         {| cColor | iif( !( Type( cColor ) == "C" ), ;
-         ( __dbgAlert( "Must be string" ), .F. ), .T. ) }, ;
+         {| cColor | iif( Type( cColor ) == "C", .T., ;
+         ( __dbgAlert( "Must be string" ), .F. ) ) }, ;
          SubStr( ::ClrModal(), 5 ) )
       ::aColors[ nColor ] := &cColor
    ENDIF
@@ -1346,8 +1346,8 @@ METHOD PROCEDURE EditSet( nSet, oBrwSets ) CLASS HBDebugger
    oBrwSets:ForceStable()
 
    IF __dbgInput( Row(), Col() + 13,, @cSet, ;
-      {| cSet | iif( !( Type( cSet ) == cType ), ;
-      ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
+      {| cSet | iif( Type( cSet ) == cType, .T., ;
+      ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ) ) }, ;
       SubStr( ::ClrModal(), 5 ) )
       Set( nSet, &cSet )
    ENDIF

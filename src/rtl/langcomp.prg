@@ -47,10 +47,10 @@
  */
 
 #ifdef HB_LEGACY_LEVEL4
-   /* Required for legacy language modules with a two character ID.
-      These cannot have a compatibility puller symbol in langlgcy.prg,
-      which in turn pulls all CP modules, so we're pulling them from
-      here. */
+/* Required for legacy language modules with a two character ID.
+   These cannot have a compatibility puller symbol in langlgcy.prg,
+   which in turn pulls all CP modules, so we're pulling them from
+   here. */
 REQUEST HB_CODEPAGE_CS852
 REQUEST HB_CODEPAGE_DE850
 REQUEST HB_CODEPAGE_EL737

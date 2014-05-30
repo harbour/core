@@ -881,7 +881,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
    IF nResult != _EXIT_OK
       IF lExitStr
-         OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), " " + "[" + cTargetName + "]", "" ) + ;
+         OutErr( hb_StrFormat( _SELF_NAME_ + iif( Empty( cTargetName ), "", " " + "[" + cTargetName + "]" ) + ;
                                ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
       ENDIF
       IF lPause
@@ -2212,9 +2212,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" }, ;
          { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" }, ;
          { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" }, ;
-         { {|| iif( ! Empty( hbmk[ _HBMK_cCCPREFIX ] ) .OR. ! Empty( hbmk[ _HBMK_cCCSUFFIX ] ), ;
-               FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] ), ;
-               NIL ) }, "mingwarm" } }
+         { {|| iif( Empty( hbmk[ _HBMK_cCCPREFIX ] ) .AND. Empty( hbmk[ _HBMK_cCCSUFFIX ] ), NIL, ;
+               FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] ) ) }, "mingwarm" } }
 #endif
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
 #ifdef HARBOUR_SUPPORT

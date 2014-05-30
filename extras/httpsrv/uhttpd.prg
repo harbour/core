@@ -1833,7 +1833,7 @@ FUNCTION uhttpd_join( cSeparator, aData )
       CASE "C"
       CASE "M" ; cRet += xData; EXIT
       CASE "N" ; cRet += hb_ntos( xData ); EXIT
-      CASE "D" ; cRet += iif( ! Empty( xData ), DToC( xData ), "" ); EXIT
+      CASE "D" ; cRet += iif( Empty( xData ), "", DToC( xData ) ); EXIT
       ENDSWITCH
    NEXT
 
@@ -2036,7 +2036,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br />Total Connections: ' + hb_ntos( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), hb_StrShrink( cThreads ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
       uhttpd_Write( '<br />Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
@@ -2046,7 +2046,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br />Total Service Connections: ' + hb_ntos( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), hb_StrShrink( cThreads ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
       uhttpd_Write( '<br />Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 
@@ -2643,7 +2643,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br />Total Connections: ' + hb_ntos( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), hb_StrShrink( cThreads ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
       uhttpd_Write( '<br />Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
@@ -2653,7 +2653,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br />Total Service Connections: ' + hb_ntos( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), hb_StrShrink( cThreads ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
       uhttpd_Write( '<br />Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 

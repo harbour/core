@@ -2986,7 +2986,7 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
 
    IF ! Empty( ::hMenu ) .AND. ( ! Empty( cCaption ) .OR. ! Empty( bAction ) )
       IF HB_ISOBJECT( bAction )
-         cCaption := iif( ! Empty( cCaption ), cCaption, bAction:Caption )
+         cCaption := iif( Empty( cCaption ), bAction:Caption, cCaption )
          aItem := { MF_POPUP, bAction:hMenu, cCaption, bAction }   /* bAction is a wvtMenu object reference */
       ELSEIF HB_ISEVALITEM( bAction )
          aItem := { MF_STRING, ::MenuItemId++, cCaption, bAction } /* bAction is a code block to execute */

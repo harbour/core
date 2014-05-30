@@ -79,9 +79,8 @@ FUNCTION TimeToSec( cTime )
 
 FUNCTION SecToTime( nSec, lHundredth )
 
-   LOCAL i, h, n
-
-   n := iif( ! HB_ISNUMERIC( nSec ), Seconds(), nSec )
+   LOCAL i, h
+   LOCAL n := iif( HB_ISNUMERIC( nSec ), nSec, Seconds() )
 
    IF HB_ISLOGICAL( lHundredth ) .AND. lHundredth
       h := StrZero( ( nSec * 100 ) % 100, 2 )

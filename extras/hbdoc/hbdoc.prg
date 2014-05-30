@@ -221,7 +221,7 @@ PROCEDURE Main( ... )
          iif( s_hSwitches[ "source" ], s_hSwitches[ "basedir" ] + "src", NIL ), ;
          iif( s_hSwitches[ "contribs" ], s_hSwitches[ "basedir" ] + "contrib", NIL ), ;
       }, ;
-      {| c | iif( ! Empty( c ), ProcessFolder( c, @aContent ), ) } )
+      {| c | iif( Empty( c ),, ProcessFolder( c, @aContent ) ) } )
 
    OutStd( hb_ntos( Len( aContent ) ), "items found" + hb_eol() )
    OutStd( hb_eol() )

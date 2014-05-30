@@ -463,7 +463,12 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
             Instead of testing every single line of mail until we find next boundary, if there is a boundary we
             jump to it immediatly, this saves thousands of EOL test and makes splitting of a string fast
           */
-         nPos := iif( ! Empty( cSubBoundary ), hb_At( "--" + cSubBoundary, cMail, nPos ), iif( ! Empty( cBoundary ), hb_At( "--" + cBoundary, cMail, nPos ), nLinePos + 2 ) )
+         nPos := ;
+            iif( Empty( cSubBoundary ), ;
+            iif( Empty( cBoundary ), ;
+            nLinePos + 2, ;
+            hb_At( "--" + cBoundary, cMail, nPos ) ), ;
+            hb_At( "--" + cSubBoundary, cMail, nPos ) )
       ENDIF
    ENDDO
 

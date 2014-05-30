@@ -786,7 +786,7 @@ METHOD Encode() CLASS uhttpd_Session
 
    ENDIF
 
-   RETURN iif( ! Empty( aSerial ), hb_Serialize( aSerial ), NIL )
+   RETURN iif( Empty( aSerial ),, hb_Serialize( aSerial ) )
 
 METHOD Decode( cData ) CLASS uhttpd_Session
 

@@ -437,7 +437,7 @@ FUNCTION UWOptionNew()
 
 METHOD Add( cTitle, cCode, lRaw ) CLASS UWOption
 
-   AAdd( ::aOption, { iif( ! Empty( lRaw ), cTitle, UHtmlEncode( cTitle ) ), cCode } )
+   AAdd( ::aOption, { iif( Empty( lRaw ), UHtmlEncode( cTitle ), cTitle ), cCode } )
 
    RETURN Self
 

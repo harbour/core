@@ -49,7 +49,7 @@ PROCEDURE Main()
    ?
 
    lExists := netio_FuncExec( "HB_DirExists", "./data" )
-   ? "Directory './data'", iif( ! lExists, "not exists", "exists" )
+   ? "Directory './data'", iif( lExists, "exists", "not exists" )
    IF ! lExists
       ? "Creating directory './data' ->", ;
          iif( netio_FuncExec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
