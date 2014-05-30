@@ -53,7 +53,7 @@
  *                 Xbase++ xbpScrollBar Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                              17Feb2009
+ *                               20090217
  */
 
 #include "hbclass.ch"
@@ -299,11 +299,11 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
    RETURN EVENT_UNHANDLED
 
-METHOD destroy() CLASS WvgScrollBar
+METHOD PROCEDURE destroy() CLASS WvgScrollBar
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD Scroll( xParam ) CLASS WvgScrollBar
 
@@ -330,7 +330,4 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
    RETURN aOldRange
 
 METHOD setScrollBoxSize( nUnits ) CLASS WvgScrollBar
-
-   LOCAL nOldUnits := nUnits
-
-   RETURN nOldUnits
+   RETURN nUnits

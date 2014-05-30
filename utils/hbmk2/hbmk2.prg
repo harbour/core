@@ -10572,7 +10572,7 @@ STATIC FUNCTION hbmk_ErrorMessage( oError )
    LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    /* add subsystem name if available */
-   cMessage += iif( HB_ISSTRING( oError:subsystem ), oError:subsystem(), "???" )
+   cMessage += hb_defaultValue( oError:subsystem, "???" )
 
    /* add subsystem's error code if available */
    cMessage += "/" + iif( HB_ISNUMERIC( oError:subCode ), hb_ntos( oError:subCode ), "???" )
@@ -12407,7 +12407,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    LOCAL nEnd
    LOCAL cMacro
 
-   LOCAL cStart := iif( HB_ISSTRING( cMacroPrefix ), cMacroPrefix, _MACRO_NORM_PREFIX ) + _MACRO_OPEN
+   LOCAL cStart := hb_defaultValue( cMacroPrefix, _MACRO_NORM_PREFIX ) + _MACRO_OPEN
 
    LOCAL cStdOut
 
@@ -15954,7 +15954,7 @@ STATIC FUNCTION __hbshell_win_reg_self( lRegister, lAllUser )
 
 STATIC FUNCTION __hbshell_win_reg_app( lRegister, lAllUser, cAppPath )
 
-   LOCAL cHive := iif( HB_ISLOGICAL( lAllUser ) .AND. lAllUser, "HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes" )
+   LOCAL cHive := iif( hb_defaultValue( lAllUser, .F. ), "HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes" )
    LOCAL lSuccess := .T.
    LOCAL tmp
 

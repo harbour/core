@@ -52,7 +52,7 @@
 //                  Xbase++ Parts Compatible functions
 //
 //                Pritpal Bedi  <bedipritpal@hotmail.com>
-//                              03Dec2011
+//                               20111203
 //
 #include "hbclass.ch"
 #include "inkey.ch"

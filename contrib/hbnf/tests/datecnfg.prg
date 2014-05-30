@@ -158,7 +158,7 @@ STATIC PROCEDURE FT_CAL( dGivenDate, nType )
       dGivenDate := Date()
    ENDIF
 
-   nType := iif( HB_ISNUMERIC( nType ), nType, 0 )
+   hb_default( @nType, 0 )
 
    IF nType == 0
       IF SubStr( cFY_Start, 6, 5 ) == "01.01"

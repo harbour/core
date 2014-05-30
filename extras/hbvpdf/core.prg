@@ -2512,7 +2512,8 @@ STATIC FUNCTION Array2File( cFile, aRay, nDepth, hFile )
    LOCAL nBytes := 0
    LOCAL i
 
-   nDepth := iif( HB_ISNUMERIC( nDepth ), nDepth, 0 )
+   hb_default( @nDepth, 0 )
+
    IF hFile == NIL
       IF ( hFile := FCreate( cFile ) ) == F_ERROR
          RETURN nBytes

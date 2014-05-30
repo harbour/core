@@ -53,7 +53,7 @@
  *                Xbase++ Compatible xbpPartHandler Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               08Nov2008
+ *                               20081108
  */
 
 #include "hbclass.ch"
@@ -130,27 +130,21 @@ METHOD WvgSysWindow:create( oParent, oOwner, aPos )
    RETURN Self
 
 METHOD WvgSysWindow:configure()
-
    RETURN Self
 
 METHOD WvgSysWindow:destroy()
-
    RETURN Self
 
 METHOD WvgSysWindow:disable()
-
    RETURN Self
 
 METHOD WvgSysWindow:enable()
-
    RETURN Self
 
 METHOD WvgSysWindow:hide()
-
    RETURN Self
 
 METHOD WvgSysWindow:show()
-
    RETURN Self
 
 METHOD WvgSysWindow:SetPos( aPos )
@@ -513,10 +507,7 @@ METHOD destroy() CLASS WvgFont
    RETURN Self
 
 METHOD list() CLASS WvgFont
-
-   LOCAL aList := {}
-
-   RETURN aList
+   RETURN {}
 
 METHOD createFont() CLASS WvgFont
 

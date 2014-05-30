@@ -53,7 +53,7 @@
  *                  Xbase++ xbp3State Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               07Dec2008
+ *                                20081207
  */
 
 #include "hbclass.ch"

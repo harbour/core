@@ -52,7 +52,7 @@
 //                    Xbase++ Compatible xbpCrt Class
 //
 //                 Pritpal Bedi  <bedipritpal@hotmail.com>
-//                              08Nov2008
+//                               20081108
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -385,15 +385,12 @@ METHOD WvgCrt:destroy()
    RETURN Self
 
 METHOD WvgCrt:currentPos()
-
    RETURN Self
 
 METHOD WvgCrt:currentSize()
-
    RETURN { hb_gtInfo( HB_GTI_SCREENWIDTH ), hb_gtInfo( HB_GTI_SCREENHEIGHT ) }
 
 METHOD WvgCrt:captureMouse()
-
    RETURN Self
 
 METHOD WvgCrt:disable()
@@ -420,15 +417,12 @@ METHOD WvgCrt:getFrameState()
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
 
 METHOD WvgCrt:getHWND()
-
    RETURN ::hWnd
 
 METHOD WvgCrt:getModalState()
-
    RETURN Self
 
 METHOD WvgCrt:hasInputFocus()
-
    RETURN ::lHasInputFocus
 
 METHOD WvgCrt:hide()
@@ -443,29 +437,24 @@ METHOD WvgCrt:refreshEx()
 
 METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
 
-   __defaultNIL( @nTop, 0 )
-   __defaultNIL( @nLeft, 0 )
-   __defaultNIL( @nBottom, MaxRow() )
-   __defaultNIL( @nRight, MaxCol() )
-
-   Wvt_InvalidateRect( nTop, nLeft, nBottom, nRight )
+   Wvt_InvalidateRect( ;
+      hb_defaultValue( nTop, 0 ), ;
+      hb_defaultValue( nLeft, 0 ), ;
+      hb_defaultValue( nBottom, MaxRow() ), ;
+      hb_defaultValue( nRight, MaxCol() ) )
 
    RETURN Self
 
 METHOD WvgCrt:isEnabled()
-
    RETURN Self
 
 METHOD WvgCrt:isVisible()
-
    RETURN Self
 
 METHOD WvgCrt:lockPS()
-
    RETURN Self
 
 METHOD WvgCrt:lockUpdate()
-
    RETURN Self
 
 METHOD WvgCrt:menuBar()
@@ -477,62 +466,46 @@ METHOD WvgCrt:menuBar()
    RETURN ::oMenu
 
 METHOD WvgCrt:setColorBG()
-
    RETURN Self
 
 METHOD WvgCrt:setColorFG()
-
    RETURN Self
 
 METHOD WvgCrt:setFont()
-
    RETURN Self
 
 METHOD WvgCrt:setFontCompoundName()
-
    RETURN ""
 
 METHOD WvgCrt:setFrameState( nState )
 
-   LOCAL lSuccess := .F.
-
    DO CASE
-
    CASE nState == WVGDLG_FRAMESTAT_MINIMIZED
-      lSuccess := ::sendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 )
-
+      RETURN ::sendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 )
    CASE nState == WVGDLG_FRAMESTAT_MAXIMIZED
-      lSuccess := ::sendMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 )
-
+      RETURN ::sendMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 )
    CASE nState == WVGDLG_FRAMESTAT_NORMALIZED
-      lSuccess := ::sendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 )
-
+      RETURN ::sendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 )
    ENDCASE
 
-   RETURN lSuccess
+   RETURN .F.
 
 METHOD WvgCrt:setModalState()
-
    RETURN Self
 
 METHOD WvgCrt:setPointer()
-
    RETURN Self
 
 METHOD WvgCrt:setTrackPointer()
-
    RETURN Self
 
 METHOD WvgCrt:setPos()
-
    RETURN Self
 
 METHOD WvgCrt:setPosAndSize()
-
    RETURN Self
 
 METHOD WvgCrt:setPresParam()
-
    RETURN Self
 
 METHOD WvgCrt:setSize( aSize, lPaint )
@@ -554,23 +527,18 @@ METHOD WvgCrt:show()
    RETURN Self
 
 METHOD WvgCrt:showModal()
-
    RETURN Self
 
 METHOD WvgCrt:toBack()
-
    RETURN Self
 
 METHOD WvgCrt:toFront()
-
    RETURN Wvg_SetWindowPosToTop( ::hWnd )
 
 METHOD WvgCrt:unlockPS()
-
    RETURN Self
 
 METHOD WvgCrt:winDevice()
-
    RETURN Self
 
 METHOD WvgCrt:enter( xParam )

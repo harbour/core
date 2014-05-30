@@ -90,7 +90,7 @@ PROCEDURE Main( cLang )
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
 #ifdef __HARBOUR__
-   hb_langSelect( iif( HB_ISSTRING( cLang ), cLang, "en" ) )
+   hb_langSelect( hb_defaultValue( cLang, "en" ) )
 #endif
 
    SET CONFIRM ON

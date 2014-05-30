@@ -5115,7 +5115,7 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
    HB_STACK_TLS_PRELOAD
 #ifndef HB_NO_PROFILER
    HB_USHORT uiClass = ( HB_USHORT ) hb_parni( 1 );
-   char * cMsg = hb_parc( 2 );
+   const char * cMsg = hb_parc( 2 );
 
    hb_reta( 2 );
    if( uiClass && uiClass <= s_uiClasses && cMsg && *cMsg )
@@ -5717,9 +5717,7 @@ HB_FUNC( __CLSVERIFY )
 }
 
 #if 0
-/*
- * return real function name ignoring aliasing
- */
+/* return real function name ignoring aliasing */
 const char * hb_clsRealMethodName( void )
 {
    HB_ISIZ nOffset = hb_stackBaseProcOffset( 1 );

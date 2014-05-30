@@ -333,7 +333,7 @@ METHOD WvtDialog:Destroy()
 
 METHOD WvtDialog:Event()
 
-   LOCAL  nKey
+   LOCAL nKey
 
    IF ( nKey := Inkey( 0.1, hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) ) ) == 0
       IF Wvt_IsLButtonPressed()
@@ -360,7 +360,7 @@ METHOD WvtDialog:Execute()
 
 METHOD WvtDialog:Inkey()
 
-   LOCAL  n, oObj, nID, i
+   LOCAL n, oObj, nID, i
 
    ::lEventHandled := .F.
    ::nUseObj       := 0
@@ -418,20 +418,20 @@ METHOD WvtDialog:Inkey()
 
       ENDCASE
 
-      IF    ::nKey == K_LBUTTONDOWN     .OR. ;
-            ::nKey == K_LBUTTONUP       .OR. ;
-            ::nKey == K_LDBLCLK         .OR. ;
-            ::nKey == K_MMLEFTDOWN      .OR. ;
-            ::nKey == K_LBUTTONPRESSED  .OR. ;
-            ::nKey == K_RBUTTONDOWN
+      IF ::nKey == K_LBUTTONDOWN    .OR. ;
+         ::nKey == K_LBUTTONUP      .OR. ;
+         ::nKey == K_LDBLCLK        .OR. ;
+         ::nKey == K_MMLEFTDOWN     .OR. ;
+         ::nKey == K_LBUTTONPRESSED .OR. ;
+         ::nKey == K_RBUTTONDOWN
 
          ::MouseOver()
 
          IF ::nObjOver > 0
-            IF    ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_BUTTON     .OR. ;
-                  ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_TOOLBAR    .OR. ;
-                  ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_PUSHBUTTON .OR. ;
-                  ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_SCROLLBAR
+            IF ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_BUTTON     .OR. ;
+               ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_TOOLBAR    .OR. ;
+               ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_PUSHBUTTON .OR. ;
+               ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_SCROLLBAR
 
                oObj := ::aObjects[ ::nObjOver ]
                IF oObj:oParent:className() == "WVTBROWSE"
@@ -444,10 +444,8 @@ METHOD WvtDialog:Inkey()
                ::nCurObj := ::nObjOver
             ENDIF
             ::nUseObj := ::nObjOver
-
          ELSE
             ::lEventHandled := .T.
-
          ENDIF
       ENDIF
 
@@ -1090,13 +1088,11 @@ METHOD WvtBrowse:Refresh()
 
 METHOD WvtBrowse:HandleEvent( nKey )
 
-   LOCAL lRet := .F.
-
    IF HB_ISEVALITEM( ::bHandleEvent )
-      lRet := Eval( ::bHandleEvent, self, ::oParent:cPaintBlockID, ::oBrw, nKey )
+      RETURN Eval( ::bHandleEvent, self, ::oParent:cPaintBlockID, ::oBrw, nKey )
    ENDIF
 
-   RETURN lRet
+   RETURN .F.
 
 METHOD WvtBrowse:NotifyChild( nIndex, nKey, oCurObj )
 
@@ -1718,15 +1714,13 @@ METHOD WvtToolButton:LeftDown()
 
 METHOD WvtToolButton:LeftUp()
 
-   LOCAL lRet := .F.
-
    IF ::lActive .AND. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
       Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet, 1 )
       Eval( ::bOnLeftUp )
-      lRet := .T.
+      RETURN .T.
    ENDIF
 
-   RETURN lRet
+   RETURN .F.
 
 METHOD WvtToolButton:HoverOn()
 
@@ -1905,11 +1899,9 @@ METHOD WvtStatic:Create()
    RETURN Self
 
 METHOD WvtStatic:HoverOn()
-
    RETURN Self
 
 METHOD WvtStatic:HoverOff()
-
    RETURN Self
 
 METHOD WvtStatic:Refresh()
@@ -2060,15 +2052,13 @@ METHOD WvtGets:AddGets( nRow, nCol, xVar, cPic, cColor, bValid, bWhen )
 
 METHOD WvtGets:HandleEvent( nKey )
 
-   LOCAL lRet := .F.
-
    DO CASE
    CASE nKey == K_LDBLCLK
       ::Read()
-      lRet := .T.
+      RETURN .T.
    ENDCASE
 
-   RETURN lRet
+   RETURN .F.
 
 METHOD WvtGets:Read()
 
@@ -2077,13 +2067,9 @@ METHOD WvtGets:Read()
    RETURN Self
 
 METHOD WvtGets:GetData()
-
-   LOCAL aData := NIL
-
-   RETURN aData
+   RETURN NIL
 
 METHOD WvtGets:SetData( /* aData */ )
-
    RETURN Self
 
 METHOD WvtGets:Hilite()
@@ -2397,7 +2383,6 @@ METHOD wvtScrollbar:ThumbPos()
    RETURN Self
 
 METHOD wvtScrollbar:GetPos()
-
    RETURN ::nCurrent
 
 METHOD wvtScrollbar:SetTooltip()
@@ -2692,7 +2677,6 @@ METHOD WvtBanner:Destroy()
    RETURN NIL
 
 METHOD WvtBanner:Configure()
-
    RETURN Self
 
 METHOD WvtBanner:OnTimer()
@@ -2810,7 +2794,6 @@ METHOD WvtTextBox:Refresh()
    RETURN Self
 
 METHOD WvtTextBox:Configure()
-
    RETURN Self
 
 METHOD WvtTextBox:SetText( cText )
@@ -2982,7 +2965,7 @@ METHOD wvtMenu:Destroy()
 
 METHOD wvtMenu:AddItem( cCaption, bAction )
 
-   LOCAL lResult := .F., aItem
+   LOCAL aItem
 
    IF ! Empty( ::hMenu ) .AND. ( ! Empty( cCaption ) .OR. ! Empty( bAction ) )
       IF HB_ISOBJECT( bAction )
@@ -3005,10 +2988,11 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
       ENDIF
 
       AAdd( ::aItems, aItem )
-      lResult := .T.
+
+      RETURN .T.
    ENDIF
 
-   RETURN lResult
+   RETURN .F.
 
 METHOD wvtMenu:DelAllItems()
 
@@ -3044,23 +3028,19 @@ METHOD wvtMenu:DelItem( nItemNum )
 
 METHOD wvtMenu:EnableItem( nItemNum )
 
-   LOCAL nPrevious := -1
-
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
-      nPrevious := Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
+      RETURN Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
-   RETURN nPrevious
+   RETURN -1
 
 METHOD wvtMenu:DisableItem( nItemNum )
 
-   LOCAL nPrevious := -1
-
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
-      nPrevious := Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
+      RETURN Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 
-   RETURN nPrevious
+   RETURN -1
 
 METHOD wvtMenu:NumItems()
 

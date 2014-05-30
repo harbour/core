@@ -67,12 +67,14 @@ PROCEDURE AltD( nAction )
 
    ELSEIF HB_ISNUMERIC( nAction )
 
-      DO CASE
-      CASE nAction == ALTD_DISABLE
+      SWITCH nAction
+      CASE ALTD_DISABLE
          Set( _SET_DEBUG, .F. )
-      CASE nAction == ALTD_ENABLE
+         EXIT
+      CASE ALTD_ENABLE
          Set( _SET_DEBUG, .T. )
-      ENDCASE
+         EXIT
+      ENDSWITCH
 
    ENDIF
 

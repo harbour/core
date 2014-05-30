@@ -221,21 +221,23 @@ STATIC FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, m
 
    LOCAL mcVarType, mbText
 
-   mcVarType := ValType( mxValue )
-   DO CASE
-   CASE mcVarType == "C"
-      mcPict := iif( HB_ISSTRING( mcPict ), mcPict, Replicate( "X", Len( mxValue ) ) )
+   SWITCH mcVarType := ValType( mxValue )
+   CASE "C"
+      mcPict := hb_defaultValue( mcPict, Replicate( "X", Len( mxValue ) ) )
       mbText := {|| mxValue }
-   CASE mcVarType == "N"
-      mcPict := iif( HB_ISSTRING( mcPict ), mcPict, "999,999,999.99" )
+      EXIT
+   CASE "N"
+      mcPict := hb_defaultValue( mcPict, "999,999,999.99" )
       mbText := {|| Transform( mxValue, mcPict ) }
-   CASE mcVarType == "D"
-      mcPict := iif( HB_ISSTRING( mcPict ), mcPict, "9999-99-99" )
+      EXIT
+   CASE "D"
+      mcPict := hb_defaultValue( mcPict, "9999-99-99" )
       mbText := {|| DToC( mxValue ) }
+      EXIT
    OTHERWISE
       // unsupported valtype
       RETURN .F.
-   ENDCASE
+   ENDSWITCH
 
    hb_default( @aEBGEts, {} )
 

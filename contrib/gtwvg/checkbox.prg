@@ -53,7 +53,7 @@
  *                 Xbase++ xbpPushButton Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               05Dec2008
+ *                                20081205
  */
 
 #include "hbclass.ch"
