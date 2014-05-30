@@ -254,11 +254,11 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgTreeView:destroy()
+METHOD PROCEDURE WvgTreeView:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgTreeView:getSelectionInfo( nlParam )
 

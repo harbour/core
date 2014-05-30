@@ -294,7 +294,7 @@ METHOD WvtDialog:Create()
 
    RETURN Self
 
-METHOD WvtDialog:Destroy()
+METHOD PROCEDURE WvtDialog:Destroy()
 
    IF HB_ISOBJECT( ::oMenu )
       ::oMenu:Destroy()
@@ -329,7 +329,7 @@ METHOD WvtDialog:Destroy()
    WvtSetPaint( ::aOldPnt )
    Wvt_SetGUI( ::lGui )
 
-   RETURN NIL
+   RETURN
 
 METHOD WvtDialog:Event()
 

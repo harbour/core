@@ -245,11 +245,11 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgMLE:destroy()
+METHOD PROCEDURE WvgMLE:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgMLE:changed( lChanged )
 

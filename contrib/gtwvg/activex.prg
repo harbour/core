@@ -231,7 +231,7 @@ METHOD WvgActiveXControl:OnError()
 
    RETURN hb_ExecFromArray( ::oOLE, __GetMessage(), hb_AParams() )
 
-METHOD WvgActiveXControl:Destroy()
+METHOD PROCEDURE WvgActiveXControl:Destroy()
 
    IF ! Empty( ::oOLE:__hObj )
       IF wapi_IsWindow( ::pWnd )
@@ -241,7 +241,7 @@ METHOD WvgActiveXControl:Destroy()
       ::hWnd := NIL
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 

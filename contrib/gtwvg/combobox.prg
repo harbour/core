@@ -167,7 +167,7 @@ METHOD WvgComboBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    RETURN Self
 
-METHOD WvgComboBox:destroy()
+METHOD PROCEDURE WvgComboBox:destroy()
 
 #if 0
    IF HB_ISOBJECT( ::oSLE )
@@ -179,7 +179,7 @@ METHOD WvgComboBox:destroy()
 #endif
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgComboBox:handleEvent( nMessage, aNM )
 

@@ -219,7 +219,7 @@ METHOD WvgPartHandler:setParent( oWvg )
 
    RETURN oOldXbp
 
-METHOD WvgPartHandler:notifierBlock( ... )
+METHOD PROCEDURE WvgPartHandler:notifierBlock( ... )
 
    LOCAL a_ := hb_AParams()
 
@@ -231,7 +231,7 @@ METHOD WvgPartHandler:notifierBlock( ... )
 
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /* This will be called by the WvgCrt() console for various events to be propogated to child controls */
 METHOD WvgPartHandler:notifier( nEvent, xParams )

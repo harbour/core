@@ -229,7 +229,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgToolBar:destroy()
+METHOD PROCEDURE WvgToolBar:destroy()
 
    LOCAL i
 
@@ -251,7 +251,7 @@ METHOD WvgToolBar:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

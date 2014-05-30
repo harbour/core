@@ -316,7 +316,7 @@ METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    RETURN Self
 
-METHOD WvgWindow:destroy()
+METHOD PROCEDURE WvgWindow:destroy()
 
    IF ! Empty( ::oParent )
       ::oParent:removeChild( Self )
@@ -402,7 +402,7 @@ METHOD WvgWindow:destroy()
    ::sl_setDisplayFocus     := NIL
    ::sl_killDisplayFocus    := NIL
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgWindow:SetWindowProcCallback()
 

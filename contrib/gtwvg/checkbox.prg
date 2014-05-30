@@ -177,11 +177,11 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgCheckBox:destroy()
+METHOD PROCEDURE WvgCheckBox:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgCheckBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

@@ -300,8 +300,8 @@ METHOD WvgListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    RETURN Self
 
-METHOD WvgListBox:destroy()
+METHOD PROCEDURE WvgListBox:destroy()
 
    ::WvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

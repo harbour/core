@@ -199,11 +199,11 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgPushButton:destroy()
+METHOD PROCEDURE WvgPushButton:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

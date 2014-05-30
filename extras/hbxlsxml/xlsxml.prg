@@ -105,28 +105,27 @@ METHOD ExcelWriterXML:new( fileName )
 
    RETURN SELF
 
-METHOD ExcelWriterXML:setOverwriteFile( overwrite )
+METHOD PROCEDURE ExcelWriterXML:setOverwriteFile( overwrite )
 
    ::overwriteFile := hb_defaultValue( overwrite, .F. )
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML:showErrorSheet( show )
+METHOD PROCEDURE ExcelWriterXML:showErrorSheet( show )
 
    ::lShowErrorSheet := hb_defaultValue( show, .T. )
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML:addError( cFunction, cMessage )
+METHOD PROCEDURE ExcelWriterXML:addError( cFunction, cMessage )
 
    ::formatErrors += { ;
       "FUNCTION" => cFunction, ;
       "MESSAGE"  => cMessage  }
 
-   RETURN NIL
+   RETURN
 
 METHOD ExcelWriterXML:getDefaultStyle()
-
    RETURN ::styles[ 1 ]
 
 METHOD ExcelWriterXML:addStyle( id )
@@ -185,8 +184,6 @@ METHOD ExcelWriterXML:checkSheetID( id )
             RETURN .F.
          ENDIF
       NEXT
-   ELSE
-      RETURN .T.
    ENDIF
 
    RETURN .T.
@@ -201,8 +198,6 @@ METHOD ExcelWriterXML:checkStyleID( id )
             RETURN .F.
          ENDIF
       NEXT
-   ELSE
-      RETURN .T.
    ENDIF
 
    RETURN .T.
@@ -303,51 +298,51 @@ METHOD ExcelWriterXML:writeData( target )
 
    RETURN .T.
 
-METHOD ExcelWriterXML:docTitle( title )
+METHOD PROCEDURE ExcelWriterXML:docTitle( title )
 
    IF HB_ISSTRING( title )
       ::cDocTitle := title
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML:docSubject( subject )
+METHOD PROCEDURE ExcelWriterXML:docSubject( subject )
 
    IF HB_ISSTRING( subject )
       ::cDocSubject := subject
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML:docAuthor( author )
+METHOD PROCEDURE ExcelWriterXML:docAuthor( author )
 
    IF HB_ISSTRING( author )
       ::cDocAuthor := author
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML:docManager( manager )
+METHOD PROCEDURE ExcelWriterXML:docManager( manager )
 
    IF HB_ISSTRING( manager )
       ::cDocManager := manager
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML:docCompany( company )
+METHOD PROCEDURE ExcelWriterXML:docCompany( company )
 
    IF HB_ISSTRING( company )
       ::cDocCompany := company
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION StrToHtml( xtxt )
 
-   LOCAL afrm, i, xret := "", xpos
+   LOCAL i, xret := "", xpos
 
-   afrm := { ;
+   LOCAL afrm := { ;
       { "á", "&aacute;" }, ;
       { "â", "&acirc;"  }, ;
       { "à", "&agrave;" }, ;
@@ -388,15 +383,16 @@ FUNCTION StrToHtml( xtxt )
 
 FUNCTION StrToHtmlSpecial( xtxt )
 
-   LOCAL afrm, i, xret := "", xpos
+   LOCAL i, xret := "", xpos
 
-   xtxt := RemoveAccents( xtxt )
-   afrm := { ;
+   LOCAL afrm := { ;
       { "&", "&amp;"  }, ;
       { '"', "&quot;" }, ;
       { "'", "&#039;" }, ;
       { "<", "&lt;"   }, ;
       { ">", "&gt;"   } }
+
+   xtxt := RemoveAccents( xtxt )
 
    FOR i := 1 TO Len( xtxt )
       IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
@@ -410,9 +406,9 @@ FUNCTION StrToHtmlSpecial( xtxt )
 
 STATIC FUNCTION RemoveAccents( xtxt )
 
-   LOCAL afrm, i, xret := "", xpos
+   LOCAL i, xret := "", xpos
 
-   afrm := { ;
+   LOCAL afrm := { ;
       { "á", "a" }, ;
       { "â", "a" }, ;
       { "à", "a" }, ;
