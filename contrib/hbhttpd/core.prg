@@ -16,13 +16,12 @@
 
 #pragma -km+
 
-/*
-  Docs:
+/* Docs:
 
-  RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0
-  RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1
-  HTTP Made Really Easy (http://www.jmarshall.com/easy/http/)
-*/
+   RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0
+   RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1
+   HTTP Made Really Easy (http://www.jmarshall.com/easy/http/)
+ */
 
 #define THREAD_COUNT_PREALLOC    3
 #define THREAD_COUNT_MAX         50

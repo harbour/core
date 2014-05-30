@@ -50,8 +50,6 @@ REQUEST HB_CODEPAGE_HUISO  /* for iso8859-2 */
 
 STATIC s_lUTF8
 
-//
-
 PROCEDURE Main( cFileToSave )
 
    hb_cdpSelect( "UTF8EX" )
@@ -69,8 +67,6 @@ PROCEDURE Main( cFileToSave )
    ENDIF
 
    RETURN
-
-//
 
 FUNCTION DesignHaruPDF( cFileToSave )
 
@@ -110,8 +106,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
    ENDIF
 
 #if 0
-   // Passwords and Permissions
-   //
+   /* Passwords and Permissions */
    HPDF_SetPassword( pdf, "owner", "user" )
    HPDF_SetPermission( pdf, HPDF_ENABLE_READ )  // cannot print
    HPDF_SetEncryptionMode( pdf, HPDF_ENCRYPT_R3, 16 )
@@ -181,8 +176,6 @@ FUNCTION DesignHaruPDF( cFileToSave )
    HPDF_Free( pdf )
 
    RETURN hb_FileExists( cFileToSave )
-
-//
 
 STATIC PROCEDURE Page_Lines( pdf )
 
@@ -437,8 +430,6 @@ STATIC PROCEDURE Page_Lines( pdf )
 
    RETURN
 
-//
-
 STATIC PROCEDURE draw_rect( page, x, y, label )
 
    HPDF_Page_BeginText( page )
@@ -449,8 +440,6 @@ STATIC PROCEDURE draw_rect( page, x, y, label )
    HPDF_Page_Rectangle( page, x, y - 40, 220, 25 )
 
    RETURN
-
-//
 
 STATIC PROCEDURE draw_line( page, x, y, label )
 
@@ -465,8 +454,6 @@ STATIC PROCEDURE draw_line( page, x, y, label )
 
    RETURN
 
-//
-
 STATIC PROCEDURE draw_line2( page, x, y, label )
 
    HPDF_Page_BeginText( page )
@@ -480,23 +467,25 @@ STATIC PROCEDURE draw_line2( page, x, y, label )
 
    RETURN
 
-//
-
 STATIC PROCEDURE Page_Text( pdf )
 
    LOCAL page, font, rect := Array( 4 )
    LOCAL SAMP_TXT := "The quick brown fox jumps over the lazy dog. "
    LOCAL angle1, angle2, rad1, rad2, i, x, y, buf
 
-   // LOCAL page_height
+#if 0
+   LOCAL page_height
+#endif
 
    /* add a new page object. */
    page := HPDF_AddPage( pdf )
    HPDF_Page_SetSize( page, HPDF_PAGE_SIZE_A5, HPDF_PAGE_PORTRAIT )
 
-   // print_grid( pdf, page )
+#if 0
+   print_grid( pdf, page )
 
-   // page_height := HPDF_Page_GetHeight( page )
+   page_height := HPDF_Page_GetHeight( page )
+#endif
 
    font := HPDF_GetFont( pdf, "Helvetica", NIL )
    HPDF_Page_SetTextLeading( page, 20 )
@@ -619,7 +608,6 @@ STATIC PROCEDURE Page_Text( pdf )
 
    HPDF_Page_GRestore( page )
 
-
    /* Rotated coordinate system */
    HPDF_Page_GSave( page )
 
@@ -680,8 +668,6 @@ STATIC PROCEDURE Page_Text( pdf )
 
    RETURN
 
-//
-
 STATIC PROCEDURE Page_TextScaling( pdf )
 
    LOCAL font, page, tw, angle1, angle2, buf, len, fsize, i, r, b, g, yPos, rad1, rad2
@@ -724,9 +710,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_BeginText( page )
    HPDF_Page_MoveTextPos( page, 60, HPDF_Page_GetHeight( page ) - 60 )
 
-   /*
-    * font size
-    */
+   /* font size */
    fsize := 8
    DO WHILE fsize < 60
       /* set style and size of font. */
@@ -752,9 +736,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
       fsize *= 1.5
    ENDDO
 
-   /*
-    * font color
-    */
+   /* font color */
    HPDF_Page_SetFontAndSize( page, font, 8 )
    HPDF_Page_MoveTextPos( page, 0, -30 )
    HPDF_Page_ShowText( page, "Font color" )
@@ -795,9 +777,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
 
    ypos := 450
 
-   /*
-    * Font rendering mode
-    */
+   /* Font rendering mode */
    HPDF_Page_SetFontAndSize( page, font, 32 )
    HPDF_Page_SetRGBFill( page, 0.5, 0.5, 0.0 )
    HPDF_Page_SetLineWidth( page, 1.5 )
@@ -858,10 +838,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_SetRGBFill( page, 0, 0, 0 )
    HPDF_Page_SetFontAndSize( page, font, 30 )
 
-
-   /*
-    * Rotating text
-    */
+   /* Rotating text */
    angle1 := 30                   /* A rotation of 30 degrees. */
    rad1 := angle1 / 180 * Pi()    /* Calcurate the radian value. */
 
@@ -871,10 +848,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_ShowText( page, "ABCabc123" )
    HPDF_Page_EndText( page )
 
-
-   /*
-    * Skewing text.
-    */
+   /* Skewing text. */
    show_description( page, 320, ypos - 120, "Skewing text" )
    HPDF_Page_BeginText( page )
 
@@ -887,7 +861,6 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_ShowText( page, "ABCabc123" )
    HPDF_Page_EndText( page )
 
-
    /* scaling text(X direction) */
    show_description( page, 320, ypos - 175, "Scaling text(X direction)" )
    HPDF_Page_BeginText( page )
@@ -895,14 +868,12 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_ShowText( page, "ABCabc12" )
    HPDF_Page_EndText( page )
 
-
    /* scaling text(Y direction) */
    show_description( page, 320, ypos - 250, "Scaling text(Y direction)" )
    HPDF_Page_BeginText( page )
    HPDF_Page_SetTextMatrix( page, 1, 0, 0, 2, 320, ypos - 250 )
    HPDF_Page_ShowText( page, "ABCabc123" )
    HPDF_Page_EndText( page )
-
 
    /* char spacing, word spacing */
    show_description( page, 60, 140, "char-spacing 0" )
@@ -937,8 +908,6 @@ STATIC PROCEDURE Page_TextScaling( pdf )
 
    RETURN
 
-//
-
 STATIC PROCEDURE show_stripe_pattern( page, x, y )
 
    LOCAL iy
@@ -954,8 +923,6 @@ STATIC PROCEDURE show_stripe_pattern( page, x, y )
    HPDF_Page_SetLineWidth( page, 2.5 )
 
    RETURN
-
-//
 
 STATIC PROCEDURE show_description( page, x, y, text )
 
@@ -974,8 +941,6 @@ STATIC PROCEDURE show_description( page, x, y, text )
    HPDF_Page_SetRGBFill( page, c[ 1 ], c[ 2 ], c[ 3 ] )
 
    RETURN
-
-//
 
 #define PAGE_WIDTH   420
 #define PAGE_HEIGHT  400
@@ -1065,8 +1030,6 @@ STATIC PROCEDURE Page_CodePages( pdf )
 
    RETURN
 
-//
-
 STATIC PROCEDURE draw_graph( page )
 
    LOCAL buf, i, x, y
@@ -1111,8 +1074,6 @@ STATIC PROCEDURE draw_graph( page )
 
    RETURN
 
-//
-
 STATIC PROCEDURE draw_fonts( page, lUTF8 )
 
    LOCAL i, j, buf, x, y, d, c
@@ -1137,8 +1098,6 @@ STATIC PROCEDURE draw_fonts( page, lUTF8 )
 
    RETURN
 
-//
-
 STATIC PROCEDURE Page_Graphics( pdf )
 
    LOCAL page, pos
@@ -1150,7 +1109,9 @@ STATIC PROCEDURE Page_Graphics( pdf )
    HPDF_Page_SetWidth( page, 200 )
 
    /* draw grid to the page */
-   // print_grid( pdf, page )
+#if 0
+   print_grid( pdf, page )
+#endif
 
    /* draw pie chart
     *
@@ -1192,7 +1153,9 @@ STATIC PROCEDURE Page_Graphics( pdf )
    HPDF_Page_MoveTo( page, 100, 100 )
    HPDF_Page_LineTo( page, pos[ 1 ], pos[ 2 ] )
    HPDF_Page_Arc( page, 100, 100, 80, 360 * 0.85, 360 )
-   // pos := HPDF_Page_GetCurrentPos( page )
+#if 0
+   pos := HPDF_Page_GetCurrentPos( page )
+#endif
    HPDF_Page_LineTo( page, 100, 100 )
    HPDF_Page_Fill( page )
 
@@ -1203,8 +1166,6 @@ STATIC PROCEDURE Page_Graphics( pdf )
    HPDF_Page_Fill( page )
 
    RETURN
-
-//
 
 STATIC PROCEDURE Page_Annotation( pdf )
 
@@ -1313,8 +1274,6 @@ STATIC PROCEDURE Page_Annotation( pdf )
 
    RETURN
 
-//
-
 STATIC PROCEDURE Page_Images( pdf )
 
    LOCAL font, page, dst, image, image1, image2, image3
@@ -1349,9 +1308,7 @@ STATIC PROCEDURE Page_Images( pdf )
    /* image2 is a mask image. */
    image2 := HPDF_LoadPngImageFromFile( pdf, cImagePath + "basn0g01.png" )
 
-   /* image3 is a RGB-color image. we use this image for color-mask
-    * demo.
-    */
+   /* image3 is a RGB-color image. we use this image for color-mask demo. */
    image3 := HPDF_LoadPngImageFromFile( pdf, cImagePath + "maskimag.png" )
 
    iw := HPDF_Image_GetWidth( image )
@@ -1445,8 +1402,6 @@ STATIC PROCEDURE Page_Images( pdf )
    show_description_1( page, x, y, "Color Mask" )
 
    RETURN
-
-//
 
 STATIC PROCEDURE show_description_1( page, x, y, text )
 

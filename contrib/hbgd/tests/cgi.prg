@@ -283,10 +283,8 @@ STATIC FUNCTION GetParams( aParams )
 
    RETURN hHashVars
 
-//
 // Decoding URL
 // Can return both a string or a number
-//
 
 STATIC FUNCTION URLDecode( cStr )
 

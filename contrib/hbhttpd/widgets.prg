@@ -57,10 +57,7 @@ CREATE CLASS UWLayoutGrid
 ENDCLASS
 
 FUNCTION UWLayoutGridNew()
-
-   LOCAL oW := UWLayoutGrid()
-
-   RETURN oW
+   RETURN UWLayoutGrid()
 
 METHOD Paint() CLASS UWLayoutGrid
 
@@ -284,10 +281,7 @@ CREATE CLASS UWSeparator
 ENDCLASS
 
 FUNCTION UWSeparatorNew()
-
-   LOCAL oW := UWSeparator()
-
-   RETURN oW
+   RETURN UWSeparator()
 
 METHOD Paint() CLASS UWSeparator
 
@@ -307,10 +301,7 @@ CREATE CLASS UWMenu
 ENDCLASS
 
 FUNCTION UWMenuNew()
-
-   LOCAL oB := UWMenu()
-
-   RETURN oB
+   RETURN UWMenu()
 
 METHOD AddItem( cTitle, cLink ) CLASS UWMenu
 
@@ -459,10 +450,8 @@ METHOD Output() CLASS UWOption
    RETURN cRet
 
 /********************************************************************
-*
-*  Default procedure handlers
-*
-********************************************************************/
+ * Default procedure handlers
+ ********************************************************************/
 
 PROCEDURE UProcWidgets( cURL, aMap )
 

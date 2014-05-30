@@ -50,10 +50,7 @@
 
 PROCEDURE Main()
 
-   LOCAL cJpeg, cPng, cGif, cElf, cExe, cCom, cText
-   LOCAL hMagic
-
-   cJpeg := hb_base64Decode( ;
+   LOCAL cJpeg := hb_base64Decode( ;
       "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB" + ;
       "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEB" + ;
       "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIA" + ;
@@ -67,23 +64,23 @@ PROCEDURE Main()
       "uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD+/iii" + ;
       "igD/2Q==" )
 
-   cPng := hb_base64Decode( ;
+   LOCAL cPng := hb_base64Decode( ;
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAAxJREFUCNdj" + ;
       "+P//PwAF/gL+3MxZ5wAAAABJRU5ErkJggg==" )
 
-   cGif := hb_base64Decode( ;
+   LOCAL cGif := hb_base64Decode( ;
       "R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=" )
 
-   cElf := hb_base64Decode( ;
+   LOCAL cElf := hb_base64Decode( ;
       "f0VMRgIBAQAAAAAAAAAAAAIAPgABAAAA4CZAAAAAAAA=" )
 
-   cExe := hb_base64Decode( ;
+   LOCAL cExe := hb_base64Decode( ;
       "TVpAAAEAAAAGAAAA//8AALgAAAAAAAAAYAAAAAAAAAA=" )
 
-   cCom := hb_base64Decode( ;
+   LOCAL cCom := hb_base64Decode( ;
       "6fEAUE1PREUvVyBWZXJzaW9uIENoZWNrIFV0aWxpdHk=" )
 
-   cText := hb_base64Decode( ;
+   LOCAL cText := hb_base64Decode( ;
       "H4sICONj7UwCA3Rlc3QAjVFba8IwGH3vr/ioDFosE4YM5qUQayaKtfWyh22M0qZpjWsbMSnz5y+p" + ;
       "MjcfhoEcksN3LiFGi1WkqFMKJuFlyat7sjWNC7lNyjhn5IoVrNwXlPGGNlpHLY2rFDYWDCzJZEFt" + ;
       "11FHUSc7SqTtgg1DF/oG/KzGNhJUZkWcCwu2viYc8NFk6kWLYIGVpv9bEdRyLVM1mURCHp75oYyl" + ;
@@ -91,7 +88,8 @@ PROCEDURE Main()
       "q8DD45cVBj9mlaUYlTMPPDQHMtvT3AESVhonLFOIiwaPVKHHy8vwKatRNzroDXVOEgv62E0p4Sm1" + ;
       "/vwKgNl52nW6CC3Xn2+zVY5GaInRGo2mCI07D1+jMUJYczdtU72rb3wD2wEd8GQCAAA=" )
 
-   hMagic := magic_open()
+   LOCAL hMagic := magic_open()
+
    IF Empty( hMagic ) .OR. magic_load( hMagic ) != 0
       ? "magic_open()/magic_load() failed"
    ELSE

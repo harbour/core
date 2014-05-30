@@ -53,34 +53,24 @@
 
 REQUEST HB_CODEPAGE_UTF8EX
 
-PROCEDURE Main( ... )
+PROCEDURE Main()
 
-   LOCAL hZip, aDir, aFile, aWild, ;
-      cZipName, cPath, cFileName, cExt, cWild, cPassword, cComment, ;
-      tmp
-   LOCAL lUnicode
+   LOCAL hZip, aFile, aWild, lUnicode, tmp
+   LOCAL cZipName, cPath, cFileName, cExt, cWild, cPassword, cComment
 
-   IF "--unicode" $ hb_CmdLine()
+   IF lUnicode := ( "--unicode" $ hb_CmdLine() )
       hb_cdpSelect( "UTF8EX" )
       hb_SetTermCP( hb_cdpTerm() )
       Set( _SET_OSCODEPAGE, hb_cdpOS() )
-      lUnicode := .T.
-   ELSE
-      lUnicode := .F.
    ENDIF
 
-   aWild := { ... }
+   aWild := hb_AParams()
    IF Len( aWild ) < 2
       ? "Usage: myzip <ZipName> [ --pass <password> ] [ --unicode ] [ --comment <comment> ] <FilePattern1> [ <FilePattern2> ... ]"
       RETURN
    ENDIF
 
-   hb_FNameSplit( aWild[ 1 ], @cPath, @cFileName, @cExt )
-   IF Empty( cExt )
-      cExt := ".zip"
-   ENDIF
-   cZipName := hb_FNameMerge( cPath, cFileName, cExt )
-
+   cZipName := hb_FNameExtSetDef( aWild[ 1 ], ".zip" )
    hb_ADel( aWild, 1, .T. )
 
    FOR tmp := Len( aWild ) - 1 TO 1 STEP -1
@@ -105,14 +95,12 @@ PROCEDURE Main( ... )
       ENDSWITCH
    NEXT
 
-   hZip := hb_zipOpen( cZipName )
-   IF ! Empty( hZip )
+   IF ! Empty( hZip := hb_zipOpen( cZipName ) )
       ? "Archive file:", cZipName
       FOR EACH cWild IN aWild
          IF ! Empty( cWild )
             hb_FNameSplit( cWild, @cPath, @cFileName, @cExt )
-            aDir := hb_DirScan( cPath, cFileName + cExt )
-            FOR EACH aFile IN aDir
+            FOR EACH aFile IN hb_DirScan( cPath, cFileName + cExt )
                IF ! cPath + aFile[ F_NAME ] == cZipName
                   ? "Adding", cPath + aFile[ F_NAME ]
                   hb_zipStoreFile( hZip, cPath + aFile[ F_NAME ], cPath + aFile[ F_NAME ], cPassword,, lUnicode )

@@ -60,7 +60,10 @@ PROCEDURE Main( ... )
 
    LOCAL oRef, aParams, cFileName, cInitDir, i, cParam, lRecursive := .F.
 
-   // AltD( 2 ); AltD()
+#if 0
+   AltD( 2 )
+   AltD()
+#endif
    aParams := hb_AParams()
 
    IF Empty( aParams ) .OR. ( Left( cFileName := ATail( aParams ), 1 ) $ "@/-" )
