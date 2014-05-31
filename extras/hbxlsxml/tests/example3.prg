@@ -52,13 +52,10 @@
 
 PROCEDURE Main()
 
-   LOCAL xml, sheet1, format4
+   LOCAL xml := ExcelWriterXML():New( "my file.xml" )
+   LOCAL sheet1 := xml:addSheet( "Plan 1" )
+   LOCAL format4 := xml:addStyle( "my style" )
 
-   xml := ExcelWriterXML():New( "my file.xml" )
-
-   sheet1 := xml:addSheet( "Plan 1" )
-
-   format4 := xml:addStyle( "my style" )
    format4:setFontSize( 20 )
    format4:setFontColor( "yellow" )
    format4:bgColor( "blue" )

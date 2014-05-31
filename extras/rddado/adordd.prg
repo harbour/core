@@ -716,10 +716,10 @@ STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
    CASE nIndex == DBOI_BAGEXT
       aOrderInfo[ UR_ORI_RESULT ] := ""
    CASE nIndex == DBOI_ORDERCOUNT
-      IF ! Empty( aWAData[ WA_CATALOG ] )
-         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
-      ELSE
+      IF Empty( aWAData[ WA_CATALOG ] )
          aOrderInfo[ UR_ORI_RESULT ] := 0
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
       ENDIF
    CASE nIndex == DBOI_FILEHANDLE
       aOrderInfo[ UR_ORI_RESULT ] := 0

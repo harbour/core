@@ -103,7 +103,7 @@ METHOD ExcelWriterXML:new( fileName )
    ::docFileName := fileName
    ::cDocCreated := DToS( Date() ) + "T" + Time() + "Z"
 
-   RETURN SELF
+   RETURN Self
 
 METHOD PROCEDURE ExcelWriterXML:setOverwriteFile( overwrite )
 
@@ -130,9 +130,9 @@ METHOD ExcelWriterXML:getDefaultStyle()
 
 METHOD ExcelWriterXML:addStyle( id )
 
-   LOCAL style
-
    STATIC s_styleNum := 1
+
+   LOCAL style
 
    IF Empty( id )
       id := NIL
@@ -155,9 +155,9 @@ METHOD ExcelWriterXML:addStyle( id )
 
 METHOD ExcelWriterXML:addSheet( id )
 
-   LOCAL sheet
-
    STATIC s_sheetNum := 1
+
+   LOCAL sheet
 
    IF id == NIL
       id := "Sheet" + hb_ntos( s_sheetNum )
@@ -178,13 +178,11 @@ METHOD ExcelWriterXML:checkSheetID( id )
 
    LOCAL sheet
 
-   IF Len( ::sheets ) > 0
-      FOR EACH sheet IN ::sheets
-         IF id == sheet:getID()
-            RETURN .F.
-         ENDIF
-      NEXT
-   ENDIF
+   FOR EACH sheet IN ::sheets
+      IF id == sheet:getID()
+         RETURN .F.
+      ENDIF
+   NEXT
 
    RETURN .T.
 
@@ -192,19 +190,17 @@ METHOD ExcelWriterXML:checkStyleID( id )
 
    LOCAL style
 
-   IF Len( ::styles ) > 0
-      FOR EACH style IN ::styles
-         IF id == style:getID()
-            RETURN .F.
-         ENDIF
-      NEXT
-   ENDIF
+   FOR EACH style IN ::styles
+      IF id == style:getID()
+         RETURN .F.
+      ENDIF
+   NEXT
 
    RETURN .T.
 
 METHOD ExcelWriterXML:writeData( target )
 
-   LOCAL style, sheet, xml := "", handle, fileExists, format
+   LOCAL style, sheet, xml := "", handle, format
 
    LOCAL docTitle   := ""
    LOCAL docSubject := ""
@@ -213,14 +209,13 @@ METHOD ExcelWriterXML:writeData( target )
    LOCAL docManager := ""
    LOCAL docCompany := ""
 
-   IF target == NIL
+   IF ! HB_ISSTRING( target )
       ::cError := "Target filename missing!"
       ::errors := .T.
       RETURN .T.
    ENDIF
 
-   fileExists := hb_FileExists( target )
-   IF fileExists .AND. ! ::overwriteFile
+   IF hb_FileExists( target ) .AND. ! ::overwriteFile
       ::cError := target + " exists and overwriteFile is set to false"
       ::errors := .T.
       RETURN .F.
@@ -244,15 +239,16 @@ METHOD ExcelWriterXML:writeData( target )
    IF ! Empty( ::cDocManager ); docManager := "<Manager>" + StrToHtmlSpecial( ::cDocManager ) + "</Manager>" + hb_eol(); ENDIF
    IF ! Empty( ::cDocCompany ); docCompany := "<Company>" + StrToHtmlSpecial( ::cDocCompany ) + "</Company>" + hb_eol(); ENDIF
 
-   xml := '<?xml version="1.0"?>' + hb_eol()
-   xml += '<?mso-application progid="Excel.Sheet"?>' + hb_eol()
-   xml += "<Workbook" + hb_eol()
-   xml += 'xmlns="urn:schemas-microsoft-com:office:spreadsheet"' + hb_eol()
-   xml += 'xmlns:o="urn:schemas-microsoft-com:office:office"' + hb_eol()
-   xml += 'xmlns:x="urn:schemas-microsoft-com:office:excel"' + hb_eol()
-   xml += 'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"' + hb_eol()
-   xml += 'xmlns:html="http://www.w3.org/TR/REC-html40">' + hb_eol()
-   xml += '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">' + hb_eol()
+   xml := ;
+      '<?xml version="1.0"?>' + hb_eol() + ;
+      '<?mso-application progid="Excel.Sheet"?>' + hb_eol() + ;
+      "<Workbook" + hb_eol() + ;
+      'xmlns="urn:schemas-microsoft-com:office:spreadsheet"' + hb_eol() + ;
+      'xmlns:o="urn:schemas-microsoft-com:office:office"' + hb_eol() + ;
+      'xmlns:x="urn:schemas-microsoft-com:office:excel"' + hb_eol() + ;
+      'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"' + hb_eol() + ;
+      'xmlns:html="http://www.w3.org/TR/REC-html40">' + hb_eol() + ;
+      '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">' + hb_eol()
    IF ! Empty( ::cDocTitle   ); xml += "   " + docTitle  ; ENDIF
    IF ! Empty( ::cDocSubject ); xml += "   " + docSubject; ENDIF
    IF ! Empty( ::cDocAuthor  ); xml += "   " + docAuthor ; ENDIF
@@ -278,14 +274,12 @@ METHOD ExcelWriterXML:writeData( target )
    IF Len( ::sheets ) == 0
       ::addSheet()
    ENDIF
-   IF Len( ::sheets ) > 0
-      FOR EACH sheet IN ::sheets
-         xml += sheet:getSheetXML( handle )
-         IF Len( sheet:getErrors() ) > 0
-            ::errors := .T.
-         ENDIF
-      NEXT
-   ENDIF
+   FOR EACH sheet IN ::sheets
+      xml += sheet:getSheetXML( handle )
+      IF Len( sheet:getErrors() ) > 0
+         ::errors := .T.
+      ENDIF
+   NEXT
    IF Len( ::formatErrors ) > 0
       ::errors := .T.
    ENDIF

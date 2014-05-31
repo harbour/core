@@ -140,13 +140,17 @@ PROCEDURE Main( ... )
       Logo()
    ENDIF
 
-   IF nMode == _HB_I18N_MERGE
+   SWITCH nMode
+   CASE _HB_I18N_MERGE
       Merge( aFiles, cFileOut )
-   ELSEIF nMode == _HB_I18N_GENHBL
+      EXIT
+   CASE _HB_I18N_GENHBL
       GenHBL( aFiles, cFileOut, lEmpty )
-   ELSEIF nMode == _HB_I18N_TRANS
+      EXIT
+   CASE _HB_I18N_TRANS
       AutoTrans( cFileIn, aFiles, cFileOut )
-   ENDIF
+      EXIT
+   ENDSWITCH
 
    RETURN
 
