@@ -76,14 +76,11 @@
  * Many of the "PROTECTED:" scope specifiers in the source have been
  * commented out where there's a problem with scope in harbour's class
  * system. Note that those comments will be removed when the bug is fixed.
- *
  */
 
 /* TODO:
- *
- * o Handle any TODO: items in the source.
- * o Document the classes and the class hierarchy.
- *
+ * - Handle any TODO: items in the source.
+ * - Document the classes and the class hierarchy.
  */
 
 /* Thanks:
@@ -126,19 +123,15 @@ METHOD init( cName, aInfo ) CLASS HBProfileEntity
    RETURN Self
 
 ACCESS nSeconds CLASS HBProfileEntity
-
    RETURN hb_Clocks2Secs( ::nTicks )
 
 ACCESS nMeanTicks CLASS HBProfileEntity
-
    RETURN iif( ::nCalls == 0, 0, ::nTicks / ::nCalls )
 
 ACCESS nMeanSeconds CLASS HBProfileEntity
-
    RETURN iif( ::nCalls == 0, 0, ::nSeconds / ::nCalls )
 
 METHOD describe() CLASS HBProfileEntity
-
    RETURN "Base Entity"
 
 // ---------------------------------------------------------
@@ -155,7 +148,6 @@ ENDCLASS
 //
 
 METHOD describe() CLASS HBProfileFunction
-
    RETURN "Function"
 
 // ---------------------------------------------------------
@@ -172,7 +164,6 @@ ENDCLASS
 //
 
 METHOD describe() CLASS HBProfileMethod
-
    RETURN "Method"
 
 // ---------------------------------------------------------
@@ -189,7 +180,6 @@ ENDCLASS
 //
 
 METHOD describe() CLASS HBProfileOPCode
-
    RETURN "OPCode"
 
 // ---------------------------------------------------------
@@ -262,9 +252,7 @@ METHOD gatherFunctions() CLASS HBProfile
             // Yes, it is, add it to the profile.
             AAdd( ::aProfile, HBProfileFunction():new( cName, __dynsGetPrf( n ) ) )
          ENDIF
-
       ENDIF
-
    NEXT
 
    __SetProfiler( lProfile )
@@ -273,8 +261,8 @@ METHOD gatherFunctions() CLASS HBProfile
 
 METHOD gatherMethods() CLASS HBProfile
 
-   LOCAL lProfile  := __SetProfiler( .F. )
-   LOCAL n         := 1
+   LOCAL lProfile := __SetProfiler( .F. )
+   LOCAL n        := 1
    LOCAL cClass
    LOCAL nMembers
    LOCAL aMembers
@@ -296,13 +284,10 @@ METHOD gatherMethods() CLASS HBProfile
                // Add it to the profile.
                AAdd( ::aProfile, HBProfileMethod():new( cClass + ":" + aMembers[ nMember ], __GetMsgPrf( n, aMembers[ nMember ] ) ) )
             ENDIF
-
          NEXT
-
       ENDIF
 
       ++n
-
    ENDDO
 
    __SetProfiler( lProfile )
@@ -313,14 +298,9 @@ METHOD gather() CLASS HBProfile
 
    LOCAL lProfile  := __SetProfiler( .F. )
 
-   // Reset the profile.
-   ::reset()
-
-   // Gather function calls
-   ::gatherFunctions()
-
-   // Gather method calls
-   ::gatherMethods()
+   ::reset()            // Reset the profile.
+   ::gatherFunctions()  // Gather function calls
+   ::gatherMethods()    // Gather method calls
 
    __SetProfiler( lProfile )
 
@@ -498,7 +478,6 @@ METHOD writeLines( aLines ) CLASS HBProfileReport
    RETURN Self
 
 METHOD header() CLASS HBProfileReport
-
    RETURN { ;
       "Name                                Type       Calls    Ticks       Seconds", ;
       "=================================== ========== ======== =========== ===========" }
@@ -510,7 +489,6 @@ METHOD emitHeader() CLASS HBProfileReport
    RETURN Self
 
 METHOD line( oEntity ) CLASS HBProfileReport
-
    RETURN { ;
       PadR( oEntity:cName,      35 ) + " " + ;
       PadR( oEntity:describe(),  8 ) + " " + ;
@@ -653,10 +631,8 @@ ENDCLASS
 
 //
 
+// No header required.
 METHOD emitHeader() CLASS HBProfileReportToTBrowse
-
-   // No header required.
-
    RETURN Self
 
 METHOD emitLine( oEntity ) CLASS HBProfileReportToTBrowse
@@ -671,14 +647,11 @@ METHOD generate( bFilter, nTop, nLeft, nBottom, nRight ) CLASS HBProfileReportTo
    LOCAL lProfile := __SetProfiler( .F. )
    LOCAL oBrowse
 
-   // Start with the first entity.
-   ::nEntity := 1
+   ::nEntity := 1  // Start with the first entity.
 
-   // Generate the array.
-   ::super:generate( bFilter )
+   ::super:generate( bFilter )  // Generate the array.
 
-   // Build the browse.
-   oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
+   oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )  // Build the browse.
 
    oBrowse:goTopBlock    := {|| ::nEntity := 1 }
    oBrowse:goBottomBlock := {|| ::nEntity := Len( ::aReport ) }
@@ -706,5 +679,4 @@ METHOD addColumns( oBrowse ) CLASS HBProfileReportToTBrowse
    RETURN Self
 
 METHOD currentEntity() CLASS HBProfileReportToTBrowse
-
    RETURN ::aReport[ ::nEntity ]

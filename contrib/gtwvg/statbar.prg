@@ -172,18 +172,17 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    RETURN nHandled
 
-METHOD WvgStatusBar:destroy()
+METHOD PROCEDURE WvgStatusBar:destroy()
 
-   LOCAL i, nItems
+   LOCAL i
 
-   nItems := Len( ::aItems )
-   FOR i := 1 TO nItems
+   FOR EACH i IN ::aItems
       /* TOFIX: Why was this left empty? */
    NEXT
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgStatusBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -193,27 +192,20 @@ METHOD WvgStatusBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisib
 
 METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 
-   LOCAL oPanel, lSuccess
+   LOCAL oPanel := WvgStatusBarPanel():new( cCaption, nStyle, cKey )
 
-   __defaultNIL( @nMode, 0 )
+   oPanel:oParent := self
+   oPanel:index := ::numItems + 1
+
+   IF Wvg_StatusBarCreatePanel( ::hWnd, hb_defaultValue( nMode, 0 ) )
+      AAdd( ::aItems, oPanel )
+      RETURN oPanel
+   ENDIF
 
    HB_SYMBOL_UNUSED( xImage )
    HB_SYMBOL_UNUSED( cDLL )
 
-   oPanel := WvgStatusBarPanel():new( cCaption, nStyle, cKey )
-   oPanel:oParent := self
-
-   oPanel:index := ::numItems + 1
-
-   lSuccess := Wvg_StatusBarCreatePanel( ::hWnd, nMode )
-
-   IF lSuccess
-      AAdd( ::aItems, oPanel )
-   ELSE
-      RETURN NIL
-   ENDIF
-
-   RETURN oPanel
+   RETURN NIL
 
 METHOD WvgStatusBar:delItem( nItemORcKey )
 

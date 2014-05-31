@@ -74,7 +74,7 @@ STATIC FUNCTION type_cb( node )
    LOCAL nResult
    LOCAL cType
 
-   /* You can lookup attributes and/or use the element name, hierarchy, etc... */
+   /* You can lookup attributes and/or use the element name, hierarchy, etc. */
 
    IF Empty( cType := mxmlElementGetAttr( node, "type" ) )
       cType := mxmlGetElement( node )

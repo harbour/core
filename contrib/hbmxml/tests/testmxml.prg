@@ -32,10 +32,7 @@ STATIC s_aTypes := { ;
 
 STATIC s_aSAXEventCounts := { 0, 0, 0, 0, 0, 0 }
 
-/*
- * 'main()' - Main entry for test program.
- */
-
+/* Main entry for test program. */
 PROCEDURE Main( cFileArg )
 
    LOCAL hTree                            /* XML tree */
@@ -47,9 +44,7 @@ PROCEDURE Main( cFileArg )
    hb_cdpSelect( "UTF8EX" )
    hb_SetTermCP( hb_cdpTerm() )
 
-   /*
-    * Check arguments...
-    */
+   /* Check arguments */
 
    IF Empty( cFileArg )
       ? hb_StrFormat( "Usage: %1$s filename.xml", hb_ProgName() )
@@ -57,9 +52,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   /*
-    * Test the basic functionality...
-    */
+   /* Test the basic functionality */
 
    hTree := mxmlNewElement( MXML_NO_PARENT, "element" )
    IF Empty( hTree )
@@ -249,9 +242,7 @@ PROCEDURE Main( cFileArg )
       ENDIF
    NEXT
 
-   /*
-    * Test mxmlFindPath...
-    */
+   /* Test mxmlFindPath */
 
    hNode := mxmlFindPath( hTree, "*/two" )
    IF Empty( hNode )
@@ -298,9 +289,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   /*
-    * Test indices...
-    */
+   /* Test indices */
 
    hInd := mxmlIndexNew( hTree )
    IF Empty( hInd )
@@ -422,19 +411,17 @@ PROCEDURE Main( cFileArg )
 
    mxmlIndexDelete( hInd )
 
-   /*
-    * Check the mxmlDelete() works properly...
-    */
+   /* Check the mxmlDelete() works properly */
 
    FOR i := 0 TO 8
-      IF ! Empty( mxmlGetFirstChild( hTree ) )
-         mxmlDelete( mxmlGetFirstChild( hTree ) )
-      ELSE
+      IF Empty( mxmlGetFirstChild( hTree ) )
          ? hb_StrFormat( "ERROR: Child pointer prematurely NULL on child #%1$d", i )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
          RETURN
+      ELSE
+         mxmlDelete( mxmlGetFirstChild( hTree ) )
       ENDIF
    NEXT
 
@@ -452,18 +439,12 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   /*
-    * Open the file...
-    */
+   /* Open the file */
 
    IF hb_LeftEq( cFileArg, "<" )
       hTree := mxmlLoadString( NIL, cFileArg, @type_cb() )
    ELSE
-
-      /*
-       * Read the file...
-       */
-
+      /* Read the file */
       hTree := mxmlLoadFile( NIL, cFileArg, @type_cb() )
    ENDIF
 
@@ -475,10 +456,8 @@ PROCEDURE Main( cFileArg )
 
    IF cFileArg == "test.xml"
 
-      /*
-       * Verify that mxmlFindElement() and indirectly mxmlWalkNext() work
-       * properly... XXX: this doesn't test for the mxmlWalkNext() _binding_
-       */
+      /* Verify that mxmlFindElement() and indirectly mxmlWalkNext() work
+         properly  XXX: this doesn't test for the mxmlWalkNext() _binding_ */
 
       IF Empty( hNode := mxmlFindElement( hTree, hTree, "choice",,, MXML_DESCEND ) )
          ? "Unable to find first <choice> element in XML tree!"
@@ -497,41 +476,29 @@ PROCEDURE Main( cFileArg )
       ENDIF
    ENDIF
 
-   /*
-    * Print the XML tree...
-    */
+   /* Print the XML tree */
 
    FErase( "out.xml" )
    mxmlSaveFile( hTree, "out.xml", @whitespace_cb() )
 
    /* XXX: */
-   /*
-    * Save the XML tree to a string and print it...
-    */
+   /* Save the XML tree to a string and print it */
 
    cStr := Space( 16384 )
    IF ( nNum := mxmlSaveString( hTree, @cStr, @whitespace_cb() ) ) > 0
       ? cStr
    ENDIF
 
-   /*
-    * Delete the tree...
-    */
+   /* Delete the tree */
 
    mxmlDelete( hTree )
 
-   /*
-    * Test SAX methods...
-    */
+   /* Test SAX methods */
 
    IF hb_LeftEq( cFileArg, "<" )
       mxmlSAXLoadString( NIL, cFileArg, @type_cb(), @sax_cb(), NIL )
    ELSE
-
-      /*
-       * Read the file...
-       */
-
+      /* Read the file */
       mxmlSAXLoadFile( NIL, cFileArg, @type_cb(), @sax_cb(), NIL )
    ENDIF
 
@@ -585,9 +552,7 @@ PROCEDURE Main( cFileArg )
 
    RETURN
 
-/*
- * 'sax_cb()' - Process nodes via SAX.
- */
+/* Process nodes via SAX. */
 
 /* I - Current node */
 /* I - SAX event */
@@ -595,9 +560,7 @@ PROCEDURE Main( cFileArg )
 
 STATIC PROCEDURE sax_cb( hNode, hEvent, hData )
 
-   /*
-    * This SAX callback just counts the different events.
-    */
+   /* This SAX callback just counts the different events. */
 
    HB_SYMBOL_UNUSED( hNode )
    HB_SYMBOL_UNUSED( hData )
@@ -606,9 +569,7 @@ STATIC PROCEDURE sax_cb( hNode, hEvent, hData )
 
    RETURN
 
-/*
- * 'type_cb()' - XML data type callback for mxmlLoadFile()...
- */
+/* XML data type callback for mxmlLoadFile() */
 
 /* O - Data type */
 /* I - Element node */
@@ -617,9 +578,7 @@ STATIC FUNCTION type_cb( hNode )
 
    LOCAL cType                            /* Type string */
 
-   /*
-    * You can lookup attributes and/or use the element name, hierarchy, etc...
-    */
+   /* You can lookup attributes and/or use the element name, hierarchy, etc. */
 
    IF Empty( cType := mxmlElementGetAttr( hNode, "type" ) )
       cType := mxmlGetElement( hNode )
@@ -633,10 +592,8 @@ STATIC FUNCTION type_cb( hNode )
 
    RETURN MXML_TEXT
 
-/*
- * 'whitespace_cb()' - Let the mxmlSaveFile() function know when to insert
- *                     newlines and tabs...
- */
+/* Let the mxmlSaveFile() function know when to insert
+   newlines and tabs */
 
 /* O - Whitespace string or NIL */
 /* I - Element node */
@@ -648,10 +605,8 @@ STATIC FUNCTION whitespace_cb( hNode, nWhere )
    LOCAL nLevel                           /* Indentation level */
    LOCAL cName                            /* Name of element */
 
-   /*
-    * We can conditionally break to a new line before or after any element.
-    * These are just common HTML elements...
-    */
+   /* We can conditionally break to a new line before or after any element.
+      These are just common HTML elements */
 
    cName := Lower( mxmlGetElement( hNode ) )
 
@@ -660,31 +615,27 @@ STATIC FUNCTION whitespace_cb( hNode, nWhere )
       cName == "h1" .OR. cName == "h2" .OR. cName == "h3" .OR. ;
       cName == "h4" .OR. cName == "h5" .OR. cName == "h6"
 
-         /*
-          * Newlines before open and after close...
-          */
+      /* Newlines before open and after close */
 
-      IF nWhere == MXML_WS_BEFORE_OPEN .OR. nWhere == MXML_WS_AFTER_CLOSE
+      IF nWhere == MXML_WS_BEFORE_OPEN .OR. ;
+         nWhere == MXML_WS_AFTER_CLOSE
          RETURN hb_eol()
       ENDIF
    ELSEIF cName == "dl" .OR. cName == "ol" .OR. cName == "ul"
 
-      /*
-       * Put a newline before and after list elements...
-       */
+      /* Put a newline before and after list elements */
 
       RETURN hb_eol()
    ELSEIF cName == "dd" .OR. cName == "dd" .OR. cName == "li"
 
-      /*
-       * Put a tab before <li>s, <dd>s and <dt>s and a newline after them...
-       */
+      /* Put a tab before <li>s, <dd>s and <dt>s and a newline after them */
 
-      IF nWhere == MXML_WS_BEFORE_OPEN
+      DO CASE
+      CASE nWhere == MXML_WS_BEFORE_OPEN
          RETURN Space( 8 )
-      ELSEIF nWhere == MXML_WS_AFTER_CLOSE
+      CASE nWhere == MXML_WS_AFTER_CLOSE
          RETURN hb_eol()
-      ENDIF
+      ENDCASE
    ELSEIF hb_LeftEq( cName, "?xml" )
       IF nWhere == MXML_WS_AFTER_OPEN
          RETURN hb_eol()
@@ -716,8 +667,4 @@ STATIC FUNCTION whitespace_cb( hNode, nWhere )
       RETURN hb_eol()
    ENDIF
 
-   /*
-    * Return NULL for no added whitespace...
-    */
-
-   RETURN NIL
+   RETURN NIL  /* Return NIL for no added whitespace */

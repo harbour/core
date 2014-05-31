@@ -49,20 +49,21 @@
 FUNCTION ThreadID()
    RETURN hb_threadID()
 
-
 FUNCTION ThreadObject( oThread )
+
    THREAD STATIC t_oThread
+
    IF PCount() > 0
       t_oThread := oThread
    ENDIF
-   RETURN t_oThread
 
+   RETURN t_oThread
 
 FUNCTION ThreadWait( aThreads, nTimeOut )
 
-   LOCAL xResult, nPos, apThIDs, th
+   LOCAL xResult, nPos, th
+   LOCAL apThIDs := {}
 
-   apThIDs := {}
    FOR EACH th IN aThreads
       IF HB_ISOBJECT( th )
          AAdd( apThIDs, th:threadSelf )
@@ -79,12 +80,11 @@ FUNCTION ThreadWait( aThreads, nTimeOut )
 
    RETURN xResult
 
-
 FUNCTION ThreadWaitAll( aThreads, nTimeOut )
 
-   LOCAL apThIDs, th
+   LOCAL th
+   LOCAL apThIDs := {}
 
-   apThIDs := {}
    FOR EACH th IN aThreads
       IF HB_ISOBJECT( th )
          AAdd( apThIDs, th:threadSelf )

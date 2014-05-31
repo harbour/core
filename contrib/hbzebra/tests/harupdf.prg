@@ -1,21 +1,13 @@
-/*
- * Harbour Project source code:
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbzebra"
 #require "hbhpdf"
 
 PROCEDURE Main()
 
-   LOCAL pdf
-   LOCAL page
+   LOCAL pdf := HPDF_New()
+   LOCAL page := HPDF_AddPage( pdf )
 
-   pdf := HPDF_New()
-   page := HPDF_AddPage( pdf )
    HPDF_Page_SetSize( page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT )
    HPDF_Page_SetFontAndSize( page, HPDF_GetFont( pdf, "Helvetica", NIL ), 12 )
 
@@ -79,7 +71,7 @@ STATIC PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
             nLineHeight := 16
          ENDIF
          HPDF_Page_BeginText( page )
-         HPDF_Page_TextOut( page,  40, nY - 13, cType )
+         HPDF_Page_TextOut( page, 40, nY - 13, cType )
          cTxt := hb_zebra_getcode( hZebra )
          IF Len( cTxt ) < 20
             HPDF_Page_TextOut( page, 150, nY - 13, cTxt )

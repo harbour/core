@@ -60,7 +60,7 @@ PROCEDURE Event( ... ) CLASS HActiveX
 METHOD OnError() CLASS HActiveX
    RETURN hb_ExecFromArray( ::oOLE, __GetMessage(), hb_AParams() )
 
-METHOD Close() CLASS HActiveX
+METHOD PROCEDURE Close() CLASS HActiveX
 
    wapi_OutputDebugString( "Close" )
    wapi_DestroyWindow( ::hWnd )
@@ -68,4 +68,4 @@ METHOD Close() CLASS HActiveX
    ::oOLE := NIL
    wapi_OutputDebugString( "After Close" )
 
-   RETURN NIL
+   RETURN

@@ -97,7 +97,6 @@ METHOD firstScrCol() CLASS xpp_TBrowse
    ENDIF
 
    // TOFIX
-
 // RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
    RETURN 0
 

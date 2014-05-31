@@ -53,7 +53,7 @@
  *                   Xbase++ xbpBitmap compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               06Dec2008
+ *                                20081206
  */
 
 #include "hbclass.ch"
@@ -97,7 +97,6 @@ CREATE CLASS WvgBitmap
 ENDCLASS
 
 METHOD new() CLASS WvgBitmap
-
    RETURN Self
 
 METHOD create( oPScompat ) CLASS WvgBitmap

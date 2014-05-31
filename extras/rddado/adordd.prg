@@ -716,10 +716,10 @@ STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
    CASE nIndex == DBOI_BAGEXT
       aOrderInfo[ UR_ORI_RESULT ] := ""
    CASE nIndex == DBOI_ORDERCOUNT
-      IF ! Empty( aWAData[ WA_CATALOG ] )
-         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
-      ELSE
+      IF Empty( aWAData[ WA_CATALOG ] )
          aOrderInfo[ UR_ORI_RESULT ] := 0
+      ELSE
+         aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
       ENDIF
    CASE nIndex == DBOI_FILEHANDLE
       aOrderInfo[ UR_ORI_RESULT ] := 0
@@ -1150,7 +1150,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
    IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != NIL
       FOR n := 1 TO aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
          oIndex := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
-         IF oIndex:Name == iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
+         IF oIndex:Name == iif( Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_CKEY ], aOrderCreateInfo[ UR_ORCR_TAGNAME ] )
             lFound := .T.
             EXIT
          ENDIF
@@ -1160,7 +1160,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == NIL .OR. ! lFound
          oIndex := win_oleCreateObject( "ADOX.Index" )
-         oIndex:Name := iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
+         oIndex:Name := iif( Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_CKEY ], aOrderCreateInfo[ UR_ORCR_TAGNAME ] )
          oIndex:PrimaryKey := .F.
          oIndex:Unique := aOrderCreateInfo[ UR_ORCR_UNIQUE ]
          oIndex:Columns:Append( aOrderCreateInfo[ UR_ORCR_CKEY ] )

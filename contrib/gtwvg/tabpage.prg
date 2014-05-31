@@ -53,7 +53,7 @@
  *                  Xbase++ xbpTabPage compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               01Mar2009
+ *                                20090301
  */
 
 #include "hbclass.ch"
@@ -193,8 +193,8 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-METHOD destroy() CLASS WvgTabPage
+METHOD PROCEDURE destroy() CLASS WvgTabPage
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

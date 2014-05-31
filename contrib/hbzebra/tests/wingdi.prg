@@ -1,10 +1,4 @@
-/*
- * Harbour Project source code:
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbzebra"
 #require "hbwin"
@@ -19,8 +13,7 @@ PROCEDURE Main()
       "dmPaperSize"   => WIN_DMPAPER_A4, ;
       "dmOrientation" => WIN_DMORIENT_PORTRAIT } )
 
-   hDC := wapi_CreateDC( NIL, "Microsoft XPS Document Writer", NIL, pDEVMODE )
-   IF ! Empty( hDC )
+   IF ! Empty( hDC := wapi_CreateDC( , "Microsoft XPS Document Writer",, pDEVMODE ) )
 
       wapi_SetMapMode( hDC, WIN_MM_TEXT )
 
@@ -113,7 +106,7 @@ STATIC PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
          IF nLineHeight == NIL
             nLineHeight := 16
          ENDIF
-         wapi_TextOut( hDC,  40 * _SCALE_, nY, cType )
+         wapi_TextOut( hDC, 40 * _SCALE_, nY, cType )
          IF Len( cTxt := hb_zebra_getcode( hZebra ) ) < 20
             wapi_TextOut( hDC, 150 * _SCALE_, nY, cTxt )
          ENDIF

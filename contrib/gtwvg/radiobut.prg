@@ -53,7 +53,7 @@
  *                 Xbase++ xbpPushButton Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               06Dec2008
+ *                                20081206
  */
 
 #include "hbclass.ch"
@@ -135,11 +135,11 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    RETURN 1
 
-METHOD destroy() CLASS WvgRadioButton
+METHOD PROCEDURE destroy() CLASS WvgRadioButton
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 

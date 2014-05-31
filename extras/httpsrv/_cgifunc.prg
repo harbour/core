@@ -150,7 +150,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
       cProto := ""
    ENDIF
 
-   cUri += cProto + iif( ! Empty( cProto ), "://", "" )
+   cUri += cProto + iif( Empty( cProto ), "", "://" )
 
    // Now we have:
    // [username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
@@ -332,7 +332,7 @@ FUNCTION uhttpd_URLEncode( cString, lComplete )
            cChar == "/" .OR. cChar == ";" .OR. cChar == "_"
          cRet += cChar
 
-      CASE iif( ! lComplete, cChar == ":" .OR. cChar == "?" .OR. cChar == "=", .F. )
+      CASE iif( lComplete, .F., cChar == ":" .OR. cChar == "?" .OR. cChar == "=" )
          cRet += cChar
 
       OTHERWISE

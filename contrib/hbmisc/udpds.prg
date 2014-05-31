@@ -118,7 +118,7 @@ STATIC PROCEDURE UDPDS( hSocket, cName, cVersion )
    LOCAL cBuffer, nLen, aAddr
 
    cName := hb_StrToUTF8( cName )
-   cVersion := iif( HB_ISSTRING( cVersion ), hb_StrToUTF8( cVersion ), "" )
+   cVersion := hb_StrToUTF8( hb_defaultValue( cVersion, "" ) )
 
    DO WHILE .T.
       cBuffer := Space( 2000 )

@@ -53,7 +53,7 @@
  *                    Xbase++ xbpSLE compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               07Dec2008
+ *                                20081207
  */
 
 #include "hbclass.ch"
@@ -241,11 +241,11 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
    RETURN EVENT_UNHANDLED
 
-METHOD destroy() CLASS WvgSLE
+METHOD PROCEDURE destroy() CLASS WvgSLE
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgSLE:changed( lChanged )
 

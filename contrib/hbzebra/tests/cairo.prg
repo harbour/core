@@ -3,11 +3,9 @@
 
 PROCEDURE Main()
 
-   LOCAL hCairo, hSurface
+   LOCAL hSurface := cairo_pdf_surface_create( hb_FNameExtSet( __FILE__, ".pdf" ), 567, 794 )  // A4
+   LOCAL hCairo := cairo_create( hSurface )
 
-   hSurface := cairo_pdf_surface_create( hb_FNameExtSet( __FILE__, ".pdf" ), 567, 794 )  // A4
-
-   hCairo := cairo_create( hSurface )
    cairo_set_source_rgb( hCairo, 1.0, 1.0, 1.0 )
    cairo_paint( hCairo )
    cairo_select_font_face( hCairo, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL )
@@ -45,7 +43,6 @@ PROCEDURE Main()
 
    RETURN
 
-
 STATIC PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
 
    LOCAL hZebra, nLineHeight, cTxt
@@ -66,6 +63,7 @@ STATIC PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
    CASE "DATAMATRIX" ; hZebra := hb_zebra_create_datamatrix( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
    CASE "QRCODE"     ; hZebra := hb_zebra_create_qrcode( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
    ENDSWITCH
+
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
          IF nLineHeight == NIL

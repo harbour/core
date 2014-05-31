@@ -364,7 +364,7 @@ METHOD Read( nLen ) CLASS TIPClientPOP
 
    RETURN ::Retrieve( Val( ::oUrl:cFile ), nLen )
 
-METHOD retrieveAll( lDelete )
+METHOD retrieveAll( lDelete ) CLASS TIPClientPOP
 
    LOCAL aMails, oMail
 

@@ -53,7 +53,7 @@
  *                  Xbase++ xbpTreeView compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
+ *                                20081126
  */
 
 #include "hbclass.ch"
@@ -255,14 +255,14 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgStatic:destroy()
+METHOD PROCEDURE WvgStatic:destroy()
 
    IF ::hBitmap != NIL
       Wvg_DeleteObject( ::hBitmap )
    ENDIF
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgStatic:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

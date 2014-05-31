@@ -42,7 +42,7 @@ PROCEDURE Main( xUtf, xCompatBuf )
    LOCAL aResult := {}
 
 #ifdef __HARBOUR__
-   hb_cdpSelect( iif( ! Empty( xUtf ), "UTF8", "EN" ) )
+   hb_cdpSelect( iif( Empty( xUtf ), "EN", "UTF8" ) )
    hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
    hb_gtInfo( HB_GTI_COMPATBUFFER, ! Empty( xCompatBuf ) )
 #endif

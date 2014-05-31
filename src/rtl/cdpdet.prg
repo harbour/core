@@ -57,10 +57,10 @@ FUNCTION hb_cdpTerm()
    cCP := __CPWinToCPStd( __wapi_GetConsoleOutputCP() )
    cLang := hb_UserLang()
 #elif defined( __PLATFORM__UNIX )
-   IF ! Empty( GetEnv( "LANG" ) )
-      __UnixParseLangCP( GetEnv( "LANG" ), @cCP, @cLang )
-   ELSE
+   IF Empty( GetEnv( "LANG" ) )
       __UnixParseLangCP( GetEnv( "LC_CTYPE" ), @cCP, @cLang )
+   ELSE
+      __UnixParseLangCP( GetEnv( "LANG" ), @cCP, @cLang )
    ENDIF
    cCP := __CPUnixToCPStd( cCP )
 #elif defined( __PLATFORM__DOS )
@@ -73,11 +73,11 @@ FUNCTION hb_cdpTerm()
    cLang := NIL
 #endif
 
-   IF ! Empty( cCP := __CPStdToHb( cCP, cLang ) )
-      RETURN cCP
+   IF Empty( cCP := __CPStdToHb( cCP, cLang ) )
+      RETURN NIL
    ENDIF
 
-   RETURN NIL
+   RETURN cCP
 
 FUNCTION hb_cdpOS()
 
@@ -88,10 +88,10 @@ FUNCTION hb_cdpOS()
    cCP := __CPWinToCPStd( __wapi_GetACP() )
    cLang := hb_UserLang()
 #elif defined( __PLATFORM__UNIX )
-   IF ! Empty( GetEnv( "LANG" ) )
-      __UnixParseLangCP( GetEnv( "LANG" ), @cCP, @cLang )
-   ELSE
+   IF Empty( GetEnv( "LANG" ) )
       __UnixParseLangCP( GetEnv( "LC_CTYPE" ), @cCP, @cLang )
+   ELSE
+      __UnixParseLangCP( GetEnv( "LANG" ), @cCP, @cLang )
    ENDIF
    cCP := __CPUnixToCPStd( cCP )
 #elif defined( __PLATFORM__DOS )
@@ -104,11 +104,11 @@ FUNCTION hb_cdpOS()
    cLang := NIL
 #endif
 
-   IF ! Empty( cCP := __CPStdToHb( cCP, cLang ) )
-      RETURN cCP
+   IF Empty( cCP := __CPStdToHb( cCP, cLang ) )
+      RETURN NIL
    ENDIF
 
-   RETURN NIL
+   RETURN cCP
 
 #if defined( __PLATFORM__WINDOWS )
 STATIC FUNCTION __CPWinToCPStd( nCPWin )

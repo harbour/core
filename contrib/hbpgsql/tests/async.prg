@@ -1,6 +1,4 @@
-/*
- * This sample show howto use asynchronous/nonblocking queries
- */
+/* This sample show howto use asynchronous/nonblocking queries */
 
 #require "hbpgsql"
 

@@ -49,13 +49,13 @@
 /* TODO: - Unicode support */
 /* TODO: - Receive support */
 
-/* NOTE: Source of information:
-         http://www.smssolutions.net/tutorials/gsm/sendsmsat/
-         http://www.smssolutions.net/tutorials/gsm/receivesmsat/
-         http://www.developershome.com/sms/sendSmsByAtCommands.asp
-         http://www.developershome.com/sms/readSmsByAtCommands.asp
-         http://www.dreamfabric.com/sms/
-         [vszakats] */
+/* Source of information:
+   http://www.smssolutions.net/tutorials/gsm/sendsmsat/
+   http://www.smssolutions.net/tutorials/gsm/receivesmsat/
+   http://www.developershome.com/sms/sendSmsByAtCommands.asp
+   http://www.developershome.com/sms/readSmsByAtCommands.asp
+   http://www.dreamfabric.com/sms/
+ */
 
 STATIC FUNCTION port_send( h, s )
    RETURN hb_comSend( h, s )
@@ -73,12 +73,12 @@ FUNCTION sms_Send( cPort, cPhoneNo, cText, lNotification, cPIN )
    LOCAL smsctx
    LOCAL nRetVal
 
-   IF ! Empty( smsctx := smsctx_New( cPort ) )
+   IF Empty( smsctx := smsctx_New( cPort ) )
+      nRetVal := -99
+   ELSE
       smsctx_PIN( smsctx, cPIN )
       nRetVal := smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
       smsctx_Close( smsctx )
-   ELSE
-      nRetVal := -99
    ENDIF
 
    RETURN nRetVal
@@ -88,12 +88,12 @@ FUNCTION sms_ReceiveAll( cPort, cPIN )
    LOCAL smsctx
    LOCAL aRetVal
 
-   IF ! Empty( smsctx := smsctx_New( cPort ) )
+   IF Empty( smsctx := smsctx_New( cPort ) )
+      aRetVal := NIL
+   ELSE
       smsctx_PIN( smsctx, cPIN )
       aRetVal := smsctx_Receive( smsctx )
       smsctx_Close( smsctx )
-   ELSE
-      aRetVal := NIL
    ENDIF
 
    RETURN aRetVal

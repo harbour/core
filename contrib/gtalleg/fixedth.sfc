@@ -1,5 +1,4 @@
 /*
- *
  * SSF C-includable font file.
  * Fixed Thin font.
  *
@@ -8,7 +7,6 @@
  *
  * NOTE: needs fixing.
  * Some chars are missing while other ones need urgent review!
- *
  */
 
 static const ssfGlyph g000 = {

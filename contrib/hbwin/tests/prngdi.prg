@@ -1,11 +1,6 @@
-/*
- * Harbour Project source code:
- *    GDI calls and passing structures.
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
+
+/* GDI calls and passing structures. */
 
 #require "hbwin"
 

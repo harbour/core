@@ -35,8 +35,7 @@ FUNCTION ft_ASum( aArray, nStartIndex, nEndIndex )
 
    AEval( aArray, {| xElement | nSumTotal += ;
       CASE_AT( ValType( xElement ), "NC", ;
-      { 0, xElement, ;
-      iif( HB_ISSTRING( xElement ), Len( xElement ), 0 ) } ) }, ;
+      { 0, xElement, iif( HB_ISSTRING( xElement ), Len( xElement ), 0 ) } ) }, ;
       nStartIndex, nEndIndex - nStartIndex + 1 )
 
    RETURN nSumTotal

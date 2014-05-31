@@ -104,10 +104,10 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
 
          // In most cases we can simply ignore the redefinition, by returning a FAKED Structure Array!
          // TraceLog( "Redefinition of C Structure: " + cStructure )
-         RETURN t_aActiveStructure := { cStructure, NIL, {}, {}, iif( HB_ISNUMERIC( nAlign ), nAlign, 8 ) }
+         RETURN t_aActiveStructure := { cStructure, NIL, {}, {}, hb_defaultValue( nAlign, 8 ) }
       ENDIF
 
-      AAdd( s_aClasses, { cStructure, NIL, {}, {}, iif( HB_ISNUMERIC( nAlign ), nAlign, 8 ) } )
+      AAdd( s_aClasses, { cStructure, NIL, {}, {}, hb_defaultValue( nAlign, 8 ) } )
       // TraceLog( "Registered: " + cStructure, ATail( s_aClasses )[ 5 ] )
 
       t_aActiveStructure := ATail( s_aClasses )

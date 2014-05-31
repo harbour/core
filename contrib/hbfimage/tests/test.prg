@@ -40,7 +40,6 @@ PROCEDURE Main()
    ? "Initialise"
    fi_Initialise()
 
-   //
 
    ? "Version          :", fi_GetVersion()
    ? "Copyright        :", fi_GetCopyrightMessage()
@@ -173,8 +172,6 @@ PROCEDURE Main()
    hb_gcAll( .T. )
 #endif
 
-   //
-
    cStr := hb_MemoRead( IMAGES_IN + "sample1.jpg" )
    IF FError() == 0
       ? "Load JPEG from memory"
@@ -184,8 +181,6 @@ PROCEDURE Main()
       ? "Image Type       :", fi_GetImageType( im )
       ? "Save PNG ?       :", fi_Save( FIF_PNG, im, IMAGES_OUT + "sample2.png", PNG_DEFAULT  )
    ENDIF
-
-   //
 
    ? "DeInitialise"
    fi_DeInitialise()

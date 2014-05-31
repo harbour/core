@@ -53,7 +53,7 @@
  *                  Xbase++ xbpTreeView compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
+ *                                20081126
  */
 
 #include "hbclass.ch"
@@ -300,8 +300,8 @@ METHOD WvgListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    RETURN Self
 
-METHOD WvgListBox:destroy()
+METHOD PROCEDURE WvgListBox:destroy()
 
    ::WvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

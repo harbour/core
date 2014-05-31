@@ -53,7 +53,7 @@
  *                  Xbase++ xbpToolBar Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                              23Nov2008
+ *                               20081123
  */
 
 #include "hbclass.ch"
@@ -229,7 +229,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgToolBar:destroy()
+METHOD PROCEDURE WvgToolBar:destroy()
 
    LOCAL i
 
@@ -251,7 +251,7 @@ METHOD WvgToolBar:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -260,7 +260,6 @@ METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    RETURN Self
 
 METHOD WvgToolBar:sendToolbarMessage( nMsg, p1, p2 )
-
    RETURN Wvg_SendToolBarMessage( ::pWnd, nMsg, p1, p2 )
 
 METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
@@ -339,35 +338,27 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    RETURN oBtn
 
 METHOD WvgToolBar:delItem()
-
    RETURN Self
 
 METHOD WvgToolBar:getItem()
-
    RETURN Self
 
 METHOD WvgToolBar:clear()
-
    RETURN Self
 
 METHOD WvgToolBar:customize()
-
    RETURN Self
 
 METHOD WvgToolBar:loadImageSet()
-
    RETURN Self
 
 METHOD WvgToolBar:saveToolbar()
-
    RETURN Self
 
 METHOD WvgToolBar:restToolbar()
-
    RETURN Self
 
 METHOD WvgToolBar:setPosAndSize()
-
    RETURN Self
 
 METHOD WvgToolBar:setSize()

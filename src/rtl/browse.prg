@@ -110,8 +110,9 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
          lKeyPressed := ( nKey := Inkey() ) != 0
       ENDDO
 
-      IF ! lKeyPressed
-
+      IF lKeyPressed
+         lKeyPressed := .F.
+      ELSE
          IF oBrw:HitBottom .AND. ( ! lAppend .OR. RecNo() != LastRec() + 1 )
             IF lAppend
                oBrw:RefreshCurrent()
@@ -136,8 +137,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
             Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
             LOOP
          ENDIF
-      ELSE
-         lKeyPressed := .F.
       ENDIF
 
       SWITCH nKey

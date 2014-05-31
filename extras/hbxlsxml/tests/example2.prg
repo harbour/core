@@ -52,10 +52,10 @@
 
 PROCEDURE Main()
 
-   LOCAL xml, format1, format2, format3, format4
+   LOCAL format1, format2, format3, format4
    LOCAL sheet1, sheet2, sheet4
 
-   xml := ExcelWriterXML():new( "my file.xml" )
+   LOCAL xml := ExcelWriterXML():new( "my file.xml" )
 
    /**
     * Add some general properties to the document

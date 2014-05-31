@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * libcurl 'easy' API - Harbour interface.
+ * curl_getdate()
  *
  * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org

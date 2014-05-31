@@ -1532,7 +1532,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
    LOCAL lMouseOver := ::lHover // 2004-03-03,was: ( MRow() >= ::nrow1 .AND. MRow() <= ::nrow2 .AND. MCol() >= ::ncol1 .AND. MCol() <= ::ncol2 )
    LOCAL lPressed := ::lPressed .AND. lMouseOver
    LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_GetFontInfo( nWinNum ), NIL )
-   LOCAL nLabelColor := iif( ! lPressed, RGB( 0, 0, 0 ), RGB( 96, 96, 96 ) )
+   LOCAL nLabelColor := iif( lPressed, RGB( 96, 96, 96 ), RGB( 0, 0, 0 ) )
    LOCAL lUseImage := HB_ISSTRING( ::cImage ) // 2004-03-25
 
    IF ! ::lVisible .OR. ::nType == _BUTTON_NONE

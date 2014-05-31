@@ -153,19 +153,19 @@ PROCEDURE Main()
    oSheet := oXml:addSheet( "Plan1" )
 
    oObj := oSheet
-   oObj:columnWidth(  1,  70 ) // N.Fiscal
-   oObj:columnWidth(  2,  20 ) // TM
-   oObj:columnWidth(  3,  70 ) // Data Movto
-   oObj:columnWidth(  4,  70 ) // Data Emis.
-   oObj:columnWidth(  5,  50 ) // CFOP
-   oObj:columnWidth(  6,  50 ) // Cod. Cliente/Fornecedor
-   oObj:columnWidth(  7, 300 ) // Nome Cliente/Fornecedor
-   oObj:columnWidth(  8,  20 ) // UF
-   oObj:columnWidth(  9,  80 ) // Vlr.Tot.
-   oObj:columnWidth( 10,  80 ) // Base Calc.
-   oObj:columnWidth( 11,  80 ) // Vlr ICMS
-   oObj:columnWidth( 12,  80 ) // Base IPI
-   oObj:columnWidth( 13,  80 ) // Valor IPI
+   oObj:columnWidth(  1,  70 )  // N.Fiscal
+   oObj:columnWidth(  2,  20 )  // TM
+   oObj:columnWidth(  3,  70 )  // Data Movto
+   oObj:columnWidth(  4,  70 )  // Data Emis.
+   oObj:columnWidth(  5,  50 )  // CFOP
+   oObj:columnWidth(  6,  50 )  // Cod. Cliente/Fornecedor
+   oObj:columnWidth(  7, 300 )  // Nome Cliente/Fornecedor
+   oObj:columnWidth(  8,  20 )  // UF
+   oObj:columnWidth(  9,  80 )  // Vlr.Tot.
+   oObj:columnWidth( 10,  80 )  // Base Calc.
+   oObj:columnWidth( 11,  80 )  // Vlr ICMS
+   oObj:columnWidth( 12,  80 )  // Base IPI
+   oObj:columnWidth( 13,  80 )  // Valor IPI
 
    xEmpresa := "EMPRESA DEMONSTRACAO LTDA"
    xDataImp := "2011-03-22"

@@ -96,8 +96,6 @@ void hb_random_seed( HB_I32 seed )
 }
 
 /*
- * hb_Random
- *
  * hb_Random() --> returns a real value n so that 0 <= n < 1
  * hb_Random( x ) --> returns a real number n so that 0 <= n < x
  * hb_Random( x, y ) --> Returns a real number n so that x <= n < y
@@ -125,8 +123,6 @@ HB_FUNC( HB_RANDOM )
 }
 
 /*
- * hb_RandomInt
- *
  * hb_RandomInt() --> returns 0 or 1, evenly distributed
  * hb_RandomInt( N ) --> returns an integer between 1 and N (inclusive)
  * hb_RandomInt( x, y ) --> Returns an integer number between x and y (inclusive)

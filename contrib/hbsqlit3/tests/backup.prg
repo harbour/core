@@ -62,24 +62,20 @@
 
 PROCEDURE Main()
 
-   LOCAL cFileSource := ":memory:", cFileDest := "backup.db", cSQLTEXT
-   LOCAL pDbSource, pDbDest, pBackup, cb, nDbFlags
+   LOCAL cFileDest := "backup.db", cSQLTEXT
+   LOCAL pDbSource, pDbDest, pBackup, cb
 
    IF sqlite3_libversion_number() < 3006011
       ErrorLevel( 1 )
       RETURN
    ENDIF
 
-   IF Empty( pDbSource := PrepareDB( cFileSource ) )
+   IF Empty( pDbSource := PrepareDB( ":memory:" ) )
       ErrorLevel( 1 )
       RETURN
    ENDIF
 
-   nDbFlags := SQLITE_OPEN_CREATE + SQLITE_OPEN_READWRITE + ;
-      SQLITE_OPEN_EXCLUSIVE
-   pDbDest := sqlite3_open_v2( cFileDest, nDbFlags )
-
-   IF Empty( pDbDest )
+   IF Empty( pDbDest := sqlite3_open_v2( cFileDest, SQLITE_OPEN_CREATE + SQLITE_OPEN_READWRITE + SQLITE_OPEN_EXCLUSIVE ) )
       ? "Can't open database:", cFileDest
       ErrorLevel( 1 )
       RETURN
@@ -87,8 +83,7 @@ PROCEDURE Main()
 
    sqlite3_trace( pDbDest, .T., "backup.log" )
 
-   pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" )
-   IF Empty( pBackup )
+   IF Empty( pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" ) )
       ? "Can't initialize backup"
       ErrorLevel( 1 )
       RETURN
@@ -116,8 +111,7 @@ PROCEDURE Main()
 
    RETURN
 
-/* */
-FUNCTION CallBack( nColCount, aValue, aColName )
+STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
@@ -130,11 +124,9 @@ FUNCTION CallBack( nColCount, aValue, aColName )
 
    RETURN 0
 
-/* */
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
    RETURN iif( hb_defaultValue( lShortMsg, .T. ), hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
-/* */
 STATIC FUNCTION PrepareDB( cFile )
 
    LOCAL cSQLTEXT
@@ -147,10 +139,8 @@ STATIC FUNCTION PrepareDB( cFile )
       "Ivet" => 28 ;
       }, enum
 
-   pDb := sqlite3_open( cFile, .T. )
-   IF Empty( pDb )
+   IF Empty( pDb := sqlite3_open( cFile, .T. ) )
       ? "Can't open/create database:", cFile
-
       RETURN NIL
    ENDIF
 
@@ -160,7 +150,6 @@ STATIC FUNCTION PrepareDB( cFile )
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
       ? "Can't create table: person"
       pDb := NIL // close database
-
       RETURN NIL
    ENDIF
 
@@ -169,7 +158,6 @@ STATIC FUNCTION PrepareDB( cFile )
    IF Empty( pStmt )
       ? "Can't prepare statement:", cSQLTEXT
       pDb := NIL
-
       RETURN NIL
    ENDIF
 

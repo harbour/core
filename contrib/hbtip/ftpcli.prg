@@ -211,7 +211,7 @@ METHOD GetReply() CLASS TIPClientFTP
    // now, if the reply has a "-" as fourth character, we need to proceed...
    DO WHILE ! Empty( cRep ) .AND. SubStr( cRep, 4, 1 ) == "-"
       ::cReply := ::inetRecvLine( ::SocketCon, @nLen, 128 )
-      cRep := iif( HB_ISSTRING( ::cReply ), ::cReply, "" )
+      cRep := hb_defaultValue( ::cReply, "" )
    ENDDO
 
    // 4 and 5 are error codes

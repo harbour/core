@@ -201,7 +201,7 @@ METHOD BuildQuery() CLASS TUrl
 
    RETURN cLine
 
-METHOD AddGetForm( xPostData )
+METHOD AddGetForm( xPostData ) CLASS TUrl
 
    LOCAL cData := ""
    LOCAL item

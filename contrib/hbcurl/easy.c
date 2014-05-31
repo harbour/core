@@ -194,58 +194,6 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
 
 #endif /* HB_CURL_HASH_STRINGS */
 
-/* Global initialization/deinitialization */
-/* -------------------------------------- */
-
-static void * hb_curl_xgrab( size_t size )
-{
-   return hb_xgrab( size );
-}
-
-static void hb_curl_xfree( void * p )
-{
-   hb_xfree( p );
-}
-
-static void * hb_curl_xrealloc( void * p, size_t size )
-{
-   return hb_xrealloc( p, size );
-}
-
-static char * hb_curl_strdup( const char * s )
-{
-   return hb_strdup( s );
-}
-
-static void * hb_curl_calloc( size_t nelem, size_t elsize )
-{
-   size_t size = nelem * elsize;
-   void * ptr  = hb_xgrab( size );
-
-   memset( ptr, 0, size );
-
-   return ptr;
-}
-
-HB_FUNC( CURL_GLOBAL_INIT )
-{
-#if LIBCURL_VERSION_NUM >= 0x070C00
-   hb_retnl( ( long ) curl_global_init_mem( hb_parnldef( 1, CURL_GLOBAL_ALL ),
-                                            hb_curl_xgrab,
-                                            hb_curl_xfree,
-                                            hb_curl_xrealloc,
-                                            hb_curl_strdup,
-                                            hb_curl_calloc ) );
-#else
-   hb_retnl( ( long ) curl_global_init( hb_parnldef( 1, CURL_GLOBAL_ALL ) ) );
-#endif
-}
-
-HB_FUNC( CURL_GLOBAL_CLEANUP )
-{
-   curl_global_cleanup();
-}
-
 /* Callbacks */
 /* --------- */
 
@@ -508,7 +456,6 @@ static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
 }
 
 /* Constructor/Destructor */
-/* ---------------------- */
 
 static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 {
@@ -653,7 +600,6 @@ static PHB_CURL PHB_CURL_par( int iParam )
 }
 
 /* Harbour interface */
-/* ----------------- */
 
 HB_FUNC( CURL_EASY_INIT )
 {

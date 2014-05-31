@@ -53,7 +53,7 @@
  *                 Xbase++ xbpPushButton Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
+ *                                20081126
  */
 
 #include "hbclass.ch"
@@ -199,11 +199,11 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgPushButton:destroy()
+METHOD PROCEDURE WvgPushButton:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

@@ -53,7 +53,7 @@
  *                  Xbase++ xbp3State Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               07Dec2008
+ *                                20081207
  */
 
 #include "hbclass.ch"
@@ -157,13 +157,13 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
 
    RETURN 1
 
-METHOD Wvg3State:destroy()
+METHOD PROCEDURE Wvg3State:destroy()
 
    hb_traceLog( "          %s:destroy()", __objGetClsName() )
 
    ::WvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD Wvg3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 

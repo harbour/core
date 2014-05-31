@@ -71,11 +71,7 @@ FUNCTION ShowMsg( aMsg, lMode )
 
    RETURN .F.
 
-/***
-*
-*  ShortCut processing for initial Get or Menu Item.
-*
-***/
+/* ShortCut processing for initial Get or Menu Item. */
 FUNCTION IsShortcut( oMenu, nKey, nID )
 
    LOCAL nItem
@@ -131,12 +127,8 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
 
    RETURN .F.
 
-/***
-*
-*  Navigates to the next Get or Menu Item from the
-*  Current if more than one uses the same ShortCut.
-*
-***/
+/* Navigates to the next Get or Menu Item from the
+   Current if more than one uses the same ShortCut. */
 FUNCTION IsQuick( oMenu, nKey, nID )
 
    LOCAL nItem

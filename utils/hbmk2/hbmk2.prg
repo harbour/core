@@ -881,7 +881,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
    IF nResult != _EXIT_OK
       IF lExitStr
-         OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), " " + "[" + cTargetName + "]", "" ) + ;
+         OutErr( hb_StrFormat( _SELF_NAME_ + iif( Empty( cTargetName ), "", " " + "[" + cTargetName + "]" ) + ;
                                ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
       ENDIF
       IF lPause
@@ -2212,9 +2212,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" }, ;
          { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" }, ;
          { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" }, ;
-         { {|| iif( ! Empty( hbmk[ _HBMK_cCCPREFIX ] ) .OR. ! Empty( hbmk[ _HBMK_cCCSUFFIX ] ), ;
-               FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] ), ;
-               NIL ) }, "mingwarm" } }
+         { {|| iif( Empty( hbmk[ _HBMK_cCCPREFIX ] ) .AND. Empty( hbmk[ _HBMK_cCCSUFFIX ] ), NIL, ;
+               FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] ) ) }, "mingwarm" } }
 #endif
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
 #ifdef HARBOUR_SUPPORT
@@ -10573,7 +10572,7 @@ STATIC FUNCTION hbmk_ErrorMessage( oError )
    LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    /* add subsystem name if available */
-   cMessage += iif( HB_ISSTRING( oError:subsystem ), oError:subsystem(), "???" )
+   cMessage += hb_defaultValue( oError:subsystem, "???" )
 
    /* add subsystem's error code if available */
    cMessage += "/" + iif( HB_ISNUMERIC( oError:subCode ), hb_ntos( oError:subCode ), "???" )
@@ -12408,7 +12407,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    LOCAL nEnd
    LOCAL cMacro
 
-   LOCAL cStart := iif( HB_ISSTRING( cMacroPrefix ), cMacroPrefix, _MACRO_NORM_PREFIX ) + _MACRO_OPEN
+   LOCAL cStart := hb_defaultValue( cMacroPrefix, _MACRO_NORM_PREFIX ) + _MACRO_OPEN
 
    LOCAL cStdOut
 
@@ -15955,7 +15954,7 @@ STATIC FUNCTION __hbshell_win_reg_self( lRegister, lAllUser )
 
 STATIC FUNCTION __hbshell_win_reg_app( lRegister, lAllUser, cAppPath )
 
-   LOCAL cHive := iif( HB_ISLOGICAL( lAllUser ) .AND. lAllUser, "HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes" )
+   LOCAL cHive := iif( hb_defaultValue( lAllUser, .F. ), "HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes" )
    LOCAL lSuccess := .T.
    LOCAL tmp
 

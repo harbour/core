@@ -50,8 +50,7 @@
 
 PROCEDURE Main()
 
-   LOCAL lCreateIfNotExist := .T.
-   LOCAL db := sqlite3_open( "test.s3db", lCreateIfNotExist )
+   LOCAL db := sqlite3_open( "test.s3db", .T. /* lCreateIfNotExist */ )
    LOCAL stmt
    LOCAL buff, blob
 

@@ -16,13 +16,12 @@
 
 #pragma -km+
 
-/*
-  Docs:
+/* Docs:
 
-  RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0
-  RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1
-  HTTP Made Really Easy (http://www.jmarshall.com/easy/http/)
-*/
+   RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0
+   RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1
+   HTTP Made Really Easy (http://www.jmarshall.com/easy/http/)
+ */
 
 #define THREAD_COUNT_PREALLOC    3
 #define THREAD_COUNT_MAX         50
@@ -1581,11 +1580,10 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE "if"
-            xValue := iif( aInstr[ 2 ] $ aData, aData[ aInstr[ 2 ] ], NIL )
-            IF ! Empty( xValue )
-               cRet += parse_data( aData, aInstr[ 3 ], hConfig )
-            ELSE
+            IF Empty( iif( aInstr[ 2 ] $ aData, aData[ aInstr[ 2 ] ], NIL ) )
                cRet += parse_data( aData, aInstr[ 4 ], hConfig )
+            ELSE
+               cRet += parse_data( aData, aInstr[ 3 ], hConfig )
             ENDIF
             EXIT
 

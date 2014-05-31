@@ -1,10 +1,8 @@
 /*
  * Harbour Project source code:
- * Functions deprecated from core Harbour by HB_LEGACY_LEVELn
- *   but kept in xHarbour, so they are made available here as well.
- *   Do not add internal functions (names starting with '__')
+ * curl_global_*() - Global initialization/deinitialization
  *
- * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,43 +46,55 @@
  *
  */
 
-#ifndef HB_LEGACY_LEVEL4
+#include <curl/curl.h>
 
-#include "hbver.ch"
+#include "hbapi.h"
 
-FUNCTION hb_osPathSeparator()
-   RETURN hb_ps()
+static void * hb_curl_xgrab( size_t size )
+{
+   return hb_xgrab( size );
+}
 
-FUNCTION hb_osNewLine()
-   RETURN hb_eol()
+static void hb_curl_xfree( void * p )
+{
+   hb_xfree( p );
+}
 
-#if 0
+static void * hb_curl_xrealloc( void * p, size_t size )
+{
+   return hb_xrealloc( p, size );
+}
 
-FUNCTION hb_ANSIToOEM( s )
-#if defined( __PLATFORM__WINDOWS )
-   RETURN win_ANSIToOEM( s )
+static char * hb_curl_strdup( const char * s )
+{
+   return hb_strdup( s );
+}
+
+static void * hb_curl_calloc( size_t nelem, size_t elsize )
+{
+   size_t size = nelem * elsize;
+   void * ptr  = hb_xgrab( size );
+
+   memset( ptr, 0, size );
+
+   return ptr;
+}
+
+HB_FUNC( CURL_GLOBAL_INIT )
+{
+#if LIBCURL_VERSION_NUM >= 0x070C00
+   hb_retnl( ( long ) curl_global_init_mem( hb_parnldef( 1, CURL_GLOBAL_ALL ),
+                                            hb_curl_xgrab,
+                                            hb_curl_xfree,
+                                            hb_curl_xrealloc,
+                                            hb_curl_strdup,
+                                            hb_curl_calloc ) );
 #else
-   RETURN s
+   hb_retnl( ( long ) curl_global_init( hb_parnldef( 1, CURL_GLOBAL_ALL ) ) );
 #endif
+}
 
-FUNCTION hb_OEMToANSI( s )
-#if defined( __PLATFORM__WINDOWS )
-   RETURN win_OEMToANSI( s )
-#else
-   RETURN s
-#endif
-
-FUNCTION hb_PCodeVer()
-   RETURN hb_Version( HB_VERSION_PCODE_VER_STR )
-
-FUNCTION hb_BuildDate()
-   RETURN hb_Version( HB_VERSION_BUILD_DATE_STR )
-
-FUNCTION hb_regexMatch( ... )
-   RETURN iif( hb_defaultValue( hb_PValue( 5 ), .F. ), ;
-      hb_regexLike( ... ), ;
-      hb_regexHas( ... ) )
-
-#endif
-
-#endif
+HB_FUNC( CURL_GLOBAL_CLEANUP )
+{
+   curl_global_cleanup();
+}

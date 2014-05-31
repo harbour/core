@@ -53,7 +53,7 @@
  *                Xbase++ Compatible xbpPartHandler Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               08Nov2008
+ *                               20081108
  */
 
 #include "hbclass.ch"
@@ -144,7 +144,6 @@ METHOD WvgPartHandler:handleEvent( hEvent, mp1, mp2 )
    RETURN Self
 
 METHOD WvgPartHandler:status()
-
    RETURN ::nStatus
 
 METHOD WvgPartHandler:addChild( oWvg )
@@ -167,7 +166,6 @@ METHOD WvgPartHandler:childFromName( nNameId )
    RETURN oWvg
 
 METHOD WvgPartHandler:childList()
-
    RETURN ::aChildren
 
 METHOD WvgPartHandler:removeChild( oChild )
@@ -221,7 +219,7 @@ METHOD WvgPartHandler:setParent( oWvg )
 
    RETURN oOldXbp
 
-METHOD WvgPartHandler:notifierBlock( ... )
+METHOD PROCEDURE WvgPartHandler:notifierBlock( ... )
 
    LOCAL a_ := hb_AParams()
 
@@ -233,7 +231,7 @@ METHOD WvgPartHandler:notifierBlock( ... )
 
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /* This will be called by the WvgCrt() console for various events to be propogated to child controls */
 METHOD WvgPartHandler:notifier( nEvent, xParams )

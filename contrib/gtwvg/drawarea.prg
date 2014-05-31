@@ -53,7 +53,7 @@
  *                   Xbase++ WvgDialog's Helper Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               15Feb2009
+ *                                20090215
  */
 
 #include "hbclass.ch"
@@ -130,8 +130,8 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD destroy() CLASS WvgDrawingArea
+METHOD PROCEDURE destroy() CLASS WvgDrawingArea
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

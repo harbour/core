@@ -46,13 +46,9 @@
  *
  */
 
-#ifndef _OTABLE_CH_
+#ifndef _TTABLE_CH_
 
-// --> Network messages
-#define _NET_USE_FAIL_MSG    "Net Open Fail !!!"
-
-
-// --> ::dbMove() constants
+// ::dbMove() constants
 #define _DB_TOP              -999999999999
 #define _DB_BOTTOM           -888888888888
 #define _DB_BOF              -777777777777
@@ -60,10 +56,6 @@
 #define NET_RECLOCK          1
 #define NET_FILELOCK         2
 #define NET_APPEND           3
-#define NET_OPEN_MODE        .T.
-#define EXCLUSIVE_OPEN_MODE  .F.
-#define RETRY_MSG            "NETWORK ERROR;Continue Attempt to Lock Record/File ?"
-#define YESNO_COLOR          "R/W"
 #define MAX_TABLE_AREAS      680
 
 #xcommand DEFAULT <uVar1> := <uVal1> ;
@@ -71,12 +63,12 @@
                   <uVar1> := iif( <uVar1> == NIL, <uVal1>, <uVar1> ) ;;
                 [ <uVarN> := iif( <uVarN> == NIL, <uValN>, <uVarN> ); ]
 
-#xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ]                        ;
-          =>                                                            ;
-          IF <v1> == NIL ; <v1> := <x1> ; END                           ;
+#xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ] ;
+          =>                                     ;
+          IF <v1> == NIL ; <v1> := <x1> ; END    ;
           [; IF <vn> == NIL ; <vn> := <xn> ; END ]
 
-// --> OOPs
+// OOPs
 #xtranslate BYNAME <V> [, <VN> ]     => ::<V> := <V> [; ::<VN> := <VN> ]
 #xtranslate BYNAME <V> DEFAULT <Val> => ::<V> := BYDEFAULT <V>, <Val>
 #xtranslate BYDEFAULT <V>, <Val>     => iif( <V> == NIL, <Val>, <V> )
@@ -89,10 +81,10 @@
            [<ro: READONLY>] ;
            => ;
            NetDbUse( <(cDBF)>, <(cAlias)>, <nSecs>, <cRDD>, ;
-                   <.new.>, .T., <.ro.> )
+                     <.new.>, .T., <.ro.> )
 
 
-// --> new table object
+// new table object
 #xcommand DEFINE TABLE <oTable>         ;
                  [FILE <cFileDBF>]      ;
                  [INDEX <cFileIDX>]     ;
@@ -103,18 +95,18 @@
                  [<lnew: NEW>]          ;
                  [<lrdonly: READONLY>]  ;
                  =>;
-                 <oTable> := TableNew(                  ;
-                                          <(cFileDBF)>, ;
-                                          <"cAlias">,   ;
-                                          <(cFileIDX)>, ;
-                                          <(cDriver)>,  ;
-                                          <.lshared.>,  ;
-                                          <(cPathDBF)>, ;
-                                          <.lnew.>,     ;
-                                          <.lrdonly.> )
+                 <oTable> := TableNew( ;
+                                       <(cFileDBF)>, ;
+                                       <"cAlias">,   ;
+                                       <(cFileIDX)>, ;
+                                       <(cDriver)>,  ;
+                                       <.lshared.>,  ;
+                                       <(cPathDBF)>, ;
+                                       <.lnew.>,     ;
+                                       <.lrdonly.> )
 
 
-// --> new order object
+// new order object
 #xcommand DEFINE ORDER [<oOrder>]   ;
                  ON [KEY] <key>     ;
                  [TAG <cTag>]       ;
@@ -124,19 +116,19 @@
                  [EVAL <eval>]      ;
                  [EVERY <every>]    ;
                  [<unique: UNIQUE>] ;
-                 [TO <cOrderFile>];
+                 [TO <cOrderFile>]  ;
                  IN <oTable>        ;
                  =>;
                  [<oOrder>:=] <oTable>:AddOrder(               ;
                                                 <(cTag)>,      ;
                                                 <"key">,       ;
-                                                <(cLabel)>,       ;
+                                                <(cLabel)>,    ;
                                                 <"for">,       ;
                                                 <"while">,     ;
                                                 [<.unique.>],  ;
                                                 <{eval}>,      ;
                                                 <every>,       ;
-                                                <(cOrderFile)>;
+                                                <(cOrderFile)> ;
                                                  )
 
 
@@ -150,7 +142,7 @@
           <oObj>:ClassAdd( <"cFld">,, {| Self | [<xpression>] },,)
 
 
-// --> ::unDo() buffer constants
+// ::unDo() buffer constants
 
 #define _WRITE_BUFFER        1
 #define _DELETE_BUFFER       2
@@ -165,14 +157,14 @@
           =>               ;
           <oTable>:UnDo( <nType>, [<n>] )
 
-#xcommand END TRANSACTION IN <oTable>   => <oTable>:SetMonitor( .F. )
+#xcommand END TRANSACTION IN <oTable> => <oTable>:SetMonitor( .F. )
 
-#command SKIP        in <o>           => <o>:dbSkip( 1 )
-#command SKIP <n>    in <o>           => <o>:dbSkip( <n> )
+#command SKIP        in <o> => <o>:dbSkip( 1 )
+#command SKIP <n>    in <o> => <o>:dbSkip( <n> )
 
-#command SEEK <xpr>                                                        ;
-         [<soft: SOFTSEEK>]                                                ;
-         [<last: LAST>]     in <o>                                         ;
+#command SEEK <xpr>                ;
+         [<soft: SOFTSEEK>]        ;
+         [<last: LAST>]     in <o> ;
       => <o>:dbSeek( <xpr>, iif( <.soft.>, .T., NIL ), iif( <.last.>, .T., NIL ) )
 
 #translate  CSY_TYPE Character  => "C"
@@ -182,15 +174,16 @@
 #xtranslate CSY_TYPE Logical    => "L"
 #xtranslate CSY_TYPE Auto       => "A"
 
-#xcommand CREATE DATABASE <o> FILE <file> => <o>:=HBTable():CreateTable(<(file)>);#define _TABLE_ <o>
-#xtranslate FIELD [ <oFld> ]                        ;
-                [ NAME <(cName)> ]                  ;
-                [ TYPE <cType> ]                    ;
-                [ LEN <nLen> ]                      ;
-                [ DEC <nDec> ]                      ;
-                OF <oDbf>                           ;
+#xcommand CREATE DATABASE <o> FILE <file> => <o> := HBTable():CreateTable( <(file)> );#define _TABLE_ <o>
+#xtranslate FIELD [ <oFld> ]       ;
+                [ NAME <(cName)> ] ;
+                [ TYPE <cType> ]   ;
+                [ LEN <nLen> ]     ;
+                [ DEC <nDec> ]     ;
+                OF <oDbf>          ;
                 => ;
-    [ <oFld> := ] _TABLE_:AddField( <(cName)>,CSY_TYPE <cType>, <nLen>, <nDec>)
+    [ <oFld> := ] _TABLE_:AddField( <(cName)>, CSY_TYPE <cType>, <nLen>, <nDec>)
 #xcommand BUILD TABLE <o> => _TABLE_:Gentable()
-#define _OTABLE_CH_
+
+#define _TTABLE_CH_
 #endif

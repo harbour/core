@@ -1097,7 +1097,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS TRPCServe
 
    RETURN .T.
 
-METHOD SendResult( oRet, cFuncName )
+METHOD SendResult( oRet, cFuncName ) CLASS TRPCServeCon
 
    LOCAL cData, cOrigLen, cCompLen
 
@@ -1276,7 +1276,7 @@ METHOD New() CLASS TRPCService
 
    RETURN Self
 
-METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
+METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod ) CLASS TRPCService
 
    LOCAL lRet := .F.
    LOCAL oFunction

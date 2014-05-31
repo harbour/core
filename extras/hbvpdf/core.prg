@@ -1364,10 +1364,10 @@ PROCEDURE pdfOpenHeader( cFile )
 
    hb_default( @cFile, "" )
 
-   IF ! Empty( cFile )
-      t_aReport[ HEADER ] := File2Array( AllTrim( cFile ) )
-   ELSE
+   IF Empty( cFile )
       t_aReport[ HEADER ] := {}
+   ELSE
+      t_aReport[ HEADER ] := File2Array( AllTrim( cFile ) )
    ENDIF
    t_aReport[ MARGINS ] := .T.
 
@@ -1820,16 +1820,17 @@ PROCEDURE pdfCreateHeader( _file, _size, _orient, _lpi, _width )
 
 FUNCTION pdfImageInfo( cFile )
 
-   LOCAL cTemp := Upper( SubStr( cFile, RAt( ".", cFile ) + 1 ) ), aTemp := {}
+   SWITCH Lower( hb_FNameExt( cFile ) )
+   CASE ".tif"
+   CASE ".tiff"
+      RETURN pdfTIFFInfo( cFile )
+   CASE ".jpg"
+   CASE ".jpeg"
+   CASE ".jpe"
+      RETURN pdfJPEGInfo( cFile )
+   ENDSWITCH
 
-   DO CASE
-   CASE cTemp == "TIF"
-      aTemp := pdfTIFFInfo( cFile )
-   CASE cTemp == "JPG"
-      aTemp := pdfJPEGInfo( cFile )
-   ENDCASE
-
-   RETURN aTemp
+   RETURN {}
 
 FUNCTION pdfTIFFInfo( cFile )
 
@@ -1844,10 +1845,10 @@ FUNCTION pdfTIFFInfo( cFile )
 
    nHandle := FOpen( cFile )
 
-   c2 := "  "
+   c2 := Space( 2 )
    FRead( nHandle, @c2, 2 )
    FRead( nHandle, @c2, 2 )
-   cIFDNext := "    "
+   cIFDNext := Space( 4 )
    FRead( nHandle, @cIFDNext, 4 )
 
    cTemp := Space( 12 )
@@ -2441,8 +2442,8 @@ STATIC FUNCTION AllToken( cString, cDelimiter, nPointer, nAction )
 
    LOCAL nTokens := 0, nPos := 1, nLen := Len( cString ), nStart, cRet
 
-   __defaultNIL( @cDelimiter, Chr( 0 ) + Chr( 9 ) + Chr( 10 ) + Chr( 13 ) + Chr( 26 ) + Chr( 32 ) + Chr( 138 ) + Chr( 141 ) )
-   __defaultNIL( @nAction, 0 )
+   hb_default( @cDelimiter, Chr( 0 ) + Chr( 9 ) + Chr( 10 ) + Chr( 13 ) + Chr( 26 ) + Chr( 32 ) + Chr( 138 ) + Chr( 141 ) )
+   hb_default( @nAction, 0 )
 
    // nAction == 0 - numtoken
    // nAction == 1 - token
@@ -2489,16 +2490,10 @@ STATIC FUNCTION NumAt( cSearch, cString )
 
 STATIC FUNCTION FileSize( nHandle )
 
-   LOCAL nCurrent
-   LOCAL nLength
-
    // Get file position
-   nCurrent := FilePos( nHandle )
-
+   LOCAL nCurrent := FilePos( nHandle )
    // Get file length
-   nLength := FSeek( nHandle, 0, FS_END )
-
-   // nLength := FilePos( nHandle )
+   LOCAL nLength := FSeek( nHandle, 0, FS_END )
 
    // Reset file position
    FSeek( nHandle, nCurrent )
@@ -2512,7 +2507,8 @@ STATIC FUNCTION Array2File( cFile, aRay, nDepth, hFile )
    LOCAL nBytes := 0
    LOCAL i
 
-   nDepth := iif( HB_ISNUMERIC( nDepth ), nDepth, 0 )
+   hb_default( @nDepth, 0 )
+
    IF hFile == NIL
       IF ( hFile := FCreate( cFile ) ) == F_ERROR
          RETURN nBytes

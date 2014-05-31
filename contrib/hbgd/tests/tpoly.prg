@@ -1,6 +1,4 @@
-/*
- * Koch Flake -- for testing gdImage*Polygon()
- */
+/* Koch Flake -- for testing gdImage*Polygon() */
 
 #require "hbgd"
 

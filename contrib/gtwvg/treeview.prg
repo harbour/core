@@ -53,7 +53,7 @@
  *                  Xbase++ xbpTreeView compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
+ *                                20081126
  */
 
 #include "hbclass.ch"
@@ -254,11 +254,11 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD WvgTreeView:destroy()
+METHOD PROCEDURE WvgTreeView:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgTreeView:getSelectionInfo( nlParam )
 
@@ -349,8 +349,7 @@ CREATE CLASS WvgTreeViewItem
    METHOD configure()
    METHOD destroy()
 
-   METHOD Expand( lExpand )                      INLINE Wvg_TreeView_Expand( ::hTree, ::hItem, ;
-      iif( HB_ISLOGICAL( lExpand ), lExpand, .T. ) )
+   METHOD Expand( lExpand ) INLINE Wvg_TreeView_Expand( ::hTree, ::hItem, hb_defaultValue( lExpand, .T. ) )
    METHOD isExpanded()
    METHOD setCaption( cCaption )
    METHOD setExpandedImage( nResIdoBitmap )
@@ -366,80 +365,67 @@ CREATE CLASS WvgTreeViewItem
 ENDCLASS
 
 METHOD new() CLASS WvgTreeViewItem
-
    RETURN Self
 
 METHOD create() CLASS WvgTreeViewItem
-
    RETURN Self
 
 METHOD configure() CLASS WvgTreeViewItem
-
    RETURN Self
 
-METHOD destroy() CLASS WvgTreeViewItem
+METHOD PROCEDURE destroy() CLASS WvgTreeViewItem
+   RETURN
 
-   RETURN NIL
+METHOD PROCEDURE isExpanded() CLASS WvgTreeViewItem
+   RETURN
 
-METHOD isExpanded() CLASS WvgTreeViewItem
-
-   RETURN NIL
-
-METHOD setCaption( cCaption ) CLASS WvgTreeViewItem
+METHOD PROCEDURE setCaption( cCaption ) CLASS WvgTreeViewItem
 
    HB_SYMBOL_UNUSED( cCaption )
 
-   RETURN NIL
+   RETURN
 
-METHOD setExpandedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
-
-   HB_SYMBOL_UNUSED( nResIdoBitmap )
-
-   RETURN NIL
-
-METHOD setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE setExpandedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
-   RETURN NIL
+   RETURN
 
-METHOD setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
-   RETURN NIL
+   RETURN
+
+METHOD PROCEDURE setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+
+   HB_SYMBOL_UNUSED( nResIdoBitmap )
+
+   RETURN
 
 METHOD addItem( cCaption ) CLASS WvgTreeViewItem
 
-   LOCAL oItem, hParent
-
-   oItem := WvgTreeViewItem():New()
+   LOCAL oItem := WvgTreeViewItem():New()
 
    oItem:hTree   := ::hTree
    oItem:oParent := self
    oItem:caption := cCaption
    oItem:oWnd    := ::oWnd
 
-   hParent := iif( HB_ISOBJECT( oItem:oParent ), oItem:oParent:hItem, NIL )
-
-   oItem:hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:caption )
+   oItem:hItem := Wvg_TreeView_AddItem( oItem:hTree, iif( HB_ISOBJECT( oItem:oParent ), oItem:oParent:hItem, ), oItem:caption )
 
    AAdd( oItem:oWnd:aItems, oItem )
 
    RETURN oItem
 
-METHOD delItem() CLASS WvgTreeViewItem
+METHOD PROCEDURE delItem() CLASS WvgTreeViewItem
+   RETURN
 
-   RETURN NIL
+METHOD PROCEDURE getChildItems() CLASS WvgTreeViewItem
+   RETURN
 
-METHOD getChildItems() CLASS WvgTreeViewItem
+METHOD PROCEDURE getParentItem() CLASS WvgTreeViewItem
+   RETURN
 
-   RETURN NIL
-
-METHOD getParentItem() CLASS WvgTreeViewItem
-
-   RETURN NIL
-
-METHOD insItem() CLASS WvgTreeViewItem
-
-   RETURN NIL
+METHOD PROCEDURE insItem() CLASS WvgTreeViewItem
+   RETURN

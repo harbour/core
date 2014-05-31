@@ -54,7 +54,7 @@
  *                Xbase++ xbpHtmlViewer compatible Class
  *
  *                 Pritpal Bedi  <bedipritpal@hotmail.com>
- *                              08Dec2008
+ *                               20081208
  */
 
 #include "hbclass.ch"

@@ -52,11 +52,11 @@
 
 REQUEST HB_CODEPAGE_UTF8EX
 
-PROCEDURE Main( ... )
+PROCEDURE Main()
 
-   LOCAL hUnzip, aWild, cFileName, cExt, cPath, cFile, ;
-      dDate, cTime, nSize, nCompSize, nErr, ;
-      lCrypted, cPassword, cComment, tmp
+   LOCAL hUnzip, aWild, cFileName, cExt, cPath, cFile
+   LOCAL dDate, cTime, nSize, nCompSize, nErr
+   LOCAL lCrypted, cPassword, cComment, tmp
 
    hb_cdpSelect( "UTF8EX" )
    hb_SetTermCP( hb_cdpTerm() )
@@ -64,18 +64,13 @@ PROCEDURE Main( ... )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   aWild := { ... }
+   aWild := hb_AParams()
    IF Len( aWild ) < 1
       ? "Usage: myunzip <ZipName> [ --pass <password> ] [ <FilePattern1> ... ]"
       RETURN
    ENDIF
 
-   hb_FNameSplit( aWild[ 1 ], @cPath, @cFileName, @cExt )
-   IF Empty( cExt )
-      cExt := ".zip"
-   ENDIF
-   cFileName := hb_FNameMerge( cPath, cFileName, cExt )
-
+   cFileName := hb_FNameExtSetDef( aWild[ 1 ], ".zip" )
    hb_ADel( aWild, 1, .T. )
 
    FOR tmp := 1 TO Len( aWild ) - 1
@@ -88,9 +83,7 @@ PROCEDURE Main( ... )
 
    AEval( aWild, {| cPattern, nPos | aWild[ nPos ] := StrTran( cPattern, "\", "/" ) } )
 
-   hUnzip := hb_unzipOpen( cFileName )
-
-   IF ! Empty( hUnzip )
+   IF ! Empty( hUnzip := hb_unzipOpen( cFileName ) )
       ? "Archive file:", cFileName
       hb_unzipGlobalInfo( hUnzip, @nSize, @cComment )
       ? "Number of entries:", nSize

@@ -53,7 +53,7 @@
  *                  Xbase++ Compatible xbpMenuBar Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                              22Nov2008
+ *                               20081122
  */
 
 #include "hbclass.ch"
@@ -262,8 +262,6 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    LOCAL nItemIndex, cCaption
    LOCAL xCaption, bAction, nStyle, nAttrib
 
-   __defaultNIL( @lInsert, .T. )
-
    ASize( aItem, 4 )
 
    xCaption := aItem[ 1 ]
@@ -305,7 +303,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
          iif( HB_ISSTRING( aItem[ 3 ] ), StrTran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
    ELSE
       nItemIndex := nPos
-      IF lInsert
+      IF hb_defaultValue( lInsert, .T. )
          ::aMenuItems := hb_AIns( ::aMenuItems, nPos, aItem, .T. )
          Wvg_InsertMenu( ::hMenu, ;
             nItemIndex - 1, ;
@@ -393,23 +391,19 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 
 METHOD WvgMenuBar:enableItem( nItemNum )
 
-   LOCAL lSuccess := .F.
-
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
-      lSuccess := Wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
+      RETURN Wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
-   RETURN lSuccess
+   RETURN .F.
 
 METHOD WvgMenuBar:disableItem( nItemNum )
 
-   LOCAL lSuccess := .F.
-
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
-      lSuccess := Wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
+      RETURN Wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 
-   RETURN lSuccess
+   RETURN .F.
 
 METHOD WvgMenuBar:getItem( nItemNum )
 
@@ -426,23 +420,15 @@ METHOD WvgMenuBar:insItem( nItemNum, aItem )
    RETURN Self
 
 METHOD WvgMenuBar:isItemChecked( nItemNum )
-
    RETURN Wvg_IsMenuItemChecked( ::hMenu, nItemNum - 1 )
 
 METHOD WvgMenuBar:isItemEnabled( nItemNum )
-
    RETURN Wvg_IsMenuItemEnabled( ::hMenu, nItemNum - 1 )
 
 METHOD WvgMenuBar:selectItem( nItemNum )
-
-   IF HB_ISNUMERIC( nItemNum )
-      RETURN .F.
-   ENDIF
-
-   RETURN .T.
+   RETURN ! HB_ISNUMERIC( nItemNum )
 
 METHOD WvgMenuBar:setItem( nItemNum, aItem )
-
    RETURN ::putItem( aItem, nItemNum, .F. )
 
 METHOD WvgMenuBar:beginMenu( xParam )
@@ -551,11 +537,9 @@ METHOD WvgMenu:create( oParent, aPresParams, lVisible )
    RETURN Self
 
 METHOD WvgMenu:getTitle()
-
    RETURN ::title
 
 METHOD WvgMenu:setTitle( cTitle )
-
    RETURN ::title := cTitle
 
 METHOD WvgMenu:Popup( oXbp, aPos, nDefaultItem, nControl )

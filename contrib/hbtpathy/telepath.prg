@@ -218,12 +218,12 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
    nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
    DO WHILE hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND. ;
-         ( nTimeout < 0 .OR. Seconds() < nDone )
+      ( nTimeout < 0 .OR. Seconds() < nDone )
 
-      IF ! tp_idle()
-         FetchChars( nPort )
-      ELSE
+      IF tp_idle()
          EXIT
+      ELSE
+         FetchChars( nPort )
       ENDIF
    ENDDO
 
@@ -323,10 +323,10 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
             EXIT
          ENDIF
 
-         IF ! tp_idle()
-            FetchChars( nPort )
-         ELSE
+         IF tp_idle()
             EXIT
+         ELSE
+            FetchChars( nPort )
          ENDIF
       ENDIF
 
@@ -339,12 +339,10 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
 
    RETURN cRet
 
-/*
-    here's an improvement over original TP... you can "lookfor" a string
-    here rather than just a char.  yay me.
-    of course, if you're using clipper/tp code and you search for a single char it will work
-    the same.
- */
+/* Here's an improvement over original TP... you can "lookfor" a string
+   here rather than just a char.  yay me.
+   of course, if you're using clipper/tp code and you search for a single char it will work
+   the same. */
 FUNCTION tp_lookfor( nPort, cLookfor )
 
    IF ! isopenport( nPort )

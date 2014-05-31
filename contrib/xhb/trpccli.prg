@@ -231,7 +231,7 @@ METHOD Destroy() CLASS TRPCClient
 
    RETURN .T.
 
-METHOD SetEncryption( cKey )
+METHOD SetEncryption( cKey ) CLASS TRPCClient
 
    IF ! Empty( cKey )
       ::bEncrypted := .T.
@@ -258,7 +258,7 @@ METHOD ScanServers( cName ) CLASS TRPCClient
 
    RETURN .F.
 
-METHOD CheckServer( cRemote )
+METHOD CheckServer( cRemote ) CLASS TRPCClient
 
    LOCAL cData, skRemote, nLen, cData2
 
@@ -303,7 +303,7 @@ METHOD ScanFunctions( cFunc, cSerial ) CLASS TRPCClient
 
    RETURN .F.
 
-METHOD StartScan()
+METHOD StartScan() CLASS TRPCClient
 
    // We don't accept sync call without timeout
 
@@ -693,7 +693,7 @@ METHOD SetTimeout( nTime ) CLASS TRPCClient
 
    RETURN .T.
 
-METHOD GetTimeout()
+METHOD GetTimeout() CLASS TRPCClient
 
    LOCAL nRet
 

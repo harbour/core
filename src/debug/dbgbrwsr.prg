@@ -122,7 +122,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
 
    RETURN Self
 
-METHOD Configure()
+METHOD Configure() CLASS HBDbBrowser
 
    ::rowCount := ::nBottom - ::nTop + 1
    IF ::rowPos > ::rowCount
@@ -134,7 +134,7 @@ METHOD Configure()
 
    RETURN Self
 
-METHOD SetColorSpec( cColors )
+METHOD SetColorSpec( cColors ) CLASS HBDbBrowser
 
    IF HB_ISSTRING( cColors )
       ::cColorSpec := cColors
@@ -143,7 +143,7 @@ METHOD SetColorSpec( cColors )
 
    RETURN ::cColorSpec
 
-METHOD MoveCursor( nSkip )
+METHOD MoveCursor( nSkip ) CLASS HBDbBrowser
 
    LOCAL nSkipped
 
@@ -161,7 +161,7 @@ METHOD MoveCursor( nSkip )
 
    RETURN Self
 
-METHOD ForceStable()
+METHOD ForceStable() CLASS HBDbBrowser
 
    LOCAL nRow, nCol, xData, oCol, nColX, nWid, aClr, nClr
 
@@ -205,7 +205,7 @@ METHOD ForceStable()
 
    RETURN Self
 
-METHOD GoTo( nRow )
+METHOD GoTo( nRow ) CLASS HBDbBrowser
 
    LOCAL nOldRow := ::nFirstVisible + ::rowPos - 1
    LOCAL nSkipped := 0
@@ -220,7 +220,7 @@ METHOD GoTo( nRow )
 
    RETURN nSkipped - nOldRow + 1
 
-METHOD GoBottom()
+METHOD GoBottom() CLASS HBDbBrowser
 
    DO WHILE ! ::hitBottom
       ::PageDown()
@@ -228,7 +228,7 @@ METHOD GoBottom()
 
    RETURN Self
 
-METHOD Resize( nTop, nLeft, nBottom, nRight )
+METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbBrowser
 
    LOCAL lResize := .F.
 

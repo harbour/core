@@ -54,7 +54,7 @@
  *              Xbase++ Compatible xbpActiveXControl Class
  *
  *                 Pritpal Bedi  <bedipritpal@hotmail.com>
- *                              08Nov2008
+ *                               20081108
  */
 
 #include "hbclass.ch"
@@ -231,7 +231,7 @@ METHOD WvgActiveXControl:OnError()
 
    RETURN hb_ExecFromArray( ::oOLE, __GetMessage(), hb_AParams() )
 
-METHOD WvgActiveXControl:Destroy()
+METHOD PROCEDURE WvgActiveXControl:Destroy()
 
    IF ! Empty( ::oOLE:__hObj )
       IF wapi_IsWindow( ::pWnd )
@@ -241,7 +241,7 @@ METHOD WvgActiveXControl:Destroy()
       ::hWnd := NIL
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
@@ -252,51 +252,37 @@ METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
    RETURN Self
 
 METHOD WvgActiveXControl:inheritPresParams()
-
-   LOCAL lSuccess := .T.
-
-   RETURN lSuccess
+   RETURN .T.
 
 METHOD WvgActiveXControl:presParamsChanged()
-
    RETURN Self
 
 METHOD WvgActiveXControl:setInputFocus()
-
    RETURN Self
 
 METHOD WvgActiveXControl:subscribeStdEvents()
-
-   RETURN NIL
+   RETURN Self
 
 METHOD WvgActiveXControl:unsubscribeStdEvents()
-
    RETURN Self
 
 METHOD WvgActiveXControl:keyDown()
-
    RETURN Self
 
 METHOD WvgActiveXControl:click()
-
    RETURN Self
 
 METHOD WvgActiveXControl:dblClick()
-
    RETURN Self
 
 METHOD WvgActiveXControl:mouseDown()
-
    RETURN Self
 
 METHOD WvgActiveXControl:mouseUp()
-
    RETURN Self
 
 METHOD WvgActiveXControl:mouseMove()
-
    RETURN Self
 
 METHOD WvgActiveXControl:activate()
-
    RETURN Self

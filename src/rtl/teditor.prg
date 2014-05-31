@@ -473,8 +473,6 @@ METHOD LineColor( nRow ) CLASS HBEditor
 // Handles cursor movements inside text array
 METHOD MoveCursor( nKey ) CLASS HBEditor
 
-   LOCAL lMoveKey := .T.
-
    SWITCH nKey
    CASE K_DOWN
       IF ! ::lEditAllow
@@ -651,11 +649,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       EXIT
 
    OTHERWISE
-      lMoveKey := .F.
-
+      RETURN .F.
    ENDSWITCH
 
-   RETURN lMoveKey
+   RETURN .T.
 
 // Changes insert state and insertion / overstrike mode of editor
 METHOD InsertState( lInsState ) CLASS HBEditor
@@ -941,7 +938,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS HBEditor
 /* -------------------------------------------- */
 
 // Rebuild a long line from multiple short ones (wrapped at soft CR)
-METHOD GetParagraph( nRow )
+METHOD GetParagraph( nRow ) CLASS HBEditor
 
    LOCAL cLine := ""
 
@@ -962,7 +959,7 @@ METHOD GetParagraph( nRow )
 
 // if editing isn't allowed we enter this loop which
 // handles only movement keys and discards all the others
-METHOD BrowseText( nPassedKey )
+METHOD BrowseText( nPassedKey ) CLASS HBEditor
 
    LOCAL nKey
    LOCAL bKeyBlock
@@ -995,7 +992,6 @@ METHOD BrowseText( nPassedKey )
       IF nPassedKey != NIL
          EXIT
       ENDIF
-
    ENDDO
 
    RETURN Self
@@ -1130,22 +1126,17 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
                ENDIF
 
                AAdd( aArray, HBTextLine():New( cSplitLine, .T. ) )
-
             ELSE
-
                // remainder of line is shorter than split point
                cSplitLine := cLine
                AAdd( aArray, HBTextLine():New( cSplitLine, .F. ) )
-
             ENDIF
 
             cLine := Right( cLine, Len( cLine ) - Len( cSplitLine ) )
          ENDDO
-
       ELSE
          AAdd( aArray, HBTextLine():New( cLine, .F. ) )
       ENDIF
-
    ENDDO
 
    RETURN aArray

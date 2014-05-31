@@ -53,7 +53,7 @@
  *                  Xbase++ Compatible xbpWindow Class
  *
  *                 Pritpal Bedi  <bedipritpal@hotmail.com>
- *                              08Nov2008
+ *                               20081108
  */
 
 #include "hbclass.ch"
@@ -316,7 +316,7 @@ METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    RETURN Self
 
-METHOD WvgWindow:destroy()
+METHOD PROCEDURE WvgWindow:destroy()
 
    IF ! Empty( ::oParent )
       ::oParent:removeChild( Self )
@@ -402,7 +402,7 @@ METHOD WvgWindow:destroy()
    ::sl_setDisplayFocus     := NIL
    ::sl_killDisplayFocus    := NIL
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgWindow:SetWindowProcCallback()
 
@@ -411,7 +411,6 @@ METHOD WvgWindow:SetWindowProcCallback()
    RETURN Self
 
 METHOD WvgWindow:captureMouse()
-
    RETURN Self
 
 METHOD WvgWindow:disable()
@@ -442,15 +441,12 @@ METHOD WvgWindow:hide()
    RETURN Self
 
 METHOD WvgWindow:invalidateRect( aRect )
-
    RETURN Wvg_InvalidateRect( ::hWnd, aRect )
 
 METHOD WvgWindow:lockPS()
-
    RETURN Self
 
 METHOD WvgWindow:lockUpdate()
-
    RETURN Self
 
 METHOD WvgWindow:setColorBG( nRGB )
@@ -475,15 +471,12 @@ METHOD WvgWindow:setColorBG( nRGB )
    RETURN Self
 
 METHOD WvgWindow:setModalState()
-
    RETURN Self
 
 METHOD WvgWindow:setPointer()
-
    RETURN Self
 
 METHOD WvgWindow:setTrackPointer()
-
    RETURN Self
 
 METHOD WvgWindow:setPos( aPos, lPaint )
@@ -508,7 +501,6 @@ METHOD WvgWindow:setPos( aPos, lPaint )
    RETURN Self
 
 METHOD WvgWindow:rePosition()    /* This will always be called from HB_GTE_RESIZED message of WVG engine */
-
    RETURN ::setPosAndSize( ::aPos, ::aSize )
 
 METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
@@ -585,27 +577,21 @@ METHOD WvgWindow:show()
    RETURN Self
 
 METHOD WvgWindow:toBack()
-
    RETURN Wvg_SetWindowPosToBack( ::hWnd )
 
 METHOD WvgWindow:toFront()
-
 #if 0
    RETURN Wvg_SetForegroundWindow( ::hWnd )
 #endif
-
    RETURN Wvg_SetWindowPosToTop( ::hWnd )
 
 METHOD WvgWindow:unlockPS()
-
    RETURN Self
 
 METHOD WvgWindow:winDevice()
-
    RETURN Self
 
 METHOD WvgWindow:SetFont()
-
    RETURN Self
 
 METHOD WvgWindow:setFontCompoundName( cFont )
@@ -641,7 +627,6 @@ METHOD WvgWindow:setFontCompoundName( cFont )
    RETURN cOldFont
 
 METHOD WvgWindow:setPresParam()
-
    RETURN Self
 
 METHOD WvgWindow:currentPos()
@@ -659,15 +644,12 @@ METHOD WvgWindow:currentSize()
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
 METHOD WvgWindow:getHWND()
-
    RETURN ::hWnd
 
 METHOD WvgWindow:getModalState()
-
    RETURN Self
 
 METHOD WvgWindow:hasInputFocus()
-
    RETURN Self
 
 METHOD WvgWindow:enter( xParam )
@@ -1135,7 +1117,6 @@ METHOD WvgWindow:setFocus()
    RETURN Self
 
 METHOD WvgWindow:sendMessage( nMessage, nlParam, nwParam )
-
    RETURN Wvg_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
 METHOD WvgWindow:findObjectByHandle( hWnd )

@@ -126,11 +126,10 @@ STATIC FUNCTION whitespace_cb( node, where )
       RETURN hb_eol()
    ENDIF
 
-   RETURN NIL /* Return NIL for no added whitespace... */
+   RETURN NIL  /* Return NIL for no added whitespace... */
 
 STATIC FUNCTION type_cb( node )
 
-   LOCAL nResult
    LOCAL cType
 
    IF Empty( cType := mxmlElementGetAttr( node, "type" ) )
@@ -140,12 +139,7 @@ STATIC FUNCTION type_cb( node )
    SWITCH Lower( cType )
    CASE "custom"               /* don't forget */
    CASE "hash"
-      nResult := MXML_CUSTOM
-      EXIT
-
-   OTHERWISE
-      nResult := MXML_TEXT
-      EXIT
+      RETURN MXML_CUSTOM
    ENDSWITCH
 
-   RETURN nResult
+   RETURN MXML_TEXT

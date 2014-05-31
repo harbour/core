@@ -274,7 +274,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
    ENDIF
 
    IF ::cValue != NIL .AND. ;
-         hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), ::cValue == cValue } ) == 0
+      hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), ::cValue == cValue } ) == 0
       RETURN .F.
    ENDIF
 
@@ -422,9 +422,8 @@ METHOD FindFirstRegex( cName, cAttrib, cValue, cData ) CLASS TXMLDocument
 
 METHOD GetContext() CLASS TXMLDocument
 
-   LOCAL oDoc
+   LOCAL oDoc := TXMLDocument():New()
 
-   oDoc := TXMLDocument():New()
    oDoc:oRoot := ::oIterator:GetNode()
 
    RETURN oDoc

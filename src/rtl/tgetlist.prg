@@ -174,7 +174,7 @@ METHOD ReadModal() CLASS HBGetList
    ::nReadProcLine := ProcLine( 2 )
 
 #ifdef HB_COMPAT_C53
-   ::nPos := ::Settle( iif( HB_ISNUMERIC( nPos ), nPos, 0 ), .T. )
+   ::nPos := ::Settle( hb_defaultValue( nPos, 0 ), .T. )
 
    IF ( lMsgFlag := HB_ISNUMERIC( nMsgRow ) .AND. ;
                     HB_ISNUMERIC( nMsgLeft ) .AND. ;
