@@ -243,7 +243,6 @@ METHOD Edit() CLASS xhb_TMemoEditor
 
 // I come here if I have an unknown key and it is not a configurable key
 // if there is an user function I leave to it its handling
-//
 METHOD KeyboardHook( nKey ) CLASS xhb_TMemoEditor
 
    LOCAL nUdfReturn
@@ -261,8 +260,8 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
                    A little trick to be able to handle a nUdfReturn with value of NIL
                    like it had a value of ME_DEFAULT */
 
-   __defaultNIL( @nUdfReturn, ME_DEFAULT )
-   __defaultNIL( @lEdited, .F. )
+   hb_default( @nUdfReturn, ME_DEFAULT )
+   hb_default( @lEdited, .F. )
 
    // I won't reach this point during ME_INIT since ME_DEFAULT ends
    // initialization phase of MemoEdit()
@@ -325,8 +324,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
 
    OTHERWISE            // ME_UNKEY
 
-      /* 2006-08-02 - E.F. - (NG) Process requested action corresponding to
-                             key value. */
+      /* 2006-08-02 - E.F. - (NG) Process requested action corresponding to key value. */
       nKey := nUdfReturn
 
 #ifdef HB_EXT_INKEY
@@ -362,7 +360,6 @@ METHOD CallUdf( nMode ) CLASS xhb_TMemoEditor
    RETURN xResult
 
 // Prg Level Call of MemoEdit()
-
 FUNCTION xhb_MemoEdit( ;
       cString, ;
       nTop, nLeft, ;

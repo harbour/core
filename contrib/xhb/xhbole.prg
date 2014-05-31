@@ -89,9 +89,9 @@ STATIC FUNCTION s_oleOpError( cOperator, ... )
       "++" => 1086, ;
       "--" => 1087, ;
       "^"  => 1088 }
-   LOCAL oErr
 
-   oErr := ErrorNew()
+   LOCAL oErr := ErrorNew()
+
    oErr:Args          := { ... }
    oErr:CanDefault    := .F.
    oErr:CanRetry      := .F.
@@ -107,9 +107,8 @@ STATIC FUNCTION s_oleOpError( cOperator, ... )
 
 STATIC FUNCTION s_oleError( nGenCode, cDescript )
 
-   LOCAL oErr
+   LOCAL oErr := ErrorNew()
 
-   oErr := ErrorNew()
    oErr:Args          := hb_AParams( 1 )
    oErr:CanDefault    := .F.
    oErr:CanRetry      := .F.
@@ -181,12 +180,11 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOleAuto
    LOCAL hOle
 
    IF HB_ISSTRING( xOle )
-      hOle := __oleCreateObject( xOle,, cLicense )
-      IF ! Empty( hOle )
+      IF Empty( hOle := __oleCreateObject( xOle,, cLicense ) )
+         RETURN Throw( s_oleError() )
+      ELSE
          ::__hObj := hOle
          ::cClassName := xOle
-      ELSE
-         RETURN Throw( s_oleError() )
       ENDIF
    ELSE
       ::hObj := xOle
@@ -204,10 +202,10 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOleAuto
 METHOD GetActiveObject( cClass ) CLASS TOleAuto
 
    IF HB_ISSTRING( cClass )
-      IF ! Empty( ::__hObj := __oleGetActiveObject( cClass ) )
-         ::cClassName := cClass
-      ELSE
+      IF Empty( ::__hObj := __oleGetActiveObject( cClass ) )
          RETURN Throw( s_oleError() )
+      ELSE
+         ::cClassName := cClass
       ENDIF
    ELSE
       wapi_MessageBox( , "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", ;
@@ -234,27 +232,16 @@ METHOD _OleValue( xValue ) CLASS TOleAuto
    RETURN xRet
 
 OLE OPERATOR "==" METHOD OleValueExactEqual WITH xArg IS ::OleValue == xArg
-
 OLE OPERATOR "=" METHOD OleValueEqual WITH xArg IS ::OleValue = xArg
-
 OLE OPERATOR "!=" METHOD OleValueNotEqual WITH xArg IS ::OleValue != xArg /* Intentionally using != operator */
-
 OLE OPERATOR "+" METHOD OleValuePlus WITH xArg IS ::OleValue + xArg
-
 OLE OPERATOR "-" METHOD OleValueMinus WITH xArg IS ::OleValue - xArg
-
 OLE OPERATOR "*" METHOD OleValueMultiply WITH xArg IS ::OleValue * xArg
-
 OLE OPERATOR "/" METHOD OleValueDivide WITH xArg IS ::OleValue / xArg
-
 OLE OPERATOR "%" METHOD OleValueModulus WITH xArg IS ::OleValue % xArg
-
 OLE OPERATOR "^" METHOD OleValuePower WITH xArg IS ::OleValue ^ xArg
-
 OLE OPERATOR "++" METHOD OleValueInc IS ++::OleValue
-
 OLE OPERATOR "--" METHOD OleValueDec IS --::OleValue
-
 
 FUNCTION CreateObject( xOle, cLicense )
    RETURN TOleAuto():New( xOle,, cLicense )
