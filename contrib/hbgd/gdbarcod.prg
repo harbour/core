@@ -303,9 +303,7 @@ METHOD PROCEDURE DrawText13() CLASS GDBarCode
 
 METHOD PROCEDURE Draw8( cText ) CLASS GDBarCode
 
-   LOCAL lError := .F.
    LOCAL ii, jj
-
 #if 0
    LOCAL xParity
 #endif
@@ -315,11 +313,7 @@ METHOD PROCEDURE Draw8( cText ) CLASS GDBarCode
    ::Settext( cText )
 
    // Valid characters
-   IF ! ::CheckCode()
-      lError := .T.
-   ENDIF
-
-   IF ! lError
+   IF ::CheckCode()
 
       ::positionX := iif( ::textfont == 0, 0, 10 )
 
@@ -592,16 +586,11 @@ METHOD PROCEDURE DrawI25( cText ) CLASS GDBarCode
 
 METHOD PROCEDURE GenCodei25() CLASS GDBarCode
 
-   LOCAL lError := .F.
    LOCAL bc_string
 
    IF ( Len( ::text ) % 2 ) != 0
       ::DrawError( "Invalid barcode length" )
-      lError := .T.
-   ENDIF
-
-   IF ! lError
-
+   ELSE
       bc_string := Upper( ::text )
 
       // Encode itemId to I25 barcode standard.

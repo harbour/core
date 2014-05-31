@@ -1580,11 +1580,10 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE "if"
-            xValue := iif( aInstr[ 2 ] $ aData, aData[ aInstr[ 2 ] ], NIL )
-            IF ! Empty( xValue )
-               cRet += parse_data( aData, aInstr[ 3 ], hConfig )
-            ELSE
+            IF Empty( iif( aInstr[ 2 ] $ aData, aData[ aInstr[ 2 ] ], NIL ) )
                cRet += parse_data( aData, aInstr[ 4 ], hConfig )
+            ELSE
+               cRet += parse_data( aData, aInstr[ 3 ], hConfig )
             ENDIF
             EXIT
 
