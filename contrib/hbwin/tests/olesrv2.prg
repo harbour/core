@@ -13,9 +13,8 @@
 
 PROCEDURE DllMain()
 
-   LOCAL hAction
+   LOCAL hAction := { => }
 
-   hAction := { => }
    hb_HCaseMatch( hAction, .F. )
    hAction[ "DATE" ]     := @Date()          // DISPID=1
    hAction[ "TIME" ]     := @Time()          // DISPID=2

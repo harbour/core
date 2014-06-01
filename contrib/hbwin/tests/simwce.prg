@@ -34,17 +34,17 @@ PROCEDURE Main()
    AEval( a, {| n | Alert( "Phone: " + n[ 1 ] + hb_eol() + "Name: " + n[ 2 ] + hb_eol() + "Addr. Type: " + hb_ntos( n[ 3 ] ) + hb_eol() + "Plan Type: " + hb_ntos( n[ 4 ] ) ) } )
 #endif
 
-   IF ! o:lGetSimPhoneEntry( 1, SIM_PBSTORAGE_SIM, @a )
-      Alert( "Pos 1 error" )
-   ELSE
+   IF o:lGetSimPhoneEntry( 1, SIM_PBSTORAGE_SIM, @a )
       Alert( "ValType() -> " + ValType( a ) + " Len() -> " + hb_ntos( Len( a ) ), a[ 1 ][ 1 ] )
       AEval( a, {| n | Alert( "Phone: " + n[ 1 ] + hb_eol() + "Name: " + n[ 2 ] + hb_eol() + "Addr. Type: " + hb_ntos( n[ 3 ] ) + hb_eol() + "Plan Type: " + hb_ntos( n[ 4 ] ), "pos 1" ) } )
+   ELSE
+      Alert( "Pos 1 error" )
    ENDIF
 
-   IF ! o:lGetSimPhoneEntry( 110, SIM_PBSTORAGE_SIM, @a )
-      Alert( "Pos 123 error" )
-   ELSE
+   IF o:lGetSimPhoneEntry( 110, SIM_PBSTORAGE_SIM, @a )
       AEval( a, {| n | Alert( "Phone: " + n[ 1 ] + hb_eol() + "Name: " + n[ 2 ] + hb_eol() + "Addr. Type: " + hb_ntos( n[ 3 ] ) + hb_eol() + "Plan Type: " + hb_ntos( n[ 4 ] ), "pos 110" ) } )
+   ELSE
+      Alert( "Pos 123 error" )
    ENDIF
 
    IF ! o:lSetSimPhoneEntry( 80, SIM_PBSTORAGE_SIM, "660099696", "pepeluis", SIM_NUMPLAN_UNKNOWN, SIM_ADDRTYPE_NATIONAL )
@@ -54,10 +54,10 @@ PROCEDURE Main()
       Alert( "Error deleting pos 80 Error => " + hb_ntos( o:nLastError ) )
    ENDIF
 
-   IF ! o:lDeInitialize()
-      Alert( "Not de-initialized SIM API. Error: " + hb_ntos( o:nLastError ) )
-   ELSE
+   IF o:lDeInitialize()
       Alert( "API SIM deinitialized!!!" )
+   ELSE
+      Alert( "Not de-initialized SIM API. Error: " + hb_ntos( o:nLastError ) )
    ENDIF
 
    o:End()

@@ -50,11 +50,10 @@
 
 PROCEDURE Main( cPortName )
 
-   LOCAL oWinPort
    LOCAL cString := "ATE0" + Chr( 13 ) + "ATI3" + Chr( 13 )
    LOCAL nResult
 
-   oWinPort := win_com():Init( hb_defaultValue( cPortName, "COM1" ), ;
+   LOCAL oWinPort := win_com():Init( hb_defaultValue( cPortName, "COM1" ), ;
       WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )
 
    IF oWinPort:Open()

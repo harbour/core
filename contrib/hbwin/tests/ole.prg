@@ -444,7 +444,7 @@ STATIC PROCEDURE Exm_SOAP()
 
    LOCAL oSoapClient
 
-   IF ! Empty( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) )
+   IF ( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) ) != NIL
 
       oSoapClient:msSoapInit( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
 
@@ -460,7 +460,7 @@ STATIC PROCEDURE Exm_PocketSOAP()
    LOCAL oHttp := win_oleCreateObject( "PocketSOAP.HTTPTransport.2" )
    LOCAL oEnvelope := win_oleCreateObject( "PocketSOAP.Envelope.2" )
 
-   IF ! Empty( oHttp ) .OR. ! Empty( oEnvelope )
+   IF oHttp != NIL .AND. oEnvelope != NIL
 
       oEnvelope:EncodingStyle := ""
       oEnvelope:SetMethod( "InvertStringCase", "http://www.dataaccess.com/webservicesserver/" )
