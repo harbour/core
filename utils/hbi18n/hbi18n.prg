@@ -306,17 +306,15 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
 
 STATIC PROCEDURE GenHBL( aFiles, cFileOut, lEmpty )
 
-   LOCAL pI18N
-
    IF Empty( cFileOut )
       cFileOut := hb_FNameExtSet( aFiles[ 1 ], ".hbl" )
    ELSE
       cFileOut := hb_FNameExtSetDef( cFileOut, ".hbl" )
    ENDIF
 
-   pI18N := __i18n_hashTable( __i18n_potArrayToHash( LoadFiles( aFiles ), ;
-      lEmpty ) )
-   IF ! hb_MemoWrit( cFileOut, hb_i18n_SaveTable( pI18N ) )
+   IF ! hb_MemoWrit( cFileOut, hb_i18n_SaveTable( ;
+      __i18n_hashTable( __i18n_potArrayToHash( LoadFiles( aFiles ), lEmpty ) ) ) )
+
       ErrorMsg( hb_StrFormat( I_( "cannot create file: %1$s" ), cFileOut ) )
    ENDIF
 
