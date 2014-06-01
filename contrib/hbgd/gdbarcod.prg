@@ -61,28 +61,23 @@ CREATE CLASS GDBarCode FROM GDBar
    VAR nType
 
    // EAN-13 ISBN
-
    METHOD New( nTypeCode ) CONSTRUCTOR
    METHOD Draw( cText )
    METHOD Draw13( cText )
    METHOD DrawText13()
 
    // EAN-8
-
    METHOD Draw8( cText )
    METHOD DrawText8()
 
    // EAN-128
-
    METHOD Draw128( cText, cModeCode )
 
    // I25
-
    METHOD DrawI25( cText )
    METHOD GenCodei25()
 
    // Utils
-
    METHOD FindCharCode( cString, cChar )
    METHOD MixCode( value )
    METHOD Findcode( uval )
@@ -136,18 +131,18 @@ METHOD New( nTypeCode ) CLASS GDBarCode
       ::keys := { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
 
       ::aCode := { ;
-         "10001", ;   // 1 digit
-         "01001", ;   // 2 digit
-         "11000", ;   // 3 digit
-         "00101", ;   // 4 digit
-         "10100", ;   // 5 digit
-         "01100", ;   // 6 digit
-         "00011", ;   // 7 digit
-         "10010", ;   // 8 digit
-         "01010", ;   // 9 digit
-         "00110", ;   // 0 digit
-         "10000", ;   // pre-amble
-         "100" }      // post-amble
+         "10001", ;  // 1 digit
+         "01001", ;  // 2 digit
+         "11000", ;  // 3 digit
+         "00101", ;  // 4 digit
+         "10100", ;  // 5 digit
+         "01100", ;  // 6 digit
+         "00011", ;  // 7 digit
+         "10010", ;  // 8 digit
+         "01010", ;  // 9 digit
+         "00110", ;  // 0 digit
+         "10000", ;  // pre-amble
+         "100" }     // post-amble
 
       EXIT
 
@@ -173,20 +168,18 @@ METHOD PROCEDURE Draw( cText ) CLASS GDBarCode
 
 METHOD PROCEDURE Draw13( cText ) CLASS GDBarCode
 
-   LOCAL lError  := .F.
-   LOCAL nChkSum := 0
-   LOCAL nChk    := 0
+   LOCAL lError
+   LOCAL nChkSum
+   LOCAL nChk
    LOCAL ii, jj
    LOCAL xParity
 
    ::Settext( cText )
 
    // Valid characters
-   IF ! ::CheckCode()
-      lError := .T.
-   ENDIF
+   IF ::CheckCode()
 
-   IF ! lError
+      lError := .F.
 
       IF ::book .AND. Len( ::text ) != 10
          ::DrawError( "Must contains 10 chars if ISBN is true." )
@@ -219,6 +212,9 @@ METHOD PROCEDURE Draw13( cText ) CLASS GDBarCode
          // start code
          ::maxHeight -= 9
 
+         nChkSum := 0
+         nChk    := 0
+
          FOR ii := 1 TO Len( ::text )
 
             // Calculate check digit
@@ -243,17 +239,18 @@ METHOD PROCEDURE Draw13( cText ) CLASS GDBarCode
                jj := 10
             ENDIF
 
-            IF ii > 1 .AND. ii < 8
+            DO CASE
+            CASE ii > 1 .AND. ii < 8
 
                ::DrawSingleBar( iif( SubStr( xParity, ii - 1, 1 ) == "E", ;
                   ::LeftHand_Even[ jj ], ;
                   ::LeftHand_Odd[ jj ] ) )
 
-            ELSEIF ii > 1 .AND. ii >= 8
+            CASE ii > 1 .AND. ii >= 8
 
                ::DrawSingleBar( ::Right_Hand[ jj ] )
 
-            ENDIF
+            ENDCASE
          NEXT
 
          jj := nChkSum % 10
@@ -290,11 +287,9 @@ METHOD PROCEDURE Draw13( cText ) CLASS GDBarCode
 METHOD PROCEDURE DrawText13() CLASS GDBarCode
 
    IF ::textfont != 0
-
       ::Say( 2, ::maxHeight - ( ::GetFontHeight() / 2 ), Left( ::text, 1 ), ::FillColor )
       ::Say( ( 10 + ( 3 * ::res + 48 * ::res ) / 2 ) - ( ::GetFontWidth() * ( 6 / 2 ) ), ::maxHeight + 1, SubStr( ::text, 2, 6 ), ::FillColor )
       ::Say( 10 + 46 * ::res + ( 3 * ::res + 46 * ::res ) / 2 - ::GetFontWidth() * ( 6 / 2 ), ::maxHeight + 1, SubStr( ::text, 8, 6 ), ::FillColor )
-
    ENDIF
 
    ::lastY := ::maxHeight + ::GetFontHeight()
@@ -304,9 +299,6 @@ METHOD PROCEDURE DrawText13() CLASS GDBarCode
 METHOD PROCEDURE Draw8( cText ) CLASS GDBarCode
 
    LOCAL ii, jj
-#if 0
-   LOCAL xParity
-#endif
    LOCAL nChkSum := 0
    LOCAL nChk    := 0
 
@@ -316,10 +308,6 @@ METHOD PROCEDURE Draw8( cText ) CLASS GDBarCode
    IF ::CheckCode()
 
       ::positionX := iif( ::textfont == 0, 0, 10 )
-
-#if 0
-      xParity := ::Parity[ 7 ]
-#endif
 
       // First Bar
       ::positionX := 10
@@ -351,12 +339,12 @@ METHOD PROCEDURE Draw8( cText ) CLASS GDBarCode
             jj := 10
          ENDIF
 
-         IF ii < 5
+         DO CASE
+         CASE ii < 5
             ::DrawSingleBar( ::LeftHand_Odd[ jj ] )
-         ELSEIF ii >= 5
+         CASE ii >= 5
             ::DrawSingleBar( ::Right_Hand[ jj ] )
-         ENDIF
-
+         ENDCASE
       NEXT
 
       jj := nChkSum % 10
@@ -395,23 +383,7 @@ METHOD PROCEDURE DrawText8() CLASS GDBarCode
    RETURN
 
 METHOD FindCharCode( cString, cChar ) CLASS GDBarCode
-
-   LOCAL i
-   LOCAL nC   := 0
-   LOCAL nRet := 0
-
-   FOR i := 1 TO Len( cString )
-
-      IF SubStr( cString, i, 1 ) == cChar
-         ++nC
-         nRet := nC
-         EXIT
-      ENDIF
-
-      ++nC
-   NEXT
-
-   RETURN nRet
+   RETURN At( cChar, cString )
 
 METHOD PROCEDURE Draw128( cText, cModeCode ) CLASS GDBarCode
 
@@ -471,7 +443,7 @@ METHOD PROCEDURE Draw128( cText, cModeCode ) CLASS GDBarCode
       IF Empty( cModeCode )
 
          IF Str( Val( ::text ), Len( ::text ) ) == ::text
-            lTypeCodeC :=  .T.
+            lTypeCodeC := .T.
             cConc      := ::aCode[ STARTC ]
             nSum       := STARTB
          ELSE
@@ -569,7 +541,6 @@ METHOD PROCEDURE Draw128( cText, cModeCode ) CLASS GDBarCode
          ::Settext( cText )
          ::DrawText()
       ENDIF
-
    ENDIF
 
    RETURN
@@ -592,12 +563,10 @@ METHOD PROCEDURE GenCodei25() CLASS GDBarCode
       bc_string := Upper( ::text )
 
       // Encode itemId to I25 barcode standard.
-
       bc_string := ::MixCode( bc_string )
 
       // Adding Start and Stop Pattern
-
-      ::DrawSingleI25( ::acode[ 11 ] + bc_string + ::acode[ 12 ]  )
+      ::DrawSingleI25( ::aCode[ 11 ] + bc_string + ::aCode[ 12 ]  )
 
       ::lastY := ::maxHeight
 
@@ -609,43 +578,35 @@ METHOD PROCEDURE GenCodei25() CLASS GDBarCode
 
    RETURN
 
-/* It makes mixe of the value to be codified by the Bar code I25 */
-
+/* It makes mix of the value to be codified by the Bar code I25 */
 METHOD MixCode( value ) CLASS GDBarCode
 
-   LOCAL l, i, k
-   LOCAL s
-   LOCAL bar_string := ""
-   LOCAL cFirst
-   LOCAL cNext
+   LOCAL i, k, s
+   LOCAL cFirst, cNext
 
-   l := Len( value )
+   LOCAL l := Len( value )
 
    IF ( l % 2 ) != 0
       ::DrawError( "Code cannot be intercalated: Invalid length (mix)" )
-   ELSE
-      i := 1
-      s := ""
-
-      DO WHILE i < l
-
-         cFirst := ::Findcode( SubStr( value, i, 1 ) )
-         cNext  := ::Findcode( SubStr( value, i + 1, 1 ) )
-
-         // Mix of the codes
-         // NNNNWNNWWW
-         //  N N N W W
-         FOR k := 1 TO 5
-            s += SubStr( cFirst, k, 1 ) + SubStr( cNext, k, 1 )
-         NEXT
-
-         i += 2
-      ENDDO
-
-      bar_string :=  s
+      RETURN ""
    ENDIF
 
-   RETURN bar_string
+   s := ""
+
+   FOR i := 1 TO l STEP 2
+
+      cFirst := ::Findcode( SubStr( value, i, 1 ) )
+      cNext  := ::Findcode( SubStr( value, i + 1, 1 ) )
+
+      // Mix of the codes
+      // NNNNWNNWWW
+      //  N N N W W
+      FOR k := 1 TO 5
+         s += SubStr( cFirst, k, 1 ) + SubStr( cNext, k, 1 )
+      NEXT
+   NEXT
+
+   RETURN s
 
 METHOD Findcode( uVal ) CLASS GDBarCode
-   RETURN ::acode[ AScan( ::keys, {| x | hb_LeftEq( x, uVal ) } ) ]
+   RETURN ::aCode[ AScan( ::keys, {| x | hb_LeftEq( x, uVal ) } ) ]

@@ -184,7 +184,7 @@ METHOD PieChart() CLASS GDChart
          ::SetTile( pTile )
          colorp := gdTiled
       ELSEIF HB_ISARRAY( colorp )
-         colorp := ::SetColor( colorp[ 1 ], colorp[ 2 ], colorp[ 3 ] )
+         colorp := ::SetColor( hb_ArrayToParams( colorp ) )
       ENDIF
       IF lFilled
          ::Arc( nPosX, nPosY, nWidth, nWidth, nDegree, nDegree + nDim, .T., colorp, gdPie )
@@ -364,7 +364,7 @@ METHOD VerticalBarChart() CLASS GDChart
          ::SetTile( pTile )
          colorp := gdTiled
       ELSEIF HB_ISARRAY( colorp )
-         colorp := ::SetColor( colorp[ 1 ], colorp[ 2 ], colorp[ 3 ] )
+         colorp := ::SetColor( hb_ArrayToParams( colorp ) )
       ENDIF
       ::Rectangle( nPosX + nBorder, ::Height() - ( nPosY + nDim ), nPosX + nSize - nBorder, ::Height() - nPosY, lFilled, colorp )
 
@@ -520,7 +520,7 @@ METHOD HorizontalBarChart() CLASS GDChart
          ::SetTile( pTile )
          colorp := gdTiled
       ELSEIF HB_ISARRAY( colorp )
-         colorp := ::SetColor( colorp[ 1 ], colorp[ 2 ], colorp[ 3 ] )
+         colorp := ::SetColor( hb_ArrayToParams( colorp ) )
       ENDIF
       ::Rectangle( nPosX, nPosY + nBorder, nPosX + nDim,  nPosY + nSize - nBorder, lFilled, colorp )
 
@@ -715,7 +715,7 @@ METHOD LineChart() CLASS GDChart
          ::SetTile( pTile )
          colorp := gdTiled
       ELSEIF HB_ISARRAY( colorp )
-         colorp := ::SetColor( colorp[ 1 ], colorp[ 2 ], colorp[ 3 ] )
+         colorp := ::SetColor( hb_ArrayToParams( colorp ) )
       ENDIF
       AAdd( aPoints, { nPosX, ::Height() - ( nPosY + nDim ) } )
 

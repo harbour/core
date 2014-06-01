@@ -60,7 +60,7 @@
 
 CREATE CLASS GDBar FROM GDImage
 
-   // class attributes
+   // Class attributes
    VAR positionX      AS NUMERIC INIT 4
    VAR positionY      AS NUMERIC
    VAR maxHeight      AS NUMERIC INIT 25
@@ -83,7 +83,7 @@ CREATE CLASS GDBar FROM GDImage
    VAR KeysModeB      AS CHARACTER
    VAR KeysModeC      AS ARRAY
 
-   // image attributes
+   // Image attributes
    VAR res            AS NUMERIC
    VAR textfont       AS NUMERIC
    VAR TEXT           AS CHARACTER
@@ -95,8 +95,7 @@ CREATE CLASS GDBar FROM GDImage
    VAR lDrawValue     AS LOGICAL INIT .T.
 
    // Methods
-
-   METHOD CreateBar( sx, sy, filename, cColor )
+   METHOD CreateBar( sx, sy, filename, aColor )
    METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue )
    METHOD Allocate()
    METHOD DrawError( ptext )
@@ -112,28 +111,26 @@ CREATE CLASS GDBar FROM GDImage
 
 ENDCLASS
 
-METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
+METHOD CreateBar( sx, sy, filename, aColor ) CLASS GDBar
 
    ::Create( sx, sy )
 
-   hb_default( @cColor, { 255, 255, 255 } )
-
-   ::SetColor( cColor[ 1 ], cColor[ 2 ], cColor[ 3 ] )
+   ::SetColor( hb_ArrayToParams( hb_defaultValue( aColor, { 255, 255, 255 } ) ) )
 
    ::error     := 0
    ::positionY := 0
    ::imWidth   := sx
 
-   IF ! Empty( filename )
+   IF HB_ISSTRING( filename ) .AND. ! Empty( filename )
       ::filename := filename
    ENDIF
 
-   ::FillColor := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
-   ::BackColor := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
+   ::FillColor := ::SetColor( hb_ArrayToParams( ::color_f ) )
+   ::BackColor := ::SetColor( hb_ArrayToParams( ::color_b ) )
 
    ::Setfont( "Arial" )
 
-   // configures Fontes
+   // configure font
    IF ::textfont != NIL
       SWITCH ::textfont
       CASE 1; ::SetFontSmall(); EXIT
@@ -146,8 +143,7 @@ METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
 
    ::SetFontPitch( ::textfont )
 
-   // always restores
-   ::maxHeight := ::maxHDefa
+   ::maxHeight := ::maxHDefa  // always restores
 
    RETURN Self
 
@@ -172,26 +168,23 @@ METHOD PROCEDURE SetText( ptext ) CLASS GDBar
 
 METHOD PROCEDURE ResetColor() CLASS GDBar
 
-   ::FillColor := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
-   ::BackColor := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
+   ::FillColor := ::SetColor( hb_ArrayToParams( ::color_f ) )
+   ::BackColor := ::SetColor( hb_ArrayToParams( ::color_b ) )
 
    RETURN
 
 METHOD Allocate() CLASS GDBar
-   RETURN ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
+   RETURN ::SetColor( hb_ArrayToParams( ::color_b ) )
 
 METHOD PROCEDURE DrawSingleBar( pcode ) CLASS GDBar
 
-   LOCAL i
-   LOCAL j
+   LOCAL i, j
 
    FOR j := 1 TO Len( pcode )
-
       FOR i := 1 TO ::res
          ::Line( ::positionX + i, ::positionY, ::positionX + i, ::positionY + ::maxHeight, ;
             iif( SubStr( pcode, j, 1 ) $ "0", ::BackColor, ::FillColor  ) )
       NEXT
-
       ::NextX()
    NEXT
 
@@ -200,9 +193,6 @@ METHOD PROCEDURE DrawSingleBar( pcode ) CLASS GDBar
 METHOD PROCEDURE DrawSingleI25( pcode ) CLASS GDBar
 
    LOCAL j
-
-   LOCAL widthSlimBar := 1
-   LOCAL widthFatBar  := 3
 
    LOCAL imgBar
    LOCAL imgWid
@@ -214,7 +204,7 @@ METHOD PROCEDURE DrawSingleI25( pcode ) CLASS GDBar
    FOR j := 1 TO Len( pcode )
 
       imgBar := iif( j % 2 == 0, ::FillColor, ::BackColor )
-      imgWid := iif( SubStr( pcode, j, 1 ) == "0", widthSlimBar, widthFatBar )
+      imgWid := iif( SubStr( pcode, j, 1 ) == "0", 1 /* Slim Bar */, 3 /* widthFatBar */ )
 
       end_y := ::maxHeight
 
@@ -239,11 +229,7 @@ METHOD PROCEDURE DrawError( ptext ) CLASS GDBar
 
 METHOD PROCEDURE nextX( lI25 ) CLASS GDBar
 
-   IF hb_defaultValue( li25, .F. )
-      ::positionX++
-   ELSE
-      ::positionX += ::res
-   ENDIF
+   ::positionX += iif( hb_defaultValue( li25, .F. ), 1, ::res )
 
    RETURN
 

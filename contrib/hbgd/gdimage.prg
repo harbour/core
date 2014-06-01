@@ -319,10 +319,9 @@ METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
 
 METHOD OpenPolygon( aPoints, color ) CLASS GDImage
 
-   hb_default( @aPoints, ::aPoints )
    __defaultNIL( @color, ::pColor )
 
-   gdImageOpenPolygon( ::pImage, aPoints, color )
+   gdImageOpenPolygon( ::pImage, hb_defaultValue( aPoints, ::aPoints ), color )
 
    RETURN Self
 
@@ -341,10 +340,9 @@ METHOD Rectangle( x1, y1, x2, y2, lFilled, color ) CLASS GDImage
 METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, color, nStyle ) CLASS GDImage
 
    __defaultNIL( @color, ::pColor )
-   hb_default( @nStyle, gdArc )
 
    IF hb_defaultValue( lFilled, .F. )
-      gdImageFilledArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color, nStyle )
+      gdImageFilledArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color, hb_defaultValue( nStyle, gdArc ) )
    ELSE
       gdImageArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color )
    ENDIF
@@ -386,12 +384,8 @@ METHOD Destroy() CLASS GDImage
 
 METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX     , 0 )
-   hb_default( @nSrcY     , 0 )
-   hb_default( @nWidth    , ::Width() )
-   hb_default( @nHeight   , ::Height() )
-   hb_default( @nDstX     , 0 )
-   hb_default( @nDstY     , 0 )
+   hb_default( @nWidth , ::Width() )
+   hb_default( @nHeight, ::Height() )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -401,18 +395,12 @@ METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage ) CLASS GDI
       ENDIF
    ENDIF
 
-   gdImageCopy( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight )
+   gdImageCopy( oDestImage:pImage, ::pImage, hb_defaultValue( nDstX, 0 ), hb_defaultValue( nDstY, 0 ), hb_defaultValue( nSrcX, 0 ), hb_defaultValue( nSrcY, 0 ), nWidth, nHeight )
 
    RETURN oDestImage
 
 METHOD CopyResized( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX     , 0 )
-   hb_default( @nSrcY     , 0 )
-   hb_default( @nSrcWidth , ::Width() )
-   hb_default( @nSrcHeight, ::Height() )
-   hb_default( @nDstX     , 0 )
-   hb_default( @nDstY     , 0 )
    hb_default( @nDstWidth , ::Width() )
    hb_default( @nDstHeight, ::Height() )
 
@@ -424,20 +412,21 @@ METHOD CopyResized( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth
       ENDIF
    ENDIF
 
-   gdImageCopyResized( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   gdImageCopyResized( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, 0 ), ;
+      hb_defaultValue( nDstY, 0 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nDstWidth, nDstHeight, ;
+      hb_defaultValue( nSrcWidth, ::Width() ), ;
+      hb_defaultValue( nSrcHeight, ::Height() ) )
 
    RETURN oDestImage
 
 METHOD CopyResampled( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nSrcWidth  , ::Width() )
-   hb_default( @nSrcHeight , ::Height() )
-   hb_default( @nDstX      , 0 )
-   hb_default( @nDstY      , 0 )
-   hb_default( @nDstWidth  , ::Width() )
-   hb_default( @nDstHeight , ::Height() )
+   hb_default( @nDstWidth , ::Width() )
+   hb_default( @nDstHeight, ::Height() )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -447,19 +436,21 @@ METHOD CopyResampled( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWid
       ENDIF
    ENDIF
 
-   gdImageCopyResampled( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   gdImageCopyResampled( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, 0 ), ;
+      hb_defaultValue( nDstY, 0 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nDstWidth, nDstHeight, ;
+      hb_defaultValue( nSrcWidth, ::Width() ), ;
+      hb_defaultValue( nSrcHeight, ::Height() ) )
 
    RETURN oDestImage
 
 METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nWidth     , ::Width )
-   hb_default( @nHeight    , ::Height )
-   hb_default( @nDstX      , nWidth / 2 )
-   hb_default( @nDstY      , nHeight / 2 )
-   hb_default( @nAngle     , 90 )
+   hb_default( @nWidth , ::Width )
+   hb_default( @nHeight, ::Height )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -469,19 +460,20 @@ METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestIm
       ENDIF
    ENDIF
 
-   gdImageCopyRotated( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nAngle )
+   gdImageCopyRotated( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, nWidth / 2 ), ;
+      hb_defaultValue( nDstY, nHeight / 2 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nWidth, nHeight, ;
+      hb_defaultValue( nAngle, 90 ) )
 
    RETURN oDestImage
 
 METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nWidth     , ::Width )
-   hb_default( @nHeight    , ::Height )
-   hb_default( @nDstX      , 0 )
-   hb_default( @nDstY      , 0 )
-   hb_default( @nPerc      , 100 )
+   hb_default( @nWidth , ::Width )
+   hb_default( @nHeight, ::Height )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -491,19 +483,20 @@ METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage
       ENDIF
    ENDIF
 
-   gdImageCopyMerge( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nPerc )
+   gdImageCopyMerge( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, 0 ), ;
+      hb_defaultValue( nDstY, 0 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nWidth, nHeight, ;
+      hb_defaultValue( nPerc, 100 ) )
 
    RETURN oDestImage
 
 METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nWidth     , ::Width )
-   hb_default( @nHeight    , ::Height )
-   hb_default( @nDstX      , 0 )
-   hb_default( @nDstY      , 0 )
-   hb_default( @nPerc      , 100 )
+   hb_default( @nWidth , ::Width )
+   hb_default( @nHeight, ::Height )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -513,27 +506,29 @@ METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestI
       ENDIF
    ENDIF
 
-   gdImageCopyMergeGray( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nPerc )
+   gdImageCopyMergeGray( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, 0 ), ;
+      hb_defaultValue( nDstY, 0 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nWidth, nHeight, ;
+      hb_defaultValue( nPerc, 100 ) )
 
    RETURN oDestImage
 
 METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight ) CLASS GDImage
 
    LOCAL oDestImage
-   LOCAL nDstX, nDstY, nDstWidth, nDstHeight
+   LOCAL nDstWidth, nDstHeight
 
-   hb_default( @nPerc      , 100 )
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nSrcWidth  , ::Width() )
-   hb_default( @nSrcHeight , ::Height() )
+   hb_default( @nPerc     , 100 )
+   hb_default( @nSrcWidth , ::Width() )
+   hb_default( @nSrcHeight, ::Height() )
 
    IF nPerc < 0
       nPerc := 100
    ENDIF
 
-   nDstX      := 0
-   nDstY      := 0
    nDstWidth  := nSrcWidth * nPerc / 100
    nDstHeight := nSrcHeight * nPerc / 100
 
@@ -543,7 +538,12 @@ METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight ) CLASS GDImage
       oDestImage := GDImage():Create( nDstWidth, nDstHeight )
    ENDIF
 
-   gdImageCopyResampled( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   gdImageCopyResampled( oDestImage:pImage, ::pImage, ;
+      0, ;
+      0, ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
 
    RETURN oDestImage
 
