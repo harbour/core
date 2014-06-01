@@ -365,9 +365,8 @@ METHOD Ellipse( x, y, nWidth, nHeight, lFilled, color ) CLASS GDImage
 
 METHOD LoadFromFile( cFile ) CLASS GDImage
 
-   LOCAL aLoad
+   LOCAL aLoad := gdImageFromFile( cFile )
 
-   aLoad := gdImageFromFile( cFile )
    Self := ::CloneDataFrom( aLoad[ 1 ] )
    aLoad[ 1 ] := NIL
 
@@ -574,46 +573,26 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
    ELSE
       ::CopyRotated( ,,,, nWidth - nWidth / 2, nHeight - nHeight / 2, nAngle, oDestImage )
    ENDIF
-   Self := ::CloneDataFrom( oDestImage )
 
-   // Move new image to existing one
-   oDestImage := NIL
+   Self := ::CloneDataFrom( oDestImage )
 
    RETURN Self
 
 METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
 
-   LOCAL oDestImage
-
-   oDestImage := ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight )
-   Self := ::CloneDataFrom( oDestImage )
-
-   // Move new image to existing one
-   oDestImage := NIL
+   Self := ::CloneDataFrom( ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight ) )
 
    RETURN Self
 
 METHOD Resize( nWidth, nHeight ) CLASS GDImage
 
-   LOCAL oDestImage
-
-   oDestImage := ::CopyResampled( 0, 0, NIL, NIL, 0, 0, nWidth, nHeight )
-   Self := ::CloneDataFrom( oDestImage )
-
-   // Move new image to existing one
-   oDestImage := NIL
+   Self := ::CloneDataFrom( ::CopyResampled( 0, 0,,, 0, 0, nWidth, nHeight ) )
 
    RETURN Self
 
 METHOD Zoom( nPerc ) CLASS GDImage
 
-   LOCAL oDestImage
-
-   oDestImage := ::CopyZoomed( nPerc )
-   Self := ::CloneDataFrom( oDestImage )
-
-   // Move new image to existing one
-   oDestImage := NIL
+   Self := ::CloneDataFrom( ::CopyZoomed( nPerc ) )
 
    RETURN Self
 

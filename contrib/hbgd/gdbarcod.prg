@@ -381,7 +381,6 @@ METHOD PROCEDURE Draw8( cText ) CLASS GDBarCode
          ::Settext( cText )
          ::DrawText8()
       ENDIF
-
    ENDIF
 
    RETURN
@@ -410,7 +409,6 @@ METHOD FindCharCode( cString, cChar ) CLASS GDBarCode
       ENDIF
 
       ++nC
-
    NEXT
 
    RETURN nRet

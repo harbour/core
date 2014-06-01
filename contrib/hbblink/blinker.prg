@@ -241,14 +241,14 @@ FUNCTION BliMgrSts( nParam )
 
    SWITCH nParam
    CASE BliCacheLoc     ; RETURN BliCacheNone
-   CASE BliCacheSize    ; RETURN 0
-   CASE BliExtMemAvail  ; RETURN 0
    CASE BliHostMode     ; RETURN BliHostNone
    CASE BliMachineMode  ; RETURN BliMode286Prot
-   CASE BliOverlayLoc   ; RETURN 0
    CASE BliOverlaySize  ; RETURN Memory( HB_MEM_CHAR )
    CASE BliRealMemAvail ; RETURN Memory( HB_MEM_CHAR )
-   CASE BliVirMemAvail  ; RETURN 0
+   CASE BliCacheSize
+   CASE BliExtMemAvail
+   CASE BliOverlayLoc
+   CASE BliVirMemAvail  /* fall through */
    ENDSWITCH
 
    RETURN 0
