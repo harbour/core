@@ -223,9 +223,9 @@ METHOD Find( cName, cAttribute, cValue, cData ) CLASS TXmlIterator
 
 METHOD Next() CLASS TXmlIterator
 
-   LOCAL oFound := ::oNode:NextInTree()
+   LOCAL oFound
 
-   DO WHILE oFound != NIL
+   DO WHILE ( oFound := ::oNode:NextInTree() ) != NIL
       IF oFound:Depth() <= ::nTopLevel
          RETURN NIL
       ENDIF
@@ -234,8 +234,6 @@ METHOD Next() CLASS TXmlIterator
          ::oNode := oFound
          RETURN oFound
       ENDIF
-
-      oFound := oFound:NextInTree()
    ENDDO
 
    RETURN NIL

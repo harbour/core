@@ -165,7 +165,7 @@ CREATE CLASS GDImage
    METHOD SetTile( pTile )                 INLINE gdImageSetTile( ::pImage, pTile:pImage ), ::pTile := pTile
 
    // Functions useful for style
-   METHOD SetStyle( aStyle )               INLINE hb_default( @aStyle, ::aStyles ), gdImageSetStyle( ::pImage, aStyle )
+   METHOD SetStyle( aStyle )               INLINE gdImageSetStyle( ::pImage, hb_defaultValue( aStyle, ::aStyles ) )
    METHOD AddStyle( pColor )               INLINE AAdd( ::aStyles, pColor )
    METHOD ResetStyles()                    INLINE ::aStyles := {}
    METHOD StyleLength()                    INLINE Len( ::aStyles )
@@ -228,17 +228,9 @@ CREATE CLASS GDImage
    METHOD GetFontWidth( pFont )            INLINE __defaultNIL( @pFont, ::pFont ), gdFontGetWidth( pFont )
    METHOD GetFontHeight( pFont )           INLINE __defaultNIL( @pFont, ::pFont ), gdFontGetHeight( pFont )
 
-   METHOD GetFTFontWidth( cFontName, nPitch )  INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch ), ;
-                                                      gdImageFTWidth( cFontName, nPitch )
-
-   METHOD GetFTFontHeight( cFontName, nPitch ) INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch ), ;
-                                                      gdImageFTHeight( cFontName, nPitch )
-
-   METHOD GetFTStringSize( cString, cFontName, nPitch ) INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch ), ;
-                                                      gdImageFTSize( cString, cFontName, nPitch )
+   METHOD GetFTFontWidth( cFontName, nPitch )           INLINE gdImageFTWidth( hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
+   METHOD GetFTFontHeight( cFontName, nPitch )          INLINE gdImageFTHeight( hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
+   METHOD GetFTStringSize( cString, cFontName, nPitch ) INLINE gdImageFTSize( cString, hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
 
    /* Color handling functions */
 
@@ -655,16 +647,15 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
    __defaultNIL( @color   , ::pColor )
    hb_default( @cFontName , ::cFontName )
    hb_default( @nPitch    , ::nFontPitch )
-   hb_default( @nAngle    , ::nFontAngle )
 
    SWITCH hb_defaultValue( nAlign, gdAlignLeft )
    CASE gdAlignCenter
-      nWidth := nPitch // gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
+      nWidth := nPitch
       nLen   := Len( cString )
       nPosX  := x - ( ( nLen / 2 ) * nWidth )
       EXIT
    CASE gdAlignRight
-      nWidth := gdImageFTWidth( cFontName, nPitch ) // , ::Radians( nAngle ) ) //::GetFontWidth()
+      nWidth := gdImageFTWidth( cFontName, nPitch )
       nLen   := Len( cString )
       nPosX  := x - ( nLen * nWidth )
       EXIT
@@ -672,7 +663,7 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
       nPosX  := x
    ENDSWITCH
 
-   gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( nAngle ), nPosX, y, ;
+   gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( hb_defaultValue( nAngle, ::nFontAngle ) ), nPosX, y, ;
       cString, nLineSpacing, nCharMap, nResolution )
 
    RETURN Self
@@ -680,23 +671,23 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
 METHOD CloneDataFrom( oSrc ) CLASS GDImage
 
    // copy values from Source to Dest
-   // please update in case of new datas
+   // please update in case of new data
 
-   ::pImage      := oSrc:pImage
-   ::pBrush      := oSrc:pBrush
-   ::pTile       := oSrc:pTile
-   ::pFont       := oSrc:pFont
-   ::pColor      := oSrc:pColor
+   ::pImage     := oSrc:pImage
+   ::pBrush     := oSrc:pBrush
+   ::pTile      := oSrc:pTile
+   ::pFont      := oSrc:pFont
+   ::pColor     := oSrc:pColor
 
-   ::cFontName   := oSrc:cFontName
-   ::nFontPitch  := oSrc:nFontPitch
-   ::nFontAngle  := oSrc:nFontAngle
+   ::cFontName  := oSrc:cFontName
+   ::nFontPitch := oSrc:nFontPitch
+   ::nFontAngle := oSrc:nFontAngle
 
-   ::aPoints     := AClone( oSrc:aPoints )
-   ::aStyles     := AClone( oSrc:aStyles )
+   ::aPoints    := AClone( oSrc:aPoints )
+   ::aStyles    := AClone( oSrc:aStyles )
 
-   ::hFile       := oSrc:hFile
-   ::cType       := oSrc:cType
-   ::cMime       := oSrc:cMime
+   ::hFile      := oSrc:hFile
+   ::cType      := oSrc:cType
+   ::cMime      := oSrc:cMime
 
    RETURN Self

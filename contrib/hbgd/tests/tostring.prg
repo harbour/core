@@ -1,13 +1,11 @@
-/*
- * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
+/* Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * GD Class test file: tostring() demo
  */
 
 #require "hbgd"
 
-#define IMAGES_IN  "imgs_in" + hb_ps()
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   "imgs_in" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 

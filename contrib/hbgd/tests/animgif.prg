@@ -1,15 +1,12 @@
-/*
- * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
+/* Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * GD API anim gif test file - from GD official documentation, adapted to porting
- *
  * This test shows how handle either file handle than file name
  */
 
 #require "hbgd"
 
-#define IMAGES_IN  "imgs_in" + hb_ps()
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   "imgs_in" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 

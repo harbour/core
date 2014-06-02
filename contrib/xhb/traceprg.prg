@@ -81,7 +81,7 @@ FUNCTION xhb_SetTraceFile( xFile, lAppend )
 
    IF HB_ISSTRING( xFile )
       s_cSET_TRACEFILE := xFile
-      IF ! HB_ISLOGICAL( lAppend ) .OR. ! lAppend
+      IF ! hb_defaultValue( lAppend, .F. )
          FClose( FCreate( s_cSET_TRACEFILE ) )
       ENDIF
    ENDIF
@@ -120,55 +120,49 @@ FUNCTION TraceLog( ... )
    // Using PRIVATE instead of LOCALs so TraceLog() is DIVERT friendly.
    LOCAL cFile, FileHandle, nLevel, ProcName, xParam
 
-   IF ! s_lSET_TRACE
-      RETURN .T.
-   ENDIF
+   IF s_lSET_TRACE
 
-   cFile := s_cSET_TRACEFILE
-   nLevel := s_nSET_TRACESTACK
+      /* hb_FileExists() and FOpen()/FCreate() make different assumptions regarding path,
+         so we have to make sure cFile contains path to avoid ambiguity */
+      cFile := cWithPath( s_cSET_TRACEFILE )
 
-   /* hb_FileExists() and FOpen()/FCreate() make different assumptions rgdg path,
-      so we have to make sure cFile contains path to avoid ambiguity */
-   cFile := cWithPath( cFile )
-
-   IF hb_FileExists( cFile )
-      FileHandle := FOpen( cFile, FO_WRITE )
-   ELSE
-      FileHandle := FCreate( cFile )
-   ENDIF
-
-   IF FileHandle != F_ERROR
-
-      FSeek( FileHandle, 0, FS_END )
-
-      IF nLevel > 0
-         FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
-      ENDIF
-
-      IF nLevel > 1 .AND. !( ProcName( 2 ) == "" )
-         FWrite( FileHandle, " Called from:" + hb_eol() )
-         nLevel := 1
-         DO WHILE !( ( ProcName := ProcName( ++nLevel ) ) == "" )
-            FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
-         ENDDO
+      IF hb_FileExists( cFile )
+         FileHandle := FOpen( cFile, FO_WRITE )
       ELSE
-         FWrite( FileHandle, hb_eol() )
+         FileHandle := FCreate( cFile )
       ENDIF
 
-      FOR EACH xParam IN hb_AParams()
-         FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
-      NEXT
+      IF FileHandle != F_ERROR
 
-      FWrite( FileHandle, hb_eol() )
+         FSeek( FileHandle, 0, FS_END )
 
-      FClose( FileHandle )
+         nLevel := s_nSET_TRACESTACK
+
+         IF nLevel > 0
+            FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
+         ENDIF
+
+         IF nLevel > 1 .AND. !( ProcName( 2 ) == "" )
+            FWrite( FileHandle, " Called from:" + hb_eol() )
+            nLevel := 1
+            DO WHILE !( ( ProcName := ProcName( ++nLevel ) ) == "" )
+               FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
+            ENDDO
+         ELSE
+            FWrite( FileHandle, hb_eol() )
+         ENDIF
+
+         FOR EACH xParam IN hb_AParams()
+            FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
+         NEXT
+
+         FWrite( FileHandle, hb_eol() )
+         FClose( FileHandle )
+      ENDIF
    ENDIF
 
    RETURN .T.
 
 /* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */
 STATIC FUNCTION cWithPath( cFilename )
-
-   LOCAL cPath := hb_FNameDir( cFilename )
-
-   RETURN iif( Empty( cPath ), "." + hb_ps(), "" ) + cFilename
+   RETURN iif( Empty( hb_FNameDir( cFilename ) ), "." + hb_ps(), "" ) + cFilename

@@ -225,11 +225,7 @@ STATIC FUNCTION ErrorMessage( oError )
    cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    // add subsystem name if available
-   IF HB_ISSTRING( oError:subsystem )
-      cMessage += oError:subsystem()
-   ELSE
-      cMessage += "???"
-   ENDIF
+   cMessage += hb_defaultValue( oError:subsystem, "???" )
 
    // add subsystem's error code if available
    IF HB_ISNUMERIC( oError:subCode )

@@ -3,6 +3,7 @@
  * Table,Record and Field Class
  *
  * Copyright 2000-2003 Manos Aspradakis maspr@otenet.gr
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,16 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000-2002 Luiz Rafael Culik
- * Methods CreateTable(), Gentable(), AddField()
- * Plus optimization for xHarbour
  *
  */
 

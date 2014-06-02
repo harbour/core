@@ -49,14 +49,12 @@
 
 FUNCTION sprintf( ... )
 
-   LOCAL aPar, cReturn, nPar, nPos, cTok
-   LOCAL nLen := 0, lUnsigned, l0 := .F., lSign := .F., nDec, xVal
-   LOCAL cString
+   LOCAL nLen := 0, lUnsigned, l0 := .F., lSign := .F., nDec, xVal, nPos, cTok
 
-   aPar    := hb_AParams()
-   cReturn := ""
-   cString := aPar[ 1 ]
-   nPar    := 2
+   LOCAL aPar    := hb_AParams()
+   LOCAL cReturn := ""
+   LOCAL cString := iif( Len( aPar ) >= 1, aPar[ 1 ], "" )
+   LOCAL nPar    := 2
 
    DO WHILE ! Empty( cString )
 

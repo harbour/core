@@ -1,6 +1,4 @@
-/*
- * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
+/* Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * CGI test application
  */
 
@@ -19,10 +17,11 @@ PROCEDURE Main( ... )
    LOCAL cQuery  := GetEnv( "QUERY_STRING" )
    LOCAL hParams := { => }
 
-   LOCAL cImg, nPt, nWidth, nHeight, cPhoto
+   LOCAL cImg, nWidth, nHeight, cPhoto
 
 #if 0
    LOCAL cText
+   LOCAL nPt
 #endif
 
    IF Empty( aParams )
@@ -39,7 +38,9 @@ PROCEDURE Main( ... )
 
          SWITCH cPar
          CASE "txt"
-            // cText := hParams[ cPar ]
+#if 0
+            cText := hParams[ cPar ]
+#endif
             EXIT
          CASE "img"
             cImg := hParams[ cPar ]
@@ -53,9 +54,11 @@ PROCEDURE Main( ... )
          CASE "height"
             nHeight := Val( hParams[ cPar ] )
             EXIT
+#if 0
          CASE "pt"
             nPt := Val( hParams[ cPar ] )
             EXIT
+#endif
          ENDSWITCH
       NEXT
    ENDIF
@@ -64,8 +67,8 @@ PROCEDURE Main( ... )
 
 #if 0
    hb_default( @cText, "Testo di Prova" )
-#endif
    hb_default( @nPt, 30 )
+#endif
 
    IF cImg != NIL
 #if 0
@@ -87,7 +90,7 @@ PROCEDURE Main( ... )
       WRITE "</td></tr>"
       WRITE "<tr><td align='center'>"
       WRITE "<img src='test_out.exe?img=" + cPhoto + ;
-         iif( HB_ISNUMERIC( nWidth ), "&width="  + hb_ntos( nWidth ), "" ) + ;
+         iif( HB_ISNUMERIC( nWidth ), "&width=" + hb_ntos( nWidth ), "" ) + ;
          iif( HB_ISNUMERIC( nHeight ), "&height=" + hb_ntos( nHeight ), "" ) + ;
          "'>" + "<br />"
       WRITE "</td></tr>"
@@ -167,7 +170,9 @@ STATIC PROCEDURE OutJpg( cText, nPitch )
 
    LOCAL oI
 
-   // LOCAL cyan
+#if 0
+   LOCAL cyan
+#endif
    LOCAL blue
    LOCAL aSize, nWidth, nHeight, nX, nY
 
@@ -231,7 +236,7 @@ STATIC FUNCTION GetVars( cFields, cSeparator )
 
    FOR EACH cField in hb_regexSplit( hb_defaultValue( cSeparator, "&" ), cFields )
 
-      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) != 2
+      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) == 2
 
          cName  := LTrim( aField[ 1 ] )
          xValue := UrlDecode( aField[ 2 ] )
@@ -261,7 +266,7 @@ STATIC FUNCTION GetParams( aParams )
 
    FOR EACH cField in aParams
 
-      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) != 2
+      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) == 2
 
           cName  := LTrim( aField[ 1 ] )
           xValue := UrlDecode( aField[ 2 ] )

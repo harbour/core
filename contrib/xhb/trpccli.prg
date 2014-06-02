@@ -233,11 +233,11 @@ METHOD Destroy() CLASS TRPCClient
 
 METHOD SetEncryption( cKey ) CLASS TRPCClient
 
-   IF ! Empty( cKey )
+   IF Empty( cKey )
+      ::bEncrypted := .F.
+   ELSE
       ::bEncrypted := .T.
       ::cCryptKey := cKey
-   ELSE
-      ::bEncrypted := .F.
    ENDIF
 
    RETURN .T.
@@ -435,16 +435,15 @@ METHOD Connect( cServer, cUserId, cPassword ) CLASS TRPCClient
       ENDIF
 
       IF hb_inetErrorCode( ::skTcp ) == 0
-         IF ! ::bEncrypted
+         IF ::bEncrypted
+            RETURN ::ManageChallenge()
+         ELSE
             hb_inetRecvAll( ::skTcp, @cReply )
             IF hb_inetErrorCode( ::skTcp ) == 0 .AND. cReply == "XHBR91OK"
                ::nStatus := RPC_STATUS_LOGGED // Logged in
                RETURN .T.
             ENDIF
-         ELSE
-            RETURN ::ManageChallenge()
          ENDIF
-
       ENDIF
    ENDIF
 
@@ -802,7 +801,6 @@ METHOD TCPAccept() CLASS TRPCClient
    ::nTCPTimeBegin := Int( Seconds() * 1000 )
    nTimeLimit := Max( ::nTimeout, ::nTimeLimit )
 
-
    DO WHILE .T.
       IF hb_inetRecvAll( ::skTCP, @cCode, 6 ) <= 0
          EXIT
@@ -829,7 +827,7 @@ METHOD TCPAccept() CLASS TRPCClient
    ::thTcpAccept := NIL
 
    IF ::caPerCall == NIL .AND. hb_inetErrorCode( ::skTCP ) != -1 .AND. ;
-         nTime - nTimeLimit < nTimeLimit - 5
+      nTime - nTimeLimit < nTimeLimit - 5
       IF hb_inetErrorCode( ::skTCP ) != 0
          ::nStatus := RPC_STATUS_ERROR
       ENDIF
@@ -968,39 +966,27 @@ METHOD GetFunctionName( xId ) CLASS TRPCClient
 
 METHOD GetServerName( xId ) CLASS TRPCClient
 
-   LOCAL cData
-
    IF HB_ISARRAY( xID )
-      cData := xId[ 2 ]
-   ELSE
-      IF Len( ::aFunctions ) > 0
-         cData := ::aFunctions[ xId ][ 2 ]
-      ELSEIF Len( ::aServers ) > 0
-         cData := ::aServers[ xId ][ 2 ]
-      ELSE
-         cData := ""
-      ENDIF
+      RETURN xId[ 2 ]
+   ELSEIF Len( ::aFunctions ) > 0
+      RETURN ::aFunctions[ xId ][ 2 ]
+   ELSEIF Len( ::aServers ) > 0
+      RETURN ::aServers[ xId ][ 2 ]
    ENDIF
 
-   RETURN cData
+   RETURN ""
 
 METHOD GetServerAddress( xId ) CLASS TRPCClient
 
-   LOCAL cData
-
    IF HB_ISARRAY( xID )
-      cData := xId[ 1 ]
-   ELSE
-      IF ! Empty( ::aFunctions )
-         cData := ::aFunctions[ xId ][ 1 ]
-      ELSEIF ! Empty( ::aServers )
-         cData := ::aServers[ xId ][ 1 ]
-      ELSE
-         cData := ""
-      ENDIF
+      RETURN xId[ 1 ]
+   ELSEIF Len( ::aFunctions ) > 0
+      RETURN ::aFunctions[ xId ][ 1 ]
+   ELSEIF Len( ::aServers ) > 0
+      RETURN ::aServers[ xId ][ 1 ]
    ENDIF
 
-   RETURN cData
+   RETURN ""
 
 METHOD Encrypt( cDataIn ) CLASS TRPCClient
 
@@ -1019,9 +1005,7 @@ METHOD Decrypt( cDataIn ) CLASS TRPCClient
    RETURN cDataIn
 
 
-/***********************************
-* Event handlers
-************************************/
+/* Event handlers */
 
 METHOD OnScanComplete() CLASS TRPCClient
 

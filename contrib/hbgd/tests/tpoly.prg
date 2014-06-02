@@ -5,7 +5,7 @@
 #xcommand TurnRight( <x> ) => s_nAngle += Pi() / 3 * <x>
 #xcommand TurnLeft( <x> )  => s_nAngle -= Pi() / 3 * <x>
 
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 STATIC s_aCoords
 STATIC s_nAngle, s_nCoordX, s_nCoordY
@@ -24,15 +24,14 @@ PROCEDURE Main()
 
 STATIC PROCEDURE DrawFlake( lOpenPoly )
 
-   LOCAL nOrder, nSide, nSides, nSideLen
+   LOCAL nSide
    LOCAL gdImage, gdColor
-   LOCAL cImageName
 
-   nSides := 3
-   nSideLen := 1500
-   nOrder := 7
+   LOCAL nSides := 3
+   LOCAL nSideLen := 1500
+   LOCAL nOrder := 7
 
-   cImageName := iif( lOpenPoly, "flakeo.png", "flake.png" )
+   LOCAL cImageName := iif( lOpenPoly, "flakeo.png", "flake.png" )
 
    gdImage := gdImageCreate( 1900, 2100 )
    gdImageColorAllocate( gdImage, 0, 0, 0 )

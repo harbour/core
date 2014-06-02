@@ -3,6 +3,7 @@
  *    HTML output conversion
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,17 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -190,17 +180,13 @@ FUNCTION SetErrorFooter()
 
 STATIC FUNCTION ErrorMessage( e )
 
-   LOCAL cMessage := ""
+   LOCAL cMessage
 
    // start error message
-   cMessage += iif( e:severity > ES_WARNING, "Error ", "Warning " )
+   cMessage := iif( e:severity > ES_WARNING, "Error ", "Warning " )
 
    // add subsystem name if available
-   IF HB_ISSTRING( e:subsystem )
-      cMessage += e:subsystem()
-   ELSE
-      cMessage += "???"
-   ENDIF
+   cMessage += hb_defaultValue( e:subsystem, "???" )
 
    // add subsystem's error code if available
    IF HB_ISNUMERIC( e:subCode )

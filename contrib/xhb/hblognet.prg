@@ -47,7 +47,7 @@
 
 #include "hbclass.ch"
 
-#define CRLF Chr( 13 ) + Chr( 10 )
+#define CRLF  Chr( 13 ) + Chr( 10 )
 
 CREATE CLASS HB_LogEmail FROM HB_LogChannel
 
@@ -100,8 +100,7 @@ METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom ) CLASS HB_LogEmail
 
    RETURN SELF
 
-/* Inet init must be called here
- */
+/* Inet init must be called here */
 METHOD Open( cName ) CLASS HB_LogEmail
 
    HB_SYMBOL_UNUSED( cName )
@@ -109,8 +108,7 @@ METHOD Open( cName ) CLASS HB_LogEmail
 
    RETURN .T.
 
-/* InetCleanup to be called here
- */
+/* InetCleanup to be called here */
 METHOD Close( cName ) CLASS HB_LogEmail
 
    HB_SYMBOL_UNUSED( cName )
@@ -118,8 +116,7 @@ METHOD Close( cName ) CLASS HB_LogEmail
 
    RETURN .T.
 
-/* Sends the real message in e-mail
- */
+/* Sends the real message in e-mail */
 METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    LOCAL skCon := hb_inetCreate()
@@ -152,9 +149,7 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
       RETURN .F.
    ENDIF
 
-   cMessage := ::Prepare( nStyle, cMessage, cName, nPriority )
-
-   hb_inetSendAll( skCon,  cMessage + CRLF + "." + CRLF )
+   hb_inetSendAll( skCon, ::Prepare( nStyle, cMessage, cName, nPriority ) + CRLF + "." + CRLF )
    IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
@@ -163,24 +158,18 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    RETURN ::GetOk( skCon )  // if quit fails, the mail does not go!
 
-/* Get the reply and returns true if it is allright
- */
+/* Get the reply and returns true if it is alright */
 METHOD GetOk( skCon ) CLASS HB_LogEmail
 
-   LOCAL nLen, cReply
+   LOCAL nLen
+   LOCAL cReply := hb_inetRecvLine( skCon, @nLen, 128 )
 
-   cReply := hb_inetRecvLine( skCon, @nLen, 128 )
-   IF hb_inetErrorCode( skcon ) != 0 .OR. hb_LeftEq( cReply, "5" )
-      RETURN .F.
-   ENDIF
-
-   RETURN .T.
+   RETURN hb_inetErrorCode( skcon ) == 0 .AND. ! hb_LeftEq( cReply, "5" )
 
 METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
-   LOCAL cPre
-
-   cPre := "FROM: " + ::cAddress + CRLF + ;
+   LOCAL cPre := ;
+      "FROM: " + ::cAddress + CRLF + ;
       "TO: " + ::cSendTo + CRLF + ;
       "Subject:" + ::cSubject + CRLF + CRLF
 
@@ -196,8 +185,7 @@ METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    RETURN cPre
 
-/* Channel for monitors listening on a port
- */
+/* Channel for monitors listening on a port */
 CREATE CLASS HB_LogInetPort FROM HB_LogChannel
 
    VAR nPort           INIT 7761

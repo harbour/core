@@ -3,6 +3,7 @@
  * Main HTML CLASS for HTMLLIB
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,17 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -1722,41 +1712,27 @@ FUNCTION HtmlLinkStyle( cHoverStyle, cHoverClr, cHoverBG, cLinkStyle, cLinkClr, 
 
 FUNCTION HtmlPadL( cStr, n )
 
-   LOCAL cRet
-   LOCAL nSpaces
-
    IF ! HB_ISNUMERIC( n )
       RETURN cStr
    ENDIF
 
-   nSpaces := n - Len( cStr )
-
    IF n <= 0
-      cRet := Right( cStr, n )
-   ELSE
-      cRet := Replicate( _HTML_SPACE, nSpaces ) + cStr
+      RETURN Right( cStr, n )
    ENDIF
 
-   RETURN cRet
+   RETURN Replicate( _HTML_SPACE, n - Len( cStr ) ) + cStr
 
 FUNCTION HtmlPadR( cStr, n )
 
-   LOCAL cRet
-   LOCAL nSpaces
-
    IF ! HB_ISNUMERIC( n )
       RETURN cStr
    ENDIF
 
-   nSpaces := n - Len( cStr )
-
    IF n <= 0
-      cRet := Left( cStr, n )
-   ELSE
-      cRet := cStr + Replicate( _HTML_SPACE, nSpaces )
+      RETURN Left( cStr, n )
    ENDIF
 
-   RETURN cRet
+   RETURN cStr + Replicate( _HTML_SPACE, n - Len( cStr ) )
 
 FUNCTION Any2Str( xVal )
    RETURN HtmlAny2Str( xVal )

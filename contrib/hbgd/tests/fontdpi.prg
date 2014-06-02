@@ -1,14 +1,11 @@
-/*
- * GD graphic library.
- * graphic font DPI demo
- *
- * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
+/* Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
+ * Graphic font DPI demo
  */
 
 #require "hbgd"
 
-#define IMAGES_IN  "imgs_in" + hb_ps()
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   "imgs_in" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 

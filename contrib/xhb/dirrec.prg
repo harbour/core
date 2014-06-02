@@ -70,7 +70,6 @@
 
 FUNCTION DirectoryRecurse( cPath, cAttr )
 
-   LOCAL aResult
    LOCAL cFilePath, cExt, cMask
 
    hb_FNameSplit( cPath, @cFilePath, @cMask, @cExt )
@@ -80,11 +79,8 @@ FUNCTION DirectoryRecurse( cPath, cAttr )
     * compatibility though it should be reverted when it will
     * be fixed in xHarbour
     */
-   aResult := hb_DirScan( cFilePath, cMask, ;
-      StrTran( Upper( hb_defaultValue( cAttr, "" ) ), "D" ) )
-
-   AEval( aResult, {| x | ;
+   RETURN AEval( hb_DirScan( cFilePath, cMask, ;
+         StrTran( Upper( hb_defaultValue( cAttr, "" ) ), "D" ) ), ;
+      {| x | ;
       x[ F_NAME ] := cFilePath + x[ F_NAME ], ;
       x[ F_DATE ] := hb_TToD( x[ F_DATE ] ) } )
-
-   RETURN aResult
