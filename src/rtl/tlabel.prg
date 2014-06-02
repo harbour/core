@@ -126,7 +126,7 @@ METHOD PROCEDURE New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    LOCAL err
    LOCAL OldMargin
 
-   ::aBandToPrint := {} // Array( 5 )
+   ::aBandToPrint := {}  // Array( 5 )
    ::nCurrentCol := 1
 
    // Resolve parameters
@@ -331,7 +331,6 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    LOCAL i                                // Counters
    LOCAL cBuff      := Space( BUFFSIZE )  // File buffer
    LOCAL nHandle                          // File handle
-   LOCAL nReadCount                       // Bytes read from file
    LOCAL nOffset    := FILEOFFSET         // Offset into file
    LOCAL nFileError                       // File error
    LOCAL cFieldText                       // Text expression container
@@ -354,13 +353,13 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    // Open the label file
    nHandle := FOpen( cLblFile )
 
-   IF ( nFileError := FError() ) != 0 .AND. Empty( hb_FNameDir( cLblFile ) )
+   IF ( nFileError := FError() ) != F_OK .AND. Empty( hb_FNameDir( cLblFile ) )
 
       // Search through default path; attempt to open label file
       FOR EACH cPath IN ListAsArray( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
          nHandle := FOpen( hb_DirSepAdd( cPath ) + cLblFile )
          // if no error is reported, we have our label file
-         IF ( nFileError := FError() ) == 0
+         IF ( nFileError := FError() ) == F_OK
             EXIT
          ENDIF
       NEXT
@@ -379,10 +378,8 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
    // If we got this far, assume the label file is open and ready to go
    // and so go ahead and read it
-   nReadCount := FRead( nHandle, @cBuff, BUFFSIZE )
-
    // READ ok?
-   IF nReadCount == 0
+   IF FRead( nHandle, @cBuff, BUFFSIZE ) == 0
       nFileError := F_EMPTY             // File is empty
    ELSE
       nFileError := FError()            // Check for OS errors
