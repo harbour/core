@@ -52,7 +52,6 @@
 /* The maximum number of palette entries in palette-based images.
    In the wonderful new world of gd 2.0, you can of course have
    many more colors when using truecolor mode. */
-
 #define gdMaxColors                   256
 
 #define gdAlphaMax                    127
@@ -67,7 +66,6 @@
 #define gdDashSize                    4
 
 /* Special colors. */
-
 #define gdStyled                      -2
 #define gdBrushed                     -3
 #define gdStyledBrushed               -4

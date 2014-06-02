@@ -69,11 +69,8 @@ THREAD STATIC t_hSrcFile := F_ERROR
 THREAD STATIC t_lSetDaTi := .T.
 THREAD STATIC t_fileTime
 
-/*
- * FileCopy()
- * This is a replacement for the CA-T*ols III function of the
- * same name that causes GPF's.
- */
+/* This is a replacement for the CA-T*ols III function of the
+   same name that causes GPF's. */
 FUNCTION FileCopy( cSource, cDest, lMode )
 
    LOCAL hDstFile

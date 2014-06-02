@@ -49,9 +49,10 @@
 
 FUNCTION StrOccurs( cSub, cStr, lAny )
 
-   LOCAL nCount := 0, nPos := 0
+   LOCAL nCount := 0, nPos
 
    IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
+      nPos := 0
       IF hb_defaultValue( lAny, PCount() < 3 )
          DO WHILE ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) != 0
             nCount++

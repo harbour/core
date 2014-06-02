@@ -66,9 +66,7 @@ PROCEDURE Main( cPortName )
    Inkey( 0 )
 
    oWinPort := win_com():Init( cPortName, WIN_CBR_9600, WIN_ODDPARITY, 7, WIN_ONESTOPBIT )
-   IF ! oWinPort:Open()
-      ? "Open() failed"
-   ELSE
+   IF oWinPort:Open()
       ? "Open() succeeded"
       ?
       IF oWinPort:Status( @lCTS, @lDSR, @lRing, @lDCD )
@@ -100,7 +98,7 @@ PROCEDURE Main( cPortName )
       ? "Read()", oWinPort:Read( @cString, 32 ), hb_ntos( hb_BLen( cString ) ), cString
       ?
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
-         ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
+         ? "QueueStatus(): CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
             ", Xoff Sent", lXoffSent, ", InQueue", nInQueue, ", nOutQueue", nOutQueue
       ELSE
          ? "QueueStatus() failed:", oWinPort:ErrorText()
@@ -133,7 +131,7 @@ PROCEDURE Main( cPortName )
       ? "Scan something... we'll not read it but purge it, press enter"
       Inkey( 0 )
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
-         ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
+         ? "QueueStatus(): CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
             ", Xoff Sent", lXoffSent, ", InQueue", nInQueue, ", nOutQueue", nOutQueue
       ELSE
          ? "QueueStatus() failed:", oWinPort:ErrorText()
@@ -145,7 +143,7 @@ PROCEDURE Main( cPortName )
       ENDIF
       ? "InQueue should be zero"
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
-         ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
+         ? "QueueStatus(): CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
             ", Xoff Sent", lXoffSent, ", InQueue", nInQueue, ", nOutQueue", nOutQueue
       ELSE
          ? "QueueStatus() failed:", oWinPort:ErrorText()
@@ -154,6 +152,8 @@ PROCEDURE Main( cPortName )
       ? "Read", oWinPort:Read( @cString, 32 ), hb_ntos( hb_BLen( cString ) ), cString
       ?
       ? "Close", oWinPort:Close()
+   ELSE
+      ? "Open() failed"
    ENDIF
 
    ?
@@ -161,11 +161,11 @@ PROCEDURE Main( cPortName )
    Inkey( 0 )
 
    oWinPort := win_com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 99, WIN_ONESTOPBIT )
-   IF ! oWinPort:Open
-      ? "Open() failed:", oWinPort:ErrorText()
-   ELSE
+   IF oWinPort:Open
       ? "Open succeeded"
       ? "Close", oWinPort:Close()
+   ELSE
+      ? "Open() failed:", oWinPort:ErrorText()
    ENDIF
 
    ? "Attach a printer now..."
@@ -173,9 +173,7 @@ PROCEDURE Main( cPortName )
    Inkey( 0 )
 
    oWinPort := win_com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )
-   IF ! oWinPort:Open
-      ? "Open() failed:", oWinPort:ErrorText()
-   ELSE
+   IF oWinPort:Open
       ? "Open succeeded"
       ?
       ? oWinPort:DebugDCB( HB_WIN_COM_DBGFLOW )
@@ -195,7 +193,7 @@ PROCEDURE Main( cPortName )
          ? "Write() failed, returned:", nResult, "expected:", hb_ntos( hb_BLen( cString ) )
       ENDIF
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
-         ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
+         ? "QueueStatus(): CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
             ", Xoff Sent", lXoffSent, ", InQueue", nInQueue, ", nOutQueue", nOutQueue
       ELSE
          ? "QueueStatus() failed:", oWinPort:ErrorText()
@@ -223,7 +221,7 @@ PROCEDURE Main( cPortName )
 
       ? "If it's on then no Hold status should be on, IF off then probably CTS and DSR"
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
-         ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
+         ? "QueueStatus(): CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
             ", Xoff Sent", lXoffSent, ", InQueue", nInQueue, ", nOutQueue", nOutQueue
       ELSE
          ? "QueueStatus() failed:", oWinPort:ErrorText()
@@ -237,6 +235,8 @@ PROCEDURE Main( cPortName )
       ENDIF
       ? Seconds()
       ? "Close", oWinPort:Close()
+   ELSE
+      ? "Open() failed:", oWinPort:ErrorText()
    ENDIF
 
    RETURN

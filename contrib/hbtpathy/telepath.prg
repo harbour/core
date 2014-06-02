@@ -74,25 +74,26 @@ THREAD STATIC t_nErrorCode := 0      // Error code from last operation, 0 if no 
 
 FUNCTION tp_baud( nPort, nNewBaud )
 
-   IF ! isport( nPort ) .OR. Empty( t_aPorts[ nPort, TPFP_NAME ] )
+   IF ! isport( nPort ) .OR. Empty( t_aPorts[ nPort ][ TPFP_NAME ] )
       RETURN TE_NOPORT
    ENDIF
 
-   IF ! isopenport( nPort )
-      RETURN 0
-   ENDIF
+   IF isopenport( nPort )
 
-   hb_default( @nNewBaud, 0 )
+      hb_default( @nNewBaud, 0 )
 
-   IF nNewBaud > 0
-      IF hb_comInit( t_aPorts[ nPort, TPFP_HANDLE ], nNewBaud, t_aPorts[ nPort, TPFP_PARITY ], t_aPorts[ nPort, TPFP_DBITS ], t_aPorts[ nPort, TPFP_SBITS ] )
-         t_aPorts[ nPort, TPFP_BAUD ] := nNewBaud
-      ELSE
-         // set error code
+      IF nNewBaud > 0
+         IF hb_comInit( t_aPorts[ nPort ][ TPFP_HANDLE ], nNewBaud, t_aPorts[ nPort ][ TPFP_PARITY ], t_aPorts[ nPort ][ TPFP_DBITS ], t_aPorts[ nPort ][ TPFP_SBITS ] )
+            t_aPorts[ nPort ][ TPFP_BAUD ] := nNewBaud
+         ELSE
+            // set error code
+         ENDIF
       ENDIF
+
+      RETURN t_aPorts[ nPort ][ TPFP_BAUD ]
    ENDIF
 
-   RETURN t_aPorts[ nPort, TPFP_BAUD ]
+   RETURN 0
 
 
 FUNCTION tp_inkey( ... )
@@ -114,27 +115,24 @@ PROCEDURE tp_delay( nTime )
 
 FUNCTION tp_close( nPort, nTimeout )
 
-   /* Clipper returns 0 even if a port is not open */
-   IF ! isopenport( nPort )
-      RETURN 0
-   ENDIF
+   /* Cl*pper returns 0 even if a port is not open */
+   IF isopenport( nPort )
 
-   hb_default( @nTimeout, 0 )
+      hb_default( @nTimeout, 0 )
 
-   IF nTimeout > 0
-      tp_flush( nPort, nTimeout )
-   ENDIF
+      IF nTimeout > 0
+         tp_flush( nPort, nTimeout )
+      ENDIF
 
-   IF t_aPorts[ nPort, TPFP_HANDLE ] >= 0
+      IF t_aPorts[ nPort ][ TPFP_HANDLE ] >= 0
 
-      hb_comClose( t_aPorts[ nPort, TPFP_HANDLE ] )
+         hb_comClose( t_aPorts[ nPort ][ TPFP_HANDLE ] )
 
-      /* Port parameters should stay the same for the case the port
-         gets reopened
-      */
-      t_aPorts[ nPort, TPFP_OC ] := .F.
-      t_aPorts[ nPort, TPFP_INBUF ] := ""
-      t_aPorts[ nPort, TPFP_HANDLE ] := -1
+         /* Port parameters should stay the same for the case the port gets reopened */
+         t_aPorts[ nPort ][ TPFP_OC ] := .F.
+         t_aPorts[ nPort ][ TPFP_INBUF ] := ""
+         t_aPorts[ nPort ][ TPFP_HANDLE ] := -1
+      ENDIF
    ENDIF
 
    RETURN 0
@@ -143,64 +141,64 @@ FUNCTION tp_reopen( nPort, nInSize, nOutSize )
 
    LOCAL nBaud, nData, cParity, nStop, cPortName
 
-   IF ! isport( nPort ) .OR. Empty( t_aPorts[ nPort, TPFP_NAME ] )
+   IF ! isport( nPort ) .OR. Empty( t_aPorts[ nPort ][ TPFP_NAME ] )
       RETURN TE_NOPORT
    ENDIF
 
-   cPortName   := t_aPorts[ nPort, TPFP_NAME ]
-   nBaud       := t_aPorts[ nPort, TPFP_BAUD ]
-   nData       := t_aPorts[ nPort, TPFP_DBITS ]
-   cParity     := t_aPorts[ nPort, TPFP_PARITY ]
-   nStop       := t_aPorts[ nPort, TPFP_SBITS ]
+   cPortName := t_aPorts[ nPort ][ TPFP_NAME ]
+   nBaud     := t_aPorts[ nPort ][ TPFP_BAUD ]
+   nData     := t_aPorts[ nPort ][ TPFP_DBITS ]
+   cParity   := t_aPorts[ nPort ][ TPFP_PARITY ]
+   nStop     := t_aPorts[ nPort ][ TPFP_SBITS ]
 
    RETURN tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortName )
 
 FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortName )
 
+   HB_SYMBOL_UNUSED( nOutSize )
+
    IF ! isport( nPort )
       RETURN TE_NOPORT
    ENDIF
-
-   HB_SYMBOL_UNUSED( nOutSize )
 
    IF HB_ISSTRING( cPortName )
       hb_comSetDevice( nPort, cPortName )
    ENDIF
 
-   t_aPorts[ nPort, TPFP_NAME       ] := cPortName
-   t_aPorts[ nPort, TPFP_BAUD       ] := hb_defaultValue( nBaud, 1200 )
-   t_aPorts[ nPort, TPFP_DBITS      ] := hb_defaultValue( nData, 8 )
-   t_aPorts[ nPort, TPFP_PARITY     ] := hb_defaultValue( cParity, "N" )
-   t_aPorts[ nPort, TPFP_SBITS      ] := hb_defaultValue( nStop, 1 )
-   t_aPorts[ nPort, TPFP_OC         ] := .F.
-   t_aPorts[ nPort, TPFP_INBUF      ] := ""
-   t_aPorts[ nPort, TPFP_INBUF_SIZE ] := hb_defaultValue( nInSize, 1536 )
-   t_aPorts[ nPort, TPFP_HANDLE     ] := -1
+   t_aPorts[ nPort ][ TPFP_NAME       ] := cPortName
+   t_aPorts[ nPort ][ TPFP_BAUD       ] := hb_defaultValue( nBaud, 1200 )
+   t_aPorts[ nPort ][ TPFP_DBITS      ] := hb_defaultValue( nData, 8 )
+   t_aPorts[ nPort ][ TPFP_PARITY     ] := hb_defaultValue( cParity, "N" )
+   t_aPorts[ nPort ][ TPFP_SBITS      ] := hb_defaultValue( nStop, 1 )
+   t_aPorts[ nPort ][ TPFP_OC         ] := .F.
+   t_aPorts[ nPort ][ TPFP_INBUF      ] := ""
+   t_aPorts[ nPort ][ TPFP_INBUF_SIZE ] := hb_defaultValue( nInSize, 1536 )
+   t_aPorts[ nPort ][ TPFP_HANDLE     ] := -1
 
    IF hb_comOpen( nPort )
 
-      t_aPorts[ nPort, TPFP_HANDLE ] := nPort
+      t_aPorts[ nPort ][ TPFP_HANDLE ] := nPort
 
-      IF hb_comInit( t_aPorts[ nPort, TPFP_HANDLE ], t_aPorts[ nPort, TPFP_BAUD ], t_aPorts[ nPort, TPFP_PARITY ], t_aPorts[ nPort, TPFP_DBITS ], t_aPorts[ nPort, TPFP_SBITS ] )
-         t_aPorts[ nPort, TPFP_OC ] := .T.
+      IF hb_comInit( t_aPorts[ nPort ][ TPFP_HANDLE ], t_aPorts[ nPort ][ TPFP_BAUD ], t_aPorts[ nPort ][ TPFP_PARITY ], t_aPorts[ nPort ][ TPFP_DBITS ], t_aPorts[ nPort ][ TPFP_SBITS ] )
+         t_aPorts[ nPort ][ TPFP_OC ] := .T.
          RETURN 0
       ELSE
-         tp_close( t_aPorts[ nPort, TPFP_HANDLE ] )
+         tp_close( t_aPorts[ nPort ][ TPFP_HANDLE ] )
          RETURN TE_PARAM
       ENDIF
    ENDIF
 
-   t_aPorts[ nPort, TPFP_NAME       ] := ""
-   t_aPorts[ nPort, TPFP_HANDLE     ] := -1
-   t_aPorts[ nPort, TPFP_BAUD       ] := 1200
-   t_aPorts[ nPort, TPFP_DBITS      ] := 8
-   t_aPorts[ nPort, TPFP_PARITY     ] := "N"
-   t_aPorts[ nPort, TPFP_SBITS      ] := 1
-   t_aPorts[ nPort, TPFP_OC         ] := .F.
-   t_aPorts[ nPort, TPFP_INBUF      ] := ""
-   t_aPorts[ nPort, TPFP_INBUF_SIZE ] := 0
+   t_aPorts[ nPort ][ TPFP_NAME       ] := ""
+   t_aPorts[ nPort ][ TPFP_HANDLE     ] := -1
+   t_aPorts[ nPort ][ TPFP_BAUD       ] := 1200
+   t_aPorts[ nPort ][ TPFP_DBITS      ] := 8
+   t_aPorts[ nPort ][ TPFP_PARITY     ] := "N"
+   t_aPorts[ nPort ][ TPFP_SBITS      ] := 1
+   t_aPorts[ nPort ][ TPFP_OC         ] := .F.
+   t_aPorts[ nPort ][ TPFP_INBUF      ] := ""
+   t_aPorts[ nPort ][ TPFP_INBUF_SIZE ] := 0
 
-   RETURN TE_CONFL   /* maybe should return something different? */
+   RETURN TE_CONFL  /* maybe should return something different? */
 
 FUNCTION tp_recv( nPort, nLength, nTimeout )
 
@@ -208,7 +206,7 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
    LOCAL cRet
 
    IF ! HB_ISNUMERIC( nLength )
-      nLength := t_aPorts[ nPort, TPFP_INBUF_SIZE ]
+      nLength := t_aPorts[ nPort ][ TPFP_INBUF_SIZE ]
    ENDIF
 
    FetchChars( nPort )
@@ -217,7 +215,7 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
    nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
-   DO WHILE hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND. ;
+   DO WHILE hb_BLen( t_aPorts[ nPort ][ TPFP_INBUF ] ) < nLength .AND. ;
       ( nTimeout < 0 .OR. Seconds() < nDone )
 
       IF tp_idle()
@@ -227,39 +225,33 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
       ENDIF
    ENDDO
 
-   IF nLength > hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] )
-      cRet := t_aPorts[ nPort, TPFP_INBUF ]
-      t_aPorts[ nPort, TPFP_INBUF ] := ""
+   IF nLength > hb_BLen( t_aPorts[ nPort ][ TPFP_INBUF ] )
+      cRet := t_aPorts[ nPort ][ TPFP_INBUF ]
+      t_aPorts[ nPort ][ TPFP_INBUF ] := ""
    ELSE
-      cRet := hb_BLeft( t_aPorts[ nPort, TPFP_INBUF ], nLength )
-      t_aPorts[ nPort, TPFP_INBUF ] := hb_BSubStr( t_aPorts[ nPort, TPFP_INBUF ], nLength + 1 )
+      cRet := hb_BLeft( t_aPorts[ nPort ][ TPFP_INBUF ], nLength )
+      t_aPorts[ nPort ][ TPFP_INBUF ] := hb_BSubStr( t_aPorts[ nPort ][ TPFP_INBUF ], nLength + 1 )
    ENDIF
 
    RETURN cRet
 
 FUNCTION tp_send( nPort, cString, nTimeout )
 
-   IF ! isopenport( nPort )
-      RETURN 0
+   IF isopenport( nPort )
+
+      hb_default( @cString, "" )
+
+      IF hb_BLen( cString ) != 0
+         RETURN hb_comSend( t_aPorts[ nPort ][ TPFP_HANDLE ], cString,, hb_defaultValue( nTimeout, 0 ) )
+      ENDIF
    ENDIF
 
-   hb_default( @cString, "" )
-
-   IF hb_BLen( cString ) == 0
-      RETURN 0
-   ENDIF
-
-   RETURN hb_comSend( t_aPorts[ nPort, TPFP_HANDLE ], cString,, hb_defaultValue( nTimeout, 0 ) )
-
+   RETURN 0
 
 FUNCTION tp_sendsub( nPort, cString, nStart, nLength, nTimeout )
-
-   IF ! HB_ISNUMERIC( nLength )
-      nLength := hb_BLen( cString )
-   ENDIF
-
-   RETURN tp_send( nPort, hb_BSubStr( cString, hb_defaultValue( nStart, 1 ), nLength ), nTimeout )
-
+   RETURN tp_send( nPort, ;
+      hb_BSubStr( cString, hb_defaultValue( nStart, 1 ), ;
+      iif( HB_ISNUMERIC( nLength ), nLength, hb_BLen( cString ) ) ), nTimeout )
 
 FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
 
@@ -268,122 +260,109 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
    LOCAL nStartPos := 1, nFirst := 0
    LOCAL nDone, cRet := ""
 
-   IF ! isopenport( nPort )
-      RETURN ""
-   ENDIF
+   IF isopenport( nPort ) .AND. HB_ISSTRING( cDelim ) .AND. hb_BLen( cDelim ) > 0
 
-   IF ! HB_ISSTRING( cDelim ) .OR. hb_BLen( cDelim ) == 0
-      RETURN ""
-   ENDIF
+      hb_default( @nMaxLen, 64999 )  /* MS-DOS telepathy default. In Harbour could be higher. */
+      hb_default( @nTimeout, 0 )
 
-   hb_default( @nMaxLen, 64999 ) /* MS-DOS telepathy default. In Harbour could be higher. */
-   hb_default( @nTimeout, 0 )
+      FetchChars( nPort )
 
-   FetchChars( nPort )
+      /* Telepathy NG: [...] If nTimeout is omitted or zero, reads until finding the
+                       delimiter or the input buffer is empty. */
+      IF nTimeout == 0 .AND. hb_BLen( t_aPorts[ nPort ][ TPFP_INBUF ] ) == 0
+         RETURN ""
+      ENDIF
 
-   /* Telepathy ng: [...] If nTimeout is omitted or zero, reads until finding the
-                    delimiter or the input buffer is empty. */
-   IF nTimeout == 0 .AND. hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] ) == 0
-      RETURN ""
-   ENDIF
+      nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
-   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
+      DO WHILE ( nTimeout < 0 .OR. Seconds() < nDone )
 
-   DO WHILE ( nTimeout < 0 .OR. Seconds() < nDone )
-
-      IF hb_BLen( cDelim ) == 1
-
-         IF ( nAt := hb_BAt( cDelim, t_aPorts[ nPort, TPFP_INBUF ], nStartPos ) ) > 0 .AND. ;
-            iif( nFirst > 0, nAt < nFirst, .T. )
-            nFirst := nAt
-         ENDIF
-
-      ELSE
-
-         FOR EACH cChar IN cDelim
-            IF ( nAt := hb_BAt( cChar, t_aPorts[ nPort, TPFP_INBUF ], nStartPos ) ) > 0 .AND. ;
+         IF hb_BLen( cDelim ) == 1
+            IF ( nAt := hb_BAt( cDelim, t_aPorts[ nPort ][ TPFP_INBUF ], nStartPos ) ) > 0 .AND. ;
                iif( nFirst > 0, nAt < nFirst, .T. )
                nFirst := nAt
             ENDIF
-         NEXT
-
-      ENDIF
-
-      // I've found it
-      IF nFirst > 0
-         EXIT
-
-      ELSE
-         // Next loop I don't need to search that part of the input buffer that
-         // I've already just searched for
-         nStartPos := Max( hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] ), 1 )
-
-         // I've read more characters than I'm allowed to, so I exit
-         IF nStartPos >= nMaxLen
-            EXIT
+         ELSE
+            FOR EACH cChar IN cDelim
+               IF ( nAt := hb_BAt( cChar, t_aPorts[ nPort ][ TPFP_INBUF ], nStartPos ) ) > 0 .AND. ;
+                  iif( nFirst > 0, nAt < nFirst, .T. )
+                  nFirst := nAt
+               ENDIF
+            NEXT
          ENDIF
 
-         IF tp_idle()
+         // I've found it
+         IF nFirst > 0
             EXIT
          ELSE
-            FetchChars( nPort )
+            // Next loop I don't need to search that part of the input buffer that
+            // I've already just searched for
+            nStartPos := Max( hb_BLen( t_aPorts[ nPort ][ TPFP_INBUF ] ), 1 )
+
+            // I've read more characters than I'm allowed to, so I exit
+            IF nStartPos >= nMaxLen
+               EXIT
+            ENDIF
+
+            IF tp_idle()
+               EXIT
+            ELSE
+               FetchChars( nPort )
+            ENDIF
          ENDIF
+      ENDDO
+
+      IF nFirst > 0
+         cRet := hb_BLeft( t_aPorts[ nPort ][ TPFP_INBUF ], nFirst )
+         t_aPorts[ nPort ][ TPFP_INBUF ] := hb_BSubStr( t_aPorts[ nPort ][ TPFP_INBUF ], nFirst + 1 )
       ENDIF
-
-   ENDDO
-
-   IF nFirst > 0
-      cRet := hb_BLeft( t_aPorts[ nPort, TPFP_INBUF ], nFirst )
-      t_aPorts[ nPort, TPFP_INBUF ] := hb_BSubStr( t_aPorts[ nPort, TPFP_INBUF ], nFirst + 1 )
    ENDIF
 
    RETURN cRet
 
 /* Here's an improvement over original TP... you can "lookfor" a string
    here rather than just a char.  yay me.
-   of course, if you're using clipper/tp code and you search for a single char it will work
+   of course, if you're using Cl*pper/tp code and you search for a single char it will work
    the same. */
 FUNCTION tp_lookfor( nPort, cLookfor )
 
-   IF ! isopenport( nPort )
-      RETURN 0
+   IF isopenport( nPort )
+      FetchChars( nPort )
+      RETURN hb_BAt( cLookfor, t_aPorts[ nPort ][ TPFP_INBUF ] )
    ENDIF
 
-   FetchChars( nPort )
-
-   RETURN hb_BAt( cLookfor, t_aPorts[ nPort, TPFP_INBUF ] )
+   RETURN 0
 
 FUNCTION tp_inchrs( nPort )
 
-   IF ! isopenport( nPort )
-      RETURN 0
+   IF isopenport( nPort )
+      FetchChars( nPort )
+      RETURN hb_BLen( t_aPorts[ nPort ][ TPFP_INBUF ] )
    ENDIF
 
-   FetchChars( nPort )
-
-   RETURN hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] )
+   RETURN 0
 
 FUNCTION tp_infree( nPort )
 
-   IF ! isopenport( nPort )
-      RETURN 0
+   IF isopenport( nPort )
+      RETURN __tp_infree( t_aPorts[ nPort ][ TPFP_HANDLE ] )
    ENDIF
 
-   RETURN __tp_infree( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN 0
 
 FUNCTION tp_outfree( nPort )
 
-   IF ! isopenport( nPort )
-      RETURN 0
+   IF isopenport( nPort )
+      RETURN __tp_outfree( t_aPorts[ nPort ][ TPFP_HANDLE ] )
    ENDIF
 
-   RETURN __tp_outfree( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN 0
 
 PROCEDURE tp_clearin( nPort )
 
    IF isopenport( nPort )
       FetchChars( nPort )
-      t_aPorts[ nPort, TPFP_INBUF ] := ""
+      t_aPorts[ nPort ][ TPFP_INBUF ] := ""
    ENDIF
 
    RETURN
@@ -406,65 +385,61 @@ FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
    LOCAL nPort // , nTimeout, lIgnorecase
 
    nPort := aParam[ 1 ]
+
+   IF isopenport( nPort )
+
 #if 0
-   nTimeout := aParam[ 2 ]
-   lIgnorecase := aParam[ Len( aParam ) ]
+      nTimeout := aParam[ 2 ]
+      lIgnorecase := aParam[ Len( aParam ) ]
+
+      hb_default( @nTimeout, -1 )
+      hb_default( @lIgnorecase, .F. )
+
+      DO CASE
+      CASE ntimeout < 0
+         nDone := _clock() + 999999
+      CASE ntimeout == 0
+         nDone := 4
+      OTHERWISE
+         nDone := _clock() + nTimeout
+      ENDCASE
+
+      DO WHILE ( nDone > _clock() .OR. nFirst == 100000 ) .AND. ! tp_idle()
+
+         IF nFirst == 100000
+            nFirst := 99999
+         ENDIF
+
+         FetchChars( nPort )
+
+         FOR EACH x IN acList
+            IF lIgnorecase
+               nAt := hb_BAt( Upper( x ), Upper( t_aPorts[ nPort ][ TPFP_INBUF ] ) )
+            ELSE
+               nAt := hb_BAt( x, t_aPorts[ nPort ][ TPFP_INBUF ] )
+            ENDIF
+            IF nAt > 0 .AND. nAt < nFirst
+               nFirst := nAt
+               nRet := x:__enumIndex()
+            ENDIF
+         NEXT
+
+         IF nFirst < 64000
+            EXIT
+         ENDIF
+
+#if 0
+         sched_yield()  // C level function
 #endif
 
-   IF ! isopenport( nPort )
-      RETURN 0
-   ENDIF
-
-#if 0
-   hb_default( @nTimeout, -1 )
-   hb_default( @lIgnorecase, .F. )
-#endif
-
-#if 0
-
-   IF ntimeout < 0
-      nDone := _clock() + 999999
-   ELSEIF ntimeout == 0
-      nDone := 4
-   ELSE
-      nDone := _clock() + nTimeout
-   ENDIF
-
-   DO WHILE ( nDone > _clock() .OR. nFirst == 100000 ) .AND. ! tp_idle()
-
-      IF nFirst == 100000
-         nFirst := 99999
-      ENDIF
-
-      FetchChars( nPort )
-
-      FOR EACH x IN acList
-         IF lIgnorecase
-            nAt := hb_BAt( Upper( x ), Upper( t_aPorts[ nPort, TPFP_INBUF ] ) )
-         ELSE
-            nAt := hb_BAt( x, t_aPorts[ nPort, TPFP_INBUF ] )
-         ENDIF
-         IF nAt > 0 .AND. nAt < nFirst
-            nFirst := nAt
-            nRet := x:__enumIndex()
-         ENDIF
-      NEXT
+      ENDDO
 
       IF nFirst < 64000
-         EXIT
+         tp_recv( nPort, nAt + hb_BLen( acList[ nRet ] ) )
+         RETURN nRet
       ENDIF
-
-#if 0
-      sched_yield() // C level function
 #endif
-
-   ENDDO
-
-   IF nFirst < 64000
-      tp_recv( nPort, nAt + hb_BLen( acList[ nRet ] ) )
-      RETURN nRet
    ENDIF
-#endif
 
    RETURN 0
 
@@ -475,25 +450,26 @@ FUNCTION tp_ctrlcts( nPort, nNewCtrl )
    LOCAL nCurValue
    LOCAL nFlag
 
-   IF ! isopenport( nPort )
-      RETURN 0
-   ENDIF
+   IF isopenport( nPort )
 
-   IF hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], @nCurValue )
-      nFlag := hb_bitOr( HB_COM_FLOW_IRTSCTS, HB_COM_FLOW_ORTSCTS )
-      IF HB_ISNUMERIC( nNewCtrl )
-         IF nNewCtrl == 0
-            nNewCtrl := hb_bitAnd( nCurValue, hb_bitNot( nFlag ) )
-         ELSE
-            nNewCtrl := hb_bitOr( nCurValue, nFlag )
+      IF hb_comFlowControl( t_aPorts[ nPort ][ TPFP_HANDLE ], @nCurValue )
+         nFlag := hb_bitOr( HB_COM_FLOW_IRTSCTS, HB_COM_FLOW_ORTSCTS )
+         IF HB_ISNUMERIC( nNewCtrl )
+            IF nNewCtrl == 0
+               nNewCtrl := hb_bitAnd( nCurValue, hb_bitNot( nFlag ) )
+            ELSE
+               nNewCtrl := hb_bitOr( nCurValue, nFlag )
+            ENDIF
+
+            hb_comFlowControl( t_aPorts[ nPort ][ TPFP_HANDLE ],, nNewCtrl )
          ENDIF
-
-         hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], NIL, nNewCtrl )
+         nCurValue := iif( hb_bitAnd( nCurValue, nFlag ) != 0, 1, 0 )
       ENDIF
-      nCurValue := iif( hb_bitAnd( nCurValue, nFlag ) != 0, 1, 0 )
+
+      RETURN nCurValue
    ENDIF
 
-   RETURN nCurValue
+   RETURN 0
 
 
 // Simply calls tp_ctrlcts()
@@ -510,96 +486,94 @@ FUNCTION tp_ctrldtr( nPort, nNewCtrl )
    LOCAL nCurValue
    LOCAL nFlag
 
-   IF ! isopenport( nPort )
-      RETURN 0
-   ENDIF
+   IF isopenport( nPort )
 
-   IF hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], @nCurValue )
-      nFlag := hb_bitOr( HB_COM_FLOW_IDTRDSR, HB_COM_FLOW_ODTRDSR )
-      IF HB_ISNUMERIC( nNewCtrl )
-         IF nNewCtrl == 0
-            nNewCtrl := hb_bitAnd( nCurValue, hb_bitNot( nFlag ) )
-         ELSE
-            nNewCtrl := hb_bitOr( nCurValue, nFlag )
+      IF hb_comFlowControl( t_aPorts[ nPort ][ TPFP_HANDLE ], @nCurValue )
+         nFlag := hb_bitOr( HB_COM_FLOW_IDTRDSR, HB_COM_FLOW_ODTRDSR )
+         IF HB_ISNUMERIC( nNewCtrl )
+            IF nNewCtrl == 0
+               nNewCtrl := hb_bitAnd( nCurValue, hb_bitNot( nFlag ) )
+            ELSE
+               nNewCtrl := hb_bitOr( nCurValue, nFlag )
+            ENDIF
+
+            hb_comFlowControl( t_aPorts[ nPort ][ TPFP_HANDLE ],, nNewCtrl )
          ENDIF
-
-         hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], NIL, nNewCtrl )
+         nCurValue := iif( hb_bitAnd( nCurValue, nFlag ) != 0, 1, 0 )
       ENDIF
-      nCurValue := iif( hb_bitAnd( nCurValue, nFlag ) != 0, 1, 0 )
+
+      RETURN nCurValue
    ENDIF
 
-   RETURN nCurValue
+   RETURN 0
 
 FUNCTION tp_isdcd( nPort )
 
    LOCAL nValue
 
-   IF ! isopenport( nPort )
-      RETURN .F.
+   IF isopenport( nPort )
+      hb_comMSR( nPort, @nValue )
+      RETURN hb_bitAnd( nValue, HB_COM_MSR_DCD ) != 0
    ENDIF
 
-   hb_comMSR( nPort, @nValue )
-
-   RETURN hb_bitAnd( nValue, HB_COM_MSR_DCD ) != 0
+   RETURN .F.
 
 FUNCTION tp_isri( nPort )
 
    LOCAL nValue
 
-   IF ! isopenport( nPort )
-      RETURN .F.
+   IF isopenport( nPort )
+      hb_comMSR( nPort, @nValue )
+      RETURN hb_bitAnd( nValue, HB_COM_MSR_RI ) != 0
    ENDIF
 
-   hb_comMSR( nPort, @nValue )
-
-   RETURN hb_bitAnd( nValue, HB_COM_MSR_RI ) != 0
+   RETURN .F.
 
 FUNCTION tp_isdsr( nPort )
 
    LOCAL nValue
 
-   IF ! isopenport( nPort )
-      RETURN .F.
+   IF isopenport( nPort )
+      hb_comMSR( nPort, @nValue )
+      RETURN hb_bitAnd( nValue, HB_COM_MSR_DSR ) != 0
    ENDIF
 
-   hb_comMSR( nPort, @nValue )
-
-   RETURN hb_bitAnd( nValue, HB_COM_MSR_DSR ) != 0
+   RETURN .F.
 
 FUNCTION tp_iscts( nPort )
 
    LOCAL nValue
 
-   IF ! isopenport( nPort )
-      RETURN .F.
+   IF isopenport( nPort )
+      hb_comMSR( nPort, @nValue )
+      RETURN hb_bitAnd( nValue, HB_COM_MSR_CTS ) != 0
    ENDIF
 
-   hb_comMSR( nPort, @nValue )
-
-   RETURN hb_bitAnd( nValue, HB_COM_MSR_CTS ) != 0
+   RETURN .F.
 
 FUNCTION tp_flush( nPort, nTimeout )
 
    LOCAL nDone
 
-   IF ! isopenport( nPort )
-      RETURN TE_CLOSED
+   IF isopenport( nPort )
+
+      hb_default( @nTimeout, -1 )
+
+      IF nTimeout > 1800
+         nTimeout := 1800
+      ENDIF
+
+      nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
+
+      DO WHILE tp_outfree( nPort ) > 0 .AND. ;
+            ( nTimeout < 0 .OR. Seconds() < nDone )
+         hb_idleState()
+      ENDDO
+
+      RETURN iif( tp_outfree( nPort ) > 0, TE_TMOUT, 0 )
    ENDIF
 
-   hb_default( @nTimeout, -1 )
-
-   IF nTimeout > 1800
-      nTimeout := 1800
-   ENDIF
-
-   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
-
-   DO WHILE tp_outfree( nPort ) > 0 .AND. ;
-         ( nTimeout < 0 .OR. Seconds() < nDone )
-      hb_idleState()
-   ENDDO
-
-   RETURN iif( tp_outfree( nPort ) > 0, TE_TMOUT, 0 )
+   RETURN TE_CLOSED
 
 #if 0
 
@@ -620,35 +594,26 @@ FUNCTION tp_setport()
 // internal (static) functions ---------------------------------------------------
 
 STATIC FUNCTION isopenport( nPort )
-
-   IF ! isport( nPort )
-      RETURN .F.
-   ENDIF
-
-   RETURN t_aPorts[ nPort, TPFP_OC ]
+   RETURN isport( nPort ) .AND. t_aPorts[ nPort ][ TPFP_OC ]
 
 STATIC FUNCTION isport( nPort )
-
-   IF ! HB_ISNUMERIC( nPort ) .OR. nPort < 1 .OR. nPort > TP_MAXPORTS
-      RETURN .F.
-   ENDIF
-
-   RETURN .T.
+   RETURN HB_ISNUMERIC( nPort ) .AND. nPort >= 1 .AND. nPort <= TP_MAXPORTS
 
 STATIC FUNCTION FetchChars( nPort )
 
    LOCAL cStr
 
-   IF ! isopenport( nPort )
-      RETURN 0
+   IF isopenport( nPort )
+
+      cStr := Space( hb_comInputCount( t_aPorts[ nPort ][ TPFP_HANDLE ] ) )
+      hb_comRecv( t_aPorts[ nPort ][ TPFP_HANDLE ], @cStr )
+
+      t_aPorts[ nPort ][ TPFP_INBUF ] += cStr
+
+      RETURN hb_BLen( cStr )
    ENDIF
 
-   cStr := Space( hb_comInputCount( t_aPorts[ nPort, TPFP_HANDLE ] ) )
-   hb_comRecv( t_aPorts[ nPort, TPFP_HANDLE ], @cStr )
-
-   t_aPorts[ nPort, TPFP_INBUF ] += cStr
-
-   RETURN hb_BLen( cStr )
+   RETURN 0
 
 INIT PROCEDURE _tpinit()
 
@@ -716,10 +681,8 @@ PROCEDURE tp_debug( nDebugLevel, cString )
 
 #endif
 
+/* NOTE: dummy function, solely for compatibility. */
 PROCEDURE tp_uninstall()
-
-   /* NOTE: dummy function, solely for compatibility. */
-
    RETURN
 
 STATIC FUNCTION __tp_infree()

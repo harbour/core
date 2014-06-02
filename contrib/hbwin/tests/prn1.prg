@@ -42,12 +42,8 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
       oPrinter:AskProperties := lAsk
    ENDIF
 
-   IF ! oPrinter:Create()
-      Alert( "Cannot Create Printer" )
-   ELSE
-      IF ! oPrinter:startDoc( "win_Prn(Doc name in Printer Properties)" )
-         Alert( "StartDoc() failed" )
-      ELSE
+   IF oPrinter:Create()
+      IF oPrinter:startDoc( "win_Prn(Doc name in Printer Properties)" )
          oPrinter:SetPen( WIN_PS_SOLID, 1, HB_WIN_RGB_RED )
          oPrinter:Bold( WIN_FW_EXTRABOLD )
          oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() == " + hb_ntos( oPrinter:MaxRow() ) + "   MaxCol() == " + hb_ntos( oPrinter:MaxCol() ) )
@@ -57,7 +53,9 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:NewLine()
          oPrinter:UnderLine( .T. )
          oPrinter:Italic( .T. )
-//       oPrinter:SetFont( "Courier New", 7, { 3, -50 } )  // Compressed print
+#if 0
+         oPrinter:SetFont( "Courier New", 7, { 3, -50 } )  // Compressed print
+#endif
          nColFixed   := 40 * oPrinter:CharWidth
          nColTTF     := 48 * oPrinter:CharWidth
          nColCharSet := 60 * oPrinter:CharWidth
@@ -71,19 +69,19 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:NewLine()
          oPrinter:Italic( .F. )
          oPrinter:UnderLine( .F. )
-         aFonts := oPrinter:GetFonts()
          oPrinter:NewLine()
+         aFonts := oPrinter:GetFonts()
          FOR x := 1 TO Len( aFonts ) STEP 2
-            oPrinter:CharSet( aFonts[ x, 4 ] )
-            IF oPrinter:SetFont( aFonts[ x, 1 ] )      // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
-               IF oPrinter:FontName == aFonts[ x, 1 ]  // Make sure Windows didn't pick a different font
-                  oPrinter:TextOut( aFonts[ x, 1 ] )
+            oPrinter:CharSet( aFonts[ x ][ HB_WINFONT_CHARSET ] )
+            IF oPrinter:SetFont( aFonts[ x ][ HB_WINFONT_NAME ] )      // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
+               IF oPrinter:FontName == aFonts[ x ][ HB_WINFONT_NAME ]  // Make sure Windows didn't pick a different font
+                  oPrinter:TextOut( aFonts[ x ][ HB_WINFONT_NAME ] )
                   oPrinter:SetPos( nColFixed )
-                  oPrinter:TextOut( iif( aFonts[ x, 2 ], "Yes", "No" ) )
+                  oPrinter:TextOut( iif( aFonts[ x ][ HB_WINFONT_FIXED ], "Yes", "No" ) )
                   oPrinter:SetPos( nColTTF )
-                  oPrinter:TextOut( iif( aFonts[ x, 3 ], "Yes", "No" ) )
+                  oPrinter:TextOut( iif( aFonts[ x ][ HB_WINFONT_TRUETYPE ], "Yes", "No" ) )
                   oPrinter:SetPos( nColCharSet )
-                  oPrinter:TextOut( hb_ntos( aFonts[ x, 4 ] ) )
+                  oPrinter:TextOut( hb_ntos( aFonts[ x ][ HB_WINFONT_CHARSET ] ) )
                   oPrinter:SetPos( oPrinter:LeftMargin, oPrinter:PosY + ( oPrinter:CharHeight * 2 ) )
                   IF oPrinter:PRow() > oPrinter:MaxRow() - 16  // Could use "oPrinter:NewPage()" to start a new page
                      EXIT
@@ -118,12 +116,15 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          // To print a barcode;
          // Replace "BCod39HN" with your own bar code font or any other font
          //   oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ), oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
-         //
          PrintBitmap( oPrinter, cBMPFile )
 
          oPrinter:EndDoc()
+      ELSE
+         Alert( "StartDoc() failed" )
       ENDIF
       oPrinter:Destroy()
+   ELSE
+      Alert( "Cannot Create Printer" )
    ENDIF
 
    RETURN

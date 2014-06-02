@@ -1,4 +1,3 @@
-//
 //         Test/Demo Program for
 //          GTWVW GUI Interface
 //      with multiple window support
@@ -14,7 +13,6 @@
 //   by Peter Rees <peter@rees.co.nz>
 //
 // parts of this program are copyrights of their respective owners
-//
 
 #require "gtwvw"
 
@@ -148,7 +146,7 @@ STATIC s_afontinfo := {}         // x current font info
 
 STATIC s_amouseobjlist := {}
 STATIC s_ncurkey := 0
-STATIC s_nkeyrepeater := NIL
+STATIC s_nkeyrepeater
 STATIC s_nrepeatrate  := 0.1
 STATIC s_nrepeatdelay := 0.5
 

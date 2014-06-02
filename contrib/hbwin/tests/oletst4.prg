@@ -17,9 +17,9 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   oObject := win_oleCreateObject( "MyOleObjServer" )
-
-   IF ! Empty( oObject )
+   IF Empty( oObject := win_oleCreateObject( "MyOleObjServer" ) )
+      ? "Can not access 'MyOleObjServer' OLE server."
+   ELSE
       oTime := oObject:timer()
       ? "TIMER:"
       ? "      date:", oTime:date
@@ -40,8 +40,6 @@ PROCEDURE Main()
       ? "        p5:", p5:className() // hb_ValToExp( p5 )
       ? "        p6:", hb_ValToExp( p6 )
       ? "        p7:", hb_ValToExp( p7 )
-   ELSE
-      ? "Can not access 'MyOleObjServer' OLE server."
    ENDIF
 
    WAIT

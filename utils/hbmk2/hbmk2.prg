@@ -8970,8 +8970,8 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
    LOCAL aCommand
 #endif
 
-   THREAD STATIC t_pRegexInclude := NIL
-   THREAD STATIC t_hExclStd := NIL
+   THREAD STATIC t_pRegexInclude
+   THREAD STATIC t_hExclStd
 
    IF hbmk[ _HBMK_nHEAD ] == _HEAD_OFF
       RETURN .F.
@@ -10472,7 +10472,7 @@ STATIC FUNCTION hbmk_SecToken()
    /* NOTE: Security token to protect against plugins accessing our
             internal structures referenced from context variable */
 
-   STATIC s_cToken := NIL
+   STATIC s_cToken
    STATIC s_mutexToken := hb_mutexCreate()
 
    hb_mutexLock( s_mutexToken )
@@ -14649,7 +14649,7 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
 
 STATIC FUNCTION hbmk_CoreHeaderFiles()
 
-   THREAD STATIC t_hHeaders := NIL
+   THREAD STATIC t_hHeaders
 
 #if defined( HBMK_WITH_EMBEDDED_HEADERS ) .OR. ;
     defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
@@ -14773,7 +14773,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 
 STATIC FUNCTION hbsh()
 
-   THREAD STATIC t_hbsh := NIL
+   THREAD STATIC t_hbsh
 
    IF t_hbsh == NIL
       t_hbsh := Array( _HBSH_MAX_ )

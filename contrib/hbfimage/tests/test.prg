@@ -1,6 +1,4 @@
-/*
- * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
+/* Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * FreeImage API test file
  */
 
@@ -9,8 +7,8 @@
 #include "fileio.ch"
 #include "simpleio.ch"
 
-#define IMAGES_IN  ""
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   ""
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 

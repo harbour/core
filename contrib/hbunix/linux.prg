@@ -1,9 +1,9 @@
 /*
  * Harbour Project source code:
- * expat API - Harbour complementary functions
+ * Linux specific functions
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour)
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,26 +46,91 @@
  *
  */
 
-#include "hbextcdp.ch"
+#include "fileio.ch"
 
-#define _UNI_NAME_NORM( s )  hb_StrReplace( s, "-. " )
+/* http://www.freedesktop.org/wiki/Specifications/trash-spec/ */
+FUNCTION linux_MoveToTrash( cFileName )
 
-FUNCTION hb_XML_get_unicode_table( cCP )
+   THREAD STATIC t_cTrashDirInfo
+   THREAD STATIC t_cTrashDirFiles
+   THREAD STATIC t_lInit := .F.
 
-   THREAD STATIC t_uni
+   LOCAL aPath
+   LOCAL cTrashDir
+   LOCAL cInfo
+   LOCAL cFile
+   LOCAL tmp
+   LOCAL n
+   LOCAL tDate
 
-   LOCAL cdp
+   IF ! HB_ISSTRING( cFileName )
+      RETURN -1
+   ENDIF
 
-   IF t_uni == NIL
-      /* Gather full list of unicode tables supported by codepage modules. */
-      t_uni := { => }
-      FOR EACH cdp IN hb_cdpList()
-         t_uni[ _UNI_NAME_NORM( hb_cdpUniID( cdp ) ) ] := cdp
+   IF ! t_lInit
+
+      aPath := {}
+
+      IF ! Empty( tmp := GetEnv( "XDG_DATA_HOME" ) )
+         AAdd( aPath, hb_DirSepAdd( tmp ) + "Trash" )
+      ENDIF
+
+      AAdd( aPath, hb_DirSepAdd( GetEnv( "HOME" ) ) + hb_DirSepToOS( ".local/share/Trash" ) )
+      AAdd( aPath, hb_DirSepAdd( GetEnv( "HOME" ) ) + ".trash" )
+
+      FOR EACH tmp IN aPath
+         IF hb_DirExists( tmp )
+            cTrashDir := tmp
+            EXIT
+         ENDIF
       NEXT
+
+      IF Empty( cTrashDir )
+         RETURN -2
+      ENDIF
+
+      t_cTrashDirInfo  := hb_DirSepAdd( cTrashDir ) + "info"
+      t_cTrashDirFiles := hb_DirSepAdd( cTrashDir ) + "files"
+
+      IF ! hb_DirExists( t_cTrashDirInfo ) .AND. ;
+         ! hb_DirExists( t_cTrashDirFiles )
+         RETURN -3
+      ENDIF
+
+      t_lInit := .T.
    ENDIF
 
-   IF ( cCP := _UNI_NAME_NORM( cCP ) ) $ t_uni
-      RETURN __hb_XML_cdpU16Map( t_uni[ cCP ] )
+   cFileName := hb_PathJoin( hb_DirBase(), cFileName )
+
+   IF ! hb_FileExists( cFileName )
+      RETURN -4
    ENDIF
 
-   RETURN NIL
+   n := 0
+   DO WHILE .T.
+
+      tmp := hb_FNameName( cFileName ) + iif( n == 0, "", "." + hb_ntos( n ) ) + hb_FNameExt( cFileName )
+
+      cInfo := hb_DirSepAdd( t_cTrashDirInfo ) + tmp + ".trashinfo"
+      cFile := hb_DirSepAdd( t_cTrashDirFiles ) + tmp
+
+      IF ! hb_FileExists( cInfo ) .AND. ;
+         ! hb_FileExists( cFile )
+         EXIT
+      ENDIF
+
+      n++
+   ENDDO
+
+   IF FRename( cFileName, cFile ) == F_ERROR
+      RETURN -5
+   ENDIF
+
+   IF hb_MemoWrit( cInfo, hb_StrToUTF8( ;
+         e"[Trash Info]\n" + ;
+         e"Path=" + cFileName + e"\n" + ;
+         e"DeletionDate=" + hb_DToC( tDate := hb_DateTime(), "yyyy-mm-dd" ) + hb_TToC( tDate, "", "Thh:mm:ss.fffZ" ) + e"\n" ) )
+      RETURN 0
+   ENDIF
+
+   RETURN -6

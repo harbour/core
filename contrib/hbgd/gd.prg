@@ -57,7 +57,6 @@ FUNCTION gdImageEllipse( im, cx, cy, w, h, color )
 
 FUNCTION gdImageFTWidth( fontname, ptsize, angle )
 
-   LOCAL nWidth
    LOCAL aRect := Array( 8 )
 
    IF gdImageStringFTEx( , @aRect, 0, ;
@@ -65,16 +64,13 @@ FUNCTION gdImageFTWidth( fontname, ptsize, angle )
       hb_defaultValue( ptsize, 8 ), ;
       hb_defaultValue( angle, 0 ), 0, 0, "M" ) == ""
 
-      nWidth := aRect[ 3 ] - aRect[ 1 ]
-   ELSE
-      nWidth := 0
+      RETURN aRect[ 3 ] - aRect[ 1 ]
    ENDIF
 
-   RETURN nWidth
+   RETURN 0
 
 FUNCTION gdImageFTHeight( fontname, ptsize, angle )
 
-   LOCAL nWidth
    LOCAL aRect := Array( 8 )
 
    IF gdImageStringFTEx( , @aRect, 0, ;
@@ -82,12 +78,10 @@ FUNCTION gdImageFTHeight( fontname, ptsize, angle )
       hb_defaultValue( ptsize, 8 ), ;
       hb_defaultValue( angle, 0 ), 0, 0, "M" ) == ""
 
-      nWidth := aRect[ 2 ] - aRect[ 8 ]
-   ELSE
-      nWidth := 0
+      RETURN aRect[ 2 ] - aRect[ 8 ]
    ENDIF
 
-   RETURN nWidth
+   RETURN 0
 
 FUNCTION gdImageFTSize( string, fontname, ptsize, angle )
 
@@ -120,8 +114,7 @@ FUNCTION gdImageStringFT( im, fg, fontname, ptsize, angle, x, y, string, ;
    LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   cErr := gdImageStringFTEx( , @aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
-   IF cErr == ""
+   IF ( cErr := gdImageStringFTEx( , @aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution ) ) == ""
       cErr := gdImageStringFTEx( im, aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
    ENDIF
 
@@ -209,8 +202,6 @@ PROCEDURE gdImageToFile( oImage, cFile )
          cString := oImage:ToStringPng()
          cExt := ".png"
          EXIT
-      OTHERWISE
-         cExt := ""
       ENDSWITCH
 
       IF cString != NIL

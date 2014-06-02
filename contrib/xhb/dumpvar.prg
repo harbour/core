@@ -357,7 +357,6 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
 /* return all values from classes, included type and scope */
 STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
 
-   LOCAL aVars
    LOCAL aReturn
    LOCAL aVar
 
@@ -367,9 +366,8 @@ STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
 
    hb_default( @aExcept, {} )
 
-   aVars   := __objGetMsgFullList( oObject, .T., HB_MSGLISTALL, nScope, nNoScope )
    aReturn := {}
-   FOR EACH aVar IN aVars
+   FOR EACH aVar IN __objGetMsgFullList( oObject, .T., HB_MSGLISTALL, nScope, nNoScope )
       IF hb_AScan( aExcept, aVar[ HB_OO_DATA_SYMBOL ], , , .T. ) == 0
          // TraceLog( "__objGetValueFullList():  aVar[HB_OO_DATA_SYMBOL]",  aVar[ HB_OO_DATA_SYMBOL ] )
          AAdd( aReturn, { aVar[ HB_OO_DATA_SYMBOL ], __SendRawMsg( oObject, aVar[ HB_OO_DATA_SYMBOL ] ), aVar[ HB_OO_DATA_TYPE ], aVar[ HB_OO_DATA_SCOPE ] } )

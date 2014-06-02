@@ -4,9 +4,9 @@
 
 PROCEDURE Main()
 
-   LOCAL cJ, nErr
+   LOCAL nErr
+   LOCAL cJ := hb_bz2_Compress( "Hello",, @nErr )
 
-   cJ := hb_bz2_Compress( "Hello", , @nErr )
    ? nErr, Len( cJ ), hb_StrToHex( cJ )
 
    RETURN

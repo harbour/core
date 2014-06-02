@@ -1,13 +1,11 @@
-/*
- * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
+/* Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * GD API test file
  */
 
 #require "hbgd"
 
-#define IMAGES_IN  "imgs_in" + hb_ps()
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   "imgs_in" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 
@@ -32,50 +30,28 @@ PROCEDURE Main()
       images; otherwise create or fetch a truecolor image instead. */
 
    /* ***** DRAW A LINE IN A PALETTE BASED IMAGE ***** */
-
-   /* First we create a true color image */
-   im := gdImageCreatePalette( 100, 100 )    // alias of gdImageCreate()
+   im := gdImageCreatePalette( 100, 100 )                  /* First we create a true color image */
 
    /* First allocate color is Background color */
    gdImageFilledRectangle( im, 0, 0, 100, 100, gdImageColorAllocate( im, 0, 0, 0 ) )
 
-   /* set foreground color */
-   blue := gdImageColorAllocate( im, 0, 0, 255 )
-
-   /* Now we draw an aliased line */
-   gdImageLine( im, 0, 0, 99, 40, blue )
-
-   /* Then we set anti-alias color */
-   gdImageSetAntiAliased( im, blue )
-
-   /* and re-draw the line in antialiased mode */
-   gdImageLine( im, 0, 40, 99, 80, gdAntiAliased )
-
-   /* saving the image */
-   gdImageJpeg( im, IMAGES_OUT + "antialiasedpal.jpg" )
+   blue := gdImageColorAllocate( im, 0, 0, 255 )           /* set foreground color */
+   gdImageLine( im, 0, 0, 99, 40, blue )                   /* Now we draw an aliased line */
+   gdImageSetAntiAliased( im, blue )                       /* Then we set anti-alias color */
+   gdImageLine( im, 0, 40, 99, 80, gdAntiAliased )         /* and re-draw the line in antialiased mode */
+   gdImageJpeg( im, IMAGES_OUT + "antialiasedpal.jpg" )    /* saving the image */
 
    /* ***** DRAW A LINE IN A TRUE COLOR IMAGE ***** */
-
-   /* First we create a true color image */
-   im := gdImageCreateTrueColor( 100, 100 )
+   im := gdImageCreateTrueColor( 100, 100 )                /* First we create a true color image */
 
    /* Background color (true color comes with black background, we have to fill it) */
    gdImageFilledRectangle( im, 0, 0, 100, 100, gdTrueColor( 255, 255, 255 ) )
 
-   /* set foreground color */
-   blue := gdImageColorAllocate( im, 0, 0, 255 )
-
-   /* Now we draw an aliased line */
-   gdImageLine( im, 0, 0, 99, 40, blue )
-
-   /* Then we set anti-alias color */
-   gdImageSetAntiAliased( im, blue )
-
-   /* and re-draw the line in antialiased mode */
-   gdImageLine( im, 0, 40, 99, 80, gdAntiAliased )
-
-   /* saving the image */
-   gdImageJpeg( im, IMAGES_OUT + "antialiasedtrue.jpg" )
+   blue := gdImageColorAllocate( im, 0, 0, 255 )           /* set foreground color */
+   gdImageLine( im, 0, 0, 99, 40, blue )                   /* Now we draw an aliased line */
+   gdImageSetAntiAliased( im, blue )                       /* Then we set anti-alias color */
+   gdImageLine( im, 0, 40, 99, 80, gdAntiAliased )         /* and re-draw the line in antialiased mode */
+   gdImageJpeg( im, IMAGES_OUT + "antialiasedtrue.jpg" )   /* saving the image */
 
    ? "Look at", IMAGES_OUT, "folder for output images"
 

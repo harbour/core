@@ -462,7 +462,7 @@ METHOD open() CLASS PopupMenu
    ENDIF
    IF ::lShadowed
       nBottom += 1
-      nRight  += 2
+      nRight += 2
    ENDIF
 
    ::aSaveScr := { nTop, nLeft, nBottom, nRight, SaveScreen( nTop, nLeft, nBottom, nRight ) }

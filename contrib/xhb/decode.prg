@@ -56,13 +56,12 @@
  */
 FUNCTION hb_Decode( ... )
 
-   LOCAL aParams, nParams, xDefault
    LOCAL xVal, cKey, xRet
    LOCAL aValues, aResults, n, i, nPos, nLen
 
-   aParams  := hb_AParams()
-   nParams  := PCount()
-   xDefault := NIL
+   LOCAL aParams  := hb_AParams()
+   LOCAL nParams  := PCount()
+   LOCAL xDefault := NIL
 
    DO CASE
    CASE nParams > 1     /* More parameters, real case */

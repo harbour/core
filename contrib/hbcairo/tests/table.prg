@@ -48,8 +48,8 @@ STATIC PROCEDURE draw_table( hCairo, nX, nY, aCol )
    dbGoTop()
    aWidth := Array( Len( aCol ) )
    FOR nI := 1 TO Len( aCol )
-      aWidth[ nI ] := cairo_text_extents( hCairo, Replicate( "9", hb_FieldLen( FieldPos( aCol[ nI, 2 ] ) ) ) )[ 5 ]
-      aWidth[ nI ] := Max( aWidth[ nI ], cairo_text_extents( hCairo, aCol[ nI, 1 ] )[ 5 ] ) + 20
+      aWidth[ nI ] := cairo_text_extents( hCairo, Replicate( "9", hb_FieldLen( FieldPos( aCol[ nI ][ 2 ] ) ) ) )[ 5 ]
+      aWidth[ nI ] := Max( aWidth[ nI ], cairo_text_extents( hCairo, aCol[ nI ][ 1 ] )[ 5 ] ) + 20
    NEXT
    nW := 0
    AEval( aWidth, {| X | nW += X } )
@@ -61,7 +61,7 @@ STATIC PROCEDURE draw_table( hCairo, nX, nY, aCol )
    nDX := nX
    FOR nI := 1 TO Len( aCol )
       cairo_move_to( hCairo, nDX + aWidth[ nI ] / 2, nY + 10 )
-      show_text_center( hCairo, aCol[ nI, 1 ] )
+      show_text_center( hCairo, aCol[ nI ][ 1 ] )
       nDX += aWidth[ nI ]
       IF nI < Len( aCol )
          cairo_move_to( hCairo, nDX, nY )
@@ -77,7 +77,7 @@ STATIC PROCEDURE draw_table( hCairo, nX, nY, aCol )
    DO WHILE ! Eof()
       nDX := nX
       FOR nI := 1 TO Len( aCol )
-         xValue := FieldGet( FieldPos( aCol[ nI, 2 ] ) )
+         xValue := FieldGet( FieldPos( aCol[ nI ][ 2 ] ) )
          SWITCH ValType( xValue )
          CASE "C"
             cairo_move_to( hCairo, nDX + 10, nY + 10 )
@@ -112,7 +112,7 @@ STATIC PROCEDURE draw_table( hCairo, nX, nY, aCol )
 
 STATIC PROCEDURE show_text_right( hCairo, cText )
 
-   cairo_rel_move_to( hCairo, - cairo_text_extents( hCairo, cText )[ 5 ], 0 )
+   cairo_rel_move_to( hCairo, -cairo_text_extents( hCairo, cText )[ 5 ], 0 )
    cairo_show_text( hCairo, cText )
 
    RETURN

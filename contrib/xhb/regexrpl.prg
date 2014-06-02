@@ -51,25 +51,14 @@
 
 FUNCTION hb_regexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch )
 
-   LOCAL aMatches := hb_regexAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
-   LOCAL cReturn := cString
+   LOCAL cReturn := cString, nOffSet := 0, aMatch, nLenSearch
 
-   LOCAL aMatch
-   LOCAL nOffSet
-   LOCAL cSearch, nStart, nLenSearch, nLenReplace
-
-   IF ! Empty( aMatches )
-      nOffSet := 0
-      FOR EACH aMatch IN aMatches
-         IF HB_ISARRAY( aMatch ) .AND. Len( aMatch ) == 3 // if regex matches I must have an array of 3 elements
-            cSearch := aMatch[ MATCH_STRING ]
-            nStart  := aMatch[ MATCH_START ]
-            nLenSearch  := Len( cSearch )
-            nLenReplace := Len( cReplace )
-            cReturn := Stuff( cReturn, nStart - nOffSet, nLenSearch, cReplace )
-            nOffSet += nLenSearch - nLenReplace
-         ENDIF
-      NEXT
-   ENDIF
+   FOR EACH aMatch IN hb_regexAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
+      IF HB_ISARRAY( aMatch ) .AND. Len( aMatch ) == 3  // if regex matches I must have an array of 3 elements
+         nLenSearch := Len( aMatch[ MATCH_STRING ] )
+         cReturn := Stuff( cReturn, aMatch[ MATCH_START ] - nOffSet, nLenSearch, cReplace )
+         nOffSet += nLenSearch - Len( cReplace )
+      ENDIF
+   NEXT
 
    RETURN cReturn

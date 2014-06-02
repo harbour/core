@@ -53,12 +53,12 @@
 
 /* NOTE: Do some initialization required by the GD headers. */
 #if defined( HB_OS_WIN )
-#  if ! defined( WIN32 )
-#     define WIN32
-#endif
-#  if ! defined( BGDWIN32 )
-#     define BGDWIN32
-#  endif
+   #if ! defined( WIN32 )
+      #define WIN32
+   #endif
+   #if ! defined( BGDWIN32 )
+      #define BGDWIN32
+   #endif
 #endif
 
 #include "gd.h"
@@ -76,10 +76,7 @@
 #define IMAGE_WBMP  4
 #define IMAGE_GD    5
 
-/* Internal functions */
-
-/*
- * internal function for handling pointers
+/* Internal function for handling pointers
  *
  * Code of Przemyslaw Czerpak for gdImagePtr
  * adapted also to gdFontPtr

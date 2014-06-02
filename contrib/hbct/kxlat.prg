@@ -399,29 +399,27 @@ FUNCTION hbct_SetKXLat( nOrgKeyValue, nNewKeyValue )
          ENDIF
          hb_mutexUnlock( s_hMutex )
       ENDIF
-   ELSE
-      IF HB_ISNUMERIC( nOrgKeyValue ) .AND. nOrgKeyValue != 0
-         IF hb_mutexLock( s_hMutex )
-            IF PCount() == 1
-               IF nOrgKeyValue $ s_hTrs
-                  lAccepted := .T.
-                  hb_HDel( s_hTrs, nOrgKeyValue )
-                  IF Empty( s_hTrs )
-                     hb_gtInfo( HB_GTI_INKEYFILTER, NIL )
-                  ENDIF
-               ENDIF
-            ELSEIF HB_ISNUMERIC( nNewKeyValue )
-               /* refuse overwriting custom HB_GTI_INKEYFILTER */
-               IF hb_gtInfo( HB_GTI_INKEYFILTER ) == NIL .OR. ! Empty( s_hTrs )
-                  lAccepted := .T.
-                  IF Empty( s_hTrs )
-                     hb_gtInfo( HB_GTI_INKEYFILTER, {| nKey | __hbct_kxlat( nKey ) } )
-                  ENDIF
-                  s_hTrs[ nOrgKeyValue ] := nNewKeyValue
+   ELSEIF HB_ISNUMERIC( nOrgKeyValue ) .AND. nOrgKeyValue != 0
+      IF hb_mutexLock( s_hMutex )
+         IF PCount() == 1
+            IF nOrgKeyValue $ s_hTrs
+               lAccepted := .T.
+               hb_HDel( s_hTrs, nOrgKeyValue )
+               IF Empty( s_hTrs )
+                  hb_gtInfo( HB_GTI_INKEYFILTER, NIL )
                ENDIF
             ENDIF
-            hb_mutexUnlock( s_hMutex )
+         ELSEIF HB_ISNUMERIC( nNewKeyValue )
+            /* refuse overwriting custom HB_GTI_INKEYFILTER */
+            IF hb_gtInfo( HB_GTI_INKEYFILTER ) == NIL .OR. ! Empty( s_hTrs )
+               lAccepted := .T.
+               IF Empty( s_hTrs )
+                  hb_gtInfo( HB_GTI_INKEYFILTER, {| nKey | __hbct_kxlat( nKey ) } )
+               ENDIF
+               s_hTrs[ nOrgKeyValue ] := nNewKeyValue
+            ENDIF
          ENDIF
+         hb_mutexUnlock( s_hMutex )
       ENDIF
    ENDIF
 

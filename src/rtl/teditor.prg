@@ -1036,10 +1036,10 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ENDIF
 
    // textrow/col, wndrow/col management
-   nTextRow    := Max( 1, hb_defaultValue( nTextRow, 1 ) )
-   nTextCol    := Max( 0, hb_defaultValue( nTextCol, 0 ) )
-   nWndRow     := Max( 0, hb_defaultValue( nWndRow, 0 ) )
-   nWndCol     := Max( 0, hb_defaultValue( nWndCol, 0 ) )
+   nTextRow := Max( 1, hb_defaultValue( nTextRow, 1 ) )
+   nTextCol := Max( 0, hb_defaultValue( nTextCol, 0 ) )
+   nWndRow  := Max( 0, hb_defaultValue( nWndRow, 0 ) )
+   nWndCol  := Max( 0, hb_defaultValue( nWndCol, 0 ) )
 
    ::nFirstRow := Max( 1, nTextRow - nWndRow )
    ::nFirstCol := nTextCol - nWndCol + 1

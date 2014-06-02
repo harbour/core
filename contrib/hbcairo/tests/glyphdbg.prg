@@ -2,10 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL hSurface, hCairo
-
-   hSurface := cairo_pdf_surface_create( "glyphdbg.pdf", 566.9, 793.7 )  // 200x280 mm in pt
-   hCairo := cairo_create( hSurface )
+   LOCAL hSurface := cairo_pdf_surface_create( "glyphdbg.pdf", 566.9, 793.7 )  // 200x280 mm in pt
+   LOCAL hCairo := cairo_create( hSurface )
 
    cairo_select_font_face( hCairo, "Times", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL )
    cairo_set_font_size( hCairo, 200 )

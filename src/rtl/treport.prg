@@ -230,11 +230,7 @@ METHOD PROCEDURE New( cFrmName AS STRING, ;
    lPrintOn   := iif( lPrinter, Set( _SET_PRINTER, lPrinter ), Set( _SET_PRINTER ) )
    lConsoleOn := iif( lNoConsole, Set( _SET_CONSOLE, .F. ), Set( _SET_CONSOLE ) )
 
-   IF lPrinter                   // To the printer
-      ::lFormFeeds := .T.
-   ELSE
-      ::lFormFeeds := .F.
-   ENDIF
+   ::lFormFeeds := lPrinter
 
    IF ! Empty( cAltFile )        // To file
       lExtraState := Set( _SET_EXTRA, .T. )
@@ -350,7 +346,6 @@ METHOD PROCEDURE New( cFrmName AS STRING, ;
 
          // Send a cr/lf for the last line
          QOut()
-
       NEXT
 
       // Any report totals?
@@ -641,7 +636,6 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
          ELSE
             ::ReportHeader()
          ENDIF
-
       ENDIF
 
       AEval( aRecordHeader, {| HeaderLine | ;
@@ -837,7 +831,6 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
             NEXT
          ENDIF
       ENDIF
-
    ENDIF    // Was this a summary report?
 
    RETURN
@@ -846,15 +839,13 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
    LOCAL cFieldsBuff
    LOCAL cParamsBuff
-   LOCAL nFieldOffset   := 0
-   LOCAL cFileBuff      := Space( SIZE_FILE_BUFF )
+   LOCAL nFieldOffset
+   LOCAL cFileBuff := Space( SIZE_FILE_BUFF )
    LOCAL cGroupExp
    LOCAL cSubGroupExp
    LOCAL nColCount                  // Number of columns in report
    LOCAL nCount
    LOCAL nFrmHandle                 // (.frm) file handle
-   LOCAL nBytesRead                 // Read/write and content record counter
-   LOCAL nPointer                   // Points to an offset into EXPR_BUFF string
    LOCAL nFileError                 // Contains current file error
    LOCAL nOptionByte                // Contains option byte
 
@@ -890,13 +881,13 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    // Open the report file
    nFrmHandle := FOpen( cFrmFile )
 
-   IF ( nFileError := FError() ) != 0 .AND. Empty( hb_FNameDir( cFrmFile ) )
+   IF ( nFileError := FError() ) != F_OK .AND. Empty( hb_FNameDir( cFrmFile ) )
 
       // Search through default path; attempt to open report file
       FOR EACH cPath IN ListAsArray( StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" ), ";" )
          nFrmHandle := FOpen( hb_DirSepAdd( cPath ) + cFrmFile )
          // if no error is reported, we have our report file
-         IF ( nFileError := FError() ) == 0
+         IF ( nFileError := FError() ) == F_OK
             EXIT
          ENDIF
       NEXT
@@ -920,14 +911,11 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       FSeek( nFrmHandle, 0 )
 
       // SEEK ok?
-      nFileError := FError()
-      IF nFileError == F_OK
+      IF ( nFileError := FError() ) == F_OK
 
          // Read entire file into process buffer
-         nBytesRead := FRead( nFrmHandle, @cFileBuff, SIZE_FILE_BUFF )
-
          // READ ok?
-         IF nBytesRead == 0
+         IF FRead( nFrmHandle, @cFileBuff, SIZE_FILE_BUFF ) == 0
             nFileError := F_EMPTY        // file is empty
          ELSE
             nFileError := FError()       // check for OS errors
@@ -943,16 +931,13 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
             ELSE
                nFileError := F_ERROR
             ENDIF
-
          ENDIF
-
       ENDIF
 
       // Close file
       IF ! FClose( nFrmHandle )
          nFileError := FError()
       ENDIF
-
    ENDIF
 
    // File existed, was opened and read ok and is a .frm file
@@ -962,9 +947,8 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       ::cLengthsBuff := hb_BSubStr( cFileBuff, LENGTHS_OFFSET, SIZE_LENGTHS_BUFF )
       ::cOffSetsBuff := hb_BSubStr( cFileBuff, OFFSETS_OFFSET, SIZE_OFFSETS_BUFF )
       ::cExprBuff    := hb_BSubStr( cFileBuff, EXPR_OFFSET, SIZE_EXPR_BUFF )
-      cFieldsBuff  := hb_BSubStr( cFileBuff, FIELDS_OFFSET, SIZE_FIELDS_BUFF )
-      cParamsBuff  := hb_BSubStr( cFileBuff, PARAMS_OFFSET, SIZE_PARAMS_BUFF )
-
+      cFieldsBuff    := hb_BSubStr( cFileBuff, FIELDS_OFFSET, SIZE_FIELDS_BUFF )
+      cParamsBuff    := hb_BSubStr( cFileBuff, PARAMS_OFFSET, SIZE_PARAMS_BUFF )
 
       // Process report attributes
       // Report width
@@ -979,7 +963,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       // Page right margin (not used)
       aReport[ RPT_RMARGIN ] := Bin2W( hb_BSubStr( cParamsBuff, RIGHT_MGRN_OFFSET, 2 ) )
 
-      nColCount  := Bin2W( hb_BSubStr( cParamsBuff, COL_COUNT_OFFSET, 2 ) )
+      nColCount := Bin2W( hb_BSubStr( cParamsBuff, COL_COUNT_OFFSET, 2 ) )
 
       // Line spacing
       // Spacing is 1, 2, or 3
@@ -994,7 +978,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       nOptionByte := hb_BPeek( cParamsBuff, OPTION_OFFSET )
 
 #ifdef HB_CLP_STRICT
-      IF nOptionByte <= 8  /* Bug compatibility with CA-Cl*pper with corrupted input files */
+      IF nOptionByte <= 8  /* Bug compatibility with CA-Cl*pper for corrupted input files */
 #endif
          IF hb_bitAnd( nOptionByte, 4 ) != 0
             aReport[ RPT_PLAIN ] := .T.          // Plain page
@@ -1010,11 +994,9 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 #endif
 
       // Page heading, report title
-      nPointer := Bin2W( hb_BSubStr( cParamsBuff, PAGE_HDR_OFFSET, 2 ) )
-
       // Retrieve the header stored in the .frm file
       nHeaderIndex := 4
-      aHeader := ParseHeader( ::GetExpr( nPointer ), nHeaderIndex )
+      aHeader := ParseHeader( ::GetExpr( Bin2W( hb_BSubStr( cParamsBuff, PAGE_HDR_OFFSET, 2 ) ) ), nHeaderIndex )
 
       // certain that we have retrieved all heading entries from the .frm file, we
       // now retract the empty headings
@@ -1030,9 +1012,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
       // Process Groups
       // Group
-      nPointer := Bin2W( hb_BSubStr( cParamsBuff, GRP_EXPR_OFFSET, 2 ) )
-
-      IF ! Empty( cGroupExp := ::GetExpr( nPointer ) )
+      IF ! Empty( cGroupExp := ::GetExpr( Bin2W( hb_BSubStr( cParamsBuff, GRP_EXPR_OFFSET, 2 ) ) ) )
 
          // Add a new group array
          AAdd( aReport[ RPT_GROUPS ], Array( RGT_COUNT ) )
@@ -1046,8 +1026,8 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          ENDIF
 
          // Group header
-         nPointer := Bin2W( hb_BSubStr( cParamsBuff, GRP_HDR_OFFSET, 2 ) )
-         aReport[ RPT_GROUPS ][ 1 ][ RGT_HEADER ] := ::GetExpr( nPointer )
+         aReport[ RPT_GROUPS ][ 1 ][ RGT_HEADER ] := ;
+            ::GetExpr( Bin2W( hb_BSubStr( cParamsBuff, GRP_HDR_OFFSET, 2 ) ) )
 
          // Page eject after group
          aReport[ RPT_GROUPS ][ 1 ][ RGT_AEJECT ] := hb_BSubStr( cParamsBuff, ;
@@ -1056,9 +1036,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       ENDIF
 
       // Subgroup
-      nPointer := Bin2W( hb_BSubStr( cParamsBuff, SUB_EXPR_OFFSET, 2 ) )
-
-      IF ! Empty( cSubGroupExp := ::GetExpr( nPointer ) )
+      IF ! Empty( cSubGroupExp := ::GetExpr( Bin2W( hb_BSubStr( cParamsBuff, SUB_EXPR_OFFSET, 2 ) ) ) )
 
          // Add new group array
          AAdd( aReport[ RPT_GROUPS ], Array( RGT_COUNT ) )
@@ -1072,8 +1050,8 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          ENDIF
 
          // Subgroup header
-         nPointer := Bin2W( hb_BSubStr( cParamsBuff, SUB_HDR_OFFSET, 2 ) )
-         aReport[ RPT_GROUPS ][ 2 ][ RGT_HEADER ] := ::GetExpr( nPointer )
+         aReport[ RPT_GROUPS ][ 2 ][ RGT_HEADER ] := ;
+            ::GetExpr( Bin2W( hb_BSubStr( cParamsBuff, SUB_HDR_OFFSET, 2 ) ) )
 
          // Page eject after subgroup
          aReport[ RPT_GROUPS ][ 2 ][ RGT_AEJECT ] := .F.
@@ -1216,7 +1194,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
          b. Character following character pointed to by pointer is Chr( 0 ) */
 METHOD GetColumn( cFieldsBuffer AS STRING, /* @ */ nOffset AS NUMERIC ) CLASS HBReportForm
 
-   LOCAL nPointer, aColumn[ RCT_COUNT ], cExpr
+   LOCAL aColumn[ RCT_COUNT ]
 
    // Column width
    aColumn[ RCT_WIDTH ] := Bin2W( hb_BSubStr( cFieldsBuffer, nOffset + ;
@@ -1234,17 +1212,13 @@ METHOD GetColumn( cFieldsBuffer AS STRING, /* @ */ nOffset AS NUMERIC ) CLASS HB
    // expression area via array OFFSETS[]
 
    // Content expression
-   nPointer := Bin2W( hb_BSubStr( cFieldsBuffer, nOffset + ;
-      FIELD_CONTENT_EXPR_OFFSET, 2 ) )
-   aColumn[ RCT_TEXT ] := ::GetExpr( nPointer )
-   cExpr := aColumn[ RCT_TEXT ]
-   aColumn[ RCT_EXP ] := hb_macroBlock( cExpr )
+   aColumn[ RCT_TEXT ] := ::GetExpr( Bin2W( hb_BSubStr( cFieldsBuffer, nOffset + ;
+      FIELD_CONTENT_EXPR_OFFSET, 2 ) ) )
+   aColumn[ RCT_EXP ] := hb_macroBlock( aColumn[ RCT_TEXT ] )
 
    // Header expression
-   nPointer := Bin2W( hb_BSubStr( cFieldsBuffer, nOffset + ;
-      FIELD_HEADER_EXPR_OFFSET, 2 ) )
-
-   aColumn[ RCT_HEADER ] := ListAsArray( ::GetExpr( nPointer ), ";" )
+   aColumn[ RCT_HEADER ] := ListAsArray( ::GetExpr( Bin2W( hb_BSubStr( cFieldsBuffer, nOffset + ;
+      FIELD_HEADER_EXPR_OFFSET, 2 ) ) ), ";" )
 
    // Column picture
    // Setup picture only if a database file is open

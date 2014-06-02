@@ -220,11 +220,9 @@ METHOD PROCEDURE Finalize CLASS TStreamFileWriter
 
 METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
 
-   LOCAL nWritten
+   LOCAL nWritten := FWrite( ::Handle, sBuffer, nCount )
 
    HB_SYMBOL_UNUSED( nOffset )
-
-   nWritten := FWrite( ::Handle, sBuffer, nCount )
 
    ::nPosition += nWritten
 

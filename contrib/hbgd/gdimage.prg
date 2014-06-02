@@ -165,7 +165,7 @@ CREATE CLASS GDImage
    METHOD SetTile( pTile )                 INLINE gdImageSetTile( ::pImage, pTile:pImage ), ::pTile := pTile
 
    // Functions useful for style
-   METHOD SetStyle( aStyle )               INLINE hb_default( @aStyle, ::aStyles ), gdImageSetStyle( ::pImage, aStyle )
+   METHOD SetStyle( aStyle )               INLINE gdImageSetStyle( ::pImage, hb_defaultValue( aStyle, ::aStyles ) )
    METHOD AddStyle( pColor )               INLINE AAdd( ::aStyles, pColor )
    METHOD ResetStyles()                    INLINE ::aStyles := {}
    METHOD StyleLength()                    INLINE Len( ::aStyles )
@@ -228,17 +228,9 @@ CREATE CLASS GDImage
    METHOD GetFontWidth( pFont )            INLINE __defaultNIL( @pFont, ::pFont ), gdFontGetWidth( pFont )
    METHOD GetFontHeight( pFont )           INLINE __defaultNIL( @pFont, ::pFont ), gdFontGetHeight( pFont )
 
-   METHOD GetFTFontWidth( cFontName, nPitch )  INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch ), ;
-                                                      gdImageFTWidth( cFontName, nPitch )
-
-   METHOD GetFTFontHeight( cFontName, nPitch ) INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch ), ;
-                                                      gdImageFTHeight( cFontName, nPitch )
-
-   METHOD GetFTStringSize( cString, cFontName, nPitch ) INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch ), ;
-                                                      gdImageFTSize( cString, cFontName, nPitch )
+   METHOD GetFTFontWidth( cFontName, nPitch )           INLINE gdImageFTWidth( hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
+   METHOD GetFTFontHeight( cFontName, nPitch )          INLINE gdImageFTHeight( hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
+   METHOD GetFTStringSize( cString, cFontName, nPitch ) INLINE gdImageFTSize( cString, hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
 
    /* Color handling functions */
 
@@ -319,10 +311,9 @@ METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
 
 METHOD OpenPolygon( aPoints, color ) CLASS GDImage
 
-   hb_default( @aPoints, ::aPoints )
    __defaultNIL( @color, ::pColor )
 
-   gdImageOpenPolygon( ::pImage, aPoints, color )
+   gdImageOpenPolygon( ::pImage, hb_defaultValue( aPoints, ::aPoints ), color )
 
    RETURN Self
 
@@ -341,10 +332,9 @@ METHOD Rectangle( x1, y1, x2, y2, lFilled, color ) CLASS GDImage
 METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, color, nStyle ) CLASS GDImage
 
    __defaultNIL( @color, ::pColor )
-   hb_default( @nStyle, gdArc )
 
    IF hb_defaultValue( lFilled, .F. )
-      gdImageFilledArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color, nStyle )
+      gdImageFilledArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color, hb_defaultValue( nStyle, gdArc ) )
    ELSE
       gdImageArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color )
    ENDIF
@@ -365,9 +355,8 @@ METHOD Ellipse( x, y, nWidth, nHeight, lFilled, color ) CLASS GDImage
 
 METHOD LoadFromFile( cFile ) CLASS GDImage
 
-   LOCAL aLoad
+   LOCAL aLoad := gdImageFromFile( cFile )
 
-   aLoad := gdImageFromFile( cFile )
    Self := ::CloneDataFrom( aLoad[ 1 ] )
    aLoad[ 1 ] := NIL
 
@@ -387,12 +376,8 @@ METHOD Destroy() CLASS GDImage
 
 METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX     , 0 )
-   hb_default( @nSrcY     , 0 )
-   hb_default( @nWidth    , ::Width() )
-   hb_default( @nHeight   , ::Height() )
-   hb_default( @nDstX     , 0 )
-   hb_default( @nDstY     , 0 )
+   hb_default( @nWidth , ::Width() )
+   hb_default( @nHeight, ::Height() )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -402,18 +387,12 @@ METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage ) CLASS GDI
       ENDIF
    ENDIF
 
-   gdImageCopy( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight )
+   gdImageCopy( oDestImage:pImage, ::pImage, hb_defaultValue( nDstX, 0 ), hb_defaultValue( nDstY, 0 ), hb_defaultValue( nSrcX, 0 ), hb_defaultValue( nSrcY, 0 ), nWidth, nHeight )
 
    RETURN oDestImage
 
 METHOD CopyResized( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX     , 0 )
-   hb_default( @nSrcY     , 0 )
-   hb_default( @nSrcWidth , ::Width() )
-   hb_default( @nSrcHeight, ::Height() )
-   hb_default( @nDstX     , 0 )
-   hb_default( @nDstY     , 0 )
    hb_default( @nDstWidth , ::Width() )
    hb_default( @nDstHeight, ::Height() )
 
@@ -425,20 +404,21 @@ METHOD CopyResized( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth
       ENDIF
    ENDIF
 
-   gdImageCopyResized( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   gdImageCopyResized( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, 0 ), ;
+      hb_defaultValue( nDstY, 0 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nDstWidth, nDstHeight, ;
+      hb_defaultValue( nSrcWidth, ::Width() ), ;
+      hb_defaultValue( nSrcHeight, ::Height() ) )
 
    RETURN oDestImage
 
 METHOD CopyResampled( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nSrcWidth  , ::Width() )
-   hb_default( @nSrcHeight , ::Height() )
-   hb_default( @nDstX      , 0 )
-   hb_default( @nDstY      , 0 )
-   hb_default( @nDstWidth  , ::Width() )
-   hb_default( @nDstHeight , ::Height() )
+   hb_default( @nDstWidth , ::Width() )
+   hb_default( @nDstHeight, ::Height() )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -448,19 +428,21 @@ METHOD CopyResampled( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWid
       ENDIF
    ENDIF
 
-   gdImageCopyResampled( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   gdImageCopyResampled( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, 0 ), ;
+      hb_defaultValue( nDstY, 0 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nDstWidth, nDstHeight, ;
+      hb_defaultValue( nSrcWidth, ::Width() ), ;
+      hb_defaultValue( nSrcHeight, ::Height() ) )
 
    RETURN oDestImage
 
 METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nWidth     , ::Width )
-   hb_default( @nHeight    , ::Height )
-   hb_default( @nDstX      , nWidth / 2 )
-   hb_default( @nDstY      , nHeight / 2 )
-   hb_default( @nAngle     , 90 )
+   hb_default( @nWidth , ::Width )
+   hb_default( @nHeight, ::Height )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -470,19 +452,20 @@ METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestIm
       ENDIF
    ENDIF
 
-   gdImageCopyRotated( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nAngle )
+   gdImageCopyRotated( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, nWidth / 2 ), ;
+      hb_defaultValue( nDstY, nHeight / 2 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nWidth, nHeight, ;
+      hb_defaultValue( nAngle, 90 ) )
 
    RETURN oDestImage
 
 METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nWidth     , ::Width )
-   hb_default( @nHeight    , ::Height )
-   hb_default( @nDstX      , 0 )
-   hb_default( @nDstY      , 0 )
-   hb_default( @nPerc      , 100 )
+   hb_default( @nWidth , ::Width )
+   hb_default( @nHeight, ::Height )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -492,19 +475,20 @@ METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage
       ENDIF
    ENDIF
 
-   gdImageCopyMerge( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nPerc )
+   gdImageCopyMerge( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, 0 ), ;
+      hb_defaultValue( nDstY, 0 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nWidth, nHeight, ;
+      hb_defaultValue( nPerc, 100 ) )
 
    RETURN oDestImage
 
 METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage ) CLASS GDImage
 
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nWidth     , ::Width )
-   hb_default( @nHeight    , ::Height )
-   hb_default( @nDstX      , 0 )
-   hb_default( @nDstY      , 0 )
-   hb_default( @nPerc      , 100 )
+   hb_default( @nWidth , ::Width )
+   hb_default( @nHeight, ::Height )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -514,27 +498,29 @@ METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestI
       ENDIF
    ENDIF
 
-   gdImageCopyMergeGray( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nWidth, nHeight, nPerc )
+   gdImageCopyMergeGray( oDestImage:pImage, ::pImage, ;
+      hb_defaultValue( nDstX, 0 ), ;
+      hb_defaultValue( nDstY, 0 ), ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nWidth, nHeight, ;
+      hb_defaultValue( nPerc, 100 ) )
 
    RETURN oDestImage
 
 METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight ) CLASS GDImage
 
    LOCAL oDestImage
-   LOCAL nDstX, nDstY, nDstWidth, nDstHeight
+   LOCAL nDstWidth, nDstHeight
 
-   hb_default( @nPerc      , 100 )
-   hb_default( @nSrcX      , 0 )
-   hb_default( @nSrcY      , 0 )
-   hb_default( @nSrcWidth  , ::Width() )
-   hb_default( @nSrcHeight , ::Height() )
+   hb_default( @nPerc     , 100 )
+   hb_default( @nSrcWidth , ::Width() )
+   hb_default( @nSrcHeight, ::Height() )
 
    IF nPerc < 0
       nPerc := 100
    ENDIF
 
-   nDstX      := 0
-   nDstY      := 0
    nDstWidth  := nSrcWidth * nPerc / 100
    nDstHeight := nSrcHeight * nPerc / 100
 
@@ -544,7 +530,12 @@ METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight ) CLASS GDImage
       oDestImage := GDImage():Create( nDstWidth, nDstHeight )
    ENDIF
 
-   gdImageCopyResampled( oDestImage:pImage, ::pImage, nDstX, nDstY, nSrcX, nSrcY, nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
+   gdImageCopyResampled( oDestImage:pImage, ::pImage, ;
+      0, ;
+      0, ;
+      hb_defaultValue( nSrcX, 0 ), ;
+      hb_defaultValue( nSrcY, 0 ), ;
+      nDstWidth, nDstHeight, nSrcWidth, nSrcHeight )
 
    RETURN oDestImage
 
@@ -574,46 +565,26 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
    ELSE
       ::CopyRotated( ,,,, nWidth - nWidth / 2, nHeight - nHeight / 2, nAngle, oDestImage )
    ENDIF
-   Self := ::CloneDataFrom( oDestImage )
 
-   // Move new image to existing one
-   oDestImage := NIL
+   Self := ::CloneDataFrom( oDestImage )
 
    RETURN Self
 
 METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
 
-   LOCAL oDestImage
-
-   oDestImage := ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight )
-   Self := ::CloneDataFrom( oDestImage )
-
-   // Move new image to existing one
-   oDestImage := NIL
+   Self := ::CloneDataFrom( ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight ) )
 
    RETURN Self
 
 METHOD Resize( nWidth, nHeight ) CLASS GDImage
 
-   LOCAL oDestImage
-
-   oDestImage := ::CopyResampled( 0, 0, NIL, NIL, 0, 0, nWidth, nHeight )
-   Self := ::CloneDataFrom( oDestImage )
-
-   // Move new image to existing one
-   oDestImage := NIL
+   Self := ::CloneDataFrom( ::CopyResampled( 0, 0,,, 0, 0, nWidth, nHeight ) )
 
    RETURN Self
 
 METHOD Zoom( nPerc ) CLASS GDImage
 
-   LOCAL oDestImage
-
-   oDestImage := ::CopyZoomed( nPerc )
-   Self := ::CloneDataFrom( oDestImage )
-
-   // Move new image to existing one
-   oDestImage := NIL
+   Self := ::CloneDataFrom( ::CopyZoomed( nPerc ) )
 
    RETURN Self
 
@@ -676,16 +647,15 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
    __defaultNIL( @color   , ::pColor )
    hb_default( @cFontName , ::cFontName )
    hb_default( @nPitch    , ::nFontPitch )
-   hb_default( @nAngle    , ::nFontAngle )
 
    SWITCH hb_defaultValue( nAlign, gdAlignLeft )
    CASE gdAlignCenter
-      nWidth := nPitch // gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
+      nWidth := nPitch
       nLen   := Len( cString )
       nPosX  := x - ( ( nLen / 2 ) * nWidth )
       EXIT
    CASE gdAlignRight
-      nWidth := gdImageFTWidth( cFontName, nPitch ) // , ::Radians( nAngle ) ) //::GetFontWidth()
+      nWidth := gdImageFTWidth( cFontName, nPitch )
       nLen   := Len( cString )
       nPosX  := x - ( nLen * nWidth )
       EXIT
@@ -693,7 +663,7 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
       nPosX  := x
    ENDSWITCH
 
-   gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( nAngle ), nPosX, y, ;
+   gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( hb_defaultValue( nAngle, ::nFontAngle ) ), nPosX, y, ;
       cString, nLineSpacing, nCharMap, nResolution )
 
    RETURN Self
@@ -701,23 +671,23 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
 METHOD CloneDataFrom( oSrc ) CLASS GDImage
 
    // copy values from Source to Dest
-   // please update in case of new datas
+   // please update in case of new data
 
-   ::pImage      := oSrc:pImage
-   ::pBrush      := oSrc:pBrush
-   ::pTile       := oSrc:pTile
-   ::pFont       := oSrc:pFont
-   ::pColor      := oSrc:pColor
+   ::pImage     := oSrc:pImage
+   ::pBrush     := oSrc:pBrush
+   ::pTile      := oSrc:pTile
+   ::pFont      := oSrc:pFont
+   ::pColor     := oSrc:pColor
 
-   ::cFontName   := oSrc:cFontName
-   ::nFontPitch  := oSrc:nFontPitch
-   ::nFontAngle  := oSrc:nFontAngle
+   ::cFontName  := oSrc:cFontName
+   ::nFontPitch := oSrc:nFontPitch
+   ::nFontAngle := oSrc:nFontAngle
 
-   ::aPoints     := AClone( oSrc:aPoints )
-   ::aStyles     := AClone( oSrc:aStyles )
+   ::aPoints    := AClone( oSrc:aPoints )
+   ::aStyles    := AClone( oSrc:aStyles )
 
-   ::hFile       := oSrc:hFile
-   ::cType       := oSrc:cType
-   ::cMime       := oSrc:cMime
+   ::hFile      := oSrc:hFile
+   ::cType      := oSrc:cType
+   ::cMime      := oSrc:cMime
 
    RETURN Self

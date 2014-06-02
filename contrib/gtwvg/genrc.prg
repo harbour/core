@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-THREAD STATIC t_oCrt := NIL
+THREAD STATIC t_oCrt
 
 EXIT PROCEDURE KillGTChildren()
 

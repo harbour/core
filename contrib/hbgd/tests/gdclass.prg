@@ -1,13 +1,11 @@
-/*
- * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
+/* Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * GD Class test file
  */
 
 #require "hbgd"
 
-#define IMAGES_IN  "imgs_in" + hb_ps()
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   "imgs_in" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 
@@ -118,14 +116,17 @@ PROCEDURE Main()
    oI2:SavePng( IMAGES_OUT + "test.png" )
    oI2:SaveJpeg( IMAGES_OUT + "test.jpg" )
    oI2:SaveGif( IMAGES_OUT + "test.gif" )
-   // oI2:SaveWBmp( IMAGES_OUT + "vale1.bmp", black )
+#if 0
+   oI2:SaveWBmp( IMAGES_OUT + "vale1.bmp", black )
+#endif
 
    /* test copy functions */
 
-   // oI3 := GDImage():CreateTrueColor( oI2:Width * 2, oI2:Height * 2 )
-   // oI2:CopyResampled( 0, 0, oI2:Width, oI2:Height, 0, 0, oI3:Width, oI3:Height, oI3 )
-   // oI3:SaveJpeg("vale2.jpg")
-
+#if 0
+   oI3 := GDImage():CreateTrueColor( oI2:Width * 2, oI2:Height * 2 )
+   oI2:CopyResampled( 0, 0, oI2:Width, oI2:Height, 0, 0, oI3:Width, oI3:Height, oI3 )
+   oI3:SaveJpeg( "vale2.jpg" )
+#endif
 
    nSecs := Seconds()
    ? "start copy zoomed"
@@ -151,13 +152,17 @@ PROCEDURE Main()
    oI4:Zoom( 200 )
    ? "end", Seconds() - nSecs
 
-   // __OutDebug( oI2:pImage )
-   // oI4:SetFontGiant()
+#if 0
+   __OutDebug( oI2:pImage )
+   oI4:SetFontGiant()
+#endif
    gray := oI4:SetColor( 30, 30, 30 )
    blue := oI4:SetColor( 0, 0, 200 )
 
-   // oI4:SetColor( black )
-   // oI4:Say( 100, 10, "Valentina" )
+#if 0
+   oI4:SetColor( black )
+   oI4:Say( 100, 10, "Valentina" )
+#endif
 #if defined( __PLATFORM__UNIX )
    oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD power", "arib____", 40, 45 )
 #else
@@ -173,8 +178,9 @@ PROCEDURE Main()
 #endif
    oI4:SaveJpeg( IMAGES_OUT + "writing.jpg" )
 
-
-   // oI4 := __objClone( oI2 )
+#if 0
+   oI4 := __objClone( oI2 )
+#endif
    oI4 := oI2:Clone()
 
    nSecs := Seconds()
@@ -187,11 +193,15 @@ PROCEDURE Main()
    ? "start rotate inside"
    oI4:RotateInside( 45 )
    ? "end", Seconds() - nSecs
-   // oI2:CopyRotated( , , , , , , 90, oI4 )
+#if 0
+   oI2:CopyRotated( , , , , , , 90, oI4 )
+#endif
    oI4:SaveJpeg( IMAGES_OUT + "rotatein.jpg" )
 
    oI5:Zoom( 40 )
-   // oI5:Rotate( 90 )
+#if 0
+   oI5:Rotate( 90 )
+#endif
    blue := oI5:SetColor( 0, 0, 200 )
    oI5:SayFreeType( oI5:CenterWidth(), oI5:CenterHeight(), "GD", "verdana", 20, 0, blue )
    oI5:SaveJpeg( IMAGES_OUT + "gd_zoom.jpg" )
@@ -207,8 +217,10 @@ PROCEDURE Main()
    oB := GDImage():LoadFromGif( IMAGES_IN + "harbour.gif" )
    oB:Zoom( 15 )
 
-   // oI5:Circle( 200, 200, oI5:Width() )
-   // oI5:Line( 0, 200, 200, 200 )
+#if 0
+   oI5:Circle( 200, 200, oI5:Width() )
+   oI5:Line( 0, 200, 200, 200 )
+#endif
 
    oI5:AddDef( "FONTPITCH", "GIANT" )
 
@@ -222,7 +234,9 @@ PROCEDURE Main()
       { "LABEL" => "Seven", "VALUE" => 55, "FILLED" => .T.  , "COLOR"  => green } ;
       } )
 
-   // oI5:VerticalBarChart()
+#if 0
+   oI5:VerticalBarChart()
+#endif
    oI5:PieChart()
 
 
@@ -239,7 +253,9 @@ PROCEDURE Main()
    oB := GDImage():LoadFromJpeg( IMAGES_IN + "conv_tst.jpg" )
    oB:Zoom( 15 )
 
-   //   oI5:AddDef( "MAXVALUE", 150 )
+#if 0
+   oI5:AddDef( "MAXVALUE", 150 )
+#endif
    oI5:AddDef( "AXISPICT", "@E 999999" )
    oI5:AddDef( "FONTPITCH", "GIANT" )
    oI5:AddDef( "COLOR", blue )
@@ -262,7 +278,6 @@ PROCEDURE Main()
       } )
 #endif
 
-
    oI5:SetData( { ;
       { "LABEL" => "One", "VALUE" => 10, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40/*, "TILE" => oB*/ }, ;
       { "LABEL" => "Two", "VALUE" => 35, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
@@ -275,7 +290,6 @@ PROCEDURE Main()
       { "LABEL" => "Nine", "VALUE" => 0, "COLOR" => blue, "FILLED" => .T. } ;
       } )
 
-
    oI5:Clone():VerticalBarChart():SaveJpeg( IMAGES_OUT + "vertbars.jpg" )
 
    oI5:Clone():HorizontalBarChart():SaveJpeg( IMAGES_OUT + "horzbars.jpg" )
@@ -283,10 +297,12 @@ PROCEDURE Main()
    oI5:LineChart()
    oI5:SaveJpeg( IMAGES_OUT + "hystogrm.jpg" )
 
-   // oI4 := GDImage():CreateTrueColor( oI2:Width * 2, oI2:Height * 2 )
-   // oI2:CopyResampled( 0, 0, oI2:Width, oI2:Height, 0, 0, oI2:Width, oI2:Height, oI4 )
-   // oI2:CopyResampled( 0, 0, oI2:Width, oI2:Height, oI4:CenterWidth(), oI4:CenterHeight(), oI2:Width, oI2:Height, oI4 )
-   // oI4:SaveJpeg("vale3.jpg")
+#if 0
+   oI4 := GDImage():CreateTrueColor( oI2:Width * 2, oI2:Height * 2 )
+   oI2:CopyResampled( 0, 0, oI2:Width, oI2:Height, 0, 0, oI2:Width, oI2:Height, oI4 )
+   oI2:CopyResampled( 0, 0, oI2:Width, oI2:Height, oI4:CenterWidth(), oI4:CenterHeight(), oI2:Width, oI2:Height, oI4 )
+   oI4:SaveJpeg( "vale3.jpg" )
+#endif
 
    /* Destroy images in memory */
    // Class does it auto

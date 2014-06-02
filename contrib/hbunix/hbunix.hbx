@@ -21,6 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC linux_MoveToTrash
 DYNAMIC posix_chdir
 DYNAMIC posix_errno
 DYNAMIC posix_getegid

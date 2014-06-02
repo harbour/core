@@ -1,6 +1,6 @@
 #require "hbxdiff"
 
-#define _SIZE 62
+#define _SIZE  62
 
 PROCEDURE Main()
 

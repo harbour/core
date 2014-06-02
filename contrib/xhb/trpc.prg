@@ -193,9 +193,7 @@
 
 #include "hbrpc.ch"
 
-/************************************
-* RPC FUNCTION
-*************************************/
+/* RPC FUNCTION */
 
 CREATE CLASS TRPCFunction
 
@@ -227,8 +225,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS TRPCFunction
    LOCAL aFuncDef
 
    // Analyze the function definition
-   aFuncDef := hb_regex( "^([a-zA-Z0-9_-]+)\(([^)]*)\) *(-->)? *(.*)$", cFname )
-   IF Empty( aFuncDef )
+   IF Empty( aFuncDef := hb_regex( "^([a-zA-Z0-9_-]+)\(([^)]*)\) *(-->)? *(.*)$", cFname ) )
       Alert( "Invalid function defintion" )
       ErrorLevel( 1 )
       QUIT
@@ -320,7 +317,7 @@ METHOD CheckParam( cParam ) CLASS TRPCFunction
 
 METHOD CheckTypes( aParams ) CLASS TRPCFunction
 
-   LOCAL oElem, i := 0
+   LOCAL oElem, i
 
    IF ! HB_ISARRAY( aParams )
       RETURN .F.
@@ -330,6 +327,7 @@ METHOD CheckTypes( aParams ) CLASS TRPCFunction
       RETURN .F.
    ENDIF
 
+   i := 0
    FOR EACH oElem in ::aParameters
       i++
       IF !( ValType( aParams[ i ] ) == oElem[ 1 ] )
@@ -351,9 +349,7 @@ METHOD Describe() CLASS TRPCFunction
       ENDIF
    NEXT
 
-   cRet += ")-->" + ::cReturn
-
-   RETURN cRet + "/" + ::cSerial
+   RETURN cRet + ")-->" + ::cReturn + "/" + ::cSerial
 
 
 /***********************************************************
@@ -762,7 +758,6 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS TRPCServeCon
 
    RETURN .T.
 
-
 METHOD RecvChallenge() CLASS TRPCServeCon
 
    LOCAL cNumber := Space( 8 )
@@ -846,13 +841,14 @@ METHOD RecvFunction( bComp, bMode ) CLASS TRPCServeCon
 
 METHOD FuncCall( cData ) CLASS TRPCServeCon
 
-   LOCAL cSer, cFuncName, aParams
+   LOCAL cSer
+   LOCAL cFuncName, aParams
 
    /* Deserialize all elements */
-   cSer := hb_DeserialBegin( cData )
-   IF cSer == NIL
+   IF ( cSer := hb_DeserialBegin( cData ) ) == NIL
       RETURN .F.
    ENDIF
+
    cFuncName := hb_DeserialNext( @cSer )
    aParams := hb_DeserialNext( @cSer )
 
@@ -866,15 +862,14 @@ METHOD FuncCall( cData ) CLASS TRPCServeCon
 
 METHOD FuncLoopCall( cMode, cData ) CLASS TRPCServeCon
 
-   LOCAL nBegin, nEnd, nStep
    LOCAL cSer
-   LOCAL cFuncName, aParams
+   LOCAL nBegin, nEnd, nStep, cFuncName, aParams
 
    /* Deserialize all elements */
-   cSer := hb_DeserialBegin( cData )
-   IF Empty( cSer )
+   IF Empty( cSer := hb_DeserialBegin( cData ) )
       RETURN .F.
    ENDIF
+
    nBegin := hb_DeserialNext( @cSer )
    nEnd := hb_DeserialNext( @cSer )
    nStep := hb_DeserialNext( @cSer )
@@ -892,12 +887,10 @@ METHOD FuncLoopCall( cMode, cData ) CLASS TRPCServeCon
 METHOD FuncForeachCall( cMode, cData ) CLASS TRPCServeCon
 
    LOCAL cSer
-   LOCAL cFuncName, aParams
-   LOCAL aItems
+   LOCAL cFuncName, aParams, aItems
 
    /* Deserialize all elements */
-   cSer := hb_DeserialBegin( cData )
-   IF Empty( cSer )
+   IF Empty( cSer := hb_DeserialBegin( cData ) )
       RETURN .F.
    ENDIF
 
@@ -905,7 +898,7 @@ METHOD FuncForeachCall( cMode, cData ) CLASS TRPCServeCon
    aParams := hb_DeserialNext( @cSer )
    aItems := hb_DeserialNext( @cSer )
 
-   IF aItems  == NIL
+   IF aItems == NIL
       RETURN .F.
    ENDIF
 
@@ -1136,7 +1129,7 @@ METHOD SendResult( oRet, cFuncName ) CLASS TRPCServeCon
 
 METHOD SendProgress( nProgress, oData ) CLASS TRPCServeCon
 
-   LOCAL cOrigLen, cCompLen, lRet := .T.
+   LOCAL cOrigLen, cCompLen
    LOCAL cData
 
    // Ignore if told so
@@ -1166,10 +1159,10 @@ METHOD SendProgress( nProgress, oData ) CLASS TRPCServeCon
    ENDIF
 
    IF hb_inetErrorCode( ::skRemote ) != 0
-      lRet := .F.
+      RETURN .F.
    ENDIF
 
-   RETURN lRet
+   RETURN .T.
 
 METHOD Encrypt( cDataIn ) CLASS TRPCServeCon
 
@@ -1187,9 +1180,7 @@ METHOD Decrypt( cDataIn ) CLASS TRPCServeCon
 
    RETURN cDataIn
 
-/************************************
-* RPC SERVICE
-*************************************/
+/* RPC SERVICE */
 
 CREATE CLASS TRPCService
 
@@ -1299,7 +1290,7 @@ METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod ) CLASS TRPCService
 METHOD Find( cName ) CLASS TRPCService
 
    LOCAL nElem
-   LOCAL oRet := NIL
+   LOCAL oRet
 
    hb_mutexLock( ::mtxBusy )
    IF ( nElem := AScan( ::aFunctions, {| x | Upper( cName ) == Upper( x:cName ) } ) ) != 0
@@ -1326,7 +1317,7 @@ METHOD Remove( cName ) CLASS TRPCService
 METHOD Run( cName, aParams ) CLASS TRPCService
 
    LOCAL oFunc := ::Find( cName )
-   LOCAL oRet := NIL
+   LOCAL oRet
 
    hb_mutexLock( ::mtxBusy )
    IF ! Empty( oFunc )
@@ -1339,7 +1330,7 @@ METHOD Run( cName, aParams ) CLASS TRPCService
 METHOD Describe( cName ) CLASS TRPCService
 
    LOCAL oFunc := ::Find( cName )
-   LOCAL cRet := NIL
+   LOCAL cRet
 
    hb_mutexLock( ::mtxBusy )
    IF ! Empty( oFunc )
@@ -1455,8 +1446,7 @@ METHOD UDPParseRequest( cData, nPacketLen ) CLASS TRPCService
    LOCAL cToSend
 
    IF ::UDPInterpretRequest( cData, nPacketLen, @cToSend )
-      hb_inetDGramSend( ::skUdp, ;
-         hb_inetAddress( ::skUdp ), hb_inetPort( ::skUdp ), cToSend )
+      hb_inetDGramSend( ::skUdp, hb_inetAddress( ::skUdp ), hb_inetPort( ::skUdp ), cToSend )
       RETURN .T.
    ENDIF
 
