@@ -75,11 +75,11 @@ FUNCTION Center( c, n, p, lMode )
 
 FUNCTION CSetCurs( l )
 
-   IF ! HB_ISLOGICAL( l )
-      RETURN SetCursor() != SC_NONE
+   IF HB_ISLOGICAL( l )
+      RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
    ENDIF
 
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
+   RETURN SetCursor() != SC_NONE
 
 FUNCTION CSetKey( n )
    RETURN SetKey( n )

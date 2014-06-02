@@ -79,14 +79,9 @@ FUNCTION TimeToSec( cTime )
 
 FUNCTION SecToTime( nSec, lHundredth )
 
-   LOCAL i, h
+   LOCAL i
    LOCAL n := iif( HB_ISNUMERIC( nSec ), nSec, Seconds() )
-
-   IF HB_ISLOGICAL( lHundredth ) .AND. lHundredth
-      h := StrZero( ( nSec * 100 ) % 100, 2 )
-   ELSE
-      h := ""
-   ENDIF
+   LOCAL h := iif( hb_defaultValue( lHundredth, .F. ), StrZero( ( n * 100 ) % 100, 2 ), "" )
 
    n := Int( n % 86400 )
 
@@ -99,6 +94,6 @@ FUNCTION SecToTime( nSec, lHundredth )
 
 FUNCTION Millisec( nDelay )
 
-   hb_idleSleep( nDelay / 1000 )
+   hb_idleSleep( hb_defaultValue( nDelay, 0 ) / 1000 )
 
    RETURN ""

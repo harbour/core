@@ -3,9 +3,8 @@
 #require "hbcity"
 #require "hbtest"
 
+/* test data taken from: https://github.com/nashby/cityhash */
 PROCEDURE Main()
-
-   /* test data taken from: https://github.com/nashby/cityhash */
 
    LOCAL cString := "test"
    LOCAL nSeed1 := 12345

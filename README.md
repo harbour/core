@@ -1508,7 +1508,7 @@ Supported shells per host platforms:
 * C/C++ Compilers/Shells:
 
      * MinGW/MinGW-64 [win, *nix, free, open-source]
-        * <http://mingw-w64.sourceforge.net/>, <https://sourceforge.net/projects/mingw-w64/>, <https://sourceforge.net/projects/mingwbuilds/> (recommended, look for niXman builds)
+        * <http://mingw-w64.sourceforge.net/>, <https://sourceforge.net/projects/mingw-w64/>, <https://sourceforge.net/projects/mingwbuilds/> (recommended, look for nixman builds)
         * <http://tdm-gcc.tdragon.net/>, <https://sourceforge.net/projects/tdm-gcc/> [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x86_64 use an alternate distro]
         * <http://mingw.org/>, <https://sourceforge.net/projects/mingw/> [NOTE: 4.5.0-1 is broken]
         * <http://nuwen.net/mingw.html> (unofficial)

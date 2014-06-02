@@ -2,13 +2,12 @@
 
 PROCEDURE Main()
 
-   LOCAL hSurface, hCairo, nI
+   LOCAL hSurface := cairo_pdf_surface_create( "lightning.pdf", 566.9, 793.7 )  // 200x280 mm in pt
+   LOCAL hCairo := cairo_create( hSurface )
 
-   hSurface := cairo_pdf_surface_create( "lightning.pdf", 566.9, 793.7 )  // 200x280 mm in pt
-   hCairo := cairo_create( hSurface )
+   LOCAL nI
 
-   // 20 pages
-   FOR nI := 1 TO 20
+   FOR nI := 1 TO 20  // 20 pages
       cairo_set_source_rgb( hCairo, 0, 0, 0 )
       cairo_paint( hCairo )
       cairo_set_source_rgb( hCairo, 1, 0.7, 1 )
@@ -26,9 +25,7 @@ STATIC PROCEDURE DrawLightning( hCairo, nX, nY, nLen, nW, nInit )
 
    cairo_move_to( hCairo, nX, nY )
    nW0 := nW
-   IF nInit == NIL
-      nInit := 0
-   ENDIF
+   hb_default( @nInit, 0 )
    nK := 0
    FOR nI := 1 TO nLen
       // AR(1) process
