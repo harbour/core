@@ -50,7 +50,7 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
-THREAD STATIC t_nHtm  := NIL
+THREAD STATIC t_nHtm
 THREAD STATIC t_cForm := 0
 THREAD STATIC t_oPage := 0
 

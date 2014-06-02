@@ -52,7 +52,7 @@
 
 FUNCTION hb_XML_get_unicode_table( cCP )
 
-   THREAD STATIC t_uni := NIL
+   THREAD STATIC t_uni
 
    LOCAL cdp
 

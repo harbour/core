@@ -78,7 +78,7 @@
 #xtranslate TEST_L_TBC( <x> ) => TEST_C_TBC( o, #<x>, {|| <x> } )
 
 STATIC s_cTest := ""
-STATIC s_xVar := NIL
+STATIC s_xVar
 STATIC s_fhnd
 STATIC s_lCallBackStack
 STATIC s_lRTEDetails

@@ -246,9 +246,9 @@
 #define FN_HB       2        /* hb file name in maps */
 
 STATIC s_aChangeMap := {}    /* from-to file name map */
-STATIC s_cTempDir := NIL
+STATIC s_cTempDir
 STATIC s_nErrors := 0        /* error indicator */
-STATIC s_cSourceRoot := NIL  /* top directory of the newly-unpacked source tree */
+STATIC s_cSourceRoot         /* top directory of the newly-unpacked source tree */
 
 STATIC s_aTools := { ;
    "patch"  =>, ;

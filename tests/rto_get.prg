@@ -61,7 +61,7 @@
 #xtranslate TEST_LINE( <x> ) => TEST_CALL( o, #<x>, {|| <x> } )
 
 STATIC s_cTest := ""
-STATIC s_xVar := NIL
+STATIC s_xVar
 STATIC s_fhnd
 STATIC s_lCallBackStack
 STATIC s_lRTEDetails

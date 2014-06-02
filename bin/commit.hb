@@ -1108,7 +1108,7 @@ STATIC FUNCTION UTF8_BOM()
 
 STATIC FUNCTION LoadGitignore( cFileName )
 
-   THREAD STATIC t_aIgnore := NIL
+   THREAD STATIC t_aIgnore
 
    LOCAL cLine
 
@@ -1143,9 +1143,9 @@ STATIC FUNCTION LoadGitignore( cFileName )
 
 STATIC FUNCTION LoadGitattributes( cFileName, /* @ */ aIdent, /* @ */ hFlags )
 
-   THREAD STATIC t_hExt := NIL
-   THREAD STATIC t_aIdent := NIL
-   THREAD STATIC t_hFlags := NIL
+   THREAD STATIC t_hExt
+   THREAD STATIC t_aIdent
+   THREAD STATIC t_hFlags
 
    LOCAL cLine
    LOCAL tmp
