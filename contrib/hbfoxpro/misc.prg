@@ -64,7 +64,7 @@ FUNCTION Sys( nValue, xPar1 )
       CASE 6
          RETURN Set( _SET_PRINTFILE )
       CASE 10
-         RETURN CToD( "" ) + hb_defaultValue( xPar1, 0 )
+         RETURN hb_SToD() + hb_defaultValue( xPar1, 0 )
       CASE 100
          RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
       CASE 101
