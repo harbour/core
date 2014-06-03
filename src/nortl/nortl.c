@@ -55,9 +55,7 @@
 #include "hbcomp.h"
 #include "hbmemory.ch"
 
-/* ------------------------------------------------------------------------- */
-/* FM statistic module */
-/* ------------------------------------------------------------------------- */
+/* --- FM statistic module --- */
 
 /* remove this 'undef' when number of memory leaks will be reduced to
    reasonable size */

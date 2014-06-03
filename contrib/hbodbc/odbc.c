@@ -4,6 +4,8 @@
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br> (SQLNumResultCols(), SQLDescribeCol())
+ * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br> (SQLGetInfo(), SQLSetStmtAttr(), SQLGetStmtAttr(), SQLCommit(), SQLRollback(), SQLColAttribute(), SQLMoreResults())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -45,26 +47,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
- *    SQLNumResultCols()
- *    SQLDescribeCol()
- *
- * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br>
- *    SQLGetInfo()
- *    SQLSetStmtAttr()
- *    SQLGetStmtAttr()
- *    SQLCommit()
- *    SQLRollback()
- *    SQLColAttribute()
- *    SQLMoreResults()
- *
- * See COPYING.txt for licensing terms.
  */
 
 #include "hbapi.h"

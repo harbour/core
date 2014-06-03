@@ -3,6 +3,8 @@
  * The Extend API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour) (hb_stor(), hb_retn*len(), hb_retdl(), hb_parn*def())
+ * Copyright 2000 Jose Lalin <dezac@corevia.com> (hb_retd())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,27 +45,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_stor()
- *    hb_retnlen()
- *    hb_retnilen()
- *    hb_retnllen()
- *    hb_retndlen()
- *    hb_retdl()
- *    hb_parnidef() (based on idea by Mindaugas Kavaliauskas)
- *    hb_parnldef()
- *
- * Copyright 2000 Jose Lalin <dezac@corevia.com>
- *    hb_retd()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

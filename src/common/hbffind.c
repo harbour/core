@@ -60,7 +60,7 @@
 #include "hbdate.h"
 #include "hb_io.h"
 
-/* ------------------------------------------------------------- */
+/* --- */
 
 #if defined( HB_OS_DOS )
 
@@ -187,7 +187,7 @@
    #endif
 #endif
 
-/* ------------------------------------------------------------- */
+/* --- */
 
 HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
 {

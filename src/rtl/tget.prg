@@ -356,7 +356,7 @@ METHOD display() CLASS Get
 
    RETURN Self
 
-/* ------------------------------------------------------------------------- */
+/* --- */
 
 METHOD colorDisp( cColorSpec ) CLASS Get
 
@@ -1541,7 +1541,7 @@ METHOD message( cMessage ) CLASS Get
 
 #endif
 
-/* ------------------------------------------------------------------------- */
+/* --- */
 
 METHOD rightLow() CLASS Get
 
@@ -1823,7 +1823,7 @@ METHOD Input( cChar ) CLASS Get
 
    RETURN cChar
 
-/* ------------------------------------------------------------------------- */
+/* --- */
 
 METHOD getBuffer() CLASS Get
    RETURN ::cBuffer
@@ -1940,7 +1940,7 @@ METHOD Reader( xValue ) CLASS Get
 
    RETURN ::bReader
 
-/* ------------------------------------------------------------------------- */
+/* --- */
 
 METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
 

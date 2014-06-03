@@ -3,6 +3,7 @@
  * Harbour common string functions (accessed from standalone utilities and the RTL)
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_stricmp())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,17 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_stricmp()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -767,8 +757,7 @@ char * hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber )
    return &szBuf[ iPos ];
 }
 
-/*
- * This function copies szText to destination buffer.
+/* This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null and the nLen param is pDest size not pSource limit
  */
@@ -786,8 +775,7 @@ char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/*
- * This function copies szText to destination buffer.
+/* This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncat, this routine will always append
  *       a null and the nLen param is pDest size not pSource limit
  */
@@ -811,12 +799,10 @@ char * hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to lower case.
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to lower case. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
 {
@@ -835,12 +821,10 @@ char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to upper case.
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to upper case. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
 {
@@ -859,12 +843,10 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to upper case AND Trims it
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to upper case AND Trims it */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 {
@@ -893,9 +875,9 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/*
- * This function copies trimed szText to destination buffer.
- * NOTE: Unlike the documentation for strncpy, this routine will always append
+/* This function copies trimed szText to destination buffer. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
  */
 char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )

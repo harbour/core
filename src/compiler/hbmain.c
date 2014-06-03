@@ -3,12 +3,13 @@
  * Compiler main file
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
+ * Copyright 2000 RonPinkas <Ron@Profit-Master.com> (hb_compPrepareJumps(), hb_compOptimizeJumps(), hb_compOptimizeFrames(), hb_compDeclaredParameterAdd(), hb_compClassAdd(), hb_compClassFind(), hb_compMethodAdd(), hb_compMethodFind(), hb_compDeclaredAdd())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,31 +17,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
- *
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
- *    hb_compPrepareJumps()
- *    hb_compOptimizeJumps()
- *    hb_compOptimizeFrames()
- *    hb_compDeclaredParameterAdd()
- *    hb_compClassAdd()
- *    hb_compClassFind()
- *    hb_compMethodAdd()
- *    hb_compMethodFind()
- *    hb_compDeclaredAdd()
- *
- * See COPYING.txt for licensing terms.
+ * along with this software; see the file COPYING.txt.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  */
 
-/*
- * Avoid tracing in preprocessor/compiler.
- */
+/* Avoid tracing in preprocessor/compiler. */
 #if ! defined( HB_TRACE_UTILS )
    #if defined( HB_TRACE_LEVEL )
       #undef HB_TRACE_LEVEL
@@ -263,9 +246,8 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
    return iStatus;
 }
 
-/* ------------------------------------------------------------------------- */
-/*                           ACTIONS                                         */
-/* ------------------------------------------------------------------------- */
+
+/* --- ACTIONS --- */
 
 
 static PHB_HSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, HB_USHORT * pwPos, HB_BOOL bFunction )

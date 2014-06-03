@@ -3,6 +3,11 @@
  * ProcName(), ProcLine() and ProcFile() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (ProcFile())
+ * Copyright 2001 JFL (Mafact) <jfl@mafact.com>
+ *    Adding the MethodName() just calling ProcName()
+ *    Special treatment in case of Object and Eval (only for methodname)
+ *    skipping block and adding (b) before the method name
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,22 +48,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    ProcFile()
- *
- * Copyright 2001 JFL (Mafact) <jfl@mafact.com>
- *    Adding the MethodName() just calling ProcName()
- *    Special treatment in case of Object and Eval (only for methodname)
- *    skipping block and adding (b) before the method name
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

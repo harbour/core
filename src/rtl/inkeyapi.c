@@ -3,6 +3,7 @@
  * Inkey GT API
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2002 Walter Negro <anegro@overnet.com.ar> (hb_inkeySetLast())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,17 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
- *    hb_inkeySetLast()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

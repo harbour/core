@@ -3,6 +3,7 @@
  * ODBC Access Class
  *
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
+ * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br> (:SetCnnOptions(), :GetCnnOptions(), :Commit(), :RollBack(), :SetStmtOptions(), :GetStmtOptions(), :SetAutoCommit())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,25 +47,10 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.xharbour.org
- *
- * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br>
- *
- * METHOD SetCnnOptions( nType, uBuffer )
- * METHOD GetCnnOptions( nType )
- * METHOD Commit()
- * METHOD RollBack()
- * METHOD SetStmtOptions( nType, uBuffer )
- * METHOD GetStmtOptions( nType )
- * METHOD SetAutoCommit( lEnable )
- */
-
 #include "hbclass.ch"
 #include "sql.ch"
 
-// Class TODBCField - Fields information collection
+// Fields information collection
 
 CREATE CLASS TODBCField
 
@@ -83,7 +69,7 @@ ENDCLASS
 METHOD New() CLASS TODBCField
    RETURN Self
 
-// Class TODBC - Manages ODBC access
+// Manages ODBC access
 
 CREATE CLASS TODBC
 

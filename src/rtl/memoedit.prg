@@ -286,7 +286,7 @@ METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
    RETURN .F.
 
-/* ------------------------------------------ */
+/* --- */
 
 FUNCTION MemoEdit( ;
    cString, ;

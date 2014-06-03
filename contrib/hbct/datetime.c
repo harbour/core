@@ -6,6 +6,7 @@
  *                              - WoM()
  *
  * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
+ * Copyright 1999 Jose Lalin <dezac@corevia.com> (WoM())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,17 +47,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *   WoM()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

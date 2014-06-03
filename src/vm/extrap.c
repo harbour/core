@@ -3,6 +3,8 @@
  * Exception handlers
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt) (hb_winExceptionHandler() Windows exception info dump code.)
+ * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour) (hb_winExceptionHandler() Module listing code, x86_64/WinCE/ARM support, OS/2, MIPS32, MIPS64, SH, IA64 CPU dumps.)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,24 +45,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
- *    hb_winExceptionHandler() Windows exception info dump code.
- *
- * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
- *    hb_winExceptionHandler() Module listing code.
- *    hb_winExceptionHandler() x86_64 support.
- *    hb_winExceptionHandler() WinCE/ARM support.
- *    hb_winExceptionHandler() OS/2 CPU dump.
- *    hb_winExceptionHandler() MIPS32, MIPS64, SH, IA64 CPU dumps.
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

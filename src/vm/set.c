@@ -3,6 +3,7 @@
  * Set functions
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour) (hb_osEncode(), hb_osDecode())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,18 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_osEncode()
- *    hb_osDecode()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

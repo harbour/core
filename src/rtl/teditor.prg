@@ -156,7 +156,7 @@ CREATE CLASS HBEditor
 
 ENDCLASS
 
-/* -------------------------------------------- */
+/* --- */
 
 // Redefines editor window size and refreshes it
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBEditor
@@ -935,7 +935,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS HBEditor
 
    RETURN HTNOWHERE
 
-/* -------------------------------------------- */
+/* --- */
 
 // Rebuild a long line from multiple short ones (wrapped at soft CR)
 METHOD GetParagraph( nRow ) CLASS HBEditor
@@ -996,7 +996,7 @@ METHOD BrowseText( nPassedKey ) CLASS HBEditor
 
    RETURN Self
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS HBEditor
 
@@ -1069,7 +1069,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    RETURN Self
 
-/* -------------------------------------------- */
+/* --- */
 
 // Returns EOL char (be it either CR or LF or both)
 STATIC FUNCTION WhichEOL( cString )
