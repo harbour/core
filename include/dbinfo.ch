@@ -52,7 +52,6 @@
 #define HB_DBINFO_CH_
 
 /* Constants for SELF_RDDINFO() */
-
 #define RDDI_ISDBF                1   /* Does this RDD support DBFs? */
 #define RDDI_CANPUTREC            2   /* Can this RDD Put Records? */
 #define RDDI_DELIMITER            3   /* The field delimiter (as a string) */
@@ -105,7 +104,6 @@
 #define RDDI_DIRTYREAD           44   /* Get/Set index dirty read flag */
 
 /* Constants for SELF_ORDINFO() */
-
 #define DBOI_CONDITION            1   /* The order's conditional expression     */
 #define DBOI_EXPRESSION           2   /* The order's key expression             */
 #define DBOI_POSITION             3   /* The current key position in scope and filter  */

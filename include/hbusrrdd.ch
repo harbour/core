@@ -46,7 +46,6 @@
  *
  */
 
-
 /* Movement and positioning methods */
 #define UR_BOF                                  1
 #define UR_EOF                                  2
