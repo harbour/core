@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.4   15 Aug 1991 23:04:10   GLENN
  * Forest Belt proofread/edited/cleaned up doc

@@ -113,7 +113,7 @@ FUNCTION xhb_SetTraceStack( xLevel )
 
    RETURN nTraceLevel
 
-// -------------------------------------------------------------- //
+/* --- */
 
 FUNCTION TraceLog( ... )
 

@@ -54,7 +54,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   15 Aug 1991 23:03:30   GLENN
  * Forest Belt proofread/edited/cleaned up doc
@@ -74,7 +73,6 @@
 #include "setcurs.ch"
 
 /* NOTE: In Harbour video pages are ignored. */
-
 PROCEDURE ft_SetVcur( nPage, nRow, nCol )
 
    HB_SYMBOL_UNUSED( nPage )
@@ -84,7 +82,6 @@ PROCEDURE ft_SetVcur( nPage, nRow, nCol )
    RETURN
 
 /* NOTE: In Harbour video pages are ignored. */
-
 FUNCTION ft_GetVCur( nPage )
 
    LOCAL nTop, nBot

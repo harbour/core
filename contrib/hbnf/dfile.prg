@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   17 Aug 1991 15:24:14   GLENN
  * Don Caton corrected some spelling errors in the doc
@@ -34,20 +33,8 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
 
    IF hb_FileExists( cInFile )
 
-      hb_default( @nTop        , 0 )
-      hb_default( @nLeft       , 0 )
-      hb_default( @nBottom     , MaxRow() )
-      hb_default( @nRight      , MaxCol() )
-      hb_default( @nCNormal    , 7 )
-      hb_default( @nCHighlight , 15 )
-      hb_default( @nStart      , 1 )
-      hb_default( @nColSkip    , 1 )
-      hb_default( @lBrowse     , .F. )
-      hb_default( @nRMargin    , 255 )
-      hb_default( @nBuffSize   , 4096 )
-
       DO CASE
-      CASE HB_ISARRAY( cExitKeys ) /* Harbour extension */
+      CASE HB_ISARRAY( cExitKeys )  /* Harbour extension */
          IF Len( cExitKeys ) > 25
             ASize( cExitKeys, 25 )
          ENDIF
@@ -60,12 +47,22 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
       t_nHandle := FOpen( cInFile )
 
       IF ( rval := FError() ) == 0
-         rval := _ft_DFInit( t_nHandle, nTop, nLeft, nBottom, nRight, ;
-            nStart, nCNormal, nCHighlight, cExitKeys, ;
-            lBrowse, nColSkip, nRMargin, nBuffSize )
+         rval := _ft_DFInit( t_nHandle, ;
+            hb_defaultValue( nTop        , 0 ), ;
+            hb_defaultValue( nLeft       , 0 ), ;
+            hb_defaultValue( nBottom     , MaxRow() ), ;
+            hb_defaultValue( nRight      , MaxCol() ), ;
+            hb_defaultValue( nStart      , 1 ), ;
+            hb_defaultValue( nCNormal    , 7 ), ;
+            hb_defaultValue( nCHighlight , 15 ), ;
+            cExitKeys, ;
+            hb_defaultValue( lBrowse     , .F. ), ;
+            hb_defaultValue( nColSkip    , 1 ), ;
+            hb_defaultValue( nRMargin    , 255 ), ;
+            hb_defaultValue( nBuffSize   , 4096 ) )
       ENDIF
    ELSE
-      rval := 2       // simulate a file-not-found DOS file error
+      rval := 2  // simulate a file-not-found MS-DOS file error
    ENDIF
 
    RETURN rval

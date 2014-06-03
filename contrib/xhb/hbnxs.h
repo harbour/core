@@ -47,8 +47,7 @@
  *
  */
 
-/***************************************************************
- * NXS aglorithm is FREE SOFTWARE. It can be reused for any
+/* NXS aglorithm is FREE SOFTWARE. It can be reused for any
  * purpose, provided that this copiright notice is still present
  * in the software.
  *
@@ -58,7 +57,7 @@
  * NXS author is Giancarlo Niccolai <giancarlo@niccolai.ws>
  *
  * Adler 32 CRC is copyrighted by Martin Adler
- **************************************************************/
+ */
 
 #ifndef HBNXS_H
 #define HBNXS_H

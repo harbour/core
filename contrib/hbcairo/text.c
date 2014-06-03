@@ -46,11 +46,9 @@
  *
  */
 
-
 #include "hbcairo.h"
 #include "hbapistr.h"
 #include "hbapierr.h"
-
 
 HB_FUNC( CAIRO_FONT_EXTENTS )
 {
@@ -70,7 +68,6 @@ HB_FUNC( CAIRO_FONT_EXTENTS )
       hb_arraySetND( pItem, 5, fe.max_y_advance );
    }
 }
-
 
 HB_FUNC( CAIRO_GET_FONT_MATRIX )
 {
@@ -92,7 +89,6 @@ HB_FUNC( CAIRO_GET_FONT_MATRIX )
    }
 }
 
-
 HB_FUNC( CAIRO_SELECT_FONT_FACE )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -104,7 +100,6 @@ HB_FUNC( CAIRO_SELECT_FONT_FACE )
       hb_strfree( hFamily );
    }
 }
-
 
 HB_FUNC( CAIRO_SET_FONT_MATRIX )
 {
@@ -130,7 +125,6 @@ HB_FUNC( CAIRO_SET_FONT_MATRIX )
    }
 }
 
-
 HB_FUNC( CAIRO_SET_FONT_SIZE )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -138,7 +132,6 @@ HB_FUNC( CAIRO_SET_FONT_SIZE )
    if( pCairo )
       cairo_set_font_size( pCairo, hb_parnd( 2 ) );
 }
-
 
 HB_FUNC( CAIRO_SHOW_TEXT )
 {
@@ -151,7 +144,6 @@ HB_FUNC( CAIRO_SHOW_TEXT )
       hb_strfree( hText );
    }
 }
-
 
 HB_FUNC( CAIRO_TEXT_EXTENTS )
 {

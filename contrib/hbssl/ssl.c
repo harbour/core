@@ -1505,7 +1505,6 @@ HB_FUNC( SSL_USE_PRIVATEKEY )
 }
 
 /* Callback */
-/* -------- */
 
 static void hb_ssl_msg_callback( int write_p, int version, int content_type, const void * buf, size_t len, SSL * ssl, void * userdata )
 {

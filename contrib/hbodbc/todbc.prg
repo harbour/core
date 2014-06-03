@@ -64,9 +64,7 @@
 #include "hbclass.ch"
 #include "sql.ch"
 
-// Class TODBCField
-// Fields information collection
-// -----------------------------------------------------------------
+// Class TODBCField - Fields information collection
 
 CREATE CLASS TODBCField
 
@@ -85,9 +83,7 @@ ENDCLASS
 METHOD New() CLASS TODBCField
    RETURN Self
 
-// Class TODBC
-// Manages ODBC access
-// -----------------------------------------------------------------
+// Class TODBC - Manages ODBC access
 
 CREATE CLASS TODBC
 

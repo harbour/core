@@ -1,5 +1,4 @@
-/*
- * TEST of TIP libs (for higher level URI interface)
+/* TEST of TIP libs (for higher level URI interface)
  *
  * Usage: This file is similar to a wget command
  *

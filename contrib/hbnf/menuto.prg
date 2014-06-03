@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.5   16 Oct 1992 00:20:28   GLENN
  * Cleaned up documentation header.
@@ -131,9 +130,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
    LOCAL nCursor := Set( _SET_CURSOR, SC_NONE )
    LOCAL nKey, bKey, nScan, lWrap, cScreen, nPrev
 
-   IF ! HB_ISLOGICAL( lCold )
-      lCold := .F.
-   ENDIF
+   hb_default( @lCold, .F. )
 
    // Validate the incoming parameters and assign some reasonable defaults
    // to prevent a crash later.

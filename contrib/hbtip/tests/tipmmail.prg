@@ -1,5 +1,4 @@
-/*
- * TIP Mail - reading and writing multipart mails
+/* TIP Mail - reading and writing multipart mails
  *
  * Creating a mail message.
  * This will create a valid mail message, using

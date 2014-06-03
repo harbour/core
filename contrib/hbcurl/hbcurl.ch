@@ -55,7 +55,6 @@
 
 /* curl_easy_setopt() parameters.
    NOTE: The actual values may be different from the libcurl equivalent. */
-
 #define HB_CURLOPT_FILE                       1
 #define HB_CURLOPT_URL                        2
 #define HB_CURLOPT_PORT                       3

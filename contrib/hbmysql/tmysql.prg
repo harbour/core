@@ -247,7 +247,7 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
 
    RETURN cWhere
 
-/* -------------------------------------------------------- */
+/* --- */
 
 // Every single query submitted to MySQL server
 CREATE CLASS TMySQLQuery
@@ -670,7 +670,7 @@ METHOD FieldType( nNum ) CLASS TMySQLQuery
 
    RETURN "U"
 
-/* -------------------------------------------------------- */
+/* --- */
 
 // A Table is a query without joins; this way I can Insert() e Delete() rows.
 // NOTE: it's always a SELECT result, so it will contain a full table only if
@@ -1202,7 +1202,7 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
 
    RETURN cWhere
 
-/* -------------------------------------------------------- */
+/* --- */
 
 // Every available MySQL server
 CREATE CLASS TMySQLServer

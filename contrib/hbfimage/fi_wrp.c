@@ -210,10 +210,9 @@ static void hb_FIMULTIBITMAP_ret( FIMULTIBITMAP * bitmap )
    hb_retptrGC( ( void * ) ptr );
 }
 
-/* ************************* WRAPPED FUNCTIONS ****************************** */
+/* *** WRAPPED FUNCTIONS *** */
 
 /* Init / Error routines */
-/* --------------------- */
 
 HB_FUNC( FI_INITIALISE )
 {
@@ -226,7 +225,6 @@ HB_FUNC( FI_DEINITIALISE )
 }
 
 /* Version routines */
-/* ---------------- */
 
 HB_FUNC( FI_GETVERSION )
 {
@@ -239,7 +237,6 @@ HB_FUNC( FI_GETCOPYRIGHTMESSAGE )
 }
 
 /* Message output functions */
-/* ------------------------ */
 
 /* DLL_API void DLL_CALLCONV FreeImage_OutputMessageProc(int fif, const char *fmt, ...); */
 
@@ -287,7 +284,6 @@ HB_FUNC( FI_SETOUTPUTMESSAGE )
 }
 
 /* Allocate / Clone / Unload routines */
-/* ---------------------------------- */
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Allocate(int width, int height, int bpp, unsigned red_mask FI_DEFAULT(0), unsigned green_mask FI_DEFAULT(0), unsigned blue_mask FI_DEFAULT(0)); */
 HB_FUNC( FI_ALLOCATE )
@@ -353,7 +349,6 @@ HB_FUNC( FI_UNLOAD )
 #endif
 
 /* Load / Save routines */
-/* -------------------- */
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_LoadFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream, int flags FI_DEFAULT(0)); */
 /* DLL_API FIMEMORY *DLL_CALLCONV FreeImage_OpenMemory(BYTE *data FI_DEFAULT(0), DWORD size_in_bytes FI_DEFAULT(0)); */
@@ -425,7 +420,6 @@ HB_FUNC( FI_SAVE )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SaveToHandle(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, FreeImageIO *io, fi_handle handle, int flags FI_DEFAULT(0)); */
 
 /* Memory I/O stream routines */
-/* -------------------------- */
 
 /*
    DLL_API FIMEMORY *DLL_CALLCONV FreeImage_OpenMemory(BYTE *data FI_DEFAULT(0), DWORD size_in_bytes FI_DEFAULT(0));
@@ -438,7 +432,6 @@ HB_FUNC( FI_SAVE )
  */
 
 /* Plugin Interface */
-/* ---------------- */
 
 /*
    DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_RegisterLocalPlugin(FI_InitProc proc_address, const char *format FI_DEFAULT(0), const char *description FI_DEFAULT(0), const char *extension FI_DEFAULT(0), const char *regexpr FI_DEFAULT(0));
@@ -463,7 +456,6 @@ HB_FUNC( FI_SAVE )
  */
 
 /* Multipaging interface */
-/* --------------------- */
 
 /* DLL_API FIMULTIBITMAP * DLL_CALLCONV FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL create_new, BOOL read_only, BOOL keep_cache_in_memory FI_DEFAULT(FALSE), int flags FI_DEFAULT(0)); */
 HB_FUNC( FI_OPENMULTIBITMAP )
@@ -616,7 +608,6 @@ HB_FUNC( FI_MOVEPAGE )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_GetLockedPageNumbers(FIMULTIBITMAP *bitmap, int *pages, int *count); */
 
 /* Filetype request routines */
-/* ------------------------- */
 
 /* DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileType(const char *filename, int size FI_DEFAULT(0)); */
 HB_FUNC( FI_GETFILETYPE )
@@ -651,7 +642,6 @@ HB_FUNC( FI_GETFILETYPEFROMMEMORY )
 }
 
 /* Image type request routine */
-/* -------------------------- */
 
 HB_FUNC( FI_GETIMAGETYPE )
 {
@@ -662,7 +652,6 @@ HB_FUNC( FI_GETIMAGETYPE )
 }
 
 /* FreeImage helper routines */
-/* ------------------------- */
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_IsLittleEndian(void); */
 HB_FUNC( FI_ISLITTLEENDIAN )
@@ -675,7 +664,6 @@ HB_FUNC( FI_ISLITTLEENDIAN )
 
 
 /* Pixel access routines */
-/* --------------------- */
 
 /* DLL_API BYTE *DLL_CALLCONV FreeImage_GetBits(FIBITMAP *dib); */
 HB_FUNC( FI_GETBITS )
@@ -709,7 +697,6 @@ HB_FUNC( FI_GETSCANLINE )
  */
 
 /* DIB info routines */
-/* ----------------- */
 
 HB_FUNC( FI_GETCOLORSUSED )
 {
@@ -972,7 +959,6 @@ HB_FUNC( FI_SETBACKGROUNDCOLOR )
 }
 
 /* ICC profile routines */
-/* -------------------- */
 
 /* DLL_API FIICCPROFILE *DLL_CALLCONV FreeImage_GetICCProfile(FIBITMAP *dib); */
 HB_FUNC( FI_GETICCPROFILE )
@@ -1010,7 +996,6 @@ HB_FUNC( FI_DESTROYICCPROFILE )
 }
 
 /* Line conversion routines */
-/* ------------------------ */
 
 /*
    DLL_API void DLL_CALLCONV FreeImage_ConvertLine1To4(BYTE *target, BYTE *source, int width_in_pixels);
@@ -1052,7 +1037,6 @@ HB_FUNC( FI_DESTROYICCPROFILE )
  */
 
 /* Smart conversion routines */
-/* ------------------------- */
 
 HB_FUNC( FI_CONVERTTO4BITS )
 {
@@ -1190,7 +1174,6 @@ HB_FUNC( FI_CONVERTTOTYPE )
 /* DLL_API FIBITMAP* DLL_CALLCONV FreeImage_TmoReinhard05(FIBITMAP *src, double intensity FI_DEFAULT(0), double contrast FI_DEFAULT(0)); */
 
 /* ZLib interface */
-/* -------------- */
 
 /* DLL_API DWORD DLL_CALLCONV FreeImage_ZLibCompress(BYTE *target, DWORD target_size, BYTE *source, DWORD source_size); */
 /* DLL_API DWORD DLL_CALLCONV FreeImage_ZLibUncompress(BYTE *target, DWORD target_size, BYTE *source, DWORD source_size); */
@@ -1199,7 +1182,6 @@ HB_FUNC( FI_CONVERTTOTYPE )
 /* DLL_API DWORD DLL_CALLCONV FreeImage_ZLibCRC32(DWORD crc, BYTE *source, DWORD source_size); */
 
 /* Metadata routines */
-/* ----------------- */
 
 /* tag creation / destruction */
 /* DLL_API FITAG *DLL_CALLCONV FreeImage_CreateTag(); */
@@ -1239,7 +1221,6 @@ HB_FUNC( FI_CONVERTTOTYPE )
 /* DLL_API const char* DLL_CALLCONV FreeImage_TagToString(FREE_IMAGE_MDMODEL model, FITAG *tag, char *Make FI_DEFAULT(NULL)); */
 
 /* Image manipulation toolkit */
-/* -------------------------- */
 
 /* rotation and flipping */
 
@@ -1302,7 +1283,6 @@ HB_FUNC( FI_FLIPVERTICAL )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransform(const char *src_file, const char *dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect FI_DEFAULT(FALSE)); */
 
 /* upsampling / downsampling */
-/* ------------------------- */
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Rescale(FIBITMAP *dib, int dst_width, int dst_height, FREE_IMAGE_FILTER filter); */
 HB_FUNC( FI_RESCALE )
@@ -1324,7 +1304,6 @@ HB_FUNC( FI_RESCALE )
 }
 
 /* color manipulation routines (point operations) */
-/* ---------------------------------------------- */
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_AdjustCurve(FIBITMAP *dib, BYTE *LUT, FREE_IMAGE_COLOR_CHANNEL channel); */
 
@@ -1384,7 +1363,6 @@ HB_FUNC( FI_INVERT )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_GetHistogram(FIBITMAP *dib, DWORD *histo, FREE_IMAGE_COLOR_CHANNEL channel FI_DEFAULT(FICC_BLACK)); */
 
 /* channel processing routines */
-/* --------------------------- */
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_GetChannel(FIBITMAP *dib, FREE_IMAGE_COLOR_CHANNEL channel); */
 HB_FUNC( FI_GETCHANNEL )
@@ -1406,7 +1384,6 @@ HB_FUNC( FI_GETCHANNEL )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetComplexChannel(FIBITMAP *dst, FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel); */
 
 /* copy / paste / composite routines */
-/* --------------------------------- */
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Copy(FIBITMAP *dib, int left, int top, int right, int bottom); */
 HB_FUNC( FI_COPY )

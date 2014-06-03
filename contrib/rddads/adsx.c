@@ -108,7 +108,7 @@ typedef struct _ADSXAREA_
 {
    ADSAREA adsarea;
 
-   /* ================ Additional fields for ADSX RDD =================== */
+   /* Additional fields for ADSX RDD */
 
    PMIXTAG pTagList;
    PMIXTAG pTagCurrent;
@@ -126,9 +126,7 @@ static HB_USHORT s_uiRddIdADSADTX = ( HB_USHORT ) -1;
 static RDDFUNCS  adsxSuper;
 
 
-/***********************************************************************
- *  Misc functions
- ************************************************************************/
+/* Misc functions */
 
 static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea,
                                  HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
@@ -174,9 +172,7 @@ static HB_ERRCODE hb_adsUpdateAreaFlags( ADSXAREAP pArea )
 }
 
 
-/************************************************************************
- *  Memory Index
- *************************************************************************/
+/* Memory Index */
 
 static PMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
 {
@@ -708,9 +704,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
 }
 
 
-/************************************************************************
- *  ADSX RDD METHODS
- *************************************************************************/
+/* ADSX RDD METHODS */
 
 static HB_ERRCODE adsxGoBottom( ADSXAREAP pArea )
 {
@@ -1145,7 +1139,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
       else
          szKeyExpr[ 0 ] = '\0';
 
-      u32RetVal = AdsCreateIndex61( 
+      u32RetVal = AdsCreateIndex61(
          pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent ? pArea->adsarea.hOrdCurrent : pArea->adsarea.hTable,
          ( UNSIGNED8 * ) pOrderInfo->abBagName,
          ( UNSIGNED8 * ) pOrderInfo->atomBagName,

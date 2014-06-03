@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   28 Sep 1991 03:09:44   GLENN
  * Allowed "No peg at that location" messagee to exceed the boundary of the

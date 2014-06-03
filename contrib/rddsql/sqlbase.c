@@ -118,7 +118,7 @@ static HB_ERRCODE hb_errRT_SQLBASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode
 }
 
 
-/*================ NULL SDD ==========================================================*/
+/* --- NULL SDD --- */
 
 static HB_ERRCODE sddConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE sddDisconnect( SQLDDCONNECTION * pConnection );
@@ -225,7 +225,7 @@ static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG 
 }
 
 
-/*==================== SDD registration =====================================*/
+/* --- SDD registration --- */
 
 static PSDDNODE s_pSdd = NULL;
 
@@ -264,7 +264,7 @@ int hb_sddRegister( PSDDNODE pSdd )
 }
 
 
-/*============= RDD METHODS =============================================================*/
+/* --- RDD METHODS --- */
 
 static HB_ERRCODE sqlbaseGoBottom( SQLBASEAREAP pArea )
 {
@@ -1091,7 +1091,7 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
 }
 
 
-/*====================================================================================*/
+/* --- */
 
 static RDDFUNCS sqlbaseTable =
 {
@@ -1198,7 +1198,7 @@ static RDDFUNCS sqlbaseTable =
 };
 
 
-/*================ Module initialization code ========================================*/
+/* --- Module initialization code --- */
 
 HB_FUNC( SQLBASE )
 {

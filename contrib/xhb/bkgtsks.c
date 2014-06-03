@@ -115,7 +115,7 @@ static void s_bkg_exit( void * cargo )
 
 static HB_TSD_NEW( s_bkg, sizeof( HB_BKG ), s_bkg_init, s_bkg_exit );
 
-/* ------------------------- C LEVEL ------------------------- */
+/* --- C LEVEL --- */
 
 static HB_ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive )
 {
@@ -353,7 +353,7 @@ static int hb_backgroundTime( HB_ULONG ulID, int nMillisec )
    return nOldState;
 }
 
-/* ------------------------ PRG LEVEL ------------------------ */
+/* --- PRG LEVEL --- */
 
 /* forces to run Background functions */
 HB_FUNC( HB_BACKGROUNDRUN )

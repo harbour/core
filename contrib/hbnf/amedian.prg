@@ -9,7 +9,6 @@
  * by David Husnian.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.1   15 Aug 1991 23:05:22   GLENN
  * Forest Belt proofread/edited/cleaned up doc

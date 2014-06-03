@@ -117,7 +117,7 @@ PROCEDURE Main( cLang )
 STATIC PROCEDURE addmtest()
 
    // AddMonth( dDate, nMonths )
-   // ===========================
+   //
    // This version will only accept an nMonths value of from 0 to 70
 
    LOCAL GetList := {}
@@ -149,7 +149,6 @@ STATIC PROCEDURE addmtest()
 STATIC PROCEDURE bomtest()
 
    // BoM( dDate )
-   // =============
 
    LOCAL GetList := {}
    LOCAL dDate   := hb_SToD()
@@ -177,7 +176,6 @@ STATIC PROCEDURE bomtest()
 STATIC PROCEDURE boqtest()
 
    // BoM( dDate )
-   // =============
 
    LOCAL GetList := {}
    LOCAL dDate   := hb_SToD()
@@ -206,7 +204,6 @@ STATIC PROCEDURE boqtest()
 STATIC PROCEDURE boytest()
 
    // BoY( dDate )
-   // =============
 
    LOCAL GetList := {}
    LOCAL dDate   := hb_SToD()
@@ -237,7 +234,7 @@ STATIC PROCEDURE boytest()
 STATIC PROCEDURE ctodowtest()
 
    // CToDoW( cDow )
-   // ===============
+   //
    // Convert name of day of the week to its ordinal number
    // if cDow is invalid, returns 0
 
@@ -270,7 +267,7 @@ STATIC PROCEDURE ctodowtest()
 STATIC PROCEDURE ctomonthtest()
 
    // CToMonth( cDom )
-   // =================
+   //
    // Convert the name of a month to its ordinal number. If cDom is
    // invalid, CToMonth() Returns 0.
 
@@ -304,7 +301,7 @@ STATIC PROCEDURE ctomonthtest()
 STATIC PROCEDURE dInMonthtest()
 
    // DaysInMonth( xDate, lleap )
-   // ============================
+   //
    // Returns the number of days in nMonth, either whose name as a
    // string or month number is passed.
 
@@ -352,7 +349,7 @@ STATIC PROCEDURE dInMonthtest()
 STATIC PROCEDURE d2month()
 
    // DaysToMonth()
-   // ==============
+   //
    // Total number days from first of Jan to beginning of nMonth.
    // lLeap is .F. for a non-leap year but .T. if it is. If so and
    // nMonth is greater than 2, ndays is incremented.
@@ -394,7 +391,7 @@ STATIC PROCEDURE d2month()
 STATIC PROCEDURE dmytest()
 
    // DMY( dDate, lMode )
-   // ====================
+   //
    // Returns the date as a string in DD Month YY format. If lmode
    // is .T., a "." is inserted after the DD
    // This version does not observe the Nations module.
@@ -434,7 +431,7 @@ STATIC PROCEDURE dmytest()
 STATIC PROCEDURE doytest()
 
    // DoY( dDate )
-   // =============
+   //
    // Determines the day of the year for a specific date
    // if dDate is invalid, returns 0
 
@@ -466,7 +463,7 @@ STATIC PROCEDURE doytest()
 STATIC PROCEDURE eomtest()
 
    // dBom := EoM( dDate )
-   // =====================
+   //
    // Returns the last date in the month of the month appearing in
    // date.
 
@@ -498,7 +495,7 @@ STATIC PROCEDURE eomtest()
 STATIC PROCEDURE eoqtest()
 
    // dret := EoQ( dDate )
-   // =====================
+   //
    // Returns the last date in the quarter in which dDate falls.
 
    LOCAL GetList := {}
@@ -529,7 +526,7 @@ STATIC PROCEDURE eoqtest()
 STATIC PROCEDURE eoytest()
 
    // dEoY := EoY( dDate )
-   // =====================
+   //
    // Returns the last date in the year of the year appearing in
    // date.
 
@@ -561,7 +558,7 @@ STATIC PROCEDURE eoytest()
 STATIC PROCEDURE isleaptest()
 
    // lRet := IsLeap( dDate )
-   // ========================
+   //
    // if dDate is a leap year, lRet is .T., otherwise .F..
    // Leap years are exactly divisible by 4 and 1,000 but not 100.
 
@@ -593,7 +590,7 @@ STATIC PROCEDURE isleaptest()
 STATIC PROCEDURE lastdayomtest()
 
    // ndays := LastDayOM( xDate )
-   // ============================
+   //
    // Returns the the number of days in the month.
    // xDate can be a date or a month number. If empty uses the
    // system date.
@@ -637,7 +634,7 @@ STATIC PROCEDURE lastdayomtest()
 STATIC PROCEDURE mdytest()
 
    // cDate := MDY( dDate )
-   // ======================
+   //
    // Returns the date as a string in "Month DD, YY" or "Month DD, YYYY"
    // If dDate is NULL, the system date is used
    // This version does not observe the Nations module.
@@ -671,7 +668,7 @@ STATIC PROCEDURE mdytest()
 STATIC PROCEDURE ntocdowtest()
 
    // cDay := NToCDoW( nDayNum )
-   // ===========================
+   //
    // NToCDoW() receives the number of a day and returns its
    // name as a string. This version does not observe the Nations
    // module.
@@ -704,7 +701,7 @@ STATIC PROCEDURE ntocdowtest()
 STATIC PROCEDURE ntocmthtest()
 
    // cMonth := NToCMonth( nMonthNum )
-   // =================================
+   //
    // NToCMonth() receives the number of a month and returns its
    // name as a string. This version does not observe the Nations
    // module.
@@ -737,7 +734,7 @@ STATIC PROCEDURE ntocmthtest()
 STATIC PROCEDURE qtrtest()
 
    // nqtr := Quarter( dDate )
-   // =========================
+   //
    // Returns the quarter as a number. If no date is specified,
    // the system date is used.
 
@@ -769,7 +766,7 @@ STATIC PROCEDURE qtrtest()
 STATIC PROCEDURE stodtest()
 
    // SToD( ansi-date )
-   // ==================
+   //
    // Returns a Harbour format date. If Ansi date is invalid, a
    // null date is returned.
 
@@ -816,7 +813,7 @@ STATIC FUNCTION chkansi( cAnsidate )
 STATIC PROCEDURE weektest()
 
    // nWeek := Week( dDate, lSWN )
-   // =============================
+   //
    // Returns the calendar week as a number. If no date is specified,
    // the system date is used. An empty date viz hb_SToD()
    // returns 0.

@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   16 Aug 1991 19:35:48   GLENN
  * Don Caton corrected some spelling errors in doc

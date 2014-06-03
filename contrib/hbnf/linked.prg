@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.2   15 Aug 1991 23:05:52   GLENN
  * Forest Belt proofread/edited/cleaned up doc
@@ -27,7 +26,7 @@
 
 FUNCTION ft_Linked( cFuncs )
 
-   LOCAL aFuncArray, nSpace, nComma, nFEnd, lRetVal := .F.
+   LOCAL aFuncArray, nSpace, nComma, nFEnd
 
    IF "(" $ cFuncs
       aFuncArray := {}
@@ -51,10 +50,10 @@ FUNCTION ft_Linked( cFuncs )
       ENDDO
       // Scan through the array of functions, stop after the first occurence
       // of a function which returns a Type() of "U" (hence is not linked in)
-      lRetVal := AScan( aFuncArray, {| element | Type( element ) == "U" } ) == 0
-   ELSE
-      // No functions in string
-      Alert( "Warning: Expected function(s) in ft_Linked(), but none were found" )
+      RETURN AScan( aFuncArray, {| element | Type( element ) == "U" } ) == 0
    ENDIF
 
-   RETURN lRetVal
+   // No functions in string
+   Alert( "Warning: Expected function(s) in ft_Linked(), but none were found" )
+
+   RETURN .F.

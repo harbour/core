@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   15 Jul 1993 00:08:46   GLENN
  * Changed reference to status_byte in order to make this work in

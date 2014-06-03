@@ -2741,11 +2741,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    return HB_TRUE;
 }
 
-/* ********************************************************************** */
-/*
- * GT Specific Functions
- */
-/* ********************************************************************** */
+/* GT Specific Functions */
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
@@ -2777,7 +2773,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       hb_errInternal( 10001, "Maximum number of WVG windows reached, cannot create another one", NULL, NULL );
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static void hb_gt_wvt_Exit( PHB_GT pGT )
 {
@@ -2807,7 +2803,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
    }
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
@@ -2849,7 +2845,7 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
    return fResult;
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
                                   int iColor, HB_BYTE bAttr, HB_USHORT usChar )
@@ -2869,7 +2865,7 @@ static HB_BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
    return HB_FALSE;
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static const char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
 {
@@ -2883,7 +2879,7 @@ static const char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
    return "Terminal: Windows native GDI with GUI extensions (WVG)";
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 {
@@ -2905,7 +2901,6 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
    return fKey ? c : 0;
 }
 
-/* ********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
 static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
@@ -2915,8 +2910,6 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
    hb_gt_winapi_tone( dFrequency, dDuration );
 }
-
-/* ********************************************************************** */
 
 static HB_BOOL hb_gt_wvt_mouse_IsPresent( PHB_GT pGT )
 {
@@ -2965,7 +2958,7 @@ static int hb_gt_wvt_mouse_CountButton( PHB_GT pGT )
    return GetSystemMetrics( SM_CMOUSEBUTTONS );
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
@@ -4030,15 +4023,12 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    return HB_TRUE;
 }
 
-/* ********************************************************************** */
+/* --- Graphics API --- */
 
-/* ********** Graphics API ********** */
-/*
- * NOTE:
+/* NOTE:
  *      GfxPrimitive() parameters may have different meanings
  *      ie: - Desired color is 'iBottom' for PUTPIXEL and 'iRight' for CIRCLE
  *          - Red is iTop, Green iLeft and Blue is iBottom for MAKECOLOR
- *
  */
 
 #define SetGFXContext( c ) \
@@ -4185,7 +4175,7 @@ static void hb_gt_wvt_gfx_Text( PHB_GT pGT, int iTop, int iLeft, const char *cBu
 }
 #endif
 
-/* ********************************************************************** */
+/* --- */
 
 static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
@@ -4213,7 +4203,7 @@ static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    }
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static void hb_gt_wvt_Refresh( PHB_GT pGT )
 {
@@ -4260,7 +4250,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    }
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
@@ -4289,16 +4279,13 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    return HB_TRUE;
 }
 
-/* ********************************************************************** */
+/* --- */
 
 #include "hbgtreg.h"
 
-/* ********************************************************************** */
+/* --- */
 
-
-/*
- *                    WVT specific functions
- */
+/* WVT specific functions */
 
 static void hb_wvt_gtLoadGuiData( void )
 {
@@ -4596,11 +4583,7 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT )
       pWVT->hWndTT = hwndTT;
 }
 
-/*
- *
- * Exported functions for API calls
- *
- */
+/* Exported functions for API calls */
 
 PHB_GTWVT hb_wvt_gtGetWVT( void )
 {

@@ -619,9 +619,7 @@
           =>                 ;
           PutCounter( <oHtm>, <num>, <folder>, <dig>, <w>, <clr>, <b> )
 
-/*******************************************/
-/*            New Commands                 */
-/*******************************************/
+/* New Commands */
 
 #xcommand LINKS <url>                ;
           [TEXT  <text>]            ;

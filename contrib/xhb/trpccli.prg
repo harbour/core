@@ -941,9 +941,7 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
 
    RETURN lContinue
 
-/***********************************
-* Utility functions
-************************************/
+/* Utility functions */
 
 METHOD GetFunctionName( xId ) CLASS TRPCClient
 

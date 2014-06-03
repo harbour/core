@@ -6,7 +6,7 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
+ *
  *    Rev 1.2a  09 Sep 1996            JO
  * Added underscore prefix to environ() calls for MSC 8.0
  * Note: 5.2e version will work if linked with MSC OldNames.lib

@@ -47,8 +47,7 @@
  *
  */
 
-/*****
- * NXS aglorithm is FREE SOFTWARE. It can be reused for any
+/* NXS aglorithm is FREE SOFTWARE. It can be reused for any
  * purpose, provided that this copyright notice is still present
  * in the software.
  *
@@ -57,7 +56,6 @@
  *
  * NXS author is Giancarlo Niccolai <giancarlo@niccolai.ws>
  */
-
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -377,20 +375,14 @@ void nxs_make_scramble( HB_ISIZ * scramble, const unsigned char * key, HB_SIZE k
    }
 }
 
-/*
- * END OF NXS
- */
+/* END OF NXS */
 
-/*****
- * xHarbour implementation
- */
+/* xHarbour implementation */
 
-/*****
- * Encrypt a text using a key
+/* Encrypt a text using a key
  * Usage:
  * hb_Crypt( cSource, cKey ) --> cCipher
  */
-
 HB_FUNC( HB_CRYPT )
 {
    PHB_ITEM pSource = hb_param( 1, HB_IT_ANY );
@@ -406,12 +398,10 @@ HB_FUNC( HB_CRYPT )
    hb_retclen_buffer( ( char * ) cRes, hb_itemGetCLen( pSource ) );
 }
 
-/*****
- * Decrypt a text using a key
+/* Decrypt a text using a key
  * Usage:
  * hb_Decrypt( cCrypt, cKey ) --> cSource
  */
-
 HB_FUNC( HB_DECRYPT )
 {
    PHB_ITEM pSource = hb_param( 1, HB_IT_ANY );

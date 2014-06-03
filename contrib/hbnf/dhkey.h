@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.1   14 Jun 1991 19:55:20   GLENN
  * Minor edit to file header

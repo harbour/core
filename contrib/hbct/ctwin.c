@@ -1161,7 +1161,7 @@ static int hb_ctw_SwapWindows( PHB_GTCTW pCTW, int iWindow1, int iWindow2 )
    return -1;
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static void hb_ctw_Init( PHB_GTCTW pCTW )
 {
@@ -1185,7 +1185,7 @@ static void hb_ctw_Init( PHB_GTCTW pCTW )
    HB_GTSELF_SETPOS( pCTW->pGT, iRow, iCol );
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static PHB_GTCTW hb_ctw_base( void )
 {
@@ -2806,9 +2806,9 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    return HB_TRUE;
 }
 
-/* *********************************************************************** */
+/* --- */
 
 #define HB_GTSUPER  NULL
 #include "hbgtreg.h"
 
-/* *********************************************************************** */
+/* --- */

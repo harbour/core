@@ -10,7 +10,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * Modification history:
- * ---------------------
  *
  * 2001-08-19 Modifications for Harbour by Brian Hays, also placed in
  * the public domain.

@@ -6,7 +6,6 @@
  * and are placed in the public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   28 Sep 1992 00:37:56   GLENN
  * Jo French cleaned up.

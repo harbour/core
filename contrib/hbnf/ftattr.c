@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *     Rev 1.2   03 Oct 1992 14:35:14   GLENN
  *  Ted Means made modifications to support use of DispBegin()/DispEnd().
@@ -76,7 +75,6 @@ HB_FUNC( FT_SAVEATT )
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *     Rev 1.2   03 Oct 1992 14:33:46   GLENN
  *  Ted Means made modifications so these functions will work with

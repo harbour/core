@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   07 Feb 1994 20:11:50   GLENN
  * Ted re-wrote to make it CPMI compliant.

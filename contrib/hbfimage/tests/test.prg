@@ -151,7 +151,7 @@ PROCEDURE Main()
    bmpinfo := NIL // To fix warning
    ? "Info           :", hb_ValToExp( bmpinfo )
    ? bmpinfo:SayMembers( " ", .T., .T. )
-   ? "-----------------------------------------------------"
+   ? Replicate( "-", 60 )
 
    ? ValType( bmpinfo:Devalue() )
    hb_traceLog( "bmpinfoheader", hb_ValToExp( bmpinfoheader ), ;

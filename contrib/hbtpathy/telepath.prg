@@ -591,7 +591,7 @@ FUNCTION tp_setport()
 
 #endif
 
-// internal (static) functions ---------------------------------------------------
+// internal (static) functions
 
 STATIC FUNCTION isopenport( nPort )
    RETURN isport( nPort ) .AND. t_aPorts[ nPort ][ TPFP_OC ]

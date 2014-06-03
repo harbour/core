@@ -1,11 +1,9 @@
-/*
- * Copyright 1999 Ryszard Glab
+/* Copyright 1999 Ryszard Glab
  * www - http://harbour-project.org
  */
 
-/*
-   Known bugs:
-   ----------
+/* Known bugs:
+
    1) It requires files separated with CR/LF pairs
    2) NextWord() doesn't work correctly
    3) If text contains color escape codes then deleting or inserting
@@ -13,8 +11,8 @@
    4) Doesn't handle OS-specific EOL (only CRLG)
    5) Unicode support
 
-   To fix:
-   ------
+   TOFIX:
+
    1) All TAB characters are replaced with spaces at startup - if edited file is
      very large and contains many TABs then it can take a vary long time - TAB
      characters should be left unchanged and interpreted during editing
@@ -2361,7 +2359,7 @@ static void Tab( PHB_EDITOR pEd, HB_BOOL fInsert )
 }
 #endif
 
-/* ---- */
+/* --- */
 
 #if 0
 HB_FUNC( ED_TAB )

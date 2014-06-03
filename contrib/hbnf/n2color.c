@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 2.1   22 Apr 2004 15:47:00   DGH
  * Made definitions of _ftI2Color and _ftGetColorStr static to match

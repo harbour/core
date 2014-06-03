@@ -896,7 +896,7 @@ static HB_BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    return HB_TRUE;
 }
 
-/* ********** Graphics API ********** */
+/* --- Graphics API --- */
 
 #define hb_gfx_cord( t, l, b, r, tmp )    \
                do { \
@@ -1070,7 +1070,7 @@ static void hb_gt_alleg_gfx_Text( PHB_GT pGT, int iTop, int iLeft, const char * 
       hb_gt_alleg_ScreenUpdate( pGT );
 }
 
-/* ******** Graphics API end ******** */
+/* --- Graphics API end --- */
 
 static void hb_gt_alleg_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
@@ -1143,8 +1143,7 @@ static void hb_gt_alleg_Refresh( PHB_GT pGT )
    }
 }
 
-
-/* ******************************************************************* */
+/* --- */
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
@@ -1173,14 +1172,13 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    return HB_TRUE;
 }
 
-/* ******************************************************************* */
+/* --- */
 
 #include "hbgtreg.h"
 
-/* ******************************************************************* */
+/* --- */
 
-/*
- * this is necessary if you want to link with .so Allegro libs
+/* This is necessary if you want to link with .so Allegro libs
  * or when link statically and your linker will force to link main()
  * from Allegro library not the Harbour one
  */

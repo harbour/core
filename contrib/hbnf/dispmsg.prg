@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 2.0   12 Aug 1994 23:05:14   PAUL
  * Added ablilty to highlight individual characters and cleaned up code

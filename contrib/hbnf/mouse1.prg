@@ -1,5 +1,4 @@
-/*
- * The functions contained herein are the work of Viktor Szakats based
+/* The functions contained herein are the work of Viktor Szakats based
  * on previous versions, all placed in the public domain.
  */
 
@@ -219,7 +218,6 @@ FUNCTION ft_MGetPage()
    RETURN 0
 
 /* NOTE: Page is ignored in Harbour */
-
 PROCEDURE ft_MSetPage( nPage )
 
    HB_SYMBOL_UNUSED( nPage )

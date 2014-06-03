@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   01 Jan 1995 03:01:00   TED
  * Added dual-mode compatibility.

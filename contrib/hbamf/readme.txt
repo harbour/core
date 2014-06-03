@@ -1,6 +1,4 @@
---------------------------------------
-Short description of Harbour functions
---------------------------------------
+Short description of Harbour functions:
 
    cAMF := amf3_Encode( xVal, symConvOut, lBinaryStrings )
    xVal           - any supported datatype:

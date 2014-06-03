@@ -151,7 +151,7 @@ HB_CALL_ON_STARTUP_END( _hb_sddpostgre_init_ )
 #endif
 
 
-/* ===================================================================================== */
+/* --- */
 static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -164,8 +164,7 @@ static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSub
 }
 
 
-/* ============= SDD METHODS ============================================================= */
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE pgsqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    PGconn *       pConn;

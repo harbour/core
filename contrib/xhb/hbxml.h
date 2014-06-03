@@ -140,10 +140,7 @@ struct tag_mxml_output;
 typedef void ( *MXML_REFIL_FUNC )( struct tag_mxml_refil * ref );
 typedef void ( *MXML_OUTPUT_FUNC )( struct tag_mxml_output * out, const char * data, HB_ISIZ len );
 
-/*************************************************
-   Structures holding the XML data
- **************************************************/
-
+/* --- Structures holding the XML data --- */
 
 /* Refiller */
 

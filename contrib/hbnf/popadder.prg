@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.4   03 Mar 1994 19:47:22   GLENN
  * Author made some enhancements and modifications.

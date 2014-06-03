@@ -1,5 +1,4 @@
-/*
- * TIP Mail - reading and writing multipart mails
+/* TIP Mail - reading and writing multipart mails
  *
  * Test for reading a multipart message (that must already
  * be in its canonical form, that is, line terminator is
@@ -24,24 +23,24 @@ PROCEDURE Main( cFileName )
       ? "Malformed mail. Dumping up to where parsed"
    ENDIF
 
-   ? "-------------============== HEADERS =================--------------"
+   ? PadC( " HEADERS ", 60, "-" )
    FOR EACH i IN oMail:hHeaders
       ? i:__enumKey(), ":", i
    NEXT
    ?
 
-   ? "-------------============== RECEIVED =================--------------"
+   ? PadC( " RECEIVED ", 60, "-" )
    FOR EACH cData IN oMail:aReceived
       ? cData
    NEXT
    ?
 
-   ? "-------------============== BODY =================--------------"
+   ? PadC( " BODY ", 60, "-" )
    ? oMail:GetBody()
    ?
 
    DO WHILE oMail:GetAttachment() != NIL
-      ? "-------------============== ATTACHMENT =================--------------"
+      ? PadC( " ATTACHMENT ", 60, "-" )
       ? oMail:NextAttachment():GetBody()
       ?
    ENDDO

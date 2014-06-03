@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   17 Aug 1991 15:47:06   GLENN
  * Don Caton fixed some spelling errors in the doc
@@ -47,17 +46,12 @@ PROCEDURE ft_XBox( ;
    LOCAL aLines
    LOCAL tmp
 
-   hb_default( @cJustType, "" )
-   hb_default( @cRetWait, "" )
-   hb_default( @cBorType, "" )
-   hb_default( @cBorColor, "N/W" )
-   hb_default( @cBoxColor, "W/N" )
    hb_default( @nStartRow, 99 )
    hb_default( @nStartCol, 99 )
 
-   cJustType := Upper( cJustType )
-   cRetWait  := Upper( cRetWait )
-   cBorType  := Upper( cBorType )
+   cJustType := Upper( hb_defaultValue( cJustType, "" ) )
+   cRetWait  := Upper( hb_defaultValue( cRetWait, "" ) )
+   cBorType  := Upper( hb_defaultValue( cBorType, "" ) )
 
    // establish array of strings to be displayed
    aLines := {}
@@ -82,7 +76,7 @@ PROCEDURE ft_XBox( ;
    hb_Scroll( nTRow, nLCol, nBRow, nRCol )
 
    // draw border
-   SetColor( cBorColor )
+   SetColor( hb_defaultValue( cBorColor, "N/W" ) )
    hb_DispBox( nTRow, nLCol, nBRow, nRCol, ;
       iif( hb_LeftEq( cBorType, "D" ), HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ) )
 
@@ -90,7 +84,7 @@ PROCEDURE ft_XBox( ;
    hb_Shadow( nTRow, nLCol, nBRow, nRCol )
 
    // print text in box
-   SetColor( cBoxColor )
+   SetColor( hb_defaultValue( cBoxColor, "W/N" ) )
    AEval( aLines, {| cSayStr, nLoop | ;
       hb_DispOutAt( ;
          nTRow + nLoop, ;

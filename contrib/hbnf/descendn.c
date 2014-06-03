@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.1   01 May 1995 03:05:00   TED
  * Added typecast to tame compiler warning

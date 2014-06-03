@@ -380,8 +380,7 @@ HB_FUNC( HB_FINFO )  /* used for debugging */
    hb_storvl( ft_text->isEof[ ft_text->area ], -1, 6 );
 }
 
-/* ------------------------------------------------
-   Warning: This is a rogue function! It is a first shot at adding the logic
+/* Warning: This is a rogue function! It is a first shot at adding the logic
    to read .csv records that respect CRLF embedded within quotes.
    It is very common, especially with Microsoft products, for
    comma-separated files to allow a field (usually an address field)

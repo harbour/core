@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.1   09 Nov 1992 22:35:52   GLENN
  * Function was inadvertently named origin() instead of ft_Origin() when

@@ -195,7 +195,6 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
 #endif /* HB_CURL_HASH_STRINGS */
 
 /* Callbacks */
-/* --------- */
 
 static size_t hb_curl_read_dummy_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
@@ -383,7 +382,6 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
 #endif
 
 /* Helpers */
-/* ------- */
 
 static void hb_curl_form_free( struct curl_httppost ** ptr )
 {

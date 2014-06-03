@@ -176,7 +176,7 @@ HB_CALL_ON_STARTUP_END( _hb_ocidd_init_ )
    #include "hbiniseg.h"
 #endif
 
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_OCIDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    PHB_ITEM  pError;
@@ -216,8 +216,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    return szRet;
 }
 
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    OCI_Connection * cn;

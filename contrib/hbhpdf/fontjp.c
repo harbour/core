@@ -45,8 +45,7 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_UseJPFonts( hDoc ) -> hStatus
- */
+/* HPDF_UseJPFonts( hDoc ) -> hStatus */
 HB_FUNC( HPDF_USEJPFONTS )
 {
    hb_retnl( ( long ) HPDF_UseJPFonts( hb_HPDF_Doc_par( 1 ) ) );

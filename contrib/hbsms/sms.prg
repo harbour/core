@@ -98,7 +98,7 @@ FUNCTION sms_ReceiveAll( cPort, cPIN )
 
    RETURN aRetVal
 
-/* --------------------- */
+/* --- */
 
 #define _SMSCTX_xHnd          1
 #define _SMSCTX_cPIN          2

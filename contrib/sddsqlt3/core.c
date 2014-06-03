@@ -135,7 +135,7 @@ HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
    #include "hbiniseg.h"
 #endif
 
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    PHB_ITEM  pError;
@@ -173,8 +173,7 @@ static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
    return szRet;
 }
 
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    sqlite3 * db;

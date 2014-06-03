@@ -6,7 +6,6 @@
  * and are placed in the public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   28 Sep 1992 00:39:04   GLENN
  * Jo French cleaned up.
@@ -28,14 +27,13 @@ FUNCTION ft_MAdd( dGivenDate, nAddMonths, lMakeEOM )
 
    hb_default( @dGivenDate, Date() )
    hb_default( @nAddMonths, 0 )
-   hb_default( @lMakeEOM, .F. )
 
    nAdjDay := Day( dGivenDate ) - 1
 
    /* If givendate is end of month and lMakeEom, then force EOM.*/
 
-   lMakeEom := ( lMakeEom .AND. dGivenDate == dGivenDate - nAdjDay + 31 - ;
-      Day( dGivenDate - nAdjDay + 31 ) )
+   lMakeEom := ( hb_defaultValue( lMakeEOM, .F. ) .AND. ;
+      dGivenDate == dGivenDate - nAdjDay + 31 - Day( dGivenDate - nAdjDay + 31 ) )
 
    dTemp := dGivenDate - nAdjDay     // first of month
 

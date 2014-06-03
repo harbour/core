@@ -45,8 +45,7 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_UseKRFonts( hDoc ) -> hStatus
- */
+/* HPDF_UseKRFonts( hDoc ) -> hStatus */
 HB_FUNC( HPDF_USEKRFONTS )
 {
    hb_retnl( ( long ) HPDF_UseKRFonts( hb_HPDF_Doc_par( 1 ) ) );

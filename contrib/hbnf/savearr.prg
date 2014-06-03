@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   28 Sep 1992 22:04:18   GLENN
  * A few users have reported that these functions do not support
@@ -105,9 +104,9 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
 
 FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
 
-   LOCAL nHandle, aArray
+   LOCAL aArray
+   LOCAL nHandle := FOpen( cFileName )
 
-   nHandle := FOpen( cFileName )
    IF ( nErrorCode := FError() ) == 0
       aArray := _ftrestsub( nHandle, @nErrorCode )
       FClose( nHandle )

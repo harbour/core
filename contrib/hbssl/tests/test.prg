@@ -2,7 +2,7 @@
 
 #require "hbssl"
 
-#define CRLF Chr( 13 ) + Chr( 10 )
+#define CRLF  Chr( 13 ) + Chr( 10 )
 
 PROCEDURE Main()
 
@@ -20,7 +20,7 @@ PROCEDURE Main()
 
    hb_inetInit()
 
-   ? "-------"
+   ? "---"
 
    socket := hb_inetCreate()
    ? "INETTIMEOUT", hb_inetTimeout( socket, 500 )
@@ -34,7 +34,7 @@ PROCEDURE Main()
    ? "BUFFER", ">" + AllTrim( buffer ) + "<"
    ? "INETCLOSE", hb_inetClose( socket )
 
-   ? "-------"
+   ? "---"
 
    socket := hb_inetCreate()
    ? hb_inetTimeout( socket, 2500 )

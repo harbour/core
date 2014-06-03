@@ -231,7 +231,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       ::cCommand := ""
 
-      // The Basics ----------------------------------
+      // --- The Basics ---
 
       IF ! HB_ISSTRING( ::cTO ) .AND. ! HB_ISSTRING( ::cTOFile ) .AND. ! ::lToUndiscloseRecipients
          ::nError := BLAT_ERR_MISSING_TO
@@ -396,7 +396,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ENDIF
       ENDIF
 
-      // Registry overrides ------------------------------
+      // --- Registry overrides ---
 
       IF HB_ISSTRING( ::cProfile )
          ::cCommand += " -p " + ::cProfile
@@ -504,7 +504,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -nomd5"
       ENDIF
 
-      // Miscellaneous RFC header switches ----------------------
+      // --- Miscellaneous RFC header switches ---
 
       IF HB_ISSTRING( ::cOrganization )
          ::cCommand += " -organization " + ::cOrganization
@@ -584,7 +584,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -sensitivity " + hb_ntos( ::nSensitivity )
       ENDIF
 
-      // Attachment and encoding options --------
+      // --- Attachment and encoding options ---
 
       IF ! Empty( ::aAttachBinFiles )
          IF HB_ISSTRING( ::cAttachBinFiles )
@@ -730,13 +730,13 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -contentType " + ::cContentType
       ENDIF
 
-      // NNTP specific options ------------------
+      // --- NNTP specific options ---
 
       IF HB_ISSTRING( ::cGroups )
          ::cCommand += " -groups " + ::cGroups
       ENDIF
 
-      // Other options --------------------------
+      // --- Other options ---
 
       IF ::lXtndXmit
          ::cCommand += " -xtndxmit"

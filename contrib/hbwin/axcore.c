@@ -219,7 +219,7 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 }
 
 
-/* ======================== Event handler support ======================== */
+/* --- Event handler support --- */
 
 
 #if ! defined( HB_OLE_C_API )

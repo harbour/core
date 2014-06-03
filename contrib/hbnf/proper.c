@@ -6,7 +6,6 @@
  * and is placed in the public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.4   01 Jan 1995 03:01:00   TED
  * Ted Means made a couple of minor mods to eliminate some (mostly

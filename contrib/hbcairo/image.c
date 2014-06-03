@@ -46,9 +46,7 @@
  *
  */
 
-
 #include "hbcairo.h"
-
 
 HB_FUNC( CAIRO_IMAGE_SURFACE_CREATE )
 {
