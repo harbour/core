@@ -3731,7 +3731,9 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
 
    if( szGtName )
    {
-      if( hb_stricmp( szGtName, "nul" ) == 0 || hb_stricmp( szGtName, "null" ) == 0 )
+      if( hb_stricmp( szGtName, "GTNUL" ) == 0 ||
+          hb_stricmp( szGtName, "NUL" ) == 0 ||
+          hb_stricmp( szGtName, "null" ) == 0 )
       {
          if( pGT || pSuperTable )
             hb_errInternal( 9996, "Harbour terminal (GT) initialization failure", NULL, NULL );
@@ -3858,7 +3860,9 @@ HB_BOOL hb_gtReload( const char * szGtName,
 {
    HB_BOOL fResult = HB_FALSE;
 
-   if( szGtName && hb_gt_FindEntry( szGtName ) != -1 )
+   if( szGtName && ( hb_gt_FindEntry( szGtName ) != -1 ||
+                     hb_stricmp( szGtName, "GTNUL" ) == 0 ||
+                     hb_stricmp( szGtName, "NUL" ) == 0 ) )
    {
       hb_gtRelease( NULL );
       hb_stackSetGT( hb_gtLoad( szGtName, NULL, NULL ) );
@@ -3875,7 +3879,9 @@ void * hb_gtCreate( const char * szGtName,
 {
    void * hCurrGT = hb_gtSwap( NULL );
 
-   if( szGtName && hb_gt_FindEntry( szGtName ) != -1 )
+   if( szGtName && ( hb_gt_FindEntry( szGtName ) != -1 ||
+                     hb_stricmp( szGtName, "GTNUL" ) == 0 ||
+                     hb_stricmp( szGtName, "NUL" ) == 0 ) )
    {
       PHB_GT pGT = hb_gtLoad( szGtName, NULL, NULL );
       if( pGT )
