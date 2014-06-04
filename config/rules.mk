@@ -64,6 +64,12 @@ ifeq ($(OBJC_RULE),)
    OBJC_RULE = $(OBJC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.m=$(OBJ_EXT)) $(CC_IN) $<
 endif
 
+# The rule to compile an Swift source file.
+ifeq ($(SWIFT_RULE),)
+   SWIFT := xcrun swift
+   SWIFT_RULE = $(SWIFT) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.swift=$(OBJ_EXT)) $(CC_IN) $<
+endif
+
 # The rule to compile resources.
 ifneq ($(RC),)
    ifeq ($(RC_RULE),)
