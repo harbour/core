@@ -54,7 +54,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   15 Aug 1991 23:06:12   GLENN
  * Forest Belt proofread/edited/cleaned up doc
@@ -74,7 +73,7 @@
 #include "hbapi.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
+   #include <dos.h>
 #endif
 
 HB_FUNC( FT_SETMODE )

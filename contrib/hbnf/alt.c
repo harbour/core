@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.5   16 Apr 2000 17:30:00   Luiz Rafael Culik
  * Ported to Harbour

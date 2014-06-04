@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.4   15 Jul 1993 23:53:12   GLENN
  * Dropped _MK_FP for the preferred 0x00400017

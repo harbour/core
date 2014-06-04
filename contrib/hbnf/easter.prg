@@ -7,7 +7,6 @@
  * code is an original work by Paul Tucker and is placed in the public domain
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.2   15 Aug 1991 23:05:28   GLENN
  * Forest Belt proofread/edited/cleaned up doc

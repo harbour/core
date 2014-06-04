@@ -1,15 +1,12 @@
-/*******
+/* Ilina Stoilkovska <anili100/at/gmail.com> 2011
+ * Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
  *
- *  Ilina Stoilkovska <anili100/at/gmail.com> 2011
- *  Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
+ * Encoding Harbour items to AMF3
  *
- *  Encoding Harbour items to AMF3
- *
- *  Contains portions from
- *  Dave Thompson's MIT licensed
- *  AmFast C library for Python
- *
- ********/
+ * Contains portions from
+ * Dave Thompson's MIT licensed
+ * AmFast C library for Python
+ */
 
 #include "hbapi.h"
 #include "hbapiitm.h"

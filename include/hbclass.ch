@@ -276,7 +276,7 @@ DECLARE HBClass ;
       local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #xcommand __HB_CLS_DECLARE_METHOD <MethodName> <ClassName> => ;
-      #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
+   #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
          DECLARED METHOD \<type> <MethodName> CLASS <ClassName>
 
 #xcommand __HB_CLS_DECLARE_METHOD <!MethodName!> <ClassName> => ;

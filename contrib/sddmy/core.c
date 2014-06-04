@@ -139,7 +139,7 @@ HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
 #endif
 
 
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -151,8 +151,7 @@ static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
    return uiAction;
 }
 
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE mysqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    MYSQL *  pMySql;

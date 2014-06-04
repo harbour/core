@@ -52,7 +52,7 @@
 #include "hbstack.h"
 
 
-/* ================ Bit buffer ================ */
+/* --- Bit buffer --- */
 
 PHB_BITBUFFER hb_bitbuffer_create( void )
 {
@@ -166,7 +166,7 @@ void hb_bitbuffer_cat_int_rev( PHB_BITBUFFER pBitBuffer, int iValue, int iLen )
 }
 
 
-/* ================ GC pointer ================ */
+/* --- GC pointer --- */
 
 static HB_GARBAGE_FUNC( hb_zebra_destructor )
 {
@@ -231,7 +231,7 @@ void hb_zebra_ret( PHB_ZEBRA pZebra )
 }
 
 
-/* ================ Zebra ================ */
+/* --- Zebra --- */
 
 PHB_ZEBRA hb_zebra_create( void )
 {

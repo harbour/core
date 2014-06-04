@@ -160,7 +160,7 @@ HB_CALL_ON_STARTUP_END( _hb_odbcdd_init_ )
 #endif
 
 
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_ODBCDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -199,8 +199,7 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
 }
 
 
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    SQLHENV    hEnv     = NULL;

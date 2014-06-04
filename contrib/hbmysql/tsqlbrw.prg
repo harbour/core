@@ -127,7 +127,7 @@ METHOD Block() CLASS TBColumnSQL
 
    RETURN hb_macroBlock( xValue )
 
-/* -------------------------------------------------------- */
+/* --- */
 
 /* This class is more or less like a TBrowseDB() object in that it receives an oQuery/oTable
    object and gives back a browseable view of it */

@@ -3,6 +3,7 @@
  * Harbour Portable Object (.hrb) file runner
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
+ * Copyright 2002 Alexander Kresin <alex@belacy.belgorod.su> (hb_hrbLoad(), hb_hrbDo(), hb_hrbUnload(), hb_hrbGetFunSym())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,20 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2002 Alexander Kresin <alex@belacy.belgorod.su>
- *    hb_hrbLoad()
- *    hb_hrbDo()
- *    hb_hrbUnload()
- *    hb_hrbGetFunSym()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

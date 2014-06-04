@@ -3,6 +3,7 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_strAtI(), tip_TimeStamp() rework, cleanups)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,29 +47,13 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_strAtI()
- *    tip_TimeStamp() rework
- *    cleanup
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbdate.h"
 
-/*
- * Internet timestamp based on RFC 822 & RFC 2822
- */
-
+/* Internet timestamp based on RFC 822 & RFC 2822 */
 HB_FUNC( TIP_TIMESTAMP )
 {
    static const char * s_days[]   = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };

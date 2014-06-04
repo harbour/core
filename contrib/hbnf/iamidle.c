@@ -54,7 +54,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *     Rev 1.0   01 Jan 1995 03:01:00   TED
  *  Nanforum Toolkit

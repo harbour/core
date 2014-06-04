@@ -45,8 +45,7 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_UseCNTFonts( hDoc ) -> hStatus
- */
+/* HPDF_UseCNTFonts( hDoc ) -> hStatus */
 HB_FUNC( HPDF_USECNTFONTS )
 {
    hb_retnl( ( long ) HPDF_UseCNTFonts( hb_HPDF_Doc_par( 1 ) ) );

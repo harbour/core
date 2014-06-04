@@ -29,7 +29,7 @@ PROCEDURE Main()
       palette. Antialiased line-drawing on simple backgrounds should work well with palette-based
       images; otherwise create or fetch a truecolor image instead. */
 
-   /* ***** DRAW A LINE IN A PALETTE BASED IMAGE ***** */
+   /* DRAW A LINE IN A PALETTE BASED IMAGE */
    im := gdImageCreatePalette( 100, 100 )                  /* First we create a true color image */
 
    /* First allocate color is Background color */
@@ -41,7 +41,7 @@ PROCEDURE Main()
    gdImageLine( im, 0, 40, 99, 80, gdAntiAliased )         /* and re-draw the line in antialiased mode */
    gdImageJpeg( im, IMAGES_OUT + "antialiasedpal.jpg" )    /* saving the image */
 
-   /* ***** DRAW A LINE IN A TRUE COLOR IMAGE ***** */
+   /* DRAW A LINE IN A TRUE COLOR IMAGE */
    im := gdImageCreateTrueColor( 100, 100 )                /* First we create a true color image */
 
    /* Background color (true color comes with black background, we have to fill it) */

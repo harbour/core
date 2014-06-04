@@ -3,6 +3,9 @@
  * Compiler command line and HARBOURCMD/CLIPPERCMD checking
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com> (hb_compChkCompilerSwitch())
+ * Copyright 1999 Jose Lalin <dezac@corevia.com> (hb_compChkEnvironVar())
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (PackDateTime(), hb_compChkDefineSwitch(), hb_compChkDefines())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,25 +22,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at https://www.gnu.org/).
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com>
- *    hb_compChkCompilerSwitch()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_compChkEnvironVar()
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    PackDateTime()
- *    hb_compChkDefineSwitch()
- *    hb_compChkDefines()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

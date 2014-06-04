@@ -45,8 +45,7 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_UseKREncodings( hDoc ) -> hStatus
- */
+/* HPDF_UseKREncodings( hDoc ) -> hStatus */
 HB_FUNC( HPDF_USEKRENCODINGS )
 {
    hb_retnl( ( long ) HPDF_UseKREncodings( hb_HPDF_Doc_par( 1 ) ) );

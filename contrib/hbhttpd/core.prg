@@ -1,5 +1,4 @@
-/*
- * Copyright 2009 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
+/* Copyright 2009 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
  * www - http://harbour-project.org
  */
 
@@ -966,11 +965,12 @@ STATIC FUNCTION UErrorHandler( oErr, oServer )
 
 STATIC FUNCTION GetErrorDesc( oErr )
 
-   LOCAL cRet, nI, cI, aPar, nJ, xI
+   LOCAL nI, cI, aPar, nJ, xI
 
-   cRet := "ERRORLOG ============================================================" + hb_eol() + ;
+   LOCAL cRet := "ERRORLOG " + Replicate( "=", 60 ) + hb_eol() + ;
       "Error: " + oErr:subsystem + "/" + ErrDescCode( oErr:genCode ) + "(" + hb_ntos( oErr:genCode ) + ") " + ;
       hb_ntos( oErr:subcode ) + hb_eol()
+
    IF ! Empty( oErr:filename );      cRet += "File: " + oErr:filename + hb_eol()
    ENDIF
    IF ! Empty( oErr:description );   cRet += "Description: " + oErr:description + hb_eol()
@@ -1132,9 +1132,7 @@ STATIC FUNCTION cvt2str( xI, lLong )
    RETURN "[" + cValtype + "]" // BS,etc
 
 
-/********************************************************************
-  Public functions
-********************************************************************/
+/* Public functions */
 
 PROCEDURE USetStatusCode( nStatusCode )
 

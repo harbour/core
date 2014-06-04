@@ -3,6 +3,16 @@
  * Base Class for internal handling of class creation
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2000 J. Lefebvre <jfl@mafact.com> and RA. Cuylen <rac@mafact.com>
+ *    Multiple inheritance
+ *    Support shared class DATA
+ *    scoping (hidden, protected, readOnly)
+ *    Use of __cls_param function to allow multiple superclass declaration
+ *    Suppress of SetType and SetInit not more nedded
+ *    Delegation and forwarding
+ *    Preparing the InitClass class method (not working !!)
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ *    Support for inheritance, default DATA values
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,27 +56,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 J. Lefebvre <jfl@mafact.com> and RA. Cuylen <rac@mafact.com>
- *    Multiple inheritance
- *    Support shared class DATA
- *    scoping (hidden, protected, readOnly)
- *    Use of __cls_param function to allow multiple superclass declaration
- *    Suppress of SetType and SetInit not more nedded
- *    Delegation and forwarding
- *    Preparing the InitClass class method (not working !!)
- *
- * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    Support for inheritance
- *    Support for default DATA values
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* NOTE: This .prg is also used by the debugger subsystem,
          therefore we need this switch to avoid an infinite
          loop when launching it. [vszakats] */
@@ -80,7 +69,7 @@ REQUEST HBObject
 
 FUNCTION HBClass()
 
-   STATIC s_hClass /* NOTE: Automatically defaults to NIL */
+   STATIC s_hClass  /* NOTE: Automatically defaults to NIL */
 
    LOCAL hClass
 

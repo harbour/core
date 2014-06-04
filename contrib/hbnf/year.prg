@@ -6,7 +6,6 @@
  * and are placed in the public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   28 Sep 1992 00:45:50   GLENN
  * Jo French cleaned up.
@@ -37,6 +36,6 @@ FUNCTION ft_Year( dGivenDate )
       SubStr( cFY_Start, 6, 2 ) + ;
       SubStr( cFY_Start, 9, 6 ) )
    aRetval[ 3 ] := ft_MAdd( aRetVal[ 2 ], 12 ) - 1
-   aRetVal[ 1 ] := StrZero( Year( aRetVal[ 3 ] ), 4 )      // End of Year
+   aRetVal[ 1 ] := StrZero( Year( aRetVal[ 3 ] ), 4 )  // End of Year
 
    RETURN aRetVal

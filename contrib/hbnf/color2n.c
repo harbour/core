@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.1   22 Apr 2004 15:44:00   DGH
  * Fixed compiler warnings about pointer vs. integer by changing NULL to 0.

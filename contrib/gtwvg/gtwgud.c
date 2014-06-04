@@ -1200,11 +1200,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
    return HB_TRUE;
 }
 
-/* ********************************************************************** */
-/*
- * GT Specific Functions
- */
-/* ********************************************************************** */
+/* GT Specific Functions */
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
@@ -1239,7 +1235,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       hb_errInternal( 10001, "Maximum number of WGU windows reached, cannot create another one", NULL, NULL );
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static void hb_gt_wvt_Exit( PHB_GT pGT )
 {
@@ -1254,7 +1250,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
       hb_gt_wvt_Free( pWVT );
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 {
@@ -1276,7 +1272,6 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
    return fKey ? c : 0;
 }
 
-/* ********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
 static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
@@ -1286,8 +1281,6 @@ static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
    hb_gt_winapi_tone( dFrequency, dDuration );
 }
-
-/* ********************************************************************** */
 
 static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
@@ -2001,7 +1994,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    return HB_TRUE;
 }
 
-/* ********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
@@ -2017,8 +2010,6 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    return HB_TRUE;
 }
 
-/* ********************************************************************** */
+/* --- */
 
 #include "hbgtreg.h"
-
-/* ********************************************************************** */

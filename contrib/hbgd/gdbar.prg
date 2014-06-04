@@ -237,18 +237,15 @@ METHOD DrawText( lIsI25 ) CLASS GDBar
 
    LOCAL xPosition
 
-   IF hb_defaultValue( lIsI25, .F. )
-      IF ! Empty( ::textfont )
+   IF ! Empty( ::textfont )
+      IF hb_defaultValue( lIsI25, .F. )
          xPosition := 10 * ::GetFontWidth()
          ::say( xPosition, ::maxHeight, "*" + ::text + "*", ::FillColor )
-         ::lastY := ::maxHeight + ::GetFontHeight()
-      ENDIF
-   ELSE
-      IF ! Empty( ::textfont )
+      ELSE
          xPosition := ( ::positionX / 2 ) - ( Len( ::text ) / 2 ) * ::GetFontWidth()
          ::say( xPosition, ::maxHeight, ::text, ::FillColor )
-         ::lastY := ::maxHeight + ::GetFontHeight()
       ENDIF
+      ::lastY := ::maxHeight + ::GetFontHeight()
    ENDIF
 
    RETURN .T.
@@ -283,10 +280,10 @@ METHOD Finish( image_style, quality, nFG ) CLASS GDBar
          ::OutputPng()
          EXIT
       CASE IMG_FORMAT_JPEG
-         ::OutputJpeg( , quality )
+         ::OutputJpeg( , hb_defaultValue( quality, 95 ) )
          EXIT
       CASE IMG_FORMAT_WBMP
-         ::OutputWBmp( , nFG )
+         ::OutputWBmp( , hb_defaultValue( nFG, { 255, 255, 255 } ) )
          EXIT
       CASE IMG_FORMAT_GIF
          ::OutputGif()

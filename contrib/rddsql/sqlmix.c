@@ -91,11 +91,7 @@ static HB_USHORT s_uiRddIdSQLMIX = ( HB_USHORT ) -1;
 static RDDFUNCS sqlmixSuper;
 
 
-/*
-   =======================================================================
-   Misc functions
-   =======================================================================
- */
+/* --- Misc functions --- */
 
 
 static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, char * filename, HB_ERRCODE errOsCode, HB_USHORT uiFlags )
@@ -121,13 +117,10 @@ static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, HB_ERRCODE errGenCode, HB_ER
 }
 
 
-/*
-   =======================================================================
-   Memory Index
-   =======================================================================
- */
+/* --- Memory Index --- */
 
-/* -------------------------- Key management ---------------------------- */
+/* --- Key management --- */
+
 /* hb_mixKey*() */
 
 static PMIXKEY hb_mixKeyNew( PMIXTAG pTag )
@@ -294,7 +287,8 @@ static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigne
 }
 
 
-/* -------------------------- Tag management ---------------------------- */
+/* --- Tag management --- */
+
 /* hb_mixTag*() */
 
 /* This function is used for debugging purposes. Uncomment it, if you need it. */
@@ -1085,7 +1079,8 @@ static void hb_mixTagSkip( PMIXTAG pTag, HB_LONG lSkip )
    }
 }
 
-/* -------------------------- Misc functions ---------------------------- */
+/* --- Misc functions --- */
+
 /* hb_mix*() */
 
 static PMIXTAG hb_mixFindTag( SQLMIXAREAP pArea, PHB_ITEM pOrder )
@@ -1115,7 +1110,7 @@ static PMIXTAG hb_mixFindTag( SQLMIXAREAP pArea, PHB_ITEM pOrder )
 }
 
 
-/*=======================================================================*/
+/* --- */
 
 
 static HB_ULONG hb_mixTagNodeKeyCount( PMIXNODE pNode )
@@ -1221,11 +1216,7 @@ static HB_ULONG hb_mixDBOIKeyNo( PMIXTAG pTag, HB_BOOL fFilter )
 }
 
 
-/*
-   =======================================================================
-   SQLMIX RDD METHODS
-   =======================================================================
- */
+/* --- SQLMIX RDD METHODS --- */
 
 static HB_ERRCODE sqlmixGoBottom( SQLMIXAREAP pArea )
 {

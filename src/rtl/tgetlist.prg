@@ -3,6 +3,7 @@
  * HBGetList Class
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2001 Luiz Rafael Culik (Support for CA-Cl*pper 5.3 Getsystem)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,17 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2001 Luiz Rafael Culik
- *    Support for CA-Cl*pper 5.3 Getsystem
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -154,7 +144,7 @@ CREATE CLASS HBGetList
 
 ENDCLASS
 
-/* -------------------------------------------- */
+/* --- */
 
 #ifdef HB_COMPAT_C53
 METHOD ReadModal( nPos, oMenu, nMsgRow, nMsgLeft, nMsgRight, cMsgColor ) CLASS HBGetList
@@ -1654,7 +1644,7 @@ METHOD EraseGetMsg( aMsg ) CLASS HBGetList
 
    RETURN Self
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD New( GetList ) CLASS HBGetList
 

@@ -54,7 +54,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *     Rev 1.0   01 Jul 1992 01:23:06   GLENN
  *  Initial revision.

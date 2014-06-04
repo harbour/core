@@ -3,6 +3,17 @@
  * Version detection functions
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+ *    hb_verPlatform() (support for determining the Windows version)
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    hb_verPlatform() (support for determining many Windows flavours)
+ *    hb_verCompiler() (support for determining some compiler version/revision)
+ * Copyright 2000-2009 Viktor Szakats (vszakats.net/harbour)
+ *    hb_verCPU()
+ *    hb_verPlatform() (support for detecting Windows NT on DOS)
+ *    hb_verPlatform() (rearrangment and cleanup)
+ *    hb_verPlatform() (Wine detection and some more)
+ *    hb_verHostBitWidth()
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,28 +54,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    hb_verPlatform() (support for determining the Windows version)
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_verPlatform() (support for determining many Windows flavours)
- *    hb_verCompiler() (support for determining some compiler version/revision)
- *
- * Copyright 2000-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_verCPU()
- *    hb_verPlatform() (support for detecting Windows NT on DOS)
- *    hb_verPlatform() (rearrangment and cleanup)
- *    hb_verPlatform() (Wine detection and some more)
- *    hb_verHostBitWidth()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

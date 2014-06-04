@@ -55,7 +55,6 @@
  * all mine.
  *
  * Modification history:
- * ---------------------
  *
  *     Rev 1.3   16 Jul 1993 00:00:18   GLENN
  *  Modified for compatibility in protected mode under ExoSpace.  Should

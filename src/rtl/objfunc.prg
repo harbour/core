@@ -3,6 +3,8 @@
  * Dynamic Object management and misc. Object related functions
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com> (__objGetMsgList())
+ * Copyright 2000 Jf. Lefebvre <jfl@mafact.com> and Ra. Cuylen <rac@mafact.com> (__objDerivedFrom())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,22 +45,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- *    __objGetMsgList
- *
- * Copyright 2000 Jf. Lefebvre <jfl@mafact.com> and Ra. Cuylen <rac@mafact.com>
- *    __objDerivedFrom
- *
- * New Param for Method :ClassSel() to allow it to return only ClassData array
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

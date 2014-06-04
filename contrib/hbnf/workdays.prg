@@ -6,7 +6,6 @@
  * and are placed in the public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.2   07 Mar 1992 22:15:06   GLENN
  * Mark K. Zechiel discovered a bug where the incorrect number of

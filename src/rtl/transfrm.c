@@ -3,6 +3,7 @@
  * Transform() function
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au> (String handling)
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  * www - http://harbour-project.org
  *
@@ -44,17 +45,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
- *    String handling
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -107,9 +97,7 @@ HB_FUNC( TRANSFORM )
 
       HB_SIZE nOffset = 0;
 
-      /* ======================================================= */
-      /* Analyze picture functions                               */
-      /* ======================================================= */
+      /* --- Analyze picture functions --- */
 
       uiPicFlags = 0;
 
@@ -200,9 +188,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
-      /* Handle STRING values                                    */
-      /* ======================================================= */
+      /* --- Handle STRING values --- */
 
       if( HB_IS_STRING( pValue ) )
       {
@@ -401,9 +387,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
-      /* Handle NUMERIC values                                   */
-      /* ======================================================= */
+      /* --- Handle NUMERIC values --- */
 
       else if( HB_IS_NUMERIC( pValue ) )
       {
@@ -654,9 +638,7 @@ HB_FUNC( TRANSFORM )
          szResult[ i ] = '\0';
       }
 
-      /* ======================================================= */
-      /* Handle DATE values                                      */
-      /* ======================================================= */
+      /* --- Handle DATE values --- */
 
       else if( HB_IS_DATE( pValue ) )
       {
@@ -757,9 +739,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
-      /* Handle TIMESTAMP values                                 */
-      /* ======================================================= */
+      /* --- Handle TIMESTAMP values --- */
 
       else if( HB_IS_TIMESTAMP( pValue ) )
       {
@@ -875,9 +855,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
-      /* Handle LOGICAL values                                   */
-      /* ======================================================= */
+      /* --- Handle LOGICAL values --- */
 
       else if( HB_IS_LOGICAL( pValue ) )
       {
@@ -907,13 +885,13 @@ HB_FUNC( TRANSFORM )
 
             switch( cPic )
             {
-               case 'y':                     /* Yes/No                   */
-               case 'Y':                     /* Yes/No                   */
+               case 'y':                     /* Yes/No */
+               case 'Y':                     /* Yes/No */
 
                   if( ! bDone )
                   {
                      szResult[ nResultPos ] = hb_itemGetL( pValue ) ? 'Y' : 'N';
-                     bDone = HB_TRUE;           /* Logical written          */
+                     bDone = HB_TRUE;           /* Logical written */
                   }
                   else
                      szResult[ nResultPos ] = ' ';
@@ -921,8 +899,8 @@ HB_FUNC( TRANSFORM )
                   break;
 
                case '#':
-               case 'l':                     /* True/False               */
-               case 'L':                     /* True/False               */
+               case 'l':                     /* True/False */
+               case 'L':                     /* True/False */
 
                   if( ! bDone )
                   {
@@ -943,7 +921,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      /* ======================================================= */
+      /* --- */
 
       else
       {
@@ -974,7 +952,7 @@ HB_FUNC( TRANSFORM )
          hb_retclen_buffer( szResult, ( nParamS && nResultPos > nParamS ) ? nParamS : nResultPos );
       }
    }
-   else if( pPic || HB_ISNIL( 2 ) ) /* Picture is an empty string or NIL */
+   else if( pPic || HB_ISNIL( 2 ) )  /* Picture is an empty string or NIL */
    {
       if( HB_IS_STRING( pValue ) )
       {

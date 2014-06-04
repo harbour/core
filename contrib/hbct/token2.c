@@ -201,9 +201,7 @@ static void sTokEnvDel( TOKEN_ENVIRONMENT env )
    hb_xfree( env );
 }
 
-/* ================= */
-/* HARBOUR functions */
-/* ================= */
+/* Harbour functions */
 
 /* static data */
 static const char * sc_spcSeparatorStr =

@@ -631,7 +631,7 @@ HB_FUNC( BIO_FREE_ALL )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* ------------ connect ------------ */
+/* --- connect --- */
 
 HB_FUNC( BIO_NEW_CONNECT )
 {

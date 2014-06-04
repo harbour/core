@@ -51,7 +51,7 @@
 
 #include "hbclass.ch"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS ScalarObject FUNCTION HBScalar
 
@@ -109,7 +109,7 @@ METHOD PROCEDURE BecomeErr() CLASS ScalarObject
 
    RETURN
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Array INHERIT HBScalar FUNCTION __HBArray
 
@@ -237,7 +237,7 @@ METHOD _Size( newSize ) CLASS Array
 
    RETURN newSize  // so that assignment works according to standard rules
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Block INHERIT HBScalar FUNCTION __HBBlock
 
@@ -248,7 +248,7 @@ ENDCLASS
 METHOD AsString() CLASS Block
    RETURN "{ || ... }"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Character INHERIT HBScalar FUNCTION __HBCharacter
 
@@ -263,7 +263,7 @@ METHOD AsString() CLASS Character
 METHOD AsExpStr() CLASS Character
    RETURN '"' + Self + '"'
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Date INHERIT HBScalar FUNCTION __HBDate
 
@@ -290,7 +290,7 @@ METHOD Month() CLASS Date
 METHOD Day() CLASS Date
    RETURN Day( Self )
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS TimeStamp INHERIT HBScalar FUNCTION __HBTimeStamp
 
@@ -338,7 +338,7 @@ METHOD Minute() CLASS TimeStamp
 METHOD Sec() CLASS TimeStamp
    RETURN hb_Sec( Self )
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Hash INHERIT HBScalar FUNCTION __HBHash
 
@@ -349,7 +349,7 @@ ENDCLASS
 METHOD AsString() CLASS Hash
    RETURN "{ ... => ... }"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Logical INHERIT HBScalar FUNCTION __HBLogical
 
@@ -360,7 +360,7 @@ ENDCLASS
 METHOD AsString() CLASS Logical
    RETURN iif( Self, ".T.", ".F." )
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS NIL INHERIT HBScalar FUNCTION __HBNil
 
@@ -371,7 +371,7 @@ ENDCLASS
 METHOD AsString() CLASS NIL
    RETURN "NIL"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Numeric INHERIT HBScalar FUNCTION __HBNumeric
 
@@ -382,7 +382,7 @@ ENDCLASS
 METHOD AsString() CLASS Numeric
    RETURN hb_ntos( Self )
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Symbol INHERIT HBScalar FUNCTION __HBSymbol
 
@@ -393,7 +393,7 @@ ENDCLASS
 METHOD AsString() CLASS Symbol
    RETURN "@" + ::name + "()"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Pointer INHERIT HBScalar FUNCTION __HBPointer
 
@@ -403,5 +403,3 @@ ENDCLASS
 
 METHOD AsString() CLASS Pointer
    RETURN "<0x...>"
-
-/* -------------------------------------------- */

@@ -1,13 +1,9 @@
-/*
- * Pritpal Bedi <bedipritpal@hotmail.com>
- */
+/* Pritpal Bedi <bedipritpal@hotmail.com> */
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-//
 // A pure Xbase++ implementation
-//
 
 PROCEDURE demoxbp()
 
@@ -18,7 +14,7 @@ PROCEDURE demoxbp()
    LOCAL aState := { "not selected", "selected", "undefined" }
    LOCAL aParts := {}
 
-   // --------------------------- Dialog -------------------------------
+   // --- Dialog ---
    oCrt := WvgDialog():new( , , { 30, 30 }, { 900, 600 }, , .T. )
    oCrt:closable := .T.
    oCrt:icon := GetResource( "vr_1.ico" )
@@ -28,13 +24,13 @@ PROCEDURE demoxbp()
 
    oDA := oCrt:drawingArea
 
-   // --------------------------- Menu --------------------------------
+   // --- Menu ---
    ActiveXBuildMenuXbp( oCrt, @oStatic, @oStatic2 )
 
-   // --------------------------- ToolBar -----------------------------
+   // --- ToolBar ---
    oTBar := ActiveXBuildToolBarXbp( oDA )
 
-   // --------------------------- StatusBar ---------------------------
+   // --- StatusBar ---
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | Wvg_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
@@ -44,7 +40,7 @@ PROCEDURE demoxbp()
    oPanel2 := oSBar:addItem()
    oPanel2:caption := "Click on any part!"
 
-   // --------------------------- Static ------------------------------
+   // --- Static ---
    oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
@@ -54,12 +50,14 @@ PROCEDURE demoxbp()
       oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
    oStatic:setColorBG( RGB( 200, 200, 200 ) )
 
-   // --------------------------- ListBox -----------------------------
+   // --- ListBox ---
    oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
    oListBox:setColorFG( RGB( 218, 61, 34 ) )
-// oListBox:setColorBG( RGB( 250,244,182 ) )
+#if 0
+   oListBox:setColorBG( RGB( 250, 244, 182 ) )
+#endif
 
    AAdd( aParts, "XbpDialog"         )
    AAdd( aParts, "XbpMenuBar"        )
@@ -88,13 +86,13 @@ PROCEDURE demoxbp()
    oListBox:itemSelected := {|| Wvg_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected "XbpToolBar"
 
-   // --------------------------- PushButton --------------------------
+   // --- PushButton ---
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20, 440 }, { 80, 30 } )
    oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   // --------------------------- TreeView ---------------------------
+   // --- TreeView ---
 
    oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[ 1 ] - 160, oTBar:currentSize()[ 2 ] + 3 }, ;
       { 160, oCrt:currentSize()[ 2 ] - ;
@@ -126,7 +124,7 @@ PROCEDURE demoxbp()
 
    oTree:setData( oItem2 )
 
-   // --------------------------- Active-X ---------------------------
+   // --- Active-X ---
    hb_gtInfo( HB_GTI_WINTITLE, "http://harbour-project.org" )
 #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
@@ -152,44 +150,48 @@ PROCEDURE demoxbp()
    oAddr:setData()
    oAddr:killInputFocus := {| m1, m2, oS | m1 := m1, m2 := m2, oS:getData(), oCom:navigate( cNavigate ) }
 
-   // ----------------- Panel : Static + Radio + Checkbox ----------
+   // --- Panel : Static + Radio + Checkbox ---
    oStatic2 := WvgStatic():New( oDA, , { 150, 150 }, { 500, 310 }, , .F. )
-   // oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
+#if 0
+   oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
+#endif
    oStatic2:exStyle += WS_EX_WINDOWEDGE
-   // oStatic2:options := WVGSTATIC_FRAMETHICK
+#if 0
+   oStatic2:options := WVGSTATIC_FRAMETHICK
+#endif
    oStatic2:create()
    oStatic2:setColorBG( RGB( 175, 175, 175 ) )
 
-   oXbp    := WvgPushButton():new( oStatic2 )
+   oXbp := WvgPushButton():new( oStatic2 )
    oXbp:caption     := "Hide"
    oXbp:caption     := "Hide"
    oXbp:create( , , { 430, 275 }, { 60, 25 } )
    oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   oRadio  := WvgRadioButton():new( oStatic2, , { 10, 10 }, { 100, 15 } )
+   oRadio := WvgRadioButton():new( oStatic2, , { 10, 10 }, { 100, 15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
    oRadio:selected  := {| m1, m2, obj | m1 := m1, m2 := m2, Wvg_MessageBox( , obj:caption + iif( obj:selection, "< S >", "< N >" ) ) }
    oRadio:create()
 
-   oRadio  := WvgRadioButton():new( oStatic2, , { 10, 35 }, { 100, 15 } )
+   oRadio := WvgRadioButton():new( oStatic2, , { 10, 35 }, { 100, 15 } )
    oRadio:caption   := "Com 2"
    oRadio:create()
 
-   oCheck  := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100, 15 }, , .T. )
+   oCheck := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100, 15 }, , .T. )
    oCheck:caption   := "Checkbox A"
    oCheck:create()
    oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, Wvg_MessageBox( , iif( o:getData(), "I am selected", "I am not selected" ) ) }
 
    // Create first 3State button, passing the position to :create()
-   oXbp    := Wvg3State():new()
+   oXbp  := Wvg3State():new()
    oXbp:caption := "3 State A"
    oXbp:create( oStatic2, , { 10, 100 }, { 100, 15 } )
    // Determine current state using mp1
    oXbp:selected := {| m1, m2, oBtn | m2 := m2, oBtn := oBtn, oPanel1:caption := "3State A [" + aState[ m1 + 1 ] + "]" }
 
    // Create second 3State Button, passing the position to :new()
-   oXbp    := Wvg3State():new( oStatic2, , { 10, 125 }, { 100, 15 } )
+   oXbp  := Wvg3State():new( oStatic2, , { 10, 125 }, { 100, 15 } )
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
@@ -228,11 +230,12 @@ PROCEDURE demoxbp()
    // Copy text from LOCAL variable into edit buffer via :dataLink
    oMLE:setData()
 
-   // --------------------------- Misc Config ------------------------
-   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == "Hide", oStatic:hide(), NIL ), ;
+   // --- Misc Config ---
+   oTBar:buttonClick := {| oBtn | ;
+      iif( oBtn:caption == "Hide", oStatic:hide(), NIL ), ;
       iif( oBtn:caption == "Show", oStatic:show(), NIL ), ;
       iif( oBtn:caption == "Tools", oStatic2:show():toFront(), NIL ), ;
-      iif( oBtn:caption == "FontDlg", ExeFontDialogXbp( oCrt ), NIL ), ;
+      iif( oBtn:caption == "FontDlg", ExeFontDialog( oCrt ), NIL ), ;
       iif( oBtn:caption $ "Hide,Show", oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ), ;
       oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
 
@@ -250,15 +253,12 @@ PROCEDURE demoxbp()
 
 STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
 
-   LOCAL aCrt, aTBar, aSBar
-   LOCAL nH, nT
+   LOCAL aCrt  := oCrt:currentSize()
+   LOCAL aTBar := oTBar:currentSize()
+   LOCAL aSBar := oSBar:currentSize()
 
-   aCrt    := oCrt:currentSize()
-   aTBar   := oTBar:currentSize()
-   aSBar   := oSBar:currentSize()
-
-   nT := aTBar[ 2 ]
-   nH := aCrt[ 2 ] - aTBar[ 2 ] - aSBar[ 2 ]
+   LOCAL nT := aTBar[ 2 ]
+   LOCAL nH := aCrt[ 2 ] - aTBar[ 2 ] - aSBar[ 2 ]
 
    IF oStatic:isVisible
       oStatic:setPosAndSize( { 0, nT + 3 }, { 120, nH - 4 }, .T. )
@@ -309,7 +309,7 @@ STATIC PROCEDURE ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
       oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WM_SIZE, 0, 0 ) } } )
    oSubMenu:addItem( { "~Show My Panel" , {|| oStatic2:show():toFront() } } )
    oSubMenu:addItem()
-   oSubMenu:addItem( { "~Font Dialog"   , {|| ExeFontDialogXbp( oCrt ) } } )
+   oSubMenu:addItem( { "~Font Dialog"   , {|| ExeFontDialog( oCrt ) } } )
 
    oMenuBar:addItem( { oSubMenu, NIL } )
 
@@ -317,9 +317,7 @@ STATIC PROCEDURE ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
 STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
-   LOCAL oTBar
-
-   oTBar := WvgToolBar():new( oCrt, , { 0, 0 }, { 0, 0 }, , .T. )
+   LOCAL oTBar := WvgToolBar():new( oCrt, , { 0, 0 }, { 0, 0 }, , .T. )
 
    oTBar:style        := WVGTOOLBAR_STYLE_FLAT
 
@@ -383,13 +381,11 @@ STATIC PROCEDURE MyFunctionXbp( nMode )
 
    RETURN
 
-STATIC PROCEDURE ExeFontDialogXbp( oCrt )
-
-   LOCAL oFontDlg
+STATIC PROCEDURE ExeFontDialog( oCrt )
 
    STATIC s_nMode := 0
 
-   oFontDlg := WvgFontDialog():new( oCrt )
+   LOCAL oFontDlg := WvgFontDialog():new( oCrt )
 
    oFontDlg:title            := "Select a Screen Font"
    oFontDlg:aPos             := { 150, 150 }
@@ -398,11 +394,15 @@ STATIC PROCEDURE ExeFontDialogXbp( oCrt )
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .F.
-// oFontDlg:activateOk       := {|| Wvg_MessageBox( , "activateOK Event Handled in Windows!" ) }
+#if 0
+   oFontDlg:activateOk       := {|| Wvg_MessageBox( , "activateOK Event Handled in Windows!" ) }
+#endif
    oFontDlg:nominalPointSize := 12
 
-// oFontDlg:size             := .F.
-// oFontDlg:style            := .F.
+#if 0
+   oFontDlg:size             := .F.
+   oFontDlg:style            := .F.
+#endif
 
    oFontDlg:create()
 

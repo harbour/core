@@ -8970,9 +8970,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
    LOCAL aCommand
 #endif
 
-   THREAD STATIC t_pRegexInclude
-   THREAD STATIC t_hExclStd
-
    IF hbmk[ _HBMK_nHEAD ] == _HEAD_OFF
       RETURN .F.
    ENDIF

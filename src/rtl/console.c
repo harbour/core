@@ -3,6 +3,13 @@
  * The Console API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_conNewLine(), DispOutAt())
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
+ *    DevPos(), __Eject(),
+ *    hb_conOut(), hb_conOutErr(), OutErr(),
+ *    hb_conOutStd(), OutStd(), PCol(), PRow(),
+ *    SetPRC(), and hb_conInit()
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,25 +50,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
- *    DevPos(), __Eject(),
- *    hb_conOut(), hb_conOutErr(), OutErr(),
- *    hb_conOutStd(), OutStd(), PCol(), PRow(),
- *    SetPRC(), and hb_conInit()
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_conNewLine()
- *    DispOutAt()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

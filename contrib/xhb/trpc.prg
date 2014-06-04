@@ -351,10 +351,7 @@ METHOD Describe() CLASS TRPCFunction
 
    RETURN cRet + ")-->" + ::cReturn + "/" + ::cSerial
 
-
-/***********************************************************
-* Connection manager class; this manages a single connection
-************************************************************/
+/* Connection manager class; this manages a single connection */
 
 CREATE CLASS TRPCServeCon
 

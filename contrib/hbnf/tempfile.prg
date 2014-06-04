@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.7   28 Sep 1992 23:48:48   GLENN
  * Deleted #define for FLAG_CARRY as Toolkit v2.1's ftint86.ch has it.
@@ -42,11 +41,7 @@ FUNCTION ft_TempFil( cPath, lHide, /* @ */ nHandle )
 
    LOCAL cFile
 
-   hb_default( @cPath, "." + hb_ps() )
-
-   cPath := AllTrim( cPath )
-
-   nHandle := hb_FTempCreate( cPath, NIL, ;
+   nHandle := hb_FTempCreate( AllTrim( hb_defaultValue( cPath, "." + hb_ps() ) ),, ;
       iif( hb_defaultValue( lHide, .F. ), FC_HIDDEN, FC_NORMAL ), @cFile )
 
    IF ! hb_PIsByRef( 3 )

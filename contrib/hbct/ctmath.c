@@ -51,9 +51,7 @@
 #include "ct.h"
 #include "ctmath.h"
 
-/* ---------------- */
-/*  initialization  */
-/* ---------------- */
+/* --- initialization --- */
 int ct_math_init( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_math_init()" ) );
@@ -66,9 +64,7 @@ int ct_math_exit( void )
    return 1;
 }
 
-/* ---------------- */
-/*  math precision  */
-/* ---------------- */
+/* --- math precision --- */
 static int s_iPrecision = 16; /* TODO: make this thread safe */
 
 void ct_setprecision( int iPrecision )

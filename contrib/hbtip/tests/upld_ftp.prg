@@ -1,6 +1,4 @@
-/*
- * Upload a file or list of files to FTP server
- */
+/* Upload a file or list of files to FTP server */
 
 #require "hbtip"
 

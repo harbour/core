@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.3   13 Oct 1992 20:43:10   GLENN
  * Ted re-wrote the @ prompt / menu to replacement in Clipper and dumped

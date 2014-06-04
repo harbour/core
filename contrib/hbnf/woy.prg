@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.2   15 Aug 1991 23:03:18   GLENN
  * Forest Belt proofread/edited/cleaned up doc
@@ -41,7 +40,6 @@ FUNCTION ft_WoY( dInDate )
          ++nWkNumber
          nDayOffset -= 7
       ENDDO
-
    ELSE
       nWkNumber := NIL
    ENDIF
@@ -50,12 +48,8 @@ FUNCTION ft_WoY( dInDate )
 
 FUNCTION ft_DoY( dInDate )
 
-   LOCAL nDayNum
-
    IF HB_ISDATE( dInDate )
-      nDayNum := ( dInDate - hb_SToD( Left( DToS( dInDate ), 4 ) + "0101" ) ) + 1
-   ELSE
-      nDayNum := NIL
+      RETURN ( dInDate - hb_SToD( Left( DToS( dInDate ), 4 ) + "0101" ) ) + 1
    ENDIF
 
-   RETURN nDayNum
+   RETURN NIL

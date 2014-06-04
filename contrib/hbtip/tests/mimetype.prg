@@ -1,5 +1,4 @@
-/*
- * TIP MIME type test
+/* TIP MIME type test
  * This test tries to detect the MIME type of a given file
  */
 

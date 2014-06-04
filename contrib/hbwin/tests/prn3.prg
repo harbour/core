@@ -20,7 +20,7 @@ STATIC PROCEDURE Dump( a )
 
    LOCAL b, c
 
-   ? "=================="
+   ? "==="
    FOR EACH b IN a
       ?
       IF HB_ISARRAY( b )
@@ -33,7 +33,7 @@ STATIC PROCEDURE Dump( a )
             ENDIF
             ?
          NEXT
-         ? "-----"
+         ? "---"
       ELSE
          ? b, win_printerExists( b ), win_printerStatus( b )
       ENDIF

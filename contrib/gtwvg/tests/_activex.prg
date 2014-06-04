@@ -14,15 +14,17 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    LOCAL oListBox, oStatic2, oDA
    LOCAL oPanel, oPanel1, oPanel2
 
-// LOCAL cVarA  := "Test A", cVarB := "Test B"
-// LOCAL aState := {"not selected", "selected", "undefined"}
+#if 0
+   LOCAL oCheck, oRadio, oMLE, cText
+   LOCAL cVarA  := "Test A", cVarB := "Test B"
+   LOCAL aState := {"not selected", "selected", "undefined"}
+#endif
    LOCAL aParts := {}
-// LOCAL oCheck, oRadio, oMLE, cText
 
    HB_SYMBOL_UNUSED( xParam )
    HB_SYMBOL_UNUSED( oCom )
 
-   // --------------------------- Dialog -------------------------------
+   // --- Dialog ---
 #if 1
    oCrt := WvgDialog():new( , , { 30, 30 }, { 800, 600 }, , .T. )
    oCrt:closable := .T.
@@ -37,13 +39,13 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
 
    oDA := oCrt:drawingArea
 
-   // --------------------------- Menu --------------------------------
+   // --- Menu ---
    ActiveXBuildMenu( oCrt, @oStatic, @oStatic2 )
 
-   // --------------------------- ToolBar -----------------------------
+   // --- ToolBar ---
    oTBar := BuildWvgToolBar( oDA )
 
-   // --------------------------- StatusBar ---------------------------
+   // --- StatusBar ---
    oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | Wvg_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
@@ -53,7 +55,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oPanel2 := oSBar:addItem()
    oPanel2:caption := "Click on any part!"
 
-   // --------------------------- Static ------------------------------
+   // --- Static ---
    oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
@@ -63,7 +65,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oStatic:setColorBG( RGB( 198, 198, 198 ) )
 
 #if 0  // panel
-   // --------------------------- Static + Radio + Checkbox ----------
+   // --- Static + Radio + Checkbox ---
    oStatic2 := WvgStatic():New( oCrt, , { 150, 150 }, { 500, 310 }, , .F. )
 // oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
@@ -139,7 +141,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oMLE:setData()
 #endif
 
-   // --------------------------- ListBox -----------------------------
+   // --- ListBox ---
    oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
@@ -165,13 +167,13 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oListBox:itemSelected := {|| Wvg_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )
 
-   // --------------------------- PushButton --------------------------
+   // --- PushButton ---
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20, 440 }, { 80, 30 } )
    oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   // --------------------------- TreeView ---------------------------
+   // --- TreeView ---
    oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[ 1 ] - 160, oTBar:currentSize()[ 2 ] + 3 }, ;
       { 160, oCrt:currentSize()[ 2 ] - ;
       oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
@@ -202,7 +204,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
 
    oTree:setData( oItem2 )
 
-   // --------------------------- Misc Config ------------------------
+   // --- Misc Config ---
    oTBar:buttonClick := {| oBtn | iif( oBtn:caption == "Hide", oStatic:hide(), NIL ), ;
       iif( oBtn:caption == "Show", oStatic:show(), NIL ), ;
       iif( oBtn:caption == "Tools", oStatic2:show():toFront(), NIL ), ;
@@ -211,7 +213,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oDA:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
 
 #if 1
-   // --------------------------- Active-X ---------------------------
+   // --- Active-X ---
    oCom := BuildActiveXControl( nActiveX, oDA )
    IF HB_ISOBJECT( oCom )
       oCrt:sendMessage( WM_SIZE, 0, 0 )
@@ -231,20 +233,17 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
 
 STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
 
-   LOCAL aCrt, aTBar, aSBar
-   LOCAL nH, nT
+   LOCAL aCrt    := oCrt:currentSize()
+   LOCAL aTBar   := oTBar:currentSize()
+   LOCAL aSBar   := oSBar:currentSize()
+#if 0
+   LOCAL aStatic := oStatic:currentSize()
+   LOCAL aTree   := oTree:currentSize()
+   LOCAL aCom    := oCom:currentSize()
+#endif
 
-// LOCAL aStatic, aCom, aTree
-
-   aCrt    := oCrt:currentSize()
-   aTBar   := oTBar:currentSize()
-   aSBar   := oSBar:currentSize()
-// aStatic := oStatic:currentSize()
-// aTree   := oTree:currentSize()
-// aCom    := oCom:currentSize()
-
-   nT := aTBar[ 2 ]
-   nH := aCrt[ 2 ] - aTBar[ 2 ] - aSBar[ 2 ]
+   LOCAL nT := aTBar[ 2 ]
+   LOCAL nH := aCrt[ 2 ] - aTBar[ 2 ] - aSBar[ 2 ]
 
    IF oStatic:isVisible
       oStatic:setPosAndSize( { 0, nT + 3 }, { 120, nH - 4 }, .T. )
@@ -259,9 +258,8 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
 
 STATIC PROCEDURE ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
 
-   LOCAL oMenuBar, oSubMenu
-
-   oMenuBar := WvgMenuBar():new( oCrt ):create()
+   LOCAL oSubMenu
+   LOCAL oMenuBar := WvgMenuBar():new( oCrt ):create()
 
    // Define submenu in procedural style.
    // The numeric index of the selected menu item
@@ -364,9 +362,9 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
 STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
 
-   LOCAL nKey, sData
-
    STATIC s_nTurn := 0
+
+   LOCAL nKey, sData
 
    // After :Create() Messages
    SWITCH nActiveX

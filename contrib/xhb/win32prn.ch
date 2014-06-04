@@ -51,10 +51,7 @@
 
 #include "hbwin.ch"
 
-/* ------------------------------- */
 /* Deprecated constants and macros */
-/* ------------------------------- */
-
 #define HKEY_CLASSES_ROOT           WIN_HKEY_CLASSES_ROOT
 #define HKEY_CURRENT_USER           WIN_HKEY_CURRENT_USER
 #define HKEY_LOCAL_MACHINE          WIN_HKEY_LOCAL_MACHINE

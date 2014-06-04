@@ -45,8 +45,7 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_UseCNTEncodings( hDoc ) -> hStatus
- */
+/* HPDF_UseCNTEncodings( hDoc ) -> hStatus */
 HB_FUNC( HPDF_USECNTENCODINGS )
 {
    hb_retnl( ( long ) HPDF_UseCNTEncodings( hb_HPDF_Doc_par( 1 ) ) );

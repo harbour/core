@@ -1,5 +1,4 @@
-/*
- * TIP Base64 (and other) encoding
+/* TIP Base64 (and other) encoding
  *
  * This test writes data to standard output, and is
  * compiled only under GTCGI. This allow to test the

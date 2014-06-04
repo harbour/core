@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *     Rev 1.4   16 Oct 1992 00:00:56   GLENN
  *  Just making sure we have Ted's latest revisions.

@@ -10,7 +10,6 @@
  * Extensively revised by Steve Larsen
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.8   01 May 1995 04:36:22   TED
  * Major overhaul by Steve Larsen to fix several bugs/quirkiness,

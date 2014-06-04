@@ -3,6 +3,8 @@
  * The Error API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (DosError(), __errInHandler(), __errRT*(), hb_errLaunch*(), hb_err*Flags(), hb_errRT*())
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (rewritten in C ERROR class and all hb_errGet*() and hb_errPut*() functions)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,33 +45,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    DosError()
- *    __errInHandler()
- *    __errRT_BASE()
- *    __errRT_SBASE()
- *    hb_errLaunch()
- *    hb_errLaunchSubst()
- *    hb_errGetFlags()
- *    hb_errPutFlags()
- *    hb_errRT_New()
- *    hb_errRT_New_Subst()
- *    hb_errRT_BASE()
- *    hb_errRT_BASE_Ext1()
- *    hb_errRT_BASE_Subst()
- *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    rewritten in C ERROR class and all hb_errGet*() and hb_errPut*()
- *    functions
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

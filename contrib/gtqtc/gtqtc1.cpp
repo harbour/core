@@ -77,7 +77,7 @@ static  HB_GT_FUNCS     SuperTable;
 
 static QApplication * s_qtapp = NULL;
 
-/* *********************************************************************** */
+/* --- */
 
 static void hb_gt_qtc_appFree( void * cargo )
 {
@@ -108,7 +108,7 @@ static PHB_ITEM hb_gt_qtc_itemPutQString( PHB_ITEM pItem, const QString * pqStr 
                                pqStr->size() );
 }
 
-/* *********************************************************************** */
+/* --- */
 
 #define hb_bm_paint_begin( qBitMap )         do { \
             QPainter painter( qBitMap ); \
@@ -1294,7 +1294,7 @@ static void hb_gt_qtc_resetBoxCharBitmaps( PHB_GTQTC pQTC )
       pQTC->boxIndex[ i ] = HB_BOXCH_TRANS_MAX;
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static void hb_gt_qtc_free( PHB_GTQTC pQTC )
 {
@@ -1617,7 +1617,7 @@ static void hb_gt_qtc_createConsoleWindow( PHB_GTQTC pQTC )
    pQTC->qWnd->update();
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static void hb_gt_qtc_InitMT( void );
 
@@ -1665,7 +1665,7 @@ static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSELF_SEMICOLD( pGT );
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static void hb_gt_qtc_Exit( PHB_GT pGT )
 {
@@ -1680,7 +1680,7 @@ static void hb_gt_qtc_Exit( PHB_GT pGT )
       hb_gt_qtc_free( pQTC );
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static void hb_gt_qtc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
@@ -1701,7 +1701,7 @@ static void hb_gt_qtc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    }
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static void hb_gt_qtc_Refresh( PHB_GT pGT )
 {
@@ -1721,7 +1721,7 @@ static void hb_gt_qtc_Refresh( PHB_GT pGT )
    }
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_qtc_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
@@ -1747,7 +1747,7 @@ static HB_BOOL hb_gt_qtc_SetMode( PHB_GT pGT, int iRows, int iCols )
    return fResult;
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static const char * hb_gt_qtc_Version( PHB_GT pGT, int iType )
 {
@@ -1761,7 +1761,7 @@ static const char * hb_gt_qtc_Version( PHB_GT pGT, int iType )
    return "Terminal: QT (QTC)";
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static int hb_gt_qtc_ReadKey( PHB_GT pGT, int iEventMask )
 {
@@ -1789,7 +1789,7 @@ static int hb_gt_qtc_ReadKey( PHB_GT pGT, int iEventMask )
    return 0;
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static void hb_gt_qtc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
@@ -1803,7 +1803,7 @@ static void hb_gt_qtc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    QApplication::beep();
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_qtc_mouse_IsPresent( PHB_GT pGT )
 {
@@ -1852,7 +1852,7 @@ static int hb_gt_qtc_mouse_CountButton( PHB_GT pGT )
    return 3;
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
@@ -2398,7 +2398,7 @@ static int hb_gt_qtc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
    return iRet;
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
@@ -2424,7 +2424,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    return HB_TRUE;
 }
 
-/* *********************************************************************** */
+/* --- */
 
 static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
                                    hb_gt_FuncInit,
@@ -2448,7 +2448,7 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
    #pragma data_seg()
 #endif
 
-/* *********************************************************************** */
+/* --- */
 
 QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent )
 {
@@ -3433,7 +3433,7 @@ void QTConsole::keyPressEvent( QKeyEvent * event )
       QWidget::keyPressEvent( event );
 }
 
-/* *********************************************************************** */
+/* --- */
 
 QTCWindow::QTCWindow( PHB_GTQTC pQTC )
 {
@@ -3548,7 +3548,7 @@ void QTCWindow::setResizing( void )
    }
 }
 
-/* *********************************************************************** */
+/* --- */
 
 #ifdef HB_XLIB_NEEDLOCKS
 
@@ -3569,4 +3569,4 @@ static void hb_gt_qtc_InitMT( void ) { }
 
 #endif
 
-/* *********************************************************************** */
+/* --- */

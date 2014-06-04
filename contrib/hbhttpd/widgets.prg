@@ -1,5 +1,4 @@
-/*
- * Copyright 2009 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
+/* Copyright 2009 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
  * www - http://harbour-project.org
  */
 
@@ -9,7 +8,7 @@
 
 MEMVAR session, server, get, post
 
-// ============================================================
+// ---
 
 CREATE CLASS UWMain
 
@@ -45,7 +44,7 @@ METHOD Add( oWidget ) CLASS UWMain
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWLayoutGrid
 
@@ -99,7 +98,7 @@ METHOD Add( oWidget, nRow, nCol ) CLASS UWLayoutGrid
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWHtml
 
@@ -123,7 +122,7 @@ METHOD Paint() CLASS UWHtml
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWLabel
 
@@ -153,7 +152,7 @@ METHOD Paint() CLASS UWLabel
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWForm
 
@@ -188,7 +187,7 @@ METHOD Paint() CLASS UWForm
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWInput
 
@@ -219,7 +218,7 @@ METHOD Paint() CLASS UWInput
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWPassword
 
@@ -245,7 +244,7 @@ METHOD Paint() CLASS UWPassword
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWSubmit
 
@@ -272,7 +271,7 @@ METHOD Paint() CLASS UWSubmit
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWSeparator
 
@@ -289,7 +288,7 @@ METHOD Paint() CLASS UWSeparator
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWMenu
 
@@ -324,7 +323,7 @@ METHOD Paint() CLASS UWMenu
 
    RETURN Self
 
-// ============================================================
+// ---
 
 CREATE CLASS UWBrowse
 
@@ -420,7 +419,7 @@ METHOD Output() CLASS UWBrowse
 
    RETURN cRet
 
-// ============================================================
+// ---
 
 CREATE CLASS UWOption
 
@@ -449,9 +448,7 @@ METHOD Output() CLASS UWOption
 
    RETURN cRet
 
-/********************************************************************
- * Default procedure handlers
- ********************************************************************/
+/* Default procedure handlers */
 
 PROCEDURE UProcWidgets( cURL, aMap )
 

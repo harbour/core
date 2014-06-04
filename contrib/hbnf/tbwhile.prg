@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.4   28 Sep 1991 02:56:56   GLENN
  * Moved Jim's "Tricks used" comment out of the file header and

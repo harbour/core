@@ -3,6 +3,18 @@
  * The FileSys API (C level)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
+ *    hb_fsSetError(), hb_fsSetDevMode(), hb_fsReadLarge(), hb_fsWriteLarge()
+ *    hb_fsCurDirBuff(), hb_fsBaseDirBuff()
+ *    fs_win_get_drive(), fs_win_set_drive()
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    hb_fsChDrv(), hb_fsCurDrv(), hb_fsIsDrv(), hb_fsIsDevice()
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>, David G. Holm <dholm@jsd-llc.com>
+ *    hb_fsEof()
+ * Copyright 2001 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>, <tecnico.sireinsa@ctv.es>
+ *    Added platform check for any compiler to use the Windows
+ *    API calls to allow openning an unlimited number of files
+ *    simultaneously.
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,40 +55,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
- *    hb_fsSetError()
- *    hb_fsSetDevMode()
- *    hb_fsReadLarge()
- *    hb_fsWriteLarge()
- *    hb_fsCurDirBuff()
- *    hb_fsBaseDirBuff()
- *    fs_win_get_drive()
- *    fs_win_set_drive()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_fsChDrv()
- *    hb_fsCurDrv()
- *    hb_fsIsDrv()
- *    hb_fsIsDevice()
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *            and David G. Holm <dholm@jsd-llc.com>
- *    hb_fsEof()
- *
- * Copyright 2001 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
- *                                   <tecnico.sireinsa@ctv.es>
- *    Added platform check for any compiler to use the Windows
- *    API calls to allow openning an unlimited number of files
- *    simultaneously.
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

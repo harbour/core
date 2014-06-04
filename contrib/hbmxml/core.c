@@ -67,7 +67,6 @@ typedef struct /* placeholder for mxml_node_t */
 } HBMXML_NODE;
 
 /* cb's funcs support */
-/* ------------------ */
 
 typedef struct
 {
@@ -137,7 +136,6 @@ static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_in
                    hb_error_cb_var_release );
 
 /* mxml_node_t * support */
-/* --------------------- */
 
 static void hbmxml_relese( mxml_node_t * node )
 {
@@ -209,7 +207,6 @@ static void mxml_node_ret( mxml_node_t * node, int iNew )
 }
 
 /* mxml_index_t * support */
-/* ---------------------- */
 
 static HB_GARBAGE_FUNC( hbmxml_indexDestructor )
 {
@@ -252,7 +249,6 @@ static void mxml_index_ret( mxml_index_t * index )
 }
 
 /* non-wrap HB_... funcs */
-/* --------------------- */
 
 HB_FUNC( HB_MXMLVERSION )
 {
@@ -260,7 +256,6 @@ HB_FUNC( HB_MXMLVERSION )
 }
 
 /* MXML_... wrapper funcs */
-/* ---------------------- */
 
 /*
  * - mxmlEntityAddCallback
@@ -710,7 +705,6 @@ HB_FUNC( MXMLINDEXRESET )
 }
 
 /* mxml_type_t type_cb( mxml_node_t * node ) */
-/* ----------------------------------------- */
 
 static mxml_type_t type_cb( mxml_node_t * node )
 {
@@ -1137,14 +1131,12 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
    }
 }
 
-/*
-   mxml_node_t * mxmlSAXLoadFile( mxml_node_t * top,
+/* mxml_node_t * mxmlSAXLoadFile( mxml_node_t * top,
                                   FILE * fp,
                                   mxml_load_cb_t cb,
                                   mxml_sax_cb_t sax_cb,
                                   void * sax_data )
  */
-
 HB_FUNC( MXMLSAXLOADFILE )
 {
    mxml_node_t *  node_top;
@@ -1213,14 +1205,12 @@ HB_FUNC( MXMLSAXLOADFILE )
    pCbs->sax_cb  = NULL;
 }
 
-/*
-   mxml_node_t * mxmlSAXLoadString( mxml_node_t * top,
+/* mxml_node_t * mxmlSAXLoadString( mxml_node_t * top,
                                     const char * s,
                                     mxml_load_cb_t cb,
                                     mxml_sax_cb_t sax_cb,
                                     void * sax_data )
  */
-
 HB_FUNC( MXMLSAXLOADSTRING )
 {
    mxml_node_t *  node_top;
@@ -1684,11 +1674,9 @@ static void custom_destroy_cb( void * Cargo )
       hb_itemRelease( pItem );
 }
 
-/*
-   mxml_node_t * mxmlNewCustom( mxml_node_t * parent,
+/* mxml_node_t * mxmlNewCustom( mxml_node_t * parent,
                                 void * data, mxml_custom_destroy_cb_t destroy )
  */
-
 HB_FUNC( MXMLNEWCUSTOM )
 {
    if( hb_pcount() > 1 )
@@ -1719,11 +1707,9 @@ HB_FUNC( MXMLNEWCUSTOM )
    MXML_ERR_ARGS();
 }
 
-/*
-   int mxmlSetCustom ( mxml_node_t * node,
+/* int mxmlSetCustom ( mxml_node_t * node,
                        void * data, mxml_custom_destroy_cb_t destroy )
  */
-
 HB_FUNC( MXMLSETCUSTOM )
 {
    mxml_node_t * node = mxml_node_param( 1 );
@@ -1853,7 +1839,6 @@ HB_FUNC( MXMLSETCUSTOMHANDLERS )
 }
 
 /* temporary solution before final 2.7 release */
-/* ------------------------------------------- */
 
 HB_FUNC( HB_MXMLGETATTRSCOUNT )
 {

@@ -3,6 +3,8 @@
  * Round(), Int() functions
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au> (Int())
+ * Copyright 2003 Vicente Aranzana <varanzana@gruposp.com> (hb_numRound())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,20 +45,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
- *    Int()
- *
- * Copyright 2003 Vicente Aranzana <varanzana@gruposp.com>
- * hb_numRound()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

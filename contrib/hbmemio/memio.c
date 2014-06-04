@@ -60,11 +60,7 @@
 
 #include "directry.ch"
 
-/******************************************************
- *
- *  Memory file system
- *
- *******************************************************/
+/* -- Memory file system --- */
 
 /* change this define for public hb_memfs*() API */
 #ifdef HB_MEMFS_PUBLIC_API
@@ -300,7 +296,7 @@ static HB_FHANDLE memfsHandleAlloc( PHB_MEMFS_FILE pFile )
 }
 
 
-/* ======== Public Memory FS functions ======== */
+/* --- Public Memory FS functions --- */
 
 HB_MEMFS_EXPORT HB_ERRCODE hb_memfsError( void )
 {
@@ -770,11 +766,7 @@ HB_MEMFS_EXPORT int hb_memfsLockTest( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_F
    return 0;
 }
 
-/******************************************************
- *
- *  I/O Driver for Memory file system
- *
- *******************************************************/
+/* --- I/O Driver for Memory file system --- */
 
 #define FILE_PREFIX      "mem:"
 #define FILE_PREFIX_LEN  strlen( FILE_PREFIX )

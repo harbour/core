@@ -49,9 +49,8 @@
 #ifndef HB_BLOB_CH_
 #define HB_BLOB_CH_
 
-
 #ifndef HB_DBINFO_CH_
-  #include "dbinfo.ch"
+   #include "dbinfo.ch"
 #endif
 
 #xtranslate BLOBRootLock()          => dbInfo( DBI_BLOB_ROOT_LOCK )

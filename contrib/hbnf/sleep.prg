@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.1   17 Oct 1992 16:18:18   GLENN
  * Leo cleaned up the doc and file header.

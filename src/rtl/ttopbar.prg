@@ -418,7 +418,7 @@ METHOD row( nRow ) CLASS TopBarMenu
 
    RETURN ::nRow
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD New( nRow, nLeft, nRight ) CLASS TopBarMenu
 
@@ -449,7 +449,7 @@ METHOD New( nRow, nLeft, nRight ) CLASS TopBarMenu
 
    RETURN Self
 
-/* -------------------------------------------- */
+/* --- */
 
 FUNCTION TopBar( nRow, nLeft, nRight )
    RETURN HBTopBarMenu():New( nRow, nLeft, nRight )

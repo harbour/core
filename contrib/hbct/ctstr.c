@@ -72,9 +72,7 @@ static void s_ct_str_init( void * cargo )
 
 static HB_TSD_NEW( s_ct_str, sizeof( CT_STR ), s_ct_str_init, NULL );
 
-/* -------------- */
 /* initialization */
-/* -------------- */
 int ct_str_init( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ctstr_init()" ) );
@@ -87,9 +85,7 @@ int ct_str_exit( void )
    return 1;
 }
 
-/* -------------------------- */
 /* search for exact substring */
-/* -------------------------- */
 const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
                                   const char * pcMatch, HB_SIZE sMatchLen, HB_SIZE * psMatchStrLen )
 {
@@ -112,9 +108,7 @@ const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
    }
 }
 
-/* ------------------------------------------------ */
 /* search for exact substring in backward direction */
-/* ------------------------------------------------ */
 const char * ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
                                    const char * pcMatch, HB_SIZE sMatchLen, HB_SIZE * psMatchStrLen )
 {
@@ -146,9 +140,7 @@ const char * ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/* ----------------------------------- */
 /* search for substring using wildcard */
-/* ----------------------------------- */
 const char * ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
                                      const char * pcMatch, HB_SIZE sMatchLen,
                                      char cWildCard, HB_SIZE * psMatchStrLen )
@@ -183,9 +175,7 @@ const char * ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/* --------------------------------------------------------- */
 /* search for substring using wildcard in backward direction */
-/* --------------------------------------------------------- */
 const char * ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
                                       const char * pcMatch, HB_SIZE sMatchLen,
                                       char cWildCard, HB_SIZE * psMatchStrLen )
@@ -220,9 +210,7 @@ const char * ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/* ------------------------------- */
 /* search for character from a set */
-/* ------------------------------- */
 const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
                                     const char * pcCharSet, HB_SIZE sCharSetLen, HB_SIZE * psMatchedCharPos )
 {
@@ -254,9 +242,7 @@ const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/* ----------------------------------------------------- */
 /* search for character from a set in backward direction */
-/* ----------------------------------------------------- */
 const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
                                      const char * pcCharSet, HB_SIZE sCharSetLen, HB_SIZE * psMatchedCharPos )
 {
@@ -287,9 +273,7 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-/*
- *  CSetRef() stuff
- */
+/* CSetRef() stuff */
 
 void ct_setref( int iNewSwitch )
 {
@@ -325,9 +309,7 @@ HB_FUNC( CSETREF )
    }
 }
 
-/*
- * CSetAtMupa() stuff
- */
+/* CSetAtMupa() stuff */
 
 void ct_setatmupa( int iNewSwitch )
 {
@@ -363,9 +345,7 @@ HB_FUNC( CSETATMUPA )
    }
 }
 
-/*
- * SetAtLike() stuff
- */
+/* SetAtLike() stuff */
 
 void ct_setatlike( int iNewMode )
 {

@@ -1,14 +1,11 @@
-/*******
+/* by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
  *
- *  by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
+ * Decoding AMF3 to Harbour items
  *
- *  Decoding AMF3 to Harbour items
- *
- *  Contains portions from
- *  Dave Thompson's MIT licensed
- *  AmFast C library for Python
- *
- ********/
+ * Contains portions from
+ * Dave Thompson's MIT licensed
+ * AmFast C library for Python
+ */
 
 #include "hbapi.h"
 #include "hbapiitm.h"

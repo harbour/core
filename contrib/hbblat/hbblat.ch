@@ -73,7 +73,6 @@
 #define _HBBLAT_CH
 
 /* Numeric Errors */
-
 #define BLAT_ERR_UNKNONW                               -1
 #define BLAT_SUCCESS                                   0
 #define BLAT_ERR_MESSAGE_NOT_ACCEPTED                  1
@@ -98,7 +97,6 @@
 #define BLAT_ERR_STRING_EXPECTED                       2001
 
 /* Text Errors */
-
 #define BLAT_TEXT_ERROR                                "Blat Error"
 #define BLAT_TEXT_ERR_UNKNOWN                          "Unknown error"
 #define BLAT_TEXT_SUCCESS                              "Ok"
@@ -124,7 +122,6 @@
 #define BLAT_TEXT_ERR_STRING_EXPECTED                  "String var expected"
 
 /* Blat Errors */
-
 #define BLAT_ERR_CANT_MALLOC                           4001  // "Malloc failed (possibly out of memory)."
 #define BLAT_ERR_SENDING_DATA                          4002  // "Error sending data."
 #define BLAT_ERR_INITIALIZING                          4003  // "Error initializing gensock.dll."

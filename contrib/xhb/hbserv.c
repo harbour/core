@@ -90,9 +90,7 @@
 #define EXCEPTION_ILLEGAL_INSTRUCTION  STATUS_ILLEGAL_INSTRUCTION
 #endif
 
-/**************************************************
- * Global definition, valid for all systems
- ***************************************************/
+/* Global definition, valid for all systems */
 
 static void s_serviceSetHBSig( void );
 static void s_serviceSetDflSig( void );
@@ -118,12 +116,11 @@ typedef struct
 
 static int s_translateSignal( HB_UINT sig, HB_UINT subsig );
 
-/*****************************************************************************
-* Unix specific signal handling implementation
-*
-* This section has unix specific code to manage the
-* signals, both from kernel or from users.
-*****************************************************************************/
+/* Unix specific signal handling implementation
+ *
+ * This section has unix specific code to manage the
+ * signals, both from kernel or from users.
+ */
 
 #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
@@ -349,12 +346,11 @@ static void * s_signalListener( void * my_stack )
 #endif
 #endif
 
-/*****************************************************************************
-* Windows specific exception filter system.
-*
-* Windows will only catch exceptions; It is necessary to rely on the
-* hb_ServiceLoop() to receive user generated messages.
-*****************************************************************************/
+/* Windows specific exception filter system.
+ *
+ * Windows will only catch exceptions; It is necessary to rely on the
+ * hb_ServiceLoop() to receive user generated messages.
+ */
 
 #ifdef HB_OS_WIN
 static void s_serviceSetHBSig( void );
@@ -365,8 +361,7 @@ static HHOOK s_hMsgHook = NULL;
 /* old error mode */
 static UINT s_uiErrorMode = 0;
 
-/* -------------------------------
-   implementation of the signal translation table
+/* implementation of the signal translation table
    Under windows, 0 is a system exception, while 1 is a user message
  */
 static S_TUPLE s_sigTable[] = {
@@ -408,9 +403,7 @@ static S_TUPLE s_sigTable[] = {
    { 0, 0,                               0                   }
 };
 
-/* -------------------------------
-   Manager of signals for windows
- */
+/* Manager of signals for windows */
 static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 {
    PHB_ITEM pFunction, pExecArray, pRet;
@@ -566,16 +559,14 @@ BOOL WINAPI s_ConsoleHandlerRoutine( DWORD dwCtrlType )
 
 #endif
 
-/*****************************************************************************
-* Filter/handlers setup/shutdown
-* This utility functions are meant to abstract the process of declare and
-* remove the signal handlers, and do it in a mutltiplatform fashon. Use this
-* to implement new platform signal/exception handlers.
-*****************************************************************************/
-
-/*-----------------------------------------------------
-   Set the signal handlers to our program interceptors.
+/**
+ * Filter/handlers setup/shutdown
+ * This utility functions are meant to abstract the process of declare and
+ * remove the signal handlers, and do it in a mutltiplatform fashon. Use this
+ * to implement new platform signal/exception handlers.
  */
+
+/* Set the signal handlers to our program interceptors. */
 
 static void s_serviceSetHBSig( void )
 {
@@ -650,10 +641,8 @@ static void s_serviceSetHBSig( void )
 
 #endif
 }
-/* ---------------------------------------------------
-   Reset the signal handlers to the default OS value
- */
 
+/* Reset the signal handlers to the default OS value */
 
 static void s_serviceSetDflSig( void )
 {
@@ -683,10 +672,8 @@ static void s_serviceSetDflSig( void )
 }
 
 
-/* ---------------------------------------------------
-   This translates a signal into abstract HB_SIGNAL
-   from os specific representation
- */
+/* This translates a signal into abstract HB_SIGNAL
+   from os specific representation */
 
 static int s_translateSignal( HB_UINT sig, HB_UINT subsig )
 {
@@ -734,10 +721,10 @@ static void s_signalHandlersInit()
    hb_vmAtQuit( hb_service_exit, NULL );
 }
 
-/*****************************************************************************
-* HB_*Service routines
-* This is the core of the service system.
-*****************************************************************************/
+/**
+ * HB_*Service routines
+ * This is the core of the service system.
+ */
 
 /**
  * Starts the service system.
@@ -1077,10 +1064,9 @@ HB_FUNC( HB_SIGNALDESC )
 
 #if 0
 
-/*****************************************************************************
- * Debug help: generates a fault or a math error to see if signal catching
+/* Debug help: generates a fault or a math error to see if signal catching
  * is working
- **************************************/
+ */
 
 HB_FUNC( __HB_SERVICEGENERATEFAULT )
 {

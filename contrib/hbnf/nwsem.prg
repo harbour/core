@@ -6,7 +6,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.4   17 Oct 1992 16:28:22   GLENN
  * Leo cleaned up documentation blocks.
@@ -29,7 +28,6 @@
  */
 
 // Semaphore Package for Novell NetWare
-// ------------------------------------
 
 #include "ftint86.ch"
 

@@ -787,7 +787,7 @@ METHOD setText( nPos, cText ) CLASS ListBox
 
    RETURN Self
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD changeItem( nOldPos, nNewPos ) CLASS ListBox
 
@@ -838,7 +838,7 @@ METHOD scrollbarPos() CLASS ListBox
 
    RETURN ( ( nCount - nLength ) * ::nTopItem + nLength - nSize ) / ( nCount - nSize )
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD bitmap( cBitmap ) CLASS ListBox
 
@@ -1046,7 +1046,7 @@ METHOD vScroll( oVScroll ) CLASS ListBox
 
    RETURN ::oVScroll
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD New( nTop, nLeft, nBottom, nRight, lDropDown ) CLASS ListBox
 

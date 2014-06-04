@@ -7,7 +7,6 @@
  * public domain.
  *
  * Modification history:
- * ---------------------
  *
  *    Rev 1.5   07 Jan 1993 08:01:04   GLENN
  * We forgot to escape the less-than symbols in the HIGHBYTE() and
