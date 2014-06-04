@@ -1,9 +1,6 @@
 /*
- * Author....: Ralph Oliver,  TRANSCOM SYSTEMS
- * CIS ID....: 74030,703
- *
- * This is an original work by Ralph Oliver and is placed in the
- * public domain.
+ * This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
+ * and is placed in the public domain.
  *
  * Modification history:
  *
@@ -12,7 +9,6 @@
  *
  *    Rev 1.0   07 Jun 1991 23:03:12   GLENN
  * Initial revision.
- *
  *
  */
 

@@ -47,9 +47,6 @@
  */
 
 /*
- * Author....: Glenn Scott
- * CIS ID....: 71620,1521
- *
  * This is an original work by Glenn Scott and is placed in the
  * public domain.
  *

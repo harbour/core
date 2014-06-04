@@ -1,7 +1,4 @@
 /*
- * Author....: Gary Baren
- * CIS ID....: 75470,1027
- *
  * This is an original work by Gary Baren and is hereby placed in the
  * public domain.
  *

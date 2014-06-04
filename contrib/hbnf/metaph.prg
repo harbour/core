@@ -1,7 +1,4 @@
 /*
- * Author....: Dave Adams
- * CIS ID....: ?
- *
  * This is an original work by Dave Adams and is placed in the
  * public domain.
  *

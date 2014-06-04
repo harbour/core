@@ -1,7 +1,4 @@
 /*
- * Author....: Brian Loesgen
- * CIS ID....: 74326,1174
- *
  * This is an original work by Brian Loesgen and is placed in the
  * public domain.
  *

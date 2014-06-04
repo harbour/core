@@ -1,7 +1,5 @@
 /*
- * File......: Header file for users of ft_int86() function
- * Author....: Ted Means
- * CIS ID....: 73067,3332
+ * Header file for users of ft_int86() function
  *
  * This is an original work by Ted Means and is placed in the
  * public domain.

@@ -1,7 +1,4 @@
 /*
- * Author....: Paul Ferrara
- * CIS ID....: 76702,556
- *
  * This is an original work by Paul Ferrara and is placed in the
  * public domain.
  *

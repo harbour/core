@@ -1,7 +1,4 @@
 /*
- * Author....: James R. Zack
- * CIS ID....: 75410,1567
- *
  * This is an original work by James R. Zack and is placed in the
  * public domain.
  *
@@ -21,7 +18,7 @@
 #include "hbapi.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
+   #include <dos.h>
 #endif
 
 HB_FUNC( FT_SETRATE )

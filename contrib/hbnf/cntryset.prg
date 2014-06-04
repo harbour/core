@@ -1,7 +1,4 @@
 /*
- * Author....: David Husnian
- * CIS ID....: ?
- *
  * This is an original work by David Husnian and is placed in the
  * public domain.
  *
@@ -18,16 +15,5 @@
  *
  */
 
-FUNCTION ft_SetCentury( lNewSetState )
-
-   // Note that if CENTURY is ON then
-   // DToC() Will Return a String of Length
-   // 10, Otherwise it Will be of Length 8
-
-   LOCAL lOldSetState := ( Len( DToC( Date() ) ) == 10 )
-
-   IF HB_ISLOGICAL( lNewSetState )        // Did they want it set?
-      SET CENTURY ( lNewSetState )        // Yes, set it
-   ENDIF
-
-   RETURN lOldSetState
+FUNCTION ft_SetCentury( lNewState )
+   RETURN __SetCentury( iif( HB_ISLOGICAL( lNewState ), lNewState, ) )

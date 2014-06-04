@@ -1,7 +1,4 @@
 /*
- * Author....: Steven Tyrakowski
- * CIS ID....: ?
- *
  * This is an original work by Steven Tyrakowski and is placed
  * in the public domain.
  *
@@ -45,9 +42,7 @@ FUNCTION ft_EscCode( cInput )
          nPointer++
 
       OTHERWISE
-
          cOutput += cCurrent
-
       ENDCASE
    NEXT
 

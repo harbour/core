@@ -1,8 +1,5 @@
 /*
- * Author....: Greg Lief
- * CIS ID....: 72460,1760
- *
- * This function is an original work by Mr. Grump and is placed in the
+ * This function is an original work by Greg Lief (Mr. Grump) and is placed in the
  * public domain.
  *
  * Modification history:
@@ -18,7 +15,6 @@
 #include "box.ch"
 
 /* display vertical menu */
-
 PROCEDURE ft_Menu2( aMenuInfo, cColors )
 
    LOCAL nChoice     := 1

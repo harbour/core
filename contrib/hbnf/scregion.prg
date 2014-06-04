@@ -1,7 +1,4 @@
 /*
- * Author....: David A. Richardson
- * CIS ID....: ?
- *
  * This is an original work by David A. Richardson and is hereby placed
  * in the public domain.
  *

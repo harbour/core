@@ -1,7 +1,4 @@
 /*
- * Author....: David Husnian
- * CIS ID....: ?
- *
  * This is an original work by David Husnian and is placed in the
  * public domain.
  *
@@ -18,12 +15,11 @@
  *    Rev 1.0   01 Apr 1991 01:02:10   GLENN
  * Nanforum Toolkit
  *
- *
  */
 
-#define FT_EXTRA_SETS    2
-#define FT_SET_CENTURY   _SET_COUNT + 1
-#define FT_SET_BLINK     _SET_COUNT + 2
+#define FT_EXTRA_SETS   2
+#define FT_SET_CENTURY  _SET_COUNT + 1
+#define FT_SET_BLINK    _SET_COUNT + 2
 
 FUNCTION ft_SaveSets()
 

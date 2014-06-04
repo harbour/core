@@ -50,7 +50,7 @@
 #include "hbapiitm.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
+   #include <dos.h>
 #endif
 
 HB_FUNC( _FT_NWKSTAT )

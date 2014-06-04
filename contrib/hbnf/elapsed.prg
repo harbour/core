@@ -1,9 +1,6 @@
 /*
- * Author....: Jo W. French dba Practical Computing
- * CIS ID....: ?
- *
  * The functions contained herein are the original work of Jo W. French
- * and are placed in the public domain.
+ * (dba Practical Computing) and are placed in the public domain.
  *
  * Modification history:
  *

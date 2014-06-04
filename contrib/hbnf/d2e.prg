@@ -1,7 +1,4 @@
 /*
- * Author....: Gary Baren
- * CIS ID....: 75470,1027
- *
  * This is an original work by Gary Baren and is hereby placed in the
  * public domain.
  *
@@ -40,6 +37,6 @@ FUNCTION ft_D2E( nDec, nPrecision )
    IF Round( Abs( nDec ), nPrecision ) >= 10
       nDec /= 10
       nExp++
-   ENDIF  /* another kludge FOR stuff LIKE "999999999" */
+   ENDIF  /* another kludge for stuff like "999999999" */
 
    RETURN LTrim( Str( nDec, nPrecision + 3, nPrecision ) ) + "E" + hb_ntos( nExp )

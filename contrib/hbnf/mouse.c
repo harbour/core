@@ -49,7 +49,7 @@
 #include "hbapi.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
+   #include <dos.h>
 #endif
 
 /* http://www.delorie.com/djgpp/doc/rbinter/ix/33/00.html */

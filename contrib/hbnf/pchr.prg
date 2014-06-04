@@ -1,7 +1,4 @@
 /*
- * Author....: Jim Gale
- * CIS ID....: 73670,2561
- *
  * This is an original work by Jim Gale and is placed in the
  * public domain.
  *

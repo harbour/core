@@ -1,7 +1,4 @@
 /*
- * Author....: Greg Lief
- * CIS ID....: 72460,1760
- *
  * This is an original work by Greg Lief and is placed in the
  * public domain.
  *
@@ -23,7 +20,7 @@ FUNCTION ft_SInkey( waittime )
    LOCAL nKey, cBlock
 
    DO CASE
-   CASE PCount() == 0 /* if no waittime passed, go straight through */
+   CASE PCount() == 0  /* if no waittime passed, go straight through */
       nKey := Inkey()
       /* dig this... if you pass Inkey( NIL ), it is identical to Inkey( 0 )!
          therefore, I allow you to pass ft_SInkey( NIL ) -- hence this mild bit

@@ -1,7 +1,4 @@
 /*
- * Author....: Isa Asudeh
- * CIS ID....: 76477,647
- *
  * This is an original work by Isa Asudeh and is placed in the
  * public domain.
  *

@@ -1,9 +1,6 @@
 /*
- * Author....: Paul Ferrara, ColumbuSoft
- * CIS ID....: 76702,556
- *
- * This function is an original work by Paul Ferrara and is placed in the
- * public domain.
+ * This function is an original work by Paul Ferrara (ColumbuSoft)
+ * and is placed in the public domain.
  *
  * Modification history:
  *
@@ -50,8 +47,8 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
          AAdd( aPos[ i:__enumIndex() ], { ;
             At( "[", i ), ;
             At( "]", i ) - 2 } )
-         i := StrTran( i, "[", "", 1, 1 )
-         i := StrTran( i, "]", "", 1, 1 )
+         i := StrTran( i, "[",, 1, 1 )
+         i := StrTran( i, "]",, 1, 1 )
       ENDDO
    NEXT
 

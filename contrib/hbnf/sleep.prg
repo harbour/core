@@ -1,7 +1,4 @@
 /*
- * Author....: Leo Letendre
- * CIS ID....: 73607,233
- *
  * This is an original work by Leo Letendre and is placed in the
  * public domain.
  *

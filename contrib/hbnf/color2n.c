@@ -1,7 +1,4 @@
 /*
- * Author....: David Richardson
- * CIS ID....: 72271,53
- *
  * This function is an original work by David Richardson and is placed in the
  * public domain.
  *

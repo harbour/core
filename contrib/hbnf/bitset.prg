@@ -1,9 +1,6 @@
 /*
- * Author....: Forest Belt, Computer Diagnostic Services, Inc.
- * CIS ID....: ?
- *
- * This is an original work by Forest Belt and is placed in the
- * public domain.
+ * This is an original work by Forest Belt (Computer Diagnostic Services, Inc.)
+ * and is placed in the public domain.
  *
  * Modification history:
  *

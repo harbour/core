@@ -1,7 +1,4 @@
 /*
- * Author....: Mike Taylor
- * CIS ID....: ?
- *
  * This is an original work by Mike Taylor and is placed in the
  * public domain.
  *
@@ -41,7 +38,6 @@
  *
  *    Rev 1.0   01 Apr 1991 01:02:46   GLENN
  * Nanforum Toolkit
- *
  *
  */
 

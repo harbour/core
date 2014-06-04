@@ -1,7 +1,4 @@
 /*
- * Author....: Jim Orlowski
- * CIS ID....: ?
- *
  * This is an original work by Jim Orlowski and is placed in the
  * public domain.
  *
@@ -25,9 +22,6 @@
  *                 ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
  *
  *  3.  Added DispBegin() and DispEnd() around both Stabilize sections
- *
- *
- *
  *
  *    Rev 1.2   15 Aug 1991 23:04:20   GLENN
  * Forest Belt proofread/edited/cleaned up doc
@@ -259,10 +253,11 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
    LOCAL i := 0
 
-   IF n == 0 .OR. LastRec() == 0
+   DO CASE
+   CASE n == 0 .OR. LastRec() == 0
       dbSkip( 0 )  /* significant on a network */
 
-   ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
+   CASE n > 0 .AND. RecNo() != LastRec() + 1
       DO WHILE i < n
          dbSkip()
          IF Eof() .OR. ! Eval( bWhileCond )
@@ -272,7 +267,7 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
          i++
       ENDDO
 
-   ELSEIF n < 0
+   CASE n < 0
       DO WHILE i > n
          dbSkip( -1 )
          IF Bof()
@@ -283,7 +278,7 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
          ENDIF
          i--
       ENDDO
-   ENDIF
+   ENDCASE
 
    RETURN i
 

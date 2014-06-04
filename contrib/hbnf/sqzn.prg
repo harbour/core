@@ -1,7 +1,4 @@
 /*
- * Author....: Joseph D. Booth, Sr.
- * CIS ID....: 72040,2112
- *
  * This is an original work by Joseph D. Booth Sr. and is placed in the
  * public domain.
  *

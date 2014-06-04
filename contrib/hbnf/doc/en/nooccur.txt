@@ -14,7 +14,7 @@
       <cCheckIn> is the string to search
 
       <lIgnoreCase> is a boolean variable to force case sensitivity
-      (optional, defaults to .F.).
+      (optional, defaults to .T.).
    $RETURNS$
       The number of times <cCheckFor> appears in <cCheckIn>
    $DESCRIPTION$
@@ -27,6 +27,6 @@
 
       // Find the number of times "the" appears in cMemoString, case
       // sensitive
-      ? ft_NoOccur( "the", cMemoString, .T. )
+      ? ft_NoOccur( "the", cMemoString, .F. )
    $END$
  */

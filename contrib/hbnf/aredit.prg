@@ -1,8 +1,5 @@
 /*
- * Author....: James J. Orlowski, M.D.
- * CIS ID....: 72707,601
- *
- * This is an original work by James Orlowski and is placed in the
+ * This is an original work by James J. Orlowski, M.D. and is placed in the
  * public domain.
  *
  * Modification history:
@@ -17,7 +14,6 @@
  *
  *    Rev 1.0   07 Jun 1991 23:03:24   GLENN
  * Initial revision.
- *
  *
  */
 
@@ -46,7 +42,7 @@
 // BLOCK[]     aBlocks   - Array containing code block for each column.
 // CODE BLOCK  bGetFunc  - Code Block For Special Get Processing
 //  NOTE: When evaluated a code block is passed the array element to
-//          be edited
+//        be edited
 
 FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
       ar, nElem, aHeadings, aBlocks, bGetFunc )

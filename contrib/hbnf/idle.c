@@ -1,8 +1,6 @@
 /*
- * Author....: Ted Means (with much gratitude to Robert DiFalco)
- * CIS ID....: 73067,3332
- *
- * This function is an original work by Ted Means and is placed in the
+ * This function is an original work by Ted Means
+ * (with much gratitude to Robert DiFalco) and is placed in the
  * public domain.
  *
  * Modification history:

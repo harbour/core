@@ -1,7 +1,4 @@
 /*
- * Author....: Alexander B. Spencer
- * CIS ID....: 76276,1012
- *
  * This is an original work by Alexander B. Spencer and is placed in the
  * public domain.
  *

@@ -1,9 +1,6 @@
 /*
- * Author....: Ralph Oliver,  TRANSCOM SYSTEMS
- * CIS ID....: 74030,703
- *
- * This is an original work by Ralph Oliver and is placed in the
- * public domain.
+ * This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
+ * and is placed in the public domain.
  *
  * This program uses the preprocessor #defines and #command
  * by David Husnian.
@@ -18,7 +15,7 @@
  *
  */
 
-#define FORCE_BETWEEN( x, y, z )         ( y := Max( Min( y, z ), x ) )
+#define FORCE_BETWEEN( x, y, z )   ( y := Max( Min( y, z ), x ) )
 
 FUNCTION ft_AMedian( aArray, nStart, nEnd )
 
@@ -27,8 +24,8 @@ FUNCTION ft_AMedian( aArray, nStart, nEnd )
    __defaultNIL( @nStart, 1 )
    __defaultNIL( @nEnd, Len( aArray ) )
 
-   // Make Sure Bounds are in Range
-   FORCE_BETWEEN( 1, nEnd,   Len( aArray ) )
+   // Make sure bounds are in range
+   FORCE_BETWEEN( 1, nEnd, Len( aArray ) )
    FORCE_BETWEEN( 1, nStart, nEnd )
 
    // Length of aTemparray

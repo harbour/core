@@ -1,8 +1,5 @@
 /*
- * Author....: Greg Lief
- * CIS ID....: 72460,1760
- *
- * This is an original work by Mr. Grump and is placed in the
+ * This is an original work by Greg Lief (Mr. Grump) and is placed in the
  * public domain.
  *
  * Modification history:

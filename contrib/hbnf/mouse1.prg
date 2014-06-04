@@ -24,50 +24,40 @@ FUNCTION ft_MDblClk( nClick, nButton, nInterval, nRow, nCol, nStart )
    lDouble := lDone := ( nClick == 0 )
 
    // Wait for first press if requested
-
    DO WHILE ! lDone
-
       ft_MButPrs( nButton, @nPrs, @nVert, @nHorz )
       nVert := Int( nVert / 8 )
       nHorz := Int( nHorz / 8 )
 
       lDouble := ( nPrs > 0 )
-      ldone := Seconds() - nStart >= nInterval .OR. lDouble
-
+      lDone := Seconds() - nStart >= nInterval .OR. lDouble
    ENDDO
 
    // if we have not moved then keep the preliminary double click setting
-
-   lDouble := lDouble .AND. ( nVert == nRow .AND. nHorz == nCol )
+   lDouble := lDouble .AND. nVert == nRow .AND. nHorz == nCol
 
    // change start time if we waited for first click. nInterval is the
    // maximum time between clicks not the total time for two clicks if
    // requested.
-
    IF nClick > 0
       nStart := Seconds()
    ENDIF
 
    // If we have fulfilled all of the requirements then wait for second click
-
    IF lDouble
-
       lDouble := lDone := .F.
 
       DO WHILE ! lDone
-
          ft_MButPrs( nButton, @nPrs, @nVert, @nHorz )
          nVert := Int( nVert / 8 )
          nHorz := Int( nHorz / 8 )
 
          lDouble := ( nPrs > 0 )
          lDone := Seconds() - nStart >= nInterval .OR. lDouble
-
       ENDDO
 
       // make sure we haven't moved
       lDouble := lDouble .AND. nVert == nRow .AND. nHorz == nCol
-
    ENDIF
 
    RETURN lDouble
@@ -139,10 +129,10 @@ FUNCTION ft_MInit()
 
    // If not previously initialized then try
 
-   IF ! t_lMInit
-      t_lMInit := ( ft_MReset() != 0 )
-   ELSE
+   IF t_lMInit
       MSetBounds()
+   ELSE
+      t_lMInit := ( ft_MReset() != 0 )
    ENDIF
 
    RETURN t_lMInit

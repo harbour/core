@@ -1,7 +1,4 @@
 /*
- * Author....: Isa Asudeh
- * CIS ID....: 76477,647
- *
  * This is an original work by Isa Asudeh and is placed in the
  * public domain.
  *
@@ -49,35 +46,35 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
 
    DO WHILE nKey != K_ESC
 
-      DO CASE
-      CASE nKey == K_HOME
+      SWITCH nKey
+      CASE K_HOME
          nJump--
-
-      CASE nKey == K_END
+         EXIT
+      CASE K_END
          nJump++
-
-      CASE nKey == K_UP
+         EXIT
+      CASE K_UP
          nJump -= 30
-
-      CASE nKey == K_DOWN
+         EXIT
+      CASE K_DOWN
          nJump += 30
-
-      CASE nKey == K_PGUP
+         EXIT
+      CASE K_PGUP
          nJump -= 365
-
-      CASE nKey == K_PGDN
+         EXIT
+      CASE K_PGDN
          nJump += 365
-
-      CASE nKey == K_RIGHT
+         EXIT
+      CASE K_RIGHT
          nJump -= 7
-
-      CASE nKey == K_LEFT
+         EXIT
+      CASE K_LEFT
          nJump += 7
-
-      CASE nKey == K_INS
+         EXIT
+      CASE K_INS
          nJump := 0
-
-      CASE nKey == K_F1
+         EXIT
+      CASE K_F1
          IF lShowHelp .AND. ! lHelpIsDisplayed
             lHelpIsDisplayed := .T.
             cSaveHelp := SaveScreen( nHelpRow - 1, 1, nHelpRow + 7, MaxCol() + 1 )
@@ -87,8 +84,8 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
                "Left_Arrow or Right_Arrow keys page by week to a past or future date.", ;
                "Hit Ins to reset to today's date, F1 to get this help, ESC to quit." )
          ENDIF
-
-      ENDCASE
+         EXIT
+      ENDSWITCH
 
       aRetVal[ 1 ] :=         Date() + nJump
       aRetVal[ 2 ] :=  Month( Date() + nJump )

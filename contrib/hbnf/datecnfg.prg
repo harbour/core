@@ -1,9 +1,6 @@
 /*
- * Author....: Jo W. French dba Practical Computing
- * CIS ID....: 74730,1751
- *
  * The functions contained herein are the original work of Jo W. French
- * and are placed in the public domain.
+ * (dba Practical Computing) and are placed in the public domain.
  *
  * Modification history:
  *
@@ -28,8 +25,7 @@ FUNCTION ft_DateCnfg( cFYStart, nDow )
    LOCAL dCheck
 
    IF HB_ISSTRING( cFYStart )
-      dCheck := CToD( cFYStart )
-      IF ! Empty( dCheck )
+      IF ! Empty( dCheck := CToD( cFYStart ) )
 
          /* No one starts a Fiscal Year on 2/29 */
          IF Month( dCheck ) == 2 .AND. Day( dcheck ) == 29

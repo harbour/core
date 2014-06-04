@@ -1,7 +1,4 @@
 /*
- * Author....: Mike Taylor
- * CIS ID....: ?
- *
  * This is an original work by Mike Taylor and is placed in the
  * public domain.
  *
