@@ -28,11 +28,9 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
-#xtranslate isOkay( <exp> )                      => ( <exp> \> 0 .AND. <exp> \<= nCount )
-#xtranslate isBetween( <val>, <lower>, <upper> ) => ( <val> \>= <lower> .AND. <val> \<= <upper> )
+#xtranslate isOkay( <exp> ) => ( <exp> \> 0 .AND. <exp> \<= nCount )
 
 // These arrays hold information about each menu item
-
 THREAD STATIC t_aRow          := { {} }
 THREAD STATIC t_aCol          := { {} }
 THREAD STATIC t_aPrompt       := { {} }
@@ -209,8 +207,8 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
       nKey := Inkey( 0 )
 
       // If the key was an alphabetic char, convert to uppercase
-      IF isBetween( nKey, 97, 122 )
-         nKey -= 32
+      IF IsLower( hb_keyChar( nKey ) )
+         nKey := hb_keyCode( Upper( hb_keyChar( nKey ) ) )
       ENDIF
 
       // Set nPrev to the currently active menu item

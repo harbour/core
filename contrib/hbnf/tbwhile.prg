@@ -35,13 +35,10 @@
  */
 
 /* The tricks are:
-
    1. Setting up functions for goTop() and goBottom() so that you can
       quickly move to the right record when the user presses the
       Ctrl-PgUp ( goTop() ) and Ctrl-PgDn ( goBottom() ) keys.
-
-   2. Passing and evaluating the block for the TbSkipWhil().
- */
+   2. Passing and evaluating the block for the TbSkipWhil(). */
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -293,8 +290,7 @@ STATIC PROCEDURE TbWhileTop( cKey )
    With softseek set on, seek the first record after condition.
    This is accomplished by incrementing the right most character of the
    string cKey by one ascii character.  After SEEKing the new string,
-   back up one record to get to the last record which matches cKey.
- */
+   back up one record to get to the last record which matches cKey. */
 STATIC PROCEDURE TbWhileBot( cKey )
 
    dbSeek( hb_StrShrink( cKey ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )

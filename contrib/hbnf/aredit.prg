@@ -26,8 +26,7 @@
    showed me the improved skipblock in public messages on Nanforum.
 
    I added the functionality of the "Edit Get" code block
-   (ie bGetFunc), TestGet() demo, and the add/delete rows.
- */
+   (ie bGetFunc), TestGet() demo, and the add/delete rows. */
 
 #include "box.ch"
 #include "inkey.ch"

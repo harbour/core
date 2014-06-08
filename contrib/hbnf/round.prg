@@ -73,8 +73,8 @@ FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
       ENDCASE
    ENDIF
 
-   IF nNumber < 0           // Was the number negative?
-      nResult := -nResult   // Yes, make the result negative also
+   IF nNumber < 0          // Was the number negative?
+      nResult := -nResult  // Yes, make the result negative also
    ENDIF
 
    RETURN nResult

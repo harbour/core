@@ -102,10 +102,10 @@ HB_FUNC( FT_MCONOFF )
    {
       union REGS regs;
       regs.HB_XREGS.ax = 0x1A;
-      regs.HB_XREGS.cx = hb_parni( 2 ) * 8; /* nLeft */
-      regs.HB_XREGS.dx = hb_parni( 1 ) * 8; /* nTop */
-      regs.HB_XREGS.si = hb_parni( 4 ) * 8; /* nRight */
-      regs.HB_XREGS.di = hb_parni( 3 ) * 8; /* nBottom */
+      regs.HB_XREGS.cx = hb_parni( 2 ) * 8;  /* nLeft */
+      regs.HB_XREGS.dx = hb_parni( 1 ) * 8;  /* nTop */
+      regs.HB_XREGS.si = hb_parni( 4 ) * 8;  /* nRight */
+      regs.HB_XREGS.di = hb_parni( 3 ) * 8;  /* nBottom */
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
@@ -185,9 +185,9 @@ HB_FUNC( FT_MDEFCRS )
    {
       union REGS regs;
       regs.HB_XREGS.ax = 10;
-      regs.HB_XREGS.bx = hb_parni( 1 ); /* nCurType */
-      regs.HB_XREGS.cx = hb_parni( 2 ); /* nScrMask */
-      regs.HB_XREGS.dx = hb_parni( 3 ); /* nCurMask */
+      regs.HB_XREGS.bx = hb_parni( 1 );  /* nCurType */
+      regs.HB_XREGS.cx = hb_parni( 2 );  /* nScrMask */
+      regs.HB_XREGS.dx = hb_parni( 3 );  /* nCurMask */
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif

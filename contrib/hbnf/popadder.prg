@@ -453,10 +453,10 @@ STATIC PROCEDURE _ftAddTotal( aAdder )
             _ftUpdateTrans( aAdder, .F., nNumTotal )
          ENDIF
          IF ! lMultDiv
-            lSubRtn := .T.                  // total key
+            lSubRtn := .T.               // total key
          ENDIF
          DO CASE
-         CASE nAddMode == 1                  // Add
+         CASE nAddMode == 1              // Add
             nTotal += nNumTotal
          CASE nAddMode == 2              // Subtract
             nTotal -= nNumTotal
@@ -471,12 +471,12 @@ STATIC PROCEDURE _ftAddTotal( aAdder )
          ENDCASE
       ENDIF
       _ftDispTotal( aAdder )
-      IF lMultDiv                         // This was a multiply or divide
+      IF lMultDiv                        // This was a multiply or divide
          _ftSetWinColor( W_CURR, W_SCREEN )
          hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "   <TOTAL>" )
          _ftSetWinColor( W_CURR, W_PROMPT )
-         lSubRtn := .F.                    // pressed total so key reset everything
-         IF ! lTotalOk                     // If you haven't printed total DO-IT
+         lSubRtn := .F.                  // pressed total so key reset everything
+         IF ! lTotalOk                   // If you haven't printed total DO-IT
             lTotalOk := .T.
             _ftUpdateTrans( aAdder, .F., NIL )
          ENDIF

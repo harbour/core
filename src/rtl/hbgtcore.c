@@ -3732,8 +3732,7 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
    if( szGtName )
    {
       if( hb_stricmp( szGtName, "GTNUL" ) == 0 ||
-          hb_stricmp( szGtName, "NUL" ) == 0 ||
-          hb_stricmp( szGtName, "null" ) == 0 )
+          hb_stricmp( szGtName, "NUL" ) == 0 )
       {
          if( pGT || pSuperTable )
             hb_errInternal( 9996, "Harbour terminal (GT) initialization failure", NULL, NULL );

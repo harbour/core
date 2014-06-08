@@ -105,7 +105,6 @@ PROCEDURE ft_MSetSens( nHoriz, nVert, nDouble )
    LOCAL nCurHoriz, nCurVert, nCurDouble
 
    // Get current values
-
    ft_MGetSens( @nCurHoriz, @nCurVert, @nCurDouble )
 
    hb_default( @nHoriz, nCurHoriz )
@@ -127,9 +126,7 @@ FUNCTION ft_MVersion( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
 
 FUNCTION ft_MInit()
 
-   // If not previously initialized then try
-
-   IF t_lMInit
+   IF t_lMInit  // If not previously initialized then try
       MSetBounds()
    ELSE
       t_lMInit := ( ft_MReset() != 0 )
@@ -139,7 +136,7 @@ FUNCTION ft_MInit()
 
 FUNCTION ft_MReset()
 
-   t_lCrsState := .F. // Cursor is off after reset
+   t_lCrsState := .F.  // Cursor is off after reset
    MHide()
    MSetBounds()
    MSetPos( ( MaxRow() + 1 ) / 2, ( MaxCol() + 1 ) / 2 )
@@ -168,7 +165,7 @@ PROCEDURE ft_MShowCrs()
 
    RETURN
 
-PROCEDURE ft_MHideCrs() // decrement internal cursor flag and hide cursor
+PROCEDURE ft_MHideCrs()  // decrement internal cursor flag and hide cursor
 
    MHide()
 

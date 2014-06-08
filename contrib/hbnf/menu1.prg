@@ -20,8 +20,8 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#define DISABLE     0
-#define ENABLE      1
+#define DISABLE   0
+#define ENABLE    1
 
 THREAD STATIC t_aChoices := {}
 THREAD STATIC t_aValidKeys := {}
@@ -97,7 +97,6 @@ PROCEDURE ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
 
    // this is the routine that calculates the position of each item
    // on the menu bar.
-
    aBarCol[ 1 ] := 0
    nTtlUsed := Len( aBar[ 1 ] ) + 1
    AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), aBarcol[ i ] := nTtlUsed, nTtlUsed += ( Len( aBar[ i ] ) + 1 ) }, ;
@@ -176,7 +175,6 @@ PROCEDURE ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
    RETURN
 
 // AChoice() user function
-
 STATIC FUNCTION __ftAcUdf( nMode )
 
    LOCAL nRtnVal := AC_CONT

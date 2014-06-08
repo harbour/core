@@ -38,8 +38,8 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
    AEval( aMenuInfo, {| ele | nMaxwidth := Max( nMaxwidth, Len( ele[ 1 ] ) ) } )
 
    /* establish top and left box coordinates */
-   nLeft := ( ( MaxCol() + 1 ) - nMaxwidth ) / 2
-   nTop  := ( ( MaxRow() + 1 ) - ( nOptions + 2 ) ) / 2
+   nLeft := ( MaxCol() + 1 - nMaxwidth ) / 2
+   nTop  := ( MaxRow() + 1 - ( nOptions + 2 ) ) / 2
 
    DO WHILE nChoice != 0 .AND. nChoice != nOptions
 

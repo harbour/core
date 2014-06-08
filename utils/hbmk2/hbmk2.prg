@@ -14370,8 +14370,9 @@ STATIC FUNCTION hbmk__hbdoc_ToSource( hEntry )
    FOR EACH item IN hEntry
       IF HB_ISSTRING( item ) .AND. ! hb_LeftEq( item:__enumKey(), "_" ) .AND. ! Empty( item ) .AND. ;
          ! HBMK_IS_IN( item:__enumKey(), "COMPLIANCE|PLATFORMS|STATUS|FILES" )
-         cSource += item:__enumKey() + hb_eol()
-         cSource += Replicate( "-", Len( item:__enumKey() ) ) + hb_eol()
+         cSource += ;
+            item:__enumKey() + hb_eol() + ;
+            Replicate( "-", Len( item:__enumKey() ) ) + hb_eol()
          FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
             cSource += cLine + hb_eol()
          NEXT

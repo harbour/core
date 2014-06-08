@@ -15,7 +15,7 @@
  *
  */
 
-#define FORCE_BETWEEN( x, y, z )   ( y := Max( Min( y, z ), x ) )
+#define FORCE_BETWEEN( x, y, z )  ( y := Max( Min( y, z ), x ) )
 
 FUNCTION ft_AAvg( aArray, nStartIndex, nEndIndex )
 

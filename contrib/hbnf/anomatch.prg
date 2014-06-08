@@ -15,11 +15,11 @@
  *
  */
 
-#define FORCE_BETWEEN( x, y, z )   ( y := Max( Min( y, z ), x ) )
+#define FORCE_BETWEEN( x, y, z )  ( y := Max( Min( y, z ), x ) )
 
 FUNCTION ft_ANoMatches( aArray, bCompareBlock, nStartIndex, nEndIndex )
 
-   LOCAL nNoOfMatches := 0              // Number of Matches Found
+   LOCAL nNoOfMatches := 0  // Number of Matches Found
 
    __defaultNIL( @nStartIndex, 1 )
    __defaultNIL( @nEndIndex, Len( aArray ) )

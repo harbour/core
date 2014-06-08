@@ -66,25 +66,25 @@ FUNCTION ft_Civ2Mil( cTIME )
 
    // am, pm, noon or midnight
    SWITCH Upper( SubStr( LTrim( cTIME ), 7, 1 ) )
-   CASE "N"                           // noon
+   CASE "N"       // noon
       IF Left( cTIME, 2 ) + SubStr( cTIME, 4, 2 ) == "0000"
          RETURN "1200"
       ELSE
          RETURN "    "
       ENDIF
-   CASE "M"                           // midnight
+   CASE "M"       // midnight
       IF Left( cTIME, 2 ) + SubStr( cTIME, 4, 2 ) == "0000"
          RETURN "0000"
       ELSE
          RETURN "    "
       ENDIF
-   CASE "A"                           // am
+   CASE "A"       // am
       RETURN StrZero( Val( Left( cTIME, 2 ) ), 2 ) + SubStr( cTIME, 4, 2 )
-   CASE "P"                           // pm
+   CASE "P"       // pm
       RETURN StrZero( Val( Left( cTIME, 2 ) ) + 12, 2 ) + SubStr( cTIME, 4, 2 )
    ENDSWITCH
 
-   RETURN "    "                      // error
+   RETURN "    "  // error
 
 FUNCTION ft_Sys2Mil()
    RETURN Left( Stuff( Time(), 3, 1, "" ), 4 )

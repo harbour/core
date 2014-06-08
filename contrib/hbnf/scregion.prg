@@ -49,7 +49,7 @@ PROCEDURE ft_RgnStack( cAction, nTop, nLeft, nBottom, nRight )
 
    LOCAL nPopTop
 
-   SWITCH cAction
+   SWITCH hb_defaultValue( cAction, "" )
    CASE "push"
 
       ASize( t_aRgnStack, ++t_nStackPtr )[ t_nStackPtr ] := ;

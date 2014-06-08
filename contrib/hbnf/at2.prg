@@ -23,7 +23,6 @@ FUNCTION ft_At2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL cSubstr := cTarget
 
    // Set default parameters as necessary.
-
    __defaultNIL( @lCaseSens, .T. )
    __defaultNIL( @nOccurs, 1 )
 
@@ -43,7 +42,6 @@ FUNCTION ft_At2( cSearch, cTarget, nOccurs, lCaseSens )
       cSubstr := SubStr( cSubstr, At( cSearch, cSubstr ) + 1 )
 
       // Breakout if there are no occurences here
-
       IF nPos == 0
          EXIT
       ENDIF
@@ -57,7 +55,6 @@ FUNCTION ft_RAt2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL cSubstr := cTarget
 
    // Set default parameters as necessary.
-
    __defaultNIL( @lCaseSens, .T. )
    __defaultNIL( @nOccurs, 1 )
 
