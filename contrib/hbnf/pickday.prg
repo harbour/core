@@ -19,8 +19,7 @@
 
 FUNCTION ft_PickDay()
 
-   LOCAL days := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;
-      "FRIDAY", "SATURDAY" }
+   LOCAL days := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" }
    LOCAL sel
    LOCAL oldscrn := SaveScreen( 8, 35, 16, 45 )
    LOCAL oldcolor := SetColor( "+w/r" )

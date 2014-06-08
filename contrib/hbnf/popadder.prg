@@ -337,7 +337,6 @@ STATIC PROCEDURE _ftChangeDec( aAdder, nNumDec )
       ELSE
          _ftDispSubTot( aAdder )
       ENDIF
-
    ENDIF
 
    RETURN
@@ -353,7 +352,7 @@ STATIC PROCEDURE _ftDispTotal( aAdder )
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cTotStr + "." )
       lAddError := .T.
-      _ftUpdateTrans( aAdder, .T., NIL )
+      _ftUpdateTrans( aAdder, .T. )
       _ftClearAdder( aAdder )
       nTotal    := 0
       nNumTotal := 0
@@ -431,7 +430,7 @@ STATIC PROCEDURE _ftAddTotal( aAdder )
          _ftSetWinColor( W_CURR, W_SCREEN )
          hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "   <TOTAL>" )
          _ftSetWinColor( W_CURR, W_PROMPT )
-         _ftUpdateTrans( aAdder, .T., NIL )
+         _ftUpdateTrans( aAdder, .T. )
          _ftDispTotal( aAdder )
          lSubRtn   := .F.                  // pressed the total key reset everyting
          nSavTotal := nTotal
@@ -478,14 +477,14 @@ STATIC PROCEDURE _ftAddTotal( aAdder )
          lSubRtn := .F.                  // pressed total so key reset everything
          IF ! lTotalOk                   // If you haven't printed total DO-IT
             lTotalOk := .T.
-            _ftUpdateTrans( aAdder, .F., NIL )
+            _ftUpdateTrans( aAdder, .F. )
          ENDIF
          nNumTotal := 0
          nSavTotal := nTotal
          nTotal    := 0
       ELSE
          IF ! lTotalOk                     // If you haven't printed total DO-IT
-            _ftUpdateTrans( aAdder, .F., NIL )
+            _ftUpdateTrans( aAdder, .F. )
             nNumTotal := 0
          ENDIF
       ENDIF
@@ -618,7 +617,7 @@ STATIC PROCEDURE _ftClearAdder( aAdder )
    IF lClAdder                            // If it has alredy been pressed once
       nTotal    := 0                      // then we are clearing the total
       nSavTotal := 0
-      _ftUpdateTrans( aAdder, .F., NIL )
+      _ftUpdateTrans( aAdder, .F. )
       lClAdder  := .F.
       _ftDispTotal( aAdder )
    ELSE
@@ -1168,13 +1167,13 @@ STATIC PROCEDURE _ftWinTitle( cTheTitle, cTopOrBot )
 STATIC PROCEDURE _ftInitColors()
 
    t_aWinColor := { ;
-      { "GR+/BG", "GR+/G", "B+/RB",  "G+/R" }, ;
+      { "GR+/BG", "GR+/G", "B+/RB",  "G+/R"  }, ;
       { "R+/N",   "W+/RB", "W+/BG",  "GR+/B" }, ;
       { "GR+/N",  "GR+/N", "GR+/N",  "GR+/N" }, ;
-      {  "B/BG",  "BG+/G", "W+/RB",  "BG+/R" }, ;
-      { "W+/BG",  "W+/G",  "GR+/RB", "W+/R" }, ;
+      { "B/BG",   "BG+/G", "W+/RB",  "BG+/R" }, ;
+      { "W+/BG",  "W+/G",  "GR+/RB", "W+/R"  }, ;
       { "GR+/B",  "GR+/R", "R+/B",   "W+/BG" }, ;
-      {  "N/N",   "N/N",   "N/N",    "N/N" } }
+      { "N/N",    "N/N",   "N/N",    "N/N"   } }
 
    t_aStdColor := { ;
       "BG+*/RB", ;
@@ -1224,7 +1223,7 @@ STATIC PROCEDURE _ftDispMessage( cMessage, nT, nL, nB, nR )
 
    _ftPushKeys()
    hb_keyPut( { K_CTRL_PGDN, K_CTRL_W } )
-   MemoEdit( cMessage, nT, nL, nB, nR, .F., NIL, nR - nL + 1 )
+   MemoEdit( cMessage, nT, nL, nB, nR, .F.,, nR - nL + 1 )
    _ftPopKeys()
 
    RETURN

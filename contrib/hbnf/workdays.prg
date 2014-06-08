@@ -59,4 +59,4 @@ FUNCTION ft_Workdays( dStart, dStop )
       ENDIF
    ENDIF
 
-   RETURN iif( nWorkDays > 0, nWorkDays, 0 )
+   RETURN Max( nWorkDays, 0 )
