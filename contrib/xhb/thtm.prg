@@ -314,8 +314,9 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
          "{" + hb_eol()
 
       FOR EACH i IN aImages
-         ::cStr += Space( 5 ) + i[ 1 ] + "=new Image(100,50);" + hb_eol()
-         ::cStr += Space( 5 ) + i[ 1 ] + ".src=" + '"' + i[ 2 ] + '"' + ";" + hb_eol()
+         ::cStr += ;
+            Space( 5 ) + i[ 1 ] + "=new Image(100,50);" + hb_eol() + ;
+            Space( 5 ) + i[ 1 ] + ".src=" + '"' + i[ 2 ] + '"' + ";" + hb_eol()
       NEXT
 
       ::cStr += "}" + hb_eol()
@@ -410,7 +411,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
 METHOD NewAlt( cType ) CLASS THtml
 
-   ::nH    := hb_GetStdOut()
+   ::nH := hb_GetStdOut()
    ::cStr += "Content-Type: " + cType + hb_eol() + hb_eol()
 
    t_nHtm := ::nH
@@ -467,8 +468,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
       iif( lULine, cStr += "<u>", cStr += "</u>" )
    ENDIF
 
-   cStr += "</font>"
-   ::cStr += cStr + hb_eol()
+   ::cStr += cStr + "</font>" + hb_eol()
 
    RETURN Self
 
@@ -688,8 +688,7 @@ METHOD Paragraph( lStart, cAlign, cStyle ) CLASS THtml
       cStr := "</p>"
    ENDIF
 
-   cStr += hb_eol()
-   ::cStr += cStr
+   ::cStr += cStr + hb_eol()
 
    RETURN Self
 
@@ -978,8 +977,10 @@ METHOD Close() CLASS THtml
 /* Close a CGI-HTML stream file */
 METHOD cgiClose() CLASS THtml
 
-   ::cStr += "</body>" + hb_eol()
-   ::cStr += "</html>" + hb_eol()
+   ::cStr += ;
+      "</body>" + hb_eol() + ;
+      "</html>" + hb_eol()
+
    FWrite( ::nh, ::cStr )
    FWrite( ::nH, hb_eol() )
 
@@ -1068,9 +1069,7 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       cStr += " nof=" + '"' + NOF + '"'
    ENDIF
 
-   cStr += ">" + hb_eol()
-
-   ::cStr += cStr + hb_eol()
+   ::cStr += cStr + ">" + hb_eol() + hb_eol()
 
    RETURN Self
 
@@ -1112,9 +1111,7 @@ METHOD TableHead( cHead, cColor, cAlign, ;
       cStr += ">"
    ENDIF
 
-   cStr += cHead + iif( HB_ISSTRING( cFont ), "</font>", "" ) + "</th>" + hb_eol()
-
-   ::cStr += cStr
+   ::cStr += cStr + cHead + iif( HB_ISSTRING( cFont ), "</font>", "" ) + "</th>" + hb_eol()
 
    RETURN Self
 
@@ -1133,8 +1130,7 @@ METHOD NewTableRow( cColor, vAling, aLing ) CLASS THtml
       cStr += " Aling=" + ALING
    ENDIF
 
-   cStr += ">" + hb_eol()
-   ::cStr += cStr
+   ::cStr += cStr + ">" + hb_eol()
 
    RETURN Self
 
@@ -1563,31 +1559,27 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
       cStr += Space( 5 ) + "       align=" + '"' + align + '"' + hb_eol()
    ENDIF
 
-   cStr += ">" + hb_eol()
-   cStr += "</iframe>" + hb_eol()
-
-   ::cStr += cStr
+   ::cStr += cStr + ;
+      ">" + hb_eol() + ;
+      "</iframe>" + hb_eol()
 
    RETURN Self
 
 METHOD Span( c, Style ) CLASS THtml
 
-   LOCAL cStr := "<span "
+   LOCAL cStr := "<span"
 
    IF HB_ISSTRING( style )
       cStr += " style=" + '"' + Style + '"'
    ENDIF
-   cStr += ">" + c + "</span>"
-   ::cStr += cStr
+
+   ::cStr += cStr + ">" + c + "</span>"
 
    RETURN Self
 
 METHOD Comment( cText ) CLASS THtml
 
-   LOCAL cStr := hb_eol() + "<!-- "
-
-   cStr += cText + " -->"
-   ::cStr += cStr
+   ::cStr += hb_eol() + "<!-- " + cText + " -->"
 
    RETURN Self
 
@@ -1635,8 +1627,7 @@ METHOD AddObject( cType, cClassid, cAling, cCode, lDisable, cCodeBase, cName, nW
       cStr += " width=" + nWidth + " " + hb_eol()
    ENDIF
 
-   cStr += " >"
-   ::cStr += cStr + hb_eol()
+   ::cStr += cStr + " >" + hb_eol()
 
    RETURN Self
 

@@ -50,11 +50,11 @@
 #include "hbver.ch"
 #include "directry.ch"
 
-#define _HB_I18N_MERGE  1
-#define _HB_I18N_GENHBL 2
-#define _HB_I18N_TRANS  3
+#define _HB_I18N_MERGE   1
+#define _HB_I18N_GENHBL  2
+#define _HB_I18N_TRANS   3
 
-#define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x ) )
+#define I_( x )          hb_UTF8ToStr( hb_i18n_gettext( x ) )
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -208,17 +208,15 @@ STATIC PROCEDURE ErrorMsg( cErrorMsg )
 
 STATIC FUNCTION ExpandWildCards( aFiles )
 
-/* do not expand wild cards in environments where SHELL already does it.
- * In *nixes it's possible that file name will contains "*" or "?".
- */
+/* Do not expand wild cards in environments where SHELL already does it.
+   In *nixes it's possible that file name will contains "*" or "?". */
 
 #ifndef __PLATFORM__UNIX
 
    LOCAL cFile, cRealFile
    LOCAL aRealFiles
-   LOCAL lWild
+   LOCAL lWild := .F.
 
-   lWild := .F.
    FOR EACH cFile IN aFiles
       IF "*" $ cFile .OR. "?" $ cFile
          lWild := .T.

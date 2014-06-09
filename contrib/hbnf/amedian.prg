@@ -19,7 +19,7 @@
 
 FUNCTION ft_AMedian( aArray, nStart, nEnd )
 
-   LOCAL nTemplen, aTemparray, nMiddle1, nMiddle2, nMedian
+   LOCAL nTemplen, aTemparray
 
    __defaultNIL( @nStart, 1 )
    __defaultNIL( @nEnd, Len( aArray ) )
@@ -31,19 +31,14 @@ FUNCTION ft_AMedian( aArray, nStart, nEnd )
    // Length of aTemparray
    nTemplen := ( nEnd - nStart ) + 1
 
-   // Initialize aTemparray
-   aTemparray := ACopy( aArray, Array( nTemplen ), nStart, nTemplen )
-
-   // Sort aTemparray
-   aTemparray := ASort( aTemparray )
+   // Initialize and sort aTemparray
+   aTemparray := ASort( ACopy( aArray, Array( nTemplen ), nStart, nTemplen ) )
 
    // Determine middle value(s)
-   IF ( nTemplen % 2 ) == 0
-      nMiddle1 := aTemparray[ nTemplen / 2 ]
-      nMiddle2 := aTemparray[ Int( nTemplen / 2 ) + 1 ]
-      nMedian :=  Int( ( nMIddle1 + nMiddle2 ) / 2 )
-   ELSE
-      nMedian := aTemparray[ Int( nTemplen / 2 ) + 1 ]
+   IF nTemplen % 2 == 0
+      RETURN Int( ( ;
+         aTemparray[ nTemplen / 2 ] + ;
+         aTemparray[ Int( nTemplen / 2 ) + 1 ] ) / 2 )
    ENDIF
 
-   RETURN nMedian
+   RETURN aTemparray[ Int( nTemplen / 2 ) + 1 ]

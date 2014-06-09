@@ -54,17 +54,10 @@
          This is to keep things simple. [vszakats] */
 
 #if defined( __HARBOUR__ )
-
    #include "hbundoc.api"
-
-   #define RT_FUNDEF( funcname )            HB_FUNC( funcname )
-
+   #define RT_FUNDEF( funcname )  HB_FUNC( funcname )
 #elif defined( __XPP__ )
-
-   #define RT_FUNDEF( funcname )            XPPRET XPPENTRY funcname ( XppParamList paramList )
-
-#else /* __CLIPPER__ */
-
-   #define RT_FUNDEF( funcname )            CLIPPER funcname ( void )
-
+   #define RT_FUNDEF( funcname )  XPPRET XPPENTRY funcname ( XppParamList paramList )
+#else  /* __CLIPPER__ */
+   #define RT_FUNDEF( funcname )  CLIPPER funcname ( void )
 #endif

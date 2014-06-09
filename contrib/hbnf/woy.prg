@@ -18,35 +18,32 @@
 
 FUNCTION ft_WoY( dInDate )
 
-   LOCAL nFirstDays, nDayOffset, nWkNumber, cCentury
+   LOCAL nDayOffset, nWkNumber, dFDoY
 
    IF HB_ISDATE( dInDate )
 
-      cCentury := Left( DToS( dInDate ), 4 )
-
-      // find number of days in first week of year
-      nFirstDays := 8 - DoW( hb_SToD( cCentury + "0101" ) )
-
-      nWkNumber := 1
+      dFDoY := hb_SToD( Left( DToS( dInDate ), 4 ) + "0101" )
 
       // find how many days after first week till dInDate
-      nDayOffset := ( dInDate - hb_SToD( cCentury + "0101" ) ) - nFirstDays + 1
+      nDayOffset := 1 + ( dInDate - dFDoY ) - ;
+         ( 8 - DoW( dFDoY ) )  // number of days in first week of year
 
       // count weeks in offset period
+      nWkNumber := 1
       DO WHILE nDayOffset > 0
          ++nWkNumber
          nDayOffset -= 7
       ENDDO
-   ELSE
-      nWkNumber := NIL
+
+      RETURN nWkNumber
    ENDIF
 
-   RETURN nWkNumber
+   RETURN NIL
 
 FUNCTION ft_DoY( dInDate )
 
    IF HB_ISDATE( dInDate )
-      RETURN ( dInDate - hb_SToD( Left( DToS( dInDate ), 4 ) + "0101" ) ) + 1
+      RETURN 1 + dInDate - hb_SToD( Left( DToS( dInDate ), 4 ) + "0101" )
    ENDIF
 
    RETURN NIL

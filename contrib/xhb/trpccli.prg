@@ -59,21 +59,16 @@ CREATE CLASS TRPCClient
    VAR nUdpPort
    VAR nTcpPort
 
-   /* asyncrhonous mode */
-   VAR lAsyncMode
-   /* block to be called at scan completion */
-   VAR bOnScanComplete
-   /*block called when there is a progress in the scan */
+   VAR lAsyncMode       // asyncrhonous mode
+   VAR bOnScanComplete  // block to be called at scan completion
+
+   /* block called when there is a progress in the scan */
    VAR bOnScanServersProgress
    VAR bOnScanFunctionsProgress
 
-   /* block to be called at function error */
-   VAR bOnFunctionProgress
-   /* block to be called at function success */
-   VAR bOnFunctionReturn
-   /* block to be called at function failure */
-   VAR bOnFunctionFail
-
+   VAR bOnFunctionProgress  // block to be called at function error
+   VAR bOnFunctionReturn    // block to be called at function success
+   VAR bOnFunctionFail      // block to be called at function failure
 
    METHOD New( cNetwork, nTcpPort, nUdpPort ) CONSTRUCTOR
    METHOD Destroy()
@@ -89,7 +84,7 @@ CREATE CLASS TRPCClient
    METHOD StopScan()
 
    /* Function call */
-   METHOD CheckServer( cRemote )    // Checks if a server is ready on tcp
+   METHOD CheckServer( cRemote )  // Checks if a server is ready on tcp
    METHOD SetLoopMode( nMethod, xData, nEnd, nStep )
    METHOD Call( ... )  // variable parameters
    METHOD CallAgain()            INLINE ::TCPAccept()
@@ -97,7 +92,6 @@ CREATE CLASS TRPCClient
 
    METHOD SetPeriodCallback( ... )
    METHOD ClearPeriodCallback()
-
 
    /* Accessors */
    METHOD SetEncryption( cKey )
@@ -125,7 +119,7 @@ CREATE CLASS TRPCClient
    METHOD GetServerAddress( xId )
 
    HIDDEN:
-   // Automatic initialization of inet support
+   /* Automatic initialization of inet support */
    CLASS VAR lInit INIT hb_inetInit()
 
    VAR mtxBusy INIT hb_mutexCreate()
@@ -195,9 +189,9 @@ ENDCLASS
 
 METHOD New( cNetwork, nTcpPort, nUdpPort ) CLASS TRPCClient
 
-   ::nStatus := RPC_STATUS_NONE // not connected
-   ::nErrorCode := 0 // no RPC error
-   ::cServer := NIL // no server
+   ::nStatus := RPC_STATUS_NONE  // not connected
+   ::nErrorCode := 0             // no RPC error
+   ::cServer := NIL              // no server
 
    ::nUdpPort := hb_defaultValue( nUdpPort, 1139 )
    ::nTcpPort := hb_defaultValue( nTcpPort, 1140 )
@@ -262,12 +256,11 @@ METHOD CheckServer( cRemote ) CLASS TRPCClient
 
    LOCAL cData, skRemote, nLen, cData2
 
-   cData := "XHBR00"
    __defaultNIL( @cRemote, ::cNetwork )
    skRemote := hb_inetConnect( cRemote, ::nTcpPort )
    IF hb_inetErrorCode( skRemote ) == 0
       hb_inetTimeout( skRemote, 10000 )
-      hb_inetSendAll( skRemote, cData )
+      hb_inetSendAll( skRemote, "XHBR00" )
       cData := Space( 256 )
       hb_inetRecvAll( skRemote, @cData, 6 + 9 )
       IF hb_inetErrorCode( skRemote ) == 0
@@ -346,8 +339,8 @@ METHOD UDPAccept() CLASS TRPCClient
 
       IF ::nTimeout >= 0
          nTime := Int( Seconds() * 1000 )
-         // a little tollerance must be added for double roundings
-         // in the double Int() functions
+         /* A little tollerance must be added for double roundings
+            in the double Int() functions */
          IF nTime - ::nUDPTimeBegin >= ::nTimeout - 5
             EXIT
          ENDIF
@@ -373,8 +366,8 @@ METHOD UDPParse( cData, nLen ) CLASS TRPCClient
    ENDIF
 
    SWITCH hb_BLeft( cData, 6 )
-      /* XHRB00 - server scan */
    CASE "XHBR10"
+      /* XHRB00 - server scan */
       cData := hb_BSubStr( cData, 7 )
       cData := hb_Deserialize( cData, 512 )
       // deserialization error checking
@@ -419,7 +412,7 @@ METHOD StopScan() CLASS TRPCClient
 
 METHOD Connect( cServer, cUserId, cPassword ) CLASS TRPCClient
 
-   LOCAL cAuth, cReply := Space( 8 )
+   LOCAL cAuth, cReply
 
    hb_inetConnect( cServer, ::nTcpPort, ::skTcp  )
 
@@ -438,6 +431,7 @@ METHOD Connect( cServer, cUserId, cPassword ) CLASS TRPCClient
          IF ::bEncrypted
             RETURN ::ManageChallenge()
          ELSE
+            cReply := Space( 8 )
             hb_inetRecvAll( ::skTcp, @cReply )
             IF hb_inetErrorCode( ::skTcp ) == 0 .AND. cReply == "XHBR91OK"
                ::nStatus := RPC_STATUS_LOGGED // Logged in
@@ -574,7 +568,6 @@ METHOD Call( ... ) CLASS TRPCClient
 
    LOCAL oCalling
    LOCAL cFunction, aParams
-   LOCAL nCount
 
    IF PCount() == 0
       RETURN NIL
@@ -590,14 +583,10 @@ METHOD Call( ... ) CLASS TRPCClient
    oCalling := hb_PValue( 1 )
    IF HB_ISARRAY( oCalling )
       cFunction := oCalling[ 1 ]
-      hb_ADel( oCalling, 1, .T. )
-      aParams := oCalling
+      aParams := hb_ADel( oCalling, 1, .T. )
    ELSE
       cFunction := oCalling
-      aParams := Array( PCount() - 1 )
-      FOR nCount := 2 TO PCount()
-         aParams[ nCount - 1 ] := hb_PValue( nCount )
-      NEXT
+      aParams := hb_ADel( hb_AParams(), 1, .T. )
    ENDIF
 
    // clear eventual pending data

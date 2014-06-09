@@ -49,8 +49,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
    LOCAL exit_requested, nKey, meth_no
    LOCAL cSaveWin, i, b, column
    LOCAL dim, cType, cVal
-   LOCAL tb_methods := ;
-      { ;
+   LOCAL tb_methods := { ;
       { K_DOWN,       {| b | b:down() } }, ;
       { K_UP,         {| b | b:up() } }, ;
       { K_PGDN,       {| b | b:pagedown() } }, ;
@@ -64,8 +63,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
       { K_CTRL_LEFT,  {| b | b:panleft() } }, ;
       { K_CTRL_RIGHT, {| b | b:panright() } }, ;
       { K_CTRL_HOME,  {| b | b:panhome() } }, ;
-      { K_CTRL_END,   {| b | b:panend() } } ;
-      }
+      { K_CTRL_END,   {| b | b:panend() } } }
 
    cSaveWin := SaveScreen( nTop, nLeft, nBot, nRight )
    hb_DispBox( nTop, nLeft, nBot, nRight, HB_B_SINGLE_UNI )

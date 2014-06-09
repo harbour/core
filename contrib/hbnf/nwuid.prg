@@ -38,8 +38,7 @@ FUNCTION ft_NWUID( nConn )
    ENDIF
 
    // Set up request packet
-   cReqPkt := hb_BChar( 22 )          // Get Connection Information
-   cReqPkt += hb_BChar( nConn )
+   cReqPkt := hb_BChar( 22 ) + hb_BChar( nConn )  // Get Connection Information
    cReqPkt := I2Bin( hb_BLen( cReqPkt ) ) + cReqPkt
 
    // Set up reply packet

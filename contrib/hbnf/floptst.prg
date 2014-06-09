@@ -50,8 +50,8 @@
 
 #define ERR_WRONG_PARAMETERS  -1
 #define ERR_NO_ERROR          0
-#define ERR_DRIVE_NOT_READY   1 /* unused */
-#define ERR_UNFORMATTED       2 /* unused */
+#define ERR_DRIVE_NOT_READY   1  /* unused */
+#define ERR_UNFORMATTED       2  /* unused */
 #define ERR_WRITE_PROTECTED   3
 
 /* NOTE: Harbour port accepts a path as a string for checking

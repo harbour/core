@@ -15,13 +15,13 @@
  *
  */
 
-/* NOTE: Harbour will accept a second parameter, like Inkey() */
+/* NOTE: Harbour accepts a second parameter, like Inkey() */
 FUNCTION ft_SInkey( ... )
 
    LOCAL nKey, cBlock
 
    IF ( cBlock := SetKey( nKey := Inkey( ... ) ) ) != NIL
-      /* run the code block associated with this key and pass it the
+      /* Run the codeblock associated with this key and pass it the
          name of the previous procedure and the previous line number */
       Eval( cBlock, ProcName( 1 ), ProcLine( 1 ), NIL )
    ENDIF

@@ -68,7 +68,7 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
    /* restore previous message and wrap settings */
    Set( _SET_MESSAGE, lOldmessrow )
    Set( _SET_MCENTER, lOldcenter )
-   Set( _SET_WRAP,    lOldwrap )
+   Set( _SET_WRAP, lOldwrap )
    SetColor( cOldcolor )
 
    RETURN

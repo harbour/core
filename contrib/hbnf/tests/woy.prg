@@ -5,6 +5,8 @@ PROCEDURE Main()
    LOCAL dDate
    LOCAL GetList := {}
 
+   CLS
+
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    DO WHILE .T.
@@ -20,8 +22,8 @@ PROCEDURE Main()
       ENDIF
 
       @ 4, 10 SAY "Is Day Number " + hb_ntos( ft_DoY( dDate ) )
-      @ 6, 10 SAY "Is in Week Number " + hb_ntos( ft_WoY( dDate ) )
-      @ 7, 0
+      @ 5, 10 SAY "Is in Week Number " + hb_ntos( ft_WoY( dDate ) )
+      @ 6, 0
 
       WAIT
 

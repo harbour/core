@@ -692,7 +692,7 @@ STATIC FUNCTION TopoSort( aEdgeList )
       FOR EACH tmp IN aEdgeList
          IF tmp[ 1 ] == n
             m := tmp[ 2 ]
-            tmp[ 1 ] := tmp[ 2 ] := NIL /* set to invalid value. TOOPT: Delete this member from list */
+            tmp[ 1 ] := tmp[ 2 ] := NIL  /* set to invalid value. TOOPT: Delete this member from list */
             IF AScan( aEdgeList, {| tmp | tmp[ 2 ] == m } ) == 0
                hTopNodes[ m ] := NIL
             ENDIF
@@ -738,7 +738,6 @@ STATIC FUNCTION AddProject( hProjectList, cFileName )
             RETURN .T.
          ENDIF
       ENDIF
-
    ENDIF
 
    RETURN .F.
