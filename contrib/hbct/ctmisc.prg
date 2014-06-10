@@ -84,8 +84,8 @@ FUNCTION CSetCurs( l )
 FUNCTION CSetKey( n )
    RETURN SetKey( n )
 
-FUNCTION CSetCent( nCentury )
-   RETURN __SetCentury( nCentury )
+FUNCTION CSetCent( l )
+   RETURN __SetCentury( l )
 
 FUNCTION LToC( l )
    RETURN iif( hb_defaultValue( l, .F. ), "T", "F" )

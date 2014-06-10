@@ -140,10 +140,10 @@ METHOD RecvTo( cDelim, nMaxlen ) CLASS win_Com
             EXIT
          ELSE
             cRecv += cString
-            IF cDelim != NIL .AND. cString == cDelim
+            IF HB_ISSTRING( cDelim ) .AND. cString == cDelim
                EXIT
             ENDIF
-            IF Len( cRecv ) == nMaxlen
+            IF hb_BLen( cRecv ) == nMaxlen
                EXIT
             ENDIF
          ENDIF
@@ -226,7 +226,7 @@ METHOD ErrorText() CLASS win_Com
 
    /* WinPortError clears the error - don't call it twice */
    cMsg := Space( 256 )
-   wapi_FormatMessage( NIL, NIL, nError := win_comError( ::nPort ), NIL, @cMsg )
+   wapi_FormatMessage(,, nError := win_comError( ::nPort ),, @cMsg )
 
    RETURN cString + "error (" + hb_ntos( nError ) + ") : " + cMsg
 

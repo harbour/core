@@ -65,7 +65,6 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
    LOCAL cExt
 
    // CA-Cl*pper would fail on this case.
-
    IF ! HB_ISSTRING( cFileMask )
       RETURN 0
    ENDIF
@@ -79,12 +78,6 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
    ENDIF
 
    //
-
-   IF HB_ISARRAY( aAttr )
-      aDir := Directory( cFileMask, "HSD" )
-   ELSE
-      aDir := Directory( cFileMask )
-   ENDIF
 
    IF HB_ISARRAY( aName )
       nNameLen := Len( aName )
@@ -104,6 +97,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    //
 
+   aDir := Directory( cFileMask, iif( HB_ISARRAY( aAttr ), "HSD", ) )
    nDirLen := Len( aDir )
 
    FOR nDirPos := 1 TO nDirLen
@@ -125,7 +119,6 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
       IF nAttrLen != NIL .AND. nAttrLen >= nDirPos
          aAttr[ nDirPos ] := aFileInfo[ F_ATTR ]
       ENDIF
-
    NEXT
 
    RETURN nDirLen

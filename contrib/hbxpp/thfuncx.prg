@@ -61,7 +61,7 @@ FUNCTION ThreadObject( oThread )
 
 FUNCTION ThreadWait( aThreads, nTimeOut )
 
-   LOCAL xResult, nPos, th
+   LOCAL nPos, th
    LOCAL apThIDs := {}
 
    FOR EACH th IN aThreads
@@ -75,10 +75,10 @@ FUNCTION ThreadWait( aThreads, nTimeOut )
    nPos := hb_threadWait( apThIDs, iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
       nTimeOut / 100, ) )
    IF nPos != 0
-      xResult := aThreads[ nPos ]
+      RETURN aThreads[ nPos ]
    ENDIF
 
-   RETURN xResult
+   RETURN NIL
 
 FUNCTION ThreadWaitAll( aThreads, nTimeOut )
 

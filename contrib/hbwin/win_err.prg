@@ -103,12 +103,10 @@ PROCEDURE Main( cInputFile )
 
          IF Empty( hWas )
             ? "No error definitions found in input file"
+         ELSEIF hb_MemoWrit( __FILE__, cOutput )
+            ? "Saved OK:", __FILE__
          ELSE
-            IF hb_MemoWrit( __FILE__, cOutput )
-               ? "Saved OK:", __FILE__
-            ELSE
-               ? "Save error:", __FILE__
-            ENDIF
+            ? "Save error:", __FILE__
          ENDIF
       ENDIF
    ENDIF
