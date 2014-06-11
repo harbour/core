@@ -7,15 +7,6 @@
  *
  */
 
-/* TOFIX:
-   ---
-   #include "inkey.ch"
-   CLS
-   hb_keyPut( { K_DOWN, K_UP } ) // bogus '2' appears out of the area here.
-   AChoice( 0, 0, 0, 0, { "1", "2" } )
-   ---
- */
-
 #pragma -gc0
 
 #include "achoice.ch"
@@ -23,8 +14,8 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#define INRANGE( xLo, xVal, xHi )   ( xVal >= xLo .AND. xVal <= xHi )
-#define BETWEEN( xLo, xVal, xHi )   Min( Max( xLo, xVal ), xHi )
+#define INRANGE( xLo, xVal, xHi )  ( xVal >= xLo .AND. xVal <= xHi )
+#define BETWEEN( xLo, xVal, xHi )  Min( Max( xLo, xVal ), xHi )
 
 /* NOTE: Extension: Harbour supports codeblocks and function pointers
          as the xSelect parameter (both when supplied as is, or as an
@@ -32,21 +23,21 @@
 
 FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPos, nHiLiteRow )
 
-   LOCAL nNumCols                          // Number of columns in the window
-   LOCAL nNumRows                          // Number of rows in the window
-   LOCAL nRowsClr                          // Number of rows to clear
-   LOCAL alSelect                          // Select permission
-   LOCAL nNewPos   := 0                    // The next item to be selected
-   LOCAL lFinished                         // Is processing finished?
-   LOCAL nKey      := 0                    // The keystroke to be processed
-   LOCAL nMode                             // The current operating mode
-   LOCAL nAtTop                            // The number of the item at the top
-   LOCAL nItems    := 0                    // The number of items
-   LOCAL nGap                              // The number of lines between top and current lines
+   LOCAL nNumCols           // Number of columns in the window
+   LOCAL nNumRows           // Number of rows in the window
+   LOCAL nRowsClr           // Number of rows to clear
+   LOCAL alSelect           // Select permission
+   LOCAL nNewPos   := 0     // The next item to be selected
+   LOCAL lFinished          // Is processing finished?
+   LOCAL nKey      := 0     // The keystroke to be processed
+   LOCAL nMode              // The current operating mode
+   LOCAL nAtTop             // The number of the item at the top
+   LOCAL nItems    := 0     // The number of items
+   LOCAL nGap               // The number of lines between top and current lines
 
    // Block used to search for items
-   LOCAL lUserFunc                         // Is a user function to be used?
-   LOCAL nUserFunc                         // Return value from user function
+   LOCAL lUserFunc          // Is a user function to be used?
+   LOCAL nUserFunc          // Return value from user function
    LOCAL nSaveCsr
    LOCAL nFrstItem := 0
    LOCAL nLastItem := 0
@@ -99,7 +90,6 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    nNumCols := nRight - nLeft + 1
    nNumRows := nBottom - nTop + 1
 
-
    IF HB_ISARRAY( xSelect )
       alSelect := xSelect
    ELSE
@@ -107,9 +97,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       AFill( alSelect, xSelect )
    ENDIF
 
-
-   nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, alSelect, acItems )
-   IF nMode == AC_NOITEM
+   IF ( nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, alSelect, acItems ) ) == AC_NOITEM
       nPos := 0
    ENDIF
 
@@ -128,7 +116,6 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    ENDIF
 
    DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, nItems )
-
 
    lFinished := ( nMode == AC_NOITEM )
    IF lFinished .AND. lUserFunc
@@ -151,9 +138,8 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          ENDIF
 
          nRowsClr := Min( nNumRows, nItems )
-         nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, alSelect, acItems )
 
-         IF nMode == AC_NOITEM
+         IF ( nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, alSelect, acItems ) ) == AC_NOITEM
             nPos := 0
             nAtTop := Max( 1, nPos - nNumRows + 1 )
          ELSE
@@ -229,7 +215,9 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                nAtTop := nNewPos
                nPos   := Max( nPos, nAtTop + nNumRows - 1 )
                DO WHILE nPos > nNewPos
-                  DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, Ach_Select( alSelect, nPos ), .F., nNumCols )
+                  IF nTop + nPos - nAtTop <= nBottom
+                     DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, Ach_Select( alSelect, nPos ), .F., nNumCols )
+                  ENDIF
                   nPos--
                ENDDO
                DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, Ach_Select( alSelect, nPos ), .T., nNumCols )
@@ -536,13 +524,13 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
             IF nPos > 0 .AND. nMode != AC_EXCEPT
 
-               // TOVERIFY: Disabled nRowsClr DispPage().
-               // Please verify it, I do not know why it was added but
-               // it breaks code which adds dynamically new acItems positions
-               // nRowsClr := Min( nNumRows, nItems )
-               nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, alSelect, acItems )
-
-               IF nMode == AC_NOITEM
+#if 0
+               /* TOVERIFY: Disabled nRowsClr DispPage().
+                  Please verify it, I do not know why it was added but
+                  it breaks code which adds dynamically new acItems positions */
+               nRowsClr := Min( nNumRows, nItems )
+#endif
+               IF ( nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, alSelect, acItems ) ) == AC_NOITEM
                   nPos := 0
                   nAtTop := Max( 1, nPos - nNumRows + 1 )
                ELSE
@@ -595,8 +583,8 @@ STATIC FUNCTION HitTest( nTop, nLeft, nBottom, nRight, mRow, mCol )
 STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nArrLen, nRowsClr )
 
    LOCAL nCntr
-   LOCAL nRow                              // Screen row
-   LOCAL nIndex                            // Array index
+   LOCAL nRow       // Screen row
+   LOCAL nIndex     // Array index
 
    hb_default( @nRowsClr, nNumRows )
 
@@ -633,7 +621,7 @@ STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
 
    RETURN
 
-STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, alSelect, acItems )
+STATIC FUNCTION Ach_Limits( /* @ */ nFrstItem, /* @ */ nLastItem, /* @ */ nItems, alSelect, acItems )
 
    LOCAL nCntr
 
