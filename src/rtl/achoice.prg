@@ -433,7 +433,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, .T., .F., nNumCols )
          ENDIF
 
-         nMode     := AC_HITTOP  /* !! -> AC_IDLE */
+         nMode     := AC_IDLE
          lFinished := .T.
 
       CASE nKey == K_RIGHT .AND. ! lUserFunc
@@ -525,7 +525,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                EXIT
             CASE AC_CONT
                // Do nothing
-               nMode := AC_HITBOTTOM  /* !! -> AC_IDLE */
+               nMode := AC_IDLE
                EXIT
             CASE AC_GOTO
                // Do nothing. The next keystroke won't be read and
