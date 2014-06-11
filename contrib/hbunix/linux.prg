@@ -94,6 +94,7 @@ FUNCTION linux_MoveToTrash( cFileName )
 
       IF ! hb_DirExists( t_cTrashDirInfo ) .AND. ;
          ! hb_DirExists( t_cTrashDirFiles )
+         /* TODO: create dirs if missing */
          RETURN -3
       ENDIF
 

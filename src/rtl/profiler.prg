@@ -472,8 +472,16 @@ METHOD writeLines( aLines ) CLASS HBProfileReport
 
 METHOD header() CLASS HBProfileReport
    RETURN { ;
-      "Name                                Type       Calls    Ticks       Seconds", ;
-      "=================================== ========== ======== =========== ===========" }
+      PadR( "Name",    35 ) + " " + ;
+      PadR( "Type",     8 ) + " " + ;
+      PadR( "Calls",   10 ) + " " + ;
+      PadR( "Ticks",   11 ) + " " + ;
+      PadR( "Seconds", 11 ), ;
+      Replicate( "=", 35 ) + " " + ;
+      Replicate( "=",  8 ) + " " + ;
+      Replicate( "=", 10 ) + " " + ;
+      Replicate( "=", 11 ) + " " + ;
+      Replicate( "=", 11 ) }
 
 METHOD emitHeader() CLASS HBProfileReport
 

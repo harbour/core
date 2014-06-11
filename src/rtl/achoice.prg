@@ -136,7 +136,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    ENDIF
    DO WHILE ! lFinished
 
-      IF nMode != AC_GOTO .AND. nMode != AC_NOITEM
+      IF nMode != AC_EXCEPT .AND. nMode != AC_NOITEM
          nKey  := Inkey( 0 )
          nMode := AC_IDLE
       ENDIF
@@ -184,7 +184,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, .T., .F., nNumCols )
          ENDIF
 
-         nMode     := AC_ABORT
+         nMode     := AC_IDLE
          nPos      := 0
          lFinished := .T.
 
@@ -433,7 +433,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, .T., .F., nNumCols )
          ENDIF
 
-         nMode     := AC_SELECT
+         nMode     := AC_HITTOP  /* !! -> AC_IDLE */
          lFinished := .T.
 
       CASE nKey == K_RIGHT .AND. ! lUserFunc
@@ -454,7 +454,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nPos      := 0
          lFinished := .T.
 
-      CASE ( ! lUserFunc .OR. nMode == AC_GOTO ) .AND. ;
+      CASE ( ! lUserFunc .OR. nMode == AC_EXCEPT ) .AND. ;
            ! ( cKey := Upper( hb_keyChar( nKey ) ) ) == ""
 
          // Find next selectable item
@@ -487,7 +487,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
          nMode := AC_IDLE
 
-      CASE nMode == AC_GOTO
+      CASE nMode == AC_EXCEPT
 
          // Garbage collect gotos which aren't valid ASCII characters
          nMode := AC_IDLE
@@ -506,32 +506,35 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
       IF lUserFunc
 
-         nUserFunc := Do( xUserFunc, nMode, nPos, nPos - nAtTop )
+         IF HB_ISNUMERIC( nUserFunc := Do( xUserFunc, nMode, nPos, nPos - nAtTop ) )
 
-         IF HB_ISNUMERIC( nUserFunc )
-
-            DO CASE
-            CASE nUserFunc == AC_ABORT .OR. nMode == AC_NOITEM
+            SWITCH nUserFunc
+            CASE AC_ABORT
+            CASE AC_REDRAW  /* QUESTION: Is this correct? */
                IF nPos != 0
                   DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, .T., .F., nNumCols )
                ENDIF
                lFinished := .T.
                nPos      := 0
-            CASE nUserFunc == AC_SELECT
+               EXIT
+            CASE AC_SELECT
                IF nPos != 0
                   DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, .T., .F., nNumCols )
                ENDIF
                lFinished := .T.
-            CASE nUserFunc == AC_CONT .OR. nUserFunc == AC_REDRAW
+               EXIT
+            CASE AC_CONT
                // Do nothing
-               nMode := AC_CONT
-            CASE nUserFunc == AC_GOTO
+               nMode := AC_HITBOTTOM  /* !! -> AC_IDLE */
+               EXIT
+            CASE AC_GOTO
                // Do nothing. The next keystroke won't be read and
                // this keystroke will be processed as a goto.
-               nMode := AC_GOTO
-            ENDCASE
+               nMode := AC_EXCEPT
+               EXIT
+            ENDSWITCH
 
-            IF nPos > 0 .AND. nMode != AC_GOTO
+            IF nPos > 0 .AND. nMode != AC_EXCEPT
 
                // TOVERIFY: Disabled nRowsClr DispPage().
                // Please verify it, I do not know why it was added but
@@ -632,7 +635,6 @@ STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
 
 STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, alSelect, acItems )
 
-   LOCAL nMode
    LOCAL nCntr
 
    nFrstItem := nLastItem := nItems := 0
@@ -653,13 +655,11 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, alSelect, acItems )
    NEXT
 
    IF nFrstItem == 0
-      nMode     := AC_NOITEM
       nLastItem := nItems
-   ELSE
-      nMode     := AC_IDLE
+      RETURN AC_NOITEM
    ENDIF
 
-   RETURN nMode
+   RETURN AC_IDLE
 
 STATIC FUNCTION Ach_Select( alSelect, nPos )
 
@@ -667,11 +667,12 @@ STATIC FUNCTION Ach_Select( alSelect, nPos )
 
    IF nPos >= 1 .AND. nPos <= Len( alSelect )
       sel := alSelect[ nPos ]
-      IF HB_ISEVALITEM( sel )
+      DO CASE
+      CASE HB_ISEVALITEM( sel )
          sel := Eval( sel )
-      ELSEIF HB_ISSTRING( sel ) .AND. ! Empty( sel )
+      CASE HB_ISSTRING( sel ) .AND. ! Empty( sel )
          sel := Eval( hb_macroBlock( sel ) )
-      ENDIF
+      ENDCASE
       IF HB_ISLOGICAL( sel )
          RETURN sel
       ENDIF
