@@ -7,10 +7,9 @@
  *
  */
 
-/*
- * Menu Navigation - <Right> and <Left> arrow keys, <Esc> to exit
- * After some <Right> or <Left> arrow preses
- */
+/* Menu Navigation - <Right> and <Left> arrow keys, <Esc> to exit
+   After some <Right> or <Left> arrow preses */
+
 #include "inkey.ch"
 #include "achoice.ch"
 
@@ -81,13 +80,10 @@ PROCEDURE Main()
 // Test for current and previous items
 // highliting-dehighliting algoritm
 
-FUNCTION cUF( nMode, nCurElement, nRowPos )  /* must be a public function */
+FUNCTION cUF( nMode )  /* must be a public function */
 
    LOCAL nRetVal := AC_CONT
    LOCAL nKey := LastKey()
-
-   HB_SYMBOL_UNUSED( nCurElement )
-   HB_SYMBOL_UNUSED( nRowPos )
 
    IF p_lHiLiTest
       DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "#", 9 ), "GR+/G" )
@@ -109,13 +105,10 @@ FUNCTION cUF( nMode, nCurElement, nRowPos )  /* must be a public function */
 // test for AC_NOITEM mode
 // Clipper in AC_NOITEM mode do not call User Function
 
-FUNCTION cUF2( nMode, nCurElement, nRowPos )  /* must be a public function */
+FUNCTION cUF2( nMode )  /* must be a public function */
 
    LOCAL nRetVal := AC_CONT
    LOCAL nKey := LastKey()
-
-   HB_SYMBOL_UNUSED( nCurElement )
-   HB_SYMBOL_UNUSED( nRowPos )
 
    DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "!", 9 ), "GR+/G" )
 
