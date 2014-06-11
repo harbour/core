@@ -223,8 +223,6 @@ METHOD SetSize( x, y, h, w ) CLASS TJSWindow
 /* Open the window from within the current document */
 METHOD Put() CLASS TJSWindow
 
-   LOCAL cStr := ""
-
    IF ::nH == NIL
       ::nH := HtmlPageHandle()
       IF ::nH == NIL
@@ -239,12 +237,11 @@ METHOD Put() CLASS TJSWindow
 
    hb_default( @::name, "newWin" )
 
-   cStr += ::varName + " = window.open('" + ;
+   HtmlJSCmd( ::nH, ;
+      ::varName + " = window.open('" + ;
       ::URL + "', '" + ;
       ::varName + "', '" + ;
-      ::features + "')"
-
-   HtmlJSCmd( ::nH, cStr )
+      ::features + "')" )
 
    RETURN Self
 

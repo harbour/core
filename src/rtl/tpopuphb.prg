@@ -60,8 +60,8 @@ CREATE CLASS hb_PopupMenu INHERIT HBPopupMenu
    METHOD shadowed( lShadowed ) SETGET
 
    METHOD setCoors( nRow, nCol, lTop )
-   METHOD isShortCut( nKey, nID )
-   METHOD isQuick( nKey, nID )
+   METHOD isShortCut( nKey, /* @ */ nID )
+   METHOD isQuick( nKey, /* @ */ nID )
 
 ENDCLASS
 
@@ -123,7 +123,7 @@ METHOD setCoors( nRow, nCol, lTop ) CLASS hb_PopupMenu
 
    RETURN Self
 
-METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
+METHOD isShortCut( nKey, /* @ */ nID ) CLASS hb_PopupMenu
 
    LOCAL nItem
    LOCAL nTotal
@@ -168,7 +168,7 @@ METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
 
    RETURN .F.
 
-METHOD isQuick( nKey, nID ) CLASS hb_PopupMenu
+METHOD isQuick( nKey, /* @ */ nID ) CLASS hb_PopupMenu
 
    LOCAL nShortCut
    LOCAL oItem

@@ -51,7 +51,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 
-#define _DIR_HEADER             1
+#define _DIR_HEADER  1
 
 PROCEDURE __Dir( cFileMask )
 
@@ -89,6 +89,12 @@ PROCEDURE __Dir( cFileMask )
 
    RETURN
 
+#define _DBF_HEAD_MARK   hb_BChar( 0x03 ) + hb_BChar( 0x06 ) + ;
+                         hb_BChar( 0x30 ) + hb_BChar( 0x31 ) + ;
+                         hb_BChar( 0x83 ) + hb_BChar( 0x86 ) + ;
+                         hb_BChar( 0xE5 ) + hb_BChar( 0xE6 ) + ;
+                         hb_BChar( 0xF5 ) + hb_BChar( 0xF6 )
+
 STATIC PROCEDURE PutDBF( aDirEntry )
 
    LOCAL fhnd
@@ -100,20 +106,16 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
       buffer := hb_FReadLen( fhnd, 8 )
 
-      IF hb_BLen( buffer ) == 8 .AND. ;
-         AScan( { 0x03, 0x06, 0x30, 0x31, 0x83, 0x86, 0xE5, 0xE6, 0xF5, 0xF6 }, ;
-         hb_BCode( buffer ) ) != 0
+      IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BCode( buffer ), _DBF_HEAD_MARK ) > 0
 
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
          dLastUpdate := hb_SToD( ;
             StrZero( hb_BPeek( buffer, 2 ) + 1900, 4 ) + ;
             StrZero( hb_BPeek( buffer, 3 ), 2 ) + ;
             StrZero( hb_BPeek( buffer, 4 ), 2 ) )
-
       ENDIF
 
       FClose( fhnd )
-
    ENDIF
 
    QOut( ;

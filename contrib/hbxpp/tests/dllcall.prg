@@ -37,8 +37,8 @@
 
 #define SPI_SETDRAGFULLWINDOWS      37
 
-#define CSIDL_APPDATA               0x001a /* <username>\Application Data */
-#define CSIDL_ADMINTOOLS            0x0030 /* <username>\Start Menu\Programs\Administrative Tools */
+#define CSIDL_APPDATA               0x001a  /* <username>\Application Data */
+#define CSIDL_ADMINTOOLS            0x0030  /* <username>\Start Menu\Programs\Administrative Tools */
 
 PROCEDURE Main()
 
@@ -71,7 +71,7 @@ PROCEDURE Main()
 
    ? "MsgBox:", DllCall( "user32.dll", DLL_OSAPI, "MessageBoxA", 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OKCANCEL, MB_ICONEXCLAMATION, MB_HELP ) )
 
-   /* Force Windows not to show dragged windows contents */
+   /* Force Windows not to show dragged windows' contents */
 
    ? "Full content drag: OFF"
    ? DllCall( "user32.dll", DLL_OSAPI, "SystemParametersInfoA", SPI_SETDRAGFULLWINDOWS, 0, 0, 0 )

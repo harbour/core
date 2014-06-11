@@ -374,29 +374,33 @@ METHOD hitTest( nMRow, nMCol ) CLASS PopupMenu
 
    DO CASE
    CASE nMRow == ::nTop
-      IF nMCol == ::nLeft
+      DO CASE
+      CASE nMCol == ::nLeft
          RETURN HTTOPLEFT
-      ELSEIF nMCol == ::nRight
+      CASE nMCol == ::nRight
          RETURN HTTOPRIGHT
-      ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
+      CASE nMCol >= ::nLeft .AND. nMCol <= ::nRight
          RETURN HTTOP
-      ENDIF
+      ENDCASE
    CASE nMRow == ::nBottom
-      IF nMCol == ::nLeft
+      DO CASE
+      CASE nMCol == ::nLeft
          RETURN HTBOTTOMLEFT
-      ELSEIF nMCol == ::nRight
+      CASE nMCol == ::nRight
          RETURN HTBOTTOMRIGHT
-      ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
+      CASE nMCol >= ::nLeft .AND. nMCol <= ::nRight
          RETURN HTBOTTOM
-      ENDIF
+      ENDCASE
    CASE nMCol == ::nLeft
-      IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
+      IF nMRow >= ::nTop .AND. ;
+         nMRow <= ::nBottom
          RETURN HTLEFT
       ELSE
          RETURN HTNOWHERE
       ENDIF
    CASE nMCol == ::nRight
-      IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
+      IF nMRow >= ::nTop .AND. ;
+         nMRow <= ::nBottom
          RETURN HTRIGHT
       ELSE
          RETURN HTNOWHERE

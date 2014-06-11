@@ -65,19 +65,11 @@ FUNCTION hb_cdpTerm()
    cCP := __CPUnixToCPStd( cCP )
 #elif defined( __PLATFORM__DOS )
    /* TODO */
-   cCP := NIL
-   cLang := NIL
 #elif defined( __PLATFORM__OS2 )
    /* TODO */
-   cCP := NIL
-   cLang := NIL
 #endif
 
-   IF Empty( cCP := __CPStdToHb( cCP, cLang ) )
-      RETURN NIL
-   ENDIF
-
-   RETURN cCP
+   RETURN __CPStdToHb( cCP, cLang )
 
 FUNCTION hb_cdpOS()
 
@@ -96,19 +88,11 @@ FUNCTION hb_cdpOS()
    cCP := __CPUnixToCPStd( cCP )
 #elif defined( __PLATFORM__DOS )
    /* TODO */
-   cCP := NIL
-   cLang := NIL
 #elif defined( __PLATFORM__OS2 )
    /* TODO */
-   cCP := NIL
-   cLang := NIL
 #endif
 
-   IF Empty( cCP := __CPStdToHb( cCP, cLang ) )
-      RETURN NIL
-   ENDIF
-
-   RETURN cCP
+   RETURN __CPStdToHb( cCP, cLang )
 
 #if defined( __PLATFORM__WINDOWS )
 STATIC FUNCTION __CPWinToCPStd( nCPWin )
@@ -143,7 +127,7 @@ STATIC FUNCTION __CPWinToCPStd( nCPWin )
       ENDSWITCH
    ENDIF
 
-   RETURN ""
+   RETURN NIL
 
 #elif defined( __PLATFORM__UNIX )
 
@@ -209,7 +193,7 @@ STATIC FUNCTION __CPUnixToCPStd( cCPUnix )
       ENDSWITCH
    ENDIF
 
-   RETURN ""
+   RETURN NIL
 #endif
 
 STATIC FUNCTION __CPStdToHb( cCPStd, cCtryStd )
@@ -218,32 +202,33 @@ STATIC FUNCTION __CPStdToHb( cCPStd, cCtryStd )
    LOCAL cCtryHb
    LOCAL cdp
 
-   IF ! Empty( cCPStd )
-      IF Lower( cCPStd ) == "utf8"
-         cCP := "UTF8"
-      ELSEIF Lower( cCPStd ) == "utf16"
-         cCP := "UTF16LE"
-      ELSE
-         IF ! Empty( cCtryHb := __LangStdToCPCtryHb( cCtryStd ) )
-            FOR EACH cdp IN hb_cdpList()
-               IF Left( cdp, 2 ) == cCtryHb
-                  IF Lower( cCPStd ) == hb_cdpUniID( cdp )
-                     cCP := cdp
-                     EXIT
-                  ENDIF
-               ENDIF
-            NEXT
-         ENDIF
-         IF Empty( cCP )
-            FOR EACH cdp IN hb_cdpList()
+   DO CASE
+   CASE cCPStd == NIL
+      /* do nothing */
+   CASE Lower( cCPStd ) == "utf8"
+      cCP := "UTF8"
+   CASE Lower( cCPStd ) == "utf16"
+      cCP := "UTF16LE"
+   OTHERWISE
+      IF ! Empty( cCtryHb := __LangStdToCPCtryHb( cCtryStd ) )
+         FOR EACH cdp IN hb_cdpList()
+            IF Left( cdp, 2 ) == cCtryHb
                IF Lower( cCPStd ) == hb_cdpUniID( cdp )
                   cCP := cdp
                   EXIT
                ENDIF
-            NEXT
-         ENDIF
+            ENDIF
+         NEXT
       ENDIF
-   ENDIF
+      IF cCP == NIL
+         FOR EACH cdp IN hb_cdpList()
+            IF Lower( cCPStd ) == hb_cdpUniID( cdp )
+               cCP := cdp
+               EXIT
+            ENDIF
+         NEXT
+      ENDIF
+   ENDCASE
 
    RETURN cCP
 

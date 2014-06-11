@@ -173,17 +173,14 @@ FUNCTION SetCorruptFunc( bFunc )
    RETURN s_bFixCorrupt
 
 FUNCTION SetErrorFooter()
-
    RETURN s_cErrFooter
 
 #if 0
 
 STATIC FUNCTION ErrorMessage( e )
 
-   LOCAL cMessage
-
    // start error message
-   cMessage := iif( e:severity > ES_WARNING, "Error ", "Warning " )
+   LOCAL cMessage := iif( e:severity > ES_WARNING, "Error ", "Warning " )
 
    // add subsystem name if available
    cMessage += hb_defaultValue( e:subsystem, "???" )
@@ -201,13 +198,12 @@ STATIC FUNCTION ErrorMessage( e )
    ENDIF
 
    // add either filename or operation
-   IF ! Empty( e:filename )
+   DO CASE
+   CASE ! Empty( e:filename )
       cMessage += ": " + e:filename
-
-   ELSEIF ! Empty( e:operation )
+   CASE ! Empty( e:operation )
       cMessage += ": " + e:operation
-
-   ENDIF
+   ENDCASE
    cMessage += hb_eol()
 
    RETURN cMessage

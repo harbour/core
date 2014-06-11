@@ -188,12 +188,13 @@ METHOD DeleteAt( n ) CLASS Array
 
 METHOD InsertAt( n, x ) CLASS Array
 
-   IF n > Len( Self )
+   DO CASE
+   CASE n > Len( Self )
       ASize( Self, n )
       Self[ n ] := x
-   ELSEIF n > 0
+   CASE n > 0
       hb_AIns( Self, n, x, .T. )
-   ENDIF
+   ENDCASE
 
    RETURN Self
 
@@ -315,7 +316,7 @@ METHOD AsExpStr() CLASS TimeStamp
    RETURN 'hb_SToT("' + ::AsString() + '")'
 
 METHOD Date() CLASS TimeStamp
-   RETURN hb_TToC( Self, NIL, "" )
+   RETURN hb_TToC( Self,, "" )
 
 METHOD Time() CLASS TimeStamp
    RETURN hb_TToC( Self, "", "HH:MM:SS" )
