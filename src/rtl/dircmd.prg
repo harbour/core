@@ -89,11 +89,11 @@ PROCEDURE __Dir( cFileMask )
 
    RETURN
 
-#define _DBF_HEAD_MARK   hb_BChar( 0x03 ) + hb_BChar( 0x06 ) + ;
-                         hb_BChar( 0x30 ) + hb_BChar( 0x31 ) + ;
-                         hb_BChar( 0x83 ) + hb_BChar( 0x86 ) + ;
-                         hb_BChar( 0xE5 ) + hb_BChar( 0xE6 ) + ;
-                         hb_BChar( 0xF5 ) + hb_BChar( 0xF6 )
+#define _DBF_HEAD_MARK  hb_BChar( 0x03 ) + hb_BChar( 0x06 ) + ;
+                        hb_BChar( 0x30 ) + hb_BChar( 0x31 ) + ;
+                        hb_BChar( 0x83 ) + hb_BChar( 0x86 ) + ;
+                        hb_BChar( 0xE5 ) + hb_BChar( 0xE6 ) + ;
+                        hb_BChar( 0xF5 ) + hb_BChar( 0xF6 )
 
 STATIC PROCEDURE PutDBF( aDirEntry )
 
@@ -106,7 +106,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
       buffer := hb_FReadLen( fhnd, 8 )
 
-      IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BCode( buffer ), _DBF_HEAD_MARK ) > 0
+      IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BLeft( buffer, 1 ), _DBF_HEAD_MARK ) > 0
 
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
          dLastUpdate := hb_SToD( ;
@@ -120,7 +120,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
    QOut( ;
       PadR( aDirEntry[ F_NAME ], 15 ) + ;
-      Str( nRecCount, 12 ) + "    " + ;
+      Str( nRecCount, 12 ), "  ", ;
       DToC( dLastUpdate ) + ;
       Str( aDirEntry[ F_SIZE ], 12 ) )
 
@@ -131,7 +131,7 @@ STATIC PROCEDURE PutNormal( aDirEntry )
    LOCAL cName
    LOCAL cExt
 
-   hb_FNameSplit( aDirEntry[ F_NAME ], NIL, @cName, @cExt )
+   hb_FNameSplit( aDirEntry[ F_NAME ],, @cName, @cExt )
 
    /* strict MS-DOS like formatting, it does not play well with long
       file names which do not stick to 8.3 MS-DOS convention */
