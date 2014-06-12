@@ -118,7 +118,8 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    hb_default( @cSMTPPass, cPass )
 
    // cTo
-   IF HB_ISARRAY( xTo )
+   DO CASE
+   CASE HB_ISARRAY( xTo )
       FOR tmp := Len( xTo ) TO 1 STEP -1
          IF Empty( xTo[ tmp ] )
             hb_ADel( xTo, tmp, .T. )
@@ -134,12 +135,13 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
             cTo += ","
          ENDIF
       NEXT
-   ELSEIF HB_ISSTRING( xTo )
+   CASE HB_ISSTRING( xTo )
       cTo := tip_GetRawEmail( AllTrim( xTo ) )
-   ENDIF
+   ENDCASE
 
    // CC (Carbon Copy)
-   IF HB_ISARRAY( xCC )
+   DO CASE
+   CASE HB_ISARRAY( xCC )
       FOR tmp := Len( xCC ) TO 1 STEP -1
          IF Empty( xCC[ tmp ] )
             hb_ADel( xCC, tmp, .T. )
@@ -152,12 +154,13 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
             cCC += ","
          ENDIF
       NEXT
-   ELSEIF HB_ISSTRING( xCC )
+   CASE HB_ISSTRING( xCC )
       cCC := tip_GetRawEmail( AllTrim( xCC ) )
-   ENDIF
+   ENDCASE
 
    // BCC (Blind Carbon Copy)
-   IF HB_ISARRAY( xBCC )
+   DO CASE
+   CASE HB_ISARRAY( xBCC )
       FOR tmp := Len( xBCC ) TO 1 STEP -1
          IF Empty( xBCC[ tmp ] )
             hb_ADel( xBCC, tmp, .T. )
@@ -170,9 +173,9 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
             cBCC += ","
          ENDIF
       NEXT
-   ELSEIF HB_ISSTRING( xBCC )
+   CASE HB_ISSTRING( xBCC )
       cBCC := tip_GetRawEmail( AllTrim( xBCC ) )
-   ENDIF
+   ENDCASE
 
    cUser := StrTran( cUser, "@", "&at;" )
 
@@ -215,46 +218,39 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    oInmail:nConnTimeout := nTimeOut
 
-   IF ! lNoAuth
+   IF ! lNoAuth .AND. oInMail:OpenSecure()
 
-      IF oInMail:OpenSecure()
-
-         DO WHILE .T.
-            IF ! oInMail:GetOk()
-               EXIT
-            ENDIF
-            DO CASE
-            CASE oInMail:cReply == NIL
-               EXIT
-            CASE "LOGIN" $ oInMail:cReply
-               lAuthLogin := .T.
-            CASE "PLAIN" $ oInMail:cReply
-               lAuthPlain := .T.
-            CASE oInMail:HasSSL() .AND. "STARTTLS" $ oInMail:cReply
-               lAuthTLS := .T.
-            CASE hb_LeftEq( oInMail:cReply, "250 " )
-               EXIT
-            ENDCASE
-         ENDDO
-
-         IF lAuthLogin
-            IF ! oInMail:Auth( cUser, cSMTPPass )
-               lConnect := .F.
-            ELSE
-               lConnectPlain := .T.
-            ENDIF
+      DO WHILE .T.
+         IF ! oInMail:GetOk()
+            EXIT
          ENDIF
+         DO CASE
+         CASE oInMail:cReply == NIL
+            EXIT
+         CASE "LOGIN" $ oInMail:cReply
+            lAuthLogin := .T.
+         CASE "PLAIN" $ oInMail:cReply
+            lAuthPlain := .T.
+         CASE oInMail:HasSSL() .AND. "STARTTLS" $ oInMail:cReply
+            lAuthTLS := .T.
+         CASE hb_LeftEq( oInMail:cReply, "250 " )
+            EXIT
+         ENDCASE
+      ENDDO
 
-         IF lAuthPlain .AND. ! lConnect
-            IF ! oInMail:AuthPlain( cUser, cSMTPPass )
-               lConnect := .F.
-            ENDIF
+      IF lAuthLogin
+         IF oInMail:Auth( cUser, cSMTPPass )
+            lConnectPlain := .T.
          ELSE
-            IF ! lConnectPlain
-               lConnect := .F.
-            ENDIF
+            lConnect := .F.
          ENDIF
-      ELSE
+      ENDIF
+
+      IF lAuthPlain .AND. ! lConnect
+         IF ! oInMail:AuthPlain( cUser, cSMTPPass )
+            lConnect := .F.
+         ENDIF
+      ELSEIF ! lConnectPlain
          lConnect := .F.
       ENDIF
    ELSE

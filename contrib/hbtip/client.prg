@@ -185,13 +185,14 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
 
    LOCAL aProtoSSL := { "ftps", "https", "pop3s", "pops", "smtps" }
 
-   IF HB_ISSTRING( xTrace ) .OR. ;
+   DO CASE
+   CASE HB_ISSTRING( xTrace ) .OR. ;
       ( HB_ISLOGICAL( xTrace ) .AND. xTrace )
       oLog := TIPLog():New( iif( HB_ISSTRING( xTrace ), xTrace, NIL ) )
       ::bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
-   ELSEIF HB_ISEVALITEM( xTrace )
+   CASE HB_ISEVALITEM( xTrace )
       ::bTrace := xTrace
-   ENDIF
+   ENDCASE
 
    IF HB_ISSTRING( oUrl )
       oUrl := TUrl():New( oUrl )
@@ -348,10 +349,11 @@ METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
 
 METHOD Close() CLASS TIPClient
 
-   LOCAL nRet := -1
+   LOCAL nRet
 
-   IF ! Empty( ::SocketCon )
-
+   IF Empty( ::SocketCon )
+      nRet := -1
+   ELSE
       nRet := hb_inetClose( ::SocketCon )
 
       IF ::lTLS .AND. ::lHasSSL
@@ -548,11 +550,13 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
 /* :GetOk() is not declared in TIPClient() [HZ] */
 METHOD Data( cData ) CLASS TIPClient
+
    ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
    IF ! ::GetOk()
       RETURN .F.
    ENDIF
    ::InetSendall(::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
+
    RETURN ::GetOk()
 
 #endif

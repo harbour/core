@@ -112,20 +112,22 @@ FUNCTION tip_MailAssemble( ;
 
    /* Convert input to the CP of the e-mail */
    IF ! Empty( cCharsetCP )
-      IF HB_ISSTRING( xTo )
+      DO CASE
+      CASE HB_ISSTRING( xTo )
          xTo := hb_Translate( xTo,, cCharsetCP )
-      ELSEIF HB_ISARRAY( xTo )
+      CASE HB_ISARRAY( xTo )
          FOR EACH tmp IN xTo
             tmp := hb_Translate( tmp,, cCharsetCP )
          NEXT
-      ENDIF
-      IF HB_ISSTRING( xCC )
+      ENDCASE
+      DO CASE
+      CASE HB_ISSTRING( xCC )
          xCC := hb_Translate( xCC,, cCharsetCP )
-      ELSEIF HB_ISARRAY( xCC )
+      CASE HB_ISARRAY( xCC )
          FOR EACH tmp IN xCC
             tmp := hb_Translate( tmp,, cCharsetCP )
          NEXT
-      ENDIF
+      ENDCASE
       cFrom := hb_Translate( cFrom,, cCharsetCP )
       cBody := hb_Translate( cBody,, cCharsetCP )
       cSubject := hb_Translate( cSubject,, cCharsetCP )
