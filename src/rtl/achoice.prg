@@ -477,7 +477,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
       CASE nMode == AC_EXCEPT
 
-         // Garbage collect gotos which aren't valid ASCII characters
+         // Handle keypresses which don't translate to characters
          nMode := AC_IDLE
 
       OTHERWISE

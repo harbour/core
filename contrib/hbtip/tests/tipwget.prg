@@ -42,7 +42,9 @@
 #require "hbssl"
 #require "hbtip"
 
+#if ! defined( __HBSCRIPT__HBSHELL )
 REQUEST __HBEXTERN__HBSSL__
+#endif
 
 #include "hbclass.ch"
 #include "tip.ch"
@@ -60,8 +62,7 @@ PROCEDURE Main( cUrl, cFile )
       RETURN
    ENDIF
 
-   oUrl := TUrl():New( cUrl )
-   IF Empty( oUrl )
+   IF Empty( oUrl := TUrl():New( cUrl ) )
       ? "Invalid URL", cUrl
       RETURN
    ENDIF

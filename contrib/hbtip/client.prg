@@ -235,33 +235,24 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
 METHOD Open( cUrl ) CLASS TIPClient
 
    LOCAL nPort
-   LOCAL cResp
 
    IF HB_ISSTRING( cUrl )
       ::oUrl := TUrl():New( cUrl )
    ENDIF
 
-   IF ::oUrl:nPort == -1
-      nPort := ::nDefaultPort
-   ELSE
-      nPort := ::oUrl:nPort
-   ENDIF
+   nPort := iif( ::oUrl:nPort == -1, ::nDefaultPort, ::oUrl:nPort )
 
    ::SocketCon := hb_inetCreate()
 
    ::InetTimeOut( ::SocketCon )
 
-   IF ! Empty( ::cProxyHost )
-      cResp := ""
-      IF ! ::OpenProxy( ::oUrl:cServer, nPort, ::cProxyHost, ::nProxyPort, @cResp, ::cProxyUser, ::cProxyPassword, "Mozilla/3.0 compatible" )
-         RETURN .F.
-      ENDIF
-   ELSE
+   IF Empty( ::cProxyHost )
       ::inetConnect( ::oUrl:cServer, nPort, ::SocketCon )
-
       IF ::inetErrorCode( ::SocketCon ) != 0
          RETURN .F.
       ENDIF
+   ELSEIF ! ::OpenProxy( ::oUrl:cServer, nPort, ::cProxyHost, ::nProxyPort,, ::cProxyUser, ::cProxyPassword, "Mozilla/3.0 compatible" )
+      RETURN .F.
    ENDIF
    ::isOpen := .T.
 
@@ -304,12 +295,14 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPasswor
    ::inetConnect( cProxy, nProxyPort, ::SocketCon )
 
    IF ( tmp := ::inetErrorCode( ::SocketCon ) ) == 0
-      cRequest := "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 )
+      cRequest := ;
+         "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 ) + ;
+         "Proxy-Connection: Keep-Alive" + Chr( 13 ) + Chr( 10 )
       IF HB_ISSTRING( cUserAgent ) .AND. ! Empty( cUserAgent )
-         cRequest += "User-agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
+         cRequest += "User-Agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
       ENDIF
       IF HB_ISSTRING( cUserName ) .AND. ! Empty( cUserName )
-         cRequest += "Proxy-authorization: Basic " + hb_base64Encode( cUserName + ":" + hb_defaultValue( cPassword, "" ) ) + Chr( 13 ) + Chr( 10 )
+         cRequest += "Proxy-Authorization: Basic " + hb_base64Encode( cUserName + ":" + hb_defaultValue( cPassword, "" ) ) + Chr( 13 ) + Chr( 10 )
       ENDIF
       cRequest += Chr( 13 ) + Chr( 10 )
       ::inetSendAll( ::SocketCon, cRequest )

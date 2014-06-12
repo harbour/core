@@ -6,8 +6,7 @@ PROCEDURE Main( cUrl )
 
    LOCAL oCon, oUrl
 
-   oUrl := TUrl():New( cUrl )
-   IF Empty( oUrl )
+   IF Empty( oUrl := TUrl():New( cUrl ) )
       ? "Invalid URL", cUrl
       RETURN
    ENDIF

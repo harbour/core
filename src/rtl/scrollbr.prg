@@ -418,14 +418,16 @@ METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS ScrollBar
    ::start      := nStart
    ::nBarLength := nEnd - nStart - 1
 
-   DO CASE
-   CASE nOrient == SCROLL_VERTICAL
+   SWITCH nOrient
+   CASE SCROLL_VERTICAL
       ::cStyle := SB_UPARROW + SB_THUMB + SB_TRACK + SB_DNARROW
       ::aBitmaps := { "arrow_u.bmu", "arrow_d.bmu", "arrow_e.bmu" }
-   CASE nOrient == SCROLL_HORIZONTAL
+      EXIT
+   CASE SCROLL_HORIZONTAL
       ::cStyle := SB_LEFTARROW + SB_THUMB + SB_TRACK + SB_RIGHTARROW
       ::aBitmaps := { "arrow_l.bmu", "arrow_r.bmu", "arrow_e.bmu" }
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    cColor := SetColor()
    ::cColorSpec := ;
