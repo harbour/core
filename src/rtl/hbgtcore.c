@@ -3175,16 +3175,14 @@ static int hb_gt_def_MouseCol( PHB_GT pGT )
 
 static void hb_gt_def_MouseGetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-   HB_SYMBOL_UNUSED( pGT );
-
-   *piRow = *piCol = 0;
+   *piRow = pGT->iMouseLastRow;
+   *piCol = pGT->iMouseLastCol;
 }
 
 static void hb_gt_def_MouseSetPos( PHB_GT pGT, int iRow, int iCol )
 {
-   HB_SYMBOL_UNUSED( pGT );
-   HB_SYMBOL_UNUSED( iRow );
-   HB_SYMBOL_UNUSED( iCol );
+   pGT->iMouseLastRow = iRow;
+   pGT->iMouseLastCol = iCol;
 }
 
 static void hb_gt_def_MouseSetBounds( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight )
