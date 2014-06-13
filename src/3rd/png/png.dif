@@ -1,7 +1,7 @@
 diff -urN png.orig/png.h png/png.h
---- png.orig/png.h	2014-03-14 23:45:47.341048800 +0100
-+++ png/png.h	2014-03-14 23:45:47.637433600 +0100
-@@ -454,7 +454,7 @@
+--- png.orig/png.h	2014-06-13 20:24:41.561925000 +0200
++++ png/png.h	2014-06-13 20:24:41.561925000 +0200
+@@ -461,7 +461,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
       */
@@ -11,16 +11,16 @@ diff -urN png.orig/png.h png/png.h
  
  #ifndef PNG_VERSION_INFO_ONLY
 diff -urN png.orig/pnglconf.h png/pnglconf.h
---- png.orig/pnglconf.h	2014-03-14 23:45:47.325449600 +0100
-+++ png/pnglconf.h	2014-03-14 23:45:47.637433600 +0100
+--- png.orig/pnglconf.h	2014-06-13 20:24:41.530726000 +0200
++++ png/pnglconf.h	2014-06-13 20:24:41.530726000 +0200
 @@ -26,8 +26,8 @@
  #define PNG_BUILD_GRAYSCALE_PALETTE_SUPPORTED
  #define PNG_CHECK_FOR_INVALID_INDEX_SUPPORTED
  #define PNG_COLORSPACE_SUPPORTED
 -#define PNG_CONSOLE_IO_SUPPORTED
 -#define PNG_CONVERT_tIME_SUPPORTED
-+/*#define PNG_CONSOLE_IO_SUPPORTED*/
-+/*#define PNG_CONVERT_tIME_SUPPORTED*/
++/* #define PNG_CONSOLE_IO_SUPPORTED */
++/* #define PNG_CONVERT_tIME_SUPPORTED */
  #define PNG_EASY_ACCESS_SUPPORTED
  /*#undef PNG_ERROR_NUMBERS_SUPPORTED*/
  #define PNG_ERROR_TEXT_SUPPORTED
@@ -44,12 +44,12 @@ diff -urN png.orig/pnglconf.h png/pnglconf.h
 +#else
 +#  define PNG_API_RULE 0
 +#endif
- #define PNG_CALLOC_SUPPORTED
  #define PNG_COST_SHIFT 3
  #define PNG_DEFAULT_READ_MACROS 1
+ #define PNG_GAMMA_THRESHOLD_FIXED 5000
 diff -urN png.orig/pngpriv.h png/pngpriv.h
---- png.orig/pngpriv.h	2014-03-14 23:45:47.372247200 +0100
-+++ png/pngpriv.h	2014-03-14 23:45:47.637433600 +0100
+--- png.orig/pngpriv.h	2014-06-13 20:24:41.577524500 +0200
++++ png/pngpriv.h	2014-06-13 20:24:41.577524500 +0200
 @@ -69,7 +69,7 @@
   * before png.h is included, but load the configuration now if it is available.
   */
