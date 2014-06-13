@@ -38,7 +38,7 @@ and interfaces to many popular APIs.
 
 # How to Get
 
-## Stable versions
+## Stable versions (non-fork/upstream)
 
 ### Harbour stable binary download
 
@@ -1661,12 +1661,12 @@ Supported shells per host platforms:
 
 # Harbour Links
 
+  * [Source code](https://github.com/vszakats/harbour-core)
+  * [Issues](https://github.com/vszakats/harbour-core/issues)
+  * [Localization](https://www.transifex.com/projects/p/harbour/)
   * [Homepage - __for non-fork/mainstream version__](http://harbour-project.org/)
   * [Users' Mailing List - __for non-fork/mainstream version__](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List - __for non-fork/mainstream version__](https://groups.google.com/group/harbour-devel/) (English language)
-  * [Source code](https://github.com/vszakats/harbour-core)
-  * [Localization](https://www.transifex.com/projects/p/harbour/)
-  * [Issues](https://github.com/vszakats/harbour-core/issues)
   * Documents:
      * [hbmk2 documentation](utils/hbmk2/doc/hbmk2.en.md)
      * [hbrun documentation](contrib/hbrun/doc/hbrun.en.md)
