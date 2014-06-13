@@ -210,10 +210,10 @@ METHOD New( nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp )
 
    RETURN Self
 
-METHOD Draw() CLASS wPaintObj
+METHOD PROCEDURE Draw() CLASS wPaintObj
 
    IF ! ::lVisible
-      RETURN NIL
+      RETURN
    ENDIF
 
    DO CASE
@@ -227,12 +227,12 @@ METHOD Draw() CLASS wPaintObj
       // lBoxErrMessage()
    ENDCASE
 
-   RETURN NIL
+   RETURN
 
 // undraw the object
 // normally this is called with ::lVisible == .F.,
 // otherwise the object will be redrawn by WVW_PAINT
-METHOD Undraw() CLASS wPaintObj
+METHOD PROCEDURE Undraw() CLASS wPaintObj
 
    LOCAL cScreen
    LOCAL nRow1, nCol1, nRow2, nCol2, nMaxRow, nMaxCol
@@ -259,25 +259,25 @@ METHOD Undraw() CLASS wPaintObj
    RestScreen( nRow1, nCol1, nRow2, nCol2, cScreen )
    DispEnd()
 
-   RETURN NIL
+   RETURN
 
-METHOD Hide() CLASS wPaintObj
+METHOD PROCEDURE Hide() CLASS wPaintObj
 
    // temporarily hides the object
    ::lVisible := .F.
    ::Undraw()
 
-   RETURN NIL
+   RETURN
 
-METHOD Show() CLASS wPaintObj
+METHOD PROCEDURE Show() CLASS wPaintObj
 
    // show the object
    ::lVisible := .T.
    ::draw()
 
-   RETURN NIL
+   RETURN
 
-/*********************************************************/
+/* ******************************************************* */
 
 // clears all wPaint objects from window nWinNum
 // if nObjNum specified, clears object >= nObjNum

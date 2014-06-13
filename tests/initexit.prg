@@ -17,7 +17,7 @@ PROCEDURE Main()
 
    RETURN
 
-INIT FUNCTION SecondOne()
+INIT PROCEDURE SecondOne()
 
    STATIC s_static_var := "SecondOne()"
 
@@ -25,9 +25,9 @@ INIT FUNCTION SecondOne()
    s_static_var_accessed_in_INIT_function++
    ? "global static=", s_static_var_accessed_in_INIT_function
 
-   RETURN NIL
+   RETURN
 
-INIT FUNCTION Third()
+INIT PROCEDURE Third()
 
    STATIC s_static_var := "Third()"
 
@@ -35,9 +35,9 @@ INIT FUNCTION Third()
    s_static_var_accessed_in_INIT_function++
    ? "global static=", s_static_var_accessed_in_INIT_function
 
-   RETURN NIL
+   RETURN
 
-EXIT FUNCTION Fifth()
+EXIT PROCEDURE Fifth()
 
    STATIC s_static_var := "Fifth()"
 
@@ -45,9 +45,9 @@ EXIT FUNCTION Fifth()
    s_static_var_accessed_in_INIT_function--
    ? "global static=", s_static_var_accessed_in_INIT_function
 
-   RETURN NIL
+   RETURN
 
-EXIT FUNCTION Sixth()
+EXIT PROCEDURE Sixth()
 
    STATIC s_static_var := "Sixth()"
 
@@ -55,7 +55,7 @@ EXIT FUNCTION Sixth()
    s_static_var_accessed_in_INIT_function--
    ? "global static=", s_static_var_accessed_in_INIT_function
 
-   RETURN NIL
+   RETURN
 
 INIT PROCEDURE initStatics()
 

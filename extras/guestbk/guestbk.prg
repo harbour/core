@@ -70,7 +70,6 @@ PROCEDURE Main()
          cField := oIni:ReadString( "Header", "DataField" + hb_ntos( i ), "" )
          oIni:WriteString( "Entries", cField + hb_ntos( nEntry ), ;
             StrTran( StrTran( oHTML:QueryFields( cField ), Chr( 13 ) ), Chr( 10 ), "<br />" ) )
-
       NEXT
 
       // Write fields to .ini file
@@ -85,9 +84,7 @@ PROCEDURE Main()
          '<body></body></html>'
 
       oHTML:ShowResult()
-
    ELSE
-
       // Sets the metahtml file
       oHTML:SetHTMLFile( _WWW_ROOT_DIR_ + "guestbk.html" )
 
@@ -110,13 +107,11 @@ PROCEDURE Main()
             cField := oIni:ReadString( "Header", "DataField" + hb_ntos( j ), "" )
             AAdd( aLine, { cField, ;
                oIni:ReadString( "Entries", cField + hb_ntos( i ), "" ) } )
-
          NEXT
 
          AAdd( aEntries, aLine )
 
          i--
-
       ENDDO
 
       cCode := ""
@@ -140,18 +135,15 @@ PROCEDURE Main()
                oIni:ReadString( "Entries", "DateTime" + hb_ntos( Len( aEntries ) - i + 1 ), "" ) )
 
             cCode += cLine + "</td></tr>" + hb_eol()
-
          NEXT
 
          cCode += "</table>" + hb_eol()
-
       NEXT
 
       // Generates the output
       oHTML:AddReplaceTag( "Entries", cCode )
       oHTML:Generate()
       oHTML:ShowResult()
-
    ENDIF
 
    RETURN

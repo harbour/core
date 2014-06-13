@@ -660,7 +660,6 @@ STATIC PROCEDURE DEMO_Browse()
    RETURN
 
 /* generic Vertical Scrollbar handler for tbrowse */
-
 STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    LOCAL nOldWin
@@ -705,7 +704,6 @@ STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    RETURN
 
 /* generic Horizontal Scrollbar handler for tbrowse */
-
 STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    LOCAL nOldWin
@@ -748,14 +746,14 @@ STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    RETURN
 
-/**
-2004-07-04 notes:
+/*
+ 2004-07-04 notes:
 
-0 <= nPage <= ( nMax - nMin + 1 )
-nPage :: pagesize
+ 0 <= nPage <= ( nMax - nMin + 1 )
+ nPage :: pagesize
 
-nMin <= nPos <= ( nMax - Max( nPage - 1, 0 ) )
-**/
+ nMin <= nPos <= ( nMax - Max( nPage - 1, 0 ) )
+*/
 
 STATIC PROCEDURE RefreshVXB( oBrowse, nWinNum, XBid )
 
@@ -854,7 +852,6 @@ STATIC FUNCTION TBPrev()
 
    RETURN lMoved
 
-//
 //      WVW_Paint() must be a FUNCTION in your application
 //      as it is called when Window gets WM_PAINT message.
 //
@@ -874,18 +871,17 @@ FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
    RETURN 0
 
-//
 //      WVW_SetFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_SETFOCUS message
 //      received by the window.
 //
 #if 0
-FUNCTION WVW_SetFocus( hWnd, nWinNum )  /* must be a public function */
+PROCEDURE WVW_SetFocus( hWnd, nWinNum )  /* must be a public function */
 
    STATIC s_nGotFocus := 0
 
    IF nWinNum == 0
-      RETURN NIL
+      RETURN
    ENDIF
    s_nGotFocus++
    @ 0, 0 SAY s_nGotFocus
@@ -893,18 +889,17 @@ FUNCTION WVW_SetFocus( hWnd, nWinNum )  /* must be a public function */
       Alert( "Got focus " + Transform( s_nGotFocus, "9999" ) + "th times" )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-//
-//      WVW_KillFocus() must be a FUNCTION in your application
-//      needs to process messages sent through WM_KILLFOCUS message
-//      received by the window.
+// WVW_KillFocus() must be a FUNCTION in your application
+// needs to process messages sent through WM_KILLFOCUS message
+// received by the window.
 
-FUNCTION WVW_KillFocus( hWnd )  /* must be a public function */
-   RETURN NIL
+PROCEDURE WVW_KillFocus( hWnd )  /* must be a public function */
+   RETURN
 #endif
 
-FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
+PROCEDURE WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    HB_SYMBOL_UNUSED( nWinNum )
    HB_SYMBOL_UNUSED( hWnd )
@@ -915,7 +910,7 @@ FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )  /* must be a publi
    // this function is called every certain interval, by GTWVW gtwndproc
    wvw_sbSetText( 0, 1, Time() )
 
-   RETURN NIL
+   RETURN
 
 STATIC PROCEDURE CreateToolbar( nWinNum )
 

@@ -45,9 +45,7 @@
  *
  */
 
-/*
- *
- * Harbour Test of a CGI/HTML-Generator class.
+/* Harbour Test of a CGI/HTML-Generator class.
  *
  * 1999-05-30  First implementation.
  *
@@ -61,7 +59,6 @@
  *             First attempt to convert Delphi's ISAPI dll of WebSites'
  *             Function List
  * 1999-07-29  Changed QOut() calls to OutStd() calls.
- *
  */
 
 #include "hbclass.ch"
@@ -70,10 +67,10 @@
 
 FUNCTION ParseString( cString, cDelim, nRet )
 
-   LOCAL cBuf, aElem, nPosFim, nSize, i
+   LOCAL cBuf, nPosFim, i
 
-   nSize := Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1
-   aElem := Array( nSize )
+   LOCAL nSize := Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1
+   LOCAL aElem := Array( nSize )
 
    cBuf := cString
 
@@ -86,24 +83,23 @@ FUNCTION ParseString( cString, cDelim, nRet )
       ENDIF
 
       cBuf := SubStr( cBuf, nPosFim + 1, Len( cBuf ) )
-
    NEXT
 
    RETURN aElem[ nRet ]
 
 CREATE CLASS THTML
 
-   VAR cTitle                          // Page Title
-   VAR cBody                           // HTML Body Handler
-   VAR cBGColor                        // Background Color
-   VAR cLinkColor                      // Link Color
-   VAR cvLinkColor                     // Visited Link Color
-   VAR cContent                        // Page Content Handler
+   VAR cTitle       INIT "Untitled"      // Page Title
+   VAR cBody        INIT ""              // HTML Body Handler
+   VAR cBGColor     INIT "#ffffff"       // Background Color
+   VAR cLinkColor   INIT "#0000ff"       // Link Color
+   VAR cvLinkColor  INIT "#ff0000"       // Visited Link Color
+   VAR cContent     INIT ""              // Page Content Handler
 
-   VAR aCGIContents
-   VAR aQueryFields
-   VAR cHTMLFile
-   VAR aReplaceTags
+   VAR aCGIContents INIT {}
+   VAR aQueryFields INIT {}
+   VAR aReplaceTags INIT {}
+   VAR cHTMLFile    INIT ""
 
    METHOD New()
    METHOD SetTitle( cTitle )
@@ -122,18 +118,6 @@ CREATE CLASS THTML
 ENDCLASS
 
 METHOD New() CLASS THTML
-
-   ::cTitle       := "Untitled"
-   ::cBGColor     := "#ffffff"
-   ::cLinkColor   := "#0000ff"
-   ::cvLinkColor  := "#ff0000"
-   ::cContent     := ""
-   ::cBody        := ""
-   ::aCGIContents := {}
-   ::aQueryFields := {}
-   ::aReplaceTags := {}
-   ::cHTMLFile    := ""
-
    RETURN Self
 
 METHOD SetTitle( cTitle ) CLASS THTML
@@ -149,11 +133,11 @@ METHOD AddLink( cLinkTo, cLinkName ) CLASS THTML
 
    RETURN Self
 
-METHOD AddHead( cDescr ) CLASS THTML
+METHOD PROCEDURE AddHead( cDescr ) CLASS THTML
 
    ::cBody += "<h1>" + cDescr + "</h1>"
 
-   RETURN NIL
+   RETURN
 
 METHOD AddPara( cPara, cAlign ) CLASS THTML
 
@@ -212,7 +196,6 @@ METHOD Generate() CLASS THTML
 
          ::cContent := cRes
 #endif
-
       ENDIF
    ENDIF
 
@@ -309,16 +292,15 @@ METHOD GetCGIParam( nParam ) CLASS THTML
 
 METHOD QueryFields( cQueryName ) CLASS THTML
 
-   LOCAL cRet := ""
    LOCAL nRet
 
    ::ProcessCGI()
 
    IF ( nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } ) ) > 0
-      cRet := ::aQueryFields[ nRet ][ 2 ]
+      RETURN ::aQueryFields[ nRet ][ 2 ]
    ENDIF
 
-   RETURN cRet
+   RETURN ""
 
 METHOD SetHTMLFile( cFile ) CLASS THTML
 

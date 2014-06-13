@@ -77,7 +77,7 @@ STATIC PROCEDURE updatescr()
 
 // this function is called by gtwvw AFTER the size is changed
 // WARNING: screen repainting is not performed completely by gtwvw at this point of call
-FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
+PROCEDURE WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    LOCAL cScreen
    LOCAL lNeedReset
@@ -90,11 +90,11 @@ FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )  /* must be a public
    IF ! s_lSizeReady
       // program is not ready to handle window resizing
       // (or this function is currently running)
-      RETURN NIL
+      RETURN
    ENDIF
    IF nWinNum != 0
       // only care about Main Window
-      RETURN NIL
+      RETURN
    ENDIF
 
    // avoid reentrance
@@ -136,4 +136,4 @@ FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )  /* must be a public
    // allow next call
    s_lSizeReady := .T.
 
-   RETURN NIL
+   RETURN

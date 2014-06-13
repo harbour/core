@@ -51,9 +51,7 @@
  *
  */
 
-/*
-
-todo
+/* TODO:
    - handle preformatted text / code / etc
    - include links back to index
    - include jumps to 'top'
@@ -62,34 +60,35 @@ todo
       - one method to retrieve, one to add?
       - key-value pair [hash table?]
 
-todo - treat '<fixed>' / </fixed> as an non-conformance condition
+   TODO: - treat '<fixed>' / </fixed> as an non-conformance condition
    ntf: this may be okay for EXAMPLES and TESTS but this is also used
         within other sections, much like <table>
 
-todo - look for embedded 'fixed'
+   TODO: - look for embedded 'fixed'
 
-these files have <tables>
-  *..\..\doc\en\cmdline.txt    txt\lineutility.txt
-   ..\..\doc\en\dbstrux.txt    txt\dbstrux.txt
-  *..\..\doc\en\file.txt       txt\file.txt
-   ..\..\doc\en\input.txt      txt\input.txt
-   ..\..\doc\en\lang.txt       txt\lang.txt
-   ..\..\doc\en\menu.txt       txt\menu.txt
-   ..\..\doc\en\objfunc.txt    txt\objfunc.txt
-   ..\..\doc\en\rdddb.txt      txt\rdddb.txt
-   ..\..\doc\en\sayget.txt     txt\sayget.txt
-   ..\..\doc\en\set.txt        txt\set.txt
-   ..\..\doc\en\setmode.txt    txt\setmode.txt
-   ..\..\doc\en\string.txt     txt\string.txt
-   ..\..\doc\en\var.txt        txt\var.txt
+   these files have <tables>
 
-done - recognize and accept </par>; see macro.txt output esp. hb_setmacro
-done - list 'compliance' and 'platforms' within help
-done - list 'category' and 'subcategory' types on help screen
-done - load into memory (class and) method template
-done - minimize these to the barest
-done - build a list of 'categories' and validate against; see what 'classdoc' uses
-done - validate sources against these templates
+   *..\..\doc\en\cmdline.txt    txt\lineutility.txt
+    ..\..\doc\en\dbstrux.txt    txt\dbstrux.txt
+   *..\..\doc\en\file.txt       txt\file.txt
+    ..\..\doc\en\input.txt      txt\input.txt
+    ..\..\doc\en\lang.txt       txt\lang.txt
+    ..\..\doc\en\menu.txt       txt\menu.txt
+    ..\..\doc\en\objfunc.txt    txt\objfunc.txt
+    ..\..\doc\en\rdddb.txt      txt\rdddb.txt
+    ..\..\doc\en\sayget.txt     txt\sayget.txt
+    ..\..\doc\en\set.txt        txt\set.txt
+    ..\..\doc\en\setmode.txt    txt\setmode.txt
+    ..\..\doc\en\string.txt     txt\string.txt
+    ..\..\doc\en\var.txt        txt\var.txt
+
+   done - recognize and accept </par>; see macro.txt output esp. hb_setmacro
+   done - list 'compliance' and 'platforms' within help
+   done - list 'category' and 'subcategory' types on help screen
+   done - load into memory (class and) method template
+   done - minimize these to the barest
+   done - build a list of 'categories' and validate against; see what 'classdoc' uses
+   done - validate sources against these templates
 */
 
 #include "directry.ch"
@@ -180,12 +179,10 @@ PROCEDURE Main( ... )
             IF arg == "" .OR. hb_AScan( s_hSwitches[ "format-list" ], arg, , , .T. ) == 0
                ShowHelp( "Unknown format option '" + arg + "'" )
                RETURN
+            ELSEIF arg == "all"
+               s_hSwitches[ "format" ] := s_hSwitches[ "format-list" ]
             ELSE
-               IF arg == "all"
-                  s_hSwitches[ "format" ] := s_hSwitches[ "format-list" ]
-               ELSE
-                  AAdd( s_hSwitches[ "format" ], arg )
-               ENDIF
+               AAdd( s_hSwitches[ "format" ], arg )
             ENDIF
          CASE cArgName == "-output-single" ;          s_hSwitches[ "output" ] := "single"
          CASE cArgName == "-output-category" ;        s_hSwitches[ "output" ] := "category"
@@ -521,10 +518,10 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             ENDIF
 
          CASE o:IsField( "RETURNS" ) .AND. cSectionName == "RETURNS" .AND. ( ;
-                  Empty( cSection ) .OR. ;
-                  Lower( cSection ) == "nil" .OR. ;
-                  Lower( cSection ) == "none" .OR. ;
-                  Lower( cSection ) == "none." )
+               Empty( cSection ) .OR. ;
+               Lower( cSection ) == "nil" .OR. ;
+               Lower( cSection ) == "none" .OR. ;
+               Lower( cSection ) == "none." )
 
             AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + cSection + ")", aHandle[ 2 ] - 1 )
 #if 0
@@ -562,10 +559,10 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
    IF ! lAccepted
    ELSEIF o:Template == "Function" .AND. ( ;
-                     Empty( o:Returns ) .OR. ;
-                     Lower( o:Returns ) == "nil" .OR. ;
-                     Lower( o:Returns ) == "none" .OR. ;
-                     Lower( o:Returns ) == "none." )
+         Empty( o:Returns ) .OR. ;
+         Lower( o:Returns ) == "nil" .OR. ;
+         Lower( o:Returns ) == "none" .OR. ;
+         Lower( o:Returns ) == "none." )
 
       AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + o:Returns + ")", aHandle[ 2 ] )
 #if 0
@@ -590,7 +587,6 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 #if 0
          OutStd( "    > " + cSectionName + hb_eol() )
 #endif
-
       ENDIF
 
       IF s_hSwitches[ "include-doc-source" ]
@@ -616,7 +612,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
    RETURN
 
-STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
+STATIC FUNCTION FReadSection( aHandle, /* @ */ cSectionName, /* @ */ cSection, /* @ */ o )
 
    LOCAL nPosition
    LOCAL cBuffer
@@ -706,16 +702,17 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 
    hb_default( @nMaxLine, 256 )
 
-   IF HB_ISSTRING( acFile )
+   DO CASE
+   CASE HB_ISSTRING( acFile )
       lCloseFile := .T.
       IF ( aHandle[ 1 ] := FOpen( acFile ) ) == F_ERROR
          RETURN
       ENDIF
-   ELSEIF HB_ISNUMERIC( acFile )
+   CASE HB_ISNUMERIC( acFile )
       aHandle[ 1 ] := acFile
-   ELSE
+   OTHERWISE
       aHandle := acFile
-   ENDIF
+   ENDCASE
 
    DO WHILE FReadLn( @aHandle, @cBuffer, nMaxLine )
       xResult := Eval( bBlock, cBuffer )
@@ -730,7 +727,7 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 
    RETURN
 
-STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
+STATIC FUNCTION FReadLn( /* @ */ aHandle, /* @ */ cBuffer, nMaxLine )
 
    STATIC s_aEOL := { Chr( 13 ) + Chr( 10 ), Chr( 10 ), Chr( 13 ) }
 
@@ -986,14 +983,12 @@ FUNCTION Parse( cVar, xDelimiter )
    IF HB_ISNUMERIC( xDelimiter )
       cResult := Left( cVar, xDelimiter )
       cVar := SubStr( cVar, xDelimiter + 1 )
+   ELSEIF ( idx := At( xDelimiter, cVar ) ) == 0
+      cResult := cVar
+      cVar := ""
    ELSE
-      IF ( idx := At( xDelimiter, cVar ) ) == 0
-         cResult := cVar
-         cVar := ""
-      ELSE
-         cResult := Left( cVar, idx - 1 )
-         cVar := SubStr( cVar, idx + Len( xDelimiter ) )
-      ENDIF
+      cResult := Left( cVar, idx - 1 )
+      cVar := SubStr( cVar, idx + Len( xDelimiter ) )
    ENDIF
 
    RETURN cResult
