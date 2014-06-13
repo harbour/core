@@ -134,7 +134,7 @@
 #define DBOI_KEYDELETE           37  /* Custom Index: Was Key Deletion successful?      */
 #define DBOI_KEYVAL              38  /* The value of the current key      */
 #define DBOI_SCOPETOP            39  /* Get or Set the scope top          */
-#define DBOI_SCOPEBOTTOM         40  /* Get or Set the scope botto        */
+#define DBOI_SCOPEBOTTOM         40  /* Get or Set the scope bottom       */
 #define DBOI_SCOPETOPCLEAR       41  /* Clear the scope top               */
 #define DBOI_SCOPEBOTTOMCLEAR    42  /* Clear the scope bottom            */
 #define DBOI_CUSTOM              45  /* Is this a Custom Index?           */

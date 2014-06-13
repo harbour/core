@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This script requires "TAR" utilities for compression.
+# This script requires 'GNU tar' tool for compression.
 
 if [ "$1" = "zip" ] || [ "$1" = "ZIP" ]; then
    hb_archbin="zip"
@@ -14,7 +14,7 @@ elif gtar --version >/dev/null 2>&1; then
 else
    hb_archbin="tar"
    hb_gnutar="no"
-   echo "Warning!!! Cannot find GNU TAR"
+   echo "Warning!!! Cannot find 'GNU tar'"
 fi
 
 hb_currdir=`pwd`

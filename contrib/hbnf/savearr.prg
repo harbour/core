@@ -1,7 +1,4 @@
 /*
- * Author....: David Barrett
- * CIS ID....: 72037,105
- *
  * This is an original work by David Barrett and is placed in the
  * public domain.
  *
@@ -21,7 +18,6 @@
  *
  *    Rev 1.0   07 Jun 1991 23:39:38   GLENN
  * Initial revision.
- *
  *
  */
 

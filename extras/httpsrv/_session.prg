@@ -369,7 +369,7 @@ METHOD CacheLimiter( cNewLimiter ) CLASS uhttpd_Session
 
    RETURN cOldLimiter
 
-METHOD SetCookieParams( nLifeTime, cPath, cDomain, lSecure  ) CLASS uhttpd_Session
+METHOD PROCEDURE SetCookieParams( nLifeTime, cPath, cDomain, lSecure ) CLASS uhttpd_Session
 
    IF nLifeTime != NIL
       ::nCookie_LifeTime := nLifeTime
@@ -384,7 +384,7 @@ METHOD SetCookieParams( nLifeTime, cPath, cDomain, lSecure  ) CLASS uhttpd_Sessi
       ::lCookie_Secure   := lSecure
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD RegenerateID() CLASS uhttpd_Session
 
@@ -395,7 +395,7 @@ METHOD RegenerateID() CLASS uhttpd_Session
 
    RETURN ::cSID
 
-METHOD SaveCookie() CLASS uhttpd_Session
+METHOD PROCEDURE SaveCookie() CLASS uhttpd_Session
 
    LOCAL cExpires := uhttpd_DateToGMT( Date(), Time(),, ::nCookie_LifeTime )
    LOCAL cKey
@@ -405,14 +405,14 @@ METHOD SaveCookie() CLASS uhttpd_Session
       ::oCookie:SetCookie( ::cName + "_" + cKey, _SESSION[ cKey ], ::cCookie_Domain, ::cCookie_Path, cExpires, ::lCookie_Secure )
    NEXT
 
-   RETURN NIL
+   RETURN
 
 #if 0
-METHOD ReadCookie() CLASS uhttpd_Session
+METHOD PROCEDURE ReadCookie() CLASS uhttpd_Session
 
    oCGI:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, cExpires, ::lCookie_Secure )
 
-   RETURN NIL
+   RETURN
 #endif
 
 METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
@@ -586,7 +586,7 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
 
 // ------------------------------
 
-METHOD SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC ) CLASS uhttpd_Session
+METHOD PROCEDURE SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC ) CLASS uhttpd_Session
 
    IF bOpen != NIL
       ::bOpen := bOpen
@@ -607,7 +607,7 @@ METHOD SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC ) CLASS uhttp
       ::bGC := bGC
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD SessionOpen( cPath, cName ) CLASS uhttpd_Session
 
@@ -835,7 +835,7 @@ METHOD Decode( cData ) CLASS uhttpd_Session
 
    RETURN lOk
 
-METHOD SendCacheLimiter() CLASS uhttpd_Session
+METHOD PROCEDURE SendCacheLimiter() CLASS uhttpd_Session
 
    LOCAL dDate
 
@@ -868,7 +868,7 @@ METHOD SendCacheLimiter() CLASS uhttpd_Session
    ENDCASE
    // __OutDebug( "Header cache '" + ::cCache_Limiter + "' inviato" )
 
-   RETURN NIL
+   RETURN
 
 PROCEDURE DestroyObject() CLASS uhttpd_Session
 

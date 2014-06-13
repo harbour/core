@@ -1,7 +1,4 @@
 /*
- * Author....: Ted Means
- * CIS ID....: 73067,3332
- *
  * This is an original work by Ted Means and is placed in the
  * public domain.
  *
@@ -12,6 +9,7 @@
  *
  *    Rev 1.0   22 Aug 1992 16:51:32   GLENN
  * Initial revision.
+ *
  */
 
 #define PV_ROW      1
@@ -34,7 +32,7 @@ FUNCTION ft_PushVid()
       Col(), ;
       SetColor(), ;
       SaveScreen( 0, 0, MaxRow(), MaxCol() ), ;
-      Set( _SET_CURSOR ), ;
+      SetCursor(), ;
       SetBlink(), ;
       NoSnow(), ;
       MaxRow() + 1, ;
@@ -50,7 +48,7 @@ FUNCTION ft_PopVid()
 
    IF nNewSize >= 0
       SetMode( aBottom[ PV_MAXROW ], aBottom[ PV_MAXCOL ] )
-      Set( _SET_CURSOR, aBottom[ PV_CURSOR ] )
+      SetCursor( aBottom[ PV_CURSOR ] )
       NoSnow( aBottom[ PV_NOSNOW ] )
       SetBlink( aBottom[ PV_BLINK ] )
       RestScreen( 0, 0, MaxRow(), MaxCol(), aBottom[ PV_IMAGE ] )

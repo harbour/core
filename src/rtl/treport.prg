@@ -344,7 +344,7 @@ METHOD PROCEDURE New( cFrmName AS STRING, ;
             ENDIF
          NEXT
 
-         // Send a cr/lf for the last line
+         // Send an EOL for the last line
          QOut()
       NEXT
 
@@ -386,7 +386,7 @@ METHOD PROCEDURE New( cFrmName AS STRING, ;
             ENDIF
          NEXT
 
-         // Send a cr/lf for the last line
+         // Send an EOL for the last line
          QOut()
 
       ENDIF
@@ -491,7 +491,7 @@ METHOD ReportHeader() CLASS HBReportForm
       NEXT
    NEXT
 
-   AAdd( aPageHeader, "" ) // S87 compat.
+   AAdd( aPageHeader, "" )  // S87 compat.
 
    nLinesInHeader := Len( aPageHeader )
    nMaxColLength := 0
@@ -602,7 +602,6 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
             AAdd( aRecordHeader, __natMsg( iif( nGroup == 1, _RFRM_SUBTOTAL, _RFRM_SUBSUBTOTAL ) ) )
             AAdd( aRecordHeader, "" )
 
-
             // Cycle through the columns, adding either the group
             // amount from ::aReportTotals or spaces wide enough for
             // the non-totaled columns
@@ -665,10 +664,10 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
 
          // page eject after group
 
-         //  put CRFF after group
+         // put CRFF after group
          IF nGroup == 1 .AND. ! ::lFirstPass .AND. ! lAnySubTotals
             IF ::aReportData[ RPT_GROUPS ][ nGroup ][ RGT_AEJECT ]
-               ::nLinesLeft  := 0
+               ::nLinesLeft := 0
             ENDIF
          ENDIF
 
@@ -971,8 +970,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          DBL_SPACE_OFFSET, 1 ) $ "YyTt", 2, 1 )
 
       // Summary report flag
-      aReport[ RPT_SUMMARY ] := hb_BSubStr( cParamsBuff, ;
-         SUMMARY_RPT_OFFSET, 1 ) $ "YyTt"
+      aReport[ RPT_SUMMARY ] := hb_BSubStr( cParamsBuff, SUMMARY_RPT_OFFSET, 1 ) $ "YyTt"
 
       // Process report eject and plain attributes option byte
       nOptionByte := hb_BPeek( cParamsBuff, OPTION_OFFSET )
@@ -1007,8 +1005,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          nHeaderIndex--
       ENDDO
 
-      aReport[ RPT_HEADER ] := iif( nHeaderIndex == 0, {}, ;
-         ASize( aHeader, nHeaderIndex ) )
+      aReport[ RPT_HEADER ] := iif( nHeaderIndex == 0, {}, ASize( aHeader, nHeaderIndex ) )
 
       // Process Groups
       // Group
@@ -1139,7 +1136,7 @@ STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
       nTabSize := nLineLength - 1
    ENDIF
 
-   RETURN MLCount( RTrim( cString ), nLineLength, nTabSize, hb_defaultValue( lWrap, .T. ) )
+   RETURN MLCount( RTrim( cString ), nLineLength, nTabSize, lWrap )
 
 STATIC FUNCTION XMEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
@@ -1150,7 +1147,7 @@ STATIC FUNCTION XMEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
       nTabSize := nLineLength - 1
    ENDIF
 
-   RETURN MemoLine( cString, nLineLength, hb_defaultValue( nLineNumber, 1 ), nTabSize, hb_defaultValue( lWrap, .T. ) )
+   RETURN MemoLine( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
 STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 

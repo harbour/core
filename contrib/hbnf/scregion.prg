@@ -1,7 +1,4 @@
 /*
- * Author....: David A. Richardson
- * CIS ID....: ?
- *
  * This is an original work by David A. Richardson and is hereby placed
  * in the public domain.
  *
@@ -17,8 +14,6 @@
  * Nanforum Toolkit
  *
  */
-
-THREAD STATIC t_aRgnStack := {}
 
 FUNCTION ft_SavRgn( nTop, nLeft, nBottom, nRight )
    RETURN hb_BChar( nTop ) + hb_BChar( nLeft ) + hb_BChar( nBottom ) + hb_BChar( nRight ) + ;
@@ -48,11 +43,12 @@ PROCEDURE ft_RstRgn( cScreen, nTop, nLeft )
 
 PROCEDURE ft_RgnStack( cAction, nTop, nLeft, nBottom, nRight )
 
+   THREAD STATIC t_aRgnStack := {}
    THREAD STATIC t_nStackPtr := 0
 
    LOCAL nPopTop
 
-   SWITCH cAction
+   SWITCH hb_defaultValue( cAction, "" )
    CASE "push"
 
       ASize( t_aRgnStack, ++t_nStackPtr )[ t_nStackPtr ] := ;

@@ -398,14 +398,16 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSou
             __i18n_strEncode( aItem[ _I18N_CONTEXT ] ) + cEol
       ENDIF
       FOR EACH msg IN aItem[ _I18N_MSGID ]
-         DO CASE
-         CASE msg:__enumIndex() == 1
+         SWITCH msg:__enumIndex()
+         CASE 1
             cPOT += "msgid "
-         CASE msg:__enumIndex() == 2
+            EXIT
+         CASE 2
             cPOT += "msgid_plural "
+            EXIT
          OTHERWISE
             cPOT += "msgid_plural" + hb_ntos( msg:__enumIndex() - 1 ) + " "
-         ENDCASE
+         ENDSWITCH
          cPOT += __i18n_strEncode( msg ) + cEol
       NEXT
       lPlural := aItem[ _I18N_PLURAL ] .OR. Len( aItem[ _I18N_MSGSTR ] ) > 1

@@ -23,8 +23,7 @@
  *
  */
 
-/*
- * Requires:
+/* Requires:
  *   - curl (built with SSL)
  *   - hbmk2 and hbi18n in PATH
  *   - the target .prg be runnable as script (for doc_make only)
@@ -65,7 +64,7 @@ PROCEDURE Main( cCommand, cMain, ... )
 STATIC FUNCTION ParEscape( cPar )
    RETURN '"' + cPar + '"'
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC PROCEDURE doc_make( cMain )
 
@@ -107,7 +106,7 @@ STATIC PROCEDURE doc_make( cMain )
 STATIC FUNCTION FToNativeEOL( cFile )
    RETURN hb_MemoWrit( cFile, StrTran( hb_MemoRead( cFile ), e"\n", hb_eol() ) )
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC PROCEDURE src_push( cMain )
 
@@ -189,7 +188,7 @@ STATIC FUNCTION POT_Sort( cFileName )
 
    RETURN .F.
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC PROCEDURE trs_pull( cMain )
 
@@ -373,7 +372,7 @@ STATIC FUNCTION PO_Clean( cFNSource, cFNTarget, ... )
 
    RETURN .F.
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC PROCEDURE trs_push( cMain )
 
@@ -426,7 +425,7 @@ STATIC PROCEDURE trs_push( cMain )
 
    RETURN
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC FUNCTION ArrayToList( array )
 
@@ -518,7 +517,7 @@ STATIC FUNCTION LoadPar( cMain )
 
    RETURN hPar
 
-/* --------------------------------------------- */
+/* --- */
 
 #include "lang2po.hb"
 #include "po2lang.hb"

@@ -242,13 +242,7 @@ METHOD Build( xPos, yPos ) CLASS TJSList
 
 METHOD Put( cFile ) CLASS TJSList
 
-   IF HB_ISSTRING( cFile )
-      ::nH := FCreate( cFile )
-   ELSE
-      ::nH := hb_GetStdOut()
-   ENDIF
-
-   IF ::nH != F_ERROR
+   IF ( ::nH := iif( HB_ISSTRING( cFile ), FCreate( cFile ), hb_GetStdOut() ) ) != F_ERROR
       AEval( ::aScript, {| e | FWrite( ::nH, e ) } )
       FClose( ::nH )
    ENDIF

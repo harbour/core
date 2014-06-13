@@ -1,7 +1,4 @@
 /*
- * Author....: Ted Means
- * CIS ID....: 73067,3332
- *
  * This is an original work by Ted Means and is placed in the
  * public domain.
  *
@@ -21,8 +18,6 @@
  *
  *    Rev 1.1   27 May 1991 14:41:56   GLENN
  * Added a parameter to turn CapLock on or off.
- *
- *
  *
  */
 

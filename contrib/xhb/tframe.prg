@@ -84,21 +84,18 @@ METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
       ::nH := hb_GetStdOut()
    ENDIF
 
-   cStr += "<html>" + hb_eol() + ;
+   ::cStr += cStr + ;
+      "<html>" + hb_eol() + ;
       " <head>" + hb_eol() + ;
       "  <title>" + ::Title + "</title>" + hb_eol() + ;
       " </head>" + hb_eol()
-
-   ::cStr += cStr
 
    RETURN Self
 
 METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
-   LOCAL cStr
+   LOCAL cStr := hb_eol() + " <frameset "
    LOCAL cItem
-
-   cStr := hb_eol() + " <frameset "
 
    IF HB_ISARRAY( aRows ) .AND. ! Empty( aRows )
 
@@ -136,9 +133,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += Space( 5 ) + " onUnLoad=" + '"' + onUnLoad + '"'
    ENDIF
 
-   cStr += " >" + hb_eol()
-
-   ::cStr += cStr
+   ::cStr += cStr + " >" + hb_eol()
 
    RETURN Self
 
@@ -209,8 +204,6 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       cStr += " marginheight= " + hb_ntos( marginheight )
    ENDIF
 
-   cStr += ">" + hb_eol()
-
-   ::cStr += cStr
+   ::cStr += cStr + ">" + hb_eol()
 
    RETURN Self

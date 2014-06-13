@@ -3175,16 +3175,14 @@ static int hb_gt_def_MouseCol( PHB_GT pGT )
 
 static void hb_gt_def_MouseGetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-   HB_SYMBOL_UNUSED( pGT );
-
-   *piRow = *piCol = 0;
+   *piRow = pGT->iMouseLastRow;
+   *piCol = pGT->iMouseLastCol;
 }
 
 static void hb_gt_def_MouseSetPos( PHB_GT pGT, int iRow, int iCol )
 {
-   HB_SYMBOL_UNUSED( pGT );
-   HB_SYMBOL_UNUSED( iRow );
-   HB_SYMBOL_UNUSED( iCol );
+   pGT->iMouseLastRow = iRow;
+   pGT->iMouseLastCol = iCol;
 }
 
 static void hb_gt_def_MouseSetBounds( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight )
@@ -3694,17 +3692,19 @@ static const char * hb_gt_FindDefault( void )
 
 static int hb_gt_FindEntry( const char * pszID )
 {
+   HB_BOOL fGt = hb_strnicmp( pszID, "gt", 2 );
    int iPos;
 
-   for( iPos = 0; iPos < s_iGtCount; iPos++ )
+   for( iPos = -1; iPos < s_iGtCount; iPos++ )
    {
-      if( hb_stricmp( s_gtInit[ iPos ]->id, pszID ) == 0 ||
-          ( hb_strnicmp( pszID, "gt", 2 ) == 0 &&
-            hb_stricmp( s_gtInit[ iPos ]->id, pszID + 2 ) == 0 ) )
+      const char * id = iPos < 0 ? "NUL" : s_gtInit[ iPos ]->id;
+
+      if( hb_stricmp( pszID, id ) == 0 ||
+          ( fGt && hb_stricmp( pszID + 2, id ) == 0 ) )
          return iPos;
    }
 
-   return -1;
+   return hb_stricmp( pszID + ( fGt ? 2 : 0 ), "null" ) == 0 ? -1 : -2;
 }
 
 void hb_gtSetDefault( const char * szGtName )
@@ -3715,7 +3715,7 @@ void hb_gtSetDefault( const char * szGtName )
 
 HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
 {
-   if( s_iGtCount < HB_GT_MAX_ && hb_gt_FindEntry( gtInit->id ) == -1 )
+   if( s_iGtCount < HB_GT_MAX_ && hb_gt_FindEntry( gtInit->id ) < -1 )
    {
       if( gtInit->pGtId )
          *gtInit->pGtId = s_iGtCount;
@@ -3731,7 +3731,9 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
 
    if( szGtName )
    {
-      if( hb_stricmp( szGtName, "nul" ) == 0 || hb_stricmp( szGtName, "null" ) == 0 )
+      iPos = hb_gt_FindEntry( szGtName );
+
+      if( iPos == -1 )
       {
          if( pGT || pSuperTable )
             hb_errInternal( 9996, "Harbour terminal (GT) initialization failure", NULL, NULL );
@@ -3743,10 +3745,7 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
          pGT->iUsed++;
          return pGT;
       }
-
-      iPos = hb_gt_FindEntry( szGtName );
-
-      if( iPos != -1 )
+      else if( iPos >= 0 )
       {
          HB_BOOL fNew = pGT == NULL;
 
@@ -3858,7 +3857,7 @@ HB_BOOL hb_gtReload( const char * szGtName,
 {
    HB_BOOL fResult = HB_FALSE;
 
-   if( szGtName && hb_gt_FindEntry( szGtName ) != -1 )
+   if( szGtName && hb_gt_FindEntry( szGtName ) >= -1 )
    {
       hb_gtRelease( NULL );
       hb_stackSetGT( hb_gtLoad( szGtName, NULL, NULL ) );
@@ -3875,7 +3874,7 @@ void * hb_gtCreate( const char * szGtName,
 {
    void * hCurrGT = hb_gtSwap( NULL );
 
-   if( szGtName && hb_gt_FindEntry( szGtName ) != -1 )
+   if( szGtName && hb_gt_FindEntry( szGtName ) >= -1 )
    {
       PHB_GT pGT = hb_gtLoad( szGtName, NULL, NULL );
       if( pGT )

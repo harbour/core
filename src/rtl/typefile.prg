@@ -114,7 +114,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       oErr:OsCode      := FError()
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
-      IF HB_ISLOGICAL( xRecover ) .AND. ! xRecover      /* user select "Default" */
+      IF HB_ISLOGICAL( xRecover ) .AND. ! xRecover  /* user select "Default" */
          RETURN
       ENDIF
    ENDDO
@@ -130,7 +130,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
    nSize   := FSeek( nHandle, 0, FS_END )
    nBuffer := Min( nSize, BUFFER_LENGTH )
 
-   FSeek( nHandle, 0 ) /* go top */
+   FSeek( nHandle, 0 )  /* go top */
 
    /* Here we try to read a line at a time but I think we could just
       display the whole buffer since it said:
@@ -138,7 +138,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
 
    nHasRead := 0
    cBuffer := Space( nBuffer )
-   QOut()                                                 /* starting a new line */
+   QOut()  /* starting a new line */
    DO WHILE ( nRead := FRead( nHandle, @cBuffer, nBuffer ) ) > 0
       nHasRead += nRead
       QQOut( cBuffer )

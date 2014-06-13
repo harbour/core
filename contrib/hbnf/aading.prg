@@ -1,9 +1,6 @@
 /*
- * Author....: Ralph Oliver,  TRANSCOM SYSTEMS
- * CIS ID....: 74030,703
- *
- * This is an original work by Ralph Oliver and is placed in the
- * public domain.
+ * This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
+ * and is placed in the public domain.
  *
  * Modification history:
  *
@@ -12,7 +9,6 @@
  *
  *    Rev 1.0   07 Jun 1991 23:03:08   GLENN
  * Initial revision.
- *
  *
  */
 
@@ -31,7 +27,7 @@ FUNCTION ft_AAddition( aList1, aList2, lTrimmer, lCaseSens )
       ELSE
          bScanCode := {| x | x == element }
       ENDIF
-   ELSE // Ignore case
+   ELSE  // Ignore case
       IF lTrimmer
          bScanCode := {| x | Upper( AllTrim( x ) ) == Upper( AllTrim( element ) ) }
       ELSE

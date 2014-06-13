@@ -1,8 +1,5 @@
 /*
- * Author....: Greg Lief
- * CIS ID....: 72460,1760
- *
- * This function is an original work by Mr. Grump and is placed in the
+ * This function is an original work by Greg Lief (Mr. Grump) and is placed in the
  * public domain.
  *
  * Modification history:
@@ -18,7 +15,6 @@
 #include "box.ch"
 
 /* display vertical menu */
-
 PROCEDURE ft_Menu2( aMenuInfo, cColors )
 
    LOCAL nChoice     := 1
@@ -42,8 +38,8 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
    AEval( aMenuInfo, {| ele | nMaxwidth := Max( nMaxwidth, Len( ele[ 1 ] ) ) } )
 
    /* establish top and left box coordinates */
-   nLeft := ( ( MaxCol() + 1 ) - nMaxwidth ) / 2
-   nTop  := ( ( MaxRow() + 1 ) - ( nOptions + 2 ) ) / 2
+   nLeft := ( MaxCol() + 1 - nMaxwidth ) / 2
+   nTop  := ( MaxRow() + 1 - ( nOptions + 2 ) ) / 2
 
    DO WHILE nChoice != 0 .AND. nChoice != nOptions
 
@@ -72,7 +68,7 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
    /* restore previous message and wrap settings */
    Set( _SET_MESSAGE, lOldmessrow )
    Set( _SET_MCENTER, lOldcenter )
-   Set( _SET_WRAP,    lOldwrap )
+   Set( _SET_WRAP, lOldwrap )
    SetColor( cOldcolor )
 
    RETURN

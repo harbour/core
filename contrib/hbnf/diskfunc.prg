@@ -1,7 +1,4 @@
 /*
- * Author....: Robert A. DiFalco
- * CIS ID....: ?
- *
  * This is an original work by Robert A. DiFalco and is placed in
  * the public domain.
  *

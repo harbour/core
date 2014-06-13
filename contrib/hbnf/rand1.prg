@@ -1,7 +1,4 @@
 /*
- * Author....: Gary Baren
- * CIS ID....: 75470,1027
- *
  * This is an original work by Gary Baren and is hereby placed in the
  * public domain.
  *
@@ -18,12 +15,13 @@
  *
  */
 
+#define _B_  31415621
+#define _M_  100000000
+
 FUNCTION ft_Rand1( nMax )
 
    THREAD STATIC t_nSeed
 
-   LOCAL m := 100000000, b := 31415621
-
    t_nSeed := iif( t_nSeed == NIL, Seconds(), t_nSeed )
 
-   RETURN nMax * ( ( t_nSeed := ( ( t_nSeed * b + 1 ) % m ) ) / m )
+   RETURN nMax * ( ( t_nSeed := ( ( t_nSeed * _B_ + 1 ) % _M_ ) ) / _M_ )

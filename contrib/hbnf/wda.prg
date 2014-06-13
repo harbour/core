@@ -1,7 +1,4 @@
 /*
- * Author....: Eric Splaver
- * CIS ID....: ?
- *
  * This is an original work by Eric Splaver and is placed in the
  * public domain.
  *

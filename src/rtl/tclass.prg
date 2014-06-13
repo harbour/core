@@ -159,22 +159,24 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    LOCAL Self := QSelf()
    LOCAL i
 
-   IF HB_ISSYMBOL( xSuper )
+   DO CASE
+   CASE HB_ISSYMBOL( xSuper )
       ::asSuper := { xSuper }
-   ELSEIF Empty( xSuper )
+   CASE Empty( xSuper )
       ::asSuper := {}
-   ELSEIF HB_ISSTRING( xSuper )
+   CASE HB_ISSTRING( xSuper )
       ::asSuper := { __dynsN2Sym( xSuper ) }
-   ELSEIF HB_ISARRAY( xSuper )
+   CASE HB_ISARRAY( xSuper )
       ::asSuper := {}
       FOR EACH i IN xSuper
-         IF HB_ISSYMBOL( i )
+         DO CASE
+         CASE HB_ISSYMBOL( i )
             AAdd( ::asSuper, i )
-         ELSEIF HB_ISSTRING( i ) .AND. ! Empty( i )
+         CASE HB_ISSTRING( i ) .AND. ! Empty( i )
             AAdd( ::asSuper, __dynsN2Sym( i ) )
-         ENDIF
+         ENDCASE
       NEXT
-   ENDIF
+   ENDCASE
 
    ::cName         := hb_asciiUpper( cClassName )
    ::sClassFunc    := sClassFunc

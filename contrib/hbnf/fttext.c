@@ -1,7 +1,4 @@
 /*
- * Author....: Brice de Ganahl and Steve Larsen
- * CIS ID....: 76370,1532
- *
  * This is an original work by Brice de Ganahl and Steve Larsen
  * and is placed in the public domain.
  *
@@ -804,8 +801,7 @@ HB_FUNC( FT_FGOTO )
    ft_text->error[ ft_text->area ] = hb_fsError();
 }
 
-/*
-   In-line assembler routine to parse a buffer
+/* In-line assembler routine to parse a buffer
    for an EOL
 
    Returns count to first character _after_ next
@@ -814,8 +810,7 @@ HB_FUNC( FT_FGOTO )
    LFs will be ignored (included in count).
 
    If no EOL found return is zero.  (could mean EOF or
-   line is longer than buffer end)
- */
+   line is longer than buffer end) */
 static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
 {
    HB_ISIZ tmp;
@@ -842,16 +837,14 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
    return 0;
 }
 
-/*
-   In-line assembler routine to parse a buffer
+/* In-line assembler routine to parse a buffer
    for a EOL
 
    buf pointer points at beginning of search (end
     of the buffer), all searches are conducted
    backwards, returns No. of characters betw.
    initial position and first character _after_
-   the preceding EOL (beginning of line).
- */
+   the preceding EOL (beginning of line). */
 static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len )
 {
    HB_ISIZ tmp = buf_len - 1;
@@ -1053,7 +1046,7 @@ static int _writeLine( PFT_TEXT ft_text, const char * theData, HB_SIZE iDataLen 
 {
    int err = 0;
 
-   if( ! ( hb_fsWriteLarge( ft_text->handles[ ft_text->area ], theData, iDataLen ) == iDataLen ) )
+   if( hb_fsWriteLarge( ft_text->handles[ ft_text->area ], theData, iDataLen ) != iDataLen )
    {
       err = 1;
       ft_text->error[ ft_text->area ] = hb_fsError();

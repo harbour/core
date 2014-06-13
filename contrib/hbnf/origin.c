@@ -1,7 +1,4 @@
 /*
- * Author....: Steve Larsen
- * CIS ID....: 76370,1532
- *
  * This is an original work by K. Stephan Larsen and is placed in the
  * public domain.
  *

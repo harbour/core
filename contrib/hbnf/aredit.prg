@@ -1,8 +1,5 @@
 /*
- * Author....: James J. Orlowski, M.D.
- * CIS ID....: 72707,601
- *
- * This is an original work by James Orlowski and is placed in the
+ * This is an original work by James J. Orlowski, M.D. and is placed in the
  * public domain.
  *
  * Modification history:
@@ -18,7 +15,6 @@
  *    Rev 1.0   07 Jun 1991 23:03:24   GLENN
  * Initial revision.
  *
- *
  */
 
 /* Some notes:
@@ -30,8 +26,7 @@
    showed me the improved skipblock in public messages on Nanforum.
 
    I added the functionality of the "Edit Get" code block
-   (ie bGetFunc), TestGet() demo, and the add/delete rows.
- */
+   (ie bGetFunc), TestGet() demo, and the add/delete rows. */
 
 #include "box.ch"
 #include "inkey.ch"
@@ -46,7 +41,7 @@
 // BLOCK[]     aBlocks   - Array containing code block for each column.
 // CODE BLOCK  bGetFunc  - Code Block For Special Get Processing
 //  NOTE: When evaluated a code block is passed the array element to
-//          be edited
+//        be edited
 
 FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
       ar, nElem, aHeadings, aBlocks, bGetFunc )
@@ -54,8 +49,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
    LOCAL exit_requested, nKey, meth_no
    LOCAL cSaveWin, i, b, column
    LOCAL dim, cType, cVal
-   LOCAL tb_methods := ;
-      { ;
+   LOCAL tb_methods := { ;
       { K_DOWN,       {| b | b:down() } }, ;
       { K_UP,         {| b | b:up() } }, ;
       { K_PGDN,       {| b | b:pagedown() } }, ;
@@ -69,8 +63,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
       { K_CTRL_LEFT,  {| b | b:panleft() } }, ;
       { K_CTRL_RIGHT, {| b | b:panright() } }, ;
       { K_CTRL_HOME,  {| b | b:panhome() } }, ;
-      { K_CTRL_END,   {| b | b:panend() } } ;
-      }
+      { K_CTRL_END,   {| b | b:panend() } } }
 
    cSaveWin := SaveScreen( nTop, nLeft, nBot, nRight )
    hb_DispBox( nTop, nLeft, nBot, nRight, HB_B_SINGLE_UNI )

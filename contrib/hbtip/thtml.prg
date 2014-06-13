@@ -94,7 +94,6 @@ THREAD STATIC t_lInit := .F.       // initilization flag for HTML data
 #endif
 
 /* Class for handling an entire HTML document */
-
 CREATE CLASS THtmlDocument MODULE FRIENDLY
 
    HIDDEN:
@@ -122,7 +121,6 @@ CREATE CLASS THtmlDocument MODULE FRIENDLY
 ENDCLASS
 
 // accepts a HTML formatted string
-
 METHOD new( cHtmlString ) CLASS THtmlDocument
 
    LOCAL oSubNode, oErrNode, aHead, aBody, nMode := 0
@@ -215,25 +213,22 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
    RETURN Self
 
 // Builds a HTML formatted string
-
 METHOD toString() CLASS THtmlDocument
-
    RETURN ::root:toString()
 
 // reads HTML file and parses it into tree of objects
-
 METHOD readFile( cFileName ) CLASS THtmlDocument
 
-   IF ! hb_FileExists( cFileName )
-      RETURN .F.
-   ENDIF
-   ::changed := .T.
-   ::new( MemoRead( cFileName ) )
+   IF hb_FileExists( cFileName )
+      ::changed := .T.
+      ::new( MemoRead( cFileName ) )
 
-   RETURN .T.
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 // writes the entire tree of HTML objects into a file
-
 METHOD writeFile( cFileName ) CLASS THtmlDocument
 
    LOCAL lSuccess := hb_MemoWrit( cFileName, ::toString() )
@@ -245,7 +240,6 @@ METHOD writeFile( cFileName ) CLASS THtmlDocument
    RETURN lSuccess
 
 // builds a one dimensional array of all nodes contained in the HTML document
-
 METHOD collect() CLASS THtmlDocument
 
    IF ::changed
@@ -256,7 +250,6 @@ METHOD collect() CLASS THtmlDocument
    RETURN ::nodes
 
 // returns the first tag matching the passed tag name
-
 METHOD getNode( cTagName ) CLASS THtmlDocument
 
    LOCAL oNode
@@ -274,7 +267,6 @@ METHOD getNode( cTagName ) CLASS THtmlDocument
    RETURN NIL
 
 // returns all tags matching the passed tag name
-
 METHOD getNodes( cTagName ) CLASS THtmlDocument
 
    LOCAL oNode, stack := S_STACK()
@@ -294,7 +286,6 @@ METHOD getNodes( cTagName ) CLASS THtmlDocument
    RETURN stack[ S_DATA ]
 
 // finds the first HTML tag matching the search criteria
-
 METHOD findFirst( cName, cAttrib, cValue, cData ) CLASS THtmlDocument
 
    ::oIterator := THtmlIteratorScan():New( Self )
@@ -302,7 +293,6 @@ METHOD findFirst( cName, cAttrib, cValue, cData ) CLASS THtmlDocument
    RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
 
 // finds the first HTML tag matching the RegEx search criteria
-
 METHOD findFirstRegex( cName, cAttrib, cValue, cData ) CLASS THtmlDocument
 
    ::oIterator := THtmlIteratorRegex():New( Self )
@@ -339,7 +329,6 @@ CREATE CLASS THtmlIterator MODULE FRIENDLY
 ENDCLASS
 
 // accepts a THtmlNode or THtmlDocument object
-
 METHOD New( oHtml ) CLASS THtmlIterator
 
    IF oHtml:isDerivedFrom ( "THtmlDocument" )
@@ -426,7 +415,6 @@ METHOD Next() CLASS THtmlIterator
    RETURN oFound
 
 METHOD MatchCriteria() CLASS THtmlIterator
-
    RETURN .T.
 
 /* Iterator scan class */
@@ -661,37 +649,30 @@ METHOD isType( nType ) CLASS THtmlNode
    RETURN lRet
 
 // checks if this is a node that is always empty and never has HTML text, e.g. <img>,<link>,<meta>
-
 METHOD isEmpty() CLASS THtmlNode
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_EMPTY ) != 0
 
 // checks if this is a node that may occur inline, eg. <b>,<font>
-
 METHOD isInline() CLASS THtmlNode
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_INLINE ) != 0
 
 // checks if this is a node that may appear without a closing tag, eg. <p>,<tr>,<td>
-
 METHOD isOptional() CLASS THtmlNode
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_OPT ) != 0
 
 // checks if this is a node (leafs contain no further nodes, e.g. <br />,<hr>,_text_)
-
 METHOD isNode() CLASS THtmlNode
    RETURN HB_ISARRAY( ::htmlContent ) .AND. Len( ::htmlContent ) > 0
 
 // checks if this is a block node that must be closed with an ending tag: eg: <table></table>, <ul></ul>
-
 METHOD isBlock() CLASS THtmlNode
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_BLOCK ) != 0
 
 // checks if this is a node whose text line formatting must be preserved: <pre>,<script>,<textarea>
-
 METHOD keepFormatting() CLASS THtmlNode
    RETURN "<" + Lower( ::htmlTagName ) + ">" $ "<pre>,<script>,<textarea>"
 
 // parses a HTML string and builds a tree of THtmlNode objects
-
 METHOD parseHtml( parser ) CLASS THtmlNode
 
    LOCAL nLastPos := parser:p_pos
@@ -857,7 +838,6 @@ METHOD parseHtml( parser ) CLASS THtmlNode
    RETURN Self
 
 // parses a HTML string without any changes to indentation and line breaks
-
 METHOD parseHtmlFixed( parser ) CLASS THtmlNode
 
    LOCAL nStart, nEnd
@@ -890,7 +870,6 @@ METHOD parseHtmlFixed( parser ) CLASS THtmlNode
    RETURN Self
 
 // adds a new CHILD node to the current one
-
 METHOD addNode( oTHtmlNode ) CLASS THtmlNode
 
    IF oTHtmlNode:parent != NIL .AND. ! oTHtmlNode:parent == Self
@@ -909,7 +888,6 @@ METHOD addNode( oTHtmlNode ) CLASS THtmlNode
    RETURN oTHtmlNode
 
 // inserts a SIBLING node before the current one
-
 METHOD insertBefore( oTHtmlNode ) CLASS THtmlNode
 
    IF ::parent == NIL
@@ -934,7 +912,6 @@ METHOD insertBefore( oTHtmlNode ) CLASS THtmlNode
    RETURN oTHtmlNode
 
 // inserts a SIBLING node after the current one
-
 METHOD insertAfter( oTHtmlNode ) CLASS THtmlNode
 
    LOCAL nPos
@@ -959,7 +936,6 @@ METHOD insertAfter( oTHtmlNode ) CLASS THtmlNode
    RETURN oTHtmlNode
 
 // deletes this node from the object tree
-
 METHOD Delete()  CLASS THtmlNode
 
    LOCAL nPos
@@ -983,7 +959,6 @@ METHOD Delete()  CLASS THtmlNode
    RETURN Self
 
 // returns first node in subtree (.F.) or first node of entire tree (.T.)
-
 METHOD firstNode( lRoot ) CLASS THtmlNode
 
    IF hb_defaultValue( lRoot, .F. )
@@ -995,7 +970,6 @@ METHOD firstNode( lRoot ) CLASS THtmlNode
    RETURN iif( Empty( ::htmlContent ), NIL, ::htmlContent[ 1 ] )
 
 // returns last node in subtree (.F.) or last node of entire tree (.T.)
-
 METHOD lastNode( lRoot ) CLASS THtmlNode
 
    hb_default( @lRoot, .F. )
@@ -1007,7 +981,6 @@ METHOD lastNode( lRoot ) CLASS THtmlNode
    RETURN ATail( iif( lRoot, ::root:collect(), ::collect() ) )
 
 // returns next node
-
 METHOD nextNode() CLASS THtmlNode
 
    LOCAL nPos, aNodes
@@ -1031,7 +1004,6 @@ METHOD nextNode() CLASS THtmlNode
    RETURN iif( nPos == Len( aNodes ), NIL, aNodes[ nPos + 1 ] )
 
 // returns previous node
-
 METHOD prevNode() CLASS THtmlNode
 
    LOCAL nPos, aNodes
@@ -1046,7 +1018,6 @@ METHOD prevNode() CLASS THtmlNode
    RETURN iif( nPos == 1, ::parent, aNodes[ nPos - 1 ] )
 
 // creates HTML code for this node
-
 METHOD toString( nIndent ) CLASS THtmlNode
 
    LOCAL cIndent, cHtml := "", oNode
@@ -1102,7 +1073,6 @@ METHOD toString( nIndent ) CLASS THtmlNode
    RETURN cHtml
 
 // Builds the attribute string
-
 METHOD attrToString() CLASS THtmlNode
 
    LOCAL aAttr, cAttr
@@ -1140,7 +1110,6 @@ STATIC FUNCTION __AttrToStr( cName, cValue, aAttr, oTHtmlNode )
    RETURN " " + cName + "=" + '"' + cValue + '"'
 
 // collects all (sub)nodes of the tree in a one dimensional array
-
 METHOD collect( oEndNode ) CLASS THtmlNode
 
    LOCAL stack, oSubNode
@@ -1174,7 +1143,6 @@ STATIC FUNCTION __CollectTags( oTHtmlNode, stack, oEndNode )
    RETURN stack
 
 // Retrieves the textual content of a node
-
 METHOD getText( cEOL ) CLASS THtmlNode
 
    LOCAL cText := ""
@@ -1197,7 +1165,6 @@ METHOD getText( cEOL ) CLASS THtmlNode
    RETURN cText
 
 // Returns the value of an HTML attribute
-
 METHOD getAttribute( cName ) CLASS THtmlNode
 
    LOCAL hHash := ::getAttributes()
@@ -1216,7 +1183,6 @@ METHOD getAttribute( cName ) CLASS THtmlNode
    RETURN cValue
 
 // Returns all HTML attributes as a Hash
-
 METHOD getAttributes() CLASS THtmlNode
 
    IF ::htmlTagType[ 1 ] == NIL
@@ -1243,7 +1209,6 @@ METHOD getAttributes() CLASS THtmlNode
    RETURN ::htmlAttributes
 
 // HTML attribute parser
-
 STATIC FUNCTION __ParseAttr( parser )
 
    LOCAL cChr, nMode := 1  // 1=name, 2=value
@@ -1341,7 +1306,6 @@ STATIC FUNCTION __ParseAttr( parser )
    RETURN hHash
 
 // Sets one attribute and value
-
 METHOD setAttribute( cName, cValue ) CLASS THtmlNode
 
    LOCAL aAttr
@@ -1374,7 +1338,6 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
    RETURN hHash[ cName ]
 
 // Sets all attribute and values
-
 METHOD setAttributes( cHtml ) CLASS THtmlNode
 
    ::htmlAttributes := cHtml
@@ -1382,7 +1345,6 @@ METHOD setAttributes( cHtml ) CLASS THtmlNode
    RETURN ::getAttributes()
 
 // Removes one attribute
-
 METHOD delAttribute( cName ) CLASS THtmlNode
 
    LOCAL xVal := ::getAttribute( cName )
@@ -1400,7 +1362,6 @@ METHOD delAttribute( cName ) CLASS THtmlNode
    RETURN lRet
 
 // Removes all attributes
-
 METHOD delAttributes() CLASS THtmlNode
 
    ::htmlAttributes := NIL
@@ -1408,7 +1369,6 @@ METHOD delAttributes() CLASS THtmlNode
    RETURN .T.
 
 // Checks for the existence of an attribute
-
 METHOD isAttribute( cName ) CLASS THtmlNode
 
    LOCAL lRet
@@ -1422,12 +1382,10 @@ METHOD isAttribute( cName ) CLASS THtmlNode
    RETURN lRet
 
 // Error handling
-
 METHOD noMessage( ... ) CLASS THtmlNode
    RETURN ::noAttribute( __GetMessage(), hb_AParams() )
 
 // Non existent message -> returns and/or creates Tag or Attribute
-
 METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
    LOCAL oNode
@@ -1464,7 +1422,6 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
    RETURN ::getAttribute( cName )
 
 // finds the first node in tree with this name
-
 METHOD findNodeByTagName( cName ) CLASS THtmlNode
 
    LOCAL aNodes := ::collect()
@@ -1479,7 +1436,6 @@ METHOD findNodeByTagName( cName ) CLASS THtmlNode
    RETURN NIL
 
 // collects all nodes in tree with this name
-
 METHOD findNodesByTagName( cName, nOrdinal ) CLASS THtmlNode
 
    LOCAL aNodes := ::collect()
@@ -1502,7 +1458,6 @@ METHOD findNodesByTagName( cName, nOrdinal ) CLASS THtmlNode
    RETURN aRet
 
 // returns the text node of this node
-
 METHOD _getTextNode() CLASS THtmlNode
 
    IF ::htmlTagName == "_text_"
@@ -1514,10 +1469,7 @@ METHOD _getTextNode() CLASS THtmlNode
    RETURN ATail( ::htmlContent )
 
 // assigns text to a text node of this node
-
 METHOD _setTextNode( cText ) CLASS THtmlNode
-
-   LOCAL oNode := ::_getTextNode()
 
    cText := LTrim( hb_ValToStr( cText ) )
 
@@ -1529,13 +1481,12 @@ METHOD _setTextNode( cText ) CLASS THtmlNode
       cText := StrTran( cText, ">", "&gt;" )
    ENDDO
 
-   oNode:htmlContent := iif( cText == "", "&nbsp;", cText )
+   ::_getTextNode():htmlContent := iif( cText == "", "&nbsp;", cText )
 
    RETURN Self
 
 // called by "+" operator
 // Creates a new node of the specified tag name and raises error if cTagName is invalid
-
 METHOD pushNode( cTagName ) CLASS THtmlNode
 
    LOCAL oNode
@@ -1570,7 +1521,6 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
 
 // called by "-" operator
 // returns the parent of this node and raises error if cName is an invalid closing tag
-
 METHOD popNode( cName ) CLASS THtmlNode
 
    LOCAL endTag
@@ -1681,23 +1631,23 @@ STATIC PROCEDURE _Init_Html_TagTypes
 
    hb_HCaseMatch( t_hHT, .F. )
 
-   t_hHT[ "_root_"     ] := { NIL                         ,         ( CM_INLINE )                                       }
-   t_hHT[ "_text_"     ] := { NIL                         ,         ( CM_INLINE )                                       }
-   t_hHT[ "!--"        ] := { NIL                         , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
+   t_hHT[ "_root_"     ] := {                             ,         ( CM_INLINE )                                       }
+   t_hHT[ "_text_"     ] := {                             ,         ( CM_INLINE )                                       }
+   t_hHT[ "!--"        ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
    t_hHT[ "a"          ] := { @THtmlAttr_A()              ,         ( CM_INLINE )                                       }
    t_hHT[ "abbr"       ] := { @THtmlAttr_ABBR()           ,         ( CM_INLINE )                                       }
    t_hHT[ "acronym"    ] := { @THtmlAttr_ACRONYM()        ,         ( CM_INLINE )                                       }
    t_hHT[ "address"    ] := { @THtmlAttr_ADDRESS()        ,         ( CM_BLOCK )                                        }
-   t_hHT[ "align"      ] := { NIL                         ,         ( CM_BLOCK )                                        }
+   t_hHT[ "align"      ] := {                             ,         ( CM_BLOCK )                                        }
    t_hHT[ "applet"     ] := { @THtmlAttr_APPLET()         , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM )          }
    t_hHT[ "area"       ] := { @THtmlAttr_AREA()           , hb_bitOr( CM_BLOCK, CM_EMPTY )                              }
    t_hHT[ "b"          ] := { @THtmlAttr_B()              ,         ( CM_INLINE )                                       }
    t_hHT[ "base"       ] := { @THtmlAttr_BASE()           , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
    t_hHT[ "basefont"   ] := { @THtmlAttr_BASEFONT()       , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
    t_hHT[ "bdo"        ] := { @THtmlAttr_BDO()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "bgsound"    ] := { NIL                         , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
+   t_hHT[ "bgsound"    ] := {                             , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
    t_hHT[ "big"        ] := { @THtmlAttr_BIG()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "blink"      ] := { NIL                         ,         ( CM_INLINE )                                       }
+   t_hHT[ "blink"      ] := {                             ,         ( CM_INLINE )                                       }
    t_hHT[ "blockquote" ] := { @THtmlAttr_BLOCKQUOTE()     ,         ( CM_BLOCK )                                        }
    t_hHT[ "body"       ] := { @THtmlAttr_BODY()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                      }
    t_hHT[ "br"         ] := { @THtmlAttr_BR()             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
@@ -1708,7 +1658,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "code"       ] := { @THtmlAttr_CODE()           ,         ( CM_INLINE )                                       }
    t_hHT[ "col"        ] := { @THtmlAttr_COL()            , hb_bitOr( CM_TABLE, CM_EMPTY )                              }
    t_hHT[ "colgroup"   ] := { @THtmlAttr_COLGROUP()       , hb_bitOr( CM_TABLE, CM_OPT )                                }
-   t_hHT[ "comment"    ] := { NIL                         ,         ( CM_INLINE )                                       }
+   t_hHT[ "comment"    ] := {                             ,         ( CM_INLINE )                                       }
    t_hHT[ "dd"         ] := { @THtmlAttr_DD()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                }
    t_hHT[ "del"        ] := { @THtmlAttr_DEL()            , hb_bitOr( CM_INLINE, CM_BLOCK, CM_MIXED )                   }
    t_hHT[ "dfn"        ] := { @THtmlAttr_DFN()            ,         ( CM_INLINE )                                       }
@@ -1717,7 +1667,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "dl"         ] := { @THtmlAttr_DL()             ,         ( CM_BLOCK )                                        }
    t_hHT[ "dt"         ] := { @THtmlAttr_DT()             , hb_bitOr( CM_DEFLIST, CM_OPT, CM_NO_INDENT )                }
    t_hHT[ "em"         ] := { @THtmlAttr_EM()             ,         ( CM_INLINE )                                       }
-   t_hHT[ "embed"      ] := { NIL                         , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                     }
+   t_hHT[ "embed"      ] := {                             , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                     }
    t_hHT[ "fieldset"   ] := { @THtmlAttr_FIELDSET()       ,         ( CM_BLOCK )                                        }
    t_hHT[ "font"       ] := { @THtmlAttr_FONT()           ,         ( CM_INLINE )                                       }
    t_hHT[ "form"       ] := { @THtmlAttr_FORM()           ,         ( CM_BLOCK )                                        }
@@ -1734,30 +1684,30 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "html"       ] := { @THtmlAttr_HTML()           , hb_bitOr( CM_HTML, CM_OPT, CM_OMITST )                      }
    t_hHT[ "i"          ] := { @THtmlAttr_I()              ,         ( CM_INLINE )                                       }
    t_hHT[ "iframe"     ] := { @THtmlAttr_IFRAME()         ,         ( CM_INLINE )                                       }
-   t_hHT[ "ilayer"     ] := { NIL                         ,         ( CM_INLINE )                                       }
+   t_hHT[ "ilayer"     ] := {                             ,         ( CM_INLINE )                                       }
    t_hHT[ "img"        ] := { @THtmlAttr_IMG()            , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                     }
    t_hHT[ "input"      ] := { @THtmlAttr_INPUT()          , hb_bitOr( CM_INLINE, CM_IMG, CM_EMPTY )                     }
    t_hHT[ "ins"        ] := { @THtmlAttr_INS()            , hb_bitOr( CM_INLINE, CM_BLOCK, CM_MIXED )                   }
    t_hHT[ "isindex"    ] := { @THtmlAttr_ISINDEX()        , hb_bitOr( CM_BLOCK, CM_EMPTY )                              }
    t_hHT[ "kbd"        ] := { @THtmlAttr_KBD()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "keygen"     ] := { NIL                         , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
+   t_hHT[ "keygen"     ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
    t_hHT[ "label"      ] := { @THtmlAttr_LABEL()          ,         ( CM_INLINE )                                       }
-   t_hHT[ "layer"      ] := { NIL                         ,         ( CM_BLOCK )                                        }
+   t_hHT[ "layer"      ] := {                             ,         ( CM_BLOCK )                                        }
    t_hHT[ "legend"     ] := { @THtmlAttr_LEGEND()         ,         ( CM_INLINE )                                       }
    t_hHT[ "li"         ] := { @THtmlAttr_LI()             , hb_bitOr( CM_LIST, CM_OPT, CM_NO_INDENT )                   }
    t_hHT[ "link"       ] := { @THtmlAttr_LINK()           , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
    t_hHT[ "listing"    ] := { @THtmlAttr_LISTING()        , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
    t_hHT[ "map"        ] := { @THtmlAttr_MAP()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "marquee"    ] := { NIL                         , hb_bitOr( CM_INLINE, CM_OPT )                               }
+   t_hHT[ "marquee"    ] := {                             , hb_bitOr( CM_INLINE, CM_OPT )                               }
    t_hHT[ "menu"       ] := { @THtmlAttr_MENU()           , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
    t_hHT[ "meta"       ] := { @THtmlAttr_META()           , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
-   t_hHT[ "multicol"   ] := { NIL                         ,         ( CM_BLOCK )                                        }
+   t_hHT[ "multicol"   ] := {                             ,         ( CM_BLOCK )                                        }
    t_hHT[ "nextid"     ] := { @THtmlAttr_NEXTID()         , hb_bitOr( CM_HEAD, CM_EMPTY )                               }
-   t_hHT[ "nobr"       ] := { NIL                         ,         ( CM_INLINE )                                       }
-   t_hHT[ "noembed"    ] := { NIL                         ,         ( CM_INLINE )                                       }
+   t_hHT[ "nobr"       ] := {                             ,         ( CM_INLINE )                                       }
+   t_hHT[ "noembed"    ] := {                             ,         ( CM_INLINE )                                       }
    t_hHT[ "noframes"   ] := { @THtmlAttr_NOFRAMES()       , hb_bitOr( CM_BLOCK, CM_FRAMES )                             }
-   t_hHT[ "nolayer"    ] := { NIL                         , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                   }
-   t_hHT[ "nosave"     ] := { NIL                         ,         ( CM_BLOCK )                                        }
+   t_hHT[ "nolayer"    ] := {                             , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                   }
+   t_hHT[ "nosave"     ] := {                             ,         ( CM_BLOCK )                                        }
    t_hHT[ "noscript"   ] := { @THtmlAttr_NOSCRIPT()       , hb_bitOr( CM_BLOCK, CM_INLINE, CM_MIXED )                   }
    t_hHT[ "object"     ] := { @THtmlAttr_OBJECT()         , hb_bitOr( CM_OBJECT, CM_HEAD, CM_IMG, CM_INLINE, CM_PARAM ) }
    t_hHT[ "ol"         ] := { @THtmlAttr_OL()             ,         ( CM_BLOCK )                                        }
@@ -1778,10 +1728,10 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "samp"       ] := { @THtmlAttr_SAMP()           ,         ( CM_INLINE )                                       }
    t_hHT[ "script"     ] := { @THtmlAttr_SCRIPT()         , hb_bitOr( CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE )          }
    t_hHT[ "select"     ] := { @THtmlAttr_SELECT()         , hb_bitOr( CM_INLINE, CM_FIELD )                             }
-   t_hHT[ "server"     ] := { NIL                         , hb_bitOr( CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE )          }
-   t_hHT[ "servlet"    ] := { NIL                         , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM )          }
+   t_hHT[ "server"     ] := {                             , hb_bitOr( CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE )          }
+   t_hHT[ "servlet"    ] := {                             , hb_bitOr( CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM )          }
    t_hHT[ "small"      ] := { @THtmlAttr_SMALL()          ,         ( CM_INLINE )                                       }
-   t_hHT[ "spacer"     ] := { NIL                         , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
+   t_hHT[ "spacer"     ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
    t_hHT[ "span"       ] := { @THtmlAttr_SPAN()           ,         ( CM_INLINE )                                       }
    t_hHT[ "strike"     ] := { @THtmlAttr_STRIKE()         ,         ( CM_INLINE )                                       }
    t_hHT[ "strong"     ] := { @THtmlAttr_STRONG()         ,         ( CM_INLINE )                                       }
@@ -1801,7 +1751,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hHT[ "u"          ] := { @THtmlAttr_U()              ,         ( CM_INLINE )                                       }
    t_hHT[ "ul"         ] := { @THtmlAttr_UL()             ,         ( CM_BLOCK )                                        }
    t_hHT[ "var"        ] := { @THtmlAttr_VAR()            ,         ( CM_INLINE )                                       }
-   t_hHT[ "wbr"        ] := { NIL                         , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
+   t_hHT[ "wbr"        ] := {                             , hb_bitOr( CM_INLINE, CM_EMPTY )                             }
    t_hHT[ "xmp"        ] := { @THtmlAttr_XMP()            , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
 
    RETURN
@@ -4358,7 +4308,6 @@ STATIC FUNCTION THtmlAttr_XMP()
 #ifdef HB_LEGACY_LEVEL4
 
 // Converts an HTML formatted text string to the ANSI character set
-
 FUNCTION HtmlToANSI( cHtmlText )
 
    LOCAL aEntity
@@ -4379,13 +4328,10 @@ FUNCTION HtmlToANSI( cHtmlText )
    RETURN cHtmlText
 
 // Converts an HTML formatted text string to the OEM character set
-
 FUNCTION HtmlToOEM( cHtmlText )
-
    RETURN hb_ANSIToOEM( HtmlToANSI( cHtmlText ) )
 
 // Inserts HTML character entities into an ANSI text string
-
 FUNCTION ANSIToHtml( cAnsiText )
 
    LOCAL cHtmlText := ""
@@ -4450,13 +4396,10 @@ FUNCTION ANSIToHtml( cAnsiText )
    RETURN cHtmlText
 
 // Inserts HTML character entities into an OEM text string
-
 FUNCTION OEMToHtml( cOemText )
-
    RETURN ANSIToHtml( hb_OEMToANSI( cOemText ) )
 
 // This function returs the HTML character entities that are exchangeable between ANSI and OEM character sets
-
 STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
 
    t_aHtmlAnsiEntities := ;
@@ -4544,7 +4487,6 @@ STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
 #endif
 
 // Converts an HTML formatted text string to the current character set
-
 FUNCTION tip_HtmlToStr( cHtmlText )
 
    LOCAL aEntity
@@ -4563,7 +4505,6 @@ FUNCTION tip_HtmlToStr( cHtmlText )
    RETURN cHtmlText
 
 // Inserts HTML character entities into a text string
-
 FUNCTION tip_StrToHtml( cAnsiText )
 
    LOCAL cHtmlText := ""

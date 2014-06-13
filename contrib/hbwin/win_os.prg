@@ -46,11 +46,10 @@
  *
  */
 
-/*
- * Operating system functions for Windows
+/* Operating system functions for Windows
  *
  * Program to check and set Windows Registry settings
- * for safe networking - all versions of Windows to XP SP2
+ * for safe networking - all versions of Windows
  *
  * Also includes check for buggy VREDIR.VXD under Win95
  * and if the correct patch file is found - run it.

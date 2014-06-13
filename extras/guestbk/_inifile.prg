@@ -85,11 +85,7 @@ METHOD New( cFileName ) CLASS TIniFile
       ::Contents := {}
       CurrArray := ::Contents
 
-      IF hb_FileExists( cFileName )
-         hFile := FOpen( cFilename )
-      ELSE
-         hFile := FCreate( cFilename )
-      ENDIF
+      hFile := iif( hb_FileExists( cFileName ), FOpen( cFilename ), FCreate( cFilename ) )
 
       cLine := ""
       lDone := .F.
@@ -97,7 +93,7 @@ METHOD New( cFileName ) CLASS TIniFile
          cFile := Space( 256 )
          lDone := ( FRead( hFile, @cFile, hb_BLen( cFile ) ) <= 0 )
 
-         cFile := StrTran( cFile, Chr( 13 ) ) // so we can just search for Chr( 10 )
+         cFile := StrTran( cFile, Chr( 13 ) )  // so we can just search for Chr( 10 )
 
          // prepend last read
          cFile := cLine + cFile

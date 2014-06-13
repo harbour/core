@@ -1,7 +1,4 @@
 /*
- * Author....: Glenn Scott
- * CIS ID....: 71620,1521
- *
  * This is an original work by Glenn Scott and is placed in the
  * public domain.
  *
@@ -36,7 +33,6 @@
 #define CLOSE_SEMAPHORE   4
 
 /* TODO: rewrite in C */
-
 FUNCTION ft_NWSemOpen( cName, nInitVal, nHandle, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], cRequest, nRet
@@ -64,7 +60,6 @@ FUNCTION ft_NWSemOpen( cName, nInitVal, nHandle, nOpenCnt )
    RETURN iif( nRet < 0, nRet + 256, nRet )
 
 /* TODO: rewrite in C */
-
 FUNCTION ft_NWSemEx( nHandle, nValue, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
@@ -97,7 +92,6 @@ FUNCTION ft_NWSemClose( nHandle )
 // internal for the semaphore package
 
 /* TODO: rewrite in C */
-
 STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
@@ -113,22 +107,19 @@ STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
 
    ft_int86( 33, aRegs )
    nRet := LOWBYTE( aRegs[ AX ] )
-   nRet := iif( nRet < 0, nRet + 256, nRet )
 
-   RETURN nRet
+   RETURN iif( nRet < 0, nRet + 256, nRet )
 
 FUNCTION ft_NWSemLock( cSemaphore, nHandle )
 
    LOCAL nOpenCnt := 0
-   LOCAL nRc := ft_NWSemOpen( cSemaphore, 0, @nHandle, @nOpenCnt )
 
-   IF nRc == 0
-      IF nOpenCnt != 1
-         ft_NWSemClose( nHandle )
-      ENDIF
+   IF ft_NWSemOpen( cSemaphore, 0, @nHandle, @nOpenCnt ) == 0 .AND. nOpenCnt != 1
+      ft_NWSemClose( nHandle )
+      RETURN .F.
    ENDIF
 
-   RETURN nOpenCnt == 1
+   RETURN .T.
 
 FUNCTION ft_NWSemUnlock( nHandle )
    RETURN ft_NWSemClose( nHandle ) == 0

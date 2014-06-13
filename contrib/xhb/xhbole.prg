@@ -61,6 +61,9 @@ FUNCTION GetActiveObject()
 FUNCTION CreateOleObject()
    RETURN NIL
 
+FUNCTION OleDefaultArg()
+   RETURN NIL
+
 #else
 
 
@@ -69,6 +72,8 @@ FUNCTION CreateOleObject()
 #include "hbclass.ch"
 
 #include "error.ch"
+
+#include "hbole.ch"
 
 #define EG_OLEEXCEPTION 1001
 #define DISPID_VALUE    0
@@ -251,5 +256,10 @@ FUNCTION GetActiveObject( cString )
 
 FUNCTION CreateOleObject( ... )
    RETURN __oleCreateObject( ... )
+
+#define WIN_DISP_E_PARAMNOTFOUND  0x80020004
+
+FUNCTION OleDefaultArg()
+   RETURN __oleVariantNew( WIN_VT_ERROR, WIN_DISP_E_PARAMNOTFOUND )
 
 #endif /* __PLATFORM__WINDOWS */

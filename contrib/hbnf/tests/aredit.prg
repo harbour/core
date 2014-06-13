@@ -6,6 +6,7 @@ PROCEDURE Main()
 
    // Thanks to Jim Gale for helping me understand the basics
    LOCAL i, ar[ 3, 26 ], aBlocks[ 3 ], aHeadings, nElem := 1, bGetFunc, cRet
+
    // set up 2 dimensional array ar[]
    FOR i := 1 TO 26
       ar[ 1, i ] := i                          //  1  ->  26  Numeric
@@ -19,7 +20,7 @@ PROCEDURE Main()
    aBlocks[ 2 ] := {|| ar[ 2, nElem ] }
    aBlocks[ 3 ] := {|| ar[ 3, nElem ] }
    // Set up TestGet() as bGetFunc
-   bGetFunc   := {| b, ar, nDim, nElem | TestGet( b, ar, nDim, nElem ) }
+   bGetFunc := {| b, ar, nDim, nElem | TestGet( b, ar, nDim, nElem ) }
 
    SET SCOREBOARD OFF
    SetColor( "W/N" )

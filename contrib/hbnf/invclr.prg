@@ -1,7 +1,4 @@
 /*
- * Author....: David Husnian
- * CIS ID....: ?
- *
  * This is an original work by David Husnian and is placed in the
  * public domain.
  *
@@ -20,21 +17,14 @@
 
 FUNCTION ft_InvClr( cDsrdColor )
 
-   LOCAL cBackground                    // The Background Color, New Foreground
-   LOCAL cForeground                    // The Foreground Color, New Background
-
    __defaultNIL( @cDsrdColor, SetColor() )
 
    // Remove Anything Past 1st Color
    cDsrdColor := Left( cDsrdColor, At( ",", cDsrdColor + "," ) - 1 )
 
-   // Separate the Fore/Background Colors
-   cForeground := AllTrim( Left( cDsrdColor,   At( "/", cDsrdColor ) - 1 ) )
-   cBackground := AllTrim( SubStr( cDsrdColor, At( "/", cDsrdColor ) + 1 ) )
-
    RETURN ;
-      hb_StrReplace( cBackground, "+*" ) + ;
+      hb_StrReplace( AllTrim( SubStr( cDsrdColor, At( "/", cDsrdColor ) + 1 ) ) /* background */, "+*" ) + ;
       iif( "*" $ cDsrdColor, "*", "" ) + ;
       iif( "+" $ cDsrdColor, "+", "" ) + ;
       "/" + ;
-      hb_StrReplace( cForeground, "+*" )
+      hb_StrReplace( AllTrim( Left( cDsrdColor, At( "/", cDsrdColor ) - 1 ) ) /* foreground */, "+*" )

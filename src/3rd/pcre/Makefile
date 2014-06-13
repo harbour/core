@@ -70,7 +70,6 @@ else
 endif
 
 # ORIGIN http://pcre.org/
-# VER    8.35
 # URL    https://downloads.sourceforge.net/pcre/pcre/8.35/pcre-8.35.tar.gz
 # DIFF   pcre.dif
 #

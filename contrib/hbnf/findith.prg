@@ -1,7 +1,4 @@
 /*
- * Author....: David Husnian
- * CIS ID....: ?
- *
  * This is an original work by David Husnian and is placed in the
  * public domain.
  *
@@ -23,7 +20,6 @@ FUNCTION ft_FindITh( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
    LOCAL nIthOccurrence
 
    // Is case important?
-
    IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. lIgnoreCase
       cCheckFor := Upper( cCheckFor )
       cCheckIn  := Upper( cCheckIn )

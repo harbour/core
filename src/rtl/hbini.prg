@@ -106,6 +106,7 @@ FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
 
    /* Default case sensitiveness for keys */
    hb_default( @lKeyCaseSens, .T. )
+   hb_default( @lAutoMain, .T. )
 
    hb_HCaseMatch( hIni, lKeyCaseSens )
 
@@ -117,7 +118,7 @@ FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
       hb_defaultValue( cData, "" ), ;
       lKeyCaseSens, ;
       hb_defaultValue( cSplitters, "=" ), ;
-      hb_defaultValue( lAutoMain, .T. ) )
+      lAutoMain )
 
 STATIC FUNCTION hb_iniFileLow( cFileSpec )
 

@@ -78,7 +78,7 @@ ENDCLASS
 
 // ------------------------------
 
-METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttpd_Cookie
+METHOD PROCEDURE SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttpd_Cookie
 
    IF cDomain != NIL
       ::cDomain := cDomain
@@ -93,9 +93,9 @@ METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttp
       ::nExpireSecs := nExpireSecs
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly ) CLASS uhttpd_Cookie
+METHOD PROCEDURE SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly ) CLASS uhttpd_Cookie
 
    LOCAL cStr, nPos, nCookies
 
@@ -147,17 +147,17 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    // uhttpd_SetHeader( "Set-Cookie", cStr, .F. )
    uhttpd_SetHeader( "Set-Cookie", cStr )
 
-   RETURN NIL
+   RETURN
 
-METHOD DeleteCookie( cCookieName, cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
+METHOD PROCEDURE DeleteCookie( cCookieName, cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
 
    LOCAL cExpires := uhttpd_DateToGMT( Date() - 1 ) // Setting date in the past delete cookie
 
    ::SetCookie( cCookieName, "", cDomain, cPath, cExpires, lSecure )
 
-   RETURN NIL
+   RETURN
 
-METHOD DeleteAllCookies( cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
+METHOD PROCEDURE DeleteAllCookies( cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
 
    LOCAL cCookieName
 
@@ -166,7 +166,7 @@ METHOD DeleteAllCookies( cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
       ::DeleteCookie( cCookieName, cDomain, cPath, lSecure )
    NEXT
 
-   RETURN NIL
+   RETURN
 
 METHOD GetCookie( cCookieName ) CLASS uhttpd_Cookie
 

@@ -219,7 +219,6 @@ METHOD display() CLASS CheckBox
          hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
             hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
-
    ENDIF
 
    DispEnd()

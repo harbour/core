@@ -27,7 +27,6 @@ xutils.c
 xversion.c
 
 # ORIGIN http://xmailserver.org/xdiff-lib.html
-# VER    0.23
 # URL    http://xmailserver.org/libxdiff-0.23.tar.gz
 # DIFF   libxdiff.dif
 #

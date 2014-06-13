@@ -1,7 +1,4 @@
 /*
- * Author....: Don Opperthauser
- * CIS ID....: ?
- *
  * This is an original work by Don Opperthauser and is placed in the
  * public domain.
  *

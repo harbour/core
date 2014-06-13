@@ -1,7 +1,4 @@
 /*
- * Author....: Rick Whitt
- * CIS ID....: 70672,605
- *
  * This is an original work by Rick Whitt and is placed in the
  * public domain.
  *

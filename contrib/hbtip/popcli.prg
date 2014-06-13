@@ -165,10 +165,10 @@ METHOD List() CLASS TIPClientPOP
    cRet := ""
    DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
       cStr := ::inetRecvLine( ::SocketCon, @nPos, 256 )
-      IF !( cStr == "." )
-         cRet += cStr + ::cCRLF
-      ELSE
+      IF cStr == "."
          ::bEof := .T.
+      ELSE
+         cRet += cStr + ::cCRLF
       ENDIF
    ENDDO
 
@@ -265,10 +265,10 @@ METHOD Top( nMsgId ) CLASS TIPClientPOP
    cRet := ""
    DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
       cStr := ::inetRecvLine( ::SocketCon, @nPos, 512 )
-      IF !( cStr == "." )
-         cRet += cStr + ::cCRLF
-      ELSE
+      IF cStr == "."
          ::bEof := .T.
+      ELSE
+         cRet += cStr + ::cCRLF
       ENDIF
    ENDDO
 
@@ -303,10 +303,10 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
       cRet := ""
       DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
          cStr := ::inetRecvLine( ::SocketCon, @nPos, 256 )
-         IF !( cStr == "." )
-            cRet += cStr + ::cCRLF
-         ELSE
+         IF cStr == "."
             ::bEof := .T.
+         ELSE
+            cRet += cStr + ::cCRLF
          ENDIF
       ENDDO
    ELSE
@@ -336,14 +336,9 @@ METHOD countMail() CLASS TIPClientPop
 
 METHOD GetOk() CLASS TIPClientPOP
 
-   LOCAL nLen
+   ::cReply := ::inetRecvLine( ::SocketCon,, 128 )
 
-   ::cReply := ::inetRecvLine( ::SocketCon, @nLen, 128 )
-   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! hb_LeftEq( ::cReply, "+" )
-      RETURN .F.
-   ENDIF
-
-   RETURN .T.
+   RETURN ::inetErrorCode( ::SocketCon ) == 0 .AND. hb_LeftEq( ::cReply, "+" )
 
 /* QUESTION: This method will return .T./.F./NIL or string
              Is it really intended that way? [vszakats] */

@@ -208,7 +208,7 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
 
 FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
 
-   LOCAL cName
+   LOCAL xName
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle
 
@@ -218,11 +218,11 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
       SWITCH ValType( xValue )
       CASE "L"
          nValueType := WIN_REG_DWORD
-         cName := iif( xValue, 1, 0 )
+         xName := iif( xValue, 1, 0 )
          EXIT
       CASE "D"
          nValueType := WIN_REG_SZ
-         cName := DToS( xValue )
+         xName := DToS( xValue )
          EXIT
       CASE "N"
          IF ! HB_ISNUMERIC( nValueType ) .OR. ;
@@ -233,7 +233,7 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
                nValueType == WIN_REG_QWORD_LITTLE_ENDIAN )
             nValueType := WIN_REG_DWORD
          ENDIF
-         cName := xValue
+         xName := xValue
          EXIT
       CASE "C"
       CASE "M"
@@ -243,12 +243,12 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
                nValueType == WIN_REG_MULTI_SZ )
             nValueType := WIN_REG_SZ
          ENDIF
-         cName := xValue
+         xName := xValue
          EXIT
       ENDSWITCH
 
-      IF cName != NIL
-         lRetVal := win_regSetValueEx( pKeyHandle, cEntryName, 0, nValueType, cName )
+      IF xName != NIL
+         lRetVal := win_regSetValueEx( pKeyHandle, cEntryName, 0, nValueType, xName )
       ENDIF
 
       win_regCloseKey( pKeyHandle )

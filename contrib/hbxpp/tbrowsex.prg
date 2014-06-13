@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-#define _TBR_COORD( n )       Int( n )
+#define _TBR_COORD( n )  Int( n )
 
 CREATE CLASS xpp_TBrowse INHERIT TBrowse
 
@@ -96,8 +96,10 @@ METHOD firstScrCol() CLASS xpp_TBrowse
       ::doConfigure()
    ENDIF
 
+#if 0
    // TOFIX
-// RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
+   RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
+#endif
    RETURN 0
 
 METHOD _left() CLASS xpp_TBrowse

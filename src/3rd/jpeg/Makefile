@@ -100,8 +100,6 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://ijg.org/
-# VER    9a
 # URL    http://ijg.org/files/jpegsrc.v9a.tar.gz
 # DIFF   jpeg.dif
 #

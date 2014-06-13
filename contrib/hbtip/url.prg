@@ -179,12 +179,10 @@ METHOD BuildAddress() CLASS TUrl
    ENDIF
 
    IF Len( cRet ) == 0
-      cRet := NIL
-   ELSE
-      ::cAddress := cRet
+      RETURN NIL
    ENDIF
 
-   RETURN cRet
+   RETURN ::cAddress := cRet
 
 METHOD BuildQuery() CLASS TUrl
 

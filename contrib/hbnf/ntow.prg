@@ -1,7 +1,4 @@
 /*
- * Author....: Gary Baren
- * CIS ID....: 75470,1027
- *
  * This is an original work by Gary Baren and is hereby placed in the
  * public domain.
  *
@@ -15,23 +12,10 @@
  *
  */
 
-STATIC sc_ones := { ;
-   "",     " One",   " Two",   " Three", " Four", " Five", ;
-   " Six", " Seven", " Eight", " Nine" }
-
-STATIC sc_teens := { ;
-   " Ten",      " Eleven",    " Twelve", ;
-   " Thirteen", " Fourteen",  " Fifteen", ;
-   " Sixteen",  " Seventeen", " Eighteen", ;
-   " Nineteen" }
-
-STATIC sc_tens :=  { ;
-   "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
-   " Sixty", " Seventy", " Eighty", " Ninety" }
-
-STATIC sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
-
 FUNCTION ft_NToW( nAmount )
+
+   STATIC sc_qualifiers := { "", ;
+      " Thousand", " Million", " Billion", " Trillion" }
 
    LOCAL nTemp, sResult := " ", nQualNo
    LOCAL nDiv := 10 ^ ( Int( sol10( nAmount ) / 3 ) * 3 )
@@ -41,7 +25,7 @@ FUNCTION ft_NToW( nAmount )
    nQualNo := Int( sol10( nDiv ) / 3 ) + 1
    sResult += grp_to_words( nAmount, sc_qualifiers[ nQualNo ] )
 
-   IF nTemp > ( nDiv /= 1000 ) .AND. ( nDiv > 1 )
+   IF nTemp > ( nDiv /= 1000 ) .AND. nDiv > 1
       sResult += ft_NToW( nTemp, nDiv )
    ELSE
       sResult += grp_to_words( nTemp, "" )
@@ -50,6 +34,19 @@ FUNCTION ft_NToW( nAmount )
    RETURN LTrim( sResult )
 
 STATIC FUNCTION grp_to_words( nGrp, sQual )
+
+   STATIC sc_ones := { "", ;
+      " One", " Two", " Three", " Four", " Five", ;
+      " Six", " Seven", " Eight", " Nine" }
+
+   STATIC sc_teens := { ;
+      " Ten",      " Eleven",    " Twelve", ;
+      " Thirteen", " Fourteen",  " Fifteen", ;
+      " Sixteen",  " Seventeen", " Eighteen", " Nineteen" }
+
+   STATIC sc_tens :=  { "", "", ;
+      " Twenty", " Thirty", " Forty", " Fifty", ;
+      " Sixty", " Seventy", " Eighty", " Ninety" }
 
    LOCAL sResult := "", nTemp
 

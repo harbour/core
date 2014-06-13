@@ -1,7 +1,4 @@
 /*
- * Author....: Robert DiFalco and Glenn Scott
- * CIS ID....: 71610,1705
- *
  * This is an original work by Glenn Scott and Robert DiFalco
  * and is placed in the public domain.
  *
@@ -22,7 +19,6 @@
  *
  *    Rev 1.0   01 Apr 1991 01:02:56   GLENN
  * Nanforum Toolkit
- *
  *
  */
 

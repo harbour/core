@@ -1,7 +1,4 @@
 /*
- * Author....: Jim Orlowski
- * CIS ID....: ?
- *
  * This is an original work by Jim Orlowski and is placed in the
  * public domain.
  *
@@ -26,9 +23,6 @@
  *
  *  3.  Added DispBegin() and DispEnd() around both Stabilize sections
  *
- *
- *
- *
  *    Rev 1.2   15 Aug 1991 23:04:20   GLENN
  * Forest Belt proofread/edited/cleaned up doc
  *
@@ -41,13 +35,10 @@
  */
 
 /* The tricks are:
-
    1. Setting up functions for goTop() and goBottom() so that you can
       quickly move to the right record when the user presses the
       Ctrl-PgUp ( goTop() ) and Ctrl-PgDn ( goBottom() ) keys.
-
-   2. Passing and evaluating the block for the TbSkipWhil().
- */
+   2. Passing and evaluating the block for the TbSkipWhil(). */
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -259,10 +250,11 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
    LOCAL i := 0
 
-   IF n == 0 .OR. LastRec() == 0
+   DO CASE
+   CASE n == 0 .OR. LastRec() == 0
       dbSkip( 0 )  /* significant on a network */
 
-   ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
+   CASE n > 0 .AND. RecNo() != LastRec() + 1
       DO WHILE i < n
          dbSkip()
          IF Eof() .OR. ! Eval( bWhileCond )
@@ -272,7 +264,7 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
          i++
       ENDDO
 
-   ELSEIF n < 0
+   CASE n < 0
       DO WHILE i > n
          dbSkip( -1 )
          IF Bof()
@@ -283,7 +275,7 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
          ENDIF
          i--
       ENDDO
-   ENDIF
+   ENDCASE
 
    RETURN i
 
@@ -298,8 +290,7 @@ STATIC PROCEDURE TbWhileTop( cKey )
    With softseek set on, seek the first record after condition.
    This is accomplished by incrementing the right most character of the
    string cKey by one ascii character.  After SEEKing the new string,
-   back up one record to get to the last record which matches cKey.
- */
+   back up one record to get to the last record which matches cKey. */
 STATIC PROCEDURE TbWhileBot( cKey )
 
    dbSeek( hb_StrShrink( cKey ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )

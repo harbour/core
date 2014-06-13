@@ -1,4 +1,4 @@
-; ---------------------------------------------------------------
+;
 ; Copyright 2009 Viktor Szakats (vszakats.net/harbour)
 ; See COPYING.txt for licensing terms.
 ;
@@ -6,7 +6,7 @@
 ; [ Do not try to use this script directly. It won't work. ]
 ;
 ; See README.md for further information.
-; ---------------------------------------------------------------
+;
 
   SetCompressor /solid lzma
 
@@ -33,14 +33,10 @@ OutFile "$%HB_TOP%\$%HB_PKGNAME%.exe"
 
 InstallDir C:\$%HB_PKGNAMI%
 
-;--------------------------------
-; Interface Settings
-
+  ; Interface Settings
   !define MUI_ABORTWARNING
 
-;--------------------------------
-; Pages
-
+  ; Pages
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE $(MUILicense)
   !insertmacro MUI_PAGE_COMPONENTS
@@ -53,19 +49,13 @@ InstallDir C:\$%HB_PKGNAMI%
   !insertmacro MUI_UNPAGE_INSTFILES
   !insertmacro MUI_UNPAGE_FINISH
 
-;--------------------------------
-; Languages
-
+  ; Languages
   !insertmacro MUI_LANGUAGE "English"
 
-;--------------------------------
 ; License Language String
-
 LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_INSTALL_PREFIX%\COPYING.txt"
 
-;--------------------------------
 ; The stuff to install
-
 Section "Main components" hb_main
 
   SectionIn RO
@@ -135,8 +125,7 @@ Section "Start Menu and Desktop icons" hb_shortcuts
 
 SectionEnd
 
-;--------------------------------
-; Descriptions
+  ; Descriptions
 
   ; Language strings
   LangString DESC_hb_main ${LANG_ENGLISH} "Main components"
@@ -150,9 +139,7 @@ SectionEnd
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_examples} $(DESC_hb_examples)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
-;--------------------------------
 ; Uninstaller
-
 Section "Uninstall"
 
   ; Remove files and uninstaller

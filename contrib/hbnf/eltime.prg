@@ -1,7 +1,4 @@
 /*
- * Author....: Alexander B. Spencer
- * CIS ID....: 76276,1012
- *
  * This is an original work by Alexander B. Spencer and is placed in the
  * public domain.
  *
@@ -20,12 +17,14 @@
 
 FUNCTION ft_ElTime( cTIME1, cTIME2 )
 
-   LOCAL nSECS1 := ( Val( SubStr( cTIME1, 1, 2 ) ) * 3600 ) + ;
-                   ( Val( SubStr( cTIME1, 4, 2 ) ) * 60 ) + ;
-                     Val( SubStr( cTIME1, 7 ) )
-   LOCAL nSECS2 := ( Val( SubStr( cTIME2, 1, 2 ) ) * 3600 ) + ;
-                   ( Val( SubStr( cTIME2, 4, 2 ) ) * 60 ) + ;
-                     Val( SubStr( cTIME2, 7 ) )
+   LOCAL nSECS1 := ;
+      ( Val( SubStr( cTIME1, 1, 2 ) ) * 3600 ) + ;
+      ( Val( SubStr( cTIME1, 4, 2 ) ) * 60 ) + ;
+        Val( SubStr( cTIME1, 7 ) )
+   LOCAL nSECS2 := ;
+      ( Val( SubStr( cTIME2, 1, 2 ) ) * 3600 ) + ;
+      ( Val( SubStr( cTIME2, 4, 2 ) ) * 60 ) + ;
+        Val( SubStr( cTIME2, 7 ) )
 
    LOCAL nDELSECS := Abs( nSECS2 - nSECS1 )
    LOCAL nHRS     := Int( nDELSECS / 3600 )

@@ -55,7 +55,7 @@
 
 /* Trick to make it work in the STATIC initializer.
    It's safe because it's only used with ASCII chars. */
-#define hb_keyCode( x ) Asc( x )
+#define hb_keyCode( x )  Asc( x )
 
 STATIC s_hTrs := { => }
 STATIC s_hMutex := hb_mutexCreate()
@@ -374,11 +374,9 @@ FUNCTION SetKXTab( cTrs )
 
 FUNCTION GetKXTab()
 
-   LOCAL cTrs := ""
-   LOCAL hTrs := hbct_GetKXTab()
-   LOCAL hKey
+   LOCAL cTrs := "", hKey
 
-   FOR EACH hKey IN hTrs
+   FOR EACH hKey IN hbct_GetKXTab()
       cTrs += __hbct_key_n_to_c( hKey:__enumKey() ) + __hbct_key_n_to_c( hKey:__enumValue() )
    NEXT
 

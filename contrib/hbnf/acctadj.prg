@@ -1,9 +1,6 @@
 /*
- * Author....: Jo W. French dba Practical Computing
- * CIS ID....: 74731,1751
- *
  * The functions contained herein are the original work of Jo W. French
- * and are placed in the public domain.
+ * (dba Practical Computing) and are placed in the public domain.
  *
  * Modification history:
  *
@@ -38,9 +35,9 @@ FUNCTION ft_AcctAdj( dGivenDate, lIsEnd )
    nTemp := ft_DayToBoW( dGivenDate )
 
    IF nTemp > ( 2 + iif( lIsEnd, 0, 1 ) )
-      dGivenDate += 7 - nTemp          // Next Week Start (This Week End + 1)
+      dGivenDate += 7 - nTemp  // Next Week Start (This Week End + 1)
    ELSE
-      dGivenDate -= nTemp              // This Week Start (Prior Week End + 1)
+      dGivenDate -= nTemp      // This Week Start (Prior Week End + 1)
    ENDIF
 
    IF lIsEnd

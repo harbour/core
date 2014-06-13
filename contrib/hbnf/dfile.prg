@@ -1,7 +1,4 @@
 /*
- * Author....: Mike Taylor
- * CIS ID....: ?
- *
  * This is an original work by Mike Taylor and is placed in the
  * public domain.
  *
@@ -34,7 +31,7 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
    IF hb_FileExists( cInFile )
 
       DO CASE
-      CASE HB_ISARRAY( cExitKeys )  /* Harbour extension */
+      CASE HB_ISARRAY( cExitKeys )  /* HB_EXTENSION - Harbour extension */
          IF Len( cExitKeys ) > 25
             ASize( cExitKeys, 25 )
          ENDIF

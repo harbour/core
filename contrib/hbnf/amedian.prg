@@ -1,9 +1,6 @@
 /*
- * Author....: Ralph Oliver,  TRANSCOM SYSTEMS
- * CIS ID....: 74030,703
- *
- * This is an original work by Ralph Oliver and is placed in the
- * public domain.
+ * This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
+ * and is placed in the public domain.
  *
  * This program uses the preprocessor #defines and #command
  * by David Husnian.
@@ -18,35 +15,30 @@
  *
  */
 
-#define FORCE_BETWEEN( x, y, z )         ( y := Max( Min( y, z ), x ) )
+#define FORCE_BETWEEN( x, y, z )  ( y := Max( Min( y, z ), x ) )
 
 FUNCTION ft_AMedian( aArray, nStart, nEnd )
 
-   LOCAL nTemplen, aTemparray, nMiddle1, nMiddle2, nMedian
+   LOCAL nTemplen, aTemparray
 
    __defaultNIL( @nStart, 1 )
    __defaultNIL( @nEnd, Len( aArray ) )
 
-   // Make Sure Bounds are in Range
-   FORCE_BETWEEN( 1, nEnd,   Len( aArray ) )
+   // Make sure bounds are in range
+   FORCE_BETWEEN( 1, nEnd, Len( aArray ) )
    FORCE_BETWEEN( 1, nStart, nEnd )
 
    // Length of aTemparray
    nTemplen := ( nEnd - nStart ) + 1
 
-   // Initialize aTemparray
-   aTemparray := ACopy( aArray, Array( nTemplen ), nStart, nTemplen )
-
-   // Sort aTemparray
-   aTemparray := ASort( aTemparray )
+   // Initialize and sort aTemparray
+   aTemparray := ASort( ACopy( aArray, Array( nTemplen ), nStart, nTemplen ) )
 
    // Determine middle value(s)
-   IF ( nTemplen % 2 ) == 0
-      nMiddle1 := aTemparray[ nTemplen / 2 ]
-      nMiddle2 := aTemparray[ Int( nTemplen / 2 ) + 1 ]
-      nMedian :=  Int( ( nMIddle1 + nMiddle2 ) / 2 )
-   ELSE
-      nMedian := aTemparray[ Int( nTemplen / 2 ) + 1 ]
+   IF nTemplen % 2 == 0
+      RETURN Int( ( ;
+         aTemparray[ nTemplen / 2 ] + ;
+         aTemparray[ Int( nTemplen / 2 ) + 1 ] ) / 2 )
    ENDIF
 
-   RETURN nMedian
+   RETURN aTemparray[ Int( nTemplen / 2 ) + 1 ]

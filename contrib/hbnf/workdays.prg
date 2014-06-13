@@ -1,7 +1,4 @@
 /*
- * Author....: John F. Kaster
- * CIS_ID....: 71510,3321
- *
  * The functions contained herein are the original work of John Kaster
  * and are placed in the public domain.
  *
@@ -33,21 +30,23 @@ FUNCTION ft_Workdays( dStart, dStop )
             dStart   := nAdjust
          ENDIF
 
-         IF ( nDays := DoW( dStart ) ) == 1 // Sunday (change to next Monday)
+         DO CASE
+         CASE ( nDays := DoW( dStart ) ) == 1  // Sunday (change to next Monday)
             dStart++
-         ELSEIF nDays == 7 // Saturday (change to next Monday)
+         CASE nDays == 7  // Saturday (change to next Monday)
             dStart += 2
-         ENDIF
+         ENDCASE
 
-         IF ( nDays := DoW( dStop ) ) == 1 // Sunday (change to prev Friday)
+         DO CASE
+         CASE ( nDays := DoW( dStop ) ) == 1  // Sunday (change to prev Friday)
             dStop -= 2
-         ELSEIF nDays == 7 // Saturday (change to prev Friday)
+         CASE nDays == 7  // Saturday (change to prev Friday)
             dStop--
-         ENDIF
+         ENDCASE
 
          nAdjust := ( nDays := dStop - dStart + 1 ) % 7
 
-         IF DoW( dStop ) + 1 < DoW( dStart ) // Weekend adjustment
+         IF DoW( dStop ) + 1 < DoW( dStart )  // Weekend adjustment
             nAdjust -= 2
          ENDIF
 
@@ -60,4 +59,4 @@ FUNCTION ft_Workdays( dStart, dStop )
       ENDIF
    ENDIF
 
-   RETURN iif( nWorkDays > 0, nWorkDays, 0 )
+   RETURN Max( nWorkDays, 0 )

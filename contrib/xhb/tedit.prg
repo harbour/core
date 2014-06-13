@@ -109,36 +109,36 @@ CREATE CLASS THtmlControl
    VAR onKeyDown
    VAR onKeyUp
 
-   METHOD SetName( c ) INLINE ::Name := c
-   METHOD SetValue( c ) INLINE ::Value := c
-   METHOD SetStyle( c ) INLINE ::Style := c
-   METHOD SetId( c ) INLINE ::id := c
-   METHOD SetRows( c ) INLINE ::Rows := c
-   METHOD SetCols( c ) INLINE ::Cols := c
-   METHOD SetCaption( c ) INLINE ::Caption := c
-   METHOD SetPicture( c ) INLINE ::picture := c
-   METHOD SetOnBlur( c ) INLINE ::onBlur := c
+   METHOD SetName( c )     INLINE ::Name := c
+   METHOD SetValue( c )    INLINE ::Value := c
+   METHOD SetStyle( c )    INLINE ::Style := c
+   METHOD SetId( c )       INLINE ::id := c
+   METHOD SetRows( c )     INLINE ::Rows := c
+   METHOD SetCols( c )     INLINE ::Cols := c
+   METHOD SetCaption( c )  INLINE ::Caption := c
+   METHOD SetPicture( c )  INLINE ::picture := c
+   METHOD SetOnBlur( c )   INLINE ::onBlur := c
    METHOD SetOnChange( c ) INLINE ::onChange := c
-   METHOD SetOnFocus( c ) INLINE ::onFocus := c
+   METHOD SetOnFocus( c )  INLINE ::onFocus := c
    METHOD SetOnSelect( c ) INLINE ::onSelect := c
-   METHOD SetOnClick( c ) INLINE ::onClick := c
+   METHOD SetOnClick( c )  INLINE ::onClick := c
    METHOD SetOnMsOver( c ) INLINE ::onMouseOver := c
-   METHOD SetOnMsOut( c ) INLINE ::onMouseOut := c
-   METHOD SetSize( n ) INLINE ::Size := n
+   METHOD SetOnMsOut( c )  INLINE ::onMouseOut := c
+   METHOD SetSize( n )     INLINE ::Size := n
    METHOD SetMaxChars( n ) INLINE ::MaxChars := n
-   METHOD SetChecked( l ) INLINE ::Checked := l
-   METHOD SetAlign( c ) INLINE ::Align := c
-   METHOD SetWrap( c ) INLINE ::wrap := c
-   METHOD SetSource( c ) INLINE ::Source := c
+   METHOD SetChecked( l )  INLINE ::Checked := l
+   METHOD SetAlign( c )    INLINE ::Align := c
+   METHOD SetWrap( c )     INLINE ::wrap := c
+   METHOD SetSource( c )   INLINE ::Source := c
    METHOD SetReadOnly( l ) INLINE ::readOnly := l
    METHOD SetDisabled( l ) INLINE ::disabled := l
    METHOD SetMultiple( l ) INLINE ::multiple := l
    METHOD SetOnMsDown( c ) INLINE ::onMouseDown := c
-   METHOD SetOnMsUp( c ) INLINE ::onMouseup := c
+   METHOD SetOnMsUp( c )   INLINE ::onMouseup := c
    METHOD SetOnKPress( c ) INLINE ::onKeyPress := c
-   METHOD SetOnKDown( c ) INLINE ::onKeyDown := c
-   METHOD SetOnKUp( c ) INLINE ::onKeyUp := c
-   METHOD SetLabel( l ) INLINE ::lLabel := l
+   METHOD SetOnKDown( c )  INLINE ::onKeyDown := c
+   METHOD SetOnKUp( c )    INLINE ::onKeyUp := c
+   METHOD SetLabel( l )    INLINE ::lLabel := l
    METHOD Put()
    METHOD AddOption( cOption, cValue, cLabel, lSelected, lDisabled )
    METHOD SetControl( name, rows, cols, size, maxchars, value, onfocus, ;
@@ -152,7 +152,6 @@ ENDCLASS
 METHOD Put() CLASS THtmlControl
 
    LOCAL i
-   LOCAL cStr
 
    ::nH := HtmlPageHandle()
    ::form := HtmlFormName()
@@ -294,14 +293,13 @@ METHOD Put() CLASS THtmlControl
    IF ::Type == "SELECT"
 
       FOR EACH i IN ::aOptions
-         cStr := ;
+         ::oHtm:cStr += ;
             "<option" + ;
             iif( HB_ISSTRING( i[ _OPTION_VALUE ] ), " value=" + i[ _OPTION_VALUE ], "" ) + ;
             iif( HB_ISSTRING( i[ _OPTION_LABEL ] ), " label=" + i[ _OPTION_LABEL ], "" ) + ;
             iif( HB_ISLOGICAL( i[ _OPTION_SELECTED ] ) .AND. i[ _OPTION_SELECTED ], " SELECTED ", "" ) + ;
             iif( HB_ISLOGICAL( i[ _OPTION_DISABLED ] ) .AND. i[ _OPTION_DISABLED ], " DISABLED ", "" ) + ;
             ">" + i[ _OPTION_TEXT ] + "</option>" + hb_eol()
-         ::oHtm:cStr += cStr
       NEXT
 
       ::oHtm:cStr += "</select>"
@@ -380,21 +378,21 @@ CREATE CLASS THtmlForm
 
    VAR cOutput INIT ""
 
-   METHOD setHandle( h ) INLINE ::nH := h
-   METHOD setName( c ) INLINE ::Name := c
-   METHOD setAction( c ) INLINE ::Action := c
-   METHOD setMethod( c ) INLINE ::Method := c
-   METHOD setEncType( c ) INLINE ::encType := c
-   METHOD setOnSubmit( c ) INLINE ::onSubmit := c
-   METHOD setOnReset( c ) INLINE ::onReset := c
-   METHOD setTarget( c ) INLINE ::Target := c
-   METHOD setCapClr( c ) INLINE ::CaptionColor := c
+   METHOD setHandle( h )    INLINE ::nH := h
+   METHOD setName( c )      INLINE ::Name := c
+   METHOD setAction( c )    INLINE ::Action := c
+   METHOD setMethod( c )    INLINE ::Method := c
+   METHOD setEncType( c )   INLINE ::encType := c
+   METHOD setOnSubmit( c )  INLINE ::onSubmit := c
+   METHOD setOnReset( c )   INLINE ::onReset := c
+   METHOD setTarget( c )    INLINE ::Target := c
+   METHOD setCapClr( c )    INLINE ::CaptionColor := c
    METHOD setCapFntClr( c ) INLINE ::CapFontColor := c
-   METHOD setCapImage( c ) INLINE ::CaptionImage := c
-   METHOD setBgImage( c ) INLINE ::bgImage := c
+   METHOD setCapImage( c )  INLINE ::CaptionImage := c
+   METHOD setBgImage( c )   INLINE ::bgImage := c
    METHOD setFontColor( c ) INLINE ::FontColor := c
-   METHOD setFrmColor( c ) INLINE ::Color := c
-   METHOD setwidth( c ) INLINE ::width := c
+   METHOD setFrmColor( c )  INLINE ::Color := c
+   METHOD setwidth( c )     INLINE ::width := c
    METHOD AddControl( o ) INLINE iif( HB_ISOBJECT( o ), ( o:nH := ::nH, o:Form := Self ), ), ;
       AAdd( ::aControls, o )
    METHOD PutControls() INLINE AEval( ::aControls, {| e | e:Put() } )

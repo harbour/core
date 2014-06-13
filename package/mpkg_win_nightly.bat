@@ -5,7 +5,6 @@ rem Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
 rem See COPYING.txt for licensing terms.
 rem ---------------------------------------------------------------
 
-rem ---------------------------------------------------------------
 rem REQUIREMENTS FOR BUILD MACHINE:
 rem   - online 24/7 (reliable)
 rem   - Windows 7 or higher (server preferred)
@@ -23,7 +22,6 @@ rem   - The first run under a new (or reinstalled) user account
 rem     must be done interactively to confirm server identity
 rem     when doing SCP uploads. This has to be repeated each time
 rem     the server certificate gets updated.
-rem ---------------------------------------------------------------
 
 pushd
 

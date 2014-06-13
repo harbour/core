@@ -144,8 +144,8 @@
  *
  * Once it has been determined that a particular component needs an update, the URL
  * argument has to be modified to point to the new source tree archive. VER should
- * also be updated. While residing in the component's directory, 3rdpatch needs
- * to be run. The rest is mostly automatic - 3rdpatch retrieves, unpacks and
+ * also be updated if there. While residing in the component's directory, 3rdpatch
+ * needs to be run. The rest is mostly automatic - 3rdpatch retrieves, unpacks and
  * otherwise prepares the updated source tree, applies any local modifications,
  * and copies any changes back to the Harbour tree (the current working directory).
  * After some inspection and a test, it is ready to be committed.

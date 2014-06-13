@@ -51,7 +51,7 @@
 
 #include "libusb.h"
 
-/* ------------ library initialisation and deinitialisation -------------------- */
+/* --- library initialisation and deinitialisation --- */
 
 /* Initialises libusb.
    Must be called before calling any other libusb functions.
@@ -85,7 +85,7 @@ HB_FUNC( LIBUSB_SET_DEBUG )
    libusb_set_debug( ( libusb_context * ) hb_parptr( 1 ), hb_parni( 2 ) );
 }
 
-/* ------------------- device handling and enumeration ------------------------- */
+/* --- device handling and enumeration --- */
 
 /* Returns a list of USB devcices attached to your system. */
 HB_FUNC( LIBUSB_GET_DEVICE_LIST )
@@ -252,7 +252,7 @@ HB_FUNC( LIBUSB_ATTACH_KERNEL_DRIVER )
    hb_retni( libusb_attach_kernel_driver( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) ) );
 }
 
-/* ------------------------------ USB descriptors ------------------------------ */
+/* --- USB descriptors --- */
 
 /* Get the USB descriptor for a given device. */
 HB_FUNC( LIBUSB_GET_DEVICE_DESCRIPTOR )
@@ -273,7 +273,7 @@ HB_FUNC( LIBUSB_GET_DEVICE_DESCRIPTOR )
    hb_retni( success );
 }
 
-/* --------------------------- synchronous device I/O -------------------------- */
+/* --- synchronous device I/O --- */
 
 /* Perform a USB bulk transfer. */
 HB_FUNC( LIBUSB_BULK_TRANSFER )

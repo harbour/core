@@ -1,7 +1,4 @@
 /*
- * Author....: Ted Means
- * CIS ID....: 73067,3332
- *
  * This is an original work by Ted Means and is placed in the
  * public domain.
  *
@@ -21,7 +18,6 @@
  *
  *    Rev 1.0   01 Apr 1991 01:03:00   GLENN
  * Nanforum Toolkit
- *
  *
  */
 

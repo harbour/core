@@ -1,7 +1,4 @@
 /*
- * Author....: David Husnian
- * CIS ID....: ?
- *
  * This is an original work by David Husnian and is placed in the
  * public domain.
  *
@@ -18,17 +15,17 @@
  *
  */
 
-#define NEAREST_DECIMAL      "D"
-#define NEAREST_FRACTION     "F"
-#define NEAREST_WHOLE_NUMBER "W"
-#define ROUND_DOWN           "D"
-#define ROUND_NORMAL         "N"
-#define ROUND_UP             "U"
+#define NEAREST_DECIMAL       "D"
+#define NEAREST_FRACTION      "F"
+#define NEAREST_WHOLE_NUMBER  "W"
+#define ROUND_DOWN            "D"
+#define ROUND_NORMAL          "N"
+#define ROUND_UP              "U"
 
 FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
       nAcceptableError )
 
-   LOCAL nResult := Abs( nNumber )        // The result of the rounding
+   LOCAL nResult := Abs( nNumber )  // The result of the rounding
 
    __defaultNIL( @nRoundToAmount, 2 )
    __defaultNIL( @cRoundType, NEAREST_DECIMAL )
@@ -76,8 +73,8 @@ FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
       ENDCASE
    ENDIF
 
-   IF nNumber < 0                       // Was the number negative?
-      nResult := -nResult               // Yes, make the result negative also
+   IF nNumber < 0          // Was the number negative?
+      nResult := -nResult  // Yes, make the result negative also
    ENDIF
 
    RETURN nResult

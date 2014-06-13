@@ -1,7 +1,4 @@
 /*
- * Author....: Jeff Bryant
- * CIS ID....: ?
- *
  * This function is an original work by Jeff Bryant and is placed in the
  * public domain.
  *

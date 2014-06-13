@@ -1,7 +1,4 @@
 /*
- * Author....: Isa Asudeh
- * CIS ID....: 76477,647
- *
  * This is an original work by Isa Asudeh and is placed in the
  * public domain.
  *
@@ -14,12 +11,6 @@
  * Initial revision.
  *
  */
-
-// cMsg    Message to display
-// nRow    Row of displayed message
-// nCol    Col of displayed message
-// nWait   Wait in seconds between messages
-// cColor  Color of displayed message
 
 PROCEDURE ft_Pending( cMsg, nRow, nCol, nWait, cColor )
 
@@ -54,10 +45,9 @@ PROCEDURE ft_Pending( cMsg, nRow, nCol, nWait, cColor )
          t_nLast_Time := nThis_Time                 // set time counter for next message.
       ENDIF
 
-      hb_Scroll( t_nRow1, 0, t_nRow1, MaxCol() + 1 )    // clear the display line
+      hb_Scroll( t_nRow1, 0, t_nRow1, MaxCol() + 1 )     // clear the display line
 
-      hb_DispOutAt( t_nRow1, t_nCol1, cMsg, t_cColor1 ) // display message
-
+      hb_DispOutAt( t_nRow1, t_nCol1, cMsg, t_cColor1 )  // display message
    ENDIF
 
    RETURN

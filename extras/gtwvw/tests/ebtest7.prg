@@ -196,7 +196,7 @@ STATIC PROCEDURE MyHelp()
 
    RETURN
 
-FUNCTION WVW_SETFOCUS( nWinNum, hWnd )  /* must be a public function */
+PROCEDURE WVW_SETFOCUS( nWinNum, hWnd )  /* must be a public function */
 
    HB_SYMBOL_UNUSED( hWnd )
 
@@ -204,7 +204,7 @@ FUNCTION WVW_SETFOCUS( nWinNum, hWnd )  /* must be a public function */
       wvw_nSetCurWindow( nwinnum )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /******************************************************
  Typical application ends here.

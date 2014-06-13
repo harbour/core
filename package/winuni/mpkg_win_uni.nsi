@@ -1,9 +1,9 @@
-; ---------------------------------------------------------------
+;
 ; NSIS installer script for Harbour
 ;
 ; Copyright 2009 Viktor Szakats (vszakats.net/harbour)
 ; See COPYING.txt for licensing terms.
-; ---------------------------------------------------------------
+;
 
 ; TODO: option: install .dlls to system paths
 
@@ -39,14 +39,10 @@ OutFile "$%HB_RT%harbour-$%HB_VF%-win.exe"
 
 InstallDir C:\hb$%HB_VS%
 
-;--------------------------------
-; Interface Settings
-
+  ; Interface Settings
   !define MUI_ABORTWARNING
 
-;--------------------------------
-; Pages
-
+  ; Pages
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE $(MUILicense)
   !insertmacro MUI_PAGE_COMPONENTS
@@ -59,19 +55,13 @@ InstallDir C:\hb$%HB_VS%
   !insertmacro MUI_UNPAGE_INSTFILES
   !insertmacro MUI_UNPAGE_FINISH
 
-;--------------------------------
-; Languages
-
+  ; Languages
   !insertmacro MUI_LANGUAGE "English"
 
-;--------------------------------
 ; License Language String
-
 LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_ABSROOT%COPYING.txt"
 
-;--------------------------------
 ; The stuff to install
-
 Section "Main components" hb_main
 
   SectionIn RO
@@ -344,8 +334,7 @@ Section "Start Menu and Desktop icons" hb_shortcuts
 
 SectionEnd
 
-;--------------------------------
-; Descriptions
+  ; Descriptions
 
   ; Language strings
   LangString DESC_hb_main         ${LANG_ENGLISH} "Harbour main components"
@@ -485,9 +474,7 @@ SectionEnd
 !endif
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
-;--------------------------------
 ; Uninstaller
-
 Section "Uninstall"
 
   ; Remove files and uninstaller

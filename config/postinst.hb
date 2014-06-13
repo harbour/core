@@ -465,9 +465,9 @@ STATIC FUNCTION EndsWith( cString, cEnd )
 STATIC FUNCTION query_stdout( cName )
 
    LOCAL cStdOut, cStdErr
-   LOCAL nRetVal := hb_processRun( cName,, @cStdOut, @cStdErr )
 
-   RETURN iif( nRetVal == 0, AllTrim( StrTran( cStdOut, Chr( 10 ), " " ) ), "" )
+   RETURN iif( hb_processRun( cName,, @cStdOut, @cStdErr ) == 0, ;
+      AllTrim( StrTran( cStdOut, Chr( 10 ), " " ) ), "" )
 
 STATIC FUNCTION query_rpm( cName, cID )
 

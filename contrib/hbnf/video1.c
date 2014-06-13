@@ -61,8 +61,8 @@ HB_FUNC( FT_SETATTR )
 
 HB_FUNC( FT_REVATTR )
 {
-   int iTop    = hb_parni( 1 );   /* Defaults to zero on bad type */
-   int iLeft   = hb_parni( 2 );   /* Defaults to zero on bad type */
+   int iTop    = hb_parni( 1 );  /* Defaults to zero on bad type */
+   int iLeft   = hb_parni( 2 );  /* Defaults to zero on bad type */
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
    int iBottom = hb_parnidef( 3, iMaxRow );

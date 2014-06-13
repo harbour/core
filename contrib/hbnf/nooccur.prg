@@ -1,7 +1,4 @@
 /*
- * Author....: David Husnian
- * CIS ID....: ?
- *
  * This is an original work by David Husnian and is placed in the
  * public domain.
  *
@@ -20,11 +17,9 @@
 
 FUNCTION ft_NoOccur( cCheckFor, cCheckIn, lIgnoreCase )
 
-   // Is case important?
-
-   IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. lIgnoreCase
+   IF hb_defaultValue( lIgnoreCase, .T. )
       cCheckFor := Upper( cCheckFor )
-      cCheckIn  := Upper( cCheckIn  )
+      cCheckIn  := Upper( cCheckIn )
    ENDIF
 
    RETURN iif( Len( cCheckFor ) == 0 .OR. Len( cCheckIn ) == 0, ;

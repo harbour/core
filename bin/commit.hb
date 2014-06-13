@@ -47,7 +47,7 @@ PROCEDURE Main()
    LOCAL lWasChangeLog
 
    IF "-c" $ cli_Options()
-      CheckFileList( iif( Empty( cli_Values() ), NIL, cli_Values() ) )
+      CheckFileList( iif( Empty( cli_Values() ),, cli_Values() ) )
       ErrorLevel( 0 )
       RETURN
    ENDIF

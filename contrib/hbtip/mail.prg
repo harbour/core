@@ -125,11 +125,7 @@ METHOD New( cBody, xEncoder ) CLASS TIPMail
 
 METHOD SetEncoder( xEncoder ) CLASS TIPMail
 
-   IF HB_ISSTRING( xEncoder )
-      ::oEncoder := tip_GetEncoder( xEncoder )
-   ELSE
-      ::oEncoder := xEncoder
-   ENDIF
+   ::oEncoder := iif( HB_ISSTRING( xEncoder ), tip_GetEncoder( xEncoder ), xEncoder )
 
    IF HB_ISOBJECT( ::oEncoder )
       ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
@@ -504,21 +500,23 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
       RETURN .F.
    ENDIF
 
-   IF HB_ISSTRING( xTo )
+   DO CASE
+   CASE HB_ISSTRING( xTo )
       aTo := { xTo }
-   ELSEIF HB_ISARRAY( xTo )
+   CASE HB_ISARRAY( xTo )
       aTo := xTo
-   ENDIF
+   ENDCASE
 
    IF Empty( aTO )
       RETURN .F.
    ENDIF
 
-   IF HB_ISSTRING( xCC )
+   DO CASE
+   CASE HB_ISSTRING( xCC )
       aCC := { xCC }
-   ELSEIF HB_ISARRAY( xCC )
+   CASE HB_ISARRAY( xCC )
       aCC := xCC
-   ENDIF
+   ENDCASE
 
    ::setFieldPart( "Subject", WordEncodeQ( hb_defaultValue( cSubject, "" ), ::cCharset ) )
    ::setFieldPart( "From", LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( cFrom ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( cFrom ) ) + ">" ) )

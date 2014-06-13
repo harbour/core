@@ -1,8 +1,5 @@
 /*
- * Author....: Glenn Scott (from John Kaster)
- * CIS ID....: 71620,1521
- *
- * This is an original work by Glenn Scott and is placed in the
+ * This is an original work by Glenn Scott/John Kaster and is placed in the
  * public domain.
  *
  * Modification history:

@@ -1,9 +1,6 @@
 /*
- * Author....: Jo W. French dba Practical Computing
- * CIS ID....: 74731,1751
- *
  * The functions contained herein are the original work of Jo W. French
- * and are placed in the public domain.
+ * (dba Practical Computing) and are placed in the public domain.
  *
  * Modification history:
  *
@@ -31,11 +28,10 @@ FUNCTION ft_MAdd( dGivenDate, nAddMonths, lMakeEOM )
    nAdjDay := Day( dGivenDate ) - 1
 
    /* If givendate is end of month and lMakeEom, then force EOM.*/
+   lMakeEOM := hb_defaultValue( lMakeEOM, .F. ) .AND. ;
+      dGivenDate == dGivenDate - nAdjDay + 31 - Day( dGivenDate - nAdjDay + 31 )
 
-   lMakeEom := ( hb_defaultValue( lMakeEOM, .F. ) .AND. ;
-      dGivenDate == dGivenDate - nAdjDay + 31 - Day( dGivenDate - nAdjDay + 31 ) )
-
-   dTemp := dGivenDate - nAdjDay     // first of month
+   dTemp := dGivenDate - nAdjDay  // first of month
 
    /* Work with 1st of months.*/
    FOR i := 1 TO Abs( nAddMonths )
@@ -43,10 +39,8 @@ FUNCTION ft_MAdd( dGivenDate, nAddMonths, lMakeEOM )
       dTemp += 1 - Day( dTemp )
    NEXT
 
-   IF lMakeEom
-      dTemp += 31 - Day( dTemp + 31 )
-   ELSE
-      dTemp := Min( dTemp + nAdjday, ( dTemp += 31 - Day( dTemp + 31 ) ) )
+   IF lMakeEOM
+      RETURN dTemp + 31 - Day( dTemp + 31 )
    ENDIF
 
-   RETURN dTemp
+   RETURN Min( dTemp + nAdjday, dTemp += 31 - Day( dTemp + 31 ) )

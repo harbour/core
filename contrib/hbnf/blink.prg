@@ -1,7 +1,4 @@
 /*
- * Author....: Terry Hackett
- * CIS ID....: 76662,2035
- *
  * This is an original work by Terry Hackett and is placed in the
  * public domain.
  *

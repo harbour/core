@@ -47,9 +47,6 @@
  */
 
 /*
- * Author....: Glenn Scott
- * CIS ID....: 71620,1521
- *
  * This is an original work by Glenn Scott and is placed in the
  * public domain.
  *
@@ -74,7 +71,7 @@
 #include "hbdate.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
+   #include <dos.h>
 #endif
 
 HB_FUNC( FT_SETDATE )

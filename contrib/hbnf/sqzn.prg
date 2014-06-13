@@ -1,7 +1,4 @@
 /*
- * Author....: Joseph D. Booth, Sr.
- * CIS ID....: 72040,2112
- *
  * This is an original work by Joseph D. Booth Sr. and is placed in the
  * public domain.
  *
@@ -36,25 +33,24 @@ FUNCTION ft_Sqzn( nValue, nSize, nDecimals )
 
 FUNCTION ft_Unsqzn( cCompressed, nSize, nDecimals )
 
-   LOCAL tmp := "", k, cValue, multi
+   LOCAL tmp := "", k, sign
 
    __defaultNIL( @nSize, 10 )
    __defaultNIL( @nDecimals, 0 )
 
    nSize := iif( ( nSize / 2 ) != Int( nSize / 2 ), nSize + 1, nSize )
    IF hb_BCode( cCompressed ) > 127
-      tmp   := Str( hb_BCode( cCompressed ) - 128, 2 )
-      multi := -1
+      tmp  := Str( hb_BCode( cCompressed ) - 128, 2 )
+      sign := -1
    ELSE
-      tmp   := Str( hb_BCode( cCompressed ), 2 )
-      multi := 1
+      tmp  := Str( hb_BCode( cCompressed ), 2 )
+      sign := 1
    ENDIF
 
    FOR k := 2 TO hb_BLen( cCompressed )
       tmp += Str( hb_BPeek( cCompressed, k ), 2 )
    NEXT
 
-   tmp    := StrTran( tmp, " ", "0" )
-   cValue := hb_BLeft( tmp, nSize - nDecimals ) + "." + hb_BSubStr( tmp, nSize - nDecimals + 1 )
+   tmp := StrTran( tmp, " ", "0" )
 
-   RETURN Val( cValue ) * multi
+   RETURN Val( hb_BLeft( tmp, nSize - nDecimals ) + "." + hb_BSubStr( tmp, nSize - nDecimals + 1 ) ) * sign

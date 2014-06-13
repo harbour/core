@@ -1,7 +1,5 @@
 /*
- * File......: Header file for users of ft_int86() function
- * Author....: Ted Means
- * CIS ID....: 73067,3332
+ * Header file for users of ft_int86() function
  *
  * This is an original work by Ted Means and is placed in the
  * public domain.
@@ -51,15 +49,15 @@
 #define ES                  9
 #define FLAGS               10
 
-#define FLAG_CARRY          0     // Carry flag
-#define FLAG_PARITY         2     // Parity flag
-#define FLAG_AUX            4     // Auxillary flag
-#define FLAG_ZERO           6     // Zero flag
-#define FLAG_SIGN           7     // Sign flag
-#define FLAG_TRAP           8     // Trap flag
-#define FLAG_INT            9     // Interrupt flag
-#define FLAG_DIR            10    // Direction flag
-#define FLAG_OFLOW          11    // Overflow flag
+#define FLAG_CARRY          0   // Carry flag
+#define FLAG_PARITY         2   // Parity flag
+#define FLAG_AUX            4   // Auxillary flag
+#define FLAG_ZERO           6   // Zero flag
+#define FLAG_SIGN           7   // Sign flag
+#define FLAG_TRAP           8   // Trap flag
+#define FLAG_INT            9   // Interrupt flag
+#define FLAG_DIR            10  // Direction flag
+#define FLAG_OFLOW          11  // Overflow flag
 
 #translate MAKEHI( <X> )        => ( ( <X> ) * 256 )
 #translate REG_DS               => .T.

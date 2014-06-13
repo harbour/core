@@ -94,11 +94,11 @@ FUNCTION MakeBlock()
    LOCAL nTest
    RETURN {|| DoThing( @nTest ), QOut( "From MakeBlock: ", nTest ) }
 
-FUNCTION DoThing( n )
+PROCEDURE DoThing( n )
 
    n := 42
 
-   RETURN NIL
+   RETURN
 
 
   In Clipper it produces:

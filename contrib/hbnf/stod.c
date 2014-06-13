@@ -1,7 +1,4 @@
 /*
- * Author....: Clayton Neff
- * CIS ID....:
- *
  * This is an original work by Clayton Neff and is placed in the
  * public domain.
  *

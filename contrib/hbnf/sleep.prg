@@ -1,7 +1,4 @@
 /*
- * Author....: Leo Letendre
- * CIS ID....: 73607,233
- *
  * This is an original work by Leo Letendre and is placed in the
  * public domain.
  *
@@ -22,7 +19,7 @@ PROCEDURE ft_Sleep( nSeconds, nInitial )
       IF nInitial > 0
          nInitial -= 86399
       ENDIF
-      nSeconds += ninitial  // calculate final time
+      nSeconds += nInitial  // calculate final time
    ENDIF
 
    hb_idleSleep( nSeconds )
