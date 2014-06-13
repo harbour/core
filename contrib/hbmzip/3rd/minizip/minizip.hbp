@@ -25,7 +25,6 @@ unzip.c
 -depincpathlocal=zlib:../../../../src/3rd/zlib
 
 # ORIGIN http://zlib.net/
-# VER    1.2.8
 # URL    https://downloads.sourceforge.net/libpng/zlib128.zip
 # DIFF   minizip.dif
 #

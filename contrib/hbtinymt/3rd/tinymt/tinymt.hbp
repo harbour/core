@@ -12,7 +12,6 @@ tinymt32.c
 tinymt64.c
 
 # ORIGIN http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/
-# VER    1.0.3
 # URL    http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/TinyMT-src-1.0.3.zip
 # DIFF   tinymt.dif
 #
