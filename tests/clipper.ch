@@ -83,17 +83,17 @@
 #xtranslate hb_BStrTran( <c>, <s>[, <r>] ) => StrTran( <c>, <s>, <r> )
 
 #ifdef B_SINGLE
-#define HB_B_SINGLE_UNI                    B_SINGLE
-#define HB_B_DOUBLE_UNI                    B_DOUBLE
-#define HB_B_SINGLE_DOUBLE_UNI             B_SINGLE_DOUBLE
-#define HB_B_DOUBLE_SINGLE_UNI             B_DOUBLE_SINGLE
+   #define HB_B_SINGLE_UNI                 B_SINGLE
+   #define HB_B_DOUBLE_UNI                 B_DOUBLE
+   #define HB_B_SINGLE_DOUBLE_UNI          B_SINGLE_DOUBLE
+   #define HB_B_DOUBLE_SINGLE_UNI          B_DOUBLE_SINGLE
 #endif
 
 #ifdef MENU_SEPARATOR
-#define HB_MENU_SEPARATOR_UNI              MENU_SEPARATOR
-#define HB_SEPARATOR_DOUBLE_UNI            SEPARATOR_DOUBLE
-#define HB_SEPARATOR_SINGLE_UNI            SEPARATOR_SINGLE
-#define HB_SEPARATOR_DOUBLE_SINGLE_UNI     SEPARATOR_DOUBLE_SINGLE
+   #define HB_MENU_SEPARATOR_UNI           MENU_SEPARATOR
+   #define HB_SEPARATOR_DOUBLE_UNI         SEPARATOR_DOUBLE
+   #define HB_SEPARATOR_SINGLE_UNI         SEPARATOR_SINGLE
+   #define HB_SEPARATOR_DOUBLE_SINGLE_UNI  SEPARATOR_DOUBLE_SINGLE
 #endif
 
 #xtranslate hb_DispBox( [<x,...>] )        => DispBox( <x> )

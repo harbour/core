@@ -1964,8 +1964,7 @@ STATIC FUNCTION THtmlAttr_A()
       t_aHA[ HTML_ATTR_URN              ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_ABBR()
    RETURN { ;
@@ -1987,8 +1986,7 @@ STATIC FUNCTION THtmlAttr_ABBR()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_ACRONYM()
    RETURN { ;
@@ -2010,8 +2008,7 @@ STATIC FUNCTION THtmlAttr_ACRONYM()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_ADDRESS()
    RETURN { ;
@@ -2035,8 +2032,7 @@ STATIC FUNCTION THtmlAttr_ADDRESS()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_APPLET()
    RETURN { ;
@@ -2055,8 +2051,7 @@ STATIC FUNCTION THtmlAttr_APPLET()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_VSPACE           ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_AREA()
    RETURN { ;
@@ -2088,8 +2083,7 @@ STATIC FUNCTION THtmlAttr_AREA()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_B()
    RETURN { ;
@@ -2112,8 +2106,7 @@ STATIC FUNCTION THtmlAttr_B()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_BASE()
    RETURN { ;
@@ -2121,8 +2114,7 @@ STATIC FUNCTION THtmlAttr_BASE()
       t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_TARGET           ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_BASEFONT()
    RETURN { ;
@@ -2130,8 +2122,7 @@ STATIC FUNCTION THtmlAttr_BASEFONT()
       t_aHA[ HTML_ATTR_FACE             ], ;
       t_aHA[ HTML_ATTR_ID               ], ;
       t_aHA[ HTML_ATTR_SIZE             ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_BDO()
    RETURN { ;
@@ -2153,8 +2144,7 @@ STATIC FUNCTION THtmlAttr_BDO()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_BIG()
    RETURN { ;
@@ -2176,8 +2166,7 @@ STATIC FUNCTION THtmlAttr_BIG()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_BLOCKQUOTE()
    RETURN { ;
@@ -2201,8 +2190,7 @@ STATIC FUNCTION THtmlAttr_BLOCKQUOTE()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_BODY()
    RETURN { ;
@@ -2232,8 +2220,7 @@ STATIC FUNCTION THtmlAttr_BODY()
       t_aHA[ HTML_ATTR_VLINK            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_BR()
    RETURN { ;
@@ -2244,8 +2231,7 @@ STATIC FUNCTION THtmlAttr_BR()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_BUTTON()
    RETURN { ;
@@ -2275,8 +2261,7 @@ STATIC FUNCTION THtmlAttr_BUTTON()
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_CAPTION()
    RETURN { ;
@@ -2299,8 +2284,7 @@ STATIC FUNCTION THtmlAttr_CAPTION()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_CENTER()
    RETURN { ;
@@ -2321,8 +2305,7 @@ STATIC FUNCTION THtmlAttr_CENTER()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_CITE()
    RETURN { ;
@@ -2345,8 +2328,7 @@ STATIC FUNCTION THtmlAttr_CITE()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_CODE()
    RETURN { ;
@@ -2369,8 +2351,7 @@ STATIC FUNCTION THtmlAttr_CODE()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_COL()
    RETURN { ;
@@ -2398,8 +2379,7 @@ STATIC FUNCTION THtmlAttr_COL()
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_COLGROUP()
    RETURN { ;
@@ -2427,8 +2407,7 @@ STATIC FUNCTION THtmlAttr_COLGROUP()
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_DD()
    RETURN { ;
@@ -2451,8 +2430,7 @@ STATIC FUNCTION THtmlAttr_DD()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_DEL()
    RETURN { ;
@@ -2476,8 +2454,7 @@ STATIC FUNCTION THtmlAttr_DEL()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_DFN()
    RETURN { ;
@@ -2499,8 +2476,7 @@ STATIC FUNCTION THtmlAttr_DFN()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_DIR()
    RETURN { ;
@@ -2524,8 +2500,7 @@ STATIC FUNCTION THtmlAttr_DIR()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_DIV()
    RETURN { ;
@@ -2548,8 +2523,7 @@ STATIC FUNCTION THtmlAttr_DIV()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_DL()
    RETURN { ;
@@ -2574,8 +2548,7 @@ STATIC FUNCTION THtmlAttr_DL()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_DT()
    RETURN { ;
@@ -2598,8 +2571,7 @@ STATIC FUNCTION THtmlAttr_DT()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_EM()
    RETURN { ;
@@ -2622,8 +2594,7 @@ STATIC FUNCTION THtmlAttr_EM()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_FIELDSET()
    RETURN { ;
@@ -2645,8 +2616,7 @@ STATIC FUNCTION THtmlAttr_FIELDSET()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_FONT()
    RETURN { ;
@@ -2660,8 +2630,7 @@ STATIC FUNCTION THtmlAttr_FONT()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_FORM()
    RETURN { ;
@@ -2694,8 +2663,7 @@ STATIC FUNCTION THtmlAttr_FORM()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_FRAME()
    RETURN { ;
@@ -2711,8 +2679,7 @@ STATIC FUNCTION THtmlAttr_FRAME()
       t_aHA[ HTML_ATTR_SRC              ], ;
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_FRAMESET()
    RETURN { ;
@@ -2724,8 +2691,7 @@ STATIC FUNCTION THtmlAttr_FRAMESET()
       t_aHA[ HTML_ATTR_ROWS             ], ;
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_H1()
    RETURN { ;
@@ -2749,8 +2715,7 @@ STATIC FUNCTION THtmlAttr_H1()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_H2()
    RETURN { ;
@@ -2774,8 +2739,7 @@ STATIC FUNCTION THtmlAttr_H2()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_H3()
    RETURN { ;
@@ -2799,8 +2763,7 @@ STATIC FUNCTION THtmlAttr_H3()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_H4()
    RETURN { ;
@@ -2824,8 +2787,7 @@ STATIC FUNCTION THtmlAttr_H4()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_H5()
    RETURN { ;
@@ -2849,8 +2811,7 @@ STATIC FUNCTION THtmlAttr_H5()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_H6()
    RETURN { ;
@@ -2874,8 +2835,7 @@ STATIC FUNCTION THtmlAttr_H6()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_HEAD()
    RETURN { ;
@@ -2885,8 +2845,7 @@ STATIC FUNCTION THtmlAttr_HEAD()
       t_aHA[ HTML_ATTR_PROFILE          ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_HR()
    RETURN { ;
@@ -2913,8 +2872,7 @@ STATIC FUNCTION THtmlAttr_HR()
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_HTML()
    RETURN { ;
@@ -2925,8 +2883,7 @@ STATIC FUNCTION THtmlAttr_HTML()
       t_aHA[ HTML_ATTR_VERSION          ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_I()
    RETURN { ;
@@ -2949,8 +2906,7 @@ STATIC FUNCTION THtmlAttr_I()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_IFRAME()
    RETURN { ;
@@ -2968,8 +2924,7 @@ STATIC FUNCTION THtmlAttr_IFRAME()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_WIDTH            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_IMG()
    RETURN { ;
@@ -3004,8 +2959,7 @@ STATIC FUNCTION THtmlAttr_IMG()
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_INPUT()
    RETURN { ;
@@ -3048,8 +3002,7 @@ STATIC FUNCTION THtmlAttr_INPUT()
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_INS()
    RETURN { ;
@@ -3073,8 +3026,7 @@ STATIC FUNCTION THtmlAttr_INS()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_ISINDEX()
    RETURN { ;
@@ -3087,8 +3039,7 @@ STATIC FUNCTION THtmlAttr_ISINDEX()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_KBD()
    RETURN { ;
@@ -3111,8 +3062,7 @@ STATIC FUNCTION THtmlAttr_KBD()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_LABEL()
    RETURN { ;
@@ -3138,8 +3088,7 @@ STATIC FUNCTION THtmlAttr_LABEL()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_LEGEND()
    RETURN { ;
@@ -3163,8 +3112,7 @@ STATIC FUNCTION THtmlAttr_LEGEND()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_LI()
    RETURN { ;
@@ -3189,8 +3137,7 @@ STATIC FUNCTION THtmlAttr_LI()
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_LINK()
    RETURN { ;
@@ -3223,15 +3170,13 @@ STATIC FUNCTION THtmlAttr_LINK()
       t_aHA[ HTML_ATTR_URN              ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_LISTING()
    RETURN { ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_MAP()
    RETURN { ;
@@ -3254,8 +3199,7 @@ STATIC FUNCTION THtmlAttr_MAP()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_MENU()
    RETURN { ;
@@ -3279,8 +3223,7 @@ STATIC FUNCTION THtmlAttr_MENU()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_META()
    RETURN { ;
@@ -3293,14 +3236,12 @@ STATIC FUNCTION THtmlAttr_META()
       t_aHA[ HTML_ATTR_SCHEME           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_NEXTID()
    RETURN { ;
       t_aHA[ HTML_ATTR_N                ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_NOFRAMES()
    RETURN { ;
@@ -3321,8 +3262,7 @@ STATIC FUNCTION THtmlAttr_NOFRAMES()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_NOSCRIPT()
    RETURN { ;
@@ -3344,8 +3284,7 @@ STATIC FUNCTION THtmlAttr_NOSCRIPT()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_OBJECT()
    RETURN { ;
@@ -3384,8 +3323,7 @@ STATIC FUNCTION THtmlAttr_OBJECT()
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_OL()
    RETURN { ;
@@ -3411,8 +3349,7 @@ STATIC FUNCTION THtmlAttr_OL()
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_OPTGROUP()
    RETURN { ;
@@ -3436,8 +3373,7 @@ STATIC FUNCTION THtmlAttr_OPTGROUP()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_OPTION()
    RETURN { ;
@@ -3465,8 +3401,7 @@ STATIC FUNCTION THtmlAttr_OPTION()
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_P()
    RETURN { ;
@@ -3490,8 +3425,7 @@ STATIC FUNCTION THtmlAttr_P()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_PARAM()
    RETURN { ;
@@ -3501,14 +3435,12 @@ STATIC FUNCTION THtmlAttr_PARAM()
       t_aHA[ HTML_ATTR_VALUE            ], ;
       t_aHA[ HTML_ATTR_VALUETYPE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_PLAINTEXT()
    RETURN { ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_PRE()
    RETURN { ;
@@ -3533,8 +3465,7 @@ STATIC FUNCTION THtmlAttr_PRE()
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XML_SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_Q()
    RETURN { ;
@@ -3557,8 +3488,7 @@ STATIC FUNCTION THtmlAttr_Q()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_RB()
    RETURN { ;
@@ -3579,8 +3509,7 @@ STATIC FUNCTION THtmlAttr_RB()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_RBC()
    RETURN { ;
@@ -3601,8 +3530,7 @@ STATIC FUNCTION THtmlAttr_RBC()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_RP()
    RETURN { ;
@@ -3623,8 +3551,7 @@ STATIC FUNCTION THtmlAttr_RP()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_RT()
    RETURN { ;
@@ -3646,8 +3573,7 @@ STATIC FUNCTION THtmlAttr_RT()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_RTC()
    RETURN { ;
@@ -3668,8 +3594,7 @@ STATIC FUNCTION THtmlAttr_RTC()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_RUBY()
    RETURN { ;
@@ -3690,8 +3615,7 @@ STATIC FUNCTION THtmlAttr_RUBY()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_S()
    RETURN { ;
@@ -3712,8 +3636,7 @@ STATIC FUNCTION THtmlAttr_S()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_SAMP()
    RETURN { ;
@@ -3736,8 +3659,7 @@ STATIC FUNCTION THtmlAttr_SAMP()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_SCRIPT()
    RETURN { ;
@@ -3751,8 +3673,7 @@ STATIC FUNCTION THtmlAttr_SCRIPT()
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XML_SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_SELECT()
    RETURN { ;
@@ -3784,8 +3705,7 @@ STATIC FUNCTION THtmlAttr_SELECT()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_SMALL()
    RETURN { ;
@@ -3807,8 +3727,7 @@ STATIC FUNCTION THtmlAttr_SMALL()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_SPAN()
    RETURN { ;
@@ -3830,8 +3749,7 @@ STATIC FUNCTION THtmlAttr_SPAN()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_STRIKE()
    RETURN { ;
@@ -3852,8 +3770,7 @@ STATIC FUNCTION THtmlAttr_STRIKE()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_STRONG()
    RETURN { ;
@@ -3876,8 +3793,7 @@ STATIC FUNCTION THtmlAttr_STRONG()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_STYLE()
    RETURN { ;
@@ -3890,8 +3806,7 @@ STATIC FUNCTION THtmlAttr_STYLE()
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XML_SPACE        ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_SUB()
    RETURN { ;
@@ -3913,8 +3828,7 @@ STATIC FUNCTION THtmlAttr_SUB()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_SUP()
    RETURN { ;
@@ -3936,8 +3850,7 @@ STATIC FUNCTION THtmlAttr_SUP()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TABLE()
    RETURN { ;
@@ -3969,8 +3882,7 @@ STATIC FUNCTION THtmlAttr_TABLE()
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TBODY()
    RETURN { ;
@@ -3996,8 +3908,7 @@ STATIC FUNCTION THtmlAttr_TBODY()
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TD()
    RETURN { ;
@@ -4033,8 +3944,7 @@ STATIC FUNCTION THtmlAttr_TD()
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TEXTAREA()
    RETURN { ;
@@ -4069,8 +3979,7 @@ STATIC FUNCTION THtmlAttr_TEXTAREA()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TFOOT()
    RETURN { ;
@@ -4096,8 +4005,7 @@ STATIC FUNCTION THtmlAttr_TFOOT()
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TH()
    RETURN { ;
@@ -4133,8 +4041,7 @@ STATIC FUNCTION THtmlAttr_TH()
       t_aHA[ HTML_ATTR_WIDTH            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_THEAD()
    RETURN { ;
@@ -4160,8 +4067,7 @@ STATIC FUNCTION THtmlAttr_THEAD()
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TITLE()
    RETURN { ;
@@ -4171,8 +4077,7 @@ STATIC FUNCTION THtmlAttr_TITLE()
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TR()
    RETURN { ;
@@ -4199,8 +4104,7 @@ STATIC FUNCTION THtmlAttr_TR()
       t_aHA[ HTML_ATTR_VALIGN           ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_TT()
    RETURN { ;
@@ -4223,8 +4127,7 @@ STATIC FUNCTION THtmlAttr_TT()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_U()
    RETURN { ;
@@ -4245,8 +4148,7 @@ STATIC FUNCTION THtmlAttr_U()
       t_aHA[ HTML_ATTR_STYLE            ], ;
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_UL()
    RETURN { ;
@@ -4271,8 +4173,7 @@ STATIC FUNCTION THtmlAttr_UL()
       t_aHA[ HTML_ATTR_TYPE             ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_VAR()
    RETURN { ;
@@ -4295,15 +4196,13 @@ STATIC FUNCTION THtmlAttr_VAR()
       t_aHA[ HTML_ATTR_TITLE            ], ;
       t_aHA[ HTML_ATTR_XML_LANG         ], ;
       t_aHA[ HTML_ATTR_XMLNS            ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 STATIC FUNCTION THtmlAttr_XMP()
    RETURN { ;
       t_aHA[ HTML_ATTR_SDAFORM          ], ;
       t_aHA[ HTML_ATTR_SDAPREF          ], ;
-      t_aHA[ HTML_ATTR_UNKNOWN          ]  ;
-      }
+      t_aHA[ HTML_ATTR_UNKNOWN          ] }
 
 #ifdef HB_LEGACY_LEVEL4
 
@@ -4391,9 +4290,8 @@ FUNCTION ANSIToHtml( cAnsiText )
          cText := StrTran( cText, aEntity[ 1 ], aEntity[ 2 ] )
       ENDIF
    NEXT
-   cHtmlText += cText
 
-   RETURN cHtmlText
+   RETURN cHtmlText + cText
 
 // Inserts HTML character entities into an OEM text string
 FUNCTION OEMToHtml( cOemText )
@@ -4479,8 +4377,7 @@ STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
       { hb_BChar( 254 ), "&thorn;"  }, ;      //  Latin small letter thorn
       { hb_BChar( 255 ), "&yuml;"   }, ;      //  Latin small letter y with diaeresis
       { hb_BChar(  94 ), "&circ;"   }, ;      //  modifier letter circumflex accent
-      { hb_BChar( 126 ), "&tilde;"  }  ;      //  small tilde
-      }
+      { hb_BChar( 126 ), "&tilde;"  } }       //  small tilde
 
    RETURN
 
@@ -4647,8 +4544,7 @@ STATIC PROCEDURE _Init_Html_CharacterEntities()
          { "þ", "&thorn;"  }, ;      //  Latin small letter thorn
          { "ÿ", "&yuml;"   }, ;      //  Latin small letter y with diaeresis
          { "^", "&circ;"   }, ;      //  modifier letter circumflex accent
-         { "~", "&tilde;"  }  ;      //  small tilde
-         }
+         { "~", "&tilde;"  } }       //  small tilde
    ENDIF
 
    RETURN

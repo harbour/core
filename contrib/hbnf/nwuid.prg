@@ -45,7 +45,7 @@ FUNCTION ft_NWUID( nConn )
    cRepPkt := Space( 63 )
 
    // Assign registers
-   aRegs[ AX ] := MAKEHI( 227 ) // NW_LOG
+   aRegs[ AX ] := MAKEHI( 0xE3 )  // NW_LOG
    aRegs[ DS ] := cReqPkt
    aRegs[ SI ] := REG_DS
    aRegs[ ES ] := cRepPkt
