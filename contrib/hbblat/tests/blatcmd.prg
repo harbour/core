@@ -47,6 +47,7 @@
  */
 
 #require "hbblat"
+#require "hbwin"
 
 PROCEDURE Main()
 

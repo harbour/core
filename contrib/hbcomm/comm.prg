@@ -104,7 +104,7 @@ FUNCTION INCHR( nPort, nCount, /* @ */ cData )
 
    hb_default( @nCount, 0 )
 
-   cData := Space( nCount )
+   cData := Replicate( Chr( 0 ), nCount )
 
    RETURN hb_comRecv( nPort, @cData, nCount )
 

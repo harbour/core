@@ -17828,10 +17828,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    ENDIF
    IF lMore
       AEval( aHdr_Desc, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      IF ! hbmk[ _HBMK_lShellMode ]
-         AEval( aLst_Desc, {| tmp | OutNote( hbmk, tmp, "  " ) } )
-      ELSE
+      IF hbmk[ _HBMK_lShellMode ]
          AEval( aLst_Desc_Shell, {| tmp | OutNote( hbmk, tmp, "  " ) } )
+      ELSE
+         AEval( aLst_Desc, {| tmp | OutNote( hbmk, tmp, "  " ) } )
       ENDIF
    ENDIF
    IF ! hbmk[ _HBMK_lShellMode ]
@@ -17843,10 +17843,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          AEval( aLst_Opt_Long, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
       AEval( aHdr_Opt_LongCmd, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      IF ! hbmk[ _HBMK_lShellMode ]
-         AEval( aLst_Opt_LongCmd, {| tmp | OutOpt( hbmk, tmp ) } )
-      ELSE
+      IF hbmk[ _HBMK_lShellMode ]
          AEval( aLst_Opt_LongCmd_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
+      ELSE
+         AEval( aLst_Opt_LongCmd, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
       IF ! hbmk[ _HBMK_lShellMode ]
          IF lLong
@@ -17870,10 +17870,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       AEval( aHdr_PredSource, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
       IF ! hbmk[ _HBMK_lShellMode ]
          AEval( aLst_PredSource, {| tmp | OutOpt( hbmk, tmp ) } )
-         AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
-      ELSE
-         AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
+      AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
       IF ! hbmk[ _HBMK_lShellMode ]
          AEval( aHdr_PredBuild, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
          AEval( aLst_PredBuild, {| tmp | OutOpt( hbmk, tmp ) } )
