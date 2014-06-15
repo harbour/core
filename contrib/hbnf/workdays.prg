@@ -24,10 +24,10 @@ FUNCTION ft_Workdays( dStart, dStop )
 
    IF dStart != NIL .AND. dStop != NIL
       IF dStart != dStop
-         IF dStart > dStop   // Swap the values
-            nAdjust  := dStop
-            dStop    := dStart
-            dStart   := nAdjust
+         IF dStart > dStop  // Swap the values
+            nAdjust := dStop
+            dStop   := dStart
+            dStart  := nAdjust
          ENDIF
 
          DO CASE
