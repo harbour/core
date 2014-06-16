@@ -5,7 +5,7 @@ PROCEDURE Main()
    LOCAL cTable := hb_FNameExtSet( __FILE__, ".dbf" )
    LOCAL tmp
 
-   dbCreate( cTable, { { "TESTM", "M", 10, 0 } }, NIL, .T., "w_TEST" )
+   dbCreate( cTable, { { "TESTM", "M", 10, 0 } }, , .T., "w_TEST" )
    dbAppend()
    w_TEST->TESTM := "hello"
 

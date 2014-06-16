@@ -183,12 +183,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
          IF HB_ISEVALITEM( ::sl_killInputFocus )
-            Eval( ::sl_killInputFocus, NIL, NIL, Self )
+            Eval( ::sl_killInputFocus, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
          IF HB_ISEVALITEM( ::sl_setInputFocus )
-            Eval( ::sl_setInputFocus, NIL, NIL, Self )
+            Eval( ::sl_setInputFocus, , , Self )
          ENDIF
 
       ENDCASE
@@ -208,12 +208,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
       DO CASE
       CASE aNM[ NMH_code ] == WM_KILLFOCUS
          IF HB_ISEVALITEM( ::sl_killInputFocus )
-            Eval( ::sl_killInputFocus, NIL, NIL, Self )
+            Eval( ::sl_killInputFocus, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_SETFOCUS
          IF HB_ISEVALITEM( ::sl_setInputFocus )
-            Eval( ::sl_setInputFocus, NIL, NIL, Self )
+            Eval( ::sl_setInputFocus, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_KEYDOWN
@@ -224,7 +224,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
                ::oParent:setFocus()
             ENDIF
             IF HB_ISEVALITEM( ::sl_returnPressed )
-               Eval( ::sl_returnPressed, NIL, NIL, Self )
+               Eval( ::sl_returnPressed, , , Self )
             ENDIF
          CASE aNM[ 2 ] == VK_TAB
             IF ::isParentCrt()
@@ -301,7 +301,7 @@ METHOD WvgSLE:returnPressed( ... )
    IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_returnPressed := a_[ 1 ]
    ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_returnPressed )
-      Eval( ::sl_returnPressed, NIL, NIL, Self )
+      Eval( ::sl_returnPressed, , , Self )
    ENDIF
 
    RETURN Self

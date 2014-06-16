@@ -2603,7 +2603,7 @@ METHOD AddText( cString, lAtPos ) CLASS XHBEditor
 
    IF ::lEditAllow .AND. ! Empty( cString )
 
-      aTmpText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
+      aTmpText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ) )
       nLines := Len( aTmpText )
       nAtRow := ::nRow
       lSaveIns := ::lInsert
@@ -2665,7 +2665,7 @@ METHOD GetTextIndex() CLASS XHBEditor
 
 METHOD LoadText( cString ) CLASS XHBEditor
 
-   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
+   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ) )
 
    IF ::LastRow() == 0
       AAdd( ::aText, HBTextLine():New() )
@@ -2687,7 +2687,7 @@ METHOD LoadFile( cFileName ) CLASS XHBEditor
       cString := ""
    ENDIF
 
-   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
+   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ) )
 
    IF ::LastRow() == 0
       AAdd( ::aText, HBTextLine():New() )

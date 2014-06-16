@@ -114,7 +114,7 @@ PROCEDURE Main()
 
    USE ( cFile ) SHARED READONLY
 
-   oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassword, NIL, cPath )
+   oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassword, , cPath )
    IF oServer:NetErr()
       ? oServer:ErrorMsg()
       RETURN

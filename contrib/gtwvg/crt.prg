@@ -544,7 +544,7 @@ METHOD WvgCrt:winDevice()
 METHOD WvgCrt:enter( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_enter )
-      Eval( ::sl_enter, xParam, NIL, Self )
+      Eval( ::sl_enter, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -558,7 +558,7 @@ METHOD WvgCrt:enter( xParam )
 METHOD WvgCrt:leave( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_leave )
-      Eval( ::sl_leave, NIL, NIL, Self )
+      Eval( ::sl_leave, , , Self )
       RETURN Self
    ENDIF
 
@@ -572,7 +572,7 @@ METHOD WvgCrt:leave( xParam )
 METHOD WvgCrt:lbClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_lbClick )
-      Eval( ::sl_lbClick, xParam, NIL, Self )
+      Eval( ::sl_lbClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -586,7 +586,7 @@ METHOD WvgCrt:lbClick( xParam )
 METHOD WvgCrt:lbDblClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_lbDblClick )
-      Eval( ::sl_lbDblClick, xParam, NIL, Self )
+      Eval( ::sl_lbDblClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -600,7 +600,7 @@ METHOD WvgCrt:lbDblClick( xParam )
 METHOD WvgCrt:lbDown( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_lbDown )
-      Eval( ::sl_lbDown, xParam, NIL, Self )
+      Eval( ::sl_lbDown, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -614,7 +614,7 @@ METHOD WvgCrt:lbDown( xParam )
 METHOD WvgCrt:lbUp( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_lbUp )
-      Eval( ::sl_lbUp, xParam, NIL, Self )
+      Eval( ::sl_lbUp, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -628,7 +628,7 @@ METHOD WvgCrt:lbUp( xParam )
 METHOD WvgCrt:mbClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_mbClick )
-      Eval( ::sl_mbClick, xParam, NIL, Self )
+      Eval( ::sl_mbClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -642,7 +642,7 @@ METHOD WvgCrt:mbClick( xParam )
 METHOD WvgCrt:mbDblClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_mbDblClick )
-      Eval( ::sl_mbDblClick, xParam, NIL, Self )
+      Eval( ::sl_mbDblClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -656,7 +656,7 @@ METHOD WvgCrt:mbDblClick( xParam )
 METHOD WvgCrt:mbDown( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_mbDown )
-      Eval( ::sl_mbDown, xParam, NIL, Self )
+      Eval( ::sl_mbDown, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -670,7 +670,7 @@ METHOD WvgCrt:mbDown( xParam )
 METHOD WvgCrt:mbUp( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_mbUp )
-      Eval( ::sl_mbUp, xParam, NIL, Self )
+      Eval( ::sl_mbUp, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -684,7 +684,7 @@ METHOD WvgCrt:mbUp( xParam )
 METHOD WvgCrt:motion( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_motion )
-      Eval( ::sl_motion, xParam, NIL, Self )
+      Eval( ::sl_motion, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -698,7 +698,7 @@ METHOD WvgCrt:motion( xParam )
 METHOD WvgCrt:rbClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_rbClick )
-      Eval( ::sl_rbClick, xParam, NIL, Self )
+      Eval( ::sl_rbClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -712,7 +712,7 @@ METHOD WvgCrt:rbClick( xParam )
 METHOD WvgCrt:rbDblClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_rbDblClick )
-      Eval( ::sl_rbDblClick, xParam, NIL, Self )
+      Eval( ::sl_rbDblClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -726,7 +726,7 @@ METHOD WvgCrt:rbDblClick( xParam )
 METHOD WvgCrt:rbDown( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_rbDown )
-      Eval( ::sl_rbDown, xParam, NIL, Self )
+      Eval( ::sl_rbDown, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -740,7 +740,7 @@ METHOD WvgCrt:rbDown( xParam )
 METHOD WvgCrt:rbUp( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_rbUp )
-      Eval( ::sl_rbUp, xParam, NIL, Self )
+      Eval( ::sl_rbUp, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -754,7 +754,7 @@ METHOD WvgCrt:rbUp( xParam )
 METHOD WvgCrt:wheel( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_wheel )
-      Eval( ::sl_wheel, xParam, NIL, Self )
+      Eval( ::sl_wheel, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -768,7 +768,7 @@ METHOD WvgCrt:wheel( xParam )
 METHOD WvgCrt:close( xParam )
 
    IF xParam == NIL .AND. HB_ISEVALITEM( ::sl_close )
-      Eval( ::sl_close, NIL, NIL, Self )
+      Eval( ::sl_close, , , Self )
       RETURN Self
    ENDIF
 
@@ -782,7 +782,7 @@ METHOD WvgCrt:close( xParam )
 METHOD WvgCrt:helpRequest( xParam )
 
    IF xParam == NIL .AND. HB_ISEVALITEM( ::sl_helpRequest )
-      Eval( ::sl_helpRequest, NIL, NIL, Self )
+      Eval( ::sl_helpRequest, , , Self )
       RETURN Self
    ENDIF
 
@@ -796,7 +796,7 @@ METHOD WvgCrt:helpRequest( xParam )
 METHOD WvgCrt:keyboard( xParam )
 
    IF HB_ISNUMERIC( xParam ) .AND. HB_ISEVALITEM( ::sl_keyboard )
-      Eval( ::sl_keyboard, xParam, NIL, Self )
+      Eval( ::sl_keyboard, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -810,7 +810,7 @@ METHOD WvgCrt:keyboard( xParam )
 METHOD WvgCrt:killDisplayFocus( xParam )
 
    IF xParam == NIL .AND. HB_ISEVALITEM( ::sl_killDisplayFocus )
-      Eval( ::sl_killDisplayFocus, NIL, NIL, Self )
+      Eval( ::sl_killDisplayFocus, , , Self )
       RETURN Self
    ENDIF
 
@@ -824,7 +824,7 @@ METHOD WvgCrt:killDisplayFocus( xParam )
 METHOD WvgCrt:killInputFocus( xParam )
 
    IF xParam == NIL .AND. HB_ISEVALITEM( ::sl_killInputFocus )
-      Eval( ::sl_killInputFocus, NIL, NIL, Self )
+      Eval( ::sl_killInputFocus, , , Self )
       RETURN Self
    ENDIF
 
@@ -838,7 +838,7 @@ METHOD WvgCrt:killInputFocus( xParam )
 METHOD WvgCrt:move( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_move )
-      Eval( ::sl_move, xParam, NIL, Self )
+      Eval( ::sl_move, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -852,7 +852,7 @@ METHOD WvgCrt:move( xParam )
 METHOD WvgCrt:paint( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_paint )
-      Eval( ::sl_paint, xParam, NIL, Self )
+      Eval( ::sl_paint, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -892,7 +892,7 @@ METHOD WvgCrt:resize( xParam )
 METHOD WvgCrt:setDisplayFocus( xParam )
 
    IF xParam == NIL .AND. HB_ISEVALITEM( ::setDisplayFocus )
-      Eval( ::setDisplayFocus, NIL, NIL, Self )
+      Eval( ::setDisplayFocus, , , Self )
       RETURN Self
    ENDIF
 
@@ -906,7 +906,7 @@ METHOD WvgCrt:setDisplayFocus( xParam )
 METHOD WvgCrt:setInputFocus( xParam )
 
    IF xParam == NIL .AND. HB_ISEVALITEM( ::sl_setInputFocus )
-      Eval( ::sl_setInputFocus, NIL, NIL, Self )
+      Eval( ::sl_setInputFocus, , , Self )
       RETURN Self
    ENDIF
 
@@ -934,7 +934,7 @@ METHOD WvgCrt:dragEnter( xParam, xParam1 )
 METHOD WvgCrt:dragMotion( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISEVALITEM( ::sl_dragMotion )
-      Eval( ::sl_dragMotion, xParam, NIL, Self )
+      Eval( ::sl_dragMotion, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -948,7 +948,7 @@ METHOD WvgCrt:dragMotion( xParam )
 METHOD WvgCrt:dragLeave( xParam )
 
    IF xParam == NIL .AND. HB_ISEVALITEM( ::sl_dragLeave )
-      Eval( ::sl_dragLeave, NIL, NIL, Self )
+      Eval( ::sl_dragLeave, , , Self )
       RETURN Self
    ENDIF
 

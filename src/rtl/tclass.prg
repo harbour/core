@@ -242,7 +242,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
 
    FOR EACH n IN ::aMethods
       __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ], ;
-                   HB_OO_MSG_METHOD, NIL, n[ HB_OO_MTHD_SCOPE ] )
+                   HB_OO_MSG_METHOD, , n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 
    nClassBegin := __cls_CntClsData( hClass )
@@ -255,7 +255,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
 
    FOR EACH n IN ::aInlines
       __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ], ;
-                   HB_OO_MSG_INLINE, NIL, n[ HB_OO_MTHD_SCOPE ] )
+                   HB_OO_MSG_INLINE, , n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 
    FOR EACH n IN ::aVirtuals

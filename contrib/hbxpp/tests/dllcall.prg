@@ -65,7 +65,7 @@ PROCEDURE Main()
    // Testing failure 2
    hDLL := DllLoad( "nothere.dll" )
    cData := Space( 24 )
-   DllCall( hDll, NIL, "PSGetVersion", @cData )
+   DllCall( hDll, , "PSGetVersion", @cData )
    ? cData
    DllUnload( hDLL )
 

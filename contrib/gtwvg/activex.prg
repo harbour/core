@@ -212,7 +212,7 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
          ::rePosition()
       ENDIF
       IF HB_ISEVALITEM( ::sl_resize )
-         Eval( ::sl_resize, NIL, NIL, Self )
+         Eval( ::sl_resize, , , Self )
       ENDIF
       EXIT
 

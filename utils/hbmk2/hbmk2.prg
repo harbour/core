@@ -7093,13 +7093,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       /* Dress lib names. */
       l_aLIB := {}
       l_aLIBA := {}
-      ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBRAW, NIL, cLibExt )
+      ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBRAW, , cLibExt )
 #ifdef HARBOUR_SUPPORT
       IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
          /* Do not link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
          IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] ) .OR. lHBMAINDLLP
             l_aLIBRAW := ArrayJoin( l_aLIBSHARED, l_aLIBRAW )
-            ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED, NIL )
+            ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED )
          ENDIF
       ENDIF
 #endif
@@ -13100,7 +13100,7 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
                _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
                _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: temp unified .po: %1$s", cPOTemp ) )
             ENDIF
-            POTMerge( hbmk, aPOTIN, NIL, cPOTemp )
+            POTMerge( hbmk, aPOTIN, , cPOTemp )
          ELSE
             _hbmk_OutStd( hbmk, I_( "Error: Cannot create temporary unified .po file." ) )
          ENDIF
@@ -13308,7 +13308,7 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
    LOCAL aTrans
    LOCAL lRetVal := .F.
 
-   IF HB_ISARRAY( aTrans := LoadPOTFiles( hbmk, aFiles, NIL, .F. ) )
+   IF HB_ISARRAY( aTrans := LoadPOTFiles( hbmk, aFiles, , .F. ) )
       IF hb_MemoWrit( cFileOut, hb_i18n_SaveTable( ;
             __i18n_hashTable( __i18n_potArrayToHash( aTrans, lEmpty ) ) ) )
          lRetVal := .T.

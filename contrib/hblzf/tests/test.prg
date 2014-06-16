@@ -73,7 +73,7 @@ PROCEDURE Main()
 
    ? "--- test 5 ---"
    cStr := Replicate( TEST_STRING, _NREPL_ )
-   str_compressed := hb_lzf_compress( cStr, NIL, @nResult )
+   str_compressed := hb_lzf_compress( cStr, , @nResult )
 
    IF nResult == HB_LZF_OK
       ? "Length of a string is", hb_ntos( Len( cStr ) )
@@ -83,7 +83,7 @@ PROCEDURE Main()
    ENDIF
 
    ? "--- test 6 ---"
-   str_decompressed := hb_lzf_decompress( str_compressed, NIL, @nResult )
+   str_decompressed := hb_lzf_decompress( str_compressed, , @nResult )
 
    IF nResult == HB_LZF_DATA_CORRUPTED
       ? "LZF decompression failed, compressed data corrupted"
@@ -93,9 +93,9 @@ PROCEDURE Main()
 
    ? "--- test 7 ---"
    cStr := Replicate( TEST_STRING, _NREPL_ )
-   str_compressed := hb_ZCompress( cStr, NIL, @nResult )
+   str_compressed := hb_ZCompress( cStr, , @nResult )
 
-   str_decompressed := hb_lzf_decompress( str_compressed, NIL, @nResult )
+   str_decompressed := hb_lzf_decompress( str_compressed, , @nResult )
 
    IF nResult == HB_LZF_DATA_CORRUPTED
       ? "LZF decompression failed, compressed data corrupted!"
@@ -105,7 +105,7 @@ PROCEDURE Main()
 
    ? "--- test 8 ---"
    cStr := Replicate( TEST_STRING, _NREPL_ )
-   str_compressed := hb_lzf_compress( cStr, NIL, @nResult )
+   str_compressed := hb_lzf_compress( cStr, , @nResult )
 
    str_decompressed := Space( 4096 )
    str_decompressed := hb_lzf_decompress( str_compressed, @str_decompressed, @nResult )
@@ -118,7 +118,7 @@ PROCEDURE Main()
 
    ? "--- test 9 ---"
    cStr := Replicate( TEST_STRING, _NREPL_ )
-   str_compressed := hb_lzf_compress( cStr, NIL, @nResult )
+   str_compressed := hb_lzf_compress( cStr, , @nResult )
 
    str_decompressed := ""
    str_decompressed := hb_lzf_decompress( str_compressed, @str_decompressed, @nResult )

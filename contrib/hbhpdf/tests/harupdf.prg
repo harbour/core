@@ -233,7 +233,7 @@ STATIC PROCEDURE Page_Lines( pdf )
    HPDF_Page_SetDash( page, DASH_MODE3, 4, 0 )
    draw_line( page, 60, 620, "dash_ptn=[8, 7, 2, 7], phase=0" )
 
-   HPDF_Page_SetDash( page, NIL, 0, 0 )
+   HPDF_Page_SetDash( page, , 0, 0 )
 
    HPDF_Page_SetLineWidth( page, 30 )
    HPDF_Page_SetRGBStroke( page, 0.0, 0.5, 0.0 )
@@ -348,7 +348,7 @@ STATIC PROCEDURE Page_Lines( pdf )
    HPDF_Page_LineTo( page, x2, y2 )
    HPDF_Page_Stroke( page )
 
-   HPDF_Page_SetDash( page, NIL, 0, 0 )
+   HPDF_Page_SetDash( page, , 0, 0 )
 
    HPDF_Page_SetLineWidth( page, 1.5 )
 
@@ -382,7 +382,7 @@ STATIC PROCEDURE Page_Lines( pdf )
    HPDF_Page_LineTo( page, x1, y1 )
    HPDF_Page_Stroke( page )
 
-   HPDF_Page_SetDash( page, NIL, 0, 0 )
+   HPDF_Page_SetDash( page, , 0, 0 )
 
    HPDF_Page_SetLineWidth( page, 1.5 )
    HPDF_Page_MoveTo( page, x, y )
@@ -421,7 +421,7 @@ STATIC PROCEDURE Page_Lines( pdf )
    HPDF_Page_LineTo( page, x3, y3 )
    HPDF_Page_Stroke( page )
 
-   HPDF_Page_SetDash( page, NIL, 0, 0 )
+   HPDF_Page_SetDash( page, , 0, 0 )
 
    HPDF_Page_SetLineWidth( page, 1.5 )
    HPDF_Page_MoveTo( page, x, y )
@@ -988,7 +988,7 @@ STATIC PROCEDURE Page_CodePages( pdf )
    font_name := HPDF_LoadTTFontFromFile( pdf, hb_DirBase() + "files" + hb_ps() + "libsanrg.ttf" )
 
    /* create outline root. */
-   root := HPDF_CreateOutline( pdf, NIL, "Encoding list", NIL )
+   root := HPDF_CreateOutline( pdf, , "Encoding list", NIL )
    HPDF_Outline_SetOpened( root, .T. )
 
    FOR EACH cEncoding IN encodings

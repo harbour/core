@@ -69,7 +69,7 @@ FUNCTION __dbJoin( cAlias, cFile, aFields, bFor, cRDD, nConnection, cCodePage )
 
    BEGIN SEQUENCE
 
-      dbCreate( cFile, aStruct, cRDD, .T., "", NIL, cCodePage, nConnection )
+      dbCreate( cFile, aStruct, cRDD, .T., "", , cCodePage, nConnection )
       nResult := Select()
       aJoinList := __JoinList( nMaster, nDetail, nResult, aStruct )
 

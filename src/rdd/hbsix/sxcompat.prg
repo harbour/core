@@ -411,13 +411,13 @@ FUNCTION rdd_Info( xID )
    RETURN { ;
       cRDD, ;
       .T., ;
-      hb_rddInfo( RDDI_TABLEEXT, NIL, cRDD ), ;
-      hb_rddInfo( RDDI_ORDBAGEXT, NIL, cRDD ), ;
-      hb_rddInfo( RDDI_ORDEREXT, NIL, cRDD ), ;
-      hb_rddInfo( RDDI_MEMOEXT, NIL, cRDD ) }
+      hb_rddInfo( RDDI_TABLEEXT, , cRDD ), ;
+      hb_rddInfo( RDDI_ORDBAGEXT, , cRDD ), ;
+      hb_rddInfo( RDDI_ORDEREXT, , cRDD ), ;
+      hb_rddInfo( RDDI_MEMOEXT, , cRDD ) }
 
 FUNCTION sx_IsDBT( cRDD )
-   RETURN hb_rddInfo( RDDI_MEMOTYPE, NIL, cRDD ) == DB_MEMO_DBT
+   RETURN hb_rddInfo( RDDI_MEMOTYPE, , cRDD ) == DB_MEMO_DBT
 
 FUNCTION sx_MemoExt( cNewExt, cRDD )
    RETURN hb_rddInfo( RDDI_MEMOEXT, cNewExt, cRDD )

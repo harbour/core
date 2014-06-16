@@ -211,7 +211,7 @@ METHOD LoadFile( cFileName ) CLASS HBEditor
       cString := ""
    ENDIF
 
-   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
+   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ) )
    ::naTextLen := Len( ::aText )
 
    IF ::naTextLen == 0
@@ -226,7 +226,7 @@ METHOD LoadFile( cFileName ) CLASS HBEditor
 
 METHOD LoadText( cString ) CLASS HBEditor
 
-   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
+   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ) )
    ::naTextLen := Len( ::aText )
 
    IF ::naTextLen == 0

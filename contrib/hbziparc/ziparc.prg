@@ -104,7 +104,7 @@ FUNCTION hb_GetFileCount( cFileName )
    ENDIF
 
    IF ! Empty( hUnzip := hb_unzipOpen( cFileName ) )
-      hb_unzipGlobalInfo( hUnzip, @nEntries, NIL )
+      hb_unzipGlobalInfo( hUnzip, @nEntries )
       hb_unzipClose( hUnzip )
    ELSE
       nEntries := 0

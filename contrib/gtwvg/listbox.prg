@@ -184,7 +184,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ::oParent:setFocus()
          ENDIF
          IF HB_ISEVALITEM( ::sl_itemMarked )
-            Eval( ::sl_itemMarked, NIL, NIL, self )
+            Eval( ::sl_itemMarked, , , self )
          ENDIF
          IF ::isParentCrt()
             IF ::pointerFocus
@@ -198,7 +198,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ::oParent:setFocus()
          ENDIF
          IF HB_ISEVALITEM( ::sl_itemSelected )
-            Eval( ::sl_itemSelected, NIL, NIL, self )
+            Eval( ::sl_itemSelected, , , self )
          ENDIF
          IF ::isParentCrt()
             IF ::pointerFocus
@@ -220,7 +220,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ::oParent:setFocus()
          ENDIF
          IF HB_ISEVALITEM( ::sl_itemSelected )
-            Eval( ::sl_itemSelected, NIL, NIL, self )
+            Eval( ::sl_itemSelected, , , self )
          ENDIF
          IF ::isParentCrt()
             IF ::pointerFocus
@@ -250,7 +250,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            Eval( ::sl_itemMarked, NIL, NIL, self )
+            Eval( ::sl_itemMarked, , , self )
             IF ::isParentCrt()
                ::setFocus()
             ENDIF
@@ -262,7 +262,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            Eval( ::sl_itemSelected, NIL, NIL, self )
+            Eval( ::sl_itemSelected, , , self )
             IF ::isParentCrt()
                ::setFocus()
             ENDIF
@@ -276,7 +276,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
                IF ::isParentCrt()
                   ::oParent:setFocus()
                ENDIF
-               Eval( ::sl_itemMarked, NIL, NIL, self )
+               Eval( ::sl_itemMarked, , , self )
                IF ::isParentCrt()
                   ::setFocus()
                ENDIF

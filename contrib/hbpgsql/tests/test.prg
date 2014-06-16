@@ -6,7 +6,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    CLS
 
-   conn := PQsetdbLogin( cHost, "5432", NIL, NIL, cDatabase, cUser, cPass )
+   conn := PQsetdbLogin( cHost, "5432", , , cDatabase, cUser, cPass )
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
    conn := PQconnectdb( ;

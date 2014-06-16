@@ -137,7 +137,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
          ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
 
          IF HB_ISEVALITEM( ::sl_lbClick )
-            Eval( ::sl_lbClick, ::editBuffer, NIL, self )
+            Eval( ::sl_lbClick, ::editBuffer, , self )
             RETURN 0
          ENDIF
       ENDIF

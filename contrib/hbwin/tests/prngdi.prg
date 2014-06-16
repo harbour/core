@@ -18,7 +18,7 @@ PROCEDURE Main()
 
    pDEVMODE := __wapi_DEVMODE_New( cPrinterName )
    __wapi_DEVMODE_Set( pDEVMODE, { "dmPaperSize" => WIN_DMPAPER_A3 } )
-   ? hDC := wapi_CreateDC( NIL, cPrinterName, NIL, pDEVMODE )
+   ? hDC := wapi_CreateDC( , cPrinterName, , pDEVMODE )
 
    ? wapi_StartDoc( hDC, { "lpszDocName" => "test job" } /* DOCINFO */ )
    ? wapi_StartPage( hDC )

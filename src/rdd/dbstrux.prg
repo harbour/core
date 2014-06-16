@@ -70,7 +70,7 @@ FUNCTION __dbCopyXStruct( cFileName )
    BEGIN SEQUENCE
 
       dbSelectArea( 0 )
-      __dbCreate( cFileName, NIL, NIL, .F., NIL )
+      __dbCreate( cFileName, , , .F. )
 
       AEval( aStruct, {| aField | ;
          iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255,;
@@ -124,9 +124,9 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
             { "FIELD_TYPE", "C",  1, 0 }, ;
             { "FIELD_LEN" , "N",  3, 0 }, ;
             { "FIELD_DEC" , "N",  3, 0 } }, ;
-            cRDD, .F., cAlias, NIL, cCodePage, nConnection )
+            cRDD, .F., cAlias, , cCodePage, nConnection )
       ELSE
-         dbUseArea( lNew, NIL, cFileFrom, "" )
+         dbUseArea( lNew, , cFileFrom, "" )
 
          dbEval( {|| AAdd( aStruct, { ;
             FIELD->FIELD_NAME ,;
@@ -146,7 +146,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
             ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256,;
               aField[ DBS_DEC ] := 0 ), NIL ) } )
 
-         dbCreate( cFileName, aStruct, cRDD, lNew, cAlias, NIL, cCodePage, nConnection )
+         dbCreate( cFileName, aStruct, cRDD, lNew, cAlias, , cCodePage, nConnection )
 
       ENDIF
 

@@ -133,7 +133,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_COMMAND
       IF HB_ISEVALITEM( ::sl_lbClick )
-         Eval( ::sl_lbClick, NIL, NIL, self )
+         Eval( ::sl_lbClick, , , self )
          RETURN 0
       ENDIF
 
@@ -148,8 +148,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
             IF aNMH[ NMH_dwItemSpec ] >= 0
                nObj := aNMH[ NMH_dwItemSpec ] + 1
 
-               Eval( ::sl_lbClick, ::aItems[ nObj ], NIL, Self )
-
+               Eval( ::sl_lbClick, ::aItems[ nObj ], , Self )
             ENDIF
 
             nHandled := 0
