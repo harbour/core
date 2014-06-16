@@ -152,19 +152,19 @@ FUNCTION hb_langSelect( cLangID, cCP )
       ENDIF
 
 #ifdef HB_LEGACY_LEVEL4
-      IF ! Empty( cLangIDBase )
-         /* Legacy emulation */
-         cLangID := cLangIDBase
-      ELSE
+      IF Empty( cLangIDBase )
 #endif
          /* Support standard ISO language IDs */
-         IF ! Empty( tmp := __LangStdToLangHb( cLangID ) )
-            cLangID := cLangIDBase := tmp
-         ELSE
+         IF Empty( tmp := __LangStdToLangHb( cLangID ) )
             /* Normal case */
             cLangIDBase := cLangID
+         ELSE
+            cLangID := cLangIDBase := tmp
          ENDIF
 #ifdef HB_LEGACY_LEVEL4
+      ELSE
+         /* Legacy emulation */
+         cLangID := cLangIDBase
       ENDIF
 #endif
 

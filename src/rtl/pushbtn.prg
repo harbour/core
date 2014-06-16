@@ -246,7 +246,6 @@ METHOD display() CLASS PushButton
       IF nPos != 0
          hb_DispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
-
    ENDIF
 
    DispEnd()

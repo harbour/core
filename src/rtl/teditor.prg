@@ -242,14 +242,11 @@ METHOD LoadText( cString ) CLASS HBEditor
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
 METHOD SaveFile() CLASS HBEditor
 
-   IF ! Empty( ::cFile )
-
-      ::lDirty := ! hb_MemoWrit( ::cFile, ::GetText() )
-
-      RETURN ! ::lDirty
+   IF Empty( ::cFile )
+      RETURN .F.
    ENDIF
 
-   RETURN .F.
+   RETURN ! ::lDirty := ! hb_MemoWrit( ::cFile, ::GetText() )
 
 // Add a new Line of text at end of current text
 METHOD AddLine( cLine, lSoftCR ) CLASS HBEditor
@@ -983,10 +980,8 @@ METHOD BrowseText( nPassedKey ) CLASS HBEditor
 
       IF nKey == K_ESC
          ::lExitEdit := .T.
-      ELSE
-         IF ! ::MoveCursor( nKey )
-            ::KeyboardHook( nKey )
-         ENDIF
+      ELSEIF ! ::MoveCursor( nKey )
+         ::KeyboardHook( nKey )
       ENDIF
 
       IF nPassedKey != NIL

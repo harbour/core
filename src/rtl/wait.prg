@@ -75,7 +75,6 @@ FUNCTION __Wait( xPrompt )
 
          EXIT
       ENDIF
-
    ENDDO
 
    RETURN cKey
