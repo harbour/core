@@ -146,11 +146,12 @@ STATIC FUNCTION __JoinList( nMaster, nDetail, nResult, aStruct )
    LOCAL i
 
    FOR i := 1 TO Len( aStruct )
-      IF ( nPos := ( nMaster )->( FieldPos( aStruct[ i ][ DBS_NAME ] ) ) ) != 0
+      DO CASE
+      CASE ( nPos := ( nMaster )->( FieldPos( aStruct[ i ][ DBS_NAME ] ) ) ) != 0
          AAdd( aList, { nResult, nMaster, nPos, i } )
-      ELSEIF ( nPos := ( nDetail )->( FieldPos( aStruct[ i ][ DBS_NAME ] ) ) ) != 0
+      CASE ( nPos := ( nDetail )->( FieldPos( aStruct[ i ][ DBS_NAME ] ) ) ) != 0
          AAdd( aList, { nResult, nDetail, nPos, i } )
-      ENDIF
+      ENDCASE
    NEXT
 
    RETURN aList

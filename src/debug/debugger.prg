@@ -748,7 +748,7 @@ METHOD PROCEDURE Colors() CLASS HBDebugger
       RETURN
    ENDIF
 
-   oBrwColors:Cargo := { 1, {} } // Actual highligthed row
+   oBrwColors:Cargo := { 1, {} }  // Actual highligthed row
    oBrwColors:ColorSpec := ::ClrModal()
    oBrwColors:goTopBlock := {|| oBrwColors:cargo[ 1 ] := 1 }
    oBrwColors:goBottomBlock := {|| oBrwColors:cargo[ 1 ] := Len( oBrwColors:cargo[ 2 ][ 1 ] ) }
@@ -1294,9 +1294,9 @@ METHOD PROCEDURE DoScript( cFileName ) CLASS HBDebugger
 
    IF hb_FileExists( cFileName )
       cInfo := MemoRead( cFileName )
-      nLen := MLCount( cInfo, 16384, NIL, .F., .T. )
+      nLen := MLCount( cInfo, 16384,, .F., .T. )
       FOR n := 1 TO nLen
-         cLine := AllTrim( MemoLine( cInfo, 16384, n, NIL, .F., .T. ) )
+         cLine := AllTrim( MemoLine( cInfo, 16384, n,, .F., .T. ) )
          IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. hb_LeftEqI( "OPTIONS", Left( cLine, nPos - 1 ) ) )
             // In inactive debugger, only "OPTIONS" commands can be executed safely
             ::DoCommand( cLine )
@@ -1350,12 +1350,11 @@ METHOD PROCEDURE EditSet( nSet, oBrwSets ) CLASS HBDebugger
 
 METHOD PROCEDURE EditVar( nVar ) CLASS HBDebugger
 
-   LOCAL cVarName   := ::aVars[ nVar ][ 1 ]
-   LOCAL uVarValue
+   LOCAL cVarName := ::aVars[ nVar ][ 1 ]
    LOCAL cVarStr
    LOCAL oErr
 
-   uVarValue := ::VarGetValue( ::aVars[ nVar ] )
+   LOCAL uVarValue := ::VarGetValue( ::aVars[ nVar ] )
 
    IF ValType( uVarValue ) $ "AHOP"
       ::InputBox( cVarName, uVarValue,, .F. )
@@ -1818,7 +1817,6 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
 
          ENDSWITCH
       ENDDO
-
    ENDIF
 
    SetCursor( nOldCursor )
@@ -1955,10 +1953,9 @@ METHOD PROCEDURE LoadVars() CLASS HBDebugger  // updates monitored variables
    LOCAL m
    LOCAL xValue
    LOCAL cName
-   LOCAL aBVars
    LOCAL hSkip
 
-   aBVars := {}
+   LOCAL aBVars := {}
 
    IF ::lShowPublics
       nCount := __mvDbgInfo( HB_MV_PUBLIC )
@@ -2148,8 +2145,7 @@ METHOD PROCEDURE Open() CLASS HBDebugger
    CASE 0
       RETURN
    CASE 1
-      cFileName := ::InputBox( "Please enter the filename", Space( 255 ) )
-      cFileName := AllTrim( cFileName )
+      cFileName := AllTrim( ::InputBox( "Please enter the filename", Space( 255 ) ) )
       EXIT
    OTHERWISE
       cFileName := aFiles[ nFileName ]
@@ -2402,7 +2398,7 @@ METHOD ResizeWindows( oWindow ) CLASS HBDebugger
       ELSE
          IF oWindow:nTop > 1
             nTop := oWindow:nBottom - oWindow:nTop + 1
-            oWindow:Resize( 1, NIL, nTop )
+            oWindow:Resize( 1,, nTop )
          ENDIF
          nTop := oWindow:nBottom + 1
       ENDIF
@@ -2516,8 +2512,8 @@ METHOD PROCEDURE SaveAppScreen() CLASS HBDebugger
 
 METHOD PROCEDURE SaveAppState() CLASS HBDebugger
 
-   ::nAppDirCase := Set( _SET_DIRCASE, 0 )
-   ::nAppFileCase := Set( _SET_FILECASE, 0 )
+   ::nAppDirCase := Set( _SET_DIRCASE, 0 /* HB_SET_CASE_MIXED */ )
+   ::nAppFileCase := Set( _SET_FILECASE, 0 /* HB_SET_CASE_MIXED */ )
    ::nAppTypeAhead := Set( _SET_TYPEAHEAD, 16 )
    ::nAppLastKey := LastKey()
 
@@ -2750,7 +2746,7 @@ METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
       ENDIF
 
       IF ::lPPO
-         hb_FNameSplit( cPrgName, @cDir, @cName, NIL )
+         hb_FNameSplit( cPrgName, @cDir, @cName )
          cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
       ENDIF
 
@@ -2793,7 +2789,6 @@ METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
          ::oBrwText:SetActiveLine( nLine )
          ::GotoLine( nLine )
       ENDIF
-
    ENDIF
 
    RETURN
@@ -2804,6 +2799,7 @@ METHOD PROCEDURE ShowHelp( nTopic ) CLASS HBDebugger
    LOCAL nCursor := SetCursor( SC_NONE )
 
    __dbgHelp( nTopic )
+
    SetCursor( nCursor )
 
    RETURN
@@ -3087,8 +3083,7 @@ METHOD TracepointAdd( cExpr ) CLASS HBDebugger
    LOCAL aWatch
 
    IF cExpr == NIL
-      cExpr := Space( 255 )
-      cExpr := AllTrim( ::InputBox( "Enter Tracepoint", cExpr ) )
+      cExpr := AllTrim( ::InputBox( "Enter Tracepoint", Space( 255 ) ) )
       IF LastKey() == K_ESC
          RETURN Self
       ENDIF
@@ -3115,12 +3110,9 @@ METHOD VarGetInfo( aVar ) CLASS HBDebugger
    CASE "G" ; RETURN aVar[ VAR_NAME ] + " <Global, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
    CASE "L" ; RETURN aVar[ VAR_NAME ] + " <Local, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
    CASE "S" ; RETURN aVar[ VAR_NAME ] + " <Static, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
-   OTHERWISE; RETURN aVar[ VAR_NAME ] + " <" + aVar[ VAR_TYPE ] + ", " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
    ENDSWITCH
 
-   // Never reached
-
-   RETURN ""
+   RETURN aVar[ VAR_NAME ] + " <" + aVar[ VAR_TYPE ] + ", " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
 
 
 METHOD VarGetValue( aVar ) CLASS HBDebugger
@@ -3129,12 +3121,9 @@ METHOD VarGetValue( aVar ) CLASS HBDebugger
    CASE "G" ; RETURN __dbgVMVarGGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
    CASE "L" ; RETURN __dbgVMVarLGet( __dbgProcLevel() - aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
    CASE "S" ; RETURN __dbgVMVarSGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
-   OTHERWISE; RETURN aVar[ VAR_POS ] // Public or Private
    ENDSWITCH
 
-   // Never reached
-
-   RETURN NIL
+   RETURN aVar[ VAR_POS ]  // Public or Private
 
 
 METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
@@ -3146,7 +3135,7 @@ METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
       __dbgVMVarGSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
       EXIT
    CASE "L"
-      nProcLevel := __dbgProcLevel() - aVar[ VAR_LEVEL ]   // skip debugger stack
+      nProcLevel := __dbgProcLevel() - aVar[ VAR_LEVEL ]  // skip debugger stack
       __dbgVMVarLSet( nProcLevel, aVar[ VAR_POS ], uValue )
       EXIT
    CASE "S"
@@ -3161,7 +3150,7 @@ METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
    RETURN Self
 
 
-METHOD ViewSets() CLASS HBDebugger
+METHOD PROCEDURE ViewSets() CLASS HBDebugger
 
    LOCAL oWndSets := HBDbWindow():New( 1, 8, ::nMaxRow - 2, ::nMaxCol - 8, ;
       "System Settings[1..47]", ::ClrModal() )
@@ -3203,7 +3192,7 @@ METHOD ViewSets() CLASS HBDebugger
    SetCursor( SC_NONE )
    oWndSets:ShowModal()
 
-   RETURN NIL
+   RETURN
 
 
 METHOD WatchGetInfo( nWatch ) CLASS HBDebugger
@@ -3234,9 +3223,7 @@ METHOD WatchpointAdd( cExpr ) CLASS HBDebugger
    LOCAL aWatch
 
    IF cExpr == NIL
-
-      cExpr := Space( 255 )
-      cExpr := AllTrim( ::InputBox( "Enter Watchpoint", cExpr ) )
+      cExpr := AllTrim( ::InputBox( "Enter Watchpoint", Space( 255 ) ) )
 
       IF LastKey() == K_ESC
          RETURN Self
@@ -3285,11 +3272,8 @@ METHOD WatchpointDel( nPos ) CLASS HBDebugger
 
 METHOD WatchpointEdit( nPos ) CLASS HBDebugger
 
-   LOCAL cExpr
+   LOCAL cExpr := AllTrim( ::InputBox( "Enter Watchpoint", PadR( ::aWatch[ nPos ][ WP_EXPR ], 255 ) ) )
    LOCAL aWatch
-
-   cExpr := PadR( ::aWatch[ nPos ][ WP_EXPR ], 255 )
-   cExpr := AllTrim( ::InputBox( "Enter Watchpoint", cExpr ) )
 
    IF LastKey() == K_ESC
       RETURN Self
@@ -3319,7 +3303,7 @@ METHOD WatchpointInspect( nPos ) CLASS HBDebugger
    xValue := ::GetExprValue( ::aWatch[ nPos ][ WP_EXPR ], @lValid )
    ::SaveAppState()
 
-   ::InputBox( ::aWatch[ nPos ][ WP_EXPR ], xValue, NIL, .F. )
+   ::InputBox( ::aWatch[ nPos ][ WP_EXPR ], xValue,, .F. )
    ::RefreshVars()
 
    RETURN Self

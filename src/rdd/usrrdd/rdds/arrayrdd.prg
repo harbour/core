@@ -1449,11 +1449,9 @@ STATIC FUNCTION AR_DUMMY()
 
    RETURN HB_SUCCESS
 
-/*
- * This function have to exist in all RDD and then name have to be in
+/* This function have to exist in all RDD and then name have to be in
  * format: <RDDNAME>_GETFUNCTABLE
  */
-
 FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
 
    LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
@@ -1583,11 +1581,9 @@ FUNCTION hb_EraseArrayRdd( cFullName )
 
    RETURN nReturn
 
-/*
-  hb_FileArrayRdd( cFullName ) --> lExist
-  This function is equivalent of File() function, but works here in memory
+/* hb_FileArrayRdd( cFullName ) --> lExist
+   This function is equivalent of File() function, but works here in memory
  */
-
 FUNCTION hb_FileArrayRdd( cFullName )
 
    LOCAL nReturn := HB_FAILURE
@@ -1634,9 +1630,8 @@ FUNCTION hb_FileArrayRdd( cFullName )
 
    RETURN nReturn == HB_SUCCESS
 
-/*
-  hb_SetArrayRdd( aArray ) --> NIL
-  This function set DBF with aArray like APPEND FROM aArray in an empty DBF
+/* hb_SetArrayRdd( aArray ) --> NIL
+   This function set DBF with aArray like APPEND FROM aArray in an empty DBF
  */
 PROCEDURE hb_SetArrayRdd( aArray )
 

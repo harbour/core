@@ -76,38 +76,38 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    LOCAL oError
    LOCAL lError := .F.
 
-   IF HB_ISEVALITEM( xWhile )
+   DO CASE
+   CASE HB_ISEVALITEM( xWhile )
       bWhileBlock := xWhile
       lRest := .T.
-   ELSEIF HB_ISSTRING( xWhile ) .AND. ! Empty( xWhile )
+   CASE HB_ISSTRING( xWhile ) .AND. ! Empty( xWhile )
       bWhileBlock := hb_macroBlock( xWhile )
       lRest := .T.
-   ELSE
+   OTHERWISE
       bWhileBlock := {|| .T. }
-   ENDIF
+   ENDCASE
 
-   IF HB_ISEVALITEM( xFor )
+   DO CASE
+   CASE HB_ISEVALITEM( xFor )
       bForBlock := xFor
-   ELSEIF HB_ISSTRING( xFor ) .AND. ! Empty( xFor )
+   CASE HB_ISSTRING( xFor ) .AND. ! Empty( xFor )
       bForBlock := hb_macroBlock( xFor )
-   ELSE
+   OTHERWISE
       bForBlock := {|| .T. }
-   ENDIF
+   ENDCASE
 
    __defaultNIL( @lRest, .F. )
 
    IF nRec != NIL
       dbGoto( nRec )
       nNext := 1
-   ELSE
-      IF nNext == NIL
-         nNext := -1
-         IF ! lRest
-            dbGoTop()
-         ENDIF
-      ELSE
-         lRest := .T.
+   ELSEIF nNext == NIL
+      nNext := -1
+      IF ! lRest
+         dbGoTop()
       ENDIF
+   ELSE
+      lRest := .T.
    ENDIF
 
    nOldArea := Select()
@@ -218,7 +218,6 @@ STATIC FUNCTION __GetField( cField )
       ENDIF
 
       cField := SubStr( cField, nPos + 2 )
-
    ENDIF
 
    RETURN FieldBlock( cField )
