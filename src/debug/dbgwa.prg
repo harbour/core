@@ -310,7 +310,6 @@ STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
 STATIC FUNCTION DbfInfo( aInfo )
 
    LOCAL nFor
-   LOCAL xType
    LOCAL xValue
    LOCAL cValue
 
@@ -331,9 +330,8 @@ STATIC FUNCTION DbfInfo( aInfo )
    FOR nFor := 1 TO FCount()
 
       xValue := __dbg():GetExprValue( "FieldGet(" + hb_ntos( nFor ) + ")" )
-      xType  := ValType( xValue )
 
-      SWITCH xType
+      SWITCH ValType( xValue )
       CASE "C"
       CASE "M"
          cValue := xValue
@@ -364,7 +362,6 @@ STATIC FUNCTION DbfInfo( aInfo )
       ENDSWITCH
 
       AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10 ) + " = " + PadR( cValue, 17 ) )
-
    NEXT
 
    RETURN aInfo

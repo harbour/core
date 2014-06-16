@@ -221,13 +221,13 @@ METHOD PROCEDURE Display() CLASS HBDbMenu
 
    SetColor( ::cClrPopup )
 
-   IF ! ::lPopup
-      hb_DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
-      SetPos( 0, 0 )
-   ELSE
+   IF ::lPopup
       ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, HB_B_SINGLE_UNI )
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
+   ELSE
+      hb_DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
+      SetPos( 0, 0 )
    ENDIF
 
    FOR EACH oMenuItem IN ::aItems
@@ -243,10 +243,8 @@ METHOD PROCEDURE Display() CLASS HBDbMenu
 
 METHOD PROCEDURE EvalAction() CLASS HBDbMenu
 
-   LOCAL oPopup, oMenuItem
-
-   oPopup := ::aItems[ ::nOpenPopup ]:bAction
-   oMenuItem := oPopup:aItems[ oPopup:nOpenPopup ]
+   LOCAL oPopup := ::aItems[ ::nOpenPopup ]:bAction
+   LOCAL oMenuItem := oPopup:aItems[ oPopup:nOpenPopup ]
 
    IF oMenuItem:bAction != NIL
       ::Close()
@@ -291,11 +289,9 @@ METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
          IF ( oItem := oMenuItem:bAction:GetItemByIdent( uIdent ) ) != NIL
             RETURN oItem
          ENDIF
-      ELSE
-         IF ValType( oMenuItem:Ident ) == ValType( uIdent ) .AND. ;
-            oMenuItem:Ident == uIdent
-            RETURN oMenuItem
-         ENDIF
+      ELSEIF ValType( oMenuItem:Ident ) == ValType( uIdent ) .AND. ;
+         oMenuItem:Ident == uIdent
+         RETURN oMenuItem
       ENDIF
    NEXT
 
@@ -318,10 +314,10 @@ METHOD PROCEDURE GoLeft() CLASS HBDbMenu
    LOCAL oMenuItem := ::aItems[ ::nOpenPopup ]
 
    IF ::nOpenPopup != 0
-      IF ! ::lPopup
-         ::ClosePopup( ::nOpenPopup )
-      ELSE
+      IF ::lPopup
          oMenuItem:Display( ::cClrPopup, ::CClrHotKey )
+      ELSE
+         ::ClosePopup( ::nOpenPopup )
       ENDIF
       IF ::nOpenPopup > 1
          --::nOpenPopup
@@ -342,10 +338,10 @@ METHOD PROCEDURE GoRight() CLASS HBDbMenu
    LOCAL oMenuItem := ::aItems[ ::nOpenPopup ]
 
    IF ::nOpenPopup != 0
-      IF ! ::lPopup
-         ::ClosePopup( ::nOpenPopup )
-      ELSE
+      IF ::lPopup
          oMenuItem:Display( ::cClrPopup, ::cClrHotKey )
+      ELSE
+         ::ClosePopup( ::nOpenPopup )
       ENDIF
       IF ::nOpenPopup < Len( ::aItems )
          ++::nOpenPopup
@@ -494,11 +490,9 @@ METHOD PROCEDURE ProcessKey( nKey ) CLASS HBDbMenu
                ::EvalAction()
             ENDIF
          ENDIF
-      ELSE
-         IF ( nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != ::nOpenPopup
-            ::Close()
-            ::ShowPopup( nPopup )
-         ENDIF
+      ELSEIF ( nPopup := ::GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != ::nOpenPopup
+         ::Close()
+         ::ShowPopup( nPopup )
       ENDIF
 
    ENDSWITCH

@@ -205,7 +205,9 @@ METHOD applyKey( nKey ) CLASS HbDbInput
       Set( _SET_INSERT, ! Set( _SET_INSERT ) )
       EXIT
    OTHERWISE
-      IF !( hb_keyChar( nKey ) == "" )
+      IF hb_keyChar( nKey ) == ""
+         lUpdate := .F.
+      ELSE
          IF Set( _SET_INSERT )
             ::cValue := Left( Stuff( ::cValue, ::nPos, 0, hb_keyChar( nKey ) ), ::nSize )
          ELSE
@@ -214,8 +216,6 @@ METHOD applyKey( nKey ) CLASS HbDbInput
          IF ::nPos < ::nSize
             ::nPos++
          ENDIF
-      ELSE
-         lUpdate := .F.
       ENDIF
    ENDSWITCH
 

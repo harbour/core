@@ -226,13 +226,14 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          __dbgAlert( "Value cannot be edited" )
       ELSE
          oBrwSets:RefreshCurrent()
-         IF HB_ISOBJECT( aArray[ nSet ] )
+         DO CASE
+         CASE HB_ISOBJECT( aArray[ nSet ] )
             __dbgObject( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
-         ELSEIF HB_ISHASH( aArray[ nSet ] )
+         CASE HB_ISHASH( aArray[ nSet ] )
             __dbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
-         ELSE
+         OTHERWISE
             ::doGet( oBrwsets, aArray, nSet )
-         ENDIF
+         ENDCASE
          oBrwSets:RefreshCurrent()
          oBrwSets:ForceStable()
       ENDIF

@@ -480,15 +480,9 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          // Handle keypresses which don't translate to characters
          nMode := AC_IDLE
 
-      OTHERWISE
+      CASE nMode != AC_NOITEM
 
-         IF nMode != AC_NOITEM
-            IF nKey == 0  // No keystroke
-               nMode := AC_IDLE
-            ELSE
-               nMode := AC_EXCEPT
-            ENDIF
-         ENDIF
+         nMode := iif( nKey == 0, AC_IDLE, AC_EXCEPT )
 
       ENDCASE
 

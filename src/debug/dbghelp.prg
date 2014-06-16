@@ -98,7 +98,7 @@ STATIC PROCEDURE PaintWindow( oDlg, oBrw, aTopics )
    hb_DispOutAtBox( oDlg:nBottom, oDlg:nLeft + 13, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
 
    oBrw:ForceStable()
-   ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 ) // Start on page 1
+   ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
 
    RETURN
 
