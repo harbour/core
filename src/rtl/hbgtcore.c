@@ -316,7 +316,7 @@ static void hb_gt_def_ColorSelect( PHB_GT pGT, int iColorIndex )
       pGT->iColorIndex = iColorIndex;
 }
 
-static int  hb_gt_def_GetColor( PHB_GT pGT )
+static int hb_gt_def_GetColor( PHB_GT pGT )
 {
    if( pGT->iColorCount )
       return pGT->pColor[ pGT->iColorIndex ];
@@ -342,7 +342,7 @@ static void hb_gt_def_GetColorData( PHB_GT pGT, int ** pColorsPtr, int * piColor
    }
 }
 
-static int  hb_gt_def_GetClearColor( PHB_GT pGT )
+static int hb_gt_def_GetClearColor( PHB_GT pGT )
 {
    return pGT->iClearColor;
 }
@@ -468,7 +468,7 @@ static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piC
    return NULL;
 }
 
-static int  hb_gt_def_ColorNum( PHB_GT pGT, const char * szColorString )
+static int hb_gt_def_ColorNum( PHB_GT pGT, const char * szColorString )
 {
    int nColor;
 
@@ -601,7 +601,7 @@ static void hb_gt_def_ColorsToString( PHB_GT pGT, int * pColors, int iColorCount
 }
 
 
-static int  hb_gt_def_GetCursorStyle( PHB_GT pGT )
+static int hb_gt_def_GetCursorStyle( PHB_GT pGT )
 {
    return pGT->iCursorShape;
 }
@@ -3213,7 +3213,7 @@ typedef struct
    int iRight;
 } _HB_MOUSE_STORAGE;
 
-static int  hb_gt_def_mouseStorageSize( PHB_GT pGT )
+static int hb_gt_def_mouseStorageSize( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -3246,7 +3246,7 @@ static void hb_gt_def_mouseRestoreState( PHB_GT pGT, const void * pBuffer )
    HB_GTSELF_MOUSESETCURSOR( pGT, pStore->fVisible );
 }
 
-static int  hb_gt_def_mouseGetDoubleClickSpeed( PHB_GT pGT )
+static int hb_gt_def_mouseGetDoubleClickSpeed( PHB_GT pGT )
 {
    return pGT->iDoubleClickSpeed;
 }
@@ -3692,7 +3692,7 @@ static const char * hb_gt_FindDefault( void )
 
 static int hb_gt_FindEntry( const char * pszID )
 {
-   HB_BOOL fGt = hb_strnicmp( pszID, "gt", 2 );
+   HB_BOOL fGt = hb_strnicmp( pszID, "gt", 2 ) == 0;
    int iPos;
 
    for( iPos = -1; iPos < s_iGtCount; iPos++ )
