@@ -160,18 +160,18 @@ STATIC PROCEDURE TEST5()
    ? TEST( cText )
    ?
 
-   ? "SET TYPEAHEAD TO 25"
-   SET TYPEAHEAD TO 25
+   ? "Set( _SET_TYPEAHEAD, 25 )"
+   Set( _SET_TYPEAHEAD, 25 )
    ? TEST( cText )
    ?
 
-   ? "SET TYPEAHEAD TO 16"
-   SET TYPEAHEAD TO 16
+   ? "Set( _SET_TYPEAHEAD, 16 )"
+   Set( _SET_TYPEAHEAD, 16 )
    ? TEST( cText )
    ?
 
-   ? "SET TYPEAHEAD TO 0"
-   SET TYPEAHEAD TO 0
+   ? "Set( _SET_TYPEAHEAD, 0 )"
+   Set( _SET_TYPEAHEAD, 0 )
    ? TEST( cText )
 
    RETURN
@@ -182,9 +182,9 @@ STATIC PROCEDURE TEST6()
    ? "For the sixth test"
    ? "The typeahead is now being set to a value greater than the maximum,"
    ? "which is 4096 and is the value that will both be used and reported."
-   ? "SET TYPEAHEAD TO 5000"
+   ? "Set( _SET_TYPEAHEAD, 5000 )"
    ?
-   SET TYPEAHEAD TO 5000
+   Set( _SET_TYPEAHEAD, 5000 )
    ? Set( _SET_TYPEAHEAD )
    ?
 

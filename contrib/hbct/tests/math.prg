@@ -58,7 +58,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   SET DECIMAL TO 2
+   SET DECIMALS TO 2
    CLS
    ? "Test of mathematical functions"
    ?

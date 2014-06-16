@@ -30,3 +30,7 @@ ifneq ($(filter $(HB_PLATFORM),win wce os2),)
 endif
 
 include $(TOP)$(ROOT)config/bin.mk
+
+ifneq ($(filter $(HB_COMPILER),mingw mingw64 gcc clang),)
+   HB_LDFLAGS += -fno-lto
+endif

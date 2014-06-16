@@ -49,8 +49,6 @@
 #include "error.ch"
 #include "fileio.ch"
 
-// #define HB_USE_HBTIP    // Use functions from HBTIP - TOIMPLEMENT
-
 #define CRLF           ( Chr( 13 ) + Chr( 10 ) )
 #define THROW( oErr )  ( Eval( ErrorBlock(), oErr ), Break( oErr ) )
 
@@ -76,7 +74,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
       ENDIF
 
       cName  := LTrim( aField[ 1 ] )
-      xValue := uhttpd_UrlDecode( aField[ 2 ] )
+      xValue := tip_URLDecode( aField[ 2 ] )
 
       // Is it an array entry?
       IF Right( cName, 2 ) == "[]"
@@ -94,7 +92,6 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
          ELSE
             hHashVars[ cName ] := xValue
          ENDIF
-
       ENDIF
    NEXT
 
@@ -127,13 +124,10 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
  */
 FUNCTION uhttpd_SplitUrl( cUrl )
 
-   LOCAL hUrl := { => }
+   LOCAL hUrl
    LOCAL nPos, cTemp, cUserNamePassword, cHostnamePort
    LOCAL cProto, cHost, cPort, nPort, cUser, cPass, cPath, cQuery, cFragment
    LOCAL cUri
-
-   // Prevents case matching
-   hb_HCaseMatch( hUrl, .F. )
 
    cTemp := cUrl
    cUri  := ""
@@ -196,7 +190,6 @@ FUNCTION uhttpd_SplitUrl( cUrl )
 
       // delete query from temp string
       cTemp := Left( cTemp, nPos - 1 )
-
    ELSE
       cQuery := ""
    ENDIF
@@ -212,7 +205,6 @@ FUNCTION uhttpd_SplitUrl( cUrl )
 
       // delete path from temp string
       cTemp := Left( cTemp, nPos - 1 )
-
    ELSE
       cPath := "/"
    ENDIF
@@ -236,18 +228,19 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    ENDIF
 
    // Assemble hash
-   hUrl[ "SCHEME" ]   := cProto
-   hUrl[ "HOST" ]     := cHost
-   hUrl[ "PORT" ]     := nPort
-   hUrl[ "USER" ]     := cUser
-   hUrl[ "PASS" ]     := cPass
-   hUrl[ "PATH" ]     := cPath
-   hUrl[ "QUERY" ]    := cQuery
-   hUrl[ "FRAGMENT" ] := cFragment
-   hUrl[ "URI" ]      := cURI
+   hUrl := { ;
+      "SCHEME"   => cProto, ;
+      "HOST"     => cHost, ;
+      "PORT"     => nPort, ;
+      "USER"     => cUser, ;
+      "PASS"     => cPass, ;
+      "PATH"     => cPath, ;
+      "QUERY"    => cQuery, ;
+      "FRAGMENT" => cFragment, ;
+      "URI"      => cURI }
 
-   // Prevents externals to add something else to this Hash
-   hb_HAutoAdd( hUrl, .F. )
+   hb_HCaseMatch( hUrl, .F. )  // Prevents case matching
+   hb_HAutoAdd( hUrl, .F. )  // Prevents externals to add something else to this Hash
 
    RETURN hUrl
 
@@ -306,70 +299,6 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    ENDIF
 
    RETURN aLines
-
-FUNCTION uhttpd_URLEncode( cString, lComplete )
-
-#ifdef HB_USE_HBTIP
-
-   __defaultNIL( @lComplete, .T. )
-
-   RETURN TIPENCODERURL_ENCODE( cString, lComplete )
-#else
-   LOCAL cRet := "", i, nVal, cChar
-
-   __defaultNIL( @lComplete, .T. )
-
-   FOR i := 1 TO Len( cString )
-      cChar := SubStr( cString, i, 1 )
-      DO CASE
-      CASE cChar == " "
-         cRet += "+"
-
-      CASE ( cChar >= "A" .AND. cChar <= "Z" ) .OR. ;
-           ( cChar >= "a" .AND. cChar <= "z" ) .OR. ;
-           ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-           cChar == "." .OR. cChar == "," .OR. cChar == "&" .OR. ;
-           cChar == "/" .OR. cChar == ";" .OR. cChar == "_"
-         cRet += cChar
-
-      CASE iif( lComplete, .F., cChar == ":" .OR. cChar == "?" .OR. cChar == "=" )
-         cRet += cChar
-
-      OTHERWISE
-         nVal := Asc( cChar )
-         cRet += "%" + hb_NumToHex( nVal )
-      ENDCASE
-   NEXT
-
-   RETURN cRet
-
-FUNCTION uhttpd_URLDecode( cString )
-
-#ifdef HB_USE_HBTIP
-   RETURN TIPENCODERURL_DECODE( cString )
-#else
-   LOCAL cRet := "", i, cChar
-
-   FOR i := 1 TO Len( cString )
-      cChar := SubStr( cString, i, 1 )
-      DO CASE
-      CASE cChar == "+"
-         cRet += " "
-
-      CASE cChar == "%"
-         i++
-         cRet += Chr( hb_HexToNum( SubStr( cString, i, 2 ) ) )
-         i++
-
-      OTHERWISE
-         cRet += cChar
-
-      ENDCASE
-
-   NEXT
-
-   RETURN cRet
-#endif
 
 /*
  * DateToGMT( dDate, cTime, nDayToAdd ) --> cGMTDate
@@ -437,20 +366,13 @@ FUNCTION uhttpd_AddSecondsToTime( cTime, nSecsToAdd, nDaysAdded )
 
 FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
 
-   LOCAL cHtml
-
    __defaultNIL( @lProtected, .F. )
    __defaultNIL( @aTranslate, { { '"', "&quot;" }, { " ", "&nbsp;" } } )
 
    // TraceLog( "OutputString( cString, aTranslate, lProtected )", cString, aTranslate, lProtected )
-   IF lProtected
-      cHtml := uhttpd_HtmlSpecialChars( cString )
-   ELSE
-      cHtml := uhttpd_TranslateStrings( cString, aTranslate )
-   ENDIF
-   // TraceLog( "OutputString(): cHtml", cHtml )
-
-   RETURN cHtml
+   RETURN iif( lProtected, ;
+      uhttpd_HtmlSpecialChars( cString ), ;
+      uhttpd_TranslateStrings( cString, aTranslate ) )
 
 FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
 
@@ -465,14 +387,17 @@ FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 
    __defaultNIL( @cQuote_style, "ENT_COMPAT" )
 
-   DO CASE
-   CASE cQuote_style == "ENT_COMPAT"
+   SWITCH cQuote_style
+   CASE "ENT_COMPAT"
       AAdd( aTranslations, { '"', "&quot;" } )
-   CASE cQuote_style == "ENT_QUOTES"
+      EXIT
+   CASE "ENT_QUOTES"
       AAdd( aTranslations, { '"', "&quot;" } )
       AAdd( aTranslations, { "'", "&#039;" } )
-   CASE cQuote_style == "ENT_NOQUOTES"
-   ENDCASE
+      EXIT
+   CASE "ENT_NOQUOTES"
+      EXIT
+   ENDSWITCH
 
    RETURN uhttpd_TranslateStrings( cString, aTranslations )
 
@@ -498,22 +423,21 @@ FUNCTION uhttpd_TranslateStrings( cString, aTranslate )
 FUNCTION uhttpd_StrStr( cString, cSearch )
 
    LOCAL nPos := At( cSearch, cString )
-   LOCAL cVal := iif( nPos > 0, SubStr( cString, nPos ), NIL )
 
-   RETURN cVal
+   RETURN iif( nPos > 0, SubStr( cString, nPos ), NIL )
 
 FUNCTION uhttpd_StrIStr( cString, cSearch )
    RETURN uhttpd_StrStr( Upper( cSearch ), Upper( cString ) )
 
 FUNCTION uhttpd_HtmlEntities( cString, cQuote_style )
 
-  LOCAL aTranslations := {}
-  LOCAL i
+   LOCAL aTranslations := {}
+   LOCAL i
 
-  // ATTENTION, these chars are visible only with OEM font
-  FOR i := 160 TO 255
+   // ATTENTION, these chars are visible only with OEM font
+   FOR i := 160 TO 255
       AAdd( aTranslations, { hb_BChar( i ), "&#" + Str( i, 3 ) + ";" } )
-  NEXT
+   NEXT
 
 RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 
@@ -557,12 +481,12 @@ FUNCTION uhttpd_HTMLSpace( n )
 
 PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
-   LOCAL nHandle, cSep
+   LOCAL nHandle
 
-   cSep := hb_ps()
-
-   // __defaultNIL( @cLog, AppFullPath() + cSep + "logfile.log" )
-   __defaultNIL( @cLog, cSep + "tmp" + cSep + "logfile.log" )
+#if 0
+   __defaultNIL( @cLog, AppFullPath() + hb_ps() + "logfile.log" )
+#endif
+   __defaultNIL( @cLog, hb_ps() + "tmp" + hb_ps() + "logfile.log" )
    __defaultNIL( @lCreate, .F. )
 
    IF cLog != NIL
@@ -578,15 +502,14 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
       IF nHandle != F_ERROR
          FSeek( nHandle, 0, FS_END )
-         FWrite( nHandle, cString )
-         FWrite( nHandle, CRLF )
+         FWrite( nHandle, cString + CRLF )
          FClose( nHandle )
       ENDIF
    ENDIF
 
    RETURN
 
-/*********************************************************************************/
+/* --- */
 
 FUNCTION uhttpd_AppFullPath()
    RETURN hb_DirBase()

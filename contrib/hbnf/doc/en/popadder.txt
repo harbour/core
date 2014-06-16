@@ -58,7 +58,7 @@
       5.) To make ft_Adder() a Hot key from inside your application
           at the beginning of your application add the line:
 
-                 SET KEY K_ALT_A TO ft_Adder()
+                 SetKey( K_ALT_A, {|| ft_Adder() } )
 
           This will make <ALT-A> a key "Hot" and permit you to
           Pop - Up the adder from anywhere in the application.

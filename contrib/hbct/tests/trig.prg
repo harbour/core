@@ -67,7 +67,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   SET DECIMAL TO 14
+   SET DECIMALS TO 14
    CLS
    ? "Begin test of Trigonometric functions... "
    ?

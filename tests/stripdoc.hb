@@ -1,8 +1,6 @@
-/*
- * Strips HBDOC docs from source files.
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
+
+/* Strips HBDOC docs from source files */
 
 #pragma -w3
 #pragma -km+

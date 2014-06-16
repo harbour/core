@@ -12,7 +12,7 @@ PROCEDURE Main()
    SET SCOREBOARD OFF
    CLS
 
-   SetKey( K_ALT_A, {|| ft_Adder() } )      // Make <ALT-A> call FT_Adder
+   SetKey( K_ALT_A, {|| ft_Adder() } )  // Make <ALT-A> call ft_Adder()
 
    // Simple sample of program data entry!
 
@@ -34,6 +34,6 @@ PROCEDURE Main()
       ENDIF
    ENDDO
 
-   SET KEY K_ALT_A                     // Reset <ALT-A>
+   SetKey( K_ALT_A, NIL )  // Reset <ALT-A>
 
    RETURN

@@ -33,21 +33,17 @@ PROCEDURE Main()
 
    ?
    Set( _SET_EPOCH, 1950 )
-   cMask := "dd/mm/yyyy"
-   cDate := "02/04/49"
-   Set( _SET_DATEFORMAT, cMask )
+   Set( _SET_DATEFORMAT, cMask := "dd/mm/yyyy" )
+   dDate := CToD( cDate := "02/04/49" )
+   ? cDate, cMask, dDate, DToS( dDate ), DToC( dDate )
+
+   ?
+   Set( _SET_DATEFORMAT, cMask := "mm/dd/yyyy" )
    dDate := CToD( cDate )
    ? cDate, cMask, dDate, DToS( dDate ), DToC( dDate )
 
    ?
-   cMask := "mm/dd/yyyy"
-   Set( _SET_DATEFORMAT, cMask )
-   dDate := CToD( cDate )
-   ? cDate, cMask, dDate, DToS( dDate ), DToC( dDate )
-
-   ?
-   cMask := "yyyy/mm/dd"
-   Set( _SET_DATEFORMAT, cMask )
+   Set( _SET_DATEFORMAT, cMask := "yyyy/mm/dd" )
    dDate := CToD( cDate )
    ? cDate, cMask, dDate, DToS( dDate ), DToC( dDate )
    ?
@@ -56,16 +52,14 @@ PROCEDURE Main()
    TestCentury()
 
    ?
-   cMask := "yyyy/dd/mm"
-   Set( _SET_DATEFORMAT, cMask )
+   Set( _SET_DATEFORMAT, cMask := "yyyy/dd/mm" )
    dDate := CToD( cDate )
    ? cDate, cMask, dDate, DToS( dDate ), DToC( dDate )
    ?
    ? "49/02/04", cMask, CToD( "49/02/04" )
 
    ?
-   cMask := "ddd/mmm/yy"
-   Set( _SET_DATEFORMAT, cMask )
+   Set( _SET_DATEFORMAT, cMask := "ddd/mmm/yy" )
    dDate := CToD( cDate )
    ? cDate, cMask, dDate, DToS( dDate ), DToC( dDate )
 

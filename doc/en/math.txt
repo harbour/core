@@ -116,7 +116,7 @@
       upward or downward; it merely truncates a number at the decimal
       point.
    $EXAMPLES$
-      SET DECIMAL TO 5
+      SET DECIMALS TO 5
       ? Int( 632512.62541 )
       ? Int( 845414111.91440 )
    $STATUS$
@@ -309,10 +309,10 @@
    $DESCRIPTION$
       This function returns the square root of <nNumber>. The precision
       of this evaluation is based solely on the settings of the
-      SET DECIMAL TO command. Any negative number passed as <nNumber>
+      SET DECIMALS TO command. Any negative number passed as <nNumber>
       will always return a 0.
    $EXAMPLES$
-      SET DECIMAL TO 5
+      SET DECIMALS TO 5
       ? Sqrt( 632512.62541 )
       ? Sqrt( 845414111.91440 )
    $STATUS$
