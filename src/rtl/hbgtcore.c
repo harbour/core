@@ -3213,7 +3213,7 @@ typedef struct
    int iRight;
 } _HB_MOUSE_STORAGE;
 
-static int  hb_gt_def_mouseStorageSize( PHB_GT pGT )
+static int hb_gt_def_mouseStorageSize( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
@@ -3246,7 +3246,7 @@ static void hb_gt_def_mouseRestoreState( PHB_GT pGT, const void * pBuffer )
    HB_GTSELF_MOUSESETCURSOR( pGT, pStore->fVisible );
 }
 
-static int  hb_gt_def_mouseGetDoubleClickSpeed( PHB_GT pGT )
+static int hb_gt_def_mouseGetDoubleClickSpeed( PHB_GT pGT )
 {
    return pGT->iDoubleClickSpeed;
 }
@@ -3692,7 +3692,7 @@ static const char * hb_gt_FindDefault( void )
 
 static int hb_gt_FindEntry( const char * pszID )
 {
-   HB_BOOL fGt = hb_strnicmp( pszID, "gt", 2 );
+   HB_BOOL fGt = hb_strnicmp( pszID, "gt", 2 ) == 0;
    int iPos;
 
    for( iPos = -1; iPos < s_iGtCount; iPos++ )
