@@ -58,7 +58,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   SET DECIMALS TO 3
+   Set( _SET_DECIMALS, 3 )
 
    ?? "Testing Financial functions...."
    ?

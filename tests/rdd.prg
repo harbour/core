@@ -15,7 +15,7 @@ PROCEDURE Main()
       { "DATE",      "D",  8, 0 }, ;
       { "LOGICAL",   "L",  1, 0 } }
 
-   SET EXCLUSIVE OFF
+   Set( _SET_EXCLUSIVE, .F. )
 
    ? "Registered RDD's:", hb_ntos( Len( aRdd ) ), "=>"
    AEval( aRdd, {| cDriver | QQOut( "", cDriver ) } )

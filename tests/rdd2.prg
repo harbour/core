@@ -284,13 +284,13 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    ordSetFocus( 0 )
 
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftEq() */
    IF ! Eof()
       NotifyUser( "LOCATE with EXACT ON failed" )
    ENDIF
 
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
    LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftEq() */
    IF Eof()
       NotifyUser( "LOCATE with EXACT OFF failed" )
@@ -298,7 +298,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // TEST: EXACT with an index (also tests COUNT)
 
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    ordSetFocus( 0 )
    COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftEq() */
    INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftEq() */
@@ -306,7 +306,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       NotifyUser( "Bad conditional index count with EXACT ON" )
    ENDIF
 
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
    ordSetFocus( 0 )
    COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftEq() */
    INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftEq() */

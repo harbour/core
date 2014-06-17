@@ -75,7 +75,7 @@ PROCEDURE Main( cCmdLine )
    ft_Fill( aOptions[ 5 ], "B. Exit Application"                 , {|| .F. }, .T. )
 
    // main routine starts here
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
 
    cNormN := iif( lColor, "N/G" , "W/N"  )
    cWindN := iif( lColor, "W/B" , "W/N"  )

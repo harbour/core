@@ -699,7 +699,7 @@ PROCEDURE Main_TRANS()
    HBTEST Transform( "abcdefghij", "@S0! <XXXXXXXX>"  ) IS "<BCDEFGHI>"
    HBTEST Transform( "abcdefghij", "@S5! <XXXXXXXX>"  ) IS "<BCDE"
 
-   SET FIXED ON
+   Set( _SET_FIXED, .T. )
 
    HBTEST Transform(              1234,        ) IS "            1234"
    HBTEST Transform(              1234, ""     ) IS "            1234"
@@ -730,20 +730,20 @@ PROCEDURE Main_TRANS()
    HBTEST Transform(       Val( "12" ),        ) IS "      12"
    HBTEST Transform(      Val( "123" ),        ) IS "      123"
    HBTEST Transform(     Val( "1234" ),        ) IS "      1234"
-   SET DECIMALS TO 3
+   Set( _SET_DECIMALS, 3 )
    HBTEST Transform(               0.0,        ) IS "         0.000"
    HBTEST Transform(        Val( "1" ),        ) IS "        1"
    HBTEST Transform(       Val( "12" ),        ) IS "        12"
    HBTEST Transform(      Val( "123" ),        ) IS "        123"
    HBTEST Transform(     Val( "1234" ),        ) IS "        1234"
-   SET DECIMALS TO 4
+   Set( _SET_DECIMALS, 4 )
    HBTEST Transform(               0.0,        ) IS "         0.0000"
    HBTEST Transform(        Val( "1" ),        ) IS "          1"
    HBTEST Transform(       Val( "12" ),        ) IS "          12"
    HBTEST Transform(      Val( "123" ),        ) IS "          123"
    HBTEST Transform(     Val( "1234" ),        ) IS "          1234"
 
-   SET FIXED OFF
+   Set( _SET_FIXED, .F. )
 
    HBTEST Transform(             -1234,        ) IS "     -1234"
    HBTEST Transform(             -1234, "@B"   ) IS "-1234     "

@@ -207,7 +207,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    hb_langSelect( "en" )
 #endif
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
 
    FErase( "NOT_HERE.$$$" )
 

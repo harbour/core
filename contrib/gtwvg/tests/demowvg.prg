@@ -628,7 +628,7 @@ STATIC PROCEDURE GCUIConsole( oCrt )
    LOCAL GetList := {}
    LOCAL hBoxR, hTxt
 
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
 
    SetColor( "N/W,N/GR*,,,N/W*" )
    CLS

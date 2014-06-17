@@ -18,7 +18,7 @@ PROCEDURE Main()
    LOCAL cErrH, cErrN
 
    // main routine starts here
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
 
    lColor := .T.
 

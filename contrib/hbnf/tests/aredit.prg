@@ -22,7 +22,7 @@ PROCEDURE Main()
    // Set up TestGet() as bGetFunc
    bGetFunc := {| b, ar, nDim, nElem | TestGet( b, ar, nDim, nElem ) }
 
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
    SetColor( "W/N" )
    CLS
    @ 21, 4 SAY "Use Cursor Keys To Move Between Fields, <F7>: Delete Row, <F8>: Add Row"

@@ -15,7 +15,7 @@ PROCEDURE Main()
    ENDDO
    nTime := nTimeLast - nTime0
 
-   SET DECIMALS TO 3
+   Set( _SET_DECIMALS, 3 )
 
    ? "Ticks per second:", hb_ntos( nTick * 1000 / nTime )
    ? "Min/avg/max interval (ms):", hb_ntos( nMin ), "/", hb_ntos( nTime / nTick ), "/", hb_ntos( nMax )

@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    rddSetDefault( "DBF" )
 
-   SET EXCLUSIVE OFF
+   Set( _SET_EXCLUSIVE, .F. )
    CLS
 
    dbUseArea( .T., "DBF", "test", "TESTDBF", .T., .F. )

@@ -14,8 +14,6 @@ PROCEDURE Main()
 
    LOCAL GetList := {}
 
-   SET CONFIRM ON
-
    CLS
 
    @ 2, 15 SAY "Regular expression test"

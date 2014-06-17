@@ -9,7 +9,7 @@ PROCEDURE Main()
    LOCAL nVacaHrs := 0
    LOCAL GetList  := {}
 
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
    CLS
 
    SetKey( K_ALT_A, {|| ft_Adder() } )  // Make <ALT-A> call ft_Adder()

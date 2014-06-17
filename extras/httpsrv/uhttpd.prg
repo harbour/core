@@ -2164,12 +2164,12 @@ STATIC PROCEDURE SysSettings()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   SET SCOREBOARD OFF
-   SET BELL OFF
-   SET DELETED ON
-   SET CONFIRM ON
-   SET ESCAPE ON
-   SET WRAP ON
+   Set( _SET_SCOREBOARD, .F. )
+   Set( _SET_BELL, .F. )
+   Set( _SET_DELETED, .T. )
+   Set( _SET_CONFIRM, .T. )
+   Set( _SET_ESCAPE, .T. )
+   Set( _SET_WRAP, .T. )
 #if 0
    rddSetDefault( "DBFCDX" )
 #endif

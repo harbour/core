@@ -58,7 +58,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   SET DECIMALS TO 2
+   Set( _SET_DECIMALS, 2 )
    CLS
    ? "Test of mathematical functions"
    ?
@@ -141,7 +141,7 @@ PROCEDURE Main()
    WAIT
    CLS
 
-   SET DECIMALS TO 0
+   Set( _SET_DECIMALS, 0 )
    ? "Fact( 1 ) == 1    // CT3"
    ? Space( 3 ), Fact( 1 ), "  <-- CT for Harbour"
    ?

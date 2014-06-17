@@ -98,7 +98,7 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   SET DELETED ON
+   Set( _SET_DELETED, .T. )
    ?
    ? "With SET DELETED ON"
    WAIT
@@ -122,7 +122,7 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   SET DELETED OFF
+   Set( _SET_DELETED, .F. )
    ?
    ? "With SET DELETED OFF"
    ? "and  SET FILTER TO MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8"

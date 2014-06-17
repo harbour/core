@@ -76,7 +76,7 @@ PROCEDURE Main()
    LOCAL cPath := "public"
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET DELETED ON
+   Set( _SET_DELETED, .T. )
 
    /* Scan parameters and setup workings */
    FOR i := 1 TO PCount()

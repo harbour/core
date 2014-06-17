@@ -172,7 +172,7 @@ PROCEDURE Main()
    Set( _SET_EVENTMASK, INKEY_ALL )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
    // wvw_SetPaintRefresh( 0 )
    wvw_SetVertCaret( .T. )
    wvw_pbSetFont( , "Tahoma", 14 )

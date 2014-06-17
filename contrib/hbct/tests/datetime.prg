@@ -93,8 +93,8 @@ PROCEDURE Main( cLang )
    hb_langSelect( hb_defaultValue( cLang, "en" ) )
 #endif
 
-   SET CONFIRM ON
-   SET ESCAPE ON
+   Set( _SET_CONFIRM, .T. )
+   Set( _SET_ESCAPE, .T. )
 
    DO WHILE .T.
 

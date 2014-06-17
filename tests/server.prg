@@ -7,6 +7,8 @@
  * to demonstrate how to use timeout sockets.
  */
 
+#include "setcurs.ch"
+
 PROCEDURE Main( cPort )
 
    LOCAL Socket, s
@@ -14,7 +16,7 @@ PROCEDURE Main( cPort )
    LOCAL nTurn := 0, nTurn1 := 0
    LOCAL bCont := .T.
 
-   SET CURSOR OFF
+   SetCursor( SC_NONE )
 
    CLS
 

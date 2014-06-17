@@ -24,7 +24,7 @@ PROCEDURE Main( cVidMode )
    ENDIF
    lColor := iif( "MONO" $ Upper( cVidMode ), .F., IsColor() )
 
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
    SetCursor( SC_NONE )
    SetBlink( .F. )
 
