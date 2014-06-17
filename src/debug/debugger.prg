@@ -3046,7 +3046,7 @@ METHOD DeleteBreakPoint( cPos ) CLASS HBDebugger
 
    ELSEIF cPos == "ALL"
 
-      FOR nAt := Len( __dbgGetBreakPoints( ::pInfo ) ) -1 TO 0 STEP -1
+      FOR nAt := Len( __dbgGetBreakPoints( ::pInfo ) ) - 1 TO 0 STEP -1
          __dbgDelBreak( ::pInfo, nAt )
       NEXT
 

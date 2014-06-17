@@ -263,7 +263,7 @@ CREATE CLASS HBDbColumn
    VAR defColor   AS ARRAY     INIT { 1, 2 }    /* Array of numeric indexes into the color table */
    VAR width      AS USUAL                      /* Column display width */
 
-   METHOD New( cHeading, bBlock )               /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( cHeading, bBlock )
 
 ENDCLASS
 
