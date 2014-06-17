@@ -64,10 +64,8 @@ STATIC PROCEDURE process( hSocket )
          cBuf := Space( 4096 )
          IF ( nLen := hb_socketRecv( hSocket, @cBuf,,, 10000 ) ) > 0  /* Timeout */
             cRequest += hb_BLeft( cBuf, nLen )
-         ELSE
-            IF nLen == -1 .AND. hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
-               nLen := 0
-            ENDIF
+         ELSEIF nLen == -1 .AND. hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
+            nLen := 0
          ENDIF
       ENDDO
 

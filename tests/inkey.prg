@@ -201,6 +201,7 @@ STATIC PROCEDURE TEST7( cSkip, cRaw )
    ? "buttons as well as double-clicking the mouse buttons."
    ?
    ? "Press any key."
+
    nMask := HB_INKEY_ALL
 
    IF HB_ISSTRING( cRaw ) .AND. hb_LeftEqI( cRaw, "R" )

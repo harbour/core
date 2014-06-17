@@ -189,17 +189,16 @@ PROCEDURE Show() CLASS TForm
 
 METHOD Transfer( ... ) CLASS TForm
 
-   LOCAL aParam := __dbgVMParLList()
-   LOCAL nLen   := PCount()
    LOCAL xRet
    LOCAL xData
 
-   IF nLen == 0
+   IF PCount() == 0
       xRet := __objGetValueList( self, ::aExcept() )
    ELSE
-      FOR EACH xData IN aParam
+      FOR EACH xData IN __dbgVMParLList()
 
-         IF HB_ISARRAY( xData )
+         DO CASE
+         CASE HB_ISARRAY( xData )
 
             IF HB_ISARRAY( xData[ 1 ] )         // 2D array passed
                xRet := __objSetValueList( self, xData )
@@ -207,11 +206,11 @@ METHOD Transfer( ... ) CLASS TForm
                xRet := __objSetValueList( self, { xData } )
             ENDIF
 
-         ELSEIF HB_ISOBJECT( xData )            // Object passed
+         CASE HB_ISOBJECT( xData )              // Object passed
             xRet := ::Transfer( xData:Transfer() )
-         ELSEIF !( ValType( xData ) == "U" )
+         CASE !( ValType( xData ) == "U" )
             ? "TRANSFER: Incorrect argument(", xData:__enumIndex(), ")", xData
-         ENDIF
+         ENDCASE
       NEXT
    ENDIF
 

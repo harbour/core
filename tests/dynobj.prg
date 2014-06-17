@@ -130,13 +130,9 @@ STATIC FUNCTION Smile()
 
    LOCAL Self := QSelf()
 
-   IF ::CalcArea() == 300
-      ? ":-)"
-   ELSE
-      ? ":-("
-   ENDIF
+   ? iif( ::CalcArea() == 300, ":-)", ":-(" )
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION BigSmile()
 
@@ -144,4 +140,4 @@ STATIC FUNCTION BigSmile()
 
    ? ":-)))"
 
-   RETURN self
+   RETURN Self
