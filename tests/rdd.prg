@@ -21,7 +21,7 @@ PROCEDURE Main()
    AEval( aRdd, {| cDriver | QQOut( "", cDriver ) } )
    ?
    rddSetDefault( "DBFCDX" )
-   dbCreate( "testdbf", aStruct, "DBFCDX" )
+   dbCreate( "testdbf.dbf", aStruct, "DBFCDX" )
    dbUseArea( , , "testdbf.dbf", "ALIAS_1" )
    ? Bof()
    dbSelectArea( 2 )
@@ -40,6 +40,6 @@ PROCEDURE Main()
    dbSkip()
    dbCloseArea()
    dbCloseAll()
-   hb_dbDrop( "testdbf",, "DBFCDX" )
+   hb_dbDrop( "testdbf.dbf",, "DBFCDX" )
 
    RETURN

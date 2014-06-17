@@ -9,16 +9,17 @@
  */
 
 procedure main()
-   local getList := {}
+
+   local GetList := {}
    local cVar := Space( 20 )
 
    cls
 
-   if ! hb_mtvm()
+   if hb_mtvm()
+      hb_threadStart( @thFunc() )
+   else
       ? "No MT support in HVM. Clock will not be shown."
       WAIT
-   else
-      hb_threadStart( @thFunc() )
    endif
 
    @ 10, 10 SAY "Insert cVar:" GET cVar
@@ -29,8 +30,10 @@ procedure main()
 
    return
 
-static function thFunc()
+static procedure thFunc()
+
    local cTime
+
    while .T.
       cTime := DToC( Date() ) + " " + Time()
       /* use hb_DispOutAt() which does not change current default
@@ -44,4 +47,5 @@ static function thFunc()
       hb_DispOutAt( 0, MaxCol() - Len( cTime ) + 1, cTime, "GR+/N" )
       hb_idleSleep( 1 )
    enddo
-   return nil
+
+   return

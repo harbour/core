@@ -17,16 +17,22 @@
 static s_var
 
 procedure main()
+
    local xResult
+
    ? Version()
    ? "join:", hb_threadJoin( hb_threadStart( @thFunc() ), @xResult )
    ? "result:", xResult
    ? "static var type:", ValType( s_var )
    ? Eval( s_var )
    ? Eval( s_var )
+
    return
 
 static function thFunc()
+
    local i := 12345.678
+
    s_var := {|| i++ }
+
    return Replicate( "Hello World!!! ", 3 )

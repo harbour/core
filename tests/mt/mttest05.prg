@@ -7,14 +7,16 @@
  *
  */
 
-#define N_THREADS 5
-#define N_COUNT   1000000
-#define N_INIT    100
+#define N_THREADS  5
+#define N_COUNT    1000000
+#define N_INIT     100
 
 thread static t_var := N_INIT
 
 procedure main()
+
    local aThreads := {}, i, nSum
+
    ? Version()
    t_var := N_INIT * 25
    ? "Starting threads:", ""
@@ -29,11 +31,15 @@ procedure main()
    ? "Sum of results:", nSum
    ? "     should be:", N_THREADS * ( N_INIT + N_COUNT ), ;
       iif( nSum == N_THREADS * ( N_INIT + N_COUNT ), "OK", "ERROR" )
+
    return
 
 static function thFunc()
+
    local i
+
    for i := 1 to N_COUNT
       ++t_var
    next
+
    return t_var

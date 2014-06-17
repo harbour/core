@@ -100,27 +100,34 @@ procedure main()
    return
 
 static procedure initVars()
+
    pub1 := "main:public1"
    pub2 := "main:public2"
    prv1 := "main:private1"
    prv2 := "main:private2"
+
    return
 
 static procedure testAllVars()
+
    test_var( "PUB1" )
    test_var( "PUB2" )
    test_var( "PRV1" )
    test_var( "PRV2" )
+
    return
 
 static procedure test_var( cVarName )
+
    ? "    " + cVarName + ":", Type( cVarName )
    if ! Type( cVarName ) == "U"
       ?? " ->", &cVarName
    endif
+
    return
 
 static procedure thFunc()
+
    ? "child thread:"
    testAllVars()
    ? "assign..."
@@ -130,4 +137,5 @@ static procedure thFunc()
    prv2 := "thread:private2"
    ? "child thread:"
    testAllVars()
+
    return

@@ -11,14 +11,19 @@
 #include "inkey.ch"
 
 #ifdef __PLATFORM__WINDOWS
-   REQUEST HB_GT_WVT_DEFAULT
-   #define THREAD_GT hb_gtVersion()
+   #if ! defined( __HBSCRIPT__HBSHELL )
+      REQUEST HB_GT_WVT_DEFAULT
+   #endif
+   #define THREAD_GT  hb_gtVersion()
 #else
-   REQUEST HB_GT_STD_DEFAULT
-   #define THREAD_GT "XWC"
+   #if ! defined( __HBSCRIPT__HBSHELL )
+      REQUEST HB_GT_STD_DEFAULT
+   #endif
+   #define THREAD_GT  "XWC"
 #endif
 
 procedure main( cGT )
+
    local i, aThreads
 
    if ! hb_mtvm()
@@ -30,7 +35,7 @@ procedure main( cGT )
       cGT := THREAD_GT
    endif
 
-   if  cGT == "QTC" .and. ! cGT == hb_gtVersion()
+   if cGT == "QTC" .and. ! cGT == hb_gtVersion()
       /* QTC have to be initialized in main thread */
       hb_gtReload( cGT )
    endif
@@ -50,15 +55,19 @@ procedure main( cGT )
       endif
       ?? "."
    enddo
+
    return
 
 static procedure thFunc( cGT )
-   /* allocate own GT driver */
-   hb_gtReload( cGT )
-   if ! dbExists( "test" ) .and. dbExists( "../test" )
-      use ../test shared
+
+   hb_gtReload( cGT )  /* allocate own GT driver */
+
+   if ! dbExists( "test.dbf" ) .and. dbExists( hb_DirSepToOS( "../test.dbf" ) )
+      use ( hb_DirSepToOS( "../test.dbf" ) ) shared
    else
-      use test shared
+      use test.dbf shared
    endif
+
    Browse()
+
    return

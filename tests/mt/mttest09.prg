@@ -12,13 +12,15 @@
 static s_mainThreadID
 
 procedure main()
+
    field F1
+
    local thID, bResult
 
    s_mainThreadID := hb_threadSelf()
    /* create table */
-   dbCreate("_tst", { { "F1", "C", 1, 0 } } )
-   use _tst
+   dbCreate( "_tst.dbf", { { "F1", "C", 1, 0 } } )
+   use _tst.dbf
    while LastRec() < 10000
       dbAppend()
       F1 := Chr( RecNo() )
@@ -39,20 +41,25 @@ procedure main()
    ? "work area atached, Used() =>", Used(), Alias()
    ? "query result:", Eval( bResult )
    close
-   dbDrop("_tst")
+   hb_dbDrop( "_tst.dbf" )
+
    return
 
 static procedure thFunc()
+
    local bQuery, xResult
 
    if hb_dbRequest( , , @bQuery, .T. )
       xResult := Eval( bQuery )
       hb_dbDetach( , {|| xResult } )
    endif
+
    return
 
 static function countRecords( bFor )
+
    local nCount := 0
+
    dbGoTop()
    while ! Eof()
       if Eval( bFor )
@@ -60,6 +67,8 @@ static function countRecords( bFor )
       endif
       dbSkip()
    enddo
-   ? "!!! JOB DONE !!!" + iif( hb_threadSelf() == s_mainThreadID, ;
-                               " (by main thread)", " (by child thread)" )
+
+   ? "!!! JOB DONE !!!", iif( hb_threadSelf() == s_mainThreadID, ;
+                              "(by main thread)", "(by child thread)" )
+
    return nCount
