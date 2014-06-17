@@ -1280,14 +1280,13 @@ FUNCTION UHtmlEncode( cString )
    LOCAL nI, cI, cRet := ""
 
    FOR nI := 1 TO Len( cString )
-      cI := SubStr( cString, nI, 1 )
-      DO CASE
-      CASE cI == "<" ; cRet += "&lt;"
-      CASE cI == ">" ; cRet += "&gt;"
-      CASE cI == "&" ; cRet += "&amp;"
-      CASE cI == '"' ; cRet += "&quot;"
-      OTHERWISE      ; cRet += cI
-      ENDCASE
+      SWITCH cI := SubStr( cString, nI, 1 )
+      CASE "<"  ; cRet += "&lt;" ; EXIT
+      CASE ">"  ; cRet += "&gt;" ; EXIT
+      CASE "&"  ; cRet += "&amp;" ; EXIT
+      CASE '"'  ; cRet += "&quot;" ; EXIT
+      OTHERWISE ; cRet += cI
+      ENDSWITCH
    NEXT
 
    RETURN cRet

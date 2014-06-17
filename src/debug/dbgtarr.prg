@@ -275,6 +275,6 @@ STATIC PROCEDURE RefreshVarsS( oBrowse )
 
 STATIC FUNCTION ArrayBrowseSkip( nPos, oBrwSets )
    RETURN ;
-      iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1, ;
+      iif( oBrwSets:cargo[ 1 ] + nPos < 1, -oBrwSets:cargo[ 1 ] + 1, ;
       iif( oBrwSets:cargo[ 1 ] + nPos > Len( oBrwSets:cargo[ 2 ][ 1 ] ), ;
       Len( oBrwSets:cargo[ 2 ][ 1 ] ) - oBrwSets:cargo[ 1 ], nPos ) )

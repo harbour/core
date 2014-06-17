@@ -12521,6 +12521,8 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hb_ntos( hb_Version( HB_VERSION_RELEASE ) ) ; EXIT
    CASE "hb_status"
       cMacro := hb_Version( HB_VERSION_STATUS ) ; EXIT
+   CASE "hb_ver_id"
+      cMacro := hb_Version( HB_VERSION_ID ) ; EXIT
    CASE "hb_revision"
       cMacro := hb_ntos( hb_Version( HB_VERSION_REVISION ) ) ; EXIT
    CASE "hb_host_plat"
@@ -17376,6 +17378,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "${hb_minor}"          , I_( "Harbour minor version number" ) }, ;
       { "${hb_release}"        , I_( "Harbour release version number" ) }, ;
       { "${hb_status}"         , I_( "Harbour version status" ) }, ;
+      { "${hb_ver_id}"         , I_( "Harbour version ID" ) }, ;
       { "${hb_revision}"       , I_( "Harbour revision" ) }, ;
       { "${hb_host_plat}"      , I_( "Harbour host platform" ) }, ;
       { "${hb_host_plat_unix}" , I_( "returns '1' if Harbour host platform is *nix compatible" ) }, ;
