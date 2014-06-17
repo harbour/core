@@ -9,14 +9,14 @@
  *
  */
 
-#define N_THREADS 5
-#define N_JOBS    10000
+#define N_THREADS  5
+#define N_JOBS     10000
 
 static s_aCounters
 static s_mtxJobs
 static s_mtxResults
 
-procedure main()
+procedure Main()
 
    local aThreads, aResults, i, nDigit, nSum, nExpected
 

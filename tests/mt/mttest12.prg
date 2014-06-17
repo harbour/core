@@ -12,7 +12,7 @@ thread static t_var2 := { "A" => "qwe", "B" => "asd" }
 thread static t_var3 := 1235.567
 thread static t_var4 := "text"
 
-procedure main()
+procedure Main()
 
    testvar( "initial main thread values" )
    AAdd( t_var1, "X" )

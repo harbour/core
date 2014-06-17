@@ -8,7 +8,7 @@
  *
  */
 
-procedure main()
+procedure Main()
 
    local GetList := {}
    local cVar := Space( 20 )

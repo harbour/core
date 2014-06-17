@@ -12,17 +12,17 @@
 
 #ifdef __PLATFORM__WINDOWS
    #if ! defined( __HBSCRIPT__HBSHELL )
-      REQUEST HB_GT_WVT_DEFAULT
+      request HB_GT_WVT_DEFAULT
    #endif
    #define THREAD_GT  hb_gtVersion()
 #else
    #if ! defined( __HBSCRIPT__HBSHELL )
-      REQUEST HB_GT_STD_DEFAULT
+      request HB_GT_STD_DEFAULT
    #endif
    #define THREAD_GT  "XWC"
 #endif
 
-procedure main( cGT )
+procedure Main( cGT )
 
    local i, aThreads
 

@@ -16,14 +16,14 @@
    #xtranslate hb_threadJoin( <x,...> ) => JoinThread( <x> )
 #endif
 
-#define N_THREADS 5
+#define N_THREADS  5
 
 static s_nVar1 := 0
 static s_nVar2 := 0
 static s_aCounters
 static s_hMutex
 
-procedure main()
+procedure Main()
 
    local aThreads, i, lEnd, nSum
 

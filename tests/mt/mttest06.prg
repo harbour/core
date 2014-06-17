@@ -7,13 +7,13 @@
  *
  */
 
-#define N_THREADS 5
-#define N_COUNT   1000000
-#define N_INIT    100
+#define N_THREADS  5
+#define N_COUNT    1000000
+#define N_INIT     100
 
 memvar m_var
 
-procedure main()
+procedure Main()
 
    local aThreads := {}, i, nSum
 

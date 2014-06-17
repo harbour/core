@@ -13,7 +13,7 @@
 memvar pub1, pub2
 memvar prv1, prv2
 
-procedure main()
+procedure Main()
 
    ? Version()
    ? "Main start"

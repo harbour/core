@@ -16,7 +16,7 @@
 
 static s_var
 
-procedure main()
+procedure Main()
 
    local xResult
 

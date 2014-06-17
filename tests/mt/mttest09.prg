@@ -11,7 +11,7 @@
 
 static s_mainThreadID
 
-procedure main()
+procedure Main()
 
    field F1
 

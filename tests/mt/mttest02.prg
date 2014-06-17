@@ -15,7 +15,7 @@
    #command always           => finally
 #endif
 
-procedure main()
+procedure Main()
 
    local thID, i
 

@@ -13,7 +13,7 @@
 
 thread static t_var := N_INIT
 
-procedure main()
+procedure Main()
 
    local aThreads := {}, i, nSum
 
