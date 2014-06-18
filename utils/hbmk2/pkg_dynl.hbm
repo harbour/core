@@ -1,3 +1,5 @@
+# Copyright 2012 Viktor Szakats (vszakats.net/harbour)
+
 # dynamic lib creation settings
 {hbdyn}-shared
 {hbdyn}-implib=lib/${hb_plat}/${hb_comp}${hb_build}/

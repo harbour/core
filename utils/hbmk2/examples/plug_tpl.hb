@@ -2,7 +2,6 @@
  * hbmk2 plugin example
  *
  * Copyright 2010-2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
