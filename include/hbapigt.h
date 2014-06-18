@@ -3,6 +3,9 @@
  * Header file for the Terminal API
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (Keyboard related declarations, Cursor declarations)
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (Mouse related declarations, Undocumented GT API declarations)
+ * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl > (Internal GT code reimplemented in different way)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,26 +46,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    Keyboard related declarations
- *    Cursor declarations
- * See above for licensing terms.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    Mouse related declarations
- *    Undocumented GT API declarations
- *
- * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- *    Internal GT code reimplemented in different way
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

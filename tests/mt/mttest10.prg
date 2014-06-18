@@ -16,9 +16,7 @@
    #endif
    #define THREAD_GT  hb_gtVersion()
 #else
-   #if ! defined( __HBSCRIPT__HBSHELL )
-      request HB_GT_STD_DEFAULT
-   #endif
+   request HB_GT_STD_DEFAULT
    #define THREAD_GT  "XWC"
 #endif
 

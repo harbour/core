@@ -1,6 +1,4 @@
 /*
- * Harbour Project source code:
- *
  * Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * Based on:
  *
@@ -14,10 +12,6 @@
  *   Video subsystem for Windows compilers
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
- *
- * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,10 +54,7 @@
  *
  */
 
-/*
- *         GUI Drawing Functions
- *  Pritpal Bedi <bedipritpal@hotmail.com>
- */
+/* GUI Drawing Function */
 
 #include "hbwinole.h"
 #include "gtwvg.h"

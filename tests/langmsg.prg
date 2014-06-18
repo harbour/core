@@ -23,13 +23,13 @@ PROCEDURE Main( cLng )
    ENDIF
 
    ? hb_langName()
-   ? "HB_LANG_ITEM_BASE_ID     ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ID     ) + "]"
-   ? "HB_LANG_ITEM_BASE_MONTH  ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_MONTH  ) + "]"
-   ? "HB_LANG_ITEM_BASE_DAY    ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_DAY    ) + "]"
-   ? "HB_LANG_ITEM_BASE_NATMSG ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_NATMSG ) + "]"
+   ? "HB_LANG_ITEM_BASE_ID     ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ID      ) + "]"
+   ? "HB_LANG_ITEM_BASE_MONTH  ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_MONTH   ) + "]"
+   ? "HB_LANG_ITEM_BASE_DAY    ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_DAY     ) + "]"
+   ? "HB_LANG_ITEM_BASE_NATMSG ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_NATMSG  ) + "]"
    ? "HB_LANG_ITEM_BASE_ERRDESC", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ERRDESC ) + "]"
    ? "HB_LANG_ITEM_BASE_ERRINTR", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ERRINTR ) + "]"
-   ? "HB_LANG_ITEM_BASE_TEXT   ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_TEXT   ) + "]"
+   ? "HB_LANG_ITEM_BASE_TEXT   ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_TEXT    ) + "]"
    ? "hb_langErrMsg(0)", hb_langErrMsg( 0 )
    ?
    ? "date format:", hb_langMessage( HB_LANG_ITEM_BASE_TEXT ) + " (" + cDtFrm + ")"
