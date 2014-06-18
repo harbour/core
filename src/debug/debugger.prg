@@ -2224,7 +2224,7 @@ METHOD OpenPPO() CLASS HBDebugger
          __dbgColors()[ 3 ] + "," + __dbgColors()[ 6 ], ::lLineNumbers, ::nTabWidth )
       ::oWndCode:Browser := ::oBrwText
       ::oWndCode:SetCaption( ::cPrgName )
-      ::oWndCode:Refresh() // to force the window caption to update
+      ::oWndCode:Refresh()  // to force the window caption to update
    ENDIF
 
    ::oPullDown:GetItemByIdent( "PPO" ):checked := ::lPPO
@@ -2609,11 +2609,12 @@ METHOD PROCEDURE SaveSettings( cFileName ) CLASS HBDebugger
    IF ! ::lWindowsAutoSized
       /* This part of the script must be executed after all windows are created */
       FOR EACH oWnd IN ::aWindows
-         cInfo += "Window Size " + hb_ntos( oWnd:nBottom - oWnd:nTop + 1 ) + " "
-         cInfo += hb_ntos( oWnd:nRight - oWnd:nLeft + 1 ) + hb_eol()
-         cInfo += "Window Move " + hb_ntos( oWnd:nTop ) + " "
-         cInfo += hb_ntos( oWnd:nLeft ) + hb_eol()
-         cInfo += "Window Next" + hb_eol()
+         cInfo += ;
+            "Window Size " + hb_ntos( oWnd:nBottom - oWnd:nTop + 1 ) + " " + ;
+            hb_ntos( oWnd:nRight - oWnd:nLeft + 1 ) + hb_eol() + ;
+            "Window Move " + hb_ntos( oWnd:nTop ) + " " + ;
+            hb_ntos( oWnd:nLeft ) + hb_eol() + ;
+            "Window Next" + hb_eol()
       NEXT
    ENDIF
 
@@ -3041,15 +3042,11 @@ METHOD DeleteBreakPoint( cPos ) CLASS HBDebugger
    ENDIF
 
    IF IsDigit( cPos )
-
       __dbgDelBreak( ::pInfo, Val( cPos ) )
-
    ELSEIF cPos == "ALL"
-
       FOR nAt := Len( __dbgGetBreakPoints( ::pInfo ) ) - 1 TO 0 STEP -1
          __dbgDelBreak( ::pInfo, nAt )
       NEXT
-
    ENDIF
 
    ::oBrwText:RefreshAll():ForceStable()
@@ -3062,9 +3059,10 @@ METHOD ListBreakPoint() CLASS HBDebugger
    LOCAL aBreak
 
    FOR EACH aBreak IN __dbgGetBreakPoints( ::pInfo )
-      ::CommandWindowDisplay( hb_ntos( aBreak:__enumIndex() - 1 ) + ") " + ;
-                              hb_ntos( aBreak[ 1 ] ) + " " + ;
-                              AllTrim( aBreak[ 2 ] ), .F. )
+      ::CommandWindowDisplay( ;
+         hb_ntos( aBreak:__enumIndex() - 1 ) + ") " + ;
+         hb_ntos( aBreak[ 1 ] ) + " " + ;
+         AllTrim( aBreak[ 2 ] ), .F. )
    NEXT
 
    RETURN Self

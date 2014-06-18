@@ -42,17 +42,8 @@ and interfaces to many popular APIs.
 
 ### Harbour stable binary download
 
-Download binary archive from this page and unpack or install:
-
-* <https://sourceforge.net/projects/harbour-project/files/><br />
-(choose the highest version number)
-
-### Harbour stable source download
-
-Download source archive from this page and unpack:
-
-* <https://sourceforge.net/projects/harbour-project/files/source/><br />
-(choose the highest version number)
+You can find links to the latest stable release (3.0.0)
+of Harbour in the README of the upstream source.
 
 
 ## Unstable versions
@@ -1664,9 +1655,6 @@ Supported shells per host platforms:
   * [Source code](https://github.com/vszakats/harbour-core)
   * [Issues](https://github.com/vszakats/harbour-core/issues)
   * [Localization](https://www.transifex.com/projects/p/harbour/)
-  * [Homepage - __for non-fork/mainstream version__](http://harbour-project.org/)
-  * [Users' Mailing List - __for non-fork/mainstream version__](https://groups.google.com/group/harbour-users/) (English language)
-  * [Development Mailing List - __for non-fork/mainstream version__](https://groups.google.com/group/harbour-devel/) (English language)
   * Documents:
      * [hbmk2 documentation](utils/hbmk2/doc/hbmk2.en.md)
      * [hbrun documentation](contrib/hbrun/doc/hbrun.en.md)

@@ -3,6 +3,7 @@
  * The Debugger Help
  *
  * Copyright 2002 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour) (GetTopics())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -237,9 +238,11 @@ STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
    NEXT
 
    IF Len( aTopics[ nTopic ][ 2 ] ) <= nRows
-      hb_DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page 1 of 1 " )
+      hb_DispOutAt( oDlg:nBottom, oDlg:nRight - 16, ;
+         " Page 1 of 1 " )
    ELSE
-      hb_DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page " + Str( oDebug:nHelpPage, 1 ) + " of " + Str( nPages, 1 ) + " " )
+      hb_DispOutAt( oDlg:nBottom, oDlg:nRight - 16, ;
+         hb_StrFormat( " Page %1$s of %2$s ", Str( oDebug:nHelpPage, 1 ), Str( nPages, 1 ) ) )
    ENDIF
 
    RETURN

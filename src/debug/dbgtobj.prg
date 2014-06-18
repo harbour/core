@@ -119,12 +119,15 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
 
    IF nSize < MaxRow() - 2
       IF HB_ISNUMERIC( nRow )
-         oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+         oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ;
+            ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
       ELSE
-         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ;
+            ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
       ENDIF
    ELSE
-      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ;
+         ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
    ENDIF
 
    ::nCurWindow++

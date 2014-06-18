@@ -92,12 +92,15 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
 
    IF nSize < MaxRow() - 2
       IF HB_ISNUMERIC( nRow )
-         oWndSets := HBDbWindow():New( GetTopPos( nRow ), 5, getBottomPos( nRow + nSize + 1 ), MaxCol() - 5, ::hashName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
+         oWndSets := HBDbWindow():New( GetTopPos( nRow ), 5, getBottomPos( nRow + nSize + 1 ), MaxCol() - 5, ;
+            ::hashName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
       ELSE
-         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::hashName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
+         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ;
+            ::hashName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
       ENDIF
    ELSE
-      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ::hashName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
+      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ;
+         ::hashName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
    ENDIF
    ::nCurWindow++
    oWndSets:lFocused := .T.
@@ -107,7 +110,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    oBrwSets:autolite := .F.
    oBrwSets:ColorSpec := __dbg():ClrModal()
-   oBrwSets:Cargo := { 1, {} } // Actual highligthed row
+   oBrwSets:Cargo := { 1, {} }  // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], hHash )
 
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::hashName + "[" + HashKeyString( hHash, oBrwSets:cargo[ 1 ] ) + "]" } ) )
