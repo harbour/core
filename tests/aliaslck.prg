@@ -10,11 +10,11 @@
 
 procedure main()
 
-   local cFile := "_tst"
+   local cFile := "_tst.dbf"
 
    if ! hb_dbExists( cFile )
       dbCreate( cFile, { { "F", "C", 10, 0 } } )
-      use _tst exclusive
+      use _tst.dbf exclusive
       while LastRec() < 100
          dbAppend()
       enddo
@@ -22,10 +22,10 @@ procedure main()
    endif
    ? "Test exclusive access"
    select 1
-   use _tst exclusive alias tst1
+   use _tst.dbf exclusive alias tst1
    ? "neterr->", NetErr(), "used->", Used(), "alias->", Alias()
    select 2
-   use _tst exclusive alias tst2
+   use _tst.dbf exclusive alias tst2
    ? "neterr->", NetErr(), "used->", Used(), "alias->", Alias()
    if Used()
       ? "Error, exclusive mode in aliased work areas does not work"
@@ -37,25 +37,25 @@ procedure main()
    ?
    ? "Test shared access"
    select 1
-   use _tst shared alias tst1
+   use _tst.dbf shared alias tst1
    ? "neterr->", NetErr(), "used->", Used(), "alias->", Alias()
-   setLock(2)
-   setLock(4)
-   setLock(6)
-   setLock(7)
+   setLock( 2 )
+   setLock( 4 )
+   setLock( 6 )
+   setLock( 7 )
    dspLock()
    select 2
-   use _tst shared alias tst2
+   use _tst.dbf shared alias tst2
    ? "neterr->", NetErr(), "used->", Used(), "alias->", Alias()
-   setLock(1)
-   setLock(2)
-   setLock(3)
-   setLock(4)
-   setLock(5)
-   setLock(6)
-   setLock(7)
-   setLock(8)
-   setLock(9)
+   setLock( 1 )
+   setLock( 2 )
+   setLock( 3 )
+   setLock( 4 )
+   setLock( 5 )
+   setLock( 6 )
+   setLock( 7 )
+   setLock( 8 )
+   setLock( 9 )
    dspLock()
    wait
    ?
@@ -65,34 +65,34 @@ procedure main()
    dspLock()
    select 2
    ? "lock 10 records in", Alias()
-   setLock(1)
-   setLock(2)
-   setLock(3)
-   setLock(4)
-   setLock(5)
-   setLock(6)
-   setLock(7)
-   setLock(8)
-   setLock(9)
+   setLock( 1 )
+   setLock( 2 )
+   setLock( 3 )
+   setLock( 4 )
+   setLock( 5 )
+   setLock( 6 )
+   setLock( 7 )
+   setLock( 8 )
+   setLock( 9 )
    dspLock()
    wait
    ?
    ? "unlock 3, 5, 9 in", Alias()
-   dbRUnlock(3)
-   dbRUnlock(5)
-   dbRUnlock(9)
+   dbRUnlock( 3 )
+   dbRUnlock( 5 )
+   dbRUnlock( 9 )
    dspLock()
    select 1
    ? "lock 10 records in", Alias()
-   setLock(1)
-   setLock(2)
-   setLock(3)
-   setLock(4)
-   setLock(5)
-   setLock(6)
-   setLock(7)
-   setLock(8)
-   setLock(9)
+   setLock( 1 )
+   setLock( 2 )
+   setLock( 3 )
+   setLock( 4 )
+   setLock( 5 )
+   setLock( 6 )
+   setLock( 7 )
+   setLock( 8 )
+   setLock( 9 )
    dspLock()
    wait
    dbCloseAll()

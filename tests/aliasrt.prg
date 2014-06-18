@@ -1,6 +1,6 @@
 PROCEDURE Main()
 
-   COPY FILE ( "test.dbf" ) TO ( "test1.dbf" )
+   COPY FILE test.dbf TO test1.dbf
 
    USE test1.dbf ALIAS test
 
@@ -24,7 +24,7 @@ PROCEDURE Main()
 
    dbCloseArea()
 
-   SELECT 2
+   dbSelectArea( 2 )
 
    USE test1.dbf ALIAS test
 

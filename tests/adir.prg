@@ -45,6 +45,6 @@ STATIC PROCEDURE TestIt( cSpec )
    AEval( a4, {| tmp | QOut( tmp ) } )
    AEval( a5, {| tmp | QOut( tmp ) } )
 
-   ADir( cSpec, 10, "A", NIL, NIL, NIL )
+   ADir( cSpec, 10, "A", , , )
 
    RETURN

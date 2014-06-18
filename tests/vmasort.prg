@@ -18,7 +18,9 @@ PROCEDURE Main( nPass )
 
    ? "Original.....:", ADump( aOrig )
    ? "asort.c......:", ADump( ASort( aTest ) )
-// ? "asort.c.block:", ADump( ASort( aTest,,, {| x, y | x < y } ) )
+#ifdef _COMMENT_
+   ? "asort.c.block:", ADump( ASort( aTest,,, {| x, y | x < y } ) )
+#endif
 
    RETURN
 
