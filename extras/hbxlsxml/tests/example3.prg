@@ -1,8 +1,5 @@
 /*
- * Harbour Project source code:
- *
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br
- * www - http://harbour-project.org
  *
  * Thanks TO Robert F Greer, PHP original version
  * https://sourceforge.net/projects/excelwriterxml/

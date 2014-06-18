@@ -1,11 +1,9 @@
-/*
- * This program will read the .hrb file and show its content
+/* This program will read the .hrb file and show its content
  *
  * readhrb <hrb file>
  *
  * Eddie Runia <eddie@runia.com>
  * Vailton Renato <vailtom@gmail.com> (Updated to support current Harbour implementation)
- * www - http://harbour-project.org
  *
  * Placed in the public domain
  */

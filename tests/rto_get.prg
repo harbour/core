@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Regression tests for class Get
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,8 +52,8 @@
 #include "setcurs.ch"
 
 #ifndef __HARBOUR__
-   #define hb_eol()     ( Chr( 13 ) + Chr( 10 ) )
-   #define hb_ntos( n ) LTrim( Str( n ) )
+   #define hb_eol()      ( Chr( 13 ) + Chr( 10 ) )
+   #define hb_ntos( n )  LTrim( Str( n ) )
 #endif
 
 #xtranslate TEST_LINE( <x> ) => TEST_CALL( o, #<x>, {|| <x> } )

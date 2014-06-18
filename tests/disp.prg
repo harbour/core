@@ -1,7 +1,4 @@
-/* Harbour Project source code
-   http://harbour-project.org/
-   Public domain program written by David G. Holm <dholm@jsd-llc.com>
- */
+/* Public domain program written by David G. Holm <dholm@jsd-llc.com> */
 
 // Test program for SetPos(), DispOut(), ?, and ?? Clipper compatibility.
 // The results should be identical between Harbour with the GT API and

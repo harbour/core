@@ -1,8 +1,5 @@
 /*
- * Harbour Project source code
- *
  * Copyright (C) 2012 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

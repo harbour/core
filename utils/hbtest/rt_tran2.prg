@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
- *    test code for Transform() function
+ * Test code for Transform() function
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
- *
  */
 
 #ifdef __HBSCRIPT__HBSHELL

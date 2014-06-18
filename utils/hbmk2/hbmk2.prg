@@ -15237,11 +15237,9 @@ FUNCTION hbshell_ext_get_list()
 STATIC FUNCTION __plugin_ext()
 #pragma __cstream | RETURN %s
 /*
- * Harbour Project source code:
- * extension manager plugin
+ * Extension manager plugin
  *
  * Copyright 2012-2014 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  */
 
 FUNCTION __hbshell_plugin()

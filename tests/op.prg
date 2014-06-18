@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Testing the operators-overloading feature
  *
  * Copyright 2000 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +53,7 @@ PROCEDURE Main()
    LOCAL oCar := TCar():New( "Red", 2 )
    LOCAL oPetrol := NIL
 
-   oCar := oCar + oPetrol
+   oCar += oPetrol
 
    HB_SYMBOL_UNUSED( oCar )
 
@@ -81,11 +79,11 @@ METHOD New( cColor, nDoors ) CLASS TCar
 
    RETURN Self
 
-METHOD Sum( oObject ) CLASS TCar
+METHOD PROCEDURE Sum( oObject ) CLASS TCar
 
    HB_SYMBOL_UNUSED( oObject )
 
    Alert( "+ has a special meaning and " + ;
       "functionality for TCar Class objects!" )
 
-   RETURN NIL
+   RETURN

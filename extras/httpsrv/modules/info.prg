@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    uHTTPD info page
+ * uHTTPD info page
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

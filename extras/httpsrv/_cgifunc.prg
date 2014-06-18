@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    uHTTPD (Micro HTTP server) cgi functions
+ * uHTTPD (Micro HTTP server) cgi functions
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

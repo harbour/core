@@ -1,12 +1,8 @@
 /*
- * Harbour Project source code:
  * Document generator - HTML output
  *
  * Copyright 2009 April White <april users.sourceforge.net>
- * www - http://harbour-project.org
- *
- * Portions of this project are based on hbdoc
- *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
+ * Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br> (Portions of this project are based on hbdoc)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    uHTTPD (Micro HTTP server)
+ * uHTTPD (Micro HTTP server)
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
- * www - http://harbour-project.org
  *
  * Credits:
  *    Based on first version posted from Mindaugas Kavaliauskas on

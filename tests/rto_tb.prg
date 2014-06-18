@@ -1,9 +1,8 @@
 /*
- * Harbour Project source code:
  * Regression tests for classes TBrowse()/TBColumn()
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (eInstVar() - from RTL)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,25 +45,14 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    eInstVar() (from RTL)
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* NOTE: This source can be compiled with both Harbour and CA-Cl*pper. */
 
 #include "error.ch"
 #include "fileio.ch"
 
 #ifndef __HARBOUR__
-   #define hb_eol()     ( Chr( 13 ) + Chr( 10 ) )
-   #define hb_ntos( n ) LTrim( Str( n ) )
+   #define hb_eol()      ( Chr( 13 ) + Chr( 10 ) )
+   #define hb_ntos( n )  LTrim( Str( n ) )
 #endif
 
 #ifdef __XHARBOUR__
