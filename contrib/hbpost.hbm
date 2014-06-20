@@ -1,3 +1,5 @@
+# Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+
 # These are mandatory inside Harbour repository, they will always
 # override project options.
 

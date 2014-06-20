@@ -1,3 +1,5 @@
+/* Copyright 2013 Viktor Szakats (vszakats.net/harbour) */
+
 #require "hbtest"
 
 PROCEDURE Main()

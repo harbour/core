@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_strcmpc()
  *
  * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

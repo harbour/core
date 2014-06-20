@@ -1,7 +1,4 @@
-/*
- * Test program for HBTINYMT library
- * Andi Jahja
- */
+/* Test program for HBTINYMT library by Andi Jahja */
 
 #require "hbtinymt"
 

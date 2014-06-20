@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * XPP compatible classes to manage threads
+ * Xbase++ compatible classes to manage threads
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

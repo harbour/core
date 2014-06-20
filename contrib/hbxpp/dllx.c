@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Dynamic library handling functions (Xbase++ compatible)
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2006 Paul Tucker <ptucker@sympatico.ca>
  * Copyright 2002 Vic McClung <vicmcclung@vicmcclung.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
