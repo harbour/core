@@ -23,14 +23,14 @@ procedure Main()
    ? "Main start"
    thID := hb_threadStart( @thFunc(), "A", "B", "C" )
    ? "Thread ID:", thID
-   ? "==================="
+   ? Replicate( "=", 20 )
    ?
    begin sequence
       for i := 1 to 10
          ?? "M"
          hb_idleSleep( 0.050 )
       next
-      ? "==================="
+      ? Replicate( "=", 20 )
       ? "Main QUIT"
       quit
    always

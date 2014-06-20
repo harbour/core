@@ -92,7 +92,7 @@ STATIC PROCEDURE TEST_Type()
    LOCAL bErr := ErrorBlock( {| e | Break( e ) } ), oE
 
    ?
-   ? "=========== Type() function ================="
+   ? "=== Type() function ==="
    v1 := "UDF()"
    ? "Test for Type('UDF()')        - should be 'UI':", Type( v1 )
    v2 := "UDF_STATIC()"

@@ -167,7 +167,7 @@ procedure main()
    self := cls2():new()
    cbErr := ErrorBlock( {| oErr | errHandler( oErr ) } )
 
-   /***************************************************************/
+   /* --- */
    ? "Class Access:"
    self:TEST1()
    ?
@@ -187,7 +187,7 @@ procedure main()
    MAKE_TEST( self, "extr" )
    ?
 
-   /***************************************************************/
+   /* --- */
    ?
    ? "Inline Class Access:"
    MAKE_TESTINLINE1( self, b1 )
@@ -199,7 +199,7 @@ procedure main()
    MAKE_TESTINLINE2( self, b2 )
    ?
 
-   /***************************************************************/
+   /* --- */
    ?
    ? "Access from class method by"
    ? "Eval() with block created in class method:"
@@ -217,7 +217,7 @@ procedure main()
    ? "Eval() with block created in foreign class method:"
    o:CBINTX( self )
 
-   /***************************************************************/
+   /* --- */
    ?
    ? "Access from function executed from class method by"
    ? "Eval() block created in class method:"
@@ -231,7 +231,7 @@ procedure main()
    ? "Eval() with block created in parent class method:"
    self:CBEVL0()
 
-   /***************************************************************/
+   /* --- */
    ?
    ? "Access from foreign object method executed from class method by"
    ? "Eval() block created in class method:"
@@ -245,7 +245,7 @@ procedure main()
    ? "Eval() with block created in parent class method:"
    self:CBFEVL0( o )
 
-   /***************************************************************/
+   /* --- */
    ?
    ? "External block executed from class method"
    MAKE_TESTBLOCK( self:cbeval1, self, ::classname() + ":" + ProcName() )
@@ -259,7 +259,7 @@ procedure main()
    ? "External block access"
    MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
 
-   /***************************************************************/
+   /* --- */
    ?
    ? "External block executed from function called from class method"
    MAKE_TESTBLOCK( self:cbeval1, self, ::classname() + ":" + ProcName() )
@@ -270,7 +270,7 @@ procedure main()
    ? "External block executed from function called from parent class method"
    MAKE_TESTBLOCK( self:cbeval0, self, ::classname() + ":" + ProcName() )
    ?
-   /***************************************************************/
+   /* --- */
 
    ErrorBlock( cbErr )
    return
@@ -474,13 +474,12 @@ method CBXEVAL2( cb, o )
 
 
 /*
-
-*************************************************************************
+  -------------------------------------------------------------------------
   Below are results Harbour when compiled with -DHB_CLASSY_BLOCK_SCOPE
   They are exactly the same as from Class(y).
   Tested with:
    2006-09-16 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-=========================================================================
+  -------------------------------------------------------------------------
 
  2006-09-16 23:17:33 Harbour Alpha build 46.2 Intl. (Flex) Linux 2.6.15 i686
 
@@ -741,11 +740,11 @@ method CBXEVAL2( cb, o )
        erVar:= CLS2:(b)MAIN
 
 
-*************************************************************************
+  -------------------------------------------------------------------------
   And now Harbour results when compiled with -DHB_REAL_BLOCK_SCOPE.
   Tested with:
    2006-09-16 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-=========================================================================
+  -------------------------------------------------------------------------
 
  2006-09-16 23:18:59 Harbour Alpha build 46.2 Intl. (Flex) Linux 2.6.15 i686
 

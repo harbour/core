@@ -13,7 +13,7 @@ PROCEDURE Main()
    test( @a, @b )
 #endif
 
-   ? "========================================================"
+   ? Replicate( "=", 56 )
    ? "before loop: ENUM=", ENUM
    ? "before loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH enum IN A
@@ -30,11 +30,11 @@ PROCEDURE Main()
    NEXT
    ? "after loop ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
-   ? "-----------------"
+   ? "---"
    ?
    WAIT
 
-   ? "========================================================"
+   ? Replicate( "=", 56 )
    ? "Testing passing by reference"
    ? "before loop: ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
@@ -61,7 +61,7 @@ PROCEDURE Main()
    ?
    WAIT
 
-   ? "========================================================"
+   ? Replicate( "=", 56 )
    ? "Testing BREAK"
    ? "before loop: ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
@@ -84,7 +84,7 @@ PROCEDURE Main()
    ?
    WAIT
 
-   ? "========================================================"
+   ? Replicate( "=", 56 )
    ? "before loop: ENUM=", enum
    ? "before loop: c=", c
    BEGIN SEQUENCE
@@ -108,7 +108,7 @@ PROCEDURE Main()
    END SEQUENCE
 
 
-   ? "========================================================"
+   ? Replicate( "=", 56 )
    FOR EACH enum, bb, cc IN A, AA, c
       ? enum, enum:__enumIndex(), enum:__enumValue()
       ? bb, bb:__enumIndex(), bb:__enumValue()
@@ -117,7 +117,7 @@ PROCEDURE Main()
    ?
    WAIT
 
-   ? "========================================================"
+   ? Replicate( "=", 56 )
    FOR EACH enum, bb, cc IN A, AA, c DESCEND
       ? enum, enum:__enumIndex(), enum:__enumValue()
       ? bb, bb:__enumIndex(), bb:__enumValue()

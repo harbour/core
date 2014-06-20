@@ -79,7 +79,7 @@ FUNCTION NoTestMain()
 
 RETURN( return )
 
-/*================================================================
+/*
 * * * * * ** Checking for NEXT
 */
 FUNCTION NeXT( next_next/*next next*/ )
@@ -129,7 +129,7 @@ Local nExt, nExt7, nExtNEXT
 
 RETURN( nExt * /*next*/ nExt )
 
-/*===================================================================
+/*
 * Checking for BEGIN
 **/
 FUNCTION BEGIN( BEGIN_BEGIN )
@@ -166,7 +166,7 @@ END /* BEGIN */ SEQUENC
 
 RETURN bEgin ^ 2
 
-/*====================================================================
+/*
 * Test for BREAK and BEGIN/RECOVER sequence
 **/
 FUNCTION BREAK_( break_break )
@@ -217,7 +217,7 @@ end
 BREAK
 RETURN Break( bReak )
 
-/*====================================================================
+/*
 * Test for CASE/DO CASE
 */
 FUNCTION CASE( case_ )
@@ -276,7 +276,7 @@ case )
 
 RETURN case
 
-/*====================================================================
+/*
 * Test for DO CASE / DO WHILE / DO / WITH
 */
 FUNCTION DO_( do )
@@ -421,7 +421,7 @@ RETURN while
 FUNCTION With( with )
 RETURN with
 
-/*====================================================================
+/*
 * Test for END
 */
 FUNCTION END_(  )
@@ -481,7 +481,7 @@ RETURN end
 FUNCTION end( end )
 RETURN end * end
 
-/*====================================================================
+/*
 * Test for EXIT
 */
 EXIT FUNCTION EXIT( exit )
@@ -521,7 +521,7 @@ EXIT FUNCTION EXIT( exit )
 RETURN exit
 
 
-/*====================================================================
+/*
 * Test for EXTERNAL
 */
 FUNCTION EXTERN( extern )
@@ -553,7 +553,7 @@ EXTERNAL external
 
 RETURN extern
 
-/*====================================================================
+/*
 * Test for FIELD
 */
 FUNCTION _FIELD( _field )  //FIELD is reserved function name (FIELDNAME)
@@ -582,7 +582,7 @@ FIEL fiel
 RETURN field
 
 
-/*====================================================================
+/*
 * Test for FOR
 */
 FUNCTION FOR( for )
@@ -623,7 +623,7 @@ FUNCTION FOR( for )
 
 RETURN for
 
-/*====================================================================
+/*
 * Test for IN
 */
 FUNCTION IN( _in )
@@ -659,7 +659,7 @@ FIELD field IN field
 
 RETURN in
 
-/*====================================================================
+/*
 * Test for INCLUDE
 */
 FUNCTION include( include )
@@ -687,7 +687,7 @@ FUNCTION include( include )
 
 RETURN include
 
-/*====================================================================
+/*
 * Test for INIT
 */
 INIT fUNCTION Init( init )
@@ -716,7 +716,7 @@ INIT fUNCTION Init( init )
 RETURN init
 
 
-/*====================================================================
+/*
 * Test for LOCAL
 */
 FUNCTION local( _local )
@@ -744,7 +744,7 @@ LOCAL local
 
 RETURN local
 
-/*====================================================================
+/*
 * Test for LOOP
 */
 FUNCTION loop( loop )
@@ -798,7 +798,7 @@ FUNCTION loop( loop )
 RETURN loop
 
 
-/*====================================================================
+/*
 * Test for USING
 */
 FUNCTION using
@@ -826,7 +826,7 @@ PRIVATE &using
 RETURN using
 
 
-/*====================================================================
+/*
 * Test for STATIC
 */
 FUNCTION STATIC
@@ -866,7 +866,7 @@ PRIVATE &STATIC
 RETURN static
 
 
-/*====================================================================
+/*
 * Test for RETURN
 */
 FUNCTION RETURN
@@ -924,7 +924,7 @@ PRIVATE &return
 RETURN( return ) + 2
 
 
-/*====================================================================
+/*
 * Test for RECOVER
 */
 FUNCTION RECOVER
@@ -971,7 +971,7 @@ PRIVATE &RECOVER
 RETURN( RECOVER ) +2
 
 
-/*====================================================================
+/*
 * Test for OTHERWISE
 */
 FUNCTION OTHERWISE

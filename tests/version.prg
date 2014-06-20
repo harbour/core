@@ -1,4 +1,4 @@
-/* Donated to the public domain by David G. Holm <dholm@jsd-llc.com>. */
+/* Donated to the public domain by David G. Holm <dholm@jsd-llc.com> */
 
 #ifndef __HARBOUR__
 #include "clipper.ch"

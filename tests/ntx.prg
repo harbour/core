@@ -23,7 +23,7 @@ PROCEDURE Main()
       dbSkip()
    ENDDO
 
-   ? "------------"
+   ? "---"
    Inkey( 0 )
    dbSkip( -1 )
 
@@ -42,7 +42,7 @@ PROCEDURE Main()
       dbSkip()
    ENDDO
 
-   ? "------------"
+   ? "---"
    Inkey( 0 )
    dbSkip( -1 )
 
@@ -61,7 +61,7 @@ PROCEDURE Main()
       dbSkip()
    ENDDO
 
-   ? "------------"
+   ? "---"
    Inkey( 0 )
    dbSkip( -1 )
 

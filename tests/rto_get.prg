@@ -1233,7 +1233,7 @@ STATIC PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:SetFocus )
    SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:SetFocus )
 
-   /* ----------------------------------------------- */
+   /* --- */
 
    s_cTest := "Non-Focus Assign as function call To N: " + XToStr( xVar )
 
@@ -1643,7 +1643,7 @@ STATIC PROCEDURE LogGETVars( o, desc, xResult )
    desc := s_cTest + " " + XToStr( desc )
 
    FWrite( s_fhnd, cStack + "  " + desc + hb_eol() )
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
    FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar      ) + hb_eol() )
    FWrite( s_fhnd, "   xResult       " + XToStr( xResult     ) + hb_eol() )
    FWrite( s_fhnd, "   Row()         " + XToStr( Row()       ) + hb_eol() )
@@ -1694,7 +1694,7 @@ STATIC PROCEDURE LogGETVars( o, desc, xResult )
          ENDIF
       NEXT
    ENDIF
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
 
    RETURN
 

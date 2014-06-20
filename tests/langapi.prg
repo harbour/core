@@ -12,27 +12,27 @@ PROCEDURE Main()
    ? NationMsg( 1 )
    ? CMonth( Date() )
    ? CDoW( Date() )
-   ? "---------"
+   ? "---"
 
    ? "Prev:", hb_langSelect( "hu" )
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )
    ? CDoW( Date() )
-   ? "---------"
+   ? "---"
 
    ? "Prev:", hb_langSelect( "ko" )
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )
    ? CDoW( Date() )
-   ? "---------"
+   ? "---"
 
    ? "Prev:", hb_langSelect( "NOTHERE" )
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )
    ? CDoW( Date() )
-   ? "---------"
+   ? "---"
 
    RETURN

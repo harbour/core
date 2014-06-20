@@ -21,3 +21,5 @@ _tmplate.prg
 # on the Harbour website
 -runflag=-format=html
 -runflag=-output-single
+
+{allgcc}-ldflag=-fno-lto

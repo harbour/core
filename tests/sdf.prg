@@ -13,7 +13,7 @@ PROCEDURE Main()
    // Copy all records and fields.
    COPY TO test1.txt SDF
 
-   // Copy only address fields for records with salary over 50,000.
+   // Copy only address fields for records with salary over 50000.
    COPY FIELD first, last, street, city, state, zip TO test2.txt SDF FOR _field->salary > 50000
 
    // Only copy record 3.
@@ -25,7 +25,7 @@ PROCEDURE Main()
    // Try to copy 10 records, starting 5 records from EOF, using WHILE
    dbGoBottom()
    dbSkip( -4 )
-   COPY WHILE ncount++ < 9 TO test4a.txt SDF
+   COPY WHILE nCount++ < 9 TO test4a.txt SDF
 
    // Copy the last 10 records.
    dbGoBottom()

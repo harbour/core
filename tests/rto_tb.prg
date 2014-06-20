@@ -442,7 +442,7 @@ STATIC PROCEDURE LogTBRVars( o, desc, xResult )
    desc := s_cTest + " " + XToStr( desc )
 
    FWrite( s_fhnd, cStack + "  " + desc + hb_eol() )
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
    FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar          ) + hb_eol() )
    FWrite( s_fhnd, "   xResult       " + XToStr( xResult         ) + hb_eol() )
    FWrite( s_fhnd, "   Row()         " + XToStr( Row()           ) + hb_eol() )
@@ -513,7 +513,7 @@ STATIC PROCEDURE LogTBRVars( o, desc, xResult )
          FWrite( s_fhnd, "      Col:          " + XToStr( col             ) + hb_eol() )
       ENDIF
    NEXT
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
 
    RETURN
 
@@ -537,7 +537,7 @@ STATIC PROCEDURE LogTBCVars( o, desc, xResult )
    desc := s_cTest + " " + XToStr( desc )
 
    FWrite( s_fhnd, cStack + "  " + desc + hb_eol() )
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
    FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar        ) + hb_eol() )
    FWrite( s_fhnd, "   xResult       " + XToStr( xResult       ) + hb_eol() )
    IF ValType( o ) == "O"
@@ -572,7 +572,7 @@ STATIC PROCEDURE LogTBCVars( o, desc, xResult )
    ELSE
       FWrite( s_fhnd, "   o             " + XToStr( o ) + hb_eol() )
    ENDIF
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
 
    RETURN
 

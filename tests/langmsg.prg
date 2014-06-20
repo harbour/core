@@ -39,7 +39,7 @@ PROCEDURE Main( cLng )
    Inkey( 0 )
 
    ? "Errors:"
-   ? "-------"
+   ?
    a := GET_ERR()
    FOR i := 1 TO Len( a )
       ? PadR( a[ i ][ 1 ], 15 ) + "|" + PadR( aErr[ i ][ 2 ], 30 ) + "|" + PadR( a[ i ][ 2 ], 32 )
@@ -48,7 +48,7 @@ PROCEDURE Main( cLng )
    Inkey( 0 )
 
    ? "Internal errors:"
-   ? "----------------"
+   ?
    a := GET_IERR()
    FOR i := 1 TO Len( a )
       ? PadR( a[ i ][ 1 ], 15 ) + "|" + PadR( aInt[ i ][ 2 ], 30 ) + "|" + PadR( a[ i ][ 2 ], 32 )
@@ -57,7 +57,7 @@ PROCEDURE Main( cLng )
    Inkey( 0 )
 
    ? "Days:"
-   ? "-----"
+   ?
    a := GET_DAYS()
    FOR i := 1 TO Len( a )
       ? "  " + PadR( aDay[ i ], 15 ) + a[ i ]
@@ -66,7 +66,7 @@ PROCEDURE Main( cLng )
    Inkey( 0 )
 
    ? "Months:"
-   ? "-------"
+   ?
    a := GET_MONTHS()
    FOR i := 1 TO Len( a )
       ? "  " + PadR( aMnt[ i ], 15 ) + a[ i ]
