@@ -4,10 +4,8 @@
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
  * gtwvw checkbox/progressbar  functions
  * GTWVW is initially created based on:
- *
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
- * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
@@ -19,16 +17,8 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_wvw_Tone()
- *
- * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

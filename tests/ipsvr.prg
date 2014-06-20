@@ -64,25 +64,24 @@ STATIC PROCEDURE process( hSocket )
          cBuf := Space( 4096 )
          IF ( nLen := hb_socketRecv( hSocket, @cBuf,,, 10000 ) ) > 0  /* Timeout */
             cRequest += hb_BLeft( cBuf, nLen )
-         ELSE
-            IF nLen == -1 .AND. hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
-               nLen := 0
-            ENDIF
+         ELSEIF nLen == -1 .AND. hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
+            nLen := 0
          ENDIF
       ENDDO
 
-      IF nLen == -1
+      DO CASE
+      CASE nLen == -1
          ? "recv() error:", hb_socketGetError()
-      ELSEIF nLen == 0
+      CASE nLen == 0
          ? "connection closed"
          EXIT
-      ELSE
+      OTHERWISE
          ? cRequest
          IF "quit" $ cRequest
             ? "exit"
             EXIT
          ENDIF
-      ENDIF
+      ENDCASE
    ENDDO
 
    ? "close socket"

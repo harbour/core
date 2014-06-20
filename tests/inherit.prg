@@ -122,17 +122,8 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
    RETURN self
 
-METHOD RUN( xTxt, lCRLF ) CLASS TTextFile
-
-   LOCAL xRet
-
-   IF ::cMode == "R"
-      xRet := ::Read()
-   ELSE
-      xRet := ::WriteLn( xTxt, lCRLF )
-   ENDIF
-
-   RETURN xRet
+METHOD Run( xTxt, lCRLF ) CLASS TTextFile
+   RETURN iif( ::cMode == "R", ::Read(), ::WriteLn( xTxt, lCRLF ) )
 
 // Close the file handle
 METHOD Dispose() CLASS TTextFile

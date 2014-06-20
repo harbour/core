@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem for Windows compilers ver.2
  * Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
@@ -11,9 +10,6 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     (with 2004 work on Readkey)
  *
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
  * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
  *    hb_gt_win_CtrlHandler()
  *    hb_gt_win_SetCloseButton()
@@ -22,10 +18,6 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
  *    hb_gt_ReadKey()
- *
- * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

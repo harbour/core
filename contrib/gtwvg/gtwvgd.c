@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
@@ -13,17 +12,14 @@
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *    Adopted to new GT API
- *
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
- *
- * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
+ * Copyright 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
+ *         Standard xplatform GT Info system,
+ *         Graphical object system and event system.
+ *         GTINFO() And GTO_* implementation.
+ * Copyright 2004 Mauricio Abre <maurifull@datafull.com>
+ *         Cross-GT, multiplatform Graphics API
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,18 +59,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * Individual authors:
- * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
- *         Standard xplatform GT Info system,
- *         Graphical object system and event system.
- *         GTINFO() And GTO_* implementation.
- *
- * (C) 2004 Mauricio Abre <maurifull@datafull.com>
- *         Cross-GT, multiplatform Graphics API
  *
  */
 

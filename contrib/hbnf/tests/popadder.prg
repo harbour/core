@@ -9,10 +9,10 @@ PROCEDURE Main()
    LOCAL nVacaHrs := 0
    LOCAL GetList  := {}
 
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
    CLS
 
-   SetKey( K_ALT_A, {|| ft_Adder() } )      // Make <ALT-A> call FT_Adder
+   SetKey( K_ALT_A, {|| ft_Adder() } )  // Make <ALT-A> call ft_Adder()
 
    // Simple sample of program data entry!
 
@@ -34,6 +34,6 @@ PROCEDURE Main()
       ENDIF
    ENDDO
 
-   SET KEY K_ALT_A                     // Reset <ALT-A>
+   SetKey( K_ALT_A, NIL )  // Reset <ALT-A>
 
    RETURN

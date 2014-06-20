@@ -57,20 +57,24 @@ PROCEDURE Main()
 
    oBlat:cFrom                   := "from@example.com"
    oBlat:cTo                     := "to@example.com"
-// oBlat:cUserAUTH               := "myaccount@example.com"
-// oBlat:cPasswordAUTH           := "mypassword"
-// oBlat:cHostname               := "mail.example.com"
-// oBlat:cCC                     := "cc@example.com"
-// oBlat:cCCFile                 := "f_cc.txt"
-// oBlat:cBCC                    := "bcc@example.com"
-// oBlat:cBCCFile                := "f_bcc.txt"
-// oBlat:cBodyFile               := "c.bin"
+#if 0
+   oBlat:cUserAUTH               := "myaccount@example.com"
+   oBlat:cPasswordAUTH           := "mypassword"
+   oBlat:cHostname               := "mail.example.com"
+   oBlat:cCC                     := "cc@example.com"
+   oBlat:cCCFile                 := "f_cc.txt"
+   oBlat:cBCC                    := "bcc@example.com"
+   oBlat:cBCCFile                := "f_bcc.txt"
+   oBlat:cBodyFile               := "c.bin"
+#endif
    oBlat:cBody                   := e"Body part\n\rEnd Body"
    oBlat:cServerSMTP             := "smtp.example.com"
    oBlat:cSubject                := "Test from Blat"
-// oBlat:lSuppressSubject        := .T.
-// oBlat:cSubjectFile            := "f_subjct.txt"
-// oBlat:lToUndiscloseRecipients := .T.
+#if 0
+   oBlat:lSuppressSubject        := .T.
+   oBlat:cSubjectFile            := "f_subjct.txt"
+   oBlat:lToUndiscloseRecipients := .T.
+#endif
    oBlat:cPostScriptumFile       := "f_ps.txt"
    oBlat:lRequestDisposition     := .T.     // does not work?
    oBlat:lRequestReturnReceipt   := .T.
@@ -83,7 +87,9 @@ PROCEDURE Main()
    oBlat:lLogTimestamp           := .T.
    oBlat:lDebug                  := .T.
    oBlat:lLogOverwrite           := .T.
-// oBlat:lSuperDebug             := .T.     // This display internal checking
+#if 0
+   oBlat:lSuperDebug             := .T.     // This display internal checking
+#endif
 
 #if 0
    ? "Checking options..."

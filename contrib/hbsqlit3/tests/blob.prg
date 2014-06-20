@@ -85,7 +85,7 @@ PROCEDURE Main()
       ?
       sqlite3_sleep( 3000 )
 
-      blob := sqlite3_blob_open( db, NIL, "image", "image", sqlite3_last_insert_rowid( db ), 0 /* 0 - RO; 1- RW */ )
+      blob := sqlite3_blob_open( db, , "image", "image", sqlite3_last_insert_rowid( db ), 0 /* 0 - RO; 1- RW */ )
       IF ! Empty( blob )
          ? "Open BLOB image - Ok"
 

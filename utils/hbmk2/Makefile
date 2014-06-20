@@ -33,4 +33,5 @@ include $(TOP)$(ROOT)config/bin.mk
 
 ifneq ($(filter $(HB_COMPILER),mingw mingw64 gcc clang),)
    HB_USER_CFLAGS := $(filter-out -flto,$(HB_USER_CFLAGS))
+   HB_LDFLAGS += -fno-lto
 endif

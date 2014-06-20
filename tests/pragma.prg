@@ -10,21 +10,13 @@
 PROCEDURE Main()
 
 #pragma Shortcut=On
-
 #pragma Shortcut= Off
-
 #pragma Shortcut = On
-
 #pragma Shortcut(OFF)
-
 #pragma Shortcut( On)
-
 #pragma Shortcut( OFF )
-
 #pragma Shortcut( On )
-
 #pragma Shortcut( OFF )
-
 #pragma Shortcut( ON
 
    /* or #pragma /Z+ */

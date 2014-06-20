@@ -17,7 +17,7 @@ PROCEDURE Main()
 
    REQUEST DBFCDX
 
-   dbCreate( "testdbf", aStruct, "DBFCDX", .T., "MYALIAS" )
+   dbCreate( "testdbf.dbf", aStruct, "DBFCDX", .T., "MYALIAS" )
 
    ? "[" + MYALIAS->MEMO1 + "]"
    ? "[" + MYALIAS->MEMO2 + "]"
@@ -74,8 +74,9 @@ PROCEDURE Main()
    ? "[" + Str( MYALIAS->NUMERIC ) + "]"
    WAIT
    dbCloseAll()
+   hb_dbDrop( "testdbf.dbf",, "DBFCDX" )
 
-   dbCreate( "testdbf", aStruct, , .T., "MYALIAS" )
+   dbCreate( "testdbf.dbf", aStruct, , .T., "MYALIAS" )
 
    FOR nI := 1 TO 10
       MYALIAS->( dbAppend() )
@@ -98,7 +99,7 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   SET DELETED ON
+   Set( _SET_DELETED, .T. )
    ?
    ? "With SET DELETED ON"
    WAIT
@@ -122,7 +123,7 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   SET DELETED OFF
+   Set( _SET_DELETED, .F. )
    ?
    ? "With SET DELETED OFF"
    ? "and  SET FILTER TO MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8"
@@ -160,7 +161,7 @@ PROCEDURE Main()
 
    ? "Open test.dbf and LOCATE FOR TESTDBF->SALARY > 145000"
    WAIT
-   dbUseArea( , , "test", "TESTDBF" )
+   dbUseArea( , , "test.dbf", "TESTDBF" )
    LOCATE for TESTDBF->SALARY > 145000
    DO WHILE TESTDBF->( Found() )
       ? TESTDBF->FIRST, TESTDBF->LAST, TESTDBF->SALARY
@@ -169,7 +170,7 @@ PROCEDURE Main()
    ?
    ? "LOCATE FOR TESTDBF->MARRIED .AND. TESTDBF->FIRST > 'S'"
    WAIT
-   dbUseArea( , , "test", "TESTDBF" )
+   dbUseArea( , , "test.dbf", "TESTDBF" )
    LOCATE for TESTDBF->MARRIED .AND. TESTDBF->FIRST > 'S'
    DO WHILE TESTDBF->( Found() )
       ? TESTDBF->FIRST, TESTDBF->LAST, TESTDBF->MARRIED
@@ -177,6 +178,6 @@ PROCEDURE Main()
    ENDDO
 
    dbCloseAll()
-   hb_dbDrop( "testdbf",, "DBFCDX" )
+   hb_dbDrop( "testdbf.dbf" )
 
    RETURN

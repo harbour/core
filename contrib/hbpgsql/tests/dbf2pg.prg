@@ -76,7 +76,7 @@ PROCEDURE Main()
    LOCAL cPath := "public"
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET DELETED ON
+   Set( _SET_DELETED, .T. )
 
    /* Scan parameters and setup workings */
    FOR i := 1 TO PCount()
@@ -114,7 +114,7 @@ PROCEDURE Main()
 
    USE ( cFile ) SHARED READONLY
 
-   oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassword, NIL, cPath )
+   oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassword, , cPath )
    IF oServer:NetErr()
       ? oServer:ErrorMsg()
       RETURN

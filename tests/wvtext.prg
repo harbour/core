@@ -36,7 +36,7 @@ PROCEDURE Main()
 
    AFill( aKeys, 0 )
 
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
 
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
    hb_gtInfo( HB_GTI_FONTWIDTH, nWidth  )

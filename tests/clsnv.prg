@@ -26,25 +26,26 @@ PROCEDURE Main()
    RETURN
 
 CREATE CLASS myclass1
-   hidden:
-   var a init "(a1)"
 
-   class var b init "(b1)"
+   HIDDEN:
+   VAR a INIT "(a1)"
 
-   METHOD x
-   protected:
-   var c init "(c1)"
-   class var d init "(d1)"
-   METHOD y
-   exported:
-   var e init "(e1)"
-   class var f init "(f1)"
-   METHOD z
-   METHOD m1
+   CLASS VAR b INIT "(b1)"
+
+   METHOD x()
+   PROTECTED:
+   VAR c INIT "(c1)"
+   CLASS VAR d INIT "(d1)"
+   METHOD y()
+   EXPORTED:
+   VAR e INIT "(e1)"
+   CLASS VAR f INIT "(f1)"
+   METHOD z()
+   METHOD m1()
 
 ENDCLASS
 
-METHOD m1
+METHOD m1()
 
    ? "Method: MYCLASS1:M1()"
    ? "   a =>", ::a, ",  should be: (a1)"
@@ -62,7 +63,7 @@ METHOD m1
 
    RETURN self
 
-METHOD x
+METHOD x()
 
    ? "   Method: MYCLASS1:X()"
    ? "      a =>", ::a, ",  should be: (a1)"
@@ -74,7 +75,7 @@ METHOD x
 
    RETURN self
 
-METHOD y
+METHOD y()
 
    ? "   Method: MYCLASS1:Y()"
    ? "      a =>", ::a, ",  should be: (a1)"
@@ -86,7 +87,7 @@ METHOD y
 
    RETURN self
 
-METHOD z
+METHOD z()
 
    ? "   Method: MYCLASS1:Z()"
    ? "      a =>", ::a, ",  should be: (a1)"
@@ -98,26 +99,27 @@ METHOD z
 
    RETURN self
 
-   CREATE CLASS myclass2
-   hidden:
-   var a init "(a2)"
+CREATE CLASS myclass2
 
-CLASS var b init "(b2)"
+   HIDDEN:
+   VAR a INIT "(a2)"
 
-   METHOD x
-   protected:
-   var c init "(c2)"
-   CLASS var d init "(d2)"
-   METHOD y
-   exported:
-   var e init "(e2)"
-   CLASS var f init "(f2)"
-   METHOD z
-   METHOD m2
+   CLASS VAR b INIT "(b2)"
+
+   METHOD x()
+   PROTECTED:
+   VAR c INIT "(c2)"
+   CLASS VAR d INIT "(d2)"
+   METHOD y()
+   EXPORTED:
+   VAR e INIT "(e2)"
+   CLASS VAR f INIT "(f2)"
+   METHOD z()
+   METHOD m2()
 
 ENDCLASS
 
-METHOD m2
+METHOD m2()
 
    ? "Method: MYCLASS2:M2()"
    ? "   a =>", ::a, ",  should be: (a2)"
@@ -135,7 +137,7 @@ METHOD m2
 
    RETURN self
 
-METHOD x
+METHOD x()
 
    ? "   Method: MYCLASS2:X()"
    ? "      a =>", ::a, ",  should be: (a2)"
@@ -147,7 +149,7 @@ METHOD x
 
    RETURN self
 
-METHOD y
+METHOD y()
 
    ? "   Method: MYCLASS2:Y()"
    ? "      a =>", ::a, ",  should be: (a2)"
@@ -159,7 +161,7 @@ METHOD y
 
    RETURN self
 
-METHOD z
+METHOD z()
 
    ? "   Method: MYCLASS2:Z()"
    ? "      a =>", ::a, ",  should be: (a2)"
@@ -172,25 +174,26 @@ METHOD z
    RETURN self
 
 CREATE CLASS myclass3 FROM myclass1, myclass2
-   hidden:
-   var a init "(a3)"
 
-   class var b init "(b3)"
+   HIDDEN:
+   VAR a INIT "(a3)"
 
-   METHOD x
-   protected:
-   var c init "(c3)"
-   class var d init "(d3)"
-   METHOD y
-   exported:
-   var e init "(e3)"
-   class var f init "(f3)"
-   METHOD z
-   METHOD m3
+   CLASS VAR b INIT "(b3)"
+
+   METHOD x()
+   PROTECTED:
+   VAR c INIT "(c3)"
+   CLASS VAR d INIT "(d3)"
+   METHOD y()
+   EXPORTED:
+   VAR e INIT "(e3)"
+   CLASS VAR f INIT "(f3)"
+   METHOD z()
+   METHOD m3()
 
 ENDCLASS
 
-METHOD m3
+METHOD m3()
 
    ? "Method: MYCLASS3:M3()"
    ? "   a =>", ::a, ",  should be: (a3)"
@@ -208,7 +211,7 @@ METHOD m3
 
    RETURN self
 
-METHOD x
+METHOD x()
 
    ? "   Method: MYCLASS3:X()"
    ? "      a =>", ::a, ",  should be: (a3)"
@@ -220,7 +223,7 @@ METHOD x
 
    RETURN self
 
-METHOD y
+METHOD y()
 
    ? "   Method: MYCLASS3:Y()"
    ? "      a =>", ::a, ",  should be: (a3)"
@@ -232,7 +235,7 @@ METHOD y
 
    RETURN self
 
-METHOD z
+METHOD z()
 
    ? "   Method: MYCLASS3:Z()"
    ? "      a =>", ::a, ",  should be: (a3)"

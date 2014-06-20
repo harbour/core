@@ -19,11 +19,11 @@ PROCEDURE Main()
 
    FIELD last, first
 
-   IF ! hb_dbExists( "tbnames" )
+   IF ! hb_dbExists( "tbnames.dbf" )
       make_dbf()
    ENDIF
 
-   USE tbnames
+   USE tbnames.dbf
 
    IF ! hb_dbExists( "tbnames.ntx" )
       INDEX ON FIELD->LAST + FIELD->FIRST TO tbnames.ntx
@@ -67,7 +67,7 @@ PROCEDURE Main()
    ?
 
    USE
-   hb_dbDrop( "tbnames" )
+   hb_dbDrop( "tbnames.dbf" )
    hb_dbDrop( "tbnames.ntx" )
 
    WAIT

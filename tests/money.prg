@@ -1,9 +1,6 @@
-//
 // Sample class Money with overloading of arythmetical operations
 //
 // Written by Pavel Tsarenko <tpe2 at mail.ru>
-// www - http://harbour-project.org
-//
 
 #include "error.ch"
 #include "hbclass.ch"

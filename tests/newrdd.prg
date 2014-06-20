@@ -14,10 +14,10 @@ PROCEDURE Main()
 
    rddSetDefault( "DBF" )
 
-   SET EXCLUSIVE OFF
+   Set( _SET_EXCLUSIVE, .F. )
    CLS
 
-   dbUseArea( .T., "DBF", "test", "TESTDBF", .T., .F. )
+   dbUseArea( .T., "DBF", "test.dbf", "TESTDBF", .T., .F. )
    ? "RecCount:", TESTDBF->( RecCount() )
    ? "Used:", TESTDBF->( Used() )
    ? "Select:", TESTDBF->( Select() )
@@ -210,7 +210,7 @@ PROCEDURE Main()
    WAIT
    CLS
 
-   ? 'dbCreate( "newrdd", { ;'
+   ? 'dbCreate( "newrdd.dbf", { ;'
    ? '   { "First_Name", "C", 20, 0 }, ;'
    ? '   { "Age",        "N",  3, 0 }, ;'
    ? '   { "Date",       "D",  8, 0 }, ;'
@@ -218,7 +218,7 @@ PROCEDURE Main()
    ? '   { "Memo",       "M", 10, 0 }, ;'
    ? '   { "Student",    "L",  1, 0 } },, .T., "newrdd" )'
    ? 'SET CENTURY ON'
-   dbCreate( "newrdd", { ;
+   dbCreate( "newrdd.dbf", { ;
       { "First_Name", "C", 20, 0 }, ;
       { "Age",        "N",  3, 0 }, ;
       { "Date",       "D",  8, 0 }, ;
@@ -303,13 +303,13 @@ PROCEDURE Main()
    CLS
 
    ? 'NEWRDD->( dbCloseArea() )'
-   ? 'dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )'
+   ? 'dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )'
    ? 'nI := 1'
    ? 'NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )'
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ?
    NEWRDD->( dbCloseArea() )
-   dbUseArea( .T., "DBFCDX", "newrdd", "NEWRDD", .F., .F. )
+   dbUseArea( .T., "DBFCDX", "newrdd.dbf", "NEWRDD", .F., .F. )
 
    WAIT
    CLS
@@ -334,7 +334,7 @@ PROCEDURE Main()
 
    ? 'NEWRDD->( dbCloseArea() )'
    ? 'SORT ON FIRST /DC, AGE /D TO NEWRDD'
-   ? 'dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )'
+   ? 'dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )'
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ? 'FOR nI := 1 TO 8'
    ? '   ? NEWRDD->FIRST, NEWRDD->AGE'
@@ -355,7 +355,7 @@ PROCEDURE Main()
    Select( "TESTDBF" )
    SORT ON FIRST /DC, AGE /D TO newrdd
 
-   dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )
+   dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )
    ? "RecCount:", NEWRDD->( RecCount() )
    FOR nI := 1 TO 8
       ? NEWRDD->FIRST, NEWRDD->AGE
@@ -371,6 +371,6 @@ PROCEDURE Main()
 
    dbCloseAll()
 
-   hb_dbDrop( "newrdd",, "DBFCDX" )
+   hb_dbDrop( "newrdd.dbf",, "DBFCDX" )
 
    RETURN

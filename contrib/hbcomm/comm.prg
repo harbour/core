@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * HBCOMM compatibility library. EXPERIMENTAL CODE. USE AT YOUR OWN RISK. NO GUARANTEES.
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,7 +102,7 @@ FUNCTION INCHR( nPort, nCount, /* @ */ cData )
 
    hb_default( @nCount, 0 )
 
-   cData := Space( nCount )
+   cData := Replicate( Chr( 0 ), nCount )
 
    RETURN hb_comRecv( nPort, @cData, nCount )
 

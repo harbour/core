@@ -13,10 +13,10 @@ PROCEDURE Main()
       { "LOGICAL",   "L",  1, 0 } }
 
    CLS
-   dbUseArea( .T., "DBFCDX", "test", "TESTDBF", .T., .F. )
-   dbCreate( "testcdx", aStruct, "DBFCDX", .T., "TESTCDX" )
+   dbUseArea( .T., "DBFCDX", "test.dbf", "TESTDBF", .T., .F. )
+   dbCreate( "testcdx.dbf", aStruct, "DBFCDX", .T., "TESTCDX" )
 
-   ? "RddName:", rddName()
+   ? "rddName():", rddName()
    WAIT
    Select( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 140000
@@ -48,6 +48,6 @@ PROCEDURE Main()
    ordCreate( "testcdx", "Character", "FIELD->CHARACTER", {|| FIELD->CHARACTER }, .F. )
 
    dbCloseAll()
-   hb_dbDrop( "testcdx",, "DBFCDX" )
+   hb_dbDrop( "testcdx.dbf",, "DBFCDX" )
 
    RETURN

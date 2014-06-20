@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * UUID definitions (for watcom)
  *
  * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2011 Andi Jahja <andi.jahja yahoo.co.id>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -449,10 +449,10 @@ FUNCTION __i18n_potArrayToHash( aTrans, lEmpty, hI18N )
    FOR EACH aItem IN aTrans
       IF lEmpty .OR. ! Empty( aItem[ _I18N_MSGSTR, 1 ] )
          cContext := aItem[ _I18N_CONTEXT ]
-         IF ! cContext $ hTrans
-            hTrans[ cContext ] := hContext := { => }
-         ELSE
+         IF cContext $ hTrans
             hContext := hTrans[ cContext ]
+         ELSE
+            hTrans[ cContext ] := hContext := { => }
          ENDIF
          IF Empty( aItem[ _I18N_MSGSTR, 1 ] )
             IF ! aItem[ _I18N_MSGID, 1 ] $ hContext
@@ -506,9 +506,7 @@ FUNCTION __i18n_hashJoin( hTrans, hTrans2 )
 
    hContext := hTrans[ "CONTEXT" ]
    FOR EACH hCtx in hTrans2[ "CONTEXT" ]
-      IF ! hCtx:__enumKey() $ hContext
-         hContext[ hCtx:__enumKey() ] := hb_HClone( hCtx )
-      ELSE
+      IF hCtx:__enumKey() $ hContext
          hDstCtx := hContext[ hCtx:__enumKey() ]
          FOR EACH xTrans IN hCtx
             IF ! Empty( xTrans ) .AND. ;
@@ -518,6 +516,8 @@ FUNCTION __i18n_hashJoin( hTrans, hTrans2 )
                   AClone( xTrans ), xTrans )
             ENDIF
          NEXT
+      ELSE
+         hContext[ hCtx:__enumKey() ] := hb_HClone( hCtx )
       ENDIF
    NEXT
 
@@ -538,10 +538,7 @@ FUNCTION __i18n_potArrayJoin( aTrans, aTrans2, hIndex )
 
    FOR EACH aItem in aTrans2
       ctx := aItem[ _I18N_CONTEXT ] + _I18N_DELIM + aItem[ _I18N_MSGID, 1 ]
-      IF ! ctx $ hIndex
-         AAdd( aTrans, AClone( aItem ) )
-         hIndex[ ctx ] := Len( aTrans )
-      ELSE
+      IF ctx $ hIndex
          aDest := aTrans[ hIndex[ ctx ] ]
          IF aItem[ _I18N_PLURAL ]
             aDest[ _I18N_PLURAL ] := .T.
@@ -564,6 +561,9 @@ FUNCTION __i18n_potArrayJoin( aTrans, aTrans2, hIndex )
             Empty( aDest[ _I18N_MSGSTR, 1 ] ) ) )
             aDest[ _I18N_MSGSTR ] := AClone( aItem[ _I18N_MSGSTR ] )
          ENDIF
+      ELSE
+         AAdd( aTrans, AClone( aItem ) )
+         hIndex[ ctx ] := Len( aTrans )
       ENDIF
    NEXT
 

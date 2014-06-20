@@ -1,10 +1,8 @@
 #!/usr/bin/hbmk2
 /*
- * Harbour Project source code:
  * Manage translations and automatic doc generation
  *
  * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

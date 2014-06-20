@@ -7,8 +7,7 @@ STATIC uTwo
 
 PROCEDURE Main()
 
-   ? "Statics overlapped!"
-   ? "==================="
+   ? "--- Statics overlapped! ---"
    ?
    ? "INSIDE", __FILE__
    ? "   STATIC uOne, uTwo"

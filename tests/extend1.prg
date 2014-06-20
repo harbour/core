@@ -12,7 +12,6 @@ PROCEDURE Main()
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    ? "Testing Harbour Extended system:"
-   ? "================================"
    ?
    ?
    ?
@@ -39,7 +38,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Strings:"
-   ? "========"
    ?
    ? '  _parc() and _retc() with Strings1( "Hello" ) =>', Strings1( "Hello" )
    ? '  _parc() and _retc() with Strings2( { "Hello" } ) =>', Strings2( { "Hello" } )
@@ -72,7 +70,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Logicals:"
-   ? "========="
    ?
    ? '  _parl() and _retl() with Logical1( .T. ) =>', Logical1( .T. )
    ? '  _parl() and _parl() with Logical2( { .T. } ) =>', Logical2( { .T. } )
@@ -103,7 +100,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Dates: (SET CENTURY ON)"
-   ? "======================="
    ?
    ? '  _pards() and _retds() with Date1( CToD( "2000-01-01" ) ) =>', Date1( CToD( "2000-01-01" ) )
    ? '  _pards() and retds() with Date2( { CToD( "2000-01-01" ) } ) =>', Date2( { CToD( "2000-01-01" ) } )
@@ -134,7 +130,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Numbers:"
-   ? "========"
    ?
    ? '  _parni() and _retni() with Int1( 1 ) =>', Int1( 1 )
    ? '  _parni() and _retni() with Int2( { 1 } ) =>', Int2( { 1 } )
@@ -173,7 +168,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Nil:"
-   ? "===="
    ?
    ? '  _ret() with Nil1() =>', Nil1()
    ?
@@ -200,7 +194,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Arrays:"
-   ? "======="
    ?
    ? '  _reta() with Len( Arrays1( 100 ) ) =>', Len( Arrays1( 100 ) )
    ? '  _parinfa() with Arrays2( { 1, "a", .T. }, 0 ) =>', Arrays2( { 1, "a", .T. }, 0 )
@@ -227,7 +220,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Parameters info:"
-   ? "================"
    ?
    ? '  _pcount() with Params1( 1, "a", .T., 10 ) =>', Params1( 1, "a", .T., 10 )
    ? '  _parinfo() with Params2( 1, "a", .T., 0 ) =>', Params2( 1, "a", .T., 0 )
@@ -254,7 +246,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Undocumented features:"
-   ? "======================"
    ?
    ? '  _parc( -1, ...) with Undoc2() =>', Undoc2()
    ? '  _parclen( -1, ...) with Undoc3() =>', Undoc3()

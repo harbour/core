@@ -14,20 +14,20 @@ PROCEDURE Main()
    ? xdl_write_mmfile( pMMF, cFileCtx ), Len( cFileCtx )
    ? xdl_mmfile_size( pMMF )
 
-   ? xdl_read_mmfile( pMMF, NIL, _SIZE, @nSize )
+   ? xdl_read_mmfile( pMMF, , _SIZE, @nSize )
    ? nSize
 
    xdl_seek_mmfile( pMMF, 0 )
 
-   ? xdl_read_mmfile( pMMF, NIL, _SIZE, @nSize )
+   ? xdl_read_mmfile( pMMF, , _SIZE, @nSize )
    ? nSize
 
-   ? xdl_read_mmfile( pMMF, NIL, _SIZE, @nSize )
+   ? xdl_read_mmfile( pMMF, , _SIZE, @nSize )
    ? nSize
 
    xdl_seek_mmfile( pMMF, _SIZE )
 
-   ? xdl_read_mmfile( pMMF, NIL, _SIZE, @nSize )
+   ? xdl_read_mmfile( pMMF, , _SIZE, @nSize )
    ? nSize
 
    RETURN

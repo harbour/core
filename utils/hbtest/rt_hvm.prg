@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Regression tests for the runtime library (HVM)
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -385,7 +383,7 @@ PROCEDURE Main_HVM()
 
    /* =, == */
 
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    HBTEST "123" = "123  "                 IS .T.
    HBTEST " 123" = "123"                  IS .F.
    HBTEST "123" = "12345"                 IS .F.
@@ -396,7 +394,7 @@ PROCEDURE Main_HVM()
    HBTEST "Z" == "A"                      IS .F.
    HBTEST "A" == "A "                     IS .F.
    HBTEST "AA" == "A"                     IS .F.
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
    HBTEST "123" = "123  "                 IS .F.
    HBTEST " 123" = "123"                  IS .F.
    HBTEST "123" = "12345"                 IS .F.
@@ -428,7 +426,7 @@ PROCEDURE Main_HVM()
 
    /* != */
 
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    HBTEST "123" != "123  "                IS .F.
    HBTEST " 123" != "123"                 IS .T.
    HBTEST "123" != "12345"                IS .T.
@@ -439,7 +437,7 @@ PROCEDURE Main_HVM()
    HBTEST "Z" != "A"                      IS .T.
    HBTEST "A" != "A "                     IS .F.
    HBTEST "AA" != "A"                     IS .T.
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
    HBTEST "123" != "123  "                IS .T.
    HBTEST " 123" != "123"                 IS .T.
    HBTEST "123" != "12345"                IS .T.

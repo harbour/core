@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    ARRAY RDD example
+ * ARRAY RDD example
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,18 +50,16 @@ REQUEST ARRAYRDD
 
 PROCEDURE Main()
 
-   LOCAL aStruct
-
-   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET DELETED OFF
-   CLS
-
-   ? "Create a new dbf in memory using dbCreate() command"
-   aStruct := { ;
+   LOCAL aStruct := { ;
       { "NAME"     , "C", 40, 0 }, ;
       { "ADDRESS"  , "C", 40, 0 }, ;
       { "BIRTHDAY" , "D",  8, 0 }, ;
       { "AGE"      , "N",  3, 0 } }
+
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+   CLS
+
+   ? "Create a new dbf in memory using dbCreate() command"
 
 #ifndef USE_DBCREATE_EXTENSIONS
    ? "Create it"

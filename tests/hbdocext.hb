@@ -1,8 +1,6 @@
-/*
- * HBDOC extractor from source
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
+
+/* HBDOC extractor from source */
 
 #pragma -w3
 #pragma -km+

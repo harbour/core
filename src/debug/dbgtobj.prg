@@ -119,12 +119,15 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
 
    IF nSize < MaxRow() - 2
       IF HB_ISNUMERIC( nRow )
-         oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+         oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ;
+            ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
       ELSE
-         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ;
+            ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
       ENDIF
    ELSE
-      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ;
+         ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
    ENDIF
 
    ::nCurWindow++
@@ -155,7 +158,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
       ::ArrayReference[ ::ArrayIndex, 2 ], ;
       PadR( __dbgValToStr( __dbgObjGetValue( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
-   oBrwSets:Cargo := 1 // Actual highlighted row
+   oBrwSets:Cargo := 1  // Actual highlighted row
    oCol:ColorBlock := {|| { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
    oCol:width := MaxCol() - 14 - nMaxLen
    oBrwSets:colPos := 2
@@ -268,27 +271,28 @@ METHOD PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObjec
    CASE K_ENTER
 
       IF nSet == oBrwSets:Cargo
-         IF HB_ISARRAY( aArray[ nSet, 2 ] )
+         DO CASE
+         CASE HB_ISARRAY( aArray[ nSet, 2 ] )
             IF Len( aArray[ nSet, 2 ] ) > 0
                HBDbArray():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
             ENDIF
-         ELSEIF HB_ISHASH( aArray[ nSet, 2 ] )
+         CASE HB_ISHASH( aArray[ nSet, 2 ] )
             IF Len( aArray[ nSet, 2 ] ) > 0
                HBDbHash():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
             ENDIF
-         ELSEIF HB_ISOBJECT( aArray[ nSet, 2 ] )
+         CASE HB_ISOBJECT( aArray[ nSet, 2 ] )
             HBDbObject():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
-         ELSEIF ( HB_ISSTRING( aArray[ nSet, 2 ] ) .AND. ;
+         CASE ( HB_ISSTRING( aArray[ nSet, 2 ] ) .AND. ;
             ! aArray[ nSet, 3 ] ) .OR. ;
             HB_ISPOINTER( aArray[ nSet, 2 ] ) .OR. ;
             ! ::lEditable
             __dbgAlert( "Value cannot be edited" )
-         ELSE
+         OTHERWISE
             oBrwSets:RefreshCurrent()
             ::doGet( oBrwSets, ::arrayReference, nSet )
             oBrwSets:RefreshCurrent()
             oBrwSets:ForceStable()
-         ENDIF
+         ENDCASE
       ENDIF
       EXIT
 

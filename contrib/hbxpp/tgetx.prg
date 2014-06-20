@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Get Class (Xbase++ compatible)
  *
  * Copyright 2007-2009 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

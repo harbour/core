@@ -4,10 +4,8 @@
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
  *
  * GTWVW is initially created based on:
- *
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
- * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
@@ -19,16 +17,21 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_wvw_Tone()
  *
- * See COPYING.txt for licensing terms.
+ * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
+ *         Standard xplatform GT Info system,
+ *         Graphical object system and event system.
+ *         hb_gtInfo() And GTO_* implementation.
  *
- * www - http://harbour-project.org
+ * (C) 2004 Mauricio Abre <maurifull@datafull.com>
+ *         Cross-GT, multiplatform Graphics API
+ *
+ * (C) 2009 Cristiam Azambuja <cristiam@datacempro.com.br>
+ *          Marson de Paula <marson@datacempro.com.br>
+ *          Data Cempro Informatica (www.datacempro.com.br)
+ *          Refactoring for xHarbour 1.2.1
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,22 +72,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/*
- * Individual authors:
- * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
- *         Standard xplatform GT Info system,
- *         Graphical object system and event system.
- *         hb_gtInfo() And GTO_* implementation.
- *
- * (C) 2004 Mauricio Abre <maurifull@datafull.com>
- *         Cross-GT, multiplatform Graphics API
- *
- * (C) 2009 Cristiam Azambuja <cristiam@datacempro.com.br>
- *          Marson de Paula <marson@datacempro.com.br>
- *          Data Cempro Informatica (www.datacempro.com.br)
- *          Refactoring for xHarbour 1.2.1
  */
 
 #include "hbgtwvw.h"

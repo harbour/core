@@ -79,7 +79,7 @@ HB_FUNC( FT_SETMODE )
    {
       union REGS regs;
       regs.h.ah = 0;
-      regs.h.al = hb_parni( 1 );
+      regs.h.al = ( HB_U8 ) hb_parni( 1 );
       HB_DOS_INT86( 0x10, &regs, &regs );
    }
 #endif

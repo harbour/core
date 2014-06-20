@@ -4,11 +4,9 @@
 
 PROCEDURE Main()
 
-   LOCAL o
+   LOCAL o := Test()
 
    CLS
-
-   o := Test()
 
    // "Another" message is not defined for Class Test, but
    // it will invoke ON ERROR MyErrorManager() method
@@ -26,7 +24,7 @@ CREATE CLASS Test STATIC
 
 ENDCLASS
 
-METHOD MyErrorManager( uParam1 ) CLASS Test
+METHOD PROCEDURE MyErrorManager( uParam1 ) CLASS Test
 
    IF PCount() > 0
       Alert( uParam1 )
@@ -34,4 +32,4 @@ METHOD MyErrorManager( uParam1 ) CLASS Test
 
    Alert( __GetMessage() )  // Shows the message that was sent to the object
 
-   RETURN NIL
+   RETURN

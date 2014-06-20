@@ -56,7 +56,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   SET DECIMAL TO 14
+   Set( _SET_DECIMALS, 14 )
 
    ?? "Test of Numeric functions - part 1"
 

@@ -13,29 +13,22 @@ PROCEDURE Main()
 
    RETURN
 
+// In order to account for documented behavour, this call will ensure
+// that ADir() returns the same length array in both cases.
+// ie: ADir( cSpec ) could return a different length array than
+// ADir( cSpec, , , , , {} )
+
 STATIC PROCEDURE TestIt( cSpec )
 
-   LOCAL a
-   LOCAL a1
-   LOCAL a2
-   LOCAL a3
-   LOCAL a4
-   LOCAL a5
+   LOCAL a  := ADir( cSpec, , , , , {} )
 
-   // In order to account for documented behavour, this call will ensure
-   // that ADir() returns the same length array in both cases.
-   // ie: ADir( cSpec ) could return a different length array than
-   // ADir( cSpec, , , , , {} )
+   LOCAL a1 := Array( a )
+   LOCAL a2 := Array( a )
+   LOCAL a3 := Array( iif( a >= 1, a - 1, a ) )
+   LOCAL a4 := Array( a )
+   LOCAL a5 := Array( a + 1 )
 
-   a := ADir( cSpec, , , , , {} )
-
-   a1 := Array( a )
-   a2 := Array( a )
-   a3 := Array( iif( a >= 1, a - 1, a ) )
-   a4 := Array( a )
-   a5 := Array( a + 1 )
-
-   ? "--------------------------------------------------------"
+   ? "---"
 
    ADir( cSpec, a1, a2, a3, a4, a5 )
 
@@ -45,6 +38,6 @@ STATIC PROCEDURE TestIt( cSpec )
    AEval( a4, {| tmp | QOut( tmp ) } )
    AEval( a5, {| tmp | QOut( tmp ) } )
 
-   ADir( cSpec, 10, "A", NIL, NIL, NIL )
+   ADir( cSpec, 10, "A", , , )
 
    RETURN

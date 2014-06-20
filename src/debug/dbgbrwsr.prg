@@ -163,7 +163,7 @@ METHOD MoveCursor( nSkip ) CLASS HBDbBrowser
 
 METHOD ForceStable() CLASS HBDbBrowser
 
-   LOCAL nRow, nCol, xData, oCol, nColX, nWid, aClr, nClr
+   LOCAL nRow, xData, oCol, nColX, nWid, aClr, nClr
 
    IF ! ::lConfigured
       ::Configure()
@@ -176,9 +176,8 @@ METHOD ForceStable() CLASS HBDbBrowser
             hb_DispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
          ELSE
             nColX := ::nLeft
-            FOR nCol := 1 TO Len( ::aColumns )
+            FOR EACH oCol IN ::aColumns
                IF nColX <= ::nRight
-                  oCol := ::aColumns[ nCol ]
                   xData := Eval( oCol:block )
                   nClr := iif( nRow == ::rowPos, 2, 1 )
                   aClr := Eval( oCol:colorBlock, xData )
@@ -191,7 +190,7 @@ METHOD ForceStable() CLASS HBDbBrowser
                   IF nWid == NIL
                      nWid := Len( xData )
                   ENDIF
-                  hb_DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
+                  hb_DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( oCol:__enumIsLast(), "", " " ), ::aColorSpec[ nClr ] )
                   nColX += nWid + 1
                ENDIF
             NEXT
@@ -264,7 +263,7 @@ CREATE CLASS HBDbColumn
    VAR defColor   AS ARRAY     INIT { 1, 2 }    /* Array of numeric indexes into the color table */
    VAR width      AS USUAL                      /* Column display width */
 
-   METHOD New( cHeading, bBlock )               /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( cHeading, bBlock )
 
 ENDCLASS
 

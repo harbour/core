@@ -1,5 +1,3 @@
-//NOTEST
-
 // The following code tests the application of the className method
 // against the "fundemental" types of Clipper.
 

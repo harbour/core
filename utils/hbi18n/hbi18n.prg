@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    Harbour i18n .pot/.hbl file manger
+ * Harbour i18n .pot/.hbl file manager
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

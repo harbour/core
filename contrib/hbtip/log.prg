@@ -86,7 +86,7 @@ METHOD Add( cMsg ) CLASS TIPLog
       hb_FNameSplit( ::cFileName, @cDir, @cName, @cExt )
 
       n := 1
-      DO WHILE ( ::fhnd := hb_FCreate( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n++ ), cExt ), NIL, FO_EXCL ) ) == F_ERROR .AND. ;
+      DO WHILE ( ::fhnd := hb_FCreate( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n++ ), cExt ),, FO_EXCL ) ) == F_ERROR .AND. ;
          FError() != 3 /* path not found */
       ENDDO
    ENDIF

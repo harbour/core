@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows API functions (winnetwk.h - mpr.dll)
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

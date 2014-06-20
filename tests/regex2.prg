@@ -7,14 +7,13 @@
 PROCEDURE Main()
 
    LOCAL pCompiled
-   LOCAL cRegex
-   LOCAL cSentence
    LOCAL nRow
    LOCAL aMatch, cMatch
 
    LOCAL GetList := {}
 
-   SET CONFIRM ON
+   LOCAL cRegex := Space( 60 )
+   LOCAL cSentence := Space( 120 )
 
    CLS
 
@@ -23,8 +22,6 @@ PROCEDURE Main()
    @ 4, 5 SAY "Insert regular expression(s) and strings to test for."
    @ 5, 5 SAY "Press <Esc> to exit"
 
-   cRegex := Space( 60 )
-   cSentence := Space( 120 )
    DO WHILE LastKey() != K_ESC
 
       @ 8, 5 SAY " REGEX:" GET cRegex PICTURE "@S30"
@@ -34,14 +31,12 @@ PROCEDURE Main()
 
          @ 12, 5 CLEAR TO MaxRow(), MaxCol()
 
-         pCompiled := hb_regexComp( RTrim( cRegex ) )
-         IF Empty( pCompiled )
+         IF Empty( pCompiled := hb_regexComp( RTrim( cRegex ) ) )
             @ 12, 5 SAY "Invalid REGEX expression"
             LOOP
          ENDIF
 
-         aMatch := hb_regex( pCompiled, RTrim( cSentence ) )
-         IF aMatch != NIL
+         IF ( aMatch := hb_regex( pCompiled, RTrim( cSentence ) ) ) != NIL
             @ 12, 5 SAY "MATCHES:"
             nRow := 13
             FOR EACH cMatch IN aMatch

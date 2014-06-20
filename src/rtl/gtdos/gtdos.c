@@ -3,6 +3,26 @@
  * Video subsystem for DOS compilers
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ *    hb_gt_CtrlBrkHandler()
+ *    hb_gt_CtrlBrkRestore()
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_gt_ReadKey()
+ * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
+ *    vmode12x40()
+ *    vmode25x40()
+ *    vmode28x40()
+ *    vmode50x40()
+ *    vmode12x80()
+ *    vmode25x80()
+ *    vmode28x80()
+ *    vmode43x80()
+ *    vmode50x80()
+ *    hb_gt_SetMode()
+ *    hb_gt_GetDisplay()
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *                Luiz Rafael Culik <Culik@sl.conex.net>
+ *    Harbour Mouse Subsystem for DOS
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,41 +66,7 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_gt_CtrlBrkHandler()
- *    hb_gt_CtrlBrkRestore()
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_ReadKey()
- *
- * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
- *    vmode12x40()
- *    vmode25x40()
- *    vmode28x40()
- *    vmode50x40()
- *    vmode12x80()
- *    vmode25x80()
- *    vmode28x80()
- *    vmode43x80()
- *    vmode50x80()
- *    hb_gt_SetMode()
- *    hb_gt_GetDisplay()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *                Luiz Rafael Culik <Culik@sl.conex.net>
- *    Harbour Mouse Subsystem for DOS
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
-/*
- * This module is based on VIDMGR by Andrew Clarke and modified for Harbour.
- */
+/* This module is based on VIDMGR by Andrew Clarke and modified for Harbour. */
 
 /* NOTE: User programs should never call this layer directly! */
 
@@ -99,8 +85,7 @@
 #include <conio.h>
 
 
-/*
- * use mouse driver save/restore state functions,
+/* Use mouse driver save/restore state functions,
  * add other compilers for which calling real mode
  * interrupts with memory pointer is implemented.
  */

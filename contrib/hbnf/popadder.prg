@@ -88,7 +88,7 @@ THREAD STATIC t_aStdColor
 // Pop Up Adder / Calculator with Tape Display
 // NOTE: To make ft_Adder() pop up from any wait state in your
 //       application just insert the line:
-//         SET KEY K_ALT_A TO {|| ft_Adder() }
+//         SetKey( K_ALT_A, {|| ft_Adder() } )
 //       at the top of your application
 PROCEDURE ft_Adder()
 

@@ -1,8 +1,5 @@
 /*
- * Harbour Project source code
- *
  * Copyright (C) 1999 Matthew Hamilton
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,7 +99,6 @@ METHOD New( cFileName ) CLASS TIniFile
       // raise an error?
       ? "No filename passed to TIniFile():New()"
       RETURN NIL
-
    ELSE
       ::FileName := cFilename
       ::Contents := {}
@@ -321,10 +317,11 @@ METHOD PROCEDURE UpdateFile() CLASS TIniFile
    LOCAL hFile := FCreate( ::Filename )
 
    FOR EACH i IN ::Contents
-      IF i[ 1 ] == NIL
+      DO CASE
+      CASE i[ 1 ] == NIL
          FWrite( hFile, i[ 2 ] + hb_eol() )
 
-      ELSEIF HB_ISARRAY( i[ 2 ] )
+      CASE HB_ISARRAY( i[ 2 ] )
          FWrite( hFile, "[" + i[ 1 ] + "]" + hb_eol() )
 
          FOR EACH j IN i[ 2 ]
@@ -336,10 +333,10 @@ METHOD PROCEDURE UpdateFile() CLASS TIniFile
          NEXT
          FWrite( hFile, hb_eol() )
 
-      ELSEIF HB_ISSTRING( i[ 2 ] )
+      CASE HB_ISSTRING( i[ 2 ] )
          FWrite( hFile, i[ 1 ] + "=" + i[ 2 ] + hb_eol() )
 
-      ENDIF
+      ENDCASE
    NEXT
 
    FClose( hFile )

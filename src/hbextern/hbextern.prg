@@ -48,7 +48,7 @@
 
 /* NOTE: Please do not add __HB_EXTERN__ symbol to hbextern.ch
  *       This symbol should be only declared by programmer who
- *       prefer using hbextern library instead of including
+ *       prefers using hbextern library instead of including
  *       hbextern.ch file
  */
 

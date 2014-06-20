@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * libcurl 'easy' API - Harbour header.
  *
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  * originally based on:
  * Copyright 2005 Luiz Rafael Culik Guimaraes <luiz at xharbour.com.br>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

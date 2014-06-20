@@ -1211,12 +1211,12 @@
        Addition         Same as operand with the greatest number of decimal digits
        Subtraction      Same as operand with the greatest number of decimal digits
        Multiplication   Sum of operand decimal digits
-       Division         Determined by SET DECIMAL TO
-       Exponential      Determined by SET DECIMAL TO
-       Log()            Determined by SET DECIMAL TO
-       Exp()            Determined by SET DECIMAL TO
-       Sqrt()           Determined by SET DECIMAL TO
-       Val()            Determined by SET DECIMAL TO
+       Division         Determined by SET DECIMALS TO
+       Exponential      Determined by SET DECIMALS TO
+       Log()            Determined by SET DECIMALS TO
+       Exp()            Determined by SET DECIMALS TO
+       Sqrt()           Determined by SET DECIMALS TO
+       Val()            Determined by SET DECIMALS TO
       </table>
    $EXAMPLES$
       SET FIXED ON

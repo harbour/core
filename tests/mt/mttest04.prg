@@ -16,15 +16,17 @@
    #xtranslate hb_threadJoin( <x,...> ) => JoinThread( <x> )
 #endif
 
-#define N_THREADS 5
+#define N_THREADS  5
 
 static s_nVar1 := 0
 static s_nVar2 := 0
 static s_aCounters
 static s_hMutex
 
-procedure main()
+procedure Main()
+
    local aThreads, i, lEnd, nSum
+
    ? Version()
    ? "Main start"
    s_aCounters := Array( N_THREADS )
@@ -51,9 +53,11 @@ procedure main()
    ? "Unprotected item result.....:", s_nVar1, "*"
    ? " * - can be different then local sum on real multi-CPU systems"
    ? "End of main"
+
    return
 
 static procedure thFunc( nThread, lEnd )
+
    while ! lEnd
       s_nVar1++
       hb_mutexLock( s_hMutex )
@@ -61,4 +65,5 @@ static procedure thFunc( nThread, lEnd )
       hb_mutexUnlock( s_hMutex )
       s_aCounters[ nThread ]++
    enddo
+
    return

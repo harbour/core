@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Regression tests for the runtime library (main)
  *
  * Copyright 1999-2014 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -207,7 +205,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    hb_langSelect( "en" )
 #endif
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
 
    FErase( "NOT_HERE.$$$" )
 
@@ -377,14 +375,14 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
       IF lRTE
          lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
       ELSE
-         IF !( ValType( xResult ) == ValType( xResultExpected ) )
+         IF ValType( xResult ) == ValType( xResultExpected )
+            lFailed := !( xResult == xResultExpected )
+         ELSE
             IF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
                lFailed := !( XToStr( xResult ) == xResultExpected )
             ELSE
                lFailed := .T.
             ENDIF
-         ELSE
-            lFailed := !( xResult == xResultExpected )
          ENDIF
       ENDIF
 

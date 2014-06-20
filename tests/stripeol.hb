@@ -1,8 +1,6 @@
-/*
- * Strips leading EOLs from source files
- *
- * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- */
+/* Copyright 2013 Viktor Szakats (vszakats.net/harbour) */
+
+/* Strips leading EOLs from source files */
 
 #pragma -w3
 #pragma -km+

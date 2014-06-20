@@ -50,7 +50,7 @@ STATIC FUNCTION asXML( xml )
    LOCAL wt := 3
    LOCAL node, subnode
 
-   node := mxmlFindElement( xml, xml, "note", NIL, NIL, MXML_DESCEND )
+   node := mxmlFindElement( xml, xml, "note", , , MXML_DESCEND )
    IF Empty( node )
       RETURN ""
    ENDIF

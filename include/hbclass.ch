@@ -3,6 +3,8 @@
  * Header file for Class commands
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
+ * Copyright 2000-07 JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com> (Class(y), TopClass and Visual Object compatibility, multiple inheritance)
+ * Copyright 2000-08-2001 JF. Lefebvre <jfl@mafact.com> (Scoping, Delegating, DATA Shared, Support of 10 Chars limits)
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    most of rules rewritten
  * www - http://harbour-project.org
@@ -45,23 +47,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 ( ->07/2000 ) JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
- *    Support for Class(y), TopClass and Visual Object compatibility
- *    Support for MI (multiple inheritance),
-
- * Copyright 2000-2001 ( 08/2000-> ) JF. Lefebvre <jfl@mafact.com>
- *    Scoping (Protect, Hidden and Readonly),
- *    Delegating, DATA Shared
- *    Support of 10 Chars limits
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

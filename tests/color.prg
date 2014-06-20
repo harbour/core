@@ -1,4 +1,3 @@
-//
 // This program demonstrates that SetColor() works with
 // Set( _SET_COLOR ) and also that the internal representation
 // of a clipper color string is properly converted back to a
@@ -7,10 +6,8 @@
 // This demo will be expanded over time.
 //
 // Written by Paul Tucker {ptucker@sympatico.ca>
-// www - http://harbour-project.org
 //
 // This test program placed in the public domain
-//
 
 #include "color.ch"
 

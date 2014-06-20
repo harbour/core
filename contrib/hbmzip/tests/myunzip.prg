@@ -103,7 +103,7 @@ PROCEDURE Main()
 
          IF AScan( aWild, {| cPattern | hb_WildMatch( cPattern, cFile, .T. ) } ) > 0
             ?? " Extracting"
-            hb_unzipExtractCurrentFile( hUnzip, NIL, cPassword )
+            hb_unzipExtractCurrentFile( hUnzip, , cPassword )
          ELSE
             ?? " Skipping"
          ENDIF

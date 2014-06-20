@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(r2014\-01\-01 13:00\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(f02eba6\) \(2014\-06\-14 10:24\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Traduzione \(it\): \(inserisci qui il tuo nome\)  
@@ -58,17 +58,17 @@ Opzioni:
  - **\-traceonly** mostrare i comandi da essere eseguiti, ma non vengono eseguiti
  - **\-warn=&lt;level&gt;** set C compiler warning level  
 &lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
- - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
+ - **\-harden\[\-\]** enable hardening options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
  - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
-&lt;level&gt; can be: yes, no, min, max
+&lt;level&gt; can be: yes, no, min, high, max
  - **\-run\[\-\]** eseguire/non eseguire l'eseguibile prodotto
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
- - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
+ - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ and \_HBMK\_BUILD\_ID\_NUM\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)
  - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
  - **\-signpw=&lt;pw&gt;** Usare &lt;pw&gt; come password quando si accede all'eseguibile \(Solo Windows e Darwin\)
- - **\-signts=&lt;url&gt;** use &lt;url&gt; as trusted timestamp server\. Empty value resets it to the default: http://timestamp\.verisign\.com/scripts/timstamp\.dll
+ - **\-signts=&lt;\[std:\]url&gt;** use &lt;url&gt; as trusted timestamp server\. Optional &lt;std&gt; might specify the standard as 'rfc3161' or 'authenticode' \(without quotes\)\. The default is 'rfc3161'\. Empty value resets it to the default: http://timestamp\.globalsign\.com/scripts/timstamp\.dll
  - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
  - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
  - **\-instforce\[\-\]** copy target file\(s\) to install path even if already up to date
@@ -119,10 +119,12 @@ Opzioni:
  - **\-rebuildpo** recreate \.po file, thus removing all obsolete entries in it
 
 
- - **\-hbx=\[&lt;\.ch&gt;\]** Creare l'intestazione Harbour \(in formato\. HBX\), con tutti i simboli esterni\. Il parametro vuoto lo disattiva\.
+ - **\-hbx=&lt;n\[\.hbx&gt;\]&gt;** create Harbour header \(in \.hbx format\) with all external symbols\. Empty parameter will disable it\. Default extension is \.hbx\. If set, &lt;n&gt; will be automatically added to the list of Harbour input files and built into the project\. Therefore, the name part of &lt;n&gt; must not be the same as any other input file present in the project\.
+ - **\-hbx\[\-\]** update \(or don't\) \.hbx file specified in \-hbx= option \(default: update\)
  - **\-autohbc=&lt;\.ch:\.hbc&gt;** &lt;\.ch&gt; is a header file name\. &lt;\.hbc&gt; is a \.hbc filename to be automatically included in case the header is found in any of the compiled sources\. \(EXPERIMENTAL\)
 
 
+ - **\-depurlbase=&lt;d:u&gt;** &lt;d&gt; is the name of the dependency\. &lt;u&gt; is the URL of the project\. Can be specified multiple times\.
  - **\-deppkgname=&lt;d:n&gt;** &lt;d&gt; è il nome della dipendenza\. &lt;n&gt; nome del pacchetto della dipendenza\. Può essere specificato più volte\.
  - **\-depkeyhead=&lt;d:h&gt;** &lt;d&gt; is the name of the dependency\. &lt;h&gt; is the key header \(\.h\) of the package dependency\. Multiple alternative headers can be specified\.
  - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; è il nome della dipendenza\. &lt;f&gt; può essere 'yes' o 'no', specifica se la dipendenza è opzionale\. Default: no
@@ -168,7 +170,11 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\-hbunreg\[=global\]** elimina la registrazione dello Script Harbour \(\.hb\) da hbmk2 \(solo Windows\)
 
 
- - **\-find &lt;text&gt;** elenca tutte le funzioni conosciute di Harbour che contengono &lt;text&gt; nel loro nome, insieme con il loro pacchetto \(ignora maiuscole e minuscole, accetta più valori, può contenere caratteri jolly\)
+ - **\-find &lt;text&gt;** list all known Harbour functions that contain &lt;text&gt; in their name, along with their package \(case insensitive, accepts multiple values, can contain wildcard characters\)
+ - **\-doc &lt;text&gt;** show documentation for function\[s\]/command\[s\] in &lt;text&gt; \[EXPERIMENTAL\]
+ - **\-docjson &lt;text&gt;** output documentation in JSON format for function\[s\]/command\[s\] in &lt;text&gt; \[EXPERIMENTAL\]
+ - **\-fixcase &lt;file\[s\]&gt;** fix casing of Harbour function names to their 'official' format\. Core functions and functions belonging to all active contribs/addons with an \.hbx file will be processed\. \[EXPERIMENTAL\]
+ - **\-sanitize &lt;file\[s\]&gt;** convert filenames to lowercase, EOLs to platform native and remove EOF character, if present\. \[EXPERIMENTAL\]
 
 
  - **\-hbmake=&lt;file&gt;** Converte il progetto hbmake &lt;file&gt; in file \.hbp
@@ -194,7 +200,7 @@ Valore speciale:
  - **\-shl** show sub\-project level in output lines
  - **\-viewhelp** Help esteso nel visualizzatore di testo
  - **\-longhelp** aiuto esteso
- - **\-longhelpmd** Help esteso in formato [Markdown](http://daringfireball.net/projects/markdown/)
+ - **\-longhelpmd** Help esteso in formato [Markdown](https://daringfireball.net/projects/markdown/)
  - **\-harbourhelp** Harbour compiler help \(all Harbour compiler options are accepted as is by hbmk2\)
  - **\-credits** Riconoscimenti del compilatore Harbour
  - **\-build** Informazioni del compilatore Harbour
@@ -281,6 +287,7 @@ Variabili macro:
  - **$\{hb\_minor\}** numero secondario di versione Harbour
  - **$\{hb\_release\}** numero di versione di rilascio di Harbour
  - **$\{hb\_status\}** Stato della versione di Harbour
+ - **$\{hb\_ver\_id\}** Harbour version ID
  - **$\{hb\_revision\}** Revisione di Harbour
  - **$\{hb\_host\_plat\}** Motore Harbour
  - **$\{hb\_host\_plat\_unix\}** ritorna '1' se la piattaforma host Harbour è \*nix compatibile
@@ -304,6 +311,7 @@ Filtri \(è possibile combinarli e/o negarli\):
  - **\{&lt;compiler&gt;\}** compilatore C di destinazione\. Dove &lt;compiler&gt; può essere qualunque valore accettato dall'opzione \-comp=\.
  - **\{&lt;cpu&gt;\}** CPU di destinazione\. Dove &lt;cpu&gt; può essere una tra i seguenti: x86, x86\_64, ia64, arm, mips, sh
  - **\{&lt;targettype&gt;\}** build target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
+ - **\{&lt;package\-manager&gt;\}** package manager\. Where &lt;package\-manager&gt; can be any of: deb, rpm, portage, homebrew, rudix, macports, fink, pkg, cygwin
  - **\{mt\}** build target is multi\-threaded \(see \-mt option\)
  - **\{st\}** build target is single\-threaded \(see \-st option\)
  - **\{gui\}** destinazione GUI \(vedi l'opzone \-gui\)
@@ -426,7 +434,7 @@ direttive \.hbc \(dovrebbero essere scritte in righe separate\):
  - **strip=&lt;bool&gt;** opzione 'yes' = \-strip, 'no' = \-strip\-
  - **run=&lt;bool&gt;** opzione 'yes' = \-run, 'no' = \-run\-
  - **inc=&lt;bool&gt;** opzione 'yes' = \-inc, 'no' = \-inc\-
- - **safe=&lt;bool&gt;** opzione 'yes' = \-safe, 'no' = \-safe\-
+ - **harden=&lt;bool&gt;** opzione 'yes' = \-harden, 'no' = \-harden\-
  - **cpp=** come l'opzione \-cpp=
  - **warn=** come l'opzione \-warn=
  - **compr=** come l'opzione \-compr=
@@ -435,6 +443,7 @@ direttive \.hbc \(dovrebbero essere scritte in righe separate\):
  - **gt=&lt;name&gt;** come l'opzione \-gt&lt;name&gt;
  - **gtdef=&lt;name&gt;** setta il GT di default da utilizzare
  - **env=** come l'opzione \-env:
+ - **depurlbase=** come l'opzione \-depurlbase=
  - **deppkgname=** come l'opzione \-deppkgname=
  - **depkeyhead=** come l'opzione \-depkeyhead=
  - **depoptional=** come l'opzione \-depoptional=
@@ -658,7 +667,7 @@ Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by 
   - '\.' \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
-  - \.hb, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
+  - \.hb, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. SET EXACT is set to ON\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
   - Puoi usare i tasti &lt;Alt\+V&gt; nella shell interativa di Harbour per incollare il testo dalla clipboard\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
 

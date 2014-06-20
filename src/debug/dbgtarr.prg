@@ -91,12 +91,15 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 
    IF nSize < MaxRow() - 2
       IF HB_ISNUMERIC( nRow )
-         oWndSets := HBDbWindow():New( GetTopPos( nRow ), 5, getBottomPos( nRow + nSize + 1 ), MaxCol() - 5, ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
+         oWndSets := HBDbWindow():New( GetTopPos( nRow ), 5, getBottomPos( nRow + nSize + 1 ), MaxCol() - 5, ;
+            ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
       ELSE
-         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
+         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ;
+            ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
       ENDIF
    ELSE
-      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
+      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ;
+         ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
    ENDIF
 
    ::nCurWindow++
@@ -107,7 +110,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    oBrwSets:autolite := .F.
    oBrwSets:ColorSpec := __dbg():ClrModal()
-   oBrwSets:Cargo := { 1, {} } // Actual highligthed row
+   oBrwSets:Cargo := { 1, {} }  // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], aArray )
 
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::arrayName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + "]" } ) )
@@ -226,13 +229,14 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          __dbgAlert( "Value cannot be edited" )
       ELSE
          oBrwSets:RefreshCurrent()
-         IF HB_ISOBJECT( aArray[ nSet ] )
+         DO CASE
+         CASE HB_ISOBJECT( aArray[ nSet ] )
             __dbgObject( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
-         ELSEIF HB_ISHASH( aArray[ nSet ] )
+         CASE HB_ISHASH( aArray[ nSet ] )
             __dbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
-         ELSE
+         OTHERWISE
             ::doGet( oBrwsets, aArray, nSet )
-         ENDIF
+         ENDCASE
          oBrwSets:RefreshCurrent()
          oBrwSets:ForceStable()
       ENDIF
@@ -273,6 +277,7 @@ STATIC PROCEDURE RefreshVarsS( oBrowse )
    RETURN
 
 STATIC FUNCTION ArrayBrowseSkip( nPos, oBrwSets )
-   RETURN iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1, ;
+   RETURN ;
+      iif( oBrwSets:cargo[ 1 ] + nPos < 1, -oBrwSets:cargo[ 1 ] + 1, ;
       iif( oBrwSets:cargo[ 1 ] + nPos > Len( oBrwSets:cargo[ 2 ][ 1 ] ), ;
       Len( oBrwSets:cargo[ 2 ][ 1 ] ) - oBrwSets:cargo[ 1 ], nPos ) )

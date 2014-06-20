@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * SMS library. EXPERIMENTAL CODE. USE AT YOUR OWN RISK. NO GUARANTEES.
  *
  * Copyright 2009-2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,15 +106,16 @@ FUNCTION smsctx_New( xPort )
 
    LOCAL smsctx[ _SMSCTX_MAX_ ]
 
-   IF HB_ISNUMERIC( xPort )
+   DO CASE
+   CASE HB_ISNUMERIC( xPort )
       smsctx[ _SMSCTX_xHnd ] := xPort
-   ELSEIF HB_ISSTRING( xPort )
+   CASE HB_ISSTRING( xPort )
       IF ( smsctx[ _SMSCTX_xHnd ] := hb_comFindPort( xPort, .T. ) ) == 0
          RETURN NIL
       ENDIF
-   ELSE
+   OTHERWISE
       RETURN NIL
-   ENDIF
+   ENDCASE
 
    IF hb_comOpen( smsctx[ _SMSCTX_xHnd ] )
       IF hb_comInit( smsctx[ _SMSCTX_xHnd ], 9600, "N", 8, 1 )

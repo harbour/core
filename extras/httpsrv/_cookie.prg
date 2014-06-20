@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    uHTTPD (Micro HTTP server) cookie functions
+ * uHTTPD (Micro HTTP server) cookie functions
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,7 +61,7 @@ CLASS uhttpd_Cookie
    VAR lSecure            INIT .F.
    VAR lHttpOnly
    VAR nExpireDays        INIT 0
-   VAR nExpireSecs        INIT 7200       // 1 hour  - TODO set environment constant
+   VAR nExpireSecs        INIT 120 * 60  // 2 hours - TODO set environment constant
    VAR lCookiesSent       INIT .F.
 
    METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly )
@@ -76,7 +74,7 @@ CLASS uhttpd_Cookie
 
 ENDCLASS
 
-// ------------------------------
+// ---
 
 METHOD PROCEDURE SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttpd_Cookie
 
@@ -113,14 +111,12 @@ METHOD PROCEDURE SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecu
       // Search if a cookie already exists
       // case sensitive
       IF ( nPos := AScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
-         ::aCookies[ nPos ][ 2 ] := uhttpd_UrlEncode( hb_CStr( xValue ) )
+         ::aCookies[ nPos ][ 2 ] := tip_URLEncode( hb_CStr( xValue ) )
       ELSE
-         AAdd( ::aCookies, { cCookieName, uhttpd_UrlEncode( hb_CStr( xValue ) ) } )
+         AAdd( ::aCookies, { cCookieName, tip_URLEncode( hb_CStr( xValue ) ) } )
       ENDIF
-   ELSE
-      IF ( nPos := AScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
-         hb_ADel( ::aCookies, nPos, .T. )
-      ENDIF
+   ELSEIF ( nPos := AScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
+      hb_ADel( ::aCookies, nPos, .T. )
    ENDIF
 
    // Rebuild cookie string as per RFC2616 (comma separated list)
@@ -128,7 +124,7 @@ METHOD PROCEDURE SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecu
    nCookies := Len( ::aCookies )
    AEval( ::aCookies, {| e, i | cStr += e[ 1 ] + "=" + e[ 2 ] + iif( i < nCookies, ",", "" ) } )
 
-   // cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_CStr( xValue ) )
+   // cStr := cCookieName + "=" + tip_URLEncode( hb_CStr( xValue ) )
 
    IF cDomain != NIL
       cStr += "; domain=" + cDomain
@@ -151,9 +147,8 @@ METHOD PROCEDURE SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecu
 
 METHOD PROCEDURE DeleteCookie( cCookieName, cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
 
-   LOCAL cExpires := uhttpd_DateToGMT( Date() - 1 ) // Setting date in the past delete cookie
-
-   ::SetCookie( cCookieName, "", cDomain, cPath, cExpires, lSecure )
+   // Setting date in the past delete cookie
+   ::SetCookie( cCookieName, "", cDomain, cPath, uhttpd_DateToGMT( Date() - 1 ), lSecure )
 
    RETURN
 

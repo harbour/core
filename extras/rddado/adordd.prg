@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
  * ADORDD - RDD to automatically manage Microsoft ADO
  *
- * Copyright 2007 Fernando Mancera <fmancera@viaopen.com> and
- * Antonio Linares <alinares@fivetechsoft.com>
- * www - http://harbour-project.org
- *
+ * Copyright 2007 Fernando Mancera <fmancera@viaopen.com>
+ * Copyright 2007 Antonio Linares <alinares@fivetechsoft.com>
  * Copyright 2007-2008 Miguel Angel Marchuet <miguelangel@marchuet.net>
  *  ADO_GOTOID( nWA, nRecord )
  *  ADO_GOTO( nWA, nRecord )
@@ -25,8 +22,6 @@
  *  ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
  *  ADO_DROP(  nRdd, cTable, cIndex, ulConnect )
  *  ADO_LOCATE( nWA, lContinue )
- *
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

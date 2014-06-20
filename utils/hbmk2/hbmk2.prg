@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour Make (alias hbmk/hbmk2/hbrun)
  *
  * Copyright 1999-2014 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -7093,13 +7091,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       /* Dress lib names. */
       l_aLIB := {}
       l_aLIBA := {}
-      ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBRAW, NIL, cLibExt )
+      ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBRAW, , cLibExt )
 #ifdef HARBOUR_SUPPORT
       IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
          /* Do not link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
          IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] ) .OR. lHBMAINDLLP
             l_aLIBRAW := ArrayJoin( l_aLIBSHARED, l_aLIBRAW )
-            ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED, NIL )
+            ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED )
          ENDIF
       ENDIF
 #endif
@@ -12521,6 +12519,8 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hb_ntos( hb_Version( HB_VERSION_RELEASE ) ) ; EXIT
    CASE "hb_status"
       cMacro := hb_Version( HB_VERSION_STATUS ) ; EXIT
+   CASE "hb_ver_id"
+      cMacro := hb_Version( HB_VERSION_ID ) ; EXIT
    CASE "hb_revision"
       cMacro := hb_ntos( hb_Version( HB_VERSION_REVISION ) ) ; EXIT
    CASE "hb_host_plat"
@@ -13100,7 +13100,7 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
                _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
                _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: temp unified .po: %1$s", cPOTemp ) )
             ENDIF
-            POTMerge( hbmk, aPOTIN, NIL, cPOTemp )
+            POTMerge( hbmk, aPOTIN, , cPOTemp )
          ELSE
             _hbmk_OutStd( hbmk, I_( "Error: Cannot create temporary unified .po file." ) )
          ENDIF
@@ -13308,7 +13308,7 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
    LOCAL aTrans
    LOCAL lRetVal := .F.
 
-   IF HB_ISARRAY( aTrans := LoadPOTFiles( hbmk, aFiles, NIL, .F. ) )
+   IF HB_ISARRAY( aTrans := LoadPOTFiles( hbmk, aFiles, , .F. ) )
       IF hb_MemoWrit( cFileOut, hb_i18n_SaveTable( ;
             __i18n_hashTable( __i18n_potArrayToHash( aTrans, lEmpty ) ) ) )
          lRetVal := .T.
@@ -15237,11 +15237,9 @@ FUNCTION hbshell_ext_get_list()
 STATIC FUNCTION __plugin_ext()
 #pragma __cstream | RETURN %s
 /*
- * Harbour Project source code:
- * extension manager plugin
+ * Extension manager plugin
  *
  * Copyright 2012-2014 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  */
 
 FUNCTION __hbshell_plugin()
@@ -17376,6 +17374,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "${hb_minor}"          , I_( "Harbour minor version number" ) }, ;
       { "${hb_release}"        , I_( "Harbour release version number" ) }, ;
       { "${hb_status}"         , I_( "Harbour version status" ) }, ;
+      { "${hb_ver_id}"         , I_( "Harbour version ID" ) }, ;
       { "${hb_revision}"       , I_( "Harbour revision" ) }, ;
       { "${hb_host_plat}"      , I_( "Harbour host platform" ) }, ;
       { "${hb_host_plat_unix}" , I_( "returns '1' if Harbour host platform is *nix compatible" ) }, ;
@@ -17828,10 +17827,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    ENDIF
    IF lMore
       AEval( aHdr_Desc, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      IF ! hbmk[ _HBMK_lShellMode ]
-         AEval( aLst_Desc, {| tmp | OutNote( hbmk, tmp, "  " ) } )
-      ELSE
+      IF hbmk[ _HBMK_lShellMode ]
          AEval( aLst_Desc_Shell, {| tmp | OutNote( hbmk, tmp, "  " ) } )
+      ELSE
+         AEval( aLst_Desc, {| tmp | OutNote( hbmk, tmp, "  " ) } )
       ENDIF
    ENDIF
    IF ! hbmk[ _HBMK_lShellMode ]
@@ -17843,10 +17842,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          AEval( aLst_Opt_Long, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
       AEval( aHdr_Opt_LongCmd, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      IF ! hbmk[ _HBMK_lShellMode ]
-         AEval( aLst_Opt_LongCmd, {| tmp | OutOpt( hbmk, tmp ) } )
-      ELSE
+      IF hbmk[ _HBMK_lShellMode ]
          AEval( aLst_Opt_LongCmd_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
+      ELSE
+         AEval( aLst_Opt_LongCmd, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
       IF ! hbmk[ _HBMK_lShellMode ]
          IF lLong
@@ -17870,10 +17869,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       AEval( aHdr_PredSource, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
       IF ! hbmk[ _HBMK_lShellMode ]
          AEval( aLst_PredSource, {| tmp | OutOpt( hbmk, tmp ) } )
-         AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
-      ELSE
-         AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
+      AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
       IF ! hbmk[ _HBMK_lShellMode ]
          AEval( aHdr_PredBuild, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
          AEval( aLst_PredBuild, {| tmp | OutOpt( hbmk, tmp ) } )

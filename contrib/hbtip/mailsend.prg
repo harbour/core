@@ -211,7 +211,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       iif( Empty( cBCC ), "", "," + cBCC )
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      oInmail := TIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
+      oInmail := TIPClientSMTP():New( oUrl, xTrace,, cClientHost )
    RECOVER
       RETURN .F.
    END SEQUENCE
@@ -264,7 +264,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       ENDIF
 
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-         oInmail := TIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
+         oInmail := TIPClientSMTP():New( oUrl, xTrace,, cClientHost )
       RECOVER
          RETURN .F.
       END SEQUENCE

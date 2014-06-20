@@ -49,6 +49,7 @@
 #pragma -b-
 
 #include "box.ch"
+#include "dbstruct.ch"
 #include "setcurs.ch"
 #include "inkey.ch"
 
@@ -73,15 +74,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    LOCAL nOldArea := Select()
 
-   /* We can't determine the last used area, so use 512 here */
-   FOR n1 := 1 TO 512
-      IF ( n1 )->( Used() )
-         AAdd( aAlias, { n1, Alias( n1 ) } )
-         IF n1 == nOldArea
-            cur_id := Len( aAlias )
-         ENDIF
-      ENDIF
-   NEXT
+   hb_WAEval( {|| AAdd( aAlias, { Select(), Alias() } ), iif( n1 == nOldArea, cur_id := Len( aAlias ), ) } )
 
    IF Len( aAlias ) == 0
       __dbgAlert( "No workareas in use" )
@@ -149,10 +142,10 @@ PROCEDURE __dbgShowWorkAreas()
       aBrw[ 3 ]:Cargo := n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ), ;
       Max( 1, n3 + nSkip ) ), n3 - nPos }
 
-   aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| PadR( aStruc[ n3, 1 ], 11 ) + ;
-      aStruc[ n3, 2 ] + ;
-      Str( aStruc[ n3, 3 ], 4 ) + ;
-      Str( aStruc[ n3, 4 ], 3 ) } ) )
+   aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| PadR( aStruc[ n3 ][ DBS_NAME ], 11 ) + ;
+      aStruc[ n3 ][ DBS_TYPE ] + ;
+      Str( aStruc[ n3 ][ DBS_LEN ], 4 ) + ;
+      Str( aStruc[ n3 ][ DBS_DEC ], 3 ) } ) )
 
    /* Show dialog */
 
@@ -204,7 +197,7 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
    RETURN
 
-STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
+STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, /* @ */ aStruc, /* @ */ aInfo )
 
    LOCAL oDebug := __dbg()
    LOCAL nAlias
@@ -230,7 +223,7 @@ STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          aBrw[ 2 ]:GoTop()
          aBrw[ 2 ]:Invalidate()
          aBrw[ 2 ]:ForceStable()
-         aInfo := ( aAlias[ aBrw[ 1 ]:Cargo ][ 1 ] )->( DbfInfo( aInfo ) )
+         aInfo := ( aAlias[ aBrw[ 1 ]:Cargo ][ 1 ] )->( DbfInfo() )
          aBrw[ 3 ]:Configure()
          aBrw[ 2 ]:Invalidate()
          aBrw[ 2 ]:RefreshAll()
@@ -307,64 +300,43 @@ STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
 
    RETURN
 
-STATIC FUNCTION DbfInfo( aInfo )
+STATIC FUNCTION DbfInfo()
 
    LOCAL nFor
-   LOCAL xType
    LOCAL xValue
    LOCAL cValue
 
-   aInfo := {}
-
-   AAdd( aInfo, "[" + hb_ntos( Select( Alias() ) ) + "] " + Alias() )
-   AAdd( aInfo, Space( 4 ) + "Current Driver" )
-   AAdd( aInfo, Space( 8 ) + rddName() )
-   AAdd( aInfo, Space( 4 ) + "Workarea Information" )
-   AAdd( aInfo, Space( 8 ) + "Select Area: " + hb_ntos( Select() ) )
-   AAdd( aInfo, Space( 8 ) + "Record Size: " + hb_ntos( RecSize() ) )
-   AAdd( aInfo, Space( 8 ) + "Header Size: " + hb_ntos( Header() ) )
-   AAdd( aInfo, Space( 8 ) + "Field Count: " + hb_ntos( FCount() ) )
-   AAdd( aInfo, Space( 8 ) + "Last Update: " + DToC( LUpdate() ) )
-   AAdd( aInfo, Space( 8 ) + "Index order: " + hb_ntos( IndexOrd() ) )
-   AAdd( aInfo, Space( 4 ) + "Current Record" )
+   LOCAL aInfo := { ;
+      "[" + hb_ntos( Select( Alias() ) ) + "] " + Alias(), ;
+      Space( 4 ) + "Current Driver", ;
+      Space( 8 ) + rddName(), ;
+      Space( 4 ) + "Workarea Information", ;
+      Space( 8 ) + "Select Area: " + hb_ntos( Select() ), ;
+      Space( 8 ) + "Record Size: " + hb_ntos( RecSize() ), ;
+      Space( 8 ) + "Header Size: " + hb_ntos( Header() ), ;
+      Space( 8 ) + "Field Count: " + hb_ntos( FCount() ), ;
+      Space( 8 ) + "Last Update: " + DToC( LUpdate() ), ;
+      Space( 8 ) + "Index order: " + hb_ntos( IndexOrd() ), ;
+      Space( 4 ) + "Current Record" }
 
    FOR nFor := 1 TO FCount()
 
       xValue := __dbg():GetExprValue( "FieldGet(" + hb_ntos( nFor ) + ")" )
-      xType  := ValType( xValue )
 
-      SWITCH xType
+      SWITCH ValType( xValue )
       CASE "C"
-      CASE "M"
-         cValue := xValue
-         EXIT
-      CASE "N"
-         cValue := hb_ntos( xValue )
-         EXIT
-      CASE "D"
-         cValue := DToC( xValue )
-         EXIT
-      CASE "T"
-         cValue := hb_TSToStr( xValue )
-         EXIT
-      CASE "L"
-         cValue := iif( xValue, ".T.", ".F." )
-         EXIT
-      CASE "A"
-         cValue := "Array"
-         EXIT
-      CASE "H"
-         cValue := "Hash"
-         EXIT
-      CASE "U"
-         cValue := "NIL"
-         EXIT
-      OTHERWISE
-         cValue := "Error"
+      CASE "M" ; cValue := xValue ; EXIT
+      CASE "N" ; cValue := hb_ntos( xValue ) ; EXIT
+      CASE "D" ; cValue := DToC( xValue ) ; EXIT
+      CASE "T" ; cValue := hb_TSToStr( xValue ) ; EXIT
+      CASE "L" ; cValue := iif( xValue, ".T.", ".F." ) ; EXIT
+      CASE "A" ; cValue := "Array" ; EXIT
+      CASE "H" ; cValue := "Hash" ; EXIT
+      CASE "U" ; cValue := "NIL" ; EXIT
+      OTHERWISE ; cValue := "Error"
       ENDSWITCH
 
       AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10 ) + " = " + PadR( cValue, 17 ) )
-
    NEXT
 
    RETURN aInfo

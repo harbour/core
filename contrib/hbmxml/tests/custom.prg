@@ -20,7 +20,7 @@ PROCEDURE Main()
 
    tree := mxmlLoadFile( tree, cFileName, @type_cb() )
 
-   node := mxmlFindElement( tree, tree, "hash", NIL, NIL, MXML_DESCEND )
+   node := mxmlFindElement( tree, tree, "hash", , , MXML_DESCEND )
    IF Empty( node )
       ? "Unable to find <hash> element in XML tree!"
       mxmlDelete( tree )

@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * XPP compatible thread functions
+ * Xbase++ compatible thread functions
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

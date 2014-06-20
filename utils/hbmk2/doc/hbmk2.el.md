@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(r2014\-01\-01 13:00\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(f02eba6\) \(2014\-06\-14 10:24\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
@@ -58,17 +58,17 @@ Copyright &copy; 1999\-2014, Viktor Szakáts
  - **\-traceonly** εμφάνιση των προς εκτέλεση εντολών, αλλά χωρίς να εκτελεστούν
  - **\-warn=&lt;level&gt;** ορισμός επίπεδου ειδοποιήσεων του μεταγλωττιστή C   
 το &lt;lev&gt; μπορεί να είναι: max, yes, low, no, def \(προεπιλογή: yes\)
- - **\-safe\[\-\]** ενεργοποίηση επιλογών ασφαλείας του μεταγλωττιστή/συνδέτη C \(προεπιλογή: ενεργοποιημένο σε Windows, απενεργοποιημένο σε άλλα συστήματα\)
- - **\-compr=&lt;level&gt;** συμπίεση εκτελέσιμου/δυναμικής βιβλιοθήκης \(απαιτεί το εργαλείο UPX\)  
-το &lt;level&gt; μπορεί να είναι: yes, no, min, max
+ - **\-harden\[\-\]** enable hardening options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
+ - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
+&lt;level&gt; can be: yes, no, min, high, max
  - **\-run\[\-\]** εκτέλεση/ή όχι, του εκτελέσιμου που θα δημιουργηθεί
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
- - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
+ - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ and \_HBMK\_BUILD\_ID\_NUM\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** ορίζει το &lt;file&gt; ως εικονίδιο της εφαρμογής\. Το &lt;file&gt; πρέπει να είναι σε μορφή υποστηριζόμενη από τη πλατφόρμα\-στόχο \(δεν υποστηρίζεται από μερικές πλατφόρμες/μεταγλωττιστές\)\. Σε Windows, υλοποιείται με τη δημιουργία και διασύνδεση ενός resource αρχείου\.
  - **\-manifest=&lt;file&gt;** ενσωμάτωση του μανιφέστου &lt;file&gt; στο εκτελέσιμο/δυναμική βιβλ\. \(μονο σε Windows\)
  - **\-sign=&lt;key&gt;** σήμανση εκτελέσιμου με το &lt;key&gt; \(μόνο σε Windows και Darwin\)\. Σε περιβάλλον Windows χρησιμοποιείται το signtool\.exe \(περιέχεται στο MS Windows SDK\) ή το posign\.exe \(περιέχεται στην Pelles C 7\), με αυτή τη σειρά, αμφότερα ανιχνεύονται αυτόματα\.
  - **\-signpw=&lt;pw&gt;** χρήση του &lt;pw&gt; ως συνθηματικού κατά την σήμανση του εκτελέσιμου \(μόνο σε Windows και Darwin\)
- - **\-signts=&lt;url&gt;** use &lt;url&gt; as trusted timestamp server\. Empty value resets it to the default: http://timestamp\.verisign\.com/scripts/timstamp\.dll
+ - **\-signts=&lt;\[std:\]url&gt;** use &lt;url&gt; as trusted timestamp server\. Optional &lt;std&gt; might specify the standard as 'rfc3161' or 'authenticode' \(without quotes\)\. The default is 'rfc3161'\. Empty value resets it to the default: http://timestamp\.globalsign\.com/scripts/timstamp\.dll
  - **\-instfile=&lt;g:file&gt;** προσθήκη &lt;file&gt; iστη λίστα αρχείων προς αντιγραφή στο μονοπάτι που ορίστηκε από την επιλογή \-instpath\. &lt;g&gt; είναι μια προαιρετική ομάδα αντιγραφής \(πεζά/κεφαλαία ευαίσθητο\), πρέπει να έχει μήκος τουλάχιστον δύο χαρακτήρων\. Σε περίπτωση μη καθορισμού του &lt;file&gt;, η λίστα αρχείων σε αυτή την ομάδα θα εκκενωθεί\.
  - **\-instpath=&lt;g:path&gt;** αντιγραφή των αρχείου\(ων\) στο &lt;path&gt;\. Αν το &lt;path&gt; είναι κατάλογος, πρέπει να τελειώνει με τον διαχωριστή μονοπατιού· σε αυτή την περίπτωση τα αρχεία που καθορίστηκαν με την επιλογή \-instfile θα αντιγραφούν επίσης· μπορεί να οριστεί πολλαπλές φορές\. &lt;g&gt; είναι μια προαιρετική ομάδα αντιγραφής, πρέπει να έχει μήκος τουλάχιστον δύο χαρακτήρων\. Το κατασκευασμένο έργο θα αντιγραφεί αυτόματα σε προεπιλεγμένη \(άδεια\) ομάδα αντιγραφής\. Υπάρχουν οι ακόλουθες ενσωματωμένες &lt;g&gt; ομάδες: 'depimplib' για τις βιβλιοθήκες εισαγωγής και 'depimplibsrc' για πηγαία \(\.dll\) αρχεία βιβλιοθηκών εισαγωγής, αμφότερες ανήκουσες σε εξαρτήσεις\.
  - **\-instforce\[\-\]** αντιγραφή του κατασκευασμένου αρχείου\(ων\) του έργου στο κατάλογο εγκατάστασης έστω κι αν είναι ενήμερο /up to date/
@@ -120,10 +120,12 @@ Copyright &copy; 1999\-2014, Viktor Szakáts
  - **\-rebuildpo** αναδημιουργία \.po αρχείου, απομακρύνοντας έτσι όλες τις παρωχημένες καταχωρίσεις
 
 
- - **\-hbx=\[&lt;\.ch&gt;\]** Δημιουργία header αρχείο \(σε \.hbx μορφή\) μέ όλα τα εξωτερικά σύμβολα \-ονοματα συναρτήσεων κ\.λ\.π\.\- \. Κενή παράμετρος το απενεργοποιεί\.
+ - **\-hbx=&lt;n\[\.hbx&gt;\]&gt;** create Harbour header \(in \.hbx format\) with all external symbols\. Empty parameter will disable it\. Default extension is \.hbx\. If set, &lt;n&gt; will be automatically added to the list of Harbour input files and built into the project\. Therefore, the name part of &lt;n&gt; must not be the same as any other input file present in the project\.
+ - **\-hbx\[\-\]** update \(or don't\) \.hbx file specified in \-hbx= option \(default: update\)
  - **\-autohbc=&lt;\.ch:\.hbc&gt;** &lt;\.ch&gt; είναι ένα όνομα αρχείου header\. &lt;\.hbc&gt; είναι ένα \.hbc όνομα αρχείου που θα συμπεριληφθεί αυτομάτως σε περίπτωση που το header βρίσκεται σε κάποιο απο τα μεταγλωττισμένα πηγαία αρχεία\. \(ΠΕΙΡΑΜΑΤΙΚΟ\)
 
 
+ - **\-depurlbase=&lt;d:u&gt;** &lt;d&gt; is the name of the dependency\. &lt;u&gt; is the URL of the project\. Can be specified multiple times\.
  - **\-deppkgname=&lt;d:n&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. &lt;n&gt; είναι το όνομα του πακέτου εξάρτησης\. Μπορεί να οριστεί πολλαπλές φορές\.
  - **\-depkeyhead=&lt;d:h&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. &lt;h&gt; είναι το header\-κλειδί \(\.h\) της εξάρτησης πακέτου\. Μπορούν να οριστούν πολλαπλά εναλλακτικά headers \.
  - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. το &lt;f&gt; μπορεί να είναι 'yes' ή 'no', καθορίζει το άν η εξάρτηση είναι προαιρετική\. Προεπιλογή: no
@@ -169,7 +171,11 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\-hbunreg\[=global\]** κατάργηση καταχώρισης συσχέτισης σεναρίου Harbour \(\.hb\) με το hbmk2 \(μόνο σε Windows \-registry\-\)
 
 
- - **\-find &lt;text&gt;** δημιουργεί λίστα όλων των γνωστών συναρτήσεων Harbour που περιέχουν &lt;text&gt; στο όνομα τους, μαζί με τα πακέτα τους \(αδιάφορο παζών/κεφαλαίων, δέχεται παλλαπλές τιμές, μπορεί να περιέχει wildcard χαρακτήρες\)
+ - **\-find &lt;text&gt;** list all known Harbour functions that contain &lt;text&gt; in their name, along with their package \(case insensitive, accepts multiple values, can contain wildcard characters\)
+ - **\-doc &lt;text&gt;** show documentation for function\[s\]/command\[s\] in &lt;text&gt; \[EXPERIMENTAL\]
+ - **\-docjson &lt;text&gt;** output documentation in JSON format for function\[s\]/command\[s\] in &lt;text&gt; \[EXPERIMENTAL\]
+ - **\-fixcase &lt;file\[s\]&gt;** fix casing of Harbour function names to their 'official' format\. Core functions and functions belonging to all active contribs/addons with an \.hbx file will be processed\. \[EXPERIMENTAL\]
+ - **\-sanitize &lt;file\[s\]&gt;** convert filenames to lowercase, EOLs to platform native and remove EOF character, if present\. \[EXPERIMENTAL\]
 
 
  - **\-hbmake=&lt;file&gt;** μετατροπή έργου hbmake &lt;file&gt; σε αρχείο \.hbp
@@ -195,7 +201,7 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\-shl** εμφάνιση επιπέδου του υπο\-έργου στις γραμμές\-εξόδου
  - **\-viewhelp** εκτεταμένη βοήθεια σε προβολή κειμένου
  - **\-longhelp** εκτεταμένη βοήθεια
- - **\-longhelpmd** εκτεταμένη βοήθεια σε μορφή [Markdown](http://daringfireball.net/projects/markdown/)
+ - **\-longhelpmd** εκτεταμένη βοήθεια σε μορφή [Markdown](https://daringfireball.net/projects/markdown/)
  - **\-harbourhelp** Βοηθεια μεταγλωττιστή Harbour \(όλες οι επιλογές μεταγλωττιστή Harbour γίνονται δεκτές ως έχουν υπό hbmk2\)
  - **\-credits** Διαπιστευτήρια του μεταγλωτιστή Harbour
  - **\-build** Πληροφορία κατασκευής μεταγλωτιστή Harbour
@@ -282,6 +288,7 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **$\{hb\_minor\}** Δευτερεύων αριθμός έκδοσης
  - **$\{hb\_release\}** Αριθμός έκδοσης Harbour \-release\-
  - **$\{hb\_status\}** Κατάσταση έκδοσης Harbour
+ - **$\{hb\_ver\_id\}** Harbour version ID
  - **$\{hb\_revision\}** Αναθεώρηση Harbour
  - **$\{hb\_host\_plat\}** Πλατφόρμα υποδοχής
  - **$\{hb\_host\_plat\_unix\}** επιστρέφει '1' αν η πλατφόρμα υποδοχής Harbour είναι \*nix συμβατή
@@ -305,6 +312,7 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\{&lt;compiler&gt;\}** ο C μεταγλωττιστής\-στόχος\. Οπου &lt;compiler&gt; μπορεί να είναι κάθε τιμή αποδεκτή απο την επιλογή \-comp\.
  - **\{&lt;cpu&gt;\}** τύπος CPU εκτέλεσης του έργου\. Οπου &lt;cpu&gt; μπορεί να είναι κάτι από: x86, x86\_64, ia64, arm, mips, sh
  - **\{&lt;targettype&gt;\}** τύπος κατασκευής έργου\. Οπου &lt;targettype&gt; είναι μια από τις τιμές που επιστρέφονται από την macro μεταβλητή $\{hb\_targettype\}\.
+ - **\{&lt;package\-manager&gt;\}** package manager\. Where &lt;package\-manager&gt; can be any of: deb, rpm, portage, homebrew, rudix, macports, fink, pkg, cygwin
  - **\{mt\}** το κατασκευαζόμενο έργο είναι πολυ\-νηματικό /multi\-threaded/ \(δες επιλογή \-mt\)
  - **\{st\}** το κατασκευαζόμενο έργο είναι μονό\-νηματικό /single\-threaded/ \(δες επιλογή \-st\)
  - **\{gui\}** στόχος Γραφικού Περιβάλλοντος Χρήστη GUI \(δες επιλογή \-gui\)
@@ -427,7 +435,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **strip=&lt;bool&gt;** 'yes' = \-strip, 'no' = \-strip\- επιλογή
  - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- επιλογή
  - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- επιλογή
- - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- επιλογή
+ - **harden=&lt;bool&gt;** 'yes' = \-harden, 'no' = \-harden\- επιλογή
  - **cpp=** όμοιο με την επιλογή \-cpp=
  - **warn=** όμοιο με την επιλογή \-warn=
  - **compr=** όμοιο με την επιλογή \-compr=
@@ -436,6 +444,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **gt=&lt;name&gt;** όμοιο με την επιλογή \-gt&lt;name&gt;
  - **gtdef=&lt;name&gt;** ορισμός του πρεπιλεγμένου GT που θα χρησιμοποιηθεί
  - **env=** όμοιο με την επιλογή \-env:
+ - **depurlbase=** όμοιο με την επιλογή \-depurlbase=
  - **deppkgname=** όμοιο με την επιλογή \-deppkgname=
  - **depkeyhead=** όμοιο με την επιλογή \-depkeyhead=
  - **depoptional=** όμοιο με την επιλογή \-depoptional=
@@ -659,7 +668,7 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   - '\.' \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
-  - \.hb, \.hrb ή \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
+  - \.hb, \.hrb ή \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. SET EXACT is set to ON\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
   - Μπορείτε να χρησιμοποιείτε το συνδυασμό πλήκτρων &lt;Alt\+V&gt; στο διαδραστικό κέλυφος του Harbour για επικόλληση από το πρόχειρο\.
   - Τιμές με αστερίσκο \[\*\] μπορεί να εξαρτώνται από την πλατφόρμα υποδοχής ή/και τη διαμόρφωση\. Η παρούσα βοήθεια δημιουργήθηκε στην 'win' πλατφόρμα υποδοχής\.
 

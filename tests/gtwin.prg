@@ -15,10 +15,10 @@
    #if ! defined( __HBSCRIPT__HBSHELL )
       request HB_GT_WVT_DEFAULT
    #endif
-   #define THREAD_GT "WVT"
+   #define THREAD_GT  "WVT"
 #else
    request HB_GT_STD_DEFAULT
-   #define THREAD_GT "XWC"
+   #define THREAD_GT  "XWC"
 #endif
 
 procedure main()

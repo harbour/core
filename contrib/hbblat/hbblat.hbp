@@ -9,9 +9,14 @@
 
 -depurlbase=blat:http://www.blat.net/
 -depoptional=blat:yes{!hbdyn}
--depkeyhead=blat:blat.h
+-depkeyhead=blat:blatdll.h
 -depcontrol=blat:${HB_WITH_BLAT}
 -depimplibs=blat:../blat.dll
+
+{!HBMK_HAS_BLAT}-depoptional=blatold:yes{!hbdyn}
+{!HBMK_HAS_BLAT}-depkeyhead=blatold:blat.h
+{!HBMK_HAS_BLAT}-depcontrol=blatold:${HB_WITH_BLAT}
+{!HBMK_HAS_BLAT}-depimplibs=blatold:../blat.dll
 
 -iflag={bcc}-a
 

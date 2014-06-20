@@ -49,7 +49,7 @@ PROCEDURE Main()
    wvw_sbCreate()
 #endif
 
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
    SetColor( s_cStdColor )
    SetCursor( SC_NONE )
    CLS

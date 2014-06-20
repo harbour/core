@@ -103,7 +103,6 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    // TEST: dbCreate()
-
    dbCreate( "test_2.dbf", aStruct := { ;
       { "CHAR", "C", 30, 0 }, ;
       { "NUM",  "N", 15, 3 }, ;
@@ -116,7 +115,6 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    // TEST: dbUseArea()/USE
-
    USE test_2.dbf NEW SHARED ALIAS mytest
 
    IF ! Alias() == "MYTEST"
@@ -124,53 +122,43 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    // TEST: rddName()
-
    IF ! rddName() == cRDD
       NotifyUser( "Failed to set RDD to " + cRDD )
    ENDIF
 
    // TEST: dbStruct()
-
    IF ! CompareArray( aStruct, dbStruct() )
       NotifyUser( "Resulting table structure is not what we asked for" )
    ENDIF
 
    // TEST: Header()
-
    IF ! Header() == 194
       NotifyUser( "Header() returned wrong size (" + hb_ntos( Header() ) + " bytes)" )
    ENDIF
 
    // Add a mix of data to table
-
    DO WHILE LastRec() < MAX_TEST_RECS
 
       // TEST: dbAppend()
-
       dbAppend()
 
       // TEST: REPLACE
-
       REPLACE CHAR WITH Chr( Asc( "A" ) + Val( SubStr( hb_ntos( RecNo() ), 2, 1 ) ) ) + ;
          " RECORD " + hb_ntos( RecNo() )
 
       // TEST: Direct field assigment
-
       MYTEST->NUM  := ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 )
       MYTEST->DATE := Date() + Int( field->NUM )
       MYTEST->LOG  := ( field->NUM < 0 )
       MYTEST->MEMO := Eval( bMemoText )
-
    ENDDO
 
    // TEST: LastRec()
-
    IF ! LastRec() == MAX_TEST_RECS
       NotifyUser( "dbAppend() and/or LastRec() failed" )
    ENDIF
 
    // TEST: dbGoBottom()
-
    dbGoBottom()
 
    IF ! RecNo() == MAX_TEST_RECS
@@ -178,7 +166,6 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    // TEST: dbGoTop()
-
    dbGoTop()
 
    IF ! RecNo() == 1
@@ -186,11 +173,9 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    // Now check each and every record for accuracy
-
    DO WHILE ! Eof()
 
       // TEST: Field access
-
       IF ! RTrim( field->CHAR ) == Chr( Asc( "A" ) + Val( SubStr( hb_ntos( RecNo() ), 2, 1 ) ) ) + ;
             " RECORD " + hb_ntos( RecNo() ) .OR. ;
             ! field->NUM == ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .OR. ;
@@ -199,22 +184,18 @@ PROCEDURE Main( cRDDType, cAdsMode )
             ! field->MEMO == Eval( bMemoText )
 
          NotifyUser( "Data in table is incorrect" )
-
       ENDIF
 
       dbSkip()
-
    ENDDO
 
    // TEST: Index creation
-
    INDEX ON INDEX_KEY_CHAR TO test_c.idx
    INDEX ON INDEX_KEY_NUM  TO test_n.idx ADDITIVE
    INDEX ON INDEX_KEY_DATE TO test_d.idx ADDITIVE
    INDEX ON INDEX_KEY_LOG  TO test_l.idx ADDITIVE
 
    // TEST: IndexOrd()
-
    IF ! IndexOrd() == 4
       NotifyUser( "Bad IndexOrd()" )
    ENDIF
@@ -284,13 +265,13 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    ordSetFocus( 0 )
 
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftEq() */
    IF ! Eof()
       NotifyUser( "LOCATE with EXACT ON failed" )
    ENDIF
 
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
    LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftEq() */
    IF Eof()
       NotifyUser( "LOCATE with EXACT OFF failed" )
@@ -298,7 +279,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // TEST: EXACT with an index (also tests COUNT)
 
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    ordSetFocus( 0 )
    COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftEq() */
    INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftEq() */
@@ -306,7 +287,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       NotifyUser( "Bad conditional index count with EXACT ON" )
    ENDIF
 
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
    ordSetFocus( 0 )
    COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftEq() */
    INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftEq() */
@@ -319,7 +300,6 @@ PROCEDURE Main( cRDDType, cAdsMode )
    //
 
    // TEST: dbCloseArea()
-
    MYTEST->( dbCloseArea() )
 
    IF Select( "MYTEST" ) > 0
@@ -332,10 +312,9 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
 STATIC PROCEDURE MyError( e )
 
-   LOCAL i := 1 /* Start are "real" error */
-   LOCAL cErr
+   LOCAL i := 1  /* Start are "real" error */
 
-   cErr := "Runtime error" + hb_eol() + ;
+   LOCAL cErr := "Runtime error" + hb_eol() + ;
       hb_eol() + ;
       "Gencode: " + hb_ntos( e:GenCode ) + hb_eol() + ;
       "Desc: " + e:Description +  + hb_eol() + ;

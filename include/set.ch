@@ -132,4 +132,8 @@
 #define HB_SET_BASE           100
 #define HB_SET_COUNT          ( _SET_DBCODEPAGE - HB_SET_BASE + 1 )
 
+#define HB_SET_CASE_MIXED     0
+#define HB_SET_CASE_LOWER     1
+#define HB_SET_CASE_UPPER     2
+
 #endif /* _SET_CH */

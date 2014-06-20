@@ -74,7 +74,7 @@
       LOCAL aClrs  := {}
       LOCAL lColor := IsColor()
 
-      SET SCOREBOARD OFF
+      Set( _SET_SCOREBOARD, .F. )
       SetBlink( .F. )       // Allow bright backgrounds
 
       // .... a typical application might have the following different settings

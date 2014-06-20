@@ -164,7 +164,7 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
    HB_SYMBOL_UNUSED( Headers )
 
    IF PCount() >= 1 .AND. HB_ISEVALITEM( ::sl_beforeNavigate )
-      Eval( ::sl_beforeNavigate, cURL, NIL, Self )
+      Eval( ::sl_beforeNavigate, cURL, , Self )
       RETURN NIL
    ENDIF
 
@@ -173,7 +173,7 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
 METHOD WvgHTMLViewer:xStatusTextChange( cText )
 
    IF HB_ISEVALITEM( ::sl_statusTextChange )
-      Eval( ::sl_statusTextChange, cText, NIL, Self )
+      Eval( ::sl_statusTextChange, cText, , Self )
    ENDIF
 
    RETURN Self
@@ -181,7 +181,7 @@ METHOD WvgHTMLViewer:xStatusTextChange( cText )
 METHOD WvgHTMLViewer:xNavigateComplete( cURL )
 
    IF HB_ISEVALITEM( ::sl_navigateComplete )
-      Eval( ::sl_navigateComplete, cURL, NIL, Self )
+      Eval( ::sl_navigateComplete, cURL, , Self )
    ENDIF
 
    RETURN Self
@@ -197,7 +197,7 @@ METHOD WvgHTMLViewer:xProgressChange( nProgress, nProgMax )
 METHOD WvgHTMLViewer:xTitleChange( cTitle )
 
    IF HB_ISEVALITEM( ::sl_titleChange )
-      Eval( ::sl_titleChange, cTitle, NIL, Self )
+      Eval( ::sl_titleChange, cTitle, , Self )
    ENDIF
 
    RETURN Self
@@ -205,7 +205,7 @@ METHOD WvgHTMLViewer:xTitleChange( cTitle )
 METHOD WvgHTMLViewer:xDocumentComplete( cURI )
 
    IF HB_ISEVALITEM( ::sl_documentComplete )
-      Eval( ::sl_documentComplete, cURI, NIL, Self )
+      Eval( ::sl_documentComplete, cURI, , Self )
    ENDIF
 
    RETURN Self

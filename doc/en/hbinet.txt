@@ -1387,7 +1387,7 @@
    $DESCRIPTION$
       Connects to a remote server described by cAddress, that can be in
       quad dot notation (e.g. "192.168.1.1") or in DNS name (e.g.
-      "www.xharbour.org"), using the desired port.
+      "example.org"), using the desired port.
 
       hb_inetConnect() uses "gethostbyname" C system call to
       find the network address of the specified server; this means that

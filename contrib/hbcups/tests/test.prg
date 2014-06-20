@@ -1,3 +1,5 @@
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
+
 #require "hbcups"
 
 PROCEDURE Main( cFile )

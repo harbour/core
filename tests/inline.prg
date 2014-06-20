@@ -1,6 +1,4 @@
-//
 // Test of inline function
-//
 
 #include "hbclass.ch"
 

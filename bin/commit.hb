@@ -1,10 +1,8 @@
 #!/usr/bin/hbmk2
 /*
- * Harbour Project source code:
  * Commit preparer and source checker/fixer
  *
  * Copyright 2012-2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +54,9 @@ PROCEDURE Main()
 
    IF cVCS == "git"
       InstallHook( cVCSDir, "pre-commit"        , hb_StrFormat( "exec hbrun %1$s --check-only", CommitScript() ) )
-//    InstallHook( cVCSDir, "prepare-commit-msg", hb_StrFormat( "exec hbrun %1$s $1 --prepare-commit", CommitScript() )
+#if 0
+      InstallHook( cVCSDir, "prepare-commit-msg", hb_StrFormat( "exec hbrun %1$s $1 --prepare-commit", CommitScript() )
+#endif
    ENDIF
 
    aFiles := {}
@@ -142,7 +142,9 @@ PROCEDURE Main()
 
          IF ! Empty( cLogName )
             OutStd( hb_ProgName() + ": " + hb_StrFormat( "Edit %1$s and commit", cLogName ) + hb_eol() )
-//          LaunchCommand( GitEditor(), cLogName )
+#if 0
+            LaunchCommand( GitEditor(), cLogName )
+#endif
          ENDIF
       ENDIF
 

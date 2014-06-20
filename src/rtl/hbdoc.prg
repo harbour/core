@@ -240,13 +240,13 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
                hEntry[ cSection ] := ""
             ENDIF
          ELSEIF ! Empty( cSection )
-            IF ! Empty( hEntry[ cSection ] )
-               hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
-            ELSE
+            IF Empty( hEntry[ cSection ] )
                /* some "heuristics" to detect in which column the real content starts,
                   we assume the first line of content is correct, and use this with all
                   consecutive lines. [vszakats] */
                nStartCol := Len( cLine ) - Len( LTrim( cLine ) ) + 1
+            ELSE
+               hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
             ENDIF
             hEntry[ cSection ] += SubStr( cLine, nStartCol )
          ELSEIF ! Empty( cLine )

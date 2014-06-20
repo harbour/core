@@ -9,14 +9,15 @@
  *
  */
 
-#define N_THREADS 5
-#define N_JOBS    10000
+#define N_THREADS  5
+#define N_JOBS     10000
 
 static s_aCounters
 static s_mtxJobs
 static s_mtxResults
 
-procedure main()
+procedure Main()
+
    local aThreads, aResults, i, nDigit, nSum, nExpected
 
    ? Version()
@@ -52,7 +53,9 @@ procedure main()
    ? "Collecting results...", ""
    for i := 1 to N_JOBS
       hb_mutexSubscribe( s_mtxResults,, @nDigit )
-      //?? "<" + hb_ntos( i ) + ">"
+#if 0
+      ?? "<" + hb_ntos( i ) + ">"
+#endif
       AAdd( aResults, nDigit )
    next
 
@@ -75,10 +78,13 @@ procedure main()
         "expected:", hb_ntos( nExpected )
    endif
    ? "End of main"
+
    return
 
 static procedure thFunc()
+
    local xJob, xResult
+
    while .T.
       hb_mutexSubscribe( s_mtxJobs,, @xJob )
       if xJob == NIL
@@ -87,4 +93,5 @@ static procedure thFunc()
       xResult := xJob / 3
       hb_mutexNotify( s_mtxResults, xResult )
    enddo
+
    return

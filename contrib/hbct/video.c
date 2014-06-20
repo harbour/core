@@ -46,9 +46,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- *
- * See COPYING.txt for licensing terms.
- *
  */
 
 #include "hbapi.h"

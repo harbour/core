@@ -31,7 +31,7 @@ PROCEDURE Main()
 
    LOCAL pSockSrv, lExists, nStream1, nStream2, nSec, xData
 
-   SET EXCLUSIVE OFF
+   Set( _SET_EXCLUSIVE, .F. )
    rddSetDefault( "DBFCDX" )
 
    pSockSrv := netio_MTServer( DBPORT,,, /* RPC */ .T., DBPASSWD )

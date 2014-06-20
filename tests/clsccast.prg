@@ -35,7 +35,7 @@ procedure main()
 
    /* direct assignment, possible because the variables have differ names */
    ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
-   for i := 1 to Len( o ); ?? "", o[ i ]; next
+   for each i in o; ?? "", i; next
    ? " => shoule be [0]:"
    ?
    ? "initialization..."
@@ -67,7 +67,7 @@ procedure main()
    ?
 
    ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
-   for i := 1 to Len( o ); ?? "", o[ i ]; next
+   for each i in o; ?? "", i; next
    ? " => shoule be [0]:"
    ?
 
@@ -292,7 +292,7 @@ procedure main()
 
 
    ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
-   for i := 1 to Len( o ); ?? "", o[ i ]; next
+   for each i in o; ?? "", i; next
    ? " => shoule be [0]:"
    ?
 

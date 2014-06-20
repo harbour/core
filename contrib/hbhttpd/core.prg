@@ -1044,19 +1044,18 @@ STATIC FUNCTION GetErrorDesc( oErr )
          cRet += "!!! Error accessing current workarea !!!" + hb_eol()
       END SEQUENCE
 
-      FOR nI := 1 TO 250
+      hb_WAEval( {||
          BEGIN SEQUENCE WITH {| o | Break( o ) }
-            IF Used()
-               dbSelectArea( nI )
-               cRet += Str( nI, 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + " " + ;
-                  Str( RecNo() ) + "/" + Str( LastRec() ) + ;
-                  iif( Empty( ordSetFocus() ), "", " Index " + ordSetFocus() + "(" + hb_ntos( ordNumber() ) + ")" ) + hb_eol()
-               dbCloseArea()
-            ENDIF
+            cRet += Str( Select(), 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + " " + ;
+               Str( RecNo() ) + "/" + Str( LastRec() ) + ;
+               iif( Empty( ordSetFocus() ), "", " Index " + ordSetFocus() + "(" + hb_ntos( ordNumber() ) + ")" ) + hb_eol()
+            dbCloseArea()
          RECOVER
-            cRet += "!!! Error accessing workarea number: " + Str( nI, 4 ) + "!!!" + hb_eol()
+            cRet += "!!! Error accessing workarea number: " + hb_ntos( Select() ) + "!!!" + hb_eol()
          END SEQUENCE
-      NEXT
+         RETURN NIL
+         } )
+
       cRet += hb_eol()
    ENDIF
 
@@ -1281,14 +1280,13 @@ FUNCTION UHtmlEncode( cString )
    LOCAL nI, cI, cRet := ""
 
    FOR nI := 1 TO Len( cString )
-      cI := SubStr( cString, nI, 1 )
-      DO CASE
-      CASE cI == "<" ; cRet += "&lt;"
-      CASE cI == ">" ; cRet += "&gt;"
-      CASE cI == "&" ; cRet += "&amp;"
-      CASE cI == '"' ; cRet += "&quot;"
-      OTHERWISE      ; cRet += cI
-      ENDCASE
+      SWITCH cI := SubStr( cString, nI, 1 )
+      CASE "<"  ; cRet += "&lt;" ; EXIT
+      CASE ">"  ; cRet += "&gt;" ; EXIT
+      CASE "&"  ; cRet += "&amp;" ; EXIT
+      CASE '"'  ; cRet += "&quot;" ; EXIT
+      OTHERWISE ; cRet += cI
+      ENDSWITCH
    NEXT
 
    RETURN cRet

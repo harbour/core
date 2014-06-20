@@ -1,10 +1,8 @@
 #!/usr/bin/hbmk2
 /*
- * Harbour Project source code:
  * Package build orchestrator script
  *
  * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -428,8 +426,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    cMakeFlags := GetEnv( "MAKEFLAGS" )
    IF " -j " $ " " + cMakeFlags + " "
       /* GNU Make uses job server to limit number of concurrent operations
-       * We cannot read it from MAKEFLAGS so I set it to arbitrary value: 8
-       */
+         We cannot read it from MAKEFLAGS so I set it to arbitrary value: 8 */
       cOptions += " -jobs=8"
    ENDIF
 
@@ -544,7 +541,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    hb_SetEnv( "CLIPPERCMD" )
 
    IF cDynSuffix != NIL
-      hb_SetEnv( "_HB_DYNSUFF", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
+      hb_SetEnv( "_HB_DYNSUFF", cDynSuffix )  /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
 
       cOptionsPre += " -hbdyn"
 

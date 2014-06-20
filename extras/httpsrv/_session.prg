@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    uHTTPD (Micro HTTP server) session functions
+ * uHTTPD (Micro HTTP server) session functions
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -148,7 +146,7 @@ CLASS uhttpd_Session
 
 ENDCLASS
 
-// ------------------------------
+// ---
 
 METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
 
@@ -444,7 +442,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
       IF hb_LeftEq( cSessVarName, cSessPrefix )  // If left part of var is equal to session prefixname i.e. "SESSION"
 
          cName  := SubStr( cSessVarName, Len( cSessPrefix ) + 1 )
-         xValue := uhttpd_UrlDecode( aField[ 2 ] )
+         xValue := tip_URLDecode( aField[ 2 ] )
          // TraceLog( "SESSION: cName, xValue", cName, xValue )
 
          // TraceLog( "cName, xValue", cName, xValue )
@@ -485,106 +483,22 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
    RETURN cFieldsNotInSession
 
 
-
-/*
- * SID == 25 random chars + 5 CRC chars
- */
-
+/* SID == 25 random chars + 5 CRC chars */
 METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
 
-   LOCAL cSID, nSIDCRC, cSIDCRC, n, cTemp
-   LOCAL nLenSID     := 25
-   LOCAL cBaseKeys   := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-   LOCAL nLenKeys    := Len( cBaseKeys )
-   LOCAL cRet
-   LOCAL nRand, nKey := 0
-   LOCAL nLenTemp
-
-   // LOCAL a := 0
-
-   // Max Length must to be 10
-   // __defaultNIL( @cCRCKey, "3InFoW4lL5" )
    __defaultNIL( @cCRCKey, MY_CRCKEY )
 
-   /* Let's generate the sequence */
-   // cSID := Space( nLenSID )
-   cSID := ""
-   FOR n := 1 TO nLenSID - 5 // 5 -> CRC Length
-      nRand     := hb_RandomInt( 1, nLenKeys )
-      // cSID[ n ] := cBaseKeys[ nRand ]
-      cSID += SubStr( cBaseKeys, nRand, 1 )
-      nKey += nRand
-   NEXT
-
-   nSIDCRC  := nKey * 51 // Max Value is 99603. a 5 chars number
-   cTemp    := StrZero( nSIDCRC, 5 )
-   cSIDCRC  := ""
-   nLenTemp := Len( cTemp )
-   FOR n := 1 TO nLenTemp
-#if 0
-      cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
-#endif
-      cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-      // ::oCGI:ToLogFile( "cCRCKey: " + hb_CStr( SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 ) ), "/pointtoit/tmp/log.txt" )
-   NEXT
-
-   cRet := cSID + cSIDCRC
-   // ::oCGI:ToLogFile( "::GenerateSID(): " + hb_CStr( cSID ) + " " + hb_CStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
-
-   // TraceLog( "Generate SID: cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a", cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a )
-
-   RETURN cRet
+   RETURN tip_GenerateSID( cCRCKey )
 
 METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
 
-   LOCAL nSIDCRC, cSIDCRC, n, cTemp
-   LOCAL nLenSID     := 25
-   LOCAL cBaseKeys   := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-   LOCAL nRand, nKey := 0
-   LOCAL nLenTemp
-   LOCAL lOk
-
-   // LOCAL a := 0
-
    __defaultNIL( @::cSID, ::RegenerateID() )
    __defaultNIL( @cSID, ::cSID )
-   // Max Length must to be 10
-   __defaultNIL( @cCRCKey, MY_CRCKEY )
+   __defaultNIL( @cCRCKey, MY_CRCKEY )  // Max Length must to be 10
 
-   // hb_ToOutDebug( "cSID: %s, ::cSID: %s\n\r", hb_ValToExp( cSID ), hb_ValToExp( ::cSID ) )
+   RETURN tip_CheckSID( cSID, cCRCKey )
 
-   IF ! Empty( cSID )
-
-      /* Calculate the key */
-      FOR n := 1 TO nLenSID - 5 // 5 -> CRC Length
-#if 0
-         nRand     := At( cSID[ n ], cBaseKeys )
-#endif
-         nRand     := At( SubStr( cSID, n, 1 ), cBaseKeys )
-         nKey += nRand
-      NEXT
-
-      // Recalculate the CRC
-      nSIDCRC  := nKey * 51 // Max Value is 99603. a 5 chars number
-      cTemp    := StrZero( nSIDCRC, 5 )
-      cSIDCRC  := ""
-      nLenTemp := Len( cTemp )
-      FOR n := 1 TO nLenTemp
-#if 0
-         cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
-#endif
-         cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-      NEXT
-
-      lOk := ( Right( cSID, 5 ) == cSIDCRC )
-
-      // TraceLog( "Check SID: cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a", cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a )
-      // ::oCGI:ToLogFile( "::CheckSID(): " + hb_CStr( cSID ) + " " + hb_CStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
-   ENDIF
-
-   RETURN lOk
-
-// ------------------------------
+// ---
 
 METHOD PROCEDURE SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC ) CLASS uhttpd_Session
 
@@ -656,7 +570,6 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
                FClose( nH )
                EXIT
             ENDDO
-
          ELSE
             // uhttpd_Die( "ERROR: On opening session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             hb_idleSleep( ::nFileWait / 1000 )
@@ -768,7 +681,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
 
    RETURN .T.
 
-// ------------------------------
+// ---
 
 METHOD Encode() CLASS uhttpd_Session
 
@@ -783,7 +696,6 @@ METHOD Encode() CLASS uhttpd_Session
             AAdd( aSerial, { cKey, xVal } )
          ENDIF
       NEXT
-
    ENDIF
 
    RETURN iif( Empty( aSerial ),, hb_Serialize( aSerial ) )
@@ -873,7 +785,9 @@ METHOD PROCEDURE SendCacheLimiter() CLASS uhttpd_Session
 PROCEDURE DestroyObject() CLASS uhttpd_Session
 
    ::Close()
-   // ::oCGI:ToLogFile( "Session destroyed" )
-   // ::oCGI := NIL
+#if 0
+   ::oCGI:ToLogFile( "Session destroyed" )
+   ::oCGI := NIL
+#endif
 
    RETURN

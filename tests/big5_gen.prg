@@ -8,9 +8,7 @@
  *
  */
 
-
-/* ***************************************************************************
-
+/*
 these characters are mapped to U+FFFD REPLACEMENT CHARACTER in BIG5.TXT:
    0xA15A      SPACING UNDERSCORE             duplicates A1C4
    0xA1C3      SPACING HEAVY OVERSCORE        not in Unicode
@@ -46,10 +44,9 @@ duplicated character has the following mapping in BIG5.TXT:
 0xA2CC  0x5341  # <CJK>
 0xA2CE  0x5345  # <CJK>
 
-*************************************************************************** */
+*/
 
-
-//#define DO_START_OPT
+// #define DO_START_OPT
 
 procedure main()
 
@@ -138,7 +135,7 @@ procedure main()
       " * www - http://harbour-project.org" + hb_eol() + ;
       " *" + hb_eol() + ;
       " */" + hb_eol() + ;
-       hb_eol()
+      hb_eol()
 
    cResult += '#include "hbapi.h"' + hb_eol()
    cResult += hb_eol()

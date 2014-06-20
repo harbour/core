@@ -45,7 +45,7 @@ FUNCTION ft_NWSemOpen( cName, nInitVal, nHandle, nOpenCnt )
    cName    := iif( hb_BLen( cName ) > 127, hb_BLeft( cName, 127 ), cName )
    cRequest := hb_BChar( Len( cName ) ) + cName
 
-   aRegs[ AX ] := MAKEHI( 197 )                       // C5h
+   aRegs[ AX ] := MAKEHI( 0xC5 )
    aRegs[ DS ] := cRequest
    aRegs[ DX ] := REG_DS
    aRegs[ CX ] := nInitVal
@@ -68,7 +68,7 @@ FUNCTION ft_NWSemEx( nHandle, nValue, nOpenCnt )
    __defaultNIL( @nValue, 0 )
    __defaultNIL( @nOpenCnt, 0 )
 
-   aRegs[ AX ] := MAKEHI( 197 ) + 1                         // C5h, 01h
+   aRegs[ AX ] := MAKEHI( 0xC5 ) + 0x01
    aRegs[ CX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
    aRegs[ DX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
 

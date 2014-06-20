@@ -3,6 +3,30 @@
  * Video subsystem for OS/2 compilers
  *
  * Copyright 1999-2001 {list of individual authors and e-mail addresses}
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_gt_os2_ReadKey()
+ *
+ * Copyright 1999 Chen Kedem <niki@synel.co.il>
+ *    hb_gt_os2_mouse_Init()
+ *    hb_gt_os2_mouse_Exit()
+ *    hb_gt_os2_mouse_IsPresent()
+ *    hb_gt_os2_mouse_Show()
+ *    hb_gt_os2_mouse_Hide()
+ *    hb_gt_os2_mouse_SetPos()
+ *    hb_gt_os2_mouse_CountButton()
+ *    hb_gt_os2_Tone()
+ *    hb_gt_os2_IsColor()
+ *    hb_gt_os2_SetCursorSize()
+ *    hb_gt_os2_GetCharHeight()
+ *    hb_gt_os2_GetCursorStyle()
+ *    hb_gt_os2_SetCursorStyle()
+ *    hb_gt_os2_GetBlink()
+ *    hb_gt_os2_SetBlink()
+ *
+ * Copyright 2000-2001 Maurilio Longo <maurilio.longo@libero.it>
+ *    hb_gt_DispBegin() / hb_gt_DispEnd()
+ *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
+ *    16 bit KBD subsystem use inside hb_gt_os2_ReadKey()
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,42 +70,7 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_os2_ReadKey()
- *
- * Copyright 1999 Chen Kedem <niki@synel.co.il>
- *    hb_gt_os2_mouse_Init()
- *    hb_gt_os2_mouse_Exit()
- *    hb_gt_os2_mouse_IsPresent()
- *    hb_gt_os2_mouse_Show()
- *    hb_gt_os2_mouse_Hide()
- *    hb_gt_os2_mouse_SetPos()
- *    hb_gt_os2_mouse_CountButton()
- *    hb_gt_os2_Tone()
- *    hb_gt_os2_IsColor()
- *    hb_gt_os2_SetCursorSize()
- *    hb_gt_os2_GetCharHeight()
- *    hb_gt_os2_GetCursorStyle()
- *    hb_gt_os2_SetCursorStyle()
- *    hb_gt_os2_GetBlink()
- *    hb_gt_os2_SetBlink()
- *
- * Copyright 2000-2001 Maurilio Longo <maurilio.longo@libero.it>
- *    hb_gt_DispBegin() / hb_gt_DispEnd()
- *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
- *    16 bit KBD subsystem use inside hb_gt_os2_ReadKey()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
-/*
- * This module is partially based on VIDMGR by Andrew Clarke and modified for Harbour.
- */
+/* This module is partially based on VIDMGR by Andrew Clarke and modified for Harbour. */
 
 /* NOTE: User programs should never call this layer directly! */
 

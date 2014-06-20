@@ -1,11 +1,9 @@
-/*
- * This program will read the .hrb file and show its content
+/* This program will read the .hrb file and show its content
  *
  * readhrb <hrb file>
  *
  * Eddie Runia <eddie@runia.com>
  * Vailton Renato <vailtom@gmail.com> (Updated to support current Harbour implementation)
- * www - http://harbour-project.org
  *
  * Placed in the public domain
  */
@@ -70,7 +68,10 @@ PROCEDURE Main( cFrom )
             hb_BPeek( cBlock, 3 ) * 0x10000 + ;
             hb_BPeek( cBlock, 4 ) * 0x1000000
 
-         ?? cBorder := "+--------------------------+------------+---------------------------------+"
+         ?? cBorder := "+" + ;
+            Replicate( "-", 25 + 1 ) + "+" + ;
+            Replicate( "-", 11 + 1 ) + "+" + ;
+            Replicate( "-", 32 + 1 ) + "+"
          PrintItem( "Symbol Name", "Type", "Scope" )
          ? cBorder
 
@@ -127,7 +128,7 @@ PROCEDURE Main( cFrom )
                      ?? ","
                   ENDIF
                NEXT
-               ? "----"
+               ? "---"
             NEXT
          ENDIF
       ELSE

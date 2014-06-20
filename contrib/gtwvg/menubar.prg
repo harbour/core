@@ -553,7 +553,7 @@ METHOD WvgMenu:Popup( oXbp, aPos, nDefaultItem, nControl )
 
    aMenuItem := ::findMenuItemById( nCmd )
    IF HB_ISARRAY( aMenuItem ) .AND. HB_ISEVALITEM( aMenuItem[ 2 ] )
-      Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
+      Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
    ENDIF
 
    RETURN 0

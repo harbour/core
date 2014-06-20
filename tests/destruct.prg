@@ -17,16 +17,16 @@ PROCEDURE Main()
 
    PUBLIC P := NIL
 
-   ? "First simple tests when object is not destroyed by GC"
-   ? "====================================================="
+   ? "First simple tests when object is not destroyed by GC", "---"
+   ?
    SIMPLETEST( 0 )
    SIMPLETEST( 1 )
    SIMPLETEST( 2 )
    SIMPLETEST( 3 )
 
    ?
-   ? "Now object will be destroyed by GC"
-   ? "=================================="
+   ? "Now object will be destroyed by GC", "---"
+   ?
    GCFREETEST( 0 )
    GCFREETEST( 1 )
    GCFREETEST( 2 )

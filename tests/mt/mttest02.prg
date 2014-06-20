@@ -15,20 +15,22 @@
    #command always           => finally
 #endif
 
-procedure main()
+procedure Main()
+
    local thID, i
+
    ? Version()
    ? "Main start"
    thID := hb_threadStart( @thFunc(), "A", "B", "C" )
    ? "Thread ID:", thID
-   ? "==================="
+   ? Replicate( "=", 20 )
    ?
    begin sequence
       for i := 1 to 10
          ?? "M"
          hb_idleSleep( 0.050 )
       next
-      ? "==================="
+      ? Replicate( "=", 20 )
       ? "Main QUIT"
       quit
    always
@@ -36,10 +38,13 @@ procedure main()
       ?
    endsequence
    ? "End of main"
+
    return
 
 static procedure thFunc( ... )
+
    local i
+
    ? "Thread begin"
    ? "Parameters:"
    AEval( hb_AParams(), {| x | QQOut( "", x ) } )
@@ -59,8 +64,11 @@ static procedure thFunc( ... )
    endsequence
    ? "Thread end"
    ?
+
    return
 
 exit procedure p()
+
    ? "I'm EXIT procedure"
+
    return

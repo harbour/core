@@ -2,6 +2,8 @@
  * This is an original work by Brice de Ganahl and Steve Larsen
  * and is placed in the public domain.
  *
+ * Viktor Szakats (vszakats.net/harbour): _findeol(), _findbol()
+ *
  * Doc headers by Glenn Scott, Don Caton, and Steve Larsen
  *
  * Extensively revised by Steve Larsen
@@ -109,17 +111,6 @@
  *
  *    Rev 1.0   01 Apr 1991 01:02:48   GLENN
  * Nanforum Toolkit
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2008 Viktor Szakats (vszakats.net/harbour)
- *    _findeol(), _findbol()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

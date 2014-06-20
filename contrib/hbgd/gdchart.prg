@@ -327,7 +327,7 @@ METHOD VerticalBarChart() CLASS GDChart
       ::AddStyle( gdTransparent )
       ::SetStyle()
       FOR n := 10 TO 100 STEP 10
-         nDim  := ( ( nMaxValue / 100 ) * n )
+         nDim  := ( nMaxValue / 100 ) * n
          nPosY := ( nDim / nMaxValue ) * nHeight
          ::Line( x, ::Height() - ( y + nPosY ), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
       NEXT
@@ -336,7 +336,7 @@ METHOD VerticalBarChart() CLASS GDChart
    IF lShowAxis
       // Y Axis
       FOR n := 10 TO 100 STEP 10
-         nDim  := ( ( nMaxValue / 100 ) * n )
+         nDim  := ( nMaxValue / 100 ) * n
          cLabel := LTrim( Transform( nDim, cAxisPict ) )
          nPosY := ( nDim / nMaxValue ) * nHeight
          IF lShowLabelLeft
@@ -483,7 +483,7 @@ METHOD HorizontalBarChart() CLASS GDChart
       ::AddStyle( gdTransparent )
       ::SetStyle()
       FOR n := 10 TO 100 STEP 10
-         nDim  := ( ( nMaxValue / 100 ) * n )
+         nDim  := ( nMaxValue / 100 ) * n
          nPosX := ( nDim / nMaxValue ) * nWidth
          ::Line( x + nPosX, y, x + nPosX, y + nHeight, gdStyled )
       NEXT
@@ -492,7 +492,7 @@ METHOD HorizontalBarChart() CLASS GDChart
    IF lShowAxis
       // X Axis
       FOR n := 0 TO 100 STEP 10
-         nDim   := ( ( nMaxValue / 100 ) * n )
+         nDim   := ( nMaxValue / 100 ) * n
          cLabel := LTrim( Transform( nDim, cAxisPict ) )
          nPosX  := ( nDim / nMaxValue ) * nWidth - ( ( Len( cLabel ) / 2 ) * ::GetFontWidth() )
          IF lShowLabelTop
@@ -673,7 +673,7 @@ METHOD LineChart() CLASS GDChart
       ::AddStyle( gdTransparent )
       ::SetStyle()
       FOR n := 10 TO 100 STEP 10
-         nDim  := ( ( nTotRange / 100 ) * n )
+         nDim  := ( nTotRange / 100 ) * n
          nPosY := ( nDim / nTotRange ) * nHeight
          ::Line( x, ::Height() - ( y + nPosY ), x + nWidth, ::Height() - ( y + nPosY ), gdStyled )
       NEXT
@@ -687,7 +687,7 @@ METHOD LineChart() CLASS GDChart
    IF lShowAxis
       // Y Axis
       FOR n := 0 TO 100 STEP 10
-         nDim  := ( ( nTotRange / 100 ) * n )
+         nDim  := ( nTotRange / 100 ) * n
          cLabel := LTrim( Transform( nMinValue + ( nTotRange / 10 ) * ( n / 10 ), cAxisPict ) )
          nPosY := ( nDim / nTotRange ) * nHeight
          IF lShowLabelLeft

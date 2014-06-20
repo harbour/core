@@ -13,37 +13,37 @@ PROCEDURE Main()
    ? "passed 2:  "; TEST_0_0( 1, 2 )
    ? "passed 3:  "; TEST_0_0( 1, 2, 3 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_0_0v()
    ? "passed 1:  "; TEST_0_0v( 1 )
    ? "passed 2:  "; TEST_0_0v( 1, 2 )
    ? "passed 3:  "; TEST_0_0v( 1, 2, 3 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_1_0()
    ? "passed 1:  "; TEST_1_0( 1 )
    ? "passed 2:  "; TEST_1_0( 1, 2 )
    ? "passed 3:  "; TEST_1_0( 1, 2, 3 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_1_0v()
    ? "passed 1:  "; TEST_1_0v( 1 )
    ? "passed 2:  "; TEST_1_0v( 1, 2 )
    ? "passed 3:  "; TEST_1_0v( 1, 2, 3 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_1_1()
    ? "passed 1:  "; TEST_1_1( 1 )
    ? "passed 2:  "; TEST_1_1( 1, 2 )
    ? "passed 3:  "; TEST_1_1( 1, 2, 3 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_1_1v()
    ? "passed 1:  "; TEST_1_1v( 1 )
    ? "passed 2:  "; TEST_1_1v( 1, 2 )
    ? "passed 3:  "; TEST_1_1v( 1, 2, 3 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_1_3()
    ? "passed 1:  "; TEST_1_3( 1 )
    ? "passed 2:  "; TEST_1_3( 1, 2 )
@@ -52,7 +52,7 @@ PROCEDURE Main()
    ? "passed 5:  "; TEST_1_3( 1, 2, 3, 4, 5 )
    ? "passed 6:  "; TEST_1_3( 1, 2, 3, 4, 5, 6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_1_3v()
    ? "passed 1:  "; TEST_1_3v( 1 )
    ? "passed 2:  "; TEST_1_3v( 1, 2 )
@@ -61,7 +61,7 @@ PROCEDURE Main()
    ? "passed 5:  "; TEST_1_3v( 1, 2, 3, 4, 5 )
    ? "passed 6:  "; TEST_1_3v( 1, 2, 3, 4, 5, 6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_3_0()
    ? "passed 1:  "; TEST_3_0( 1 )
    ? "passed 2:  "; TEST_3_0( 1, 2 )
@@ -70,7 +70,7 @@ PROCEDURE Main()
    ? "passed 5:  "; TEST_3_0( 1, 2, 3, 4, 5 )
    ? "passed 6:  "; TEST_3_0( 1, 2, 3, 4, 5, 6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_3_0v()
    ? "passed 1:  "; TEST_3_0v( 1 )
    ? "passed 2:  "; TEST_3_0v( 1, 2 )
@@ -79,7 +79,7 @@ PROCEDURE Main()
    ? "passed 5:  "; TEST_3_0v( 1, 2, 3, 4, 5 )
    ? "passed 6:  "; TEST_3_0v( 1, 2, 3, 4, 5, 6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_3_3()
    ? "passed 1:  "; TEST_3_3( 1 )
    ? "passed 2:  "; TEST_3_3( 1, 2 )
@@ -88,7 +88,7 @@ PROCEDURE Main()
    ? "passed 5:  "; TEST_3_3( 1, 2, 3, 4, 5 )
    ? "passed 6:  "; TEST_3_3( 1, 2, 3, 4, 5, 6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 0:  "; TEST_3_3v()
    ? "passed 1:  "; TEST_3_3v( 1 )
    ? "passed 2:  "; TEST_3_3v( 1, 2 )
@@ -97,27 +97,27 @@ PROCEDURE Main()
    ? "passed 5:  "; TEST_3_3v( 1, 2, 3, 4, 5 )
    ? "passed 6:  "; TEST_3_3v( 1, 2, 3, 4, 5, 6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 6 by ref:  "; TEST_0_0( @l1, @l2, @l3, @l4, @l5, @l6 )
    ? "passed 6 by ref:  "; TEST_0_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 6 by ref:  "; TEST_1_0( @l1, @l2, @l3, @l4, @l5, @l6 )
    ? "passed 6 by ref:  "; TEST_1_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 6 by ref:  "; TEST_1_1( @l1, @l2, @l3, @l4, @l5, @l6 )
    ? "passed 6 by ref:  "; TEST_1_1v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 6 by ref:  "; TEST_1_3( @l1, @l2, @l3, @l4, @l5, @l6 )
    ? "passed 6 by ref:  "; TEST_1_3v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 6 by ref:  "; TEST_3_0( @l1, @l2, @l3, @l4, @l5, @l6 )
    ? "passed 6 by ref:  "; TEST_3_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
-   ? "---------------------------------------"
+   ? Replicate( "-", 40 )
    ? "passed 6 by ref:  "; TEST_3_3( @l1, @l2, @l3, @l4, @l5, @l6 )
    ? "passed 6 by ref:  "; TEST_3_3v( @l1, @l2, @l3, @l4, @l5, @l6 )
 

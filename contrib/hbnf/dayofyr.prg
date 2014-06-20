@@ -33,11 +33,7 @@ FUNCTION ft_DayOfYr( dGivenDate, nDayNum, lIsAcct )
       dGivenDate := Date()
    ENDIF
 
-   IF HB_ISLOGICAL( lIsAcct )
-      aRetVal := ft_AcctYear( dGivenDate )
-   ELSE
-      aRetVal := ft_Year( dGivenDate )
-   ENDIF
+   aRetVal := iif( HB_ISLOGICAL( lIsAcct ), ft_AcctYear( dGivenDate ), ft_Year( dGivenDate ) )
 
    IF HB_ISNUMERIC( nDayNum )
       nTemp := aRetVal[ 3 ] - aRetVal[ 2 ] + 1

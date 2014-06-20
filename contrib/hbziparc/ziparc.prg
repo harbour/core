@@ -1,12 +1,9 @@
 /*
- * Harbour Project source code:
  * ZipArchive interface compatibility implementation.
  *
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2008 Toninho (toninhofwi yahoo.com.br)
- * Copyright 2000-2001 Luiz Rafael Culik <culik@sl.conex.net>
- *   (original ZipArchive interface, docs)
- * www - http://harbour-project.org
+ * Copyright 2000-2001 Luiz Rafael Culik <culik@sl.conex.net> (original ZipArchive interface, docs)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,7 +101,7 @@ FUNCTION hb_GetFileCount( cFileName )
    ENDIF
 
    IF ! Empty( hUnzip := hb_unzipOpen( cFileName ) )
-      hb_unzipGlobalInfo( hUnzip, @nEntries, NIL )
+      hb_unzipGlobalInfo( hUnzip, @nEntries )
       hb_unzipClose( hUnzip )
    ELSE
       nEntries := 0

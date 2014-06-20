@@ -369,11 +369,11 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
       cVal := hb_defaultValue( cDefault, "" )
    ENDIF
 
-   IF !( cVal == "" )
-      cVal := "<" + cKey + ">" + cVal + "</" + cKey + ">"
+   IF cVal == ""
+      RETURN cVal
    ENDIF
 
-   RETURN cVal
+   RETURN "<" + cKey + ">" + cVal + "</" + cKey + ">"
 
 STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
 

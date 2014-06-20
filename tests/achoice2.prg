@@ -1,11 +1,6 @@
-/*
- * Harbour Project source code:
- *    AChoice() test
- *
- * Copyright 2009 Vladislav Lavrecky <lavr / at / ldz.lv>
- * www - http://harbour-project.org
- *
- */
+/* Copyright 2009 Vladislav Lavrecky <lavr / at / ldz.lv> */
+
+/* AChoice() bug test */
 
 /* Menu Navigation - <Right> and <Left> arrow keys, <Esc> to exit
    After some <Right> or <Left> arrow preses */

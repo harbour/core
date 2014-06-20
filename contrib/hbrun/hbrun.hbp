@@ -1,3 +1,5 @@
+# Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+
 @../../utils/hbmk2/hbmk2.hbp
 
 -o${hb_name}

@@ -9,7 +9,6 @@ PROCEDURE Main()
    CLS
 
    ? "Testing Harbour run-time preprocessing"
-   ? "======================================"
    ?
 
    ? cString := "@ 10, 10 SAY 'Hello!'"
@@ -55,7 +54,7 @@ PROCEDURE Main()
 
    FOR j := 1 TO 2
       ? iif( j == 1, "Before", "After" ), "__pp_Process()"
-      ? "==================="
+      ? Replicate( "-", 20 )
       ?
       FOR EACH cString IN aScript
          ? iif( j == 1, cString, __pp_Process( pPP, cString ) )

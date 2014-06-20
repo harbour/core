@@ -78,7 +78,7 @@ HB_FUNC( FT_SETVPG )
    {
       union REGS regs;
       regs.h.ah = 5;
-      regs.h.al = hb_parni( 1 ); /* nPage */
+      regs.h.al = ( HB_U8 ) hb_parni( 1 );  /* nPage */
       HB_DOS_INT86( 0x10, &regs, &regs );
    }
 #endif

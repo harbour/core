@@ -9,8 +9,7 @@
 
 3.) *nix users will need to convert original filenames to lowercase
     and EOLs to native format, using these commands:
-    hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.c"
-    hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.prg"
+    hbmk2 -sanitize *.c *.prg
 
 4.) Apply supplied patch to the source using GNU Patch:
     patch -lNi superlib.dif

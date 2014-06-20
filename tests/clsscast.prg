@@ -34,8 +34,8 @@ procedure main()
    ?
 
    /* direct assignment, possible because the variables have differ names */
-   ? "instance variables [" + hb_ntos( Len( o ) ) +"]:"; ?
-   for i := 1 to Len( o ); ?? "", o[ i ]; next
+   ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
+   for each i in o; ?? "", i; next
    ? " => shoule be [0]:"
    ?
    ? "[1] MYCLASS1 VARS:", o:myclass1:x1, o:myclass1:y1, o:myclass1:z1, "  => should be: (x1) (y1) (z1)"
@@ -87,8 +87,8 @@ procedure main()
    ? "    MYCLASS4 VARS:", o:x4, o:y4, o:z4, "  => should be:  X4   Y4   Z4"
    ?
 
-   ? "instance variables [" + hb_ntos( Len( o ) ) +"]:"; ?
-   for i := 1 to Len( o ); ?? "", o[ i ]; next
+   ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
+   for each i in o; ?? "", i; next
    ? " => shoule be [0]:"
    ?
 
@@ -312,8 +312,8 @@ procedure main()
    ?
 
 
-   ? "instance variables [" + hb_ntos( Len( o ) ) +"]:"; ?
-   for i := 1 to Len( o ); ?? "", o[ i ]; next
+   ? "instance variables [" + hb_ntos( Len( o ) ) + "]:"; ?
+   for each i in o; ?? "", i; next
    ? " => shoule be [0]:"
    ?
    ? "myclass1 shared class vars:", Str( __cls_CntShrData( o:myclass1:classH ), 3 ), "  => should be:   3"
