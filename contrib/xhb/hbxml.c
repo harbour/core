@@ -634,7 +634,7 @@ static void mxml_node_add_below( PHB_ITEM pTg, PHB_ITEM pNode )
    if( ! HB_IS_NIL( pChild ) )
    {
       /* Scanning up to the last child */
-      for(;; )
+      for( ;; )
       {
          hb_objSendMsg( pChild, "ONEXT", 0 );
          if( HB_IS_NIL( hb_param( -1, HB_IT_ANY ) ) )

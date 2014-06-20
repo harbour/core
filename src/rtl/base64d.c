@@ -77,7 +77,7 @@ static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_i
    char *       pszPlainchar = pszPlainttextOut;
    signed char  fragment;
 
-   for(;; )
+   for( ;; )
    {
       do
       {
