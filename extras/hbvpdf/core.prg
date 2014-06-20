@@ -1836,10 +1836,10 @@ FUNCTION pdfTIFFInfo( cFile )
 
    LOCAL c40 := Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
 
-   // local aType := {"BYTE","ASCII","SHORT","LONG","RATIONAL","SBYTE","UNDEFINED","SSHORT","SLONG","SRATIONAL","FLOAT","DOUBLE"}
+   // LOCAL aType := { "BYTE", "ASCII", "SHORT", "LONG", "RATIONAL", "SBYTE", "UNDEFINED", "SSHORT", "SLONG", "SRATIONAL", "FLOAT", "DOUBLE" }
    LOCAL aCount := { 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8 }
    LOCAL nTemp, nHandle, cValues, c2, nFieldType, nCount, nPos, nTag, nValues
-   LOCAL nOffset, cTemp, cIFDNext, nIFD, nFields, nn// , cTag, nPages
+   LOCAL nOffset, cTemp, cIFDNext, nIFD, nFields, nn //, cTag, nPages
 
    LOCAL nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0, yRes := 0, aTemp := {}, nSpace
 
@@ -1867,8 +1867,8 @@ FUNCTION pdfTIFFInfo( cFile )
       FOR nn := 1 TO nFields
          FRead( nHandle, @cTemp, 12 )
 
-         nTag := Bin2W( SubStr( cTemp, 1, 2 ) )
-         nFieldType := Bin2W( SubStr( cTemp, 3, 2 ) )
+         nTag := Bin2W( hb_BSubStr( cTemp, 1, 2 ) )
+         nFieldType := Bin2W( hb_BSubStr( cTemp, 3, 2 ) )
          /*
          1 : BYTE       8-bit unsigned integer.
          2 : ASCII      8-bit byte that contains a 7-bit ASCII code; the last byte
@@ -1890,8 +1890,8 @@ FUNCTION pdfTIFFInfo( cFile )
          11 : FLOAT     Single precision (4-byte) IEEE format.
          12 : DOUBLE    Double precision (8-byte) IEEE format.
          */
-         nCount := Bin2L( SubStr( cTemp, 5, 4 ) )
-         nOffset := Bin2L( SubStr( cTemp, 9, 4 ) )
+         nCount := Bin2L( hb_BSubStr( cTemp, 5, 4 ) )
+         nOffset := Bin2L( hb_BSubStr( cTemp, 9, 4 ) )
 
          IF nCount > 1 .OR. nFieldType == RATIONAL .OR. nFieldType == SRATIONAL
             nPos := filepos( nHandle )
@@ -1902,7 +1902,7 @@ FUNCTION pdfTIFFInfo( cFile )
             FRead( nHandle, @cValues, nValues )
             FSeek( nHandle, nPos )
          ELSE
-            cValues := SubStr( cTemp, 9, 4 )
+            cValues := hb_BSubStr( cTemp, 9, 4 )
          ENDIF
 
          IF nFieldType == ASCII
@@ -1928,9 +1928,9 @@ FUNCTION pdfTIFFInfo( cFile )
 #endif
             DO CASE
             CASE nFieldType == SHORT
-               nWidth := Bin2W( SubStr( cValues, 1, 2 ) )
+               nWidth := Bin2W( hb_BSubStr( cValues, 1, 2 ) )
             CASE nFieldType == LONG
-               nWidth := Bin2L( SubStr( cValues, 1, 4 ) )
+               nWidth := Bin2L( hb_BSubStr( cValues, 1, 4 ) )
             ENDCASE
 
          CASE nTag == 257
@@ -1949,9 +1949,9 @@ FUNCTION pdfTIFFInfo( cFile )
 #endif
             DO CASE
             CASE nFieldType == SHORT
-               nHeight := Bin2W( SubStr( cValues, 1, 2 ) )
+               nHeight := Bin2W( hb_BSubStr( cValues, 1, 2 ) )
             CASE nFieldType == LONG
-               nHeight := Bin2L( SubStr( cValues, 1, 4 ) )
+               nHeight := Bin2L( hb_BSubStr( cValues, 1, 4 ) )
             ENDCASE
 
          CASE nTag == 258
@@ -2084,9 +2084,9 @@ FUNCTION pdfTIFFInfo( cFile )
 
             DO CASE
             CASE nFieldType == SHORT
-               nFrom := Bin2W( SubStr( cValues, 1, 2 ) )
+               nFrom := Bin2W( hb_BSubStr( cValues, 1, 2 ) )
             CASE nFieldType == LONG
-               nFrom := Bin2L( SubStr( cValues, 1, 4 ) )
+               nFrom := Bin2L( hb_BSubStr( cValues, 1, 4 ) )
             ENDCASE
 
          CASE nTag == 277
@@ -2133,9 +2133,9 @@ FUNCTION pdfTIFFInfo( cFile )
 
             DO CASE
             CASE nFieldType == SHORT
-               nLength := Bin2W( SubStr( cValues, 1, 2 ) )
+               nLength := Bin2W( hb_BSubStr( cValues, 1, 2 ) )
             CASE nFieldType == LONG
-               nLength := Bin2L( SubStr( cValues, 1, 4 ) )
+               nLength := Bin2L( hb_BSubStr( cValues, 1, 4 ) )
             ENDCASE
 
             nLength *= nCount // Count all strips !!!
@@ -2153,7 +2153,7 @@ FUNCTION pdfTIFFInfo( cFile )
             IF nFieldType != RATIONAL
                // Alert( "Wrong Type for XResolution" )
             ENDIF
-            xRes := Bin2L( SubStr( cValues, 1, 4 ) )
+            xRes := Bin2L( hb_BSubStr( cValues, 1, 4 ) )
          CASE nTag == 283
                /*
                YResolution
@@ -2167,7 +2167,7 @@ FUNCTION pdfTIFFInfo( cFile )
             IF nFieldType != RATIONAL
                // Alert( "Wrong Type for YResolution" )
             ENDIF
-            yRes := Bin2L( SubStr( cValues, 1, 4 ) )
+            yRes := Bin2L( hb_BSubStr( cValues, 1, 4 ) )
          CASE nTag == 284
             // ?? "PlanarConfiguration"
             // cTag := "PlanarConfiguration"
@@ -2320,49 +2320,49 @@ FUNCTION pdfTIFFInfo( cFile )
          DO CASE
          CASE nFieldType == BYTE
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( Asc( SubStr( cValues, nI, 1 ) ) )
+               ?? " " + hb_ntos( hb_BCode( hb_BSubStr( cValues, nI, 1 ) ) )
             NEXT
          CASE nFieldType == ASCII
             ?? " "
             FOR nI := 1 TO nCount
-               ?? SubStr( cValues, nI, 1 )
+               ?? hb_BSubStr( cValues, nI, 1 )
             NEXT
          CASE nFieldType == SHORT
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( Bin2W( SubStr( cValues, ( nI - 1 ) * 2 + 1, 2 ) ) )
+               ?? " " + hb_ntos( Bin2W( hb_BSubStr( cValues, ( nI - 1 ) * 2 + 1, 2 ) ) )
             NEXT
          CASE nFieldType == LONG
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( Bin2L( SubStr( cValues, ( nI - 1 ) * 4 + 1, 4 ) ) )
+               ?? " " + hb_ntos( Bin2L( hb_BSubStr( cValues, ( nI - 1 ) * 4 + 1, 4 ) ) )
             NEXT
          CASE nFieldType == RATIONAL
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( Bin2L( SubStr( cValues, ( nI - 1 ) * 8 + 1, 4 ) ) ) + "/" + hb_ntos( Bin2L( SubStr( cValues, nI + 4, 4 ) ) )
+               ?? " " + hb_ntos( Bin2L( hb_BSubStr( cValues, ( nI - 1 ) * 8 + 1, 4 ) ) ) + "/" + hb_ntos( Bin2L( hb_BSubStr( cValues, nI + 4, 4 ) ) )
             NEXT
          CASE nFieldType == SBYTE
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( Asc( SubStr( cValues, nI, 1 ) ) )
+               ?? " " + hb_ntos( hb_BCode( hb_BSubStr( cValues, nI, 1 ) ) )
             NEXT
          CASE nFieldType == UNDEFINED
             FOR nI := 1 TO nCount
-               ?? " " + SubStr( cValues, nI, 1 )
+               ?? " " + hb_BSubStr( cValues, nI, 1 )
             NEXT
          CASE nFieldType == SSHORT
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( Bin2I( SubStr( cValues, ( nI - 1 ) * 2 + 1, 2 ) ) )
+               ?? " " + hb_ntos( Bin2I( hb_BSubStr( cValues, ( nI - 1 ) * 2 + 1, 2 ) ) )
             NEXT
          CASE nFieldType == SLONG
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( Bin2L( SubStr( cValues, ( nI - 1 ) * 4 + 1, 4 ) ) )
+               ?? " " + hb_ntos( Bin2L( hb_BSubStr( cValues, ( nI - 1 ) * 4 + 1, 4 ) ) )
             NEXT
          CASE nFieldType == SRATIONAL
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( Bin2L( SubStr( cValues, ( nI - 1 ) * 8 + 1, 4 ) ) ) + "/" + hb_ntos( Bin2L( SubStr( cValues, nI + 4, 4 ) ) )
+               ?? " " + hb_ntos( Bin2L( hb_BSubStr( cValues, ( nI - 1 ) * 8 + 1, 4 ) ) ) + "/" + hb_ntos( Bin2L( hb_BSubStr( cValues, nI + 4, 4 ) ) )
             NEXT
          CASE nFieldType == FLOAT
          CASE nFieldType == DOUBLE
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( CToF( SubStr( cValues, ( nI - 1 ) * 8 + 1, 8 ) ) )
+               ?? " " + hb_ntos( CToF( hb_BSubStr( cValues, ( nI - 1 ) * 8 + 1, 8 ) ) )
             NEXT
 
          ENDCASE
@@ -2399,14 +2399,14 @@ FUNCTION pdfJPEGInfo( cFile )
    c255 := Space( nBuffer )
    FRead( nHandle, @c255, nBuffer )
 
-   xRes := Asc( SubStr( c255, 15, 1 ) ) * 256 + Asc( SubStr( c255, 16, 1 ) )
-   yRes := Asc( SubStr( c255, 17, 1 ) ) * 256 + Asc( SubStr( c255, 18, 1 ) )
+   xRes := hb_BCode( hb_BSubStr( c255, 15, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 16, 1 ) )
+   yRes := hb_BCode( hb_BSubStr( c255, 17, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 18, 1 ) )
 
    nAt := RAt( Chr( 255 ) + Chr( 192 ), c255 ) + 5
-   nHeight := Asc( SubStr( c255, nAt, 1 ) ) * 256 + Asc( SubStr( c255, nAt + 1, 1 ) )
-   nWidth := Asc( SubStr( c255, nAt + 2, 1 ) ) * 256 + Asc( SubStr( c255, nAt + 3, 1 ) )
+   nHeight := hb_BCode( hb_BSubStr( c255, nAt, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, nAt + 1, 1 ) )
+   nWidth := hb_BCode( hb_BSubStr( c255, nAt + 2, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, nAt + 3, 1 ) )
 
-   nSpace := Asc( SubStr( c255, nAt + 4, 1 ) )
+   nSpace := hb_BCode( hb_BSubStr( c255, nAt + 4, 1 ) )
 
    nLength := FileSize( nHandle )
 
