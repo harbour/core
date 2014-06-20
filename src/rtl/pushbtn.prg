@@ -211,13 +211,14 @@ METHOD display() CLASS PushButton
 
    DispBegin()
 
-   IF ::lBuffer
+   DO CASE
+   CASE ::lBuffer
       cColor := hb_ColorIndex( ::cColorSpec, 2 )
-   ELSEIF ::lHasFocus
+   CASE ::lHasFocus
       cColor := hb_ColorIndex( ::cColorSpec, 1 )
-   ELSE
+   OTHERWISE
       cColor := hb_ColorIndex( ::cColorSpec, 0 )
-   ENDIF
+   ENDCASE
 
    IF ( nPos := At( "&", cCaption ) ) == 0
    ELSEIF nPos == Len( cCaption )

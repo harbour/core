@@ -129,7 +129,7 @@ CREATE CLASS Array INHERIT HBScalar FUNCTION __HBArray
    METHOD IsScalar()
    METHOD Remove( e )
    METHOD Scan( b )
-   METHOD _Size( newSize )                   // assignment method
+   METHOD _Size( newSize )  // assignment method
 
    MESSAGE Append  METHOD Add
 

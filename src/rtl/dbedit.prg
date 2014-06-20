@@ -97,7 +97,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
    oBrowse:colSep    := iif( HB_ISSTRING( xColumnSeparators ), xColumnSeparators, hb_UTF8ToStrBox( " │ " ) )
    oBrowse:footSep   := hb_defaultValue( xFootingSeparators, "" )
    oBrowse:skipBlock := {| nRecs | Skipped( nRecs, lAppend ) }
-   oBrowse:autoLite  := .F. /* Set to .F. just like in CA-Cl*pper. [vszakats] */
+   oBrowse:autoLite  := .F.  /* Set to .F. just like in CA-Cl*pper. [vszakats] */
 
    IF HB_ISARRAY( acColumns )
       nColCount := 0
@@ -283,9 +283,8 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
 
 
 /* NOTE: CA-Cl*pper uses intermediate function CALLUSER()
- *       to execute user function. We're replicating this behavior
- *       for code which may check ProcName() results in user function
- */
+         to execute user function. We're replicating this behavior
+         for code which may check ProcName() results in user function */
 STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
 
    LOCAL nPrevRecNo
@@ -304,11 +303,12 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
    /* NOTE: CA-Cl*pper won't check the type of the return value here,
             and will crash if it's a non-NIL, non-numeric type. We're
             replicating this behavior. */
-   nAction := iif( HB_ISEVALITEM( xUserFunc ), ;
-                                 Eval( xUserFunc, nMode, oBrowse:colPos ), ;
-              iif( HB_ISSTRING( xUserFunc ) .AND. ! Empty( xUserFunc ), ;
-                                 &xUserFunc( nMode, oBrowse:colPos ), ;  /* NOTE: Macro operator! */
-              iif( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT ) ) )
+   nAction := ;
+      iif( HB_ISEVALITEM( xUserFunc ), ;
+                         Eval( xUserFunc, nMode, oBrowse:colPos ), ;
+      iif( HB_ISSTRING( xUserFunc ) .AND. ! Empty( xUserFunc ), ;
+                         &xUserFunc( nMode, oBrowse:colPos ), ;  /* NOTE: Macro operator! */
+      iif( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT ) ) )
 
    IF ! lAppend .AND. Eof() .AND. ! IsDbEmpty()
       dbSkip( -1 )
@@ -359,10 +359,8 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
 
 
 /* helper function to detect empty tables. It's not perfect but
- * it functionally uses the same conditions as CA-Cl*pper
- */
+   it functionally uses the same conditions as CA-Cl*pper */
 STATIC FUNCTION IsDbEmpty()
-
    RETURN LastRec() == 0 .OR. ;
       ( Bof() .AND. ( Eof() .OR. RecNo() == LastRec() + 1 ) )
 
@@ -372,14 +370,15 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
    LOCAL nSkipped := 0
 
    IF LastRec() != 0
-      IF nRecs == 0
+      DO CASE
+      CASE nRecs == 0
          IF Eof() .AND. ! lAppend
             dbSkip( -1 )
             nSkipped := -1
          ELSE
             dbSkip( 0 )
          ENDIF
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+      CASE nRecs > 0 .AND. RecNo() != LastRec() + 1
          DO WHILE nSkipped < nRecs
             dbSkip()
             IF Eof()
@@ -392,7 +391,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             ENDIF
             nSkipped++
          ENDDO
-      ELSEIF nRecs < 0
+      CASE nRecs < 0
          DO WHILE nSkipped > nRecs
             dbSkip( -1 )
             IF Bof()
@@ -400,7 +399,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             ENDIF
             nSkipped--
          ENDDO
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN nSkipped

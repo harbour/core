@@ -139,12 +139,10 @@ STATIC FUNCTION DefError( oError )
 
    n := 1
    DO WHILE ! Empty( ProcName( ++n ) )
-
       OutErr( hb_eol() )
       OutErr( hb_StrFormat( "Called from %1$s(%2$d)  ", ;
          ProcName( n ), ;
          ProcLine( n ) ) )
-
    ENDDO
 
    ErrorLevel( 1 )

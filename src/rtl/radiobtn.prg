@@ -89,7 +89,7 @@ CREATE CLASS RadioButtn FUNCTION HBRadioButton
    METHOD sBlock( bSBlock ) SETGET
    METHOD style( cStyle ) SETGET
 
-   METHOD New( nRow, nCol, cCaption, cData ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( nRow, nCol, cCaption, cData )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -332,7 +332,7 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RadioButtn
    ::cCaption := hb_defaultValue( cCaption, "" )
    ::nCol     := nCol
    ::nRow     := nRow
-   ::cData    := cData /* NOTE: Every type is allowed here to be fully compatible */
+   ::cData    := cData  /* NOTE: Every type is allowed here to be fully compatible */
 
    IF IsDefColor()
       ::cColorSpec := "W/N,W+/N,W+/N,N/W,W/N,W/N,W+/N"

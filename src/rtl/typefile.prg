@@ -49,7 +49,7 @@
 #include "error.ch"
 #include "fileio.ch"
 
-#define BUFFER_LENGTH 8192
+#define BUFFER_LENGTH  8192
 
 PROCEDURE __TypeFile( cFile, lPrint )
 
