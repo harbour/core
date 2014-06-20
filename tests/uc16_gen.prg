@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    code to generate C source with conversion tables between BIG5 and UCS16
- *    using data defined by Unicode, Inc. in BIG5.TXT
+ * Code to generate C source with conversion tables between BIG5 and UCS16
+ * using data defined by Unicode, Inc. in BIG5.TXT
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

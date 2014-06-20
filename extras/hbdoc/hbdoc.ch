@@ -1,12 +1,8 @@
 /*
- * Harbour Project source code:
  * Document generator include file
  *
  * Copyright 2009 April White <april users.sourceforge.net>
- * www - http://harbour-project.org
- *
- * Portions of this project are based on hbdoc
- *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
+ * Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br> (Portions of this project are based on hbdoc)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +51,7 @@
 // Template definitions
 #define TPL_START            1
 #define TPL_END              2
-#define TPL_REQUIRED         4 // intentially has a 'required' and 'optional' flag
+#define TPL_REQUIRED         4  // intentially has a 'required' and 'optional' flag
 #define TPL_OPTIONAL         8
 #define TPL_PREFORMATTED     16
 #define TPL_CONSTRAINTLIST   32

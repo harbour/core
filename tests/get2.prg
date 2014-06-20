@@ -1,3 +1,7 @@
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 PROCEDURE Main()
 
    LOCAL GetList := {}
@@ -18,6 +22,6 @@ PROCEDURE Main()
 
    dbCloseArea()
 
-   FErase( "test1.dbf" )
+   hb_dbDrop( "test1.dbf" )
 
    RETURN

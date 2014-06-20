@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for GT keyboard input
+ * Demonstration/test code for GT keyboard input
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 
