@@ -61,6 +61,15 @@ HB_FUNC( __WAPI_GETACP )
 #endif
 }
 
+HB_FUNC( __WAPI_GETOEMCP )
+{
+#if defined( HB_OS_WIN )
+   hb_retnl( GetOEMCP() );
+#else
+   hb_retnl( 0 );
+#endif
+}
+
 HB_FUNC( __WAPI_GETCONSOLEOUTPUTCP )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )

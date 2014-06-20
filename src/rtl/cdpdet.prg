@@ -52,7 +52,8 @@ FUNCTION hb_cdpTerm()
    LOCAL cLang
 
 #if defined( __PLATFORM__WINDOWS )
-   cCP := __CPWinToCPStd( __wapi_GetConsoleOutputCP() )
+   LOCAL tmp
+   cCP := __CPWinToCPStd( iif( ( tmp := __wapi_GetConsoleOutputCP() ) == 0, __wapi_GetOEMCP(), tmp ) )
    cLang := hb_UserLang()
 #elif defined( __PLATFORM__UNIX )
    cCP := __UnixParseLangCP( iif( Empty( GetEnv( "LANG" ) ), GetEnv( "LC_CTYPE" ), GetEnv( "LANG" ) ), @cLang )
