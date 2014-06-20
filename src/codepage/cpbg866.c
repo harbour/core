@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (BG866)
  *
  * Copyright 1999-2005 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

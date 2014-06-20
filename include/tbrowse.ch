@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for TBrowse() function
  *
  * Copyright 2002 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +48,7 @@
 #define _TBROWSE_CH
 
 /* TBrowse ApplyKey() method return codes */
-#define TBR_EXIT        -1
+#define TBR_EXIT         -1
 #define TBR_CONTINUE     0
 #define TBR_EXCEPTION    1
 

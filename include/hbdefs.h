@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for compiler and runtime basic type declarations
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

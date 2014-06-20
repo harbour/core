@@ -2,7 +2,6 @@
  * xHarbour Project source code:
  * KOI8-U <-> Unicode conversion table
  *
- *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.xharbour.org
  *

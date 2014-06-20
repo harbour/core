@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file assertion macros
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,24 +46,24 @@
 
 #ifndef HB_ASSERT_CH_
 #define HB_ASSERT_CH_
-#define _ASSERT_DEFINED /* NOTE: For complete CA-Cl*pper compatibility */
+#define _ASSERT_DEFINED  /* NOTE: For complete CA-Cl*pper compatibility */
 
 #ifdef NDEBUG
 
 /* When NDEBUG is defined, ignore all ASSERT() calls */
-#command ASSERT( <exp> [, <msg>] )      =>
+#command ASSERT( <exp> [, <msg>] )  =>
 
 #else
 
-#command ASSERT( <exp> [, <msg>] )      =>                              ;
-         IF !( <exp> )                                                  ;
-       ;    OutStd(                                                     ;
-                    hb_eol() + ProcName( 0 ) +                          ;
-                    "(" + hb_ntos( ProcLine() ) + ")" +                 ;
-                    "  Assertion failed: " +                            ;
-                    iif( <.msg.>, <msg>, <"exp"> )                      ;
-                  )                                                     ;
-       ;    QUIT                                                        ;
+#command ASSERT( <exp> [, <msg>] )  =>                  ;
+         IF !( <exp> )                                  ;
+       ;    OutStd(                                     ;
+                    hb_eol() + ProcName( 0 ) +          ;
+                    "(" + hb_ntos( ProcLine() ) + ")" + ;
+                    "  Assertion failed: " +            ;
+                    iif( <.msg.>, <msg>, <"exp"> )      ;
+                  )                                     ;
+       ;    QUIT                                        ;
        ; END
 
 #endif /* NDEBUG */
