@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for typedef for maindllp.c
  *
  * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

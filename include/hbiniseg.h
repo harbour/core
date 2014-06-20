@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
- *    startup code using special data segments
+ * Startup code using special data segments
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
- *
  * This code uses MSC startup macros created by
  * Paul Tucker <ptucker /at/ sympatico.ca>
  *
