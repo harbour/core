@@ -64,7 +64,7 @@ typedef PHB_ITEM ( * HB_PARAM )( int iParam, long lMask );
 typedef PHB_ITEM ( * HB_PARAMERROR )( int iParam );
 typedef HB_BOOL  ( * HB_EXTISPARAM ) ( int iParam );
 #if defined( HB_LEGACY_LEVEL4 )
-#  define HB_EXTISARRAY HB_EXTISPARAM
+   #define HB_EXTISARRAY HB_EXTISPARAM
 #endif
 
 typedef void     ( * HB_RET )( void );

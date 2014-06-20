@@ -707,10 +707,10 @@ STDAPI DllUnregisterServer( void )
 }
 
 #ifndef SELFREG_E_CLASS
-#  ifndef SELFREG_E_FIRST
-#     define SELFREG_E_FIRST  MAKE_SCODE( SEVERITY_ERROR, FACILITY_ITF, 0x0200 )
-#  endif
-#  define SELFREG_E_CLASS     ( SELFREG_E_FIRST + 1 )
+   #ifndef SELFREG_E_FIRST
+      #define SELFREG_E_FIRST  MAKE_SCODE( SEVERITY_ERROR, FACILITY_ITF, 0x0200 )
+   #endif
+   #define SELFREG_E_CLASS     ( SELFREG_E_FIRST + 1 )
 #endif
 
 STDAPI DllRegisterServer( void )

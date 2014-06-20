@@ -49,7 +49,7 @@
 #include "hbapi.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 #endif
 
 HB_FUNC( __WAPI_GETACP )

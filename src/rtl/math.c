@@ -64,7 +64,7 @@ _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #endif
 
 #if defined( HB_MATH_ERRNO )
-#   include <errno.h>
+   #include <errno.h>
 #endif
 
 typedef struct
@@ -313,9 +313,9 @@ HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc,
          return HB_FALSE;
       case EDOM:
       case ERANGE:
-#   if defined( EOVERFLOW )
+   #if defined( EOVERFLOW )
       case EOVERFLOW:
-#   endif
+   #endif
          errCode = errno;
          break;
 
@@ -341,12 +341,12 @@ HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc,
          phb_exc->type = HB_MATH_ERR_SING;
          phb_exc->error = "Calculation results in singularity";
          break;
-#   if defined( EOVERFLOW )
+   #if defined( EOVERFLOW )
       case EOVERFLOW:
          phb_exc->type = HB_MATH_ERR_OVERFLOW;
          phb_exc->error = "Calculation result too large to represent";
          break;
-#   endif
+   #endif
       default:
          phb_exc->type = HB_MATH_ERR_UNKNOWN;
          phb_exc->error = "Unknown math error";
@@ -375,17 +375,17 @@ HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc,
    HB_SYMBOL_UNUSED( arg2 );
    HB_SYMBOL_UNUSED( szFunc );
 
-#  if defined( HB_MATH_HANDLER )
+   #if defined( HB_MATH_HANDLER )
 
    memcpy( phb_exc, &hb_mathErrData()->exception, sizeof( HB_MATH_EXCEPTION ) );
    return phb_exc->type != HB_MATH_ERR_NONE;
 
-#  else
+   #else
 
    HB_SYMBOL_UNUSED( phb_exc );
    return HB_FALSE;
 
-#  endif
+   #endif
 
 #endif
 }

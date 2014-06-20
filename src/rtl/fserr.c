@@ -52,9 +52,9 @@
 #include "hb_io.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 #else
-#  include <errno.h>
+   #include <errno.h>
 #endif
 
 /* Try to translate C errno into DOS error code */

@@ -54,7 +54,7 @@
 #include "lzfP.h"
 
 #if ! AVOID_ERRNO
-#  include <errno.h>
+   #include <errno.h>
 #endif
 
 #include "hblzf.ch"

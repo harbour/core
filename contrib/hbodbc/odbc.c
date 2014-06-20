@@ -80,28 +80,28 @@
          so we turn off UNICODE, until it's fixed in OpenWatcom:
             Error! E2028: _SQLSetStmtAttrW@16 is an undefined reference
          [vszakats] */
-#  if defined( __WATCOMC__ ) && defined( UNICODE )
-#     undef UNICODE
-#  endif
+   #if defined( __WATCOMC__ ) && defined( UNICODE )
+      #undef UNICODE
+   #endif
 
-#  include <windows.h>
+   #include <windows.h>
 
-#  if ! defined( WIN32 )
-#     define WIN32  /* Required for WIN32_LEAN_AND_MEAN mode */
-#  endif
+   #if ! defined( WIN32 )
+      #define WIN32  /* Required for WIN32_LEAN_AND_MEAN mode */
+   #endif
 #endif
 
 #include <sql.h>
 #include <sqlext.h>
 
 #if ! defined( HB_OS_WIN )
-#  if ! defined( SQLLEN ) && ! defined( SQLTCHAR )
-typedef unsigned char SQLTCHAR;
-#  endif
+   #if ! defined( SQLLEN ) && ! defined( SQLTCHAR )
+      typedef unsigned char SQLTCHAR;
+   #endif
 #endif
 
 #ifndef SQL_NO_DATA
-#  define SQL_NO_DATA  SQL_NO_DATA_FOUND
+#define SQL_NO_DATA  SQL_NO_DATA_FOUND
 #endif
 
 #if defined( UNICODE )

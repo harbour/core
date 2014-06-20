@@ -134,5 +134,5 @@ int main( int argc, char * argv[] )
 }
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __CEGCC__ )
-#  include "hbwmain.c"
+   #include "hbwmain.c"
 #endif

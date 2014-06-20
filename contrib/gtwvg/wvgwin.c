@@ -63,11 +63,11 @@
 #include <windowsx.h>
 
 #if ! defined( GCLP_HBRBACKGROUND )
-#  define GCLP_HBRBACKGROUND     -10
+   #define GCLP_HBRBACKGROUND     -10
 #endif
 
 #if ! defined( CB_GETCOMBOBOXINFO )
-#  define CB_GETCOMBOBOXINFO     0x0164
+   #define CB_GETCOMBOBOXINFO     0x0164
 #endif
 
 #define WIN_STATUSBAR_MAX_PARTS  256

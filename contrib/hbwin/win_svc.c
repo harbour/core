@@ -54,7 +54,7 @@
 #if ! defined( HB_OS_WIN_CE )
 
 #if defined( __POCC__ ) || defined( __XCC__ )
-#  include <winsvc.h>   /* it's disabled by WIN32_LEAN_AND_MEAN */
+   #include <winsvc.h>   /* it's disabled by WIN32_LEAN_AND_MEAN */
 #endif
 
 static SERVICE_STATUS        s_ServiceStatus;

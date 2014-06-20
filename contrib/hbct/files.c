@@ -67,17 +67,17 @@
 #include "ctdisk.ch"
 
 #if defined( __DJGPP__ )
-#  include <dpmi.h>
-#  include <go32.h>
-#  include <sys/farptr.h>
-#  include <sys/param.h>
+   #include <dpmi.h>
+   #include <go32.h>
+   #include <sys/farptr.h>
+   #include <sys/param.h>
 #endif
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-#  include <sys/types.h>
-#  include <utime.h>
-#  include <unistd.h>
-#  include <time.h>
+   #include <sys/types.h>
+   #include <utime.h>
+   #include <unistd.h>
+   #include <time.h>
 #endif
 
 typedef struct

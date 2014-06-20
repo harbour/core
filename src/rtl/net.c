@@ -111,23 +111,23 @@ char * hb_netname( void )
 {
 #if defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 
-#  if defined( __WATCOMC__ )
+   #if defined( __WATCOMC__ )
       return hb_getenv( "HOSTNAME" );
-#  else
+   #else
       char szValue[ MAXGETHOSTNAME + 1 ];
       szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
       gethostname( szValue, MAXGETHOSTNAME );
       return szValue[ 0 ] ? hb_osStrDecode( szValue ) : NULL;
-#  endif
+   #endif
 
 #elif defined( HB_OS_DOS )
 
-#  if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
+   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       char szValue[ MAXGETHOSTNAME + 1 ];
       szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
       gethostname( szValue, MAXGETHOSTNAME );
       return szValue[ 0 ] ? hb_osStrDecode( szValue ) : NULL;
-#  else
+   #else
       union REGS regs;
       struct SREGS sregs;
       char * pszValue = ( char * ) hb_xgrab( 16 );
@@ -143,7 +143,7 @@ char * hb_netname( void )
          pszValue = '\0';
 
       return pszValue;
-#  endif
+   #endif
 
 #elif defined( HB_OS_WIN )
 
@@ -169,12 +169,12 @@ char * hb_username( void )
 {
 #if defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 
-#  if defined( __WATCOMC__ ) || defined( HB_OS_VXWORKS )
+   #if defined( __WATCOMC__ ) || defined( HB_OS_VXWORKS )
       return hb_getenv( "USER" );
-#  else
+   #else
       struct passwd * pwd = getpwuid( getuid() );
       return pwd && pwd->pw_name ? hb_osStrDecode( pwd->pw_name ) : hb_getenv( "USER" );
-#  endif
+   #endif
 
 #elif defined( HB_OS_WIN )
 

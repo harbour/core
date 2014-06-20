@@ -100,9 +100,9 @@ HB_EXTERN_BEGIN
 
 
 #if defined( HB_COMPAT_C53 ) && ! defined( HB_CLP_STRICT )
-#  define HB_DEFAULT_INKEY_BUFSIZE  50
+   #define HB_DEFAULT_INKEY_BUFSIZE  50
 #else
-#  define HB_DEFAULT_INKEY_BUFSIZE  15
+   #define HB_DEFAULT_INKEY_BUFSIZE  15
 #endif
 
 

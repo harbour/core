@@ -56,10 +56,10 @@
 #include "hbvm.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
-#  if ! defined( _WINDOWS_ )
-#     define _WINDOWS_
-#  endif
+   #include <windows.h>
+   #if ! defined( _WINDOWS_ )
+      #define _WINDOWS_
+   #endif
 #endif
 
 #include "FreeImage.h"

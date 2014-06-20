@@ -53,7 +53,7 @@
 #define HB_CDX_NEW_SORT
 
 #if ! defined( HB_SIXCDX )
-#  define HB_CDX_PACKTRAIL
+   #define HB_CDX_PACKTRAIL
 #endif
 
 #define HB_CDX_DBGCODE
@@ -9896,9 +9896,9 @@ static const RDDFUNCS cdxTable =
 
 
 #if defined( HB_SIXCDX )
-#  define HB_CDXRDD  "SIXCDX"
+   #define HB_CDXRDD  "SIXCDX"
 #else
-#  define HB_CDXRDD  "DBFCDX"
+   #define HB_CDXRDD  "DBFCDX"
 #endif
 
 HB_FUNC_STATIC( _GETFUNCTABLE )

@@ -55,7 +55,7 @@
 #include "hbwapi.h"
 
 #if defined( __XCC__ )
-#  include <ole2.h>
+   #include <ole2.h>
 #endif
 #include <commdlg.h>
 

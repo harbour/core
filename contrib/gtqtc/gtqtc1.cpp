@@ -58,21 +58,21 @@ static  HB_GT_FUNCS     SuperTable;
 
 
 #if defined( HB_OS_UNIX )
-#  if !defined( HB_QT_NEEDLOCKS )
-#     define HB_QT_NEEDLOCKS
-#  endif
-#  if !defined( HB_XLIB_NEEDLOCKS )
-/* #     define HB_XLIB_NEEDLOCKS */
-#  endif
+   #if !defined( HB_QT_NEEDLOCKS )
+      #define HB_QT_NEEDLOCKS
+   #endif
+   #if !defined( HB_XLIB_NEEDLOCKS )
+/*    #define HB_XLIB_NEEDLOCKS */
+   #endif
 #endif
 
 #ifdef HB_QT_NEEDLOCKS
    static QMutex s_qMtx( QMutex::Recursive );
-#  define HB_QTC_LOCK()       do { s_qMtx.lock()
-#  define HB_QTC_UNLOCK()     s_qMtx.unlock(); } while( 0 )
+   #define HB_QTC_LOCK()       do { s_qMtx.lock()
+   #define HB_QTC_UNLOCK()     s_qMtx.unlock(); } while( 0 )
 #else
-#  define HB_QTC_LOCK()       do {} while( 0 )
-#  define HB_QTC_UNLOCK()     do {} while( 0 )
+   #define HB_QTC_LOCK()       do {} while( 0 )
+   #define HB_QTC_UNLOCK()     do {} while( 0 )
 #endif
 
 static QApplication * s_qtapp = NULL;

@@ -50,7 +50,7 @@
 #include "hbmacro.ch"
 
 #if ! defined( HB_HASH_USES_ARRAY_INDEXES )
-#  define HB_HASH_USES_ARRAY_INDEXES
+   #define HB_HASH_USES_ARRAY_INDEXES
 #endif
 
 #define HB_USE_ARRAYAT_REF

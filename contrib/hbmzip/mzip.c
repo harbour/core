@@ -49,7 +49,7 @@
  */
 
 #if ! defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE  1
+   #define _LARGEFILE64_SOURCE  1
 #endif
 
 #include "hbapi.h"
@@ -60,7 +60,7 @@
 #include "hbset.h"
 
 #if ! defined( HB_OS_UNIX )
-#  undef _LARGEFILE64_SOURCE
+   #undef _LARGEFILE64_SOURCE
 #endif
 
 #include "zip.h"
@@ -843,13 +843,13 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
       struct tm   st;
       time_t      ftime;
       char *      pszFree;
-#  if defined( HB_USE_LARGEFILE64 )
+   #if defined( HB_USE_LARGEFILE64 )
       struct stat64 statbuf;
       if( stat64( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
-#  else
+   #else
       struct stat statbuf;
       if( stat( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
-#  endif
+   #endif
       {
          if( S_ISDIR( statbuf.st_mode ) )
          {
@@ -873,11 +873,11 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
                       ( ( statbuf.st_mode & S_IRUSR ) ? 0x01000000 : 0 );
 
          ftime = statbuf.st_mtime;
-#  if defined( HB_HAS_LOCALTIME_R )
+   #if defined( HB_HAS_LOCALTIME_R )
          localtime_r( &ftime, &st );
-#  else
+   #else
          st = *localtime( &ftime );
-#  endif
+   #endif
 
          zfi.tmz_date.tm_sec  = st.tm_sec;
          zfi.tmz_date.tm_min  = st.tm_min;

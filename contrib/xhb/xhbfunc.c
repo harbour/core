@@ -297,9 +297,9 @@ HB_FUNC( XHB_MEMOWRIT )
 
 /* length of buffer for CR/LF characters */
 #if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
-#  define CRLF_BUFFER_LEN  4
+   #define CRLF_BUFFER_LEN  4
 #else
-#  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
+   #define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
 #endif
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )

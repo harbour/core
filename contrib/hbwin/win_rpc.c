@@ -50,7 +50,7 @@
 #include "hbwin.ch"
 
 #if ! defined( HB_OS_WIN_CE )
-#  include <rpc.h>
+   #include <rpc.h>
 #endif
 
 HB_FUNC( WIN_UUIDCREATESTRING )

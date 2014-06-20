@@ -804,8 +804,8 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_bm_rdd_init_ )
 HB_CALL_ON_STARTUP_END( _hb_bm_rdd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-#  pragma startup _hb_bm_InitSymbols_
-#  pragma startup _hb_bm_rdd_init_
+   #pragma startup _hb_bm_InitSymbols_
+   #pragma startup _hb_bm_rdd_init_
 #elif defined( HB_DATASEG_STARTUP )
    #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_bm_InitSymbols_ ) \
                               HB_DATASEG_FUNC( _hb_bm_rdd_init_ )

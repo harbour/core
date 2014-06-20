@@ -47,7 +47,7 @@
 #include "hbwapi.h"
 
 #if ! defined( HB_OS_WIN_CE )
-#  include <winnetwk.h>
+   #include <winnetwk.h>
 #endif
 
 HB_FUNC( WAPI_WNETGETLASTERROR )

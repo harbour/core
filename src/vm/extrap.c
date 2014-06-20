@@ -56,30 +56,30 @@
 #include "hbset.h"
 
 #if defined( HB_OS_UNIX )
-#  include <unistd.h>
-#  include <signal.h>
-#  if defined( SIGSTKSZ ) && \
-      ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
-        ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
-#     define HB_SIGNAL_EXCEPTION_HANDLER
-#  endif
+   #include <unistd.h>
+   #include <signal.h>
+   #if defined( SIGSTKSZ ) && \
+       ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
+         ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
+      #define HB_SIGNAL_EXCEPTION_HANDLER
+   #endif
 #elif defined( HB_OS_WIN )
-#  include <windows.h>
-#  if ! defined( __TINYC__ )
-#     include <tlhelp32.h>
-#  endif
-#  include "hbwinuni.h"
-#  if defined( HB_OS_WIN_CE )
-#     include "hbwince.h"
-#  endif
+   #include <windows.h>
+   #if ! defined( __TINYC__ )
+      #include <tlhelp32.h>
+   #endif
+   #include "hbwinuni.h"
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
    /* BCC and MinGW doesn't seem to #define this */
-#  ifndef TH32CS_SNAPMODULE32
-#     define TH32CS_SNAPMODULE32  0
-#  endif
+   #ifndef TH32CS_SNAPMODULE32
+   #define TH32CS_SNAPMODULE32  0
+   #endif
 #elif defined( HB_OS_OS2 )
-#  define INCL_DOSEXCEPTIONS
-#  define INCL_ERRORS
-#  include <os2.h>
+   #define INCL_DOSEXCEPTIONS
+   #define INCL_ERRORS
+   #include <os2.h>
 #endif
 
 #if defined( HB_SIGNAL_EXCEPTION_HANDLER )

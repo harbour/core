@@ -154,7 +154,7 @@ HB_EXTERN_END
       defined( HB_OS_ANDROID ) ) && \
    ! defined( HB_OS_DARWIN_5 ) && ! defined( __WATCOMC__ ) && \
    ! defined( HB_HAS_LOCALTIME_R )
-#  define HB_HAS_LOCALTIME_R
+   #define HB_HAS_LOCALTIME_R
 #endif
 
 #endif /* HB_DATE_H_ */

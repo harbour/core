@@ -54,17 +54,17 @@
 #if defined( _HB_REGEX_INTERNAL_ )
 
 #if defined( HB_HAS_PCRE )
-#  include <pcre.h>
-#  undef HB_POSIX_REGEX
+   #include <pcre.h>
+   #undef HB_POSIX_REGEX
 #elif defined( HB_OS_UNIX )
-#  include <sys/types.h>
-#  include <regex.h>
-#  define HB_POSIX_REGEX
+   #include <sys/types.h>
+   #include <regex.h>
+   #define HB_POSIX_REGEX
 #elif defined( __BORLANDC__ )
-#  include <pcreposi.h>
-#  define HB_POSIX_REGEX
+   #include <pcreposi.h>
+   #define HB_POSIX_REGEX
 #else
-#  error pcre component required, but not available
+   #error pcre component required, but not available
 #endif
 
 typedef struct
@@ -105,10 +105,10 @@ extern void hb_regexInit( HB_REG_FREE pFree, HB_REG_COMP pComp, HB_REG_EXEC pExe
 extern HB_BOOL hb_regexIs( PHB_ITEM pItem );
 
 #ifndef REG_EXTENDED
-#  define REG_EXTENDED  0x00
+#define REG_EXTENDED  0x00
 #endif
 #ifndef REG_NOSUB
-#  define REG_NOSUB     0x00
+#define REG_NOSUB     0x00
 #endif
 
 #else
@@ -126,7 +126,7 @@ typedef void * PHB_REGEX;
 #define HBREG_DOTALL    0x40
 
 #ifndef REGEX_MAX_GROUPS
-#  define REGEX_MAX_GROUPS 16
+#define REGEX_MAX_GROUPS 16
 #endif
 
 HB_EXTERN_BEGIN

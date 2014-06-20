@@ -117,15 +117,15 @@ static HB_COUNTER s_initialize = 1;
 
 #if defined( HB_OS_LINUX )
 /* #define HB_INET_LINUX_INTERRUPT     SIGUSR1 + 90 */
-#  ifdef HB_INET_LINUX_INTERRUPT
-#     include <signal.h>
+   #ifdef HB_INET_LINUX_INTERRUPT
+      #include <signal.h>
 
 static void hb_inetLinuxSigusrHandle( int sig )
 {
    /* nothing to do */
    HB_SYMBOL_UNUSED( sig );
 }
-#  endif
+   #endif
 #endif
 
 static void hb_inetErrRT( void )

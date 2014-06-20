@@ -52,10 +52,10 @@
 #include "hbapifs.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
-#  if defined( __DJGPP__ )
-#     include <dpmi.h>
-#  endif
+   #include <dos.h>
+   #if defined( __DJGPP__ )
+      #include <dpmi.h>
+   #endif
 #endif
 
 HB_FUNC( PRINTSTAT )

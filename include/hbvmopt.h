@@ -55,13 +55,13 @@
  * which interacts with alignment are used. [druzus]
  */
 #if ! defined( HB_NO_DEFAULT_API_MACROS ) && ! defined( _HB_API_MACROS_ )
-#  define _HB_API_MACROS_
+   #define _HB_API_MACROS_
 #endif
 
 #if ! defined( HB_NO_DEFAULT_STACK_MACROS ) && ! defined( _HB_STACK_MACROS_ )
-#  define _HB_STACK_MACROS_
+   #define _HB_STACK_MACROS_
 #endif
 
 #if ! defined( _HB_API_INTERNAL_ )
-#  define _HB_API_INTERNAL_
+   #define _HB_API_INTERNAL_
 #endif

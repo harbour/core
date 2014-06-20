@@ -58,24 +58,24 @@
 /* Direct WinApi Functions - Prefixed WIN_*() */
 
 #if defined( __BORLANDC__ )
-#  if ! defined( NONAMELESSUNION )
-#     define NONAMELESSUNION
-#  endif
-#  if defined( DUMMYUNIONNAME )
-#     undef DUMMYUNIONNAME
-#  endif
-#  if defined( DUMMYUNIONNAME2 )
-#     undef DUMMYUNIONNAME2
-#  endif
-#  if defined( DUMMYUNIONNAME3 )
-#     undef DUMMYUNIONNAME3
-#  endif
-#  if defined( DUMMYUNIONNAME4 )
-#     undef DUMMYUNIONNAME4
-#  endif
-#  if defined( DUMMYUNIONNAME5 )
-#     undef DUMMYUNIONNAME5
-#  endif
+   #if ! defined( NONAMELESSUNION )
+      #define NONAMELESSUNION
+   #endif
+   #if defined( DUMMYUNIONNAME )
+      #undef DUMMYUNIONNAME
+   #endif
+   #if defined( DUMMYUNIONNAME2 )
+      #undef DUMMYUNIONNAME2
+   #endif
+   #if defined( DUMMYUNIONNAME3 )
+      #undef DUMMYUNIONNAME3
+   #endif
+   #if defined( DUMMYUNIONNAME4 )
+      #undef DUMMYUNIONNAME4
+   #endif
+   #if defined( DUMMYUNIONNAME5 )
+      #undef DUMMYUNIONNAME5
+   #endif
 #endif
 
 #include "gtwvg.h"
@@ -84,17 +84,17 @@
 #include <windowsx.h>
 
 #if defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1552 )
-#  undef NONAMELESSUNION
+   #undef NONAMELESSUNION
 #endif
 
 #if defined( NONAMELESSUNION )
-#  define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
+   #define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
 #else
-#  define HB_WIN_V_UNION( x, z )  ( ( x ).z )
+   #define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
 #if ! defined( GCLP_HBRBACKGROUND )
-#  define GCLP_HBRBACKGROUND     -10
+   #define GCLP_HBRBACKGROUND     -10
 #endif
 
 #define WIN_STATUSBAR_MAX_PARTS  256

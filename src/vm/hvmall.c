@@ -68,10 +68,10 @@
 
 /* For Linux and mremap() function */
 #ifndef _GNU_SOURCE
-#  define _GNU_SOURCE
+#define _GNU_SOURCE
 #endif
 
-/* warning the order of included files is important
+/* Warning: the order of included files is important
  * due to macros used to overload some functions
  */
 
@@ -81,19 +81,19 @@
 #include "hbstack.h"
 
 #if defined( _HB_STACK_MACROS_ ) && defined( _HB_STACK_LOCAL_MACROS_ )
-#  if defined( HB_MT_VM )
-#     if defined( HB_USE_TLS )
-#        if defined( __BORLANDC__ )
+   #if defined( HB_MT_VM )
+      #if defined( HB_USE_TLS )
+         #if defined( __BORLANDC__ )
             static PHB_STACK HB_TLS_ATTR hb_stack_ptr = NULL;
-#        else
+         #else
             static HB_TLS_ATTR PHB_STACK hb_stack_ptr = NULL;
-#        endif
-#     elif ! defined( hb_stack_ptr_get )
+         #endif
+      #elif ! defined( hb_stack_ptr_get )
          static HB_TLS_KEY hb_stack_key;
-#     endif
-#  else
+      #endif
+   #else
       static HB_STACK hb_stack;
-#  endif
+   #endif
 #endif
 
 

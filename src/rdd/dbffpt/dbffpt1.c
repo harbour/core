@@ -52,13 +52,13 @@
  */
 
 #if defined( HB_FPT_NO_READLOCK )
-#  undef HB_MEMO_SAFELOCK
+   #undef HB_MEMO_SAFELOCK
 #else
 /*#  define HB_MEMO_SAFELOCK */
 #endif
 
 #if defined( __XCC__ )
-#  pragma optimize( none )
+   #pragma optimize( none )
 #endif
 
 #include "hbapi.h"

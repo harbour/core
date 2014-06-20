@@ -52,12 +52,12 @@
 #include "hbapifs.h"
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-#  include <sys/types.h>
-#  include <unistd.h>
+   #include <sys/types.h>
+   #include <unistd.h>
 #elif defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_DOS )
-#  include <process.h>
+   #include <process.h>
 #endif
 
 HB_FUNC( EXECNAME )

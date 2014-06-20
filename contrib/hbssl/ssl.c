@@ -46,11 +46,11 @@
 
 /* for applink.c */
 #if ! defined( HB_OPENSSL_STATIC )
-#  if defined( _MSC_VER )
-#     ifndef _CRT_SECURE_NO_WARNINGS
-#        define _CRT_SECURE_NO_WARNINGS
-#     endif
-#  endif
+   #if defined( _MSC_VER )
+      #ifndef _CRT_SECURE_NO_WARNINGS
+      #define _CRT_SECURE_NO_WARNINGS
+      #endif
+   #endif
 #endif
 
 #include "hbapi.h"
@@ -59,8 +59,8 @@
 #include "hbvm.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
-#  include <wincrypt.h>
+   #include <windows.h>
+   #include <wincrypt.h>
 #endif
 
 #include "hbssl.h"
@@ -73,9 +73,9 @@
             Warning W8065 openssl/applink.c 40: Call to function '_setmode' with no prototype in function app_fsetmod
             Error E2451 openssl/applink.c 82: Undefined symbol '_lseek' in function OPENSSL_Applink
     */
-#  if ! defined( __BORLANDC__ )
-#     include "openssl/applink.c"
-#  endif
+   #if ! defined( __BORLANDC__ )
+      #include "openssl/applink.c"
+   #endif
 #endif
 
 HB_FUNC( SSL_INIT )

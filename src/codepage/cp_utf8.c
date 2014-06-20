@@ -54,7 +54,7 @@
 #include "uc16def.c"
 
 #ifdef HB_UTF8EX_SORT
-#  include "utf8sort.c"
+   #include "utf8sort.c"
 #endif
 
 static HB_CDP_GET_FUNC( UTF8_get )

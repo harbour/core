@@ -49,9 +49,9 @@
 #include <windows.h>
 
 #if defined( HB_OS_WIN_CE )
-#  define HB_LPSTR  LPWSTR
+   #define HB_LPSTR  LPWSTR
 #else
-#  define HB_LPSTR  LPSTR
+   #define HB_LPSTR  LPSTR
 #endif
 
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
@@ -73,7 +73,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    iErrorCode = hb_vmQuit();
 
 #else
-#  define HB_MAX_ARGS   256
+   #define HB_MAX_ARGS   256
 
    int argc = 0;
    char * argv[ HB_MAX_ARGS ];
@@ -81,19 +81,19 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    LPSTR pArgs, pArg, pDst, pSrc;
    HB_BOOL fQuoted;
    HANDLE hHeap;
-#  if defined( HB_OS_WIN_CE )
+   #if defined( HB_OS_WIN_CE )
    LPSTR pFree;
-#  endif
+   #endif
 
    argv[ argc++ ] = ( char * ) "";
 
    pArg = NULL;
 
-#  if defined( HB_OS_WIN_CE )
+   #if defined( HB_OS_WIN_CE )
    pSrc = pFree = hb_wctomb( lpCmdLine ); /* No HVM stack */
-#  else
+   #else
    pSrc = lpCmdLine;
-#  endif
+   #endif
    hHeap = GetProcessHeap();
    pDst = pArgs = ( LPSTR ) HeapAlloc( hHeap, 0, strlen( pSrc ) + 1 );
    fQuoted = HB_FALSE;
@@ -129,9 +129,9 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
       argv[ argc++ ] = pArg;
    }
 
-#  if defined( HB_OS_WIN_CE )
+   #if defined( HB_OS_WIN_CE )
    hb_xfree( pFree );
-#  endif
+   #endif
 
    HB_SYMBOL_UNUSED( hInstance );
    HB_SYMBOL_UNUSED( hPrevInstance );

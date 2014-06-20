@@ -124,16 +124,16 @@ typedef FUNCP * FUNCPP;
 #define CLIPPER HARBOUR
 
 #if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
-#  undef FALSE
-#  define FALSE      0
-#  undef TRUE
-#  define TRUE       1
+   #undef FALSE
+   #define FALSE      0
+   #undef TRUE
+   #define TRUE       1
 #endif
 #ifndef NIL
-#  define NIL     '\0'
+   #define NIL     '\0'
 #endif
 #ifndef NULL
-#  define NULL    0
+   #define NULL    0
 #endif
 
 /* Old types */

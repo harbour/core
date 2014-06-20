@@ -49,7 +49,7 @@
 #include "hbwapi.h"
 
 #if ! defined( HB_OS_WIN_CE )
-#  include <winspool.h>
+   #include <winspool.h>
 #endif
 
 static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )

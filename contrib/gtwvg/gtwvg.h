@@ -102,15 +102,15 @@ HB_EXTERN_BEGIN
 #define WVT_MAX_COLS               1024
 #define WVT_MAX_WINDOWS             256
 #if defined( HB_OS_WIN_CE )
-#  define WVT_DEFAULT_ROWS          15
-#  define WVT_DEFAULT_COLS          50
-#  define WVT_DEFAULT_FONT_HEIGHT   12
-#  define WVT_DEFAULT_FONT_WIDTH    8
+   #define WVT_DEFAULT_ROWS         15
+   #define WVT_DEFAULT_COLS         50
+   #define WVT_DEFAULT_FONT_HEIGHT  12
+   #define WVT_DEFAULT_FONT_WIDTH   8
 #else
-#  define WVT_DEFAULT_ROWS          25
-#  define WVT_DEFAULT_COLS          80
-#  define WVT_DEFAULT_FONT_HEIGHT   16
-#  define WVT_DEFAULT_FONT_WIDTH    10
+   #define WVT_DEFAULT_ROWS         25
+   #define WVT_DEFAULT_COLS         80
+   #define WVT_DEFAULT_FONT_HEIGHT  16
+   #define WVT_DEFAULT_FONT_WIDTH   10
 #endif
 #define WVT_DEFAULT_FONT_NAME       TEXT( "Courier New" )
 
@@ -544,23 +544,23 @@ typedef enum
 #endif
 
 #ifndef WM_MOUSEWHEEL
-#  define WM_MOUSEWHEEL 0x020A
+#define WM_MOUSEWHEEL  0x020A
 #endif
 #ifndef WM_ENTERSIZEMOVE
-#  define WM_ENTERSIZEMOVE 561
+#define WM_ENTERSIZEMOVE  561
 #endif
 #ifndef WM_EXITSIZEMOVE
-#  define WM_EXITSIZEMOVE  562
+#define WM_EXITSIZEMOVE   562
 #endif
 
 #ifndef SWP_DEFERERASE
-#  define SWP_DEFERERASE 0x2000
+#define SWP_DEFERERASE 0x2000
 #endif
 #ifndef SW_NORMAL
-#  define SW_NORMAL 1
+#define SW_NORMAL 1
 #endif
 #ifndef SC_MAXIMIZE
-#  define SC_MAXIMIZE 0xF030
+#define SC_MAXIMIZE 0xF030
 #endif
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __MINGW32CE__ )

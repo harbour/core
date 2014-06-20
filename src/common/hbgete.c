@@ -222,22 +222,22 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
       }
       else
       {
-#  if ( defined( __DJGPP__ ) && \
-        ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ < 4 ) ) ) || \
+   #if ( defined( __DJGPP__ ) && \
+         ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ < 4 ) ) ) || \
       defined( __WATCOMC__ )
          szValue = getenv( szName );
          if( szValue && *szValue )
             fResult = setenv( szName, "", 1 ) == 0;
          else
             fResult = HB_TRUE;
-#  elif defined( __OpenBSD__ ) || defined( HB_OS_QNX ) || \
-        ( defined( __FreeBSD_version ) && __FreeBSD_version < 700050 ) || \
-        ( defined( HB_OS_DARWIN ) && !( defined( __DARWIN_UNIX03 ) && __DARWIN_UNIX03 ) )
+   #elif defined( __OpenBSD__ ) || defined( HB_OS_QNX ) || \
+         ( defined( __FreeBSD_version ) && __FreeBSD_version < 700050 ) || \
+         ( defined( HB_OS_DARWIN ) && !( defined( __DARWIN_UNIX03 ) && __DARWIN_UNIX03 ) )
          unsetenv( szName );
          fResult = HB_TRUE;
-#  else
+   #else
          fResult = unsetenv( szName ) == 0;
-#  endif
+   #endif
       }
 
       if( pszNameFree )

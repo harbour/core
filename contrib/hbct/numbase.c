@@ -51,7 +51,7 @@
 #include "ct.h"
 
 #if HB_VMLONG_MAX == INT32_MAX
-#  define HB_CT3_STRICT32
+   #define HB_CT3_STRICT32
 #endif
 
 HB_FUNC( CTON )
