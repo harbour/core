@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Harbour common string functions (accessed from standalone utilities and the RTL)
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_stricmp())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

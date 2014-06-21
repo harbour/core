@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Harbour File Find API (C level)
  *
  * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
  * Copyright 2001-2002 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2001-2002 Paul Tucker <ptucker@sympatico.ca>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

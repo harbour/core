@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Exception handlers
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt) (hb_winExceptionHandler() Windows exception info dump code.)
  * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour) (hb_winExceptionHandler() Module listing code, x86_64/WinCE/ARM support, OS/2, MIPS32, MIPS64, SH, IA64 CPU dumps.)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

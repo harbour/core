@@ -1,13 +1,11 @@
 /*
- * Harbour Project source code:
- *    SIX compatible function:
- *          sx_SlimFast()
- *          sx_WildMatch()
- *          sx_Version()
- *          sx_Error()
+ * SIX compatible function:
+ *       sx_SlimFast()
+ *       sx_WildMatch()
+ *       sx_Version()
+ *       sx_Error()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

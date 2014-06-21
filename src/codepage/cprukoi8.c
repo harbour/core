@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (RUKOI8)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

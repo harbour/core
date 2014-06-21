@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * The FileSys API (C level)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
@@ -15,7 +14,6 @@
  *    Added platform check for any compiler to use the Windows
  *    API calls to allow openning an unlimited number of files
  *    simultaneously.
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

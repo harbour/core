@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * DBFNTX RDD
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

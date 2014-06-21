@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
- *    .prg interface to preprocessor
- *    __pp_StdRules() function
- *       intentionally in separate file to not force linking
- *       standard PP rules table when user does not need them
+ * .prg interface to preprocessor
+ * __pp_StdRules() function
+ *    intentionally in separate file to not force linking
+ *    standard PP rules table when user does not need them
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

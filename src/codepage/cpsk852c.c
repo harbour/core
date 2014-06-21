@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (SK852C)
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This file is generated automatically by cpinfo.prg
  */

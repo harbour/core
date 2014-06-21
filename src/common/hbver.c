@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Version detection functions
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
@@ -14,7 +13,6 @@
  *    hb_verPlatform() (rearrangment and cleanup)
  *    hb_verPlatform() (Wine detection and some more)
  *    hb_verHostBitWidth()
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

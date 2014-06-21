@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * PROMPT/MENU TO commands
  *
  * Released to Public Domain by Phil Barnett <philb@iag.net>
- * www - http://harbour-project.org
  *
  */
 

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    ARRAY RDD
+ * ARRAY RDD
  *
  * Copyright 2006 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
  * Copyright 2011-2013 Quique <quique@quiquesoft.com> (Index, locate and filter Support)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

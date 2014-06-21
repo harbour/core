@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
  * Compiler command line and HARBOURCMD/CLIPPERCMD checking
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com> (hb_compChkCompilerSwitch())
  * Copyright 1999 Jose Lalin <dezac@corevia.com> (hb_compChkEnvironVar())
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (PackDateTime(), hb_compChkDefineSwitch(), hb_compChkDefines())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    small and MT safe lexer for macro compiler
+ * Small and MT safe lexer for macro compiler
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

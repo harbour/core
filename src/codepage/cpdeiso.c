@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (DEISO)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
- * v1.0 2003 Guenther Steiner <byte-one@aon.at>
+ * Copyright 2003 Guenther Steiner <byte-one@aon.at>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

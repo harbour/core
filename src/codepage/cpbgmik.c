@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * National Collation Support Module (BGMIK)
  *
  * Copyright 2005 Rosen Vladimirov <kondor_ltd@dir.bg>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

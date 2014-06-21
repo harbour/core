@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * environment variables access
  *
  * Copyright 2001-2002 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

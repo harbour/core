@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * Handling .ini files
  *
  * Copyright 2002 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://www.xharbour.org
  *
  * this program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * generate line information for debugger
+ * Generate line information for debugger
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

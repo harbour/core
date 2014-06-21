@@ -1,14 +1,10 @@
 /*
- * Harbour Project source code:
  * StrTran() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * rewritten to fix incompatibilities with Clipper and fatal performance
  * of original code
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

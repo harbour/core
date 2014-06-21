@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Dynamic Object management and misc. Object related functions
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com> (__objGetMsgList())
  * Copyright 2000 Jf. Lefebvre <jfl@mafact.com> and Ra. Cuylen <rac@mafact.com> (__objDerivedFrom())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

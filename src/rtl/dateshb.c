@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
  * The Date API (Harbour level)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999 Jose Lalin <dezac@corevia.com> (Day(), Month(), Year(), DoW())
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (CToD(), Date())
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_SToD())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

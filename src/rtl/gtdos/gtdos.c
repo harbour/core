@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem for DOS compilers
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
@@ -21,9 +20,8 @@
  *    hb_gt_SetMode()
  *    hb_gt_GetDisplay()
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *                Luiz Rafael Culik <Culik@sl.conex.net>
+ * Copyright 1999 Luiz Rafael Culik <Culik@sl.conex.net>
  *    Harbour Mouse Subsystem for DOS
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

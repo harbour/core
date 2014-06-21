@@ -1,12 +1,9 @@
 /*
- * Harbour Project source code:
- * low level functions to create, wait and terminate processes
+ * Low level functions to create, wait and terminate processes
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  * based on xHarbour code by
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

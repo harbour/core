@@ -1,14 +1,12 @@
 /*
- * Harbour Project source code:
- *    SIX compatible functions:
- *          hb_sxDtoP()
- *          hb_sxPtoD()
+ * SIX compatible functions:
+ *       hb_sxDtoP()
+ *       hb_sxPtoD()
  *
- *          sx_DToP()
- *          sx_PToD()
+ *       sx_DToP()
+ *       sx_PToD()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

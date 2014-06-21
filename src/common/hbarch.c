@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
- *    Architecture dependent conversions
+ * Architecture dependent conversions
  *
  * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

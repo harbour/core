@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    common file with all HVM functions for compilers which can improve
- *    speed automatically inlining functions
+ * Common file with all HVM functions for compilers which can improve
+ * speed automatically inlining functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

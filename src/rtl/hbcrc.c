@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *    CRC checksum functions
+ * CRC checksum functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

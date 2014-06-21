@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Base Class for internal handling of class creation
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
@@ -13,7 +12,6 @@
  *    Preparing the InitClass class method (not working !!)
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    Support for inheritance, default DATA values
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

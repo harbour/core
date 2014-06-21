@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * The Extend API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour) (hb_stor(), hb_retn*len(), hb_retdl(), hb_parn*def())
  * Copyright 2000 Jose Lalin <dezac@corevia.com> (hb_retd())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (GBK)
  *
  * Copyright 2012 Dongming Wang <wangdongming / at / gmail.com>
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * The Eval API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_itemDo()/hb_itemDoC() (based on HB_DO() by Ryszard Glab))
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

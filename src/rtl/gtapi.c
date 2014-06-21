@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * The Terminal API
  *
  * Copyright 1999 Bil Simser <bsimser@home.com>
@@ -14,7 +13,6 @@
  *    The body of these functions which were usable in new GT API
  *    have been moved to hbgtcore.c to hb_gt_def_*() functions
  *    some of my modificaations.
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

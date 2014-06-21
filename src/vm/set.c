@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Set functions
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
  * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour) (hb_osEncode(), hb_osDecode())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

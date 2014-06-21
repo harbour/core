@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * DBFFPT RDD
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
  *
  * The SIX memo conversion algorithms and some piece of code taken from
  * DBFCDX and DBFFPT

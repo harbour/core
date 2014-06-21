@@ -1,11 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (LTWIN)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
- * Lithuanian collation sequence
- * 2003, by Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
+ * Copyright 2003 Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

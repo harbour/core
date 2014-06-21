@@ -1,11 +1,11 @@
 /*
- * Harbour Project source code:
- *    hb_gt_dos_keyCodeTranslate()
- *          function used by DOS, WIN and OS2 ports of few GTs which use
- *          getkey()/getch()/_read_kbd()/KbdCharIn() or similar function
- *          for keyboard input
- *    based on hb_gt_ReadKey() from GTDOS code by:
- *          Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * hb_gt_dos_keyCodeTranslate()
+ *       function used by DOS, WIN and OS2 ports of few GTs which use
+ *       getkey()/getch()/_read_kbd()/KbdCharIn() or similar function
+ *       for keyboard input
+ *
+ * based on hb_gt_ReadKey() from GTDOS code by:
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

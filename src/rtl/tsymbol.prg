@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour implementation of Class(y) Class Symbol
  *
  * Copyright 2003 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

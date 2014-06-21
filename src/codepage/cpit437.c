@@ -1,8 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (IT437)
  *
- * Copyright 2004 Maurilio Longo - <maurilio.longo@libero.it>
+ * Copyright 2004 Maurilio Longo <maurilio.longo@libero.it>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

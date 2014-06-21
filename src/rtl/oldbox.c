@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * __Box(), __BoxS(), __BoxD() undocumented box drawing functions
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * The Array API (C level)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_arrayIsObject(), hb_arrayCopyC(), hb_arrayGetC())
  * Copyright 2001 Ron Pinkas <ron@profit-master.com> (hb_arrayClone(), hb_arrayFromStack(), hb_arrayFromParams())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

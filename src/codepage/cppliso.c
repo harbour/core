@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (PLISO)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
- * Polish collating sequence (PLISO) done by Jacek Kubica <kubica@wssk.wroc.pl>
+ * Copyright 2002 Jacek Kubica <kubica@wssk.wroc.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

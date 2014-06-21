@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * i18n support in Harbour compiler
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas.at.dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

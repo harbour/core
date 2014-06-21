@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    PRG functions for MD5 encryption/decryption using
- *    CFB (cipher feedback) mode
+ * PRG functions for MD5 encryption/decryption using
+ * CFB (cipher feedback) mode
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (HRWIN)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
- * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
- * 2003 Vlado Miholic <Vladimir.Miholic@sk.hinet.hr>
+ * Copyright 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
+ * Copyright 2003 Vlado Miholic <Vladimir.Miholic@sk.hinet.hr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

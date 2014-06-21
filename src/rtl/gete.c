@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * GetEnv(), GetE() functions
  *
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (GetE())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

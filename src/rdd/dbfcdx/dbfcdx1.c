@@ -1,5 +1,4 @@
 /*
- * xHarbour Project source code:
  * DBFCDX RDD (ver.2)
  *
  * Copyright 1999-2002 Bruno Cantero <bruno@issnet.net>
@@ -7,7 +6,6 @@
  * Copyright 2003 Przemyslaw Czerpak <druzus@priv.onet.pl> - all code except
  * hb_cdxTagDoIndex and related hb_cdxSort* rewritten.
  * Copyright 2004 Przemyslaw Czerpak <druzus@priv.onet.pl> - rest of code rewritten
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
