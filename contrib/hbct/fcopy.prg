@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *   CT3 file functions:
+ * CT3 file functions:
  *    FileCopy(), FileCOpen(), FileCCLose(), FileAppend()
  *
  *    Author...: Frederic J. Bell
@@ -17,8 +16,6 @@
  *
  *    added FileCDaTi() and rewritten above functions for CT3 compatibility
  *    and some problems fixing,
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

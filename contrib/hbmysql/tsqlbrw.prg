@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * MySQL TBrowse
  * A TBrowse on a MySQL Table / query
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

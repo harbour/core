@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Header file for cross-compatibility with xhb class code extensions
  *
  * Warning: using this functionality may break logical inheritance
@@ -8,7 +7,6 @@
  *          feature added here only for strict XHB compatibility.
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

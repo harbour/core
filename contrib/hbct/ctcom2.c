@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    CT3 serial communication functions not directly operating on
+ * CT3 serial communication functions not directly operating on
  *    serial devices
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

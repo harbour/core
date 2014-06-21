@@ -1,13 +1,12 @@
 /*
- * Harbour Project source code:
- *   Test CT3 math functions
+ * Test CT3 math functions
  *   - Floor()
  *   - Ceiling()
  *   - Log10()
  *   - Sign()
  *   - Fact()
+ *
  * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

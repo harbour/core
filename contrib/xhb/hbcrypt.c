@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * Cryptography for xharbour
  *
  * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
- * www - http://www.xharbour.org
  * SEE ALSO COPYRIGHT NOTICE FOR NXS BELOW.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -97,7 +95,7 @@ void nxs_crypt(
    nxs_xorcyclic( cipher, srclen, key, keylen );
 }
 
-/*decrypting the buffer */
+/* Decrypting the buffer */
 
 void nxs_decrypt(
    const unsigned char * cipher, HB_SIZE cipherlen,

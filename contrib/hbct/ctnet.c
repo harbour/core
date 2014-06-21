@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * CT3 NET functions to PC-LAN/MS-NET.
  *
  * Copyright 2004 Eduardo Fernandes <eduardo@modalsistemas.com.br>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

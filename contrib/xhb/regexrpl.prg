@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * hb_regexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch ) --> cReturn
  *
  * Copyright 2006 Francesco Saverio Giudice <info/at/fsgiudice.com>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

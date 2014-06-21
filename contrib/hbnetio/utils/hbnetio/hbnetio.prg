@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Harbour NETIO server daemon
  *
  * Copyright 2010-2012 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

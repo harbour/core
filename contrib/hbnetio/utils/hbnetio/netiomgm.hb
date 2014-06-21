@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour NETIO server management client engine
  *
  * Copyright 2009-2014 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

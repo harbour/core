@@ -1,34 +1,32 @@
 /*
- * Harbour Project source code:
- *    demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server with RPC support
- *    All files which names starts 'net:' are redirected to this API.
- *    This is server code giving the following .prg functions:
- *       netio_Listen( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
- *                                              -> <pListenSocket> | NIL
- *       netio_Accept( <pListenSocket>, [<nTimeOut>],
- *                     [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
- *                                              -> <pConnectionSocket> | NIL
- *       netio_Compress( <pConnectionSocket>,
- *                       [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
- *                                              -> NIL
- *       netio_Server( <pConnectionSocket> ) -> NIL
- *       netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
- *                                              -> NIL
- *       netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
- *       netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
- *                                              -> <lPrev>
- *       netio_RPCFilter( <pConnectionSocket>,
- *                        <sFuncSym> | <hValue> | NIL ) -> NIL
+ * Demonstration code for alternative RDD IO API which uses own
+ * very simple TCP/IP file server with RPC support
+ * All files which names starts 'net:' are redirected to this API.
+ * This is server code giving the following .prg functions:
+ *    netio_Listen( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
+ *                                           -> <pListenSocket> | NIL
+ *    netio_Accept( <pListenSocket>, [<nTimeOut>],
+ *                  [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
+ *                                           -> <pConnectionSocket> | NIL
+ *    netio_Compress( <pConnectionSocket>,
+ *                    [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
+ *                                           -> NIL
+ *    netio_Server( <pConnectionSocket> ) -> NIL
+ *    netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
+ *                                           -> NIL
+ *    netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
+ *    netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
+ *                                           -> <lPrev>
+ *    netio_RPCFilter( <pConnectionSocket>,
+ *                     <sFuncSym> | <hValue> | NIL ) -> NIL
  *
- *       netio_SrvStatus( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
- *       netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> )
- *             -> <lSent>
- *       netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> )
- *             -> <lSent>
+ *    netio_SrvStatus( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
+ *    netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> )
+ *          -> <lSent>
+ *    netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> )
+ *          -> <lSent>
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

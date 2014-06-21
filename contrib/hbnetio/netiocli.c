@@ -1,36 +1,34 @@
 /*
- * Harbour Project source code:
- *    demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server with RPC support
- *    All files which names starts 'net:' are redirected to this API.
- *    This is client code with
- *       netio_Connect( [<cServer>], [<nPort>], [<nTimeOut>],
- *                      [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
- *             -> <lOK>
- *    function which register alternative RDD IO API, sets server
- *    address and port and connection timeout parameter.
- *    Then it tries to connect to the server and returns .T. on success.
- *    This code also provides the following .prg functions:
- *       netio_Disconnect( [<cServer>], [<nPort>] ) -> <lOK>
- *       netio_Decode( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>],
- *                     [@<cPasswd>], [@<nCompressionLevel>], [@<nStrategy>] )
- *             -> <lDecoded>
- *       netio_ProcExists( <cProcName> ) -> <lExists>
- *       netio_ProcExec( <cProcName> [, <params,...>] ) -> <lSent>
- *       netio_ProcExecW( <cProcName> [, <params,...>] ) -> <lExecuted>
- *       netio_FuncExec( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
+ * Demonstration code for alternative RDD IO API which uses own
+ * very simple TCP/IP file server with RPC support
+ * All files which names starts 'net:' are redirected to this API.
+ * This is client code with
+ *    netio_Connect( [<cServer>], [<nPort>], [<nTimeOut>],
+ *                   [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
+ *          -> <lOK>
+ * function which register alternative RDD IO API, sets server
+ * address and port and connection timeout parameter.
+ * Then it tries to connect to the server and returns .T. on success.
+ * This code also provides the following .prg functions:
+ *    netio_Disconnect( [<cServer>], [<nPort>] ) -> <lOK>
+ *    netio_Decode( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>],
+ *                  [@<cPasswd>], [@<nCompressionLevel>], [@<nStrategy>] )
+ *          -> <lDecoded>
+ *    netio_ProcExists( <cProcName> ) -> <lExists>
+ *    netio_ProcExec( <cProcName> [, <params,...>] ) -> <lSent>
+ *    netio_ProcExecW( <cProcName> [, <params,...>] ) -> <lExecuted>
+ *    netio_FuncExec( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
  *
- *       netio_OpenDataStream( <cStreamFuncName> [, <params,...>] )
- *             -> <nStreamID>
- *       netio_OpenItemStream( <cStreamFuncName> [, <params,...>] )
- *             -> <nStreamID>
- *       netio_CloseStream( <nStreamID>, [<cServer>], [<nPort>] )
- *             -> <lOK>
- *       netio_GetData( <nStreamID>, [<cServer>], [<nPort>] )
- *             -> <aData> | <cData> | NIL
+ *    netio_OpenDataStream( <cStreamFuncName> [, <params,...>] )
+ *          -> <nStreamID>
+ *    netio_OpenItemStream( <cStreamFuncName> [, <params,...>] )
+ *          -> <nStreamID>
+ *    netio_CloseStream( <nStreamID>, [<cServer>], [<nPort>] )
+ *          -> <lOK>
+ *    netio_GetData( <nStreamID>, [<cServer>], [<nPort>] )
+ *          -> <aData> | <cData> | NIL
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,14 +1,8 @@
 /*
- * Harbour Project source code:
  * Windows dialogs
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *    win_PrintDlgDC()
- *
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    win_GetOpenFileName(), win_GetSaveFileName()
- *
- * www - http://harbour-project.org
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (win_PrintDlgDC())
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (win_GetOpenFileName(), win_GetSaveFileName())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

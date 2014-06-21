@@ -1,11 +1,10 @@
 /*
- * Harbour Project source code:
- *    demonstration/test client code for OLE server returning to client
- *    HVM objects as OLE object. It's also test for parameters
- *    passed by reference.
+ * Demonstration/test client code for OLE server returning to client
+ * HVM objects as OLE object. It's also test for parameters
+ * passed by reference.
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
+ *
  */
 
 #require "hbwin"

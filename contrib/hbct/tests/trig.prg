@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *   Test CT3 TRIGONOMETRIC functions - PART 1
+ * Test CT3 TRIGONOMETRIC functions - PART 1
  *   - Pi()
  *   - Sin()
  *   - Cos()
@@ -13,8 +12,8 @@
  *   - Sinh()
  *   - Cosh()
  *   - Tanh()
+ *
  * Copyright 2001 Alejandro de garate <alex_degarate@hotmail.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_strAtI(), tip_TimeStamp() rework, cleanups)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

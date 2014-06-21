@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *   Test CT3 function RangeRepl()
+ * Test CT3 function RangeRepl()
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *   CT3 string functions
+ * CT3 string functions
  *     - CharEven()
  *     - CharOdd()
  *
@@ -9,8 +8,6 @@
  * Merged into one file for optimization and some small corrections:
  * (c) 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *          Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

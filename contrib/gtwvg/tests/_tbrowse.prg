@@ -1,11 +1,11 @@
 /*
- *    TBrowse Demonstration with GUI Elements
+ * TBrowse Demonstration with GUI Elements
  *
- *    This protocol can be clubbed with pure console implementation
- *    AND can be called IN a separate thread as well as modal TO
- *    current window.
+ * This protocol can be clubbed with pure console implementation
+ * AND can be called IN a separate thread as well as modal TO
+ * current window.
  *
- *    Pritpal Bedi <bedipritpal@hotmail.com>
+ * Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
 #include "dbstruct.ch"
@@ -425,7 +425,7 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oXbp:setColorBG( "BG+"  )
    oXbp:returnPressed := {| m1, m2, o | m1 := m2, oCom:navigate( RTrim( o:getData() ) ) }
    oXbp:tooltipText := "Type-in a web address and press ENTER"
-   oXbp:setData( "http://harbour-project.org/" )
+   oXbp:setData( "http://harbour-project.org" )
 
    RETURN { oLbl, oXbp }
 
@@ -443,7 +443,7 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    oXbp:create( , , { -23, -1 }, { -1, -10 } )
    oXbp:setColorFG( "R+" )
    oXbp:setColorBG( "W" )
-   oXbp:tooltipText  := "Navigate: http://harbour-project.org"
+   oXbp:tooltipText  := "Navigate: " + "http://harbour-project.org"
 
    RETURN oXbp
 

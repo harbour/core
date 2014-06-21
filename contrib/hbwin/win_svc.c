@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows Service API
  *
- * Copyright 2010 Jose Luis Capel - <jlcapel at hotmail . com>
- * www - http://harbour-project.org
+ * Copyright 2010 Jose Luis Capel <jlcapel at hotmail . com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

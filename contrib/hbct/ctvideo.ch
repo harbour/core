@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
- *   Header file for CT video adapter definitions
+ * Header file for CT video adapter definitions
  *
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

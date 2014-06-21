@@ -1,14 +1,11 @@
 /*
- * Harbour Project source code:
- *
  * GUI Components
+ *
  * Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * Based On:
- *
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software and Systems Ltd
- *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,10 +1,7 @@
 /*
- * xHarbour Project source code:
- * Remote Procedure Call code
- * Standard definitions
+ * Remote Procedure Call code - Standard definitions
  *
  * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

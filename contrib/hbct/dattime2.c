@@ -1,20 +1,19 @@
 /*
- * Harbour Project source code:
- *   CT3 Date & Time functions, part II: - AddMonth()
- *                                       - DaysInMonth()
- *                                       - DaysToMonth()
- *                                       - DMY()
- *                                       - DoY()
- *                                       - IsLeap()
- *                                       - LastDayOM()
- *                                       - MDY()
- *                                       - NToCDoW()
- *                                       - NToCMonth()
- *                                       - Quarter()
- *                                       - Week()
+ * CT3 Date & Time functions, part II:
+ *   AddMonth()
+ *   DaysInMonth()
+ *   DaysToMonth()
+ *   DMY()
+ *   DoY()
+ *   IsLeap()
+ *   LastDayOM()
+ *   MDY()
+ *   NToCDoW()
+ *   NToCMonth()
+ *   Quarter()
+ *   Week()
  *
  * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

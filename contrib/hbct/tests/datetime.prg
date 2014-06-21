@@ -1,11 +1,7 @@
 /*
- * Harbour Project source code:
- *   Program to test functions to mimic Clipper Tools III date and time functions.
- *   (C) Alan Secker 2002 <alansecker@globalnet.co.uk>
+ * Program to test functions to mimic Clipper Tools III date and time functions.
  *
- *   small changes: Martin Vogel <vogel@inttec.de> 2003
- *
- * www - http://harbour-project.org
+ * Copyright 2002 Alan Secker <alansecker@globalnet.co.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

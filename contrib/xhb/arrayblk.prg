@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * HB_ArrayBlk function
+ * hb_ArrayBlock() function
  *
  * Copyright 2003 Walter Negro <anegro@overnet.com.ar>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

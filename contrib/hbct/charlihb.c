@@ -1,13 +1,10 @@
 /*
- * Harbour Project source code:
- *   CT3 string functions
+ * CT3 string functions
  *     - CharSList()  (Harbour extension)
  *     - CharHist()  (Harbour extension)
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,12 +49,12 @@
 
 #include "ct.h"
 
-HB_FUNC( CHARSLIST ) /* HB_EXTENSION */
+HB_FUNC( CHARSLIST )  /* HB_EXTENSION */
 {
    ct_charlist( CT_CHARLIST_CHARSLIST );
 }
 
-HB_FUNC( CHARHIST ) /* HB_EXTENSION */
+HB_FUNC( CHARHIST )  /* HB_EXTENSION */
 {
    ct_charlist( CT_CHARLIST_CHARHIST );
 }

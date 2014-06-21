@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    MINIXML functions wrapper
+ * MINIXML functions wrapper
  *
  * Copyright 2010 Tamas TEVESZ <ice@extreme.hu>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

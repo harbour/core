@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *   CT3 Miscellaneous functions: - XToC()
+ * CT3 Miscellaneous functions: XToC()
  *
- * Copyright 2002 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
- * www - http://harbour-project.org
+ * Copyright 2002 Walter Negro - FOEESITRA <waltern@foeesitra.org.ar>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

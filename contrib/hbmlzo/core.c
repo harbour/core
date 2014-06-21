@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    hbmLZO (miniLZO functions wrapper).
- *    miniLZO -- mini subset of the LZO real-time data compression library
- *               http://www.oberhumer.com/opensource/lzo/
+ * hbmLZO (miniLZO functions wrapper).
+ * miniLZO -- mini subset of the LZO real-time data compression library
+ *            http://www.oberhumer.com/opensource/lzo/
  *
  * Copyright 2011 Petr Chornyj <myorg63@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

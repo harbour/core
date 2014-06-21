@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    dbSetLocate[Block]( <bFor> ) -> <lSet>
  * FlagShip compatible functions
+ * dbSetLocate[Block]( <bFor> ) -> <lSet>
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

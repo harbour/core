@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * MySQL DBMS low level (client api) interface code.
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (GC support)
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net> (DATATOSQL(), FILETOSQLBINARY())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

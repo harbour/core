@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The background tasks - an extension of idle state
  *
  * Copyright 2003-2008 Francesco Saverio Giudice <info@fsgiudice.com>
- * www - http://www.xharbour.org - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

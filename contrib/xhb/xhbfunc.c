@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    xHarbour compatible wrapper functions
+ * xHarbour compatible wrapper functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (hb_F_Eof())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

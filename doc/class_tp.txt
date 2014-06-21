@@ -8,7 +8,7 @@ FILE HEADER TEMPLATE
 /*
  * {one-liner description about the purpose of this source file}
  *
- * Copyright 2000 {list of individual authors and e-mail addresses}
+ * Copyright 2010 {list of individual authors and e-mail addresses}
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

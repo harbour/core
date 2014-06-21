@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * Dbf2Text() function
  *
  * Copyright 1999 Andi Jahja <andij@aonlippo.co.id>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

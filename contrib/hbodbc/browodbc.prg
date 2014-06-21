@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
  * Browse() for ODBC data
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com> for code derived from browse.prg
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) for original FieldBlock function
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> for original Skipped function
  * Copyright 2002 Tomaz Zupan <tomaz.zupan@orpo.si> modifications for ODBC
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * mLZO( miniLZO ) - Harbour header
  *
  * Copyright 2011 Petr Chornyj <myorg63@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

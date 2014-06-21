@@ -1,13 +1,8 @@
 /*
- * xHarbour Project source code:
- *   CT3 GET/READ Functions
+ * CT3 GET/READ Functions
  *
- * SaveGets(), RestGets()
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- * CountGets(), CurrentGet(), GetFldRow(), GetFldCol(), GetFldVar()
- * Copyright 2004 Philip Chee <philip@aleytys.pc.my>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (SaveGets(), RestGets())
+ * Copyright 2004 Philip Chee <philip@aleytys.pc.my> (CountGets(), CurrentGet(), GetFldRow(), GetFldCol(), GetFldVar())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

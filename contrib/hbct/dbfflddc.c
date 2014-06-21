@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
  * dbf structure related functions:
- *
- *    FieldDeci()
+ *   FieldDeci()
  *
  * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

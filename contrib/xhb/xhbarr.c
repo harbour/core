@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * The FastItem Optimization API
  *
  * Copyright 2008 Ron Pinkas <ron@@ronpinkas.com>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

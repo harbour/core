@@ -1,13 +1,11 @@
 /*
- * Harbour Project source code:
- *    IsBegSeq() -> <lResult>
  * FlagShip compatible function
+ *    IsBegSeq() -> <lResult>
  * Test if currently executed code is encapsulated inside
  * begin sequence / end sequence statement activated by
  * current or any upper level function/procedure
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

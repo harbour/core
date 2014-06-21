@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * sql_sprintf() function
  *
  * Copyright 2008 Xavi <jarabal/at/gmail.com>

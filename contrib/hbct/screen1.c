@@ -1,17 +1,10 @@
 /*
- * Harbour Project source code:
- *   CT3 video functions:
- *
+ * CT3 video functions:
  * ScreenAttr(), ScreenMix(), SayScreen(),
  * ClearWin(), InvertWin(), UnTextWin(), CharWin(), ColorWin(), ColorRepl()
- *
- *   and Harbour extension:
- *
- * ScreenText()
+ * and Harbour extension: ScreenText()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -423,7 +416,7 @@ HB_FUNC( COLORWIN )
    hb_retc_null();
 }
 
-HB_FUNC( SCREENTEXT ) /* HB_EXTENSION */
+HB_FUNC( SCREENTEXT )  /* HB_EXTENSION */
 {
    int iTop, iLeft, iBottom, iRight;
    char * pBuffer, * szText;

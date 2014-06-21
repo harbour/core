@@ -1,11 +1,8 @@
 /*
- * xHarbour Project source code:
- *
- * CT3 video functions
+ * CT3 video functions:
  * CharPix(), VGAPalette(), VideoType(), SetFont()
  *
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

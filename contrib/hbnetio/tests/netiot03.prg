@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for alternative RDD IO API, RPC and
- *    asynchronous data streams in NETIO
+ * Demonstration/test code for alternative RDD IO API, RPC and
+ * asynchronous data streams in NETIO
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
- *
  */
 
 #require "hbnetio"
