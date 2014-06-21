@@ -842,7 +842,7 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
    /* BLAT_TEXT_ERR_UNKNOWN has to be first error */
    /* TODO: add function that returns language error array */
    LOCAL aErrors := { ;
-      { BLAT_ERR_UNKNONW                        , BLAT_TEXT_ERR_UNKNOWN                        }, ;
+      { BLAT_ERR_UNKNOWN                        , BLAT_TEXT_ERR_UNKNOWN                        }, ;
       { BLAT_SUCCESS                            , BLAT_TEXT_SUCCESS                            }, ;
       { BLAT_ERR_MESSAGE_NOT_ACCEPTED           , BLAT_TEXT_ERR_MESSAGE_NOT_ACCEPTED           }, ;
       { BLAT_ERR_MISSING_FROM                   , BLAT_TEXT_ERR_MISSING_FROM                   }, ;

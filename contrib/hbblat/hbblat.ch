@@ -71,7 +71,7 @@
 #define _HBBLAT_CH
 
 /* Numeric Errors */
-#define BLAT_ERR_UNKNONW                               -1
+#define BLAT_ERR_UNKNOWN                               -1
 #define BLAT_SUCCESS                                   0
 #define BLAT_ERR_MESSAGE_NOT_ACCEPTED                  1
 #define BLAT_ERR_MISSING_FROM                          1000
