@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_DiskSpace() function
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -155,17 +153,17 @@ double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
 #if defined( _MSC_VER ) || defined( __LCC__ ) || \
     ( defined( __GNUC__ ) && ! defined( __RSXNT__ ) )
 
-#  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
-                                    ( double ) (v).HighPart * \
-                                    ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
+   #define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
+                                     ( double ) (v).HighPart * \
+                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 
 #else
    /* NOTE: Borland doesn't seem to deal with the un-named
             struct that is part of ULARGE_INTEGER
             [pt] */
-#  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).u.LowPart + \
-                                    ( double ) (v).u.HighPart * \
-                                    ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
+   #define HB_GET_LARGE_UINT( v )  ( ( double ) (v).u.LowPart + \
+                                     ( double ) (v).u.HighPart * \
+                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 #endif
 
             ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;

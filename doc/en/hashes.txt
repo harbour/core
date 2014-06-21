@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
  * Hash table type and functions
  *
  * Copyright 2009 April White <april@users.sourceforge.net>
- * www - http://harbour-project.org
- *
  * Based on the content of hashfunc.c and hashes.c
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -91,7 +91,7 @@ Version:        %{version}
 Release:        %{releasen}%{?alphatag:.%{alphatag}}%{?platform:.%{platform}}
 License:        GPL (plus exception)
 Group:          Development/Languages
-URL:            http://harbour-project.org/
+URL:            https://harbour.github.io/
 Source:         %{name}-%{version}.src.tar.gz
 BuildRequires:  gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}

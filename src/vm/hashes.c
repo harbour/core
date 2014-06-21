@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    The Hash tables API (C level)
+ * The Hash tables API (C level)
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +45,7 @@
  */
 
 #ifndef _HB_HASH_INTERNAL_
-#  define _HB_HASH_INTERNAL_
+#define _HB_HASH_INTERNAL_
 #endif
 
 #include "hbvmopt.h"

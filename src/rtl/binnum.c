@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Bin2W(), Bin2I(), Bin2L(), I2Bin(), L2Bin() functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Manuel Ruiz <mrt@joca.es>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

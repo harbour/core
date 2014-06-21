@@ -1,14 +1,12 @@
 /*
- * Harbour Project source code:
- *    SIX compatible functions:
- *          hb_sxEnCrypt()
- *          hb_sxDeCrypt()
+ * SIX compatible functions:
+ *       hb_sxEnCrypt()
+ *       hb_sxDeCrypt()
  *
- *          sx_Encrypt()
- *          sx_Decrypt()
+ *       sx_Encrypt()
+ *       sx_Decrypt()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * __Dir() function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,7 +131,7 @@ STATIC PROCEDURE PutNormal( aDirEntry )
 
    hb_FNameSplit( aDirEntry[ F_NAME ],, @cName, @cExt )
 
-   /* strict MS-DOS like formatting, it does not play well with long
+   /* Strict MS-DOS like formatting, it does not play well with long
       file names which do not stick to 8.3 MS-DOS convention */
 
    QOut( ;

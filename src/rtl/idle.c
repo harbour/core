@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * The idle state collector
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_ReleaseCPU())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

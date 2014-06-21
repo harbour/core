@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    Mini GT for GUI programs.
- *    Now it supports only low level TONE and CLIPBOARD code for Windows
+ * Mini GT for GUI programs.
+ * Now it supports only low level TONE and CLIPBOARD code for Windows
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

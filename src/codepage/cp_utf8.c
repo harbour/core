@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    example of Harbour codepage using UTF8 encoding
+ * Example of Harbour codepage using UTF8 encoding
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +52,7 @@
 #include "uc16def.c"
 
 #ifdef HB_UTF8EX_SORT
-#  include "utf8sort.c"
+   #include "utf8sort.c"
 #endif
 
 static HB_CDP_GET_FUNC( UTF8_get )

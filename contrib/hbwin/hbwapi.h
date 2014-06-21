@@ -107,23 +107,23 @@
 
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
    defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-#  ifndef GetWindowLongPtr
-#     define GetWindowLongPtr  GetWindowLong
-#  endif
-#  ifndef SetWindowLongPtr
-#     define SetWindowLongPtr  SetWindowLong
-#  endif
-#  ifndef GWLP_USERDATA
-#     define GWLP_USERDATA     GWL_USERDATA
-#  endif
+   #ifndef GetWindowLongPtr
+   #define GetWindowLongPtr  GetWindowLong
+   #endif
+   #ifndef SetWindowLongPtr
+   #define SetWindowLongPtr  SetWindowLong
+   #endif
+   #ifndef GWLP_USERDATA
+   #define GWLP_USERDATA     GWL_USERDATA
+   #endif
 #endif
 
 #if defined( __BORLANDC__ )
-#  define HBWAPI_GET_LARGEUINT( v )  ( ( HB_MAXUINT ) ( v ).u.LowPart | \
-                                       ( ( HB_MAXUINT ) ( v ).u.HighPart << 32 ) )
+   #define HBWAPI_GET_LARGEUINT( v )  ( ( HB_MAXUINT ) ( v ).u.LowPart | \
+                                      ( ( HB_MAXUINT ) ( v ).u.HighPart << 32 ) )
 #else
-#  define HBWAPI_GET_LARGEUINT( v )  ( ( HB_MAXUINT ) ( v ).LowPart | \
-                                       ( ( HB_MAXUINT ) ( v ).HighPart << 32 ) )
+   #define HBWAPI_GET_LARGEUINT( v )  ( ( HB_MAXUINT ) ( v ).LowPart | \
+                                      ( ( HB_MAXUINT ) ( v ).HighPart << 32 ) )
 #endif
 
 HB_EXTERN_BEGIN

@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * ProcName(), ProcLine() and ProcFile() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
@@ -8,7 +7,6 @@
  *    Adding the MethodName() just calling ProcName()
  *    Special treatment in case of Object and Eval (only for methodname)
  *    skipping block and adding (b) before the method name
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

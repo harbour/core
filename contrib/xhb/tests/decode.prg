@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    hb_Decode() function test
+ * hb_Decode() function test
  *
  * Copyright 2006 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
- *
+ * Error code translations
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,9 +50,9 @@
 #include "hb_io.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 #else
-#  include <errno.h>
+   #include <errno.h>
 #endif
 
 /* Try to translate C errno into DOS error code */

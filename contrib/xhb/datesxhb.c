@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * The Date API (Harbour level)
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2004 Giancarlo Niccolai <gc -at- niccolai -dot- ws>
  * Copyright 2007 Walter Negro <anegro@overnet.com.ar>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

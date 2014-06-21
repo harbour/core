@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (ESWIN - Modern Spanish)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
- * Spanish Windows support by Antonio Linares <alinares@fivetechsoft.com>
+ * Copyright 2002 Antonio Linares <alinares@fivetechsoft.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * OLE library
  *
  * Copyright 2000, 2003 Jose F. Gimenez (JFG) <jfgimenez@wanadoo.es>
  * Copyright 2008, 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +55,7 @@
 #if ( defined( __POCC__ ) && defined( HB_OS_WIN_CE ) ) || \
    defined( __DMC__ ) || \
    ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) )
-#  define HB_OLE_NO_LL
+   #define HB_OLE_NO_LL
 #endif
 
 #if ( defined( __POCC__ ) && defined( HB_OS_WIN_CE ) ) || \
@@ -65,7 +63,7 @@
    defined( __MINGW32__ ) || \
    defined( __DMC__ ) || \
    ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) )
-#  define HB_OLE_NO_LLREF
+   #define HB_OLE_NO_LLREF
 #endif
 
 
@@ -576,21 +574,21 @@ static void hb_oleItemToVariantRef( VARIANT * pVariant, PHB_ITEM pItem,
          }
 #else
          V_VT( pVariant ) = VT_I8;
-#  if defined( HB_OLE_NO_LL )
+   #if defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
          * ( ( HB_LONGLONG * ) &V_I4( pVariant ) ) = hb_itemGetNInt( pItem );
-#  else
+   #else
          V_I8( pVariant ) = hb_itemGetNInt( pItem );
-#  endif
+   #endif
          if( pVarRef )
          {
             V_VT( pVarRef ) = VT_I8 | VT_BYREF;
-#  if defined( HB_OLE_NO_LLREF ) || defined( HB_OLE_NO_LL )
+   #if defined( HB_OLE_NO_LLREF ) || defined( HB_OLE_NO_LL )
             /* workaround for wrong OLE variant structure definition */
             V_R8REF( pVarRef ) = &V_R8( pVariant );
-#  else
+   #else
             V_I8REF( pVarRef ) = &V_I8( pVariant );
-#  endif
+   #endif
          }
 #endif
          break;

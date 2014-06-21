@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Compatibility header file for CA-Cl*pper base definitions
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -126,16 +124,16 @@ typedef FUNCP * FUNCPP;
 #define CLIPPER HARBOUR
 
 #if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
-#  undef FALSE
-#  define FALSE      0
-#  undef TRUE
-#  define TRUE       1
+   #undef FALSE
+   #define FALSE      0
+   #undef TRUE
+   #define TRUE       1
 #endif
 #ifndef NIL
-#  define NIL     '\0'
+   #define NIL     '\0'
 #endif
 #ifndef NULL
-#  define NULL    0
+   #define NULL    0
 #endif
 
 /* Old types */

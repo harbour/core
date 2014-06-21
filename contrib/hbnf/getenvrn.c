@@ -23,19 +23,19 @@
 #include "hbapiitm.h"
 
 #if defined( HB_OS_UNIX )
-#  include <unistd.h>
-#  if defined( HB_OS_DARWIN )
-#     include <crt_externs.h>
-#     define environ  ( *_NSGetEnviron() )
-#  elif ! defined( __WATCOMC__ )
-extern char ** environ;
-#  endif
+   #include <unistd.h>
+   #if defined( HB_OS_DARWIN )
+      #include <crt_externs.h>
+      #define environ  ( *_NSGetEnviron() )
+   #elif ! defined( __WATCOMC__ )
+      extern char ** environ;
+   #endif
 #elif defined( HB_OS_DOS )
-#  define environ     _environ
-extern char ** _environ;
+   #define environ     _environ
+   extern char ** _environ;
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-#  include "hbwinuni.h"
-#  include <windows.h>
+   #include "hbwinuni.h"
+   #include <windows.h>
 #endif
 
 #define NORETURN      0

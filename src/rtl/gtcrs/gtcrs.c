@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem based on ncurses screen library.
  *
  * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >

@@ -1,11 +1,7 @@
 /*
- * xHarbour Project source code:
  * HBXML - XML DOM oriented routines
- * Define wrappers for xHarbour PRG.
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,6 +1,7 @@
 /*
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  * hbhpdf header
+ *
+ * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

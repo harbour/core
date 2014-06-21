@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Reimplementation of xhb .zip functions. EXPERIMENTAL CODE. USE AT YOUR OWN RISK. NO GUARANTEES.
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * The Keyboard API
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * Copyright 1999-2012 Viktor Szakats (vszakats.net/harbour) (hb_keyPut())
  * Copyright 2003-2012 Przemyslaw Czerpak <druzus@acn.waw.pl> (hb_keySetLast(), hb_keyChar(), hb_keyStd())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Printing subsystem for Windows using GUI printing
  *
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

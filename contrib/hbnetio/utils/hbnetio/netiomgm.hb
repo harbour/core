@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour NETIO server management client engine
  *
  * Copyright 2009-2014 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -330,7 +328,7 @@ STATIC PROCEDURE cmdAbout( netiocli )
 
    hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + HBRawVersion() )
    hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2014, Viktor Szakats" )
-   hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
+   hbnetiocon_dispevent( netiocli, hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN
 

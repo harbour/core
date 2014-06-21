@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (TRWIN)
  *
  * Copyright 2006 Bicahi Esgici <esgici@yahoo.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

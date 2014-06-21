@@ -1,8 +1,7 @@
 /*
- * Harbour Project source code:
+ * DLL call header
  *
- *
- * www - http://harbour-project.org
+ * Copyright 200? {list of individual authors and e-mail addresses}
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

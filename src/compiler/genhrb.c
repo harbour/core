@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
  * Compiler Harbour Portable Object (.hrb) generation
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
- * www - http://harbour-project.org
- *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    rewritten to work on memory buffers and with new compiler code
  *

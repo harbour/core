@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    RDD tests
+ * RDD tests
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

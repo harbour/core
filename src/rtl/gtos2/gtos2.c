@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem for OS/2 compilers
  *
  * Copyright 1999-2001 {list of individual authors and e-mail addresses}
@@ -27,7 +26,6 @@
  *    hb_gt_DispBegin() / hb_gt_DispEnd()
  *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
  *    16 bit KBD subsystem use inside hb_gt_os2_ReadKey()
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

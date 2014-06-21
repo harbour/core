@@ -21,6 +21,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 #include "wvgparts.ch"
 
 REQUEST DBFCDX
@@ -70,7 +71,7 @@ PROCEDURE Main()
    LOCAL cName     := PadR( "Pritpal Bedi", 35 )
    LOCAL cAdd1     := PadR( "60, New Professor Colony", 35 )
    LOCAL cAdd2     := PadR( "Ludhiana, INDIA", 35 )
-   LOCAL cAdd3     := PadR( "http://harbour-project.org", 35 )
+   LOCAL cAdd3     := PadR( hb_Version( HB_VERSION_URL_BASE ), 35 )
    LOCAL nSlry     := 20000
    LOCAL aBlocks   := {}
    LOCAL nColGet   := 8

@@ -1564,7 +1564,7 @@ Supported shells per host platforms:
 
      * Git (1.7 or upper) [multiplatform, free, open-source]
         * <http://git-scm.com/>
-        * <http://msysgit.github.io> (Windows binaries)
+        * <https://msysgit.github.io> (Windows binaries)
      * GitHub Client [multiplatform, free]
         * <https://windows.github.com/>
         * <https://mac.github.com/>
@@ -1661,7 +1661,7 @@ Supported shells per host platforms:
      * [ChangeLog](ChangeLog.txt?raw=true)
      * Comparing [Harbour to xHarbour](doc/xhb-diff.txt?raw=true)
      * CA-Cl*pper 5.3 [online documentation](http://x-hacker.org/ng/53guide/)
-     * Harbour [online documentation](http://harbour.github.io/doc/)
+     * Harbour [online documentation](https://vszakats.github.io/harbour-core/harbour.html)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
      * [Stack Exchange](https://stackoverflow.com/questions/tagged/clipper)

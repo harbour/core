@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * DOS Ukrainian (RUSCII) cp1125 <-> Unicode conversion table
  *
  * Copyright 2009 Pavel Tsarenko <tpe2@mail.ru>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

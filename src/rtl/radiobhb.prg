@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * RadioButton() constructor function
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +52,7 @@
 
 #ifdef HB_COMPAT_C53
 
-FUNCTION RadioButton( nRow, nCol, cCaption, cData ) /* NOTE: cData argument is undocumented */
+FUNCTION RadioButton( nRow, nCol, cCaption, cData )  /* NOTE: cData argument is undocumented */
    RETURN HBRadioButton():New( nRow, nCol, cCaption, cData )
 
 #endif

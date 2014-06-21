@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *   CA-T*ols for Harbour, Math header file
+ * CA-T*ols for Harbour, Math header file
  *
  * Copyright 2001 Alejandro de garate <alex_degarate@hotmail.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

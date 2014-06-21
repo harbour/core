@@ -1,8 +1,7 @@
 /*
- * Harbour Project source code:
+ * Windows types
  *
- *
- * www - http://harbour-project.org
+ * Copyright 200? {list of individual authors and e-mail addresses}
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,6 +103,6 @@
 #define HDC                  CTYPE_UNSIGNED_LONG
 #define HIMAGELIST           CTYPE_UNSIGNED_LONG
 
-#ytranslate CTYPE_Int( <x> ) => Int( <x> ) /* Fixes conflict with Int() function */
+#ytranslate CTYPE_Int( <x> ) => Int( <x> )  /* Fixes conflict with Int() function */
 
 #endif /* __WINTYPES_CH */

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Compiler Expression Optimizer - reducing expressions
  *
  * Copyright 1999 Ryszard Glab
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Xbase++ compatible classes to manage threads
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
- * special thanks for Pritpal Bedi for class skeleton with info about
+ * Special thanks for Pritpal Bedi for class skeleton with info about
  * Xbase++ and to other contributors which I hope will finish and fix
  * this code
  *

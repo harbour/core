@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
  * Header file for the Terminal API
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (Keyboard related declarations, Cursor declarations)
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (Mouse related declarations, Undocumented GT API declarations)
  * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl > (Internal GT code reimplemented in different way)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -100,9 +98,9 @@ HB_EXTERN_BEGIN
 
 
 #if defined( HB_COMPAT_C53 ) && ! defined( HB_CLP_STRICT )
-#  define HB_DEFAULT_INKEY_BUFSIZE  50
+   #define HB_DEFAULT_INKEY_BUFSIZE  50
 #else
-#  define HB_DEFAULT_INKEY_BUFSIZE  15
+   #define HB_DEFAULT_INKEY_BUFSIZE  15
 #endif
 
 

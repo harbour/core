@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Inkey GT API
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2002 Walter Negro <anegro@overnet.com.ar> (hb_inkeySetLast())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

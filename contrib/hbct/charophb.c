@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *   CT3 string functions
+ * CT3 string functions
  *     - CharSub()  (Harbour extension)
  *     - CharShl()  (Harbour extension)
  *     - CharShr()  (Harbour extension)
@@ -9,8 +8,6 @@
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,27 +52,27 @@
 
 #include "ct.h"
 
-HB_FUNC( CHARSUB ) /* HB_EXTENSION */
+HB_FUNC( CHARSUB )  /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARSUB );
 }
 
-HB_FUNC( CHARSHL ) /* HB_EXTENSION */
+HB_FUNC( CHARSHL )  /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARSHL );
 }
 
-HB_FUNC( CHARSHR ) /* HB_EXTENSION */
+HB_FUNC( CHARSHR )  /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARSHR );
 }
 
-HB_FUNC( CHARRLL ) /* HB_EXTENSION */
+HB_FUNC( CHARRLL )  /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARRLL );
 }
 
-HB_FUNC( CHARRLR ) /* HB_EXTENSION */
+HB_FUNC( CHARRLR )  /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARRLR );
 }

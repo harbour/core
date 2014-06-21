@@ -1,7 +1,7 @@
-Harbour Shell / Script Runner 3\.4\.0dev \(f02eba6\) \(2014\-06\-14 10:24\)  
+Harbour Shell / Script Runner 3\.4\.0dev \(756ab4d\) \(2014\-06\-21 11:08\)  
 Copyright &copy; 2007\-2014, Viktor Szakáts  
 Copyright &copy; 2003\-2007, Przemysław Czerpak  
-<http://harbour\-project\.org/>  
+<https://harbour\.github\.io/>  
 Traduction \(fr\): \(ajoutez votre nom ici\)  
 
 Syntax:  

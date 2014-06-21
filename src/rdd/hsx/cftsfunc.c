@@ -1,10 +1,8 @@
 /*
- * xHarbour Project source code:
- *    HiPer-SEEK / CFTS compatible library
- *    Cfts*() functions
+ * HiPer-SEEK / CFTS compatible library
+ * Cfts*() functions
  *
  * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
  *
  * Credits:
  *    Many thanks for Mindaugas Kavaliauskas for his assistance,

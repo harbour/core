@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Filesys API
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,7 +96,7 @@ HB_EXTERN_BEGIN
 #define HB_FA_RWXO            ( HB_FA_ROTH | HB_FA_WOTH | HB_FA_XOTH )
 
 #if defined( HB_OS_VXWORKS ) && ! defined( S_ISVTX )
-#  define S_ISVTX 0
+   #define S_ISVTX 0
 #endif
 
 /* macros to convert Harbour attributes to POSIX ones */
@@ -197,22 +195,22 @@ extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* re
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_USE_SHARELOCKS_OFF )
-#  define HB_USE_SHARELOCKS
-#  define HB_SHARELOCK_POS          0x7fffffffUL
-#  define HB_SHARELOCK_SIZE         0x1UL
-#  if defined( HB_USE_BSDLOCKS_OFF )
-#     undef HB_USE_BSDLOCKS
-#  elif defined( HB_OS_LINUX ) && \
-        ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
-      /* default usage of BSD locks in *BSD systems for emulating
-       * MS-DOS/Windows DENY_* flags has been disabled because tests
-       * on FreeBSD 6.2 and OS X shows that this implementation
-       * can create self deadlock when used simultaneously with
-       * POSIX locks - thanks to Phil and Lorenzo for locating the
-       * problem and tests [druzus]
-       */
-#     define HB_USE_BSDLOCKS
-#  endif
+   #define HB_USE_SHARELOCKS
+   #define HB_SHARELOCK_POS          0x7fffffffUL
+   #define HB_SHARELOCK_SIZE         0x1UL
+   #if defined( HB_USE_BSDLOCKS_OFF )
+      #undef HB_USE_BSDLOCKS
+   #elif defined( HB_OS_LINUX ) && \
+         ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
+       /* default usage of BSD locks in *BSD systems for emulating
+        * MS-DOS/Windows DENY_* flags has been disabled because tests
+        * on FreeBSD 6.2 and OS X shows that this implementation
+        * can create self deadlock when used simultaneously with
+        * POSIX locks - thanks to Phil and Lorenzo for locating the
+        * problem and tests [druzus]
+        */
+      #define HB_USE_BSDLOCKS
+   #endif
 #endif
 
 #define HB_MAX_DRIVE_LENGTH   10
@@ -306,7 +304,7 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
 
 #if defined( _HB_FILE_IMPLEMENTATION_ ) || defined( _HB_FILE_INTERNAL_ )
 
-#  define HB_FILE_TYPE_MAX    64
+   #define HB_FILE_TYPE_MAX    64
 
    struct _HB_FILE;
    typedef struct _HB_FILE * PHB_FILE;

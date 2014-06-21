@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    LZF functions wrapper
+ * LZF functions wrapper
  *
  * Copyright 2010 Petr Chornyj <myorg63@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +52,7 @@
 #include "lzfP.h"
 
 #if ! AVOID_ERRNO
-#  include <errno.h>
+   #include <errno.h>
 #endif
 
 #include "hblzf.ch"

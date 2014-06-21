@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (SVCLIP - Clipper compatible)
  *
  * Copyright 2006 Klas Engwall <klas dot engwall at engwall dot com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

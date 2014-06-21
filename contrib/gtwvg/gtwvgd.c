@@ -90,15 +90,15 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
       defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-#  ifndef GetWindowLongPtr
-#     define GetWindowLongPtr   GetWindowLong
-#  endif
-#  ifndef SetWindowLongPtr
-#     define SetWindowLongPtr   SetWindowLong
-#  endif
-#  define HB_GTWVT_LONG_PTR     LONG
+   #ifndef GetWindowLongPtr
+   #define GetWindowLongPtr   GetWindowLong
+   #endif
+   #ifndef SetWindowLongPtr
+   #define SetWindowLongPtr   SetWindowLong
+   #endif
+   #define HB_GTWVT_LONG_PTR     LONG
 #else
-#  define HB_GTWVT_LONG_PTR     LONG_PTR
+   #define HB_GTWVT_LONG_PTR     LONG_PTR
 #endif
 
 #ifndef WS_OVERLAPPEDWINDOW

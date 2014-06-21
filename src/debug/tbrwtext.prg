@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Text file browser class
  *
  * Copyright 2008 Lorenzo Fiorini <lorenzo.fiorini@gmail.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

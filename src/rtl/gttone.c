@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    Low level tone code common to some GT drivers
+ * Low level tone code common to some GT drivers
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
- * the body of TONE function from Windows taken from GTWIN created by
+ * the body of Tone() function from Windows taken from GTWIN created by
  * the following authors:
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * Copyright 1999-2006 Paul Tucker <ptucker@sympatico.ca>

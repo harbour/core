@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- * Table,Record and Field Class
+ * Table, Record and Field Class
  *
  * Copyright 2000-2003 Manos Aspradakis maspr@otenet.gr
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

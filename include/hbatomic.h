@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    header file with functions for atomic operations
+ * Header file with functions for atomic operations
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

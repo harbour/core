@@ -1,11 +1,7 @@
 /*
- * Harbour Project source code:
- *   CT3 video functions (screen-like functions):
+ * CT3 video functions (screen-like functions):
  *
- * ScreenMark()
- * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
- * www - http://harbour-project.org
- *
+ * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru> (ScreenMark())
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *   modified for better CT3 compatibility and GT drivers which do not use
  *   VGA compatible video buffer

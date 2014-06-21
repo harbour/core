@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
- *    CT3 Number and bit manipulation functions:
- *       EnvParam()
+ * EnvParam()
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,27 +47,27 @@
 #include "hbapi.h"
 
 #if defined( HB_OS_UNIX )
-#  include <unistd.h>
-#  if defined( HB_OS_DARWIN )
-#     include <crt_externs.h>
-#     define environ  ( *_NSGetEnviron() )
-#  elif ! defined( __WATCOMC__ )
+   #include <unistd.h>
+   #if defined( HB_OS_DARWIN )
+      #include <crt_externs.h>
+      #define environ  ( *_NSGetEnviron() )
+   #elif ! defined( __WATCOMC__ )
       extern char ** environ;
-#  endif
+   #endif
 #elif defined( HB_OS_DOS )
-#  if defined( __DJGPP__ )
+   #if defined( __DJGPP__ )
       extern char ** environ;
-#  elif ! defined( __WATCOMC__ )
-#     define environ _environ
+   #elif ! defined( __WATCOMC__ )
+      #define environ _environ
       extern char ** _environ;
-#  endif
+   #endif
 #elif defined( HB_OS_OS2 )
-#  if ! defined( __WATCOMC__ )
+   #if ! defined( __WATCOMC__ )
       extern char ** environ;
-#  endif
+   #endif
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-#  include "hbwinuni.h"
-#  include <windows.h>
+   #include "hbwinuni.h"
+   #include <windows.h>
 #endif
 
 HB_FUNC( ENVPARAM )

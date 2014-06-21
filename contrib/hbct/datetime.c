@@ -1,13 +1,8 @@
 /*
- * Harbour Project source code:
- *   CT3 Date & Time functions: - BoM() / EoM()
- *                              - BoQ() / EoQ()
- *                              - BoY() / EoY()
- *                              - WoM()
+ * CT3 Date & Time functions: BoM() / EoM(), BoQ() / EoQ(), BoY() / EoY(), WoM()
  *
  * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  * Copyright 1999 Jose Lalin <dezac@corevia.com> (WoM())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,18 +1,16 @@
 /*
- * Harbour Project source code:
- *    SIX compatible functions:
- *          hb_LZSSxCompressMem()
- *          hb_LZSSxDecompressMem()
- *          hb_LZSSxCompressFile()
- *          hb_LZSSxDecompressFile()
+ * SIX compatible functions:
+ *       hb_LZSSxCompressMem()
+ *       hb_LZSSxDecompressMem()
+ *       hb_LZSSxCompressFile()
+ *       hb_LZSSxDecompressFile()
  *
- *          SX_FCOMPRESS
- *          SX_FDECOMPRESS
- *          _SX_STRDECOMPRESS
- *          _SX_STRCOMPRESS
+ *       sx_FCompress()
+ *       sx_FDecompress()
+ *       _sx_StrDecompress()
+ *       _sx_StrCompress()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

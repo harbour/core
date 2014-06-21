@@ -1,14 +1,9 @@
 /*
- * Harbour Project source code:
- *   PosAlpha(), PosLower(), PosRange() and PosUpper() CT3 string functions
+ * PosAlpha(), PosLower(), PosRange() and PosUpper() CT3 string functions
  *
- * PosUpper() Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *
- * PosAlpha(), PosLower(), PosRange()
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (PosUpper())
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

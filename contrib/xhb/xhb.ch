@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for cross-compatibility with xhb
  *
  * Copyright 1999-2007 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

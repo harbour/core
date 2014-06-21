@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * FreeImage graphic library low level (client api) interface code.
  *
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
- * www - http://www.xharbour.org http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,10 +54,10 @@
 #include "hbvm.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
-#  if ! defined( _WINDOWS_ )
-#     define _WINDOWS_
-#  endif
+   #include <windows.h>
+   #if ! defined( _WINDOWS_ )
+      #define _WINDOWS_
+   #endif
 #endif
 
 #include "FreeImage.h"

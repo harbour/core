@@ -2,7 +2,6 @@
  * ODBC Database Driver
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,20 +55,20 @@
 
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 /* Required for WIN32_LEAN_AND_MEAN mode */
-#  if ! defined( WIN32 )
-#     define WIN32
-#  endif
+   #if ! defined( WIN32 )
+      #define WIN32
+   #endif
 #endif
 
 #include <sql.h>
 #include <sqlext.h>
 
 #if ! defined( HB_OS_WIN )
-#  if ! defined( SQLLEN ) && ! defined( SQLTCHAR )
-typedef unsigned char SQLTCHAR;
-#  endif
+   #if ! defined( SQLLEN ) && ! defined( SQLTCHAR )
+      typedef unsigned char SQLTCHAR;
+   #endif
 #endif
 
 #if defined( UNICODE )

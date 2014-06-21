@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *   Memory file system
- *   I/O driver for Memory file system
+ * Memory file system
+ * I/O driver for Memory file system
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

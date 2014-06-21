@@ -1,13 +1,11 @@
 /*
- * Harbour Project source code:
- *    Simple program to generate information for Harbour CP module definition.
- *    Compile it with Clipper and link with given national sorting module
- *    (usually ntx*.obj) and then execute to generate letters strings for
- *    given national sorting module. Then use this string to define Harbour
- *    CP module in src/codepage/ directory.
+ * Simple program to generate information for Harbour CP module definition.
+ * Compile it with Clipper and link with given national sorting module
+ * (usually ntx*.obj) and then execute to generate letters strings for
+ * given national sorting module. Then use this string to define Harbour
+ * CP module in src/codepage/ directory.
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 
@@ -330,9 +328,8 @@ static function charinfo( c )
 
 #ifdef __HARBOUR__
    #include "hbextcdp.ch"
-   #define EOL           hb_eol()
 #else
-   #define EOL           Chr( 13 ) + Chr( 10 )
+   #define hb_eol()      ( Chr( 13 ) + Chr( 10 ) )
    #define hb_BLen( s )  Len( s )
 #endif
 
@@ -416,58 +413,56 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
    local cDef
 
    cDef := ;
-      '/*' + EOL + ;
-      ' * Harbour Project source code:' + EOL + ;
-      ' * National Collation Support Module ($1)' + EOL + ;
-      ' *' + EOL + ;
-      ' * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>' + EOL + ;
-      ' * www - http://harbour-project.org' + EOL + ;
-      ' *' + EOL + ;
-      ' * This file is generated automatically by cpinfo.prg' + EOL + ;
-      ' */' + EOL + EOL + ;
-      '#define HB_CP_ID        $1' + EOL + ;
-      '#define HB_CP_INFO      "$2"' + EOL + ;
-      '#define HB_CP_UNITB     HB_UNITB_$3' + EOL
+      "/*" + hb_eol() + ;
+      " * National Collation Support Module ($1)" + hb_eol() + ;
+      " *" + hb_eol() + ;
+      " * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>" + hb_eol() + ;
+      " *" + hb_eol() + ;
+      " * This file is generated automatically by cpinfo.prg" + hb_eol() + ;
+      " */" + hb_eol() + hb_eol() + ;
+      "#define HB_CP_ID        $1" + hb_eol() + ;
+      '#define HB_CP_INFO      "$2"' + hb_eol() + ;
+      "#define HB_CP_UNITB     HB_UNITB_$3" + hb_eol()
    if ! lBin
       cDef += ;
-         '#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE' + EOL
+         "#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE" + hb_eol()
       if lMixed
-         cDef += '#define HB_CP_CSSORT    HB_CDP_CSSORT_MIXED' + EOL
+         cDef += "#define HB_CP_CSSORT    HB_CDP_CSSORT_MIXED" + hb_eol()
       endif
 #ifdef __HARBOUR__
       cDef += ;
-         '#define HB_CP_UPPER     "' + hb_StrToUTF8( cUp ) + '"' + EOL + ;
-         '#define HB_CP_LOWER     "' + hb_StrToUTF8( cLo ) + '"' + EOL + ;
-         '#define HB_CP_UTF8' + EOL + ;
-         EOL
+         '#define HB_CP_UPPER     "' + hb_StrToUTF8( cUp ) + '"' + hb_eol() + ;
+         '#define HB_CP_LOWER     "' + hb_StrToUTF8( cLo ) + '"' + hb_eol() + ;
+         "#define HB_CP_UTF8" + hb_eol() + ;
+         hb_eol()
 #else
       cDef += ;
-         '#define HB_CP_UPPER     "' + cUp + '"' + EOL + ;
-         '#define HB_CP_LOWER     "' + cLo + '"' + EOL + ;
-         EOL
+         '#define HB_CP_UPPER     "' + cUp + '"' + hb_eol() + ;
+         '#define HB_CP_LOWER     "' + cLo + '"' + hb_eol() + ;
+         hb_eol()
 #endif
       if lWarn
          cDef += ;
-            '#if 0 /* TOVERIFY: binary tables */' + EOL
+            "#if 0 /* TOVERIFY: binary tables */" + hb_eol()
       endif
    endif
    if lBin .or. lWarn
       cDef += ;
-         EOL + ;
-         '#define HB_CP_RAW' + EOL + EOL + ;
-         'static const unsigned char s_flags[ 256 ] = { $f };' + EOL + ;
-         'static const unsigned char s_upper[ 256 ] = { $u };' + EOL + ;
-         'static const unsigned char s_lower[ 256 ] = { $l };' + EOL + ;
-         'static const unsigned char s_sort [ 256 ] = { $s };' + EOL + ;
-         EOL
+         hb_eol() + ;
+         "#define HB_CP_RAW" + hb_eol() + hb_eol() + ;
+         "static const unsigned char s_flags[ 256 ] = { $f };" + hb_eol() + ;
+         "static const unsigned char s_upper[ 256 ] = { $u };" + hb_eol() + ;
+         "static const unsigned char s_lower[ 256 ] = { $l };" + hb_eol() + ;
+         "static const unsigned char s_sort [ 256 ] = { $s };" + hb_eol() + ;
+         hb_eol()
       if ! lBin
          cDef += ;
-            '#endif' + EOL + EOL
+            "#endif" + hb_eol() + hb_eol()
       endif
    endif
    cDef += ;
-      '/* include CP registration code */' + EOL + ;
-      '#include "hbcdpreg.h"' + EOL
+      "/* include CP registration code */" + hb_eol() + ;
+      '#include "hbcdpreg.h"' + hb_eol()
 
    cDef := StrTran( cDef, "$f", a2def( flags ) )
    cDef := StrTran( cDef, "$u", a2def( upper ) )

@@ -114,7 +114,7 @@ METHOD NewFile() CLASS GenerateHTML
    ::Append( ::cTitle /* + iif( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
    ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc" )
    ::CloseTag( "meta" )
-   ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )
+   ::OpenTag( "meta", "name", "keywords", "content", "Harbour Project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, 64-bit" )
    ::CloseTag( "meta" )
 
    IF ::lCreateStyleDocument

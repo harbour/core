@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * JUS I.B1.002 / ISO-646-YU / YUSCII / CROSCII / SLOSCII <-> Unicode conversion table
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

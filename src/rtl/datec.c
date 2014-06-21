@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * CMonth(), CDoW() functions
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +53,7 @@
 #if defined( __CODEGUARD__ )
    static const char s_nullStr[ 4 ] = { 0 };
 #else
-#  define s_nullStr     ""
+   #define s_nullStr     ""
 #endif
 
 const char * hb_dateCMonth( int iMonth )

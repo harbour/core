@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows Service API
  *
- * Copyright 2010 Jose Luis Capel - <jlcapel at hotmail . com>
- * www - http://harbour-project.org
+ * Copyright 2010 Jose Luis Capel <jlcapel at hotmail . com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +52,7 @@
 #if ! defined( HB_OS_WIN_CE )
 
 #if defined( __POCC__ ) || defined( __XCC__ )
-#  include <winsvc.h>   /* it's disabled by WIN32_LEAN_AND_MEAN */
+   #include <winsvc.h>   /* it's disabled by WIN32_LEAN_AND_MEAN */
 #endif
 
 static SERVICE_STATUS        s_ServiceStatus;

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    functions to access files with shared handles and locks
- *    (buffers in the future)
+ * Functions to access files with shared handles and locks
+ * (buffers in the future)
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

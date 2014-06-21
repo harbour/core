@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour implementation of Class(y) Scalar classes
  *
  * Copyright 2004 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -129,7 +127,7 @@ CREATE CLASS Array INHERIT HBScalar FUNCTION __HBArray
    METHOD IsScalar()
    METHOD Remove( e )
    METHOD Scan( b )
-   METHOD _Size( newSize )                   // assignment method
+   METHOD _Size( newSize )  // assignment method
 
    MESSAGE Append  METHOD Add
 

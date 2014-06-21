@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Quick Clipper Browse()
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -414,9 +412,10 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
    LOCAL nSkipped := 0
 
    IF LastRec() != 0
-      IF nRecs == 0
+      DO CASE
+      CASE nRecs == 0
          dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+      CASE nRecs > 0 .AND. RecNo() != LastRec() + 1
          DO WHILE nSkipped < nRecs
             dbSkip()
             IF Eof()
@@ -429,7 +428,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             ENDIF
             ++nSkipped
          ENDDO
-      ELSEIF nRecs < 0
+      CASE nRecs < 0
          DO WHILE nSkipped > nRecs
             dbSkip( -1 )
             IF Bof()
@@ -437,7 +436,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             ENDIF
             --nSkipped
          ENDDO
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN nSkipped

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *
+ * Harbour standalone compiler entry point
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -134,5 +132,5 @@ int main( int argc, char * argv[] )
 }
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __CEGCC__ )
-#  include "hbwmain.c"
+   #include "hbwmain.c"
 #endif

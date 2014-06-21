@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    HiPer-SEEK indexing/search test
+ * HiPer-SEEK indexing/search test
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

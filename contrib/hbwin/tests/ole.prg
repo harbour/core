@@ -1,18 +1,16 @@
 /*
- * Harbour Project source code
- *
- * hbole library demo/test code
+ * OLE demo/test code
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  *    Exm_CDO(), Exm_OOOpen(), Exm_CreateShortcut()
  *
- * www - http://harbour-project.org
- *
  */
 
 #require "hbwin"
+
+#include "hbver.ch"
 
 PROCEDURE Main()
 
@@ -215,7 +213,7 @@ STATIC PROCEDURE Exm_IExplorer()
 
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:Visible := .T.
-      oIE:Navigate( "http://harbour-project.org" )
+      oIE:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
    ELSE
       ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
@@ -229,7 +227,7 @@ STATIC PROCEDURE Exm_IExplorer2()
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:__hSink := __axRegisterHandler( oIE:__hObj, {| ... | QOut( ... ) } )
       oIE:Visible := .T.
-      oIE:Navigate( "http://harbour-project.org" )
+      oIE:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
       DO WHILE oIE:ReadyState != 4
          hb_idleSleep( 0 )
       ENDDO

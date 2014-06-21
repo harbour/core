@@ -128,15 +128,15 @@
 }
 
 #if defined( __BORLANDC__ )
-#  if __BORLANDC__ >= 1328
-#     define _ULL( num )          num##ui64
-#  else
-#     define _ULL( num )          num
-#  endif
+   #if __BORLANDC__ >= 1328
+      #define _ULL( num )          num##ui64
+   #else
+      #define _ULL( num )          num
+   #endif
 #elif defined( _MSC_VER )
-#  define _ULL( num )          num
+   #define _ULL( num )          num
 #else
-#  define _ULL( num )          num##ULL
+   #define _ULL( num )          num##ULL
 #endif
 
 static const uint32 sha224_h0[8] =

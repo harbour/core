@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *   StrDiff() CT3 string function
+ * StrDiff() CT3 string function
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

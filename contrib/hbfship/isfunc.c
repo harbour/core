@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
- *    IsFunction( <cName> ) -> <lExists>
  * FlagShip compatible function
+ *    IsFunction( <cName> ) -> <lExists>
  * Determines if a standard or user defined function/procedure
  * is available (linked to the application and registered in VM)
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

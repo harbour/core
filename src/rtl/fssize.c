@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * hb_FSize() function
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
  * Copyright 2000-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +46,7 @@
  */
 
 #if ! defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE  1
+   #define _LARGEFILE64_SOURCE  1
 #endif
 
 #include "hbapi.h"
@@ -56,8 +54,8 @@
 #include "hbvm.h"
 
 #if ! defined( HB_OS_WIN_CE )
-#  include <sys/types.h>
-#  include <sys/stat.h>
+   #include <sys/types.h>
+   #include <sys/stat.h>
 #endif
 
 #if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )

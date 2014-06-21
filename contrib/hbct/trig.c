@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *   CT3 trigonometric functions
+ * CT3 trigonometric functions
  *     - Pi()
  *     - Sin()
  *     - Cos()
@@ -20,8 +19,6 @@
  *
  * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

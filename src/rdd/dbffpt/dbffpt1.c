@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * DBFFPT RDD
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
  *
  * The SIX memo conversion algorithms and some piece of code taken from
  * DBFCDX and DBFFPT
@@ -52,13 +50,13 @@
  */
 
 #if defined( HB_FPT_NO_READLOCK )
-#  undef HB_MEMO_SAFELOCK
+   #undef HB_MEMO_SAFELOCK
 #else
 /*#  define HB_MEMO_SAFELOCK */
 #endif
 
 #if defined( __XCC__ )
-#  pragma optimize( none )
+   #pragma optimize( none )
 #endif
 
 #include "hbapi.h"

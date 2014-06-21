@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * The Debugger
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
  * Copyright 2003-2006 Phil Krylov <phil@newstar.rinet.ru>
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (__dbgCStr())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

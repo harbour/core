@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Base-routines for OOPS system
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
@@ -52,7 +51,6 @@
  *    Added hb_objGetRealClsName to keep a full class tree (for 99% cases)
  *    Fixed hb_clsIsParent
  *    hb_objGetMthd() & __clsAddMsg() modified to translate operators
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

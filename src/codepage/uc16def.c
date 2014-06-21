@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    Unicode character tables
- *    code generated automatically by uc16_gen.prg
+ * Unicode character tables
+ * code generated automatically by uc16_gen.prg
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

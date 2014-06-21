@@ -1,5 +1,5 @@
 /*
- * Harbour Project source code:
+ * Paint functions
  *
  * Copyright 2004 Pritpal Bedi <bedipritpal@hotmail.com>
  *

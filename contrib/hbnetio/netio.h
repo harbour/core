@@ -1,13 +1,11 @@
 /*
- * Harbour Project source code:
- *    demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server with RPC support
- *    All files which names starts with 'net:' are redirected to this API.
- *    This is header file used by client and server code with some constant
- *    definitions.
+ * Demonstration code for alternative RDD IO API which uses own
+ * very simple TCP/IP file server with RPC support
+ * All files which names starts with 'net:' are redirected to this API.
+ * This is header file used by client and server code with some constant
+ * definitions.
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

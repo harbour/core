@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * The Console API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
@@ -10,7 +9,6 @@
  *    hb_conOut(), hb_conOutErr(), OutErr(),
  *    hb_conOutStd(), OutStd(), PCol(), PRow(),
  *    SetPRC(), and hb_conInit()
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,9 +75,9 @@
 
 /* length of buffer for CR/LF characters */
 #if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
-#  define CRLF_BUFFER_LEN  4
+   #define CRLF_BUFFER_LEN  4
 #else
-#  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
+   #define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
 #endif
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )

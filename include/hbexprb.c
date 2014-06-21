@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Compiler Expression Optimizer
  *
  * Copyright 1999 Ryszard Glab
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +48,7 @@
 #include "hbmacro.ch"
 
 #if ! defined( HB_HASH_USES_ARRAY_INDEXES )
-#  define HB_HASH_USES_ARRAY_INDEXES
+   #define HB_HASH_USES_ARRAY_INDEXES
 #endif
 
 #define HB_USE_ARRAYAT_REF

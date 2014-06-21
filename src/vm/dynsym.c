@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Dynamic symbol table management
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,20 +65,20 @@ HB_SYM_HOLDER, * PHB_SYM_HOLDER;
 
 #if defined( HB_MT_VM )
 
-#  include "hbthread.h"
+   #include "hbthread.h"
 
    static HB_CRITICAL_NEW( s_dynsMtx );
-#  define HB_DYNSYM_LOCK()      hb_threadEnterCriticalSection( &s_dynsMtx )
-#  define HB_DYNSYM_UNLOCK()    hb_threadLeaveCriticalSection( &s_dynsMtx )
+   #define HB_DYNSYM_LOCK()      hb_threadEnterCriticalSection( &s_dynsMtx )
+   #define HB_DYNSYM_UNLOCK()    hb_threadLeaveCriticalSection( &s_dynsMtx )
 
-#  define hb_dynsymHandles( p )     hb_stackGetDynHandle( p )
+   #define hb_dynsymHandles( p )     hb_stackGetDynHandle( p )
 
 #else
 
-#  define HB_DYNSYM_LOCK()      do {} while( 0 )
-#  define HB_DYNSYM_UNLOCK()    do {} while( 0 )
+   #define HB_DYNSYM_LOCK()      do {} while( 0 )
+   #define HB_DYNSYM_UNLOCK()    do {} while( 0 )
 
-#  define hb_dynsymHandles( p )     ( p )
+   #define hb_dynsymHandles( p )     ( p )
 
 #endif /* HB_MT_VM */
 

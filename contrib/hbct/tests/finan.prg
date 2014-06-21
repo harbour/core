@@ -1,13 +1,12 @@
 /*
- * Harbour Project source code:
- *   CT3 Financial functions
+ * CT3 Financial functions
  *     - PV()
  *     - FV()
  *     - Payment()
  *     - Periods()
  *     - Rate()
+ *
  * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * MaxRow(), MaxCol() functions
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

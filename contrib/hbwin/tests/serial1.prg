@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows communications library
  *
  * Copyright 2005-2009 Alex Strickland <sscc@mweb.co.za>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

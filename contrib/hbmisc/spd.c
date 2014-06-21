@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * sql_sprintf() function
  *
  * Copyright 2008 Xavi <jarabal/at/gmail.com>
@@ -439,13 +438,13 @@ HB_FUNC( SQL_SPRINTF )
          }
          else     /* Par Item sprintf() Out */
          {
-#        ifdef HB_IT_NULL
+#ifdef HB_IT_NULL
             if( ( HB_IS_NIL( pItmPar ) || HB_IS_NULL( pItmPar ) ) )
             {
-#        else
+#else
             if( HB_IS_NIL( pItmPar ) )
             {
-#        endif
+#endif
                ulWidth = f;
                IsIndW  = IsIndP = 0;
                while( cParFrm[ --f ] != '%' )
@@ -460,13 +459,14 @@ HB_FUNC( SQL_SPRINTF )
                   cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
                }
                pItmCpy = hb_itemNew( NULL );
-#           ifdef HB_IT_NULL
+#ifdef HB_IT_NULL
                if( IsType == 2 && ! HB_IS_NULL( pItmPar ) )
                   hb_itemPutCL( pItmCpy, "DEFAULT", 7 );
-#           else  /* Print DEFAULT if NIL for T converter if not NULL, print NULL for the rest of converters */
+#else
+               /* Print DEFAULT if NIL for T converter if not NULL, print NULL for the rest of converters */
                if( IsType == 2 )
                   hb_itemPutCL( pItmCpy, "DEFAULT", 7 );
-#           endif
+#endif
                else
                   hb_itemPutCL( pItmCpy, "NULL", 4 );
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec,

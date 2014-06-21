@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * HBBLAT sample blat pure command interface
+ * hbblat sample blat pure command interface
  *
  * Copyright 2007-2009 Francesco Saverio Giudice <info@fsgiudice.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

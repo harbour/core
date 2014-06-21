@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Converts a .dbf file into a Postgres table
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * (The original file was ported from mysql and changed by Rodrigo Moreno rodrigo_moreno@yahoo.com)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

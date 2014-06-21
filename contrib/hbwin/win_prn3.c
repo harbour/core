@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * win_printerSetDefault()
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (based on MS sample code)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +47,7 @@
 #include "hbwapi.h"
 
 #if ! defined( HB_OS_WIN_CE )
-#  include <winspool.h>
+   #include <winspool.h>
 #endif
 
 static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )

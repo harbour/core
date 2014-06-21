@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * hb_sprintf() function.
+ * hb_sprintf() function
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

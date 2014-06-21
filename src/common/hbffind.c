@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Harbour File Find API (C level)
  *
  * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
  * Copyright 2001-2002 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2001-2002 Paul Tucker <ptucker@sympatico.ca>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +47,7 @@
  */
 
 #if ! defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE  1
+   #define _LARGEFILE64_SOURCE  1
 #endif
 
 #define _HB_FFIND_INTERNAL_
@@ -773,11 +771,11 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                raw_attr = sStat.st_mode;
 
                ftime = sStat.st_mtime;
-#  if defined( HB_HAS_LOCALTIME_R )
+   #if defined( HB_HAS_LOCALTIME_R )
                localtime_r( &ftime, &lt );
-#  else
+   #else
                lt = *localtime( &ftime );
-#  endif
+   #endif
 
                iYear  = lt.tm_year + 1900;
                iMonth = lt.tm_mon + 1;
@@ -930,11 +928,11 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
 #if defined( HB_OS_DOS )
 
-#  if defined( __WATCOMC__ )
+   #if defined( __WATCOMC__ )
             _dos_findclose( &info->entry );
-#  elif ! defined( __DJGPP__ ) && ! defined( __BORLANDC__ )
+   #elif ! defined( __DJGPP__ ) && ! defined( __BORLANDC__ )
             findclose( &info->entry );
-#  endif
+   #endif
 
 #elif defined( HB_OS_OS2 )
 

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * The Fixed Memory API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_xquery())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

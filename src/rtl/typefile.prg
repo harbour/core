@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * __TypeFile() function
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +47,7 @@
 #include "error.ch"
 #include "fileio.ch"
 
-#define BUFFER_LENGTH 8192
+#define BUFFER_LENGTH  8192
 
 PROCEDURE __TypeFile( cFile, lPrint )
 

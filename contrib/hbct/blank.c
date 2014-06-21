@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *   CT3 Blank() function
+ * CT3 Blank() function
  *
  * Copyright 2009 Pavel Tsarenko <tpe2@mail.ru>
- * http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

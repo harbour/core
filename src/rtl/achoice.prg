@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * AChoice() function
  *
  * Released to Public Domain by Peter Townsend <cephas@tpgi.com.au>
- * www - http://harbour-project.org
  *
  */
 

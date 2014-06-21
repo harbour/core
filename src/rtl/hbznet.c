@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    ZLIB compression for Harbour stream sockets
+ * ZLIB compression for Harbour stream sockets
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,9 +76,9 @@ HB_ZNETSTREAM;
 #define HB_ZNET_BUFSIZE 16384
 
 #if MAX_MEM_LEVEL >= 8
-#  define HB_ZNET_MEM_LEVEL   8
+   #define HB_ZNET_MEM_LEVEL   8
 #else
-#  define HB_ZNET_MEM_LEVEL   MAX_MEM_LEVEL
+   #define HB_ZNET_MEM_LEVEL   MAX_MEM_LEVEL
 #endif
 
 /* return status of last compression/decompression operation */

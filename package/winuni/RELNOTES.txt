@@ -1,9 +1,9 @@
 Hi All,
 
-Harbour 3.0.0 (r16951) source archives and Windows binary
-releases are available for download on sourceforge.net:
+Harbour 3.4.0 (hash) source archives and Windows binary
+release is available for download on this URL:
 
-   https://sourceforge.net/projects/harbour-project/files/
+   https://github.com/vszakats/harbour-core/releases
 
 Make sure to check README.md "Build Your Own Harbour App"
 section.

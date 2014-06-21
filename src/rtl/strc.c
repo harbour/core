@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * hb_StrDecodEscape() - decode string with \ escape sequences
  * hb_StrCDecode() - decode string using C compiler rules
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    example of Harbour codepage using UTF-16 little endian encoding
+ * Example of Harbour codepage using UTF-16 little endian encoding
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

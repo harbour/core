@@ -1,14 +1,12 @@
 /*
- * Harbour Project source code:
- *    Alternative BMDBF* implementation which respects RDD inheritance
- *    scheme and gives similar functionality and PRG functions as modified
- *    by Miguel Angel Marchuet <miguelangel@marchuet.net> DBFCDX with
- *    directly hardcoded bitmap filters.
- *    This code is completely new implementation and does not contain
- *    any code created by Miguel.
+ * Alternative BMDBF* implementation which respects RDD inheritance
+ * scheme and gives similar functionality and PRG functions as modified
+ * by Miguel Angel Marchuet <miguelangel@marchuet.net> DBFCDX with
+ * directly hardcoded bitmap filters.
+ * This code is completely new implementation and does not contain
+ * any code created by Miguel.
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -804,8 +802,8 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_bm_rdd_init_ )
 HB_CALL_ON_STARTUP_END( _hb_bm_rdd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-#  pragma startup _hb_bm_InitSymbols_
-#  pragma startup _hb_bm_rdd_init_
+   #pragma startup _hb_bm_InitSymbols_
+   #pragma startup _hb_bm_rdd_init_
 #elif defined( HB_DATASEG_STARTUP )
    #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_bm_InitSymbols_ ) \
                               HB_DATASEG_FUNC( _hb_bm_rdd_init_ )

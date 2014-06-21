@@ -72,9 +72,9 @@
  */
 #if defined( __BORLANDC__ ) || \
    ( defined( __WATCOMC__ ) && ! defined( __cplusplus ) )
-#  if ! defined( NONAMELESSUNION )
-#     define NONAMELESSUNION
-#  endif
+   #if ! defined( NONAMELESSUNION )
+      #define NONAMELESSUNION
+   #endif
 #endif
 
 #include <windows.h>
@@ -83,34 +83,34 @@
 
 /* MinGW is lacking a number of variant accessors */
 #if defined( __MINGW32__ )
-#  if ! defined( V_I1REF )
-#     define V_I1REF( x )    V_UNION( x, pcVal )
-#  endif
-#  if ! defined( V_UI2REF )
-#     define V_UI2REF( x )   V_UNION( x, puiVal )
-#  endif
-#  if ! defined( V_INT )
-#     define V_INT( x )      V_UNION( x, intVal )
-#  endif
-#  if ! defined( V_INTREF )
-#     define V_INTREF( x )   V_UNION( x, pintVal )
-#  endif
-#  if ! defined( V_UINT )
-#     define V_UINT( x )     V_UNION( x, uintVal )
-#  endif
-#  if ! defined( V_UINTREF )
-#     define V_UINTREF( x )  V_UNION( x, puintVal )
-#  endif
+   #if ! defined( V_I1REF )
+      #define V_I1REF( x )    V_UNION( x, pcVal )
+   #endif
+   #if ! defined( V_UI2REF )
+      #define V_UI2REF( x )   V_UNION( x, puiVal )
+   #endif
+   #if ! defined( V_INT )
+      #define V_INT( x )      V_UNION( x, intVal )
+   #endif
+   #if ! defined( V_INTREF )
+      #define V_INTREF( x )   V_UNION( x, pintVal )
+   #endif
+   #if ! defined( V_UINT )
+      #define V_UINT( x )     V_UNION( x, uintVal )
+   #endif
+   #if ! defined( V_UINTREF )
+      #define V_UINTREF( x )  V_UNION( x, puintVal )
+   #endif
 #endif
 
 #if defined( NONAMELESSUNION )
-#  define HB_WIN_U1( x, y )  ( x )->n1.y
-#  define HB_WIN_U2( x, y )  ( x )->n1.n2.y
-#  define HB_WIN_U3( x, y )  ( x )->n1.n2.n3.y
+   #define HB_WIN_U1( x, y )  ( x )->n1.y
+   #define HB_WIN_U2( x, y )  ( x )->n1.n2.y
+   #define HB_WIN_U3( x, y )  ( x )->n1.n2.n3.y
 #else
-#  define HB_WIN_U1( x, y )  ( x )->y
-#  define HB_WIN_U2( x, y )  ( x )->y
-#  define HB_WIN_U3( x, y )  ( x )->y
+   #define HB_WIN_U1( x, y )  ( x )->y
+   #define HB_WIN_U2( x, y )  ( x )->y
+   #define HB_WIN_U3( x, y )  ( x )->y
 #endif
 
 /* macros used to hide type of interface: C or C++ */
@@ -120,16 +120,16 @@
      defined( _MSC_VER ) || \
      defined( __MINGW32__ ) || \
      ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1270 ) ) )
-#  define HB_ID_REF( id )     ( id )
-#  define HB_VTBL( pSelf )    ( pSelf )
-#  define HB_THIS( pSelf )
-#  define HB_THIS_( pSelf )
+   #define HB_ID_REF( id )     ( id )
+   #define HB_VTBL( pSelf )    ( pSelf )
+   #define HB_THIS( pSelf )
+   #define HB_THIS_( pSelf )
 #else
-#  define HB_OLE_C_API        1
-#  define HB_ID_REF( id )     ( &id )
-#  define HB_VTBL( pSelf )    ( pSelf )->lpVtbl
-#  define HB_THIS( pSelf )    ( pSelf )
-#  define HB_THIS_( pSelf )   ( pSelf ),
+   #define HB_OLE_C_API        1
+   #define HB_ID_REF( id )     ( &id )
+   #define HB_VTBL( pSelf )    ( pSelf )->lpVtbl
+   #define HB_THIS( pSelf )    ( pSelf )
+   #define HB_THIS_( pSelf )   ( pSelf ),
 #endif
 
 HB_EXTERN_BEGIN

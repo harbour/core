@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Binary and unicode string functions:
  *    hb_UChar(), hb_UCode(), hb_ULen(), hb_UPeek(), hb_UPoke()
  *    hb_BChar(), hb_BCode(), hb_BLen(), hb_BPeek(), hb_BPoke()
  *
  * Copyright 2012 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

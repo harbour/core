@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    wildcards / file match functions
+ * Wildcards / file match functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +48,7 @@
 #include "hbapicdp.h"
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_NO_FNMATCH )
-#  include <fnmatch.h>
+   #include <fnmatch.h>
 #endif
 
 #define HB_MAX_WILDPATTERN  256
@@ -279,11 +277,11 @@ HB_BOOL hb_strMatchCaseWildExact( const char * szString, const char * szPattern 
 HB_BOOL hb_strMatchFile( const char * szString, const char * szPattern )
 {
 #if defined( HB_OS_UNIX )
-#  if defined( HB_NO_FNMATCH )
+   #if defined( HB_NO_FNMATCH )
    return hb_strMatchWildExact( szString, szPattern );
-#  else
+   #else
    return fnmatch( szPattern, szString, FNM_PERIOD | FNM_PATHNAME ) == 0;
-#  endif
+   #endif
 #elif defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
    PHB_CODEPAGE cdp = hb_vmCDP();
 

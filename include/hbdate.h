@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Date API
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -156,7 +154,7 @@ HB_EXTERN_END
       defined( HB_OS_ANDROID ) ) && \
    ! defined( HB_OS_DARWIN_5 ) && ! defined( __WATCOMC__ ) && \
    ! defined( HB_HAS_LOCALTIME_R )
-#  define HB_HAS_LOCALTIME_R
+   #define HB_HAS_LOCALTIME_R
 #endif
 
 #endif /* HB_DATE_H_ */

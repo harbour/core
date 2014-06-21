@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (CSISO)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
- * Czech collating sequence (CSISO) done by Vojtech Obrdlik <vobrdlik@centrum.cz>
+ * Copyright 2002 Vojtech Obrdlik <vobrdlik@centrum.cz>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

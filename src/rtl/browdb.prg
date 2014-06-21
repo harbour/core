@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * TBrowseDB() function
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,9 +61,10 @@ FUNCTION __dbSkipper( nRecs )
    LOCAL nSkipped := 0
 
    IF LastRec() != 0
-      IF nRecs == 0
+      DO CASE
+      CASE nRecs == 0
          dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+      CASE nRecs > 0 .AND. RecNo() != LastRec() + 1
          DO WHILE nSkipped < nRecs
             dbSkip()
             IF Eof()
@@ -74,7 +73,7 @@ FUNCTION __dbSkipper( nRecs )
             ENDIF
             ++nSkipped
          ENDDO
-      ELSEIF nRecs < 0
+      CASE nRecs < 0
          DO WHILE nSkipped > nRecs
             dbSkip( -1 )
             IF Bof()
@@ -82,7 +81,7 @@ FUNCTION __dbSkipper( nRecs )
             ENDIF
             --nSkipped
          ENDDO
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN nSkipped

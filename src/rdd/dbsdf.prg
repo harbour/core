@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
  * Copies the contents of a database to an SDF text file.
  * Appends the contents of an SDF text file to a database.
  *
  * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
- *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    function __dbSDF() replaced by the new one which uses
  *    SDF RDD I've just created

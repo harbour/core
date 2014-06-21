@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * xhb compatibility functions
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (optimization and fixes)
  * Copyright 2012 Viktor Szakats (vszakats.net/harbour) (rework)
  * Copyright 2004 Eduardo Fernandes <modalsist@yahoo.com.br> (original)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

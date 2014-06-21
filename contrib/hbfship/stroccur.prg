@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    StrOccurs( <cSub>, <cStr>, [<lAny>] ) -> <nCount>
  * Undocumented FlagShip compatible function
+ *    StrOccurs( <cSub>, <cStr>, [<lAny>] ) -> <nCount>
  *
  * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

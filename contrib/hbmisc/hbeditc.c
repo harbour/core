@@ -1,6 +1,4 @@
-/* Copyright 1999 Ryszard Glab
- * www - http://harbour-project.org
- */
+/* Copyright 1999 Ryszard Glab */
 
 /* Known bugs:
 

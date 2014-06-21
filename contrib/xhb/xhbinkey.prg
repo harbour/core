@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    xHarbour compatible inkey block functions.
+ * xHarbour compatible inkey block functions.
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

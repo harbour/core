@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Header file with trace constants and PP rules
  *
  * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,8 +65,7 @@
 /* Default tracing level. */
 #define HB_TR_DEFAULT   HB_TR_WARNING
 
-/*
- * If we compiled without specifying a -DHB_TR_LEVEL, use the value
+/* If we compiled without specifying a -DHB_TR_LEVEL, use the value
  * for HB_TR_DEFAULT.
  */
 #ifdef HB_TR_LEVEL_ALWAYS

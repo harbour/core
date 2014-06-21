@@ -1,5 +1,4 @@
 /*
- * xHarbour Project source code:
  * DBFCDX RDD (ver.2)
  *
  * Copyright 1999-2002 Bruno Cantero <bruno@issnet.net>
@@ -7,7 +6,6 @@
  * Copyright 2003 Przemyslaw Czerpak <druzus@priv.onet.pl> - all code except
  * hb_cdxTagDoIndex and related hb_cdxSort* rewritten.
  * Copyright 2004 Przemyslaw Czerpak <druzus@priv.onet.pl> - rest of code rewritten
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +51,7 @@
 #define HB_CDX_NEW_SORT
 
 #if ! defined( HB_SIXCDX )
-#  define HB_CDX_PACKTRAIL
+   #define HB_CDX_PACKTRAIL
 #endif
 
 #define HB_CDX_DBGCODE
@@ -9896,9 +9894,9 @@ static const RDDFUNCS cdxTable =
 
 
 #if defined( HB_SIXCDX )
-#  define HB_CDXRDD  "SIXCDX"
+   #define HB_CDXRDD  "SIXCDX"
 #else
-#  define HB_CDXRDD  "DBFCDX"
+   #define HB_CDXRDD  "DBFCDX"
 #endif
 
 HB_FUNC_STATIC( _GETFUNCTABLE )

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * SIM interface code (low level)
+ * SIM interface code (low-level)
  *
  * Copyright 2009 Jose Luis Capel <jlcapel@hotmail.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,8 +48,8 @@
 #include "hbapiitm.h"
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ )
-#  include <simmgr.h>
-#  define __HB_COMPONENT_SUPPORTED__
+   #include <simmgr.h>
+   #define __HB_COMPONENT_SUPPORTED__
 #endif
 
 HB_FUNC( WCE_SIMINITIALIZE ) /* hSim by reference, lNotifications */

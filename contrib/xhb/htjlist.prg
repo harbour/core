@@ -1,14 +1,12 @@
 /*
- * Harbour Project source code:
- *     Generates Javascript and DHTML list menus
- *     (see the website/jList dir for an example)
+ * Generates Javascript and DHTML list menus
+ * (see the website/jList dir for an example)
  *
- *     Uses list.js and resize.js (heavily modified) found at
- *     developer.netscape.com
+ * Uses list.js and resize.js (heavily modified) found at
+ * developer.netscape.com
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

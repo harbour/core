@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for non virtual hidden messages
+ * Demonstration/test code for non virtual hidden messages
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

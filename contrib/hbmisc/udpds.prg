@@ -1,7 +1,4 @@
-/*
- * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
- * www - http://harbour-project.org
- */
+/* Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt> */
 
 /*
  * This module demonstrates a simple UDP Discovery Server

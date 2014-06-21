@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem - terminal GT driver
  *
  * Unlike GTSLN and GTCRS this GT driver does not use termcap/terminfo
@@ -12,10 +11,9 @@
  * Now it support the following terminals:
  *   linux, pc-ansi, xterm
  *
- * Copyright 2007 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
- * www - http://harbour-project.org
- *
  * I used my code from other GT drivers (GTCRS, GTPCA)
+ *
+ * Copyright 2007 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

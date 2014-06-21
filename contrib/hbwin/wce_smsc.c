@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * SMS interface code
  *
  * Copyright 2009 Jose Luis Capel <jlcapel@hotmail.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,8 +49,8 @@
 #if defined( HB_OS_WIN_CE ) && \
    ! defined( __MINGW32__ ) && \
    ! ( ! defined( __cplusplus ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
-#  include <sms.h>
-#  define __HB_COMPONENT_SUPPORTED__
+   #include <sms.h>
+   #define __HB_COMPONENT_SUPPORTED__
 #endif
 
 HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */

@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
+ * FlagShip compatible functions
  *    IndexCount() -> <nIndexCount>
  *    IndexNames() -> <acIndexNames>
- * FlagShip compatible functions
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

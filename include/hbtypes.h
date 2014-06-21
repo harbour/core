@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for typedef for maindllp.c
  *
  * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +62,7 @@ typedef PHB_ITEM ( * HB_PARAM )( int iParam, long lMask );
 typedef PHB_ITEM ( * HB_PARAMERROR )( int iParam );
 typedef HB_BOOL  ( * HB_EXTISPARAM ) ( int iParam );
 #if defined( HB_LEGACY_LEVEL4 )
-#  define HB_EXTISARRAY HB_EXTISPARAM
+   #define HB_EXTISARRAY HB_EXTISPARAM
 #endif
 
 typedef void     ( * HB_RET )( void );

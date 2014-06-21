@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    Harbour FILE IO redirector: IOTCP
- *    example of IOUSR usage
+ * Harbour FILE IO redirector: IOTCP
+ * example of IOUSR usage
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

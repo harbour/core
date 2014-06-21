@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Reading AMFIO data from standard input pipe
  *
  * Copyright 2011 Ilina Stoilkovska <anili100/at/gmail.com>
  * Copyright 2012 Aleksander Czajczynski <hb/at/fki.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

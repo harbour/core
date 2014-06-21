@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Simple MAPI wrapper
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2009 Toninho (toninhofwi yahoo.com.br)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,28 +48,28 @@
 #include "hbapi.h" /* for HB_OS_* detection */
 
 #if defined( UNICODE )
-#  define HB_UNICODE_ORI
+   #define HB_UNICODE_ORI
 #endif
 
 #if ! defined( HB_OS_WIN_CE )
-#  if defined( UNICODE )
-#     undef UNICODE
-#  endif
+   #if defined( UNICODE )
+      #undef UNICODE
+   #endif
 #endif
 
 #include "hbwapi.h"
 #if defined( HB_OS_WIN_CE )
-#  include "hbwince.h"
+   #include "hbwince.h"
 #endif
 
 #include <mapi.h>
 
 #if ! defined( MAPI_RECEIPT_REQUESTED )
-#  if defined( MAPI_RECIPIENT_REQUESTED )
-#     define MAPI_RECEIPT_REQUESTED  MAPI_RECIPIENT_REQUESTED
-#  else
-#     define MAPI_RECEIPT_REQUESTED  0x00000002L
-#  endif
+   #if defined( MAPI_RECIPIENT_REQUESTED )
+      #define MAPI_RECEIPT_REQUESTED  MAPI_RECIPIENT_REQUESTED
+   #else
+      #define MAPI_RECEIPT_REQUESTED  0x00000002L
+   #endif
 #endif
 
 #if defined( __WATCOMC__ ) || defined( __CYGWIN__ )

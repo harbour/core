@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_StrToExp() function - convert string to valid macrocompiler expression
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * PushButton class
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -211,13 +209,14 @@ METHOD display() CLASS PushButton
 
    DispBegin()
 
-   IF ::lBuffer
+   DO CASE
+   CASE ::lBuffer
       cColor := hb_ColorIndex( ::cColorSpec, 2 )
-   ELSEIF ::lHasFocus
+   CASE ::lHasFocus
       cColor := hb_ColorIndex( ::cColorSpec, 1 )
-   ELSE
+   OTHERWISE
       cColor := hb_ColorIndex( ::cColorSpec, 0 )
-   ENDIF
+   ENDCASE
 
    IF ( nPos := At( "&", cCaption ) ) == 0
    ELSEIF nPos == Len( cCaption )

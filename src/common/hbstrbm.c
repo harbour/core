@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Turbo Boyer-Moore (Crochemore) string search
  *    Based on this code:
  *       http://www-igm.univ-mlv.fr/~lecroq/string/node15.html
@@ -7,7 +6,6 @@
  *       Christian Charras, Thierry Lecroq
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * ReadKey() function
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,12 +51,12 @@ FUNCTION ReadKey()
    LOCAL nKey
 
    SWITCH nKey := LastKey()
-   CASE K_UP        ; nKey :=  4 ; EXIT /* NOTE: NG says 5 incorrectly */
-   CASE K_DOWN      ; nKey :=  5 ; EXIT /* NOTE: NG says 2 incorrectly */
+   CASE K_UP        ; nKey :=  4 ; EXIT  /* NOTE: NG says 5 incorrectly */
+   CASE K_DOWN      ; nKey :=  5 ; EXIT  /* NOTE: NG says 2 incorrectly */
    CASE K_PGUP      ; nKey :=  6 ; EXIT
    CASE K_PGDN      ; nKey :=  7 ; EXIT
-   CASE K_CTRL_PGUP ; nKey := 34 ; EXIT /* NOTE: NG says 31 incorrectly */
-   CASE K_CTRL_PGDN ; nKey := 35 ; EXIT /* NOTE: NG says 30 incorrectly */
+   CASE K_CTRL_PGUP ; nKey := 34 ; EXIT  /* NOTE: NG says 31 incorrectly */
+   CASE K_CTRL_PGDN ; nKey := 35 ; EXIT  /* NOTE: NG says 30 incorrectly */
    CASE K_ESC       ; nKey := 12 ; EXIT
    CASE K_CTRL_W    ; nKey := 14 ; EXIT
    CASE K_ENTER     ; nKey := 15 ; EXIT

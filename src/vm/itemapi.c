@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * The Item API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
@@ -12,7 +11,6 @@
  *    hb_itemPutD(), hb_itemSetCMemo()
  * Copyright 1999 Eddie Runia <eddie@runia.com> (hb_itemStrCmp())
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_itemStr(), hb_itemString(), hb_itemValToStr())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

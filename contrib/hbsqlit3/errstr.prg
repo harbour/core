@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Supplementary functions (error strings)
  *
  * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2009 P.Chornyj <myorg63@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

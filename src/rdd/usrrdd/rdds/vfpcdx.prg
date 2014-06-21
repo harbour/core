@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    VFPCDX
+ * VFPCDX
  *
  * Copyright 2007 Miguel Angel Marchuet Frutos <miguelangel /at/ marchuet.net>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

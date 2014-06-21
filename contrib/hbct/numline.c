@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *   CT3 string functions: NumLine()
+ * CT3 string functions: NumLine()
  *
  * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    xHarbour compatible wrapper functions
+ * xHarbour compatible wrapper functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (hb_F_Eof())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -297,9 +295,9 @@ HB_FUNC( XHB_MEMOWRIT )
 
 /* length of buffer for CR/LF characters */
 #if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
-#  define CRLF_BUFFER_LEN  4
+   #define CRLF_BUFFER_LEN  4
 #else
-#  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
+   #define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
 #endif
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )

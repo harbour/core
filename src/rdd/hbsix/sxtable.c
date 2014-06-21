@@ -1,26 +1,24 @@
 /*
- * Harbour Project source code:
- *    SIX compatible functions:
- *          sx_GetLocks()
- *          sx_IsFLocked()
- *          sx_IsReadonly()
- *          sx_IsShared()
- *          sx_IDType()
- *          sx_TableType()
- *          sx_TableName()
- *          sx_Rollback()
- *          sx_Rlock()
- *          sx_Unlock()
- *          sx_SetPass()
- *          sx_DbfEncrypt()
- *          sx_DbfDecrypt()
- *          sx_MemoPack()
- *          sx_SetTurbo()
- *          sx_TurboArea()
- *          _sxOpenInit() (internal function used by _sx_IniInit())
+ * SIX compatible functions:
+ *       sx_GetLocks()
+ *       sx_IsFLocked()
+ *       sx_IsReadonly()
+ *       sx_IsShared()
+ *       sx_IDType()
+ *       sx_TableType()
+ *       sx_TableName()
+ *       sx_Rollback()
+ *       sx_Rlock()
+ *       sx_Unlock()
+ *       sx_SetPass()
+ *       sx_DbfEncrypt()
+ *       sx_DbfDecrypt()
+ *       sx_MemoPack()
+ *       sx_SetTurbo()
+ *       sx_TurboArea()
+ *       _sxOpenInit() (internal function used by _sx_IniInit())
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Misc Windows API functions
  *
  * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com> (win_SysRefresh())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

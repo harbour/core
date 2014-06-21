@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Memvar (PRIVATE/PUBLIC) runtime support
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *   __mvSave(), __mvRestore() (Thanks to Dave Pearson and Jo French for the original Clipper function FReadMem() to read .mem files)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,10 +59,8 @@
 #include "hbstack.h"
 
 #if ! defined( HB_MT_VM )
-
-#  define hb_dynsymGetMemvar( p )     ( ( PHB_ITEM ) ( p )->pMemvar )
-#  define hb_dynsymSetMemvar( p, h )  do { ( p )->pMemvar = ( h ); } while( 0 )
-
+   #define hb_dynsymGetMemvar( p )     ( ( PHB_ITEM ) ( p )->pMemvar )
+   #define hb_dynsymSetMemvar( p, h )  do { ( p )->pMemvar = ( h ); } while( 0 )
 #endif
 
 #define TABLE_INITHB_VALUE    100

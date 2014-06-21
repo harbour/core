@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
- * AMF3 headers
- * Based on a AmFast C library for Python by Dave Thompson
+ * AMF3 headers - based on a AmFast C library for Python by Dave Thompson
  *
  * Copyright 2011-2012 Aleksander Czajczynski <hb/at/fki.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

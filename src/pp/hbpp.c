@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    preprocessor static rules generator.
- *    It creates .c file with tables for defines/[x]translates/[x]commands
- *    found in given .ch or .prg file
+ * Preprocessor static rules generator.
+ * It creates .c file with tables for defines/[x]translates/[x]commands
+ * found in given .ch or .prg file
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -201,11 +199,9 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * 
    int iDefs = 0, iTrans = 0, iCmds = 0;
 
    fprintf( fout, "/*\n * $" "Id" "$\n */\n\n/*\n"
-            " * Harbour Project source code:\n"
-            " *    Build in preprocessor rules.\n"
+            " * Build in preprocessor rules.\n"
             " *\n"
             " * Copyright 2006-2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
-            " * www - http://harbour-project.org\n"
             " *\n"
             " * This file is generated automatically by Harbour preprocessor\n"
             " * and is covered by the same license as Harbour PP\n"
@@ -346,11 +342,9 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iCommitRev, char * szCom
       char * pszEscaped;
 
       fprintf( fout, "/*\n"
-               " * Harbour Project source code:\n"
-               " *    Version information and build time switches.\n"
+               " * Version information and build time switches.\n"
                " *\n"
                " * Copyright 2008-2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
-               " * www - http://harbour-project.org\n"
                " *\n"
                " * This file is generated automatically by Harbour preprocessor\n"
                " * and is covered by the same license as Harbour PP\n"
@@ -876,7 +870,7 @@ int main( int argc, char * argv[] )
    {
       printf( "Harbour Preprocessor %d.%d.%d%s\n",
               HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS );
-      printf( "Copyright (c) 1999-2014, http://harbour-project.org/\n" );
+      printf( "Copyright (c) 1999-2014, https://harbour.github.io/\n" );
    }
 
    if( szFile )
@@ -948,5 +942,5 @@ int main( int argc, char * argv[] )
 }
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __CEGCC__ )
-#  include "hbwmain.c"
+   #include "hbwmain.c"
 #endif

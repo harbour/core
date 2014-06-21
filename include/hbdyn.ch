@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Dynamic call (high-level header)
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,9 +50,9 @@
 #define HBDYN_CH_
 
 /* C calling conventions */
-#define HB_DYN_CALLCONV_CDECL               0x0000000 /* C default */
-#define HB_DYN_CALLCONV_STDCALL             0x0100000 /* Windows API default */
-#define HB_DYN_CALLCONV_SYSCALL             0x0200000 /* OS/2 32-bit default */
+#define HB_DYN_CALLCONV_CDECL               0x0000000  /* C default */
+#define HB_DYN_CALLCONV_STDCALL             0x0100000  /* Windows API default */
+#define HB_DYN_CALLCONV_SYSCALL             0x0200000  /* OS/2 32-bit default */
 
 /* String encodings */
 #define HB_DYN_ENC_ASCII                    0x0000000

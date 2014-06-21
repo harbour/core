@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Not (yet) implemented CT functions
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

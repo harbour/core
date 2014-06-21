@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Windows API functions (shellapi.h - shell32.dll)
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,38 +46,38 @@
  */
 
 #undef _WIN32_IE
-#define _WIN32_IE  0x0500 /* request Windows 2000 features for NOTIFYICONDATA */
+#define _WIN32_IE  0x0500  /* request Windows 2000 features for NOTIFYICONDATA */
 
 #include "hbwapi.h"
 #include "hbapiitm.h"
 
 #if defined( __BORLANDC__ )
-#  if ! defined( NONAMELESSUNION )
-#     define NONAMELESSUNION
-#  endif
-#  if defined( DUMMYUNIONNAME )
-#     undef DUMMYUNIONNAME
-#  endif
-#  if defined( DUMMYUNIONNAME2 )
-#     undef DUMMYUNIONNAME2
-#  endif
-#  if defined( DUMMYUNIONNAME3 )
-#     undef DUMMYUNIONNAME3
-#  endif
-#  if defined( DUMMYUNIONNAME4 )
-#     undef DUMMYUNIONNAME4
-#  endif
-#  if defined( DUMMYUNIONNAME5 )
-#     undef DUMMYUNIONNAME5
-#  endif
+   #if ! defined( NONAMELESSUNION )
+      #define NONAMELESSUNION
+   #endif
+   #if defined( DUMMYUNIONNAME )
+      #undef DUMMYUNIONNAME
+   #endif
+   #if defined( DUMMYUNIONNAME2 )
+      #undef DUMMYUNIONNAME2
+   #endif
+   #if defined( DUMMYUNIONNAME3 )
+      #undef DUMMYUNIONNAME3
+   #endif
+   #if defined( DUMMYUNIONNAME4 )
+      #undef DUMMYUNIONNAME4
+   #endif
+   #if defined( DUMMYUNIONNAME5 )
+      #undef DUMMYUNIONNAME5
+   #endif
 #endif
 
 #include <shellapi.h>
 
 #if defined( NONAMELESSUNION )
-#  define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
+   #define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
 #else
-#  define HB_WIN_V_UNION( x, z )  ( ( x ).z )
+   #define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
 /* win_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
@@ -131,8 +129,8 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 #if ! defined( HB_OS_WIN_CE )
 
 #if defined( __MINGW32__ )
-#  include <_mingw.h>
-#  if ! defined( __MINGW64_VERSION_MAJOR )
+   #include <_mingw.h>
+   #if ! defined( __MINGW64_VERSION_MAJOR )
 
 typedef struct _SHNAMEMAPPING
 {
@@ -142,7 +140,7 @@ typedef struct _SHNAMEMAPPING
    int    cchNewPath;
 } SHNAMEMAPPING, * LPSHNAMEMAPPING;
 
-#endif   /* End MinGW-w64 detection */
+   #endif   /* End MinGW-w64 detection */
 #endif   /* End MinGW detection */
 
 typedef struct

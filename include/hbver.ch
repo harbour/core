@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for hb_Version() function
  *
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,12 +72,14 @@
 #define HB_VERSION_BITWIDTH         17
 #define HB_VERSION_ENDIANNESS       18
 #define HB_VERSION_MT               19
-#define HB_VERSION_SHARED           26 /* Last. Please continue from here. */
+#define HB_VERSION_SHARED           26
 #define HB_VERSION_UNIX_COMPAT      20
 #define HB_VERSION_PLATFORM         21
 #define HB_VERSION_CPU              24
 #define HB_VERSION_COMPILER_CPP     25
-#define HB_VERSION_MAX_             26
+#define HB_VERSION_URL_BASE         27
+#define HB_VERSION_URL_SOURCE       28  /* Latest value. Continue from here. */
+#define HB_VERSION_MAX_             28
 
 #if defined( HB_LEGACY_LEVEL5 )
 #define HB_VERSION_CHANGELOG_LAST   HB_VERSION_COMMIT_INFO

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Hash table type and functions
  *
  * Copyright 2009 April White <april@users.sourceforge.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,12 +68,12 @@
       Clipper). The goal of the Harbour project is to produce a cross platform
       CA-Cl*pper compatible compiler.
 
-      The Harbour web site is at <URL:http://harbour-project.org/>. If you
+      The Harbour web site is at <URL:https://harbour.github.io/>. If you
       have any problems with this copy of Harbour please visit our web site and
       ensure that you are using the latest release.
 
       If you have any questions about Harbour please be sure to read the FAQ
-      <URL:http://harbour-project.org/faq/>. Also, please be sure to read the
+      <URL:https://harbour.github.io/faq/>. Also, please be sure to read the
       documentation that comes with Harbour, you should find it in the same
       directory in which you found this file.
 

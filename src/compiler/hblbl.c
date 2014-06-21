@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * generate table with jump labels
+ * Generate table with jump labels
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

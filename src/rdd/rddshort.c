@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Short (10 chars long) version of some functions for Cl*pper compatibility
  *
  * Copyright 2014 Viktor Szakats (vszakats.net/harbour)
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

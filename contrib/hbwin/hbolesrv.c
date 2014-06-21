@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    OLE server
+ * OLE server
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -707,10 +705,10 @@ STDAPI DllUnregisterServer( void )
 }
 
 #ifndef SELFREG_E_CLASS
-#  ifndef SELFREG_E_FIRST
-#     define SELFREG_E_FIRST  MAKE_SCODE( SEVERITY_ERROR, FACILITY_ITF, 0x0200 )
-#  endif
-#  define SELFREG_E_CLASS     ( SELFREG_E_FIRST + 1 )
+   #ifndef SELFREG_E_FIRST
+      #define SELFREG_E_FIRST  MAKE_SCODE( SEVERITY_ERROR, FACILITY_ITF, 0x0200 )
+   #endif
+   #define SELFREG_E_CLASS     ( SELFREG_E_FIRST + 1 )
 #endif
 
 STDAPI DllRegisterServer( void )

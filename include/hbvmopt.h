@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header files to force macro inlining for HVM build
  *
  * Copyright 2005 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,13 +53,13 @@
  * which interacts with alignment are used. [druzus]
  */
 #if ! defined( HB_NO_DEFAULT_API_MACROS ) && ! defined( _HB_API_MACROS_ )
-#  define _HB_API_MACROS_
+   #define _HB_API_MACROS_
 #endif
 
 #if ! defined( HB_NO_DEFAULT_STACK_MACROS ) && ! defined( _HB_STACK_MACROS_ )
-#  define _HB_STACK_MACROS_
+   #define _HB_STACK_MACROS_
 #endif
 
 #if ! defined( _HB_API_INTERNAL_ )
-#  define _HB_API_INTERNAL_
+   #define _HB_API_INTERNAL_
 #endif

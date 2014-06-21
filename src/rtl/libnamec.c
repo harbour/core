@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_libExt(), hb_libPrefix()
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,29 +76,29 @@ HB_FUNC( HB_LIBPREFIX )
 }
 
 #if defined( HB_OS_WIN )
-#  define HB_DLL_VER      "-" HB_MACRO2STRING( HB_VER_MAJOR ) HB_MACRO2STRING( HB_VER_MINOR )
+   #define HB_DLL_VER      "-" HB_MACRO2STRING( HB_VER_MAJOR ) HB_MACRO2STRING( HB_VER_MINOR )
 #else
-#  define HB_DLL_VER      ""
+   #define HB_DLL_VER      ""
 #endif
 
 #if   defined( HB_OS_WIN_CE ) && defined( HB_CPU_ARM )
-#  define HB_DLL_POSTFIX  HB_DLL_VER "-wce-arm"
+   #define HB_DLL_POSTFIX  HB_DLL_VER "-wce-arm"
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_MIPS )
-#  define HB_DLL_POSTFIX  HB_DLL_VER "-wce-mips"
+   #define HB_DLL_POSTFIX  HB_DLL_VER "-wce-mips"
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_SH )
-#  define HB_DLL_POSTFIX  HB_DLL_VER "-wce-sh"
+   #define HB_DLL_POSTFIX  HB_DLL_VER "-wce-sh"
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_X86 )
-#  define HB_DLL_POSTFIX  HB_DLL_VER "-wce-x86"
+   #define HB_DLL_POSTFIX  HB_DLL_VER "-wce-x86"
 #elif defined( HB_OS_WIN_CE )
-#  define HB_DLL_POSTFIX  HB_DLL_VER "-wce"
+   #define HB_DLL_POSTFIX  HB_DLL_VER "-wce"
 #elif defined( __BORLANDC__ )
-#  define HB_DLL_POSTFIX  HB_DLL_VER "-bcc"
+   #define HB_DLL_POSTFIX  HB_DLL_VER "-bcc"
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_X86_64 )
-#  define HB_DLL_POSTFIX  HB_DLL_VER "-x64"
+   #define HB_DLL_POSTFIX  HB_DLL_VER "-x64"
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
-#  define HB_DLL_POSTFIX  HB_DLL_VER "-ia64"
+   #define HB_DLL_POSTFIX  HB_DLL_VER "-ia64"
 #else
-#  define HB_DLL_POSTFIX  HB_DLL_VER
+   #define HB_DLL_POSTFIX  HB_DLL_VER
 #endif
 
 HB_FUNC( HB_LIBPOSTFIX )

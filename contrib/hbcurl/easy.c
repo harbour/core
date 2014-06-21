@@ -48,10 +48,10 @@
 
 #include <curl/curl.h>
 #if LIBCURL_VERSION_NUM < 0x070A03
-#  include <curl/easy.h>
+   #include <curl/easy.h>
 #endif
 #if LIBCURL_VERSION_NUM < 0x070C00
-#  include <curl/types.h>
+   #include <curl/types.h>
 #endif
 
 #include "hbapi.h"
@@ -75,9 +75,9 @@
          [vszakats] */
 
 #if LIBCURL_VERSION_NUM < 0x071100
-#  ifndef HB_CURL_HASH_STRINGS
-#     define HB_CURL_HASH_STRINGS
-#  endif
+   #ifndef HB_CURL_HASH_STRINGS
+   #define HB_CURL_HASH_STRINGS
+   #endif
 #endif
 
 /* Fall back to return simple error if special abort signal is not available. */
@@ -184,13 +184,13 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
       return NULL;
 }
 
-#  define hb_curl_StrHash( c, s )  hb_curl_StrHashNew( ( c ), ( s ) )
+   #define hb_curl_StrHash( c, s )  hb_curl_StrHashNew( ( c ), ( s ) )
 
 #else
 
-#  define hb_curl_StrHash( c, s )  ( s )
+   #define hb_curl_StrHash( c, s )  ( s )
 
-#endif /* HB_CURL_HASH_STRINGS */
+#endif  /* HB_CURL_HASH_STRINGS */
 
 /* Callbacks */
 

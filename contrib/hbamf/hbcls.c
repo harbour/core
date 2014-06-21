@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Some class support functions for AMF3 (de)serialization
  *
  * Copyright 2011 Aleksander Czajczynski <hb/at/fki.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

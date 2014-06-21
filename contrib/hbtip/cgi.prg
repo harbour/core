@@ -1,19 +1,8 @@
 /*
- * xHarbour Project source code:
  * TIPCgi Class oriented cgi protocol
  *
  * Copyright 2006 Lorenzo Fiorini <lorenzo.fiorini@gmail.com>
- *
- * code from:
- * TIP Class oriented Internet protocol library
- *
- * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://harbour-project.org
- *
- *    CGI Session Manager Class
- *
  * Copyright 2003-2006 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

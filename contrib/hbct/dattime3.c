@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *   CT3 Date & Time functions:
- *       WaitPeriod(), TimeValid(), SetTime(), SetDate()
+ * CT3 Date & Time functions:
+ *   WaitPeriod(), TimeValid(), SetTime(), SetDate()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +47,7 @@
 
 /* stime exists only in SVr4, SVID, X/OPEN and Linux */
 #ifndef _SVID_SOURCE
-#  define _SVID_SOURCE
+#define _SVID_SOURCE
 #endif
 
 #include "hbapi.h"
@@ -57,7 +55,7 @@
 #include "hbstack.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 #endif
 #include <time.h>
 

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Advantage Database Server RDD Management Functions Test program
  *
  * Copyright 2001 Brian Hays <bhays@abacuslaw.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

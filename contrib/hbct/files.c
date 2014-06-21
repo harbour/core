@@ -1,20 +1,13 @@
 /*
- * Harbour Project source code:
- *   CT3 files functions
+ * CT3 files functions: SetFAttr()
  *
- * SetFAttr()
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *
- * SetFDaTi(), FileSMax(), FileDelete()
+ *    SetFDaTi(), FileSMax(), FileDelete()
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- *
- * FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
- * FileMove(), FileSMax(),
- * DeleteFile(), RenameFile()
- *
+ *    FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
+ *    FileMove(), FileSMax(),
+ *    DeleteFile(), RenameFile()
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,17 +60,17 @@
 #include "ctdisk.ch"
 
 #if defined( __DJGPP__ )
-#  include <dpmi.h>
-#  include <go32.h>
-#  include <sys/farptr.h>
-#  include <sys/param.h>
+   #include <dpmi.h>
+   #include <go32.h>
+   #include <sys/farptr.h>
+   #include <sys/param.h>
 #endif
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-#  include <sys/types.h>
-#  include <utime.h>
-#  include <unistd.h>
-#  include <time.h>
+   #include <sys/types.h>
+   #include <utime.h>
+   #include <unistd.h>
+   #include <time.h>
 #endif
 
 typedef struct

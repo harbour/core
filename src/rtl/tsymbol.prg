@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour implementation of Class(y) Class Symbol
  *
  * Copyright 2003 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,14 +50,14 @@ CREATE CLASS Symbol
 
    EXPORTED:
 
-   METHOD New( cSymName )    // Constructor. cSymName may already exists or not
-   METHOD name()             // retrieves the symbol name
-   METHOD isEqual( oSymbol ) // Compares two symbol objects
-   METHOD exec( ... )        // Executes the function referred to by the
-                             // Symbol object, with an optional parameters list
+   METHOD New( cSymName )     // Constructor. cSymName may already exists or not
+   METHOD name()              // retrieves the symbol name
+   METHOD isEqual( oSymbol )  // Compares two symbol objects
+   METHOD exec( ... )         // Executes the function referred to by the
+                              // Symbol object, with an optional parameters list
    PROTECTED:
 
-   VAR nSym                  // internal pointer to the Symbols table symbol
+   VAR nSym                   // internal pointer to the Symbols table symbol
 
 ENDCLASS
 

@@ -47,9 +47,9 @@
 #include "hbapi.h"
 
 #if defined( HB_OS_WIN ) && ! defined( _Windows )
-#  define _Windows
-#  include <windows.h>
-#  define GSDLLEXPORT  __declspec( dllimport )
+   #define _Windows
+   #include <windows.h>
+   #define GSDLLEXPORT  __declspec( dllimport )
 #endif
 
 #include "ierrors.h"

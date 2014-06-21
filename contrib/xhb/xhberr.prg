@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * xHarbour default error handler and error functions:
  *    xhb_ErrorSys(), __BreakBlock(), __ErrorBlock(),
  *    __MinimalErrorHandler(), xhb_ErrorNew()
@@ -9,7 +8,6 @@
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 2001-2004 Ron Pinkas <ron@profit-master.com> (TraceLog())
  * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br> (strvalue(), LogError())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

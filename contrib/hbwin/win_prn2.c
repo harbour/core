@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Harbour Windows Printing support functions
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

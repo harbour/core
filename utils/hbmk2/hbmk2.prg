@@ -16933,7 +16933,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    Eval( hbmk[ _HBMK_bOut ], cText )
 
 #ifdef HARBOUR_SUPPORT
-   cText := "http://harbour-project.org/"
+   cText := hb_Version( HB_VERSION_URL_BASE )
    IF hbmk[ _HBMK_lMarkdown ]
       cText := ToMarkdown( cText, "url" ) + ToMarkdown( e"\n" )
    ELSE

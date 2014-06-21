@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Strip multiple HB_P_LINE PCODEs which can appear after dead code
  * and dummy jumps elimination
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

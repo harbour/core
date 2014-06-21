@@ -1,8 +1,6 @@
-/* Harbour Project source code
-   http://harbour-project.org/
-   Donated to the public domain on 2001-04-03 by David G. Holm <dholm@jsd-llc.com>
-   A class that reads a file one line at a time
- */
+/* Donated to the public domain on 2001-04-03 by David G. Holm <dholm@jsd-llc.com> */
+
+/* A class that reads a file one line at a time */
 
 #include "hbclass.ch"
 

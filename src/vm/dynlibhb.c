@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Dynamic link libraries management functions
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,12 +62,12 @@
 #include "hbwinuni.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
-#  if defined( HB_OS_WIN_CE )
-#     include "hbwince.h"
-#  endif
+   #include <windows.h>
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
 #elif defined( HB_OS_OS2 )
-#  include <os2.h>
+   #include <os2.h>
 #endif
 
 /* NOTE: VxWorks supports dlopen() functionality only in shared
@@ -81,11 +79,11 @@
       defined( HB_OS_QNX ) || defined( HB_OS_CYGWIN )  || \
       defined( HB_OS_MINIX ) || ( defined( __DJGPP__ ) && \
         ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) )
-#  define HB_HAS_DLFCN
+   #define HB_HAS_DLFCN
 #endif
 
 #if defined( HB_HAS_DLFCN )
-#  include <dlfcn.h>
+   #include <dlfcn.h>
 #endif
 
 static HB_GARBAGE_FUNC( hb_libRelease )

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the RDD API Index OrderInfo and DBInfo support
  *
  * Copyright 2004 {list of individual authors and e-mail addresses}
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

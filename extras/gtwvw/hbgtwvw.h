@@ -126,15 +126,15 @@ typedef __int64 LONG_PTR;
 
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
    defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-#  ifndef GetWindowLongPtr
-#     define GetWindowLongPtr     GetWindowLong
-#  endif
-#  ifndef SetWindowLongPtr
-#     define SetWindowLongPtr     SetWindowLong
-#  endif
-#  ifndef SetClassLongPtr
-#     define SetClassLongPtr      SetClassLong
-#  endif
+   #ifndef GetWindowLongPtr
+   #define GetWindowLongPtr     GetWindowLong
+   #endif
+   #ifndef SetWindowLongPtr
+   #define SetWindowLongPtr     SetWindowLong
+   #endif
+   #ifndef SetClassLongPtr
+   #define SetClassLongPtr      SetClassLong
+   #endif
 #endif
 
 #if ( defined( __MSC6__ ) || defined( __DMC__ ) )

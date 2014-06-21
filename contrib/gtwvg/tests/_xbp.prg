@@ -2,6 +2,7 @@
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 
 // A pure Xbase++ implementation
 
@@ -125,7 +126,7 @@ PROCEDURE demoxbp()
    oTree:setData( oItem2 )
 
    // --- Active-X ---
-   hb_gtInfo( HB_GTI_WINTITLE, "http://harbour-project.org" )
+   hb_gtInfo( HB_GTI_WINTITLE, hb_Version( HB_VERSION_URL_BASE ) )
 #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
    oCom:CLSID := "Shell.Explorer.2"
@@ -137,12 +138,12 @@ PROCEDURE demoxbp()
    oCom:mapEvent( 112, {|| oPanel:caption := "EXPLORER-269" } )
 #endif
    oCom:create()
-   oCom:Navigate( "http://harbour-project.org" )
+   oCom:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
 
    oAddr := WvgSLE():new()
    oAddr:bufferLength := 500
    oAddr:border       := .T.
-   cNavigate          := "http://harbour-project.org"
+   cNavigate          := hb_Version( HB_VERSION_URL_BASE )
    oAddr:dataLink     := {| x | iif( x == NIL, cNavigate, cNavigate := x ) }
    oAddr:setColorFG( RGB( 0, 0, 255   ) )
    oAddr:setColorBG( RGB( 0, 255, 255 ) )

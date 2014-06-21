@@ -6,6 +6,7 @@
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 
 #define IMAGE_VOUCH                hb_DirBase() + "vouch1.bmp"
 #define IMAGE_BROWSE               hb_DirBase() + "v_browse.ico"
@@ -72,7 +73,7 @@ STATIC PROCEDURE ExecForm( aPaint )
    LOCAL cName     := PadR( "Pritpal Bedi", 35 )
    LOCAL cAdd1     := PadR( "60, New Professor Colony", 35 )
    LOCAL cAdd2     := PadR( "Ludhiana, INDIA", 35 )
-   LOCAL cAdd3     := PadR( "http://harbour-project.org", 35 )
+   LOCAL cAdd3     := PadR( hb_Version( HB_VERSION_URL_BASE ), 35 )
    LOCAL nSlry     := 20000
    LOCAL nColGet   := 8
 

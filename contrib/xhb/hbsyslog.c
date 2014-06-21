@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Event logging system
  *
  * Copyright 2004 Giancarlo Niccolai <gc -at- niccolai [dot] ws>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +51,7 @@
 
 #if defined( HB_OS_WIN )
 
-#  include "windows.h"
+   #include "windows.h"
 
 static HANDLE s_RegHandle;
 
@@ -62,7 +60,7 @@ static HANDLE s_RegHandle;
    ! defined( HB_OS_VXWORKS ) && \
    ! defined( HB_OS_SYMBIAN )
 
-#  include <syslog.h>
+   #include <syslog.h>
 
 #endif
 
@@ -70,8 +68,8 @@ HB_FUNC( HB_SYSLOGOPEN )
 {
 #if defined( HB_OS_WIN )
 
-#  if ( WINVER >= 0x0400 ) && \
-   ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
+   #if ( WINVER >= 0x0400 ) && \
+      ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
 
    /* Ok, we compiled under NT, but we must not use this function
       when RUNNING on a win98. */
@@ -84,10 +82,10 @@ HB_FUNC( HB_SYSLOGOPEN )
    }
    else
       hb_retl( HB_FALSE );
-#  else
+   #else
    s_RegHandle = NULL;
    hb_retl( HB_FALSE );
-#  endif
+   #endif
 
 #elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) && ! defined( HB_OS_VXWORKS )
    openlog( hb_parcx( 1 ), LOG_NDELAY | LOG_NOWAIT | LOG_PID, LOG_USER );
@@ -101,8 +99,8 @@ HB_FUNC( HB_SYSLOGCLOSE )
 {
 #if defined( HB_OS_WIN )
 
-#  if ( WINVER >= 0x0400 ) && \
-   ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
+   #if ( WINVER >= 0x0400 ) && \
+      ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
 
    if( hb_iswinnt() )
    {
@@ -111,9 +109,9 @@ HB_FUNC( HB_SYSLOGCLOSE )
    }
    else
       hb_retl( HB_FALSE );
-#  else
+   #else
    hb_retl( HB_FALSE );
-#  endif
+   #endif
 
 #elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) && ! defined( HB_OS_VXWORKS )
    closelog();
@@ -127,8 +125,8 @@ HB_FUNC( HB_SYSLOGMESSAGE )
 {
 #if defined( HB_OS_WIN )
 
-#  if ( WINVER >= 0x0400 ) && \
-   ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
+   #if ( WINVER >= 0x0400 ) && \
+      ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
    if( hb_iswinnt() )
    {
       WORD    logval;
@@ -157,9 +155,9 @@ HB_FUNC( HB_SYSLOGMESSAGE )
    }
    else
       hb_retl( HB_FALSE );
-#  else
+   #else
    hb_retl( HB_FALSE );
-#  endif
+   #endif
 
 #elif defined( HB_OS_UNIX ) && \
    ! defined( __WATCOMC__ ) && \

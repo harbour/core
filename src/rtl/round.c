@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Round(), Int() functions
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au> (Int())
  * Copyright 2003 Vicente Aranzana <varanzana@gruposp.com> (hb_numRound())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

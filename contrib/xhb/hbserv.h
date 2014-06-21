@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * The Service/Daemon support
  *
  * Copyright 2003 Giancarlo Niccolai [gian@niccolai.ws]
- * www - http://www.xharbour.org
  *
  * this program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General public License as published by

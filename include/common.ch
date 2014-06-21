@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for common macros
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +48,7 @@
 #define HB_COMMON_CH_
 
 #if defined( HB_LEGACY_LEVEL4 )
-#  include "hbhash.ch"
+   #include "hbhash.ch"
 #endif
 
 /* Friendly logical aliases */

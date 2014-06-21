@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Command line and environment argument management
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -345,7 +343,7 @@ void hb_cmdargUpdate( void )
 #if ! defined( HB_OS_WIN )
    if( s_argc > 0 )
    {
-#  if defined( HB_OS_OS2 )
+   #if defined( HB_OS_OS2 )
       {
          PPIB ppib = NULL;
          APIRET ulrc;
@@ -360,7 +358,7 @@ void hb_cmdargUpdate( void )
                s_argv[ 0 ] = s_szAppName;
          }
       }
-#  else
+   #else
       /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
       {
          PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
@@ -404,11 +402,11 @@ void hb_cmdargUpdate( void )
          }
          if( pFName->szPath )
          {
-#     if defined( HB_OS_HAS_DRIVE_LETTER )
+      #if defined( HB_OS_HAS_DRIVE_LETTER )
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && ! pFName->szDrive )
-#     else
+      #else
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR )
-#     endif
+      #endif
             {
                if( pFName->szPath[ 0 ] == '.' &&
                    pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
@@ -430,7 +428,7 @@ void hb_cmdargUpdate( void )
          }
          hb_xfree( pFName );
       }
-#  endif
+   #endif
    }
 #endif
 }

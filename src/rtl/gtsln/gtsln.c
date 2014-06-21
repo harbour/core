@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Video subsystem based on Slang screen library.
  *
  * Copyright 2000 Marek Paliwoda <paliwoda@inetia.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -636,9 +634,9 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
             SLtt_Blink_Mode = 1;
             SLtt_Use_Blink_For_ACS = 0;
 #else
-#  ifdef HB_SLN_UNICODE
+   #ifdef HB_SLN_UNICODE
             hb_sln_Is_Unicode = SLsmg_Is_Unicode;
-#  endif
+   #endif
             if( hb_sln_Is_Unicode )
             {
                SLtt_Blink_Mode = 1;

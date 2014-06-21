@@ -1,7 +1,4 @@
-/*
- * Copyright 1999 Ryszard Glab
- * www - http://harbour-project.org
- */
+/* Copyright 1999 Ryszard Glab */
 
 #include "inkey.ch"
 #include "setcurs.ch"

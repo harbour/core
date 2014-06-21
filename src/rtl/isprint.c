@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * IsPrinter() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +48,7 @@
 #include "hbapifs.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
+   #include <dos.h>
 #endif
 
 HB_BOOL hb_printerIsReady( const char * pszPrinterName )

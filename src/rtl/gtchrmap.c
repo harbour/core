@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Video subsystem based on ncurses screen library.
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
- * www - http://harbour-project.org
  * Special thanks to Marek Paliwoda <paliwoda@inetia.pl>
  * author of gtsln from which I borrowed a lot of code and ideas.
  *

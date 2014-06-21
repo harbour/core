@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * The Date API (C level)
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (hb_timeFormat(), hb_timeUnformat(), hb_timeStampFormat(), hb_timeStampUnformat())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

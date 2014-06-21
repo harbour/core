@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code
  * This file contains source for first ODBC routines.
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br> (SQLNumResultCols(), SQLDescribeCol())
  * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br> (SQLGetInfo(), SQLSetStmtAttr(), SQLGetStmtAttr(), SQLCommit(), SQLRollback(), SQLColAttribute(), SQLMoreResults())
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,28 +78,28 @@
          so we turn off UNICODE, until it's fixed in OpenWatcom:
             Error! E2028: _SQLSetStmtAttrW@16 is an undefined reference
          [vszakats] */
-#  if defined( __WATCOMC__ ) && defined( UNICODE )
-#     undef UNICODE
-#  endif
+   #if defined( __WATCOMC__ ) && defined( UNICODE )
+      #undef UNICODE
+   #endif
 
-#  include <windows.h>
+   #include <windows.h>
 
-#  if ! defined( WIN32 )
-#     define WIN32  /* Required for WIN32_LEAN_AND_MEAN mode */
-#  endif
+   #if ! defined( WIN32 )
+      #define WIN32  /* Required for WIN32_LEAN_AND_MEAN mode */
+   #endif
 #endif
 
 #include <sql.h>
 #include <sqlext.h>
 
 #if ! defined( HB_OS_WIN )
-#  if ! defined( SQLLEN ) && ! defined( SQLTCHAR )
-typedef unsigned char SQLTCHAR;
-#  endif
+   #if ! defined( SQLLEN ) && ! defined( SQLTCHAR )
+      typedef unsigned char SQLTCHAR;
+   #endif
 #endif
 
 #ifndef SQL_NO_DATA
-#  define SQL_NO_DATA  SQL_NO_DATA_FOUND
+#define SQL_NO_DATA  SQL_NO_DATA_FOUND
 #endif
 
 #if defined( UNICODE )

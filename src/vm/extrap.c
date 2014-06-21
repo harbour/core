@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Exception handlers
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt) (hb_winExceptionHandler() Windows exception info dump code.)
  * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour) (hb_winExceptionHandler() Module listing code, x86_64/WinCE/ARM support, OS/2, MIPS32, MIPS64, SH, IA64 CPU dumps.)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,30 +54,30 @@
 #include "hbset.h"
 
 #if defined( HB_OS_UNIX )
-#  include <unistd.h>
-#  include <signal.h>
-#  if defined( SIGSTKSZ ) && \
-      ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
-        ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
-#     define HB_SIGNAL_EXCEPTION_HANDLER
-#  endif
+   #include <unistd.h>
+   #include <signal.h>
+   #if defined( SIGSTKSZ ) && \
+       ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
+         ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
+      #define HB_SIGNAL_EXCEPTION_HANDLER
+   #endif
 #elif defined( HB_OS_WIN )
-#  include <windows.h>
-#  if ! defined( __TINYC__ )
-#     include <tlhelp32.h>
-#  endif
-#  include "hbwinuni.h"
-#  if defined( HB_OS_WIN_CE )
-#     include "hbwince.h"
-#  endif
+   #include <windows.h>
+   #if ! defined( __TINYC__ )
+      #include <tlhelp32.h>
+   #endif
+   #include "hbwinuni.h"
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
    /* BCC and MinGW doesn't seem to #define this */
-#  ifndef TH32CS_SNAPMODULE32
-#     define TH32CS_SNAPMODULE32  0
-#  endif
+   #ifndef TH32CS_SNAPMODULE32
+   #define TH32CS_SNAPMODULE32  0
+   #endif
 #elif defined( HB_OS_OS2 )
-#  define INCL_DOSEXCEPTIONS
-#  define INCL_ERRORS
-#  include <os2.h>
+   #define INCL_DOSEXCEPTIONS
+   #define INCL_ERRORS
+   #include <os2.h>
 #endif
 
 #if defined( HB_SIGNAL_EXCEPTION_HANDLER )

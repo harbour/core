@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Extend API, Array API, misc API and base declarations
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -527,13 +525,13 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_S
 #endif /* _HB_API_INTERNAL_ */
 
 #if defined( HB_LEGACY_LEVEL4 )
-#  define HB_ITEM_PTR         PHB_ITEM
-#  define HB_BASEARRAY_PTR    PHB_BASEARRAY
-#  define HB_CODEBLOCK_PTR    PHB_CODEBLOCK
-#  define HB_MACRO_PTR        PHB_MACRO
-#  define HB_ERROR_INFO_PTR   PHB_ERROR_INFO
-#  define HB_HASH_TABLE_PTR   PHB_HASH_TABLE
-#  define HB_GARBAGE_FUNC_PTR PHB_GARBAGE_FUNC
+   #define HB_ITEM_PTR         PHB_ITEM
+   #define HB_BASEARRAY_PTR    PHB_BASEARRAY
+   #define HB_CODEBLOCK_PTR    PHB_CODEBLOCK
+   #define HB_MACRO_PTR        PHB_MACRO
+   #define HB_ERROR_INFO_PTR   PHB_ERROR_INFO
+   #define HB_HASH_TABLE_PTR   PHB_HASH_TABLE
+   #define HB_GARBAGE_FUNC_PTR PHB_GARBAGE_FUNC
 #endif
 
 #define hb_xgrabz( n )        memset( hb_xgrab( ( n ) ), 0, ( n ) )
@@ -1088,7 +1086,7 @@ extern void       hb_memvarValueIncRef( PHB_ITEM pValue ); /* increase the refer
 extern void       hb_memvarValueDecRef( PHB_ITEM pValue ); /* decrease the reference count of a global value */
 extern PHB_ITEM   hb_memvarGetItem( PHB_SYMB pMemvarSymb );
 #if defined( _HB_API_MACROS_ )
-#  define hb_memvarValueIncRef( p )       hb_xRefInc( p )
+   #define hb_memvarValueIncRef( p )       hb_xRefInc( p )
 #endif /* _HB_API_MACROS_ */
 #endif /* _HB_API_INTERNAL_ */
 

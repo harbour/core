@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *
+ * Harbour preprocessor
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -240,19 +238,19 @@ typedef HB_PP_MSG_FUNC_( ( * PHB_PP_MSG_FUNC ) );
                                    HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_EOC )
 
 #ifdef HB_CLP_STRICT
-#  define HB_PP_TOKEN_ISEOS(t)   HB_PP_TOKEN_ISEOL(t)
-#  define HB_PP_TOKEN_ISEOP(t,l) HB_PP_TOKEN_ISEOL(t)
+   #define HB_PP_TOKEN_ISEOS(t)   HB_PP_TOKEN_ISEOL(t)
+   #define HB_PP_TOKEN_ISEOP(t,l) HB_PP_TOKEN_ISEOL(t)
 #else
 /* End Of Subst - define how many tokens in line should be translated,
                   Clipper translates whole line */
-#  define HB_PP_TOKEN_ISEOS(t)   ( HB_PP_TOKEN_ISEOL(t) || \
-                                   ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_EOC && \
-                                     (t)->pNext && \
-                                     ( HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_HASH || \
-                                       HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_DIRECTIVE ) ) )
+   #define HB_PP_TOKEN_ISEOS(t)   ( HB_PP_TOKEN_ISEOL(t) || \
+                                    ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_EOC && \
+                                      (t)->pNext && \
+                                      ( HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_HASH || \
+                                        HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_DIRECTIVE ) ) )
 /* End Of Pattern - the second parameter define if it's direct or indirect
                     pattern */
-#  define HB_PP_TOKEN_ISEOP(t,l) ( (l) ? HB_PP_TOKEN_ISEOL(t) : HB_PP_TOKEN_ISEOC(t) )
+   #define HB_PP_TOKEN_ISEOP(t,l) ( (l) ? HB_PP_TOKEN_ISEOL(t) : HB_PP_TOKEN_ISEOC(t) )
 #endif
 
 #define HB_PP_TOKEN_ISDIRECTIVE(t)  ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_DIRECTIVE || \
@@ -319,18 +317,18 @@ typedef HB_PP_MSG_FUNC_( ( * PHB_PP_MSG_FUNC ) );
 #endif
 
 #ifdef HB_CLP_STRICT
-#  define HB_PP_TOKEN_ISUNARY(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MINUS || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DEC || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_INC || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_AMPERSAND )
+   #define HB_PP_TOKEN_ISUNARY(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MINUS || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DEC || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_INC || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_AMPERSAND )
 #else
-#  define HB_PP_TOKEN_ISUNARY(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MINUS || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DEC || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_INC || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_AMPERSAND || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_PLUS || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_NOT || \
-                                   HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_REFERENCE )
+   #define HB_PP_TOKEN_ISUNARY(t) ( HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_MINUS || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_DEC || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_INC || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_AMPERSAND || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_PLUS || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_NOT || \
+                                    HB_PP_TOKEN_TYPE(t) == HB_PP_TOKEN_REFERENCE )
 #endif
 
 #define HB_PP_TOKEN_ISMATCH(t)   ( (t) && ( (t)->type & HB_PP_TOKEN_MATCHMARKER ) != 0 )
@@ -443,9 +441,9 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
    have to be changed to use valid C functions, f.e.:
       isalpha(), isdigit(), ... */
 #ifdef HB_CLP_STRICT
-#  define HB_PP_ISILLEGAL(c)     ( (c) < 32 || (c) >= 126 )
+   #define HB_PP_ISILLEGAL(c)    ( (c) < 32 || (c) >= 126 )
 #else
-#  define HB_PP_ISILLEGAL(c)     ( (c) < 32 || (c) == 127 )
+   #define HB_PP_ISILLEGAL(c)    ( (c) < 32 || (c) == 127 )
 #endif
 #define HB_PP_ISTEXTCHAR(c)      ( (unsigned char) (c) >= 128 )
 #define HB_PP_ISBLANK(c)         ( (c) == ' ' || (c) == '\t' )

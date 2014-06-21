@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the RDD API Index Order support
  *
  * Copyright 2000 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,15 +77,15 @@
 
 #ifdef HB_COMPAT_C53
 
-#xtranslate ORDCOND( [FOR <for>]                                        ;
-                     [<all:ALL>] [WHILE <while>]                        ;
-                     [EVAL <eval>] [EVERY <every>]                      ;
-                     [RECORD <rec>] [NEXT <next>]                       ;
-                     [<rest:REST>] [<descend: DESCENDING>] )            ;
-      => ordCondSet( <"for">, <{for}>,                                  ;
-                     [<.all.>], <{while}>,                              ;
-                     <{eval}>, <every>,                                 ;
-                     RecNo(), <next>, <rec>,                            ;
+#xtranslate ORDCOND( [FOR <for>]                             ;
+                     [<all:ALL>] [WHILE <while>]             ;
+                     [EVAL <eval>] [EVERY <every>]           ;
+                     [RECORD <rec>] [NEXT <next>]            ;
+                     [<rest:REST>] [<descend: DESCENDING>] ) ;
+      => ordCondSet( <"for">, <{for}>,                       ;
+                     [<.all.>], <{while}>,                   ;
+                     <{eval}>, <every>,                      ;
+                     RecNo(), <next>, <rec>,                 ;
                      [<.rest.>], [<.descend.>] )
 
 #endif

@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,13 +47,13 @@
 #include "hbclass.ch"
 
 /* An URL:
-   http://user:passwd@example.com/mypages/mysite/page.html?avar=0&avar1=1
-   ^--^   ^--^ ^----^ ^---------^ ^----------------------^ ^------------^
-   cProto  UID  PWD     cServer             cPath                 cQuery
-                                  ^------------^ ^-------^
-                                    cDirectory     cFile
-                                                 ^--^ ^--^
-                                               cFname cExt
+   https://user:passwd@example.com/mypages/mysite/page.html?avar=0&avar1=1
+   ^---^   ^--^ ^----^ ^---------^ ^----------------------^ ^------------^
+   cProto   UID  PWD     cServer             cPath                 cQuery
+                                   ^------------^ ^-------^
+                                     cDirectory     cFile
+                                                  ^--^ ^--^
+                                                cFname cExt
  */
 
 CREATE CLASS TUrl

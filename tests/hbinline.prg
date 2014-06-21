@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    new hb_inline {} test
+ * hb_inline {} test
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *    XWindow Console
- * Copyright 2003 - Giancarlo Niccolai <antispam /at/ niccolai.ws>
- * Copyright 2004/2006 - Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
+ * XWindow Console
  *
- * www - http://harbour-project.org
- * www - http://www.xharbour.org
+ * Copyright 2003 Giancarlo Niccolai <antispam /at/ niccolai.ws>
+ * Copyright 2004-2006 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
