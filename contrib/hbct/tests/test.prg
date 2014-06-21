@@ -296,4 +296,7 @@ PROCEDURE Main()
    HBTEST StrSwap()                                        IS ""
    HBTEST StrSwap( NIL, NIL )                              IS ""
 
+   HBTEST Crypt( "Hello World!", "pw" ) IS e"\222\365?\003{\375$\324\331\246\017\177"
+   HBTEST Crypt( e"\222\365?\003{\375$\324\331\246\017\177", "pw" ) IS "Hello World!"
+
    RETURN

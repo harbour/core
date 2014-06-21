@@ -268,7 +268,7 @@ STATIC FUNCTION __StrToExp( cStr )
    LOCAL cByte
 
    FOR EACH cByte IN cStr  /* FOR EACH on byte stream */
-      cResult += iif( hb_BCode( cByte ) < 32 .OR. hb_BCode( cByte ) >= 128 .OR. cByte == '"', ;
+      cResult += iif( hb_BCode( cByte ) < 32 .OR. hb_BCode( cByte ) >= 127 .OR. cByte == '"', ;
          "\" + __ByteEscape( hb_BCode( cByte ) ), cByte )
    NEXT
 
