@@ -724,7 +724,7 @@ HB_FUNC( BIO_GET_CONN_IP )
 
 HB_FUNC( BIO_GET_CONN_INT_PORT )
 {
-#if OPENSSL_VERSION_NUMBER >= 0x10001000L  /* fixed here: http://rt.openssl.org/Ticket/Display.html?id=1989 */
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L  /* fixed here: https://rt.openssl.org/Ticket/Display.html?id=1989 */
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )

@@ -103,7 +103,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
   it works like parse_url() PHP function
 
   a URL string is something like this:
-  http://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
+  https://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
   Parameters:
   cUrl     -   Valid URL string
@@ -131,7 +131,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    cUri  := ""
 
    // Starting with
-   // http://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
+   // https://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Read protocol
    IF ( nPos := At( "://", cTemp ) ) > 0
