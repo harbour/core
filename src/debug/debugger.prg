@@ -2510,8 +2510,8 @@ METHOD PROCEDURE SaveAppScreen() CLASS HBDebugger
 
 METHOD PROCEDURE SaveAppState() CLASS HBDebugger
 
-   ::nAppDirCase := Set( _SET_DIRCASE, 0 /* HB_SET_CASE_MIXED */ )
-   ::nAppFileCase := Set( _SET_FILECASE, 0 /* HB_SET_CASE_MIXED */ )
+   ::nAppDirCase := Set( _SET_DIRCASE, HB_SET_CASE_MIXED )
+   ::nAppFileCase := Set( _SET_FILECASE, HB_SET_CASE_MIXED )
    ::nAppTypeAhead := Set( _SET_TYPEAHEAD, 16 )
    ::nAppLastKey := LastKey()
 

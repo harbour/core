@@ -85,7 +85,7 @@ by Viktor Szakats
 1.4 Here's how to use the Git server in read-only mode
 ======================================================
 
-   git clone git://github.com/harbour/core.git harbour-core
+   git clone git://github.com/vszakats/harbour-core.git harbour-core
 
 1.5 Things to do to avoid damaging the Git repository
 =====================================================

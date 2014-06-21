@@ -103,7 +103,7 @@ PROCEDURE Main()
 
    sqlite3_sleep( 3000 )
 
-   pDb := NIL // close database
+   pDb := NIL  // close database
 
    RETURN
 
@@ -142,7 +142,7 @@ STATIC FUNCTION CallBack( nColCount, aValue, aColName )
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      ? PadR( aColName[ nI ], 5 ), " == ", aValue[ nI ]
+      ? PadR( aColName[ nI ], 5 ), "==", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
@@ -165,21 +165,21 @@ STATIC FUNCTION PrepareDB( cFile )
       }, enum
 
    IF Empty( pDb := sqlite3_open( cFile, .T. ) )
-      ? "Can't open/create database : ", cFile
+      ? "Can't open/create database:", cFile
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER, pasw TEXT(32) )"
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
-      ? "Can't create table : person"
-      pDb := NIL // close database
+      ? "Can't create table:", "person"
+      pDb := NIL  // close database
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "INSERT INTO person( name, age, pasw ) VALUES( :name, :age, :pasw )"
-   pStmt := sqlite3_prepare( pDb, cSQLTEXT )
-   IF Empty( pStmt )
-      ? "Can't prepare statement : ", cSQLTEXT
+
+   IF Empty( pStmt := sqlite3_prepare( pDb, cSQLTEXT ) )
+      ? "Can't prepare statement:", cSQLTEXT
       pDb := NIL
       RETURN NIL
    ENDIF

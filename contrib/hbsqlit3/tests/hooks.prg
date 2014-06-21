@@ -150,7 +150,7 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
 
 STATIC FUNCTION PrepareDB( cFile )
 
-   LOCAL cSQLTEXT, cMsg
+   LOCAL cSQLTEXT
    LOCAL pDb, pStmt
    LOCAL hPerson := { ;
       "Bob" => 52, ;
@@ -166,16 +166,14 @@ STATIC FUNCTION PrepareDB( cFile )
    ENDIF
 
    ? cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
-   cMsg := cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
-   IF !( cMsg == "SQLITE_OK" )
-      ? "Can't create table: person"
+   IF !( cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) ) == "SQLITE_OK" )
+      ? "Can't create table:", "person"
       pDb := NIL // close database
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
-   pStmt := sqlite3_prepare( pDb, cSQLTEXT )
-   IF Empty( pStmt )
+   IF Empty( pStmt := sqlite3_prepare( pDb, cSQLTEXT ) )
       ? "Can't prepare statement:", cSQLTEXT
       pDb := NIL
       RETURN NIL

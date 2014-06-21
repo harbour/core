@@ -63,10 +63,9 @@ PROCEDURE Main()
 
       sqlite3_exec( db, TABLE_SQL )
 
-      stmt := sqlite3_prepare( db, "INSERT INTO image( title, image ) VALUES( :title, :image )" )
-      IF ! Empty( stmt )
-         buff := sqlite3_file_to_buff( "test.jpg" )
+      IF ! Empty( stmt := sqlite3_prepare( db, "INSERT INTO image( title, image ) VALUES( :title, :image )" ) )
 
+         buff := sqlite3_file_to_buff( "test.jpg" )
          IF sqlite3_bind_text( stmt, 1, "test.jpg" ) == SQLITE_OK .AND. ;
             sqlite3_bind_blob( stmt, 2, @buff ) == SQLITE_OK
             IF sqlite3_step( stmt ) == SQLITE_DONE
@@ -85,14 +84,12 @@ PROCEDURE Main()
       ?
       sqlite3_sleep( 3000 )
 
-      blob := sqlite3_blob_open( db, , "image", "image", sqlite3_last_insert_rowid( db ), 0 /* 0 - RO; 1- RW */ )
-      IF ! Empty( blob )
+      IF ! Empty( blob := sqlite3_blob_open( db, , "image", "image", sqlite3_last_insert_rowid( db ), 0 /* 0 - RO; 1- RW */ ) )
          ? "Open BLOB image - Ok"
 
          buff := sqlite3_blob_read( blob )
 
          /* Call sqlite3_blob_bytes() only after sqlite3_blob_read() */
-
          ? "The size in bytes of the blob -", sqlite3_blob_bytes( blob )
 
          IF sqlite3_buff_to_file( "pngtest1.png", @buff ) == SQLITE_OK
@@ -108,8 +105,8 @@ PROCEDURE Main()
 
       ?
       ? "Save BLOB using sqlite3_column_blob()"
-      stmt := sqlite3_prepare( db, "SELECT image FROM image WHERE id == ?5 " )
-      IF ! Empty( stmt )
+      IF ! Empty( stmt := sqlite3_prepare( db, "SELECT image FROM image WHERE id == ?5 " ) )
+
          IF sqlite3_bind_int64( stmt, 5, sqlite3_last_insert_rowid( db ) ) == SQLITE_OK
             IF sqlite3_step( stmt ) == SQLITE_ROW
                buff := sqlite3_column_blob( stmt, 1 )

@@ -102,10 +102,10 @@ PROCEDURE Main()
    /* Little test for sqlite3_exec with callback  */
    ?
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
-   cb := @CallBack() // "CallBack"
+   cb := @CallBack()  // "CallBack"
    ? cErrorMsg( sqlite3_exec( pDbDest, cSQLTEXT, cb ) )
 
-   pDbDest := NIL // close database
+   pDbDest := NIL  // close database
 
    sqlite3_sleep( 3000 )
 
@@ -148,14 +148,13 @@ STATIC FUNCTION PrepareDB( cFile )
 
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
-      ? "Can't create table: person"
-      pDb := NIL // close database
+      ? "Can't create table:", "person"
+      pDb := NIL  // close database
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
-   pStmt := sqlite3_prepare( pDb, cSQLTEXT )
-   IF Empty( pStmt )
+   IF Empty( pStmt := sqlite3_prepare( pDb, cSQLTEXT ) )
       ? "Can't prepare statement:", cSQLTEXT
       pDb := NIL
       RETURN NIL
