@@ -63,7 +63,7 @@ HB_FUNC( HB_VERSION )
 {
    switch( hb_parni( 1 ) )
    {
-      case HB_VERSION_URL_BASE:       hb_retc_const( "http://harbour-project.org/" ); break;
+      case HB_VERSION_URL_BASE:       hb_retc_const( "https://harbour.github.io/" ); break;
       case HB_VERSION_URL_SOURCE:
       {
          char * pszVersion = hb_xstrcpy( NULL,

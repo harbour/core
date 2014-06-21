@@ -172,7 +172,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
 {
    hb_compOutStd( HB_COMP_PARAM,
          "\n"
-         "Credits:  The Harbour Team at harbour-project.org\n"
+         "Credits:  The Harbour Team at https://harbour.github.io/\n"
          "          (replace space with @ in e-mail addresses)\n"
          "\n"
          "Alejandro de Garate (alex_degarate hotmail com)\n"
@@ -271,6 +271,6 @@ void hb_compPrintLogo( HB_COMP_DECL )
 
    hb_compOutStd( HB_COMP_PARAM, szVer );
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCopyright (c) 1999-2014, http://harbour-project.org/\n" );
+                  "\nCopyright (c) 1999-2014, https://harbour.github.io/\n" );
    hb_xfree( szVer );
 }
