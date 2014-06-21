@@ -66,6 +66,15 @@ HB_FUNC( HB_VERSION )
    switch( hb_parni( 1 ) )
    {
       case HB_VERSION_URL_BASE:       hb_retc_const( "http://harbour-project.org/" ); break;
+      case HB_VERSION_URL_SOURCE:
+      {
+         char * pszVersion = hb_xstrcpy( NULL,
+            "https://github.com/vszakats/harbour-core",
+            strlen( hb_verCommitID() ) ? "/commit/" : NULL, hb_verCommitID(), NULL );
+
+         hb_retclen_buffer( pszVersion, strlen( pszVersion ) );
+         break;
+      }
       case HB_VERSION_HARBOUR:        hb_retc_buffer( hb_verHarbour() ); break;
       case HB_VERSION_COMPILER:       hb_retc_buffer( hb_verCompiler() ); break;
       case HB_VERSION_MAJOR:          hb_retni( HB_VER_MAJOR ); break;
