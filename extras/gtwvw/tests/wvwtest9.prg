@@ -20,6 +20,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 
 #define MF_INSERT                     0
 #define MF_CHANGE                   128
@@ -432,7 +433,7 @@ STATIC PROCEDURE Demo_Get()
    LOCAL get_2   := PadR( "Pritpal Bedi", 35 )
    LOCAL get_3   := PadR( "60, New Professor Colony", 35 )
    LOCAL get_4   := PadR( "Ludhiana, INDIA", 35 )
-   LOCAL get_5   := PadR( "http://harbour-project.org", 35 )
+   LOCAL get_5   := PadR( hb_Version( HB_VERSION_URL_BASE ), 35 )
    LOCAL get_6   := 20000
    LOCAL nCursor := SetCursor( SC_NORMAL )
    MEMVAR x

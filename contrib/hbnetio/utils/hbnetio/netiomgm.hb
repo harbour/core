@@ -328,7 +328,7 @@ STATIC PROCEDURE cmdAbout( netiocli )
 
    hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + HBRawVersion() )
    hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2014, Viktor Szakats" )
-   hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
+   hbnetiocon_dispevent( netiocli, hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN
 

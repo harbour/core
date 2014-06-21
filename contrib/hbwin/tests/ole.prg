@@ -10,6 +10,8 @@
 
 #require "hbwin"
 
+#include "hbver.ch"
+
 PROCEDURE Main()
 
    LOCAL nOption
@@ -211,7 +213,7 @@ STATIC PROCEDURE Exm_IExplorer()
 
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:Visible := .T.
-      oIE:Navigate( "http://harbour-project.org" )
+      oIE:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
    ELSE
       ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
@@ -225,7 +227,7 @@ STATIC PROCEDURE Exm_IExplorer2()
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:__hSink := __axRegisterHandler( oIE:__hObj, {| ... | QOut( ... ) } )
       oIE:Visible := .T.
-      oIE:Navigate( "http://harbour-project.org" )
+      oIE:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
       DO WHILE oIE:ReadyState != 4
          hb_idleSleep( 0 )
       ENDDO

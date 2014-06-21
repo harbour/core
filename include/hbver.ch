@@ -72,12 +72,13 @@
 #define HB_VERSION_BITWIDTH         17
 #define HB_VERSION_ENDIANNESS       18
 #define HB_VERSION_MT               19
-#define HB_VERSION_SHARED           26 /* Last. Please continue from here. */
+#define HB_VERSION_SHARED           26
 #define HB_VERSION_UNIX_COMPAT      20
 #define HB_VERSION_PLATFORM         21
 #define HB_VERSION_CPU              24
 #define HB_VERSION_COMPILER_CPP     25
-#define HB_VERSION_MAX_             26
+#define HB_VERSION_URL_BASE         27 /* Last. Please continue from here. */
+#define HB_VERSION_MAX_             27
 
 #if defined( HB_LEGACY_LEVEL5 )
 #define HB_VERSION_CHANGELOG_LAST   HB_VERSION_COMMIT_INFO

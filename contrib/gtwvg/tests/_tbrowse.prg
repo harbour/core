@@ -12,6 +12,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 
 #define K_MOVING                1001
 
@@ -329,7 +330,7 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
    oCom:mapEvent( 269, {|| uiDebug( "EXPLORER-269" ) } )
 #endif
    oCom:create()
-   oCom:navigate( "http://harbour-project.org" )
+   oCom:navigate( hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN oCom
 
@@ -425,7 +426,7 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oXbp:setColorBG( "BG+"  )
    oXbp:returnPressed := {| m1, m2, o | m1 := m2, oCom:navigate( RTrim( o:getData() ) ) }
    oXbp:tooltipText := "Type-in a web address and press ENTER"
-   oXbp:setData( "http://harbour-project.org" )
+   oXbp:setData( hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN { oLbl, oXbp }
 
@@ -443,7 +444,7 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    oXbp:create( , , { -23, -1 }, { -1, -10 } )
    oXbp:setColorFG( "R+" )
    oXbp:setColorBG( "W" )
-   oXbp:tooltipText  := "Navigate: " + "http://harbour-project.org"
+   oXbp:tooltipText  := "Navigate: " + hb_Version( HB_VERSION_URL_BASE )
 
    RETURN oXbp
 

@@ -3,6 +3,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 
@@ -296,7 +297,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
    SWITCH hb_defaultValue( nActiveX, 2 )
    CASE 1
-      hb_gtInfo( HB_GTI_WINTITLE, "Shell.Explorer.2" + "  [  " + "http://harbour-project.org" + "  ]" )
+      hb_gtInfo( HB_GTI_WINTITLE, "Shell.Explorer.2" + "  [  " + hb_Version( HB_VERSION_URL_BASE ) + "  ]" )
       oCom:CLSID := "Shell.Explorer.2"
       oCom:mapEvent( 269, {|| wapi_OutputDebugString( "EXPLORER-269" ) } )
       oCom:mapEvent( 105, {|| wapi_OutputDebugString( "EXPLORER-105" ) } )
@@ -367,9 +368,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
    // After :Create() Messages
    SWITCH nActiveX
    CASE 1
-      hb_gtInfo( HB_GTI_WINTITLE, iif( Empty( xParam ), "http://harbour-project.org", xParam ) )
+      hb_gtInfo( HB_GTI_WINTITLE, iif( Empty( xParam ), hb_Version( HB_VERSION_URL_BASE ), xParam ) )
       oCom:AddressBar := .T.
-      oCom:Navigate( iif( Empty( xParam ), "http://harbour-project.org", xParam ) )
+      oCom:Navigate( iif( Empty( xParam ), hb_Version( HB_VERSION_URL_BASE ), xParam ) )
       EXIT
 
    CASE 4
@@ -402,7 +403,7 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
       IF nKey == K_F12
          SWITCH nActiveX
          CASE 1
-            oCom:Navigate( "http://harbour-project.org" )
+            oCom:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
             EXIT
 
          CASE 11
@@ -610,7 +611,7 @@ STATIC PROCEDURE ConfigureRMChart( RMChart )
    RMChart:AddRegion()
 
    oRegion := RMChart:Region( 1 )
-   oRegion:Footer := "http://harbour-project.org"
+   oRegion:Footer := hb_Version( HB_VERSION_URL_BASE )
 
    oRegion:AddCaption()
 

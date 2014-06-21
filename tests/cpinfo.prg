@@ -414,11 +414,9 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
 
    cDef := ;
       "/*" + hb_eol() + ;
-      " * Harbour Project source code:" + hb_eol() + ;
       " * National Collation Support Module ($1)" + hb_eol() + ;
       " *" + hb_eol() + ;
       " * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>" + hb_eol() + ;
-      " * www - http://harbour-project.org" + hb_eol() + ;
       " *" + hb_eol() + ;
       " * This file is generated automatically by cpinfo.prg" + hb_eol() + ;
       " */" + hb_eol() + hb_eol() + ;
