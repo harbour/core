@@ -1,6 +1,6 @@
 Date: Fri, 12 Jun 2009 19:47:37 +0300
 From: Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
-To: "Harbour Project Main Developer List." <harbour@harbour-project.org>
+To: "Harbour Project Main Developer List."
 Subject: uhttpd v0.2
 
 
