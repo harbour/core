@@ -1,9 +1,4 @@
-/*
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- * See COPYING.txt for licensing terms.
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 {
    var tst2 = new ActiveXObject("MyOleTimeServer");
