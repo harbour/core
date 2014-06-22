@@ -912,9 +912,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
          // Read entire file into process buffer
          // READ ok?
-         nFileError := iif( FRead( nFrmHandle, @cFileBuff, SIZE_FILE_BUFF ) == 0, F_EMPTY, FError() )
-
-         IF nFileError == F_OK
+         IF ( nFileError := iif( FRead( nFrmHandle, @cFileBuff, SIZE_FILE_BUFF ) == 0, F_EMPTY, FError() ) ) == F_OK
 
             // Is this a .frm type file (2 at start and end of file)
             IF Bin2W( hb_BSubStr( cFileBuff, 1, 2 ) ) == 2 .AND. ;

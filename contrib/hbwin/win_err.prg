@@ -66,46 +66,43 @@ PROCEDURE Main( cInputFile )
 
    IF Empty( cFile := hb_MemoRead( cInputFile ) )
       ? "Input file not found"
+   ELSEIF Empty( pRegex := hb_regexComp( "[ \t]*#[ \t]*define[ \t]+([a-zA-Z0-9_]+)[ \t]+([\-A-F0-9]+)+L([ \t\n\r]|$)", .T., .T. ) )
+      ? "Invalid regexp"
    ELSE
-      IF Empty( pRegex := hb_regexComp( "[ \t]*#[ \t]*define[ \t]+([a-zA-Z0-9_]+)[ \t]+([\-A-F0-9]+)+L([ \t\n\r]|$)", .T., .T. ) )
-         ? "Invalid regexp"
+      cOutput := hb_MemoRead( __FILE__ )
+      IF ( tmp := RAt( "<<< */", cOutput ) ) > 0
+         cOutput := Left( cOutput, tmp - 1 ) + "<<< */" + hb_eol() + hb_eol()
+      ENDIF
+
+      cOutput += ;
+         "FUNCTION win_ErrorString( nCode )" + hb_eol() + ;
+         hb_eol() + ;
+         "   IF ! HB_ISNUMERIC( nCode )" + hb_eol() + ;
+         "      nCode := wapi_GetLastError()" + hb_eol() + ;
+         "   ENDIF" + hb_eol() + ;
+         hb_eol() + ;
+         "   SWITCH nCode" + hb_eol()
+
+      hWas := { => }
+
+      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+         IF !( Val( tmp[ 3 ] ) $ hWas )
+            hWas[ Val( tmp[ 3 ] ) ] := NIL
+            cOutput += "   CASE " + PadR( tmp[ 3 ], 5 ) + " ; RETURN " + '"' + tmp[ 2 ] + '"' + hb_eol()
+         ENDIF
+      NEXT
+
+      cOutput += ;
+         "   ENDSWITCH" + hb_eol() + ;
+         hb_eol() + ;
+         "   RETURN " + '"' + "HBWIN_UNKNOWN_" + '"' + " + hb_ntos( nCode )" + hb_eol()
+
+      IF Empty( hWas )
+         ? "No error definitions found in input file"
+      ELSEIF hb_MemoWrit( __FILE__, cOutput )
+         ? "Saved OK:", __FILE__
       ELSE
-         cOutput := hb_MemoRead( __FILE__ )
-         IF ( tmp := RAt( "<<< */", cOutput ) ) > 0
-            cOutput := Left( cOutput, tmp - 1 ) + "<<< */" + hb_eol() + hb_eol()
-         ENDIF
-
-         cOutput += ;
-            "FUNCTION win_ErrorString( nCode )" + hb_eol() + ;
-            hb_eol() + ;
-            "   IF ! HB_ISNUMERIC( nCode )" + hb_eol() + ;
-            "      nCode := wapi_GetLastError()" + hb_eol() + ;
-            "   ENDIF" + hb_eol() + ;
-            hb_eol() + ;
-            "   SWITCH nCode" + hb_eol()
-
-         hWas := { => }
-
-         FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
-            IF !( Val( tmp[ 3 ] ) $ hWas )
-               hWas[ Val( tmp[ 3 ] ) ] := NIL
-               cOutput += ;
-                  "   CASE " + PadR( tmp[ 3 ], 5 ) + " ; RETURN " + '"' + tmp[ 2 ] + '"' + hb_eol()
-            ENDIF
-         NEXT
-
-         cOutput += ;
-            "   ENDSWITCH" + hb_eol() + ;
-            hb_eol() + ;
-            "   RETURN " + '"' + "HBWIN_UNKNOWN_" + '"' + " + hb_ntos( nCode )" + hb_eol()
-
-         IF Empty( hWas )
-            ? "No error definitions found in input file"
-         ELSEIF hb_MemoWrit( __FILE__, cOutput )
-            ? "Saved OK:", __FILE__
-         ELSE
-            ? "Save error:", __FILE__
-         ENDIF
+         ? "Save error:", __FILE__
       ENDIF
    ENDIF
 
