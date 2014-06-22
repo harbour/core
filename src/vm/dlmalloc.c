@@ -1,12 +1,12 @@
 /*
   This is a version (aka dlmalloc) of malloc/free/realloc written by
   Doug Lea and released to the public domain, as explained at
-  http://creativecommons.org/publicdomain/zero/1.0/ Send questions,
+  https://creativecommons.org/publicdomain/zero/1.0/ Send questions,
   comments, complaints, performance data, etc to dl@cs.oswego.edu
 
 * Version 2.8.6 Wed Aug 29 06:57:58 2012  Doug Lea
    Note: There may be an updated version of this malloc obtainable at
-           ftp://gee.cs.oswego.edu/pub/misc/malloc.c
+           http://gee.cs.oswego.edu/pub/misc/malloc.c
          Check before installing!
 
 * Quickstart
@@ -18,7 +18,7 @@
   compile-time and dynamic tuning options.
 
   For convenience, an include file for code using this malloc is at:
-     ftp://gee.cs.oswego.edu/pub/misc/malloc-2.8.6.h
+     http://gee.cs.oswego.edu/pub/misc/malloc-2.8.6.h
   You don't really need this .h file unless you call functions not
   defined in your system include files.  The .h file contains only the
   excerpts from this file needed for using this malloc on ANSI C/C++
@@ -3082,7 +3082,7 @@ static size_t traverse_and_check(mstate m);
   that the mstate controlling malloc/free is intact.  This is a
   streamlined version of the approach described by William Robertson
   et al in "Run-time Detection of Heap-based Overflows" LISA'03
-  http://www.usenix.org/events/lisa03/tech/robertson.html The footer
+  https://www.usenix.org/events/lisa03/tech/robertson.html The footer
   of an inuse chunk holds the xor of its mstate and a random seed,
   that is checked upon calls to free() and realloc().  This is
   (probabalistically) unguessable from outside the program, but can be

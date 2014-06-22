@@ -40,6 +40,7 @@ FUNCTION hbmk_plugin_bison( hbmk )
    LOCAL cCommand
    LOCAL nError
    LOCAL lBuildIt
+   LOCAL tmp
 
    SWITCH hbmk[ "cSTATE" ]
    CASE "init"
@@ -55,7 +56,9 @@ FUNCTION hbmk_plugin_bison( hbmk )
       hbmk[ "vars" ][ "aBIS_Src" ] := {}
       FOR EACH cSrc IN hbmk[ "params" ]
          IF hb_LeftEq( cSrc, "-bisonflag=" )
-            /* TODO: process bison flags */
+            IF ! Empty( tmp := SubStr( cSrc, Len( "-bisonflag=" ) + 1 ) )
+               AAdd( hbmk[ "vars" ][ "aBIS_Opt" ], tmp )
+            ENDIF
          ELSE
             SWITCH Lower( hb_FNameExt( cSrc ) )
             CASE ".y"
@@ -115,6 +118,7 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
                   cCommand := hbmk[ "vars" ][ "cBIS_BIN" ] + ;
                      " -d -p hb_comp" + ;
+                     " " + hbmk_ArrayToList( hbmk[ "vars" ][ "aBIS_Opt" ] ) + ;
                      " -o " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cDst ) ) + ;
                      " " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cSrc ) )
 

@@ -58,10 +58,9 @@
 
 /* TODO: Add checks for string parameters with embedded NUL character */
 /* TODO: Add test cases for other string functions */
-/* TODO: Incorporate tests from test/working/string*.prg */
 /* TODO: String overflow on + and - tests */
 /* TODO: Tests with MEMO type ? */
-/* TODO: Tests with Log(0) type of invalid values */
+/* TODO: Tests with Log( 0 ) type of invalid values */
 
 #include "rt_main.ch"
 

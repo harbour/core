@@ -409,7 +409,7 @@ HB_FUNC( TOKENNEXT )
       }
       else
       {
-         /* ... or static  ? */
+         /* ... or static ? */
          if( s_sTokenEnvironment == NULL )
          {
             int iArgErrorMode = ct_getargerrormode();
@@ -425,7 +425,7 @@ HB_FUNC( TOKENNEXT )
          sTokenEnvironment = s_sTokenEnvironment;
       }
 
-      /* nth token or next token ?  */
+      /* nth token or next token? */
       if( HB_ISNUM( 2 ) )
       {
          psTokenPosition = sTokEnvGetPosIndex( sTokenEnvironment, hb_parns( 2 ) - 1 );
@@ -538,7 +538,7 @@ HB_FUNC( TOKENEND )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         /* it is CTIII behaviour to return .T. if there's no string TOKENINIT'ed */
+         /* it is CT3 behaviour to return .T. if there's no string TokenInit()'ed */
          hb_retl( HB_TRUE );
    }
 }
