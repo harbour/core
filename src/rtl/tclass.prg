@@ -210,26 +210,23 @@ STATIC PROCEDURE Create( /* MetaClass */ )
       ENDIF
    NEXT
 
-   hClass := __clsNew( ::cName, Len( ::aDatas ), ahSuper, ::sClassFunc, ::lModFriendly )
-   ::hClass := hClass
+   ::hClass := hClass := __clsNew( ::cName, Len( ::aDatas ), ahSuper, ::sClassFunc, ::lModFriendly )
 
-   IF ! Empty( ahSuper )
-      IF ahSuper[ 1 ] != 0
-         __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
-         __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
-      ENDIF
+   IF ! Empty( ahSuper ) .AND. ahSuper[ 1 ] != 0
+      __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
+      __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
    ENDIF
    __clsAddMsg( hClass, "REALCLASS", 0, HB_OO_MSG_REALCLASS, 0, HB_OO_CLSTP_EXPORTED )
 
 #if 0
-   // We will work here on the MetaClass object to add the Class Method
-   // as needed
+   /* We will work here on the MetaClass object to add the Class Method
+      as needed */
    FOR EACH n IN ::aClsMethods
       // do it
    NEXT
 #endif
 
-   /* local messages... */
+   /* Local messages */
 
    FOR EACH n IN ::aDatas
       __clsAddMsg( hClass, n[ HB_OO_DATA_SYMBOL ]       , n:__enumIndex(), ;
@@ -287,10 +284,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    RETURN
 
 STATIC FUNCTION Instance()
-
-   LOCAL Self := QSelf()
-
-   RETURN __clsInst( ::hClass )
+   RETURN __clsInst( QSelf():hClass )
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
