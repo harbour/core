@@ -50,24 +50,23 @@
 
 CREATE CLASS ExcelWriterXML
 
-   VAR    styles                                  INIT {}
-   VAR    formatErrors                            INIT { => }
-   VAR    sheets                                  INIT {}
-   VAR    lShowErrorSheet                         INIT .F.
-   VAR    overwriteFile                           INIT .F.
-   VAR    docFileName
+   VAR    styles                INIT {}
+   VAR    formatErrors          INIT { => }
+   VAR    sheets                INIT {}
+   VAR    lShowErrorSheet       INIT .F.
+   VAR    overwriteFile         INIT .F.
    VAR    cDocTitle
    VAR    cDocSubject
    VAR    cDocAuthor
    VAR    cDocCreated
    VAR    cDocManager
    VAR    cDocCompany
-   VAR    cDocVersion                             INIT "11.9999"
+   VAR    cDocVersion           INIT "11.9999"
 
-   VAR    cError                                  INIT ""
-   VAR    errors                                  INIT .F.
+   VAR    cError                INIT ""
+   VAR    errors                INIT .F.
 
-   METHOD New( fileName )
+   METHOD New()
    METHOD setOverwriteFile( overwrite )
    METHOD showErrorSheet( show )
    METHOD addError( cFunction, cMessage )
@@ -85,19 +84,13 @@ CREATE CLASS ExcelWriterXML
 
 ENDCLASS
 
-METHOD ExcelWriterXML:new( fileName )
+METHOD ExcelWriterXML:New()
 
-   LOCAL style
+   LOCAL style := ::addStyle( "DEFAULT" )
 
-   style := ::addStyle( "DEFAULT" )
    style:name( "Normal" )
    style:alignVertical( "Bottom" )
 
-   IF Empty( fileName )
-      fileName := "file.xml"
-   ENDIF
-
-   ::docFileName := fileName
    ::cDocCreated := DToS( Date() ) + "T" + Time() + "Z"
 
    RETURN Self
@@ -131,11 +124,7 @@ METHOD ExcelWriterXML:addStyle( id )
 
    LOCAL style
 
-   IF Empty( id )
-      id := NIL
-   ENDIF
-
-   IF id == NIL
+   IF ! HB_ISSTRING( id ) .OR. Empty( id )
       id := "CustomStyle" + hb_ntos( s_styleNum )
       s_styleNum++
    ENDIF
@@ -156,7 +145,7 @@ METHOD ExcelWriterXML:addSheet( id )
 
    LOCAL sheet
 
-   IF id == NIL
+   IF ! HB_ISSTRING( id )
       id := "Sheet" + hb_ntos( s_sheetNum )
       s_sheetNum++
    ENDIF
@@ -206,7 +195,7 @@ METHOD ExcelWriterXML:writeData( target )
    LOCAL docManager := ""
    LOCAL docCompany := ""
 
-   IF ! HB_ISSTRING( target )
+   IF ! HB_ISSTRING( target ) .OR. Empty( target )
       ::cError := "Target filename missing!"
       ::errors := .T.
       RETURN .T.
@@ -284,7 +273,6 @@ METHOD ExcelWriterXML:writeData( target )
    xml += "</Workbook>"
 
    FWrite( handle, xml )
-   xml := ""
    FClose( handle )
 
    RETURN .T.

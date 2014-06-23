@@ -1091,7 +1091,7 @@ HB_FUNC( HPDF_PAGE_MOVETEXTPOS2 )
    hb_retnl( ( long ) HPDF_Page_MoveTextPos2( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ), ( HPDF_REAL ) hb_parnd( 3 ) ) );
 }
 
-/* HPDF_Page_SetTextMatrix( hPage ) -> hStatus TODO */
+/* HPDF_Page_SetTextMatrix( hPage ) -> hStatus */
 HB_FUNC( HPDF_PAGE_SETTEXTMATRIX )
 {
    hb_retnl( ( long ) HPDF_Page_SetTextMatrix( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ), ( HPDF_REAL ) hb_parnd( 3 ), ( HPDF_REAL ) hb_parnd( 4 ), ( HPDF_REAL ) hb_parnd( 5 ), ( HPDF_REAL ) hb_parnd( 6 ), ( HPDF_REAL ) hb_parnd( 7 ) ) );

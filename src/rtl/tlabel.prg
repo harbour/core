@@ -103,7 +103,7 @@ CREATE CLASS HBLabelForm
    VAR aBandToPrint AS ARRAY
    VAR cBlank       AS STRING  INIT ""
    VAR lOneMoreBand AS LOGICAL INIT .T.
-   VAR nCurrentCol  AS NUMERIC // The current column in the band
+   VAR nCurrentCol  AS NUMERIC  // The current column in the band
 
    METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample )
@@ -151,7 +151,7 @@ METHOD PROCEDURE New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    ENDIF
 
    lConsoleOn := Set( _SET_CONSOLE )
-   Set( _SET_CONSOLE, ! ( lNoConsole .OR. ! lConsoleOn ) )
+   Set( _SET_CONSOLE, ! lNoConsole .AND. lConsoleOn )
 
    IF ! Empty( cAltFile )         // To file
       lExtraState := Set( _SET_EXTRA, .T. )
@@ -377,13 +377,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    // If we got this far, assume the label file is open and ready to go
    // and so go ahead and read it
    // READ ok?
-   IF FRead( nHandle, @cBuff, BUFFSIZE ) == 0
-      nFileError := F_EMPTY             // File is empty
-   ELSE
-      nFileError := FError()            // Check for OS errors
-   ENDIF
-
-   IF nFileError == 0
+   IF iif( FRead( nHandle, @cBuff, BUFFSIZE ) == 0, F_EMPTY, FError() ) == F_OK
 
       // Load label dimension into aLabel
       aLabel[ LBL_REMARK  ] := hb_BSubStr( cBuff, REMARKOFFSET, REMARKSIZE )
@@ -398,7 +392,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
          // Get the text of the expression
          cFieldText := RTrim( hb_BSubStr( cBuff, nOffset, FIELDSIZE ) )
-         nOffset += 60
+         nOffset += FIELDSIZE
 
          IF Empty( cFieldText )
             AAdd( aLabel[ LBL_FIELDS ], NIL )
@@ -411,8 +405,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
       NEXT
    ENDIF
 
-   // Close file
-   FClose( nHandle )
+   FClose( nHandle )  // Close file
 
    RETURN aLabel
 
@@ -434,7 +427,7 @@ STATIC PROCEDURE PrintIt( cString )
 STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
    LOCAL nPos
-   LOCAL aList := {}                  // Define an empty array
+   LOCAL aList := {}  // Define an empty array
    LOCAL lDelimLast := .F.
 
    hb_default( @cDelimiter, "," )
@@ -461,4 +454,4 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
       AAdd( aList, "" )
    ENDIF
 
-   RETURN aList                       // Return the array
+   RETURN aList  // Return the array

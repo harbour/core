@@ -52,26 +52,20 @@ PROCEDURE Main()
    LOCAL format1, format2, format3, format4
    LOCAL sheet1, sheet2, sheet4
 
-   LOCAL xml := ExcelWriterXML():new( "my file.xml" )
+   LOCAL xml := ExcelWriterXML():new()
 
-   /**
-    * Add some general properties to the document
-    */
+   /* Add some general properties to the document */
    xml:docTitle( "My Demo Doc" )
    xml:docAuthor( "Robert F Greer" )
    xml:docCompany( "Greers Org" )
    xml:docManager( "Wife" )
 
-   /**
-    * Choose to show any formatting/input errors on a seperate sheet
-    */
+   /* Choose to show any formatting/input errors on a seperate sheet */
 #if 0
    xml:showErrorSheet( .T. )
 #endif
 
-   /**
-    * Show the style options
-    */
+   /* Show the style options */
    format1 := xml:addStyle( "left_rotate60_big" )
    format1:alignRotate( 60 )
    format1:alignHorizontal( "Left" )
@@ -85,15 +79,11 @@ PROCEDURE Main()
    format3:alignWraptext()
    format3:alignVertical( "Top" )
 
-   /**
-    * Create a new sheet with the XML document
-    */
+   /* Create a new sheet with the XML document */
    sheet1 := xml:addSheet( "Alignment" )
-   /**
-    * Add three new cells of type String with difference alignment values.
-    * Notice that the style of the each cell can be explicity named or the style
-    * reference can be passed.
-    */
+   /* Add three new cells of type String with difference alignment values.
+      Notice that the style of the each cell can be explicity named or the style
+      reference can be passed. */
    sheet1:writeString( 1, 1, "left_rotate45", format1 )
    sheet1:writeString( 1, 2, "vertical left", "verticaltext_left" )
    sheet1:writeString( 1, 3, "this text has been wrapped and is aligned at the top", "wraptext_top" )
@@ -102,12 +92,10 @@ PROCEDURE Main()
 #endif
 
    sheet2 := xml:addSheet( "Formulas" )
-   /**
-    * Wrote three numbers.
-    * Rows 4 and 5 show the formulas in R1C1 notation using the writeFormula()
-    * function.
-    * Also see how comments are added.
-    */
+   /* Wrote three numbers.
+      Rows 4 and 5 show the formulas in R1C1 notation using the writeFormula()
+      function.
+      Also see how comments are added. */
    sheet2:columnWidth( 1, 100 )
    sheet2:writeString( 1, 1, "Number" )
    sheet2:writeNumber( 1, 2, 50 )
@@ -144,9 +132,7 @@ PROCEDURE Main()
    // Merge (2,1) with 4 columns to the right and 2 rows down
    sheet4:cellMerge( 2, 1, 4, 2 )
 
-   /**
-    * Send the headers, then output the data
-    */
+   /* Send the headers, then output the data */
 #if 0
    xml:sendHeaders()
 #endif

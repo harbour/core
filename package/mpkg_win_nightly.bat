@@ -59,7 +59,6 @@ set HB_OPT_NSIS=/DPKG_NO_COMP_BCC /DPKG_NO_COMP_MSVC /DPKG_NO_COMP_MSVC64 /DPKG_
 set HB_DIR_ZIP=%_HB_DIR_TOOL%
 set HB_DIR_7Z=%_HB_DIR_TOOL%
 set HB_DIR_UPX=%_HB_DIR_TOOL%upx\
-rem set HB_DIR_BCC_IMPLIB=%_HB_DIR_COMP%bcc\Bin\
 set HB_DIR_MINGW=%_HB_DIR_COMP%mingw
 
 set HB_WITH_ADS=%_HB_DIR_3RD%ads\acesdk
@@ -82,30 +81,10 @@ win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-mingw-log.t
 if errorlevel 1 goto _EXIT
 endlocal
 
-rem setlocal
-rem echo ! Setting environment for using Borland C++
-rem set PATH=%_HB_DIR_COMP%bcc\Bin
-rem win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-bcc-log.txt" 2>&1
-rem if errorlevel 1 goto _EXIT
-rem endlocal
-
-rem setlocal
-rem echo ! Setting environment for using Open Watcom
-rem SET WATCOM=%_HB_DIR_COMP%watcom
-rem SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW
-rem SET EDPATH=%WATCOM%\EDDAT
-rem SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
-rem win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-watcom-log.txt" 2>&1
-rem endlocal
-
 rem echo ! Uploading Harbour Windows binaries...
 rem
 rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.exe  %HB_SFNET_USER%%_HB_SFNET_URL%
 rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.zip  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.exe    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.zip    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.exe %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.zip %HB_SFNET_USER%%_HB_SFNET_URL%
 
 echo ! Creating unified Windows package...
 
@@ -120,8 +99,6 @@ echo ! Uploading Harbour unified Windows package...
 
 %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-log.txt        %HB_SFNET_USER%%_HB_SFNET_URL%
 %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-mingw-log.txt  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-bcc-log.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-watcom-log.txt %HB_SFNET_USER%%_HB_SFNET_URL%
 
 echo ! Finished.
 

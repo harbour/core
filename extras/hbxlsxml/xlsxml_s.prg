@@ -50,14 +50,14 @@
 CREATE CLASS ExcelWriterXML_Sheet
 
    VAR    id
-   VAR    cells                                   INIT { => }
-   VAR    colWidth                                INIT { => }
-   VAR    rowHeight                               INIT { => }
-   VAR    URLs                                    INIT { => }
-   VAR    mergeCells                              INIT { => }
-   VAR    comments                                INIT { => }
-   VAR    formatErrors                            INIT { => }
-   VAR    ldisplayRightToLeft                     INIT .F.
+   VAR    cells                 INIT { => }
+   VAR    colWidth              INIT { => }
+   VAR    rowHeight             INIT { => }
+   VAR    URLs                  INIT { => }
+   VAR    mergeCells            INIT { => }
+   VAR    comments              INIT { => }
+   VAR    formatErrors          INIT { => }
+   VAR    ldisplayRightToLeft   INIT .F.
 
    METHOD new( id )
    METHOD getID()
@@ -69,7 +69,7 @@ CREATE CLASS ExcelWriterXML_Sheet
    METHOD writeDateTime( row, column, xData, style )
    METHOD writeData( type, row, column, xData, style, formula )
    METHOD displayRightToLeft()
-   METHOD getSheetXML( handle )
+   METHOD getSheetXML()
    METHOD cellWidth( row, col, width )
    METHOD columnWidth( col, width )
    METHOD cellHeight( row, col, height )
@@ -83,10 +83,9 @@ METHOD ExcelWriterXML_Sheet:new( id )
 
    ::id := id
 
-   RETURN SELF
+   RETURN Self
 
 METHOD ExcelWriterXML_Sheet:getID()
-
    RETURN ::id
 
 METHOD PROCEDURE ExcelWriterXML_Sheet:addError( cFunction, cMessage )
@@ -117,21 +116,23 @@ METHOD PROCEDURE ExcelWriterXML_Sheet:writeString( row, column, xData, style )
 
 METHOD PROCEDURE ExcelWriterXML_Sheet:writeNumber( row, column, xData, style )
 
-   IF HB_ISNUMERIC( xData )
+   DO CASE
+   CASE HB_ISNUMERIC( xData )
       ::writeData( "Number", row, column, AllTrim( Str( xData, 18, 6 ) ), style )
-   ELSE
+   CASE HB_ISSTRING( xData )
       ::writeData( "String", row, column, xData, style )
-   ENDIF
+   ENDCASE
 
    RETURN
 
 METHOD PROCEDURE ExcelWriterXML_Sheet:writeDateTime( row, column, xData, style )
 
-   IF HB_ISDATE( xData )
+   DO CASE
+   CASE HB_ISDATE( xData )
       ::writeData( "DateTime", row, column, DToC( xData ), style )
-   ELSE
+   CASE HB_ISSTRING( xData )
       ::writeData( "String", row, column, xData, style )
-   ENDIF
+   ENDCASE
 
    RETURN
 
@@ -139,15 +140,12 @@ METHOD PROCEDURE ExcelWriterXML_Sheet:writeData( type, row, column, xData, style
 
    LOCAL hcol, cell, styleID
 
-   IF style != NIL
-      IF HB_ISOBJECT( style )
-         styleID := style:getID()
-      ELSE
-         styleID := style
-      ENDIF
-   ELSE
-      styleID := NIL
-   ENDIF
+   DO CASE
+   CASE HB_ISOBJECT( style )
+      styleID := style:getID()
+   CASE HB_ISSTRING( style )
+      styleID := style
+   ENDCASE
 
    cell := { ;
       "type"      => type, ;
@@ -173,19 +171,17 @@ METHOD PROCEDURE ExcelWriterXML_Sheet:displayRightToLeft()
 
    RETURN
 
-METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
+METHOD ExcelWriterXML_Sheet:getSheetXML()
 
-   LOCAL displayRightToLeft, ir, ic, xml, url
+   LOCAL ir, ic, xml, url
    LOCAL column, cell, xData, type, mergecell, comment, style, colIndex, colWidth
    LOCAL row, rowData, rowHeight, formula
 
-   displayRightToLeft := iif( ::ldisplayRightToLeft, 'ss:RightToLeft="1"', "" )
+   LOCAL displayRightToLeft := iif( ::ldisplayRightToLeft, 'ss:RightToLeft="1"', "" )
 
-   xml := '<Worksheet ss:Name="' + ::id + '" ' + displayRightToLeft + ">" + hb_eol()
-   xml += "   <Table>" + hb_eol()
-
-   FWrite( handle, xml )
-   xml := ""
+   xml := ;
+      '<Worksheet ss:Name="' + ::id + '" ' + displayRightToLeft + ">" + hb_eol() + ;
+      "   <Table>" + hb_eol()
 
    FOR EACH ic IN ::colWidth
       colIndex := ic:__enumKey()
@@ -194,9 +190,6 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
       colWidth := hb_ntos( colWidth )
       xml += '      <Column ss:Index="' + colIndex + '" ss:AutoFitWidth="0" ss:Width="' + colWidth + '"/>' + hb_eol()
    NEXT
-
-   FWrite( handle, xml )
-   xml := ""
 
    FOR EACH ir IN ::cells
       row     := ir:__enumKey()
@@ -222,28 +215,27 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
          ELSE
             style := 'ss:StyleID="' + cell[ "style" ] + '"'
          ENDIF
-         URL := ""
-         mergeCell := ""
-         IF row $ ::mergeCells
-            IF column $ ::mergeCells[ row ]
-               mergeCell := 'ss:MergeAcross="' + hb_ntos( ::mergeCells[ row ][ column ][ "width" ] ) + '" ss:MergeDown="' + hb_ntos( ::mergeCells[ row ][ column ][ "height" ] ) + '"'
-            ENDIF
+         IF row $ ::mergeCells .AND. column $ ::mergeCells[ row ]
+            mergeCell := 'ss:MergeAcross="' + hb_ntos( ::mergeCells[ row ][ column ][ "width" ] ) + '" ss:MergeDown="' + hb_ntos( ::mergeCells[ row ][ column ][ "height" ] ) + '"'
+         ELSE
+            mergeCell := ""
          ENDIF
-         comment := ""
-         IF row $ ::comments
-            IF column $ ::comments[ row ]
-               comment := ;
-                  '               <Comment ss:Author="' + ::comments[ row ][ column ][ "author" ] + '">' + hb_eol() + ;
-                  '               <ss:Data xmlns="http://www.w3.org/TR/REC-html40">' + hb_eol() + ;
-                  '               <B><Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "author" ] + ":</Font></B>" + hb_eol() + ;
-                  '               <Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "comment" ] + "</Font>" + hb_eol() + ;
-                  "               </ss:Data>" + hb_eol() + ;
-                  "               </Comment>" + hb_eol()
-            ENDIF
+         IF row $ ::comments .AND. column $ ::comments[ row ]
+            comment := ;
+               '               <Comment ss:Author="' + ::comments[ row ][ column ][ "author" ] + '">' + hb_eol() + ;
+               '               <ss:Data xmlns="http://www.w3.org/TR/REC-html40">' + hb_eol() + ;
+               '               <B><Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "author" ] + ":</Font></B>" + hb_eol() + ;
+               '               <Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "comment" ] + "</Font>" + hb_eol() + ;
+               "               </ss:Data>" + hb_eol() + ;
+               "               </Comment>" + hb_eol()
+         ELSE
+            comment := ""
          ENDIF
+
          type  := cell[ "type" ]
          xData := cell[ "data" ]
 
+         URL := ""
          xml += ;
             "         <Cell " + AllTrim( style + ' ss:Index="' + hb_ntos( column ) + '" ' + URL + " " + mergeCell + " " + formula ) + ">" + hb_eol() + ;
             '            <Data ss:Type="' + type + '">' + ;
@@ -254,16 +246,10 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
 
       NEXT
       xml += "      </Row>" + hb_eol()
-
-      FWrite( handle, xml )
-      xml := ""
    NEXT
 
    xml += "   </Table>" + hb_eol()
    xml += "</Worksheet>" + hb_eol()
-
-   FWrite( handle, xml )
-   xml := ""
 
    RETURN xml
 

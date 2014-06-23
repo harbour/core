@@ -344,7 +344,7 @@ HB_FUNC( ATN2 )
          else
          {
             /* DOMAIN error: both arguments to atan2 have been 0 */
-            /* CTIII behaves very strange here: atn2 (0.0, 0.0) == -PI
+            /* CT3 behaves very strange here: atn2 (0.0, 0.0) == -PI
                atn2 (0.0, -0.0) == 0.0
                atn2 (-0.0, 0.0) == -PI
                atn2 (-0.0, -0.0) == -2*PI */
@@ -391,7 +391,7 @@ HB_FUNC( SINH )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
          else
          {
-            /* OVERFLOW error: we have no CTIII behaviour to follow,
+            /* OVERFLOW error: we have no CT3 behaviour to follow,
                so return +INF or -INF, respectively */
             if( dArg < 0.0 )
                hb_retndlen( -HUGE_VAL, -1, -1 );
@@ -433,7 +433,7 @@ HB_FUNC( COSH )
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
          else
-            /* OVERFLOW error: we have no CTIII behaviour to follow,
+            /* OVERFLOW error: we have no CT3 behaviour to follow,
                so return +INF */
             hb_retndlen( HUGE_VAL, -1, -1 );
       }

@@ -2,7 +2,9 @@
 
 #require "hbssl"
 
-#define CRLF  Chr( 13 ) + Chr( 10 )
+#include "hbsocket.ch"
+
+#define CRLF  ( Chr( 13 ) + Chr( 10 ) )
 
 PROCEDURE Main()
 
@@ -16,84 +18,77 @@ PROCEDURE Main()
    LOCAL bits
    LOCAL tmp
 
-   // TODO: use hb_socket*() API instead of hb_inet*()
-
-   hb_inetInit()
-
    ? "---"
 
-   socket := hb_inetCreate()
-   ? "INETTIMEOUT", hb_inetTimeout( socket, 500 )
-   ? "INETCONN", hb_inetConnect( "www.fortify.net", 80, socket )
-   ? "INETERR", hb_inetErrorCode( socket )
-   ? "INETFD", hb_inetFD( socket )
-   ? "INETSEND", hb_inetSend( socket, "GET / http/1.1" + CRLF + "Host: " + "www.fortify.net" + CRLF + CRLF )
-   ? "INETERR", hb_inetErrorCode( socket )
+   socket := hb_socketOpen()
+   ? "hb_socketConnect()", hb_socketConnect( socket, { HB_SOCKET_AF_INET, hb_socketResolveAddr( "www.fortify.net" ), 80 } )
+   ? "hb_socketGetError()", hb_socketGetError( socket )
+   ? "hb_socketGetFD()", hb_socketGetFD( socket )
+   ? "hb_socketSend()", hb_socketSend( socket, "GET / http/1.1" + CRLF + "Host: " + "www.fortify.net" + CRLF + CRLF )
+   ? "hb_socketGetError()", hb_socketGetError( socket )
    buffer := Space( 1024 )
-   ? "INETRECVALL", hb_inetRecvAll( socket, @buffer, Len( buffer ) )
+   ? "hb_socketRecv()", hb_socketRecv( socket, @buffer,,, 500 )
    ? "BUFFER", ">" + AllTrim( buffer ) + "<"
-   ? "INETCLOSE", hb_inetClose( socket )
+   ? "hb_socketClose()", hb_socketClose( socket )
 
    ? "---"
 
-   socket := hb_inetCreate()
-   ? hb_inetTimeout( socket, 2500 )
-   ? hb_inetConnect( "www.fortify.net", 443, socket )
-   ? hb_inetErrorCode( socket )
+   socket := hb_socketOpen()
+   ? hb_socketConnect( socket, { HB_SOCKET_AF_INET, hb_socketResolveAddr( "www.fortify.net" ), 443 } )
+   ? hb_socketGetError( socket )
 
    //
 
    SSL_init()
 
    ? SSLeay_version()
-   ? SSLeay_version( HB_SSLEAY_VERSION  )
-   ? SSLeay_version( HB_SSLEAY_CFLAGS   )
+   ? SSLeay_version( HB_SSLEAY_VERSION )
+   ? SSLeay_version( HB_SSLEAY_CFLAGS )
    ? SSLeay_version( HB_SSLEAY_BUILT_ON )
    ? SSLeay_version( HB_SSLEAY_PLATFORM )
-   ? SSLeay_version( HB_SSLEAY_DIR      )
+   ? SSLeay_version( HB_SSLEAY_DIR )
 
-   ? "RAND_SEED", RAND_seed( "some entropy" )
+   ? "RAND_seed()", RAND_seed( "some entropy" )
 
-   ? "SSL_CTX_NEW", ssl_ctx := SSL_CTX_new()
+   ? "SSL_CTX_new()", ssl_ctx := SSL_CTX_new()
 
-   ? "SSL_NEW", ssl := SSL_new( ssl_ctx )
+   ? "SSL_new()", ssl := SSL_new( ssl_ctx )
 
-   ? "SSL_VERSION", SSL_version( ssl )
-   ? "SSL_GET_VERSION", SSL_get_version( ssl )
+   ? "SSL_version()", SSL_version( ssl )
+   ? "SSL_get_version()", SSL_get_version( ssl )
 
-   ? "INET FD", hb_inetFD( socket )
+   ? "hb_socketGetFD()", hb_socketGetFD( socket )
 
-   ? "SSL_SET_FD", SSL_set_fd( ssl, hb_inetFD( socket ) )
-   ? "SSL_CONNECT", tmp := SSL_connect( ssl )
-   ? "SSL_GET_ERROR", SSL_get_error( ssl, tmp )
+   ? "SSL_set_fd()", SSL_set_fd( ssl, hb_socketGetFD( socket ) )
+   ? "SSL_connect()", tmp := SSL_connect( ssl )
+   ? "SSL_get_error()", SSL_get_error( ssl, tmp )
 
-   tmp := SSL_get_ciphers( ssl )
-   FOR EACH cipher IN tmp
-      ? "SSL_CIPHER_GET_NAME", SSL_CIPHER_get_name( cipher )
-      ? "SSL_CIPHER_GET_VERSION", SSL_CIPHER_get_version( cipher )
-      ? "SSL_CIPHER_GET_BITS", SSL_CIPHER_get_bits( cipher, @bits ), bits
-      ? "SSL_CIPHER_DESCRIPTION", ">" + SSL_CIPHER_description( cipher ) + "<"
-      ? "- - - - - - - - - - - - - - -"
+   FOR EACH cipher IN SSL_get_ciphers( ssl )
+      ? "SSL_CIPHER_get_name()", SSL_CIPHER_get_name( cipher )
+      ? "SSL_CIPHER_get_version()", SSL_CIPHER_get_version( cipher )
+      ? "SSL_CIPHER_get_bits()", SSL_CIPHER_get_bits( cipher, @bits ), bits
+      ? "SSL_CIPHER_description()", ">" + SSL_CIPHER_description( cipher ) + "<"
+      ? Replicate( "- ", 15 )
    NEXT
 
-   ? "SSL_GET_CIPHER_BITS", SSL_get_cipher_bits( ssl, @bits ), bits
-   ? "SSL_GET_CIPHER_LIST", SSL_get_cipher_list( ssl )
-   ? "SSL_GET_CIPHER_NAME", SSL_get_cipher_name( ssl )
-   ? "SSL_GET_CIPHER_VERSION", SSL_get_cipher_version( ssl )
+   ? "SSL_get_cipher_bits()", SSL_get_cipher_bits( ssl, @bits ), bits
+   ? "SSL_get_cipher_list()", SSL_get_cipher_list( ssl )
+   ? "SSL_get_cipher_name()", SSL_get_cipher_name( ssl )
+   ? "SSL_get_cipher_version()", SSL_get_cipher_version( ssl )
 
-   ? "SSL_GET_CURRENT_CIPHER", cipher := SSL_get_current_cipher( ssl )
-   ? "SSL_CIPHER_GET_NAME", SSL_CIPHER_get_name( cipher )
-   ? "SSL_CIPHER_GET_VERSION", SSL_CIPHER_get_version( cipher )
-   ? "SSL_CIPHER_GET_BITS", SSL_CIPHER_get_bits( cipher, @bits ), bits
-   ? "SSL_CIPHER_DESCRIPTION", SSL_CIPHER_description( cipher )
+   ? "SSL_get_current_cipher()", cipher := SSL_get_current_cipher( ssl )
+   ? "SSL_CIPHER_get_name()", SSL_CIPHER_get_name( cipher )
+   ? "SSL_CIPHER_get_version()", SSL_CIPHER_get_version( cipher )
+   ? "SSL_CIPHER_get_bits()", SSL_CIPHER_get_bits( cipher, @bits ), bits
+   ? "SSL_CIPHER_description()", SSL_CIPHER_description( cipher )
 
-   ? "SSL_WRITE", tmp := SSL_write( ssl, "GET / http/1.1" + CRLF + "Host: " + "www.fortify.net" + CRLF + CRLF )
-   ? "SSL_GET_ERROR", SSL_get_error( ssl, tmp )
+   ? "SSL_write()", tmp := SSL_write( ssl, "GET / http/1.1" + CRLF + "Host: " + "www.fortify.net" + CRLF + CRLF )
+   ? "SSL_get_error()", SSL_get_error( ssl, tmp )
    buffer := Space( 1024 )
-   ? "SSL_READ", tmp := SSL_read( ssl, @buffer )
-   ? "SSL_GET_ERROR", SSL_get_error( ssl, tmp )
+   ? "SSL_read()", tmp := SSL_read( ssl, @buffer )
+   ? "SSL_get_error()", SSL_get_error( ssl, tmp )
    ? buffer
 
-   ? hb_inetClose( socket )
+   ? hb_socketClose( socket )
 
    RETURN

@@ -1,14 +1,9 @@
-/*
-   Harbour Project - http://www.harbour-project.org
-
-   Please left here information about any modifications to original
+/* Please left here information about any modifications to original
    ZLIB files. It will make upgrading ZLIB library much more easier
-   and safer in the future.
- */
+   and safer in the future. */
 
 /* YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name (your_email address)
-   2013-12-31 13:59 UTC+0100 Foo Bar (foo.bar example.org)
- */
+   2013-12-31 13:59 UTC+0100 Foo Bar (foo.bar example.org) */
 
 2009-08-12 23:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/hbzlib/zutil.c

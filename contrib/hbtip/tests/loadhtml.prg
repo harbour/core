@@ -9,8 +9,7 @@ REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main()
 
-   LOCAL cURL
-   LOCAL oHttp, cHtml, hQuery, aLink, oNode, oDoc
+   LOCAL cURL, oHttp, cHtml, hQuery, oNode, oDoc
 
    ? "URL:", cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com/search"
 
@@ -47,12 +46,8 @@ PROCEDURE Main()
    ? oNode:getText( "" ), oNode:href
 
    /* ":divs(5)" returns the 5th <div> tag */
-   oNode := oDoc:body:divs( 5 )
-
    /* "aS" is the plural of "a" and returns all <a href="url"> tags */
-   aLink := oNode:aS
-
-   FOR EACH oNode IN aLink
+   FOR EACH oNode IN oDoc:body:divs( 5 ):aS
       ? tip_HtmlToStr( oNode:getText( "" ) ), oNode:href
    NEXT
 

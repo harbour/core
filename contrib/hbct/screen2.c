@@ -366,7 +366,7 @@ HB_FUNC( SCREENSTR )
       hb_retc_null();
 }
 
-HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
+HB_FUNC( STRSCREEN )  /* TODO: Unicode support */
 {
    HB_SIZE nLen = hb_parclen( 1 );
 
@@ -409,10 +409,7 @@ HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
    hb_retc_null();
 }
 
-/*
- * __hbct_DspTime() is helper functions for ShowTime()
- */
-HB_FUNC( __HBCT_DSPTIME )
+HB_FUNC( __HBCT_DSPTIME )  /* Helper function for ShowTime() */
 {
    int iRow, iCol;
    int iColor, iLen;
