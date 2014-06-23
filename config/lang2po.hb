@@ -104,7 +104,7 @@ STATIC FUNCTION Meta()
 
    hMeta := { => }
    hMeta[ "Project-Id-Version:"        ] := "core-lang"
-   hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://groups.google.com/group/harbour-devel/"
+   hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://github.com/vszakats/harbour-core/issues"
    hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp
    hMeta[ "PO-Revision-Date:"          ] := cISO_TimeStamp
    hMeta[ "Last-Translator:"           ] := "foo bar <foo.bar@example.org>"
