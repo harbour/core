@@ -120,6 +120,9 @@ typedef struct _HB_CURL
 
    PHB_HASH_TABLE pHash;
 
+   FILE * pErr;
+
+
 } HB_CURL, * PHB_CURL;
 
 
@@ -538,6 +541,10 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
    else
       curl_easy_reset( hb_curl->curl );
 #endif
+
+   if( hb_curl->pErr )
+      fclose( hb_curl->pErr );
+
 }
 
 /* NOTE: Will create a new one. If 'from' is specified, the new one
@@ -776,32 +783,32 @@ HB_FUNC( CURL_EASY_SETOPT )
                break;
 #endif
 
-            /* Callback */
+               /* Callback */
 
-            /* These are hidden on the Harbour level: */
-            /* HB_CURLOPT_WRITEFUNCTION */
-            /* HB_CURLOPT_WRITEDATA */
-            /* HB_CURLOPT_READFUNCTION */
-            /* HB_CURLOPT_READDATA */
+               /* These are hidden on the Harbour level: */
+               /* HB_CURLOPT_WRITEFUNCTION */
+               /* HB_CURLOPT_WRITEDATA */
+               /* HB_CURLOPT_READFUNCTION */
+               /* HB_CURLOPT_READDATA */
 #if LIBCURL_VERSION_NUM >= 0x070C03
-            /* HB_CURLOPT_IOCTLFUNCTION */
-            /* HB_CURLOPT_IOCTLDATA */
+               /* HB_CURLOPT_IOCTLFUNCTION */
+               /* HB_CURLOPT_IOCTLDATA */
 #endif
-            /* HB_CURLOPT_SEEKFUNCTION */
-            /* HB_CURLOPT_SEEKDATA */
-            /* HB_CURLOPT_SOCKOPTFUNCTION */
-            /* HB_CURLOPT_SOCKOPTDATA */
-            /* HB_CURLOPT_OPENSOCKETFUNCTION */
-            /* HB_CURLOPT_OPENSOCKETDATA */
-            /* HB_CURLOPT_PROGRESSFUNCTION */
-            /* HB_CURLOPT_PROGRESSDATA */
-            /* HB_CURLOPT_HEADERFUNCTION */
-            /* HB_CURLOPT_HEADERDATA / CURLOPT_WRITEHEADER */
-            /* HB_CURLOPT_DEBUGFUNCTION */
-            /* HB_CURLOPT_DEBUGDATA */
+               /* HB_CURLOPT_SEEKFUNCTION */
+               /* HB_CURLOPT_SEEKDATA */
+               /* HB_CURLOPT_SOCKOPTFUNCTION */
+               /* HB_CURLOPT_SOCKOPTDATA */
+               /* HB_CURLOPT_OPENSOCKETFUNCTION */
+               /* HB_CURLOPT_OPENSOCKETDATA */
+               /* HB_CURLOPT_PROGRESSFUNCTION */
+               /* HB_CURLOPT_PROGRESSDATA */
+               /* HB_CURLOPT_HEADERFUNCTION */
+               /* HB_CURLOPT_HEADERDATA / CURLOPT_WRITEHEADER */
+               /* HB_CURLOPT_DEBUGFUNCTION */
+               /* HB_CURLOPT_DEBUGDATA */
 #if LIBCURL_VERSION_NUM >= 0x070B00
-            /* HB_CURLOPT_SSL_CTX_FUNCTION */
-            /* HB_CURLOPT_SSL_CTX_DATA */
+               /* HB_CURLOPT_SSL_CTX_FUNCTION */
+               /* HB_CURLOPT_SSL_CTX_DATA */
 #endif
             /* HB_CURLOPT_CONV_TO_NETWORK_FUNCTION */
             /* HB_CURLOPT_CONV_FROM_NETWORK_FUNCTION */
@@ -810,7 +817,18 @@ HB_FUNC( CURL_EASY_SETOPT )
             /* Error */
 
             /* HB_CURLOPT_ERRORBUFFER */
-            /* HB_CURLOPT_STDERR */
+            case HB_CURLOPT_STDERR:
+
+               if( hb_curl->pErr )
+                  fclose( hb_curl->pErr );
+
+               if( HB_ISCHAR( 3 ) )
+               {
+                  hb_curl->pErr = fopen( hb_parc( 3 ), "a"  );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_STDERR, hb_curl->pErr );
+               }
+
+               break;
 
             case HB_CURLOPT_FAILONERROR:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_FAILONERROR, HB_CURL_OPT_BOOL( 3 ) );
@@ -1021,6 +1039,32 @@ HB_FUNC( CURL_EASY_SETOPT )
                                    CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 1 ),
                                    CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 1 ),
                                    CURLFORM_FILE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pSubArray, 2 ) ),
+                                   CURLFORM_END );
+                  }
+
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, hb_curl->pHTTPPOST_First );
+               }
+            }
+            break;
+            case HB_CURLOPT_HTTPPOST_VALUE:
+            {
+               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
+               if( pArray )
+               {
+                  HB_SIZE ulPos;
+                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
+                  {
+                     PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, ulPos + 1 );
+
+                     curl_formadd( &hb_curl->pHTTPPOST_First,
+                                   &hb_curl->pHTTPPOST_Last,
+                                   CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 1 ),
+                                   CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 1 ),
+                                   CURLFORM_COPYCONTENTS, hb_arrayGetCPtr( pSubArray, 2 ),
+                                   CURLFORM_CONTENTSLENGTH, hb_arrayGetCLen( pSubArray, 2 ),
                                    CURLFORM_END );
                   }
 
