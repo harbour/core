@@ -49,7 +49,7 @@
 
 PROCEDURE Main()
 
-   LOCAL xml := ExcelWriterXML():New( "my file.xml" )
+   LOCAL xml := ExcelWriterXML():New()
    LOCAL sheet1 := xml:addSheet( "Plan 1" )
    LOCAL format4 := xml:addStyle( "my style" )
 

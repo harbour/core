@@ -1,7 +1,7 @@
 /*
  * SuperLib rewritten parts
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2014 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@
  */
 
 #include "fileio.ch"
+#include "hbgtinfo.ch"
 
 FUNCTION CDIR( p )
    RETURN DirChange( p ) != F_ERROR
@@ -91,6 +92,18 @@ FUNCTION RAT_LBHD
 FUNCTION RAT_RBHD
    RETURN MRightDown()
 
+FUNCTION SHIFTY( f )
+   RETURN HB_ISNUMERIC( f ) .AND. f >= 1 .AND. f <= 8 .AND. ;
+      hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), { ;
+         HB_GTI_KBD_RSHIFT, ;
+         HB_GTI_KBD_LSHIFT, ;
+         HB_GTI_KBD_CTRL, ;
+         HB_GTI_KBD_ALT, ;
+         HB_GTI_KBD_SCROLOCK, ;
+         HB_GTI_KBD_NUMLOCK, ;
+         HB_GTI_KBD_CAPSLOCK, ;
+         HB_GTI_KBD_INSERT }[ f ] ) != 0
+
 /* Dummy calls in Harbour */
 
 PROCEDURE RAT_RESET()
@@ -121,11 +134,3 @@ FUNCTION RAT_LEFTB()
 
 FUNCTION RAT_RIGHTB()
    RETURN MRightDown()
-
-/* TOFIX: This is just a dummy stub */
-
-FUNCTION SHIFTY( f )
-
-   HB_SYMBOL_UNUSED( f )
-
-   RETURN .F.

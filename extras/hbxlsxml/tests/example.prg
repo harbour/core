@@ -49,7 +49,7 @@
 
 PROCEDURE Main()
 
-   LOCAL oXml, oSheet, xarquivo := "example.xml"
+   LOCAL oXml, oSheet
    LOCAL i, xqtddoc, xttotnot, xtbascal, xtvlricm, xtbasipi, xtvlripi, aDoc, nLinha
    LOCAL xEmpresa
    LOCAL xDataImp
@@ -60,7 +60,7 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   oXml := ExcelWriterXML():New( xarquivo )
+   oXml := ExcelWriterXML():New()
    oXml:setOverwriteFile( .T. )
 
    oObj := oXml:addStyle( "textLeft" )
@@ -200,8 +200,8 @@ PROCEDURE Main()
 
    aDoc := {}
    FOR i := 1 TO 40
-      AAdd( aDoc, ;
-         { StrZero( i, 8 ), ;
+      AAdd( aDoc, { ;
+         StrZero( i, 8 ), ;
          "VE", ;
          Date() - 49 - i, ;
          Date() - 50 - i, ;
@@ -220,26 +220,26 @@ PROCEDURE Main()
 
    FOR i := 1 TO 40
       oObj := oSheet
-      oObj:writeString( ++nLinha, 1, aDoc[ i, 1 ], "textLeft" )
-      oObj:writeString( nLinha, 2, aDoc[ i, 2 ], "textLeft" )
-      oObj:writeString( nLinha, 3, DToC( aDoc[ i, 3 ] ), "textLeft" )
-      oObj:writeString( nLinha, 4, DToC( aDoc[ i, 4 ] ), "textLeft" )
-      oObj:writeString( nLinha, 5, aDoc[ i, 5 ], "textLeft" )
-      oObj:writeString( nLinha, 6, aDoc[ i, 6 ], "textLeft" )
-      oObj:writeString( nLinha, 7, aDoc[ i, 7 ], "textLeft" )
-      oObj:writeString( nLinha, 8, aDoc[ i, 8 ], "textLeft" )
-      oObj:writeNumber( nLinha, 9, aDoc[ i, 9 ], "numberRight" )
-      oObj:writeNumber( nLinha, 10, aDoc[ i, 10 ], "numberRight" )
-      oObj:writeNumber( nLinha, 11, aDoc[ i, 11 ], "numberRight" )
-      oObj:writeNumber( nLinha, 12, aDoc[ i, 12 ], "numberRight" )
-      oObj:writeNumber( nLinha, 13, aDoc[ i, 13 ], "numberRight" )
+      oObj:writeString( ++nLinha, 1, aDoc[ i ][ 1 ], "textLeft" )
+      oObj:writeString( nLinha, 2, aDoc[ i ][ 2 ], "textLeft" )
+      oObj:writeString( nLinha, 3, DToC( aDoc[ i ][ 3 ] ), "textLeft" )
+      oObj:writeString( nLinha, 4, DToC( aDoc[ i ][ 4 ] ), "textLeft" )
+      oObj:writeString( nLinha, 5, aDoc[ i ][ 5 ], "textLeft" )
+      oObj:writeString( nLinha, 6, aDoc[ i ][ 6 ], "textLeft" )
+      oObj:writeString( nLinha, 7, aDoc[ i ][ 7 ], "textLeft" )
+      oObj:writeString( nLinha, 8, aDoc[ i ][ 8 ], "textLeft" )
+      oObj:writeNumber( nLinha, 9, aDoc[ i ][ 9 ], "numberRight" )
+      oObj:writeNumber( nLinha, 10, aDoc[ i ][ 10 ], "numberRight" )
+      oObj:writeNumber( nLinha, 11, aDoc[ i ][ 11 ], "numberRight" )
+      oObj:writeNumber( nLinha, 12, aDoc[ i ][ 12 ], "numberRight" )
+      oObj:writeNumber( nLinha, 13, aDoc[ i ][ 13 ], "numberRight" )
 
       xqtddoc++
-      xttotnot += aDoc[ i, 9 ]
-      xtbascal += aDoc[ i, 10 ]
-      xtvlricm += aDoc[ i, 11 ]
-      xtbasipi += aDoc[ i, 12 ]
-      xtvlripi += aDoc[ i, 13 ]
+      xttotnot += aDoc[ i ][ 9 ]
+      xtbascal += aDoc[ i ][ 10 ]
+      xtvlricm += aDoc[ i ][ 11 ]
+      xtbasipi += aDoc[ i ][ 12 ]
+      xtvlripi += aDoc[ i ][ 13 ]
    NEXT
 
    oObj := oSheet
@@ -260,6 +260,6 @@ PROCEDURE Main()
    oObj:writeNumber(   nLinha, 12, xtbasipi, "numberRightBold" )
    oObj:writeNumber(   nLinha, 13, xtvlripi, "numberRightBold" )
 
-   oXml:writeData( xarquivo )
+   oXml:writeData( "example.xml" )
 
    RETURN
