@@ -406,7 +406,8 @@ METHOD select( xValue ) CLASS RadioGroup
    LOCAL nPos
    LOCAL nLen
 
-   IF cType == "C"
+   DO CASE
+   CASE cType == "C"
 
       nLen := ::nItemCount
       FOR nPos := 1 TO nLen
@@ -426,7 +427,7 @@ METHOD select( xValue ) CLASS RadioGroup
          ::xBuffer := xValue
       ENDIF
 
-   ELSEIF cType == "N" .AND. xValue >= 1 .AND. xValue <= ::nItemCount
+   CASE cType == "N" .AND. xValue >= 1 .AND. xValue <= ::nItemCount
 
       IF ::xBuffer == NIL
          ::xBuffer := 0
@@ -434,7 +435,7 @@ METHOD select( xValue ) CLASS RadioGroup
 
       ::changeButton( ::nValue, xValue )
 
-   ENDIF
+   ENDCASE
 
    RETURN Self
 

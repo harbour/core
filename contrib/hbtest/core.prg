@@ -137,7 +137,7 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
       lPPError := .T.
    ENDIF
 
-   cLangOld := hb_langSelect( "en" ) /* to always have RTEs in one language */
+   cLangOld := hb_langSelect( "en" )  /* to always have RTEs in one language */
 
    IF ! s_lBanner
       s_lBanner := .T.
@@ -156,16 +156,12 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
 
    IF lRTE
       lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
+   ELSEIF ValType( xResult ) == ValType( xResultExpected )
+      lFailed := !( xResult == xResultExpected )
+   ELSEIF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
+      lFailed := !( XToStr( xResult ) == xResultExpected )
    ELSE
-      IF ValType( xResult ) == ValType( xResultExpected )
-         lFailed := !( xResult == xResultExpected )
-      ELSE
-         IF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
-            lFailed := !( XToStr( xResult ) == xResultExpected )
-         ELSE
-            lFailed := .T.
-         ENDIF
-      ENDIF
+      lFailed := .T.
    ENDIF
 
    IF lFailed .OR. lPPError .OR. hb_HGetDef( t_hParams, "showall", .T. )
@@ -281,13 +277,13 @@ STATIC FUNCTION __ByteEscape( nByte )
 
    IF nByte == 0
       RETURN "0"
-   ELSE
-      cResult := ""
-      FOR nExp := 2 TO 0 STEP -1
-         cResult += SubStr( "01234567", Int( nByte / ( 8 ^ nExp ) ) + 1, 1 )
-         nByte %= 8 ^ nExp
-      NEXT
    ENDIF
+
+   cResult := ""
+   FOR nExp := 2 TO 0 STEP -1
+      cResult += SubStr( "01234567", Int( nByte / ( 8 ^ nExp ) ) + 1, 1 )
+      nByte %= 8 ^ nExp
+   NEXT
 
    RETURN cResult
 
@@ -307,8 +303,9 @@ FUNCTION hbtest_AllValues()
       "HELLO", ;
       "Hello", ;
       "", ;
+      "   ", ;
       "A" + Chr( 0 ) + "B", ;
-      Chr( 13 ) + Chr( 10 ) + Chr( 141 ) + Chr( 10 ) + Chr( 9 ), ;
+      Chr( 13 ) + Chr( 10 ) + hb_BChar( 141 ) + Chr( 10 ) + Chr( 9 ), ;
       "utf8-űŰőŐ©", ;
       0, ;
       0.0, ;

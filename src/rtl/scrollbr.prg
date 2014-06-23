@@ -142,7 +142,6 @@ METHOD display() CLASS ScrollBar
          hb_DispOutAt( nOffset, nStart, SubStr( cStyle, 1, 1 ), cColor )
          hb_DispOutAt( nOffset, nStart + ::nThumbPos, SubStr( cStyle, 3, 1 ), cColor )
          hb_DispOutAt( nOffset, nEnd + 1, SubStr( cStyle, 4, 1 ), cColor )
-
       ENDIF
 
       DispEnd()
@@ -216,9 +215,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS ScrollBar
          CASE nMRow == ::nThumbPos + ::nStart
             RETURN HTSCROLLTHUMBDRAG
          ENDCASE
-
       ENDIF
-
    ELSE
 
       DO CASE
@@ -236,7 +233,6 @@ METHOD hitTest( nMRow, nMCol ) CLASS ScrollBar
       CASE nMCol == ::nThumbPos + ::nStart
          RETURN HTSCROLLTHUMBDRAG
       ENDCASE
-
    ENDIF
 
    RETURN HTNOWHERE

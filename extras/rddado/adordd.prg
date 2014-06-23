@@ -286,11 +286,8 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
       DO CASE
       CASE Lower( hb_FNameExt( aOpenInfo[ UR_OI_NAME ] ) ) == ".mdb"
-         IF Empty( aWAData[ WA_PASSWORD ] )
-            aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] )
-         ELSE
-            aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Jet OLEDB:Database Password=" + AllTrim( aWAData[ WA_PASSWORD ] ) )
-         ENDIF
+         aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ;
+            iif( Empty( aWAData[ WA_PASSWORD ] ), "", ";Jet OLEDB:Database Password=" + AllTrim( aWAData[ WA_PASSWORD ] ) ) )
 
       CASE Lower( hb_FNameExt( aOpenInfo[ UR_OI_NAME ] ) ) == ".xls"
          aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
@@ -441,30 +438,35 @@ STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
    LOCAL rs := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    IF aWAData[ WA_EOF ] .OR. rs:EOF .OR. rs:BOF
-      xValue := NIL
       IF ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type ) == HB_FT_STRING
          xValue := Space( rs:Fields( nField - 1 ):DefinedSize )
+      ELSE
+         xValue := NIL
       ENDIF
    ELSE
       xValue := rs:Fields( nField - 1 ):Value
 
-      IF ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type ) == HB_FT_STRING
+      SWITCH ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type )
+      CASE HB_FT_STRING
          IF ValType( xValue ) == "U"
             xValue := Space( rs:Fields( nField - 1 ):DefinedSize )
          ELSE
             xValue := PadR( xValue, rs:Fields( nField - 1 ):DefinedSize )
          ENDIF
-      ELSEIF ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type ) == HB_FT_DATE
+         EXIT
+      CASE HB_FT_DATE
          /* Null values */
          IF ValType( xValue ) == "U"
             xValue := hb_SToD()
          ENDIF
-      ELSEIF ADO_GETFIELDTYPE( rs:Fields( nField - 1 ):Type ) == HB_FT_TIMESTAMP
+         EXIT
+      CASE HB_FT_TIMESTAMP
          /* Null values */
          IF ValType( xValue ) == "U"
             xValue := hb_SToD()
          ENDIF
-      ENDIF
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN HB_SUCCESS
@@ -590,11 +592,7 @@ STATIC FUNCTION ADO_DELETED( nWA, lDeleted )
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      IF oRecordSet:Status == adRecDeleted
-         lDeleted := .T.
-      ELSE
-         lDeleted := .F.
-      ENDIF
+      lDeleted := ( oRecordSet:Status == adRecDeleted )
    RECOVER
       lDeleted := .F.
    END SEQUENCE
@@ -631,14 +629,11 @@ STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
    RETURN nResult
 
 STATIC FUNCTION ADO_RECID( nWA, nRecNo )
-
    RETURN ADO_RECNO( nWA, @nRecNo )
 
 STATIC FUNCTION ADO_RECCOUNT( nWA, nRecords )
 
-   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
-
-   nRecords := oRecordSet:RecordCount()
+   nRecords := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]:RecordCount()
 
    RETURN HB_SUCCESS
 
@@ -753,7 +748,9 @@ STATIC FUNCTION ADO_RECINFO( nWA, nRecord, nInfoType, uInfo )
 
    LOCAL nResult := HB_SUCCESS
 
-// LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#if 0
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#endif
 
    HB_SYMBOL_UNUSED( nWA )
 
@@ -908,7 +905,9 @@ STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
 
 STATIC FUNCTION ADO_PACK( nWA )
 
-// LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#if 0
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#endif
 
    HB_SYMBOL_UNUSED( nWA )
 
@@ -916,7 +915,9 @@ STATIC FUNCTION ADO_PACK( nWA )
 
 STATIC FUNCTION ADO_RAWLOCK( nWA, nAction, nRecNo )
 
-// LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#if 0
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#endif
 
    /* TODO */
 
@@ -928,7 +929,9 @@ STATIC FUNCTION ADO_RAWLOCK( nWA, nAction, nRecNo )
 
 STATIC FUNCTION ADO_LOCK( nWA, aLockInfo )
 
-// LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#if 0
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#endif
 
    HB_SYMBOL_UNUSED( nWA )
 
@@ -940,7 +943,9 @@ STATIC FUNCTION ADO_LOCK( nWA, aLockInfo )
 
 STATIC FUNCTION ADO_UNLOCK( nWA, xRecID )
 
-// LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#if 0
+   LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
+#endif
 
    /* TODO */
 
@@ -1191,9 +1196,8 @@ STATIC FUNCTION ADO_ORDDESTROY( nWA, aOrderInfo )
 
 STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
 
-   LOCAL nCurrArea
+   LOCAL nCurrArea := Select()
 
-   nCurrArea := Select()
    IF nCurrArea != nArea
       dbSelectArea( nArea )
    ELSE
@@ -1213,7 +1217,7 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 #if 0
    LOCAL n
 #endif
-   LOCAL lRet := HB_FAILURE
+   LOCAL nRet := HB_FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
    HB_SYMBOL_UNUSED( ulConnect )
@@ -1223,7 +1227,7 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 #if 0
          n := aRData[ WA_CATALOG ]:Tables( cTable )
 #endif
-         lRet := HB_SUCCESS
+         nRet := HB_SUCCESS
       RECOVER
       END SEQUENCE
       IF ! Empty( cIndex )
@@ -1231,20 +1235,20 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 #if 0
             n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
 #endif
-            lRet := HB_SUCCESS
+            nRet := HB_SUCCESS
          RECOVER
          END SEQUENCE
       ENDIF
    ENDIF
 
-   RETURN lRet
+   RETURN nRet
 
 STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
 
 #if 0
    LOCAL n
 #endif
-   LOCAL lRet := HB_FAILURE
+   LOCAL nRet := HB_FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
    HB_SYMBOL_UNUSED( ulConnect )
@@ -1254,7 +1258,7 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
 #if 0
          n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
 #endif
-         lRet := HB_SUCCESS
+         nRet := HB_SUCCESS
       RECOVER
       END SEQUENCE
       IF ! Empty( cIndex )
@@ -1262,13 +1266,13 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
 #if 0
             n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
 #endif
-            lRet := HB_SUCCESS
+            nRet := HB_SUCCESS
          RECOVER
          END SEQUENCE
       ENDIF
    ENDIF
 
-   RETURN lRet
+   RETURN nRet
 
 STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
 

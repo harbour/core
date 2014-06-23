@@ -49,15 +49,15 @@
 
 CREATE CLASS ExcelWriterXML_Sheet
 
-   VAR    id
-   VAR    cells                 INIT { => }
-   VAR    colWidth              INIT { => }
-   VAR    rowHeight             INIT { => }
-   VAR    URLs                  INIT { => }
-   VAR    mergeCells            INIT { => }
-   VAR    comments              INIT { => }
-   VAR    formatErrors          INIT { => }
-   VAR    ldisplayRightToLeft   INIT .F.
+   VAR id
+   VAR cells                INIT { => }
+   VAR colWidth             INIT { => }
+   VAR rowHeight            INIT { => }
+   VAR URLs                 INIT { => }
+   VAR mergeCells           INIT { => }
+   VAR comments             INIT { => }
+   VAR formatErrors         INIT { => }
+   VAR ldisplayRightToLeft  INIT .F.
 
    METHOD new( id )
    METHOD getID()

@@ -372,16 +372,12 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
 
       IF lRTE
          lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
+      ELSEIF ValType( xResult ) == ValType( xResultExpected )
+         lFailed := !( xResult == xResultExpected )
+      ELSEIF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
+         lFailed := !( XToStr( xResult ) == xResultExpected )
       ELSE
-         IF ValType( xResult ) == ValType( xResultExpected )
-            lFailed := !( xResult == xResultExpected )
-         ELSE
-            IF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
-               lFailed := !( XToStr( xResult ) == xResultExpected )
-            ELSE
-               lFailed := .T.
-            ENDIF
-         ENDIF
+         lFailed := .T.
       ENDIF
 
    ENDIF

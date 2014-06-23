@@ -186,13 +186,14 @@ METHOD isAccel( xKey ) CLASS RadioButtn
 
    LOCAL cKey
 
-   IF HB_ISSTRING( xKey )
+   DO CASE
+   CASE HB_ISSTRING( xKey )
       cKey := xKey
-   ELSEIF HB_ISNUMERIC( xKey )
+   CASE HB_ISNUMERIC( xKey )
       cKey := hb_keyChar( xKey )
-   ELSE
+   OTHERWISE
       RETURN .F.
-   ENDIF
+   ENDCASE
 
    RETURN Len( cKey ) > 0 .AND. hb_AtI( "&" + cKey, ::cCaption ) > 0
 

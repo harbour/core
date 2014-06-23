@@ -54,8 +54,6 @@
 #include "mxml.h"
 #include "config.h"
 
-#define BUFFER_SIZE  8192
-
 #define MXML_ERR_ARGS()  ( hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, \
                                                  HB_ERR_ARGS_BASEPARAMS ) )
 
@@ -1319,7 +1317,7 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
    {
       mxml_save_cb_t cb   = MXML_NO_CALLBACK;
       HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
-      char buffer[ BUFFER_SIZE ];
+      char buffer[ 8192 ];
       int  bytes;
 
       if( HB_ISEVALITEM( 2 ) )
@@ -1328,7 +1326,7 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
          cb = save_cb;
       }
 
-      bytes         = mxmlSaveString( node, buffer, BUFFER_SIZE, cb );
+      bytes         = mxmlSaveString( node, buffer, sizeof( buffer ), cb );
       pCbs->save_cb = NULL;
       if( pCbs->hText )
       {

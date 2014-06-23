@@ -510,14 +510,12 @@ METHOD ReportHeader() CLASS HBReportForm
          ENDIF
          IF aCol[ RCT_HEADER ][ nLine ] == NIL
             aPageHeader[ nLinesInHeader + nLine ] += Space( aCol[ RCT_WIDTH ] )
+         ELSEIF aCol[ RCT_TYPE ] == "N"
+            aPageHeader[ nLinesInHeader + nLine ] += ;
+               PadL( aCol[ RCT_HEADER ][ nLine ], aCol[ RCT_WIDTH ] )
          ELSE
-            IF aCol[ RCT_TYPE ] == "N"
-               aPageHeader[ nLinesInHeader + nLine ] += ;
-                  PadL( aCol[ RCT_HEADER ][ nLine ], aCol[ RCT_WIDTH ] )
-            ELSE
-               aPageHeader[ nLinesInHeader + nLine ] += ;
-                  PadR( aCol[ RCT_HEADER ][ nLine ], aCol[ RCT_WIDTH ] )
-            ENDIF
+            aPageHeader[ nLinesInHeader + nLine ] += ;
+               PadR( aCol[ RCT_HEADER ][ nLine ], aCol[ RCT_WIDTH ] )
          ENDIF
       NEXT
    NEXT
@@ -1021,7 +1019,6 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          // Page eject after group
          aReport[ RPT_GROUPS ][ 1 ][ RGT_AEJECT ] := hb_BSubStr( cParamsBuff, ;
             PE_OFFSET, 1 ) $ "YyTt"
-
       ENDIF
 
       // Subgroup
@@ -1044,7 +1041,6 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
          // Page eject after subgroup
          aReport[ RPT_GROUPS ][ 2 ][ RGT_AEJECT ] := .F.
-
       ENDIF
 
       // Process columns
@@ -1158,13 +1154,8 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
          // delimiter present
          AAdd( aPageHeader, Left( cItem, nPos - 1 ) )
       ELSE
-         IF Empty( cItem )
-            // empty string for S87 and 5.0 compatibility
-            AAdd( aPageHeader, "" )
-         ELSE
-            // exception
-            AAdd( aPageHeader, cItem )
-         ENDIF
+         // empty string handling for S87 and 5.0 compatibility
+         AAdd( aPageHeader, iif( Empty( cItem ), "", cItem ) )
          // empty or not, we jump past the field
          nPos := nHeaderLen
       ENDIF

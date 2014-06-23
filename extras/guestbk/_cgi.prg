@@ -42,9 +42,7 @@
  *
  */
 
-/* Harbour Test of a CGI/HTML-Generator class.
- *
- * 1999-05-30  First implementation.
+/* 1999-05-30  First implementation.
  *
  *             Tips: - Use ShowResults to make dynamic html (to test dynamic
  *                     results, put the exe file on CGI-BIN dir or equivalent);
@@ -60,26 +58,43 @@
 
 #include "hbclass.ch"
 
-#include "cgi.ch"
+#define CGI_SERVER_SOFTWARE     1
+#define CGI_SERVER_NAME         2
+#define CGI_GATEWAY_INTERFACE   3
+#define CGI_SERVER_PROTOCOL     4
+#define CGI_SERVER_PORT         5
+#define CGI_REQUEST_METHOD      6
+#define CGI_HTTP_ACCEPT         7
+#define CGI_HTTP_USER_AGENT     8
+#define CGI_HTTP_REFERER        9
+#define CGI_PATH_INFO           10
+#define CGI_PATH_TRANSLATED     11
+#define CGI_SCRIPT_NAME         12
+#define CGI_QUERY_STRING        13
+#define CGI_REMOTE_HOST         14
+#define CGI_REMOTE_ADDR         15
+#define CGI_REMOTE_USER         16
+#define CGI_AUTH_TYPE           17
+#define CGI_CONTENT_TYPE        18
+#define CGI_CONTENT_LENGTH      19
+#define CGI_ANNOTATION_SERVER   20
 
 FUNCTION ParseString( cString, cDelim, nRet )
 
-   LOCAL cBuf, nPosFim, i
+   LOCAL nPosFim, i
 
    LOCAL nSize := Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1
    LOCAL aElem := Array( nSize )
 
-   cBuf := cString
-
    FOR i := 1 TO nSize
 
-      IF ( nPosFim := At( cDelim, cBuf ) ) > 0
-         aElem[ i ] := Left( cBuf, nPosFim - 1 )
+      IF ( nPosFim := At( cDelim, cString ) ) > 0
+         aElem[ i ] := Left( cString, nPosFim - 1 )
       ELSE
-         aElem[ i ] := cBuf
+         aElem[ i ] := cString
       ENDIF
 
-      cBuf := SubStr( cBuf, nPosFim + 1, Len( cBuf ) )
+      cString := SubStr( cString, nPosFim + 1 )
    NEXT
 
    RETURN aElem[ nRet ]
@@ -117,18 +132,17 @@ ENDCLASS
 METHOD New() CLASS THTML
    RETURN Self
 
-METHOD SetTitle( cTitle ) CLASS THTML
+METHOD PROCEDURE SetTitle( cTitle ) CLASS THTML
 
    ::cTitle := cTitle
 
-   RETURN Self
+   RETURN
 
-METHOD AddLink( cLinkTo, cLinkName ) CLASS THTML
+METHOD PROCEDURE AddLink( cLinkTo, cLinkName ) CLASS THTML
 
-   ::cBody := ::cBody + ;
-      "<a href='" + cLinkTo + "'>" + cLinkName + "</a>"
+   ::cBody += "<a href='" + cLinkTo + "'>" + cLinkName + "</a>"
 
-   RETURN Self
+   RETURN
 
 METHOD PROCEDURE AddHead( cDescr ) CLASS THTML
 
@@ -136,49 +150,39 @@ METHOD PROCEDURE AddHead( cDescr ) CLASS THTML
 
    RETURN
 
-METHOD AddPara( cPara, cAlign ) CLASS THTML
+METHOD PROCEDURE AddPara( cPara, cAlign ) CLASS THTML
 
-   ::cBody := ::cBody + ;
+   ::cBody += ;
       "<p align='" + cAlign + "'>" + hb_eol() + ;
       cPara + hb_eol() + ;
       "</p>"
 
-   RETURN Self
+   RETURN
 
-METHOD Generate() CLASS THTML
+METHOD PROCEDURE Generate() CLASS THTML
 
-   LOCAL i
 #if 0
+   LOCAL i
    LOCAL lFlag := .F.
    LOCAL cRes
 #endif
 
    // Is this a meta file or hand generated script?
    IF Empty( ::cHTMLFile )
-      ::cContent :=                                                         ;
-         "<html><head>"                                        + hb_eol() + ;
-         "<title>" + ::cTitle + "</title>"                     + hb_eol() + ;
-         "<body link='" + ::cLinkColor + "' " +                             ;
-         "vlink='" + ::cvLinkColor + "'>" +                    + hb_eol() + ;
-         ::cBody                                               + hb_eol() + ;
+      ::cContent := ;
+         "<html><head>" + hb_eol() + ;
+         "<title>" + ::cTitle + "</title>" + hb_eol() + ;
+         "<body link='" + ::cLinkColor + "' " + "vlink='" + ::cvLinkColor + "'>" + hb_eol() + ;
+         ::cBody + hb_eol() + ;
          "</body></html>"
    ELSE
       ::cContent := ""
 
-      // Does cHTMLFile exists?
-      IF ! hb_FileExists( ::cHTMLFile )
-         ::cContent := "<h1>Server Error</h1><p><i>No such file: " + ;
-            ::cHTMLFile
-      ELSE
-         ::cContent := hb_MemoRead( ::cHTMLFile )
+      IF hb_FileExists( ::cHTMLFile )
+         ::cContent := hb_StrReplace( hb_MemoRead( ::cHTMLFile ), ::aReplaceTags )
 
-         // Replace matched tags
-         FOR EACH i IN ::aReplaceTags
-            ::cContent := StrTran( ::cContent, "<#" + i[ 1 ] + ">", i[ 2 ] )
-         NEXT
-
-         /* TODO: Clear remaining (not matched) tags */
 #if 0
+         /* TODO: Clear remaining (not matched) tags */
          cRes := ""
          FOR i := 1 TO Len( ::cContent )
             IF SubStr( ::cContent, i, 1 ) == "<" .AND. ;
@@ -193,31 +197,30 @@ METHOD Generate() CLASS THTML
 
          ::cContent := cRes
 #endif
+      ELSE
+         ::cContent := "<h1>Server Error</h1><p><i>No such file: " + ::cHTMLFile + "</i></p>"
       ENDIF
    ENDIF
 
-   RETURN Self
+   RETURN
 
-METHOD ShowResult() CLASS THTML
+METHOD PROCEDURE ShowResult() CLASS THTML
 
-   OutStd(                                                                   ;
-      "HTTP/1.0 200 OK"                                         + hb_eol() + ;
-      "CONTENT-TYPE: TEXT/HTML"                      + hb_eol() + hb_eol() + ;
+   OutStd( ;
+      "HTTP/1.0 200 OK" + hb_eol() + ;
+      "CONTENT-TYPE: TEXT/HTML" + hb_eol() + hb_eol() + ;
       ::cContent )
 
-   RETURN Self
+   RETURN
 
 METHOD SaveToFile( cFile ) CLASS THTML
+   RETURN hb_MemoWrit( cFile, ::cContent )
 
-   hb_MemoWrit( cFile, ::cContent )
-
-   RETURN Self
-
-METHOD ProcessCGI() CLASS THTML
+METHOD PROCEDURE ProcessCGI() CLASS THTML
 
    LOCAL cQuery
-   LOCAL cBuff := ""
-   LOCAL nBuff := 0
+   LOCAL cBuff
+   LOCAL nBuff
    LOCAL i
 
    IF Empty( ::aCGIContents )
@@ -243,11 +246,12 @@ METHOD ProcessCGI() CLASS THTML
          GetEnv( "CONTENT_LENGTH"    ), ;
          GetEnv( "ANNOTATION_SERVER" ) }
 
-      cQuery := ::GetCGIParam( CGI_QUERY_STRING )
-
-      IF ! Empty( cQuery )
+      IF ! Empty( cQuery := ::GetCGIParam( CGI_QUERY_STRING ) )
 
          ::aQueryFields := {}
+
+         cBuff := ""
+         nBuff := 0
 
          FOR i := 1 TO Len( cQuery ) + 1
 
@@ -274,18 +278,18 @@ METHOD ProcessCGI() CLASS THTML
       ENDIF
    ENDIF
 
-   RETURN Self
+   RETURN
 
 METHOD GetCGIParam( nParam ) CLASS THTML
 
    ::ProcessCGI()
 
-   IF nParam > 20 .OR. nParam < 1
-      OutErr( "Invalid CGI parameter" )
-      RETURN NIL
+   IF nParam >= 1 .AND. nParam <= Len( ::aCGIContents )
+      RETURN ::aCGIContents[ nParam ]
    ENDIF
 
-   RETURN ::aCGIContents[ nParam ]
+   OutErr( "Invalid CGI parameter" )
+   RETURN NIL
 
 METHOD QueryFields( cQueryName ) CLASS THTML
 
@@ -299,14 +303,14 @@ METHOD QueryFields( cQueryName ) CLASS THTML
 
    RETURN ""
 
-METHOD SetHTMLFile( cFile ) CLASS THTML
+METHOD PROCEDURE SetHTMLFile( cFile ) CLASS THTML
 
    ::cHTMLFile := cFile
 
-   RETURN Self
+   RETURN
 
-METHOD AddReplaceTag( cTag, cReplaceText ) CLASS THTML
+METHOD PROCEDURE AddReplaceTag( cTag, cReplaceText ) CLASS THTML
 
-   AAdd( ::aReplaceTags, { cTag, cReplaceText } )
+   AAdd( ::aReplaceTags, { "<#" + cTag + ">", cReplaceText } )
 
-   RETURN Self
+   RETURN

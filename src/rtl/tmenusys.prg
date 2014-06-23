@@ -138,15 +138,14 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
       hb_Scroll( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
 
       ::cMsgSaveS := SaveScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
-
    ENDIF
 
    oTopMenu:select( nSelection )
 
-   IF !( oTopMenu:ClassName() == "TOPBARMENU" ) .AND. ! oTopMenu:isOpen
-      oTopMenu:open()
-   ELSE
+   IF oTopMenu:ClassName() == "TOPBARMENU" .OR. oTopMenu:isOpen
       oTopMenu:display()
+   ELSE
+      oTopMenu:open()
    ENDIF
 
    IF nSelection <= 0
@@ -162,17 +161,13 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          ELSEIF IsShortcut( oTopMenu, nKey, @nReturn )
             RETURN nReturn
-
          ELSE
             nSelection := 1
-
          ENDIF
-
       ENDDO
 
       oTopMenu:select( nSelection )
       oTopMenu:display()
-
    ENDIF
 
    IF ! oTopMenu:getItem( nSelection ):enabled
@@ -224,9 +219,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
                   ::PushMenu()
                   ::ShowMsg( .T. )
                ENDIF
-
             ENDIF
-
          ENDIF
 
       CASE nKey == K_DOWN
@@ -255,7 +248,6 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::oMenu:select( nTemp )
             ::oMenu:display()
             ::ShowMsg( .T. )
-
          ENDIF
 
       CASE nKey == K_LEFT
@@ -308,20 +300,18 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ENDIF
          ENDIF
 
-      CASE nKey == K_ESC // go to previous menu
+      CASE nKey == K_ESC  // go to previous menu
 
          IF ::PopMenu()
             ::oMenu:display()
             ::ShowMsg( .T. )
          ELSE
-
             IF IS_IN( ::oMenu:ClassName(), "POPUPMENU|HB_POPUPMENU" )
                ::oMenu:close()
             ENDIF
 
-            nReturn := -1 // Bail out if at the top menu item
+            nReturn := -1  // Bail out if at the top menu item
             EXIT
-
          ENDIF
 
       CASE nKey == K_LBUTTONDOWN
@@ -398,7 +388,6 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
                ENDIF
             ENDIF
             ::ShowMsg( .T. )
-
          ENDIF
 
       CASE IsShortcut( oTopMenu, nKey, @nReturn )
@@ -437,7 +426,6 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ENDIF
 
       ENDCASE
-
    ENDDO
 
    IF ::lMsgFlag
@@ -468,7 +456,6 @@ METHOD PushMenu() CLASS HBMenuSys
       ENDIF
 
       RETURN .T.
-
    ENDIF
 
    RETURN .F.
@@ -498,7 +485,6 @@ METHOD PopChild( nNewLevel ) CLASS HBMenuSys
          ::nMenuLevel := nNewLevel
          RETURN .T.
       ENDIF
-
    ENDIF
 
    RETURN .F.
@@ -552,7 +538,6 @@ METHOD Execute() CLASS HBMenuSys
       ENDIF
 
       RETURN oNewMenu:Id
-
    ENDIF
 
    RETURN 0
@@ -572,7 +557,6 @@ METHOD MHitTest( oNewMenu, nNewLevel, nNewItem ) CLASS HBMenuSys
       CASE nNewItem > 0 .AND. oNewMenu:getItem( nNewItem ):enabled
          RETURN .T.  // Test for the mouse on an enabled item in the menu
       ENDCASE
-
    NEXT
 
    RETURN .F.
@@ -605,7 +589,6 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
 
       ::cOldMessage := cMsg
       ::lOldMsgFlag := ::lMsgFlag
-
    ENDIF
 
    RETURN .T.

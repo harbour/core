@@ -151,7 +151,6 @@ METHOD killFocus() CLASS CheckBox
 
       ::display()
       SetCursor( ::nCursor )
-
    ENDIF
 
    RETURN Self
