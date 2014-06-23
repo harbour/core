@@ -67,7 +67,6 @@ DYNAMIC pdfTextWidth
 DYNAMIC pdfTIFFInfo
 DYNAMIC pdfUnderline
 DYNAMIC pdfWidth
-DYNAMIC __PDF_FONTSDAT
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBVPDF__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
