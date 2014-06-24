@@ -115,10 +115,10 @@ METHOD display() CLASS ScrollBar
 
    IF ::CalcThumbPos()
 
-      cStyle    := ::cStyle
-      nOffset   := ::nOffset
-      nStart    := ::nStart
-      nEnd      := ::nEnd - 1
+      cStyle  := ::cStyle
+      nOffset := ::nOffset
+      nStart  := ::nStart
+      nEnd    := ::nEnd - 1
 
       DispBegin()
 

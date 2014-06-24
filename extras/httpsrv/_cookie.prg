@@ -55,7 +55,7 @@ CLASS uhttpd_Cookie
 
    // Data for cookies
    VAR aCookies           INIT {}  // Using an array to mantain order
-   VAR cDomain
+   VAR cDomain            INIT ""
    VAR cPath              INIT "/"
    VAR cExpire
    VAR lSecure            INIT .F.
@@ -78,16 +78,16 @@ ENDCLASS
 
 METHOD PROCEDURE SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttpd_Cookie
 
-   IF cDomain != NIL
+   IF HB_ISSTRING( cDomain )
       ::cDomain := cDomain
    ENDIF
-   IF cPath != NIL
+   IF HB_ISSTRING( cPath )
       ::cPath := cPath
    ENDIF
-   IF nExpireDays != NIL
+   IF HB_ISNUMERIC( nExpireDays )
       ::nExpireDays := nExpireDays
    ENDIF
-   IF nExpireSecs != NIL
+   IF HB_ISNUMERIC( nExpireSecs )
       ::nExpireSecs := nExpireSecs
    ENDIF
 
@@ -97,15 +97,14 @@ METHOD PROCEDURE SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecu
 
    LOCAL cStr, nPos, nCookies
 
-   __defaultNIL( @cDomain, ::cDomain )
-   __defaultNIL( @cPath, ::cPath )
-   __defaultNIL( @lHttpOnly, .F. )
+   hb_default( @cDomain, ::cDomain )
+   hb_default( @cPath, ::cPath )
 
-   IF cExpires == NIL
+   IF ! HB_ISSTRING( cExpires )
       cExpires := uhttpd_DateToGMT( Date(), Time(), ::nExpireDays, ::nExpireSecs )
    ENDIF
 
-   ::lHttpOnly := lHttpOnly
+   ::lHttpOnly := hb_defaultValue( lHttpOnly, .F. )
 
    IF xValue != NIL
       // Search if a cookie already exists
@@ -126,16 +125,14 @@ METHOD PROCEDURE SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecu
 
    // cStr := cCookieName + "=" + tip_URLEncode( hb_CStr( xValue ) )
 
-   IF cDomain != NIL
+   IF ! Empty( cDomain )
       cStr += "; domain=" + cDomain
    ENDIF
-   IF cPath != NIL
+   IF ! Empty( cPath )
       cStr += "; path=" + cPath
    ENDIF
-   IF cExpires != NIL
-      cStr += "; expires=" + cExpires
-   ENDIF
-   IF HB_ISLOGICAL( lSecure ) .AND. lSecure
+   cStr += "; expires=" + cExpires
+   IF hb_defaultValue( lSecure, .F. )
       cStr += "; secure"
    ENDIF
 

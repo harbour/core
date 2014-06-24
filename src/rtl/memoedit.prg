@@ -158,33 +158,34 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
    LOCAL nCol
 
    IF ::UserFunctionIsValid() .AND. ! ::lCallKeyboardHook  // To avoid recursive calls in endless loop. [jarabal]
+
       ::lCallKeyboardHook := .T.
       ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
       ::lCallKeyboardHook := .F.
-   ELSE
-      IF nKey == K_ESC
-         IF ::lDirty .AND. Set( _SET_SCOREBOARD )
-            cBackScr := SaveScreen( 0, MaxCol() - 18, 0, MaxCol() )
 
-            nRow := Row()
-            nCol := Col()
-            hb_DispOutAt( 0, MaxCol() - 18, "Abort Edit? (Y/N)" )
-            SetPos( 0, MaxCol() - 1 )
+   ELSEIF nKey == K_ESC
 
-            nYesNoKey := Inkey( 0 )
+      IF ::lDirty .AND. Set( _SET_SCOREBOARD )
+         cBackScr := SaveScreen( 0, MaxCol() - 18, 0, MaxCol() )
 
-            RestScreen( 0, MaxCol() - 18, 0, MaxCol(), cBackScr )
-            SetPos( nRow, nCol )
+         nRow := Row()
+         nCol := Col()
+         hb_DispOutAt( 0, MaxCol() - 18, "Abort Edit? (Y/N)" )
+         SetPos( 0, MaxCol() - 1 )
 
-            IF Upper( hb_keyChar( nYesNoKey ) ) == "Y"
-               hb_keySetLast( K_ESC ) /* Cl*pper compatibility */
-               ::lSaved := .F.
-               ::lExitEdit := .T.
-            ENDIF
-         ELSE
+         nYesNoKey := Inkey( 0 )
+
+         RestScreen( 0, MaxCol() - 18, 0, MaxCol(), cBackScr )
+         SetPos( nRow, nCol )
+
+         IF Upper( hb_keyChar( nYesNoKey ) ) == "Y"
+            hb_keySetLast( K_ESC )  /* Cl*pper compatibility */
             ::lSaved := .F.
             ::lExitEdit := .T.
          ENDIF
+      ELSE
+         ::lSaved := .F.
+         ::lExitEdit := .T.
       ENDIF
    ENDIF
 
@@ -305,21 +306,26 @@ FUNCTION MemoEdit( ;
 
    LOCAL nOldCursor
 
-   hb_default( @nTop            , 0 )
    hb_default( @nLeft           , 0 )
-   hb_default( @nBottom         , MaxRow() )
    hb_default( @nRight          , MaxCol() )
-   hb_default( @lEditMode       , .T. )
    hb_default( @nLineLength     , nRight - nLeft + 1 )
-   hb_default( @nTabSize        , 4 )
-   hb_default( @nTextBuffRow    , 1 )
    hb_default( @nTextBuffColumn , 0 )
-   hb_default( @nWindowRow      , 0 )
    hb_default( @nWindowColumn   , nTextBuffColumn )
-   hb_default( @cString         , "")
+   hb_default( @cString         , "" )
 
    /* Original MemoEdit() converts tabs into spaces */
-   oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )
+   oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), ;
+      hb_defaultValue( nTop, 0 ), ;
+      nLeft, ;
+      hb_defaultValue( nBottom, MaxRow() ), ;
+      nRight, ;
+      hb_defaultValue( lEditMode, .T. ), ;
+      nLineLength, ;
+      hb_defaultValue( nTabSize, 4 ), ;
+      hb_defaultValue( nTextBuffRow, 1 ), ;
+      nTextBuffColumn, ;
+      hb_defaultValue( nWindowRow, 0 ), ;
+      nWindowColumn )
    oEd:MemoInit( xUserFunction )
    oEd:display()
 

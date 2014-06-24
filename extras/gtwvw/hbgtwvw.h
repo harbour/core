@@ -233,13 +233,13 @@ typedef __int64 LONG_PTR;
 /* #define WVW_WHICH_WINDOW ( HB_ISNIL( 1 ) ? ( s_bMainCoordMode ? s_usNumWindows-1 : s_usCurWindow ) : ((UINT) hb_parni( 1 )) ) */
 #define WVW_WHICH_WINDOW          ( HB_ISNIL( 1 ) ? ( hb_gt_wvw_GetMainCoordMode() ? ( ( hb_gt_wvw_GetNumWindows() ) - 1 )  : hb_gt_wvw_GetCurWindow() ) : ( ( UINT ) hb_parni( 1 ) ) )
 
-#define BLACK                     RGB( 0x0, 0x0, 0x0  )
-#define BLUE                      RGB( 0x0, 0x0, 0x85 )
-#define GREEN                     RGB( 0x0, 0x85, 0x0  )
-#define CYAN                      RGB( 0x0, 0x85, 0x85 )
-#define RED                       RGB( 0x85, 0x0, 0x0  )
-#define MAGENTA                   RGB( 0x85, 0x0, 0x85 )
-#define BROWN                     RGB( 0x85, 0x85, 0x0  )
+#define BLACK                     RGB( 0x00, 0x00, 0x00 )
+#define BLUE                      RGB( 0x00, 0x00, 0x85 )
+#define GREEN                     RGB( 0x00, 0x85, 0x00 )
+#define CYAN                      RGB( 0x00, 0x85, 0x85 )
+#define RED                       RGB( 0x85, 0x00, 0x00 )
+#define MAGENTA                   RGB( 0x85, 0x00, 0x85 )
+#define BROWN                     RGB( 0x85, 0x85, 0x00 )
 #define WHITE                     RGB( 0xC6, 0xC6, 0xC6 )
 #define LIGHT_GRAY                RGB( 0x60, 0x60, 0x60 )
 #define BRIGHT_BLUE               RGB( 0x00, 0x00, 0xFF )
@@ -373,11 +373,11 @@ typedef struct control_data
 
 typedef struct app_data
 {
-   BOOL CaretExist;                          /* TRUE if a caret has been created                */
-   BOOL displayCaret;                        /* flag to indicate if caret is on                 */
+   BOOL CaretExist;                          /* TRUE if a caret has been created */
+   BOOL displayCaret;                        /* flag to indicate if caret is on */
 
-   BOOL Win9X;                               /* Flag to say if running on Win9X not NT/2000/XP  */
-   BOOL AltF4Close;                          /* Can use Alt+F4 to close application             */
+   BOOL Win9X;                               /* Flag to say if running on Win9x */
+   BOOL AltF4Close;                          /* Can use Alt+F4 to close application */
 
    HPEN   penWhite;                          /* White pen to draw GDI elements */
    HPEN   penBlack;                          /* Black pen to draw GDI elements */
@@ -401,15 +401,15 @@ typedef struct app_data
    HINSTANCE       hMSImg32;                 /* Handle to the loaded library msimg32.dll */
    wvwGradientFill pfnGF;                    /* Pointer to Address of the GradientFill function in MSImg32.dll */
 
-   HWND hDlgModeless[ WVW_DLGML_MAX ];       /* Handle to a modeless dialog                               */
+   HWND hDlgModeless[ WVW_DLGML_MAX ];       /* Handle to a modeless dialog */
 
-   PHB_ITEM pFunc[ WVW_DLGML_MAX ];          /* Function pointer for WndProc                              */
+   PHB_ITEM pFunc[ WVW_DLGML_MAX ];          /* Function pointer for WndProc */
    /* TODO: pcbFunc is redundant and should be removed */
    PHB_ITEM pcbFunc[ WVW_DLGML_MAX ];        /* codeblock for WndProc */
    int      iType[ WVW_DLGML_MAX ];          /* Type of Function Pointers - Function 1, Block 2, Method 3 */
 
-   HWND     hDlgModal[ WVW_DLGMD_MAX ];      /* Handle to a modal dialog                               */
-   PHB_ITEM pFuncModal[ WVW_DLGMD_MAX ];     /* Function pointer for WndProc                              */
+   HWND     hDlgModal[ WVW_DLGMD_MAX ];      /* Handle to a modal dialog */
+   PHB_ITEM pFuncModal[ WVW_DLGMD_MAX ];     /* Function pointer for WndProc */
    /* TODO: pcbFuncModal is redundant and should be removed */
    PHB_ITEM pcbFuncModal[ WVW_DLGMD_MAX ];   /* codeblock for WndProc */
    int      iTypeModal[ WVW_DLGMD_MAX ];     /* Type of Function Pointers - Function 1, Block 2, Method 3 */
@@ -421,46 +421,46 @@ typedef struct app_data
    UINT uiBMcache;                     /* number of bitmap cached */
    UINT uiMaxBMcache;                  /* maximum number of bitmap cached */
 
-   PHB_DYNS pSymWVW_PAINT;             /* Stores pointer to WVW_PAINT function     */
-   PHB_DYNS pSymWVW_SETFOCUS;          /* Stores pointer to WVW_SETFOCUS function  */
+   PHB_DYNS pSymWVW_PAINT;             /* Stores pointer to WVW_PAINT function */
+   PHB_DYNS pSymWVW_SETFOCUS;          /* Stores pointer to WVW_SETFOCUS function */
    PHB_DYNS pSymWVW_KILLFOCUS;         /* Stores pointer to WVW_KILLFOCUS function */
-   PHB_DYNS pSymWVW_MOUSE;             /* Stores pointer to WVW_MOUSE function     */
-   PHB_DYNS pSymWVW_TBMOUSE;           /* Stores pointer to WVW_TBMOUSE function   */
+   PHB_DYNS pSymWVW_MOUSE;             /* Stores pointer to WVW_MOUSE function */
+   PHB_DYNS pSymWVW_TBMOUSE;           /* Stores pointer to WVW_TBMOUSE function */
    PHB_DYNS pSymWVW_MENUSELECT;        /* Stores pointer to WVW_MENUSELECT function*/
 
    PHB_DYNS pSymWVW_SIZE;              /* Stores pointer to WVW_SIZE function */
    PHB_DYNS pSymWVW_MOVE;              /* Stores pointer to WVW_MOVE function */
 
-   PHB_DYNS pSymWVW_INPUTFOCUS;        /* Stores pointer to WVW_INPUTFOCUS function*/
+   PHB_DYNS pSymWVW_INPUTFOCUS;        /* Stores pointer to WVW_INPUTFOCUS function */
 
-   PHB_DYNS pSymWVW_TIMER;             /* Stores pointer to WVW_TIMER function     */
-   PHB_DYNS pSymWVW_ONCTLCOLOR;        /* Stores pointer to WVW_TIMER function     */
+   PHB_DYNS pSymWVW_TIMER;             /* Stores pointer to WVW_TIMER function */
+   PHB_DYNS pSymWVW_ONCTLCOLOR;        /* Stores pointer to WVW_TIMER function */
 
 } APP_DATA;
 
 typedef struct win_data
 {
-   UINT  byWinId;                            /*x Window's Id, a number 0..WVWMAXWINDOWS            */
-   TCHAR szWinName[ WVW_MAXWINNAMELENGTH ];  /*x name of Window ~ szAppName for Window 0  */
+   UINT  byWinId;                            /*x Window's Id, a number 0..WVWMAXWINDOWS */
+   TCHAR szWinName[ WVW_MAXWINNAMELENGTH ];  /*x name of Window ~ szAppName for Window 0 */
 
    int byLineSpacing;                        /*x linespacing in pixels */
    int iLSpaceColor;                         /*x linespacing color index */
 
-   USHORT usRowOfs;                          /*x offset to Main Window's (0,0)                     */
-   USHORT usColOfs;                          /*x offset to Main Window's (0,0)                     */
-   int    uiDispCount;                       /*x pending DispEnd() request                         */
-   BOOL   bPaintPending;                     /*x pending WVW_PAINT() execution                     */
-   RECT   rPaintPending;                     /*x rect of pending bPaintPending  */
+   USHORT usRowOfs;                          /*x offset to Main Window's (0,0) */
+   USHORT usColOfs;                          /*x offset to Main Window's (0,0) */
+   int    uiDispCount;                       /*x pending DispEnd() request */
+   BOOL   bPaintPending;                     /*x pending WVW_PAINT() execution */
+   RECT   rPaintPending;                     /*x rect of pending bPaintPending */
    HWND   hStatusBar;                        /* handle to status bar */
    USHORT usSBHeight;                        /* height of status bar */
 
-   HWND   hToolBar;                          /* TB handle to toolbar        */
-   USHORT usTBHeight;                        /* TB height of toolbar        */
+   HWND   hToolBar;                          /* TB handle to toolbar */
+   USHORT usTBHeight;                        /* TB height of toolbar */
    int    iStartStdBitmap,
           iStartViewBitmap,
-          iStartHistBitmap;            /* start of bitmap index       */
+          iStartHistBitmap;            /* start of bitmap index */
    int iTBImgWidth,
-       iTBImgHeight;                   /* image width and height      */
+       iTBImgHeight;                   /* image width and height */
    WNDPROC tbOldProc;
 
    CONTROL_DATA * pcdCtrlList;         /* lists of created controls, eg. scrollbars */
@@ -567,19 +567,19 @@ typedef struct wvw_data
 
    LOGFONT s_lfPB;            /* default font for pushbuttons */
 
-   LOGFONT s_lfSB;            /* default font for statusbar  */
+   LOGFONT s_lfSB;            /* default font for statusbar */
    LOGFONT s_lfCB;            /* default font for comboboxes */
 
    LOGFONT s_lfEB;            /* default font for editboxes */
 
    LOGFONT s_lfCX;            /* font for 'focused'checkbox */
-   LOGFONT s_lfST;            /* font for  control    */
+   LOGFONT s_lfST;            /* font for  control */
 
-   HWND hWndTT;               /* Window handle Tool Tip     */
+   HWND hWndTT;               /* Window handle Tool Tip */
 
 /* read only by user ***/
 
-/* for GTWVW private use: ***********************************************/
+/* for GTWVW private use: */
    BOOL s_bQuickSetMode;   /* quick SetMode(), to reset MaxRow() and MaxCol() only */
 
    BOOL s_bFlashingWindow;
@@ -599,13 +599,13 @@ typedef struct wvw_data
 
    HINSTANCE hInstance;
 
-   UINT s_usNumWindows;                      /*number of windows                         */
-   UINT s_usCurWindow;                       /*current window handled by HB_GT_FUNC(...) */
+   UINT s_usNumWindows;                      /* number of windows */
+   UINT s_usCurWindow;                       /* current window handled by HB_GT_FUNC(...) */
 
-   WIN_DATA * s_pWindows[ WVW_MAXWINDOWS ];  /*array of WIN_DATA                         */
-   APP_DATA * s_sApp;                        /*application wide vars                     */
+   WIN_DATA * s_pWindows[ WVW_MAXWINDOWS ];  /* array of WIN_DATA */
+   APP_DATA * s_sApp;                        /* application wide vars */
 
-}WVW_DATA;
+} WVW_DATA;
 
 #if 0
 #define HB_RETHANDLE( h )          hb_retptr( ( void * ) ( h ) )

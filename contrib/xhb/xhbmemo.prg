@@ -73,8 +73,6 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
 
    LOCAL nUdfReturn
 
-   __defaultNIL( @xUDF, NIL )
-
    ::aEditKeys := { ;
       K_DOWN, ;
       K_UP, ;
