@@ -189,16 +189,15 @@ HB_FUNC( SP_RATE )
  * Description: Original Creation.
  *---------------------------- ALL RIGHTS RESERVED ----------------------------*/
 
-/*
-   This function replaces the ft_Metaph() that Joe Booth used in his
-   spelling checker article in the Aquarium.*/
+/* This function replaces the ft_Metaph() that Joe Booth used in his
+   spelling checker article in the Aquarium. */
 
 HB_FUNC( C_METAFONE )
 {
-   char *  sReturn;            /* Pointer to the return string.   */
-   char *  sMeta;              /* Pointer to the passed string.   */
-   HB_SIZE iRetLen;            /* Length of the return string.    */
-   HB_SIZE iStrLen;            /* Length of the passed string.    */
+   char *  sReturn;            /* Pointer to the return string. */
+   char *  sMeta;              /* Pointer to the passed string. */
+   HB_SIZE iRetLen;            /* Length of the return string. */
+   HB_SIZE iStrLen;            /* Length of the passed string. */
    HB_SIZE iRetPtr;            /* Pointer into the return string. */
    HB_SIZE iStrPtr;            /* Pointer into the passed string. */
 

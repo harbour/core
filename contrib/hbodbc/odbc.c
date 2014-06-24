@@ -67,17 +67,16 @@
          blocks as used.
          It does not cause any speed or memory overhead so I left it
          as example for more complicated cases and as base for some
-         potential extensions. [druzus]
- */
+         potential extensions. [druzus] */
 
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )
 
-/* NOTE: Workaround for OpenWatcom's (tested with 1.9) odbc32.lib implib
-         missing the entry for wide version of one function,
-         so we turn off UNICODE, until it's fixed in OpenWatcom:
-            Error! E2028: _SQLSetStmtAttrW@16 is an undefined reference
-         [vszakats] */
+   /* NOTE: Workaround for OpenWatcom's (tested with 1.9) odbc32.lib implib
+            missing the entry for wide version of one function,
+            so we turn off UNICODE, until it's fixed in OpenWatcom:
+               Error! E2028: _SQLSetStmtAttrW@16 is an undefined reference
+            [vszakats] */
    #if defined( __WATCOMC__ ) && defined( UNICODE )
       #undef UNICODE
    #endif
@@ -233,9 +232,8 @@ static void hb_SQLHDBC_stor( PHB_ITEM pHEnvItm, SQLHDBC hDbc, int iParam )
    pHDbc->hDbc = hDbc;
    pHDbc->conn_counter = 1;
    /* initialize pointer scanned by mark function before allocating new
-    * new GC block - such allocation may activate GC and uninitalized
-    * pointer will be accessed from our mark function
-    */
+      new GC block - such allocation may activate GC and uninitalized
+      pointer will be accessed from our mark function */
    pHDbc->pHEnvItm = NULL;
    if( pHEnvItm )
    {
@@ -332,9 +330,8 @@ static void hb_SQLHSTMT_stor( PHB_ITEM pHDbcItm, SQLHSTMT hStmt, int iParam )
    pHStmt->hStmt = hStmt;
    pHStmt->conn_counter = 0;
    /* initialize pointer scanned by mark function before allocating new
-    * new GC block - such allocation may activate GC and uninitalized
-    * pointer will be accessed from our mark function
-    */
+      new GC block - such allocation may activate GC and uninitalized
+      pointer will be accessed from our mark function */
    pHStmt->pHDbcItm = NULL;
 
    if( pHDbcItm )
@@ -361,7 +358,7 @@ static SQLHSTMT hb_SQLHSTMT_par( int iParam )
           pHStmt->hStmt : NULL;
 }
 
-HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
+HB_FUNC( SQLALLOCENV )  /* @hEnv --> nRetCode */
 {
    SQLHENV   hEnv;
    SQLRETURN result;
@@ -380,7 +377,7 @@ HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
    hb_SQLHENV_stor( hEnv, 1 );
 }
 
-HB_FUNC( SQLALLOCCONNECT ) /* hEnv, @hDbc --> nRetCode */
+HB_FUNC( SQLALLOCCONNECT )  /* hEnv, @hDbc --> nRetCode */
 {
    SQLHENV hEnv = hb_SQLHENV_par( 1 );
 
@@ -400,7 +397,7 @@ HB_FUNC( SQLALLOCCONNECT ) /* hEnv, @hDbc --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
+HB_FUNC( SQLDRIVERCONNECT )  /* hDbc, @cConnectString --> nRetCode */
 {
    SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
 
@@ -434,7 +431,7 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLCONNECT ) /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
+HB_FUNC( SQLCONNECT )  /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
 {
    SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
 
@@ -470,7 +467,7 @@ HB_FUNC( SQLCONNECT ) /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLDISCONNECT ) /* hDbc --> nRetCode */
+HB_FUNC( SQLDISCONNECT )  /* hDbc --> nRetCode */
 {
    PHB_SQLHDBC pHDbc = hb_SQLHDBC_get( hb_param( 1, HB_IT_POINTER ) );
 
@@ -489,21 +486,21 @@ HB_FUNC( SQLDISCONNECT ) /* hDbc --> nRetCode */
 
 #if defined( HB_LEGACY_LEVEL4 )
 
-HB_FUNC( SQLFREECONNECT ) /* hDbc --> nRetCode */
+HB_FUNC( SQLFREECONNECT )  /* hDbc --> nRetCode */
 {
 }
 
-HB_FUNC( SQLFREEENV ) /* hEnv --> nRetCode */
+HB_FUNC( SQLFREEENV )  /* hEnv --> nRetCode */
 {
 }
 
-HB_FUNC( SQLFREESTMT ) /* hStmt, nType --> nRetCode */
+HB_FUNC( SQLFREESTMT )  /* hStmt, nType --> nRetCode */
 {
 }
 
 #endif
 
-HB_FUNC( SQLALLOCSTMT ) /* hDbc, @hStmt --> nRetCode */
+HB_FUNC( SQLALLOCSTMT )  /* hDbc, @hStmt --> nRetCode */
 {
    SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
 
@@ -523,7 +520,7 @@ HB_FUNC( SQLALLOCSTMT ) /* hDbc, @hStmt --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLEXECDIRECT ) /* hStmt, cStatement --> nRetCode */
+HB_FUNC( SQLEXECDIRECT )  /* hStmt, cStatement --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -542,7 +539,7 @@ HB_FUNC( SQLEXECDIRECT ) /* hStmt, cStatement --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLFETCH ) /* hStmt --> nRetCode */
+HB_FUNC( SQLFETCH )  /* hStmt --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -552,7 +549,7 @@ HB_FUNC( SQLFETCH ) /* hStmt --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
+HB_FUNC( SQLGETDATA )  /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -626,7 +623,7 @@ HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLNUMRESULTCOLS ) /* hStmt, @nColCount --> nRetCode */
+HB_FUNC( SQLNUMRESULTCOLS )  /* hStmt, @nColCount --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -642,7 +639,7 @@ HB_FUNC( SQLNUMRESULTCOLS ) /* hStmt, @nColCount --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType, @nColSize, @nDec, @nNull --> nRetCode */
+HB_FUNC( SQLDESCRIBECOL )  /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType, @nColSize, @nDec, @nNull --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -685,7 +682,7 @@ HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType,
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @nAttribute --> nRetCode */
+HB_FUNC( SQLCOLATTRIBUTE )  /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @nAttribute --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -753,7 +750,7 @@ HB_FUNC( SQLFETCHSCROLL )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
+HB_FUNC( SQLERROR )  /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
 {
    SQLHENV  hEnv  = hb_SQLHENV_par( 1 );
    SQLHDBC  hDbc  = hb_SQLHDBC_par( 2 );
@@ -787,7 +784,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nError, @cErrorMsg */
+HB_FUNC( SQLGETDIAGREC )  /* nHandleType, hHandle, nRecNumber, @cSQLState, @nError, @cErrorMsg */
 {
 #if ODBCVER >= 0x0300
    SQLSMALLINT iHandleType = ( SQLSMALLINT ) hb_parni( 1 );
@@ -858,7 +855,7 @@ HB_FUNC( SQLROWCOUNT )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
+HB_FUNC( SQLGETINFO )  /* hDbc, nType, @cResult */
 {
    SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
 
@@ -881,7 +878,7 @@ HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
+HB_FUNC( SQLSETCONNECTATTR )  /* hDbc, nOption, uOption */
 {
    SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
 
@@ -902,7 +899,7 @@ HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
+HB_FUNC( SQLSETSTMTATTR )  /* hStmt, nOption, uOption --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -923,7 +920,7 @@ HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLGETCONNECTATTR ) /* hDbc, nOption, @cOption */
+HB_FUNC( SQLGETCONNECTATTR )  /* hDbc, nOption, @cOption */
 {
    SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
 
@@ -952,7 +949,7 @@ HB_FUNC( SQLGETCONNECTATTR ) /* hDbc, nOption, @cOption */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLGETSTMTATTR ) /* hStmt, nOption, @cOption */
+HB_FUNC( SQLGETSTMTATTR )  /* hStmt, nOption, @cOption */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -981,7 +978,7 @@ HB_FUNC( SQLGETSTMTATTR ) /* hStmt, nOption, @cOption */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLCOMMIT ) /* hEnv, hDbc */
+HB_FUNC( SQLCOMMIT )  /* hEnv, hDbc */
 {
    SQLHENV hEnv = hb_SQLHENV_par( 1 );
    SQLHDBC hDbc = hb_SQLHDBC_par( 2 );
@@ -992,7 +989,7 @@ HB_FUNC( SQLCOMMIT ) /* hEnv, hDbc */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLROLLBACK ) /* hEnv, hDbc */
+HB_FUNC( SQLROLLBACK )  /* hEnv, hDbc */
 {
    SQLHENV hEnv = hb_SQLHENV_par( 1 );
    SQLHDBC hDbc = hb_SQLHDBC_par( 2 );
@@ -1003,7 +1000,7 @@ HB_FUNC( SQLROLLBACK ) /* hEnv, hDbc */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLPREPARE ) /* hStmt, cStatement --> nRetCode */
+HB_FUNC( SQLPREPARE )  /* hStmt, cStatement --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -1021,7 +1018,7 @@ HB_FUNC( SQLPREPARE ) /* hStmt, cStatement --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLEXECUTE ) /* hStmt --> nRetCode */
+HB_FUNC( SQLEXECUTE )  /* hStmt --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -1031,7 +1028,7 @@ HB_FUNC( SQLEXECUTE ) /* hStmt --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLMORERESULTS ) /* hEnv, hDbc */
+HB_FUNC( SQLMORERESULTS )  /* hEnv, hDbc */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
@@ -1063,7 +1060,7 @@ HB_FUNC( HB_ODBCSTOD )
       hb_retds( NULL );
 }
 
-HB_FUNC( HB_ODBCNUMSETLEN ) /* nValue, nSize, nDecimals --> nValue (nSize, nDec) */
+HB_FUNC( HB_ODBCNUMSETLEN )  /* nValue, nSize, nDecimals --> nValue (nSize, nDec) */
 {
    hb_retnlen( hb_parnd( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
 }

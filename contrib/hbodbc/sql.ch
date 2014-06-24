@@ -83,8 +83,7 @@
 
 /* NULL status constants.  These are used in SQLColumns(), SQLColAttribute(),
    SQLDescribeCol(), SQLDescribeParam() and SQLSpecialColumns() to describe the
-   nullablity of a column in a table.
- */
+   nullablity of a column in a table. */
 #define SQL_NO_NULLS                    0
 #define SQL_NULLABLE                    1
 #define SQL_NULLABLE_UNKNOWN            2

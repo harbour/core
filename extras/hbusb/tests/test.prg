@@ -6,8 +6,6 @@ PROCEDURE Main()
    LOCAL pDeviceList
    LOCAL nDeviceCount
    LOCAL nDeviceNumber
-   LOCAL nBusNumber
-   LOCAL nDeviceAddress
    LOCAL pDescriptor
    LOCAL nVendorID
    LOCAL nProductID
@@ -18,57 +16,48 @@ PROCEDURE Main()
    LOCAL tmp
 
    ? "Initialising libusb"
-   nRetVal := libusb_init()
-   ?? " returns", nRetVal
+   ?? " returns", libusb_init()
 
    ? "Getting Device List"
-   nDeviceCount := libusb_get_device_list( NIL, @pDeviceList )
+   nDeviceCount := libusb_get_device_list( , @pDeviceList )
    ?? " returns", nDeviceCount, "which is the number of USB devices found"
    ? "Device list address is", pDeviceList
 
    FOR nDeviceNumber := 0 TO nDeviceCount - 1
-      nBusNumber := libusb_get_bus_number( pDeviceList, nDeviceNumber )
-      ? "Bus Number:", hb_ntos( nBusNumber )
-      nDeviceAddress := libusb_get_device_address( pDeviceList, nDeviceNumber )
-      ?? "   Address:", hb_ntos( nDeviceAddress )
-      nRetVal := libusb_get_device_descriptor( pDeviceList, nDeviceNumber, @pDescriptor, @nVendorID, @nProductID, @nNumConfigurations )
-      ?? "  return:", hb_ntos( nRetVal )
+      ? "Bus Number:", hb_ntos( libusb_get_bus_number( pDeviceList, nDeviceNumber ) )
+      ?? "   Address:", hb_ntos( libusb_get_device_address( pDeviceList, nDeviceNumber ) )
+      ?? "  return:", hb_ntos( libusb_get_device_descriptor( pDeviceList, nDeviceNumber, @pDescriptor, @nVendorID, @nProductID, @nNumConfigurations ) )
       ?? "  Vendor:", hb_ntos( nVendorID )
       ?? "  Product:", hb_ntos( nProductID )
       ?? "  Config Count:", hb_ntos( nNumConfigurations )
    NEXT
 
    ? "Freeing Device List"
-   libusb_free_device_list( NIL )
+   libusb_free_device_list()
 
    ?
    ? "Opening Device"
-   pDeviceHandle := libusb_open_device_with_vid_pid( NIL, 1523, 255 )
-   ? "returns", pDeviceHandle
+   ? "returns", pDeviceHandle := libusb_open_device_with_vid_pid( , 1523, 255 )
 
    IF Empty( pDeviceHandle )
       ? "Cannot open the device"
    ELSE
       ? "Testing for kernel having claimed interface"
-      nRetVal := libusb_kernel_driver_active( pDeviceHandle, 0 )
-      ? "returns", nRetVal
+      ? "returns", nRetVal := libusb_kernel_driver_active( pDeviceHandle, 0 )
 
       IF nRetVal == LIBUSB_KERNEL_HAS_INTERFACE
          ? "Kernel has interface"
          ? "Detaching Kernel from interface"
-         nRetVal := libusb_detach_kernel_driver( pDeviceHandle, 0 )
-         ? "returns", nRetVal
+         ? "returns", libusb_detach_kernel_driver( pDeviceHandle, 0 )
       ENDIF
       ? "Claiming Interface"
-      nRetVal := libusb_claim_interface( pDeviceHandle, 0 )
-      ? "returns", nRetVal
+      ? "returns", libusb_claim_interface( pDeviceHandle, 0 )
 
       cData := Space( 512 )
       nLength := 0
       ? "Querying device"
       FOR tmp := 1 TO 500
-         nRetVal := libusb_bulk_transfer( pDeviceHandle, LIBUSB_ENDPOINT_IN, 100, @cData, @nLength )
-         HB_SYMBOL_UNUSED( nRetVal )
+         libusb_bulk_transfer( pDeviceHandle, LIBUSB_ENDPOINT_IN, 100, @cData, @nLength )
          IF hb_BLen( cData ) > 0
             SWITCH hb_BPeek( cData, hb_BLen( cData ) - 1 )
             CASE 0
@@ -102,12 +91,10 @@ PROCEDURE Main()
       NEXT
 
       ? "Releasing Interface"
-      nRetVal := libusb_release_interface( pDeviceHandle, 0 )
-      ? "returns", nRetVal
+      ? "returns", libusb_release_interface( pDeviceHandle, 0 )
 
       ? "Reattaching Kernel to interface"
-      nRetVal := libusb_attach_kernel_driver( pDeviceHandle, 0 )
-      ? "returns", nRetVal
+      ? "returns", libusb_attach_kernel_driver( pDeviceHandle, 0 )
    ENDIF
 
    ? "Closing Device"
