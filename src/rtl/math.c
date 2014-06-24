@@ -485,9 +485,17 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
    {
       PHB_ITEM pArray, pRet;
       PHB_ITEM pType, pFuncname, pError, pArg1, pArg2, pRetval, pHandled;
+      const char * funcname = pexc->funcname;
+
+      if( funcname == HB_ERR_FUNCNAME )
+      {
+         PHB_SYMB pSym = hb_itemGetSymbol( hb_stackBaseItem() );
+         if( pSym )
+            funcname = pSym->szName;
+      }
 
       pType = hb_itemPutNI( NULL, pexc->type );
-      pFuncname = hb_itemPutC( NULL, pexc->funcname );
+      pFuncname = hb_itemPutC( NULL, funcname );
       pError = hb_itemPutC( NULL, pexc->error );
       pArg1 = hb_itemPutND( NULL, pexc->arg1 );
       pArg2 = hb_itemPutND( NULL, pexc->arg2 );
@@ -641,7 +649,7 @@ HB_FUNC( EXP )
 
       hb_mathResetError( &hb_exc );
       dResult = exp( dArg );
-      if( hb_mathGetError( &hb_exc, "EXP", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -674,7 +682,7 @@ HB_FUNC( LOG )
       {
          hb_mathResetError( &hb_exc );
          dResult = log( dArg );
-         if( hb_mathGetError( &hb_exc, "LOG", dArg, 0.0, dResult ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
          {
             if( hb_exc.handled )
                hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -715,7 +723,7 @@ HB_FUNC( SQRT )
       {
          hb_mathResetError( &hb_exc );
          dResult = sqrt( dArg );
-         if( hb_mathGetError( &hb_exc, "SQRT", dArg, 0.0, dResult ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
          {
             if( hb_exc.handled )
                hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );

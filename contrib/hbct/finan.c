@@ -77,7 +77,7 @@ HB_FUNC( FV )
          hb_mathResetError( &hb_exc );
          dResult = pow( dBase, dTime );
 
-         if( hb_mathGetError( &hb_exc, "POW", dBase, dTime, dResult ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dBase, dTime, dResult ) )
             dResult = hb_exc.handled ? hb_exc.retval : 0.0;
 
          dResult = dPayment * ( dResult - 1.0 ) / dRate;
@@ -124,7 +124,7 @@ HB_FUNC( PV )
          hb_mathResetError( &hb_exc );
          dResult = pow( dBase, -dTime );
 
-         if( hb_mathGetError( &hb_exc, "PV", dBase, -dTime, dResult ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dBase, -dTime, dResult ) )
             dResult = hb_exc.handled ? hb_exc.retval : 0.0;
 
          dResult = dPayment * ( 1.0 - dResult ) / dRate;
@@ -171,7 +171,7 @@ HB_FUNC( PAYMENT )
          hb_mathResetError( &hb_exc );
          dResult = pow( dBase, -dTime );
 
-         if( hb_mathGetError( &hb_exc, "PAYMENT", dBase, -dTime, dResult ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dBase, -dTime, dResult ) )
             dResult = hb_exc.handled ? hb_exc.retval : 0.0;
 
          dResult = dCapital * dRate / ( 1.0 - dResult );
@@ -222,7 +222,7 @@ HB_FUNC( PERIODS )
 
          hb_mathResetError( &hb_exc );
          dResult = log( dBase );
-         if( hb_mathGetError( &hb_exc, "PERIODS", dBase, 0.0, dResult ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dBase, 0.0, dResult ) )
             dResult = hb_exc.handled ? hb_exc.retval : 0.0;
 
          if( dResult )
@@ -232,7 +232,7 @@ HB_FUNC( PERIODS )
             dBase = 1.0 - ( dCapital * dRate / dPayment );
             dResult2 = log( dBase );
 
-            if( hb_mathGetError( &hb_exc, "PERIODS", dBase, 0.0, dResult2 ) )
+            if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dBase, 0.0, dResult2 ) )
                dResult2 = hb_exc.handled ? hb_exc.retval : 0.0;
 
             dResult = -dResult2 / dResult;
@@ -284,7 +284,7 @@ HB_FUNC( RATE )
          hb_mathResetError( &hb_exc );
          dBase = 1.0 + r;
          dExp = pow( dBase, dTime );
-         if( hb_mathGetError( &hb_exc, "RATE", dBase, dTime, dExp ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dBase, dTime, dExp ) )
          {
             /* TODO: Check if this is a correct default correction value for pow() */
             dExp = hb_exc.handled ? hb_exc.retval : 0.0;
