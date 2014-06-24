@@ -100,7 +100,7 @@ HB_FUNC( CEILING )
 
       hb_mathResetError( &hb_exc );
       dResult = ceil( dArg );
-      if( hb_mathGetError( &hb_exc, "CEIL", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, "CEILING", dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );

@@ -187,7 +187,7 @@ HB_FUNC( COT )
 
       hb_mathResetError( &hb_exc );
       dResult = tan( dArg );
-      if( hb_mathGetError( &hb_exc, "TAN", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, "COT", dArg, 0.0, dResult ) )
          dResult = hb_exc.handled ? hb_exc.retval : 0.0;
 
       dResult = dResult ? 1 / dResult : HUGE_VAL;
@@ -337,7 +337,7 @@ HB_FUNC( ATN2 )
 
       hb_mathResetError( &hb_exc );
       dResult = atan2( dY, dX );
-      if( hb_mathGetError( &hb_exc, "ATAN2", dY, dX, dResult ) )
+      if( hb_mathGetError( &hb_exc, "ATN2", dY, dX, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
