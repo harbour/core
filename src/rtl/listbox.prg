@@ -277,7 +277,6 @@ METHOD display() CLASS ListBox
          nLeft++
          nSize -= 2
          nEnd -= 2
-
       ENDIF
 
       IF nEnd > ::nItemCount
@@ -303,7 +302,6 @@ METHOD display() CLASS ListBox
       IF nPos != 0
          hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 2, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 6 ) )
       ENDIF
-
    ENDIF
 
    DispEnd()
@@ -761,7 +759,6 @@ METHOD setFocus() CLASS ListBox
       IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
-
    ENDIF
 
    RETURN Self

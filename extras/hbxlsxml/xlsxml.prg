@@ -50,21 +50,21 @@
 
 CREATE CLASS ExcelWriterXML
 
-   VAR    styles                INIT {}
-   VAR    formatErrors          INIT { => }
-   VAR    sheets                INIT {}
-   VAR    lShowErrorSheet       INIT .F.
-   VAR    overwriteFile         INIT .F.
-   VAR    cDocTitle
-   VAR    cDocSubject
-   VAR    cDocAuthor
-   VAR    cDocCreated
-   VAR    cDocManager
-   VAR    cDocCompany
-   VAR    cDocVersion           INIT "11.9999"
+   VAR styles               INIT {}
+   VAR formatErrors         INIT { => }
+   VAR sheets               INIT {}
+   VAR lShowErrorSheet      INIT .F.
+   VAR overwriteFile        INIT .F.
+   VAR cDocTitle
+   VAR cDocSubject
+   VAR cDocAuthor
+   VAR cDocCreated
+   VAR cDocManager
+   VAR cDocCompany
+   VAR cDocVersion          INIT "11.9999"
 
-   VAR    cError                INIT ""
-   VAR    errors                INIT .F.
+   VAR cError               INIT ""
+   VAR errors               INIT .F.
 
    METHOD New()
    METHOD setOverwriteFile( overwrite )

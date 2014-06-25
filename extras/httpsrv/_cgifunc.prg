@@ -58,9 +58,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
 
-   __defaultNIL( @cSeparator, "&" )
-
-   aFields := uhttpd_Split( cSeparator, cFields )
+   aFields := uhttpd_Split( hb_defaultValue( cSeparator, "&" ), cFields )
 
    FOR EACH cField in aFields
       aField := uhttpd_Split( "=", cField, 1 )
@@ -268,9 +266,9 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    LOCAL aLines  := {}, cLine
    LOCAL nHowMany := 0
 
-   __defaultNIL( @cDelim, Chr( 13 ) + Chr( 10 ) )
-   __defaultNIL( @lRemDelim, .T. )
-   __defaultNIL( @nCount, -1 )
+   hb_default( @cDelim, Chr( 13 ) + Chr( 10 ) )
+   hb_default( @lRemDelim, .T. )
+   hb_default( @nCount, -1 )
 
    // WriteToLogFile( "Splitstring: " + CStr( cString ) )
 
@@ -310,10 +308,10 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
 
 FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
 
-   __defaultNIL( @dDate, Date() )
-   __defaultNIL( @cTime, Time() )
-   __defaultNIL( @nDayToAdd, 0 )
-   __defaultNIL( @nSecsToAdd, 0 )
+   hb_default( @dDate, Date() )
+   hb_default( @cTime, Time() )
+   hb_default( @nDayToAdd, 0 )
+   hb_default( @nSecsToAdd, 0 )
 
    // TraceLog( "DateToGMT - StartingValue", dDate, cTime, nDayToAdd, nSecsToAdd )
 
@@ -346,10 +344,10 @@ FUNCTION uhttpd_AddSecondsToTime( cTime, nSecsToAdd, nDaysAdded )
    LOCAL nOneDaySeconds := 86400  // 24 * 60 * 60
    LOCAL cNewTime, nSecs
 
-   __defaultNIL( @cTime, Time() )
-   __defaultNIL( @nSecsToAdd, 0 )
+   hb_default( @cTime, Time() )
+   hb_default( @nSecsToAdd, 0 )
    // nDaysAdded can be already valued, so below i add to this value
-   __defaultNIL( @nDaysAdded, 0 )
+   hb_default( @nDaysAdded, 0 )
 
    IF nSecsToAdd != 0
       nSecs      := Secs( cTime ) + nSecsToAdd
@@ -364,13 +362,11 @@ FUNCTION uhttpd_AddSecondsToTime( cTime, nSecsToAdd, nDaysAdded )
 
 FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
 
-   __defaultNIL( @lProtected, .F. )
-   __defaultNIL( @aTranslate, { { '"', "&quot;" }, { " ", "&nbsp;" } } )
-
    // TraceLog( "OutputString( cString, aTranslate, lProtected )", cString, aTranslate, lProtected )
-   RETURN iif( lProtected, ;
+
+   RETURN iif( hb_defaultValue( lProtected, .F. ), ;
       uhttpd_HtmlSpecialChars( cString ), ;
-      uhttpd_TranslateStrings( cString, aTranslate ) )
+      uhttpd_TranslateStrings( cString, hb_defaultValue( aTranslate, { { '"', "&quot;" }, { " ", "&nbsp;" } } ) ) )
 
 FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
 
@@ -383,9 +379,7 @@ FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
 
 FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 
-   __defaultNIL( @cQuote_style, "ENT_COMPAT" )
-
-   SWITCH cQuote_style
+   SWITCH hb_defaultValue( cQuote_style, "ENT_COMPAT" )
    CASE "ENT_COMPAT"
       AAdd( aTranslations, { '"', "&quot;" } )
       EXIT
@@ -400,11 +394,7 @@ FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
    RETURN uhttpd_TranslateStrings( cString, aTranslations )
 
 FUNCTION uhttpd_CRLF2BR( cString )
-
-   LOCAL aTranslations := { ;
-      { CRLF, "<br />" } }
-
-   RETURN uhttpd_TranslateStrings( cString, aTranslations )
+   RETURN hb_StrReplace( cString, { CRLF => "<br />" } )
 
 FUNCTION uhttpd_TranslateStrings( cString, aTranslate )
 
@@ -434,16 +424,16 @@ FUNCTION uhttpd_HtmlEntities( cString, cQuote_style )
 
    // ATTENTION, these chars are visible only with OEM font
    FOR i := 160 TO 255
-      AAdd( aTranslations, { hb_BChar( i ), "&#" + Str( i, 3 ) + ";" } )
+      AAdd( aTranslations, { hb_BChar( i ), "&#" + StrZero( i, 3 ) + ";" } )
    NEXT
 
-RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
+   RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 
 PROCEDURE uhttpd_Die( cError )
 
    LOCAL oErr, lError
 
-   IF cError != NIL // THEN OutStd( cError )
+   IF HB_ISSTRING( cError )
 #if 0
       __OutDebug( "cError: ", cError )
       IF ! oCGI:HeaderSent()
@@ -482,27 +472,23 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
    LOCAL nHandle
 
 #if 0
-   __defaultNIL( @cLog, AppFullPath() + hb_ps() + "logfile.log" )
+   hb_default( @cLog, AppFullPath() + hb_ps() + "logfile.log" )
 #endif
-   __defaultNIL( @cLog, hb_ps() + "tmp" + hb_ps() + "logfile.log" )
-   __defaultNIL( @lCreate, .F. )
+   hb_default( @cLog, hb_ps() + "tmp" + hb_ps() + "logfile.log" )
 
-   IF cLog != NIL
+   IF ! hb_defaultValue( lCreate, .F. ) .AND. hb_FileExists( cLog )
+      nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED )
+   ELSE
+      nHandle := hb_FCreate( cLog,, FO_READWRITE + FO_SHARED )
+      // __OutDebug( "Create ", nHandle )
+   ENDIF
 
-      IF ! lCreate .AND. hb_FileExists( cLog )
-         nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED )
-      ELSE
-         nHandle := hb_FCreate( cLog,, FO_READWRITE + FO_SHARED )
-         // __OutDebug( "Create ", nHandle )
-      ENDIF
+   // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
 
-      // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
-
-      IF nHandle != F_ERROR
-         FSeek( nHandle, 0, FS_END )
-         FWrite( nHandle, cString + CRLF )
-         FClose( nHandle )
-      ENDIF
+   IF nHandle != F_ERROR
+      FSeek( nHandle, 0, FS_END )
+      FWrite( nHandle, cString + CRLF )
+      FClose( nHandle )
    ENDIF
 
    RETURN

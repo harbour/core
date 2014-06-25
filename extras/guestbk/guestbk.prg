@@ -76,9 +76,10 @@ PROCEDURE Main()
 
       oIni:UpdateFile()
 
-      oHTML:cContent := '<html><head><meta http-equiv="Refresh" ' + ;
-         'content="0;url=/cgi-bin/guestbk.exe"></head>'  + ;
-         '<body></body></html>'
+      oHTML:cContent := ;
+         "<html><head>" + ;
+         '<meta http-equiv="Refresh" content="0;url=/cgi-bin/guestbk.exe">' + ;
+         "</head><body></body></html>"
 
       oHTML:ShowResult()
    ELSE
@@ -86,8 +87,8 @@ PROCEDURE Main()
       oHTML:SetHTMLFile( _WWW_ROOT_DIR_ + "guestbk.html" )
 
       // Retrieves odd and even entries color
-      cOddColor := oIni:ReadString( "Header", "OddColor", "#FFFFFF" )
-      cEvenColor := oIni:ReadString( "Header", "EvenColor", "#F0F0F0" )
+      cOddColor := oIni:ReadString( "Header", "OddColor", "#ffffff" )
+      cEvenColor := oIni:ReadString( "Header", "EvenColor", "#f0f0f0" )
 
       cCode := ""
       i := oIni:ReadNumber( "Entries", "Entries", 0 )

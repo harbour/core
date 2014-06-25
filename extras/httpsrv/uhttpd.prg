@@ -340,35 +340,35 @@ PROCEDURE Main( ... )
 
    // Parameters forced from command line
 
-   IF cCmdPort != NIL
+   IF HB_ISSTRING( cCmdPort )
       nPort := Val( cCmdPort )
    ENDIF
 
-   IF cCmdApplicationRoot != NIL
+   IF HB_ISSTRING( cCmdApplicationRoot )
       cApplicationRoot := cCmdApplicationRoot
    ENDIF
 
-   IF cCmdDocumentRoot != NIL
+   IF HB_ISSTRING( cCmdDocumentRoot )
       cDocumentRoot := cCmdDocumentRoot
    ENDIF
 
-   IF lCmdIndexes != NIL
+   IF HB_ISLOGICAL( lCmdIndexes )
       lIndexes := lCmdIndexes
    ENDIF
 
-   IF nCmdStartThreads != NIL
+   IF HB_ISNUMERIC( nCmdStartThreads )
       nStartThreads := nCmdStartThreads
    ENDIF
 
-   IF nCmdMaxThreads != NIL
+   IF HB_ISNUMERIC( nCmdMaxThreads )
       nMaxThreads := nCmdMaxThreads
    ENDIF
 
-   IF nCmdConsoleRows != NIL
+   IF HB_ISNUMERIC( nCmdConsoleRows )
       nConsoleRows := nCmdConsoleRows
    ENDIF
 
-   IF nCmdConsoleCols != NIL
+   IF HB_ISNUMERIC( nCmdConsoleCols )
       nConsoleCols := nCmdConsoleCols
    ENDIF
 
@@ -1648,9 +1648,12 @@ PROCEDURE uhttpd_SetStatusCode( nStatusCode )
 
 PROCEDURE uhttpd_SetHeader( cType, cValue )
 
-   // LOCAL nI
-   // // Needed from SetCookie()
-   // __defaultNIL( @lReplace, .T. )
+#if 0
+   LOCAL nI
+
+   // Needed from SetCookie()
+   hb_default( @lReplace, .T. )
+#endif
 
    _HTTP_RESPONSE[ cType ] := cValue
 
@@ -1798,7 +1801,7 @@ FUNCTION uhttpd_split( cSeparator, cString, nMax )
    LOCAL aRet := {}, nI
    LOCAL nIter := 0
 
-   __defaultNIL( @nMax, 0 )
+   hb_default( @nMax, 0 )
 
    DO WHILE ( nI := At( cSeparator, cString ) ) > 0
       AAdd( aRet, Left( cString, nI - 1 ) )
@@ -1848,19 +1851,15 @@ STATIC FUNCTION uproc_default()
 #endif
 
       IF cFileName == NIL
-
          // Special script names
          IF Upper( cScript ) == "/SERVERSTATUS"
             cFileName := "/serverstatus"
             cExt      := "/serverstatus" // special extension
          ENDIF
-
       ENDIF
 
       IF cFileName == NIL
-
          cFileName := FileUnAlias( cScript )
-
       ENDIF
 
       // if filename is still NIL I set it
@@ -2267,14 +2266,12 @@ STATIC FUNCTION ParseIni( cConfig )
                   // hb_ToOutDebug( "cKey: %s\n\r", cKey )
 
                   IF cSection == "SCRIPTALIASES"
-                     xVal := hSect[ cKey ]
-                     IF xVal != NIL
+                     IF ( xVal := hSect[ cKey ] ) != NIL
                         hDefault[ cSection ][ cKey ] := xVal
                      ENDIF
 
                   ELSEIF cSection == "ALIASES"
-                     xVal := hSect[ cKey ]
-                     IF xVal != NIL
+                     IF ( xVal := hSect[ cKey ] ) != NIL
                         hDefault[ cSection ][ cKey ] := xVal
                      ENDIF
 

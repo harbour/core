@@ -8,7 +8,6 @@
 -hbx=${hb_name}
 
 core.prg
-fonts.prg
 
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

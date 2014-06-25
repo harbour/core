@@ -64,7 +64,7 @@ HB_FUNC( FLOOR )
 
       hb_mathResetError( &hb_exc );
       dResult = floor( dArg );
-      if( hb_mathGetError( &hb_exc, "FLOOR", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -100,7 +100,7 @@ HB_FUNC( CEILING )
 
       hb_mathResetError( &hb_exc );
       dResult = ceil( dArg );
-      if( hb_mathGetError( &hb_exc, "CEIL", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -171,7 +171,7 @@ HB_FUNC( LOG10 )
 
       hb_mathResetError( &hb_exc );
       dResult = log10( dArg );
-      if( hb_mathGetError( &hb_exc, "LOG10", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );

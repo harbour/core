@@ -79,7 +79,7 @@ HB_FUNC( SIN )
 
       hb_mathResetError( &hb_exc );
       dResult = sin( dArg );
-      if( hb_mathGetError( &hb_exc, "SIN", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -115,7 +115,7 @@ HB_FUNC( COS )
 
       hb_mathResetError( &hb_exc );
       dResult = cos( dArg );
-      if( hb_mathGetError( &hb_exc, "COS", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -151,7 +151,7 @@ HB_FUNC( TAN )
 
       hb_mathResetError( &hb_exc );
       dResult = tan( dArg );
-      if( hb_mathGetError( &hb_exc, "TAN", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -187,7 +187,7 @@ HB_FUNC( COT )
 
       hb_mathResetError( &hb_exc );
       dResult = tan( dArg );
-      if( hb_mathGetError( &hb_exc, "TAN", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
          dResult = hb_exc.handled ? hb_exc.retval : 0.0;
 
       dResult = dResult ? 1 / dResult : HUGE_VAL;
@@ -219,7 +219,7 @@ HB_FUNC( ASIN )
 
       hb_mathResetError( &hb_exc );
       dResult = asin( dArg );
-      if( hb_mathGetError( &hb_exc, "ASIN", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -255,7 +255,7 @@ HB_FUNC( ACOS )
 
       hb_mathResetError( &hb_exc );
       dResult = acos( dArg );
-      if( hb_mathGetError( &hb_exc, "ACOS", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -291,7 +291,7 @@ HB_FUNC( ATAN )
 
       hb_mathResetError( &hb_exc );
       dResult = atan( dArg );
-      if( hb_mathGetError( &hb_exc, "ATAN", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -337,7 +337,7 @@ HB_FUNC( ATN2 )
 
       hb_mathResetError( &hb_exc );
       dResult = atan2( dY, dX );
-      if( hb_mathGetError( &hb_exc, "ATAN2", dY, dX, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dY, dX, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -385,7 +385,7 @@ HB_FUNC( SINH )
 
       hb_mathResetError( &hb_exc );
       dResult = sinh( dArg );
-      if( hb_mathGetError( &hb_exc, "SINH", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -428,7 +428,7 @@ HB_FUNC( COSH )
 
       hb_mathResetError( &hb_exc );
       dResult = cosh( dArg );
-      if( hb_mathGetError( &hb_exc, "COSH", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -466,7 +466,7 @@ HB_FUNC( TANH )
 
       hb_mathResetError( &hb_exc );
       dResult = tanh( dArg );
-      if( hb_mathGetError( &hb_exc, "TANH", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );

@@ -49,46 +49,46 @@
 
 CREATE CLASS ExcelWriterXML_Style
 
-   VAR    id
-   VAR    name
-   VAR    useAlignment          INIT .F.
-   VAR    useFont               INIT .F.
-   VAR    useBorder             INIT .F.
-   VAR    useInterior           INIT .F.
+   VAR id
+   VAR name
+   VAR useAlignment         INIT .F.
+   VAR useFont              INIT .F.
+   VAR useBorder            INIT .F.
+   VAR useInterior          INIT .F.
 
-   VAR    valign
-   VAR    halign
-   VAR    rotate
-   VAR    shrinktofit           INIT 0
-   VAR    verticaltext          INIT 0
-   VAR    wraptext              INIT 0
+   VAR valign
+   VAR halign
+   VAR rotate
+   VAR shrinktofit          INIT 0
+   VAR verticaltext         INIT 0
+   VAR wraptext             INIT 0
 
-   VAR    fontColor             INIT "Automatic"
-   VAR    fontName
-   VAR    fontFamily
-   VAR    fontSize
-   VAR    bold
-   VAR    italic
-   VAR    underline
-   VAR    strikethrough
-   VAR    shadow
-   VAR    outline
+   VAR fontColor            INIT "Automatic"
+   VAR fontName
+   VAR fontFamily
+   VAR fontSize
+   VAR bold
+   VAR italic
+   VAR underline
+   VAR strikethrough
+   VAR shadow
+   VAR outline
 
-   VAR    borderTop             INIT { => }
-   VAR    borderBottom          INIT { => }
-   VAR    borderLeft            INIT { => }
-   VAR    borderRight           INIT { => }
-   VAR    borderDL              INIT { => }
-   VAR    borderDR              INIT { => }
+   VAR borderTop            INIT { => }
+   VAR borderBottom         INIT { => }
+   VAR borderLeft           INIT { => }
+   VAR borderRight          INIT { => }
+   VAR borderDL             INIT { => }
+   VAR borderDR             INIT { => }
 
-   VAR    interiorColor
-   VAR    interiorPattern
-   VAR    interiorPatternColor
+   VAR interiorColor
+   VAR interiorPattern
+   VAR interiorPatternColor
 
-   VAR    numberFormat
+   VAR numberFormat
 
-   VAR    formatErrors          INIT { => }
-   VAR    namedColorsIE         INIT { => }
+   VAR formatErrors         INIT { => }
+   VAR namedColorsIE        INIT { => }
 
    METHOD new( id )
    METHOD getID()

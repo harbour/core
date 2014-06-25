@@ -3201,8 +3201,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             l_nJOBS := Val( cParam )
          ENDIF
 
-         HB_SYMBOL_UNUSED( l_nJOBS )
-
       CASE hb_LeftEq( cParamL, "-lng=" )
 
          cParam := SubStr( cParam, 5 + 1 )

@@ -49,7 +49,6 @@
 #include "directry.ch"
 
 #xtranslate SetNewValueReturnOld( <p>, <v> ) => LOCAL xOld, xOld := <p>, iif( <v> != NIL, <p> := <v>,  ), xOld
-#xtranslate Default( <p>, <v> ) => ( <p> := iif( <p> == NIL, <v>, <p> ) )
 
 
 MEMVAR _COOKIE, _SESSION, _REQUEST, _SERVER
@@ -152,9 +151,6 @@ METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
 
    // hb_ToOutDebug( "cSessionName: %s, cSessionPath: %s\n\r", cSessionName, cSessionPath )
 
-   __defaultNIL( @cSessionName, "SESSION" )
-   __defaultNIL( @cSessionPath, ::cSavePath )
-
    // ::cSID := ::GenerateSID()
 
    // As default we will use FILES - this is FILE version
@@ -175,10 +171,10 @@ METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
    ::bGC       := {| nMaxLifeTime | DBF_Session_GC( nMaxLifeTime ) }
 #endif
 
-   ::cName     := cSessionName + "ID"
+   ::cName     := hb_defaultValue( cSessionName, "SESSION" ) + "ID"
    ::cReferrer_Check := _SERVER[ "HTTP_REFERER" ]
 
-   ::cSavePath := cSessionPath
+   ::cSavePath := hb_defaultValue( cSessionPath, ::cSavePath )
 
    ::oCookie   := uhttpd_CookieNew( ::cCookie_Domain, ::cCookie_Path )
 
@@ -191,7 +187,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    LOCAL xVal, nRand
    LOCAL hUrl
 
-   IF cSID != NIL
+   IF HB_ISSTRING( cSID )
       ::cSID := cSID
    ENDIF
 
@@ -357,7 +353,7 @@ METHOD CacheLimiter( cNewLimiter ) CLASS uhttpd_Session
 
    LOCAL cOldLimiter := ::cCache_Limiter
 
-   IF cNewLimiter != NIL
+   IF HB_ISSTRING( cNewLimiter )
       IF cNewLimiter $ "none/nocache/private/private_no_expire/public"
          ::cCache_Limiter := cNewLimiter
       ELSE
@@ -369,16 +365,16 @@ METHOD CacheLimiter( cNewLimiter ) CLASS uhttpd_Session
 
 METHOD PROCEDURE SetCookieParams( nLifeTime, cPath, cDomain, lSecure ) CLASS uhttpd_Session
 
-   IF nLifeTime != NIL
+   IF HB_ISNUMERIC( nLifeTime )
       ::nCookie_LifeTime := nLifeTime
    ENDIF
-   IF cPath     != NIL
+   IF HB_ISSTRING( cPath )
       ::cCookie_Path     := cPath
    ENDIF
-   IF cDomain   != NIL
+   IF HB_ISSTRING( cDomain )
       ::cCookie_Domain   := cDomain
    ENDIF
-   IF lSecure   != NIL
+   IF HB_ISLOGICAL( lSecure )
       ::lCookie_Secure   := lSecure
    ENDIF
 
@@ -422,9 +418,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
    LOCAL cFieldsNotInSession := ""
    LOCAL cSessVarName
 
-   __defaultNIL( @cSeparator, "&" )
-
-   aFields := hb_regexSplit( cSeparator, cFields )
+   aFields := hb_regexSplit( hb_defaultValue( cSeparator, "&" ), cFields )
 
    FOR EACH cField in aFields
       aField := hb_regexSplit( "=", cField, 2 )
@@ -485,39 +479,36 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
 
 /* SID == 25 random chars + 5 CRC chars */
 METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
-
-   __defaultNIL( @cCRCKey, MY_CRCKEY )
-
-   RETURN tip_GenerateSID( cCRCKey )
+   RETURN tip_GenerateSID( hb_defaultValue( cCRCKey, MY_CRCKEY ) )
 
 METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
 
-   __defaultNIL( @::cSID, ::RegenerateID() )
-   __defaultNIL( @cSID, ::cSID )
-   __defaultNIL( @cCRCKey, MY_CRCKEY )  // Max Length must to be 10
+   IF ::cSID == NIL
+      ::cSID := ::RegenerateID()
+   ENDIF
 
-   RETURN tip_CheckSID( cSID, cCRCKey )
+   RETURN tip_CheckSID( hb_defaultValue( cSID, ::cSID ), hb_defaultValue( cCRCKey, MY_CRCKEY ) )
 
 // ---
 
 METHOD PROCEDURE SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC ) CLASS uhttpd_Session
 
-   IF bOpen != NIL
+   IF HB_ISEVALITEM( bOpen )
       ::bOpen := bOpen
    ENDIF
-   IF bClose != NIL
+   IF HB_ISEVALITEM( bClose )
       ::bClose := bClose
    ENDIF
-   IF bRead != NIL
+   IF HB_ISEVALITEM( bRead )
       ::bRead := bRead
    ENDIF
-   IF bWrite != NIL
+   IF HB_ISEVALITEM( bWrite )
       ::bWrite := bWrite
    ENDIF
-   IF bDestroy != NIL
+   IF HB_ISEVALITEM( bDestroy )
       ::bDestroy := bDestroy
    ENDIF
-   IF bGC != NIL
+   IF HB_ISEVALITEM( bGC )
       ::bGC := bGC
    ENDIF
 
@@ -526,10 +517,10 @@ METHOD PROCEDURE SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC ) C
 METHOD SessionOpen( cPath, cName ) CLASS uhttpd_Session
 
    // TraceLog( "SessionOpen() - cName", cName )
-   IF cPath != NIL
+   IF HB_ISSTRING( cPath )
       ::cSavePath := cPath
    ENDIF
-   IF cName != NIL
+   IF HB_ISSTRING( cName )
       ::cName := cName
    ENDIF
 
@@ -550,8 +541,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
    LOCAL cBuffer
    LOCAL nRetry  := 0
 
-   __defaultNIL( @cID, ::cSID )
-   cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
+   cFile := ::cSavePath + hb_ps() + ::cName + "_" + hb_defaultValue( cID, ::cSID )
    // TraceLog( "SessionRead: cFile", cFile )
    IF hb_FileExists( cFile )
       DO WHILE nRetry++ <= ::nFileRetry
@@ -587,18 +577,17 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
    LOCAL nH
    LOCAL cFile
    LOCAL lOk := .F.
-   LOCAL nRetry  := 0
+   LOCAL nRetry := 0
 
    // TraceLog( "SessionWrite() - cID, cData", cID, cData )
-   __defaultNIL( @cID, ::cSID )
-   __defaultNIL( @cData, "" )
+   hb_default( @cData, "" )
 
-   cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
+   cFile := ::cSavePath + hb_ps() + ::cName + "_" + hb_defaultValue( cID, ::cSID )
    // TraceLog( "SessionWrite() - cFile", cFile )
    IF ! Empty( cData )
       DO WHILE nRetry++ <= ::nFileRetry
          IF ( nH := hb_FCreate( cFile,, FO_READWRITE + FO_DENYWRITE ) ) != F_ERROR
-            IF FWrite( nH, @cData ) != hb_BLen( cData )
+            IF FWrite( nH, cData ) != hb_BLen( cData )
                uhttpd_Die( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             ELSE
                lOk := .T.
@@ -631,13 +620,12 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
    LOCAL nRetry := 0
 
    // TraceLog( "SessionDestroy() - cID", cID )
-   __defaultNIL( @cID, ::cSID )
 
    _SESSION := { => }
    ::oCookie:DeleteCookie( ::cName )
 
    // TraceLog( "SessionDestroy() - cID, oCGI:h_Session", cID, DumpValue( oCGI:h_Session ) )
-   cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
+   cFile := ::cSavePath + hb_ps() + ::cName + "_" + hb_defaultValue( cID, ::cSID )
 
    lOk := .F.
    DO WHILE nRetry++ <= ::nFileRetry
@@ -670,7 +658,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
    // STATIC s_nStartTime
    // TraceLog( "SessionGC() - nMaxLifeTime", nMaxLifeTime )
 
-   __defaultNIL( @nMaxLifeTime, ::nGc_MaxLifeTime )
+   hb_default( @nMaxLifeTime, ::nGc_MaxLifeTime )
 
    FOR EACH aFile IN hb_Directory( ::cSavePath + hb_ps() + ::cName + "_*.*" )
       IF ( ( hb_DateTime() - aFile[ F_DATE ] ) * 86400 ) > nMaxLifeTime
@@ -689,10 +677,8 @@ METHOD Encode() CLASS uhttpd_Session
    LOCAL cKey, xVal
 
    IF Type( "_SESSION" ) == "H"
-
       FOR EACH cKey IN _SESSION:Keys
-         xVal := _SESSION[ cKey ]
-         IF xVal != NIL
+         IF ( xVal := _SESSION[ cKey ] ) != NIL
             AAdd( aSerial, { cKey, xVal } )
          ENDIF
       NEXT
