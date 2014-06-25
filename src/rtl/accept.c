@@ -53,7 +53,7 @@
 
 HB_FUNC_EXTERN( QOUT );
 
-#define ACCEPT_BUFFER_LEN  256 /* length of input buffer for ACCEPT command */
+#define ACCEPT_BUFFER_LEN  256  /* length of input buffer for ACCEPT command */
 
 #ifdef HB_CLP_UNDOC
 
