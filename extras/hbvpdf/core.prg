@@ -50,7 +50,7 @@ FUNCTION pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )
    CASE cUnits == "R"
       IF ! lExact
          pdfCheckLine( nRow )
-         nRow := nRow + t_aReport[ PDFTOP ]
+         nRow += t_aReport[ PDFTOP ]
       ENDIF
       nRow := pdfR2D( nRow )
       nCol := pdfM2X( t_aReport[ PDFLEFT ] ) + ;
@@ -60,23 +60,23 @@ FUNCTION pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )
    IF ! Empty( cString )
       cString := pdfStringB( cString )
       DO CASE
-      CASE Right( cString, 1 ) == Chr( 255 ) // reverse
-         cString := hb_StrShrink( cString )
+      CASE hb_BRight( cString, 1 ) == hb_BChar( 255 )  // reverse
+         cString := hb_BLeft( cString, hb_BLen( cString ) - 1 )
          pdfBox( t_aReport[ PAGEY ] - nRow - t_aReport[ FONTSIZE ] + 2.0, nCol, t_aReport[ PAGEY ] - nRow + 2.0, nCol + pdfM2X( pdfLen( cString ) ) + 1,, 100, "D" )
          t_aReport[ PAGEBUFFER ] += " 1 g "
          lReverse := .T.
-      CASE Right( cString, 1 ) == Chr( 254 ) // underline
-         cString := hb_StrShrink( cString )
+      CASE hb_BRight( cString, 1 ) == hb_BChar( 254 )  // underline
+         cString := hb_BLeft( cString, hb_BLen( cString ) - 1 )
          pdfBox( t_aReport[ PAGEY ] - nRow + 0.5,  nCol, t_aReport[ PAGEY ] - nRow + 1, nCol + pdfM2X( pdfLen( cString ) ) + 1,, 100, "D" )
       ENDCASE
 
       // version 0.01
-      IF ( nAt := At( Chr( 253 ), cString ) ) > 0 // some color text inside
+      IF ( nAt := hb_BAt( hb_BChar( 253 ), cString ) ) > 0  // some color text inside
          t_aReport[ PAGEBUFFER ] += CRLF + ;
-            Chr_RGB( SubStr( cString, nAt + 1, 1 ) ) + " " + ;
-            Chr_RGB( SubStr( cString, nAt + 2, 1 ) ) + " " + ;
-            Chr_RGB( SubStr( cString, nAt + 3, 1 ) ) + " rg "
-         cString := Stuff( cString, nAt, 4, "" )
+            Chr_RGB( hb_BSubStr( cString, nAt + 1, 1 ) ) + " " + ;
+            Chr_RGB( hb_BSubStr( cString, nAt + 2, 1 ) ) + " " + ;
+            Chr_RGB( hb_BSubStr( cString, nAt + 3, 1 ) ) + " rg "
+         cString := hb_BLeft( cString, nAt - 1 ) + hb_BSubStr( cString, nAt + 4 )
       ENDIF
       // version 0.01
 
@@ -312,10 +312,11 @@ FUNCTION pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )
       ENDIF
 
       IF nBorder > 0
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( pdfM2X( y1 ) ) + " " + hb_ntos( pdfM2Y( x1 ) ) + " " + hb_ntos( pdfM2X( y2 - y1 ) ) + " -" + hb_ntos( pdfM2X( nBorder ) ) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( pdfM2X( y2 - nBorder ) ) + " " + hb_ntos( pdfM2Y( x1 ) ) + " " + hb_ntos( pdfM2X( nBorder ) ) + " -" + hb_ntos( pdfM2X( x2 - x1 ) ) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( pdfM2X( y1 ) ) + " " + hb_ntos( pdfM2Y( x2 - nBorder ) ) + " " + hb_ntos( pdfM2X( y2 - y1 ) ) + " -" + hb_ntos( pdfM2X( nBorder ) ) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( pdfM2X( y1 ) ) + " " + hb_ntos( pdfM2Y( x1 ) ) + " " + hb_ntos( pdfM2X( nBorder ) ) + " -" + hb_ntos( pdfM2X( x2 - x1 ) ) + " re f"
+         t_aReport[ PAGEBUFFER ] += ;
+            CRLF + "0 g " + hb_ntos( pdfM2X( y1 ) ) + " " + hb_ntos( pdfM2Y( x1 ) ) + " " + hb_ntos( pdfM2X( y2 - y1 ) ) + " -" + hb_ntos( pdfM2X( nBorder ) ) + " re f" + ;
+            CRLF + "0 g " + hb_ntos( pdfM2X( y2 - nBorder ) ) + " " + hb_ntos( pdfM2Y( x1 ) ) + " " + hb_ntos( pdfM2X( nBorder ) ) + " -" + hb_ntos( pdfM2X( x2 - x1 ) ) + " re f" + ;
+            CRLF + "0 g " + hb_ntos( pdfM2X( y1 ) ) + " " + hb_ntos( pdfM2Y( x2 - nBorder ) ) + " " + hb_ntos( pdfM2X( y2 - y1 ) ) + " -" + hb_ntos( pdfM2X( nBorder ) ) + " re f" + ;
+            CRLF + "0 g " + hb_ntos( pdfM2X( y1 ) ) + " " + hb_ntos( pdfM2Y( x1 ) ) + " " + hb_ntos( pdfM2X( nBorder ) ) + " -" + hb_ntos( pdfM2X( x2 - x1 ) ) + " re f"
       ENDIF
    CASE cUnits == "D"// "Dots"
       // x1, y1, x2, y2 - nTop, nLeft, nBottom, nRight
@@ -325,17 +326,16 @@ FUNCTION pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )
       ENDIF
 
       IF nBorder > 0
-/*
-            1
-         +-----+
-       4 |     | 2
-         +-----+
-            3
-*/
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( y2 - y1 ) + " -" + hb_ntos( nBorder ) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( y2 - nBorder ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( nBorder ) + " -" + hb_ntos( x2 - x1 ) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x2 + nBorder ) + " " + hb_ntos( y2 - y1 ) + " -" + hb_ntos( nBorder ) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( nBorder ) + " -" + hb_ntos( x2 - x1 ) + " re f"
+         //      1
+         //   +-----+
+         // 4 |     | 2
+         //   +-----+
+         //      3
+         t_aReport[ PAGEBUFFER ] += ;
+            CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( y2 - y1 ) + " -" + hb_ntos( nBorder ) + " re f" + ;
+            CRLF + "0 g " + hb_ntos( y2 - nBorder ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( nBorder ) + " -" + hb_ntos( x2 - x1 ) + " re f" + ;
+            CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x2 + nBorder ) + " " + hb_ntos( y2 - y1 ) + " -" + hb_ntos( nBorder ) + " re f" + ;
+            CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( nBorder ) + " -" + hb_ntos( x2 - x1 ) + " re f"
       ENDIF
    ENDCASE
 
@@ -346,7 +346,7 @@ PROCEDURE pdfBox1( nTop, nLeft, nBottom, nRight, nBorderWidth, cBorderColor, cBo
 
    __defaultNIL( @nBorderWidth, 0.5 )
    __defaultNIL( @cBorderColor, Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )
-   __defaultNIL( @cBoxColor, Chr( 255 ) + Chr( 255 ) + Chr( 255 ) )
+   __defaultNIL( @cBoxColor, hb_BChar( 255 ) + hb_BChar( 255 ) + hb_BChar( 255 ) )
 
    t_aReport[ PAGEBUFFER ] += CRLF + ;
       Chr_RGB( SubStr( cBorderColor, 1, 1 ) ) + " " + ;
@@ -388,11 +388,9 @@ FUNCTION pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )
 
    nLen := pdfLen( cString ) / 2
 
-   IF cUnits == "R"
-      IF ! lExact
-         pdfCheckLine( nRow )
-         nRow := nRow + t_aReport[ PDFTOP ]
-      ENDIF
+   IF cUnits == "R" .AND. ! lExact
+      pdfCheckLine( nRow )
+      nRow += t_aReport[ PDFTOP ]
    ENDIF
    pdfAtSay( cString, pdfR2M( nRow ), iif( cUnits == "R", t_aReport[ PDFLEFT ] + ( t_aReport[ PAGEX ] / 72 * 25.4 - 2 * t_aReport[ PDFLEFT ] ) * nCol / t_aReport[ REPORTWIDTH ], nCol ) - nLen, "M", lExact )
 
@@ -430,7 +428,8 @@ PROCEDURE pdfClose()
       cTemp += " " + hb_ntos( t_aReport[ PAGES ][ nI ] ) + " 0 R"
    NEXT
 
-   cTemp += " ]" + CRLF + ;
+   cTemp += ;
+      " ]" + CRLF + ;
       ">>" + CRLF + ;
       "endobj" + CRLF
 
@@ -440,7 +439,8 @@ PROCEDURE pdfClose()
    // info
    ++t_aReport[ REPORTOBJ ]
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
-   cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
+   cTemp := ;
+      hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
       "<<" + CRLF + ;
       "/Producer ()" + CRLF + ;
       "/Title ()" + CRLF + ;
@@ -457,7 +457,8 @@ PROCEDURE pdfClose()
    // root
    ++t_aReport[ REPORTOBJ ]
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
-   cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
+   cTemp := ;
+      hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
       "<< /Type /Catalog /Pages 1 0 R /Outlines " + hb_ntos( t_aReport[ REPORTOBJ ] + 1 ) + " 0 R" + iif( ( nBookLen := Len( t_aReport[ BOOKMARK ] ) ) > 0, " /PageMode /UseOutlines", "" ) + " >>" + CRLF + "endobj" + CRLF
    t_aReport[ DOCLEN ] += Len( cTemp )
    FWrite( t_aReport[ HANDLE ], cTemp )
@@ -528,7 +529,8 @@ PROCEDURE pdfClose()
 
    ++t_aReport[ REPORTOBJ ]
 
-   cTemp += "xref" + CRLF + ;
+   cTemp += ;
+      "xref" + CRLF + ;
       "0 " + hb_ntos( t_aReport[ REPORTOBJ ] ) + CRLF + ;
       PadL( t_aReport[ REFS ][ 1 ], 10, "0" ) + " 65535 f" + CRLF
 
@@ -536,7 +538,8 @@ PROCEDURE pdfClose()
       cTemp += PadL( t_aReport[ REFS ][ nI ], 10, "0" ) + " 00000 n" + CRLF
    NEXT
 
-   cTemp += "trailer << /Size " + hb_ntos( t_aReport[ REPORTOBJ ] ) + " /Root " + hb_ntos( nObj1 - 1 ) + " 0 R /Info " + hb_ntos( nObj1 - 2 ) + " 0 R >>" + CRLF + ;
+   cTemp += ;
+      "trailer << /Size " + hb_ntos( t_aReport[ REPORTOBJ ] ) + " /Root " + hb_ntos( nObj1 - 1 ) + " 0 R /Info " + hb_ntos( nObj1 - 2 ) + " 0 R >>" + CRLF + ;
       "startxref" + CRLF + ;
       hb_ntos( t_aReport[ DOCLEN ] ) + CRLF + ;
       "%%EOF" + CRLF
@@ -816,24 +819,29 @@ PROCEDURE pdfItalic()
 // ---
 FUNCTION pdfLen( cString )
 
-   LOCAL nWidth := 0.00, nI, nLen, nArr, nAdd := ( t_aReport[ FONTNAME ] - 1 ) % 4
-
-   nLen := Len( cString )
-   IF Right( cString, 1 ) == Chr( 255 ) .OR. Right( cString, 1 ) == Chr( 254 ) // reverse or underline
-      --nLen
-   ENDIF
-   SWITCH pdfGetFontInfo( "NAME" )
-   CASE "Times"
-      nArr := 1
-      EXIT
-   CASE "Helvetica"
-      nArr := 2
-      EXIT
-   OTHERWISE
-      nArr := 3  // 0.04
-   ENDSWITCH
+   LOCAL nWidth := 0.00, nI, nLen, nArr, nAdd
 
    IF ! Empty( t_aReport[ FONTWIDTH ] )
+
+      IF hb_BRight( cString, 1 ) == hb_BChar( 255 ) .OR. ;
+         hb_BRight( cString, 1 ) == hb_BChar( 254 )  // reverse or underline
+         cString := hb_BLeft( cString, hb_BLen( cString ) - 1 )
+      ENDIF
+
+      SWITCH pdfGetFontInfo( "NAME" )
+      CASE "Times"
+         nArr := 1
+         EXIT
+      CASE "Helvetica"
+         nArr := 2
+         EXIT
+      OTHERWISE
+         nArr := 3  // 0.04
+      ENDSWITCH
+
+      nAdd := ( t_aReport[ FONTNAME ] - 1 ) % 4
+
+      nLen := Len( cString )
       FOR nI := 1 TO nLen
          nWidth += t_aReport[ FONTWIDTH ][ nArr ][ ( Asc( SubStr( cString, nI, 1 ) ) - 32 ) * 4 + 1 + nAdd ] * 25.4 * t_aReport[ FONTSIZE ] / 720.00 / 100.00
       NEXT
@@ -1079,7 +1087,7 @@ FUNCTION pdfPageNumber( n )
 
 // ---
 FUNCTION pdfReverse( cString )
-   RETURN cString + Chr( 255 )
+   RETURN cString + hb_BChar( 255 )
 
 // ---
 FUNCTION pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )
@@ -1220,7 +1228,7 @@ FUNCTION pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor,
       nLen := Len( cToken )
 
       IF nLineLen + nSpace + nTokenLen > nLength
-         IF nStart == nI // single word > nLength
+         IF nStart == nI  // single word > nLength
             k := 1
             DO WHILE k <= nLen
                cTemp := ""
@@ -1345,7 +1353,7 @@ STATIC FUNCTION pdfTextNextPara( cString, cDelim, nI )
 
 // ---
 FUNCTION pdfUnderline( cString )
-   RETURN cString + Chr( 254 )
+   RETURN cString + hb_BChar( 254 )
 
 // ---
 STATIC FUNCTION pdfX2M( n )
@@ -2403,7 +2411,7 @@ FUNCTION pdfJPEGInfo( cFile )
    xRes := hb_BCode( hb_BSubStr( c255, 15, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 16, 1 ) )
    yRes := hb_BCode( hb_BSubStr( c255, 17, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 18, 1 ) )
 
-   nAt := RAt( Chr( 255 ) + Chr( 192 ), c255 ) + 5
+   nAt := hb_BRAt( hb_BChar( 255 ) + hb_BChar( 192 ), c255 ) + 5
    nHeight := hb_BCode( hb_BSubStr( c255, nAt, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, nAt + 1, 1 ) )
    nWidth := hb_BCode( hb_BSubStr( c255, nAt + 2, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, nAt + 3, 1 ) )
 
@@ -2428,7 +2436,7 @@ STATIC FUNCTION FilePos( nHandle )
    RETURN FSeek( nHandle, 0, FS_RELATIVE )
 
 STATIC FUNCTION Chr_RGB( cChar )
-   RETURN Str( Asc( cChar ) / 255, 4, 2 )
+   RETURN Str( hb_BCode( cChar ) / 255, 4, 2 )
 
 STATIC FUNCTION NumToken( cString, cDelimiter )
    RETURN AllToken( cString, cDelimiter )

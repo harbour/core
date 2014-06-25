@@ -324,11 +324,8 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
    LOCAL cEOL
 
    IF FSeek( fHandle, 0, FS_RELATIVE ) == 0
-
       lMoved := .F.
-
    ELSE
-
       lMoved := .T.
 
       cEOL := Chr( 13 ) + Chr( 10 )  /* TOFIX: EOL detection to be multiplatform */
@@ -344,16 +341,15 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
       cBuff   := Space( nMaxRead )
       nNewPos := FSeek( fHandle, -nMaxRead, FS_RELATIVE )
       FRead( fHandle, @cBuff, nMaxRead )
-      IF ( nWhereEOL := RAt( cEOL, cBuff ) ) == 0  /* TOFIX: should be hb_BRAt() */
+      IF ( nWhereEOL := hb_BRAt( cEOL, cBuff ) ) == 0
          nPrev    := nNewPos
          ::Buffer := cBuff
       ELSE
          nPrev    := nNewPos + nWhereEOL + 1
-         ::Buffer := SubStr( cBuff, nWhereEOL + hb_BLen( cEOL ) )  /* TOFIX: should be hb_BSubStr() */
+         ::Buffer := hb_BSubStr( cBuff, nWhereEOL + hb_BLen( cEOL ) )
       ENDIF
 
       FSeek( fHandle, nPrev, FS_SET )
-
    ENDIF
 
    RETURN iif( lMoved, ::Buffer, "" )
