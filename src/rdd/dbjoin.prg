@@ -62,7 +62,8 @@ FUNCTION __dbJoin( cAlias, cFile, aFields, bFor, cRDD, nConnection, cCodePage )
 
    dbSelectArea( nMaster )
    IF Empty( aStruct := __FieldTwo( cAlias, aFields ) )
-      /* NOTE: CA-Cl*pper will leave the wrong workarea (cAlias) selected here */
+      /* NOTE: CA-Cl*pper will leave the wrong workarea (cAlias) selected here.
+               Harbour is bug compatible. [vszakats] */
       RETURN .F.
    ENDIF
 
