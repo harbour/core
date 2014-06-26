@@ -18,7 +18,7 @@ PROCEDURE Main()
 
    ? "rddName():", rddName()
    WAIT
-   Select( "TESTDBF" )
+   dbSelectArea( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 140000
    TESTDBF->( dbGoTop() )
    DO WHILE ! TESTDBF->( Eof() )
@@ -44,7 +44,7 @@ PROCEDURE Main()
 
    hb_dbDrop( "testcdx.cdx" )
 
-   Select( "TESTCDX" )
+   dbSelectArea( "TESTCDX" )
    ordCreate( "testcdx", "Character", "FIELD->CHARACTER", {|| FIELD->CHARACTER }, .F. )
 
    dbCloseAll()

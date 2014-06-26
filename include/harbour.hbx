@@ -309,6 +309,7 @@ DYNAMIC hb_blowfishEncrypt_CFB
 DYNAMIC hb_blowfishKey
 DYNAMIC hb_BPeek
 DYNAMIC hb_BPoke
+DYNAMIC hb_BRAt
 DYNAMIC hb_BRight
 DYNAMIC hb_BSubStr
 DYNAMIC hb_ByteSwapI

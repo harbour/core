@@ -66,6 +66,7 @@
 #xtranslate hb_LeftEqI( <l>, <r> )         => ( Left( Lower( <l> ), Len( <r> ) ) == Lower( <r> ) )
 #xtranslate hb_StrShrink( <l> )            => Left( <l>, Len( <l> ) - 1 )
 #xtranslate hb_StrShrink( <l>, <r> )       => Left( <l>, Len( <l> ) - <r> )
+#xtranslate hb_RAt( <c>, <p> )             => RAt( <c>, <p> )
 
 #xtranslate hb_keyStd( <n> )               => ( n )
 #xtranslate hb_keyCode( <n> )              => Asc( <n> )
@@ -81,6 +82,8 @@
 #xtranslate hb_BLeft( <c>, <l> )           => Left( <c>, <l> )
 #xtranslate hb_BRight( <c>, <l> )          => Right( <c>, <l> )
 #xtranslate hb_BStrTran( <c>, <s>[, <r>] ) => StrTran( <c>, <s>, <r> )
+#xtranslate hb_BAt( <c>, <p> )             => At( <c>, <p> )
+#xtranslate hb_BRAt( <c>, <p> )            => RAt( <c>, <p> )
 
 #ifdef B_SINGLE
    #define HB_B_SINGLE_UNI                 B_SINGLE

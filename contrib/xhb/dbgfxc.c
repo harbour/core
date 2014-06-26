@@ -45,14 +45,11 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 #include "hbapifs.h"
 
 #include "xhb.h"
 
 static HB_BOOL s_bToOutputDebug = HB_TRUE;
-static HB_BOOL s_bToLogFile     = HB_TRUE;
-static HB_BOOL s_bEmptyLogFile  = HB_TRUE;
 
 HB_BOOL hb_ToOutDebugOnOff( HB_BOOL bOnOff )
 {
@@ -77,6 +74,11 @@ void hb_ToOutDebug( const char * sTraceMsg, ... )
       hb_OutDebug( ( const char * ) buffer, strlen( buffer ) );
    }
 }
+
+#if defined( XHB_UNSAFE )
+
+static HB_BOOL s_bToLogFile     = HB_TRUE;
+static HB_BOOL s_bEmptyLogFile  = HB_TRUE;
 
 HB_BOOL hb_ToLogFileOnOff( HB_BOOL bOnOff )
 {
@@ -129,3 +131,5 @@ void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... )
       }
    }
 }
+
+#endif

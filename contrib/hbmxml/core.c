@@ -769,8 +769,7 @@ HB_FUNC( MXMLLOADFILE )
 
    if( HB_ISCHAR( 2 ) )
    {
-      void * hFree;
-      FILE * file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "rb" );
+      FILE * file = hb_fopen( hb_parc( 2 ), "rb" );
       if( file )
       {
          mxml_node_t * node = mxmlLoadFile( node_top, file, cb );
@@ -779,7 +778,6 @@ HB_FUNC( MXMLLOADFILE )
 
          fclose( file );
       }
-      hb_strfree( hFree );
    }
    else
       MXML_ERR_ARGS();
@@ -1181,8 +1179,7 @@ HB_FUNC( MXMLSAXLOADFILE )
 
    if( HB_ISCHAR( 2 ) )
    {
-      void * hFree;
-      FILE * file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "rb" );
+      FILE * file = hb_fopen( hb_parc( 2 ), "rb" );
       if( file )
       {
          mxml_node_t * node = mxmlSAXLoadFile( node_top, file, cb, cb_sax, pData );
@@ -1191,8 +1188,6 @@ HB_FUNC( MXMLSAXLOADFILE )
 
          fclose( file );
       }
-
-      hb_strfree( hFree );
    }
    else
       MXML_ERR_ARGS();
@@ -1362,7 +1357,6 @@ HB_FUNC( MXMLSAVEFILE )
    if( node && HB_ISCHAR( 2 ) )
    {
       FILE * file;
-      void * hFree;
 
       mxml_save_cb_t cb   = MXML_NO_CALLBACK;
       HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
@@ -1373,7 +1367,7 @@ HB_FUNC( MXMLSAVEFILE )
          cb = save_cb;
       }
 
-      file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "wb" );
+      file = hb_fopen( hb_parc( 2 ), "wb" );
       if( file )
       {
          hb_retni( mxmlSaveFile( node, file, cb ) );
@@ -1386,7 +1380,6 @@ HB_FUNC( MXMLSAVEFILE )
          hb_strfree( pCbs->hText );
          pCbs->hText = NULL;
       }
-      hb_strfree( hFree );
    }
    else
       MXML_ERR_ARGS();

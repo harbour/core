@@ -11,6 +11,8 @@ PROCEDURE Main()
    LOCAL tree, node
    LOCAL xData
 
+   Set( _SET_OSCODEPAGE, hb_cdpOS() )
+
    mxmlSetErrorCallback( @my_mxmlError() )
    mxmlSetCustomHandlers( @load_c(), @save_c() )
 

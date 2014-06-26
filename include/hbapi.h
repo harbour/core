@@ -346,7 +346,7 @@ struct hb_struRefer
    union {
       struct _HB_BASEARRAY * array;       /* array (statics and array item references) */
       struct _HB_CODEBLOCK * block;       /* codeblock */
-      struct _HB_ITEM * itemPtr;          /* item pointer  */
+      struct _HB_ITEM * itemPtr;          /* item pointer */
       struct _HB_ITEM ** *itemsbasePtr;   /* local variables */
    } BasePtr;
    HB_ISIZ offset;                        /* 0 for static variables */
@@ -1200,7 +1200,7 @@ extern HB_EXPORT HB_BOOL hb_iswince( void );    /* return HB_TRUE if OS is Windo
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 
 /* OS/Harbour codepage conversion */
-extern HB_EXPORT HB_BOOL      hb_osUseCP( void ); /* Is OS<->Harbour codepage conversion enabled?  */
+extern HB_EXPORT HB_BOOL      hb_osUseCP( void ); /* Is OS<->Harbour codepage conversion enabled? */
 extern HB_EXPORT const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string sent to a system call, from Harbour codepage. */
 extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string received from a system call, to Harbour codepage. */
 

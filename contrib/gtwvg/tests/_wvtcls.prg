@@ -312,12 +312,10 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oDlg:Destroy()
 
    IF lOpen
-      Select( cUseAlias )
-      USE
+      ( cUseAlias )->( dbCloseArea() )
    ENDIF
    IF lOpen1
-      Select( cUseAlias1 )
-      USE
+      ( cUseAlias1 )->( dbCloseArea() )
    ENDIF
 
    WvtSetBlocks( aObjects )

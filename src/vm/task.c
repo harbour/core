@@ -743,7 +743,7 @@ void hb_taskResume( void * pTaskPtr )
       {
 #if ! defined( HB_HAS_UCONTEXT )
          case TASK_INIT:
-            /* save current execution context  */
+            /* save current execution context */
             if( setjmp( s_currTask->context ) == 0 )
             {
                s_currTask = pTask;
@@ -767,7 +767,7 @@ void hb_taskResume( void * pTaskPtr )
             /* save current execution context and switch to the new one */
             swapcontext( &pCurrTask->context, &pTask->context );
 #else
-            /* save current execution context  */
+            /* save current execution context */
             if( setjmp( s_currTask->context ) == 0 )
             {
                s_currTask = pTask;

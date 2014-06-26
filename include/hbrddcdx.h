@@ -288,11 +288,11 @@ typedef struct _CDXPAGE
       CDXINTNODE intNode;
    } node;
    HB_BYTE   bufKeyVal[ CDX_MAXKEY ];      /* buffer for leaf key val or added branch key */
-   HB_SHORT  bufKeyNum;                    /* do not change these vars' order             */
-   HB_SHORT  bufKeyPos;                    /* they have to be just after the node         */
-   HB_SHORT  bufKeyLen;                    /* and maybe temporary overwriten when adding  */
-   HB_SHORT  iFree;                        /* new key to interior node record.            */
-   HB_BYTE * pKeyBuf;                      /* pointer to uncompressed leaf page key pool  */
+   HB_SHORT  bufKeyNum;                    /* do not change these vars' order */
+   HB_SHORT  bufKeyPos;                    /* they have to be just after the node */
+   HB_SHORT  bufKeyLen;                    /* and maybe temporary overwriten when adding */
+   HB_SHORT  iFree;                        /* new key to interior node record. */
+   HB_BYTE * pKeyBuf;                      /* pointer to uncompressed leaf page key pool */
    /* HB_SHORT iKeyInBuf; */
 
    struct _CDXPAGE * Owner;
@@ -460,15 +460,15 @@ typedef struct _CDXAREA
    DBFAREA dbfarea;
 
    /*
-   *  CDX's additions to the workarea structure
-   *
-   *  Warning: The above section MUST match DBFAREA exactly! Any
-   *  additions to the structure MUST be added below, as in this
-   *  example.
-   */
+    * CDX's additions to the workarea structure
+    *
+    * Warning: The above section MUST match DBFAREA exactly! Any
+    * additions to the structure MUST be added below, as in this
+    * example.
+    */
 
    LPCDXSORTINFO  pSort;         /* Index build structure */
-   LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
+   LPCDXINDEX     lpIndexes;     /* Pointer to indexes array */
    const HB_UCHAR * sortTab;     /* Table with sorted characters */
    HB_BOOL        fCdxAppend;    /* Appended record changed */
    HB_BOOL        fSortCDP;      /* Use CDP functions for sorting */

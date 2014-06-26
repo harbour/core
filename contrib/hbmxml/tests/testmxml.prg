@@ -43,6 +43,7 @@ PROCEDURE Main( cFileArg )
 
    hb_cdpSelect( "UTF8EX" )
    hb_SetTermCP( hb_cdpTerm() )
+   Set( _SET_OSCODEPAGE, hb_cdpOS() )
 
    /* Check arguments */
 

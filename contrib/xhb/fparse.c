@@ -44,6 +44,8 @@
  *
  */
 
+/* TODO: use Harbour FS API */
+
 /*
    FParse( cFile, cDelimiter ) -> array
 

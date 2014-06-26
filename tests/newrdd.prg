@@ -231,7 +231,7 @@ PROCEDURE Main()
    WAIT
    CLS
 
-   ? 'Select( "TESTDBF" )'
+   ? 'dbSelectArea( "TESTDBF" )'
    ? "SET FILTER TO TESTDBF->SALARY > 120000"
    ? "TESTDBF->( dbGoTop() )"
    ? "DO WHILE ! TESTDBF->( Eof() )"
@@ -258,7 +258,7 @@ PROCEDURE Main()
    ? "NEWRDD->( dbDelete() )"
    ? "? NEWRDD->( Deleted() )"
    ? "NEWRDD->( dbRLock( 3 ) )"
-   Select( "TESTDBF" )
+   dbSelectArea( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 120000
    TESTDBF->( dbGoTop() )
    DO WHILE ! TESTDBF->( Eof() )
@@ -352,7 +352,7 @@ PROCEDURE Main()
    CLS
 
    NEWRDD->( dbCloseArea() )
-   Select( "TESTDBF" )
+   dbSelectArea( "TESTDBF" )
    SORT ON FIRST /DC, AGE /D TO newrdd
 
    dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )

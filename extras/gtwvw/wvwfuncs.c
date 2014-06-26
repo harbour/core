@@ -63,6 +63,8 @@
 
 #include "hbgtwvw.h"
 
+#include "hbapifs.h"
+
 HB_FUNC( WVW_YESCLOSE )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -807,7 +809,6 @@ HB_FUNC( OPENIMAGE )
    const char * cFileName = hb_parc( 1 );
    BOOL         lString   = HB_ISNIL( 2 ) ? 0 : hb_parl( 2 );
    int          iFileSize;
-   FILE *       fp;
    /* IPicture * pPic; */
    LPPICTURE pPic;
    IStream * pStream;
@@ -827,25 +828,24 @@ HB_FUNC( OPENIMAGE )
    }
    else
    {
-      fp = fopen( cFileName, "rb" );
-      if( ! fp )
+      HB_FHANDLE fhnd = hb_fsOpen( cFileName, FO_READ | FO_SHARED );
+      if( fhnd == FS_ERROR )
       {
          hb_retnl( 0 );
          return;
       }
 
-      fseek( fp, 0, SEEK_END );
-      iFileSize = ftell( fp );
-      hG        = GlobalAlloc( GPTR, iFileSize );
+      iFileSize = ( int ) hb_fsSeek( fhnd, 0, FS_END );
+      hG = GlobalAlloc( GPTR, iFileSize );
       if( ! hG )
       {
-         fclose( fp );
+         hb_fsClose( fhnd );
          hb_retnl( 0 );
          return;
       }
-      fseek( fp, 0, SEEK_SET );
-      fread( ( void * ) hG, 1, iFileSize, fp );
-      fclose( fp );
+      hb_fsSeek( fhnd, 0, FS_SET );
+      hb_fsReadLarge( fhnd, hG, iFileSize );
+      hb_fsClose( fhnd );
    }
 
    CreateStreamOnHGlobal( hG, 0, &pStream );

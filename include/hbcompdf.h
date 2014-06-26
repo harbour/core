@@ -359,7 +359,7 @@ typedef struct HB_EXPR_
       struct
       {
          struct HB_EXPR_ * pMacro;  /* macro variable */
-         const char * szName;       /* variable name  */
+         const char * szName;       /* variable name */
       } asRTVar;                 /* PUBLIC or PRIVATE variable declaration */
       struct
       {
@@ -851,7 +851,7 @@ typedef struct
 extern PHB_COMP hb_comp_new( void );
 extern void hb_comp_free( PHB_COMP );
 
-#endif /* ! HB_MACRO_SUPPORT  */
+#endif /* ! HB_MACRO_SUPPORT */
 
 typedef struct _HB_COMP_FUNCS
 {

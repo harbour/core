@@ -48,6 +48,8 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+/* TODO: use Harbour FS API */
+
 #include "hbgtcore.h"
 #include "hbapifs.h"
 
@@ -451,7 +453,7 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 }
 
 #if 0
-int main(int argc, char **argv)
+int main( int argc, char ** argv )
 {
    int piTransTbl[ 256 ], i;
 

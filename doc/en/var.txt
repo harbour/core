@@ -128,9 +128,9 @@
       procedure
    $EXAMPLES$
       PROCEDURE Main()
-         PRIVATE mPrivate
 
-         mPrivate := "PRIVATE from Main()"
+         PRIVATE mPrivate := "PRIVATE from Main()"
+
          ? mPrivate     // PRIVATE from Main()
          Test()
          ? mPrivate     // PRIVATE from Main()
@@ -138,9 +138,9 @@
          RETURN
 
       PROCEDURE Main()
-         PRIVATE mPrivate
 
-         mPrivate := "PRIVATE from Main()"
+         PRIVATE mPrivate := "PRIVATE from Main()"
+
          ? mPrivate           // PRIVATE from Main()
          RELEASE mPrivate
          ? mPrivate           // NIL
@@ -226,6 +226,7 @@
       function/procedure
    $EXAMPLES$
       PROCEDURE Main()
+
          PUBLIC mPublic
          PRIVATE mPrivateGlobal
 
@@ -235,6 +236,7 @@
          RETURN
 
       PROCEDURE CallProc()
+
          PRIVATE mPrivateLocal
 
          ? __mvScope( "mPublic" )            // HB_MV_PUBLIC
@@ -377,7 +379,9 @@
          RETURN
 
       PROCEDURE CountMemvars()
+
          LOCAL i, nCnt, xVal, cName
+
          PUBLIC ccPublic := "ccPublic"
          PRIVATE ccPrivate := "ccPrivate"
 
@@ -560,6 +564,7 @@
       as a value of the codeblock evaluation.
    $EXAMPLES$
       PROCEDURE Main()
+
          LOCAL cbSetGet
          PUBLIC xPublic
 
@@ -612,8 +617,8 @@
       a specific work area code block use FieldWBlock() instead.
    $EXAMPLES$
       // open a file named test.dbf that have a field named "name"
-      LOCAL bField
-      bFiled := FieldBlock( "name" )
+      LOCAL bFiled := FieldBlock( "name" )
+
       USE test
       ? "Original value of field 'name':", Eval( bField )
       Eval( bField, "Mr X new name" )
@@ -665,9 +670,8 @@
       with the name <cFieldName> in work area number <nWorkArea>, the code
       block return NIL.
    $EXAMPLES$
-      LOCAL bField
       // this block work on the field "name" that exist on work area 2
-      bFiled := FieldBlock( "name", 2 )
+      LOCAL bFiled := FieldBlock( "name", 2 )
       // open a file named One in work area 1
       // that have a field named "name"
       SELECT 1
@@ -887,11 +891,14 @@
       passed by reference.
    $EXAMPLES$
       PROCEDURE Main()
+
          LOCAL cVar := "Test local"
+
          MEMVAR m_nVar
          PRIVATE m_nVar := 0
 
          Test( @cVar, @m_nVar, cVar, m_nVar )
+
          RETURN
 
       STATIC PROCEDURE Test( Arg1, Arg2, Arg3, Arg4 )

@@ -1041,8 +1041,8 @@ static int _qr_penalty( PHB_BITBUFFER pBits, int iVersion )
    }
 
    /* 2. Block of same color modules */
-   /* Instead of looking for non-overlapped MxN block, we can search for 2x2 overlapping blocks, */
-   /* penalty value is the same for both of these methods                                        */
+   /* Instead of looking for non-overlapped MxN block, we can search for 2x2 overlapping blocks,
+      penalty value is the same for both of these methods */
    for( i = 0; i < iLen - 1; i++ )
    {
       for( j = 0; j < iLen - 1; j++ )

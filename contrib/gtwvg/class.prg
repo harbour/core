@@ -479,7 +479,7 @@ METHOD WvtDialog:Inkey()
          ::oLastObj := ::aObjects[ ::nCurObj ]
 
          IF ::oCurObj:nType == DLG_OBJ_BROWSE
-            Select( ::oCurObj:cAlias )
+            dbSelectArea( ::oCurObj:cAlias )
          ENDIF
 
          ::Eval( ::oCurObj:bOnFocus, ::oCurObj )
@@ -971,7 +971,7 @@ METHOD WvtBrowse:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtBrowse:Create()
 
-   Select( ::cAlias )
+   dbSelectArea( ::cAlias )
 #if 0
    ::nTop    := ::oBrw:nTop - 2
    ::nLeft   := ::oBrw:nLeft - 2
@@ -1063,17 +1063,10 @@ METHOD WvtBrowse:SetHBar()
 
 METHOD WvtBrowse:Refresh()
 
-   LOCAL nWorkArea := Select()
-
    IF HB_ISEVALITEM( ::bOnRefresh )
       Eval( ::bOnRefresh, self )
    ELSE
-      Select( ::cAlias )
-
-      ::oBrw:RefreshAll()
-      ::oBrw:ForceStable()
-
-      Select( nWorkArea )
+      ( ::cAlias )->( ::oBrw:RefreshAll():ForceStable() )
    ENDIF
 
    RETURN Self
@@ -1135,17 +1128,12 @@ METHOD WvtBrowse:DeHilite()
 
 METHOD WvtBrowse:SetTooltip()
 
-   LOCAL cTip, nArea
+   LOCAL cTip
 
    IF HB_ISEVALITEM( ::bTooltip )
       ::SaveSettings()
-      nArea := Select( ::cAlias )
 
-      Select( ::cAlias )
-
-      cTip := Eval( ::bTooltip )
-
-      Select( nArea )
+      cTip := ( ::cAlias )->( Eval( ::bTooltip ) )
 
       ::RestSettings()
    ENDIF

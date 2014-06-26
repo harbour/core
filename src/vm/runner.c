@@ -59,20 +59,20 @@
 
 typedef struct
 {
-   char *        szName;                        /* Name of the function     */
-   HB_PCODEFUNC  pcodeFunc;                     /* Dynamic function info    */
-   HB_BYTE *     pCode;                         /* P-code                   */
+   char *        szName;                        /* Name of the function */
+   HB_PCODEFUNC  pcodeFunc;                     /* Dynamic function info */
+   HB_BYTE *     pCode;                         /* P-code */
 } HB_DYNF, * PHB_DYNF;
 
 typedef struct
 {
-   HB_ULONG    ulSymbols;                       /* Number of symbols        */
-   HB_ULONG    ulFuncs;                         /* Number of functions      */
+   HB_ULONG    ulSymbols;                       /* Number of symbols */
+   HB_ULONG    ulFuncs;                         /* Number of functions */
    HB_BOOL     fInit;                           /* should be INIT functions executed */
    HB_BOOL     fExit;                           /* should be EXIT functions executed */
-   HB_LONG     lSymStart;                       /* Startup Symbol           */
-   PHB_SYMB    pSymRead;                        /* Symbols read             */
-   PHB_DYNF    pDynFunc;                        /* Functions read           */
+   HB_LONG     lSymStart;                       /* Startup Symbol */
+   PHB_SYMB    pSymRead;                        /* Symbols read */
+   PHB_DYNF    pDynFunc;                        /* Functions read */
    PHB_SYMBOLS pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
@@ -80,10 +80,10 @@ static const char s_szHead[ 4 ] = { '\xC0', 'H', 'R', 'B' };
 
 
 #define SYM_NOLINK     0            /* symbol does not have to be linked */
-#define SYM_FUNC       1            /* function defined in this module   */
-#define SYM_EXTERN     2            /* function defined in other module  */
-#define SYM_DEFERRED   3            /* lately bound function             */
-#define SYM_NOT_FOUND  0xFFFFFFFFUL /* Symbol not found.                 */
+#define SYM_FUNC       1            /* function defined in this module */
+#define SYM_EXTERN     2            /* function defined in other module */
+#define SYM_DEFERRED   3            /* lately bound function */
+#define SYM_NOT_FOUND  0xFFFFFFFFUL /* Symbol not found. */
 
 static HB_SIZE hb_hrbCheckSig( const char * szBody, HB_SIZE nBodySize )
 {
@@ -318,8 +318,8 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
       char * buffer, ch;
       HB_USHORT usBind = ( usMode & HB_HRB_BIND_MODEMASK );
 
-      PHB_SYMB pSymRead;                           /* Symbols read     */
-      PHB_DYNF pDynFunc;                           /* Functions read   */
+      PHB_SYMB pSymRead;                           /* Symbols read */
+      PHB_DYNF pDynFunc;                           /* Functions read */
       PHB_DYNS pDynSym;
 
       int iVersion = hb_hrbReadHead( szHrbBody, nBodySize, &nBodyOffset );

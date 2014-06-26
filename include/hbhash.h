@@ -82,7 +82,7 @@ extern HB_EXPORT_INT PHB_HASH_TABLE hb_hashTableCreate( HB_SIZE nSize,
                                                         PHB_HASH_FUNC pComp );
 extern HB_EXPORT_INT void hb_hashTableKill( PHB_HASH_TABLE pTable ); /* release all items and the hash table */
 extern HB_EXPORT_INT HB_BOOL hb_hashTableAdd( PHB_HASH_TABLE pTable, const void * pKey, const void * pValue ); /* add a new item into the table */
-extern HB_EXPORT_INT HB_BOOL hb_hashTableDel( PHB_HASH_TABLE pTable, const void * pKey ); /* delete an item from the table  */
+extern HB_EXPORT_INT HB_BOOL hb_hashTableDel( PHB_HASH_TABLE pTable, const void * pKey ); /* delete an item from the table */
 extern HB_EXPORT_INT const void * hb_hashTableFind( PHB_HASH_TABLE pTable, const void * pKey ); /* return the pointer to item's value or NULL if not found */
 extern HB_EXPORT_INT PHB_HASH_TABLE hb_hashTableResize( PHB_HASH_TABLE pTable, HB_SIZE nNewSize ); /* resize the hash table */
 extern HB_EXPORT_INT HB_SIZE hb_hashTableSize( PHB_HASH_TABLE pTable ); /* return the hash table size */

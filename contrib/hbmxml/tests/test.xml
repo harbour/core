@@ -22,9 +22,8 @@
 		</choice>
 	</option>
 	<integer>123</integer>
-	<string>Now is the time for all good men to come to the aid of their
+	<string>Now is the time for all good men to ©ome to the aid of their
 country.</string>
-	<string>UTF-8 String ©</string>
 	<!-- this is a comment -->
 	<![CDATA[this is CDATA 0123456789ABCDEF]]>
 </group>

@@ -72,7 +72,7 @@ static void do_charonly( int iSwitch )
       int iShift, iBool;
       const char * pcSub, * pc;
 
-      /* check for zero-length strings  */
+      /* check for zero-length strings */
       switch( iSwitch )
       {
          case DO_CHARONLY_CHARONLY:

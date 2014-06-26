@@ -68,7 +68,7 @@
 
 /* There is also two compatibility define you can use */
 /* HB_CLS_NOTOBJECT which IF DEFINED, disable the auto inherit of HBObject */
-/* (which in fact also disable the classy compatibility :new(...) => :Init(...)  */
+/* (which in fact also disable the classy compatibility :new(...) => :Init(...) */
 /* HB_CLS_NOAUTOINIT which disable the (VO like) AutoInit for Logical and Numeric */
 /* when not specifically initiated */
 /* These two are disabled by default */

@@ -387,7 +387,7 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                 */
                PHB_EXPR pFirst;
 
-               pFirst = pArg;                /* first argument  */
+               pFirst = pArg;                /* first argument */
                pNext  = pFirst->pNext;       /* second argument */
                if( pNext )
                   pNext = pNext->pNext;      /* third argument */
