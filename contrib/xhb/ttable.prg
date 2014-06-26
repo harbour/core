@@ -658,7 +658,7 @@ METHOD Open() CLASS HBTable
       RETURN .F.
    ENDIF
 
-   Select( ::Alias )
+   dbSelectArea( ::Alias )
    ::Area := Select()
    IF HB_ISSTRING( ::cOrderBag ) .AND. hb_dbExists( ::cPath + ::cOrderFile )
       SET INDEX TO ( ::cPath + ::cOrderBag )
@@ -742,7 +742,7 @@ METHOD FldInit() CLASS HBTable
    oNew:oParent     := ::oParent
    oNew:Buffer      := ::buffer
 
-   Select( oNew:Alias )
+   dbSelectArea( oNew:Alias )
 
    oNew:Area := Select()
 
@@ -783,7 +783,7 @@ METHOD PROCEDURE Read( lKeepBuffer ) CLASS HBTable
       AAdd( ::ReadBuffers, { ( ::Alias )->( RecNo() ), ::Buffer } )
    ENDIF
 
-   Select( nSel )
+   dbSelectArea( nSel )
 
    RETURN
 
@@ -812,7 +812,7 @@ METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
    ENDIF
 
    ( ::Alias )->( dbGoto( nRec ) )
-   Select( nSel )
+   dbSelectArea( nSel )
 
    RETURN
 
@@ -851,7 +851,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
       ( ::Alias )->( dbRUnlock() )
    ENDIF
    ( ::Alias )->( ordSetFocus( nOrd ) )
-   Select( nSel )
+   dbSelectArea( nSel )
 
    RETURN .T.
 
@@ -876,7 +876,7 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
       ( ::Alias )->( dbRUnlock() )
    ENDIF
    ( ::Alias )->( ordSetFocus( nOrd ) )
-   Select( nSel )
+   dbSelectArea( nSel )
 
    RETURN .T.
 
@@ -1072,7 +1072,7 @@ METHOD Reindex() CLASS HBTable
    ( ::Alias )->( ordSetFocus( nOrd ) )
    ( ::Alias )->( dbGoTop() )
    ( ::Alias )->( dbUnlock() )
-   Select( nSel )
+   dbSelectArea( nSel )
 
    RETURN .T.
 
@@ -1112,7 +1112,7 @@ METHOD FastReindex() CLASS HBTable
    ( ::Alias )->( ordSetFocus( nOrd ) )
    ( ::Alias )->( dbGoTop() )
    ( ::Alias )->( dbUnlock() )
-   Select( nSel )
+   dbSelectArea( nSel )
 
    RETURN .T.
 

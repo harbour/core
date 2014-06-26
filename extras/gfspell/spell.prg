@@ -1116,8 +1116,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       RestScreen( 8, 30, 11, 48, cSave )
    ENDIF
 
-   Select( "DICT" )
-   dbCloseArea()
+   DICT->( dbCloseArea() )
    FErase( "$$temp" + IndexExt() )
 
    RETURN nStatus
@@ -1244,8 +1243,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
       RestScreen( 8, 30, 12, 48, cSave )
    ENDIF
 
-   Select( "DICT" )
-   dbCloseArea()
+   DICT->( dbCloseArea() )
 
    RETURN nStatus
 

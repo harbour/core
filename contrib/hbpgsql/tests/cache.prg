@@ -145,7 +145,7 @@ PROCEDURE SQLCloseTemp( cAlias )
 
    LOCAL x
 
-   IF ! Empty( Select( cAlias ) )
+   IF Select( cAlias ) != 0
       ( cAlias )->( dbCloseArea() )
    ENDIF
 
@@ -262,10 +262,10 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
       RETURN .F.
    ENDIF
 
-   IF Empty( Select( cAlias ) )
+   IF Select( cAlias ) == 0
       hb_dbCreateTemp( cAlias, oQuery:Struct() )
    ELSE
-      Select( cAlias )
+      dbSelectArea( cAlias )
       hb_dbZap()
    ENDIF
 

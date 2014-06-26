@@ -62,6 +62,7 @@ FUNCTION __dbJoin( cAlias, cFile, aFields, bFor, cRDD, nConnection, cCodePage )
 
    dbSelectArea( nMaster )
    IF Empty( aStruct := __FieldTwo( cAlias, aFields ) )
+      /* NOTE: CA-Cl*pper will leave the wrong workarea (cAlias) selected here */
       RETURN .F.
    ENDIF
 
@@ -130,7 +131,7 @@ STATIC FUNCTION __FieldTwo( cAlias, aFields )
    AEval( dbStruct(), {| aFld | cField := aFld[ DBS_NAME ], ;
       iif( AScan( aFields, bFind ) == 0, NIL, AAdd( aStruct, aFld ) ) } )
 
-   Select( cAlias )
+   dbSelectArea( cAlias )
    bFind := {| cFld | "->" $ cFld .AND. SubStr( cFld, At( "->", cFld ) + 2 ) == cField }
    AEval( dbStruct(), {| aFld | cField := aFld[ DBS_NAME ], ;
       iif( AScan( aFields, bFind ) == 0, NIL, AAdd( aStruct, aFld ) ) } )
