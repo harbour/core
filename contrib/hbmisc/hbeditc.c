@@ -636,8 +636,7 @@ HB_FUNC( ED_CONFIG )
                pEd->first_col   = 0;
             }
          }
-         if( szer > nszer ) /* current width of the window is smaller then during previous activation
-                             */
+         if( szer > nszer )  /* current width of the window is smaller then during previous activation */
          {
             if( pEd->cursor_col > ( nszer - 1 ) )
             {
@@ -1591,7 +1590,7 @@ static void End( PHB_EDITOR pEd )
    }
    else if( ( ll - pEd->first_col ) > ( pEd->right - pEd->left ) )
    {
-      /* scroll text to the right  */
+      /* scroll text to the right */
       pEd->cursor_col     = pEd->right - pEd->left;
       pEd->first_col      = ll - ( pEd->right - pEd->left );
       pEd->fStable        = HB_FALSE;

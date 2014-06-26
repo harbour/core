@@ -710,7 +710,7 @@
 #define HPDF_LANG_PA                        "pa"     /* Punjabi */
 #define HPDF_LANG_PL                        "pl"     /* Polish */
 #define HPDF_LANG_PS                        "ps"     /* Pashto,Pushto */
-#define HPDF_LANG_PT                        "pt"     /* Portuguese  */
+#define HPDF_LANG_PT                        "pt"     /* Portuguese */
 #define HPDF_LANG_QU                        "qu"     /* Quechua */
 #define HPDF_LANG_RM                        "rm"     /* Rhaeto-Romance */
 #define HPDF_LANG_RN                        "rn"     /* Kirundi */

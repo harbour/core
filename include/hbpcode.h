@@ -194,8 +194,8 @@ typedef enum
    HB_P_MACROPUSHREF,          /* 127 Reference to macro variable @&mvar */
    HB_P_PUSHLONGLONG,          /* 128 places an integer number on the virtual machine stack */
    HB_P_ENUMSTART,             /* 129 Start of FOR EACH loop */
-   HB_P_ENUMNEXT,              /* 130 Next item of FOR EACH loop  */
-   HB_P_ENUMPREV,              /* 131 Previous item of FOR EACH loop  */
+   HB_P_ENUMNEXT,              /* 130 Next item of FOR EACH loop */
+   HB_P_ENUMPREV,              /* 131 Previous item of FOR EACH loop */
    HB_P_ENUMEND,               /* 132 End of FOR EACH loop */
    HB_P_SWITCH,                /* 133 SWITCH using long values */
    HB_P_PUSHDATE,              /* 134 places a data constant value on the virtual machine stack */

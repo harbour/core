@@ -57,37 +57,37 @@
 #define FEOF        ( ( char ) 26 )
 
 #define BUFFERSIZE  4096         /* maximum size of the file buffer */
-#define MAXLINE     255          /* default maximum size of a line  */
+#define MAXLINE     255          /* default maximum size of a line */
 
 #define TABSET      8
 
 typedef struct
 {
-   HB_FOFFSET buffoffset;        /* offset into buffer of current line  */
-   HB_FOFFSET fsize;             /* file size in bytes                  */
-   HB_ISIZ    bufftop, buffbot;  /* first and last character in buffer  */
-   int        wintop, winbot;    /* first and last character in window  */
-   int        winrow, wincol;    /* row and column of window highlight  */
-   int        sline, eline;      /* start and end line of window        */
-   int        scol, ecol;        /* start and end col of window         */
-   int        height, width;     /* height and width of window          */
-   HB_FHANDLE infile;            /* input file handle                   */
-   int        maxlin;            /* line size                           */
-   HB_ISIZ    buffsize;          /* buffer size                         */
-   int        hlight;            /* highlight attribute                 */
-   int        norm;              /* normal attribute                    */
+   HB_FOFFSET buffoffset;        /* offset into buffer of current line */
+   HB_FOFFSET fsize;             /* file size in bytes */
+   HB_ISIZ    bufftop, buffbot;  /* first and last character in buffer */
+   int        wintop, winbot;    /* first and last character in window */
+   int        winrow, wincol;    /* row and column of window highlight */
+   int        sline, eline;      /* start and end line of window */
+   int        scol, ecol;        /* start and end col of window */
+   int        height, width;     /* height and width of window */
+   HB_FHANDLE infile;            /* input file handle */
+   int        maxlin;            /* line size */
+   HB_ISIZ    buffsize;          /* buffer size */
+   int        hlight;            /* highlight attribute */
+   int        norm;              /* normal attribute */
    HB_ISIZ    kcount;            /* number of keys in terminate key list*/
-   int        colinc;            /* col increment amount                */
-   HB_BOOL    bBrowse;           /* browse flag                         */
-   HB_BOOL    bRefresh;          /* HB_TRUE means refresh screen        */
-   int        keylist[ 24 ];     /* terminate key list                  */
-   int        keytype;           /* K_STRING or K_LIST                  */
+   int        colinc;            /* col increment amount */
+   HB_BOOL    bBrowse;           /* browse flag */
+   HB_BOOL    bRefresh;          /* HB_TRUE means refresh screen */
+   int        keylist[ 24 ];     /* terminate key list */
+   int        keytype;           /* K_STRING or K_LIST */
 
-   HB_BOOL    bIsAllocated;      /* if buffers were allocated           */
-   char *     buffer;            /* file buffer pointer                 */
-   char *     lbuff;             /* line buffer pointer                 */
-   HB_UCHAR * vseg;              /* video segment variable              */
-   int        iCellSize;         /* size of one buffer cell             */
+   HB_BOOL    bIsAllocated;      /* if buffers were allocated */
+   char *     buffer;            /* file buffer pointer */
+   char *     lbuff;             /* line buffer pointer */
+   HB_UCHAR * vseg;              /* video segment variable */
+   int        iCellSize;         /* size of one buffer cell */
 } FT_DISPC, * PFT_DISPC;
 
 static HB_TSD_NEW( s_dispc, sizeof( FT_DISPC ), NULL, NULL );
@@ -477,12 +477,12 @@ HB_FUNC( _FT_DFINIT )
    {
       rval = 0;
 
-      dispc->sline = sline;                             /* top row of window   */
-      dispc->scol  = scol;                              /* left col            */
-      dispc->eline = eline;                             /* bottom row          */
-      dispc->ecol  = ecol;                              /* right col           */
+      dispc->sline = sline;                             /* top row of window */
+      dispc->scol  = scol;                              /* left col */
+      dispc->eline = eline;                             /* bottom row */
+      dispc->ecol  = ecol;                              /* right col */
 
-      dispc->width  = dispc->ecol - dispc->scol;        /* calc width of window  */
+      dispc->width  = dispc->ecol - dispc->scol;        /* calc width of window */
       dispc->height = dispc->eline - dispc->sline + 1;  /* calc height of window */
 
       if( dispc->vseg )
@@ -503,8 +503,8 @@ HB_FUNC( _FT_DFINIT )
       if( dispc->lbuff )
          hb_xfree( dispc->lbuff );
 
-      dispc->buffer = ( char * ) hb_xalloc( dispc->buffsize );    /* allocate memory  */
-      dispc->lbuff  = ( char * ) hb_xalloc( dispc->maxlin + 1 );  /*  for buffers     */
+      dispc->buffer = ( char * ) hb_xalloc( dispc->buffsize );    /* allocate memory */
+      dispc->lbuff  = ( char * ) hb_xalloc( dispc->maxlin + 1 );  /*  for buffers */
 
       dispc->bIsAllocated = ! ( dispc->buffer == NULL || dispc->lbuff == NULL || dispc->vseg == NULL );
       /* memory allocated? */
@@ -527,11 +527,11 @@ HB_FUNC( _FT_DFINIT )
             dispc->vseg = NULL;
          }
       }
-      else                                                     /* get parameters            */
+      else                                                     /* get parameters */
       {
-         dispc->infile = hb_numToHandle( hb_parnint( 1 ) );    /* file handle               */
-         j = hb_parni( 6 );                                    /* starting line value       */
-         dispc->norm   = hb_parni( 7 );                        /* normal color attribute    */
+         dispc->infile = hb_numToHandle( hb_parnint( 1 ) );    /* file handle */
+         j = hb_parni( 6 );                                    /* starting line value */
+         dispc->norm   = hb_parni( 7 );                        /* normal color attribute */
          dispc->hlight = hb_parni( 8 );                        /* highlight color attribute */
 
          if( HB_ISARRAY( 9 ) )
@@ -554,17 +554,17 @@ HB_FUNC( _FT_DFINIT )
                dispc->keylist[ i - 1 ] = pszKeys[ i - 1 ];  /* get exit key list */
          }
 
-         dispc->bBrowse = hb_parl( 10 );              /* get browse flag   */
+         dispc->bBrowse = hb_parl( 10 );              /* get browse flag */
 
          dispc->colinc = hb_parni( 11 );              /* column skip value */
 
-         dispc->bufftop    = 0;                       /* init buffer top pointer      */
-         dispc->buffbot    = dispc->buffsize;         /* init buffer bottom pointer   */
+         dispc->bufftop    = 0;                       /* init buffer top pointer */
+         dispc->buffbot    = dispc->buffsize;         /* init buffer bottom pointer */
          dispc->buffoffset = 0;                       /* curr line offset into buffer */
-         dispc->winrow     = dispc->sline;            /* init window row              */
-         dispc->wincol     = 0;                       /* init window col              */
-         dispc->wintop     = 0;                       /* init window top pointer      */
-         dispc->winbot     = 0;                       /* init window bottom pointer   */
+         dispc->winrow     = dispc->sline;            /* init window row */
+         dispc->wincol     = 0;                       /* init window col */
+         dispc->wintop     = 0;                       /* init window top pointer */
+         dispc->winbot     = 0;                       /* init window bottom pointer */
 
          /* get file size */
          dispc->fsize = hb_fsSeek( dispc->infile, 0, FS_END ) - 1;
@@ -672,25 +672,25 @@ HB_FUNC( FT_DISPFILE )
             case K_DOWN:
 
                if( dispc->bBrowse )                  /* if browse flag */
-                  dispc->winrow = dispc->eline;      /* is set, force  */
+                  dispc->winrow = dispc->eline;      /* is set, force */
 
                /* active line to */
-               linedown( dispc );                    /* be last line   */
+               linedown( dispc );                    /* be last line */
                break;
 
             case K_UP:
 
                if( dispc->bBrowse )                  /* if browse flag */
-                  dispc->winrow = dispc->sline;      /* is set, force  */
+                  dispc->winrow = dispc->sline;      /* is set, force */
 
                /* active line to */
-               lineup( dispc );                      /* be first line  */
+               lineup( dispc );                      /* be first line */
                break;
 
             case K_LEFT:
 
-               dispc->wincol  -= dispc->colinc;      /* move cursor    */
-               dispc->bRefresh = HB_TRUE;            /* to the left    */
+               dispc->wincol  -= dispc->colinc;      /* move cursor */
+               dispc->bRefresh = HB_TRUE;            /* to the left */
 
                if( dispc->wincol < 0 )
                   dispc->wincol = 0;
@@ -699,7 +699,7 @@ HB_FUNC( FT_DISPFILE )
 
             case K_RIGHT:
 
-               dispc->wincol  += dispc->colinc;      /* move cursor  */
+               dispc->wincol  += dispc->colinc;      /* move cursor */
                dispc->bRefresh = HB_TRUE;            /* to the right */
 
                if( dispc->wincol > ( dispc->maxlin - dispc->width ) )
@@ -709,7 +709,7 @@ HB_FUNC( FT_DISPFILE )
 
             case K_HOME:
 
-               dispc->wincol   = 0;                  /* move cursor  */
+               dispc->wincol   = 0;                  /* move cursor */
                dispc->bRefresh = HB_TRUE;            /* to first col */
 
                break;
@@ -725,7 +725,7 @@ HB_FUNC( FT_DISPFILE )
 
             case K_CTRL_LEFT:
 
-               dispc->wincol  -= 16;                 /* move cursor    */
+               dispc->wincol  -= 16;                 /* move cursor */
                dispc->bRefresh = HB_TRUE;            /* 16 col to left */
 
                if( dispc->wincol < 0 )
@@ -735,7 +735,7 @@ HB_FUNC( FT_DISPFILE )
 
             case K_CTRL_RIGHT:
 
-               dispc->wincol  += 16;                 /* move cursor     */
+               dispc->wincol  += 16;                 /* move cursor */
                dispc->bRefresh = HB_TRUE;            /* 16 col to right */
 
                if( dispc->wincol > ( dispc->maxlin - dispc->width ) )
@@ -770,7 +770,7 @@ HB_FUNC( FT_DISPFILE )
             case K_ENTER:
 
                bDone = HB_TRUE;                      /* carriage return */
-               break;                                /* terminates      */
+               break;                                /* terminates */
 
             case K_ESC:
 

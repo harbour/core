@@ -90,7 +90,7 @@ extern void hb_compParserRun( HB_COMP_DECL );
 #define HB_VSCOMP_MEMVAR     ( HB_VSCOMP_PUBLIC | HB_VSCOMP_PRIVATE )
 #define HB_VSCOMP_TH_STATIC  ( HB_VSCOMP_STATIC | HB_VSCOMP_THREAD )
 
-/* return detailed information about a class of variable  */
+/* return detailed information about a class of variable */
 extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define HB_VS_UNDECLARED      0
 /* variables declared in a current codeblock/function/procedure */

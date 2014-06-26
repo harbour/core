@@ -823,7 +823,7 @@ HB_FUNC( WAPI_TREEVIEW_GETISEARCHSTRING )
 
 /* BOOL TreeView_GetItem( HWND hwndTV, LPTVITEM pitem );
    -- Version 4.71 or later --
-   BOOL TreeView_GetItem( HWND hwndTV, LPTVITEMEX pitem );  */
+   BOOL TreeView_GetItem( HWND hwndTV, LPTVITEMEX pitem ); */
 HB_FUNC( WAPI_TREEVIEW_GETITEM )
 {
 #if 0

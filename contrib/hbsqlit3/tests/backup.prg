@@ -99,7 +99,7 @@ PROCEDURE Main()
 
    pDbSource := NIL /* close :memory: database */
 
-   /* Little test for sqlite3_exec with callback  */
+   /* Little test for sqlite3_exec with callback */
    ?
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
    cb := @CallBack()  // "CallBack"

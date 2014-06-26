@@ -70,7 +70,7 @@ CREATE CLASS GDImage
 
    METHOD New( sx, sy )  CONSTRUCTOR
 
-   /* IMAGE CREATION, DESTRUCTION, LOADING AND SAVING  */
+   /* IMAGE CREATION, DESTRUCTION, LOADING AND SAVING */
 
    // Create in memory
    METHOD Create( sx, sy )                 INLINE ::pImage := gdImageCreate( sx, sy ), Self

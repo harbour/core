@@ -164,14 +164,14 @@ HB_FUNC( NUMROLX )
    if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )
    {
       lNum1  = __getparam( 2 );               /* Number to do ROL */
-      usNum2 = ( HB_USHORT ) __getparam( 3 ); /* Iterations       */
+      usNum2 = ( HB_USHORT ) __getparam( 3 ); /* Iterations */
 
       sizeofbits( &usBytes, &lPattern, &lTestRol );
 
-      usNum2 = usNum2 % usBytes;          /* Set usNum2 < usBytes  */
+      usNum2 = usNum2 % usBytes;          /* Set usNum2 < usBytes */
 
       lNumBak = lNum1 & lPattern;         /* lNumBak contain the section
-                                             to doesn't ROL               */
+                                             to doesn't ROL */
 
       for( usFor = 1; usFor <= usNum2; usFor++ )
       {
@@ -210,7 +210,7 @@ HB_FUNC( NUMMIRRX )
          if( lNum1 & 1 )
          {
             lMirror = lMirror << 1;    /* if the LSB of lNum1 == 1 then */
-            lMirror = lMirror | 1;     /* set the LSB of lMirror = 1    */
+            lMirror = lMirror | 1;     /* set the LSB of lMirror = 1 */
          }
          else
             lMirror = lMirror << 1;
