@@ -816,11 +816,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             case HB_CURLOPT_HTTPPROXYTUNNEL:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPROXYTUNNEL, HB_CURL_OPT_BOOL( 3 ) );
                break;
-#if 0
-            case HB_CURLOPT_SOCKS5_RESOLVE_LOCAL:
-               res = curl_easy_setopt( hb_curl->curl, CURLOPT_SOCKS5_RESOLVE_LOCAL, HB_CURL_OPT_BOOL( 3 ) );
-               break;
-#endif
+
             case HB_CURLOPT_INTERFACE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_INTERFACE, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
                break;

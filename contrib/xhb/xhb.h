@@ -59,9 +59,12 @@ extern HB_EXPORT void hb_OutDebug( const char * szMsg, HB_SIZE ulMsgLen );
 /* functions in dbgfxc.c */
 extern HB_EXPORT HB_BOOL hb_ToOutDebugOnOff( HB_BOOL bOnOff );
 extern HB_EXPORT void hb_ToOutDebug( const char * sTraceMsg, ... );
+
+#if defined( XHB_UNSAFE )
 extern HB_EXPORT HB_BOOL hb_ToLogFileOnOff( HB_BOOL bOnOff );
 extern HB_EXPORT HB_BOOL hb_EmptyLogFile( HB_BOOL bOnOff );
 extern HB_EXPORT void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... );
+#endif
 
 #define hb_seconds()  hb_dateSeconds()
 
