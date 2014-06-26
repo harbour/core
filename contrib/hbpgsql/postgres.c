@@ -958,7 +958,7 @@ HB_FUNC( PQISNONBLOCKING )
 HB_FUNC( PQTRACECREATE )  /* not a direct wrapper */
 {
 #ifdef NODLL
-   hb_FILE_ret( fopen( hb_parcx( 1 ), "w+b" ) );
+   hb_FILE_ret( hb_fopen( hb_parcx( 1 ), "w+b" ) );
 #else
    hb_retptr( NULL );
 #endif
