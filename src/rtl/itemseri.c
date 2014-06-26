@@ -1471,24 +1471,33 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          nLen = HB_GET_LE_UINT32( &pBuffer[ nOffset ] );
          nOffset += 4;
          szVal = ( char * ) hb_xgrab( nLen + 1 );
-         if( hb_zlibUncompress( szVal, &nLen, ( const char * ) &pBuffer[ nOffset ],
-                                nSize ) == HB_ZLIB_RES_OK )
+         switch( hb_zlibUncompress( szVal, &nLen,
+                                    ( const char * ) &pBuffer[ nOffset ], nSize ) )
          {
-            PHB_CYCLIC_REF pRefZ = NULL;
-            pBuffer = ( const HB_UCHAR * ) szVal;
-            if( hb_deserializeTest( &pBuffer, &nLen, 0, &pRefZ ) )
-               hb_deserializeItem( pItem, cdpIn, cdpOut, ( const HB_UCHAR * ) szVal, 0, pRefZ );
-            else
+            case HB_ZLIB_RES_OK:
+            {
+               PHB_CYCLIC_REF pRefZ = NULL;
+               pBuffer = ( const HB_UCHAR * ) szVal;
+               if( hb_deserializeTest( &pBuffer, &nLen, 0, &pRefZ ) )
+                  hb_deserializeItem( pItem, cdpIn, cdpOut, ( const HB_UCHAR * ) szVal, 0, pRefZ );
+               else
+                  hb_itemClear( pItem );
+               hb_itemSerialRefFree( pRefZ );
+               break;
+            }
+            case HB_ZLIB_RES_UNSUPPORTED:
+               if( hb_vmRequestQuery() == 0 )
+               {
+                  hb_itemPutCLPtr( pItem, szVal, nLen );
+                  hb_errRT_BASE_Ext1( EG_ARG, 3016, NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, 1, pItem );
+                  szVal = NULL;
+               }
+               /* no break; */
+
+            default:
                hb_itemClear( pItem );
-            hb_itemSerialRefFree( pRefZ );
          }
-         else if( hb_vmRequestQuery() == 0 )
-         {
-            hb_itemPutCLPtr( pItem, szVal, nLen );
-            hb_errRT_BASE_Ext1( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, 1, pItem );
-            hb_itemClear( pItem );
-            szVal = NULL;
-         }
+
          if( szVal )
             hb_xfree( szVal );
          nOffset += nSize;

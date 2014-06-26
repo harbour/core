@@ -332,6 +332,7 @@ DYNAMIC NumToHex
 DYNAMIC NumXorX
 DYNAMIC Occurs
 DYNAMIC Ole2txtError
+DYNAMIC OleDefaultArg
 DYNAMIC OleError
 DYNAMIC os_IsWin2000
 DYNAMIC os_IsWin2000_Or_Later

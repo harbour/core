@@ -118,7 +118,7 @@ METHOD setFocus() CLASS PushButton
       ::lHasFocus := .T.
       ::display()
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -147,7 +147,7 @@ METHOD select( nPos ) CLASS PushButton
          ENDIF
       ENDIF
 
-      IF HB_ISBLOCK( ::bSBlock )
+      IF HB_ISEVALITEM( ::bSBlock )
          Eval( ::bSBlock )
       ENDIF
 
@@ -162,7 +162,7 @@ METHOD killFocus() CLASS PushButton
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -281,7 +281,7 @@ METHOD col( nCol ) CLASS PushButton
 METHOD colorSpec( cColorSpec ) CLASS PushButton
 
    IF cColorSpec != NIL
-      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
          {|| ! Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 5 ) ) } )
    ENDIF
 

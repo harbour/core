@@ -559,3 +559,57 @@ HB_FUNC( HB_BAT )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+/* hb_BRAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+ */
+HB_FUNC( HB_BRAT )
+{
+   HB_SIZE nSubLen = hb_parclen( 1 );
+   HB_SIZE nPos = 0;
+
+   if( nSubLen )
+   {
+      HB_SIZE nLen = hb_parclen( 2 );
+      HB_ISIZ nTo = nLen - nSubLen;
+
+      if( nTo >= 0 )
+      {
+         const char * pszSub = hb_parc( 1 );
+         const char * pszText = hb_parc( 2 );
+         HB_ISIZ nStart = hb_parns( 3 );
+         HB_ISIZ nFrom;
+
+         if( nStart <= 1 )
+            nFrom = 0;
+         else
+            nFrom = --nStart;
+
+         if( nTo >= nFrom )
+         {
+            if( HB_ISNUM( 4 ) )
+            {
+               HB_ISIZ nEnd = hb_parns( 4 ) - nSubLen;
+
+               if( nEnd < nTo )
+                  nTo = nEnd;
+            }
+
+            if( nTo >= nFrom )
+            {
+               do
+               {
+                  if( pszText[ nTo ] == *pszSub &&
+                      memcmp( pszSub, pszText + nTo, nSubLen ) == 0 )
+                  {
+                     nPos = nTo + 1;
+                     break;
+                  }
+               }
+               while( --nTo >= nFrom );
+            }
+         }
+      }
+   }
+
+   hb_retns( nPos );
+}

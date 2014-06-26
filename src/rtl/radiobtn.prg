@@ -113,7 +113,7 @@ METHOD setFocus() CLASS RadioButtn
       ::lHasFocus := .T.
       ::display()
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -127,7 +127,7 @@ METHOD select( lState ) CLASS RadioButtn
    ::lBuffer := iif( HB_ISLOGICAL( lState ), lState, ! ::lBuffer )
 
    IF lOldState != ::lBuffer .AND. ;
-      HB_ISBLOCK( ::bSBlock )
+      HB_ISEVALITEM( ::bSBlock )
 
       Eval( ::bSBlock )
    ENDIF
@@ -139,7 +139,7 @@ METHOD killFocus() CLASS RadioButtn
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 

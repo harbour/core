@@ -65,8 +65,6 @@
 #include "setcurs.ch"
 #include "tbrowse.ch"
 
-#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
-
 #define SCORE_ROW       0
 #define SCORE_COL       60
 
@@ -204,13 +202,13 @@ METHOD ReadModal() CLASS HBGetList
       ::PostActiveGet()
 
 #ifdef HB_COMPAT_C53
-      IF HB_ISBLOCK( ::oGet:reader )
+      IF HB_ISEVALITEM( ::oGet:reader )
          Eval( ::oGet:reader, ::oGet, Self, oMenu, aMsg )
       ELSE
          ::Reader( oMenu, aMsg )
       ENDIF
 #else
-      IF HB_ISBLOCK( ::oGet:reader )
+      IF HB_ISEVALITEM( ::oGet:reader )
          Eval( ::oGet:reader, ::oGet )
       ELSE
          ::Reader()
@@ -776,7 +774,7 @@ METHOD SetFormat( bFormat ) CLASS HBGetList
 
    LOCAL bSavFormat := ::bFormat
 
-   IF HB_ISBLOCK( bFormat )
+   IF HB_ISEVALITEM( bFormat )
       ::bFormat := bFormat
    ENDIF
 
@@ -913,11 +911,16 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
       ENDDO
 
       // De-activate the GET
-      IF IS_IN( oGUI:ClassName(), "LISTBOX|RADIOGROUP" ) .AND. HB_ISNUMERIC( oGet:varGet() )
-         oGet:varPut( oGUI:value )
-      ELSE
-         oGet:varPut( oGUI:buffer )
-      ENDIF
+      SWITCH oGUI:ClassName()
+         CASE "LISTBOX"
+         CASE "RADIOGROUP"
+            IF HB_ISNUMERIC( oGet:varGet() )
+               oGet:varPut( oGUI:value )
+               EXIT
+            ENDIF
+         OTHERWISE
+            oGet:varPut( oGUI:buffer )
+      ENDSWITCH
       oGUI:killFocus()
 
       ::EraseGetMsg( aMsg )
@@ -1182,11 +1185,16 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
 
    IF !( oGUI:ClassName() == "TBROWSE" )
       xOldValue := oGet:varGet()
-      IF IS_IN( oGUI:ClassName(), "LISTBOX|RADIOGROUP" ) .AND. HB_ISNUMERIC( oGet:varGet() )
-         xNewValue := oGUI:Value
-      ELSE
-         xNewValue := oGUI:Buffer
-      ENDIF
+      SWITCH oGUI:ClassName()
+         CASE "LISTBOX"
+         CASE "RADIOGROUP"
+            IF HB_ISNUMERIC( oGet:varGet() )
+               xNewValue := oGUI:value
+               EXIT
+            ENDIF
+         OTHERWISE
+            xNewValue := oGUI:buffer
+      ENDSWITCH
    ENDIF
 
    IF !( xOldValue == xNewValue )

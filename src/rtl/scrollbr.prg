@@ -158,7 +158,7 @@ METHOD update() CLASS ScrollBar
 
    LOCAL nOldThumbPos := ::nThumbPos
 
-   IF HB_ISBLOCK( ::bSBlock )
+   IF HB_ISEVALITEM( ::bSBlock )
       Eval( ::bSBlock )
    ENDIF
 
@@ -312,7 +312,7 @@ METHOD orient( nOrient ) CLASS ScrollBar
 
 METHOD sBlock( bSBlock ) CLASS ScrollBar
 
-   IF HB_ISBLOCK( bSBlock )
+   IF HB_ISEVALITEM( bSBlock )
       ::bSBlock := bSBlock
    ENDIF
 

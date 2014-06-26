@@ -379,11 +379,11 @@ HB_FUNC( HB_HMERGE )
 {
    PHB_ITEM pDest = hb_param( 1, HB_IT_HASH );
    PHB_ITEM pSource = hb_param( 2, HB_IT_HASH );
-   PHB_ITEM pAction = hb_param( 3, HB_IT_BLOCK | HB_IT_NUMERIC );
+   PHB_ITEM pAction = hb_param( 3, HB_IT_EVALITEM | HB_IT_NUMERIC );
 
    if( pDest && pSource )
    {
-      if( pAction && HB_IS_BLOCK( pAction ) )
+      if( pAction && HB_IS_EVALITEM( pAction ) )
       {
          HB_SIZE nLen = hb_hashLen( pSource ), nPos = 0;
          while( ++nPos <= nLen )
@@ -420,7 +420,7 @@ HB_FUNC( HB_HMERGE )
 HB_FUNC( HB_HEVAL )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pBlock = hb_param( 2, HB_IT_BLOCK );
+   PHB_ITEM pBlock = hb_param( 2, HB_IT_EVALITEM );
 
    if( pHash && pBlock )
    {
@@ -470,7 +470,7 @@ HB_FUNC( HB_HSCAN )
          ++nStart;
       nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
 
-      if( HB_IS_BLOCK( pValue ) )
+      if( HB_IS_EVALITEM( pValue ) )
       {
          while( nCount-- )
          {

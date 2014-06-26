@@ -499,7 +499,7 @@ HB_FUNC( HB_INETPERIODCALLBACK )
 
    if( socket )
    {
-      PHB_ITEM pExec = hb_param( 2, HB_IT_ARRAY | HB_IT_BLOCK | HB_IT_SYMBOL );
+      PHB_ITEM pExec = hb_param( 2, HB_IT_ARRAY | HB_IT_EVALITEM );
 
       if( socket->pPeriodicBlock )
          hb_itemReturn( socket->pPeriodicBlock );

@@ -325,6 +325,7 @@ DYNAMIC hb_blowfishEncrypt_CFB
 DYNAMIC hb_blowfishKey
 DYNAMIC hb_BPeek
 DYNAMIC hb_BPoke
+DYNAMIC hb_BRAt
 DYNAMIC hb_BRight
 DYNAMIC hb_BSubStr
 DYNAMIC hb_BuildDate
@@ -648,6 +649,8 @@ DYNAMIC hb_langErrMsg
 DYNAMIC hb_langMessage
 DYNAMIC hb_langName
 DYNAMIC hb_langNew
+DYNAMIC hb_LeftEq
+DYNAMIC hb_LeftEqI
 DYNAMIC hb_langSelect
 DYNAMIC hb_libError
 DYNAMIC hb_libExt
@@ -1332,7 +1335,7 @@ DYNAMIC __dbArrange
 DYNAMIC __dbClearIndex
 DYNAMIC __dbClearRelation
 DYNAMIC __dbClose
-DYNAMIC __dbClosearea
+DYNAMIC __dbCloseArea
 DYNAMIC __dbCommit
 DYNAMIC __dbCommitAll
 DYNAMIC __dbContinue

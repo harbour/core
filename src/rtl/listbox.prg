@@ -188,7 +188,7 @@ METHOD close() CLASS ListBox
 
    RETURN Self
 
-METHOD delItem( nPos )
+METHOD delItem( nPos ) CLASS ListBox
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
 
@@ -485,7 +485,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
 
    RETURN 0
 
-METHOD insItem( nPos, cText, cData )
+METHOD insItem( nPos, cText, cData ) CLASS ListBox
 
    IF HB_ISSTRING( cText ) .AND. ;
       HB_ISNUMERIC( nPos ) .AND. ;
@@ -512,7 +512,7 @@ METHOD killFocus() CLASS ListBox
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -732,7 +732,7 @@ METHOD select( xPos ) CLASS ListBox
 
    ::display()
 
-   IF HB_ISBLOCK( ::bSBlock )
+   IF HB_ISEVALITEM( ::bSBlock )
       Eval( ::bSBlock )
    ENDIF
 
@@ -755,7 +755,7 @@ METHOD setFocus() CLASS ListBox
 
       ::display()
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -818,7 +818,7 @@ METHOD changeItem( nOldPos, nNewPos ) CLASS ListBox
 
       ::display()
 
-      IF HB_ISBLOCK( ::bSBlock )
+      IF HB_ISEVALITEM( ::bSBlock )
          Eval( ::bSBlock )
       ENDIF
    ENDIF
@@ -1043,7 +1043,7 @@ METHOD vScroll( oVScroll ) CLASS ListBox
 
 /* -------------------------------------------- */
 
-METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
+METHOD New( nTop, nLeft, nBottom, nRight, lDropDown ) CLASS ListBox
 
    LOCAL cColor
 
