@@ -28,7 +28,9 @@
   6. Open a Pull Request
 - Make sure to use the same coding/formatting style as you find in
   the files you're modifying. The easiest way to achieve this
-  is to use these commands to format the sources:
+  is to use these commands to format the sources (use this
+  with care - most existing sources are well-formatted, so make
+  sure to only apply it to newly added or modified code sections)
 
         $ uncrustify -c <harbour_dir>/bin/harbour.ucf <source(.c|.h)>
         $ <harbour_dir>/bin/hbformat <source(.prg|.hb|.ch)>
