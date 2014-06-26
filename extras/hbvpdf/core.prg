@@ -2420,7 +2420,10 @@ FUNCTION pdfJPEGInfo( cFile )
    xRes := hb_BCode( hb_BSubStr( c255, 15, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 16, 1 ) )
    yRes := hb_BCode( hb_BSubStr( c255, 17, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 18, 1 ) )
 
-   nAt := hb_BRAt( hb_BChar( 255 ) + hb_BChar( 192 ), c255 ) + 5
+   IF ( nAt := hb_BRAt( hb_BChar( 255 ) + hb_BChar( 0xC0 ), c255 ) ) == 0
+      nAt := hb_BRAt( hb_BChar( 255 ) + hb_BChar( 0xC2 ), c255 )
+   ENDIF
+   nAt += 5
    nHeight := hb_BCode( hb_BSubStr( c255, nAt, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, nAt + 1, 1 ) )
    nWidth := hb_BCode( hb_BSubStr( c255, nAt + 2, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, nAt + 3, 1 ) )
 

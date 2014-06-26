@@ -358,23 +358,21 @@
       If 3rd and 4th parameters is not specified, then hb_RAt() is equal
       to RAt().
    $EXAMPLES$
-      LOCAL cString
-      LOCAL cSearch
-      LOCAL i, y, r, nLen
+      LOCAL cString := "acdefcdeedcb"
+      LOCAL cSearch := "cde"
+      LOCAL i, y, r
+      LOCAL nLen := Len( cString )
 
-      ? hb_RAt( "cde", "abcdefgfedcba" ) // -> 3
-
-      cString := "acdefcdeedcb"
-      cSearch := "cde"
-      nLen := Len( cString )
       FOR y := 1 TO nLen
          FOR i := 1 TO nLen
             IF ( r := hb_RAt( cSearch, cString, y, i ) ) != 0
-               ? 'hb_RAt( "' + cSearch + '", "' + cString + '", ' + hb_ntos( y ) + ', ' + hb_ntos( i ) + ' ) = ' + ;
+               ? 'hb_RAt( "' + cSearch + '", "' + cString + '",', hb_ntos( y ) + ",", hb_ntos( i ), ") =", ;
                   hb_ntos( r )
             ENDIF
          NEXT
       NEXT
+
+      ? hb_RAt( cSearch, "abcdefgfedcba" )  // -> 3
    $STATUS$
       R
    $COMPLIANCE$
@@ -578,8 +576,8 @@
       *  If <nLength> is specified but <nDecimals> is omitted (no
          decimal places), the return value is rounded to an integer.
    $EXAMPLES$
-      ? Str( 10, 6, 2 ) // " 10.00"
-      ? Str( -10, 8, 2 ) // "  -10.00"
+      ? Str( 10, 6, 2 )  // " 10.00"
+      ? Str( -10, 8, 2 )  // "  -10.00"
    $STATUS$
       R
    $COMPLIANCE$
@@ -656,8 +654,8 @@
 
       The StrZero() function was part of the CA-Cl*pper samples.
    $EXAMPLES$
-      ? StrZero( 10, 6, 2 ) // "010.00"
-      ? StrZero( -10, 8, 2 ) // "-0010.00"
+      ? StrZero( 10, 6, 2 )  // "010.00"
+      ? StrZero( -10, 8, 2 )  // "-0010.00"
    $STATUS$
       R
    $COMPLIANCE$
@@ -782,6 +780,7 @@
          ? Empty( 0 )               // .T.
          ? Empty( .F. )             // .T.
          ? Empty( "" )              // .T.
+         ? Empty( "  " )            // .T.
          ? Empty( 1 )               // .F.
          ? Empty( .T. )             // .F.
          ? Empty( "smile" )         // .F.
