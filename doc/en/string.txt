@@ -35,8 +35,8 @@
       in <cString> is an alphabetic character. If not, the function will
       return a logical false (.F.).
    $EXAMPLES$
-      ? 'IsAlpha( "hello" ) =', IsAlpha( "hello" )
-      ? 'IsAlpha( "12345" ) =', IsAlpha( "12345" )
+      ? IsAlpha( "hello" )
+      ? IsAlpha( "12345" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -224,8 +224,7 @@
       the first string <cSearch>. If the substring is not contained within
       the second expression, the function will return 0.
    $EXAMPLES$
-      ? 'At( "cde", "abcdefgfedcba" ) =', ;
-         At( "cde", "abcdefgfedcba" )    // 3
+      ? At( "cde", "abcdefgfedcba" )    // 3
    $STATUS$
       R
    $COMPLIANCE$
@@ -269,10 +268,8 @@
       the second expression, the function will return 0. The third and fourth
       parameters lets you indicate a starting and end offset to search in.
    $EXAMPLES$
-      ? 'hb_At( "cde", "abcdefgfedcba" ) =', ;
-         hb_At( "cde", "abcdefgfedcba" )       // 3
-      ? 'hb_At( "cde", "abcdefgfedcba" ) =', ;
-         hb_At( "cde", "abcdefgfedcba", 4 )    // 0
+      ? hb_At( "cde", "abcdefgfedcba" )       // 3
+      ? hb_At( "cde", "abcdefgfedcba", 4 )    // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -314,10 +311,8 @@
       If the function is unable to find any occurrence of <cSearch> in
       <cString>, the return value is 0.
    $EXAMPLES$
-      ? 'RAt( "cde", "abcdefgfcdeedcba" ) = ' + ;
-         hb_ntos( RAt( "cde", "abcdefgfcdeedcba" ) )     // 9
-      ? 'RAt( "cdr", "abcdefgfedcba" ) = ' + ;
-         hb_ntos( RAt( "cdr", "abcdefgfedcba" ) )        // 0
+      ? hb_ntos( RAt( "cde", "abcdefgfcdeedcba" ) )     // 9
+      ? hb_ntos( RAt( "cdr", "abcdefgfedcba" ) )        // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -367,8 +362,7 @@
       LOCAL cSearch
       LOCAL i, y, r, nLen
 
-      ? 'hb_RAt( "cde", "abcdefgfedcba" ) = ', ;
-         hb_RAt( "cde", "abcdefgfedcba" ) // -> 3
+      ? hb_RAt( "cde", "abcdefgfedcba" ) // -> 3
 
       cString := "acdefcdeedcb"
       cSearch := "cde"
@@ -376,8 +370,8 @@
       FOR y := 1 TO nLen
          FOR i := 1 TO nLen
             IF ( r := hb_RAt( cSearch, cString, y, i ) ) != 0
-            ? 'hb_RAt( "' + cSearch + '", "' + cString + '", ' + hb_ntos( y ) + ', ' + hb_ntos( i ) + ' ) = ' + ;
-               hb_ntos( r )
+               ? 'hb_RAt( "' + cSearch + '", "' + cString + '", ' + hb_ntos( y ) + ', ' + hb_ntos( i ) + ' ) = ' + ;
+                  hb_ntos( r )
             ENDIF
          NEXT
       NEXT
