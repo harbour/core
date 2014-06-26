@@ -824,8 +824,10 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( HB_ISCHAR( 3 ) )
                {
-                  hb_curl->pErr = fopen( hb_parc( 3 ), "a"  );
-                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_STDERR, hb_curl->pErr );
+                  hb_curl->pErr = hb_fopen( hb_parc( 3 ), "a"  );
+				  
+				  if ( hb_curl->pErr  )
+					res = curl_easy_setopt( hb_curl->curl, CURLOPT_STDERR, hb_curl->pErr );
                }
 
                break;
@@ -1046,7 +1048,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                }
             }
             break;
-            case HB_CURLOPT_HTTPPOST_VALUE:
+            case HB_CURLOPT_HTTPPOST_CONTENT:
             {
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
 
