@@ -558,6 +558,8 @@ HB_FUNC( HB_BAT )
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* hb_BRAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+ */
 HB_FUNC( HB_BRAT )
 {
    HB_SIZE nSubLen = hb_parclen( 1 );

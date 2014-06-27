@@ -185,10 +185,9 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOleAuto
    IF HB_ISSTRING( xOle )
       IF Empty( hOle := __oleCreateObject( xOle,, cLicense ) )
          RETURN Throw( s_oleError() )
-      ELSE
-         ::__hObj := hOle
-         ::cClassName := xOle
       ENDIF
+      ::__hObj := hOle
+      ::cClassName := xOle
    ELSE
       ::hObj := xOle
       IF ::__hObj == NIL
@@ -207,9 +206,8 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
    IF HB_ISSTRING( cClass )
       IF Empty( ::__hObj := __oleGetActiveObject( cClass ) )
          RETURN Throw( s_oleError() )
-      ELSE
-         ::cClassName := cClass
       ENDIF
+      ::cClassName := cClass
    ELSE
       wapi_MessageBox( , "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", ;
          "OLE Interface", )
@@ -254,8 +252,6 @@ FUNCTION GetActiveObject( cString )
 
 FUNCTION CreateOleObject( ... )
    RETURN __oleCreateObject( ... )
-
-#define WIN_DISP_E_PARAMNOTFOUND  0x80020004
 
 FUNCTION OleDefaultArg()
    RETURN __oleVariantNew( WIN_VT_ERROR, WIN_DISP_E_PARAMNOTFOUND )
