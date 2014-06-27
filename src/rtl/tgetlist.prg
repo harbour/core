@@ -904,6 +904,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
             oGet:varPut( oGUI:value )
             EXIT
          ENDIF
+         /* fall through */
       OTHERWISE
          oGet:varPut( oGUI:buffer )
       ENDSWITCH
@@ -1178,6 +1179,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
             xNewValue := oGUI:value
             EXIT
          ENDIF
+         /* fall through */
       OTHERWISE
          xNewValue := oGUI:buffer
       ENDSWITCH
