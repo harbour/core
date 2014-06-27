@@ -18,6 +18,6 @@ PROCEDURE Main()
       CONTINUE
    ENDDO
 
-   USE
+   dbCloseArea()
 
    RETURN

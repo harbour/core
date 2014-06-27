@@ -153,7 +153,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
       'error description and parameters...");' )
    FWrite( nH, "</font>" + hb_eol() + "</body></html>" + hb_eol() )
 
-   CLOSE ALL
+   dbCloseAll()
 
    ErrorLevel( 1 )
    QUIT

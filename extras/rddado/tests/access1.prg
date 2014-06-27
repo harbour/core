@@ -13,6 +13,6 @@ PROCEDURE Main()
    CLS
    Browse()
 
-   USE
+   dbCloseArea()
 
    RETURN

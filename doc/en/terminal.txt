@@ -730,7 +730,7 @@
          ENDIF
       ENDDO
       SET DEVICE TO SCREEN
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$

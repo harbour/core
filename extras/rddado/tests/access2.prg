@@ -37,6 +37,6 @@ PROCEDURE Main()
    CLS
    LOCATE FOR ( 'FIRST = "Lara"' )
    ? "Found:", Found()
-   USE
+   dbCloseArea()
 
    RETURN

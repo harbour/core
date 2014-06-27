@@ -11,6 +11,6 @@ PROCEDURE Main()
 
    Browse()
 
-   USE
+   dbCloseArea()
 
    RETURN

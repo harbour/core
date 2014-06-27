@@ -60,15 +60,15 @@ PROCEDURE Main()
       // now create an index
       USE table1 NEW
       INDEX ON FIELD->id TAG codigo
-      USE
+      dbCloseArea()
 
       USE table2 NEW
       INDEX ON FIELD->id TAG codigo
-      USE
+      dbCloseArea()
    ENDIF
 
    // now the magic
-   IF AdsConnect60( "harbour.add", 7, ; /* All types of connection */
+   IF AdsConnect60( "harbour.add", 7, ;  /* All types of connection */
       "ADSSYS", "", , @hConnection1 )
       // The connection handle to harbour.add is now stored in hConnection1,
       // and this is now the default connection
@@ -120,7 +120,7 @@ PROCEDURE Main()
             IF ! AdsExecuteSQLDirect( " insert into table1( name, address, city, age ) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + hb_ntos( n ) + ")" )
                ShowAdsError()
             ENDIF
-            USE
+            dbCloseArea()
          ENDIF
       NEXT
 
@@ -129,7 +129,7 @@ PROCEDURE Main()
             IF ! AdsExecuteSQLDirect( " insert into " + '"Customer Data"' + "( name, address, city, age ) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + hb_ntos( n ) + ")" )
                ShowAdsError()
             ENDIF
-            USE
+            dbCloseArea()
          ENDIF
       NEXT
 
@@ -142,10 +142,10 @@ PROCEDURE Main()
       ? "Press a key to browse", Alias()
       Inkey( 0 )
       Browse()
-      USE
+      dbCloseArea()
       USE table1 NEW
       Browse()
-      USE
+      dbCloseArea()
    ENDIF
 
    AdsDisconnect( hConnection1 )

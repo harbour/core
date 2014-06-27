@@ -61,14 +61,14 @@ FUNCTION HRBMAIN()
    IF "w" $ _REQUEST
 
       cHtml := CreateCounter( hb_ntos( Val( _REQUEST[ "w" ] ) ) )
-      IF ! Empty( cHtml )
+      IF Empty( cHtml )
+         uhttpd_SetHeader( "Content-Type", "text/html" )
+         uhttpd_Write( "<h1>Error: No image created</h1>" )
+      ELSE
          uhttpd_SetHeader( "Content-Type", "image/gif" )
          uhttpd_SetHeader( "Pragma", "no-cache" )
          uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_RandomInt( 100 ) ) + ".gif" )
          uhttpd_Write( cHtml )
-      ELSE
-         uhttpd_SetHeader( "Content-Type", "text/html" )
-         uhttpd_Write( "<h1>Error: No image created</h1>" )
       ENDIF
    ELSE
       uhttpd_SetHeader( "Content-Type", "text/html" )

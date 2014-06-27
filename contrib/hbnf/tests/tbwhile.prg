@@ -66,7 +66,7 @@ PROCEDURE Main()
    ENDIF
    ?
 
-   USE
+   dbCloseArea()
    hb_dbDrop( "tbnames.dbf" )
    hb_dbDrop( "tbnames.ntx" )
 
@@ -94,7 +94,7 @@ STATIC PROCEDURE make_dbf()
       { "OLEANDAR", "JILL", "425 FLORAL PARK DRIVE", "FLORAL PARK", "NY", "10093"       }, ;
       { "SUGARMAN", "CANDY", "1541 SWEETHEART ROAD", "HERSHEY", "PA", "10132"           } }
 
-   dbCreate( "tbnames", { ;
+   dbCreate( "tbnames.dbf", { ;
       { "LAST" , "C", 18, 0, }, ;
       { "FIRST", "C",  9, 0, }, ;
       { "ADDR" , "C", 28, 0, }, ;
@@ -102,13 +102,13 @@ STATIC PROCEDURE make_dbf()
       { "STATE", "C",  2, 0, }, ;
       { "ZIP"  , "C",  9, 0, } } )
 
-   USE tbnames
+   USE tbnames.dbf
 
    FOR EACH x IN aData
       dbAppend()
       AEval( x, {| e, n | FieldPut( n, e ) } )
    NEXT
 
-   USE
+   dbCloseArea()
 
    RETURN

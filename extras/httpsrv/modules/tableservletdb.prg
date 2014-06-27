@@ -136,7 +136,7 @@ METHOD Open() CLASS TableManager
 
    IF ! ::lOpened
 
-      CLOSE ALL
+      dbCloseAll()
       USE ( cDBF ) ALIAS table SHARED NEW
       // hb_ToOutDebug( "after: cDBF: %s, Used(): %s\n", cDBF, Used() )
       ::lOpened := Used()
@@ -375,7 +375,6 @@ CREATE CLASS BasicXML
 ENDCLASS
 
 METHOD New() CLASS BasicXML
-
    RETURN Self
 
 METHOD ToString() CLASS BasicXML

@@ -29,12 +29,14 @@
       a macro expression.
    $EXAMPLES$
       PROCEDURE Main()
+
          FIELD Id
          FIELD Name
-         USE test NEW
+         USE test.dbf NEW
          Name := "Sales"
          Id := 5
-         USE
+         dbCloseArea()
+
          RETURN
    $STATUS$
       R
@@ -91,6 +93,7 @@
       LOCAL variables and arrays are not affected by the RELEASE command.
    $EXAMPLES$
       PROCEDURE Main()
+
          LOCAL n, lVar
 
          n := iif( lVar, "A", 3 )
