@@ -53,20 +53,51 @@
 #endif
 
 #include "hbapifs.h"
+#include "hbvm.h"
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+   #include "hbwinuni.h"
+#endif
 
 FILE * hb_fopen( const char * path, const char * mode )
 {
-   char * pszFree = NULL;
    FILE * file;
 
-   path = hb_fsNameConv( path, &pszFree );
-#if defined( _MSC_VER ) && _MSC_VER >= 1400 && ! defined( _CRT_SECURE_NO_WARNINGS )
-   fopen_s( &file, path, mode );
+#if defined( HB_OS_WIN ) && defined( UNICODE ) && !defined( __XCC__ )
+   LPCTSTR lpPath, lpMode;
+   LPTSTR lpFreeP, lpFreeM;
+
+   lpPath = HB_FSNAMECONV( path, &lpFreeP );
+   lpMode = HB_FSNAMECONV( mode, &lpFreeM );
+
+   hb_vmUnlock();
+   #if defined( _MSC_VER ) && _MSC_VER >= 1400 && ! defined( _CRT_SECURE_NO_WARNINGS )
+      _wfopen_s( &file, lpPath, lpMode );
+   #else
+      file = _wfopen( lpPath, lpMode );
+   #endif
+   hb_vmLock();
+
+   if( lpFreeP )
+      hb_xfree( lpFreeP );
+   if( lpFreeM )
+      hb_xfree( lpFreeM );
 #else
-   file = fopen( path, mode );
-#endif
+   char * pszFree = NULL;
+
+   path = hb_fsNameConv( path, &pszFree );
+
+   hb_vmUnlock();
+   #if defined( _MSC_VER ) && _MSC_VER >= 1400 && ! defined( _CRT_SECURE_NO_WARNINGS )
+      fopen_s( &file, path, mode );
+   #else
+      file = fopen( path, mode );
+   #endif
+   hb_vmLock();
+
    if( pszFree )
       hb_xfree( pszFree );
+#endif
 
    return file;
 }

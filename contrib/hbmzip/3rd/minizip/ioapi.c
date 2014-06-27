@@ -110,7 +110,7 @@ static voidpf ZCALLBACK fopen_file_func (voidpf opaque, const char* filename, in
         mode_fopen = "wb";
 
     if ((filename!=NULL) && (mode_fopen != NULL))
-        file = hb_fopen(filename, mode_fopen);
+        file = fopen(filename, mode_fopen);
     return file;
 }
 
