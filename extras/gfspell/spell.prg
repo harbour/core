@@ -448,7 +448,7 @@ FUNCTION Sp_Suggest( cWord )
       //
 
       FOR jj := 1 TO zz
-         cHold := Left( cWord, jj - 1 ) + SubStr( cWord, jj + 1 )
+         cHold := Stuff( cWord, jj, 1, "" )
          //
          // If the word is not already in the list, then check
          // to see if it is a valid word.
@@ -493,7 +493,7 @@ FUNCTION Sp_Suggest( cWord )
                ii := 0
                DO WHILE ( ii := hb_At( jj[ 1 ], cWord, ii ) ) > 0
                   FOR EACH kk IN jj[ 2 ]
-                     cHold := Left( cWord, ii - 1 ) + kk + SubStr( cWord, ii + 1 )
+                     cHold := Stuff( cWord, ii, 1, kk )
                      IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
                         AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
                      ENDIF
@@ -772,7 +772,7 @@ FUNCTION Sp_Quick( cWord )
    //
 
    FOR jj := 1 TO zz
-      cHold := Left( cWord, jj - 1 ) + SubStr( cWord, jj + 1 )
+      cHold := Stuff( cWord, jj, 1, "" )
       //
       // If the word is not already in the list, then check
       // to see if it is a valid word.
@@ -819,7 +819,7 @@ FUNCTION Sp_Quick( cWord )
                ll    := hb_At( "$", sc_aTryThese[ jj ], nOld )
                cTemp := SubStr( sc_aTryThese[ jj ], nOld, ll - nOld )
                nOld  := ll + 1
-               cHold := Left( cWord, ii - 1 ) + cTemp + SubStr( cWord, ii + 1 )
+               cHold := Stuff( cWord, ii, 1, cTemp )
                IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
                   AAdd( arr_, cHold )
                ENDIF

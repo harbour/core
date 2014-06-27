@@ -102,13 +102,13 @@ FUNCTION sprintf( ... )
             EXIT
 
          CASE "+"
-            cString := Left( cString, nPos - 1 ) + SubStr( cString, nPos + 1 )
+            cString := Stuff( cString, nPos, 1, "" )
             nPos    := At( "%", cString ) - 1
             lSign   := .T.
             EXIT
 
          CASE "0"
-            cString := Left( cString, nPos - 1 ) + SubStr( cString, nPos + 1 )
+            cString := Stuff( cString, nPos, 1, "" )
             nPos    := At( "%", cString ) - 1
             l0      := .T.
             EXIT

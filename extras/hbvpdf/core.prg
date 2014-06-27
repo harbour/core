@@ -39,7 +39,7 @@ FUNCTION pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )
    ENDIF
 
    IF ( nAt := At( "#pagenumber#", cString ) ) > 0
-      cString := Left( cString, nAt - 1 ) + hb_ntos( pdfPageNumber() ) + SubStr( cString, nAt + Len( "#pagenumber#" ) )
+      cString := Stuff( cString, nAt, Len( "#pagenumber#" ), hb_ntos( pdfPageNumber() ) )
    ENDIF
 
    lReverse := .F.
@@ -390,7 +390,7 @@ FUNCTION pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )
    ENDIF
 
    IF ( nAt := At( "#pagenumber#", cString ) ) > 0
-      cString := Left( cString, nAt - 1 ) + hb_ntos( pdfPageNumber() ) + SubStr( cString, nAt + Len( "#pagenumber#" ) )
+      cString := Stuff( cString, nAt, Len( "#pagenumber#" ), hb_ntos( pdfPageNumber() ) )
    ENDIF
 
    nLen := pdfLen( cString ) / 2
@@ -1113,7 +1113,7 @@ FUNCTION pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )
    ENDIF
 
    IF ( nAt := At( "#pagenumber#", cString ) ) > 0
-      cString := Left( cString, nAt - 1 ) + hb_ntos( pdfPageNumber() ) + SubStr( cString, nAt + Len( "#pagenumber#" ) )
+      cString := Stuff( cString, nAt, Len( "#pagenumber#" ), hb_ntos( pdfPageNumber() ) )
    ENDIF
 
    nLen := pdfLen( cString )

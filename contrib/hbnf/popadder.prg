@@ -270,7 +270,7 @@ STATIC PROCEDURE _ftAddScreen( aAdder )
    LOCAL nCol
 
    _ftPushWin( 2 + nTopOS, 2 + nAddSpace, 22 + nTopOS, 30 + nAddSpace, "   Adder   ", ;
-      "<F-1> for Help",, FT_B_DOUBLE )
+      "<F1> for Help",, FT_B_DOUBLE )
    nCol := 5 + nAddSpace
    hb_DispOutAt(  7 + nTopOS, nCol, hb_UTF8ToStr( "      ┌───┐ ┌───┐ ┌───┐" ) )
    hb_DispOutAt(  8 + nTopOS, nCol, hb_UTF8ToStr( "      │   │ │   │ │   │" ) )
@@ -654,7 +654,6 @@ STATIC PROCEDURE _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
       aTrans[ Len( aTrans ) ] := _ftStuffComma( aTrans[ Len( aTrans ) ], .T. ) + ;
          iif( lSubRtn, " S", iif( nAddMode == 1, " +", iif( nAddMode == 2, " -", ;
          iif( lTotalOk, " =", iif( nAddMode == 3, " X", " /" ) ) ) ) ) + iif( lAddError, "ER", "" )
-
    ENDIF
 
    IF lTape
@@ -1000,12 +999,12 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
    LOCAL nDecPosit, x
 
    IF !( "." $ cStrToStuff )
-      cStrToStuff := _ftPosIns( cStrToStuff, ".", iif( "C" $ cStrToStuff .OR. ;
+      cStrToStuff := Stuff( cStrToStuff, iif( "C" $ cStrToStuff .OR. ;
          "E" $ cStrToStuff .OR. "+" $ cStrToStuff .OR. "-" $ cStrToStuff ;
          .OR. "X" $ cStrToStuff .OR. "*" $ cStrToStuff .OR. ;
          Chr( 4 ) /* LOW-ASCII "♦" */ $ cStrToStuff .OR. ;
          "/" $ cStrToStuff .OR. "=" $ cStrToStuff, ;
-         Len( cStrToStuff ) - 1, Len( cStrToStuff ) + 1 ) )
+         Len( cStrToStuff ) - 1, Len( cStrToStuff ) + 1 ), 0, "." )
 
       IF cStrToStuff == " " .OR. cStrToStuff == "0"
          cStrToStuff := SubStr( cStrToStuff, 2 )
@@ -1018,11 +1017,11 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
       At( ".", LTrim( _ftCharRem( "-", cStrToStuff ) ) ) - 1 ) ) > 3
       IF hb_defaultValue( lTrimStuffedStr, .F. )  // Do we trim the number each time we insert a comma
          FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP -4
-            cStrToStuff := SubStr( _ftPosIns( cStrToStuff, ",", x ), 2 )
+            cStrToStuff := SubStr( Stuff( cStrToStuff, x, 0, "," ), 2 )
          NEXT
       ELSE
          FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP -3
-            cStrToStuff := _ftPosIns( cStrToStuff, ",", x )
+            cStrToStuff := Stuff( cStrToStuff, x, 0, "," )
          NEXT
       ENDIF
    ENDIF
@@ -1200,10 +1199,6 @@ STATIC FUNCTION _ftCharRem( cChar, cString )
 // Returns the number of spaces on the Left side of the String
 STATIC FUNCTION _ftCountLeft( cString )
    RETURN Len( cString ) - Len( LTrim( cString ) )
-
-// Insert the Character cChar in cString at position nPosit
-STATIC FUNCTION _ftPosIns( cString, cChar, nPosit )
-   RETURN Left( cString, nPosit - 1 ) + cChar + SubStr( cString, nPosit )
 
 STATIC FUNCTION _ftInkey( nSecs, cVar )
 
