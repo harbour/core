@@ -51,7 +51,7 @@
 // Template definitions
 #define TPL_START            1
 #define TPL_END              2
-#define TPL_REQUIRED         4  // intentially has a 'required' and 'optional' flag
+#define TPL_REQUIRED         4  // intentionally has a 'required' and 'optional' flag
 #define TPL_OPTIONAL         8
 #define TPL_PREFORMATTED     16
 #define TPL_CONSTRAINTLIST   32
