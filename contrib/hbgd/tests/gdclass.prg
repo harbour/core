@@ -225,14 +225,13 @@ PROCEDURE Main()
    oI5:AddDef( "FONTPITCH", "GIANT" )
 
    oI5:SetData( { ;
-      { "LABEL" => "One"  , "VALUE" => 10, "COLOR"  => blue , "FILLED" => .T., "EXTRUDE" => 40/*, "TILE" => oB*/ }, ;
+      { "LABEL" => "One"  , "VALUE" => 10, "COLOR"  => blue , "FILLED" => .T., "EXTRUDE" => 40 /*, "TILE" => oB */ }, ;
       { "LABEL" => "Two"  , "VALUE" => 35, "COLOR"  => gray , "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
       { "LABEL" => "Three", "VALUE" => 55, "COLOR"  => green, "FILLED" => .T. }, ;
       { "LABEL" => "Four" , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
       { "LABEL" => "Five" , "VALUE" => 55, "COLOR"  => red  , "FILLED" => .T., "EXTRUDE" => 20 }, ;
       { "LABEL" => "Six"  , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
-      { "LABEL" => "Seven", "VALUE" => 55, "FILLED" => .T.  , "COLOR"  => green } ;
-      } )
+      { "LABEL" => "Seven", "VALUE" => 55, "FILLED" => .T.  , "COLOR"  => green } } )
 
 #if 0
    oI5:VerticalBarChart()
@@ -274,8 +273,7 @@ PROCEDURE Main()
       { "LABEL" => "Six", "VALUE" => 10000 }, ;
       { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => .T., "COLOR" => red }, ;
       { "LABEL" => "Eight", "VALUE" => -2200 }, ;
-      { "LABEL" => "Nine", "VALUE" => -3600, "COLOR" => blue, "FILLED" => .T. } ;
-      } )
+      { "LABEL" => "Nine", "VALUE" => -3600, "COLOR" => blue, "FILLED" => .T. } } )
 #endif
 
    oI5:SetData( { ;
@@ -287,8 +285,7 @@ PROCEDURE Main()
       { "LABEL" => "Six", "VALUE" => 100 }, ;
       { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => .T., "COLOR" => red }, ;
       { "LABEL" => "Eight", "VALUE" => 0 }, ;
-      { "LABEL" => "Nine", "VALUE" => 0, "COLOR" => blue, "FILLED" => .T. } ;
-      } )
+      { "LABEL" => "Nine", "VALUE" => 0, "COLOR" => blue, "FILLED" => .T. } } )
 
    oI5:Clone():VerticalBarChart():SaveJpeg( IMAGES_OUT + "vertbars.jpg" )
 

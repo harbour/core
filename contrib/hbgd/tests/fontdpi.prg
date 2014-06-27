@@ -11,14 +11,14 @@ PROCEDURE Main()
 
    LOCAL oI := GDImage():Create( 600, 300 )
 
-   LOCAL black := oI:SetColor( 50, 0, 0 )
-
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
 
-   oI:SetColor( black )
+   oI:Rectangle( 0, 0, 600, 300, .T., oI:SetColor( 255, 255, 255 ) )
+
+   oI:SetColor( 0, 0, 90 )
    oI:SetFontName( "Arial" )
    oI:SetFontPitch( 10 )
 

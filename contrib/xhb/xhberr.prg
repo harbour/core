@@ -416,7 +416,7 @@ STATIC PROCEDURE LogError( oerr )
       nHandle := FCreate( cLogFile )
    ENDIF
 
-   IF nHandle == F_ERROR .AND. !( Lower( cLogFile ) == "error.log" )
+   IF nHandle == F_ERROR .AND. ! hb_FileMatch( cLogFile, "error.log" )
       // Force creating error.log in case supplied log file cannot be created for any reason
       nHandle := FCreate( "error.log" )
    ENDIF
@@ -484,11 +484,11 @@ PROCEDURE __MinimalErrorHandler( oError )
    IF HB_ISSTRING( oError:Description )
       cError += "Description: " + oError:Description + hb_eol()
    ENDIF
-   cError += "Source: " + ProcFile( 3 ) + hb_eol()
-   cError += "Procedure: " + ProcName( 3 ) + hb_eol()
-   cError += "Line: " + hb_ntos( ProcLine( 3 ) ) + hb_eol()
 
-   OutStd( cError )
+   OutStd( cError + ;
+      "Source: " + ProcFile( 3 ) + hb_eol() + ;
+      "Procedure: " + ProcName( 3 ) + hb_eol() + ;
+      "Line: " + hb_ntos( ProcLine( 3 ) ) + hb_eol() )
 
    QUIT
 

@@ -1391,9 +1391,7 @@ STATIC FUNCTION TimeAsAMPM( cTime )
 
 PROCEDURE pdfOpenHeader( cFile )
 
-   hb_default( @cFile, "" )
-
-   t_aReport[ HEADER ] := iif( Empty( cFile ), {}, File2Array( AllTrim( cFile ) ) )
+   t_aReport[ HEADER ] := iif( HB_ISSTRING( cFile ), File2Array( AllTrim( cFile ) ), {} )
    t_aReport[ MARGINS ] := .T.
 
    RETURN

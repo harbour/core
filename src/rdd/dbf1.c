@@ -4552,7 +4552,7 @@ static HB_ERRCODE hb_dbfPack( DBFAREAP pArea )
       return HB_FAILURE;
 
    /* This is bad hack but looks that people begins to use it :-(
-    * so I'll add workaround to make it m ore safe
+    * so I'll add workaround to make it more safe
     */
    if( pArea->area.valResult && HB_IS_ARRAY( pArea->area.valResult ) &&
        hb_arrayLen( pArea->area.valResult ) == 2 &&

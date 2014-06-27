@@ -186,13 +186,14 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       cStr += " noresize"
    ENDIF
 
-   IF HB_ISSTRING( cScrolling )
+   DO CASE
+   CASE HB_ISSTRING( cScrolling )
       cStr += " scrolling=" + '"' + cScrolling + '"'
-   ELSEIF HB_ISLOGICAL( lScrolling )
+   CASE HB_ISLOGICAL( lScrolling )
       cStr += " scrolling=" + '"' + iif( lScrolling, "yes", "no" ) + '"'
-   ELSE
+   OTHERWISE
       cStr += " scrolling=" + '"' + "auto" + '"'
-   ENDIF
+   ENDCASE
 
    IF HB_ISNUMERIC( marginwidth )
       cStr += " marginwidth= " + hb_ntos( marginwidth )

@@ -12,56 +12,42 @@
 
 PROCEDURE Main( ... )
 
-   LOCAL cPar
-   LOCAL aParams := hb_AParams()
-   LOCAL cQuery  := GetEnv( "QUERY_STRING" )
-   LOCAL hParams := { => }
+   LOCAL hParams := iif( PCount() > 0, GetParams( hb_AParams() ), GetVars( GetEnv( "QUERY_STRING" ) ) )
 
-   LOCAL cImg, nWidth, nHeight, cPhoto
-
+   LOCAL cPar, cImg, nWidth, nHeight, cPhoto
 #if 0
    LOCAL cText
    LOCAL nPt
 #endif
 
-   IF Empty( aParams )
-      IF ! Empty( cQuery )
-         hParams := GetVars( cQuery )
-      ENDIF
-   ELSE
-      hParams := GetParams( aParams )
-   ENDIF
-
    // Gestione parametri
-   IF ! Empty( hParams )
-      FOR EACH cPar IN hParams:Keys
+   FOR EACH cPar IN hParams
 
-         SWITCH cPar
-         CASE "txt"
+      SWITCH cPar:__enumKey()
+      CASE "txt"
 #if 0
-            cText := hParams[ cPar ]
+         cText := cPar
 #endif
-            EXIT
-         CASE "img"
-            cImg := hParams[ cPar ]
-            EXIT
-         CASE "photo"
-            cPhoto := hParams[ cPar ]
-            EXIT
-         CASE "width"
-            nWidth := Val( hParams[ cPar ] )
-            EXIT
-         CASE "height"
-            nHeight := Val( hParams[ cPar ] )
-            EXIT
+         EXIT
+      CASE "img"
+         cImg := cPar
+         EXIT
+      CASE "photo"
+         cPhoto := cPar
+         EXIT
+      CASE "width"
+         nWidth := Val( cPar )
+         EXIT
+      CASE "height"
+         nHeight := Val( cPar )
+         EXIT
 #if 0
-         CASE "pt"
-            nPt := Val( hParams[ cPar ] )
-            EXIT
+      CASE "pt"
+         nPt := Val( cPar )
+         EXIT
 #endif
-         ENDSWITCH
-      NEXT
-   ENDIF
+      ENDSWITCH
+   NEXT
 
    // __OutDebug( cQuery, hb_ValToExp( hParams ) )
 

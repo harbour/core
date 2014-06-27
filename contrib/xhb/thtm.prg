@@ -447,25 +447,25 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF HB_ISSTRING( cColor )
-      cStr += Q_( " color=", cColor, ">" )
+      cStr += " color=" + '"' + cColor + '"'
 
-      IF lset
+      IF lSet
          ::fontColor := cColor
       ENDIF
-   ELSE
-      cStr += ">"
    ENDIF
 
+   cStr += ">"
+
    IF HB_ISLOGICAL( lBold )
-      iif( lBold, cStr += "<b>", cStr += "</b>" )
+      cStr += iif( lBold, "<b>", "</b>" )
    ENDIF
 
    IF HB_ISLOGICAL( lItalic )
-      iif( lItalic, cStr += "<i>", cStr += "</i>" )
+      cStr += iif( lItalic, "<i>", "</i>" )
    ENDIF
 
    IF HB_ISLOGICAL( lULine )
-      iif( lULine, cStr += "<u>", cStr += "</u>" )
+      cStr += iif( lULine, "<u>", "</u>" )
    ENDIF
 
    ::cStr += cStr + "</font>" + hb_eol()
@@ -503,29 +503,26 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
       ENDIF
 
       IF HB_ISSTRING( cColor )
-         cStr += Q_( " color=", cColor, ">" )
+         cStr += " color=" + '"' + cColor + '"'
 
          IF lSet
             ::fontColor := cColor
          ENDIF
-      ELSE
-         cStr += ">"
       ENDIF
-
-   ELSE
-      cStr += ">"
    ENDIF
 
+   cStr += ">"
+
    IF HB_ISLOGICAL( lBold )
-      iif( lBold, cStr += "<b>", cStr += "</b>" )
+      cStr += iif( lBold, "<b>", "</b>" )
    ENDIF
 
    IF HB_ISLOGICAL( lItalic )
-      iif( lItalic, cStr += "<i>", cStr += "</i>" )
+      cStr += iif( lItalic, "<i>", "</i>" )
    ENDIF
 
    IF HB_ISLOGICAL( lULine )
-      iif( lULine, cStr += "<u>", cStr += "</u>" )
+      cStr += iif( lULine, "<u>", "</u>" )
    ENDIF
 
    ::cStr += cStr + hb_eol()
@@ -586,7 +583,7 @@ METHOD EndFont() CLASS THtml
 
 METHOD Say( str, cFont, nSize, type, cColor, cStyle ) CLASS THtml
 
-   LOCAL cOut    := ""
+   LOCAL cStd    := ""
    LOCAL lBold   := .F.
    LOCAL lItalic := .F.
    LOCAL lULine  := .F.
@@ -599,15 +596,15 @@ METHOD Say( str, cFont, nSize, type, cColor, cStyle ) CLASS THtml
    hb_default( @cCOLOR, ::FontColor )
 
    IF HB_ISSTRING( cFONT ) .OR. HB_ISNUMERIC( nSize ) .OR. HB_ISSTRING( cCOLOR )
-      cOut := "<font " + ;
+      cStd := "<font " + ;
          iif( HB_ISSTRING( cFont ), "face=" + '"' + cFont + '"', "" ) + ;
          iif( HB_ISSTRING( cColor ), " color=" + cColor, "" ) + ;
          iif( HB_ISNUMERIC( nSize ), " size=" + hb_ntos( nSize ), "" )
 
       IF HB_ISSTRING( cStyle )
-         cOut += Q_( " style=", cStyle, ">" )
+         cStd += Q_( " style=", cStyle, ">" )
       ELSE
-         cOut += ">"
+         cStd += ">"
       ENDIF
    ENDIF
 
@@ -617,58 +614,58 @@ METHOD Say( str, cFont, nSize, type, cColor, cStyle ) CLASS THtml
 
          IF "<b>" $ type
             lBold := .T.
-            cOut  += "<b>"
+            cStd += "<b>"
          ENDIF
 
          IF "<i>" $ type
             lItalic := .T.
-            cOut    += "<i>"
+            cStd += "<i>"
          ENDIF
 
          IF "<u>" $ type
             lULine := .T.
-            cOut   += "<u>"
+            cStd += "<u>"
          ENDIF
 
          IF "<em>" $ type
             lEm  := .T.
-            cOut += "<em>"
+            cStd += "<em>"
          ENDIF
 
          IF "<strong>" $ type
             lStrong := .T.
-            cOut    += "<strong>"
+            cStd += "<strong>"
          ENDIF
       ENDIF
    ENDIF
 
-   cOut += str
+   cStd += str
 
    IF lBold
-      cOut += "</b>"
+      cStd += "</b>"
    ENDIF
 
    IF lItalic
-      cOut += "</i>"
+      cStd += "</i>"
    ENDIF
 
    IF lULine
-      cOut += "</u>"
+      cStd += "</u>"
    ENDIF
 
    IF lStrong
-      cOut += "</strong>"
+      cStd += "</strong>"
    ENDIF
 
    IF lEm
-      cOut += "</em>"
+      cStd += "</em>"
    ENDIF
 
    IF HB_ISSTRING( cFONT ) .OR. HB_ISNUMERIC( nSize ) .OR. HB_ISSTRING( cCOLOR )
-      cOut += "</font>"
+      cStd += "</font>"
    ENDIF
 
-   ::cStr += cOut + hb_eol()
+   ::cStr += cStd + hb_eol()
 
    RETURN Self
 
@@ -726,25 +723,25 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
 
    LOCAL cStr := ""
 
-   ::cStr += "<a href=" + '"' + hb_defaultValue( cUrl, "" ) + '"' + hb_eol()
-
    IF HB_ISSTRING( cOnClick )
-      ::cStr += Space( 5 ) + "onClick=" + '"' + cOnClick + '"' + hb_eol()
+      cStr += Space( 5 ) + "onClick=" + '"' + cOnClick + '"' + hb_eol()
    ENDIF
    IF HB_ISSTRING( cOnMsOver )
-      ::cStr += Space( 5 ) + "onMouseOver=" + '"' + cOnMsOver + '"' + hb_eol()
+      cStr += Space( 5 ) + "onMouseOver=" + '"' + cOnMsOver + '"' + hb_eol()
    ENDIF
    IF HB_ISSTRING( cOnMsOut )
-      ::cStr += Space( 5 ) + "onMouseOut=" + '"' + cOnMsOut + '"' + hb_eol()
+      cStr += Space( 5 ) + "onMouseOut=" + '"' + cOnMsOut + '"' + hb_eol()
    ENDIF
 
    IF HB_ISSTRING( cTarget )
-      ::cStr += Space( 5 ) + "target=" + cTarget + hb_eol()
+      cStr += Space( 5 ) + "target=" + cTarget + hb_eol()
    ENDIF
 
    IF HB_ISSTRING( cClass )
-      ::cStr += Space( 5 ) + "class=" + cClass + hb_eol()
+      cStr += Space( 5 ) + "class=" + cClass + hb_eol()
    ENDIF
+
+   cStr += ">"
 
    hb_default( @bld, .F. )
 
@@ -773,16 +770,17 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
 
    cStr += cText
 
-   ::cStr += ">" + cStr
    IF HB_ISSTRING( FONT ) .OR. HB_ISSTRING( clr ) .OR. HB_ISNUMERIC( size ) .OR. HB_ISSTRING( style )
-      ::cStr += "</font>"
+      cStr += "</font>"
    ENDIF
 
    IF bld
-      ::cStr += "</b>"
+      cStr += "</b>"
    ENDIF
 
-   ::cStr += "</a>" + iif( hb_defaultValue( lBreak, .F. ), "<br />", "" ) + hb_eol()
+   ::cStr += ;
+      "<a href=" + '"' + hb_defaultValue( cUrl, "" ) + '"' + hb_eol() + ;
+      cStr + "</a>" + iif( hb_defaultValue( lBreak, .F. ), "<br />", "" ) + hb_eol()
 
    RETURN Self
 
@@ -800,23 +798,26 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
       cStr += " alt=" + '"' + cAlt + '"' + hb_eol()
    ENDIF
 
-   IF HB_ISNUMERIC( nBorder )
+   DO CASE
+   CASE HB_ISNUMERIC( nBorder )
       cStr += " border=" + hb_ntos( nBorder ) + hb_eol()
-   ELSEIF HB_ISSTRING( nBorder )
+   CASE HB_ISSTRING( nBorder )
       cStr += " border=" + nBorder + hb_eol()
-   ENDIF
+   ENDCASE
 
-   IF HB_ISNUMERIC( nHeight )
+   DO CASE
+   CASE HB_ISNUMERIC( nHeight )
       cStr += " height=" + hb_ntos( nHeight ) + " " + hb_eol()
-   ELSEIF HB_ISSTRING( nHeight )
-      cStr += " height=" + nHeight + " " + hb_eol()
-   ENDIF
+   CASE HB_ISSTRING( nHeight )
+      cStr += " height=" + '"' + nHeight + '"' + " " + hb_eol()
+   ENDCASE
 
-   IF HB_ISNUMERIC( nWidth )
+   DO CASE
+   CASE HB_ISNUMERIC( nWidth )
       cStr += " width=" + hb_ntos( nWidth ) + " " + hb_eol()
-   ELSEIF HB_ISSTRING( nWidth )
-      cStr += " width=" + nWidth + " " + hb_eol()
-   ENDIF
+   CASE HB_ISSTRING( nWidth )
+      cStr += " width=" + '"' + nWidth + '"' + " " + hb_eol()
+   ENDCASE
 
    IF HB_ISSTRING( cOnClick )
       cStr += " onClick=" + '"' + cOnClick + '"' + hb_eol()
@@ -861,17 +862,19 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
       cStr += " border=" + hb_ntos( nBorder )
    ENDIF
 
-   IF HB_ISNUMERIC( nHeight )
+   DO CASE
+   CASE HB_ISNUMERIC( nHeight )
       cStr += " height=" + hb_ntos( nHeight ) + " "
-   ELSEIF HB_ISSTRING( nHeight )
-      cStr += " height=" + nHeight + " "
-   ENDIF
+   CASE HB_ISSTRING( nHeight )
+      cStr += " height=" + '"' + nHeight + '"' + " "
+   ENDCASE
 
-   IF HB_ISNUMERIC( nWidth )
+   DO CASE
+   CASE HB_ISNUMERIC( nWidth )
       cStr += " width=" + hb_ntos( nWidth ) + " "
-   ELSEIF HB_ISSTRING( nWidth )
-      cStr += " width=" + nWidth + " "
-   ENDIF
+   CASE HB_ISSTRING( nWidth )
+      cStr += " width=" + '"' + nWidth + '"' + " "
+   ENDCASE
 
    IF HB_ISSTRING( cOnClick )
       cStr += " onClick=" + '"' + cOnClick + '"'
@@ -906,23 +909,26 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
       cStr += " alt=" + '"' + cAlt + '"'
    ENDIF
 
-   IF HB_ISNUMERIC( nBorder )
+   DO CASE
+   CASE HB_ISNUMERIC( nBorder )
       cStr += " border=" + hb_ntos( nBorder )
-   ELSEIF HB_ISSTRING( nBorder )
+   CASE HB_ISSTRING( nBorder )
       cStr += " border=" + '"' + nBorder + '"'
-   ENDIF
+   ENDCASE
 
-   IF HB_ISNUMERIC( nHeight )
+   DO CASE
+   CASE HB_ISNUMERIC( nHeight )
       cStr += " height=" + hb_ntos( nHeight ) + " "
-   ELSEIF HB_ISSTRING( nHeight )
+   CASE HB_ISSTRING( nHeight )
       cStr += " height=" + '"' + nHeight + '"'
-   ENDIF
+   ENDCASE
 
-   IF HB_ISNUMERIC( nWidth )
+   DO CASE
+   CASE HB_ISNUMERIC( nWidth )
       cStr += " width=" + hb_ntos( nWidth ) + " "
-   ELSEIF HB_ISSTRING( nWidth )
-      cStr += " width=" + nWidth + " "
-   ENDIF
+   CASE HB_ISSTRING( nWidth )
+      cStr += " width=" + '"' + nWidth + '"' + " "
+   ENDCASE
 
    IF HB_ISSTRING( cOnClick )
       cStr += " onClick=" + '"' + cOnClick + '"'
@@ -1019,17 +1025,19 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
 
    cStr += iif( HB_ISNUMERIC( xCols ), " cols=" + hb_ntos( nCols ), "" )
 
-   IF HB_ISNUMERIC( nWidth )
+   DO CASE
+   CASE HB_ISNUMERIC( nWidth )
       cStr += " width=" + hb_ntos( nWidth )
-   ELSEIF HB_ISSTRING( nWidth )
+   CASE HB_ISSTRING( nWidth )
       cStr += " width=" + '"' + nWidth + '"'
-   ENDIF
+   ENDCASE
 
-   IF HB_ISNUMERIC( nHeight )
+   DO CASE
+   CASE HB_ISNUMERIC( nHeight )
       cStr += " height=" + hb_ntos( nHeight )
-   ELSEIF HB_ISSTRING( nHeight )
+   CASE HB_ISSTRING( nHeight )
       cStr += " height=" + '"' + nHeight + '"'
-   ENDIF
+   ENDCASE
 
    IF hb_defaultValue( l3d, .T. )
       cStr += " bordercolorlight=#000000 " + ;
@@ -1048,13 +1056,14 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       cStr += " bordercolor=" + cClrBorder
    ENDIF
 
-   IF hb_defaultValue( lRuleCols, .F. )
+   DO CASE
+   CASE hb_defaultValue( lRuleCols, .F. )
       cStr += " rules=COLS"
-   ELSEIF hb_defaultValue( lRuleRows, .F. )
+   CASE hb_defaultValue( lRuleRows, .F. )
       cStr += " rules=ROWS"
-   ELSEIF HB_ISLOGICAL( lRules ) .AND. lRules
+   CASE hb_defaultValue( lRules, .F. )
       cStr += " rules=ALL"
-   ENDIF
+   ENDCASE
 
    IF HB_ISSTRING( bgImage )
       cStr += Q_( " background=", bgImage, " " )
@@ -1167,24 +1176,27 @@ METHOD NewTableCell( cAlign, cColor, ;
    IF HB_ISSTRING( cValign )
       cStr += " valign=" + cValign
    ENDIF
-   IF HB_ISNUMERIC( nHeight )
+   DO CASE
+   CASE HB_ISNUMERIC( nHeight )
       cStr += " height=" + hb_ntos( nHeight )
-   ELSEIF HB_ISSTRING( nHeight )
+   CASE HB_ISSTRING( nHeight )
       cStr += " height=" + '"' + nHeight + '"'
-   ENDIF
+   ENDCASE
    IF HB_ISSTRING( cBgPic )
       cStr += " background=" + '"' + cBgPic + '"'
    ENDIF
-   IF HB_ISNUMERIC( nWidth )
+   DO CASE
+   CASE HB_ISNUMERIC( nWidth )
       cStr += " width=" + hb_ntos( nWidth )
-   ELSEIF HB_ISSTRING( nWidth )
+   CASE HB_ISSTRING( nWidth )
       cStr += " width=" + '"' + nWidth + '"'
-   ENDIF
-   IF HB_ISNUMERIC( nColspan )
+   ENDCASE
+   DO CASE
+   CASE HB_ISNUMERIC( nColspan )
       cStr += " colspan=" + hb_ntos( nColspan )
-   ELSEIF HB_ISSTRING( nColspan )
+   CASE HB_ISSTRING( nColspan )
       cStr += " colspan=" + '"' + nColspan + '"'
-   ENDIF
+   ENDCASE
    IF HB_ISSTRING( clrdrk )
       cStr += " borderColorDark=" + clrdrk
    ENDIF
@@ -1195,11 +1207,12 @@ METHOD NewTableCell( cAlign, cColor, ;
       cStr += Q_( " Class=", cClass, " " )
    ENDIF
 
-   IF HB_ISNUMERIC( nRowspan )
+   DO CASE
+   CASE HB_ISNUMERIC( nRowspan )
       cStr += " rowspan=" + hb_ntos( nRowspan )
-   ELSEIF HB_ISSTRING( nRowspan )
+   CASE HB_ISSTRING( nRowspan )
       cStr += " rowspan=" + '"' + nRowspan + '"'
-   ENDIF
+   ENDCASE
 
    IF ! hb_defaultValue( lWrap, .T. )
       cStr += " nowrap"
@@ -1616,17 +1629,19 @@ METHOD AddObject( cType, cClassid, cAlign, cCode, lDisable, cCodeBase, cName, nW
       cStr += " name=" + '"' + cName + '"' + hb_eol()
    ENDIF
 
-   IF HB_ISNUMERIC( nHeight )
+   DO CASE
+   CASE HB_ISNUMERIC( nHeight )
       cStr += " height=" + hb_ntos( nHeight ) + " " + hb_eol()
-   ELSEIF HB_ISSTRING( nHeight )
-      cStr += " height=" + nHeight + " " + hb_eol()
-   ENDIF
+   CASE HB_ISSTRING( nHeight )
+      cStr += " height=" + '"' + nHeight + '"' + " " + hb_eol()
+   ENDCASE
 
-   IF HB_ISNUMERIC( nWidth )
+   DO CASE
+   CASE HB_ISNUMERIC( nWidth )
       cStr += " width=" + hb_ntos( nWidth ) + " " + hb_eol()
-   ELSEIF HB_ISSTRING( nWidth )
-      cStr += " width=" + nWidth + " " + hb_eol()
-   ENDIF
+   CASE HB_ISSTRING( nWidth )
+      cStr += " width=" + '"' + nWidth + '"' + " " + hb_eol()
+   ENDCASE
 
    ::cStr += cStr + " >" + hb_eol()
 

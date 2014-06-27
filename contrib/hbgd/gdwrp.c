@@ -48,6 +48,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+#include "hbapigt.h"
 
 /* NOTE: Do some initialization required by the GD headers. */
 #if defined( HB_OS_WIN )
@@ -289,7 +290,7 @@ static void GDImageCreateFrom( int nType )
       sz = hb_parni( 2 );
 
       /* retrieve image from handle */
-      iptr = LoadImageFromHandle( hb_numToHandle( hb_parnintdef( 1, 0 /* std input */ ) ), sz );
+      iptr = LoadImageFromHandle( hb_numToHandle( hb_parnintdef( 1, HB_STDIN_HANDLE ) ), sz );
    }
    else
    {
@@ -430,14 +431,13 @@ static void GDImageSaveTo( int nType )
          HB_FHANDLE fhandle = hb_numToHandle( hb_parnint( 2 ) );
 
          if( fhandle == FS_ERROR || fhandle == 0 )
-            fhandle = 1;  /* std output */
+            fhandle = HB_STDOUT_HANDLE;
 
          /* Write Image */
          SaveImageToHandle( fhandle, iptr, sz );
       }
-      /* Return image as string) */
+      /* Return image as string */
       else
-         /* Return as string */
          hb_retclen( ( const char * ) iptr, ( HB_SIZE ) sz );
 
       /* Free memory */
@@ -2117,7 +2117,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       if( HB_ISCHAR( 2 ) )
          SaveImageToFile( hb_parc( 2 ), iptr, size );
       else
-         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, 1 /* std output */ ) ), iptr, size );
+         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, HB_STDOUT_HANDLE ) ), iptr, size );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2154,7 +2154,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       if( HB_ISCHAR( 2 ) )
          AddImageToFile( hb_parc( 2 ), iptr, size );
       else
-         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, 1 /* std output */ ) ), iptr, size );
+         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, HB_STDOUT_HANDLE ) ), iptr, size );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2175,7 +2175,7 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       if( HB_ISCHAR( 1 ) )
          AddImageToFile( hb_parc( 1 ), iptr, size );
       else
-         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 1, 1 /* std output */ ) ), iptr, size );
+         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 1, HB_STDOUT_HANDLE ) ), iptr, size );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
