@@ -951,7 +951,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          pFunc = hb_itemNew( pFirst );
          iType = 2;
       }
-      else if( hb_itemType( pFirst ) == HB_IT_STRING )
+      else if( HB_IS_STRING( pFirst ) )
       {
          pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
          if( pExecSym )
@@ -1073,7 +1073,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          _s->pFuncModal[ iIndex ] = pFunc;
          _s->iTypeModal[ iIndex ] = 2;
       }
-      else if( hb_itemType( pFirst ) == HB_IT_STRING )
+      else if( HB_IS_STRING( pFirst ) )
       {
          pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
          if( pExecSym )

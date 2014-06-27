@@ -1643,7 +1643,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          return HB_FAILURE;
       }
-      if( hb_itemType( pArea->sqlarea.area.valResult ) != HB_IT_LOGICAL )
+      if( ! HB_IS_LOGICAL( pArea->sqlarea.area.valResult ) )
       {
          hb_itemRelease( pArea->sqlarea.area.valResult );
          pArea->sqlarea.area.valResult = 0;
@@ -1743,7 +1743,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, HB_USHORT uiIndex, LPDBORD
                   pArea->sqlarea.area.valResult = NULL;
                   if( SELF_EVALBLOCK( ( AREAP ) pArea, pForItem ) == HB_SUCCESS )
                   {
-                     if( hb_itemType( pArea->sqlarea.area.valResult ) == HB_IT_LOGICAL )
+                     if( HB_IS_LOGICAL( pArea->sqlarea.area.valResult ) )
                      {
                         pTag->szForExpr = hb_strdup( pForExpr );
                         pTag->pForItem  = pForItem;
