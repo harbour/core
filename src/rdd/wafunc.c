@@ -881,7 +881,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
 
    if( ! uiSize )
       return HB_FAILURE;
-   if( hb_itemType( pFields ) & HB_IT_ARRAY )
+   if( HB_IS_ARRAY( pFields ) )
    {
       uiFields = ( HB_USHORT ) hb_arrayLen( pFields );
       if( uiFields )

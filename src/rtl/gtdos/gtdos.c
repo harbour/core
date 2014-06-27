@@ -1330,7 +1330,7 @@ static HB_BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_dos_getKbdState() );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
             hb_gt_dos_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 

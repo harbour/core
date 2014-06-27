@@ -169,7 +169,7 @@ typedef ADSAREA * ADSAREAP;
 
 #define HB_ADS_PARCONNECTION( n )     ( ( ADSHANDLE ) hb_parnintdef( n, hb_ads_getConnection() ) )
 #define HB_ADS_RETCONNECTION( h )     hb_retnint( h )
-#define HB_ADS_GETCONNECTION( p )     ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNInt( p ) : hb_ads_getConnection() )
+#define HB_ADS_GETCONNECTION( p )     ( ( HB_IS_NUMERIC( p ) ) ? ( ADSHANDLE ) hb_itemGetNInt( p ) : hb_ads_getConnection() )
 #define HB_ADS_PUTCONNECTION( p, h )  hb_itemPutNInt( ( p ), ( ADSHANDLE ) ( h ) )
 #define HB_ADS_DEFCONNECTION( h, s )  hb_ads_defConnection( ( h ), ( s ) )
 

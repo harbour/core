@@ -1395,7 +1395,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_FONTNAME:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, pWindowData->fontFace );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
+         if( HB_IS_STRING( pInfo->pNewVal ) ) /* TODO */
             hb_strncpy( pWindowData->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), LF_FACESIZE - 1 );
          break;
 
@@ -1426,7 +1426,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                break;
          }
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, iVal );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
          {
             /* store font status for next operation on fontsize */
             switch( hb_itemGetNI( pInfo->pNewVal ) )
@@ -1463,7 +1463,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                break;
          }
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, iVal );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
          {
             switch( hb_itemGetNI( pInfo->pNewVal ) )
             {
@@ -1563,7 +1563,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
       case HB_GTI_WINTITLE:
          pInfo->pResult = hb_gt_wvw_GetWindowTitle( s_pWvwData->s_usCurWindow, pInfo->pResult );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         if( HB_IS_STRING( pInfo->pNewVal ) )
          {
             void * hWindowTitle;
             hb_gt_wvwSetWindowTitle( s_pWvwData->s_usCurWindow, HB_ITEMGETSTR( pInfo->pNewVal, &hWindowTitle, NULL ) );
@@ -1580,7 +1580,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_ICONFILE:
       {
          HICON hIcon = NULL;
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         if( HB_IS_STRING( pInfo->pNewVal ) )
          {
             void * hImageName;
             hIcon = ( HICON ) hb_gt_wvwSetWindowIconFromFile( s_pWvwData->s_usCurWindow, HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ) );
@@ -1593,12 +1593,12 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_ICONRES:
       {
          HICON hIcon = NULL;
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         if( HB_IS_STRING( pInfo->pNewVal ) )
          {
             LPSTR lpIcon = ( LPSTR ) hb_itemGetCPtr( pInfo->pNewVal );
             hIcon = ( HICON ) hb_gt_wvwSetWindowIcon( s_pWvwData->s_usCurWindow, 0, ( char * ) lpIcon );
          }
-         else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         else if( HB_IS_NUMERIC( pInfo->pNewVal ) )
             hIcon = ( HICON ) hb_gt_wvwSetWindowIcon( s_pWvwData->s_usCurWindow, hb_itemGetNI( pInfo->pNewVal ), NULL );
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) hIcon );
          break;
@@ -1615,12 +1615,12 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_winapi_getKbdState() );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
             hb_gt_winapi_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
       case HB_GTI_CLIPBOARDDATA:
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         if( HB_IS_STRING( pInfo->pNewVal ) )
 #if defined( UNICODE )
             hb_gt_winapi_setClipboard( CF_UNICODETEXT, pInfo->pNewVal );
 #else
@@ -1642,7 +1642,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CURSORBLINKRATE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, GetCaretBlinkTime() );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
             SetCaretBlinkTime( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
@@ -1669,7 +1669,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
 
       case HB_GTI_PALETTE:
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
          {
             int iIndex = hb_itemGetNI( pInfo->pNewVal );
 
@@ -1677,7 +1677,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                pInfo->pResult = hb_itemPutNL( pInfo->pResult, _COLORS[ iIndex - 1 ] );
 
-               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
+               if( HB_IS_NUMERIC( pInfo->pNewVal2 ) )
                   _COLORS[ iIndex - 1 ] = hb_itemGetNL( pInfo->pNewVal2 );
             }
          }
@@ -1690,7 +1690,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             for( i = 1; i <= 16; i++ )
                hb_itemPutNL( hb_arrayGetItemPtr( pInfo->pResult, i ), _COLORS[ i - 1 ] );
 
-            if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
+            if( HB_IS_ARRAY( pInfo->pNewVal ) )
                if( hb_arrayLen( pInfo->pNewVal ) == 16 )
                   for( i = 0; i < 16; i++ )
                      _COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
