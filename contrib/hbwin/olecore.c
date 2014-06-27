@@ -1659,8 +1659,9 @@ HB_FUNC( WIN_OLEERROR )
 
 
 #ifndef DISP_E_BUFFERTOOSMALL
-   #define DISP_E_BUFFERTOOSMALL    0x80020013L
+#define DISP_E_BUFFERTOOSMALL  0x80020013L
 #endif
+
 HB_FUNC( WIN_OLEERRORTEXT )
 {
    HRESULT lOleError = HB_ISNUM( 1 ) ? hb_parnl( 1 ) : hb_oleGetError();
