@@ -411,6 +411,19 @@ static HB_ERRCODE hb_sdfGetValue( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
          hb_itemPutDS( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
          break;
 
+      case HB_FT_TIMESTAMP:
+      {
+         long lJulian, lMilliSec;
+         HB_BYTE * pFieldPtr = pArea->pRecord + pArea->pFieldOffset[ uiIndex ], bChar;
+
+         bChar = pFieldPtr[ pField->uiLen ];
+         pFieldPtr[ pField->uiLen ] = 0;
+         hb_timeStampStrGetDT( ( const char * ) pFieldPtr, &lJulian, &lMilliSec );
+         pFieldPtr[ pField->uiLen ] = bChar;
+         hb_itemPutTDT( pItem, lJulian, lMilliSec );
+         break;
+      }
+
       case HB_FT_LONG:
       {
          HB_MAXINT lVal;
@@ -520,7 +533,7 @@ static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
             hb_itemGetDS( pItem, szBuffer );
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
          }
-         else if( pField->uiType == HB_FT_STRING &&
+         else if( pField->uiType == HB_FT_TIMESTAMP &&
                   ( pField->uiLen == 12 || pField->uiLen == 23 ) )
          {
             long lDate, lTime;
@@ -870,14 +883,14 @@ static HB_ERRCODE hb_sdfAddField( SDFAREAP pArea, LPDBFIELDINFO pFieldInfo )
          break;
 
       case HB_FT_TIME:
-         pFieldInfo->uiType = HB_FT_STRING;
+         pFieldInfo->uiType = HB_FT_TIMESTAMP;
          pFieldInfo->uiLen = 12;
          pArea->fTransRec = HB_FALSE;
          break;
 
       case HB_FT_TIMESTAMP:
       case HB_FT_MODTIME:
-         pFieldInfo->uiType = HB_FT_STRING;
+         pFieldInfo->uiType = HB_FT_TIMESTAMP;
          pFieldInfo->uiLen = 23;
          pArea->fTransRec = HB_FALSE;
          break;

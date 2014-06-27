@@ -121,6 +121,7 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
       switch( pField->uiType )
       {
          case HB_FT_STRING:
+         case HB_FT_TIMESTAMP:
             uiLen = pField->uiLen;
             while( uiLen && pFieldBuf[ uiLen - 1 ] == ' ' )
                --uiLen;
@@ -262,7 +263,8 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
       pField = pArea->area.lpFields + uiField;
       uiType = pField->uiType;
       if( uiType == HB_FT_STRING || uiType == HB_FT_LOGICAL ||
-          uiType == HB_FT_DATE || uiType == HB_FT_LONG )
+          uiType == HB_FT_DATE || uiType == HB_FT_TIMESTAMP ||
+          uiType == HB_FT_LONG )
       {
          uiSize = 0;
          uiLen = pField->uiLen;
@@ -289,7 +291,8 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
           * can be terminated only with valid stop character, when
           * other fields also by length
           */
-         if( pField->uiType == HB_FT_STRING )
+         if( pField->uiType == HB_FT_STRING ||
+             ( pField->uiType == HB_FT_TIMESTAMP && cStop == pArea->cDelim ) )
          {
             while( ch >= 0 && ch != cStop )
             {
@@ -302,7 +305,8 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
          {
             while( ch >= 0 && ch != cStop && uiSize < uiLen )
             {
-               buffer[ uiSize++ ] = ( HB_BYTE ) ch;
+               if( uiSize < sizeof( buffer ) - 1 )
+                  buffer[ uiSize++ ] = ( HB_BYTE ) ch;
                ch = hb_delimNextChar( pArea );
             }
             buffer[ uiSize ] = '\0';
@@ -316,6 +320,12 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
             {
                if( uiSize == 8 && hb_dateEncStr( ( char * ) buffer ) != 0 )
                   memcpy( pFieldBuf, buffer, 8 );
+            }
+            else if( pField->uiType == HB_FT_TIMESTAMP )
+            {
+               memcpy( pFieldBuf, buffer, uiSize );
+               if( uiSize < uiLen )
+                  memset( pFieldBuf + uiSize, 0, uiLen - uiSize );
             }
             else
             {
@@ -588,6 +598,19 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
          hb_itemPutDS( pItem, ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
          break;
 
+      case HB_FT_TIMESTAMP:
+      {
+         long lJulian, lMilliSec;
+         HB_BYTE * pFieldPtr = pArea->pRecord + pArea->pFieldOffset[ uiIndex ], bChar;
+
+         bChar = pFieldPtr[ pField->uiLen ];
+         pFieldPtr[ pField->uiLen ] = 0;
+         hb_timeStampStrGetDT( ( const char * ) pFieldPtr, &lJulian, &lMilliSec );
+         pFieldPtr[ pField->uiLen ] = bChar;
+         hb_itemPutTDT( pItem, lJulian, lMilliSec );
+         break;
+      }
+
       case HB_FT_LONG:
       {
          HB_MAXINT lVal;
@@ -691,7 +714,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
             hb_itemGetDS( pItem, szBuffer );
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
          }
-         else if( pField->uiType == HB_FT_STRING &&
+         else if( pField->uiType == HB_FT_TIMESTAMP &&
                   ( pField->uiLen == 12 || pField->uiLen == 23 ) )
          {
             long lDate, lTime;
@@ -1116,16 +1139,18 @@ static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
          break;
 
       case HB_FT_TIME:
-         pFieldInfo->uiType = HB_FT_STRING;
+         pFieldInfo->uiType = HB_FT_TIMESTAMP;
          pFieldInfo->uiLen = 12;
          pArea->fTransRec = HB_FALSE;
+         uiDelim = 2;
          break;
 
       case HB_FT_TIMESTAMP:
       case HB_FT_MODTIME:
-         pFieldInfo->uiType = HB_FT_STRING;
+         pFieldInfo->uiType = HB_FT_TIMESTAMP;
          pFieldInfo->uiLen = 23;
          pArea->fTransRec = HB_FALSE;
+         uiDelim = 2;
          break;
 
       default:
