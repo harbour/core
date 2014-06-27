@@ -31,15 +31,6 @@ diff -urN minizip.orig/ioapi.c minizip/ioapi.c
      if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
          mode_fopen = "rb";
      else
-@@ -106,7 +110,7 @@
-         mode_fopen = "wb";
- 
-     if ((filename!=NULL) && (mode_fopen != NULL))
--        file = fopen(filename, mode_fopen);
-+        file = hb_fopen(filename, mode_fopen);
-     return file;
- }
- 
 @@ -114,6 +118,9 @@
  {
      FILE* file = NULL;
