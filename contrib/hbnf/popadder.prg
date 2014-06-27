@@ -633,7 +633,7 @@ STATIC PROCEDURE _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 
    LOCAL lUseTotal := ( nAmount == NIL )
 
-   __defaultNIL( @nAmount, 0 )
+   hb_default( @nAmount, 0 )
 
    IF lClAdder  // Clear the adder (they pressed <DEL> twice
       AAdd( aTrans, Str( 0, 22, nMaxDeci ) + " C" )
@@ -674,7 +674,7 @@ STATIC PROCEDURE _ftEraseTotSubTot( aAdder )
 // Adder Rounding function
 STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
 
-   __defaultNIL( @nPlaces, 0 )
+   hb_default( @nPlaces, 0 )
 
    RETURN iif( nNumber < 0.0, -1.0, 1.0 ) * ;
       Int( Abs( nNumber ) * 10 ^ nPlaces + 0.50 + 10 ^ -12 ) / 10 ^ nPlaces
@@ -793,7 +793,7 @@ STATIC PROCEDURE _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTo
    nNumRows  := MLCount( cMessage, nWide )
 
    // If they didn't say what the top row is, Center it on the screen
-   __defaultNIL( @nTop, Int( ( MaxRow() - nNumRows ) / 2 ) )
+   hb_default( @nTop, Int( ( MaxRow() - nNumRows ) / 2 ) )
 
    nBottom   := nTop + nNumRows + 2
    nLeft     := Int( ( MaxCol() - nWide ) / 2 ) - 3
@@ -1036,18 +1036,14 @@ STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
       _ftInitColors()
    ENDIF
 
-   __defaultNIL( @nStd, 8 )
-   __defaultNIL( @nEnh, 8 )
-   __defaultNIL( @nBord, 8 )
-   __defaultNIL( @nBack, 8 )
-   __defaultNIL( @nUnsel, nEnh )
+   hb_default( @nEnh, 8 )
 
    RETURN SetColor( ;
-      t_aStdColor[ nStd ] + "," + ;
+      t_aStdColor[ hb_defaultValue( nStd, 8 ) ] + "," + ;
       t_aStdColor[ nEnh ] + "," + ;
-      t_aStdColor[ nBord ] + "," + ;
-      t_aStdColor[ nBack ] + "," + ;
-      t_aStdColor[ nUnsel ] )
+      t_aStdColor[ hb_defaultValue( nBord, 8 ) ] + "," + ;
+      t_aStdColor[ hb_defaultValue( nBack, 8 ) ] + "," + ;
+      t_aStdColor[ hb_defaultValue( nUnsel, nEnh ) ] )
 
 // NOTE: Push a new window on the screen in the position t,l,b,r
 //       and if cTitle is not NIL print the title for the window
@@ -1121,19 +1117,15 @@ STATIC PROCEDURE _ftPopWin()
 //       active window number nWinColor.
 STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
 
-   __defaultNIL( @nWin, t_nWinColor )
-   __defaultNIL( @nStd, 7 )
-   __defaultNIL( @nEnh, 7 )
-   __defaultNIL( @nBord, 7 )
-   __defaultNIL( @nBack, 7 )
-   __defaultNIL( @nUnsel, nEnh )
+   hb_default( @nWin, t_nWinColor )
+   hb_default( @nEnh, 7 )
 
    RETURN SetColor( ;
-      t_aWinColor[ nStd, nWin ] + "," + ;
+      t_aWinColor[ hb_defaultValue( nStd, 7 ), nWin ] + "," + ;
       t_aWinColor[ nEnh, nWin ] + "," + ;
-      t_aWinColor[ nBord, nWin ] + "," + ;
-      t_aWinColor[ nBack, nWin ] + "," + ;
-      t_aWinColor[ nUnsel, nWin ] )
+      t_aWinColor[ hb_defaultValue( nBord, 7 ), nWin ] + "," + ;
+      t_aWinColor[ hb_defaultValue( nBack, 7 ), nWin ] + "," + ;
+      t_aWinColor[ hb_defaultValue( nUnsel, nEnh ), nWin ] )
 
 // Decrement the active window color number and return the current value
 // NOTE: If we are already on window #1 restart count by using # 4.
