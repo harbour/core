@@ -10447,6 +10447,16 @@ PROCEDURE hbmk_AddInput_INSTFILE( ctx, cFileName, cGroup )
 
    RETURN
 
+PROCEDURE hbmk_AddOption_PRG( ctx, cOption )
+
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+
+   IF hbmk != NIL .AND. HB_ISSTRING( cOption ) .AND. ! Empty( cOption )
+      AAdd( hbmk[ _HBMK_aOPTPRG ], cOption )
+   ENDIF
+
+   RETURN
+
 PROCEDURE hbmk_AddOption_C( ctx, cOption )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
@@ -10519,10 +10529,10 @@ STATIC FUNCTION PlugIn_make_ctx( hbmk, cState, hVars )
       "cCCPREFIX"     => hbmk[ _HBMK_cCCPREFIX ]    , ;
       "cCCSUFFIX"     => hbmk[ _HBMK_cCCSUFFIX ]    , ;
       "cCCEXT"        => hbmk[ _HBMK_cCCEXT ]       , ;
-      "nCmd_Esc"      => hbmk[ _HBMK_nCmd_Esc ]     , ; /* deprecated with HB_LEGACY_LEVEL4 */
-      "nScr_Esc"      => hbmk[ _HBMK_nScr_Esc ]     , ; /* deprecated with HB_LEGACY_LEVEL4 */
-      "nCmd_FNF"      => hbmk[ _HBMK_nCmd_FNF ]     , ; /* deprecated with HB_LEGACY_LEVEL4 */
-      "nScr_FNF"      => hbmk[ _HBMK_nScr_FNF ]     , ; /* deprecated with HB_LEGACY_LEVEL4 */
+      "nCmd_Esc"      => hbmk[ _HBMK_nCmd_Esc ]     , ;  /* deprecated with HB_LEGACY_LEVEL4 */
+      "nScr_Esc"      => hbmk[ _HBMK_nScr_Esc ]     , ;  /* deprecated with HB_LEGACY_LEVEL4 */
+      "nCmd_FNF"      => hbmk[ _HBMK_nCmd_FNF ]     , ;  /* deprecated with HB_LEGACY_LEVEL4 */
+      "nScr_FNF"      => hbmk[ _HBMK_nScr_FNF ]     , ;  /* deprecated with HB_LEGACY_LEVEL4 */
       "cWorkDir"      => hbmk[ _HBMK_cWorkDir ]     , ;
       "nExitCode"     => hbmk[ _HBMK_nExitCode ]    , ;
       hbmk_SecToken() => hbmk }
@@ -17574,6 +17584,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "hbmk_AddInput_RC( hbmk, <cFileName> ) -> NIL"                                , I_( "Add a Windows resource input file to the project." ) }, ;
       { "hbmk_AddInput_OBJ( hbmk, <cFileName> ) -> NIL"                               , I_( "Add a binary object file to the project." ) }, ;
       { "hbmk_AddInput_INSTFILE( hbmk, <cFileName>, [<cGroup>] ) -> NIL"              , I_( "Add a file to be installed, with an optional -instpath= group name." ) }, ;
+      { "hbmk_AddOption_PRG( hbmk, <cOption> ) -> NIL"                                , I_( "Add a Harbour compiler option." ) }, ;
       { "hbmk_AddOption_C( hbmk, <cOption> ) -> NIL"                                  , I_( "Add a C compiler option." ) }, ;
       { "hbmk_OutStd( hbmk, <cText> ) -> NIL"                                         , I_( "Output text to stdout." ) }, ;
       { "hbmk_OutErr( hbmk, <cText> ) -> NIL"                                         , I_( "Output text to stderr." ) }, ;

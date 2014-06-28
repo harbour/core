@@ -47,6 +47,8 @@ STATIC FUNCTION gs_version_detect( hbmk )
    LOCAL cFileName
    LOCAL nVersion
 
+   LOCAL cStdOutErr
+
    LOCAL aPath := {}, cPath
    LOCAL aBin := {}, cBin
 
@@ -68,7 +70,11 @@ STATIC FUNCTION gs_version_detect( hbmk )
    FOR EACH cPath IN aPath
       FOR EACH cBin IN aBin
          IF ( cFileName := hbmk_FindInPath( cBin, cPath ) ) != NIL
-            nVersion := Version( cFileName )
+
+            cStdOutErr := ""
+            hb_processRun( cFileName + " --version",, @cStdOutErr, @cStdOutErr )
+            nVersion := Val( hb_StrReplace( cStdOutErr, Chr( 13 ) + Chr( 10 ) ) )
+
             IF hbmk[ "lINFO" ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Ghostscript version detected: %1$s [%2$s]" ), hb_ntos( nVersion ), cFileName ) )
             ENDIF
@@ -78,14 +84,6 @@ STATIC FUNCTION gs_version_detect( hbmk )
    NEXT
 
    RETURN 0
-
-STATIC FUNCTION Version( cBIN )
-
-   LOCAL cStdOutErr := ""
-
-   hb_processRun( cBIN + " --version",, @cStdOutErr, @cStdOutErr )
-
-   RETURN Val( hb_StrReplace( cStdOutErr, Chr( 13 ) + Chr( 10 ) ) )
 
 #else
 
