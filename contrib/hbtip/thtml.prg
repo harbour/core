@@ -83,8 +83,12 @@
 THREAD STATIC t_aHA                // data for HTML attributes
 THREAD STATIC t_hHT                // data for HTML tags
 THREAD STATIC t_cHtmlCP := ""
-THREAD STATIC t_aHtmlEntities      // HTML character entities
+THREAD STATIC t_aHtmlUnicEntities  // HTML character entities
+THREAD STATIC t_cHtmlUnicChars
+#ifdef HB_LEGACY_LEVEL4
 THREAD STATIC t_aHtmlAnsiEntities  // HTML character entities (ANSI character set)
+THREAD STATIC t_cHtmlAnsiChars
+#endif
 THREAD STATIC t_lInit := .F.       // initilization flag for HTML data
 
 #ifdef _DEBUG_
@@ -602,9 +606,7 @@ METHOD new( oParent, cTagName, cAttrib, cContent ) CLASS THtmlNode
 
    IF HB_ISSTRING( oParent )
       // a HTML string is passed -> build new tree of objects
-      IF Chr( 9 ) $ oParent
-         oParent := StrTran( oParent, Chr( 9 ), " " )
-      ENDIF
+      oParent := StrTran( oParent, Chr( 9 ), " " )
       ::root           := Self
       ::htmlTagName    := "_root_"
       ::htmlTagType    := THtmlTagType( "_root_" )
@@ -1567,7 +1569,9 @@ FUNCTION THtmlInit( lInit )
    IF HB_ISLOGICAL( lInit ) .AND. ! lInit
       t_aHA := NIL
       t_hHT := NIL
+#ifdef HB_LEGACY_LEVEL4
       t_aHtmlAnsiEntities := NIL
+#endif
       t_lInit := .F.
    ELSEIF ! t_lInit
       t_aHA := Array( HTML_ATTR_COUNT )
@@ -4207,22 +4211,11 @@ STATIC FUNCTION THtmlAttr_XMP()
 // Converts an HTML formatted text string to the ANSI character set
 FUNCTION HtmlToANSI( cHtmlText )
 
-   LOCAL aEntity
-
    IF t_aHtmlAnsiEntities == NIL
       _Init_Html_AnsiCharacterEntities()
    ENDIF
 
-   FOR EACH aEntity IN t_aHtmlAnsiEntities
-      IF aEntity[ 2 ] $ cHtmlText
-         cHtmlText := StrTran( cHtmlText, aEntity[ 2 ], aEntity[ 1 ] )
-      ENDIF
-   NEXT
-   IF "&nbsp;" $ cHtmlText
-      cHtmlText := StrTran( cHtmlText, "&nbsp;", " " )
-   ENDIF
-
-   RETURN cHtmlText
+   RETURN StrTran( hb_StrReplace( cHtmlText, t_aHtmlAnsiEntities, t_cHtmlAnsiChars ), "&nbsp;", " " )
 
 // Converts an HTML formatted text string to the OEM character set
 FUNCTION HtmlToOEM( cHtmlText )
@@ -4234,7 +4227,7 @@ FUNCTION ANSIToHtml( cAnsiText )
    LOCAL cHtmlText := ""
    LOCAL parser    := P_PARSER( cAnsiText )
    LOCAL nStart    := 1
-   LOCAL aEntity, cEntity, cText, cChr, nEnd
+   LOCAL cEntity, cText, cChr, nEnd
 
    IF t_aHtmlAnsiEntities == NIL
       _Init_Html_AnsiCharacterEntities()
@@ -4249,16 +4242,14 @@ FUNCTION ANSIToHtml( cAnsiText )
       ENDDO
 
       SWITCH cChr
-      CASE ";"
-         // HTML character entity found
+      CASE ";"  // HTML character entity found
          nStart  := nEnd
          nEnd    := parser:p_pos + 1
          cEntity := SubStr( parser:p_str, nStart, nEnd - nStart )
          parser:p_end := parser:p_pos
          parser:p_pos++
          EXIT
-      CASE " "
-         // "&" character found
+      CASE " "  // "&" character found
          cHtmlText += cText
          nStart    := nEnd
          nEnd      := parser:p_pos + 1
@@ -4272,24 +4263,11 @@ FUNCTION ANSIToHtml( cAnsiText )
 
       IF cEntity != NIL
          nStart := parser:p_pos
-         FOR EACH aEntity IN t_aHtmlAnsiEntities
-            IF aEntity[ 1 ] $ cText
-               cText := StrTran( cText, aEntity[ 1 ], aEntity[ 2 ] )
-            ENDIF
-         NEXT
-
-         cHtmlText += cText + cEntity
+         cHtmlText += hb_StrReplace( cText, t_cHtmlAnsiChars, t_aHtmlAnsiEntities ) + cEntity
       ENDIF
    ENDDO
 
-   cText := SubStr( parser:p_str, nStart )
-   FOR EACH aEntity IN t_aHtmlAnsiEntities
-      IF aEntity[ 1 ] $ cText
-         cText := StrTran( cText, aEntity[ 1 ], aEntity[ 2 ] )
-      ENDIF
-   NEXT
-
-   RETURN cHtmlText + cText
+   RETURN cHtmlText + hb_StrReplace( SubStr( parser:p_str, nStart ), t_cHtmlAnsiChars, t_aHtmlAnsiEntities )
 
 // Inserts HTML character entities into an OEM text string
 FUNCTION OEMToHtml( cOemText )
@@ -4298,83 +4276,85 @@ FUNCTION OEMToHtml( cOemText )
 // This function returs the HTML character entities that are exchangeable between ANSI and OEM character sets
 STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
 
-   t_aHtmlAnsiEntities := { ;
-      { hb_BChar(  38 ), "&amp;"    }, ;      //  ampersand
-      { hb_BChar(  60 ), "&lt;"     }, ;      //  less-than sign
-      { hb_BChar(  62 ), "&gt;"     }, ;      //  greater-than sign
-      { hb_BChar( 162 ), "&cent;"   }, ;      //  cent sign
-      { hb_BChar( 163 ), "&pound;"  }, ;      //  pound sign
-      { hb_BChar( 165 ), "&yen;"    }, ;      //  yen sign
-      { hb_BChar( 166 ), "&brvbar;" }, ;      //  broken bar
-      { hb_BChar( 167 ), "&sect;"   }, ;      //  section sign
-      { hb_BChar( 169 ), "&copy;"   }, ;      //  copyright sign
-      { hb_BChar( 174 ), "&reg;"    }, ;      //  registered sign
-      { hb_BChar( 176 ), "&deg;"    }, ;      //  degree sign
-      { hb_BChar( 191 ), "&iquest;" }, ;      //  inverted question mark
-      { hb_BChar( 192 ), "&Agrave;" }, ;      //  Latin capital letter a with grave
-      { hb_BChar( 193 ), "&Aacute;" }, ;      //  Latin capital letter a with acute
-      { hb_BChar( 194 ), "&Acirc;"  }, ;      //  Latin capital letter a with circumflex
-      { hb_BChar( 195 ), "&Atilde;" }, ;      //  Latin capital letter a with tilde
-      { hb_BChar( 196 ), "&Auml;"   }, ;      //  Latin capital letter a with diaeresis
-      { hb_BChar( 197 ), "&Aring;"  }, ;      //  Latin capital letter a with ring above
-      { hb_BChar( 198 ), "&AElig;"  }, ;      //  Latin capital letter ae
-      { hb_BChar( 199 ), "&Ccedil;" }, ;      //  Latin capital letter c with cedilla
-      { hb_BChar( 200 ), "&Egrave;" }, ;      //  Latin capital letter e with grave
-      { hb_BChar( 201 ), "&Eacute;" }, ;      //  Latin capital letter e with acute
-      { hb_BChar( 202 ), "&Ecirc;"  }, ;      //  Latin capital letter e with circumflex
-      { hb_BChar( 203 ), "&Euml;"   }, ;      //  Latin capital letter e with diaeresis
-      { hb_BChar( 204 ), "&Igrave;" }, ;      //  Latin capital letter i with grave
-      { hb_BChar( 205 ), "&Iacute;" }, ;      //  Latin capital letter i with acute
-      { hb_BChar( 206 ), "&Icirc;"  }, ;      //  Latin capital letter i with circumflex
-      { hb_BChar( 207 ), "&Iuml;"   }, ;      //  Latin capital letter i with diaeresis
-      { hb_BChar( 208 ), "&ETH;"    }, ;      //  Latin capital letter eth
-      { hb_BChar( 209 ), "&Ntilde;" }, ;      //  Latin capital letter n with tilde
-      { hb_BChar( 210 ), "&Ograve;" }, ;      //  Latin capital letter o with grave
-      { hb_BChar( 211 ), "&Oacute;" }, ;      //  Latin capital letter o with acute
-      { hb_BChar( 212 ), "&Ocirc;"  }, ;      //  Latin capital letter o with circumflex
-      { hb_BChar( 213 ), "&Otilde;" }, ;      //  Latin capital letter o with tilde
-      { hb_BChar( 214 ), "&Ouml;"   }, ;      //  Latin capital letter o with diaeresis
-      { hb_BChar( 216 ), "&Oslash;" }, ;      //  Latin capital letter o with stroke
-      { hb_BChar( 217 ), "&Ugrave;" }, ;      //  Latin capital letter u with grave
-      { hb_BChar( 218 ), "&Uacute;" }, ;      //  Latin capital letter u with acute
-      { hb_BChar( 219 ), "&Ucirc;"  }, ;      //  Latin capital letter u with circumflex
-      { hb_BChar( 220 ), "&Uuml;"   }, ;      //  Latin capital letter u with diaeresis
-      { hb_BChar( 221 ), "&Yacute;" }, ;      //  Latin capital letter y with acute
-      { hb_BChar( 222 ), "&THORN;"  }, ;      //  Latin capital letter thorn
-      { hb_BChar( 223 ), "&szlig;"  }, ;      //  Latin small letter sharp s (German Eszett)
-      { hb_BChar( 224 ), "&agrave;" }, ;      //  Latin small letter a with grave
-      { hb_BChar( 225 ), "&aacute;" }, ;      //  Latin small letter a with acute
-      { hb_BChar( 226 ), "&acirc;"  }, ;      //  Latin small letter a with circumflex
-      { hb_BChar( 227 ), "&atilde;" }, ;      //  Latin small letter a with tilde
-      { hb_BChar( 228 ), "&auml;"   }, ;      //  Latin small letter a with diaeresis
-      { hb_BChar( 229 ), "&aring;"  }, ;      //  Latin small letter a with ring above
-      { hb_BChar( 230 ), "&aelig;"  }, ;      //  Latin lowercase ligature ae
-      { hb_BChar( 231 ), "&ccedil;" }, ;      //  Latin small letter c with cedilla
-      { hb_BChar( 232 ), "&egrave;" }, ;      //  Latin small letter e with grave
-      { hb_BChar( 233 ), "&eacute;" }, ;      //  Latin small letter e with acute
-      { hb_BChar( 234 ), "&ecirc;"  }, ;      //  Latin small letter e with circumflex
-      { hb_BChar( 235 ), "&euml;"   }, ;      //  Latin small letter e with diaeresis
-      { hb_BChar( 236 ), "&igrave;" }, ;      //  Latin small letter i with grave
-      { hb_BChar( 237 ), "&iacute;" }, ;      //  Latin small letter i with acute
-      { hb_BChar( 238 ), "&icirc;"  }, ;      //  Latin small letter i with circumflex
-      { hb_BChar( 239 ), "&iuml;"   }, ;      //  Latin small letter i with diaeresis
-      { hb_BChar( 240 ), "&eth;"    }, ;      //  Latin small letter eth
-      { hb_BChar( 241 ), "&ntilde;" }, ;      //  Latin small letter n with tilde
-      { hb_BChar( 242 ), "&ograve;" }, ;      //  Latin small letter o with grave
-      { hb_BChar( 243 ), "&oacute;" }, ;      //  Latin small letter o with acute
-      { hb_BChar( 244 ), "&ocirc;"  }, ;      //  Latin small letter o with circumflex
-      { hb_BChar( 245 ), "&otilde;" }, ;      //  Latin small letter o with tilde
-      { hb_BChar( 246 ), "&ouml;"   }, ;      //  Latin small letter o with diaeresis
-      { hb_BChar( 248 ), "&oslash;" }, ;      //  Latin small letter o with stroke
-      { hb_BChar( 249 ), "&ugrave;" }, ;      //  Latin small letter u with grave
-      { hb_BChar( 250 ), "&uacute;" }, ;      //  Latin small letter u with acute
-      { hb_BChar( 251 ), "&ucirc;"  }, ;      //  Latin small letter u with circumflex
-      { hb_BChar( 252 ), "&uuml;"   }, ;      //  Latin small letter u with diaeresis
-      { hb_BChar( 253 ), "&yacute;" }, ;      //  Latin small letter y with acute
-      { hb_BChar( 254 ), "&thorn;"  }, ;      //  Latin small letter thorn
-      { hb_BChar( 255 ), "&yuml;"   }, ;      //  Latin small letter y with diaeresis
-      { hb_BChar(  94 ), "&circ;"   }, ;      //  modifier letter circumflex accent
-      { hb_BChar( 126 ), "&tilde;"  } }       //  small tilde
+   t_cHtmlAnsiChars := ;
+      hb_BChar(  38 ) + ;
+      hb_BChar(  60 ) + ;
+      hb_BChar(  62 ) + ;
+      hb_BChar( 192 ) + ;
+      hb_BChar( 193 ) + ;
+      hb_BChar( 194 ) + ;
+      hb_BChar( 195 ) + ;
+      hb_BChar( 196 ) + ;
+      hb_BChar( 197 ) + ;
+      hb_BChar( 198 ) + ;
+      hb_BChar( 199 ) + ;
+      hb_BChar( 200 ) + ;
+      hb_BChar( 201 ) + ;
+      hb_BChar( 202 ) + ;
+      hb_BChar( 203 ) + ;
+      hb_BChar( 204 ) + ;
+      hb_BChar( 205 ) + ;
+      hb_BChar( 206 ) + ;
+      hb_BChar( 207 ) + ;
+      hb_BChar( 208 ) + ;
+      hb_BChar( 209 ) + ;
+      hb_BChar( 210 ) + ;
+      hb_BChar( 211 ) + ;
+      hb_BChar( 212 ) + ;
+      hb_BChar( 213 ) + ;
+      hb_BChar( 214 ) + ;
+      hb_BChar( 216 ) + ;
+      hb_BChar( 217 ) + ;
+      hb_BChar( 218 ) + ;
+      hb_BChar( 219 ) + ;
+      hb_BChar( 220 ) + ;
+      hb_BChar( 221 ) + ;
+      hb_BChar( 222 ) + ;
+      hb_BChar( 223 ) + ;
+      hb_BChar( 224 ) + ;
+      hb_BChar( 225 ) + ;
+      hb_BChar( 226 ) + ;
+      hb_BChar( 227 ) + ;
+      hb_BChar( 228 ) + ;
+      hb_BChar( 229 ) + ;
+      hb_BChar( 230 ) + ;
+      hb_BChar( 231 ) + ;
+      hb_BChar( 232 ) + ;
+      hb_BChar( 233 ) + ;
+      hb_BChar( 234 ) + ;
+      hb_BChar( 235 ) + ;
+      hb_BChar( 236 ) + ;
+      hb_BChar( 237 ) + ;
+      hb_BChar( 238 ) + ;
+      hb_BChar( 239 ) + ;
+      hb_BChar( 240 ) + ;
+      hb_BChar( 241 ) + ;
+      hb_BChar( 242 ) + ;
+      hb_BChar( 243 ) + ;
+      hb_BChar( 244 ) + ;
+      hb_BChar( 245 ) + ;
+      hb_BChar( 246 ) + ;
+      hb_BChar( 248 ) + ;
+      hb_BChar( 249 ) + ;
+      hb_BChar( 250 ) + ;
+      hb_BChar( 251 ) + ;
+      hb_BChar( 252 ) + ;
+      hb_BChar( 253 ) + ;
+      hb_BChar( 254 ) + ;
+      hb_BChar( 255 ) + ;
+      hb_BChar(  94 ) + ;
+      hb_BChar( 162 ) + ;
+      hb_BChar( 163 ) + ;
+      hb_BChar( 165 ) + ;
+      hb_BChar( 166 ) + ;
+      hb_BChar( 167 ) + ;
+      hb_BChar( 169 ) + ;
+      hb_BChar( 174 ) + ;
+      hb_BChar( 176 ) + ;
+      hb_BChar( 191 ) + ;
+      hb_BChar( 126 )
+
+   t_aHtmlAnsiEntities := __HtmlEntities()
 
    RETURN
 
@@ -4383,20 +4363,9 @@ STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
 // Converts an HTML formatted text string to the current character set
 FUNCTION tip_HtmlToStr( cHtmlText )
 
-   LOCAL aEntity
-
    _Init_Html_CharacterEntities()
 
-   FOR EACH aEntity IN t_aHtmlEntities
-      IF aEntity[ 2 ] $ cHtmlText
-         cHtmlText := StrTran( cHtmlText, aEntity[ 2 ], hb_UTF8ToStr( aEntity[ 1 ] ) )
-      ENDIF
-   NEXT
-   IF "&nbsp;" $ cHtmlText
-      cHtmlText := StrTran( cHtmlText, "&nbsp;", " " )
-   ENDIF
-
-   RETURN cHtmlText
+   RETURN StrTran( hb_StrReplace( cHtmlText, t_aHtmlUnicEntities, t_cHtmlUnicChars ), "&nbsp;", " " )
 
 // Inserts HTML character entities into a text string
 FUNCTION tip_StrToHtml( cAnsiText )
@@ -4404,7 +4373,7 @@ FUNCTION tip_StrToHtml( cAnsiText )
    LOCAL cHtmlText := ""
    LOCAL parser    := P_PARSER( cAnsiText )
    LOCAL nStart    := 1
-   LOCAL aEntity, cEntity, cText, cChr, nEnd
+   LOCAL cEntity, cText, cChr, nEnd
 
    _Init_Html_CharacterEntities()
 
@@ -4417,16 +4386,14 @@ FUNCTION tip_StrToHtml( cAnsiText )
       ENDDO
 
       SWITCH cChr
-      CASE ";"
-         // HTML character entity found
+      CASE ";"  // HTML character entity found
          nStart  := nEnd
          nEnd    := parser:p_pos + 1
          cEntity := SubStr( parser:p_str, nStart, nEnd - nStart )
          parser:p_end := parser:p_pos
          parser:p_pos++
          EXIT
-      CASE " "
-         // "&" character found
+      CASE " "  // "&" character found
          cHtmlText += cText
          nStart    := nEnd
          nEnd      := parser:p_pos + 1
@@ -4440,107 +4407,97 @@ FUNCTION tip_StrToHtml( cAnsiText )
 
       IF cEntity != NIL
          nStart := parser:p_pos
-         FOR EACH aEntity IN t_aHtmlEntities
-            IF hb_UTF8ToStr( aEntity[ 1 ] ) $ cText
-               cText := StrTran( cText, hb_UTF8ToStr( aEntity[ 1 ] ), aEntity[ 2 ] )
-            ENDIF
-         NEXT
-
-         cHtmlText += cText + cEntity
+         cHtmlText += hb_StrReplace( cText, t_cHtmlUnicChars, t_aHtmlUnicEntities ) + cEntity
       ENDIF
    ENDDO
 
-   cText := SubStr( parser:p_str, nStart )
-   FOR EACH aEntity IN t_aHtmlEntities
-      IF hb_UTF8ToStr( aEntity[ 1 ] ) $ cText
-         cText := StrTran( cText, hb_UTF8ToStr( aEntity[ 1 ] ), aEntity[ 2 ] )
-      ENDIF
-   NEXT
-   cHtmlText += cText
-
-   RETURN cHtmlText
+   RETURN cHtmlText + hb_StrReplace( SubStr( parser:p_str, nStart ), t_cHtmlUnicChars, t_aHtmlUnicEntities )
 
 STATIC PROCEDURE _Init_Html_CharacterEntities()
 
-   IF t_aHtmlEntities == NIL .OR. !( t_cHtmlCP == hb_cdpSelect() )
+   IF t_aHtmlUnicEntities == NIL .OR. !( t_cHtmlCP == hb_cdpSelect() )
       t_cHtmlCP := hb_cdpSelect()
-      t_aHtmlEntities := { ;
-         { "&", "&amp;"    }, ;      //  ampersand
-         { "<", "&lt;"     }, ;      //  less-than sign
-         { ">", "&gt;"     }, ;      //  greater-than sign
-         { "¢", "&cent;"   }, ;      //  cent sign
-         { "£", "&pound;"  }, ;      //  pound sign
-         { "¥", "&yen;"    }, ;      //  yen sign
-         { "¦", "&brvbar;" }, ;      //  broken bar
-         { "§", "&sect;"   }, ;      //  section sign
-         { "©", "&copy;"   }, ;      //  copyright sign
-         { "®", "&reg;"    }, ;      //  registered sign
-         { "°", "&deg;"    }, ;      //  degree sign
-         { "¿", "&iquest;" }, ;      //  inverted question mark
-         { "À", "&Agrave;" }, ;      //  Latin capital letter a with grave
-         { "Á", "&Aacute;" }, ;      //  Latin capital letter a with acute
-         { "Â", "&Acirc;"  }, ;      //  Latin capital letter a with circumflex
-         { "Ã", "&Atilde;" }, ;      //  Latin capital letter a with tilde
-         { "Ä", "&Auml;"   }, ;      //  Latin capital letter a with diaeresis
-         { "Å", "&Aring;"  }, ;      //  Latin capital letter a with ring above
-         { "Æ", "&AElig;"  }, ;      //  Latin capital letter ae
-         { "Ç", "&Ccedil;" }, ;      //  Latin capital letter c with cedilla
-         { "È", "&Egrave;" }, ;      //  Latin capital letter e with grave
-         { "É", "&Eacute;" }, ;      //  Latin capital letter e with acute
-         { "Ê", "&Ecirc;"  }, ;      //  Latin capital letter e with circumflex
-         { "Ë", "&Euml;"   }, ;      //  Latin capital letter e with diaeresis
-         { "Ì", "&Igrave;" }, ;      //  Latin capital letter i with grave
-         { "Í", "&Iacute;" }, ;      //  Latin capital letter i with acute
-         { "Î", "&Icirc;"  }, ;      //  Latin capital letter i with circumflex
-         { "Ï", "&Iuml;"   }, ;      //  Latin capital letter i with diaeresis
-         { "Ð", "&ETH;"    }, ;      //  Latin capital letter eth
-         { "Ñ", "&Ntilde;" }, ;      //  Latin capital letter n with tilde
-         { "Ò", "&Ograve;" }, ;      //  Latin capital letter o with grave
-         { "Ó", "&Oacute;" }, ;      //  Latin capital letter o with acute
-         { "Ô", "&Ocirc;"  }, ;      //  Latin capital letter o with circumflex
-         { "Õ", "&Otilde;" }, ;      //  Latin capital letter o with tilde
-         { "Ö", "&Ouml;"   }, ;      //  Latin capital letter o with diaeresis
-         { "Ø", "&Oslash;" }, ;      //  Latin capital letter o with stroke
-         { "Ù", "&Ugrave;" }, ;      //  Latin capital letter u with grave
-         { "Ú", "&Uacute;" }, ;      //  Latin capital letter u with acute
-         { "Û", "&Ucirc;"  }, ;      //  Latin capital letter u with circumflex
-         { "Ü", "&Uuml;"   }, ;      //  Latin capital letter u with diaeresis
-         { "Ý", "&Yacute;" }, ;      //  Latin capital letter y with acute
-         { "Þ", "&THORN;"  }, ;      //  Latin capital letter thorn
-         { "ß", "&szlig;"  }, ;      //  Latin small letter sharp s (German Eszett)
-         { "à", "&agrave;" }, ;      //  Latin small letter a with grave
-         { "á", "&aacute;" }, ;      //  Latin small letter a with acute
-         { "â", "&acirc;"  }, ;      //  Latin small letter a with circumflex
-         { "ã", "&atilde;" }, ;      //  Latin small letter a with tilde
-         { "ä", "&auml;"   }, ;      //  Latin small letter a with diaeresis
-         { "å", "&aring;"  }, ;      //  Latin small letter a with ring above
-         { "æ", "&aelig;"  }, ;      //  Latin lowercase ligature ae
-         { "ç", "&ccedil;" }, ;      //  Latin small letter c with cedilla
-         { "è", "&egrave;" }, ;      //  Latin small letter e with grave
-         { "é", "&eacute;" }, ;      //  Latin small letter e with acute
-         { "ê", "&ecirc;"  }, ;      //  Latin small letter e with circumflex
-         { "ë", "&euml;"   }, ;      //  Latin small letter e with diaeresis
-         { "ì", "&igrave;" }, ;      //  Latin small letter i with grave
-         { "í", "&iacute;" }, ;      //  Latin small letter i with acute
-         { "î", "&icirc;"  }, ;      //  Latin small letter i with circumflex
-         { "ï", "&iuml;"   }, ;      //  Latin small letter i with diaeresis
-         { "ð", "&eth;"    }, ;      //  Latin small letter eth
-         { "ñ", "&ntilde;" }, ;      //  Latin small letter n with tilde
-         { "ò", "&ograve;" }, ;      //  Latin small letter o with grave
-         { "ó", "&oacute;" }, ;      //  Latin small letter o with acute
-         { "ô", "&ocirc;"  }, ;      //  Latin small letter o with circumflex
-         { "õ", "&otilde;" }, ;      //  Latin small letter o with tilde
-         { "ö", "&ouml;"   }, ;      //  Latin small letter o with diaeresis
-         { "ø", "&oslash;" }, ;      //  Latin small letter o with stroke
-         { "ù", "&ugrave;" }, ;      //  Latin small letter u with grave
-         { "ú", "&uacute;" }, ;      //  Latin small letter u with acute
-         { "û", "&ucirc;"  }, ;      //  Latin small letter u with circumflex
-         { "ü", "&uuml;"   }, ;      //  Latin small letter u with diaeresis
-         { "ý", "&yacute;" }, ;      //  Latin small letter y with acute
-         { "þ", "&thorn;"  }, ;      //  Latin small letter thorn
-         { "ÿ", "&yuml;"   }, ;      //  Latin small letter y with diaeresis
-         { "^", "&circ;"   }, ;      //  modifier letter circumflex accent
-         { "~", "&tilde;"  } }       //  small tilde
+      t_cHtmlUnicChars := hb_UTF8ToStr( "&<>¢£¥¦§©®°¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ^¢£¥¦§©®°¿~" )
+      t_aHtmlUnicEntities := __HtmlEntities()
    ENDIF
 
    RETURN
+
+STATIC FUNCTION __HtmlEntities()
+   RETURN { ;
+      "&amp;"    , ;  // ampersand
+      "&lt;"     , ;  // less-than sign
+      "&gt;"     , ;  // greater-than sign
+      "&Agrave;" , ;  // Latin capital letter a with grave
+      "&Aacute;" , ;  // Latin capital letter a with acute
+      "&Acirc;"  , ;  // Latin capital letter a with circumflex
+      "&Atilde;" , ;  // Latin capital letter a with tilde
+      "&Auml;"   , ;  // Latin capital letter a with diaeresis
+      "&Aring;"  , ;  // Latin capital letter a with ring above
+      "&AElig;"  , ;  // Latin capital letter ae
+      "&Ccedil;" , ;  // Latin capital letter c with cedilla
+      "&Egrave;" , ;  // Latin capital letter e with grave
+      "&Eacute;" , ;  // Latin capital letter e with acute
+      "&Ecirc;"  , ;  // Latin capital letter e with circumflex
+      "&Euml;"   , ;  // Latin capital letter e with diaeresis
+      "&Igrave;" , ;  // Latin capital letter i with grave
+      "&Iacute;" , ;  // Latin capital letter i with acute
+      "&Icirc;"  , ;  // Latin capital letter i with circumflex
+      "&Iuml;"   , ;  // Latin capital letter i with diaeresis
+      "&ETH;"    , ;  // Latin capital letter eth
+      "&Ntilde;" , ;  // Latin capital letter n with tilde
+      "&Ograve;" , ;  // Latin capital letter o with grave
+      "&Oacute;" , ;  // Latin capital letter o with acute
+      "&Ocirc;"  , ;  // Latin capital letter o with circumflex
+      "&Otilde;" , ;  // Latin capital letter o with tilde
+      "&Ouml;"   , ;  // Latin capital letter o with diaeresis
+      "&Oslash;" , ;  // Latin capital letter o with stroke
+      "&Ugrave;" , ;  // Latin capital letter u with grave
+      "&Uacute;" , ;  // Latin capital letter u with acute
+      "&Ucirc;"  , ;  // Latin capital letter u with circumflex
+      "&Uuml;"   , ;  // Latin capital letter u with diaeresis
+      "&Yacute;" , ;  // Latin capital letter y with acute
+      "&THORN;"  , ;  // Latin capital letter thorn
+      "&szlig;"  , ;  // Latin small letter sharp s (German Eszett)
+      "&agrave;" , ;  // Latin small letter a with grave
+      "&aacute;" , ;  // Latin small letter a with acute
+      "&acirc;"  , ;  // Latin small letter a with circumflex
+      "&atilde;" , ;  // Latin small letter a with tilde
+      "&auml;"   , ;  // Latin small letter a with diaeresis
+      "&aring;"  , ;  // Latin small letter a with ring above
+      "&aelig;"  , ;  // Latin lowercase ligature ae
+      "&ccedil;" , ;  // Latin small letter c with cedilla
+      "&egrave;" , ;  // Latin small letter e with grave
+      "&eacute;" , ;  // Latin small letter e with acute
+      "&ecirc;"  , ;  // Latin small letter e with circumflex
+      "&euml;"   , ;  // Latin small letter e with diaeresis
+      "&igrave;" , ;  // Latin small letter i with grave
+      "&iacute;" , ;  // Latin small letter i with acute
+      "&icirc;"  , ;  // Latin small letter i with circumflex
+      "&iuml;"   , ;  // Latin small letter i with diaeresis
+      "&eth;"    , ;  // Latin small letter eth
+      "&ntilde;" , ;  // Latin small letter n with tilde
+      "&ograve;" , ;  // Latin small letter o with grave
+      "&oacute;" , ;  // Latin small letter o with acute
+      "&ocirc;"  , ;  // Latin small letter o with circumflex
+      "&otilde;" , ;  // Latin small letter o with tilde
+      "&ouml;"   , ;  // Latin small letter o with diaeresis
+      "&oslash;" , ;  // Latin small letter o with stroke
+      "&ugrave;" , ;  // Latin small letter u with grave
+      "&uacute;" , ;  // Latin small letter u with acute
+      "&ucirc;"  , ;  // Latin small letter u with circumflex
+      "&uuml;"   , ;  // Latin small letter u with diaeresis
+      "&yacute;" , ;  // Latin small letter y with acute
+      "&thorn;"  , ;  // Latin small letter thorn
+      "&yuml;"   , ;  // Latin small letter y with diaeresis
+      "&circ;"   , ;  // modifier letter circumflex accent
+      "&cent;"   , ;  // cent sign
+      "&pound;"  , ;  // pound sign
+      "&yen;"    , ;  // yen sign
+      "&brvbar;" , ;  // broken bar
+      "&sect;"   , ;  // section sign
+      "&copy;"   , ;  // copyright sign
+      "&reg;"    , ;  // registered sign
+      "&deg;"    , ;  // degree sign
+      "&iquest;" , ;  // inverted question mark
+      "&tilde;"   }   // small tilde
