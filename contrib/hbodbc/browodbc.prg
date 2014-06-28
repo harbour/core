@@ -5,6 +5,8 @@
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) for original FieldBlock function
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> for original Skipped function
  * Copyright 2002 Tomaz Zupan <tomaz.zupan@orpo.si> modifications for ODBC
+ *   This code is mostly derived work from Harbour RTL browse.prg, browdb.prg.
+ *   and fieldbl.prg. Only minor changes were needed to adapt them to ODBC.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,11 +47,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
- /* CREDITS:
- * This code is mostly derived work from harbours RTL browse.prg, browdb.prg.
- * and fieldbl.prg. Only minor changes were needed to adapt them to ODBC.
  */
 
 #include "box.ch"
@@ -169,9 +166,10 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
    LOCAL nSkipped := 0
 
    IF ! oDataSource:Eof()
-      IF nRecs == 0
+      DO CASE
+      CASE nRecs == 0
          // ODBC doesn't have Skip( 0 )
-      ELSEIF nRecs > 0
+      CASE nRecs > 0
          DO WHILE nSkipped < nRecs
             IF ! oDataSource:Eof()
                oDataSource:next()
@@ -182,7 +180,7 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
                nSkipped++
             ENDIF
          ENDDO
-      ELSEIF nRecs < 0
+      CASE nRecs < 0
          DO WHILE nSkipped > nRecs
             IF ! oDataSource:Bof()
                oDataSource:prior()
@@ -192,7 +190,7 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
                nSkipped--
             ENDIF
          ENDDO
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN nSkipped

@@ -289,6 +289,7 @@ METHOD GetCGIParam( nParam ) CLASS THTML
    ENDIF
 
    OutErr( "Invalid CGI parameter" )
+
    RETURN NIL
 
 METHOD QueryFields( cQueryName ) CLASS THTML

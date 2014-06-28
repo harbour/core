@@ -57,7 +57,6 @@ DYNAMIC WvgTreeView
 DYNAMIC WvgTreeViewItem
 DYNAMIC WvgWindow
 DYNAMIC Wvg_AddToolBarButton
-DYNAMIC Wvg_And
 DYNAMIC Wvg_AppendMenu
 DYNAMIC Wvg_BeginMouseTracking
 DYNAMIC Wvg_BoxGet
@@ -143,9 +142,7 @@ DYNAMIC Wvg_LOWORD
 DYNAMIC Wvg_MakeLParam
 DYNAMIC Wvg_MessageBox
 DYNAMIC Wvg_MoveWindow
-DYNAMIC Wvg_Not
 DYNAMIC Wvg_Object
-DYNAMIC Wvg_Or
 DYNAMIC Wvg_Outline
 DYNAMIC Wvg_OutlineEx
 DYNAMIC Wvg_Picture

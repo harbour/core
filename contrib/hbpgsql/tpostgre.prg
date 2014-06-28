@@ -378,11 +378,7 @@ METHOD CreateTable( cTable, aStruct ) CLASS TPQserver
          EXIT
       ENDSWITCH
 
-      IF fld:__enumIsLast()
-         cQuery += ")"
-      ELSE
-         cQuery += ","
-      ENDIF
+      cQuery += iif( fld:__enumIsLast(), ")", "," )
    NEXT
 
    res := PQexec( ::pDB, cQuery )
@@ -648,7 +644,6 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
             ::nFields := PQfcount( res )
 
             ::aStruct := aStruct
-
          ENDIF
       ENDIF
 
@@ -807,6 +802,7 @@ METHOD Delete( oRow ) CLASS TPQquery
    ::SetKey()
 
    IF ! Empty( ::Tablename ) .AND. ! Empty( ::aKeys )
+
       FOR EACH i IN ::aKeys
          nField := oRow:FieldPos( i )
          xField := oRow:FieldGetOld( nField )

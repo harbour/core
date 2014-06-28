@@ -352,7 +352,7 @@ FUNCTION pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )
 PROCEDURE pdfBox1( nTop, nLeft, nBottom, nRight, nBorderWidth, cBorderColor, cBoxColor )
 
    hb_default( @nBorderWidth, 0.5 )
-   hb_default( @cBorderColor, Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )
+   hb_default( @cBorderColor, hb_BChar( 0 ) + hb_BChar( 0 ) + hb_BChar( 0 ) )
    hb_default( @cBoxColor, hb_BChar( 255 ) + hb_BChar( 255 ) + hb_BChar( 255 ) )
 
    t_aReport[ PAGEBUFFER ] += CRLF + ;
@@ -968,8 +968,6 @@ PROCEDURE pdfOpen( cFile, nLen, lOptimize )
    t_aReport[ IMAGES       ] := {}
    t_aReport[ PAGEIMAGES   ] := {}
    t_aReport[ PAGEFONTS    ] := {}
-
-   // TOFIX: This external file dependency should be removed.
 
    cTemp := __pdf_fontsdat()  // times, times-bold, times-italic, times-bolditalic, helvetica..., courier... // 0.04
    n1 := hb_BLen( cTemp ) / ( 2 * n2 )
@@ -1851,7 +1849,7 @@ FUNCTION pdfImageInfo( cFile )
 
 FUNCTION pdfTIFFInfo( cFile )
 
-   LOCAL c40 := Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+   LOCAL c40 := hb_BChar( 0 ) + hb_BChar( 0 ) + hb_BChar( 0 ) + hb_BChar( 0 )
 
 #if 0
    LOCAL aType := { "BYTE", "ASCII", "SHORT", "LONG", "RATIONAL", "SBYTE", "UNDEFINED", "SSHORT", "SLONG", "SRATIONAL", "FLOAT", "DOUBLE" }

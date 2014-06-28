@@ -468,7 +468,7 @@ FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
  */
    cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /* nBufferSize */, cDefName )
 
-   IF Wvg_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
+   IF hb_bitAnd( nFlags, OFN_ALLOWMULTISELECT ) != 0
       xRet := {}
       IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]
@@ -510,7 +510,7 @@ FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
  */
    cRet := win_GetSaveFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
 
-   IF Wvg_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
+   IF hb_bitAnd( nFlags, OFN_ALLOWMULTISELECT ) != 0
       xRet := {}
       IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]

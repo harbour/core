@@ -88,8 +88,11 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
+# cvs -z3 -d:pserver:cvsanon@cvs.maptools.org:/cvs/maptools/cvsroot co -P libtiff
+# file://path/libtiff.zip
+
 # ORIGIN http://remotesensing.org/libtiff/
-# VER    4.0.4devel-2013-11-30
+# VER    4.0.4devel-2014-06-07
 # URL    http://download.osgeo.org/libtiff/tiff-4.0.3.zip
 # DIFF   tiff.dif
 #

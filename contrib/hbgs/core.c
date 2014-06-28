@@ -44,8 +44,14 @@
  *
  */
 
+#if ! defined( HB_GS_UTF8_NO_SUPPORT )
+   #define HB_GS_UTF8_SUPPORT  /* requires Ghostscript 9.10 or upper */
+#endif
+
 #include "hbapi.h"
-#include "hbapistr.h"
+#if defined( HB_GS_UTF8_SUPPORT )
+   #include "hbapistr.h"
+#endif
 
 #if defined( HB_OS_WIN ) && ! defined( _Windows )
    #define _Windows
@@ -55,10 +61,6 @@
 
 #include "ierrors.h"
 #include "iapi.h"
-
-#if ! defined( HB_GS_UTF8_NO_SUPPORT )
-   #define HB_GS_UTF8_SUPPORT  /* requires Ghostscript 9.10 an upper */
-#endif
 
 HB_FUNC( HB_GS )
 {

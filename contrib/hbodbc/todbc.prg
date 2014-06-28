@@ -134,6 +134,8 @@ METHOD SQLErrorMessage() CLASS TODBC
 
    SQLError( ::hEnv, ::hDbc, ::hStmt, @cErrorClass, @nType, @cErrorMsg )
 
+   HB_SYMBOL_UNUSED( nType )
+
    RETURN "Error " + cErrorClass + " - " + cErrorMsg
 
 METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC

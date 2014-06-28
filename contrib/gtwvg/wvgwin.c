@@ -525,6 +525,8 @@ HB_FUNC( WVG_SCREENTOCLIENT )
       hb_retl( HB_FALSE );
 }
 
+#ifdef HB_LEGACY_LEVEL5
+
 HB_FUNC( WVG_AND )
 {
    hb_retnl( hb_parnl( 1 ) & hb_parnl( 2 ) );
@@ -539,6 +541,8 @@ HB_FUNC( WVG_NOT )
 {
    hb_retnl( ~( hb_parnl( 1 ) ) );
 }
+
+#endif
 
 HB_FUNC( WVG_TRACKPOPUPMENU )
 {

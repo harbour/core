@@ -605,7 +605,7 @@ STATIC FUNCTION AsString()
          EXIT
       ENDIF
 
-      cString[ cChar:__enumIndex() ] := cChar
+      cString := Stuff( cString, cChar:__enumIndex(), 1, cChar )
    NEXT
 
    RETURN cString

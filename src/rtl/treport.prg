@@ -1058,7 +1058,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    Notes:
       1. The expression is empty if:
           a. Passed pointer is equal to 65535
-          b. Character following character pointed to by pointer is Chr( 0 ) */
+          b. Character following character pointed to by pointer is hb_BChar( 0 ) */
 METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
 
    LOCAL nExprOffset
@@ -1092,7 +1092,7 @@ METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
 
       // dBASE does this so we must do it too
       // Character following character pointed to by pointer is NULL
-      IF hb_BLeft( cString, 1 ) == Chr( 0 )
+      IF hb_BLeft( cString, 1 ) == hb_BChar( 0 )
          cString := ""
       ENDIF
    ENDIF
@@ -1171,7 +1171,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
    Notes:
       1. The Header or Contents expressions are empty if:
          a. Passed pointer is equal to 65535
-         b. Character following character pointed to by pointer is Chr( 0 ) */
+         b. Character following character pointed to by pointer is hb_BChar( 0 ) */
 METHOD GetColumn( cFieldsBuffer AS STRING, /* @ */ nOffset AS NUMERIC ) CLASS HBReportForm
 
    LOCAL aColumn[ RCT_COUNT ]

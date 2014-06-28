@@ -63,11 +63,7 @@ FUNCTION ThreadWait( aThreads, nTimeOut )
    LOCAL apThIDs := {}
 
    FOR EACH th IN aThreads
-      IF HB_ISOBJECT( th )
-         AAdd( apThIDs, th:threadSelf )
-      ELSE
-         AAdd( apThIDs, th )
-      ENDIF
+      AAdd( apThIDs, iif( HB_ISOBJECT( th ), th:threadSelf, th ) )
    NEXT
 
    nPos := hb_threadWait( apThIDs, iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
