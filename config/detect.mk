@@ -3,7 +3,7 @@
 # See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# This make file will detect optional 3rd party components
+# This makefile will detect optional 3rd party components
 # used in Harbour core code.
 
 # config.mk if present is root, is able to override HB_HAS_* values.

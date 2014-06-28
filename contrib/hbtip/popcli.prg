@@ -338,24 +338,18 @@ METHOD GetOk() CLASS TIPClientPOP
 
    RETURN ::inetErrorCode( ::SocketCon ) == 0 .AND. hb_LeftEq( ::cReply, "+" )
 
-/* QUESTION: This method will return .T./.F./NIL or string
+/* QUESTION: This method will return logical, NIL or string
              Is it really intended that way? [vszakats] */
 METHOD Read( nLen ) CLASS TIPClientPOP
 
-   /* Set what to read for */
+   /* Decide what to read */
    IF Empty( ::oUrl:cFile )
-      RETURN ::List()
+      RETURN ::List()  /* return NIL or string */
+   ELSEIF Val( ::oUrl:cFile ) < 0
+      RETURN ::Delete( -Val( ::oUrl:cFile ) ) .AND. ::Quit()  /* return logical */
    ENDIF
 
-   IF Val( ::oUrl:cFile ) < 0
-      IF ::Delete( -Val( ::oUrl:cFile ) )
-         RETURN ::Quit()
-      ELSE
-         RETURN .F.
-      ENDIF
-   ENDIF
-
-   RETURN ::Retrieve( Val( ::oUrl:cFile ), nLen )
+   RETURN ::Retrieve( Val( ::oUrl:cFile ), nLen )  /* return NIL or string */
 
 METHOD retrieveAll( lDelete ) CLASS TIPClientPOP
 

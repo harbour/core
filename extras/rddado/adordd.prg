@@ -100,11 +100,11 @@
 
 ANNOUNCE ADORDD
 
-THREAD STATIC t_cTableName
-THREAD STATIC t_cEngine
-THREAD STATIC t_cServer
-THREAD STATIC t_cUserName
-THREAD STATIC t_cPassword
+THREAD STATIC t_cTableName := ""
+THREAD STATIC t_cEngine := ""
+THREAD STATIC t_cServer := ""
+THREAD STATIC t_cUserName := ""
+THREAD STATIC t_cPassword := ""
 THREAD STATIC t_cQuery := ""
 
 STATIC FUNCTION ADO_INIT( nRDD )
@@ -242,44 +242,48 @@ STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
    aWAData[ WA_SQLSTRUCT ] := ""
 
    FOR EACH field IN aStruct
+
       IF ! field:__enumIsFirst()
          aWAData[ WA_SQLSTRUCT ] += ", "
       ENDIF
+
       aWAData[ WA_SQLSTRUCT ] += "[" + field[ DBS_NAME ] + "]"
-      DO CASE
-      CASE field[ DBS_TYPE ] $ "C,Character"
+
+      SWITCH field[ DBS_TYPE ]
+      CASE "C"
+      CASE "Character"
          aWAData[ WA_SQLSTRUCT ] += " CHAR(" + hb_ntos( field[ DBS_LEN ] ) + ") NULL"
-
-      CASE field[ DBS_TYPE ] == "V"
+         EXIT
+      CASE "V"
          aWAData[ WA_SQLSTRUCT ] += " VARCHAR(" + hb_ntos( field[ DBS_LEN ] ) + ") NULL"
-
-      CASE field[ DBS_TYPE ] == "B"
+         EXIT
+      CASE "B"
          aWAData[ WA_SQLSTRUCT ] += " DOUBLE NULL"
-
-      CASE field[ DBS_TYPE ] == "Y"
+         EXIT
+      CASE "Y"
          aWAData[ WA_SQLSTRUCT ] += " SMALLINT NULL"
-
-      CASE field[ DBS_TYPE ] == "I"
+         EXIT
+      CASE "I"
          aWAData[ WA_SQLSTRUCT ] += " MEDIUMINT NULL"
-
-      CASE field[ DBS_TYPE ] == "D"
+         EXIT
+      CASE "D"
          aWAData[ WA_SQLSTRUCT ] += " DATE NULL"
-
-      CASE field[ DBS_TYPE ] == "T"
+         EXIT
+      CASE "T"
          aWAData[ WA_SQLSTRUCT ] += " DATETIME NULL"
-
-      CASE field[ DBS_TYPE ] == "@"
+         EXIT
+      CASE "@"
          aWAData[ WA_SQLSTRUCT ] += " TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP"
-
-      CASE field[ DBS_TYPE ] == "M"
+         EXIT
+      CASE "M"
          aWAData[ WA_SQLSTRUCT ] += " TEXT NULL"
-
-      CASE field[ DBS_TYPE ] == "N"
+         EXIT
+      CASE "N"
          aWAData[ WA_SQLSTRUCT ] += " NUMERIC(" + hb_ntos( field[ DBS_LEN ] ) + ")"
-
-      CASE field[ DBS_TYPE ] == "L"
+         EXIT
+      CASE "L"
          aWAData[ WA_SQLSTRUCT ] += " LOGICAL"
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    RETURN HB_SUCCESS
@@ -464,7 +468,7 @@ STATIC FUNCTION ADO_CLOSE( nWA )
 
    RETURN UR_SUPER_CLOSE( nWA )
 
-STATIC FUNCTION ADO_GETVALUE( nWA, nField, xValue )
+STATIC FUNCTION ADO_GETVALUE( nWA, nField, /* @ */ xValue )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL rs := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
@@ -596,7 +600,7 @@ STATIC FUNCTION ADO_SKIPRAW( nWA, nToSkip )
 
    RETURN nResult
 
-STATIC FUNCTION ADO_BOF( nWA, lBof )
+STATIC FUNCTION ADO_BOF( nWA, /* @ */ lBof )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
@@ -604,7 +608,7 @@ STATIC FUNCTION ADO_BOF( nWA, lBof )
 
    RETURN HB_SUCCESS
 
-STATIC FUNCTION ADO_EOF( nWA, lEof )
+STATIC FUNCTION ADO_EOF( nWA, /* @ */ lEof )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
    LOCAL nResult := HB_SUCCESS
@@ -619,7 +623,7 @@ STATIC FUNCTION ADO_EOF( nWA, lEof )
 
    RETURN nResult
 
-STATIC FUNCTION ADO_DELETED( nWA, lDeleted )
+STATIC FUNCTION ADO_DELETED( nWA, /* @ */ lDeleted )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
@@ -641,7 +645,7 @@ STATIC FUNCTION ADO_DELETE( nWA )
 
    RETURN HB_SUCCESS
 
-STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
+STATIC FUNCTION ADO_RECNO( nWA, /* @ */ nRecNo )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
    LOCAL nResult := HB_SUCCESS
@@ -660,10 +664,10 @@ STATIC FUNCTION ADO_RECNO( nWA, nRecNo )
 
    RETURN nResult
 
-STATIC FUNCTION ADO_RECID( nWA, nRecNo )
+STATIC FUNCTION ADO_RECID( nWA, /* @ */ nRecNo )
    RETURN ADO_RECNO( nWA, @nRecNo )
 
-STATIC FUNCTION ADO_RECCOUNT( nWA, nRecords )
+STATIC FUNCTION ADO_RECCOUNT( nWA, /* @ */ nRecords )
 
    nRecords := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]:RecordCount()
 
@@ -776,7 +780,7 @@ STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
 
    RETURN nResult
 
-STATIC FUNCTION ADO_RECINFO( nWA, nRecord, nInfoType, uInfo )
+STATIC FUNCTION ADO_RECINFO( nWA, nRecord, nInfoType, /* @ */ uInfo )
 
    LOCAL nResult := HB_SUCCESS
 
@@ -815,7 +819,7 @@ STATIC FUNCTION ADO_RECINFO( nWA, nRecord, nInfoType, uInfo )
 
    RETURN nResult
 
-STATIC FUNCTION ADO_FIELDNAME( nWA, nField, cFieldName )
+STATIC FUNCTION ADO_FIELDNAME( nWA, nField, /* @ */ cFieldName )
 
    LOCAL nResult := HB_SUCCESS
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
@@ -829,7 +833,7 @@ STATIC FUNCTION ADO_FIELDNAME( nWA, nField, cFieldName )
 
    RETURN nResult
 
-STATIC FUNCTION ADO_FIELDINFO( nWA, nField, nInfoType, uInfo )
+STATIC FUNCTION ADO_FIELDINFO( nWA, nField, nInfoType, /* @ */ uInfo )
 
    LOCAL nType, nLen
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
@@ -1061,7 +1065,7 @@ STATIC FUNCTION ADO_CLEARREL( nWA )
 
    RETURN HB_SUCCESS
 
-STATIC FUNCTION ADO_RELAREA( nWA, nRelNo, nRelArea )
+STATIC FUNCTION ADO_RELAREA( nWA, nRelNo, /* @ */ nRelArea )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
@@ -1075,7 +1079,7 @@ STATIC FUNCTION ADO_RELAREA( nWA, nRelNo, nRelArea )
 
    RETURN HB_SUCCESS
 
-STATIC FUNCTION ADO_RELTEXT( nWA, nRelNo, cExpr )
+STATIC FUNCTION ADO_RELTEXT( nWA, nRelNo, /* @ */ cExpr )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
@@ -1129,16 +1133,16 @@ STATIC FUNCTION ADO_RELEVAL( nWA, aRelInfo )
    IF nReturn == HB_SUCCESS
       /* Check the current order */
       aInfo := Array( UR_ORI_SIZE )
-      nReturn := ADO_ORDINFO( nWA, DBOI_NUMBER, @aInfo )
+      nReturn := ADO_ORDINFO( nWA, DBOI_NUMBER, aInfo )
 
       IF nReturn == HB_SUCCESS
          nOrder := aInfo[ UR_ORI_RESULT ]
          IF nOrder != 0
             IF aRelInfo[ UR_RI_SCOPED ]
                aInfo[ UR_ORI_NEWVAL ] := uResult
-               nReturn := ADO_ORDINFO( nWA, DBOI_SCOPETOP, @aInfo )
+               nReturn := ADO_ORDINFO( nWA, DBOI_SCOPETOP, aInfo )
                IF nReturn == HB_SUCCESS
-                  nReturn := ADO_ORDINFO( nWA, DBOI_SCOPEBOTTOM, @aInfo )
+                  nReturn := ADO_ORDINFO( nWA, DBOI_SCOPEBOTTOM, aInfo )
                ENDIF
             ENDIF
             IF nReturn == HB_SUCCESS
@@ -1226,7 +1230,7 @@ STATIC FUNCTION ADO_ORDDESTROY( nWA, aOrderInfo )
 
    RETURN HB_SUCCESS
 
-STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
+STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, /* @ */ uResult )
 
    LOCAL nCurrArea := Select()
 
@@ -1317,7 +1321,7 @@ STATIC FUNCTION ADO_SEEK( nWA, lSoftSeek, cKey, lFindLast )
 
    RETURN HB_FAILURE
 
-STATIC FUNCTION ADO_FOUND( nWA, lFound )
+STATIC FUNCTION ADO_FOUND( nWA, /* @ */ lFound )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
@@ -1491,31 +1495,31 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFieldType )
 
 PROCEDURE hb_adoSetTable( cTableName )
 
-   t_cTableName := cTableName
+   t_cTableName := hb_defaultValue( cTableName, "" )
 
    RETURN
 
 PROCEDURE hb_adoSetEngine( cEngine )
 
-   t_cEngine := cEngine
+   t_cEngine := hb_defaultValue( cEngine, "" )
 
    RETURN
 
 PROCEDURE hb_adoSetServer( cServer )
 
-   t_cServer := cServer
+   t_cServer := hb_defaultValue( cServer, "" )
 
    RETURN
 
 PROCEDURE hb_adoSetUser( cUser )
 
-   t_cUserName := cUser
+   t_cUserName := hb_defaultValue( cUser, "" )
 
    RETURN
 
 PROCEDURE hb_adoSetPassword( cPassword )
 
-   t_cPassword := cPassword
+   t_cPassword := hb_defaultValue( cPassword, "" )
 
    RETURN
 
