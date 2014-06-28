@@ -1,4 +1,4 @@
-description=RDDSQL MySQL backend
+description=RDDSQL MariaDB/MySQL backend
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 

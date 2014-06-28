@@ -324,18 +324,18 @@ statikus szerkesztéshez.
 
 ## mysql library
 %{?_with_mysql:%package mysql}
-%{?_with_mysql:Summary:        MYSQL library bindings for %{dname} compiler}
-%{?_with_mysql:Summary(pl):    Bilioteka MYSQL dla kompilatora %{dname}}
+%{?_with_mysql:Summary:        MariaDB/MYSQL library bindings for %{dname} compiler}
+%{?_with_mysql:Summary(pl):    Bilioteka MariaDB/MYSQL dla kompilatora %{dname}}
 %{?_with_mysql:Group:          Development/Languages}
 %{?_with_mysql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
 %{?_with_mysql:%description mysql}
 %{?_with_mysql:%{dname} is a Clipper compatible compiler.}
-%{?_with_mysql:This package provides %{dname} MYSQL library for program linking.}
+%{?_with_mysql:This package provides %{dname} MariaDB/MYSQL library for program linking.}
 
 %{?_with_mysql:%description -l pl mysql}
 %{?_with_mysql:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
-%{?_with_mysql:Ten pakiet udostępnia statyczn+ biliotekę MYSQL dla kompilatora %{dname}.}
+%{?_with_mysql:Ten pakiet udostępnia statyczn+ biliotekę MariaDB/MYSQL dla kompilatora %{dname}.}
 
 ## odbc library
 %{?_with_odbc:%package odbc}

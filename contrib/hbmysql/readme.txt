@@ -1,5 +1,5 @@
-2001-11-22 - Harbour MySQL access classes - readme
-==================================================
+2001-11-22 - Harbour MariaDB/MySQL access classes - readme
+==========================================================
 
 
 This is work in progress, so it has to be fully tested and needs a few more methods to cover MySQL possibilities.

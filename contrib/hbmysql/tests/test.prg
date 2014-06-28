@@ -1,5 +1,5 @@
 /*
- * MySQL DBMS test program
+ * MariaDB/MySQL DBMS test program
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  *

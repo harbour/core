@@ -75,7 +75,7 @@ then
    v=`rpm -q --whatprovides gd-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g"`
    [ "$v" -ge 2 ] && INST_PARAM="${INST_PARAM} --with gd"
 fi
-if test_reqrpm "MySQL-devel" || test_reqrpm "mysql-devel"
+if test_reqrpm "libmariadbd-devel" || test_reqrpm "libmysqlclient-devel" || test_reqrpm "MySQL-devel" || test_reqrpm "mysql-devel"
 then
    INST_PARAM="${INST_PARAM} --with mysql"
 fi

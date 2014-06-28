@@ -1,4 +1,4 @@
-description=MySQL wrapper (SQL)
+description=MariaDB/MySQL wrapper (SQL)
 
 incpaths=.
 

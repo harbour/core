@@ -144,41 +144,62 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
    DO CASE
    CASE Lower( hb_FNameExt( cDatabase ) ) == ".mdb"
-      cParam := "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase
+      cParam := ;
+         "Provider=Microsoft.Jet.OLEDB.4.0" + ;
+         ";Data Source=" + cDataBase
       IF ! hb_FileExists( cDataBase )
          oCatalog:Create( cParam )
       ENDIF
       oConnection:Open( cParam )
 
    CASE Lower( hb_FNameExt( cDatabase ) ) == ".xls"
-      cParam := "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False"
+      cParam := ;
+         "Provider=Microsoft.Jet.OLEDB.4.0" + ;
+         ";Data Source=" + cDataBase + ;
+         ";Extended Properties='Excel 8.0;HDR=YES'" + ;
+         ";Persist Security Info=False"
       IF ! hb_FileExists( cDataBase )
          oCatalog:Create( cParam )
       ENDIF
       oConnection:Open( cParam )
 
    CASE Lower( hb_FNameExt( cDatabase ) ) == ".db"
-      cParam := "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Paradox 3.x';"
+      cParam := ;
+         "Provider=Microsoft.Jet.OLEDB.4.0" + ;
+         ";Data Source=" + cDataBase + ;
+         ";Extended Properties='Paradox 3.x';"
       IF ! hb_FileExists( cDataBase )
          oCatalog:Create( cParam )
       ENDIF
       oConnection:Open( cParam )
 
    CASE Lower( hb_FNameExt( cDatabase ) ) == ".fdb"
-      cParam := "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";"
+      cParam := ;
+         "Driver=Firebird/InterBase(r) driver" + ;
+         ";UID=" + cUserName + ;
+         ";PWD=" + cPassword + ;
+         ";DbName=" + cDataBase + ";"
       IF ! hb_FileExists( cDataBase )
          oCatalog:Create( cParam )
       ENDIF
       oConnection:Open( cParam )
       oConnection:CursorLocation := adUseClient
 
+   CASE Upper( cDbEngine ) == "MARIADB"  /* https://mariadb.com/kb/en/about-the-mariadb-odbc-driver/ */
+      oConnection:Open( ;
+         "Driver={MariaDB ODBC 1.0 Driver}" + ;
+         ";Server=" + cServer + ;
+         ";Database=" + cDataBase + ;
+         ";UID=" + cUserName + ;
+         ";PWD=" + cPassword )
+
    CASE Upper( cDbEngine ) == "MYSQL"
       oConnection:Open( ;
-         "Driver={MySQL ODBC 3.51 Driver};" + ;
-         "server=" + cServer + ;
-         ";database=" + cDataBase + ;
-         ";uid=" + cUserName + ;
-         ";pwd=" + cPassword )
+         "Driver={MySQL ODBC 3.51 Driver}" + ;
+         ";Server=" + cServer + ;
+         ";Database=" + cDataBase + ;
+         ";UID=" + cUserName + ;
+         ";PWD=" + cPassword )
 
    ENDCASE
 
@@ -298,33 +319,44 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       CASE Lower( hb_FNameExt( aOpenInfo[ UR_OI_NAME ] ) ) == ".db"
          aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Paradox 3.x';" )
 
+      CASE aWAData[ WA_ENGINE ] == "MARIADB"
+         aWAData[ WA_CONNECTION ]:Open( ;
+            "Driver={MariaDB ODBC 1.0 Driver}" + ;
+            ";Server=" + aWAData[ WA_SERVER ] + ;
+            ";Database=" + aOpenInfo[ UR_OI_NAME ] + ;
+            ";UID=" + aWAData[ WA_USERNAME ] + ;
+            ";PWD=" + aWAData[ WA_PASSWORD ] )
+
       CASE aWAData[ WA_ENGINE ] == "MYSQL"
-         aWAData[ WA_CONNECTION ]:Open( "DRIVER={MySQL ODBC 3.51 Driver};" + ;
-            "server=" + aWAData[ WA_SERVER ] + ;
-            ";database=" + aOpenInfo[ UR_OI_NAME ] + ;
-            ";uid=" + aWAData[ WA_USERNAME ] + ;
-            ";pwd=" + aWAData[ WA_PASSWORD ] )
+         aWAData[ WA_CONNECTION ]:Open( ;
+            "Driver={MySQL ODBC 3.51 Driver}" + ;
+            ";Server=" + aWAData[ WA_SERVER ] + ;
+            ";Database=" + aOpenInfo[ UR_OI_NAME ] + ;
+            ";UID=" + aWAData[ WA_USERNAME ] + ;
+            ";PWD=" + aWAData[ WA_PASSWORD ] )
 
       CASE aWAData[ WA_ENGINE ] == "SQL"
-         aWAData[ WA_CONNECTION ]:Open( "Provider=SQLOLEDB;" + ;
-            "server=" + aWAData[ WA_SERVER ] + ;
-            ";database=" + aOpenInfo[ UR_OI_NAME ] + ;
-            ";uid=" + aWAData[ WA_USERNAME ] + ;
-            ";pwd=" + aWAData[ WA_PASSWORD ] )
+         aWAData[ WA_CONNECTION ]:Open( ;
+            "Provider=SQLOLEDB" + ;
+            ";Server=" + aWAData[ WA_SERVER ] + ;
+            ";Database=" + aOpenInfo[ UR_OI_NAME ] + ;
+            ";UID=" + aWAData[ WA_USERNAME ] + ;
+            ";PWD=" + aWAData[ WA_PASSWORD ] )
 
       CASE aWAData[ WA_ENGINE ] == "ORACLE"
-         aWAData[ WA_CONNECTION ]:Open( "Provider=MSDAORA.1;" + ;
-            "Persist Security Info=False" + ;
-            iif( Empty( aWAData[ WA_SERVER ] ), ;
-            "", ";Data source=" + aWAData[ WA_SERVER ] ) + ;
+         aWAData[ WA_CONNECTION ]:Open( ;
+            "Provider=MSDAORA.1" + ;
+            ";Persist Security Info=False" + ;
+            iif( Empty( aWAData[ WA_SERVER ] ), "", ";Data source=" + aWAData[ WA_SERVER ] ) + ;
             ";User ID=" + aWAData[ WA_USERNAME ] + ;
             ";Password=" + aWAData[ WA_PASSWORD ] )
 
       CASE aWAData[ WA_ENGINE ] == "FIREBIRD"
-         aWAData[ WA_CONNECTION ]:Open( "Driver=Firebird/InterBase(r) driver;" + ;
-            "Persist Security Info=False" + ;
-            ";Uid=" + aWAData[ WA_USERNAME ] + ;
-            ";Pwd=" + aWAData[ WA_PASSWORD ] + ;
+         aWAData[ WA_CONNECTION ]:Open( ;
+            "Driver=Firebird/InterBase(r) driver" + ;
+            ";Persist Security Info=False" + ;
+            ";UID=" + aWAData[ WA_USERNAME ] + ;
+            ";PWD=" + aWAData[ WA_PASSWORD ] + ;
             ";DbName=" + aOpenInfo[ UR_OI_NAME ] )
       ENDCASE
    ELSE
