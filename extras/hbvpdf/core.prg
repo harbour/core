@@ -1855,7 +1855,7 @@ FUNCTION pdfTIFFInfo( cFile )
    LOCAL aType := { "BYTE", "ASCII", "SHORT", "LONG", "RATIONAL", "SBYTE", "UNDEFINED", "SSHORT", "SLONG", "SRATIONAL", "FLOAT", "DOUBLE" }
 #endif
    LOCAL aCount := { 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8 }
-   LOCAL nTemp, cValues, c2, nFieldType, nCount, nPos, nTag, nValues
+   LOCAL nTemp, cValues, c2, nFieldType, nCount, nPos, nTag
    LOCAL nOffset, cTemp, cIFDNext, nIFD, nFields, nn //, cTag, nPages
 
    LOCAL nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0, yRes := 0
@@ -1914,9 +1914,8 @@ FUNCTION pdfTIFFInfo( cFile )
             nPos := filepos( nHandle )
             FSeek( nHandle, nOffset )
 
-            nValues := nCount * aCount[ nFieldType ]
-            cValues := Space( nValues )
-            FRead( nHandle, @cValues, nValues )
+            cValues := Space( nCount * aCount[ nFieldType ] )
+            FRead( nHandle, @cValues, hb_BLen( cValues ) )
             FSeek( nHandle, nPos )
          ELSE
             cValues := hb_BSubStr( cTemp, 9, 4 )
@@ -1939,7 +1938,7 @@ FUNCTION pdfTIFFInfo( cFile )
             // ?? cTag := "ImageWidth"
 #if 0
             IF nFieldType != SHORT .AND. nFieldType != LONG
-               Alert( "Wrong Type for ImageWidth" )
+               // Alert( "Wrong Type for ImageWidth" )
             ENDIF
 #endif
             SWITCH nFieldType
@@ -1962,7 +1961,7 @@ FUNCTION pdfTIFFInfo( cFile )
             // ?? cTag := "ImageLength"
 #if 0
             IF nFieldType != SHORT .AND. nFieldType != LONG
-               Alert( "Wrong Type for ImageLength" )
+               // Alert( "Wrong Type for ImageLength" )
             ENDIF
 #endif
             SWITCH nFieldType
@@ -1992,9 +1991,9 @@ FUNCTION pdfTIFFInfo( cFile )
                // Alert( "Wrong Type for BitsPerSample" )
             ENDIF
             nBits := nTemp
-            // IF nTemp != 4 .AND. nTemp != 8
-            //    Alert( "Wrong Value for BitsPerSample" )
-            // ENDIF
+            IF nTemp != 4 .AND. nTemp != 8
+               // Alert( "Wrong Value for BitsPerSample" )
+            ENDIF
             EXIT
 
          CASE 259
@@ -2015,15 +2014,17 @@ FUNCTION pdfTIFFInfo( cFile )
                Baseline TIFF readers must handle all three compression schemes.
                */
             // ?? cTag := "Compression"
-            /*nTemp := 0
+#if 0
+            nTemp := 0
             IF nFieldType == SHORT
                nTemp := Bin2W( cValues )
             ELSE
                // Alert( "Wrong Type for Compression" )
-            ENDIF*/
-            // IF nTemp != 1 .AND. nTemp != 2 .AND. nTemp != 32773
-            //    Alert( "Wrong Value for Compression" )
-            // ENDIF
+            ENDIF
+            IF nTemp != 1 .AND. nTemp != 2 .AND. nTemp != 32773
+               // Alert( "Wrong Value for Compression" )
+            ENDIF
+#endif
             EXIT
 
          CASE 262
@@ -2444,13 +2445,12 @@ FUNCTION pdfJPEGInfo( cFile )
 
    LOCAL c255, nAt
    LOCAL nWidth, nHeight, nBits := 8, nFrom := 0, nLength, xRes, yRes
-   LOCAL nBuffer := 20000
    LOCAL nSpace  // := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
 
    LOCAL nHandle := FOpen( cFile )
 
-   c255 := Space( nBuffer )
-   FRead( nHandle, @c255, nBuffer )
+   c255 := Space( 20000 )
+   FRead( nHandle, @c255, hb_BLen( c255 ) )
 
    xRes := hb_BCode( hb_BSubStr( c255, 15, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 16, 1 ) )
    yRes := hb_BCode( hb_BSubStr( c255, 17, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 18, 1 ) )

@@ -4298,8 +4298,7 @@ FUNCTION OEMToHtml( cOemText )
 // This function returs the HTML character entities that are exchangeable between ANSI and OEM character sets
 STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
 
-   t_aHtmlAnsiEntities := ;
-      { ;
+   t_aHtmlAnsiEntities := { ;
       { hb_BChar(  38 ), "&amp;"    }, ;      //  ampersand
       { hb_BChar(  60 ), "&lt;"     }, ;      //  less-than sign
       { hb_BChar(  62 ), "&gt;"     }, ;      //  greater-than sign
@@ -4453,8 +4452,8 @@ FUNCTION tip_StrToHtml( cAnsiText )
 
    cText := SubStr( parser:p_str, nStart )
    FOR EACH aEntity IN t_aHtmlEntities
-      IF aEntity[ 1 ] $ cText
-         cText := StrTran( cText, aEntity[ 1 ], aEntity[ 2 ] )
+      IF hb_UTF8ToStr( aEntity[ 1 ] ) $ cText
+         cText := StrTran( cText, hb_UTF8ToStr( aEntity[ 1 ] ), aEntity[ 2 ] )
       ENDIF
    NEXT
    cHtmlText += cText
@@ -4465,8 +4464,7 @@ STATIC PROCEDURE _Init_Html_CharacterEntities()
 
    IF t_aHtmlEntities == NIL .OR. !( t_cHtmlCP == hb_cdpSelect() )
       t_cHtmlCP := hb_cdpSelect()
-      t_aHtmlEntities := ;
-         { ;
+      t_aHtmlEntities := { ;
          { "&", "&amp;"    }, ;      //  ampersand
          { "<", "&lt;"     }, ;      //  less-than sign
          { ">", "&gt;"     }, ;      //  greater-than sign
