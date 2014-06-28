@@ -148,10 +148,10 @@ METHOD PROCEDURE ExcelWriterXML_Sheet:writeData( type, row, column, xData, style
    ENDCASE
 
    cell := { ;
-      "type"      => type, ;
-      "style"     => styleID, ;
-      "data"      => xData, ;
-      "formula"   => formula }
+      "type"    => type, ;
+      "style"   => styleID, ;
+      "data"    => xData, ;
+      "formula" => formula }
 
    IF row $ ::cells
       hcol := ::cells[ row ]
@@ -290,8 +290,8 @@ METHOD PROCEDURE ExcelWriterXML_Sheet:cellMerge( row, col, width, height )
    ENDIF
 
    haux[ col ] := { ;
-      "width"   => width, ;
-      "height"  => height }
+      "width"  => width, ;
+      "height" => height }
 
    ::mergeCells[ row ] := haux
 
@@ -302,8 +302,8 @@ METHOD PROCEDURE ExcelWriterXML_Sheet:addComment( row, col, comment, author )
    LOCAL haux := { => }
 
    haux[ col ] := { ;
-      "comment"  => comment, ;
-      "author"   => author }
+      "comment" => comment, ;
+      "author"  => author }
 
    ::comments[ row ] := haux
 

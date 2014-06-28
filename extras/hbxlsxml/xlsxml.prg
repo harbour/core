@@ -188,13 +188,6 @@ METHOD ExcelWriterXML:writeData( target )
 
    LOCAL style, sheet, xml := "", handle, format
 
-   LOCAL docTitle   := ""
-   LOCAL docSubject := ""
-   LOCAL docAuthor  := ""
-   LOCAL docCreated := ""
-   LOCAL docManager := ""
-   LOCAL docCompany := ""
-
    IF ! HB_ISSTRING( target ) .OR. Empty( target )
       ::cError := "Target filename missing!"
       ::errors := .T.
@@ -218,13 +211,6 @@ METHOD ExcelWriterXML:writeData( target )
       format:bgColor( "red" )
    ENDIF
 
-   IF ! Empty( ::cDocTitle   ); docTitle   := "<Title>"   + StrToHtmlSpecial( ::cDocTitle   ) + "</Title>"   + hb_eol(); ENDIF
-   IF ! Empty( ::cDocSubject ); docSubject := "<Subject>" + StrToHtmlSpecial( ::cDocSubject ) + "</Subject>" + hb_eol(); ENDIF
-   IF ! Empty( ::cDocAuthor  ); docAuthor  := "<Author>"  + StrToHtmlSpecial( ::cDocAuthor  ) + "</Author>"  + hb_eol(); ENDIF
-   IF ! Empty( ::cDocCreated ); docCreated := "<Created>" + StrToHtmlSpecial( ::cDocCreated ) + "</Created>" + hb_eol(); ENDIF
-   IF ! Empty( ::cDocManager ); docManager := "<Manager>" + StrToHtmlSpecial( ::cDocManager ) + "</Manager>" + hb_eol(); ENDIF
-   IF ! Empty( ::cDocCompany ); docCompany := "<Company>" + StrToHtmlSpecial( ::cDocCompany ) + "</Company>" + hb_eol(); ENDIF
-
    xml := ;
       '<?xml version="1.0"?>' + hb_eol() + ;
       '<?mso-application progid="Excel.Sheet"?>' + hb_eol() + ;
@@ -235,16 +221,19 @@ METHOD ExcelWriterXML:writeData( target )
       'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"' + hb_eol() + ;
       'xmlns:html="http://www.w3.org/TR/REC-html40">' + hb_eol() + ;
       '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">' + hb_eol()
-   IF ! Empty( ::cDocTitle   ); xml += "   " + docTitle  ; ENDIF
-   IF ! Empty( ::cDocSubject ); xml += "   " + docSubject; ENDIF
-   IF ! Empty( ::cDocAuthor  ); xml += "   " + docAuthor ; ENDIF
-   IF ! Empty( ::cDocCreated ); xml += "   " + docCreated; ENDIF
-   IF ! Empty( ::cDocManager ); xml += "   " + docManager; ENDIF
-   IF ! Empty( ::cDocCompany ); xml += "   " + docCompany; ENDIF
-   xml += "   <Version>" + ::cDocVersion + "</Version>" + hb_eol()
-   xml += "</DocumentProperties>" + hb_eol()
-   xml += '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel" />' + hb_eol()
-   xml += "<Styles>" + hb_eol()
+
+   IF ! Empty( ::cDocTitle   ); xml += "   " + "<Title>"   + StrToHtmlSpecial( ::cDocTitle   ) + "</Title>"   + hb_eol(); ENDIF
+   IF ! Empty( ::cDocSubject ); xml += "   " + "<Subject>" + StrToHtmlSpecial( ::cDocSubject ) + "</Subject>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocAuthor  ); xml += "   " + "<Author>"  + StrToHtmlSpecial( ::cDocAuthor  ) + "</Author>"  + hb_eol(); ENDIF
+   IF ! Empty( ::cDocCreated ); xml += "   " + "<Created>" + StrToHtmlSpecial( ::cDocCreated ) + "</Created>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocManager ); xml += "   " + "<Manager>" + StrToHtmlSpecial( ::cDocManager ) + "</Manager>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocCompany ); xml += "   " + "<Company>" + StrToHtmlSpecial( ::cDocCompany ) + "</Company>" + hb_eol(); ENDIF
+
+   xml += ;
+      "   " + "<Version>" + ::cDocVersion + "</Version>" + hb_eol() + ;
+      "</DocumentProperties>" + hb_eol() + ;
+      '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel" />' + hb_eol() + ;
+      "<Styles>" + hb_eol()
 
    FWrite( handle, xml )
    xml := ""
@@ -270,9 +259,7 @@ METHOD ExcelWriterXML:writeData( target )
       ::errors := .T.
    ENDIF
 
-   xml += "</Workbook>"
-
-   FWrite( handle, xml )
+   FWrite( handle, xml + "</Workbook>" )
    FClose( handle )
 
    RETURN .T.
@@ -317,113 +304,47 @@ METHOD PROCEDURE ExcelWriterXML:docCompany( company )
 
    RETURN
 
+STATIC FUNCTION RemoveAccents( xtxt )
+   RETURN hb_StrReplace( xtxt, ;
+      hb_UTF8ToStr( ;
+      "áâàãçéêíóôõúüÁÂÀÃÇÉÊÍÓÔÕÚÜªº°" ), ;
+      "aaaaceeiooouuAAAACEEIOOOUU..." )
+
 FUNCTION StrToHtml( xtxt )
-
-   LOCAL i, xret := "", xpos
-
-   LOCAL afrm := { ;
-      { "á", "&aacute;" }, ;
-      { "â", "&acirc;"  }, ;
-      { "à", "&agrave;" }, ;
-      { "ã", "&atilde;" }, ;
-      { "ç", "&ccedil;" }, ;
-      { "é", "&eacute;" }, ;
-      { "ê", "&ecirc;"  }, ;
-      { "í", "&iacute;" }, ;
-      { "ó", "&oacute;" }, ;
-      { "ô", "&ocirc;"  }, ;
-      { "õ", "&otilde;" }, ;
-      { "ú", "&uacute;" }, ;
-      { "ü", "&uuml;"   }, ;
-      { "Á", "&Aacute;" }, ;
-      { "Â", "&Acirc;"  }, ;
-      { "À", "&Agrave;" }, ;
-      { "Ã", "&Atilde;" }, ;
-      { "Ç", "&Ccedil;" }, ;
-      { "É", "&Eacute;" }, ;
-      { "Ê", "&Ecirc;"  }, ;
-      { "Í", "&Iacute;" }, ;
-      { "Ó", "&Oacute;" }, ;
-      { "Ô", "&Ocirc;"  }, ;
-      { "Õ", "&Otilde;" }, ;
-      { "Ú", "&Uacute;" }, ;
-      { "Ü", "&Uuml;"   }, ;
-      { "-", "&ndash;"  } }
-
-   FOR i := 1 TO Len( xtxt )
-      IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == hb_UTF8ToStr( x[ 1 ] ) } ) ) > 0
-         xret += afrm[ xpos, 2 ]
-      ELSE
-         xret += SubStr( xtxt, i, 1 )
-      ENDIF
-   NEXT
-
-   RETURN xret
+   RETURN hb_StrReplace( xtxt, hb_UTF8ToStr( ;
+      "áâàãçéêíóôõúüÁÂÀÃÇÉÊÍÓÔÕÚÜ-" ), { ;
+      "&aacute;" , ;
+      "&acirc;"  , ;
+      "&agrave;" , ;
+      "&atilde;" , ;
+      "&ccedil;" , ;
+      "&eacute;" , ;
+      "&ecirc;"  , ;
+      "&iacute;" , ;
+      "&oacute;" , ;
+      "&ocirc;"  , ;
+      "&otilde;" , ;
+      "&uacute;" , ;
+      "&uuml;"   , ;
+      "&Aacute;" , ;
+      "&Acirc;"  , ;
+      "&Agrave;" , ;
+      "&Atilde;" , ;
+      "&Ccedil;" , ;
+      "&Eacute;" , ;
+      "&Ecirc;"  , ;
+      "&Iacute;" , ;
+      "&Oacute;" , ;
+      "&Ocirc;"  , ;
+      "&Otilde;" , ;
+      "&Uacute;" , ;
+      "&Uuml;"   , ;
+      "&ndash;"  } )
 
 FUNCTION StrToHtmlSpecial( xtxt )
-
-   LOCAL i, xret := "", xpos
-
-   LOCAL afrm := { ;
-      { "&", "&amp;"  }, ;
-      { '"', "&quot;" }, ;
-      { "'", "&#039;" }, ;
-      { "<", "&lt;"   }, ;
-      { ">", "&gt;"   } }
-
-   xtxt := RemoveAccents( xtxt )
-
-   FOR i := 1 TO Len( xtxt )
-      IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
-         xret += afrm[ xpos, 2 ]
-      ELSE
-         xret += SubStr( xtxt, i, 1 )
-      ENDIF
-   NEXT
-
-   RETURN xret
-
-STATIC FUNCTION RemoveAccents( xtxt )
-
-   LOCAL i, xret := "", xpos
-
-   LOCAL afrm := { ;
-      { "á", "a" }, ;
-      { "â", "a" }, ;
-      { "à", "a" }, ;
-      { "ã", "a" }, ;
-      { "ç", "c" }, ;
-      { "é", "e" }, ;
-      { "ê", "e" }, ;
-      { "í", "i" }, ;
-      { "ó", "o" }, ;
-      { "ô", "o" }, ;
-      { "õ", "o" }, ;
-      { "ú", "u" }, ;
-      { "ü", "u" }, ;
-      { "Á", "A" }, ;
-      { "Â", "A" }, ;
-      { "À", "A" }, ;
-      { "Ã", "A" }, ;
-      { "Ç", "C" }, ;
-      { "É", "E" }, ;
-      { "Ê", "E" }, ;
-      { "Í", "I" }, ;
-      { "Ó", "O" }, ;
-      { "Ô", "O" }, ;
-      { "Õ", "O" }, ;
-      { "Ú", "U" }, ;
-      { "Ü", "U" }, ;
-      { "ª", "." }, ;
-      { "º", "." }, ;
-      { "°", "." } }
-
-   FOR i := 1 TO Len( xtxt )
-      IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == hb_UTF8ToStr( x[ 1 ] ) } ) ) > 0
-         xret += afrm[ xpos, 2 ]
-      ELSE
-         xret += SubStr( xtxt, i, 1 )
-      ENDIF
-   NEXT
-
-   RETURN xret
+   RETURN hb_StrReplace( RemoveAccents( xtxt ), '"' + "'&<>", { ;
+      "&quot;" , ;
+      "&#039;" , ;
+      "&amp;"  , ;
+      "&lt;"   , ;
+      "&gt;"   } )
