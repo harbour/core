@@ -44,9 +44,7 @@
  *
  */
 
-#if ! defined( HB_GS_UTF8_NO_SUPPORT )
-   #define HB_GS_UTF8_SUPPORT  /* requires Ghostscript 9.10 or upper */
-#endif
+/* #define HB_GS_UTF8_SUPPORT */  /* requires Ghostscript 9.10 or upper */
 
 #include "hbapi.h"
 #if defined( HB_GS_UTF8_SUPPORT )
