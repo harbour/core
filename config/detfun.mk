@@ -1,10 +1,10 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour)
 # See COPYING.txt for licensing terms.
-#
+# ---------------------------------------------------------------
+
 # This make file will detect optional 3rd party components
 # used in Harbour core code. Generic function.
-# ---------------------------------------------------------------
 
 # USAGE:
 #    ON CALL:

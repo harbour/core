@@ -3,11 +3,9 @@
 # See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# ---------------------------------------------------------------
 # See batch docs here:
 #    http://www.computerhope.com/batch.htm
 #    http://www.robvanderwoude.com/batchcommands.php
-# ---------------------------------------------------------------
 
 ifneq ($(HB_SHELL),sh)
 

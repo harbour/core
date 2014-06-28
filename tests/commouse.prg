@@ -9,8 +9,7 @@ PROCEDURE Main( cParam )
       RETURN
    ENDIF
 
-   nPort := Val( cParam )
-   IF nPort == 0
+   IF ( nPort := Val( cParam ) ) == 0
       ? "Using device:", cParam
       nPort := 1
       hb_comSetDevice( nPort, cParam )

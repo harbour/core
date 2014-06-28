@@ -1,12 +1,10 @@
 # GNU Make file for Open Watcom C/C++ compiler
 # (shell specific rules)
 
-# ---------------------------------------------------------------
 # See option docs here:
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
 #    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
-# ---------------------------------------------------------------
 
 # NOTE: Hack to force no extension for Linux binaries created on non-Linux hosts.
 #       Otherwise they become '.elf'. [vszakats]

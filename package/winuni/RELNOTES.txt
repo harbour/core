@@ -8,8 +8,9 @@ release is available for download on this URL:
 Make sure to check README.md "Build Your Own Harbour App"
 section.
 
-Release notes:
------------------------------------------------------------------------
+Release notes
+=============
+
 Unified Windows release for mainstream compilers and
 x86, x64, WinCE/ARM platforms.
 
@@ -22,7 +23,7 @@ Options: x86 shared tools, x64 shared tools, MinGW x64 and
 WinCE-ARM libs, MSVC x64 libs, shared x64/WinCE-ARM libs.
 
 Usage:
-1) install/unpack to any directory (C:\hb30)
+1) install/unpack to any directory (C:\hb\)
 2) go to bin dir (optional if you specify path for hbmk2)
 3) For x86 executable, type: 'hbmk2 ../tests/hello.prg'
 4) For x64 executable, type: 'hbmk2 ../tests/hello.prg -comp=mingw64'
@@ -30,11 +31,10 @@ Usage:
 5) For WinCE/ARM executable, type: 'hbmk2 ../tests/hello.prg -comp=mingwarm'
    [needs cegcc to be installed in 'comp/mingwarm' dir beforehand]
 
-Tool/lib versions used to create this package:
------------------------------------------------------------------------
+Tool/lib versions used to create this package
+=============================================
 
    Compiler tools
-   --------------
 
    MinGW GNU C 4.6.1 (TDM-DW2) (included)
    MinGW w64 GNU C 4.5.3-20110207 (prerelease)
@@ -42,7 +42,6 @@ Tool/lib versions used to create this package:
    MSVC 2012 Update 1
 
    External lib dependencies
-   -------------------------
 
    ACE 11.00
    Cairo 1.8.8
@@ -56,13 +55,13 @@ Tool/lib versions used to create this package:
    PostgreSQL 9.2.0-1
    WATTCP 2.2.10
 
-Changes since previous (2.0.0) release:
------------------------------------------------------------------------
+Changes since previous (2.0.0) release
+======================================
 
   [TODO]
 
-Changes since previous (2.0.0beta3 20090905) release:
------------------------------------------------------------------------
+Changes since previous (2.0.0beta3 20090905) release
+====================================================
 
 - Harbour updated to r13359 (from r12422)
 - MinGW CEGCC updated to 4.4.0
@@ -140,8 +139,8 @@ Changes since previous (2.0.0beta3 20090905) release:
   "incompatibility" in ChangeLog.txt to find spots which may imply changes
   on their part.
 
-Changes since previous (2.0.0beta2 20090624) release:
------------------------------------------------------------------------
+Changes since previous (2.0.0beta2 20090624) release
+====================================================
 
 - Harbour updated to r12422 (from r11508)
 - Rewritten socket library.
@@ -168,8 +167,9 @@ Changes since previous (2.0.0beta2 20090624) release:
   the former didn't work.
 - Included hbqt lib which links against static QT libs.
 
-Changes since previous (2.0.0beta1 20090609) release:
------------------------------------------------------------------------
+Changes since previous (2.0.0beta1 20090609) release
+====================================================
+
 - Harbour updated to r11508 (from r11287)
 - New User's Forum linked
 - upx compressor included in install package
@@ -195,10 +195,10 @@ Changes since previous (2.0.0beta1 20090609) release:
   your source code (hb_par*()/hb_stor*() in .c files and GTWVG WIN_*()
   function in .prg files). Search for 'incompatible' word in ChangeLog.txt
   for more.
------------------------------------------------------------------------
 
-Changes since previous (1.1.0dev 20090602) release:
------------------------------------------------------------------------
+Changes since previous (1.1.0dev 20090602) release
+==================================================
+
 - Harbour updated to r11287 (from r11179)
 - all contrib tests included in install package
 - All 3rd party packages upgraded to latest version.
@@ -210,10 +210,10 @@ Changes since previous (1.1.0dev 20090602) release:
 - 'terminal' fixed in examples
 - source formatter, Cl*pper RL tool, legacy hbmake added
 - MT Xbase++ compatibility
------------------------------------------------------------------------
 
-Changes since previous (1.1.0dev 20090408) release:
------------------------------------------------------------------------
+Changes since previous (1.1.0dev 20090408) release
+==================================================
+
 - Harbour updated to r11179 (from r10819)
 - Updated hbmk2 (filter issues + experimental Harbour 1.0.x support)
 - Included contrib tests/utils

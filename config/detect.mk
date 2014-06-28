@@ -1,12 +1,12 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour)
 # See COPYING.txt for licensing terms.
-#
-# This make file will detect optional 3rd party components
-# used in Harbour core code.
 # ---------------------------------------------------------------
 
-# config/conf.mk if present, is able to override HB_HAS_* values.
+# This make file will detect optional 3rd party components
+# used in Harbour core code.
+
+# config.mk if present is root, is able to override HB_HAS_* values.
 
 ifeq ($(DETECT_MK_),)
 export DETECT_MK_ := yes

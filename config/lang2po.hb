@@ -171,7 +171,7 @@ STATIC FUNCTION ConvToC_2( cStr )
 STATIC FUNCTION Comment( nPos )
 
    SWITCH nPos
-   CASE 22  ; RETURN "Colums must be aligned to positions: 1, 19, 32, 48"
+   CASE 22  ; RETURN "Columns must be aligned to character positions: 1, 19, 32, 48"
    CASE 25
    CASE 26
    CASE 27  ; RETURN "Keep the '*' decorations and internal space padding intact."

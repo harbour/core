@@ -3,7 +3,7 @@
 PROCEDURE Main( cPortName )
 
    LOCAL cString := "ATE0" + Chr( 13 ) + "ATI3" + Chr( 13 )
-   LOCAL nTimeOut := 3000  // 3000 miliseconds is 3 sec.
+   LOCAL nTimeOut := 3000  // 3 sec.
    LOCAL nResult
    LOCAL nPort := 1
 

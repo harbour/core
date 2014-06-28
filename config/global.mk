@@ -3,7 +3,6 @@
 # See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# ---------------------------------------------------------------
 # GNU make docs:
 #    https://www.gnu.org/software/make/manual/make.html
 #    http://wanderinghorse.net/computing/make/
@@ -18,7 +17,6 @@
 #    https://www.gnu.org/prep/standards/standards.html
 # GNU Make NEWS:
 #    http://git.savannah.gnu.org/cgit/make.git/tree/NEWS
-# ---------------------------------------------------------------
 
 # NOTE: $(realpath/abspath) need GNU Make 3.81 or upper
 # NOTE: $(eval) needs GNU Make 3.80 or upper

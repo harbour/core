@@ -155,7 +155,7 @@ To test it, type:
     > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
- You should see ``Hello, world!`` on screen.
+You should see ``Hello, world!`` on screen.
 
 ## on OS/2 hosts (possible cross-build targets: MS-DOS, OS/2, Linux)
 
