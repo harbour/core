@@ -223,8 +223,8 @@ CREATE CLASS GDImage
                                                            nTextRadius, nFillPortion, cFontName, nPitch, cStringTop, cStringBottom, color )
 
    METHOD GetFont()                        INLINE ::pFont
-   METHOD GetFontWidth( pFont )            INLINE __defaultNIL( @pFont, iif( ::pFont == NIL, pFont, ::pFont ) ), gdFontGetWidth( pFont )
-   METHOD GetFontHeight( pFont )           INLINE __defaultNIL( @pFont, iif( ::pFont == NIL, pFont, ::pFont ) ), gdFontGetHeight( pFont )
+   METHOD GetFontWidth( pFont )            INLINE hb_default( @pFont, iif( ::pFont == NIL, pFont, ::pFont ) ), gdFontGetWidth( pFont )
+   METHOD GetFontHeight( pFont )           INLINE hb_default( @pFont, iif( ::pFont == NIL, pFont, ::pFont ) ), gdFontGetHeight( pFont )
 
    METHOD GetFTFontWidth( cFontName, nPitch )           INLINE gdImageFTWidth( hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
    METHOD GetFTFontHeight( cFontName, nPitch )          INLINE gdImageFTHeight( hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )

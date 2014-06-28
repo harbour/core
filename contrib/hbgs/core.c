@@ -45,6 +45,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapistr.h"
 
 #if defined( HB_OS_WIN ) && ! defined( _Windows )
    #define _Windows
@@ -54,6 +55,10 @@
 
 #include "ierrors.h"
 #include "iapi.h"
+
+#if ! defined( HB_GS_UTF8_NO_SUPPORT )
+   #define HB_GS_UTF8_SUPPORT  /* requires Ghostscript 9.10 an upper */
+#endif
 
 HB_FUNC( HB_GS )
 {
@@ -67,18 +72,31 @@ HB_FUNC( HB_GS )
       int     code, code1;
       int     gsargc = ( int ) hb_arrayLen( pParam ) + 1;
       char ** gsargv = ( char ** ) hb_xgrab( gsargc * sizeof( const char * ) );
+      #if defined( HB_GS_UTF8_SUPPORT )
+      void ** gsargf = ( void ** ) hb_xgrab( gsargc * sizeof( void * ) );
+      #endif
 
-      gsargv[ 0 ] = ( char * ) "hbgs"; /* actual value doesn't matter */
+      gsargv[ 0 ] = ( char * ) "hbgs";  /* actual value doesn't matter */
 
       for( pos = 1; pos < gsargc; ++pos )
       {
-         const char * pszParam = hb_arrayGetCPtr( pParam, pos );
+         const char * pszParam;
+         #if defined( HB_GS_UTF8_SUPPORT )
+         gsargf[ pos ] = NULL;
+         pszParam = hb_arrayGetStrUTF8( pParam, pos, &gsargf[ pos ], NULL );
+         #else
+         pszParam = hb_arrayGetCPtr( pParam, pos );
+         #endif
          gsargv[ pos ] = ( char * ) ( pszParam ? pszParam : "" );
       }
 
       code = gsapi_new_instance( &minst, NULL );
       if( code >= 0 )
       {
+         #if defined( HB_GS_UTF8_SUPPORT )
+         gsapi_set_arg_encoding( minst, GS_ARG_ENCODING_UTF8 );
+         #endif
+
          code  = gsapi_init_with_args( minst, gsargc, gsargv );
          code1 = gsapi_exit( minst );
 
@@ -89,6 +107,11 @@ HB_FUNC( HB_GS )
 
          bResult = ( code == 0 || code == e_Quit );
       }
+
+      #if defined( HB_GS_UTF8_SUPPORT )
+      for( pos = 1; pos < gsargc; ++pos )
+         hb_strfree( gsargf[ pos ] );
+      #endif
    }
 
    hb_retl( bResult );

@@ -459,11 +459,9 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    IF HB_ISLOGICAL( lBold )
       cStr += iif( lBold, "<b>", "</b>" )
    ENDIF
-
    IF HB_ISLOGICAL( lItalic )
       cStr += iif( lItalic, "<i>", "</i>" )
    ENDIF
-
    IF HB_ISLOGICAL( lULine )
       cStr += iif( lULine, "<u>", "</u>" )
    ENDIF
@@ -516,11 +514,9 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    IF HB_ISLOGICAL( lBold )
       cStr += iif( lBold, "<b>", "</b>" )
    ENDIF
-
    IF HB_ISLOGICAL( lItalic )
       cStr += iif( lItalic, "<i>", "</i>" )
    ENDIF
-
    IF HB_ISLOGICAL( lULine )
       cStr += iif( lULine, "<u>", "</u>" )
    ENDIF
@@ -732,11 +728,9 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
    IF HB_ISSTRING( cOnMsOut )
       cStr += Space( 5 ) + "onMouseOut=" + '"' + cOnMsOut + '"' + hb_eol()
    ENDIF
-
    IF HB_ISSTRING( cTarget )
       cStr += Space( 5 ) + "target=" + cTarget + hb_eol()
    ENDIF
-
    IF HB_ISSTRING( cClass )
       cStr += Space( 5 ) + "class=" + cClass + hb_eol()
    ENDIF
@@ -964,11 +958,9 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
 /* Close an HTML disk file */
 METHOD Close() CLASS THtml
 
-#if 0
-   ::cStr += ::cStr
-#endif
-   ::cStr += "</body>" + hb_eol()
-   ::cStr += "</html>" + hb_eol()
+   ::cStr += ;
+      "</body>" + hb_eol() + ;
+      "</html>" + hb_eol()
 
    FWrite( ::nh, ::cStr )
 
@@ -1004,7 +996,6 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    IF HB_ISSTRING( colorFore )
       cStr += " bordercolor=" + ColorFore + " "
    ENDIF
-
    IF HB_ISSTRING( colorbg )
       cStr += " bgcolor=" + ColorBG + " "
    ENDIF
@@ -1014,11 +1005,9 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    IF HB_ISNUMERIC( ncellpadding )
       cStr += " CellPadding=" + hb_ntos( nCellPadding )
    ENDIF
-
    IF HB_ISNUMERIC( nCellSpacing )
       cStr += " CellSpacing=" + hb_ntos( nCellSpacing )
    ENDIF
-
    IF HB_ISSTRING( cAlign )
       cStr += " align=" + '"' + cAlign + '"'
    ENDIF
@@ -1047,11 +1036,9 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    IF HB_ISSTRING( cClrDark )
       cStr += " bordercolordark=" + cClrDark
    ENDIF
-
    IF HB_ISSTRING( cClrLight )
       cStr += " bordercolorlight=" + cClrLight
    ENDIF
-
    IF HB_ISSTRING( cClrBorder )
       cStr += " bordercolor=" + cClrBorder
    ENDIF
@@ -1176,21 +1163,24 @@ METHOD NewTableCell( cAlign, cColor, ;
    IF HB_ISSTRING( cValign )
       cStr += " valign=" + cValign
    ENDIF
+   IF HB_ISSTRING( cBgPic )
+      cStr += " background=" + '"' + cBgPic + '"'
+   ENDIF
+
    DO CASE
    CASE HB_ISNUMERIC( nHeight )
       cStr += " height=" + hb_ntos( nHeight )
    CASE HB_ISSTRING( nHeight )
       cStr += " height=" + '"' + nHeight + '"'
    ENDCASE
-   IF HB_ISSTRING( cBgPic )
-      cStr += " background=" + '"' + cBgPic + '"'
-   ENDIF
+
    DO CASE
    CASE HB_ISNUMERIC( nWidth )
       cStr += " width=" + hb_ntos( nWidth )
    CASE HB_ISSTRING( nWidth )
       cStr += " width=" + '"' + nWidth + '"'
    ENDCASE
+
    DO CASE
    CASE HB_ISNUMERIC( nColspan )
       cStr += " colspan=" + hb_ntos( nColspan )
@@ -1226,7 +1216,6 @@ METHOD NewTableCell( cAlign, cColor, ;
       IF HB_ISNUMERIC( nSize )
          cStr += "size=" + hb_ntos( nSize )
       ENDIF
-
       IF HB_ISSTRING( cFntColor )
          cStr += " color=" + cFntColor
       ENDIF
@@ -1298,11 +1287,9 @@ METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
    IF HB_ISSTRING( cName )
       ::cStr += " Name=" + '"' + cName + '"'
    ENDIF
-
    IF xValue != NIL
       ::cStr += " Value=" + '"' + HtmlAny2Str( xValue ) + '"'
    ENDIF
-
    IF HB_ISNUMERIC( nSize )
       ::cStr += " Size=" + '"' + HtmlAny2Str( nSize ) + '"'
    ENDIF
@@ -1544,7 +1531,6 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
    IF HB_ISSTRING( src )
       cStr += Space( 5 ) + "         src=" + '"' + src + '"' + hb_eol()
    ENDIF
-
    IF hb_defaultValue( BORDER, .T. )
       cStr += Space( 5 ) + " frameborder=1" + hb_eol()
    ELSE
@@ -1556,19 +1542,15 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
    IF HB_ISNUMERIC( marginwidth )
       cStr += Space( 5 ) + " marginwidth=" + '"' + hb_ntos( marginWidth ) + '"' + hb_eol()
    ENDIF
-
    IF HB_ISNUMERIC( marginheight )
       cStr += Space( 5 ) + "marginheight=" + '"' + hb_ntos( marginheight ) + '"' + hb_eol()
    ENDIF
-
    IF HB_ISNUMERIC( WIDTH )
       cStr += Space( 5 ) + "       width=" + '"' + hb_ntos( Width ) + '"' + hb_eol()
    ENDIF
-
    IF HB_ISNUMERIC( HEIGHT )
       cStr += Space( 5 ) + "      height=" + '"' + hb_ntos( height ) + '"' + hb_eol()
    ENDIF
-
    IF HB_ISSTRING( align )
       cStr += Space( 5 ) + "       align=" + '"' + align + '"' + hb_eol()
    ENDIF
@@ -1604,27 +1586,21 @@ METHOD AddObject( cType, cClassid, cAlign, cCode, lDisable, cCodeBase, cName, nW
    IF HB_ISSTRING( cType )
       cStr += " type=" + '"' + cType + '"' + hb_eol()
    ENDIF
-
    IF HB_ISSTRING( cClassId )
       cStr += " classid=" + '"' + cClassId + '"' + hb_eol()
    ENDIF
-
    IF HB_ISSTRING( cAlign )
       cStr += " align=" + '"' + cAlign + '"' + hb_eol()
    ENDIF
-
    IF HB_ISSTRING( cCode )
       cStr += " code=" + '"' + cCode + '"' + hb_eol()
    ENDIF
-
    IF lDisable
       cStr += " DISABLED " + hb_eol()
    ENDIF
-
    IF HB_ISSTRING( cCodebase )
       cStr += " codebase=" + '"' + cCodebase + '"' + hb_eol()
    ENDIF
-
    IF HB_ISSTRING( cName )
       cStr += " name=" + '"' + cName + '"' + hb_eol()
    ENDIF
