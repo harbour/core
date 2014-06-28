@@ -10384,7 +10384,7 @@ FUNCTION hbmk_PathSepToTarget( ctx, cFileName )
 
    RETURN ""
 
-FUNCTION hbmk_AddInput_PRG( ctx, cFileName )
+PROCEDURE hbmk_AddInput_PRG( ctx, cFileName )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
@@ -10393,9 +10393,9 @@ FUNCTION hbmk_AddInput_PRG( ctx, cFileName )
       hb_default( @hbmk[ _HBMK_cFIRST ], hb_DirSepToOS( cFileName ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION hbmk_AddInput_C( ctx, cFileName )
+PROCEDURE hbmk_AddInput_C( ctx, cFileName )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
@@ -10404,9 +10404,9 @@ FUNCTION hbmk_AddInput_C( ctx, cFileName )
       hb_default( @hbmk[ _HBMK_cFIRST ], hb_DirSepToOS( cFileName ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION hbmk_AddInput_CPP( ctx, cFileName )
+PROCEDURE hbmk_AddInput_CPP( ctx, cFileName )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
@@ -10415,9 +10415,9 @@ FUNCTION hbmk_AddInput_CPP( ctx, cFileName )
       hb_default( @hbmk[ _HBMK_cFIRST ], hb_DirSepToOS( cFileName ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION hbmk_AddInput_RC( ctx, cFileName )
+PROCEDURE hbmk_AddInput_RC( ctx, cFileName )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
@@ -10425,9 +10425,9 @@ FUNCTION hbmk_AddInput_RC( ctx, cFileName )
       AAdd( hbmk[ _HBMK_aRESSRC ], hb_DirSepToOS( cFileName ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION hbmk_AddInput_OBJ( ctx, cFileName )
+PROCEDURE hbmk_AddInput_OBJ( ctx, cFileName )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
@@ -10435,9 +10435,9 @@ FUNCTION hbmk_AddInput_OBJ( ctx, cFileName )
       AAdd( hbmk[ _HBMK_aOBJUSER ], hb_DirSepToOS( cFileName ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION hbmk_AddInput_INSTFILE( ctx, cFileName, cGroup )
+PROCEDURE hbmk_AddInput_INSTFILE( ctx, cFileName, cGroup )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
@@ -10445,9 +10445,19 @@ FUNCTION hbmk_AddInput_INSTFILE( ctx, cFileName, cGroup )
       AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { hb_defaultValue( cGroup, "" ), hb_DirSepToOS( cFileName ) } )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION hbmk_Register_Input_File_Extension( ctx, cExt )
+PROCEDURE hbmk_AddOption_C( ctx, cOption )
+
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+
+   IF hbmk != NIL .AND. HB_ISSTRING( cOption ) .AND. ! Empty( cOption )
+      AAdd( hbmk[ _HBMK_aOPTC ], hbmk_hb_DirSepToOS( cOption, 2 ) )
+   ENDIF
+
+   RETURN
+
+PROCEDURE hbmk_Register_Input_File_Extension( ctx, cExt )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
@@ -10458,7 +10468,7 @@ FUNCTION hbmk_Register_Input_File_Extension( ctx, cExt )
       hbmk[ _HBMK_hPLUGINExt ][ Lower( cExt ) ] := NIL
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION hbmk_SecToken()
 
@@ -11020,9 +11030,7 @@ STATIC FUNCTION PathSepToForward( cFileName )
    RETURN iif( HB_ISSTRING( cFileName ), StrTran( cFileName, "\", "/" ), "" )
 
 STATIC FUNCTION hbmk_hb_DirSepToOS( cFileName, nStart )
-   RETURN iif( nStart == NIL, ;
-      StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() ), ;
-      Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), iif( hb_ps() == "\", "/", "\" ), hb_ps() ) )
+   RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), iif( hb_ps() == "\", "/", "\" ), hb_ps() )
 
 STATIC FUNCTION PathSepToTarget( hbmk, cFileName, nStart )
 
@@ -16158,7 +16166,7 @@ FUNCTION hbshell_ScriptName()
 
    RETURN hb_UTF8ToStr( hbsh[ _HBSH_cScriptName ] )
 
-FUNCTION hbshell_Clipper()
+PROCEDURE hbshell_Clipper()
 
    LOCAL hbsh := hbsh()
 
@@ -16171,9 +16179,9 @@ FUNCTION hbshell_Clipper()
    Set( _SET_DATEFORMAT, "mm/dd/yy" )
    Set( _SET_EXACT, .F. )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION hbshell_gtSelect( cGT )
+PROCEDURE hbshell_gtSelect( cGT )
 
    LOCAL hbsh := hbsh()
 
@@ -16188,7 +16196,7 @@ FUNCTION hbshell_gtSelect( cGT )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION __hbshell_gtDefault()
 #if defined( __PLATFORM__WINCE )
@@ -17566,6 +17574,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "hbmk_AddInput_RC( hbmk, <cFileName> ) -> NIL"                                , I_( "Add a Windows resource input file to the project." ) }, ;
       { "hbmk_AddInput_OBJ( hbmk, <cFileName> ) -> NIL"                               , I_( "Add a binary object file to the project." ) }, ;
       { "hbmk_AddInput_INSTFILE( hbmk, <cFileName>, [<cGroup>] ) -> NIL"              , I_( "Add a file to be installed, with an optional -instpath= group name." ) }, ;
+      { "hbmk_AddOption_C( hbmk, <cOption> ) -> NIL"                                  , I_( "Add a C compiler option." ) }, ;
       { "hbmk_OutStd( hbmk, <cText> ) -> NIL"                                         , I_( "Output text to stdout." ) }, ;
       { "hbmk_OutErr( hbmk, <cText> ) -> NIL"                                         , I_( "Output text to stderr." ) }, ;
       { "hbmk_OutStdRaw( hbmk, ... ) -> NIL"                                          , I_( "Output text to stdout without any formatting." ) }, ;

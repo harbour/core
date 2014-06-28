@@ -24,11 +24,7 @@
 #pragma -km+
 #pragma -ko+
 
-#include "directry.ch"
-#include "hbclass.ch"
-#include "error.ch"
-
-#define I_( x )                 hb_i18n_gettext( x )
+#define I_( x )  hb_i18n_gettext( x )
 
 #if defined( __HBSCRIPT__HBMK_PLUGIN )
 
