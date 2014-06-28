@@ -1,6 +1,6 @@
 /*
  * MySQL DBMS classes.
- * These classes try to emulate clipper dbXXXX functions on a SQL query
+ * These classes try to emulate Cl*pper db*() functions on a SQL query
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  *
@@ -66,14 +66,14 @@ CREATE CLASS TMySQLRow
 
    METHOD New( aRow, aFStruct, cTableName )     // Create a new Row object
 
-   METHOD FieldGet( cnField )                   // Same as clipper ones, but FieldGet() and FieldPut() accept a string as
+   METHOD FieldGet( cnField )                   // Same as Cl*pper ones, but FieldGet() and FieldPut() accept a string as
    METHOD FieldPut( cnField, Value )            // field identifier, not only a number
    METHOD FieldName( nNum )
    METHOD FieldPos( cFieldName )
 
    METHOD FieldLen( nNum )                      // Length of field N
    METHOD FieldDec( nNum, lFormat )             // How many decimals in field N
-   METHOD FieldType( nNum )                     // Clipper type of field N
+   METHOD FieldType( nNum )                     // Cl*pper type of field N
 
    METHOD MakePrimaryKeyWhere()                 // returns a WHERE x=y statement which uses primary key (if available)
 
@@ -214,29 +214,25 @@ METHOD FieldType( nNum ) CLASS TMySQLRow
 // returns a WHERE x=y statement which uses primary key (if available)
 METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
 
-   LOCAL ni, cWhere := ""
+   LOCAL fld, cWhere := "", nI
 
-   FOR nI := 1 TO Len( ::aFieldStruct )
+   FOR EACH fld IN ::aFieldStruct
 
       // search for fields part of a primary key
-      IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) != 0 .OR. ;
-         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) != 0 .OR. ;
-         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], UNIQUE_KEY_FLAG ) != 0
+      IF hb_bitAnd( fld[ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) != 0 .OR. ;
+         hb_bitAnd( fld[ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) != 0 .OR. ;
+         hb_bitAnd( fld[ MYSQL_FS_FLAGS ], UNIQUE_KEY_FLAG ) != 0
 
          IF ! Empty( cWhere )
             cWhere += " AND "
          ENDIF
 
-         cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "="
+         nI := fld:__enumIndex()
 
          // if a part of a primary key has been changed, use original value
-         IF ::aDirty[ nI ]
-            cWhere += ClipValue2SQL( ::aOldValue[ nI ] )
-         ELSE
-            cWhere += ClipValue2SQL( ::aRow[ nI ] )
-         ENDIF
+         cWhere += fld[ MYSQL_FS_NAME ] + "=" + ;
+            ClipValue2SQL( iif( ::aDirty[ nI ], ::aOldValue[ nI ], ::aRow[ nI ] ) )
       ENDIF
-
    NEXT
 
    IF ! Empty( cWhere )
@@ -278,7 +274,7 @@ CREATE CLASS TMySQLQuery
 
    METHOD GetRow( nRow )                // return Row n of answer
 
-   METHOD Skip( nRows )                 // Same as clipper ones
+   METHOD Skip( nRows )                 // Same as Cl*pper ones
 
    METHOD Bof() INLINE ::lBof
    METHOD Eof() INLINE ::lEof
@@ -299,14 +295,14 @@ CREATE CLASS TMySQLQuery
 
    METHOD FieldLen( nNum )              // Length of field N
    METHOD FieldDec( nNum, lFormat )     // How many decimals in field N
-   METHOD FieldType( nNum )             // Clipper type of field N
+   METHOD FieldType( nNum )             // Cl*pper type of field N
 
 ENDCLASS
 
 
 METHOD New( nSocket, cQuery ) CLASS TMySQLQuery
 
-   LOCAL nI, aField
+   LOCAL nI
 
    ::nSocket := nSocket
    ::cQuery := cQuery
@@ -333,13 +329,10 @@ METHOD New( nSocket, cQuery ) CLASS TMySQLQuery
          ::aRow := Array( ::nNumFields )
 
          FOR nI := 1 TO ::nNumFields
-
-            aField := mysql_fetch_field( ::nResultHandle )
-            AAdd( ::aFieldStruct, aField )
+            AAdd( ::aFieldStruct, mysql_fetch_field( ::nResultHandle ) )
             IF ::lFieldAsData
                __objAddData( Self, ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] )
             ENDIF
-
          NEXT
 
          ::getRow( ::nCurRow )
@@ -406,7 +399,7 @@ METHOD PROCEDURE Skip( nRows ) CLASS TMySQLQuery
       // Negative movement
       IF ( ::RecNo() + nRows ) < 1
          nRows := - ::RecNo() + 1
-         // Clipper: only SKIP movement can set Bof() to .T.
+         // Cl*pper: only SKIP movement can set Bof() to .T.
          ::lBof := .T.  // Try to skip before first record
       ENDIF
    ELSE
@@ -419,7 +412,7 @@ METHOD PROCEDURE Skip( nRows ) CLASS TMySQLQuery
    ::nCurRow := ::nCurRow + nRows
 
    // Maintain ::bof() true until next movement
-   // Clipper: only SKIP movement can set Bof() to .T.
+   // Cl*pper: only SKIP movement can set Bof() to .T.
    lbof := ::Bof()
 
    // mysql_data_seek( ::nResultHandle, ::nCurRow - 1 )
@@ -446,7 +439,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
       ::lBof := ( Empty( ::LastRec() ) )
 
       IF nRow < 1 .OR. nRow > ::LastRec()  // Out of range
-         // Equal to Clipper behaviour
+         // Equal to Cl*pper behaviour
          nRow := ::LastRec() + 1  // LastRec()+1
          ::nCurRow := ::LastRec() + 1
          // ::lEof := .T.
@@ -472,7 +465,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 
       IF ::aRow != NIL
 
-         // Convert answer from text field to correct clipper types
+         // Convert answer from text field to correct Cl*pper types
          FOR i := 1 TO ::nNumFields
 
             SWITCH ::aFieldStruct[ i ][ MYSQL_FS_TYPE ]
@@ -728,7 +721,9 @@ METHOD GetRow( nRow ) CLASS TMySQLTable
 
    ::aOldvalue := {}
    FOR i := 1 TO ::nNumFields
-      // ::aOldValue[ i ] := ::FieldGet( i )
+#if 0
+      ::aOldValue[ i ] := ::FieldGet( i )
+#endif
       AAdd( ::aOldvalue, ::FieldGet( i ) )
    NEXT
 
@@ -783,7 +778,10 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
 
          FOR nI := 1 TO Len( ::aFieldStruct )
-            cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( ::aOldValue[ nI ] ) + " AND "
+            cWhere += ;
+               ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ;
+               ClipValue2SQL( ::aOldValue[ nI ] ) + ;
+               " AND "
          NEXT
          // remove last " AND "
          cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
@@ -795,7 +793,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
       ENDIF
 
       IF mysql_query( ::nSocket, cUpdateQuery ) == 0
-         // Clipper maintain same record pointer
+         // Cl*pper maintain same record pointer
 
          // After refresh(), position of current record is often unpredictable
          IF lRefresh
@@ -816,7 +814,9 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
          FOR i := 1 TO Len( oRow:aRow )
             IF oRow:aDirty[ i ]
-               cUpdateQuery += oRow:aFieldStruct[ i ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( oRow:aRow[ i ] ) + ","
+               cUpdateQuery += ;
+                  oRow:aFieldStruct[ i ][ MYSQL_FS_NAME ] + "=" + ;
+                  ClipValue2SQL( oRow:aRow[ i ] ) + ","
             ENDIF
          NEXT
 
@@ -828,7 +828,10 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
 
             FOR nI := 1 TO Len( oRow:aFieldStruct )
-               cWhere += oRow:aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( oRow:aOriValue[ nI ] ) + " AND "
+               cWhere += ;
+                  oRow:aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ;
+                  ClipValue2SQL( oRow:aOriValue[ nI ] ) + ;
+                  " AND "
             NEXT
             // remove last " AND "
             cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
@@ -847,7 +850,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
             oRow:aOriValue := AClone( oRow:aRow )
 
-            // Clipper maintain same record pointer
+            // Cl*pper maintain same record pointer
 
             // After refresh(), position of current record is often unpredictable
             IF lRefresh
@@ -881,10 +884,10 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
 
          FOR nI := 1 TO Len( ::aFieldStruct )
-            cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "="
-            // use original value
-            cWhere += ClipValue2SQL( ::aOldValue[ nI ] )
-            cWhere += " AND "
+            cWhere += ;
+               ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ;
+                ClipValue2SQL( ::aOldValue[ nI ] ) + ;  // use original value
+                " AND "
          NEXT
          // remove last " AND "
          cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
@@ -897,7 +900,7 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
       IF mysql_query( ::nSocket, cDeleteQuery ) == 0
          ::lError := .F.
-         // Clipper maintain same record pointer
+         // Cl*pper maintain same record pointer
 
          // After refresh(), position of current record is often unpredictable
          IF lRefresh
@@ -920,10 +923,10 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
 
             FOR nI := 1 TO Len( oRow:aFieldStruct )
-               cWhere += oRow:aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "="
-               // use original value
-               cWhere += ClipValue2SQL( oRow:aOriValue[ nI ] )
-               cWhere += " AND "
+               cWhere += ;
+                  oRow:aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ;
+                  ClipValue2SQL( oRow:aOriValue[ nI ] ) + ;  // use original value
+                  " AND "
             NEXT
             // remove last " AND "
             cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
@@ -983,7 +986,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
 
       IF mysql_query( ::nSocket, cInsertQuery ) == 0
          ::lError := .F.
-         // Clipper add record at end
+         // Cl*pper add record at end
          ::nCurRow := ::LastRec() + 1
 
          // After refresh(), position of current record is often unpredictable
@@ -1035,7 +1038,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
 
             oRow:aOriValue := AClone( oRow:aRow )
 
-            // Clipper add record at end
+            // Cl*pper add record at end
             ::nCurRow := ::LastRec() + 1
 
             // After refresh(), position of current record is often unpredictable
@@ -1177,20 +1180,20 @@ METHOD Refresh() CLASS TMySQLTABLE
 // returns a WHERE x=y statement which uses primary key (if available)
 METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
 
-   LOCAL ni, cWhere := ""
+   LOCAL fld, cWhere := ""
 
-   FOR nI := 1 TO Len( ::aFieldStruct )
+   FOR EACH fld IN ::aFieldStruct
 
       // search for fields part of a primary key
-      IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) != 0 .OR. ;
-         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) != 0 .OR. ;
-         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], UNIQUE_KEY_FLAG ) != 0
+      IF hb_bitAnd( fld[ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) != 0 .OR. ;
+         hb_bitAnd( fld[ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) != 0 .OR. ;
+         hb_bitAnd( fld[ MYSQL_FS_FLAGS ], UNIQUE_KEY_FLAG ) != 0
 
          IF ! Empty( cWhere )
             cWhere += " AND "
          ENDIF
 
-         cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( ::aOldValue[ nI ] )
+         cWhere += fld[ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( ::aOldValue[ fld:__enumIndex() ] )
       ENDIF
    NEXT
 
@@ -1221,7 +1224,7 @@ CREATE CLASS TMySQLServer
 
    METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto )  // Create new table using the same syntax of dbCreate()
    METHOD DeleteTable( cTable )                            // delete table
-   METHOD TableStruct( cTable )                            // returns a structure array compatible with clipper's dbStruct() ones
+   METHOD TableStruct( cTable )                            // returns a structure array compatible with Cl*pper's dbStruct() ones
    METHOD CreateIndex( cName, cTable, aFNames, lUnique )   // Create an index (unique) on field name(s) passed as an array of strings aFNames
    METHOD DeleteIndex( cName, cTable )                     // Delete index cName from cTable
 

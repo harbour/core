@@ -18,8 +18,8 @@ TMySQLServer:  manages access to a MySQL server and returns an oServer object to
                queries;
 TMySQLQuery:   a standard query to an oServer with joins. Every query has a GetRow() method
                which on every call returns a TMySQLRow object which, in turn, contains requested fields.
-               Query objects convert MySQL answers (which is an array of strings) to clipper level types.
-               At present time N (with decimals), L, D, and C clipper types are supported.
+               Query objects convert MySQL answers (which is an array of strings) to Cl*pper level types.
+               At present time N (with decimals), L, D, and C Cl*pper types are supported.
 TMySQLTable:   It's a descendant of a TMySQLQuery and you'll receive it when your query has no joins.
                It adds Update(), Append() and Delete() methods which receive a TMySQLRow object and
                reflect changes to the MySQL table from which they come.

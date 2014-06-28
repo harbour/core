@@ -27,7 +27,7 @@ do
       if [ "${LAST}" = "--with" ]
       then
          [ "$1" = "mysql" ] && NEED_RPM="${NEED_RPM} mysql-devel"
-         [ "$1" = "odbc" ] && NEED_RPM="${NEED_RPM} unixODBC-devel"
+         [ "$1" = "odbc" ] && NEED_RPM="${NEED_RPM} unixodbc-devel"
          [ "$1" = "pgsql" ] && NEED_RPM="${NEED_RPM} postgresql-devel"
          [ "$1" = "firebird" ] && NEED_RPM="${NEED_RPM} firebird-devel"
          [ "$1" = "freeimage" ] && NEED_RPM="${NEED_RPM} freeimage-devel"

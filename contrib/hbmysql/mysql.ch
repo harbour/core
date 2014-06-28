@@ -1,6 +1,6 @@
 /*
  * MySQL DBMS defines
- * These defines are clipper code level equivalent of mysql.h and mysql_com.h
+ * These defines are Cl*pper code level equivalent of mysql.h and mysql_com.h
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  *
@@ -102,7 +102,7 @@
 #define MYSQL_TYPE_GEOMETRY     255
 
 /* MySQL field structure item number
-   (C level structure is translated to a clipper array) */
+   (C level structure is translated to a Cl*pper array) */
 #define MYSQL_FS_NAME           1     /* Name of column */
 #define MYSQL_FS_TABLE          2     /* Table of column if column was a field */
 #define MYSQL_FS_DEF            3     /* Default value (set by mysql_list_fields) */

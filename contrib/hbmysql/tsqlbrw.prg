@@ -71,7 +71,7 @@ CREATE CLASS TBColumnSQL FROM TBColumn
 
    VAR oBrw                 // pointer to Browser containing this column, needed to be able to
                             // retreive field values from Browse instance variable oCurRow
-// VAR Picture              // From clipper 5.3
+// VAR Picture              // From CA-Cl*pper 5.3
    VAR nFieldNum            // This column maps field num from query
 
    MESSAGE Block METHOD Block()          // When evaluating code block to get data from source this method
