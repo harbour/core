@@ -5,7 +5,7 @@
  * Copyright 2007 Toninho@fwi (UserCommand())
  * Copyright 2007 miguelangel@marchuet.net (NoOp(), Rest(), Port(), SendPort())
  * Copyright 2007 Patrick Mast <patrick/dot/mast/at/xharbour.com> (fileSize())
- * Copyright 2005 Rafa Carmona (LS(), Rename(), UploadFile(), DownLoadFile(), MKD())
+ * Copyright 2005 Rafa Carmona (LS(), Rename(), UploadFile(), DownloadFile(), MKD())
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,12 +59,13 @@
 #define _PORT_MAX  24000
 
 STATIC s_nPort := _PORT_MIN
+STATIC s_mutexPort := hb_mutexCreate()
 
 CREATE CLASS TIPClientFTP FROM TIPClient
 
    VAR nDataPort
    VAR cDataServer
-   VAR bUsePasv
+   VAR bUsePasv     INIT .T.
    VAR RegBytes
    VAR RegPasv
    // Socket opened in response to a port command
@@ -105,9 +106,9 @@ CREATE CLASS TIPClientFTP FROM TIPClient
    METHOD MGet( cSpec, cLocalPath )
    METHOD MPut( cFileSpec, cAttr )
    METHOD UploadFile( cLocalFile, cRemoteFile )
-   METHOD DownLoadFile( cLocalFile, cRemoteFile )
-   METHOD listFiles( cFileSpec )
-   METHOD fileSize( cFileSpec )
+   METHOD DownloadFile( cLocalFile, cRemoteFile )
+   METHOD ListFiles( cFileSpec )
+   METHOD FileSize( cFileSpec )
 
 ENDCLASS
 
@@ -117,11 +118,9 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientFTP
 
    ::nDefaultPort := 21
    ::nConnTimeout := 3000
-   ::bUsePasv     := .T.
    ::nAccessMode  := TIP_RW  // a read-write protocol
 
-   ::nDefaultSndBuffSize := 65536
-   ::nDefaultRcvBuffSize := 65536
+   ::nDefaultSndBuffSize := ::nDefaultRcvBuffSize := 65536
 
    // precompilation of regex for better prestations
    ::RegBytes := hb_regexComp( "\(([0-9]+)[ )a-zA-Z]" )
@@ -135,22 +134,18 @@ METHOD Open( cUrl ) CLASS TIPClientFTP
       ::oUrl := TUrl():New( cUrl )
    ENDIF
 
-   IF Len( ::oUrl:cUserid ) == 0 .OR. ;
-      Len( ::oUrl:cPassword ) == 0
-      RETURN .F.
-   ENDIF
+   IF Len( ::oUrl:cUserid ) > 0 .AND. ;
+      Len( ::oUrl:cPassword ) > 0
 
-   IF ! ::super:Open()
-      RETURN .F.
-   ENDIF
-
-   IF ::GetReply()
-      ::inetSendAll( ::SocketCon, "USER " + ::oUrl:cUserid + ::cCRLF )
-      IF ::GetReply()
-         ::inetSendAll( ::SocketCon, "PASS " + ::oUrl:cPassword + ::cCRLF )
-         // set binary by default
-         IF ::GetReply() .AND. ::TypeI()
-            RETURN .T.
+      IF ::super:Open()
+         IF ::GetReply()
+            ::inetSendAll( ::SocketCon, "USER " + ::oUrl:cUserid + ::cCRLF )
+            IF ::GetReply()
+               ::inetSendAll( ::SocketCon, "PASS " + ::oUrl:cPassword + ::cCRLF )
+               IF ::GetReply() .AND. ::TypeI()  // set binary by default
+                  RETURN .T.
+               ENDIF
+            ENDIF
          ENDIF
       ENDIF
    ENDIF
@@ -176,16 +171,11 @@ METHOD GetReply() CLASS TIPClientFTP
 
    // now, if the reply has a "-" as fourth character, we need to proceed...
    DO WHILE ! Empty( cRep ) .AND. SubStr( cRep, 4, 1 ) == "-"
-      ::cReply := ::inetRecvLine( ::SocketCon, @nLen, 128 )
-      cRep := hb_defaultValue( ::cReply, "" )
+      cRep := ::cReply := hb_defaultValue( ::inetRecvLine( ::SocketCon, @nLen, 128 ), "" )
    ENDDO
 
    // 4 and 5 are error codes
-   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. Val( Left( ::cReply, 1 ) ) >= 4
-      RETURN .F.
-   ENDIF
-
-   RETURN .T.
+   RETURN ::inetErrorCode( ::SocketCon ) == 0 .AND. Val( Left( ::cReply, 1 ) ) < 4
 
 METHOD Commit() CLASS TIPClientFTP
 
@@ -194,16 +184,8 @@ METHOD Commit() CLASS TIPClientFTP
    ::SocketCon := ::SocketControl
    ::bInitialized := .F.
 
-   IF ! ::GetReply()
-      RETURN .F.
-   ENDIF
-
    // error code?
-   IF hb_LeftEq( ::cReply, "5" )
-      RETURN .F.
-   ENDIF
-
-   RETURN .T.
+   RETURN ::GetReply() .AND. ! hb_LeftEq( ::cReply, "5" )
 
 // scan last reply for an hint of length
 METHOD ScanLength() CLASS TIPClientFTP
@@ -457,31 +439,32 @@ METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply ) CLASS TIPClientFTP
 
 METHOD Port() CLASS TIPClientFTP
 
-   LOCAL nPort
-
    ::SocketPortServer := hb_inetCreate( ::nConnTimeout )
 
-   DO WHILE ( nPort := ++s_nPort ) < _PORT_MAX
-      hb_inetServer( nPort, ::SocketPortServer )
+   hb_mutexLock( s_mutexPort )
+
+   DO WHILE ++s_nPort < _PORT_MAX
+      hb_inetServer( s_nPort, ::SocketPortServer )
       IF ::inetErrorCode( ::SocketPortServer ) == 0
+         hb_mutexUnlock( s_mutexPort )
          RETURN ::SendPort()
       ENDIF
    ENDDO
 
    s_nPort := _PORT_MIN
 
+   hb_mutexUnlock( s_mutexPort )
+
    RETURN .F.
 
 METHOD SendPort() CLASS TIPClientFTP
 
-   LOCAL cAddr
-   LOCAL cPort, nPort
+   LOCAL nPort := hb_inetPort( ::SocketPortServer )
 
-   cAddr := StrTran( hb_inetGetHosts( NetName() )[ 1 ], ".", "," )
-   nPort := hb_inetPort( ::SocketPortServer )
-   cPort := "," + hb_ntos( Int( nPort / 256 ) ) +  "," + hb_ntos( Int( nPort % 256 ) )
-
-   ::inetSendAll( ::SocketCon, "PORT " + cAddr + cPort + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "PORT " + ;
+      StrTran( hb_inetGetHosts( NetName() )[ 1 ], ".", "," ) + "," + ;
+      hb_ntos( Int( nPort / 256 ) ) + "," + hb_ntos( nPort % 256 ) + ;
+      ::cCRLF )
 
    RETURN ::GetReply()
 
@@ -581,7 +564,7 @@ METHOD MGet( cSpec, cLocalPath ) CLASS TIPClientFTP
    IF cStr != NIL
       FOR EACH cFile IN hb_ATokens( StrTran( cStr, Chr( 13 ) ), Chr( 10 ) )
          IF ! Empty( cFile )
-            ::downloadfile( cLocalPath + RTrim( cFile ), RTrim( cFile ) )
+            ::Downloadfile( cLocalPath + RTrim( cFile ), RTrim( cFile ) )
          ENDIF
       NEXT
    ENDIF
@@ -645,16 +628,10 @@ METHOD UploadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    RETURN ::WriteFromFile( cLocalFile )
 
-METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
-
-   LOCAL cPath
-   LOCAL cFile
-   LOCAL cExt
-
-   hb_FNameSplit( cLocalFile, @cPath, @cFile, @cExt  )
+METHOD DownloadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    ::bEof := .F.
-   ::oUrl:cFile := hb_defaultValue( cRemoteFile, cFile + cExt )
+   ::oUrl:cFile := hb_defaultValue( cRemoteFile, hb_FNameNameExt( cLocalFile ) )
 
    IF ! ::bInitialized
 
@@ -679,7 +656,7 @@ METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
    RETURN ::ReadToFile( cLocalFile, , ::nLength )
 
 // Return total file size for <cFileSpec>
-METHOD fileSize( cFileSpec ) CLASS TIPClientFTP
+METHOD FileSize( cFileSpec ) CLASS TIPClientFTP
 
    LOCAL aFile
    LOCAL nSize := 0
@@ -691,7 +668,7 @@ METHOD fileSize( cFileSpec ) CLASS TIPClientFTP
    RETURN nSize
 
 // Parse the :list() string into a Directory() compatible 2-dim array
-METHOD listFiles( cFileSpec ) CLASS TIPClientFTP
+METHOD ListFiles( cFileSpec ) CLASS TIPClientFTP
 
    LOCAL aMonth := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 
@@ -762,7 +739,7 @@ METHOD listFiles( cFileSpec ) CLASS TIPClientFTP
          cDay          := SubStr( cEntry, nStart, nEnd - nStart )
          nStart        := nEnd
 
-         // year
+         // Year
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
          ENDDO
          nEnd          := hb_At( " ", cEntry, nStart )
@@ -784,7 +761,7 @@ METHOD listFiles( cFileSpec ) CLASS TIPClientFTP
          aFile[ F_DATE ] := hb_SToD( cYear + cMonth + cDay )
          aFile[ F_TIME ] := cTime
 
-         aList[ cEntry:__enumIndex() ] := aFile
+         cEntry := aFile
       ENDIF
    NEXT
 

@@ -23,29 +23,31 @@ PROCEDURE Main( ... )
 
    FOR i := 1 TO PCount()
 
-      cData := hb_PValue( i )
-
-      DO CASE
-      CASE Lower( cData ) == "-h"
+      SWITCH Lower( cData := hb_PValue( i ) )
+      CASE "-h"
          Usage()
          RETURN
-      CASE Lower( cData ) == "-f"
+      CASE "-f"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "From" ] := hb_StrToUTF8( cData )
          ENDIF
-      CASE Lower( cData ) == "-t"
+         EXIT
+      CASE "-t"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "To" ] := hb_StrToUTF8( cData )
          ENDIF
-      CASE Lower( cData ) == "-s"
+         EXIT
+      CASE "-s"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "Subject" ] := hb_StrToUTF8( cData )
          ENDIF
-      CASE Lower( cData ) == "-b"
+         EXIT
+      CASE "-b"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:SetBody( hb_StrToUTF8( cData ) + e"\r\n" )
          ENDIF
-      CASE Lower( cData ) == "-m"
+         EXIT
+      CASE "-m"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             cData := MemoRead( cData )
             IF Empty( cData )
@@ -54,14 +56,15 @@ PROCEDURE Main( ... )
             ENDIF
             oMail:SetBody( cData + e"\r\n" )
          ENDIF
+         EXIT
       OTHERWISE  // it is an attachment file
-         cData := MemoRead( cData )
+         cData := hb_MemoRead( cData )
          IF Empty( cData )
             ? "Fatal: Can't read attachment", hb_PValue( i )
             RETURN
          ENDIF
-         oAttach := TIPMail():New()
 
+         oAttach := TIPMail():New()
          oAttach:SetEncoder( "base64" )
          // TODO: mime type magic auto-finder
          cFName := hb_FNameNameExt( hb_PValue( i ) )
@@ -74,7 +77,7 @@ PROCEDURE Main( ... )
          oAttach:SetBody( cData )
 
          oMail:Attach( oAttach )
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    /* Writing stream */

@@ -10,20 +10,17 @@
 PROCEDURE Main( ... )
 
    LOCAL oEncoder
-   LOCAL cData
+   LOCAL cData, nLen
    LOCAL cBuffer := Space( 1024 )
-   LOCAL nLen
    LOCAL lHelp := .F., lDecode := .F., lQp := .F., lUrl := .F.
 
    LOCAL hInput := hb_GetStdIn()
    LOCAL hOutput := hb_GetStdOut()
 
    /* Parameter parsing */
-   FOR nLen := 1 TO PCount()
+   FOR EACH cData IN hb_AParams()
 
-      cData := Lower( hb_PValue( nLen ) )
-
-      SWITCH cData
+      SWITCH Lower( cData )
       CASE "-h"
          lHelp := .T.
          EXIT
