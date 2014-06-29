@@ -2,6 +2,9 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
+ * Copyright 2007 Hannes Ziegler (INetErrorDesc(), lastErrorCode(), lastErrorMessage())
+ * Copyright 2007 Toninho@fwi (::nWrite to work like ::nRead)
+ * Copyright 2009 Luiz Rafael Culik (luiz at xharbour dot com dot br) (Proxy connection)
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,23 +46,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/* 2004-01-13
-      Enhanced tip cliente to conenct to secure smtp servers by Luiz Rafael Culik
-   2007-03-29, Hannes Ziegler
-      Adapted all :new() method(s) so that TIPClient becomes the
-      abstract super class for TIPClientFtp, TIPClientHttp, TIPClientPop and TIPClientSmtp
-
-      Added Methods :INetErrorDesc(), :lastErrorCode() and :lastErrorMessage()
-      Removed method :data() since it calls an undeclared method :getOk()
-      :data() is used in TIPClientSmtp
-
-      Fixed bug in :readToFile()
-   2007-06-01, Toninho@fwi
-      Added data ::nWrite to work like ::nRead
-   2009-06-29, Luiz Rafael Culik (luiz at xharbour dot com dot br)
-      Added support for proxy connection
  */
 
 #include "hbclass.ch"

@@ -2,6 +2,7 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
+ * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (countMail(), retrieveAll())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,11 +43,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/* 2007-04-10, Hannes Ziegler <hz AT knowlexbase.com>
-   Added method :countMail()
-   Added method :retrieveAll()
  */
 
 #include "hbclass.ch"

@@ -2,6 +2,7 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
+ * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (sendMail())
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,10 +44,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
-   Added method :sendMail()
  */
 
 #include "hbclass.ch"

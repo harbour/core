@@ -2,6 +2,7 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
+ * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (setHeader(), attachFile(), detachFile(), getFileName(), isMultiPart(), getMultiParts())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,15 +43,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/* 2007-04-11, Hannes Ziegler <hz AT knowlexbase.com>
-   Added method :setHeader()
-   Added method :attachFile()
-   Added method :detachFile()
-   Added method :getFileName()
-   Added method :isMultiPart()
-   Added method :getMultiParts()
  */
 
 #include "hbclass.ch"
