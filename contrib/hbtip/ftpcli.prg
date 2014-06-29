@@ -73,40 +73,40 @@ CREATE CLASS TIPClientFTP FROM TIPClient
 
    METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )
-   METHOD Read( nLen )
-   METHOD Write( cData, nLen )
    METHOD Close()
-   METHOD TransferStart()
-   METHOD Commit()
-
    METHOD GetReply()
+   METHOD Commit()
+   METHOD ScanLength()
+   METHOD TransferStart()
+
    METHOD Pasv()
+   METHOD Quit()
    METHOD TypeI()
    METHOD TypeA()
    METHOD NoOp()
    METHOD Rest( nPos )
-   METHOD List( cSpec )
-   METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply )
    METHOD Pwd()
    METHOD Cwd( cPath )
    METHOD Dele( cPath )
-   METHOD Port()
-   METHOD SendPort()
-   METHOD Retr( cFile )
-   METHOD Stor( cFile )
-   METHOD Quit()
-   METHOD ScanLength()
-   METHOD ReadAuxPort()
-   METHOD MGet( cSpec, cLocalPath )
-
    METHOD LS( cSpec )
    METHOD Rename( cFrom, cTo )
-   METHOD UploadFile( cLocalFile, cRemoteFile )
-   METHOD DownLoadFile( cLocalFile, cRemoteFile )
    METHOD MKD( cPath )
    METHOD RMD( cPath )
-   METHOD listFiles( cFileSpec )
+   METHOD Retr( cFile )
+   METHOD Stor( cFile )
+   METHOD List( cSpec )
+   METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply )
+
+   METHOD Port()
+   METHOD SendPort()
+   METHOD ReadAuxPort()
+   METHOD Read( nLen )
+   METHOD Write( cData, nLen )
+   METHOD MGet( cSpec, cLocalPath )
    METHOD MPut( cFileSpec, cAttr )
+   METHOD UploadFile( cLocalFile, cRemoteFile )
+   METHOD DownLoadFile( cLocalFile, cRemoteFile )
+   METHOD listFiles( cFileSpec )
    METHOD fileSize( cFileSpec )
 
 ENDCLASS
@@ -157,6 +157,14 @@ METHOD Open( cUrl ) CLASS TIPClientFTP
 
    RETURN .F.
 
+METHOD Close() CLASS TIPClientFTP
+
+   ::InetTimeOut( ::SocketCon )
+
+   ::Quit()
+
+   RETURN ::super:Close()
+
 METHOD GetReply() CLASS TIPClientFTP
 
    LOCAL nLen
@@ -179,87 +187,23 @@ METHOD GetReply() CLASS TIPClientFTP
 
    RETURN .T.
 
-METHOD Pasv() CLASS TIPClientFTP
+METHOD Commit() CLASS TIPClientFTP
 
-   LOCAL aRep
+   hb_inetClose( ::SocketCon )
 
-   ::inetSendAll( ::SocketCon, "PASV" + ::cCRLF )
+   ::SocketCon := ::SocketControl
+   ::bInitialized := .F.
 
    IF ! ::GetReply()
       RETURN .F.
    ENDIF
 
-   aRep := hb_regex( ::RegPasv, ::cReply )
-
-   IF Empty( aRep )
+   // error code?
+   IF hb_LeftEq( ::cReply, "5" )
       RETURN .F.
    ENDIF
 
-   ::cDataServer := aRep[ 2 ] + "." + aRep[ 3 ] + "." + aRep[ 4 ] + "." + aRep[ 5 ]
-   ::nDataPort := Val( aRep[ 6 ] ) * 256 + Val( aRep[ 7 ] )
-
    RETURN .T.
-
-METHOD Close() CLASS TIPClientFTP
-
-   ::InetTimeOut( ::SocketCon )
-
-   ::Quit()
-
-   RETURN ::super:Close()
-
-METHOD Quit() CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "QUIT" + ::cCRLF )
-
-   RETURN ::GetReply()
-
-METHOD TypeI() CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "TYPE I" + ::cCRLF )
-
-   RETURN ::GetReply()
-
-METHOD TypeA() CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "TYPE A" + ::cCRLF )
-
-   RETURN ::GetReply()
-
-METHOD NoOp() CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "NOOP" + ::cCRLF )
-
-   RETURN ::GetReply()
-
-METHOD Rest( nPos ) CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "REST " + hb_ntos( hb_defaultValue( nPos, 0 ) ) + ::cCRLF )
-
-   RETURN ::GetReply()
-
-METHOD CWD( cPath ) CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "CWD " + cPath + ::cCRLF )
-
-   RETURN ::GetReply()
-
-METHOD PWD() CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "PWD" + ::cCRLF )
-   IF ::GetReply()
-      ::cReply := SubStr( ::cReply, At( '"', ::cReply ) + 1, ;
-         RAt( '"', ::cReply ) - At( '"', ::cReply ) - 1 )
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
-
-METHOD Dele( cPath ) CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "DELE " + cPath + ::cCRLF )
-
-   RETURN ::GetReply()
 
 // scan last reply for an hint of length
 METHOD ScanLength() CLASS TIPClientFTP
@@ -315,23 +259,157 @@ METHOD TransferStart() CLASS TIPClientFTP
 
    RETURN .T.
 
-METHOD Commit() CLASS TIPClientFTP
+METHOD Pasv() CLASS TIPClientFTP
 
-   hb_inetClose( ::SocketCon )
+   LOCAL aRep
 
-   ::SocketCon := ::SocketControl
-   ::bInitialized := .F.
+   ::inetSendAll( ::SocketCon, "PASV" + ::cCRLF )
 
    IF ! ::GetReply()
       RETURN .F.
    ENDIF
 
-   // error code?
-   IF hb_LeftEq( ::cReply, "5" )
+   aRep := hb_regex( ::RegPasv, ::cReply )
+
+   IF Empty( aRep )
       RETURN .F.
    ENDIF
 
+   ::cDataServer := aRep[ 2 ] + "." + aRep[ 3 ] + "." + aRep[ 4 ] + "." + aRep[ 5 ]
+   ::nDataPort := Val( aRep[ 6 ] ) * 256 + Val( aRep[ 7 ] )
+
    RETURN .T.
+
+METHOD Quit() CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "QUIT" + ::cCRLF )
+
+   RETURN ::GetReply()
+
+METHOD TypeI() CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "TYPE I" + ::cCRLF )
+
+   RETURN ::GetReply()
+
+METHOD TypeA() CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "TYPE A" + ::cCRLF )
+
+   RETURN ::GetReply()
+
+METHOD NoOp() CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "NOOP" + ::cCRLF )
+
+   RETURN ::GetReply()
+
+METHOD Rest( nPos ) CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "REST " + hb_ntos( hb_defaultValue( nPos, 0 ) ) + ::cCRLF )
+
+   RETURN ::GetReply()
+
+METHOD PWD() CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "PWD" + ::cCRLF )
+   IF ::GetReply()
+      ::cReply := SubStr( ::cReply, At( '"', ::cReply ) + 1, ;
+         RAt( '"', ::cReply ) - At( '"', ::cReply ) - 1 )
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+METHOD CWD( cPath ) CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "CWD " + cPath + ::cCRLF )
+
+   RETURN ::GetReply()
+
+METHOD Dele( cPath ) CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "DELE " + cPath + ::cCRLF )
+
+   RETURN ::GetReply()
+
+METHOD LS( cSpec ) CLASS TIPClientFTP
+
+   IF ::bUsePasv .AND. ! ::Pasv()
+#if 0
+      ::bUsePasv := .F.
+#endif
+      RETURN .F.
+   ENDIF
+
+   IF ! ::bUsePasv .AND. ! ::Port()
+      RETURN .F.
+   ENDIF
+
+   ::inetSendAll( ::SocketCon, "NLST " + hb_defaultValue( cSpec, "" ) + ::cCRLF )
+
+   RETURN iif( ::GetReply(), ::ReadAuxPort(), "" )
+
+METHOD Rename( cFrom, cTo ) CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "RNFR " + hb_defaultValue( cFrom, "" ) + ::cCRLF )
+   IF ::GetReply()
+      ::inetSendAll( ::SocketCon, "RNTO " + hb_defaultValue( cTo, "" ) + ::cCRLF )
+      RETURN ::GetReply()
+   ENDIF
+
+   RETURN .F.
+
+// Create a new folder
+METHOD MKD( cPath ) CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "MKD " + cPath + ::cCRLF )
+
+   RETURN ::GetReply()
+
+// Delete an existing folder
+METHOD RMD( cPath ) CLASS TIPClientFTP
+
+   ::inetSendAll( ::SocketCon, "RMD " + cPath + ::cCRLF )
+
+   RETURN ::GetReply()
+
+METHOD Retr( cFile ) CLASS TIPClientFTP
+
+   IF ::bUsePasv .AND. ! ::Pasv()
+#if 0
+      ::bUsePasv := .F.
+#endif
+      RETURN .F.
+   ENDIF
+
+   ::inetSendAll( ::SocketCon, "RETR " + cFile + ::cCRLF )
+
+   IF ::TransferStart()
+      ::ScanLength()
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+METHOD Stor( cFile ) CLASS TIPClientFTP
+
+   IF ::bUsePasv .AND. ! ::Pasv()
+#if 0
+      ::bUsePasv := .F.
+#endif
+      RETURN .F.
+   ENDIF
+
+   ::inetSendAll( ::SocketCon, "STOR " + cFile + ::cCRLF )
+
+   // It is important not to delete these lines in order not to disrupt the timing of
+   // the responses, which can lead to failures in transfers.
+   IF ! ::bUsePasv
+      ::GetReply()
+   ENDIF
+
+   RETURN ::TransferStart()
 
 METHOD List( cSpec ) CLASS TIPClientFTP
 
@@ -377,47 +455,6 @@ METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply ) CLASS TIPClientFTP
 
    RETURN .T.
 
-METHOD ReadAuxPort() CLASS TIPClientFTP
-
-   LOCAL cRet
-   LOCAL cList
-
-   IF ::TransferStart()
-
-      cList := ""
-      DO WHILE ( cRet := ::super:Read( 512 ) ) != NIL .AND. hb_BLen( cRet ) > 0
-         cList += cRet
-      ENDDO
-
-      hb_inetClose( ::SocketCon )
-      ::SocketCon := ::SocketControl
-
-      IF ::GetReply()
-         RETURN cList
-      ENDIF
-   ENDIF
-
-   RETURN NIL
-
-METHOD Stor( cFile ) CLASS TIPClientFTP
-
-   IF ::bUsePasv .AND. ! ::Pasv()
-#if 0
-      ::bUsePasv := .F.
-#endif
-      RETURN .F.
-   ENDIF
-
-   ::inetSendAll( ::SocketCon, "STOR " + cFile + ::cCRLF )
-
-   // It is important not to delete these lines in order not to disrupt the timing of
-   // the responses, which can lead to failures in transfers.
-   IF ! ::bUsePasv
-      ::GetReply()
-   ENDIF
-
-   RETURN ::TransferStart()
-
 METHOD Port() CLASS TIPClientFTP
 
    LOCAL nPort
@@ -447,6 +484,28 @@ METHOD SendPort() CLASS TIPClientFTP
    ::inetSendAll( ::SocketCon, "PORT " + cAddr + cPort + ::cCRLF )
 
    RETURN ::GetReply()
+
+METHOD ReadAuxPort() CLASS TIPClientFTP
+
+   LOCAL cRet
+   LOCAL cList
+
+   IF ::TransferStart()
+
+      cList := ""
+      DO WHILE ( cRet := ::super:Read( 512 ) ) != NIL .AND. hb_BLen( cRet ) > 0
+         cList += cRet
+      ENDDO
+
+      hb_inetClose( ::SocketCon )
+      ::SocketCon := ::SocketControl
+
+      IF ::GetReply()
+         RETURN cList
+      ENDIF
+   ENDIF
+
+   RETURN NIL
 
 METHOD Read( nLen ) CLASS TIPClientFTP
 
@@ -501,24 +560,6 @@ METHOD Write( cData, nLen ) CLASS TIPClientFTP
    ENDIF
 
    RETURN ::super:Write( cData, nLen, .F. )
-
-METHOD Retr( cFile ) CLASS TIPClientFTP
-
-   IF ::bUsePasv .AND. ! ::Pasv()
-#if 0
-      ::bUsePasv := .F.
-#endif
-      RETURN .F.
-   ENDIF
-
-   ::inetSendAll( ::SocketCon, "RETR " + cFile + ::cCRLF )
-
-   IF ::TransferStart()
-      ::ScanLength()
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
 
 METHOD MGet( cSpec, cLocalPath ) CLASS TIPClientFTP
 
@@ -604,33 +645,6 @@ METHOD UploadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    RETURN ::WriteFromFile( cLocalFile )
 
-METHOD LS( cSpec ) CLASS TIPClientFTP
-
-   IF ::bUsePasv .AND. ! ::Pasv()
-#if 0
-      ::bUsePasv := .F.
-#endif
-      RETURN .F.
-   ENDIF
-
-   IF ! ::bUsePasv .AND. ! ::Port()
-      RETURN .F.
-   ENDIF
-
-   ::inetSendAll( ::SocketCon, "NLST " + hb_defaultValue( cSpec, "" ) + ::cCRLF )
-
-   RETURN iif( ::GetReply(), ::ReadAuxPort(), "" )
-
-METHOD Rename( cFrom, cTo ) CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "RNFR " + hb_defaultValue( cFrom, "" ) + ::cCRLF )
-   IF ::GetReply()
-      ::inetSendAll( ::SocketCon, "RNTO " + hb_defaultValue( cTo, "" ) + ::cCRLF )
-      RETURN ::GetReply()
-   ENDIF
-
-   RETURN .F.
-
 METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    LOCAL cPath
@@ -663,20 +677,6 @@ METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
    ENDIF
 
    RETURN ::ReadToFile( cLocalFile, , ::nLength )
-
-// Create a new folder
-METHOD MKD( cPath ) CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "MKD " + cPath + ::cCRLF )
-
-   RETURN ::GetReply()
-
-// Delete an existing folder
-METHOD RMD( cPath ) CLASS TIPClientFTP
-
-   ::inetSendAll( ::SocketCon, "RMD " + cPath + ::cCRLF )
-
-   RETURN ::GetReply()
 
 // Return total file size for <cFileSpec>
 METHOD fileSize( cFileSpec ) CLASS TIPClientFTP
