@@ -1,6 +1,11 @@
 /*
  * TIP Class oriented Internet protocol library (FTP)
  *
+ * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (RMD(), listFiles(), MPut())
+ * Copyright 2007 Toninho@fwi (UserCommand())
+ * Copyright 2007 miguelangel@marchuet.net (NoOp(), Rest(), Port(), SendPort())
+ * Copyright 2007 Patrick Mast <patrick/dot/mast/at/xharbour.com> (fileSize())
+ * Copyright 2005 Rafa Carmona (LS(), Rename(), UploadFile(), DownLoadFile(), MKD())
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -44,50 +49,9 @@
  *
  */
 
-/* 2007-04-19, Hannes Ziegler <hz AT knowlexbase.com>
-   Added method :RMD()
-   Added method :listFiles()
-   Added method :MPut()
-   Changed method :DownloadFile() to enable display of progress
-   Changed method :UploadFile() to enable display of progress
-
-   2007-06-01, Toninho@fwi
-   Added method UserCommand( cCommand, lPasv, lReadPort, lGetReply )
-
-   2007-07-12, miguelangel@marchuet.net
-   Added method :NoOp()
-   Added method :Rest( nPos )
-   Changed method :LS( cSpec )
-   Changed method :List( cSpec )
-   Changed method :TransferStart()
-   Changed method :Stor( cFile )
-   Changed method :UploadFile( cLocalFile, cRemoteFile )
-   Changed method :DownloadFile( cLocalFile, cRemoteFile )
-
-   Added support to Port transfer mode
-   Added method :Port()
-   Added method :SendPort()
-
-   Cleaned unused variables.
-
-   2007-09-08 21:34 UTC+0100 Patrick Mast <patrick/dot/mast/at/xharbour.com>
-     * Formatting
-     + METHOD StartCleanLogFile()
-       Starts a clean log file, overwriting current logfile.
-     + METHOD fileSize( cFileSpec )
-       Calculates the filesize of the given files specifications.
-     + DATA cLogFile
-       Holds the filename of the current logfile.
-     ! Fixed logfilename in New(), now its not limited to 9999 log files anymore
-     ! Fixed MGet() due to changes in hb_ATokens()
-     ! Fixed listFiles() due to changes in hb_ATokens()
-     ! listFiles() is still buggy. Needs to be fixed.
- */
-
 #include "hbclass.ch"
 
 #include "directry.ch"
-#include "fileio.ch"
 
 #include "tip.ch"
 
@@ -133,22 +97,19 @@ CREATE CLASS TIPClientFTP FROM TIPClient
    METHOD Quit()
    METHOD ScanLength()
    METHOD ReadAuxPort()
-   METHOD mget( cSpec, cLocalPath )
-
-   // Method below contributed by Rafa Carmona
+   METHOD MGet( cSpec, cLocalPath )
 
    METHOD LS( cSpec )
    METHOD Rename( cFrom, cTo )
-   METHOD UploadFile( cLocalFile, cRemoteFile )    // new method for file upload
-   METHOD DownLoadFile( cLocalFile, cRemoteFile )  // new method to download file
-   METHOD MKD( cPath )                             // new method to create an directory on ftp server
+   METHOD UploadFile( cLocalFile, cRemoteFile )
+   METHOD DownLoadFile( cLocalFile, cRemoteFile )
+   METHOD MKD( cPath )
    METHOD RMD( cPath )
    METHOD listFiles( cFileSpec )
    METHOD MPut( cFileSpec, cAttr )
    METHOD fileSize( cFileSpec )
 
 ENDCLASS
-
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientFTP
 
@@ -294,7 +255,7 @@ METHOD PWD() CLASS TIPClientFTP
 
    RETURN .F.
 
-METHOD DELE( cPath ) CLASS TIPClientFTP
+METHOD Dele( cPath ) CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "DELE " + cPath + ::cCRLF )
 
@@ -377,7 +338,9 @@ METHOD List( cSpec ) CLASS TIPClientFTP
    LOCAL cStr
 
    IF ::bUsePasv .AND. ! ::Pasv()
-      // ::bUsePasv := .F.
+#if 0
+      ::bUsePasv := .F.
+#endif
       RETURN NIL
    ENDIF
    IF ! ::bUsePasv .AND. ! ::Port()
@@ -439,7 +402,9 @@ METHOD ReadAuxPort() CLASS TIPClientFTP
 METHOD Stor( cFile ) CLASS TIPClientFTP
 
    IF ::bUsePasv .AND. ! ::Pasv()
-      // ::bUsePasv := .F.
+#if 0
+      ::bUsePasv := .F.
+#endif
       RETURN .F.
    ENDIF
 
@@ -540,7 +505,9 @@ METHOD Write( cData, nLen ) CLASS TIPClientFTP
 METHOD Retr( cFile ) CLASS TIPClientFTP
 
    IF ::bUsePasv .AND. ! ::Pasv()
-      // ::bUsePasv := .F.
+#if 0
+      ::bUsePasv := .F.
+#endif
       RETURN .F.
    ENDIF
 
@@ -553,7 +520,7 @@ METHOD Retr( cFile ) CLASS TIPClientFTP
 
    RETURN .F.
 
-METHOD MGET( cSpec, cLocalPath ) CLASS TIPClientFTP
+METHOD MGet( cSpec, cLocalPath ) CLASS TIPClientFTP
 
    LOCAL cStr, cFile
 
@@ -580,7 +547,7 @@ METHOD MGET( cSpec, cLocalPath ) CLASS TIPClientFTP
 
    RETURN cStr
 
-METHOD MPUT( cFileSpec, cAttr ) CLASS TIPClientFTP
+METHOD MPut( cFileSpec, cAttr ) CLASS TIPClientFTP
 
    LOCAL cPath, cFile, cExt, aFile
    LOCAL cStr
@@ -640,7 +607,9 @@ METHOD UploadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 METHOD LS( cSpec ) CLASS TIPClientFTP
 
    IF ::bUsePasv .AND. ! ::Pasv()
-      // ::bUsePasv := .F.
+#if 0
+      ::bUsePasv := .F.
+#endif
       RETURN .F.
    ENDIF
 
@@ -695,7 +664,6 @@ METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    RETURN ::ReadToFile( cLocalFile, , ::nLength )
 
-
 // Create a new folder
 METHOD MKD( cPath ) CLASS TIPClientFTP
 
@@ -703,14 +671,12 @@ METHOD MKD( cPath ) CLASS TIPClientFTP
 
    RETURN ::GetReply()
 
-
 // Delete an existing folder
 METHOD RMD( cPath ) CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "RMD " + cPath + ::cCRLF )
 
    RETURN ::GetReply()
-
 
 // Return total file size for <cFileSpec>
 METHOD fileSize( cFileSpec ) CLASS TIPClientFTP
@@ -724,15 +690,15 @@ METHOD fileSize( cFileSpec ) CLASS TIPClientFTP
 
    RETURN nSize
 
-
 // Parse the :list() string into a Directory() compatible 2-dim array
 METHOD listFiles( cFileSpec ) CLASS TIPClientFTP
 
    LOCAL aMonth := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-   LOCAL cList, aList, aFile, cEntry, nStart, nEnd
+
+   LOCAL aList, aFile, cEntry, nStart, nEnd
    LOCAL cYear, cMonth, cDay, cTime
 
-   cList := ::list( cFileSpec )
+   LOCAL cList := ::list( cFileSpec )
 
    IF Empty( cList )
       RETURN {}

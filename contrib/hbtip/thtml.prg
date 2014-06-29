@@ -1566,7 +1566,7 @@ STATIC FUNCTION CutStr( cCut, cString )
 
 FUNCTION THtmlInit( lInit )
 
-   IF HB_ISLOGICAL( lInit ) .AND. ! lInit
+   IF ! hb_defaultValue( lInit, .T. )
       t_aHA := NIL
       t_hHT := NIL
 #ifdef HB_LEGACY_LEVEL4
