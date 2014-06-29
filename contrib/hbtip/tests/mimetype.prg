@@ -1,6 +1,4 @@
-/* TIP MIME type test
- * This test tries to detect the MIME type of a given file
- */
+/* This test tries to detect the MIME type of a given file */
 
 #require "hbtip"
 

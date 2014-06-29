@@ -1,4 +1,4 @@
-/* TIP HTTP advanced operations Test */
+/* TIP HTTP advanced operations test */
 
 #require "hbssl"
 #require "hbtip"

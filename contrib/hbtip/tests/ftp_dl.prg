@@ -8,15 +8,11 @@ PROCEDURE Main( cURL, cMask )
 
    LOCAL lRetVal := .T.
 
-   LOCAL aFiles
-   LOCAL oURL
-   LOCAL oFTP
-   LOCAL aFile
+   LOCAL aFiles, aFile
+   LOCAL oFTP, oURL
 
    /* fetch files to transfer */
-   aFiles := { { hb_defaultValue( cMask, __FILE__ ),,, } }
-
-   IF ! Empty( aFiles )
+   IF ! Empty( aFiles := { { hb_defaultValue( cMask, __FILE__ ),,, } } )
 
       hb_default( @cURL, "ftp://user:pass@ftp.example.com" )
 

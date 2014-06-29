@@ -9,10 +9,9 @@
 
 PROCEDURE Main( ... )
 
-   LOCAL oEncoder
-   LOCAL cData, nLen
-   LOCAL cBuffer := Space( 1024 )
-   LOCAL lHelp := .F., lDecode := .F., lQp := .F., lUrl := .F.
+   LOCAL oEncoder, cEncoder := "base64"
+   LOCAL lDecode := .F., lHelp := .F.
+   LOCAL cData, nLen, cBuffer
 
    LOCAL hInput := hb_GetStdIn()
    LOCAL hOutput := hb_GetStdOut()
@@ -28,10 +27,10 @@ PROCEDURE Main( ... )
          lDecode := .T.
          EXIT
       CASE "-q"
-         lQp := .T.
+         cEncoder := "quoted-printable"
          EXIT
       CASE "-u"
-         lUrl := .T.
+         cEncoder := "url"
          EXIT
       OTHERWISE
          IF hb_FileExists( cData ) .AND. hInput == hb_GetStdIn()
@@ -58,17 +57,9 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
 
-   /* Selecting the encoder */
-   IF lUrl
-      oEncoder := TIPEncoder():New( "url" )
-   ELSEIF lQp
-      oEncoder := TIPEncoder():New( "quoted-printable" )
-   ELSE
-      oEncoder := TIPEncoder():New( "base64" )
-   ENDIF
-
    /* Reading input stream */
    cData := ""
+   cBuffer := Space( 1024 )
    DO WHILE ( nLen := FRead( hInput, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
       cData += hb_BLeft( cBuffer, nLen )
    ENDDO
@@ -77,6 +68,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    /* Encoding/decoding */
+   oEncoder := TIPEncoder():New( cEncoder )
    IF lDecode
       cData := oEncoder:Decode( cData )
    ELSE
