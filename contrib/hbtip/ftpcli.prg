@@ -438,12 +438,13 @@ METHOD ReadAuxPort( cLocalFile ) CLASS TIPClientFTP
       ENDIF
    ENDDO
 
+   IF nFile != F_ERROR
+      FClose( nFile )
+   ENDIF
+
    hb_inetClose( ::SocketCon )
    ::SocketCon := ::SocketControl
    IF ::GetReply()
-      IF nFile != F_ERROR
-         FClose( nFile )
-      ENDIF
       RETURN cList
    ENDIF
 
