@@ -11,13 +11,13 @@ PROCEDURE Main( cFileName )
 
    LOCAL oMail, cData, i
 
-   IF ! HB_ISSTRING( cFileName )
-      cData := MemoRead( cFileName )
-      IF FError() > 0
+   IF HB_ISSTRING( cFileName )
+      IF Empty( cData := MemoRead( cFileName ) )
          ? "Can't open", cFileName
          RETURN
       ENDIF
    ENDIF
+
    oMail := TIPMail():New()
    IF oMail:FromString( cData ) == 0
       ? "Malformed mail. Dumping up to where parsed"

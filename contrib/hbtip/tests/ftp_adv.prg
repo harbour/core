@@ -19,6 +19,8 @@ PROCEDURE Main( cUrl )
       RETURN
    ENDIF
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    oFTP := TIPClientFTP():New( oURL )
    oFTP:nConnTimeout := 20000
    ? "Connecting with", oURL:cServer
