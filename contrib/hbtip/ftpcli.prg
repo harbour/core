@@ -132,7 +132,7 @@ CREATE CLASS TIPClientFTP FROM TIPClient
    METHOD Stor( cFile )
    METHOD Quit()
    METHOD ScanLength()
-   METHOD ReadAuxPort( cLocalFile )
+   METHOD ReadAuxPort()
    METHOD mget( cSpec, cLocalPath )
 
    // Method below contributed by Rafa Carmona
@@ -414,38 +414,24 @@ METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply ) CLASS TIPClientFTP
 
    RETURN .T.
 
-METHOD ReadAuxPort( cLocalFile ) CLASS TIPClientFTP
+METHOD ReadAuxPort() CLASS TIPClientFTP
 
    LOCAL cRet
    LOCAL cList
-   LOCAL nFile
 
-   IF ! ::TransferStart()
-      RETURN NIL
-   ENDIF
+   IF ::TransferStart()
 
-   IF HB_ISSTRING( cLocalFile ) .AND. ! Empty( cLocalFile )
-      nFile := FCreate( cLocalFile )
-   ELSE
-      nFile := F_ERROR
-   ENDIF
+      cList := ""
+      DO WHILE ( cRet := ::super:Read( 512 ) ) != NIL .AND. hb_BLen( cRet ) > 0
+         cList += cRet
+      ENDDO
 
-   cList := ""
-   DO WHILE ( cRet := ::super:Read( 512 ) ) != NIL .AND. Len( cRet ) > 0
-      cList += cRet
-      IF nFile != F_ERROR
-         FWrite( nFile, cRet )
+      hb_inetClose( ::SocketCon )
+      ::SocketCon := ::SocketControl
+
+      IF ::GetReply()
+         RETURN cList
       ENDIF
-   ENDDO
-
-   IF nFile != F_ERROR
-      FClose( nFile )
-   ENDIF
-
-   hb_inetClose( ::SocketCon )
-   ::SocketCon := ::SocketControl
-   IF ::GetReply()
-      RETURN cList
    ENDIF
 
    RETURN NIL

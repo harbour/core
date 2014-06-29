@@ -172,7 +172,7 @@ METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
    IF ! "Content-Type" $ ::hFields
       ::inetSendAll( ::SocketCon, "Content-Type: application/x-www-form-urlencoded" + ::cCRLF )
    ENDIF
-   ::inetSendAll( ::SocketCon, "Content-Length: " + hb_ntos( Len( cData ) ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "Content-Length: " + hb_ntos( hb_BLen( cData ) ) + ::cCRLF )
 
    // End of header
    ::inetSendAll( ::SocketCon, ::cCRLF )
@@ -571,7 +571,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
       ::inetSendAll( ::SocketCon, "Content-Type: multipart/form-data; boundary=" + ::boundary( 2 ) + ::cCrlf )
    ENDIF
 
-   ::inetSendAll( ::SocketCon, "Content-Length: " + hb_ntos( Len( cData ) ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "Content-Length: " + hb_ntos( hb_BLen( cData ) ) + ::cCRLF )
    // End of header
    ::inetSendAll( ::SocketCon, ::cCRLF )
 
