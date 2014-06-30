@@ -9,7 +9,6 @@ PROCEDURE Main( cProxy )
 
    LOCAL cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com"
    LOCAL oHTTP := TIPClientHTTP():New( cURL, .T. )
-   LOCAL oProxy
 
    ? "URL:", cURL
 
