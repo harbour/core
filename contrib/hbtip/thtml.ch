@@ -51,32 +51,32 @@
    https://sourceforge.net/projects/tidy/ */
 
 #define CM_UNKNOWN                  0
-#define CM_EMPTY                    0x000001   /* Elements with no content. Map to HTML specification. */
-#define CM_HTML                     0x000002   /* Elements that appear outside of "body". */
-#define CM_HEAD                     0x000004   /* Elements that can appear within HEAD. */
-#define CM_BLOCK                    0x000008   /* HTML "block" elements. */
-#define CM_INLINE                   0x000010   /* HTML "inline" elements. */
-#define CM_LIST                     0x000020   /* Elements that mark list item ("li"). */
-#define CM_DEFLIST                  0x000040   /* Elements that mark definition list item ("dl", "dt"). */
-#define CM_TABLE                    0x000080   /* Elements that can appear inside TABLE. */
-#define CM_ROWGRP                   0x000100   /* Used for "thead", "tfoot" or "tbody". */
-#define CM_ROW                      0x000200   /* Used for "td", "th" */
-#define CM_FIELD                    0x000400   /* Elements whose content must be protected against white space movement.
-                                                  Includes some elements that can found in forms. */
-#define CM_OBJECT                   0x000800   /* Used to avoid propagating inline emphasis inside some elements
-                                                  such as OBJECT or APPLET. */
-#define CM_PARAM                    0x001000   /* Elements that allows "PARAM". */
-#define CM_FRAMES                   0x002000   /* "FRAME", "FRAMESET", "NOFRAMES". Used in ParseFrameSet. */
-#define CM_HEADING                  0x004000   /* Heading elements (h1, h2, ...). */
-#define CM_OPT                      0x008000   /* Elements with an optional end tag. */
-#define CM_IMG                      0x010000   /* Elements that use "align" attribute for vertical position. */
-#define CM_MIXED                    0x020000   /* Elements with inline and block model. Used to avoid calling InlineDup. */
-#define CM_NO_INDENT                0x040000   /* Elements whose content needs to be indented only if containing one
-                                                  CM_BLOCK element. */
-#define CM_OBSOLETE                 0x080000   /* Elements that are obsolete (such as "dir", "menu"). */
-#define CM_NEW                      0x100000   /* User defined elements. Used to determine how attributes wihout value
-                                                  should be printed. */
-#define CM_OMITST                   0x200000   /* Elements that cannot be omitted. */
+#define CM_EMPTY                    0x000001  /* Elements with no content. Map to HTML specification. */
+#define CM_HTML                     0x000002  /* Elements that appear outside of "body". */
+#define CM_HEAD                     0x000004  /* Elements that can appear within HEAD. */
+#define CM_BLOCK                    0x000008  /* HTML "block" elements. */
+#define CM_INLINE                   0x000010  /* HTML "inline" elements. */
+#define CM_LIST                     0x000020  /* Elements that mark list item ("li"). */
+#define CM_DEFLIST                  0x000040  /* Elements that mark definition list item ("dl", "dt"). */
+#define CM_TABLE                    0x000080  /* Elements that can appear inside TABLE. */
+#define CM_ROWGRP                   0x000100  /* Used for "thead", "tfoot" or "tbody". */
+#define CM_ROW                      0x000200  /* Used for "td", "th" */
+#define CM_FIELD                    0x000400  /* Elements whose content must be protected against white space movement.
+                                                 Includes some elements that can found in forms. */
+#define CM_OBJECT                   0x000800  /* Used to avoid propagating inline emphasis inside some elements
+                                                 such as OBJECT or APPLET. */
+#define CM_PARAM                    0x001000  /* Elements that allows "PARAM". */
+#define CM_FRAMES                   0x002000  /* "FRAME", "FRAMESET", "NOFRAMES". Used in ParseFrameSet. */
+#define CM_HEADING                  0x004000  /* Heading elements (h1, h2, ...). */
+#define CM_OPT                      0x008000  /* Elements with an optional end tag. */
+#define CM_IMG                      0x010000  /* Elements that use "align" attribute for vertical position. */
+#define CM_MIXED                    0x020000  /* Elements with inline and block model. Used to avoid calling InlineDup. */
+#define CM_NO_INDENT                0x040000  /* Elements whose content needs to be indented only if containing one
+                                                 CM_BLOCK element. */
+#define CM_OBSOLETE                 0x080000  /* Elements that are obsolete (such as "dir", "menu"). */
+#define CM_NEW                      0x100000  /* User defined elements. Used to determine how attributes wihout value
+                                                 should be printed. */
+#define CM_OMITST                   0x200000  /* Elements that cannot be omitted. */
 
 /* Constants for HTML attributes adopted from Tidy library
    https://sourceforge.net/projects/tidy/ */

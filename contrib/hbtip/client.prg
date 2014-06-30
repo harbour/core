@@ -310,7 +310,7 @@ METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
    DO WHILE bMoreDataToRead
 
       szResponse := Space( 1 )
-      IF ::inetRecv( ::SocketCon, @szResponse, hb_BLen( szResponse ) ) == 0
+      IF ::inetRecv( ::SocketCon, @szResponse, hb_BLen( szResponse ) ) <= 0
          RETURN .F.
       ENDIF
       sResponse += szResponse
@@ -798,10 +798,17 @@ METHOD Log( ... ) CLASS TIPClient
 
 METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS TIPClient
 
-   ::cProxyHost     := cProxyHost
-   ::nProxyPort     := nProxyPort
-   ::cProxyUser     := cProxyUser
-   ::cProxyPassword := cProxyPassword
+   IF HB_ISOBJECT( cProxyHost ) .AND. cProxyHost:className() == "TURL"
+      ::cProxyHost     := cProxyHost:cServer
+      ::nProxyPort     := cProxyHost:nPort
+      ::cProxyUser     := cProxyHost:cUserid
+      ::cProxyPassword := cProxyHost:cPassword
+   ELSE
+      ::cProxyHost     := hb_defaultValue( cProxyHost, "" )
+      ::nProxyPort     := hb_defaultValue( nProxyPort, 0 )
+      ::cProxyUser     := hb_defaultValue( cProxyUser, "" )
+      ::cProxyPassword := hb_defaultValue( cProxyPassword, "" )
+   ENDIF
 
    RETURN Self
 

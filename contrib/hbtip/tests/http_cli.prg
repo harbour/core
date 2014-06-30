@@ -14,8 +14,7 @@ PROCEDURE Main( cProxy )
    ? "URL:", cURL
 
    IF HB_ISSTRING( cProxy )
-      oProxy := TUrl():New( cProxy )
-      oHTTP:setProxy( oProxy:cServer, oProxy:nPort )
+      oHTTP:setProxy( TUrl():New( cProxy ) )
    ENDIF
    oHTTP:setCookie( "test01=value01" )
 
