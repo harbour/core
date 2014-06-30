@@ -149,59 +149,60 @@ FUNCTION tip_MailAssemble( ;
       oAttach:SetFieldPart( "Content-Type", cContentType )
       oAttach:SetBody( cBody )
       oMail:Attach( oAttach )
-   ENDIF
 
-   FOR EACH aThisFile IN aFiles
+      FOR EACH aThisFile IN aFiles
 
-      cMimeType := NIL
-      nAttr := 0
+         cMimeType := NIL
+         nAttr := 0
 
-      IF HB_ISSTRING( aThisFile )
-         cFile := aThisFile
-         cData := hb_MemoRead( cFile )
-         hb_FGetAttr( cFile, @nAttr )
-      ELSEIF HB_ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
-         cFile := aThisFile[ 1 ]
-         IF HB_ISSTRING( aThisFile[ 2 ] )
-            cData := aThisFile[ 2 ]
-            hb_default( @cFile, "unnamed" )
-         ELSEIF HB_ISSTRING( cFile )
+         DO CASE
+         CASE HB_ISSTRING( aThisFile )
+            cFile := aThisFile
             cData := hb_MemoRead( cFile )
             hb_FGetAttr( cFile, @nAttr )
-         ELSE
-            LOOP  /* No filename and no content. */
+         CASE HB_ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
+            cFile := aThisFile[ 1 ]
+            IF HB_ISSTRING( aThisFile[ 2 ] )
+               cData := aThisFile[ 2 ]
+               hb_default( @cFile, "unnamed" )
+            ELSEIF HB_ISSTRING( cFile )
+               cData := hb_MemoRead( cFile )
+               hb_FGetAttr( cFile, @nAttr )
+            ELSE
+               LOOP  /* No filename and no content. */
+            ENDIF
+            IF Len( aThisFile ) >= 3 .AND. HB_ISSTRING( aThisFile[ 3 ] )
+               cMimeType := aThisFile[ 3 ]
+            ENDIF
+         OTHERWISE
+            LOOP
+         ENDCASE
+
+         hb_default( @cMimeType, tip_FileNameMimeType( cFile ) )
+
+         cFileCP := iif( Empty( cCharsetCP ), cFile, hb_Translate( cFile,, cCharsetCP ) )
+
+         oAttach := TIPMail():New()
+         oAttach:SetCharset( cCharset )
+         oAttach:SetEncoder( iif( hb_LeftEq( cMimeType, "text/" ), cEncoding, "base64" ) )
+         oAttach:SetFieldPart( "Content-Disposition", "attachment" )
+         oAttach:SetFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFileCP ) )  // Usually, original filename is set here
+         IF cMimeType == "unknown"
+            cMimeType := "application/octet-stream"
          ENDIF
-         IF Len( aThisFile ) >= 3 .AND. HB_ISSTRING( aThisFile[ 3 ] )
-            cMimeType := aThisFile[ 3 ]
+         oAttach:SetFieldPart( "Content-Type", cMimeType )
+         IF Lower( hb_FNameExt( cFile ) ) == ".html" .OR. ;
+            Lower( hb_FNameExt( cFile ) ) == ".htm"
+            oAttach:SetFieldOption( "Content-Type", "charset", cCharset )
          ENDIF
-      ELSE
-         LOOP
-      ENDIF
-
-      hb_default( @cMimeType, tip_FileNameMimeType( cFile ) )
-
-      cFileCP := iif( Empty( cCharsetCP ), cFile, hb_Translate( cFile,, cCharsetCP ) )
-
-      oAttach := TIPMail():New()
-      oAttach:SetCharset( cCharset )
-      oAttach:SetEncoder( iif( hb_LeftEq( cMimeType, "text/" ), cEncoding, "base64" ) )
-      oAttach:SetFieldPart( "Content-Disposition", "attachment" )
-      oAttach:SetFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFileCP ) )  // Usually, original filename is set here
-      IF cMimeType == "unknown"
-         cMimeType := "text/plain"  /* TOFIX: Such fallback doesn't seem right. [vszakats] */
-      ENDIF
-      oAttach:SetFieldPart( "Content-Type", cMimeType )
-      IF Lower( hb_FNameExt( cFile ) ) == ".html" .OR. ;
-         Lower( hb_FNameExt( cFile ) ) == ".htm"
-         oAttach:SetFieldOption( "Content-Type", "charset", cCharset )
-      ENDIF
-      oAttach:SetFieldOption( "Content-Type", "name", hb_FNameNameExt( cFileCP ) )  // Some e-mail clients use Content-Type to check for filename
-      IF nAttr != 0
-         oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( __tip_FAttrToUmask( nAttr ), 4 ) )
-      ENDIF
-      oAttach:SetBody( cData )
-      oMail:Attach( oAttach )
-   NEXT
+         oAttach:SetFieldOption( "Content-Type", "name", hb_FNameNameExt( cFileCP ) )  // Some e-mail clients use Content-Type to check for filename
+         IF nAttr != 0
+            oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( __tip_FAttrToUmask( nAttr ), 4 ) )
+         ENDIF
+         oAttach:SetBody( cData )
+         oMail:Attach( oAttach )
+      NEXT
+   ENDIF
 
    IF HB_ISEVALITEM( bSMIME ) .AND. ;
       HB_ISSTRING( tmp := Eval( bSMIME, oMail:ToString() ) )
@@ -220,7 +221,7 @@ FUNCTION tip_MailAssemble( ;
    IF lRead
       oMail:SetFieldPart( "Disposition-Notification-To", tip_GetRawEmail( cFrom ) )
    ENDIF
-   IF nPriority != 3
+   IF Int( nPriority ) != 3
       oMail:SetFieldPart( "X-Priority", hb_ntos( Int( nPriority ) ) )
    ENDIF
 
