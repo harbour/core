@@ -7,26 +7,25 @@ REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main( cProxy )
 
-   LOCAL cURL
-   LOCAL oHttp
+   LOCAL cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com"
+   LOCAL oHTTP := TIPClientHTTP():New( cURL, .T. )
    LOCAL oProxy
 
-   ? "URL:", cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com"
+   ? "URL:", cURL
 
-   oHttp := TIPClientHTTP():New( cURL, .T. )
-   IF cProxy != NIL
+   IF HB_ISSTRING( cProxy )
       oProxy := TUrl():New( cProxy )
-      oHttp:setProxy( oProxy:cServer, oProxy:nPort )
+      oHTTP:setProxy( oProxy:cServer, oProxy:nPort )
    ENDIF
-   oHttp:setCookie( "test01=value01" )
+   oHTTP:setCookie( "test01=value01" )
 
-   IF oHttp:open()
-      IF ! oHttp:post( "test" )
-         ? "Error: oHttp:post():", oHttp:lastErrorMessage()
+   IF oHTTP:Open()
+      IF ! oHTTP:Post( "test" )
+         ? "Error:", "oHTTP:Post()", oHTTP:lastErrorMessage()
       ENDIF
-      oHttp:close()
+      oHTTP:Close()
    ELSE
-      ? "Error: oHttp:open():", oHttp:lastErrorMessage()
+      ? "Error:", "oHTTP:Open()", oHTTP:lastErrorMessage()
    ENDIF
 
    RETURN

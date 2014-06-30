@@ -97,12 +97,12 @@ METHOD SetAddress( cUrl ) CLASS TUrl
    ENDIF
 
    ::cAddress := cUrl
-   ::cProto := ""
-   ::cUserid := ""
-   ::cPassword := ""
-   ::cServer := ""
-   ::cPath := ""
-   ::cQuery := ""
+   ::cProto := ;
+   ::cUserid := ;
+   ::cPassword := ;
+   ::cServer := ;
+   ::cPath := ;
+   ::cQuery := ;
    ::cFile := ""
    ::nPort := -1
 

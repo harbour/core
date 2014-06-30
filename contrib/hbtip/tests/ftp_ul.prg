@@ -16,12 +16,13 @@ PROCEDURE Main( cURL, cMask )
 
       hb_default( @cURL, "ftp://user:pass@ftp.example.com" )
 
-      oURL              := TUrl():New( cUrl )
-      oFTP              := TIPClientFTP():New( oURL, .T. )
-      oFTP:nConnTimeout := 20000
-      oFTP:bUsePasv     := .T.
+      oURL := TUrl():New( cURL )
 
-      IF oFTP:Open( cUrl )
+      oFTP := TIPClientFTP():New( oURL, .T. )
+      oFTP:nConnTimeout := 20000
+      oFTP:bUsePasv := .T.
+
+      IF oFTP:Open( cURL )
          FOR EACH aFile IN aFiles
             ? "Filename:", aFile[ F_NAME ]
             IF oFtp:UploadFile( aFile[ F_NAME ] )

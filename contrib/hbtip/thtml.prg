@@ -938,8 +938,6 @@ METHOD insertAfter( oTHtmlNode ) CLASS THtmlNode
 // deletes this node from the object tree
 METHOD Delete()  CLASS THtmlNode
 
-   LOCAL nPos
-
    IF ::parent == NIL
       RETURN Self
    ENDIF
@@ -949,8 +947,7 @@ METHOD Delete()  CLASS THtmlNode
    ENDIF
 
    IF HB_ISARRAY( ::parent:htmlContent )
-      nPos := hb_AScan( ::parent:htmlContent, Self,,, .T. )
-      hb_ADel( ::parent:htmlContent, nPos, .T. )
+      hb_ADel( ::parent:htmlContent, hb_AScan( ::parent:htmlContent, Self,,, .T. ), .T. )
    ENDIF
 
    ::parent := NIL

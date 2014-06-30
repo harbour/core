@@ -4,12 +4,12 @@
 
 #include "directry.ch"
 
-PROCEDURE Main( cUrl )
+PROCEDURE Main( cURL )
 
    LOCAL oFTP, oURL, aFile
 
-   IF Empty( oURL := TUrl():New( cUrl ) )
-      ? "Invalid URL", cUrl
+   IF Empty( oURL := TUrl():New( cURL ) )
+      ? "Invalid URL", cURL
       RETURN
    ENDIF
 
@@ -24,7 +24,7 @@ PROCEDURE Main( cUrl )
    oFTP := TIPClientFTP():New( oURL )
    oFTP:nConnTimeout := 20000
    ? "Connecting with", oURL:cServer
-   IF oFTP:Open( cUrl )
+   IF oFTP:Open( cURL )
       ? "Connection established"
       ? "File listing"
       FOR EACH aFile IN oFTP:ListFiles()

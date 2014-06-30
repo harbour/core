@@ -7,52 +7,52 @@
 REQUEST __HBEXTERN__HBSSL__
 #endif
 
-PROCEDURE Main( cUrl )
+PROCEDURE Main( cURL )
 
-   LOCAL oCon, oUrl, i
+   LOCAL oHTTP, oURL, i
 
-   IF Empty( oUrl := TUrl():New( cUrl ) )
-      ? "Invalid URL", cUrl
+   IF Empty( oURL := TUrl():New( cURL ) )
+      ? "Invalid URL", cURL
       RETURN
    ENDIF
 
-   IF !( oUrl:cProto == "http" ) .AND. ;
-      !( oUrl:cProto == "https" )
+   IF !( oURL:cProto == "http" ) .AND. ;
+      !( oURL:cProto == "https" )
       ? "This is a header test for http/https."
       ? "Use an http/https address."
       RETURN
    ENDIF
 
-   IF oUrl:cProto == "https" .AND. ! tip_SSL()
+   IF oURL:cProto == "https" .AND. ! tip_SSL()
       ? "Error: Requires SSL support"
       RETURN
    ENDIF
 
-   oCon := TIPClientHTTP():New( oUrl )
-   oCon:nConnTimeout := 20000
-   ? "Connecting with", oUrl:cServer
-   IF oCon:Open( cUrl )
+   oHTTP := TIPClientHTTP():New( oURL )
+   oHTTP:nConnTimeout := 20000
+   ? "Connecting with", oURL:cServer
+   IF oHTTP:Open( cURL )
       ? "Connection eshtablished"
-      ? "Retrieving", oUrl:cPath, oUrl:cFile, oUrl:cQuery
+      ? "Retrieving", oURL:cPath, oURL:cFile, oURL:cQuery
 
-      IF oCon:Get( oUrl:cPath )
+      IF oHTTP:Get( oURL:cPath )
          ? "Get Successful"
-         FOR EACH i IN oCon:hHeaders
+         FOR EACH i IN oHTTP:hHeaders
             ? i:__enumKey() + ":", i
          NEXT
       ELSE
-         ? "Get failure (server reply:", oCon:cReply, ")"
+         ? "Get failure (server reply:", oHTTP:cReply, ")"
       ENDIF
 
-      oCon:Close()
+      oHTTP:Close()
    ELSE
-      ? "Can't connect with", oUrl:cServer
-      IF oCon:SocketCon == NIL
+      ? "Can't connect with", oURL:cServer
+      IF oHTTP:SocketCon == NIL
          ? "Connection not initiated"
-      ELSEIF hb_inetErrorCode( oCon:SocketCon ) == 0
-         ? "Server replied:", oCon:cReply
+      ELSEIF hb_inetErrorCode( oHTTP:SocketCon ) == 0
+         ? "Server replied:", oHTTP:cReply
       ELSE
-         ? "Error in connection:", hb_inetErrorDesc( oCon:SocketCon )
+         ? "Error in connection:", hb_inetErrorDesc( oHTTP:SocketCon )
       ENDIF
    ENDIF
 

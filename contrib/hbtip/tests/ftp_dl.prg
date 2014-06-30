@@ -2,28 +2,28 @@
 
 #require "hbtip"
 
-#include "directry.ch"
-
-PROCEDURE Main( cURL, cMask )
+PROCEDURE Main( cURL, ... )
 
    LOCAL lRetVal := .T.
 
-   LOCAL aFiles, aFile
+   LOCAL aFiles, cFile
    LOCAL oFTP, oURL
 
    /* fetch files to transfer */
-   IF ! Empty( aFiles := { { hb_defaultValue( cMask, __FILE__ ),,, } } )
+   IF ! Empty( aFiles := { ... } )
 
       hb_default( @cURL, "ftp://user:pass@ftp.example.com" )
 
-      oURL              := TUrl():New( cUrl )
-      oFTP              := TIPClientFTP():New( oURL, .T. )
-      oFTP:nConnTimeout := 20000
-      oFTP:bUsePasv     := .T.
+      oURL := TUrl():New( cURL )
 
-      IF oFTP:Open( cUrl )
-         FOR EACH aFile IN aFiles
-            IF oFtp:DownloadFile( aFile[ F_NAME ] )
+      oFTP := TIPClientFTP():New( oURL, .T. )
+      oFTP:nConnTimeout := 20000
+      oFTP:bUsePasv := .T.
+
+      IF oFTP:Open( cURL )
+         FOR EACH cFile IN aFiles
+            ? "Filename:", cFile
+            IF oFtp:DownloadFile( cFile )
                lRetVal := .T.
             ELSE
                lRetVal := .F.

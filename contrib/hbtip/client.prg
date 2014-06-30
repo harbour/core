@@ -119,15 +119,11 @@ CREATE CLASS TIPClient
 
    METHOD Read( nLen )
    METHOD ReadToFile( cFile, nMode, nSize )
-   METHOD Write( cData, nLen, bCommit )
+   METHOD Write( cData, nLen, lCommit )
    METHOD Commit()
    METHOD WriteFromFile( cFile )
    METHOD Reset()
    METHOD Close()
-
-#if 0
-   METHOD Data( cData )                   // commented: calls undeclared METHOD :getOk
-#endif
 
    METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword )
 
@@ -529,22 +525,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    RETURN .T.
 
-#if 0
-
-/* :GetOk() is not declared in TIPClient() [HZ] */
-METHOD Data( cData ) CLASS TIPClient
-
-   ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
-   IF ! ::GetOk()
-      RETURN .F.
-   ENDIF
-   ::InetSendall(::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
-
-   RETURN ::GetOk()
-
-#endif
-
-METHOD Write( cData, nLen, bCommit ) CLASS TIPClient
+METHOD Write( cData, nLen, lCommit ) CLASS TIPClient
 
    IF ! HB_ISNUMERIC( nLen ) .OR. nLen <= 0
       nLen := hb_BLen( cData )
@@ -552,7 +533,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS TIPClient
 
    ::nLastWrite := ::inetSendAll( ::SocketCon, cData, nLen )
 
-   IF ! Empty( bCommit ) .AND. bCommit
+   IF hb_defaultValue( lCommit, .F. )
       ::Commit()
    ENDIF
 
@@ -702,37 +683,36 @@ METHOD inetErrorCode( SocketCon ) CLASS TIPClient
 
 METHOD inetErrorDesc( SocketCon ) CLASS TIPClient
 
-   LOCAL cMsg := ""
-
    hb_default( @SocketCon, ::SocketCon )
 
    IF ! Empty( SocketCon )
       IF ::lTLS
          IF ::lHasSSL .AND. ::nSSLError != 0
-            cMsg := ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
+            RETURN ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
          ENDIF
       ELSE
-         cMsg := hb_inetErrorDesc( SocketCon )
+         RETURN hb_inetErrorDesc( SocketCon )
       ENDIF
    ENDIF
 
-   RETURN cMsg
+   RETURN ""
 
 /* BROKEN, should test number of parameters and act accordingly, see doc\inet.txt */
 METHOD PROCEDURE inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
 
    hb_inetConnect( cServer, nPort, SocketCon )
 
-   /* IMPORTANT: if internet connection is off and address is not resolved and it is SSL compliant, then RTE must be avoided [pritpal] */
+   /* IMPORTANT: if internet connection is off and address is not
+                 resolved and it is SSL compliant, then RTE must
+                 be avoided [pritpal] */
    IF hb_inetStatus( SocketCon ) == -1
       RETURN
    ENDIF
 
-   IF ! Empty( ::nDefaultSndBuffSize )
+   IF HB_ISNUMERIC( ::nDefaultSndBuffSize )
       ::InetSndBufSize( SocketCon, ::nDefaultSndBuffSize )
    ENDIF
-
-   IF ! Empty( ::nDefaultRcvBuffSize )
+   IF HB_ISNUMERIC( ::nDefaultRcvBuffSize )
       ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 

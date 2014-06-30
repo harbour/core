@@ -215,17 +215,9 @@ METHOD TransferStart() CLASS TIPClientFTP
 
          ::InetTimeOut( skt )
 
-         /* Set internal socket send buffer to 64KB,
-            this should fix the speed problems some users have reported */
-         IF ! Empty( ::nDefaultSndBuffSize )
-            ::InetSndBufSize( skt, ::nDefaultSndBuffSize )
-         ENDIF
-
-         IF ! Empty( ::nDefaultRcvBuffSize )
-            ::InetRcvBufSize( skt, ::nDefaultRcvBuffSize )
-         ENDIF
-
          ::SocketCon := skt
+      ELSE
+         RETURN .F.
       ENDIF
    ELSE
       ::SocketCon := hb_inetAccept( ::SocketPortServer )
@@ -235,8 +227,15 @@ METHOD TransferStart() CLASS TIPClientFTP
          ::GetReply()
          RETURN .F.
       ENDIF
-      hb_inetSetRcvBufSize( ::SocketCon, 65536 )
-      hb_inetSetSndBufSize( ::SocketCon, 65536 )
+   ENDIF
+
+   /* Set internal socket send buffer to 64kB, this should
+      resolve the speed problems some users have reported */
+   IF HB_ISNUMERIC( ::nDefaultSndBuffSize )
+      ::InetSetSndBufSize( ::SocketCon, ::nDefaultSndBuffSize )
+   ENDIF
+   IF HB_ISNUMERIC( ::nDefaultRcvBuffSize )
+      ::InetSetRcvBufSize( ::SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 
    RETURN .T.

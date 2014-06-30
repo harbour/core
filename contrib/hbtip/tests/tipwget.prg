@@ -49,57 +49,53 @@ REQUEST __HBEXTERN__HBSSL__
 #include "hbclass.ch"
 #include "tip.ch"
 
-PROCEDURE Main( cUrl, cFile )
+PROCEDURE Main( cURL, cFile )
 
    LOCAL bWrite := .F.
-   LOCAL oUrl, oClient
+   LOCAL oURL, oClient
    LOCAL cData
 
    ? "Harbour - TIP (class based internet client protocol) test"
 
-   IF ! HB_ISSTRING( cUrl ) .OR. Empty( cUrl )
+   IF ! HB_ISSTRING( cURL ) .OR. Empty( cURL )
       ? hb_StrFormat( "Usage: %1$s <URI> [dumpToOrFromFileName]", hb_ProgName() )
       RETURN
    ENDIF
 
-   IF Empty( oUrl := TUrl():New( cUrl ) )
-      ? "Invalid URL", cUrl
+   IF Empty( oURL := TUrl():New( cURL ) )
+      ? "Invalid URL", cURL
       RETURN
    ENDIF
 
-   SWITCH Lower( oUrl:cProto )
+   SWITCH Lower( oURL:cProto )
    CASE "ftp"
-      oClient := TIPClientFTP():New( oUrl )
+      oClient := TIPClientFTP():New( oURL )
       EXIT
    CASE "http"
    CASE "https"
-      oClient := TIPClientHTTP():New( oUrl )
+      oClient := TIPClientHTTP():New( oURL )
       EXIT
    CASE "pop"
    CASE "pops"
-      oClient := TIPClientPOP():New( oUrl )
+      oClient := TIPClientPOP():New( oURL )
       EXIT
    CASE "smtp"
    CASE "smtps"
-      oClient := TIPClientSMTP():New( oUrl )
+      oClient := TIPClientSMTP():New( oURL )
       EXIT
    ENDSWITCH
 
    IF Empty( oClient )
-      ? "Invalid URL", cUrl
+      ? "Invalid URL", cURL
       RETURN
    ENDIF
    oClient:nConnTimeout := 2000 /* 20000 */
 
-   oUrl:cUserid := StrTran( oUrl:cUserid, "&at;", "@" )
+   oURL:cUserid := StrTran( oURL:cUserid, "&at;", "@" )
 
-   ? "Connecting to", oUrl:cProto + "://" + oUrl:cServer
+   ? "Connecting to", oURL:cProto + "://" + oURL:cServer
    IF oClient:Open()
-      IF Empty( oClient:cReply )
-         ? "Connection status: <connected>"
-      ELSE
-         ? "Connection status:", oClient:cReply
-      ENDIF
+      ? "Connection status:", iif( Empty( oClient:cReply ), "<connected>", oClient:cReply )
 
       IF ! Empty( cFile ) .AND. hb_LeftEq( cFile, "+" )
          cFile := SubStr( cFile, 2 )
@@ -138,13 +134,9 @@ PROCEDURE Main( cUrl, cFile )
       ENDIF
 
       oClient:Close()
-      IF Empty( oClient:cReply )
-         ? "Done: (no goodbye message)"
-      ELSE
-         ? "Done:", oClient:cReply
-      ENDIF
+      ? "Done:", iif( Empty( oClient:cReply ), "(no goodbye message)", oClient:cReply )
    ELSE
-      ? "Can't open URI", cUrl
+      ? "Can't open URI", cURL
       IF ! Empty( oClient:cReply )
          ? oClient:cReply
       ENDIF

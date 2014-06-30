@@ -9,37 +9,32 @@ REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main()
 
-   LOCAL cURL, oHttp, cHtml, hQuery, oNode, oDoc
+   LOCAL cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com/search"
+   LOCAL oHTTP := TIPClientHTTP():New( cURL )
+   LOCAL cHtml, oNode, oDoc
 
-   ? "URL:", cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com/search"
+   ? "URL:", cURL
 
-   oHttp := TIPClientHTTP():New( cURL )
-
-   /* build the Google query */
-   hQUery := { => }
-   hb_HCaseMatch( hQuery, .F. )
-
-   hQuery[ "q" ]    := "Harbour"
-   hQuery[ "hl" ]   := "en"
-   hQuery[ "btnG" ] := "Google+Search"
-
-   /* add query data to the TUrl object */
-   oHttp:oUrl:addGetForm( hQuery )
+   /* build the Google query and add it to the TUrl object */
+   oHTTP:oURL:addGetForm( { ;
+      "q"    => "Harbour", ;
+      "hl"   => "en", ;
+      "btnG" => "Google+Search" } )
 
    /* Connect to the HTTP server */
-   IF ! oHttp:open()
-      ? "Connection error:", oHttp:lastErrorMessage()
+   IF ! oHTTP:Open()
+      ? "Connection error:", oHTTP:lastErrorMessage()
       RETURN
    ENDIF
 
    /* download the Google response */
-   cHtml := oHttp:readAll()
-   oHttp:close()
+   cHtml := oHTTP:ReadAll()
+   oHTTP:Close()
    ? hb_ntos( Len( cHtml ) ), "bytes received"
 
    oDoc := THtmlDocument():New( cHtml )
 
-   oDoc:writeFile( "google.html" )
+   oDoc:writeFile( "google.htm" )
 
    /* ":a" retrieves the first <a href="url"> text </a> tag */
    oNode := oDoc:body:a
