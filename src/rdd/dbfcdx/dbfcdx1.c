@@ -831,7 +831,8 @@ static void hb_cdxTagSetScope( LPCDXTAG pTag, HB_USHORT nScope, PHB_ITEM pItem )
    if( pArea->dbfarea.lpdbPendingRel && pArea->dbfarea.lpdbPendingRel->isScoped )
       SELF_FORCEREL( ( AREAP ) pArea );
 
-   pScopeVal = HB_IS_BLOCK( pItem ) ? hb_vmEvalBlock( pItem ) : pItem;
+   pScopeVal = ( hb_itemType( pItem ) == HB_IT_BLOCK ) ?
+                           hb_vmEvalBlock( pItem ) : pItem;
 
    if( hb_cdxItemTypeCmp( ( HB_BYTE ) pTag->uiType ) == hb_cdxItemTypeCmp( hb_cdxItemType( pScopeVal ) ) )
    {
@@ -897,14 +898,14 @@ static void hb_cdxTagRefreshScope( LPCDXTAG pTag )
        pTag->pIndex->pArea->dbfarea.lpdbPendingRel->isScoped )
       SELF_FORCEREL( ( AREAP ) pTag->pIndex->pArea );
 
-   if( HB_IS_BLOCK( pTag->topScope ) )
+   if( hb_itemType( pTag->topScope ) == HB_IT_BLOCK )
    {
       pItem = hb_vmEvalBlock( pTag->topScope );
       pTag->topScopeKey = hb_cdxKeyPutItem( pTag->topScopeKey, pItem,
                                             pTag->topScopeKey->rec, pTag,
                                             HB_TRUE, CDX_CMP_PREFIX );
    }
-   if( HB_IS_BLOCK( pTag->bottomScope ) )
+   if( hb_itemType( pTag->bottomScope ) == HB_IT_BLOCK )
    {
       pItem = hb_vmEvalBlock( pTag->bottomScope );
       pTag->bottomScopeKey = hb_cdxKeyPutItem( pTag->bottomScopeKey, pItem,
@@ -5355,7 +5356,7 @@ static HB_BOOL hb_cdxDBOISkipEval( CDXAREAP pArea, LPCDXTAG pTag, HB_BOOL fForwa
    if( FAST_GOCOLD( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FALSE;
 
-   if( ! pTag || ! HB_IS_BLOCK( pEval ) )
+   if( ! pTag || hb_itemType( pEval ) != HB_IT_BLOCK )
    {
       if( SELF_SKIP( ( AREAP ) pArea, fForward ? 1 : -1 ) == HB_FAILURE )
          return HB_FALSE;
@@ -7600,7 +7601,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          return HB_FAILURE;
       }
-      fOK = HB_IS_LOGICAL( pArea->dbfarea.area.valResult );
+      fOK = hb_itemType( pArea->dbfarea.area.valResult ) == HB_IT_LOGICAL;
       hb_itemRelease( pArea->dbfarea.area.valResult );
       pArea->dbfarea.area.valResult = NULL;
       if( ! fOK )
@@ -8110,7 +8111,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
                   pArea->dbfarea.area.valResult = NULL;
                   if( SELF_EVALBLOCK( ( AREAP ) pArea, pForItem ) == HB_SUCCESS )
                   {
-                     if( HB_IS_LOGICAL( pArea->dbfarea.area.valResult ) )
+                     if( hb_itemType( pArea->dbfarea.area.valResult ) == HB_IT_LOGICAL )
                      {
                         pTag->pForItem = pForItem;
                         pForItem = NULL;
@@ -8403,7 +8404,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          break;
 
       case DBOI_CUSTOM:
-         if( HB_IS_LOGICAL( pInfo->itmNewVal ) )
+         if( hb_itemType( pInfo->itmNewVal ) == HB_IT_LOGICAL )
          {
             if( hb_cdxIndexLockWrite( pTag->pIndex ) )
             {
@@ -8445,7 +8446,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
       /* TODO: */
 #if 0
       case DBOI_TEMPLATE:
-        if( HB_IS_LOGICAL( pInfo->itmNewVal ) &&
+        if( hb_itemType( pInfo->itmNewVal ) == HB_IT_LOGICAL &&
             hb_itemGetL( pInfo->itmNewVal ) )
         {
            if( hb_cdxIndexLockWrite( pTag->pIndex ) )
@@ -8585,7 +8586,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
       case DBOI_READLOCK:
          if( pTag )
          {
-            if( HB_IS_LOGICAL( pInfo->itmNewVal ) )
+            if( hb_itemType( pInfo->itmNewVal ) == HB_IT_LOGICAL )
             {
                if( hb_itemGetL( pInfo->itmNewVal ) )
                   hb_cdxIndexLockRead( pTag->pIndex );
@@ -8602,7 +8603,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
       case DBOI_WRITELOCK:
          if( pTag )
          {
-            if( HB_IS_LOGICAL( pInfo->itmNewVal ) )
+            if( hb_itemType( pInfo->itmNewVal ) == HB_IT_LOGICAL )
             {
                if( hb_itemGetL( pInfo->itmNewVal ) )
                   hb_cdxIndexLockWrite( pTag->pIndex );
@@ -8760,7 +8761,7 @@ static HB_ERRCODE hb_cdxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
       case RDDI_STRICTSTRUCT:
       {
          HB_BOOL fStrictStruct = pData->fStrictStruct;
-         if( HB_IS_LOGICAL( pItem ) )
+         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
             pData->fStrictStruct = hb_itemGetL( pItem );
          hb_itemPutL( pItem, fStrictStruct );
          break;

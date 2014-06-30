@@ -1306,7 +1306,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
          return HB_FAILURE;
       }
-      if( ! HB_IS_LOGICAL( pArea->adsarea.area.valResult ) )
+      if( hb_itemType( pArea->adsarea.area.valResult ) != HB_IT_LOGICAL )
       {
          if( hIndex )
             AdsDeleteIndex( hIndex );
