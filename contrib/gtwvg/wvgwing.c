@@ -1107,7 +1107,7 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
 
    if( pBlock )
    {
-      if( hb_itemType( pBlock ) == HB_IT_POINTER )
+      if( HB_IS_POINTER( pBlock ) )
       {
          hb_vmPushSymbol( hb_dynsymSymbol( ( ( PHB_SYMB ) pBlock )->pDynSym ) );
          hb_vmPushNil();

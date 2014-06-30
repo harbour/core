@@ -1441,7 +1441,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       case HB_GTI_ICONFILE:
-         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
             void * hImageName;
@@ -1649,7 +1649,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
 
             if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
-                              ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
+                ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
             {
                int x, y;
 
