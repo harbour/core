@@ -1798,13 +1798,13 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
          break;
       case RDDI_LOCKSCHEME:
          iResult = hb_setGetDBFLockScheme();
-         if( HB_IS_NUMERIC( pItem ) )
+         if( hb_itemType( pItem ) & HB_IT_NUMERIC )
             hb_setSetItem( HB_SET_DBFLOCKSCHEME, pItem );
          hb_itemPutNI( pItem, iResult );
          break;
       case RDDI_MEMOBLOCKSIZE:
          iResult = hb_setGetMBlockSize();
-         if( HB_IS_NUMERIC( pItem ) )
+         if( hb_itemType( pItem ) & HB_IT_NUMERIC )
             hb_setSetItem( HB_SET_MBLOCKSIZE, pItem );
          hb_itemPutNI( pItem, iResult );
          break;
@@ -1812,7 +1812,7 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
       {
          const char * szExt = hb_setGetMFileExt();
          char * szResult = szExt ? hb_strdup( szExt ) : NULL;
-         if( HB_IS_STRING( pItem ) )
+         if( hb_itemType( pItem ) & HB_IT_STRING )
          {
             hb_setSetItem( HB_SET_MFILEEXT, pItem );
             if( szResult )

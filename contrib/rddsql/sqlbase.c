@@ -960,7 +960,7 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
       {
          HB_ULONG ulNewConnection = 0;
 
-         if( HB_IS_NUMERIC( pItem ) )
+         if( hb_itemType( pItem ) & HB_IT_NUMERIC )
             ulNewConnection = hb_itemGetNL( pItem );
 
          hb_itemPutNL( pItem, ulConnect ? ulConnect : s_ulConnectionCurrent );

@@ -3936,7 +3936,7 @@ static LPTAGINFO hb_nsxFindTag( NSXAREAP pArea, PHB_ITEM pTagItem,
    fBag = hb_itemGetCLen( pBagItem ) > 0;
    if( fBag )
    {
-      if( HB_IS_STRING( pTagItem ) )
+      if( hb_itemType( pTagItem ) & HB_IT_STRING )
          pIndex = hb_nsxFindBag( pArea, hb_itemGetCPtr( pBagItem ) );
       else
          pIndex = pArea->lpIndexes;
@@ -3963,7 +3963,7 @@ static LPTAGINFO hb_nsxFindTag( NSXAREAP pArea, PHB_ITEM pTagItem,
    }
    if( pIndex )
    {
-      if( HB_IS_STRING( pTagItem ) )
+      if( hb_itemType( pTagItem ) & HB_IT_STRING )
       {
          const char * szTag = hb_itemGetCPtr( pTagItem );
          int iTag;
@@ -7281,7 +7281,7 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
       {
          case DBOI_CONDITION:
             pInfo->itmResult = hb_itemPutC( pInfo->itmResult, pTag->ForExpr );
-            if( HB_IS_STRING( pInfo->itmNewVal ) )
+            if( hb_itemType( pInfo->itmNewVal ) & HB_IT_STRING )
             {
                const char * szForExpr = hb_itemGetCPtr( pInfo->itmNewVal );
                if( pTag->ForExpr ?
@@ -7361,14 +7361,14 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          case DBOI_POSITION:
          case DBOI_KEYNORAW:
          /* case DBOI_RECNO: */
-            if( HB_IS_NUMERIC( pInfo->itmNewVal ) )
+            if( hb_itemType( pInfo->itmNewVal ) & HB_IT_NUMERIC )
                pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
                   hb_nsxOrdKeyGoto( pTag, hb_itemGetNL( pInfo->itmNewVal ) ) );
             else
                pInfo->itmResult = hb_itemPutNL( pInfo->itmResult, hb_nsxOrdKeyNo( pTag ) );
             break;
          case DBOI_RELKEYPOS:
-            if( HB_IS_NUMERIC( pInfo->itmNewVal ) )
+            if( hb_itemType( pInfo->itmNewVal ) & HB_IT_NUMERIC )
                hb_nsxOrdSetRelKeyPos( pTag, hb_itemGetND( pInfo->itmNewVal ) );
             else
                pInfo->itmResult = hb_itemPutND( pInfo->itmResult, hb_nsxOrdGetRelKeyPos( pTag ) );
@@ -7659,14 +7659,14 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          case DBOI_POSITION:
          case DBOI_KEYNORAW:
          /* case DBOI_RECNO: */
-            if( pInfo->itmNewVal && HB_IS_NUMERIC( pInfo->itmNewVal ) )
+            if( pInfo->itmNewVal && hb_itemType( pInfo->itmNewVal ) & HB_IT_NUMERIC )
                hb_itemPutL( pInfo->itmResult, SELF_GOTO( ( AREAP ) pArea,
                               hb_itemGetNL( pInfo->itmNewVal ) ) == HB_SUCCESS );
             else
                SELF_RECID( ( AREAP ) pArea, pInfo->itmResult );
             break;
          case DBOI_RELKEYPOS:
-            if( HB_IS_NUMERIC( pInfo->itmNewVal ) )
+            if( hb_itemType( pInfo->itmNewVal ) & HB_IT_NUMERIC )
             {
                double dPos = hb_itemGetND( pInfo->itmNewVal );
                LPTAGINFO pSavedTag = pArea->lpCurTag;

@@ -3677,7 +3677,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_ESCDELAY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pTerm->esc_delay );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             pTerm->esc_delay = hb_itemGetNI( pInfo->pNewVal );
          break;
 
@@ -3693,7 +3693,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_ADDKEYMAP:
-         if( HB_IS_ARRAY( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
          {
             iVal = hb_arrayGetNI( pInfo->pNewVal, 1 );
             szVal = hb_arrayGetCPtr( pInfo->pNewVal, 2 );
@@ -3712,7 +3712,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 #else
             pInfo->pResult = hb_itemPutStr( pInfo->pResult, pTerm->cdpTerm, pTerm->szTitle );
 #endif
-         if( HB_IS_STRING( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             if( pTerm->fUTF8 )
                szVal = hb_itemGetStrUTF8( pInfo->pNewVal, &hVal, NULL );
@@ -3734,13 +3734,13 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 
       case HB_GTI_PALETTE:
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal >= 0 && iVal < 16 )
             {
                pInfo->pResult = hb_itemPutNI( pInfo->pResult, pTerm->colors[ iVal ] );
-               if( HB_IS_NUMERIC( pInfo->pNewVal2 ) )
+               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
                {
                   pTerm->colors[ iVal ] = hb_itemGetNI( pInfo->pNewVal2 );
                   hb_gt_trm_SetPalette( pTerm, iVal, iVal );
@@ -3755,7 +3755,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_arrayNew( pInfo->pResult, 16 );
             for( iVal = 0; iVal < 16; iVal++ )
                hb_arraySetNI( pInfo->pResult, iVal + 1, pTerm->colors[ iVal ] );
-            if( HB_IS_ARRAY( pInfo->pNewVal ) &&
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY &&
                 hb_arrayLen( pInfo->pNewVal ) == 16 )
             {
                for( iVal = 0; iVal < 16; iVal++ )

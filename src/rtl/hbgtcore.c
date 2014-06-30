@@ -1819,20 +1819,20 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_COMPATBUFFER:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pGT->fVgaCell );
-         if( HB_IS_LOGICAL( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             pGT->fVgaCell = hb_itemGetL( pInfo->pNewVal );
          break;
 
       case HB_GTI_REDRAWMAX:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pGT->iRedrawMax );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             pGT->iRedrawMax = hb_itemGetNI( pInfo->pNewVal );
          break;
 
       case HB_GTI_BOXCP:
          pInfo->pResult = hb_itemPutC( pInfo->pResult,
                                        pGT->cdpBox ? pGT->cdpBox->id : NULL );
-         if( HB_IS_STRING( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             if( hb_itemGetCLen( pInfo->pNewVal ) > 0 )
             {
@@ -1897,7 +1897,7 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
       case HB_GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
-         if( HB_IS_ARRAY( pInfo->pNewVal ) &&
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) &&
              hb_arrayLen( pInfo->pNewVal ) == 8 )
          {
             HB_GTSELF_DISPBEGIN( pGT );
@@ -1919,7 +1919,7 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_CLIPBOARDDATA:
-         if( HB_IS_STRING( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             /* set new Clipboard value */
             hb_gt_setClipboard( hb_itemGetCPtr( pInfo->pNewVal ),

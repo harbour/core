@@ -867,13 +867,13 @@ static HB_BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             al_poll_keyboard();
 
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, al_key_shifts );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             al_set_keyboard_leds( hb_itemGetNI( pInfo->pNewVal ) );
 
          break;
 
       case HB_GTI_WINTITLE:
-         if( HB_IS_STRING( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
             al_set_window_title( ( char * ) hb_itemGetCPtr( pInfo->pNewVal ) );
 
          break;

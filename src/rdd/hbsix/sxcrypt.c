@@ -133,7 +133,7 @@ static HB_BOOL _hb_sxGetKey( PHB_ITEM pKeyItem, char * pKeyVal )
    PHB_ITEM pItem = NULL;
    HB_SIZE nKey;
 
-   if( ! HB_IS_STRING( pKeyItem ) )
+   if( ! ( hb_itemType( pKeyItem ) & HB_IT_STRING ) )
    {
       AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
@@ -144,7 +144,7 @@ static HB_BOOL _hb_sxGetKey( PHB_ITEM pKeyItem, char * pKeyVal )
             pKeyItem = pItem;
       }
    }
-   if( HB_IS_STRING( pKeyItem ) )
+   if( hb_itemType( pKeyItem ) & HB_IT_STRING )
    {
       nKey = hb_itemGetCLen( pKeyItem );
       if( nKey )

@@ -905,7 +905,7 @@ static HB_BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_ESCDELAY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_sln_escDelay );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_sln_escDelay = hb_itemGetNI( pInfo->pNewVal );
          break;
 

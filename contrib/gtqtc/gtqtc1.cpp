@@ -1899,7 +1899,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_FONTWEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pQTC->fontWeight );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             /* store font status for next operation on fontsize */
             iVal = hb_itemGetNI( pInfo->pNewVal );
@@ -1923,7 +1923,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_FONTATTRIBUTE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pQTC->fontAttribute );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             pQTC->fontAttribute = hb_itemGetNI( pInfo->pNewVal ) &
                                                 ( HB_GTI_FONTA_FIXMETRIC |
                                                   HB_GTI_FONTA_CLRBKG    |

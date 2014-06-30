@@ -1806,7 +1806,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    {
       case HB_GTI_ISFULLSCREEN:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, hb_gt_win_IsFullScreen() );
-         if( HB_IS_LOGICAL( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
             HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( hb_itemGetL( pInfo->pResult ) != bNewValue )
@@ -1832,7 +1832,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          UINT uiCodePage = GetConsoleCP();
          UINT uiCodePageNew = hb_itemGetNI( pInfo->pNewVal );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, uiCodePage );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) &&
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
              uiCodePageNew != uiCodePage )
          {
             SetConsoleCP( uiCodePageNew );
@@ -1848,7 +1848,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          dwLen = GetConsoleTitle( buff, HB_SIZEOFARRAY( buff ) );
          pInfo->pResult = HB_ITEMPUTSTRLEN( pInfo->pResult, buff, dwLen );
-         if( HB_IS_STRING( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             void * hTitle;
             SetConsoleTitle( HB_ITEMGETSTR( pInfo->pNewVal, &hTitle, NULL ) );
@@ -1859,7 +1859,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CLOSABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bClosable );
-         if( HB_IS_LOGICAL( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
             HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != s_bClosable )
@@ -1872,7 +1872,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CLOSEMODE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_bClosable ? 0 : 2 );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             int iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal >= 0 && iVal <= 2 &&
@@ -1913,7 +1913,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_PALETTE:
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             int iIndex = hb_itemGetNI( pInfo->pNewVal );
 
@@ -1924,7 +1924,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
                pInfo->pResult = hb_itemPutNL( pInfo->pResult, colors[ iIndex ] );
 
-               if( fGet && HB_IS_NUMERIC( pInfo->pNewVal2 ) )
+               if( fGet && ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
                {
                   colors[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
                   hb_gt_win_SetPalette( HB_TRUE, colors );
@@ -1945,7 +1945,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             for( i = 0; i < 16; i++ )
                hb_arraySetNL( pInfo->pResult, i + 1, colors[ i ] );
 
-            if( HB_IS_ARRAY( pInfo->pNewVal ) )
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
             {
                if( hb_arrayLen( pInfo->pNewVal ) == 16 )
                {
@@ -1988,25 +1988,25 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_win_getKbdState() );
-         if( HB_IS_NUMERIC( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_gt_winapi_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
       case HB_GTI_KBDSPECIAL:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bSpecialKeyHandling );
-         if( HB_IS_LOGICAL( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             s_bSpecialKeyHandling = hb_itemGetL( pInfo->pNewVal );
          break;
 
       case HB_GTI_KBDALT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bAltKeyHandling );
-         if( HB_IS_LOGICAL( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             s_bAltKeyHandling = hb_itemGetL( pInfo->pNewVal );
          break;
 
       case HB_GTI_MOUSESTATUS:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bMouseEnable );
-         if( HB_IS_LOGICAL( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
             s_bMouseEnable = hb_itemGetL( pInfo->pNewVal );
             SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
@@ -2014,7 +2014,7 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_CLIPBOARDDATA:
-         if( HB_IS_STRING( pInfo->pNewVal ) )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
 #if defined( UNICODE )
             hb_gt_winapi_setClipboard( CF_UNICODETEXT, pInfo->pNewVal );
 #else

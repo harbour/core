@@ -602,7 +602,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, HB_BYTE * pKey, HB_BOOL * fD
    if( ! pExpr )
       return HSX_BADPARMS;
 
-   if( HB_IS_STRING( pExpr ) )
+   if( hb_itemType( pExpr ) & HB_IT_STRING )
    {
       pStr = hb_itemGetCPtr( pExpr );
       nLen = hb_itemGetCLen( pExpr );
