@@ -10,5 +10,6 @@ hbcurl.hbm
 -iflag={bcc}-a
 
 {hbdyn&win}-instfile=depimplibsrc:${HBMK_DIR_CURL}/../bin/*.dll
+{hbdyn&win}-instfile=depimplibsrc:${HBMK_DIR_CURL}/../dlls/*.dll
 
 hbcurls.hbp
