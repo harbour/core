@@ -263,8 +263,8 @@ static function hash_to_array16( hVal )
    local aVal := {}, cLine, n
 
    for each cLine in hVal
-      for n := 1 to Len( cLine ) step( 2 )
-         AAdd( aVal, Bin2W( SubStr( cLine, n, 2 ) ) )
+      for n := 1 to hb_BLen( cLine ) step 2
+         AAdd( aVal, Bin2W( hb_BSubStr( cLine, n, 2 ) ) )
       next
    next
 
@@ -276,7 +276,7 @@ static function hash_to_array04( hVal )
 
    for each cLine in hVal
       for each c in cLine
-         AAdd( aVal, Asc( c ) )
+         AAdd( aVal, hb_BCode( c ) )
       next
    next
 
@@ -349,7 +349,7 @@ static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    aInd := {}
    for n := nMin to nMax
       cLine += I2Bin( iif( n == 0, 0, aVal[ n ] ) )
-      if Len( cLine ) == nLine
+      if hb_BLen( cLine ) == nLine
          hVal[ cLine ] := cLine
          AAdd( aInd, hb_HPos( hVal, cLine ) - 1 )
          cLine := ""
@@ -357,7 +357,7 @@ static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    next
    if ! cLine == ""
       for each c in hVal
-         if hb_LeftEq( c, cLine )
+         if hb_BLeft( c, hb_BLen( cLine ) ) == cLine
             cLine := c
             exit
          endif
@@ -368,7 +368,7 @@ static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    nn := iif( Len( aInd ) > 256, 2, 1 )
    n := Len( aInd ) * nn
    for each c in hVal
-      n += Len( c )
+      n += hb_BLen( c )
    next
 
    return n
@@ -407,8 +407,8 @@ static function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    hVal := {=>}
    aInd := {}
    for n := nMin to nMax step 2
-      cLine += Chr( iif( n == 0, 0, aVal[ n ] ) + aVal[ n + 1 ] * 16 )
-      if Len( cLine ) == nLine
+      cLine += hb_BChar( iif( n == 0, 0, aVal[ n ] ) + aVal[ n + 1 ] * 16 )
+      if hb_BLen( cLine ) == nLine
          hVal[ cLine ] := cLine
          AAdd( aInd, hb_HPos( hVal, cLine ) - 1 )
          cLine := ""
@@ -416,7 +416,7 @@ static function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    next
    if ! cLine == ""
       for each c in hVal
-         if hb_LeftEq( c, cLine )
+         if hb_BLeft( c, hb_BLen( cLine ) ) == cLine
             cLine := c
             exit
          endif
@@ -427,7 +427,7 @@ static function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    nn := iif( Len( aInd ) > 256, 2, 1 )
    n := Len( aInd ) * nn
    for each c in hVal
-      n += Len( c )
+      n += hb_BLen( c )
    next
 
    return n

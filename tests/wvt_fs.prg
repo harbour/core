@@ -18,7 +18,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   ? "GT" + hb_gtVersion() + " test"
+   ? "GT" + hb_gtVersion(), "test"
 
    ?  hb_gtInfo( HB_GTI_ISFULLSCREEN, .T. ), "we should be on full screen"
    WAIT
