@@ -212,8 +212,8 @@ static function hash_to_array( hVal )
    local aVal := {}, cLine, n
 
    for each cLine in hVal
-      for n := 1 to Len( cLine ) step( 2 )
-         AAdd( aVal, Bin2W( SubStr( cLine, n, 2 ) ) )
+      for n := 1 to hb_BLen( cLine ) step 2
+         AAdd( aVal, Bin2W( hb_BSubStr( cLine, n, 2 ) ) )
       next
    next
 
@@ -254,7 +254,7 @@ static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    aInd := {}
    for n := nMin to nMax
       cLine += I2Bin( iif( n == 0, 0, aVal[ n ] ) )
-      if Len( cLine ) == nLine * 2
+      if hb_BLen( cLine ) == nLine * 2
          hVal[ cLine ] := cLine
          AAdd( aInd, hb_HPos( hVal, cLine ) - 1 )
          cLine := ""
@@ -262,7 +262,7 @@ static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    next
    if ! cLine == ""
       for each c in hVal
-         if hb_LeftEq( c, cLine )
+         if hb_BLeft( c, hb_BLen( cLine ) ) == cLine
             cLine := c
             exit
          endif
@@ -273,7 +273,7 @@ static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    nn := iif( Len( aInd ) > 256, 2, 1 )
    n := Len( aInd ) * nn
    for each c in hVal
-      n += Len( c )
+      n += hb_BLen( c )
    next
 
    return n
