@@ -50,17 +50,18 @@
 
 static void * hb_curl_xgrab( size_t size )
 {
-   return hb_xgrab( size );
+   return size > 0 ? hb_xgrab( size ) : NULL;
 }
 
 static void hb_curl_xfree( void * p )
 {
-   hb_xfree( p );
+   if( p )
+      hb_xfree( p );
 }
 
 static void * hb_curl_xrealloc( void * p, size_t size )
 {
-   return hb_xrealloc( p, size );
+   return size > 0 ? ( p ? hb_xrealloc( p, size ) : hb_xgrab( size ) ) : NULL;
 }
 
 static char * hb_curl_strdup( const char * s )
@@ -71,11 +72,17 @@ static char * hb_curl_strdup( const char * s )
 static void * hb_curl_calloc( size_t nelem, size_t elsize )
 {
    size_t size = nelem * elsize;
-   void * ptr  = hb_xgrab( size );
 
-   memset( ptr, 0, size );
+   if( size > 0 )
+   {
+      void * ptr = hb_xgrab( size );
 
-   return ptr;
+      memset( ptr, 0, size );
+
+      return ptr;
+   }
+   else
+      return NULL;
 }
 
 HB_FUNC( CURL_GLOBAL_INIT )
