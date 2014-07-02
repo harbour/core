@@ -7,9 +7,7 @@ PROCEDURE Main()
    LOCAL tmp
 
    ? "create handle", h := FCreate( "test.txt" )
-
    FWrite( h, "This test worked if you can see this" )
-
    FClose( h )
 
    /* using FRead() */

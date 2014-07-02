@@ -89,13 +89,14 @@ METHOD normalize( xArg ) CLASS Money
 
    LOCAL nValue
 
-   IF IsMoney( xArg )
+   DO CASE
+   CASE IsMoney( xArg )
       nValue := ::getMoney( xArg )
-   ELSEIF HB_ISNUMERIC( xArg )
+   CASE HB_ISNUMERIC( xArg )
       nValue := Int( xArg * ::nMul )
-   ELSE
+   OTHERWISE
       nValue := Eval( ErrorBlock(), GenError( xArg ) )
-   ENDIF
+   ENDCASE
 
    RETURN nValue
 
@@ -122,13 +123,14 @@ METHOD Multiple( xArg ) CLASS Money
 
    LOCAL oResult := Money():new( ::nDec )
 
-   IF IsMoney( xArg )
+   DO CASE
+   CASE IsMoney( xArg )
       oResult:nValue := Int( ::nValue * xArg:nValue / xArg:nMul )
-   ELSEIF HB_ISNUMERIC( xArg )
+   CASE HB_ISNUMERIC( xArg )
       oResult:nValue := Int( ::nValue * xArg )
-   ELSE
+   OTHERWISE
       Eval( ErrorBlock(), GenError( xArg ) )
-   ENDIF
+   ENDCASE
 
    RETURN oResult
 
@@ -136,13 +138,14 @@ METHOD Divide( xArg ) CLASS Money
 
    LOCAL oResult := Money():new( ::nDec )
 
-   IF IsMoney( xArg )
+   DO CASE
+   CASE IsMoney( xArg )
       oResult:nValue := Int( ::nValue / xArg:nValue * xArg:nMul )
-   ELSEIF HB_ISNUMERIC( xArg )
+   CASE HB_ISNUMERIC( xArg )
       oResult:nValue := Int( ::nValue / xArg )
-   ELSE
+   OTHERWISE
       Eval( ErrorBlock(), GenError( xArg ) )
-   ENDIF
+   ENDCASE
 
    RETURN oResult
 

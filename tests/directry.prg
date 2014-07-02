@@ -4,12 +4,10 @@
 
 PROCEDURE Main( filespec, attribs )
 
-   LOCAL aDir
+   LOCAL aDir := Directory( filespec, attribs )
    LOCAL x
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-
-   aDir := Directory( filespec, attribs )
 
    FOR x := 1 TO Len( aDir )
       ? ;

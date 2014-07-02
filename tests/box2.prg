@@ -1,16 +1,18 @@
 /* Donated to the public domain on 2001-08-22 by David G. Holm <dholm@jsd-llc.com> */
 
-// Test program for box and line drawing functions.
+/* Test program for box and line drawing functions. */
 
 #include "box.ch"
 
 PROCEDURE Main()
 
-   LOCAL max_row, max_col, boxColor := "W+/B,N/BG", lineColor := "W+/R, N/BG"
+   LOCAL max_row := MaxRow()
+   LOCAL max_col := MaxCol()
+
+   LOCAL boxColor := "W+/B,N/BG"
+   LOCAL lineColor := "W+/R,N/BG"
 
    CLS
-   max_row := MaxRow()
-   max_col := MaxCol()
 
    // Draw filled boxes centered around the four screen corners.
    DispBox( -10, -10, 10, 10, HB_B_SINGLE_UNI + "X", boxColor )
@@ -25,7 +27,6 @@ PROCEDURE Main()
    DispBox( max_row - 15, max_col - 15, max_row + 15, max_col + 15, 1, boxColor )
 
    // Draw a box in the center, then two boxes off screen.
-
    DispBox( 20, 20, 25, 60, 2, boxColor )
    DispBox( -10, -10, -1, -1, 2, boxColor )
    DispBox( max_row + 1, max_col + 1, max_row + 10, max_col + 10, 2, boxColor )

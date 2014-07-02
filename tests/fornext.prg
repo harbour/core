@@ -1,8 +1,6 @@
-// Testing Harbour FOR NEXT loops
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* Testing Harbour FOR NEXT loops */
 
 PROCEDURE Main()
 

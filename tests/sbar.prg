@@ -1,8 +1,6 @@
-/*
- * ScrollBar class test
- *
- * Example donated by Diego Pego, modified by Alejandro de Garate
- */
+/* Example donated by Diego Pego, modified by Alejandro de Garate */
+
+/* ScrollBar class test */
 
 #include "directry.ch"
 #include "achoice.ch"

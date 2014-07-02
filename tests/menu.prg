@@ -1,8 +1,8 @@
 #include "button.ch"
 #include "inkey.ch"
 
-#ifndef HB_MENU_SEPARATOR_UNI
-   #define HB_MENU_SEPARATOR_UNI  MENU_SEPARATOR
+#ifndef __HARBOUR__
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main()

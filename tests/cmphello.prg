@@ -1,8 +1,6 @@
-// This program compiles hello.prg
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* This program compiles hello.prg */
 
 PROCEDURE Main()
 

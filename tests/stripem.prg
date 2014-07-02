@@ -1,10 +1,4 @@
-/*
- * Written by Eddie Runia <eddie@runia.com>
- * Placed in the public domain
- */
-
-#include "fileio.ch"
-#include "hbclass.ch"
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
 
 // The Harbour stripping command
 //
@@ -13,6 +7,9 @@
 // The output from FileFrom is copied to FileTo except for the empty lines
 //
 // Default files: From: stripem.prg To: stripem.out
+
+#include "fileio.ch"
+#include "hbclass.ch"
 
 PROCEDURE Main( cFrom, cTo )
 

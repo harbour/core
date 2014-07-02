@@ -1,8 +1,6 @@
-// Testing of multiple arguments
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* Testing of multiple arguments */
 
 PROCEDURE Main()
 

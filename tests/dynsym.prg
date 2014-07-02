@@ -7,8 +7,7 @@ PROCEDURE Main()
       ? __dynsGetName( nPos )
    NEXT
 
-   nPos := __dynsGetIndex( "Main" )
-   ? "Main", nPos
+   ? "Main", nPos := __dynsGetIndex( "Main" )
 
    ? __dynsGetName( nPos )
    ? __dynsGetName()

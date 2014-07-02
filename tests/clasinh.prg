@@ -2,10 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL oObject, oBase
-
-   oObject := TAnyClass():New()
-   oBase := TClassBase():New()
+   LOCAL oObject := TAnyClass():New()
+   LOCAL oBase := TClassBase():New()
 
    HB_SYMBOL_UNUSED( oObject )
    HB_SYMBOL_UNUSED( oBase )

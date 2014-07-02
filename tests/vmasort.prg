@@ -62,22 +62,15 @@ STATIC FUNCTION XToStr( xValue )
    LOCAL cType := ValType( xValue )
 
    DO CASE
-   CASE cType == "C" .OR. cType == "M"
-      RETURN xValue
-   CASE cType == "N"
-      RETURN hb_ntos( xValue )
-   CASE cType == "D"
-      RETURN DToC( xValue )
-   CASE cType == "L"
-      RETURN iif( xValue, ".T.", ".F." )
-   CASE cType == "U"
-      RETURN "NIL"
-   CASE cType == "A"
-      RETURN "{.}"
-   CASE cType == "B"
-      RETURN "{|| }"
-   CASE cType == "O"
-      RETURN "[O]"
+   CASE cType == "C" .OR. ;
+        cType == "M" ; RETURN xValue
+   CASE cType == "N" ; RETURN hb_ntos( xValue )
+   CASE cType == "D" ; RETURN DToC( xValue )
+   CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
+   CASE cType == "U" ; RETURN "NIL"
+   CASE cType == "A" ; RETURN "{.}"
+   CASE cType == "B" ; RETURN "{|| }"
+   CASE cType == "O" ; RETURN "[O]"
    ENDCASE
 
    RETURN xValue

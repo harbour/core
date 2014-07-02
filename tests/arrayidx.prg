@@ -1,8 +1,6 @@
-// Array Index tests
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* Array Index tests */
 
 PROCEDURE Main()
 

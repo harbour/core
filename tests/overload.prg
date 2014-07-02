@@ -1,8 +1,6 @@
-// Implementation of operator overload in Harbour
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* Implementation of operator overload in Harbour */
 
 #include "hbclass.ch"
 

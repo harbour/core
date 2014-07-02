@@ -1,6 +1,6 @@
-// Copyright 2000 Alejandro de Garate <alex_degarate hotmail com>
+/* Copyright 2000 Alejandro de Garate <alex_degarate hotmail com> */
 
-// Test SetMode() for Harbour
+/* Test SetMode() for Harbour */
 
 #ifndef __HARBOUR__
 #include "clipper.ch"
@@ -48,13 +48,11 @@ PROCEDURE Main()
             Inkey( 0 )
          ENDIF
       ENDIF
-
    ENDDO
 
    RETURN
 
 // Simple testing screen.
-
 STATIC PROCEDURE TESTBOX( cMode )
 
    LOCAL nRow

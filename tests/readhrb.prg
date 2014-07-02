@@ -1,11 +1,9 @@
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+/* Updated to support current Harbour implementation by Vailton Renato <vailtom@gmail.com> */
+
 /* This program will read the .hrb file and show its content
  *
  * readhrb <hrb file>
- *
- * Eddie Runia <eddie@runia.com>
- * Vailton Renato <vailtom@gmail.com> (Updated to support current Harbour implementation)
- *
- * Placed in the public domain
  */
 
 #include "fileio.ch"

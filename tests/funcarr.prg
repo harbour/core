@@ -1,8 +1,6 @@
-// Function Array syntax test
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* Function Array syntax test */
 
 PROCEDURE Main()
 

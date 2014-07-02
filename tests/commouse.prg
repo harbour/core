@@ -18,12 +18,12 @@ PROCEDURE Main( cParam )
    ENDIF
 
    IF ! hb_comOpen( nPort )
-      ? "Unable to open port. Error:", hb_comGetError( nPort ), " OS error:", hb_comGetOSError( nPort )
+      ? "Unable to open port. Error:", hb_ntos( hb_comGetError( nPort ) ), " OS error:", hb_ntos( hb_comGetOSError( nPort ) )
       RETURN
    ENDIF
 
    IF ! hb_comInit( nPort, 1200, "N", 8, 1 )
-      ? "Unable to initialize port. Error:", hb_comGetError( nPort ), " OS error:", hb_comGetOSError( nPort )
+      ? "Unable to initialize port. Error:", hb_ntos( hb_comGetError( nPort ) ), " OS error:", hb_ntos( hb_comGetOSError( nPort ) )
       hb_comClose( nPort )
       RETURN
    ENDIF
@@ -60,7 +60,8 @@ PROCEDURE Main( cParam )
          hb_idleSleep( 0.05 )
          LOOP
       ENDIF
-      IF nType == 2
+      SWITCH nType
+      CASE 2
          IF hb_bitAnd( hb_BCode( cBuffer ), 0xC0 ) != 0xC0
             cBuffer := hb_BSubStr( cBuffer, 2 )
          ELSEIF hb_BLen( cBuffer ) >= 3
@@ -83,7 +84,8 @@ PROCEDURE Main( cParam )
             ENDIF
             cBuffer := hb_BSubStr( cBuffer, 4 )
          ENDIF
-      ELSEIF nType == 3
+         EXIT
+      CASE 3
          IF hb_bitAnd( hb_BCode( cBuffer ), 0xC0 ) != 0x80
             cBuffer := hb_BSubStr( cBuffer, 2 )
          ELSEIF hb_BLen( cBuffer ) >= 4
@@ -122,7 +124,8 @@ PROCEDURE Main( cParam )
             ENDIF
             cBuffer := hb_BSubStr( cBuffer, 5 )
          ENDIF
-      ENDIF
+         EXIT
+      ENDSWITCH
    ENDDO
    hb_comClose( nPort )
 

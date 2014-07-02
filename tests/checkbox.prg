@@ -4,15 +4,14 @@ PROCEDURE Main()
 
    LOCAL GetList := {}
 
-   LOCAL cItem := "Windows"
+   LOCAL cItem := "Linux"
    LOCAL lx := .F.
    LOCAL ly := .F.
 
-   LOCAL aItems[ 3 ]
-
-   aItems[ 1 ] := RadioButto( 3, 3, "&Windows" )
-   aItems[ 2 ] := RadioButto( 4, 3, "&Linux" )
-   aItems[ 3 ] := RadioButto( 5, 3, "&OS X" )
+   LOCAL aItems := { ;
+      RadioButto( 3, 3, "&Windows" ), ;
+      RadioButto( 4, 3, "&Linux" ), ;
+      RadioButto( 5, 3, "&OS X" ) }
 
    CLS
 

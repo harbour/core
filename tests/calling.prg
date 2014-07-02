@@ -4,7 +4,7 @@ PROCEDURE Main()
 
    SecondOne()
 
-   DO Fourth WITH "from Fourth() function"    // Testing the old fashioned 'DO'...
+   DO Fourth WITH "from Fourth() function"  // Testing the old fashioned 'DO'...
 
    ? "Ok, back to Main()"
 
