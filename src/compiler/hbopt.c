@@ -1616,8 +1616,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    }
 
    /* Initial scan */
-   pLocals = ( PHB_OPT_LOCAL ) hb_xgrab( sizeof( HB_OPT_LOCAL ) * usLocalCount );
-   memset( pLocals, 0, sizeof( HB_OPT_LOCAL ) * usLocalCount );
+   pLocals = ( PHB_OPT_LOCAL ) hb_xgrabz( sizeof( HB_OPT_LOCAL ) * usLocalCount );
    hb_compPCodeEnumScanLocals( pFunc, pLocals );
 
    /* Check */
@@ -1634,7 +1633,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
        *       if .F.
        *          x := 1
        *       endif
-       *    return
+       *       return
        * [druzus]
        */
 #if 0

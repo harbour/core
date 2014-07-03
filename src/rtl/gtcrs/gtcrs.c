@@ -1905,10 +1905,8 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
           ( ioBase->std_chmap[ i ] & A_ALTCHARSET ) == 0 )
       {
          if( ioBase->out_transtbl == NULL )
-         {
-            ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
-            memset( ioBase->out_transtbl, 0, 256 );
-         }
+            ioBase->out_transtbl = ( unsigned char * ) hb_xgrabz( 256 );
+
          ioBase->out_transtbl[ i ] = ch & A_CHARTEXT;
       }
    }
@@ -1927,10 +1925,8 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
             if( i != ( int ) uc )
             {
                if( ioBase->out_transtbl == NULL )
-               {
-                  ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
-                  memset( ioBase->out_transtbl, 0, 256 );
-               }
+                  ioBase->out_transtbl = ( unsigned char * ) hb_xgrabz( 256 );
+
                ioBase->out_transtbl[ i ] = uc;
             }
          }
@@ -1946,8 +1942,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
    unsigned int i, n;
    char buf[ 256 ], * ptr, * crsterm = NULL;
 
-   ioBase = ( InOutBase * ) hb_xgrab( sizeof( InOutBase ) );
-   memset( ioBase, 0, sizeof( InOutBase ) );
+   ioBase = ( InOutBase * ) hb_xgrabz( sizeof( InOutBase ) );
 
    if( ! term || ! *term )
       term = getenv( "HB_TERM" );

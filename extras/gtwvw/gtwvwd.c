@@ -389,10 +389,8 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    if( bStartMode )
    {
-      s_pWvwData = ( WVW_DATA * ) hb_xgrab( sizeof( WVW_DATA ) );
-      memset( s_pWvwData, 0, sizeof( WVW_DATA ) );
-      s_pWvwData->s_sApp = ( APP_DATA * ) hb_xgrab( sizeof( APP_DATA ) );
-      memset( s_pWvwData->s_sApp, 0, sizeof( APP_DATA ) );
+      s_pWvwData = ( WVW_DATA * ) hb_xgrabz( sizeof( WVW_DATA ) );
+      s_pWvwData->s_sApp = ( APP_DATA * ) hb_xgrabz( sizeof( APP_DATA ) );
 
       s_pWvwData->s_uiPaintRefresh      = 100;
       s_pWvwData->s_bMainCoordMode      = FALSE;
@@ -2203,7 +2201,6 @@ static BOOL hb_gt_wvwAllocSpBuffer( WIN_DATA * pWindowData, USHORT col, USHORT r
 
    if( pWindowData->byWinId == 0 )
       memset( pWindowData->pColors, 0x07, pWindowData->BUFFERSIZE );
-
    else
       memset( pWindowData->pColors, hb_gtGetCurrColor(), pWindowData->BUFFERSIZE );
 
@@ -4969,8 +4966,7 @@ static void hb_gt_wvwWindowPrologue( void )
 
    s_pWvwData->s_usNumWindows++;
    uiWindow = s_pWvwData->s_usNumWindows;
-   s_pWvwData->s_pWindows[ uiWindow - 1 ] = ( WIN_DATA * ) hb_xgrab( sizeof( WIN_DATA ) );
-   memset( s_pWvwData->s_pWindows[ uiWindow - 1 ], 0, sizeof( WIN_DATA ) );
+   s_pWvwData->s_pWindows[ uiWindow - 1 ] = ( WIN_DATA * ) hb_xgrabz( sizeof( WIN_DATA ) );
 
 }
 
@@ -8591,9 +8587,7 @@ HBITMAP FindBitmapHandle( const char * szFileName, int * piWidth, int * piHeight
 
 void AddBitmapHandle( const char * szFileName, HBITMAP hBitmap, int iWidth, int iHeight )
 {
-   BITMAP_HANDLE * pbhNew = ( BITMAP_HANDLE * ) hb_xgrab( sizeof( BITMAP_HANDLE ) );
-
-   memset( pbhNew, 0, sizeof( BITMAP_HANDLE ) );
+   BITMAP_HANDLE * pbhNew = ( BITMAP_HANDLE * ) hb_xgrabz( sizeof( BITMAP_HANDLE ) );
 
    strcpy( pbhNew->szFilename, szFileName );
    pbhNew->hBitmap = hBitmap;
@@ -8639,9 +8633,8 @@ static IPicture * FindPictureHandle( const char * szFileName, int * piWidth, int
 
 static void AddPictureHandle( const char * szFileName, IPicture * iPicture, int iWidth, int iHeight )
 {
-   PICTURE_HANDLE * pphNew = ( PICTURE_HANDLE * ) hb_xgrab( sizeof( PICTURE_HANDLE ) );
+   PICTURE_HANDLE * pphNew = ( PICTURE_HANDLE * ) hb_xgrabz( sizeof( PICTURE_HANDLE ) );
 
-   memset( pphNew, 0, sizeof( PICTURE_HANDLE ) );
    strcpy( pphNew->szFilename, szFileName );
    pphNew->iPicture = iPicture;
    pphNew->iWidth   = iWidth;
@@ -8688,9 +8681,7 @@ static HBITMAP FindUserBitmapHandle( const char * szFileName, int * piWidth, int
 
 static void AddUserBitmapHandle( const char * szFileName, HBITMAP hBitmap, int iWidth, int iHeight )
 {
-   BITMAP_HANDLE * pbhNew = ( BITMAP_HANDLE * ) hb_xgrab( sizeof( BITMAP_HANDLE ) );
-
-   memset( pbhNew, 0, sizeof( BITMAP_HANDLE ) );
+   BITMAP_HANDLE * pbhNew = ( BITMAP_HANDLE * ) hb_xgrabz( sizeof( BITMAP_HANDLE ) );
 
    strcpy( pbhNew->szFilename, szFileName );
    pbhNew->hBitmap = hBitmap;
@@ -9180,9 +9171,7 @@ UINT LastControlId( UINT usWinNum, BYTE byCtrlClass )
 void AddControlHandle( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT uiCtrlid, PHB_ITEM phiCodeBlock, RECT rCtrl, RECT rOffCtrl, byte bStyle )
 {
    WIN_DATA *     pWindowData = s_pWvwData->s_pWindows[ usWinNum ];
-   CONTROL_DATA * pcdNew      = ( CONTROL_DATA * ) hb_xgrab( sizeof( CONTROL_DATA ) );
-
-   memset( pcdNew, 0, sizeof( CONTROL_DATA ) );
+   CONTROL_DATA * pcdNew      = ( CONTROL_DATA * ) hb_xgrabz( sizeof( CONTROL_DATA ) );
 
    pcdNew->byCtrlClass = byCtrlClass;
    pcdNew->hWndCtrl    = hWndCtrl;

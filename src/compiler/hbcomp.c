@@ -240,10 +240,8 @@ PHB_COMP hb_comp_new( void )
 
    if( pPP )
    {
-      pComp = ( PHB_COMP ) hb_xgrab( sizeof( HB_COMP ) );
-      memset( pComp, 0, sizeof( HB_COMP ) );
-      pComp->pLex = ( PHB_COMP_LEX ) hb_xgrab( sizeof( HB_COMP_LEX ) );
-      memset( pComp->pLex, 0, sizeof( HB_COMP_LEX ) );
+      pComp = ( PHB_COMP ) hb_xgrabz( sizeof( HB_COMP ) );
+      pComp->pLex = ( PHB_COMP_LEX ) hb_xgrabz( sizeof( HB_COMP_LEX ) );
 
       /* initialize default settings */
       pComp->mode = HB_MODE_COMPILER;

@@ -73,9 +73,7 @@
 static PHB_GOBJS hb_wvg_ObjectNew( PHB_GTWVT pWVT )
 {
    int iHandle     = ( pWVT->gObjs ? pWVT->gObjs->iHandle + 1 : 1 );
-   HB_GOBJS * gObj = ( HB_GOBJS * ) hb_xgrab( sizeof( HB_GOBJS ) );
-
-   memset( gObj, 0, sizeof( HB_GOBJS ) );
+   HB_GOBJS * gObj = ( HB_GOBJS * ) hb_xgrabz( sizeof( HB_GOBJS ) );
 
    gObj->iHandle = iHandle;
    gObj->iState  = GOBJ_OBJSTATE_ENABLED;

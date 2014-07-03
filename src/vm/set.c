@@ -1205,10 +1205,8 @@ int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * callback )
    PHB_SET_LISTENER_LST pList;
 
    if( ! pSet->hb_set_listener )
-   {
-      pSet->hb_set_listener = hb_xgrab( sizeof( HB_SET_LISTENER_LST ) );
-      memset( pSet->hb_set_listener, 0, sizeof( HB_SET_LISTENER_LST ) );
-   }
+      pSet->hb_set_listener = hb_xgrabz( sizeof( HB_SET_LISTENER_LST ) );
+
    pList = ( PHB_SET_LISTENER_LST ) pSet->hb_set_listener;
 
    p_sl->callback = callback;

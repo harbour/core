@@ -56,7 +56,7 @@ procedure main()
    nMin  := nUMin := 0xFFFF
    nMax  := nUMax := 0x0000
 
-   for each cLine in hb_ATokens( hb_MemoRead( "BIG5.TXT" ), hb_eol() )
+   for each cLine in hb_ATokens( StrTran( hb_MemoRead( "BIG5.TXT" ), Chr( 13 ) ), Chr( 10 ) )
       if hb_LeftEq( cLine, "0x" ) .and. ( n := hb_At( "0x", cLine, 7 ) ) != 0
          nBG5 := hb_HexToNum( SubStr( cLine, 3, 4 ) )
          nU16 := hb_HexToNum( SubStr( cLine, n + 2, 4 ) )

@@ -169,8 +169,7 @@ HB_FUNC( XDL_INIT_MMFILE )
    {
       HB_MMF * phb_mmf;
 
-      phb_mmf = ( HB_MMF * ) hb_xgrab( sizeof( HB_MMF ) );
-      hb_xmemset( phb_mmf, 0, sizeof( HB_MMF ) );
+      phb_mmf = ( HB_MMF * ) hb_xgrabz( sizeof( HB_MMF ) );
       phb_mmf->mmf = mmf;
       hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
    }
@@ -345,8 +344,7 @@ HB_FUNC( XDL_MMFILE_COMPACT )
       {
          HB_MMF * phb_mmf;
 
-         phb_mmf = ( HB_MMF * ) hb_xgrab( sizeof( HB_MMF ) );
-         hb_xmemset( phb_mmf, 0, sizeof( HB_MMF ) );
+         phb_mmf = ( HB_MMF * ) hb_xgrabz( sizeof( HB_MMF ) );
          phb_mmf->mmf = mmfc;
          hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
 

@@ -715,8 +715,7 @@ HB_FUNC( SQLITE3_OPEN )
       {
          HB_SQLITE3 * hbsqlite3;
 
-         hbsqlite3 = ( HB_SQLITE3 * ) hb_xgrab( sizeof( HB_SQLITE3 ) );
-         hb_xmemset( hbsqlite3, 0, sizeof( HB_SQLITE3 ) );
+         hbsqlite3 = ( HB_SQLITE3 * ) hb_xgrabz( sizeof( HB_SQLITE3 ) );
          hbsqlite3->db = db;
          hb_sqlite3_ret( hbsqlite3, HB_SQLITE3_DB );
       }
@@ -749,8 +748,7 @@ HB_FUNC( SQLITE3_OPEN_V2 )
    {
       HB_SQLITE3 * hbsqlite3;
 
-      hbsqlite3 = ( HB_SQLITE3 * ) hb_xgrab( sizeof( HB_SQLITE3 ) );
-      hb_xmemset( hbsqlite3, 0, sizeof( HB_SQLITE3 ) );
+      hbsqlite3 = ( HB_SQLITE3 * ) hb_xgrabz( sizeof( HB_SQLITE3 ) );
       hbsqlite3->db = db;
       hb_sqlite3_ret( hbsqlite3, HB_SQLITE3_DB );
    }
@@ -1674,8 +1672,9 @@ HB_FUNC( SQLITE3_BLOB_READ )
          iLen = sqlite3_blob_bytes( pBlob );
 
       buffer = ( char * ) hb_xgrab( iLen + 1 );
-
-      /*hb_xmemset( buffer, 0, iLen );*/
+#if 0
+      hb_xmemset( buffer, 0, iLen );
+#endif
 
       if( SQLITE_OK == sqlite3_blob_read( pBlob, ( void * ) buffer, iLen, hb_parni( 3 ) ) )
       {

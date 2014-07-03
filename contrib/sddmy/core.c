@@ -408,8 +408,8 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    pArea->ulRecCount = ( HB_ULONG ) mysql_num_rows( pSDDData->pResult );
 
    pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
+
    pArea->ulRecMax = pArea->ulRecCount + 1;
 
    pRow = pArea->pRow;

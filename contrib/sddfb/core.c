@@ -434,8 +434,8 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    pArea->ulRecCount = 0;
 
    pArea->pRow      = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
+
    pArea->ulRecMax = SQLDD_ROWSET_INIT;
 
    *pArea->pRow = pItemEof;

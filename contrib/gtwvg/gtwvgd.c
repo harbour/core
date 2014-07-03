@@ -326,8 +326,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
    PHB_GTWVT pWVT;
 
-   pWVT = ( PHB_GTWVT ) hb_xgrab( sizeof( HB_GTWVT ) );
-   memset( pWVT, 0, sizeof( HB_GTWVT ) );
+   pWVT = ( PHB_GTWVT ) hb_xgrabz( sizeof( HB_GTWVT ) );
+
    pWVT->pGT               = pGT;
 
    if( ! hb_gt_wvt_Alloc( pWVT ) )
@@ -4275,8 +4275,7 @@ static void hb_wvt_gtLoadGuiData( void )
 {
    HINSTANCE h;
 
-   s_guiData = ( PHB_GUIDATA ) hb_xgrab( sizeof( HB_GUIDATA ) );
-   memset( s_guiData, 0, sizeof( HB_GUIDATA ) );
+   s_guiData = ( PHB_GUIDATA ) hb_xgrabz( sizeof( HB_GUIDATA ) );
 
    s_guiData->penWhite       = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 255,255,255 ) );
    s_guiData->penBlack       = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );

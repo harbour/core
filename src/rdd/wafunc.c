@@ -107,8 +107,7 @@ void * hb_rddNewAreaNode( LPRDDNODE pRddNode, HB_USHORT uiRddID )
    {
       HB_USHORT uiSize;
 
-      pArea = ( AREAP ) hb_xgrab( sizeof( AREA ) );
-      memset( pArea, 0, sizeof( AREA ) );
+      pArea = ( AREAP ) hb_xgrabz( sizeof( AREA ) );
       pArea->lprfsHost = &pRddNode->pTable;
       pArea->rddID = uiRddID;
 
@@ -128,8 +127,7 @@ void * hb_rddNewAreaNode( LPRDDNODE pRddNode, HB_USHORT uiRddID )
    }
    else
    {
-      pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
-      memset( pArea, 0, pRddNode->uiAreaSize );
+      pArea = ( AREAP ) hb_xgrabz( pRddNode->uiAreaSize );
       pArea->lprfsHost = &pRddNode->pTable;
       pArea->rddID = uiRddID;
    }

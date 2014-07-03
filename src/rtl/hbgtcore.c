@@ -132,10 +132,9 @@ static void * hb_gt_def_New( PHB_GT pGT )
    pGT->screenBuffer =
             ( PHB_SCREENCELL ) hb_xgrab( sizeof( HB_SCREENCELL ) * nSize );
    pGT->prevBuffer =
-            ( PHB_SCREENCELL ) hb_xgrab( sizeof( HB_SCREENCELL ) * nSize );
+            ( PHB_SCREENCELL ) hb_xgrabz( sizeof( HB_SCREENCELL ) * nSize );
    pGT->pLines = ( HB_BOOL * ) hb_xgrab( sizeof( HB_BOOL ) * pGT->iHeight );
 
-   memset( pGT->prevBuffer, 0, sizeof( HB_SCREENCELL ) * nSize );
    for( i = 0; i < pGT->iHeight; ++i )
       pGT->pLines[ i ] = HB_TRUE;
 
@@ -489,8 +488,7 @@ static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, in
    if( *piColorCount == 0 )
    {
       *piColorCount = HB_CLR_MAX_ + 1;
-      *pColorsPtr = ( int * ) hb_xgrab( *piColorCount * sizeof( int ) );
-      memset( *pColorsPtr, 0, *piColorCount * sizeof( int ) );
+      *pColorsPtr = ( int * ) hb_xgrabz( *piColorCount * sizeof( int ) );
    }
 
    pColors = *pColorsPtr;
@@ -3736,8 +3734,7 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
          if( pGT || pSuperTable )
             hb_errInternal( 9996, "Harbour terminal (GT) initialization failure", NULL, NULL );
 
-         pGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
-         memset( pGT, 0, sizeof( HB_GT_BASE ) );
+         pGT = ( PHB_GT_BASE ) hb_xgrabz( sizeof( HB_GT_BASE ) );
          pGT->pFuncTable = ( PHB_GT_FUNCS ) hb_xgrab( sizeof( HB_GT_FUNCS ) );
          memcpy( pGT->pFuncTable, &s_gtCoreFunc, sizeof( HB_GT_FUNCS ) );
          pGT->iUsed++;
@@ -3749,8 +3746,7 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
 
          if( fNew )
          {
-            pGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
-            memset( pGT, 0, sizeof( HB_GT_BASE ) );
+            pGT = ( PHB_GT_BASE ) hb_xgrabz( sizeof( HB_GT_BASE ) );
             pGT->pFuncTable = ( PHB_GT_FUNCS ) hb_xgrab( sizeof( HB_GT_FUNCS ) );
             memcpy( pGT->pFuncTable, &s_gtCoreFunc, sizeof( HB_GT_FUNCS ) );
             pGT->iUsed++;

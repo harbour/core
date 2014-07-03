@@ -296,8 +296,7 @@ HB_FUNC( HB_PQCOPYFROMWA )
 
       pItem = hb_itemNew( NULL );
 
-      context = ( pgCopyContext * ) hb_xgrab( sizeof( pgCopyContext ) );
-      memset( context, 0, sizeof( pgCopyContext ) );
+      context = ( pgCopyContext * ) hb_xgrabz( sizeof( pgCopyContext ) );
 
       context->buffer     = ( char * ) hb_xgrab( sizeof( char ) * nBufLen * 1400 );
       context->position   = 0;

@@ -859,12 +859,10 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
 {
    PHB_FFIND ffind;
 
-   ffind = ( PHB_FFIND ) hb_xgrab( sizeof( HB_FFIND ) );
-   memset( ffind, 0, sizeof( HB_FFIND ) );
+   ffind = ( PHB_FFIND ) hb_xgrabz( sizeof( HB_FFIND ) );
 
    /* Allocate platform dependent file find info storage */
-   ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
-   memset( ffind->info, 0, sizeof( HB_FFIND_INFO ) );
+   ffind->info = ( void * ) hb_xgrabz( sizeof( HB_FFIND_INFO ) );
 
    /* Store search parameters */
 #if defined( HB_OS_WIN )

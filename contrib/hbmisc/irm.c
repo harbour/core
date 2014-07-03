@@ -29,8 +29,8 @@ PHB_IRMMAP hb_irmMapAlloc( HB_ULONG ulSize )
 
    pMap->ulSize  = ulSize;
    pMap->ulAlloc = ( ulSize + 7 ) & ~7UL;
-   pMap->pBits   = ( HB_BYTE * ) hb_xgrab( pMap->ulAlloc >> 3 );
-   memset( pMap->pBits, 0, pMap->ulAlloc >> 3 );
+   pMap->pBits   = ( HB_BYTE * ) hb_xgrabz( pMap->ulAlloc >> 3 );
+
    return pMap;
 }
 

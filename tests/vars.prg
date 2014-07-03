@@ -2,6 +2,8 @@
 #include "clipper.ch"
 #endif
 
+/* Testing warnings. Do not add HB_SYMBOL_UNUSED() or remove unused variables. */
+
 MEMVAR i
 
 PROCEDURE Main( Param1 )
@@ -14,10 +16,6 @@ PROCEDURE Main( Param1 )
    Sub( @j )
 
    ? j
-
-   HB_SYMBOL_UNUSED( Param1 )
-   HB_SYMBOL_UNUSED( k )
-   HB_SYMBOL_UNUSED( i )
 
    RETURN
 

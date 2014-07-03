@@ -311,7 +311,7 @@ typedef struct _HB_MEMINFO
 #define HB_FM_BLOCKSIZE( p )  ( s_fStatistic ? HB_FM_PTR( pMem )->nSize : 0 )
 
 /* NOTE: we cannot use here HB_TRACE because it will overwrite the
- * function name/line number of code which called hb_xalloc/hb_xgrab
+ * function name/line number of code which called hb_xalloc()/hb_xgrab()
  */
 #define HB_TRACE_FM  HB_TRACE_STEALTH
 
@@ -610,7 +610,7 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
          /* NOTE: PRG line number/procname is not very useful during hunting
           * for memory leaks - this is why we are using the previously stored
           * function/line info - this is a location of code that called
-          * hb_xalloc/hb_xgrab
+          * hb_xalloc()/hb_xgrab()
           */
          pMem->uiProcLine = pTrace->line; /* C line number */
          if( pTrace->file )
@@ -696,7 +696,7 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
          /* NOTE: PRG line number/procname is not very useful during hunting
           * for memory leaks - this is why we are using the previously stored
           * function/line info - this is a location of code that called
-          * hb_xalloc/hb_xgrab
+          * hb_xalloc()/hb_xgrab()
           */
          pMem->uiProcLine = pTrace->line; /* C line number */
          if( pTrace->file )

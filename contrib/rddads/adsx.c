@@ -402,8 +402,7 @@ static PMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM
    PHB_ITEM            pItem, pEvalItem = NULL;
 
 
-   pTag = ( PMIXTAG ) hb_xgrab( sizeof( MIXTAG ) );
-   memset( pTag, 0, sizeof( MIXTAG ) );
+   pTag = ( PMIXTAG ) hb_xgrabz( sizeof( MIXTAG ) );
 
    pTag->szName = ( char * ) hb_xgrab( MIX_MAXTAGNAMELEN + 1 );
    hb_strncpyUpperTrim( pTag->szName, szTagName, MIX_MAXTAGNAMELEN );

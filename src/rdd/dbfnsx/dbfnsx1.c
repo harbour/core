@@ -1412,9 +1412,8 @@ static LPPAGEINFO hb_nsxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
       pIndex->ulPages = 1;
       pIndex->ulPageLast = 0;
       pIndex->ulPagesDepth = NSX_PAGE_BUFFER;
-      pIndex->pages = ( LPPAGEINFO * ) hb_xgrab( sizeof( LPPAGEINFO ) * NSX_PAGE_BUFFER );
-      memset( pIndex->pages, 0, sizeof( LPPAGEINFO ) * NSX_PAGE_BUFFER );
-      pPagePtr = &pIndex->pages[0];
+      pIndex->pages = ( LPPAGEINFO * ) hb_xgrabz( sizeof( LPPAGEINFO ) * NSX_PAGE_BUFFER );
+      pPagePtr = &pIndex->pages[ 0 ];
    }
    else
    {
@@ -1447,14 +1446,12 @@ static LPPAGEINFO hb_nsxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
 
    if( ! *pPagePtr )
    {
-      *pPagePtr = ( LPPAGEINFO ) hb_xgrab( sizeof( HB_PAGEINFO ) );
-      memset( *pPagePtr, 0, sizeof( HB_PAGEINFO ) );
+      *pPagePtr = ( LPPAGEINFO ) hb_xgrabz( sizeof( HB_PAGEINFO ) );
    }
 #ifdef HB_NSX_EXTERNAL_PAGEBUFFER
    if( ! hb_nsxPageBuffer( *pPagePtr ) )
    {
-      hb_nsxPageBuffer( *pPagePtr ) = ( HB_UCHAR * ) hb_xgrab( NSX_PAGELEN );
-      memset( hb_nsxPageBuffer( *pPagePtr ), 0, NSX_PAGELEN );
+      hb_nsxPageBuffer( *pPagePtr ) = ( HB_UCHAR * ) hb_xgrabz( NSX_PAGELEN );
    }
 #endif
    ( *pPagePtr )->pPrev = NULL;
@@ -1693,8 +1690,7 @@ static LPTAGINFO hb_nsxTagNew( LPNSXINDEX pIndex, const char * szTagName,
 {
    LPTAGINFO pTag;
 
-   pTag = ( LPTAGINFO ) hb_xgrab( sizeof( TAGINFO ) );
-   memset( pTag, 0, sizeof( TAGINFO ) );
+   pTag = ( LPTAGINFO ) hb_xgrabz( sizeof( TAGINFO ) );
    pTag->TagName = hb_strndup( szTagName, NSX_TAGNAME );
    pTag->pIndex = pIndex;
    if( szKeyExpr )
@@ -1979,8 +1975,7 @@ static LPNSXINDEX hb_nsxIndexNew( NSXAREAP pArea )
 {
    LPNSXINDEX pIndex;
 
-   pIndex = ( LPNSXINDEX ) hb_xgrab( sizeof( NSXINDEX ) );
-   memset( pIndex, 0, sizeof( NSXINDEX ) );
+   pIndex = ( LPNSXINDEX ) hb_xgrabz( sizeof( NSXINDEX ) );
 
    pIndex->pFile = NULL;
    pIndex->pArea = pArea;
@@ -2485,8 +2480,7 @@ static void hb_nsxTagSetPageStack( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT u
       if( pTag->stackSize == 0 )
       {
          pTag->stackSize = NSX_STACKSIZE;
-         pTag->stack = ( LPTREESTACK ) hb_xgrab( sizeof( TREE_STACK ) * NSX_STACKSIZE );
-         memset( pTag->stack, 0, sizeof( TREE_STACK ) * NSX_STACKSIZE );
+         pTag->stack = ( LPTREESTACK ) hb_xgrabz( sizeof( TREE_STACK ) * NSX_STACKSIZE );
       }
       else
       {
@@ -5438,8 +5432,7 @@ static LPNSXSORTINFO hb_nsxSortNew( LPTAGINFO pTag, HB_ULONG ulRecCount )
    if( ulRecCount == 0 )
       ulRecCount = 1;
 
-   pSort = ( LPNSXSORTINFO ) hb_xgrab( sizeof( NSXSORTINFO ) );
-   memset( pSort, 0, sizeof( NSXSORTINFO ) );
+   pSort = ( LPNSXSORTINFO ) hb_xgrabz( sizeof( NSXSORTINFO ) );
 
    ulMin = ( HB_ULONG ) ceil( sqrt( ( double ) ulRecCount ) );
    ulMax = ( ( HB_ULONG ) ceil( sqrt( ( double ) ulRecCount / ( iLen + 4 ) ) ) ) << 7;
@@ -5510,8 +5503,7 @@ static LPNSXSORTINFO hb_nsxSortNew( LPTAGINFO pTag, HB_ULONG ulRecCount )
    /* check for overflow on 32 bit machines when number of records is nearly 2^32 */
    if( ! pSort->ulPages )
       pSort->ulPages = ulRecCount / pSort->ulPgKeys + 1;
-   pSort->pSwapPage = ( LPNSXSWAPPAGE ) hb_xgrab( sizeof( NSXSWAPPAGE ) * pSort->ulPages );
-   memset( pSort->pSwapPage, 0, sizeof( NSXSWAPPAGE ) * pSort->ulPages );
+   pSort->pSwapPage = ( LPNSXSWAPPAGE ) hb_xgrabz( sizeof( NSXSWAPPAGE ) * pSort->ulPages );
    return pSort;
 }
 

@@ -339,8 +339,7 @@ static void s_consrvRet( PHB_CONSRV conn )
 
 static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, HB_BOOL rpc )
 {
-   PHB_CONSRV conn = ( PHB_CONSRV ) memset( hb_xgrab( sizeof( HB_CONSRV ) ),
-                                            0, sizeof( HB_CONSRV ) );
+   PHB_CONSRV conn = ( PHB_CONSRV ) hb_xgrabz( sizeof( HB_CONSRV ) );
 
    conn->sd = connsd;
    conn->rpc = rpc;
@@ -471,8 +470,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, HB_BOOL rpc )
       PHB_LISTENSD lsd, * lsd_ptr;
       int iLen;
 
-      lsd = ( PHB_LISTENSD ) memset( hb_xgrab( sizeof( HB_LISTENSD ) ),
-                                            0, sizeof( HB_LISTENSD ) );
+      lsd = ( PHB_LISTENSD ) hb_xgrabz( sizeof( HB_LISTENSD ) );
       lsd->sd = sd;
       lsd->rpc = rpc;
       if( szRootPath )

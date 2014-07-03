@@ -1178,10 +1178,7 @@ static HB_ERRCODE hb_delimSetFieldExtent( DELIMAREAP pArea, HB_USHORT uiFieldExt
 
    /* Alloc field offsets array */
    if( uiFieldExtent )
-   {
-      pArea->pFieldOffset = ( HB_USHORT * ) hb_xgrab( uiFieldExtent * sizeof( HB_USHORT ) );
-      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( HB_USHORT ) );
-   }
+      pArea->pFieldOffset = ( HB_USHORT * ) hb_xgrabz( uiFieldExtent * sizeof( HB_USHORT ) );
 
    return HB_SUCCESS;
 }

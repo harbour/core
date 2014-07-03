@@ -3105,8 +3105,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    nSize = ( HB_SIZE ) pArea->area.uiFieldCount * sizeof( DBFFIELD ) +
            ( pArea->bTableType == DB_DBF_VFP ? 1 : 2 );
-   pBuffer = ( HB_BYTE * ) hb_xgrab( nSize + sizeof( DBFFIELD ) + 1 );
-   memset( pBuffer, 0, nSize + sizeof( DBFFIELD ) + 1 );
+   pBuffer = ( HB_BYTE * ) hb_xgrabz( nSize + sizeof( DBFFIELD ) + 1 );
    pThisField = ( DBFFIELD * ) pBuffer;
 
    pArea->fHasMemo = fError = HB_FALSE;

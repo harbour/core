@@ -246,9 +246,7 @@ static void s_GetFileName( HB_BOOL fSave )
    ofn.nMaxFile         = hbwapi_par_DWORD( 7 );
    if( ofn.nMaxFile < 0x400 )
       ofn.nMaxFile = ofn.nMaxFile == 0 ? 0x10000 : 0x400;
-   ofn.lpstrFile        = ( LPTSTR )
-                          memset( hb_xgrab( ofn.nMaxFile * sizeof( TCHAR ) ),
-                                  0, ofn.nMaxFile * sizeof( TCHAR ) );
+   ofn.lpstrFile        = ( LPTSTR ) hb_xgrabz( ofn.nMaxFile * sizeof( TCHAR ) );
 
    ofn.lpstrInitialDir  = HB_PARSTR( 3, &hInitDir, NULL );
    ofn.lpstrTitle       = HB_PARSTR( 2, &hTitle, NULL );

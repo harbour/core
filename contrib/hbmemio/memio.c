@@ -157,8 +157,7 @@ static void memfsInit( void )
    s_fs.ulInodeAlloc = HB_MEMFS_INITSIZE;
    s_fs.pInodes = ( PHB_MEMFS_INODE * ) hb_xgrab( sizeof( PHB_MEMFS_INODE ) * s_fs.ulInodeAlloc );
    s_fs.ulFileAlloc = HB_MEMFS_INITSIZE;
-   s_fs.pFiles = ( PHB_MEMFS_FILE * ) hb_xgrab( sizeof( PHB_MEMFS_FILE ) * s_fs.ulFileAlloc );
-   memset( s_fs.pFiles, 0, sizeof( PHB_MEMFS_FILE ) * s_fs.ulFileAlloc );
+   s_fs.pFiles = ( PHB_MEMFS_FILE * ) hb_xgrabz( sizeof( PHB_MEMFS_FILE ) * s_fs.ulFileAlloc );
    s_fs.ulFileLast = 0;
    hb_vmAtQuit( memfsExit, NULL );
 }
@@ -196,8 +195,7 @@ static PHB_MEMFS_INODE memfsInodeAlloc( const char * szName )
 
    pInode->llSize = 0;
    pInode->llAlloc = HB_MEMFS_INITSIZE;
-   pInode->pData = ( char * ) hb_xgrab( ( HB_ULONG ) pInode->llAlloc );
-   memset( pInode->pData, 0, ( HB_SIZE ) pInode->llAlloc );
+   pInode->pData = ( char * ) hb_xgrabz( ( HB_SIZE ) pInode->llAlloc );
    pInode->szName = hb_strdup( szName );
 
    pInode->uiCount = 1;

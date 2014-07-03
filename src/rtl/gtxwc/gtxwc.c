@@ -4442,11 +4442,8 @@ static HB_BOOL hb_gt_xwc_isUTF8( void )
 
 static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
 {
-   PXWND_DEF wnd = ( PXWND_DEF ) hb_xgrab( sizeof( XWND_DEF ) );
+   PXWND_DEF wnd = ( PXWND_DEF ) hb_xgrabz( sizeof( XWND_DEF ) );
    int i;
-
-   /* clear whole structure */
-   memset( wnd, 0, sizeof( XWND_DEF ) );
 
    wnd->pGT = pGT;
    wnd->dpy = NULL;

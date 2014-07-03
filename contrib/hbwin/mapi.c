@@ -121,16 +121,10 @@ HB_FUNC( WIN_MAPISENDMAIL )
          note.lpszDateReceived = ( LPSTR ) HB_PARSTRDEF( 4, &hString[ iString++ ], NULL );
 
          if( nRecpCount )
-         {
-            note.lpRecips = ( MapiRecipDesc * ) hb_xgrab( nRecpCount * sizeof( MapiRecipDesc ) );
-            memset( note.lpRecips, 0, nRecpCount * sizeof( MapiRecipDesc ) );
-         }
+            note.lpRecips = ( MapiRecipDesc * ) hb_xgrabz( nRecpCount * sizeof( MapiRecipDesc ) );
 
          if( nFileCount )
-         {
-            note.lpFiles = ( MapiFileDesc * ) hb_xgrab( nFileCount * sizeof( MapiFileDesc ) );
-            memset( note.lpFiles, 0, nFileCount * sizeof( MapiFileDesc ) );
-         }
+            note.lpFiles = ( MapiFileDesc * ) hb_xgrabz( nFileCount * sizeof( MapiFileDesc ) );
 
          if( hb_parl( 6 ) )
             note.flFlags |= MAPI_RECEIPT_REQUESTED;

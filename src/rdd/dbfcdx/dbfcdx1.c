@@ -235,11 +235,7 @@ static void hb_cdxMakeSortTab( CDXAREAP pArea )
  */
 static LPCDXKEY hb_cdxKeyNew( void )
 {
-   LPCDXKEY pKey;
-
-   pKey = ( LPCDXKEY ) hb_xgrab( sizeof( CDXKEY ) );
-   memset( pKey, 0, sizeof( CDXKEY ) );
-   return pKey;
+   return ( LPCDXKEY ) hb_xgrabz( sizeof( CDXKEY ) );
 }
 
 /*
@@ -2387,8 +2383,7 @@ static LPCDXPAGE hb_cdxPageNew( LPCDXTAG pTag, LPCDXPAGE pOwnerPage, HB_ULONG ul
    }
    else
    {
-      pPage = ( LPCDXPAGE ) hb_xgrab( sizeof( CDXPAGE ) );
-      memset( pPage, 0, sizeof( CDXPAGE ) );
+      pPage = ( LPCDXPAGE ) hb_xgrabz( sizeof( CDXPAGE ) );
       pPage->PageType = CDX_NODE_UNUSED;
       pPage->Left = pPage->Right = CDX_DUMMYNODE;
       pPage->TagParent = pTag;

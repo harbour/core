@@ -530,9 +530,8 @@ static PHB_CURL PHB_CURL_create( CURL * from )
 
    if( curl )
    {
-      PHB_CURL hb_curl = ( PHB_CURL ) hb_xgrab( sizeof( HB_CURL ) );
+      PHB_CURL hb_curl = ( PHB_CURL ) hb_xgrabz( sizeof( HB_CURL ) );
 
-      memset( hb_curl, 0, sizeof( HB_CURL ) );
       hb_curl->curl = curl;
 
       return hb_curl;

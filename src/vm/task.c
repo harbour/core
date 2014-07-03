@@ -505,8 +505,7 @@ static PHB_TASKINFO hb_taskNew( long stack_size )
    if( stack_size < HB_TASK_STACK_MIN )
       stack_size = HB_TASK_STACK_MIN;
 
-   pTask = ( PHB_TASKINFO ) memset( hb_xgrab( sizeof( HB_TASKINFO ) ), 0,
-                                    sizeof( HB_TASKINFO ) );
+   pTask = ( PHB_TASKINFO ) hb_xgrabz( sizeof( HB_TASKINFO ) );
    pTask->stack = ( char * ) hb_xgrab( stack_size );
 
    stack_size += ( HB_PTRDIFF ) pTask->stack;
@@ -559,8 +558,7 @@ void hb_taskInit( void )
 {
    if( s_iTaskID == 0 )
    {
-      s_mainTask = s_currTask = ( PHB_TASKINFO )
-         memset( hb_xgrab( sizeof( HB_TASKINFO ) ), 0, sizeof( HB_TASKINFO ) );
+      s_mainTask = s_currTask = ( PHB_TASKINFO ) hb_xgrabz( sizeof( HB_TASKINFO ) );
       /* main task uses default application stack */
       s_currTask->id = ++s_iTaskID;
       s_currTask->state = TASK_RUNNING;

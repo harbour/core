@@ -287,8 +287,7 @@ void * hb_stackGetTSD( PHB_TSD pTSD )
       HB_SIZE nSize = ( hb_stack.iTSD + 2 ) * sizeof( HB_TSD_HOLDER );
       if( hb_stack.iTSD == 0 )
       {
-         hb_stack.pTSD = ( PHB_TSD_HOLDER ) hb_xgrab( nSize );
-         memset( hb_stack.pTSD, 0, nSize );
+         hb_stack.pTSD = ( PHB_TSD_HOLDER ) hb_xgrabz( nSize );
       }
       else
       {
@@ -298,8 +297,7 @@ void * hb_stackGetTSD( PHB_TSD pTSD )
 #endif
 
       hb_stack.pTSD[ pTSD->iHandle ].pTSD  = pTSD;
-      hb_stack.pTSD[ pTSD->iHandle ].value = hb_xgrab( pTSD->iSize );
-      memset( hb_stack.pTSD[ pTSD->iHandle ].value, 0, pTSD->iSize );
+      hb_stack.pTSD[ pTSD->iHandle ].value = hb_xgrabz( pTSD->iSize );
       if( pTSD->pInitFunc )
          pTSD->pInitFunc( hb_stack.pTSD[ pTSD->iHandle ].value );
    }

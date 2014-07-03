@@ -288,8 +288,7 @@ static void s_fileNewSrvData( PHB_CONCLI conn, int iStreamID, int iType )
 
    if( ! pSrvData )
    {
-      pSrvData = ( PHB_SRVDATA ) memset( hb_xgrab( sizeof( HB_SRVDATA ) ),
-                                         0, sizeof( HB_SRVDATA ) );
+      pSrvData = ( PHB_SRVDATA ) hb_xgrabz( sizeof( HB_SRVDATA ) );
       pSrvData->id = iStreamID;
       pSrvData->type = iType;
       if( iType == NETIO_SRVITEM )

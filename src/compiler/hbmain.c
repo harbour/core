@@ -1862,10 +1862,7 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
  */
 static PHB_HFUNC hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBOLSCOPE cScope )
 {
-   PHB_HFUNC pFunc;
-
-   pFunc = ( PHB_HFUNC ) hb_xgrab( sizeof( HB_HFUNC ) );
-   memset( pFunc, 0, sizeof( HB_HFUNC ) );
+   PHB_HFUNC pFunc = ( PHB_HFUNC ) hb_xgrabz( sizeof( HB_HFUNC ) );
 
    pFunc->szName         = szName;
    pFunc->cScope         = cScope;
@@ -1879,9 +1876,7 @@ static PHB_HFUNC hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBO
 
 static PHB_HINLINE hb_compInlineNew( HB_COMP_DECL, const char * szName, int iLine )
 {
-   PHB_HINLINE pInline;
-
-   pInline = ( PHB_HINLINE ) hb_xgrab( sizeof( HB_HINLINE ) );
+   PHB_HINLINE pInline = ( PHB_HINLINE ) hb_xgrab( sizeof( HB_HINLINE ) );
 
    pInline->szName     = szName;
    pInline->pCode      = NULL;

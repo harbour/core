@@ -207,8 +207,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
    PHB_GTWVT pWVT;
 
-   pWVT = ( PHB_GTWVT ) hb_xgrab( sizeof( HB_GTWVT ) );
-   memset( pWVT, 0, sizeof( HB_GTWVT ) );
+   pWVT = ( PHB_GTWVT ) hb_xgrabz( sizeof( HB_GTWVT ) );
+
    pWVT->pGT               = pGT;
 
    if( ! hb_gt_wvt_Alloc( pWVT ) )

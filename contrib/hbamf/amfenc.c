@@ -1018,8 +1018,7 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
 {
    amfContext * context;
 
-   context = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
-   memset( context, 0, sizeof( amfContext ) );
+   context = ( amfContext * ) hb_xgrabz( sizeof( amfContext ) );
 
    context->cBuf = ( char * ) hb_xgrab( sizeof( char ) * 8 );
 #if 0
@@ -1378,8 +1377,7 @@ HB_FUNC( AMF3_ENCODE )
    if( ! pItem )
       return;
 
-   context = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
-   memset( context, 0, sizeof( amfContext ) );
+   context = ( amfContext * ) hb_xgrabz( sizeof( amfContext ) );
 
    context->cBuf = ( char * ) hb_xgrab( sizeof( char ) * 8 );
 #if 0

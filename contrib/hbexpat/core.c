@@ -751,9 +751,8 @@ HB_FUNC( XML_PARSERCREATE )
 
    if( parser )
    {
-      PHB_EXPAT hb_expat = ( PHB_EXPAT ) hb_xgrab( sizeof( HB_EXPAT ) );
+      PHB_EXPAT hb_expat = ( PHB_EXPAT ) hb_xgrabz( sizeof( HB_EXPAT ) );
 
-      memset( hb_expat, 0, sizeof( HB_EXPAT ) );
       hb_expat->parser = parser;
 
       XML_SetUserData( hb_expat->parser, hb_expat );

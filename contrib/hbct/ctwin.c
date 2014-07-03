@@ -716,8 +716,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
    else if( iCol > iRight )
       iCol = iRight;
 
-   pWnd = ( PHB_CT_WND ) hb_xgrab( sizeof( HB_CT_WND ) );
-   memset( pWnd, 0, sizeof( HB_CT_WND ) );
+   pWnd = ( PHB_CT_WND ) hb_xgrabz( sizeof( HB_CT_WND ) );
 
    pWnd->fHidden = ! fVisible;
    pWnd->iLevel = HB_CTW_DEFAULT;
@@ -1198,9 +1197,8 @@ static PHB_GTCTW hb_ctw_base( void )
          return HB_GTCTW_GET( pGT );
       else
       {
-         PHB_GTCTW pCTW = ( PHB_GTCTW ) hb_xgrab( sizeof( HB_GTCTW ) );
+         PHB_GTCTW pCTW = ( PHB_GTCTW ) hb_xgrabz( sizeof( HB_GTCTW ) );
 
-         memset( pCTW, 0, sizeof( HB_GTCTW ) );
          HB_GTLOCAL( pGT ) = pCTW;
          pCTW->pGT = pGT;
 
