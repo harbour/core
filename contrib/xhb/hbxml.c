@@ -51,7 +51,7 @@
  * This source file contains a modified version of MXML (Mini XML)
  * library, developed by Giancarlo Niccolai. MXML is released under
  * LGPL license; this modified version (called HBXML) is released under
- * GPL with HARBOUR exception. HBXML license does not extends into
+ * GPL with Harbour exception. HBXML license does not extends into
  * MXML; HBXML and any modification to HBXML is to be considered as
  * a part of Harbour or xHarbour projects, as it is modified to
  * be specifically working in the context of the compiler's RTL.

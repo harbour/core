@@ -349,7 +349,7 @@ void hb_stackInit( void )
 #endif
    {
       HB_STACK_TLS_PRELOAD
-      hb_stack_init(&hb_stack );
+      hb_stack_init( &hb_stack );
       hb_xinit_thread();
    }
 }

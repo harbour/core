@@ -78,7 +78,7 @@ Exceptions:
   on Harbour command line is unusual, check the current code
   for this.
 
-- The CLIPPER, HARBOUR and Harbour application
+- CLIPPER, HARBOUR envvars and Harbour application
   command line parsing is a different beast,
   see cmdarg.c for a NOTE.
 

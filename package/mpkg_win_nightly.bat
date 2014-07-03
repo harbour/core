@@ -16,12 +16,6 @@ rem   - multi-core CPU recommended
 rem   - admin rights for MSVC setup (optional)
 rem   - admin rights for Scheduled Task setup
 rem   - remote admin (via RDP protocol)
-rem
-rem NOTES:
-rem   - The first run under a new (or reinstalled) user account
-rem     must be done interactively to confirm server identity
-rem     when doing SCP uploads. This has to be repeated each time
-rem     the server certificate gets updated.
 
 pushd
 
@@ -50,7 +44,6 @@ set HB_VL=%HB_VF%
 set HB_RT=%~dp0
 
 set _HB_MAKE_OPTION=HB_VERSION=%HB_VF%
-set _HB_SFNET_URL=,harbour-project@frs.sourceforge.net:/home/frs/project/h/ha/harbour-project/binaries-windows/nightly/
 
 set HB_BUILD_PKG=yes
 
@@ -81,10 +74,9 @@ win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-mingw-log.t
 if errorlevel 1 goto _EXIT
 endlocal
 
-rem echo ! Uploading Harbour Windows binaries...
-rem
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.exe  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.zip  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem Non-unified packages are here:
+rem    harbour-nightly-win-mingw.exe
+rem    harbour-nightly-win-mingw.zip
 
 echo ! Creating unified Windows package...
 
@@ -92,13 +84,15 @@ call package\winuni\mpkg_win_uni.bat
 
 echo ! Uploading Harbour unified Windows package...
 
-%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.exe            %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.7z             %HB_SFNET_USER%%_HB_SFNET_URL%
+rem Unified packages are here:
+rem    %HB_RT%harbour-nightly-win.exe
+rem    %HB_RT%harbour-nightly-win.7z
 
 :_EXIT
 
-%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-log.txt        %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-mingw-log.txt  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem Logs are here:
+rem    %HB_RT%harbour-nightly-win-log.txt
+rem    %HB_RT%harbour-nightly-win-mingw-log.txt
 
 echo ! Finished.
 

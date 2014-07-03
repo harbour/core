@@ -42,8 +42,8 @@ STATIC FUNCTION Example_Text()
 STATIC FUNCTION Example_Text_Raw()
 #pragma __cstream | RETURN %s
 
- ~2THE HARBOUR PROJECT LICENSE~1
-~3 ===========================
+ ~2THE HARBOUR LICENSE~1
+~3 ===================
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
