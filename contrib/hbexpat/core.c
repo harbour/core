@@ -124,7 +124,7 @@ typedef struct _HB_EXPAT
 
 static void * XMLCALL hb_expat_xgrab( size_t size )
 {
-   return hb_xgrab( size );
+   return size > 0 ? hb_xgrab( size ) : NULL;
 }
 
 static void XMLCALL hb_expat_xfree( void * p )
@@ -135,7 +135,7 @@ static void XMLCALL hb_expat_xfree( void * p )
 
 static void * XMLCALL hb_expat_xrealloc( void * p, size_t size )
 {
-   return hb_xrealloc( p, size );
+   return size > 0 ? ( p ? hb_xrealloc( p, size ) : hb_xgrab( size ) ) : NULL;
 }
 
 /* --- Callbacks --- */
