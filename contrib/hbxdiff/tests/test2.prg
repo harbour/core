@@ -14,7 +14,7 @@ PROCEDURE Main()
    LOCAL cDiffName
 
    xdl_write_mmfile( pMMFOld, @cFileCtx )
-   xdl_write_mmfile( pMMFNew, cFileCtx + hb_eol() + Space( 3 ) + "RETURN NIL" + hb_eol() )
+   xdl_write_mmfile( pMMFNew, cFileCtx + hb_eol() + Space( 3 ) + "RETURN" + hb_eol() )
 
    ? xdl_mmfile_cmp( pMMFOld, pMMFNew )
 

@@ -604,21 +604,22 @@ static void * wf_malloc( void * priv, unsigned int size )
 {
    HB_SYMBOL_UNUSED( priv );
 
-   return hb_xgrab( size );
+   return size > 0 ? hb_xgrab( size ) : NULL;
 }
 
 static void wf_free( void * priv, void * ptr )
 {
    HB_SYMBOL_UNUSED( priv );
 
-   hb_xfree( ptr );
+   if( ptr )
+      hb_xfree( ptr );
 }
 
 static void * wf_realloc( void * priv, void * ptr, unsigned int size )
 {
    HB_SYMBOL_UNUSED( priv );
 
-   return hb_xrealloc( ptr, size );
+   return size > 0 ? ( ptr ? hb_xrealloc( ptr, size ) : hb_xgrab( size ) ) : NULL;
 }
 
 static void xdiff_init( void )
