@@ -3,7 +3,7 @@
 ; See COPYING.txt for licensing terms.
 ;
 ; Harbour Nullsoft installer script (for Windows/MS-DOS)
-; [ Do not try to use this script directly. It won't work. ]
+; [ Do not use this script directly. It won't work. ]
 ;
 ; See README.md for further information.
 ;

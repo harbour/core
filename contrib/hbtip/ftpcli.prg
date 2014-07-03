@@ -232,10 +232,10 @@ METHOD TransferStart() CLASS TIPClientFTP
    /* Set internal socket send buffer to 64kB, this should
       resolve the speed problems some users have reported */
    IF HB_ISNUMERIC( ::nDefaultSndBuffSize )
-      ::InetSetSndBufSize( ::SocketCon, ::nDefaultSndBuffSize )
+      ::InetSndBufSize( ::SocketCon, ::nDefaultSndBuffSize )
    ENDIF
    IF HB_ISNUMERIC( ::nDefaultRcvBuffSize )
-      ::InetSetRcvBufSize( ::SocketCon, ::nDefaultRcvBuffSize )
+      ::InetRcvBufSize( ::SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 
    RETURN .T.

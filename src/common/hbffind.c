@@ -857,9 +857,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
 PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
 {
-   PHB_FFIND ffind;
-
-   ffind = ( PHB_FFIND ) hb_xgrabz( sizeof( HB_FFIND ) );
+   PHB_FFIND ffind = ( PHB_FFIND ) hb_xgrabz( sizeof( HB_FFIND ) );
 
    /* Allocate platform dependent file find info storage */
    ffind->info = ( void * ) hb_xgrabz( sizeof( HB_FFIND_INFO ) );
