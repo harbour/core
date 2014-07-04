@@ -10,7 +10,6 @@
 #define NETPORT    2940
 #define NETPASSWD  "toptopsecret"
 
-
 PROCEDURE Main()
 
    /* connect to the server */

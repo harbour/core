@@ -46,8 +46,8 @@
 
 #define _RPC_FILTER "HBNETIOSRV_RPCMAIN"
 
-/* enable this if you need all core functions in RPC support */
-#ifdef HB_EXTERN
+/* enable this if you don't need all core functions in RPC support */
+#if ! defined( HB_NO_EXTERN )
 REQUEST __HB_EXTERN__
 #endif
 

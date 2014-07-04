@@ -111,7 +111,6 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
 
    LOCAL nAction
    LOCAL tmp
-   LOCAL tmp1
 
    LOCAL lCustom
    LOCAL cCustomDir
@@ -159,7 +158,7 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
       ENDIF
    NEXT
 
-   /* Assemble list of primary targets (registered projects in current directory) */
+   /* Assemble list of primary targets (registered projects in or under current directory) */
 
    hProjectReqList := { => }
 
@@ -174,10 +173,9 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
    IF ! lCustom
       /* Find out which projects are in current dir, these will be our primary targets */
       FOR EACH tmp IN hProjectList
-         tmp1 := hb_ps() + hb_FNameDir( hb_DirSepToOS( tmp:__enumKey() ) )
-         IF tmp1 == Right( hb_cwd(), Len( tmp1 ) ) /* Not ultimate solution */
+         IF hb_LeftEq( hb_DirSepToOS( tmp:__enumKey() ) + hb_ps(), hb_FNameNameExt( hb_DirSepDel( hb_cwd() ) ) )  /* Not ultimate solution */
             hProjectReqList[ tmp:__enumKey() ] := tmp:__enumKey()
-            s_cReBase := SubStr( tmp1, 2 )
+            s_cReBase := hb_FNameDir( hb_DirSepToOS( tmp:__enumKey() ) )
          ENDIF
       NEXT
       IF Empty( hProjectReqList )
