@@ -407,7 +407,7 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 /* Clipper allows only 16 nested includes */
 #define HB_PP_MAX_INCLUDED_FILES    64
 
-#define HB_PP_HASHID(t)       ( ( HB_UCHAR ) HB_PP_UPPER( (t)->value[0] ) )
+#define HB_PP_HASHID(t)       ( ( HB_UCHAR ) HB_PP_UPPER( (t)->value[ 0 ] ) )
 #define HB_PP_HASHID_MAX      256
 #define HB_PP_DEFINE          1
 #define HB_PP_TRANSLATE       2

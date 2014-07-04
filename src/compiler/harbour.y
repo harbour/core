@@ -1319,8 +1319,8 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   HB_COMP_PARAM->pLastMethod->cParamTypes = ( HB_BYTE * ) hb_xgrab( 1 );
                   HB_COMP_PARAM->pLastMethod->pParamClasses = ( PHB_HCLASS * ) hb_xgrab( sizeof( HB_HCLASS ) );
 
-                  HB_COMP_PARAM->pLastMethod->cParamTypes[0] = cVarType;
-                  HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
+                  HB_COMP_PARAM->pLastMethod->cParamTypes[ 0 ] = cVarType;
+                  HB_COMP_PARAM->pLastMethod->pParamClasses[ 0 ] = pClass;
 
                   if( HB_TOUPPER( cVarType ) == 'S' )
                   {

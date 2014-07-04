@@ -13,10 +13,10 @@
 
          The subarray has the following structure:
 
-          [1]  cName    is the name of this color setting i.e. "Pick List"
+         [ 1 ] cName    is the name of this color setting i.e. "Pick List"
                   Maximum length is 20 bytes
 
-          [2]  cClrStr  is the current color string
+         [ 2 ] cClrStr  is the current color string
                   Default is "W/N,N/W,N/N,N/N,N/W"
 
                   If Setting type is "M" (Menu) the colors are...
@@ -34,7 +34,7 @@
                      foreground [+] / background [*]
                      i.e. "GR+/BG*, N/W*, N+/N, , W/N"
 
-          [3]  cType  is the type of color setting
+         [ 3 ] cType  is the type of color setting
                   Default is "W" (Window)
 
                      T = Title     Only 1 color element
@@ -48,7 +48,7 @@
                   W/G/B/A are functionally the same but will provide
                   a more appropriate test display.
 
-          [4]  cFillChar  is the character (for desktop background only)
+         [ 4 ] cFillChar  is the character (for desktop background only)
                   Default is "▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
 
 
@@ -71,7 +71,7 @@
       not using ft_MenuTo(), you can specify "A" for setting type and have
       a normal color string returned.
    $EXAMPLES$
-      LOCAL aClrs  := {}
+      LOCAL aClrs
       LOCAL lColor := IsColor()
 
       Set( _SET_SCOREBOARD, .F. )

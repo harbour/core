@@ -360,14 +360,14 @@ static int getClipKey( int nKey )
          if( n >= 0 && n < NO_STDKEYS )
          {
             if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                 stdKeyTab[n].shift_key != 0 )
-               nRet = stdKeyTab[n].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[n].alt_key != 0 )
-               nRet = stdKeyTab[n].alt_key;
-            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[n].ctrl_key != 0 )
-               nRet = stdKeyTab[n].ctrl_key;
+                 stdKeyTab[ n ].shift_key != 0 )
+               nRet = stdKeyTab[ n ].shift_key;
+            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[ n ].alt_key != 0 )
+               nRet = stdKeyTab[ n ].alt_key;
+            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[ n ].ctrl_key != 0 )
+               nRet = stdKeyTab[ n ].ctrl_key;
             else
-               nRet = stdKeyTab[n].key;
+               nRet = stdKeyTab[ n ].key;
          }
          else
             nRet = nKey;

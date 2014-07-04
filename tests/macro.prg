@@ -33,7 +33,7 @@ PROCEDURE Main()
    &cStr._1 := "Concatenated Macro (String)"
    ? M->cVar_1
 
-   &( aVar[1] ) := "Array Macro"
+   &( aVar[ 1 ] ) := "Array Macro"
    ? M->cVar_1
 
    oVar := TValue():New()

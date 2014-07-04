@@ -1291,7 +1291,7 @@ static HB_BOOL hb_nsxTagHeaderCheck( LPTAGINFO pTag )
          {
             if( header.Signature[ 0 ] == NSX_SIGNATURE )
             {
-               pTag->TagFlags = header.TagFlags[0];
+               pTag->TagFlags = header.TagFlags[ 0 ];
                pTag->RootBlock = HB_GET_LE_UINT32( header.RootPage );
                hb_nsxTagUpdateFlags( pTag );
             }
@@ -1924,12 +1924,12 @@ static HB_ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
       hb_nsxIndexTagAdd( pIndex, pTag );
    }
 
-   Header.Signature[0] = NSX_SIGNATURE;
-   Header.TagFlags[0]  = ( pTag->Partial  ? NSX_TAG_PARTIAL  : 0 ) |
-                         ( pTag->Template ? NSX_TAG_TEMPLATE : 0 ) |
-                         ( pTag->ChgOnly  ? NSX_TAG_CHGONLY  : 0 ) |
-                         ( pTag->Custom   ? NSX_TAG_NOUPDATE : 0 ) |
-                         ( pTag->MultiKey ? NSX_TAG_MULTIKEY : 0 );
+   Header.Signature[ 0 ] = NSX_SIGNATURE;
+   Header.TagFlags[ 0 ]  = ( pTag->Partial  ? NSX_TAG_PARTIAL  : 0 ) |
+                           ( pTag->Template ? NSX_TAG_TEMPLATE : 0 ) |
+                           ( pTag->ChgOnly  ? NSX_TAG_CHGONLY  : 0 ) |
+                           ( pTag->Custom   ? NSX_TAG_NOUPDATE : 0 ) |
+                           ( pTag->MultiKey ? NSX_TAG_MULTIKEY : 0 );
    HB_PUT_LE_UINT32( Header.RootPage, pTag->RootBlock );
 
    if( pIndex->Update )
@@ -1942,8 +1942,8 @@ static HB_ERRCODE hb_nsxTagHeaderSave( LPTAGINFO pTag )
 
       HB_PUT_LE_UINT16( Header.KeyType, type );
       HB_PUT_LE_UINT16( Header.KeySize,  pTag->KeyLength );
-      Header.Unique[0]  = pTag->UniqueKey ? 1 : 0;
-      Header.Descend[0] = pTag->AscendKey ? 0 : 1;
+      Header.Unique[ 0 ]  = pTag->UniqueKey ? 1 : 0;
+      Header.Descend[ 0 ] = pTag->AscendKey ? 0 : 1;
 
       iLen = ( int ) strlen( pTag->KeyExpr );
       if( iLen > NSX_MAXEXPLEN )
@@ -2020,9 +2020,9 @@ static HB_ERRCODE hb_nsxIndexHeaderSave( LPNSXINDEX pIndex )
 
    pIndex->Version++;
    pIndex->Version &= 0xFFFF;
-   pIndex->HeaderBuff.Signature[0]  = pIndex->LargeFile ?
+   pIndex->HeaderBuff.Signature[ 0 ]  = pIndex->LargeFile ?
                                       NSX_SIGNATURE_LARGE : NSX_SIGNATURE;
-   pIndex->HeaderBuff.IndexFlags[0] = 0;
+   pIndex->HeaderBuff.IndexFlags[ 0 ] = 0;
    HB_PUT_LE_UINT16( pIndex->HeaderBuff.TagCount, pIndex->iTags );
    HB_PUT_LE_UINT16( pIndex->HeaderBuff.Version,  pIndex->Version );
    HB_PUT_LE_UINT32( pIndex->HeaderBuff.FreePage, pIndex->NextAvail );

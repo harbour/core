@@ -809,7 +809,6 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          char *       cRet;
          HB_ISIZ      nPos    = 0;
          HB_ISIZ      nPosRet = 0;
-         HB_BYTE      cElem;
 
          while( nLen && HB_ISSPACE( pszData[ nLen - 1 ] ) )
             nLen--;
@@ -819,7 +818,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
 
          while( nPos < nLen )
          {
-            cElem = ( HB_BYTE ) pszData[ nPos ];
+            HB_BYTE cElem = ( HB_BYTE ) pszData[ nPos ];
 
             if( cElem == '&' )
             {
@@ -913,7 +912,6 @@ HB_FUNC( TIP_JSONSPECIALCHARS )
          char *       cRet;
          HB_ISIZ      nPos    = 0;
          HB_ISIZ      nPosRet = 0;
-         HB_BYTE      cElem;
 
          while( nLen && HB_ISSPACE( pszData[ nLen - 1 ] ) )
             nLen--;
@@ -923,7 +921,7 @@ HB_FUNC( TIP_JSONSPECIALCHARS )
 
          while( nPos < nLen )
          {
-            cElem = ( HB_BYTE ) pszData[ nPos ];
+            HB_BYTE cElem = ( HB_BYTE ) pszData[ nPos ];
 
             if( cElem == '"' )
             {

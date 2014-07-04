@@ -57,7 +57,7 @@ CREATE CLASS TMySQLRow
 
    VAR aRow                                     // a single row of answer
    VAR aDirty                                   // array of booleans set to .T. if corresponding field of aRow has been changed
-   VAR aOldValue                                // If aDirty[n] is .T. aOldValue[n] keeps a copy of changed value if aRow[n] is part of a primary key
+   VAR aOldValue                                // If aDirty[ n ] is .T. aOldValue[ n ] keeps a copy of changed value if aRow[ n ] is part of a primary key
 
    VAR aOriValue                                // Original values ( same as TMySQLtable:aOldValue )
 

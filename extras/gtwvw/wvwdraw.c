@@ -2028,7 +2028,7 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
  *                   [aOffset] )
  *
  * NOTE: aOffset is TLBR offset in pixel. none in GTWVT
- *       actually aOffset[4] (Right Offset) is not used here
+ *       actually aOffset[ 4 ] (Right Offset) is not used here
  */
 
 HB_FUNC( WVW_DRAWGRIDVERT )

@@ -1351,7 +1351,9 @@ STATIC FUNCTION MakeResponse()
       cRet += v:__enumKey() + ": " + v + CR_LF
    NEXT
 
-   // AEval( t_aHeader, {| x | cRet += x[1] + ": " + x[2] + CR_LF } )
+#if 0
+   AEval( t_aHeader, {| x | cRet += x[ 1 ] + ": " + x[ 2 ] + CR_LF } )
+#endif
    cRet += CR_LF
    cRet += t_cResult
 

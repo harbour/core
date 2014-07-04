@@ -115,11 +115,11 @@ PROCEDURE Main()
  *
  * Events handled here:
  * CBN_SETFOCUS: (3)
- * Find i where GetList[i] is Get object beneath the combobox, then
+ * Find i where GetList[ i ] is Get object beneath the combobox, then
  * synchronize the contents, and let TGetList think she is working on it.
  *
  * CBN_KILLFOCUS: (4)
- * Find i where GetList[i] is Get object beneath the combobox, then
+ * Find i where GetList[ i ] is Get object beneath the combobox, then
  * synchronize the contents.
  *
  * CBN_SELCHANGE: (1)

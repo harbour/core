@@ -297,7 +297,7 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
             /* create a set only codeblock */
             if( pVar->ExprType == HB_ET_MACRO )
             {
-               /* &var[1] */
+               /* &var[ 1 ] */
                HB_COMP_EXPR_FREE( pVar );
                pVar = hb_compExprNewNil( HB_COMP_PARAM );
             }

@@ -59,16 +59,14 @@ HB_FUNC( TIP_URLENCODE )
       if( nLen )
       {
          HB_BOOL bComplete = hb_parldef( 2, HB_TRUE );
-         char *  cRet;
-         HB_ISIZ nPos = 0, nPosRet = 0, nVal;
-         char    cElem;
+         HB_ISIZ nPos      = 0, nPosRet = 0, nVal;
 
          /* Giving maximum final length possible */
-         cRet = ( char * ) hb_xgrab( nLen * 3 + 1 );
+         char * cRet = ( char * ) hb_xgrab( nLen * 3 + 1 );
 
          while( nPos < nLen )
          {
-            cElem = cData[ nPos ];
+            char cElem = cData[ nPos ];
 
             if( cElem == ' ' )
             {
@@ -120,16 +118,14 @@ HB_FUNC( TIP_URLDECODE )
 
       if( nLen )
       {
-         char *  cRet;
          HB_ISIZ nPos = 0, nPosRet = 0;
-         char    cElem;
 
          /* maximum possible length */
-         cRet = ( char * ) hb_xgrab( nLen );
+         char * cRet = ( char * ) hb_xgrab( nLen );
 
          while( nPos < nLen )
          {
-            cElem = cData[ nPos ];
+            char cElem = cData[ nPos ];
 
             if( cElem == '+' )
             {
@@ -146,11 +142,8 @@ HB_FUNC( TIP_URLDECODE )
                   cElem = cData[ ++nPos ];
                   cRet[ nPosRet ] |= cElem < 'A' ? cElem - '0' : cElem - 'A' + 10;
                }
-               else
-               {
-                  if( nPosRet > 0 )
-                     break;
-               }
+               else if( nPosRet > 0 )
+                  break;
             }
             else
                cRet[ nPosRet ] = cElem;
@@ -161,8 +154,7 @@ HB_FUNC( TIP_URLDECODE )
 
          /* this function also adds a zero */
          /* hopefully reduce the size of cRet */
-         cRet = ( char * ) hb_xrealloc( cRet, nPosRet + 1 );
-         hb_retclen_buffer( cRet, nPosRet );
+         hb_retclen_buffer( ( char * ) hb_xrealloc( cRet, nPosRet + 1 ), nPosRet );
       }
       else
          hb_retc_null();

@@ -1164,7 +1164,7 @@ static LPPAGEINFO hb_ntxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
       pIndex->ulPageLast = 0;
       pIndex->ulPagesDepth = NTX_PAGES_PER_TAG;
       pIndex->pages = ( LPPAGEINFO * ) hb_xgrabz( sizeof( LPPAGEINFO ) * NTX_PAGES_PER_TAG );
-      pPagePtr = &pIndex->pages[0];
+      pPagePtr = &pIndex->pages[ 0 ];
    }
    else
    {
@@ -1980,7 +1980,7 @@ static HB_ERRCODE hb_ntxIndexHeaderRead( LPNTXINDEX pIndex )
                         pIndex->IndexName, 0, 0, NULL );
          return HB_FAILURE;
       }
-      pTag = pIndex->iTags ? pIndex->lpTags[0] : NULL;
+      pTag = pIndex->iTags ? pIndex->lpTags[ 0 ] : NULL;
 
       ulVersion = HB_GET_LE_UINT16( lpNTX->version );
       ulRootPage = HB_GET_LE_UINT32( lpNTX->root );
@@ -7418,10 +7418,10 @@ static HB_ERRCODE hb_ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    hb_ntxCreateFName( pArea, hb_itemGetCPtr( pOrderInfo->atomBagName ),
                       &fProd, szFileName, szTagName );
 
-/*
-   if( ! szTagName[0] )
+#if 0
+   if( ! szTagName[ 0 ] )
       return HB_FAILURE;
- */
+#endif
 
    pIndex = hb_ntxFindBag( pArea, szFileName );
 
@@ -7486,7 +7486,7 @@ static HB_ERRCODE hb_ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    if( ! pArea->lpCurTag && pIndex->iTags )
    {
-      pArea->lpCurTag = pIndex->lpTags[0];
+      pArea->lpCurTag = pIndex->lpTags[ 0 ];
       errCode = SELF_GOTOP( ( AREAP ) pArea );
    }
    return errCode;
