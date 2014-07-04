@@ -412,7 +412,7 @@ METHOD EndPage( lStartNewPage ) CLASS win_Prn
          ::PosY := ::TopMargin
       ELSE
          ::StartPage()
-         IF hb_osIsWin9x() // Reset font on Win9X
+         IF hb_osIsWin9x()  // Reset font on Win9X
             ::SetFont()
          ENDIF
       ENDIF
@@ -659,19 +659,16 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
 
    IF ::CheckPage()
 
-      IF ! HB_ISNUMERIC( nPointSize )
-         nPointSize := ::FontPointSize
-      ENDIF
-
       IF HB_ISSTRING( cFont )
-         IF HB_ISARRAY( nWidth )
+         DO CASE
+         CASE HB_ISARRAY( nWidth )
             nDiv   := nWidth[ 1 ]
             nWidth := nWidth[ 2 ]
-         ELSEIF HB_ISNUMERIC( nWidth ) .AND. nWidth != 0
+         CASE HB_ISNUMERIC( nWidth ) .AND. nWidth != 0
             nDiv := 1
-         ENDIF
+         ENDCASE
          hFont := ::hFont
-         ::hFont := win_CreateFont( ::hPrinterDC, cFont, nPointSize, nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
+         ::hFont := win_CreateFont( ::hPrinterDC, cFont, hb_defaultValue( nPointSize, ::FontPointSize ), nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
       ENDIF
       IF HB_ISNUMERIC( nColor )
          nColor := win_SetColor( ::hPrinterDC, nColor )
@@ -685,6 +682,8 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
       IF HB_ISNUMERIC( nColor )
          win_SetColor( ::hPrinterDC, nColor )  // Reset Color
       ENDIF
+   ELSE
+      lResult := .F.
    ENDIF
 
    RETURN lResult

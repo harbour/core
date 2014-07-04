@@ -82,11 +82,11 @@ FUNCTION hb_GetZipComment( cFileName )
       cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
-   IF ! Empty( hUnzip := hb_unzipOpen( cFileName ) )
+   IF Empty( hUnzip := hb_unzipOpen( cFileName ) )
+      cComment := ""
+   ELSE
       hb_unzipGlobalInfo( hUnzip,, @cComment )
       hb_unzipClose( hUnzip )
-   ELSE
-      cComment := ""
    ENDIF
 
    RETURN cComment
@@ -100,11 +100,11 @@ FUNCTION hb_GetFileCount( cFileName )
       cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
-   IF ! Empty( hUnzip := hb_unzipOpen( cFileName ) )
+   IF Empty( hUnzip := hb_unzipOpen( cFileName ) )
+      nEntries := 0
+   ELSE
       hb_unzipGlobalInfo( hUnzip, @nEntries )
       hb_unzipClose( hUnzip )
-   ELSE
-      nEntries := 0
    ENDIF
 
    RETURN nEntries
@@ -398,8 +398,9 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
       cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
-   IF ! Empty( hUnzip := hb_unzipOpen( cFileName ) )
-
+   IF Empty( hUnzip := hb_unzipOpen( cFileName ) )
+      lRetVal := .F.
+   ELSE
       IF HB_ISNUMERIC( acFiles ) .OR. ;
          HB_ISSTRING( acFiles )
          acFiles := { acFiles }
@@ -455,8 +456,6 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
       ENDDO
 
       hb_unzipClose( hUnzip )
-   ELSE
-      lRetVal := .F.
    ENDIF
 
    RETURN lRetVal
