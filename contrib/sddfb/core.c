@@ -171,7 +171,7 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
    if( isc_attach_database( status, ( short ) hb_arrayGetCLen( pItem, 5 ), hb_arrayGetCPtr( pItem, 5 ),
                             &hDb, ( short ) i, parambuf ) )
-      /* TODO: error code in status[1]; */
+      /* TODO: error code in status[ 1 ]; */
       return HB_FAILURE;
    pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
    ( ( SDDCONN * ) pConnection->pSDDConn )->hDb = hDb;

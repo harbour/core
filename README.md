@@ -1641,7 +1641,7 @@ Supported shells per host platforms:
      * [Git Reference](http://gitref.org)
      * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
      * Using gettext (.po files)
-       * <http://support.transifex.com/customer/portal/articles/913371-po-files>
+       * <http://docs.transifex.com/developer/formats/gettext>
        * <http://heiner-eichmann.de/autotools/using_gettext.html>
      * [GitHub Guides](https://guides.github.com)
      * [GitHub flavoured Markdown](https://help.github.com/articles/github-flavored-markdown)

@@ -162,7 +162,7 @@ error is returned.
 NOTE 2: if you want to use a slash-less URL address as a synonym for
 the folder you may need an extra redirection rule. Ex.,
      "/files"   => { {|| URedirect( "/files/" ) }, .F. }
-     "/files/*" => { {| x | UProcFiles(DocumentRoot + x ) }, .F. }
+     "/files/*" => { {| x | UProcFiles( DocumentRoot + x ) }, .F. }
 
 
 Widgets

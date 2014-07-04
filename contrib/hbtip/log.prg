@@ -58,7 +58,7 @@ CREATE CLASS TIPLog
    PROTECTED:
 
    VAR cFileName
-   VAR fhnd
+   VAR fhnd      INIT F_ERROR
 
 ENDCLASS
 
@@ -79,7 +79,7 @@ METHOD Add( cMsg ) CLASS TIPLog
    LOCAL cDir, cName, cExt
    LOCAL n
 
-   IF Empty( ::fhnd ) .OR. ::fhnd == F_ERROR
+   IF ::fhnd == F_ERROR
 
       hb_FNameSplit( ::cFileName, @cDir, @cName, @cExt )
 
@@ -89,7 +89,7 @@ METHOD Add( cMsg ) CLASS TIPLog
       ENDDO
    ENDIF
 
-   IF ! Empty( ::fhnd ) .AND. ::fhnd != F_ERROR
+   IF ::fhnd != F_ERROR
       RETURN FWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
    ENDIF
 
@@ -99,9 +99,9 @@ METHOD Close() CLASS TIPLog
 
    LOCAL lRetVal
 
-   IF ! Empty( ::fhnd ) .AND. ::fhnd != F_ERROR
+   IF ::fhnd != F_ERROR
       lRetVal := FClose( ::fhnd )
-      ::fhnd := NIL
+      ::fhnd := F_ERROR
       RETURN lRetVal
    ENDIF
 

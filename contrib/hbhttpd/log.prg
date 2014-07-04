@@ -75,9 +75,6 @@ METHOD New( cFileName ) CLASS UHttpdLog
 
    RETURN Self
 
-METHOD IsOpen() CLASS UHttpdLog
-   RETURN ::fhnd != F_ERROR
-
 METHOD Add( cMsg ) CLASS UHttpdLog
 
    IF ! HB_ISSTRING( cMsg )
@@ -97,8 +94,10 @@ METHOD Close() CLASS UHttpdLog
    IF ::fhnd != F_ERROR
       lRetVal := FClose( ::fhnd )
       ::fhnd := F_ERROR
-   ELSE
-      lRetVal := .F.
+      RETURN lRetVal
    ENDIF
 
-   RETURN lRetVal
+   RETURN .F.
+
+METHOD IsOpen() CLASS UHttpdLog
+   RETURN ::fhnd != F_ERROR

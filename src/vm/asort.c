@@ -50,7 +50,7 @@
 
 /* NOTE: Based on PD code found in
          SORTING AND SEARCHING ALGORITHMS: A COOKBOOK, BY THOMAS NIEMANN
-         http://members.xoom.com/_XMCM/thomasn/s_man.htm */
+         https://www.cs.auckland.ac.nz/~jmor159/PLDS210/niemann/s_man.htm */
 
 #include "hbvmint.h"
 #include "hbapiitm.h"

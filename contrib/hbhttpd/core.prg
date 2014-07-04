@@ -15,16 +15,16 @@
 
 /* Docs:
 
-   RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0
-   RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1
-   HTTP Made Really Easy (http://www.jmarshall.com/easy/http/)
+   RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0 - https://tools.ietf.org/html/rfc1945
+   RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1 - https://tools.ietf.org/html/rfc2616
+   HTTP Made Really Easy - http://www.jmarshall.com/easy/http/
  */
 
-#define THREAD_COUNT_PREALLOC    3
-#define THREAD_COUNT_MAX         50
-#define SESSION_TIMEOUT          600
+#define THREAD_COUNT_PREALLOC   3
+#define THREAD_COUNT_MAX        50
+#define SESSION_TIMEOUT         600
 
-#define CR_LF                    ( Chr( 13 ) + Chr( 10 ) )
+#define CR_LF                   ( Chr( 13 ) + Chr( 10 ) )
 
 THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_aSessionData
 
@@ -1424,7 +1424,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       ENDIF
    ELSEIF hb_DirExists( UOsFileName( cFileName ) )
       IF !( Right( cFileName, 1 ) == "/" )
-         URedirect( "http://" + server[ "HTTP_HOST" ] + server[ "SCRIPT_NAME" ] + "/" )
+         URedirect( iif( server[ "HTTPS" ], "https", "http" ) + "://" + server[ "HTTP_HOST" ] + server[ "SCRIPT_NAME" ] + "/" )
          RETURN
       ENDIF
       IF AScan( { "index.html", "index.htm" }, ;

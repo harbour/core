@@ -45,7 +45,7 @@
  */
 
 /* Class(y) documentation is located at:
-   http://www.clipx.net/ng/classy/ngdebc.php */
+   http://www.x-hacker.org/ng/classy/ngdebc.html */
 
 #include "hbclass.ch"
 
