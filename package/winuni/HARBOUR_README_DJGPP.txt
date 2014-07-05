@@ -1,4 +1,2 @@
-If this directory is empty, download package from link below
-and install into this directory.
-
-http://www.delorie.com/djgpp/
+If this directory is empty, download DJGPP package from link
+found in README.md and install into this directory.

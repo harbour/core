@@ -1,4 +1,2 @@
-If this directory is empty, download package from link below
-and unpack into this directory.
-
-https://sourceforge.net/projects/mingw-w64/files/
+If this directory is empty, download mingw package from link
+found in README.md and unpack/install into this directory.

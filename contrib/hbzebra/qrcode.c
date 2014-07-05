@@ -51,7 +51,7 @@
        https://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
    https://en.wikipedia.org/wiki/QR_Code
-   http://www.denso-wave.com/qrcode/index-e.html
+   http://www.qrcode.com/en/
    http://www.itsc.org.sg/pdf/synthesis08/Three_QR_Code.pdf
    http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
    http://www.swetake.com/qr/index-e.html
