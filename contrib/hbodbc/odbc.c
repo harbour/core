@@ -636,10 +636,15 @@ HB_FUNC( SQLGETDATA )  /* hStmt, nField, nType, [nLenLimit], @cBuffer --> nRetCo
 
                   val = ( SQLPOINTER ) hb_xgrab( iLen + 1 );
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BINARY, val, iLen + 1, &iLen ) ) )
-                     hb_storclen( ( char * ) val, ( HB_SIZE ) iLen, 5 );
+                  {
+                     if( ! hb_storclen_buffer( ( char * ) val, ( HB_SIZE ) iLen, 5 ) )
+                        hb_xfree( val );
+                  }
                   else
+                  {
+                     hb_xfree( val );
                      hb_storc( NULL, 5 );
-                  hb_xfree( val );
+                  }
                }
                else
                   hb_storc( NULL, 5 );
@@ -677,7 +682,6 @@ HB_FUNC( SQLGETDATA )  /* hStmt, nField, nType, [nLenLimit], @cBuffer --> nRetCo
                hb_stornl( val, 5 );
             else
                hb_stornl( 0, 5 );
-
             break;
          }
 
@@ -689,7 +693,6 @@ HB_FUNC( SQLGETDATA )  /* hStmt, nField, nType, [nLenLimit], @cBuffer --> nRetCo
                hb_storni( val, 5 );
             else
                hb_storni( 0, 5 );
-
             break;
          }
 

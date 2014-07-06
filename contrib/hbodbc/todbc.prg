@@ -48,23 +48,32 @@
 #include "hbclass.ch"
 #include "sql.ch"
 
-// Fields information collection
+// Field object
 
 CREATE CLASS TODBCField
 
-   VAR FieldID      INIT -1
-   VAR FieldName    INIT ""
-   VAR DataType     INIT SQL_TYPE_NULL
-   VAR DataSize     INIT -1
-   VAR DataDecs     INIT -1
-   VAR AllowNull    INIT .F.
-   VAR Value        INIT NIL
+   VAR FieldID
+   VAR FieldName
+   VAR DataType
+   VAR DataSize
+   VAR DataDecs
+   VAR AllowNull
+   VAR Value
 
-   METHOD New()
+   METHOD New( nID, cName, nType, nSize, nDec, lNullable )
 
 ENDCLASS
 
-METHOD New() CLASS TODBCField
+METHOD New( nID, cName, nType, nSize, nDec, lNullable ) CLASS TODBCField
+
+   ::FieldID   := hb_defaultValue( nID, 0 )
+   ::FieldName := hb_defaultValue( cName, "" )
+   ::DataType  := hb_defaultValue( nType, SQL_TYPE_NULL )
+   ::DataSize  := hb_defaultValue( nSize, 0 )
+   ::DataDecs  := hb_defaultValue( nDec, 0 )
+   ::AllowNull := hb_defaultValue( lNullable, .F. )
+   ::Value     := Space( ::DataSize )
+
    RETURN Self
 
 // Manages ODBC access
@@ -82,12 +91,12 @@ CREATE CLASS TODBC
    VAR nEof         INIT 0
    VAR lBof         INIT .F.
    VAR nRetCode
-   VAR nRecCount    INIT 0  // number of rows in current recordset
-   VAR nRecNo       INIT 0  // Current row number in current recordset
-   VAR lCacheRS             // Do we want to cache recordset in memory
-   VAR aRecordSet   INIT {} // Array to store cached recordset
+   VAR nRecCount    INIT 0   // Number of rows in current recordset
+   VAR nRecNo       INIT 0   // Current row number in current recordset
+   VAR lCacheRS              // Do we want to cache recordset in memory
+   VAR aRecordSet   INIT {}  // Array to store cached recordset
 
-   VAR lAutoCommit AS LOGICAL INIT .T.   // Autocommit is usually on at startup
+   VAR lAutoCommit AS LOGICAL INIT .T.   // Autocommit is usually enabled at startup
 
    METHOD New( cODBCStr, cUserName, cPassword, lCache )
    METHOD Destroy()
@@ -98,7 +107,7 @@ CREATE CLASS TODBC
    METHOD Close()
 
    METHOD LoadData( nPos )
-   METHOD ClearData() INLINE AEval( ::Fields, {| oField | oField:Value := NIL } )
+   METHOD ClearData() INLINE AEval( ::Fields, {| oField | oField:Value := Space( oField:DataSize ) } )
    METHOD FieldByName( cField )
 
    METHOD Fetch( nFetchType, nOffSet )
@@ -106,7 +115,7 @@ CREATE CLASS TODBC
    METHOD Next()
    METHOD Prior()
    METHOD First()
-   METHOD last()
+   METHOD Last()
    METHOD MoveBy( nSteps )
    METHOD GoTo( nRecNo )
    METHOD Skip()
@@ -226,97 +235,70 @@ METHOD PROCEDURE SetSQL( cSQL ) CLASS TODBC
 
 METHOD Open() CLASS TODBC
 
-   LOCAL nRet
    LOCAL nCols
-   LOCAL nRows
-   LOCAL i
-   LOCAL cColName
-   LOCAL nNameLen
-   LOCAL nDataType
-   LOCAL nColSize
-   LOCAL nDecimals
-   LOCAL nNul
    LOCAL aCurRow
+   LOCAL i
 
-   DO WHILE .T.
+   LOCAL cName
+   LOCAL nType
+   LOCAL nLen
+   LOCAL nDec
+   LOCAL nNull
 
-      // Dataset must be closed
-      IF ::Active
+   // Dataset must be closed
+   IF ::Active
+      // TODO: Some error here
+      // Cannot do this operation on an opened dataset
+      RETURN .F.
+   ENDIF
 
-         // TODO: Some error here
-         // Cannot do this operation on an opened dataset
+   // SQL statement is mandatory
+   IF Empty( ::cSQL )
+      // TODO: Some error here
+      // SQL Statement not defined
+      RETURN .F.
+   ENDIF
 
-         nRet := -1
-         EXIT
-      ENDIF
+   // Allocates and executes the statement
+   SQLAllocStmt( ::hDbc, @::hStmt )
+   IF SQLExecDirect( ::hStmt, ::cSQL ) != SQL_SUCCESS
+      RETURN .F.
+   ENDIF
 
-      // SQL statement is mandatory
-      IF Empty( ::cSQL )
+   // Get result information about fields and stores it
+   // on fields collection
+   SQLNumResultCols( ::hStmt, @nCols )
 
-         // TODO: Some error here
-         // SQL Statement not defined
+   ::Fields := {}
 
-         nRet := -1
-         EXIT
-      ENDIF
+   FOR i := 1 TO nCols
+      SQLDescribeCol( ::hStmt, i, @cName, 255,, @nType, @nLen, @nDec, @nNull )
+      AAdd( ::Fields, TODBCField():New( i, cName, nType, nLen, nDec, nNull != 0 ) )
+   NEXT
 
-      // Allocates and executes the statement
-      SQLAllocStmt( ::hDbc, @::hStmt )
-      IF ( nRet := SQLExecDirect( ::hStmt, ::cSQL ) ) != SQL_SUCCESS
-         EXIT
-      ENDIF
+   // Do we cache recordset?
+   IF ::lCacheRS
+      ::aRecordSet := {}
+      DO WHILE ::Fetch( SQL_FETCH_NEXT, 1 ) == SQL_SUCCESS
+         aCurRow := {}
+         FOR EACH i IN ::Fields
+            AAdd( aCurRow, i:value )
+         NEXT
+         AAdd( ::aRecordSet, aCurRow )
+      ENDDO
 
-      // Get result information about fields and stores it
-      // on Fields collection
-      SQLNumResultCols( ::hStmt, @nCols )
+      ::nRecCount := Len( ::aRecordSet )
+   ELSE
+      ::nRecCount := iif( ::First() == SQL_SUCCESS, 1, 0 )
+   ENDIF
 
-      // Get number of rows in result set
-      IF SQLRowCount( ::hStmt, @nRows ) == SQL_SUCCESS
-         ::nRecCount := nRows
-      ENDIF
+   ::nRecNo := 0  // Newly opened recordset
+   ::Active := .T.  // Sets the Dataset state to active
 
-      ::Fields := {}
+   // workaround (?) to avoid an empty record before the first ::Skip() after ::Open()
+   ::Next()
 
-      FOR i := 1 TO nCols
-
-         SQLDescribeCol( ::hStmt, i, @cColName, 255, @nNameLen, @nDataType, ;
-            @nColSize, @nDecimals, @nNul )
-
-         AAdd( ::Fields, TODBCField():New() )
-         ATail( ::Fields ):FieldID   := i
-         ATail( ::Fields ):FieldName := cColName
-         ATail( ::Fields ):DataSize  := nColsize
-         ATail( ::Fields ):DataType  := nDataType
-         ATail( ::Fields ):DataDecs  := nDecimals
-         ATail( ::Fields ):AllowNull := ( nNul != 0 )
-      NEXT
-
-      // Do we cache recordset?
-      IF ::lCacheRS
-         ::aRecordSet := {}
-         DO WHILE ::Fetch( SQL_FETCH_NEXT, 1 ) == SQL_SUCCESS
-            aCurRow := {}
-            FOR EACH i IN ::Fields
-               AAdd( aCurRow, i:value )
-            NEXT
-            AAdd( ::aRecordSet, aCurRow )
-         ENDDO
-
-         ::nRecCount := Len( ::aRecordSet )
-      ELSE
-         ::nRecCount := iif( ::First() == SQL_SUCCESS, 1, 0 )
-      ENDIF
-
-      ::nRecNo := 0  // Newly opened recordset
-      ::Active := .T.  // Sets the Dataset state to active
-
-      // workaround (?) to avoid an empty record before the first ::Skip() after ::Open()
-      ::Next()
-
-      EXIT
-   ENDDO
-
-   RETURN nRet == SQL_SUCCESS
+   RETURN .T.
 
 // Only executes the SQL Statement
 METHOD ExecSQL() CLASS TODBC
@@ -347,8 +329,7 @@ METHOD PROCEDURE Close() CLASS TODBC
    IF ::lCacheRS
       ::aRecordSet := {}
    ENDIF
-   ::nRecCount := 0
-   ::nRecNo    := 0
+   ::nRecCount := ::nRecNo := 0
    ::lBof      := .T.
 
    RETURN
@@ -359,11 +340,9 @@ METHOD FieldByName( cField ) CLASS TODBC
    LOCAL nRet
 
    IF HB_ISSTRING( cField )
-      IF ( nRet := AScan( ::Fields, {| x | Upper( x:FieldName ) == Upper( cField ) } ) ) != 0
+      cField := Upper( cField )
+      IF ( nRet := AScan( ::Fields, {| x | Upper( x:FieldName ) == cField } ) ) > 0
          RETURN ::Fields[ nRet ]
-      ELSE
-         // TODO: Some error here
-         // Invalid field name
       ENDIF
    ENDIF
 
@@ -381,7 +360,7 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
    // Do we have cached recordset?
    IF ::lCacheRS .AND. ::Active  // looks like we do...
 
-      // Change Recno according to nFetchType and nOffset
+      // Change ::nRecNo according to nFetchType and nOffset
       SWITCH nFetchType
       CASE SQL_FETCH_NEXT
 
@@ -413,7 +392,8 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
          EXIT
 
       CASE SQL_FETCH_RELATIVE
-         IF ( ::nRecNo + nOffset ) > ::nRecCount .OR. ( ::nRecNo + nOffset ) < 1  // TODO: Should we go to the first/last row if out of bounds?
+         IF ( ::nRecNo + nOffset ) > ::nRecCount .OR. ( ::nRecNo + nOffset ) < 1
+            // TODO: Should we go to the first/last row if out of bounds?
             nResult := SQL_ERROR
          ELSE
             nResult := SQL_SUCCESS
@@ -422,7 +402,8 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
          EXIT
 
       CASE SQL_FETCH_ABSOLUTE
-         IF nOffset > ::nRecCount .OR. nOffset < 1  // TODO: Should we go to the first/last row if out of bounds?
+         IF nOffset > ::nRecCount .OR. nOffset < 1
+            // TODO: Should we go to the first/last row if out of bounds?
             nResult := SQL_ERROR
          ELSE
             nResult := SQL_SUCCESS
@@ -456,12 +437,12 @@ METHOD Next() CLASS TODBC
 
    DO CASE
    CASE nResult == SQL_SUCCESS
-      ::nRecno := ::nRecno + 1
+      ::nRecNo++
       IF ::nRecNo > ::nRecCount
          ::nRecCount := ::nRecNo
       ENDIF
-   CASE nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == ::nRecCount // permit skip on last row, so that Eof() can work properly
-      ::nRecno := ::nRecno + 1
+   CASE nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == ::nRecCount  // permit skip on last row, so that Eof() can work properly
+      ::nRecNo++
    OTHERWISE
       // TODO: Error handling
    ENDCASE
@@ -475,9 +456,9 @@ METHOD Prior() CLASS TODBC
 
    DO CASE
    CASE nResult == SQL_SUCCESS
-      ::nRecno := ::nRecno - 1
-   CASE nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == 1 // permit skip-1 on first row, so that Bof() can work properly
-      ::nRecno := ::nRecno - 1
+      ::nRecNo--
+   CASE nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == 1  // permit skip-1 on first row, so that Bof() can work properly
+      ::nRecNo--
       ::Next()
       ::lBof := .T.
    OTHERWISE
@@ -492,7 +473,7 @@ METHOD First() CLASS TODBC
    LOCAL nResult := ::Fetch( SQL_FETCH_FIRST, 1 )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := 1
+      ::nRecNo := 1
    ELSE
       // TODO: Error handling
    ENDIF
@@ -500,12 +481,12 @@ METHOD First() CLASS TODBC
    RETURN nResult
 
 // Moves to the last record on DataSet
-METHOD last() CLASS TODBC
+METHOD Last() CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_LAST, 1 )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := ::nRecCount
+      ::nRecNo := ::nRecCount
    ELSE
       // TODO: Error handling
    ENDIF
@@ -519,7 +500,7 @@ METHOD MoveBy( nSteps ) CLASS TODBC
    LOCAL nResult := ::Fetch( SQL_FETCH_RELATIVE, nSteps )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := ::nRecNo + nSteps
+      ::nRecNo += nSteps
    ELSE
       // TODO: Error handling
    ENDIF
@@ -532,7 +513,7 @@ METHOD GoTo( nRecNo ) CLASS TODBC
    LOCAL nResult := ::Fetch( SQL_FETCH_ABSOLUTE, nRecNo )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := nRecNo
+      ::nRecNo := nRecNo
    ELSE
       // TODO: Error handling
    ENDIF
@@ -568,40 +549,40 @@ METHOD RecCount() CLASS TODBC
 // Loads current record data into the Fields collection
 METHOD PROCEDURE LoadData( nPos ) CLASS TODBC
 
-   LOCAL uData
+   LOCAL xData
    LOCAL i
 
    FOR EACH i IN ::Fields
 
-      uData := ""
-
       IF ::lCacheRS .AND. ::Active
-         IF nPos > 0 .AND. nPos <= ::nRecCount
-            uData := ::aRecordSet[ nPos ][ i:__enumIndex() ]
-         ENDIF
+         xData := iif( nPos >= 1 .AND. nPos <= ::nRecCount, ::aRecordSet[ nPos ][ i:__enumIndex() ], Space( i:DataSize ) )
       ELSE
-         SQLGetData( ::hStmt, i:FieldID, i:DataType,, @uData )
+         SQLGetData( ::hStmt, i:FieldID, i:DataType,, @xData )
 
          SWITCH i:DataType
-         CASE SQL_LONGVARCHAR
-            uData := AllTrim( uData )
-            EXIT
          CASE SQL_CHAR
+         CASE SQL_WCHAR
          CASE SQL_VARCHAR
-         CASE SQL_NVARCHAR
-            uData := PadR( uData, i:DataSize )
+         CASE SQL_WVARCHAR
+         CASE SQL_LONGVARCHAR
+         CASE SQL_WLONGVARCHAR
+            xData := PadR( xData, i:DataSize )
             EXIT
          CASE SQL_DOUBLE
          CASE SQL_FLOAT
          CASE SQL_REAL
             IF i:DataDecs > 0
-               uData := hb_odbcNumSetLen( uData, i:DataSize, i:DataDecs )
+               xData := hb_odbcNumSetLen( xData, i:DataSize, i:DataDecs )
             ENDIF
             EXIT
+         OTHERWISE
+            IF xData == NIL
+               xData := Space( i:DataSize )
+            ENDIF
          ENDSWITCH
       ENDIF
 
-      i:Value := uData
+      i:Value := xData
    NEXT
 
    RETURN

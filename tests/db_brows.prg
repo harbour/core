@@ -145,7 +145,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    IF HB_ISNUMERIC( LI_MSED )
       predxx := predit := LI_MSED
    ELSE
-      predxx := predit := iif( AScan( LI_MSED, 3 ) != 0, 3, iif( AScan( LI_MSED, 2 ) != 0, 2, 1 ) )
+      predxx := predit := iif( AScan( LI_MSED, 3 ) != 0, 3, iif( AScan( LI_MSED, 2 ) > 0, 2, 1 ) )
    ENDIF
    SetCursor( iif( predit > 1, SC_NORMAL, SC_NONE ) )
    IF LI_LSOHR
@@ -399,7 +399,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
             predit := 1
          ENDIF
       OTHERWISE
-         IF maskey != NIL .AND. AScan( maskey, nKey ) != 0
+         IF maskey != NIL .AND. AScan( maskey, nKey ) > 0
             rez     := .F.
             rezproc := nKey
          ENDIF

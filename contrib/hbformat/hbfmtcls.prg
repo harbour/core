@@ -367,7 +367,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                      IF nState > 0
                         nState := RF_STATE_CODE
                      ENDIF
-                     IF ( nContrState := AScan( ::aContr, {| a | a[ 1 ] == cToken1 .AND. ( Empty( a[ 2 ] ) .OR. a[ 2 ] == cToken2 ) } ) ) != 0
+                     IF ( nContrState := AScan( ::aContr, {| a | a[ 1 ] == cToken1 .AND. ( Empty( a[ 2 ] ) .OR. a[ 2 ] == cToken2 ) } ) ) > 0
                         IF Len( aDeep ) < ++nDeep
                            AAdd( aDeep, NIL )
                         ENDIF
@@ -377,7 +377,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                               cToken1 == "end"
                            IF nPos != 0 .AND. nDeep > 0 .AND. aDeep[ nDeep ] != nPos
                               DO WHILE ( nPos := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 4 ] }, ;
-                                    nPos + 1 ) ) != 0 .AND. aDeep[ nDeep ] != nPos
+                                    nPos + 1 ) ) > 0 .AND. aDeep[ nDeep ] != nPos
                               ENDDO
                            ENDIF
                            IF nDeep > 0 .AND. ( aDeep[ nDeep ] == nPos .OR. cToken1 == "end" )

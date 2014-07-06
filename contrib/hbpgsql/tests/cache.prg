@@ -69,7 +69,7 @@ FUNCTION SQLApplyUpdates()
    LOCAL lError := .F.
    LOCAL cError
 
-   IF ( i := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
+   IF ( i := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) > 0
 
       oQuery := t_aTableTemp[ i ][ DB_QUERY ]
 
@@ -149,7 +149,7 @@ PROCEDURE SQLCloseTemp( cAlias )
       ( cAlias )->( dbCloseArea() )
    ENDIF
 
-   IF ( x := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
+   IF ( x := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) > 0
       hb_ADel( t_aTableTemp, x, .F. /* .T. */ )
    ENDIF
 
@@ -187,7 +187,7 @@ FUNCTION SQLFetch( lFetchAll )
 
    /* Procura pela tabela no array */
 
-   IF ( i := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
+   IF ( i := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) > 0
       /* Traz registros da base de dados */
 
       oQuery := t_aTableTemp[ i ][ DB_QUERY ]
@@ -243,7 +243,7 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
    cAlias := Upper( cAlias )
 
    /* Procura por query na area temporaria */
-   IF ( x := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
+   IF ( x := AScan( t_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) > 0
       oQuery := t_aTableTemp[ x ][ DB_QUERY ]
       oQuery:Destroy()
    ENDIF

@@ -699,8 +699,9 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                      {
                         SQLPOINTER val = ( SQLPOINTER ) hb_xgrab( iLen + 1 );
                         if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BINARY, val, iLen + 1, &iLen ) ) )
-                           pItem = hb_itemPutCL( NULL, ( char * ) val, ( HB_SIZE ) iLen );
-                        hb_xfree( val );
+                           pItem = hb_itemPutCLPtr( NULL, ( char * ) val, ( HB_SIZE ) iLen );
+                        else
+                           hb_xfree( val );
                      }
                   }
                   break;

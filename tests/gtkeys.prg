@@ -295,7 +295,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    DO WHILE .T.
       kX := Inkey( 0 )
       k := hb_keyStd( kX )
-      IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) != 0
+      IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) > 0
          ? " key:", Str( aKeys[ i ][ 2 ], 7 ), PadR( aKeys[ i ][ 1 ], 18 ) + aKeys[ i ][ 3 ]
       ELSEIF ( k >= 32 .AND. k <= 126 ) .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
              Len( hb_keyChar( k ) ) > 0

@@ -96,7 +96,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
          nKey := Inkey( 0 )
       ENDIF
 
-      IF ( meth_no := AScan( tb_methods, {| elem | nKey == elem[ KEY_ELEM ] } ) ) != 0
+      IF ( meth_no := AScan( tb_methods, {| elem | nKey == elem[ KEY_ELEM ] } ) ) > 0
          Eval( tb_methods[ meth_no ][ BLK_ELEM ], b )
       ELSE
          DO CASE

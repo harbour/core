@@ -7,19 +7,17 @@ PROCEDURE Main()
    dsFunctions:SetSQL( "SELECT * FROM test" )
    ? dsFunctions:Open()
 
-   ? dsFunctions:RecNo(), dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:Skip()
-   ? dsFunctions:RecNo(), dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:GoTo( 1 )
-   ? dsFunctions:RecNo(), dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:Prior()
-   ? dsFunctions:RecNo(), dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:First()
-   ? dsFunctions:RecNo(), dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:Last()
-   ? dsFunctions:RecNo(), dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:Prior()
-   ? dsFunctions:RecNo(), dsFunctions:FieldByName( "First" ):Value
+   #translate Disp() => ? dsFunctions:RecNo(), "|" + dsFunctions:FieldByName( "First" ):Value + "|"
+
+   Disp() ; ? dsFunctions:Skip()
+   Disp() ; ? dsFunctions:GoTo( 1 )
+   Disp() ; ? dsFunctions:Prior()
+   Disp() ; ? dsFunctions:First()
+   Disp() ; ? dsFunctions:Last()
+   Disp() ; ? dsFunctions:Prior()
+   Disp() ; ? dsFunctions:Last()
+   Disp() ; ? dsFunctions:Skip()
+   Disp()
 
    ? dsFunctions:Close()
    dsFunctions:Destroy()

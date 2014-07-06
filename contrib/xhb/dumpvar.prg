@@ -342,7 +342,7 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
    FOR EACH aMsg IN aMessages
 
       IF ! hb_LeftEq( aMsg[ HB_OO_DATA_SYMBOL ], "_" )
-         IF ( AScan( aMessages, {| aElement | aElement[ HB_OO_DATA_SYMBOL ] == "_" + aMsg[ HB_OO_DATA_SYMBOL ] }, nFirstProperty ) != 0 ) == lData
+         IF ( AScan( aMessages, {| aElement | aElement[ HB_OO_DATA_SYMBOL ] == "_" + aMsg[ HB_OO_DATA_SYMBOL ] }, nFirstProperty ) > 0 ) == lData
             IF nNoScope == 0 .OR. hb_bitAnd( aMsg[ HB_OO_DATA_SCOPE ], nNoScope ) == 0
                AAdd( aReturn, aMsg )
             ENDIF

@@ -85,7 +85,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
    aMethods := {}
    FOR EACH cMsg IN aMessages
       IF hb_LeftEq( cMsg, "_" ) .AND. ;
-         hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, 2 ),,, .T. ) != 0
+         hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, 2 ),,, .T. ) > 0
          xValue := __dbgObjGetValue( oObject, cMsgAcc )
          AAdd( ::pItems, { cMsgAcc, xValue, .T. } )
          AAdd( ::AllNames, cMsgAcc )

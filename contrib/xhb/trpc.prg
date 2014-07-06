@@ -1287,7 +1287,7 @@ METHOD Find( cName ) CLASS TRPCService
    LOCAL oRet
 
    hb_mutexLock( ::mtxBusy )
-   IF ( nElem := AScan( ::aFunctions, {| x | Upper( cName ) == Upper( x:cName ) } ) ) != 0
+   IF ( nElem := AScan( ::aFunctions, {| x | Upper( cName ) == Upper( x:cName ) } ) ) > 0
       oRet := ::aFunctions[ nElem ]
    ENDIF
    hb_mutexUnlock( ::mtxBusy )
@@ -1300,7 +1300,7 @@ METHOD Remove( cName ) CLASS TRPCService
    LOCAL lRet := .F.
 
    hb_mutexLock( ::mtxBusy )
-   IF ( nElem := AScan( ::aFunctions, {| x | cName == x:cName } ) ) != 0
+   IF ( nElem := AScan( ::aFunctions, {| x | cName == x:cName } ) ) > 0
       hb_ADel( ::aFunctions, nElem, .T. )
       lRet := .T.
    ENDIF

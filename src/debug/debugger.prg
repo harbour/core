@@ -2357,7 +2357,7 @@ METHOD PROCEDURE RemoveWindow( oWnd ) CLASS HBDebugger
 
    LOCAL n
 
-   IF ( n := hb_AScan( ::aWindows, oWnd,,, .T. ) ) != 0
+   IF ( n := hb_AScan( ::aWindows, oWnd,,, .T. ) ) > 0
       ::aWindows := hb_ADel( ::aWindows, n, .T. )
    ENDIF
 

@@ -93,7 +93,7 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
 
          /* Find position of matching set function in array with all symbols */
          /* If found: DATA, else: METHOD */
-         IF ( AScan( aInfo, {| tmp | tmp == ( "_" + cName ) }, nFirst ) != 0 ) == lDataMethod
+         IF ( AScan( aInfo, {| tmp | tmp == ( "_" + cName ) }, nFirst ) > 0 ) == lDataMethod
             AAdd( aData, cName )
          ENDIF
       ENDIF

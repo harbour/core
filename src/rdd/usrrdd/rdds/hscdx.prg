@@ -193,14 +193,15 @@ PROCEDURE HSX_CLOSE( xHSX )
 
    IF Used() .AND. rddName() == "HSCDX"
       aWData := USRRDD_AREADATA( Select() )
-      IF HB_ISNUMERIC( xHSX )
+      DO CASE
+      CASE HB_ISNUMERIC( xHSX )
          nSlot := AScan( aWData[ 2 ], xHSX )
-      ELSEIF HB_ISSTRING( xHSX )
+      CASE HB_ISSTRING( xHSX )
          nSlot := hb_AScan( aWData[ 3 ], xHSX,,, .T. )
-      ELSE
+      OTHERWISE
          nSlot := 0
-      ENDIF
-      IF nSlot != 0
+      ENDCASE
+      IF nSlot > 0
          hb_ADel( aWData[ 2 ], nSlot, .T. )
          hb_ADel( aWData[ 3 ], nSlot, .T. )
       ENDIF
@@ -214,7 +215,7 @@ FUNCTION HSX_HANDLE( cFile )
 
    IF Used() .AND. rddName() == "HSCDX"
       aWData := USRRDD_AREADATA( Select() )
-      IF ( nSlot := hb_AScan( aWData[ 3 ], cFile,,, .T. ) ) != 0
+      IF ( nSlot := hb_AScan( aWData[ 3 ], cFile,,, .T. ) ) > 0
          RETURN aWData[ 2 ][ nSlot ]
       ENDIF
    ENDIF
@@ -227,7 +228,7 @@ FUNCTION HSX_FILE( nHsx )
 
    IF Used() .AND. rddName() == "HSCDX"
       aWData := USRRDD_AREADATA( Select() )
-      IF ( nSlot := AScan( aWData[ 3 ], nHsx ) ) != 0
+      IF ( nSlot := AScan( aWData[ 3 ], nHsx ) ) > 0
          RETURN aWData[ 3 ][ nSlot ]
       ENDIF
    ENDIF

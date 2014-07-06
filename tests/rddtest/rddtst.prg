@@ -202,7 +202,7 @@ static function itm2str( itm )
 static procedure rddtst_wr( cAction, xRet )
    local aState, cOut
 
-   if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) != 0
+   if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) > 0
       xRet := NIL
    endif
    aState := rdd_state()
@@ -223,7 +223,7 @@ static procedure rddtst_tst( cAction, aExState, xRet, xExRet )
 
    aState := rdd_state()
    if PCount() >= 4
-      if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) != 0
+      if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) > 0
          xRet := NIL
       endif
       if ! ValType( xRet ) == ValType( xExRet ) .or. ;
