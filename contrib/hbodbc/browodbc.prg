@@ -196,10 +196,5 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
    RETURN nSkipped
 
 STATIC FUNCTION ODBCFGet( cFieldName, oDataSource )
-
-   IF HB_ISSTRING( cFieldName )
-      // For changing value rather write a decent SQL statement
-      RETURN {| x | iif( x == NIL, oDataSource:FieldByName( cFieldName ):value, NIL ) }
-   ENDIF
-
-   RETURN NIL
+   // For changing value rather write a decent SQL statement
+   RETURN {| x | iif( x == NIL, oDataSource:FieldByName( cFieldName ):value, NIL ) }

@@ -1,8 +1,8 @@
 /*
  * ODBC Access Class
  *
+ * Copyright 2006 Marcelo Lombardo <lombardo@uol.com.br> (:SetCnnOptions(), :GetCnnOptions(), :Commit(), :RollBack(), :SetStmtOptions(), :GetStmtOptions(), :SetAutoCommit())
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
- * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br> (:SetCnnOptions(), :GetCnnOptions(), :Commit(), :RollBack(), :SetStmtOptions(), :GetStmtOptions(), :SetAutoCommit())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -236,7 +236,6 @@ METHOD Open() CLASS TODBC
    LOCAL nColSize
    LOCAL nDecimals
    LOCAL nNul
-   LOCAL nResult
    LOCAL aCurRow
 
    DO WHILE .T.
@@ -272,8 +271,7 @@ METHOD Open() CLASS TODBC
       SQLNumResultCols( ::hStmt, @nCols )
 
       // Get number of rows in result set
-      nResult := SQLRowCount( ::hStmt, @nRows )
-      IF nResult == SQL_SUCCESS
+      IF SQLRowCount( ::hStmt, @nRows ) == SQL_SUCCESS
          ::nRecCount := nRows
       ENDIF
 
@@ -297,10 +295,9 @@ METHOD Open() CLASS TODBC
       IF ::lCacheRS
          ::aRecordSet := {}
          DO WHILE ::Fetch( SQL_FETCH_NEXT, 1 ) == SQL_SUCCESS
-
             aCurRow := {}
-            FOR i := 1 TO nCols
-               AAdd( aCurRow, ::Fields[ i ]:value )
+            FOR EACH i IN ::Fields
+               AAdd( aCurRow, i:value )
             NEXT
             AAdd( ::aRecordSet, aCurRow )
          ENDDO
@@ -310,8 +307,11 @@ METHOD Open() CLASS TODBC
          ::nRecCount := iif( ::First() == SQL_SUCCESS, 1, 0 )
       ENDIF
 
-      ::nRecNo := 1  // Newly opened recordset - we are on first row
+      ::nRecNo := 0  // Newly opened recordset
       ::Active := .T.  // Sets the Dataset state to active
+
+      // workaround (?) to avoid an empty record before the first ::Skip() after ::Open()
+      ::Next()
 
       EXIT
    ENDDO
@@ -379,7 +379,7 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
    ::ClearData()
 
    // Do we have cached recordset?
-   IF ::lCacheRS .AND. ::Active  // looks like we do ...
+   IF ::lCacheRS .AND. ::Active  // looks like we do...
 
       // Change Recno according to nFetchType and nOffset
       SWITCH nFetchType
@@ -454,16 +454,17 @@ METHOD Next() CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_NEXT, 1 )
 
-   IF nResult == SQL_SUCCESS
+   DO CASE
+   CASE nResult == SQL_SUCCESS
       ::nRecno := ::nRecno + 1
       IF ::nRecNo > ::nRecCount
          ::nRecCount := ::nRecNo
       ENDIF
-   ELSEIF nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == ::nRecCount // permit skip on last row, so that Eof() can work properly
+   CASE nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == ::nRecCount // permit skip on last row, so that Eof() can work properly
       ::nRecno := ::nRecno + 1
-   ELSE
+   OTHERWISE
       // TODO: Error handling
-   ENDIF
+   ENDCASE
 
    RETURN nResult
 
@@ -472,15 +473,16 @@ METHOD Prior() CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_PRIOR, 1 )
 
-   IF nResult == SQL_SUCCESS
+   DO CASE
+   CASE nResult == SQL_SUCCESS
       ::nRecno := ::nRecno - 1
-   ELSEIF nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == 1 // permit skip-1 on first row, so that Bof() can work properly
+   CASE nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == 1 // permit skip-1 on first row, so that Bof() can work properly
       ::nRecno := ::nRecno - 1
       ::Next()
       ::lBof := .T.
-   ELSE
+   OTHERWISE
       // TODO: Error handling
-   ENDIF
+   ENDCASE
 
    RETURN nResult
 

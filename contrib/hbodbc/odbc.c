@@ -3,9 +3,9 @@
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
+ * Copyright 2006 Marcelo Lombardo <lombardo@uol.com.br> (SQLGetInfo(), SQLSetStmtAttr(), SQLGetStmtAttr(), SQLCommit(), SQLRollback(), SQLColAttribute(), SQLMoreResults())
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br> (SQLNumResultCols(), SQLDescribeCol())
- * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br> (SQLGetInfo(), SQLSetStmtAttr(), SQLGetStmtAttr(), SQLCommit(), SQLRollback(), SQLColAttribute(), SQLMoreResults())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

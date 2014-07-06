@@ -44,8 +44,6 @@ PROCEDURE Main()
          PadR( dsFunctions:FieldByName( "City" ):FieldName, 40 ) ;
          COLOR "B/W"
 
-      dsFunctions:Skip()  /* TOFIX: To avoid first record to return NILs. bug in TODBC? */
-
       DO WHILE ! dsFunctions:Eof()
          ? "      " + ;
             PadR( dsFunctions:FieldByName( "First" ):Value, 10 ), "|", ;
