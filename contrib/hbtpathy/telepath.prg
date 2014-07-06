@@ -388,7 +388,7 @@ FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
 
 #if 0
       nTimeout := aParam[ 2 ]
-      lIgnorecase := aParam[ Len( aParam ) ]
+      lIgnorecase := ATail( aParam )
 
       hb_default( @nTimeout, -1 )
       hb_default( @lIgnorecase, .F. )

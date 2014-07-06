@@ -85,7 +85,7 @@ FUNCTION WvtPaintObjects()
                   lExe := .F.
                ELSE
                   nLeft  := b:aColumnsSep[ 1 ]
-                  nRight := b:aColumnsSep[ Len( b:aColumnsSep ) ]
+                  nRight := ATail( b:aColumnsSep )
                   IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   < bottom */
                      tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm > top    */
                      tlbr_[ 2 ] <= nRight + 1       .AND. ; /* left  < right  */

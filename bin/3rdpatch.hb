@@ -608,7 +608,7 @@ STATIC FUNCTION CombinePath( ... )
       FOR nI := 2 TO Len( aArguments ) - 1
          cRetVal += aArguments[ nI ] + hb_ps()
       NEXT
-      cRetVal += aArguments[ Len( aArguments ) ]
+      cRetVal += ATail( aArguments )
    ENDIF
 
    RETURN cRetVal

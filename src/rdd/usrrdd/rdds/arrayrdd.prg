@@ -773,7 +773,7 @@ STATIC FUNCTION AR_DELETE( nWA )
    IF aOpenInfo[ UR_OI_READONLY ]
       oError := ErrorNew()
       oError:GenCode     := EG_READONLY
-      oError:SubCode     := 1025                /* EDBF_READONLY */
+      oError:SubCode     := 1025  /* EDBF_READONLY */
       oError:Description := hb_langErrMsg( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
@@ -785,7 +785,7 @@ STATIC FUNCTION AR_DELETE( nWA )
       IF aOpenInfo[ UR_OI_SHARED ] .AND. AScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) == 0
          oError := ErrorNew()
          oError:GenCode     := EG_UNLOCKED
-         oError:SubCode     := 1022            /* EDBF_UNLOCKED */
+         oError:SubCode     := 1022  /* EDBF_UNLOCKED */
          oError:Description := hb_langErrMsg( EG_UNLOCKED )
          oError:FileName    := aOpenInfo[ UR_OI_NAME ]
          UR_SUPER_ERROR( nWA, oError )
@@ -824,8 +824,8 @@ STATIC FUNCTION AR_RECALL( nWA )
    LOCAL aWAData   := USRRDD_AREADATA( nWA )
    LOCAL aDBFData  := aWAData[ WADATA_DATABASE ]
    LOCAL aRecInfo  := aDBFData[ DATABASE_RECINFO ]
-   LOCAL aIndexes  := aDBFData[ DATABASE_INDEX ]
    LOCAL aOpenInfo := aWAData[ WADATA_OPENINFO ]
+   LOCAL aIndexes  := aDBFData[ DATABASE_INDEX ]
    LOCAL aKeys[ Len( aIndexes ) ]
    LOCAL oError
 
@@ -834,7 +834,7 @@ STATIC FUNCTION AR_RECALL( nWA )
    IF aOpenInfo[ UR_OI_READONLY ]
       oError := ErrorNew()
       oError:GenCode     := EG_READONLY
-      oError:SubCode     := 1025 /* EDBF_READONLY */
+      oError:SubCode     := 1025  /* EDBF_READONLY */
       oError:Description := hb_langErrMsg( EG_READONLY )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       UR_SUPER_ERROR( nWA, oError )
@@ -846,7 +846,7 @@ STATIC FUNCTION AR_RECALL( nWA )
       IF aOpenInfo[ UR_OI_SHARED ] .AND. AScan( aWAData[ WADATA_LOCKS ], aWAData[ WADATA_RECNO ] ) == 0
          oError := ErrorNew()
          oError:GenCode     := EG_UNLOCKED
-         oError:SubCode     := 1022 /* EDBF_UNLOCKED */
+         oError:SubCode     := 1022  /* EDBF_UNLOCKED */
          oError:Description := hb_langErrMsg( EG_UNLOCKED )
          oError:FileName    := aOpenInfo[ UR_OI_NAME ]
          UR_SUPER_ERROR( nWA, oError )

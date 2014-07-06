@@ -645,13 +645,13 @@ STATIC PROCEDURE _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 
    IF lTypeTotal  // If lTypeTotal == .T. Update from total
       AAdd( aTrans, Str( iif( lUseTotal, nTotal, nAmount ), 22, nMaxDeci ) )
-      aTrans[ Len( aTrans ) ] := _ftStuffComma( aTrans[ Len( aTrans ) ], .T. ) + " *" + ;
+      aTrans[ Len( aTrans ) ] := _ftStuffComma( ATail( aTrans ), .T. ) + " *" + ;
          iif( lAddError, "ER", "" )
 
    ELSE           // If lTypeTotal=.F. Update from nNumTotal
       AAdd( aTrans, Str( iif( lUseTotal, nTotal, nAmount ), 22, nMaxDeci ) )
 
-      aTrans[ Len( aTrans ) ] := _ftStuffComma( aTrans[ Len( aTrans ) ], .T. ) + ;
+      aTrans[ Len( aTrans ) ] := _ftStuffComma( ATail( aTrans ), .T. ) + ;
          iif( lSubRtn, " S", iif( nAddMode == 1, " +", iif( nAddMode == 2, " -", ;
          iif( lTotalOk, " =", iif( nAddMode == 3, " X", " /" ) ) ) ) ) + iif( lAddError, "ER", "" )
    ENDIF
@@ -717,7 +717,7 @@ STATIC PROCEDURE _ftDisplayTape( aAdder, nKey )
       SetColor( "N/W" )
       hb_Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
       IF Len( aTrans ) > 0               // Any transactions been entered yet?
-         hb_DispOutAt( 20 + nTopOS, 7 + nTapeSpace, aTrans[ Len( aTrans ) ] )
+         hb_DispOutAt( 20 + nTopOS, 7 + nTapeSpace, ATail( aTrans ) )
       ENDIF
       _ftSetWinColor( W_CURR, W_PROMPT )
    ELSE                                  // Start displaying tape

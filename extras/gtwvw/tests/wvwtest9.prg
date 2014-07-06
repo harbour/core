@@ -1341,8 +1341,10 @@ METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWi
    hb_default( @lDraw, .T. )
    hb_default( @nWinId, wvw_nNumWindows() - 1 )  // 2004-03-03
 
-   // TODO: ::nId := iif( Empty( s_amouseobjlist ), 1, s_amouseobjlist[ Len( s_amouseobjlist ) ]:nGetId() + 1 )
-   // TODO: ::nHotKey := NIL
+#if 0  // TODO
+   ::nId := iif( Empty( s_amouseobjlist ), 1, ATail( s_amouseobjlist ):nGetId() + 1 )
+   ::nHotKey := NIL
+#endif
    ::nWinId := nWinId  // 2004-03-03
 
    ::nRow1 := nRow1

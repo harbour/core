@@ -108,7 +108,7 @@ METHOD New( cFileName ) CLASS TIniFile
                      ENDIF
 
                      AAdd( ::Contents, { cLine, { /* this will be CurrArray */ } } )
-                     CurrArray := ::Contents[ Len( ::Contents ) ][ 2 ]
+                     CurrArray := ATail( ::Contents )[ 2 ]
 
                   CASE hb_LeftEq( cLine, ";" )  // preserve comments
                      AAdd( CurrArray, { NIL, cLine } )
