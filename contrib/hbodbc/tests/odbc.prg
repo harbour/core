@@ -1,5 +1,8 @@
 #require "hbodbc"
 
+#define _DBNAME_     "test.mdb"
+#define _TABLENAME_  "test"
+
 PROCEDURE Main()
 
    LOCAL hEnv
@@ -8,12 +11,13 @@ PROCEDURE Main()
    LOCAL cConnStr
    LOCAL cConstrout
    LOCAL nRows
-   LOCAL cCode, cFunc, cState, cComm
+   LOCAL cStr1, cStr2, cStr3, cStr4, dDate, lFlag, nNum1, nNum2
    LOCAL cError1, nError, cError2
+   LOCAL nFld, cColName, nNameLen, nDataType, nColSize, nDecimals, nNul
 
    ? "Version:", hb_NumToHex( hb_odbcVer() )
 
-   cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
+   cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), _DBNAME_ ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    ? PadC( "*** ODBC ACCESS TEST ***", 70 )
    ?
@@ -41,8 +45,8 @@ PROCEDURE Main()
    ? SQLGetDiagRec( SQL_HANDLE_ENV, hEnv, 1, @cError1, @nError, @cError2 )
    ? "SQLGetDiagRec", cError1, nError, cError2
 
-   ? "SQL: SELECT FROM test"
-   ? SQLExecDirect( hStmt, "SELECT FROM test" )
+   ? "SQL:", "SELECT FROM " + _TABLENAME_
+   ? SQLExecDirect( hStmt, "SELECT FROM " + _TABLENAME_ )
 
    ? SQLError( ,, hStmt, @cError1, @nError, @cError2 )
    ? "SQLError", cError1, nError, cError2
@@ -50,18 +54,36 @@ PROCEDURE Main()
    ? "SQLGetDiagRec", cError1, nError, cError2
 
    ?
-   ? "SQL: SELECT * FROM test"
-   SQLExecDirect( hStmt, "SELECT * FROM test" )
+   ? "SQL:", "SELECT * FROM " + _TABLENAME_
+   SQLExecDirect( hStmt, "SELECT * FROM " + _TABLENAME_ )
+
+   ? Replicate( "-", 70 )
+
+   FOR nFld := 1 TO 20
+      IF SQLDescribeCol( hStmt, nFld, @cColName, 255,, @nDataType, @nColSize, @nDecimals, @nNul ) == SQL_ERROR
+         EXIT
+      ENDIF
+      ? nFld, PadR( cColName, 15 ), nDataType, nColSize, nDecimals, nNul != 0
+   NEXT
 
    ? Replicate( "-", 70 )
 
    nRows := 0
    DO WHILE SQLFetch( hStmt ) == 0
-      SQLGetData( hStmt, 1, SQL_CHAR, 128, @cCode )
-      SQLGetData( hStmt, 2, SQL_CHAR, 128, @cFunc )
-      SQLGetData( hStmt, 3, SQL_CHAR, 128, @cState )
-      SQLGetData( hStmt, 4, SQL_CHAR, 128, @cComm )
-      ? cCode, PadR( cFunc, 20 ), cState, cComm
+      SQLGetData( hStmt, 1, SQL_CHAR,, @cStr1 )
+      SQLGetData( hStmt, 2, SQL_CHAR,, @cStr2 )
+      SQLGetData( hStmt, 3, SQL_CHAR,, @cStr3 )
+      SQLGetData( hStmt, 4, SQL_CHAR,, @cStr4 )
+      SQLGetData( hStmt, 7, SQL_DATE,, @dDate )
+      SQLGetData( hStmt, 8, SQL_BIT,, @lFlag )
+      SQLGetData( hStmt, 9, SQL_INTEGER,, @nNum1 )
+      SQLGetData( hStmt, 10, SQL_INTEGER,, @nNum2 )
+      ? ;
+         PadR( cStr1, 10 ), ;
+         PadR( cStr2, 10 ), ;
+         PadR( cStr3, 25 ), ;
+         PadR( cStr4, 15 ), ;
+         dDate, lFlag, nNum1, nNum2
       nRows++
    ENDDO
 

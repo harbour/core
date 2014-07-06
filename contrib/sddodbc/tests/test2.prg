@@ -9,6 +9,12 @@ PROCEDURE Main()
 
    LOCAL nConnection, nI, aI
 
+#if defined( __HBSCRIPT__HBSHELL )
+   rddRegister( "SQLBASE" )
+   rddRegister( "SQLMIX" )
+   hb_SDDODBC_Register()
+#endif
+
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    rddSetDefault( "SQLMIX" )

@@ -480,6 +480,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiType = HB_FT_STRING;
             break;
 
+         case SQL_BINARY:
          case SQL_VARBINARY:
          case SQL_LONGVARBINARY:
             pFieldInfo.uiType  = HB_FT_STRING;
@@ -488,11 +489,11 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
          case SQL_TINYINT:
          case SQL_SMALLINT:
-         case SQL_INTEGER:
          case SQL_BIGINT:
             pFieldInfo.uiType = HB_FT_INTEGER;
             break;
 
+         case SQL_INTEGER:
          case SQL_DECIMAL:
          case SQL_NUMERIC:
             pFieldInfo.uiType = HB_FT_LONG;
@@ -686,33 +687,54 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
          {
             case HB_FT_STRING:
             {
-               SQLSMALLINT iTargetType;
-               char        buffer[ 2 ];
-
-               iLen = 0;
-
-#if defined( UNICODE )
-               iTargetType = SQL_C_WCHAR;
-#else
-               iTargetType = SQL_C_CHAR;
-#endif
-
-               if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, buffer, 0, &iLen ) ) )
+               if( pField->uiFlags == HB_FF_BINARY )
                {
-                  if( iLen >= 0 )
+                  char buffer[ 1 ];
+
+                  iLen = 0;
+
+                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BINARY, ( SQLPOINTER ) buffer, 0, &iLen ) ) )
                   {
-                     SQLPOINTER * val = ( SQLPOINTER * ) hb_xgrab( iLen + sizeof( O_HB_CHAR ) );
-                     if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, val, iLen + sizeof( O_HB_CHAR ), &iLen ) ) )
+                     if( iLen >= 0 )
                      {
-#if defined( UNICODE )
-                        iLen /= 2;
-#endif
-                        pItem = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) val, ( HB_SIZE ) iLen );
+                        SQLPOINTER val = ( SQLPOINTER ) hb_xgrab( iLen + 1 );
+                        if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BINARY, val, iLen + 1, &iLen ) ) )
+                           pItem = hb_itemPutCL( NULL, ( char * ) val, ( HB_SIZE ) iLen );
+                        hb_xfree( val );
                      }
-                     hb_xfree( val );
                   }
+                  break;
                }
-               break;
+               else
+               {
+                  SQLSMALLINT iTargetType;
+                  char        buffer[ sizeof( O_HB_CHAR ) ];
+
+                  iLen = 0;
+
+#if defined( UNICODE )
+                  iTargetType = SQL_C_WCHAR;
+#else
+                  iTargetType = SQL_C_CHAR;
+#endif
+
+                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, ( SQLPOINTER ) buffer, 0, &iLen ) ) )
+                  {
+                     if( iLen >= 0 )
+                     {
+                        SQLPOINTER val = ( SQLPOINTER ) hb_xgrab( iLen + sizeof( O_HB_CHAR ) );
+                        if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, val, iLen + sizeof( O_HB_CHAR ), &iLen ) ) )
+                        {
+#if defined( UNICODE )
+                           iLen /= 2;
+#endif
+                           pItem = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) val, ( HB_SIZE ) iLen );
+                        }
+                        hb_xfree( val );
+                     }
+                  }
+                  break;
+               }
             }
 
             case HB_FT_INTEGER:

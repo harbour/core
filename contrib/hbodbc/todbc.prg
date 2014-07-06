@@ -54,7 +54,7 @@ CREATE CLASS TODBCField
 
    VAR FieldID      INIT -1
    VAR FieldName    INIT ""
-   VAR DataType     INIT -1
+   VAR DataType     INIT SQL_TYPE_NULL
    VAR DataSize     INIT -1
    VAR DataDecs     INIT -1
    VAR AllowNull    INIT .F.
@@ -285,13 +285,12 @@ METHOD Open() CLASS TODBC
             @nColSize, @nDecimals, @nNul )
 
          AAdd( ::Fields, TODBCField():New() )
-         ::Fields[ Len( ::Fields ) ]:FieldID   := i
-         ::Fields[ Len( ::Fields ) ]:FieldName := cColName
-         ::Fields[ Len( ::Fields ) ]:DataSize  := nColsize
-         ::Fields[ Len( ::Fields ) ]:DataType  := nDataType
-         ::Fields[ Len( ::Fields ) ]:DataDecs  := nDecimals
-         ::Fields[ Len( ::Fields ) ]:AllowNull := ( nNul != 0 )
-
+         ATail( ::Fields ):FieldID   := i
+         ATail( ::Fields ):FieldName := cColName
+         ATail( ::Fields ):DataSize  := nColsize
+         ATail( ::Fields ):DataType  := nDataType
+         ATail( ::Fields ):DataDecs  := nDecimals
+         ATail( ::Fields ):AllowNull := ( nNul != 0 )
       NEXT
 
       // Do we cache recordset?
@@ -308,18 +307,13 @@ METHOD Open() CLASS TODBC
 
          ::nRecCount := Len( ::aRecordSet )
       ELSE
-         IF ::First() == SQL_SUCCESS
-            ::nRecCount := 1
-         ELSE
-            ::nRecCount := 0
-         ENDIF
+         ::nRecCount := iif( ::First() == SQL_SUCCESS, 1, 0 )
       ENDIF
 
-      ::nRecNo := 1 // Newly opened recordset - we are on first row
-      ::Active := .T. // Sets the Dataset state to active
+      ::nRecNo := 1  // Newly opened recordset - we are on first row
+      ::Active := .T.  // Sets the Dataset state to active
 
       EXIT
-
    ENDDO
 
    RETURN nRet == SQL_SUCCESS
@@ -363,18 +357,17 @@ METHOD PROCEDURE Close() CLASS TODBC
 METHOD FieldByName( cField ) CLASS TODBC
 
    LOCAL nRet
-   LOCAL xRet := NIL
 
    IF HB_ISSTRING( cField )
       IF ( nRet := AScan( ::Fields, {| x | Upper( x:FieldName ) == Upper( cField ) } ) ) != 0
-         xRet := ::Fields[ nRet ]
+         RETURN ::Fields[ nRet ]
       ELSE
          // TODO: Some error here
          // Invalid field name
       ENDIF
    ENDIF
 
-   RETURN xRet
+   RETURN NIL
 
 // General fetch wrapper - used by next methods
 METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
@@ -562,11 +555,11 @@ METHOD Bof() CLASS TODBC
 METHOD RecNo() CLASS TODBC
    RETURN ::nRecNo
 
-// Returns number of rows ( if that function is supported by ODBC driver )
+// Returns number of rows (if that function is supported by ODBC driver)
 METHOD LastRec() CLASS TODBC
    RETURN ::nRecCount
 
-// Returns number of rows ( if that function is supported by ODBC driver )
+// Returns number of rows (if that function is supported by ODBC driver)
 METHOD RecCount() CLASS TODBC
    RETURN ::nRecCount
 
@@ -585,48 +578,28 @@ METHOD PROCEDURE LoadData( nPos ) CLASS TODBC
             uData := ::aRecordSet[ nPos ][ i:__enumIndex() ]
          ENDIF
       ELSE
-
-         SQLGetData( ::hStmt, i:FieldID, SQL_CHAR, 256, @uData )
+         SQLGetData( ::hStmt, i:FieldID, i:DataType,, @uData )
 
          SWITCH i:DataType
          CASE SQL_LONGVARCHAR
             uData := AllTrim( uData )
             EXIT
-
          CASE SQL_CHAR
          CASE SQL_VARCHAR
          CASE SQL_NVARCHAR
             uData := PadR( uData, i:DataSize )
             EXIT
-
-         CASE SQL_TIMESTAMP
-         CASE SQL_DATE
-            uData := hb_SToD( SubStr( uData, 1, 4 ) + SubStr( uData, 6, 2 ) + SubStr( uData, 9, 2 ) )
-            EXIT
-
-         CASE SQL_BIT
-            uData := Val( uData ) == 1
-            EXIT
-
-         CASE SQL_NUMERIC
-         CASE SQL_DECIMAL
          CASE SQL_DOUBLE
-         CASE SQL_TINYINT
-         CASE SQL_SMALLINT
-         CASE SQL_BIGINT
-         CASE SQL_INTEGER
          CASE SQL_FLOAT
          CASE SQL_REAL
-            uData := Round( Val( StrTran( uData, ",", "." ) ), i:DataDecs )
-            uData := hb_odbcNumSetLen( uData, i:DataSize, i:DataDecs )
+            IF i:DataDecs > 0
+               uData := hb_odbcNumSetLen( uData, i:DataSize, i:DataDecs )
+            ENDIF
             EXIT
-
          ENDSWITCH
-
       ENDIF
 
       i:Value := uData
-
    NEXT
 
    RETURN

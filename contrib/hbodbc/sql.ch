@@ -68,17 +68,22 @@
 #define SQL_TIME                        10
 #define SQL_TIMESTAMP                   11
 #define SQL_VARCHAR                     12
+#define SQL_TYPE_DATE                   91
+#define SQL_TYPE_TIME                   92
+#define SQL_TYPE_TIMESTAMP              93
 #define SQL_BIT                         -7
 #define SQL_LONGVARCHAR                 -1
 #define SQL_LONGVARBINARY               -4
 #define SQL_BIGINT                      -5
 #define SQL_TINYINT                     -6
-
-#define SQL_NVARCHAR                    -9
+#define SQL_WCHAR                       -8
+#define SQL_WVARCHAR                    -9
+#define SQL_NVARCHAR                    SQL_WVARCHAR
+#define SQL_WLONGVARCHAR                -10
 
 #define SQL_TYPE_NULL                   0
-#define SQL_TYPE_MIN                    SQL_BIT
-#define SQL_TYPE_MAX                    SQL_VARCHAR
+#define SQL_TYPE_MIN                    SQL_WLONGVARCHAR
+#define SQL_TYPE_MAX                    SQL_TYPE_TIMESTAMP
 #define SQL_ALL_TYPES                   0
 
 /* NULL status constants.  These are used in SQLColumns(), SQLColAttribute(),

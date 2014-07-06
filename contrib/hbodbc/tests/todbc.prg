@@ -6,7 +6,7 @@ PROCEDURE Main()
 
    LOCAL aOrders
    LOCAL nOp
-   LOCAL i
+   LOCAL fld
 
    SetColor( "W+/B" )
    CLS
@@ -21,9 +21,9 @@ PROCEDURE Main()
       @  3, 24 TO Len( dsFunctions:Fields ) + 4, 55
 
       aOrders := {}
-      FOR i := 1 TO Len( dsFunctions:Fields )
-         AAdd( aOrders, dsFunctions:Fields[ i ]:FieldName )
-         @ i + 3, 25 PROMPT PadC( "ORDER BY " + aOrders[ i ], 30 )
+      FOR EACH fld IN dsFunctions:Fields
+         AAdd( aOrders, fld:FieldName )
+         @  3 + Len( aOrders ), 25 PROMPT PadR( "ORDER BY " + ATail( aOrders ), 30 )
       NEXT
 
       MENU TO nOp
@@ -44,7 +44,7 @@ PROCEDURE Main()
          PadR( dsFunctions:FieldByName( "City" ):FieldName, 40 ) ;
          COLOR "B/W"
 
-      dsFunctions:Skip() /* TOFIX: To avoid first record to return NILs. bug in TODBC? */
+      dsFunctions:Skip()  /* TOFIX: To avoid first record to return NILs. bug in TODBC? */
 
       DO WHILE ! dsFunctions:Eof()
          ? "      " + ;
@@ -60,8 +60,8 @@ PROCEDURE Main()
       @ MaxRow(), Col() + 1 SAY dsFunctions:cSQL
 
       dsFunctions:Close()
-
    ENDDO
+
    dsFunctions:Destroy()
 
    RETURN
