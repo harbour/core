@@ -31,3 +31,4 @@ rddsql.hbc
 -hbx=${hb_name}
 
 core.c
+libinfo.c

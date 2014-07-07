@@ -22,6 +22,9 @@
 #endif
 
 DYNAMIC hb_SDDOCI_Register
+DYNAMIC OCI_GetCharsetMetaData
+DYNAMIC OCI_GetCharsetUserData
+DYNAMIC OCI_GetImportMode
 DYNAMIC SDDOCI
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__SDDOCI__REQUEST )

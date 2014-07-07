@@ -59,37 +59,21 @@
 
 #define HB_OCILIB_VERS( ma, mi, mu )  ( OCILIB_MAJOR_VERSION > ma || ( OCILIB_MAJOR_VERSION == ma && ( OCILIB_MINOR_VERSION > mi || ( OCILIB_MINOR_VERSION == mi && OCILIB_REVISION_VERSION >= mu ) ) ) )
 
-#if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE )
-   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define M_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define M_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define M_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
-   #define M_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define M_HB_CHAR  HB_WCHAR
-#else
-   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
-   #define M_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
-   #define M_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define M_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define M_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
-   #define M_HB_CHAR  char
-#endif
-
-#if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE ) || defined( OCI_CHARSET_MIXED )
-   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define D_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define D_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define D_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
-   #define D_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define D_HB_CHAR  HB_WCHAR
-#else
-   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
-   #define D_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
-   #define D_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define D_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define D_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
-   #define D_HB_CHAR  char
-#endif
+#define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  ( s_fOCI_CharsetMetaDataUni ? \
+                                                 ( const mtext * ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen ) : \
+                                                 ( const mtext * ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen ) )
+#define M_HB_ITEMGETSTR( itm, phstr, plen )      ( s_fOCI_CharsetMetaDataUni ? \
+                                                 ( const mtext * ) hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen ) : \
+                                                 ( const mtext * ) hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen ) )
+#define M_HB_ITEMPUTSTR( itm, str )              ( s_fOCI_CharsetMetaDataUni ? \
+                                                 hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str ) : \
+                                                 hb_itemPutStr( itm, hb_setGetOSCP(), ( char * ) str ) )
+#define D_HB_ITEMPUTSTR( itm, str )              ( s_fOCI_CharsetUserDataUni ? \
+                                                 hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str ) : \
+                                                 hb_itemPutStr( itm, hb_setGetOSCP(), ( char * ) str ) )
+#define D_HB_ITEMPUTSTRLEN( itm, str, len )      ( s_fOCI_CharsetUserDataUni ? \
+                                                 hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str, len ) : \
+                                                 hb_itemPutStrLen( itm, hb_setGetOSCP(), ( char * ) str, len ) )
 
 typedef struct
 {
@@ -122,17 +106,20 @@ static SDDNODE s_ocidd =
    ( SDDFUNC_GETVARLEN ) NULL
 };
 
+static HB_BOOL s_fOCI_CharsetMetaDataUni = HB_FALSE;
+static HB_BOOL s_fOCI_CharsetUserDataUni = HB_FALSE;
+
 static void hb_ocidd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
    if( ! OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED ) )
       hb_errInternal( 8000, NULL, NULL, NULL );
-   else
-   {
-      if( ! hb_sddRegister( &s_ocidd ) )
-         hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-   }
+   else if( ! hb_sddRegister( &s_ocidd ) )
+      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+
+   s_fOCI_CharsetMetaDataUni = ( OCI_GetCharsetMetaData() == OCI_CHAR_WIDE );
+   s_fOCI_CharsetUserDataUni = ( OCI_GetCharsetUserData() == OCI_CHAR_WIDE );
 }
 
 static void hb_ocidd_exit( void * cargo )
@@ -224,9 +211,9 @@ static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    void * hUser;
    void * hPass;
 
-   cn = OCI_ConnectionCreate( ( mtext * ) M_HB_ARRAYGETSTR( pItem, 2, &hConn, NULL ),
-                              ( mtext * ) M_HB_ARRAYGETSTR( pItem, 3, &hUser, NULL ),
-                              ( mtext * ) M_HB_ARRAYGETSTR( pItem, 4, &hPass, NULL ), OCI_SESSION_DEFAULT );
+   cn = OCI_ConnectionCreate( M_HB_ARRAYGETSTR( pItem, 2, &hConn, NULL ),
+                              M_HB_ARRAYGETSTR( pItem, 3, &hUser, NULL ),
+                              M_HB_ARRAYGETSTR( pItem, 4, &hPass, NULL ), OCI_SESSION_DEFAULT );
 
    hb_strfree( hConn );
    hb_strfree( hUser );
@@ -563,7 +550,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   const dtext * val;
                   if( ( val = OCI_GetString( rs, ui ) ) != NULL )
-                     pItem = D_HB_ITEMPUTSTRLEN( NULL, val, ( HB_SIZE ) dtslen( val ) );  /* TODO: Pad it to pField->uiLen size with spaces? */
+                     pItem = D_HB_ITEMPUTSTR( NULL, val );  /* TODO: Pad it to pField->uiLen size with spaces? */
                }
                break;
 
@@ -587,9 +574,9 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   unsigned int uiSize = OCI_LongGetSize( val );
                   if( OCI_LongGetType( val ) == OCI_CLONG )
-                     pItem = D_HB_ITEMPUTSTRLEN( NULL, ( D_HB_CHAR * ) OCI_LongGetBuffer( val ), uiSize );
+                     pItem = D_HB_ITEMPUTSTRLEN( NULL, OCI_LongGetBuffer( val ), uiSize );
                   else
-                     pItem = hb_itemPutCL( NULL, ( char * ) OCI_LongGetBuffer( val ), uiSize );
+                     pItem = hb_itemPutCL( NULL, ( const char * ) OCI_LongGetBuffer( val ), uiSize );
                }
                break;
             }
@@ -600,7 +587,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             {
                OCI_Long * val = OCI_GetLong( rs, ui );
                if( val )
-                  pItem = hb_itemPutCL( NULL, ( char * ) OCI_LongGetBuffer( val ), OCI_LongGetSize( val ) );
+                  pItem = hb_itemPutCL( NULL, ( const char * ) OCI_LongGetBuffer( val ), OCI_LongGetSize( val ) );
                break;
             }
 

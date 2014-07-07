@@ -1,3 +1,5 @@
+/* Copyright 2014 Viktor Szakats (vszakats.net/harbour) */
+
 #require "rddsql"
 #require "sddoci"
 
@@ -16,6 +18,10 @@ PROCEDURE Main()
    rddRegister( "SQLMIX" )
    hb_SDDOCI_Register()
 #endif
+
+   ? hb_HGetDef( { 1 => "OCI_CHAR_ANSI", 2 => "OCI_CHAR_WIDE" }, OCI_GetCharsetMetaData(), "OCI_CHAR_unknown" )
+   ? hb_HGetDef( { 1 => "OCI_CHAR_ANSI", 2 => "OCI_CHAR_WIDE" }, OCI_GetCharsetUserData(), "OCI_CHAR_unknown" )
+   ? hb_HGetDef( { 1 => "OCI_IMPORT_MODE_LINKAGE", 2 => "OCI_IMPORT_MODE_RUNTIME" }, OCI_GetImportMode(), "OCI_IMPORT_MODE_unknown" )
 
    rddSetDefault( "SQLMIX" )
 
