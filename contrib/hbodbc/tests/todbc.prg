@@ -37,25 +37,11 @@ PROCEDURE Main()
       dsFunctions:SetSQL( "SELECT * FROM test ORDER BY " + aOrders[ nOp ] )
       dsFunctions:Open()
 
-      @ 14, 5 SAY " " + ;
-         PadR( dsFunctions:FieldByName( "First" ):FieldName, 10 ) + "   " + ;
-         PadR( dsFunctions:FieldByName( "Last" ):FieldName, 10 ) + "   " + ;
-         PadR( dsFunctions:FieldByName( "Street" ):FieldName, 25 ) + "   " + ;
-         PadR( dsFunctions:FieldByName( "City" ):FieldName, 40 ) ;
-         COLOR "B/W"
-
-      DO WHILE ! dsFunctions:Eof()
-         ? "      " + ;
-            PadR( dsFunctions:FieldByName( "First" ):Value, 10 ), "|", ;
-            PadR( dsFunctions:FieldByName( "Last" ):Value, 10 ), "|", ;
-            PadR( dsFunctions:FieldByName( "Street" ):Value, 25 ), "|", ;
-            PadR( dsFunctions:FieldByName( "City" ):Value, 40 )
-         dsFunctions:Skip()
-      ENDDO
-
       @ MaxRow(), 0
       @ MaxRow(), 1 SAY "Statement:" COLOR "GR+/B"
       @ MaxRow(), Col() + 1 SAY dsFunctions:cSQL
+
+      BrowseODBC( 1, 0, MaxRow() - 1, MaxCol(), dsFunctions )
 
       dsFunctions:Close()
    ENDDO

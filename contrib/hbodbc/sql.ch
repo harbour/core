@@ -47,13 +47,18 @@
 #ifndef HBODBC_CH_
 #define HBODBC_CH_
 
-/* RETCODEs */
+/* Result codes */
 #define SQL_INVALID_HANDLE              -2
 #define SQL_ERROR                       -1
 #define SQL_SUCCESS                     0
 #define SQL_SUCCESS_WITH_INFO           1
-#define SQL_NO_DATA_FOUND               100
+#define SQL_STILL_EXECUTING             2
+#define SQL_NO_DATA                     100
+#define SQL_NO_DATA_FOUND               SQL_NO_DATA
 #define SQL_NEED_DATA                   99
+
+/* Test for SQL_SUCCESS or SQL_SUCCESS_WITH_INFO */
+#define SQL_SUCCEEDED( rc )             ( hb_bitAnd( rc, hb_bitNot( SQL_SUCCESS_WITH_INFO ) ) == SQL_SUCCESS )
 
 /* Standard SQL datatypes, using ANSI type numbering */
 #define SQL_CHAR                        1
@@ -71,11 +76,13 @@
 #define SQL_TYPE_DATE                   91
 #define SQL_TYPE_TIME                   92
 #define SQL_TYPE_TIMESTAMP              93
-#define SQL_BIT                         -7
 #define SQL_LONGVARCHAR                 -1
+#define SQL_BINARY                      -2
+#define SQL_VARBINARY                   -3
 #define SQL_LONGVARBINARY               -4
 #define SQL_BIGINT                      -5
 #define SQL_TINYINT                     -6
+#define SQL_BIT                         -7
 #define SQL_WCHAR                       -8
 #define SQL_WVARCHAR                    -9
 #define SQL_NVARCHAR                    SQL_WVARCHAR

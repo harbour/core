@@ -65,12 +65,10 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
       RETURN .F.
    ENDIF
 
-   IF PCount() < 4
-      nTop    := 1
-      nLeft   := 0
-      nBottom := MaxRow()
-      nRight  := MaxCol()
-   ENDIF
+   hb_default( @nTop, 1 )
+   hb_default( @nLeft, 0 )
+   hb_default( @nBottom, MaxRow() )
+   hb_default( @nRight, MaxCol() )
 
    nOldCursor := SetCursor( SC_NONE )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
@@ -145,15 +143,15 @@ STATIC PROCEDURE Statline( oBrw, oDataSource )
    LOCAL nTop   := oBrw:nTop - 1
    LOCAL nRight := oBrw:nRight
 
-   hb_DispOutAt( nTop, nRight - 27, "Record " )
+   hb_DispOutAt( nTop, nRight - 32, "Record " )
 
    IF oDataSource:LastRec() == 0
-      hb_DispOutAt( nTop, nRight - 20, "<none>               " )
+      hb_DispOutAt( nTop, nRight - 25, "<none>               " )
    ELSEIF oDataSource:RecNo() == oDataSource:LastRec() + 1
-      hb_DispOutAt( nTop, nRight - 40, "         " )
-      hb_DispOutAt( nTop, nRight - 20, "                <new>" )
+      hb_DispOutAt( nTop, nRight - 45, "         " )
+      hb_DispOutAt( nTop, nRight - 25, "                <new>" )
    ELSE
-      hb_DispOutAt( nTop, nRight - 20, PadR( hb_ntos( oDataSource:RecNo() ) + "/" + ;
+      hb_DispOutAt( nTop, nRight - 25, PadR( hb_ntos( oDataSource:RecNo() ) + "/" + ;
          hb_ntos( oDataSource:LastRec() ), 16 ) + ;
          iif( oBrw:hitTop, "<bof>", "     " ) + ;
          iif( oBrw:hitBottom, "<eof>", "     " ) )
@@ -182,7 +180,9 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
          ENDDO
       CASE nRecs < 0
          DO WHILE nSkipped > nRecs
-            IF ! oDataSource:Bof()
+            IF oDataSource:Bof()
+               EXIT
+            ELSE
                oDataSource:prior()
                IF oDataSource:Bof()
                   EXIT
