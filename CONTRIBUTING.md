@@ -26,8 +26,8 @@
 
   Examples:
 
-  * [commit](35ffdc113f348fbf10203757073bbee564e4339f)
-  * [issue](#18)
+  * [commit](https://github.com/vszakats/harbour-core/commit/35ffdc113f348fbf10203757073bbee564e4339f) 35ffdc113f348fbf10203757073bbee564e4339f
+  * [issue](https://github.com/vszakats/harbour-core/issues/18) #18
   * [source file](tests/hello.prg)
   * [source directory](contrib/hbcurl/)
 
