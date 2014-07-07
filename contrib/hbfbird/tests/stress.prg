@@ -62,7 +62,7 @@ PROCEDURE Main()
    oServer:StartTransaction()
 
    FOR i := 1 TO 10000
-      @ 15, 0 SAY "Inserting values.... " + hb_ntos( i )
+      @ 15, 0 SAY "Inserting values... " + hb_ntos( i )
 
       oRow := oQuery:Blank()
 
@@ -82,7 +82,7 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 5000 TO 7000
-      @ 16, 0 SAY "Deleting values.... " + hb_ntos( i )
+      @ 16, 0 SAY "Deleting values... " + hb_ntos( i )
 
       oRow := oQuery:Blank()
       oServer:Delete( oRow, "Code = " + hb_ntos( i ) )
@@ -94,7 +94,7 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 2000 TO 3000
-      @ 17, 0 SAY "Updating values.... " + hb_ntos( i )
+      @ 17, 0 SAY "Updating values... " + hb_ntos( i )
 
       oRow := oQuery:Blank()
       oRow:FieldPut( 5, 4000 + i )
@@ -110,7 +110,7 @@ PROCEDURE Main()
 
    IF ! oQuery:NetErr()
       oQuery:Fetch()
-      @ 18, 0 SAY "Sum values.... " + hb_ntos( oQuery:FieldGet( 1 ) )
+      @ 18, 0 SAY "Sum values... " + hb_ntos( oQuery:FieldGet( 1 ) )
       oQuery:Destroy()
    ENDIF
 
@@ -125,7 +125,7 @@ PROCEDURE Main()
          oQuery:destroy()
          x += oRow:FieldGet( oRow:FieldPos( "salary" ) )
 
-         @ 19, 0 SAY "Sum values.... " + hb_ntos( x )
+         @ 19, 0 SAY "Sum values... " + hb_ntos( x )
       ENDIF
    NEXT
 

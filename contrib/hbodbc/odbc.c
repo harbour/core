@@ -551,6 +551,24 @@ HB_FUNC( SQLFETCH )  /* hStmt --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SQLFETCHSCROLL )
+{
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
+   {
+#if ODBCVER >= 0x0300
+      hb_retni( SQLFetchScroll( hStmt,
+                                ( SQLSMALLINT ) hb_parni( 2 ),
+                                ( SQLLEN ) hb_parnint( 3 ) ) );
+#else
+      hb_retni( SQL_ERROR );
+#endif
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SQLGETDATA )  /* hStmt, nField, nType, [nLenLimit], @cBuffer --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
@@ -880,24 +898,6 @@ HB_FUNC( SQLCOLATTRIBUTE )  /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @
       hb_stornint( nNumPtr, 7 );
 
       hb_xfree( buffer );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( SQLFETCHSCROLL )
-{
-   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
-
-   if( hStmt )
-   {
-#if ODBCVER >= 0x0300
-      hb_retni( SQLFetchScroll( hStmt,
-                                ( SQLSMALLINT ) hb_parni( 2 ),
-                                ( SQLLEN ) hb_parnint( 3 ) ) );
-#else
-      hb_retni( SQL_ERROR );
-#endif
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

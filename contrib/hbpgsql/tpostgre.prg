@@ -253,8 +253,8 @@ METHOD TableStruct( cTable ) CLASS TPQserver
 
          cField := PQgetvalue( res, i, 1 )
          cType  := PQgetvalue( res, i, 2 )
-         nSize  := PQgetvalue( res, i, 4 )
-         nDec   := PQgetvalue( res, i, 5 )
+         nSize  := PQgetvalue( res, i, 4 )  /* string value */
+         nDec   := PQgetvalue( res, i, 5 )  /* string value */
 
          DO CASE
          CASE "char" $ cType
@@ -334,7 +334,7 @@ METHOD TableStruct( cTable ) CLASS TPQserver
             nDec  := 0
 
          OTHERWISE
-            /* Unsuported */
+            /* Unsupported */
             cType := "U"
             nSize := 0
             nDec  := -1

@@ -142,11 +142,7 @@
 #define SQL_ALL_EXCEPT_LIKE             2
 #define SQL_SEARCHABLE                  3
 
-/* SQLError() defines */
-#define SQL_NULL_HENV                   0
-#define SQL_NULL_HDBC                   0
-#define SQL_NULL_HSTMT                  0
-
+/* SQLFetchScroll() types */
 #define SQL_FETCH_NEXT                  1
 #define SQL_FETCH_FIRST                 2
 #define SQL_FETCH_LAST                  3
@@ -249,6 +245,7 @@
 #define SQL_ASYNC_ENABLE                4
 #define SQL_BIND_TYPE                   5
 
+/* SQLGetDiagRec() handle types */
 #define SQL_HANDLE_ENV                  1
 #define SQL_HANDLE_DBC                  2
 #define SQL_HANDLE_STMT                 3

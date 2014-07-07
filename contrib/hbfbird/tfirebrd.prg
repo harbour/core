@@ -229,7 +229,7 @@ METHOD ListTables() CLASS TFbServer
 
    IF HB_ISARRAY( qry )
       DO WHILE FBFetch( qry ) == 0
-         AAdd( result, FBGetData( qry, 1 ) )
+         AAdd( result, hb_defaultValue( FBGetData( qry, 1 ), "" ) )
       ENDDO
 
       FBFree( qry )
@@ -261,14 +261,14 @@ METHOD TableStruct( cTable ) CLASS TFbServer
 
    IF HB_ISARRAY( qry )
       DO WHILE FBFetch( qry ) == 0
-         cField  := FBGetData( qry, 1 )
-         nType   := Val( FBGetData( qry, 2 ) )
-         nSize   := Val( FBGetData( qry, 3 ) )
-         nDec    := Val( FBGetData( qry, 4 ) )
-         cDomain := FBGetData( qry, 5 )
+         cField  := hb_defaultValue( FBGetData( qry, 1 ), "" )
+         nType   := Val( hb_defaultValue( FBGetData( qry, 2 ), "" ) )
+         nSize   := Val( hb_defaultValue( FBGetData( qry, 3 ), "" ) )
+         nDec    := Val( hb_defaultValue( FBGetData( qry, 4 ), "" ) )
+         cDomain := hb_defaultValue( FBGetData( qry, 5 ), "" )
 
          SWITCH nType
-         CASE 7 // SMALLINT
+         CASE 7  // SMALLINT
             IF "BOOL" $ cDomain
                cType := "L"
                nSize := 1
@@ -277,56 +277,55 @@ METHOD TableStruct( cTable ) CLASS TFbServer
                cType := "N"
                nSize := 5
             ENDIF
-
             EXIT
 
-         CASE 8 // INTEGER
+         CASE 8  // INTEGER
          CASE 9
             cType := "N"
             nSize := 9
             EXIT
 
-         CASE 10 // FLOAT
+         CASE 10  // FLOAT
          CASE 11
             cType := "N"
             nSize := 15
             EXIT
 
-         CASE 12 // DATE
+         CASE 12  // DATE
             cType := "D"
             nSize := 8
             EXIT
 
-         CASE 13 // TIME
+         CASE 13  // TIME
             cType := "C"
             nSize := 10
             EXIT
 
-         CASE 14 // CHAR
+         CASE 14  // CHAR
             cType := "C"
             EXIT
 
-         CASE 16 // INT64
+         CASE 16  // INT64
             cType := "N"
             nSize := 9
             EXIT
 
-         CASE 27 // DOUBLE
+         CASE 27  // DOUBLE
             cType := "N"
             nSize := 15
             EXIT
 
-         CASE 35 // TIMESTAMP
+         CASE 35  // TIMESTAMP
             cType := "D"
             nSize := 8
             EXIT
 
-         CASE 37 // VARCHAR
+         CASE 37  // VARCHAR
          CASE 40
             cType := "C"
             EXIT
 
-         CASE 261 // BLOB
+         CASE 261  // BLOB
             cType := "M"
             nSize := 10
             EXIT
@@ -348,14 +347,14 @@ METHOD TableStruct( cTable ) CLASS TFbServer
 METHOD Delete( oRow, cWhere ) CLASS TFbServer
 
    LOCAL result := .F.
-   LOCAL aKeys, i, nField, xField, cQuery
+   LOCAL aKeys, i, nField, xField
 
    LOCAL aTables := oRow:GetTables()
 
    IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
       // Cannot delete joined tables
 
-      IF cWhere == NIL
+      IF ! HB_ISSTRING( cWhere )
          aKeys := oRow:GetKeyField()
 
          cWhere := ""
@@ -371,10 +370,8 @@ METHOD Delete( oRow, cWhere ) CLASS TFbServer
          NEXT
       ENDIF
 
-      IF !( cWhere == "" )
-         cQuery := "DELETE FROM " + aTables[ 1 ] + " WHERE " + cWhere
-
-         result := ::Execute( cQuery )
+      IF ! Empty( cWhere )
+         result := ::Execute( "DELETE FROM " + aTables[ 1 ] + " WHERE " + cWhere )
       ENDIF
    ENDIF
 
@@ -423,7 +420,7 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
    IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
       // Can't insert joined tables
 
-      IF cWhere == NIL
+      IF ! HB_ISSTRING( cWhere )
          aKeys := oRow:GetKeyField()
 
          cWhere := ""
@@ -446,10 +443,8 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
          ENDIF
       NEXT
 
-      IF !( cWhere == "" )
-         cQuery := hb_StrShrink( cQuery ) + " WHERE " + cWhere
-
-         result := ::Execute( cQuery )
+      IF ! Empty( cWhere )
+         result := ::Execute( hb_StrShrink( cQuery ) + " WHERE " + cWhere )
       ENDIF
    ENDIF
 
@@ -604,7 +599,7 @@ METHOD Struct() CLASS TFbQuery
 
    IF ! ::lError
       FOR EACH i IN ::aStruct
-         AAdd( result, { i[ 1 ], i[ 2 ], i[ 3 ], i[ 4 ] } )
+         AAdd( result, { i[ 1 ], i[ 2 ], i[ 3 ], i[ 4 ] } )  // DBS_NAME, DBS_TYPE, DBS_LEN, DBS_DEC
       NEXT
    ENDIF
 
@@ -613,7 +608,8 @@ METHOD Struct() CLASS TFbQuery
 METHOD FieldPos( cField ) CLASS TFbQuery
 
    IF ! ::lError
-      RETURN AScan( ::aStruct, {| x | x[ 1 ] == RTrim( Upper( cField ) ) } )
+      cField := RTrim( Upper( cField ) )
+      RETURN AScan( ::aStruct, {| x | x[ 1 ] == cField } )
    ENDIF
 
    RETURN 0
@@ -663,22 +659,24 @@ METHOD FieldGet( nField ) CLASS TFbQuery
       SWITCH ::aStruct[ nField ][ 2 ]
       CASE "M"
          /* Blob */
-         IF result != NIL
+         IF HB_ISPOINTER( result )
             aBlob := FBGetBlob( ::db, result )
-
             result := ""
-            FOR EACH i IN aBlob
-               result += i
-            NEXT
-
-            // result := FBGetBlob( ::db, result )
+            IF HB_ISARRAY( aBlob )
+               FOR EACH i IN aBlob
+                  result += i
+               NEXT
+            ENDIF
+#if 0
+            result := FBGetBlob( ::db, result )
+#endif
          ELSE
             result := ""
          ENDIF
          EXIT
 
       CASE "N"
-         IF result != NIL
+         IF HB_ISSTRING( result )
             result := Val( result )
          ELSE
             result := 0
@@ -686,7 +684,7 @@ METHOD FieldGet( nField ) CLASS TFbQuery
          EXIT
 
       CASE "D"
-         IF result != NIL
+         IF HB_ISSTRING( result )
             result := hb_SToD( Left( result, 4 ) + SubStr( result, 5, 2 ) + SubStr( result, 7, 2 ) )
          ELSE
             result := hb_SToD()
@@ -694,7 +692,7 @@ METHOD FieldGet( nField ) CLASS TFbQuery
          EXIT
 
       CASE "L"
-         IF result != NIL
+         IF HB_ISSTRING( result )
             result := ( Val( result ) == 1 )
          ELSE
             result := .F.
@@ -834,7 +832,10 @@ METHOD FieldName( nField ) CLASS TFbRow
    RETURN NIL
 
 METHOD FieldPos( cField ) CLASS TFbRow
-   RETURN AScan( ::aStruct, {| x | x[ 1 ] == RTrim( Upper( cField ) ) } )
+
+   cField := RTrim( Upper( cField ) )
+
+   RETURN AScan( ::aStruct, {| x | x[ 1 ] == cField } )
 
 METHOD FieldType( nField ) CLASS TFbRow
 
@@ -897,7 +898,7 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
 
       IF HB_ISARRAY( qry )
          DO WHILE FBFetch( qry ) == 0
-            AAdd( aKeys, RTrim( FBGetData( qry, 1 ) ) )
+            AAdd( aKeys, RTrim( hb_defaultValue( FBGetData( qry, 1 ), "" ) ) )
          ENDDO
 
          FBFree( qry )
@@ -960,9 +961,9 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
 
       DO WHILE FBFetch( qry ) == 0
          AAdd( aDomains, { ;
-            iif( FBGetData( qry, 1 ) == NIL, "", FBGetData( qry, 1 ) ), ;
-            iif( FBGetData( qry, 2 ) == NIL, "", FBGetData( qry, 2 ) ), ;
-            iif( FBGetData( qry, 3 ) == NIL, "", FBGetData( qry, 3 ) ) } )
+            hb_defaultValue( FBGetData( qry, 1 ), "" ), ;
+            hb_defaultValue( FBGetData( qry, 2 ), "" ), ;
+            hb_defaultValue( FBGetData( qry, 3 ), "" ) } )
       ENDDO
 
       FBFree( qry )
@@ -978,7 +979,7 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
 
       nVal := AScan( aDomains, {| x | RTrim( x[ 1 ] ) == cTable .AND. RTrim( x[ 2 ] ) == cField } )
 
-      cDomain := iif( nVal > 0, aDomains[ nVal, 3 ], "" )
+      cDomain := iif( nVal > 0, aDomains[ nVal ][ 3 ], "" )
 
       SWITCH nType
       CASE SQL_TEXT

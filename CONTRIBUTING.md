@@ -3,8 +3,9 @@
 # Table of Content
 
 1. [How to Donate](#how-to-donate)
-2. [How to Participate](#how-to-participate)
-3. [Troubleshooting](#troubleshooting)
+2. [How to Share](#how-to-share)
+3. [How to Participate](#how-to-participate)
+4. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -13,6 +14,22 @@
   You can donate to support the effort that goes into responding to issues.
 
   * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
+
+
+# How to Share
+
+  Share by __linking__ to this project. Link to commits, issues or source
+  files, or whatever else you find worthy to pass to someone. This is the
+  easiest, most useful and self-updating way of referring to this project.
+  It's also the best form of crediting and appreciating this work without
+  donating or participating directly.
+
+  Examples:
+
+  * [commit](35ffdc113f348fbf10203757073bbee564e4339f)
+  * [issue](#18)
+  * [source file](tests/hello.prg)
+  * [source directory](contrib/hbcurl/)
 
 
 # How to Participate

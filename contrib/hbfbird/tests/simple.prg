@@ -1,5 +1,7 @@
 #require "hbfbird"
 
+#include "dbstruct.ch"
+
 PROCEDURE Main()
 
    LOCAL oServer, oQuery, oRow, i, x, aKey
@@ -99,7 +101,7 @@ PROCEDURE Main()
    oQuery := oServer:Query( "SELECT code, name, description, sales FROM test" )
 
    FOR EACH i IN oQuery:Struct()
-      ? i[ 1 ], i[ 2 ], i[ 3 ], i[ 4 ]
+      ? i[ DBS_NAME ], i[ DBS_TYPE ], i[ DBS_LEN ], i[ DBS_DEC ]
    NEXT
 
    aKey := oQuery:GetKeyField()
