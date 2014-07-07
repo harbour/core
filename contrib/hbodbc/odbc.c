@@ -1191,28 +1191,6 @@ HB_FUNC( SQLMORERESULTS )  /* hEnv, hDbc */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_ODBCSTOD )
-{
-   if( hb_parclen( 1 ) >= 10 )
-   {
-      const char * szSqlDate = hb_parc( 1 );  /* YYYY-MM-DD */
-      char         szHrbDate[ 9 ];            /* YYYYMMDD */
-
-      szHrbDate[ 0 ] = szSqlDate[ 0 ];
-      szHrbDate[ 1 ] = szSqlDate[ 1 ];
-      szHrbDate[ 2 ] = szSqlDate[ 2 ];
-      szHrbDate[ 3 ] = szSqlDate[ 3 ];
-      szHrbDate[ 4 ] = szSqlDate[ 5 ];
-      szHrbDate[ 5 ] = szSqlDate[ 6 ];
-      szHrbDate[ 6 ] = szSqlDate[ 8 ];
-      szHrbDate[ 7 ] = szSqlDate[ 9 ];
-      szHrbDate[ 8 ] = '\0';
-      hb_retds( szHrbDate );
-   }
-   else
-      hb_retds( NULL );
-}
-
 HB_FUNC( HB_ODBCNUMSETLEN )  /* nValue, nSize, nDecimals --> nValue (nSize, nDec) */
 {
    hb_retnlen( hb_parnd( 1 ), hb_parni( 2 ), hb_parni( 3 ) );

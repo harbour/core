@@ -57,7 +57,7 @@ HB_FUNC( XHB_HASHERROR )
 
    if( iPCount == 1 )
    {
-      if( szMessage[ 0 ] == '_' ) /* ASSIGN */
+      if( szMessage[ 0 ] == '_' )  /* ASSIGN */
       {
          PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), szMessage + 1 );
          PHB_ITEM pDest  = hb_hashGetItemPtr( hb_stackSelfItem(), pIndex, HB_HASH_AUTOADD_ASSIGN );
@@ -71,7 +71,7 @@ HB_FUNC( XHB_HASHERROR )
          }
       }
    }
-   else if( iPCount == 0 ) /* ACCESS */
+   else if( iPCount == 0 )  /* ACCESS */
    {
       PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), szMessage );
       PHB_ITEM pValue = hb_hashGetItemPtr( hb_stackSelfItem(), pIndex, HB_HASH_AUTOADD_ACCESS );
@@ -397,7 +397,7 @@ HB_FUNC( XHB_PLUS )
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
       int      iDec;
       double   dValue = hb_itemGetNDDec( pSelf, &iDec );
-      hb_retnlen( dValue + uc, 0, iDec  );
+      hb_retnlen( dValue + uc, 0, iDec );
    }
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
             pValue && HB_IS_NUMERIC( pValue ) )
@@ -430,7 +430,7 @@ HB_FUNC( XHB_MINUS )
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
       int      iDec;
       double   dValue = hb_itemGetNDDec( pSelf, &iDec );
-      hb_retnlen( dValue - uc, 0, iDec  );
+      hb_retnlen( dValue - uc, 0, iDec );
    }
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
             pValue && HB_IS_NUMERIC( pValue ) )

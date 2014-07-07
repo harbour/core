@@ -201,4 +201,7 @@ STATIC FUNCTION odbc_FieldGet( cFieldName, oDataSource )
 #ifdef HB_LEGACY_LEVEL5
 FUNCTION BrowseODBC( ... )
    RETURN hb_odbcBrowse( ... )
+
+FUNCTION hb_odbcSToD( s )
+   RETURN hb_CToD( s, "yyyy-mm-dd" )
 #endif

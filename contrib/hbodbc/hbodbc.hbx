@@ -23,7 +23,6 @@
 
 DYNAMIC hb_odbcBrowse
 DYNAMIC hb_odbcNumSetLen
-DYNAMIC hb_odbcSToD
 DYNAMIC hb_odbcVer
 DYNAMIC SQLAllocConnect
 DYNAMIC SQLAllocEnv
