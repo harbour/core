@@ -29,6 +29,7 @@
   * [commit](https://github.com/vszakats/harbour-core/commit/35ffdc113f348fbf10203757073bbee564e4339f)
   * [issue](https://github.com/vszakats/harbour-core/issues/18)
   * [source file](tests/hello.prg)
+  * [source file (specific revision)](https://github.com/vszakats/harbour-core/blob/dd2c3b3e9c0e7db7f1c18be2a079dc92f983122e/tests/hello.prg) [more](https://help.github.com/articles/getting-permanent-links-to-files)
   * [source directory](contrib/hbcurl/)
 
 
@@ -144,8 +145,8 @@ Evaluate these points before reporting an issue:
 13. If your example or report contains any human readable text, use
     English only.
 14. If your example involves compatibility components, make sure to test
-    it against original implementation (for example, test legacy Clipper
-    core language elements against real CA-Clipper 5.2e or 5.3b, or hbct
+    it against original implementation (for example, test legacy Cl*pper
+    core language elements against real CA-Cl*pper 5.2e or 5.3b, or hbct
     functions against CT3 library, etc)
 
 
