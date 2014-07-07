@@ -53,7 +53,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
+FUNCTION hb_odbcBrowse( nTop, nLeft, nBottom, nRight, oDataSource )
 
    LOCAL oBrw
    LOCAL cOldScreen
@@ -82,11 +82,10 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    oBrw:GoTopBlock    := {|| oDataSource:first() }
    oBrw:GoBottomBlock := {|| oDataSource:last() }
 
-   oBrw:HeadSep := "-"
+   oBrw:HeadSep := " " + hb_UTF8ToStrBox( "═" )
 
-   // TODO: Find out number of columns in ODBC result set, up to then you have to add columns by hand
    FOR EACH f IN oDataSource:Fields
-      oBrw:AddColumn( TBColumn():New( f:FieldName, ODBCFget( f:FieldName, oDataSource ) ) )
+      oBrw:AddColumn( TBColumn():New( f:FieldName, odbc_FieldGet( f:FieldName, oDataSource ) ) )
    NEXT
 
    oBrw:Configure()
@@ -104,7 +103,7 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
       IF nKey == 0
 
          oBrw:forceStable()
-         Statline( oBrw, oDataSource )
+         StatLine( oBrw, oDataSource )
 
          nKey := Inkey( 0 )
 
@@ -138,7 +137,7 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
 
    RETURN .T.
 
-STATIC PROCEDURE Statline( oBrw, oDataSource )
+STATIC PROCEDURE StatLine( oBrw, oDataSource )
 
    LOCAL nTop   := oBrw:nTop - 1
    LOCAL nRight := oBrw:nRight
@@ -195,6 +194,11 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
 
    RETURN nSkipped
 
-STATIC FUNCTION ODBCFGet( cFieldName, oDataSource )
+STATIC FUNCTION odbc_FieldGet( cFieldName, oDataSource )
    // For changing value rather write a decent SQL statement
    RETURN {| x | iif( x == NIL, oDataSource:FieldByName( cFieldName ):value, NIL ) }
+
+#ifdef HB_LEGACY_LEVEL5
+FUNCTION BrowseODBC( ... )
+   RETURN hb_odbcBrowse( ... )
+#endif

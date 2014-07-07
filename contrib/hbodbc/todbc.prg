@@ -96,7 +96,7 @@ CREATE CLASS TODBC
    VAR lCacheRS              // Do we want to cache recordset in memory
    VAR aRecordSet   INIT {}  // Array to store cached recordset
 
-   VAR lAutoCommit AS LOGICAL INIT .T.   // Autocommit is usually enabled by default
+   VAR lAutoCommit AS LOGICAL INIT .T.  // Autocommit is usually enabled by default
 
    METHOD New( cODBCStr, cUserName, cPassword, lCache )
    METHOD Destroy()
@@ -134,7 +134,7 @@ CREATE CLASS TODBC
    PROTECTED:
 
    METHOD LoadData( nPos )
-   METHOD ClearData() INLINE AEval( ::Fields, {| oField | oField:Value := Space( oField:DataSize ) } )
+   METHOD ClearData() INLINE AEval( ::Fields, {| fld | fld:Value := Space( fld:DataSize ) } )
    METHOD Fetch( nFetchType, nOffSet )
 
 ENDCLASS
@@ -226,7 +226,7 @@ METHOD Open() CLASS TODBC
 
    LOCAL nCols
    LOCAL aCurRow
-   LOCAL i
+   LOCAL i, fld
 
    LOCAL cName
    LOCAL nType
@@ -254,8 +254,7 @@ METHOD Open() CLASS TODBC
       RETURN .F.
    ENDIF
 
-   // Get result information about fields and stores it
-   // on fields collection
+   // Get result information about fields and stores it on fields collection
    SQLNumResultCols( ::hStmt, @nCols )
 
    ::Fields := {}
@@ -270,8 +269,8 @@ METHOD Open() CLASS TODBC
       ::aRecordSet := {}
       DO WHILE ::Fetch( SQL_FETCH_NEXT, 1 ) == SQL_SUCCESS
          aCurRow := {}
-         FOR EACH i IN ::Fields
-            AAdd( aCurRow, i:value )
+         FOR EACH fld IN ::Fields
+            AAdd( aCurRow, fld:value )
          NEXT
          AAdd( ::aRecordSet, aCurRow )
       ENDDO
@@ -341,7 +340,7 @@ METHOD FieldByName( cField ) CLASS TODBC
 
    IF HB_ISSTRING( cField )
       cField := Upper( cField )
-      IF ( nPos := AScan( ::Fields, {| x | Upper( x:FieldName ) == cField } ) ) > 0
+      IF ( nPos := AScan( ::Fields, {| fld | Upper( fld:FieldName ) == cField } ) ) > 0
          RETURN ::Fields[ nPos ]
       ENDIF
    ENDIF
@@ -352,10 +351,7 @@ METHOD FieldByName( cField ) CLASS TODBC
 METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
 
    LOCAL nResult
-   LOCAL nPos := NIL
-
-   // First clear fields
-   ::ClearData()
+   LOCAL nPos
 
    // Do we have cached recordset?
    IF ::lCacheRS .AND. ::Active  // looks like we do...
@@ -425,6 +421,7 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
       ::LoadData( nPos )
       ::lBof := .F.
    ELSE
+      ::ClearData()
       // TODO: Report error here
    ENDIF
 
@@ -552,39 +549,39 @@ METHOD RecCount() CLASS TODBC
 METHOD PROCEDURE LoadData( nPos ) CLASS TODBC
 
    LOCAL xData
-   LOCAL i
+   LOCAL fld
 
-   FOR EACH i IN ::Fields
+   FOR EACH fld IN ::Fields
 
       IF ::lCacheRS .AND. ::Active
-         xData := iif( nPos >= 1 .AND. nPos <= ::nRecCount, ::aRecordSet[ nPos ][ i:__enumIndex() ], Space( i:DataSize ) )
+         xData := iif( nPos >= 1 .AND. nPos <= ::nRecCount, ::aRecordSet[ nPos ][ fld:__enumIndex() ], Space( fld:DataSize ) )
       ELSE
-         SQLGetData( ::hStmt, i:FieldID, i:DataType,, @xData )
+         SQLGetData( ::hStmt, fld:FieldID, fld:DataType,, @xData )
 
-         SWITCH i:DataType
+         SWITCH fld:DataType
          CASE SQL_CHAR
          CASE SQL_WCHAR
          CASE SQL_VARCHAR
          CASE SQL_WVARCHAR
          CASE SQL_LONGVARCHAR
          CASE SQL_WLONGVARCHAR
-            xData := PadR( xData, i:DataSize )
+            xData := PadR( xData, fld:DataSize )
             EXIT
          CASE SQL_DOUBLE
          CASE SQL_FLOAT
          CASE SQL_REAL
-            IF i:DataDecs > 0
-               xData := hb_odbcNumSetLen( xData, i:DataSize, i:DataDecs )
+            IF fld:DataDecs > 0
+               xData := hb_odbcNumSetLen( xData, fld:DataSize, fld:DataDecs )
             ENDIF
             EXIT
          OTHERWISE
             IF xData == NIL
-               xData := Space( i:DataSize )
+               xData := Space( fld:DataSize )
             ENDIF
          ENDSWITCH
       ENDIF
 
-      i:Value := xData
+      fld:Value := xData
    NEXT
 
    RETURN
