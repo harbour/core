@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
+CREATE CLASS WvgToolBar INHERIT WvgWindow /*WvgActiveXControl*/
 
    VAR    appearance
    VAR    style                                 INIT WVGTOOLBAR_STYLE_STANDARD

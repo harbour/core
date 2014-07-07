@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgDrawingArea  INHERIT  WvgWindow
+CREATE CLASS WvgDrawingArea INHERIT WvgWindow
 
    VAR    caption                               INIT ""
    VAR    clipParent                            INIT .T.

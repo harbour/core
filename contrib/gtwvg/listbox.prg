@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgListBox INHERIT WvgWindow, WvgDataRef
 
    VAR    adjustHeight                          INIT .F.
    VAR    horizScroll                           INIT .F.

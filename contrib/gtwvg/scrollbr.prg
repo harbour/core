@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgScrollBar INHERIT WvgWindow, WvgDataRef
 
    VAR    autoTrack                             INIT .T.
    VAR    range                                 INIT { 0, 1 }

@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgTreeView INHERIT WvgWindow, WvgDataRef
 
    VAR    alwaysShowSelection                   INIT .F.
    VAR    hasButtons                            INIT .F.

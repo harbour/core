@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgPushButton  INHERIT  WvgWindow
+CREATE CLASS WvgPushButton INHERIT WvgWindow
 
    VAR    autosize                              INIT .F.
    VAR    border                                INIT .T.
@@ -92,7 +92,7 @@ METHOD WvgPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_PUSHBUTTON  + BS_NOTIFY /* + BS_PUSHLIKE */
+   ::style       := WS_CHILD + BS_PUSHBUTTON + BS_NOTIFY /* + BS_PUSHLIKE */
    ::className   := "BUTTON"
    ::objType     := objTypePushButton
 
@@ -106,21 +106,27 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    CASE HB_ISNUMERIC( ::caption )
       ::style += BS_BITMAP
    CASE HB_ISSTRING( ::caption )
-      DO CASE
-      CASE Lower( hb_FNameExt( ::caption ) ) == ".ico"
+      SWITCH Lower( hb_FNameExt( ::caption ) )
+      CASE ".ico"
          ::style += BS_ICON
-      CASE Lower( hb_FNameExt( ::caption ) ) == ".bmp"
+         EXIT
+      CASE ".bmp"
          ::style += BS_BITMAP
-      ENDCASE
+         EXIT
+      ENDSWITCH
    CASE HB_ISARRAY( ::caption )
       ASize( ::caption, 3 )
       IF HB_ISNUMERIC( ::caption[ 2 ] )
-         DO CASE
-         CASE ::caption[ 2 ] == WVG_IMAGE_ICONFILE .OR. ::caption[ 2 ] == WVG_IMAGE_ICONRESOURCE
+         SWITCH ::caption[ 2 ]
+         CASE WVG_IMAGE_ICONFILE
+         CASE WVG_IMAGE_ICONRESOURCE
             ::style += BS_ICON
-         CASE ::caption[ 2 ] == WVG_IMAGE_BITMAPFILE .OR. ::caption[ 2 ] == WVG_IMAGE_BITMAPRESOURCE
+            EXIT
+         CASE WVG_IMAGE_BITMAPFILE
+         CASE WVG_IMAGE_BITMAPRESOURCE
             ::style += BS_BITMAP
-         ENDCASE
+            EXIT
+         ENDSWITCH
       ENDIF
    ENDCASE
 
@@ -210,6 +216,7 @@ METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisi
    RETURN Self
 
 METHOD WvgPushButton:setCaption( xCaption, cDll )
+
    LOCAL nLoadFromResByIdNumber := 0
    LOCAL nLoadFromResByIdName   := 1
    LOCAL nLoadFromDiskFile      := 2
@@ -222,14 +229,16 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
    DO CASE
    CASE HB_ISSTRING( xCaption )
 
-      DO CASE
-      CASE Lower( hb_FNameExt( ::caption ) ) == ".ico"
+      SWITCH Lower( hb_FNameExt( ::caption ) )
+      CASE ".ico"
          Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_ICON ) )
-      CASE Lower( hb_FNameExt( ::caption ) ) == ".bmp"
+         EXIT
+      CASE ".bmp"
          Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_BITMAP ) )
+         EXIT
       OTHERWISE
          Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
-      ENDCASE
+      ENDSWITCH
 
    CASE HB_ISNUMERIC( xCaption )  /* Handle to the bitmap */
       Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, ::caption )

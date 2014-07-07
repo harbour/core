@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgStatic  INHERIT  WvgWindow
+CREATE CLASS WvgStatic INHERIT WvgWindow
 
    VAR    autoSize                              INIT .F.
    VAR    caption                               INIT ""

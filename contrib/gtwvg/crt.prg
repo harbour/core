@@ -60,7 +60,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
+CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
 
    VAR    oMenu
 

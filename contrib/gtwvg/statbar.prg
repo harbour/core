@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
+CREATE CLASS WvgStatusBar INHERIT WvgWindow /* WvgActiveXControl */
 
    VAR    caption                               INIT ""
    VAR    sizeGrip                              INIT .T.

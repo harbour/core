@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgCheckBox INHERIT WvgWindow, WvgDataRef
 
    VAR    autosize                              INIT .F.
    VAR    caption                               INIT ""

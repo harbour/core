@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgComboBox  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgComboBox INHERIT WvgWindow, WvgDataRef
 
    VAR    type                                  INIT    WVGCOMBO_DROPDOWN
    VAR    drawMode                              INIT    WVG_DRAW_NORMAL

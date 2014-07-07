@@ -62,7 +62,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgTabPage  INHERIT  WvgWindow
+CREATE CLASS WvgTabPage INHERIT WvgWindow
 
    VAR    caption                               INIT NIL /* Character string, Numeric, Object ("")                                                                           */
    VAR    clipChildren                          INIT .T. /* Determines whether Xbase Parts in the child list are clipped during graphic output.                              */

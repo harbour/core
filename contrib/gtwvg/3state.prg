@@ -66,7 +66,7 @@
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-CREATE CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS Wvg3State INHERIT WvgWindow, WvgDataRef
 
    VAR    autosize                              INIT .F.
    VAR    caption                               INIT ""
