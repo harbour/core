@@ -13,7 +13,7 @@ PROCEDURE Main()
    LOCAL nRows
    LOCAL cStr1, cStr2, cStr3, cStr4, dDate, lFlag, nNum1, nNum2
    LOCAL cError1, nError, cError2
-   LOCAL nFld, cColName, nNameLen, nDataType, nColSize, nDecimals, nNul
+   LOCAL nFld, cFldName, nFldType, nFldLen, nFldDec, nNull
 
    ? "Version:", hb_NumToHex( hb_odbcVer() )
 
@@ -60,10 +60,10 @@ PROCEDURE Main()
    ? Replicate( "-", 70 )
 
    FOR nFld := 1 TO 20
-      IF SQLDescribeCol( hStmt, nFld, @cColName, 255,, @nDataType, @nColSize, @nDecimals, @nNul ) == SQL_ERROR
+      IF SQLDescribeCol( hStmt, nFld, @cFldName, 255,, @nFldType, @nFldLen, @nFldDec, @nNull ) == SQL_ERROR
          EXIT
       ENDIF
-      ? nFld, PadR( cColName, 15 ), nDataType, nColSize, nDecimals, nNul != 0
+      ? nFld, PadR( cFldName, 15 ), nFldType, nFldLen, nFldDec, nNull != 0
    NEXT
 
    ? Replicate( "-", 70 )

@@ -5,7 +5,7 @@ PROCEDURE Main()
    LOCAL dsFunctions := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
 
    dsFunctions:SetSQL( "SELECT * FROM test" )
-   ? dsFunctions:Open()
+   ? "Open()", dsFunctions:Open()
 
    #translate Disp() => ? dsFunctions:RecNo(), "|" + dsFunctions:FieldByName( "First" ):Value + "|"
 
@@ -19,7 +19,7 @@ PROCEDURE Main()
    Disp() ; ? dsFunctions:Skip()
    Disp()
 
-   ? dsFunctions:Close()
+   ? "Close()", dsFunctions:Close()
    dsFunctions:Destroy()
 
    RETURN
