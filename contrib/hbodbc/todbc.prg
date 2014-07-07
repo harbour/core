@@ -118,9 +118,11 @@ CREATE CLASS TODBC
 
    METHOD Eof()
    METHOD Bof()
-   METHOD RecCount()
-   METHOD LastRec()
    METHOD RecNo()
+#ifdef HB_LEGACY_LEVEL4
+   METHOD RecCount()
+#endif
+   METHOD LastRec()
 
    METHOD FieldByName( cField )
    METHOD SQLErrorMessage()
@@ -537,12 +539,14 @@ METHOD Bof() CLASS TODBC
 METHOD RecNo() CLASS TODBC
    RETURN ::nRecNo
 
-// Returns number of rows (if that function is supported by ODBC driver)
-METHOD LastRec() CLASS TODBC
-   RETURN ::nRecCount
-
+#ifdef HB_LEGACY_LEVEL4
 // Returns number of rows (if that function is supported by ODBC driver)
 METHOD RecCount() CLASS TODBC
+   RETURN ::nRecCount
+#endif
+
+// Returns number of rows (if that function is supported by ODBC driver)
+METHOD LastRec() CLASS TODBC
    RETURN ::nRecCount
 
 // Loads current record data into the Fields collection

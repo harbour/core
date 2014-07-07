@@ -606,7 +606,7 @@ STATIC FUNCTION InitList()
    LI_BBOF    := {|| Bof() }
    LI_B1      := {| a | HB_SYMBOL_UNUSED( a ), hb_DispOutAt( LI_Y2, LI_X1 + 2, Str( RecNo(), 10 ) + "/" + Str( LI_KOLZ, 10 ) ) }
    LI_FREEZE  := 0
-   LI_RCOU    := {|| RecCount() }
+   LI_RCOU    := {|| LastRec() }
    LI_RECNO   := {|| RecNo() }
    LI_BGOTO   := {| a, n | HB_SYMBOL_UNUSED( a ), dbGoto( n ) }
    LI_PRFLT   := LI_LVIEW := .F.

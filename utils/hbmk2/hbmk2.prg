@@ -15775,7 +15775,7 @@ STATIC PROCEDURE __hbshell_Info( cCommand )
          " | Area:" + Str( Select(), 3 ) +;
          " | Dbf: " + PadR( Alias(), 10 ) +;
          " | Index: " + PadR( ordName( IndexOrd() ), 8 ) +;
-         " | # " + Str( RecNo(), 7 ) + "/" + Str( RecCount(), 7 ), MaxCol() + 1 ), "N/BG" )
+         " | # " + Str( RecNo(), 7 ) + "/" + Str( LastRec(), 7 ), MaxCol() + 1 ), "N/BG" )
    ELSE
       hb_DispOutAt( 1, 0, PadR( ;
          "RDD: " + Space( 6 ) +;

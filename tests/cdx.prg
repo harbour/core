@@ -32,7 +32,7 @@ PROCEDURE Main()
       TESTDBF->( dbSkip() )
    ENDDO
 
-   ? TESTCDX->( RecCount() )
+   ? TESTCDX->( LastRec() )
    TESTCDX->( dbGoTop() )
    ? TESTCDX->( Eof() )
    DO WHILE ! TESTCDX->( Eof() )

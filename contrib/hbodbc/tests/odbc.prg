@@ -5,19 +5,17 @@
 
 PROCEDURE Main()
 
-   LOCAL hEnv
-   LOCAL hDbc
-   LOCAL hStmt
-   LOCAL cConnStr
-   LOCAL cConstrout
+   LOCAL hEnv, hDbc, hStmt
+   LOCAL cConnect, cConnectOut
    LOCAL nRows
-   LOCAL cStr1, cStr2, cStr3, cStr4, dDate, lFlag, nNum1, nNum2
-   LOCAL cError1, nError, cError2
+
    LOCAL nFld, cFldName, nFldType, nFldLen, nFldDec, nNull
+   LOCAL cError1, cError2, nError
+   LOCAL cStr1, cStr2, cStr3, cStr4, dDate, lFlag, nNum1, nNum2
 
    ? "Version:", hb_NumToHex( hb_odbcVer() )
 
-   cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), _DBNAME_ ) + ";Driver={Microsoft Access Driver (*.mdb)}"
+   cConnect := "DBQ=" + hb_FNameMerge( hb_DirBase(), _DBNAME_ ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    ? PadC( "*** ODBC ACCESS TEST ***", 70 )
    ?
@@ -26,32 +24,32 @@ PROCEDURE Main()
    ? "Allocating connection..."
    SQLAllocConnect( hEnv, @hDbc )
    ? "-- 1st"
-   ? "Connecting to driver", cConnStr + "..."
-   ? SQLDriverConnect( hDbc, cConnStr, @cConstrout )
-   ? cConstrout
+   ? "Connecting to driver", cConnect + "..."
+   ? SQLDriverConnect( hDbc, cConnect, @cConnectOut )
+   ? cConnectOut
    ? "-- 2nd (test)"
-   cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test_nothere.mdb" ) + ";Driver={Not here (*.non)}"
-   ? "Connecting to driver", cConnStr + "..."
-   ? SQLDriverConnect( hDbc, cConnStr, @cConstrout )
-   ? cConstrout
+   cConnect := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test_nothere.mdb" ) + ";Driver={Not here (*.non)}"
+   ? "Connecting to driver", cConnect + "..."
+   ? SQLDriverConnect( hDbc, cConnect, @cConnectOut )
+   ? cConnectOut
    ? SQLError( , hDbc,, @cError1, @nError, @cError2 )
-   ? "SQLError", cError1, nError, cError2
+   ? "SQLError", cError1, hb_ntos( nError ), cError2
    ? "--"
    ? "Allocating statement..."
    SQLAllocStmt( hDbc, @hStmt )
 
    ? SQLError( hEnv,,, @cError1, @nError, @cError2 )
-   ? "SQLError", cError1, nError, cError2
+   ? "SQLError", cError1, hb_ntos( nError ), cError2
    ? SQLGetDiagRec( SQL_HANDLE_ENV, hEnv, 1, @cError1, @nError, @cError2 )
-   ? "SQLGetDiagRec", cError1, nError, cError2
+   ? "SQLGetDiagRec", cError1, hb_ntos( nError ), cError2
 
    ? "SQL:", "SELECT FROM " + _TABLENAME_
    ? SQLExecDirect( hStmt, "SELECT FROM " + _TABLENAME_ )
 
    ? SQLError( ,, hStmt, @cError1, @nError, @cError2 )
-   ? "SQLError", cError1, nError, cError2
+   ? "SQLError", cError1, hb_ntos( nError ), cError2
    ? SQLGetDiagRec( SQL_HANDLE_STMT, hStmt, 1, @cError1, @nError, @cError2 )
-   ? "SQLGetDiagRec", cError1, nError, cError2
+   ? "SQLGetDiagRec", cError1, hb_ntos( nError ), cError2
 
    ?
    ? "SQL:", "SELECT * FROM " + _TABLENAME_

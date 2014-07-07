@@ -727,7 +727,7 @@
       PROCEDURE Main()
          LOCAL x
          USE test NEW
-         FOR x := 1 TO RecCount()
+         FOR x := 1 TO LastRec()
             IF ! dbRLock()
                dbUnlock()
             ENDIF

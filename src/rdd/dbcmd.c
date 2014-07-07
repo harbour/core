@@ -1072,7 +1072,6 @@ HB_FUNC( INDEXORD )
       hb_retni( 0 );
 }
 
-/* Same as RecCount() */
 HB_FUNC( LASTREC )
 {
    HB_ULONG ulRecCount = 0;

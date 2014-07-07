@@ -2,10 +2,10 @@
 
 PROCEDURE Main()
 
-   LOCAL dsFunctions := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
+   LOCAL oDS := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
 
    LOCAL aOrders
-   LOCAL nOp
+   LOCAL nChoice
    LOCAL fld
 
    SetColor( "W+/B" )
@@ -13,15 +13,15 @@ PROCEDURE Main()
 
    @ 0, 0 SAY PadC( "TODBC Demonstration", MaxCol() + 1 ) COLOR "B/W"
 
-   dsFunctions:SetSQL( "SELECT * FROM test" )
-   dsFunctions:Open()
+   oDS:SetSQL( "SELECT * FROM test" )
+   oDS:Open()
 
    aOrders := {}
-   FOR EACH fld IN dsFunctions:Fields
+   FOR EACH fld IN oDS:Fields
       AAdd( aOrders, fld:FieldName )
    NEXT
 
-   dsFunctions:Close()
+   oDS:Close()
 
    DO WHILE .T.
 
@@ -29,21 +29,21 @@ PROCEDURE Main()
       @ 3, 35 SAY " " + "ORDER BY" + " "
       @ MaxRow(), 0
 
-      IF ( nOp := AChoice( 4, 25, Len( aOrders ) + 4, 54, aOrders,,, nOp ) ) == 0
+      IF ( nChoice := AChoice( 4, 25, Len( aOrders ) + 4, 54, aOrders,,, nChoice ) ) == 0
          EXIT
       ENDIF
 
-      dsFunctions:SetSQL( "SELECT * FROM test ORDER BY " + aOrders[ nOp ] )
-      dsFunctions:Open()
+      oDS:SetSQL( "SELECT * FROM test ORDER BY " + aOrders[ nChoice ] )
+      oDS:Open()
 
       @ MaxRow(), 1 SAY "Statement:" COLOR "GR+/B"
-      @ MaxRow(), Col() + 1 SAY dsFunctions:cSQL
+      @ MaxRow(), Col() + 1 SAY oDS:cSQL
 
-      hb_odbcBrowse( 1, 0, MaxRow() - 1, MaxCol(), dsFunctions )
+      hb_odbcBrowse( 1, 0, MaxRow() - 1, MaxCol(), oDS )
 
-      dsFunctions:Close()
+      oDS:Close()
    ENDDO
 
-   dsFunctions:Destroy()
+   oDS:Destroy()
 
    RETURN

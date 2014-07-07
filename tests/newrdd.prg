@@ -18,7 +18,7 @@ PROCEDURE Main()
    CLS
 
    dbUseArea( .T., "DBF", "test.dbf", "TESTDBF", .T., .F. )
-   ? "RecCount:", TESTDBF->( RecCount() )
+   ? "LastRec:", TESTDBF->( LastRec() )
    ? "Used:", TESTDBF->( Used() )
    ? "Select:", TESTDBF->( Select() )
    ? "RecSize:", TESTDBF->( RecSize() )
@@ -248,7 +248,7 @@ PROCEDURE Main()
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
    ? "SET FILTER TO"
-   ? "? NEWRDD->( RecCount() )"
+   ? "? NEWRDD->( LastRec() )"
    ? "NEWRDD->( dbGoTop() )"
    ? "NEWRDD->( dbRLock( 1 ) )"
    ? "NEWRDD->( dbDelete() )"
@@ -275,7 +275,7 @@ PROCEDURE Main()
       TESTDBF->( dbSkip() )
    ENDDO
    SET FILTER TO
-   ? NEWRDD->( RecCount() )
+   ? NEWRDD->( LastRec() )
    NEWRDD->( dbGoTop() )
    NEWRDD->( dbRLock( 1 ) )
    NEWRDD->( dbDelete() )
@@ -306,7 +306,7 @@ PROCEDURE Main()
    ? 'dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )'
    ? 'nI := 1'
    ? 'NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )'
-   ? '? "RecCount:", NEWRDD->( RecCount() )'
+   ? '? "LastRec:", NEWRDD->( LastRec() )'
    ?
    NEWRDD->( dbCloseArea() )
    dbUseArea( .T., "DBFCDX", "newrdd.dbf", "NEWRDD", .F., .F. )
@@ -316,18 +316,18 @@ PROCEDURE Main()
 
    nI := 1
    NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )
-   ? "RecCount:", NEWRDD->( RecCount() )
+   ? "LastRec:", NEWRDD->( LastRec() )
 
    WAIT
    CLS
 
-   ? '? "RecCount:", NEWRDD->( RecCount() )'
+   ? '? "LastRec:", NEWRDD->( LastRec() )'
    ? 'NEWRDD->( __dbZap() )'
-   ? '? "RecCount:", NEWRDD->( RecCount() )'
+   ? '? "LastRec:", NEWRDD->( LastRec() )'
    ?
-   ? "RecCount:", NEWRDD->( RecCount() )
+   ? "LastRec:", NEWRDD->( LastRec() )
    NEWRDD->( __dbZap() )
-   ? "RecCount:", NEWRDD->( RecCount() )
+   ? "LastRec:", NEWRDD->( LastRec() )
 
    WAIT
    CLS
@@ -335,7 +335,7 @@ PROCEDURE Main()
    ? 'NEWRDD->( dbCloseArea() )'
    ? 'SORT ON FIRST /DC, AGE /D TO NEWRDD'
    ? 'dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )'
-   ? '? "RecCount:", NEWRDD->( RecCount() )'
+   ? '? "LastRec:", NEWRDD->( LastRec() )'
    ? 'FOR nI := 1 TO 8'
    ? '   ? NEWRDD->FIRST, NEWRDD->AGE'
    ? '   NEWRDD->( dbSkip() )'
@@ -356,7 +356,7 @@ PROCEDURE Main()
    SORT ON FIRST /DC, AGE /D TO newrdd
 
    dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )
-   ? "RecCount:", NEWRDD->( RecCount() )
+   ? "LastRec:", NEWRDD->( LastRec() )
    FOR nI := 1 TO 8
       ? NEWRDD->FIRST, NEWRDD->AGE
       NEWRDD->( dbSkip() )
