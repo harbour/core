@@ -18,7 +18,7 @@
 
 # How to Share
 
-  Share by __linking__ to this project. Link to commits, issues or source
+  Share by **linking** to this project. Link to commits, issues or source
   files, or whatever else you find worthy to pass to someone. This is the
   easiest, most useful and self-updating way of referring to this project.
   It's also the best form of crediting and appreciating this work without
@@ -70,7 +70,7 @@
 Evaluate these points before reporting an issue:
 
 1.  Make sure to have carefully read this document.
-2.  Make sure to do a ``make clean`` before doing a build after refreshing
+2.  Make sure to do a `make clean` before doing a build after refreshing
     the sources.
 3.  If that still fails, make sure to install fresh source tree in a new
     local directory and start over. See [How to Get](README.md#how-to-get)
@@ -107,16 +107,16 @@ Evaluate these points before reporting an issue:
     mode using `HB_BUILD_VERBOSE=yes`. Preferably, configure your tools
     to output English language messages.
     Complete log output is rarely necessary, but make sure to include
-    the top of the output (lines starting with ``!``) and the area where
+    the top of the output (lines starting with `!`) and the area where
     problematic behavior occurred _first_. Make sure to not only include
     a link failure or a make tool failure, as it's most of the time not
     enough information. Compress your log using zip if it is larger
-    than 25kB. (use the extension `.zip`)
+    than 25kB (use the extension `.zip`).
     With these, you have much better chance to get useful or any response.
 10. Do not alter the directory layout and files in Harbour and 3rd party
     packages.
 11. If you are to report a build problem with a Harbour application,
-    all of the above points apply, plus make sure to use ``-trace``
+    all of the above points apply, plus make sure to use `-trace`
     command-line option when running hbmk2 and redirect the result to
     a file (see above how). Also include your full command-line in your
     report.

@@ -119,7 +119,7 @@ To test it, type:
     > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
-You should see ``Hello, world!`` on screen.
+You should see `Hello, world!` on screen.
 
 ## on Windows hosts with POSIX shells (MSYS/Cygwin)
 
@@ -136,10 +136,10 @@ To test it, type:
     > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
-You should see ``Hello, world!`` on screen.
+You should see `Hello, world!` on screen.
 
 > When building for Borland C++ make sure that GNU Make
-> is executed when typing ``make``, Borland Make has the same name.
+> is executed when typing `make`, Borland Make has the same name.
 
 ## on MS-DOS hosts (possible cross-build targets: Windows, OS/2, Linux)
 
@@ -155,7 +155,7 @@ To test it, type:
     > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
-You should see ``Hello, world!`` on screen.
+You should see `Hello, world!` on screen.
 
 ## on OS/2 hosts (possible cross-build targets: MS-DOS, OS/2, Linux)
 
@@ -169,7 +169,7 @@ To test it, type:
     > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
-You should see ``Hello, world!`` on screen.
+You should see `Hello, world!` on screen.
 
 ## on Linux hosts (possible cross-build targets: Windows, Windows CE, MS-DOS, OS/2)
 
@@ -183,7 +183,7 @@ To test it, type:
     $ ../bin/<plat>/<comp>/hbmk2 hello.prg
     $ ./hello
 
-You should see ``Hello, world!`` on screen.
+You should see `Hello, world!` on screen.
 
 ## on Darwin (OS X) hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
@@ -200,7 +200,7 @@ To test it, type:
     $ ../bin/<plat>/<comp>/hbmk2 hello.prg
     $ ./hello
 
-You should see ``Hello, world!`` on screen.
+You should see `Hello, world!` on screen.
 
 > You can override default (host) architecture by adding
 > values below to `HB_USER_CFLAGS`, `HB_USER_LDFLAGS` envvars,
@@ -239,7 +239,7 @@ To test it, type:
     $ ../bin/<plat>/<comp>/hbmk2 hello.prg
     $ ./hello
 
-You should see ``Hello, world!`` on screen.
+You should see `Hello, world!` on screen.
 
 ## on Minix hosts
 
@@ -264,7 +264,7 @@ To test it, type:
     $ ../bin/<plat>/<comp>/hbmk2 hello.prg
     $ ./hello
 
-You should see ``Hello, world!`` on screen.
+You should see `Hello, world!` on screen.
 
 > For sunpro on Solaris:<br />
 > If you have any GNU binutils stuff installed, do make sure
@@ -509,7 +509,7 @@ sensitive.
      It's always set to `./pkg/<arch>/<comp>` when
      `HB_BUILD_PKG` is set to `yes`. On non-*nix systems,
      you must set it to a valid directory when using
-     ``install``. Use absolute paths only. For a peace of
+     `install`. Use absolute paths only. For a peace of
      mind, avoid using spaces and quotes in the name.
      You have to use path format native to your shell.
      F.e. to specify `C:\dir` on Windows, with Cygwin
@@ -633,7 +633,7 @@ sensitive.
 
      Copy import libraries created for external .dll
      dependencies to the library install directory in
-     ``install`` build phase. Default: `yes`<br />
+     `install` build phase. Default: `yes`<br />
      For Windows and OS/2 targets only. Please note
      that this feature doesn't work with all possible
      binary distributions of 3rd party packages.
@@ -644,7 +644,7 @@ sensitive.
    - `HB_INSTALL_3RDDYN=yes`
 
      Copy dynamic libraries of external .dll dependencies
-     to the dynamic library directory in ``install`` build
+     to the dynamic library directory in `install` build
      phase. Default: `no`
 
    - `HB_SRC_ROOTPATH=<dir>`
@@ -704,7 +704,7 @@ for your host platform can be found:
 
 If you leave this value empty, the make system will try to autodetect it,
 so in practice all you have to do is to create a native build first (no
-``install`` required), then create the cross-build. If you set this value
+`install` required), then create the cross-build. If you set this value
 manually, it may be useful to know that harbour, hbpp and hbmk2
 executables are required for a cross-build process to succeed.
 
