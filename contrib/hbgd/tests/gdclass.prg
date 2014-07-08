@@ -7,6 +7,8 @@
 #define IMAGES_IN   "imgs_in" + hb_ps()
 #define IMAGES_OUT  "imgs_out" + hb_ps()
 
+REQUEST HB_CODEPAGE_UTF8EX
+
 PROCEDURE Main()
 
    LOCAL black, blue, red, green, cyan, gray
@@ -14,6 +16,8 @@ PROCEDURE Main()
    LOCAL oI, oI2, oI3, oI4, nThick, n, nSecs
    LOCAL oI5
    LOCAL oB
+
+   hb_cdpSelect( "UTF8EX" )
 
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
@@ -98,8 +102,7 @@ PROCEDURE Main()
    oI:SayVertical( 70, 30, "W" )
 
    oI:SayFreeType( 20, 30, "Test", "arial", 24, 15 )
-   oI:SayFreeType( 40, 70, "Test2" )
-
+   oI:SayFreeType( 40, 70, "Ájőlű" )
 
    /* Set Clip Rectangle */
    oI:SetClippingArea( 25, 25, 75, 75 )
@@ -169,7 +172,7 @@ PROCEDURE Main()
    nSecs := Seconds()
    ? "start write"
    FOR n := 0 TO 350 STEP 10
-      oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "             GD Font Power", "arial", 20, n )
+      oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "             Árvíztűrő tükörfúrógép", "arial", 20, n )
    NEXT
    ? "end", Seconds() - nSecs
    oI4:SetTransparent( blue )

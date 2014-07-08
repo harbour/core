@@ -49,6 +49,7 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
+#include "hbapistr.h"
 
 /* NOTE: Do some initialization required by the GD headers. */
 #if defined( HB_OS_WIN )
@@ -1462,7 +1463,6 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       double       angle    = hb_parnd( 6 ); /* angle value in radians */
       int          x        = hb_parni( 7 );
       int          y        = hb_parni( 8 );
-      const char * string   = hb_parc( 9 );
 
       gdFTStringExtra extra;
       int flags = 0; /* Extended flags */
@@ -1475,6 +1475,8 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       int    aRect[ 8 ];
       int    i;
       char * err;
+
+      void * hText;
 
       /* Retrieve rectangle array */
       for( i = 0; i < 8; i++ )
@@ -1504,14 +1506,18 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       if( flags != 0 )
       {
          extra.flags       = flags;
-         extra.linespacing = ( flags & gdFTEX_LINESPACE  ? linespacing : 1.05 );
-         extra.charmap     = ( flags & gdFTEX_CHARMAP    ? charmap : gdFTEX_Unicode );
-         extra.hdpi        = ( flags & gdFTEX_RESOLUTION ? resolution : 96 );
-         extra.vdpi        = ( flags & gdFTEX_RESOLUTION ? resolution : 96 );
+         extra.linespacing = flags & gdFTEX_LINESPACE  ? linespacing : 1.05;
+         extra.charmap     = flags & gdFTEX_CHARMAP    ? charmap : gdFTEX_Unicode;
+         extra.hdpi        = flags & gdFTEX_RESOLUTION ? resolution : 96;
+         extra.vdpi        = flags & gdFTEX_RESOLUTION ? resolution : 96;
       }
 
       /* Write string */
-      err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) fontname, ptsize, angle, x, y, ( char * ) string, ( flags != 0 ? &extra : NULL ) );
+      err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) fontname,
+                               ptsize, angle, x, y, ( char * ) hb_parstr_utf8( 9, &hText, NULL ), flags != 0 ? &extra : NULL );
+
+      hb_strfree( hText );
+
       if( ! err )
       {
          /* Save in array the correct text rectangle dimensions */
@@ -1550,12 +1556,19 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       double       fillPortion = hb_parnd( 6 );
       const char * fontname    = hb_parc( 7 );
       double       points      = hb_parnd( 8 );
-      const char * top         = hb_parcx( 9 );
-      const char * bottom      = hb_parcx( 10 );
-      int          fgcolor     = hb_parni( 11 ); /* foreground color */
+      int          fgcolor     = hb_parni( 11 );  /* foreground color */
+
+      void * hTop    = NULL;
+      void * hBottom = NULL;
 
       /* Write string */
-      hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion, ( char * ) fontname, points, ( char * ) top, ( char * ) bottom, fgcolor ) );
+      hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion,
+                                      ( char * ) fontname, points,
+                                      HB_ISCHAR( 9 ) ? ( char * ) hb_parstr_utf8( 9, &hTop, NULL ) : "",
+                                      HB_ISCHAR( 10 ) ? ( char * ) hb_parstr_utf8( 10, &hBottom, NULL ) : "", fgcolor ) );
+
+      hb_strfree( hTop );
+      hb_strfree( hBottom );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

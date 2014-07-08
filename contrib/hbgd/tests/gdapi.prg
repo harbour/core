@@ -7,11 +7,15 @@
 #define IMAGES_IN   "imgs_in" + hb_ps()
 #define IMAGES_OUT  "imgs_out" + hb_ps()
 
+REQUEST HB_CODEPAGE_UTF8EX
+
 PROCEDURE Main()
 
    LOCAL im, im2
    LOCAL black, blue, red, green, cyan
    LOCAL color, font
+
+   hb_cdpSelect( "UTF8EX" )
 
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
@@ -67,9 +71,9 @@ PROCEDURE Main()
    gdImageStringUp( im, font, 70, 15, "P", black )
    gdImageCharUp( im, font, 70, 30, "W", black )
 
-   gdImageStringFT( im, blue, "arial", 20, 30, 20, 90, "Test" )
+   gdImageStringFT( im, blue, "arial", 20, 30, 20, 90, "Test-ő" )
 
-   ? gdImageStringFTCircle( im, 120, 120, 50, 25, 0.8, "arial", 24, "Up", /*"Down"*/, red )
+   ? gdImageStringFTCircle( im, 120, 120, 50, 25, 0.8, "arial", 24, "Up-ő", /*"Down"*/, red )
 
    /* Set Clip Rectangle */
    gdImageSetClip( im, 25, 25, 75, 75 )
