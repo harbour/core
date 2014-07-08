@@ -49,8 +49,8 @@
 //
 //                  Xbase++ Parts Compatible functions
 //
-//                Pritpal Bedi  <bedipritpal@hotmail.com>
-//                               20111203
+//                Pritpal Bedi <bedipritpal@hotmail.com>
+//                              2011-12-03
 //
 #include "hbclass.ch"
 #include "inkey.ch"

@@ -47,6 +47,13 @@ PROCEDURE Main()
       ? FieldName( tmp ), hb_FieldType( tmp ), hb_FieldLen( tmp ), hb_FieldDec( tmp )
    NEXT
    Inkey( 0 )
+
+   DO WHILE ! Eof()
+      ? FIELD->empno, "|" + FIELD->ename + "|"
+      dbSkip()
+   ENDDO
+   Inkey( 0 )
+
    Browse()
 
    INDEX ON FIELD->sal TO salary

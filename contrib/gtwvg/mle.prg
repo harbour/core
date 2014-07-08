@@ -51,7 +51,7 @@
  *                    Xbase++ xbpMLE compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                                20081207
+ *                               2008-12-07
  */
 
 #include "hbclass.ch"

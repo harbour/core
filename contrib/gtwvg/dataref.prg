@@ -51,7 +51,7 @@
  *                    Xbase++ dataRef Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                                20081206
+ *                               2008-12-06
  */
 
 #include "hbclass.ch"

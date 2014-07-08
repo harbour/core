@@ -51,7 +51,7 @@
  *                  Xbase++ Compatible xbpDialog Class
  *
  *                 Pritpal Bedi <bedipritpal@hotmail.com>
- *                               20081117
+ *                              2008-11-17
  */
 
 #include "hbclass.ch"

@@ -657,8 +657,7 @@ METHOD FieldGet( nField ) CLASS TFbQuery
       result := FBGetData( ::qry, nField )
 
       SWITCH ::aStruct[ nField ][ 2 ]
-      CASE "M"
-         /* Blob */
+      CASE "M"  /* Blob */
          IF HB_ISPOINTER( result )
             aBlob := FBGetBlob( ::db, result )
             result := ""
@@ -676,27 +675,15 @@ METHOD FieldGet( nField ) CLASS TFbQuery
          EXIT
 
       CASE "N"
-         IF HB_ISSTRING( result )
-            result := Val( result )
-         ELSE
-            result := 0
-         ENDIF
+         result := iif( HB_ISSTRING( result ), Val( result ), 0 )
          EXIT
 
       CASE "D"
-         IF HB_ISSTRING( result )
-            result := hb_SToD( Left( result, 4 ) + SubStr( result, 5, 2 ) + SubStr( result, 7, 2 ) )
-         ELSE
-            result := hb_SToD()
-         ENDIF
+         result := hb_SToD( result )
          EXIT
 
       CASE "L"
-         IF HB_ISSTRING( result )
-            result := ( Val( result ) == 1 )
-         ELSE
-            result := .F.
-         ENDIF
+         result := ( HB_ISSTRING( result ) .AND. Val( result ) == 1 )
          EXIT
 
       ENDSWITCH

@@ -34,6 +34,7 @@
 #xtranslate hb_osError()                   => DOSError()
 #xtranslate hb_osPathDelimiters()          => "\:"
 #xtranslate hb_osPathListSeparator()       => ";"
+#xtranslate hb_UserName()                  => GetEnv( "USERNAME" )
 
 #xtranslate hb_DirSepToOS( <d> )           => StrTran( <d>, "/", "\" )
 
@@ -61,6 +62,13 @@
 #xtranslate HB_ISEVALITEM( <v> )           => ( ValType( <v> ) == "B" )
 #xtranslate HB_ISCHAR( <v> )               => ( ValType( <v> ) == "C" )
 #xtranslate HB_ISMEMO( <v> )               => ( ValType( <v> ) == "M" )
+#xtranslate HB_ISDATETIME( <v> )           => .F.
+#xtranslate HB_ISHASH( <v> )               => .F.
+#xtranslate HB_ISHASHKEY( <v> )            => .F.
+#xtranslate HB_ISNULL( <v> )               => .F.
+#xtranslate HB_ISPOINTER( <v> )            => .F.
+#xtranslate HB_ISSYMBOL( <v> )             => .F.
+#xtranslate HB_ISTIMESTAMP( <v> )          => .F.
 
 #xtranslate hb_LeftEq( <l>, <r> )          => ( Left( <l>, Len( <r> ) ) == <r> )
 #xtranslate hb_LeftEqI( <l>, <r> )         => ( Left( Lower( <l> ), Len( <r> ) ) == Lower( <r> ) )
@@ -107,7 +115,19 @@
 #xtranslate hb_GetStdOut()                 => 1
 #xtranslate hb_GetStdErr()                 => 2
 
+#xtranslate hb_AIns( <a>, <p> )            => AIns( <a>, <p> )
+#xtranslate hb_AIns( <a>, <p>, <v> )       => ( AIns( <a>, <p> ), <a>\[ <p> ]\ := <v>, <a> )
+#xtranslate hb_AIns( <a>, <p>, <v>, <r> )  => ( iif( <r>, ( ASize( <a>, Len( <a> ) + 1 ) ), ), AIns( <a>, <p> ), <a>\[ <p> ]\ := <v>, <a> )
+#xtranslate hb_ADel( <a>, <p> )            => ADel( <a>, <p> )
+#xtranslate hb_ADel( <a>, <p>, <r> )       => ( ADel( <a>, <p> ), iif( <r>, ASize( <a>, Len( <a> ) - 1 ), ), <a> )
+
+#xtranslate hb_Date()                      => Date()
+#xtranslate hb_Date( <y>, <m>, <d> )       => hb_SToD( StrZero( Int( <y> ), 4 ) + StrZero( Int( <m> ), 2 ) + StrZero( Int( <d> ), 2 ) )
 #xtranslate hb_ntos( <n> )                 => LTrim( Str( <n> ) )
+#xtranslate hb_CToD( [<s>] )               => CToD( s )
+#xtranslate hb_DToC( [<s>] )               => DToC( s )
+#xtranslate hb_CToD( [<s>], <f> )          => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, <f> ), dt := CToD( s ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
+#xtranslate hb_DToC( [<s>], <f> )          => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, <f> ), dt := DToC( s ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
 #xtranslate hb_SToD( [<s>] )               => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
 #xtranslate hb_Compiler()                  => "C"
 #xtranslate hb_cdpIsUTF8( [<c>] )          => .F.

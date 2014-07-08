@@ -85,4 +85,4 @@ FUNCTION ft_Easter( nYear )
       nYear := 0
    ENDIF
 
-   RETURN hb_SToD( StrZero( nYear, 4 ) + StrZero( nMonth, 2 ) + StrZero( Int( nDay ), 2 ) )
+   RETURN hb_Date( nYear, nMonth, nDay )

@@ -50,7 +50,7 @@
 //                    Xbase++ Compatible xbpCrt Class
 //
 //                 Pritpal Bedi  <bedipritpal@hotmail.com>
-//                               20081108
+//                              2008-11-08
 
 #include "hbclass.ch"
 #include "inkey.ch"

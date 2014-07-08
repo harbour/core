@@ -51,7 +51,7 @@
  *                   Xbase++ WvgDialog's Helper Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                                20090215
+ *                               2009-02-15
  */
 
 #include "hbclass.ch"

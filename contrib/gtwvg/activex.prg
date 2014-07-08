@@ -51,8 +51,8 @@
  *
  *              Xbase++ Compatible xbpActiveXControl Class
  *
- *                 Pritpal Bedi  <bedipritpal@hotmail.com>
- *                               20081108
+ *                 Pritpal Bedi <bedipritpal@hotmail.com>
+ *                              2008-11-08
  */
 
 #include "hbclass.ch"

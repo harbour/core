@@ -51,7 +51,7 @@
  *                  Xbase++ xbpTabPage compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                                20090301
+ *                               2009-03-01
  */
 
 #include "hbclass.ch"

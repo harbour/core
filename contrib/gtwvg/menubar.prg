@@ -51,7 +51,7 @@
  *                  Xbase++ Compatible xbpMenuBar Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               20081122
+ *                              2008-11-22
  */
 
 #include "hbclass.ch"

@@ -318,9 +318,9 @@ FUNCTION hbtest_AllValues()
       -10.567, ; /* Use different number of decimals than the default */
       1234567890123, ;
       hb_SToD( "19840325" ), ;
-      hb_SToD( "" ), ;
+      hb_SToD(), ;
       hb_SToT( "19850325123456789" ), ;
-      hb_SToT( "" ), ;
+      hb_SToT(), ;
       .F., ;
       .T., ;
       @hbtest_AllValues(), ;

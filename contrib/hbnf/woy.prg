@@ -22,7 +22,7 @@ FUNCTION ft_WoY( dInDate )
 
    IF HB_ISDATE( dInDate )
 
-      dFDoY := hb_SToD( Left( DToS( dInDate ), 4 ) + "0101" )
+      dFDoY := hb_Date( Year( dInDate ), 1, 1 )
 
       // find how many days after first week till dInDate
       nDayOffset := 1 + ( dInDate - dFDoY ) - ;
@@ -43,7 +43,7 @@ FUNCTION ft_WoY( dInDate )
 FUNCTION ft_DoY( dInDate )
 
    IF HB_ISDATE( dInDate )
-      RETURN 1 + dInDate - hb_SToD( Left( DToS( dInDate ), 4 ) + "0101" )
+      RETURN 1 + dInDate - hb_Date( Year( dInDate ), 1, 1 )
    ENDIF
 
    RETURN NIL

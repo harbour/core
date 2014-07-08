@@ -51,7 +51,7 @@
  *                  Xbase++ xbpToolBar Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               20081123
+ *                              2008-11-23
  */
 
 #include "hbclass.ch"

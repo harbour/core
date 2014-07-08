@@ -51,7 +51,7 @@
  *                 Xbase++ xbpStatusBar Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                              25Nov2008
+ *                              2008-11-25
  */
 
 #include "hbclass.ch"

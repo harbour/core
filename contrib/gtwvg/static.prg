@@ -51,7 +51,7 @@
  *                  Xbase++ xbpTreeView compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                                20081126
+ *                               2008-11-26
  */
 
 #include "hbclass.ch"

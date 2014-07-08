@@ -51,7 +51,7 @@
  *                 Xbase++ xbpScrollBar Compatible Class
  *
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               20090217
+ *                              2009-02-17
  */
 
 #include "hbclass.ch"

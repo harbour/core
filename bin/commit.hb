@@ -278,7 +278,7 @@ STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog )
    LOCAL nOffset := hb_UTCOffset()
 
    LOCAL cLog := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s", ;
-      hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
+      hb_TToC( hb_DateTime(), "yyyy-mm-dd", "HH:MM" ), ;
       iif( nOffset < 0, "-", "+" ), ;
       Int( Abs( nOffset ) / 3600 ), ;
       Int( ( ( Abs( nOffset ) / 3600 ) - Int( Abs( nOffset ) / 3600 ) ) * 60 ), ;
