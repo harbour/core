@@ -1168,6 +1168,11 @@ HB_FUNC( PQPUTCOPYEND )
 #endif
 }
 
+HB_FUNC( PG_ENCODING_TO_CHAR )
+{
+   hb_retc( pg_encoding_to_char( hb_parni( 1 ) ) );
+}
+
 #if 0
 
  TODO: Implement Full Large Objects Support

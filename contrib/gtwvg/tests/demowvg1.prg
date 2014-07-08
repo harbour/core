@@ -67,15 +67,15 @@ FUNCTION Wvt_Paint()  /* must be a public function */
 
 STATIC PROCEDURE ExecForm( aPaint )
 
-   LOCAL cColor    := SetColor()
+   LOCAL cColor  := SetColor()
    LOCAL aPnt
-   LOCAL dDate     := Date()
-   LOCAL cName     := PadR( "Pritpal Bedi", 35 )
-   LOCAL cAdd1     := PadR( "60, New Professor Colony", 35 )
-   LOCAL cAdd2     := PadR( "Ludhiana, INDIA", 35 )
-   LOCAL cAdd3     := PadR( hb_Version( HB_VERSION_URL_BASE ), 35 )
-   LOCAL nSlry     := 20000
-   LOCAL nColGet   := 8
+   LOCAL dDate   := Date()
+   LOCAL cName   := PadR( "Pritpal Bedi", 35 )
+   LOCAL cAdd1   := PadR( "60, New Professor Colony", 35 )
+   LOCAL cAdd2   := PadR( "Ludhiana, INDIA", 35 )
+   LOCAL cAdd3   := PadR( hb_Version( HB_VERSION_URL_BASE ), 35 )
+   LOCAL nSlry   := 20000
+   LOCAL nColGet := 8
 
    aPnt := WvtSetPaint( aPaint )
 
@@ -89,13 +89,12 @@ STATIC PROCEDURE ExecForm( aPaint )
    @  9, nColGet SAY "<" + PadC( "Name", 33 ) + ">"
    @ 12, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
    @ 16, 61      SAY "< Salary >"
-   @  7, nColGet GET dDate WHEN  DispStatusMsg( "Date must be Valid" )
-   @ 10, nColGet GET cName WHEN  DispStatusMsg( "Must be one of the list!" ) VALID ( MyChoice() < 7 )
-   @ 13, nColGet GET cAdd1 WHEN  DispStatusMsg( "Press F2 to get modal window" )
-   @ 15, nColGet GET cAdd2 WHEN  DispStatusMsg( "Press F2 to activate modal window" )
-   @ 17, nColGet GET cAdd3 WHEN  DispStatusMsg( "Press F2 to bring in front a modal window" )
+   @  7, nColGet GET dDate WHEN DispStatusMsg( "Date must be Valid" )
+   @ 10, nColGet GET cName WHEN DispStatusMsg( "Must be one of the list!" ) VALID ( MyChoice() < 7 )
+   @ 13, nColGet GET cAdd1 WHEN DispStatusMsg( "Press F2 to get modal window" )
+   @ 15, nColGet GET cAdd2 WHEN DispStatusMsg( "Press F2 to activate modal window" )
+   @ 17, nColGet GET cAdd3 WHEN DispStatusMsg( "Press F2 to bring in front a modal window" )
    @ 17, 61      GET nSlry PICTURE "@Z 9999999.99" WHEN ClearStatusMsg()
-
 
    READ
 
@@ -106,10 +105,10 @@ STATIC PROCEDURE ExecForm( aPaint )
 
 STATIC FUNCTION SetGT( nIndex, pGT )
 
-   LOCAL oldGT
    STATIC s_pGT_ := { NIL, NIL, NIL }
 
-   oldGT := s_pGT_[ nIndex ]
+   LOCAL oldGT := s_pGT_[ nIndex ]
+
    IF PCount() == 2
       s_pGT_[ nIndex ] := pGT
    ENDIF
@@ -143,17 +142,18 @@ STATIC FUNCTION ClearStatusMsg()
    LOCAL nCol := Col()
 
    hb_DispOutAt( MaxRow(), 42, Space( 37 ), "W/W" )
+
    SetPos( nRow, nCol )
 
    RETURN .T.
 
 STATIC PROCEDURE DoModalDialog()
 
-   LOCAL oCrt, nSel
    LOCAL aPnt   := WvtSetPaint( {} )
    LOCAL aPaint := {}
+   LOCAL nSel
 
-   oCrt := WvgCrt():New( , , { 4, 8 }, { 12, 49 }, , .T. )
+   LOCAL oCrt := WvgCrt():New( , , { 4, 8 }, { 12, 49 }, , .T. )
 
    oCrt:lModal      := .T.
    oCrt:resizable   := .F.

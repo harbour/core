@@ -157,8 +157,8 @@ PROCEDURE Main()
 
    dDate := hb_SToD( "20040401" )
 
-   @  7, nColGet GET dDate WHEN  DispStatusMsg( "Date must be valid" ) VALID ClearStatusMsg()
-   @ 10, nColGet GET cName WHEN  DispStatusMsg( "Must be one of the list!" ) VALID ( VouChoice() < 7 .AND. ClearStatusMsg() )
+   @  7, nColGet GET dDate WHEN DispStatusMsg( "Date must be valid" ) VALID ClearStatusMsg()
+   @ 10, nColGet GET cName WHEN DispStatusMsg( "Must be one of the list!" ) VALID VouChoice() < 7 .AND. ClearStatusMsg()
    @ 13, nColGet GET cAdd1
    @ 15, nColGet GET cAdd2
    @ 17, nColGet GET cAdd3
@@ -196,14 +196,14 @@ STATIC PROCEDURE WvtConsoleGets( nMode )
 
 STATIC PROCEDURE WvtNextGetsConsole()
 
-   LOCAL dDate      := hb_SToD()
-   LOCAL cName      := Space( 35 )
-   LOCAL cAdd1      := Space( 35 )
-   LOCAL cAdd2      := Space( 35 )
-   LOCAL cAdd3      := Space( 35 )
-   LOCAL nSlry      := 0
-   LOCAL nColGet    := 8
-   LOCAL GetList    := {}
+   LOCAL dDate   := hb_SToD()
+   LOCAL cName   := Space( 35 )
+   LOCAL cAdd1   := Space( 35 )
+   LOCAL cAdd2   := Space( 35 )
+   LOCAL cAdd3   := Space( 35 )
+   LOCAL nSlry   := 0
+   LOCAL nColGet := 8
+   LOCAL GetList := {}
 
    SetMode( 20, 51 )
    SetColor( "N/W,N/GR*,,,N/W*" )
@@ -263,7 +263,7 @@ STATIC PROCEDURE WvtNextGets_X()
 
    // Change the values of pallatte arbitrarily though yu can fine tune
    // these values with realistic values.
-   aNewPalette[ 8 ] := aNewPalette[ 8 ] + ( 100000 * ++s_nPalletMultiplier )
+   aNewPalette[ 8 ] += 100000 * ++s_nPalletMultiplier
 
    hb_gtInfo( HB_GTI_PALETTE, aNewPalette )
 
@@ -539,9 +539,8 @@ STATIC PROCEDURE GoogleMap()
 
 STATIC PROCEDURE BuildButtons()
 
-   LOCAL oXbp
+   LOCAL oXbp := WvgPushButton():new()
 
-   oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
    oXbp:caption := "Hi"
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -1 }, { -2, -4 } )

@@ -30,9 +30,10 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    ? "Verbose:", PQsetErrorVerbosity( conn, 2 )
 
    ? "Protocol:", PQprotocolVersion( conn )
-   ? "Server Version:", PQserverVersion( conn )
-   ? "Client Encoding:", PQsetClientEncoding( conn, "UTF-8" )
-   ? "New encode:", PQclientEncoding( conn )
+   ? "Server version:", PQserverVersion( conn )
+   ? "Client encoding (old):", pg_encoding_to_char( PQclientEncoding( conn ) )
+   ? "Set client encoding:", PQsetClientEncoding( conn, "UTF-8" )
+   ? "Client encoding (new):", pg_encoding_to_char( PQclientEncoding( conn ) )
 
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
