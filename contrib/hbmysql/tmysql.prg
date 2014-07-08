@@ -469,63 +469,43 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
          FOR i := 1 TO ::nNumFields
 
             SWITCH ::aFieldStruct[ i ][ MYSQL_FS_TYPE ]
+            CASE MYSQL_TYPE_BLOB  // Memo field
+            CASE MYSQL_TYPE_STRING
+            CASE MYSQL_TYPE_VAR_STRING  // Char field
+               // ; do nothing
+               EXIT
+
             CASE MYSQL_TYPE_TINY
             CASE MYSQL_TYPE_SHORT
             CASE MYSQL_TYPE_LONG
             CASE MYSQL_TYPE_LONGLONG
             CASE MYSQL_TYPE_INT24
             CASE MYSQL_TYPE_NEWDECIMAL
-               IF ::aRow[ i ] == NIL
-                  ::aRow[ i ] := "0"
-               ENDIF
-               ::aRow[ i ] := Val( ::aRow[ i ] )
-               EXIT
-
             CASE MYSQL_TYPE_DOUBLE
             CASE MYSQL_TYPE_FLOAT
-               IF ::aRow[ i ] == NIL
-                  ::aRow[ i ] := "0"
-               ENDIF
-               ::aRow[ i ] := Val( ::aRow[ i ] )
+               ::aRow[ i ] := iif( ::aRow[ i ] == NIL, 0, Val( ::aRow[ i ] ) )
                EXIT
 
             CASE MYSQL_TYPE_DATE
-               IF Empty( ::aRow[ i ] )
-                  ::aRow[ i ] := hb_SToD()
-               ELSE
-                  ::aRow[ i ] := hb_CToD( ::aRow, "yyyy-mm-dd" )
-               ENDIF
-               EXIT
-
-            CASE MYSQL_TYPE_BLOB
-               // Memo field
-               EXIT
-
-            CASE MYSQL_TYPE_STRING
-            CASE MYSQL_TYPE_VAR_STRING
-               // char field
+               ::aRow[ i ] := iif( ::aRow[ i ] == NIL, hb_SToD(), hb_CToD( ::aRow[ i ], "yyyy-mm-dd" ) )
                EXIT
 
             CASE MYSQL_TYPE_DATETIME
-               // DateTime field
+            CASE MYSQL_TYPE_TIMESTAMP
+               ::aRow[ i ] := iif( ::aRow[ i ] == NIL, hb_SToT(), hb_CToT( ::aRow[ i ], "yyyy-mm-dd", "hh:mm:ss" ) )
                EXIT
 
             OTHERWISE
-
                // ? "Unknown type from SQL Server Field: " + hb_ntos( i ) + " is type " + hb_ntos( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] )
-
             ENDSWITCH
 
             IF ::lFieldAsData
                __objSetValueList( Self, { { ::aFieldStruct[ i ][ MYSQL_FS_NAME ], ::aRow[ i ] } } )
             ENDIF
-
          NEXT
 
          oRow := TMySQLRow():New( ::aRow, ::aFieldStruct )
-
       ENDIF
-
    ENDIF
 
    RETURN iif( ::aRow == NIL, NIL, oRow )
