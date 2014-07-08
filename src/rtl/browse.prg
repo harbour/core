@@ -374,22 +374,15 @@ STATIC FUNCTION ExitKey( lAppend )
 
    SWITCH nKey := LastKey()
    CASE K_PGDN
-      nKey := iif( lAppend, 0, K_DOWN )
-      EXIT
-
+      RETURN iif( lAppend, 0, K_DOWN )
    CASE K_PGUP
-      nKey := iif( lAppend, 0, K_UP )
-
+      RETURN iif( lAppend, 0, K_UP )
    CASE K_DOWN
    CASE K_UP
-      EXIT
-
-   OTHERWISE
-      nKey := iif( nKey == K_ENTER .OR. ;
-         !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
+      RETURN nKey
    ENDSWITCH
 
-   RETURN nKey
+   RETURN iif( nKey == K_ENTER .OR. !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
 
 STATIC PROCEDURE FreshOrder( oBrw )
 

@@ -216,13 +216,13 @@ PROCEDURE gdImageToHandle( oImage, nHandle )
       SWITCH oImage:cType
       CASE "jpeg"
          oImage:OutputJpeg( nHandle )
-         EXIT
+         RETURN
       CASE "gif"
          oImage:OutputGif( nHandle )
-         EXIT
+         RETURN
       CASE "png"
          oImage:OutputPng( nHandle )
-         EXIT
+         RETURN
       ENDSWITCH
    ENDIF
 

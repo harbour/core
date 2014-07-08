@@ -411,8 +411,8 @@ METHOD PROCEDURE Draw128( cText, cModeCode ) CLASS GDBarCode
       SWITCH cModeCode
       CASE "C"
 
-         IF AScan( ::KeysmodeC, {| x | x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i + 1, 1 ) } ) == 0
-            ::DrawError( "With Code C, you must provide always pair of two integers. Character " + SubStr( ::text, i, 1 ) + SubStr( ::text, i + 1, 1 ) + " not allowed." )
+         IF AScan( ::KeysmodeC, {| x | x == SubStr( ::Text, i, 2 ) } ) == 0
+            ::DrawError( "With Code C, you must provide always pair of two integers. Character " + SubStr( ::text, i, 2 ) + " not allowed." )
             lError := .T.
          ENDIF
          EXIT
@@ -446,7 +446,7 @@ METHOD PROCEDURE Draw128( cText, cModeCode ) CLASS GDBarCode
             nSum       := STARTB
          ELSE
             FOR n := 1 TO Len( ::text )
-               nC += iif( SubStr( ::text, n, 1 ) > 31, 1, 0 )
+               nC += iif( Asc( SubStr( ::text, n, 1 ) ) > 31, 1, 0 )
             NEXT
 
             IF nC < Len( ::text ) / 2
@@ -497,14 +497,15 @@ METHOD PROCEDURE Draw128( cText, cModeCode ) CLASS GDBarCode
 
          CASE lTypeCodeA
 
-            IF cChar > "_"
+            DO CASE
+            CASE cChar > "_"
                cConc += ::aCode[ CODEB ]
                nValChar := Asc( cChar ) - 31
-            ELSEIF cChar <= " "
+            CASE cChar <= " "
                nValChar := Asc( cChar ) + 64
-            ELSE
+            OTHERWISE
                nValChar := Asc( cChar ) - 31
-            ENDIF
+            ENDCASE
 
          OTHERWISE
 
@@ -525,8 +526,9 @@ METHOD PROCEDURE Draw128( cText, cModeCode ) CLASS GDBarCode
       cConc += ::aCode[ nSum ] + ::aCode[ 107 ]
 
       FOR n := 1 TO Len( cConc ) STEP 2
-         cBarCode += Replicate( "1", Val( SubStr( cConc, n, 1 ) ) )
-         cBarCode += Replicate( "0", Val( SubStr( cConc, n + 1, 1 ) ) )
+         cBarCode += ;
+            Replicate( "1", Val( SubStr( cConc, n, 1 ) ) ) + ;
+            Replicate( "0", Val( SubStr( cConc, n + 1, 1 ) ) )
       NEXT
 
       ::DrawSingleBar( cBarCode )

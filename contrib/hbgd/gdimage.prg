@@ -134,9 +134,9 @@ CREATE CLASS GDImage
 
    /* Drawing functions */
 
-   METHOD SetPixel( x, y, color )          INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageSetPixel( ::pImage, x, y, color )
-   METHOD Line( x1, y1, x2, y2, color )    INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageLine( ::pImage, x1, y1, x2, y2, color )
-   METHOD DashedLine( x1, y1, x2, y2, color )    INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageDashedLine( ::pImage, x1, y1, x2, y2, color )
+   METHOD SetPixel( x, y, color )          INLINE gdImageSetPixel( ::pImage, x, y, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
+   METHOD Line( x1, y1, x2, y2, color )    INLINE gdImageLine( ::pImage, x1, y1, x2, y2, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
+   METHOD DashedLine( x1, y1, x2, y2, color )    INLINE gdImageDashedLine( ::pImage, x1, y1, x2, y2, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
 
    // Functions useful for polygons
    METHOD Polygon( aPoints, lFilled, color )
@@ -152,12 +152,12 @@ CREATE CLASS GDImage
    METHOD Circle( x, y, nRadius, lFilled, nColor ) ;
                                            INLINE ::Ellipse( x, y, nRadius, nRadius, lFilled, nColor )
 
-   METHOD Fill( x, y, color )              INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageFill( ::pImage, x, y, color )
+   METHOD Fill( x, y, color )              INLINE gdImageFill( ::pImage, x, y, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
    METHOD FillToBorder( x, y, border, color ) ;
-                                           INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageFillToBorder( ::pImage, x, y, border, color )
-   METHOD SetAntiAliased( color )          INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageSetAntiAliased( ::pImage, color )
+                                           INLINE gdImageFillToBorder( ::pImage, x, y, border, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
+   METHOD SetAntiAliased( color )          INLINE gdImageSetAntiAliased( ::pImage, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
    METHOD SetAntiAliasedDontBlend( lDontBlend, color ) ;
-                                           INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageSetAntiAliasedDontBlend( ::pImage, color, lDontBlend )
+                                           INLINE gdImageSetAntiAliasedDontBlend( ::pImage, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ), lDontBlend )
 
    METHOD SetBrush( pBrush )               INLINE gdImageSetBrush( ::pImage, pBrush:pImage ), ::pBrush := pBrush
    METHOD SetTile( pTile )                 INLINE gdImageSetTile( ::pImage, pTile:pImage ), ::pTile := pTile
@@ -176,10 +176,10 @@ CREATE CLASS GDImage
    /* Query functions */
 
    METHOD ColorsTotal()                    INLINE gdImageColorsTotal( ::pImage )
-   METHOD Alpha( color )                   INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageAlpha( ::pImage, color )
-   METHOD Red( color )                     INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageRed( ::pImage, color )
-   METHOD Green( color )                   INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageGreen( ::pImage, color )
-   METHOD Blue( color )                    INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageBlue( ::pImage, color )
+   METHOD Alpha( color )                   INLINE gdImageAlpha( ::pImage, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
+   METHOD Red( color )                     INLINE gdImageRed( ::pImage, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
+   METHOD Green( color )                   INLINE gdImageGreen( ::pImage, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
+   METHOD Blue( color )                    INLINE gdImageBlue( ::pImage, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
    METHOD Width()                          INLINE gdImageSX( ::pImage )
    METHOD Height()                         INLINE gdImageSY( ::pImage )
    METHOD CenterWidth()                    INLINE ::Width() / 2
@@ -210,21 +210,20 @@ CREATE CLASS GDImage
    METHOD SetFontGiant()                   INLINE ::pFont := gdFontGetGiant()
    METHOD SetFontTiny()                    INLINE ::pFont := gdFontGetTiny()
    METHOD Say( x, y, cString, color, nAlign )
-   METHOD SayVertical( x, y, cString, color )  INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageStringUp( ::pImage, ::pFont, x, y, cString, color )
+   METHOD SayVertical( x, y, cString, color )  INLINE gdImageStringUp( ::pImage, ::pFont, x, y, cString, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
 
    METHOD SetFontName( cFontName )         INLINE ::cFontName  := cFontName
    METHOD SetFontPitch( nPitch )           INLINE ::nFontPitch := nPitch
    METHOD SetFontAngle( nAngle )           INLINE ::nFontAngle := nAngle
-   METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
-                       nLineSpacing, nCharMap, nResolution )
+   METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, nLineSpacing, nCharMap, nResolution )
 
    METHOD SayFreeTypeCircle( x, y, cStringTop, cStringBottom, color, nRadius, nTextRadius, nFillPortion, cFontName, nPitch ) ;
-                                           INLINE hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) ), gdImageStringFTCircle( ::pImage, x, y, nRadius, ;
-                                                           nTextRadius, nFillPortion, cFontName, nPitch, cStringTop, cStringBottom, color )
+                                           INLINE gdImageStringFTCircle( ::pImage, x, y, nRadius, ;
+                                                           nTextRadius, nFillPortion, cFontName, nPitch, cStringTop, cStringBottom, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
 
    METHOD GetFont()                        INLINE ::pFont
-   METHOD GetFontWidth( pFont )            INLINE hb_default( @pFont, iif( ::pFont == NIL, pFont, ::pFont ) ), gdFontGetWidth( pFont )
-   METHOD GetFontHeight( pFont )           INLINE hb_default( @pFont, iif( ::pFont == NIL, pFont, ::pFont ) ), gdFontGetHeight( pFont )
+   METHOD GetFontWidth( pFont )            INLINE gdFontGetWidth( hb_defaultValue( pFont, iif( ::pFont == NIL, pFont, ::pFont ) ) )
+   METHOD GetFontHeight( pFont )           INLINE gdFontGetHeight( hb_defaultValue( pFont, iif( ::pFont == NIL, pFont, ::pFont ) ) )
 
    METHOD GetFTFontWidth( cFontName, nPitch )           INLINE gdImageFTWidth( hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
    METHOD GetFTFontHeight( cFontName, nPitch )          INLINE gdImageFTHeight( hb_defaultValue( cFontName, ::cFontName ), hb_defaultValue( nPitch, ::nFontPitch ) )
@@ -309,9 +308,7 @@ METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
 
 METHOD OpenPolygon( aPoints, color ) CLASS GDImage
 
-   hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) )
-
-   gdImageOpenPolygon( ::pImage, hb_defaultValue( aPoints, ::aPoints ), color )
+   gdImageOpenPolygon( ::pImage, hb_defaultValue( aPoints, ::aPoints ), hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
 
    RETURN Self
 
@@ -439,8 +436,8 @@ METHOD CopyResampled( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWid
 
 METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestImage ) CLASS GDImage
 
-   hb_default( @nWidth , ::Width )
-   hb_default( @nHeight, ::Height )
+   hb_default( @nWidth , ::Width() )
+   hb_default( @nHeight, ::Height() )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -462,8 +459,8 @@ METHOD CopyRotated( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nAngle, oDestIm
 
 METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage ) CLASS GDImage
 
-   hb_default( @nWidth , ::Width )
-   hb_default( @nHeight, ::Height )
+   hb_default( @nWidth , ::Width() )
+   hb_default( @nHeight, ::Height() )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -485,8 +482,8 @@ METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage
 
 METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage ) CLASS GDImage
 
-   hb_default( @nWidth , ::Width )
-   hb_default( @nHeight, ::Height )
+   hb_default( @nWidth , ::Width() )
+   hb_default( @nHeight, ::Height() )
 
    IF oDestImage == NIL
       IF ::IsTrueColor()
@@ -546,11 +543,11 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
    hb_default( @lInside, .F. )
 
    IF lInside
-      nWidth  := ::Width
-      nHeight := ::Height
+      nWidth  := ::Width()
+      nHeight := ::Height()
    ELSE
-      nWidth  := ::Width * Cos( nAngRad ) + ::Height * Sin( nAngRad )
-      nHeight := ::Width * Sin( nAngRad ) + ::Height * Cos( nAngRad )
+      nWidth  := ::Width() * Cos( nAngRad ) + ::Height() * Sin( nAngRad )
+      nHeight := ::Width() * Sin( nAngRad ) + ::Height() * Cos( nAngRad )
    ENDIF
 
    IF ::IsTrueColor()
@@ -592,15 +589,15 @@ METHOD Clone() CLASS GDImage
    LOCAL pImage
 
    IF ::IsTrueColor()
-      oDestImage := GDImage():CreateTrueColor( ::Width, ::Height )
+      oDestImage := GDImage():CreateTrueColor( ::Width(), ::Height() )
    ELSE
-      oDestImage := GDImage():Create( ::Width, ::Height )
+      oDestImage := GDImage():Create( ::Width(), ::Height() )
    ENDIF
 
    pImage := oDestImage:pImage
    oDestImage := oDestImage:CloneDataFrom( Self )
    oDestImage:pImage := pImage
-   ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
+   ::Copy( 0, 0, ::Width(), ::Height(), 0, 0, oDestImage )
 
 #if 0
    pImage := oDestImage:pImage
@@ -614,8 +611,6 @@ METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
 
    LOCAL nWidth, nLen
    LOCAL nPosX
-
-   hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) )
 
    SWITCH hb_defaultValue( nAlign, gdAlignLeft )
    CASE gdAlignCenter
@@ -632,7 +627,7 @@ METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
       nPosX  := x
    ENDSWITCH
 
-   gdImageString( ::pImage, ::pFont, nPosX, y, cString, color )
+   gdImageString( ::pImage, ::pFont, nPosX, y, cString, hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ) )
 
    RETURN Self
 
@@ -642,7 +637,6 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
    LOCAL nWidth, nLen
    LOCAL nPosX
 
-   hb_default( @color, iif( ::pColor == NIL, color, ::pColor ) )
    hb_default( @cFontName, ::cFontName )
    hb_default( @nPitch, ::nFontPitch )
 
@@ -661,8 +655,11 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
       nPosX  := x
    ENDSWITCH
 
-   gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( hb_defaultValue( nAngle, ::nFontAngle ) ), nPosX, y, ;
-      cString, nLineSpacing, nCharMap, nResolution )
+   gdImageStringFT( ::pImage, ;
+      hb_defaultValue( color, iif( ::pColor == NIL, color, ::pColor ) ), ;
+      cFontName, nPitch, ;
+      ::Radians( hb_defaultValue( nAngle, ::nFontAngle ) ), ;
+      nPosX, y, cString, nLineSpacing, nCharMap, nResolution )
 
    RETURN Self
 

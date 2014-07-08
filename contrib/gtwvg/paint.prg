@@ -444,7 +444,7 @@ Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, n
 hWnd:     Handle to parent window
 cPath:    (optional) if OFN_ALLOWMULTISELECT the path is stored
 cTitle:   Window Title
-aFilter:  Array of Files Types i.e. { {"Data Bases","*.dbf"},{"Clipper","*.prg"} }
+aFilter:  Array of Files Types i.e. { { "Data Bases", "*.dbf" }, { "Clipper", "*.prg" } }
 nFlags:   OFN_* values default to OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
@@ -488,7 +488,7 @@ Wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt
 hWnd:     Handle to parent window
 cDefName: (optional) Default FileName
 cTitle:   Window Title
-aFilter:  Array of Files Types i.e. { {"Data Bases","*.dbf"},{"Clipper","*.prg"} }
+aFilter:  Array of Files Types i.e. { { "Data Bases", "*.dbf" }, { "Clipper", "*.prg" } }
 nFlags:   OFN_* values default to OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
