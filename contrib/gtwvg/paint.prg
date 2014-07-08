@@ -555,10 +555,10 @@ PROCEDURE Wvt_SetIcon( ncIconRes, cIconName )
 FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
    RETURN hb_gtInfo( HB_GTI_SETFONT, { ;
       hb_defaultValue( cFontName, hb_gtInfo( HB_GTI_FONTNAME ) ), ;
+      hb_defaultValue( nSize, hb_gtInfo( HB_GTI_FONTSIZE ) ), ;
       hb_defaultValue( nWidth, hb_gtInfo( HB_GTI_FONTWIDTH ) ), ;
       hb_defaultValue( nWeight, hb_gtInfo( HB_GTI_FONTWEIGHT ) ), ;
-      hb_defaultValue( nQuality, hb_gtInfo( HB_GTI_FONTQUALITY ) ), ;
-      hb_defaultValue( nSize, hb_gtInfo( HB_GTI_FONTSIZE ) ) } )
+      hb_defaultValue( nQuality, hb_gtInfo( HB_GTI_FONTQUALITY ) ) } )
 
 #ifdef HB_LEGACY_LEVEL4
 
