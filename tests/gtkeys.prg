@@ -259,16 +259,8 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 #endif
    hb_gtInfo( HB_GTI_CLOSABLE, .F. )
    hb_gtInfo( HB_GTI_SELECTCOPY, .T. )
-   IF Empty( cTermCP )
-      cTermCP := "UTF8"
-   ELSE
-      cTermCP := Upper( cTermCP )
-   ENDIF
-   IF Empty( cHostCP )
-      cHostCP := "UTF8"
-   ELSE
-      cHostCP := Upper( cHostCP )
-   ENDIF
+   cTermCP := Upper( hb_defaultValue( cTermCP, "UTF8" ) )
+   cHostCP := Upper( hb_defaultValue( cHostCP, "UTF8" ) )
    hb_cdpSelect( cHostCP )
    hb_SetTermCP( cTermCP, cHostCP, ! Empty( lBoxChar ) )
 #else

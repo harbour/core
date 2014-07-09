@@ -1331,8 +1331,8 @@ STATIC FUNCTION AR_ORDINFO( nWA, nMsg, aOrderInfo )
             aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_ORDRECNO ]
          ELSE
             nPos := Seek( aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ], .T., .F., aIndexes[ nIndex ] )
-            IF nPos >= 1 .AND. ! LEFTEQUAL( aIndexes[ nIndex, INDEX_RECORDS, nPos, INDEXKEY_KEY ], aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] )
-               IF nPos >= 2 .AND. aIndexes[ nIndex, INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
+            IF nPos > 0 .AND. ! LEFTEQUAL( aIndexes[ nIndex, INDEX_RECORDS, nPos, INDEXKEY_KEY ], aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] )
+               IF nPos > 1 .AND. aIndexes[ nIndex, INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
                   nPos--
                ELSE
                   aOrderInfo[ UR_ORI_RESULT ] := 0
@@ -1960,8 +1960,8 @@ STATIC FUNCTION SeekScope( aIndex, aOrdInfo, lBottom )
 
    LOCAL nPos := Seek( aOrdInfo[ WAOI_SCOPE_0 ], .T., lBottom, aIndex )
 
-   IF nPos >= 1 .AND. ! LEFTEQUAL( aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ], aOrdInfo[ WAOI_SCOPE_1 ] )
-      IF nPos >= 2 .AND. aIndex[ INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aOrdInfo[ WAOI_SCOPE_0 ]
+   IF nPos > 0 .AND. ! LEFTEQUAL( aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ], aOrdInfo[ WAOI_SCOPE_1 ] )
+      IF nPos > 1 .AND. aIndex[ INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aOrdInfo[ WAOI_SCOPE_0 ]
          nPos--
       ELSE
          nPos := 0

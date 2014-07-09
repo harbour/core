@@ -20,27 +20,19 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
    LOCAL i, j, x, cp
 
-   IF Empty( cTermCP )
-      cTermCP := "PLISO"
-   ELSE
-      cTermCP := Upper( cTermCP )
-   ENDIF
-   IF Empty( cHostCP )
-      cHostCP := "PLMAZ"
-   ELSE
-      cHostCP := Upper( cHostCP )
-   ENDIF
-
    hb_gtInfo( HB_GTI_FONTNAME, "fixed" )
    hb_gtInfo( HB_GTI_FONTWIDTH, 9 )
    hb_gtInfo( HB_GTI_FONTSIZE, 20 )
+
+   cTermCP := Upper( hb_defaultValue( cTermCP, "PLISO" ) )
+   cHostCP := Upper( hb_defaultValue( cHostCP, "PLMAZ" ) )
 
    hb_cdpSelect( cHostCP )
    hb_SetTermCP( cTermCP,, ! Empty( lBoxChar ) )
 
    ? OS(), Version(), Date(), Time()
    ? "GT" + hb_gtVersion(), hb_gtVersion( 1 )
-   ? "Host codpage:", cHostCP + ", terminal codepage:", cTermCP
+   ? "Host codpage:", hb_cdpSelect() + ", terminal codepage:", cTermCP
    ?
 
 #if 0
