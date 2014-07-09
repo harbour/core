@@ -78,7 +78,7 @@ PROCEDURE Main( cArg )
       ? oServer:Error()
    ENDIF
 
-   oQuery := oServer:Query( "SELECT C111, C116, C134 from MAGA LIMIT 10" )
+   oQuery := oServer:Query( "SELECT C111, C116, C134 FROM maga LIMIT 10" )
 #if 0
    oRow := oQuery:GetRow()
 #endif

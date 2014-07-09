@@ -1061,10 +1061,8 @@ STATIC FUNCTION GetErrorDesc( oErr )
 
 STATIC FUNCTION ErrDescCode( nCode )
 
-   LOCAL cI := NIL
-
-   IF nCode > 0 .AND. nCode <= 41
-      cI := { ;
+   IF nCode >= 1 .AND. nCode <= 41
+      RETURN "EG_" + { ;
          "ARG"     , "BOUND"    , "STROVERFLOW", "NUMOVERFLOW", "ZERODIV" , "NUMERR"     , "SYNTAX"  , "COMPLEXITY" , ; //  1,  2,  3,  4,  5,  6,  7,  8
          NIL       , NIL        , "MEM"        , "NOFUNC"     , "NOMETHOD", "NOVAR"      , "NOALIAS" , "NOVARMETHOD", ; //  9, 10, 11, 12, 13, 14, 15, 16
          "BADALIAS", "DUPALIAS" , NIL          , "CREATE"     , "OPEN"    , "CLOSE"      , "READ"    , "WRITE"      , ; // 17, 18, 19, 20, 21, 22, 23, 24
@@ -1073,13 +1071,13 @@ STATIC FUNCTION ErrDescCode( nCode )
          "LOCK"    }[ nCode ]                                                                                           // 41
    ENDIF
 
-   RETURN iif( cI == NIL, "", "EG_" + cI )
+   RETURN ""
 
 STATIC FUNCTION cvt2str( xI, lLong )
 
    LOCAL cValtype, cI, xJ
 
-   lLong := ! Empty( lLong )
+   hb_default( @lLong, .F. )
 
    SWITCH cValtype := ValType( xI )
    CASE "U"

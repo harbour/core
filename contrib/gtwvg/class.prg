@@ -1083,7 +1083,7 @@ METHOD WvtBrowse:NotifyChild( nIndex, nKey, oCurObj )
 
    LOCAL xData, i
 
-   IF nIndex > 0 .AND. nIndex <= Len( ::aChildren )
+   IF nIndex >= 1 .AND. nIndex <= Len( ::aChildren )
       IF HB_ISEVALITEM( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] )
          xData := Eval( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] )
       ENDIF
@@ -1280,7 +1280,7 @@ METHOD WvtStatusBar:Update( nPanel, cText, cColor )
 
    LOCAL oPanel
 
-   IF nPanel > 0 .AND. nPanel <= Len( ::aPanels )
+   IF nPanel >= 1 .AND. nPanel <= Len( ::aPanels )
       oPanel        := ::aPanels[ nPanel ]
       oPanel:Text   := cText
       oPanel:cColor := iif( cColor == NIL, "N/W", cColor )
@@ -1295,7 +1295,7 @@ METHOD WvtStatusBar:SetText( nPanel, cText, cColor )
 
    __defaultNIL( @cColor, ::cColor )
 
-   IF nPanel > 0 .AND. nPanel <= Len( ::aPanels )
+   IF nPanel >= 1 .AND. nPanel <= Len( ::aPanels )
       oPanel        := ::aPanels[ nPanel ]
       oPanel:Text   := cText
       oPanel:cColor := cColor
@@ -1305,7 +1305,7 @@ METHOD WvtStatusBar:SetText( nPanel, cText, cColor )
 
 METHOD WvtStatusBar:SetIcon( nPanel, cIconFile )
 
-   IF nPanel > 0 .AND. nPanel <= Len( ::aPanels )
+   IF nPanel >= 1 .AND. nPanel <= Len( ::aPanels )
       ::aPanels[ nPanel ]:cIconFile := cIconFile
    ENDIF
 
@@ -2990,7 +2990,7 @@ METHOD wvtMenu:DelItem( nItemNum )
 
    LOCAL lResult := .F.
 
-   IF nItemNum > 0 .AND. nItemNum <= ::NumItems()
+   IF nItemNum >= 1 .AND. nItemNum <= ::NumItems()
       IF ::aItems[ nItemNum, WVT_MENU_TYPE ] == MF_POPUP
          ::aItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
@@ -3008,7 +3008,7 @@ METHOD wvtMenu:DelItem( nItemNum )
 
 METHOD wvtMenu:EnableItem( nItemNum )
 
-   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
+   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum >= 1
       RETURN Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
@@ -3016,7 +3016,7 @@ METHOD wvtMenu:EnableItem( nItemNum )
 
 METHOD wvtMenu:DisableItem( nItemNum )
 
-   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
+   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum >= 1
       RETURN Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 
@@ -3030,7 +3030,7 @@ METHOD wvtMenu:GetItem( nItemNum )
 
    LOCAL nItems := ::NumItems(), aResult := NIL
 
-   IF nItemNum > 0 .AND. nItemNum <= nItems
+   IF nItemNum >= 1 .AND. nItemNum <= nItems
       aResult := ::aItems[ nItemNum ]
    ENDIF
 

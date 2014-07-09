@@ -289,7 +289,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ENDIF
       ENDIF
 
-      IF HB_ISNUMERIC( ::nMaxNames ) .AND. ::nMaxNames > 0
+      IF HB_ISNUMERIC( ::nMaxNames ) .AND. ::nMaxNames >= 1
          ::cCommand += " -maxNames " + hb_ntos( ::nMaxNames )
       ENDIF
 
@@ -458,19 +458,19 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -sender " + ::cSender
       ENDIF
 
-      IF HB_ISNUMERIC( ::nPortSMTP ) .AND. ::nPortSMTP > 0
+      IF HB_ISNUMERIC( ::nPortSMTP ) .AND. ::nPortSMTP >= 1
          ::cCommand += " -portSMTP " + hb_ntos( ::nPortSMTP )
       ENDIF
 
-      IF HB_ISNUMERIC( ::nPortNNTP ) .AND. ::nPortNNTP > 0
+      IF HB_ISNUMERIC( ::nPortNNTP ) .AND. ::nPortNNTP >= 1
          ::cCommand += " -portNNTP " + hb_ntos( ::nPortNNTP )
       ENDIF
 
-      IF HB_ISNUMERIC( ::nPortPOP3 ) .AND. ::nPortPOP3 > 0
+      IF HB_ISNUMERIC( ::nPortPOP3 ) .AND. ::nPortPOP3 >= 1
          ::cCommand += " -portPOP3 " + hb_ntos( ::nPortPOP3 )
       ENDIF
 
-      IF HB_ISNUMERIC( ::nPortIMAP ) .AND. ::nPortIMAP > 0
+      IF HB_ISNUMERIC( ::nPortIMAP ) .AND. ::nPortIMAP >= 1
          ::cCommand += " -portIMAP " + hb_ntos( ::nPortIMAP )
       ENDIF
 
@@ -716,7 +716,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -8bitmime"
       ENDIF
 
-      IF HB_ISNUMERIC( ::nMultipartSize ) .AND. ::nMultipartSize > 0
+      IF HB_ISNUMERIC( ::nMultipartSize ) .AND. ::nMultipartSize >= 1
          ::cCommand += " -multipart " + hb_ntos( ::nMultipartSize )
       ENDIF
 
@@ -767,7 +767,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -overwritelog"
       ENDIF
 
-      IF HB_ISNUMERIC( ::nTimeout ) .AND. ::nTimeout > 0
+      IF HB_ISNUMERIC( ::nTimeout ) .AND. ::nTimeout >= 1
          ::cCommand += " -ti " + hb_ntos( ::nTimeout )
       ENDIF
 
@@ -791,7 +791,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -raw"
       ENDIF
 
-      IF HB_ISNUMERIC( ::nDelay ) .AND. ::nDelay > 0
+      IF HB_ISNUMERIC( ::nDelay ) .AND. ::nDelay >= 1
          ::cCommand += " -delay " + hb_ntos( ::nDelay )
       ENDIF
 

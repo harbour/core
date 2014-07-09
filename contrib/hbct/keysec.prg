@@ -64,7 +64,7 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
       ENDIF
       nTime *= 1000
 
-      hb_default( @nCounter, 1 )
+      nCounter := Int( hb_defaultValue( nCounter, 1 ) )
       hb_default( @lMode, .F. )
 
       nSeconds := hb_MilliSeconds()

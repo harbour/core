@@ -721,7 +721,7 @@ METHOD Skip( nrecno ) CLASS TPQquery
 
 METHOD Goto( nRecno ) CLASS TPQquery
 
-   IF nRecno > 0 .AND. nRecno <= ::nLastrec
+   IF nRecno >= 1 .AND. nRecno <= ::nLastrec
       ::nRecno := nRecno
       ::lEof := .F.
    ENDIF
@@ -1019,7 +1019,7 @@ METHOD Getrow( nRow ) CLASS TPQquery
 
    IF ::nResultStatus == PGRES_TUPLES_OK
 
-      IF nRow > 0 .AND. nRow <= ::nLastRec
+      IF nRow >= 1 .AND. nRow <= ::nLastRec
 
          aRow := Array( ::nFields )
          aOld := Array( ::nFields )

@@ -269,9 +269,8 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ELSE
       cHostCP := Upper( cHostCP )
    ENDIF
-   lBoxChar := ! Empty( lBoxChar )
    hb_cdpSelect( cHostCP )
-   hb_SetTermCP( cTermCP, cHostCP, lBoxChar )
+   hb_SetTermCP( cTermCP, cHostCP, ! Empty( lBoxChar ) )
 #else
 #ifdef _SET_EVENTMASK
    Set( _SET_EVENTMASK, INKEY_ALL )

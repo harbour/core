@@ -373,7 +373,7 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
          cVal := xVal
       ELSEIF cKey $ xVal
          cVal := xVal[ cKey ]
-         IF Empty( lScan )
+         IF hb_defaultValue( lScan, .F. )
             hb_HDel( xVal, cKey )
          ENDIF
          cVal := cKey + "=" + '"' + cVal + '"'

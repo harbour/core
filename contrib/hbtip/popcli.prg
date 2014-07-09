@@ -142,7 +142,7 @@ METHOD Close( lAutoQuit ) CLASS TIPClientPOP
 
 METHOD Delete( nId ) CLASS TIPClientPOP
 
-   ::inetSendAll( ::SocketCon, "DELE " + hb_ntos( nId ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "DELE " + hb_ntos( Int( nId ) ) + ::cCRLF )
 
    RETURN ::GetOk()
 
@@ -185,7 +185,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
    LOCAL cEOM := ::cCRLF + "." + ::cCRLF        // End Of Mail
 
    IF ! ::bInitialized
-      ::inetSendAll( ::SocketCon, "RETR " + hb_ntos( nId ) + ::cCRLF )
+      ::inetSendAll( ::SocketCon, "RETR " + hb_ntos( Int( nId ) ) + ::cCRLF )
       IF ! ::GetOk()
          ::bEof := .T.
          RETURN NIL
@@ -251,7 +251,7 @@ METHOD Top( nMsgId ) CLASS TIPClientPOP
    LOCAL nPos
    LOCAL cStr, cRet
 
-   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( nMsgId ) + " 0" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( Int( nMsgId ) ) + " 0" + ::cCRLF )
    IF ! ::GetOk()
       RETURN NIL
    ENDIF
@@ -283,8 +283,8 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
    LOCAL nPos
    LOCAL cStr, cRet
 
-   IF HB_ISNUMERIC( nMsgId ) .AND. nMsgId > 0
-      ::inetSendAll( ::SocketCon, "UIDL " + hb_ntos( nMsgId ) + ::cCRLF )
+   IF HB_ISNUMERIC( nMsgId ) .AND. nMsgId >= 1
+      ::inetSendAll( ::SocketCon, "UIDL " + hb_ntos( Int( nMsgId ) ) + ::cCRLF )
    ELSE
       ::inetSendAll( ::SocketCon, "UIDL" + ::cCRLF )
    ENDIF

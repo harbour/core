@@ -433,7 +433,7 @@ STATIC FUNCTION AR_GETVALUE( nWA, nField, xValue )
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nField: %2$d, xValue: %3$s", nWA, nField, hb_ValToExp( xValue ) ) )
 
-   IF nField > 0 .AND. nField <= Len( aStruct )
+   IF nField >= 1 .AND. nField <= Len( aStruct )
       IF aWAData[ WADATA_EOF ]
          /* We are at EOF position, return empty value */
          xValue := EmptyValue( aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
@@ -458,7 +458,7 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nField: %2$d, xValue: %3$s", nWA, nField, hb_ValToExp( xValue ) ) )
 
-   IF nField > 0 .AND. nField <= Len( aStruct ) .AND. ;
+   IF nField >= 1 .AND. nField <= Len( aStruct ) .AND. ;
       iif( HB_ISSTRING( xValue ) .AND. aStruct[ nField ][ DBS_TYPE ] == "M", .T., ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ] )
 
       xVal := PutValue( xValue, aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
@@ -1331,8 +1331,8 @@ STATIC FUNCTION AR_ORDINFO( nWA, nMsg, aOrderInfo )
             aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WADATA_ORDRECNO ]
          ELSE
             nPos := Seek( aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ], .T., .F., aIndexes[ nIndex ] )
-            IF nPos > 0 .AND. ! LEFTEQUAL( aIndexes[ nIndex, INDEX_RECORDS, nPos, INDEXKEY_KEY ], aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] )
-               IF nPos > 1 .AND. aIndexes[ nIndex, INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
+            IF nPos >= 1 .AND. ! LEFTEQUAL( aIndexes[ nIndex, INDEX_RECORDS, nPos, INDEXKEY_KEY ], aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_1 ] )
+               IF nPos >= 2 .AND. aIndexes[ nIndex, INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ]
                   nPos--
                ELSE
                   aOrderInfo[ UR_ORI_RESULT ] := 0
@@ -1347,7 +1347,7 @@ STATIC FUNCTION AR_ORDINFO( nWA, nMsg, aOrderInfo )
       aOrderInfo[ UR_ORI_RESULT ] := ""
       EXIT
    CASE DBOI_KEYCOUNT
-      IF nIndex > 0 .AND. ! Empty( aWAData[ WADATA_DATABASE, DATABASE_RECORDS ] )
+      IF nIndex >= 1 .AND. ! Empty( aWAData[ WADATA_DATABASE, DATABASE_RECORDS ] )
          IF aWAData[ WADATA_WAORDINFO, nIndex, WAOI_SCOPE_0 ] == NIL
             nPos := 0
          ELSE
@@ -1960,8 +1960,8 @@ STATIC FUNCTION SeekScope( aIndex, aOrdInfo, lBottom )
 
    LOCAL nPos := Seek( aOrdInfo[ WAOI_SCOPE_0 ], .T., lBottom, aIndex )
 
-   IF nPos > 0 .AND. ! LEFTEQUAL( aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ], aOrdInfo[ WAOI_SCOPE_1 ] )
-      IF nPos > 1 .AND. aIndex[ INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aOrdInfo[ WAOI_SCOPE_0 ]
+   IF nPos >= 1 .AND. ! LEFTEQUAL( aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ], aOrdInfo[ WAOI_SCOPE_1 ] )
+      IF nPos >= 2 .AND. aIndex[ INDEX_RECORDS, nPos - 1, INDEXKEY_KEY ] >= aOrdInfo[ WAOI_SCOPE_0 ]
          nPos--
       ELSE
          nPos := 0

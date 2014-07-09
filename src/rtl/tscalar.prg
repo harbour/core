@@ -178,7 +178,7 @@ METHOD Copy() CLASS Array
 
 METHOD DeleteAt( n ) CLASS Array
 
-   IF n > 0 .AND. n <= Len( Self )
+   IF n >= 1 .AND. n <= Len( Self )
       hb_ADel( Self, n, .T. )
    ENDIF
 
@@ -190,7 +190,7 @@ METHOD InsertAt( n, x ) CLASS Array
    CASE n > Len( Self )
       ASize( Self, n )
       Self[ n ] := x
-   CASE n > 0
+   CASE n >= 1
       hb_AIns( Self, n, x, .T. )
    ENDCASE
 

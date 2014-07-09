@@ -215,16 +215,15 @@ METHOD WvgStatusBar:delItem( nItemORcKey )
       nIndex := nItemORcKey
    ENDCASE
 
-   IF nIndex > 0
-      /* Delete panel by window */
-      hb_ADel( ::aItems, nIndex, .T. )
+   IF nIndex >= 1 .AND. nIndex <= Len( ::aItems )
+      hb_ADel( ::aItems, nIndex, .T. )  /* Delete panel by window */
    ENDIF
 
    RETURN Self
 
 METHOD WvgStatusBar:getItem( nItemORcKey )
 
-   LOCAL nIndex := 0, oPanel
+   LOCAL nIndex := 0
 
    DO CASE
    CASE HB_ISSTRING( nItemORcKey )
@@ -233,11 +232,11 @@ METHOD WvgStatusBar:getItem( nItemORcKey )
       nIndex := nItemORcKey
    ENDCASE
 
-   IF nIndex > 0
-      oPanel := ::aItems[ nIndex ]
+   IF nIndex >= 1 .AND. nIndex <= Len( ::aItems )
+      RETURN ::aItems[ nIndex ]
    ENDIF
 
-   RETURN oPanel
+   RETURN NIL
 
 METHOD WvgStatusBar:clear()
 

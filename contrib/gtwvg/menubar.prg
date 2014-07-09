@@ -219,7 +219,7 @@ METHOD WvgMenuBar:delItem( nItemNum )
 
    LOCAL lResult := .F.
 
-   IF nItemNum > 0 .AND. nItemNum <= ::numItems()
+   IF nItemNum >= 1 .AND. nItemNum <= ::numItems()
       IF ::aMenuItems[ nItemNum, WVT_MENU_TYPE ] == MF_POPUP
          ::aMenuItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
@@ -405,7 +405,7 @@ METHOD WvgMenuBar:disableItem( nItemNum )
 
 METHOD WvgMenuBar:getItem( nItemNum )
 
-   IF HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0 .AND. nItemNum <= Len( ::aMenuItems )
+   IF HB_ISNUMERIC( nItemNum ) .AND. nItemNum >= 1 .AND. nItemNum <= Len( ::aMenuItems )
       RETURN { ::aMenuItems[ nItemNum, 3 ], ::aMenuItems[ nItemNum, 4 ], ::aMenuItems[ nItemNum, 5 ], ::aMenuItems[ nItemNum, 6 ] }
    ENDIF
 

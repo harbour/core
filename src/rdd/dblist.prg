@@ -73,7 +73,7 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    /* Save SETs */
 
-   IF ! Empty( lToPrint )
+   IF ! Empty( lToPrint )  /* => hb_defaultValue( lToPrint, .F. ) */
       lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
    IF ! Empty( cToFileName )
@@ -89,12 +89,12 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    BEGIN SEQUENCE
 
-      IF Empty( lAll ) .AND. ;
+      IF Empty( lAll ) .AND. ;  /* => hb_defaultValue( lAll, .F. ) */
          Empty( bFor ) .AND. ;
          Empty( bWhile ) .AND. ;
          Empty( nNext ) .AND. ;
          Empty( nRecord ) .AND. ;
-         Empty( lRest )
+         Empty( lRest )  /* => hb_defaultValue( lRest, .F. ) */
 
          Eval( bOutBlock )
       ELSE
@@ -107,7 +107,7 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    /* Restore SETs */
 
-   IF ! Empty( lToPrint )
+   IF ! Empty( lToPrint )  /* => hb_defaultValue( lToPrint, .F. ) */
       Set( _SET_PRINTER, lOldPrinter )
    ENDIF
    IF ! Empty( cToFileName )

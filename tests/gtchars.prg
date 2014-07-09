@@ -30,15 +30,13 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ELSE
       cHostCP := Upper( cHostCP )
    ENDIF
-   lBoxChar := ! Empty( lBoxChar )
 
    hb_gtInfo( HB_GTI_FONTNAME, "fixed" )
    hb_gtInfo( HB_GTI_FONTWIDTH, 9 )
    hb_gtInfo( HB_GTI_FONTSIZE, 20 )
 
    hb_cdpSelect( cHostCP )
-
-   hb_SetTermCP( cTermCP,, lBoxChar )
+   hb_SetTermCP( cTermCP,, ! Empty( lBoxChar ) )
 
    ? OS(), Version(), Date(), Time()
    ? "GT" + hb_gtVersion(), hb_gtVersion( 1 )

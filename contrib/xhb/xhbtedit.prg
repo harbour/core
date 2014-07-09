@@ -240,8 +240,8 @@ CREATE CLASS XHBEditor
 
    // 2006-07-25 - E.F. - Internal use only.
 
-   METHOD GetCol( nRow, nCol ) INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), iif( nCol > 0 .AND. nCol <= Min( ::nWordWrapCol + 1, ::LineLen( nRow ) ), SubStr( ::aText[ nRow ]:cText, nCol, 1 ), "" ), "" )
-   METHOD IsEmptyLine( nRow )  INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), Empty( ::aText[ nRow ]:cText ), .T. )
+   METHOD GetCol( nRow, nCol ) INLINE iif( nRow >= 1 .AND. nRow <= ::LastRow(), iif( nCol > 0 .AND. nCol <= Min( ::nWordWrapCol + 1, ::LineLen( nRow ) ), SubStr( ::aText[ nRow ]:cText, nCol, 1 ), "" ), "" )
+   METHOD IsEmptyLine( nRow )  INLINE iif( nRow >= 1 .AND. nRow <= ::LastRow(), Empty( ::aText[ nRow ]:cText ), .T. )
 
 ENDCLASS
 
@@ -1700,7 +1700,7 @@ METHOD DelTextRight( nRow ) CLASS XHBEditor
 
       __defaultNIL( @nRow, ::nRow )
 
-      IF nRow > 0 .AND. nRow <= ::LastRow()
+      IF nRow >= 1 .AND. nRow <= ::LastRow()
          ::lChanged := .T.
          ::aText[ nRow ]:cText := Stuff( ::aText[ nRow ]:cText, ::nCol, ::LineLen( nRow ) - ::nCol + 1, "" )
          ::RefreshLine()
@@ -1789,7 +1789,7 @@ METHOD GotoLine( nRow ) CLASS XHBEditor
 
    LOCAL lRefresh := .F.
 
-   IF nRow > 0 .AND. nRow <= ::LastRow()
+   IF nRow >= 1 .AND. nRow <= ::LastRow()
 
       // I need to move cursor if is past requested line number and if requested line is
       // inside first screen of text otherwise ::nFirstRow would be wrong
@@ -1844,7 +1844,7 @@ METHOD GotoPos( nRow, nCol, lRefresh ) CLASS XHBEditor
 
    DispBegin()  // to minimize flicker
 
-   IF nRow > 0 .AND. nRow <= ::LastRow()
+   IF nRow >= 1 .AND. nRow <= ::LastRow()
       // I need to move cursor if is past requested line number and if requested line is
       // inside first screen of text otherwise ::nFirstRow would be wrong
       IF nRow < ::nFirstRow

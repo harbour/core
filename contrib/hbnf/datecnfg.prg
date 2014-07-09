@@ -24,8 +24,7 @@ FUNCTION ft_DateCnfg( cFYStart, nDow )
 
    LOCAL dCheck
 
-   IF HB_ISSTRING( cFYStart ) .AND. ;
-      ! Empty( dCheck := CToD( cFYStart ) )
+   IF HB_ISSTRING( cFYStart ) .AND. ! Empty( dCheck := CToD( cFYStart ) )
 
       /* No one starts a Fiscal Year on 2/29 */
       IF Month( dCheck ) == 2 .AND. Day( dcheck ) == 29
@@ -35,7 +34,7 @@ FUNCTION ft_DateCnfg( cFYStart, nDow )
       t_aDatePar[ 1 ] := dCheck
    ENDIF
 
-   IF HB_ISNUMERIC( nDow ) .AND. nDow > 0 .AND. nDow < 8
+   IF HB_ISNUMERIC( nDow ) .AND. nDow > 0 .AND. nDow < 8  /* TOFIX: floats may confuse it */
       t_aDatePar[ 2 ] := nDow
    ENDIF
 
