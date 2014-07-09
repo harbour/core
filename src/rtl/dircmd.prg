@@ -74,7 +74,7 @@ PROCEDURE __Dir( cFileMask )
          {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
 
-      hb_FNameSplit( LTrim( cFileMask ), @cPath, @cName, @cExt )
+      hb_FNameSplit( LTrim( cFileMask ), @cPath, @cName, @cExt )  /* TOFIX: LTrim() on filename? */
       IF Empty( cPath )
          cPath := Set( _SET_DEFAULT )
       ENDIF
@@ -105,12 +105,8 @@ STATIC PROCEDURE PutDBF( aDirEntry )
       buffer := hb_FReadLen( fhnd, 8 )
 
       IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BLeft( buffer, 1 ), _DBF_HEAD_MARK ) > 0
-
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
-         dLastUpdate := hb_SToD( ;
-            StrZero( hb_BPeek( buffer, 2 ) + 1900, 4 ) + ;
-            StrZero( hb_BPeek( buffer, 3 ), 2 ) + ;
-            StrZero( hb_BPeek( buffer, 4 ), 2 ) )
+         dLastUpdate := hb_Date( hb_BPeek( buffer, 2 ) + 1900, hb_BPeek( buffer, 3 ), hb_BPeek( buffer, 4 ) )
       ENDIF
 
       FClose( fhnd )
