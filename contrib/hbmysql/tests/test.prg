@@ -62,7 +62,7 @@ PROCEDURE Main( cArg )
 
    oServer:SelectDB( "ims" )
 #if 0
-   oQuery := oServer:Query( "SELECT * from maga limit 10" )
+   oQuery := oServer:Query( "SELECT * FROM maga LIMIT 10" )
    oRow := oQuery:GetRow()
 #endif
 
@@ -78,7 +78,7 @@ PROCEDURE Main( cArg )
       ? oServer:Error()
    ENDIF
 
-   oQuery := oServer:Query( "SELECT C111, C116, C134 from maga limit 10" )
+   oQuery := oServer:Query( "SELECT C111, C116, C134 from MAGA LIMIT 10" )
 #if 0
    oRow := oQuery:GetRow()
 #endif
@@ -87,7 +87,7 @@ PROCEDURE Main( cArg )
 
    DO WHILE ! wn->( Eof() )
 
-      oQuery2 := oServer:Query( "SELECT * from test where CODF='" + wn->CODF + "' and CODP='" + wn->CODP + "'" )
+      oQuery2 := oServer:Query( "SELECT * FROM test WHERE CODF='" + wn->CODF + "' AND CODP='" + wn->CODP + "'" )
 
       IF oQuery2:LastRec() > 0
 

@@ -83,7 +83,7 @@ ENDCLASS
 METHOD New( aRow, aFStruct, cTableName ) CLASS TMySQLRow
 
    ::aRow := aRow
-   ::aOriValue := AClone( aRow )    // Original values ( same as TMySQLtable:aOldValue )
+   ::aOriValue := AClone( aRow )  // Original values ( same as TMySQLtable:aOldValue )
 
    ::aFieldStruct := hb_defaultValue( aFStruct, {} )
    ::cTable := hb_defaultValue( cTableName, "" )
@@ -94,7 +94,6 @@ METHOD New( aRow, aFStruct, cTableName ) CLASS TMySQLRow
    AFill( ::aDirty, .F. )
 
    RETURN Self
-
 
 METHOD FieldGet( cnField ) CLASS TMySQLRow
 
@@ -111,7 +110,6 @@ METHOD FieldGet( cnField ) CLASS TMySQLRow
    ENDIF
 
    RETURN NIL
-
 
 METHOD FieldPut( cnField, Value ) CLASS TMySQLRow
 
@@ -140,7 +138,6 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLRow
 
    RETURN NIL
 
-
 // Given a field name returns it's position
 METHOD FieldPos( cFieldName ) CLASS TMySQLRow
 
@@ -148,11 +145,9 @@ METHOD FieldPos( cFieldName ) CLASS TMySQLRow
 
    RETURN AScan( ::aFieldStruct, {| aItem | Upper( aItem[ MYSQL_FS_NAME ] ) == cUpperName } )
 
-
 // Returns name of field N
 METHOD FieldName( nNum ) CLASS TMySQLRow
    RETURN iif( nNum >= 1 .AND. nNum <= Len( ::aFieldStruct ), ::aFieldStruct[ nNum ][ MYSQL_FS_NAME ], "" )
-
 
 METHOD FieldLen( nNum ) CLASS TMySQLRow
    RETURN iif( nNum >= 1 .AND. nNum <= Len( ::aFieldStruct ), ::aFieldStruct[ nNum ][ MYSQL_FS_LENGTH ], 0 )
@@ -175,7 +170,6 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
    RETURN 0
 
-
 METHOD FieldType( nNum ) CLASS TMySQLRow
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
@@ -183,7 +177,6 @@ METHOD FieldType( nNum ) CLASS TMySQLRow
    ENDIF
 
    RETURN "U"
-
 
 // returns a WHERE x=y statement which uses primary key (if available)
 METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
@@ -319,7 +312,6 @@ METHOD New( nSocket, cQuery ) CLASS TMySQLQuery
 
    RETURN Self
 
-
 METHOD Refresh() CLASS TMySQLQuery
 
    // free present result handle
@@ -356,7 +348,6 @@ METHOD Refresh() CLASS TMySQLQuery
 
    RETURN ! ::lError
 
-
 METHOD PROCEDURE Skip( nRows ) CLASS TMySQLQuery
 
    LOCAL lBof
@@ -364,7 +355,7 @@ METHOD PROCEDURE Skip( nRows ) CLASS TMySQLQuery
    // NOTE: MySQL row count starts from 0
    hb_default( @nRows, 1 )
 
-   ::lBof := Empty( ::LastRec() )
+   ::lBof := ( ::LastRec() == 0 )
 
    IF nRows == 0
       // No move
@@ -401,33 +392,28 @@ METHOD PROCEDURE Skip( nRows ) CLASS TMySQLQuery
 // Get row n of a query and return it as a TMySQLRow object
 METHOD GetRow( nRow ) CLASS TMySQLQuery
 
-   LOCAL oRow := NIL
-   LOCAL i
-
-   IF ! HB_ISNUMERIC( nRow )
-      nRow := ::nCurRow
-   ENDIF
+   LOCAL oRow, row, fld
 
    IF ::nResultHandle != NIL
 
-      ::lBof := ( Empty( ::LastRec() ) )
+      IF ! HB_ISNUMERIC( nRow )
+         nRow := ::nCurRow
+      ENDIF
+
+      ::lBof := ( ::LastRec() == 0 )
 
       IF nRow < 1 .OR. nRow > ::LastRec()  // Out of range
          // Equal to Cl*pper behaviour
-         nRow := ::LastRec() + 1  // LastRec()+1
+         nRow := ::LastRec() + 1
          ::nCurRow := ::LastRec() + 1
-         // ::lEof := .T.
       ENDIF
 
       IF nRow >= 1 .AND. nRow <= ::nNumRows
-
-         // NOTE: row count starts from 0
-         mysql_data_seek( ::nResultHandle, nRow - 1 )
+         mysql_data_seek( ::nResultHandle, nRow - 1 )  // NOTE: row count starts from 0
          ::nCurRow := nRow
       ENDIF
 
       ::lEof := ( ::RecNo() > ::LastRec() )
-      ::aRow := NIL
 
       IF ::Eof()
          // Phantom record with empty fields
@@ -440,9 +426,9 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
       IF ::aRow != NIL
 
          // Convert answer from text field to correct Cl*pper types
-         FOR i := 1 TO ::nNumFields
+         FOR EACH row, fld IN ::aRow, ::aFieldStruct
 
-            SWITCH ::aFieldStruct[ i ][ MYSQL_FS_TYPE ]
+            SWITCH fld[ MYSQL_FS_TYPE ]
             CASE MYSQL_TYPE_BLOB  // Memo field
             CASE MYSQL_TYPE_STRING
             CASE MYSQL_TYPE_VAR_STRING  // Char field
@@ -457,24 +443,26 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
             CASE MYSQL_TYPE_NEWDECIMAL
             CASE MYSQL_TYPE_DOUBLE
             CASE MYSQL_TYPE_FLOAT
-               ::aRow[ i ] := iif( ::aRow[ i ] == NIL, 0, Val( ::aRow[ i ] ) )
+               row := iif( row == NIL, 0, Val( row ) )
                EXIT
 
             CASE MYSQL_TYPE_DATE
-               ::aRow[ i ] := iif( ::aRow[ i ] == NIL, hb_SToD(), hb_CToD( ::aRow[ i ], "yyyy-mm-dd" ) )
+               row := iif( row == NIL, hb_SToD(), hb_CToD( row, "yyyy-mm-dd" ) )
                EXIT
 
             CASE MYSQL_TYPE_DATETIME
             CASE MYSQL_TYPE_TIMESTAMP
-               ::aRow[ i ] := iif( ::aRow[ i ] == NIL, hb_SToT(), hb_CToT( ::aRow[ i ], "yyyy-mm-dd", "hh:mm:ss" ) )
+               row := iif( row == NIL, hb_SToT(), hb_CToT( row, "yyyy-mm-dd", "hh:mm:ss" ) )
                EXIT
 
             OTHERWISE
-               // ? "Unknown type from SQL Server Field: " + hb_ntos( i ) + " is type " + hb_ntos( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] )
+#if 0
+               ? "Unknown type from SQL Server Field: " + hb_ntos( fld:__enumIndex() ) + " is type " + hb_ntos( fld[ MYSQL_FS_TYPE ] )
+#endif
             ENDSWITCH
 
             IF ::lFieldAsData
-               __objSetValueList( Self, { { ::aFieldStruct[ i ][ MYSQL_FS_NAME ], ::aRow[ i ] } } )
+               __objSetValueList( Self, { { fld[ MYSQL_FS_NAME ], row } } )
             ENDIF
          NEXT
 
@@ -484,7 +472,6 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 
    RETURN iif( ::aRow == NIL, NIL, oRow )
 
-
 // Free result handle and associated resources
 METHOD Destroy() CLASS TMySQLQuery
 
@@ -492,10 +479,8 @@ METHOD Destroy() CLASS TMySQLQuery
 
    RETURN Self
 
-
 METHOD FCount() CLASS TMySQLQuery
    RETURN ::nNumFields
-
 
 METHOD Error() CLASS TMySQLQuery
 
@@ -618,7 +603,6 @@ METHOD New( nSocket, cQuery, cTableName ) CLASS TMySQLTable
 
    RETURN Self
 
-
 METHOD GetRow( nRow ) CLASS TMySQLTable
 
    LOCAL oRow := ::super:GetRow( nRow ), i
@@ -634,7 +618,6 @@ METHOD GetRow( nRow ) CLASS TMySQLTable
 
    RETURN oRow
 
-
 METHOD PROCEDURE Skip( nRow ) CLASS TMySQLTable
 
    LOCAL i
@@ -646,7 +629,6 @@ METHOD PROCEDURE Skip( nRow ) CLASS TMySQLTable
    NEXT
 
    RETURN
-
 
 /* Creates an update query for changed fields and submits it to server */
 METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
@@ -766,7 +748,6 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
    RETURN ! ::lError
 
-
 METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
    LOCAL cDeleteQuery := "DELETE FROM " + ::cTable, i
@@ -814,7 +795,6 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
       ELSE
          ::lError := .T.
       ENDIF
-
    ELSE
 
       IF oRow:cTable == ::cTable
@@ -853,7 +833,6 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    ENDIF
 
    RETURN ! ::lError
-
 
 // Adds a row with values passed into oRow
 METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
@@ -906,7 +885,6 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
       ELSE
          ::lError := .T.
       ENDIF
-
    ELSE
 
       IF oRow:cTable == ::cTable
@@ -955,7 +933,6 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
    ENDIF
 
    RETURN .F.
-
 
 METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
 
@@ -1011,7 +988,6 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
 
    RETURN TMySQLRow():New( aRow, ::aFieldStruct, ::cTable )
 
-
 METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
 
    LOCAL nNum := iif( HB_ISSTRING( cnField ), ::FieldPos( cnField ), cnField )
@@ -1035,7 +1011,6 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
    ENDIF
 
    RETURN NIL
-
 
 METHOD Refresh() CLASS TMySQLTABLE
 
@@ -1073,7 +1048,6 @@ METHOD Refresh() CLASS TMySQLTABLE
    ENDIF
 
    RETURN ! ::lError
-
 
 // returns a WHERE x=y statement which uses primary key (if available)
 METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
@@ -1433,7 +1407,6 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
 #endif
 
    RETURN aStruct
-
 
 // Returns an SQL string with Cl*pper value converted
 STATIC FUNCTION HarbValueToSQL( Value )

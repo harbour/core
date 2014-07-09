@@ -360,7 +360,7 @@ HB_FUNC( MYSQL_NUM_ROWS ) /* my_ulongulong mysql_num_rows( MYSQL_RES * ) */
    MYSQL_RES * mresult = hb_MYSQL_RES_par( 1 );
 
    if( mresult )
-      hb_retnint( mysql_num_rows( ( mresult ) ) );
+      hb_retnint( mysql_num_rows( mresult ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -408,7 +408,7 @@ HB_FUNC( MYSQL_NUM_FIELDS ) /* unsigned int mysql_num_fields( MYSQL_RES * ) */
    MYSQL_RES * mresult = hb_MYSQL_RES_par( 1 );
 
    if( mresult )
-      hb_retnl( mysql_num_fields( ( mresult ) ) );
+      hb_retnl( mysql_num_fields( mresult ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -420,7 +420,7 @@ HB_FUNC( MYSQL_FIELD_COUNT ) /* unsigned int mysql_field_count( MYSQL * ) */
    if( mysql )
    {
 #if MYSQL_VERSION_ID > 32200
-      hb_retnl( mysql_field_count( ( mysql ) ) );
+      hb_retnl( mysql_field_count( mysql ) );
 #else
       hb_retnl( 0 );
 #endif
