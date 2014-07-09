@@ -37,7 +37,7 @@ STATIC PROCEDURE Query( conn, cQuery, lCancel )
 
    DO WHILE Inkey() != K_ESC
       DevPos( Row(), 20 )
-      DevOut( "Processing: " + ElapTime( cTime, Time() ) )
+      DevOut( "Processing:", ElapTime( cTime, Time() ) )
 
       Inkey( 1 )
 

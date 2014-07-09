@@ -191,7 +191,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable ) CLASS TBrows
 
       CASE "M"
       CASE "C"
-         oCol:picture := Replicate( "!", oCol:Width )
+         oCol:picture := Replicate( "X", oCol:Width )
          EXIT
       ENDSWITCH
 
@@ -207,28 +207,21 @@ STATIC FUNCTION Skipper( nSkip, oQuery )
    DO CASE
    CASE nSkip == 0 .OR. oQuery:LastRec() == 0
       oQuery:Skip( 0 )
-
    CASE nSkip > 0
       DO WHILE i < nSkip           // Skip Foward
-
          IF oQuery:recno() == oQuery:lastrec()
             EXIT
          ENDIF
          oQuery:Skip( 1 )
          i++
-
       ENDDO
-
    CASE nSkip < 0
       DO WHILE i > nSkip           // Skip backward
-
          IF oQuery:recno() == 1
             EXIT
          ENDIF
-
          oQuery:Skip( -1 )
          i--
-
       ENDDO
    ENDCASE
 
@@ -330,11 +323,9 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
          nKey := Inkey( 0 )
       ENDIF
 
-      IF AScan( aExitKeys, nKey ) > 0
-         EXIT
-      ENDIF
-
       DO CASE
+      CASE AScan( aExitKeys, nKey ) > 0 ; EXIT
+
       CASE nKey == K_DOWN       ; ::down()
       CASE nKey == K_PGDN       ; ::pageDown()
       CASE nKey == K_CTRL_PGDN  ; ::goBottom()
@@ -352,7 +343,6 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
 
       CASE nKey == K_ENTER .AND. lCanEdit
          ::EditField()
-
 #if 0
       CASE nKey == K_DEL
          IF lCanEdit
@@ -367,7 +357,6 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
             ::refreshAll():forceStable()
          ENDIF
 #endif
-
       OTHERWISE
          ::KeyboardHook( nKey )
       ENDCASE

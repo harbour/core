@@ -221,7 +221,7 @@ PROCEDURE Main()
 
       IF ( nCount % nCommit ) == 0
          DevPos( Row(), 1 )
-         DevOut( "imported recs: " + hb_ntos( nCount ) )
+         DevOut( "imported recs:", hb_ntos( nCount ) )
 
          IF lUseTrans
             oServer:commit()
