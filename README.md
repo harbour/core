@@ -1345,6 +1345,7 @@ Press `<Alt+D>` in the app.
 * sunpro   - Sun Studio C/C++
 
 ### win
+* clang    - Clang
 * mingw    - MinGW GNU C 3.4.2 and above
 * mingw64  - MinGW GNU C x86-64
 * msvc     - Microsoft Visual C++

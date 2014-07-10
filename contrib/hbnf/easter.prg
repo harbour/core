@@ -70,7 +70,7 @@ FUNCTION ft_Easter( nYear )
          ENDIF
 
          // Advance to Sunday
-         nMoon := Int( nMoon + 7 - ( ( nSunday + nMoon ) % 7 ) )
+         nMoon := Int( nMoon + 7 - ( nSunday + nMoon ) % 7 )
 
          // Get Month and Day
          IF nMoon > 31
