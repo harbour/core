@@ -15,8 +15,7 @@ PROCEDURE Main( cFileName )
                &cLine
             ENDIF
          RECOVER USING oErr
-            ? "Macro compiler error at line:", ;
-               hb_ntos( cLine:__enumIndex() )
+            ? "Macro compiler error at line:", hb_ntos( cLine:__enumIndex() )
             ? cLine
             ? ErrMsg( oErr )
          END SEQUENCE

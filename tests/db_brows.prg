@@ -204,18 +204,14 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          fbar1 := "Ax_KeyNo()"
          fbar2 := "Ax_KeyCount()"
       ENDCASE
-      IF ! Empty( fbar1 )
+      IF fbar1 != NIL
          hb_DispBox( LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2, str_barbox )
          hb_DispOutAt( LI_Y1 + 1, LI_X2, SubStr( str_bar, 2, 1 ) )
          hb_DispOutAt( LI_Y2 - 1, LI_X2, SubStr( str_bar, 1, 1 ) )
          hb_DispOutAt( LI_Y1 + 2 + Int( iif( LI_PRFLT, LI_TEKZP, &fbar1 ) * ( LI_Y2 - LI_Y1 - 4 ) / iif( LI_PRFLT, LI_KOLZ, &fbar2 ) ), LI_X2, Right( str_bar, 1 ) )
       ENDIF
       //
-      IF LI_LVIEW
-         nKey := K_ESC
-      ELSE
-         nKey := Inkey( 0 )
-      ENDIF
+      nKey := iif( LI_LVIEW, K_ESC, Inkey( 0 ) )
       VIVSTR( mslist, LI_NSTR + LI_Y1, 0 )
       DO CASE
       CASE nKey == K_DOWN

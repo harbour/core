@@ -31,15 +31,15 @@ PROCEDURE Main( cFrom, cTo )
 
    RETURN
 
-// Generic file handler
+// Generic text file handler
 CREATE CLASS TTextFile STATIC
 
    VAR cFileName               // Filename spec. by user
-   VAR hFile                   // File handle
-   VAR nLine                   // Current linenumber
+   VAR hFile     INIT F_ERROR  // File handle
+   VAR nLine     INIT 0        // Current linenumber
    VAR nError                  // Last error
-   VAR lEoF                    // End of file
-   VAR cBlock                  // Storage block
+   VAR lEoF      INIT .F.      // End of file
+   VAR cBlock    INIT ""       // Storage block
    VAR nBlockSize              // Size of read-ahead buffer
    VAR cMode                   // Mode of file use: R: read, W: write
 
@@ -63,13 +63,10 @@ ENDCLASS
 //
 METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
-   ::nLine     := 0
-   ::lEoF      := .F.
-   ::cBlock    := ""
    ::cFileName := cFileName
-   ::cMode     := hb_defaultValue( cMode, "R" )
+   ::nBlockSize := hb_defaultValue( nBlock, 4096 )
 
-   SWITCH ::cMode
+   SWITCH ::cMode := hb_defaultValue( cMode, "R" )
    CASE "R"
       ::hFile := FOpen( cFileName )
       EXIT
@@ -80,21 +77,20 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
       ? "File Init: Unknown file mode:", ::cMode
    ENDSWITCH
 
-   IF ( ::nError := FError() ) != 0
+   IF ::hFile == F_ERROR
       ::lEoF := .T.
-      ? "Error", ::nError
+      ? "Error", ::nError := FError()
    ENDIF
-   ::nBlockSize := hb_defaultValue( nBlock, 4096 )
 
    RETURN self
 
 // Close the file handle
 METHOD Dispose() CLASS TTextFile
 
-   ::cBlock := NIL
+   ::cBlock := ""
    IF ::hFile != F_ERROR .AND. ! FClose( ::hFile )
       ::nError := FError()
-      ? "OS Error closing", ::cFileName, " Code", ::nError
+      ? "Error closing", ::cFileName, " Code", ::nError
    ENDIF
 
    RETURN self
@@ -113,9 +109,9 @@ METHOD Read() CLASS TTextFile
       ? "File", ::cFileName, "not open for reading"
    ELSEIF ! ::lEoF
 
-      IF Len( ::cBlock ) == 0                     // Read new block
+      IF Len( ::cBlock ) == 0                   // Read new block
          IF Len( cBlock := hb_FReadLen( ::hFile, ::nBlockSize ) ) == 0
-            ::nError := FError()                  // Error or EOF
+            ::nError := FError()                // Error or EOF
             ::lEoF   := .T.
          ELSE
             ::cBlock := cBlock
@@ -165,7 +161,7 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
          cBlock += hb_eol()
       ENDIF
       IF FWrite( ::hFile, cBlock ) != hb_BLen( cBlock )
-         ::nError := FError()                   // Not completely written !
+         ::nError := FError()                   // Not completely written!
       ENDIF
       ::nLine++
    ENDIF
@@ -175,9 +171,9 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 // Go to a specified line number
 METHOD Goto( nLine ) CLASS TTextFile
 
-   LOCAL nWhere := 1
+   LOCAL nWhere
 
-   IF Empty( ::hFile )
+   IF ::hFile == F_ERROR
       ? "File:Goto: No file open"
    ELSEIF !( ::cMode == "R" )
       ? "File", ::cFileName, "not open for reading"
@@ -186,9 +182,10 @@ METHOD Goto( nLine ) CLASS TTextFile
       ::nLine  := 0                             // Start at beginning
       ::cBlock := ""
       FSeek( ::hFile, 0 )                       // Go top
+      nWhere := 1
       DO WHILE ! ::lEoF .AND. nWhere < nLine
          nWhere++
-         ::Run()
+         ::Read()
       ENDDO
    ENDIF
 

@@ -37,14 +37,14 @@ STATIC s_nDispCount := 0
 
 #endif
 
-PROCEDURE Main( xUtf, xCompatBuf )
+PROCEDURE Main( lUtf, lCompatBuf )
 
    LOCAL aResult := {}
 
 #ifdef __HARBOUR__
-   hb_cdpSelect( iif( Empty( xUtf ), "EN", "UTF8" ) )
+   hb_cdpSelect( iif( Empty( lUtf ), "EN", "UTF8" ) )
    hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
-   hb_gtInfo( HB_GTI_COMPATBUFFER, ! Empty( xCompatBuf ) )
+   hb_gtInfo( HB_GTI_COMPATBUFFER, ! Empty( lCompatBuf ) )
 #endif
 
    Initialise()
