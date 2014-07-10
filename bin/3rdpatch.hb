@@ -892,7 +892,7 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
 
    DO WHILE .T.
 
-      IF ( nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1 ) < 1
+      IF ( nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1 ) == 0
          /* If anything is left in the input string, stick it to the end
           * of the output string. No path searching as that would be
           * an invalid diff anyway */

@@ -365,7 +365,7 @@
 
       FOR y := 1 TO nLen
          FOR i := 1 TO nLen
-            IF ( r := hb_RAt( cSearch, cString, y, i ) ) != 0
+            IF ( r := hb_RAt( cSearch, cString, y, i ) ) > 0
                ? 'hb_RAt( "' + cSearch + '", "' + cString + '",', hb_ntos( y ) + ",", hb_ntos( i ), ") =", ;
                   hb_ntos( r )
             ENDIF

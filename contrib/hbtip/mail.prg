@@ -145,7 +145,7 @@ METHOD GetFieldPart( cPart ) CLASS TIPMail
    LOCAL cEnc
 
    IF hb_HGetRef( ::hHeaders, cPart, @cEnc )
-      IF ( nPos := At( ";", cEnc ) ) != 0
+      IF ( nPos := At( ";", cEnc ) ) > 0
          cEnc := Left( cEnc, nPos - 1 )
       ENDIF
       RETURN cEnc

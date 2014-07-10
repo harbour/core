@@ -9525,7 +9525,7 @@ STATIC FUNCTION deplst_add( hDeps, cList )
 
    IF ! Empty( cList )
 
-      IF ( n := At( ": ", cList ) ) != 0 .AND. ;
+      IF ( n := At( ": ", cList ) ) > 0 .AND. ;
          ! Empty( cFile := AllTrim( Left( cList, n - 1 ) ) )
 
          aList := hb_ATokens( SubStr( cList, n + 1 ) )
@@ -12652,12 +12652,12 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          cFuncList := ""
          hb_processRun( cExecNM + " " + FNameEscape( cFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) + ;
             " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
-         IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
+         IF ( n := At( " T HB_FUN_", cFuncList ) ) > 0
             n += 10
-         ELSEIF ( n := At( " T _HB_FUN_", cFuncList ) ) != 0
+         ELSEIF ( n := At( " T _HB_FUN_", cFuncList ) ) > 0
             n += 11
          ENDIF
-         IF n != 0
+         IF n > 0
             WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
                      hb_asciiIsDigit( c ) .OR. hb_asciiIsAlpha( c )
                IF c == "x" .AND. IsHexDigit( SubStr( cFuncList, n, 1 ) ) .AND. ;

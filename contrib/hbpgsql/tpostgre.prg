@@ -1092,15 +1092,15 @@ METHOD PROCEDURE SetKey() CLASS TPQquery
 
          IF nCount == 1
             /* first, try get the table name from select, else get from pg_catalog */
-            IF ( nPos := At( "FROM ", Upper( ::cQuery ) ) ) != 0
+            IF ( nPos := At( "FROM ", Upper( ::cQuery ) ) ) > 0
                cQuery := Lower( LTrim( SubStr( ::cQuery, nPos + 5 ) ) )
 
-               IF ( nPos := At( ".", cQuery ) ) != 0
+               IF ( nPos := At( ".", cQuery ) ) > 0
                   ::Schema := AllTrim( Left( cQuery, nPos - 1 ) )
                   cQuery := SubStr( cQuery, nPos + 1 )
                ENDIF
 
-               IF ( nPos := At( " ", cQuery ) ) != 0
+               IF ( nPos := At( " ", cQuery ) ) > 0
                   ::Tablename := RTrim( Left( cQuery, nPos ) )
                ELSE
                   ::Tablename := cQuery

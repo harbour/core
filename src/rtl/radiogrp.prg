@@ -180,7 +180,7 @@ METHOD display() CLASS RadioGroup
 
    IF ! Empty( cCaption := ::cCaption )
 
-      IF ( nPos := At( "&", cCaption ) ) != 0
+      IF ( nPos := At( "&", cCaption ) ) > 0
          IF nPos == Len( cCaption )
             nPos := 0
          ELSE
@@ -190,7 +190,7 @@ METHOD display() CLASS RadioGroup
 
       hb_DispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, 1 ) )
 
-      IF nPos != 0
+      IF nPos > 0
          hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
       ENDIF
    ENDIF
@@ -268,7 +268,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS RadioGroup
 
    nLen := Len( ::cCaption )
 
-   IF ( nPos := At( "&", ::cCaption ) ) != 0 .AND. nPos < nLen
+   IF ( nPos := At( "&", ::cCaption ) ) > 0 .AND. nPos < nLen
       nLen--
    ENDIF
 

@@ -237,7 +237,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
          LOOP
       ENDIF
       IF lComment
-         IF ( nPos := hb_At( "*/", aFile[ i ] ) ) != 0
+         IF ( nPos := hb_At( "*/", aFile[ i ] ) ) > 0
             lComment := .F.
             IF ! Empty( cToken1 := SubStr( aFile[ i ], nPos + 2 ) )
                aFile[ i ] := Left( aFile[ i ], nPos + 1 )
@@ -267,9 +267,9 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
             IF ::lCnvAst
                cLineAll := "//" + SubStr( cLineAll, 2 )
             ENDIF
-         ELSEIF ( nPos := FindNotQuoted( "//", cLineAll ) ) != 0
+         ELSEIF ( nPos := FindNotQuoted( "//", cLineAll ) ) > 0
             nPosComment := nPos
-         ELSEIF ( nPos := FindNotQuoted( "&&", cLineAll ) ) != 0
+         ELSEIF ( nPos := FindNotQuoted( "&&", cLineAll ) ) > 0
             nPosComment := nPos
             IF ::lCnvAmp
                cLineAll := Left( cLineAll, nPos - 1 ) + "//" + SubStr( cLineAll, nPos + 2 )
@@ -281,7 +281,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                cLineAll := Left( cLineAll, nPos - 1 ) + Space( ::nSpaceComment ) + LTrim( SubStr( cLineAll, nPos ) )
             ENDIF
          ENDIF
-         IF ( nPos := FindNotQuoted( "/*", cLineAll ) ) != 0 .AND. ( nPosComment == 0 .OR. nPosComment > nPos )
+         IF ( nPos := FindNotQuoted( "/*", cLineAll ) ) > 0 .AND. ( nPosComment == 0 .OR. nPosComment > nPos )
             nPosComment := nPos
             IF hb_At( "*/", cLineAll, nPos + 2 ) == 0
                lComment := .T.
@@ -298,7 +298,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                DO WHILE .T.
                   nPos := nPosSep
                   IF ! hb_LeftEq( aFile[ i ], "#" ) .AND. ;
-                        ( nPosSep := FindNotQuoted( ";", aFile[ i ], nPosSep ) ) != 0 .AND. ;
+                        ( nPosSep := FindNotQuoted( ";", aFile[ i ], nPosSep ) ) > 0 .AND. ;
                         nPosSep < Len( aFile[ i ] ) .AND. ( nPosComment == 0 .OR. nPosSep < nPosComment )
                      cLine := SubStr( aFile[ i ], nPos, nPosSep - nPos + 1 )
                   ELSE
@@ -375,7 +375,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                      ELSEIF Len( cToken1 ) < 4 .OR. ( nContrState := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 3 ] } ) ) == 0
                         IF ( nPos := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 4 ] } ) ) > 0 .OR. ;
                               cToken1 == "end"
-                           IF nPos != 0 .AND. nDeep > 0 .AND. aDeep[ nDeep ] != nPos
+                           IF nPos > 0 .AND. nDeep > 0 .AND. aDeep[ nDeep ] != nPos
                               DO WHILE ( nPos := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 4 ] }, ;
                                     nPos + 1 ) ) > 0 .AND. aDeep[ nDeep ] != nPos
                               ENDDO
@@ -699,11 +699,11 @@ METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS HBFormatCode
 
          cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
 
-         IF ( ( nPos := At( "," + cToken, ::cCommands ) ) != 0 .AND. ( Len( cToken ) >= 4 ;
+         IF ( ( nPos := At( "," + cToken, ::cCommands ) ) > 0 .AND. ( Len( cToken ) >= 4 ;
                .OR. SubStr( ::cCommands, nPos + Len( cToken ) + 1, 1 ) == "," ) ) ;
                .OR. ;
                ( ! lFirstOnly .AND. ;
-               ( nPos := At( "," + cToken, ::cClauses ) ) != 0 .AND. ( Len( cToken ) >= 4 ;
+               ( nPos := At( "," + cToken, ::cClauses ) ) > 0 .AND. ( Len( cToken ) >= 4 ;
                .OR. SubStr( ::cClauses, nPos + Len( cToken ) + 1, 1 ) == "," ) )
             IF ::nCaseCmd > 0
                IF ::nCaseCmd > 1
@@ -729,7 +729,7 @@ METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS HBFormatCode
 
       cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
 
-      IF ( nPos := hb_AtI( "," + cToken + ",", ::cFunctions ) ) != 0
+      IF ( nPos := hb_AtI( "," + cToken + ",", ::cFunctions ) ) > 0
 
          IF ::nCaseFnc > 1
             nPos++
@@ -759,7 +759,7 @@ METHOD ConvertBool( cLine, nBegin, nEnd ) CLASS HBFormatCode
       cBool := ",NOT,AND,OR,F,T,"
       cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
 
-      IF ( nPos := At( "," + cToken + ",", cBool ) ) != 0
+      IF ( nPos := At( "," + cToken + ",", cBool ) ) > 0
          IF ::lCnvNot .AND. nPos == 1
             cLine := Left( cLine, nBegin - 2 ) + "!" + SubStr( cLine, nEnd + 1 )
          ELSE
@@ -782,7 +782,7 @@ METHOD SetOption( cLine, i, aIni ) CLASS HBFormatCode
 
    LOCAL nPos, cToken1, cToken2, cTemp, xRes
 
-   IF ( nPos := At( "=", cLine ) ) != 0
+   IF ( nPos := At( "=", cLine ) ) > 0
       cToken1 := Upper( RTrim( Left( cLine, nPos - 1 ) ) )
       cToken2 := LTrim( SubStr( cLine, nPos + 1 ) )
       IF __objHasMsg( Self, cToken1 )

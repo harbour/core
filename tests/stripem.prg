@@ -124,7 +124,7 @@ METHOD Read() CLASS TTextFile
 
       IF ! ::lEoF
          ::nLine++
-         IF ( nCRPos := At( Chr( 10 ), ::cBlock ) ) != 0  // More than one line read
+         IF ( nCRPos := At( Chr( 10 ), ::cBlock ) ) > 0  // More than one line read
             cRet     := Left( ::cBlock, nCRPos - 1 )
             ::cBlock := SubStr( ::cBlock, nCRPos + 1 )
          ELSE                                   // No complete line
@@ -135,7 +135,7 @@ METHOD Read() CLASS TTextFile
                ::nLine--                        // Adjust erroneous line count
             ENDIF
          ENDIF
-         IF ( nEoFPos := hb_BAt( Chr( 26 ), cRet ) ) != 0  // End of file read
+         IF ( nEoFPos := hb_BAt( Chr( 26 ), cRet ) ) > 0  // End of file read
             cRet   := hb_BLeft( cRet, nEoFPos - 1 )
             ::lEoF := .T.
          ENDIF

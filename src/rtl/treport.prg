@@ -1102,7 +1102,7 @@ STATIC FUNCTION Occurs( cSearch, cTarget )
    LOCAL nPos, nCount := 0
 
    DO WHILE ! Empty( cTarget )
-      IF ( nPos := At( cSearch, cTarget ) ) != 0
+      IF ( nPos := At( cSearch, cTarget ) ) > 0
          nCount++
          cTarget := SubStr( cTarget, nPos + 1 )
       ELSE
@@ -1148,7 +1148,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
       cItem := Left( cHeaderString, nHeaderLen )
 
       // check for explicit delimiter
-      IF ( nPos := At( ";", cItem ) ) != 0
+      IF ( nPos := At( ";", cItem ) ) > 0
          // delimiter present
          AAdd( aPageHeader, Left( cItem, nPos - 1 ) )
       ELSE

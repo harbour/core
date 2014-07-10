@@ -52,11 +52,11 @@ FUNCTION StrOccurs( cSub, cStr, lAny )
    IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
       nPos := 0
       IF hb_defaultValue( lAny, PCount() < 3 )
-         DO WHILE ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) != 0
+         DO WHILE ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) > 0
             nCount++
          ENDDO
       ELSE
-         DO WHILE ( nPos := hb_At( cSub, cStr, nPos ) ) != 0
+         DO WHILE ( nPos := hb_At( cSub, cStr, nPos ) ) > 0
             nCount++
             nPos += Len( cSub )
          ENDDO
