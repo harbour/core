@@ -15,7 +15,7 @@ PROCEDURE Main()
    oHTML:AddHead( "Harbour" )
    oHTML:AddPara( "<b>Harbour</b> is xBase at its best. Have a taste today!", "left" )
    oHTML:AddPara( "<b>Links</b>", "center" )
-   oHTML:AddLink( "http://example.org", "Meet the Harbour power!" )
+   oHTML:AddLink( "https://example.org", "Meet the Harbour power!" )
    oHTML:Generate()
 
 #if 0
