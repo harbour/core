@@ -568,7 +568,7 @@ static void hb_gt_std_DispLine( PHB_GT pGT, int iRow, int iFrom, int iSize )
    else
       iAll = iSize;
 
-   for( iCol = iLastCol = iFrom, nLen = nI = 0; iSize > 0; ++iSize )
+   for( iCol = iLastCol = iFrom, nLen = nI = 0; iSize > 0; --iSize )
    {
       if( ! HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
          break;
