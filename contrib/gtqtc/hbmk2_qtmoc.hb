@@ -190,6 +190,8 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
          #endif
 
          IF Empty( cBIN )
+            /* The extra PATH comes from this message:
+               https://www.mail-archive.com/harbour@harbour-project.org/msg21734.html */
             IF Empty( cBIN := hbmk_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" ) )
                hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not or wrongly set, could not autodetect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )
                RETURN NIL
