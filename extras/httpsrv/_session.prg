@@ -737,8 +737,8 @@ METHOD PROCEDURE SendCacheLimiter() CLASS uhttpd_Session
 
    LOCAL dDate
 
-   DO CASE
-   CASE ::cCache_Limiter == "nocache"
+   SWITCH ::cCache_Limiter
+   CASE "nocache"
 #if 0
       uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
 #endif
@@ -749,21 +749,24 @@ METHOD PROCEDURE SendCacheLimiter() CLASS uhttpd_Session
       uhttpd_SetHeader( "Cache-Control", "post-check=0, pre-check=0", .F. )
 #endif
       uhttpd_SetHeader( "Pragma", "no-cache" )
-   CASE ::cCache_Limiter == "private"
+      EXIT
+   CASE "private"
       uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
       uhttpd_SetHeader( "Cache-Control", "private, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
       IF hb_FGetDateTime( hb_ProgName(), @dDate )
          uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )
       ENDIF
-   CASE ::cCache_Limiter == "public"
+      EXIT
+   CASE "public"
       uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
       uhttpd_SetHeader( "Cache-Control", "public, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
       IF hb_FGetDateTime( hb_ProgName(), @dDate )
          uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )
       ENDIF
+      EXIT
    OTHERWISE
       uhttpd_Die( "ERROR: Caching method " + ::cCache_Limiter + " not implemented." )
-   ENDCASE
+   ENDSWITCH
    // __OutDebug( "Header cache '" + ::cCache_Limiter + "' inviato" )
 
    RETURN

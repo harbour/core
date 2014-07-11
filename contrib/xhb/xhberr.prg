@@ -80,7 +80,7 @@ PROCEDURE xhb_ErrorSys()
 STATIC FUNCTION xhb_DefError( oError )
 
    LOCAL cMessage
-   LOCAL cDOSError
+   LOCAL cOSError
 
    LOCAL aOptions
    LOCAL nChoice
@@ -130,7 +130,7 @@ STATIC FUNCTION xhb_DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
-      cDOSError := "(DOS Error " + hb_ntos( oError:osCode ) + ")"
+      cOSError := "(OS Error " + hb_ntos( oError:osCode ) + ")"
    ENDIF
 
    IF HB_ISARRAY( oError:Args )
@@ -157,7 +157,7 @@ STATIC FUNCTION xhb_DefError( oError )
       // TraceLog( cMessage )
 
       DO WHILE ( nChoice := Alert( cMessage + ;
-         iif( cDOSError == NIL, "", ";" + cDOSError ), aOptions ) ) == 0
+         iif( cOSError == NIL, "", ";" + cOSError ), aOptions ) ) == 0
       ENDDO
 
       IF ! Empty( nChoice )
@@ -174,14 +174,14 @@ STATIC FUNCTION xhb_DefError( oError )
       IF Empty( oError:osCode )
          Alert( cMessage + ";" + ProcLine( 3 ) + "(" + hb_ntos( ProcLine( 3 ) ) +  ") in module: " + ProcFile( 3 ) )
       ELSE
-         Alert( cMessage + ";" + cDOSError + ";" + ProcLine( 3 ) + "(" + hb_ntos( ProcLine( 3 ) ) +  ") in module: " + ProcFile( 3 ) )
+         Alert( cMessage + ";" + cOSError + ";" + ProcLine( 3 ) + "(" + hb_ntos( ProcLine( 3 ) ) +  ") in module: " + ProcFile( 3 ) )
       ENDIF
    ENDIF
 
    // "Quit" selected
 
    IF ! Empty( oError:osCode )
-      cMessage += " " + cDOSError
+      cMessage += " " + cOSError
    ENDIF
 
    ? cMessage

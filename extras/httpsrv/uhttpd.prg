@@ -187,8 +187,8 @@ PROCEDURE Main( ... )
 
    LOCAL nPort, hListen, hSocket, aRemote, cI, xVal
    LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
-   LOCAL i, cPar, lStop
-   LOCAL cGT, cApplicationRoot, cDocumentRoot, lIndexes, cConfig
+   LOCAL i, lStop
+   LOCAL cApplicationRoot, cDocumentRoot, lIndexes, cConfig
    LOCAL lConsole, lScriptAliasMixedCase, aDirectoryIndex
    LOCAL nProgress := 0
    LOCAL hDefault, cLogAccess, cLogError, cSessionPath
@@ -220,66 +220,71 @@ PROCEDURE Main( ... )
    // defaults not changeble via ini file
    lStop                := .F.
    cConfig              := hb_DirBase() + APP_NAME + ".ini"
-   lConsole             := .T.
    nStartServiceThreads := START_SERVICE_THREADS
 
    // Check GT version - if I have started app with //GT:NUL then I have to disable
    // console and application will start in hidden way.
-   cGT := hb_gtVersion()
-   IF cGT == "NUL"
-      lConsole := .F.
-   ENDIF
+   lConsole := !( hb_gtVersion() == "NUL" )
 
+#if 0
    // TOCHECK: now not force case insensitive
-   // hb_HCaseMatch( s_hScriptAliases, .F. )
+   hb_HCaseMatch( s_hScriptAliases, .F. )
+#endif
 
    // Line command parameters checking
 
-   i := 1
-   DO WHILE i <= PCount()
+   FOR i := 1 TO PCount()
 
-      cPar := hb_PValue( i++ )
+      SWITCH hb_PValue( i++ )
+      CASE "--port"             ; CASE "-p"
+         cCmdPort := hb_PValue( i++ )
+         EXIT
 
-      DO CASE
-      CASE cPar == "--port"             .OR. cPar == "-p"
-         cCmdPort    := hb_PValue( i++ )
-
-      CASE cPar == "--approot"          .OR. cPar == "-a"
+      CASE "--approot"          ; CASE "-a"
          cCmdApplicationRoot := hb_PValue( i++ )
+         EXIT
 
-      CASE cPar == "--docroot"          .OR. cPar == "-d"
+      CASE "--docroot"          ; CASE "-d"
          cCmdDocumentRoot := hb_PValue( i++ )
+         EXIT
 
-      CASE cPar == "--indexes"          .OR. cPar == "-i"
+      CASE "--indexes"          ; CASE "-i"
          lCmdIndexes := .T.
+         EXIT
 
-      CASE cPar == "--stop"             .OR. cPar == "-s"
-         lStop    := .T.
+      CASE "--stop"             ; CASE "-s"
+         lStop := .T.
+         EXIT
 
-      CASE cPar == "--config"           .OR. cPar == "-c"
-         cConfig     := hb_PValue( i++ )
+      CASE "--config"           ; CASE "-c"
+         cConfig := hb_PValue( i++ )
+         EXIT
 
-      CASE cPar == "--start-threads"    .OR. cPar == "-ts"
+      CASE "--start-threads"    ; CASE "-ts"
          nCmdStartThreads := Val( hb_PValue( i++ ) )
+         EXIT
 
-      CASE cPar == "--max-threads"      .OR. cPar == "-tm"
+      CASE "--max-threads"      ; CASE "-tm"
          nCmdMaxThreads := Val( hb_PValue( i++ ) )
+         EXIT
 
-      CASE cPar == "--console-rows"     .OR. cPar == "-cr"
+      CASE "--console-rows"     ; CASE "-cr"
          nCmdConsoleRows := Val( hb_PValue( i++ ) )
+         EXIT
 
-      CASE cPar == "--console-cols"     .OR. cPar == "-cc"
+      CASE "--console-cols"     ; CASE "-cc"
          nCmdConsoleCols := Val( hb_PValue( i++ ) )
+         EXIT
 
-      CASE cPar == "--help"             .OR. Lower( cPar ) == "-h" .OR. cPar == "-?"
+      CASE "--help"             ; CASE "-h" ; CASE "-H" ; CASE "-?"
          Help()
          RETURN
 
       OTHERWISE
          Help()
          RETURN
-      ENDCASE
-   ENDDO
+      ENDSWITCH
+   NEXT
 
    // checking STOP request
 
@@ -449,11 +454,12 @@ PROCEDURE Main( ... )
       nMaxThreads := MAX_RUNNING_THREADS
    ENDIF
 
-   IF nStartThreads < 0
+   DO CASE
+   CASE nStartThreads < 0
       nStartThreads := 0
-   ELSEIF nStartThreads > nMaxThreads
+   CASE nStartThreads > nMaxThreads
       nStartThreads := nMaxThreads
-   ENDIF
+   ENDCASE
 
    IF nConsoleRows < 1 // .OR. nConsoleRows > MaxRow() + 1
       nConsoleRows := MaxRow()
@@ -909,8 +915,8 @@ STATIC FUNCTION ProcessConnection()
 
             // hb_ToOutDebug( "cRequest -- BEGIN --\n\r%s\n\rcRequest -- END --\n\r", cRequest )
 
-            _SERVER := HB_HASHI(); _GET := HB_HASHI(); _POST := HB_HASHI(); _COOKIE := HB_HASHI()
-            _SESSION := HB_HASHI(); _REQUEST := HB_HASHI(); _HTTP_REQUEST := HB_HASHI(); _HTTP_RESPONSE := HB_HASHI()
+            _SERVER := hb_HashI(); _GET := hb_HashI(); _POST := hb_HashI(); _COOKIE := hb_HashI()
+            _SESSION := hb_HashI(); _REQUEST := hb_HashI(); _HTTP_REQUEST := hb_HashI(); _HTTP_RESPONSE := hb_HashI()
             m_cPost := NIL
             t_cResult     := ""
             // t_aHeader     := {}
@@ -1058,8 +1064,8 @@ STATIC FUNCTION ServiceConnection()
 
             // hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
-            _SERVER := HB_HASHI(); _GET := HB_HASHI(); _POST := HB_HASHI(); _COOKIE := HB_HASHI()
-            _SESSION := HB_HASHI(); _REQUEST := HB_HASHI(); _HTTP_REQUEST := HB_HASHI(); _HTTP_RESPONSE := HB_HASHI()
+            _SERVER := hb_HashI(); _GET := hb_HashI(); _POST := hb_HashI(); _COOKIE := hb_HashI()
+            _SESSION := hb_HashI(); _REQUEST := hb_HashI(); _HTTP_REQUEST := hb_HashI(); _HTTP_RESPONSE := hb_HashI()
             m_cPost := NIL
             t_cResult     := ""
             // t_aHeader     := {}
@@ -1438,9 +1444,10 @@ STATIC PROCEDURE WriteToLog( cRequest )
       nSize    := Len( t_cResult )
       cReferer := _SERVER[ "HTTP_REFERER" ]
 
-      cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + StrZero( Day( dDate ), 2 ) + "/" + ;
-         aMonths[ Month( dDate ) ] + ;
-         "/" + StrZero( Year( dDate ), 4 ) + ":" + cTime + " " + uhttpd_UTCOffset() + '] "' + ;
+      cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + ;
+         StrZero( Day( dDate ), 2 ) + "/" + ;
+         aMonths[ Month( dDate ) ] + "/" + ;
+         StrZero( Year( dDate ), 4 ) + ":" + cTime + " " + uhttpd_UTCOffset() + '] "' + ;
          Left( cRequest, At( CR_LF, cRequest ) - 1 ) + '" ' + ;
          hb_ntos( t_nStatusCode ) + " " + iif( nSize == 0, "-", hb_ntos( nSize ) ) + ;
          ' "' + iif( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;
@@ -1481,7 +1488,6 @@ STATIC FUNCTION CGIExec( cProc, /* @ */ cOutPut )
    LOCAL cCurPath
 
    // LOCAL cError
-
 
    IF HB_ISSTRING( cProc )
 
@@ -1565,11 +1571,8 @@ STATIC FUNCTION CGIExec( cProc, /* @ */ cOutPut )
          // hb_ToOutDebug( "CGIExec closed handles\n\r" )
 
       ENDIF
-
    ELSE
-
-      nErrorLevel := -1 // Error: cProc is not a valid string
-
+      nErrorLevel := -1  // Error: cProc is not a valid string
    ENDIF
 
    hmtxCGIKill := NIL
@@ -1703,7 +1706,7 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
          EXIT
       ENDIF
       cRequest += hb_BLeft( cBuf, nLen )
-      IF CR_LF + CR_LF $ cRequest
+      IF CR_LF + CR_LF $ cRequest  /* TOFIX: will fail if CRLF pair is on the buffer boundary */
          EXIT
       ENDIF
    ENDDO
@@ -1949,9 +1952,7 @@ STATIC FUNCTION uproc_default()
                // Restart
                LOOP
             ENDIF
-
          ENDIF
-
       ENDIF
 
       // Ok, now I have to see what action I have to take
@@ -2162,7 +2163,6 @@ STATIC PROCEDURE Help()
 STATIC PROCEDURE SysSettings()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-
    Set( _SET_SCOREBOARD, .F. )
    Set( _SET_BELL, .F. )
    Set( _SET_DELETED, .T. )
@@ -2205,9 +2205,7 @@ STATIC PROCEDURE WriteToConsole( ... )
 #ifdef DEBUG_ACTIVE
             hb_ToOutDebug( ">>> %s\n\r", cMsg )
 #endif
-
          NEXT
-
       ENDIF
       hb_mutexUnlock( s_hmtxConsole )
    ENDIF
@@ -2218,13 +2216,12 @@ STATIC FUNCTION ParseIni( cConfig )
 
    LOCAL hIni := hb_iniRead( cConfig, .T. ) // .T. to load all keys in MixedCase, redundant as it is default, but to remember
    LOCAL cSection, hSect, cKey, xVal, cVal, nPos
-   LOCAL hDefault
 
    // hb_ToOutDebug( "cConfig: %s,\n\rhIni: %s\n\r", cConfig, hb_ValToExp( hIni ) )
 
    // Define here what attributes we can have in ini config file and their defaults
    // Please add all keys in uppercase. hDefaults is Case Insensitive
-   hDefault := { ;
+   LOCAL hDefault := { ;
       "MAIN"           => { "PORT"                 => LISTEN_PORT               , ;
                             "APPLICATION_ROOT"     => hb_DirBase()              , ;
                             "DOCUMENT_ROOT"        => hb_DirBase() + "home"     , ;
@@ -2267,85 +2264,93 @@ STATIC FUNCTION ParseIni( cConfig )
 
                   // hb_ToOutDebug( "cKey: %s\n\r", cKey )
 
-                  IF cSection == "SCRIPTALIASES"
+                  DO CASE
+                  CASE cSection == "SCRIPTALIASES"
                      IF ( xVal := hSect[ cKey ] ) != NIL
                         hDefault[ cSection ][ cKey ] := xVal
                      ENDIF
 
-                  ELSEIF cSection == "ALIASES"
+                  CASE cSection == "ALIASES"
                      IF ( xVal := hSect[ cKey ] ) != NIL
                         hDefault[ cSection ][ cKey ] := xVal
                      ENDIF
 
-                  ELSEIF ( cKey := Upper( cKey ) ) $ hDefault[ cSection ]  // force cKey to be uppercase
+                  CASE ( cKey := Upper( cKey ) ) $ hDefault[ cSection ]  // force cKey to be uppercase
 
                      IF ( nPos := hb_HScan( hSect, {| k | Upper( k ) == cKey } ) ) > 0
                         cVal := hb_HValueAt( hSect, nPos )
 
                         // hb_ToOutDebug( "cVal: %s\n\r", cVal )
 
-                        DO CASE
-                        CASE cSection == "MAIN"
+                        SWITCH cSection
+                        CASE "MAIN"
 
-                           DO CASE
-                           CASE cKey == "PORT"
-                              xVal := Val( cVal )
-                           CASE cKey == "CONSOLE-ROWS"
-                              xVal := Val( cVal )
-                           CASE cKey == "CONSOLE-COLS"
-                              xVal := Val( cVal )
-                           CASE cKey == "APPLICATION_ROOT"
+                           SWITCH cKey
+                           CASE "PORT"
+                              xVal := Val( cVal ) ; EXIT
+                           CASE "CONSOLE-ROWS"
+                              xVal := Val( cVal ) ; EXIT
+                           CASE "CONSOLE-COLS"
+                              xVal := Val( cVal ) ; EXIT
+                           CASE "APPLICATION_ROOT"
                               IF ! Empty( cVal )
                                  // Change APP_DIR macro with current exe path
                                  xVal := cVal
                               ENDIF
-                           CASE cKey == "DOCUMENT_ROOT"
+                              EXIT
+                           CASE "DOCUMENT_ROOT"
                               IF ! Empty( cVal )
                                  // After will change APP_DIR macro with application dir
                                  // xVal := StrTran( cVal, "$(APP_DIR)", hb_DirBase() )
                                  xVal := cVal
                               ENDIF
-                           CASE cKey == "SCRIPTALIASMIXEDCASE"
-                              xVal := cVal
-                           CASE cKey == "SESSIONPATH"
+                              EXIT
+                           CASE "SCRIPTALIASMIXEDCASE"
+                              xVal := cVal ; EXIT
+                           CASE "SESSIONPATH"
                               IF ! Empty( cVal )
                                  // Change APP_DIR macro with current exe path
                                  // xVal := StrTran( cVal, "$(APP_DIR)", hb_DirBase() )
                                  xVal := cVal
                               ENDIF
-                           CASE cKey == "DIRECTORYINDEX"
+                              EXIT
+                           CASE "DIRECTORYINDEX"
                               IF ! Empty( cVal )
                                  xVal := uhttpd_split( " ", AllTrim( cVal ) )
                               ENDIF
-                           ENDCASE
+                              EXIT
+                           ENDSWITCH
+                           EXIT
 
-                        CASE cSection == "LOGFILES"
+                        CASE "LOGFILES"
 
-                           DO CASE
-                           CASE cKey == "ACCESS"
-                              xVal := cVal
-                           CASE cKey == "ERROR"
-                              xVal := cVal
-                           ENDCASE
+                           SWITCH cKey
+                           CASE "ACCESS"
+                              xVal := cVal ; EXIT
+                           CASE "ERROR"
+                              xVal := cVal ; EXIT
+                           ENDSWITCH
+                           EXIT
 
-                        CASE cSection == "THREADS"
+                        CASE "THREADS"
 
-                           DO CASE
-                           CASE cKey == "MAX_WAIT"
-                              xVal := Val( cVal )
-                           CASE cKey == "START_NUM"
-                              xVal := Val( cVal )
-                           CASE cKey == "MAX_NUM"
-                              xVal := Val( cVal )
-                           ENDCASE
+                           SWITCH cKey
+                           CASE "MAX_WAIT"
+                              xVal := Val( cVal ) ; EXIT
+                           CASE "START_NUM"
+                              xVal := Val( cVal ) ; EXIT
+                           CASE "MAX_NUM"
+                              xVal := Val( cVal ) ; EXIT
+                           ENDSWITCH
+                           EXIT
 
-                        ENDCASE
+                        ENDSWITCH
 
                         IF xVal != NIL
                            hDefault[ cSection ][ cKey ] := xVal
                         ENDIF
                      ENDIF
-                  ENDIF
+                  ENDCASE
                NEXT
             ENDIF
          ENDIF
@@ -2362,27 +2367,21 @@ STATIC FUNCTION FileUnAlias( cScript )
    IF cScript $ s_hScriptAliases
       // in this case I have to substitute the alias with the real file name
       cFileName := s_hScriptAliases[ cScript ]
-
-      // substitute macros
-      cFileName := hb_StrReplace( cFileName, { ;
-         "$(DOCROOT_DIR)" => _SERVER[ "DOCUMENT_ROOT" ], ;
-         "$(APP_DIR)"     => s_cApplicationRoot } )
-   ENDIF
-
-   IF cFileName == NIL
-
+   ELSE
       // Checking if the request contains an alias
       FOR EACH x IN s_hAliases
          IF hb_LeftEq( cScript, x:__enumKey() )
             cFileName := x + SubStr( cScript, Len( x:__enumKey() ) + 1 )
-
-            // substitute macros
-            cFileName := hb_StrReplace( cFileName, { ;
-               "$(DOCROOT_DIR)" => _SERVER[ "DOCUMENT_ROOT" ], ;
-               "$(APP_DIR)"     => s_cApplicationRoot } )
             EXIT
          ENDIF
       NEXT
+   ENDIF
+
+   IF cFileName != NIL
+      // substitute macros
+      cFileName := hb_StrReplace( cFileName, { ;
+         "$(DOCROOT_DIR)" => _SERVER[ "DOCUMENT_ROOT" ], ;
+         "$(APP_DIR)"     => s_cApplicationRoot } )
    ENDIF
 
    RETURN cFileName
@@ -2391,7 +2390,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
 
    LOCAL cMessage
    LOCAL cCallstack
-   LOCAL cDOSError
+   LOCAL cOSError
 
    LOCAL aOptions
    LOCAL nChoice
@@ -2428,7 +2427,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
-      cDOSError := "(OS Error " + hb_ntos( oError:osCode ) + ")"
+      cOSError := "(OS Error " + hb_ntos( oError:osCode ) + ")"
    ENDIF
 
    //
@@ -2460,7 +2459,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
 #endif
 
    DO WHILE ( nChoice := Alert( cMessage + ;
-      iif( cDOSError == NIL, "", " " + cDOSError ) + ";" + cCallstack, aOptions ) ) == 0
+      iif( cOSError == NIL, "", " " + cOSError ) + ";" + cCallstack, aOptions ) ) == 0
    ENDDO
 
    IF ! Empty( nChoice )  /* Alert() may return NIL */
@@ -2476,8 +2475,8 @@ STATIC FUNCTION uhttpd_DefError( oError )
 
    // "Quit" selected
 
-   IF cDOSError != NIL
-      cMessage += " " + cDOSError
+   IF cOSError != NIL
+      cMessage += " " + cOSError
    ENDIF
 
    OutErr( hb_eol() )
@@ -2541,7 +2540,8 @@ STATIC FUNCTION Handler_Default( cFileName )
    LOCAL cMime
 
    // If file exists
-   IF hb_FileExists( uhttpd_OSFileName( cFileName ) )
+   DO CASE
+   CASE hb_FileExists( uhttpd_OSFileName( cFileName ) )
       IF ( cMime := tip_FileNameMimeType( cFileName ) ) == "unknown"
          // Unknown file type
          cMime := "application/octet-stream"
@@ -2551,7 +2551,7 @@ STATIC FUNCTION Handler_Default( cFileName )
       uhttpd_Write( hb_MemoRead( uhttpd_OSFileName( cFileName ) ) )
 
       // Directory content request
-   ELSEIF hb_DirExists( uhttpd_OSFileName( cFileName ) )
+   CASE hb_DirExists( uhttpd_OSFileName( cFileName ) )
 
       // If I'm here it's means that I have no page, so, if it is defined, I will display content folder
       IF s_lIndexes
@@ -2561,11 +2561,11 @@ STATIC FUNCTION Handler_Default( cFileName )
          uhttpd_SetStatusCode( 403 )
          t_cErrorMsg := "Display file list not allowed"
       ENDIF
-   ELSE
+   OTHERWISE
       // We cannot handle request
       uhttpd_SetStatusCode( 404 )
       t_cErrorMsg := "File does not exist: " + cFileName
-   ENDIF
+   ENDCASE
 
    RETURN MakeResponse()
 
@@ -2696,13 +2696,10 @@ STATIC FUNCTION Handler_CgiScript( cFileName )
    WriteToConsole( "Executing: " + cFileName )
 
    IF CGIExec( uhttpd_OSFileName( cFileName ), @xResult ) == 0
-
       // uhttpd_SetHeader( "Content-Type", cI )
       // uhttpd_Write( xResult )
       RETURN "HTTP/1.1 200 OK " + CR_LF + xResult
-
    ELSE
-
       uhttpd_SetHeader( "Content-Type", "text/html" )
       IF Empty( xResult )
          uhttpd_Write( "CGI Error" )
@@ -2739,7 +2736,7 @@ STATIC FUNCTION UHTTPD_UTCOFFSET()
       StrZero( nOffset / 3600, 2, 0 ) + ;
       StrZero( ( nOffset % 3600 ) / 60, 2, 0 )
 
-STATIC FUNCTION HB_HASHI()
+STATIC FUNCTION hb_HashI()
 
    LOCAL h := { => }
 

@@ -192,7 +192,7 @@ FUNCTION Sp_Check( cWord )
                x := Bin2L( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
                y := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
 
-               IF ! Empty( x )
+               IF x != 0
                   IF !( t_cLast == Left( cLookup, 2 ) )
                      t_cBuf := Space( y )
                      FSeek( t_nHandle, x, FS_SET )
@@ -252,7 +252,7 @@ STATIC FUNCTION Sp_GetBuf( cLetters )
    IF nRow > 0 .AND. nRow <= 26 .AND. ;
       nCol > 0 .AND. nCol <= 26
       x := Bin2L( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
-      IF ! Empty( x )
+      IF x != 0
          y := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
          cBuf := Space( y )
          FSeek( t_nHandle, x + 4, FS_SET )
@@ -1195,7 +1195,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
       FOR j := 1 TO 26
          temp := Chr( i + 64 ) + Chr( j + 64 )
          x := Bin2L( hb_BSubStr( t_cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 1 ), 4 ) )
-         IF ! Empty( x )
+         IF x != 0
             y := Bin2W( hb_BSubStr( t_cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 5 ), 2 ) )
 
             IF lTalk
@@ -1348,11 +1348,10 @@ FUNCTION WildCard( cPattern, cString )
       CASE Empty( cAfter )
          lMatch := hb_LeftEq( cString, cBefore )
       OTHERWISE
-         lMatch := hb_LeftEq( cString, cBefore ) .AND. ;
-            Right( cString, Len( cAfter ) ) == cAfter
+         lMatch := hb_LeftEq( cString, cBefore ) .AND. Right( cString, Len( cAfter ) ) == cAfter
       ENDCASE
 
-   CASE ( x := At( "?", cPattern ) ) > 0
+   CASE At( "?", cPattern ) > 0
 
       nPatSize := Len( cPattern )
       IF nPatSize == Len( cString )

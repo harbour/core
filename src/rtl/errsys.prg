@@ -55,7 +55,7 @@ PROCEDURE ErrorSys()
 STATIC FUNCTION DefError( oError )
 
    LOCAL cMessage
-   LOCAL cDOSError
+   LOCAL cOSError
 
    LOCAL aOptions
    LOCAL nChoice
@@ -92,7 +92,7 @@ STATIC FUNCTION DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
-      cDOSError := hb_StrFormat( "(DOS Error %1$d)", oError:osCode )
+      cOSError := hb_StrFormat( "(DOS Error %1$d)", oError:osCode )
    ENDIF
 
    // Build buttons
@@ -112,7 +112,7 @@ STATIC FUNCTION DefError( oError )
    // Show alert box
 
    DO WHILE ( nChoice := Alert( cMessage + ;
-      iif( cDOSError == NIL, "", ";" + cDOSError ), aOptions ) ) == 0
+      iif( cOSError == NIL, "", ";" + cOSError ), aOptions ) ) == 0
    ENDDO
 
    IF ! Empty( nChoice )  /* Alert() may return NIL */
@@ -128,8 +128,8 @@ STATIC FUNCTION DefError( oError )
 
    // "Quit" selected
 
-   IF cDOSError != NIL
-      cMessage += " " + cDOSError
+   IF cOSError != NIL
+      cMessage += " " + cOSError
    ENDIF
 
    OutErr( hb_eol() )

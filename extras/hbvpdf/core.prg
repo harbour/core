@@ -1014,7 +1014,10 @@ PROCEDURE pdfPageSize( _cPageSize, _nWidth, _nHeight )
       { "B5",         6.93,  9.84 }, ;
       { "USSTDFOLD", 14.87, 11.00 } }
 
-   IF Empty( _nWidth ) .OR. Empty( _nHeight )
+   hb_default( @_nWidth, 0 )
+   hb_default( @_nHeight, 0 )
+
+   IF _nWidth == 0 .OR. _nHeight == 0
 
       hb_default( @_cPageSize, "LETTER" )
 
@@ -1028,9 +1031,6 @@ PROCEDURE pdfPageSize( _cPageSize, _nWidth, _nHeight )
       nHeight := aSize[ nSize ][ 3 ]
 
    ELSE
-
-      _nWidth := Val( hb_ntos( _nWidth ) )
-      _nHeight := Val( hb_ntos( _nHeight ) )
 
       IF ( nSize := AScan( aSize, {| arr | ( arr[ 2 ] == _nWidth  ) .AND. ( arr[ 3 ] == _nHeight ) } ) ) == 0
          nSize := AScan( aSize, {| arr | ( arr[ 3 ] == _nWidth ) .AND. ( arr[ 2 ] == _nHeight ) } )
