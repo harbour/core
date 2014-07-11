@@ -48,8 +48,6 @@ PROCEDURE Main()
    ? SSLeay_version( HB_SSLEAY_PLATFORM )
    ? SSLeay_version( HB_SSLEAY_DIR )
 
-   ? "RAND_seed()", RAND_seed( "some entropy" )
-
    ? "SSL_CTX_new()", ssl_ctx := SSL_CTX_new()
 
    ? "SSL_new()", ssl := SSL_new( ssl_ctx )

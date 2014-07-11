@@ -45,7 +45,8 @@
  */
 
 #include "hbapi.h"
-#include "hbapierr.h"
+
+#if defined( HB_LEGACY_LEVEL5 )
 
 #include "hbssl.h"
 
@@ -53,31 +54,41 @@
 
 HB_FUNC( RAND_SEED )
 {
+#if OPENSSL_VERSION_NUMBER < 0x20000000L
    RAND_seed( hb_parcx( 1 ), ( int ) hb_parclen( 1 ) );
+#endif
 }
 
 HB_FUNC( RAND_ADD )
 {
+#if OPENSSL_VERSION_NUMBER < 0x20000000L
    RAND_add( hb_parcx( 1 ), ( int ) hb_parclen( 1 ), hb_parnd( 2 ) );
+#endif
 }
 
 HB_FUNC( RAND_STATUS )
 {
+#if OPENSSL_VERSION_NUMBER < 0x20000000L
    hb_retni( RAND_status() );
+#else
+   hb_retni( 1 );
+#endif
 }
 
 HB_FUNC( RAND_EVENT )
 {
-#if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
+#if OPENSSL_VERSION_NUMBER < 0x20000000L && defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
    hb_retni( RAND_event( hb_parni( 1 ), ( WPARAM ) hb_parnint( 2 ), ( LPARAM ) hb_parnint( 3 ) ) );
 #else
-   hb_retni( 0 );
+   hb_retni( 1 );
 #endif
 }
 
 HB_FUNC( RAND_SCREEN )
 {
-#if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
+#if OPENSSL_VERSION_NUMBER < 0x20000000L && defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
    RAND_screen();
 #endif
 }
+
+#endif
