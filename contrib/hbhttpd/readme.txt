@@ -143,9 +143,9 @@ Mounting table is hash, having this structure:
    oServer:hMount := { url => { handler, sessioned }, ... }
 URL can a single URL path, or path containing '*' wildchar in the end.
 Example:
-    /app/login   - single URL match http://host/app/login
-    /files/*     - the whole URL subtree from http://host/files/
-    /*           - the whole URL tree http://host/
+    /app/login   - single URL match https://host/app/login
+    /files/*     - the whole URL subtree from https://host/files/
+    /*           - the whole URL tree https://host/
 
 NOTE: '*' should be placed after '/' symbol to match URL subtree.
 Usage of '/files*' is invalid and do not match '/files1', '/filesa'

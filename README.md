@@ -1506,7 +1506,7 @@ Supported shells per host platforms:
      * Clang [multiplatform, free, open-source]
         * <http://llvm.org/builds/> (Windows snapshots)
      * Cygwin [win, free, open-source]
-        * <http://cygwin.com/>
+        * <https://cygwin.com/>
      * OS/2 GCC [os2, free, open-source]
         * <http://os2ports.smedley.id.au/index.php?page=gcc-v4-4-x>
      * DJGPP [dos, *nix, free, open-source]

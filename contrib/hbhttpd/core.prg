@@ -17,7 +17,7 @@
 
    RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0 - https://tools.ietf.org/html/rfc1945
    RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1 - https://tools.ietf.org/html/rfc2616
-   HTTP Made Really Easy - http://www.jmarshall.com/easy/http/
+   HTTP Made Really Easy - https://www.jmarshall.com/easy/http/
  */
 
 #define THREAD_COUNT_PREALLOC   3

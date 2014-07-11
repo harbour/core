@@ -55,7 +55,7 @@
 
    Online generator:
      http://www.bcmaker.com/demos/pdf417.php
-     http://www.terryburton.co.uk/barcodewriter/generator/
+     https://www.terryburton.co.uk/barcodewriter/generator/
 
    Online decoder:
      http://www.datasymbol.com/barcode-recognition-sdk/barcode-reader/online-barcode-decoder.html

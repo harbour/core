@@ -2,7 +2,7 @@
  * Czech and Slovak Kamenicky <-> Unicode conversion table
  *
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
- * adapted from David Kozub - http://linux.fjfi.cvut.cz/%7Ezub/cp895/
+ * adapted from David Kozub - https://linux.fjfi.cvut.cz/%7Ezub/cp895/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
