@@ -93,13 +93,9 @@ METHOD Run( hConfig ) CLASS UHttpd
       ::hConfig[ xValue:__enumKey ] := xValue
    NEXT
 
-
    IF ::hConfig[ "SSL" ]
       IF ::lHasSSL
          SSL_init()
-         DO WHILE RAND_status() != 1
-            RAND_add( Str( hb_Random(), 18, 15 ) + Str( hb_MilliSeconds(), 20 ), 1 )
-         ENDDO
 
          ::hSSLCtx := SSL_CTX_new( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
          SSL_CTX_set_options( ::hSSLCtx, HB_SSL_OP_NO_TLSv1 )
