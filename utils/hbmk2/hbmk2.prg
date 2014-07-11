@@ -17985,50 +17985,46 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
             Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
          ENDIF
       ENDIF
-   ELSE
-      IF Len( aOpt ) > 1
-         IF ! hb_LeftEq( aOpt[ 2 ], "^" )
-            IF hbmk[ _HBMK_lMarkdown ]
-               IF nWidth == 0
-                  Eval( hbmk[ _HBMK_bOut ], ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
-               ELSE
-                  Eval( hbmk[ _HBMK_bOut ], ;
-                     " - " + ;
-                     ToMarkdown( aOpt[ 1 ], iif( Empty( aOpt[ 2 ] ), NIL, "strong" ) ) + ;
-                     iif( nWidth < 0, ToMarkdown( e"\n" ), " " ) + ;
-                     ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
-               ENDIF
+   ELSEIF Len( aOpt ) > 1
+      IF ! hb_LeftEq( aOpt[ 2 ], "^" )
+         IF hbmk[ _HBMK_lMarkdown ]
+            IF nWidth == 0
+               Eval( hbmk[ _HBMK_bOut ], ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
             ELSE
-               IF ( nWidth > 0 .AND. Len( aOpt[ 1 ] ) + 2 + 1 < nWidth ) .OR. nWidth == 0
-                  aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
-                  nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth ), ;
-                                 MLCount( aOpt[ 1 ], nWidth ) )
+               Eval( hbmk[ _HBMK_bOut ], ;
+                  " - " + ;
+                  ToMarkdown( aOpt[ 1 ], iif( Empty( aOpt[ 2 ] ), NIL, "strong" ) ) + ;
+                  iif( nWidth < 0, ToMarkdown( e"\n" ), " " ) + ;
+                  ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
+            ENDIF
+         ELSE
+            IF ( nWidth > 0 .AND. Len( aOpt[ 1 ] ) + 2 + 1 < nWidth ) .OR. nWidth == 0
+               aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
+               nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth ), ;
+                              MLCount( aOpt[ 1 ], nWidth ) )
+               FOR nLine := 1 TO nLines
+                  Eval( hbmk[ _HBMK_bOut ], PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], nWidth, nLine ), nWidth ) )
+                  Eval( hbmk[ _HBMK_bOut ], RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
+               NEXT
+            ELSE
+               IF nWidth < 0
+                  Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
+               ENDIF
+               FOR EACH nWidth, cOpt IN { 2, iif( nWidth > 0, nWidth, 8 ) }, aOpt
+                  cOpt := StrTran( cOpt, e"\n", hb_eol() )
+                  nLines := MLCount( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth )
                   FOR nLine := 1 TO nLines
-                     Eval( hbmk[ _HBMK_bOut ], PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], nWidth, nLine ), nWidth ) )
-                     Eval( hbmk[ _HBMK_bOut ], RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
+                     Eval( hbmk[ _HBMK_bOut ], Space( nWidth ) + RTrim( MemoLine( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
                   NEXT
-               ELSE
-                  IF nWidth < 0
-                     Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
-                  ENDIF
-                  FOR EACH nWidth, cOpt IN { 2, iif( nWidth > 0, nWidth, 8 ) }, aOpt
-                     cOpt := StrTran( cOpt, e"\n", hb_eol() )
-                     nLines := MLCount( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth )
-                     FOR nLine := 1 TO nLines
-                        Eval( hbmk[ _HBMK_bOut ], Space( nWidth ) + RTrim( MemoLine( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
-                     NEXT
-                  NEXT
-               ENDIF
+               NEXT
             ENDIF
          ENDIF
+      ENDIF
+   ELSEIF ! hb_LeftEq( aOpt[ 1 ], "^" )
+      IF hbmk[ _HBMK_lMarkdown ]
+         Eval( hbmk[ _HBMK_bOut ], " - " + ToMarkdown( aOpt[ 1 ], "strong" ) + _OUT_EOL )
       ELSE
-         IF ! hb_LeftEq( aOpt[ 1 ], "^" )
-            IF hbmk[ _HBMK_lMarkdown ]
-               Eval( hbmk[ _HBMK_bOut ], " - " + ToMarkdown( aOpt[ 1 ], "strong" ) + _OUT_EOL )
-            ELSE
-               Eval( hbmk[ _HBMK_bOut ], Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
-            ENDIF
-         ENDIF
+         Eval( hbmk[ _HBMK_bOut ], Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
       ENDIF
    ENDIF
 
@@ -18044,23 +18040,21 @@ STATIC PROCEDURE OutNote( hbmk, cText, cPrefix )
          Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
       ENDIF
       Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
-   ELSE
-      IF ! hb_LeftEq( cText, "^" )
-         hb_default( @cPrefix, "  - " )
-         IF hbmk[ _HBMK_lMarkdown ]
-            Eval( hbmk[ _HBMK_bOut ], cPrefix + ToMarkdown( cText ) + _OUT_EOL )
-         ELSE
-            cText := StrTran( cText, e"\n", hb_eol() )
-            nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ) )
-            FOR nLine := 1 TO nLines
-               IF nLine == 1
-                  Eval( hbmk[ _HBMK_bOut ], cPrefix )
-               ELSE
-                  Eval( hbmk[ _HBMK_bOut ], Space( Len( cPrefix ) ) )
-               ENDIF
-               Eval( hbmk[ _HBMK_bOut ], RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ), nLine ) ) + _OUT_EOL )
-            NEXT
-         ENDIF
+   ELSEIF ! hb_LeftEq( cText, "^" )
+      hb_default( @cPrefix, "  - " )
+      IF hbmk[ _HBMK_lMarkdown ]
+         Eval( hbmk[ _HBMK_bOut ], cPrefix + ToMarkdown( cText ) + _OUT_EOL )
+      ELSE
+         cText := StrTran( cText, e"\n", hb_eol() )
+         nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ) )
+         FOR nLine := 1 TO nLines
+            IF nLine == 1
+               Eval( hbmk[ _HBMK_bOut ], cPrefix )
+            ELSE
+               Eval( hbmk[ _HBMK_bOut ], Space( Len( cPrefix ) ) )
+            ENDIF
+            Eval( hbmk[ _HBMK_bOut ], RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ), nLine ) ) + _OUT_EOL )
+         NEXT
       ENDIF
    ENDIF
 
