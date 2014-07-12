@@ -10491,7 +10491,7 @@ STATIC FUNCTION hbmk_SecToken()
    hb_mutexLock( s_mutexToken )
 
    IF s_cToken == NIL
-      s_cToken := StrZero( hb_rand32(), 10, 0 )
+      s_cToken := StrZero( hb_rand32(), 10 )
    ENDIF
 
    hb_mutexUnlock( s_mutexToken )

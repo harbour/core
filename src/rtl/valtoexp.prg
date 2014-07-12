@@ -88,6 +88,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
    CASE "S" ; RETURN "@" + xVal:name + "()"
    CASE "O"
       cClass := xVal:className()
+      /* Fall through */
    CASE "A"
    CASE "H"
       tmp := __vmItemID( xVal )

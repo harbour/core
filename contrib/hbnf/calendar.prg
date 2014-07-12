@@ -87,22 +87,22 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
          EXIT
       ENDSWITCH
 
-      aRetVal[ 1 ] :=         Date() + nJump
-      aRetVal[ 2 ] :=  Month( Date() + nJump )
-      aRetVal[ 3 ] :=    Day( Date() + nJump )
-      aRetVal[ 4 ] :=   Year( Date() + nJump )
-      aRetVal[ 5 ] := CMonth( Date() + nJump )
-      aRetVal[ 6 ] :=   CDoW( Date() + nJump )
+      aRetVal[ 1 ] := Date() + nJump
+      aRetVal[ 2 ] :=  Month( aRetVal[ 1 ] )
+      aRetVal[ 3 ] :=    Day( aRetVal[ 1 ] )
+      aRetVal[ 4 ] :=   Year( aRetVal[ 1 ] )
+      aRetVal[ 5 ] := CMonth( aRetVal[ 1 ] )
+      aRetVal[ 6 ] :=   CDoW( aRetVal[ 1 ] )
       aRetVal[ 7 ] :=   JDoY( aRetVal[ 4 ], aRetVal[ 2 ], aRetVal[ 3 ] )
 
       hb_DispOutAt( nRow, nCol, ;
          Left( aRetval[ 6 ], 3 ) + " " + ;
-         Str( aRetVal[ 3 ], 2, 0 ) + " " + ;
+         Str( aRetVal[ 3 ], 2 ) + " " + ;
          Left( aRetVal[ 5 ], 3 ) + " " + ;
-         Str( aRetVal[ 4 ], 4, 0 ) )
+         StrZero( aRetVal[ 4 ], 4 ) )
 
       hb_DispOutAt( nRow + 1, nCol, ;
-         Str( aRetVal[ 7 ], 3, 0 ) )
+         Str( aRetVal[ 7 ], 3 ) )
 
       nKey := 0
       DO WHILE nKey == 0

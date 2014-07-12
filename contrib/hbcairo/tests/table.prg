@@ -5,8 +5,10 @@ PROCEDURE Main()
    LOCAL hSurface, hCairo
    FIELD CODE, NAME, RESIDENTS
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    // Create database
-   dbCreate( "country", { { "CODE", "C", 3, 0 }, { "NAME", "C", 30, 0 }, { "RESIDENTS", "N", 10, 0 } },, .T. )
+   dbCreate( "country.dbf", { { "CODE", "C", 3, 0 }, { "NAME", "C", 30, 0 }, { "RESIDENTS", "N", 10, 0 } },, .T. )
    dbAppend(); CODE := "LTU"; NAME := "Lithuania";                 RESIDENTS :=   3369600
    dbAppend(); CODE := "USA"; NAME := "United States of America";  RESIDENTS := 305397000
    dbAppend(); CODE := "POR"; NAME := "Portugal";                  RESIDENTS :=  10617600
@@ -32,6 +34,8 @@ PROCEDURE Main()
    cairo_destroy( hCairo )
    cairo_surface_destroy( hSurface )
    dbCloseAll()
+
+   hb_dbDrop( "country.dbf" )
 
    RETURN
 

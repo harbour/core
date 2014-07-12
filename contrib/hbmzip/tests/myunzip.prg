@@ -53,7 +53,7 @@ REQUEST HB_CODEPAGE_UTF8EX
 PROCEDURE Main()
 
    LOCAL hUnzip, aWild, cFileName, cExt, cPath, cFile
-   LOCAL dDate, cTime, nSize, nCompSize, nErr
+   LOCAL tDate, cTime, nSize, nCompSize, nErr
    LOCAL lCrypted, cPassword, cComment, tmp
 
    hb_cdpSelect( "UTF8EX" )
@@ -84,7 +84,7 @@ PROCEDURE Main()
    IF ! Empty( hUnzip := hb_unzipOpen( cFileName ) )
       ? "Archive file:", cFileName
       hb_unzipGlobalInfo( hUnzip, @nSize, @cComment )
-      ? "Number of entries:", nSize
+      ? "Number of entries:", hb_ntos( nSize )
       IF ! Empty( cComment )
          ? "global comment:", cComment
       ENDIF
@@ -93,8 +93,8 @@ PROCEDURE Main()
       ? "-----------------------------------------------------------------------------------"
       nErr := hb_unzipFileFirst( hUnzip )
       DO WHILE nErr == 0
-         hb_unzipFileInfo( hUnzip, @cFile, @dDate, @cTime, , , , @nSize, @nCompSize, @lCrypted, @cComment )
-         ? PadR( cFile + iif( lCrypted, "*", "" ), 30 ), DToC( dDate ), cTime, nSize, nCompSize
+         hb_unzipFileInfo( hUnzip, @cFile, @tDate, @cTime, , , , @nSize, @nCompSize, @lCrypted, @cComment )
+         ? PadR( cFile + iif( lCrypted, "*", "" ), 30 ), hb_TToD( tDate ), cTime, nSize, nCompSize
          IF ! Empty( cComment )
             ? "comment:", cComment
          ENDIF

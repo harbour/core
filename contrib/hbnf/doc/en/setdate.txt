@@ -29,10 +29,10 @@
 
       PROCEDURE Main( cDate )
 
-         cDate := iif( cDate == NIL, DToS( Date() ), cDate )
+         hb_default( @cDate, DToS( Date() ) )
          ? "Setting date to:", cDate + "... "
          ft_SetDate( hb_SToD( cDate ) )
-         ? "Today is now:", DToC( Date() )
+         ? "Today is now:", Date()
 
          RETURN
    $END$

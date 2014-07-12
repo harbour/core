@@ -141,7 +141,7 @@ STATIC FUNCTION Item( cOri, cTrs, nPos )
       iif( Empty( cComment ), "", "#  " + cComment + hb_eol() ) + ;
       "#: lang_id:" + hb_ntos( nPos ) + hb_eol() + ;
       "#, c-format" + hb_eol() + ;
-      "msgid " + ItemString( iif( Len( cOri ) == 0 .AND. nPos != 0, "{" + StrZero( nPos, 3, 0 ) + "}", cOri ) ) + ;
+      "msgid " + ItemString( iif( Len( cOri ) == 0 .AND. nPos != 0, "{" + StrZero( nPos, 3 ) + "}", cOri ) ) + ;
       "msgstr " + ItemString( cTrs ) + hb_eol()
 
 STATIC FUNCTION ItemString( cString )
