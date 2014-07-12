@@ -198,6 +198,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       hb_inetInit()
       IF ::lHasSSL
          SSL_init()
+         RAND_seed( Time() + hb_UserName() + DToS( Date() ) + hb_DirBase() + NetName() )
       ENDIF
       ::bInitSocks := .T.
    ENDIF
