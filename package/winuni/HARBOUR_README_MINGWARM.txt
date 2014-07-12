@@ -4,7 +4,7 @@ and unpack into this directory.
 https://sourceforge.net/projects/cegcc/files/
 
 NOTES: - In order to unpack and *use* this package, you'll
-         need Cygwin package (from http://cygwin.com) installed
+         need Cygwin package (from https://cygwin.com) installed
          and put in PATH for Cygwin runtime (cygwin1.dll).
        - Unpack using these commands:
             > bzip2 -d cegcc_mingw32ce_cygwin1.7_r1375.tar.bz2
