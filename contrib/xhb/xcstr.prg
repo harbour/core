@@ -59,10 +59,7 @@ FUNCTION CStrToVal( cExp, cType )
    CASE "P"
       RETURN hb_HexToNum( cExp )
    CASE "D"
-      IF SubStr( cExp, 3, 1 ) >= "0" .AND. ;
-         SubStr( cExp, 3, 1 ) <= "9" .AND. ;
-         SubStr( cExp, 5, 1 ) >= "0" .AND. ;
-         SubStr( cExp, 5, 1 ) <= "9"
+      IF Empty( hb_StrReplace( cExp, "0123456789" ) )
          RETURN hb_SToD( cExp )
       ELSE
          RETURN CToD( cExp )
@@ -253,10 +250,7 @@ FUNCTION ValToDate( xVal )
    CASE "B"
       RETURN ValToDate( Eval( xVal ) )
    CASE "C"
-      IF SubStr( DToS( xVal ), 3, 1 ) >= "0" .AND. ;
-         SubStr( DToS( xVal ), 3, 1 ) <= "9" .AND. ;
-         SubStr( DToS( xVal ), 5, 1 ) >= "0" .AND. ;
-         SubStr( DToS( xVal ), 5, 1 ) <= "9"
+      IF Empty( hb_StrReplace( xVal, "0123456789" ) )
          RETURN hb_SToD( xVal )
       ELSE
          RETURN CToD( xVal )
