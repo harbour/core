@@ -987,11 +987,9 @@ METHOD setPos( nPos ) CLASS Get
             ::typeOut := .T.
 
          ENDCASE
-
       ENDIF
 
       RETURN nPos
-
    ENDIF
 
    RETURN 0
@@ -1244,7 +1242,7 @@ METHOD unTransform() CLASS Get
 
       cBuffer := ::cBuffer
 
-      IF HB_ISSTRING( cBuffer ) .AND. ::cType != NIL
+      IF HB_ISSTRING( cBuffer )
 
          SWITCH ::cType
          CASE "C"
@@ -1382,7 +1380,6 @@ METHOD unTransform() CLASS Get
    RETURN xValue
 
 METHOD type() CLASS Get
-
    RETURN ::cType := ValType( iif( ::hasFocus, ::xVarGet, ::varGet() ) )
 
 /* The METHOD Block and VAR bBlock allow to replace the
@@ -1421,7 +1418,6 @@ METHOD firstEditable() CLASS Get
             RETURN nFor
          ENDIF
       NEXT
-
    ENDIF
 
    RETURN 0
@@ -1437,7 +1433,6 @@ METHOD lastEditable() CLASS Get
             RETURN nFor
          ENDIF
       NEXT
-
    ENDIF
 
    RETURN 0
@@ -1657,19 +1652,24 @@ METHOD DeleteAll() CLASS Get
 
       ::lEdit := .T.
 
-      DO CASE
-      CASE ::cType == "C"
+      SWITCH ::cType
+      CASE "C"
          xValue := Space( ::nMaxlen )
-      CASE ::cType == "N"
+         EXIT
+      CASE "N"
          xValue := 0
          ::lMinus2 := .F.
-      CASE ::cType == "D"
+         EXIT
+      CASE "D"
          xValue := hb_SToD()
-      CASE ::cType == "T"
+         EXIT
+      CASE "T"
          xValue := hb_SToT()
-      CASE ::cType == "L"
+         EXIT
+      CASE "L"
          xValue := .F.
-      ENDCASE
+         EXIT
+      ENDSWITCH
 
       ::cBuffer := ::PutMask( xValue )
       ::pos     := ::FirstEditable()

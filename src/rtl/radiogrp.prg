@@ -402,12 +402,11 @@ METHOD prevItem() CLASS RadioGroup
 
 METHOD select( xValue ) CLASS RadioGroup
 
-   LOCAL cType := ValType( xValue )
    LOCAL nPos
    LOCAL nLen
 
-   DO CASE
-   CASE cType == "C"
+   SWITCH ValType( xValue )
+   CASE "C"
 
       nLen := ::nItemCount
       FOR nPos := 1 TO nLen
@@ -426,16 +425,20 @@ METHOD select( xValue ) CLASS RadioGroup
       IF nPos > nLen
          ::xBuffer := xValue
       ENDIF
+      EXIT
 
-   CASE cType == "N" .AND. xValue >= 1 .AND. xValue <= ::nItemCount
+   CASE "N"
 
-      IF ::xBuffer == NIL
-         ::xBuffer := 0
+      IF xValue >= 1 .AND. xValue <= ::nItemCount
+         IF ::xBuffer == NIL
+            ::xBuffer := 0
+         ENDIF
+
+         ::changeButton( ::nValue, xValue )
       ENDIF
+      EXIT
 
-      ::changeButton( ::nValue, xValue )
-
-   ENDCASE
+   ENDSWITCH
 
    RETURN Self
 
