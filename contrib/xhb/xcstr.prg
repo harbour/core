@@ -54,22 +54,17 @@ FUNCTION CStrToVal( cExp, cType )
    ENDIF
 
    SWITCH cType
-   CASE "C"
-      RETURN cExp
-   CASE "P"
-      RETURN hb_HexToNum( cExp )
+   CASE "C" ; RETURN cExp
+   CASE "P" ; RETURN hb_HexToNum( cExp )
    CASE "D"
       IF Empty( hb_StrReplace( cExp, "0123456789" ) )
          RETURN hb_SToD( cExp )
       ELSE
          RETURN CToD( cExp )
       ENDIF
-   CASE "L"
-      RETURN Left( cExp, 1 ) $ "TY" .OR. SubStr( cExp, 2, 1 ) $ "TY"
-   CASE "N"
-      RETURN Val( cExp )
-   CASE "U"
-      RETURN NIL
+   CASE "L" ; RETURN Left( cExp, 1 ) $ "TY" .OR. SubStr( cExp, 2, 1 ) $ "TY"
+   CASE "N" ; RETURN Val( cExp )
+   CASE "U" ; RETURN NIL
    ENDSWITCH
 
    Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
@@ -109,14 +104,10 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
    // TraceLog( xVal, cName, nPad, aObjs )
 
    SWITCH ValType( xVal )
-   CASE "C"
-      RETURN StringToLiteral( xVal )
-   CASE "D"
-      RETURN "hb_SToD( '" + DToS( xVal ) + "' )"
-   CASE "L"
-      RETURN iif( xVal, ".T.", ".F." )
-   CASE "N"
-      RETURN hb_ntos( xVal )
+   CASE "C" ; RETURN StringToLiteral( xVal )
+   CASE "D" ; RETURN "hb_SToD( '" + DToS( xVal ) + "' )"
+   CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
+   CASE "N" ; RETURN hb_ntos( xVal )
    CASE "A"
       IF cName == NIL
          nPad := 0
@@ -164,11 +155,9 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
       /* There is no support for codeblock serialization */
 #if 0
-   CASE "B"
-      RETURN ValToPrgExp( xVal )
+   CASE "B" ; RETURN ValToPrgExp( xVal )
 #endif
-   CASE "P"
-      RETURN "0x" + hb_NumToHex( xVal )
+   CASE "P" ; RETURN "0x" + hb_NumToHex( xVal )
    CASE "O"
       /* TODO: Use HBPersistent() when avialable! */
       IF cName == NIL
@@ -245,21 +234,17 @@ FUNCTION ValToDate( xVal )
    CASE "H"
    CASE "L"
    CASE "O"
-   CASE "U"
-      EXIT
-   CASE "B"
-      RETURN ValToDate( Eval( xVal ) )
+   CASE "U" ; EXIT
+   CASE "B" ; RETURN ValToDate( Eval( xVal ) )
    CASE "C"
       IF Empty( hb_StrReplace( xVal, "0123456789" ) )
          RETURN hb_SToD( xVal )
       ELSE
          RETURN CToD( xVal )
       ENDIF
-   CASE "D"
-      RETURN xVal
+   CASE "D" ; RETURN xVal
    CASE "N"
-   CASE "P"
-      RETURN 0d19000101 + xVal
+   CASE "P" ; RETURN 0d19000101 + xVal
    ENDSWITCH
 
    Throw( xhb_ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
@@ -282,10 +267,8 @@ FUNCTION ValToLogical( xVal )
    CASE "H"
    CASE "N"
    CASE "O"
-   CASE "P"
-      RETURN ! Empty( xVal )
-   CASE "B"
-      RETURN ValToLogical( Eval( xVal ) )
+   CASE "P" ; RETURN ! Empty( xVal )
+   CASE "B" ; RETURN ValToLogical( Eval( xVal ) )
    CASE "C"
       IF hb_LeftEq( xVal, "." ) .AND. SubStr( xVal, 3, 1 ) == "." .AND. Upper( SubStr( xVal, 2, 1 ) ) $ "TFYN"
          RETURN Upper( SubStr( xVal, 2, 1 ) ) $ "TY"
@@ -295,10 +278,8 @@ FUNCTION ValToLogical( xVal )
          RETURN ! Empty( xVal )
       ENDIF
       EXIT
-   CASE "L"
-      RETURN xVal
-   CASE "U"
-      RETURN .F.
+   CASE "L" ; RETURN xVal
+   CASE "U" ; RETURN .F.
    ENDSWITCH
 
    Throw( xhb_ErrorNew( "VALTOLOGICAL", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
@@ -327,35 +308,16 @@ FUNCTION ValToNumber( xVal )
 FUNCTION ValToObject( xVal )
 
    SWITCH ValType( xVal )
-   CASE "A"
-      ENABLE TYPE CLASS ARRAY
-      EXIT
-   CASE "B"
-      ENABLE TYPE CLASS BLOCK
-      EXIT
-   CASE "C"
-      ENABLE TYPE CLASS CHARACTER
-      EXIT
-   CASE "D"
-      ENABLE TYPE CLASS DATE
-      EXIT
-   CASE "H"
-      ENABLE TYPE CLASS HASH
-      EXIT
-   CASE "L"
-      ENABLE TYPE CLASS LOGICAL
-      EXIT
-   CASE "N"
-      ENABLE TYPE CLASS NUMERIC
-      EXIT
-   CASE "O"
-      RETURN xVal
-   CASE "P"
-      ENABLE TYPE CLASS POINTER
-      EXIT
-   CASE "U"
-      ENABLE TYPE CLASS NIL
-      EXIT
+   CASE "A" ; ENABLE TYPE CLASS ARRAY ; EXIT
+   CASE "B" ; ENABLE TYPE CLASS BLOCK ; EXIT
+   CASE "C" ; ENABLE TYPE CLASS CHARACTER ; EXIT
+   CASE "D" ; ENABLE TYPE CLASS DATE ; EXIT
+   CASE "H" ; ENABLE TYPE CLASS HASH ; EXIT
+   CASE "L" ; ENABLE TYPE CLASS LOGICAL ; EXIT
+   CASE "N" ; ENABLE TYPE CLASS NUMERIC ; EXIT
+   CASE "O" ; RETURN xVal
+   CASE "P" ; ENABLE TYPE CLASS POINTER ; EXIT
+   CASE "U" ; ENABLE TYPE CLASS NIL ; EXIT
    ENDSWITCH
 
    Throw( xhb_ErrorNew( "VALTOOBJECT", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )

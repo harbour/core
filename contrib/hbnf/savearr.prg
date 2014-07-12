@@ -136,13 +136,9 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
       CASE "D"
          cMemVar := Space( 8 )
          FRead( nHandle, @cMemVar, 8 )
-         IF Empty( hb_StrReplace( cMemVar, "0123456789" ) )
-            xMemVar := hb_SToD( cMemVar )
-         ELSE
-            /* Original Cl*pper NFLIB format:
-               not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load */
-            xMemVar := CToD( cMemVar )
-         ENDIF
+         /* Fall back to CToD() to handle original Cl*pper NFLIB format:
+            not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load */
+         xMemVar := iif( Empty( hb_StrReplace( cMemVar, "0123456789" ) ), hb_SToD( cMemVar ), CToD( cMemVar ) )
          EXIT
       CASE "L"
          cMemVar := Space( 1 )
