@@ -202,13 +202,13 @@ METHOD PROCEDURE LogError( cError ) CLASS UHttpd
 
 METHOD PROCEDURE LogAccess() CLASS UHttpd
 
-   LOCAL cDate := DToS( Date() ), cTime := Time()
+   LOCAL dDate := Date(), cTime := Time()
 
    hb_mutexLock( ::hmtxLog )
    Eval( ::hConfig[ "LogAccess" ], ;
-      server[ "REMOTE_ADDR" ] + " - - [" + Right( cDate, 2 ) + "/" + ;
-      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Val( SubStr( cDate, 5, 2 ) ) ] + ;
-      "/" + Left( cDate, 4 ) + ":" + cTime + ' +0000] "' + server[ "REQUEST_ALL" ] + '" ' + ;
+      server[ "REMOTE_ADDR" ] + " - - [" + StrZero( Day( dDate ), 2 ) + "/" + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( dDate ) ] + ;
+      "/" + StrZero( Year( dDate ), 4 ) + ":" + cTime + ' +0000] "' + server[ "REQUEST_ALL" ] + '" ' + ;
       hb_ntos( t_nStatusCode ) + " " + hb_ntos( Len( t_cResult ) ) + ;
       ' "' + server[ "HTTP_REFERER" ] + '" "' + server[ "HTTP_USER_AGENT" ] + ;
       '"' )
@@ -221,8 +221,11 @@ STATIC FUNCTION IPAddr2Num( cIP )
    LOCAL aA, n1, n2, n3, n4
 
    aA := hb_regex( "^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$", cIP )
-   IF Len( aA ) == 5 .AND. ( n1 := Val( aA[ 2 ] ) ) <= 255 .AND. ( n2 := Val( aA[ 3 ] ) ) <= 255 .AND. ;
-         ( n3 := Val( aA[ 4 ] ) ) <= 255 .AND. ( n4 := Val( aA[ 5 ] ) ) <= 255
+   IF Len( aA ) == 5 .AND. ;
+      ( n1 := Val( aA[ 2 ] ) ) <= 255 .AND. ;
+      ( n2 := Val( aA[ 3 ] ) ) <= 255 .AND. ;
+      ( n3 := Val( aA[ 4 ] ) ) <= 255 .AND. ;
+      ( n4 := Val( aA[ 5 ] ) ) <= 255
       RETURN ( ( ( n1 * 256 ) + n2 ) * 256 + n3 ) * 256 + n4
    ENDIF
 
@@ -1171,12 +1174,11 @@ PROCEDURE UWrite( cString )
 
 STATIC PROCEDURE USessionCreateInternal()
 
-   LOCAL cSID, hMtx
+   LOCAL cSID := hb_MD5( hb_TToS( hb_DateTime() ) + hb_randStr( 32 ) )
+   LOCAL hMtx := hb_mutexCreate()
 
-   cSID := hb_MD5( DToS( Date() ) + Time() + Str( hb_Random(), 15, 12 ) )
-   hMtx := hb_mutexCreate()
    hb_mutexLock( hMtx )
-   t_aSessionData := httpd:hSession[ cSID ] := { hMtx, { "_unique" => hb_MD5( Str( hb_Random(), 15, 12 ) ) }, hb_MilliSeconds() + SESSION_TIMEOUT * 1000, cSID }
+   t_aSessionData := httpd:hSession[ cSID ] := { hMtx, { "_unique" => hb_MD5( hb_randStr( 15 ) ) }, hb_MilliSeconds() + SESSION_TIMEOUT * 1000, cSID }
    session := t_aSessionData[ 2 ]
    UAddHeader( "Set-Cookie", "SESSID=" + cSID + "; path=/" )
 

@@ -142,7 +142,7 @@ CREATE CLASS TIPClient
    VAR nLastError INIT 0
 
    METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassword, cUserAgent )
-   METHOD ReadHTTPProxyResponse( sResponse )
+   METHOD ReadHTTPProxyResponse( cResponse )
 
    /* Methods to log data if needed */
    METHOD inetRecv( SocketCon, cStr1, len )
@@ -198,7 +198,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       hb_inetInit()
       IF ::lHasSSL
          SSL_init()
-         RAND_seed( Time() + hb_UserName() + DToS( Date() ) + hb_DirBase() + NetName() )
+         RAND_seed( hb_randStr( 20 ) + hb_UserName() + hb_TToS( hb_DateTime() ) + NetName() )
       ENDIF
       ::bInitSocks := .T.
    ENDIF
@@ -301,26 +301,26 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPasswor
 
    RETURN lRet
 
-METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
+METHOD ReadHTTPProxyResponse( /* @ */ cResponse ) CLASS TIPClient
 
    LOCAL bMoreDataToRead := .T.
    LOCAL nLength
-   LOCAL szResponse
+   LOCAL cBuffer
 
    DO WHILE bMoreDataToRead
 
-      szResponse := Space( 1 )
-      IF ::inetRecv( ::SocketCon, @szResponse, hb_BLen( szResponse ) ) <= 0
+      cBuffer := Space( 1 )
+      IF ::inetRecv( ::SocketCon, @cBuffer, hb_BLen( cBuffer ) ) <= 0
          RETURN .F.
       ENDIF
-      sResponse += szResponse
+      cResponse += cBuffer
 
-      IF ( nLength := hb_BLen( sResponse ) ) >= 4
+      IF ( nLength := hb_BLen( cResponse ) ) >= 4
          bMoreDataToRead := ;
-            hb_BPeek( sResponse, nLength - 3 ) != 13 .OR. ;
-            hb_BPeek( sResponse, nLength - 2 ) != 10 .OR. ;
-            hb_BPeek( sResponse, nLength - 1 ) != 13 .OR. ;
-            hb_BPeek( sResponse, nLength - 0 ) != 10
+            hb_BPeek( cResponse, nLength - 3 ) != 13 .OR. ;
+            hb_BPeek( cResponse, nLength - 2 ) != 10 .OR. ;
+            hb_BPeek( cResponse, nLength - 1 ) != 13 .OR. ;
+            hb_BPeek( cResponse, nLength - 0 ) != 10
       ENDIF
    ENDDO
 

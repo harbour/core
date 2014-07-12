@@ -455,7 +455,7 @@ PROCEDURE pdfClose()
       "/Creator ()" + CRLF + ;
       "/Subject ()" + CRLF + ;
       "/Keywords ()" + CRLF + ;
-      "/CreationDate (D:" + DToS( Date() ) + SubStr( Time(), 1, 2 ) + SubStr( Time(), 4, 2 ) + SubStr( Time(), 7, 2 ) + ")" + CRLF + ;
+      "/CreationDate (D:" + Left( hb_TToS( hb_DateTime() ), 14 ) + ")" + CRLF + ;
       ">>" + CRLF + ;
       "endobj" + CRLF
    t_aReport[ DOCLEN ] += Len( cTemp )

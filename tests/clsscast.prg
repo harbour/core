@@ -15,7 +15,7 @@ procedure main()
 
    local o := myclass4():new(), i, cbErr
 
-   ? Date(), Time(), Version(), OS()
+   ? OS(), Version(), Date(), Time()
    ?
 
    ? "myclass1 shared class vars:", Str( __cls_CntShrData( o:myclass1:classH ), 3 ), "  => should be:   3"

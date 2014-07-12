@@ -677,7 +677,7 @@
       the HB_CLP_UNDOC flag.
    $EXAMPLES$
       // write error log information
-      OutErr( Date(), Time(), "Core meltdown detected" )
+      OutErr( hb_DateTime(), "Core meltdown detected" )
    $STATUS$
       R
    $COMPLIANCE$

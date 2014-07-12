@@ -15,7 +15,7 @@ procedure main()
 
    local o := myclass4():new(), i, cbErr
 
-   ? Date(), Time(), Version(), OS()
+   ? OS(), Version(), Date(), Time()
    ?
 
    /* direct assignment, possible because the variables have differ names */

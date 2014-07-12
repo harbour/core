@@ -474,7 +474,7 @@ METHOD MakeBoundary() CLASS TIPMail
       cBound += Chr( Asc( "A" ) + hb_Random( 0, 25 ) )
    NEXT
 
-   RETURN cBound + "_TIP_" + DToS( Date() ) + StrTran( Time(), ":" )
+   RETURN cBound + "_TIP_" + hb_TToS( hb_DateTime() )
 
 METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
 

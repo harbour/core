@@ -158,7 +158,7 @@ procedure main()
 
    local cbErr, self, o
 
-   ? Date(), Time(), Version(), OS()
+   ? OS(), Version(), Date(), Time()
    ?
 
    o := clsX():new()

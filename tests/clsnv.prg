@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    LOCAL o := myclass3():new()
 
-   ? Date(), Time(), Version(), OS()
+   ? OS(), Version(), Date(), Time()
    ?
 
    o:m1()

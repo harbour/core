@@ -34,7 +34,7 @@ procedure main( cdp, info, unicode )
    next
    ASort( a,,, {| x, y | Chr( x ) + Chr( 0 ) < Chr( y ) + Chr( 0 ) } )
 
-   ? Date(), Time(), OS(), Version()
+   ? OS(), Version(), Date(), Time()
 #ifdef __HARBOUR__
    ? "Character encoding:", Set( _SET_CODEPAGE )
 #else

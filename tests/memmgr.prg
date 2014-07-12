@@ -19,7 +19,7 @@ PROCEDURE Main()
    ENDIF
 #endif
    ?
-   ? Date(), Time(), Version() + build_mode() + ",", OS()
+   ? OS(), Version() + build_mode(), Date(), Time()
 
    ?
    ? "testing single large memory blocks allocation and freeing..."
