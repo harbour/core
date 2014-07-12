@@ -62,8 +62,8 @@
 #translate MAKEHI( <X> )        => ( ( <X> ) * 256 )
 #translate REG_DS               => .T.
 #translate REG_ES               => .F.
-#translate HIGHBYTE( <X> )      => ( Int( iif( ( <X> ) \< 0, 65536 + ( <X> ), ( <X> ) ) / 256 ) )
-#translate LOWBYTE( <X> )       => (      iif( ( <X> ) \< 0, 65536 + ( <X> ), ( <X> ) ) % 256   )
-#translate CARRYSET( <XFLAGS> ) => ( hb_bitTest( <XFLAGS>, FLAG_CARRY ) )
+#translate HIGHBYTE( <X> )      => Int( iif( ( <X> ) \< 0, 0x10000 + ( <X> ), <X> ) / 256 )
+#translate LOWBYTE( <X> )       => (    iif( ( <X> ) \< 0, 0x10000 + ( <X> ), <X> ) % 256 )
+#translate CARRYSET( <XFLAGS> ) => hb_bitTest( <XFLAGS>, FLAG_CARRY )
 
 #endif // __FTINT86_CH__

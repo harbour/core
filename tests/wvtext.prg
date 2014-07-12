@@ -217,7 +217,7 @@ PROCEDURE Main()
          SetPaletteIndex()
 
       CASE nKey == K_F8
-         Alert( "Menu text changed. Was: " + hb_gtInfo( HB_GTI_SELECTCOPY, hb_TToC( hb_DateTime() ) ) )
+         Alert( "Menu text changed. Was: " + hb_gtInfo( HB_GTI_SELECTCOPY, hb_TToS( hb_DateTime() ) ) )
 
       CASE nKey == K_F9
          hb_gtInfo( HB_GTI_RESIZEMODE, iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT, HB_GTI_RESIZEMODE_ROWS ) )

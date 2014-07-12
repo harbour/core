@@ -146,10 +146,10 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    oW := WvgDrawingArea():new( Self ):create( , , { 0, 0 }, ::currentSize(), , .F. )
-   IF ! Empty( oW:hWnd )
-      ::drawingArea := oW
-   ELSE
+   IF Empty( oW:hWnd )
       ::drawingArea := Self
+   ELSE
+      ::drawingArea := oW
    ENDIF
 
    hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {| nEvent, ... | ::notifier( nEvent, ... ) } )
@@ -168,9 +168,7 @@ METHOD WvgDialog:destroy()
       ::oMenu:destroy()
    ENDIF
 
-   IF Len( ::aChildren ) > 0
-      AEval( ::aChildren, {| o | o:destroy() } )
-   ENDIF
+   AEval( ::aChildren, {| o | o:destroy() } )
 
    IF ! Empty( ::hBrushBG )
       Wvg_DeleteObject( ::hBrushBG )
@@ -183,25 +181,22 @@ METHOD WvgDialog:destroy()
 
 METHOD WvgDialog:setFrameState( nState )
 
-   DO CASE
-   CASE nState == WVGDLG_FRAMESTAT_MINIMIZED
-      RETURN ::sendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 ) != 0
-   CASE nState == WVGDLG_FRAMESTAT_MAXIMIZED
-      RETURN ::sendMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 ) != 0
-   CASE nState == WVGDLG_FRAMESTAT_NORMALIZED
-      RETURN ::sendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 ) != 0
-   ENDCASE
+   IF HB_ISNUMERIC( nState )
+      SWITCH nState
+      CASE WVGDLG_FRAMESTAT_MINIMIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 ) != 0
+      CASE WVGDLG_FRAMESTAT_MAXIMIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 ) != 0
+      CASE WVGDLG_FRAMESTAT_NORMALIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 ) != 0
+      ENDSWITCH
+   ENDIF
 
    RETURN .F.
 
 METHOD WvgDialog:getFrameState()
 
-   IF Wvg_IsIconic( ::hWnd )
-      RETURN WVGDLG_FRAMESTAT_MINIMIZED
-   ENDIF
-   IF Wvg_IsZoomed( ::hWnd )
-      RETURN WVGDLG_FRAMESTAT_MAXIMIZED
-   ENDIF
+   DO CASE
+   CASE Wvg_IsIconic( ::hWnd ) ; RETURN WVGDLG_FRAMESTAT_MINIMIZED
+   CASE Wvg_IsZoomed( ::hWnd ) ; RETURN WVGDLG_FRAMESTAT_MAXIMIZED
+   ENDCASE
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
 

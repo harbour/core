@@ -51,8 +51,8 @@
 //                         GTWVT Specific
 //
 
-#xtranslate MAKELONG( <nLow>, <nHigh> )   => ( ( <nLow> ) + ( <nHigh> ) * 65536 )
-#xtranslate MAKELPARAM( <nLow>, <nHigh> ) => ( ( <nLow> ) + ( <nHigh> ) * 65536 )
+#xtranslate MAKELONG( <nLow>, <nHigh> )   => ( ( <nLow> ) + ( <nHigh> ) * 0x10000 )
+#xtranslate MAKELPARAM( <nLow>, <nHigh> ) => ( ( <nLow> ) + ( <nHigh> ) * 0x10000 )
 
 /*
  *   Wvt_DrawButton() constants
@@ -178,9 +178,7 @@
 #define WVT_SCROLLBUTTON_RIGHT                    4
 #define WVT_SCROLL_THUMB                          5
 
-/*
- * WvtMenu() defines [Peter Rees]
- */
+/* WvtMenu() defines [Peter Rees] */
 #define WVT_MENU_TYPE                             1
 #define WVT_MENU_IDENTIFIER                       2
 #define WVT_MENU_CAPTION                          3
@@ -270,9 +268,7 @@
 #define TPM_NONOTIFY                              0x0080              /* Don't send any notification msgs */
 #define TPM_RETURNCMD                             0x0100
 
-/*
- * ShowWindow() Commands
- */
+/* ShowWindow() Commands */
 #define SW_HIDE                                   0
 #define SW_SHOWNORMAL                             1
 #define SW_NORMAL                                 1
@@ -289,9 +285,7 @@
 #define SW_FORCEMINIMIZE                          11
 #define SW_MAX                                    11
 
-/*
- * Window Messages
- */
+/* Window Messages */
 #define WM_USER                                   1024
 
 #define WM_CREATE                                 1
@@ -476,9 +470,7 @@
 #define WM_PALETTECHANGED                         785
 #define WM_HOTKEY                                 786
 
-/*
- * Window Styles
- */
+/* Window Styles */
 #define WS_OVERLAPPED                             0
 #define WS_POPUP                                  2147483648          // 0x80000000L
 #define WS_CHILD                                  1073741824          // 0x40000000L
@@ -513,9 +505,7 @@
                                                    WS_MINIMIZEBOX + ;
                                                    WS_MAXIMIZEBOX )
 
-/*
- * Extended Window Styles
- */
+/* Extended Window Styles */
 #define WS_EX_DLGMODALFRAME                       1                   // 0x00000001L
 #define WS_EX_NOPARENTNOTIFY                      4                   // 0x00000004L
 #define WS_EX_TOPMOST                             8                   // 0x00000008L
@@ -569,9 +559,7 @@
 #define SC_CONTEXTHELP                            61824               // 0xF180
 #define SC_SEPARATOR                              61455               // 0xF00F
 
-/*
- * Dialog styles
- */
+/* Dialog styles */
 #define DS_ABSALIGN                               1                   // 0x01
 #define DS_SYSMODAL                               2                   // 0x02
 #define DS_3DLOOK                                 4                   // 0x04
@@ -586,9 +574,7 @@
 #define DS_CENTERMOUSE                            4096                // 0x1000
 #define DS_CONTEXTHELP                            8192                // 0x2000
 
-/*
- * Dialog Box Command IDs
- */
+/* Dialog Box Command IDs */
 #define IDOK                                      1
 #define IDCANCEL                                  2
 #define IDABORT                                   3
@@ -599,9 +585,7 @@
 #define IDTRYAGAIN                                10                  // WINVER >= 0x0500
 #define IDCONTINUE                                11                  // WINVER >= 0x0500
 
-/*
- * Button Control Styles
- */
+/* Button Control Styles */
 #define BS_PUSHBUTTON                             0                   // 0x00000000L
 #define BS_DEFPUSHBUTTON                          1                   // 0x00000001L
 #define BS_CHECKBOX                               2                   // 0x00000002L
@@ -630,9 +614,7 @@
 #define BS_FLAT                                   32768               // 0x00008000L
 #define BS_RIGHTBUTTON                            BS_LEFTTEXT
 
-/*
- * User Button Notification Codes
- */
+/* User Button Notification Codes */
 #define BN_CLICKED                                0
 #define BN_PAINT                                  1
 #define BN_HILITE                                 2
@@ -645,9 +627,7 @@
 #define BN_SETFOCUS                               6
 #define BN_KILLFOCUS                              7
 
-/*
- * Button Control Messages
- */
+/* Button Control Messages */
 #define BM_GETCHECK                               240
 #define BM_SETCHECK                               241
 #define BM_GETSTATE                               242
@@ -663,9 +643,7 @@
 #define BST_PUSHED                                4
 #define BST_FOCUS                                 8
 
-/*
- * Edit Control Styles
- */
+/* Edit Control Styles */
 #define ES_LEFT                                   0
 #define ES_CENTER                                 1
 #define ES_RIGHT                                  2
@@ -681,9 +659,7 @@
 #define ES_WANTRETURN                             4096
 #define ES_NUMBER                                 8192
 
-/*
- * Edit Control Notification Codes
- */
+/* Edit Control Notification Codes */
 #define EN_SETFOCUS                               256                 // 0x0100
 #define EN_KILLFOCUS                              512                 // 0x0200
 #define EN_CHANGE                                 768                 // 0x0300
@@ -693,9 +669,7 @@
 #define EN_HSCROLL                                1537                // 0x0601
 #define EN_VSCROLL                                1538                // 0x0602
 
-/*
- * Edit Control Messages
- */
+/* Edit Control Messages */
 #define EM_GETSEL                                 176
 #define EM_SETSEL                                 177
 #define EM_GETRECT                                178
@@ -734,9 +708,7 @@
 #define EM_POSFROMCHAR                            214
 #define EM_CHARFROMPOS                            215
 
-/*
- * Combo Box styles
- */
+/* Combo Box styles */
 #define CBS_SIMPLE                                1                   // 0x0001L
 #define CBS_DROPDOWN                              2                   // 0x0002L
 #define CBS_DROPDOWNLIST                          3                   // 0x0003L
@@ -751,9 +723,7 @@
 #define CBS_UPPERCASE                             8192                // 0x2000L
 #define CBS_LOWERCASE                             16384               // 0x4000L
 
-/*
- * Combo Box Notification Codes
- */
+/* Combo Box Notification Codes */
 #define CBN_ERRSPACE                              -1
 #define CBN_SELCHANGE                             1
 #define CBN_DBLCLK                                2
@@ -766,9 +736,7 @@
 #define CBN_SELENDOK                              9
 #define CBN_SELENDCANCEL                          10
 
-/*
- * Combo Box messages
- */
+/* Combo Box messages */
 #define CB_GETEDITSEL                             320
 #define CB_LIMITTEXT                              321
 #define CB_SETEDITSEL                             322
@@ -808,16 +776,12 @@
 #define CB_MSGMAX                                 0x0165
 
 
-/*
- * Combo Box return Values
- */
+/* Combo Box return Values */
 #define CB_OKAY                                   0
 #define CB_ERR                                    -1
 #define CB_ERRSPACE                               -2
 
-/*
- * Static Control Constants
- */
+/* Static Control Constants */
 #define SS_LEFT                                   0                   // 0x00000000L
 #define SS_CENTER                                 1                   // 0x00000001L
 #define SS_RIGHT                                  2                   // 0x00000002L
@@ -850,9 +814,7 @@
 #define SS_WORDELLIPSIS                           49152
 #define SS_ELLIPSISMASK                           49152
 
-/*
- * Static Control Mesages
- */
+/* Static Control Mesages */
 #define STM_SETICON                               368
 #define STM_GETICON                               369
 #define STM_SETIMAGE                              370
@@ -863,9 +825,7 @@
 #define STN_ENABLE                                2
 #define STN_DISABLE                               3
 
-/*
- * Listbox messages
- */
+/* Listbox messages */
 #define LB_ADDSTRING                              384
 #define LB_INSERTSTRING                           385
 #define LB_DELETESTRING                           386
@@ -907,9 +867,7 @@
 #define LB_INITSTORAGE                            424
 #define LB_ITEMFROMPOINT                          425
 
-/*
- * Listbox Styles
- */
+/* Listbox Styles */
 #define LBS_NOTIFY                                1
 #define LBS_SORT                                  2
 #define LBS_NOREDRAW                              4
@@ -927,9 +885,7 @@
 #define LBS_NOSEL                                 16384
 #define LBS_STANDARD                              ( LBS_NOTIFY + LBS_SORT + WS_VSCROLL + WS_BORDER )
 
-/*
- * Listbox Notification Codes
- */
+/* Listbox Notification Codes */
 #define LBN_ERRSPACE                              -2
 #define LBN_SELCHANGE                             1
 #define LBN_DBLCLK                                2
@@ -937,9 +893,7 @@
 #define LBN_SETFOCUS                              4
 #define LBN_KILLFOCUS                             5
 
-/*
- * MessageBox() Flags
- */
+/* MessageBox() Flags */
 #define MB_OK                                     0
 #define MB_OKCANCEL                               1
 #define MB_ABORTRETRYIGNORE                       2
@@ -984,9 +938,7 @@
 #define MB_MODEMASK                               12288
 #define MB_MISCMASK                               49152
 
-/*
- * Stock Logical Objects
- */
+/* Stock Logical Objects */
 #define WHITE_BRUSH                               0
 #define LTGRAY_BRUSH                              1
 #define GRAY_BRUSH                                2
@@ -1008,9 +960,7 @@
 #define SYSTEM_FIXED_FONT                         16
 #define DEFAULT_GUI_FONT                          17
 
-/*
- * WM_SETICON / WM_GETICON Type Codes
- */
+/* WM_SETICON / WM_GETICON Type Codes */
 #define ICON_SMALL                                0
 #define ICON_BIG                                  1
 
@@ -1021,9 +971,7 @@
 #define IMAGE_CURSOR                              2
 #define IMAGE_ENHMETAFILE                         3
 
-/*
- * DrawText() Format Flags
- */
+/* DrawText() Format Flags */
 #define DT_TOP                                    0
 #define DT_LEFT                                   0
 #define DT_CENTER                                 1
@@ -1049,9 +997,7 @@
 #define DT_HIDEPREFIX                             1048576
 #define DT_PREFIXONLY                             2097152
 
-/*
- * Brush Styles
- */
+/* Brush Styles */
 #define BS_SOLID                                  0
 #define BS_NULL                                   1
 #define BS_HOLLOW                                 BS_NULL
@@ -1161,9 +1107,7 @@
 #define CC_SOLIDCOLOR                             128                 // 0x00000080 // WINVER >= 0x0400
 #define CC_ANYCOLOR                               256                 // 0x00000100 // WINVER >= 0x0400
 
-/*
- * Window field offsets for GetWindowLong()
- */
+/* Window field offsets for GetWindowLong() */
 #define GWL_WNDPROC                               -4
 #define GWL_HINSTANCE                             -6
 #define GWL_HWNDPARENT                            -8
@@ -1176,9 +1120,7 @@
 #define DWL_DLGPROC                               4
 #define DWL_USER                                  8
 
-/*
- *  Virtual Key Codes
- */
+/* Virtual Key Codes */
 #define VK_LBUTTON                                1
 #define VK_RBUTTON                                2
 #define VK_CANCEL                                 3
@@ -1252,9 +1194,7 @@
 #define VK_NUMLOCK                                144
 #define VK_SCROLL                                 145
 
-/*
- *  File Open/Save Dialog Constants
- */
+/* File Open/Save Dialog Constants */
 #define OFN_READONLY                              1
 #define OFN_OVERWRITEPROMPT                       2
 #define OFN_HIDEREADONLY                          4

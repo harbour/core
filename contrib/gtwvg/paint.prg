@@ -64,41 +64,41 @@ PROCEDURE Wvt_Paint()
 
 FUNCTION WvtPaintObjects()
 
-   LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
+   LOCAL blk, lExe, nLeft, nRight, b, tlbr_
 
-   aBlocks := WvtSetPaint()
+   LOCAL aBlocks := WvtSetPaint()
 
-   IF ( nBlocks := Len( aBlocks ) ) > 0
+   IF Len( aBlocks ) > 0
       tlbr_ := Wvt_GetPaintRect()
 
-      FOR i := 1 TO nBlocks
+      FOR EACH blk IN aBlocks
          lExe := .T.
 
-         IF aBlocks[ i, 3 ] != NIL .AND. ! Empty( aBlocks[ i, 3 ] )
+         IF blk[ 3 ] != NIL .AND. ! Empty( blk[ 3 ] )
             /* Check parameters against tlbr_ depending upon the
              * type of object and attributes contained in aAttr
              */
             DO CASE
-            CASE aBlocks[ i, 3, 1 ] == WVT_BLOCK_GRID_V
-               b := aBlocks[ i, 3, 6 ]
+            CASE blk[ 3, 1 ] == WVT_BLOCK_GRID_V
+               b := blk[ 3, 6 ]
                IF Len( b:aColumnsSep ) == 0
                   lExe := .F.
                ELSE
                   nLeft  := b:aColumnsSep[ 1 ]
                   nRight := ATail( b:aColumnsSep )
-                  IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   < bottom */
-                     tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm > top    */
+                  IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top   < bottom */
+                     tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ; /* bootm > top    */
                      tlbr_[ 2 ] <= nRight + 1       .AND. ; /* left  < right  */
                      tlbr_[ 4 ] >= nLeft  - 2             ) /* right > left   */
                      lExe := .F.
                   ENDIF
                ENDIF
 
-            CASE aBlocks[ i, 3, 1 ] == WVT_BLOCK_GETS
-               IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   < bott  */
-                  tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm > top   */
-                  tlbr_[ 2 ] <= aBlocks[ i, 3, 5 ] .AND. ; /* left  < righ  */
-                  tlbr_[ 4 ] >= aBlocks[ i, 3, 3 ]       ) /* right > left  */
+            CASE blk[ 3, 1 ] == WVT_BLOCK_GETS
+               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top   < bott  */
+                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ; /* bootm > top   */
+                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ; /* left  < righ  */
+                  tlbr_[ 4 ] >= blk[ 3, 3 ]       ) /* right > left  */
                   lExe := .F.
                ENDIF
 
@@ -106,17 +106,17 @@ FUNCTION WvtPaintObjects()
                /* If refreshing rectangle's top is less than objects' bottom
                 * and left is less than objects' right
                 */
-               IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   <= bottom  */
-                  tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm >= top     */
-                  tlbr_[ 2 ] <= aBlocks[ i, 3, 5 ] .AND. ; /* left  < right    */
-                  tlbr_[ 4 ] >= aBlocks[ i, 3, 3 ]       ) /* right > left     */
+               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top   <= bottom  */
+                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ; /* bootm >= top     */
+                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ; /* left  < right    */
+                  tlbr_[ 4 ] >= blk[ 3, 3 ]       ) /* right > left     */
                   lExe := .F.
                ENDIF
             ENDCASE
          ENDIF
 
          IF lExe
-            Eval( aBlocks[ i, 2 ] )
+            Eval( blk[ 2 ] )
          ENDIF
       NEXT
    ENDIF
@@ -156,8 +156,7 @@ FUNCTION Wvg_SetPaint( cID, nAction, xData, aAttr )
          ENDIF
       ELSE
          AAdd( t_paint_, { cID, {} } )
-         n := Len( t_paint_ )
-         AAdd( t_paint_[ n, 2 ], { nAction, xData, aAttr } )
+         AAdd( ATail( t_paint_ )[ 2 ], { nAction, xData, aAttr } )
       ENDIF
    ENDIF
 
@@ -676,7 +675,7 @@ PROCEDURE Wvt_PasteFromClipboard()
 
    nLen := Len( cText )
    FOR i := 1 TO nLen
-      Wvt_Keyboard( Asc( SubStr( cText, i, 1 ) ) )
+      Wvt_Keyboard( hb_keyCode( SubStr( cText, i, 1 ) ) )
    NEXT
 
    RETURN

@@ -1121,10 +1121,8 @@ METHOD WvgWindow:findObjectByHandle( hWnd )
 
    LOCAL nObj
 
-   IF Len( ::aChildren ) > 0
-      IF ( nObj := AScan( ::aChildren, {| o | o:hWnd == hWnd } ) ) > 0
-         RETURN ::aChildren[ nObj ]
-      ENDIF
+   IF ( nObj := AScan( ::aChildren, {| o | o:hWnd == hWnd } ) ) > 0
+      RETURN ::aChildren[ nObj ]
    ENDIF
 
    RETURN NIL

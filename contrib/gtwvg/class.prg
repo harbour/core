@@ -500,7 +500,6 @@ METHOD WvtDialog:Inkey()
          IF ::nUseObj > 0
             IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftUp() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnLeftUp )
-
             ENDIF
          ENDIF
       ENDIF
@@ -509,7 +508,6 @@ METHOD WvtDialog:Inkey()
          IF ::nUseObj > 0
             IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:MMLeftDown() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnMMLeftDown )
-
             ENDIF
          ENDIF
       ENDIF
@@ -518,7 +516,6 @@ METHOD WvtDialog:Inkey()
          IF ::nUseObj > 0
             IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftPressed() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnLeftPressed )
-
             ENDIF
          ENDIF
       ENDIF
@@ -526,7 +523,6 @@ METHOD WvtDialog:Inkey()
       IF ::nKey == K_LDBLCLK
          IF ::nUseObj > 0
             ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnSelect )
-
          ENDIF
       ENDIF
 
@@ -3023,7 +3019,6 @@ METHOD wvtMenu:DisableItem( nItemNum )
    RETURN -1
 
 METHOD wvtMenu:NumItems()
-
    RETURN Len( ::aItems )
 
 METHOD wvtMenu:GetItem( nItemNum )

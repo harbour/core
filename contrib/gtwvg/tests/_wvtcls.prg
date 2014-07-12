@@ -141,7 +141,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
 
    oBtn := WvtPushButton():New( oDlg, 124, 6, 129, 7, 137 )
    oBtn:cCaption  := "Print"
-   oBtn:bOnLeftUp := {|| Wvt_Keyboard( 379 ) }
+   oBtn:bOnLeftUp := {|| Wvt_Keyboard( K_CTRL_PRTSCR ) }
    oBtn:Tooltip   := "Open Printing Dialog for the Browser in Focus"
    oDlg:AddObject( oBtn )
 

@@ -172,11 +172,12 @@ METHOD display() CLASS RadioGroup
       cUnSelBox := ::cHotBox
    ENDIF
 
-   IF ! Empty( cSelBox )
+   DO CASE
+   CASE ! Empty( cSelBox )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
-   ELSEIF ! Empty( cUnSelBox )
+   CASE ! Empty( cUnSelBox )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cUnSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
-   ENDIF
+   ENDCASE
 
    IF ! Empty( cCaption := ::cCaption )
 

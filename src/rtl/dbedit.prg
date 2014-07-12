@@ -144,25 +144,28 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
 
       bBlock := iif( Type( cBlock ) == "M", {|| "  <Memo>  " }, hb_macroBlock( cBlock ) )
 
-      IF HB_ISARRAY( xColumnHeaders ) .AND. Len( xColumnHeaders ) >= nPos .AND. HB_ISSTRING( xColumnHeaders[ nPos ] )
+      DO CASE
+      CASE HB_ISARRAY( xColumnHeaders ) .AND. Len( xColumnHeaders ) >= nPos .AND. HB_ISSTRING( xColumnHeaders[ nPos ] )
          cHeading := xColumnHeaders[ nPos ]
-      ELSEIF HB_ISSTRING( xColumnHeaders )
+      CASE HB_ISSTRING( xColumnHeaders )
          cHeading := xColumnHeaders
-      ENDIF
+      ENDCASE
 
       oColumn := TBColumnNew( cHeading, bBlock )
 
-      IF HB_ISARRAY( xColumnSayPictures ) .AND. nPos <= Len( xColumnSayPictures ) .AND. HB_ISSTRING( xColumnSayPictures[ nPos ] ) .AND. ! Empty( xColumnSayPictures[ nPos ] )
+      DO CASE
+      CASE HB_ISARRAY( xColumnSayPictures ) .AND. nPos <= Len( xColumnSayPictures ) .AND. HB_ISSTRING( xColumnSayPictures[ nPos ] ) .AND. ! Empty( xColumnSayPictures[ nPos ] )
          oColumn:picture := xColumnSayPictures[ nPos ]
-      ELSEIF HB_ISSTRING( xColumnSayPictures ) .AND. ! Empty( xColumnSayPictures )
+      CASE HB_ISSTRING( xColumnSayPictures ) .AND. ! Empty( xColumnSayPictures )
          oColumn:picture := xColumnSayPictures
-      ENDIF
+      ENDCASE
 
-      IF HB_ISARRAY( xColumnFootings ) .AND. nPos <= Len( xColumnFootings ) .AND. HB_ISSTRING( xColumnFootings[ nPos ] )
+      DO CASE
+      CASE HB_ISARRAY( xColumnFootings ) .AND. nPos <= Len( xColumnFootings ) .AND. HB_ISSTRING( xColumnFootings[ nPos ] )
          oColumn:footing := xColumnFootings[ nPos ]
-      ELSEIF HB_ISSTRING( xColumnFootings )
+      CASE HB_ISSTRING( xColumnFootings )
          oColumn:footing := xColumnFootings
-      ENDIF
+      ENDCASE
 
       IF HB_ISARRAY( xHeadingSeparators ) .AND. nPos <= Len( xHeadingSeparators ) .AND. HB_ISSTRING( xHeadingSeparators[ nPos ] )
          oColumn:headSep := xHeadingSeparators[ nPos ]
@@ -177,7 +180,6 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
       ENDIF
 
       oBrowse:addColumn( oColumn )
-
    NEXT
 
    nOldCUrsor := SetCursor( SC_NONE )
