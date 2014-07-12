@@ -199,39 +199,31 @@ STATIC FUNCTION __UnixParseLangCP( cString, /* @ */ cLang )
 
 STATIC FUNCTION __CPStdToHb( cCPStd, cCtryStd )
 
-   LOCAL cCP
    LOCAL cCtryHb
    LOCAL cdp
 
-   DO CASE
-   CASE cCPStd == NIL
-      /* do nothing */
-   CASE Lower( cCPStd ) == "utf8"
-      cCP := "UTF8"
-   CASE Lower( cCPStd ) == "utf16"
-      cCP := "UTF16LE"
-   OTHERWISE
-      IF ! Empty( cCtryHb := __LangStdToCPCtryHb( cCtryStd ) )
+   IF cCPStd != NIL
+      SWITCH Lower( cCPStd )
+      CASE "utf8"
+         RETURN "UTF8"
+      CASE "utf16"
+         RETURN "UTF16LE"
+      OTHERWISE
+         cCtryHb := __LangStdToCPCtryHb( cCtryStd )
          FOR EACH cdp IN hb_cdpList()
-            IF Left( cdp, 2 ) == cCtryHb
-               IF Lower( cCPStd ) == hb_cdpUniID( cdp )
-                  cCP := cdp
-                  EXIT
-               ENDIF
+            IF hb_LeftEq( cdp, cCtryHb ) .AND. Lower( cCPStd ) == hb_cdpUniID( cdp )
+               RETURN cdp
             ENDIF
          NEXT
-      ENDIF
-      IF cCP == NIL
          FOR EACH cdp IN hb_cdpList()
             IF Lower( cCPStd ) == hb_cdpUniID( cdp )
-               cCP := cdp
-               EXIT
+               RETURN cdp
             ENDIF
          NEXT
-      ENDIF
-   ENDCASE
+      ENDSWITCH
+   ENDIF
 
-   RETURN cCP
+   RETURN NIL
 
 STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
 
@@ -479,4 +471,4 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
 #endif
    ENDSWITCH
 
-   RETURN Left( hb_cdpSelect(), 2 )
+   RETURN Left( hb_cdpSelect(), 2 )  /* Caller assumes this never returns strings shorter than two chars */
