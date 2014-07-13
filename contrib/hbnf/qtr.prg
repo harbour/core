@@ -26,9 +26,7 @@ FUNCTION ft_Qtr( dGivenDate, nQtrNum )
       nQtrNum := dGivenDate
    ENDIF
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
+   hb_default( @dGivenDate, Date() )
 
    aRetval := ft_Year( dGivenDate )
 

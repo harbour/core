@@ -21,13 +21,8 @@
 FUNCTION ft_DayToBoW( dGivenDate )
 
    LOCAL nDOW_Start := ft_DateCnfg()[ 2 ]
-   LOCAL nRetVal
+   LOCAL nRetVal := DoW( hb_defaultValue( dGivenDate, Date() ) ) - nDOW_Start
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
-
-   nRetVal := DoW( dGivenDate ) - nDOW_Start
    IF nRetVal < 0
       nRetVal += 7
    ENDIF

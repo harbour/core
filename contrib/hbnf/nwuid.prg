@@ -31,7 +31,6 @@ FUNCTION ft_NWUID( nConn )
 
    LOCAL aRegs[ INT86_MAX_REGS ]
    LOCAL cReqPkt
-   LOCAL cRepPkt
 
    IF nConn == NIL
       nConn := ft_NWLStat()
@@ -41,14 +40,11 @@ FUNCTION ft_NWUID( nConn )
    cReqPkt := hb_BChar( 22 ) + hb_BChar( nConn )  // Get Connection Information
    cReqPkt := I2Bin( hb_BLen( cReqPkt ) ) + cReqPkt
 
-   // Set up reply packet
-   cRepPkt := Space( 63 )
-
    // Assign registers
    aRegs[ AX ] := MAKEHI( 0xE3 )  // NW_LOG
    aRegs[ DS ] := cReqPkt
    aRegs[ SI ] := REG_DS
-   aRegs[ ES ] := cRepPkt
+   aRegs[ ES ] := Space( 63 )  // Set up reply packet
    aRegs[ DI ] := REG_ES
 
    ft_int86( 33, aRegs )

@@ -35,49 +35,18 @@ PROCEDURE ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
    LOCAL nTtlUsed
    LOCAL sMainScrn, lCancMode, lLooping := .T.
 
-   // column position for each item on the menu bar
-   LOCAL aBarCol[ Len( aBar ) ]
+   LOCAL aKeyCodes := { ;  // inkey codes for A - Z
+      K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F, ;
+      K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L, ;
+      K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R, ;
+      K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X, ;
+      K_ALT_Y, K_ALT_Z }
 
-   // inkey code for each item on menu bar
-   LOCAL aBarKeys[ Len( aBar ) ]
-
-   // inkey codes for A - Z
-   LOCAL aKeyCodes := { ;
-      K_ALT_A, ;
-      K_ALT_B, ;
-      K_ALT_C, ;
-      K_ALT_D, ;
-      K_ALT_E, ;
-      K_ALT_F, ;
-      K_ALT_G, ;
-      K_ALT_H, ;
-      K_ALT_I, ;
-      K_ALT_J, ;
-      K_ALT_K, ;
-      K_ALT_L, ;
-      K_ALT_M, ;
-      K_ALT_N, ;
-      K_ALT_O, ;
-      K_ALT_P, ;
-      K_ALT_Q, ;
-      K_ALT_R, ;
-      K_ALT_S, ;
-      K_ALT_T, ;
-      K_ALT_U, ;
-      K_ALT_V, ;
-      K_ALT_W, ;
-      K_ALT_X, ;
-      K_ALT_Y, ;
-      K_ALT_Z }
-
-   // Len() of widest array element for for each pulldown menu
-   LOCAL aBarWidth[ Len( aBar ) ]
-
-   // starting column for each box
-   LOCAL aBoxLoc[ Len( aBar ) ]
-
-   // last selection for each element
-   LOCAL aLastSel[ Len( aBar ) ]
+   LOCAL aBarCol[ Len( aBar ) ]    // column position for each item on the menu bar
+   LOCAL aBarKeys[ Len( aBar ) ]   // inkey code for each item on menu bar
+   LOCAL aBarWidth[ Len( aBar ) ]  // Len() of widest array element for for each pulldown menu
+   LOCAL aBoxLoc[ Len( aBar ) ]    // starting column for each box
+   LOCAL aLastSel[ Len( aBar ) ]   // last selection for each element
 
    // color memvars
    LOCAL cBorder  := aColors[ 1 ]
@@ -89,8 +58,8 @@ PROCEDURE ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
    t_nMaxRow := MaxRow()
    t_nMaxCol := MaxCol()
 
-   // row for menu bar
-   __defaultNIL( @nTopRow, 0 )
+   __defaultNIL( @nTopRow, 0 )  // row for menu bar
+   __defaultNIL( @lShadow, .T. )
 
    AFill( aLastSel, 1 )
    t_aChoices := aOptions
@@ -122,8 +91,8 @@ PROCEDURE ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
    AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), hb_DispOutAt( nTopRow, aBarCol[ i ], aBar[ i ] ) } )
 
    // store inkey code for each item on menu bar to aBarKeys
-   AEval( aBarKeys, {| x, i | HB_SYMBOL_UNUSED( x ), aBarKeys[ i ] := ;
-      aKeyCodes[ Asc( Upper( LTrim( aBar[ i ] ) ) ) - Asc( "@" ) ] } )
+   AEval( aBarKeys, {| x, i | x := hb_keyCode( Upper( LTrim( aBar[ i ] ) ) ) - hb_keyCode( "A" ) + 1, ;
+      aBarKeys[ i ] := iif( x >= 1 .AND. x <= Len( aKeyCodes ), aKeyCodes[ x ], 0 ) } )
 
    // disable Alt-C and Alt-D
    lCancMode := SetCancel( .F. )
@@ -138,24 +107,31 @@ PROCEDURE ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
       RESTORE SCREEN FROM sMainScrn
       SetColor( cCurrent )
       hb_DispOutAt( nTopRow, aBarCol[ t_nHPos ], aBar[ t_nHPos ] )
-      IF lShadow == NIL .OR. lShadow
+      IF lShadow
          hb_Shadow( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] )
       ENDIF
       hb_DispBox( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ], HB_B_DOUBLE_UNI + " ", cBorder )
       SetColor( cBox + "," + cCurrent + ",,," + cUnselec )
       t_nVPos := AChoice( nTopRow + 2, aBoxLoc[ t_nHPos ] + 2, Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 1 + aBoxLoc[ t_nHPos ], t_aChoices[ t_nHPos, 1 ], t_aChoices[ t_nHPos, 3 ], {| nMode | __ftAcUdf( nMode ) }, aLastSel[ t_nHPos ] )
-      DO CASE
-      CASE LastKey() == K_RIGHT .OR. LastKey() == K_TAB
+      SWITCH LastKey()
+      CASE K_RIGHT
+      CASE K_TAB
          t_nHPos := iif( t_nHPos == Len( t_aChoices ), 1, t_nHPos + 1 )
-      CASE LastKey() == K_LEFT .OR. LastKey() == K_SH_TAB
+         EXIT
+      CASE K_LEFT
+      CASE K_SH_TAB
          t_nHPos := iif( t_nHPos == 1, Len( t_aChoices ), t_nHPos - 1 )
-      CASE LastKey() == K_ESC
-         lLooping := _ftBailOut( cBorder, cBox )
-      CASE LastKey() == K_HOME
+         EXIT
+      CASE K_HOME
          t_nHPos := 1
-      CASE LastKey() == K_END
+         EXIT
+      CASE K_END
          t_nHPos := Len( t_aChoices )
-      CASE LastKey() == K_ENTER
+         EXIT
+      CASE K_ESC
+         lLooping := _ftBailOut( cBorder, cBox )
+         EXIT
+      CASE K_ENTER
          aLastSel[ t_nHPos ] := t_nVPos
          IF t_aChoices[ t_nHPos, 2, t_nVPos ] != NIL
             SetCancel( lCancMode )
@@ -164,9 +140,12 @@ PROCEDURE ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
             AltD( DISABLE )
             SetCancel( .F. )
          ENDIF
-      CASE AScan( aBarKeys, LastKey() ) > 0
-         t_nHPos := AScan( aBarKeys, LastKey() )
-      ENDCASE
+         EXIT
+      OTHERWISE
+         IF AScan( aBarKeys, LastKey() ) > 0
+            t_nHPos := AScan( aBarKeys, LastKey() )
+         ENDIF
+      ENDSWITCH
    ENDDO
    SetCancel( lCancMode )
    AltD( ENABLE )

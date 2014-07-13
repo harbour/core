@@ -43,10 +43,12 @@ FUNCTION ft_PushVid()
 
 FUNCTION ft_PopVid()
 
-   LOCAL nNewSize := Len( t_aVideo ) - 1
-   LOCAL aBottom  := ATail( t_aVideo )
+   LOCAL nSize := Len( t_aVideo )
+   LOCAL aBottom
 
-   IF nNewSize >= 0
+   IF nSize >= 1
+      aBottom := ATail( t_aVideo )
+
       SetMode( aBottom[ PV_MAXROW ], aBottom[ PV_MAXCOL ] )
       SetCursor( aBottom[ PV_CURSOR ] )
       NoSnow( aBottom[ PV_NOSNOW ] )
@@ -56,7 +58,7 @@ FUNCTION ft_PopVid()
       SetPos( aBottom[ PV_ROW ], aBottom[ PV_COL ] )
       Set( _SET_SCOREBOARD, aBottom[ PV_SCORE ] )
 
-      ASize( t_aVideo, nNewSize )
+      ASize( t_aVideo, nSize - 1 )
    ENDIF
 
-   RETURN Len( t_aVideo )
+   RETURN nSize

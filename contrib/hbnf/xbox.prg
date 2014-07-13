@@ -82,11 +82,9 @@ PROCEDURE ft_XBox( ;
 
    // print text in box
    SetColor( hb_defaultValue( cBoxColor, "W/N" ) )
-   AEval( aLines, {| cSayStr, nLoop | ;
-      hb_DispOutAt( ;
-         nTRow + nLoop, ;
-         nLCol + 2 + iif( hb_LeftEq( cJustType, "L" ), 0, ( nLLen - Int( Len( cSayStr ) ) ) / 2 ), ;
-         cSayStr ) } )
+   AEval( aLines, {| cSayStr, nLoop | hb_DispOutAt( nTRow + nLoop, ;
+      nLCol + 2 + iif( hb_LeftEq( cJustType, "L" ), 0, ( nLLen - Int( Len( cSayStr ) ) ) / 2 ), ;
+      cSayStr ) } )
 
    // wait for keypress if desired
    IF hb_LeftEq( cRetWait, "W" )

@@ -61,7 +61,7 @@ PROCEDURE __Dir( cFileMask )
 
       /* NOTE: Although Cl*pper has this string in the national language
                module, it will not use it from there.
-               This is hard wired to English. So this is a small
+               This is hard-wired to English. So this is a small
                incompatibility. */
 
 #ifdef HB_CLP_STRICT
@@ -124,18 +124,17 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
 STATIC PROCEDURE PutNormal( aDirEntry )
 
-   LOCAL cName
-   LOCAL cExt
+   LOCAL cName, cExt
 
    hb_FNameSplit( aDirEntry[ F_NAME ],, @cName, @cExt )
 
    /* Strict MS-DOS like formatting, it does not play well with long
-      file names which do not stick to 8.3 MS-DOS convention */
+      filenames which do not stick to 8.3 MS-DOS convention */
 
    QOut( ;
       PadR( cName, 8 ), ;
       PadR( SubStr( cExt, 2 ), 3 ), ;
       Str( aDirEntry[ F_SIZE ], 8 ), "", ;
-      DToC( aDirEntry[ F_DATE ] ) )
+      aDirEntry[ F_DATE ] )
 
    RETURN

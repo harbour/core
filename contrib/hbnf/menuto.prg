@@ -28,7 +28,7 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
-#xtranslate isOkay( <exp> ) => ( <exp> \> 0 .AND. <exp> \<= nCount )
+#xtranslate isOkay( <exp> ) => ( <exp> \>= 1 .AND. <exp> \<= nCount )
 
 // These arrays hold information about each menu item
 THREAD STATIC t_aRow          := { {} }
@@ -256,7 +256,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
       CASE nKey == K_DOWN
          // If Down Arrow was pressed, go to the designated menu item.
          IF t_aDown[ nMenu, nActive ] == NIL
-            if ++nActive > nCount
+            IF ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
             ENDIF
          ELSE
@@ -280,7 +280,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
       CASE nKey == K_RIGHT
          // If Right Arrow was pressed, go to the designated menu item.
          IF t_aRight[ nMenu, nActive ] == NIL
-            if ++nActive > nCount
+            IF ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
             ENDIF
          ELSE

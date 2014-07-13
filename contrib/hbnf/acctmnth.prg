@@ -26,9 +26,7 @@ FUNCTION ft_AcctMonth( dGivenDate, nMonthNum )
       nMonthNum := dGivenDate
    ENDIF
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
+   hb_default( @dGivenDate, Date() )
 
    aRetVal := ft_Month( dGivenDate )
    nYTemp := Val( SubStr( aRetVal[ 1 ], 1, 4 ) )

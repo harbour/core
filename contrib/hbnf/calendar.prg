@@ -47,33 +47,15 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
    DO WHILE nKey != K_ESC
 
       SWITCH nKey
-      CASE K_HOME
-         nJump--
-         EXIT
-      CASE K_END
-         nJump++
-         EXIT
-      CASE K_UP
-         nJump -= 30
-         EXIT
-      CASE K_DOWN
-         nJump += 30
-         EXIT
-      CASE K_PGUP
-         nJump -= 365
-         EXIT
-      CASE K_PGDN
-         nJump += 365
-         EXIT
-      CASE K_RIGHT
-         nJump -= 7
-         EXIT
-      CASE K_LEFT
-         nJump += 7
-         EXIT
-      CASE K_INS
-         nJump := 0
-         EXIT
+      CASE K_HOME  ; nJump-- ; EXIT
+      CASE K_END   ; nJump++ ; EXIT
+      CASE K_UP    ; nJump -= 30 ; EXIT
+      CASE K_DOWN  ; nJump += 30 ; EXIT
+      CASE K_PGUP  ; nJump -= 365 ; EXIT
+      CASE K_PGDN  ; nJump += 365 ; EXIT
+      CASE K_RIGHT ; nJump -= 7 ; EXIT
+      CASE K_LEFT  ; nJump += 7 ; EXIT
+      CASE K_INS   ; nJump := 0 ; EXIT
       CASE K_F1
          IF lShowHelp .AND. ! lHelpIsDisplayed
             lHelpIsDisplayed := .T.

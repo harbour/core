@@ -128,27 +128,22 @@ STATIC FUNCTION _ftColors( aOpt, aClrPal, lColor )
    LOCAL cScrSav := SaveScreen( 18, 0, MaxRow(), MaxCol() )
 
    ASize( aOpt, 4 )                            // check incoming parameters
-   __defaultNIL( @aOpt[ C_CHAR ], "" )
-   __defaultNIL( @aOpt[ C_TYPE ], "W" )
+   hb_default( @aOpt[ C_CHAR ], "" )
+   hb_default( @aOpt[ C_TYPE ], "W" )
    aOpt[ C_CLR ]  := Upper( aOpt[ C_CLR ] )    // need upper case
    aOpt[ C_TYPE ] := Upper( aOpt[ C_TYPE ] )
 
-   __defaultNIL( @lColor, IsColor() )
+   hb_default( @lColor, IsColor() )
 
    // display appropriate prompts based on type of color setting
-   nChoice := 1
-   DO CASE
-   CASE aOpt[ C_TYPE ] == "D"
-      aPrompt := { " Color ", " Character " }
-   CASE aOpt[ C_TYPE ] == "M"
-      aPrompt := { " Prompt ", " Message ", " HotKey ", ;
-         " LightBar ", " LightBar HotKey " }
-   CASE aOpt[ C_TYPE ] == "A" .OR. ;
-        aOpt[ C_TYPE ] == "B"
-      aPrompt := { " Standard ", " Selected ", " Border ", " Unavailable " }
-   OTHERWISE
-      aPrompt := { " Standard ", " Selected ", " Border ", " Unselected " }
-   ENDCASE
+
+   SWITCH aOpt[ C_TYPE ]
+   CASE "D"  ; aPrompt := { " Color ", " Character " } ; EXIT
+   CASE "M"  ; aPrompt := { " Prompt ", " Message ", " HotKey ", " LightBar ", " LightBar HotKey " } ; EXIT
+   CASE "A"
+   CASE "B"  ; aPrompt := { " Standard ", " Selected ", " Border ", " Unavailable " } ; EXIT
+   OTHERWISE ; aPrompt := { " Standard ", " Selected ", " Border ", " Unselected " }
+   ENDSWITCH
 
    IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
       // we need to know top,left,bottom,right for the prompt window
@@ -195,11 +190,11 @@ STATIC FUNCTION _ftColors( aOpt, aClrPal, lColor )
       ASize( aClrs, 5 )                      // make sure there are 5 settings
       // empty elements are made NIL so they can be defaulted
       AEval( aClrs, {| v, e | aClrs[ e ] := iif( Empty( v ), NIL, AllTrim( v ) ) } )
-      __defaultNIL( @aClrs[ 1 ], "W/N" )
-      __defaultNIL( @aClrs[ 2 ], "N/W" )  // place default colors into
-      __defaultNIL( @aClrs[ 3 ], "N/N" )  // elements which are empty
-      __defaultNIL( @aClrs[ 4 ], "N/N" )
-      __defaultNIL( @aClrs[ 5 ], "N/W" )
+      hb_default( @aClrs[ 1 ], "W/N" )
+      hb_default( @aClrs[ 2 ], "N/W" )  // place default colors into
+      hb_default( @aClrs[ 3 ], "N/N" )  // elements which are empty
+      hb_default( @aClrs[ 4 ], "N/N" )
+      hb_default( @aClrs[ 5 ], "N/W" )
       cClr := aClrs[ nChoice ]    // selected color
 
       // allow change to specific part of color string
@@ -214,7 +209,6 @@ STATIC FUNCTION _ftColors( aOpt, aClrPal, lColor )
       IF aOpt[ C_TYPE ] == "T"
          EXIT
       ENDIF
-
    ENDDO
 
    // restore the lower 1/2 of screen, and color
@@ -235,7 +229,6 @@ STATIC PROCEDURE _ftShowIt( aOpt )
    DispBegin()
 
    SWITCH aOpt[ C_TYPE ]
-
    CASE "D"    // Desktop Background
       SetColor( aClr[ 1 ] )
       BkGrnd( 19, 43, 22, 64, aOpt[ C_CHAR ] )
@@ -477,15 +470,12 @@ STATIC FUNCTION _ftChr2Arr( cString, cDelim )
 
    LOCAL n, aArray := {}
 
-   __defaultNIL( @cDelim, "," )
-   __defaultNIL( @cString, "" )  // this should really be passed
+   hb_default( @cDelim, "," )
+   hb_default( @cString, "" )  // this should really be passed
 
    cString += cDelim
 
-   DO WHILE .T.
-      IF Empty( cString )
-         EXIT
-      ENDIF
+   DO WHILE ! Empty( cString )
       n := At( cDelim, cString )
       AAdd( aArray, iif( n == 1, "", Left( cString, n - 1 ) ) )
       cString := SubStr( cString, n + 1 )
@@ -498,8 +488,8 @@ STATIC FUNCTION _ftArr2Chr( aArray, cDelim )
 
    LOCAL cString := ""
 
-   __defaultNIL( @aArray, {} )
-   __defaultNIL( @cDelim, "," )
+   hb_default( @aArray, {} )
+   hb_default( @cDelim, "," )
 
    AEval( aArray, {| v, e | cString += iif( e == 1, v, cDelim + v ) } )
 
@@ -509,19 +499,14 @@ STATIC FUNCTION _ftArr2Chr( aArray, cDelim )
 STATIC PROCEDURE _ftShowPal( aClrPal, cChr )
 
    LOCAL nF, nB
-   LOCAL nTop    := 0
-   LOCAL nLeft   := 28
-   LOCAL nBottom := nTop  + Len( aClrPal ) + 1
-   LOCAL nRight  := nLeft + ( Len( aClrPal ) * 3 ) + 2
-
-   // Buffer the screen output
+   LOCAL nTop := 0
+   LOCAL nLeft := 28
 
    DispBegin()
-   Single( nTop, nLeft, nBottom, nRight )
+   Single( nTop, nLeft, nTop  + Len( aClrPal ) + 1, nLeft + ( Len( aClrPal ) * 3 ) + 2 )
    FOR nF := 1 TO Len( aClrPal )
-      FOR nB := 1 TO  Len( aClrPal[ nF ] )
-         SetColor( aClrPal[ nF ][ nB ] )
-         hb_DispOutAt( nF, nB * 3 + 27, cChr )
+      FOR nB := 1 TO Len( aClrPal[ nF ] )
+         hb_DispOutAt( nF, nB * 3 + 27, cChr, aClrPal[ nF ][ nB ] )
       NEXT
    NEXT
    DispEnd()

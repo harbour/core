@@ -5,6 +5,7 @@
    Pass "vga" or "VGA" as a command line parameter for 50-line mode.
  */
 
+#include "box.ch"
 #include "setcurs.ch"
 
 PROCEDURE Main( cCmdLine )
@@ -20,7 +21,7 @@ PROCEDURE Main( cCmdLine )
 
    // options on menu bar
    LOCAL aColors
-   LOCAL aBar := { " ENTER/EDIT ", " REPORTS ", " DISPLAY ", " MAINTENANCE ", " QUIT " }
+   LOCAL aBar := { " ÉNTER/EDIT ", " REPORTS ", " DISPLAY ", " MAINTENANCE ", " QUIT " }
    LOCAL aOptions[ Len( aBar ) ]
 
    LOCAL nMaxRow
@@ -35,7 +36,8 @@ PROCEDURE Main( cCmdLine )
    lColor := iif( "MONO" $ Upper( cCmdLine ), .F., IsColor() )
 
    // Border, Box, Bar, Current, Unselected
-   aColors := iif( lColor, { "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;
+   aColors := iif( lColor, { ;
+        "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;
       { "W+/N", "W+/N", "W/N", "N/W", "W/N" } )
 
    ft_Fill( aOptions[ 1 ], "A. Execute A Dummy Procedure"        , {|| fubar() }, .T. )
@@ -61,6 +63,7 @@ PROCEDURE Main( cCmdLine )
    ft_Fill( aOptions[ 2 ], "K. Print Transaction Totals"         , {|| .T. }, .T. )
    ft_Fill( aOptions[ 2 ], "L. Print Transaction Codes File"     , {|| .T. }, .T. )
    ft_Fill( aOptions[ 2 ], "M. Print No-Activity List"           , {|| .T. }, .T. )
+   ft_Fill( aOptions[ 2 ], "Á. Testing Unicode"                  , {|| .T. }, .T. )
 
    ft_Fill( aOptions[ 3 ], "A. Transaction Totals Display"       , {|| .T. }, .T. )
    ft_Fill( aOptions[ 3 ], "B. Display Invoice Totals"           , {|| .T. }, .T. )
@@ -104,7 +107,7 @@ PROCEDURE Main( cCmdLine )
    @ nMaxRow, MaxCol() - 12 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
 
    SetColor( cErrH )
-   @ nMaxRow - 11, 23, nMaxRow - 3, 56 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
+   @ nMaxRow - 11, 23, nMaxRow - 3, 56 BOX HB_B_SINGLE_UNI + " "
    @ nMaxRow -  9, 23 SAY hb_UTF8ToStr( "├────────────────────────────────┤" )
    SetColor( cErrN )
    @ nMaxRow - 10, 33 SAY "Navigation Keys"

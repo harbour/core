@@ -30,16 +30,9 @@ FUNCTION ft_Elapsed( dStart, dEnd, cTimeStart, cTimeEnd )
       cTimeEnd := dEnd
    ENDIF
 
-   IF ! HB_ISDATE( dStart )
-      dStart := Date()
-   ENDIF
-   IF ! HB_ISDATE( dEnd )
-      dEnd := Date()
-   ENDIF
-
    nTemp := nTotalSec := 86400 * ( ;
-      hb_SToT( DToS( dEnd   ) + StrTran( hb_defaultValue( cTimeEnd  , "" ), ":" ) ) - ;
-      hb_SToT( DToS( dStart ) + StrTran( hb_defaultValue( cTimeStart, "" ), ":" ) ) )
+      hb_SToT( DToS( hb_defaultValue( dEnd  , Date() ) ) + StrTran( hb_defaultValue( cTimeEnd  , "" ), ":" ) ) - ;
+      hb_SToT( DToS( hb_defaultValue( dStart, Date() ) ) + StrTran( hb_defaultValue( cTimeStart, "" ), ":" ) ) )
 
    FOR EACH nConst IN { 86400, 3600, 60, 1 }
       aRetVal[ nConst:__enumIndex() ] := { tmp := Int( nTemp / nConst ), nTotalSec / nConst }

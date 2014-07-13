@@ -24,8 +24,6 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#xtranslate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => hb_DispBox( <top>, <left>, <bottom>, <right>, HB_B_DOUBLE_UNI + " " )
-
 /* here's the board array -- structure of which is:
    board_[ xx, 1 ] - subarray containing box coordinates for this peg
    board_[ xx, 2 ] - subarray containing all adjacent locations
@@ -119,7 +117,7 @@ PROCEDURE ft_Pegs()
                toprow := 21 - Len( possible_ )
                SetColor( "+w/b" )
                buffer := SaveScreen( toprow, 55, 22, 74 )
-               DOUBLEBOX( toprow, 55, 22, 74 )
+               hb_DispBox( toprow, 55, 22, 74, HB_B_DOUBLE_UNI + " " )
                hb_DispOutAt( toprow, 58, "Possible Moves" )
                SetPos( toprow, 65 )
                AEval( possible_, {| a | hb_DispOutAt( Row() + 1, 65, Transform( a[ 2 ], "##" ) ) } )
@@ -201,7 +199,7 @@ STATIC FUNCTION moremoves( board_ )
    IF ! canmove
       SetColor( "+w/b" )
       buffer := SaveScreen( 18, 55, 21, 74 )
-      DOUBLEBOX( 18, 55, 21, 74 )
+      hb_DispBox( 18, 55, 21, 74, HB_B_DOUBLE_UNI + " " )
       hb_DispOutAt( 19, 58, "No more moves!" )
       hb_DispOutAt( 20, 58, hb_ntos( piecesleft ) + " pieces left" )
       Inkey( 0 )

@@ -17,9 +17,9 @@
 
 FUNCTION ft_GCD( nNumber1, nNumber2 )
 
-   LOCAL nHold1                   // Temporarily hold the maximum number
-   LOCAL nHold2                   // Temporarily hold the minimum number
-   LOCAL nResult                  // GCD
+   LOCAL nHold1   // Temporarily hold the maximum number
+   LOCAL nHold2   // Temporarily hold the minimum number
+   LOCAL nResult  // GCD
 
    // Either number zero?
    IF nNumber1 == 0 .OR. nNumber2 == 0
@@ -41,4 +41,4 @@ FUNCTION ft_GCD( nNumber1, nNumber2 )
       ENDIF
    ENDDO
 
-   RETURN nHold1                  // Maximum number should be the answer
+   RETURN nHold1  // Maximum number should be the answer

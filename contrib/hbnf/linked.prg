@@ -38,10 +38,8 @@ FUNCTION ft_Linked( cFuncs )
             // We have extra parameters or spaces prior to the start
             // of the function. Strip them out.
             DO CASE
-            CASE nComma > 0
-               cFuncs := SubStr( cFuncs, nComma + 1 )
-            CASE nSpace > 0
-               cFuncs := SubStr( cFuncs, nSpace + 1 )
+            CASE nComma > 0 ; cFuncs := SubStr( cFuncs, nComma + 1 )
+            CASE nSpace > 0 ; cFuncs := SubStr( cFuncs, nSpace + 1 )
             ENDCASE
          ENDDO
       ENDDO

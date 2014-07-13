@@ -1,6 +1,7 @@
 /*
- * CMonth(), CDoW() functions
+ * CMonth(), CDoW(), hb_CDay() functions
  *
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour) (hb_CDay())
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -100,6 +101,23 @@ HB_FUNC( CDOW )
          hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
          hb_retc_const( hb_dateCDOW( hb_dateDOW( iYear, iMonth, iDay ) ) );
       }
+      else
+         hb_retc_null();
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_CDAY )
+{
+   PHB_ITEM pDay = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pDay )
+   {
+      int nDay = hb_itemGetNI( pDay );
+
+      if( nDay > 0 )
+         hb_retc_const( hb_dateCDOW( nDay ) );
       else
          hb_retc_null();
    }

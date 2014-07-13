@@ -22,9 +22,7 @@ FUNCTION ft_AcctYear( dGivenDate )
 
    LOCAL nYTemp, aRetVal
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
+   hb_default( @dGivenDate, Date() )
 
    aRetVal      := ft_Year( dGivenDate )
    nYTemp       := Val( aRetVal[ 1 ] )

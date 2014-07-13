@@ -21,12 +21,9 @@
 FUNCTION ft_Year( dGivenDate )
 
    LOCAL aRetVal[ 3 ]
-
    LOCAL cFY_Start := ft_DateCnfg()[ 1 ]
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
+   hb_default( @dGivenDate, Date() )
 
    aRetVal[ 2 ] := hb_SToD( ;
       StrZero( Year( dGivenDate ) - iif( Month( dGivenDate ) < Month( hb_CToD( cFY_Start, "yyyy.mm.dd" ) ), 1, 0 ), 4 ) + ;

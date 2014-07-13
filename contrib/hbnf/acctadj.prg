@@ -26,10 +26,7 @@ FUNCTION ft_AcctAdj( dGivenDate, lIsEnd )
 
    LOCAL nTemp
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
-
+   hb_default( @dGivenDate, Date() )
    hb_default( @lIsEnd, .F. )
 
    nTemp := ft_DayToBoW( dGivenDate )

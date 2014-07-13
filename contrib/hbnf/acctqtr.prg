@@ -26,9 +26,7 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
       nQtrNum := dGivenDate
    ENDIF
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
+   hb_default( @dGivenDate, Date() )
 
    aRetVal      := ft_Qtr( dGivenDate )
    nYTemp       := Val( SubStr( aRetVal[ 1 ], 1, 4 ) )

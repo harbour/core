@@ -33,25 +33,25 @@ FUNCTION ft_Easter( nYear )
 
       IF nYear > 1582
 
-         // <<nGold>> is Golden number of the year in the 19 year Metonic cycle
+         // <nGold> is Golden number of the year in the 19 year Metonic cycle
          nGold := nYear % 19 + 1
 
-         // <<nCent>> is Century
+         // <nCent> is Century
          nCent := Int( nYear / 100 ) + 1
 
          // Corrections:
-         // <<nCorx>> is the no. of years in which leap-year was dropped in order
+         // <nCorx> is the no. of years in which leap-year was dropped in order
          // to keep step with the sun
          nCorx := Int( ( 3 * nCent ) / 4 - 12 )
 
-         // <<nCorz>> is a special correction to synchronize Easter with the moon's
+         // <nCorz> is a special correction to synchronize Easter with the moon's
          // orbit.
          nCorz := Int( ( 8 * nCent + 5 ) / 25 - 5 )
 
-         // <<nSunday>> Find Sunday
+         // <nSunday> Find Sunday
          nSunday := Int( ( 5 * nYear ) / 4 - nCorx - 10 )
 
-         // Set Epact <<nEpact>> (specifies occurance of a full moon)
+         // Set Epact <nEpact> (specifies occurance of a full moon)
          nEpact := Int( ( 11 * nGold + 20 + nCorz - nCorx ) % 30 )
 
          IF nEpact < 0
@@ -62,7 +62,7 @@ FUNCTION ft_Easter( nYear )
             ++nEpact
          ENDIF
 
-         // Find full moon - the <<nMoon>>th of MARCH is a "calendar" full moon
+         // Find full moon - the <nMoon>th of March is a "calendar" full moon
          nMoon := 44 - nEpact
 
          IF nMoon < 21

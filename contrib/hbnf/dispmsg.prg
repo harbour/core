@@ -34,7 +34,7 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    LOCAL cOldColor
    LOCAL i
    LOCAL j
-   LOCAL nOption
+   LOCAL nKey
    LOCAL aPos := {}
    LOCAL nLeft
    LOCAL aLeft
@@ -90,9 +90,7 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    __defaultNIL( @lShadow, .T. )
 
    cOldScreen := SaveScreen( nBoxTop, nBoxLeft, nBoxBottom + 1, nBoxRight + 2 )
-
    cOldCursor := SetCursor( SC_NONE )
-
    // draw box
    cOldColor := SetColor( aInfo[ 2, Len( aInfo[ 2 ] ) ] )
 
@@ -127,7 +125,6 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    /* highlight characters */
    FOR i := 1 TO Len( aPos )
       FOR j := 1 TO Len( aPos[ i ] )
-
          ft_SetAttr( nBoxTop + i, ;
             aPos[ i, j, 1 ] + aLeft[ i ] - 1, ;
             nBoxTop + i, ;
@@ -138,16 +135,17 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    IF cKey != NIL
       IF Len( cKey ) == 1
-         nOption := ft_SInkey( 0 )
-         IF Upper( Chr( nOption ) ) == cKey
+         IF Upper( hb_keyChar( ft_SInkey( 0 ) ) ) == Upper( cKey )
             xRtnVal := .T.
          ENDIF
       ELSE
-         nOption := 0
-         DO WHILE hb_BAt( Upper( Chr( nOption ) ), Upper( cKey ) ) == 0
-            nOption := ft_SInkey( 0 )
+         DO WHILE .T.
+            nKey := ft_SInkey( 0 )
+            IF At( iif( Empty( hb_keyChar( nKey ) ), hb_BChar( nKey ), Upper( hb_keyChar( nKey ) ) ), Upper( cKey ) ) > 0
+               EXIT
+            ENDIF
          ENDDO
-         xRtnVal := nOption
+         xRtnVal := nKey
       ENDIF
       RestScreen( nBoxTop, nBoxLeft, nBoxBottom + 1, nBoxRight + 2, cOldScreen )
    ENDIF

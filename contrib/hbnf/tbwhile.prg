@@ -47,9 +47,11 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       cColorList, cColorShad, nTop, nLeft, nBottom, nRight )
 
    LOCAL b, column, i
-   LOCAL lKeepScrn, cScrnSave
+   LOCAL cScrnSave
    LOCAL cColorSave, cColorBack, nCursSave
    LOCAL lMore, nKey, nPassRec
+
+   LOCAL lKeepScrn := PCount() > 6
 
    __defaultNIL( @nFreeze, 0 )
    __defaultNIL( @lSaveScrn, .T. )
@@ -59,8 +61,6 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    __defaultNIL( @nLeft, 2 )
    __defaultNIL( @nBottom, MaxRow() - 2 )
    __defaultNIL( @nRight, MaxCol() - 2 )
-
-   lKeepScrn := PCount() > 6
 
    dbSeek( cKey )
    IF ! Found() .OR. LastRec() == 0
@@ -77,9 +77,7 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    /* add custom TbSkipWhil() (to handle passed condition) */
    b:skipBlock := {| x | TbSkipWhil( x, bWhileCond ) }
-
-   /* Set up substitute goto top and goto bottom
-      with While's top and bottom records */
+   /* Set up substitute goto top and goto bottom with While's top and bottom records */
    b:goTopBlock    := {|| TbWhileTop( cKey ) }
    b:goBottomBlock := {|| TbWhileBot( cKey ) }
 
@@ -168,61 +166,20 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
       /* process key */
       SWITCH nKey
-      CASE K_DOWN
-         b:down()
-         EXIT
-
-      CASE K_UP
-         b:up()
-         EXIT
-
-      CASE K_PGDN
-         b:pageDown()
-         EXIT
-
-      CASE K_PGUP
-         b:pageUp()
-         EXIT
-
-      CASE K_CTRL_PGUP
-         b:goTop()
-         EXIT
-
-      CASE K_CTRL_PGDN
-         b:goBottom()
-         EXIT
-
-      CASE K_RIGHT
-         b:Right()
-         EXIT
-
-      CASE K_LEFT
-         b:Left()
-         EXIT
-
-      CASE K_HOME
-         b:home()
-         EXIT
-
-      CASE K_END
-         b:end()
-         EXIT
-
-      CASE K_CTRL_LEFT
-         b:panLeft()
-         EXIT
-
-      CASE K_CTRL_RIGHT
-         b:panRight()
-         EXIT
-
-      CASE K_CTRL_HOME
-         b:panHome()
-         EXIT
-
-      CASE K_CTRL_END
-         b:panEnd()
-         EXIT
+      CASE K_DOWN       ; b:down() ; EXIT
+      CASE K_UP         ; b:up() ; EXIT
+      CASE K_PGDN       ; b:pageDown() ; EXIT
+      CASE K_PGUP       ; b:pageUp() ; EXIT
+      CASE K_CTRL_PGUP  ; b:goTop() ; EXIT
+      CASE K_CTRL_PGDN  ; b:goBottom() ; EXIT
+      CASE K_RIGHT      ; b:Right() ; EXIT
+      CASE K_LEFT       ; b:Left() ; EXIT
+      CASE K_HOME       ; b:home() ; EXIT
+      CASE K_END        ; b:end() ; EXIT
+      CASE K_CTRL_LEFT  ; b:panLeft() ; EXIT
+      CASE K_CTRL_RIGHT ; b:panRight() ; EXIT
+      CASE K_CTRL_HOME  ; b:panHome() ; EXIT
+      CASE K_CTRL_END   ; b:panEnd() ; EXIT
 
       CASE K_ESC
          nPassRec := 0

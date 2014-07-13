@@ -19,10 +19,14 @@
 
 FUNCTION ft_PickDay()
 
-   LOCAL days := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" }
+   LOCAL days[ 7 ], tmp
    LOCAL sel
    LOCAL oldscrn := SaveScreen( 8, 35, 16, 45 )
    LOCAL oldcolor := SetColor( "+w/r" )
+
+   FOR tmp := 1 TO 7
+      days[ tmp ] := Upper( hb_CDay( tmp ) )
+   NEXT
 
    hb_DispBox( 8, 35, 16, 45, HB_B_SINGLE_UNI + " " )
    /* do not allow user to Esc out, which would cause array access error */

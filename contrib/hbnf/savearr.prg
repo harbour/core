@@ -33,8 +33,7 @@ FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /
 
    nHandle := FCreate( cFileName )
    IF ( nErrorCode := FError() ) == 0
-      lRet := _ftsavesub( aArray, nHandle, @nErrorCode, ;
-         hb_defaultValue( lDropCompatibility, .F. ) )
+      lRet := _ftsavesub( aArray, nHandle, @nErrorCode, hb_defaultValue( lDropCompatibility, .F. ) )
       FClose( nHandle )
       IF lRet .AND. FError() != 0
          nErrorCode := FError()
@@ -48,20 +47,14 @@ FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /
 
 STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibility )
 
-   LOCAL cValType, nLen, cString
-
    LOCAL lRet := .T.
+   LOCAL cValType := ValType( xMemVar ), cString
 
-   cValType := ValType( xMemVar )
-   FWrite( nHandle, cValType, 1 )
-   IF FError() == 0
+   IF FWrite( nHandle, cValType ) == hb_BLen( cValType )
       SWITCH cValType
       CASE "A"
-         nLen := Len( xMemVar )
-         FWrite( nHandle, L2Bin( nLen ), 4 )
-         IF FError() == 0
-            AEval( xMemVar, {| xMemVar1 | ;
-               lRet := _ftsavesub( xMemVar1, nHandle,, lDropCompatibility ) } )
+         IF FWrite( nHandle, L2Bin( Len( xMemVar ) ) ) == 4
+            AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, nHandle,, lDropCompatibility ) } )
          ELSE
             lRet := .F.
          ENDIF
@@ -70,24 +63,20 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
          lRet := .F.
          EXIT
       CASE "C"
-         nLen := Len( xMemVar )
-         FWrite( nHandle, L2Bin( nLen ), 4 )
+         FWrite( nHandle, L2Bin( hb_BLen( xMemVar ) ) )
          FWrite( nHandle, xMemVar )
          EXIT
       CASE "D"
-         nLen := 8
-         FWrite( nHandle, L2Bin( nLen ), 4 )
+         FWrite( nHandle, L2Bin( 8 ) )
          FWrite( nHandle, iif( lDropCompatibility, DToS( xMemVar ), DToC( xMemVar ) ), 8 )
          EXIT
       CASE "L"
-         nLen := 1
-         FWrite( nHandle, L2Bin( nLen ), 4 )
+         FWrite( nHandle, L2Bin( 1 ) )
          FWrite( nHandle, iif( xMemVar, "T", "F" ) )
          EXIT
       CASE "N"
          cString := Str( xMemVar )
-         nLen := Len( cString )
-         FWrite( nHandle, L2Bin( nLen ), 4 )
+         FWrite( nHandle, L2Bin( hb_BLen( cString ) ) )
          FWrite( nHandle, cString )
          EXIT
       ENDSWITCH
@@ -114,41 +103,25 @@ FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
 
 STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
 
-   LOCAL cValType, nLen, cLenStr, xMemVar, cMemVar, nk
+   LOCAL cValType := hb_FReadLen( nHandle, 1 ), xMemVar, tmp
+   LOCAL nLen := Bin2L( hb_FReadLen( nHandle, 4 ) )
 
-   cValType := Space( 1 )
-   FRead( nHandle, @cValType, 1 )
-   cLenStr := Space( 4 )
-   FRead( nHandle, @cLenStr, 4 )
-   nLen := Bin2L( cLenStr )
    IF ( nErrorCode := FError() ) == 0
       SWITCH cValType
-      CASE "A"
-         xMemVar := {}
-         FOR nk := 1 TO nLen
-            AAdd( xMemVar, _ftrestsub( nHandle ) )  /* Recursive call */
-         NEXT
-         EXIT
-      CASE "C"
-         xMemVar := Space( nLen )
-         FRead( nHandle, @xMemVar, nLen )
-         EXIT
+      CASE "C" ; xMemVar := hb_FReadLen( nHandle, nLen ) ; EXIT
+      CASE "N" ; xMemVar := Val( hb_FReadLen( nHandle, nLen ) ) ; EXIT
+      CASE "L" ; xMemVar := ( hb_FReadLen( nHandle, 1 ) == "T" ) ; EXIT
       CASE "D"
-         cMemVar := Space( 8 )
-         FRead( nHandle, @cMemVar, 8 )
+         xMemVar := hb_FReadLen( nHandle, 8 )
          /* Fall back to CToD() to handle original Cl*pper NFLIB format:
             not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load */
-         xMemVar := iif( Empty( hb_StrReplace( cMemVar, "0123456789" ) ), hb_SToD( cMemVar ), CToD( cMemVar ) )
+         xMemVar := iif( Empty( hb_StrReplace( xMemVar, "0123456789" ) ), hb_SToD( xMemVar ), CToD( xMemVar ) )
          EXIT
-      CASE "L"
-         cMemVar := Space( 1 )
-         FRead( nHandle, @cMemVar, 1 )
-         xMemVar := ( cMemVar == "T" )
-         EXIT
-      CASE "N"
-         cMemVar := Space( nLen )
-         FRead( nHandle, @cMemVar, nLen )
-         xMemVar := Val( cMemVar )
+      CASE "A"
+         xMemVar := {}
+         FOR tmp := 1 TO nLen
+            AAdd( xMemVar, _ftrestsub( nHandle ) )  /* Recursive call */
+         NEXT
          EXIT
       ENDSWITCH
       nErrorCode := FError()

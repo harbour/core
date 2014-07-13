@@ -30,29 +30,17 @@ FUNCTION ft_Mil2Civ( cMILTIME )
 
    LOCAL nHRS  := Val( Left( cMILTIME, 2 ) )
    LOCAL cMINS := Right( cMILTIME, 2 )
-   LOCAL cHRS
 
    DO CASE
    CASE ( nHRS == 24 .OR. nHRS == 0 ) .AND. cMINS == "00"  // Midnight
       RETURN "12:00 m"
-   CASE nHRS == 12                                     // Noon to 12:59pm
-      IF cMINS == "00"
-         RETURN "12:00 n"
-      ELSE
-         RETURN "12:" + cMINS + " pm"
-      ENDIF
-   CASE nHRS < 12                                      // AM
-      IF nHRS == 0
-         cHRS := "12"
-      ELSE
-         cHRS := Str( Int( nHRS ), 2 )
-      ENDIF
-      RETURN cHRS + ":" + cMINS + " am"
-   OTHERWISE                                           // PM
-      RETURN Str( Int( nHRS - 12 ), 2 ) + ":" + cMINS + " pm"
+   CASE nHRS == 12  // Noon to 12:59pm
+      RETURN iif( cMINS == "00", "12:00 n", "12:" + cMINS + " pm" )
+   CASE nHRS < 12  // AM
+      RETURN iif( nHRS == 0, "12", Str( Int( nHRS ), 2 ) ) + ":" + cMINS + " am"
    ENDCASE
 
-   RETURN NIL  // never reached
+   RETURN Str( Int( nHRS - 12 ), 2 ) + ":" + cMINS + " pm"  // PM
 
 FUNCTION ft_Civ2Mil( cTIME )
 
@@ -64,24 +52,11 @@ FUNCTION ft_Civ2Mil( cTIME )
       cTIME := Stuff( cTIME, 1, 2, "00" )
    ENDIF
 
-   // am, pm, noon or midnight
    SWITCH Upper( SubStr( LTrim( cTIME ), 7, 1 ) )
-   CASE "N"       // noon
-      IF Left( cTIME, 2 ) + SubStr( cTIME, 4, 2 ) == "0000"
-         RETURN "1200"
-      ELSE
-         RETURN "    "
-      ENDIF
-   CASE "M"       // midnight
-      IF Left( cTIME, 2 ) + SubStr( cTIME, 4, 2 ) == "0000"
-         RETURN "0000"
-      ELSE
-         RETURN "    "
-      ENDIF
-   CASE "A"       // am
-      RETURN StrZero( Val( Left( cTIME, 2 ) ), 2 ) + SubStr( cTIME, 4, 2 )
-   CASE "P"       // pm
-      RETURN StrZero( Val( Left( cTIME, 2 ) ) + 12, 2 ) + SubStr( cTIME, 4, 2 )
+   CASE "N" ; RETURN iif( Left( cTIME, 2 ) + SubStr( cTIME, 4, 2 ) == "0000", "1200", "    " )  // noon
+   CASE "M" ; RETURN iif( Left( cTIME, 2 ) + SubStr( cTIME, 4, 2 ) == "0000", "0000", "    " )  // midnight
+   CASE "A" ; RETURN StrZero( Val( Left( cTIME, 2 ) ), 2 ) + SubStr( cTIME, 4, 2 )              // am
+   CASE "P" ; RETURN StrZero( Val( Left( cTIME, 2 ) ) + 12, 2 ) + SubStr( cTIME, 4, 2 )         // pm
    ENDSWITCH
 
    RETURN "    "  // error

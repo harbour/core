@@ -26,9 +26,7 @@ FUNCTION ft_AcctWeek( dGivenDate, nWeekNum )
       nWeekNum := dGivenDate
    ENDIF
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
+   hb_default( @dGivenDate, Date() )
 
    aRetVal := ft_AcctYear( dGivenDate )
 

@@ -29,9 +29,7 @@ FUNCTION ft_DayOfYr( dGivenDate, nDayNum, lIsAcct )
       lIsAcct := dGivenDate
    ENDCASE
 
-   IF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
-   ENDIF
+   hb_default( @dGivenDate, Date() )
 
    aRetVal := iif( HB_ISLOGICAL( lIsAcct ), ft_AcctYear( dGivenDate ), ft_Year( dGivenDate ) )
 

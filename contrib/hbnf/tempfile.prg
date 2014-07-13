@@ -38,8 +38,12 @@ FUNCTION ft_TempFil( cPath, lHide, /* @ */ nHandle )
 
    LOCAL cFile
 
-   nHandle := hb_FTempCreate( AllTrim( hb_defaultValue( cPath, "." + hb_ps() ) ),, ;
-      iif( hb_defaultValue( lHide, .F. ), FC_HIDDEN, FC_NORMAL ), @cFile )
+   hb_default( @cPath, "." + hb_ps() )
+   IF Set( _SET_TRIMFILENAME )
+      cPath := AllTrim( cPath )
+   ENDIF
+
+   nHandle := hb_FTempCreate( cPath,, iif( hb_defaultValue( lHide, .F. ), FC_HIDDEN, FC_NORMAL ), @cFile )
 
    IF ! hb_PIsByRef( 3 )
       FClose( nHandle )
