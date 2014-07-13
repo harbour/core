@@ -18,8 +18,7 @@ PROCEDURE Main()
    @  5, 1 PROMPT "Menu choice #3" MESSAGE "Go to lunch"
 
    // Prompt with pinpoint message control
-   @  7, 1 PROMPT "Menu choice #4" MESSAGE "Drop Dead" ;
-      MSGROW 22 MSGCOL 4 MSGCOLOR "GR+/N"
+   @  7, 1 PROMPT "Menu choice #4" MESSAGE "Drop Dead" MSGROW 22 MSGCOL 4 MSGCOLOR "GR+/N"
 
    // Prompt with a trigger character ("#" character)
    @ 11, 1 PROMPT "Menu choice #6" TRIGGER 13

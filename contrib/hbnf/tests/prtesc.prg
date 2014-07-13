@@ -2,7 +2,7 @@
 
 PROCEDURE Main( cParm1 )
 
-   IF cParm1 != NIL
+   IF HB_ISSTRING( cParm1 )
       ? ft_EscCode( cParm1 )
    ELSE
       ? "Usage: prtesc 'escape code sequence'"

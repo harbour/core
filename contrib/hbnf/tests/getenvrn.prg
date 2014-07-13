@@ -15,7 +15,7 @@ PROCEDURE Main()
       ? tmp
    NEXT
 
-   ? "-------------------------------------"
+   ? Replicate( "-", 40 )
 
    c := ""
    ft_GetE( @c )

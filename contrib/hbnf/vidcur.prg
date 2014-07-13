@@ -84,24 +84,11 @@ FUNCTION ft_GetVCur( nPage )
    HB_SYMBOL_UNUSED( nPage )
 
    SWITCH SetCursor()
-   CASE SC_NORMAL
-      nTop := 6
-      nBot := 7
-      EXIT
-   CASE SC_INSERT
-      nTop := 4
-      nBot := 7
-      EXIT
-   CASE SC_SPECIAL1
-      nTop := 0
-      nBot := 7
-      EXIT
-   CASE SC_SPECIAL2
-      nTop := 0
-      nBot := 3
-      EXIT
-   OTHERWISE
-      nTop := nBot := 0
+   CASE SC_NORMAL   ; nTop := 6 ; nBot := 7 ; EXIT
+   CASE SC_INSERT   ; nTop := 4 ; nBot := 7 ; EXIT
+   CASE SC_SPECIAL1 ; nTop := 0 ; nBot := 7 ; EXIT
+   CASE SC_SPECIAL2 ; nTop := 0 ; nBot := 3 ; EXIT
+   OTHERWISE        ; nTop := nBot := 0
    ENDSWITCH
 
    RETURN { nTop, nBot, Row(), Col() }

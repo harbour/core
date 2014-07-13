@@ -136,7 +136,6 @@ STATIC FUNCTION _ftColors( aOpt, aClrPal, lColor )
    hb_default( @lColor, IsColor() )
 
    // display appropriate prompts based on type of color setting
-
    SWITCH aOpt[ C_TYPE ]
    CASE "D"  ; aPrompt := { " Color ", " Character " } ; EXIT
    CASE "M"  ; aPrompt := { " Prompt ", " Message ", " HotKey ", " LightBar ", " LightBar HotKey " } ; EXIT

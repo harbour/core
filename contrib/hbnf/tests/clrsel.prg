@@ -28,7 +28,7 @@ PROCEDURE Main( cVidMode )
    SetCursor( SC_NONE )
    SetBlink( .F. )
 
-   // .... a typical application might have the following different settings
+   // A typical application might have the following different settings
    //     normally these would be stored in a .dbf/.dbv
    aClrs := { ;
       { "Desktop",        "N/BG",                          "D", hb_UTF8ToStrBox( "░" ) }, ;
@@ -46,7 +46,7 @@ PROCEDURE Main( cVidMode )
 
    HB_SYMBOL_UNUSED( aClrs )
 
-   // .... restore the original environment
+   // Restore the original environment
    ft_RestSets( aEnvOri )
    RestScreen( 0, 0, MaxRow(), MaxCol(), cScrOri )
    SetPos( nRowOri, nColOri )

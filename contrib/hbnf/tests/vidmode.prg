@@ -2,11 +2,7 @@
 
 PROCEDURE Main( cMode )
 
-   IF cMode == NIL
-      cMode := "1"
-   ENDIF
-
-   ft_SetMode( Val( cMode ) )
+   ft_SetMode( Val( hb_defaultValue( cMode, "1" ) ) )
    ? "Video mode is:", ft_GetMode()
 
    RETURN

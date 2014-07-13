@@ -5,33 +5,26 @@
 
 PROCEDURE Main()
 
-   LOCAL cDosScrn
-   LOCAL nDosRow
-   LOCAL nDosCol
-   LOCAL lColor
-   LOCAL nMaxRow
-   LOCAL nType
+   LOCAL lColor := .T.
 
    // color variables
-   LOCAL cNormH, cNormN
-   LOCAL cWindH, cWindN
-   LOCAL cErrH, cErrN
+   LOCAL cNormH := iif( lColor, "W+/BG", "W+/N" )
+   LOCAL cNormN := iif( lColor, "N/BG", "W/N"  )
+   LOCAL cWindH := iif( lColor, "W+/B", "W+/N" )
+   LOCAL cWindN := iif( lColor, "W/B", "W/N"  )
+   LOCAL cErrH  := iif( lColor, "W+/R", "W+/N" )
+   LOCAL cErrN  := iif( lColor, "W/R", "W/N"  )
+
+   LOCAL cOldScrn := SaveScreen()
+   LOCAL nOldRow := Row()
+   LOCAL nOldCol := Col()
+
+   LOCAL nMaxRow
+   LOCAL nType
 
    // main routine starts here
    Set( _SET_SCOREBOARD, .F. )
 
-   lColor := .T.
-
-   cNormH := iif( lColor, "W+/BG", "W+/N" )
-   cNormN := iif( lColor, "N/BG", "W/N"  )
-   cWindH := iif( lColor, "W+/B", "W+/N" )
-   cWindN := iif( lColor, "W/B", "W/N"  )
-   cErrH  := iif( lColor, "W+/R", "W+/N" )
-   cErrN  := iif( lColor, "W/R", "W/N"  )
-
-   cDosScrn := SaveScreen()
-   nDosRow := Row()
-   nDosCol := Col()
    SetColor( "W/N" )
    CLS
    nMaxRow := MaxRow()
@@ -59,7 +52,7 @@ PROCEDURE Main()
    SetColor( "W/N" )
    SetCursor( SC_NORMAL )
    SetBlink( .T. )
-   RestScreen( , , , , cDosScrn )
-   SetPos( nDosRow, nDosCol )
+   RestScreen( , , , , cOldScrn )
+   SetPos( nOldRow, nOldCol )
 
    RETURN

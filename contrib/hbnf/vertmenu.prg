@@ -26,11 +26,11 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
    LOCAL nTop
    LOCAL lOldwrap    := Set( _SET_WRAP, .T. )
    LOCAL lOldcenter  := Set( _SET_MCENTER, .T. )
-   LOCAL lOldmessrow := Set( _SET_MESSAGE )
+   LOCAL nOldmessrow := Set( _SET_MESSAGE )
    LOCAL cOldcolor   := SetColor( cColors )
 
    /* if no message row has been established, use bottom row */
-   IF lOldmessrow == 0
+   IF nOldmessrow == 0
       Set( _SET_MESSAGE, MaxRow() )
    ENDIF
 
@@ -66,7 +66,7 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
    ENDDO
 
    /* restore previous message and wrap settings */
-   Set( _SET_MESSAGE, lOldmessrow )
+   Set( _SET_MESSAGE, nOldmessrow )
    Set( _SET_MCENTER, lOldcenter )
    Set( _SET_WRAP, lOldwrap )
    SetColor( cOldcolor )

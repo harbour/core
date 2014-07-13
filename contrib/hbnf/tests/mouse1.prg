@@ -17,21 +17,11 @@ PROCEDURE Main( nRow, nCol )
    LOCAL aType := { "Bus", "Serial", "InPort", "PS/2", "HP" }
    LOCAL nHoriz, nVert, nDouble
 
-   IF nRow == NIL
-      nRow := MaxRow() + 1
-   ELSE
-      nRow := Val( nRow )
-   ENDIF
-
-   IF nCol == NIL
-      nCol := MaxCol() + 1
-   ELSE
-      nCol := Val( nCol )
-   ENDIF
+   nRow := iif( nRow == NIL, MaxRow() + 1, Val( nRow ) )
+   nCol := iif( nCol == NIL, MaxCol() + 1, Val( nCol ) )
 
    IF ! SetMode( nRow, nCol )
-      @ MaxRow(), 0 SAY "Mode Change unsuccessful:" + Str( nRow, 2 ) + " by";
-         + Str( nCol, 3 )
+      @ MaxRow(), 0 SAY "Mode Change unsuccessful: " + Str( nRow, 2 ) + " by " + Str( nCol, 3 )
       RETURN
    ENDIF
 
@@ -43,7 +33,8 @@ PROCEDURE Main( nRow, nCol )
 
    SetCursor( SC_NONE )
 
-   // ..... Set up the screen
+   // Set up the screen
+
    cSavClr := SetColor( "w/n" )
    @ 0, 0, MaxRow(), MaxCol() BOX hb_UTF8ToStr( "░░░░░░░░░" )
 
@@ -58,7 +49,7 @@ PROCEDURE Main( nRow, nCol )
 
    SetColor( "GR+/RB" )
 
-   // ..... Start the demo
+   // Start the demo
 
    @ MaxRow(), 0 SAY "Driver version: " + ;
       hb_ntos( ft_MVersion( @nMinor, @nType, @nIRQ ) ) + "." + ;
@@ -66,33 +57,19 @@ PROCEDURE Main( nRow, nCol )
    @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + Str( nIRQ, 2 )
 
    ft_MGetSens( @nHoriz, @nVert, @nDouble )  // Get the current sensitivities
-   ft_MSetSens( 70, 70, 60 )    // Bump up the sensitivity of the mouse
+   ft_MSetSens( 70, 70, 60 )  // Bump up the sensitivity of the mouse
 
    ft_MShowCrs()
    ft_MSetCoord( 10, 20 )  // just an arbitrary place for demo
 
    // put the unchanging stuff
-
-   DevPos( 9, 10 )
-   DevOut( "FT_MMICKEYS :" )
-
-   DevPos( 10, 10 )
-   DevOut( "FT_MGETPOS  :" )
-
-   DevPos( 11, 10 )
-   DevOut( "FT_MGETX    :" )
-
-   DevPos( 12, 10 )
-   DevOut( "FT_MGETY    :" )
-
-   DevPos( 13, 10 )
-   DevOut( "FT_MGETCOORD:" )
-
-   DevPos( 14, 10 )
-   DevOut( "FT_MBUTPRS  :" )
-
-   DevPos( 16, 10 )
-   DevOut( "FT_MBUTREL  :" )
+   DevPos(  9, 10 ) ; DevOut( "FT_MMICKEYS :" )
+   DevPos( 10, 10 ) ; DevOut( "FT_MGETPOS  :" )
+   DevPos( 11, 10 ) ; DevOut( "FT_MGETX    :" )
+   DevPos( 12, 10 ) ; DevOut( "FT_MGETY    :" )
+   DevPos( 13, 10 ) ; DevOut( "FT_MGETCOORD:" )
+   DevPos( 14, 10 ) ; DevOut( "FT_MBUTPRS  :" )
+   DevPos( 16, 10 ) ; DevOut( "FT_MBUTREL  :" )
 
    nX := nY := 1
    DO WHILE .T.
@@ -105,9 +82,9 @@ PROCEDURE Main( nRow, nCol )
       DO WHILE nX == 0 .AND. nY == 0
          ft_MMickeys( @nX, @nY )
       ENDDO
+
       // tell the mouse driver where updates will be taking place so it can hide
       // the cursor when necessary.
-
       ft_MCOnOff( 9, 23, 16, 53 )
 
       DevPos( 9, 23 )
@@ -137,7 +114,6 @@ PROCEDURE Main( nRow, nCol )
       DevPos( 15, 23 )
 
       // show only the last Press since it flashes by so quickly
-
       IF nX != 0 .OR. nY != 0
          DevOut( nX )
          DevOut( nY )
@@ -148,21 +124,18 @@ PROCEDURE Main( nRow, nCol )
       DevOut( ft_MButRel( 0,, @nX, @nY ) )
 
       // show only the last release since it flashes by so quickly
-
       IF nX != 0 .OR. nY != 0
          DevOut( nX )
          DevOut( nY )
       ENDIF
 
       // Restore the cursor if it has been hidden
-
       ft_MShowCrs()
 
       IF ft_MInRegion( 18, 11, 18, 39 )
 
          // Change the type of cursor when in the box. Just slightly different than the
          // normal. The character is shown in high intensity.
-
          ft_MDefCrs( 0, 32767, 32512 )
          IF ft_MDblClk( 2, 0, 0.8 )
             EXIT
@@ -173,12 +146,9 @@ PROCEDURE Main( nRow, nCol )
 
          // Change the type of cursor when in the box. Just slightly different than the
          // normal. The character is shown in high intensity.
-
          ft_MDefCrs( 0, 32767, 32512 )
       ELSE
-
          // Put the cursor back to normal mode
-
          ft_MDefCrs( 0, 30719, 30464 )
       ENDIF
 
@@ -193,7 +163,6 @@ PROCEDURE Main( nRow, nCol )
    DevPos( MaxRow(), 0 )
 
    // Reset sensitivity
-
    ft_MSetSens( nHoriz, nVert, nDouble )
 
    RETURN

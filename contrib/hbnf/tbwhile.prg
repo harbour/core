@@ -51,8 +51,6 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    LOCAL cColorSave, cColorBack, nCursSave
    LOCAL lMore, nKey, nPassRec
 
-   LOCAL lKeepScrn := PCount() > 6
-
    __defaultNIL( @nFreeze, 0 )
    __defaultNIL( @lSaveScrn, .T. )
    __defaultNIL( @cColorList, "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R" )
@@ -119,11 +117,10 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    ENDIF
    cColorSave := SetColor()
 
-   /* Background Color Is Based On First Color In Passed cColorList */
-   cColorBack := iif( "," $ cColorList, ;
-      Left( cColorList, At( ",", cColorList ) - 1 ), cColorList )
+   /* Background color is based on first color in passed cColorList */
+   cColorBack := iif( "," $ cColorList, Left( cColorList, At( ",", cColorList ) - 1 ), cColorList )
 
-   IF ! lKeepScrn
+   IF PCount() <= 6  /* don't keep screen */
       SetColor( cColorBack )
       hb_Scroll()
    ENDIF

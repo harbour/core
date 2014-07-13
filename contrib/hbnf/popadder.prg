@@ -104,7 +104,6 @@ PROCEDURE ft_Adder()
    LOCAL lAC_exit_ok
 
    // Must prevent recursive calls
-
    IF t_lAdderOpen
       RETURN
    ENDIF
@@ -115,14 +114,14 @@ PROCEDURE ft_Adder()
    cTotPict     := "999999999999999.99"
    cTapeScr     := ""
    nTotal       := nNumTotal := nSavTotal := nDecDigit := 0
-   lDone        := .F.                   // Loop flag
-   nMaxDeci     := 2                     // Initial # of decimals
+   lDone        := .F.  // Loop flag
+   nMaxDeci     := 2    // Initial # of decimals
    nSavSubTot   := 0
    lNewNum      := .F.
-   nAddMode     := 1                     // Start in ADD mode
-   lMultDiv     := .F.                   // Start in ADD mode
-   lClAdder     := .F.                   // Clear adder flag
-   lDecSet      := .F.                   // Decimal ? - keyboard routine
+   nAddMode     := 1    // Start in ADD mode
+   lMultDiv     := .F.  // Start in ADD mode
+   lClAdder     := .F.  // Clear adder flag
+   lDecSet      := .F.  // Decimal ? - keyboard routine
    lSubRtn      := lTotalOk := lTape := lAddError := lDivError := .F.
 
    nTopOS       := Int( ( MaxRow() - 24 ) / 2 )  // Using the TopOffSet and LeftOffSet
@@ -787,8 +786,7 @@ STATIC PROCEDURE _ftPushMessage( cMessage, cTitle, cBotTitle )
 // NOTE: This function will work for all Data Types
 STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid )
 
-   LOCAL nMessLen, nWide, nNumRows, nBottom, nLeft, nTop
-   LOCAL nRight, oNewGet, nNumMessRow, nLenLastRow, lGetOnNextLine
+   LOCAL oNewGet
    LOCAL cVarType := ValType( xVarVal )
    LOCAL nVarLen  := ;
       iif( cVarType == "C", Len( xVarVal ), ;
@@ -802,19 +800,19 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid )
    LOCAL nOldCurs  := SetCursor( SC_NONE )
    LOCAL cOldColor := SetColor()
 
-   nMessLen  := Len( cMessage ) + nVarLen + 1
-   nWide     := iif( nMessLen > 66, 66, iif( nMessLen < 12, 12, nMessLen ) )
+   LOCAL nMessLen := Len( cMessage ) + nVarLen + 1
+   LOCAL nWide    := iif( nMessLen > 66, 66, iif( nMessLen < 12, 12, nMessLen ) )
 
-   nNumMessRow    := MLCount( cMessage, nWide )
-   nLenLastRow    := Len( RTrim( MemoLine( cMessage, nWide, nNumMessRow ) ) )
-   lGetOnNextLine := ( nLenLastRow + nVarLen ) > nWide
-   nNumRows       := nNumMessRow + iif( lGetOnNextLine, 1, 0 )
+   LOCAL nNumMessRow    := MLCount( cMessage, nWide )
+   LOCAL nLenLastRow    := Len( RTrim( MemoLine( cMessage, nWide, nNumMessRow ) ) )
+   LOCAL lGetOnNextLine := ( nLenLastRow + nVarLen ) > nWide
+   LOCAL nNumRows       := nNumMessRow + iif( lGetOnNextLine, 1, 0 )
 
    // Center it in the screen
-   nTop        := Int( ( MaxRow() - nNumRows ) / 2 )
-   nBottom     := nTop + nNumRows + 1
-   nLeft       := Int( ( MaxCol() - nWide ) / 2 ) - 4
-   nRight      := nLeft + nWide + 4
+   LOCAL nTop    := Int( ( MaxRow() - nNumRows ) / 2 )
+   LOCAL nBottom := nTop + nNumRows + 1
+   LOCAL nLeft   := Int( ( MaxCol() - nWide ) / 2 ) - 4
+   LOCAL nRight  := nLeft + nWide + 4
 
    _ftPushWin( nTop, nLeft, nBottom, nRight, "QUESTION ?", iif( HB_ISSTRING( xVarVal ) ;
       .AND. nVarLen > nWide, /* LOW-ASCII "←" */ Chr( 27 ) + " scroll " + Chr( 26 ) /* LOW-ASCII "→" */, NIL ) )

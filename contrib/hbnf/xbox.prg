@@ -68,16 +68,9 @@ PROCEDURE ft_XBox( ;
    nBRow := nTRow + nNumRows + 1
 
    // form box and border
-
-   // save screen color and set new color
    hb_Scroll( nTRow, nLCol, nBRow, nRCol )
-
-   // draw border
    SetColor( hb_defaultValue( cBorColor, "N/W" ) )
-   hb_DispBox( nTRow, nLCol, nBRow, nRCol, ;
-      iif( hb_LeftEq( cBorType, "D" ), HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ) )
-
-   // write shadow
+   hb_DispBox( nTRow, nLCol, nBRow, nRCol, iif( hb_LeftEq( cBorType, "D" ), HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ) )
    hb_Shadow( nTRow, nLCol, nBRow, nRCol )
 
    // print text in box

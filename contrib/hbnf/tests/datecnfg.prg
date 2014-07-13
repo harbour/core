@@ -142,22 +142,20 @@ PROCEDURE Main()
    RETURN
 
 // DEMO Monthly Calendar function.
-// nType: 0 -> FT_MONTH, 1 -> FT_ACCTMONTH
+// nType: 0 -> ft_Month(), 1 -> ft_AcctMonth()
 
 STATIC PROCEDURE FT_CAL( dGivenDate, nType )
 
-   LOCAL nTemp, dTemp, aTemp, cFY_Start, dStart, dEnd
+   LOCAL nTemp, dTemp, dStart, dEnd
 
-   aTemp     := ft_DateCnfg()
-   cFY_Start := aTemp[ 1 ]
+   LOCAL aTemp     := ft_DateCnfg()
+   LOCAL cFY_Start := aTemp[ 1 ]
 
-   IF dGivenDate == NIL .OR. !( ValType( dGivenDate ) $ "NDT" )
-      dGivenDate := Date()
-   ELSEIF HB_ISNUMERIC( dGivenDate )
+   IF HB_ISNUMERIC( dGivenDate )
       nType := dGivenDate
-      dGivenDate := Date()
    ENDIF
 
+   hb_default( @dGivenDate, Date() )
    hb_default( @nType, 0 )
 
    IF nType == 0
