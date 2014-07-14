@@ -43,8 +43,7 @@
 //  NOTE: When evaluated a code block is passed the array element to
 //        be edited
 
-FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
-      ar, nElem, aHeadings, aBlocks, bGetFunc )
+FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ar, nElem, aHeadings, aBlocks, bGetFunc )
 
    LOCAL exit_requested, nKey, meth_no
    LOCAL cSaveWin, i, b, column
@@ -77,9 +76,8 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
    b:gobottomblock := {|| nElem := Len( ar[ 1 ] ) }
 
    // skipblock originally coded by Robert DiFalco
-   b:SkipBlock     := {| nSkip, nStart | nStart := nElem, ;
-      nElem := Max( 1, Min( Len( ar[ 1 ] ), nElem + nSkip ) ), ;
-      nElem - nStart }
+   b:SkipBlock := {| nSkip, nStart | nStart := nElem, ;
+      nElem := Max( 1, Min( Len( ar[ 1 ] ), nElem + nSkip ) ), nElem - nStart }
 
    FOR i := 1 TO Len( aBlocks )
       column := TBColumnNew( aHeadings[ i ], aBlocks[ i ] )
@@ -124,20 +122,18 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
          CASE nKey == K_ESC
             exit_requested := .T.
 
-            // Other exception handling ...
-         CASE HB_ISEVALITEM( bGetFunc )
+         CASE HB_ISEVALITEM( bGetFunc )  // Other exception handling
             IF nKey != K_ENTER
-               // want last key to be part of GET edit so KEYBOARD it
-               hb_keyPut( LastKey() )
+               hb_keyPut( LastKey() )  // want last key to be part of GET edit so KEYBOARD it
             ENDIF
             Eval( bGetFunc, b, ar, b:colPos, nElem )
             // after get move to next field
             hb_keyPut( iif( b:colPos < b:colCount, K_RIGHT, { K_HOME, K_DOWN } ) )
 
+         CASE nKey == K_ENTER
             // Placing K_ENTER here below Edit Block (i.e. bGetFunc)
             // defaults K_ENTER to Edit when bGetFunc Is Present
             // BUT if no bGetFunc, then K_ENTER selects element to return
-         CASE nKey == K_ENTER
             exit_requested := .T.
 
          ENDCASE

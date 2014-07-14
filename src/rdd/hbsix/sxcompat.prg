@@ -93,6 +93,9 @@ FUNCTION sxChar( nLen, xKeyVal )
    CASE "D"
       xKeyVal := DToS( xKeyVal )
       EXIT
+   CASE "T"
+      xKeyVal := hb_TToS( xKeyVal )
+      EXIT
    CASE "L"
       xKeyVal := iif( xKeyVal, "T", "F" )
       EXIT
@@ -106,15 +109,11 @@ FUNCTION sxChar( nLen, xKeyVal )
 FUNCTION sxNum( xKeyVal )
 
    SWITCH ValType( xKeyVal )
-   CASE "N"
-      RETURN xKeyVal
+   CASE "N" ; RETURN xKeyVal
    CASE "C"
-   CASE "M"
-      RETURN Val( xKeyVal )
-   CASE "D"
-      RETURN xKeyVal - hb_SToD()
-   CASE "L"
-      RETURN iif( xKeyVal, 1, 0 )
+   CASE "M" ; RETURN Val( xKeyVal )
+   CASE "D" ; RETURN xKeyVal - hb_SToD()
+   CASE "L" ; RETURN iif( xKeyVal, 1, 0 )
    ENDSWITCH
 
    RETURN 0.00
@@ -122,13 +121,11 @@ FUNCTION sxNum( xKeyVal )
 FUNCTION sxDate( xKeyVal )
 
    SWITCH ValType( xKeyVal )
-   CASE "D"
-      RETURN xKeyVal
+   CASE "D" ; RETURN xKeyVal
+   CASE "T" ; RETURN hb_TToD( xKeyVal )
    CASE "C"
-   CASE "M"
-      RETURN CToD( xKeyVal )
-   CASE "N"
-      RETURN hb_SToD() + xKeyVal
+   CASE "M" ; RETURN CToD( xKeyVal )
+   CASE "N" ; RETURN hb_SToD() + xKeyVal
    ENDSWITCH
 
    RETURN hb_SToD()
@@ -309,16 +306,17 @@ FUNCTION sx_KillTag( xTag, xIndex )
 
    IF HB_ISLOGICAL( xTag )
       IF xTag
-         IF Empty( xIndex )
+         DO CASE
+         CASE Empty( xIndex )
             cIndex := sx_IndexName()
-         ELSEIF HB_ISNUMERIC( xIndex )
+         CASE HB_ISNUMERIC( xIndex )
             cIndex := sx_IndexName( 1, xIndex )
-         ELSEIF HB_ISSTRING( xIndex )
+         CASE HB_ISSTRING( xIndex )
             nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex )
             IF nOrder != 0
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
             ENDIF
-         ENDIF
+         ENDCASE
          IF ! Empty( cIndex ) .AND. ordBagClear( cIndex )
             lRet := FErase( cIndex ) != F_ERROR
          ENDIF
@@ -484,11 +482,12 @@ FUNCTION sx_VSigLen( xField )
    LOCAL nResult := 0, nField := 0
 
    IF Used()
-      IF HB_ISSTRING( xField )
+      DO CASE
+      CASE HB_ISSTRING( xField )
          nField := FieldPos( xField )
-      ELSEIF HB_ISNUMERIC( xField )
+      CASE HB_ISNUMERIC( xField )
          nField := xField
-      ENDIF
+      ENDCASE
       IF nField >= 1 .AND. nField <= FCount()
          nResult := hb_FieldLen( nField )
          IF hb_FieldType( nField ) == "V" .AND. nResult >= 6

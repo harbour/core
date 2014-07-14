@@ -412,7 +412,7 @@ STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
 #ifdef __GTWVW__
    wvw_nOpenWindow( ctitle, r1, c1, r2, c2 )
-   ResetMiscObjects( NIL )   // make sure we start with no GUI objects
+   ResetMiscObjects()   // make sure we start with no GUI objects
 #endif
 
    AAdd( s_zwin, { i + 1, r1, c1, r2, c2, cScreen, ctitle, nrow, ncol, coldcolor } )
@@ -447,7 +447,7 @@ STATIC PROCEDURE ZREVWINDOW()
    ENDIF
 
 #ifdef __GTWVW__
-   ResetMiscObjects( NIL )   // clear all GUI objects, if any
+   ResetMiscObjects()   // clear all GUI objects, if any
    wvw_lCloseWindow()
 #endif
 

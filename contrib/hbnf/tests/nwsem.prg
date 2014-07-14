@@ -13,7 +13,7 @@ PROCEDURE Main()
    ? "Final nRc value =", nRc
    Inkey( 0 )
    IF nRc == 254
-      ? "Couldn't get the semaphore.  Try again."
+      ? "Couldn't get the semaphore. Try again."
       RETURN
    ENDIF
 

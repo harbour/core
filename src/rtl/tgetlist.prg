@@ -535,7 +535,7 @@ METHOD GetPreValidate( oGet, aMsg ) CLASS HBGetList
 
    IF oGet:preBlock != NIL
 
-      lUpdated  := ::lUpdated
+      lUpdated := ::lUpdated
 
       lWhen := Eval( oGet:preBlock, oGet, aMsg )
 

@@ -36,15 +36,15 @@ MEMVAR __nCBid__, __temp__
       WIDTH <nWidth>   =>                   ;
       ;
       ;
-      __nCBid__ := wvw_cbCreate( NIL, <row>, <col>, <nWidth>, ;
+      __nCBid__ := wvw_cbCreate( , <row>, <col>, <nWidth>, ;
       <aOptions>, ;
       {| nWinNum, nId, nEvent, nIndex, temp |     ;
       CBhandler( nWinNum, nId, nEvent, nIndex, <"var">, GetList ), HB_SYMBOL_UNUSED( temp );
       },                                          ;
-      NIL, NIL, s_nCB_Kbd, NIL );                     ;
+      , , s_nCB_Kbd );                     ;
       AAdd( s_aComboList, { __nCBid__, <"var"> } );                        ;
-      __temp__ := wvw_cbFindString( NIL, __nCBid__, <var> );             ;
-      iif( __temp__ >= 0, wvw_cbSetIndex( NIL, __nCBid__, __temp__ ), NIL );   ;
+      __temp__ := wvw_cbFindString( , __nCBid__, <var> );             ;
+      iif( __temp__ >= 0, wvw_cbSetIndex( , __nCBid__, __temp__ ), NIL );   ;
       SetPos( <row>, <col> );                                              ;
       AAdd( GetList, _GET_( <var>, <"var">, Replicate( "X", <nWidth> ),, ) ) ;   ;
       ATail( GetList ):cargo := __nCBid__;                                ;
@@ -60,10 +60,10 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   wvw_SetCodepage( NIL, 255 )
-   wvw_SetLineSpacing( NIL, 4 )
-   wvw_SetLSpaceColor( NIL, 0 )
-   wvw_cbSetFont( NIL, "Arial", 14 )  // std: 20-2
+   wvw_SetCodepage( , 255 )
+   wvw_SetLineSpacing( , 4 )
+   wvw_SetLSpaceColor( , 0 )
+   wvw_cbSetFont( , "Arial", 14 )  // std: 20-2
 #if 0
    Set( _SET_TRACESTACK, 0 )
 
@@ -84,7 +84,7 @@ PROCEDURE Main()
    READ
 
    // disable all comboboxes:
-   AEval( s_aComboList, {| x | wvw_cbEnable( NIL, x[ 1 ], .F. ) } )
+   AEval( s_aComboList, {| x | wvw_cbEnable( , x[ 1 ], .F. ) } )
 
    DevPos( 5, 0 )
    ? "name: '" + mname + "'"
@@ -95,7 +95,7 @@ PROCEDURE Main()
    Inkey( 0 )
 
    // destroy all comboboxes:
-   AEval( s_aComboList, {| x | wvw_cbDestroy( NIL, x[ 1 ] ) } )
+   AEval( s_aComboList, {| x | wvw_cbDestroy( , x[ 1 ] ) } )
    s_aComboList := {}
 
    ?
@@ -207,8 +207,8 @@ STATIC PROCEDURE CBreader( oGet )
    LOCAL nKey, bKeyBlock
    LOCAL oGetList := __GetListActive()
 
-   IF ! wvw_cbIsFocused( NIL, oGet:cargo )
-      wvw_cbSetFocus( NIL, oGet:cargo )
+   IF ! wvw_cbIsFocused( , oGet:cargo )
+      wvw_cbSetFocus( , oGet:cargo )
    ENDIF
 
    oGet:setfocus()
@@ -248,10 +248,10 @@ STATIC PROCEDURE CBreader( oGet )
 
    CASE nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
       // is there any GET object hit?
-      IF ! Empty( HitTest( oGetList:aGetList, MRow(), MCol(), NIL ) )
-         oGet:exitState := GE_MOUSEHIT
-      ELSE
+      IF Empty( HitTest( oGetList:aGetList, MRow(), MCol() ) )
          oGet:exitState := GE_NOEXIT
+      ELSE
+         oGet:exitState := GE_MOUSEHIT
       ENDIF
 
    CASE HB_ISEVALITEM( bKeyBlock := SetKey( nKey ) )

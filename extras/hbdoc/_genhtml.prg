@@ -173,10 +173,10 @@ METHOD AddReference( oEntry, cReference, cSubReference ) CLASS GenerateHTML
    IF HB_ISOBJECT( oEntry ) .AND. oEntry:ClassName() == "ENTRY"
       ::OpenTag( "a", "href", ::TargetFilename + ::cExtension + "#" + oEntry:Filename ):Append( oEntry:Name ):CloseTag( "a" ):Append( oEntry:OneLiner ):Newline()
    ELSE
-      IF cSubReference == NIL
-         ::OpenTag( "a", "href", cReference + ::cExtension /* + "#" + oEntry:Filename */ ):Append( oEntry ):CloseTag( "a" ):Newline()
-      ELSE
+      IF HB_ISSTRING( cSubReference )
          ::OpenTag( "a", "href", cReference + ::cExtension + "#" + cSubReference ):Append( oEntry ):CloseTag( "a" ):Newline()
+      ELSE
+         ::OpenTag( "a", "href", cReference + ::cExtension /* + "#" + oEntry:Filename */ ):Append( oEntry ):CloseTag( "a" ):Newline()
       ENDIF
    ENDIF
 
@@ -228,7 +228,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted ) CLASS GenerateHTML
       ENDIF
 
       IF lPreformatted
-         ::OpenTag( "pre", iif( cTagClass != NIL, "class", ), cTagClass )
+         ::OpenTag( "pre", "class", cTagClass )
          DO WHILE Len( cEntry ) > 0
             IF Lower( cField ) + "|" $ "examples|tests|"
                ::Append( SubStr( Parse( @cEntry, hb_eol() ), 5 ), "" )

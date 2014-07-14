@@ -86,7 +86,6 @@ PROCEDURE hb_mvSave( cFileName, cMask, lIncludeMask )
    LOCAL tmp
 
    LOCAL oError
-   LOCAL xRecover
    LOCAL nRetries
 
    IF HB_ISSTRING( cFileName )
@@ -133,8 +132,7 @@ PROCEDURE hb_mvSave( cFileName, cMask, lIncludeMask )
             oError:osCode      := FError()
             oError:tries       := ++nRetries
 
-            xRecover := Eval( ErrorBlock(), oError )
-            IF HB_ISLOGICAL( xRecover ) .AND. xRecover
+            IF hb_defaultValue( Eval( ErrorBlock(), oError ), .F. )
                LOOP
             ENDIF
          ENDIF
@@ -176,7 +174,6 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL fhnd
 
    LOCAL oError
-   LOCAL xRecover
    LOCAL nRetries
 
    IF HB_ISSTRING( cFileName )
@@ -212,8 +209,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
             oError:osCode      := FError()
             oError:tries       := ++nRetries
 
-            xRecover := Eval( ErrorBlock(), oError )
-            IF HB_ISLOGICAL( xRecover ) .AND. xRecover
+            IF hb_defaultValue( Eval( ErrorBlock(), oError ), .F. )
                LOOP
             ENDIF
          ENDIF

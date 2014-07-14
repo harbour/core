@@ -21,7 +21,7 @@ PROCEDURE Main( nRow, nCol )
    nCol := iif( nCol == NIL, MaxCol() + 1, Val( nCol ) )
 
    IF ! SetMode( nRow, nCol )
-      @ MaxRow(), 0 SAY "Mode Change unsuccessful: " + Str( nRow, 2 ) + " by " + Str( nCol, 3 )
+      @ MaxRow(), 0 SAY "Mode Change unsuccessful: " + hb_ntos( nRow ) + " by " + hb_ntos( nCol )
       RETURN
    ENDIF
 
@@ -54,7 +54,7 @@ PROCEDURE Main( nRow, nCol )
    @ MaxRow(), 0 SAY "Driver version: " + ;
       hb_ntos( ft_MVersion( @nMinor, @nType, @nIRQ ) ) + "." + ;
       hb_ntos( nMinor )
-   @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + Str( nIRQ, 2 )
+   @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + hb_ntos( nIRQ )
 
    ft_MGetSens( @nHoriz, @nVert, @nDouble )  // Get the current sensitivities
    ft_MSetSens( 70, 70, 60 )  // Bump up the sensitivity of the mouse

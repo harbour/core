@@ -642,14 +642,8 @@ Reading a script file:
 A script file may be read into the debugger at any
 time using the Options:Restore menu option.
 
-When using CLD.EXE, a script file may also be
-specified on the command line, before the name of
-the program to be debugged, i.e.:
-
-    CLD @<ScriptName> <ProgName>
-
-In both of these, the extension '.cld' will be assumed
-if no extension is supplied.
+The extension '.cld' will be assumed if no extension
+is supplied.
 
 When reading a script file, the debugger will look
 for the file in the current directory first. If the

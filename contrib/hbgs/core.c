@@ -69,7 +69,6 @@ HB_FUNC( HB_GS )
    {
       void *  minst;
       int     pos;
-      int     code, code1;
       int     gsargc = ( int ) hb_arrayLen( pParam ) + 1;
       char ** gsargv = ( char ** ) hb_xgrab( gsargc * sizeof( const char * ) );
       #if defined( HB_GS_UTF8_SUPPORT )
@@ -90,9 +89,10 @@ HB_FUNC( HB_GS )
          gsargv[ pos ] = ( char * ) ( pszParam ? pszParam : "" );
       }
 
-      code = gsapi_new_instance( &minst, NULL );
-      if( code >= 0 )
+      if( gsapi_new_instance( &minst, NULL ) >= 0 )
       {
+         int code, code1;
+
          #if defined( HB_GS_UTF8_SUPPORT )
          gsapi_set_arg_encoding( minst, GS_ARG_ENCODING_UTF8 );
          #endif

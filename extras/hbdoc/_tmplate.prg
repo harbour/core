@@ -147,7 +147,7 @@ METHOD IsField( c, nType ) CLASS Entry
    IF ( lResult := ( idx := AScan( ::Fields, {| a | Upper( a[ 1 ] ) == Upper( c ) } ) ) > 0 )
       IF ::Group[ idx ] == 0
          lResult := .F.
-      ELSEIF nType != NIL .AND. hb_bitAnd( ::Group[ idx ], nType ) != nType
+      ELSEIF HB_ISNUMERIC( nType ) .AND. hb_bitAnd( ::Group[ idx ], nType ) != nType
          lResult := .F.
       ENDIF
    ENDIF

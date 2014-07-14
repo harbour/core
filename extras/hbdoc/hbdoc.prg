@@ -692,7 +692,6 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
    LOCAL aHandle := { F_ERROR, 0 }
    LOCAL cBuffer
    LOCAL lCloseFile := .F.
-   LOCAL xResult
 
    hb_default( @nMaxLine, 256 )
 
@@ -709,8 +708,7 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
    ENDCASE
 
    DO WHILE FReadLn( @aHandle, @cBuffer, nMaxLine )
-      xResult := Eval( bBlock, cBuffer )
-      IF xResult != NIL .AND. HB_ISLOGICAL( xResult ) .AND. ! xResult
+      IF ! hb_defaultValue( Eval( bBlock, cBuffer ), .T. )
          EXIT
       ENDIF
    ENDDO
@@ -753,13 +751,13 @@ STATIC FUNCTION FReadLn( /* @ */ aHandle, /* @ */ cBuffer, nMaxLine )
 
    RETURN nNumRead != 0
 
-FUNCTION Decode( cType, hsBlock, cKey )
+STATIC FUNCTION Decode( cType, hsBlock, cKey )
 
    LOCAL cCode
    LOCAL cResult
    LOCAL idx
 
-   IF cKey != NIL .AND. hsBlock != NIL .AND. cKey $ hsBlock
+   IF cKey != NIL .AND. HB_ISHASH( hsBlock ) .AND. cKey $ hsBlock
       cCode := hsBlock[ cKey ]
    ELSE
       cCode := cKey
@@ -861,7 +859,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
 
    RETURN /* cType + "=" + */ cCode
 
-PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
+STATIC PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
 
    LOCAL cIndent := Space( nIndent )
 
@@ -898,7 +896,7 @@ STATIC FUNCTION HBRawVersion()
       hb_Version( HB_VERSION_ID ), ;
       "20" + Transform( hb_Version( HB_VERSION_REVISION ), "99-99-99 99:99" ) )
 
-PROCEDURE ShowHelp( cExtraMessage, aArgs )
+STATIC PROCEDURE ShowHelp( cExtraMessage, aArgs )
 
    LOCAL nMode := 1
 
@@ -987,7 +985,7 @@ FUNCTION Parse( cVar, xDelimiter )
 
    RETURN cResult
 
-FUNCTION Join( aVar, cDelimiter )
+STATIC FUNCTION Join( aVar, cDelimiter )
 
    LOCAL cResult := ""
 
@@ -1082,7 +1080,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
 
    RETURN cResult
 
-FUNCTION Filename( cFile, cFormat, nLength )
+STATIC FUNCTION Filename( cFile, cFormat, nLength )
 
    STATIC s_Files := {}
 
@@ -1127,7 +1125,7 @@ FUNCTION Filename( cFile, cFormat, nLength )
 
    RETURN cResult
 
-PROCEDURE init_Templates()
+STATIC PROCEDURE init_Templates()
 
    LOCAL item
    LOCAL aSubCategories := { ;
@@ -1290,7 +1288,7 @@ STATIC PROCEDURE ShowComplianceHelp()
 
    FOR EACH item IN sc_hConstraint[ "compliance" ]
       ShowSubHelp( item[ 1 ], 1, 0, item:__enumIndex() )
-      ShowSubHelp( Decode( "COMPLIANCE", NIL, item[ 1 ] ), 1, 6, item:__enumIndex() )
+      ShowSubHelp( Decode( "COMPLIANCE", , item[ 1 ] ), 1, 6, item:__enumIndex() )
       ShowSubHelp( "", 1, 0 )
    NEXT
 
@@ -1302,7 +1300,7 @@ STATIC PROCEDURE ShowPlatformsHelp()
 
    FOR EACH item IN sc_hConstraint[ "platforms" ]
       ShowSubHelp( item[ 1 ], 1, 0, item:__enumIndex() )
-      ShowSubHelp( Decode( "PLATFORMS", NIL, item[ 1 ] ), 1, 6, item:__enumIndex() )
+      ShowSubHelp( Decode( "PLATFORMS", , item[ 1 ] ), 1, 6, item:__enumIndex() )
       ShowSubHelp( "", 1, 0 )
    NEXT
 

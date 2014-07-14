@@ -47,7 +47,7 @@
 #define STD_BORDER   7
 
 // Instead of using STATIC variables for these I'm using a LOCAL array
-//   and passing aAdder[] all over the place.... Don't let this confuse
+//   and passing aAdder[] all over the place. Don't let this confuse
 //   you. I wrote the Adder using the variable names and now let the
 //   PreProcessor do all the work.
 #define nTotal     aAdder[ 1 ]

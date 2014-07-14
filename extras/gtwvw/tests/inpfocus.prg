@@ -86,7 +86,7 @@ STATIC FUNCTION CreateToolbar( nWinNum )
 
    wvw_tbDestroy( nWinNum )   // just in case
 
-   hWndTB := wvw_tbCreate( nWinNum, lDisplayText, NIL, nSysBitmap )
+   hWndTB := wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap )
 
    IF hWndTB == 0
       wvw_MessageBox( nWinNum, "FAILED to create toolbar", "Error", MB_OK + MB_ICONEXCLAMATION )
@@ -152,7 +152,7 @@ STATIC FUNCTION OpenNewWindow()
 
    // open a window whose parent is Main Window
    SetColor( "W+/N" )
-   IF wvw_nOpenWindow( ctitle, nrow1, ncol1, nrow2, ncol2, NIL, 0 ) != nWinNum
+   IF wvw_nOpenWindow( ctitle, nrow1, ncol1, nrow2, ncol2, , 0 ) != nWinNum
       // currently wvw_nOpenWindow() will always return sequentially numbered window
       wvw_MessageBox( 0, "Something horrible has happened, program aborted", ;
          "Internal Error", MB_OK + MB_ICONHAND )

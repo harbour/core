@@ -132,29 +132,29 @@ PROCEDURE Main()
       DispEnd()
 
       // topleft panel, stretch/fit to panel
-      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "TOPLEFT", ntop + 1, nleft + 1, nmidver - 1, nmidhor - 1, NIL, ltransp )
+      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "TOPLEFT", ntop + 1, nleft + 1, nmidver - 1, nmidhor - 1, , ltransp )
       oWPaint:cImage := cpict
       wg_AddWPaintObj( 0, oWPaint )
 
       // topright panel, fit vertically
-      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "TOPRIGHT", ntop + 1, nmidhor + 1, nmidver - 1, NIL, NIL, ltransp )
+      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "TOPRIGHT", ntop + 1, nmidhor + 1, nmidver - 1, , , ltransp )
       oWPaint:cImage := cpict
       wg_AddWPaintObj( 0, oWPaint )
 
       // botleft panel, fit horizontally
-      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "BOTLEFT", nmidver + 1, nleft + 1, NIL, nmidhor - 1, NIL, ltransp )
+      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "BOTLEFT", nmidver + 1, nleft + 1, , nmidhor - 1, , ltransp )
       oWPaint:cImage := cpict
       wg_AddWPaintObj( 0, oWPaint )
 
       // botright panel, actual image size
-      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "BOTRIGHT", nmidver + 1, nmidhor + 1, NIL, NIL, NIL, ltransp )
+      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "BOTRIGHT", nmidver + 1, nmidhor + 1, , , , ltransp )
       oWPaint:cImage := cpict
       wg_AddWPaintObj( 0, oWPaint )
 
       Inkey( 0 )
 
       // delete all image objects
-      wg_DelWPaintObj( 0, WPAINTOBJ_IMAGE, NIL )
+      wg_DelWPaintObj( 0, WPAINTOBJ_IMAGE )
    ENDDO // WHILE .T.
    SetCursor( SC_NORMAL )
 

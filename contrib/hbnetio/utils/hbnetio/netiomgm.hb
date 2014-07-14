@@ -177,7 +177,6 @@ STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread
    LOCAL lExit := .F.
    LOCAL xList
    LOCAL xItem
-   LOCAL xRetVal
 
    LOCAL nLastPing := hb_MilliSeconds()
 
@@ -200,8 +199,7 @@ STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread
          IF ( xList := netio_GetData( netiocli[ _NETIOCLI_nStreamID ] ) ) != NIL
             IF HB_ISARRAY( xList )
                FOR EACH xItem IN xList
-                  xRetVal := Eval( bBlock, netiocli[ _NETIOCLI_nStreamID ], xItem )
-                  IF HB_ISLOGICAL( xRetVal ) .AND. ! xRetVal
+                  IF ! hb_defaultValue( Eval( bBlock, netiocli[ _NETIOCLI_nStreamID ], xItem ), .T. )
                      lExit := .T.
                      EXIT
                   ENDIF

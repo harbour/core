@@ -109,8 +109,8 @@ PROCEDURE Main()
 
    CLS
    @ 0, 1 SAY "Click NEW to open a new GET session, CLOSE when done"
-   wvw_pbCreate( 0, 2, 1, 2, 10, "New", NIL, {|| GetSession() } )
-   wvw_pbCreate( 0, 2, 12, 2, 22, "Close", NIL, {|| ToCloseWindow( 0, @lClosepermitted ) } )
+   wvw_pbCreate( 0, 2, 1, 2, 10, "New", , {|| GetSession() } )
+   wvw_pbCreate( 0, 2, 12, 2, 22, "Close", , {|| ToCloseWindow( 0, @lClosepermitted ) } )
 
    // activate/show the main window
    wvw_ShowWindow( 0 )
@@ -153,7 +153,7 @@ STATIC PROCEDURE GetSession()
    nrow2 := nrow1 + 15
    ncol2 := ncol1 + 60
    wvw_nOpenWindow( "Session " + hb_ntos( s_nsession ) + " (press F8 for help)", ;
-      nrow1, ncol1, nrow2, ncol2, NIL, 0 )
+      nrow1, ncol1, nrow2, ncol2, , 0 )
 
    cRemark += hb_eol() + "(from Session " + hb_ntos( nwinnum ) + ")"
 
@@ -188,7 +188,7 @@ STATIC PROCEDURE MyHelp()
       ccallstack += hb_ntos( i ) + ". " + ProcName( i ) + "(" + hb_ntos( ProcLine( i ) ) + ")" + hb_eol()
    NEXT
 
-   MyMessageBox( NIL, ;
+   MyMessageBox( , ;
       "Sorry, this is not really a help :-)" + hb_eol() + ;
       "It is only to show that SetKey() codeblock is handled by our editboxes" + hb_eol() + ;
       "Call stack:" + hb_eol() + ;
@@ -302,26 +302,26 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
          aGet[ __GET_LMULTILINE ], ;  // EBtype
       0, ;  // nmorestyle
       iif( lmultiline, NIL, nlen + 1 ), ; // nMaxChar
-      NIL, NIL )
+      , )
 
       nmaxrow := Max( nmaxrow, nrow2 )
       nmincol := Min( nmincol, ncol1 )
    NEXT
    nrow1 := nmaxrow + 2 // Min(nmaxrow+2, MaxRow())
    ncol1 := nmincol // Min(nmincol, MaxCol()-33)
-   nOKbutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "OK", NIL, ;
+   nOKbutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "OK", , ;
       {|| SaveVar( nwinnum, @aEBGets, @lDone ), ;
       EndGets( nwinnum, @aEBGets, nOKbutton, nCancelbutton, nCloseButton );
       } )
 
    ncol1 := ncol1 + 10 + 1
-   nCancelbutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Cancel", NIL, ;
+   nCancelbutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Cancel", , ;
       {|| CancelVar( nwinnum, @aEBGets, @lDone ), ;
       EndGets( nwinnum, @aEBGets, nOKbutton, nCancelbutton, nCloseButton );
       } )
 
    ncol1 := ncol1 + 10 + 1
-   nClosebutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Close", NIL, ;
+   nClosebutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Close", , ;
       {|| ToCloseWindow( nwinnum, @lClosepermitted ) } )
    wvw_pbEnable( nwinnum, nclosebutton, .F. )
 
@@ -583,7 +583,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    ENDIF
 
    // Store Initial CaretPos
-   wvw_ebGetSel( mnwinnum, mnebid, NIL, @icp )
+   wvw_ebGetSel( mnwinnum, mnebid, , @icp )
 
    // Get Current Content
    InBuffer := wvw_ebGetText( mnwinnum, mnebid )
@@ -898,7 +898,7 @@ STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
    ENDIF
 
    IF Empty( CToD( cBuffer ) )
-      MyMessageBox( NIL, "'" + cBuffer + "' is not a valid DATE" )
+      MyMessageBox( , "'" + cBuffer + "' is not a valid DATE" )
       RETURN .T.
    ENDIF
 
@@ -946,6 +946,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
 STATIC FUNCTION inp_handler( nwinnum, bhandler )
 
    STATIC s_bhandlers := {}
+
    LOCAL retval := iif( Len( s_bhandlers ) >= nwinnum + 1, s_bhandlers[ nwinnum + 1 ], NIL )
 
    IF HB_ISEVALITEM( bhandler )
@@ -957,16 +958,10 @@ STATIC FUNCTION inp_handler( nwinnum, bhandler )
 
    RETURN retval
 
-/********** general helpers ************/
+/* ********* general helpers *********** */
 
 STATIC FUNCTION MyMessageBox( nwinnum, cMessage, cCaption, nFlags )
-
-   LOCAL nParent
-
-   hb_default( @cCaption, "Debug Message" )
-   nParent := wvw_GetWindowHandle( nwinnum )
-
-   RETURN win_MessageBox( nParent, cMessage, cCaption, nFlags )
+   RETURN win_MessageBox( wvw_GetWindowHandle( nwinnum ), cMessage, hb_defaultValue( cCaption, "Debug Message" ), nFlags )
 
 #define VK_SHIFT            16
 

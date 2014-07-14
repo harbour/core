@@ -719,7 +719,7 @@ METHOD PROCEDURE ExcelWriterXML_Style:bgPattern( pattern, color )
    ENDIF
 
    ::interiorPattern := pattern
-   IF color != NIL
+   IF HB_ISSTRING( color )
       ::bgPatternColor( color )
    ENDIF
    ::useInterior := .T.

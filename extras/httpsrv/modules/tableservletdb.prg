@@ -308,8 +308,8 @@ METHOD xmlEncode( input ) CLASS TableManager
 
    LOCAL out, i, c
 
-   IF input == NIL
-      RETURN INPUT
+   IF ! HB_ISSTRING( input )
+      RETURN input
    ENDIF
 
    // Go through the input string and replace the following
@@ -358,7 +358,6 @@ METHOD xmlEncode( input ) CLASS TableManager
          ELSE
             out += c
          ENDIF
-         EXIT
       ENDSWITCH
    NEXT
 

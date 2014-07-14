@@ -2195,22 +2195,17 @@ METHOD OpenMenu( cName ) CLASS HBDebugger
 METHOD OpenPPO() CLASS HBDebugger
 
    LOCAL lSuccess
-   LOCAL cDir
-   LOCAL cName
-   LOCAL cExt
 
    IF Empty( ::cPrgName )
       RETURN .F.
    ENDIF
 
-   hb_FNameSplit( ::cPrgName, @cDir, @cName, @cExt )
-
-   IF Lower( cExt ) == ".ppo"
-      ::cPrgName := hb_FNameMerge( cDir, cName, ".prg" )
+   IF Lower( hb_FNameExt( ::cPrgName ) ) == ".ppo"
+      ::cPrgName := hb_FNameExtSet( ::cPrgName, ".prg" )
       lSuccess := hb_FileExists( ::cPrgName )
       ::lPPO := ! lSuccess
    ELSE
-      ::cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
+      ::cPrgName := hb_FNameExtSet( ::cPrgName, ".ppo" )
       lSuccess := hb_FileExists( ::cPrgName )
       ::lPPO := lSuccess
    ENDIF
@@ -2721,8 +2716,6 @@ METHOD PROCEDURE ShowCallStack() CLASS HBDebugger
 
 METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
 
-   LOCAL cDir
-   LOCAL cName
    LOCAL nLine
    LOCAL cPrgName
 
@@ -2745,8 +2738,7 @@ METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
       ENDIF
 
       IF ::lPPO
-         hb_FNameSplit( cPrgName, @cDir, @cName )
-         cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
+         cPrgName := hb_FNameExtSet( cPrgName, ".ppo" )
       ENDIF
 
       IF ! Empty( cPrgName )

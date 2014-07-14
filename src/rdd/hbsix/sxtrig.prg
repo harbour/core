@@ -45,6 +45,8 @@
  *
  */
 
+/* In separate source file to make it easy to override by user code */
+
 #include "hbsxdef.ch"
 
 FUNCTION sx_DefTrigger( nEvent, nArea, nFieldPos, xTrigVal )

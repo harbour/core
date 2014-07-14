@@ -80,7 +80,7 @@ static int hb_doy( int iYear, int iMonth, int iDay )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_doy(%d, %d, %d)", iYear, iMonth, iDay ) );
 
-   for( i = 1; i < iMonth; i++ )
+   for( i = 1; i < iMonth; ++i )
       iDoy += hb_daysinmonth( iYear, i );
 
    return iDoy + iDay;
@@ -106,10 +106,10 @@ static int hb_woy( int iYear, int iMonth, int iDay, HB_BOOL bISO )
 
 HB_FUNC( AMONTHS )
 {
-   PHB_ITEM pReturn = hb_itemArrayNew( 12 );    /* Create array */
+   PHB_ITEM pReturn = hb_itemArrayNew( 12 );  /* Create array */
    int      i;
 
-   for( i = 0; i < 12; i++ )
+   for( i = 0; i < 12; ++i )
       hb_arraySetC( pReturn, i + 1, hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
 
    hb_itemReturnRelease( pReturn );
@@ -117,10 +117,10 @@ HB_FUNC( AMONTHS )
 
 HB_FUNC( ADAYS )
 {
-   PHB_ITEM pReturn = hb_itemArrayNew( 7 );    /* Create array */
+   PHB_ITEM pReturn = hb_itemArrayNew( 7 );  /* Create array */
    int      i;
 
-   for( i = 0; i < 7; i++ )
+   for( i = 0; i < 7; ++i )
       hb_arraySetC( pReturn, i + 1, hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + i ) );
 
    hb_itemReturnRelease( pReturn );

@@ -198,8 +198,8 @@ PROCEDURE Main()
    kF2 := SetKey( K_F2, {|| xDebugInfo() } )
    kF3 := SetKey( K_F3, {|| Demo_Console() } )
 
-   kF9 := SetKey( K_F9, {|| wvw_SetLineSpacing( NIL, wvw_SetLineSpacing() - 2 ) } )
-   kF10 := SetKey( K_F10, {|| wvw_SetLineSpacing( NIL, wvw_SetLineSpacing() + 2 ) } )
+   kF9 := SetKey( K_F9, {|| wvw_SetLineSpacing( , wvw_SetLineSpacing() - 2 ) } )
+   kF10 := SetKey( K_F10, {|| wvw_SetLineSpacing( , wvw_SetLineSpacing() + 2 ) } )
    kF11 := SetKey( K_F11, {|| wvw_SetDefLineSpacing( wvw_SetLineSpacing() ) } )
 
    // start menu definitions *************************************
@@ -249,16 +249,16 @@ PROCEDURE Main()
    wvwm_ResetMouseObjects( nCurWindow )
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!", MaxRow() - 2, 67, , , {|| xDebugInfo() } ) )
 
-   oMouse := WVWMouseButton():New( "Flat",   MaxRow() - 2, 67 - 11, , , {|| lboxmessage( "flat" ) }, 1, NIL )
+   oMouse := WVWMouseButton():New( "Flat",   MaxRow() - 2, 67 - 11, , , {|| lboxmessage( "flat" ) }, 1 )
    oMouse:cImage := "vouch1.gif"
    oMouse:cCaption := ""
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-   oMouse := WVWMouseButton():New( "None",   MaxRow() - 2, 67 - 11 - 11, , , {|| lboxmessage( "none" ) }, 2, NIL )
+   oMouse := WVWMouseButton():New( "None",   MaxRow() - 2, 67 - 11 - 11, , , {|| lboxmessage( "none" ) }, 2 )
    oMouse:Enable( .T. )
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Hard",   MaxRow() - 2, 67 - 11 - 11 - 11, , , {|| lboxmessage( "hard" ) }, 3, NIL ) )
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Hard",   MaxRow() - 2, 67 - 11 - 11 - 11, , , {|| lboxmessage( "hard" ) }, 3 ) )
    oMouse := WVWMouseButton():New( "Disabled",   MaxRow() - 2, 67 - 11 - 11 - 11 - 11, , , {|| xDebugInfo() } )
    oMouse:Enable( .F. )
    wvwm_AddMouseObjects( nCurWindow, oMouse )
@@ -268,7 +268,7 @@ PROCEDURE Main()
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
    // 20070525 the real pushbutton, easier and better looking. Nothing to do with wvwmouse.prg.
-   wvw_pbCreate( nCurWindow, MaxRow() - 4, 67 - 11 - 11 - 11 - 11 - 11, MaxRow() - 4, 67 + 9 - 11 - 11 - 11 - 11 - 11, "native", NIL, {|| lboxmessage( "native pushbutton" ) }, NIL )
+   wvw_pbCreate( nCurWindow, MaxRow() - 4, 67 - 11 - 11 - 11 - 11 - 11, MaxRow() - 4, 67 + 9 - 11 - 11 - 11 - 11 - 11, "native", , {|| lboxmessage( "native pushbutton" ) } )
 
    SetColor( "N/W,N/GR*,,,N/W*" )
    CLS
@@ -461,7 +461,7 @@ STATIC PROCEDURE Demo_Get()
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", MaxRow() - 1, MaxCol() - 15, , , {|| xDebugInfo() } ))
    */
-   wvw_pbCreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
+   wvw_pbCreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", , {|| xDebugInfo() } )
 
    CLS
 
@@ -560,10 +560,10 @@ STATIC PROCEDURE DEMO_Browse()
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", MaxRow(), MaxCol() - 15, , , {|| xDebugInfo() } ))
    */
-   wvw_pbCreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
+   wvw_pbCreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", , {|| xDebugInfo() } )
 
-   nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
-   nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
+   nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
+   nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
 
    hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( hb_CurDrive() + ":" + hb_ps() + CurDir() + hb_ps() + "test.dbf", nRight - nLeft + 1 ), "W+/W" )
 
@@ -931,7 +931,7 @@ STATIC PROCEDURE CreateToolbar( nWinNum )
       lDisplayText := Alert( "Display text in toolbar?", { "Yes", "No" } ) == 1
    ENDIF
 
-   hWndTB := wvw_tbCreate( nWinNum, lDisplayText, NIL, nSysBitmap )
+   hWndTB := wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap )
 
    IF hWndTB == 0
       lboxmessage( "FAILED create toolbar" )
@@ -1056,9 +1056,9 @@ STATIC FUNCTION nMenuChecker( nMenuEvent )
       nkey := K_ESC
 
    CASE nMenuEvent == IDM_WINDOW_SPACING_INCREASE
-      wvw_SetLineSpacing( NIL, wvw_SetLineSpacing() + 2 )
+      wvw_SetLineSpacing( , wvw_SetLineSpacing() + 2 )
    CASE nMenuEvent == IDM_WINDOW_SPACING_DECREASE
-      wvw_SetLineSpacing( NIL, wvw_SetLineSpacing() - 2 )
+      wvw_SetLineSpacing( , wvw_SetLineSpacing() - 2 )
    CASE nMenuEvent == IDM_WINDOW_SPACING_DEFAULT
       wvw_SetDefLineSpacing( wvw_SetLineSpacing() )
 
@@ -1554,7 +1554,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
          IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_MessageBox( NIL, "Button Failed wvw_DrawImage(" + ::cImage + ")" )
+            win_MessageBox( , "Button Failed wvw_DrawImage(" + ::cImage + ")" )
          ENDIF
       ENDIF
 
@@ -1572,7 +1572,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
          IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_MessageBox( NIL, "Button Failed wvw_DrawImage(" + ::cImage + ")" )
+            win_MessageBox( , "Button Failed wvw_DrawImage(" + ::cImage + ")" )
          ENDIF
       ENDIF
 
@@ -1626,6 +1626,7 @@ STATIC FUNCTION wvwm_SetKeyRepeater( lSet )
    // returns .T. if KeyRepeater is active
    // if lSet is supplied, KeyRepeater is enable/disable accordingly
    LOCAL lWasSet := ( s_nkeyrepeater != NIL )
+
    IF lSet != NIL
       IF lSet
          IF ! lWasSet

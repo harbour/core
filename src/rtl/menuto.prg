@@ -193,11 +193,12 @@ FUNCTION __MenuTo( bBlock, cVariable )
                Eval( bAction, ProcName( 1 ), ProcLine( 1 ), hb_asciiUpper( cVariable ) )
                n := Eval( bBlock )
 
-               IF n < 1
+               DO CASE
+               CASE n < 1
                   n := 1
-               ELSEIF n > nArrLen
+               CASE n > nArrLen
                   n := nArrLen
-               ENDIF
+               ENDCASE
 
                nKey := 0
 

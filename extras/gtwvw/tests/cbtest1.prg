@@ -37,15 +37,15 @@ PROCEDURE Main()
 #endif
 
    SetColor( "N/W" )
-   wvw_SetTitle( NIL, "Quick Survey" )
-   wvw_NoClose( NIL )
+   wvw_SetTitle( , "Quick Survey" )
+   wvw_NoClose()
    wvw_SetAltF4Close( .F. )
-   wvw_SetLineSpacing( NIL, 4 )
+   wvw_SetLineSpacing( , 4 )
 #if 0
-   wvw_SetLSpaceColor( NIL, 7 )
+   wvw_SetLSpaceColor( , 7 )
 #endif
-   wvw_cbSetFont( NIL, "Arial", 16 )
-   wvw_pbSetFont( NIL, "Arial", 16 )
+   wvw_cbSetFont( , "Arial", 16 )
+   wvw_pbSetFont( , "Arial", 16 )
 
    nMaxWidth := 0
    AEval( s_aAnswers, {| x | nMaxWIdth := Max( nMaxWidth, Len( x ) ) } )
@@ -56,14 +56,14 @@ PROCEDURE Main()
    nCursor := SetCursor( SC_NONE )
    @ 1, 1 SAY s_cQuestion
    @ 2, 1 SAY s_cHint
-   nCBid := wvw_cbCreate( NIL, 4, 1, nMaxWidth, s_aAnswers, ;
+   nCBid := wvw_cbCreate( , 4, 1, nMaxWidth, s_aAnswers, ;
       {| nWinNum, nId, nEvent, nIndex | ;
       CBhandler( nWinNum, nId, nEvent, nIndex, nPBid ) } )
 
-   nPBid := wvw_pbCreate( NIL, 4, 1 + nMaxWidth + 1, 4, 1 + nMaxWidth + 1 + 10 - 1, "OK", NIL, ;
+   nPBid := wvw_pbCreate( , 4, 1 + nMaxWidth + 1, 4, 1 + nMaxWidth + 1 + 10 - 1, "OK", , ;
       {|| hb_keyPut( _SECRET_KEY ) }, { 0, 0, + 2, 0 } )
 
-   wvw_cbSetFocus( NIL, nCBid )
+   wvw_cbSetFocus( , nCBid )
 
    wvw_ShowWindow()
 
@@ -71,7 +71,7 @@ PROCEDURE Main()
    DO WHILE ( ch := Inkey( 0 ) ) != _SECRET_KEY
       DO CASE
       CASE ch == K_TAB .OR. ch == K_ENTER
-         IF nPos == 2 .AND. ch == K_ENTER .AND. wvw_pbEnable( NIL, nPBid )
+         IF nPos == 2 .AND. ch == K_ENTER .AND. wvw_pbEnable( , nPBid )
             hb_keyPut( _SECRET_KEY )
             LOOP
          ELSE
@@ -87,17 +87,17 @@ PROCEDURE Main()
       ENDIF
       DO CASE
       CASE nPos == 1
-         wvw_cbSetFocus( NIL, nCBid )
+         wvw_cbSetFocus( , nCBid )
       CASE nPos == 2
-         wvw_pbSetFocus( NIL, nPBid )
-         wvw_pbSetStyle( NIL, nPBid, 1 ) // BS_DEFPUSHBUTTON
+         wvw_pbSetFocus( , nPBid )
+         wvw_pbSetStyle( , nPBid, 1 ) // BS_DEFPUSHBUTTON
       ENDCASE
    ENDDO
 
-   wvw_cbEnable( NIL, nCBid, .F. )
-   wvw_pbEnable( NIL, nPBid, .F. )
+   wvw_cbEnable( , nCBid, .F. )
+   wvw_pbEnable( , nPBid, .F. )
    @ 6, 1 SAY "Your response is:"
-   @ 7, 1 SAY wvw_cbGetCurText( NIL, nCBid )
+   @ 7, 1 SAY wvw_cbGetCurText( , nCBid )
    @ 9, 1 SAY s_cThankYou
    Inkey( 0 )
    SetCursor( nCursor )
