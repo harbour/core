@@ -7,13 +7,12 @@ PROCEDURE Main()
    LOCAL oServer, oQuery, oRow, i, x
 
    LOCAL cServer := "localhost:"
-   LOCAL cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
+   LOCAL cDatabase := hb_FNameExtSet( hb_ProgName(), ".fdb" )
    LOCAL cUser := "SYSDBA"
    LOCAL cPass := "masterkey"
    LOCAL nPageSize := 1024
    LOCAL cCharSet := "UTF8"
    LOCAL nDialect := 1
-   LOCAL cQuery
 
    CLS
 
@@ -24,9 +23,7 @@ PROCEDURE Main()
    ENDIF
 
    ? "Connecting..."
-
    oServer := TFBServer():New( cServer + cDatabase, cUser, cPass, nDialect )
-
    IF oServer:NetErr()
       ? oServer:Error()
       RETURN
@@ -38,11 +35,10 @@ PROCEDURE Main()
    ENDIF
 
    ? "Creating domain for boolean fields..."
-
-   ? oServer:Execute( "create domain boolean_field as smallint default 0 not null check (value in (0,1))" )
+   ? oServer:Execute( "CREATE DOMAIN boolean_field as smallint default 0 not null check (value in (0,1))" )
 
    ? "Creating test table..."
-   cQuery := ;
+   ? oServer:Execute( ;
       "CREATE TABLE test(" + ;
       "   Code SmallInt not null primary key," + ;
       "   dept Integer," + ;
@@ -53,9 +49,7 @@ PROCEDURE Main()
       "   Budget Numeric(12,2)," + ;
       "   Discount Decimal(5,2)," + ;
       "   Creation Date," + ;
-      "   Description blob sub_type 1 segment size 40 )"
-
-   ? "CREATE TABLE:", oServer:Execute( cQuery )
+      "   Description blob sub_type 1 segment size 40 )" )
 
    oQuery := oServer:Query( "SELECT code, dept, name, sales, salary, creation FROM test" )
 

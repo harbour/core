@@ -48,18 +48,15 @@ MEMVAR _REQUEST
 
 FUNCTION HRBMAIN()
 
-   LOCAL cHtml := ""
-   LOCAL cCookie := uhttpd_GetField( "mycookie" )
-   LOCAL cAction := uhttpd_GetField( "action" )
+   LOCAL cHtml
+   LOCAL cCookie := hb_defaultValue( uhttpd_GetField( "mycookie" ), "" )
+   LOCAL cAction := hb_defaultValue( uhttpd_GetField( "action" ), "" )
    LOCAL oCookie
 
    // hb_ToOutDebug( "cCookie: %s, cAction: %s\n\r", hb_ValToExp( cCookie ), cAction )
 
-   hb_default( @cCookie, "" )
-   hb_default( @cAction, "" )
-
    // Sample page embedded
-#pragma __cstream | cHtml += %s
+#pragma __cstream | cHtml := %s
 <!DOCTYPE html>
 <html>
 <head>
@@ -84,20 +81,21 @@ FUNCTION HRBMAIN()
 </html>
 #pragma __endtext
 
-   IF Empty( cAction )
+   DO CASE
+   CASE Empty( cAction )
       // Set a simple cookie
       oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
       // cleaning previous cookie
       oCookie:DeleteCookie( "mycookie" )
 
       cHtml := StrTran( cHtml, "<%COOKIE_VALUE%>", cCookie )
-   ELSEIF cAction == "gotoinfo"
+   CASE cAction == "gotoinfo"
       // Set a simple cookie
       oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
       oCookie:SetCookie( "mycookie", cCookie )
       uhttpd_SetHeader( "Location", "/info" )
       // uhttpd_Write( "cookie set <a href='/info'>Go to info page</a>" )
       RETURN NIL
-   ENDIF
+   ENDCASE
 
    RETURN cHtml

@@ -618,9 +618,8 @@ METHOD new( oParent, cTagName, cAttrib, cContent ) CLASS THtmlNode
       ::parent      := oParent
       IF HB_ISSTRING( cAttrib )
          IF Right( cAttrib, 1 ) == "/"
-            cAttrib := Stuff( cAttrib, Len( cAttrib ), 1, " " )
             ::htmlEndTagName := "/"
-            ::htmlAttributes := RTrim( cAttrib )
+            ::htmlAttributes := hb_StrShrink( cAttrib )
          ELSE
             ::htmlAttributes := cAttrib
          ENDIF

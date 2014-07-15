@@ -7,13 +7,12 @@ PROCEDURE Main()
    LOCAL oServer, oQuery, oRow, i, x, aKey
 
    LOCAL cServer := "localhost:"
-   LOCAL cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
+   LOCAL cDatabase := hb_FNameExtSet( hb_ProgName(), ".fdb" )
    LOCAL cUser := "SYSDBA"
    LOCAL cPass := "masterkey"
    LOCAL nPageSize := 1024
    LOCAL cCharSet := "UTF8"
    LOCAL nDialect := 1
-   LOCAL cQuery
 
    IF hb_FileExists( cDatabase )
       FErase( cDatabase )
@@ -22,22 +21,18 @@ PROCEDURE Main()
    ? FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect )
 
    ? "Connecting..."
-
    oServer := TFBServer():New( cServer + cDatabase, cUser, cPass, nDialect )
-
    IF oServer:NetErr()
       ? oServer:Error()
       RETURN
    ENDIF
 
    ? "Tables..."
-
    FOR EACH i IN oServer:ListTables()
       ? i
    NEXT
 
    ? "Using implicit transaction..."
-
    IF oServer:TableExists( "TEST" )
       oServer:Execute( "DROP TABLE Test" )
       oServer:Execute( "DROP DOMAIN boolean_field" )
@@ -46,9 +41,9 @@ PROCEDURE Main()
    ? "Creating domain for boolean fields..."
    oServer:Execute( "create domain boolean_field as smallint default 0 not null check (value in (0,1))" )
 
-   oServer:StartTransaction()
    ? "Creating test table..."
-   cQuery := ;
+   oServer:StartTransaction()
+   oServer:Execute( ;
       "CREATE TABLE test(" + ;
       "   Code SmallInt not null primary key," + ;
       "   dept Integer," + ;
@@ -59,9 +54,7 @@ PROCEDURE Main()
       "   Budget Numeric(12,2)," + ;
       "   Discount Decimal(5,2)," + ;
       "   Creation Date," + ;
-      "   Description blob sub_type 1 segment size 40 )"
-
-   oServer:Execute( cQuery )
+      "   Description blob sub_type 1 segment size 40 )" )
 
    IF oServer:NetErr()
       ? oServer:Error()
@@ -73,7 +66,6 @@ PROCEDURE Main()
    WAIT
 
    ? "Structure of test table"
-
    FOR EACH i IN oServer:TableStruct( "test" )
       ?
       FOR EACH x IN i
@@ -81,15 +73,13 @@ PROCEDURE Main()
       NEXT
    NEXT
 
-   ? "Inserting, declared transaction control "
+   ? "Inserting, declared transaction control"
    oServer:StartTransaction()
 
    FOR i := 1 TO 100
-      cQuery := ;
-         "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) "
-         'VALUES( ' + hb_ntos( i ) + ', 2, "TEST", 1, 5, 3000, 1500.2, 7.5, "2003-12-22", "Short Description about what ?")'
-
-      oServer:Execute( cQuery )
+      oServer:Execute( ;
+         "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) " + ;
+         'VALUES( ' + hb_ntos( i ) + ', 2, "TEST", 1, 5, 3000, 1500.2, 7.5, "2003-12-22", "Short Description about what ?")' )
 
       IF oServer:NetErr()
          ? oServer:error()
@@ -125,11 +115,8 @@ PROCEDURE Main()
    oRow:FieldPut( 2, "MY TEST" )
 
    ? oRow:FieldGet( 1 ), oRow:FieldGet( 2 )
-
    ? oServer:Append( oRow )
-
    ? oServer:Delete( oQuery:blank(), "code = 200" )
-
    ? oServer:Execute( "error caused intentionaly" )
 
    DO WHILE ! oQuery:Eof()

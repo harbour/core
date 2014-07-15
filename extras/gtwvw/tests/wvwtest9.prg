@@ -565,11 +565,11 @@ STATIC PROCEDURE DEMO_Browse()
    nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
    nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
 
-   hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( hb_CurDrive() + ":" + hb_ps() + CurDir() + hb_ps() + "test.dbf", nRight - nLeft + 1 ), "W+/W" )
+   hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( "test.dbf", nRight - nLeft + 1 ), "W+/W" )
 
    oBrowse:ForceStable()
-   RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) // 2004-07-04
-   RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) // 2004-07-04
+   RefreshHXB( oBrowse, nCurWindow, nHScrollBar )  // 2004-07-04
+   RefreshVXB( oBrowse, nCurWindow, nVScrollBar )  // 2004-07-04
 
    DO WHILE ! lEnd
       nKey := Inkey( 0 )
@@ -592,11 +592,15 @@ STATIC PROCEDURE DEMO_Browse()
          oBrowse:Up()   // simple scroll up
 
       CASE nKey == K_LEFT
-         IF oBrowse:colPos == 1; loop; ENDIF
+         IF oBrowse:colPos == 1
+            LOOP
+         ENDIF
          oBrowse:Left()
 
       CASE nKey == K_RIGHT
-         IF oBrowse:colPos == oBrowse:colCount; loop; ENDIF
+         IF oBrowse:colPos == oBrowse:colCount
+            LOOP
+         ENDIF
          oBrowse:Right()
 
       CASE nKey == K_PGDN
@@ -667,7 +671,9 @@ STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    LOCAL lNeedStabilize
 
    // if we can't handle non topmost window we must return right away
-   // IF nWinNum != wvw_nNumWindows() - 1 ; RETURN ; ENDIF
+   // IF nWinNum != wvw_nNumWindows() - 1
+   //    RETURN
+   // ENDIF
 
    nOldWin := wvw_nSetCurWindow( nWinNum )
 
@@ -675,16 +681,24 @@ STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    DO WHILE .T.  // dummy loop
       DO CASE
       CASE XBmsg == 0 // SB_LINEUP
-         IF ordKeyNo() == 1; exit; ENDIF
+         IF ordKeyNo() == 1
+            EXIT
+         ENDIF
          oBrowse:up()
       CASE XBmsg == 1 // SB_LINEDOWN
-         IF ordKeyNo() == ordKeyCount(); exit; ENDIF
+         IF ordKeyNo() == ordKeyCount()
+            EXIT
+         ENDIF
          oBrowse:down()
       CASE XBmsg == 2 // SB_PAGEUP
-         IF ordKeyNo() == 1; exit; ENDIF
+         IF ordKeyNo() == 1
+            EXIT
+         ENDIF
          oBrowse:pageup()
       CASE XBmsg == 3 // SB_PAGEDOWN
-         IF ordKeyNo() == ordKeyCount(); exit; ENDIF
+         IF ordKeyNo() == ordKeyCount()
+            EXIT
+         ENDIF
          oBrowse:pagedown()
       OTHERWISE
          // ignore
@@ -719,16 +733,24 @@ STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    DO WHILE .T.  // dummy loop
       DO CASE
       CASE XBmsg == 0 // SB_LINELEFT
-         IF oBrowse:colPos == 1; exit; ENDIF
+         IF oBrowse:colPos == 1
+            EXIT
+         ENDIF
          oBrowse:Left()
       CASE XBmsg == 1 // SB_LINERIGHT
-         IF oBrowse:colpos == oBrowse:colCount; exit; ENDIF
+         IF oBrowse:colpos == oBrowse:colCount
+            EXIT
+         ENDIF
          oBrowse:Right()
       CASE XBmsg == 2 // SB_PAGELEFT
-         IF oBrowse:colPos == 1; exit; ENDIF
+         IF oBrowse:colPos == 1
+            EXIT
+         ENDIF
          oBrowse:panleft()
       CASE XBmsg == 3 // SB_PAGERIGHT
-         IF oBrowse:colpos == oBrowse:colCount; exit; ENDIF
+         IF oBrowse:colpos == oBrowse:colCount
+            EXIT
+         ENDIF
          oBrowse:panright()
       OTHERWISE
          // ignore

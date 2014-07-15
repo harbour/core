@@ -400,11 +400,7 @@ PROCEDURE Main( ... )
       ENDIF
       cI := cApplicationRoot
       IF hb_DirExists( cI )
-         IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
-            s_cApplicationRoot := hb_StrShrink( cI )
-         ELSE
-            s_cApplicationRoot := cI
-         ENDIF
+         s_cApplicationRoot := hb_DirSepDel( cI )
       ELSE
          ? "Invalid application root:", cI
          WAIT
@@ -423,16 +419,9 @@ PROCEDURE Main( ... )
 #endif
 
    IF HB_ISSTRING( cDocumentRoot )
-#if 0
-      cI := StrTran( SubStr( cDocumentRoot, 2 ), "\", "/" )
-#endif
-      cI := cDocumentRoot
+      cI := hb_DirSepToOS( cDocumentRoot )
       IF hb_DirExists( cI )
-         IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
-            s_cDocumentRoot := hb_StrShrink( cI )
-         ELSE
-            s_cDocumentRoot := cI
-         ENDIF
+         s_cDocumentRoot := hb_DirSepDel( cI )
       ELSE
          ? "Invalid document root:", cI
          WAIT
@@ -1495,21 +1484,21 @@ STATIC FUNCTION CGIExec( cProc, /* @ */ cOutPut )
       // No hIn, hErr == hOut
 
       // save current directory
-      cCurPath := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
+      cCurPath := hb_cwd()
 
       // hb_ToOutDebug( "cCurPath: %s\n\r", cCurPath )
 
       // Change dir to document root
-      DirChange( s_cDocumentRoot )
+      hb_cwd( s_cDocumentRoot )
 
-      // hb_ToOutDebug( "New Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+      // hb_ToOutDebug( "New Path: %s\n\r", hb_cwd() )
 
       hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T.: Detached Process (Hide Window)
 
       // return to original folder
-      DirChange( cCurPath )
+      hb_cwd( cCurPath )
 
-      // hb_ToOutDebug( "New 2 Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+      // hb_ToOutDebug( "New 2 Path: %s\n\r", hb_cwd() )
 
       IF hProc != F_ERROR
          // hb_ToOutDebug( "Process handler: %s\n\r", hProc )
@@ -2124,17 +2113,6 @@ STATIC FUNCTION HRB_LoadFromFile( cFile )
 
 STATIC PROCEDURE Help()
 
-#if 0
-   LOCAL cPrg := hb_ProgName()
-   LOCAL nPos := RAt( hb_ps(), cPrg )
-
-   __OutDebug( hb_ProgName() )
-
-   IF nPos > 0
-      cPrg := SubStr( cPrg, nPos + 1 )
-   ENDIF
-#endif
-
    ?
    ? "(C) 2009 Francesco Saverio Giudice <info@fsgiudice.com>"
    ?
@@ -2633,9 +2611,9 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
                t_cErrorMsg := "File does not exist: " + cFileName
             ELSE
                // save current directory
-               cCurPath := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
+               cCurPath := hb_cwd()
                // Change dir to document root
-               DirChange( s_cDocumentRoot )
+               hb_cwd( s_cDocumentRoot )
 
                xResult := hb_hrbDo( pHRB )
 
@@ -2645,7 +2623,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
 #endif
 
                // return to original folder
-               DirChange( cCurPath )
+               hb_cwd( cCurPath )
 
                hb_hrbUnload( pHRB )
             ENDIF

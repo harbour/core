@@ -168,7 +168,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          DO CASE
-         CASE cArgName == "-source" ; s_hSwitches[ "basedir" ] := arg + iif( Right( arg, 1 ) == hb_ps(), "", hb_ps() )
+         CASE cArgName == "-source" ; s_hSwitches[ "basedir" ] := hb_DirSepAdd( arg )
          CASE cArgName == "-format"
             IF arg == "" .OR. hb_AScan( s_hSwitches[ "format-list" ], arg, , , .T. ) == 0
                ShowHelp( "Unknown format option '" + arg + "'" )

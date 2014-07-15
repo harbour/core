@@ -415,17 +415,16 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
 
-   cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
-
+   cCWD := hb_cwd()
 #if defined( _CURDIR )
-   cRoot := cCWD + hb_ps()
+   cRoot := cCWD
 #endif
 
    FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) )
    FErase( s_cTempDir )
    hb_DirCreate( s_cTempDir )
 
-   cThisComponent := hb_FNameName( cCWD )
+   cThisComponent := hb_FNameName( hb_DirSepDel( cCWD ) )
 
    hb_DirCreate( CombinePath( s_cTempDir, cThisComponent ) )
    hb_DirCreate( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
@@ -514,7 +513,7 @@ PROCEDURE Main( ... )
       DirChange( s_cTempDir )
       TRACE( "Running " + cCommand )
       hb_processRun( cCommand, , @cDiffText, @cStdErr, .F. )
-      DirChange( cCWD )
+      hb_cwd( cCWD )
 
       SaveLog( "diff", NIL, cStdErr )
 
@@ -598,15 +597,15 @@ STATIC PROCEDURE SetupTools()
 STATIC FUNCTION CombinePath( ... )
 
    LOCAL aArguments := hb_AParams()
-   LOCAL cRetVal := ""
+   LOCAL cRetVal
    LOCAL nI
 
    IF Len( aArguments ) == 2
-      cRetVal := aArguments[ 1 ] + hb_ps() + aArguments[ 2 ]
+      cRetVal := hb_DirSepAdd( aArguments[ 1 ] ) + aArguments[ 2 ]
    ELSE
-      cRetVal := aArguments[ 1 ] + hb_ps()
+      cRetVal := hb_DirSepAdd( aArguments[ 1 ] )
       FOR nI := 2 TO Len( aArguments ) - 1
-         cRetVal += aArguments[ nI ] + hb_ps()
+         cRetVal += hb_DirSepAdd( aArguments[ nI ] )
       NEXT
       cRetVal += ATail( aArguments )
    ENDIF
@@ -618,7 +617,7 @@ STATIC FUNCTION WalkAndFind( cTop, cLookFor )
    LOCAL aDirEntry
    LOCAL cRetVal := NIL
 
-   cTop += iif( Right( cTop, 1 ) $ "/\", "", hb_ps() )
+   cTop := hb_DirSepAdd( cTop )
 
    FOR EACH aDirEntry IN ASort( Directory( cTop + hb_osFileMask(), "D" ),,, {| aLeft | !( "D" $ aLeft[ F_ATTR ] ) } )  /* Files first */
       IF !( "D" $ aDirEntry[ F_ATTR ] )
@@ -760,10 +759,10 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
    cCommand := hb_StrFormat( "%1$s %2$s %3$s", ;
       cArchiver, cArchiverArgs, CombinePath( s_cTempDir, cExtractedFileName ) )
    TRACE( "Running " + cCommand )
-   cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
+   cCWD := hb_cwd()
    DirChange( CombinePath( s_cTempDir, "root" ) )
    nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
-   DirChange( cCWD )
+   hb_cwd( cCWD )
    SaveLog( "archive", cStdOut, cStdErr )
    IF nResult != 0
       OutStd( hb_StrFormat( "E: Error unarchiving %1$s", cFileName ) + hb_eol() )
@@ -892,7 +891,7 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
 
    DO WHILE .T.
 
-      IF ( nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1 ) == 0
+      IF ( nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1 ) == -1
          /* If anything is left in the input string, stick it to the end
           * of the output string. No path searching as that would be
           * an invalid diff anyway */

@@ -49,32 +49,28 @@
 #define TABLE_NAME_PATH  hb_DirSepToOS( "../../../tests/test.dbf" )
 #define SIMULATE_SLOW_REPLY
 
-MEMVAR _REQUEST // defined in uHTTPD
+MEMVAR _REQUEST  // defined in uHTTPD
 
 FUNCTION HRBMAIN()
 
-   LOCAL cXml, cPage, cCount, nCount
+   LOCAL cXml, nCount
    LOCAL oTM
-   LOCAL hGets := _REQUEST
 
-   hb_default( @hGets, { => } )
+   LOCAL hGets := hb_defaultValue( _REQUEST, { => } )
 
-   IF "page" $ hGets
-
-      cPage := hGets[ "page" ]
+   DO CASE
+   CASE "page" $ hGets
 
       oTM := TableManager():New()
       IF oTM:Open()
          oTM:Read()
-         cXml := oTM:getXmlData( Val( cPage ) )
+         cXml := oTM:getXmlData( Val( hGets[ "page" ] ) )
          oTM:Close()
       ENDIF
 
-   ELSEIF "count" $ hGets
+   CASE "count" $ hGets
 
-      cCount := hGets[ "count" ]
-
-      IF cCount == "true"
+      IF hGets[ "count" ] == "true"
          oTM := TableManager():New()
          IF oTM:Open()
             nCount := oTM:getLastRec()
@@ -82,25 +78,22 @@ FUNCTION HRBMAIN()
             oTM:Close()
          ENDIF
       ENDIF
-   ENDIF
+   ENDCASE
 
-   IF ! Empty( cXml )
+   IF Empty( cXml )
+      uhttpd_SetHeader( "Content-Type", "text/xml" )
+      uhttpd_Write( '<?xml version="1.0" encoding="UTF-8"?>' )
+      uhttpd_Write( "<pages><page>No Data</page></pages>" )
+   ELSE
       uhttpd_SetHeader( "Content-Type", "text/xml" )
       // cache control
       uhttpd_SetHeader( "Cache-Control", "no-cache, must-revalidate" )
       uhttpd_SetHeader( "Expires", "Mon, 26 Jul 1997 05:00:00 GMT" )
       uhttpd_Write( cXml )
-   ELSE
-      uhttpd_SetHeader( "Content-Type", "text/xml" )
-      uhttpd_Write( '<?xml version="1.0" encoding="UTF-8"?>' )
-      uhttpd_Write( "<pages><page>No Data</page></pages>" )
    ENDIF
 
-   RETURN .T. // I Handle HTML Output
+   RETURN .T.  // I Handle HTML Output
 
-/*
-  TableManager
-*/
 
 CREATE CLASS TableManager
 
@@ -113,7 +106,7 @@ CREATE CLASS TableManager
 
    METHOD New()
    METHOD Open()
-   METHOD Close()          INLINE iif( ::lOpened, ( table->( dbCloseArea() ), ::lOpened := .F. ), )
+   METHOD Close()          INLINE iif( ::lOpened, table->( dbCloseArea(), ::lOpened := .F. ), )
    METHOD Read()
    METHOD getLastRec()     INLINE table->( LastRec() )
    METHOD getXmlData( page )
@@ -123,15 +116,13 @@ CREATE CLASS TableManager
 ENDCLASS
 
 METHOD New() CLASS TableManager
-
    RETURN Self
 
 METHOD Open() CLASS TableManager
 
    LOCAL cDBF := ::cTable
 
-   // hb_ToOutDebug( "CurPath: %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
-
+   // hb_ToOutDebug( "CurPath: %s", hb_cwd() )
    // hb_ToOutDebug( "before: cDBF: %s, Used(): %s\n", cDBF, Used() )
 
    IF ! ::lOpened
@@ -147,8 +138,6 @@ METHOD Open() CLASS TableManager
 
 METHOD Read() CLASS TableManager
 
-   LOCAL hMap, lOk := .F.
-
 #ifdef SIMULATE_SLOW_REPLY
    // force slow connection to simulate long reply
    hb_idleSleep( 0.5 )
@@ -160,22 +149,21 @@ METHOD Read() CLASS TableManager
       // n := 0
       DO WHILE table->( ! Eof() ) // .AND. ++n < 50
 
-         hMap := { => }
-         hMap[ "recno"   ] := StrZero( table->( RecNo() ), 4 )
-         hMap[ "name"    ] := RTrim( table->first ) + " " + RTrim( table->last )
-         hMap[ "address" ] := RTrim( table->street )
-         hMap[ "city"    ] := RTrim( table->city )
-         hMap[ "state"   ] := table->state
-         hMap[ "zip"     ] := table->zip
-         AAdd( ::aData, hMap )
+         AAdd( ::aData, { ;
+            "recno"   => StrZero( table->( RecNo() ), 4 ), ;
+            "name"    => RTrim( table->first ) + " " + RTrim( table->last ), ;
+            "address" => RTrim( table->street ), ;
+            "city"    => RTrim( table->city ), ;
+            "state"   => table->state, ;
+            "zip"     => table->zip } )
+
          table->( dbSkip() )
       ENDDO
 
-      lOk := .T.
-
+      RETURN .T.
    ENDIF
 
-   RETURN lOK
+   RETURN .F.
 
 /**
  * Builds a <code>String</code> of XML representing the aData for the
@@ -214,8 +202,7 @@ METHOD getXmlData( page ) CLASS TableManager
    LOCAL startIndex, stopIndex
    LOCAL xml, i, map, key, cString
 
-   /*
-    * For simplicity, we are creating XML as a String. In a production
+   /* For simplicity, we are creating XML as a string. In a production
     * system, you should create an XML document (org.w3c.dom.Document) to
     * ensure compliance with the DOM Level 2 Core Specification.
     */
@@ -258,9 +245,10 @@ METHOD getXmlData( page ) CLASS TableManager
       // e.g., <address>123 four street</address>
       FOR EACH KEY IN map:Keys
 
-         cString := '<cell key="' + key + '">'
-         cString += ::xmlEncode( hb_CStr( map[ key ] ) )
-         cString += "</cell>"
+         cString := ;
+            "<cell key=" + '"' + key + '"' + ">" + ;
+            ::xmlEncode( hb_CStr( map[ key ] ) ) + ;
+            "</cell>"
 
          xml:append( cString )
       NEXT
