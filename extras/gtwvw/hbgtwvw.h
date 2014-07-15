@@ -230,7 +230,6 @@ typedef __int64 LONG_PTR;
  */
 #define WVW_TB_LABELMAXLENGTH     100
 
-/* #define WVW_WHICH_WINDOW ( HB_ISNIL( 1 ) ? ( s_bMainCoordMode ? s_usNumWindows-1 : s_usCurWindow ) : ((UINT) hb_parni( 1 )) ) */
 #define WVW_WHICH_WINDOW          ( HB_ISNIL( 1 ) ? ( hb_gt_wvw_GetMainCoordMode() ? ( ( hb_gt_wvw_GetNumWindows() ) - 1 )  : hb_gt_wvw_GetCurWindow() ) : ( ( UINT ) hb_parni( 1 ) ) )
 
 #define BLACK                     RGB( 0x00, 0x00, 0x00 )
