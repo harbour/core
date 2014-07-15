@@ -70,7 +70,7 @@
   [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
 
 > Personal/private e-mails will either be ignored or given a short
-> answer to move the inquiry to somewhere public.
+> answer to move the inquiry to somewhere public.<br />
 > Donators can count on my reciprocity even in private.
 
 
