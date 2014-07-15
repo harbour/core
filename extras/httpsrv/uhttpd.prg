@@ -2537,17 +2537,11 @@ STATIC FUNCTION ErrorMessage( oError )
 // This handler handle static files
 STATIC FUNCTION Handler_Default( cFileName )
 
-   LOCAL cMime
-
    // If file exists
    DO CASE
    CASE hb_FileExists( uhttpd_OSFileName( cFileName ) )
-      IF ( cMime := tip_FileNameMimeType( cFileName ) ) == "unknown"
-         // Unknown file type
-         cMime := "application/octet-stream"
-      ENDIF
 
-      uhttpd_SetHeader( "Content-Type", cMime )
+      uhttpd_SetHeader( "Content-Type", tip_FileNameMimeType( cFileName, "application/octet-stream" ) )
       uhttpd_Write( hb_MemoRead( uhttpd_OSFileName( cFileName ) ) )
 
       // Directory content request

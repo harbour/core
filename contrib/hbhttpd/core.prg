@@ -1346,7 +1346,7 @@ FUNCTION UUrlValidate( cUrl )
 
 PROCEDURE UProcFiles( cFileName, lIndex )
 
-   LOCAL aDir, aF, cI, tDate, tHDate
+   LOCAL aDir, aF, tDate, tHDate
 
    cFileName := StrTran( cFileName, "//", "/" )
 
@@ -1371,11 +1371,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
          USetStatusCode( 412 )
       ELSE
-         IF ( cI := tip_FileNameMimeType( cFileName ) ) == "unknown"
-            // Unknown file type
-            cI := "application/octet-stream"
-         ENDIF
-         UAddHeader( "Content-Type", cI )
+         UAddHeader( "Content-Type", tip_FileNameMimeType( cFileName, "application/octet-stream" ) )
 
          IF hb_FGetDateTime( UOsFileName( cFileName ), @tDate )
             UAddHeader( "Last-Modified", HttpDateFormat( tDate ) )

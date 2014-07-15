@@ -1,5 +1,5 @@
 /*
- * TIP Class oriented Internet protocol library
+ * TIP MIME functions
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *
@@ -44,6 +44,11 @@
  *
  */
 
+/* TODO: move to core and rename:
+   tip_FileMimeType()     -> hb_mimeFile()
+   tip_FileNameMimeType() -> hb_mimeFName()
+   tip_MimeType()         -> hb_mimeStr() */
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -70,7 +75,7 @@ typedef struct tag_mime
 
 static const MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 {
-   /* Dos/win executable */
+   /* MS-DOS/Windows executable */
    /*  0*/ { 0,  "MZ",                                "application/x-dosexec",         0, 0, 0                                                                },
 
    /* ELF file */
@@ -538,6 +543,9 @@ static const char * s_findExtMimeType( const char * cExt )
 {
    int iCount;
 
+   if( *cExt == '.' )
+      ++cExt;
+
    for( iCount = 0; iCount < EXT_MIME_TABLE_SIZE; iCount++ )
    {
       if( s_extMimeTable[ iCount ].flags == MIME_FLAG_CASEINSENS )
@@ -678,22 +686,41 @@ static const char * s_findFileMimeType( HB_FHANDLE fileIn )
    return NULL;
 }
 
+HB_FUNC( TIP_MIMETYPE )
+{
+   PHB_ITEM pData = hb_param( 1, HB_IT_STRING );
+
+   if( pData )
+   {
+      const char * magic_type = s_findStringMimeType( hb_itemGetCPtr( pData ), hb_itemGetCLen( pData ) );
+
+      if( magic_type )
+         hb_retc_const( magic_type );
+      else if( HB_ISCHAR( 2 ) )
+         hb_retc( hb_parcx( 2 ) );
+      else
+         hb_retc_const( "unknown" );  /* TOFIX: change to "application/unknown" */
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( TIP_FILENAMEMIMETYPE )
 {
    const char * fname = hb_parc( 1 );
 
    if( fname )
    {
-      const char * ext_type = NULL;
-      HB_ISIZ nPos = strlen( fname ) - 1;
+      PHB_FNAME pFileName = hb_fsFNameSplit( fname );
+      const char * ext_type = pFileName->szExtension ? s_findExtMimeType( pFileName->szExtension ) : NULL;
+      hb_xfree( pFileName );
 
-      while( nPos >= 0 && fname[ nPos ] != '.' )
-         nPos--;
-
-      if( nPos > 0 )
-         ext_type = s_findExtMimeType( fname + nPos + 1 );
-
-      hb_retc_const( ext_type ? ext_type : "unknown" );
+      if( ext_type )
+         hb_retc_const( ext_type );
+      else if( HB_ISCHAR( 2 ) )
+         hb_retc( hb_parcx( 2 ) );
+      else
+         hb_retc_const( "unknown" );  /* TOFIX: change to "application/unknown" */
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -711,18 +738,14 @@ HB_FUNC( TIP_FILEMIMETYPE )
 
       if( HB_IS_STRING( pFile ) )
       {
-         /* decode the extension */
          const char * fname = hb_itemGetCPtr( pFile );
-         HB_ISIZ      nPos  = strlen( fname ) - 1;
 
-         while( nPos >= 0 && fname[ nPos ] != '.' )
-            nPos--;
+         PHB_FNAME pFileName = hb_fsFNameSplit( fname );
 
-         if( nPos > 0 )
-            ext_type = s_findExtMimeType( fname + nPos + 1 );
+         ext_type = pFileName->szExtension ? s_findExtMimeType( pFileName->szExtension ) : NULL;
+         hb_xfree( pFileName );
 
-         fileIn = hb_fsOpen( fname, FO_READ );
-         if( fileIn != FS_ERROR )
+         if( ( fileIn = hb_fsOpen( fname, FO_READ ) ) != FS_ERROR )
          {
             magic_type = s_findFileMimeType( fileIn );
             hb_fsClose( fileIn );
@@ -736,22 +759,12 @@ HB_FUNC( TIP_FILEMIMETYPE )
 
       if( magic_type )
          hb_retc_const( magic_type );
+      else if( ext_type )
+         hb_retc_const( ext_type );
+      else if( HB_ISCHAR( 2 ) )
+         hb_retc( hb_parcx( 2 ) );
       else
-         hb_retc_const( ext_type ? ext_type : "unknown" );  /* "unknown" is a valid MIME type */
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( TIP_MIMETYPE )
-{
-   PHB_ITEM pData = hb_param( 1, HB_IT_STRING );
-
-   if( pData )
-   {
-      const char * magic_type = s_findStringMimeType( hb_itemGetCPtr( pData ), hb_itemGetCLen( pData ) );
-
-      hb_retc_const( magic_type ? magic_type : "unknown" );
+         hb_retc_const( "unknown" );  /* TOFIX: change to "application/unknown" */
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -178,7 +178,7 @@ FUNCTION tip_MailAssemble( ;
             LOOP
          ENDCASE
 
-         hb_default( @cMimeType, tip_FileNameMimeType( cFile ) )
+         hb_default( @cMimeType, tip_FileNameMimeType( cFile, "application/octet-stream" ) )
 
          cFileCP := iif( Empty( cCharsetCP ), cFile, hb_Translate( cFile,, cCharsetCP ) )
 
@@ -187,9 +187,6 @@ FUNCTION tip_MailAssemble( ;
          oAttach:SetEncoder( iif( hb_LeftEq( cMimeType, "text/" ), cEncoding, "base64" ) )
          oAttach:SetFieldPart( "Content-Disposition", "attachment" )
          oAttach:SetFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFileCP ) )  // Usually, original filename is set here
-         IF cMimeType == "unknown"
-            cMimeType := "application/octet-stream"
-         ENDIF
          oAttach:SetFieldPart( "Content-Type", cMimeType )
          IF Lower( hb_FNameExt( cFile ) ) == ".html" .OR. ;
             Lower( hb_FNameExt( cFile ) ) == ".htm"
