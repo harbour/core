@@ -69,6 +69,10 @@
 - You can also participate in localization:<br />
   [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
 
+> Personal/private e-mails will either be ignored or given a short
+> answer to move the inquiry to somewhere public. Donators can count
+> on my reciprocity even in private.
+
 
 # Troubleshooting
 
@@ -101,7 +105,7 @@ Evaluate these points before reporting an issue:
     for your C compiler.
     Use only those documented in this file.
 7.  Remove any Harbour build settings documented in [Build Options](README.md#build-options).
-8.  Do no or only small modifications at once to the examples
+8.  Do no or only minor modifications at once to the examples
     included in [Build Examples](README.md#build-examples).
     If it doesn't work, fall back to documented examples _as is_.
 9.  If everything fails and you are to report a build problem to Harbour
@@ -119,7 +123,7 @@ Evaluate these points before reporting an issue:
     than 25kB (use the extension `.zip`).
     With these, you have much better chance to get useful or any response.
 10. Do not alter the directory layout and files in Harbour and 3rd party
-    packages.
+    packages and tools (including C compilers).
 11. If you are to report a build problem with a Harbour application,
     all of the above points apply, plus make sure to use `-trace`
     command-line option when running hbmk2 and redirect the result to
@@ -132,21 +136,24 @@ Evaluate these points before reporting an issue:
     No such thing is necessary as all of these are automatically handled
     by hbmk2. IOW start simple and don't be overbusy with *fine-tuning*
     your configuration. If you need to, the problem is most probably
-    elsewhere. It's also good idea to try with Harbour nightly binary or
-    official stable release first.
+    elsewhere. It's also good idea to try with latest Harbour revision
+    or Harbour's mainstream branch first.
 12. If you are to report a problem with Harbour itself, provide
     self-contained, minimal source code example. Do not use xhb contrib
     library, or any 3rd party Harbour libraries. The example shall reproduce
-    the problem using official stable or nightly Harbour build.
-    Do not post executables and other binary files. If your source contains
-    non-ASCII (national, accented, special) chars, make sure to mark the
-    codepage/encoding used (UTF-8 recommended) and attach the files
-    compressed with zip. (use the extension `.zip`)<br />
+    the problem using the latest Harbour revision at the time of the report.
+    Do not post links to executables and other binary files. If your source
+    contains non-ASCII and non-UTF-8 national, accented, special chars, make
+    sure to mark the codepage/encoding used and use Chr()/hb_BCode() calls
+    to form the strings. UTF-8 is recommended. Notice that code examples
+    are likely to be executed as hbrun scripts for testing, so it's
+    a good idea to make them work this way.<br />
+    Also make sure to not report multiple issues under one GitHub Issue.<br />
     * See more on self-contained examples:
       <http://sscce.org/>
     * See more on how to report issues in an effective and useful way:
       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
-13. If your example or report contains any human readable text, use
+13. If your example or report contains human readable text, use
     English only.
 14. If your example involves compatibility components, make sure to test
     it against original implementation (for example, test legacy Cl*pper
