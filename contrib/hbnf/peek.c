@@ -54,12 +54,8 @@
 HB_FUNC( FT_PEEK )
 {
 #if defined( HB_OS_DOS )
-   {
-      HB_U16 nSeg = ( HB_U16 ) hb_parni( 1 );
-      HB_U16 nOff = ( HB_U16 ) hb_parni( 2 );
-
-      hb_retni( HB_PEEK_BYTE( nSeg, nOff ) );
-   }
+   hb_retni( HB_PEEK_BYTE( ( HB_U16 ) hb_parni( 1 ),
+                           ( HB_U16 ) hb_parni( 2 ) ) );
 #else
    hb_retni( -1 );
 #endif
@@ -68,14 +64,10 @@ HB_FUNC( FT_PEEK )
 HB_FUNC( FT_POKE )
 {
 #if defined( HB_OS_DOS )
-   {
-      HB_U16 nSeg = ( HB_U16 ) hb_parni( 1 );
-      HB_U16 nOff = ( HB_U16 ) hb_parni( 2 );
+   HB_POKE_BYTE( ( HB_U16 ) hb_parni( 1 ),
+                 ( HB_U16 ) hb_parni( 2 ), ( HB_U8 ) hb_parni( 3 ) );
 
-      HB_POKE_BYTE( nSeg, nOff, ( HB_U8 ) hb_parni( 3 ) );
-
-      hb_retl( HB_TRUE );
-   }
+   hb_retl( HB_TRUE );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -93,8 +85,7 @@ HB_FUNC( FT_INP )
 HB_FUNC( FT_OUTP )
 {
 #if defined( HB_OS_DOS )
-   outportb( ( HB_U8 ) hb_parni( 1 ),
-             ( HB_U8 ) hb_parni( 2 ) );
+   outportb( ( HB_U8 ) hb_parni( 1 ), ( HB_U8 ) hb_parni( 2 ) );
 
    hb_retl( HB_TRUE );
 #else

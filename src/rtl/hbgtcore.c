@@ -1182,9 +1182,7 @@ static void hb_gt_def_WriteConW( PHB_GT pGT, const HB_WCHAR * szText, HB_SIZE nL
       if( bDisp || nIndex == nLength )
       {
          if( iLen )
-         {
             HB_GTSELF_WRITEW( pGT, szString, iLen );
-         }
 
          iLen = 0;
          if( iRow > iMaxRow )

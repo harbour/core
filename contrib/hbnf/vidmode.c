@@ -95,9 +95,7 @@ HB_FUNC( FT_GETMODE )
       iMode = regs.h.al;
    }
 #else
-   {
-      iMode = 0;
-   }
+   iMode = 0;
 #endif
 
    hb_retni( iMode );

@@ -404,7 +404,7 @@ HB_FUNC( DBRECORDINFO )
 }
 
 /*
- * DBFILEPUT/BLOB2FILE - retrieve memo contents into file
+ * dbFileGet()/Blob2File() - retrieve memo contents into file
  */
 HB_FUNC( DBFILEGET )
 {
@@ -437,7 +437,7 @@ HB_FUNC( DBFILEGET )
 }
 
 /*
- * DBFILEPUT/FILE2BLOB - store file contents in MEMO
+ * dbFilePut()/File2Blob() - store file contents in MEMO
  */
 HB_FUNC( DBFILEPUT )
 {

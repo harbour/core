@@ -394,9 +394,10 @@ STATIC FUNCTION MY_SSL_ACCEPT( hConfig, hSSL, hSocket, nTimeout )
    LOCAL nErr
 
    nErr := SSL_accept( hSSL )
-   IF nErr > 0
+   DO CASE
+   CASE nErr > 0
       RETURN 0
-   ELSEIF nErr < 0
+   CASE nErr < 0
       SWITCH nErr := SSL_get_error( hSSL, nErr )
       CASE HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
@@ -418,11 +419,11 @@ STATIC FUNCTION MY_SSL_ACCEPT( hConfig, hSSL, hSocket, nTimeout )
          Eval( hConfig[ "Trace" ], "SSL_accept() error", nErr )
          nErr := 1000 + nErr
       ENDSWITCH
-   ELSE /* nErr == 0 */
+   OTHERWISE  /* nErr == 0 */
       nErr := SSL_get_error( hSSL, nErr )
       Eval( hConfig[ "Trace" ], "SSL_accept() shutdown error", nErr )
       nErr := 1000 + nErr
-   ENDIF
+   ENDCASE
 
    RETURN nErr
 
@@ -526,12 +527,13 @@ STATIC FUNCTION ProcessConnection( oServer )
                ENDIF
             ENDIF
 
-            IF nLen > 0
+            DO CASE
+            CASE nLen > 0
                cRequest += hb_BLeft( cBuf, nLen )
-            ELSEIF nLen == 0
+            CASE nLen == 0
                /* connection closed */
                EXIT
-            ELSE
+            OTHERWISE
                /* nLen == -1  socket error */
                IF nErr == HB_SOCKET_ERR_TIMEOUT
                   IF ( hb_MilliSeconds() - nTime ) > 1000 * 30 .OR. oServer:lStop
@@ -542,7 +544,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                   Eval( oServer:hConfig[ "Trace" ], "receive error:", nErr, hb_socketErrorString( nErr ) )
                   EXIT
                ENDIF
-            ENDIF
+            ENDCASE
          ENDDO
 
          IF nLen <= 0 .OR. oServer:lStop
@@ -582,12 +584,13 @@ STATIC FUNCTION ProcessConnection( oServer )
                   ENDIF
                ENDIF
 
-               IF nLen > 0
+               DO CASE
+               CASE nLen > 0
                   cRequest += hb_BLeft( cBuf, nLen )
-               ELSEIF nLen == 0
+               CASE nLen == 0
                   /* connection closed */
                   EXIT
-               ELSE
+               OTHERWISE
                   /* nLen == -1  socket error */
                   IF nErr == HB_SOCKET_ERR_TIMEOUT
                      IF ( hb_MilliSeconds() - nTime ) > 1000 * 120 .OR. oServer:lStop
@@ -598,7 +601,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                      Eval( oServer:hConfig[ "Trace" ], "receive error:", nErr, hb_socketErrorString( nErr ) )
                      EXIT
                   ENDIF
-               ENDIF
+               ENDCASE
             ENDDO
 
             IF nLen <= 0 .OR. oServer:lStop
@@ -645,12 +648,13 @@ STATIC FUNCTION ProcessConnection( oServer )
                ENDIF
             ENDIF
 
-            IF nLen < 0
+            DO CASE
+            CASE nLen < 0
                Eval( oServer:hConfig[ "Trace" ], "send error:", nErr, hb_socketErrorString( nErr ) )
                EXIT
-            ELSEIF nLen > 0
+            CASE nLen > 0
                cBuf := hb_BSubStr( cBuf, nLen + 1 )
-            ENDIF
+            ENDCASE
          ENDDO
 
          IF oServer:lStop
@@ -927,14 +931,14 @@ STATIC FUNCTION HttpDateFormat( tDate )
          Int( Abs( nOffset ) / 3600 ), ;
          Int( ( Abs( nOffset ) / 3600 ) - Int( Abs( nOffset ) / 3600 ) ) * 60 )
 
-STATIC FUNCTION HttpDateUnformat( cDate, tDate )
+STATIC FUNCTION HttpDateUnformat( cDate, /* @ */ tDate )
 
    LOCAL nMonth, tI
 
    // TODO: support outdated compatibility format RFC2616
    IF Len( cDate ) == 29 .AND. Right( cDate, 4 ) == " GMT" .AND. SubStr( cDate, 4, 2 ) == ", "
       IF ( nMonth := AScan( { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }, SubStr( cDate, 9, 3 ) ) ) > 0
-         tI := hb_SToT( SubStr( cDate, 13, 4 ) + PadL( nMonth, 2, "0" ) + SubStr( cDate, 6, 2 ) + StrTran( SubStr( cDate, 18, 8 ), ":" ) )
+         tI := hb_SToT( SubStr( cDate, 13, 4 ) + StrZero( nMonth, 2 ) + SubStr( cDate, 6, 2 ) + StrTran( SubStr( cDate, 18, 8 ), ":" ) )
          IF ! Empty( tI )
             tDate := tI + hb_UTCOffset() / ( 3600 * 24 )
             RETURN .T.
@@ -947,15 +951,16 @@ STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 STATIC FUNCTION UErrorHandler( oErr, oServer )
 
    Eval( oServer:hConfig[ "Trace" ], "UErrorHandler" )
-   IF oErr:genCode == EG_ZERODIV
+   DO CASE
+   CASE oErr:genCode == EG_ZERODIV
       RETURN 0
-   ELSEIF oErr:genCode == EG_LOCK
+   CASE oErr:genCode == EG_LOCK
       RETURN .T.
-   ELSEIF ( oErr:genCode == EG_OPEN .AND. oErr:osCode == 32 .OR. ;
+   CASE ( oErr:genCode == EG_OPEN .AND. oErr:osCode == 32 .OR. ;
          oErr:genCode == EG_APPENDLOCK ) .AND. oErr:canDefault
       NetErr( .T. )
       RETURN .F.
-   ENDIF
+   ENDCASE
    oServer:LogError( GetErrorDesc( oErr ) )
    IF oErr != NIL // Dummy check to avoid unreachable code warning for RETURN NIL
       Break( oErr )
@@ -1366,53 +1371,10 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
          USetStatusCode( 412 )
       ELSE
-         SWITCH Lower( hb_FNameExt( cFileName ) )
-         CASE ".css";  cI := "text/css"; EXIT
-         CASE ".htm"
-         CASE ".html"; cI := "text/html"; EXIT
-         CASE ".txt"
-         CASE ".text"
-         CASE ".asc"
-         CASE ".c"
-         CASE ".h"
-         CASE ".cpp"
-         CASE ".hpp"
-         CASE ".log";  cI := "text/plain"; EXIT
-         CASE ".rtf";  cI := "text/rtf"; EXIT
-         CASE ".xml";  cI := "text/xml"; EXIT
-         CASE ".bmp";  cI := "image/bmp"; EXIT
-         CASE ".gif";  cI := "image/gif"; EXIT
-         CASE ".jpg"
-         CASE ".jpe"
-         CASE ".jpeg"; cI := "image/jpeg"; EXIT
-         CASE ".png";  cI := "image/png";   EXIT
-         CASE ".tif"
-         CASE ".tiff"; cI := "image/tiff"; EXIT
-         CASE ".djv"
-         CASE ".djvu"; cI := "image/vnd.djvu"; EXIT
-         CASE ".ico";  cI := "image/x-icon"; EXIT
-         CASE ".xls";  cI := "application/excel"; EXIT
-         CASE ".doc";  cI := "application/msword"; EXIT
-         CASE ".pdf";  cI := "application/pdf"; EXIT
-         CASE ".ps"
-         CASE ".eps";  cI := "application/postscript"; EXIT
-         CASE ".ppt";  cI := "application/powerpoint"; EXIT
-         CASE ".bz2";  cI := "application/x-bzip2"; EXIT
-         CASE ".gz";   cI := "application/x-gzip"; EXIT
-         CASE ".tgz";  cI := "application/x-gtar"; EXIT
-         CASE ".js";   cI := "application/x-javascript"; EXIT
-         CASE ".tar";  cI := "application/x-tar"; EXIT
-         CASE ".tex";  cI := "application/x-tex"; EXIT
-         CASE ".zip";  cI := "application/zip"; EXIT
-         CASE ".midi"; cI := "audio/midi"; EXIT
-         CASE ".mp3";  cI := "audio/mpeg"; EXIT
-         CASE ".wav";  cI := "audio/x-wav"; EXIT
-         CASE ".qt"
-         CASE ".mov";  cI := "video/quicktime"; EXIT
-         CASE ".avi";  cI := "video/x-msvideo"; EXIT
-         OTHERWISE ;   cI := "application/octet-stream"
-         ENDSWITCH
-
+         IF ( cI := tip_FileNameMimeType( cFileName ) ) == "unknown"
+            // Unknown file type
+            cI := "application/octet-stream"
+         ENDIF
          UAddHeader( "Content-Type", cI )
 
          IF hb_FGetDateTime( UOsFileName( cFileName ), @tDate )

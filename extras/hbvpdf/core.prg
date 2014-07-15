@@ -539,10 +539,10 @@ PROCEDURE pdfClose()
    cTemp += ;
       "xref" + CRLF + ;
       "0 " + hb_ntos( t_aReport[ REPORTOBJ ] ) + CRLF + ;
-      PadL( t_aReport[ REFS ][ 1 ], 10, "0" ) + " 65535 f" + CRLF
+      StrZero( t_aReport[ REFS ][ 1 ], 10 ) + " 65535 f" + CRLF
 
    FOR nI := 2 TO Len( t_aReport[ REFS ] )
-      cTemp += PadL( t_aReport[ REFS ][ nI ], 10, "0" ) + " 00000 n" + CRLF
+      cTemp += StrZero( t_aReport[ REFS ][ nI ], 10 ) + " 00000 n" + CRLF
    NEXT
 
    cTemp += ;

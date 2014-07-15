@@ -22,7 +22,6 @@
  * -  Revised seek logic
  * -  Changed undocumented calls to API functions wherever possible
  *
- *
  *    Rev 1.7   17 Oct 1992 16:25:16   GLENN
  * Leo cleaned up the documentation, including an errant SEEALSO
  * reference.

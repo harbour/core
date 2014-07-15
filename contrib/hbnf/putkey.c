@@ -28,13 +28,15 @@
 
 HB_FUNC( FT_PUTKEY )
 {
-   HB_BOOL lSuccess = HB_FALSE;
+   HB_BOOL lSuccess;
 
    if( HB_ISNUM( 1 ) )
    {
       hb_inkeyPut( hb_parni( 1 ) );
       lSuccess = HB_TRUE;
    }
+   else
+      lSuccess = HB_FALSE;
 
    hb_retl( lSuccess );
 }

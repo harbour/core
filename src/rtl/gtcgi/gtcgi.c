@@ -119,7 +119,7 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    pGTCGI->hStdout = hFilenoStdout;
 
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   if( IsValidCodePage( CP_UTF8 ) )
+   if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
    {
       pGTCGI->uiOldCP = GetConsoleOutputCP();
       SetConsoleOutputCP( CP_UTF8 );
@@ -151,7 +151,7 @@ static void hb_gt_cgi_Exit( PHB_GT pGT )
    if( pGTCGI )
    {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-      if( IsValidCodePage( CP_UTF8 ) )
+      if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
          SetConsoleOutputCP( pGTCGI->uiOldCP );
 #endif
 

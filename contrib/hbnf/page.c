@@ -62,9 +62,7 @@ HB_FUNC( FT_GETVPG )
       iPage = regs.h.bh;
    }
 #else
-   {
-      iPage = 0;
-   }
+   iPage = 0;
 #endif
 
    hb_retni( iPage );

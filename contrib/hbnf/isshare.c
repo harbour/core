@@ -63,9 +63,7 @@ HB_FUNC( FT_ISSHARE )
       iShare = regs.h.al;
    }
 #else
-   {
-      iShare = 0;
-   }
+   iShare = 0;
 #endif
 
    hb_retni( iShare );

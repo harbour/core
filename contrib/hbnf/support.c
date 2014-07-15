@@ -63,9 +63,7 @@ HB_FUNC( _FT_NWKSTAT )
       iConnect = regs.h.al;
    }
 #else
-   {
-      iConnect = 0;
-   }
+   iConnect = 0;
 #endif
 
    hb_retni( iConnect );
@@ -93,12 +91,11 @@ HB_FUNC( _FT_TEMPFIL )
       iflags = regs.HB_XREGS.flags;
    }
 #else
-   {
-      nax    = 0;
-      iflags = 0;
-      cPath  = hb_parcx( 1 );
-   }
+   nax    = 0;
+   iflags = 0;
+   cPath  = hb_parcx( 1 );
 #endif
+
    {
       PHB_ITEM pArray = hb_itemArrayNew( 3 );
 

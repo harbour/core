@@ -82,11 +82,9 @@ HB_FUNC( FT_MGETSENS )
       iDouble = regs.HB_XREGS.dx;
    }
 #else
-   {
-      iHoriz  = 0;
-      iVert   = 0;
-      iDouble = 0;
-   }
+   iHoriz  = 0;
+   iVert   = 0;
+   iDouble = 0;
 #endif
 
    hb_storni( iHoriz, 1 );
@@ -128,12 +126,10 @@ HB_FUNC( FT_MBUTPRS )
       iStatus  = regs.HB_XREGS.ax;
    }
 #else
-   {
-      inX      = 0;
-      inY      = 0;
-      inButton = 0;
-      iStatus  = 0;
-   }
+   inX      = 0;
+   inY      = 0;
+   inButton = 0;
+   iStatus  = 0;
 #endif
 
    hb_storni( inButton, 2 );
@@ -162,12 +158,10 @@ HB_FUNC( FT_MBUTREL )
       iStatus  = regs.HB_XREGS.ax;
    }
 #else
-   {
-      inX      = 0;
-      inY      = 0;
-      inButton = 0;
-      iStatus  = 0;
-   }
+   inX      = 0;
+   inY      = 0;
+   inButton = 0;
+   iStatus  = 0;
 #endif
 
    hb_storni( inButton, 2 );

@@ -366,11 +366,12 @@ METHOD Output() CLASS UWBrowse
       cRet += '<tr>'
       FOR EACH col IN ::aColumns
          xField := col[ 3 ]
-         IF HB_ISSTRING( xField )
+         DO CASE
+         CASE HB_ISSTRING( xField )
             xI := FieldGet( FieldPos( xField ) )
-         ELSEIF HB_ISEVALITEM( xField )
+         CASE HB_ISEVALITEM( xField )
             xI := Eval( xField )
-         ENDIF
+         ENDCASE
          SWITCH ValType( xI )
          CASE "C"  ; xI := RTrim( xI ); EXIT
          CASE "N"  ; xI := hb_ntos( xI ); EXIT
@@ -502,11 +503,12 @@ PROCEDURE UProcWidgets( cURL, aMap )
 
       IF lRet
          session[ "_uthis" ] := ATail( aStack )[ 3 ]
-         IF server[ "REQUEST_METHOD" ] == "GET"
+         DO CASE
+         CASE server[ "REQUEST_METHOD" ] == "GET"
             Eval( ATail( aStack )[ 2 ], "GET" )
-         ELSEIF server[ "REQUEST_METHOD" ] == "POST"
+         CASE server[ "REQUEST_METHOD" ] == "POST"
             Eval( ATail( aStack )[ 2 ], "POST" )
-         ENDIF
+         ENDCASE
          ATail( aStack )[ 3 ] := session[ "_uthis" ]
          session[ "_uthis" ] := NIL
       ENDIF

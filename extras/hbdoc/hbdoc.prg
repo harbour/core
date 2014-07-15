@@ -859,9 +859,7 @@ STATIC FUNCTION Decode( cType, hsBlock, cKey )
 
    RETURN /* cType + "=" + */ cCode
 
-STATIC PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
-
-   LOCAL cIndent := Space( nIndent )
+STATIC PROCEDURE ShowSubHelp( xLine, /* @ */ nMode, nIndent, n )
 
    DO CASE
    CASE xLine == NIL
@@ -871,7 +869,7 @@ STATIC PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
       Eval( xLine )
    CASE HB_ISARRAY( xLine )
       IF nMode == 2
-         OutStd( cIndent + Space( 2 ) )
+         OutStd( Space( nIndent ) + Space( 2 ) )
       ENDIF
       AEval( xLine, {| x, n | ShowSubHelp( x, @nMode, nIndent + 2, n ) } )
       IF nMode == 2
@@ -879,9 +877,9 @@ STATIC PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
       ENDIF
    OTHERWISE
       DO CASE
-      CASE nMode == 1 ; OutStd( cIndent + xLine ); OutStd( hb_eol() )
+      CASE nMode == 1 ; OutStd( Space( nIndent ) + xLine + hb_eol() )
       CASE nMode == 2 ; OutStd( iif( n > 1, ", ", "" ) + xLine )
-      OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " ); OutStd( xLine ); OutStd( hb_eol() )
+      OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " + xLine + hb_eol() )
       ENDCASE
    ENDCASE
 
@@ -967,20 +965,17 @@ STATIC PROCEDURE ShowHelp( cExtraMessage, aArgs )
 
    RETURN
 
-FUNCTION Parse( cVar, xDelimiter )
+FUNCTION Parse( /* @ */ cVar, xDelimiter )
 
    LOCAL cResult
    LOCAL idx
 
-   IF HB_ISNUMERIC( xDelimiter )
-      cResult := Left( cVar, xDelimiter )
-      cVar := SubStr( cVar, xDelimiter + 1 )
-   ELSEIF ( idx := At( xDelimiter, cVar ) ) == 0
-      cResult := cVar
-      cVar := ""
-   ELSE
+   IF ( idx := At( xDelimiter, cVar ) ) > 0
       cResult := Left( cVar, idx - 1 )
       cVar := SubStr( cVar, idx + Len( xDelimiter ) )
+   ELSE
+      cResult := cVar
+      cVar := ""
    ENDIF
 
    RETURN cResult
@@ -1082,7 +1077,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
 
 STATIC FUNCTION Filename( cFile, cFormat, nLength )
 
-   STATIC s_Files := {}
+   STATIC s_aFiles := {}
 
    LOCAL cResult := ""
    LOCAL idx
@@ -1096,11 +1091,9 @@ STATIC FUNCTION Filename( cFile, cFormat, nLength )
 
    IF Lower( hb_defaultValue( cFormat, "alnum" ) ) == "alnum"
       FOR idx := 1 TO Len( cFile )
-         char := Lower( SubStr( cFile, idx, 1 ) )
-         IF ( "0" <= char .AND. char <= "9" ) .OR. ;
-            ( "a" <= char .AND. char <= "z" ) .OR. ;
-            char == "_"
-            cResult += char
+         char := SubStr( cFile, idx, 1 )
+         IF hb_asciiIsDigit( char ) .OR. hb_asciiIsAlpha( char ) .OR. char == "_"
+            cResult += Lower( char )
             IF nLength > 0 .AND. Len( cResult ) == nLength
                EXIT
             ENDIF
@@ -1110,17 +1103,17 @@ STATIC FUNCTION Filename( cFile, cFormat, nLength )
       cResult := cFile
    ENDIF
 
-   IF hb_AScan( s_Files, cResult, , , .T. ) == 0
-      AAdd( s_Files, cResult )
+   IF hb_AScan( s_aFiles, cResult, , , .T. ) == 0
+      AAdd( s_aFiles, cResult )
    ELSE
 #ifdef __PLATFORM__DOS
       cResult := hb_StrShrink( cResult, 3 )
 #endif
       idx := 0
-      DO WHILE hb_AScan( s_Files, cResult + PadL( hb_ntos( ++idx ), 3, "0" ), , , .T. ) > 0
+      DO WHILE hb_AScan( s_aFiles, cResult + StrZero( ++idx, 3 ), , , .T. ) > 0
       ENDDO
-      cResult += PadL( hb_ntos( idx ), 3, "0" )
-      AAdd( s_Files, cResult )
+      cResult += StrZero( idx, 3 )
+      AAdd( s_aFiles, cResult )
    ENDIF
 
    RETURN cResult
@@ -1138,7 +1131,7 @@ STATIC PROCEDURE init_Templates()
       "Environment", ;
       "Error", ;
       "Events", ;
-      "Execute and execution", ; /* replace w/ "Environment"? */
+      "Execute and execution", ;  /* replace w/ "Environment"? */
       "Extend", ;
       "FileSys", ;
       "Fixed memory", ;

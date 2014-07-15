@@ -727,8 +727,7 @@ METHOD ListFiles( cFileSpec ) CLASS TIPClientFTP
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
          ENDDO
          nEnd          := hb_At( " ", cEntry, nStart )
-         cMonth        := SubStr( cEntry, nStart, nEnd - nStart )
-         cMonth        := PadL( hb_AScan( aMonth, cMonth, , , .T. ), 2, "0" )
+         cMonth        := StrZero( hb_AScan( aMonth, SubStr( cEntry, nStart, nEnd - nStart ), , , .T. ), 2 )
          nStart        := nEnd
 
          // Day
