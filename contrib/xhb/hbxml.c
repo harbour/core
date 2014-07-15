@@ -2042,7 +2042,7 @@ void mxml_refil_ungetc( MXML_REFIL * ref, int chr )
 /* Useful "fill" function that reads from a file handle */
 static void mxml_refill_from_handle_func( MXML_REFIL * ref )
 {
-   HB_FHANDLE fh = ( HB_FHANDLE ) ref->u.hFile;
+   HB_FHANDLE fh = ref->u.hFile;
    HB_ISIZ    len;
 
    len = hb_fsReadLarge( fh, ref->buffer, ref->bufsize );
@@ -2295,7 +2295,7 @@ HB_FUNC( HBXML_NODE_WRITE )
       iStyle = hb_itemGetNI( pStyle );
 
    mxml_output_setup( &out, mxml_output_func_to_handle, 0 );
-   out.u.hFile = ( HB_FHANDLE ) hb_itemGetNInt( pHandle );
+   out.u.hFile = hb_numToHandle( hb_itemGetNInt( pHandle ) );
 
    iRet = mxml_node_write( &out, pNode, iStyle );
    hb_retni( iRet );

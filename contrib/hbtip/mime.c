@@ -697,7 +697,7 @@ HB_FUNC( TIP_MIMETYPE )
       if( magic_type )
          hb_retc_const( magic_type );
       else if( HB_ISCHAR( 2 ) )
-         hb_retc( hb_parcx( 2 ) );
+         hb_retc( hb_parc( 2 ) );
       else
          hb_retc_const( "unknown" );  /* TOFIX: change to "application/unknown" */
    }
@@ -718,7 +718,7 @@ HB_FUNC( TIP_FILENAMEMIMETYPE )
       if( ext_type )
          hb_retc_const( ext_type );
       else if( HB_ISCHAR( 2 ) )
-         hb_retc( hb_parcx( 2 ) );
+         hb_retc( hb_parc( 2 ) );
       else
          hb_retc_const( "unknown" );  /* TOFIX: change to "application/unknown" */
    }
@@ -753,7 +753,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
       }
       else
       {
-         fileIn     = ( HB_FHANDLE ) hb_itemGetNInt( pFile );
+         fileIn     = hb_numToHandle( hb_itemGetNInt( pFile ) );
          magic_type = s_findFileMimeType( fileIn );
       }
 
@@ -762,7 +762,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
       else if( ext_type )
          hb_retc_const( ext_type );
       else if( HB_ISCHAR( 2 ) )
-         hb_retc( hb_parcx( 2 ) );
+         hb_retc( hb_parc( 2 ) );
       else
          hb_retc_const( "unknown" );  /* TOFIX: change to "application/unknown" */
    }

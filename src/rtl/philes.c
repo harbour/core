@@ -239,7 +239,7 @@ HB_FUNC( FREADSTR )
 
       if( nToRead > 0 )
       {
-         HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
+         HB_FHANDLE fhnd = hb_numToHandle( hb_parnint( 1 ) );
          char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
          HB_SIZE nRead;
 
@@ -268,7 +268,7 @@ HB_FUNC( HB_FREADLEN )
 
       if( nToRead > 0 )
       {
-         HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
+         HB_FHANDLE fhnd = hb_numToHandle( hb_parnint( 1 ) );
          char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
          HB_SIZE nRead;
 

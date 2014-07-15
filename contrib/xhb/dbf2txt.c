@@ -152,7 +152,7 @@ HB_FUNC( DBF2TEXT )
    PHB_ITEM pFields = hb_param( 3, HB_IT_ARRAY );
 
    const char * cDelim = hb_parc( 4 );
-   HB_FHANDLE   handle = ( HB_FHANDLE ) hb_parnint( 5 );
+   HB_FHANDLE   handle = hb_numToHandle( hb_parnint( 5 ) );
    const char * cSep   = hb_parc( 6 );
    int          nCount = hb_parni( 7 );
    PHB_CODEPAGE cdp    = hb_cdpFind( hb_parcx( 8 ) );
