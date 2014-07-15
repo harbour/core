@@ -1,6 +1,6 @@
 ifneq ($(HB_COMPILER),clang)
    ifeq ($(HB_COMPILER_VER),)
-      $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let autodetection detect it, or set HB_COMPILER_VER manually according to your C compiler version.)
+      $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let autodetection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 1600 for 16.0.x).)
    endif
 endif
 
