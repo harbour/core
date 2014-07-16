@@ -513,7 +513,7 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
             ENDIF
 #endif
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ), ;
-               "cFileName_HBP" => StrTran( hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" ) ) ), "\", "/" ) } )
+               "cFileName_HBP" => StrTran( hb_PathRelativize( hb_FNameDir( hb_DirSepDel( hb_cwd() ) ), hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" ) ) ) ), "\", "/" ) } )
          ENDIF
       NEXT
    ELSE
@@ -756,7 +756,7 @@ STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
          IF hb_FileExists( tmp := ( cDir + aFile[ F_NAME ] + hb_ps() + "makesub.txt" ) )
             FOR EACH tmp IN hb_ATokens( StrTran( hb_MemoRead( tmp ), Chr( 13 ) ), Chr( 10 ) )
                IF ! Empty( tmp )
-                  AddProject( hProjectList, aFile[ F_NAME ] + hb_ps() + tmp )
+                  AddProject( hProjectList, aFile[ F_NAME ] + hb_ps() + hb_DirSepToOS( tmp ) )
                ENDIF
             NEXT
          ENDIF
