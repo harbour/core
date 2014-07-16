@@ -618,7 +618,9 @@ sensitive.
      win/mingw and cygwin/gcc targets currently.
      `<ver>` format:
 
-         <15><0>[<0>] = <major><minor>[.<revision>]
+         <15><00> = <major><minor>
+
+         F.e. msvc: 1500, mingw: 0406
 
      Default: filled by compiler autodetection or empty
 

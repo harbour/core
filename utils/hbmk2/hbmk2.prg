@@ -2003,7 +2003,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       { cLIB_BASE_ZLIB } } )
 #endif
 
-   hbmk[ _HBMK_nCOMPVer ] := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <15><00>[.<00>] == <major><minor>[.<revision>] */
+   hbmk[ _HBMK_nCOMPVer ] := Val( GetEnv( "HB_COMPILER_VER" ) )  /* Format: <15><00> == <major><minor> */
+#if 1
+   /* Convert old-style ('xy') mingw version number to new format ('0x0y'),
+      to keep a level of compatibility while migrating to the new format. */
+   IF Len( hb_ntos( tmp := hbmk[ _HBMK_nCOMPVer ] ) ) == 2
+      hbmk[ _HBMK_nCOMPVer ] := hbmk[ _HBMK_nCOMPVer ] % 10 + Int( hbmk[ _HBMK_nCOMPVer ] / 10 ) * 100
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Old style HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s" ), tmp, StrZero( hbmk[ _HBMK_nCOMPVer ], 4 ) ) )
+   ENDIF
+#endif
 
    /* Autodetect platform */
 
@@ -2536,7 +2544,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE ( hbmk[ _HBMK_cPLAT ] == "cygwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
 
          IF File( hb_FNameDir( cPath_CompC ) + "i686-pc-cygwin-gcc-3.4" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 34
+            hbmk[ _HBMK_nCOMPVer ] := 0304
          ENDIF
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
@@ -2550,33 +2558,33 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
               File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.9" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.9" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.9" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 49
+            hbmk[ _HBMK_nCOMPVer ] := 0409
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.8" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 48
+            hbmk[ _HBMK_nCOMPVer ] := 0408
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.7" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 47
+            hbmk[ _HBMK_nCOMPVer ] := 0407
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.6" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 46
+            hbmk[ _HBMK_nCOMPVer ] := 0406
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.5" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.5" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.5" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.5" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 45
+            hbmk[ _HBMK_nCOMPVer ] := 0405
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.4" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 44
+            hbmk[ _HBMK_nCOMPVer ] := 0404
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.3" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 43
+            hbmk[ _HBMK_nCOMPVer ] := 0403
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-3.4" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 34
+            hbmk[ _HBMK_nCOMPVer ] := 0304
          ENDCASE
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. HBMK_ISCOMP( "msvc|msvc64|msvcia64|icc|iccia64" ) ) .OR. ;
@@ -4379,9 +4387,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             IF hbmk[ _HBMK_lHARDEN ]
                /* EXPERIMENTAL */
                DO CASE
-               CASE hbmk[ _HBMK_nCOMPVer ] >= 49
+               CASE hbmk[ _HBMK_nCOMPVer ] >= 0409
                   AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-strong" )
-               CASE hbmk[ _HBMK_nCOMPVer ] >= 41
+               CASE hbmk[ _HBMK_nCOMPVer ] >= 0401
 #if 0
                   /* too slow */
                   AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-all" )
@@ -4394,7 +4402,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
-            IF hbmk[ _HBMK_nCOMPVer ] < 46 .AND. ;
+            IF hbmk[ _HBMK_nCOMPVer ] < 0406 .AND. ;
                ! hbmk[ _HBMK_lDEBUG ] .AND. hbmk[ _HBMK_cPLAT ] == "cygwin"
                cOpt_CompC += " -fomit-frame-pointer"
             ENDIF
@@ -4717,7 +4725,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
-            IF hbmk[ _HBMK_nCOMPVer ] < 46 .AND. ;
+            IF hbmk[ _HBMK_nCOMPVer ] < 0406 .AND. ;
                ! hbmk[ _HBMK_lDEBUG ] .AND. !( hbmk[ _HBMK_cCOMP ] == "mingw64" )
                cOpt_CompC += " -fomit-frame-pointer"
             ENDIF
@@ -4750,12 +4758,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_lHARDEN ]
             IF hbmk[ _HBMK_cPLAT ] == "win"
                DO CASE
-               CASE hbmk[ _HBMK_nCOMPVer ] >= 49
+               CASE hbmk[ _HBMK_nCOMPVer ] >= 0409
 #if 0
                   AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-strong" )
                   AAdd( l_aLIBSYS, "ssp" )
 #endif
-               CASE hbmk[ _HBMK_nCOMPVer ] >= 41
+               CASE hbmk[ _HBMK_nCOMPVer ] >= 0401
 #if 0
                   /* too slow */
                   AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-all" )
@@ -4767,7 +4775,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* It is also supported by official mingw 4.4.x and mingw64 4.4.x,
                   but not supported by mingw tdm 4.4.x, so I only enable it on or
                   above 4.5.0 [vszakats] */
-               IF hbmk[ _HBMK_nCOMPVer ] > 44
+               IF hbmk[ _HBMK_nCOMPVer ] > 0404
                   AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--nxcompat" )
                   AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--dynamicbase" )
                   AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--nxcompat" )
@@ -17322,7 +17330,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "HB_USER_LDFLAGS"    , I_( "options to be passed to linker (executable) (before command-line options)" ) }, ;
       { "HB_USER_DFLAGS"     , I_( "options to be passed to linker (dynamic library) (before command-line options)" ) }, ;
       { "HB_USER_AFLAGS"     , I_( "options to be passed to linker (static library) (before command-line options)" ) }, ;
-      { "HB_COMPILER_VER"    , I_( "override C compiler version autodetection (gcc and msvc compiler families only). Format: <15><00>[.<00>] = <major><minor>[.<revision>]" ) }, ;
+      { "HB_COMPILER_VER"    , I_( "override C compiler version autodetection (gcc and msvc compiler families only). Format: <15><00> = <major><minor>" ) }, ;
       { "HB_CCPATH"          , I_( "override C compiler executable directory (gcc compiler families only)" ) }, ;
       { "HB_CCPREFIX"        , I_( "override C compiler executable prefix (gcc compiler families only)" ) }, ;
       { "HB_CCSUFFIX"        , I_( "override C compiler executable suffix (gcc compiler families only)" ) }, ;

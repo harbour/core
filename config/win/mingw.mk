@@ -1,5 +1,5 @@
 ifeq ($(HB_COMPILER_VER),)
-   $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let autodetection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 46 for 4.6.x).)
+   $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let autodetection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 0406 for 4.6.x).)
 endif
 
 ifeq ($(HB_BUILD_MODE),cpp)
@@ -27,11 +27,11 @@ CC_OUT := -o
 CFLAGS += -I. -I$(HB_HOST_INC)
 
 # Similar to MSVC -GS (default) option:
-ifeq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43 44 45 46 47 48),)
+ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407 0408),)
    #CFLAGS += -fstack-protector-strong
    #SYSLIBS += ssp
 else
-ifeq ($(filter $(HB_COMPILER_VER),29 34 40),)
+ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400),)
    # too weak
    #CFLAGS += -fstack-protector
    # too slow
@@ -44,7 +44,7 @@ endif
 # but not supported by mingw tdm 4.4.x, so I only enable it on or
 # above 4.5.0.
 ifneq ($(HB_COMPILER_VER),)
-   ifeq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43 44),)
+   ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404),)
       LDFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
       DFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
    endif
@@ -68,7 +68,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
       # It makes debugging hard or impossible on x86 systems.
       ifneq ($(HB_BUILD_DEBUG),yes)
          # It's the default in 4.6 and up
-         ifneq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43 44 45),)
+         ifneq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
             CFLAGS += -fomit-frame-pointer
          endif
       endif
