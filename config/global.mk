@@ -708,19 +708,20 @@ ifeq ($(HB_COMPILER),)
                                                 ifneq ($(HB_COMP_PATH),)
                                                    HB_COMPILER := msvc64
                                                    HB_CPU := x86_64
-                                                   ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
+                                                   _C_VER := $(shell "$(HB_COMP_PATH)" 2>&1)
+                                                   ifneq ($(findstring 14.,$(_C_VER)),)
                                                       HB_COMPILER_VER := 1400
                                                    else
-                                                   ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
+                                                   ifneq ($(findstring 15.,$(_C_VER)),)
                                                       HB_COMPILER_VER := 1500
                                                    else
-                                                   ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
+                                                   ifneq ($(findstring 16.,$(_C_VER)),)
                                                       HB_COMPILER_VER := 1600
                                                    else
-                                                   ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
+                                                   ifneq ($(findstring 17.,$(_C_VER)),)
                                                       HB_COMPILER_VER := 1700
                                                    else
-                                                   ifneq ($(findstring 12.0,$(HB_COMP_PATH)),)
+                                                   ifneq ($(findstring 18.,$(_C_VER)),)
                                                       HB_COMPILER_VER := 1800
                                                    endif
                                                    endif
@@ -732,19 +733,20 @@ ifeq ($(HB_COMPILER),)
                                                    ifneq ($(HB_COMP_PATH),)
                                                       HB_COMPILER := msvcia64
                                                       HB_CPU := ia64
-                                                      ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
+                                                      _C_VER := $(shell "$(HB_COMP_PATH)" 2>&1)
+                                                      ifneq ($(findstring 14.,$(_C_VER)),)
                                                          HB_COMPILER_VER := 1400
                                                       else
-                                                      ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
+                                                      ifneq ($(findstring 15.,$(_C_VER)),)
                                                          HB_COMPILER_VER := 1500
                                                       else
-                                                      ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
+                                                      ifneq ($(findstring 16.,$(_C_VER)),)
                                                          HB_COMPILER_VER := 1600
                                                       else
-                                                      ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
+                                                      ifneq ($(findstring 17.,$(_C_VER)),)
                                                          HB_COMPILER_VER := 1700
                                                       else
-                                                      ifneq ($(findstring 12.0,$(HB_COMP_PATH)),)
+                                                      ifneq ($(findstring 18.,$(_C_VER)),)
                                                          HB_COMPILER_VER := 1800
                                                       endif
                                                       endif
@@ -755,25 +757,26 @@ ifeq ($(HB_COMPILER),)
                                                       HB_COMP_PATH := $(call find_in_path_raw,cl.exe)
                                                       ifneq ($(HB_COMP_PATH),)
                                                          HB_COMPILER := msvc
-                                                         ifneq ($(findstring VC98,$(HB_COMP_PATH)),)
+                                                         _C_VER := $(shell "$(HB_COMP_PATH)" 2>&1)
+                                                         ifneq ($(findstring 12.,$(_C_VER)),)
                                                             HB_COMPILER_VER := 1200
                                                          else
-                                                         ifneq ($(findstring 2003,$(HB_COMP_PATH)),)
+                                                         ifneq ($(findstring 13.,$(_C_VER)),)
                                                             HB_COMPILER_VER := 1300
                                                          else
-                                                         ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
+                                                         ifneq ($(findstring 14.,$(_C_VER)),)
                                                             HB_COMPILER_VER := 1400
                                                          else
-                                                         ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
+                                                         ifneq ($(findstring 15.,$(_C_VER)),)
                                                             HB_COMPILER_VER := 1500
                                                          else
-                                                         ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
+                                                         ifneq ($(findstring 16.,$(_C_VER)),)
                                                             HB_COMPILER_VER := 1600
                                                          else
-                                                         ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
+                                                         ifneq ($(findstring 17.,$(_C_VER)),)
                                                             HB_COMPILER_VER := 1700
                                                          else
-                                                         ifneq ($(findstring 12.0,$(HB_COMP_PATH)),)
+                                                         ifneq ($(findstring 18.,$(_C_VER)),)
                                                             HB_COMPILER_VER := 1800
                                                          endif
                                                          endif

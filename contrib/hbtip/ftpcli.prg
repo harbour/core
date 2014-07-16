@@ -572,18 +572,16 @@ METHOD MGet( cSpec, cLocalPath ) CLASS TIPClientFTP
 
 METHOD MPut( cFileSpec, cAttr ) CLASS TIPClientFTP
 
-   LOCAL cPath, cFile, cExt, aFile
+   LOCAL aFile
    LOCAL cStr
 
    IF ! HB_ISSTRING( cFileSpec )
       RETURN NIL
    ENDIF
 
-   hb_FNameSplit( cFileSpec, @cPath, @cFile, @cExt  )
-
    cStr := ""
-   FOR EACH aFile IN Directory( cPath + cFile + cExt, cAttr )
-      IF ::UploadFile( cPath + aFile[ F_NAME ], aFile[ F_NAME ] )
+   FOR EACH aFile IN Directory( cFileSpec, cAttr )
+      IF ::UploadFile( hb_FNameDir( cFileSpec ) + aFile[ F_NAME ] )
          cStr += e"\r\n" + aFile[ F_NAME ]
       ENDIF
    NEXT
@@ -594,14 +592,8 @@ METHOD MPut( cFileSpec, cAttr ) CLASS TIPClientFTP
 
 METHOD UploadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
-   LOCAL cPath
-   LOCAL cFile
-   LOCAL cExt
-
-   hb_FNameSplit( cLocalFile, @cPath, @cFile, @cExt  )
-
    ::bEof := .F.
-   ::oUrl:cFile := hb_defaultValue( cRemoteFile, cFile + cExt )
+   ::oUrl:cFile := hb_defaultValue( cRemoteFile, hb_FNameNameExt( cLocalFile ) )
 
    IF ! ::bInitialized
 

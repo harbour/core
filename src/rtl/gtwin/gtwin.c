@@ -1404,7 +1404,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
+   /* First check for Ctrl+Break, which is handled by gtwin.c */
    if( s_bBreak )
    {
       /* Reset the global Ctrl+Break flag */

@@ -98,6 +98,10 @@ typedef struct _HB_GTCGI
 #endif
 } HB_GTCGI, * PHB_GTCGI;
 
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+static UINT s_uiOldCP;
+#endif
+
 static void hb_gt_cgi_termOut( PHB_GTCGI pGTCGI, const char * szStr, HB_SIZE nLen )
 {
    hb_fsWriteLarge( pGTCGI->hStdout, szStr, nLen );
@@ -107,6 +111,27 @@ static void hb_gt_cgi_newLine( PHB_GTCGI pGTCGI )
 {
    hb_gt_cgi_termOut( pGTCGI, pGTCGI->szCrLf, pGTCGI->nCrLf );
 }
+
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+static BOOL WINAPI hb_gt_cgi_CtrlHandler( DWORD dwCtrlType )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_CtrlHandler(%lu)", ( HB_ULONG ) dwCtrlType ) );
+
+   switch( dwCtrlType )
+   {
+      case CTRL_C_EVENT:
+      case CTRL_CLOSE_EVENT:
+      case CTRL_BREAK_EVENT:
+      case CTRL_LOGOFF_EVENT:
+      case CTRL_SHUTDOWN_EVENT:
+         if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
+            SetConsoleOutputCP( s_uiOldCP );
+         break;
+   }
+
+   return HB_FALSE;
+}
+#endif
 
 static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
@@ -122,6 +147,9 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
    {
       pGTCGI->uiOldCP = GetConsoleOutputCP();
+      if( s_uiOldCP == 0 )
+         s_uiOldCP = pGTCGI->uiOldCP;
+      SetConsoleCtrlHandler( hb_gt_cgi_CtrlHandler, TRUE );
       SetConsoleOutputCP( CP_UTF8 );
       HB_GTSELF_SETDISPCP( pGT, "UTF8", NULL, HB_FALSE );
    }

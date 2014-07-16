@@ -472,7 +472,7 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
    LOCAL nHandle
 
 #if 0
-   hb_default( @cLog, AppFullPath() + hb_ps() + "logfile.log" )
+   hb_default( @cLog, hb_DirBase() + "logfile.log" )
 #endif
    hb_default( @cLog, hb_ps() + "tmp" + hb_ps() + "logfile.log" )
 

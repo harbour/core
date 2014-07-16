@@ -2586,24 +2586,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. "clarm.exe" $ cPath_CompC
             hbmk[ _HBMK_nCOMPVer ] := 1310 /* Visual Studio .NET 2003 */
          ELSE
-            DO CASE
-            CASE "VC98" $ cPath_CompC
-               hbmk[ _HBMK_nCOMPVer ] := 1200
-            CASE "2003" $ cPath_CompC
-               hbmk[ _HBMK_nCOMPVer ] := 1300
-            CASE "8" + hb_ps() $ cPath_CompC /* Visual Studio 2005 */
-               hbmk[ _HBMK_nCOMPVer ] := 1400
-            CASE "9.0" $ cPath_CompC /* Visual Studio 2008 or Windows SDK 7.0 */
-               hbmk[ _HBMK_nCOMPVer ] := 1500
-            CASE "10.0" $ cPath_CompC /* Visual Studio 2010 or Windows SDK 7.1 */
-               hbmk[ _HBMK_nCOMPVer ] := 1600
-            CASE "11.0" $ cPath_CompC /* Visual Studio 2012 */
-               hbmk[ _HBMK_nCOMPVer ] := 1700
-            CASE "12.0" $ cPath_CompC /* Visual Studio 2013 */
-               hbmk[ _HBMK_nCOMPVer ] := 1800
-            OTHERWISE
-               hbmk[ _HBMK_nCOMPVer ] := 1400
-            ENDCASE
+            hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 1400 )
          ENDIF
       ENDCASE
    ENDIF
@@ -13642,6 +13625,23 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
    ENDIF
 
    RETURN nResult
+
+STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
+
+   LOCAL cStdOutErr := ""
+   LOCAL tmp, tmp1
+
+   DO CASE
+   CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
+      hb_processRun( cPath_CompC,, @cStdOutErr, @cStdOutErr )
+      tmp := hb_cdpSelect( "EN" )
+      IF ( tmp1 := hb_AtX( "Version [0-9][0-9]\.[0-9]", cStdOutErr ) ) != NIL
+         nVer := Val( Stuff( SubStr( tmp1, Len( "Version " ) + 1 ), 3, 1, "" ) + "0" )
+      ENDIF
+      hb_cdpSelect( tmp )
+   ENDCASE
+
+   RETURN nVer
 
 #define _VCS_UNKNOWN        0
 #define _VCS_SVN            1

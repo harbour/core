@@ -12,7 +12,7 @@ request DBFCDX
 procedure main()
 
    local nMaxScrRow, nMaxScrCol
-   local cPath, cName, cExt, cDrive
+   local cPath
    local i, j, k
 
    /* Set EN CP-437 encoding */
@@ -42,8 +42,7 @@ procedure main()
    Alert( OS() + ";" + Version() + ";GT" + hb_gtVersion() )
 
    /* database test */
-   hb_FNameSplit( hb_ProgName(), @cPath, @cName, @cExt, @cDrive )
-   cPath += "data" + hb_ps()
+   cPath := hb_DirBase() + "data" + hb_ps()
 
    Alert( "Database path:;;" + cPath )
 
