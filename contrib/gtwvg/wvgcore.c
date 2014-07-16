@@ -1113,7 +1113,8 @@ HB_FUNC( WVT_DRAWLABEL )
       hFont = CreateFontIndirect( &logfont );
       if( hFont )
       {
-         LPCTSTR  text  = HB_PARSTR( 3, &hText, NULL );
+         HB_SIZE  nLen;
+         LPCTSTR  text  = HB_PARSTR( 3, &hText, &nLen );
          COLORREF fgClr = hb_wvt_FgColorParam( 6 ),
                   bgClr = hb_wvt_BgColorParam( 7 );
 
@@ -1126,7 +1127,7 @@ HB_FUNC( WVT_DRAWLABEL )
          SetTextAlign( _s->hdc, hb_parnidef( 4, TA_LEFT ) );
          hOldFont = ( HFONT ) SelectObject( _s->hdc, hFont );
 
-         ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
+         ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, ( UINT ) nLen, NULL );
 
          SelectObject( _s->hdc, hOldFont );
          #if defined( __SETGUI__ )
@@ -1137,7 +1138,7 @@ HB_FUNC( WVT_DRAWLABEL )
             SetTextAlign( _s->hGuiDC, hb_parnidef( 4, TA_LEFT ) );
             hOldFontGui = ( HFONT ) SelectObject( _s->hGuiDC, hFont );
 
-            ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
+            ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, ( UINT ) nLen, NULL );
             SelectObject( _s->hGuiDC, hOldFontGui );
          }
          #endif
@@ -1721,13 +1722,14 @@ HB_FUNC( WVT_DRAWBUTTON )
       if( bText )
       {
          void *  hText;
-         LPCTSTR text = HB_PARSTR( 5, &hText, NULL );
+         HB_SIZE nLen;
+         LPCTSTR text = HB_PARSTR( 5, &hText, &nLen );
 #if ! defined( HB_OS_WIN_CE )
          SelectObject( _s->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
 #else
          SelectObject( _s->hdc, GetStockObject( OEM_FIXED_FONT ) );
 #endif
-         GetTextExtentPoint32( _s->hdc, text, lstrlen( text ), &sz );
+         GetTextExtentPoint32( _s->hdc, text, ( int ) nLen, &sz );
 
 #if 0
          iTextWidth  = sz.cx;
@@ -1753,7 +1755,7 @@ HB_FUNC( WVT_DRAWBUTTON )
          SetBkMode( _s->hdc, TRANSPARENT );
          SetTextColor( _s->hdc, textColor );
 
-         ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
+         ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, ( UINT ) nLen, NULL );
          if( _s->bGui )
          {
 #if ! defined( HB_OS_WIN_CE )
@@ -1765,7 +1767,7 @@ HB_FUNC( WVT_DRAWBUTTON )
             SetBkMode( _s->hGuiDC, TRANSPARENT );
             SetTextColor( _s->hGuiDC, textColor );
 
-            ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
+            ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, ( UINT ) nLen, NULL );
          }
          hb_strfree( hText );
       }
@@ -1939,7 +1941,8 @@ HB_FUNC( WVT_DRAWLABELEX )
       {
          POINT    xy;
          void *   hText;
-         LPCTSTR  text  = HB_PARSTR( 3, &hText, NULL );
+         HB_SIZE  nLen;
+         LPCTSTR  text  = HB_PARSTR( 3, &hText, &nLen );
          COLORREF fgClr = hb_wvt_FgColorParam( 5 ),
                   bgClr = hb_wvt_BgColorParam( 6 );
 
@@ -1952,7 +1955,7 @@ HB_FUNC( WVT_DRAWLABELEX )
          SetTextAlign( _s->hdc, hb_parnidef( 4, TA_LEFT ) );
          SelectObject( _s->hdc, _s->pGUI->hUserFonts[ iSlot ] );
 
-         ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
+         ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, ( UINT ) nLen, NULL );
          #if defined( __SETGUI__ )
          if( _s->bGui )
          {
@@ -1961,7 +1964,7 @@ HB_FUNC( WVT_DRAWLABELEX )
             SetTextAlign( _s->hGuiDC, hb_parnidef( 4, TA_LEFT ) );
             SelectObject( _s->hGuiDC, _s->pGUI->hUserFonts[ iSlot ] );
 
-            ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
+            ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, ( UINT ) nLen, NULL );
          }
          #endif
          hb_strfree( hText );
@@ -2213,7 +2216,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       UINT     uiOptions;
       SIZE     sz = { 0, 0 };
       void *   hText;
-      LPCTSTR  text  = HB_PARSTR( 5, &hText, NULL );
+      HB_SIZE  nLen;
+      LPCTSTR  text  = HB_PARSTR( 5, &hText, &nLen );
       COLORREF fgClr = hb_wvt_FgColorParam( 8 ),
                bgClr = hb_wvt_BgColorParam( 9 );
 
@@ -2231,7 +2235,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       SetBkColor( _s->hdc, bgClr );
       SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 10 ) );
 
-      GetTextExtentPoint32( _s->hdc, text, lstrlen( text ), &sz );
+      GetTextExtentPoint32( _s->hdc, text, ( int ) nLen, &sz );
 
       x = iLeft;
       y = iTop;
@@ -2278,7 +2282,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 
       uiOptions = ETO_CLIPPED | ETO_OPAQUE;
 
-      ExtTextOut( _s->hdc, x, y, uiOptions, &rect, text, lstrlen( text ), NULL );
+      ExtTextOut( _s->hdc, x, y, uiOptions, &rect, text, ( UINT ) nLen, NULL );
       #if defined( __SETGUI__ )
       if( _s->bGui )
       {
@@ -2287,7 +2291,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
          SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 10 ) );
          SetTextAlign( _s->hGuiDC, iAlignH | iAlignV );
 
-         ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, text, lstrlen( text ), NULL );
+         ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, text, ( UINT ) nLen, NULL );
       }
       #endif
       hb_strfree( hText );

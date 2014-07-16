@@ -396,14 +396,15 @@ HB_FUNC( WVG_DRAWTEXT )
 {
    RECT    rc;
    void *  hBuffer;
-   LPCTSTR lpBuffer = HB_PARSTR( 2, &hBuffer, NULL );
+   HB_SIZE nLen;
+   LPCTSTR lpBuffer = HB_PARSTR( 2, &hBuffer, &nLen );
 
    rc.left   = hb_parvni( 3, 1 );
    rc.top    = hb_parvni( 3, 2 );
    rc.right  = hb_parvni( 3, 3 );
    rc.bottom = hb_parvni( 3, 4 );
 
-   hb_retl( DrawText( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), lpBuffer, lstrlen( lpBuffer ), &rc, hb_parni( 4 ) ) );
+   hb_retl( DrawText( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), lpBuffer, ( int ) nLen, &rc, hb_parni( 4 ) ) );
    hb_strfree( hBuffer );
 }
 
