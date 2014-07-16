@@ -1652,6 +1652,7 @@ Supported shells per host platforms:
 
 # Harbour Links
 
+  * [Homepage](https://vszakats.github.io/harbour-core/)
   * [Source code](https://github.com/vszakats/harbour-core)
   * [Issues](https://github.com/vszakats/harbour-core/issues)
   * [Localization](https://www.transifex.com/projects/p/harbour/)

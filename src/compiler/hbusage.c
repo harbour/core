@@ -172,7 +172,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
 {
    hb_compOutStd( HB_COMP_PARAM,
          "\n"
-         "Credits:  The Harbour Team at https://harbour.github.io/\n"
+         "Credits:  The Harbour Team\n"
          "          (replace space with @ in e-mail addresses)\n"
          "\n"
          "Alejandro de Garate (alex_degarate hotmail com)\n"
