@@ -104,11 +104,10 @@ HB_FUNC( WVT_UTILS )
    /* Retained for legacy code. */
 }
 
-/*
- *     Wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
- *                                    lItalic, lUnderline, lStrikeout )
- *              ->
- *    { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
+/* Wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
+ *                                lItalic, lUnderline, lStrikeout )
+ *          ->
+ * { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
  */
 HB_FUNC( WVT_CHOOSEFONT )
 {
@@ -215,9 +214,7 @@ HB_FUNC( WVT_CHOOSEFONT )
 #endif
 }
 
-/*
- *    Wvt_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected
- */
+/* Wvt_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
 HB_FUNC( WVT_CHOOSECOLOR )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -246,9 +243,7 @@ HB_FUNC( WVT_CHOOSECOLOR )
    }
 }
 
-/*
- *  Wvt_MessageBox( cMessage, cTitle, nIcon, hWnd )
- */
+/* Wvt_MessageBox( cMessage, cTitle, nIcon, hWnd ) */
 HB_FUNC( WVT_MESSAGEBOX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -283,9 +278,7 @@ HB_FUNC( WVT_SETTOOLTIPACTIVE )
    }
 }
 
-/*
- *   Wvt_SetToolTip( nTop, nLeft, nBottom, nRight, cToolText )
- */
+/* Wvt_SetToolTip( nTop, nLeft, nBottom, nRight, cToolText ) */
 HB_FUNC( WVT_SETTOOLTIP )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -686,9 +679,7 @@ HB_FUNC( WVT_GETFONTINFO )
    }
 }
 
-/*
- *                 Peter Rees <peter@rees.co.nz>
- */
+/* Peter Rees <peter@rees.co.nz> */
 
 HB_FUNC( WVT_SETMENU )
 {
@@ -907,9 +898,7 @@ HB_FUNC( WVT_GETMENU )
       hb_retnint( ( HB_PTRDIFF ) GetMenu( _s->hWnd ) );
 }
 
-/*
- * Dialogs
- */
+/* Dialogs */
 
 HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
 {
@@ -1186,13 +1175,13 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
          *p++ = LOWORD( hb_parvnl( 4, i ) );   /* style       */
          *p++ = HIWORD( hb_parvnl( 4, i ) );
 
-         *p++ = ( short ) hb_parvni( 5, i );    /* x           */
-         *p++ = ( short ) hb_parvni( 6, i );    /* y           */
-         *p++ = ( short ) hb_parvni( 7, i );    /* cx          */
-         *p++ = ( short ) hb_parvni( 8, i );    /* cy          */
+         *p++ = ( short ) hb_parvni( 5, i );   /* x           */
+         *p++ = ( short ) hb_parvni( 6, i );   /* y           */
+         *p++ = ( short ) hb_parvni( 7, i );   /* cx          */
+         *p++ = ( short ) hb_parvni( 8, i );   /* cy          */
 
-         *p++ = LOWORD( hb_parvnl( 9, i ) );    /* id          */
-         *p++ = HIWORD( hb_parvnl( 9, i ) );    /* id          */
+         *p++ = LOWORD( hb_parvnl( 9, i ) );   /* id          */
+         *p++ = HIWORD( hb_parvnl( 9, i ) );   /* id          */
 
          if( hb_parinfa( 10, i ) == HB_IT_STRING )
          {
@@ -1229,9 +1218,8 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
       hb_retc_null();
 }
 
-/*
- *  Helper routine.  Take an input pointer, return closest
- *  pointer that is aligned on a DWORD (4 byte) boundary.
+/* Helper routine.  Take an input pointer, return closest
+ * pointer that is aligned on a DWORD (4 byte) boundary.
  */
 LPWORD lpwAlign( LPWORD lpIn )
 {
@@ -1293,9 +1281,7 @@ HB_FUNC( WVT_CBSETCURSEL )
    SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
-/*
- *   Wvt_DlgSetIcon( hDlg, ncIcon )
- */
+/* Wvt_DlgSetIcon( hDlg, ncIcon ) */
 HB_FUNC( WVT_DLGSETICON )
 {
    HICON hIcon;

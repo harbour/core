@@ -105,9 +105,7 @@ static void hb_wvg_RestFromBuffer( PHB_GTWVT pWVT, int iLeft, int iTop, int iRig
            pWVT->hGuiDC, iLeft, iTop, SRCCOPY );
 }
 
-/*
-   Wvg_ClearGUIObjects() -> NIL
- */
+/* Wvg_ClearGUIObjects() -> NIL */
 HB_FUNC( WVG_CLEARGUIOBJECTS )
 {
    PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
@@ -178,9 +176,7 @@ HB_FUNC( WVG_SETGOBJSTATE )
    hb_retni( iOState );
 }
 
-/*
-   Wvg_SetGuiObjectData( hObj, nGobjDataType, xData, xData1 ) -> lSuccess
- */
+/* Wvg_SetGuiObjectData( hObj, nGobjDataType, xData, xData1 ) -> lSuccess */
 HB_FUNC( WVG_SETGOBJDATA )
 {
    PHB_GTWVT pWVT     = hb_wvt_gtGetWVT();
@@ -296,9 +292,7 @@ HB_FUNC( WVG_SETGOBJDATA )
    hb_retl( bSuccess );
 }
 
-/*
-   Wvg_BoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff )
- */
+/* Wvg_BoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVG_BOXRAISED )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -326,33 +320,31 @@ static void hb_wvg_BoxRaised( PHB_GTWVT pWVT, int iLeft, int iTop, int iRight, i
    PHB_GUIDATA pGUI = pWVT->pGUI;
 
    SelectObject( hdc, pGUI->penWhiteDim );
-   MoveToEx( hdc, iLeft, iTop, NULL );          /*  Top Inner    */
+   MoveToEx( hdc, iLeft, iTop, NULL );             /* Top Inner    */
    LineTo( hdc, iRight, iTop );
-   MoveToEx( hdc, iLeft, iTop, NULL );          /*  Left Inner   */
+   MoveToEx( hdc, iLeft, iTop, NULL );             /* Left Inner   */
    LineTo( hdc, iLeft, iBottom );
 
    SelectObject( hdc, pGUI->penWhite );
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /*  Top Outer    */
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Top Outer    */
    LineTo( hdc, iRight + 1, iTop - 1 );
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /*  Left Outer   */
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Left Outer   */
    LineTo( hdc, iLeft - 1, iBottom + 1 );
 
    SelectObject( hdc, pGUI->penDarkGray );
-   MoveToEx( hdc, iLeft, iBottom, NULL );       /*  Bottom Inner */
+   MoveToEx( hdc, iLeft, iBottom, NULL );          /* Bottom Inner */
    LineTo( hdc, iRight, iBottom );
-   MoveToEx( hdc, iRight, iBottom, NULL );      /*  Right Inner  */
+   MoveToEx( hdc, iRight, iBottom, NULL );         /* Right Inner  */
    LineTo( hdc, iRight, iTop );
 
    SelectObject( hdc, pGUI->penBlack );
-   MoveToEx( hdc, iLeft - 1, iBottom + 1, NULL );  /*  Bottom Outer */
+   MoveToEx( hdc, iLeft - 1, iBottom + 1, NULL );  /* Bottom Outer */
    LineTo( hdc, iRight + 1 + 1, iBottom + 1 );
-   MoveToEx( hdc, iRight + 1, iTop - 1, NULL );    /*  Right Outer  */
+   MoveToEx( hdc, iRight + 1, iTop - 1, NULL );    /* Right Outer  */
    LineTo( hdc, iRight + 1, iBottom + 1 );
 }
 
-/*
-   Wvg_BoxRecessed( nTop, nLeft, nBottom, nRight, aPxlOff ) -> NIL
- */
+/* Wvg_BoxRecessed( nTop, nLeft, nBottom, nRight, aPxlOff ) -> NIL */
 HB_FUNC( WVG_BOXRECESSED )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -404,9 +396,7 @@ static void hb_wvg_BoxRecessed( PHB_GTWVT pWVT, int iLeft, int iTop, int iRight,
    LineTo( hdc, iRight + 1, iTop - 1 );
 }
 
-/*
-   Wvt_DrawBoxGet( nRow, nCol, nWidth ) -> NIL
- */
+/* Wvt_DrawBoxGet( nRow, nCol, nWidth ) -> NIL */
 HB_FUNC( WVG_BOXGET )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -435,21 +425,19 @@ static void hb_wvg_BoxGet( PHB_GTWVT pWVT, int iLeft, int iTop, int iRight, int 
    PHB_GUIDATA pGUI = pWVT->pGUI;
 
    SelectObject( hdc, pGUI->penBlack );
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );        /* Top Inner   */
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );   /* Top Inner   */
    LineTo(   hdc, iRight - 1, iTop - 1       );
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );        /* Left  Inner */
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );   /* Left  Inner */
    LineTo(   hdc, iLeft - 1, iBottom - 1    );
 
    SelectObject( hdc, pGUI->penDarkGray );
-   MoveToEx( hdc, iLeft - 2, iTop - 2, NULL );           /* Top Outer   */
+   MoveToEx( hdc, iLeft - 2, iTop - 2, NULL );   /* Top Outer   */
    LineTo(   hdc, iRight, iTop - 2       );
-   MoveToEx( hdc, iLeft - 2, iTop - 2, NULL );           /* Left Outer  */
+   MoveToEx( hdc, iLeft - 2, iTop - 2, NULL );   /* Left Outer  */
    LineTo(   hdc, iLeft - 2, iBottom      );
 }
 
-/*
-   Wvg_BoxGroup( nTop, nLeft, nBottom, nRight, aPxlOff ) -> NIL
- */
+/* Wvg_BoxGroup( nTop, nLeft, nBottom, nRight, aPxlOff ) -> NIL */
 HB_FUNC( WVG_BOXGROUP )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -478,16 +466,16 @@ static void hb_wvg_BoxGroup( PHB_GTWVT pWVT, int iLeft, int iTop, int iRight, in
 
    SelectObject( hdc, pGUI->penDarkGray );
 
-   MoveToEx( hdc, iRight, iTop, NULL );            /* Right Inner  */
+   MoveToEx( hdc, iRight, iTop, NULL );         /* Right Inner  */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );          /* Bottom Inner */
+   MoveToEx( hdc, iLeft, iBottom, NULL );       /* Bottom Inner */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Left Outer   */
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );  /* Left Outer   */
    LineTo( hdc, iLeft - 1, iBottom + 1 );
 
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Top Outer    */
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );  /* Top Outer    */
    LineTo( hdc, iRight + 1, iTop - 1 );
 
 
@@ -496,7 +484,7 @@ static void hb_wvg_BoxGroup( PHB_GTWVT pWVT, int iLeft, int iTop, int iRight, in
    MoveToEx( hdc, iRight + 1, iTop, NULL );        /* Right Outer  */
    LineTo( hdc, iRight + 1, iBottom + 1 );
 
-   MoveToEx( hdc, iLeft - 1, iBottom + 1, NULL );   /* Bottom Outer */
+   MoveToEx( hdc, iLeft - 1, iBottom + 1, NULL );  /* Bottom Outer */
    LineTo( hdc, iRight + 1 + 1, iBottom + 1 );
 
    MoveToEx( hdc, iLeft, iTop, NULL );             /* Left  Inner  */
@@ -506,9 +494,7 @@ static void hb_wvg_BoxGroup( PHB_GTWVT pWVT, int iLeft, int iTop, int iRight, in
    LineTo( hdc, iRight, iTop );
 }
 
-/*
-   Wvg_BoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff ) -> NIL
- */
+/* Wvg_BoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff ) -> NIL */
 HB_FUNC( WVG_BOXGROUPRAISED )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -537,39 +523,37 @@ static void hb_wvg_BoxGroupRaised( PHB_GTWVT pWVT, int iLeft, int iTop, int iRig
 
    SelectObject( hdc, pGUI->penWhite );
 
-   MoveToEx( hdc, iRight, iTop, NULL );           /* Right Inner  */
+   MoveToEx( hdc, iRight, iTop, NULL );            /* Right Inner  */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );         /* Bottom Inner */
+   MoveToEx( hdc, iLeft, iBottom, NULL );          /* Bottom Inner */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );    /* Left Outer   */
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Left Outer   */
    LineTo( hdc, iLeft - 1, iBottom + 1 );
 
-   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );    /* Top Outer    */
+   MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );     /* Top Outer    */
    LineTo( hdc, iRight + 1, iTop - 1 );
 
    SelectObject( hdc, pGUI->penDarkGray );
 
-   MoveToEx( hdc, iRight + 1, iTop, NULL );       /* Right Outer  */
+   MoveToEx( hdc, iRight + 1, iTop, NULL );        /* Right Outer  */
    LineTo( hdc, iRight + 1, iBottom + 1 );
 
    MoveToEx( hdc, iLeft - 1, iBottom + 1, NULL );  /* Bottom Outer */
    LineTo( hdc, iRight + 1 + 1, iBottom + 1 );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            /* Left  Inner  */
+   MoveToEx( hdc, iLeft, iTop, NULL );             /* Left  Inner  */
    LineTo( hdc, iLeft, iBottom );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );            /* Top Inner    */
+   MoveToEx( hdc, iLeft, iTop, NULL );             /* Top Inner    */
    LineTo( hdc, iRight, iTop );
 }
 
-/*
- *    Wvg_Label( nRow, nCol, aPxlOff, cLabel, nAlign,
- *               nEscapement, nTextColor, nBkColor, cFontFace, nFontHeight,
- *               nFontWidth, nFontWeight, nQuality,  nCharSet, lItalics,
- *               lUnderline, lStrikeOut )
- */
+/* Wvg_Label( nRow, nCol, aPxlOff, cLabel, nAlign,
+              nEscapement, nTextColor, nBkColor, cFontFace, nFontHeight,
+              nFontWidth, nFontWeight, nQuality,  nCharSet, lItalics,
+              lUnderline, lStrikeOut ) */
 HB_FUNC( WVG_LABEL )
 {
    PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
@@ -624,9 +608,7 @@ HB_FUNC( WVG_LABEL )
    }
 }
 
-/*
-   Wvg_LabelEx( nRow, nCol, aPxlOff, cLabel, nAlign, nTextColor, nBkColor, nSlotFont )
- */
+/* Wvg_LabelEx( nRow, nCol, aPxlOff, cLabel, nAlign, nTextColor, nBkColor, nSlotFont ) */
 HB_FUNC( WVG_LABELEX )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -680,12 +662,10 @@ static void hb_wvg_Label( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop )
 }
 
 
-/*
- *    Wvg_LabelEx2( nTop, nLeft, nBottom, nRight, aPxlOff, cLabel, nAlign,
- *                  nEscapement, nTextColor, nBkColor, cFontFace, nFontHeight,
- *                  nFontWidth, nFontWeight, nQuality,  nCharSet, lItalics,
- *                  lUnderline, lStrikeOut )
- */
+/* Wvg_LabelEx2( nTop, nLeft, nBottom, nRight, aPxlOff, cLabel, nAlign,
+                 nEscapement, nTextColor, nBkColor, cFontFace, nFontHeight,
+                 nFontWidth, nFontWeight, nQuality, nCharSet, lItalics,
+                 lUnderline, lStrikeOut ) */
 HB_FUNC( WVG_LABELEX2 )
 {
    PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
@@ -791,9 +771,8 @@ static void hb_wvg_LabelEx2( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop
    SelectObject( pWVT->hdc, hOldFont );
 }
 
-/*
- *                  1      2       3        4       5       6        7         8
- *    Wvg_Outline( nTop, nLeft, nBottom, nRight, aPxlOff, nThick, nShape, nRGBColor )
+/*               1      2       3        4       5       6        7         8
+ * Wvg_Outline( nTop, nLeft, nBottom, nRight, aPxlOff, nThick, nShape, nRGBColor )
  */
 HB_FUNC( WVG_OUTLINE )
 {
@@ -831,9 +810,7 @@ HB_FUNC( WVG_OUTLINE )
    pWVT->gObjs    = gObj;
 }
 
-/*
-   Wvg_OutlineEx( nTop, nLeft, nBottom, nRight, aPxlOff, nSlotPen )
- */
+/* Wvg_OutlineEx( nTop, nLeft, nBottom, nRight, aPxlOff, nSlotPen ) */
 HB_FUNC( WVG_OUTLINEEX )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -920,8 +897,8 @@ HB_FUNC( WVG_LINE )
    pWVT->gObjs    = gObj;
 }
 
-/*                1      2       3       4        5        6       7       8          9
- *   Wvg_LineEx( nTop, nLeft, nBottom, nRight, aPxlOff, nOrient, nFormat, nAlign, nSlotPen )
+/*              1      2       3       4        5        6       7       8          9
+ * Wvg_LineEx( nTop, nLeft, nBottom, nRight, aPxlOff, nOrient, nFormat, nAlign, nSlotPen )
  */
 HB_FUNC( WVG_LINEEX )
 {
@@ -1061,10 +1038,8 @@ static void hb_wvg_Line( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, in
    SelectObject( hdc, hOldPen );
 }
 
-/*
- *    Inside the area requested!
- *    Wvg_Ellipse( nTop, nLeft, nBottom, nRight, aPxlOff )
- */
+/* Inside the area requested!
+   Wvg_Ellipse( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVG_ELLIPSE )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -1102,9 +1077,7 @@ static void hb_wvg_Ellipse( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
    SelectObject( pWVT->hdc, hBrush );
 }
 
-/*
-   Wvg_Rectangle( nTop, nLeft, nBottom, nRight, aPxlOff )
- */
+/* Wvg_Rectangle( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVG_RECTANGLE )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -1142,9 +1115,7 @@ static void hb_wvg_Rectangle( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTo
    SelectObject( pWVT->hdc, hBrush );
 }
 
-/*
-   Wvg_RoundRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRoundHeight, nRoundWidth )
- */
+/* Wvg_RoundRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRoundHeight, nRoundWidth ) */
 HB_FUNC( WVG_ROUNDRECT )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -1185,9 +1156,7 @@ static void hb_wvg_RoundRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTo
    SelectObject( pWVT->hdc, hBrush );
 }
 
-/*
-   Wvg_ColorRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRGB )
- */
+/* Wvg_ColorRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRGB ) */
 HB_FUNC( WVG_COLORRECT )
 {
    HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnint( 6 ) );
@@ -1225,9 +1194,7 @@ static void hb_wvg_ColorRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTo
    FillRect( pWVT->hGuiDC, &rc, gObj->hBrush );
 }
 
-/*
-   Wvg_ShadedRect( nTop, nLeft, nBottom, nRight, aPxlOff, nHorVert, aRGBb, aRGBe  )
- */
+/* Wvg_ShadedRect( nTop, nLeft, nBottom, nRight, aPxlOff, nHorVert, aRGBb, aRGBe ) */
 HB_FUNC( WVG_SHADEDRECT )
 {
    PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
@@ -1288,10 +1255,8 @@ static void hb_wvg_ShadedRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iT
    HB_SYMBOL_UNUSED( bGF );
 }
 
-/*
- *   Wvg_TextBox( nTop, nLeft, nBottom, nRight, aPxlOff, cText, ;
- *                nAlignHorz, nAlignVert, nTextColor, nBackColor, hFont )
- */
+/* Wvg_TextBox( nTop, nLeft, nBottom, nRight, aPxlOff, cText, ;
+                nAlignHorz, nAlignVert, nTextColor, nBackColor, hFont ) */
 HB_FUNC( WVG_TEXTBOX )
 {
    PHB_GTWVT  pWVT    = hb_wvt_gtGetWVT();
@@ -1357,9 +1322,8 @@ static void hb_wvg_TextBox( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
    DrawText( hdc, gObj->lpText, lstrlen( gObj->lpText ), &rc, gObj->iAlign | DT_WORDBREAK | DT_TOP );
 }
 
-/*
- *  Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff ) -> lOk
- *  Wvg_Picture(  nTop, nLeft, nBottom, nRight, aPxlOff, nSlot, lDoNotScale ) -> NIL
+/* Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff ) -> lOk
+ * Wvg_Picture( nTop, nLeft, nBottom, nRight, aPxlOff, nSlot, lDoNotScale ) -> NIL
  */
 HB_FUNC( WVG_PICTURE )
 {
@@ -1429,9 +1393,7 @@ HB_FUNC( WVG_PICTUREEX )
 #endif
 }
 
-/*
-    Wvg_Image( nTop, nLeft, nBottom, nRight, aPxlOff, nImageSource, cImage/nPictureSlot, cSection, lDoNotScale )
- */
+/* Wvg_Image( nTop, nLeft, nBottom, nRight, aPxlOff, nImageSource, cImage/nPictureSlot, cSection, lDoNotScale ) */
 HB_FUNC( WVG_IMAGE )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -1563,8 +1525,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 #endif
 }
 
-/*
-   Wvg_Object( nObj, bBlock )
+/* Wvg_Object( nObj, bBlock )
    nObj == one of the objects == GOBJ_OBJTYPE_ROUNDRECT | GOBJ_OBJTYPE_IMAGE | etc
    bBlock == Block returning the array conataining as many elements as necessary for the given object
              Also it will return those array elements in the same order expected by the object to draw
@@ -1588,10 +1549,8 @@ HB_FUNC( WVG_OBJECT )
    pWVT->gObjs    = gObj;
 }
 
-/*
- *    Wvg_Object( GOBJ_OBJTYPE_GRIDVERT, {|| { nTop, nBottom, aCols, nCols, aPxlOff } } )
- *                                                  aPxlOff[ 1 ] and aPxlOff[ 3 ] used
- */
+/* Wvg_Object( GOBJ_OBJTYPE_GRIDVERT, {|| { nTop, nBottom, aCols, nCols, aPxlOff } } )
+                                                 aPxlOff[ 1 ] and aPxlOff[ 3 ] used */
 static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
 {
    PHB_ITEM pCols = hb_arrayGetItemPtr( pArray, 3 );
@@ -1720,12 +1679,12 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT * uRect )
                else
                   iObjType = 0;
 
-               /*  C A R E F U L */
+               /* CAREFUL */
                #if 0
                if( pArray )
                {
-                  /*hb_itemRelease( pArray );*/
-                  /*pArray = NULL;*/
+                  hb_itemRelease( pArray );
+                  pArray = NULL;
                }
                #endif
                hb_vmRequestRestore();
