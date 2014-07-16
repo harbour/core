@@ -359,7 +359,7 @@ HB_FUNC( WVT_SETTOOLTIPMARGIN )
 
    if( _s )
    {
-      RECT rc = { 0, 0, 0, 0 };
+      RECT rc;
 
       rc.left   = hb_parni( 2 );
       rc.top    = hb_parni( 1 );
@@ -525,9 +525,7 @@ HB_FUNC( WVT_SETMOUSEPOS )
 
    if( _s )
    {
-      POINT xy = { 0, 0 };
-
-      xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      POINT xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
       if( ClientToScreen( _s->hWnd, &xy ) )
          hb_retl( SetCursorPos( xy.x, xy.y + ( _s->PTEXTSIZE.y / 2 ) ) );
@@ -660,9 +658,7 @@ HB_FUNC( WVT_SETMOUSEMOVE )
 HB_FUNC( WVT_GETXYFROMROWCOL )
 {
    PHB_ITEM info = hb_itemArrayNew( 2 );
-   POINT    xy   = { 0, 0 };
-
-   xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+   POINT    xy   = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
    hb_arraySetNL( info, 1, xy.x );
    hb_arraySetNL( info, 2, xy.y );
@@ -833,8 +829,8 @@ HB_FUNC( WVT_INVALIDATERECT )
 
    if( _s )
    {
-      RECT  rc = { 0, 0, 0, 0 };
-      POINT xy = { 0, 0 };
+      RECT  rc;
+      POINT xy;
 
       xy        = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       rc.top    = xy.y;
@@ -859,9 +855,7 @@ HB_FUNC( WVT_CLIENTTOSCREEN )
    if( _s )
    {
       PHB_ITEM info = hb_itemArrayNew( 2 );
-      POINT    xy   = { 0, 0 };
-
-      xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      POINT    xy   = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
       ClientToScreen( _s->hWnd, &xy );
 
@@ -1123,113 +1117,116 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
 HB_FUNC( WVT__MAKEDLGTEMPLATE )
 {
    WORD * p, * pdlgtemplate;
-   WORD   nItems = ( WORD ) hb_parvni( 1, 4 );
-   int    i, nchar;
-   DWORD  lStyle;
 
-   /* Parameters: 12 arrays                             */
-   /* 1 for DLG template                                */
-   /* 11 for item properties                            */
+   /* Parameters: 12 arrays  */
+   /* 1 for DLG template     */
+   /* 11 for item properties */
 
    /* 64k allow to build up to 255 items on the dialog  */
-   /*                                                   */
    pdlgtemplate = p = ( PWORD ) LocalAlloc( LPTR, 65534 );
 
-   lStyle = hb_parvnl( 1, 3 );
-
-   /* start to fill in the dlgtemplate information.  addressing by WORDs */
-
-   *p++ = 1;                              /* version    */
-   *p++ = 0xFFFF;                         /* signature  */
-   *p++ = LOWORD( hb_parvnl( 1, 1 ) );    /* Help Id    */
-   *p++ = HIWORD( hb_parvnl( 1, 1 ) );
-
-   *p++ = LOWORD( hb_parvnl( 1, 2 ) );   /* ext. style */
-   *p++ = HIWORD( hb_parvnl( 1, 2 ) );
-
-   *p++ = LOWORD( lStyle );
-   *p++ = HIWORD( lStyle );
-
-   *p++ = ( WORD ) nItems;             /* NumberOfItems           */
-   *p++ = ( short ) hb_parvni( 1, 5 ); /* x                       */
-   *p++ = ( short ) hb_parvni( 1, 6 ); /* y                       */
-   *p++ = ( short ) hb_parvni( 1, 7 ); /* cx                      */
-   *p++ = ( short ) hb_parvni( 1, 8 ); /* cy                      */
-   *p++ = ( short ) 0;                 /* Menu (ignored for now.) */
-   *p++ = ( short ) 0x00;              /* Class also ignored      */
-
-   if( hb_parinfa( 1, 11 ) == HB_IT_STRING )
+   if( pdlgtemplate )
    {
-      nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 1, 11 ) );
-      p    += nchar;
-   }
-   else
-      *p++ = 0;
+      WORD  nItems = ( WORD ) hb_parvni( 1, 4 );
+      DWORD lStyle = hb_parvnl( 1, 3 );
+      int   i, nchar;
 
-   /* add in the wPointSize and szFontName here iff the DS_SETFONT bit on */
+      /* start to fill in the dlgtemplate information.  addressing by WORDs */
 
-   if( ( lStyle & DS_SETFONT ) )
-   {
-      *p++ = ( short ) hb_parvni( 1, 12 );
-      *p++ = ( short ) hb_parvni( 1, 13 );
-      *p++ = ( short ) hb_parvni( 1, 14 );
+      *p++ = 1;                              /* version    */
+      *p++ = 0xFFFF;                         /* signature  */
+      *p++ = LOWORD( hb_parvnl( 1, 1 ) );    /* Help Id    */
+      *p++ = HIWORD( hb_parvnl( 1, 1 ) );
 
-      nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 1, 15 ) );
-      p    += nchar;
-   }
+      *p++ = LOWORD( hb_parvnl( 1, 2 ) );   /* ext. style */
+      *p++ = HIWORD( hb_parvnl( 1, 2 ) );
 
-   for( i = 1; i <= nItems; i++ )
-   {
-      /* make sure each item starts on a DWORD boundary */
+      *p++ = LOWORD( lStyle );
+      *p++ = HIWORD( lStyle );
+
+      *p++ = ( WORD ) nItems;             /* NumberOfItems           */
+      *p++ = ( short ) hb_parvni( 1, 5 ); /* x                       */
+      *p++ = ( short ) hb_parvni( 1, 6 ); /* y                       */
+      *p++ = ( short ) hb_parvni( 1, 7 ); /* cx                      */
+      *p++ = ( short ) hb_parvni( 1, 8 ); /* cy                      */
+      *p++ = ( short ) 0;                 /* Menu (ignored for now.) */
+      *p++ = ( short ) 0x00;              /* Class also ignored      */
+
+      if( hb_parinfa( 1, 11 ) == HB_IT_STRING )
+      {
+         nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 1, 11 ) );
+         p    += nchar;
+      }
+      else
+         *p++ = 0;
+
+      /* add in the wPointSize and szFontName here iff the DS_SETFONT bit on */
+
+      if( ( lStyle & DS_SETFONT ) )
+      {
+         *p++ = ( short ) hb_parvni( 1, 12 );
+         *p++ = ( short ) hb_parvni( 1, 13 );
+         *p++ = ( short ) hb_parvni( 1, 14 );
+
+         nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 1, 15 ) );
+         p    += nchar;
+      }
+
+      for( i = 1; i <= nItems; i++ )
+      {
+         /* make sure each item starts on a DWORD boundary */
+         p = lpwAlign( p );
+
+         *p++ = LOWORD( hb_parvnl( 2, i ) );   /* help id     */
+         *p++ = HIWORD( hb_parvnl( 2, i ) );
+
+         *p++ = LOWORD( hb_parvnl( 3, i ) );   /* ext. style  */
+         *p++ = HIWORD( hb_parvnl( 3, i ) );
+
+         *p++ = LOWORD( hb_parvnl( 4, i ) );   /* style       */
+         *p++ = HIWORD( hb_parvnl( 4, i ) );
+
+         *p++ = ( short ) hb_parvni( 5, i );    /* x           */
+         *p++ = ( short ) hb_parvni( 6, i );    /* y           */
+         *p++ = ( short ) hb_parvni( 7, i );    /* cx          */
+         *p++ = ( short ) hb_parvni( 8, i );    /* cy          */
+
+         *p++ = LOWORD( hb_parvnl( 9, i ) );    /* id          */
+         *p++ = HIWORD( hb_parvnl( 9, i ) );    /* id          */
+
+         if( hb_parinfa( 10, i ) == HB_IT_STRING )
+         {
+            nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 10, i ) );   /* class */
+            p    += nchar;
+         }
+         else
+         {
+            *p++ = 0xFFFF;
+            *p++ = ( WORD ) hb_parvni( 10, i );
+         }
+
+         if( hb_parinfa( 11, i ) == HB_IT_STRING )
+         {
+            nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 11, i ) );   /*  text  */
+            p    += nchar;
+         }
+         else
+         {
+            *p++ = 0xFFFF;
+            *p++ = ( WORD ) hb_parvni( 11, i );
+         }
+
+         *p++ = 0x00;  /* extras ( in array 12 ) */
+      }
+
       p = lpwAlign( p );
 
-      *p++ = LOWORD( hb_parvnl( 2, i ) );   /* help id     */
-      *p++ = HIWORD( hb_parvnl( 2, i ) );
+      hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) );
 
-      *p++ = LOWORD( hb_parvnl( 3, i ) );   /* ext. style  */
-      *p++ = HIWORD( hb_parvnl( 3, i ) );
-
-      *p++ = LOWORD( hb_parvnl( 4, i ) );   /* style       */
-      *p++ = HIWORD( hb_parvnl( 4, i ) );
-
-      *p++ = ( short ) hb_parvni( 5, i );    /* x           */
-      *p++ = ( short ) hb_parvni( 6, i );    /* y           */
-      *p++ = ( short ) hb_parvni( 7, i );    /* cx          */
-      *p++ = ( short ) hb_parvni( 8, i );    /* cy          */
-
-      *p++ = LOWORD( hb_parvnl( 9, i ) );    /* id          */
-      *p++ = HIWORD( hb_parvnl( 9, i ) );    /* id          */
-
-      if( hb_parinfa( 10, i ) == HB_IT_STRING )
-      {
-         nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 10, i ) );   /* class */
-         p    += nchar;
-      }
-      else
-      {
-         *p++ = 0xFFFF;
-         *p++ = ( WORD ) hb_parvni( 10, i );
-      }
-
-      if( hb_parinfa( 11, i ) == HB_IT_STRING )
-      {
-         nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 11, i ) );   /*  text  */
-         p    += nchar;
-      }
-      else
-      {
-         *p++ = 0xFFFF;
-         *p++ = ( WORD ) hb_parvni( 11, i );
-      }
-
-      *p++ = 0x00;  /* extras ( in array 12 ) */
+      LocalFree( LocalHandle( pdlgtemplate ) );
    }
-
-   p = lpwAlign( p );
-
-   hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) );
-
-   LocalFree( LocalHandle( pdlgtemplate ) );
+   else
+      hb_retc_null();
 }
 
 /*

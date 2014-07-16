@@ -88,7 +88,7 @@ static PHB_GOBJS hb_wvg_ObjectNew( PHB_GTWVT pWVT )
 
 static void hb_wvg_RefreshRect( PHB_GTWVT pWVT, PHB_GOBJS gObj )
 {
-   RECT rc = { 0, 0, 0, 0 };
+   RECT rc;
 
    /* Calculate the region occupied +- 3 pixels as most controls are outside of designated area */
    rc.top    = ( pWVT->PTEXTSIZE.y * gObj->iTop ) + gObj->aOffset.iTop - 3;
@@ -1272,7 +1272,7 @@ HB_FUNC( WVG_SHADEDRECT )
 static void hb_wvg_ShadedRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, int iRight, int iBottom )
 {
    HB_BOOL       bGF;
-   GRADIENT_RECT gRect = { 0, 0 };
+   GRADIENT_RECT gRect;
 
    gRect.UpperLeft  = 0;
    gRect.LowerRight = 1;
@@ -1506,18 +1506,25 @@ HB_FUNC( WVG_IMAGE )
 static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, int iRight, int iBottom )
 {
 #if ! defined( HB_OS_WIN_CE )
-   LONG       lWidth, lHeight;
-   int        xe, ye, iWd = 0, iHt = 0, x, y, wd, ht;
-   HRGN       hrgn1;
-   POINT      lpp     = { 0, 0 };
 
-   HDC        hdc      = pWVT->hGuiDC;
    IPicture * iPicture = gObj->iPicture;
 
    if( iPicture )
    {
-      HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) & lWidth );
-      HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) & lHeight );
+      LONG  lWidth, lHeight;
+      int   xe, ye, iWd = 0, iHt = 0, x, y, wd, ht;
+      HRGN  hrgn1;
+      POINT lpp = { 0, 0 };
+      HDC   hdc = pWVT->hGuiDC;
+
+      RECT  rect_dummy;
+
+      memset( &rect_dummy, 0, sizeof( rect_dummy ) );
+
+      if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &lWidth ) != S_OK )
+         lWidth = 0;
+      if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &lHeight ) != S_OK )
+         lHeight = 0;
 
       x = iLeft;
       y = iTop;
@@ -1541,7 +1548,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
       hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
       SelectClipRgn( hdc, hrgn1 );
 
-      HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, NULL );
+      HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, &rect_dummy );
 
       SelectClipRgn( hdc, NULL );
       DeleteObject( hrgn1 );

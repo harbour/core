@@ -86,8 +86,7 @@ HB_FUNC( WIN_PRINTEREXISTS )
       {
          DWORD dwNeeded = 0, dwReturned = 0;
 
-         EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
-         if( dwNeeded )
+         if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned ) && dwNeeded )
          {
             PRINTER_INFO_5 * pPrinterEnumBak;
             PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
@@ -180,17 +179,14 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
        */
       DWORD dwNeeded = 0, dwReturned = 0;
 
-      if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned ) )
+      if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned ) && dwNeeded )
       {
-         if( dwNeeded )
-         {
-            PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+         PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
 
-            if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwNeeded, &dwReturned ) && dwReturned )
-               HB_ITEMPUTSTR( pPrinterName, pPrinterInfo->pPrinterName );
+         if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwNeeded, &dwReturned ) && dwReturned )
+            HB_ITEMPUTSTR( pPrinterName, pPrinterInfo->pPrinterName );
 
-            hb_xfree( pPrinterInfo );
-         }
+         hb_xfree( pPrinterInfo );
       }
    }
 #else
@@ -324,8 +320,7 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
    {
       DWORD dwNeeded = 0, dwReturned = 0;
 
-      EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
-      if( dwNeeded )
+      if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned ) && dwNeeded )
       {
          PRINTER_INFO_5 * pPrinterEnumBak;
          PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
@@ -477,8 +472,7 @@ HB_FUNC( WIN_PRINTERLIST )
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
    DWORD dwNeeded = 0, dwReturned = 0, i;
 
-   EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
-   if( dwNeeded )
+   if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned ) && dwNeeded )
    {
       PRINTER_INFO_5 * pPrinterEnumBak;
       PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );

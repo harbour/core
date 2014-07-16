@@ -272,7 +272,7 @@ HB_FUNC( WVG_INVALIDATERECT )
 {
    if( HB_ISARRAY( 2 ) )
    {
-      RECT rc = { 0, 0, 0, 0 };
+      RECT rc;
 
       rc.left   = hb_parvni( 2, 1 );
       rc.top    = hb_parvni( 2, 2 );
@@ -386,7 +386,7 @@ HB_FUNC( WVG_RELEASEDC )
 
 HB_FUNC( WVG_CREATEBRUSH )
 {
-   LOGBRUSH lb = { 0, 0, 0 };
+   LOGBRUSH lb;
 
    lb.lbStyle = hb_parni( 1 );
    lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
@@ -403,7 +403,7 @@ HB_FUNC( WVG_CREATEBRUSH )
  */
 HB_FUNC( WVG_DRAWTEXT )
 {
-   RECT    rc = { 0, 0, 0, 0 };
+   RECT    rc;
    void *  hBuffer;
    LPCTSTR lpBuffer = HB_PARSTR( 2, &hBuffer, NULL );
 
@@ -810,11 +810,15 @@ HB_FUNC( WVG_SENDMESSAGETEXT )
 
 HB_FUNC( WVG_GETMESSAGETEXT )
 {
-   TCHAR cText[ 32000 ];
+   TCHAR * cText = ( TCHAR * ) hb_xgrab( 32000 * sizeof( TCHAR ) );
+
+   cText[ 0 ] = TEXT( '\0' );
 
    SendMessage( wvg_parhwnd( 1 ), ( UINT ) hb_parni( 2 ), wvg_parwparam( 3 ), ( LPARAM ) cText );
 
    HB_RETSTR( cText );
+
+   hb_xfree( cText );
 }
 
 HB_FUNC( WVG_SETWNDPROC )

@@ -464,7 +464,8 @@ static int hb_ctw_ChangeWindowHandle( PHB_GTCTW pCTW, int iNewWindow )
    {
       if( iWindow > 0 && iNewWindow > 0 && iNewWindow <= 255 &&
           ( iNewWindow > pCTW->iMaxWindow ||
-            pCTW->windows[ iNewWindow ] == NULL ) )
+            pCTW->windows[ iNewWindow ] == NULL ) &&
+          pCTW->windows[ iWindow ] )
       {
          PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
 

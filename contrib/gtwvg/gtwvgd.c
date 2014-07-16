@@ -774,9 +774,8 @@ static HB_BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    int top;
 
    GetClientRect( pWVT->hWnd, &ci );
-   if( ! pWVT->bMaximized && ( ci.right - ci.left ) == ( pWVT->PTEXTSIZE.x * pWVT->COLS )
-                                                   &&
-                            ( ci.bottom - ci.top ) == ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) )
+   if( ! pWVT->bMaximized && ( ci.right - ci.left ) == ( pWVT->PTEXTSIZE.x * pWVT->COLS ) &&
+                             ( ci.bottom - ci.top ) == ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) )
    {
       return HB_FALSE;
    }
@@ -787,7 +786,8 @@ static HB_BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 
    if( pWVT->bMaximized )
    {
-      SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
+      if( ! SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 ) )
+         return HB_FALSE;
 
       maxHeight = wi.bottom - wi.top - borderHeight;
       maxWidth  = wi.right - wi.left - borderWidth;
@@ -1235,8 +1235,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                TCHAR * sBuffer;
                HB_SIZE nSize;
                int     irow, icol, j, top, left, bottom, right;
-               RECT    rect = { 0, 0, 0, 0 };
-               RECT    colrowRC = { 0, 0, 0, 0 };
+               RECT    rect;
+               RECT    colrowRC;
 
                rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
                rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
@@ -1317,8 +1317,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
          if( pWVT->bBeingMarked )
          {
-            RECT rect     = { 0, 0, 0, 0 };
-            RECT colrowRC = { 0, 0, 0, 0 };
+            RECT rect;
+            RECT colrowRC;
 
             pWVT->sRectNew.right  = xy.x;
             pWVT->sRectNew.bottom = xy.y;
