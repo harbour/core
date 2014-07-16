@@ -178,14 +178,17 @@ static void hb_gt_cgi_Exit( PHB_GT pGT )
 
    if( pGTCGI )
    {
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-      if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
-         SetConsoleOutputCP( pGTCGI->uiOldCP );
-#endif
-
       /* update cursor position on exit */
       if( pGTCGI->iLastCol > 0 )
          hb_gt_cgi_newLine( pGTCGI );
+
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+      if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
+      {
+         SetConsoleOutputCP( pGTCGI->uiOldCP );
+         SetConsoleCtrlHandler( hb_gt_cgi_CtrlHandler, FALSE );
+      }
+#endif
 
 #ifndef HB_GT_CGI_RAWOUTPUT
       if( pGTCGI->iLineBufSize > 0 )

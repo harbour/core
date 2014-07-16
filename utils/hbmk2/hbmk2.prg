@@ -13643,7 +13643,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
    CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
       hb_processRun( cPath_CompC,, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "EN" )
-      IF ( tmp1 := hb_AtX( "Version [0-9][0-9]\.[0-9]", cStdOutErr ) ) != NIL
+      IF ( tmp1 := hb_AtX( R_( "Version [0-9][0-9]\.[0-9]" ), cStdOutErr ) ) != NIL
          nVer := Val( Stuff( SubStr( tmp1, Len( "Version " ) + 1 ), 3, 1, "" ) + "0" )
       ENDIF
       hb_cdpSelect( tmp )
