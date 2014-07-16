@@ -2191,7 +2191,11 @@ int hb_socketBind( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen )
 {
    int ret;
 
+#if defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && ( __WATCOMC__ <= 1290 )
+   ret = bind( sd, ( struct sockaddr * ) pSockAddr, ( socklen_t ) uiLen );
+#else
    ret = bind( sd, ( const struct sockaddr * ) pSockAddr, ( socklen_t ) uiLen );
+#endif
    hb_socketSetOsError( ret == 0 ? 0 : HB_SOCK_GETERROR() );
 
    return ret;

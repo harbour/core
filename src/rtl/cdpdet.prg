@@ -129,6 +129,8 @@ STATIC FUNCTION __CPWinToCPStd( nCPWin )
    CASE 28605 ; RETURN "iso8859-" + hb_ntos( nCPWin - 28590 )
    CASE 20866 ; RETURN "koi-8"
    CASE 21866 ; RETURN "koi-8u"
+   CASE 936   ; RETURN "GBK"
+   CASE 950   ; RETURN "CP950"
    ENDSWITCH
 
    RETURN NIL
@@ -154,43 +156,57 @@ STATIC FUNCTION __UnixParseLangCP( cString, /* @ */ cLang )
       cCP := "UTF-8"
    ENDIF
 
+   /* Tricks to make the manual translation table shorter */
+   cCP := hb_StrReplace( Lower( cCP ), { "_" => "", "-" => "", "ibm" => "cp", "windows" => "cp" } )
+   IF hb_LeftEq( cCP, "iso8859" )
+      cCP := Stuff( cCP, Len( "iso8859" ) + 1, 0, "-" )
+   ENDIF
+
    /* Convert UNIX CP name to Harbour CP ID */
-   /* TOFIX: update the list of std unix cp names */
-   SWITCH Lower( hb_StrReplace( cCP, "_-" ) )
-   CASE "ibm437"
-   CASE "cp437"       ; RETURN "cp437"
-   CASE "ibm737"
-   CASE "cp737"       ; RETURN "cp737"
-   CASE "ibm775"
-   CASE "cp775"       ; RETURN "cp775"
-   CASE "ibm850"
-   CASE "cp850"       ; RETURN "cp850"
-   CASE "ibm852"
-   CASE "cp852"       ; RETURN "cp852"
-   CASE "ibm857"
-   CASE "cp857"       ; RETURN "cp857"
-   CASE "ibm860"
-   CASE "cp860"       ; RETURN "cp860"
-   CASE "ibm861"
-   CASE "cp861"       ; RETURN "cp861"
-   CASE "ibm865"
-   CASE "cp865"       ; RETURN "cp865"
-   CASE "ibm866"
-   CASE "cp866"       ; RETURN "cp866"
-   CASE "windows1250" ; RETURN "cp1250"
-   CASE "windows1251" ; RETURN "cp1251"
-   CASE "windows1252" ; RETURN "cp1252"
-   CASE "windows1253" ; RETURN "cp1253"
-   CASE "windows1254" ; RETURN "cp1254"
-   CASE "windows1257" ; RETURN "cp1257"
-   CASE "koi8r"       ; RETURN "koi-8"
-   CASE "koi8u"       ; RETURN "koi-8u"
-   CASE "iso88591"    ; RETURN "iso8859-1"
-   CASE "iso88592"    ; RETURN "iso8859-2"
-   CASE "iso88595"    ; RETURN "iso8859-5"
-   CASE "iso88597"    ; RETURN "iso8859-7"
-   CASE "iso88599"    ; RETURN "iso8859-9"
-   CASE "utf8"        ; RETURN "utf8"
+   SWITCH cCP
+   CASE "utf8"
+   CASE "cp437"
+   CASE "cp737"
+   CASE "cp775"
+   CASE "cp850"
+   CASE "cp852"
+   CASE "cp855"
+   CASE "cp856"
+   CASE "cp857"
+   CASE "cp858"
+   CASE "cp860"
+   CASE "cp861"
+   CASE "cp862"
+   CASE "cp863"
+   CASE "cp864"
+   CASE "cp865"
+   CASE "cp866"
+   CASE "cp869"
+   CASE "cp874"
+   CASE "cp1250"
+   CASE "cp1251"
+   CASE "cp1252"
+   CASE "cp1253"
+   CASE "cp1254"
+   CASE "cp1255"
+   CASE "cp1256"
+   CASE "cp1257"
+   CASE "cp1258"
+   CASE "iso8859-1"
+   CASE "iso8859-2"
+   CASE "iso8859-3"
+   CASE "iso8859-4"
+   CASE "iso8859-5"
+   CASE "iso8859-6"
+   CASE "iso8859-7"
+   CASE "iso8859-8"
+   CASE "iso8859-9"
+   CASE "iso8859-13"
+   CASE "iso8859-15" ; RETURN cCP
+   CASE "koi8r"      ; RETURN "koi-8"
+   CASE "koi8u"      ; RETURN "koi-8u"
+   CASE "gbk"        ; RETURN "GBK"
+   CASE "big5"       ; RETURN "BIG5"
    ENDSWITCH
 
    RETURN NIL

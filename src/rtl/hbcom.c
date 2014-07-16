@@ -342,7 +342,7 @@ int hb_comFindPort( const char * pszDevName, HB_BOOL fCreate )
          else if( hb_comPortCmp( pCom->name, pszDevName ) )
             break;
       }
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
       if( iPort == 0 && fCreate && access( pszDevName, F_OK ) == 0 )
 #else
       if( iPort == 0 && fCreate )
