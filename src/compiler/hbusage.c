@@ -271,6 +271,6 @@ void hb_compPrintLogo( HB_COMP_DECL )
 
    hb_compOutStd( HB_COMP_PARAM, szVer );
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCopyright (c) 1999-2014, https://harbour.github.io/\n" );
+                  "\nCopyright (c) 1999-2014, https://github.com/vszakats/harbour-core/\n" );
    hb_xfree( szVer );
 }

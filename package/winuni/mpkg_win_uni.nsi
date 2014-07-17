@@ -326,7 +326,7 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour $%HB_VM%\Links"
-  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Homepage.url"                   "InternetShortcut" "URL" "https://harbour.github.io/"
+  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Homepage.url"                   "InternetShortcut" "URL" "https://github.com/vszakats/harbour-core"
 ; WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "https://groups.google.com/group/harbour-users/"
 ; WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "https://groups.google.com/group/harbour-devel/"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Development.url"                "InternetShortcut" "URL" "https://github.com/vszakats/harbour-core"

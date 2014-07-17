@@ -870,7 +870,7 @@ int main( int argc, char * argv[] )
    {
       printf( "Harbour Preprocessor %d.%d.%d%s\n",
               HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS );
-      printf( "Copyright (c) 1999-2014, https://harbour.github.io/\n" );
+      printf( "Copyright (c) 1999-2014, https://github.com/vszakats/harbour-core/\n" );
    }
 
    if( szFile )

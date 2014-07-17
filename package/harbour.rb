@@ -1,7 +1,7 @@
 require "formula"
 
 class Harbour < Formula
-  homepage "https://harbour.github.io/"
+  homepage "https://github.com/vszakats/harbour-core/"
   url "https://github.com/vszakats/harbour-core/archive/master.tar.gz"
 
   depends_on "pcre"

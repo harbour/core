@@ -91,7 +91,7 @@ Version:        %{version}
 Release:        %{releasen}%{?alphatag:.%{alphatag}}%{?platform:.%{platform}}
 License:        GPL (plus exception)
 Group:          Development/Languages
-URL:            https://harbour.github.io/
+URL:            https://github.com/vszakats/harbour-core/
 Source:         %{name}-%{version}.src.tar.gz
 BuildRequires:  gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
