@@ -4,7 +4,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_PLATFORM),wce)
    ifneq ($(HB_COMPILER),pcc)
-      HB_PRGFLAGS := -gc3
+      HB_PRGFLAGS += -gc3
    endif
 endif
 
