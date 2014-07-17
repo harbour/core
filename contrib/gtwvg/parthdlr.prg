@@ -85,11 +85,11 @@ CREATE CLASS WvgPartHandler
    METHOD notifier( nEvent, xParams )
    METHOD controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
-   VAR    aChildren                             INIT    {}
+   VAR    aChildren                             INIT {}
    VAR    nNameId
    VAR    oParent
    VAR    oOwner
-   VAR    nStatus                               INIT    0
+   VAR    nStatus                               INIT 0
 
    /* Application Level Notifier */
    VAR    sb_notifier

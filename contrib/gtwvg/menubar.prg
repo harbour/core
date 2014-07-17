@@ -495,7 +495,7 @@ METHOD WvgMenuBar:onMenuKey( xParam )
 /* Xbase++ compatible xbpMenu class */
 CREATE CLASS WvgMenu INHERIT WvgMenuBar
 
-   VAR    title                                 INIT  ""
+   VAR    title                                 INIT ""
 
    METHOD new( oParent, aPresParams, lVisible )
    METHOD create( oParent, aPresParams, lVisible )

@@ -82,7 +82,7 @@ CREATE CLASS WvgRadioButton INHERIT WvgWindow, WvgDataRef
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -92,7 +92,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadio
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -114,7 +114,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRa
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
+METHOD WvgRadioButton:handleEvent( nMessage, aNM )
 
    SWITCH nMessage
 
@@ -133,19 +133,19 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    RETURN 1
 
-METHOD PROCEDURE destroy() CLASS WvgRadioButton
+METHOD PROCEDURE WvgRadioButton:destroy()
 
    ::wvgWindow:destroy()
 
    RETURN
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-METHOD setCaption( xCaption ) CLASS WvgRadioButton
+METHOD WvgRadioButton:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption

@@ -65,44 +65,44 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    oMenu
 
    /*  CONFIGURATION */
-   VAR    alwaysOnTop                           INIT  .F.        /* Determines whether the dialog can be covered by other windows */
-   VAR    border                                INIT  0          /* Border type for the XbpCrt window */
-   VAR    clipChildren                          INIT  .F.
-   VAR    closable                              INIT  .T.
-   VAR    fontHeight                            INIT  16
-   VAR    fontWidth                             INIT  10
-   VAR    fontName                              INIT  "Courier New"
-   VAR    gridMove                              INIT  .F.
-   VAR    icon                                  INIT  0
-   VAR    minMax                                INIT  .T.
-   VAR    sysMenu                               INIT  .T.
-   VAR    taskList                              INIT  .T.
-   VAR    title                                 INIT  " "
-   VAR    titleBar                              INIT  .T.
-   VAR    visible                               INIT  .T.
+   VAR    alwaysOnTop                           INIT .F.        /* Determines whether the dialog can be covered by other windows */
+   VAR    border                                INIT 0          /* Border type for the XbpCrt window */
+   VAR    clipChildren                          INIT .F.
+   VAR    closable                              INIT .T.
+   VAR    fontHeight                            INIT 16
+   VAR    fontWidth                             INIT 10
+   VAR    fontName                              INIT "Courier New"
+   VAR    gridMove                              INIT .F.
+   VAR    icon                                  INIT 0
+   VAR    minMax                                INIT .T.
+   VAR    sysMenu                               INIT .T.
+   VAR    taskList                              INIT .T.
+   VAR    title                                 INIT " "
+   VAR    titleBar                              INIT .T.
+   VAR    visible                               INIT .T.
 
-   VAR    autoFocus                             INIT  .T.
-   VAR    autoMark                              INIT  .T.
-   VAR    dropFont                              INIT  .T.
-   VAR    dropZone                              INIT  .F.
-   VAR    helpLink                              INIT  NIL
-   VAR    maxCol                                INIT  79
-   VAR    maxRow                                INIT  24
-   VAR    mouseMode                             INIT  1          /* Determines whether mouse coordinates are given as graphics or text coordinates.*/
-   VAR    modalResult                           INIT  NIL        /* Specifies the result of a modal dialog.                                        */
-   VAR    aSyncFlush                            INIT  .F.        /* Determines the display behavior of text-mode output.                           */
-   VAR    tooltipText                           INIT  ""
-   VAR    useShortCuts                          INIT  .F.        /* Enables shortcut keys for the system menu                                      */
-   VAR    xSize                                 INIT  640 READONLY
-   VAR    ySize                                 INIT  400 READONLY
+   VAR    autoFocus                             INIT .T.
+   VAR    autoMark                              INIT .T.
+   VAR    dropFont                              INIT .T.
+   VAR    dropZone                              INIT .F.
+   VAR    helpLink                              INIT NIL
+   VAR    maxCol                                INIT 79
+   VAR    maxRow                                INIT 24
+   VAR    mouseMode                             INIT 1          /* Determines whether mouse coordinates are given as graphics or text coordinates.*/
+   VAR    modalResult                           INIT NIL        /* Specifies the result of a modal dialog.                                        */
+   VAR    aSyncFlush                            INIT .F.        /* Determines the display behavior of text-mode output.                           */
+   VAR    tooltipText                           INIT ""
+   VAR    useShortCuts                          INIT .F.        /* Enables shortcut keys for the system menu                                      */
+   VAR    xSize                                 INIT 640 READONLY
+   VAR    ySize                                 INIT 400 READONLY
 
    /*  GUI Specifics */
-   VAR    animate                               INIT  .F.
-   VAR    clipParent                            INIT  .F.
-   VAR    clipSiblings                          INIT  .T.
-   VAR    group                                 INIT  0          /* XBP_NO_GROUP */
-   VAR    sizeRedraw                            INIT  .F.
-   VAR    tabStop                               INIT  .F.
+   VAR    animate                               INIT .F.
+   VAR    clipParent                            INIT .F.
+   VAR    clipSiblings                          INIT .T.
+   VAR    group                                 INIT 0          /* XBP_NO_GROUP */
+   VAR    sizeRedraw                            INIT .F.
+   VAR    tabStop                               INIT .F.
 
    /*  CALLBACK SLOTS */
    VAR    sl_enter
@@ -139,24 +139,24 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    sl_dragDrop
 
    /*  HARUR implementation */
-   VAR    resizable                             INIT  .T.
-   VAR    resizeMode                            INIT  HB_GTI_RESIZEMODE_FONT
-   VAR    style                                 INIT  ( WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX )
-   VAR    exStyle                               INIT  0
-   VAR    lModal                                INIT  .F.
+   VAR    resizable                             INIT .T.
+   VAR    resizeMode                            INIT HB_GTI_RESIZEMODE_FONT
+   VAR    style                                 INIT ( WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX )
+   VAR    exStyle                               INIT 0
+   VAR    lModal                                INIT .F.
    VAR    pGTp
    VAR    pGT
-   VAR    objType                               INIT  objTypeCrt
-   VAR    ClassName                             INIT  "WVGCRT"
+   VAR    objType                               INIT objTypeCrt
+   VAR    ClassName                             INIT "WVGCRT"
    VAR    drawingArea
    VAR    hWnd
-   VAR    aPos                                  INIT  { 0, 0 }
-   VAR    aSize                                 INIT  { 24, 79 }
-   VAR    aPresParams                           INIT  {}
-   VAR    lHasInputFocus                        INIT  .F.
-   VAR    nFrameState                           INIT  0  /* normal */
+   VAR    aPos                                  INIT { 0, 0 }
+   VAR    aSize                                 INIT { 24, 79 }
+   VAR    aPresParams                           INIT {}
+   VAR    lHasInputFocus                        INIT .F.
+   VAR    nFrameState                           INIT 0  /* normal */
 
-   VAR    isGT                                  INIT  .F.
+   VAR    isGT                                  INIT .F.
 
    METHOD setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )

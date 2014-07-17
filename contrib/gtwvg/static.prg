@@ -115,7 +115,7 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    SWITCH ::type
    CASE WVGSTATIC_TYPE_TEXT
       IF hb_bitAnd( ::options, WVGSTATIC_TEXT_LEFT ) != 0
-         ::style += SS_LEFT /*+ SS_LEFTNOWORDWRAP */
+         ::style += SS_LEFT /* + SS_LEFTNOWORDWRAP */
       ENDIF
       IF hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) != 0
          ::style += SS_RIGHT
@@ -146,6 +146,7 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
       ENDCASE
       EXIT
+
    CASE WVGSTATIC_TYPE_FGNDRECT
       ::style += SS_WHITERECT
       EXIT
@@ -164,18 +165,16 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    CASE WVGSTATIC_TYPE_HALFTONEFRAME
       ::style += SS_GRAYFRAME
       EXIT
-
    CASE WVGSTATIC_TYPE_RAISEDBOX
       ::style += SS_ETCHEDFRAME
       EXIT
+
    CASE WVGSTATIC_TYPE_RECESSEDBOX
       EXIT
-
    CASE WVGSTATIC_TYPE_RAISEDRECT
       EXIT
    CASE WVGSTATIC_TYPE_RECESSEDRECT
       EXIT
-
    CASE WVGSTATIC_TYPE_RAISEDLINE
       EXIT
    CASE WVGSTATIC_TYPE_RECESSEDLINE

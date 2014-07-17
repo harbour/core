@@ -139,7 +139,6 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
       aNMH := Wvg_GetNMMouseInfo( aNM[ 2 ] )
 
       DO CASE
-
       CASE aNMH[ NMH_code ] == NM_CLICK
 
          IF HB_ISEVALITEM( ::sl_lbClick )

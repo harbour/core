@@ -87,7 +87,7 @@ CREATE CLASS WvgScrollBar INHERIT WvgWindow, WvgDataRef
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
+METHOD WvgScrollBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -97,7 +97,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrol
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
+METHOD WvgScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -133,7 +133,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
+METHOD WvgScrollBar:handleEvent( nMessage, aNM )
 
    LOCAL nScrMsg, nScrPos, nCommand
 
@@ -297,13 +297,13 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
    RETURN EVENT_UNHANDLED
 
-METHOD PROCEDURE destroy() CLASS WvgScrollBar
+METHOD PROCEDURE WvgScrollBar:destroy()
 
    ::wvgWindow:destroy()
 
    RETURN
 
-METHOD Scroll( xParam ) CLASS WvgScrollBar
+METHOD WvgScrollBar:Scroll( xParam )
 
    IF HB_ISEVALITEM( xParam )
       ::sl_xbeSB_Scroll := xParam
@@ -311,7 +311,7 @@ METHOD Scroll( xParam ) CLASS WvgScrollBar
 
    RETURN self
 
-METHOD setRange( aRange ) CLASS WvgScrollBar
+METHOD WvgScrollBar:setRange( aRange )
 
    LOCAL aOldRange, nMin, nMax
 
@@ -327,5 +327,5 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
 
    RETURN aOldRange
 
-METHOD setScrollBoxSize( nUnits ) CLASS WvgScrollBar
+METHOD WvgScrollBar:setScrollBoxSize( nUnits )
    RETURN nUnits

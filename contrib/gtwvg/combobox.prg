@@ -64,11 +64,11 @@
 
 CREATE CLASS WvgComboBox INHERIT WvgWindow, WvgDataRef
 
-   VAR    type                                  INIT    WVGCOMBO_DROPDOWN
-   VAR    drawMode                              INIT    WVG_DRAW_NORMAL
-   VAR    nCurSelected                          INIT    0
+   VAR    type                                  INIT WVGCOMBO_DROPDOWN
+   VAR    drawMode                              INIT WVG_DRAW_NORMAL
+   VAR    nCurSelected                          INIT 0
 
-   VAR    aInfo                                 INIT    NIL
+   VAR    aInfo                                 INIT NIL
 
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -91,8 +91,8 @@ CREATE CLASS WvgComboBox INHERIT WvgWindow, WvgDataRef
 
    VAR    oSLE
    VAR    oListBox
-   ACCESS XbpSLE                                INLINE  ::oSLE
-   ACCESS XbpListBox                            INLINE  ::oListBox
+   ACCESS XbpSLE                                INLINE ::oSLE
+   ACCESS XbpListBox                            INLINE ::oListBox
 
    VAR    sl_itemMarked
    VAR    sl_itemSelected

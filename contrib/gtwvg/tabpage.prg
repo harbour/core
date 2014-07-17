@@ -86,7 +86,7 @@ CREATE CLASS WvgTabPage INHERIT WvgWindow
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
+METHOD WvgTabPage:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -96,7 +96,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPa
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
+METHOD WvgTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -132,14 +132,13 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
+METHOD WvgTabPage:handleEvent( nMessage, aNM )
 
    LOCAL aHdr
 
    DO CASE
    CASE nMessage == HB_GTE_SETFOCUS
       IF HB_ISEVALITEM( ::sl_tabActivate )
-
          RETURN EVENT_HANDLED
       ENDIF
 
@@ -155,7 +154,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
       DO CASE
       CASE aHdr[ NMH_code ] == -551 /* TCN_SELCHANGE */
-
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
@@ -165,7 +163,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    RETURN EVENT_UNHANDLED
 
-METHOD tabActivate( xParam ) CLASS WvgTabPage
+METHOD WvgTabPage:tabActivate( xParam )
 
    IF HB_ISEVALITEM( xParam )
       ::sl_tabActivate := xParam
@@ -173,25 +171,25 @@ METHOD tabActivate( xParam ) CLASS WvgTabPage
 
    RETURN self
 
-METHOD minimize() CLASS WvgTabPage
+METHOD WvgTabPage:minimize()
 
    ::hide()
 
    RETURN .F.
 
-METHOD maximize() CLASS WvgTabPage
+METHOD WvgTabPage:maximize()
 
    ::show()
 
    RETURN .T.
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
+METHOD WvgTabPage:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-METHOD PROCEDURE destroy() CLASS WvgTabPage
+METHOD PROCEDURE WvgTabPage:destroy()
 
    ::wvgWindow:destroy()
 

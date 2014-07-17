@@ -735,19 +735,19 @@ CREATE CLASS WvtObject
    ASSIGN ToolTip( cTip )                         INLINE ::cToolTip := cTip
 
    VAR    bHandleEvent
-   VAR    bOnCreate                               INIT   {|| NIL }
-   VAR    bOnSelect                               INIT   {|| NIL }
-   VAR    bOnFocus                                INIT   {|| NIL }
-   VAR    bOnRefresh                              INIT   {|| NIL }
-   VAR    bOnLeftUp                               INIT   {|| NIL }
-   VAR    bOnLeftDown                             INIT   {|| .F. }
-   VAR    bOnMMLeftDown                           INIT   {|| NIL }
-   VAR    bOnLeftPressed                          INIT   {|| NIL }
-   VAR    bTooltip                                INIT   {|| NIL }
-   VAR    bSaveSettings                           INIT   {|| NIL }
-   VAR    bRestSettings                           INIT   {|| NIL }
-   VAR    bOnHilite                               INIT   {|| NIL }
-   VAR    bOnDeHilite                             INIT   {|| NIL }
+   VAR    bOnCreate                               INIT {|| NIL }
+   VAR    bOnSelect                               INIT {|| NIL }
+   VAR    bOnFocus                                INIT {|| NIL }
+   VAR    bOnRefresh                              INIT {|| NIL }
+   VAR    bOnLeftUp                               INIT {|| NIL }
+   VAR    bOnLeftDown                             INIT {|| .F. }
+   VAR    bOnMMLeftDown                           INIT {|| NIL }
+   VAR    bOnLeftPressed                          INIT {|| NIL }
+   VAR    bTooltip                                INIT {|| NIL }
+   VAR    bSaveSettings                           INIT {|| NIL }
+   VAR    bRestSettings                           INIT {|| NIL }
+   VAR    bOnHilite                               INIT {|| NIL }
+   VAR    bOnDeHilite                             INIT {|| NIL }
 
    ACCESS nChildren                               INLINE Len( ::aChildren )
    VAR    nIndexOrder
@@ -1947,11 +1947,11 @@ METHOD WvtPushButton:LeftUp()
 /* Class WvtGets */
 CREATE CLASS WvtGets FROM WvtObject
 
-   VAR    aGetList                                INIT  {}
-   VAR    nLastGet                                INIT  1
-   VAR    nCurGet                                 INIT  1
-   VAR    GetList                                 INIT  {}
-   VAR    cDesc                                   INIT  ""
+   VAR    aGetList                                INIT {}
+   VAR    nLastGet                                INIT 1
+   VAR    nCurGet                                 INIT 1
+   VAR    GetList                                 INIT {}
+   VAR    cDesc                                   INIT ""
 
    METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()

@@ -362,46 +362,46 @@ CREATE CLASS WvgTreeViewItem
 
 ENDCLASS
 
-METHOD new() CLASS WvgTreeViewItem
+METHOD WvgTreeViewItem:new()
    RETURN Self
 
-METHOD create() CLASS WvgTreeViewItem
+METHOD WvgTreeViewItem:create()
    RETURN Self
 
-METHOD configure() CLASS WvgTreeViewItem
+METHOD WvgTreeViewItem:configure()
    RETURN Self
 
-METHOD PROCEDURE destroy() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:destroy()
    RETURN
 
-METHOD PROCEDURE isExpanded() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:isExpanded()
    RETURN
 
-METHOD PROCEDURE setCaption( cCaption ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setCaption( cCaption )
 
    HB_SYMBOL_UNUSED( cCaption )
 
    RETURN
 
-METHOD PROCEDURE setExpandedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setExpandedImage( nResIdoBitmap )
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
    RETURN
 
-METHOD PROCEDURE setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setImage( nResIdoBitmap )
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
    RETURN
 
-METHOD PROCEDURE setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setMarkedImage( nResIdoBitmap )
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
    RETURN
 
-METHOD addItem( cCaption ) CLASS WvgTreeViewItem
+METHOD WvgTreeViewItem:addItem( cCaption )
 
    LOCAL oItem := WvgTreeViewItem():New()
 
@@ -416,14 +416,14 @@ METHOD addItem( cCaption ) CLASS WvgTreeViewItem
 
    RETURN oItem
 
-METHOD PROCEDURE delItem() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:delItem()
    RETURN
 
-METHOD PROCEDURE getChildItems() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:getChildItems()
    RETURN
 
-METHOD PROCEDURE getParentItem() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:getParentItem()
    RETURN
 
-METHOD PROCEDURE insItem() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:insItem()
    RETURN

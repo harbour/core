@@ -64,12 +64,12 @@
 
 CREATE CLASS WvgBitmap
 
-   VAR    bits                                  INIT 0        READONLY
-   VAR    bufferOffset                          INIT 0        READONLY
-   VAR    planes                                INIT 0        READONLY
+   VAR    bits                                  INIT 0 READONLY
+   VAR    bufferOffset                          INIT 0 READONLY
+   VAR    planes                                INIT 0 READONLY
    VAR    transparentClr                        INIT 0
-   VAR    xSize                                 INIT 0        READONLY
-   VAR    ySize                                 INIT 0        READONLY
+   VAR    xSize                                 INIT 0 READONLY
+   VAR    ySize                                 INIT 0 READONLY
 
    VAR    hBitmap
    VAR    hDCcompat
@@ -94,10 +94,10 @@ CREATE CLASS WvgBitmap
 
 ENDCLASS
 
-METHOD new() CLASS WvgBitmap
+METHOD WvgBitmap:new()
    RETURN Self
 
-METHOD create( oPScompat ) CLASS WvgBitmap
+METHOD WvgBitmap:create( oPScompat )
 
    IF oPScompat == NIL
       ::hDCComp := Wvg_GetDC()
@@ -108,7 +108,7 @@ METHOD create( oPScompat ) CLASS WvgBitmap
 
    RETURN Self
 
-METHOD destroy() CLASS WvgBitmap
+METHOD WvgBitmap:destroy()
 
    IF ::hBitmap != NIL
       Wvg_DeleteObject( ::hBitmap )

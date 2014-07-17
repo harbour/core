@@ -128,7 +128,7 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD PROCEDURE destroy() CLASS WvgDrawingArea
+METHOD PROCEDURE WvgDrawingArea:destroy()
 
    ::wvgWindow:destroy()
 

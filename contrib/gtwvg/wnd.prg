@@ -72,21 +72,21 @@
 CREATE CLASS WvgWindow INHERIT WvgPartHandler
 
    /*  CONFIGURATION */
-   VAR    animate                               INIT  .F.
-   VAR    clipChildren                          INIT  .F.
-   VAR    clipParent                            INIT  .F.
-   VAR    clipSiblings                          INIT  .T.
-   VAR    group                                 INIT  0    /* XBP_NO_GROUP */
-   VAR    sizeRedraw                            INIT  .F.
-   VAR    tabStop                               INIT  .F.
-   VAR    visible                               INIT  .T.
+   VAR    animate                               INIT .F.
+   VAR    clipChildren                          INIT .F.
+   VAR    clipParent                            INIT .F.
+   VAR    clipSiblings                          INIT .T.
+   VAR    group                                 INIT 0    /* XBP_NO_GROUP */
+   VAR    sizeRedraw                            INIT .F.
+   VAR    tabStop                               INIT .F.
+   VAR    visible                               INIT .T.
 
-   VAR    pointerFocus                          INIT  .T.
+   VAR    pointerFocus                          INIT .T.
 
    /*  RUNTIME VAR  */
-   VAR    dropZone                              INIT  .F.
+   VAR    dropZone                              INIT .F.
    VAR    helpLink
-   VAR    s_tooltipText                         INIT  ""
+   VAR    s_tooltipText                         INIT ""
    METHOD tooltipText                           SETGET
 
    VAR    clr_FG
@@ -130,36 +130,36 @@ CREATE CLASS WvgWindow INHERIT WvgPartHandler
    VAR    sl_killDisplayFocus
 
    VAR    hBrushBG
-   VAR    is_hidden                             INIT   .F.
-   VAR    is_enabled                            INIT   .T.
-   VAR    title                                 INIT   " "
-   VAR    icon                                  INIT   0
-   VAR    closable                              INIT   .T.
-   VAR    resizable                             INIT   .T.
-   VAR    resizeMode                            INIT   0
-   VAR    style                                 INIT   WS_OVERLAPPEDWINDOW
-   VAR    exStyle                               INIT   0
-   VAR    lModal                                INIT   .F.
+   VAR    is_hidden                             INIT .F.
+   VAR    is_enabled                            INIT .T.
+   VAR    title                                 INIT " "
+   VAR    icon                                  INIT 0
+   VAR    closable                              INIT .T.
+   VAR    resizable                             INIT .T.
+   VAR    resizeMode                            INIT 0
+   VAR    style                                 INIT WS_OVERLAPPEDWINDOW
+   VAR    exStyle                               INIT 0
+   VAR    lModal                                INIT .F.
    VAR    pGTp
    VAR    pGT
-   VAR    objType                               INIT   objTypeNone
-   VAR    className                             INIT   ""
+   VAR    objType                               INIT objTypeNone
+   VAR    className                             INIT ""
 
    VAR    hWnd
    VAR    pWnd
-   VAR    aPos                                  INIT   { 0, 0 }
-   VAR    aSize                                 INIT   { 0, 0 }
-   VAR    aPresParams                           INIT   {}
-   VAR    lHasInputFocus                        INIT   .F.
-   VAR    nFrameState                           INIT   0       /* normal */
+   VAR    aPos                                  INIT { 0, 0 }
+   VAR    aSize                                 INIT { 0, 0 }
+   VAR    aPresParams                           INIT {}
+   VAR    lHasInputFocus                        INIT .F.
+   VAR    nFrameState                           INIT 0       /* normal */
 
-   VAR    maxCol                                INIT   79
-   VAR    maxRow                                INIT   24
-   VAR    mouseMode                             INIT   1
+   VAR    maxCol                                INIT 79
+   VAR    maxRow                                INIT 24
+   VAR    mouseMode                             INIT 1
 
-   VAR    nID                                   INIT   0
-   VAR    nControlID                            INIT   5000
-   VAR    nOldProc                              INIT   0
+   VAR    nID                                   INIT 0
+   VAR    nControlID                            INIT 5000
+   VAR    nOldProc                              INIT 0
 
    VAR    oMenu
 

@@ -67,7 +67,7 @@ CREATE CLASS WvgDialog FROM WvgWindow
    VAR    oMenu
    VAR    aRect
    VAR    drawingArea
-   VAR    tasklist                              INIT  .T.
+   VAR    tasklist                              INIT .T.
 
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )

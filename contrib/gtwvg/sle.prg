@@ -103,11 +103,11 @@ CREATE CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
    METHOD changed( lChanged )                   SETGET
 
    VAR    sl_returnPressed
-   METHOD returnPressed( ... )                  SETGET
+   METHOD returnPressed( bReturnPressed )       SETGET
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
+METHOD WvgSLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -117,7 +117,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
+METHOD WvgSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    LOCAL es_ := { ES_LEFT, ES_RIGHT, ES_CENTER }
 
@@ -161,7 +161,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
+METHOD WvgSLE:handleEvent( nMessage, aNM )
 
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
@@ -239,7 +239,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
    RETURN EVENT_UNHANDLED
 
-METHOD PROCEDURE destroy() CLASS WvgSLE
+METHOD PROCEDURE WvgSLE:destroy()
 
    ::wvgWindow:destroy()
 
@@ -265,11 +265,9 @@ METHOD WvgSLE:clear()
 
 METHOD WvgSLE:copyMarked()
 
-   LOCAL n, nB, nE
-
-   n := ::sendMessage( EM_GETSEL )
-   nB := Wvg_LOWORD( n )
-   nE := Wvg_HIWORD( n )
+   LOCAL n := ::sendMessage( EM_GETSEL )
+   LOCAL nB := Wvg_LOWORD( n )
+   LOCAL nE := Wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
       hb_gtInfo( HB_GTI_CLIPBOARDDATA, SubStr( ::getData(), nB, n ) )
@@ -279,11 +277,11 @@ METHOD WvgSLE:copyMarked()
 
 METHOD WvgSLE:cutMarked()
 
-   LOCAL n, nB, nE, cText
+   LOCAL n := ::sendMessage( EM_GETSEL )
+   LOCAL nB := Wvg_LOWORD( n )
+   LOCAL nE := Wvg_HIWORD( n )
 
-   n := ::sendMessage( EM_GETSEL )
-   nB := Wvg_LOWORD( n )
-   nE := Wvg_HIWORD( n )
+   LOCAL cText
 
    IF ( n := nE - nB ) > 0
       cText := ::getData()
@@ -292,13 +290,11 @@ METHOD WvgSLE:cutMarked()
 
    RETURN n
 
-METHOD WvgSLE:returnPressed( ... )
+METHOD WvgSLE:returnPressed( bReturnPressed )
 
-   LOCAL a_ := hb_AParams()
-
-   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
-      ::sl_returnPressed := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_returnPressed )
+   IF HB_ISEVALITEM( bReturnPressed )
+      ::sl_returnPressed := bReturnPressed
+   ELSEIF HB_ISEVALITEM( ::sl_returnPressed )
       Eval( ::sl_returnPressed, , , Self )
    ENDIF
 

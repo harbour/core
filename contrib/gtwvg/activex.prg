@@ -181,7 +181,7 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    RETURN Self
 
-PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
+METHOD PROCEDURE WvgActiveXControl:execEvent( nEvent, ... )
 
 #if 0
    LOCAL cEvents := hb_ValToStr( nEvent ) + ", "

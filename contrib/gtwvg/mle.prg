@@ -64,14 +64,14 @@
 
 CREATE CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
 
-   VAR    border                                INIT    .T.
-   VAR    editable                              INIT    .T.
-   VAR    horizScroll                           INIT    .T.
-   VAR    vertScroll                            INIT    .T.
-   VAR    wordWrap                              INIT    .T.
-   VAR    ignoreTab                             INIT    .F.
+   VAR    border                                INIT .T.
+   VAR    editable                              INIT .T.
+   VAR    horizScroll                           INIT .T.
+   VAR    vertScroll                            INIT .T.
+   VAR    wordWrap                              INIT .T.
+   VAR    ignoreTab                             INIT .F.
 
-   VAR    bufferLength                          INIT    32000
+   VAR    bufferLength                          INIT 32000
 
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -94,20 +94,20 @@ CREATE CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
    METHOD lineFromChar()                        VIRTUAL
    METHOD pos()                                 VIRTUAL
 
-   VAR    sl_undo                               INIT    .T.
-   ACCESS undo                                  INLINE  iif( ::sl_undo, NIL, NIL )
-   ASSIGN undo( lUndo )                         INLINE  ::sl_undo := lUndo
+   VAR    sl_undo                               INIT .T.
+   ACCESS undo                                  INLINE iif( ::sl_undo, NIL, NIL )
+   ASSIGN undo( lUndo )                         INLINE ::sl_undo := lUndo
 
    METHOD setEditable()                         VIRTUAL
    METHOD setWrap()                             VIRTUAL
 
    VAR    sl_hScroll
-   ACCESS hScroll                               INLINE  ::sl_hScroll
-   ASSIGN hScroll( bBlock )                     INLINE  ::sl_hScroll := bBlock
+   ACCESS hScroll                               INLINE ::sl_hScroll
+   ASSIGN hScroll( bBlock )                     INLINE ::sl_hScroll := bBlock
 
    VAR    sl_vScroll
-   ACCESS vScroll                               INLINE  ::sl_vScroll
-   ASSIGN vScroll( bBlock )                     INLINE  ::sl_vScroll := bBlock
+   ACCESS vScroll                               INLINE ::sl_vScroll
+   ASSIGN vScroll( bBlock )                     INLINE ::sl_vScroll := bBlock
 
    METHOD changed( lChanged )                   SETGET
 

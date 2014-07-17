@@ -55,8 +55,7 @@ THREAD STATIC t_paint_ := { { "", {} } }
 
 PROCEDURE Wvt_Paint()
 
-   /* Call this function from this funtion */
-   WvtPaintObjects()
+   WvtPaintObjects()  /* Call this function from this funtion */
 
    RETURN
 
@@ -76,8 +75,7 @@ FUNCTION WvtPaintObjects()
 
          IF blk[ 3 ] != NIL .AND. ! Empty( blk[ 3 ] )
             /* Check parameters against tlbr_ depending upon the
-             * type of object and attributes contained in aAttr
-             */
+               type of object and attributes contained in aAttr */
             DO CASE
             CASE blk[ 3, 1 ] == WVT_BLOCK_GRID_V
                b := blk[ 3, 6 ]
@@ -86,19 +84,19 @@ FUNCTION WvtPaintObjects()
                ELSE
                   nLeft  := b:aColumnsSep[ 1 ]
                   nRight := ATail( b:aColumnsSep )
-                  IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top   < bottom */
-                     tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ; /* bootm > top    */
-                     tlbr_[ 2 ] <= nRight + 1       .AND. ; /* left  < right  */
-                     tlbr_[ 4 ] >= nLeft  - 2             ) /* right > left   */
+                  IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    < bottom */
+                     tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom > top    */
+                     tlbr_[ 2 ] <= nRight + 1 .AND. ;     /* left   < right  */
+                     tlbr_[ 4 ] >= nLeft  - 2 )           /* right  > left   */
                      lExe := .F.
                   ENDIF
                ENDIF
 
             CASE blk[ 3, 1 ] == WVT_BLOCK_GETS
-               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top   < bott  */
-                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ; /* bootm > top   */
-                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ; /* left  < righ  */
-                  tlbr_[ 4 ] >= blk[ 3, 3 ]       ) /* right > left  */
+               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    < bottom */
+                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom > top    */
+                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ;    /* left   < right  */
+                  tlbr_[ 4 ] >= blk[ 3, 3 ] )          /* right  > left   */
                   lExe := .F.
                ENDIF
 
@@ -106,10 +104,10 @@ FUNCTION WvtPaintObjects()
                /* If refreshing rectangle's top is less than objects' bottom
                 * and left is less than objects' right
                 */
-               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top   <= bottom  */
-                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ; /* bootm >= top     */
-                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ; /* left  < right    */
-                  tlbr_[ 4 ] >= blk[ 3, 3 ]       ) /* right > left     */
+               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    <= bottom */
+                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom >= top    */
+                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ;    /* left   <  right  */
+                  tlbr_[ 4 ] >= blk[ 3, 3 ] )          /* right  >  left   */
                   lExe := .F.
                ENDIF
             ENDCASE
@@ -239,10 +237,8 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    LOCAL aDlg := { {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} }
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
-   LOCAL aFont
+   LOCAL aFont := Wvt_GetFontInfo()
    LOCAL nMode := Wvt_SetDlgCoMode()
-
-   aFont := Wvt_GetFontInfo()
 
    IF nMode == 0
       hb_default( @aOffSet, {} )
@@ -364,11 +360,11 @@ FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
    AAdd( aDlg[  2 ], hb_defaultValue( nHelpId, 0 ) )
    AAdd( aDlg[  3 ], hb_defaultValue( nExStyle, 0 ) )
    AAdd( aDlg[  4 ], hb_defaultValue( nStyle, WS_CHILD + WS_VISIBLE ) )
-   AAdd( aDlg[  5 ], nX         )
-   AAdd( aDlg[  6 ], nY         )
-   AAdd( aDlg[  7 ], nW         )
-   AAdd( aDlg[  8 ], nH         )
-   AAdd( aDlg[  9 ], cnId       )
+   AAdd( aDlg[  5 ], nX )
+   AAdd( aDlg[  6 ], nY )
+   AAdd( aDlg[  7 ], nW )
+   AAdd( aDlg[  8 ], nH )
+   AAdd( aDlg[  9 ], cnId )
    AAdd( aDlg[ 10 ], cnDlgClass )
    AAdd( aDlg[ 11 ], iif( HB_ISSTRING( cText ) .OR. HB_ISNUMERIC( cText ), cText, "" ) )
    AAdd( aDlg[ 12 ], 0 )
@@ -387,7 +383,8 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
    nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
 
    IF cType == "A"
-      xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ], acnDlg[  2 ], acnDlg[  3 ], acnDlg[  4 ], ;
+      xTemplate := Wvt__MakeDlgTemplate( ;
+         acnDlg[ 1 ], acnDlg[  2 ], acnDlg[  3 ], acnDlg[  4 ], ;
          acnDlg[ 5 ], acnDlg[  6 ], acnDlg[  7 ], acnDlg[  8 ], ;
          acnDlg[ 9 ], acnDlg[ 10 ], acnDlg[ 11 ], acnDlg[ 12 ] )
    ELSE
@@ -437,8 +434,7 @@ FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 
    RETURN nResult
 
-/*
-Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
+/* Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
 
 hWnd:     Handle to parent window
 cPath:    (optional) if OFN_ALLOWMULTISELECT the path is stored
@@ -481,8 +477,7 @@ FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
 
    RETURN xRet
 
-/*
-Wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
+/* Wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
 
 hWnd:     Handle to parent window
 cDefName: (optional) Default FileName
@@ -541,12 +536,9 @@ FUNCTION Wvt_GetTitle()
 PROCEDURE Wvt_SetIcon( ncIconRes, cIconName )
 
    DO CASE
-   CASE HB_ISNUMERIC( ncIconRes )
-      hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
-   CASE HB_ISSTRING( cIconName )
-      hb_gtInfo( HB_GTI_ICONRES, cIconName )
-   CASE HB_ISSTRING( ncIconRes )
-      hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
+   CASE HB_ISNUMERIC( ncIconRes ) ; hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
+   CASE HB_ISSTRING( cIconName )  ; hb_gtInfo( HB_GTI_ICONRES, cIconName )
+   CASE HB_ISSTRING( ncIconRes )  ; hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
    ENDCASE
 
    RETURN
@@ -575,22 +567,22 @@ FUNCTION Wvt_GetRGBColor( nIndex )
 
 #endif
 
-#define BLACK                                     RGB( 0x00, 0x00, 0x00 )
-#define BLUE                                      RGB( 0x00, 0x00, 0x85 )
-#define GREEN                                     RGB( 0x00, 0x85, 0x00 )
-#define CYAN                                      RGB( 0x00, 0x85, 0x85 )
-#define RED                                       RGB( 0x85, 0x00, 0x00 )
-#define MAGENTA                                   RGB( 0x85, 0x00, 0x85 )
-#define BROWN                                     RGB( 0x85, 0x85, 0x00 )
-#define LIGHT_GRAY                                RGB( 0xC6, 0xC6, 0xC6 )
-#define GRAY                                      RGB( 0x60, 0x60, 0x60 )
-#define BRIGHT_BLUE                               RGB( 0x00, 0x00, 0xFF )
-#define BRIGHT_GREEN                              RGB( 0x60, 0xFF, 0x60 )
-#define BRIGHT_CYAN                               RGB( 0x60, 0xFF, 0xFF )
-#define BRIGHT_RED                                RGB( 0xF8, 0x00, 0x26 )
-#define BRIGHT_MAGENTA                            RGB( 0xFF, 0x60, 0xFF )
-#define YELLOW                                    RGB( 0xFF, 0xFF, 0x00 )
-#define WHITE                                     RGB( 0xFF, 0xFF, 0xFF )
+#define BLACK               RGB( 0x00, 0x00, 0x00 )
+#define BLUE                RGB( 0x00, 0x00, 0x85 )
+#define GREEN               RGB( 0x00, 0x85, 0x00 )
+#define CYAN                RGB( 0x00, 0x85, 0x85 )
+#define RED                 RGB( 0x85, 0x00, 0x00 )
+#define MAGENTA             RGB( 0x85, 0x00, 0x85 )
+#define BROWN               RGB( 0x85, 0x85, 0x00 )
+#define LIGHT_GRAY          RGB( 0xC6, 0xC6, 0xC6 )
+#define GRAY                RGB( 0x60, 0x60, 0x60 )
+#define BRIGHT_BLUE         RGB( 0x00, 0x00, 0xFF )
+#define BRIGHT_GREEN        RGB( 0x60, 0xFF, 0x60 )
+#define BRIGHT_CYAN         RGB( 0x60, 0xFF, 0xFF )
+#define BRIGHT_RED          RGB( 0xF8, 0x00, 0x26 )
+#define BRIGHT_MAGENTA      RGB( 0xFF, 0x60, 0xFF )
+#define YELLOW              RGB( 0xFF, 0xFF, 0x00 )
+#define WHITE               RGB( 0xFF, 0xFF, 0xFF )
 
 FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
@@ -610,8 +602,7 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
       s := Upper( s )
       lEnh := "*" $ s .OR. "+" $ s
       IF lEnh
-         s := StrTran( s, "*" )
-         s := StrTran( s, "+" )
+         s := hb_StrReplace( s, "*+" )
       ENDIF
       IF ( nIndex := hb_AScan( { "N", "B", "G", "BG", "R", "RB", "GR", "W" }, s,,, .T. ) ) > 0
          IF lEnh
@@ -669,11 +660,10 @@ FUNCTION Wvt_SetClipboard( cText )
 
 PROCEDURE Wvt_PasteFromClipboard()
 
-   LOCAL cText, nLen, i
+   LOCAL cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
+   LOCAL nLen := Len( cText )
+   LOCAL i
 
-   cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
-
-   nLen := Len( cText )
    FOR i := 1 TO nLen
       Wvt_Keyboard( hb_keyCode( SubStr( cText, i, 1 ) ) )
    NEXT
