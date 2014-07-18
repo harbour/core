@@ -139,7 +139,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
    CASE "H"
       IF Empty( xVal )
-         cRet := "hb_Hash()"
+         cRet := "{ => }"
       ELSE
          cRet := "{ "
          FOR EACH aVar IN xVal

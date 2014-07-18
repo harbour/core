@@ -8091,7 +8091,7 @@ HB_FUNC( WVW_SETICON )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
 
-   if( HB_ISNUM( 2 ) || HB_ISCHAR( 3 ) )
+   if( HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
       hb_retptr( ( void * ) hb_gt_wvwSetWindowIcon( usWinNum, hb_parni( 2 ), hb_parc( 3 ) ) );
    else
    {

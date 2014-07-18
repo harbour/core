@@ -690,6 +690,26 @@ ifeq ($(HB_COMPILER),)
                                        HB_COMPILER := msvcarm
                                        HB_PLATFORM := wce
                                        HB_CPU := arm
+                                       _C_VER := $(shell $(subst armasm.exe,cl.exe,"$(HB_COMP_PATH)" 2>&1))
+                                       ifneq ($(findstring 14.,$(_C_VER)),)
+                                          HB_COMPILER_VER := 1400
+                                       else
+                                       ifneq ($(findstring 15.,$(_C_VER)),)
+                                          HB_COMPILER_VER := 1500
+                                       else
+                                       ifneq ($(findstring 16.,$(_C_VER)),)
+                                          HB_COMPILER_VER := 1600
+                                       else
+                                       ifneq ($(findstring 17.,$(_C_VER)),)
+                                          HB_COMPILER_VER := 1700
+                                       else
+                                       ifneq ($(findstring 18.,$(_C_VER)),)
+                                          HB_COMPILER_VER := 1800
+                                       endif
+                                       endif
+                                       endif
+                                       endif
+                                       endif
                                     else
                                        HB_COMP_PATH := $(call find_in_path_raw,idis.exe)
                                        ifneq ($(HB_COMP_PATH),)

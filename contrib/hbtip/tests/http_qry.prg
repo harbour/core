@@ -34,7 +34,7 @@ PROCEDURE Main()
 
    oDoc := THtmlDocument():New( cHtml )
 
-   oDoc:writeFile( "google.htm" )
+   oDoc:writeFile( "result.htm" )
 
    /* ":a" retrieves the first <a href="url"> text </a> tag */
    oNode := oDoc:body:a

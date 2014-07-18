@@ -64,6 +64,10 @@
       can be of type: number, date, datetime, string, pointer
 
       <Value1> entry value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
+
+      Equivalent to:
+         hsTable := { => }
+         hsTable := { <Key1> => <Value1>, <Key2> => <Value2>, <KeyN> => <ValueN> }
    $RETURNS$
       A hash table built from the initial key/value pairs
    $DESCRIPTION$
@@ -97,7 +101,7 @@
    $SYNTAX$
       hb_HHasKey( <hsTable>, <Key> ) -> lExists
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> a key value to be queried for;
       can be of type: number, date, datetime, string, pointer
@@ -134,7 +138,7 @@
    $SYNTAX$
       hb_HPos( <hsTable>, <Key> ) -> nPosition
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> key for which its position is to be determined;
       can be of type: number, date, datetime, string, pointer
@@ -173,7 +177,7 @@
    $SYNTAX$
       hb_HGet( <hsTable>, <Key> ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> key to be retrieve from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -212,7 +216,7 @@
    $SYNTAX$
       hb_HGetDef( <hsTable>, <Key>, [<DefaultValue>] ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> key to be retrieve from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -253,7 +257,7 @@
    $SYNTAX$
       hb_HSet( <hsTable>, <Key>, <Value> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> the key of the entry to be set;
       can be of type: number, date, datetime, string, pointer
@@ -292,7 +296,7 @@
    $SYNTAX$
       hb_HDel( <hsTable>, <Key> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> key to be removed from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -329,7 +333,7 @@
    $SYNTAX$
       hb_HKeyAt( <hsTable>, <nPosition> ) -> <Key>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -367,7 +371,7 @@
    $SYNTAX$
       hb_HValueAt( <hsTable>, <nPosition>, [<NewValue>] ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -407,7 +411,7 @@
    $SYNTAX$
       hb_HPairAt( <hsTable>, <nPosition> ) -> <aKeyValue>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -444,7 +448,7 @@
    $SYNTAX$
       hb_HDelAt( <hsTable>, <nPosition> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nPosition> the position of an entry within the hash table that will
       be deleted
@@ -481,7 +485,7 @@
    $SYNTAX$
       hb_HKeys( <hsTable> ) -> <aKeys>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
    $RETURNS$
       An array of all the hash table keys
    $DESCRIPTION$
@@ -515,7 +519,7 @@
    $SYNTAX$
       hb_HValues( <hsTable> ) -> <aValues>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
    $RETURNS$
       An array of all the hash values
    $DESCRIPTION$
@@ -549,7 +553,7 @@
    $SYNTAX$
       hb_HFill( <hsTable>, <Value> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Value> fill value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
    $RETURNS$
@@ -585,7 +589,7 @@
    $SYNTAX$
       hb_HClone( <hsTable> ) -> <hsDestination>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
    $RETURNS$
       A cloned copy of the hash table
    $DESCRIPTION$
@@ -619,9 +623,9 @@
    $SYNTAX$
       hb_HCopy( <hsDestination>, <hsSource>, [<nStart>], [<nCount>] ) -> <hsDestination>
    $ARGUMENTS$
-      <hsDestination> a destination hash table, created by hb_Hash()
+      <hsDestination> a destination hash table
 
-      <hsSource> a source hash table, created by hb_Hash()
+      <hsSource> a source hash table
 
       <nStart> starting index, defaults to 1 if omitted
 
@@ -659,9 +663,9 @@
    $SYNTAX$
       hb_HMerge( <hsDestination>, <hsSource>, <bBlock>|<nPosition> ) -> <hsDestination>
    $ARGUMENTS$
-      <hsDestination> a destination hash table, created by hb_Hash()
+      <hsDestination> a destination hash table
 
-      <hsSource> a source hash table, created by hb_Hash()
+      <hsSource> a source hash table
 
       <bBlock> a code block that will be evaluated for each entry within the
       source hash table; the code block will be passed the entry key, value and
@@ -705,7 +709,7 @@
    $SYNTAX$
       hb_HEval( <hsTable>, <bBlock>, [<nStart>], [<nCount>] ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <bBlock> code block to be evaluated
 
@@ -748,7 +752,7 @@
    $SYNTAX$
       hb_HScan( <hsTable>, <Value>, [<nStart>], [<nCount>, [<lExact>] ) -> nPosition
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Value> to be located within the hash table
 
@@ -791,7 +795,7 @@
    $SYNTAX$
       hb_HSort( <hsTable> ) -> <hsSortedTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
    $RETURNS$
       The hash table sorted
 
@@ -827,7 +831,7 @@
    $SYNTAX$
       hb_HCaseMatch( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <lFlag> a logical value indicating to turn on or off
       the 'case match' flag of the hash table
@@ -866,7 +870,7 @@
    $SYNTAX$
       hb_HBinary( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <lFlag> a logical value indicating to turn on or off
       the 'binary' flag of the hash table
@@ -906,7 +910,7 @@
    $SYNTAX$
       hb_HAutoAdd( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <lFlag> a logical value indicating to turn on or off
       the 'auto add' flag of the hash table
@@ -946,7 +950,7 @@
    $SYNTAX$
       hb_HAllocate( <hsTable>, <nItems> )
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nItems> number of items to preallocate in the hash table
    $DESCRIPTION$
@@ -980,7 +984,7 @@
    $SYNTAX$
       hb_HDefault( <hsTable>, <DefaultValue> ) -> <OldDefaultValye>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <DefaultValue>
    $RETURNS$

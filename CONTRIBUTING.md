@@ -30,10 +30,10 @@
   * [commit - specific file](https://github.com/vszakats/harbour-core/commit/35ffdc113f348fbf10203757073bbee564e4339f#diff-2)
   * [issue](https://github.com/vszakats/harbour-core/issues/18)
   * [issue comment](https://github.com/vszakats/harbour-core/issues/22#issuecomment-47928889)
-  * [source file - specific revision](https://github.com/vszakats/harbour-core/blob/dd2c3b3e9c0e7db7f1c18be2a079dc92f983122e/tests/hello.prg) ([more information here](https://help.github.com/articles/getting-permanent-links-to-files))
   * [source file](tests/hello.prg)
-  * [source line](https://github.com/vszakats/harbour-core/blob/master/tests/hello.prg#L5)
-  * [source section](https://github.com/vszakats/harbour-core/blob/master/src/rtl/chruni.c#L101-L112)
+  * [source file - specific revision](https://github.com/vszakats/harbour-core/blob/dd2c3b3e9c0e7db7f1c18be2a079dc92f983122e/tests/hello.prg) ([more information here](https://help.github.com/articles/getting-permanent-links-to-files))
+  * [source line](https://github.com/vszakats/harbour-core/blob/dd2c3b3e9c0e7db7f1c18be2a079dc92f983122e/tests/hello.prg#L5)
+  * [source section](https://github.com/vszakats/harbour-core/blob/90ce13098244b0e27fc4b8c7af5586f892a09337/src/rtl/chruni.c#L101-L112)
   * [source directory](contrib/hbcurl/)
 
 
