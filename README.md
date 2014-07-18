@@ -1650,6 +1650,23 @@ Supported shells per host platforms:
      * [GitHub Guides](https://guides.github.com)
      * [GitHub flavoured Markdown](https://help.github.com/articles/github-flavored-markdown)
 
+* Community forums:
+
+  * Generic:
+     * [English](https://groups.google.com/forum/#!forum/harbour-users)
+     * [Portuguese](http://pctoledo.com.br/forum/viewforum.php?f=4)
+     * [Russian](http://clipper.borda.ru/?0-4)
+
+  * Product-specific:
+     * [Harbour upstream development](https://groups.google.com/forum/#!forum/harbour-devel)
+     * [HMG](http://hmgforum.com/viewforum.php?f=7)
+     * [hbqt](https://groups.google.com/forum/#!forum/qtcontribs)
+     * [FiveWin](http://forums.fivetechsupport.com/viewforum.php?f=3)
+     * [xHarbour](https://groups.google.com/forum/#!forum/comp.lang.xharbour)
+
+
+  [Google translate](https://translate.google.com)
+
 
 # Harbour Links
 
