@@ -1521,7 +1521,7 @@ Supported shells per host platforms:
         * <https://developer.apple.com/downloads/>
      * MS Windows SDK [win, free, closed-source]
         * <https://msdn.microsoft.com/en-us/windows/desktop/bg162891.aspx>
-         ([7.x](https://www.microsoft.com/en-us/download/details.aspx?id=8279) contained compilers for x86, x86_64 and IA-64)
+         ([7.x](https://www.microsoft.com/en-us/download/details.aspx?id=8279) includes compilers for x86, x86_64 and IA-64)
      * MS Windows Mobile SDK [wce, free]
         * <https://www.microsoft.com/en-us/download/details.aspx?id=42>
      * MS Visual Studio Express [win, free, closed-source]
