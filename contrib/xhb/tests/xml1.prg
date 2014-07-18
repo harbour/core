@@ -4,12 +4,10 @@
 
 PROCEDURE Main()
 
-   LOCAL cFile := hb_DirBase() + "test.xml"
-   LOCAL cString
    LOCAL cNote, cDiscount
    LOCAL oDoc, oBook, oIterator, oCurrent
 
-   cString := MemoRead( cFile )
+   LOCAL cString := MemoRead( hb_DirBase() + "test.xml" )
 
    IF Empty( cString )
       ? "xml file unavailable"
@@ -22,8 +20,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   oBook := oDoc:findfirst( "book" )
-   IF oBook == NIL
+   IF ( oBook := oDoc:findfirst( "book" ) ) == NIL
       ? "no books found"
       RETURN
    ENDIF
@@ -41,28 +38,26 @@ PROCEDURE Main()
       oIterator := TXMLIterator():New( oBook )
 
       DO WHILE .T.
-         oCurrent := oIterator:Next()
-         IF oCurrent == NIL
+         IF ( oCurrent := oIterator:Next() ) == NIL
             ? "end branch"
             ? "values:", cNote, cDiscount
             Inkey( 0 )
             EXIT
          ELSE
             ? "current tag:", oCurrent:cName
-            IF oCurrent:cName == "note"
+            DO CASE
+            CASE oCurrent:cName == "note"
                cNote := oCurrent:cData
-            ELSEIF oCurrent:cName == "discount"
+            CASE oCurrent:cName == "discount"
                cDiscount := oCurrent:cData
-            ENDIF
+            ENDCASE
          ENDIF
       ENDDO
 
-      oBook := oDoc:findnext()
-      IF oBook == NIL
+      IF ( oBook := oDoc:findnext() ) == NIL
          ? "no more books found"
          EXIT
       ENDIF
-
    ENDDO
 
    RETURN

@@ -1,11 +1,9 @@
-/*
- * This test demonstrates usage of BACKGROUND functions that are an extension of IDLE functions;
- * this is a variant of idle functions that runs only on idle state (as Inkey( 0 ) does)
- * Background functions run on every vm execution. PLEASE BE CAREFULLY using these functions.
- * Inside background functions you have to think that them are executed on EVERY VM call.
- *
- * (c) 2003 - Francesco Saverio Giudice <info@fsgiudice.com>
- */
+/* This test demonstrates usage of BACKGROUND functions that are an extension of IDLE functions;
+   this is a variant of idle functions that runs only on idle state (as Inkey( 0 ) does)
+   Background functions run on every vm execution. PLEASE BE CAREFULLY using these functions.
+   Inside background functions you have to think that them are executed on EVERY VM call.
+
+   (c) 2003 - Francesco Saverio Giudice <info@fsgiudice.com> */
 
 #require "xhb"
 
@@ -64,7 +62,9 @@ PROCEDURE Main()
    DispInfo( "Now I set on background tasks" )
    hb_idleSleep( 3 )
 
-// SET BACKGROUND TASK ON
+#if 0
+   SET BACKGROUND TASK ON
+#endif
 
    hb_DispOutAt( 5, 5, "Background functions show timer, ticker, counters and check time elapsed." )
    hb_DispOutAt( 6, 5, "After 40 seconds this program will be forcely quitted." )
