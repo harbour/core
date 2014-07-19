@@ -10244,10 +10244,6 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
 /* Public functions accessible for plugins */
 
-#ifdef HB_LEGACY_LEVEL4
-FUNCTION hbmk_FNameToSymbol( ... )    ; RETURN hbmk_FuncNameEncode( ... )
-#endif
-
 FUNCTION hbmk_FindInPath( ... )       ; RETURN FindInPath( ... )
 FUNCTION hbmk_PathSepToForward( ... ) ; RETURN PathSepToForward( ... )
 FUNCTION hbmk_FNameDirExtSet( ... )   ; RETURN FNameDirExtSet( ... )
@@ -10293,37 +10289,31 @@ FUNCTION hbmk_FNameEscape( ctx, cFileName )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   IF hbmk == NIL
-#ifdef HB_LEGACY_LEVEL4
-      /* legacy calling mode */
-      IF HB_ISSTRING( ctx )
-         RETURN FNameEscape( ctx, cFileName, hb_PValue( 3 ) )
-      ENDIF
-#endif
-      RETURN NIL
+   IF hbmk != NIL
+      RETURN FNameEscape( cFileName, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] )
    ENDIF
 
-   RETURN FNameEscape( cFileName, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] )
+   RETURN NIL
 
 FUNCTION hbmk_OutStdRaw( ctx, ... )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
-      RETURN NIL
+   IF hbmk != NIL .AND. hbmk[ _HBMK_lDumpInfo ]
+      RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
    ENDIF
 
-   RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
+   RETURN NIL
 
 FUNCTION hbmk_OutErrRaw( ctx, ... )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
-      RETURN NIL
+   IF hbmk != NIL .AND. hbmk[ _HBMK_lDumpInfo ]
+      RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
    ENDIF
 
-   RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
+   RETURN NIL
 
 FUNCTION hbmk_OutStd( ctx, cText )
 
@@ -10520,10 +10510,6 @@ STATIC FUNCTION PlugIn_make_ctx( hbmk, cState, hVars )
       "cCCPREFIX"     => hbmk[ _HBMK_cCCPREFIX ]    , ;
       "cCCSUFFIX"     => hbmk[ _HBMK_cCCSUFFIX ]    , ;
       "cCCEXT"        => hbmk[ _HBMK_cCCEXT ]       , ;
-      "nCmd_Esc"      => hbmk[ _HBMK_nCmd_Esc ]     , ;  /* deprecated with HB_LEGACY_LEVEL4 */
-      "nScr_Esc"      => hbmk[ _HBMK_nScr_Esc ]     , ;  /* deprecated with HB_LEGACY_LEVEL4 */
-      "nCmd_FNF"      => hbmk[ _HBMK_nCmd_FNF ]     , ;  /* deprecated with HB_LEGACY_LEVEL4 */
-      "nScr_FNF"      => hbmk[ _HBMK_nScr_FNF ]     , ;  /* deprecated with HB_LEGACY_LEVEL4 */
       "cWorkDir"      => hbmk[ _HBMK_cWorkDir ]     , ;
       "nExitCode"     => hbmk[ _HBMK_nExitCode ]    , ;
       hbmk_SecToken() => hbmk }
