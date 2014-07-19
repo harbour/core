@@ -14134,6 +14134,7 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
 
    LOCAL hNeeded := { => }
    LOCAL aInLongForm := {}
+   LOCAL aTypo := {}
 
    LOCAL bAdd := ;
       {| cFunction |
@@ -14171,6 +14172,14 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
          FOR EACH tmp1 IN hAll
             IF hb_WildMatchI( "*" + cFunction + "*", tmp1:__enumKey() )
                Eval( bAdd, tmp1:__enumKey() )
+               lFound := .T.
+            ENDIF
+         NEXT
+      ELSEIF ! lFound
+         FOR EACH tmp1 IN hAll
+            IF Levenshtein( Upper( cFunction ), Upper( tmp1:__enumKey() ) ) <= 1
+               Eval( bAdd, tmp1:__enumKey() )
+               AAdd( aTypo, hb_StrFormat( "%1$s() -> %2$s()", cFunction, tmp1:__enumKey() ) )
                lFound := .T.
             ENDIF
          NEXT
@@ -14216,6 +14225,11 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
             ArrayToList( aInLongForm, _OUT_EOL ) ) )
       ENDIF
 
+      IF ! Empty( aTypo )
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( e"Hint: Correct possibly mistyped function name(s):\n%1$s" ), ;
+            ArrayToList( aTypo, _OUT_EOL ) ) )
+      ENDIF
+
       IF ! Empty( aFunction )
          _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Error: Referenced, missing, but unknown Harbour function(s): %1$s" ), ;
             ArrayToList( aFunction, ", ",,,, "()" ) ) )
@@ -14223,6 +14237,85 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
    ENDIF
 
    RETURN
+
+#if 0
+/* Test cases from:
+   http://rosettacode.org/wiki/Levenshtein_distance
+   http://oldfashionedsoftware.com/2009/11/19/string-distance-and-refactoring-in-scala/ */
+
+STATIC FUNCTION Levenshtein_Tests()
+
+   ? Levenshtein( "kitten", "sitting" )               == 3
+   ? Levenshtein( "stop", "tops" )                    == 2
+   ? Levenshtein( "rosettacode", "raisethysword" )    == 8
+   ? Levenshtein( ""   , ""    )                      == 0
+   ? Levenshtein( "a"  , ""    )                      == 1
+   ? Levenshtein( ""   , "a"   )                      == 1
+   ? Levenshtein( "abc",  ""   )                      == 3
+   ? Levenshtein( ""   , "abc" )                      == 3
+   ? Levenshtein( ""   , ""    )                      == 0
+   ? Levenshtein( "a"  , "a"   )                      == 0
+   ? Levenshtein( "abc", "abc" )                      == 0
+   ? Levenshtein( ""   , "a"   )                      == 1
+   ? Levenshtein( "a"  , "ab"  )                      == 1
+   ? Levenshtein( "b"  , "ab"  )                      == 1
+   ? Levenshtein( "ac" , "abc" )                      == 1
+   ? Levenshtein( "abcdefg", "xabxcdxxefxgx" )        == 6
+   ? Levenshtein( "a"  , ""    )                      == 1
+   ? Levenshtein( "ab" , "a"   )                      == 1
+   ? Levenshtein( "ab" , "b"   )                      == 1
+   ? Levenshtein( "abc", "ac"  )                      == 1
+   ? Levenshtein( "xabxcdxxefxgx", "abcdefg" )        == 6
+   ? Levenshtein( "a"  , "b"   )                      == 1
+   ? Levenshtein( "ab" , "ac"  )                      == 1
+   ? Levenshtein( "ac" , "bc"  )                      == 1
+   ? Levenshtein( "abc", "axc" )                      == 1
+   ? Levenshtein( "xabxcdxxefxgx", "1ab2cd34ef5g6" )  == 6
+   ? Levenshtein( "example", "samples" )              == 3
+   ? Levenshtein( "sturgeon", "urgently" )            == 6
+   ? Levenshtein( "levenshtein", "frankenstein" )     == 6
+   ? Levenshtein( "distance", "difference" )          == 5
+   ? Levenshtein( "java was neat", "scala is great" ) == 7
+
+   RETURN
+#endif
+
+/* Based on: https://en.wikipedia.org/wiki/Levenshtein_distance#Iterative_with_two_matrix_rows */
+
+STATIC FUNCTION Levenshtein( s, t )
+
+   LOCAL m := Len( s )
+   LOCAL n := Len( t )
+   LOCAL v0, v1, i, j, cost
+
+   DO CASE
+   CASE s == t ; RETURN 0
+   CASE m == 0 ; RETURN n
+   CASE n == 0 ; RETURN m
+   ENDCASE
+
+   v0 := Array( n + 1 )
+   v1 := Array( n + 1 )
+
+   FOR EACH i IN v0
+      i := i:__enumIndex() - 1
+   NEXT
+
+   FOR i := 1 TO m
+
+      v1[ 1 ] := i
+
+      FOR j := 1 TO n
+         cost := iif( SubStr( s, i, 1 ) == SubStr( t, j, 1 ), 0, 1 )
+         v1[ j + 1 ] := Min( v1[ j ] + 1, Min( v0[ j + 1 ] + 1, v0[ j ] + cost ) )
+      NEXT
+
+      FOR j := 1 TO Len( v0 )
+         v0[ j ] := v1[ j ]
+      NEXT
+   NEXT
+
+   RETURN v1[ n + 1 ]
 
 STATIC FUNCTION LibReferenceToOption( hbmk, cLib )
 

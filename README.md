@@ -1520,7 +1520,7 @@ Supported shells per host platforms:
         * <https://itunes.apple.com/us/app/xcode/id497799835>
         * <https://developer.apple.com/downloads/>
      * MS Windows SDK [win, free, closed-source]
-        * <https://msdn.microsoft.com/en-us/windows/desktop/bg162891.aspx>
+        * <https://msdn.microsoft.com/en-us/windows/desktop/bg162891.aspx><br />
          ([7.x](https://www.microsoft.com/en-us/download/details.aspx?id=8279) includes compilers for x86, x86_64 and IA-64)
      * MS Windows Mobile SDK [wce, free]
         * <https://www.microsoft.com/en-us/download/details.aspx?id=42>
@@ -1656,6 +1656,7 @@ Supported shells per host platforms:
      * [English](https://groups.google.com/forum/#!forum/harbour-users)
      * [Portuguese](http://pctoledo.com.br/forum/viewforum.php?f=4)
      * [Russian](http://clipper.borda.ru/?0-4)
+     * [Italian](https://groups.google.com/forum/#!forum/harbourita)
 
   * Product-specific:
      * [Harbour upstream development](https://groups.google.com/forum/#!forum/harbour-devel)

@@ -70,7 +70,7 @@ whitespace. (or just walk through all argv[])
 The Harbour switches are always case insensitive.
 
 In the Harbour commandline the two style can be used together:
-harbour -wnes2 /gc0/q0 -iC:\include
+harbour -wnes2 /gc0/q0 -iC:\hb\include
 
 Exceptions:
 

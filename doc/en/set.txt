@@ -357,7 +357,7 @@
                    Specifies a path of directories to search through to
                    locate a file that can't be located in the DEFAULT
                    directory. Defaults to no path (""). Directories must
-                   be separated by a semicolon (e.g., "C:\data;C:\more").
+                   be separated by a semicolon (e.g., "C:\hb\bin;C:\hb\tests").
 
               _SET_PRINTER     <lFlag> | <cOnOff>
 
@@ -869,7 +869,7 @@
       parameters with this command will default the operation to the
       current logged drive and directory.
    $EXAMPLES$
-      SET DEFAULT TO C:\temp
+      SET DEFAULT TO C:\hb\tests
    $STATUS$
       R
    $COMPLIANCE$
@@ -976,7 +976,7 @@
       search hierarchy is: 1 Current drive and directory, 2 The SET DEFAULT
       path; 3 The SET PATH path.
    $EXAMPLES$
-      SET PATH TO C:\harbour\test
+      SET PATH TO C:\hb\tests
    $STATUS$
       R
    $COMPLIANCE$
