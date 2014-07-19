@@ -14176,8 +14176,9 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
             ENDIF
          NEXT
       ELSEIF ! lFound
+         tmp := Upper( cFunction )
          FOR EACH tmp1 IN hAll
-            IF Levenshtein( Upper( cFunction ), Upper( tmp1:__enumKey() ) ) <= 1
+            IF Levenshtein( tmp, Upper( tmp1:__enumKey() ) ) <= 1
                Eval( bAdd, tmp1:__enumKey() )
                AAdd( aTypo, hb_StrFormat( "%1$s() -> %2$s()", cFunction, tmp1:__enumKey() ) )
                lFound := .T.
@@ -14243,7 +14244,7 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
    http://rosettacode.org/wiki/Levenshtein_distance
    http://oldfashionedsoftware.com/2009/11/19/string-distance-and-refactoring-in-scala/ */
 
-STATIC FUNCTION Levenshtein_Tests()
+STATIC PROCEDURE Levenshtein_Tests()
 
    ? Levenshtein( "kitten", "sitting" )               == 3
    ? Levenshtein( "stop", "tops" )                    == 2
@@ -14253,7 +14254,6 @@ STATIC FUNCTION Levenshtein_Tests()
    ? Levenshtein( ""   , "a"   )                      == 1
    ? Levenshtein( "abc",  ""   )                      == 3
    ? Levenshtein( ""   , "abc" )                      == 3
-   ? Levenshtein( ""   , ""    )                      == 0
    ? Levenshtein( "a"  , "a"   )                      == 0
    ? Levenshtein( "abc", "abc" )                      == 0
    ? Levenshtein( ""   , "a"   )                      == 1
@@ -14261,7 +14261,6 @@ STATIC FUNCTION Levenshtein_Tests()
    ? Levenshtein( "b"  , "ab"  )                      == 1
    ? Levenshtein( "ac" , "abc" )                      == 1
    ? Levenshtein( "abcdefg", "xabxcdxxefxgx" )        == 6
-   ? Levenshtein( "a"  , ""    )                      == 1
    ? Levenshtein( "ab" , "a"   )                      == 1
    ? Levenshtein( "ab" , "b"   )                      == 1
    ? Levenshtein( "abc", "ac"  )                      == 1
@@ -14280,13 +14279,14 @@ STATIC FUNCTION Levenshtein_Tests()
    RETURN
 #endif
 
-/* Based on: https://en.wikipedia.org/wiki/Levenshtein_distance#Iterative_with_two_matrix_rows */
+/* Based on:
+   https://en.wikipedia.org/wiki/Levenshtein_distance#Iterative_with_two_matrix_rows */
 
 STATIC FUNCTION Levenshtein( s, t )
 
    LOCAL m := Len( s )
    LOCAL n := Len( t )
-   LOCAL v0, v1, i, j, cost
+   LOCAL v0, v1, i, j
 
    DO CASE
    CASE s == t ; RETURN 0
@@ -14306,13 +14306,13 @@ STATIC FUNCTION Levenshtein( s, t )
       v1[ 1 ] := i
 
       FOR j := 1 TO n
-         cost := iif( SubStr( s, i, 1 ) == SubStr( t, j, 1 ), 0, 1 )
-         v1[ j + 1 ] := Min( v1[ j ] + 1, Min( v0[ j + 1 ] + 1, v0[ j ] + cost ) )
+         v1[ j + 1 ] := Min( ;
+            v1[ j ] + 1, Min( ;
+            v0[ j + 1 ] + 1, ;
+            v0[ j ] + iif( SubStr( s, i, 1 ) == SubStr( t, j, 1 ), 0, 1 ) ) )
       NEXT
 
-      FOR j := 1 TO Len( v0 )
-         v0[ j ] := v1[ j ]
-      NEXT
+      ACopy( v1, v0 )
    NEXT
 
    RETURN v1[ n + 1 ]
