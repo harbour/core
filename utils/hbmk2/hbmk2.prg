@@ -2380,6 +2380,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                                                         hb_DirSepToOS( hbmk[ _HBMK_cBUILD ] ) )
 #endif
                         hbmk[ _HBMK_cCOMP ] := tmp[ _COMPDET_cCOMP ]
+                        /* Allow override of compiler using the CPU setting for
+                           dual-mode mingw distros */
+                        DO CASE
+                        CASE hbmk[ _HBMK_cCOMP ] == "mingw" .AND. hbmk[ _HBMK_cCPU ] == "x86_64"
+                           hbmk[ _HBMK_cCOMP ] := "mingw64"
+                        CASE hbmk[ _HBMK_cCOMP ] == "mingw64" .AND. hbmk[ _HBMK_cCPU ] == "x86"
+                           hbmk[ _HBMK_cCOMP ] := "mingw"
+                        ENDCASE
                         IF Len( tmp ) >= _COMPDET_cCCPREFIX .AND. tmp[ _COMPDET_cCCPREFIX ] != NIL
                            hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDET_cCCPREFIX ]
                         ENDIF
@@ -2425,6 +2433,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                IF hbmk[ _HBMK_cPLAT ] == tmp[ _COMPDETE_cPLAT ] .AND. ;
                   ! Empty( cPath_CompC := Eval( tmp[ _COMPDETE_bBlock ], tmp[ _COMPDETE_cCCPREFIX ], tmp[ _COMPDETE_cCCPATH ] ) )
                   hbmk[ _HBMK_cCOMP ] := tmp[ _COMPDETE_cCOMP ]
+                  /* Allow override of compiler using the CPU setting for
+                     dual-mode mingw distros */
+                  DO CASE
+                  CASE hbmk[ _HBMK_cCOMP ] == "mingw" .AND. hbmk[ _HBMK_cCPU ] == "x86_64"
+                     hbmk[ _HBMK_cCOMP ] := "mingw64"
+                  CASE hbmk[ _HBMK_cCOMP ] == "mingw64" .AND. hbmk[ _HBMK_cCPU ] == "x86"
+                     hbmk[ _HBMK_cCOMP ] := "mingw"
+                  ENDCASE
                   hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDETE_cCCPREFIX ]
                   hbmk[ _HBMK_cCCPATH ] := cPath_CompC
                   IF HB_ISEVALITEM( tmp[ _COMPDETE_bSetup ] )

@@ -587,14 +587,22 @@ ifeq ($(HB_COMPILER),)
                      # tdragon DWARF-2 build (4.4.1)
                      HB_COMP_PATH := $(call find_in_path,gcc-dw2)
                      ifneq ($(HB_COMP_PATH),)
-                        HB_COMPILER := mingw
                         HB_CCSUFFIX := -dw2
+                        ifeq ($(HB_CPU),x86_64)
+                           HB_COMPILER := mingw64
+                        else
+                           HB_COMPILER := mingw
+                        endif
                      else
                         # Equation Solution build (requires x86_64 host)
                         HB_COMP_PATH := $(call find_in_path,x86_64-pc-mingw32-gcc)
                         ifneq ($(HB_COMP_PATH),)
-                           HB_COMPILER := mingw64
-                           HB_CPU := x86_64
+                           ifeq ($(HB_CPU),x86)
+                              HB_COMPILER := mingw
+                           else
+                              HB_COMPILER := mingw64
+                              HB_CPU := x86_64
+                           endif
                            ifneq ($(wildcard $(dir $(HB_COMP_PATH))x86_64-*-mingw32-gcc-4.9*),)
                               HB_COMPILER_VER := 0409
                            else
@@ -619,7 +627,12 @@ ifeq ($(HB_COMPILER),)
                            ifneq ($(HB_COMP_PATH),)
                               # Check for a mingw64-tdm gcc executable in the same directory
                               ifneq ($(wildcard $(dir $(HB_COMP_PATH))x86_64-w64-mingw32-gcc$(HB_HOST_BIN_EXT)),)
-                                 HB_COMPILER := mingw64
+                                 ifeq ($(HB_CPU),x86)
+                                    HB_COMPILER := mingw
+                                 else
+                                    HB_COMPILER := mingw64
+                                    HB_CPU := x86_64
+                                 endif
                                  ifneq ($(wildcard $(dir $(HB_COMP_PATH))x86_64-w64-mingw32-gcc-4.9*),)
                                     HB_COMPILER_VER := 0409
                                  else
@@ -640,7 +653,11 @@ ifeq ($(HB_COMPILER),)
                                  endif
                                  endif
                               else
-                                 HB_COMPILER := mingw
+                                 ifeq ($(HB_CPU),x86_64)
+                                    HB_COMPILER := mingw64
+                                 else
+                                    HB_COMPILER := mingw
+                                 endif
                                  ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.9*),)
                                     HB_COMPILER_VER := 0409
                                  else
@@ -837,9 +854,13 @@ ifeq ($(HB_COMPILER),)
                                                                      # mingw-w64 build
                                                                      HB_COMP_PATH := $(call find_in_path,i686-w64-mingw32-gcc)
                                                                      ifneq ($(HB_COMP_PATH),)
-                                                                        HB_COMPILER := mingw64
                                                                         HB_CCPREFIX := i686-w64-mingw32-
-                                                                        HB_CPU := x86_64
+                                                                        ifeq ($(HB_CPU),x86)
+                                                                           HB_COMPILER := mingw
+                                                                        else
+                                                                           HB_COMPILER := mingw64
+                                                                           HB_CPU := x86_64
+                                                                        endif
                                                                         ifneq ($(wildcard $(dir $(HB_COMP_PATH))$(HB_CCPREFIX)gcc-4.9*),)
                                                                            HB_COMPILER_VER := 0409
                                                                         else
@@ -864,9 +885,13 @@ ifeq ($(HB_COMPILER),)
                                                                            # mingw-w64 build
                                                                            HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
                                                                            ifneq ($(HB_COMP_PATH),)
-                                                                              HB_COMPILER := mingw64
                                                                               HB_CCPREFIX := x86_64-w64-mingw32-
-                                                                              HB_CPU := x86_64
+                                                                              ifeq ($(HB_CPU),x86)
+                                                                                 HB_COMPILER := mingw
+                                                                              else
+                                                                                 HB_COMPILER := mingw64
+                                                                                 HB_CPU := x86_64
+                                                                              endif
                                                                               ifneq ($(wildcard $(dir $(HB_COMP_PATH))$(HB_CCPREFIX)gcc-4.9*),)
                                                                                  HB_COMPILER_VER := 0409
                                                                               else
