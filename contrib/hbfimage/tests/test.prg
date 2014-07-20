@@ -149,7 +149,7 @@ PROCEDURE Main()
 
    bmpinfo:Pointer( fi_GetInfo( im ) )
    bmpinfo := NIL // To fix warning
-   ? "Info           :", hb_ValToExp( bmpinfo )
+   ? "Info             :", hb_ValToExp( bmpinfo )
    ? bmpinfo:SayMembers( " ", .T., .T. )
    ? Replicate( "-", 60 )
 

@@ -54,10 +54,7 @@ PROCEDURE Main()
    nBuflen := 3
    nError := hb_Compress( cText, Len( cText ), @cComp, @nBuflen )
 
-   IF nError != HB_Z_OK
-      ? "Error generated (" + hb_ntos( Len( cComp ) ) + ")", hb_CompressErrorDesc( nError )
-   ELSE
-      ? "NO Error generated (" + hb_ntos( Len( cComp ) ) + ")", hb_CompressErrorDesc( nError )
-   ENDIF
+   ? iif( nError != HB_Z_OK, "Error generated", "NO Error generated" ), ;
+      "(" + hb_ntos( Len( cComp ) ) + ")", hb_CompressErrorDesc( nError )
 
    RETURN

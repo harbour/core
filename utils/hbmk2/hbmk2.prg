@@ -10315,21 +10315,21 @@ FUNCTION hbmk_OutStdRaw( ctx, ... )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   IF hbmk != NIL .AND. hbmk[ _HBMK_lDumpInfo ]
-      RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
+   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
+      RETURN NIL
    ENDIF
 
-   RETURN NIL
+   RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
 
 FUNCTION hbmk_OutErrRaw( ctx, ... )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   IF hbmk != NIL .AND. hbmk[ _HBMK_lDumpInfo ]
-      RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
+   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
+      RETURN NIL
    ENDIF
 
-   RETURN NIL
+   RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
 FUNCTION hbmk_OutStd( ctx, cText )
 

@@ -33,8 +33,7 @@ PROCEDURE Main()
          ? "no attribute book ID"
       ENDIF
 
-      cNote := ""
-      cDiscount := ""
+      cNote := cDiscount := ""
       oIterator := TXMLIterator():New( oBook )
 
       DO WHILE .T.
