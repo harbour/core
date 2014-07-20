@@ -66,7 +66,7 @@
 #define _ITEM_cTEXT         1
 #define _ITEM_cDATA         2
 
-#define _LISTBOX_ITEMDATA( aItem ) iif( aItem[ _ITEM_cDATA ] == NIL, aItem[ _ITEM_cTEXT ], aItem[ _ITEM_cDATA ] )
+#define _LISTBOX_ITEMDATA( aItem )  iif( aItem[ _ITEM_cDATA ] == NIL, aItem[ _ITEM_cTEXT ], aItem[ _ITEM_cDATA ] )
 
 CREATE CLASS ListBox FUNCTION HBListBox
 
@@ -79,7 +79,7 @@ CREATE CLASS ListBox FUNCTION HBListBox
    METHOD delItem( nPos )
    METHOD display()
    METHOD findText( cText, nPos, lCaseSensitive, lExact )
-   METHOD findData( cData, nPos, lCaseSensitive, lExact ) /* NOTE: Undocumented CA-Cl*pper method. */
+   METHOD findData( cData, nPos, lCaseSensitive, lExact )  /* NOTE: Undocumented CA-Cl*pper method. */
    METHOD getData( nPos )
    METHOD getItem( nPos )
    METHOD getText( nPos )
@@ -162,7 +162,7 @@ ENDCLASS
 
 METHOD addItem( cText, cData ) CLASS ListBox
 
-   IF HB_ISSTRING( cText ) .AND. ValType( cData ) $ "CU"
+   IF HB_ISSTRING( cText )
 
       AAdd( ::aItems, { cText, cData } )
 
@@ -311,12 +311,14 @@ METHOD display() CLASS ListBox
 METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS ListBox
 
    LOCAL nPosFound
-   LOCAL nLen
    LOCAL bSearch
 
-   IF ! HB_ISSTRING( cText ) .OR. Len( cText ) == 0
+#ifndef HB_CLP_STRICT
+   /* NOTE: Cl*pper will RTE if passed a non-string cText */
+   IF ! HB_ISSTRING( cText )
       RETURN 0
    ENDIF
+#endif
 
    hb_default( @nPos, 1 )
    hb_default( @lCaseSensitive, .T. )
@@ -325,20 +327,17 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS ListBox
    ENDIF
 
    IF lExact
-      cText := RTrim( cText )
       IF lCaseSensitive
-         bSearch := {| aItem | RTrim( aItem[ _ITEM_cTEXT ] ) == cText }
+         bSearch := {| aItem | aItem[ _ITEM_cTEXT ] == cText }
       ELSE
          cText := Lower( cText )
-         bSearch := {| aItem | Lower( RTrim( aItem[ _ITEM_cTEXT ] ) ) == cText }
+         bSearch := {| aItem | Lower( aItem[ _ITEM_cTEXT ] ) == cText }
       ENDIF
    ELSE
-      nLen := Len( cText )
       IF lCaseSensitive
-         bSearch := {| aItem | Left( aItem[ _ITEM_cTEXT ], nLen ) == cText }
+         bSearch := {| aItem | hb_LeftEq( aItem[ _ITEM_cTEXT ], cText ) }
       ELSE
-         cText := Lower( cText )
-         bSearch := {| aItem | Lower( Left( aItem[ _ITEM_cTEXT ], nLen ) ) == cText }
+         bSearch := {| aItem | hb_LeftEqI( aItem[ _ITEM_cTEXT ], cText ) }
       ENDIF
    ENDIF
 
@@ -351,12 +350,14 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS ListBox
 METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS ListBox
 
    LOCAL nPosFound
-   LOCAL nLen
    LOCAL bSearch
 
+#ifndef HB_CLP_STRICT
+   /* NOTE: Cl*pper will RTE if passed a non-string cData */
    IF ! HB_ISSTRING( cData )
       RETURN 0
    ENDIF
+#endif
 
    hb_default( @nPos, 1 )
    hb_default( @lCaseSensitive, .T. )
@@ -365,20 +366,16 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS ListBox
    ENDIF
 
    IF lExact
-      cData := RTrim( cData )
       IF lCaseSensitive
-         bSearch := {| aItem | RTrim( _LISTBOX_ITEMDATA( aItem ) ) == cData }
+         bSearch := {| aItem | _LISTBOX_ITEMDATA( aItem ) == cData }
       ELSE
-         cData := Lower( cData )
-         bSearch := {| aItem | Lower( RTrim( _LISTBOX_ITEMDATA( aItem ) ) ) == cData }
+         bSearch := {| aItem | Lower( _LISTBOX_ITEMDATA( aItem ) ) == cData }
       ENDIF
    ELSE
-      nLen := Len( cData )
       IF lCaseSensitive
-         bSearch := {| aItem | Left( _LISTBOX_ITEMDATA( aItem ), nLen ) == cData }
+         bSearch := {| aItem | hb_LeftEq( _LISTBOX_ITEMDATA( aItem ), cData ) }
       ELSE
-         cData := Lower( cData )
-         bSearch := {| aItem | Lower( Left( _LISTBOX_ITEMDATA( aItem ), nLen ) ) == cData }
+         bSearch := {| aItem | hb_LeftEqI( _LISTBOX_ITEMDATA( aItem ), cData ) }
       ENDIF
    ENDIF
 
@@ -739,6 +736,7 @@ METHOD select( xPos ) CLASS ListBox
 
    RETURN ::nValue
 
+/* NOTE: This function does nothing in Cl*pper, due to a bug. */
 METHOD setData( nPos, cData ) CLASS ListBox
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount

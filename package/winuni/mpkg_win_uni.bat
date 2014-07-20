@@ -32,7 +32,6 @@ xcopy /y /s    %~dp0..\..\tests\*.*                                             
 xcopy /y       %~dp0HARBOUR_README_ADDONS.txt                                             %HB_ABSROOT%addons\
 xcopy /y       %~dp0HARBOUR_README_DJGPP.txt                                              %HB_ABSROOT%comp\djgpp\
 xcopy /y       %~dp0HARBOUR_README_MINGW.txt                                              %HB_ABSROOT%comp\mingw\
-xcopy /y       %~dp0HARBOUR_README_MINGW64.txt                                            %HB_ABSROOT%comp\mingw64\
 xcopy /y       %~dp0HARBOUR_README_MINGWARM.txt                                           %HB_ABSROOT%comp\mingwarm\
 xcopy /y       %~dp0HARBOUR_README_POCC.txt                                               %HB_ABSROOT%comp\pocc\
 xcopy /y       %~dp0HARBOUR_README_WATCOM.txt                                             %HB_ABSROOT%comp\watcom\
@@ -131,7 +130,6 @@ rem echo "%HB_DR%comp\djgpp\HARBOUR_README_DJGPP.txt"       >> _hbfiles
 echo "%HB_DR%comp\watcom\HARBOUR_README_WATCOM.txt"     >> _hbfiles
 echo "%HB_DR%comp\pocc\HARBOUR_README_POCC.txt"         >> _hbfiles
 echo "%HB_DR%comp\mingw\HARBOUR_README_MINGW.txt"       >> _hbfiles
-echo "%HB_DR%comp\mingw64\HARBOUR_README_MINGW64.txt"   >> _hbfiles
 echo "%HB_DR%comp\mingwarm\HARBOUR_README_MINGWARM.txt" >> _hbfiles
 rem echo "%HB_DR%lib\dos\djgpp\*.*"                     >> _hbfiles
 echo "%HB_DR%lib\dos\watcom\*.*"                    >> _hbfiles

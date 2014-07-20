@@ -1,11 +1,9 @@
-/*
- *   THIS DEMO SHOWS tbnames.dbf CONSISTING OF LAST, FIRST, ADDR, CITY,
- *   STATE, ZIP WITH ACTIVE INDEX ON LAST + FIRST.  IT SHOWS LAST NAME,
- *   FIRST NAME, CITY ONLY FOR THOSE LAST NAMES THAT BEGIN WITH LETTER
- *   THAT YOU INPUT FOR THE CKEY GET.
- *
- *   tbnames.dbf/.ntx ARE AUTOMATICALLY CREATED BY THIS TEST PROGRAM
- */
+/* This demo shows tbnames.dbf consisting of LAST, FIRST, ADDR, CITY,
+   STATE, ZIP with active index on LAST + FIRST.  It shows last name,
+   first name, city only for those last names that begin with letter
+   that you input for the cKey GET.
+
+   tbnames.dbf/.ntx are automatically created by this test program */
 
 #require "hbnf"
 
@@ -43,16 +41,16 @@ PROCEDURE Main()
    @ 5, 10 SAY "Enter First Letter Of Last Name:" GET cKey PICTURE "!"
    READ
 
-   // tbnames->LAST = cKey is the Conditional Block passed to this function
+   // hb_LeftEq( tbnames->LAST, cKey ) is the Conditional Block passed to this function
    // you can make it as complicated as you want, but you would then
    // have to modify TBWhileSet() to find first and last records
    // matching your key.
-   nRecSel := ft_BrwsWhl( aFields, {|| tbnames->LAST = cKey }, cKey, nFreeze, ;
+   nRecSel := ft_BrwsWhl( aFields, {|| hb_LeftEq( tbnames->LAST ) }, cKey, nFreeze, ;
       lSaveScrn, cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 )
    // Note you can use Compound Condition
    // such as cLast := "Pierce            " and cFirst := "Hawkeye  "
    // by changing above block to:
-   //    {|| tbnames->LAST = cLast .AND. tbnames->FIRST = cFirst }
+   //    {|| hb_LeftEq( tbnames->LAST, cLast ) .AND. hb_LeftEq( tbnames->FIRST, cFirst ) }
    // and setting cKey := cLast + cFirst
 
    ?

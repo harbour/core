@@ -24,7 +24,6 @@ CRCCheck on
 
 RequestExecutionLevel user
 
-!define PKG_NO_CC_MINGW64
 !define PKG_NO_CC_MINGWARM
 !define PKG_NO_COMP_DJGPP
 !define PKG_NO_COMP_POCC
@@ -132,13 +131,6 @@ Section "MinGW compiler" hb_mingw
 SectionEnd
 !endif
 
-!ifndef PKG_NO_CC_MINGW64
-Section "MinGW x64 compiler" hb_mingw64
-  SetOutPath $INSTDIR\comp\mingw64
-  File /r "$%HB_ABSROOT%comp\mingw64\*.*"
-SectionEnd
-!endif
-
 !ifndef PKG_NO_CC_MINGWARM
 Section "MinGW WinCE/ARM compiler" hb_mingwarm
   SetOutPath $INSTDIR\comp\mingwarm
@@ -158,8 +150,6 @@ SectionEnd
 Section /o "Libs for MinGW x64" hb_lib_mingw64
   SetOutPath $INSTDIR\lib\win\mingw64
   File "$%HB_ABSROOT%lib\win\mingw64\*.*"
-  SetOutPath $INSTDIR\comp\mingw64
-  File "$%HB_ABSROOT%comp\mingw64\HARBOUR_README_MINGW64.txt"
 SectionEnd
 !endif
 
@@ -358,9 +348,6 @@ SectionEnd
 !ifndef PKG_NO_CC_MINGW
   LangString DESC_hb_mingw        ${LANG_ENGLISH} "MinGW compiler"
 !endif
-!ifndef PKG_NO_CC_MINGW64
-  LangString DESC_hb_mingw64      ${LANG_ENGLISH} "MinGW x64 compiler"
-!endif
 !ifndef PKG_NO_CC_MINGWARM
   LangString DESC_hb_mingwarm     ${LANG_ENGLISH} "MinGW WinCE/ARM compiler"
 !endif
@@ -422,9 +409,6 @@ SectionEnd
 !endif
 !ifndef PKG_NO_CC_MINGW
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_mingw}        $(DESC_hb_mingw)
-!endif
-!ifndef PKG_NO_CC_MINGW64
-    !insertmacro MUI_DESCRIPTION_TEXT ${hb_mingw64}      $(DESC_hb_mingw64)
 !endif
 !ifndef PKG_NO_CC_MINGWARM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_mingwarm}     $(DESC_hb_mingwarm)

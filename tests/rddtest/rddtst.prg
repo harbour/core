@@ -5,7 +5,7 @@
  *
  */
 
-//#define _TEST_CREATE_
+// #define _TEST_CREATE_
 
 #ifndef N_LOOP
    #define N_LOOP 15
@@ -41,7 +41,7 @@ field FSTR, FNUM
 #include "fileio.ch"
 
 #ifdef _TEST_CREATE_
-  static s_hMake := F_ERROR
+   static s_hMake := F_ERROR
 #endif
 static s_nTested := 0
 static s_nErrors := 0
@@ -59,11 +59,14 @@ static aBadRetFunc := { "DBSKIP", "DBGOTO", "DBDELETE", "DBRECALL", ;
 #ifdef __HARBOUR__
 #ifdef _TEST_ADS_
 #include "ads.ch"
-REQUEST ADS
+request ADS
+
 init procedure adstest_init()
+
    rddRegister( "ADS", 1 )
    AdsSetServerType( ADS_LOCAL_SERVER )
    // rddSetDefault( "ADS" )
+
    return
 #endif
 #endif
@@ -72,29 +75,34 @@ init procedure adstest_init()
 
 #ifdef _TEST_CREATE_
 procedure main( cOutFile, rdd )
+
    test_init( rdd, cOutFile )
    test_main()
    test_close()
+
    return
 #else
 procedure main( rdd )
+
    test_init( rdd )
    test_main()
    test_close()
+
    return
 #endif
 
 static procedure test_init( rdd, cOutFile )
+
    local n, cOut, aDb := { { "FSTR", "C", 10, 0 }, { "FNUM", "N", 10, 0 } }
 
-if Empty( rdd )
-   #ifdef _TESTRDD
-      rdd := _TESTRDD
-   #else
-      rdd := "DBFCDX"
-   #endif
-endif
-rddSetDefault( rdd )
+   if Empty( rdd )
+      #ifdef _TESTRDD
+         rdd := _TESTRDD
+      #else
+         rdd := "DBFCDX"
+      #endif
+   endif
+   rddSetDefault( rdd )
 #ifdef _TEST_CREATE_
    if Empty( cOutFile )
       ? "Syntax: <outfile.prg> [<rddname>]"
@@ -139,11 +147,14 @@ rddSetDefault( rdd )
    dbCommit()
    dbUnlock()
 #endif
+
    return
 
 
 static procedure test_close()
+
    local cOut
+
 #ifdef _TEST_CREATE_
    if s_hMake != F_ERROR
       cOut := EOL + ;
@@ -164,6 +175,7 @@ static procedure test_close()
    AEval( Directory( "./TG_?.??x" ), {| x | FErase( x[ 1 ] ) } )
    FErase( "./" + _DBNAME + ".dbf" )
    ?
+
    return
 
 static procedure rdd_retval()
@@ -174,7 +186,9 @@ static function rdd_state()
 
 
 static function itm2str( itm )
+
    local cStr := "", i
+
    do case
    case itm == NIL
       cStr += "NIL"
@@ -195,14 +209,16 @@ static function itm2str( itm )
       next
       cStr += "}"
    endcase
+
    return cStr
 
 
 #ifdef _TEST_CREATE_
 static procedure rddtst_wr( cAction, xRet )
+
    local aState, cOut
 
-   if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) > 0
+   if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) > 0  /* hb_LeftEq() */
       xRet := NIL
    endif
    aState := rdd_state()
@@ -215,15 +231,17 @@ static procedure rddtst_wr( cAction, xRet )
       ? "write error."
       quit
    endif
+
    return
 #else
 // rddtst_tst( #<x>, <s>, <x>, <r> )
 static procedure rddtst_tst( cAction, aExState, xRet, xExRet )
+
    local aState, lOK := ( .T. ), s1, s2, i
 
    aState := rdd_state()
    if PCount() >= 4
-      if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) > 0
+      if AScan( aBadRetFunc, {| x | Upper( cAction ) = x + "(" } ) > 0  /* hb_LeftEq() */
          xRet := NIL
       endif
       if ! ValType( xRet ) == ValType( xExRet ) .or. ;
@@ -253,5 +271,6 @@ static procedure rddtst_tst( cAction, aExState, xRet, xExRet )
       s_nErrors++
    endif
    s_nTested++
+
    return
 #endif
