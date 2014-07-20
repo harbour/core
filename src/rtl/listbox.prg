@@ -63,10 +63,10 @@
 
 #ifdef HB_COMPAT_C53
 
-#define _ITEM_cTEXT         1
-#define _ITEM_cDATA         2
+#define _ITEM_cText         1
+#define _ITEM_xData         2
 
-#define _LISTBOX_ITEMDATA( aItem )  iif( aItem[ _ITEM_cDATA ] == NIL, aItem[ _ITEM_cTEXT ], aItem[ _ITEM_cDATA ] )
+#define _LISTBOX_ITEMDATA( aItem )  iif( aItem[ _ITEM_xData ] == NIL, aItem[ _ITEM_cText ], aItem[ _ITEM_xData ] )
 
 CREATE CLASS ListBox FUNCTION HBListBox
 
@@ -74,7 +74,7 @@ CREATE CLASS ListBox FUNCTION HBListBox
 
    VAR cargo
 
-   METHOD addItem( cText, cData )
+   METHOD addItem( cText, xData )
    METHOD close()
    METHOD delItem( nPos )
    METHOD display()
@@ -84,14 +84,14 @@ CREATE CLASS ListBox FUNCTION HBListBox
    METHOD getItem( nPos )
    METHOD getText( nPos )
    METHOD hitTest( nMRow, nMCol )
-   METHOD insItem( nPos, cText, cData )
+   METHOD insItem( nPos, cText, xData )
    METHOD killFocus()
    METHOD nextItem()
    METHOD open()
    METHOD prevItem()
    METHOD scroll( nMethod )
    METHOD select( xPos )
-   METHOD setData( nPos, cData )
+   METHOD setData( nPos, xData )
    METHOD setFocus()
    METHOD setItem( nPos, aItem )
    METHOD setText( nPos, cText )
@@ -160,11 +160,11 @@ CREATE CLASS ListBox FUNCTION HBListBox
 
 ENDCLASS
 
-METHOD addItem( cText, cData ) CLASS ListBox
+METHOD addItem( cText, xData ) CLASS ListBox
 
    IF HB_ISSTRING( cText )
 
-      AAdd( ::aItems, { cText, cData } )
+      AAdd( ::aItems, { cText, xData } )
 
       ::nItemCount++
 
@@ -254,7 +254,7 @@ METHOD display() CLASS ListBox
    IF ::lDropDown
 
       hb_DispOutAt( nTop, nLeft, ;
-         iif( ::nValue == 0, Space( nSize - 1 ), PadR( ::aItems[ ::nValue ][ _ITEM_cTEXT ], nSize - 1 ) ), ;
+         iif( ::nValue == 0, Space( nSize - 1 ), PadR( ::aItems[ ::nValue ][ _ITEM_cText ], nSize - 1 ) ), ;
          cColorAny )
 
       hb_DispOutAt( nTop++, nLeft + nSize - 1, ::cStyle, hb_ColorIndex( ::cColorSpec, 7 ) )
@@ -284,7 +284,7 @@ METHOD display() CLASS ListBox
       ENDIF
 
       FOR nItem := ::nTopItem TO nEnd
-         hb_DispOutAt( nTop++, nLeft, PadR( ::aItems[ nItem ][ _ITEM_cTEXT ], nSize ), iif( nItem == ::nValue, cColor4, cColor3 ) )
+         hb_DispOutAt( nTop++, nLeft, PadR( ::aItems[ nItem ][ _ITEM_cText ], nSize ), iif( nItem == ::nValue, cColor4, cColor3 ) )
       NEXT
    ENDIF
 
@@ -328,16 +328,16 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS ListBox
 
    IF lExact
       IF lCaseSensitive
-         bSearch := {| aItem | aItem[ _ITEM_cTEXT ] == cText }
+         bSearch := {| aItem | aItem[ _ITEM_cText ] == cText }
       ELSE
          cText := Lower( cText )
-         bSearch := {| aItem | Lower( aItem[ _ITEM_cTEXT ] ) == cText }
+         bSearch := {| aItem | Lower( aItem[ _ITEM_cText ] ) == cText }
       ENDIF
    ELSE
       IF lCaseSensitive
-         bSearch := {| aItem | hb_LeftEq( aItem[ _ITEM_cTEXT ], cText ) }
+         bSearch := {| aItem | hb_LeftEq( aItem[ _ITEM_cText ], cText ) }
       ELSE
-         bSearch := {| aItem | hb_LeftEqI( aItem[ _ITEM_cTEXT ], cText ) }
+         bSearch := {| aItem | hb_LeftEqI( aItem[ _ITEM_cText ], cText ) }
       ENDIF
    ENDIF
 
@@ -347,6 +347,10 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS ListBox
 
    RETURN nPosFound
 
+/* NOTE: Both Cl*pper and Harbour will RTE when search reaches
+         an item with a non-string, non-NIL value. The RTE will
+         be different than in Cl*pper, but will occur under the
+         same conditions. */
 METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS ListBox
 
    LOCAL nPosFound
@@ -386,13 +390,13 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS ListBox
    RETURN nPosFound
 
 METHOD getData( nPos ) CLASS ListBox
-   RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ][ _ITEM_cDATA ], NIL )
+   RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ][ _ITEM_xData ], NIL )
 
 METHOD getItem( nPos ) CLASS ListBox
    RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ], NIL )
 
 METHOD getText( nPos ) CLASS ListBox
-   RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ][ _ITEM_cTEXT ], NIL )
+   RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ][ _ITEM_cText ], NIL )
 
 METHOD hitTest( nMRow, nMCol ) CLASS ListBox
 
@@ -482,13 +486,13 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
 
    RETURN 0
 
-METHOD insItem( nPos, cText, cData ) CLASS ListBox
+METHOD insItem( nPos, cText, xData ) CLASS ListBox
 
    IF HB_ISSTRING( cText ) .AND. ;
       HB_ISNUMERIC( nPos ) .AND. ;
       nPos < ::nItemCount
 
-      hb_AIns( ::aItems, nPos, { cText, cData }, .T. )
+      hb_AIns( ::aItems, nPos, { cText, xData }, .T. )
       ::nItemCount++
 
       IF ::nItemCount == 1
@@ -737,10 +741,10 @@ METHOD select( xPos ) CLASS ListBox
    RETURN ::nValue
 
 /* NOTE: This function does nothing in Cl*pper, due to a bug. */
-METHOD setData( nPos, cData ) CLASS ListBox
+METHOD setData( nPos, xData ) CLASS ListBox
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
-      ::aItems[ nPos ][ _ITEM_cDATA ] := cData
+      ::aItems[ nPos ][ _ITEM_xData ] := xData
    ENDIF
 
    RETURN Self
@@ -765,7 +769,7 @@ METHOD setItem( nPos, aItem ) CLASS ListBox
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       Len( aItem ) == 2 .AND. ;
-      HB_ISSTRING( aItem[ _ITEM_cTEXT ] )
+      HB_ISSTRING( aItem[ _ITEM_cText ] )
 
       ::aItems[ nPos ] := aItem
    ENDIF
@@ -775,7 +779,7 @@ METHOD setItem( nPos, aItem ) CLASS ListBox
 METHOD setText( nPos, cText ) CLASS ListBox
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
-      ::aItems[ nPos ][ _ITEM_cTEXT ] := cText
+      ::aItems[ nPos ][ _ITEM_cText ] := cText
    ENDIF
 
    RETURN Self
@@ -1104,15 +1108,15 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
       FOR EACH xItem IN aItems
          IF ! HB_ISARRAY( xItem )
             o:addItem( xItem )
-         ELSEIF Len( xItem ) == _ITEM_cTEXT
-            o:addItem( xItem[ _ITEM_cTEXT ] )
+         ELSEIF Len( xItem ) == _ITEM_cText
+            o:addItem( xItem[ _ITEM_cText ] )
          ELSE
-            o:addItem( xItem[ _ITEM_cTEXT ], xItem[ _ITEM_cDATA ] )
+            o:addItem( xItem[ _ITEM_cText ], xItem[ _ITEM_xData ] )
          ENDIF
       NEXT
 
-      IF HB_ISLOGICAL( lScrollBar ) .AND. lScrollBar
-         IF HB_ISLOGICAL( lDropDown ) .AND. lDropDown
+      IF hb_defaultValue( lScrollBar, .F. )
+         IF hb_defaultValue( lDropDown, .F. )
             nTop++
          ENDIF
          o:VScroll := ScrollBar( nTop + 1, nBottom - 1, nRight )

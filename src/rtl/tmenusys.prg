@@ -571,7 +571,7 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
    LOCAL nCurrent
    LOCAL cMsg
 
-   IF HB_ISLOGICAL( ::lOldMsgFlag ) .AND. ::lOldMsgFlag
+   IF hb_defaultValue( ::lOldMsgFlag, .F. )
       RestScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight, ::cMsgSaveS )
    ENDIF
 
