@@ -862,7 +862,7 @@ HB_FUNC( WAPI_DESTROYACCELERATORTABLE )
 
 HB_FUNC( WAPI_GETKEYBOARDLAYOUT )
 {
-   hbwapi_ret_DWORD( ( DWORD ) GetKeyboardLayout( hbwapi_par_DWORD( 1 ) ) );
+   hbwapi_ret_NINT( ( HB_MAXINT ) ( HB_PTRDIFF ) GetKeyboardLayout( hbwapi_par_DWORD( 1 ) ) );
 }
 
 HB_FUNC( WAPI_GETKEYBOARDLAYOUTNAME )

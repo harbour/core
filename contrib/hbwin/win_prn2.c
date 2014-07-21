@@ -206,7 +206,7 @@ HB_FUNC( WIN_PRINTERGETDEFAULT )
 }
 
 #if ! defined( HB_OS_WIN_CE )
-static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJobs )
+static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, DWORD * pdwJobs )
 {
    HB_BOOL bResult = HB_FALSE;
    DWORD dwNeeded = 0;
@@ -215,25 +215,25 @@ static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, long * plJo
    if( dwNeeded )
    {
       PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
-      DWORD dwByteUsed = 0;
+      DWORD dwUsed = 0;
 
-      if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwByteUsed ) )
+      if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwUsed ) )
       {
          DWORD dwReturned = 0;
 
          EnumJobs( hPrinter, 0, pPrinterInfo->cJobs, 2, NULL, 0, &dwNeeded, &dwReturned );
          if( dwNeeded )
          {
-            JOB_INFO_2 * pJobStorage = ( JOB_INFO_2 * ) hb_xgrab( dwNeeded );
+            JOB_INFO_2 * pJobInfo = ( JOB_INFO_2 * ) hb_xgrab( dwNeeded );
 
-            if( EnumJobs( hPrinter, 0, dwReturned, 2, ( LPBYTE ) pJobStorage, dwNeeded, &dwByteUsed, &dwReturned ) )
+            if( EnumJobs( hPrinter, 0, dwReturned, 2, ( LPBYTE ) pJobInfo, dwNeeded, &dwUsed, &dwReturned ) )
             {
-               *plJobs = ( long ) dwReturned;
-               *ppJobInfo = pJobStorage;
+               *pdwJobs = dwReturned;
+               *ppJobInfo = pJobInfo;
                bResult = HB_TRUE;
             }
             else
-               hb_xfree( pJobStorage );
+               hb_xfree( pJobInfo );
          }
       }
       hb_xfree( pPrinterInfo );
@@ -277,13 +277,13 @@ HB_FUNC( WIN_PRINTERSTATUS )
          if( nStatus == 0 )
          {
             JOB_INFO_2 * pJobs;
-            long lJobs = 0;
+            DWORD dwJobs = 0;
 
-            if( hb_GetJobs( hPrinter, &pJobs, &lJobs ) )
+            if( hb_GetJobs( hPrinter, &pJobs, &dwJobs ) )
             {
-               long i;
+               DWORD i;
 
-               for( i = 0; nStatus == 0 && i < lJobs; ++i )
+               for( i = 0; nStatus == 0 && i < dwJobs; ++i )
                {
                   if( pJobs[ i ].Status & JOB_STATUS_ERROR )
                      nStatus = -20;
