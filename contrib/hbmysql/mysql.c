@@ -163,7 +163,7 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
 #if MYSQL_VERSION_ID > 32200
    MYSQL * mysql;
 
-   if( ( mysql = mysql_init( ( MYSQL * ) NULL ) ) != NULL )
+   if( ( mysql = mysql_init( NULL ) ) != NULL )
    {
       PHB_ITEM pSSL = hb_param( 6, HB_IT_HASH );
 

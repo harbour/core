@@ -546,7 +546,7 @@ HB_FUNC( WIN_ENUMFONTS )
    if( fNullDC )
       hDC = GetDC( NULL );
 
-   EnumFonts( hDC, ( LPCTSTR ) NULL, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray );
+   EnumFonts( hDC, NULL, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray );
 
    if( fNullDC )
       ReleaseDC( NULL, hDC );

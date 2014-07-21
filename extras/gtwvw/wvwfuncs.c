@@ -270,7 +270,7 @@ HB_FUNC( WIN_LOADICON )
    if( HB_ISNUM( 1 ) )
       hIcon = LoadIcon( hb_getWvwData()->hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
    else
-      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, hb_parc( 1 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      hIcon = ( HICON ) LoadImage( NULL, hb_parc( 1 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
 
    hb_retnl( ( ULONG ) hIcon );
 }
@@ -299,7 +299,7 @@ HB_FUNC( WIN_LOADIMAGE )
          break;
 
       case 2:
-         hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, hb_parc( 1 ), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
+         hImage = ( HBITMAP ) LoadImage( NULL, hb_parc( 1 ), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
          break;
    }
 
@@ -667,9 +667,9 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
 #endif
 
    if( ! pData->hWndTT )
-      pData->hWndTT = CreateWindow( TOOLTIPS_CLASS, ( LPSTR ) NULL, iStyle,
+      pData->hWndTT = CreateWindow( TOOLTIPS_CLASS, NULL, iStyle,
                                     CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-                                    NULL, ( HMENU ) NULL, GetModuleHandle( NULL ), NULL );
+                                    NULL, NULL, GetModuleHandle( NULL ), NULL );
    if( ! pData->hWndTT )
    {
       hb_retnl( 0 );
@@ -703,7 +703,7 @@ HB_FUNC( CREATEIMAGELIST )
    for( ul = 1; ul <= ulLen; ul++ )
    {
       hbmp = ( HBITMAP ) hb_arrayGetNL( pArray, ul );
-      ImageList_Add( himl, hbmp, ( HBITMAP ) NULL );
+      ImageList_Add( himl, hbmp, NULL );
       DeleteObject( hbmp );
    }
 
@@ -712,7 +712,7 @@ HB_FUNC( CREATEIMAGELIST )
 
 HB_FUNC( IMAGELIST_ADD )
 {
-   hb_retnl( ImageList_Add( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), ( HBITMAP ) NULL ) );
+   hb_retnl( ImageList_Add( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), NULL ) );
 }
 
 HB_FUNC( IMAGELIST_ADDMASKED )
@@ -907,8 +907,8 @@ HB_FUNC( OPENBITMAP )
    HBITMAP hbm;
    HDC     hDC  = ( hb_pcount() > 1 && ! HB_ISNIL( 2 ) ) ? ( HDC ) HB_PARHANDLE( 2 ) : NULL;
    HANDLE  hfbm = CreateFile( hb_parc( 1 ), GENERIC_READ, FILE_SHARE_READ,
-                              ( LPSECURITY_ATTRIBUTES ) NULL, OPEN_EXISTING,
-                              FILE_ATTRIBUTE_READONLY, ( HANDLE ) NULL );
+                              NULL, OPEN_EXISTING,
+                              FILE_ATTRIBUTE_READONLY, NULL );
 
    if( ( ( long int ) hfbm ) <= 0 )
    {
@@ -951,7 +951,7 @@ HB_FUNC( OPENBITMAP )
       case 8:
          ReadFile( hfbm, lpbmi->bmiColors,
                    ( ( 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) ),
-                   &dwRead, ( LPOVERLAPPED ) NULL );
+                   &dwRead, NULL );
          break;
 
       case 16:
@@ -959,7 +959,7 @@ HB_FUNC( OPENBITMAP )
          if( bmih.biCompression == BI_BITFIELDS )
             ReadFile( hfbm, lpbmi->bmiColors,
                       ( 3 * sizeof( RGBQUAD ) ),
-                      &dwRead, ( LPOVERLAPPED ) NULL );
+                      &dwRead, NULL );
          break;
 
       case 24:
@@ -1089,18 +1089,18 @@ HB_FUNC( SELECTFONT )
    PHB_ITEM aMetr = hb_itemArrayNew( 9 );
 
    cf.lStructSize    = sizeof( CHOOSEFONT );
-   cf.hwndOwner      = ( HWND ) NULL;
-   cf.hDC            = ( HDC ) NULL;
+   cf.hwndOwner      = NULL;
+   cf.hDC            = NULL;
    cf.lpLogFont      = &lf;
    cf.iPointSize     = 0;
    cf.Flags          = CF_SCREENFONTS | ( ( pObj ) ? CF_INITTOLOGFONTSTRUCT : 0 );
    cf.rgbColors      = RGB( 0, 0, 0 );
    cf.lCustData      = 0L;
-   cf.lpfnHook       = ( LPCFHOOKPROC ) NULL;
-   cf.lpTemplateName = ( LPSTR ) NULL;
+   cf.lpfnHook       = NULL;
+   cf.lpTemplateName = NULL;
 
-   cf.hInstance = ( HINSTANCE ) NULL;
-   cf.lpszStyle = ( LPSTR ) NULL;
+   cf.hInstance = NULL;
+   cf.lpszStyle = NULL;
    cf.nFontType = SCREEN_FONTTYPE;
    cf.nSizeMin  = 0;
    cf.nSizeMax  = 0;
@@ -1672,16 +1672,16 @@ HB_FUNC( WVW_CHOOSEFONT )
 
    cf.lStructSize    = sizeof( CHOOSEFONT );
    cf.hwndOwner      = p->s_pWindows[ p->s_usNumWindows - 1 ]->hWnd;
-   cf.hDC            = ( HDC ) NULL;
+   cf.hDC            = NULL;
    cf.lpLogFont      = &lf;
    cf.iPointSize     = 0;
    cf.Flags          = CF_SCREENFONTS | CF_EFFECTS | CF_SHOWHELP | CF_INITTOLOGFONTSTRUCT;
    cf.rgbColors      = RGB( 0, 0, 0 );
    cf.lCustData      = 0L;
-   cf.lpfnHook       = ( LPCFHOOKPROC ) NULL;
-   cf.lpTemplateName = ( LPSTR ) NULL;
-   cf.hInstance      = ( HINSTANCE ) NULL;
-   cf.lpszStyle      = ( LPSTR ) NULL;
+   cf.lpfnHook       = NULL;
+   cf.lpTemplateName = NULL;
+   cf.hInstance      = NULL;
+   cf.lpszStyle      = NULL;
    cf.nFontType      = SCREEN_FONTTYPE;
    cf.nSizeMin       = 0;
    cf.nSizeMax       = 0;
@@ -1886,7 +1886,7 @@ HB_FUNC( WVW_DLGSETICON )
    if( HB_ISNUM( 2 ) )
       hIcon = LoadIcon( hb_getWvwData()->hInstance, MAKEINTRESOURCE( hb_parni( 2 ) ) );
    else
-      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, hb_parc( 2 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      hIcon = ( HICON ) LoadImage( NULL, hb_parc( 2 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
 
    if( hIcon )
    {
@@ -2164,7 +2164,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
    if( iIndex >= WVW_DLGML_MAX )
    {
       /* no more room */
-      hb_retnl( ( ULONG ) NULL );
+      hb_retnl( 0 );
       return;
    }
 
@@ -2272,7 +2272,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
    if( iIndex >= WVW_DLGMD_MAX )
    {
       /* no more room */
-      hb_retni( ( int ) NULL );
+      hb_retni( 0 );
       return;
    }
 

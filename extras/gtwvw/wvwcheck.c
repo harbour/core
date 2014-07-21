@@ -468,7 +468,7 @@ HB_FUNC( WVW_PGCREATE )
    hWndPG = CreateWindowEx(
       0L,
       PROGRESS_CLASS,
-      ( LPSTR ) NULL,
+      NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
       iLeft,
       iTop,
@@ -477,7 +477,7 @@ HB_FUNC( WVW_PGCREATE )
       hWndParent,
       ( HMENU ) uiPGid,
       ( HINSTANCE ) hInstance,
-      ( LPVOID ) NULL
+      NULL
       );
 
    if( hWndPG )
@@ -497,7 +497,7 @@ HB_FUNC( WVW_PGCREATE )
       rOffXB.top    = iOffTop;     rOffXB.left = iOffLeft;
       rOffXB.bottom = iOffBottom; rOffXB.right = iOffRight;
 
-      AddControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, hWndPG, uiPGid, ( PHB_ITEM ) NULL, rXB, rOffXB, ( byte ) iStyle );
+      AddControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, hWndPG, uiPGid, NULL, rXB, rOffXB, ( byte ) iStyle );
 
       hb_retnl( ( LONG ) uiPGid );
    }

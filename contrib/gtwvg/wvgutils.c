@@ -143,16 +143,16 @@ HB_FUNC( WVT_CHOOSEFONT )
 
       cf.lStructSize    = sizeof( cf );
       cf.hwndOwner      = _s->hWnd;
-      cf.hDC            = ( HDC ) NULL;
+      cf.hDC            = NULL;
       cf.lpLogFont      = &lf;
       cf.iPointSize     = 0;
       cf.Flags          = CF_SCREENFONTS | CF_EFFECTS | CF_SHOWHELP | CF_INITTOLOGFONTSTRUCT;
       cf.rgbColors      = RGB( 0, 0, 0 );
       cf.lCustData      = 0L;
-      cf.lpfnHook       = ( LPCFHOOKPROC ) NULL;
-      cf.lpTemplateName = ( LPTSTR ) NULL;
-      cf.hInstance      = ( HINSTANCE ) NULL;
-      cf.lpszStyle      = ( LPTSTR ) NULL;
+      cf.lpfnHook       = NULL;
+      cf.lpTemplateName = NULL;
+      cf.hInstance      = NULL;
+      cf.lpszStyle      = NULL;
       cf.nFontType      = SCREEN_FONTTYPE;
       cf.nSizeMin       = 0;
       cf.nSizeMax       = 0;
@@ -1291,7 +1291,7 @@ HB_FUNC( WVT_DLGSETICON )
    else
    {
       void * cIcon;
-      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
       if( ! hIcon )
          hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, 0 );
       hb_strfree( cIcon );

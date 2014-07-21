@@ -304,7 +304,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
                }
                else
                {
-                  hBitmap = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL,
+                  hBitmap = ( HBITMAP ) LoadImage( NULL,
                                                    szBitmap,
                                                    IMAGE_BITMAP,
                                                    iExpWidth,
@@ -840,7 +840,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 
    cf.lStructSize = sizeof( cf );
    cf.hwndOwner   = hWnd;
-   cf.hDC         = ( HDC ) NULL;           /* only when ::oPrinterPS is defined */
+   cf.hDC         = NULL;           /* only when ::oPrinterPS is defined */
    cf.lpLogFont   = &lf;
    cf.iPointSize  = PointSize;
    cf.Flags       = Flags;
@@ -849,8 +849,8 @@ HB_FUNC( WVG_CHOOSEFONT )
    cf.lCustData = ( HB_PTRDIFF ) hb_param( 2, HB_IT_EVALITEM );
    cf.lpfnHook  = ( LPCFHOOKPROC ) WvgDialogProcChooseFont;
 
-   cf.lpTemplateName = ( LPTSTR ) NULL;
-   cf.hInstance      = ( HINSTANCE ) NULL;
+   cf.lpTemplateName = NULL;
+   cf.hInstance      = NULL;
    cf.lpszStyle      = ( LPTSTR ) szStyle;
    cf.nFontType      = SCREEN_FONTTYPE;     /* ?? */
    cf.nSizeMin       = 0;

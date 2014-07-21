@@ -295,7 +295,7 @@ HB_FUNC( WVG_LOADICON )
    else
    {
       void * hBuffer;
-      hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, HB_PARSTR( 1, &hBuffer, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTR( 1, &hBuffer, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
       hb_strfree( hBuffer );
    }
 
@@ -332,9 +332,9 @@ HB_FUNC( WVG_LOADIMAGE )
 
       case 2:   /* Image from disk file */
          if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
-            hImage = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_ICON, hb_parni( 4 ), hb_parni( 5 ), LR_LOADFROMFILE );
+            hImage = ( HICON ) LoadImage( NULL, lpBuffer, IMAGE_ICON, hb_parni( 4 ), hb_parni( 5 ), LR_LOADFROMFILE );
          else
-            hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, lpBuffer, IMAGE_BITMAP, hb_parni( 4 ), hb_parni( 5 ), LR_LOADFROMFILE );
+            hImage = ( HBITMAP ) LoadImage( NULL, lpBuffer, IMAGE_BITMAP, hb_parni( 4 ), hb_parni( 5 ), LR_LOADFROMFILE );
          break;
    }
 
@@ -1077,7 +1077,7 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
          int    iString;
          void * hCaption;
 
-         iString = ( int ) SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+         iString = ( int ) SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
          hb_strfree( hCaption );
 
          hbwapi_ret_NI( iString );
@@ -1252,7 +1252,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
    switch( msg )
    {
       case CB_ADDSTRING:
-         hb_retnint( SendMessage( hCB, CB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) ( LPCTSTR ) HB_PARSTR( 3, &hText, NULL ) ) );
+         hb_retnint( SendMessage( hCB, CB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) ( LPCTSTR ) HB_PARSTR( 3, &hText, NULL ) ) );
          break;
       case CB_DELETESTRING:
          hb_retnint( SendMessage( hCB, CB_DELETESTRING, hb_parni( 3 ), 0 ) );
@@ -1341,7 +1341,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
          break;
       case CB_GETEDITSEL:
       {
-         DWORD    range = ( DWORD ) SendMessage( hCB, CB_GETEDITSEL, ( WPARAM ) NULL, ( LPARAM ) NULL );
+         DWORD    range = ( DWORD ) SendMessage( hCB, CB_GETEDITSEL, ( WPARAM ) 0, ( LPARAM ) 0 );
          PHB_ITEM pRng  = hb_itemNew( NULL );
 
          hb_arrayNew( pRng, 2 );

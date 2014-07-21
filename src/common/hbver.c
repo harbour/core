@@ -1028,7 +1028,7 @@ char * hb_verCompiler( void )
 
 #else
 
-   pszName = ( char * ) NULL;
+   pszName = NULL;
    iVerMajor = iVerMinor = iVerPatch = 0;
 
 #endif

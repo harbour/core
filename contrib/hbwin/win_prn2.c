@@ -86,7 +86,7 @@ HB_FUNC( WIN_PRINTEREXISTS )
       {
          DWORD dwNeeded = 0, dwReturned = 0;
 
-         EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
+         EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, NULL, 0, &dwNeeded, &dwReturned );
          if( dwNeeded )
          {
             PRINTER_INFO_5 * pPrinterEnumBak;
@@ -320,7 +320,7 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
    {
       DWORD dwNeeded = 0, dwReturned = 0;
 
-      EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
+      EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, NULL, 0, &dwNeeded, &dwReturned );
       if( dwNeeded )
       {
          PRINTER_INFO_5 * pPrinterEnumBak;
@@ -397,12 +397,12 @@ HB_FUNC( WIN_PRINTFILERAW )
                      DWORD nWritten = 0;
 
 #if 0
-                     /* TOFIX: This check seems wrong for any input files
+                     /* TOFIX: This check seems wrong for any input file
                                larger than our read buffer, in such case it
                                will strip Chr( 26 ) from inside the file, which
                                means it will corrupt it. [vszakats] */
                      if( pbyBuffer[ nRead - 1 ] == 26 )
-                        nRead--;   /* Skip the Eof() character */
+                        --nRead;  /* Skip the EOF character */
 #endif
 
                      while( nWritten < nRead )
@@ -473,7 +473,7 @@ HB_FUNC( WIN_PRINTERLIST )
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
    DWORD dwNeeded = 0, dwReturned = 0, i;
 
-   EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) NULL, 0, &dwNeeded, &dwReturned );
+   EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, NULL, 0, &dwNeeded, &dwReturned );
    if( dwNeeded )
    {
       PRINTER_INFO_5 * pPrinterEnumBak;

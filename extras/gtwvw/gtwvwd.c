@@ -753,9 +753,9 @@ static void hb_gt_wvw_SetCursorStyle( PHB_GT pGT, int iStyle )
    if( bCursorOn )
    {
       if( ! s_pWvwData->s_bVertCaret )
-         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, ( HBITMAP ) NULL, pWindowData->PTEXTSIZE.x, pWindowData->CaretSize );
+         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, NULL, pWindowData->PTEXTSIZE.x, pWindowData->CaretSize );
       else
-         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, ( HBITMAP ) NULL, pWindowData->CaretSize, pWindowData->PTEXTSIZE.y );
+         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, NULL, pWindowData->CaretSize, pWindowData->PTEXTSIZE.y );
    }
    hb_gt_wvwSetCaretOn( pWindowData, bCursorOn );
 }
@@ -1863,7 +1863,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
    PHB_ITEM pFunc   = NULL;
 
 
-   iType = ( int ) NULL;
+   iType = 0;
 
    for( iIndex = 0; iIndex < WVW_DLGML_MAX; iIndex++ )
       if( ( s_pWvwData->s_sApp->hDlgModeless[ iIndex ] != NULL ) && ( s_pWvwData->s_sApp->hDlgModeless[ iIndex ] == hDlg ) )
@@ -1977,7 +1977,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
          s_pWvwData->s_sApp->hDlgModeless[ iIndex ] = NULL;
 
          s_pWvwData->s_sApp->pFunc[ iIndex ] = NULL;
-         s_pWvwData->s_sApp->iType[ iIndex ] = ( int ) NULL;
+         s_pWvwData->s_sApp->iType[ iIndex ] = 0;
          bReturn = FALSE;
          break;
    }
@@ -2001,7 +2001,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
       return bReturn;
    }
 
-   iType = ( int ) NULL;
+   iType = 0;
 
    for( iIndex = 0; iIndex < WVW_DLGMD_MAX; iIndex++ )
       if( ( s_pWvwData->s_sApp->hDlgModal[ iIndex ] != NULL ) && ( s_pWvwData->s_sApp->hDlgModal[ iIndex ] == hDlg ) )
@@ -2112,7 +2112,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
 
          s_pWvwData->s_sApp->hDlgModal[ iIndex ]  = NULL;
          s_pWvwData->s_sApp->pFuncModal[ iIndex ] = NULL;
-         s_pWvwData->s_sApp->iTypeModal[ iIndex ] = ( int ) NULL;
+         s_pWvwData->s_sApp->iTypeModal[ iIndex ] = 0;
          bReturn = FALSE;
          break;
    }
@@ -3745,7 +3745,7 @@ static void hb_gt_wvwCreateToolTipWindow( WIN_DATA * pWindowData )
                           CW_USEDEFAULT, CW_USEDEFAULT,
                           CW_USEDEFAULT, CW_USEDEFAULT,
                           NULL,
-                          ( HMENU ) NULL,
+                          NULL,
                           s_pWvwData->hInstance,
                           NULL );
 
@@ -3971,9 +3971,9 @@ static void hb_gt_wvwCreateCaret( WIN_DATA * pWindowData )
    if( pWindowData->byWinId == s_pWvwData->s_usNumWindows - 1 )
    {
       if( ! s_pWvwData->s_bVertCaret )
-         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, ( HBITMAP ) NULL, pWindowData->PTEXTSIZE.x, pWindowData->CaretSize );
+         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, NULL, pWindowData->PTEXTSIZE.x, pWindowData->CaretSize );
       else
-         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, ( HBITMAP ) NULL, pWindowData->CaretSize, pWindowData->PTEXTSIZE.y );
+         s_pWvwData->s_sApp->CaretExist = CreateCaret( pWindowData->hWnd, NULL, pWindowData->CaretSize, pWindowData->PTEXTSIZE.y );
    }
    else
       s_pWvwData->s_sApp->CaretExist = FALSE;
@@ -4478,14 +4478,14 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
          s_pWvwData->s_sApp->hDlgModeless[ iIndex ] = NULL;
 
          s_pWvwData->s_sApp->pFunc[ iIndex ] = NULL;
-         s_pWvwData->s_sApp->iType[ iIndex ] = ( int ) NULL;
+         s_pWvwData->s_sApp->iType[ iIndex ] = 0;
       }
 
       for( iIndex = 0; iIndex < WVW_DLGMD_MAX; iIndex++ )
       {
          s_pWvwData->s_sApp->hDlgModal[ iIndex ]  = NULL;
          s_pWvwData->s_sApp->pFuncModal[ iIndex ] = NULL;
-         s_pWvwData->s_sApp->iTypeModal[ iIndex ] = ( int ) NULL;
+         s_pWvwData->s_sApp->iTypeModal[ iIndex ] = 0;
       }
 
       s_pWvwData->s_sApp->pbhBitmapList  = NULL;
@@ -6190,7 +6190,7 @@ static HICON hb_gt_wvwSetWindowIcon( UINT usWinNum, int icon, const char * lpIco
 
 static HICON hb_gt_wvwSetWindowIconFromFile( UINT usWinNum, LPCTSTR icon )
 {
-   HICON hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, icon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+   HICON hIcon = ( HICON ) LoadImage( NULL, icon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
 
    if( hIcon )
    {
@@ -6980,7 +6980,7 @@ HB_FUNC( WVW_NOPENWINDOW )
 
    DWORD     dwStyle    = HB_ISNIL( 6 ) ? ( ( DWORD ) ( WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN ) ) : ( ( DWORD ) hb_parnl( 6 ) );
    INT       iParentWin = HB_ISNIL( 7 ) ? ( s_pWvwData->s_bMainCoordMode ? ( INT ) s_pWvwData->s_usNumWindows - 1 : ( INT ) s_pWvwData->s_usCurWindow ) : ( ( INT ) hb_parni( 7 ) );
-   PHB_FNAME pFileName;
+   PHB_FNAME pFileName = NULL;
 
    if( s_pWvwData->s_usNumWindows == 0 )
    {
@@ -7024,7 +7024,6 @@ HB_FUNC( WVW_NOPENWINDOW )
          hb_retni( 0 );
          return;
       }
-      pFileName   = NULL;
       lpszWinName = HB_PARSTR( 1, &hWinName, NULL );
    }
    else
@@ -8811,7 +8810,7 @@ static HBITMAP hPrepareBitmap( char * szBitmap, UINT uiBitmap,
             else
             {
 
-               hBitmap = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL,
+               hBitmap = ( HBITMAP ) LoadImage( NULL,
                                                 szBitmap,
                                                 IMAGE_BITMAP,
                                                 iExpWidth,
@@ -9151,7 +9150,7 @@ UINT FindControlId( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, byte * pbSty
       }
       pcd = pcd->pNext;
    }
-   return ( UINT ) NULL;
+   return 0;
 }
 
 UINT LastControlId( UINT usWinNum, BYTE byCtrlClass )
@@ -9197,7 +9196,7 @@ void AddControlHandle( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT uiCt
 
    pcdNew->bStyle = bStyle;
 
-   pcdNew->OldProc = ( WNDPROC ) NULL;
+   pcdNew->OldProc = NULL;
 
    pcdNew->pNext = pWindowData->pcdCtrlList;
 
@@ -9248,7 +9247,7 @@ WNDPROC GetControlProc( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl )
          return pcd->OldProc;
       pcd = pcd->pNext;
    }
-   return ( WNDPROC ) NULL;
+   return NULL;
 }
 
 static int GetControlClass( UINT usWinNum, HWND hWndCtrl )
@@ -9728,7 +9727,7 @@ UINT ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT usBottom, 
       hWndParent,                               /* handle to parent window */
       ( HMENU ) uiPBid,                         /* id for this button control */
       s_pWvwData->hInstance,                    /* instance owning this window */
-      ( LPVOID ) NULL                           /* pointer not needed */
+      NULL                                      /* pointer not needed */
       );
 
    if( hWndButton )

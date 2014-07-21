@@ -415,7 +415,7 @@ HB_FUNC( SQLDRIVERCONNECT )  /* hDbc, @cConnectString --> nRetCode */
       buffer[ 0 ] = '\0';
 
       ret = SQLDriverConnect( hDbc,
-                              ( SQLHWND ) NULL,
+                              NULL,
                               cConnStr,
                               ( SQLSMALLINT ) nConnStr,
                               ( SQLTCHAR * ) buffer,

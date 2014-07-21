@@ -501,7 +501,7 @@ HB_FUNC( WVW_XBCREATE )
    hWndXB = CreateWindowEx(
       0L,                                       /* no extended styles */
       "SCROLLBAR",                              /* scroll bar control class */
-      ( LPSTR ) NULL,                           /* text for window title bar */
+      NULL,                                     /* text for window title bar */
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle, /* scroll bar styles */
       iLeft,                                    /* horizontal position */
       iTop,                                     /* vertical position */
@@ -510,7 +510,7 @@ HB_FUNC( WVW_XBCREATE )
       hWndParent,                               /* handle to main window */
       ( HMENU ) uiXBid,                         /* id for this scroll bar control */
       hb_getWvwData()->hInstance,               /* instance owning this window */
-      ( LPVOID ) NULL                           /* pointer not needed */
+      NULL                                      /* pointer not needed */
       );
 
    if( hWndXB )

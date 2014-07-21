@@ -184,7 +184,7 @@ HB_FUNC( WVW_EBCREATE )
    hWndEB = CreateWindowEx(
       0L,
       "EDIT",
-      ( LPSTR ) NULL,
+      NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) dwStyle,
       iLeft,
       iTop,
@@ -193,7 +193,7 @@ HB_FUNC( WVW_EBCREATE )
       hWndParent,
       ( HMENU ) uiEBid,
       ( HINSTANCE ) hInstance,
-      ( LPVOID ) NULL
+      NULL
       );
 
    if( hWndEB )
@@ -258,7 +258,7 @@ HB_FUNC( WVW_EBDESTROY )
    WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    UINT           uiEBid      = ( UINT ) ( HB_ISNIL( 2 ) ? 0  : hb_parni( 2 ) );
    CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
-   CONTROL_DATA * pcdPrev     = ( CONTROL_DATA * ) NULL;
+   CONTROL_DATA * pcdPrev     = NULL;
 
    while( pcd )
    {
@@ -742,7 +742,7 @@ HB_FUNC( WVW_STCREATE )
    hWndCB = CreateWindowEx(
       ulExStyle,
       "STATIC",
-      ( LPSTR ) NULL,
+      NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
       iLeft,
       iTop,
@@ -751,7 +751,7 @@ HB_FUNC( WVW_STCREATE )
       hWndParent,
       ( HMENU ) uiCBid,
       ( HINSTANCE ) hInstance,
-      ( LPVOID ) NULL
+      NULL
       );
 
    if( hWndCB )

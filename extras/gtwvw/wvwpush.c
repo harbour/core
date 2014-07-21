@@ -491,7 +491,7 @@ HB_FUNC( WVW_CBCREATE )
    hWndCB = CreateWindowEx(
       0L,
       "COMBOBOX",
-      ( LPSTR ) NULL,
+      NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
       iLeft,
       iTop,
@@ -500,7 +500,7 @@ HB_FUNC( WVW_CBCREATE )
       hWndParent,
       ( HMENU ) uiCBid,
       hb_getWvwData()->hInstance,
-      ( LPVOID ) NULL
+      NULL
       );
 
    if( hWndCB )
@@ -603,7 +603,7 @@ HB_FUNC( WVW_CBDESTROY )
    WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    UINT           uiCBid      = ( UINT ) ( HB_ISNIL( 2 ) ? 0  : hb_parni( 2 ) );
    CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
-   CONTROL_DATA * pcdPrev     = ( CONTROL_DATA * ) NULL;
+   CONTROL_DATA * pcdPrev     = NULL;
 
    while( pcd )
    {
