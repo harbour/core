@@ -108,6 +108,8 @@
 #endif
 
 #xtranslate hb_DispBox( [<x,...>] )        => DispBox( <x> )
+#xtranslate hb_DispOutAt( [<x,...>] )      => DispOutAt( <x> )
+#xtranslate hb_DispOutAtBox( [<x,...>] )   => DispOutAt( <x> )
 
 #xtranslate hb_gtVersion( [<n>] )          => "DOS"
 

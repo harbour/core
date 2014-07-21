@@ -310,7 +310,7 @@ METHOD SampleLabels() CLASS HBLabelForm
       // Prompt for more
       DispOutAt( Row(), 0, __natMsg( _LF_SAMPLES ) + " (" + __natMsg( _LF_YN ) + ")" )
       cKey := hb_keyChar( Inkey( 0 ) )
-      DispOutAt( Row(), Col(), cKey )
+      DispOut( cKey )
       IF Row() == MaxRow()
          hb_Scroll( 0, 0, MaxRow(), MaxCol(), 1 )
          SetPos( MaxRow(), 0 )

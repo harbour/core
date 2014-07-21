@@ -109,7 +109,7 @@ CREATE CLASS ListBox FUNCTION HBListBox
    METHOD delItem( nPos )
    METHOD display()
    METHOD findText( cText, nPos, lCaseSensitive, lExact )
-   METHOD findData( cData, nPos, lCaseSensitive, lExact )  /* NOTE: Undocumented CA-Cl*pper method. */
+   METHOD findData( xData, nPos, lCaseSensitive, lExact )  /* NOTE: Undocumented CA-Cl*pper method. */
    METHOD getData( nPos )
    METHOD getItem( nPos )
    METHOD getText( nPos )
@@ -144,15 +144,15 @@ CREATE CLASS ListBox FUNCTION HBListBox
    METHOD message( cMessage ) SETGET
    METHOD right( nRight ) SETGET
    METHOD sBlock( bSBlock ) SETGET
-   METHOD style( cStyle ) SETGET                          /* NOTE: Undocumented CA-Cl*pper method. */
-   METHOD textValue() SETGET                              /* NOTE: Undocumented CA-Cl*pper method. */
+   METHOD style( cStyle ) SETGET                           /* NOTE: Undocumented CA-Cl*pper method. */
+   METHOD textValue() SETGET                               /* NOTE: Undocumented CA-Cl*pper method. */
    METHOD top( nTop ) SETGET
    METHOD topItem( nTopItem ) SETGET
    METHOD typeOut() SETGET
-   METHOD value() SETGET                                  /* NOTE: Undocumented CA-Cl*pper method. */
+   METHOD value() SETGET                                   /* NOTE: Undocumented CA-Cl*pper method. */
    METHOD vScroll( oVScroll ) SETGET
 
-   METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )  /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )   /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -207,7 +207,6 @@ METHOD delItem( nPos ) CLASS ListBox
          ELSEIF ::nValue > 0
             ::xBuffer := ::cTextValue
          ENDIF
-
       ENDIF
 
       IF ::nTopItem > ::nItemCount
@@ -348,21 +347,14 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS ListBox
 
    RETURN nPosFound
 
-/* NOTE: Both Cl*pper and Harbour will RTE when search reaches
-         an item with a non-string, non-NIL value. The RTE will
-         be different than in Cl*pper, but will occur under the
-         same conditions. */
-METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS ListBox
+/* NOTE: Both Cl*pper and Harbour may RTE when searching for
+         a different type than present in an item value. The RTE
+         will be different and in Cl*pper, but will occur under
+         the same conditions. */
+METHOD findData( xData, nPos, lCaseSensitive, lExact ) CLASS ListBox
 
    LOCAL nPosFound
    LOCAL bSearch
-
-#ifndef HB_CLP_STRICT
-   /* NOTE: Cl*pper will RTE if passed a non-string cData */
-   IF ! HB_ISSTRING( cData )
-      RETURN 0
-   ENDIF
-#endif
 
    hb_default( @nPos, 1 )
    hb_default( @lCaseSensitive, .T. )
@@ -372,15 +364,18 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS ListBox
 
    IF lExact
       IF lCaseSensitive
-         bSearch := {| aItem | _LISTBOX_ITEMDATA( aItem ) == cData }
+         bSearch := {| aItem | _LISTBOX_ITEMDATA( aItem ) == xData }
       ELSE
-         bSearch := {| aItem | Lower( _LISTBOX_ITEMDATA( aItem ) ) == cData }
+         /* Cl*pper will also RTE here, if xData is not a string */
+         xData := Lower( xData )
+         bSearch := {| aItem | Lower( _LISTBOX_ITEMDATA( aItem ) ) == xData }
       ENDIF
    ELSE
       IF lCaseSensitive
-         bSearch := {| aItem | hb_LeftEq( _LISTBOX_ITEMDATA( aItem ), cData ) }
+         bSearch := {| aItem, xItemData | xItemData := _LISTBOX_ITEMDATA( aItem ), iif( HB_ISSTRING( xItemData ), hb_LeftEq( xItemData, xData ), xItemData == xData ) }
       ELSE
-         bSearch := {| aItem | hb_LeftEqI( _LISTBOX_ITEMDATA( aItem ), cData ) }
+         /* Cl*pper will also RTE here, if xData is not a string */
+         bSearch := {| aItem | hb_LeftEqI( _LISTBOX_ITEMDATA( aItem ), xData ) }
       ENDIF
    ENDIF
 

@@ -12275,7 +12275,6 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
 
    LOCAL cExpr := "hbmk_KEYW( hbmk, cFileName, '%1' )"
    LOCAL cExprWithValue := "hbmk_KEYW( hbmk, cFileName, '%1', '%2', '%3' )"
-   LOCAL tmp
 
    nEnd := 1
    WHILE .T.
@@ -12335,11 +12334,9 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
                   ENDIF
                ELSE
                   IF ! Empty( cKeyword ) .AND. ! Empty( cValue )
-                     tmp := cExprWithValue
-                     tmp := hb_StrReplace( tmp, ;
+                     cFilterHarb += hb_StrReplace( cExprWithValue, ;
                         { "%1", "%2", "%3" }, ;
                         { cKeyword, cValue, cOperator } )
-                     cFilterHarb += tmp
                      cKeyword := ""
                      cValue := NIL
                      cOperator := ""
@@ -12349,11 +12346,9 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          NEXT
          IF ! Empty( cKeyword )
             IF ! Empty( cValue )
-               tmp := cExprWithValue
-               tmp := hb_StrReplace( tmp, ;
+               cFilterHarb += hb_StrReplace( cExprWithValue, ;
                   { "%1", "%2", "%3" }, ;
                   { cKeyword, cValue, cOperator } )
-               cFilterHarb += tmp
             ELSE
                cFilterHarb += StrTran( cExpr, "%1", cKeyword )
             ENDIF

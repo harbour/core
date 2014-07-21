@@ -40,6 +40,12 @@ ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400),)
 endif
 endif
 
+ifneq ($(HB_COMPILER_VER),)
+   ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407),)
+      DFLAGS += -static-libgcc
+   endif
+endif
+
 # It is also supported by official mingw 4.4.x and mingw64 4.4.x,
 # but not supported by mingw tdm 4.4.x, so I only enable it on or
 # above 4.5.0.

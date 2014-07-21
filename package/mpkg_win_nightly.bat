@@ -70,6 +70,7 @@ echo ! Building Harbour...
 setlocal
 echo ! Setting environment for using MinGW GCC
 set PATH=%_HB_DIR_COMP%mingw\bin
+set HB_CPU=x86
 win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-mingw-log.txt" 2>&1
 if errorlevel 1 goto _EXIT
 endlocal

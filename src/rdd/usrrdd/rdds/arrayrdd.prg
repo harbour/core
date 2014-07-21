@@ -45,11 +45,9 @@
  *
  */
 
-/*
- * This is a Array RDD, or Memory RDD.
- * It works only in memory and actually supports standard dbf commands
- * except relations
- */
+/* This is a Array RDD, or Memory RDD.
+   It works only in memory and actually supports standard dbf commands
+   except relations. */
 
 #include "dbinfo.ch"
 #include "dbstruct.ch"
@@ -60,7 +58,7 @@
 #include "rddsys.ch"
 
 #define THROW( oErr )      ( Eval( ErrorBlock(), oErr ), Break( oErr ) )
-#define LEFTEQUAL( l, r )  iif( ValType( l ) $ "CM", hb_LeftEq( l, r ), l == r )
+#define LEFTEQUAL( l, r )  iif( HB_ISSTRING( l ), hb_LeftEq( l, r ), l == r )
 
 ANNOUNCE ARRAYRDD
 

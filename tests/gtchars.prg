@@ -71,7 +71,7 @@ STATIC PROCEDURE dspboxch( cStr )
    FOR i := 1 TO Len( cStr )
       r := Row()
       c := Col()
-      DispBox( r, c, r, c, SubStr( cStr, i, 1 ) )
+      hb_DispBox( r, c, r, c, SubStr( cStr, i, 1 ) )
       SetPos( r, c + 1 )
    NEXT
 

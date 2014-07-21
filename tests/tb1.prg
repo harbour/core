@@ -11,26 +11,26 @@
 #include "box.ch"
 
 #ifdef __HARBOUR__
-   #define _DRAW_1 hb_UTF8ToStr( "├" )
-   #define _DRAW_2 hb_UTF8ToStr( "┤" )
-   #define _DRAW_3 hb_UTF8ToStrBox( "┐ ┌─" )
-   #define _DRAW_4 hb_UTF8ToStrBox( "┘ └─" )
-   #define _DRAW_5 hb_UTF8ToStrBox( "│ │" )
-   #define _DRAW_6 hb_UTF8ToStrBox( "┐ ┌─┤HIDE├─" )
-   #define _DRAW_7 hb_UTF8ToStrBox( "╖ ╓─┤HIDE├─" )
-   #define _DRAW_8 hb_UTF8ToStrBox( "╜ ╙─" )
-   #define _DRAW_9 hb_UTF8ToStrBox( "║ ║" )
+   #define _DRAW_1  hb_UTF8ToStr( "├" )
+   #define _DRAW_2  hb_UTF8ToStr( "┤" )
+   #define _DRAW_3  hb_UTF8ToStrBox( "┐ ┌─" )
+   #define _DRAW_4  hb_UTF8ToStrBox( "┘ └─" )
+   #define _DRAW_5  hb_UTF8ToStrBox( "│ │" )
+   #define _DRAW_6  hb_UTF8ToStrBox( "┐ ┌─┤HIDE├─" )
+   #define _DRAW_7  hb_UTF8ToStrBox( "╖ ╓─┤HIDE├─" )
+   #define _DRAW_8  hb_UTF8ToStrBox( "╜ ╙─" )
+   #define _DRAW_9  hb_UTF8ToStrBox( "║ ║" )
 #else
-   #define _DRAW_1 Chr( 195 )
-   #define _DRAW_2 Chr( 180 )
-   #define _DRAW_3 Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 )
-   #define _DRAW_4 Chr( 217 ) + " " + Chr( 192 ) + Chr( 196 )
-   #define _DRAW_5 Chr( 179 ) + " " + Chr( 179 )
-   #define _DRAW_6 Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
-   #define _DRAW_7 Chr( 183 ) + " " + Chr( 214 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
-   #define _DRAW_8 Chr( 189 ) + " " + Chr( 211 ) + Chr( 196 )
-   #define _DRAW_9 Chr( 186 ) + " " + Chr( 186 )
-   #define hb_keyCode( n ) Asc( n )
+   #include "clipper.ch"
+   #define _DRAW_1  Chr( 195 )
+   #define _DRAW_2  Chr( 180 )
+   #define _DRAW_3  Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 )
+   #define _DRAW_4  Chr( 217 ) + " " + Chr( 192 ) + Chr( 196 )
+   #define _DRAW_5  Chr( 179 ) + " " + Chr( 179 )
+   #define _DRAW_6  Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
+   #define _DRAW_7  Chr( 183 ) + " " + Chr( 214 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
+   #define _DRAW_8  Chr( 189 ) + " " + Chr( 211 ) + Chr( 196 )
+   #define _DRAW_9  Chr( 186 ) + " " + Chr( 186 )
 #endif
 
 PROCEDURE Main()
@@ -58,18 +58,17 @@ PROCEDURE Main()
    MSetCursor( .T. )
 #endif
 
-
    CLS
 #ifdef HB_B_DOUBLE_SINGLE_UNI
-   DispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI, cColor )
+   hb_DispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI, cColor )
 #else
-   DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE, cColor )
+   hb_DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE, cColor )
 #endif
    oBrw := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
-   DispOutAt( nTop + 3,    nLeft,  _DRAW_1, cColor )
-   DispOutAt( nTop + 3,    nRight, _DRAW_2, cColor )
-   DispOutAt( nBottom - 2, nLeft,  _DRAW_1, cColor )
-   DispOutAt( nBottom - 2, nRight, _DRAW_2, cColor )
+   hb_DispOutAt( nTop + 3,    nLeft,  _DRAW_1, cColor )
+   hb_DispOutAt( nTop + 3,    nRight, _DRAW_2, cColor )
+   hb_DispOutAt( nBottom - 2, nLeft,  _DRAW_1, cColor )
+   hb_DispOutAt( nBottom - 2, nRight, _DRAW_2, cColor )
 
    oBrw:colorSpec := cColor
    oBrw:headSep := _DRAW_3
