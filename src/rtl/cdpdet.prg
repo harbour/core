@@ -219,7 +219,7 @@ STATIC FUNCTION __CPStdToHb( cCPStd, cCtryStd )
    LOCAL cdp
 
    IF cCPStd != NIL
-      SWITCH Lower( cCPStd )
+      SWITCH cCPStd := Lower( cCPStd )
       CASE "utf8"
          RETURN "UTF8"
       CASE "utf16"
@@ -227,12 +227,12 @@ STATIC FUNCTION __CPStdToHb( cCPStd, cCtryStd )
       OTHERWISE
          cCtryHb := __LangStdToCPCtryHb( cCtryStd )
          FOR EACH cdp IN hb_cdpList()
-            IF hb_LeftEq( cdp, cCtryHb ) .AND. Lower( cCPStd ) == hb_cdpUniID( cdp )
+            IF hb_LeftEq( cdp, cCtryHb ) .AND. cCPStd == hb_cdpUniID( cdp )
                RETURN cdp
             ENDIF
          NEXT
          FOR EACH cdp IN hb_cdpList()
-            IF Lower( cCPStd ) == hb_cdpUniID( cdp )
+            IF cCPStd == hb_cdpUniID( cdp )
                RETURN cdp
             ENDIF
          NEXT
