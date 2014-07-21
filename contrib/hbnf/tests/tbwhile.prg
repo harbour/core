@@ -45,7 +45,7 @@ PROCEDURE Main()
    // you can make it as complicated as you want, but you would then
    // have to modify TBWhileSet() to find first and last records
    // matching your key.
-   nRecSel := ft_BrwsWhl( aFields, {|| hb_LeftEq( tbnames->LAST ) }, cKey, nFreeze, ;
+   nRecSel := ft_BrwsWhl( aFields, {|| hb_LeftEq( tbnames->LAST, cKey ) }, cKey, nFreeze, ;
       lSaveScrn, cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 )
    // Note you can use Compound Condition
    // such as cLast := "Pierce            " and cFirst := "Hawkeye  "

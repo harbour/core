@@ -70,9 +70,39 @@
 
 CREATE CLASS ListBox FUNCTION HBListBox
 
-   EXPORTED:
+   PROTECTED:
 
-   VAR cargo
+   /* --- Start of CA-Cl*pper compatible instance area --- */
+   VAR nBottom
+   VAR xBuffer
+   VAR cCaption   INIT ""
+   VAR nCapCol
+   VAR nCapRow
+   VAR cargo      EXPORTED
+   VAR cColdBox   INIT HB_B_SINGLE_UNI
+   VAR cColorSpec
+   VAR aItems     INIT {}
+   VAR lDropDown
+   VAR bFBlock
+   VAR lHasFocus  INIT .F.
+   VAR cHotBox    INIT HB_B_DOUBLE_UNI
+   VAR nItemCount INIT 0
+   VAR nLeft
+   VAR cMessage   INIT ""
+   VAR aSaveScr
+   VAR lIsOpen
+   VAR nRight
+   VAR bSBlock
+   VAR nCursor
+   VAR cStyle     INIT Chr( 31 ) /* LOW-ASCII "▼" */
+   VAR cTextValue INIT ""
+   VAR nTop
+   VAR nTopItem   INIT 0
+   VAR oVScroll
+   VAR nValue     INIT 0
+   VAR cBitmap    INIT "dropbox.bmu"
+
+   EXPORTED:
 
    METHOD addItem( cText, xData )
    METHOD close()
@@ -125,35 +155,6 @@ CREATE CLASS ListBox FUNCTION HBListBox
    METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
-
-   VAR cBitmap    INIT "dropbox.bmu"
-   VAR nBottom
-   VAR xBuffer
-   VAR nCapCol
-   VAR nCapRow
-   VAR cCaption   INIT ""
-   VAR cColdBox   INIT HB_B_SINGLE_UNI
-   VAR cColorSpec
-   VAR lDropDown
-   VAR bFBlock
-   VAR lHasFocus  INIT .F.
-   VAR cHotBox    INIT HB_B_DOUBLE_UNI
-   VAR lIsOpen
-   VAR nItemCount INIT 0
-   VAR nLeft
-   VAR cMessage   INIT ""
-   VAR nRight
-   VAR bSBlock
-   VAR cStyle     INIT Chr( 31 ) /* LOW-ASCII "▼" */
-   VAR cTextValue INIT ""
-   VAR nTop
-   VAR nTopItem   INIT 0
-   VAR nValue     INIT 0
-   VAR oVScroll
-
-   VAR aItems     INIT {}
-   VAR aSaveScr
-   VAR nCursor
 
    METHOD changeItem( nOldPos, nNewPos )
    METHOD scrollbarPos()
