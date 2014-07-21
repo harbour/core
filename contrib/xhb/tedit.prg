@@ -295,8 +295,8 @@ METHOD Put() CLASS THtmlControl
             "<option" + ;
             iif( HB_ISSTRING( i[ _OPTION_VALUE ] ), " value=" + i[ _OPTION_VALUE ], "" ) + ;
             iif( HB_ISSTRING( i[ _OPTION_LABEL ] ), " label=" + i[ _OPTION_LABEL ], "" ) + ;
-            iif( HB_ISLOGICAL( i[ _OPTION_SELECTED ] ) .AND. i[ _OPTION_SELECTED ], " SELECTED ", "" ) + ;
-            iif( HB_ISLOGICAL( i[ _OPTION_DISABLED ] ) .AND. i[ _OPTION_DISABLED ], " DISABLED ", "" ) + ;
+            iif( hb_defaultValue( i[ _OPTION_SELECTED ], .F. ), " SELECTED ", "" ) + ;
+            iif( hb_defaultValue( i[ _OPTION_DISABLED ], .F. ), " DISABLED ", "" ) + ;
             ">" + i[ _OPTION_TEXT ] + "</option>" + hb_eol()
       NEXT
 

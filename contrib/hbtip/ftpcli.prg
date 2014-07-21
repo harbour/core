@@ -114,7 +114,7 @@ ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientFTP
 
-   ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "ftp", xTrace ), oCredentials )
+   ::super:new( oUrl, iif( hb_defaultValue( xTrace, .F. ), "ftp", xTrace ), oCredentials )
 
    ::nDefaultPort := 21
    ::nConnTimeout := 3000

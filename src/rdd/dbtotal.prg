@@ -193,7 +193,6 @@ STATIC FUNCTION __GetField( cField )
    LOCAL nCurrArea := Select()
    LOCAL nPos
    LOCAL oError
-   LOCAL lError
 
    /* Is the field aliased? */
    IF ( nPos := At( "->", cField ) ) > 0
@@ -208,8 +207,7 @@ STATIC FUNCTION __GetField( cField )
          oError:operation  := cField
          oError:subCode    := 1101
 
-         lError := Eval( ErrorBlock(), oError )
-         IF ! HB_ISLOGICAL( lError ) .OR. lError
+         IF hb_defaultValue( Eval( ErrorBlock(), oError ), .T. )
             __errInHandler()
          ENDIF
 

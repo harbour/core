@@ -1914,7 +1914,7 @@ STATIC FUNCTION GetParagraph( oSelf, nRow )
    LOCAL cLine := ""
 
    // V@
-   DO WHILE nRow <= oSelf:LastRow() .AND. HB_ISLOGICAL( oSelf:aText[ nRow ]:lSoftCR ) .AND. oSelf:aText[ nRow ]:lSoftCR
+   DO WHILE nRow <= oSelf:LastRow() .AND. hb_defaultValue( oSelf:aText[ nRow ]:lSoftCR, .F. )
       cLine += oSelf:aText[ nRow ]:cText
       oSelf:RemoveLine( nRow )
       IF oSelf:LastRow() <= 0  // V@

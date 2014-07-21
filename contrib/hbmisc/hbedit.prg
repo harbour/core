@@ -272,7 +272,7 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
    nLeft   := oEdit[ E_LEFT ] + 1
    nBottom := oEdit[ E_BOTTOM ] - 1
    nRight  := oEdit[ E_RIGHT ] - 1
-   IF HB_ISLOGICAL( lFrame ) .AND. ! lFrame
+   IF ! hb_defaultValue( lFrame, .T. )
       nLeft--
       nBottom++
       nRight++

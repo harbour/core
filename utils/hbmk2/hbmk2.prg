@@ -12265,7 +12265,6 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
    LOCAL cFilterSrc
    LOCAL cFilterHarb
    LOCAL bFilter
-   LOCAL xResult
    LOCAL cKeyword
    LOCAL cValue
    LOCAL cOperator
@@ -12371,7 +12370,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          /* Evaluate filter */
          BEGIN SEQUENCE WITH {| oError | Break( oError ) }
             bFilter := &( "{| hbmk, cFileName |" + cFilterHarb + "}" )
-            IF HB_ISLOGICAL( xResult := Eval( bFilter, hbmk, cFileName ) ) .AND. xResult
+            IF hb_defaultValue( Eval( bFilter, hbmk, cFileName ), .F. )
                cRetVal := cItem
             ENDIF
          RECOVER

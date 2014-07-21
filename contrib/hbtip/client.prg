@@ -166,7 +166,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
    LOCAL aProtoSSL := { "ftps", "https", "pop3s", "pops", "smtps" }
 
    DO CASE
-   CASE HB_ISSTRING( xTrace ) .OR. ( HB_ISLOGICAL( xTrace ) .AND. xTrace )
+   CASE HB_ISSTRING( xTrace ) .OR. hb_defaultValue( xTrace, .F. )
       oLog := TIPLog():New( iif( HB_ISSTRING( xTrace ), xTrace, NIL ) )
       ::bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
    CASE HB_ISEVALITEM( xTrace )

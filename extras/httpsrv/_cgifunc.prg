@@ -431,7 +431,7 @@ FUNCTION uhttpd_HtmlEntities( cString, cQuote_style )
 
 PROCEDURE uhttpd_Die( cError )
 
-   LOCAL oErr, lError
+   LOCAL oErr
 
    IF HB_ISSTRING( cError )
 #if 0
@@ -452,8 +452,7 @@ PROCEDURE uhttpd_Die( cError )
       oErr:canDefault  := .F.
       oErr:fileName    := ""
       oErr:osCode      := 0
-      lError := Eval( ErrorBlock(), oErr )
-      IF ! HB_ISLOGICAL( lError ) .OR. lError
+      IF hb_defaultValue( Eval( ErrorBlock(), oErr ), .T. )
          __errInHandler()
       ENDIF
       Break( oErr )

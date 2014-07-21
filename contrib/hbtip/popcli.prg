@@ -73,7 +73,7 @@ ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientPOP
 
-   ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "pop3", xTrace ), oCredentials )
+   ::super:new( oUrl, iif( hb_defaultValue( xTrace, .F. ), "pop3", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "pop3s" .OR. ::oUrl:cProto == "pops", 995, 110 )
    ::nConnTimeout := 10000

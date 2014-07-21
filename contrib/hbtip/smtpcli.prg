@@ -79,7 +79,7 @@ ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials, cClientHost ) CLASS TIPClientSMTP
 
-   ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "smtp", xTrace ), oCredentials )
+   ::super:new( oUrl, iif( hb_defaultValue( xTrace, .F. ), "smtp", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "smtps", 465, 25 )
    ::nConnTimeout := 50000

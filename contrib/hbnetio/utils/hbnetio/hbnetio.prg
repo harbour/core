@@ -526,14 +526,7 @@ STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister
       RETURN iif( cIndex $ netiomgm[ _NETIOSRV_hNotifStream ], netiomgm[ _NETIOSRV_hNotifStream ][ cIndex ][ _CLI_xCargo ], NIL )
 #endif
    CASE 4
-      IF ! HB_ISLOGICAL( lRegister ) .OR. ! lRegister
-         hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
-         IF cIndex $ netiomgm[ _NETIOSRV_hNotifStream ]
-            hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], cIndex )
-         ENDIF
-         hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
-         RETURN -1
-      ELSE
+      IF hb_defaultValue( lRegister, .F. )
          cli := Array( _CLI_MAX_ )
          cli[ _CLI_pConnSock ]   := pConnSock
          cli[ _CLI_nStreamID ]   := nStreamID
@@ -543,6 +536,13 @@ STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister
          netiomgm[ _NETIOSRV_hNotifStream ][ cIndex ] := cli
          hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
          RETURN nStreamID
+      ELSE
+         hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
+         IF cIndex $ netiomgm[ _NETIOSRV_hNotifStream ]
+            hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], cIndex )
+         ENDIF
+         hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
+         RETURN -1
       ENDIF
    ENDSWITCH
 

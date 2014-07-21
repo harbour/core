@@ -277,8 +277,8 @@
    #xuntranslate NetName(                      =>
    #xuntranslate MemoWrit(                     =>
 
-   #xtranslate NetName( <n> )                  => iif( HB_ISNUMERIC( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
-   #xtranslate MemoWrit( <x>, <y>, <z> )       => iif( HB_ISLOGICAL( <z> ) .AND. ! <z>, hb_MemoWrit( <x>, <y> ), MemoWrit( <x>, <y> ) )
+   #xtranslate NetName( <n> )                  => iif( hb_defaultValue( <n>, 0 ) == 1, hb_UserName(), NetName() )
+   #xtranslate MemoWrit( <x>, <y>, <z> )       => iif( hb_defaultValue( <z>, T. ), MemoWrit( <x>, <y> ), hb_MemoWrit( <x>, <y> ) )
 
    #xuntranslate AIns(                         =>
    #xuntranslate ADel(                         =>
