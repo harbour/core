@@ -134,11 +134,11 @@ STATIC PROCEDURE GetSession()
    LOCAL cNickName  := Space( 10 )
    LOCAL dBirthdate := hb_SToD()
    LOCAL nBudget    := 125000
-   LOCAL cRemark    := "Some notes" + hb_eol() + ;
+   LOCAL cRemark    := ;
+      "Some notes" + hb_eol() + ;
       "about this person"
    LOCAL nwinnum
    LOCAL nrow1, ncol1, nrow2, ncol2
-   LOCAL cdebugreport
 
    IF s_nsession > 15
       MyMessageBox( 0, "Sorry, maximum number of sessions reached" )
@@ -165,13 +165,13 @@ STATIC PROCEDURE GetSession()
    EBReadGets( nwinnum, @aEBGets )   // READ
 
    // debugging text
-   cdebugreport := "Back to GetSession() of window " + hb_ntos( nwinnum ) + " with these values returned:" + hb_eol()
-   cdebugreport += "cName:" + cName + hb_eol()
-   cdebugreport += "cNickName:" + cNickName + hb_eol()
-   cdebugreport += "dBirthDate:" + DToC( dBirthDate ) + hb_eol()
-   cdebugreport += "nBudget:" + Transform( nBudget, "999,999.99" ) + hb_eol()
-   cdebugreport += "cRemark:" + cRemark
-   MyMessageBox( nwinnum, cdebugreport )
+   MyMessageBox( nwinnum, ;
+      "Back to GetSession() of window " + hb_ntos( nwinnum ) + " with these values returned:" + hb_eol() + ;
+      "cName:" + cName + hb_eol() + ;
+      "cNickName:" + cNickName + hb_eol() + ;
+      "dBirthDate:" + DToC( dBirthDate ) + hb_eol() + ;
+      "nBudget:" + Transform( nBudget, "999,999.99" ) + hb_eol() + ;
+      "cRemark:" + cRemark )
 
    wvw_lCloseWindow()
 
@@ -181,9 +181,9 @@ STATIC PROCEDURE GetSession()
 
 STATIC PROCEDURE MyHelp()
 
-   LOCAL ccallstack, i
+   LOCAL ccallstack := ""
+   LOCAL i
 
-   ccallstack := ""
    FOR i := 0 TO 8
       ccallstack += hb_ntos( i ) + ". " + ProcName( i ) + "(" + hb_ntos( ProcLine( i ) ) + ")" + hb_eol()
    NEXT
@@ -314,13 +314,13 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
       EndGets( nwinnum, @aEBGets, nOKbutton, nCancelbutton, nCloseButton );
       } )
 
-   ncol1 := ncol1 + 10 + 1
+   ncol1 += 10 + 1
    nCancelbutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Cancel", , ;
       {|| CancelVar( nwinnum, @aEBGets, @lDone ), ;
       EndGets( nwinnum, @aEBGets, nOKbutton, nCancelbutton, nCloseButton );
       } )
 
-   ncol1 := ncol1 + 10 + 1
+   ncol1 += 10 + 1
    nClosebutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Close", , ;
       {|| ToCloseWindow( nwinnum, @lClosepermitted ) } )
    wvw_pbEnable( nwinnum, nclosebutton, .F. )
@@ -453,7 +453,7 @@ STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButt
 // save values into variables
 STATIC PROCEDURE SaveVar( nwinnum, aEBGets, lDone )
 
-   LOCAL aGet, cdebugreport
+   LOCAL aGet
 
    FOR EACH aGet IN aEBGets
       // do some validation if necessary
@@ -463,16 +463,16 @@ STATIC PROCEDURE SaveVar( nwinnum, aEBGets, lDone )
    lDone := .T.
 
    // debugging text
-   cdebugreport := "Get session in window " + hb_ntos( nwinnum ) + " is ended with confirmation" + hb_eol() + ;
-      "Values have been assigned to the respective ebGET variables"
-   MyMessageBox( nwinnum, cdebugreport )
+   MyMessageBox( nwinnum, ;
+      "Get session in window " + hb_ntos( nwinnum ) + " is ended with confirmation" + hb_eol() + ;
+      "Values have been assigned to the respective ebGET variables" )
 
    RETURN
 
 // restore initial values into variables
 STATIC PROCEDURE CancelVar( nwinnum, aEBGets, lDone )
 
-   LOCAL aGet, cdebugreport
+   LOCAL aGet
 
    FOR EACH aGet IN aEBGets
       Eval( aGet[ __GET_BASSIGN ], aGet[ __GET_XINIT ] )
@@ -480,9 +480,9 @@ STATIC PROCEDURE CancelVar( nwinnum, aEBGets, lDone )
    lDone := .T.
 
    // debugging text
-   cdebugreport := "Get session in window " + hb_ntos( nwinnum ) + " is ended with cancellation" + hb_eol() + ;
-      "Values has been assigned to the respective initial ebGET variables"
-   MyMessageBox( nwinnum, cdebugreport )
+   MyMessageBox( nwinnum, ;
+      "Get session in window " + hb_ntos( nwinnum ) + " is ended with cancellation" + hb_eol() + ;
+      "Values has been assigned to the respective initial ebGET variables" )
 
    RETURN
 
@@ -490,8 +490,9 @@ STATIC PROCEDURE ToCloseWindow( nwinnum, lPermitted )
 
    // allow to close topmost window only
    lPermitted := ( nwinnum == wvw_nNumWindows() - 1 )
-   IF ! lpermitted
-      MyMessageBox( nwinnum, "Window " + hb_ntos( nwinnum ) + " is not allowed to be closed, yet" + hb_eol() + ;
+   IF ! lPermitted
+      MyMessageBox( nwinnum, ;
+         "Window " + hb_ntos( nwinnum ) + " is not allowed to be closed, yet" + hb_eol() + ;
          "Please close window " + hb_ntos( wvw_nNumWindows() - 1 ) + " first" )
    ENDIF
 
@@ -659,16 +660,16 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       CASE CM == "A" .OR. CM == "!"
          IF IsAlpha( CB ) .OR. CB == " "
             IF CM == "!"
-               OutBuffer := OutBuffer + Upper( CB )
+               OutBuffer += Upper( CB )
             ELSE
-               OutBuffer := OutBuffer + CB
+               OutBuffer += CB
             ENDIF
          ELSE
             IF x == icp
                BadEntry := .T.
-               OutBuffer := OutBuffer + OldChar
+               OutBuffer += OldChar
             ELSE
-               OutBuffer := OutBuffer + " "
+               OutBuffer += " "
             ENDIF
          ENDIF
 
@@ -677,40 +678,40 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
             ( mcvaltype == "N" .AND. ; // x
             CB == "-" .AND. x == fnb .AND. PCount() > 1 )
 
-            OutBuffer := OutBuffer + CB
+            OutBuffer += CB
          ELSE
             IF x == icp
                BadEntry := .T.
-               OutBuffer := OutBuffer + OldChar
+               OutBuffer += OldChar
             ELSE
-               OutBuffer := OutBuffer + " "
+               OutBuffer += " "
             ENDIF
          ENDIF
 
       CASE CM == " "
          IF CB == " "
-            OutBuffer := OutBuffer + CB
+            OutBuffer += CB
          ELSE
             IF x == icp
                BadEntry := .T.
-               OutBuffer := OutBuffer + OldChar
+               OutBuffer += OldChar
             ELSE
-               OutBuffer := OutBuffer + " "
+               OutBuffer += " "
             ENDIF
          ENDIF
 
          // x
       CASE CM == "X"
-         OutBuffer := OutBuffer + CB
+         OutBuffer += CB
 
       OTHERWISE
-         OutBuffer := OutBuffer + CM
+         OutBuffer += CM
 
       ENDCASE
    NEXT
 
    // Replace Content
-   IF ! ( BackInBuffer == OutBuffer )
+   IF !( BackInBuffer == OutBuffer )
       wvw_ebSetText( mnwinnum, mnebid, OutBuffer )
    ENDIF
 

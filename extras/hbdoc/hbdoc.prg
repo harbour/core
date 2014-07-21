@@ -565,7 +565,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
    ELSE
 
-      IF ! ( ;
+      IF !( ;
          /* Lower( hsBlock[ "CATEGORY" ] ) == "document" .OR. */ ;
          /* ! ( hsBlock[ "SUBCODE" ] == "" ) .OR. */ ;
          .F. )

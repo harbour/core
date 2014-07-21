@@ -113,7 +113,7 @@ FUNCTION SQLApplyUpdates()
 
                   IF oRow:FieldPos( FieldName( x ) ) != 0
 
-                     IF ! ( FieldGet( x ) == oRow:FieldGet( FieldName( x ) ) )
+                     IF !( FieldGet( x ) == oRow:FieldGet( FieldName( x ) ) )
                         oRow:FieldPut( FieldName( x ), FieldGet( x ) )
                         lUpdate := .T.
                      ENDIF

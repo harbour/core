@@ -123,9 +123,9 @@
 #xtranslate hb_ADel( <a>, <p> )            => ADel( <a>, <p> )
 #xtranslate hb_ADel( <a>, <p>, <r> )       => ( ADel( <a>, <p> ), iif( <r>, ASize( <a>, Len( <a> ) - 1 ), ), <a> )
 
+#xtranslate hb_ntos( <n> )                 => LTrim( Str( <n> ) )
 #xtranslate hb_Date()                      => Date()
 #xtranslate hb_Date( <y>, <m>, <d> )       => hb_SToD( StrZero( Int( <y> ), 4 ) + StrZero( Int( <m> ), 2 ) + StrZero( Int( <d> ), 2 ) )
-#xtranslate hb_ntos( <n> )                 => LTrim( Str( <n> ) )
 #xtranslate hb_CToD( [<s>] )               => CToD( s )
 #xtranslate hb_DToC( [<s>] )               => DToC( s )
 #xtranslate hb_CToD( [<s>], <f> )          => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, <f> ), dt := CToD( s ), Set( _SET_DATEFORMAT, df ), dt }, <s> )

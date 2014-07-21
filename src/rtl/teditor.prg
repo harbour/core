@@ -321,7 +321,7 @@ METHOD GotoLine( nRow ) CLASS HBEditor
 
          ::nRow := nRow
 
-         IF ! ( ::nFirstRow == 1 .AND. nRow <= ::nNumRows )
+         IF !( ::nFirstRow == 1 .AND. nRow <= ::nNumRows )
             ::nFirstRow := Max( 1, nRow - ( ::Row() - ::nTop ) )
          ENDIF
 
