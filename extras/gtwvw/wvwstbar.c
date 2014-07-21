@@ -220,7 +220,7 @@ HB_FUNC( WVW_SBADDPART )
          SendMessage( hWndSB, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
    }
 
-   SendMessage( hWndSB, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, ( LPARAM ) NULL );
+   SendMessage( hWndSB, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, ( LPARAM ) 0 );
    if( ! HB_ISNIL( 7 ) )
       SendMessage( hWndSB, SB_SETTIPTEXT, ( WPARAM ) ( numOfParts - 1 ), ( LPARAM ) hb_parcx( 7 ) );
 
