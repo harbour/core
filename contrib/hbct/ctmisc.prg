@@ -45,6 +45,7 @@
  */
 
 #include "color.ch"
+#include "fileio.ch"
 #include "setcurs.ch"
 
 #include "hbmemory.ch"
@@ -63,8 +64,8 @@ FUNCTION Center( c, n, p, lMode )
    IF HB_ISLOGICAL( p )
       lMode := p
       p := NIL
-   ELSEIF ! HB_ISLOGICAL( lMode )
-      lMode := .F.
+   ELSE
+      hb_default( @lMode, .F. )
    ENDIF
 
    cRet := PadC( RTrim( hb_defaultValue( c, "" ) ), n, p )
@@ -101,3 +102,51 @@ FUNCTION DosParam()
 
 FUNCTION ExeName()
    RETURN hb_ProgName()
+
+FUNCTION IsCGA( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsEGA( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsHercules( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsMCGA( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsMono( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsPGA( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsVGA()
+   RETURN .T.
+
+FUNCTION CGA40( lMono )
+
+   HB_SYMBOL_UNUSED( lMono )
+
+   RETURN SetMode( MaxRow() + 1, 40 )
+
+FUNCTION CGA80( lMono )
+
+   HB_SYMBOL_UNUSED( lMono )
+
+   RETURN SetMode( MaxRow() + 1, 80 )
+
+FUNCTION EGA43()
+   RETURN SetMode( 43, MaxCol() + 1 )
+
+FUNCTION VGA28()
+   RETURN SetMode( 28, MaxCol() + 1 )
+
+FUNCTION VGA50()
+   RETURN SetMode( 50, MaxCol() + 1 )
+
+FUNCTION DiskTotal( cDrive )
+   RETURN hb_DiskSpace( hb_defaultValue( cDrive, hb_CurDrive() ) + hb_osDriveSeparator(), HB_DISK_TOTAL )
+
+FUNCTION DiskFree( cDrive )
+   RETURN hb_DiskSpace( hb_defaultValue( cDrive, hb_CurDrive() ) + hb_osDriveSeparator(), HB_DISK_FREE )

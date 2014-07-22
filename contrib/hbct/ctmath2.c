@@ -136,13 +136,11 @@ HB_FUNC( SIGN )
 
       if( dInput == 0.00 )
          iResult = 0;
+      else if( dInput > 0.00 )
+         iResult = 1;
       else
-      {
-         if( dInput > 0.00 )
-            iResult = 1;
-         else
-            iResult = -1;
-      }
+         iResult = -1;
+
       hb_retni( iResult );
    }
    else
@@ -216,11 +214,12 @@ HB_FUNC( FACT )
    if( HB_ISNUM( 1 ) )
    {
       int iInput = hb_parni( 1 );
-      int i;
-      double dResult = 1.0;
 
       if( iInput >= 0 && iInput < 22 )
       {
+         double dResult = 1.0;
+         int i;
+
          for( i = 1; i <= iInput; i++ )
             dResult *= ( double ) i;
          hb_retnd( dResult );

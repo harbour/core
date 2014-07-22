@@ -50,7 +50,6 @@ ctmath.c
 ctmath2.c
 ctnet.c
 ctpad.c
-ctset.c
 ctstr.c
 ctstrfil.c
 ctwfunc.c

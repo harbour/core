@@ -48,6 +48,8 @@
 #include "ct.h"
 #include "ctmath.h"
 
+#include "hbstack.h"
+
 /* --- initialization --- */
 int ct_math_init( void )
 {
@@ -62,18 +64,31 @@ int ct_math_exit( void )
 }
 
 /* --- math precision --- */
-static int s_iPrecision = 16; /* TODO: make this thread safe */
+static void s_iPrecision_init( void * cargo )
+{
+   int * piPrecision = ( int * ) cargo;
+
+   *piPrecision = 16;
+}
+
+static HB_TSD_NEW( s_iPrecision, sizeof( int ), s_iPrecision_init, NULL );
 
 void ct_setprecision( int iPrecision )
 {
+   int * piPrecision = ( int * ) hb_stackGetTSD( &s_iPrecision );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setprecision (%i)", iPrecision ) );
-   s_iPrecision = iPrecision;
+
+   *piPrecision = iPrecision;
 }
 
 int ct_getprecision( void )
 {
+   int * piPrecision = ( int * ) hb_stackGetTSD( &s_iPrecision );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getprecision()" ) );
-   return s_iPrecision;
+
+   return *piPrecision;
 }
 
 HB_FUNC( SETPREC )
