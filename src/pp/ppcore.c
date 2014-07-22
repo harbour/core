@@ -1262,7 +1262,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          }
          else if( ch == '*' && pState->pFile->iTokens == 0 )
          {
-            /* strip the rest of line with // or && comment */
+            /* strip the rest of line with * comment */
             n = nLen;
          }
          else if( ch == '/' && nLen > 1 && pBuffer[ 1 ] == '*' )

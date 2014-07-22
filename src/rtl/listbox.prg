@@ -1102,13 +1102,14 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
       o:sBlock    := bSBlock
 
       FOR EACH xItem IN aItems
-         IF ! HB_ISARRAY( xItem )
+         DO CASE
+         CASE ! HB_ISARRAY( xItem )
             o:addItem( xItem )
-         ELSEIF Len( xItem ) == _ITEM_cText
+         CASE Len( xItem ) == _ITEM_cText
             o:addItem( xItem[ _ITEM_cText ] )
-         ELSE
+         OTHERWISE
             o:addItem( xItem[ _ITEM_cText ], xItem[ _ITEM_xData ] )
-         ENDIF
+         ENDCASE
       NEXT
 
       IF hb_defaultValue( lScrollBar, .F. )

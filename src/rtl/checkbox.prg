@@ -326,11 +326,11 @@ METHOD New( nRow, nCol, cCaption ) CLASS CheckBox
 
    __defaultNIL( @cCaption, "" )
 
-   ::caption  := cCaption
-   ::capRow   := nRow
-   ::capCol   := nCol + 3 + 1
-   ::row      := nRow
-   ::col      := nCol
+   ::caption := cCaption
+   ::capRow  := nRow
+   ::capCol  := nCol + 3 + 1
+   ::row     := nRow
+   ::col     := nCol
 
    IF IsDefColor()
       ::cColorSpec := "W/N,W+/N,W/N,W+/N"
