@@ -7,7 +7,7 @@ PROCEDURE Main( cDate, cDays )
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    hb_default( @cDate, DToS( Date() ) )
-   hb_default( @cDays, "10" )
+   hb_default( @cDays, hb_ntos( 10 ) )
 
    nDays := ft_AddWkDy( hb_SToD( cDate ), Val( cDays ) )
 

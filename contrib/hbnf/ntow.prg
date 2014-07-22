@@ -16,13 +16,13 @@ FUNCTION ft_NToW( nAmount )
 
    STATIC sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
 
-   LOCAL nTemp, cResult, nQualNo
-   LOCAL nDiv := 10 ^ ( Int( sol10( nAmount ) / 3 ) * 3 )
+   LOCAL nTemp, cResult
+   LOCAL nDiv := 10 ^ ( Int( sol10( nAmount := Max( 0, nAmount ) ) / 3 ) * 3 )
 
    nTemp   := Int( nAmount % nDiv )
    nAmount := Int( nAmount / nDiv )
-   nQualNo := Int( sol10( nDiv ) / 3 ) + 1
-   cResult := " " + grp_to_words( nAmount ) + sc_qualifiers[ nQualNo ]
+   cResult := " " + grp_to_words( nAmount ) + ;
+      sc_qualifiers[ Int( sol10( nDiv ) / 3 ) + 1 ]
 
    IF nTemp > ( nDiv /= 1000 ) .AND. nDiv > 1
       cResult += ft_NToW( nTemp, nDiv )
@@ -36,11 +36,9 @@ STATIC FUNCTION grp_to_words( nGrp )
 
    STATIC sc_ones := { "", ;
       " One", " Two", " Three", " Four", " Five", " Six", " Seven", " Eight", " Nine" }
-
    STATIC sc_teens := { ;
       " Ten",     " Eleven",    " Twelve", ;
       " Thirteen", " Fourteen", " Fifteen", " Sixteen", " Seventeen", " Eighteen", " Nineteen" }
-
    STATIC sc_tens :=  { "", "", ;
       " Twenty", " Thirty", " Forty", " Fifty", " Sixty", " Seventy", " Eighty", " Ninety" }
 

@@ -385,7 +385,7 @@ generation) might not work as expected.
 You can set these environment variables before starting
 the build. Make sure to adjust them to your own directories:
 
-    HB_WITH_CURSES= (on *nix systems and DJGPP, where it's autodetected)
+    HB_WITH_CURSES= (on *nix systems and DJGPP, autodetected on both)
     HB_WITH_GPM= (on Linux only)
     HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
     HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
@@ -420,8 +420,7 @@ See contrib-specific dependencies and build notes in the projects'
 1. Install [Homebrew](http://brew.sh/)
 2. Install packages:
 
-        $ brew install pcre slang
-        $ brew install upx uncrustify ack optipng jpegoptim
+        $ brew install pcre slang upx uncrustify ack optipng jpegoptim
 
 3. Install [X11](https://xquartz.macosforge.org/landing/) (optional, for gtxwc)
 
@@ -430,46 +429,38 @@ See contrib-specific dependencies and build notes in the projects'
 
 You'll need these base packages to build/package/test/use Harbour:
 
-    $ sudo apt-get install bash git gcc binutils fakeroot debhelper valgrind upx uncrustify
+      bash git gcc binutils fakeroot debhelper valgrind upx uncrustify
 
-You'll need these packages to compile certain optional Harbour features:
+You'll need these packages to compile optional core Harbour features:
 
-      for gtcrs terminal lib:    $ sudo apt-get install libncurses-dev
-      for gtsln terminal lib:    $ sudo apt-get install libslang2-dev OR
-                                 $ sudo apt-get install libslang1-dev
-      for gtxwc terminal lib:    $ sudo apt-get install libx11-dev
-      for console mouse support: $ sudo apt-get install libgpm-dev OR
-                                 $ sudo apt-get install libgpmg1-dev
+      for gtcrs terminal lib:    libncurses-dev
+      for gtsln terminal lib:    libslang2-dev OR libslang1-dev
+      for gtxwc terminal lib:    libx11-dev
+      for console mouse support: libgpm-dev OR libgpmg1-dev
 
 Optional, to override locally hosted sources:
 
-      for zlib support:          $ sudo apt-get install zlib1g-dev
-      for pcre (regex) support:  $ sudo apt-get install libpcre3-dev
+      for zlib support:          zlib1g-dev
+      for pcre (regex) support:  libpcre3-dev
 
 ## Linux (.rpm based distros: openSUSE, Fedora, CentOS, Mandriva)
 
 You'll need these base packages to build/package/test/use Harbour:
 
-    bash git gcc make glibc-devel rpm valgrind upx uncrustify
+      bash git gcc make glibc-devel rpm valgrind upx uncrustify
 
-You'll need these packages to compile certain optional Harbour features:
+You'll need these packages to compile optional core Harbour features:
 
       for gtcrs terminal lib:    ncurses-devel ncurses
       for gtsln terminal lib:    slang-devel slang
-      for gtxwc terminal lib:    xorg-x11-devel
-                                 XFree86-devel
-      for console mouse support: gpm-devel OR
-                                 gpm
+      for gtxwc terminal lib:    xorg-x11-devel OR XFree86-devel
+      for console mouse support: gpm-devel OR gpm
+
 
 > NOTES:
 >
->    * You can use following commands on different distros to install packages:
->
->         openSUSE:       $ sudo zypper install <pkg>
->         Fedora, CentOS: $ sudo yum install <pkg>
->         Mandriva:       $ sudo urpmi <pkg>
->
->   * Check [this](http://distrowatch.com/dwres.php?resource=package-management) for more
+>   * See [this](http://distrowatch.com/dwres.php?resource=package-management) on
+>       package management in various distros.
 >   * On openSUSE, if you want to build 32-bit Harbour on a 64-bit host, install
 >       above packages with `-32bit` appended to their names, f.e. `slang-devel-32bit`
 
@@ -621,7 +612,7 @@ sensitive.
 
          <15><00> = <major><minor>
 
-         F.e. msvc: 1500, mingw: 0406
+         F.e. msvc: 1800 for 18.00.x, mingw: 0409 for 4.9.x
 
      Default: filled by compiler autodetection or empty
 

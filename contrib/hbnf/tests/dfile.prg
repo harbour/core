@@ -33,12 +33,8 @@ PROCEDURE Main( cInFile )
 
    READ
 
-   /*
-    * REMEMBER A WINDOW WILL BE ONE SIZE LESS AND GREATER THAN THE PASSED COORD.'S
-    *
-    * THE 9TH PARAMETER CONTAINS THE KEYS THAT THE ROUTINE WILL TERMINATE ON
-    *
-    */
+   /* Remember a window will be one size less and greater than the passed coordinates.
+      The 9th parameter contains the keys that the routine will terminate on. */
 
    aExitKeys := {}
    FOR EACH tmp IN cExitKeys

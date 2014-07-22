@@ -2,6 +2,6 @@
 
 PROCEDURE Main( cHexNum )
 
-   ? ft_Hex2Dec( cHexNum )
+   ? ft_Hex2Dec( hb_defaultValue( cHexNum, "D021" ) )
 
    RETURN
