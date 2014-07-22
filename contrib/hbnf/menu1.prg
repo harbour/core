@@ -1,6 +1,5 @@
 /*
- * This is an original work by Paul Ferrara and is placed in the
- * public domain.
+ * This is an original work by Paul Ferrara and is placed in the public domain.
  *
  * Modification history:
  *

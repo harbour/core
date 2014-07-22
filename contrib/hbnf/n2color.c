@@ -1,5 +1,5 @@
 /*
- * This function is an original work by David Richardson and is placed in the
+ * This is an original work by David Richardson and is placed in the
  * public domain.
  *
  * Modification history:

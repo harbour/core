@@ -1,6 +1,5 @@
 /*
- * This is an original work by Isa Asudeh and is placed in the
- * public domain.
+ * This is an original work by Isa Asudeh and is placed in the public domain.
  *
  * Modification history
  *

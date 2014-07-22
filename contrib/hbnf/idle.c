@@ -1,7 +1,6 @@
 /*
- * This function is an original work by Ted Means
- * (with much gratitude to Robert DiFalco) and is placed in the
- * public domain.
+ * This is an original work by Ted Means (with much gratitude to Robert DiFalco)
+ * and is placed in the public domain.
  *
  * Modification history:
  *

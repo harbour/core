@@ -612,7 +612,7 @@ sensitive.
 
          <15><00> = <major><minor>
 
-         F.e. msvc: 1800 for 18.00.x, mingw: 0409 for 4.9.x
+         F.e. mingw: 0409 for 4.9.x, msvc: 1800 for 18.00.x
 
      Default: filled by compiler autodetection or empty
 

@@ -1,6 +1,5 @@
 /*
- * This is an original work by Brian Loesgen and is placed in the
- * public domain.
+ * This is an original work by Brian Loesgen and is placed in the public domain.
  *
  * Modification history:
  *

@@ -1,6 +1,6 @@
 /*
- * This is an original work by David A. Richardson and is hereby placed
- * in the public domain.
+ * This is an original work by David A. Richardson and is placed in the
+ * public domain.
  *
  * Modification history:
  *

@@ -1,6 +1,5 @@
 /*
- * This is an original work by Eric Splaver and is placed in the
- * public domain.
+ * This is an original work by Eric Splaver and is placed in the public domain.
  *
  * Modification history:
  *

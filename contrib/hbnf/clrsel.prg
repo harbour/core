@@ -1,7 +1,6 @@
 /*
- * This is an original work by Dave Adams and is placed in the
- * public domain. Thanks to Brian Loesgen for offering ideas and
- * helping to tweak the code.
+ * This is an original work by Dave Adams and is placed in the public domain.
+ * Thanks to Brian Loesgen for offering ideas and helping to tweak the code.
  *
  * Modification history:
  *

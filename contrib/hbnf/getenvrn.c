@@ -1,6 +1,5 @@
 /*
- * This is an original work by Rick Whitt and is placed in the
- * public domain.
+ * This is an original work by Rick Whitt and is placed in the public domain.
  *
  * Modification history:
  *
@@ -38,10 +37,10 @@
    #include <windows.h>
 #endif
 
-#define NORETURN      0
-#define CHARTYPE      1
-#define ARRAYTYPE     2
-#define CRLF          "\x0D\x0A"
+#define NORETURN     0
+#define CHARTYPE     1
+#define ARRAYTYPE    2
+#define CRLF         "\x0D\x0A"
 
 HB_FUNC( FT_GETE )
 {
@@ -98,15 +97,17 @@ HB_FUNC( FT_GETE )
    }
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    {
-      LPTCH    lpEnviron = GetEnvironmentStrings(), lpEnv;
-      LPTSTR   lpResult  = NULL, lpDst;
-      HB_SIZE  nSize     = 0, nCount = 0;
-      PHB_ITEM pArray    = NULL;
-      int      rettype   = HB_ISARRAY( 1 ) ? ARRAYTYPE :
-                           ( HB_ISCHAR( 1 ) && HB_ISBYREF( 1 ) ? CHARTYPE : NORETURN );
+      LPTCH   lpEnviron = GetEnvironmentStrings(), lpEnv;
+      HB_SIZE nCount    = 0;
+      int     rettype   = HB_ISARRAY( 1 ) ? ARRAYTYPE :
+                          ( HB_ISCHAR( 1 ) && HB_ISBYREF( 1 ) ? CHARTYPE : NORETURN );
 
       if( lpEnviron )
       {
+         LPTSTR   lpResult = NULL, lpDst;
+         PHB_ITEM pArray   = NULL;
+         HB_SIZE  nSize    = 0;
+
          if( rettype == CHARTYPE )
          {
             for( lpEnv = lpEnviron; *lpEnv; lpEnv++ )

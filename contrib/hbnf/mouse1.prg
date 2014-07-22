@@ -1,6 +1,5 @@
-/* The functions contained herein are the work of Viktor Szakats based
- * on previous versions, all placed in the public domain.
- */
+/* This is an original work from 2012 by Viktor Szakats (vszakats.net/harbour)
+   and is placed in the public domain. */
 
 THREAD STATIC t_lCrsState := .F.
 THREAD STATIC t_lMInit := .F.

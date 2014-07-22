@@ -1,6 +1,6 @@
 /*
- * This is an original work by Steven Tyrakowski and is placed
- * in the public domain.
+ * This is an original work by Steven Tyrakowski and is placed in the
+ * public domain.
  *
  * Modification history:
  *

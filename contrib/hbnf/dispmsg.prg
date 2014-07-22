@@ -1,6 +1,6 @@
 /*
- * This function is an original work by Paul Ferrara (ColumbuSoft)
- * and is placed in the public domain.
+ * This is an original work by Paul Ferrara (ColumbuSoft) and is placed
+ * in the public domain.
  *
  * Modification history:
  *

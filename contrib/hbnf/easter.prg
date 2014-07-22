@@ -1,8 +1,8 @@
 /*
  * While I can say that I wrote the program, the algorithm is from Donald
  * Knuth's The Art of Computer Programming, Section 1.3.2.  So, the source
- * code is an original work by Paul Tucker <ptucker@sympatico.ca> and
- * is placed in the public domain
+ * code is an original work by Paul Tucker <ptucker@sympatico.ca>
+ * and is placed in the public domain
  *
  * Modification history:
  *

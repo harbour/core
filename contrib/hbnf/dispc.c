@@ -1,6 +1,5 @@
 /*
- * This is an original work by Mike Taylor and is placed in the
- * public domain.
+ * This is an original work by Mike Taylor and is placed in the public domain.
  *
  * Modification history:
  *
@@ -92,28 +91,12 @@ typedef struct
 
 static HB_TSD_NEW( s_dispc, sizeof( FT_DISPC ), NULL, NULL );
 
-/* prototypes */
-
-static void          chattr( PFT_DISPC dispc, int x, int y, int len, int attr );
-static HB_FOFFSET    getblock( PFT_DISPC dispc, HB_FOFFSET offset );
-static void          buff_align( PFT_DISPC dispc );
-static void          win_align( PFT_DISPC dispc );
-static void          disp_update( PFT_DISPC dispc, int offset );
-static void          windown( PFT_DISPC dispc );
-static void          winup( PFT_DISPC dispc );
-static void          linedown( PFT_DISPC dispc );
-static void          lineup( PFT_DISPC dispc );
-static void          filetop( PFT_DISPC dispc );
-static void          filebot( PFT_DISPC dispc );
-
 /* chattr() replace the color attribute with a new one starting at
    location x, y and going for length len. */
 static void chattr( PFT_DISPC dispc, int x, int y, int len, int attr )
 {
-   int i;
-
-   /* calc the screen memory coord */
-   HB_UCHAR * vmem;
+   int        i;
+   HB_UCHAR * vmem;  /* calc the screen memory coord */
 
    vmem = dispc->vseg + ( y * ( dispc->width + 1 ) * dispc->iCellSize ) + ( x * dispc->iCellSize ) + 1;
 
@@ -125,31 +108,25 @@ static void chattr( PFT_DISPC dispc, int x, int y, int len, int attr )
 }
 
 /* function getblock() reads the text file and returns the a block.
- *  the variables offset and buffsize tell it where to start reading and
- *  how many bytes to try to read.  if the block read in would not fill
- *  the buffer then the offset is adjusted so that the start or end of
- *  of the file is positioned at the head or tail of the buffer.
- *
- * it returns the offset into the file of the first byte of the buffer.
- */
+    the variables offset and buffsize tell it where to start reading and
+    how many bytes to try to read.  if the block read in would not fill
+    the buffer then the offset is adjusted so that the start or end of
+    of the file is positioned at the head or tail of the buffer.
+
+   It returns the offset into the file of the first byte of the buffer. */
 static HB_FOFFSET getblock( PFT_DISPC dispc, HB_FOFFSET offset )
 {
-   /* set the file pointer to the proper offset
-      and if an error occured then check to see
-      if a positive offset was requested, if so
-      then set the pointer to the offset from
-      the end of the file, otherwise set it from
-      the beginning of the file. */
-
+   /* set the file pointer to the proper offset and if an error occured
+      then check to see if a positive offset was requested, if so then
+      set the pointer to the offset from the end of the file, otherwise
+      set it from the beginning of the file. */
    hb_fsSeekLarge( dispc->infile, offset, FS_SET );
 
-   /* read in the file and set the buffer bottom variable equal */
-   /* to the number of bytes actually read in. */
-
+   /* read in the file and set the buffer bottom variable equal
+      to the number of bytes actually read in. */
    dispc->buffbot = hb_fsReadLarge( dispc->infile, dispc->buffer, dispc->buffsize );
 
    /* if a full buffer's worth was not read in, make it full. */
-
    if( dispc->buffbot != dispc->buffsize && dispc->fsize > dispc->buffsize )
    {
       if( offset > 0 )
@@ -161,7 +138,6 @@ static HB_FOFFSET getblock( PFT_DISPC dispc, HB_FOFFSET offset )
    }
 
    /* return the actual file position */
-
    return hb_fsSeekLarge( dispc->infile, 0, FS_RELATIVE ) - dispc->buffbot;
 }
 
@@ -176,9 +152,8 @@ static void buff_align( PFT_DISPC dispc )
 
    if( dispc->buffoffset != 0 )
    {
-      /* if the buffoffset is other than 0
-         start at the top of the file and scan
-         forward until a CR is reached. */
+      /* if the buffoffset is other than 0 start at the top of the file
+         and scan forward until a CR is reached. */
       i = dispc->bufftop;
 
       while( dispc->buffer[ i ] != CR && i < dispc->buffbot )
@@ -189,21 +164,16 @@ static void buff_align( PFT_DISPC dispc )
 
    /* if the buffer offset is not a complete
       buffer's length away from the file end */
-
    if( dispc->buffoffset + dispc->buffbot != dispc->fsize )
    {
-      /* if the file position of the last byte
-         of the buffer would end up past the
-         end of the file, then the buffer does
-         contain a complete buffer full and the
-         buffer end pointer needs to be set to
-         the last character of the file. */
-
+      /* if the file position of the last byte of the buffer would end up
+         past the end of the file, then the buffer does contain a complete
+         buffer full and the buffer end pointer needs to be set to the last
+         character of the file. */
       if( dispc->buffoffset + dispc->buffbot > dispc->fsize )
          dispc->buffbot = ( HB_ISIZ ) ( dispc->fsize - dispc->buffoffset );
 
-      /* point the end of the buffer to a valid
-         complete text line. */
+      /* point the end of the buffer to a valid complete text line. */
       i = dispc->buffbot;
 
       while( dispc->buffer[ i ] != CR && i > dispc->bufftop )
@@ -214,16 +184,15 @@ static void buff_align( PFT_DISPC dispc )
 }
 
 /* win_align() takes the value for wintop and then figures out where
- * winbot would be.  if winbot would extend past the end of the
- * buffer, then the top of the window is adjusted to ensure that a full
- * screen of text will appear.  This simplifies the cursor routines.
- */
+   winbot would be.  if winbot would extend past the end of the
+   buffer, then the top of the window is adjusted to ensure that a full
+   screen of text will appear.  This simplifies the cursor routines. */
 static void win_align( PFT_DISPC dispc )
 {
-   int i;
+   int i = 0;
 
-   dispc->winbot = dispc->wintop;   /* find out if there is enough text for */
-   i = 0;                           /* full window. */
+   /* find out if there is enough text for full window. */
+   dispc->winbot = dispc->wintop;
 
    while( dispc->winbot < dispc->buffbot && i < dispc->height )
    {
@@ -234,13 +203,12 @@ static void win_align( PFT_DISPC dispc )
 
    if( i < dispc->height )
    {
-      /* if there is not a full window,
-         then retrofit winbot to the end of a line */
+      /* if there is not a full window, then retrofit winbot to the end of a line */
       while( dispc->buffer[ dispc->winbot ] != LF && dispc->winbot > dispc->bufftop )
          dispc->winbot--;
 
-      dispc->wintop = dispc->winbot;
-      i = 0;                                /* and setup dispc->wintop */
+      dispc->wintop = dispc->winbot;  /* and setup dispc->wintop */
+      i = 0;
 
       while( dispc->wintop > dispc->bufftop && i <= dispc->height )
       {
@@ -255,37 +223,34 @@ static void win_align( PFT_DISPC dispc )
 }
 
 /* this routine displays the actual text in the window.  This is done
- * by taking each line and placing it in a string.  the screen line
- * is then taken from the appropriate group of characters in the string.
- * this allows a window to page left-right across the buffer without
- * having to use any complex algorithm to calc the needed chars.
- */
+   by taking each line and placing it in a string.  the screen line
+   is then taken from the appropriate group of characters in the string.
+   this allows a window to page left-right across the buffer without
+   having to use any complex algorithm to calc the needed chars. */
 static void disp_update( PFT_DISPC dispc, int offset )
 {
-   int line, col, pos, i;
+   int line = 0;
 
    dispc->bRefresh = HB_FALSE;
-   line = 0;
 
    while( line < dispc->height )
    {
-      /* calculate the initial position, this save execution
-         time because each column is considered as a offset
-         from the line start */
+      int col, pos, i;
 
+      /* calculate the initial position, this save execution time because
+         each column is considered as a offset from the line start */
       pos = ( line * ( dispc->width + 1 ) * dispc->iCellSize );
 
       /* copy string to temp buffer */
-
       for( i = 0; dispc->buffer[ offset ] != CR && offset <= dispc->winbot; offset++ )
       {
          if( i <= dispc->maxlin )
          {
-            if( dispc->buffer[ offset ] == '\t' )              /* check for a tab */
+            if( dispc->buffer[ offset ] == '\t' )         /* check for a tab */
             {
-               dispc->lbuff[ i++ ] = ' ';                      /* pad with spaces */
-               while( i % TABSET && i <= dispc->maxlin )       /* until tab stop */
-                  dispc->lbuff[ i++ ] = ' ';                   /* is reached or EOL */
+               dispc->lbuff[ i++ ] = ' ';                 /* pad with spaces */
+               while( i % TABSET && i <= dispc->maxlin )  /* until tab stop */
+                  dispc->lbuff[ i++ ] = ' ';              /* is reached or EOL */
             }
             else
                dispc->lbuff[ i++ ] = dispc->buffer[ offset ];
@@ -293,11 +258,10 @@ static void disp_update( PFT_DISPC dispc, int offset )
          }
       }
 
-      for(; i <= dispc->maxlin; i++ )          /* fill out with spaces */
+      for(; i <= dispc->maxlin; i++ )  /* fill out with spaces */
          dispc->lbuff[ i ] = ' ';
 
       /* place the proper characters onto the screen */
-
       for( i = dispc->wincol, col = 0; col <= dispc->width; col++ )
       {
          HB_UCHAR * vmem = dispc->vseg + pos + ( col * dispc->iCellSize );
@@ -312,16 +276,13 @@ static void disp_update( PFT_DISPC dispc, int offset )
 }
 
 /* move the window pointers so that a new window's worth of information
- * is visible.  it adjusts the pointers within the buffer and if necessary
- * it calls the getblock function to load in a new buffer
- */
+   is visible.  it adjusts the pointers within the buffer and if necessary
+   it calls the getblock function to load in a new buffer */
 static void winup( PFT_DISPC dispc )
 {
-   int        k;
-   HB_FOFFSET i, j;
+   int k = dispc->wintop - 3;
 
    dispc->bRefresh = HB_TRUE;
-   k = dispc->wintop - 3;
 
    while( dispc->buffer[ k ] != CR && k > dispc->bufftop )
       k--;
@@ -341,8 +302,8 @@ static void winup( PFT_DISPC dispc )
    }
    else if( dispc->bufftop + dispc->buffoffset > 0 && dispc->fsize > dispc->buffsize )
    {
-      i = dispc->buffoffset + dispc->wintop;
-      j = dispc->buffoffset - ( dispc->buffsize / 2 );
+      HB_FOFFSET i = dispc->buffoffset + dispc->wintop;
+      HB_FOFFSET j = dispc->buffoffset - ( dispc->buffsize / 2 );
 
       if( j < 0 )
          j = 0;
@@ -356,16 +317,13 @@ static void winup( PFT_DISPC dispc )
 }
 
 /* move the window pointers so that a new window's worth of information
- * is visible.  it adjusts the pointers within the buffer and if necessary
- * it calls the getblock function to load in a new buffer
- */
+   is visible.  it adjusts the pointers within the buffer and if necessary
+   it calls the getblock function to load in a new buffer */
 static void windown( PFT_DISPC dispc )
 {
-   int        k;
-   HB_FOFFSET i, j;
+   int k = dispc->winbot;
 
    dispc->bRefresh = HB_TRUE;
-   k = dispc->winbot;
 
    while( dispc->buffer[ k ] != CR && k <= dispc->buffbot )
       k++;
@@ -382,8 +340,9 @@ static void windown( PFT_DISPC dispc )
    }
    else if( ( dispc->buffbot + dispc->buffoffset ) < dispc->fsize && dispc->fsize > dispc->buffsize )
    {
-      i = dispc->buffoffset + dispc->wintop;
-      j = i;
+      HB_FOFFSET i, j;
+
+      j = i = dispc->buffoffset + dispc->wintop;
 
       if( j > dispc->fsize )
          j = dispc->fsize - dispc->buffsize;
@@ -403,9 +362,9 @@ static void windown( PFT_DISPC dispc )
 /* move the cursor one line down */
 static void linedown( PFT_DISPC dispc )
 {
-   if( dispc->winrow < dispc->eline )     /* if cursor not at last line */
+   if( dispc->winrow < dispc->eline )  /* if cursor not at last line */
       ++dispc->winrow;
-   else                                   /* otherwise adjust the window top variable */
+   else                                /* otherwise adjust the window top variable */
       windown( dispc );
 }
 
@@ -459,8 +418,6 @@ HB_FUNC( _FT_DFINIT )
    PFT_DISPC dispc = ( PFT_DISPC ) hb_stackGetTSD( &s_dispc );
 
    int     rval;
-   HB_ISIZ j;
-   HB_ISIZ i;
    HB_SIZE nSize;
 
    int sline = hb_parni( 2 );
@@ -468,19 +425,22 @@ HB_FUNC( _FT_DFINIT )
    int eline = hb_parni( 4 );
    int ecol  = hb_parni( 5 );
 
-   int maxlin = hb_parni( 12 );
+   int     maxlin   = hb_parni( 12 );
    HB_ISIZ buffsize = hb_parns( 13 );
 
    hb_gtRectSize( sline, scol, eline, ecol, &nSize );
 
    if( nSize > 0 && maxlin >= 0 && buffsize > 0 )
    {
+      HB_ISIZ j;
+      HB_ISIZ i;
+
       rval = 0;
 
-      dispc->sline = sline;                             /* top row of window */
-      dispc->scol  = scol;                              /* left col */
-      dispc->eline = eline;                             /* bottom row */
-      dispc->ecol  = ecol;                              /* right col */
+      dispc->sline = sline;  /* top row of window */
+      dispc->scol  = scol;   /* left col */
+      dispc->eline = eline;  /* bottom row */
+      dispc->ecol  = ecol;   /* right col */
 
       dispc->width  = dispc->ecol - dispc->scol;        /* calc width of window */
       dispc->height = dispc->eline - dispc->sline + 1;  /* calc height of window */
@@ -510,7 +470,7 @@ HB_FUNC( _FT_DFINIT )
       /* memory allocated? */
       if( ! dispc->bIsAllocated )
       {
-         rval = 8;                     /* return error code 8 (memory) */
+         rval = 8;  /* return error code 8 (memory) */
          if( dispc->buffer != NULL )
          {
             hb_xfree( dispc->buffer );
@@ -527,12 +487,12 @@ HB_FUNC( _FT_DFINIT )
             dispc->vseg = NULL;
          }
       }
-      else                                                     /* get parameters */
+      else                                                   /* get parameters */
       {
-         dispc->infile = hb_numToHandle( hb_parnint( 1 ) );    /* file handle */
-         j = hb_parni( 6 );                                    /* starting line value */
-         dispc->norm   = hb_parni( 7 );                        /* normal color attribute */
-         dispc->hlight = hb_parni( 8 );                        /* highlight color attribute */
+         dispc->infile = hb_numToHandle( hb_parnint( 1 ) );  /* file handle */
+         j = hb_parni( 6 );                                  /* starting line value */
+         dispc->norm   = hb_parni( 7 );                      /* normal color attribute */
+         dispc->hlight = hb_parni( 8 );                      /* highlight color attribute */
 
          if( HB_ISARRAY( 9 ) )
          {
@@ -554,17 +514,17 @@ HB_FUNC( _FT_DFINIT )
                dispc->keylist[ i - 1 ] = pszKeys[ i - 1 ];  /* get exit key list */
          }
 
-         dispc->bBrowse = hb_parl( 10 );              /* get browse flag */
+         dispc->bBrowse = hb_parl( 10 );       /* get browse flag */
 
-         dispc->colinc = hb_parni( 11 );              /* column skip value */
+         dispc->colinc = hb_parni( 11 );       /* column skip value */
 
-         dispc->bufftop    = 0;                       /* init buffer top pointer */
-         dispc->buffbot    = dispc->buffsize;         /* init buffer bottom pointer */
-         dispc->buffoffset = 0;                       /* curr line offset into buffer */
-         dispc->winrow     = dispc->sline;            /* init window row */
-         dispc->wincol     = 0;                       /* init window col */
-         dispc->wintop     = 0;                       /* init window top pointer */
-         dispc->winbot     = 0;                       /* init window bottom pointer */
+         dispc->bufftop    = 0;                /* init buffer top pointer */
+         dispc->buffbot    = dispc->buffsize;  /* init buffer bottom pointer */
+         dispc->buffoffset = 0;                /* curr line offset into buffer */
+         dispc->winrow     = dispc->sline;     /* init window row */
+         dispc->wincol     = 0;                /* init window col */
+         dispc->wintop     = 0;                /* init window top pointer */
+         dispc->winbot     = 0;                /* init window bottom pointer */
 
          /* get file size */
          dispc->fsize = hb_fsSeek( dispc->infile, 0, FS_END ) - 1;
@@ -574,7 +534,7 @@ HB_FUNC( _FT_DFINIT )
 
          /* if block less than buffsize */
          if( dispc->fsize < dispc->buffbot )
-            dispc->buffbot = ( int ) dispc->fsize;           /* then set buffer bottom */
+            dispc->buffbot = ( int ) dispc->fsize;  /* then set buffer bottom */
 
          /* set the current lines buffer offset pointer */
          dispc->buffoffset = getblock( dispc, dispc->bufftop );
@@ -624,16 +584,14 @@ HB_FUNC( FT_DISPFILE )
 {
    PFT_DISPC dispc = ( PFT_DISPC ) hb_stackGetTSD( &s_dispc );
 
-   int     i;
-   char    rval[ 2 ];
-   HB_BOOL bDone;
-
    int ch;
 
    /* make sure buffers were allocated and file was opened */
    if( dispc->bIsAllocated && dispc->infile > 0 )
    {
-      bDone = HB_FALSE;
+      HB_BOOL bDone = HB_FALSE;
+      int     i;
+
       dispc->bRefresh = HB_TRUE;
 
       /* draw inside of window with normal color attribute */
@@ -645,13 +603,12 @@ HB_FUNC( FT_DISPFILE )
       /* main processing loop -- terminated by user key press */
       do
       {
-         if( dispc->bRefresh )                     /* redraw window contents? */
+         if( dispc->bRefresh )  /* redraw window contents? */
             disp_update( dispc, dispc->wintop );
 
          hb_gtRest( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
 
-         /* if not browse, highlight the current line */
-         if( ! dispc->bBrowse )
+         if( ! dispc->bBrowse )  /* if not browse, highlight the current line */
             chattr( dispc, 0, dispc->winrow - dispc->sline, dispc->width, dispc->hlight );
 
          hb_gtRest( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
@@ -660,8 +617,7 @@ HB_FUNC( FT_DISPFILE )
 
          ch = hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 
-         /* if not browse, then un-highlight current line */
-         if( ! dispc->bBrowse )
+         if( ! dispc->bBrowse )  /* if not browse, then un-highlight current line */
             chattr( dispc, 0, dispc->winrow - dispc->sline, dispc->width, dispc->norm );
 
          hb_gtRest( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
@@ -669,116 +625,109 @@ HB_FUNC( FT_DISPFILE )
          /* figure out what the user wants to do */
          switch( ch )
          {
-            case K_DOWN:
+            case K_DOWN:        /* if browse flag is set, force */
 
-               if( dispc->bBrowse )                  /* if browse flag */
-                  dispc->winrow = dispc->eline;      /* is set, force */
+               if( dispc->bBrowse )
+                  dispc->winrow = dispc->eline;
 
-               /* active line to */
-               linedown( dispc );                    /* be last line */
+               linedown( dispc );  /* active line to be last line */
                break;
 
-            case K_UP:
+            case K_UP:          /* if browse flag is set, force */
 
-               if( dispc->bBrowse )                  /* if browse flag */
-                  dispc->winrow = dispc->sline;      /* is set, force */
+               if( dispc->bBrowse )
+                  dispc->winrow = dispc->sline;
 
-               /* active line to */
-               lineup( dispc );                      /* be first line */
+               lineup( dispc );  /* active line to be first line */
                break;
 
-            case K_LEFT:
+            case K_LEFT:        /* move cursor to the left */
 
-               dispc->wincol  -= dispc->colinc;      /* move cursor */
-               dispc->bRefresh = HB_TRUE;            /* to the left */
+               dispc->wincol  -= dispc->colinc;
+               dispc->bRefresh = HB_TRUE;
 
                if( dispc->wincol < 0 )
                   dispc->wincol = 0;
 
                break;
 
-            case K_RIGHT:
+            case K_RIGHT:       /* move cursor to the right */
 
-               dispc->wincol  += dispc->colinc;      /* move cursor */
-               dispc->bRefresh = HB_TRUE;            /* to the right */
+               dispc->wincol  += dispc->colinc;
+               dispc->bRefresh = HB_TRUE;
 
                if( dispc->wincol > ( dispc->maxlin - dispc->width ) )
                   dispc->wincol = dispc->maxlin - dispc->width;
 
                break;
 
-            case K_HOME:
+            case K_HOME:        /* move cursor to first col */
 
-               dispc->wincol   = 0;                  /* move cursor */
-               dispc->bRefresh = HB_TRUE;            /* to first col */
-
+               dispc->wincol   = 0;
+               dispc->bRefresh = HB_TRUE;
                break;
 
-            /* move cursor to last col */
-
-            case K_END:
+            case K_END:         /* move cursor to last col */
 
                dispc->wincol   = dispc->maxlin - dispc->width;
                dispc->bRefresh = HB_TRUE;
-
                break;
 
-            case K_CTRL_LEFT:
+            case K_CTRL_LEFT:   /* move cursor 16 col to left */
 
-               dispc->wincol  -= 16;                 /* move cursor */
-               dispc->bRefresh = HB_TRUE;            /* 16 col to left */
+               dispc->wincol  -= 16;
+               dispc->bRefresh = HB_TRUE;
 
                if( dispc->wincol < 0 )
                   dispc->wincol = 0;
 
                break;
 
-            case K_CTRL_RIGHT:
+            case K_CTRL_RIGHT:  /* move cursor 16 col to right */
 
-               dispc->wincol  += 16;                 /* move cursor */
-               dispc->bRefresh = HB_TRUE;            /* 16 col to right */
+               dispc->wincol  += 16;
+               dispc->bRefresh = HB_TRUE;
 
                if( dispc->wincol > ( dispc->maxlin - dispc->width ) )
                   dispc->wincol = dispc->maxlin - dispc->width;
 
                break;
 
-            case K_PGUP:
+            case K_PGUP:       /* move window up one page */
 
-               for( i = 0; i < dispc->height; i++ )  /* move window */
-                  winup( dispc );                    /* up one page */
-
-               break;
-
-            case K_PGDN:
-
-               for( i = 0; i < dispc->height; i++ )  /* move window */
-                  windown( dispc );                  /* down 1 page */
+               for( i = 0; i < dispc->height; i++ )
+                  winup( dispc );
 
                break;
 
-            case K_CTRL_PGUP:
+            case K_PGDN:       /* move window down 1 page */
 
-               filetop( dispc );                     /* move cursor to */
-               break;                                /* to top of file */
+               for( i = 0; i < dispc->height; i++ )
+                  windown( dispc );
 
-            case K_CTRL_PGDN:
+               break;
 
-               filebot( dispc );                     /* move cursor to */
-               break;                                /* to bot of file */
+            case K_CTRL_PGUP:  /* move cursor to to top of file */
 
-            case K_ENTER:
+               filetop( dispc );
+               break;
 
-               bDone = HB_TRUE;                      /* carriage return */
-               break;                                /* terminates */
+            case K_CTRL_PGDN:  /* move cursor to to bot of file */
 
-            case K_ESC:
+               filebot( dispc );
+               break;
 
-               bDone = HB_TRUE;                      /* escape key */
-               break;                                /* terminates */
+            case K_ENTER:      /* carriage return terminates */
 
-            /* scan key list and see if key pressed is there */
-            default:
+               bDone = HB_TRUE;
+               break;
+
+            case K_ESC:        /* escape key terminates */
+
+               bDone = HB_TRUE;
+               break;
+
+            default:  /* scan key list and see if key pressed is there */
 
                for( i = 0; i < dispc->kcount; i++ )
                {
@@ -797,6 +746,7 @@ HB_FUNC( FT_DISPFILE )
    /* return key value to caller */
    if( dispc->keytype == K_STRING )
    {
+      char rval[ 2 ];
       rval[ 0 ] = ( char ) ch;
       rval[ 1 ] = '\0';
       hb_retc( rval );

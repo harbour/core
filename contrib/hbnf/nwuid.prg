@@ -1,6 +1,5 @@
 /*
- * This is an original work by Glenn Scott and is placed in the
- * public domain.
+ * This is an original work by Glenn Scott and is placed in the public domain.
  *
  * Modification history:
  *
