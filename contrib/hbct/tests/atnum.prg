@@ -55,8 +55,6 @@ PROCEDURE Main()
 
    LOCAL cStr := "...This...is...a...test!"
 
-   ctinit()
-
    ? "Begin test of AtNum()"
    ?
    ? "  Value of cStr is:", '"' + cStr + '"'
@@ -97,7 +95,5 @@ PROCEDURE Main()
 
    ? "End test of AtNum()"
    ?
-
-   ctexit()
 
    RETURN

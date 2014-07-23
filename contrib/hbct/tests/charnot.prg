@@ -56,8 +56,6 @@ PROCEDURE Main()
 
    LOCAL ni, cStr
 
-   ctinit()
-
    ? "Begin test of CharNot()"
    ?
 
@@ -82,7 +80,5 @@ PROCEDURE Main()
 
    ? "End test of CharNot()"
    ?
-
-   ctexit()
 
    RETURN

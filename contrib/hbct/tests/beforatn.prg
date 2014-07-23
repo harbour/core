@@ -55,8 +55,6 @@ PROCEDURE Main()
 
    LOCAL cStr := "...This...is...a...test!"
 
-   ctinit()
-
    ? "Begin test of BeforAtNum()"
    ?
    ? "  Value of cStr is:", '"' + cStr + '"'
@@ -97,7 +95,5 @@ PROCEDURE Main()
 
    ? "End test of BeforAtNum()"
    ?
-
-   ctexit()
 
    RETURN

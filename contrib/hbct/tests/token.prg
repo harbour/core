@@ -58,8 +58,6 @@ PROCEDURE Main()
    LOCAL cPre := " "
    LOCAL cPost := " "
 
-   ctinit()
-
    ? "Begin test of Token()"
    ?
 
@@ -90,7 +88,5 @@ PROCEDURE Main()
    ?
    ? "End test of Token()"
    ?
-
-   ctexit()
 
    RETURN

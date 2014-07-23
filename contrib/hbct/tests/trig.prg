@@ -64,8 +64,6 @@ PROCEDURE Main()
 
    LOCAL X, Y
 
-   ctinit()
-
    Set( _SET_DECIMALS, 14 )
    CLS
    ? "Begin test of Trigonometric functions... "
@@ -250,7 +248,5 @@ PROCEDURE Main()
 
    WAIT
    CLS
-
-   ctexit()
 
    RETURN

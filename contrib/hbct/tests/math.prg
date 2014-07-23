@@ -55,8 +55,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    Set( _SET_DECIMALS, 2 )
    CLS
    ? "Test of mathematical functions"
@@ -160,7 +158,5 @@ PROCEDURE Main()
    ? "Fact( 0 ) == 1    // CT3"
    ? Space( 3 ), Fact( 0 ), "  <-- CT for Harbour"
    ?
-
-   ctexit()
 
    RETURN

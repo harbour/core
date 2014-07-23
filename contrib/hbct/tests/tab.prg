@@ -55,8 +55,6 @@ PROCEDURE Main()
 
    LOCAL cStr, nLen
 
-   ctinit()
-
    ? "Begin test of TabExpand()"
    ?
 
@@ -126,8 +124,6 @@ PROCEDURE Main()
    ?
 
    me()
-
-   ctexit()
 
    RETURN
 

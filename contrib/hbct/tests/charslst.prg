@@ -51,8 +51,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharSList()"
    ?
 
@@ -62,7 +60,5 @@ PROCEDURE Main()
 
    ? "End test of CharSList()"
    ?
-
-   ctexit()
 
    RETURN

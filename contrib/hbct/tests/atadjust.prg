@@ -61,8 +61,6 @@ PROCEDURE Main()
       "Discussion: 21" }
    LOCAL ni
 
-   ctinit()
-
    ? "Begin test of AtAdjust()"
    ?
 
@@ -94,7 +92,5 @@ PROCEDURE Main()
 
    ? "End test of AtAdjust()"
    ?
-
-   ctexit()
 
    RETURN

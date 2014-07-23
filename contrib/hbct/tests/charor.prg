@@ -53,8 +53,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharOr()"
    ?
 
@@ -65,7 +63,5 @@ PROCEDURE Main()
 
    ? "End test of CharOr()"
    ?
-
-   ctexit()
 
    RETURN

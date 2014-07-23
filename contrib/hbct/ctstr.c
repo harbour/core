@@ -69,19 +69,6 @@ static void s_ct_str_init( void * cargo )
 
 static HB_TSD_NEW( s_ct_str, sizeof( CT_STR ), s_ct_str_init, NULL );
 
-/* initialization */
-int ct_str_init( void )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "ctstr_init()" ) );
-   return 1;
-}
-
-int ct_str_exit( void )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "ctstr_exit()" ) );
-   return 1;
-}
-
 /* search for exact substring */
 const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
                                   const char * pcMatch, HB_SIZE sMatchLen, HB_SIZE * psMatchStrLen )

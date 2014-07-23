@@ -53,8 +53,6 @@ PROCEDURE Main()
 
    LOCAL cStr := ".,.This.,.is.,.a.,.test!"
 
-   ctinit()
-
    ? "Begin test of NumToken()"
    ?
 
@@ -75,7 +73,5 @@ PROCEDURE Main()
    ?
    ? "End test of NumToken()"
    ?
-
-   ctexit()
 
    RETURN

@@ -53,8 +53,6 @@ PROCEDURE Main()
 
    LOCAL cStr := "This is a test!"
 
-   ctinit()
-
    ? "Begin test of AddAscii()"
    ?
    ? "Simple tests:"
@@ -94,7 +92,5 @@ PROCEDURE Main()
 
    ? "End test of AddAscii()"
    ?
-
-   ctexit()
 
    RETURN

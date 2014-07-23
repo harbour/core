@@ -54,8 +54,6 @@ PROCEDURE Main()
 
    LOCAL n
 
-   ctinit()
-
    Set( _SET_DECIMALS, 15 )
 
    FOR n := 1 TO 1000
@@ -66,7 +64,5 @@ PROCEDURE Main()
    ? Str( Infinity( .T. ) ), Str( Mantissa( Infinity( .T. ) ) ), Str( Exponent( Infinity( .T. ) ) )
 
    ? "Infinity( .T. ):", Str( Mantissa( Infinity( .T. ) ), 20, 15 ), Str( Exponent( Infinity( .T. ) ), 4 )
-
-   ctexit()
 
    RETURN

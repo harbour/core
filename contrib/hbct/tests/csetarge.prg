@@ -57,8 +57,6 @@ PROCEDURE Main()
 
    LOCAL cRet, olderr
 
-   ctinit()
-
    ? "Begin test of CSetArgErr()"
    ?
 
@@ -190,8 +188,6 @@ PROCEDURE Main()
    WAIT
 
    ? "End test of CSetArgErr()"
-
-   ctexit()
 
    RETURN
 

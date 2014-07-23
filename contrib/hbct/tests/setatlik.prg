@@ -53,8 +53,6 @@ PROCEDURE Main()
 
    LOCAL cWildcard := " "
 
-   ctinit()
-
    ? "Begin test of SetAtLike()"
    ? "  Default mode should be 0, is................................", SetAtLike()
    ? "  Setting mode to 1, return value should be 0, is.............", SetAtLike( 1 )
@@ -69,7 +67,5 @@ PROCEDURE Main()
    ? "    should yield '#' for cWildcard, does......................", cWildcard
    ? "End test of SetAtLike()"
    ?
-
-   ctexit()
 
    RETURN

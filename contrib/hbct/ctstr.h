@@ -51,9 +51,6 @@
 
 HB_EXTERN_BEGIN
 
-extern int ct_str_init( void );
-extern int ct_str_exit( void );
-
 extern const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
                                          const char * pcMatch, HB_SIZE sMatchLen,
                                          HB_SIZE * psMatchStrLen );

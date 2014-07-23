@@ -232,26 +232,24 @@ HB_FUNC( CSETARGERR )
    }
 }
 
-/* initialization */
-static int s_initialized = 0;   /* TODO: make this thread safe */
+#if defined( HB_LEGACY_LEVEL5 )
 
 HB_FUNC( CTCINIT )
 {
-   if( s_initialized == 0 )
-   {
-      int iSuccess;
-
-      iSuccess = ct_str_init();
-      iSuccess |= ct_math_init();
-      s_initialized = iSuccess;
-   }
-   hb_retl( s_initialized );
+   hb_retl( HB_TRUE );
 }
 
 HB_FUNC( CTCEXIT )
 {
-   ct_str_exit();
-   ct_math_exit();
-   s_initialized = 0;
-   hb_ret();
 }
+
+HB_FUNC( CTINIT )
+{
+   hb_retl( HB_TRUE );
+}
+
+HB_FUNC( CTEXIT )
+{
+}
+
+#endif

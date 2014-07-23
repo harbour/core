@@ -51,8 +51,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharOne()"
    ?
 
@@ -66,7 +64,5 @@ PROCEDURE Main()
 
    ? "End test of CharOne()"
    ?
-
-   ctexit()
 
    RETURN

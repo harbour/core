@@ -53,8 +53,6 @@ PROCEDURE Main()
 
    LOCAL cStr := ".,.This.,.is.,.a.,.test!"
 
-   ctinit()
-
    ? "Begin test of TokenLower()"
    ?
 
@@ -79,7 +77,5 @@ PROCEDURE Main()
    ?
    ? "End test of TokenLower()"
    ?
-
-   ctexit()
 
    RETURN

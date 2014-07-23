@@ -51,8 +51,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of WordSwap()"
    ?
 
@@ -63,7 +61,5 @@ PROCEDURE Main()
 
    ? "End test of WordSwap()"
    ?
-
-   ctexit()
 
    RETURN

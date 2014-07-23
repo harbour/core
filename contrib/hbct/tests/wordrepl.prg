@@ -51,8 +51,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of WordRepl()"
    ?
 
@@ -70,7 +68,5 @@ PROCEDURE Main()
 
    ? "End test of WordRepl()"
    ?
-
-   ctexit()
 
    RETURN

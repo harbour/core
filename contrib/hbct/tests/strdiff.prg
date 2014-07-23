@@ -51,8 +51,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of StrDiff()"
    ?
 
@@ -67,7 +65,5 @@ PROCEDURE Main()
 
    ? "End test of StrDiff()"
    ?
-
-   ctexit()
 
    RETURN

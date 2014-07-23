@@ -53,8 +53,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharAdd()"
    ?
 
@@ -66,7 +64,5 @@ PROCEDURE Main()
 
    ? "End test of CharAdd()"
    ?
-
-   ctexit()
 
    RETURN

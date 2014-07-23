@@ -56,8 +56,6 @@ PROCEDURE Main()
    LOCAL cStr := ".,.This.,.is.,.a.,.test!"
    LOCAL ni
 
-   ctinit()
-
    ? "Begin test of TokenSep()"
    ?
 
@@ -81,7 +79,5 @@ PROCEDURE Main()
    ?
    ? "End test of TokenSep()"
    ?
-
-   ctexit()
 
    RETURN

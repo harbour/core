@@ -51,8 +51,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of AscPos()"
    ?
 
@@ -63,7 +61,5 @@ PROCEDURE Main()
    ?
    ? "End test of AscPos()"
    ?
-
-   ctexit()
 
    RETURN

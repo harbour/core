@@ -51,8 +51,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharSort()"
    ?
 
@@ -70,7 +68,5 @@ PROCEDURE Main()
 
    ? "End test of CharSort()"
    ?
-
-   ctexit()
 
    RETURN

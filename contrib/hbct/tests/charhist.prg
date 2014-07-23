@@ -53,8 +53,6 @@ PROCEDURE Main()
 
    LOCAL nTotal := 0
 
-   ctinit()
-
    ? "Begin test of CharHist()"
    ?
 
@@ -66,7 +64,5 @@ PROCEDURE Main()
 
    ? "End test of CharHist()"
    ?
-
-   ctexit()
 
    RETURN

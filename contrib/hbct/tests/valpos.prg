@@ -51,8 +51,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of ValPos()"
    ?
 
@@ -64,7 +62,5 @@ PROCEDURE Main()
    ?
    ? "End test of ValPos()"
    ?
-
-   ctexit()
 
    RETURN

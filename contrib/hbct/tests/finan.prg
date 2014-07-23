@@ -55,8 +55,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    Set( _SET_DECIMALS, 3 )
 
    ?? "Testing Financial functions...."
@@ -97,7 +95,5 @@ PROCEDURE Main()
    ? Space( 25 ), Rate( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
    ?
    WAIT
-
-   ctexit()
 
    RETURN

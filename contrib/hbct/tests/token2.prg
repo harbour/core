@@ -68,8 +68,6 @@ PROCEDURE Main()
 
    LOCAL cTE1, cTE2
 
-   ctinit()
-
    ? "Begin test of incremental tokenizer function family"
    ?
 
@@ -165,7 +163,5 @@ PROCEDURE Main()
    ?
 
    WAIT
-
-   ctexit()
 
    RETURN

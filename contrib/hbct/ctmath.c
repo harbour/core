@@ -50,19 +50,6 @@
 
 #include "hbstack.h"
 
-/* --- initialization --- */
-int ct_math_init( void )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "ct_math_init()" ) );
-   return 1;
-}
-
-int ct_math_exit( void )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "ct_math_exit()" ) );
-   return 1;
-}
-
 /* --- math precision --- */
 static void s_iPrecision_init( void * cargo )
 {

@@ -53,8 +53,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharSub()"
    ?
 
@@ -66,7 +64,5 @@ PROCEDURE Main()
 
    ? "End test of CharSub()"
    ?
-
-   ctexit()
 
    RETURN

@@ -104,7 +104,6 @@ video.c
 wordrepl.c
 wordtoch.c
 
-ct.prg
 ctdummy.prg
 ctmisc.prg
 ctrand.prg

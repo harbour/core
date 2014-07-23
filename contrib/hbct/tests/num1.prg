@@ -53,8 +53,6 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    Set( _SET_DECIMALS, 14 )
 
    ?? "Test of Numeric functions - part 1"
@@ -93,7 +91,5 @@ PROCEDURE Main()
    ?  "Infinity()       // CT3"
    ?  Space( 8 ), Str( Infinity(), 30, 15 ), " <-- CT for Harbour"
    ?
-
-   ctexit()
 
    RETURN

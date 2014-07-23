@@ -56,8 +56,6 @@ PROCEDURE Main()
    LOCAL cStr := "...This...is...a...test!"
    LOCAL ni, npos
 
-   ctinit()
-
    ? "Begin test of AtToken()"
    ?
 
@@ -80,7 +78,5 @@ PROCEDURE Main()
    ?
    ? "End test of AtToken()"
    ?
-
-   ctexit()
 
    RETURN
