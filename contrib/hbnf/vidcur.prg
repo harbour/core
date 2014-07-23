@@ -23,7 +23,7 @@
 #include "setcurs.ch"
 
 /* NOTE: In Harbour video pages are ignored. */
-PROCEDURE ft_SetVcur( nPage, nRow, nCol )
+PROCEDURE ft_SetVCur( nPage, nRow, nCol )
 
    HB_SYMBOL_UNUSED( nPage )
 

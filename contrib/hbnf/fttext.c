@@ -179,7 +179,7 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
 {
    HB_ISIZ tmp;
 
-   for( tmp = 0; tmp < buf_len; tmp++ )
+   for( tmp = 0; tmp < buf_len; ++tmp )
    {
       if( tmp < buf_len - 1 && buf[ tmp ] == FT_CHR_CR && buf[ tmp + 1 ] == FT_CHR_LF )
       {
@@ -245,7 +245,7 @@ static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len )
          }
       }
 
-      for(; tmp > 0; tmp--, p-- )
+      for(; tmp > 0; --tmp, --p )
       {
          if( *p == FT_CHR_LF && *( p - 1 ) == FT_CHR_CR )
             return buf_len - ( tmp + 2 ) + 1;
@@ -668,7 +668,7 @@ HB_FUNC( FT_FSELECT )
       {
          if( newArea == 0 )
          {
-            for(; newArea < TEXT_WORKAREAS - 1; newArea++ )
+            for(; newArea < TEXT_WORKAREAS - 1; ++newArea )
             {
                if( ft_text->handles[ newArea ] == FS_ERROR )
                {

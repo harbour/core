@@ -210,8 +210,8 @@ DYNAMIC ft_SetKeys
 DYNAMIC ft_SetMode
 DYNAMIC ft_SetRate
 DYNAMIC ft_SetTime
-DYNAMIC ft_SetVcur
-DYNAMIC ft_SetVpg
+DYNAMIC ft_SetVCur
+DYNAMIC ft_SetVPg
 DYNAMIC ft_Shadow
 DYNAMIC ft_Shift
 DYNAMIC ft_SInkey

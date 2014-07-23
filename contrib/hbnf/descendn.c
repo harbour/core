@@ -45,7 +45,7 @@ HB_FUNC( FT_DESCEND )
 
       hb_itemCopyC( iP, pDescend, uiLen );
 
-      for( n = 0; n < uiLen; n++ )
+      for( n = 0; n < uiLen; ++n )
          pDescend[ n ] = ( char ) 0 - pDescend[ n ];
 
       iR = hb_itemPutCL( 0, pDescend, uiLen );

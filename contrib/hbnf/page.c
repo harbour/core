@@ -1,5 +1,5 @@
 /*
- * ft_GetVPg()/ft_SetVpg() functions
+ * ft_GetVPg()/ft_SetVPg() functions
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  *

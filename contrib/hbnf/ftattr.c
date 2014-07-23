@@ -37,12 +37,10 @@ HB_FUNC( FT_SAVEATT )
 
    if( iTop <= iBottom && iLeft <= iRight )
    {
-      HB_SIZE nSize;
-      char *  pBuffer;
+      HB_SIZE nSize = ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
       char *  pAttrib;
+      char *  pBuffer = pAttrib = ( char * ) hb_xgrab( nSize + 1 );
 
-      nSize   = ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
-      pBuffer = pAttrib = ( char * ) hb_xgrab( nSize + 1 );
       while( iTop <= iBottom )
       {
          int iCol = iLeft;

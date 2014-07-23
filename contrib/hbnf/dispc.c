@@ -103,7 +103,7 @@ static void chattr( PFT_DISPC dispc, int x, int y, int len, int attr )
    if( dispc->iCellSize == 4 )
       vmem++;
 
-   for( i = 0; i <= len; i++, vmem += dispc->iCellSize )  /* write the new attribute value */
+   for( i = 0; i <= len; ++i, vmem += dispc->iCellSize )  /* write the new attribute value */
       *vmem = ( char ) attr;
 }
 
@@ -242,7 +242,7 @@ static void disp_update( PFT_DISPC dispc, int offset )
       pos = ( line * ( dispc->width + 1 ) * dispc->iCellSize );
 
       /* copy string to temp buffer */
-      for( i = 0; dispc->buffer[ offset ] != CR && offset <= dispc->winbot; offset++ )
+      for( i = 0; dispc->buffer[ offset ] != CR && offset <= dispc->winbot; ++offset )
       {
          if( i <= dispc->maxlin )
          {
@@ -258,11 +258,11 @@ static void disp_update( PFT_DISPC dispc, int offset )
          }
       }
 
-      for(; i <= dispc->maxlin; i++ )  /* fill out with spaces */
+      for(; i <= dispc->maxlin; ++i )  /* fill out with spaces */
          dispc->lbuff[ i ] = ' ';
 
       /* place the proper characters onto the screen */
-      for( i = dispc->wincol, col = 0; col <= dispc->width; col++ )
+      for( i = dispc->wincol, col = 0; col <= dispc->width; ++col )
       {
          HB_UCHAR * vmem = dispc->vseg + pos + ( col * dispc->iCellSize );
 
@@ -432,9 +432,6 @@ HB_FUNC( _FT_DFINIT )
 
    if( nSize > 0 && maxlin >= 0 && buffsize > 0 )
    {
-      HB_ISIZ j;
-      HB_ISIZ i;
-
       rval = 0;
 
       dispc->sline = sline;  /* top row of window */
@@ -467,8 +464,8 @@ HB_FUNC( _FT_DFINIT )
       dispc->lbuff  = ( char * ) hb_xalloc( dispc->maxlin + 1 );  /*  for buffers */
 
       dispc->bIsAllocated = ! ( dispc->buffer == NULL || dispc->lbuff == NULL || dispc->vseg == NULL );
-      /* memory allocated? */
-      if( ! dispc->bIsAllocated )
+
+      if( ! dispc->bIsAllocated )  /* memory allocated? */
       {
          rval = 8;  /* return error code 8 (memory) */
          if( dispc->buffer != NULL )
@@ -489,8 +486,9 @@ HB_FUNC( _FT_DFINIT )
       }
       else                                                   /* get parameters */
       {
+         HB_ISIZ i, j = hb_parni( 6 );                       /* starting line value */
+
          dispc->infile = hb_numToHandle( hb_parnint( 1 ) );  /* file handle */
-         j = hb_parni( 6 );                                  /* starting line value */
          dispc->norm   = hb_parni( 7 );                      /* normal color attribute */
          dispc->hlight = hb_parni( 8 );                      /* highlight color attribute */
 
@@ -500,7 +498,7 @@ HB_FUNC( _FT_DFINIT )
             dispc->kcount  = hb_parinfa( 9, 0 );
             if( dispc->kcount > 24 )
                dispc->kcount = 24;
-            for( i = 1; i <= dispc->kcount; i++ )
+            for( i = 1; i <= dispc->kcount; ++i )
                dispc->keylist[ i - 1 ] = hb_parvni( 9, i );  /* get exit key list */
          }
          else
@@ -510,7 +508,7 @@ HB_FUNC( _FT_DFINIT )
             dispc->kcount  = hb_parclen( 9 );
             if( dispc->kcount > 24 )
                dispc->kcount = 24;
-            for( i = 1; i <= dispc->kcount; i++ )
+            for( i = 1; i <= dispc->kcount; ++i )
                dispc->keylist[ i - 1 ] = pszKeys[ i - 1 ];  /* get exit key list */
          }
 
@@ -544,7 +542,7 @@ HB_FUNC( _FT_DFINIT )
          win_align( dispc );
 
          /* point line pointer to line passed by caller */
-         for( i = 1; i < j; i++ )
+         for( i = 1; i < j; ++i )
             linedown( dispc );
 
          hb_gtRest( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
@@ -595,7 +593,7 @@ HB_FUNC( FT_DISPFILE )
       dispc->bRefresh = HB_TRUE;
 
       /* draw inside of window with normal color attribute */
-      for( i = 0; i < dispc->height; i++ )
+      for( i = 0; i < dispc->height; ++i )
          chattr( dispc, 0, i, dispc->width, dispc->norm );
 
       hb_gtRest( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
@@ -695,14 +693,14 @@ HB_FUNC( FT_DISPFILE )
 
             case K_PGUP:       /* move window up one page */
 
-               for( i = 0; i < dispc->height; i++ )
+               for( i = 0; i < dispc->height; ++i )
                   winup( dispc );
 
                break;
 
             case K_PGDN:       /* move window down 1 page */
 
-               for( i = 0; i < dispc->height; i++ )
+               for( i = 0; i < dispc->height; ++i )
                   windown( dispc );
 
                break;
@@ -729,7 +727,7 @@ HB_FUNC( FT_DISPFILE )
 
             default:  /* scan key list and see if key pressed is there */
 
-               for( i = 0; i < dispc->kcount; i++ )
+               for( i = 0; i < dispc->kcount; ++i )
                {
                   if( dispc->keylist[ i ] == ch )
                      bDone = HB_TRUE;

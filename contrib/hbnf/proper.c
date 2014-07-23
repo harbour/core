@@ -59,7 +59,7 @@ HB_FUNC( FT_PROPER )
 
    hb_storc( NULL, 1 );
 
-   for( i = 0; i < iLen; i++ )
+   for( i = 0; i < iLen; ++i )
    {
       if( _ftIsAlpha( cStr[ i ] ) )
       {
@@ -79,7 +79,7 @@ HB_FUNC( FT_PROPER )
    /* Find "Mc" */
    if( cDst )
    {
-      for( i = 0; i < iLen - 2; i++ )
+      for( i = 0; i < iLen - 2; ++i )
       {
          if( cStr[ i ] == 'M' && cStr[ i + 1 ] == 'c' )
             cDst[ i + 2 ] = _ftToUpper( cDst[ i + 2 ] );

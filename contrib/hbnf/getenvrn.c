@@ -55,7 +55,7 @@ HB_FUNC( FT_GETE )
       /* scan strings first and add up total size */
       if( rettype == CHARTYPE )
       {
-         for( x = 0; environ[ x ]; x++ )
+         for( x = 0; environ[ x ]; ++x )
          {
             /* add length of this string plus 2 for the crlf */
             buffsize += ( strlen( environ[ x ] ) + 2 );
@@ -67,7 +67,7 @@ HB_FUNC( FT_GETE )
          buffer[ 0 ] = '\0';
       }
 
-      for( x = 0; environ[ x ]; x++ )
+      for( x = 0; environ[ x ]; ++x )
       {
          if( ! environ[ x ] )
             /* null string, we're done */
@@ -110,7 +110,7 @@ HB_FUNC( FT_GETE )
 
          if( rettype == CHARTYPE )
          {
-            for( lpEnv = lpEnviron; *lpEnv; lpEnv++ )
+            for( lpEnv = lpEnviron; *lpEnv; ++lpEnv )
             {
                while( *++lpEnv )
                   ++nSize;
@@ -122,7 +122,7 @@ HB_FUNC( FT_GETE )
          else if( rettype == ARRAYTYPE )
             pArray = hb_param( 1, HB_IT_ARRAY );
 
-         for( lpEnv = lpEnviron, lpDst = lpResult; *lpEnv; lpEnv++ )
+         for( lpEnv = lpEnviron, lpDst = lpResult; *lpEnv; ++lpEnv )
          {
             nCount++;
             if( rettype == CHARTYPE )

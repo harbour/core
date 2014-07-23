@@ -314,7 +314,7 @@
       NIL
    $DESCRIPTION$
       This function sets the display page for the mouse cursor. The valid
-      values of nPage is dependent upon the display mode. See ft_SetVpg()
+      values of nPage is dependent upon the display mode. See ft_SetVPg()
       for changing the current video page
    $EXAMPLES$
       ft_MSetPage( 1 )  // Sets the mouse cursor to page 1
@@ -339,7 +339,7 @@
            displayed
    $DESCRIPTION$
       This function gets the display page for the mouse cursor. The valid
-      values of nPage is dependent upon the display mode. See ft_SetVpg()
+      values of nPage is dependent upon the display mode. See ft_SetVPg()
       for changing the current video page
    $EXAMPLES$
       nPage := ft_MGetPage( )  // Gets the mouse cursor display page

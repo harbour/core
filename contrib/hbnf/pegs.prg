@@ -28,8 +28,7 @@
    board_[ xx, 1 ] - subarray containing box coordinates for this peg
    board_[ xx, 2 ] - subarray containing all adjacent locations
    board_[ xx, 3 ] - subarray containing all target locations
-   board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No
- */
+   board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No */
 
 PROCEDURE ft_Pegs()
 
