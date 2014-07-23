@@ -33,7 +33,6 @@
 FUNCTION ft_ClrSel( aClrs, lColor, cChr )
 
    LOCAL aClrOld := AClone( aClrs )
-   LOCAL aOptions
    LOCAL nB, nT, nL, nR
    LOCAL nChoice := 1
    LOCAL nLen    := 0
@@ -90,11 +89,10 @@ FUNCTION ft_ClrSel( aClrs, lColor, cChr )
       ENDIF
    ENDDO
 
-   aOptions := { "Save New Colors", "Restore Original" }
-   IF ! _ftIdentArr( aClrs, aClrOld )
-      nChoice := Alert( "Colors have been modified...", aOptions )
-   ELSE
+   IF _ftIdentArr( aClrs, aClrOld )
       nChoice := 1
+   ELSE
+      nChoice := Alert( "Colors have been modified...", { "Save New Colors", "Restore Original" } )
    ENDIF
 
    ft_RestSets( aEnvSav )
@@ -389,7 +387,6 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
       CASE nKey == K_LEFT  ; --nC
       CASE nKey == K_RIGHT ; ++nC
       ENDCASE
-
    ENDDO
 
    SetColor( "GR+/N" )
@@ -455,7 +452,6 @@ STATIC FUNCTION _ftDeskChar( aOpt )
       CASE nKey == K_UP    ; --n
       CASE nKey == K_DOWN  ; ++n
       ENDCASE
-
    ENDDO
 
    SetColor( "W+/N" )

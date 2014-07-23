@@ -81,20 +81,15 @@ THREAD STATIC t_nWinColor
 THREAD STATIC t_aWinColor
 THREAD STATIC t_aStdColor
 
-// Pop Up Adder / Calculator with Tape Display
-//
-// To make ft_Adder() pop up from any wait state in your
-// application just insert the line:
-//    SetKey( K_ALT_A, {|| ft_Adder() } )
-// at the top of your application
+// Pop Up Calculator with Tape Display
 PROCEDURE ft_Adder()
 
-   LOCAL nOldDecim, cMoveTotSubTot, cTotal, lDone, nKey
+   LOCAL nOldDecim, cMoveTotSubTot, cTotal, nKey
    LOCAL oGet        := GetActive()
-   LOCAL nOldCurs    := SetCursor( SC_NONE )
+   LOCAL nOldCurs
    LOCAL nOldRow     := Row()
    LOCAL nOldCol     := Col()
-   LOCAL bOldF10     := SetKey( K_F10, NIL )
+   LOCAL bOldF10
    LOCAL nOldLastKey := LastKey()
    LOCAL lShowRight  := .T.
    LOCAL aAdder      := Array( 23 )
@@ -102,75 +97,64 @@ PROCEDURE ft_Adder()
 
    LOCAL lAC_exit_ok
 
-   // Must prevent recursive calls
-   IF t_lAdderOpen
+   IF t_lAdderOpen  // Must prevent recursive calls
       RETURN
    ENDIF
    t_lAdderOpen := .T.
 
-   aTrans       := { "                  0.00 C " }
-   nOldDecim    := Set( _SET_DECIMALS, 9 )
-   cTotPict     := "999999999999999.99"
-   cTapeScr     := ""
-   nTotal       := nNumTotal := nSavTotal := nDecDigit := 0
-   lDone        := .F.  // Loop flag
-   nMaxDeci     := 2    // Initial # of decimals
-   nSavSubTot   := 0
-   lNewNum      := .F.
-   nAddMode     := 1    // Start in ADD mode
-   lMultDiv     := .F.  // Start in ADD mode
-   lClAdder     := .F.  // Clear adder flag
-   lDecSet      := .F.  // Decimal ? - keyboard routine
-   lSubRtn      := lTotalOk := lTape := lAddError := lDivError := .F.
+   nOldCurs := SetCursor( SC_NONE )
+   bOldF10  := SetKey( K_F10, NIL )
 
-   nTopOS       := Int( ( MaxRow() - 24 ) / 2 )  // Using the TopOffSet and LeftOffSet
-   nLeftOS      := Int( ( MaxCol() - 79 ) / 2 )  // the Adder will always be centered
-   nAddSpace    := iif( lShowRight, 40, 0 ) + nLeftOS
-   nTapeSpace   := iif( lShowRight, 0, 40 ) + nLeftOS
+   aTrans     := { "                  0.00 C " }
+   nOldDecim  := Set( _SET_DECIMALS, 9 )
+   cTotPict   := "999999999999999.99"
+   cTapeScr   := ""
+   nTotal     := nNumTotal := nSavTotal := nDecDigit := 0
+   nMaxDeci   := 2    // Initial # of decimals
+   nSavSubTot := 0
+   lNewNum    := .F.
+   nAddMode   := 1    // Start in ADD mode
+   lMultDiv   := .F.  // Start in ADD mode
+   lClAdder   := .F.  // Clear adder flag
+   lDecSet    := .F.  // Decimal ? - keyboard routine
+   lSubRtn    := lTotalOk := lTape := lAddError := lDivError := .F.
+
+   nTopOS     := Int( ( MaxRow() - 24 ) / 2 )  // Using the TopOffSet and LeftOffSet
+   nLeftOS    := Int( ( MaxCol() - 79 ) / 2 )  // the Adder will always be centered
+   nAddSpace  := iif( lShowRight, 40, 0 ) + nLeftOS
+   nTapeSpace := iif( lShowRight, 0, 40 ) + nLeftOS
 
    // Set Up the STATIC variables
-   t_aKeys      := {}
-   t_aWindow    := {}
-   t_nWinColor  := 0
+   t_aKeys     := {}
+   t_aWindow   := {}
+   t_nWinColor := 0
 
    _ftAddScreen( aAdder )
 
-   // Set the decimals to 2 and display a cleared adder
-   _ftChangeDec( aAdder, 2 )
    hb_DispOutAt( 4 + nTopOS, 7 + nAddSpace, Transform( nTotal, cTotPict ) )
 
-   DO WHILE ! lDone                     // Input key and test loop
+   DO WHILE .T.
       nKey := _ftInkey()
       DO CASE
       CASE hb_keyChar( nKey ) $ "1234567890."
          _ftProcessNumb( aAdder, nKey )
-      CASE nKey == hb_keyCode( "+" )    // <+> sign
+      CASE nKey == hb_keyCode( "+" )
          _ftAddSub( aAdder, nKey )
-      CASE nKey == hb_keyCode( "-" )    // <-> sign
+      CASE nKey == hb_keyCode( "-" )
          _ftAddSub( aAdder, nKey )
-      CASE nKey == hb_keyCode( "*" )    // <*> sign
+      CASE nKey == hb_keyCode( "*" )
          _ftMultDiv( aAdder, nKey )
-      CASE nKey == hb_keyCode( "/" )    // </> sign
+      CASE nKey == hb_keyCode( "/" )
          _ftMultDiv( aAdder, nKey )
-      CASE nKey == K_ENTER              // <RTN> Total or Subtotal
+      CASE nKey == K_ENTER            // <RTN> Total or Subtotal
          _ftAddTotal( aAdder )
-      CASE nKey == K_ESC                // <ESC> Quit
-         Set( _SET_DECIMALS, nOldDecim )
-         SetCursor( nOldCurs )
-         IF lTape
-            RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
-         ENDIF
-         _ftPopWin()
-         SetPos( nOldRow, nOldCol )
-         _ftSetLastKey( nOldLastKey )
-         SetKey( K_F10, bOldF10 )
-         t_lAdderOpen := .F.            // Reset the recursive flag
-         lDone := .T.
-      CASE nKey == hb_keyCode( "D" ) .OR. nKey == hb_keyCode( "d" )  // <D> Change number of decimal places
+      CASE nKey == K_ESC              // <ESC> Quit
+         EXIT
+      CASE hb_keyChar( nKey ) $ "Dd"  // <D> Change number of decimal places
          _ftChangeDec( aAdder )
-      CASE nKey == hb_keyCode( "T" ) .OR. nKey == hb_keyCode( "t" )  // <T> Display Tape
+      CASE hb_keyChar( nKey ) $ "Tt"  // <T> Display Tape
          _ftDisplayTape( aAdder, nKey )
-      CASE nKey == hb_keyCode( "M" ) .OR. nKey == hb_keyCode( "m" )  // <M> Move Adder
+      CASE hb_keyChar( nKey ) $ "Mm"  // <M> Move Adder
          IF lTape
             RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
          ENDIF
@@ -200,20 +184,18 @@ PROCEDURE ft_Adder()
          hb_DispOutAt( 4 + nTopOS, 8 + nAddSpace, cTotal )
          IF ! Empty( cMoveTotSubTot )
             _ftSetWinColor( W_CURR, W_SCREEN )
-            hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, iif( cMoveTotSubTot == "T", "   <TOTAL>", ;
-               "<SUBTOTAL>" ) )
+            hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, ;
+               iif( cMoveTotSubTot == "T", "   <TOTAL>", "<SUBTOTAL>" ) )
             _ftSetWinColor( W_CURR, W_PROMPT )
          ENDIF
-      CASE ( nKey == hb_keyCode( "S" ) .OR. nKey == hb_keyCode( "s" ) ) .AND. lTape  // <S> Scroll tape display
+      CASE hb_keyChar( nKey ) $ "Ss" .AND. lTape  // <S> Scroll tape display
          IF Len( aTrans ) > 16           // We need to scroll
-            SetColor( "GR+/W" )
-            hb_DispOutAt( 21 + nTopOS, 8 + nTapeSpace, " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT " )
+            hb_DispOutAt( 21 + nTopOS, 8 + nTapeSpace, " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT ", "GR+/W" )
             SetColor( "N/W,W+/N" )
             lAC_exit_ok := .F.
             AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T., ;
                {| nMode, cur_elem, rel_pos | _ftAdderTapeUDF( nMode, cur_elem, rel_pos, @lAC_exit_ok ) }, Len( aTrans ), 20 )
-            SetColor( "R+/W" )
-            hb_DispBox( 21 + nTopOS, 8 + nTapeSpace, 21 + nTopOS, 30 + nTapeSpace, HB_B_SINGLE_UNI )
+            hb_DispBox( 21 + nTopOS, 8 + nTapeSpace, 21 + nTopOS, 30 + nTapeSpace, HB_B_SINGLE_UNI, "R+/W" )
             _ftSetWinColor( W_CURR, W_PROMPT )
             CLEAR TYPEAHEAD
          ELSE
@@ -228,18 +210,8 @@ PROCEDURE ft_Adder()
       CASE nKey == K_F10                 // <F10> Quit - Return total
          IF lTotalOk                     // Did they finish the calculation
             IF oGet != NIL .AND. oGet:type == "N"
-               Set( _SET_DECIMALS, nOldDecim )
-               SetCursor( nOldCurs )
-               IF lTape
-                  RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
-               ENDIF
-               _ftPopWin()
-               SetPos( nOldRow, nOldCol )
-               _ftSetLastKey( nOldLastKey )
-               SetKey( K_F10, bOldF10 )
-               oGet:VARPUT( nSavTotal )
-               t_lAdderOpen := .F.       // Reset the recursive flag
-               lDone        := .T.
+               oGet:varPut( nSavTotal )
+               EXIT
             ELSE
                _ftError( "but I can not return the total from the " + ;
                   "adder to this variable. You must quit the adder using" + ;
@@ -252,7 +224,18 @@ PROCEDURE ft_Adder()
       ENDCASE
    ENDDO
 
-   // Reset the STATICS to NIL
+   Set( _SET_DECIMALS, nOldDecim )
+   SetCursor( nOldCurs )
+   IF lTape
+      RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
+   ENDIF
+   _ftPopWin()
+   SetPos( nOldRow, nOldCol )
+   _ftSetLastKey( nOldLastKey )
+   SetKey( K_F10, bOldF10 )
+   t_lAdderOpen := .F.            // Reset the recursive flag
+
+   // Reset the STATICs to NIL
    t_aKeys := t_aWindow := t_aWinColor := t_aStdColor := NIL
 
    RETURN
@@ -260,26 +243,29 @@ PROCEDURE ft_Adder()
 // Display the Adder
 STATIC PROCEDURE _ftAddScreen( aAdder )
 
-   LOCAL nCol
+   LOCAL nCol, i
 
    _ftPushWin( 2 + nTopOS, 2 + nAddSpace, 22 + nTopOS, 30 + nAddSpace, "   Adder   ", ;
       "<F1> for Help",, HB_B_DOUBLE_UNI + " " )
    nCol := 5 + nAddSpace
-   hb_DispOutAt(  7 + nTopOS, nCol, hb_UTF8ToStr( "      ┌───┐ ┌───┐ ┌───┐" ) )
-   hb_DispOutAt(  8 + nTopOS, nCol, hb_UTF8ToStr( "      │   │ │   │ │   │" ) )
-   hb_DispOutAt(  9 + nTopOS, nCol, hb_UTF8ToStr( "      └───┘ └───┘ └───┘" ) )
-   hb_DispOutAt( 10 + nTopOS, nCol, hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ ┌───┐" ) )
-   hb_DispOutAt( 11 + nTopOS, nCol, hb_UTF8ToStr( "│   │ │   │ │   │ │   │" ) )
-   hb_DispOutAt( 12 + nTopOS, nCol, hb_UTF8ToStr( "└───┘ └───┘ └───┘ │   │" ) )
-   hb_DispOutAt( 13 + nTopOS, nCol, hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ │   │" ) )
-   hb_DispOutAt( 14 + nTopOS, nCol, hb_UTF8ToStr( "│   │ │   │ │   │ │   │" ) )
-   hb_DispOutAt( 15 + nTopOS, nCol, hb_UTF8ToStr( "└───┘ └───┘ └───┘ └───┘" ) )
-   hb_DispOutAt( 16 + nTopOS, nCol, hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ ┌───┐" ) )
-   hb_DispOutAt( 17 + nTopOS, nCol, hb_UTF8ToStr( "│   │ │   │ │   │ │   │" ) )
-   hb_DispOutAt( 18 + nTopOS, nCol, hb_UTF8ToStr( "└───┘ └───┘ └───┘ │   │" ) )
-   hb_DispOutAt( 19 + nTopOS, nCol, hb_UTF8ToStr( "┌─────────┐ ┌───┐ │   │" ) )
-   hb_DispOutAt( 20 + nTopOS, nCol, hb_UTF8ToStr( "│         │ │   │ │   │" ) )
-   hb_DispOutAt( 21 + nTopOS, nCol, hb_UTF8ToStr( "└─────────┘ └───┘ └───┘" ) )
+   FOR EACH i IN { ;
+      "      ┌───┐ ┌───┐ ┌───┐", ;
+      "      │   │ │   │ │   │", ;
+      "      └───┘ └───┘ └───┘", ;
+      "┌───┐ ┌───┐ ┌───┐ ┌───┐", ;
+      "│   │ │   │ │   │ │   │", ;
+      "└───┘ └───┘ └───┘ │   │", ;
+      "┌───┐ ┌───┐ ┌───┐ │   │", ;
+      "│   │ │   │ │   │ │   │", ;
+      "└───┘ └───┘ └───┘ └───┘", ;
+      "┌───┐ ┌───┐ ┌───┐ ┌───┐", ;
+      "│   │ │   │ │   │ │   │", ;
+      "└───┘ └───┘ └───┘ │   │", ;
+      "┌─────────┐ ┌───┐ │   │", ;
+      "│         │ │   │ │   │", ;
+      "└─────────┘ └───┘ └───┘" }
+      hb_DispOutAt( 6 + nTopOS + i:__enumIndex(), nCol, hb_UTF8ToStr( i ) )
+   NEXT
    _ftSetWinColor( W_CURR, W_TITLE )
    nCol := 7 + nAddSpace
    hb_DispOutAt( 11 + nTopOS, nCol, "7" )
@@ -308,21 +294,17 @@ STATIC PROCEDURE _ftAddScreen( aAdder )
    RETURN
 
 // Change the decimal position in the display
-STATIC PROCEDURE _ftChangeDec( aAdder, nNumDec )
+STATIC PROCEDURE _ftChangeDec( aAdder )
 
-   IF nNumDec == NIL
-      nNumDec := _ftQuest( "How many decimals do you want to display?", 0, "9", {| oGet | _ftValDeci( oGet ) } )
+   LOCAL nNumDec := nMaxDeci := _ftQuest( "How many decimals do you want to display?", 0, "9", {| oGet | _ftValDeci( oGet ) } )
 
-      cTotPict := Right( _ftStuffComma( Stuff( "9999999999999999999", 19 - nNumDec, 1, "." ) ), 19 )
-      cTotPict := iif( nNumDec == 2 .OR. nNumDec == 6, " " + Right( cTotPict, 18 ), cTotPict )
+   cTotPict := Right( _ftStuffComma( Stuff( "9999999999999999999", 19 - nNumDec, 1, "." ) ), 19 )
+   cTotPict := iif( nNumDec == 2 .OR. nNumDec == 6, " " + Right( cTotPict, 18 ), cTotPict )
 
-      nMaxDeci := nNumDec
-
-      IF lSubRtn
-         _ftDispTotal( aAdder )
-      ELSE
-         _ftDispSubTot( aAdder )
-      ENDIF
+   IF lSubRtn
+      _ftDispTotal( aAdder )
+   ELSE
+      _ftDispSubTot( aAdder )
    ENDIF
 
    RETURN
@@ -330,12 +312,10 @@ STATIC PROCEDURE _ftChangeDec( aAdder, nNumDec )
 // Display total number to Adder Window
 STATIC PROCEDURE _ftDispTotal( aAdder )
 
-   LOCAL cTotStr
-
    IF nTotal > Val( StrTran( cTotPict, "," ) )
-      cTotStr := _ftStuffComma( hb_ntos( nTotal ) )
       hb_DispOutAt( 4 + nTopOS, 8 + nAddSpace, "****  ERROR  **** " )
-      _ftError( "that number is to big to display! I believe the answer was " + cTotStr + "." )
+      _ftError( "that number is to big to display! I believe the answer was " + ;
+         _ftStuffComma( hb_ntos( nTotal ) ) + "." )
       lAddError := .T.
       _ftUpdateTrans( aAdder, .T. )
       _ftClearAdder( aAdder )
@@ -350,12 +330,10 @@ STATIC PROCEDURE _ftDispTotal( aAdder )
 // Display subtotal number
 STATIC PROCEDURE _ftDispSubTot( aAdder )
 
-   LOCAL cStotStr
-
    IF nNumTotal > Val( StrTran( cTotPict, "," ) )
-      cStotStr := _ftStuffComma( hb_ntos( nNumTotal ) )
       hb_DispOutAt( 4 + nTopOS, 8 + nAddSpace, "****  ERROR  **** " )
-      _ftError( "that number is to big to display! I believe the answer was " + cStotStr + "." )
+      _ftError( "that number is to big to display! I believe the answer was " + ;
+         _ftStuffComma( hb_ntos( nNumTotal ) ) + "." )
       lAddError := .T.
       _ftUpdateTrans( aAdder, .T., nNumTotal )
       _ftClearAdder( aAdder )
@@ -437,14 +415,10 @@ STATIC PROCEDURE _ftAddTotal( aAdder )
             lSubRtn := .T.        // total key
          ENDIF
          DO CASE
-         CASE nAddMode == 1       // Add
-            nTotal += nNumTotal
-         CASE nAddMode == 2       // Subtract
-            nTotal -= nNumTotal
-         CASE nAddMode == 3       // Multiply
-            nTotal *= nNumTotal
-         CASE nAddMode == 4       // Divide
-            nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
+         CASE nAddMode == 1 ; nTotal += nNumTotal
+         CASE nAddMode == 2 ; nTotal -= nNumTotal
+         CASE nAddMode == 3 ; nTotal *= nNumTotal
+         CASE nAddMode == 4 ; nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
             IF lDivError
                _ftError( "you can't divide by ZERO!" )
                lDivError := .F.
@@ -593,14 +567,14 @@ STATIC PROCEDURE _ftClearAdder( aAdder )
    _ftEraseTotSubTot( aAdder )
    lDecSet   := .F.
    nDecDigit := 0
-   IF lClAdder             // If it has alredy been pressed once
-      nTotal    := 0       // then we are clearing the total
+   IF lClAdder         // If it has alredy been pressed once
+      nTotal    := 0   // then we are clearing the total
       nSavTotal := 0
       _ftUpdateTrans( aAdder, .F. )
       lClAdder  := .F.
       _ftDispTotal( aAdder )
    ELSE
-      nNumTotal := 0       // Just clearing the last entry
+      nNumTotal := 0   // Just clearing the last entry
       lClAdder  := .T.
       _ftDispSubTot( aAdder )
    ENDIF
@@ -685,26 +659,25 @@ STATIC PROCEDURE _ftDisplayTape( aAdder, nKey )
 
    LOCAL nDispTape, nTopTape := 1
 
-   IF ( nKey == hb_keyCode( "T" ) .OR. nKey == hb_keyCode( "t" ) ) .AND. lTape  // Stop displaying tape
+   IF hb_keyChar( nKey ) $ "Tt" .AND. lTape  // Stop displaying tape
       lTape := .F.
       RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
       RETURN
    ENDIF
-   IF lTape                   // Are we in the display mode
+   IF lTape                  // Are we in the display mode
       SetColor( "N/W" )
       hb_Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
-      IF Len( aTrans ) > 0    // Any transactions been entered yet?
+      IF Len( aTrans ) > 0   // Any transactions been entered yet?
          hb_DispOutAt( 20 + nTopOS, 7 + nTapeSpace, ATail( aTrans ) )
       ENDIF
       _ftSetWinColor( W_CURR, W_PROMPT )
-   ELSE                       // Start displaying tape
+   ELSE                      // Start displaying tape
       lTape := .T.
       SetColor( "N/W" )
       cTapeScr := SaveScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace )
       hb_Shadow( 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace )
       hb_DispBox( 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace, HB_B_SINGLE_UNI + " ", "R+/W" )
-      SetColor( "GR+/W" )
-      hb_DispOutAt( 4 + nTopOS, 17 + nTapeSpace, " TAPE " )
+      hb_DispOutAt( 4 + nTopOS, 17 + nTapeSpace, " TAPE ", "GR+/W" )
       SetColor( "N/W" )
       IF Len( aTrans ) > 15
          nTopTape := Len( aTrans ) - 15
@@ -884,8 +857,8 @@ STATIC PROCEDURE _ftError( cMessage )
    LOCAL cErrorScr, nMessLen, nWide, nNumRows
 
    LOCAL nOldLastKey := LastKey()
-   LOCAL nOldRow  := Row()
-   LOCAL nOldCol  := Col()
+   LOCAL nOldRow := Row()
+   LOCAL nOldCol := Col()
    LOCAL nOldCurs := SetCursor( SC_NONE )
    LOCAL cOldColor := _ftSetScrColor( STD_ERROR )
 
