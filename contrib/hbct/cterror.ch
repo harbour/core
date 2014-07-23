@@ -128,8 +128,6 @@
  */
 
 /* general functions */
-#define CT_ERROR_CTINIT          1014
-#define CT_ERROR_CTEXIT          1020
 #define CT_ERROR_CSETARGERR      1032
 
 /* windowing functions */

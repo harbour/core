@@ -183,18 +183,31 @@ PHB_ITEM ct_error_subst( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE
 }
 
 /* argument error behaviour */
-static int s_iArgErrMode = CT_ARGERR_IGNORE;
+static void s_iArgErrMode_init( void * cargo )
+{
+   int * iArgErrMode = ( int * ) cargo;
+
+   *iArgErrMode = CT_ARGERR_IGNORE;
+}
+
+static HB_TSD_NEW( s_iArgErrMode, sizeof( int ), s_iArgErrMode_init, NULL );
 
 void ct_setargerrormode( int iMode )
 {
+   int * iArgErrMode = ( int * ) hb_stackGetTSD( &s_iArgErrMode );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setargerrormode(%i)", iMode ) );
-   s_iArgErrMode = iMode;
+
+   *iArgErrMode = iMode;
 }
 
 int ct_getargerrormode( void )
 {
+   int * iArgErrMode = ( int * ) hb_stackGetTSD( &s_iArgErrMode );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getargerrormode()" ) );
-   return s_iArgErrMode;
+
+   return *iArgErrMode;
 }
 
 HB_FUNC( CSETARGERR )

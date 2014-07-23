@@ -48,22 +48,42 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
+#include "hbstack.h"
 
 #include "ctstrfil.h"
 
-static HB_FATTR s_nFileAttr = HB_FA_NORMAL;
-static HB_BOOL  s_bSafety   = HB_FALSE;
+typedef struct
+{
+   HB_FATTR nFileAttr;
+   HB_BOOL  bSafety;
+} CT_STRFIL;
+
+static void s_strfil_init( void * cargo )
+{
+   CT_STRFIL * strfil = ( CT_STRFIL * ) cargo;
+
+   strfil->nFileAttr = HB_FA_NORMAL;
+   strfil->bSafety   = HB_FALSE;
+}
+
+static HB_TSD_NEW( s_strfil, sizeof( CT_STRFIL ), s_strfil_init, NULL );
 
 void ct_setfcreate( HB_FATTR nFileAttr )
 {
+   CT_STRFIL * strfil = ( CT_STRFIL * ) hb_stackGetTSD( &s_strfil );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setfcreate(%u)", nFileAttr ) );
-   s_nFileAttr = nFileAttr;
+
+   strfil->nFileAttr = nFileAttr;
 }
 
 HB_FATTR ct_getfcreate( void )
 {
+   CT_STRFIL * strfil = ( CT_STRFIL * ) hb_stackGetTSD( &s_strfil );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getfcreate()" ) );
-   return s_nFileAttr;
+
+   return strfil->nFileAttr;
 }
 
 HB_FUNC( SETFCREATE )
@@ -76,14 +96,20 @@ HB_FUNC( SETFCREATE )
 
 void ct_setsafety( HB_BOOL bSafety )
 {
+   CT_STRFIL * strfil = ( CT_STRFIL * ) hb_stackGetTSD( &s_strfil );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setsafety(%i)", bSafety ) );
-   s_bSafety = bSafety;
+
+   strfil->bSafety = bSafety;
 }
 
 HB_BOOL ct_getsafety( void )
 {
+   CT_STRFIL * strfil = ( CT_STRFIL * ) hb_stackGetTSD( &s_strfil );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getsafety()" ) );
-   return s_bSafety;
+
+   return strfil->bSafety;
 }
 
 HB_FUNC( CSETSAFETY )
