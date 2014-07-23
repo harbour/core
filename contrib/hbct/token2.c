@@ -56,6 +56,8 @@
 #include "ct.h"
 #include "hbvm.h"
 
+#include "hbstack.h"
+
 /* static functions for token environment management */
 
 #define TOKEN_ENVIRONMENT_STEP  100
@@ -205,33 +207,27 @@ static const char * sc_spcSeparatorStr =
    "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
 static const HB_SIZE sc_sSeparatorStrLen = 26;
 
-/* TODO: make thread safe */
-static TOKEN_ENVIRONMENT s_sTokenEnvironment = NULL;
-static HB_BOOL s_fInit = HB_FALSE;
-
-static void sTokExit( void * cargo )
+static void s_token_exit( void * cargo )
 {
-   HB_SYMBOL_UNUSED( cargo );
+   TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) cargo;
 
-   if( s_sTokenEnvironment )
+   if( *penv )
    {
-      sTokEnvDel( s_sTokenEnvironment );
-      s_sTokenEnvironment = NULL;
+      sTokEnvDel( *penv );
+      *penv = NULL;
    }
 }
 
+static HB_TSD_NEW( s_token, sizeof( TOKEN_ENVIRONMENT * ), NULL, s_token_exit );
+
 static void sTokSet( TOKEN_ENVIRONMENT env )
 {
-   if( ! s_fInit && env )
-   {
-      hb_vmAtExit( sTokExit, NULL );
-      s_fInit = HB_TRUE;
-   }
+   TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
 
-   if( s_sTokenEnvironment )
-      sTokEnvDel( s_sTokenEnvironment );
+   if( *penv )
+      sTokEnvDel( *penv );
 
-   s_sTokenEnvironment = env;
+   *penv = env;
 }
 
 HB_FUNC( TOKENINIT )
@@ -349,7 +345,10 @@ HB_FUNC( TOKENINIT )
       if( HB_ISCHAR( 4 ) && HB_ISBYREF( 4 ) )
          sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_parc( 4 );
       else
-         sTokenEnvironment = s_sTokenEnvironment;
+      {
+         TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
+         sTokenEnvironment = *penv;
+      }
 
       if( sTokenEnvironment != NULL )
       {
@@ -409,8 +408,10 @@ HB_FUNC( TOKENNEXT )
       }
       else
       {
+         TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
+
          /* ... or static ? */
-         if( s_sTokenEnvironment == NULL )
+         if( *penv == NULL )
          {
             int iArgErrorMode = ct_getargerrormode();
 
@@ -422,7 +423,7 @@ HB_FUNC( TOKENNEXT )
             hb_retc_null();
             return;
          }
-         sTokenEnvironment = s_sTokenEnvironment;
+         sTokenEnvironment = *penv;
       }
 
       /* nth token or next token? */
@@ -493,7 +494,10 @@ HB_FUNC( TOKENNUM )
    if( HB_ISCHAR( 1 ) && HB_ISBYREF( 1 ) )
       sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_parc( 1 );
    else
-      sTokenEnvironment = s_sTokenEnvironment;
+   {
+      TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
+      sTokenEnvironment = *penv;
+   }
 
    if( sTokenEnvironment != NULL )
       hb_retns( sTokEnvGetCnt( sTokenEnvironment ) );
@@ -521,7 +525,10 @@ HB_FUNC( TOKENEND )
    if( HB_ISCHAR( 1 ) && HB_ISBYREF( 1 ) )
       sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_parc( 1 );
    else
-      sTokenEnvironment = s_sTokenEnvironment;
+   {
+      TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
+      sTokenEnvironment = *penv;
+   }
 
    if( sTokenEnvironment != NULL )
       hb_retl( sTokEnvEnd( sTokenEnvironment ) );
@@ -545,9 +552,12 @@ HB_FUNC( TOKENEND )
 
 HB_FUNC( TOKENEXIT )
 {
-   if( s_sTokenEnvironment != NULL )
+   TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
+
+   if( *penv != NULL )
    {
-      sTokExit( NULL );
+      sTokEnvDel( *penv );
+      *penv = NULL;
       hb_retl( HB_TRUE );
    }
    else
@@ -567,7 +577,10 @@ HB_FUNC( TOKENAT )
    if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
       sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_parc( 3 );
    else
-      sTokenEnvironment = s_sTokenEnvironment;
+   {
+      TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
+      sTokenEnvironment = *penv;
+   }
 
    if( sTokenEnvironment == NULL )
    {
@@ -607,8 +620,10 @@ HB_FUNC( TOKENAT )
 
 HB_FUNC( SAVETOKEN )
 {
-   if( s_sTokenEnvironment != NULL )
-      hb_retclen( ( char * ) s_sTokenEnvironment, sTokEnvGetSize( s_sTokenEnvironment ) );
+   TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
+
+   if( *penv != NULL )
+      hb_retclen( ( char * ) *penv, sTokEnvGetSize( *penv ) );
    else
       hb_retc_null();
 }
@@ -648,9 +663,11 @@ HB_FUNC( RESTTOKEN )
 
    if( sTokenEnvironment != NULL || sStrLen == 0 )
    {
+      TOKEN_ENVIRONMENT * penv = ( TOKEN_ENVIRONMENT * ) hb_stackGetTSD( &s_token );
+
       /* return current environment, then delete it */
-      if( s_sTokenEnvironment != NULL )
-         hb_retclen( ( char * ) s_sTokenEnvironment, sTokEnvGetSize( s_sTokenEnvironment ) );
+      if( *penv != NULL )
+         hb_retclen( ( char * ) *penv, sTokEnvGetSize( *penv ) );
       else
          hb_retc_null();
 
