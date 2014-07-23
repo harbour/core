@@ -6,7 +6,7 @@ release is available for download on this URL:
 Make sure to check README.md "Build Your Own Harbour App"
 section.
 
-Release notes
+Release Notes
 =============
 
 Unified Windows release for x86 and x64 platforms.
@@ -21,18 +21,18 @@ Usage:
 3. For x86 executable, type: 'hbmk2 ../tests/hello.prg'
 4. For x64 executable, type: 'hbmk2 ../tests/hello.prg -cpu=x86_64'
 
-Tool/lib versions used to create this package
-=============================================
+Tool/lib dependencies
+=====================
 
-   Compiler tools
+   Tools
 
-   MinGW GNU C 4.9.0 (x86/x64) (included)
+   MinGW GNU C 4.9.1 (x86/x64) (included)
 
-   External lib dependencies
+   Libs
 
    ACE 11.00
    Cairo 1.8.8
-   libcurl 7.37.0
+   libcurl 7.37.1
    Firebird 2.5.0
    FreeImage 3.15.4
    GD 2.0.35
@@ -40,7 +40,6 @@ Tool/lib versions used to create this package
    OCILIB 3.12.1
    OpenSSL 1.0.1
    PostgreSQL 9.3.0-1
-   WATTCP 2.2.10
 
 Changes since previous (3.0.0) release
 ======================================
@@ -57,7 +56,7 @@ Changes since previous (2.0.0beta3 2009-09-05) release
 
 - Harbour updated to r13359 (from r12422)
 - MinGW CEGCC updated to 4.4.0
-- upx updated to 3.04.
+- upx updated to 3.04
 - MinGW 4.4.1 updated to TDM-2 release fixing a performance problem.
 - MinGW w64 updated to latest binary release.
 - DJGPP build in unified release replaced with OpenWatcom MS-DOS build.
