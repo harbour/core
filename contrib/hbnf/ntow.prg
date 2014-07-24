@@ -39,19 +39,19 @@ STATIC FUNCTION grp_to_words( nGrp )
       " Ten",     " Eleven",    " Twelve", ;
       " Thirteen", " Fourteen", " Fifteen", " Sixteen", " Seventeen", " Eighteen", " Nineteen" }
    STATIC sc_tens :=  { "", "", ;
-      " Twenty-", " Thirty-", " Forty-", " Fifty-", " Sixty-", " Seventy-", " Eighty-", " Ninety-" }
+      " Twenty", " Thirty", " Forty", " Fifty", " Sixty", " Seventy", " Eighty", " Ninety" }
 
    LOCAL cResult, nTemp
 
    nTemp   := Int( nGrp % 100 )
    nGrp    := Int( nGrp / 100 )
-   cResult := " " + sc_ones[ nGrp + 1 ] + iif( nGrp > 0, " Hundred", "" )
+   cResult := iif( nGrp > 0, " " + sc_ones[ nGrp + 1 ] + " Hundred", "" )
 
    DO CASE
    CASE nTemp > 19
       cResult += ;
          sc_tens[ Int( nTemp / 10 ) + 1 ] + ;
-         sc_ones[ Int( nTemp % 10 ) + 1 ]
+         iif( ( nTemp := Int( nTemp % 10 ) ) > 0, "-", "" ) + sc_ones[ nTemp + 1 ]
    CASE nTemp < 20 .AND. nTemp > 9
       cResult += sc_teens[ Int( nTemp % 10 ) + 1 ]
    CASE nTemp < 10 .AND. nTemp > 0
