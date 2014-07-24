@@ -20,11 +20,11 @@ FUNCTION ft_NToW( nAmount )
 
    nTemp   := Int( nAmount % nDiv )
    nAmount := Int( nAmount / nDiv )
-   cResult := " " + grp_to_words( nAmount ) + ;
+   cResult := grp_to_words( nAmount ) + ;
       sc_qualifiers[ Int( sol10( nDiv ) / 3 ) + 1 ]
 
    IF nTemp > ( nDiv /= 1000 ) .AND. nDiv > 1
-      cResult += ft_NToW( nTemp, nDiv )
+      cResult += " " + ft_NToW( nTemp )
    ELSE
       cResult += grp_to_words( nTemp )
    ENDIF
@@ -34,18 +34,18 @@ FUNCTION ft_NToW( nAmount )
 STATIC FUNCTION grp_to_words( nGrp )
 
    STATIC sc_ones := { "", ;
-      " One", " Two", " Three", " Four", " Five", " Six", " Seven", " Eight", " Nine" }
+      "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" }
    STATIC sc_teens := { ;
       " Ten",     " Eleven",    " Twelve", ;
       " Thirteen", " Fourteen", " Fifteen", " Sixteen", " Seventeen", " Eighteen", " Nineteen" }
    STATIC sc_tens :=  { "", "", ;
-      " Twenty", " Thirty", " Forty", " Fifty", " Sixty", " Seventy", " Eighty", " Ninety" }
+      " Twenty-", " Thirty-", " Forty-", " Fifty-", " Sixty-", " Seventy-", " Eighty-", " Ninety-" }
 
    LOCAL cResult, nTemp
 
    nTemp   := Int( nGrp % 100 )
    nGrp    := Int( nGrp / 100 )
-   cResult := sc_ones[ nGrp + 1 ] + iif( nGrp > 0, " Hundred", "" )
+   cResult := " " + sc_ones[ nGrp + 1 ] + iif( nGrp > 0, " Hundred", "" )
 
    DO CASE
    CASE nTemp > 19
@@ -55,7 +55,7 @@ STATIC FUNCTION grp_to_words( nGrp )
    CASE nTemp < 20 .AND. nTemp > 9
       cResult += sc_teens[ Int( nTemp % 10 ) + 1 ]
    CASE nTemp < 10 .AND. nTemp > 0
-      cResult += sc_ones[ Int( nTemp ) + 1 ]
+      cResult += " " + sc_ones[ Int( nTemp ) + 1 ]
    ENDCASE
 
    RETURN cResult
