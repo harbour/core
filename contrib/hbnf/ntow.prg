@@ -45,17 +45,17 @@ STATIC FUNCTION grp_to_words( nGrp )
 
    nTemp   := Int( nGrp % 100 )
    nGrp    := Int( nGrp / 100 )
-   cResult := iif( nGrp >= 1, " " + sc_ones[ nGrp ] + " Hundred", "" )
+   cResult := iif( nGrp > 0, " " + sc_ones[ nGrp ] + " Hundred", "" )
 
    DO CASE
    CASE nTemp > 19
       cResult += ;
          sc_tens[ Int( nTemp / 10 ) + 1 ] + ;
-         iif( ( nTemp := Int( nTemp % 10 ) ) >= 1, "-" + sc_ones[ nTemp ], "" )
+         iif( ( nTemp := Int( nTemp % 10 ) ) > 0, "-" + sc_ones[ nTemp ], "" )
    CASE nTemp < 20 .AND. nTemp > 9
       cResult += sc_teens[ Int( nTemp % 10 ) + 1 ]
-   CASE nTemp < 10 .AND. nTemp >= 1
-      cResult += " " + sc_ones[ Int( nTemp ) ]
+   CASE nTemp < 10 .AND. nTemp > 0
+      cResult += " " + sc_ones[ nTemp ]
    ENDCASE
 
    RETURN cResult
