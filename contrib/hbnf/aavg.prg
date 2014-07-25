@@ -18,7 +18,6 @@ FUNCTION ft_AAvg( aArray, nStartIndex, nEndIndex )
    __defaultNIL( @nEndIndex, Len( aArray ) )
 
    // Make sure bounds are in range
-
    FORCE_BETWEEN( 1, nEndIndex, Len( aArray ) )
    FORCE_BETWEEN( 1, nStartIndex, nEndIndex )
 

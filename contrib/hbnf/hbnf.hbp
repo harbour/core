@@ -10,7 +10,6 @@
 alt.c
 caplock.c
 chdir.c
-cint86.c
 color2n.c
 ctrl.c
 descendn.c
@@ -19,6 +18,7 @@ ftattr.c
 fttext.c
 isprint.c
 getenvrn.c
+hex2dec.c
 iamidle.c
 idle.c
 isshare.c
@@ -28,6 +28,7 @@ mouse.c
 n2color.c
 numlock.c
 nwlstat.c
+nwsem.c
 origin.c
 page.c
 peek.c
@@ -35,6 +36,7 @@ proper.c
 prtscr.c
 putkey.c
 rmdir.c
+scancode.c
 setdate.c
 setkeys.c
 setlastk.c
@@ -94,7 +96,6 @@ findith.prg
 firstday.prg
 floptst.prg
 gcd.prg
-hex2dec.prg
 invclr.prg
 isbit.prg
 isbiton.prg
@@ -111,7 +112,6 @@ mouse1.prg
 netpv.prg
 nooccur.prg
 ntow.prg
-nwsem.prg
 nwuid.prg
 ontick.prg
 pchr.prg
@@ -126,7 +126,6 @@ rand1.prg
 round.prg
 savearr.prg
 savesets.prg
-scancode.prg
 scregion.prg
 sinkey.prg
 sleep.prg

@@ -13,9 +13,7 @@
    Initial revision.
  */
 
-/* Some notes:
-
-   The tbmethods section is a short cut from Spence's book instead
+/* The tbmethods section is a short cut from Spence's book instead
    of using the longer DO CASE method.
 
    Jim Gale showed me the basic array browser and Robert DiFalco

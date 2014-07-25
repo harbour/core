@@ -120,10 +120,11 @@ STATIC FUNCTION _ftColors( aOpt, aClrPal, lColor )
    LOCAL cColor  := SetColor()
    LOCAL cScrSav := SaveScreen( 18, 0, MaxRow(), MaxCol() )
 
-   ASize( aOpt, 4 )                            // check incoming parameters
+   // check incoming parameters
+   ASize( aOpt, 4 )
    hb_default( @aOpt[ C_CHAR ], "" )
    hb_default( @aOpt[ C_TYPE ], "W" )
-   aOpt[ C_CLR ]  := Upper( aOpt[ C_CLR ] )    // need upper case
+   aOpt[ C_CLR ]  := Upper( aOpt[ C_CLR ] )  // need upper case
    aOpt[ C_TYPE ] := Upper( aOpt[ C_TYPE ] )
 
    hb_default( @lColor, IsColor() )

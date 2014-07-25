@@ -198,7 +198,6 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
 
       DispEnd()
 
-      // Wait for a keystroke
       nKey := Inkey( 0 )
 
       // If the key was an alphabetic char, convert to uppercase

@@ -10,7 +10,7 @@
    Nanforum Toolkit
  */
 
-FUNCTION ft_SInkey( ... )  // NOTE: Harbour accepts a second parameter, like Inkey()
+FUNCTION ft_SInkey( ... )  // HB_EXTENSION: Harbour accepts a 2nd parameter, like Inkey()
 
    LOCAL nKey, cBlock
 

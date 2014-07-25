@@ -111,7 +111,6 @@ DYNAMIC ft_Hex2Dec
 DYNAMIC ft_IAmIdle
 DYNAMIC ft_Idle
 DYNAMIC ft_inp
-DYNAMIC ft_int86
 DYNAMIC ft_InvClr
 DYNAMIC ft_IsBit
 DYNAMIC ft_IsBitOn

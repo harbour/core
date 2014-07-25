@@ -57,7 +57,7 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
 
       // execute action block attached to this option if there is one
       IF nChoice > 0 .AND. Len( aMenuInfo[ nChoice ] ) == 3
-         Eval( aMenuInfo[ nChoice, 3 ] )
+         Eval( aMenuInfo[ nChoice ][ 3 ] )
       ENDIF
    ENDDO
 

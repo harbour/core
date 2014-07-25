@@ -32,7 +32,7 @@ HB_FUNC( FT_NWLSTAT )
       iConnect = regs.h.al;
 
       if( iConnect < 0 )
-         iConnect += 256
+         iConnect += 256;
    }
 #else
    iConnect = 0;

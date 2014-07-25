@@ -23,14 +23,9 @@ FUNCTION ft_AEMaxLen( aArray, nDimension, nStart, nCount )
       IF aArray[ i ] != NIL
 
          SWITCH ValType( aArray[ i ] )
-         CASE "C"
-            nLen := Len( aArray[ i ] )
-            EXIT
-         CASE "A"
-            nLen := Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) )
-            EXIT
-         OTHERWISE
-            nLen := Len( LTrim( Transform( aArray[ i ], "@X" ) ) )
+         CASE "C"  ; nLen := Len( aArray[ i ] ) ; EXIT
+         CASE "A"  ; nLen := Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) ) ; EXIT
+         OTHERWISE ; nLen := Len( LTrim( Transform( aArray[ i ], "@X" ) ) )
          ENDSWITCH
 
          nMaxlen := Max( nMaxlen, nLen )

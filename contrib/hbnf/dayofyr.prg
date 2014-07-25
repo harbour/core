@@ -19,10 +19,8 @@ FUNCTION ft_DayOfYr( dGivenDate, nDayNum, lIsAcct )
    LOCAL nTemp, aRetVal
 
    DO CASE
-   CASE HB_ISNUMERIC( dGivenDate )
-      nDayNum := dGivenDate
-   CASE HB_ISLOGICAL( dGivenDate )
-      lIsAcct := dGivenDate
+   CASE HB_ISNUMERIC( dGivenDate ) ; nDayNum := dGivenDate
+   CASE HB_ISLOGICAL( dGivenDate ) ; lIsAcct := dGivenDate
    ENDCASE
 
    hb_default( @dGivenDate, Date() )

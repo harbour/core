@@ -2367,50 +2367,50 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             IF Empty( hbmk[ _HBMK_cCOMP ] ) .AND. ! Empty( aCOMPDET )
 #ifdef HARBOUR_SUPPORT
                lDoSupportDetection := Empty( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) .AND. ;
-                                      hb_DirExists( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" + hb_ps() + hbmk[ _HBMK_cPLAT ] )
+                                      hb_DirExists( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" )
 #endif
                /* Check compilers */
                FOR EACH tmp IN aCOMPDET
                   IF ! Empty( cPath_CompC := Eval( tmp[ _COMPDET_bBlock ] ) )
 #ifdef HARBOUR_SUPPORT
+                     hbmk[ _HBMK_cCOMP ] := tmp[ _COMPDET_cCOMP ]
+                     /* Allow override of compiler using the CPU setting for
+                        dual-mode mingw distros */
+                     DO CASE
+                     CASE hbmk[ _HBMK_cCOMP ] == "mingw" .AND. hbmk[ _HBMK_cCPU ] == "x86_64"
+                        hbmk[ _HBMK_cCOMP ] := "mingw64"
+                     CASE hbmk[ _HBMK_cCOMP ] == "mingw64" .AND. hbmk[ _HBMK_cCPU ] == "x86"
+                        hbmk[ _HBMK_cCOMP ] := "mingw"
+                     ENDCASE
+                     IF Len( tmp ) >= _COMPDET_cCCPREFIX .AND. tmp[ _COMPDET_cCCPREFIX ] != NIL
+                        hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDET_cCCPREFIX ]
+                     ENDIF
+                     IF Len( tmp ) >= _COMPDET_cCCSUFFIX .AND. tmp[ _COMPDET_cCCSUFFIX ] != NIL
+                        hbmk[ _HBMK_cCCSUFFIX ] := tmp[ _COMPDET_cCCSUFFIX ]
+                     ENDIF
+                     tmp1 := hbmk[ _HBMK_cPLAT ]
+                     IF Len( tmp ) >= _COMPDET_cPLAT .AND. tmp[ _COMPDET_cPLAT ] != NIL
+                        hbmk[ _HBMK_cPLAT ] := tmp[ _COMPDET_cPLAT ]
+                     ENDIF
+                     /* Hack autodetect watcom platform by looking at the header path config. TODO: Do it properly */
+                     IF hbmk[ _HBMK_cCOMP ] == "watcom"
+                        DO CASE
+                        CASE FindInPath( "os2.h", GetEnv( "INCLUDE" ) ) != NIL
+                           hbmk[ _HBMK_cPLAT ] := "os2"
+                        CASE FindInPath( "dirent.h", GetEnv( "INCLUDE" ) ) != NIL
+                           hbmk[ _HBMK_cPLAT ] := "linux"
+                        CASE FindInPath( "windows.h", GetEnv( "INCLUDE" ) ) != NIL
+                           hbmk[ _HBMK_cPLAT ] := "win"
+                        OTHERWISE
+                           hbmk[ _HBMK_cPLAT ] := "dos"
+                        ENDCASE
+                     ENDIF
                      IF ! lDoSupportDetection .OR. ;
                         hb_DirExists( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" + ;
                                                         hb_ps() + hbmk[ _HBMK_cPLAT ] + ;
                                                         hb_ps() + tmp[ _COMPDET_cCOMP ] + ;
                                                         hb_DirSepToOS( hbmk[ _HBMK_cBUILD ] ) )
 #endif
-                        hbmk[ _HBMK_cCOMP ] := tmp[ _COMPDET_cCOMP ]
-                        /* Allow override of compiler using the CPU setting for
-                           dual-mode mingw distros */
-                        DO CASE
-                        CASE hbmk[ _HBMK_cCOMP ] == "mingw" .AND. hbmk[ _HBMK_cCPU ] == "x86_64"
-                           hbmk[ _HBMK_cCOMP ] := "mingw64"
-                        CASE hbmk[ _HBMK_cCOMP ] == "mingw64" .AND. hbmk[ _HBMK_cCPU ] == "x86"
-                           hbmk[ _HBMK_cCOMP ] := "mingw"
-                        ENDCASE
-                        IF Len( tmp ) >= _COMPDET_cCCPREFIX .AND. tmp[ _COMPDET_cCCPREFIX ] != NIL
-                           hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDET_cCCPREFIX ]
-                        ENDIF
-                        IF Len( tmp ) >= _COMPDET_cCCSUFFIX .AND. tmp[ _COMPDET_cCCSUFFIX ] != NIL
-                           hbmk[ _HBMK_cCCSUFFIX ] := tmp[ _COMPDET_cCCSUFFIX ]
-                        ENDIF
-                        tmp1 := hbmk[ _HBMK_cPLAT ]
-                        IF Len( tmp ) >= _COMPDET_cPLAT .AND. tmp[ _COMPDET_cPLAT ] != NIL
-                           hbmk[ _HBMK_cPLAT ] := tmp[ _COMPDET_cPLAT ]
-                        ENDIF
-                        /* Hack autodetect watcom platform by looking at the header path config. TODO: Do it properly */
-                        IF hbmk[ _HBMK_cCOMP ] == "watcom"
-                           DO CASE
-                           CASE FindInPath( "os2.h", GetEnv( "INCLUDE" ) ) != NIL
-                              hbmk[ _HBMK_cPLAT ] := "os2"
-                           CASE FindInPath( "dirent.h", GetEnv( "INCLUDE" ) ) != NIL
-                              hbmk[ _HBMK_cPLAT ] := "linux"
-                           CASE FindInPath( "windows.h", GetEnv( "INCLUDE" ) ) != NIL
-                              hbmk[ _HBMK_cPLAT ] := "win"
-                           OTHERWISE
-                              hbmk[ _HBMK_cPLAT ] := "dos"
-                           ENDCASE
-                        ENDIF
                         IF !( hbmk[ _HBMK_cPLAT ] == tmp1 ) .AND. hbmk[ _HBMK_lInfo ]
                            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected platform: %1$s (adjusted)" ), hbmk[ _HBMK_cPLAT ] ) )
                         ENDIF

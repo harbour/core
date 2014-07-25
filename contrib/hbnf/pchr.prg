@@ -91,7 +91,7 @@ FUNCTION ft_PChr( c_nums )
          ENDCASE
       ENDCASE
 
-      c_st := At( ",", SubStr( c_nums, c_st + 1 ) ) + c_st
+      c_st += At( ",", SubStr( c_nums, c_st + 1 ) )
       c_part := SubStr( c_nums, c_st + 1, At( ",", SubStr( c_nums, c_st + 2 ) ) )
    ENDDO
 
