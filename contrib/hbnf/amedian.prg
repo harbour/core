@@ -1,18 +1,14 @@
-/*
- * This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
- * and is placed in the public domain.
- *
- * This program uses the preprocessor #defines and #command
- * by David Husnian.
- *
- * Modification history:
- *
- *    Rev 1.1   15 Aug 1991 23:05:22   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   07 Jun 1991 23:03:20   GLENN
- * Initial revision.
- *
+/* This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
+   and is placed in the public domain.
+
+   This program uses the preprocessor #defines and #command
+   by David Husnian.
+
+      Rev 1.1   15 Aug 1991 23:05:22   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   07 Jun 1991 23:03:20   GLENN
+   Initial revision.
  */
 
 #define FORCE_BETWEEN( x, y, z )  ( y := Max( Min( y, z ), x ) )

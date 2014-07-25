@@ -1,43 +1,39 @@
-/*
- * This is an original work by Mike Taylor and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.10  22 Apr 2004 15:32:00   David G. Holm <dholm@jsd-llc.com>
- * Corrected all hb_fsSeek calls to use FS_ defines instead of using
- * redefined SEEK_ ones that conflict with the C-level SEEK_ defines.
- *    Rev 1.9   ? ?
- * An unknown number of changes were made between Rev 1.8 and Rev 1.10.
- *
- *    Rev 1.8   24 May 2002 19:25:00   David G. Holm <dholm@jsd-llc.com>
- * Fixed some problems that caused C++ compiles to fail.
- *
- *    Rev 1.7   29 Mar 2002 17:00:00   Walter Negro <anegro@overnet.com.ar>
- * Ported to Harbour
- *
- *    Rev 1.6   01 Jan 1995 03:01:00   TED
- * Changed some prototypes to eliminate compiler warnings.
- *
- *    Rev 1.5   14 Feb 1994 16:58:42   GLENN
- * Steve Tyrakowski and Kevin Maher modified to be CPMI-compliant.
- *
- *    Rev 1.4   18 Nov 1991 02:20:20   GLENN
- * Mike fixed a bug in _ft_DFInit() related to allocating memory.  Some
- * users had been reporting problems, but everyone who tested this patch
- * reported success.
- *
- *    Rev 1.3   17 Aug 1991 15:25:46   GLENN
- * Don Caton fixed some spelling errors in the doc
- *
- *    Rev 1.2   15 Aug 1991 23:08:14   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:53:42   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:02:46   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Mike Taylor and is placed in the public domain.
+
+      Rev 1.10  22 Apr 2004 15:32:00   David G. Holm <dholm@jsd-llc.com>
+   Corrected all hb_fsSeek calls to use FS_ defines instead of using
+   redefined SEEK_ ones that conflict with the C-level SEEK_ defines.
+      Rev 1.9   ? ?
+   An unknown number of changes were made between Rev 1.8 and Rev 1.10.
+
+      Rev 1.8   24 May 2002 19:25:00   David G. Holm <dholm@jsd-llc.com>
+   Fixed some problems that caused C++ compiles to fail.
+
+      Rev 1.7   29 Mar 2002 17:00:00   Walter Negro <anegro@overnet.com.ar>
+   Ported to Harbour
+
+      Rev 1.6   01 Jan 1995 03:01:00   TED
+   Changed some prototypes to eliminate compiler warnings.
+
+      Rev 1.5   14 Feb 1994 16:58:42   GLENN
+   Steve Tyrakowski and Kevin Maher modified to be CPMI-compliant.
+
+      Rev 1.4   18 Nov 1991 02:20:20   GLENN
+   Mike fixed a bug in _ft_DFInit() related to allocating memory.  Some
+   users had been reporting problems, but everyone who tested this patch
+   reported success.
+
+      Rev 1.3   17 Aug 1991 15:25:46   GLENN
+   Don Caton fixed some spelling errors in the doc
+
+      Rev 1.2   15 Aug 1991 23:08:14   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:53:42   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:02:46   GLENN
+   Nanforum Toolkit
  */
 
 /* TOFIX: support for reading files with any encoding

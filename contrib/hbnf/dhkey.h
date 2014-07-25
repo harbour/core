@@ -1,14 +1,10 @@
-/*
- * This is an original work by Mike Taylor and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.1   14 Jun 1991 19:55:20   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:03:04   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Mike Taylor and is placed in the public domain.
+
+      Rev 1.1   14 Jun 1991 19:55:20   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:03:04   GLENN
+   Nanforum Toolkit
  */
 
 /* Key constants for d_keyin() routine.

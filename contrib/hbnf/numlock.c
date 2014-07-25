@@ -1,21 +1,17 @@
-/*
- * This is an original work by Ted Means and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.3   15 Jul 1993 00:08:46   GLENN
- * Changed reference to status_byte in order to make this work in
- * protected mode.
- *
- *    Rev 1.2   15 Aug 1991 23:08:12   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   27 May 1991 14:43:20   GLENN
- * Ted added a parameter to toggle the Numlock on or off.
- *
- *    Rev 1.0   01 Apr 1991 01:02:50   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Ted Means and is placed in the public domain.
+
+      Rev 1.3   15 Jul 1993 00:08:46   GLENN
+   Changed reference to status_byte in order to make this work in
+   protected mode.
+
+      Rev 1.2   15 Aug 1991 23:08:12   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   27 May 1991 14:43:20   GLENN
+   Ted added a parameter to toggle the Numlock on or off.
+
+      Rev 1.0   01 Apr 1991 01:02:50   GLENN
+   Nanforum Toolkit
  */
 
 #include "hbapigt.h"

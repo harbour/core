@@ -1,21 +1,17 @@
-/*
- * This is an original work by Rick Whitt and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.2a  09 Sep 1996            JO
- * Added underscore prefix to environ() calls for MSC 8.0
- * Note: 5.2e version will work if linked with MSC OldNames.lib
- *
- *    Rev 1.2   01 Jan 1996 03:01:00   TED
- * Added prototypes to kill compiler warning.
- *
- *    Rev 1.1   15 Aug 1991 23:08:42   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   17 Jul 1991 22:08:12   GLENN
- * Initial revision.
- *
+/* This is an original work by Rick Whitt and is placed in the public domain.
+
+      Rev 1.2a  09 Sep 1996            JO
+   Added underscore prefix to environ() calls for MSC 8.0
+   Note: 5.2e version will work if linked with MSC OldNames.lib
+
+      Rev 1.2   01 Jan 1996 03:01:00   TED
+   Added prototypes to kill compiler warning.
+
+      Rev 1.1   15 Aug 1991 23:08:42   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   17 Jul 1991 22:08:12   GLENN
+   Initial revision.
  */
 
 #include "hbapi.h"

@@ -1,20 +1,16 @@
-/*
- * This is an original work by James J. Orlowski, M.D. and is placed in the
- * public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   15 Aug 1991 23:05:56   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   12 Jun 1991 00:42:38   GLENN
- * A referee suggested changing the documentation such that the return value
- * is shown as "xElement" rather than "cElement" because the function
- * can return different types.
- *
- *    Rev 1.0   07 Jun 1991 23:03:24   GLENN
- * Initial revision.
- *
+/* This is an original work by James J. Orlowski, M.D. and is placed in the
+   public domain.
+
+      Rev 1.2   15 Aug 1991 23:05:56   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   12 Jun 1991 00:42:38   GLENN
+   A referee suggested changing the documentation such that the return value
+   is shown as "xElement" rather than "cElement" because the function
+   can return different types.
+
+      Rev 1.0   07 Jun 1991 23:03:24   GLENN
+   Initial revision.
  */
 
 /* Some notes:

@@ -1,23 +1,19 @@
-/*
- * This is an original work by David Barrett and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.3   28 Sep 1992 22:04:18   GLENN
- * A few users have reported that these functions do not support
- * multi-dimensional arrays.  Until the bugs are verified and
- * workarounds or re-writes devised, a warning has been placed in the
- * documentation.
- *
- *    Rev 1.2   15 Aug 1991 23:06:06   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:52:54   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   07 Jun 1991 23:39:38   GLENN
- * Initial revision.
- *
+/* This is an original work by David Barrett and is placed in the public domain.
+
+      Rev 1.3   28 Sep 1992 22:04:18   GLENN
+   A few users have reported that these functions do not support
+   multi-dimensional arrays.  Until the bugs are verified and
+   workarounds or re-writes devised, a warning has been placed in the
+   documentation.
+
+      Rev 1.2   15 Aug 1991 23:06:06   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:52:54   GLENN
+   Minor edit to file header
+
+      Rev 1.0   07 Jun 1991 23:39:38   GLENN
+   Initial revision.
  */
 
 /* Set <lDropCompatibility> to .T. if you don't mind, if the created

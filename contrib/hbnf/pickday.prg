@@ -1,18 +1,14 @@
-/*
- * This is an original work by Greg Lief (Mr. Grump) and is placed in the
- * public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   15 Aug 1991 23:04:24   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:52:40   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:02:00   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Greg Lief (Mr. Grump) and is placed in the
+   public domain.
+
+      Rev 1.2   15 Aug 1991 23:04:24   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:52:40   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:02:00   GLENN
+   Nanforum Toolkit
  */
 
 #include "box.ch"

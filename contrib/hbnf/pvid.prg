@@ -1,14 +1,10 @@
-/*
- * This is an original work by Ted Means and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.1   16 Oct 1992 00:05:22   GLENN
- * Just making sure we had Ted's most current revision.
- *
- *    Rev 1.0   22 Aug 1992 16:51:32   GLENN
- * Initial revision.
- *
+/* This is an original work by Ted Means and is placed in the public domain.
+
+      Rev 1.1   16 Oct 1992 00:05:22   GLENN
+   Just making sure we had Ted's most current revision.
+
+      Rev 1.0   22 Aug 1992 16:51:32   GLENN
+   Initial revision.
  */
 
 #define PV_ROW      1

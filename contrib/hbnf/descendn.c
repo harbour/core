@@ -1,14 +1,10 @@
-/*
- * This is an original work by Ted Means and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.1   01 May 1995 03:05:00   TED
- * Added typecast to tame compiler warning
- *
- *    Rev 1.0   01 Feb 1995 03:02:00   TED
- * Initial release
- *
+/* This is an original work by Ted Means and is placed in the public domain.
+
+      Rev 1.1   01 May 1995 03:05:00   TED
+   Added typecast to tame compiler warning
+
+      Rev 1.0   01 Feb 1995 03:02:00   TED
+   Initial release
  */
 
 #include "hbapi.h"

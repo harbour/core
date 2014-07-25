@@ -1,27 +1,23 @@
-/*
- * This is an original work by Ted Means and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.5   16 Oct 1992 00:20:28   GLENN
- * Cleaned up documentation header.
- *
- *    Rev 1.4   16 Oct 1992 00:08:44   GLENN
- * Just making sure we had Ted's latest revision.
- *
- *    Rev 1.3   13 Oct 1992 20:45:46   GLENN
- * Complete rewrite by Ted Means, dumping assembler version for a
- * Clipper version.
- *
- *    Rev 1.2   15 Aug 1991 23:03:54   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:52:16   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:01:42   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Ted Means and is placed in the public domain.
+
+      Rev 1.5   16 Oct 1992 00:20:28   GLENN
+   Cleaned up documentation header.
+
+      Rev 1.4   16 Oct 1992 00:08:44   GLENN
+   Just making sure we had Ted's latest revision.
+
+      Rev 1.3   13 Oct 1992 20:45:46   GLENN
+   Complete rewrite by Ted Means, dumping assembler version for a
+   Clipper version.
+
+      Rev 1.2   15 Aug 1991 23:03:54   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:52:16   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:01:42   GLENN
+   Nanforum Toolkit
  */
 
 #include "setcurs.ch"

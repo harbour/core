@@ -1,18 +1,14 @@
-/*
- * This is an original work by Alexander B. Spencer and is placed in the
- * public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   15 Aug 1991 23:04:02   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:52:22   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   14 Jun 1991 03:43:52   GLENN
- * Initial revision.
- *
+/* This is an original work by Alexander B. Spencer and is placed in the
+   public domain.
+
+      Rev 1.2   15 Aug 1991 23:04:02   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:52:22   GLENN
+   Minor edit to file header
+
+      Rev 1.0   14 Jun 1991 03:43:52   GLENN
+   Initial revision.
  */
 
 FUNCTION ft_Mil2Min( cMILTIME )

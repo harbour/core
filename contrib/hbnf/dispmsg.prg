@@ -1,21 +1,17 @@
-/*
- * This is an original work by Paul Ferrara (ColumbuSoft) and is placed
- * in the public domain.
- *
- * Modification history:
- *
- *    Rev 2.0   12 Aug 1994 23:05:14   PAUL
- * Added ablilty to highlight individual characters and cleaned up code
- *
- *    Rev 1.2   15 Aug 1991 23:05:14   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:51:36   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:01:12   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Paul Ferrara (ColumbuSoft) and is placed
+   in the public domain.
+
+      Rev 2.0   12 Aug 1994 23:05:14   PAUL
+   Added ablilty to highlight individual characters and cleaned up code
+
+      Rev 1.2   15 Aug 1991 23:05:14   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:51:36   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:01:12   GLENN
+   Nanforum Toolkit
  */
 
 #include "box.ch"

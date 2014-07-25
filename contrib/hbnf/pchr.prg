@@ -1,17 +1,13 @@
-/*
- * This is an original work by Jim Gale and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   17 Aug 1991 15:40:16   GLENN
- * Don Caton fixed some spelling errors in the doc
- *
- *    Rev 1.1   15 Aug 1991 23:06:00   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   12 Jun 1991 01:45:04   GLENN
- * Initial revision.
- *
+/* This is an original work by Jim Gale and is placed in the public domain.
+
+      Rev 1.2   17 Aug 1991 15:40:16   GLENN
+   Don Caton fixed some spelling errors in the doc
+
+      Rev 1.1   15 Aug 1991 23:06:00   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   12 Jun 1991 01:45:04   GLENN
+   Initial revision.
  */
 
 /* NOTE: In original NF, control codes were also accepted when

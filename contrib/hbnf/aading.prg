@@ -1,15 +1,11 @@
-/*
- * This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
- * and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.1   15 Aug 1991 23:05:40   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   07 Jun 1991 23:03:08   GLENN
- * Initial revision.
- *
+/* This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
+   and is placed in the public domain.
+
+      Rev 1.1   15 Aug 1991 23:05:40   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   07 Jun 1991 23:03:08   GLENN
+   Initial revision.
  */
 
 FUNCTION ft_AAddition( aList1, aList2, lTrimmer, lCaseSens )

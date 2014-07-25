@@ -1,20 +1,16 @@
-/*
- * While I can say that I wrote the program, the algorithm is from Donald
- * Knuth's The Art of Computer Programming, Section 1.3.2.  So, the source
- * code is an original work by Paul Tucker <ptucker@sympatico.ca>
- * and is placed in the public domain
- *
- * Modification history:
- *
- *    Rev 1.2   15 Aug 1991 23:05:28   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:51:42   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:01:16   GLENN
- * Nanforum Toolkit
- *
+/* While I can say that I wrote the program, the algorithm is from Donald
+   Knuth's The Art of Computer Programming, Section 1.3.2.  So, the source
+   code is an original work by Paul Tucker <ptucker@sympatico.ca>
+   and is placed in the public domain
+
+      Rev 1.2   15 Aug 1991 23:05:28   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:51:42   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:01:16   GLENN
+   Nanforum Toolkit
  */
 
 FUNCTION ft_Easter( nYear )

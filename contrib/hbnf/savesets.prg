@@ -1,20 +1,16 @@
-/*
- * This is an original work by David Husnian and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   15 Aug 1991 23:05:06   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   12 Apr 1991 00:18:04   GLENN
- * There was a call to SetCentury() that should have been ft_SetCentury().
- * Another one of those errors that came from testing earlier versions of
- * a routine before FT_ prefix was added to function names.  Lesson learned.
- * Minor documentation change.
- *
- *    Rev 1.0   01 Apr 1991 01:02:10   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by David Husnian and is placed in the public domain.
+
+      Rev 1.2   15 Aug 1991 23:05:06   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   12 Apr 1991 00:18:04   GLENN
+   There was a call to SetCentury() that should have been ft_SetCentury().
+   Another one of those errors that came from testing earlier versions of
+   a routine before FT_ prefix was added to function names.  Lesson learned.
+   Minor documentation change.
+
+      Rev 1.0   01 Apr 1991 01:02:10   GLENN
+   Nanforum Toolkit
  */
 
 #define FT_EXTRA_SETS   2

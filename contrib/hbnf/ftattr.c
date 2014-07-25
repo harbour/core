@@ -1,17 +1,13 @@
-/*
- * This is an original work by Ted Means and is placed in the public domain.
- *
- * Modification history:
- *
- *     Rev 1.2   03 Oct 1992 14:35:14   GLENN
- *  Ted Means made modifications to support use of DispBegin()/DispEnd().
- *
- *     Rev 1.1   15 Aug 1991 23:07:58   GLENN
- *  Forest Belt proofread/edited/cleaned up doc
- *
- *     Rev 1.0   12 Jun 1991 01:30:20   GLENN
- *  Initial revision.
- *
+/* This is an original work by Ted Means and is placed in the public domain.
+
+      Rev 1.2   03 Oct 1992 14:35:14   GLENN
+   Ted Means made modifications to support use of DispBegin()/DispEnd().
+
+      Rev 1.1   15 Aug 1991 23:07:58   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   12 Jun 1991 01:30:20   GLENN
+   Initial revision.
  */
 
 #include "hbapi.h"

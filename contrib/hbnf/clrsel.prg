@@ -1,18 +1,14 @@
-/*
- * This is an original work by Dave Adams and is placed in the public domain.
- * Thanks to Brian Loesgen for offering ideas and helping to tweak the code.
- *
- * Modification history:
- *
- *    Rev 1.2   17 Aug 1991 15:05:22   GLENN
- * Don Caton made corrected some spelling errors in the doc
- *
- *    Rev 1.1   15 Aug 1991 23:03:50   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   13 Jun 1991 15:21:46   GLENN
- * Initial revision.
- *
+/* This is an original work by Dave Adams and is placed in the public domain.
+   Thanks to Brian Loesgen for offering ideas and helping to tweak the code.
+
+      Rev 1.2   17 Aug 1991 15:05:22   GLENN
+   Don Caton made corrected some spelling errors in the doc
+
+      Rev 1.1   15 Aug 1991 23:03:50   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   13 Jun 1991 15:21:46   GLENN
+   Initial revision.
  */
 
 #include "box.ch"

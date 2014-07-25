@@ -1,14 +1,10 @@
-/*
- * This is an original work by Eric Splaver and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.1   15 Aug 1991 23:04:34   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   14 Jun 1991 04:25:46   GLENN
- * Initial revision.
- *
+/* This is an original work by Eric Splaver and is placed in the public domain.
+
+      Rev 1.1   15 Aug 1991 23:04:34   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   14 Jun 1991 04:25:46   GLENN
+   Initial revision.
  */
 
 FUNCTION ft_AddWkDy( dStart, nDys )

@@ -1,21 +1,17 @@
-/*
- * The functions contained herein are the original work of John Kaster
- * and are placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   07 Mar 1992 22:15:06   GLENN
- * Mark K. Zechiel discovered a bug where the incorrect number of
- * workdays was reported when <dStart> was a Tuesday through Friday and
- * dStop was a multiple of 7 days away from dStart (i.e., 7, or 14, or
- * 21, etc).  Fixed.
- *
- *    Rev 1.1   15 Aug 1991 23:05:48   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   12 Jun 1991 01:33:10   GLENN
- * Initial revision.
- *
+/* The functions contained herein are the original work of John Kaster
+   and are placed in the public domain.
+
+      Rev 1.2   07 Mar 1992 22:15:06   GLENN
+   Mark K. Zechiel discovered a bug where the incorrect number of
+   workdays was reported when <dStart> was a Tuesday through Friday and
+   dStop was a multiple of 7 days away from dStart (i.e., 7, or 14, or
+   21, etc).  Fixed.
+
+      Rev 1.1   15 Aug 1991 23:05:48   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   12 Jun 1991 01:33:10   GLENN
+   Initial revision.
  */
 
 FUNCTION ft_Workdays( dStart, dStop )

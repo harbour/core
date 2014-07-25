@@ -1,14 +1,12 @@
-/*
- * This is an original work by Isa Asudeh and is placed in the public domain.
- *
- * Modification History
- *
- *    Rev 1.1   15 Aug 1991 23:05:20   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   31 May 1991 21:18:04   GLENN
- * Initial revision.
- *
+/* This is an original work by Isa Asudeh and is placed in the public domain.
+
+   Modification History
+
+      Rev 1.1   15 Aug 1991 23:05:20   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   31 May 1991 21:18:04   GLENN
+   Initial revision.
  */
 
 PROCEDURE ft_Pending( cMsg, nRow, nCol, nWait, cColor )

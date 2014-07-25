@@ -1,14 +1,10 @@
-/*
- * This is an original work by Gary Baren and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.1   15 Aug 1991 23:05:54   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   09 Jun 1991 00:26:56   GLENN
- * Initial revision.
- *
+/* This is an original work by Gary Baren and is placed in the public domain.
+
+      Rev 1.1   15 Aug 1991 23:05:54   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   09 Jun 1991 00:26:56   GLENN
+   Initial revision.
  */
 
 FUNCTION ft_NToW( nAmount )

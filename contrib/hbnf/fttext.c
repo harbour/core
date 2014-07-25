@@ -1,116 +1,109 @@
-/*
- * This is an original work by Brice de Ganahl and Steve Larsen
- * and is placed in the public domain.
- *
- * Viktor Szakats (vszakats.net/harbour): _findeol(), _findbol()
- *
- * Doc headers by Glenn Scott, Don Caton, and Steve Larsen
- *
- * Extensively revised by Steve Larsen
- *
- * Modification history:
- *
- *    Rev 1.8   01 May 1995 04:36:22   TED
- * Major overhaul by Steve Larsen to fix several bugs/quirkiness,
- * add some requested features, clean up source for readability.
- *
- * -  Added ft_FError() test
- * -  Added ft_FBof() test
- * -  Provided protected mode compatibility
- * -  Increased buffer to 4k, added logic to allow lines longer than
- *    the buffer size.
- * -  Revised seek logic
- * -  Changed undocumented calls to API functions wherever possible
- *
- *    Rev 1.7   17 Oct 1992 16:25:16   GLENN
- * Leo cleaned up the documentation, including an errant SEEALSO
- * reference.
- *
- *    Rev 1.6   03 Oct 1992 02:07:38   GLENN
- * Minor adjustments to file header block.
- *
- *    Rev 1.5   03 Oct 1992 02:03:44   GLENN
- * Major modifications by Steve Larsen, as follows:
- *
- * Brice laid some wonderful groundwork with his initial release of
- * these functions, however I needed more capability.  With his per-
- * mission, I have made the following additions/changes to Rev. 1.4:
- *
- * -  Eliminated the problem of memory for buffers being re-allocated every
- *    time a file got used.
- * -  Further reduced memory impact by converting from extend system memory
- *    allocation techniques to virtual memory.  To accomplish this, we
- *    use the Clipper v5.01 r1.29 variants of the "_v" undocumented
- *    internal functions.  If these functions change in future releases, you
- *    will need to locate them herein and make the appropriate changes.
- *
- *    NOTE: these functions allocate and deallocate virtual memory on an
- *    "as-needed" basis.  If your application makes heavy and frequent use
- *    of those functions that perform a lot of buffering (ft_FInsert(),
- *    ft_FDelete() and ft_fWrite()), you might consider modifying the memory
- *    management scheme used herein, that is, allocate the required buffers
- *    only once upon the first call to these functions, then recycle them.
- * -  Added the ability to specify file open mode.
- * -  Added a function to write to a record, which through a switch can either
- *    over-write the current record, or insert a new one.
- * -  Added functions to insert, delete and append a specified number of lines.
- * -  Fixed the existing functions so that they properly handle "trailers",
- *    that is, a case where the last chars in a file are not CRLF delimited.
- * -  Provided checking for the possibility that the file might be terminated
- *    with ^Z (1Ah), if so, ignoring it (providing consistency with non-^Z
- *    terminated files).  This only occurs on the last record of a file.
- * -  Eliminated a potential problem if one were to issue an ft_FUse() prior
- *    actually opening any files.
- * -  Replaced the original C parsing logic to determine the end-of-line (CRLF)
- *    with an optimized assembler routine.  This bypassed a significant
- *    performance hit.
- * -  The original header (FTTEXT.h) file in now incorporated in this one file.
- *    This is not necessarily an enhancement, more like laziness.
- * -  Provided the (followup) author with his very first C experience!
- *
- *    Steve Larsen, Dec. 7, 1991   CIS 76370,1532
- *
- * -  Function changes/additions (refer to the individual doc headers for
- *    details):
- *
- *    ft_FSelect( [ <nArea > ] )               -> nArea
- *    ft_FUse(    [ <cFile>  ][, <nMode>   ] ) -> nHandle | NIL
- *    ft_FWriteLn(  <cData>   [, <lInsert> ] ) -> NIL
- *    ft_FInsert( [ <nLines> ] )               -> NIL
- *    ft_FDelete( [ <nLines> ] )               -> NIL
- *    ft_FAppend( [ <nLines> ] )               -> NIL
- *
- *    Internal Steve Larsen revisions:
- *
- *     1991-12-07  Original rework
- *     1992-02-13  Fixed _findeol(), ft_FReadLn() and ft_FGoBot() to
- *                 better handle files with CRLF, LF, ^Z or nothing
- *                 at the EOF.  Previously, under some conditions the
- *                 last record was chopped by a character, depending
- *                 on the last character(s).
- *     1992-05-02  Fixed buffering and VMM allocation problem with
- *                 ft_FGoBot().
- *     1992-08-26  Correcting problem when appending blank lines to an
- *                 empty file (ft_FAppend() and ft_FWriteLn()).
- *
- *
- *    Rev 1.4   17 Aug 1991 15:31:08   GLENN
- * Don Caton fixed some spelling errors in the doc
- *
- *    Rev 1.3   15 Aug 1991 23:08:36   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.2   29 Apr 1991 08:02:12   GLENN
- * Minor adjustments to documentation block
- *
- *    Rev 1.1   29 Apr 1991 08:00:26   GLENN
- * ft_flastrec() -- name was longer than 10 characters so linkers couldn't
- * find the symbol.  Just hacked off the last "c" so it is really
- * ft_FLastRe().  Sorry, folks.  -- Glenn
- *
- *    Rev 1.0   01 Apr 1991 01:02:48   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Brice de Ganahl and Steve Larsen
+   and is placed in the public domain.
+   Viktor Szakats (vszakats.net/harbour): _findeol(), _findbol()
+   Doc headers by Glenn Scott, Don Caton, and Steve Larsen
+   Extensively revised by Steve Larsen
+
+      Rev 1.8   01 May 1995 04:36:22   TED
+   Major overhaul by Steve Larsen to fix several bugs/quirkiness,
+   add some requested features, clean up source for readability.
+
+   -  Added ft_FError() test
+   -  Added ft_FBof() test
+   -  Provided protected mode compatibility
+   -  Increased buffer to 4k, added logic to allow lines longer than
+      the buffer size.
+   -  Revised seek logic
+   -  Changed undocumented calls to API functions wherever possible
+
+      Rev 1.7   17 Oct 1992 16:25:16   GLENN
+   Leo cleaned up the documentation, including an errant SEEALSO
+   reference.
+
+      Rev 1.6   03 Oct 1992 02:07:38   GLENN
+   Minor adjustments to file header block.
+
+      Rev 1.5   03 Oct 1992 02:03:44   GLENN
+   Major modifications by Steve Larsen, as follows:
+
+   Brice laid some wonderful groundwork with his initial release of
+   these functions, however I needed more capability.  With his per-
+   mission, I have made the following additions/changes to Rev. 1.4:
+
+   -  Eliminated the problem of memory for buffers being re-allocated every
+      time a file got used.
+   -  Further reduced memory impact by converting from extend system memory
+      allocation techniques to virtual memory.  To accomplish this, we
+      use the Clipper v5.01 r1.29 variants of the "_v" undocumented
+      internal functions.  If these functions change in future releases, you
+      will need to locate them herein and make the appropriate changes.
+
+      NOTE: these functions allocate and deallocate virtual memory on an
+      "as-needed" basis.  If your application makes heavy and frequent use
+      of those functions that perform a lot of buffering (ft_FInsert(),
+      ft_FDelete() and ft_fWrite()), you might consider modifying the memory
+      management scheme used herein, that is, allocate the required buffers
+      only once upon the first call to these functions, then recycle them.
+   -  Added the ability to specify file open mode.
+   -  Added a function to write to a record, which through a switch can either
+      over-write the current record, or insert a new one.
+   -  Added functions to insert, delete and append a specified number of lines.
+   -  Fixed the existing functions so that they properly handle "trailers",
+      that is, a case where the last chars in a file are not CRLF delimited.
+   -  Provided checking for the possibility that the file might be terminated
+      with ^Z (1Ah), if so, ignoring it (providing consistency with non-^Z
+      terminated files).  This only occurs on the last record of a file.
+   -  Eliminated a potential problem if one were to issue an ft_FUse() prior
+      actually opening any files.
+   -  Replaced the original C parsing logic to determine the end-of-line (CRLF)
+      with an optimized assembler routine.  This bypassed a significant
+      performance hit.
+   -  The original header (FTTEXT.h) file in now incorporated in this one file.
+      This is not necessarily an enhancement, more like laziness.
+   -  Provided the (followup) author with his very first C experience!
+
+      Steve Larsen, Dec. 7, 1991   CIS 76370,1532
+
+   -  Function changes/additions (refer to the individual doc headers for
+      details):
+
+      ft_FSelect( [ <nArea > ] )               -> nArea
+      ft_FUse(    [ <cFile>  ][, <nMode>   ] ) -> nHandle | NIL
+      ft_FWriteLn(  <cData>   [, <lInsert> ] ) -> NIL
+      ft_FInsert( [ <nLines> ] )               -> NIL
+      ft_FDelete( [ <nLines> ] )               -> NIL
+      ft_FAppend( [ <nLines> ] )               -> NIL
+
+      Internal Steve Larsen revisions:
+
+       1991-12-07  Original rework
+       1992-02-13  Fixed _findeol(), ft_FReadLn() and ft_FGoBot() to
+                   better handle files with CRLF, LF, ^Z or nothing
+                   at the EOF.  Previously, under some conditions the
+                   last record was chopped by a character, depending
+                   on the last character(s).
+       1992-05-02  Fixed buffering and VMM allocation problem with
+                   ft_FGoBot().
+       1992-08-26  Correcting problem when appending blank lines to an
+                   empty file (ft_FAppend() and ft_FWriteLn()).
+
+
+      Rev 1.4   17 Aug 1991 15:31:08   GLENN
+   Don Caton fixed some spelling errors in the doc
+
+      Rev 1.3   15 Aug 1991 23:08:36   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.2   29 Apr 1991 08:02:12   GLENN
+   Minor adjustments to documentation block
+
+      Rev 1.1   29 Apr 1991 08:00:26   GLENN
+   ft_flastrec() -- name was longer than 10 characters so linkers couldn't
+   find the symbol.  Just hacked off the last "c" so it is really
+   ft_FLastRe().  Sorry, folks.  -- Glenn
+
+      Rev 1.0   01 Apr 1991 01:02:48   GLENN
+   Nanforum Toolkit
  */
 
 /* up this number if you need more than 10 text file areas */

@@ -1,21 +1,17 @@
-/*
- * This is an original work by Don Opperthauser and is placed in the
- * public domain.
- *
- * Modification history:
- *
- *    Rev 1.3   17 Aug 1991 15:47:06   GLENN
- * Don Caton fixed some spelling errors in the doc
- *
- *    Rev 1.2   15 Aug 1991 23:05:12   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 17:55:50   GLENN
- * Fixed bug where extra blank line was displayed in the box.
- *
- *    Rev 1.0   01 Apr 1991 01:02:34   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Don Opperthauser and is placed in the
+   public domain.
+
+      Rev 1.3   17 Aug 1991 15:47:06   GLENN
+   Don Caton fixed some spelling errors in the doc
+
+      Rev 1.2   15 Aug 1991 23:05:12   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 17:55:50   GLENN
+   Fixed bug where extra blank line was displayed in the box.
+
+      Rev 1.0   01 Apr 1991 01:02:34   GLENN
+   Nanforum Toolkit
  */
 
 #include "box.ch"

@@ -1,77 +1,72 @@
-/*
- * This is an original work by Dave Adams and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   15 Aug 1991 23:04:00   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:52:20   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:01:44   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Dave Adams and is placed in the public domain.
+
+      Rev 1.2   15 Aug 1991 23:04:00   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:52:20   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:01:44   GLENN
+   Nanforum Toolkit
  */
 
 /* Commentary
- *
- *  The concepts for this algoritm were adapted from an article in the
- *  Computer Language Magazine (Dec.90, Vol.7, No.12) written by
- *  Lawrence B.F. Phillips.
- *
- *  The STRTRAN function was selected to calculate the MetaPhone, to
- *  allow the algoritm to be fine-tuned in an easy manner, as there are
- *  always exceptions to any phonetic pronunciation in not only English,
- *  but many other languages as well.
- *
- *  What is a metaphone?
- *  Basically it takes a character string, removes the vowels, and equates
- *  letters (or groups of letters) to other consonent sounds.  The vowels
- *  are not removed until near the end, as they play an important part
- *  in determining how some consonents sound in different surroundings.
- *
- *  The consonant sounds are:  B, F, H, J, K, L, M, N, P, R, S, T, W, X, Y, 0
- *  Vowels are only included if they are at the beginning.
- *  Here are the transformations. The order of evaluation is important
- *  as characters may meet more than one transformation conditions.
- *  ( note: v == vowel )
- *
- *    B --> B  unless at end of a word after 'm' as in dumb.
- *    C --> X  (sh)  CIA, TCH, CH, ISCH, CC
- *           S  SCI, SCE, SCY, CI, CE, CY
- *           K  otherwise ( including CK )
- *    D --> J  DGE, DGY, DGI
- *           T  otherwise
- *    F --> F
- *    G --> K  GHv, vGHT
- *           W  vGH
- *           J  DGE, DGY, DGI, GI, GE, GY
- *           N  GN
- *           K  otherwise
- *    H --> H  vHv
- *              otherwise silent
- *    J --> J
- *    K --> K
- *    L --> L
- *    M --> M
- *    N --> N
- *    P --> F  PH
- *           P  otherwise
- *    Q --> K
- *    R --> R
- *    S --> X  (sh) SH, SIO, SIA, ISCH
- *           S  otherwise
- *    T --> X  (sh) TIA, TIO, TCH
- *           0  (th) TH
- *           T  otherwise
- *    V --> F
- *    W --> W
- *    X --> KS
- *    Y -->    vY
- *           Y  otherwise
- *    Z --> S
- *
+
+    The concepts for this algoritm were adapted from an article in the
+    Computer Language Magazine (Dec.90, Vol.7, No.12) written by
+    Lawrence B.F. Phillips.
+
+    The STRTRAN function was selected to calculate the MetaPhone, to
+    allow the algoritm to be fine-tuned in an easy manner, as there are
+    always exceptions to any phonetic pronunciation in not only English,
+    but many other languages as well.
+
+    What is a metaphone?
+    Basically it takes a character string, removes the vowels, and equates
+    letters (or groups of letters) to other consonent sounds.  The vowels
+    are not removed until near the end, as they play an important part
+    in determining how some consonents sound in different surroundings.
+
+    The consonant sounds are:  B, F, H, J, K, L, M, N, P, R, S, T, W, X, Y, 0
+    Vowels are only included if they are at the beginning.
+    Here are the transformations. The order of evaluation is important
+    as characters may meet more than one transformation conditions.
+    ( note: v == vowel )
+
+      B --> B  unless at end of a word after 'm' as in dumb.
+      C --> X  (sh)  CIA, TCH, CH, ISCH, CC
+             S  SCI, SCE, SCY, CI, CE, CY
+             K  otherwise ( including CK )
+      D --> J  DGE, DGY, DGI
+             T  otherwise
+      F --> F
+      G --> K  GHv, vGHT
+             W  vGH
+             J  DGE, DGY, DGI, GI, GE, GY
+             N  GN
+             K  otherwise
+      H --> H  vHv
+                otherwise silent
+      J --> J
+      K --> K
+      L --> L
+      M --> M
+      N --> N
+      P --> F  PH
+             P  otherwise
+      Q --> K
+      R --> R
+      S --> X  (sh) SH, SIO, SIA, ISCH
+             S  otherwise
+      T --> X  (sh) TIA, TIO, TCH
+             0  (th) TH
+             T  otherwise
+      V --> F
+      W --> W
+      X --> KS
+      Y -->    vY
+             Y  otherwise
+      Z --> S
  */
 
 FUNCTION ft_Metaph( cName, nSize )  // Calculates the metaphone of a character string

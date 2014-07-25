@@ -1,15 +1,11 @@
-/*
- * This is an original work by Joseph D. Booth Sr. and is placed in the
- * public domain.
- *
- * Modification history:
- *
- *    Rev 1.1   15 Aug 1991 23:04:38   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   13 Jun 1991 15:21:36   GLENN
- * Initial revision.
- *
+/* This is an original work by Joseph D. Booth Sr. and is placed in the
+   public domain.
+
+      Rev 1.1   15 Aug 1991 23:04:38   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   13 Jun 1991 15:21:36   GLENN
+   Initial revision.
  */
 
 FUNCTION ft_Sqzn( nValue, nSize, nDecimals )

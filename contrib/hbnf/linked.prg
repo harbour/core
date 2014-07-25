@@ -1,17 +1,13 @@
-/*
- * This is an original work by Brian Loesgen and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   15 Aug 1991 23:05:52   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:52:08   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   13 Jun 1991 15:21:26   GLENN
- * Initial revision.
- *
+/* This is an original work by Brian Loesgen and is placed in the public domain.
+
+      Rev 1.2   15 Aug 1991 23:05:52   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:52:08   GLENN
+   Minor edit to file header
+
+      Rev 1.0   13 Jun 1991 15:21:26   GLENN
+   Initial revision.
  */
 
 // A function is detected by the left parenthesis, "(", and it begins

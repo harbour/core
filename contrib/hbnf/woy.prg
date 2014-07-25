@@ -1,19 +1,15 @@
-/*
- * This is an original work by Forest Belt (Computer Diagnostic Services, Inc.)
- * and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.2   15 Aug 1991 23:03:18   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   11 May 1991 00:01:00   GLENN
- * Documentation correction on ft_DoY() oneliner.  Was identical to ft_WoY(),
- * now it's right.
- *
- *    Rev 1.0   01 Apr 1991 01:02:32   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Forest Belt (Computer Diagnostic Services, Inc.)
+   and is placed in the public domain.
+
+      Rev 1.2   15 Aug 1991 23:03:18   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   11 May 1991 00:01:00   GLENN
+   Documentation correction on ft_DoY() oneliner.  Was identical to ft_WoY(),
+   now it's right.
+
+      Rev 1.0   01 Apr 1991 01:02:32   GLENN
+   Nanforum Toolkit
  */
 
 FUNCTION ft_WoY( dInDate )

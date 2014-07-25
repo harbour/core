@@ -1,21 +1,17 @@
-/*
- * This is an original work by Ted Means and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.3   13 Oct 1992 20:43:10   GLENN
- * Ted re-wrote the @ prompt / menu to replacement in Clipper and dumped
- * the assembler version; this .ch file was updated as well.
- *
- *    Rev 1.2   15 Aug 1991 23:08:46   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:55:14   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:02:40   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Ted Means and is placed in the public domain.
+
+      Rev 1.3   13 Oct 1992 20:43:10   GLENN
+   Ted re-wrote the @ prompt / menu to replacement in Clipper and dumped
+   the assembler version; this .ch file was updated as well.
+
+      Rev 1.2   15 Aug 1991 23:08:46   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:55:14   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:02:40   GLENN
+   Nanforum Toolkit
  */
 
 /* These commands will simplify use of the ft_Prompt() and

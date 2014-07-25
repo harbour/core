@@ -1,36 +1,32 @@
-/*
- * This is an original work by Jim Orlowski and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.4   28 Sep 1991 02:56:56   GLENN
- * Moved Jim's "Tricks used" comment out of the file header and
- * into the source code area.
- *
- *    Rev 1.3   28 Sep 1991 02:52:22   GLENN
- * Jim's modifications:
- *
- *  1.  Changed SaveScreen() and RestScreen() to use MaxRow(), MaxCol()
- *      instead of fixed dimensions
- *
- *  2.  Added Nantucket's cleaner code for:
- *        - Cleaned up logic around line 334 while loop section
- *        - Added refreshCurrent and another stabilize around line 349
- *        - TbSkipWhil() was redone
- *             Note: Leo's line was changed to:
- *                 ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
- *
- *  3.  Added DispBegin() and DispEnd() around both Stabilize sections
- *
- *    Rev 1.2   15 Aug 1991 23:04:20   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:53:08   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:02:22   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Jim Orlowski and is placed in the public domain.
+
+      Rev 1.4   28 Sep 1991 02:56:56   GLENN
+   Moved Jim's "Tricks used" comment out of the file header and
+   into the source code area.
+
+      Rev 1.3   28 Sep 1991 02:52:22   GLENN
+   Jim's modifications:
+
+    1.  Changed SaveScreen() and RestScreen() to use MaxRow(), MaxCol()
+        instead of fixed dimensions
+
+    2.  Added Nantucket's cleaner code for:
+          - Cleaned up logic around line 334 while loop section
+          - Added refreshCurrent and another stabilize around line 349
+          - TbSkipWhil() was redone
+               Note: Leo's line was changed to:
+                   ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
+
+    3.  Added DispBegin() and DispEnd() around both Stabilize sections
+
+      Rev 1.2   15 Aug 1991 23:04:20   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:53:08   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:02:22   GLENN
+   Nanforum Toolkit
  */
 
 /* The tricks are:

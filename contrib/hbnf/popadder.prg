@@ -1,24 +1,20 @@
-/*
- * This is an original work by Keith A. Wire and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.4   03 Mar 1994 19:47:22   GLENN
- * Author made some enhancements and modifications.
- *
- *    Rev 1.3   19 Jan 1993 19:52:52   GLENN
- * Removed reference to K_SPACE, as this has been defined in Clipper
- * 5.2's inkey.ch.
- *
- *    Rev 1.2   17 Aug 1991 15:44:30   GLENN
- * Don Caton fixed some spelling errors in the doc
- *
- *    Rev 1.1   15 Aug 1991 23:04:12   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   14 Jun 1991 17:37:54   GLENN
- * Initial revision.
- *
+/* This is an original work by Keith A. Wire and is placed in the public domain.
+
+      Rev 1.4   03 Mar 1994 19:47:22   GLENN
+   Author made some enhancements and modifications.
+
+      Rev 1.3   19 Jan 1993 19:52:52   GLENN
+   Removed reference to K_SPACE, as this has been defined in Clipper
+   5.2's inkey.ch.
+
+      Rev 1.2   17 Aug 1991 15:44:30   GLENN
+   Don Caton fixed some spelling errors in the doc
+
+      Rev 1.1   15 Aug 1991 23:04:12   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   14 Jun 1991 17:37:54   GLENN
+   Initial revision.
  */
 
 #include "box.ch"

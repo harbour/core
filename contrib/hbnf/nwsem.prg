@@ -1,26 +1,22 @@
-/*
- * This is an original work by Glenn Scott and is placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.4   17 Oct 1992 16:28:22   GLENN
- * Leo cleaned up documentation blocks.
- *
- *    Rev 1.3   08 Oct 1992 01:37:34   GLENN
- * Added ft_NWSemUnlock() to complement ft_NWSemLock().  Modified
- * the calling procedure for ft_NWSemLock() but it shouldn't break any
- * existing code, although I doubt anyone's using it.
- *
- *
- *    Rev 1.2   17 Aug 1991 16:11:46   GLENN
- * Oops, I forgot to comment out some test code.
- *
- *    Rev 1.1   15 Aug 1991 23:05:34   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   28 Jun 1991 00:44:14   GLENN
- * Initial revision.
- *
+/* This is an original work by Glenn Scott and is placed in the public domain.
+
+      Rev 1.4   17 Oct 1992 16:28:22   GLENN
+   Leo cleaned up documentation blocks.
+
+      Rev 1.3   08 Oct 1992 01:37:34   GLENN
+   Added ft_NWSemUnlock() to complement ft_NWSemLock().  Modified
+   the calling procedure for ft_NWSemLock() but it shouldn't break any
+   existing code, although I doubt anyone's using it.
+
+
+      Rev 1.2   17 Aug 1991 16:11:46   GLENN
+   Oops, I forgot to comment out some test code.
+
+      Rev 1.1   15 Aug 1991 23:05:34   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   28 Jun 1991 00:44:14   GLENN
+   Initial revision.
  */
 
 // Semaphore Package for Novell NetWare

@@ -1,25 +1,21 @@
-/*
- * The functions contained herein are the original work of Jo W. French
- * (dba Practical Computing) and are placed in the public domain.
- *
- * Modification history:
- *
- *    Rev 1.4   28 Sep 1992 00:22:38   GLENN
- * Jo French clean up.
- *
- *    Rev 1.3   15 Aug 1991 23:04:58   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.2   14 Jun 1991 19:50:40   GLENN
- * Minor edit to file header
- *
- *    Rev 1.1   11 May 1991 00:34:00   GLENN
- * Documentation rewrite.  Enter DOC header was rewritten and resubmitted
- * by the author.  No code changes.
- *
- *    Rev 1.0   01 Apr 1991 01:00:22   GLENN
- * Nanforum Toolkit
- *
+/* The functions contained herein are the original work of Jo W. French
+   (dba Practical Computing) and are placed in the public domain.
+
+      Rev 1.4   28 Sep 1992 00:22:38   GLENN
+   Jo French clean up.
+
+      Rev 1.3   15 Aug 1991 23:04:58   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.2   14 Jun 1991 19:50:40   GLENN
+   Minor edit to file header
+
+      Rev 1.1   11 May 1991 00:34:00   GLENN
+   Documentation rewrite.  Enter DOC header was rewritten and resubmitted
+   by the author.  No code changes.
+
+      Rev 1.0   01 Apr 1991 01:00:22   GLENN
+   Nanforum Toolkit
  */
 
 FUNCTION ft_AcctAdj( dGivenDate, lIsEnd )
