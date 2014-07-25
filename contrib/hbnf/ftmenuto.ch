@@ -23,38 +23,16 @@
    These commands can replace the existing Clipper @ PROMPT and
    MENU TO commands. */
 
-#xcommand @ <Row>, <Col> PROMPT <Prompt>                    ;
-                        [COLOR <Attr>]                      ;
-                        [MESSAGE <Message>]                 ;
-                        [MSGROW <MsgRow>]                   ;
-                        [MSGCOL <MsgCol>]                   ;
-                        [MSGCOLOR <MsgColor>]               ;
-                        [TRIGGER <Trigger>]                 ;
-                        [TRIGGERCOLOR <TriggerColor>]       ;
-                        [HOME <Home>]                       ;
-                        [END <End>]                         ;
-                        [UP <Up>]                           ;
-                        [DOWN <Down>]                       ;
-                        [LEFT <Left>]                       ;
-                        [RIGHT <Right>]                     ;
-                        [EXECUTE <Block>]                   ;
-      => ft_Prompt( <Row>,                                  ;
-                    <Col>,                                  ;
-                    <Prompt>,                               ;
-                    <Attr>,                                 ;
-                    <MsgRow>,                               ;
-                    <MsgCol>,                               ;
-                    <Message>,                              ;
-                    <MsgColor>,                             ;
-                    <Trigger>,                              ;
-                    <TriggerColor>,                         ;
-                    <Home>,                                 ;
-                    <End>,                                  ;
-                    <Up>,                                   ;
-                    <Down>,                                 ;
-                    <Left>,                                 ;
-                    <Right>,                                ;
-                    <Block>                                 )
+#xcommand @ <Row>, <Col> PROMPT <Prompt> [COLOR <Attr>] ;
+             [MESSAGE <Message>] [MSGROW <MsgRow>] [MSGCOL <MsgCol>] [MSGCOLOR <MsgColor>] ;
+             [TRIGGER <Trigger>] [TRIGGERCOLOR <TriggerColor>] ;
+             [HOME <Home>] [END <End>] [UP <Up>] [DOWN <Down>] [LEFT <Left>] [RIGHT <Right>] ;
+             [EXECUTE <Block>] => ;
+   ft_Prompt( <Row>, <Col>, <Prompt>, <Attr>, ;
+      <MsgRow>, <MsgCol>, <Message>, <MsgColor>, ;
+      <Trigger>, <TriggerColor>, ;
+      <Home>, <End>, <Up>, <Down>, <Left>, <Right>, ;
+      <Block> )
 
 #xcommand MENU TO <v> [<l : COLD>] => ;
    <v> := ft_MenuTo( {| _1 | iif( _1 == NIL, <v>, <v> := _1 ) }, #<v>, <.l.> )

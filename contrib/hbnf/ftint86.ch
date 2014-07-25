@@ -35,28 +35,28 @@
 #ifndef __FTINT86_CH__
 #define __FTINT86_CH__
 
-#define INT86_MAX_REGS      10
+#define INT86_MAX_REGS  10
 
-#define AX                  1
-#define BX                  2
-#define CX                  3
-#define DX                  4
-#define SI                  5
-#define DI                  6
-#define BP                  7
-#define DS                  8
-#define ES                  9
-#define FLAGS               10
+#define AX              1
+#define BX              2
+#define CX              3
+#define DX              4
+#define SI              5
+#define DI              6
+#define BP              7
+#define DS              8
+#define ES              9
+#define FLAGS           10
 
-#define FLAG_CARRY          0   // Carry flag
-#define FLAG_PARITY         2   // Parity flag
-#define FLAG_AUX            4   // Auxillary flag
-#define FLAG_ZERO           6   // Zero flag
-#define FLAG_SIGN           7   // Sign flag
-#define FLAG_TRAP           8   // Trap flag
-#define FLAG_INT            9   // Interrupt flag
-#define FLAG_DIR            10  // Direction flag
-#define FLAG_OFLOW          11  // Overflow flag
+#define FLAG_CARRY      0   // Carry flag
+#define FLAG_PARITY     2   // Parity flag
+#define FLAG_AUX        4   // Auxillary flag
+#define FLAG_ZERO       6   // Zero flag
+#define FLAG_SIGN       7   // Sign flag
+#define FLAG_TRAP       8   // Trap flag
+#define FLAG_INT        9   // Interrupt flag
+#define FLAG_DIR        10  // Direction flag
+#define FLAG_OFLOW      11  // Overflow flag
 
 #translate MAKEHI( <X> )        => ( ( <X> ) * 256 )
 #translate REG_DS               => .T.
@@ -65,4 +65,4 @@
 #translate LOWBYTE( <X> )       => (    iif( ( <X> ) \< 0, 0x10000 + ( <X> ), <X> ) % 256 )
 #translate CARRYSET( <XFLAGS> ) => hb_bitTest( <XFLAGS>, FLAG_CARRY )
 
-#endif // __FTINT86_CH__
+#endif

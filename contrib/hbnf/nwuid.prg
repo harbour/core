@@ -22,12 +22,11 @@
  *
  */
 
-#include "ftint86.ch"
-
 /* TODO: rewrite in C */
 
 FUNCTION ft_NWUID( nConn )
 
+#if 0
    LOCAL aRegs[ INT86_MAX_REGS ]
    LOCAL cReqPkt
 
@@ -49,3 +48,8 @@ FUNCTION ft_NWUID( nConn )
    ft_int86( 33, aRegs )
 
    RETURN AllTrim( StrTran( hb_BSubStr( aRegs[ ES ], 9, 48 ), hb_BChar( 0 ) ) )
+#else
+   HB_SYMBOL_UNUSED( nConn )
+
+   RETURN ""
+#endif

@@ -18,15 +18,17 @@
  *
  */
 
-#include "ftint86.ch"
-
 /* TODO: rewrite in C */
 
 FUNCTION ft_ScanCode()
 
+#if 0
    LOCAL aRegs[ INT86_MAX_REGS ]
 
    aRegs[ AX ] := MAKEHI( 0 )
    ft_int86( 22, aRegs )
 
    RETURN hb_BChar( LOWBYTE( aRegs[ AX ] ) ) + hb_BChar( HIGHBYTE( aRegs[ AX ] ) )
+#else
+   RETURN Chr( 0 ) + Chr( 0 )
+#endif

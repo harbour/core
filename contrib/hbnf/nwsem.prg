@@ -25,8 +25,6 @@
 
 // Semaphore Package for Novell NetWare
 
-#include "ftint86.ch"
-
 #define WAIT_SEMAPHORE    2
 #define SIGNAL_SEMAPHORE  3
 #define CLOSE_SEMAPHORE   4
@@ -88,6 +86,7 @@ FUNCTION ft_NWSemClose( nHandle )
 /* TODO: rewrite in C */
 STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
 
+#if 0
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
 
    __defaultNIL( @nOp, SIGNAL_SEMAPHORE )
@@ -103,6 +102,13 @@ STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
    nRet := LOWBYTE( aRegs[ AX ] )
 
    RETURN iif( nRet < 0, nRet + 256, nRet )
+#else
+   HB_SYMBOL_UNUSED( nOp )
+   HB_SYMBOL_UNUSED( nHandle )
+   HB_SYMBOL_UNUSED( nTimeout )
+
+   RETURN 0
+#endif
 
 FUNCTION ft_NWSemLock( cSemaphore, nHandle )
 
