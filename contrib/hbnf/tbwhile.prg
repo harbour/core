@@ -29,11 +29,11 @@
    Nanforum Toolkit
  */
 
-/* The tricks are:
-   1. Setting up functions for goTop() and goBottom() so that you can
-      quickly move to the right record when the user presses the
-      Ctrl-PgUp ( goTop() ) and Ctrl-PgDn ( goBottom() ) keys.
-   2. Passing and evaluating the block for the TbSkipWhil(). */
+// The tricks are:
+// 1. Setting up functions for goTop() and goBottom() so that you can
+//    quickly move to the right record when the user presses the
+//    Ctrl-PgUp ( goTop() ) and Ctrl-PgDn ( goBottom() ) keys.
+// 2. Passing and evaluating the block for the TbSkipWhil().
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -93,9 +93,9 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       ENDIF
 #endif
 
-      /* To simplify I just used 3rd and 4th colors from passed cColorList
-         This way 1st is SAY, 2nd is GET, 3rd and 4th are used here,
-         5th is Unselected Get, extras can be used as in tbdemo.prg */
+      // To simplify I just used 3rd and 4th colors from passed cColorList
+      // This way 1st is SAY, 2nd is GET, 3rd and 4th are used here,
+      // 5th is Unselected Get, extras can be used as in tbdemo.prg
       column:defColor := { 3, 4 }
 
       b:addColumn( column )
@@ -145,8 +145,8 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
             Tone( 125, 0 )
          ENDIF
 
-         /* Make sure that the current record is showing
-            up-to-date data in case we are on a network. */
+         // Make sure that the current record is showing
+         // up-to-date data in case we are on a network.
          DispBegin()
          b:refreshCurrent()
          b:forceStable()
@@ -234,12 +234,12 @@ STATIC PROCEDURE TbWhileTop( cKey )
 
    RETURN
 
-/* SeekLast: Finds Last Record For Matching Key
-   Developed By Jon Cole
-   With softseek set on, seek the first record after condition.
-   This is accomplished by incrementing the right most character of the
-   string cKey by one ascii character.  After SEEKing the new string,
-   back up one record to get to the last record which matches cKey. */
+// SeekLast: Finds Last Record For Matching Key
+// Developed By Jon Cole
+// With softseek set on, seek the first record after condition.
+// This is accomplished by incrementing the right most character of the
+// string cKey by one ascii character.  After SEEKing the new string,
+// back up one record to get to the last record which matches cKey.
 STATIC PROCEDURE TbWhileBot( cKey )
 
    dbSeek( hb_StrShrink( cKey ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )

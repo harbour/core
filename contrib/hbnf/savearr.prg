@@ -108,8 +108,8 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
       CASE "L" ; xMemVar := ( hb_FReadLen( nHandle, 1 ) == "T" ) ; EXIT
       CASE "D"
          xMemVar := hb_FReadLen( nHandle, 8 )
-         /* Fall back to CToD() to handle original Cl*pper NFLIB format:
-            not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load */
+         // Fall back to CToD() to handle original Cl*pper NFLIB format:
+         // not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load
          xMemVar := iif( Empty( hb_StrReplace( xMemVar, "0123456789" ) ), hb_SToD( xMemVar ), CToD( xMemVar ) )
          EXIT
       CASE "A"

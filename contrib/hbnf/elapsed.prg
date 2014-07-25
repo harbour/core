@@ -1,5 +1,5 @@
-/* The functions contained herein are the original work of Jo W. French
-   (dba Practical Computing) and are placed in the public domain.
+/* This is an original work of Jo W. French (dba Practical Computing)
+   and is placed in the public domain.
 
       Rev 1.3   28 Sep 1992 00:37:56   GLENN
    Jo French cleaned up.

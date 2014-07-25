@@ -1,5 +1,4 @@
-/* The functions contained herein are the original work of John Kaster
-   and are placed in the public domain.
+/* This is an original work of John Kaster and is placed in the public domain.
 
       Rev 1.2   07 Mar 1992 22:15:06   GLENN
    Mark K. Zechiel discovered a bug where the incorrect number of

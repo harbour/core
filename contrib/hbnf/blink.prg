@@ -12,7 +12,6 @@
 
 /* NOTE: In its original version, this function changed cursor position,
          in Harbour it doesn't. */
-
 PROCEDURE ft_Blink( cMsg, nRow, nCol )
 
    LOCAL cSavColor

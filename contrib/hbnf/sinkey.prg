@@ -15,8 +15,8 @@ FUNCTION ft_SInkey( ... )  // NOTE: Harbour accepts a second parameter, like Ink
    LOCAL nKey, cBlock
 
    IF ( cBlock := SetKey( nKey := Inkey( ... ) ) ) != NIL
-      /* Run the codeblock associated with this key and pass it the
-         name of the previous procedure and the previous line number */
+      // Run the codeblock associated with this key and pass it the
+      // name of the previous procedure and the previous line number
       Eval( cBlock, ProcName( 1 ), ProcLine( 1 ), NIL )
    ENDIF
 

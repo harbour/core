@@ -20,11 +20,11 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-/* here's the board array -- structure of which is:
-   board_[ xx, 1 ] - subarray containing box coordinates for this peg
-   board_[ xx, 2 ] - subarray containing all adjacent locations
-   board_[ xx, 3 ] - subarray containing all target locations
-   board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No */
+// here's the board array -- structure of which is:
+// board_[ xx, 1 ] - subarray containing box coordinates for this peg
+// board_[ xx, 2 ] - subarray containing all adjacent locations
+// board_[ xx, 3 ] - subarray containing all target locations
+// board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No
 
 PROCEDURE ft_Pegs()
 
@@ -68,8 +68,8 @@ PROCEDURE ft_Pegs()
       { { 18, 37, 20, 42 }, { 29 }, { 24 }, .T. }, ;
       { { 18, 45, 20, 50 }, { 30, 32 }, { 25, 31 }, .T. } }
 
-   /* the following code block is used in conjunction with AScan()
-      to validate entry when there is more than one possible move */
+   // the following code block is used in conjunction with AScan()
+   // to validate entry when there is more than one possible move
    scanblock := {| a | a[ 2 ] == move2 }
    hb_Scroll()
    SetColor( "w/r" )
