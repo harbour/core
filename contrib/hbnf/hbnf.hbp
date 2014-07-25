@@ -15,7 +15,6 @@ color2n.c
 ctrl.c
 descendn.c
 dispc.c
-dosver.c
 ftattr.c
 fttext.c
 isprint.c
@@ -28,6 +27,7 @@ mkdir.c
 mouse.c
 n2color.c
 numlock.c
+nwlstat.c
 origin.c
 page.c
 peek.c
@@ -42,7 +42,6 @@ settime.c
 shadow.c
 shift.c
 stod.c
-support.c
 video1.c
 vidmode.c
 
@@ -85,6 +84,7 @@ default.prg
 dfile.prg
 diskfunc.prg
 dispmsg.prg
+dosver.prg
 e2d.prg
 easter.prg
 elapmil.prg
@@ -111,7 +111,6 @@ mouse1.prg
 netpv.prg
 nooccur.prg
 ntow.prg
-nwlstat.prg
 nwsem.prg
 nwuid.prg
 ontick.prg

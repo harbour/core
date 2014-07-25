@@ -239,7 +239,7 @@ static void disp_update( PFT_DISPC dispc, int offset )
 
       /* calculate the initial position, this save execution time because
          each column is considered as a offset from the line start */
-      pos = ( line * ( dispc->width + 1 ) * dispc->iCellSize );
+      pos = line * ( dispc->width + 1 ) * dispc->iCellSize;
 
       /* copy string to temp buffer */
       for( i = 0; dispc->buffer[ offset ] != CR && offset <= dispc->winbot; ++offset )
@@ -254,7 +254,6 @@ static void disp_update( PFT_DISPC dispc, int offset )
             }
             else
                dispc->lbuff[ i++ ] = dispc->buffer[ offset ];
-
          }
       }
 
@@ -269,7 +268,7 @@ static void disp_update( PFT_DISPC dispc, int offset )
          *vmem = dispc->lbuff[ i++ ];
       }
 
-      line   += 1;
+      ++line;
       offset += 2;
    }
    hb_gtRest( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );

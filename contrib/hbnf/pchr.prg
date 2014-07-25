@@ -42,8 +42,8 @@ FUNCTION ft_PChr( c_nums )
       CASE hb_LeftEq( c_part, "&" )
 
          c_upper := Upper( c_part )
-         IF ( c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1 ) > -1
-            IF ( c_t2 := At( SubStr( c_upper, 3, 1 ), c_hex ) - 1 ) > -1
+         IF ( c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1 ) > 0
+            IF ( c_t2 := At( SubStr( c_upper, 3, 1 ), c_hex ) - 1 ) > 0
                c_t1 := c_t1 * 16 + c_t2
             ENDIF
             c_ret += Chr( c_t1 )

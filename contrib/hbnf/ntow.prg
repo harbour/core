@@ -33,10 +33,8 @@ FUNCTION ft_NToW( nAmount )
 
 STATIC FUNCTION grp_to_words( nGrp )
 
-   STATIC sc_ones := { ;
-      "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" }
-   STATIC sc_teens := { ;
-      " Ten",     " Eleven",    " Twelve", ;
+   STATIC sc_ones := { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" }
+   STATIC sc_teens := { " Ten", " Eleven", " Twelve", ;
       " Thirteen", " Fourteen", " Fifteen", " Sixteen", " Seventeen", " Eighteen", " Nineteen" }
    STATIC sc_tens :=  { "", "", ;
       " Twenty", " Thirty", " Forty", " Fifty", " Sixty", " Seventy", " Eighty", " Ninety" }

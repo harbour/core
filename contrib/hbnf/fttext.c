@@ -168,13 +168,11 @@ static HB_BOOL _writeeol( HB_FHANDLE fhnd )
 
 /* Routine to parse a buffer for an EOL
 
-   Returns count to first character _after_ next
-   EOL (beginning of next line).  Current line
-   will contain the trailing EOL.  1Ah and trailing
-   LFs will be ignored (included in count).
+   Returns count to first character _after_ next EOL (beginning of next line).
+   Current line will contain the trailing EOL. 1Ah and trailing LFs will be
+   ignored (included in count).
 
-   If no EOL found return is zero.  (could mean EOF or
-   line is longer than buffer end) */
+   If no EOL found return is zero.  (could mean EOF or line is longer than buffer end) */
 static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
 {
    HB_ISIZ tmp;
@@ -201,14 +199,12 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
    return 0;
 }
 
-/* In-line assembler routine to parse a buffer
-   for a EOL
+/* In-line assembler routine to parse a buffer for a EOL
 
-   buf pointer points at beginning of search (end
-    of the buffer), all searches are conducted
-   backwards, returns No. of characters betw.
-   initial position and first character _after_
-   the preceding EOL (beginning of line). */
+   buf pointer points at beginning of search (end of the buffer), all
+   searches are conducted backwards, returns No. of characters between
+   initial position and first character _after_ the preceding EOL
+   (beginning of line). */
 static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len )
 {
    HB_ISIZ tmp = buf_len - 1;
@@ -270,8 +266,7 @@ static int _ins_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
    HB_ISIZ    SaveLen;
    HB_ISIZ    iLenRemaining = iLen;
 
-   /* set target move distance, this allows iLen to be greater than
-      BUFFSIZE */
+   /* set target move distance, this allows iLen to be greater than BUFFSIZE */
    iLen = HB_MIN( iLenRemaining, BUFFSIZE );
    iLenRemaining -= iLen;
 
@@ -481,8 +476,7 @@ static long _ft_skip( long iRecs )
 
             if( iByteCount > 0 && iByteCount != iBytesRemaining )
             {
-               /* found an EOL, iByteCount points to first char of next
-                  record */
+               /* found an EOL, iByteCount points to first char of next record */
                iBytesRemaining -= iByteCount;
                fpOffset        += iByteCount;
                cPtr += iByteCount;
@@ -494,9 +488,7 @@ static long _ft_skip( long iRecs )
             }
             else
             {
-
-               /* no more EOLs in this buffer, or EOL is last
-                  chars in the buffer */
+               /* no more EOLs in this buffer, or EOL is last chars in the buffer */
 
                /* check for EOF */
                if( iBytesRead != BUFFSIZE )
@@ -510,9 +502,8 @@ static long _ft_skip( long iRecs )
                }
                else
                {
-                  /* buffer was full, so probably not EOF, but maybe
-                     EOL straddled end of buffer, so back up pointer a bit
-                     before doing the next read */
+                  /* buffer was full, so probably not EOF, but maybe EOL straddled end
+                     of buffer, so back up pointer a bit before doing the next read */
                   fpOffset        = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0, FS_RELATIVE ) - 1;
                   iBytesRemaining = 0;
                }
@@ -858,11 +849,9 @@ HB_FUNC( FT_FAPPEND )
    ft_text->error[ ft_text->area ] = 0;
 
    /* go to end of file */
-
    HB_FUNC_EXEC( FT_FGOBOT );
 
    /* find end of record */
-
    hb_fsSeekLarge( ft_text->handles[ ft_text->area ], ft_text->offset[ ft_text->area ], FS_SET );
    iRead = hb_fsRead( ft_text->handles[ ft_text->area ], buff, BUFFSIZE );   /* now read in a big glob */
 
@@ -987,11 +976,8 @@ HB_FUNC( FT_FLASTRE )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_ft_text );
 
-   long       cur_rec;
-   HB_FOFFSET cur_offset;
-
-   cur_rec    = ft_text->recno[ ft_text->area ];
-   cur_offset = ft_text->offset[ ft_text->area ];
+   long       cur_rec    = ft_text->recno[ ft_text->area ];
+   HB_FOFFSET cur_offset = ft_text->offset[ ft_text->area ];
 
    HB_FUNC_EXEC( FT_FGOBOT );
    hb_retnl( ft_text->last_rec[ ft_text->area ] );

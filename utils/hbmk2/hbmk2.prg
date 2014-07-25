@@ -13663,11 +13663,7 @@ STATIC FUNCTION VCSDetect( cDir )
    LOCAL nResult
    LOCAL cOldDir
 
-   hb_default( @cDir, "" )
-
-   IF ! Empty( cDir )
-      cDir := hb_DirSepAdd( cDir )
-   ENDIF
+   cDir := hb_DirSepAdd( hb_defaultValue( cDir, "" ) )
 
    DO CASE
    CASE hb_DirExists( cDir + ".svn" )      ; RETURN _VCS_SVN

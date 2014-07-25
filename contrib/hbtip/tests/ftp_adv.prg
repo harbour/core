@@ -1,4 +1,4 @@
-/* TIP FTP advanced operations Test */
+/* TIP FTP advanced operations test */
 
 #require "hbtip"
 
@@ -34,16 +34,18 @@ PROCEDURE Main( cURL )
          ENDIF
          ? aFile[ F_DATE ], Str( aFile[ F_SIZE ], 10 ), aFile[ F_NAME ]
       NEXT
-      ? "Deleting", oURL:cPath
       IF oFTP:CWD( oURL:cPath )
          ? "CWD success"
-         IF oFTP:Dele( oURL:cFile )
-            ? "DELE success"
-         ELSE
-            ? "DELE failure (server reply:", oFTP:cReply + ")"
+         IF ! Empty( oURL:cFile )
+            ? "Deleting", oURL:cPath
+            IF oFTP:Dele( oURL:cFile )
+               ? "DELE success"
+            ELSE
+               ? "DELE failure (server reply:", oFTP:cReply + ")"
+            ENDIF
          ENDIF
       ELSE
-         ? "CWD Faliure (server reply:", oFTP:cReply + ")"
+         ? "CWD failure (server reply:", oFTP:cReply + ")"
       ENDIF
 
       oFTP:Close()
