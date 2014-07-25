@@ -10,7 +10,7 @@
 
 #include "box.ch"
 
-/* display vertical menu */
+// display vertical menu
 PROCEDURE ft_Menu2( aMenuInfo, cColors )
 
    LOCAL nChoice     := 1
@@ -25,15 +25,15 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
    LOCAL nOldmessrow := Set( _SET_MESSAGE )
    LOCAL cOldcolor   := SetColor( cColors )
 
-   /* if no message row has been established, use bottom row */
+   // if no message row has been established, use bottom row
    IF nOldmessrow == 0
       Set( _SET_MESSAGE, MaxRow() )
    ENDIF
 
-   /* determine longest menu option */
+   // determine longest menu option
    AEval( aMenuInfo, {| ele | nMaxwidth := Max( nMaxwidth, Len( ele[ 1 ] ) ) } )
 
-   /* establish top and left box coordinates */
+   // establish top and left box coordinates
    nLeft := ( MaxCol() + 1 - nMaxwidth ) / 2
    nTop  := ( MaxRow() + 1 - ( nOptions + 2 ) ) / 2
 
@@ -55,13 +55,13 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
 
       RestScreen( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth, cOldscreen )
 
-      /* execute action block attached to this option if there is one */
+      // execute action block attached to this option if there is one
       IF nChoice > 0 .AND. Len( aMenuInfo[ nChoice ] ) == 3
          Eval( aMenuInfo[ nChoice, 3 ] )
       ENDIF
    ENDDO
 
-   /* restore previous message and wrap settings */
+   // restore previous message and wrap settings
    Set( _SET_MESSAGE, nOldmessrow )
    Set( _SET_MCENTER, lOldcenter )
    Set( _SET_WRAP, lOldwrap )

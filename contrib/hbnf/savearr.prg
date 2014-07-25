@@ -115,7 +115,7 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
       CASE "A"
          xMemVar := {}
          FOR tmp := 1 TO nLen
-            AAdd( xMemVar, _ftrestsub( nHandle ) )  /* Recursive call */
+            AAdd( xMemVar, _ftrestsub( nHandle ) )  // Recursive call
          NEXT
          EXIT
       ENDSWITCH

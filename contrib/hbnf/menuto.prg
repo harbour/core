@@ -211,7 +211,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
 
       DO CASE
       CASE ( bKey := SetKey( nKey ) ) != NIL
-         // Check for a hotkey, and evaluate the associated block if present.
+         // Check for a hotkey, and evaluate the associated block if present
          Eval( bKey, ProcName( 1 ), ProcLine( 1 ), cReadVar )
 
       CASE nKey == K_ENTER
@@ -224,20 +224,20 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
          ENDIF
 
       CASE nKey == K_ESC
-         // If ESC was pressed, set the selected item to zero and exit.
+         // If ESC was pressed, set the selected item to zero and exit
          lChoice := .T.
          nActive := 0
 
       CASE nKey == K_HOME
-         // If Home was pressed, go to the designated menu item.
+         // If Home was pressed, go to the designated menu item
          nActive := iif( t_aHome[ nMenu, nActive ] == NIL, 1, t_aHome[ nMenu, nActive ] )
 
       CASE nKey == K_END
-         // If End was pressed, go to the designated menu item.
+         // If End was pressed, go to the designated menu item
          nActive := iif( t_aEnd[ nMenu, nActive ] == NIL, nCount, t_aEnd[ nMenu, nActive ] )
 
       CASE nKey == K_UP
-         // If Up Arrow was pressed, go to the designated menu item.
+         // If Up Arrow was pressed, go to the designated menu item
          IF t_aUp[ nMenu, nActive ] == NIL
             IF --nActive < 1
                nActive := iif( lWrap, nCount, 1 )
@@ -249,7 +249,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
          ENDIF
 
       CASE nKey == K_DOWN
-         // If Down Arrow was pressed, go to the designated menu item.
+         // If Down Arrow was pressed, go to the designated menu item
          IF t_aDown[ nMenu, nActive ] == NIL
             IF ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
@@ -261,7 +261,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
          ENDIF
 
       CASE nKey == K_LEFT
-         // If Left Arrow was pressed, go to the designated menu item.
+         // If Left Arrow was pressed, go to the designated menu item
          IF t_aLeft[ nMenu, nActive ] == NIL
             IF --nActive < 1
                nActive := iif( lWrap, nCount, 1 )
@@ -273,7 +273,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
          ENDIF
 
       CASE nKey == K_RIGHT
-         // If Right Arrow was pressed, go to the designated menu item.
+         // If Right Arrow was pressed, go to the designated menu item
          IF t_aRight[ nMenu, nActive ] == NIL
             IF ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
@@ -285,8 +285,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
          ENDIF
 
       CASE ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKey ) ) > 0
-         // If a trigger letter was pressed, handle it based on the COLD
-         // parameter.
+         // If a trigger letter was pressed, handle it based on the COLD parameter
          nActive := nScan
          IF ! lCold
             hb_keyPut( K_ENTER )

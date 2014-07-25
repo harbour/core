@@ -17,7 +17,7 @@ STATIC PROCEDURE __ft_OnTick()
 
 PROCEDURE ft_OnTick( bOnTick, nTickInterval )
 
-   /* HB_EXTENSION: Harbour will also accept function pointers */
+   // HB_EXTENSION: Harbour will also accept function pointers
    IF HB_ISEVALITEM( bOnTick )
       t_bOnTick := bOnTick
       IF HB_ISNUMERIC( nTickInterval )

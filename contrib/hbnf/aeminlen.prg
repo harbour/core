@@ -37,6 +37,6 @@ FUNCTION ft_AEMinLen( aArray, nDimension, nStart, nCount )
       ENDIF
    NEXT
 
-   __defaultNIL( @nMinLen, 65519 )  /* for compatibility */
+   __defaultNIL( @nMinLen, 65519 )  // for compatibility
 
    RETURN nMinlen

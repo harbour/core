@@ -25,8 +25,7 @@
 #define SIGNAL_SEMAPHORE  3
 #define CLOSE_SEMAPHORE   4
 
-/* TODO: rewrite in C */
-FUNCTION ft_NWSemOpen( cName, nInitVal, /* @ */ nHandle, /* @ */ nOpenCnt )
+FUNCTION ft_NWSemOpen( cName, nInitVal, /* @ */ nHandle, /* @ */ nOpenCnt )  // TODO: rewrite in C
 
 #if 0
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
@@ -56,8 +55,7 @@ FUNCTION ft_NWSemOpen( cName, nInitVal, /* @ */ nHandle, /* @ */ nOpenCnt )
    RETURN nHandle := nOpenCnt := 0
 #endif
 
-/* TODO: rewrite in C */
-FUNCTION ft_NWSemEx( nHandle, /* @ */ nValue, /* @ */ nOpenCnt )
+FUNCTION ft_NWSemEx( nHandle, /* @ */ nValue, /* @ */ nOpenCnt )  // TODO: rewrite in C
 
 #if 0
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
@@ -91,9 +89,7 @@ FUNCTION ft_NWSemClose( nHandle )
    RETURN _ftnwsem( CLOSE_SEMAPHORE, nHandle )
 
 // internal for the semaphore package
-
-/* TODO: rewrite in C */
-STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
+STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )  // TODO: rewrite in C
 
 #if 0
    LOCAL aRegs[ INT86_MAX_REGS ], nRet

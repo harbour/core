@@ -25,10 +25,10 @@ FUNCTION ft_PickDay()
    NEXT
 
    hb_DispBox( 8, 35, 16, 45, HB_B_SINGLE_UNI + " " )
-   /* do not allow user to Esc out, which would cause array access error */
+   // do not allow user to Esc out, which would cause array access error
    DO WHILE ( sel := AChoice( 9, 36, 15, 44, days ) ) == 0
    ENDDO
-   /* restore previous screen contents and color */
+   // restore previous screen contents and color
    RestScreen( 8, 35, 16, 45, oldscrn )
    SetColor( oldcolor )
 

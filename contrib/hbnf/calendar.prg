@@ -102,5 +102,5 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
    RETURN aRetVal
 
 STATIC FUNCTION JDoY( nYear, nMonth, nDay )
-   RETURN Val( SubStr( "000031059090120151181212243273304334", ( nMonth - 1 ) * 3 + 1, 3 ) ) + ;
-      nDay + iif( nYear % 4 == 0 .AND. nMonth > 2, 1, 0 )
+   RETURN Val( SubStr( "000031059090120151181212243273304334", ( nMonth - 1 ) * 3 + 1, 3 ) ) + nDay + ;
+      iif( nMonth > 2 .AND. ( ( nYear % 4 == 0 .AND. nYear % 100 != 0 ) .OR. nYear % 400 == 0 ), 1, 0 )

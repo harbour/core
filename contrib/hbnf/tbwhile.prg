@@ -60,31 +60,31 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       RETURN 0
    ENDIF
 
-   /* make new browse object */
+   // make new browse object
    b := TBrowseDB( nTop, nLeft, nBottom, nRight )
 
-   /* default heading and column separators */
+   // default heading and column separators
    b:headSep := hb_UTF8ToStrBox( "═╤═" )
    b:colSep  := hb_UTF8ToStrBox( " │ " )
    b:footSep := hb_UTF8ToStrBox( "═╧═" )
 
-   /* add custom TbSkipWhil() (to handle passed condition) */
+   // add custom TbSkipWhil() (to handle passed condition)
    b:skipBlock := {| x | TbSkipWhil( x, bWhileCond ) }
-   /* Set up substitute goto top and goto bottom with While's top and bottom records */
+   // Set up substitute goto top and goto bottom with While's top and bottom records
    b:goTopBlock    := {|| TbWhileTop( cKey ) }
    b:goBottomBlock := {|| TbWhileBot( cKey ) }
 
-   /* colors */
+   // colors
    b:colorSpec := cColorList
 
-   /* add a column for each field in the current workarea */
+   // add a column for each field in the current workarea
    FOR EACH i IN aFields
 
-      /* make the new column */
+      // make the new column
       column := TBColumnNew( i[ 1 ], i[ 2 ] )
 
 #if 0
-      /* these are color setups from tbdemo.prg from Nantucket */
+      // these are color setups from tbdemo.prg from Nantucket
       IF HB_ISNUMERIC( Eval( i[ 2 ] )
          column:defColor := { 5, 6 }
          column:colorBlock := {| x | iif( x < 0, { 7, 8 }, { 5, 6 } ) }
@@ -101,26 +101,26 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       b:addColumn( column )
    NEXT
 
-   /* freeze columns */
+   // freeze columns
    IF nFreeze != 0
       b:freeze := nFreeze
    ENDIF
 
-   /* save old screen and colors */
+   // save old screen and colors
    IF lSaveScrn
       cScrnSave := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    ENDIF
    cColorSave := SetColor()
 
-   /* Background color is based on first color in passed cColorList */
+   // Background color is based on first color in passed cColorList
    cColorBack := iif( "," $ cColorList, Left( cColorList, At( ",", cColorList ) - 1 ), cColorList )
 
-   IF PCount() <= 6  /* don't keep screen */
+   IF PCount() <= 6  // don't keep screen
       SetColor( cColorBack )
       hb_Scroll()
    ENDIF
 
-   /* make a window shadow */
+   // make a window shadow
    hb_Scroll( nTop + 1, nLeft + 1, nBottom + 1, nRight + 1,,, cColorShad )
    hb_Scroll( nTop, nLeft, nBottom, nRight,,, cColorBack )
    SetColor( cColorSave )
@@ -130,7 +130,7 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    lMore := .T.
    DO WHILE lMore
 
-      /* stabilize the display */
+      // stabilize the display
       nKey := 0
       DispBegin()
       DO WHILE nKey == 0 .AND. ! b:stable
@@ -140,7 +140,7 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       DispEnd()
 
       IF b:stable
-         /* display is stable */
+         // display is stable
          IF b:hitTop .OR. b:hitBottom
             Tone( 125, 0 )
          ENDIF
@@ -152,11 +152,11 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
          b:forceStable()
          DispEnd()
 
-         /* everything's done. just wait for a key */
+         // everything's done. just wait for a key
          nKey := Inkey( 0 )
       ENDIF
 
-      /* process key */
+      // process key
       SWITCH nKey
       CASE K_DOWN       ; b:down() ; EXIT
       CASE K_UP         ; b:up() ; EXIT
@@ -186,7 +186,7 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       ENDSWITCH
    ENDDO
 
-   /* restore old screen */
+   // restore old screen
    IF lSaveScrn
       RestScreen( 0, 0, MaxRow(), MaxCol(), cScrnSave )
    ENDIF
@@ -201,7 +201,7 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
    DO CASE
    CASE n == 0 .OR. LastRec() == 0
-      dbSkip( 0 )  /* significant on a network */
+      dbSkip( 0 )  // significant on a network
 
    CASE n > 0 .AND. RecNo() != LastRec() + 1
       DO WHILE i < n

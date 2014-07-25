@@ -18,9 +18,7 @@
    Nanforum Toolkit
  */
 
-/* TODO: rewrite in C */
-
-FUNCTION ft_NWUID( nConn )
+FUNCTION ft_NWUID( nConn )  // TODO: rewrite in C
 
 #if 0
    LOCAL aRegs[ INT86_MAX_REGS ]

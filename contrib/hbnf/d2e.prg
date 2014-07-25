@@ -24,7 +24,7 @@ FUNCTION ft_D2E( nDec, nPrecision )
    CASE Abs( nDec ) < 1
       nExp := Int( _LOG10( nDec ) ) - 1
    OTHERWISE
-      nExp := Int( _LOG10( Abs( nDec ) + 0.00001 ) )  /* 0.00001 == kludge for imprecise logs */
+      nExp := Int( _LOG10( Abs( nDec ) + 0.00001 ) )  // 0.00001 == kludge for imprecise logs
    ENDCASE
 
    nDec /= 10 ^ nExp
@@ -32,6 +32,6 @@ FUNCTION ft_D2E( nDec, nPrecision )
    IF Round( Abs( nDec ), nPrecision ) >= 10
       nDec /= 10
       nExp++
-   ENDIF  /* another kludge for stuff like "999999999" */
+   ENDIF  // another kludge for stuff like "999999999"
 
    RETURN LTrim( Str( nDec, nPrecision + 3, nPrecision ) ) + "E" + hb_ntos( nExp )

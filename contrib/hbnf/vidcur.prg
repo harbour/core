@@ -18,8 +18,7 @@
 
 #include "setcurs.ch"
 
-/* NOTE: In Harbour video pages are ignored. */
-PROCEDURE ft_SetVCur( nPage, nRow, nCol )
+PROCEDURE ft_SetVCur( nPage, nRow, nCol )  // NOTE: In Harbour video pages are ignored
 
    HB_SYMBOL_UNUSED( nPage )
 
@@ -27,8 +26,7 @@ PROCEDURE ft_SetVCur( nPage, nRow, nCol )
 
    RETURN
 
-/* NOTE: In Harbour video pages are ignored. */
-FUNCTION ft_GetVCur( nPage )
+FUNCTION ft_GetVCur( nPage )  // NOTE: In Harbour video pages are ignored
 
    LOCAL nTop, nBot
 

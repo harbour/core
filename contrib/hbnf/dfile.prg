@@ -26,7 +26,7 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
    IF hb_FileExists( cInFile )
 
       DO CASE
-      CASE HB_ISARRAY( cExitKeys )  /* HB_EXTENSION - Harbour extension */
+      CASE HB_ISARRAY( cExitKeys )  // HB_EXTENSION - Harbour extension
          IF Len( cExitKeys ) > 25
             ASize( cExitKeys, 25 )
          ENDIF

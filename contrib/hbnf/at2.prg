@@ -18,20 +18,20 @@ FUNCTION ft_At2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL nCount, nPos, nPos2 := 0
    LOCAL cSubstr := cTarget
 
-   // Set default parameters as necessary.
+   // Set default parameters as necessary
    __defaultNIL( @lCaseSens, .T. )
    __defaultNIL( @nOccurs, 1 )
 
    FOR nCount := 1 TO nOccurs
 
-      // Store position of next occurrence of cSearch.
+      // Store position of next occurrence of cSearch
       IF lCaseSens
          nPos := At( cSearch, cSubstr )
       ELSE
          nPos := At( Upper( cSearch ), Upper( cSubstr ) )
       ENDIF
 
-      // Store position of cSearch relative to original string.
+      // Store position of cSearch relative to original string
       nPos2 += nPos
 
       // Resize cSubstr
@@ -50,20 +50,20 @@ FUNCTION ft_RAt2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL nCount, nPos, nPos2 := 0
    LOCAL cSubstr := cTarget
 
-   // Set default parameters as necessary.
+   // Set default parameters as necessary
    __defaultNIL( @lCaseSens, .T. )
    __defaultNIL( @nOccurs, 1 )
 
    FOR nCount := 1 TO nOccurs
 
-      // Store position of next occurrence of cSearch.
+      // Store position of next occurrence of cSearch
       IF lCaseSens
          nPos := RAt( cSearch, cSubstr )
       ELSE
          nPos := RAt( Upper( cSearch ), Upper( cSubstr ) )
       ENDIF
 
-      // Store position of cSearch relative to original string.
+      // Store position of cSearch relative to original string
       nPos2 := nPos
 
       // Resize cSubstr

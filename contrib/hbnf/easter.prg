@@ -19,10 +19,8 @@ FUNCTION ft_Easter( nYear )
    LOCAL nMonth := 0, nDay := 0
 
    DO CASE
-   CASE HB_ISSTRING( nYear )
-      nYear := Val( nYear )
-   CASE HB_ISDATE( nYear )
-      nYear := Year( nYear )
+   CASE HB_ISSTRING( nYear ) ; nYear := Val( nYear )
+   CASE HB_ISDATE( nYear )   ; nYear := Year( nYear )
    ENDCASE
 
    IF HB_ISNUMERIC( nYear )
@@ -40,8 +38,7 @@ FUNCTION ft_Easter( nYear )
          // to keep step with the sun
          nCorx := Int( ( 3 * nCent ) / 4 - 12 )
 
-         // <nCorz> is a special correction to synchronize Easter with the moon's
-         // orbit.
+         // <nCorz> is a special correction to synchronize Easter with the moon's orbit
          nCorz := Int( ( 8 * nCent + 5 ) / 25 - 5 )
 
          // <nSunday> Find Sunday
@@ -58,15 +55,13 @@ FUNCTION ft_Easter( nYear )
             ++nEpact
          ENDIF
 
-         // Find full moon - the <nMoon>th of March is a "calendar" full moon
-         nMoon := 44 - nEpact
+         nMoon := 44 - nEpact  // Find full moon - the <nMoon>th of March is a "calendar" full moon
 
          IF nMoon < 21
             nMoon += 30
          ENDIF
 
-         // Advance to Sunday
-         nMoon := Int( nMoon + 7 - ( nSunday + nMoon ) % 7 )
+         nMoon := Int( nMoon + 7 - ( nSunday + nMoon ) % 7 )  // Advance to Sunday
 
          // Get Month and Day
          IF nMoon > 31

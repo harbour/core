@@ -14,9 +14,7 @@
    Nanforum Toolkit
  */
 
-/* TODO: rewrite in C */
-
-FUNCTION ft_ScanCode()
+FUNCTION ft_ScanCode()  // TODO: rewrite in C
 
 #if 0
    LOCAL aRegs[ INT86_MAX_REGS ]

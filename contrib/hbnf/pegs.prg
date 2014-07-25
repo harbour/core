@@ -179,9 +179,9 @@ STATIC FUNCTION moremoves( board_ )
 
    FOR xx := 1 TO 33
       FOR yy := 1 TO Len( board_[ xx ][ 2 ] )
-         IF board_[ xx ][ 4 ] .AND.  ;                     // if current location is filled
-            board_[ board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;   // adjacent must be filled
-            ! board_[ board_[ xx ][ 3, yy ] ][ 4 ]         // target must be empty
+         IF board_[ xx ][ 4 ] .AND.  ;                    // if current location is filled
+            board_[ board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;  // adjacent must be filled
+            ! board_[ board_[ xx ][ 3, yy ] ][ 4 ]        // target must be empty
             canmove := .T.
             EXIT
          ENDIF

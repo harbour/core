@@ -60,7 +60,7 @@ FUNCTION ft_ClrSel( aClrs, lColor, cChr )
    AEval( aClrs, {| aOpt | nLen := Max( nLen, Len( aOpt[ C_NAME ] ) ) } )
    nLen := Min( Max( nLen, 1 ), 20 ) + 2
 
-   // prepare an array for use with AChoice(); truncate names at 20 chrs.
+   // prepare an array for use with AChoice(); truncate names at 20 chrs
    aPrompt := Array( Len( aClrs ) )
    AEval( aClrs, {| aOpt, nE | aPrompt[ nE ] := " " + Left( aOpt[ C_NAME ], nLen - 2 ) + " " } )
 
@@ -414,10 +414,10 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    LOCAL nElem := hb_AScan( aChar, cChar,,, .T. )
    LOCAL n, nKey
 
-   IF nElem == 0             // this allows another character to be selected
-      AAdd( aChar, cChar )   // but there is the possibility that it will
-      nElem := 5             // not be available if they ever select another
-   ENDIF                     // char and store it. It's up to you to put it in
+   IF nElem == 0            // this allows another character to be selected
+      AAdd( aChar, cChar )  // but there is the possibility that it will
+      nElem := 5            // not be available if they ever select another
+   ENDIF                    // char and store it. It's up to you to put it in
 
    // draw the choices on the screen
    SetColor( cClr )

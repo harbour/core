@@ -34,7 +34,7 @@
 // ANYTYPE[]   ar        - Array to browse
 // NUMERIC     nElem     - Element In Array
 // CHARACTER[] aHeadings - Array of Headings for each column
-// BLOCK[]     aBlocks   - Array containing code block for each column.
+// BLOCK[]     aBlocks   - Array containing code block for each column
 // CODE BLOCK  bGetFunc  - Code Block For Special Get Processing
 //  NOTE: When evaluated a code block is passed the array element to
 //        be edited

@@ -833,7 +833,7 @@ STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
       CASE K_ESC
          hb_keyPut( { K_CTRL_PGDN, K_ENTER } )  // Go to last item
          lAC_exit_ok := .T.
-         /* Fall through */
+         // Fall through
       CASE K_CTRL_PGDN
          RETURN AC_CONT
       OTHERWISE

@@ -22,7 +22,7 @@ FUNCTION ft_DateCnfg( cFYStart, nDow )
 
    IF HB_ISSTRING( cFYStart ) .AND. ! Empty( dCheck := CToD( cFYStart ) )
 
-      /* No one starts a Fiscal Year on 2/29 */
+      // No one starts a Fiscal Year on 2/29
       IF Month( dCheck ) == 2 .AND. Day( dcheck ) == 29
          dCheck--
       ENDIF
@@ -30,8 +30,8 @@ FUNCTION ft_DateCnfg( cFYStart, nDow )
       t_aDatePar[ 1 ] := dCheck
    ENDIF
 
-   IF HB_ISNUMERIC( nDow ) .AND. nDow > 0 .AND. nDow < 8  /* TOFIX: floats may confuse it */
-      t_aDatePar[ 2 ] := nDow
+   IF HB_ISNUMERIC( nDow ) .AND. nDow >= 1 .AND. nDow <= 7
+      t_aDatePar[ 2 ] := Int( nDow )
    ENDIF
 
    RETURN { hb_DToC( t_aDatePar[ 1 ], "yyyy.mm.dd" ), t_aDatePar[ 2 ] }

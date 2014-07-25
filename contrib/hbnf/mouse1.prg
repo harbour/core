@@ -118,7 +118,7 @@ PROCEDURE ft_MSetSens( nHoriz, nVert, nDouble )
 FUNCTION ft_MVersion( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
 
    nMinor := 20
-   nType := 2 /* serial */
+   nType := 2  // serial
    nIRQ := 3
 
    RETURN 8
@@ -203,8 +203,7 @@ FUNCTION ft_MGetY()
 FUNCTION ft_MGetPage()
    RETURN 0
 
-/* NOTE: Page is ignored in Harbour */
-PROCEDURE ft_MSetPage( nPage )
+PROCEDURE ft_MSetPage( nPage )  // NOTE: Page is ignored in Harbour
 
    HB_SYMBOL_UNUSED( nPage )
 

@@ -21,7 +21,7 @@ PROCEDURE ft_Blink( cMsg, nRow, nCol )
 
       cSavColor := SetColor()
 
-      // If blink colors not already set, add blink to current foreground color.
+      // If blink colors not already set, add blink to current foreground color
       hb_DispOutAt( ;
          iif( nRow == NIL, Row(), nRow ), ;
          iif( nCol == NIL, Col(), nCol ), ;

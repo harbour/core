@@ -17,8 +17,6 @@
 #include "box.ch"
 #include "setcurs.ch"
 
-// beginning of demo program
-
 FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    LOCAL xRtnVal := .F.
@@ -50,7 +48,7 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    AEval( aInfo[ 1 ], {| x | nWidest := Max( nWidest, Len( x ) ) } )
 
-   /* calculate location of data */
+   // calculate location of data
    IF nBoxLeft == NIL
       nLeft := Round( ( MaxCol() - nWidest ) / 2, 0 )
    ELSE
@@ -63,7 +61,7 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    ENDIF
 #endif
 
-   /* calculate location of box */
+   // calculate location of box
    IF nBoxLeft == NIL
       nBoxLeft := nLeft - 2
    ENDIF
@@ -96,7 +94,7 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       hb_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )
    ENDIF
 
-   /* fill array with left positions for each row */
+   // fill array with left positions for each row
    aLeft := Array( Len( aInfo[ 1 ] ) )
    FOR i := 1 TO Len( aInfo[ 1 ] )
       IF Len( aInfo[ 1, i ] ) == nWidest
@@ -106,19 +104,19 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       ENDIF
    NEXT
 
-   /* fill array of colors */
+   // fill array of colors
    FOR i := 2 TO Len( aInfo[ 2 ] )
       IF aInfo[ 2, i ] == NIL
          aInfo[ 2, i ] := aInfo[ 2, i - 1 ]
       ENDIF
    NEXT
 
-   /* display messages */
+   // display messages
    FOR i := 1 TO Len( aInfo[ 1 ] )
       hb_DispOutAt( nBoxTop + i, aLeft[ i ], aInfo[ 1, i ], aInfo[ 2, i ] )
    NEXT
 
-   /* highlight characters */
+   // highlight characters
    FOR i := 1 TO Len( aPos )
       FOR j := 1 TO Len( aPos[ i ] )
          ft_SetAttr( nBoxTop + i, ;

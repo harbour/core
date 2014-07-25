@@ -16,7 +16,7 @@ FUNCTION ft_AAddition( aList1, aList2, lTrimmer, lCaseSens )
    __defaultNIL( @lCaseSens, .T. )
    __defaultNIL( @lTrimmer, .T. )
 
-   // Assign code blocks according to case sensitivity and trim.
+   // Assign code blocks according to case sensitivity and trim
    IF lCaseSens
       IF lTrimmer
          bScanCode := {| x | AllTrim( x ) == AllTrim( element ) }
@@ -31,9 +31,9 @@ FUNCTION ft_AAddition( aList1, aList2, lTrimmer, lCaseSens )
       ENDIF
    ENDIF
 
-   // Add the unique elements of aList2 to aList1.
+   // Add the unique elements of aList2 to aList1
    FOR EACH element IN aList2
-      // If unique, then add element to new array.
+      // If unique, then add element to new array
       IF AScan( aList1, bScanCode ) == 0
          AAdd( aNewArray, element )
       ENDIF
