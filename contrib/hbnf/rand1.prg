@@ -10,7 +10,6 @@
    Initial revision.
  */
 
-#define _B_  31415621
 #define _M_  100000000
 
 FUNCTION ft_Rand1( nMax )
@@ -19,4 +18,4 @@ FUNCTION ft_Rand1( nMax )
 
    t_nSeed := iif( t_nSeed == NIL, Seconds(), t_nSeed )
 
-   RETURN nMax * ( ( t_nSeed := ( ( t_nSeed * _B_ + 1 ) % _M_ ) ) / _M_ )
+   RETURN nMax * ( ( t_nSeed := ( ( t_nSeed * 31415621 + 1 ) % _M_ ) ) / _M_ )

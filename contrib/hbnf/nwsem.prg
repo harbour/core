@@ -28,6 +28,7 @@
 /* TODO: rewrite in C */
 FUNCTION ft_NWSemOpen( cName, nInitVal, /* @ */ nHandle, /* @ */ nOpenCnt )
 
+#if 0
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
 
    __defaultNIL( @cName, "" )
@@ -48,10 +49,17 @@ FUNCTION ft_NWSemOpen( cName, nInitVal, /* @ */ nHandle, /* @ */ nOpenCnt )
    nRet := LOWBYTE( aRegs[ AX ] )
 
    RETURN iif( nRet < 0, nRet + 256, nRet )
+#else
+   HB_SYMBOL_UNUSED( cName )
+   HB_SYMBOL_UNUSED( nInitVal )
+
+   RETURN nHandle := nOpenCnt := 0
+#endif
 
 /* TODO: rewrite in C */
 FUNCTION ft_NWSemEx( nHandle, /* @ */ nValue, /* @ */ nOpenCnt )
 
+#if 0
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
 
    __defaultNIL( @nHandle, 0 )
@@ -67,6 +75,11 @@ FUNCTION ft_NWSemEx( nHandle, /* @ */ nValue, /* @ */ nOpenCnt )
    nRet     := LOWBYTE( aRegs[ AX ] )
 
    RETURN iif( nRet < 0, nRet + 256, nRet )
+#else
+   HB_SYMBOL_UNUSED( nHandle )
+
+   RETURN nValue := nOpenCnt := 0
+#endif
 
 FUNCTION ft_NWSemWait( nHandle, nTimeout )
    RETURN _ftnwsem( WAIT_SEMAPHORE, nHandle, nTimeout )

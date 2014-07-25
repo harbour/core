@@ -29,17 +29,17 @@ PROCEDURE ft_Pending( cMsg, nRow, nCol, nWait, cColor )
       t_nWait1  := iif( nWait != NIL, nWait, t_nWait1 )     // reset display wait
       t_cColor1 := iif( cColor != NIL, cColor, t_cColor1 )  // reset display color
 
-      nThis_Time := Seconds()                       // time of current message
+      nThis_Time := Seconds()                   // time of current message
 
       IF t_nLast_Time == 0
-         t_nLast_Time := nThis_Time - t_nWait1      // for first time round.
+         t_nLast_Time := nThis_Time - t_nWait1  // for first time round.
       ENDIF
 
-      IF ( nThis_Time - t_nLast_Time ) < 0.1        // if messages are coming too fast,
-         t_nLast_Time := nThis_Time + t_nWait1      // set time counter and then
-         Inkey( t_nWait1 )                          // wait a few seconds.
+      IF nThis_Time < t_nLast_Time + 0.1        // if messages are coming too fast,
+         t_nLast_Time := nThis_Time + t_nWait1  // set time counter and then
+         Inkey( t_nWait1 )                      // wait a few seconds.
       ELSE
-         t_nLast_Time := nThis_Time                 // set time counter for next message.
+         t_nLast_Time := nThis_Time             // set time counter for next message.
       ENDIF
 
       hb_Scroll( t_nRow1, 0, t_nRow1, MaxCol() + 1 )     // clear the display line
