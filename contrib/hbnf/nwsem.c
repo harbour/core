@@ -146,7 +146,7 @@ HB_FUNC( FT_NWSEMCLOSE )
 
 HB_FUNC( FT_NWSEMLOCK )
 {
-   HB_U32 nHandle = ( HB_U32 ) hb_parnint( 2 );
+   HB_U32 nHandle;
    int nOpenCnt;
 
    if( _ft_nwsemopen( hb_parcx( 1 ), 0, &nHandle, &nOpenCnt ) == 0 && nOpenCnt != 1 )
