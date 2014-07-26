@@ -43,37 +43,25 @@ FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /
 STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibility )
 
    LOCAL lRet := .T.
-   LOCAL cValType := ValType( xMemVar ), cString
+   LOCAL cValType := ValType( xMemVar )
 
    IF FWrite( nHandle, cValType ) == hb_BLen( cValType )
       SWITCH cValType
       CASE "A"
          IF FWrite( nHandle, L2Bin( Len( xMemVar ) ) ) == 4
-            AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, nHandle,, lDropCompatibility ) } )
-         ELSE
-            lRet := .F.
+            AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, nHandle,, lDropCompatibility ) },, 0xFFFFFFFF )
+            EXIT
          ENDIF
-         EXIT
+         // fall through
       CASE "B"
          lRet := .F.
          EXIT
-      CASE "C"
-         FWrite( nHandle, L2Bin( hb_BLen( xMemVar ) ) )
-         FWrite( nHandle, xMemVar )
-         EXIT
-      CASE "D"
-         FWrite( nHandle, L2Bin( 8 ) )
-         FWrite( nHandle, iif( lDropCompatibility, DToS( xMemVar ), DToC( xMemVar ) ), 8 )
-         EXIT
-      CASE "L"
-         FWrite( nHandle, L2Bin( 1 ) )
-         FWrite( nHandle, iif( xMemVar, "T", "F" ) )
-         EXIT
       CASE "N"
-         cString := Str( xMemVar )
-         FWrite( nHandle, L2Bin( hb_BLen( cString ) ) )
-         FWrite( nHandle, cString )
-         EXIT
+         xMemVar := Str( xMemVar )
+         // fall through
+      CASE "C" ; FWrite( nHandle, L2Bin( hb_BLen( xMemVar ) ) + hb_BLeft( xMemVar, 0xFFFFFFFF ) ) ; EXIT
+      CASE "D" ; FWrite( nHandle, L2Bin( 8 ) + iif( lDropCompatibility, DToS( xMemVar ), hb_BLeft( DToC( xMemVar ), 8 ) ) ) ; EXIT
+      CASE "L" ; FWrite( nHandle, L2Bin( 1 ) + iif( xMemVar, "T", "F" ) ) ; EXIT
       ENDSWITCH
    ELSE
       lRet := .F.
