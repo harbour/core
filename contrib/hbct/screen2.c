@@ -56,9 +56,7 @@ HB_FUNC( SAYDOWN )
    if( nLen )
    {
       int iRow, iCol, iMaxRow, iMaxCol;
-      long lDelay;
-
-      lDelay = hb_parnldef( 2, 4 );
+      long lDelay = hb_parnldef( 2, 4 );
 
       hb_gtGetPos( &iRow, &iCol );
       if( HB_ISNUM( 3 ) )
@@ -235,20 +233,16 @@ HB_FUNC( SAYMOVEIN )
    hb_retc_null();
 }
 
-HB_FUNC( CLEARSLOW )
+HB_FUNC( CLEARSLOW )  /* TODO: Unicode support */
 {
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
-   int iTop, iLeft, iBottom, iRight;
+   long lDelay = hb_parnl( 1 );
+   int iTop    = hb_parni( 2 );
+   int iLeft   = hb_parni( 3 );
+   int iBottom = hb_parnidef( 4, iMaxRow );
+   int iRight  = hb_parnidef( 5, iMaxCol );
    HB_UCHAR ucChar;
-   long lDelay;
-
-   lDelay  = hb_parnl( 1 );
-
-   iTop    = hb_parni( 2 );
-   iLeft   = hb_parni( 3 );
-   iBottom = hb_parnidef( 4, iMaxRow );
-   iRight  = hb_parnidef( 5, iMaxCol );
 
    if( HB_ISNUM( 6 ) )
       ucChar = ( HB_UCHAR ) hb_parni( 6 );
@@ -318,9 +312,11 @@ HB_FUNC( CLEARSLOW )
       }
       hb_gtEndWrite();
    }
+
+   hb_retc_null();
 }
 
-HB_FUNC( SCREENSTR )
+HB_FUNC( SCREENSTR )  /* TODO: Unicode support */
 {
    int iRow, iCol, iMaxRow, iMaxCol, iC;
    char * pBuffer, * szText;

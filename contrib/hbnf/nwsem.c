@@ -29,7 +29,13 @@
    #include <dos.h>
 #endif
 
-static int _ft_nwsemopen( const char * szName, long nInitVal, HB_U32 * pnHandle, int * pnOpenCnt )
+#define SEM_OPEN     0
+#define SEM_EXAMINE  1
+#define SEM_WAIT     2
+#define SEM_SIGNAL   3
+#define SEM_CLOSE    4
+
+static int _ft_nwsemopen( const char * szName, long nInitVal, HB_ULONG * pnHandle, int * pnOpenCnt )
 {
 #if defined( HB_OS_DOS )
    {
@@ -42,7 +48,7 @@ static int _ft_nwsemopen( const char * szName, long nInitVal, HB_U32 * pnHandle,
       buffer[ 0 ] = ( HB_BYTE ) strlen( ( char * ) ( buffer + 1 ) );
 
       regs.h.ah = 0xC5;
-      regs.h.al = 0;
+      regs.h.al = SEM_OPEN;
       regs.HB_XREGS.dx = FP_OFF( buffer );
       sregs.ds = FP_SEG( buffer );
       regs.HB_XREGS.cx = ( HB_U16 ) nInitVal;
@@ -63,7 +69,7 @@ static int _ft_nwsemopen( const char * szName, long nInitVal, HB_U32 * pnHandle,
 
 HB_FUNC( FT_NWSEMOPEN )
 {
-   HB_U32 nHandle;
+   HB_ULONG nHandle;
    int nOpenCnt;
 
    hb_retni( _ft_nwsemopen( hb_parcx( 1 ), hb_parnl( 2 ), &nHandle, &nOpenCnt ) );
@@ -78,10 +84,10 @@ HB_FUNC( FT_NWSEMEX )
    {
       union REGS regs;
 
-      HB_U32 nHandle = ( HB_U32 ) hb_parnint( 1 );
+      HB_ULONG nHandle = ( HB_ULONG ) hb_parnint( 1 );
 
       regs.h.ah = 0xC5;
-      regs.h.al = 1;
+      regs.h.al = SEM_EXAMINE;
       regs.HB_XREGS.cx = HB_LOWORD( nHandle );
       regs.HB_XREGS.dx = HB_HIWORD( nHandle );
       HB_DOS_INT86( 0x21, &regs, &regs );
@@ -98,20 +104,16 @@ HB_FUNC( FT_NWSEMEX )
 #endif
 }
 
-#define WAIT_SEMAPHORE    2
-#define SIGNAL_SEMAPHORE  3
-#define CLOSE_SEMAPHORE   4
-
-static int _ft_nwsemfunc( HB_BYTE nMode, HB_U32 nHandle, HB_UINT nTimeOut )
+static int _ft_nwsemfunc( int nMode, HB_ULONG nHandle, HB_UINT nTimeOut )
 {
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
 
       regs.h.ah = 0xC5;
-      regs.h.al = nMode;
-      regs.HB_XREGS.cx = HB_LOWORD( nHandle );
-      regs.HB_XREGS.dx = HB_HIWORD( nHandle );
+      regs.h.al = ( HB_BYTE ) nMode;
+      regs.HB_XREGS.cx = HB_LOWORD( ( HB_U32 ) nHandle );
+      regs.HB_XREGS.dx = HB_HIWORD( ( HB_U32 ) nHandle );
 #if defined( __DJGPP__ )
       regs.HB_XREGS.bp = ( HB_U16 ) nTimeOut;
 #else
@@ -131,27 +133,27 @@ static int _ft_nwsemfunc( HB_BYTE nMode, HB_U32 nHandle, HB_UINT nTimeOut )
 
 HB_FUNC( FT_NWSEMWAIT )
 {
-   hb_retni( _ft_nwsemfunc( WAIT_SEMAPHORE, ( HB_U32 ) hb_parnint( 1 ), ( HB_UINT ) hb_parni( 2 ) ) );
+   hb_retni( _ft_nwsemfunc( SEM_WAIT, ( HB_ULONG ) hb_parnint( 1 ), ( HB_UINT ) hb_parni( 2 ) ) );
 }
 
 HB_FUNC( FT_NWSEMSIG )
 {
-   hb_retni( _ft_nwsemfunc( SIGNAL_SEMAPHORE, ( HB_U32 ) hb_parnint( 1 ), 0 ) );
+   hb_retni( _ft_nwsemfunc( SEM_SIGNAL, ( HB_ULONG ) hb_parnint( 1 ), 0 ) );
 }
 
 HB_FUNC( FT_NWSEMCLOSE )
 {
-   hb_retni( _ft_nwsemfunc( CLOSE_SEMAPHORE, ( HB_U32 ) hb_parnint( 1 ), 0 ) );
+   hb_retni( _ft_nwsemfunc( SEM_CLOSE, ( HB_ULONG ) hb_parnint( 1 ), 0 ) );
 }
 
 HB_FUNC( FT_NWSEMLOCK )
 {
-   HB_U32 nHandle;
+   HB_ULONG nHandle;
    int nOpenCnt;
 
    if( _ft_nwsemopen( hb_parcx( 1 ), 0, &nHandle, &nOpenCnt ) == 0 && nOpenCnt != 1 )
    {
-      _ft_nwsemfunc( CLOSE_SEMAPHORE, nHandle, 0 );
+      _ft_nwsemfunc( SEM_CLOSE, nHandle, 0 );
       nHandle = 0;
       hb_retl( HB_FALSE );
    }
@@ -163,5 +165,5 @@ HB_FUNC( FT_NWSEMLOCK )
 
 HB_FUNC( FT_NWSEMUNLOCK )
 {
-   hb_retl( _ft_nwsemfunc( CLOSE_SEMAPHORE, ( HB_U32 ) hb_parnint( 1 ), 0 ) == 0 );
+   hb_retl( _ft_nwsemfunc( SEM_CLOSE, ( HB_ULONG ) hb_parnint( 1 ), 0 ) == 0 );
 }

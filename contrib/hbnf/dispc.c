@@ -686,36 +686,36 @@ HB_FUNC( FT_DISPFILE )
 
                break;
 
-            case K_PGUP:       /* move window up one page */
+            case K_PGUP:        /* move window up one page */
 
                for( i = 0; i < dispc->height; ++i )
                   winup( dispc );
 
                break;
 
-            case K_PGDN:       /* move window down 1 page */
+            case K_PGDN:        /* move window down 1 page */
 
                for( i = 0; i < dispc->height; ++i )
                   windown( dispc );
 
                break;
 
-            case K_CTRL_PGUP:  /* move cursor to to top of file */
+            case K_CTRL_PGUP:   /* move cursor to to top of file */
 
                filetop( dispc );
                break;
 
-            case K_CTRL_PGDN:  /* move cursor to to bot of file */
+            case K_CTRL_PGDN:   /* move cursor to to bot of file */
 
                filebot( dispc );
                break;
 
-            case K_ENTER:      /* carriage return terminates */
+            case K_ENTER:       /* carriage return terminates */
 
                bDone = HB_TRUE;
                break;
 
-            case K_ESC:        /* escape key terminates */
+            case K_ESC:         /* escape key terminates */
 
                bDone = HB_TRUE;
                break;

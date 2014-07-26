@@ -49,7 +49,7 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
       SWITCH cValType
       CASE "A"
          IF FWrite( nHandle, L2Bin( Len( xMemVar ) ) ) == 4
-            AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, nHandle,, lDropCompatibility ) },, 0xFFFFFFFF )
+            AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, nHandle,, lDropCompatibility ) },, 0x7FFFFFFF )
             EXIT
          ENDIF
          // fall through
@@ -59,7 +59,7 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
       CASE "N"
          xMemVar := Str( xMemVar )
          // fall through
-      CASE "C" ; FWrite( nHandle, L2Bin( hb_BLen( xMemVar ) ) + hb_BLeft( xMemVar, 0xFFFFFFFF ) ) ; EXIT
+      CASE "C" ; FWrite( nHandle, L2Bin( Min( hb_BLen( xMemVar ), 0x7FFFFFFF ) ) + hb_BLeft( xMemVar, 0x7FFFFFFF ) ) ; EXIT
       CASE "D" ; FWrite( nHandle, L2Bin( 8 ) + iif( lDropCompatibility, DToS( xMemVar ), hb_BLeft( DToC( xMemVar ), 8 ) ) ) ; EXIT
       CASE "L" ; FWrite( nHandle, L2Bin( 1 ) + iif( xMemVar, "T", "F" ) ) ; EXIT
       ENDSWITCH

@@ -59,8 +59,10 @@ FUNCTION hb_cdpTerm()
    cCP := __UnixParseLangCP( iif( Empty( GetEnv( "LANG" ) ), GetEnv( "LC_CTYPE" ), GetEnv( "LANG" ) ), @cLang )
 #elif defined( __PLATFORM__DOS )
    /* TODO */
+   cCP := cLang := NIL
 #elif defined( __PLATFORM__OS2 )
    /* TODO */
+   cCP := cLang := NIL
 #endif
 
    RETURN __CPStdToHb( cCP, cLang )
@@ -77,8 +79,10 @@ FUNCTION hb_cdpOS()
    cCP := __UnixParseLangCP( iif( Empty( GetEnv( "LANG" ) ), GetEnv( "LC_CTYPE" ), GetEnv( "LANG" ) ), @cLang )
 #elif defined( __PLATFORM__DOS )
    /* TODO */
+   cCP := cLang := NIL
 #elif defined( __PLATFORM__OS2 )
    /* TODO */
+   cCP := cLang := NIL
 #endif
 
    RETURN __CPStdToHb( cCP, cLang )
