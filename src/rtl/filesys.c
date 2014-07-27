@@ -811,7 +811,7 @@ int hb_fsIsPipeOrSock( HB_FHANDLE hPipeHandle )
    }
    return 0;
 }
-#elif defined( HB_OS_WIN )
+#elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 {
    return ( GetFileType( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ) ) ==
             FILE_TYPE_PIPE ) ? 1 : 0;

@@ -2178,8 +2178,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| iif( Empty( GetEnv( "WATCOM" ) ), ;
                     NIL, ;
                     FindInPath( "wcc386" ) ) }, "watcom" }, ;
-         { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" }, ;
-         { {|| FindInPath( "armasm.exe" ) }, "msvcarm" }, ;
+         { {|| FindInPath( "clarm.exe"  ) }, "msvcarm",,, "wce" }, ;
+         { {|| FindInPath( "armasm.exe" ) }, "msvcarm",,, "wce" }, ;
          { {|| FindInPath( "ml64.exe"   ) }, "msvc64" }, ;
          { {|| FindInPath( "ias.exe"    ) }, "msvcia64" }, ;
          { {|| FindInPath( "clang-cl.exe" ) }, "clang" }, ;
@@ -5701,9 +5701,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTD ], "-subsystem:windowsce" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:oldnames.lib" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-nodefaultlib:oldnames.lib" )
-            AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:kernel32.lib" )
             IF hbmk[ _HBMK_nCOMPVer ] >= 1400
                AAdd( hbmk[ _HBMK_aOPTL ], "-manifest:no" )
+            ENDIF
+            IF HBMK_ISCOMP( "msvcarm|poccarm" )
+               AAdd( l_aLIBSYSCORE, "corelibc" )
             ENDIF
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )

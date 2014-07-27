@@ -50,9 +50,6 @@
 #include "hbapiitm.h"
 
 #if defined( HB_OS_WIN_CE )
-   /* For Arc() */
-   #include "hbwince.h"
-
    #if defined( __POCC__ )
       #ifndef FONTENUMPROC
       #define FONTENUMPROC  FONTENUMPROCW
@@ -682,6 +679,9 @@ HB_FUNC( WIN_RECTANGLE )
 
 HB_FUNC( WIN_ARC )
 {
+#if defined( HB_OS_WIN_CE )
+   hb_retl( HB_FALSE );
+#else
    HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC ? Arc( hDC /* hDC */,
@@ -693,6 +693,7 @@ HB_FUNC( WIN_ARC )
                        0,
                        0,
                        0 ) : HB_FALSE );
+#endif
 }
 
 HB_FUNC( WIN_ELLIPSE )

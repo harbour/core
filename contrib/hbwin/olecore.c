@@ -760,10 +760,14 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
              *       holds all variant values except VT_DECIMAL which is
              *       stored in different place.
              */
+#if defined( HB_OS_WIN_CE ) && defined( _MSC_VER )
+            if( SafeArrayGetElement( pSafeArray, plIndex, &vItem ) == S_OK )
+#else
             if( SafeArrayGetElement( pSafeArray, plIndex,
                                      vt == VT_VARIANT ? ( void * ) &vItem :
                                      ( vt == VT_DECIMAL ? ( void * ) &HB_WIN_U1( &vItem, decVal ) :
                                      ( void * ) &HB_WIN_U3( &vItem, ullVal ) ) ) == S_OK )
+#endif
             {
                if( vt != VT_VARIANT )
                   V_VT( &vItem ) = vt; /* it's reserved in VT_DECIMAL structure */

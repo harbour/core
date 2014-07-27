@@ -3768,9 +3768,15 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             void * hImageName;
 
             pWVT->bIconToFree = HB_TRUE;
+#if defined( HB_OS_WIN_CE )
+            pWVT->hIcon = ( HICON ) LoadImage( NULL,
+                                               HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
+                                               IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+#else
             pWVT->hIcon = ( HICON ) LoadImage( NULL,
                                                HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
                                                IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE );
+#endif
             hb_strfree( hImageName );
             if( pWVT->hWnd )
             {

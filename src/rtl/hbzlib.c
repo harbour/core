@@ -77,6 +77,23 @@ static HB_SIZE s_zlibCompressBound( HB_SIZE nLen )
 #endif
 }
 
+#if defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240
+static void * s_zlib_alloc( void * cargo, uInt items, uInt size )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   return ( items > 0 && size > 0 ) ? hb_xalloc( ( HB_SIZE ) items * size ) : NULL;
+}
+
+static void s_zlib_xfree( void * cargo, void * address )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   if( address )
+      hb_xfree( address );
+}
+#endif
+
 static HB_SIZE s_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
                                        int * piResult )
 {
@@ -88,11 +105,13 @@ static HB_SIZE s_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
 
    stream.next_in   = ( Bytef * ) szSrc;
    stream.avail_in  = ( uInt ) nLen;
-/*
-   stream.zalloc    = Z_NULL;
-   stream.zfree     = Z_NULL;
+#if defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240
+   /* We build zlib with Z_SOLO for WinCE to avoid missing headers,
+      so we need to provide our own memory allocation functions */
+   stream.zalloc    = s_zlib_alloc;
+   stream.zfree     = s_zlib_xfree;
    stream.opaque    = NULL;
- */
+#endif
 
    *piResult = inflateInit2( &stream, 15 + 32 );
    if( *piResult == Z_OK )

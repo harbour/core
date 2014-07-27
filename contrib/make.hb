@@ -512,8 +512,15 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
                LOOP
             ENDIF
 #endif
+            tmp := hb_PathRelativize( hb_FNameDir( hb_DirSepDel( hb_cwd() ) ), hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" ) ) ) )
+            /* Hack to doctor path of dependencies that are
+               specified as relative paths inside .hbp files
+               (these are typically '3rd' subprojects) */
+            IF hb_LeftEq( tmp, ".." + hb_ps() )
+               tmp := SubStr( tmp, Len( ".." + hb_ps() ) + 1 )
+            ENDIF
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ), ;
-               "cFileName_HBP" => StrTran( hb_PathRelativize( hb_FNameDir( hb_DirSepDel( hb_cwd() ) ), hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" ) ) ) ), "\", "/" ) } )
+               "cFileName_HBP" => StrTran( tmp, "\", "/" ) } )
          ENDIF
       NEXT
    ELSE

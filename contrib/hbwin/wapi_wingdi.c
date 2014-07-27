@@ -52,10 +52,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* For Arc() */
-#if defined( HB_OS_WIN_CE )
-   #include "hbwince.h"
-#else
+#if ! defined( HB_OS_WIN_CE )
    #include <winspool.h>
 #endif
 
@@ -835,6 +832,9 @@ HB_FUNC( WAPI_ARC )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
+#if defined( HB_OS_WIN_CE )
+      hb_retl( HB_FALSE );
+#else
       hb_retl( Arc( hDC,
                     hb_parni( 2 ) /* nLeftRect */,
                     hb_parni( 3 ) /* nTopRect */,
@@ -844,6 +844,7 @@ HB_FUNC( WAPI_ARC )
                     hb_parni( 7 ) /* nYStartArc */,
                     hb_parni( 8 ) /* nXEndArc */,
                     hb_parni( 9 ) /* nYEndArc */ ) );
+#endif
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

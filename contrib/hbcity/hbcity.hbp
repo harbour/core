@@ -1,4 +1,4 @@
--stop{(win&!allgcc&!allmsvc&!watcom)|android}
+-stop{(win&!allgcc&!allmsvc&!watcom)|android|msvcarm}
 
 -hblib
 -inc

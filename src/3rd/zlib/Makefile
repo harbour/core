@@ -17,10 +17,6 @@ C_SOURCES := \
    compress.c \
    crc32.c \
    deflate.c \
-   gzclose.c \
-   gzlib.c \
-   gzread.c \
-   gzwrite.c \
    infback.c \
    inffast.c \
    inflate.c \
@@ -28,6 +24,15 @@ C_SOURCES := \
    trees.c \
    uncompr.c \
    zutil.c \
+
+ifeq ($(filter $(HB_COMPILER),msvcarm),)
+C_SOURCES += \
+   gzclose.c \
+   gzlib.c \
+   gzread.c \
+   gzwrite.c \
+
+endif
 
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    # To suppress new warnings in version 1.2.5
@@ -40,6 +45,9 @@ ifneq ($(HB_HAS_ZLIB_LOCAL),)
    endif
    ifneq ($(filter $(HB_PLATFORM),wce),)
       HB_CFLAGS += -D_WINCE
+   endif
+   ifneq ($(filter $(HB_COMPILER),msvcarm),)
+      HB_CFLAGS += -DZ_SOLO
    endif
    ifeq ($(filter $(HB_PLATFORM),win wce),)
       HB_CFLAGS += -DHAVE_UNISTD_H

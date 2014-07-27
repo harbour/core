@@ -9,6 +9,8 @@
 -cpp=no
 -pic
 
+{wce}-cflag=-DNO_MSCVER_FILE64_FUNC
+
 # for f*64() functions
 -c=gnu90
 

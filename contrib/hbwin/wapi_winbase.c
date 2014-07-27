@@ -47,11 +47,6 @@
 #include "hbwapi.h"
 #include "hbapierr.h"
 
-/* For SetErrorMode() */
-#if defined( HB_OS_WIN_CE )
-   #include "hbwince.h"
-#endif
-
 HB_FUNC( WAPI_GETCOMMANDLINE )
 {
    HB_RETSTR( GetCommandLine() );
@@ -201,7 +196,11 @@ HB_FUNC( WAPI_SETLASTERROR )
 
 HB_FUNC( WAPI_SETERRORMODE )
 {
+#if defined( HB_OS_WIN_CE )
+   hb_retni( 0 );
+#else
    hb_retni( SetErrorMode( ( UINT ) hb_parni( 1 ) ) );
+#endif
 }
 
 HB_FUNC( WAPI_LOADLIBRARY )
