@@ -166,7 +166,7 @@ HB_FUNC( WOPEN )
    hb_retni( hb_ctwCreateWindow( hb_parni( 1 ), hb_parni( 2 ),
                                  hb_parni( 3 ), hb_parni( 4 ),
                                  hb_parl( 5 ), iColor,
-                                 hb_parldef( 7, 1 ) ) ); /* HB_EXTENSION */
+                                 hb_parldef( 7, HB_TRUE ) ) ); /* HB_EXTENSION */
 }
 
 HB_FUNC( WCLOSE )
@@ -181,11 +181,10 @@ HB_FUNC( WACLOSE )
    hb_retni( hb_ctwCloseAllWindows() );
 }
 
-HB_FUNC( WSELECT )
+HB_FUNC( WSELECT )  /* 2nd parameter (fBringToTop) is Harbour extension */
 {
-   /* 2-nd parameter (fBringToTop) is Harbour extension */
    hb_retni( HB_ISNUM( 1 ) ? hb_ctwSelectWindow( hb_parni( 1 ),
-                                                 hb_parldef( 2, 1 ) ) : /* HB_EXTENSION */
+                                                 hb_parldef( 2, HB_TRUE ) ) : /* HB_EXTENSION */
                           hb_ctwCurrentWindow() );
 }
 

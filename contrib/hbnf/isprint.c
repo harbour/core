@@ -19,15 +19,13 @@
 
 #include "hbapi.h"
 
+#if defined( HB_OS_UNIX )
+   #define _P_  NULL
+#else
+   #define _P_  "PRN"
+#endif
+
 HB_FUNC( FT_ISPRINT )
 {
-   const char * pszPort;
-
-   #if defined( HB_OS_UNIX )
-   pszPort = hb_parc( 1 );
-   #else
-   pszPort = HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "PRN";
-   #endif
-
-   hb_retl( hb_printerIsReady( pszPort ) );
+   hb_retl( hb_printerIsReady( HB_ISCHAR( 1 ) ? hb_parc( 1 ) : _P_ ) );
 }

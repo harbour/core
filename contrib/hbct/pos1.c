@@ -94,7 +94,7 @@ static void do_pos1( int iSwitch )
       pcString = ( const unsigned char * ) hb_parc( iParamShift + 1 );
       sStrLen = hb_parclen( iParamShift + 1 );
 
-      iMode = hb_parldef( iParamShift + 2, 0 );
+      iMode = hb_parl( iParamShift + 2 );
       sIgnore = hb_parnsdef( iParamShift + 3, 0 );
 
       for( puc = pcString + sIgnore; puc < pcString + sStrLen; puc++ )

@@ -555,7 +555,7 @@ HB_FUNC( NETIO_RPCFILTER )
 HB_FUNC( NETIO_SERVERSTOP )
 {
    PHB_LISTENSD lsd = s_listenParam( 1, HB_FALSE );
-   HB_BOOL fStop = hb_parldef( 2, 1 );
+   HB_BOOL fStop = hb_parldef( 2, HB_TRUE );
 
    if( lsd )
       lsd->stop = fStop;

@@ -1838,7 +1838,7 @@ HB_FUNC( ADSDDREMOVETABLE )
 #if ADS_LIB_VERSION >= 600
    hb_retl( AdsDDRemoveTable( HB_ADS_PARCONNECTION( 3 ) /* hConnect */,
                               ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
-                              ( UNSIGNED16 ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : hb_parldef( 2, 0 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
+                              ( UNSIGNED16 ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : hb_parl( 2 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -1850,7 +1850,7 @@ HB_FUNC( ADSDDADDINDEXFILE )
    hb_retl( AdsDDAddIndexFile( HB_ADS_PARCONNECTION( 4 ) /* hConnect */,
                                ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
                                ( UNSIGNED8 * ) hb_parcx( 2 ) /* pIndexName */,
-                               ( UNSIGNED8 * ) hb_parcx( 3 ) /* pucComment  */ ) == AE_SUCCESS );
+                               ( UNSIGNED8 * ) hb_parcx( 3 ) /* pucComment */ ) == AE_SUCCESS );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -1862,7 +1862,7 @@ HB_FUNC( ADSDDREMOVEINDEXFILE )
    hb_retl( AdsDDRemoveIndexFile( HB_ADS_PARCONNECTION( 4 ) /* hConnect */,
                                   ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
                                   ( UNSIGNED8 * ) hb_parcx( 2 ) /* pIndexName */,
-                                  ( UNSIGNED16 ) ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parldef( 3, 0 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
+                                  ( UNSIGNED16 ) ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -2395,13 +2395,13 @@ HB_FUNC( ADSCREATEFTSINDEX )
                                    ( UNSIGNED32 )  hb_parnldef( 4, ADS_DEFAULT )  /* ulPageSize               */ ,
                                    ( UNSIGNED32 )  hb_parnldef( 5, 3 )            /* ulMinWordLen             */ ,
                                    ( UNSIGNED32 )  hb_parnldef( 6, 30 )           /* ulMaxWordLen             */ ,
-                                   ( UNSIGNED16 )  hb_parldef( 7, 1 )             /* usUseDefaultDelim        */ ,
+                                   ( UNSIGNED16 )  hb_parldef( 7, HB_TRUE )       /* usUseDefaultDelim        */ ,
                                    ( UNSIGNED8 * ) hb_parc( 8 )                   /* pucDelimiters            */ ,
-                                   ( UNSIGNED16 )  hb_parldef( 9, 1 )             /* usUseDefaultNoise        */ ,
+                                   ( UNSIGNED16 )  hb_parldef( 9, HB_TRUE )       /* usUseDefaultNoise        */ ,
                                    ( UNSIGNED8 * ) hb_parc( 10 )                  /* pucNoiseWords            */ ,
-                                   ( UNSIGNED16 )  hb_parldef( 11, 1 )            /* usUseDefaultDrop         */ ,
+                                   ( UNSIGNED16 )  hb_parldef( 11, HB_TRUE )      /* usUseDefaultDrop         */ ,
                                    ( UNSIGNED8 * ) hb_parc( 12 )                  /* pucDropChars             */ ,
-                                   ( UNSIGNED16 )  hb_parldef( 13, 1 )            /* usUseDefaultConditionals */ ,
+                                   ( UNSIGNED16 )  hb_parldef( 13, HB_TRUE )      /* usUseDefaultConditionals */ ,
                                    ( UNSIGNED8 * ) hb_parc( 14 )                  /* pucConditionalChars      */ ,
                                    ( UNSIGNED8 * ) hb_parc( 15 )                  /* pucReserved1             */ ,
                                    ( UNSIGNED8 * ) hb_parc( 16 )                  /* pucReserved2             */ ,

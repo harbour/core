@@ -159,7 +159,7 @@ HB_FUNC( __PP_INIT )
    if( pState )
    {
       const char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
-      HB_BOOL fArchDefs = hb_parldef( 3, 1 );
+      HB_BOOL fArchDefs = hb_parldef( 3, HB_TRUE );
       PHB_ITEM ppItem;
 
       pStatePtr = ( PHB_PP_STATE * ) hb_gcAllocate( sizeof( PHB_PP_STATE ),

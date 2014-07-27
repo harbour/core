@@ -1548,7 +1548,7 @@ HB_FUNC( __MVRESTORE )
          bIncludeMask = HB_TRUE;
 #else
          pszMask = hb_memvarGetMask( 3 );
-         bIncludeMask = hb_parldef( 4, 1 );
+         bIncludeMask = hb_parldef( 4, HB_TRUE );
 #endif
 
          while( hb_fileRead( fhnd, buffer, HB_MEM_REC_LEN, -1 ) == HB_MEM_REC_LEN )

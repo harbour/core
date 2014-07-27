@@ -124,7 +124,7 @@ HB_FUNC( WIN_ABORTDOC )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
-   hb_retl( hDC && ( AbortDoc( hDC ) > 0 ) );
+   hb_retl( hDC && AbortDoc( hDC ) > 0 );
 }
 
 /* Compatibility dummy */
@@ -169,7 +169,7 @@ HB_FUNC( WIN_TEXTOUT )
 
          int iRow = hb_parni( 2 );
          int iCol = hb_parni( 3 );
-         int iWidth = hb_parni( 6 ); /* defaults to 0 */
+         int iWidth = hb_parni( 6 );  /* defaults to 0 */
 
          if( HB_ISNUM( 7 ) )
             SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | hb_parni( 7 ) );
@@ -188,8 +188,8 @@ HB_FUNC( WIN_TEXTOUT )
          }
          else if( ExtTextOut( hDC, iRow, iCol, 0, NULL, lpData, ( UINT ) nLen, NULL ) )
          {
-            GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize ); /* Get the length of the text in device size */
-            lResult = ( long ) sSize.cx; /* return the width so we can update the current pen position (::PosY) */
+            GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );  /* Get the length of the text in device size */
+            lResult = ( long ) sSize.cx;  /* return the width so we can update the current pen position (::PosY) */
          }
       }
 
@@ -219,12 +219,12 @@ HB_FUNC( WIN_GETTEXTSIZE )
       {
          SIZE sSize;
 
-         GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );     /* Get the length of the text in device size */
+         GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );  /* Get the length of the text in device size */
 
-         if( ! hb_parldef( 4, 1 ) )
-            lResult = ( long ) sSize.cy;    /* return the height */
+         if( ! hb_parldef( 4, HB_TRUE ) )
+            lResult = ( long ) sSize.cy;  /* return the height */
          else
-            lResult = ( long ) sSize.cx;    /* return the width */
+            lResult = ( long ) sSize.cx;  /* return the width */
       }
 
       hb_strfree( hData );

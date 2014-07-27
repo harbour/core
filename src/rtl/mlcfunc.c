@@ -159,7 +159,7 @@ static HB_BOOL hb_mlInit( PHB_MLC_INFO pMLC, int iParAdd )
       pMLC->nLen = hb_parclen( 1 );
 
       pMLC->nTabSize = hb_parnldef( 3 + iParAdd, 4 );
-      pMLC->fWordWrap = hb_parldef( 4 + iParAdd, 1 );
+      pMLC->fWordWrap = hb_parldef( 4 + iParAdd, HB_TRUE );
 
 #ifdef HB_CLP_STRICT
       if( pMLC->nLineLength > 254 )

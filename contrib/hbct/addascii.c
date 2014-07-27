@@ -82,7 +82,7 @@ HB_FUNC( ADDASCII )
       hb_xmemcpy( pcResult, pcSource, sLen );
 
       lValue = hb_parnl( 2 );
-      iCarryOver = hb_parldef( 4, 0 );
+      iCarryOver = hb_parl( 4 );
 
       if( iCarryOver )
       {

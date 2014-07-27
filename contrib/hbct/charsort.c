@@ -106,7 +106,7 @@ HB_FUNC( CHARSORT )
       HB_SIZE sElementLen = hb_parnsdef( 2, 1 );
       HB_SIZE sIgnore     = hb_parnsdef( 4, 0 );
       HB_SIZE sSortLen    = hb_parnsdef( 6, sStrLen - sIgnore );
-      int     iDescend    = hb_parldef( 7, 0 );
+      int     iDescend    = hb_parl( 7 );
 
       charsort->sCompareLen = hb_parnsdef( 3, sElementLen );
       charsort->sElementPos = hb_parnsdef( 5, 0 );

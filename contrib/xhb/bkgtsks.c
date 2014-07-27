@@ -425,7 +425,7 @@ HB_FUNC( HB_BACKGROUNDACTIVE )
    if( bkg->pBackgroundTasks && HB_ISNUM( 1 ) )
    {
       /* TODO: access to pointers from harbour code */
-      bOldActive = hb_backgroundActive( hb_parnl( 1 ), hb_parldef( 2, 1 ) );
+      bOldActive = hb_backgroundActive( hb_parnl( 1 ), hb_parldef( 2, HB_TRUE ) );
    }
    else
       bOldActive = HB_FALSE;

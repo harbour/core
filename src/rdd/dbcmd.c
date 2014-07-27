@@ -275,7 +275,7 @@ HB_FUNC( DBAPPEND )
 
    if( pArea )
    {
-      HB_BOOL bUnLockAll = hb_parldef( 1, 1 );
+      HB_BOOL bUnLockAll = hb_parldef( 1, HB_TRUE );
       HB_ERRCODE errCode;
 
       /* Clipper clears NETERR flag before APPEND */
@@ -1200,7 +1200,7 @@ HB_FUNC( ORDCONDSET )
       pItem = hb_param( 2, HB_IT_BLOCK );
       lpdbOrdCondInfo->itmCobFor = pItem ? hb_itemNew( pItem ) : NULL;
 
-      lpdbOrdCondInfo->fAll = hb_parldef( 3, 1 );
+      lpdbOrdCondInfo->fAll = hb_parldef( 3, HB_TRUE );
 
       lpdbOrdCondInfo->abWhile = hb_parclen( 17 ) > 0 ?
                                  hb_strdup( hb_parc( 17 ) ) : NULL;
