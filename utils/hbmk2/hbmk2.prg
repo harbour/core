@@ -5704,7 +5704,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             IF hbmk[ _HBMK_nCOMPVer ] >= 1400
                AAdd( hbmk[ _HBMK_aOPTL ], "-manifest:no" )
             ENDIF
-            IF HBMK_ISCOMP( "msvcarm|poccarm" )
+            IF hbmk[ _HBMK_cCOMP ] == "msvcarm"
                AAdd( l_aLIBSYSCORE, "corelibc" )
             ENDIF
          ENDIF
@@ -5797,6 +5797,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
+            IF hbmk[ _HBMK_cCOMP ] == "poccarm"
+               AAdd( l_aLIBSYSCORE, "corelibc" )
+            ENDIF
          ENDIF
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "pocc"

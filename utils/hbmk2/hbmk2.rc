@@ -1,5 +1,5 @@
 #if !( defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 ) )
-#if ! defined( __BORLANDC__ )
+#if ! defined( __BORLANDC__ ) && ! defined( UNDER_CE )
 1 ICON DISCARDABLE "../../package/harbour.ico"
 #endif
 #include "../../package/harbour.rc"
