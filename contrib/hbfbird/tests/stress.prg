@@ -63,7 +63,7 @@ PROCEDURE Main()
       oRow:FieldPut( 1, i )
       oRow:FieldPut( 2, i + 1 )
       oRow:FieldPut( 3, "DEPARTMENT NAME " + StrZero( i ) )
-      oRow:FieldPut( 4, ( i % 10 ) == 0 )
+      oRow:FieldPut( 4, i % 10 == 0 )
       oRow:FieldPut( 5, 3000 + i )
       oRow:FieldPut( 6, Date() )
 

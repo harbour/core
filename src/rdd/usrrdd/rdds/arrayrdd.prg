@@ -1703,7 +1703,7 @@ STATIC FUNCTION hb_Decode( ... )
       nParams := Len( aParams )
 
       /* if I have a odd number of members, last is default */
-      IF ( nParams % 2 ) != 0
+      IF nParams % 2 != 0
          xDefault := ATail( aParams )
          /* Resize again deleting last */
          hb_ADel( aParams, nParams, .T. )

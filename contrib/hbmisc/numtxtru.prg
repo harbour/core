@@ -564,7 +564,7 @@ STATIC FUNCTION NumToStrRaw( nValue, aMsg, nGender, lOrd )
                ENDIF
             ELSEIF nTri <= Len( aMsg[ NTSR_1000_1 ] )
                cTemp += " "
-               nTemp1 := ( nValue % 10 )
+               nTemp1 := nValue % 10
                IF nTemp1 == 1 .AND. nValue != 11
                   cTemp += aMsg[ NTSR_1000_1 ][ nTri ]
                ELSEIF nTemp1 >= 2 .AND. nTemp1 <= 4 .AND. ( nValue < 10 .OR. nValue > 20 )

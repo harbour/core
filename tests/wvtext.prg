@@ -392,11 +392,11 @@ STATIC PROCEDURE thFunc()
    hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
    hb_gtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
 
-   IF ( s_nBrowser % 2 ) != 0
+   IF s_nBrowser % 2 != 0
       hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    ENDIF
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
-   hb_gtInfo( HB_GTI_WINTITLE, "test.dbf    [" + iif( ( s_nBrowser % 2 ) != 0, "RESIZABLE_BY_ROWS", "RESIZABLE_BY_FONT" ) + "]" )
+   hb_gtInfo( HB_GTI_WINTITLE, "test.dbf    [" + iif( s_nBrowser % 2 != 0, "RESIZABLE_BY_ROWS", "RESIZABLE_BY_FONT" ) + "]" )
    hb_gtInfo( HB_GTI_ALTENTER, .T. )  // allow alt-enter for full screen
 
    SetCursor( SC_NONE )

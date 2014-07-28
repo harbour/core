@@ -148,7 +148,7 @@ procedure main()
    ? "min char:", nMinCh
    ? "max char:", nMaxCh
    ? "ATTR tables."
-   ? "raw size:", hb_ntos( int( ( nMaxCh - nMinCh + 2 ) / 2 ) )
+   ? "raw size:", hb_ntos( Int( ( nMaxCh - nMinCh + 2 ) / 2 ) )
 #ifndef DO_START_OPT
    nMinCh := Min( nMinCh, 0 ) // optimal
 #endif
@@ -342,7 +342,7 @@ static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
 
    local nLine, n, cLine, c
 
-   nLine := int( 2 ^ ( nBit + 1 ) )
+   nLine := Int( 2 ^ ( nBit + 1 ) )
 
    cLine := ""
    hVal := { => }
@@ -401,7 +401,7 @@ static function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
 
    local nLine, n, cLine, c
 
-   nLine := int( 2 ^ ( nBit - 1 ) )
+   nLine := Int( 2 ^ ( nBit - 1 ) )
 
    cLine := ""
    hVal := {=>}
@@ -466,17 +466,17 @@ static function conv_get04( n, aInd, aVal, nMin, nMax, nBit )
    local nDiv, nByte, nInd
 
    if n >= nMin .and. n <= nMax
-      nDiv := int( 2 ^ nBit )
+      nDiv := Int( 2 ^ nBit )
       n -= nMin
 #if 0
       nInd := aInd[ n / nDiv + 1 ] * nDiv + n % nDiv
       nByte := aVal[ nInd / 2 + 1 ]
-      return iif( n % 2 == 0, hb_bitAnd( nByte, 0x0F ), int( nByte / 16 ) )
+      return iif( n % 2 == 0, hb_bitAnd( nByte, 0x0F ), Int( nByte / 16 ) )
 #endif
 
       nInd := aInd[ n / nDiv + 1 ] * nDiv / 2 + ( n % nDiv ) / 2
       nByte := aVal[ nInd + 1 ]
-      return iif( n % 2 == 1, int( nByte / 16 ), hb_bitAnd( nByte, 0x0F ) )
+      return iif( n % 2 == 1, Int( nByte / 16 ), hb_bitAnd( nByte, 0x0F ) )
 
 //    v = s_ch_val[ ( s_ch_idx[ n >> HB_UCFL_BITS ] << ( HB_UCFL_BITS - 1 ) ) +
 //                  ( ( n & ( ( 1 << HB_UCFL_BITS ) - 1 ) ) >> 1 ) ];

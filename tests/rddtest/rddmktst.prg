@@ -86,7 +86,7 @@ RDDTEST SET DELETED OFF
 RDDTEST ;
   for n := 1 to N_LOOP                      ;;
      dbAppend()                             ;;
-     replace FNUM with int( ( n + 2 ) / 3 ) ;;
+     replace FNUM with Int( ( n + 2 ) / 3 ) ;;
      replace FSTR with Chr( FNUM + 48 )     ;;
   next
 

@@ -219,7 +219,7 @@ PROCEDURE Main()
 
       dbSkip()
 
-      IF ( nCount % nCommit ) == 0
+      IF nCount % nCommit == 0
          DevPos( Row(), 1 )
          DevOut( "imported recs:", hb_ntos( nCount ) )
 
@@ -230,7 +230,7 @@ PROCEDURE Main()
       ENDIF
    ENDDO
 
-   IF ( nCount % nCommit ) != 0 .AND. lUseTrans
+   IF nCount % nCommit != 0 .AND. lUseTrans
       oServer:commit()
    ENDIF
 

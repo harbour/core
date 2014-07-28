@@ -136,7 +136,7 @@ PROCEDURE Main()
 
       dbSkip()
 
-      IF ( RecNo() % 100 ) == 0
+      IF RecNo() % 100 == 0
          DevPos( Row(), 1 )
          DevOut( "imported recs:", hb_ntos( RecNo() ) )
       ENDIF

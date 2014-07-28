@@ -251,9 +251,7 @@ METHOD PROCEDURE Draw13( cText ) CLASS GDBarCode
             ENDCASE
          NEXT
 
-         jj := nChkSum % 10
-
-         IF jj != 0
+         IF ( jj := nChkSum % 10 ) != 0
             nChk := 10 - jj
          ENDIF
 
@@ -345,9 +343,7 @@ METHOD PROCEDURE Draw8( cText ) CLASS GDBarCode
          ENDCASE
       NEXT
 
-      jj := nChkSum % 10
-
-      IF jj != 0
+      IF ( jj := nChkSum % 10 ) != 0
          nChk := 10 - jj
       ENDIF
 
@@ -557,7 +553,7 @@ METHOD PROCEDURE GenCodei25() CLASS GDBarCode
 
    LOCAL bc_string
 
-   IF ( Len( ::text ) % 2 ) != 0
+   IF Len( ::text ) % 2 != 0
       ::DrawError( "Invalid barcode length" )
    ELSE
       bc_string := Upper( ::text )
@@ -586,7 +582,7 @@ METHOD MixCode( value ) CLASS GDBarCode
 
    LOCAL l := Len( value )
 
-   IF ( l % 2 ) != 0
+   IF l % 2 != 0
       ::DrawError( "Code cannot be intercalated: Invalid length (mix)" )
       RETURN ""
    ENDIF

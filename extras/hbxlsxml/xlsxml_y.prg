@@ -477,7 +477,7 @@ METHOD PROCEDURE ExcelWriterXML_Style:alignRotate( rotate )
 
    IF HB_ISNUMERIC( rotate )
       IF Abs( rotate ) > 90
-         rotate := rotate % 90
+         rotate %= 90
       ENDIF
       ::rotate := hb_ntos( rotate )
       ::useAlignment := .T.

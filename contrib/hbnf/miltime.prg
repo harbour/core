@@ -16,7 +16,7 @@ FUNCTION ft_Mil2Min( cMILTIME )
 
 FUNCTION ft_Min2Mil( nMin )
 
-   nMin := nMin % 1440
+   nMin %= 1440
 
    RETURN ;
       StrZero( Int( nMin / 60 ), 2 ) + ;

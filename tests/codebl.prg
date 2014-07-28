@@ -57,7 +57,7 @@ STATIC PROCEDURE GetArray( a )
 
    a := Array( 100 )
    FOR i := 1 TO 100
-      IF ( i % 6 ) == 0
+      IF i % 6 == 0
          a[ i - 2 ] := NIL
          a[ i - 4 ] := NIL
       ENDIF

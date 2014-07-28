@@ -132,7 +132,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    // TEST: Header()
-   IF ! Header() == 194
+   IF Header() != 194
       NotifyUser( "Header() returned wrong size (" + hb_ntos( Header() ) + " bytes)" )
    ENDIF
 
@@ -154,21 +154,21 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDDO
 
    // TEST: LastRec()
-   IF ! LastRec() == MAX_TEST_RECS
+   IF LastRec() != MAX_TEST_RECS
       NotifyUser( "dbAppend() and/or LastRec() failed" )
    ENDIF
 
    // TEST: dbGoBottom()
    dbGoBottom()
 
-   IF ! RecNo() == MAX_TEST_RECS
+   IF RecNo() != MAX_TEST_RECS
       NotifyUser( "dbGoBottom() failed" )
    ENDIF
 
    // TEST: dbGoTop()
    dbGoTop()
 
-   IF ! RecNo() == 1
+   IF RecNo() != 1
       NotifyUser( "dbGoTop() failed" )
    ENDIF
 
@@ -196,29 +196,29 @@ PROCEDURE Main( cRDDType, cAdsMode )
    INDEX ON INDEX_KEY_LOG  TO test_l.idx ADDITIVE
 
    // TEST: IndexOrd()
-   IF ! IndexOrd() == 4
+   IF IndexOrd() != 4
       NotifyUser( "Bad IndexOrd()" )
    ENDIF
 
    // TEST: DBOI_KEYCOUNT
 
    ordSetFocus( 1 )
-   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+   IF dbOrderInfo( DBOI_KEYCOUNT ) != MAX_TEST_RECS
       NotifyUser( "Bad DBOI_KEYCOUNT/1" )
    ENDIF
 
    ordSetFocus( 2 )
-   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+   IF dbOrderInfo( DBOI_KEYCOUNT ) != MAX_TEST_RECS
       NotifyUser( "Bad DBOI_KEYCOUNT/2" )
    ENDIF
 
    ordSetFocus( 3 )
-   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+   IF dbOrderInfo( DBOI_KEYCOUNT ) != MAX_TEST_RECS
       NotifyUser( "Bad DBOI_KEYCOUNT/3" )
    ENDIF
 
    ordSetFocus( 4 )
-   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+   IF dbOrderInfo( DBOI_KEYCOUNT ) != MAX_TEST_RECS
       NotifyUser( "Bad DBOI_KEYCOUNT/4" )
    ENDIF
 
@@ -283,7 +283,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ordSetFocus( 0 )
    COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftEq() */
    INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftEq() */
-   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
+   IF dbOrderInfo( DBOI_KEYCOUNT ) != xTemp
       NotifyUser( "Bad conditional index count with EXACT ON" )
    ENDIF
 
@@ -291,7 +291,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ordSetFocus( 0 )
    COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftEq() */
    INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftEq() */
-   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
+   IF dbOrderInfo( DBOI_KEYCOUNT ) != xTemp
       NotifyUser( "Bad conditional index count with EXACT OFF" )
    ENDIF
 

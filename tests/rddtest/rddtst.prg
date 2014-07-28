@@ -140,7 +140,7 @@ static procedure test_init( rdd, cOutFile )
    FLock()
    for n := 1 to N_LOOP
       dbAppend()
-      field->FNUM := int( ( n + 2 ) / 3 )
+      field->FNUM := Int( ( n + 2 ) / 3 )
       field->FSTR := Chr( FNUM + 48 )
       // ? FNUM, FSTR, RecNo(), Eof(), Bof()
    next

@@ -55,7 +55,7 @@ RDDTESTF .f., {1,.f.,.t.,.f.}, dbSeek("", .T.,.T.)
 RDDTESTF .f., {1,.f.,.t.,.f.}, dbSeek("", .F.,.F.)
 RDDTESTF .f., {1,.f.,.t.,.f.}, dbSeek("", .F.,.T.)
 RDDTESTC {1,.f.,.t.,.f.}, SET DELETED OFF
-RDDTESTC {15,.f.,.f.,.f.}, for n:=1 to 15                    ; dbAppend()                          ; replace FNUM with int((n+2)/3)      ; replace FSTR with Chr(FNUM+48)      ; next
+RDDTESTC {15,.f.,.f.,.f.}, for n:=1 to 15                    ; dbAppend()                          ; replace FNUM with Int((n+2)/3)      ; replace FSTR with Chr(FNUM+48)      ; next
 RDDTESTF NIL, {15,.f.,.f.,.f.}, dbCommit()
 RDDTESTF NIL, {15,.f.,.f.,.f.}, dbUnlock()
 RDDTESTF "TG_C", {15,.f.,.f.,.f.}, ordSetFocus(1)

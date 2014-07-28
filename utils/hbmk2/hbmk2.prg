@@ -2008,7 +2008,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    /* Convert old-style ('xy') mingw version number to new format ('0x0y'),
       to keep a level of compatibility while migrating to the new format. */
    IF Len( hb_ntos( tmp := hbmk[ _HBMK_nCOMPVer ] ) ) == 2
-      hbmk[ _HBMK_nCOMPVer ] := hbmk[ _HBMK_nCOMPVer ] % 10 + Int( hbmk[ _HBMK_nCOMPVer ] / 10 ) * 100
+      hbmk[ _HBMK_nCOMPVer ] := Int( hbmk[ _HBMK_nCOMPVer ] % 10 ) + Int( hbmk[ _HBMK_nCOMPVer ] / 10 ) * 100
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Old style HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s" ), tmp, StrZero( hbmk[ _HBMK_nCOMPVer ], 4 ) ) )
    ENDIF
 #endif

@@ -247,7 +247,7 @@ static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
 
    local nLine, n, cLine, c
 
-   nLine := int( 2 ^ nBit )
+   nLine := Int( 2 ^ nBit )
 
    cLine := ""
    hVal := { => }
