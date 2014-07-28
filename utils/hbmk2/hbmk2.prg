@@ -818,8 +818,8 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 #ifdef HARBOUR_SUPPORT
       CASE Right( tmp, Len( "hbhrb" ) ) == "hbhrb" .OR. ;
            hb_LeftEq( tmp, "hbhrb" )       ; AAdd( aArgsProc, "-hbhrb" )
-      ENDCASE
 #endif
+      ENDCASE
    ENDIF
 
    /* Handle multitarget command-lines */
@@ -1381,10 +1381,6 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
             AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | hb_LeftEq( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
       ENDIF
    #endif
-
-   IF Empty( hbmk[ _HBMK_cPKGM ] )
-      hbmk[ _HBMK_cPKGM ] := DetectPackageManager()
-   ENDIF
 
    RETURN
 #endif
@@ -2372,7 +2368,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* Check compilers */
                FOR EACH tmp IN aCOMPDET
                   IF ! Empty( cPath_CompC := Eval( tmp[ _COMPDET_bBlock ] ) )
-#ifdef HARBOUR_SUPPORT
                      hbmk[ _HBMK_cCOMP ] := tmp[ _COMPDET_cCOMP ]
                      /* Allow override of compiler using the CPU setting for
                         dual-mode mingw distros */
@@ -2382,16 +2377,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      CASE hbmk[ _HBMK_cCOMP ] == "mingw64" .AND. hbmk[ _HBMK_cCPU ] == "x86"
                         hbmk[ _HBMK_cCOMP ] := "mingw"
                      ENDCASE
-                     IF Len( tmp ) >= _COMPDET_cCCPREFIX .AND. tmp[ _COMPDET_cCCPREFIX ] != NIL
-                        hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDET_cCCPREFIX ]
-                     ELSE
-                        hbmk[ _HBMK_cCCPREFIX ] := ""
-                     ENDIF
-                     IF Len( tmp ) >= _COMPDET_cCCSUFFIX .AND. tmp[ _COMPDET_cCCSUFFIX ] != NIL
-                        hbmk[ _HBMK_cCCSUFFIX ] := tmp[ _COMPDET_cCCSUFFIX ]
-                     ELSE
-                        hbmk[ _HBMK_cCCSUFFIX ] := ""
-                     ENDIF
                      tmp1 := hbmk[ _HBMK_cPLAT ]
                      IF Len( tmp ) >= _COMPDET_cPLAT .AND. tmp[ _COMPDET_cPLAT ] != NIL
                         hbmk[ _HBMK_cPLAT ] := tmp[ _COMPDET_cPLAT ]
@@ -2409,12 +2394,19 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                            hbmk[ _HBMK_cPLAT ] := "dos"
                         ENDCASE
                      ENDIF
+#ifdef HARBOUR_SUPPORT
                      IF ! lDoSupportDetection .OR. ;
                         hb_DirExists( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" + ;
                                                         hb_ps() + hbmk[ _HBMK_cPLAT ] + ;
                                                         hb_ps() + hbmk[ _HBMK_cCOMP ] + ;
                                                         hb_DirSepToOS( hbmk[ _HBMK_cBUILD ] ) )
 #endif
+                        IF Len( tmp ) >= _COMPDET_cCCPREFIX .AND. tmp[ _COMPDET_cCCPREFIX ] != NIL
+                           hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDET_cCCPREFIX ]
+                        ENDIF
+                        IF Len( tmp ) >= _COMPDET_cCCSUFFIX .AND. tmp[ _COMPDET_cCCSUFFIX ] != NIL
+                           hbmk[ _HBMK_cCCSUFFIX ] := tmp[ _COMPDET_cCCSUFFIX ]
+                        ENDIF
                         IF !( hbmk[ _HBMK_cPLAT ] == tmp1 ) .AND. hbmk[ _HBMK_lInfo ]
                            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected platform: %1$s (adjusted)" ), hbmk[ _HBMK_cPLAT ] ) )
                         ENDIF
@@ -2626,6 +2618,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       hbmk_harbour_dirlayout_init( hbmk )
    ENDIF
 #endif
+
+   IF Empty( hbmk[ _HBMK_cPKGM ] )
+      hbmk[ _HBMK_cPKGM ] := DetectPackageManager()
+   ENDIF
 
    /* Display detection results */
 
@@ -8270,6 +8266,7 @@ STATIC PROCEDURE ProcEnvOption( cValue )
 
    RETURN
 
+#ifdef HARBOUR_SUPPORT
 STATIC FUNCTION AllFilesWarning( hbmk, cArg )
 
    IF HBMK_IS_IN( cArg, hb_osFileMask() + "|*|*.*" )
@@ -8278,6 +8275,7 @@ STATIC FUNCTION AllFilesWarning( hbmk, cArg )
    ENDIF
 
    RETURN .F.
+#endif
 
 STATIC PROCEDURE PointlessPairWarning( hbmk, /* @ */ aParam1, aParam2, cParam2L, cOption )
 
