@@ -462,7 +462,7 @@ METHOD SendPort() CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "PORT " + ;
       StrTran( hb_inetGetHosts( NetName() )[ 1 ], ".", "," ) + "," + ;
-      hb_ntos( Int( nPort / 256 ) ) + "," + hb_ntos( nPort % 256 ) + ;
+      hb_ntos( Int( nPort / 256 ) ) + "," + hb_ntos( Int( nPort % 256 ) ) + ;
       ::cCRLF )
 
    RETURN ::GetReply()

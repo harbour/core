@@ -1,3 +1,4 @@
+#define HB_FM_STATISTICS
 /*
  * The Fixed Memory API
  *
@@ -1045,7 +1046,7 @@ const char * hb_xinfo( void * pMem, HB_USHORT * puiLine )
       PHB_MEMINFO pMemBlock = HB_FM_PTR( pMem );
 
       if( puiLine )
-         * puiLine = pMemBlock->uiProcLine;
+         *puiLine = pMemBlock->uiProcLine;
 
       return pMemBlock->szProcName;
    }
@@ -1054,7 +1055,7 @@ const char * hb_xinfo( void * pMem, HB_USHORT * puiLine )
    HB_SYMBOL_UNUSED( pMem );
 
    if( puiLine )
-      * puiLine = 0;
+      *puiLine = 0;
 
    return NULL;
 #endif
