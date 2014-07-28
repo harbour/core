@@ -2384,9 +2384,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      ENDCASE
                      IF Len( tmp ) >= _COMPDET_cCCPREFIX .AND. tmp[ _COMPDET_cCCPREFIX ] != NIL
                         hbmk[ _HBMK_cCCPREFIX ] := tmp[ _COMPDET_cCCPREFIX ]
+                     ELSE
+                        hbmk[ _HBMK_cCCPREFIX ] := ""
                      ENDIF
                      IF Len( tmp ) >= _COMPDET_cCCSUFFIX .AND. tmp[ _COMPDET_cCCSUFFIX ] != NIL
                         hbmk[ _HBMK_cCCSUFFIX ] := tmp[ _COMPDET_cCCSUFFIX ]
+                     ELSE
+                        hbmk[ _HBMK_cCCSUFFIX ] := ""
                      ENDIF
                      tmp1 := hbmk[ _HBMK_cPLAT ]
                      IF Len( tmp ) >= _COMPDET_cPLAT .AND. tmp[ _COMPDET_cPLAT ] != NIL
@@ -2408,7 +2412,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      IF ! lDoSupportDetection .OR. ;
                         hb_DirExists( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" + ;
                                                         hb_ps() + hbmk[ _HBMK_cPLAT ] + ;
-                                                        hb_ps() + tmp[ _COMPDET_cCOMP ] + ;
+                                                        hb_ps() + hbmk[ _HBMK_cCOMP ] + ;
                                                         hb_DirSepToOS( hbmk[ _HBMK_cBUILD ] ) )
 #endif
                         IF !( hbmk[ _HBMK_cPLAT ] == tmp1 ) .AND. hbmk[ _HBMK_lInfo ]
