@@ -85,7 +85,7 @@ static void * s_zlib_alloc( void * cargo, uInt items, uInt size )
    return ( items > 0 && size > 0 ) ? hb_xalloc( ( HB_SIZE ) items * size ) : NULL;
 }
 
-static void s_zlib_xfree( void * cargo, void * address )
+static void s_zlib_free( void * cargo, void * address )
 {
    HB_SYMBOL_UNUSED( cargo );
 
@@ -109,7 +109,7 @@ static HB_SIZE s_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
    /* We build zlib with Z_SOLO for WinCE to avoid missing headers,
       so we need to provide our own memory allocation functions */
    stream.zalloc    = s_zlib_alloc;
-   stream.zfree     = s_zlib_xfree;
+   stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
 #endif
 

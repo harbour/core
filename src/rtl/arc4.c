@@ -61,13 +61,9 @@
 #if defined( HB_OS_WIN )
 #  if ! defined( __TINYC__ )
 #     include <wincrypt.h>
-#     if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) )
-#        include <process.h>  /* for getpid(), but never used */
-#     endif
 #  endif
 #elif defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
 #  include <sys/types.h>
-#  include <process.h>  /* for getpid(), but never used */
 #else
 #  if ! defined( __WATCOMC__ )
 #     include <sys/param.h>
