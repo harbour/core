@@ -1,4 +1,3 @@
-#define HB_FM_STATISTICS
 /*
  * The Fixed Memory API
  *
