@@ -161,6 +161,7 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
    /* Assemble list of primary targets (registered projects in or under current directory) */
 
    hProjectReqList := { => }
+
    IF hb_DirExists( AllTrim( cOptionsUser ) )
       cCustomDir := hb_cwd( AllTrim( cOptionsUser ) )
       cOptionsUser := ""
