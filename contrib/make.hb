@@ -161,7 +161,6 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
    /* Assemble list of primary targets (registered projects in or under current directory) */
 
    hProjectReqList := { => }
-
    IF hb_DirExists( AllTrim( cOptionsUser ) )
       cCustomDir := hb_cwd( AllTrim( cOptionsUser ) )
       cOptionsUser := ""
@@ -484,7 +483,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
 
    LOCAL cStdOut
-   LOCAL tmp
+   LOCAL tmp, tmp1
    LOCAL hInfo
 
    LOCAL nErrorLevel
@@ -512,15 +511,12 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
                LOOP
             ENDIF
 #endif
-            tmp := hb_PathRelativize( hb_FNameDir( hb_DirSepDel( hb_cwd() ) ), hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" ) ) ) )
-            /* Hack to doctor path of dependencies that are
-               specified as relative paths inside .hbp files
-               (these are typically '3rd' subprojects) */
-            IF hb_LeftEq( tmp, ".." + hb_ps() )
-               tmp := SubStr( tmp, Len( ".." + hb_ps() ) + 1 )
-            ENDIF
+            tmp1 := hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" )
+            tmp1 := hb_PathNormalize( hb_PathRelativize( ;
+               hb_PathNormalize( hb_PathJoin( hb_DirSepToOS( hb_cwd() ), hb_DirSepToOS( hb_DirBase() ) ) ), ;
+               hb_PathNormalize( hb_PathJoin( hb_DirSepToOS( hb_cwd() ), tmp1 ) ) ) )
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ), ;
-               "cFileName_HBP" => StrTran( tmp, "\", "/" ) } )
+               "cFileName_HBP" => StrTran( tmp1, "\", "/" ) } )
          ENDIF
       NEXT
    ELSE
