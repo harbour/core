@@ -144,11 +144,11 @@ Evaluate these points before reporting an issue:
     the problem using the latest Harbour revision at the time of the report.
     Do not post links to executables and other binary files. If your source
     contains non-ASCII and non-UTF-8 national, accented, special chars, make
-    sure to mark the codepage/encoding used and use Chr()/hb_BCode() calls
+    sure to mark the codepage/encoding used and use `Chr()`/`hb_BCode()` calls
     to form the strings. UTF-8 is recommended. Notice that code examples
     are likely to be executed as hbrun scripts for testing, so it's
     a good idea to make them work this way.<br />
-    Also make sure to not report multiple issues under one GitHub Issue.<br />
+    Also make sure not to report multiple issues under one GitHub Issue.<br />
     * See more on self-contained examples:
       <http://sscce.org/>
     * See more on how to report issues in an effective and useful way:
