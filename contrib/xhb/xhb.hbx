@@ -469,6 +469,7 @@ DYNAMIC xhb_SetTraceStack
 DYNAMIC xhb_TMemoEditor
 DYNAMIC xhb_Trim
 DYNAMIC xhb__Keyboard
+DYNAMIC xhb__Run
 DYNAMIC XIsPrinter
 DYNAMIC _Array
 DYNAMIC _Block
