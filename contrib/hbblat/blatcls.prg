@@ -338,20 +338,16 @@ METHOD PROCEDURE Check() CLASS HBBlat
          IF ! ::lIgnoreErrors
             RETURN
          ENDIF
+      ELSEIF HB_ISSTRING( ::cBody )
+         ::cCommand += ' -body "' + ::cBody + '"'
+      ELSEIF hb_FileExists( ::cBodyFile )
+         ::cCommand += " -bodyF " + ::cBodyFile
       ELSE
-         IF HB_ISSTRING( ::cBody )
-            ::cCommand += ' -body "' + ::cBody + '"'
-         ELSE
-            IF hb_FileExists( ::cBodyFile )
-               ::cCommand += " -bodyF " + ::cBodyFile
-            ELSE
-               ::nError := BLAT_ERR_MISSING_BODYFILE
-               ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODYFILE ) + ": " + ::cBodyFile
-               AAdd( ::aErrors, { ::nError, ::cError } )
-               IF ! ::lIgnoreErrors
-                  RETURN
-               ENDIF
-            ENDIF
+         ::nError := BLAT_ERR_MISSING_BODYFILE
+         ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODYFILE ) + ": " + ::cBodyFile
+         AAdd( ::aErrors, { ::nError, ::cError } )
+         IF ! ::lIgnoreErrors
+            RETURN
          ENDIF
       ENDIF
 
