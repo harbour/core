@@ -604,26 +604,6 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
    {
       PHB_TRACEINFO pTrace;
 
-      pTrace = hb_traceinfo();
-      if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
-      {
-         /* NOTE: PRG line number/procname is not very useful during hunting
-          * for memory leaks - this is why we are using the previously stored
-          * function/line info - this is a location of code that called
-          * hb_xalloc()/hb_xgrab()
-          */
-         pMem->uiProcLine = pTrace->line; /* C line number */
-         if( pTrace->file )
-            hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
-         else
-            pMem->szProcName[ 0 ] = '\0';
-         pTrace->level = -1;
-      }
-      else
-      {
-         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
-      }
-
       HB_FM_LOCK();
 
       if( ! s_pFirstBlock )
@@ -642,6 +622,26 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
       pMem->u32Signature = HB_MEMINFO_SIGNATURE;
       HB_FM_SETSIG( HB_MEM_PTR( pMem ), nSize );
       pMem->nSize = nSize;  /* size of the memory block */
+
+      pTrace = hb_traceinfo();
+      if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
+      {
+         /* NOTE: PRG line number/procname is not very useful during hunting
+          * for memory leaks - this is why we are using the previously stored
+          * function/line info - this is a location of code that called
+          * hb_xalloc/hb_xgrab
+          */
+         pMem->uiProcLine = pTrace->line; /* C line number */
+         if( pTrace->file )
+            hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
+         else
+            pMem->szProcName[ 0 ] = '\0';
+         pTrace->level = -1;
+      }
+      else
+      {
+         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
+      }
 
       s_nMemoryConsumed += nSize + sizeof( HB_COUNTER );
       if( s_nMemoryMaxConsumed < s_nMemoryConsumed )
@@ -690,26 +690,6 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
    {
       PHB_TRACEINFO pTrace;
 
-      pTrace = hb_traceinfo();
-      if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
-      {
-         /* NOTE: PRG line number/procname is not very useful during hunting
-          * for memory leaks - this is why we are using the previously stored
-          * function/line info - this is a location of code that called
-          * hb_xalloc()/hb_xgrab()
-          */
-         pMem->uiProcLine = pTrace->line; /* C line number */
-         if( pTrace->file )
-            hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
-         else
-            pMem->szProcName[ 0 ] = '\0';
-         pTrace->level = -1;
-      }
-      else
-      {
-         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
-      }
-
       HB_FM_LOCK();
 
       if( ! s_pFirstBlock )
@@ -728,6 +708,26 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
       pMem->u32Signature = HB_MEMINFO_SIGNATURE;
       HB_FM_SETSIG( HB_MEM_PTR( pMem ), nSize );
       pMem->nSize = nSize;  /* size of the memory block */
+
+      pTrace = hb_traceinfo();
+      if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
+      {
+         /* NOTE: PRG line number/procname is not very useful during hunting
+          * for memory leaks - this is why we are using the previously stored
+          * function/line info - this is a location of code that called
+          * hb_xalloc/hb_xgrab
+          */
+         pMem->uiProcLine = pTrace->line; /* C line number */
+         if( pTrace->file )
+            hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
+         else
+            pMem->szProcName[ 0 ] = '\0';
+         pTrace->level = -1;
+      }
+      else
+      {
+         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
+      }
 
       s_nMemoryConsumed += nSize + sizeof( HB_COUNTER );
       if( s_nMemoryMaxConsumed < s_nMemoryConsumed )
@@ -793,6 +793,8 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
 
       HB_FM_CLRSIG( pMem, nMemSize );
 
+      HB_FM_LOCK();
+
 #ifdef HB_PARANOID_MEM_CHECK
       pMem = malloc( HB_ALLOC_SIZE( nSize ) );
       if( pMem )
@@ -811,8 +813,6 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
 #else
       pMem = realloc( pMemBlock, HB_ALLOC_SIZE( nSize ) );
 #endif
-
-      HB_FM_LOCK();
 
       s_nMemoryConsumed += ( nSize - nMemSize );
       if( s_nMemoryMaxConsumed < s_nMemoryConsumed )
