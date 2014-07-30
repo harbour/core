@@ -193,8 +193,8 @@ FUNCTION tip_MailAssemble( ;
             oAttach:SetFieldOption( "Content-Type", "charset", cCharset )
          ENDIF
          oAttach:SetFieldOption( "Content-Type", "name", hb_FNameNameExt( cFileCP ) )  // Some e-mail clients use Content-Type to check for filename
-         IF nAttr != 0
-            oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( __tip_FAttrToUmask( nAttr ), 4 ) )
+         IF ( nAttr := __tip_FAttrToUmask( nAttr ) ) != 0 != 0
+            oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( nAttr, 4 ) )
          ENDIF
          oAttach:SetBody( cData )
          oMail:Attach( oAttach )
