@@ -142,7 +142,7 @@ static const MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 47 { 0, "PK\x03\x04", "application/x-zip", 0, 0, 0 }, 2010-12-15 support of xlsx/ods */
 
    /* xml */
-   /* 48*/ { 0,  "<?xml",                             "text/xml",                      0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 48*/ { 0,  "<?xml",                             "application/xml",               0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
 
    /* html */
    /* 49*/ { 0,  "<html",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
@@ -530,7 +530,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "xls"     , MIME_FLAG_CASEINSENS, "application/excel" },
    { "xlsx"    , MIME_FLAG_CASEINSENS, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
    { "xlt"     , MIME_FLAG_CASEINSENS, "application/xlt" },
-   { "xml"     , MIME_FLAG_CASEINSENS, "text/xml" },
+   { "xml"     , MIME_FLAG_CASEINSENS, "application/xml" },
    { "xpi"     , MIME_FLAG_CASEINSENS, "application/x-xpinstall" },
    { "xpm"     , MIME_FLAG_CASEINSENS, "image/x-xpixmap" },
    { "xwd"     , MIME_FLAG_CASEINSENS, "image/x-xwindowdump" },

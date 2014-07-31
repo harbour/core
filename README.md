@@ -53,7 +53,7 @@ of Harbour in the README of the upstream source.
 > Recommended
 > [for](https://groups.google.com/forum/#!msg/harbour-users/2fwUzdKwpKA/32nI4WhZLfYJ)
 > [users](https://groups.google.com/forum/#!msg/harbour-users/Ro99f8S6my0/KvfjhCx_jE4J)
-> contributing to development, following [commits](https://github.com/vszakats/harbour-core/commits/master) and reading
+> [contributing](CONTRIBUTING.md) to development, following [commits](https://github.com/vszakats/harbour-core/commits/master) and reading
 > [ChangeLog.txt](ChangeLog.txt?raw=true).
 
 ### Harbour live source repository
@@ -1663,6 +1663,7 @@ Supported shells per host platforms:
 # Harbour Links
 
   * [Homepage](https://vszakats.github.io/harbour-core/)
+  * [How to contribute](CONTRIBUTING.md)
   * [Source code](https://github.com/vszakats/harbour-core)
   * [Issues](https://github.com/vszakats/harbour-core/issues)
   * [Localization](https://www.transifex.com/projects/p/harbour/)

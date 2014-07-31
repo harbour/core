@@ -658,6 +658,15 @@ METHOD FileSize( cFileSpec ) CLASS TIPClientFTP
 
    RETURN nSize
 
+/* TODO: listing formats from libcurl
+   https://github.com/bagder/curl/blob/master/lib/ftplistparser.c
+   UNIX version 1: drwxr-xr-x 1 user01 ftp  512 Jan 29 23:32 prog
+   UNIX version 2: drwxr-xr-x 1 user01 ftp  512 Jan 29 1997  prog
+   UNIX version 3: drwxr-xr-x 1      1   1  512 Jan 29 23:32 prog
+   UNIX symlink  : lrwxr-xr-x 1 user01 ftp  512 Jan 29 23:32 prog -> prog2000
+   DOS style/IIS : 01-29-97 11:32PM <DIR> prog
+ */
+
 // Parse the :list() string into a Directory() compatible 2-dim array
 METHOD ListFiles( cFileSpec ) CLASS TIPClientFTP
 

@@ -188,8 +188,7 @@ FUNCTION tip_MailAssemble( ;
          oAttach:SetFieldPart( "Content-Disposition", "attachment" )
          oAttach:SetFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFileCP ) )  // Usually, original filename is set here
          oAttach:SetFieldPart( "Content-Type", cMimeType )
-         IF Lower( hb_FNameExt( cFile ) ) == ".html" .OR. ;
-            Lower( hb_FNameExt( cFile ) ) == ".htm"
+         IF cMimeType == "text/html"
             oAttach:SetFieldOption( "Content-Type", "charset", cCharset )
          ENDIF
          oAttach:SetFieldOption( "Content-Type", "name", hb_FNameNameExt( cFileCP ) )  // Some e-mail clients use Content-Type to check for filename
