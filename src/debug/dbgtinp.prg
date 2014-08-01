@@ -68,7 +68,6 @@ CREATE CLASS HbDbInput
    VAR nSize   AS INTEGER
    VAR cValue  AS CHARACTER
    VAR acColor AS ARRAY
-   VAR lFocus  AS LOGICAL     INIT .F.
 
    EXPORTED:
 
@@ -76,9 +75,8 @@ CREATE CLASS HbDbInput
    METHOD applyKey( nKey )
    METHOD getValue()
    METHOD setValue( cValue )
-   METHOD setFocus()
-   METHOD killFocus()
    METHOD display()
+   METHOD showCursor()
    METHOD newPos( nRow, nCol )
    METHOD setColor( cColor )
 
@@ -91,7 +89,6 @@ METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize ) CLASS HbDbInput
    ::nWidth := nWidth
    ::nSize  := iif( HB_ISNUMERIC( nSize ), nSize, nWidth )
    ::cValue := PadR( cValue, ::nSize )
-   ::nRow   := nRow
 
    ::setColor( cColor )
 
@@ -99,16 +96,10 @@ METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize ) CLASS HbDbInput
 
 METHOD SetColor( cColor ) CLASS HbDbInput
 
-   ::acColor := { ;
-      hb_ColorIndex( cColor, CLR_STANDARD ), ;
-      hb_ColorIndex( cColor, CLR_ENHANCED ) }
+   ::acColor := { hb_ColorIndex( cColor, CLR_STANDARD ), ;
+                  hb_ColorIndex( cColor, CLR_ENHANCED ) }
    IF hb_ColorToN( ::acColor[ 2 ] ) == -1
-      ::acColor[ 2 ] := iif( hb_ColorToN( ::acColor[ 1 ] ) != -1, ;
-         ::acColor[ 1 ], ;
-         hb_ColorIndex( SetColor(), CLR_ENHANCED ) )
-   ENDIF
-   IF hb_ColorToN( ::acColor[ 1 ] ) == -1
-      ::acColor[ 1 ] := hb_ColorIndex( SetColor(), CLR_STANDARD )
+      ::acColor[ 2 ] := ::acColor[ 1 ]
    ENDIF
 
    RETURN Self
@@ -117,24 +108,6 @@ METHOD newPos( nRow, nCol ) CLASS HbDbInput
 
    ::nRow := nRow
    ::nCol := nCol
-
-   RETURN Self
-
-METHOD setFocus() CLASS HbDbInput
-
-   IF ! ::lFocus
-      ::lFocus := .T.
-      ::display()
-   ENDIF
-
-   RETURN Self
-
-METHOD killFocus() CLASS HbDbInput
-
-   IF ::lFocus
-      ::lFocus := .F.
-      ::display()
-   ENDIF
 
    RETURN Self
 
@@ -156,11 +129,14 @@ METHOD display() CLASS HbDbInput
       ::nFirst := ::nPos - ::nWidth + 1
    ENDIF
    hb_DispOutAt( ::nRow, ::nCol, SubStr( ::cValue, ::nFirst, ::nWidth ), ;
-      ::acColor[ iif( ::lFocus, 2, 1 ) ] )
-   IF ::lFocus
-      SetPos( ::nRow, ::nCol + ::nPos - ::nFirst )
-      SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
-   ENDIF
+                 ::acColor[ 2 ] )
+
+   RETURN Self
+
+METHOD showCursor() CLASS HbDbInput
+
+   SetPos( ::nRow, ::nCol + ::nPos - ::nFirst )
+   SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
 
    RETURN Self
 

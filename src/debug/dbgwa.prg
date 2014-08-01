@@ -69,32 +69,25 @@ PROCEDURE __dbgShowWorkAreas()
    LOCAL n1
    LOCAL n2
    LOCAL n3 := 1
-   LOCAL cur_id := 1
+   LOCAL cur_id
 
    LOCAL nOldArea := Select()
 
-   /* We can't determine the last used area, so use 512 here */
-   FOR n1 := 1 TO 512
-      IF ( n1 )->( Used() )
-         AAdd( aAlias, { n1, Alias( n1 ) } )
-         IF n1 == nOldArea
-            cur_id := Len( aAlias )
-         ENDIF
-      ENDIF
-   NEXT
+   hb_WAEval( {|| AAdd( aAlias, { select(), Alias() } ) } )
 
    IF Len( aAlias ) == 0
       __dbgAlert( "No workareas in use" )
       RETURN
    ENDIF
 
-   IF ! Used()
+   IF ( cur_id := AScan( aAlias, {| x | x[ 1 ] == nOldArea } ) ) == 0
+      cur_id := 1
       dbSelectArea( aAlias[ 1 ][ 1 ] )
    ENDIF
 
    /* Window creation */
 
-   oDlg := HBDbWindow():New( 2, 3, 21, 74, "", cColor )
+   oDlg := HBDbWindow():New( 2, 3, 21, 76, "", cColor )
 
    oDlg:bKeyPressed := {| nKey | DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, @aStruc, @aInfo ) }
    oDlg:bPainted    := {|| DlgWorkAreaPaint( oDlg, aBrw ) }
@@ -116,11 +109,15 @@ PROCEDURE __dbgShowWorkAreas()
 
    oCol:ColorBlock := {|| iif( aAlias[ n1 ][ 1 ] == Select(), { 3, 4 }, { 1, 2 } ) }
 
+   IF cur_id > 1
+      aBrw[ 1 ]:Configure():MoveCursor( cur_id - 1 )
+   ENDIF
+
    /* Info Browse */
 
    aInfo := ( aAlias[ n1 ][ 1 ] )->( DbfInfo() )
 
-   aBrw[ 2 ] := HBDbBrowser():new( oDlg:nTop + 7, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 50 )
+   aBrw[ 2 ] := HBDbBrowser():new( oDlg:nTop + 7, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 52 )
 
    aBrw[ 2 ]:Cargo         := ( n2 := 1 )
    aBrw[ 2 ]:ColorSpec     := oDlg:cColor
@@ -131,7 +128,7 @@ PROCEDURE __dbgShowWorkAreas()
       Max( 1, n2 + nSkip ) ), ;
       n2 - nPos }
 
-   aBrw[ 2 ]:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( aInfo[ n2 ], 38 ) } ) )
+   aBrw[ 2 ]:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( aInfo[ n2 ], 40 ) } ) )
 
    oCol:ColorBlock := {|| iif( aAlias[ n1 ][ 1 ] == Select() .AND. n2 == 1, { 3, 4 }, { 1, 2 } ) }
 
@@ -139,7 +136,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    aStruc := ( aAlias[ n1 ][ 1 ] )->( dbStruct() )
 
-   aBrw[ 3 ] := HBDbBrowser():new( oDlg:nTop + 1, oDlg:nLeft + 52, oDlg:nBottom - 1, oDlg:nLeft + 70 )
+   aBrw[ 3 ] := HBDbBrowser():new( oDlg:nTop + 1, oDlg:nLeft + 54, oDlg:nBottom - 1, oDlg:nLeft + 72 )
 
    aBrw[ 3 ]:Cargo         := n3 := 1
    aBrw[ 3 ]:ColorSpec     := oDlg:cColor
@@ -149,10 +146,10 @@ PROCEDURE __dbgShowWorkAreas()
       aBrw[ 3 ]:Cargo := n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ), ;
       Max( 1, n3 + nSkip ) ), n3 - nPos }
 
-   aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| PadR( aStruc[ n3, 1 ], 11 ) + ;
-      aStruc[ n3, 2 ] + ;
-      Str( aStruc[ n3, 3 ], 4 ) + ;
-      Str( aStruc[ n3, 4 ], 3 ) } ) )
+   aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| PadR( aStruc[ n3, 1 ], 10 ) + " " + ;
+      Padr( aStruc[ n3, 2 ], 1 ) + " " + ;
+      Str( aStruc[ n3, 3 ], 3 ) + " " + ;
+      Str( aStruc[ n3, 4 ], 2 ) } ) )
 
    /* Show dialog */
 
@@ -176,21 +173,21 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
    hb_DispOutAtBox( oDlg:nTop, oDlg:nLeft + 12, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
    hb_DispOutAtBox( oDlg:nBottom, oDlg:nLeft + 12, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
 
-   hb_DispBox( oDlg:nTop + 1, oDlg:nLeft + 51, oDlg:nBottom - 1, oDlg:nLeft + 51, HB_B_SINGLE_UNI, oDlg:cColor )
-   hb_DispOutAtBox( oDlg:nTop, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
-   hb_DispOutAtBox( oDlg:nBottom, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
+   hb_DispBox( oDlg:nTop + 1, oDlg:nLeft + 53, oDlg:nBottom - 1, oDlg:nLeft + 53, HB_B_SINGLE_UNI, oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nTop, oDlg:nLeft + 53, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nBottom, oDlg:nLeft + 53, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
 
-   hb_DispBox( oDlg:nTop + 6, oDlg:nLeft + 13, oDlg:nTop + 6, oDlg:nLeft + 50, HB_B_SINGLE_UNI, oDlg:cColor )
+   hb_DispBox( oDlg:nTop + 6, oDlg:nLeft + 13, oDlg:nTop + 6, oDlg:nLeft + 52, HB_B_SINGLE_UNI, oDlg:cColor )
    hb_DispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 12, hb_UTF8ToStrBox( "├" ), oDlg:cColor )
-   hb_DispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┤" ), oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 53, hb_UTF8ToStrBox( "┤" ), oDlg:cColor )
 
    /* Display labels */
 
-   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 13, "Alias:                Record:         ", oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 13, "   BOF:         Deleted:              ", oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 13, "   EOF:           Found:              ", oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 13, "Filter:                               ", oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 13, "   Key:                               ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 15, "Alias:                Record:         ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 15, "   BOF:         Deleted:              ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 15, "   EOF:           Found:              ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 15, "Filter:                               ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 15, "   Key:                               ", oDlg:cColor )
 
    /* Stabilize browse */
 
@@ -299,7 +296,6 @@ STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
 STATIC FUNCTION DbfInfo( aInfo )
 
    LOCAL nFor
-   LOCAL xType
    LOCAL xValue
    LOCAL cValue
 
@@ -320,39 +316,21 @@ STATIC FUNCTION DbfInfo( aInfo )
    FOR nFor := 1 TO FCount()
 
       xValue := __Dbg():GetExprValue( "FieldGet(" + hb_ntos( nFor ) + ")" )
-      xType  := ValType( xValue )
 
-      SWITCH xType
+      SWITCH ValType( xValue )
       CASE "C"
       CASE "M"
          cValue := xValue
          EXIT
-      CASE "N"
-         cValue := hb_ntos( xValue )
-         EXIT
-      CASE "D"
-         cValue := DToC( xValue )
-         EXIT
-      CASE "T"
-         cValue := hb_TSToStr( xValue )
-         EXIT
+#ifdef HB_CLP_STRICT
       CASE "L"
-         cValue := iif( xValue, ".T.", ".F." )
-         EXIT
-      CASE "A"
-         cValue := "Array"
-         EXIT
-      CASE "H"
-         cValue := "Hash"
-         EXIT
-      CASE "U"
-         cValue := "NIL"
-         EXIT
+         cValue := iif( xValue, "T", "F" )
+#endif
       OTHERWISE
-         cValue := "Error"
+         cValue := __dbgValToStr( xValue )
       ENDSWITCH
 
-      AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10 ) + " = " + PadR( cValue, 17 ) )
+      AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10 ) + " = " + PadR( cValue, 19 ) )
 
    NEXT
 
@@ -375,12 +353,12 @@ STATIC PROCEDURE UpdateInfo( oDlg, cAlias )
       PadR( hb_ntos( RecNo() ) + "/" + hb_ntos( LastRec() ), 9 ), ;
       oDlg:cColor )
 
-   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 21, iif( Bof(), "Yes", "No " ), oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 38, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 21, iif( Eof(), "Yes", "No " ), oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 38, iif( Found(), "Yes", "No " ), oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 21, PadR( dbFilter(), 29 ), oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 21, PadR( ordKey(), 29 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 23, iif( Bof(), "Yes", "No " ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 40, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 23, iif( Eof(), "Yes", "No " ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 40, iif( Found(), "Yes", "No " ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 23, PadR( dbFilter(), 29 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 23, PadR( ordKey(), 29 ), oDlg:cColor )
 
    dbSelectArea( nOldArea )
 

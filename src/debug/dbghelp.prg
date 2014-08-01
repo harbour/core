@@ -82,7 +82,7 @@ PROCEDURE __dbgHelp( nTopic )
    oBrw:GoBottomBlock := {|| oBrw:Cargo := Len( aTopics ) }
 
    IF nTopic > 1
-      Eval( oBrw:SkipBlock, nTopic - 1 )
+      oBrw:nFirstVisible := nTopic
    ENDIF
 
    oDlg:bPainted := {|| PaintWindow( oDlg, oBrw, aTopics ) }
@@ -209,19 +209,15 @@ STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
       ENDCASE
    ENDIF
 
-   hb_Scroll( oDlg:nTop + 1, oDlg:nLeft + 14, oDlg:nBottom - 1, oDlg:nRight - 1 )
+   hb_Scroll( oDlg:nTop + 1, oDlg:nLeft + 14, oDlg:nBottom - 1, oDlg:nRight - 1,,, oDlg:cColor )
 
    nRowsToPaint := Min( nRows, Len( aTopics[ nTopic ][ 2 ] ) - ( ( oDebug:nHelpPage - 1 ) * nRows ) )
 
    FOR n := 1 TO nRowsToPaint
-      hb_DispOutAt( 2 + n, 16, aTopics[ nTopic ][ 2 ][ ( ( oDebug:nHelpPage - 1 ) * nRows ) + n ] )
+      hb_DispOutAt( 2 + n, 16, aTopics[ nTopic ][ 2 ][ ( ( oDebug:nHelpPage - 1 ) * nRows ) + n ], oDlg:cColor )
    NEXT
 
-   IF Len( aTopics[ nTopic ][ 2 ] ) <= nRows
-      hb_DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page 1 of 1 " )
-   ELSE
-      hb_DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page " + Str( oDebug:nHelpPage, 1 ) + " of " + Str( nPages, 1 ) + " " )
-   ENDIF
+   hb_DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page " + Str( oDebug:nHelpPage, 1 ) + " of " + Str( nPages, 1 ) + " ", oDlg:cColor )
 
    RETURN
 

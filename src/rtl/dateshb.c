@@ -446,10 +446,7 @@ HB_FUNC( HB_TSTOSTR )
             if( lDate == 0 )
                hb_retc_const( "00:00" );
             else
-            {
-               szBuffer[ 10 ] = '\0';
-               hb_retc( szBuffer );
-            }
+               hb_retclen( szBuffer, 10 );
          }
          else
          {
@@ -462,15 +459,14 @@ HB_FUNC( HB_TSTOSTR )
                if( szBuffer[ i - 1 ] == '0' && szBuffer[ i - 2 ] == '0' )
                   i -= 3;
             }
-            szBuffer[ i ] = '\0';
             if( lDate == 0 )
-               hb_retc( szBuffer + 11 );
+               hb_retclen( szBuffer + 11, i - 11 );
             else
-               hb_retc( szBuffer );
+               hb_retclen( szBuffer, i );
          }
       }
       else
-         hb_retc( szBuffer );
+         hb_retclen( szBuffer, 23 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -497,6 +497,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
 #elif defined( HB_OS_UNIX ) && \
       ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
 
+      char ** argv = hb_buildArgs( pszFileName );
       pid_t pid = fork();
 
       if( pid == -1 )
@@ -572,18 +573,15 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
 
          /* execute command */
          {
-            char ** argv;
-
-            argv = hb_buildArgs( pszFileName );
 #  if defined( __WATCOMC__ )
             execvp( argv[ 0 ], ( const char ** ) argv );
 #  else
             execvp( argv[ 0 ], argv );
 #  endif
-            hb_freeArgs( argv );
             exit( -1 );
          }
       }
+      hb_freeArgs( argv );
 
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
 
@@ -757,6 +755,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
       RESULTCODES resultCodes = { 0, 0 };
       APIRET ret;
 
+      hb_vmUnlock();
       ret = DosWaitChild( DCWA_PROCESS, fWait ? DCWW_WAIT : DCWW_NOWAIT,
                           &resultCodes, &pid, pid );
       hb_fsSetIOError( ret == NO_ERROR, 0 );
@@ -764,6 +763,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
          iRetStatus = resultCodes.codeResult;
       else
          iRetStatus = -2;
+      hb_vmLock();
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );

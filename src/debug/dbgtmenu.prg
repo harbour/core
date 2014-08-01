@@ -219,21 +219,18 @@ METHOD Display() CLASS HBDbMenu
 
    LOCAL oMenuItem
 
-   SetColor( ::cClrPopup )
-
    IF ! ::lPopup
-      hb_DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
-      SetPos( 0, 0 )
+      hb_Scroll( 0, 0, 0, MaxCol(),,, ::cClrPopup )
    ELSE
       ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
-      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, HB_B_SINGLE_UNI )
+      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, HB_B_SINGLE_UNI, ::cClrPopup )
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ENDIF
 
    FOR EACH oMenuItem IN ::aItems
       IF oMenuItem:cPrompt == "-"  // Separator
          hb_DispOutAtBox( oMenuItem:nRow, ::nLeft, ;
-            hb_UTF8ToStrBox( "├" + Replicate( "─", ::nRight - ::nLeft - 1 ) + "┤" ) )
+            hb_UTF8ToStrBox( "├" + Replicate( "─", ::nRight - ::nLeft - 1 ) + "┤" ), ::cClrPopup )
       ELSE
          oMenuItem:Display( ::cClrPopup, ::cClrHotKey )
       ENDIF
@@ -399,8 +396,7 @@ METHOD Refresh() CLASS HBDbMenu
    DispBegin()
 
    IF ! ::lPopup
-      hb_DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
-      SetPos( 0, 0 )
+      hb_Scroll( 0, 0, 0, MaxCol(),,, ::cClrPopup )
    ENDIF
 
    FOR EACH oMenuItem IN ::aItems

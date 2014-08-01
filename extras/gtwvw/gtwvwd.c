@@ -8170,7 +8170,7 @@ HB_FUNC( WVW_SETICON )
    else
    {
       void * hImageName;
-      hb_retptr( ( void * ) hb_gt_wvwSetWindowIconFromFile( usWinNum, HB_PARSTRDEF( 1, &hImageName, NULL ) ) );
+      hb_retptr( ( void * ) hb_gt_wvwSetWindowIconFromFile( usWinNum, HB_PARSTRDEF( 2, &hImageName, NULL ) ) );
       hb_strfree( hImageName );
    }
 }

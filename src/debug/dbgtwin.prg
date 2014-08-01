@@ -131,8 +131,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
 
 METHOD Clear() CLASS HBDbWindow
 
-   SetColor( ::cColor )
-   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
+   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1,,, ::cColor )
 
    RETURN NIL
 
@@ -154,8 +153,7 @@ METHOD ScrollUp( nLines ) CLASS HBDbWindow
 
    hb_default( @nLines, 1 )
 
-   SetColor( ::cColor )
-   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines )
+   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines,, ::cColor )
 
    RETURN NIL
 
@@ -208,15 +206,11 @@ METHOD Refresh() CLASS HBDbWindow
 
 METHOD Show( lFocused ) CLASS HBDbWindow
 
-   LOCAL nRow := Row()
-   LOCAL nCol := Col()
-
    hb_default( @lFocused, ::lFocused )
 
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ), ;
       ::nRight + iif( ::lShadow, 2, 0 ) )
-   SetColor( ::cColor )
-   hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
+   hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,,, ::cColor )
    ::SetFocus( lFocused )
 
    IF ::lShadow
@@ -225,8 +219,6 @@ METHOD Show( lFocused ) CLASS HBDbWindow
 
    ::Refresh()
    ::lVisible := .T.
-
-   SetPos( nRow, nCol )
 
    RETURN NIL
 
@@ -239,7 +231,7 @@ METHOD ShowModal() CLASS HBDbWindow
    ::Show()
 
    DO WHILE ! lExit
-      nKey := Inkey( 0, INKEY_ALL )
+      nKey := __dbgInkey()
 
       IF ::bKeyPressed != NIL
          Eval( ::bKeyPressed, nKey )
@@ -287,9 +279,9 @@ METHOD Move() CLASS HBDbWindow
 
    DO WHILE .T.
       RestScreen( ,,,, ::cBackImage )
-      hb_DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " " )
+      hb_DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " ", ::cColor )
 
-      nKey := Inkey( 0, INKEY_ALL )
+      nKey := __dbgInkey()
 
       DO CASE
       CASE nKey == K_UP
@@ -334,7 +326,7 @@ METHOD Move() CLASS HBDbWindow
       ENDIF
    ENDDO
 
-   // hb_keyPut( 0 ); Inkey()
+   // hb_keySetLast( 0 )
 
    RETURN NIL
 

@@ -1216,8 +1216,8 @@ void hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine )
    {
       szProcName[ 0 ] = '\0';
       * puiProcLine = 0;
-      return;
    }
+   else
 #endif
    {
       HB_STACK_TLS_PRELOAD

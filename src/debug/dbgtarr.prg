@@ -87,7 +87,6 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    LOCAL oBrwSets
    LOCAL nSize := Len( aArray )
    LOCAL oWndSets
-   LOCAL nWidth
    LOCAL nColWidth
    LOCAL oCol
 
@@ -105,9 +104,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    oWndSets:lFocused := .T.
    AAdd( ::aWindows, oWndSets )
 
-   nWidth := oWndSets:nRight - oWndSets:nLeft - 1
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
-   oBrwSets:autolite := .F.
    oBrwSets:ColorSpec := __Dbg():ClrModal()
    oBrwSets:Cargo := { 1, {} } // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], aArray )
@@ -117,35 +114,20 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    oCol:DefColor := { 1, 2 }
    nColWidth := oCol:Width
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( __dbgValToStr( aArray[ oBrwSets:cargo[ 1 ] ] ), nWidth - nColWidth - 1 ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| __dbgValToExp( aArray[ oBrwSets:cargo[ 1 ] ] ) } ) )
 
-   /* 2004-08-09 - <maurilio.longo@libero.it>
-                   Setting a fixed width like it is done in the next line of code wich I've
-                   commented exploits a bug of current tbrowse, that is, if every column is
-                   narrower than tbrowse but the sum of them is wider tbrowse paints
-                   one above the other if code like the one inside RefreshVarsS() is called.
-                   (That code is used to have current row fully highlighted and not only
-                   current cell). Reproducing this situation on a smaller sample with
-                   clipper causes that only column two is visible after first stabilization.
-
-                   I think tbrowse should trim columns up until the point where at leat
-                   two are visible in the same moment, I leave this fix to tbrowse for
-                   the reader ;)
-   oCol:width := 50
-   */
-
+   oCol:width := oWndSets:nRight - oWndSets:nLeft - nColWidth - 2
    oCol:defColor := { 1, 3 }
 
    oBrwSets:goTopBlock := {|| oBrwSets:cargo[ 1 ] := 1 }
    oBrwSets:goBottomBlock := {|| oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
-   oBrwSets:skipBlock := {| nPos | ( nPos := ArrayBrowseSkip( nPos, oBrwSets ), oBrwSets:cargo[ 1 ] := ;
-      oBrwSets:cargo[ 1 ] + nPos, nPos ) }
+   oBrwSets:skipBlock := {| nPos | nPos := ArrayBrowseSkip( nPos, oBrwSets ), ;
+                                   oBrwSets:cargo[ 1 ] := oBrwSets:cargo[ 1 ] + nPos, nPos }
+   oBrwSets:colPos := 2
 
-   ::aWindows[ ::nCurWindow ]:bPainted    := {|| ( oBrwSets:forcestable(), RefreshVarsS( oBrwSets ) ) }
-   ::aWindows[ ::nCurWindow ]:bKeyPressed := {| nKey | ::SetsKeyPressed( nKey, oBrwSets, ;
-      ::aWindows[ ::nCurWindow ], ::arrayName, aArray ) }
-
-   SetCursor( SC_NONE )
+   ::aWindows[ ::nCurWindow ]:bPainted    := {|| oBrwSets:forcestable() }
+   ::aWindows[ ::nCurWindow ]:bKeyPressed := ;
+      {| nKey | ::SetsKeyPressed( nKey, oBrwSets, ::aWindows[ ::nCurWindow ], ::arrayName, aArray ) }
 
    ::aWindows[ ::nCurWindow ]:ShowModal()
 
@@ -154,15 +136,17 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
 
    LOCAL oErr
-   LOCAL cValue := PadR( __dbgValToStr( pItem[ nSet ] ), ;
-      oBrowse:nRight - oBrowse:nLeft - oBrowse:GetColumn( 1 ):width )
+   LOCAL cValue
 
    // make sure browse is stable
    oBrowse:forceStable()
    // if confirming new record, append blank
 
-   IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
-     {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
+   cValue := __dbgValToExp( pItem[ nSet ] )
+
+   IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1, ;
+                  oBrowse:getColumn( 2 ):Width, @cValue, ;
+                  __dbgExprValidBlock(), __dbgColors()[ 2 ], 256 )
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          pItem[ nSet ] := &cValue
       RECOVER USING oErr
@@ -177,26 +161,36 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
    LOCAL nSet := oBrwSets:cargo[ 1 ]
    LOCAL cOldName := ::arrayName
 
-   DO CASE
-   CASE nKey == K_UP
+   SWITCH nKey
+   CASE K_UP
       oBrwSets:Up()
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
       oBrwSets:Down()
+      EXIT
 
-   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+   CASE K_HOME
+   CASE K_CTRL_PGUP
+   CASE K_CTRL_HOME
       oBrwSets:GoTop()
+      EXIT
 
-   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+   CASE K_END
+   CASE K_CTRL_PGDN
+   CASE K_CTRL_END
       oBrwSets:GoBottom()
+      EXIT
 
-   CASE nKey == K_PGDN
+   CASE K_PGDN
       oBrwSets:pageDown()
+      EXIT
 
-   CASE nKey == K_PGUP
+   CASE K_PGUP
       oBrwSets:PageUp()
+      EXIT
 
-   CASE nKey == K_ENTER
+   CASE K_ENTER
       IF HB_ISARRAY( aArray[ nSet ] )
          IF Len( aArray[ nSet ] ) == 0
             __dbgAlert( "Array is empty" )
@@ -233,12 +227,12 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          ENDIF
       ENDIF
 
-   ENDCASE
+   ENDSWITCH
 
-   RefreshVarsS( oBrwSets )
+   oBrwSets:forceStable()
 
    ::aWindows[ ::nCurWindow ]:SetCaption( cName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + ".." + ;
-      hb_ntos( Len( aArray ) ) + "]" )
+                                          hb_ntos( Len( aArray ) ) + "]" )
 
    RETURN self
 
@@ -251,23 +245,7 @@ STATIC FUNCTION GetTopPos( nPos )
 STATIC FUNCTION GetBottomPos( nPos )
    RETURN iif( nPos < MaxRow() - 2, nPos, MaxRow() - 2 )
 
-STATIC PROCEDURE RefreshVarsS( oBrowse )
-
-   LOCAL nLen := oBrowse:colCount
-
-   IF nLen == 2
-      oBrowse:deHilite():colPos := 2
-   ENDIF
-   oBrowse:deHilite():forceStable()
-
-   IF nLen == 2
-      oBrowse:hilite():colPos := 1
-   ENDIF
-   oBrowse:hilite()
-
-   RETURN
-
 STATIC FUNCTION ArrayBrowseSkip( nPos, oBrwSets )
    RETURN iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1, ;
-      iif( oBrwSets:cargo[ 1 ] + nPos > Len( oBrwSets:cargo[ 2 ][ 1 ] ), ;
-      Len( oBrwSets:cargo[ 2 ][ 1 ] ) - oBrwSets:cargo[ 1 ], nPos ) )
+               iif( oBrwSets:cargo[ 1 ] + nPos > Len( oBrwSets:cargo[ 2 ][ 1 ] ), ;
+                    Len( oBrwSets:cargo[ 2 ][ 1 ] ) - oBrwSets:cargo[ 1 ], nPos ) )

@@ -406,7 +406,7 @@ HB_FUNC( DBRECORDINFO )
 }
 
 /*
- * DBFILEPUT/BLOB2FILE - retrieve memo contents into file
+ * DBFILEGET/BLOB2FILE - retrieve memo contents into file
  */
 HB_FUNC( DBFILEGET )
 {

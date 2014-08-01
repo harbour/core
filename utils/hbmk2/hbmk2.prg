@@ -6868,9 +6868,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                         IF ! hbmk[ _HBMK_lDONTEXEC ]
                            IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
-                              AAdd( aThreads, { hb_threadStart( @hb_processRun(), cCommand ), cCommand } )
+                              AAdd( aThreads, { hb_threadStart( @hbmk_hb_processRunFile(), cCommand, cScriptFile ), cCommand } )
                            ELSE
-                              IF ( tmp := hb_processRun( cCommand ) ) != 0
+                              IF ( tmp := hbmk_hb_processRunFile( cCommand, cScriptFile ) ) != 0
                                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C/C++ compiler. %1$d" ), tmp ) )
                                  IF ! hbmk[ _HBMK_lQuiet ]
                                     OutErr( cCommand + _OUT_EOL )
@@ -6881,11 +6881,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                                  ENDIF
                               ENDIF
                            ENDIF
-                        ENDIF
-
-                        IF ! Empty( cScriptFile )
+                        ELSEIF ! Empty( cScriptFile )
                            FErase( cScriptFile )
                         ENDIF
+
                      NEXT
 
                      FOR EACH thread IN aThreads
@@ -13160,6 +13159,18 @@ STATIC FUNCTION Apple_App_Template_Info_plist()
 </dict>
 </plist>
 #pragma __endtext
+
+STATIC FUNCTION hbmk_hb_processRunFile( cCommand, cTempFile )
+
+   LOCAL nResult
+
+   nResult := hb_processRun( cCommand )
+
+   IF ! Empty( cTempFile )
+      FErase( cTempFile )
+   ENDIF
+
+   RETURN nResult
 
 STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
 
