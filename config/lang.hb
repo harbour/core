@@ -160,8 +160,9 @@ STATIC PROCEDURE src_push( cMain )
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;
-      ParEscape( hPar[ "login" ] ), cTempContent, hPar[ "project" ], ;
-      TransifexResourceName( hPar ), cTempResult ) )
+      ParEscape( hPar[ "login" ] ), cTempContent, ;
+      TransifexSlugMap( hPar[ "project" ] ), ;
+      TransifexSlugMap( hb_FNameName( hPar[ "entry" ] ) ), cTempResult ) )
 
    IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
       ? hb_ValToExp( json )
@@ -209,8 +210,9 @@ STATIC PROCEDURE trs_pull( cMain )
       lang_hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
          "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/" + ;
          " -o %5$s", ;
-         ParEscape( hPar[ "login" ] ), hPar[ "project" ], ;
-         TransifexResourceName( hPar ), cLang, cTempResult ) )
+         ParEscape( hPar[ "login" ] ), ;
+         TransifexSlugMap( hPar[ "project" ] ), ;
+         TransifexSlugMap( hb_FNameName( hPar[ "entry" ] ) ), cLang, cTempResult ) )
 
       IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
          hb_MemoWrit( cTempResult, json[ "content" ] )
@@ -410,8 +412,9 @@ STATIC PROCEDURE trs_push( cMain )
          'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
          'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/translation/%5$s/' + ;
          ' -o %6$s', ;
-         ParEscape( hPar[ "login" ] ), cTempContent, hPar[ "project" ], ;
-         TransifexResourceName( hPar ), cLang, cTempResult ) )
+         ParEscape( hPar[ "login" ] ), cTempContent, ;
+         TransifexSlugMap( hPar[ "project" ] ), ;
+         TransifexSlugMap( hb_FNameName( hPar[ "entry" ] ) ), cLang, cTempResult ) )
 
       IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
          ? hb_ValToExp( json )
@@ -435,13 +438,17 @@ STATIC FUNCTION lang_hb_run( ... )
 
    RETURN hb_run( ... )
 
-STATIC FUNCTION TransifexResourceName( hPar )
+STATIC FUNCTION TransifexSlugMap( cSlug )
 
-   IF ! Empty( GetEnv( "HB_TRANSIFEX_RESOURCE" ) )
-      RETURN GetEnv( "HB_TRANSIFEX_RESOURCE" )
-   ENDIF
+   LOCAL hMap := { => }, item
 
-   RETURN hb_FNameName( hPar[ "entry" ] )
+   FOR EACH item IN hb_ATokens( GetEnv( "HB_TRANSIFEX_SLUG_MAP" ) )
+      IF Len( item := hb_ATokens( item, ":" ) ) == 2
+         hMap[ item[ 1 ] ] := item[ 2 ]
+      ENDIF
+   NEXT
+
+   RETURN hb_HGetDef( hMap, cSlug, cSlug )
 
 STATIC FUNCTION ArrayToList( array )
 
@@ -517,8 +524,7 @@ STATIC FUNCTION LoadPar( cMain )
          AAdd( hPar[ "docoption" ], item[ 2 ] )
       NEXT
 
-      item := _HAGetDef( hb_regexAll( "-3rd=_langhb_entry=([\S]*)", cConfig,,,,, .T. ), NIL, 1, 2 )
-      IF item != NIL
+      IF ( item := _HAGetDef( hb_regexAll( "-3rd=_langhb_entry=([\S]*)", cConfig,,,,, .T. ), NIL, 1, 2 ) ) != NIL
          item := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( item )
          hPar[ "entry" ] := iif( Empty( hb_FNameName( item ) ), item + hb_FNameName( hb_DirSepDel( item ) ) + ".prg", item )
       ENDIF

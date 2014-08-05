@@ -14003,10 +14003,8 @@ FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
          CASE ">" ; RETURN Lower( tmp ) > Lower( cValue )
          CASE "<" ; RETURN Lower( tmp ) < Lower( cValue )
          ENDSWITCH
-      ELSE
-         IF ! Empty( tmp ) .AND. !( tmp == "0" ) .AND. !( Lower( tmp ) == "no" )
-            RETURN .T.
-         ENDIF
+      ELSEIF ! Empty( tmp ) .AND. !( tmp == "0" ) .AND. !( Lower( tmp ) == "no" )
+         RETURN .T.
       ENDIF
    ENDIF
 
