@@ -172,7 +172,7 @@ METHOD DispRow( nRow, lHiLite ) CLASS HBDbBrowser
    ELSE
       DispBegin()
       nColX := ::nLeft
-      FOR EACH oCOl IN ::aColumns
+      FOR EACH oCol IN ::aColumns
          IF nColX <= ::nRight
             xData := Eval( oCol:block )
             nClr := iif( lHiLite, 2, 1 )
