@@ -84,7 +84,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
 
    /* create list of object messages */
    aMessages := oObject:classSel()
-   ASort( aMessages,,, {| x, y | x + chr( 0 ) < y + chr( 0 ) } )
+   ASort( aMessages,,, {| x, y | x + Chr( 0 ) < y + Chr( 0 ) } )
    aMethods := {}
    FOR EACH cMsg IN aMessages
       IF hb_LeftEq( cMsg, "_" ) .AND. ;

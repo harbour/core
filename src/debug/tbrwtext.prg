@@ -175,7 +175,7 @@ METHOD GetLineColor() CLASS HBBrwText
 
    LOCAL aColor
 
-   IF __dbgIsBreak( __Dbg():pInfo, ::cFileName, ::nRow ) >= 0
+   IF __dbgIsBreak( __dbg():pInfo, ::cFileName, ::nRow ) >= 0
       aColor := iif( ::nRow == ::nActiveLine, { 4, 4 }, { 3, 3 } )
    ELSE
       aColor := iif( ::nRow == ::nActiveLine, { 2, 2 }, { 1, 1 } )
