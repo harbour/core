@@ -91,8 +91,9 @@ CREATE CLASS HBDbBrowser
    ACCESS ColorSpec            INLINE ::cColorSpec
    ASSIGN ColorSpec( cColors ) METHOD SetColorSpec( cColors )
    METHOD Configure()
-   METHOD DeHiLite()           INLINE Self
-   METHOD HiLite()             INLINE Self
+   METHOD DeHiLite()           INLINE ::DispRow( ::rowPos, .F. )
+   METHOD HiLite()             INLINE ::DispRow( ::rowPos, .T. )
+   METHOD DispRow( nRow, lHiLite )
    METHOD MoveCursor( nSkip )
    METHOD GoTo( nRow )
    METHOD GoTop()              INLINE ::GoTo( 1 ), ::rowPos := 1, ::nFirstVisible := 1, ::RefreshAll()
@@ -159,9 +160,44 @@ METHOD MoveCursor( nSkip ) CLASS HBDbBrowser
 
    RETURN Self
 
+METHOD DispRow( nRow, lHiLite ) CLASS HBDbBrowser
+
+   LOCAL nColX, nWid, aClr, nClr
+   LOCAL xData
+   LOCAL oCol
+
+   ::GoTo( ::nFirstVisible + nRow - 1 )
+   IF ::hitBottom
+      hb_Scroll( ::nTop + nRow - 1, ::nLeft, ::nTop + nRow - 1, ::nRight,,, ::aColorSpec[ 1 ] )
+   ELSE
+      DispBegin()
+      nColX := ::nLeft
+      FOR EACH oCOl IN ::aColumns
+         IF nColX <= ::nRight
+            xData := Eval( oCol:block )
+            nClr := iif( lHiLite, 2, 1 )
+            aClr := Eval( oCol:colorBlock, xData )
+            IF HB_ISARRAY( aClr )
+               nClr := aClr[ nClr ]
+            ELSE
+               nClr := oCol:defColor[ nClr ]
+            ENDIF
+            nWid := oCol:width
+            IF nWid == NIL
+               nWid := Len( xData )
+            ENDIF
+            hb_DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( oCol:__enumIsLast(), "", " " ), ::aColorSpec[ nClr ] )
+            nColX += nWid + 1
+         ENDIF
+      NEXT
+      DispEnd()
+   ENDIF
+
+   RETURN Self
+
 METHOD ForceStable() CLASS HBDbBrowser
 
-   LOCAL nRow, xData, oCol, nColX, nWid, aClr, nClr
+   LOCAL nRow
 
    IF ! ::lConfigured
       ::Configure()
@@ -169,30 +205,7 @@ METHOD ForceStable() CLASS HBDbBrowser
    DispBegin()
    FOR nRow := 1 TO ::rowCount
       IF ! ::aRowState[ nRow ]
-         ::GoTo( ::nFirstVisible + nRow - 1 )
-         IF ::hitBottom
-            hb_DispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
-         ELSE
-            nColX := ::nLeft
-            FOR EACH oCol IN ::aColumns
-               IF nColX <= ::nRight
-                  xData := Eval( oCol:block )
-                  nClr := iif( nRow == ::rowPos, 2, 1 )
-                  aClr := Eval( oCol:colorBlock, xData )
-                  IF HB_ISARRAY( aClr )
-                     nClr := aClr[ nClr ]
-                  ELSE
-                     nClr := oCol:defColor[ nClr ]
-                  ENDIF
-                  nWid := oCol:width
-                  IF nWid == NIL
-                     nWid := Len( xData )
-                  ENDIF
-                  hb_DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( oCol:__enumIsLast(), "", " " ), ::aColorSpec[ nClr ] )
-                  nColX += nWid + 1
-               ENDIF
-            NEXT
-         ENDIF
+         ::DispRow( nRow, nRow == ::rowPos )
          ::aRowState[ nRow ] := .T.
       ENDIF
    NEXT
@@ -219,9 +232,16 @@ METHOD GoTo( nRow ) CLASS HBDbBrowser
 
 METHOD GoBottom() CLASS HBDbBrowser
 
+   LOCAL nScroll
+
    DO WHILE ! ::hitBottom
       ::PageDown()
    ENDDO
+   IF ::rowPos < ::rowCount .AND. ::nFirstVisible > 1
+      nScroll := Min( ::nFirstVisible - 1, ::rowCount - ::rowPos )
+      ::nFirstVisible -= nScroll
+      ::rowPos += nScroll
+   ENDIF
 
    RETURN Self
 

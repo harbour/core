@@ -192,7 +192,6 @@ static void     hb_dbgAddVar( int * nVars, HB_VARINFO ** aVars, const char * szN
 static void     hb_dbgAddStopLines( PHB_ITEM pItem );
 static void     hb_dbgEndProc( HB_DEBUGINFO * info );
 static PHB_ITEM hb_dbgEval( HB_DEBUGINFO * info, HB_WATCHPOINT * watch );
-static PHB_ITEM hb_dbgEvalMacro( const char * szExpr, PHB_ITEM pItem );
 static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch );
 static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO * info, HB_WATCHPOINT * watch );
 static HB_BOOL  hb_dbgIsAltD( void );
@@ -441,14 +440,15 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
             PHB_ITEM xValue;
 
             xValue = hb_dbgEval( info, &info->aWatch[ tp->nIndex ] );
-            if( ! xValue )
-               xValue = hb_itemNew( NULL );
 
-            if( HB_ITEM_TYPE( xValue ) != HB_ITEM_TYPE( tp->xValue ) ||
-                ! hb_dbgEqual( xValue, tp->xValue ) )
+            if( ! ( xValue == NULL && tp->xValue == NULL ) &&
+                ( xValue == NULL || tp->xValue == NULL ||
+                  HB_ITEM_TYPE( xValue ) != HB_ITEM_TYPE( tp->xValue ) ||
+                  ! hb_dbgEqual( xValue, tp->xValue ) ) )
             {
-               hb_itemCopy( tp->xValue, xValue );
-               hb_itemRelease( xValue );
+               if( tp->xValue )
+                  hb_itemRelease( tp->xValue );
+               tp->xValue = xValue;
 
                pTop->nLine = nLine;
                info->nProcLevel = nProcLevel - ( hb_dbgIsAltD() ? 2 : 0 );
@@ -465,7 +465,8 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
                hb_dbgActivate( info );
                return;
             }
-            hb_itemRelease( xValue );
+            if( xValue )
+               hb_itemRelease( xValue );
          }
          hb_clsSetScope( bOldClsScope );
 
@@ -1064,10 +1065,8 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch )
          char * szWord;
 
          while( c && IS_IDENT_CHAR( c ) )
-         {
-            j++;
-            c = watch->szExpr[ j ];
-         }
+            c = watch->szExpr[ ++j ];
+
          nLen = j - i;
          i = j;
          if( c )
@@ -1075,7 +1074,8 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch )
             while( watch->szExpr[ i ] == ' ' )
                i++;
 
-            if( watch->szExpr[ i ] == '(' )
+            if( watch->szExpr[ i ] == '(' ||
+                ( nLen == 1 && i == j && watch->szExpr[ i ] == '"' ) )
                continue;
 
             if( watch->szExpr[ i ] == '-' && watch->szExpr[ i + 1 ] == '>' )
@@ -1095,9 +1095,9 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch )
       }
       if( c == '.' )
       {
-         if( watch->szExpr[ i + 1 ]
-             && strchr( "TtFf", watch->szExpr[ i + 1 ] )
-             && watch->szExpr[ i + 2 ] == '.' )
+         if( watch->szExpr[ i + 1 ] &&
+             strchr( "TtFf", watch->szExpr[ i + 1 ] ) &&
+             watch->szExpr[ i + 2 ] == '.' )
          {
             i += 3;
          }
@@ -1105,8 +1105,8 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch )
          {
             i += 4;
          }
-         else if( ! hb_strnicmp( watch->szExpr + i + 1, "AND.", 4 )
-                  || ! hb_strnicmp( watch->szExpr + i + 1, "NOT.", 4 ) )
+         else if( ! hb_strnicmp( watch->szExpr + i + 1, "AND.", 4 ) ||
+                  ! hb_strnicmp( watch->szExpr + i + 1, "NOT.", 4 ) )
          {
             i += 5;
          }
@@ -1117,9 +1117,9 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch )
          bAfterId = HB_FALSE;
          continue;
       }
-      if( c == ':'
-          || ( c == '-' && watch->szExpr[ i + 1 ] == '>'
-               && IS_IDENT_START( watch->szExpr[ i + 2 ] ) ) )
+      if( c == ':' ||
+          ( c == '-' && watch->szExpr[ i + 1 ] == '>' &&
+            IS_IDENT_START( watch->szExpr[ i + 2 ] ) ) )
       {
          if( c == ':' && watch->szExpr[ i + 1 ] == ':' )
          {
@@ -1345,6 +1345,14 @@ PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char * expression )
 }
 
 
+PHB_ITEM hb_dbgGetWatchValue( void * handle, int nWatch )
+{
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+
+   return hb_dbgEval( info, &( info->aWatch[ nWatch ] ) );
+}
+
+
 PHB_ITEM hb_dbgGetSourceFiles( void * handle )
 {
    PHB_ITEM ret;
@@ -1364,14 +1372,6 @@ PHB_ITEM hb_dbgGetSourceFiles( void * handle )
    HB_DBGCOMMON_UNLOCK();
 
    return ret;
-}
-
-
-PHB_ITEM hb_dbgGetWatchValue( void * handle, int nWatch )
-{
-   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
-
-   return hb_dbgEval( info, &( info->aWatch[ nWatch ] ) );
 }
 
 

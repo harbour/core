@@ -117,8 +117,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
 
 METHOD PROCEDURE Clear() CLASS HBDbWindow
 
-   SetColor( ::cColor )
-   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
+   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1,,, ::cColor )
 
    RETURN
 
@@ -139,8 +138,7 @@ METHOD IsOver( nRow, nCol ) CLASS HBDbWindow
 
 METHOD PROCEDURE ScrollUp( nLines ) CLASS HBDbWindow
 
-   SetColor( ::cColor )
-   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, hb_defaultValue( nLines, 1 ) )
+   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, hb_defaultValue( nLines, 1 ),, ::cColor )
 
    RETURN
 
@@ -193,13 +191,9 @@ METHOD PROCEDURE Refresh() CLASS HBDbWindow
 
 METHOD PROCEDURE Show( lFocused ) CLASS HBDbWindow
 
-   LOCAL nRow := Row()
-   LOCAL nCol := Col()
-
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ), ;
       ::nRight + iif( ::lShadow, 2, 0 ) )
-   SetColor( ::cColor )
-   hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
+   hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,,, ::cColor )
    ::SetFocus( hb_defaultValue( lFocused, ::lFocused ) )
 
    IF ::lShadow
@@ -208,8 +202,6 @@ METHOD PROCEDURE Show( lFocused ) CLASS HBDbWindow
 
    ::Refresh()
    ::lVisible := .T.
-
-   SetPos( nRow, nCol )
 
    RETURN
 
@@ -222,7 +214,7 @@ METHOD PROCEDURE ShowModal() CLASS HBDbWindow
    ::Show()
 
    DO WHILE ! lExit
-      nKey := Inkey( 0, INKEY_ALL )
+      nKey := __dbgInkey()
 
       IF HB_ISEVALITEM( ::bKeyPressed )
          Eval( ::bKeyPressed, nKey )
@@ -272,11 +264,10 @@ METHOD PROCEDURE Move() CLASS HBDbWindow
    LOCAL nKey
 
    DO WHILE .T.
-
       RestScreen( ,,,, ::cBackImage )
-      hb_DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " " )
+      hb_DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " ", ::cColor )
 
-      SWITCH nKey := Inkey( 0, INKEY_ALL )
+      SWITCH nKey := __dbgInkey()
       CASE K_UP
 
          IF ::nTop != 0
@@ -325,8 +316,7 @@ METHOD PROCEDURE Move() CLASS HBDbWindow
    ENDDO
 
 #if 0
-   hb_keyPut( 0 )
-   Inkey()
+   hb_keySetLast( 0 )
 #endif
 
    RETURN
