@@ -45,6 +45,7 @@ DYNAMIC netio_ServerTimeOut
 DYNAMIC netio_SrvSendData
 DYNAMIC netio_SrvSendItem
 DYNAMIC netio_SrvStatus
+DYNAMIC netio_TimeOut
 DYNAMIC netio_VerifyClient
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNETIO__REQUEST )
