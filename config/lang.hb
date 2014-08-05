@@ -78,18 +78,18 @@ STATIC PROCEDURE doc_make( cMain )
 
       ? hPar[ "name" ], "generating documentation:"
 
-      hb_run( hb_StrFormat( "%1$s -hbraw -q0 %2$s -gh -o%3$s", hbshell_ProgName(), hPar[ "entry" ], cTempHRB ) )
+      lang_hb_run( hb_StrFormat( "%1$s -hbraw -q0 %2$s -gh -o%3$s", hbshell_ProgName(), hPar[ "entry" ], cTempHRB ) )
 
       FOR EACH cLang IN hb_AIns( hPar[ "langs" ], 1, hPar[ "baselang" ], .T. )
 
          ?? "", cLang
 
-         hb_run( hb_StrFormat( "hbi18n -q -g %1$s -o%2$s", ;
+         lang_hb_run( hb_StrFormat( "hbi18n -q -g %1$s -o%2$s", ;
             hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po", ;
             hb_FNameDir( hPar[ "entry" ] ) + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".hbl" ) )
 
          file := hPar[ "doc" ] + hPar[ "name" ] + "." + cLang + hPar[ "docext" ]
-         hb_run( hb_StrFormat( "%1$s %2$s %3$s > %4$s", ;
+         lang_hb_run( hb_StrFormat( "%1$s %2$s %3$s > %4$s", ;
             hbshell_ProgName(), cTempHRB, StrTran( ArrayToList( hPar[ "docoption" ] ), "{LNG}", cLang ), file ) )
          FToNativeEOL( file )
 
@@ -123,7 +123,7 @@ STATIC PROCEDURE src_push( cMain )
    IF Empty( hPar[ "po" ] )
       cContent := LangToPO( LangToCoreLang( hPar[ "baselang" ] ) )
    ELSE
-      hb_run( hb_StrFormat( "%1$s -hbraw -q0 %2$s -j%3$s -s", hbshell_ProgName(), hPar[ "entry" ], cTempContent ) )
+      lang_hb_run( hb_StrFormat( "%1$s -hbraw -q0 %2$s -j%3$s -s", hbshell_ProgName(), hPar[ "entry" ], cTempContent ) )
 
       POT_Sort( cTempContent )
 
@@ -152,9 +152,11 @@ STATIC PROCEDURE src_push( cMain )
 
    ? hPar[ "name" ], "uploading", "size", hb_ntos( Len( cContent ) )
 
-   hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
+   hb_MemoWrit( cTempContent, hb_jsonEncode( { ;
+      "content" => StrTran( cContent, hb_eol(), e"\n" ), ;
+      "mimetype" => "text/x-po" } ) )
 
-   hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
+   lang_hb_run( hb_StrFormat( 'curl -v -s -L --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;
@@ -204,7 +206,7 @@ STATIC PROCEDURE trs_pull( cMain )
 
       ?? "", cLang
 
-      hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
+      lang_hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
          "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/" + ;
          " -o %5$s", ;
          ParEscape( hPar[ "login" ] ), hPar[ "project" ], ;
@@ -404,7 +406,7 @@ STATIC PROCEDURE trs_push( cMain )
 
       hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
-      hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
+      lang_hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
          'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
          'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/translation/%5$s/' + ;
          ' -o %6$s', ;
@@ -424,6 +426,14 @@ STATIC PROCEDURE trs_push( cMain )
    RETURN
 
 /* --- */
+
+STATIC FUNCTION lang_hb_run( ... )
+
+   IF ! Empty( GetEnv( "HB_LANG_TRACE" ) )
+      ? "$", ...
+   ENDIF
+
+   RETURN hb_run( ... )
 
 STATIC FUNCTION TransifexResourceName( hPar )
 

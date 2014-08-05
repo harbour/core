@@ -1,4 +1,4 @@
-/* Last Translator: Pete_wg (pete_westg yahoo.gr) */
+/* Last Translator: vszakats */
 
 #include "hbapilng.h"
 

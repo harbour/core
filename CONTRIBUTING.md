@@ -67,7 +67,7 @@
 - And this:
   <https://guides.github.com/overviews/os-contributing/>
 - You can also participate in localization:<br />
-  [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
+  [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2-vszakats/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
 
 > Personal/private e-mails will either be ignored or given a short
 > answer to move the inquiry to somewhere public.<br />

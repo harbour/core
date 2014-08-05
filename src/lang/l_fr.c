@@ -1,4 +1,4 @@
-/* Last Translator: jujuland (alain.aupeix wanadoo.fr) */
+/* Last Translator: Alain Aupeix (alain.aupeix wanadoo.fr) */
 
 #include "hbapilng.h"
 
