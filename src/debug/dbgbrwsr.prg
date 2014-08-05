@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * The Debugger Browser
  *
  * Copyright 2004 Ryszard Glab <rglab@imid.med.pl>
  * Copyright 2007 Phil Krylov <phil a t newstar.rinet.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -106,7 +104,7 @@ CREATE CLASS HBDbBrowser
    METHOD PageUp()             INLINE ::MoveCursor( -::rowCount )
    METHOD GetColumn( nColumn ) INLINE ::aColumns[ nColumn ]
    METHOD RefreshAll()         INLINE AFill( ::aRowState, .F. ), Self
-   METHOD RefreshCurrent()     INLINE iif( ::rowCount > 0 .AND. ::rowPos <= Len( ::aRowState ), ::aRowState[ ::rowPos ] := .F., ), Self
+   METHOD RefreshCurrent()     INLINE iif( ::rowCount >= 1 .AND. ::rowPos <= Len( ::aRowState ), ::aRowState[ ::rowPos ] := .F., ), Self
    METHOD Invalidate()         INLINE ::RefreshAll()
    METHOD Stabilize()          INLINE ::ForceStable()
    METHOD ForceStable()
@@ -164,7 +162,7 @@ METHOD MoveCursor( nSkip ) CLASS HBDbBrowser
 
 METHOD DispRow( nRow, lHiLite ) CLASS HBDbBrowser
 
-   LOCAL nCol, nColX, nWid, aClr, nClr
+   LOCAL nColX, nWid, aClr, nClr
    LOCAL xData
    LOCAL oCol
 
@@ -174,9 +172,8 @@ METHOD DispRow( nRow, lHiLite ) CLASS HBDbBrowser
    ELSE
       DispBegin()
       nColX := ::nLeft
-      FOR nCol := 1 TO Len( ::aColumns )
+      FOR EACH oCol IN ::aColumns
          IF nColX <= ::nRight
-            oCol := ::aColumns[ nCol ]
             xData := Eval( oCol:block )
             nClr := iif( lHiLite, 2, 1 )
             aClr := Eval( oCol:colorBlock, xData )
@@ -189,7 +186,7 @@ METHOD DispRow( nRow, lHiLite ) CLASS HBDbBrowser
             IF nWid == NIL
                nWid := Len( xData )
             ENDIF
-            hb_DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
+            hb_DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( oCol:__enumIsLast(), "", " " ), ::aColorSpec[ nClr ] )
             nColX += nWid + 1
          ENDIF
       NEXT
@@ -252,19 +249,19 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbBrowser
 
    LOCAL lResize := .F.
 
-   IF nTop != NIL .AND. nTop != ::nTop
+   IF HB_ISNUMERIC( nTop ) .AND. nTop != ::nTop
       ::nTop := nTop
       lResize := .T.
    ENDIF
-   IF nLeft != NIL .AND. nLeft != ::nLeft
+   IF HB_ISNUMERIC( nLeft ) .AND. nLeft != ::nLeft
       ::nLeft := nLeft
       lResize := .T.
    ENDIF
-   IF nBottom != NIL .AND. nBottom != ::nBottom
+   IF HB_ISNUMERIC( nBottom ) .AND. nBottom != ::nBottom
       ::nBottom := nBottom
       lResize := .T.
    ENDIF
-   IF nRight != NIL .AND. nRight != ::nRight
+   IF HB_ISNUMERIC( nRight ) .AND. nRight != ::nRight
       ::nRight := nRight
       lResize := .T.
    ENDIF
@@ -284,7 +281,7 @@ CREATE CLASS HBDbColumn
    VAR defColor   AS ARRAY     INIT { 1, 2 }    /* Array of numeric indexes into the color table */
    VAR width      AS USUAL                      /* Column display width */
 
-   METHOD New( cHeading, bBlock )               /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( cHeading, bBlock )
 
 ENDCLASS
 

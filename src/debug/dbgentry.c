@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * Debugger entry routine
  *
  * Copyright 2005 Phil Krylov <phil a t newstar.rinet.ru>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -371,8 +369,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
    {
       if( ! info )
       {
-         info = *infoPtr = ( HB_DEBUGINFO * ) hb_xgrab( sizeof( HB_DEBUGINFO ) );
-         memset( info, 0, sizeof( HB_DEBUGINFO ) );
+         info = *infoPtr = ( HB_DEBUGINFO * ) hb_xgrabz( sizeof( HB_DEBUGINFO ) );
          info->bCBTrace = HB_TRUE;
       }
       else if( info->bInside || info->bQuit )
@@ -764,7 +761,7 @@ static void hb_dbgAddStopLines( PHB_ITEM pItem )
                HB_ISIZ k;
                char * pBuffer = ( char * ) hb_xgrab( nLen + 1 );
 
-               hb_xmemset( pBuffer, 0, nLen );
+               hb_xmemset( pBuffer, 0, nLen + 1 );
 
                /* the bitfields with line numbers should use
                 * 8bit alignment so it's safe to use byte copy
@@ -1362,7 +1359,9 @@ PHB_ITEM hb_dbgGetSourceFiles( void * handle )
    HB_ISIZ nModules;
    HB_ISIZ i;
 
-   /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
+#if 0
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+#endif
    HB_SYMBOL_UNUSED( handle );
 
    HB_DBGCOMMON_LOCK();
@@ -1408,7 +1407,9 @@ HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
    HB_ISIZ nModules;
    HB_ISIZ i;
 
-   /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
+#if 0
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+#endif
    HB_SYMBOL_UNUSED( handle );
 
    szModule = hb_dbgStripModuleName( szModule );

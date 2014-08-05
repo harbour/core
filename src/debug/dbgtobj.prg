@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Debugger Object Inspector
  *
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -82,17 +80,15 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
    LOCAL aMessages, aMethods
    LOCAL xValue
 
-   hb_default( @lEditable, .T. )
-
-   __dbgSetGo( __Dbg():pInfo )
+   __dbgSetGo( __dbg():pInfo )
 
    /* create list of object messages */
    aMessages := oObject:classSel()
-   ASort( aMessages,,, {| x, y | x + chr( 0 ) < y + chr( 0 ) } )
+   ASort( aMessages,,, {| x, y | x + Chr( 0 ) < y + Chr( 0 ) } )
    aMethods := {}
    FOR EACH cMsg IN aMessages
-      IF Left( cMsg, 1 ) == "_" .AND. ;
-         hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, 2 ),,, .T. ) != 0
+      IF hb_LeftEq( cMsg, "_" ) .AND. ;
+         hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, 2 ),,, .T. ) > 0
          xValue := __dbgObjGetValue( oObject, cMsgAcc )
          AAdd( ::pItems, { cMsgAcc, xValue, .T. } )
       ELSEIF hb_AScan( aMessages, "_" + cMsg,,, .T. ) == 0
@@ -105,7 +101,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
 
    ::objname := cVarName
    ::TheObj := oObject
-   ::lEditable := lEditable
+   ::lEditable := hb_defaultValue( lEditable, .T. )
 
    ::addWindows()
 
@@ -120,13 +116,16 @@ METHOD addWindows( nRow ) CLASS HBDbObject
    LOCAL nMaxLen
 
    IF nSize < MaxRow() - 2
-      IF nRow != NIL
-         oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+      IF HB_ISNUMERIC( nRow )
+         oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ;
+            ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
       ELSE
-         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ;
+            ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
       ENDIF
    ELSE
-      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ;
+         ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
    ENDIF
 
    ::nCurWindow++
@@ -135,7 +134,7 @@ METHOD addWindows( nRow ) CLASS HBDbObject
 
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
 
-   oBrwSets:ColorSpec := __Dbg():ClrModal()
+   oBrwSets:ColorSpec := __dbg():ClrModal()
    oBrwSets:GoTopBlock := {|| ::Arrayindex := 1 }
    oBrwSets:GoBottomBlock := {|| ::arrayindex := Len( ::pItems ) }
    oBrwSets:SkipBlock := {| nSkip, nPos | nPos := ::arrayindex, ;
@@ -165,7 +164,7 @@ METHOD addWindows( nRow ) CLASS HBDbObject
 
    RETURN Self
 
-METHOD doGet( oBrowse ) CLASS HBDbObject
+METHOD PROCEDURE doGet( oBrowse ) CLASS HBDbObject
 
    LOCAL oErr
    LOCAL cValue
@@ -180,7 +179,7 @@ METHOD doGet( oBrowse ) CLASS HBDbObject
    cValue := __dbgObjGetValue( ::TheObj, aItemRef[ OMSG_NAME ], @lCanAcc )
    IF ! lCanAcc
       __dbgAlert( cValue )
-      RETURN NIL
+      RETURN
    ENDIF
    cValue := __dbgValToExp( cValue )
 
@@ -194,9 +193,9 @@ METHOD doGet( oBrowse ) CLASS HBDbObject
       END SEQUENCE
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-METHOD SetsKeyPressed( nKey, oBrwSets ) CLASS HBDbObject
+METHOD PROCEDURE SetsKeyPressed( nKey, oBrwSets ) CLASS HBDbObject
 
    LOCAL aItemRef
 
@@ -231,54 +230,52 @@ METHOD SetsKeyPressed( nKey, oBrwSets ) CLASS HBDbObject
 
    CASE K_ENTER
 
-         aItemRef := ::pItems[ ::ArrayIndex ]
-         IF HB_ISARRAY( aItemRef[ OMSG_VALUE ] )
-            IF Len( aItemRef[ OMSG_VALUE ] ) > 0
-               HBDbArray():New( aItemRef[ OMSG_VALUE ], aItemRef[ OMSG_NAME ] )
-            ENDIF
-         ELSEIF HB_ISHASH( aItemRef[ OMSG_VALUE ] )
-            IF Len( aItemRef[ OMSG_VALUE ] ) > 0
-               HBDbHash():New( aItemRef[ OMSG_VALUE ], aItemRef[ OMSG_NAME ] )
-            ENDIF
-         ELSEIF HB_ISOBJECT( aItemRef[ OMSG_VALUE ] )
-            HBDbObject():New( aItemRef[ OMSG_VALUE ], aItemRef[ OMSG_NAME ] )
-         ELSEIF ! aItemRef[ OMSG_EDIT ] .OR. ;
-                HB_ISBLOCK( aItemRef[ OMSG_VALUE ] ) .OR. ;
-                HB_ISPOINTER( aItemRef[ OMSG_VALUE ] )
-            __dbgAlert( "Value cannot be edited" )
-         ELSE
-            IF ::lEditable
-               oBrwSets:RefreshCurrent()
-               ::doGet( oBrwSets )
-               oBrwSets:RefreshCurrent()
-               oBrwSets:ForceStable()
-            ELSE
-               __dbgAlert( "Value cannot be edited" )
-            ENDIF
+      aItemRef := ::pItems[ ::ArrayIndex ]
+      DO CASE
+      CASE HB_ISARRAY( aItemRef[ OMSG_VALUE ] )
+         IF Len( aItemRef[ OMSG_VALUE ] ) > 0
+            HBDbArray():New( aItemRef[ OMSG_VALUE ], aItemRef[ OMSG_NAME ] )
          ENDIF
+      CASE HB_ISHASH( aItemRef[ OMSG_VALUE ] )
+         IF Len( aItemRef[ OMSG_VALUE ] ) > 0
+            HBDbHash():New( aItemRef[ OMSG_VALUE ], aItemRef[ OMSG_NAME ] )
+         ENDIF
+      CASE HB_ISOBJECT( aItemRef[ OMSG_VALUE ] )
+         HBDbObject():New( aItemRef[ OMSG_VALUE ], aItemRef[ OMSG_NAME ] )
+      CASE ! aItemRef[ OMSG_EDIT ] .OR. ;
+           HB_ISBLOCK( aItemRef[ OMSG_VALUE ] ) .OR. ;
+           HB_ISPOINTER( aItemRef[ OMSG_VALUE ] ) .OR. ;
+           ! ::lEditable
+         __dbgAlert( "Value cannot be edited" )
+      OTHERWISE
+         oBrwSets:RefreshCurrent()
+         ::doGet( oBrwSets )
+         oBrwSets:RefreshCurrent()
+         oBrwSets:ForceStable()
+      ENDCASE
 
    ENDSWITCH
 
    oBrwSets:ForceStable()
 
-   RETURN NIL
+   RETURN
 
 FUNCTION __dbgObject( oObject, cVarName, lEditable )
    RETURN HBDbObject():New( oObject, cVarName, lEditable )
 
 STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
 
-   LOCAL nProcLevel := __Dbg():nProcLevel
+   LOCAL nProcLevel := __dbg():nProcLevel
    LOCAL xResult
    LOCAL oErr
 
    BEGIN SEQUENCE WITH {|| Break() }
-      xResult := __dbgSENDMSG( nProcLevel, oObject, cVar )
+      xResult := __dbgSendMsg( nProcLevel, oObject, cVar )
       lCanAcc := .T.
    RECOVER
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          /* Try to access variables using class code level */
-         xResult := __dbgSENDMSG( 0, oObject, cVar )
+         xResult := __dbgSendMsg( 0, oObject, cVar )
          lCanAcc := .T.
       RECOVER USING oErr
          xResult := oErr:description
@@ -290,15 +287,15 @@ STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
 
 STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
 
-   LOCAL nProcLevel := __Dbg():nProcLevel
+   LOCAL nProcLevel := __dbg():nProcLevel
    LOCAL oErr
 
    BEGIN SEQUENCE WITH {|| Break() }
-      __dbgSENDMSG( nProcLevel, oObject, "_" + cVar, xValue )
+      __dbgSendMsg( nProcLevel, oObject, "_" + cVar, xValue )
    RECOVER
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          /* Try to access variables using class code level */
-         __dbgSENDMSG( 0, oObject, "_" + cVar, xValue )
+         __dbgSendMsg( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
       END SEQUENCE

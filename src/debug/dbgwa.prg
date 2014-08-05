@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Debugger Work Area Inspector
  *
  * Copyright 2001-2002 Ignacio Ortiz de Zuniga <ignacio@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,6 +47,7 @@
 #pragma -b-
 
 #include "box.ch"
+#include "dbstruct.ch"
 #include "setcurs.ch"
 #include "inkey.ch"
 
@@ -64,7 +63,7 @@ PROCEDURE __dbgShowWorkAreas()
    LOCAL aStruc
    LOCAL aInfo
 
-   LOCAL cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
+   LOCAL cColor := iif( __dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
 
    LOCAL n1
    LOCAL n2
@@ -146,10 +145,10 @@ PROCEDURE __dbgShowWorkAreas()
       aBrw[ 3 ]:Cargo := n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ), ;
       Max( 1, n3 + nSkip ) ), n3 - nPos }
 
-   aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| PadR( aStruc[ n3, 1 ], 10 ) + " " + ;
-      Padr( aStruc[ n3, 2 ], 1 ) + " " + ;
-      Str( aStruc[ n3, 3 ], 3 ) + " " + ;
-      Str( aStruc[ n3, 4 ], 2 ) } ) )
+   aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| PadR( aStruc[ n3 ][ DBS_NAME ], 10 ) + " " + ;
+      PadR( aStruc[ n3 ][ DBS_TYPE ], 1 ) + " " + ;
+      Str( aStruc[ n3 ][ DBS_LEN ], 3 ) + " " + ;
+      Str( aStruc[ n3 ][ DBS_DEC ], 2 ) } ) )
 
    /* Show dialog */
 
@@ -201,9 +200,9 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
    RETURN
 
-STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
+STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, /* @ */ aStruc, /* @ */ aInfo )
 
-   LOCAL oDebug := __Dbg()
+   LOCAL oDebug := __dbg()
    LOCAL nAlias
 
    IF nKey == K_TAB .OR. nKey == K_SH_TAB
@@ -219,15 +218,15 @@ STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
       RETURN
    ENDIF
 
-   DO CASE
-   CASE oDebug:nWaFocus == 1
+   SWITCH oDebug:nWaFocus
+   CASE 1
       nAlias := aBrw[ 1 ]:Cargo
       WorkAreasKeyPressed( nKey, aBrw[ 1 ], Len( aAlias ) )
       IF nAlias != aBrw[ 1 ]:Cargo
          aBrw[ 2 ]:GoTop()
          aBrw[ 2 ]:Invalidate()
          aBrw[ 2 ]:ForceStable()
-         aInfo := ( aAlias[ aBrw[ 1 ]:Cargo ][ 1 ] )->( DbfInfo( aInfo ) )
+         aInfo := ( aAlias[ aBrw[ 1 ]:Cargo ][ 1 ] )->( DbfInfo() )
          aBrw[ 3 ]:Configure()
          aBrw[ 2 ]:Invalidate()
          aBrw[ 2 ]:RefreshAll()
@@ -244,18 +243,21 @@ STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          aBrw[ 3 ]:Dehilite()
          UpdateInfo( oDlg, aAlias[ aBrw[ 1 ]:Cargo ][ 2 ] )
       ENDIF
-   CASE oDebug:nWaFocus == 2
+      EXIT
+   CASE 2
       WorkAreasKeyPressed( nKey, aBrw[ 2 ], Len( aInfo ) )
-   CASE oDebug:nWaFocus == 3
+      EXIT
+   CASE 3
       WorkAreasKeyPressed( nKey, aBrw[ 3 ], Len( aStruc ) )
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN
 
 STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
 
-   DO CASE
-   CASE nKey == K_UP
+   SWITCH nKey
+   CASE K_UP
 
       IF oBrw:Cargo > 1
          oBrw:Cargo--
@@ -263,8 +265,9 @@ STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
          oBrw:Up()
          oBrw:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
 
       IF oBrw:Cargo < nTotal
          oBrw:Cargo++
@@ -272,50 +275,56 @@ STATIC PROCEDURE WorkAreasKeyPressed( nKey, oBrw, nTotal )
          oBrw:Down()
          oBrw:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+   CASE K_HOME
+   CASE K_CTRL_PGUP
+   CASE K_CTRL_HOME
 
       IF oBrw:Cargo > 1
          oBrw:Cargo := 1
          oBrw:GoTop()
          oBrw:ForceStable()
       ENDIF
+      EXIT
 
-   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+   CASE K_END
+   CASE K_CTRL_PGDN
+   CASE K_CTRL_END
 
       IF oBrw:Cargo < nTotal
          oBrw:Cargo := nTotal
          oBrw:GoBottom()
          oBrw:ForceStable()
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN
 
-STATIC FUNCTION DbfInfo( aInfo )
+STATIC FUNCTION DbfInfo()
 
    LOCAL nFor
    LOCAL xValue
    LOCAL cValue
 
-   aInfo := {}
-
-   AAdd( aInfo, "[" + hb_ntos( Select( Alias() ) ) + "] " + Alias() )
-   AAdd( aInfo, Space( 4 ) + "Current Driver" )
-   AAdd( aInfo, Space( 8 ) + rddName() )
-   AAdd( aInfo, Space( 4 ) + "Workarea Information" )
-   AAdd( aInfo, Space( 8 ) + "Select Area: " + hb_ntos( Select() ) )
-   AAdd( aInfo, Space( 8 ) + "Record Size: " + hb_ntos( RecSize() ) )
-   AAdd( aInfo, Space( 8 ) + "Header Size: " + hb_ntos( Header() ) )
-   AAdd( aInfo, Space( 8 ) + "Field Count: " + hb_ntos( FCount() ) )
-   AAdd( aInfo, Space( 8 ) + "Last Update: " + DToC( LUpdate() ) )
-   AAdd( aInfo, Space( 8 ) + "Index order: " + hb_ntos( IndexOrd() ) )
-   AAdd( aInfo, Space( 4 ) + "Current Record" )
+   LOCAL aInfo := { ;
+      "[" + hb_ntos( Select( Alias() ) ) + "] " + Alias(), ;
+      Space( 4 ) + "Current Driver", ;
+      Space( 8 ) + rddName(), ;
+      Space( 4 ) + "Workarea Information", ;
+      Space( 8 ) + "Select Area: " + hb_ntos( Select() ), ;
+      Space( 8 ) + "Record Size: " + hb_ntos( RecSize() ), ;
+      Space( 8 ) + "Header Size: " + hb_ntos( Header() ), ;
+      Space( 8 ) + "Field Count: " + hb_ntos( FCount() ), ;
+      Space( 8 ) + "Last Update: " + DToC( LUpdate() ), ;
+      Space( 8 ) + "Index order: " + hb_ntos( IndexOrd() ), ;
+      Space( 4 ) + "Current Record" }
 
    FOR nFor := 1 TO FCount()
 
-      xValue := __Dbg():GetExprValue( "FieldGet(" + hb_ntos( nFor ) + ")" )
+      xValue := __dbg():GetExprValue( "FieldGet(" + hb_ntos( nFor ) + ")" )
 
       SWITCH ValType( xValue )
       CASE "C"

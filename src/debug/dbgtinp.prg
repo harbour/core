@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * User input class for debugger
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -181,7 +179,9 @@ METHOD applyKey( nKey ) CLASS HbDbInput
       Set( _SET_INSERT, ! Set( _SET_INSERT ) )
       EXIT
    OTHERWISE
-      IF !( hb_keyChar( nKey ) == "" )
+      IF hb_keyChar( nKey ) == ""
+         lUpdate := .F.
+      ELSE
          IF Set( _SET_INSERT )
             ::cValue := Left( Stuff( ::cValue, ::nPos, 0, hb_keyChar( nKey ) ), ::nSize )
          ELSE
@@ -190,8 +190,6 @@ METHOD applyKey( nKey ) CLASS HbDbInput
          IF ::nPos < ::nSize
             ::nPos++
          ENDIF
-      ELSE
-         lUpdate := .F.
       ENDIF
    ENDSWITCH
 
