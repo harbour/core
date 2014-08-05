@@ -14104,9 +14104,7 @@ STATIC FUNCTION Apple_App_Template_Info_plist()
 
 STATIC FUNCTION hbmk_hb_processRunFile( cCommand, cTempFile )
 
-   LOCAL nResult
-
-   nResult := hb_processRun( cCommand )
+   LOCAL nResult := hb_processRun( cCommand )
 
    IF ! Empty( cTempFile )
       FErase( cTempFile )
