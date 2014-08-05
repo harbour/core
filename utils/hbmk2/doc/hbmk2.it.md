@@ -1,6 +1,6 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(756ab4d\) \(2014\-06\-21 11:08\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(5890c33\) \(2014\-07\-21 01:51\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
-<https://harbour\.github\.io/>  
+<https://github\.com/vszakats/harbour\-core/>  
 Traduzione \(it\): \(inserisci qui il tuo nome\)  
 
 Sintassi:  
@@ -380,7 +380,7 @@ Variabili d'ambiente:
  - **HB\_USER\_LDFLAGS** opzioni da passare al linker \(eseguibile\) \(prima delle opzioni da linea di comando\)
  - **HB\_USER\_DFLAGS** opzioni da passare al linker \(libreria dinamica\) \(prima delle opzioni da linea di comando\)
  - **HB\_USER\_AFLAGS** opzioni da passare al linker \(libreria statica\) \(prima delle opzioni da linea di comando\)
- - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
+ - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt; = &lt;major&gt;&lt;minor&gt;
  - **HB\_CCPATH** ignora la cartella del compilatore C \(solamente per la famiglia dei compilatori gcc\)
  - **HB\_CCPREFIX** ignora il prefisso del compilatore C \(solamente per la famiglia dei compilatori gcc\)
  - **HB\_CCSUFFIX** ignora il suffisso del compilatore C \(solamente per la famiglia dei compilatori gcc\)
@@ -481,6 +481,10 @@ Aggiunge al progetto un file di risorsa di input
 Aggiunge al progetto un file binario oggetto\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Add a file to be installed, with an optional \-instpath= group name\.
+ - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a Harbour compiler option\.
+ - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a C compiler option\.
  - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Invio del testo su stdout\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  

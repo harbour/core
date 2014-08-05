@@ -1,7 +1,7 @@
-Harbour Shell / Script Runner 3\.4\.0dev \(756ab4d\) \(2014\-06\-21 11:08\)  
+Harbour Shell / Script Runner 3\.4\.0dev \(5890c33\) \(2014\-07\-21 01:51\)  
 Copyright &copy; 2007\-2014, Viktor Szakáts  
 Copyright &copy; 2003\-2007, Przemysław Czerpak  
-<https://harbour\.github\.io/>  
+<https://github\.com/vszakats/harbour\-core/>  
 Tradução \(pt\_BR\): Sami Laham &lt;sami@laham\.com\.br&gt; / Vailton Renato &lt;vailtom@gmail\.com&gt;  
 
 Sintaxe:  
@@ -35,7 +35,7 @@ Arquivos:
  - **hb\_extension** lista de extensões a ser carregada no shell interativo Harbour\. Uma extensão por linha, a parte alem do caracter '\#' será ignorada\. Nome alternativo em MS\-DOS: hb\_ext\.ini\. localizado em \[\*\]: %APPDATA%\\\.harbour\\
 
 
-Predefined constants in sources \(do not define them manually\):
+Constantes pré\-definidas nos fontes \(não defini\-las manualmente\):
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** quando um programa fonte Harbour está rodando como "shell script"
@@ -70,7 +70,7 @@ hb\_DirBase\(\) não mapeado para script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 hb\_ProgName\(\) não mapeado para script\.
  - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**  
-Name of the script executing\.
+Nome do script em execução\.
   
 Notas:  
 

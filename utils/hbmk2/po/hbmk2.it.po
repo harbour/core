@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-11-20 09:22+0000\nLast-Translator: mlacecilia <m.lacecilia@gmail.com>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-05 11:25+0000\nLast-Translator: vszakats\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -45,10 +45,6 @@ msgstr "Compilatore C rilevato: %1$s"
 #, c-format
 msgid "Error: Compiler value unknown: %1$s"
 msgstr "Errore: Valore del compilatore sconosciuto: %1$s"
-
-#, c-format
-msgid "Using Harbour: %1$s %2$s %3$s %4$s %5$s %6$s"
-msgstr "Harbour in uso: %1$s %2$s %3$s %4$s %5$s %6$s"
 
 #, c-format
 msgid "Using C compiler: %1$s"
@@ -109,10 +105,6 @@ msgstr "Attenzione: nome del file di output non portabile: %1$s. Cancellare l'es
 #, c-format
 msgid "Error: Working directory cannot be created: %1$s"
 msgstr "Errore: La cartella di lavoro non può essere creata: %1$s"
-
-#, c-format
-msgid "Error: Temporary Working directory cannot be created: %1$s"
-msgstr "Errore: la cartella di lavoro temporanea non può essere creata: %1$s"
 
 #, c-format
 msgid "Triggered by #require directive: %1$s"
@@ -239,20 +231,8 @@ msgid "Warning: Ignored invalid option value in: %1$s"
 msgstr "Attenzione: opzione errata ignorata: %1$s"
 
 #, c-format
-msgid "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead."
-msgstr "Attenzione: Opzione di compatibilità obsoleta: %1$s. Utilizzare invece '%2$s'."
-
-#, c-format
 msgid "Warning: Dangerous low-level option not recommended: %1$s"
 msgstr "Attenzione: Opzione di basso livello pericolosa e sconsigliata: %1$s"
-
-#, c-format
-msgid "Warning: Non-portable parameter: %1$s. Use %2$s directives(s) instead."
-msgstr "Attenzione: Parametro non portabile: %1$s. Usare invece la direttiva(e) %2$s."
-
-#, c-format
-msgid "Warning: Non-portable parameter: %1$s. Use '%2$s' option(s) instead."
-msgstr "Attenzione: Non portabilità del parametro: %1$s. Usare invece l'opzione(i) %2$s."
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)"
@@ -319,24 +299,12 @@ msgid "Dependency '%1$s' forcibly disabled"
 msgstr "La dipendenza '%1$s' è stata forzatamente disattivata"
 
 #, c-format
-msgid "Warning: Missing optional dependencies: %1$s"
-msgstr "Attenzione: dipendenze opzionali omesse: %1$s"
-
-#, c-format
 msgid "Warning: Missing optional dependency: %1$s"
 msgstr "Attenzione: dipendenza opzionale omessa: %1$s"
 
 #, c-format
-msgid "Error: Missing dependencies: %1$s"
-msgstr "Errore: dipendenze omesse: %1$s"
-
-#, c-format
 msgid "Error: Missing dependency: %1$s"
 msgstr "Errore: Dipendenze omesse: %1$s"
-
-#, c-format
-msgid "Warning: Missing dependencies: %1$s"
-msgstr "Attenzione: dipendenze omesse: %1$s"
 
 #, c-format
 msgid "Warning: Missing dependency: %1$s"
@@ -435,18 +403,6 @@ msgid "(not installed)"
 msgstr "(non installato)"
 
 #, c-format
-msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
-msgstr "Suggerimento: aggiungere l'opzione '%1$s' per la funzione(i) mancante: %2$s"
-
-#, c-format
-msgid "Hint: Install package %3$s and add option '%1$s' for missing function(s): %2$s"
-msgstr "Suggerimento: Installare il pacchetto %3$s e aggiungere l'opzione '%1$s' per l'omessa funzione(i): %2$s"
-
-#, c-format
-msgid "Error: Referenced, missing, but unknown function(s): %1$s"
-msgstr "Errore: Funzione(i) referenziata, mancante ma sconosciuta: %1$s"
-
-#, c-format
 msgid "Harbour core"
 msgstr "Motore Harbour"
 
@@ -529,10 +485,6 @@ msgstr "compilatore sconosciuto"
 #, c-format
 msgid "failed Harbour detection"
 msgstr "Individuazione fallita di Harbour"
-
-#, c-format
-msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
-msgstr "fallimento nella compilazione (Harbour, compilatore C, compilatore delle Risorse)"
 
 #, c-format
 msgid "unsupported"
@@ -635,20 +587,12 @@ msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will 
 msgstr "crea (o non) una libreria d'importazione (in modalità -hbdyn/-hbexe). Al nome verrà aggiunto un suffisso."
 
 #, c-format
-msgid "create GUI/console executable"
-msgstr "creare l'eseguibile GUI/console"
-
-#, c-format
 msgid "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)"
 msgstr "crea la libreria di importazione (in modalità -hbdyn/-hbexe) di nome <output> (default: identica all'output)"
 
 #, c-format
 msgid "create import library (Windows only)"
 msgstr "creare la libreria d'importazione (solamente WIndows)"
-
-#, c-format
-msgid "Create Harbour header (in .hbx format) with all external symbols. Empty parameter will disable it."
-msgstr "Creare l'intestazione Harbour (in formato. HBX), con tutti i simboli esterni. Il parametro vuoto lo disattiva."
 
 #, c-format
 msgid "do not add extra list of system libraries to default library list"
@@ -679,10 +623,6 @@ msgid "force function/procedure to be linked"
 msgstr "forza la funzione/procedura da essere linkata"
 
 #, c-format
-msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
-msgstr "genera un header file .ch con informazioni sul repository locale. Sono attualmente supportati Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone. L'header generato definisce le costanti del preprocessore _HBMK_VCS_TYPE_ con il nome del VCS rilevato e _HBMK_VCS_ID_ con l'ID unico del repository locale. Se non viene rilevato alcun VCS, viene automaticamente incrementato un numero sequenziale ad ogni compilazione."
-
-#, c-format
 msgid "link with <framework> framework (Darwin only)"
 msgstr "Collega al <framework> framework (Solamente Darwin)"
 
@@ -709,10 +649,6 @@ msgstr "Ricompila con i sotto-progetti (in compilazione incrementale)"
 #, c-format
 msgid "run/do not run output executable"
 msgstr "eseguire/non eseguire l'eseguibile prodotto"
-
-#, c-format
-msgid "select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)"
-msgstr "Scegliere tra modo compilazione UNICODE (WIDE) e ANSI (predefinito: ANSI) (Solo Windows. Per WinCE esso è sempre fissato a UNICODE)"
 
 #, c-format
 msgid "select C++ mode. Allowed values are: def, yes, no"
@@ -789,10 +725,6 @@ msgstr "Informazioni del compilatore Harbour"
 #, c-format
 msgid "Harbour compiler credits"
 msgstr "Riconoscimenti del compilatore Harbour"
-
-#, c-format
-msgid "lists all known Harbour functions that contain <text> in their name, along with their package (case insensitive, accepts multiple values, can contain wildcard characters)"
-msgstr "elenca tutte le funzioni conosciute di Harbour che contengono <text> nel loro nome, insieme con il loro pacchetto (ignora maiuscole e minuscole, accetta più valori, può contenere caratteri jolly)"
 
 #, c-format
 msgid "long help"
@@ -1311,10 +1243,6 @@ msgid "stop the build. Display <msg>, if specified."
 msgstr "ferma la compilazione. Visualizza <msg>, se specificato."
 
 #, c-format
-msgid "Predefined constants in sources:"
-msgstr "Costanti predefinite nei sorgenti:"
-
-#, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
 msgstr "quando la dipendenza <depname> è stata rilevata (disponibile nei sorgenti C)"
 
@@ -1325,10 +1253,6 @@ msgstr "quando uno scripr .hb viene compilato come plugin %1$s"
 #, c-format
 msgid "when an .hbx source file is present in a project (available in Harbour sources)"
 msgstr "dove un file sorgente .hbx è presente in un progetto (disponibile nei sorgenti Harbour)"
-
-#, c-format
-msgid "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..."
-msgstr "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, ecc..."
 
 #, c-format
 msgid "when a Harbour source file is run as a shell script"
@@ -1469,10 +1393,6 @@ msgstr "vedere la macro %1$s"
 #, c-format
 msgid "Notes:"
 msgstr "Note:"
-
-#, c-format
-msgid ". (dot) passed as first parameter will enter the interactive Harbour shell."
-msgstr ". (il punto) passato come primo parametro entrerà nella shell interattiva di Harbour."
 
 #, c-format
 msgid "%1$s make script in current directory is always processed if it exists."

@@ -1,6 +1,6 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(756ab4d\) \(2014\-06\-21 11:08\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(5890c33\) \(2014\-07\-21 01:51\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
-<https://harbour\.github\.io/>  
+<https://github\.com/vszakats/harbour\-core/>  
 Traduction \(fr\): \(ajoutez votre nom ici\)  
 
 Syntax:  
@@ -381,7 +381,7 @@ Environment variables:
  - **HB\_USER\_LDFLAGS** options to be passed to linker \(executable\) \(before command\-line options\)
  - **HB\_USER\_DFLAGS** options to be passed to linker \(dynamic library\) \(before command\-line options\)
  - **HB\_USER\_AFLAGS** options to be passed to linker \(static library\) \(before command\-line options\)
- - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
+ - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt; = &lt;major&gt;&lt;minor&gt;
  - **HB\_CCPATH** override C compiler executable directory \(gcc compiler families only\)
  - **HB\_CCPREFIX** override C compiler executable prefix \(gcc compiler families only\)
  - **HB\_CCSUFFIX** override C compiler executable suffix \(gcc compiler families only\)
@@ -482,6 +482,10 @@ Add a Windows resource input file to the project\.
 Add a binary object file to the project\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Add a file to be installed, with an optional \-instpath= group name\.
+ - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a Harbour compiler option\.
+ - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a C compiler option\.
  - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Output text to stdout\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  

@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-02-19 03:20+0000\nLast-Translator: vszakats\nLanguage-Team: Hungarian (http://www.transifex.com/projects/p/harbour/language/hu/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: hu\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-05 11:25+0000\nLast-Translator: vszakats\nLanguage-Team: Hungarian (http://www.transifex.com/projects/p/harbour/language/hu/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: hu\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -81,10 +81,6 @@ msgstr "Hiba: Munkakönyvtár nem hozható létre: %1$s"
 #, c-format
 msgid "Creating VCS header: %1$s"
 msgstr "VCS fejléc létrehozása: %1$s"
-
-#, c-format
-msgid "Creating timestamp header: %1$s"
-msgstr "Időbélyeg fejléc létrehozása: %1$s"
 
 #, c-format
 msgid "Compiling Harbour sources..."
@@ -447,16 +443,8 @@ msgid "clean (in incremental build mode)"
 msgstr "törlés (lépcsőzetes üzemmódban)"
 
 #, c-format
-msgid "compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, max"
-msgstr "tömörítse a végeredményt (UPX szükséges)\n<level> lehet: yes, no, min, max"
-
-#, c-format
 msgid "create (or not) a map file"
 msgstr "készítsen (vagy ne) térkép (map) fájlt"
-
-#, c-format
-msgid "create GUI/console executable"
-msgstr "GUI/konzol alkalmazás létrehozása"
 
 #, c-format
 msgid "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)"
@@ -477,10 +465,6 @@ msgstr "egyszeri sípolás sikeres végrehajtás esetén, dupla sípolás hiba e
 #, c-format
 msgid "force waiting for a key on exit in case of failure (with alternate GTs only)"
 msgstr "várjon billentyűre sikertelen befejezés esetén. (csak alternatív GT használata esetén)"
-
-#, c-format
-msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
-msgstr "hozzon létre egy .ch fejlécet időpont adatokkal. Generált fejléc _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ makrói az aktuális dátumokkal kerülnek feltöltésre"
 
 #, c-format
 msgid "ignore errors when running compiler tools (default: off)"
@@ -667,20 +651,12 @@ msgid "space separated list of licenses"
 msgstr "licencek szóközzel elválasztott listája"
 
 #, c-format
-msgid "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..."
-msgstr "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, stb."
-
-#, c-format
 msgid "Current exit code"
 msgstr "Aktuális kilépési érték"
 
 #, c-format
 msgid "Notes:"
 msgstr "Megjegyzések:"
-
-#, c-format
-msgid "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory."
-msgstr "%1$s opció fájl a %2$s könyvtárában mindig feldolgozásra kerül amennyiben létezik. *nix platformokon a fájl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc könyvtárak (ebben a sorrendben) szintén ellenőrzésre kerülnek."
 
 #, c-format
 msgid "Filters are accepted in each .hbc line and most options.\nFilters can be combined using '&' (and), '|' (or) operators, negated by '!' operator and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"

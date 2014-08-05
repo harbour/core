@@ -1,6 +1,6 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(756ab4d\) \(2014\-06\-21 11:08\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(5890c33\) \(2014\-07\-21 01:51\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
-<https://harbour\.github\.io/>  
+<https://github\.com/vszakats/harbour\-core/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
 
 Σύνταξη:  
@@ -381,7 +381,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **HB\_USER\_LDFLAGS** επιλογής που θα περαστούν στον συνδέτη \(εκτελέσιμου\) \(πρίν τις επιλογές της γραμμής\-εντολών\)
  - **HB\_USER\_DFLAGS** επιλογές που θα περαστούν στον συνδέτη \-linker\- \(dynamic library\) \(πρίν από επιλογές γραμμής\-εντολών\)
  - **HB\_USER\_AFLAGS** επιλογές που θα περαστούν στον συνδέτη \-linker\- \(static library\) \(πρίν τις επιλογές της γραμμής\-εντολών\)
- - **HB\_COMPILER\_VER** επικάλυψη αυτόματης ανίχνευσης της έκδοσης του μεταγλωττιστή C \(μόνο για οικογένειες μεταγλωττιστών gcc και msvc\)\. Μορφή: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
+ - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt; = &lt;major&gt;&lt;minor&gt;
  - **HB\_CCPATH** επικάλυψη του καταλόγου εκτελέσιμων του μεταγλωττιστή C \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
  - **HB\_CCPREFIX** επικάλυψη του προθέματος εκτελέσιμου του μεταγλωττιστή C \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
  - **HB\_CCSUFFIX** επικάλυψη του επιθέματος εκτελέσιμου του μεταγλωττιστή C \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
@@ -482,6 +482,10 @@ Plugin API:
 Προσθήκη ενός δυαδικού object αρχείου στο έργο\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Προσθήκη αρχείου προς εγκατάσταση, με ένα προαιρετικό \-instpath= όνομα ομάδας\.
+ - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a Harbour compiler option\.
+ - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a C compiler option\.
  - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Εξοδος κειμένου στο stdout\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  

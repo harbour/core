@@ -1,6 +1,6 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(756ab4d\) \(2014\-06\-21 11:08\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(5890c33\) \(2014\-07\-21 01:51\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
-<https://harbour\.github\.io/>  
+<https://github\.com/vszakats/harbour\-core/>  
 Traducción \(es\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
 
 Sintaxis:  
@@ -381,7 +381,7 @@ Variables de entorno:
  - **HB\_USER\_LDFLAGS** opciones para ser enviadas al enlazador \(ejecutable\) \(antes de las opciones de la linea de comandos\)
  - **HB\_USER\_DFLAGS** opciones para ser enviadas al enlazador \(librería dinámica\) \(antes de las opciones de la linea de comandos\)
  - **HB\_USER\_AFLAGS** opciones para ser enviadas al enlazador \(librería estática\) \(antes de las opciones de la linea de comandos\)
- - **HB\_COMPILER\_VER** sustituye la autodetección de la versión del compilador de C \(sólo para las familias de compiladores gcc y msvc\)\. Formato: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
+ - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt; = &lt;major&gt;&lt;minor&gt;
  - **HB\_CCPATH** sustituye el directorio del compilador de C \(sólo para la familia de compiladores gcc\)
  - **HB\_CCPREFIX** sustituye el prefijo del ejecutable del compilador de C \(sólo para la familia de compiladores gcc\)
  - **HB\_CCSUFFIX** sustituye el sufijo del ejecutable del compilador de C \(sólo para la familia de compiladores gcc\)
@@ -482,6 +482,10 @@ Añade un archivo de entrda de recursos de Windows al proyecto\.
 Añade un archivo objeto binario al proyecto\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Añade un archivo para instalar, con un nombre de grupo \-instpath= opcional\.
+ - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a Harbour compiler option\.
+ - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a C compiler option\.
  - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Envia el texto de salida a la salida estándar\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  

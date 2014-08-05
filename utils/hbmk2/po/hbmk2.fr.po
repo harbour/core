@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-11-20 09:22+0000\nLast-Translator: Alain Aupeix <alain.aupeix@wanadoo.fr>\nLanguage-Team: French (http://www.transifex.com/projects/p/harbour/language/fr/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: fr\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-05 11:25+0000\nLast-Translator: vszakats\nLanguage-Team: French (http://www.transifex.com/projects/p/harbour/language/fr/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: fr\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -61,10 +61,6 @@ msgstr "Impossible de détecter un compilateur C supporté dans votre chemin d'a
 #, c-format
 msgid "Error: Compiler value unknown: %1$s"
 msgstr "Erreur: Valeur de compilateur inconnue: %1$s"
-
-#, c-format
-msgid "Using Harbour: %1$s %2$s %3$s %4$s %5$s %6$s"
-msgstr "Utilisation de Harbour: %1$s %2$s %3$s %4$s %5$s %6$s"
 
 #, c-format
 msgid "Using C compiler: %1$s"
@@ -143,16 +139,8 @@ msgid "Error: Working directory cannot be created: %1$s"
 msgstr "Erreur: Création du répertoire de travail impossible: %1$s"
 
 #, c-format
-msgid "Error: Temporary Working directory cannot be created: %1$s"
-msgstr "Erreur: Création du répertoire temporaire de travail impossible: %1$s"
-
-#, c-format
 msgid "Creating VCS header: %1$s"
 msgstr "Création de l'entête VCS: %1$s"
-
-#, c-format
-msgid "Creating timestamp header: %1$s"
-msgstr "Création de l'entête de datation: %1$s"
 
 #, c-format
 msgid "Triggered by #require directive: %1$s"
@@ -383,20 +371,8 @@ msgid "Warning: Ignored invalid option value in: %1$s"
 msgstr "Attention: Valeurd'option invalide ignorée dans: %1$s"
 
 #, c-format
-msgid "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead."
-msgstr "Attention: Option de compatibilité dépréciée: %1$s. Utilisez plutôt '%2$s'."
-
-#, c-format
 msgid "Warning: Dangerous low-level option not recommended: %1$s"
 msgstr "Attention: Option de bas-niveau dangereuse et non recommandée: %1$s"
-
-#, c-format
-msgid "Warning: Non-portable parameter: %1$s. Use %2$s directives(s) instead."
-msgstr "Attention: Paramètre non portable: %1$s. Utilisez plutôt la/les directive(s) %2$s."
-
-#, c-format
-msgid "Warning: Non-portable parameter: %1$s. Use '%2$s' option(s) instead."
-msgstr "Attention: Paramètre non portable: %1$s. Utilisez plutôt la/les option(s) %2$s."
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)"
@@ -471,24 +447,12 @@ msgid "Dependency '%1$s' forcibly disabled"
 msgstr "Dépendance '%1$s' désactivée par la force"
 
 #, c-format
-msgid "Warning: Missing optional dependencies: %1$s"
-msgstr "Attention: Dépendances optionnelles manquantes: %1$s"
-
-#, c-format
 msgid "Warning: Missing optional dependency: %1$s"
 msgstr "Attention: Dépendance optionnelle manquante: %1$s"
 
 #, c-format
-msgid "Error: Missing dependencies: %1$s"
-msgstr "Erreur: Dépendances manquantes: %1$s"
-
-#, c-format
 msgid "Error: Missing dependency: %1$s"
 msgstr "Erreur: Dépendance manquante: %1$s"
-
-#, c-format
-msgid "Warning: Missing dependencies: %1$s"
-msgstr "Attention: Dépendances manquantes: %1$s"
 
 #, c-format
 msgid "Warning: Missing dependency: %1$s"
@@ -671,18 +635,6 @@ msgid "(not installed)"
 msgstr "(non installé)"
 
 #, c-format
-msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
-msgstr "Astuce: Ajouter l'option '%1$s' pour les fonctions manquantes: %2$s"
-
-#, c-format
-msgid "Hint: Install package %3$s and add option '%1$s' for missing function(s): %2$s"
-msgstr "Suggestio, : Installez le paquet %3$s et ajouter l'option '%1$s' pour les fonctions manquantes: %2$s"
-
-#, c-format
-msgid "Error: Referenced, missing, but unknown function(s): %1$s"
-msgstr "Erreur: Référencée(s), manquante(s), mais fonction(s) inconnue(s): %1$s"
-
-#, c-format
 msgid "Harbour core"
 msgstr "Noyau Harbour"
 
@@ -771,10 +723,6 @@ msgid "failed Harbour detection"
 msgstr "échec à la détection de Harbour"
 
 #, c-format
-msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
-msgstr "échec lors de la compilation Harbour, Compilateur C, compilateur de ressource"
-
-#, c-format
 msgid "failed in final assembly (linker or library manager)"
 msgstr "Echec à l'assemblage final (éditeur de liens ou gestionnaire de librairie)"
 
@@ -797,10 +745,6 @@ msgstr "ne pas lier GT par défaut (efficace en mode statique)"
 #, c-format
 msgid "do not use static core Harbour libraries when linking"
 msgstr "ne pas utiliser de librairies statiques Harbour lors de l'édition des liens"
-
-#, c-format
-msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
-msgstr "générer un fichier d'en-tête .ch avec l'information du dépôt local. Git, SVN, Mercurial, Bazaar, Fossil, CVS et Monotone sont actuellement pris en charge. L'entête générée définira la constante du préprocesseur _HBMK_VCS_TYPE_ avec le nom de VCS détecté et _HBMK_VCS_ID_ avec l'ID unique du dépôt local. Si aucun système VCS n'est détecté, un numéro séquentiel sera automatiquement affecté à ​​chaque révision."
 
 #, c-format
 msgid "pass single flag to import library creation command"

@@ -156,7 +156,7 @@ STATIC PROCEDURE src_push( cMain )
       "content" => StrTran( cContent, hb_eol(), e"\n" ), ;
       "mimetype" => "text/x-po" } ) )
 
-   lang_hb_run( hb_StrFormat( 'curl -v -s -L --user %1$s -X ' + ;
+   lang_hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;

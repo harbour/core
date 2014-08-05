@@ -1,6 +1,6 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(756ab4d\) \(2014\-06\-21 11:08\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(5890c33\) \(2014\-07\-21 01:51\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
-<https://harbour\.github\.io/>  
+<https://github\.com/vszakats/harbour\-core/>  
 Traducción \(gl\): JLalín  
 
 Sintaxe:  
@@ -390,7 +390,7 @@ Variables de ámbito:
  - **HB\_USER\_LDFLAGS** opcións para enviar ao enlazador \(executable\) \(antes das opcións da liña de comando\)
  - **HB\_USER\_DFLAGS** opcións para enviar ao enlazador \(biblioteca dinámica\) \(antes das opcións da liña de comando\)
  - **HB\_USER\_AFLAGS** opcións para enviar ao enlazador \(biblioteca estática\) \(antes das opcións da liña de comando\)
- - **HB\_COMPILER\_VER** substituír autodetección da versión do compilador C \(só para familia de compiladores gcc e msvc\)\. Formato: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
+ - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt; = &lt;major&gt;&lt;minor&gt;
  - **HB\_CCPATH** substituír o directorio do executable do compilador de C \(só para a famila de compiladores gcc\)
  - **HB\_CCPREFIX** substituír o prefixo do executable do compilador de C \(só para a famila de compiladores gcc\)
  - **HB\_CCSUFFIX** substituír o sufixo do executable do compilador de C \(só para a famila de compiladores gcc\)
@@ -492,6 +492,10 @@ Engadir un arquivo de recursos Windows ao proxecto\.
 Engadir un arquivo binario ao proxecto\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Engadir un arquivo para ser instalado, con un nome de grupo opcional para \-instpath=\.
+ - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a Harbour compiler option\.
+ - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a C compiler option\.
  - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Enviar texto a saída de estándar 'stdout'\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
