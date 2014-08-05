@@ -170,8 +170,6 @@ static HB_BOOL s_fInit = HB_TRUE;
 
 static const HB_FILE_FUNCS * s_fileMethods( void );
 
-#define NETIO_TIMEOUT  -1
-
 static void hb_errRT_NETIO( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                             HB_ERRCODE errOsCode, const char * szDescription,
                             const char * szOperation )
@@ -192,9 +190,9 @@ static long s_fileRecvAll( PHB_CONCLI conn, void * buffer, long len )
    while( lRead < len )
    {
       if( conn->zstream )
-         l = hb_znetRead( conn->zstream, conn->sd, ptr + lRead, len - lRead, NETIO_TIMEOUT );
+         l = hb_znetRead( conn->zstream, conn->sd, ptr + lRead, len - lRead, conn->timeout );
       else
-         l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, NETIO_TIMEOUT );
+         l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, conn->timeout );
       if( l <= 0 )
          break;
       lRead += l;
@@ -217,7 +215,7 @@ static long s_fileRecvTest( PHB_CONCLI conn, void * buffer, long len )
       if( l <= 0 )
          break;
       lRead += l;
-      timeout = NETIO_TIMEOUT;
+      timeout = conn->timeout;
    }
    return lRead;
 }
@@ -395,9 +393,9 @@ static HB_BOOL s_fileSendMsg( PHB_CONCLI conn, HB_BYTE * msgbuf,
    while( lSent < len )
    {
       if( conn->zstream )
-         l = hb_znetWrite( conn->zstream, conn->sd, msg + lSent, len - lSent, NETIO_TIMEOUT, &lLast );
+         l = hb_znetWrite( conn->zstream, conn->sd, msg + lSent, len - lSent, conn->timeout, &lLast );
       else
-         l = lLast = hb_socketSend( conn->sd, msg + lSent, len - lSent, 0, NETIO_TIMEOUT );
+         l = lLast = hb_socketSend( conn->sd, msg + lSent, len - lSent, 0, conn->timeout );
       if( l > 0 )
          lSent += l;
       if( lLast <= 0 )
@@ -410,7 +408,7 @@ static HB_BOOL s_fileSendMsg( PHB_CONCLI conn, HB_BYTE * msgbuf,
    if( lSent == len )
    {
       if( conn->zstream &&
-          hb_znetFlush( conn->zstream, conn->sd, NETIO_TIMEOUT ) != 0 )
+          hb_znetFlush( conn->zstream, conn->sd, conn->timeout ) != 0 )
       {
          conn->errcode = hb_socketGetError();
          if( ! fNoError )
@@ -1144,6 +1142,27 @@ HB_FUNC( NETIO_DISCONNECT )
    hb_retl( fDisconnected );
 }
 
+/* netio_TimeOut( <pConnection> [, <nTimeOut>] ) -> [<nTimeOut>]
+ */
+HB_FUNC( NETIO_TIMEOUT )
+{
+   PHB_CONCLI conn = s_connParam( 1 );
+
+   if( conn )
+   {
+      if( s_fileConLock( conn ) )
+      {
+         hb_retni( conn->timeout );
+         if( HB_ISNUM( 2 ) )
+            conn->timeout = hb_parni( 2 );
+         s_fileConUnlock( conn );
+      }
+      s_fileConClose( conn );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 static const char * s_netio_params( int iParam, int iMsg, const char * pszName, HB_U32 * pSize, char ** pFree )
 {
    int iPCount = iMsg == NETIO_PROCIS ? 0 : hb_pcount();
@@ -1225,9 +1244,14 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
                   }
                   if( buffer == NULL )
                      buffer = ( char * ) hb_xgrab( nResult );
-                  nResult = s_fileRecvAll( conn, buffer, ( long ) nResult );
-                  data = buffer;
-                  pItem = hb_itemDeserialize( &data, &nResult );
+                  if( nResult == ( HB_SIZE ) s_fileRecvAll( conn, buffer, ( long ) nResult ) )
+                  {
+                     data = buffer;
+                     pItem = hb_itemDeserialize( &data, &nResult );
+                  }
+                  else
+                     pItem = NULL;
+
                   if( pItem )
                   {
                      if( iMsg == NETIO_FUNCCTRL )

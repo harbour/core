@@ -77,6 +77,10 @@ Client side functions:
       <cFullName> should not contain "net:" prefix.
 
 
+   netio_TimeOut( <pConnection> [, <nTimeOut>] ) -> [<nTimeOut>]
+      Get/Set client side timeout for messages
+
+
    netio_ProcExists( [<pConnection>,] <cProcName> ) -> <lExists>
       Check if function or procedure exists on the server side.
 
