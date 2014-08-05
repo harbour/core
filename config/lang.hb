@@ -159,7 +159,7 @@ STATIC PROCEDURE src_push( cMain )
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;
       ParEscape( hPar[ "login" ] ), cTempContent, hPar[ "project" ], ;
-      hb_FNameName( hPar[ "entry" ] ), cTempResult ) )
+      TransifexResourceName( hPar ), cTempResult ) )
 
    IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
       ? hb_ValToExp( json )
@@ -208,7 +208,7 @@ STATIC PROCEDURE trs_pull( cMain )
          "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/" + ;
          " -o %5$s", ;
          ParEscape( hPar[ "login" ] ), hPar[ "project" ], ;
-         hb_FNameName( hPar[ "entry" ] ), cLang, cTempResult ) )
+         TransifexResourceName( hPar ), cLang, cTempResult ) )
 
       IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
          hb_MemoWrit( cTempResult, json[ "content" ] )
@@ -409,7 +409,7 @@ STATIC PROCEDURE trs_push( cMain )
          'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/translation/%5$s/' + ;
          ' -o %6$s', ;
          ParEscape( hPar[ "login" ] ), cTempContent, hPar[ "project" ], ;
-         hb_FNameName( hPar[ "entry" ] ), cLang, cTempResult ) )
+         TransifexResourceName( hPar ), cLang, cTempResult ) )
 
       IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
          ? hb_ValToExp( json )
@@ -424,6 +424,14 @@ STATIC PROCEDURE trs_push( cMain )
    RETURN
 
 /* --- */
+
+STATIC FUNCTION TransifexResourceName( hPar )
+
+   IF ! Empty( GetEnv( "HB_TRANSIFEX_RESOURCE" ) )
+      RETURN GetEnv( "HB_TRANSIFEX_RESOURCE" )
+   ENDIF
+
+   RETURN hb_FNameName( hPar[ "entry" ] )
 
 STATIC FUNCTION ArrayToList( array )
 
