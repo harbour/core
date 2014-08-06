@@ -6978,8 +6978,8 @@ HB_FUNC( WVW_NOPENWINDOW )
    RECT       wi = { 0 }, rcWorkArea = { 0 };
    UINT       usWinNum;
 
-   DWORD     dwStyle    = HB_ISNIL( 6 ) ? ( ( DWORD ) ( WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN ) ) : ( ( DWORD ) hb_parnl( 6 ) );
-   INT       iParentWin = HB_ISNIL( 7 ) ? ( s_pWvwData->s_bMainCoordMode ? ( INT ) s_pWvwData->s_usNumWindows - 1 : ( INT ) s_pWvwData->s_usCurWindow ) : ( ( INT ) hb_parni( 7 ) );
+   DWORD     dwStyle    = ( DWORD ) hb_parnldef( 6, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN );
+   INT       iParentWin = HB_ISNUM( 7 ) ? ( INT ) hb_parni( 7 ) : ( s_pWvwData->s_bMainCoordMode ? ( INT ) s_pWvwData->s_usNumWindows - 1 : ( INT ) s_pWvwData->s_usCurWindow );
    PHB_FNAME pFileName = NULL;
 
    if( s_pWvwData->s_usNumWindows == 0 )
@@ -7034,10 +7034,10 @@ HB_FUNC( WVW_NOPENWINDOW )
       hb_itemRelease( pItem );
    }
 
-   irow1 = HB_ISNIL( 2 ) ? 0 : hb_parni( 2 );
-   icol1 = HB_ISNIL( 3 ) ? 0 : hb_parni( 3 );
-   irow2 = HB_ISNIL( 4 ) ? pParentWindow->ROWS - 1 :  hb_parni( 4 );
-   icol2 = HB_ISNIL( 5 ) ? pParentWindow->COLS - 1 :  hb_parni( 5 );
+   irow1 = hb_parni( 2 );
+   icol1 = hb_parni( 3 );
+   irow2 = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pParentWindow->ROWS - 1;
+   icol2 = HB_ISNUM( 5 ) ? hb_parni( 5 ) : pParentWindow->COLS - 1;
 
    usWinNum = hb_gt_wvwOpenWindow( lpszWinName, irow1, icol1, irow2, icol2,
                                    dwStyle, iParentWin );
@@ -7203,17 +7203,16 @@ HB_FUNC( WVW_NSETCURWINDOW )
 {
    INT sWinNum;
 
-   if( HB_ISNIL( 1 ) )
-      hb_retni( ( int ) ( s_pWvwData->s_usCurWindow ) );
-   else
+   if( HB_ISNUM( 1 ) )
    {
       sWinNum = hb_parni( 1 );
       if( sWinNum >= 0 && sWinNum < ( INT ) s_pWvwData->s_usNumWindows )
-         hb_retni( ( int ) ( hb_gt_wvwSetCurWindow( sWinNum ) ) );
+         hb_retni( ( int ) hb_gt_wvwSetCurWindow( sWinNum ) );
       else
          hb_errRT_TERM( EG_BOUND, 10001, "Window Number out of range", "WVW_nSetCurWindow()", 0, 0 );
-
    }
+   else
+      hb_retni( ( int ) s_pWvwData->s_usCurWindow );
 }
 
 /*wvw_nRowOfs( [nWinNum] )
@@ -7297,7 +7296,7 @@ HB_FUNC( WVW_SETMAINCOORD )
 {
    BOOL bOldMainCoordMode = s_pWvwData->s_bMainCoordMode;
 
-   if( ! HB_ISNIL( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       s_pWvwData->s_bMainCoordMode = hb_parl( 1 );
 
@@ -7327,7 +7326,7 @@ HB_FUNC( WVW_ADDROWS )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = s_pWvwData->s_pWindows[ usWinNum ];
-   int        iRows       = HB_ISNIL( 2 ) ? 0 : hb_parni( 2 );
+   int        iRows       = hb_parni( 2 );
    USHORT     height, width;
    USHORT     diffheight, diffwidth;
    USHORT     usNumChars;
@@ -7569,7 +7568,7 @@ HB_FUNC( WVW_SETVERTCARET )
    BOOL       bOldVertCaret = s_pWvwData->s_bVertCaret;
    WIN_DATA * pWindowData   = s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ];
 
-   if( ! HB_ISNIL( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
       s_pWvwData->s_bVertCaret = hb_parl( 1 );
 
@@ -7592,7 +7591,7 @@ HB_FUNC( WVW_SETDEFCENTREWINDOW )
 {
    BOOL bOldDef = s_pWvwData->s_bDefCentreWindow;
 
-   if( ! HB_ISNIL( 1 ) && HB_ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       s_pWvwData->s_bDefCentreWindow = hb_parl( 1 );
 
    hb_retl( bOldDef );
@@ -7608,7 +7607,7 @@ HB_FUNC( WVW_SETDEFHCENTREWINDOW )
 {
    BOOL bOldDef = s_pWvwData->s_bDefHCentreWindow;
 
-   if( ! HB_ISNIL( 1 ) && HB_ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       s_pWvwData->s_bDefHCentreWindow = hb_parl( 1 );
 
    hb_retl( bOldDef );
@@ -7624,7 +7623,7 @@ HB_FUNC( WVW_SETDEFVCENTREWINDOW )
 {
    BOOL bOldDef = s_pWvwData->s_bDefVCentreWindow;
 
-   if( ! HB_ISNIL( 1 ) && HB_ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
       s_pWvwData->s_bDefVCentreWindow = hb_parl( 1 );
 
    hb_retl( bOldDef );
@@ -7643,7 +7642,7 @@ HB_FUNC( WVW_SETDEFLINESPACING )
 {
    int byOldLineSpacing = s_pWvwData->s_byDefLineSpacing;
 
-   if( ! HB_ISNIL( 1 ) && HB_ISNUM( 1 ) && hb_parni( 1 ) >= 0 && hb_parni( 1 ) <= 40 && /*nobody is crazy enough to use > 40 */
+   if( HB_ISNUM( 1 ) && hb_parni( 1 ) >= 0 && hb_parni( 1 ) <= 40 && /* nobody is crazy enough to use > 40 */
        fmod( hb_parnd( 1 ), 2 ) == 0 )
       s_pWvwData->s_byDefLineSpacing = hb_parni( 1 );
 
@@ -7665,7 +7664,7 @@ HB_FUNC( WVW_SETLINESPACING )
    WIN_DATA * pWindowData      = s_pWvwData->s_pWindows[ usWinNum ];
    int        byOldLineSpacing = pWindowData->byLineSpacing;
 
-   if( ! HB_ISNIL( 2 ) && HB_ISNUM( 2 ) && hb_parni( 2 ) >= 0 && hb_parni( 2 ) <= 40 && /*nobody is crazy enough to use > 40 */
+   if( HB_ISNUM( 2 ) && hb_parni( 2 ) >= 0 && hb_parni( 2 ) <= 40 && /*nobody is crazy enough to use > 40 */
        fmod( hb_parnd( 2 ), 2 ) == 0 )
    {
       USHORT height, maxHeight;
@@ -7701,7 +7700,7 @@ HB_FUNC( WVW_SETDEFLSPACECOLOR )
 {
    int iOldDefLSpaceColor = s_pWvwData->s_iDefLSpaceColor;
 
-   if( ! HB_ISNIL( 1 ) && HB_ISNUM( 1 ) && hb_parni( 1 ) >= -1 && hb_parni( 1 ) <= 15 )
+   if( HB_ISNUM( 1 ) && hb_parni( 1 ) >= -1 && hb_parni( 1 ) <= 15 )
       s_pWvwData->s_iDefLSpaceColor = hb_parni( 1 );
 
    hb_retni( iOldDefLSpaceColor );
@@ -7723,7 +7722,7 @@ HB_FUNC( WVW_SETLSPACECOLOR )
    WIN_DATA * pWindowData     = s_pWvwData->s_pWindows[ usWinNum ];
    int        iOldLSpaceColor = pWindowData->iLSpaceColor;
 
-   if( ! HB_ISNIL( 2 ) && HB_ISNUM( 2 ) && hb_parni( 2 ) >= -1 && hb_parni( 2 ) <= 15 )
+   if( HB_ISNUM( 2 ) && hb_parni( 2 ) >= -1 && hb_parni( 2 ) <= 15 )
    {
       pWindowData->iLSpaceColor = hb_parni( 2 );
 
@@ -7790,7 +7789,7 @@ HB_FUNC( WVW_NOSTARTUPSUBWINDOW )
 {
    BOOL bOldNOSTARTUPSUBWINDOW = s_pWvwData->s_bNOSTARTUPSUBWINDOW;
 
-   if( ! HB_ISNIL( 1 ) )
+   if( HB_ISLOG( 1 ) )
       s_pWvwData->s_bNOSTARTUPSUBWINDOW = hb_parl( 1 );
 
    hb_retl( bOldNOSTARTUPSUBWINDOW );
@@ -7829,7 +7828,7 @@ HB_FUNC( WVW_SETWINDOWCENTRE )
 HB_FUNC( WVW_ENABLESHORTCUTS )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
-   BOOL bEnable  = HB_ISNIL( 2 ) ? TRUE : hb_parl( 2 );
+   BOOL bEnable  = hb_parldef( 2, HB_TRUE );
 
    hb_retl( hb_gt_wvwEnableShortCuts( usWinNum, bEnable ) );
 }
@@ -7875,7 +7874,7 @@ HB_FUNC( WVW_GETRGBCOLOR )
 {
    int iColor;
 
-   if( ! HB_ISNIL( 1 ) )
+   if( HB_ISNUM( 1 ) )
    {
       iColor = hb_parni( 1 );
       if( iColor >= 0 && iColor < 16 ) /* Test bound error */
@@ -8077,12 +8076,11 @@ HB_FUNC( WVW_SETFONT )
    UINT usWinNum = WVW_WHICH_WINDOW;
 
    hb_retl( hb_gt_wvwSetFont( usWinNum,
-                              HB_ISNIL( 2 ) ? s_pWvwData->s_pWindows[ usWinNum ]->fontFace   : hb_parcx( 2 ),
-                              HB_ISNIL( 3 ) ? s_pWvwData->s_pWindows[ usWinNum ]->fontHeight : hb_parni( 3 ),
-                              HB_ISNIL( 4 ) ? s_pWvwData->s_pWindows[ usWinNum ]->fontWidth  : hb_parni( 4 ),
-                              HB_ISNIL( 5 ) ? s_pWvwData->s_pWindows[ usWinNum ]->fontWeight : hb_parni( 5 ),
-                              HB_ISNIL( 6 ) ? s_pWvwData->s_pWindows[ usWinNum ]->fontQuality : hb_parni( 6 )
-                              ) );
+                              HB_ISCHAR( 2 ) ? hb_parcx( 2 ) : s_pWvwData->s_pWindows[ usWinNum ]->fontFace,
+                              HB_ISNUM( 3 ) ? hb_parni( 3 ) : s_pWvwData->s_pWindows[ usWinNum ]->fontHeight,
+                              HB_ISNUM( 4 ) ? hb_parni( 4 ) : s_pWvwData->s_pWindows[ usWinNum ]->fontWidth,
+                              HB_ISNUM( 5 ) ? hb_parni( 5 ) : s_pWvwData->s_pWindows[ usWinNum ]->fontWeight,
+                              HB_ISNUM( 6 ) ? hb_parni( 6 ) : s_pWvwData->s_pWindows[ usWinNum ]->fontQuality ) );
 }
 
 
@@ -8137,11 +8135,9 @@ HB_FUNC( WVW_SETCODEPAGE )
 /* wvw_CenterWindow( nWinNum, lCenter, lPaint )   (nWinNum==0==MAIN) */
 HB_FUNC( WVW_CENTERWINDOW )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
-   hb_retl( hb_gt_wvwSetCentreWindow( usWinNum,
-                                      HB_ISNIL( 2 ) ? TRUE  : hb_parl( 2 ),
-                                      HB_ISNIL( 3 ) ? FALSE : hb_parl( 3 ) ) );
+   hb_retl( hb_gt_wvwSetCentreWindow( WVW_WHICH_WINDOW,
+                                      hb_parldef( 2, HB_TRUE ),
+                                      hb_parl( 3 ) ) );
 }
 
 
@@ -8149,10 +8145,10 @@ HB_FUNC( WVW_SETMOUSEMOVE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
 
-   if( HB_ISNIL( 2 ) )
-      hb_retl( s_pWvwData->s_pWindows[ usWinNum ]->MouseMove );
-   else
+   if( HB_ISLOG( 2 ) )
       hb_retl( hb_gt_wvwSetMouseMove( usWinNum, hb_parl( 2 ) ) );
+   else
+      hb_retl( s_pWvwData->s_pWindows[ usWinNum ]->MouseMove );
 }
 
 
@@ -8295,7 +8291,7 @@ HB_FUNC( WVW_SETGUI )
 {
    BOOL bGui = s_pWvwData->s_sApp->bGui;
 
-   if( ! HB_ISNIL( 1 ) )
+   if( HB_ISLOG( 1 ) )
       s_pWvwData->s_sApp->bGui = hb_parl( 1 );
 
    hb_retl( bGui );

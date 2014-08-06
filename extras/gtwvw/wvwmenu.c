@@ -207,55 +207,49 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
    char    szResname[ _MAX_PATH + 1 ];
    int     iWidth, iHeight;
 
-   if( ! HB_ISNIL( 4 ) )
+   if( HB_ISNUM( 4 ) )
    {
-      if( HB_ISNUM( 4 ) )
+      sprintf( szResname, "?%u", hb_parni( 4 ) );
+
+      hBitmapUnchecked = FindBitmapHandle( szResname, &iWidth, &iHeight );
+
+      if( ! hBitmapUnchecked )
       {
-         sprintf( szResname, "?%u", hb_parni( 4 ) );
-
-         hBitmapUnchecked = FindBitmapHandle( szResname, &iWidth, &iHeight );
-
-         if( ! hBitmapUnchecked )
-         {
-            hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 4 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-            AddBitmapHandle( szResname, hBitmapUnchecked, iWidth, iHeight );
-         }
+         hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 4 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         AddBitmapHandle( szResname, hBitmapUnchecked, iWidth, iHeight );
       }
-      else
-      {
-         hBitmapUnchecked = FindBitmapHandle( hb_parcx( 4 ), &iWidth, &iHeight );
+   }
+   else if( HB_ISCHAR( 4 ) )
+   {
+      hBitmapUnchecked = FindBitmapHandle( hb_parc( 4 ), &iWidth, &iHeight );
 
-         if( ! hBitmapUnchecked )
-         {
-            hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, hb_parcx( 4 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-            AddBitmapHandle( hb_parcx( 4 ), hBitmapUnchecked, iWidth, iHeight );
-         }
+      if( ! hBitmapUnchecked )
+      {
+         hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, hb_parc( 4 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         AddBitmapHandle( hb_parc( 4 ), hBitmapUnchecked, iWidth, iHeight );
       }
    }
 
-   if( ! HB_ISNIL( 5 ) )
+   if( HB_ISNUM( 5 ) )
    {
-      if( HB_ISNUM( 5 ) )
+      sprintf( szResname, "?%u", hb_parni( 5 ) );
+
+      hBitmapChecked = FindBitmapHandle( szResname, &iWidth, &iHeight );
+
+      if( ! hBitmapChecked )
       {
-         sprintf( szResname, "?%u", hb_parni( 5 ) );
-
-         hBitmapChecked = FindBitmapHandle( szResname, &iWidth, &iHeight );
-
-         if( ! hBitmapChecked )
-         {
-            hBitmapChecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 5 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-            AddBitmapHandle( szResname, hBitmapChecked, iWidth, iHeight );
-         }
+         hBitmapChecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 5 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         AddBitmapHandle( szResname, hBitmapChecked, iWidth, iHeight );
       }
-      else
-      {
-         hBitmapChecked = FindBitmapHandle( hb_parcx( 5 ), &iWidth, &iHeight );
+   }
+   else if( HB_ISCHAR( 5 ) )
+   {
+      hBitmapChecked = FindBitmapHandle( hb_parc( 5 ), &iWidth, &iHeight );
 
-         if( ! hBitmapChecked )
-         {
-            hBitmapChecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, hb_parcx( 5 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-            AddBitmapHandle( hb_parcx( 5 ), hBitmapChecked, iWidth, iHeight );
-         }
+      if( ! hBitmapChecked )
+      {
+         hBitmapChecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, hb_parc( 5 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         AddBitmapHandle( hb_parc( 5 ), hBitmapChecked, iWidth, iHeight );
       }
    }
 
@@ -322,7 +316,7 @@ HB_FUNC( WIN_SETMENU )
 HB_FUNC( WVW_NOSYSMENU )
 {
    UINT       usWinNum     = WVW_WHICH_WINDOW;
-   BOOL       lRemoveClose = HB_ISNIL( 2 ) ? FALSE : hb_parl( 2 );
+   BOOL       lRemoveClose = hb_parl( 2 );
    WIN_DATA * pWindowData  = hb_gt_wvw_GetWindowsData( usWinNum );
    HMENU      hMenu        = GetSystemMenu( pWindowData->hWnd, FALSE );
 
@@ -351,7 +345,7 @@ HB_FUNC( WVW_GETSYSTEMMENU )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   BOOL       lReset      = HB_ISNIL( 2 ) ? FALSE : hb_parl( 2 );
+   BOOL       lReset      = hb_parl( 2 );
 
    hb_retnl( ( ULONG ) GetSystemMenu( pWindowData->hWnd, lReset ) );
 }
