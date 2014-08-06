@@ -433,20 +433,11 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
             cStart := Left( cLine, 1 )
             SWITCH cStart
             CASE "M"
-            CASE " " /* modified props */
-               cStart := "*"
-               EXIT
-            CASE "A"
-               cStart := "+"
-               EXIT
-            CASE "D"
-               cStart := "-"
-               EXIT
-            CASE "X"
-               cStart := ""
-               EXIT
-            OTHERWISE
-               cStart := "?"
+            CASE " "  ; cStart := "*" ; EXIT  /* modified props */
+            CASE "A"  ; cStart := "+" ; EXIT
+            CASE "D"  ; cStart := "-" ; EXIT
+            CASE "X"  ; cStart := "" ; EXIT
+            OTHERWISE ; cStart := "?"
             ENDSWITCH
             IF ! Empty( cStart )
                AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 8 + 1 ), "\", "/" ) )
@@ -468,24 +459,15 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
             ENDIF
             SWITCH cStart
             CASE " "
-            CASE "?"
-               cStart := ""
-               EXIT
+            CASE "?"  ; cStart := "" ; EXIT
             CASE "M"
             CASE "R"
             CASE "T"
-            CASE "U"
-               cStart := "*"
-               EXIT
+            CASE "U"  ; cStart := "*" ; EXIT
             CASE "A"
-            CASE "C"
-               cStart := "+"
-               EXIT
-            CASE "D"
-               cStart := "-"
-               EXIT
-            OTHERWISE
-               cStart := "?"
+            CASE "C"  ; cStart := "+" ; EXIT
+            CASE "D"  ; cStart := "-" ; EXIT
+            OTHERWISE ; cStart := "?"
             ENDSWITCH
             IF ! Empty( cStart )
                AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 3 + 1 ), "\", "/" ) )

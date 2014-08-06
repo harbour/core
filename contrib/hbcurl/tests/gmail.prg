@@ -23,17 +23,17 @@ PROCEDURE Main( cFrom, cPassword, cTo )
 
    cMessage := tip_MailAssemble( cFrom, ;
       { cTo }, ;
-      NIL /* aCC */, ;
+      /* aCC */, ;
       "test: body", ;
       "test: subject", ;
-      NIL /* attachment */, ;
-      NIL /* nPriority */, ;
-      NIL /* lRead */, ;
-      NIL /* cReplyTo */, ;
-      NIL /* cCharset */, ;
-      NIL /* cEncoding */, ;
+      /* attachment */, ;
+      /* nPriority */, ;
+      /* lRead */, ;
+      /* cReplyTo */, ;
+      /* cCharset */, ;
+      /* cEncoding */, ;
       .F. /* lBodyHTML */, ;
-      NIL /* bSMIME */ )
+      /* bSMIME */ )
 
    curl_global_init()
 
