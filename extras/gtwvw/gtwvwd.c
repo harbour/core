@@ -1155,21 +1155,21 @@ static BOOL hb_gt_wvwGetCharFromInputQueue( int * c )
    UINT       uiWindow = s_pWvwData->s_usNumWindows - 1;
    WIN_DATA * pWindow  = s_pWvwData->s_pWindows[ uiWindow ];
 
-/*
+#if 0
    int iNextPos;
    BOOL bRet = FALSE;
 
- * c = 0;
+   *c = 0;
 
-   iNextPos = ( s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->keyPointerOut >= WVW_CHAR_QUEUE_SIZE - 1 ) ? 0 : s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->keyPointerOut+1 ;
-   if ( iNextPos != s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->keyPointerIn )
+   iNextPos = ( s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->keyPointerOut >= WVW_CHAR_QUEUE_SIZE - 1 ) ? 0 : s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ]->keyPointerOut + 1;
+   if( iNextPos != s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->keyPointerIn )
    {
- * c = s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->Keys[ iNextPos ] ;
-    s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->keyPointerOut = iNextPos ;
-    bRet =  TRUE;
+      *c = s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->Keys[ iNextPos ];
+      s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->keyPointerOut = iNextPos;
+      bRet = TRUE;
    }
-   return( bRet );
- */
+   return bRet;
+#endif
    if( pWindow->keyPointerOut != pWindow->keyPointerIn )
    {
       *c = pWindow->Keys[ pWindow->keyPointerOut ];

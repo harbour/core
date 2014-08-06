@@ -129,8 +129,8 @@ HB_FUNC( WVW_PBCREATE )
 
    iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
    iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
-   iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : +2;
-   iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : +2;
+   iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
+   iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
    uiPBid = ButtonCreate( usWinNum, usTop, usLeft, usBottom, usRight, lpszCaption,
                           szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
@@ -568,7 +568,7 @@ HB_FUNC( WVW_CBCREATE )
       SendMessage(
          ( HWND ) hWndCB,
          CB_SETDROPPEDWIDTH,
-         ( WPARAM ) NewLongComboWidth + 100, /* LongComboWidth+100 */
+         ( WPARAM ) NewLongComboWidth + 100,  /* LongComboWidth + 100 */
          ( LPARAM ) 0
          );
 
