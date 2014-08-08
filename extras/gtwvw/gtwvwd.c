@@ -479,14 +479,13 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 BOOL hb_gt_wvwDestroyPicture( IPicture * iPicture )
 {
-   BOOL bResult = FALSE;
-
    if( iPicture )
    {
       iPicture->lpVtbl->Release( iPicture );
-      bResult = TRUE;
+      return TRUE;
    }
-   return bResult;
+
+   return FALSE;
 }
 
 
@@ -1157,7 +1156,6 @@ static BOOL hb_gt_wvwGetCharFromInputQueue( int * c )
 
 #if 0
    int iNextPos;
-   BOOL bRet = FALSE;
 
    *c = 0;
 
@@ -1166,9 +1164,9 @@ static BOOL hb_gt_wvwGetCharFromInputQueue( int * c )
    {
       *c = s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->Keys[ iNextPos ];
       s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->keyPointerOut = iNextPos;
-      bRet = TRUE;
+      return TRUE;
    }
-   return bRet;
+   return FALSE;
 #endif
    if( pWindow->keyPointerOut != pWindow->keyPointerIn )
    {

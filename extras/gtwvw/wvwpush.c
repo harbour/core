@@ -115,11 +115,11 @@ HB_FUNC( WVW_PBCREATE )
           usLeft        = ( USHORT ) hb_parni( 3 ),
           usBottom      = ( USHORT ) hb_parni( 4 ),
           usRight       = ( USHORT ) hb_parni( 5 );
-   LPCTSTR lpszCaption  = HB_ISCHAR( 6 ) ? hb_parcx( 6 ) : NULL;
-   char *  szBitmap     = HB_ISCHAR( 7 ) ? ( char * ) hb_parcx( 7 ) : NULL;
-   UINT    uiBitmap     = HB_ISNUM( 7 ) ? ( UINT ) hb_parni( 7 ) : 0;
+   LPCTSTR lpszCaption  = hb_parc( 6 );
+   char *  szBitmap     = ( char * ) hb_parc( 7 );
+   UINT    uiBitmap     = ( UINT ) hb_parni( 7 );
    double  dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL    bMap3Dcolors = HB_ISLOG( 11 ) ? ( BOOL ) hb_parl( 11 ) : FALSE;
+   BOOL    bMap3Dcolors = ( BOOL ) hb_parl( 11 );
 
    if( ! HB_ISEVALITEM( 8 ) )
    {
@@ -319,7 +319,7 @@ HB_FUNC( WVW_PBSETFONT )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_DATA * pData       = hb_getWvwData();
-   BOOL       retval      = TRUE;
+   HB_BOOL    retval      = HB_TRUE;
 
    pData->s_lfPB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
    pData->s_lfPB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->s_lfPB.lfWidth;
@@ -359,7 +359,7 @@ HB_FUNC( WVW_PBSETFONT )
 
       }
       else
-         retval = FALSE;
+         retval = HB_FALSE;
    }
 
    hb_retl( retval );
@@ -735,7 +735,7 @@ HB_FUNC( WVW_CBSETFONT )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_DATA * pData       = hb_getWvwData();
 
-   BOOL retval = TRUE;
+   HB_BOOL retval = HB_TRUE;
 
    pData->s_lfCB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
    pData->s_lfCB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->s_lfCB.lfWidth;
@@ -776,7 +776,7 @@ HB_FUNC( WVW_CBSETFONT )
 
       }
       else
-         retval = FALSE;
+         retval = HB_FALSE;
    }
 
    hb_retl( retval );

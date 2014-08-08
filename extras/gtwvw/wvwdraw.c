@@ -494,7 +494,7 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    APP_DATA * s_sApp      = hb_gt_wvwGetAppData();
-   BOOL       bGF         = FALSE;
+   HB_BOOL    bGF         = HB_FALSE;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -541,8 +541,9 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
       gRect.UpperLeft  = 0;
       gRect.LowerRight = 1;
 
-      bGF = ( BOOL ) s_sApp->pfnGF( pWindowData->hdc, vert, 2, &gRect, 1, iMode );
+      bGF = ( HB_BOOL ) s_sApp->pfnGF( pWindowData->hdc, vert, 2, &gRect, 1, iMode );
    }
+
    hb_retl( bGF );
 }
 
@@ -904,7 +905,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
               usRight  = ( USHORT ) hb_parni( 5 );
    BOOL bUseArray      = HB_ISARRAY( 6 );
 
-   BOOL bTight = ( bUseArray || ! HB_ISLOG( 6 ) ? FALSE : hb_parl( 6 ) );
+   BOOL bTight = hb_parl( 6 );
    int  iOLeft, iOTop, iORight, iOBottom;
 
    pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
@@ -982,7 +983,7 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
               usRight  = ( USHORT ) hb_parni( 5 );
    BOOL bUseArray      = HB_ISARRAY( 6 );
 
-   BOOL bTight = ( bUseArray || ! HB_ISLOG( 6 ) ? FALSE : hb_parl( 6 ) );
+   BOOL bTight = hb_parl( 6 );
    int  iOLeft, iOTop, iORight, iOBottom;
 
    pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
@@ -1213,7 +1214,7 @@ HB_FUNC( WVW_DRAWIMAGE )
    BOOL bUseArray    = HB_ISARRAY( 7 );
    BOOL bTransparent = hb_parl( 8 );
    int  iOLeft, iOTop, iORight, iOBottom;
-   BOOL bResult;
+   HB_BOOL bResult;
 
    pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
@@ -1340,7 +1341,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
    BOOL       bUseArray    = HB_ISARRAY( 7 );
    BOOL       bTransparent = hb_parl( 8 );
    int        iOLeft, iOTop, iORight, iOBottom;
-   BOOL       bResult = FALSE;
+   HB_BOOL    bResult = HB_FALSE;
    IPicture * pPic;
 
    pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
@@ -2381,11 +2382,8 @@ HB_FUNC( WVW_DRAWPICTURE )
          iRight  = xy.x - 1 + iORight;
 
          hb_retl( hb_gt_wvwRenderPicture( usWinNum, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, s_sApp->iPicture[ iSlot ],
-                                          FALSE )
-                  );
-
+                                          FALSE ) );
       }
-
 }
 
 

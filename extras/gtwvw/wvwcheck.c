@@ -116,11 +116,11 @@ HB_FUNC( WVW_CXCREATE )
           usLeft        = ( BYTE ) hb_parni( 3 ),
           usBottom      = ( BYTE ) hb_parni( 4 ),
           usRight       = ( BYTE ) hb_parni( 5 );
-   LPCTSTR lpszCaption  = HB_ISCHAR( 6 ) ? hb_parcx( 6 ) : NULL;
-   char *  szBitmap     = HB_ISCHAR( 7 ) ? ( char * ) hb_parcx( 7 ) : NULL;
-   UINT    uiBitmap     = HB_ISNUM( 7 ) ? ( UINT ) hb_parni( 7 ) : 0;
+   LPCTSTR lpszCaption  = hb_parc( 6 );
+   char *  szBitmap     = ( char * ) hb_parc( 7 );
+   UINT    uiBitmap     = ( UINT ) hb_parni( 7 );
    double  dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL    bMap3Dcolors = HB_ISLOG( 11 ) ? ( BOOL ) hb_parl( 11 ) : FALSE;
+   BOOL    bMap3Dcolors = ( BOOL ) hb_parl( 11 );
 
    if( ! HB_ISEVALITEM( 8 ) )
    {

@@ -122,12 +122,12 @@ HB_FUNC( WVW_EBCREATE )
               usRight  = ( USHORT ) hb_parni( 5 );
    LPTSTR lpszText     = ( LPTSTR ) hb_parcx( 6 );
 
-   BOOL bMultiline = HB_ISLOG( 8 ) ? hb_parl( 8 ) : FALSE;
+   BOOL bMultiline = hb_parl( 8 );
    BYTE bEBType    = ( BYTE ) ( bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE );
 
-   DWORD dwMoreStyle = ( DWORD ) ( HB_ISNUM( 9 ) ? hb_parnl( 9 ) : 0 );
+   DWORD dwMoreStyle = ( DWORD ) hb_parnl( 9 );
 
-   USHORT usMaxChar = ( USHORT ) ( HB_ISNUM( 10 ) && hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0 );
+   USHORT usMaxChar = ( USHORT ) ( hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0 );
 
    DWORD      dwStyle;
    WVW_DATA * pData = hb_getWvwData();
@@ -420,7 +420,7 @@ HB_FUNC( WVW_EBSETFONT )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   BOOL       retval      = TRUE;
+   HB_BOOL    retval      = HB_TRUE;
    WVW_DATA * pData       = hb_getWvwData();
 
    pData->s_lfEB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
@@ -462,7 +462,7 @@ HB_FUNC( WVW_EBSETFONT )
 
       }
       else
-         retval = FALSE;
+         retval = HB_FALSE;
    }
 
    hb_retl( retval );
@@ -508,7 +508,7 @@ HB_FUNC( WVW_EBGETTEXT )
    UINT usWinNum         = WVW_WHICH_WINDOW;
    UINT uiEBid           = hb_parni( 2 );
    CONTROL_DATA * pcd    = GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, uiEBid );
-   BOOL       bSoftBreak = HB_ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
+   BOOL       bSoftBreak = hb_parl( 3 );
    USHORT     usLen;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    LPTSTR     lpszTextANSI;
@@ -642,8 +642,8 @@ HB_FUNC( WVW_EBSETSEL )
    UINT usWinNum          = WVW_WHICH_WINDOW;
    UINT uiEBid            = hb_parni( 2 );
    CONTROL_DATA * pcd     = GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, uiEBid );
-   DWORD          dwStart = ( DWORD ) ( HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 0 );
-   DWORD          dwEnd   = ( DWORD ) ( HB_ISNUM( 4 ) ? hb_parnl( 4 ) : 0 );
+   DWORD          dwStart = ( DWORD ) hb_parnl( 3 );
+   DWORD          dwEnd   = ( DWORD ) hb_parnl( 4 );
 
    if( pcd == NULL )
    {
@@ -690,7 +690,7 @@ HB_FUNC( WVW_STCREATE )
 
 
    int   iStyle = ( bBorder ? WS_BORDER : 0 );
-   int   iBox   = HB_ISNUM( 10 ) ? hb_parni( 10 ) : 0;
+   int   iBox   = hb_parni( 10 );
    HFONT hFont  = NULL;
 
    if( iBox > 0 )
@@ -790,7 +790,7 @@ HB_FUNC( WVW_STSETFONT )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_DATA * pData       = hb_getWvwData();
-   BOOL       retval      = TRUE;
+   HB_BOOL    retval      = HB_TRUE;
 
    pData->s_lfST.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
    pData->s_lfST.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->s_lfST.lfWidth;
@@ -831,7 +831,7 @@ HB_FUNC( WVW_STSETFONT )
 
       }
       else
-         retval = FALSE;
+         retval = HB_FALSE;
    }
 
    hb_retl( retval );

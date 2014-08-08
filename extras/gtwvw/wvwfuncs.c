@@ -1534,7 +1534,7 @@ HB_FUNC( WVW_SETPOINTER )
 /*                                                                   */
 HB_FUNC( WVW_LOADPICTURE )
 {
-   BOOL bResult = FALSE;
+   HB_BOOL bResult = HB_FALSE;
 
    WVW_DATA * p        = hb_getWvwData();
    IPicture * iPicture = hb_gt_wvwLoadPicture( hb_parcx( 2 ) );
@@ -1548,7 +1548,7 @@ HB_FUNC( WVW_LOADPICTURE )
 
       p->s_sApp->iPicture[ iSlot ] = iPicture;
 
-      bResult = TRUE;
+      bResult = HB_TRUE;
    }
 
    hb_retl( bResult );
@@ -2431,8 +2431,9 @@ HB_FUNC( WVW_RESTSCREEN )
 
    HBITMAP hBmp;
 
-   BOOL   bResult = FALSE;
-   BOOL   bDoNotDestroyBMP = hb_parl( 7 );
+   HB_BOOL bResult = HB_FALSE;
+   HB_BOOL bDoNotDestroyBMP = hb_parl( 7 );
+
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
           usBottom = ( USHORT ) hb_parni( 4 ),
@@ -2466,7 +2467,7 @@ HB_FUNC( WVW_RESTSCREEN )
                      0,
                      0,
                      SRCCOPY ) )
-            bResult = TRUE;
+            bResult = HB_TRUE;
       }
       else if( StretchBlt( pWindowData->hdc,
                            iLeft,
@@ -2479,8 +2480,7 @@ HB_FUNC( WVW_RESTSCREEN )
                            hb_parvni( 6, 1 ),
                            hb_parvni( 6, 2 ),
                            SRCCOPY ) )
-         bResult = TRUE;
-
+         bResult = HB_TRUE;
    }
 
    SelectObject( pWindowData->hCompDC, hBmp );
