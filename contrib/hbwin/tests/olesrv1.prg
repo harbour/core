@@ -12,7 +12,7 @@
 
 /* DllMain() is OLE server entry point
  * It's executed just after loading OLE inproc server
- * as server from other application and also by regsrv32.exe
+ * as server from other application and also by regsvr32.exe
  * during registration and unregistration procedure.
  * It should initialize OLE server ID and name.
  */

@@ -11,6 +11,7 @@
 #define CLS_ID    "{23245C3F-4487-404B-985F-E33886698D23}"
 
 #include "hbclass.ch"
+#include "hbver.ch"
 
 PROCEDURE DllMain()
 
@@ -59,7 +60,7 @@ CREATE CLASS infoCls
    MESSAGE os       EXTERN OS()
    MESSAGE ver      EXTERN Version()
    MESSAGE compiler EXTERN hb_Compiler()
-   MESSAGE build    EXTERN hb_BuildDate()
+   MESSAGE build    EXTERN hb_Version( HB_VERSION_BUILD_DATE_STR )
 
 ENDCLASS
 
