@@ -189,7 +189,7 @@ HB_FUNC( WVW_PBSETFOCUS )
    if( hWndPB )
       hb_retl( SetFocus( hWndPB ) != NULL );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_pbIsFocused( [nWinNum], nPBid )
@@ -228,7 +228,7 @@ HB_FUNC( WVW_PBENABLE )
          SetFocus( pWindowData->hWnd );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_pbSetCodeblock( [nWinNum], nPBid, bBlock )
@@ -262,7 +262,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
                      pData->szAppName, MB_ICONERROR );
 #endif
 
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -278,7 +278,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    pcd->bBusy = FALSE;
    pData->s_bRecurseCBlock = bOldSetting;
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /* wvw_pbSetStyle( [nWinNum], nPBid, nStyle )
@@ -305,7 +305,7 @@ HB_FUNC( WVW_PBSETSTYLE )
    if( pcd->hWndCtrl )
       SendMessage( pcd->hWndCtrl, BM_SETSTYLE, ( WPARAM ) ulStyle, ( LPARAM ) TRUE );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /* wvw_pbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
@@ -334,7 +334,7 @@ HB_FUNC( WVW_PBSETFONT )
    pData->s_lfPB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfPB.lfQuality;
    pData->s_lfPB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      strcpy( pData->s_lfPB.lfFaceName, hb_parc( 2 ) );
+      hb_strncpy( pData->s_lfPB.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hPBfont )
    {
@@ -643,7 +643,7 @@ HB_FUNC( WVW_CBSETFOCUS )
    if( hWndCB )
       hb_retl( SetFocus( hWndCB ) != NULL );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_cbIsFocused( [nWinNum], nComboId )
@@ -682,7 +682,7 @@ HB_FUNC( WVW_CBENABLE )
          SetFocus( pWindowData->hWnd );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_cbSetCodeblock( [nWinNum], nCBid, bBlock )
@@ -702,7 +702,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -718,7 +718,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
    pcd->bBusy = FALSE;
    pData->s_bRecurseCBlock = bOldSetting;
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /* wvw_cbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
@@ -750,7 +750,7 @@ HB_FUNC( WVW_CBSETFONT )
    pData->s_lfCB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfCB.lfQuality;
    pData->s_lfCB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      strcpy( pData->s_lfCB.lfFaceName, hb_parcx( 2 ) );
+      hb_strncpy( pData->s_lfCB.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hCBfont )
    {
@@ -804,7 +804,7 @@ HB_FUNC( WVW_CBSETINDEX )
 
    if( pcd == NULL || iIndex < 0 )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -941,7 +941,7 @@ HB_FUNC( WVW_CBISDROPPED )
 
    if( pcd == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 

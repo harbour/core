@@ -119,7 +119,7 @@ HB_FUNC( WVW_APPENDMENU )
    {
       MessageBox( NULL, TEXT( "Menu Command Id too high. Potential conflict with pushbutton" ),
                   hb_gt_wvw_GetAppName(), MB_ICONERROR );
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -209,7 +209,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
    if( HB_ISNUM( 4 ) )
    {
-      sprintf( szResname, "?%u", hb_parni( 4 ) );
+      hb_snprintf( szResname, sizeof( szResname ), "?%u", hb_parni( 4 ) );
 
       hBitmapUnchecked = FindBitmapHandle( szResname, &iWidth, &iHeight );
 
@@ -232,7 +232,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
    if( HB_ISNUM( 5 ) )
    {
-      sprintf( szResname, "?%u", hb_parni( 5 ) );
+      hb_snprintf( szResname, sizeof( szResname ), "?%u", hb_parni( 5 ) );
 
       hBitmapChecked = FindBitmapHandle( szResname, &iWidth, &iHeight );
 
@@ -253,7 +253,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
       }
    }
 
-   if( ! HB_ISNIL( 2 ) )
+   if( HB_ISNUM( 2 ) )
       SetMenuItemBitmaps( ( HMENU ) HB_PARHANDLE( 1 ), hb_parni( 2 ), MF_BYCOMMAND, ( HBITMAP ) hBitmapUnchecked, ( HBITMAP ) hBitmapChecked );
    else
       SetMenuItemBitmaps( ( HMENU ) HB_PARHANDLE( 1 ), hb_parni( 3 ), MF_BYPOSITION, ( HBITMAP ) hBitmapUnchecked, ( HBITMAP ) hBitmapChecked );

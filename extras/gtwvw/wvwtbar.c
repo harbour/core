@@ -77,7 +77,7 @@ HB_FUNC( WVW_TBCREATE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndTB;
-   int        iMaxTextRows = ( int ) ( HB_ISNIL( 2 ) ? 0 : ( hb_parl( 2 ) ? 1 : 0 ) );
+   int        iMaxTextRows = ( int ) ( hb_parl( 2 ) ? 1 : 0 );
 #if 0
    DWORD dwStyle = ( DWORD ) hb_parnidef( 3, TBSTYLE_FLAT | TBSTYLE_TOOLTIPS );
 #endif
@@ -232,7 +232,7 @@ HB_FUNC( WVW_TBADDBUTTON )
    hWndTB = pWindowData->hToolBar;
    if( hWndTB == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -240,7 +240,7 @@ HB_FUNC( WVW_TBADDBUTTON )
    {
       MessageBox( NULL, TEXT( "Toolbar button Command Id too high. Potential conflict with pushbutton" ),
                   hb_gt_wvw_GetAppName(), MB_ICONERROR );
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -248,7 +248,7 @@ HB_FUNC( WVW_TBADDBUTTON )
    {
       MessageBox( NULL, TEXT( "Cannot addbutton, Label too long..." ),
                   hb_gt_wvw_GetAppName(), MB_ICONERROR );
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -262,7 +262,7 @@ HB_FUNC( WVW_TBADDBUTTON )
          {
             MessageBox( NULL, TEXT( "Failed addbutton..." ),
                         hb_gt_wvw_GetAppName(), MB_ICONERROR );
-            hb_retl( FALSE );
+            hb_retl( HB_FALSE );
             return;
          }
       }
@@ -270,7 +270,7 @@ HB_FUNC( WVW_TBADDBUTTON )
       {
          MessageBox( NULL, TEXT( "Failed addbutton..." ),
                      hb_gt_wvw_GetAppName(), MB_ICONERROR );
-         hb_retl( FALSE );
+         hb_retl( HB_FALSE );
          return;
       }
    }
@@ -280,7 +280,7 @@ HB_FUNC( WVW_TBADDBUTTON )
    if( pWindowData->usTBHeight != usOldHeight )
       hb_gt_wvwResetWindow( usWinNum );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*wvw_tbButtonCount([nWinNum])
@@ -318,7 +318,7 @@ HB_FUNC( WVW_TBDELBUTTON )
    hWndTB = pWindowData->hToolBar;
    if( hWndTB == NULL || iButton < 0 )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -326,7 +326,7 @@ HB_FUNC( WVW_TBDELBUTTON )
 
    if( ! SendMessage( hWndTB, TB_DELETEBUTTON, ( WPARAM ) iButton, ( LPARAM ) 0 ) )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -335,7 +335,7 @@ HB_FUNC( WVW_TBDELBUTTON )
    if( pWindowData->usTBHeight != usOldHeight )
       hb_gt_wvwResetWindow( usWinNum );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /* wvw_tbGetButtonRect([nWinNum], nButton)
@@ -396,14 +396,14 @@ HB_FUNC( WVW_TBENABLEBUTTON )
    hWndTB = pWindowData->hToolBar;
    if( hWndTB == NULL || iButton < 0 )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
    iCommand = IndexToCommand( hWndTB, iButton );
    if( iCommand < 0 )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -411,7 +411,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
 
    if( ! SendMessage( hWndTB, TB_ENABLEBUTTON, ( WPARAM ) iCommand, ( LPARAM ) MAKELONG( bEnable, 0 ) ) )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -420,7 +420,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
    if( pWindowData->usTBHeight != usOldHeight )
       hb_gt_wvwResetWindow( usWinNum );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*wvw_tbDestroy( [nWinNum] )
@@ -431,7 +431,7 @@ HB_FUNC( WVW_TBDESTROY )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   if( ! ( pWindowData->hToolBar == NULL ) )
+   if( pWindowData->hToolBar != NULL )
    {
       DestroyWindow( pWindowData->hToolBar );
       pWindowData->hToolBar   = NULL;

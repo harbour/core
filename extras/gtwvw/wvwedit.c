@@ -298,7 +298,7 @@ HB_FUNC( WVW_EBSETFOCUS )
    if( hWndEB )
       hb_retl( SetFocus( hWndEB ) != NULL );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_ebIsFocused( [nWinNum], nEditId )
@@ -337,7 +337,7 @@ HB_FUNC( WVW_EBENABLE )
          SetFocus( pWindowData->hWnd );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_ebEditable( [nWinNum], nEditId, [lEditable] )
@@ -358,7 +358,7 @@ HB_FUNC( WVW_EBEDITABLE )
    {
       DWORD dwStyle = ( DWORD ) GetWindowLong( hWndEB, GWL_STYLE );
 
-      hb_retl( ! ( ( dwStyle & ES_READONLY ) == ES_READONLY ) );
+      hb_retl( ( dwStyle & ES_READONLY ) != ES_READONLY );
 
       if( ! HB_ISNIL( 3 ) )
          SendMessage(
@@ -389,7 +389,7 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -405,7 +405,7 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
    pcd->bBusy = FALSE;
    pData->s_bRecurseCBlock = bOldSetting;
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /* wvw_ebSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
@@ -436,7 +436,7 @@ HB_FUNC( WVW_EBSETFONT )
    pData->s_lfEB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfEB.lfQuality;
    pData->s_lfEB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      strcpy( pData->s_lfEB.lfFaceName, hb_parcx( 2 ) );
+      hb_strncpy( pData->s_lfEB.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hEBfont )
    {
@@ -483,7 +483,7 @@ HB_FUNC( WVW_EBISMULTILINE )
 
    if( pcd == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -516,7 +516,7 @@ HB_FUNC( WVW_EBGETTEXT )
 
    if( pcd == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -570,7 +570,7 @@ HB_FUNC( WVW_EBSETTEXT )
 
    if( pcd == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -611,7 +611,7 @@ HB_FUNC( WVW_EBGETSEL )
 
    if( pcd == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -625,7 +625,7 @@ HB_FUNC( WVW_EBGETSEL )
       hb_stornl( dwStart, 3 );
    if( HB_ISBYREF( 4 ) )
       hb_stornl( dwEnd, 4 );
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*wvw_ebSetSel( [nWinNum], nEBid, nstart, nend )
@@ -647,7 +647,7 @@ HB_FUNC( WVW_EBSETSEL )
 
    if( pcd == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -656,7 +656,7 @@ HB_FUNC( WVW_EBSETSEL )
                 ( WPARAM ) dwStart,
                 ( LPARAM ) dwEnd
                 );
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 /* Static controls */
 
@@ -781,7 +781,7 @@ HB_FUNC( WVW_STSETTEXT )
       hb_retl( 1 );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 
@@ -805,7 +805,7 @@ HB_FUNC( WVW_STSETFONT )
    pData->s_lfST.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfST.lfQuality;
    pData->s_lfST.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      strcpy( pData->s_lfST.lfFaceName, hb_parcx( 2 ) );
+      hb_strncpy( pData->s_lfST.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hSTfont )
    {

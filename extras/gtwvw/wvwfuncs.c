@@ -460,7 +460,7 @@ HB_FUNC( WVW_SETCONTROLTEXT )
    if( uiCtrlId == 0 || hWndPB == NULL )
       return;
    SetWindowText( hWndPB, hb_parcx( 3 ) );
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 HB_FUNC( WVW_PBVISIBLE )
@@ -474,7 +474,7 @@ HB_FUNC( WVW_PBVISIBLE )
 
    if( uiCtrlId == 0 || hWndPB == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -503,7 +503,7 @@ HB_FUNC( WVW_CBVISIBLE )
       hb_retl( ShowWindow( hWndCB, iCmdShow ) == 0 );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVW_CXVISIBLE )
@@ -517,7 +517,7 @@ HB_FUNC( WVW_CXVISIBLE )
 
    if( uiCtrlId == 0 || hWndPB == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -546,7 +546,7 @@ HB_FUNC( WVW_XBVISIBLE )
 
    if( uiXBid == 0 || hWndXB == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -624,7 +624,7 @@ HB_FUNC( BRINGTOTOP1 )
    if( IsIconic( hWnd ) )
    {
       ShowWindow( hWnd, SW_RESTORE );
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
       return;
    }
    BringWindowToTop( hWnd ); /* IE 5.5 related hack */
@@ -751,7 +751,7 @@ HB_FUNC( LOADIMAGE )
 {
    if( HB_ISNUM( 2 ) )
       hb_retnl( ( LONG )
-                LoadImage( hb_getWvwData()->hInstance,                     /* HB_ISNIL( 1 ) ? GetModuleHandle( NULL ) : ( HINSTANCE ) hb_parnl( 1 ),   handle of the instance that contains the image */
+                LoadImage( hb_getWvwData()->hInstance,                     /* ( HINSTANCE ) hb_parnldef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
                            ( LPCTSTR ) MAKEINTRESOURCE( hb_parnl( 2 ) ),   /* name or identifier of image */
                            ( UINT ) hb_parni( 3 ),                         /* type of image */
                            hb_parni( 4 ),                                  /* desired width */
@@ -775,7 +775,7 @@ HB_FUNC( LOADBITMAP )
 {
    if( HB_ISNUM( 1 ) )
    {
-      if( ! HB_ISNIL( 2 ) && hb_parl( 2 ) )
+      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
 #if 0
          hb_retnl( ( LONG ) LoadBitmap( GetModuleHandle( NULL ),  MAKEINTRESOURCE( hb_parnl( 1 ) ) ) );
 #endif
@@ -793,7 +793,7 @@ HB_FUNC( LOADBITMAPEX )
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      if( ! HB_ISNIL( 3 ) && hb_parl( 3 ) )
+      if( HB_ISLOG( 3 ) && hb_parl( 3 ) )
 #if 0
          hb_retnl( ( LONG ) LoadBitmap( h,  MAKEINTRESOURCE( hb_parnl( 2 ) ) ) );
 #endif
@@ -907,7 +907,7 @@ HB_FUNC( OPENBITMAP )
    LPVOID  lpvBits;
    HGLOBAL hmem1, hmem2;
    HBITMAP hbm;
-   HDC     hDC  = ( hb_pcount() > 1 && ! HB_ISNIL( 2 ) ) ? ( HDC ) HB_PARHANDLE( 2 ) : NULL;
+   HDC     hDC  = ( HDC ) HB_PARHANDLE( 2 );
    HANDLE  hfbm = CreateFile( hb_parc( 1 ), GENERIC_READ, FILE_SHARE_READ,
                               NULL, OPEN_EXISTING,
                               FILE_ATTRIBUTE_READONLY, NULL );
@@ -982,7 +982,7 @@ HB_FUNC( OPENBITMAP )
    /* Create a bitmap from the data stored in the .BMP file.  */
    hbm = CreateDIBitmap( hDC, &bmih, CBM_INIT, lpvBits, lpbmi, DIB_RGB_COLORS );
 
-   if( hb_pcount() < 2 || HB_ISNIL( 2 ) )
+   if( ! HB_ISHANDLE( 2 ) )
       ReleaseDC( 0, hDC );
 
    /* Unlock the global memory objects and close the .BMP file. */
@@ -1395,10 +1395,10 @@ HB_FUNC( WVW_SETTIMER )
 
       SetTimer( pWindowData->hWnd, WVW_ID_BASE_TIMER + usWinNum, ( UINT ) hb_parni( 2 ), NULL );
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_KillTimer([nWinNum])
@@ -1416,10 +1416,10 @@ HB_FUNC( WVW_KILLTIMER )
       WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
       KillTimer( pWindowData->hWnd, WVW_ID_BASE_TIMER + usWinNum );
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 
@@ -1585,7 +1585,7 @@ HB_FUNC( WVW_LOADFONT )
       logfont.lfHeight         = HB_ISNUM( 3 ) ? hb_parni( 3 ) : pWindowData->fontHeight;
       logfont.lfWidth = HB_ISNUM( 4 ) ? hb_parni( 4 ) : ( pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
 
-      strcpy( logfont.lfFaceName, HB_ISCHAR( 2 ) ? hb_parc( 2 ) : pWindowData->fontFace );
+      hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 2 ) ? hb_parc( 2 ) : pWindowData->fontFace, sizeof( logfont.lfFaceName ) - 1 );
 
       hFont = CreateFontIndirect( &logfont );
       if( hFont )
@@ -1621,10 +1621,10 @@ HB_FUNC( WVW_LOADPEN )
          DeleteObject( ( HPEN ) p->s_sApp->hUserPens[ iSlot ] );
       p->s_sApp->hUserPens[ iSlot ] = hPen;
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 
@@ -1670,7 +1670,7 @@ HB_FUNC( WVW_CHOOSEFONT )
    lf.lfQuality        = ( BYTE ) hb_parnidef( 5, DEFAULT_QUALITY );
    lf.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 1 ) )
-      strcpy( lf.lfFaceName, hb_parcx( 1 ) );
+      hb_strncpy( lf.lfFaceName, hb_parc( 1 ), sizeof( lf.lfFaceName ) - 1 );
 
    cf.lStructSize    = sizeof( CHOOSEFONT );
    cf.hwndOwner      = p->s_pWindows[ p->s_usNumWindows - 1 ]->hWnd;
@@ -1774,7 +1774,7 @@ HB_FUNC( WVW_SETMOUSEPOS )
    if( ClientToScreen( pWindowData->hWnd, &xy ) )
       hb_retl( SetCursorPos( xy.x, xy.y + ( pWindowData->PTEXTSIZE.y / 2 ) ) );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 
@@ -1855,7 +1855,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
       DeleteObject( hBrush );
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -1940,12 +1940,12 @@ HB_FUNC( WVW_SETPEN )
 
          p->s_sApp->currentPen = hPen;
 
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
          return;
       }
    }
 
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 
@@ -1988,12 +1988,12 @@ HB_FUNC( WVW_SETBRUSH )
          }
          p->s_sApp->currentBrush = hBrush;
 
-         hb_retl( TRUE );
+         hb_retl( HB_TRUE );
          return;
       }
    }
 
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 
@@ -2259,7 +2259,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
    int        iIndex;
    int        iResource = hb_parni( 4 );
    int        iResult   = 0;
-   HWND       hParent   = HB_ISNIL( 5 ) ? p->s_pWindows[ 0 ]->hWnd : ( HWND ) HB_PARHANDLE( 5 );
+   HWND       hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : p->s_pWindows[ 0 ]->hWnd;
 
    /* check if we still have room for a new dialog */
    for( iIndex = 0; iIndex < WVW_DLGMD_MAX; iIndex++ )
@@ -2521,7 +2521,7 @@ HB_FUNC( WVW_CREATEFONT )
    logfont.lfHeight         = HB_ISNUM( 2 ) ? hb_parni( 2 ) : pWindowData->fontHeight;
    logfont.lfWidth = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
 
-   strcpy( logfont.lfFaceName, HB_ISCHAR( 1 ) ? hb_parc( 1 ) : pWindowData->fontFace );
+   hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 1 ) ? hb_parc( 1 ) : pWindowData->fontFace, sizeof( logfont.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &logfont );
    if( hFont )

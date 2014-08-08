@@ -81,7 +81,7 @@ HB_FUNC( WVW_SBCREATE )
    WVW_DATA * pData = hb_getWvwData();
    int        ptArray[ WVW_MAX_STATUS_PARTS ];
 
-   if( ! ( pWindowData->hStatusBar == NULL ) )
+   if( pWindowData->hStatusBar != NULL )
    {
       hb_retnl( 0 );
       return;
@@ -122,7 +122,7 @@ HB_FUNC( WVW_SBDESTROY )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   if( ! ( pWindowData->hStatusBar == NULL ) )
+   if( pWindowData->hStatusBar != NULL )
    {
       if( pWindowData->hSBfont )
       {
@@ -216,7 +216,7 @@ HB_FUNC( WVW_SBADDPART )
       if( hIcon == NULL )
          hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), hb_parc( 6 ), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
 
-      if( ! ( hIcon == NULL ) )
+      if( hIcon != NULL )
          SendMessage( hWndSB, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
    }
 
@@ -349,7 +349,7 @@ HB_FUNC( WVW_SBSETFONT )
    pData->s_lfSB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfSB.lfQuality;
    pData->s_lfSB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      strcpy( pData->s_lfSB.lfFaceName, hb_parcx( 2 ) );
+      hb_strncpy( pData->s_lfSB.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfSB.lfFaceName ) - 1 );
 
    if( pWindowData->hSBfont )
    {
@@ -683,7 +683,7 @@ HB_FUNC( WVW_XBENABLE )
 
    if( uiXBid == 0 || hWndXB == NULL || uiFlags > ESB_DISABLE_BOTH )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 

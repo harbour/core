@@ -230,7 +230,7 @@ typedef __int64 LONG_PTR;
  */
 #define WVW_TB_LABELMAXLENGTH     100
 
-#define WVW_WHICH_WINDOW          ( HB_ISNIL( 1 ) ? ( hb_gt_wvw_GetMainCoordMode() ? ( ( hb_gt_wvw_GetNumWindows() ) - 1 )  : hb_gt_wvw_GetCurWindow() ) : ( ( UINT ) hb_parni( 1 ) ) )
+#define WVW_WHICH_WINDOW          ( HB_ISNUM( 1 ) ? ( UINT ) hb_parni( 1 ) : ( hb_gt_wvw_GetMainCoordMode() ? hb_gt_wvw_GetNumWindows() - 1 : hb_gt_wvw_GetCurWindow() ) )
 
 #define BLACK                     RGB( 0x00, 0x00, 0x00 )
 #define BLUE                      RGB( 0x00, 0x00, 0x85 )
@@ -608,10 +608,12 @@ typedef struct wvw_data
 
 #if 0
 #define HB_RETHANDLE( h )          hb_retptr( ( void * ) ( h ) )
+#define HB_ISHANDLE( n )           HB_ISPOINTER( n )
 #define HB_PARHANDLE( n )          hb_parptr( n )
 #define HB_STOREHANDLE( h, n )     hb_storptr( ( void * ) ( h ), n )
 #endif
    #define HB_RETHANDLE( h )       hb_retnl( ( LONG ) ( h ) )
+   #define HB_ISHANDLE( n )        HB_ISNUM( n )
    #define HB_PARHANDLE( n )       ( ( LONG ) hb_parnl( n ) )
    #define HB_STOREHANDLE( h, n )  hb_stornl( ( LONG ) ( h ), n )
 HB_EXTERN_BEGIN

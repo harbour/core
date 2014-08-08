@@ -182,7 +182,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    SetBkColor( pWindowData->hdc, oldBkColor );
    SetTextColor( pWindowData->hdc, oldTextColor );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -273,7 +273,7 @@ HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
          break;
 
    }
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -810,7 +810,7 @@ HB_FUNC( WVW_DRAWBOXGET )
    MoveToEx( pWindowData->hdc, iRight, iTop, NULL );
    LineTo( pWindowData->hdc, iRight, iBottom + 1 );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*
@@ -873,7 +873,7 @@ HB_FUNC( WVW_DRAWBOXGET_XP )
    MoveToEx( pWindowData->hdc, iRight + 1, iTop - 1, NULL );
    LineTo( pWindowData->hdc, iRight + 1, iBottom + 1 );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -951,7 +951,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
    hb_gt_wvwDrawBoxRaised( pWindowData->byWinId, iTop, iLeft, iBottom, iRight,
                            bTight );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -1028,7 +1028,7 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
    hb_gt_wvwDrawBoxRecessed( pWindowData->byWinId, iTop, iLeft, iBottom, iRight,
                              bTight );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*
@@ -1102,7 +1102,7 @@ HB_FUNC( WVW_DRAWBOXGROUP )
    MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top Inner     */
    LineTo( pWindowData->hdc, iRight, iTop );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -1167,7 +1167,7 @@ HB_FUNC( WVW_DRAWBOXGROUPRAISED )
    MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top Inner     */
    LineTo( pWindowData->hdc, iRight, iTop );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -1480,7 +1480,7 @@ HB_FUNC( WVW_DRAWLABEL )
    logfont.lfHeight         = HB_ISNUM( 10 ) ? hb_parni( 10 ) : pWindowData->fontHeight;
    logfont.lfWidth = HB_ISNUM( 11 ) ? hb_parni( 11 ) : ( pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
 
-   strcpy( logfont.lfFaceName, HB_ISCHAR( 9 ) ? hb_parcx( 9 ) : pWindowData->fontFace );
+   hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 9 ) ? hb_parc( 9 ) : pWindowData->fontFace, sizeof( logfont.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &logfont );
    if( hFont )
@@ -1500,10 +1500,10 @@ HB_FUNC( WVW_DRAWLABEL )
       SetBkColor( pWindowData->hdc, oldBkColor );
       SetTextColor( pWindowData->hdc, oldTextColor );
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
 
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 
@@ -1562,7 +1562,7 @@ HB_FUNC( WVW_DRAWOUTLINE )
       DeleteObject( hPen );
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -1724,7 +1724,7 @@ HB_FUNC( WVW_DRAWLINE )
 
    SelectObject( pWindowData->hdc, hOldPen );
    DeleteObject( hPen );
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -2013,7 +2013,7 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
       usAtRow++;
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*
@@ -2041,7 +2041,7 @@ HB_FUNC( WVW_DRAWGRIDVERT )
    pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
    if( ! iTabs )
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 
    iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
    iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
@@ -2079,7 +2079,7 @@ HB_FUNC( WVW_DRAWGRIDVERT )
       LineTo( pWindowData->hdc, x, iBottom );
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -2105,7 +2105,7 @@ HB_FUNC( WVW_DRAWBUTTON )
    IPicture * iPicture;
 
    BOOL bText   = HB_ISCHAR( 6 );
-   BOOL bImage  = ! HB_ISNIL( 7 );
+   BOOL bImage  = HB_ISNUM( 7 ) || HB_ISCHAR( 7 );
    int  iFormat = hb_parni( 8 );
 
    COLORREF textColor = ( COLORREF ) hb_parnldef(  9, _COLORS[ 0 ] );
@@ -2226,7 +2226,7 @@ HB_FUNC( WVW_DRAWBUTTON )
                              FALSE );
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -2426,10 +2426,10 @@ HB_FUNC( WVW_DRAWLABELEX )
       SetBkColor( pWindowData->hdc, oldBkColor );
       SetTextColor( pWindowData->hdc, oldTextColor );
 
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
    }
 
-   hb_retl( FALSE );
+   hb_retl( HB_FALSE );
 }
 
 
@@ -2571,7 +2571,7 @@ HB_FUNC( WVW_DRAWLINEEX )
          break;
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 

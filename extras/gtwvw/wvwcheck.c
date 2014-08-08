@@ -190,7 +190,7 @@ HB_FUNC( WVW_CXSETFOCUS )
    if( hWndCX )
       hb_retl( SetFocus( hWndCX ) != NULL );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_cxEnable( [nWinNum], nButtonId, [lToggle] )
@@ -216,7 +216,7 @@ HB_FUNC( WVW_CXENABLE )
          SetFocus( pWindowData->hWnd );
    }
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 /*wvw_cxSetCodeblock( [nWinNum], nCXid, bBlock )
@@ -235,7 +235,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -250,7 +250,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
    pcd->bBusy = FALSE;
    pData->s_bRecurseCBlock = bOldSetting;
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /* wvw_cxSetCheck( [nWinNum], nCXid, nCheckState )
@@ -272,7 +272,7 @@ HB_FUNC( WVW_CXSETCHECK )
       SendMessage( pcd->hWndCtrl,
                    BM_SETCHECK, ( WPARAM ) ulCheck, ( LPARAM ) 0 );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*wvw_cxGetCheck( [nWinNum], nCXid )
@@ -306,7 +306,7 @@ HB_FUNC( WVW_CXSETFONT )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_DATA * pData       = hb_getWvwData();
 
-   BOOL retval = TRUE;
+   BOOL retval = HB_TRUE;
 
    pData->s_lfCX.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
    pData->s_lfCX.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->s_lfCX.lfWidth;
@@ -321,7 +321,7 @@ HB_FUNC( WVW_CXSETFONT )
    pData->s_lfCX.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfCX.lfQuality;
    pData->s_lfCX.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      strcpy( pData->s_lfCX.lfFaceName, hb_parcx( 2 ) );
+      hb_strncpy( pData->s_lfCX.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hCXfont )
    {
@@ -348,7 +348,7 @@ HB_FUNC( WVW_CXSETFONT )
 
       }
       else
-         retval = FALSE;
+         retval = HB_FALSE;
    }
 
    hb_retl( retval );
@@ -371,7 +371,7 @@ HB_FUNC( WVW_CXSTATUSFONT )
          SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) pWindowData->hPBfont, ( LPARAM ) TRUE );
    }
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 
@@ -562,14 +562,14 @@ HB_FUNC( WVW_PGSETRANGE )
 
    if( uiPGid == 0 || hWndPG == NULL || ( iMin > iMax ) )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
    SendMessage( hWndPG, PBM_SETRANGE, 0, MAKELPARAM( iMin, iMax ) );
    SendMessage( hWndPG, PBM_SETPOS, ( WPARAM ) iMin, 0 );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*wvw_pgSetPos(nWinNum, PGid, [nPos])
@@ -589,7 +589,7 @@ HB_FUNC( WVW_PGSETPOS )
 
    if( uiPGid == 0 || hWndPG == NULL )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
@@ -597,13 +597,13 @@ HB_FUNC( WVW_PGSETPOS )
 
    if( iPos < pbrange.iLow || iPos > pbrange.iHigh )
    {
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
       return;
    }
 
    SendMessage( hWndPG, PBM_SETPOS, ( WPARAM ) iPos, 0 );
 
-   hb_retl( TRUE );
+   hb_retl( HB_TRUE );
 }
 
 /*wvw_pgGetPos(nWinNum, PGid)
