@@ -16,10 +16,14 @@ gtwvwd.c
 wvwcheck.c
 wvwedit.c
 wvwpush.c
+
+combobox.c
 draw.c
 funcs.c
 menubar.c
+progrbar.c
 scrollbr.c
+static.c
 toolbar.c
 
 $hb_pkg_dynlib.hbm
