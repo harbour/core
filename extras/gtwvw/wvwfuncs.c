@@ -132,7 +132,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 /* win_SetTimer( hWnd, nIdentifier, nTimeOut ) */
 HB_FUNC( WIN_SETTIMER )
 {
-   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), hb_parnint( 2 ), hb_parni( 3 ), NULL ) != ( UINT_PTR ) NULL );
+   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), hb_parnl( 2 ), hb_parni( 3 ), NULL ) != ( UINT_PTR ) NULL );
 }
 
 

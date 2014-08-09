@@ -5743,7 +5743,7 @@ static void  hb_gt_wvw_vxPutch( WIN_DATA * pWindowData, USHORT iRow, USHORT iCol
    if( index < pWindowData->BUFFERSIZE )
    {
       pWindowData->pBuffer[ index ] = bChar;
-      pWindowData->pColors[ index ] = bColor;
+      pWindowData->pColors[ index ] = ( BYTE ) bColor;
 
       /* determine bounds of rect around character to refresh */
       hb_gt_wvw_SetInvalidRect( pWindowData, iCol, iRow, iCol, iRow );
