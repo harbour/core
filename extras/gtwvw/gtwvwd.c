@@ -6333,7 +6333,8 @@ BOOL hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const ch
 
    WIN_DATA * pWindowData = s_pWvwData->s_pWindows[ usWinNum ];
 
-   iWidth = 0;  iHeight = 0;
+   iWidth = 0;
+   iHeight = 0;
 
    hBitmap = FindUserBitmapHandle( image, &iWidth, &iHeight );
    if( ! hBitmap )
@@ -6417,7 +6418,7 @@ BOOL hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const ch
 
 IPicture * hb_gt_wvwLoadPicture( const char * image )
 {
-   LPVOID  iPicture = NULL;
+   LPVOID iPicture = NULL;
    HANDLE hFile = CreateFile( image, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 
    if( hFile != INVALID_HANDLE_VALUE )
@@ -8262,38 +8263,26 @@ IPicture * rr_LoadPicture( const char * filename, LONG * lwidth, LONG * lheight 
 static BITMAPINFO * PackedDibLoad( PTSTR szFileName )
 {
    BITMAPFILEHEADER bmfh;
-   BITMAPINFO *     pbmi;
-   BOOL   bSuccess;
-   DWORD  dwPackedDibSize, dwBytesRead;
-   HANDLE hFile;
+   BITMAPINFO *     pbmi = NULL;
 
-   hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
-                       OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+   HB_FHANDLE fhnd = hb_fsOpen( szFileName, FO_READ | FO_SHARED );
 
-   if( hFile == INVALID_HANDLE_VALUE )
-      return NULL;
-
-   bSuccess = ReadFile( hFile, &bmfh, sizeof( BITMAPFILEHEADER ),
-                        &dwBytesRead, NULL );
-
-   if( ! bSuccess || dwBytesRead != sizeof( BITMAPFILEHEADER ) || bmfh.bfType != 0x4d42 /* "BM" */ )
+   if( fhnd != FS_ERROR &&
+       hb_fsReadLarge( fhnd, &bmfh, sizeof( BITMAPFILEHEADER ) ) == sizeof( BITMAPFILEHEADER ) &&
+       bmfh.bfType == 0x4d42 /* "BM" */ )
    {
-      CloseHandle( hFile );
-      return NULL;
+      DWORD dwPackedDibSize = bmfh.bfSize - sizeof( BITMAPFILEHEADER );
+
+      pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
+
+      if( hb_fsReadLarge( fhnd, &pbmi, dwPackedDibSize ) != dwPackedDibSize )
+      {
+         hb_xfree( pbmi );
+         pbmi = NULL;
+      }
    }
 
-   dwPackedDibSize = bmfh.bfSize - sizeof( BITMAPFILEHEADER );
-
-   pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
-
-   bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
-   CloseHandle( hFile );
-
-   if( ! bSuccess || dwBytesRead != dwPackedDibSize )
-   {
-      hb_xfree( pbmi );
-      return NULL;
-   }
+   hb_fsClose( fhnd );
 
    return pbmi;
 }
@@ -8331,7 +8320,6 @@ static int PackedDibGetInfoHeaderSize( BITMAPINFO * pPackedDib )
       return pPackedDib->bmiHeader.biSize +
              ( pPackedDib->bmiHeader.biCompression ==
                BI_BITFIELDS ? 12 : 0 );
-
    else
       return pPackedDib->bmiHeader.biSize;
 }
@@ -8380,14 +8368,12 @@ HBITMAP FindBitmapHandle( const char * szFileName, int * piWidth, int * piHeight
 
    while( pbh )
    {
-
       if( strcmp( szFileName, pbh->szFilename ) == 0 &&
           ( ! bStrictDimension ||
             ( *piWidth == pbh->iWidth &&
               *piHeight == pbh->iHeight
             )
-          )
-          )
+          ) )
       {
          if( ! bStrictDimension )
          {
@@ -8430,8 +8416,7 @@ static IPicture * FindPictureHandle( const char * szFileName, int * piWidth, int
             ( *piWidth == pph->iWidth &&
               *piHeight == pph->iHeight
             )
-          )
-          )
+          ) )
       {
          if( ! bStrictDimension )
          {
@@ -8475,8 +8460,7 @@ static HBITMAP FindUserBitmapHandle( const char * szFileName, int * piWidth, int
             ( *piWidth == pbh->iWidth &&
               *piHeight == pbh->iHeight
             )
-          )
-          )
+          ) )
       {
          if( ! bStrictDimension )
          {
@@ -8862,7 +8846,6 @@ LRESULT CALLBACK hb_gt_wvwTBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 #endif
       case WM_PAINT:
       {
-
          HGDIOBJ hOldObj;
          HDC     hdc;
          RECT    rTB = { 0 };
@@ -8895,7 +8878,6 @@ LRESULT CALLBACK hb_gt_wvwTBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
          return 0;
       }
-
    }
 
    return CallWindowProc( ( WNDPROC ) pWindowData->tbOldProc, hWnd, message, wParam, lParam );
@@ -9042,7 +9024,6 @@ WNDPROC GetControlProc( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl )
 
 static int GetControlClass( UINT usWinNum, HWND hWndCtrl )
 {
-
    WIN_DATA *     pWindowData = s_pWvwData->s_pWindows[ usWinNum ];
    CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
 
@@ -9104,7 +9085,6 @@ static void RunControlBlock( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UIN
       }
       else if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON )
       {
-
          pReturn = hb_itemDo( pcd->phiCodeBlock, 2, phiWinNum, phiXBid );
          hb_itemRelease( pReturn );
       }
@@ -9181,7 +9161,6 @@ static void RunControlBlock( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UIN
                hb_itemRelease( phiEvent );
 
                break;
-
          }
       }
 
@@ -9221,7 +9200,6 @@ static void ReposControls( UINT usWinNum, BYTE byCtrlClass )
 
          if( pcd->byCtrlClass == WVW_CONTROL_SCROLLBAR )
          {
-
             if( pcd->bStyle == SBS_VERT )
             {
                iBottom = xy.y - 1 + pcd->rOffCtrl.bottom;
@@ -9255,7 +9233,6 @@ static void ReposControls( UINT usWinNum, BYTE byCtrlClass )
          }
          else
          {
-
             hb_errRT_TERM( EG_NOFUNC, 10001, "Undefined Control Class", "ReposControls()", 0, 0 );
 
             /* dummy assignment, to avoid warning in mingw32: */
@@ -9319,7 +9296,6 @@ LRESULT CALLBACK hb_gt_wvwXBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
    switch( message )
    {
-
       case WM_LBUTTONUP:
 
          CallWindowProc( OldProc, hWnd, message, wParam, lParam );
@@ -9420,7 +9396,6 @@ LRESULT CALLBACK hb_gt_wvwBtnProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
                PostMessage( hWndParent, message, wParam, lParam );
 
                break;
-
          }
          return 0;
       }
@@ -9594,7 +9569,6 @@ LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
    switch( message )
    {
-
       case WM_KEYDOWN:
       case WM_SYSKEYDOWN:
       {
@@ -9614,10 +9588,8 @@ LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
          if( bKbdType == WVW_CB_KBD_STANDARD )
          {
-
             switch( c )
             {
-
                case VK_F4:
                   if( bAlt )
                   {
@@ -9651,7 +9623,6 @@ LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
                      break;
                   else
                   {
-
                      if( ! bDropped )
                      {
                         SendMessage( ( HWND ) hWnd,
@@ -9689,7 +9660,6 @@ LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
          {
             switch( c )
             {
-
                case VK_F4:
                   if( bAlt )
                   {
@@ -9705,7 +9675,6 @@ LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
                      break;
                   else
                   {
-
                      if( ! bDropped )
                      {
                         SendMessage(
@@ -9717,7 +9686,6 @@ LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
                      }
                      else
                      {
-
                         SetFocus( hWndParent );
                         PostMessage( hWndParent, message, wParam, lParam );
                         return 0;
@@ -9754,7 +9722,6 @@ LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
                case VK_TAB:
                   if( ! bCtrl && ! bAlt )
                   {
-
                      SetFocus( hWndParent );
                      PostMessage( hWndParent, message, wParam, lParam );
                      return 0;
@@ -9787,8 +9754,10 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
       return DefWindowProc( hWnd, message, wParam, lParam );
 
    for( usWinNum = 0; usWinNum < s_pWvwData->s_usNumWindows; usWinNum++ )
+   {
       if( s_pWvwData->s_pWindows[ usWinNum ]->hWnd == hWndParent )
          break;
+   }
 
    if( usWinNum >= s_pWvwData->s_usNumWindows )
       return DefWindowProc( hWnd, message, wParam, lParam );
@@ -9882,7 +9851,6 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
          {
             switch( c )
             {
-
                case VK_BACK:
                   iKey = hb_gt_wvwJustTranslateKey( K_BS, K_SH_BS, K_ALT_BS, K_CTRL_BS );
                   break;
@@ -10031,7 +9999,6 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
          iKey = c;
          break;
       }
-
    }
 
    if( iKey != 0 )
@@ -10076,7 +10043,6 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
          switch( c )
          {
-
             case VK_F4:
                if( bAlt )
                {
