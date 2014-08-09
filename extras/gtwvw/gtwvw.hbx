@@ -69,7 +69,6 @@ DYNAMIC win_IsDlgButtonChecked
 DYNAMIC win_LoadIcon
 DYNAMIC win_LoadImage
 DYNAMIC win_MessageBox
-DYNAMIC win_MulDiv
 DYNAMIC win_ReleaseDC
 DYNAMIC win_SelectObject
 DYNAMIC win_SendDlgItemMessage

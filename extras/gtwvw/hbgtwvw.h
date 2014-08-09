@@ -68,7 +68,7 @@
 #endif
 
 #ifndef _WIN32_IE
-    #define _WIN32_IE         0x0400
+#define _WIN32_IE             0x0400
 #endif
 
 /* NOTE: User programs should never call this layer directly! */
@@ -78,7 +78,7 @@
 #define HB_GT_NAME            WVW
 
 #ifndef CINTERFACE
-   #define CINTERFACE         1
+#define CINTERFACE            1
 #endif
 
 #include "hbset.h"
@@ -93,36 +93,57 @@
 #include "hbstack.h"
 #include "hbwinuni.h"
 
-#include "hbole.h"
+/* Header file so MSVC can use ole in C mode while compile in C++ mode
+   Copyright 2006 Paul Tucker <ptucker@sympatico.ca> */
+
+#if defined( _MSC_VER ) && ! defined( HB_OS_WIN_64 ) && \
+   ! defined( __LCC__ ) && ! defined( __POCC__ ) && ! defined( __XCC__ )
+
+#ifndef CINTERFACE
+#define CINTERFACE              1
+#endif
+
+#ifndef _REFGUID_DEFINED
+#define _REFGUID_DEFINED        1
+#define REFGUID                 const GUID * const
+#endif
+
+#ifndef _REFIID_DEFINED
+#define _REFIID_DEFINED         1
+#define REFIID                  const IID * const
+#endif
+
+#ifndef _REFCLSID_DEFINED
+#define _REFCLSID_DEFINED       1
+#define REFCLSID                const IID * const
+#endif
+
+#ifndef _REFFMTID_DEFINED
+#define _REFFMTID_DEFINED       1
+#define REFFMTID                const IID * const
+#endif
+
+#ifndef _SYS_GUID_OPERATOR_EQ_
+#define _SYS_GUID_OPERATOR_EQ_  1
+#endif
+
+#endif
 
 #include <windows.h>
-#include <stdlib.h>
-#include <commctrl.h>
+#include <ole2.h>
+#include <ocidl.h>
+#include <olectl.h>
+#if defined( __DMC__ )
+   #if ! defined( LONG_PTR )
+typedef __int64 LONG_PTR;
+   #endif
+#endif
 
-#include <math.h>       /* fmod */
 #include <winuser.h>
 #include <commctrl.h>
 #include <commdlg.h>
-
-#if defined( __MINGW32__ ) || defined( __WATCOMC__ ) || defined( _MSC_VER ) || defined( __DMC__ )
-   #include <unknwn.h>
-   #include <ole2.h>
-   #include <ocidl.h>
-   #include <olectl.h>
-
-   #if defined( _MSC_VER ) || defined( __DMC__ )
-      #include <conio.h>
-
-      #if ! defined( _MSC_VER )
-
-         #if ! defined( LONG_PTR )
-typedef __int64 LONG_PTR;
-         #endif
-      #endif
-   #endif
-#else
-   #include <olectl.h>
-#endif
+#include <math.h>       /* fmod */
+#include <unknwn.h>
 
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
    defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
@@ -137,12 +158,9 @@ typedef __int64 LONG_PTR;
    #endif
 #endif
 
-#if ( defined( __MSC6__ ) || defined( __DMC__ ) )
+#if defined( __MSC6__ ) || defined( __DMC__ )
    #define LONG_PTR               LONG
 #endif
-
-#include <time.h>
-#include <ctype.h>
 
 /* xHarbour compatible definitions */
 #if ! defined( K_SH_LEFT )
@@ -612,10 +630,10 @@ typedef struct wvw_data
 #define HB_PARHANDLE( n )          hb_parptr( n )
 #define HB_STOREHANDLE( h, n )     hb_storptr( ( void * ) ( h ), n )
 #endif
-   #define HB_RETHANDLE( h )       hb_retnl( ( LONG ) ( h ) )
+   #define HB_RETHANDLE( h )       hb_retnint( ( HB_PTRDIFF ) ( h ) )
    #define HB_ISHANDLE( n )        HB_ISNUM( n )
-   #define HB_PARHANDLE( n )       ( ( LONG ) hb_parnl( n ) )
-   #define HB_STOREHANDLE( h, n )  hb_stornl( ( LONG ) ( h ), n )
+   #define HB_PARHANDLE( n )       ( ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define HB_STOREHANDLE( h, n )  hb_stornint( ( HB_PTRDIFF ) ( h ), n )
 HB_EXTERN_BEGIN
 
 /* Get functions for internal Data */

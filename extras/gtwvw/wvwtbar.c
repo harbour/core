@@ -190,7 +190,7 @@ HB_FUNC( WVW_TBCREATE )
       hb_gt_wvwResetWindow( usWinNum );
    }
 
-   hb_retnl( ( LONG ) hWndTB );
+   hb_retnl( ( HB_PTRDIFF ) hWndTB );
 }
 
 /*wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType,;
@@ -311,7 +311,7 @@ HB_FUNC( WVW_TBDELBUTTON )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int        iButton     = HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1;
+   int        iButton     = hb_parnidef( 2, -1 );
    HWND       hWndTB;
    USHORT     usOldHeight;
 
@@ -345,7 +345,7 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int        iButton     = HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1;
+   int        iButton     = hb_parnidef( 2, -1 );
    HWND       hWndTB;
    RECT       rc;
    RECT       rcRect = { 0 };
@@ -387,8 +387,8 @@ HB_FUNC( WVW_TBENABLEBUTTON )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int        iButton     = HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1;
-   BOOL       bEnable     = HB_ISLOG( 3 ) ? hb_parl( 3 ) : TRUE;
+   int        iButton     = hb_parnidef( 2, -1 );
+   BOOL       bEnable     = hb_parldef( 3, HB_TRUE );
    int        iCommand;
    HWND       hWndTB;
    USHORT     usOldHeight;

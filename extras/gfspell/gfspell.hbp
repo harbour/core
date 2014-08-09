@@ -3,7 +3,8 @@
 
 -olib/${hb_plat}/${hb_comp}/${hb_name}
 
--w1 -es2
+-w3 -es2
+-warn=yes
 
 -hbx=${hb_name}
 

@@ -111,7 +111,7 @@ HB_FUNC( WVW_SBCREATE )
 
    }
 
-   hb_retnl( ( LONG ) hWndSB );
+   hb_retnint( ( HB_PTRDIFF ) hWndSB );
 }
 
 /* wvw_sbDestroy( [nWinNum] )
@@ -429,8 +429,8 @@ HB_FUNC( WVW_XBCREATE )
    POINT      xy = { 0 };
    int        iTop, iLeft, iBottom, iRight;
    int        iOffTop, iOffLeft, iOffBottom, iOffRight;
-   int        iStyle = ( int ) ( ! HB_ISNUM( 2 ) ? -1 : hb_parni( 2 ) );
-   UINT       uiXBid;
+   int        iStyle = ( int ) hb_parnidef( 2, -1 );
+   HB_PTRDIFF uiXBid;
    USHORT     usTop  = ( USHORT ) hb_parni( 3 ),
               usLeft = ( USHORT ) hb_parni( 4 ),
               usBottom,
@@ -508,7 +508,6 @@ HB_FUNC( WVW_XBCREATE )
 
    if( hWndXB )
    {
-
       RECT rXB = { 0 }, rOffXB = { 0 };
 
       WNDPROC OldProc;
@@ -528,10 +527,10 @@ HB_FUNC( WVW_XBCREATE )
 
       StoreControlProc( usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, OldProc );
 
-      hb_retnl( ( LONG ) uiXBid );
+      hb_retnint( uiXBid );
    }
    else
-      hb_retnl( ( LONG ) 0 );
+      hb_retnint( 0 );
 }
 
 /*wvw_xbDestroy( [nWinNum], nXBid )

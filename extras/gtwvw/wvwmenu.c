@@ -141,7 +141,7 @@ HB_FUNC( WVW_APPENDMENU )
          lpszCaption = hb_parcx( 4 );
    }
    else
-      lpszCaption = ( LPCTSTR ) hb_parni( 4 );
+      lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
 
    hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parni( 3 ), ( LPCTSTR ) lpszCaption ) );
 }
@@ -347,5 +347,5 @@ HB_FUNC( WVW_GETSYSTEMMENU )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    BOOL       lReset      = hb_parl( 2 );
 
-   hb_retnl( ( ULONG ) GetSystemMenu( pWindowData->hWnd, lReset ) );
+   hb_retnint( ( HB_PTRDIFF ) GetSystemMenu( pWindowData->hWnd, lReset ) );
 }

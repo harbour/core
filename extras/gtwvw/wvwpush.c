@@ -423,30 +423,30 @@ HB_FUNC( WVW_CBCREATE )
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndCB;
    WVW_DATA * pData = hb_getWvwData();
-/*   LONG cnt; */
+/* LONG cnt; */
    LONG numofchars;
    LONG avgwidth;
    LONG LongComboWidth, NewLongComboWidth;
-/*   RECT r; */
+/* RECT r; */
    HFONT hFont = hb_gt_wvwGetFont( pWindowData->fontFace, 10, pWindowData->fontWidth, pWindowData->fontWeight, pWindowData->fontQuality, pWindowData->CodePage );
 
    POINT xy = { 0 };
    int   iTop, iLeft, iBottom, iRight;
    int   iOffTop, iOffLeft, iOffBottom, iOffRight;
 
-   UINT   uiCBid;
+   HB_PTRDIFF uiCBid;
    USHORT usWidth      = ( USHORT ) hb_parni( 4 );
    USHORT usTop        = ( USHORT ) hb_parni( 2 ),
           usLeft       = ( USHORT ) hb_parni( 3 ),
           usBottom     = usTop,
           usRight      = usLeft + usWidth - 1;
    USHORT usNumElement = ( USHORT ) ( HB_ISARRAY( 5 ) ? hb_arrayLen( hb_param( 5, HB_IT_ARRAY ) ) : 0 );
-   USHORT usListLines  = ( USHORT ) ( HB_ISNUM( 7 ) ? hb_parni( 7 ) : 3 );
+   USHORT usListLines  = ( USHORT ) hb_parnidef( 7, 3 );
    BYTE   byCharHeight = hb_wvw_LineHeight( pWindowData );
 
    /* in the future combobox type might be selectable by 8th parameter */
    int  iStyle   = CBS_DROPDOWNLIST | WS_VSCROLL;
-   BYTE bKbdType = HB_ISNUM( 9 ) ? ( BYTE ) hb_parni( 9 ) : ( BYTE ) WVW_CB_KBD_STANDARD;
+   BYTE bKbdType = ( BYTE ) hb_parnidef( 9, WVW_CB_KBD_STANDARD );
 
 
    if( pWindowData->hCBfont == NULL )
@@ -539,7 +539,6 @@ HB_FUNC( WVW_CBCREATE )
                              ) < 0 )
             {
                /* ignore failure */
-
             }
             else
             {
@@ -554,29 +553,31 @@ HB_FUNC( WVW_CBCREATE )
          ( HWND ) hWndCB,
          CB_SETCURSEL,
          ( WPARAM ) 0,
-         ( LPARAM ) 0
-         );
+         ( LPARAM ) 0 );
 
       SendMessage(
          ( HWND ) hWndCB,
          CB_SETEXTENDEDUI,
          ( WPARAM ) TRUE,
-         ( LPARAM ) 0
-         );
+         ( LPARAM ) 0 );
+
       avgwidth = GetFontDialogUnits( hWndParent, hFont );
       NewLongComboWidth = ( LongComboWidth - 2 ) * avgwidth;
       SendMessage(
          ( HWND ) hWndCB,
          CB_SETDROPPEDWIDTH,
          ( WPARAM ) NewLongComboWidth + 100,  /* LongComboWidth + 100 */
-         ( LPARAM ) 0
-         );
+         ( LPARAM ) 0 );
 
-      rXB.top    = usTop;     rXB.left = usLeft;
-      rXB.bottom = usBottom; rXB.right = usRight;
-      rOffXB.top = iOffTop;     rOffXB.left = iOffLeft;
+      rXB.top    = usTop;
+      rXB.left   = usLeft;
+      rXB.bottom = usBottom;
+      rXB.right  = usRight;
 
-      rOffXB.bottom = iOffBottom; rOffXB.right = iOffRight;
+      rOffXB.top    = iOffTop;
+      rOffXB.left   = iOffLeft;
+      rOffXB.bottom = iOffBottom;
+      rOffXB.right  = iOffRight;
 
       AddControlHandle( usWinNum, WVW_CONTROL_COMBOBOX, hWndCB, uiCBid, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( byte ) bKbdType );
 
@@ -586,12 +587,12 @@ HB_FUNC( WVW_CBCREATE )
       StoreControlProc( usWinNum, WVW_CONTROL_COMBOBOX, hWndCB, OldProc );
 
       SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) pWindowData->hCBfont, ( LPARAM ) TRUE );
-      hb_stornl( ( LONG ) hWndCB, 11 );
+      hb_stornint( ( HB_PTRDIFF ) hWndCB, 11 );
 
-      hb_retnl( ( LONG ) uiCBid );
+      hb_retnint( ( HB_PTRDIFF ) uiCBid );
    }
    else
-      hb_retnl( ( LONG ) 0 );
+      hb_retnint( 0 );
 }
 
 /*wvw_cbDestroy( [nWinNum], nCBid )
@@ -878,7 +879,7 @@ HB_FUNC( WVW_CBFINDSTRING )
    hb_retni( retval );
 }
 
-/*wvw_cbGetCurText( [nWinNum], nCBid )
+/* wvw_cbGetCurText( [nWinNum], nCBid )
  * get current selected cString in combobox nCBid in window nWinNum
  * returns "" if none selected
  *
@@ -926,7 +927,7 @@ HB_FUNC( WVW_CBGETCURTEXT )
    hb_xfree( lptstr );
 }
 
-/*wvw_cbIsDropped( [nWinNum], nCBid )
+/* wvw_cbIsDropped( [nWinNum], nCBid )
  * get current dropped state of combobox nCBid in window nWinNum
  * returns .t. if listbox is being shown, otherwise .f.
  * Also returns .f. if nCBid not valid
@@ -952,6 +953,3 @@ HB_FUNC( WVW_CBISDROPPED )
                            );
    hb_retl( bDropped );
 }
-
-
-/* COMBOBOX ends (experimental)                                    */

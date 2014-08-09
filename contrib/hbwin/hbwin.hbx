@@ -71,6 +71,7 @@ DYNAMIC wapi_GetCurrentThread
 DYNAMIC wapi_GetCurrentThreadId
 DYNAMIC wapi_GetDesktopWindow
 DYNAMIC wapi_GetDeviceCaps
+DYNAMIC wapi_GetDialogBaseUnits
 DYNAMIC wapi_GetDlgItem
 DYNAMIC wapi_GetDlgItemText
 DYNAMIC wapi_GetKeyboardLayout

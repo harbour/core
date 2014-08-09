@@ -115,7 +115,7 @@ HB_FUNC( WVW_EBCREATE )
    POINT      xy = { 0 };
    int        iTop, iLeft, iBottom, iRight;
    int        iOffTop, iOffLeft, iOffBottom, iOffRight;
-   UINT       uiEBid;
+   HB_PTRDIFF uiEBid;
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
@@ -177,7 +177,6 @@ HB_FUNC( WVW_EBCREATE )
 
    if( pWindowData->CodePage == OEM_CHARSET )
       dwStyle |= ES_OEMCONVERT;
-
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
@@ -677,9 +676,10 @@ HB_FUNC( WVW_STCREATE )
    POINT xy = { 0 };
    int   iTop, iLeft, iBottom, iRight;
    int   iOffTop, iOffLeft, iOffBottom, iOffRight;
-   UINT  uiCBid;
    BOOL  bBorder   = hb_parnl( 7 );
    ULONG ulExStyle = 0 | ( bBorder ? WS_EX_CLIENTEDGE : 0 );
+
+   HB_PTRDIFF uiCBid;
 
    USHORT usWidth  = ( USHORT ) hb_parni( 4 );
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
@@ -709,7 +709,6 @@ HB_FUNC( WVW_STCREATE )
          return;
       }
    }
-
 
    iOffTop  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
    iOffLeft = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;

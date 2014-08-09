@@ -427,7 +427,7 @@ HB_FUNC( WVW_PGCREATE )
    BOOL       bBarColor  = HB_ISNUM( 8 );
    BOOL       bSmooth    = hb_parl( 9 );
    BOOL       bVertical  = hb_parl( 10 );
-   UINT       uiPGid;
+   HB_PTRDIFF uiPGid;
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
@@ -625,7 +625,6 @@ HB_FUNC( WVW_PGGETPOS )
    }
 
    hb_retni( ( int ) SendMessage( hWndPG, PBM_GETPOS, ( WPARAM ) 0, ( LPARAM ) 0 ) );
-
 }
 
 

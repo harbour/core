@@ -299,7 +299,7 @@ FUNCTION Sp_GetSet( nWhich, xNewSetting )
 FUNCTION Sp_LoadAux( cFile )
 
    LOCAL is_ok := .F.
-   LOCAL x     := 0
+   LOCAL x
    LOCAL cStr  := ""
    LOCAL nSize
 
@@ -931,9 +931,7 @@ FUNCTION Sp_Init()
 
    LOCAL isok := .T.
    LOCAL cBuf
-   LOCAL i
-   LOCAL j
-   LOCAL nOther := 0
+   LOCAL nOther
    LOCAL cOther := ""
    LOCAL nFileSize
 
@@ -997,7 +995,6 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    LOCAL nStatus := 0                 // Status code
    LOCAL i                            // Loop counters
    LOCAL j
-   LOCAL x
    LOCAL nH                           // File handle
    LOCAL nWhere
    LOCAL temp
@@ -1223,7 +1220,6 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
                   cWord := Left( cBuf, z )
                   dbAppend()
                   DICT->word := temp + XUnForm( cWord )
-                  cWord := ""
                   cBuf  := SubStr( cBuf, z + 1 )
                   z     := 1
 
@@ -1234,7 +1230,6 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
                   z++
                ENDIF
             ENDDO
-            cWord := ""
          ENDIF
       NEXT
    NEXT
@@ -1375,8 +1370,8 @@ FUNCTION AWords( cLine )
 
    LOCAL aWords_ := {}
    LOCAL nSize   := Len( RTrim( cLine ) )
-   LOCAL x, y, z
-   LOCAL cWord   := ""
+   LOCAL y, z
+   LOCAL cWord
    LOCAL nOffset
 
    z := 0
