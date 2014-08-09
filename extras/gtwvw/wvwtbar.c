@@ -63,7 +63,7 @@
 
 #include "hbgtwvw.h"
 
-/*wvw_tbCreate([nWinNum], lDisplayText, nStyle, nSystemBitmap, nImageWidth, nImageHeight)
+/* wvw_tbCreate( [nWinNum], lDisplayText, nStyle, nSystemBitmap, nImageWidth, nImageHeight )
  * creates a toolbar at the top (no button initially)
  * lDisplayText==.f. button's string is used as tooltips (default)
  * nStyle: toolbar style, defaults to TBSTYLE_FLAT | TBSTYLE_TOOLTIPS
@@ -193,8 +193,8 @@ HB_FUNC( WVW_TBCREATE )
    hb_retnl( ( HB_PTRDIFF ) hWndTB );
 }
 
-/*wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType,;
- *                           lMap3Dcolors, lDropdown)
+/* wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType,;
+ *                            lMap3Dcolors, lDropdown)
  * adds one button on the right of existing buttons
  * xBitmap:
  * nBitmap is resource id. or use cBitmap as bitmap file name.
@@ -212,7 +212,6 @@ HB_FUNC( WVW_TBCREATE )
  *         This might be desirable to have transparent effect.
  *         LIMITATION: this will work on 256 colored bitmaps only
  */
-
 HB_FUNC( WVW_TBADDBUTTON )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -283,16 +282,14 @@ HB_FUNC( WVW_TBADDBUTTON )
    hb_retl( HB_TRUE );
 }
 
-/*wvw_tbButtonCount([nWinNum])
+/* wvw_tbButtonCount( [nWinNum] )
  * returns number of buttons in toolbar on window nWinNum
  */
 HB_FUNC( WVW_TBBUTTONCOUNT )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndTB;
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   HWND       hWndTB = pWindowData->hToolBar;
 
-   hWndTB = pWindowData->hToolBar;
    if( hWndTB == NULL )
    {
       hb_retni( 0 );
@@ -302,7 +299,7 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
    hb_retni( SendMessage( hWndTB, TB_BUTTONCOUNT, ( WPARAM ) 0, ( LPARAM ) 0 ) );
 }
 
-/*wvw_tbDelButton([nWinNum], nButton)
+/* wvw_tbDelButton( [nWinNum], nButton )
  * nButton is zero based index of button to delete
  * index=0 is the leftmost button
  * NOTE: button separator is indexed and deleteable too
@@ -312,10 +309,9 @@ HB_FUNC( WVW_TBDELBUTTON )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    int        iButton     = hb_parnidef( 2, -1 );
-   HWND       hWndTB;
+   HWND       hWndTB      = pWindowData->hToolBar;
    USHORT     usOldHeight;
 
-   hWndTB = pWindowData->hToolBar;
    if( hWndTB == NULL || iButton < 0 )
    {
       hb_retl( HB_FALSE );
@@ -338,22 +334,20 @@ HB_FUNC( WVW_TBDELBUTTON )
    hb_retl( HB_TRUE );
 }
 
-/* wvw_tbGetButtonRect([nWinNum], nButton)
+/* wvw_tbGetButtonRect( [nWinNum], nButton )
  * return an array {nRowStart, nColStart, nRowStop, nColStop}
  */
 HB_FUNC( WVW_TBGETBUTTONRECT )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    int        iButton     = hb_parnidef( 2, -1 );
-   HWND       hWndTB;
+   HWND       hWndTB      = pWindowData->hToolBar;
    RECT       rc;
    RECT       rcRect = { 0 };
 
    PHB_ITEM aXY = hb_itemNew( NULL );
    PHB_ITEM temp;
 
-   hWndTB = pWindowData->hToolBar;
    if( hWndTB == NULL || iButton < 0 || ! SendMessage( hWndTB, TB_GETRECT, ( WPARAM ) iButton, ( LPARAM ) &rc ) )
    {
       hb_itemReturnRelease( aXY );
@@ -372,12 +366,11 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
    hb_arraySetForward( aXY, 4, hb_itemPutNL( temp, rcRect.right ) );
    hb_itemRelease( temp );
 
-
    hb_itemReturnRelease( aXY );
 }
 
 
-/*wvw_tbEnableButton([nWinNum], nButton, [lToggle])
+/* wvw_tbEnableButton( [nWinNum], nButton, [lToggle] )
  * nButton is zero based index of button to enable/disable
  * index=0 is the leftmost button
  * NOTE: button separator is indexed too
@@ -390,10 +383,9 @@ HB_FUNC( WVW_TBENABLEBUTTON )
    int        iButton     = hb_parnidef( 2, -1 );
    BOOL       bEnable     = hb_parldef( 3, HB_TRUE );
    int        iCommand;
-   HWND       hWndTB;
+   HWND       hWndTB      = pWindowData->hToolBar;
    USHORT     usOldHeight;
 
-   hWndTB = pWindowData->hToolBar;
    if( hWndTB == NULL || iButton < 0 )
    {
       hb_retl( HB_FALSE );
@@ -423,7 +415,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
    hb_retl( HB_TRUE );
 }
 
-/*wvw_tbDestroy( [nWinNum] )
+/* wvw_tbDestroy( [nWinNum] )
  * destroy toolbar for window nWinNum
  */
 HB_FUNC( WVW_TBDESTROY )
@@ -441,14 +433,13 @@ HB_FUNC( WVW_TBDESTROY )
    }
 }
 
-/*wvw_tbIndex2Cmd([nWinNum], nIndex)
+/* wvw_tbIndex2Cmd([nWinNum], nIndex)
  * returns Command Id of button nIndex (0 based)
  * returns -1 if the button does not exist
  */
 HB_FUNC( WVW_TBINDEX2CMD )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HWND       hWndTB      = pWindowData->hToolBar;
    int        iIndex      = hb_parni( 2 );
    int        iCmd        = IndexToCommand( hWndTB, iIndex );
@@ -456,14 +447,13 @@ HB_FUNC( WVW_TBINDEX2CMD )
    hb_retni( ( int ) ( iCmd > 0 ? iCmd : -1 ) );
 }
 
-/*wvw_tbCmd2Index([nWinNum], nCmd)
+/* wvw_tbCmd2Index([nWinNum], nCmd)
  * returns Index (0 based) of button whose command id is nCmd
  * returns -1 if the button does not exist
  */
 HB_FUNC( WVW_TBCMD2INDEX )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HWND       hWndTB      = pWindowData->hToolBar;
    int        iCmd        = hb_parni( 2 );
 
@@ -471,22 +461,19 @@ HB_FUNC( WVW_TBCMD2INDEX )
 }
 
 
-/* TOOLBAR ends                                                      */
+/* TOOLBAR ends */
 
 
 #if _WIN32_IE > 0x400
 
 
-/*                                                                   */
-/*                              Tooltips                             */
-/*                                                                   */
+/* Tooltips */
 
 
-/*WVW_SetToolTopActive([nWinNum], [lToggle]) */
+/* WVW_SetToolTopActive([nWinNum], [lToggle]) */
 HB_FUNC( WVW_SETTOOLTIPACTIVE )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    BOOL bActive = pWindowData->bToolTipActive;
 
@@ -502,13 +489,10 @@ HB_FUNC( WVW_SETTOOLTIPACTIVE )
 }
 
 
-/*                                                                        */
-/*   Wvw_SetToolTip( [nWinNum], nTop, nLeft, nBottom, nRight, cToolText ) */
-/*                                                                        */
+/* Wvw_SetToolTip( [nWinNum], nTop, nLeft, nBottom, nRight, cToolText ) */
 HB_FUNC( WVW_SETTOOLTIP )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    TOOLINFO ti = { 0 };
    POINT    xy = { 0 };
@@ -552,8 +536,7 @@ HB_FUNC( WVW_SETTOOLTIP )
 
 HB_FUNC( WVW_SETTOOLTIPTEXT )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    TOOLINFO   ti;
 
    ti.cbSize = sizeof( TOOLINFO );
@@ -570,8 +553,7 @@ HB_FUNC( WVW_SETTOOLTIPTEXT )
 
 HB_FUNC( WVW_SETTOOLTIPMARGIN )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    RECT       rc = { 0 };
 
    rc.left   = hb_parni( 3 );
@@ -584,8 +566,7 @@ HB_FUNC( WVW_SETTOOLTIPMARGIN )
 
 HB_FUNC( WVW_SETTOOLTIPWIDTH )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    int iTipWidth = SendMessage( pWindowData->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
@@ -598,8 +579,7 @@ HB_FUNC( WVW_SETTOOLTIPWIDTH )
 
 HB_FUNC( WVW_SETTOOLTIPBKCOLOR )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    COLORREF cr = SendMessage( pWindowData->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
 
@@ -611,8 +591,7 @@ HB_FUNC( WVW_SETTOOLTIPBKCOLOR )
 
 HB_FUNC( WVW_SETTOOLTIPTEXTCOLOR )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    COLORREF cr = SendMessage( pWindowData->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
 
@@ -626,8 +605,7 @@ HB_FUNC( WVW_SETTOOLTIPTITLE )
 {
    if( HB_ISCHAR( 3 ) )
    {
-      UINT       usWinNum    = WVW_WHICH_WINDOW;
-      WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+      WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
       int        iIcon       = hb_parni( 2 );
 
       if( iIcon > 3 )
@@ -639,8 +617,7 @@ HB_FUNC( WVW_SETTOOLTIPTITLE )
 
 HB_FUNC( WVW_GETTOOLTIPWIDTH )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    hb_retni( SendMessage( pWindowData->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
 }
@@ -648,8 +625,7 @@ HB_FUNC( WVW_GETTOOLTIPWIDTH )
 
 HB_FUNC( WVW_GETTOOLTIPBKCOLOR )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    hb_retnl( ( COLORREF ) SendMessage( pWindowData->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
 }
@@ -657,8 +633,7 @@ HB_FUNC( WVW_GETTOOLTIPBKCOLOR )
 
 HB_FUNC( WVW_GETTOOLTIPTEXTCOLOR )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    hb_retnl( ( COLORREF ) SendMessage( pWindowData->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
 }

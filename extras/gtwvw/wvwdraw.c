@@ -82,11 +82,8 @@ static COLORREF _COLORS[] = {
    BRIGHT_WHITE
 };
 
-/*
- *
- *    wvw_DrawLabelObj( [nWinNum], nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont,
- *                      aOffset )
- */
+/* wvw_DrawLabelObj( [nWinNum], nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont,
+                     aOffset ) */
 
 HB_FUNC( WVW_DRAWLABELOBJ )
 {
@@ -186,9 +183,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 }
 
 
-/*                                                                                       */
-/*    wvw_DrawToolButtonState( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOff, nState )*/
-/*                                                                                       */
+/* wvw_DrawToolButtonState( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOff, nState ) */
 HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
@@ -277,9 +272,7 @@ HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
 }
 
 
-/*                                                                                                 */
-/*   wvw_DrawScrollButton( [nWinNum], nTop, nLeft, nBottom, nRight, aOffPixels, nTLBR, lDepressed )*/
-/*                                                                                                 */
+/* wvw_DrawScrollButton( [nWinNum], nTop, nLeft, nBottom, nRight, aOffPixels, nTLBR, lDepressed ) */
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be usefull */
 HB_FUNC( WVW_DRAWSCROLLBUTTON )
 {
@@ -375,9 +368,7 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
 }
 
 
-/*                                                                                              */
-/*  Wvw_DrawScrollbarThumbVert( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlScroll, nThumbPos )*/
-/*                                                                                              */
+/* Wvw_DrawScrollbarThumbVert( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlScroll, nThumbPos ) */
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be usefull */
 HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
 {
@@ -433,9 +424,7 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
 }
 
 
-/*                                                                                              */
-/*  Wvw_DrawScrollbarThumbHorz( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffset, nThumbPos )*/
-/*                                                                                              */
+/* Wvw_DrawScrollbarThumbHorz( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffset, nThumbPos ) */
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be usefull */
 HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
 {
@@ -486,9 +475,7 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
 }
 
 
-/*                                                                                                      */
-/*    wvw_DrawShadedRect( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, nHorVert, aRGBb, aRGBe  )*/
-/*                                                                                                      */
+/* wvw_DrawShadedRect( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, nHorVert, aRGBb, aRGBe ) */
 HB_FUNC( WVW_DRAWSHADEDRECT )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -548,11 +535,9 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
 }
 
 
-/*                                                                                 */
-/*   wvw_DrawTextBox( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, cText, ;*/
-/*                    nAlignHorz, nAlignVert, nTextColor, nBackColor, ;            */
-/*                    nBackMode, hFont )                                           */
-/*                                                                                 */
+/* wvw_DrawTextBox( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, cText, ;
+                    nAlignHorz, nAlignVert, nTextColor, nBackColor, ;
+                    nBackMode, hFont ) */
 HB_FUNC( WVW_DRAWTEXTBOX )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -621,11 +606,8 @@ HB_FUNC( WVW_DRAWTEXTBOX )
    SelectObject( pWindowData->hdc, oldFont );
 }
 
-/*
- *
- * wvw_DrawProgressBar( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlTLBR, nPercent,;
- *                      nBackColor, nBarColor, cImage, lVertical, nDirection )
- */
+/* wvw_DrawProgressBar( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlTLBR, nPercent,;
+                        nBackColor, nBarColor, cImage, lVertical, nDirection ) */
 HB_FUNC( WVW_DRAWPROGRESSBAR )
 {
    UINT       usWinNum     = WVW_WHICH_WINDOW;
@@ -730,16 +712,13 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
 }
 
 
-/*
- *
- *   wvw_DrawBoxGet( [nWinNum], nRow, nCol, nWidth,;
- *                   aOffset )   <-- additional parm, not exist in GTWVT
+/* wvw_DrawBoxGet( [nWinNum], nRow, nCol, nWidth,;
+ *                 aOffset )   <-- additional parm, not exist in GTWVT
  *
  * NOTES: unlike GTWVT, GTWVW draw white lines on outer right and outer bottom
  *       Besides, scope is the same as DRAWBOXRECESSED, ie.
  *       two pixel out of char boundary
  */
-
 HB_FUNC( WVW_DRAWBOXGET )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -814,16 +793,13 @@ HB_FUNC( WVW_DRAWBOXGET )
    hb_retl( HB_TRUE );
 }
 
-/*
- *
- *   wvw_DrawBoxGet_XP( [nWinNum], nRow, nCol, nWidth,;
- *                   aOffset )   <-- additional parm, not exist in GTWVT
+/* wvw_DrawBoxGet_XP( [nWinNum], nRow, nCol, nWidth,;
+ *                    aOffset )   <-- additional parm, not exist in GTWVT
  *
  * NOTES: unlike GTWVT, GTWVW draw white lines on outer right and outer bottom
  *       Besides, scope is the same as DRAWBOXRECESSED, ie.
  *       two pixel out of char boundary
  */
-
 HB_FUNC( WVW_DRAWBOXGET_XP )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -878,21 +854,16 @@ HB_FUNC( WVW_DRAWBOXGET_XP )
 }
 
 
-/*                                                                   */
-/*   wvw_DrawBoxRaised( nWinNum,                                     */
-/*                   nTop, nLeft, nBottom, nRight,                   */
-/*                   lTight/aOffset)                                 */
-/*                                                                   */
-/*   if lTight, box is drawn inside the character region                               */
-/*   AND top and left lines are lower two pixel down to make room for above/left object*/
-/*   WARNING: gui object of this type subject to be overwritten by chars               */
-/*   NOTE that these lines are to be overwritten by displayed char,                    */
-/*        we are depending on the fact that gui object will be painted last            */
-/*                                                                                     */
-/*   lTight may be replaced with aOffset parm {top,left,bottom,right}                  */
-/*     ie. offset in pixel unit                                                        */
-/*                                                                                     */
+/* wvw_DrawBoxRaised( nWinNum, nTop, nLeft, nBottom, nRight, lTight/aOffset) */
 
+/* if lTight, box is drawn inside the character region
+   AND top and left lines are lower two pixel down to make room for above/left object
+   WARNING: gui object of this type subject to be overwritten by chars
+   NOTE that these lines are to be overwritten by displayed char,
+        we are depending on the fact that gui object will be painted last
+
+   lTight may be replaced with aOffset parm {top,left,bottom,right}
+     ie. offset in pixel unit */
 HB_FUNC( WVW_DRAWBOXRAISED )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -956,21 +927,16 @@ HB_FUNC( WVW_DRAWBOXRAISED )
 }
 
 
-/*                                                                                         */
-/*    wvw_DrawBoxRecessed( nWinNum, ;                                                      */
-/*                   nTop, nLeft, nBottom, nRight,                                         */
-/*                   lTight/aOffset) <--none in gtwvt                                              */
-/*                                                                                         */
-/*   if lTight, box is drawn inside the character region                                   */
-/*   AND top and left lines are lower two pixel down to make room for above/left object    */
-/*   WARNING: gui object of this type subject to be overwritten by chars                   */
-/*   NOTE that these lines are to be overwritten by displayed char,                        */
-/*        we are depending on the fact that gui object will be painted last                */
-/*                                                                                         */
-/*   lTight may be replaced with aOffset parm {top,left,bottom,right}                      */
-/*     ie. offset in pixel unit                                                            */
-/*                                                                                         */
+/* wvw_DrawBoxRecessed( nWinNum, nTop, nLeft, nBottom, nRight, lTight/aOffset) <--none in gtwvt */
 
+/* if lTight, box is drawn inside the character region
+   AND top and left lines are lower two pixel down to make room for above/left object
+   WARNING: gui object of this type subject to be overwritten by chars
+   NOTE that these lines are to be overwritten by displayed char,
+        we are depending on the fact that gui object will be painted last
+
+   lTight may be replaced with aOffset parm {top,left,bottom,right}
+     ie. offset in pixel unit */
 HB_FUNC( WVW_DRAWBOXRECESSED )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -1000,7 +966,6 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
    }
    else if( bUseArray )
    {
-
       iOTop    = hb_parvni( 6, 1 ) - 1;
       iOLeft   = hb_parvni( 6, 2 ) - 1;
       iOBottom = hb_parvni( 6, 3 );
@@ -1008,7 +973,6 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
    }
    else
    {
-
       iOTop    = -1;
       iOLeft   = -1;
       iOBottom = 0;
@@ -1032,15 +996,10 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
    hb_retl( HB_TRUE );
 }
 
-/*
- *
- *    wvw_DrawBoxGroup( nWinNum, ;
- *                   nTop, nLeft, nBottom, nRight,;
- *                   [aOffset] )
+/* wvw_DrawBoxGroup( nWinNum, nTop, nLeft, nBottom, nRight, [aOffset] )
  *
  * NOTE: aOffset is TLBR offset in pixel. none in GTWVT
  */
-
 HB_FUNC( WVW_DRAWBOXGROUP )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -1107,11 +1066,7 @@ HB_FUNC( WVW_DRAWBOXGROUP )
 }
 
 
-/*                                                                   */
-/*    wvw_DrawBoxRaised( nWinNum, ;                                  */
-/*                   nTop, nLeft, nBottom, nRight )                  */
-/*                                                                   */
-
+/* wvw_DrawBoxRaised( nWinNum, nTop, nLeft, nBottom, nRight ) */
 HB_FUNC( WVW_DRAWBOXGROUPRAISED )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -1172,13 +1127,12 @@ HB_FUNC( WVW_DRAWBOXGROUPRAISED )
 }
 
 
-/*                                                                        */
-/*    wvw_DrawImage( nWinNum, ;                                           */
-/*                   nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, ; */
-/*                   lTight/aOffset,;                                     */
-/*                   lTransparent) <--none in gtwvt                     */
-/*                                                                        */
-/* 20060724 Notes:
+/* wvw_DrawImage( nWinNum, ;
+                  nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, ;
+                  lTight/aOffset,;
+                  lTransparent) <--none in gtwvt */
+
+/* 2006-07-24 Notes:
    (1) Image dimension
    if nBottom is NIL, then image height will be proportional to image width.
    if nRight  is NIL, then image width will be proportional to image height.
@@ -1299,13 +1253,12 @@ HB_FUNC( WVW_DRAWIMAGE )
    hb_retl( bResult );
 }
 
-/*                                                                                       */
-/*    wvw_DrawImage_Resource( nWinNum, ;                                                 */
-/*                   nTop, nLeft, nBottom, nRight, nPictureResource/cPictureResource, ;  */
-/*                   lTight/aOffset,;                                                    */
-/*                   lTransparent) <--none in gtwvt                                      */
-/*                                                                                       */
-/* 20060724 Notes:
+/* wvw_DrawImage_Resource( nWinNum, ;
+                  nTop, nLeft, nBottom, nRight, nPictureResource/cPictureResource, ;
+                  lTight/aOffset,;
+                  lTransparent) <--none in gtwvt */
+
+/* 2006-07-24 Notes:
    (1) Image dimension
    if nBottom is NIL, then image height will be proportional to image width.
    if nRight  is NIL, then image width will be proportional to image height.
@@ -1443,13 +1396,10 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
 }
 
 
-/*                                                                           */
-/*    wvw_DrawLabel( nWinNum, ;                                              */
-/*                   nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, ;  */
-/*                   nBkColor, cFontFace,nHeight, nWidth, nWeight, ;         */
-/*                   nQuality, nCharSet, lItalic, lUnderline, lStrikeOut )   */
-/*                                                                           */
-
+/* wvw_DrawLabel( nWinNum, ;
+                  nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, ;
+                  nBkColor, cFontFace,nHeight, nWidth, nWeight, ;
+                  nQuality, nCharSet, lItalic, lUnderline, lStrikeOut ) */
 HB_FUNC( WVW_DRAWLABEL )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -1508,12 +1458,9 @@ HB_FUNC( WVW_DRAWLABEL )
 }
 
 
-/*                                                                   */
-/*    wvw_DrawOutline( nWinNum, ;                                    */
-/*                   nTop, nLeft, nBottom, nRight,                   */
-/*                   nThick, nShape, nRGBColor )                     */
-/*                                                                   */
-
+/* wvw_DrawOutline( nWinNum, ;
+                  nTop, nLeft, nBottom, nRight,
+                  nThick, nShape, nRGBColor ) */
 HB_FUNC( WVW_DRAWOUTLINE )
 {
    UINT  usWinNum = WVW_WHICH_WINDOW;
@@ -1567,13 +1514,10 @@ HB_FUNC( WVW_DRAWOUTLINE )
 }
 
 
-/*                  1                                                                               */
-/*                  2      3       4       5        6        7       8       9      10      11      */
-/*                 12                                                                               */
-/*   wvw_DrawLine( nWinNum, ;                                                                       */
-/*                 nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor,; */
-/*                 aOffset)                                                                         */
-/*                                                                                                  */
+/*                1
+                  2      3       4       5        6        7       8       9      10      11      12
+   wvw_DrawLine( nWinNum, ;
+                 nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aOffset) */
 
 HB_FUNC( WVW_DRAWLINE )
 {
@@ -1729,12 +1673,8 @@ HB_FUNC( WVW_DRAWLINE )
 }
 
 
-/*                                                                   */
-/*    Inside the area requested!                                     */
-/*    wvw_DrawEllipse( nWinNum, nTop, nLeft, nBottom, nRight ,;      */
-/*                     aOffset)                                      */
-/*                                                                   */
-
+/* Inside the area requested! */
+/* wvw_DrawEllipse( nWinNum, nTop, nLeft, nBottom, nRight, aOffset) */
 HB_FUNC( WVW_DRAWELLIPSE )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -1774,11 +1714,7 @@ HB_FUNC( WVW_DRAWELLIPSE )
 }
 
 
-/*                                                                   */
-/*    wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight )     */
-/*                     aOffset, lUsaCurrentPen)                      */
-/*                                                                   */
-
+/* wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight, aOffset, lUsaCurrentPen ) */
 HB_FUNC( WVW_DRAWRECTANGLE )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -1823,16 +1759,13 @@ HB_FUNC( WVW_DRAWRECTANGLE )
    hb_retl( Rectangle( pWindowData->hdc, iLeft, iTop, iRight, iBottom ) );
 }
 
-/*                                                                                         */
-/*    wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, ;
- *                       aOffset, ; <-- new parm
- *                       nRoundHeight, nRoundWidth */
-/*                                                                                         */
+/* wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, ;
+                      aOffset, ; <-- new parm
+                      nRoundHeight, nRoundWidth */
 
 /* WARNING!!!
- * unlike previous release of GTWVW, 6th parameter is now aOffset
- * This placement of new parameter is made in line with gtwvt's way of doing it
- */
+   unlike previous release of GTWVW, 6th parameter is now aOffset
+   This placement of new parameter is made in line with gtwvt's way of doing it */
 
 HB_FUNC( WVW_DRAWROUNDRECT )
 {
@@ -1876,11 +1809,7 @@ HB_FUNC( WVW_DRAWROUNDRECT )
 }
 
 
-/*                                                                   */
-/*    wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight,;     */
-/*                 aOffset)                                          */
-/*                                                                   */
-
+/* wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffset ) */
 HB_FUNC( WVW_DRAWFOCUSRECT )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -1915,13 +1844,9 @@ HB_FUNC( WVW_DRAWFOCUSRECT )
    hb_retl( DrawFocusRect( pWindowData->hdc, &rc ) );
 }
 
-/*NOTE: this is compatibility function with GTWVT
- *      similar with wvw_FillRectangle()
- */
-/*
- *
- *   wvw_DrawColorRect( nWinNum, nTop, nLeft, nBottom, nRight, aPxlOff, nRGB )
- */
+/* NOTE: this is compatibility function with GTWVT similar with wvw_FillRectangle() */
+
+/* wvw_DrawColorRect( nWinNum, nTop, nLeft, nBottom, nRight, aPxlOff, nRGB ) */
 HB_FUNC( WVW_DRAWCOLORRECT )
 {
    UINT       usWinNum        = WVW_WHICH_WINDOW;
@@ -1969,11 +1894,7 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 }
 
 
-/*                                                                   */
-/*   wvw_DrawGridHorz( nWinNum, ;                                    */
-/*                   nTop, nLeft, nRight, nRows )                    */
-/*                                                                   */
-
+/* wvw_DrawGridHorz( nWinNum, nTop, nLeft, nRight, nRows ) */
 HB_FUNC( WVW_DRAWGRIDHORZ )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -2017,16 +1938,11 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
    hb_retl( HB_TRUE );
 }
 
-/*
- *
- *     wvw_DrawGridVert( nWinNum, ;
- *                   nTop, nBottom, aCols, nCols,;
- *                   [aOffset] )
+/* wvw_DrawGridVert( nWinNum, nTop, nBottom, aCols, nCols, [aOffset] )
  *
  * NOTE: aOffset is TLBR offset in pixel. none in GTWVT
  *       actually aOffset[ 4 ] (Right Offset) is not used here
  */
-
 HB_FUNC( WVW_DRAWGRIDVERT )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -2084,12 +2000,9 @@ HB_FUNC( WVW_DRAWGRIDVERT )
 }
 
 
-/*                                                                                */
-/* wvw_DrawButton( nWinNum, ;                                                     */
-/*                 nTop, nLeft, nBottom, nRight, cText, cImage/nImage, nFormat, ; */
-/*                 nTextColor, nBkColor, nImageAt )                               */
-/*                                                                                */
-
+/* wvw_DrawButton( nWinNum, ;
+                   nTop, nLeft, nBottom, nRight, cText, cImage/nImage, nFormat, ;
+                   nTextColor, nBkColor, nImageAt ) */
 HB_FUNC( WVW_DRAWBUTTON )
 {
    UINT  usWinNum = WVW_WHICH_WINDOW;
@@ -2219,12 +2132,10 @@ HB_FUNC( WVW_DRAWBUTTON )
       {
          iPicture = s_sApp->iPicture[ hb_parni( 7 ) - 1 ];
 
-         hb_gt_wvwRenderPicture( usWinNum, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, iPicture,
-                                 FALSE );
+         hb_gt_wvwRenderPicture( usWinNum, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, iPicture, FALSE );
       }
       else
-         hb_gt_wvwDrawImage( usWinNum, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, hb_parcx( 7 ),
-                             FALSE );
+         hb_gt_wvwDrawImage( usWinNum, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, hb_parcx( 7 ), FALSE );
    }
 
    hb_retl( HB_TRUE );
@@ -2234,7 +2145,6 @@ HB_FUNC( WVW_DRAWBUTTON )
 /* wvw_DrawStatusBar() is meant for WVT compatibility only.
    WVW_SBxxxx() functions are recommended instead.
  */
-
 HB_FUNC( WVW_DRAWSTATUSBAR )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -2326,11 +2236,8 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
 }
 
 
-/*                                                                                        */
-/*  wvw_DrawPicture( [nWinNum], nTop, nLeft, nBottom, nRight, nSlot, lTight/aAdj ) -> lOk */
-/*  nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right } */
-/*                                                                                        */
-
+/* wvw_DrawPicture( [nWinNum], nTop, nLeft, nBottom, nRight, nSlot, lTight/aAdj ) -> lOk */
+/* nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right } */
 HB_FUNC( WVW_DRAWPICTURE )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -2387,10 +2294,7 @@ HB_FUNC( WVW_DRAWPICTURE )
 }
 
 
-/*                                                                                              */
-/*    wvw_DrawLabelEx( [nWinNum], nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont ) */
-/*                                                                                              */
-
+/* wvw_DrawLabelEx( [nWinNum], nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont ) */
 HB_FUNC( WVW_DRAWLABELEX )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -2431,10 +2335,8 @@ HB_FUNC( WVW_DRAWLABELEX )
 }
 
 
-/*                        1      2       3       4        5        6       7       8      9        */
-/*   wvw_DrawLineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen ) */
-/*                                                                                                 */
-
+/*                      1      2       3       4        5        6       7       8      9        */
+/* wvw_DrawLineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen ) */
 HB_FUNC( WVW_DRAWLINEEX )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
@@ -2573,10 +2475,7 @@ HB_FUNC( WVW_DRAWLINEEX )
 }
 
 
-/*                                                                           */
-/*    wvw_DrawOutlineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nSlotPen ) */
-/*                                                                           */
-
+/* wvw_DrawOutlineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nSlotPen ) */
 HB_FUNC( WVW_DRAWOUTLINEEX )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;

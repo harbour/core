@@ -1,24 +1,5 @@
 /*
- * Video subsystem for Windows using GUI windows instead of Console
- * with multiple windows support
- *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw menu Functions
- * GTWVW is initially created based on:
- * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
- *
- * Video subsystem for Windows using GUI windows instead of Console
- *     Copyright 2003 Peter Rees <peter@rees.co.nz>
- *                    Rees Software & Systems Ltd
- * based on
- *   Bcc ConIO Video subsystem by
- *     Copyright 2002 Marek Paliwoda <paliwoda@inteia.pl>
- *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
- *   Video subsystem for Windows compilers
- *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
- *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_wvw_Tone()
+ * Copyright Peter Rees <peter@rees.co.nz>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,12 +44,6 @@
 
 #include "hbgtwvw.h"
 
-
-/*                                                                   */
-/*                 Peter Rees <peter@rees.co.nz>                     */
-/*                                                                   */
-
-
 HB_FUNC( WVW_SETMENU )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
@@ -82,12 +57,11 @@ HB_FUNC( WVW_SETMENU )
 
 HB_FUNC( WVW_SETPOPUPMENU )
 {
-   UINT       usWinNum = WVW_WHICH_WINDOW;
-   WIN_DATA * pWinData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWinData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HMENU      hPopup   = pWinData->hPopup;
 
    pWinData->hPopup = ( HMENU ) HB_PARHANDLE( 2 );
-   /* if ( hPopup ) */
+   /* if( hPopup ) */
    {
       HB_RETHANDLE( hPopup );
    }
@@ -167,29 +141,19 @@ HB_FUNC( WVW_ENABLEMENUITEM )
 
 HB_FUNC( WVW_GETLASTMENUEVENT )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
-   hb_retni( hb_gt_wvwGetLastMenuEvent( usWinNum ) );
+   hb_retni( hb_gt_wvwGetLastMenuEvent( WVW_WHICH_WINDOW ) );
 }
 
 
 HB_FUNC( WVW_SETLASTMENUEVENT )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
-   hb_retni( hb_gt_wvwSetLastMenuEvent( usWinNum, hb_parni( 2 ) ) );
+   hb_retni( hb_gt_wvwSetLastMenuEvent( WVW_WHICH_WINDOW, hb_parni( 2 ) ) );
 }
 
 
 HB_FUNC( WVW_SETMENUKEYEVENT )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-   int  iEvent   = 0;
-
-   if( HB_ISNUM( 2 ) )
-      iEvent = hb_parnl( 2 );
-
-   hb_retni( hb_gt_wvwSetMenuKeyEvent( usWinNum, iEvent ) );
+   hb_retni( hb_gt_wvwSetMenuKeyEvent( WVW_WHICH_WINDOW, hb_parnl( 2 ) ) );
 }
 
 #if 0
@@ -262,8 +226,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
 HB_FUNC( WVW_DRAWMENUBAR )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    DrawMenuBar( pWindowData->hWnd );
 }
@@ -277,8 +240,7 @@ HB_FUNC( WVW_ENDMENU )
 /* wvw_GetMenu([nWinNum]) */
 HB_FUNC( WVW_GETMENU )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    HB_RETHANDLE( GetMenu( pWindowData->hWnd ) );
 }
@@ -286,8 +248,7 @@ HB_FUNC( WVW_GETMENU )
 /* wvw_TrackPopupMenu([nWinNum], n) */
 HB_FUNC( WVW_TRACKPOPUPMENU )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    POINT      xy = { 0 };
 
    GetCursorPos( &xy );
@@ -306,18 +267,16 @@ HB_FUNC( WIN_SETMENU )
    SetMenu( ( HWND ) HB_PARHANDLE( 1 ), ( HMENU ) HB_PARHANDLE( 2 ) );
 }
 
-/*
- *  wvw_NoSysMenu( [nWinNum], lRemoveClose )
- *  removes System Menu of a window
- *  if lRemoveClose is .t., also removes the 'Close' command and 'X' button
+/* wvw_NoSysMenu( [nWinNum], lRemoveClose )
+ * removes System Menu of a window
+ * if lRemoveClose is .t., also removes the 'Close' command and 'X' button
  *
  * no return value
  */
 HB_FUNC( WVW_NOSYSMENU )
 {
-   UINT       usWinNum     = WVW_WHICH_WINDOW;
-   BOOL       lRemoveClose = hb_parl( 2 );
-   WIN_DATA * pWindowData  = hb_gt_wvw_GetWindowsData( usWinNum );
+   HB_BOOL    lRemoveClose = hb_parl( 2 );
+   WIN_DATA * pWindowData  = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HMENU      hMenu        = GetSystemMenu( pWindowData->hWnd, FALSE );
 
    if( hMenu )
@@ -343,8 +302,7 @@ HB_FUNC( WVW_NOSYSMENU )
  */
 HB_FUNC( WVW_GETSYSTEMMENU )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    BOOL       lReset      = hb_parl( 2 );
 
    hb_retnint( ( HB_PTRDIFF ) GetSystemMenu( pWindowData->hWnd, lReset ) );

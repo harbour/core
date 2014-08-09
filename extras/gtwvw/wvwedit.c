@@ -192,8 +192,7 @@ HB_FUNC( WVW_EBCREATE )
       hWndParent,
       ( HMENU ) uiEBid,
       ( HINSTANCE ) hInstance,
-      NULL
-      );
+      NULL );
 
    if( hWndEB )
    {
@@ -214,8 +213,7 @@ HB_FUNC( WVW_EBCREATE )
          ( HWND ) hWndEB,
          WM_SETTEXT,
          0,
-         ( LPARAM ) lpszText
-         );
+         ( LPARAM ) lpszText );
 
       if( bFromOEM )
          hb_xfree( lpszText );
@@ -225,13 +223,17 @@ HB_FUNC( WVW_EBCREATE )
             ( HWND ) hWndEB,
             EM_LIMITTEXT,
             ( WPARAM ) usMaxChar,
-            ( LPARAM ) 0
-            );
+            ( LPARAM ) 0 );
 
-      rXB.top       = usTop;     rXB.left = usLeft;
-      rXB.bottom    = usBottom; rXB.right = usRight;
-      rOffXB.top    = iOffTop;     rOffXB.left = iOffLeft;
-      rOffXB.bottom = iOffBottom; rOffXB.right = iOffRight;
+      rXB.top    = usTop;
+      rXB.left   = usLeft;
+      rXB.bottom = usBottom;
+      rXB.right  = usRight;
+
+      rOffXB.top    = iOffTop;
+      rOffXB.left   = iOffLeft;
+      rOffXB.bottom = iOffBottom;
+      rOffXB.right  = iOffRight;
 
       AddControlHandle( usWinNum, WVW_CONTROL_EDITBOX, hWndEB, uiEBid, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, ( byte ) bEBType );
 
@@ -242,19 +244,18 @@ HB_FUNC( WVW_EBCREATE )
 
       SendMessage( hWndEB, WM_SETFONT, ( WPARAM ) pWindowData->hEBfont, ( LPARAM ) TRUE );
 
-      hb_retnl( ( LONG ) uiEBid );
+      hb_retnint( uiEBid );
    }
    else
-      hb_retnl( ( LONG ) 0 );
+      hb_retnint( 0 );
 }
 
-/*wvw_ebDestroy( [nWinNum], nEBid )
+/* wvw_ebDestroy( [nWinNum], nEBid )
  * destroy editbox nEBid for window nWinNum
  */
 HB_FUNC( WVW_EBDESTROY )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    UINT           uiEBid      = ( UINT ) hb_parni( 2 );
    CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
    CONTROL_DATA * pcdPrev     = NULL;
@@ -280,19 +281,17 @@ HB_FUNC( WVW_EBDESTROY )
    if( pcd->phiCodeBlock )
       hb_itemRelease( pcd->phiCodeBlock );
 
-
    hb_xfree( pcd );
 }
 
-/*wvw_ebSetFocus( [nWinNum], nEditId )
+/* wvw_ebSetFocus( [nWinNum], nEditId )
  * set the focus to editbox nEditId in window nWinNum
  */
 HB_FUNC( WVW_EBSETFOCUS )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
    UINT uiCtrlId = hb_parni( 2 );
    byte bStyle;
-   HWND hWndEB = FindControlHandle( usWinNum, WVW_CONTROL_EDITBOX, uiCtrlId, &bStyle );
+   HWND hWndEB = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, uiCtrlId, &bStyle );
 
    if( hWndEB )
       hb_retl( SetFocus( hWndEB ) != NULL );
@@ -300,24 +299,23 @@ HB_FUNC( WVW_EBSETFOCUS )
       hb_retl( HB_FALSE );
 }
 
-/*wvw_ebIsFocused( [nWinNum], nEditId )
+/* wvw_ebIsFocused( [nWinNum], nEditId )
  * returns .t. if the focus is on editbox nEditId in window nWinNum
  */
 HB_FUNC( WVW_EBISFOCUSED )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
    UINT uiCtrlId = hb_parni( 2 );
    byte bStyle;
-   HWND hWndEB = FindControlHandle( usWinNum, WVW_CONTROL_EDITBOX, uiCtrlId, &bStyle );
+   HWND hWndEB = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, uiCtrlId, &bStyle );
 
    hb_retl( ( HWND ) GetFocus() == hWndEB );
 }
 
-/*wvw_ebEnable( [nWinNum], nEditId, [lEnable] )
- * enable/disable editbox nEditId on window nWinNum
- *(lEnable defaults to .t., ie. enabling the editbox)
- * return previous state of the editbox (TRUE:enabled FALSE:disabled)
- *(if nEditId is invalid, this function returns FALSE too)
+/* wvw_ebEnable( [nWinNum], nEditId, [lEnable] )
+ *  enable/disable editbox nEditId on window nWinNum
+ * (lEnable defaults to .t., ie. enabling the editbox)
+ *  return previous state of the editbox (TRUE:enabled FALSE:disabled)
+ * (if nEditId is invalid, this function returns FALSE too)
  */
 HB_FUNC( WVW_EBENABLE )
 {
@@ -339,19 +337,18 @@ HB_FUNC( WVW_EBENABLE )
       hb_retl( HB_FALSE );
 }
 
-/*wvw_ebEditable( [nWinNum], nEditId, [lEditable] )
- * get/set editability attribute from editbox nEditId on window nWinNum
- *(if lEditable is not specified, no change to editability)
- * return previous state of the editbox (TRUE:editable FALSE:not editable)
- *(if nEditId is invalid, this function returns FALSE too)
+/* wvw_ebEditable( [nWinNum], nEditId, [lEditable] )
+ *  get/set editability attribute from editbox nEditId on window nWinNum
+ * (if lEditable is not specified, no change to editability)
+ *  return previous state of the editbox (TRUE:editable FALSE:not editable)
+ * (if nEditId is invalid, this function returns FALSE too)
  */
 HB_FUNC( WVW_EBEDITABLE )
 {
-   UINT usWinNum  = WVW_WHICH_WINDOW;
    UINT uiCtrlId  = hb_parni( 2 );
    BOOL bEditable = hb_parldef( 3, HB_TRUE );
    byte bStyle;
-   HWND hWndEB = FindControlHandle( usWinNum, WVW_CONTROL_EDITBOX, uiCtrlId, &bStyle );
+   HWND hWndEB = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, uiCtrlId, &bStyle );
 
    if( hWndEB )
    {
@@ -364,24 +361,21 @@ HB_FUNC( WVW_EBEDITABLE )
             ( HWND ) hWndEB,
             EM_SETREADONLY,
             ( WPARAM ) ! bEditable,
-            ( LPARAM ) 0
-            );
+            ( LPARAM ) 0 );
    }
    else
       hb_retl( HB_FALSE );
 }
 
-/*wvw_ebSetCodeblock( [nWinNum], nEBid, bBlock )
+/* wvw_ebSetCodeblock( [nWinNum], nEBid, bBlock )
  * assign (new) codeblock bBlock to editbox nEBid for window nWinNum
  *
  * return .t. if successful
  */
 HB_FUNC( WVW_EBSETCODEBLOCK )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
    UINT uiEBid                 = ( UINT ) hb_parni( 2 );
-   CONTROL_DATA * pcd          = GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, uiEBid );
+   CONTROL_DATA * pcd          = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, NULL, uiEBid );
    WVW_DATA *     pData        = hb_getWvwData();
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL bOldSetting            = pData->s_bRecurseCBlock;
@@ -397,7 +391,6 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
 
    if( pcd->phiCodeBlock )
       hb_itemRelease( pcd->phiCodeBlock );
-
 
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
@@ -417,8 +410,7 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
  */
 HB_FUNC( WVW_EBSETFONT )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HB_BOOL    retval      = HB_TRUE;
    WVW_DATA * pData       = hb_getWvwData();
 
@@ -448,10 +440,8 @@ HB_FUNC( WVW_EBSETFONT )
          while( pcd )
          {
             if( ( pcd->byCtrlClass == WVW_CONTROL_EDITBOX ) &&
-                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont )
-                )
+                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont ) )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
-
 
             pcd = pcd->pNext;
          }
@@ -468,16 +458,15 @@ HB_FUNC( WVW_EBSETFONT )
 
 }
 
-/*wvw_ebIsMultiline( [nWinNum], nEBid )
+/* wvw_ebIsMultiline( [nWinNum], nEBid )
  * returns .t. if editbox nEBid in window nWinNum is multiline
  * otherwise .f.
  * Also returns .f. if nEBid not valid
  */
 HB_FUNC( WVW_EBISMULTILINE )
 {
-   UINT usWinNum      = WVW_WHICH_WINDOW;
    UINT uiEBid        = hb_parni( 2 );
-   CONTROL_DATA * pcd = GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, uiEBid );
+   CONTROL_DATA * pcd = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, NULL, uiEBid );
    BOOL bMultiline;
 
    if( pcd == NULL )
@@ -524,9 +513,7 @@ HB_FUNC( WVW_EBGETTEXT )
          ( HWND ) pcd->hWndCtrl,
          EM_FMTLINES,
          ( WPARAM ) TRUE,
-         ( LPARAM ) 0
-         );
-
+         ( LPARAM ) 0 );
 
    usLen = ( USHORT ) SendMessage( ( HWND ) pcd->hWndCtrl, WM_GETTEXTLENGTH, 0, 0 ) + 1;
 
@@ -536,8 +523,7 @@ HB_FUNC( WVW_EBGETTEXT )
       ( HWND ) pcd->hWndCtrl,
       WM_GETTEXT,
       usLen,
-      ( LPARAM ) lpszTextANSI
-      );
+      ( LPARAM ) lpszTextANSI );
 
    if( bToOEM )
    {
@@ -553,7 +539,7 @@ HB_FUNC( WVW_EBGETTEXT )
    hb_xfree( lpszTextANSI );
 }
 
-/*wvw_ebSetText( [nWinNum], nEBid, cText )
+/* wvw_ebSetText( [nWinNum], nEBid, cText )
  * set current text of editbox nEBid in window nWinNum
  * returns .t. if successful, .f. in case of error (eg. nEBid not valid)
  */
@@ -585,8 +571,7 @@ HB_FUNC( WVW_EBSETTEXT )
       ( HWND ) pcd->hWndCtrl,
       WM_SETTEXT,
       0,
-      ( LPARAM ) lpszText
-      );
+      ( LPARAM ) lpszText );
 
    if( bFromOEM )
       hb_xfree( lpszText );
@@ -594,7 +579,7 @@ HB_FUNC( WVW_EBSETTEXT )
    hb_retl( bRetval );
 }
 
-/*wvw_ebGetSel( [nWinNum], nEBid, @nstart, @nend )
+/* wvw_ebGetSel( [nWinNum], nEBid, @nstart, @nend )
  * get selected text editbox nEBid in window nWinNum
  * the start selected text (0-based) is in nstart
  * the end selected text (0-based) is in nend
@@ -603,9 +588,8 @@ HB_FUNC( WVW_EBSETTEXT )
  */
 HB_FUNC( WVW_EBGETSEL )
 {
-   UINT usWinNum      = WVW_WHICH_WINDOW;
    UINT uiEBid        = hb_parni( 2 );
-   CONTROL_DATA * pcd = GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, uiEBid );
+   CONTROL_DATA * pcd = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, NULL, uiEBid );
    DWORD          dwStart, dwEnd;
 
    if( pcd == NULL )
@@ -617,8 +601,7 @@ HB_FUNC( WVW_EBGETSEL )
    SendMessage( ( HWND ) pcd->hWndCtrl,
                 EM_GETSEL,
                 ( WPARAM ) &dwStart,
-                ( LPARAM ) &dwEnd
-                );
+                ( LPARAM ) &dwEnd );
 
    if( HB_ISBYREF( 3 ) )
       hb_stornl( dwStart, 3 );
@@ -627,7 +610,7 @@ HB_FUNC( WVW_EBGETSEL )
    hb_retl( HB_TRUE );
 }
 
-/*wvw_ebSetSel( [nWinNum], nEBid, nstart, nend )
+/* wvw_ebSetSel( [nWinNum], nEBid, nstart, nend )
  * set selected text editbox nEBid in window nWinNum
  * the start selected text (0-based) is in nstart
  * the end selected text (0-based) is in nend
@@ -638,9 +621,8 @@ HB_FUNC( WVW_EBGETSEL )
  */
 HB_FUNC( WVW_EBSETSEL )
 {
-   UINT usWinNum          = WVW_WHICH_WINDOW;
    UINT uiEBid            = hb_parni( 2 );
-   CONTROL_DATA * pcd     = GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, uiEBid );
+   CONTROL_DATA * pcd     = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, NULL, uiEBid );
    DWORD          dwStart = ( DWORD ) hb_parnl( 3 );
    DWORD          dwEnd   = ( DWORD ) hb_parnl( 4 );
 
@@ -653,8 +635,8 @@ HB_FUNC( WVW_EBSETSEL )
    SendMessage( ( HWND ) pcd->hWndCtrl,
                 EM_SETSEL,
                 ( WPARAM ) dwStart,
-                ( LPARAM ) dwEnd
-                );
+                ( LPARAM ) dwEnd );
+
    hb_retl( HB_TRUE );
 }
 /* Static controls */
@@ -688,7 +670,6 @@ HB_FUNC( WVW_STCREATE )
           usRight  = HB_ISNUM( 12 ) ? ( USHORT ) hb_parni( 12 ) : usLeft + usWidth - 1;
    /* char * sText = hb_parc( 5 ); */
 
-
    int   iStyle = ( bBorder ? WS_BORDER : 0 );
    int   iBox   = hb_parni( 10 );
    HFONT hFont  = NULL;
@@ -696,11 +677,9 @@ HB_FUNC( WVW_STCREATE )
    if( iBox > 0 )
       iStyle |= iBox;
 
-
    if( HB_ISNUM( 8 ) )
       hFont = ( HFONT ) HB_PARHANDLE( 8 );
-   else
-   if( pWindowData->hSTfont == NULL )
+   else if( pWindowData->hSTfont == NULL )
    {
       pWindowData->hSTfont = CreateFontIndirect( &pData->s_lfST );
       if( pWindowData->hSTfont == NULL )
@@ -750,8 +729,7 @@ HB_FUNC( WVW_STCREATE )
       hWndParent,
       ( HMENU ) uiCBid,
       ( HINSTANCE ) hInstance,
-      NULL
-      );
+      NULL );
 
    if( hWndCB )
    {
@@ -761,11 +739,11 @@ HB_FUNC( WVW_STCREATE )
          SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
       else
          SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) pWindowData->hSTfont, ( LPARAM ) TRUE );
-      hb_retnl( ( LONG ) uiCBid );
+      hb_retnint( uiCBid );
       HB_STOREHANDLE( hWndCB, 9 );
    }
    else
-      hb_retnl( ( LONG ) 0 );
+      hb_retnint( 0 );
 }
 
 
@@ -775,9 +753,8 @@ HB_FUNC( WVW_STSETTEXT )
 
    if( hWndCB )
    {
-
       SetWindowText( ( HWND ) hWndCB, ( LPCTSTR ) hb_parc( 3 ) );
-      hb_retl( 1 );
+      hb_retl( HB_TRUE );
    }
    else
       hb_retl( HB_FALSE );
@@ -786,8 +763,7 @@ HB_FUNC( WVW_STSETTEXT )
 
 HB_FUNC( WVW_STSETFONT )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    WVW_DATA * pData       = hb_getWvwData();
    HB_BOOL    retval      = HB_TRUE;
 
@@ -817,10 +793,8 @@ HB_FUNC( WVW_STSETFONT )
          while( pcd )
          {
             if( ( pcd->byCtrlClass == WVW_CONTROL_STATIC ) &&
-                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont )
-                )
+                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont ) )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
-
 
             pcd = pcd->pNext;
          }
@@ -834,5 +808,4 @@ HB_FUNC( WVW_STSETFONT )
    }
 
    hb_retl( retval );
-
 }

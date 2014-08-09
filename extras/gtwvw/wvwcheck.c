@@ -64,11 +64,11 @@
 #include "hbgtwvw.h"
 
 
-/* CHECKBOX begins                                                   */
+/* CHECKBOX begins */
 
 
-/*wvw_cxCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
- *              nStretchBitmap, lMap3Dcolors)
+/* wvw_cxCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
+ *               nStretchBitmap, lMap3Dcolors)
  * create CHECKBOX for window nWinNum
  * nTop: row of top/left corner (in character unit)
  * nLeft: col of top/left corner (in character unit)
@@ -102,15 +102,12 @@
  *
  * returns control id of newly created CHECKBOX of windows nWinNum
  * returns 0 if failed
- *
- * example:
  */
 
 HB_FUNC( WVW_CXCREATE )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
    int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-   /* int   iStyle; */
+/* int   iStyle; */
    UINT   uiPBid;
    USHORT usTop         = ( BYTE ) hb_parni( 2 ),
           usLeft        = ( BYTE ) hb_parni( 3 ),
@@ -133,7 +130,7 @@ HB_FUNC( WVW_CXCREATE )
    iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
    iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
-   uiPBid = ButtonCreate( usWinNum, usTop, usLeft, usBottom, usRight, lpszCaption,
+   uiPBid = ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
                           szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
                           iOffTop, iOffLeft, iOffBottom, iOffRight,
                           dStretch, bMap3Dcolors,
@@ -141,13 +138,12 @@ HB_FUNC( WVW_CXCREATE )
    hb_retnl( ( LONG ) uiPBid );
 }
 
-/*wvw_cxDestroy( [nWinNum], nCXid )
+/* wvw_cxDestroy( [nWinNum], nCXid )
  * destroy checkbox nCXid for window nWinNum
  */
 HB_FUNC( WVW_CXDESTROY )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    UINT           uiCXid      = ( UINT ) hb_parni( 2 );
    CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
    CONTROL_DATA * pcdPrev     = NULL;
@@ -177,15 +173,14 @@ HB_FUNC( WVW_CXDESTROY )
    hb_xfree( pcd );
 }
 
-/*wvw_cxSetFocus( [nWinNum], nButtonId )
+/* wvw_cxSetFocus( [nWinNum], nButtonId )
  * set the focus to checkbox nButtonId in window nWinNum
  */
 HB_FUNC( WVW_CXSETFOCUS )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
    UINT uiCtrlId = hb_parni( 2 );
    byte bStyle;
-   HWND hWndCX = FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
+   HWND hWndCX = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
 
    if( hWndCX )
       hb_retl( SetFocus( hWndCX ) != NULL );
@@ -193,18 +188,18 @@ HB_FUNC( WVW_CXSETFOCUS )
       hb_retl( HB_FALSE );
 }
 
-/*wvw_cxEnable( [nWinNum], nButtonId, [lToggle] )
+/* wvw_cxEnable( [nWinNum], nButtonId, [lToggle] )
  * enable/disable checkbox nButtonId on window nWinNum
- *(lToggle defaults to .t., ie. enabling the checkbox)
+ * (lToggle defaults to .t., ie. enabling the checkbox)
  * return previous state of the checkbox (TRUE:enabled FALSE:disabled)
- *(if nButtonId is invalid, this function returns FALSE too)
+ * (if nButtonId is invalid, this function returns FALSE too)
  */
 HB_FUNC( WVW_CXENABLE )
 {
-   UINT       usWinNum = WVW_WHICH_WINDOW;
    UINT       uiCtrlId = hb_parni( 2 );
    BOOL       bEnable  = hb_parldef( 3, HB_TRUE );
    byte       bStyle;
+   UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HWND       hWndCX      = FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
 
@@ -219,17 +214,16 @@ HB_FUNC( WVW_CXENABLE )
       hb_retl( HB_FALSE );
 }
 
-/*wvw_cxSetCodeblock( [nWinNum], nCXid, bBlock )
+/* wvw_cxSetCodeblock( [nWinNum], nCXid, bBlock )
  * assign (new) codeblock bBlock to button nCXid for window nWinNum
  *
  * return .t. if successful
  */
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
-   UINT usWinNum               = WVW_WHICH_WINDOW;
    WVW_DATA *     pData        = hb_getWvwData();
    UINT           uiCXid       = ( UINT ) hb_parni( 2 );
-   CONTROL_DATA * pcd          = GetControlData( usWinNum, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd          = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL           bOldSetting  = pData->s_bRecurseCBlock;
 
@@ -262,11 +256,9 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
  */
 HB_FUNC( WVW_CXSETCHECK )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
    UINT  uiCXid       = ( UINT ) hb_parni( 2 );
    ULONG ulCheck      = ( ULONG ) hb_parnidef( 3, BST_CHECKED );
-   CONTROL_DATA * pcd = GetControlData( usWinNum, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
    if( pcd->hWndCtrl )
       SendMessage( pcd->hWndCtrl,
@@ -275,7 +267,7 @@ HB_FUNC( WVW_CXSETCHECK )
    hb_retl( HB_TRUE );
 }
 
-/*wvw_cxGetCheck( [nWinNum], nCXid )
+/* wvw_cxGetCheck( [nWinNum], nCXid )
  * returns check-state of checkbox nCXid
  *           0==unchecked    BST_UNCHECKED
  *           1==checked      BST_CHECKED
@@ -283,11 +275,9 @@ HB_FUNC( WVW_CXSETCHECK )
  */
 HB_FUNC( WVW_CXGETCHECK )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
    UINT  uiCXid       = ( UINT ) hb_parni( 2 );
    ULONG ulCheck      = 0;
-   CONTROL_DATA * pcd = GetControlData( usWinNum, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
    if( pcd->hWndCtrl )
       ulCheck = SendMessage( pcd->hWndCtrl,
@@ -296,14 +286,10 @@ HB_FUNC( WVW_CXGETCHECK )
    hb_retnl( ulCheck );
 }
 
-/*wvw_cxSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
- *                             lItalic, lUnderline, lStrikeout
- *
- */
+/* wvw_cxSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_CXSETFONT )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    WVW_DATA * pData       = hb_getWvwData();
 
    BOOL retval = HB_TRUE;
@@ -375,10 +361,10 @@ HB_FUNC( WVW_CXSTATUSFONT )
 }
 
 
-/* CHECKBOX ends                                                     */
+/* CHECKBOX ends */
 
 
-/* PROGRESSBAR begins                                                 */
+/* PROGRESSBAR begins */
 
 
 /* wvw_pgCreate( [nWinNum], nTop, nLeft, nBottom, nRight, [aOffset],
@@ -423,10 +409,10 @@ HB_FUNC( WVW_PGCREATE )
    int        iTop, iLeft, iBottom, iRight;
    int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    int        iStyle     = 0;
-   BOOL       bBackColor = HB_ISNUM( 7 );
-   BOOL       bBarColor  = HB_ISNUM( 8 );
-   BOOL       bSmooth    = hb_parl( 9 );
-   BOOL       bVertical  = hb_parl( 10 );
+   HB_BOOL    bBackColor = HB_ISNUM( 7 );
+   HB_BOOL    bBarColor  = HB_ISNUM( 8 );
+   HB_BOOL    bSmooth    = hb_parl( 9 );
+   HB_BOOL    bVertical  = hb_parl( 10 );
    HB_PTRDIFF uiPGid;
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
               usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -477,8 +463,7 @@ HB_FUNC( WVW_PGCREATE )
       hWndParent,
       ( HMENU ) uiPGid,
       ( HINSTANCE ) hInstance,
-      NULL
-      );
+      NULL );
 
    if( hWndPG )
    {
@@ -492,27 +477,31 @@ HB_FUNC( WVW_PGCREATE )
       SendMessage( hWndPG, PBM_SETRANGE, 0, MAKELPARAM( 0, 100 ) );
       SendMessage( hWndPG, PBM_SETPOS, ( WPARAM ) 0, 0 );
 
-      rXB.top       = usTop;     rXB.left = usLeft;
-      rXB.bottom    = usBottom; rXB.right = usRight;
-      rOffXB.top    = iOffTop;     rOffXB.left = iOffLeft;
-      rOffXB.bottom = iOffBottom; rOffXB.right = iOffRight;
+      rXB.top    = usTop;
+      rXB.left   = usLeft;
+      rXB.bottom = usBottom;
+      rXB.right  = usRight;
+
+      rOffXB.top    = iOffTop;
+      rOffXB.left   = iOffLeft;
+      rOffXB.bottom = iOffBottom;
+      rOffXB.right  = iOffRight;
 
       AddControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, hWndPG, uiPGid, NULL, rXB, rOffXB, ( byte ) iStyle );
 
-      hb_retnl( ( LONG ) uiPGid );
+      hb_retnint( uiPGid );
    }
    else
-      hb_retnl( ( LONG ) 0 );
+      hb_retnint( 0 );
 }
 
-/*wvw_pgDestroy( [nWinNum], nPGid )
+/* wvw_pgDestroy( [nWinNum], nPGid )
  * destroy progressbar nPGid for window nWinNum
  * This function has no return value.
  */
 HB_FUNC( WVW_PGDESTROY )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    UINT           uiPGid      = ( UINT ) hb_parni( 2 );
    CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
    CONTROL_DATA * pcdPrev     = NULL;
@@ -552,11 +541,9 @@ HB_FUNC( WVW_PGDESTROY )
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
    UINT uiPGid = ( UINT ) hb_parni( 2 );
    byte bStyle;
-   HWND hWndPG = FindControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
+   HWND hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
    int  iMin   = ( int ) hb_parni( 3 );
    int  iMax   = ( int ) hb_parni( 4 );
 
@@ -572,18 +559,16 @@ HB_FUNC( WVW_PGSETRANGE )
    hb_retl( HB_TRUE );
 }
 
-/*wvw_pgSetPos(nWinNum, PGid, [nPos])
+/* wvw_pgSetPos(nWinNum, PGid, [nPos])
  * update progressbar position within current range
  * nPos: a number in range of current range
  * returns .t. if operation considered successfull
  */
 HB_FUNC( WVW_PGSETPOS )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
    UINT    uiPGid = ( UINT ) hb_parni( 2 );
    byte    bStyle;
-   HWND    hWndPG = FindControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
+   HWND    hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
    int     iPos   = ( int ) hb_parni( 3 );
    PBRANGE pbrange;
 
@@ -606,17 +591,15 @@ HB_FUNC( WVW_PGSETPOS )
    hb_retl( HB_TRUE );
 }
 
-/*wvw_pgGetPos(nWinNum, PGid)
+/* wvw_pgGetPos(nWinNum, PGid)
  * get progressbar current position
  * returns 0 if operation failed
  */
 HB_FUNC( WVW_PGGETPOS )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
    UINT uiPGid = ( UINT ) hb_parni( 2 );
    byte bStyle;
-   HWND hWndPG = FindControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
+   HWND hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
 
    if( uiPGid == 0 || hWndPG == NULL )
    {
@@ -627,5 +610,4 @@ HB_FUNC( WVW_PGGETPOS )
    hb_retni( ( int ) SendMessage( hWndPG, PBM_GETPOS, ( WPARAM ) 0, ( LPARAM ) 0 ) );
 }
 
-
-/* PROGRESSBAR ends                                                   */
+/* PROGRESSBAR ends */
