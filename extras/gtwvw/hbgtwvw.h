@@ -58,17 +58,12 @@
 #ifndef HB_WVW_H_
 #define HB_WVW_H_
 
-#define TTS_BALLOON           0x40   /* added by MAG */
-
-#ifndef GRADIENT_FILL_RECT_H
-#define GRADIENT_FILL_RECT_H  0x00000000
-#endif
-#ifndef TPM_RECURSE
-#define TPM_RECURSE           0x0001L
-#endif
-
 #ifndef _WIN32_IE
-#define _WIN32_IE             0x0400
+#define _WIN32_IE  0x0400
+#endif
+
+#ifndef WINVER
+#define WINVER  0x0500
 #endif
 
 /* NOTE: User programs should never call this layer directly! */
@@ -81,16 +76,7 @@
 #define CINTERFACE            1
 #endif
 
-#include "hbset.h"
-#include "hbgtcore.h"
-#include "hbinit.h"
-#include "hbapigt.h"
-#include "hbapierr.h"
 #include "hbapiitm.h"
-#include "inkey.ch"
-#include "error.ch"
-#include "hbvm.h"
-#include "hbstack.h"
 #include "hbwinuni.h"
 
 /* Header file so MSVC can use ole in C mode while compile in C++ mode
@@ -133,17 +119,13 @@
 #include <ole2.h>
 #include <ocidl.h>
 #include <olectl.h>
-#if defined( __DMC__ )
-   #if ! defined( LONG_PTR )
-typedef __int64 LONG_PTR;
-   #endif
+#if defined( __DMC__ ) && ! defined( LONG_PTR )
+   typedef __int64 LONG_PTR;
 #endif
 
 #include <winuser.h>
 #include <commctrl.h>
 #include <commdlg.h>
-#include <math.h>       /* fmod */
-#include <unknwn.h>
 
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
    defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
@@ -160,6 +142,16 @@ typedef __int64 LONG_PTR;
 
 #if defined( __MSC6__ ) || defined( __DMC__ )
    #define LONG_PTR               LONG
+#endif
+
+#ifndef GRADIENT_FILL_RECT_H
+#define GRADIENT_FILL_RECT_H  0x00000000
+#endif
+#ifndef TPM_RECURSE
+#define TPM_RECURSE           0x0001L
+#endif
+#ifndef TTS_BALLOON
+#define TTS_BALLOON           0x40
 #endif
 
 /* xHarbour compatible definitions */
@@ -204,20 +196,20 @@ typedef __int64 LONG_PTR;
 #define WVW_ID_BASE_PUSHBUTTON    64000
 #define WVW_ID_BASE_CHECKBOX      64000
 
-#define WVW_ID_MAX_PUSHBUTTON     WVW_ID_BASE_PUSHBUTTON + 200 - 1
-#define WVW_ID_MAX_CHECKBOX       WVW_ID_BASE_CHECKBOX + 200 - 1
+#define WVW_ID_MAX_PUSHBUTTON     ( WVW_ID_BASE_PUSHBUTTON + 200 - 1 )
+#define WVW_ID_MAX_CHECKBOX       ( WVW_ID_BASE_CHECKBOX + 200 - 1 )
 /* ie. effectively there are max 200 buttons on a window */
 
-#define WVW_ID_BASE_COMBOBOX      WVW_ID_MAX_PUSHBUTTON + 1
+#define WVW_ID_BASE_COMBOBOX      ( WVW_ID_MAX_PUSHBUTTON + 1 )
 #define WVW_CB_KBD_STANDARD       0
 #define WVW_CB_KBD_CLIPPER        1
 
-#define WVW_COMBOBOX_MAXLEN       255 /* maximum length of combobox string */
+#define WVW_COMBOBOX_MAXLEN       255  /* maximum length of combobox string */
 
-#define WVW_ID_MAX_COMBOBOX       WVW_ID_BASE_COMBOBOX + 200 - 1
+#define WVW_ID_MAX_COMBOBOX       ( WVW_ID_BASE_COMBOBOX + 200 - 1 )
 
-#define WVW_ID_BASE_EDITBOX       WVW_ID_MAX_COMBOBOX + 1
-#define WVW_ID_MAX_EDITBOX        WVW_ID_BASE_EDITBOX + 200 - 1
+#define WVW_ID_BASE_EDITBOX       ( WVW_ID_MAX_COMBOBOX + 1 )
+#define WVW_ID_MAX_EDITBOX        ( WVW_ID_BASE_EDITBOX + 200 - 1 )
 
 #define WVW_EB_SINGLELINE         1
 #define WVW_EB_MULTILINE          2
@@ -239,13 +231,11 @@ typedef __int64 LONG_PTR;
 
 /* default maximum number of user bitmap cache
    One bitmap cache currently takes 280 bytes (see BITMAP_HANDLE).
-   See also wvw_SetMaxBMCache().
- */
+   See also wvw_SetMaxBMCache(). */
 #define WVW_DEFAULT_MAX_BMCACHE   20
 
 /* Como as descricoes sao grandes, precisei aumetar isso - Peluffo - 2007-10-26
-   #define WVW_TB_LABELMAXLENGTH 40
- */
+   #define WVW_TB_LABELMAXLENGTH 40 */
 #define WVW_TB_LABELMAXLENGTH     100
 
 #define WVW_WHICH_WINDOW          ( HB_ISNUM( 1 ) ? ( UINT ) hb_parni( 1 ) : ( hb_gt_wvw_GetMainCoordMode() ? hb_gt_wvw_GetNumWindows() - 1 : hb_gt_wvw_GetCurWindow() ) )
@@ -337,7 +327,7 @@ typedef BOOL ( WINAPI * wvwGradientFill )(
    ULONG dwMode      );
 
 #ifndef _MAX_PATH
-   #define _MAX_PATH  256
+#define _MAX_PATH  256
 #endif
 
 typedef struct bitmap_handle
@@ -483,13 +473,9 @@ typedef struct win_data
    CONTROL_DATA * pcdCtrlList;         /* lists of created controls, eg. scrollbars */
 
    HFONT hPBfont;                      /* handle to font used by pushbuttons & checkboxes */
-
    HFONT hCBfont;                      /* handle to font used by comboboxes */
-
    HFONT hEBfont;                      /* handle to font used by editboxes */
-
    HFONT hSBfont;                      /* handle to font used by pushbuttons & checkboxes */
-
    HFONT hCXfont;                      /* handle to font used by checkboxes when 'focused' */
    HFONT hSTfont;                      /* handle to font used by checkboxes when 'focused' */
 
@@ -517,7 +503,7 @@ typedef struct win_data
    BYTE * pColors;                                 /*   "     "    "    */
    POINT  caretPos;                                /* the current caret position */
 
-   int   CaretSize;                                /*x this may be specific to each windows, eg. different font size */
+   int   CaretSize;                                /* this may be specific to each windows, eg. different font size */
    POINT mousePos;                                 /* the last mousedown position */
    BOOL  MouseMove;                                /* Flag to say whether to return mouse movement events */
    HWND  hWnd;                                     /* the window handle */
@@ -625,15 +611,16 @@ typedef struct wvw_data
 } WVW_DATA;
 
 #if 0
-#define HB_RETHANDLE( h )          hb_retptr( ( void * ) ( h ) )
-#define HB_ISHANDLE( n )           HB_ISPOINTER( n )
-#define HB_PARHANDLE( n )          hb_parptr( n )
-#define HB_STOREHANDLE( h, n )     hb_storptr( ( void * ) ( h ), n )
-#endif
+   #define HB_RETHANDLE( h )       hb_retptr( ( void * ) ( h ) )
+   #define HB_ISHANDLE( n )        HB_ISPOINTER( n )
+   #define HB_PARHANDLE( n )       hb_parptr( n )
+   #define HB_STOREHANDLE( h, n )  hb_storptr( ( void * ) ( h ), n )
+#else
    #define HB_RETHANDLE( h )       hb_retnint( ( HB_PTRDIFF ) ( h ) )
    #define HB_ISHANDLE( n )        HB_ISNUM( n )
    #define HB_PARHANDLE( n )       ( ( HB_PTRDIFF ) hb_parnint( n ) )
    #define HB_STOREHANDLE( h, n )  hb_stornint( ( HB_PTRDIFF ) ( h ), n )
+#endif
 HB_EXTERN_BEGIN
 
 /* Get functions for internal Data */
@@ -668,7 +655,7 @@ extern int CommandToIndex( HWND hWndTB, int iCommand );
 extern BOOL AddTBButton( HWND hWndToolbar, char * szBitmap, UINT uiBitmap, char * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown );
 extern RECT hb_gt_wvwGetColRowFromXYRect( WIN_DATA * pWIndowData, RECT xy );
 extern BYTE hb_wvw_LineHeight( WIN_DATA * pWindowData );
-extern DWORD hb_gt_wvwProcessMessages( WIN_DATA * pWindowData );
+extern WPARAM hb_gt_wvwProcessMessages( WIN_DATA * pWindowData );
 /* control (eg. scrollbar) supporters: */
 extern HWND FindControlHandle( UINT usWinNum, BYTE byCtrlClass, UINT uiCtrlid, byte * pbStyle );
 extern UINT FindControlId( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, byte * pbStyle );
@@ -713,7 +700,7 @@ extern HB_EXPORT void          hb_gt_wvwDoProcessMessages( UINT usWinNum );
 extern HB_EXPORT BOOL          hb_gt_wvwSetMouseMove( UINT usWinNum, BOOL bHandleEvent );
 extern HB_EXPORT BOOL          hb_gt_wvwEnableShortCuts( UINT usWinNum, BOOL bEnable );
 extern HB_EXPORT BOOL          hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const char * image, BOOL bTransparent );
-extern HB_EXPORT BOOL          hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture, BOOL bTransp );
+extern HB_EXPORT HB_BOOL       hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture, BOOL bTransp );
 extern HB_EXPORT WIN_DATA *    hb_gt_wvwGetGlobalData( UINT usWinNum );
 extern HB_EXPORT BOOL          hb_gt_wvwSetColorData( int iIndex, COLORREF ulCr );
 extern HB_EXPORT void          hb_gt_wvwDrawBoxRaised( UINT usWinNum, int iTop, int iLeft, int iBottom, int iRight, BOOL bTight );

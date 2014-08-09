@@ -2413,9 +2413,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         EXIT
 #ifdef HARBOUR_SUPPORT
                      ELSE
-                        IF hbmk[ _HBMK_lInfo ]
-                           _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected C compiler '%1$s' skipped because required Harbour core libraries are not found." ), tmp[ _COMPDET_cCOMP ] ) )
-                        ENDIF
+                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected C compiler '%1$s' skipped because required Harbour core libraries are not found." ), tmp[ _COMPDET_cCOMP ] ) )
                      ENDIF
 #endif
                   ENDIF

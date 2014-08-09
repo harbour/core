@@ -132,7 +132,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 /* win_SetTimer( hWnd, nIdentifier, nTimeOut ) */
 HB_FUNC( WIN_SETTIMER )
 {
-   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) );
+   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), hb_parnint( 2 ), hb_parni( 3 ), NULL ) != ( UINT_PTR ) NULL );
 }
 
 
@@ -355,7 +355,7 @@ HB_FUNC( WIN_DRAWTEXT )
    rc.right  = hb_parvni( 3, 3 );
    rc.bottom = hb_parvni( 3, 4 );
 
-   hb_retl( DrawText( ( HDC ) HB_PARHANDLE( 1 ), hb_parc( 2 ), strlen( hb_parc( 2 ) ), &rc, hb_parni( 4 ) ) );
+   hb_retl( DrawText( ( HDC ) HB_PARHANDLE( 1 ), hb_parcx( 2 ), ( int ) strlen( hb_parcx( 2 ) ), &rc, hb_parni( 4 ) ) );
 }
 
 /* Adiciones a GtWVW desarrolladas por SOLUCIONES PERCEPTIVAS... */
@@ -427,7 +427,7 @@ HB_FUNC( WVW_RBCREATE )
 
 HB_FUNC( WVW_SETCONTROLTEXT )
 {
-   UINT uiCtrlId = hb_parni( 2 );
+   UINT uiCtrlId = ( UINT ) hb_parnl( 2 );
    byte bStyle;
    HWND hWndPB = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
 
@@ -439,7 +439,7 @@ HB_FUNC( WVW_SETCONTROLTEXT )
 
 HB_FUNC( WVW_PBVISIBLE )
 {
-   UINT uiCtrlId = hb_parni( 2 );
+   UINT uiCtrlId = ( UINT ) hb_parnl( 2 );
    BOOL bEnable  = hb_parldef( 3, HB_TRUE );
    byte bStyle;
    HWND hWndPB = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
@@ -460,7 +460,7 @@ HB_FUNC( WVW_PBVISIBLE )
 
 HB_FUNC( WVW_CBVISIBLE )
 {
-   UINT uiCtrlId = hb_parni( 2 );
+   UINT uiCtrlId = ( UINT ) hb_parnl( 2 );
    BOOL bEnable  = hb_parldef( 3, HB_TRUE );
    byte bStyle;
    HWND hWndCB = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, uiCtrlId, &bStyle );
@@ -473,7 +473,7 @@ HB_FUNC( WVW_CBVISIBLE )
 
 HB_FUNC( WVW_CXVISIBLE )
 {
-   UINT uiCtrlId = hb_parni( 2 );
+   UINT uiCtrlId = ( UINT ) hb_parnl( 2 );
    BOOL bEnable  = hb_parldef( 3, HB_TRUE );
    byte bStyle;
    HWND hWndPB = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
@@ -497,7 +497,7 @@ HB_FUNC( WVW_CXVISIBLE )
  */
 HB_FUNC( WVW_XBVISIBLE )
 {
-   UINT uiXBid = ( UINT ) hb_parni( 2 );
+   UINT uiXBid = ( UINT ) hb_parnl( 2 );
    BOOL bShow  = ( BOOL ) hb_parldef( 3, HB_TRUE );
    byte bStyle;
    HWND hWndXB = uiXBid == 0 ? NULL : FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, uiXBid, &bStyle );
@@ -632,11 +632,13 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
    ti.uFlags = TTF_SUBCLASS | TTF_IDISHWND;
    ti.hwnd   = pWindowData->hWnd;
    ti.uId    = ( UINT ) hb_parnl( 2 );
-/* ti.uId    = ( UINT ) GetDlgItem( hWnd, hb_parni( 2 ) ); */
+#if 0
+   ti.uId    = ( UINT ) GetDlgItem( hWnd, hb_parni( 2 ) );
+#endif
    ti.hinst    = GetModuleHandle( NULL );
    ti.lpszText = ( LPSTR ) hb_parc( 3 );
 
-   hb_retl( SendMessage( pData->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) ( LPTOOLINFO ) &ti ) );
+   hb_retl( ( BOOL ) SendMessage( pData->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) ( LPTOOLINFO ) &ti ) );
 }
 
 
@@ -646,7 +648,7 @@ HB_FUNC( CREATEIMAGELIST )
    PHB_ITEM   pArray = hb_param( 1, HB_IT_ARRAY );
    UINT       flags  = hb_parnidef( 5, ILC_COLOR );
    HIMAGELIST himl;
-   ULONG      ul, ulLen = hb_arrayLen( pArray );
+   int        ul, ulLen = ( int ) hb_arrayLen( pArray );
    HBITMAP    hbmp;
 
    himl = ImageList_Create( hb_parni( 2 ), hb_parni( 3 ), flags,
@@ -773,14 +775,14 @@ HB_FUNC( OPENIMAGE )
 
    if( lString )
    {
-      iFileSize = hb_parclen( 1 );
+      iFileSize = ( int ) hb_parclen( 1 );
       hG        = GlobalAlloc( GPTR, iFileSize );
       if( ! hG )
       {
          hb_retnl( 0 );
          return;
       }
-      memcpy( ( void * ) hG, ( void * ) cFileName, iFileSize );
+      memcpy( hG, cFileName, ( int ) iFileSize );
    }
    else
    {
@@ -804,9 +806,7 @@ HB_FUNC( OPENIMAGE )
       hb_fsClose( fhnd );
    }
 
-   CreateStreamOnHGlobal( hG, 0, &pStream );
-
-   if( ! pStream )
+   if( CreateStreamOnHGlobal( hG, 0, &pStream ) != S_OK || ! pStream )
    {
       GlobalFree( hG );
       hb_retnl( 0 );
@@ -857,94 +857,95 @@ HB_FUNC( OPENBITMAP )
    BITMAPFILEHEADER bmfh;
    BITMAPINFOHEADER bmih;
    LPBITMAPINFO     lpbmi;
-   DWORD   dwRead;
    LPVOID  lpvBits;
    HGLOBAL hmem1, hmem2;
-   HBITMAP hbm;
-   HDC     hDC  = ( HDC ) HB_PARHANDLE( 2 );
-   HANDLE  hfbm = CreateFile( hb_parc( 1 ), GENERIC_READ, FILE_SHARE_READ,
-                              NULL, OPEN_EXISTING,
-                              FILE_ATTRIBUTE_READONLY, NULL );
+   HBITMAP hbm = NULL;
+   HDC     hDC = ( HDC ) HB_PARHANDLE( 2 );
 
-   if( ( HB_PTRDIFF ) hfbm <= 0 )
+   HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
+
+   if( fhnd == FS_ERROR )
    {
       HB_RETHANDLE( NULL );
       return;
    }
-   /* Retrieve the BITMAPFILEHEADER structure. */
-   ReadFile( hfbm, &bmfh, sizeof( BITMAPFILEHEADER ), &dwRead, NULL );
 
    /* Retrieve the BITMAPFILEHEADER structure. */
-   ReadFile( hfbm, &bmih, sizeof( BITMAPINFOHEADER ), &dwRead, NULL );
+   hb_fsReadLarge( fhnd, &bmfh, sizeof( BITMAPFILEHEADER ) );
+
+   /* Retrieve the BITMAPFILEHEADER structure. */
+   hb_fsReadLarge( fhnd, &bmih, sizeof( BITMAPINFOHEADER ) );
 
    /* Allocate memory for the BITMAPINFO structure. */
 
    hmem1 = GlobalAlloc( GHND, sizeof( BITMAPINFOHEADER ) +
-                        ( ( 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) ) );
-   lpbmi = ( LPBITMAPINFO ) GlobalLock( hmem1 );
-
-   /*  Load BITMAPINFOHEADER into the BITMAPINFO  structure. */
-   lpbmi->bmiHeader.biSize   = bmih.biSize;
-   lpbmi->bmiHeader.biWidth  = bmih.biWidth;
-   lpbmi->bmiHeader.biHeight = bmih.biHeight;
-   lpbmi->bmiHeader.biPlanes = bmih.biPlanes;
-
-   lpbmi->bmiHeader.biBitCount      = bmih.biBitCount;
-   lpbmi->bmiHeader.biCompression   = bmih.biCompression;
-   lpbmi->bmiHeader.biSizeImage     = bmih.biSizeImage;
-   lpbmi->bmiHeader.biXPelsPerMeter = bmih.biXPelsPerMeter;
-   lpbmi->bmiHeader.biYPelsPerMeter = bmih.biYPelsPerMeter;
-   lpbmi->bmiHeader.biClrUsed       = bmih.biClrUsed;
-   lpbmi->bmiHeader.biClrImportant  = bmih.biClrImportant;
-
-   /* Retrieve the color table.
-    * 1 << bmih.biBitCount == 2 ^ bmih.biBitCount
-    */
-   switch( bmih.biBitCount )
+                        ( ( SIZE_T ) 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) );
+   if( hmem1 )
    {
-      case 1:
-      case 4:
-      case 8:
-         ReadFile( hfbm, lpbmi->bmiColors,
-                   ( ( 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) ),
-                   &dwRead, NULL );
-         break;
+      lpbmi = ( LPBITMAPINFO ) GlobalLock( hmem1 );
 
-      case 16:
-      case 32:
-         if( bmih.biCompression == BI_BITFIELDS )
-            ReadFile( hfbm, lpbmi->bmiColors,
-                      ( 3 * sizeof( RGBQUAD ) ),
-                      &dwRead, NULL );
-         break;
+      /* Load BITMAPINFOHEADER into the BITMAPINFO  structure. */
+      lpbmi->bmiHeader.biSize   = bmih.biSize;
+      lpbmi->bmiHeader.biWidth  = bmih.biWidth;
+      lpbmi->bmiHeader.biHeight = bmih.biHeight;
+      lpbmi->bmiHeader.biPlanes = bmih.biPlanes;
 
-      case 24:
-         break;
+      lpbmi->bmiHeader.biBitCount      = bmih.biBitCount;
+      lpbmi->bmiHeader.biCompression   = bmih.biCompression;
+      lpbmi->bmiHeader.biSizeImage     = bmih.biSizeImage;
+      lpbmi->bmiHeader.biXPelsPerMeter = bmih.biXPelsPerMeter;
+      lpbmi->bmiHeader.biYPelsPerMeter = bmih.biYPelsPerMeter;
+      lpbmi->bmiHeader.biClrUsed       = bmih.biClrUsed;
+      lpbmi->bmiHeader.biClrImportant  = bmih.biClrImportant;
+
+      /* Retrieve the color table.
+       * 1 << bmih.biBitCount == 2 ^ bmih.biBitCount
+       */
+      switch( bmih.biBitCount )
+      {
+         case 1:
+         case 4:
+         case 8:
+            hb_fsReadLarge( fhnd, lpbmi->bmiColors, ( ( SIZE_T ) 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) );
+            break;
+
+         case 16:
+         case 32:
+            if( bmih.biCompression == BI_BITFIELDS )
+               hb_fsReadLarge( fhnd, lpbmi->bmiColors, 3 * sizeof( RGBQUAD ) );
+            break;
+
+         case 24:
+            break;
+      }
+
+      /* Allocate memory for the required number of  bytes. */
+      hmem2 = GlobalAlloc( GHND, ( bmfh.bfSize - bmfh.bfOffBits ) );
+      if( hmem2 )
+      {
+         lpvBits = GlobalLock( hmem2 );
+
+         /* Retrieve the bitmap data. */
+         hb_fsReadLarge( fhnd, lpvBits, bmfh.bfSize - bmfh.bfOffBits );
+
+         if( ! hDC )
+            hDC = GetDC( 0 );
+
+         /* Create a bitmap from the data stored in the .bmp file.  */
+         hbm = CreateDIBitmap( hDC, &bmih, CBM_INIT, lpvBits, lpbmi, DIB_RGB_COLORS );
+
+         if( ! HB_ISHANDLE( 2 ) )
+            ReleaseDC( 0, hDC );
+
+         GlobalUnlock( hmem2 );
+         GlobalFree( hmem2 );
+      }
+
+      GlobalUnlock( hmem1 );
+      GlobalFree( hmem1 );
    }
 
-   /* Allocate memory for the required number of  bytes. */
-   hmem2   = GlobalAlloc( GHND, ( bmfh.bfSize - bmfh.bfOffBits ) );
-   lpvBits = GlobalLock( hmem2 );
-
-   /* Retrieve the bitmap data. */
-
-   ReadFile( hfbm, lpvBits, ( bmfh.bfSize - bmfh.bfOffBits ), &dwRead, NULL );
-
-   if( ! hDC )
-      hDC = GetDC( 0 );
-
-   /* Create a bitmap from the data stored in the .BMP file.  */
-   hbm = CreateDIBitmap( hDC, &bmih, CBM_INIT, lpvBits, lpbmi, DIB_RGB_COLORS );
-
-   if( ! HB_ISHANDLE( 2 ) )
-      ReleaseDC( 0, hDC );
-
-   /* Unlock the global memory objects and close the .BMP file. */
-   GlobalUnlock( hmem1 );
-   GlobalUnlock( hmem2 );
-   GlobalFree( hmem1 );
-   GlobalFree( hmem2 );
-   CloseHandle( hfbm );
+   hb_fsClose( fhnd );
 
    HB_RETHANDLE( hbm );
 }
@@ -1094,6 +1095,8 @@ HB_FUNC( INVALIDATERECT )
       rc.right  = hb_parni( 5 );
       rc.bottom = hb_parni( 6 );
    }
+   else
+      memset( &rc, 0, sizeof( rc ) );
 
    InvalidateRect(
       ( HWND ) HB_PARHANDLE( 1 ),         /* handle of window with changed update region */
@@ -1190,12 +1193,9 @@ HB_FUNC( SETBITMAPRESOURCEID )
 
    if( iBitmapType == 0 )
    {
-
-
       tbab.hInst = NULL;
       tbab.nID   = ( UINT ) ( HB_PTRDIFF ) hBitmap;
-      iNewBitmap = SendMessage( hWndToolbar, TB_ADDBITMAP, ( WPARAM ) 1, ( WPARAM ) &tbab );
-
+      iNewBitmap = ( int ) SendMessage( hWndToolbar, TB_ADDBITMAP, ( WPARAM ) 1, ( WPARAM ) &tbab );
    }
    else /* system bitmap */
       iNewBitmap = ( int ) uiBitmap + iOffset;
@@ -1913,102 +1913,106 @@ HB_FUNC( WVW_SETBRUSH )
 HB_FUNC( WVW__MAKEDLGTEMPLATE )
 {
    WORD * p, * pdlgtemplate;
-   WORD   nItems = ( WORD ) hb_parvni( 1, 4 );
-   int    i, nchar;
-   DWORD  lStyle;
 
    pdlgtemplate = p = ( PWORD ) LocalAlloc( LPTR, 65534 );
 
-   lStyle = hb_parvnl( 1, 3 );
-
-   *p++ = 1;
-   *p++ = 0xFFFF;
-   *p++ = LOWORD( hb_parvnl( 1, 1 ) );
-   *p++ = HIWORD( hb_parvnl( 1, 1 ) );
-
-   *p++ = LOWORD( hb_parvnl( 1, 2 ) );
-   *p++ = HIWORD( hb_parvnl( 1, 2 ) );
-
-   *p++ = LOWORD( lStyle );
-   *p++ = HIWORD( lStyle );
-
-   *p++ = ( WORD ) nItems;
-   *p++ = ( short ) hb_parvni( 1, 5 );
-   *p++ = ( short ) hb_parvni( 1, 6 );
-   *p++ = ( short ) hb_parvni( 1, 7 );
-   *p++ = ( short ) hb_parvni( 1, 8 );
-   *p++ = ( short ) 0;
-   *p++ = ( short ) 0x00;
-
-   if( hb_parinfa( 1, 11 ) == HB_IT_STRING )
+   if( p )
    {
-      nchar = nCopyAnsiToWideChar( p, TEXT( ( char * ) hb_parvcx( 1, 11 ) ) );
-      p    += nchar;
-   }
-   else
-      *p++ = 0;
+      WORD   nItems = ( WORD ) hb_parvni( 1, 4 );
+      int    i, nchar;
+      DWORD  lStyle = hb_parvnl( 1, 3 );
 
-   if( ( lStyle & DS_SETFONT ) )
-   {
-      *p++ = ( short ) hb_parvni( 1, 12 );
-      *p++ = ( short ) hb_parvni( 1, 13 );
-      *p++ = ( short ) hb_parvni( 1, 14 );
+      *p++ = 1;
+      *p++ = 0xFFFF;
+      *p++ = LOWORD( hb_parvnl( 1, 1 ) );
+      *p++ = HIWORD( hb_parvnl( 1, 1 ) );
 
-      nchar = nCopyAnsiToWideChar( p, TEXT( ( char * ) hb_parvcx( 1, 15 ) ) );
-      p    += nchar;
-   }
+      *p++ = LOWORD( hb_parvnl( 1, 2 ) );
+      *p++ = HIWORD( hb_parvnl( 1, 2 ) );
 
-   for( i = 1; i <= nItems; i++ )
-   {
+      *p++ = LOWORD( lStyle );
+      *p++ = HIWORD( lStyle );
+
+      *p++ = ( WORD ) nItems;
+      *p++ = ( short ) hb_parvni( 1, 5 );
+      *p++ = ( short ) hb_parvni( 1, 6 );
+      *p++ = ( short ) hb_parvni( 1, 7 );
+      *p++ = ( short ) hb_parvni( 1, 8 );
+      *p++ = ( short ) 0;
+      *p++ = ( short ) 0x00;
+
+      if( hb_parinfa( 1, 11 ) == HB_IT_STRING )
+      {
+         nchar = nCopyAnsiToWideChar( p, TEXT( ( char * ) hb_parvcx( 1, 11 ) ) );
+         p    += nchar;
+      }
+      else
+         *p++ = 0;
+
+      if( ( lStyle & DS_SETFONT ) )
+      {
+         *p++ = ( short ) hb_parvni( 1, 12 );
+         *p++ = ( short ) hb_parvni( 1, 13 );
+         *p++ = ( short ) hb_parvni( 1, 14 );
+
+         nchar = nCopyAnsiToWideChar( p, TEXT( ( char * ) hb_parvcx( 1, 15 ) ) );
+         p    += nchar;
+      }
+
+      for( i = 1; i <= nItems; i++ )
+      {
+         p = lpwAlign( p );
+
+         *p++ = LOWORD( hb_parvnl( 2, i ) );
+         *p++ = HIWORD( hb_parvnl( 2, i ) );
+
+         *p++ = LOWORD( hb_parvnl( 3, i ) );
+         *p++ = HIWORD( hb_parvnl( 3, i ) );
+
+         *p++ = LOWORD( hb_parvnl( 4, i ) );
+         *p++ = HIWORD( hb_parvnl( 4, i ) );
+
+         *p++ = ( short ) hb_parvni( 5, i );
+         *p++ = ( short ) hb_parvni( 6, i );
+         *p++ = ( short ) hb_parvni( 7, i );
+         *p++ = ( short ) hb_parvni( 8, i );
+
+         *p++ = LOWORD( hb_parvnl( 9, i ) );
+         *p++ = HIWORD( hb_parvnl( 9, i ) );
+
+         if( hb_parinfa( 10, i ) == HB_IT_STRING )
+         {
+            nchar = nCopyAnsiToWideChar( p, TEXT( ( char * ) hb_parvcx( 10, i ) ) );
+            p    += nchar;
+         }
+         else
+         {
+            *p++ = 0xFFFF;
+            *p++ = ( WORD ) hb_parvni( 10, i );
+         }
+
+         if( hb_parinfa( 11, i ) == HB_IT_STRING )
+         {
+            nchar = nCopyAnsiToWideChar( p, ( LPSTR ) hb_parvcx( 11, i ) );
+            p    += nchar;
+         }
+         else
+         {
+            *p++ = 0xFFFF;
+            *p++ = ( WORD ) hb_parvni( 11, i );
+         }
+
+         *p++ = 0x00;
+      }
+
       p = lpwAlign( p );
 
-      *p++ = LOWORD( hb_parvnl( 2, i ) );
-      *p++ = HIWORD( hb_parvnl( 2, i ) );
+      hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) );
 
-      *p++ = LOWORD( hb_parvnl( 3, i ) );
-      *p++ = HIWORD( hb_parvnl( 3, i ) );
-
-      *p++ = LOWORD( hb_parvnl( 4, i ) );
-      *p++ = HIWORD( hb_parvnl( 4, i ) );
-
-      *p++ = ( short ) hb_parvni( 5, i );
-      *p++ = ( short ) hb_parvni( 6, i );
-      *p++ = ( short ) hb_parvni( 7, i );
-      *p++ = ( short ) hb_parvni( 8, i );
-
-      *p++ = LOWORD( hb_parvnl( 9, i ) );
-      *p++ = HIWORD( hb_parvnl( 9, i ) );
-
-      if( hb_parinfa( 10, i ) == HB_IT_STRING )
-      {
-         nchar = nCopyAnsiToWideChar( p, TEXT( ( char * ) hb_parvcx( 10, i ) ) );
-         p    += nchar;
-      }
-      else
-      {
-         *p++ = 0xFFFF;
-         *p++ = ( WORD ) hb_parvni( 10, i );
-      }
-
-      if( hb_parinfa( 11, i ) == HB_IT_STRING )
-      {
-         nchar = nCopyAnsiToWideChar( p, ( LPSTR ) hb_parvcx( 11, i ) );
-         p    += nchar;
-      }
-      else
-      {
-         *p++ = 0xFFFF;
-         *p++ = ( WORD ) hb_parvni( 11, i );
-      }
-
-      *p++ = 0x00;
+      LocalFree( LocalHandle( pdlgtemplate ) );
    }
-
-   p = lpwAlign( p );
-
-   hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) );
-
-   LocalFree( LocalHandle( pdlgtemplate ) );
+   else
+      hb_retc_null();
 }
 
 
@@ -2159,7 +2163,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
    WVW_DATA * p = hb_getWvwData();
    int        iIndex;
    int        iResource = hb_parni( 4 );
-   int        iResult   = 0;
+   INT_PTR    iResult   = 0;
    HWND       hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : p->s_pWindows[ 0 ]->hWnd;
 
    /* check if we still have room for a new dialog */
@@ -2219,7 +2223,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
          break;
    }
 
-   hb_retni( iResult );
+   hb_retnint( iResult );
 }
 
 /* removed from GTWVT, so we remove it from here also. I really don't like doing it... */
@@ -2374,12 +2378,12 @@ HB_FUNC( WVW_RESTSCREEN )
                            hb_parvni( 6, 2 ),
                            SRCCOPY ) )
          bResult = HB_TRUE;
+
+      SelectObject( pWindowData->hCompDC, hBmp );
+
+      if( ! bDoNotDestroyBMP )
+         DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 6, 3 ) );
    }
-
-   SelectObject( pWindowData->hCompDC, hBmp );
-
-   if( ! bDoNotDestroyBMP )
-      DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 6, 3 ) );
 
    hb_retl( bResult );
 }

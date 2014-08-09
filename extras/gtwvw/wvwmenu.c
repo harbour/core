@@ -85,7 +85,6 @@ HB_FUNC( WVW_CREATEPOPUPMENU )
 HB_FUNC( WVW_APPENDMENU )
 {
    char    ucBuf[ 256 ];
-   int     i, iLen;
    LPCTSTR lpszCaption;
 
    if( ! ( hb_parni( 2 ) & ( MF_SEPARATOR | MF_POPUP ) ) &&
@@ -99,7 +98,7 @@ HB_FUNC( WVW_APPENDMENU )
 
    if( HB_ISCHAR( 4 ) )
    {
-      iLen = hb_parclen( 4 );
+      HB_SIZE i, iLen = hb_parclen( 4 );
       if( iLen > 0 && iLen < 256 )
       {
          lpszCaption = hb_parcx( 4 );

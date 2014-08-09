@@ -63,9 +63,7 @@
 
 #include "hbgtwvw.h"
 
-
 /* CHECKBOX begins */
-
 
 /* wvw_cxCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
  *               nStretchBitmap, lMap3Dcolors)
@@ -144,7 +142,7 @@ HB_FUNC( WVW_CXCREATE )
 HB_FUNC( WVW_CXDESTROY )
 {
    WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT           uiCXid      = ( UINT ) hb_parni( 2 );
+   UINT           uiCXid      = ( UINT ) hb_parnl( 2 );
    CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
    CONTROL_DATA * pcdPrev     = NULL;
 
@@ -178,7 +176,7 @@ HB_FUNC( WVW_CXDESTROY )
  */
 HB_FUNC( WVW_CXSETFOCUS )
 {
-   UINT uiCtrlId = hb_parni( 2 );
+   UINT uiCtrlId = hb_parnl( 2 );
    byte bStyle;
    HWND hWndCX = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
 
@@ -196,7 +194,7 @@ HB_FUNC( WVW_CXSETFOCUS )
  */
 HB_FUNC( WVW_CXENABLE )
 {
-   UINT       uiCtrlId = hb_parni( 2 );
+   UINT       uiCtrlId = ( UINT ) hb_parnl( 2 );
    BOOL       bEnable  = hb_parldef( 3, HB_TRUE );
    byte       bStyle;
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -222,7 +220,7 @@ HB_FUNC( WVW_CXENABLE )
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
    WVW_DATA *     pData        = hb_getWvwData();
-   UINT           uiCXid       = ( UINT ) hb_parni( 2 );
+   UINT           uiCXid       = ( UINT ) hb_parnl( 2 );
    CONTROL_DATA * pcd          = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL           bOldSetting  = pData->s_bRecurseCBlock;
@@ -256,7 +254,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
  */
 HB_FUNC( WVW_CXSETCHECK )
 {
-   UINT  uiCXid       = ( UINT ) hb_parni( 2 );
+   UINT  uiCXid       = ( UINT ) hb_parnl( 2 );
    ULONG ulCheck      = ( ULONG ) hb_parnidef( 3, BST_CHECKED );
    CONTROL_DATA * pcd = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
@@ -275,12 +273,12 @@ HB_FUNC( WVW_CXSETCHECK )
  */
 HB_FUNC( WVW_CXGETCHECK )
 {
-   UINT  uiCXid       = ( UINT ) hb_parni( 2 );
+   UINT  uiCXid       = ( UINT ) hb_parnl( 2 );
    ULONG ulCheck      = 0;
    CONTROL_DATA * pcd = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
    if( pcd->hWndCtrl )
-      ulCheck = SendMessage( pcd->hWndCtrl,
+      ulCheck = ( int ) SendMessage( pcd->hWndCtrl,
                              BM_GETCHECK, ( WPARAM ) 0, ( LPARAM ) 0 );
 
    hb_retnl( ulCheck );
@@ -345,7 +343,7 @@ HB_FUNC( WVW_CXSTATUSFONT )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   UINT uiPBid        = ( UINT ) hb_parni( 2 );
+   UINT uiPBid        = ( UINT ) hb_parnl( 2 );
    BOOL bFocus        = hb_parldef( 3, HB_TRUE );
    CONTROL_DATA * pcd = GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
 
@@ -413,7 +411,7 @@ HB_FUNC( WVW_PGCREATE )
    HB_BOOL    bBarColor  = HB_ISNUM( 8 );
    HB_BOOL    bSmooth    = hb_parl( 9 );
    HB_BOOL    bVertical  = hb_parl( 10 );
-   HB_PTRDIFF uiPGid;
+   UINT       uiPGid;
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
@@ -461,7 +459,7 @@ HB_FUNC( WVW_PGCREATE )
       iRight - iLeft + 1,
       iBottom - iTop + 1,
       hWndParent,
-      ( HMENU ) uiPGid,
+      ( HMENU ) ( HB_PTRDIFF ) uiPGid,
       ( HINSTANCE ) hInstance,
       NULL );
 
@@ -489,10 +487,10 @@ HB_FUNC( WVW_PGCREATE )
 
       AddControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, hWndPG, uiPGid, NULL, rXB, rOffXB, ( byte ) iStyle );
 
-      hb_retnint( uiPGid );
+      hb_retnl( uiPGid );
    }
    else
-      hb_retnint( 0 );
+      hb_retnl( 0 );
 }
 
 /* wvw_pgDestroy( [nWinNum], nPGid )
@@ -502,7 +500,7 @@ HB_FUNC( WVW_PGCREATE )
 HB_FUNC( WVW_PGDESTROY )
 {
    WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT           uiPGid      = ( UINT ) hb_parni( 2 );
+   UINT           uiPGid      = ( UINT ) hb_parnl( 2 );
    CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
    CONTROL_DATA * pcdPrev     = NULL;
 
@@ -541,7 +539,7 @@ HB_FUNC( WVW_PGDESTROY )
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
-   UINT uiPGid = ( UINT ) hb_parni( 2 );
+   UINT uiPGid = ( UINT ) hb_parnl( 2 );
    byte bStyle;
    HWND hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
    int  iMin   = ( int ) hb_parni( 3 );
@@ -566,7 +564,7 @@ HB_FUNC( WVW_PGSETRANGE )
  */
 HB_FUNC( WVW_PGSETPOS )
 {
-   UINT    uiPGid = ( UINT ) hb_parni( 2 );
+   UINT    uiPGid = ( UINT ) hb_parnl( 2 );
    byte    bStyle;
    HWND    hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
    int     iPos   = ( int ) hb_parni( 3 );
@@ -597,7 +595,7 @@ HB_FUNC( WVW_PGSETPOS )
  */
 HB_FUNC( WVW_PGGETPOS )
 {
-   UINT uiPGid = ( UINT ) hb_parni( 2 );
+   UINT uiPGid = ( UINT ) hb_parnl( 2 );
    byte bStyle;
    HWND hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
 

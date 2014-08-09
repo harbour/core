@@ -63,7 +63,7 @@
 
 #include "hbgtwvw.h"
 
-static COLORREF _COLORS[] = {
+static const COLORREF s_COLORS[] = {
    BLACK,
    BLUE,
    GREEN,
@@ -218,52 +218,52 @@ HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
       case 0:
          SelectObject( pWindowData->hdc, s_sApp->penGray );
 
-         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right       */
+         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right  */
          LineTo( pWindowData->hdc, iRight, iBottom + 1 );
 
-         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom      */
+         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom */
          LineTo( pWindowData->hdc, iRight, iBottom );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left        */
+         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left   */
          LineTo( pWindowData->hdc, iLeft, iBottom );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top         */
+         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top    */
          LineTo( pWindowData->hdc, iRight, iTop );
          break;
 
       case 1:
          SelectObject( pWindowData->hdc, s_sApp->penBlack );
 
-         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right       */
+         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right  */
          LineTo( pWindowData->hdc, iRight, iBottom + 1 );
 
-         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom      */
+         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom */
          LineTo( pWindowData->hdc, iRight, iBottom );
 
          SelectObject( pWindowData->hdc, s_sApp->penWhite );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left        */
+         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left   */
          LineTo( pWindowData->hdc, iLeft, iBottom );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top         */
+         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top    */
          LineTo( pWindowData->hdc, iRight, iTop );
          break;
 
       case 2:
          SelectObject( pWindowData->hdc, s_sApp->penWhite );
 
-         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right       */
+         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right  */
          LineTo( pWindowData->hdc, iRight, iBottom + 1 );
 
-         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom      */
+         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom */
          LineTo( pWindowData->hdc, iRight, iBottom );
 
          SelectObject( pWindowData->hdc, s_sApp->penBlack );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left        */
+         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left   */
          LineTo( pWindowData->hdc, iLeft, iBottom );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top         */
+         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top    */
          LineTo( pWindowData->hdc, iRight, iTop );
          break;
 
@@ -2022,8 +2022,8 @@ HB_FUNC( WVW_DRAWBUTTON )
    BOOL bImage  = HB_ISNUM( 7 ) || HB_ISCHAR( 7 );
    int  iFormat = hb_parni( 8 );
 
-   COLORREF textColor = ( COLORREF ) hb_parnldef(  9, _COLORS[ 0 ] );
-   COLORREF bkColor   = ( COLORREF ) hb_parnldef( 10, _COLORS[ 7 ] );
+   COLORREF textColor = ( COLORREF ) hb_parnldef(  9, s_COLORS[ 0 ] );
+   COLORREF bkColor   = ( COLORREF ) hb_parnldef( 10, s_COLORS[ 7 ] );
 
    WIN_DATA * pWindowData;
    WIN_DATA * pWindowMainData = hb_gt_wvw_GetWindowsData( 0 );
