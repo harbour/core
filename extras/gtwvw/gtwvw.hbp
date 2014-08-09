@@ -14,11 +14,11 @@
 gtwvwd.c
 
 wvwcheck.c
-wvwdraw.c
 wvwedit.c
-wvwfuncs.c
-wvwmenu.c
 wvwpush.c
+draw.c
+funcs.c
+menubar.c
 scrollbr.c
 toolbar.c
 
