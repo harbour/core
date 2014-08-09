@@ -1,5 +1,4 @@
-/*
-   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
+/* Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
    To present prettier displays we may want to use pseudo-GUI objects.
    This, however, is not as easy as the previous example.

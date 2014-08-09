@@ -62,11 +62,9 @@
       ;
       => AddEBGet( aEBGets, <row>, <col>, @<var>, <"var">, {| x | <var> := x }, <label>, <.multiline.>, <pic> )
 
-// ***************************
 // constants to aEBGets member,
 // according to EBReadGets() convention
 // NOTE: a smarter way would be to use CLASS instead of arrays
-// ***************************
 #define __GET_LMULTILINE 1
 #define __GET_CLABEL 2
 #define __GET_NROW   3
@@ -206,12 +204,10 @@ PROCEDURE WVW_SETFOCUS( nWinNum, hWnd )  /* must be a public function */
 
    RETURN
 
-/******************************************************
- Typical application ends here.
- Below are EBReadGets() and its supporters that are
- usable for general needs
- (can be put into separated module)
- ******************************************************/
+/* Typical application ends here.
+   Below are EBReadGets() and its supporters that are
+   usable for general needs
+   (can be put into separated module) */
 
 // 2007-05-25
 
@@ -559,7 +555,7 @@ STATIC PROCEDURE MaskEditBox( nWinNum, nId, nEvent, aEBGets )
 
    RETURN
 
-/************* borrowed and modified from minigui *************/
+/* --- borrowed and modified from minigui --- */
 
 // from h_textbox.prg
 
@@ -905,7 +901,7 @@ STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
 
    RETURN .F.
 
-/************ WVW_INPUTFOCUS ************/
+/* --- WVW_INPUTFOCUS --- */
 
 // this is a simple sample of WVW_INPUTFOCUS
 // only handles WM_CHAR, thus not all input characters are accepted
@@ -959,7 +955,7 @@ STATIC FUNCTION inp_handler( nwinnum, bhandler )
 
    RETURN retval
 
-/* ********* general helpers *********** */
+/* --- general helpers --- */
 
 STATIC FUNCTION MyMessageBox( nwinnum, cMessage, cCaption, nFlags )
    RETURN win_MessageBox( wvw_GetWindowHandle( nwinnum ), cMessage, hb_defaultValue( cCaption, "Debug Message" ), nFlags )

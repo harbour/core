@@ -1,11 +1,10 @@
-/*
-   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
+/* Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
-   This is a simple Clipper program runs simple GET and BROWSE dialogs
+   This is a simple program runs simple GET and BROWSE dialogs
    each on a pseudo-window with brief help message on the bottom of
    the screen.
 
-   Note that this Clipper program uses ZNEWWINDOW() and ZREVWINDOW() to
+   Note that this program uses ZNEWWINDOW() and ZREVWINDOW() to
    open and close every pseudo-windows respectively.
 */
 

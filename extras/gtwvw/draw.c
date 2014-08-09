@@ -1313,13 +1313,13 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
 
    if( ! HB_ISNUM( 6 ) )
    {
-      pPic = hb_gt_wvw_hb_gt_wvw_rr_LoadPictureFromResource( hb_parcx( 6 ), 0, &lImgWidth, &lImgHeight );
+      pPic = hb_gt_wvw_rr_LoadPictureFromResource( hb_parcx( 6 ), 0, &lImgWidth, &lImgHeight );
 
       if( pPic == NULL )
          pPic = hb_gt_wvw_rr_LoadPicture( hb_parcx( 6 ), &lImgWidth, &lImgHeight );
    }
    else
-      pPic = hb_gt_wvw_hb_gt_wvw_rr_LoadPictureFromResource( NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
+      pPic = hb_gt_wvw_rr_LoadPictureFromResource( NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
 
 #if 0
    lImgWidth  = iImgWidth;

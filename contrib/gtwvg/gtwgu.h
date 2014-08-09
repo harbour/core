@@ -122,15 +122,15 @@ HB_EXTERN_BEGIN
 #define RED                         RGB( 0x85, 0x00, 0x00 )
 #define MAGENTA                     RGB( 0x85, 0x00, 0x85 )
 #define BROWN                       RGB( 0x85, 0x85, 0x00 )
-#define WHITE                       RGB( 0xC6, 0xC6, 0xC6 )
-#define LIGHT_GRAY                  RGB( 0x60, 0x60, 0x60 )
+#define LIGHT_GRAY                  RGB( 0xC6, 0xC6, 0xC6 )
+#define GRAY                        RGB( 0x60, 0x60, 0x60 )
 #define BRIGHT_BLUE                 RGB( 0x00, 0x00, 0xFF )
 #define BRIGHT_GREEN                RGB( 0x60, 0xFF, 0x60 )
 #define BRIGHT_CYAN                 RGB( 0x60, 0xFF, 0xFF )
 #define BRIGHT_RED                  RGB( 0xF8, 0x00, 0x26 )
 #define BRIGHT_MAGENTA              RGB( 0xFF, 0x60, 0xFF )
 #define YELLOW                      RGB( 0xFF, 0xFF, 0x00 )
-#define BRIGHT_WHITE                RGB( 0xFF, 0xFF, 0xFF )
+#define WHITE                       RGB( 0xFF, 0xFF, 0xFF )
 
 #define WM_MY_UPDATE_CARET          ( WM_USER + 0x0101 )
 

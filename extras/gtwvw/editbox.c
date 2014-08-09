@@ -195,21 +195,13 @@ HB_FUNC( WVW_EBCREATE )
          lpszText = lpszTextANSI;
       }
 
-      SendMessage(
-         ( HWND ) hWndEB,
-         WM_SETTEXT,
-         0,
-         ( LPARAM ) lpszText );
+      SendMessage( hWndEB, WM_SETTEXT, 0, ( LPARAM ) lpszText );
 
       if( bFromOEM )
          hb_xfree( lpszText );
 
       if( usMaxChar > 0 )
-         SendMessage(
-            ( HWND ) hWndEB,
-            EM_LIMITTEXT,
-            ( WPARAM ) usMaxChar,
-            ( LPARAM ) 0 );
+         SendMessage( hWndEB, EM_LIMITTEXT, ( WPARAM ) usMaxChar, 0 );
 
       rXB.top    = usTop;
       rXB.left   = usLeft;
@@ -337,20 +329,10 @@ HB_FUNC( WVW_EBEDITABLE )
 
    if( hWndEB )
    {
-      DWORD dwStyle = ( DWORD ) GetWindowLong( hWndEB, GWL_STYLE );
+      hb_retl( ( GetWindowLong( hWndEB, GWL_STYLE ) & ES_READONLY ) != ES_READONLY );
 
-      hb_retl( ( dwStyle & ES_READONLY ) != ES_READONLY );
-
-      if( ! HB_ISNIL( 3 ) )
-      {
-         BOOL bEditable = hb_parldef( 3, HB_TRUE );
-
-         SendMessage(
-            ( HWND ) hWndEB,
-            EM_SETREADONLY,
-            ( WPARAM ) ! bEditable,
-            ( LPARAM ) 0 );
-      }
+      if( HB_ISLOG( 3 ) )
+         SendMessage( hWndEB, EM_SETREADONLY, ( WPARAM ) ! hb_parl( 3 ), 0 );
    }
    else
       hb_retl( HB_FALSE );
@@ -428,7 +410,7 @@ HB_FUNC( WVW_EBSETFONT )
          while( pcd )
          {
             if( ( pcd->byCtrlClass == WVW_CONTROL_EDITBOX ) &&
-                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont ) )
+                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont ) )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
@@ -488,21 +470,13 @@ HB_FUNC( WVW_EBGETTEXT )
       LPTSTR lpszTextANSI;
 
       if( bSoftBreak )
-         SendMessage(
-            ( HWND ) pcd->hWndCtrl,
-            EM_FMTLINES,
-            ( WPARAM ) TRUE,
-            ( LPARAM ) 0 );
+         SendMessage( pcd->hWndCtrl, EM_FMTLINES, ( WPARAM ) TRUE, 0 );
 
-      usLen = ( USHORT ) SendMessage( ( HWND ) pcd->hWndCtrl, WM_GETTEXTLENGTH, 0, 0 ) + 1;
+      usLen = ( USHORT ) SendMessage( pcd->hWndCtrl, WM_GETTEXTLENGTH, 0, 0 ) + 1;
 
       lpszTextANSI = ( LPTSTR ) hb_xgrab( usLen );
 
-      SendMessage(
-         ( HWND ) pcd->hWndCtrl,
-         WM_GETTEXT,
-         usLen,
-         ( LPARAM ) lpszTextANSI );
+      SendMessage( pcd->hWndCtrl, WM_GETTEXT, usLen, ( LPARAM ) lpszTextANSI );
 
       if( bToOEM )
       {
@@ -543,11 +517,7 @@ HB_FUNC( WVW_EBSETTEXT )
          lpszText = lpszTextANSI;
       }
 
-      hb_retl( ( BOOL ) SendMessage(
-         ( HWND ) pcd->hWndCtrl,
-         WM_SETTEXT,
-         0,
-         ( LPARAM ) lpszText ) );
+      hb_retl( ( BOOL ) SendMessage( pcd->hWndCtrl, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
 
       if( bFromOEM )
          hb_xfree( lpszText );
@@ -570,10 +540,7 @@ HB_FUNC( WVW_EBGETSEL )
 
    if( pcd )
    {
-      SendMessage( ( HWND ) pcd->hWndCtrl,
-                   EM_GETSEL,
-                   ( WPARAM ) &dwStart,
-                   ( LPARAM ) &dwEnd );
+      SendMessage( pcd->hWndCtrl, EM_GETSEL, ( WPARAM ) &dwStart, ( LPARAM ) &dwEnd );
 
       hb_retl( HB_TRUE );
    }
@@ -605,10 +572,7 @@ HB_FUNC( WVW_EBSETSEL )
       DWORD dwStart = ( DWORD ) hb_parnl( 3 );
       DWORD dwEnd   = ( DWORD ) hb_parnl( 4 );
 
-      SendMessage( ( HWND ) pcd->hWndCtrl,
-                   EM_SETSEL,
-                   ( WPARAM ) dwStart,
-                   ( LPARAM ) dwEnd );
+      SendMessage( pcd->hWndCtrl, EM_SETSEL, ( WPARAM ) dwStart, ( LPARAM ) dwEnd );
 
       hb_retl( HB_TRUE );
    }

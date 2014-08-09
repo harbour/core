@@ -1,12 +1,5 @@
-/*
-   Copyright 2005 Budyanto Dj. <budyanto@centrin.net.id>
-
-   A simple example on how to make use of GTWVW's combobox.
-
-   This program requires GTWVW.LIB.
-
-   Compile: bldwvw cbtest1
-*/
+/* Copyright 2005 Budyanto Dj. <budyanto@centrin.net.id>
+   A simple example on how to make use of GTWVW's combobox. */
 
 #require "gtwvw"
 
@@ -23,7 +16,7 @@ STATIC s_aAnswers  := { "1-GTWVW is a great library!", ;
 STATIC s_cYourAnswer := "Your response is:"
 STATIC s_cThankYou := "Thanks for participating in our survey :-)"
 
-#define _SECRET_KEY 101010
+#define _SECRET_KEY  101010
 
 ANNOUNCE HB_NOSTARTUPWINDOW
 

@@ -202,7 +202,7 @@ PROCEDURE Main()
    kF10 := SetKey( K_F10, {|| wvw_SetLineSpacing( , wvw_SetLineSpacing() + 2 ) } )
    kF11 := SetKey( K_F11, {|| wvw_SetDefLineSpacing( wvw_SetLineSpacing() ) } )
 
-   // start menu definitions *************************************
+   // start menu definitions
 
    hMenu := wvw_CreateMenu()
    hPopupMenu := wvw_CreateMenu()
@@ -237,7 +237,7 @@ PROCEDURE Main()
 
    wvw_SetMenu( , hMenu )
 
-   // end menu definitions *************************************
+   // end menu definitions
 
    nCurWindow := wvw_nNumWindows() - 1 // == 0, Main Window
 
@@ -370,7 +370,7 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    ResetMiscObjects( nCurWindow )
    wvwm_ResetMouseObjects( nCurWindow )
 
-   // *********** begin typewriter mode *************
+   // --- begin typewriter mode ---
    CLS
    ?? "Press Ctrl+E to toggle between echoing what you type to previous window"
    ?
@@ -404,7 +404,7 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
       ch := Inkey( 0 )
    ENDDO
 
-   // *********** end typewriter mode ***************
+   // --- end typewriter mode ---
 
    // epilogue
    wvw_lCloseWindow()
@@ -940,7 +940,6 @@ STATIC PROCEDURE CreateToolbar( nWinNum )
    // for toolbar:
    LOCAL nSysBitmap := 1     // 0:none 1:small 2:large
    LOCAL lDisplayText := .F. // text will be displayed as tooltip instead
-   LOCAL hWndTB
 
    wvw_tbDestroy( nWinNum )
 
@@ -950,9 +949,7 @@ STATIC PROCEDURE CreateToolbar( nWinNum )
       lDisplayText := Alert( "Display text in toolbar?", { "Yes", "No" } ) == 1
    ENDIF
 
-   hWndTB := wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap )
-
-   IF hWndTB == 0
+   IF wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap ) == 0
       lboxmessage( "FAILED create toolbar" )
       RETURN
    ENDIF
@@ -1021,7 +1018,7 @@ STATIC FUNCTION AddMiscObjects( nWinNum, bAction )
 
    RETURN .T.
 
-// Inkey() handler **************************************
+// Inkey() handler
 
 /* this is for use with SetInkeyAfterBlock() */
 
@@ -1046,7 +1043,7 @@ STATIC FUNCTION nAfterInkey( nkey )
 
    RETURN nkey
 
-// MENU handler **************************************
+// MENU handler
 
 STATIC FUNCTION nMenuChecker( nMenuEvent )
 
@@ -1055,68 +1052,76 @@ STATIC FUNCTION nMenuChecker( nMenuEvent )
    xDisableMenus( 0, 4 )
    // xDisableToolbar( 0 )
 
-   DO CASE
-   CASE nMenuEvent == IDM_DEMO_GET
+   SWITCH nMenuEvent
+   CASE IDM_DEMO_GET
       // lboxmessage( "Demo GET" )
       Demo_Get()
-   CASE nMenuEvent == IDM_DEMO_BROWSE
+      EXIT
+   CASE IDM_DEMO_BROWSE
       // lboxmessage( "Demo BROWSE" )
       Demo_Browse()
-   CASE nMenuEvent == IDM_DEMO_CONSOLE
+      EXIT
+   CASE IDM_DEMO_CONSOLE
       // lboxmessage( "Demo CONSOLE" )
       Demo_Console()
+      EXIT
 #if 0
-   CASE nMenuEvent == IDM_DEMO_COLOR
+   CASE IDM_DEMO_COLOR
       // lboxmessage( "Demo COLOR" )
       Demo_Color()
+      EXIT
 #endif
-   CASE nMenuEvent == IDM_DEMO_EXIT
+   CASE IDM_DEMO_EXIT
       // lboxmessage( "should EXIT!" )
       nkey := K_ESC
+      EXIT
 
-   CASE nMenuEvent == IDM_WINDOW_SPACING_INCREASE
+   CASE IDM_WINDOW_SPACING_INCREASE
       wvw_SetLineSpacing( , wvw_SetLineSpacing() + 2 )
-   CASE nMenuEvent == IDM_WINDOW_SPACING_DECREASE
+      EXIT
+   CASE IDM_WINDOW_SPACING_DECREASE
       wvw_SetLineSpacing( , wvw_SetLineSpacing() - 2 )
-   CASE nMenuEvent == IDM_WINDOW_SPACING_DEFAULT
+      EXIT
+   CASE IDM_WINDOW_SPACING_DEFAULT
       wvw_SetDefLineSpacing( wvw_SetLineSpacing() )
-
-   CASE nMenuEvent == IDM_TOOLBAR_ENABLE
+      EXIT
+   CASE IDM_TOOLBAR_ENABLE
       xEnableToolbar( 0 )
-   CASE nMenuEvent == IDM_TOOLBAR_DISABLE
+      EXIT
+   CASE IDM_TOOLBAR_DISABLE
       xDisableToolbar( 0 )
-   CASE nMenuEvent == IDM_TOOLBAR_RESET
+      EXIT
+   CASE IDM_TOOLBAR_RESET
       CreateToolbar( 0 )
-   CASE nMenuEvent == IDM_TOOLBAR_DELETE
+      EXIT
+   CASE IDM_TOOLBAR_DELETE
       wvw_tbDestroy( 0 )
-
-   CASE nMenuEvent == IDM_HELP_HELP
+      EXIT
+   CASE IDM_HELP_HELP
       xHelp()
-   CASE nMenuEvent == IDM_HELP_INFO
+      EXIT
+   CASE IDM_HELP_INFO
       xDebugInfo()
+      EXIT
    OTHERWISE
       lboxmessage( "Sorry, unknown menu option" )
-   ENDCASE
+   ENDSWITCH
 
    // xEnableToolbar( 0 )
    xEnableMenus( 0, 4 )
 
    RETURN nkey
 
-// MISCELLANEOUS
+// Misc
 
 STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 
-   hb_default( @cTitle, "Info" )
-   win_MessageBox( wvw_GetWindowHandle(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
+   win_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Info" ), MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
 
    RETURN .T.
 
 STATIC FUNCTION lYesNo( cMsg, cTitle )
-
-   hb_default( @cTitle, "Konfirmasi" )
-
-   RETURN win_MessageBox( wvw_GetWindowHandle(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
+   RETURN win_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Confirmation" ), MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
 
 STATIC FUNCTION lDebug( cMsg )
    RETURN lBoxMessage( cMsg, "Debug" )
@@ -1127,9 +1132,11 @@ STATIC PROCEDURE xDebugInfo()
 
    MSetPos( MaxRow(), MaxCol() )
 
-   // SetMouse( .T., MaxRow(), MaxCol() )
+#if 0
+   SetMouse( .T., MaxRow(), MaxCol() )
 
-   // wvw_SetMousePos( wvw_nNumWindows() - 1, MaxRow(), MaxCol() )
+   wvw_SetMousePos( wvw_nNumWindows() - 1, MaxRow(), MaxCol() )
+#endif
 
    lboxmessage( "GTWVW test/demo" + hb_eol() + ;
       "Budyanto Dj. <budyanto@centrin.net.id>" + hb_eol() + ;
@@ -1282,9 +1289,7 @@ STATIC PROCEDURE MyError( e )
 #define _MOBJECT_HSCROLL 1      // horiz scrollbar: OBSOLETE, NOT USED HERE
 #define _MOBJECT_VSCROLL 2      // horiz scrollbar: OBSOLETE, NOT USED HERE
 
-// **************************************************************
 // WVWMouseButton
-// **************************************************************
 
 CREATE CLASS WVWMouseButton STATIC
 
@@ -1347,7 +1352,7 @@ CREATE CLASS WVWMouseButton STATIC
 
    METHOD Draw( nWinNum )
 
-ENDCLASS   // WVWMouseButton
+ENDCLASS
 
 METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId ) CLASS WVWMouseButton
 
@@ -1609,7 +1614,6 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
    RETURN Self
 
-// *******************************************************
 // interface functions
 
 STATIC PROCEDURE wvwm_paint( nWinNum )
@@ -1752,7 +1756,6 @@ STATIC FUNCTION wvwm_nMouseChecker( nkey )
       OTHERWISE
          // runtime error!
       ENDCASE
-
    NEXT
 
    s_ncurkey := 0  // 2004-03-03

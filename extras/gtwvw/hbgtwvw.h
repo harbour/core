@@ -706,7 +706,7 @@ extern HB_EXPORT BOOL          hb_gt_wvw_SetColorData( int iIndex, COLORREF ulCr
 extern HB_EXPORT void          hb_gt_wvw_DrawBoxRaised( UINT usWinNum, int iTop, int iLeft, int iBottom, int iRight, BOOL bTight );
 extern HB_EXPORT void          hb_gt_wvw_DrawBoxRecessed( UINT usWinNum, int iTop, int iLeft, int iBottom, int iRight, BOOL bTight );
 extern HB_EXPORT void          hb_gt_wvw_DrawOutline( UINT usWinNum, int iTop, int iLeft, int iBottom, int iRight );
-extern HB_EXPORT IPicture *    hb_gt_wvw_hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, UINT iresimage, LONG * lwidth, LONG * lheight );
+extern HB_EXPORT IPicture *    hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, UINT iresimage, LONG * lwidth, LONG * lheight );
 extern HB_EXPORT IPicture *    hb_gt_wvw_rr_LoadPicture( const char * filename, LONG * lwidth, LONG * lheight );
 
 HB_EXTERN_END

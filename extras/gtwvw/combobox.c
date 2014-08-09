@@ -185,19 +185,11 @@ HB_FUNC( WVW_CBCREATE )
       USHORT  i;
       TCHAR   szDefault[] = TEXT( "empty" );
 
-      SendMessage(
-         ( HWND ) hWndCB,
-         WM_SETREDRAW,
-         ( WPARAM ) TRUE,
-         ( LPARAM ) 0 );
+      SendMessage( hWndCB, WM_SETREDRAW, ( WPARAM ) TRUE, 0 );
 
       if( usNumElement == 0 )
       {
-         if( SendMessage( ( HWND ) hWndCB,
-                          CB_ADDSTRING,
-                          ( WPARAM ) 0,
-                          ( LPARAM ) ( LPCTSTR ) szDefault
-                          ) < 0 )
+         if( SendMessage( hWndCB, CB_ADDSTRING, 0, ( LPARAM ) ( LPCTSTR ) szDefault ) < 0 )
          {
             /* ignore failure */
          }
@@ -205,11 +197,7 @@ HB_FUNC( WVW_CBCREATE )
       else
          for( i = 1; i <= usNumElement; i++ )
          {
-            if( SendMessage( ( HWND ) hWndCB,
-                             CB_ADDSTRING,
-                             ( WPARAM ) 0,
-                             ( LPARAM ) ( LPCTSTR ) hb_parvcx( 5, i )
-                             ) < 0 )
+            if( SendMessage( hWndCB, CB_ADDSTRING, 0, ( LPARAM ) ( LPCTSTR ) hb_parvcx( 5, i ) ) < 0 )
             {
                /* ignore failure */
             }
@@ -222,25 +210,12 @@ HB_FUNC( WVW_CBCREATE )
             }
          }
 
-      SendMessage(
-         ( HWND ) hWndCB,
-         CB_SETCURSEL,
-         ( WPARAM ) 0,
-         ( LPARAM ) 0 );
-
-      SendMessage(
-         ( HWND ) hWndCB,
-         CB_SETEXTENDEDUI,
-         ( WPARAM ) TRUE,
-         ( LPARAM ) 0 );
+      SendMessage( hWndCB, CB_SETCURSEL, 0, 0 );
+      SendMessage( hWndCB, CB_SETEXTENDEDUI, ( WPARAM ) TRUE, 0 );
 
       avgwidth = hb_gt_wvw_GetFontDialogUnits( hWndParent, hFont );
       NewLongComboWidth = ( LongComboWidth - 2 ) * avgwidth;
-      SendMessage(
-         ( HWND ) hWndCB,
-         CB_SETDROPPEDWIDTH,
-         ( WPARAM ) NewLongComboWidth + 100,  /* LongComboWidth + 100 */
-         ( LPARAM ) 0 );
+      SendMessage( hWndCB, CB_SETDROPPEDWIDTH, ( WPARAM ) NewLongComboWidth + 100 /* LongComboWidth + 100 */, 0 );
 
       rXB.top    = usTop;
       rXB.left   = usLeft;
@@ -428,7 +403,7 @@ HB_FUNC( WVW_CBSETFONT )
          while( pcd )
          {
             if( ( pcd->byCtrlClass == WVW_CONTROL_COMBOBOX ) &&
-                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont ) )
+                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont ) )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
@@ -460,11 +435,7 @@ HB_FUNC( WVW_CBSETINDEX )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd && iIndex >= 0 )
-      hb_retl( SendMessage( ( HWND ) pcd->hWndCtrl,
-                            CB_SETCURSEL,
-                            ( WPARAM ) iIndex,
-                            ( LPARAM ) 0
-                            ) == iIndex );
+      hb_retl( SendMessage( pcd->hWndCtrl, CB_SETCURSEL, ( WPARAM ) iIndex, 0 ) == iIndex );
    else
       hb_retl( HB_FALSE );
 }
@@ -485,10 +456,7 @@ HB_FUNC( WVW_CBGETINDEX )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
-      hb_retni( ( int ) SendMessage( ( HWND ) pcd->hWndCtrl,
-                                     CB_GETCURSEL,
-                                     ( WPARAM ) 0,
-                                     ( LPARAM ) 0 ) );
+      hb_retni( ( int ) SendMessage( pcd->hWndCtrl, CB_GETCURSEL, 0, 0 ) );
    else
       hb_retni( CB_ERR );
 }
@@ -505,10 +473,7 @@ HB_FUNC( WVW_CBFINDSTRING )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
-      hb_retni( ( int ) SendMessage( ( HWND ) pcd->hWndCtrl,
-                                     CB_FINDSTRING,
-                                     ( WPARAM ) -1,
-                                     ( LPARAM ) ( LPCSTR ) hb_parcx( 3 ) ) );
+      hb_retni( ( int ) SendMessage( pcd->hWndCtrl, CB_FINDSTRING, ( WPARAM ) -1, ( LPARAM ) ( LPCSTR ) hb_parcx( 3 ) ) );
    else
       hb_retni( CB_ERR );
 }
@@ -524,25 +489,15 @@ HB_FUNC( WVW_CBGETCURTEXT )
 
    if( pcd )
    {
-      int iCurSel = ( int ) SendMessage( ( HWND ) pcd->hWndCtrl,
-                                         CB_GETCURSEL,
-                                         ( WPARAM ) 0,
-                                         ( LPARAM ) 0 );
-      int iTextLen = ( int ) SendMessage( ( HWND ) pcd->hWndCtrl,
-                                          CB_GETLBTEXTLEN,
-                                          ( WPARAM ) iCurSel,
-                                          ( LPARAM ) 0 );
+      int iCurSel = ( int ) SendMessage( pcd->hWndCtrl, CB_GETCURSEL, 0, 0 );
+      int iTextLen = ( int ) SendMessage( pcd->hWndCtrl, CB_GETLBTEXTLEN, ( WPARAM ) iCurSel, 0 );
       if( iTextLen == CB_ERR )
          hb_retc_null();
       else
       {
          LPTSTR lptstr = ( char * ) hb_xgrab( iTextLen + 1 );
 
-         if( SendMessage( ( HWND ) pcd->hWndCtrl,
-                          CB_GETLBTEXT,
-                          ( WPARAM ) iCurSel,
-                          ( LPARAM ) lptstr
-                          ) == CB_ERR )
+         if( SendMessage( pcd->hWndCtrl, CB_GETLBTEXT, ( WPARAM ) iCurSel, ( LPARAM ) lptstr ) == CB_ERR )
          {
             hb_retc_null();
             hb_xfree( lptstr );
@@ -565,10 +520,7 @@ HB_FUNC( WVW_CBISDROPPED )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
-      hb_retl( ( HB_BOOL ) SendMessage( ( HWND ) pcd->hWndCtrl,
-                                        CB_GETDROPPEDSTATE,
-                                        ( WPARAM ) 0,
-                                        ( LPARAM ) 0 ) );
+      hb_retl( ( HB_BOOL ) SendMessage( pcd->hWndCtrl, CB_GETDROPPEDSTATE, 0, 0 ) );
    else
       hb_retl( HB_FALSE );
 }

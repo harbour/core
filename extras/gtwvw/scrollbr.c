@@ -175,7 +175,7 @@ HB_FUNC( WVW_SBADDPART )
       HDC  hDCSB = GetDC( hWndSB );
       SIZE size  = { 0 };
 
-      HFONT hFont    = ( HFONT ) SendMessage( hWndSB, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 );
+      HFONT hFont    = ( HFONT ) SendMessage( hWndSB, WM_GETFONT, 0, 0 );
       HFONT hOldFont = ( HFONT ) SelectObject( hDCSB, hFont );
 
       if( GetTextExtentPoint32( hDCSB, hb_parc( 2 ), ( int ) hb_parclen( 2 ) + 1, &size ) )
@@ -215,7 +215,7 @@ HB_FUNC( WVW_SBADDPART )
          SendMessage( hWndSB, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
    }
 
-   SendMessage( hWndSB, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, ( LPARAM ) 0 );
+   SendMessage( hWndSB, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, 0 );
    if( HB_ISCHAR( 7 ) )
       SendMessage( hWndSB, SB_SETTIPTEXT, ( WPARAM ) ( numOfParts - 1 ), ( LPARAM ) hb_parc( 7 ) );
 
@@ -415,7 +415,7 @@ HB_FUNC( WVW_XBCREATE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndXB;
-   POINT      xy = { 0 };
+   POINT      xy;
    int        iTop, iLeft, iBottom, iRight;
    int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    int        iStyle = ( int ) hb_parnidef( 2, -1 );

@@ -604,7 +604,7 @@ HB_FUNC( WAPI_TABCTRL_SETCURFOCUS )
 HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
 {
    /* hbwapi_ret_NI( TabCtrl_SetMinTabWidth( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) ); */
-   hbwapi_ret_NI( ( int ) SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_SETMINTABWIDTH, ( WPARAM ) 0, ( LPARAM ) hbwapi_par_INT( 2 ) ) );
+   hbwapi_ret_NI( ( int ) SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_SETMINTABWIDTH, 0, ( LPARAM ) hbwapi_par_INT( 2 ) ) );
 }
 
 /* TabCtrl_DeselectAll(hwnd, fExcludeFocus) */
@@ -612,7 +612,7 @@ HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
 HB_FUNC( WAPI_TABCTRL_DESELECTALL )
 {
    /* TabCtrl_DeselectAll( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ) ); */
-   SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_DESELECTALL, ( WPARAM ) hbwapi_par_UINT( 2 ), ( LPARAM ) 0 );
+   SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_DESELECTALL, ( WPARAM ) hbwapi_par_UINT( 2 ), 0 );
 }
 
 /* TabCtrl_HighlightItem(hwnd, i, fHighlight) */

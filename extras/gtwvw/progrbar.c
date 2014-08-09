@@ -87,7 +87,7 @@ HB_FUNC( WVW_PGCREATE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndPG;
-   POINT      xy = { 0 };
+   POINT      xy;
    int        iTop, iLeft, iBottom, iRight;
    int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    int        iStyle     = 0;
@@ -157,7 +157,7 @@ HB_FUNC( WVW_PGCREATE )
          SendMessage( hWndPG, PBM_SETBARCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnl( 8 ) );
 
       SendMessage( hWndPG, PBM_SETRANGE, 0, MAKELPARAM( 0, 100 ) );
-      SendMessage( hWndPG, PBM_SETPOS, ( WPARAM ) 0, 0 );
+      SendMessage( hWndPG, PBM_SETPOS, 0, 0 );
 
       rXB.top    = usTop;
       rXB.left   = usLeft;
@@ -280,7 +280,7 @@ HB_FUNC( WVW_PGGETPOS )
    HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
 
    if( hWndPG )
-      hb_retni( ( int ) SendMessage( hWndPG, PBM_GETPOS, ( WPARAM ) 0, ( LPARAM ) 0 ) );
+      hb_retni( ( int ) SendMessage( hWndPG, PBM_GETPOS, 0, 0 ) );
    else
       hb_retni( 0 );
 }

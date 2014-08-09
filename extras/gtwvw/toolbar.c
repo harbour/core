@@ -156,13 +156,13 @@ HB_FUNC( WVW_TBCREATE )
       tbab.hInst = HINST_COMMCTRL;
 
       tbab.nID = iSystemBitmap == 1 ? IDB_STD_SMALL_COLOR : IDB_STD_LARGE_COLOR;
-      pWindowData->iStartStdBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 0, ( WPARAM ) &tbab );
+      pWindowData->iStartStdBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, 0, ( WPARAM ) &tbab );
 
       tbab.nID = iSystemBitmap == 1 ? IDB_VIEW_SMALL_COLOR : IDB_VIEW_LARGE_COLOR;
-      pWindowData->iStartViewBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 0, ( WPARAM ) &tbab );
+      pWindowData->iStartViewBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, 0, ( WPARAM ) &tbab );
 
       tbab.nID = iSystemBitmap == 1 ? IDB_HIST_SMALL_COLOR : IDB_HIST_LARGE_COLOR;
-      pWindowData->iStartHistBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, ( WPARAM ) 0, ( WPARAM ) &tbab );
+      pWindowData->iStartHistBitmap = ( int ) SendMessage( hWndTB, TB_ADDBITMAP, 0, ( WPARAM ) &tbab );
    }
    else
    {
@@ -174,7 +174,7 @@ HB_FUNC( WVW_TBCREATE )
    pWindowData->iTBImgWidth  = iImageWidth;
    pWindowData->iTBImgHeight = iImageHeight;
 
-   SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) iMaxTextRows, ( LPARAM ) 0 );
+   SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) iMaxTextRows, 0 );
 
    if( hWndTB )
    {
@@ -297,7 +297,7 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
    HWND       hWndTB = pWindowData->hToolBar;
 
    if( hWndTB )
-      hb_retni( ( int ) SendMessage( hWndTB, TB_BUTTONCOUNT, ( WPARAM ) 0, ( LPARAM ) 0 ) );
+      hb_retni( ( int ) SendMessage( hWndTB, TB_BUTTONCOUNT, 0, 0 ) );
    else
       hb_retni( 0 );
 }
@@ -318,7 +318,7 @@ HB_FUNC( WVW_TBDELBUTTON )
    {
       USHORT usOldHeight = pWindowData->usTBHeight;
 
-      if( SendMessage( hWndTB, TB_DELETEBUTTON, ( WPARAM ) iButton, ( LPARAM ) 0 ) )
+      if( SendMessage( hWndTB, TB_DELETEBUTTON, ( WPARAM ) iButton, 0 ) )
       {
          hb_gt_wvw_TBinitSize( pWindowData, hWndTB );
 

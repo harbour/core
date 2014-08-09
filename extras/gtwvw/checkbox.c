@@ -236,8 +236,7 @@ HB_FUNC( WVW_CXSETCHECK )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
    if( pcd->hWndCtrl )
-      SendMessage( pcd->hWndCtrl,
-                   BM_SETCHECK, ( WPARAM ) ulCheck, ( LPARAM ) 0 );
+      SendMessage( pcd->hWndCtrl, BM_SETCHECK, ( WPARAM ) ulCheck, 0 );
 
    hb_retl( HB_TRUE );
 }
@@ -255,8 +254,7 @@ HB_FUNC( WVW_CXGETCHECK )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
    if( pcd->hWndCtrl )
-      ulCheck = ( int ) SendMessage( pcd->hWndCtrl,
-                             BM_GETCHECK, ( WPARAM ) 0, ( LPARAM ) 0 );
+      ulCheck = ( int ) SendMessage( pcd->hWndCtrl, BM_GETCHECK, 0, 0 );
    else
       ulCheck = 0;
 
@@ -298,7 +296,7 @@ HB_FUNC( WVW_CXSETFONT )
          while (pcd)
          {
             if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON &&
-                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont )
+                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE);
 
             pcd = pcd->pNext;

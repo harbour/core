@@ -1,7 +1,4 @@
-/*
-   compile and link this file together with wutil.prg
-
-   This is a sample of how to display an image file (.bmp,.gif,.jpg)
+/* This is a sample of how to display an image file (.bmp,.gif,.jpg)
    in four ways:
    1. Image stretched to fit a region
       (all four coordinates are defined)
@@ -21,11 +18,6 @@
    2. Transparency
       If this option is used, topleft pixel is used as the transparent mask
       of the image.
-
-   Remarks:
-   Image drawing and wvw_paint management are performed by wutil.prg.
-   wutil.prg is a simple "middle module" interfacing an application with
-   gtwvw.
  */
 
 #require "gtwvw"
@@ -160,7 +152,7 @@ PROCEDURE Main()
 
    RETURN
 
-// ************** simple wpaint organizer *******
+// --- simple wpaint organizer ---
 
 CREATE CLASS wGUIObj STATIC
 
@@ -173,7 +165,7 @@ CREATE CLASS wGUIObj STATIC
 
 ENDCLASS
 
-/*********************************************************/
+/* --- */
 
 CREATE CLASS wPaintObj FROM wGUIObj STATIC
 
@@ -277,7 +269,7 @@ METHOD PROCEDURE Show() CLASS wPaintObj
 
    RETURN
 
-/* ******************************************************* */
+/* --- */
 
 // clears all wPaint objects from window nWinNum
 // if nObjNum specified, clears object >= nObjNum

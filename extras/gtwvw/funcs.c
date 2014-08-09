@@ -186,7 +186,7 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
-   USHORT iLen  = ( USHORT ) SendMessage( ( HWND ) GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), ( UINT ) WM_GETTEXTLENGTH, ( WPARAM ) 0, ( LPARAM ) 0 ) + 1;
+   USHORT iLen  = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), ( UINT ) WM_GETTEXTLENGTH, 0, 0 ) + 1;
    char * cText = ( char * ) hb_xgrab( iLen + 1  );
 
    GetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ),
@@ -510,8 +510,7 @@ HB_FUNC( SENDMESSAGE )
                 ( UINT ) hb_parni( 2 ),         /* message to send */
                 ( WPARAM ) hb_parnl( 3 ),       /* first message parameter */
                 ( HB_ISCHAR( 4 ) ) ? ( LPARAM ) hb_parc( 4 ) :
-                ( LPARAM ) hb_parnl( 4 )        /* second message parameter */
-                ) );
+                ( LPARAM ) hb_parnl( 4 ) ) );   /* second message parameter */
 }
 
 HB_FUNC( SETPARENT )
@@ -566,8 +565,7 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
    INITCOMMONCONTROLSEX icex = { 0 };
    TOOLINFO ti = { 0 };
 
-   /* Load the tooltip class from the DLL.
-    */
+   /* Load the tooltip class from the DLL. */
    icex.dwSize = sizeof( icex );
    icex.dwICC  = ICC_BAR_CLASSES;
 
@@ -1624,7 +1622,7 @@ HB_FUNC( WVW_CHOOSECOLOR )
 
 HB_FUNC( WVW_SETMOUSEPOS )
 {
-   POINT      xy          = { 0 };
+   POINT      xy;
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    USHORT     usRow       = ( USHORT ) hb_parni( 2 ),
@@ -1661,7 +1659,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WVW_DATA * p           = hb_gt_wvw_GetWvwData();
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   POINT      xy          = { 0 };
+   POINT      xy;
    int        iTop, iLeft, iBottom, iRight;
    int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
@@ -2217,7 +2215,7 @@ HB_FUNC( WVW_SAVESCREEN )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HBITMAP  hBmp, oldBmp;
-   POINT    xy = { 0 };
+   POINT    xy;
    int      iTop, iLeft, iBottom, iRight, iWidth, iHeight;
    PHB_ITEM info = hb_itemArrayNew( 3 );
 
@@ -2264,7 +2262,7 @@ HB_FUNC( WVW_RESTSCREEN )
    UINT usWinNum = WVW_WHICH_WINDOW;
 
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   POINT      xy = { 0 };
+   POINT      xy;
    int        iTop, iLeft, iBottom, iRight, iWidth, iHeight;
 
    HBITMAP hBmp;

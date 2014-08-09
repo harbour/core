@@ -882,7 +882,7 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 
    memset( &lf, 0, sizeof( lf ) );
 
-   SendMessage( wvg_parhwnd( 1 ), WM_CHOOSEFONT_GETLOGFONT, ( WPARAM ) 0, ( LPARAM ) &lf );
+   SendMessage( wvg_parhwnd( 1 ), WM_CHOOSEFONT_GETLOGFONT, 0, ( LPARAM ) &lf );
 
    aFont = wvg_logfontTOarray( &lf, HB_FALSE );
 
@@ -983,11 +983,11 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 
          /* set string */
          void * hCaption;
-         iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+         iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
          hb_strfree( hCaption );
 
          if( hb_parl( 6 ) )
-            SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) 0, ( LPARAM ) 0 );
+            SendMessage( hWndTB, TB_SETMAXTEXTROWS, 0, 0 );
 
          /* add button */
          tbb.iBitmap   = hb_parni( 2 );
@@ -1001,7 +1001,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
             https://msdn.microsoft.com/en-us/library/windows/desktop/bb787291(v=vs.85).aspx */
          bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
 #if ! defined( HB_OS_WIN_CE )
-         SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10, 10 ) );
+         SendMessage( hWndTB, TB_SETPADDING, 0, ( LPARAM ) MAKELPARAM(  10, 10 ) );
 #endif
          hb_retl( bSuccess );
          return;
@@ -1173,7 +1173,7 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
    toolInfo.uId      = ( UINT_PTR ) ( HWND ) wvg_parhwnd( 1 );
    toolInfo.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   SendMessage( wvg_parhwnd( 2 ), TTM_SETTOOLINFO, ( WPARAM ) 0, ( LPARAM ) &toolInfo );
+   SendMessage( wvg_parhwnd( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &toolInfo );
 
    hb_strfree( hText );
 }

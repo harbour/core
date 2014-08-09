@@ -1,7 +1,4 @@
-/*
-   sample on using Maximize Mode in gtwvw.
-   budyanto@centrin.net.id
- */
+/* sample on using Maximize Mode in gtwvw. budyanto@centrin.net.id */
 
 #require "gtwvw"
 

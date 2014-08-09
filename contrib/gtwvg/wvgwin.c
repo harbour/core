@@ -1077,14 +1077,14 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
          int    iString;
          void * hCaption;
 
-         iString = ( int ) SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+         iString = ( int ) SendMessage( hTB, TB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
          hb_strfree( hCaption );
 
          hbwapi_ret_NI( iString );
          break;
       }
       case TB_AUTOSIZE:
-         SendMessage( hTB, TB_AUTOSIZE, ( WPARAM ) 0, ( LPARAM ) 0 );
+         SendMessage( hTB, TB_AUTOSIZE, 0, 0 );
          break;
       case TB_BUTTONCOUNT:
          break;
@@ -1126,27 +1126,27 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
       case TB_REPLACEBITMAP:
          break;
       case TB_SETBITMAPSIZE:
-         SendMessage( hTB, TB_SETBITMAPSIZE, ( WPARAM ) 0,
+         SendMessage( hTB, TB_SETBITMAPSIZE, 0,
                       ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
          break;
       case TB_SETBUTTONINFO:
          break;
       case TB_SETBUTTONSIZE:
-         SendMessage( hTB, TB_SETBUTTONSIZE, ( WPARAM ) 0,
+         SendMessage( hTB, TB_SETBUTTONSIZE, 0,
                       ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
          break;
       case TB_SETBUTTONWIDTH:
-         SendMessage( hTB, TB_SETBUTTONWIDTH, ( WPARAM ) 0,
+         SendMessage( hTB, TB_SETBUTTONWIDTH, 0,
                       ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
          break;
       case TB_SETIMAGELIST:
-         SendMessage( hTB, TB_SETIMAGELIST, ( WPARAM ) 0, ( LPARAM ) hbwapi_par_raw_HIMAGELIST( 3 ) );
+         SendMessage( hTB, TB_SETIMAGELIST, 0, ( LPARAM ) hbwapi_par_raw_HIMAGELIST( 3 ) );
          break;
       case TB_SETINDENT:
-         SendMessage( hTB, TB_SETINDENT, ( WPARAM ) hbwapi_par_INT( 3 ), ( LPARAM ) 0 );
+         SendMessage( hTB, TB_SETINDENT, ( WPARAM ) hbwapi_par_INT( 3 ), 0 );
          break;
       case TB_SETMAXTEXTROWS:
-         SendMessage( hTB, TB_SETMAXTEXTROWS, ( WPARAM ) hbwapi_par_INT( 2 ), ( LPARAM ) 0 );
+         SendMessage( hTB, TB_SETMAXTEXTROWS, ( WPARAM ) hbwapi_par_INT( 2 ), 0 );
          break;
       case TB_SETPARENT:
       case TB_SETROWS:
@@ -1176,7 +1176,7 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 
 #if ! defined( HB_OS_WIN_CE )
       case TB_SETPADDING:
-         SendMessage( hTB, TB_SETPADDING, ( WPARAM ) 0,
+         SendMessage( hTB, TB_SETPADDING, 0,
                       ( LPARAM ) MAKELPARAM( hbwapi_par_INT( 2 ), hbwapi_par_INT( 3 ) ) );
          break;
       case TB_MARKBUTTON:
@@ -1201,7 +1201,7 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
          memset( &colorScheme, 0, sizeof( colorScheme ) );
 
          colorScheme.dwSize = sizeof( colorScheme );
-         SendMessage( hTB, TB_GETCOLORSCHEME, ( WPARAM ) 0, ( LPARAM ) &colorScheme );
+         SendMessage( hTB, TB_GETCOLORSCHEME, 0, ( LPARAM ) &colorScheme );
 
          hb_arraySetNInt( info, 1, colorScheme.clrBtnHighlight );
          hb_arraySetNInt( info, 2, colorScheme.clrBtnShadow );
@@ -1252,7 +1252,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
    switch( msg )
    {
       case CB_ADDSTRING:
-         hb_retnint( SendMessage( hCB, CB_ADDSTRING, ( WPARAM ) 0, ( LPARAM ) ( LPCTSTR ) HB_PARSTR( 3, &hText, NULL ) ) );
+         hb_retnint( SendMessage( hCB, CB_ADDSTRING, 0, ( LPARAM ) ( LPCTSTR ) HB_PARSTR( 3, &hText, NULL ) ) );
          break;
       case CB_DELETESTRING:
          hb_retnint( SendMessage( hCB, CB_DELETESTRING, hb_parni( 3 ), 0 ) );
@@ -1341,7 +1341,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
          break;
       case CB_GETEDITSEL:
       {
-         DWORD    range = ( DWORD ) SendMessage( hCB, CB_GETEDITSEL, ( WPARAM ) 0, ( LPARAM ) 0 );
+         DWORD    range = ( DWORD ) SendMessage( hCB, CB_GETEDITSEL, 0, 0 );
          PHB_ITEM pRng  = hb_itemNew( NULL );
 
          hb_arrayNew( pRng, 2 );

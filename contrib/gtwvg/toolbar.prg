@@ -322,8 +322,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth, ::buttonHeight )
 
 #if 0
-      SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10, 10 ) );
-         ::sendToolbarMessage( TB_SETPADDING, 10, 10 )
+      ::sendToolbarMessage( TB_SETPADDING, 10, 10 )
 #endif
       ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE

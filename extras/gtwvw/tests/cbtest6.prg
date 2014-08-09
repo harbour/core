@@ -1,14 +1,8 @@
-/*
-   Copyright 2005 Budyanto Dj. <budyanto@centrin.net.id>
+/* Copyright 2005 Budyanto Dj. <budyanto@centrin.net.id>
 
    This is an example on how to integrate GTWVW's combobox into
    regular GET/GETLIST system. Be creative, do not be bound by
-   the ideas presented herein. There may be better ways to do it.
-
-   This program requires GTWVW.LIB.
-
-   Compile: bldwvw cbtest6
-*/
+   the ideas presented herein. There may be better ways to do it. */
 
 #require "gtwvw"
 
@@ -195,7 +189,7 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    RETURN
 
-/************* custom get reader ******************/
+/* --- custom get reader --- */
 
 // This is the reader() for oGet, a GET object hidden beneath a combobox.
 //

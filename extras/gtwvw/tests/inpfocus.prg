@@ -1,10 +1,5 @@
-/*
- * Demo program to show how to make use of WVW_INPUTFOCUS feature
- * of GTWVW
- *
- * Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- *
- */
+/* Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
+   Demo program to show how to make use of WVW_INPUTFOCUS feature of GTWVW */
 
 #require "gtwvw"
 
@@ -290,9 +285,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
 
    RETURN .F.
 
-// ********************************************************************
 // SUPPORTING FUNCTIONS
-// ********************************************************************
 
 // returns MaxRow() of window nWinNum
 STATIC FUNCTION winMaxRow( nWinNum )
