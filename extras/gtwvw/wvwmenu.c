@@ -51,7 +51,7 @@ HB_FUNC( WVW_SETMENU )
 
    SetMenu( pWinData->hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
 
-   hb_gt_wvwResetWindow( usWinNum );
+   hb_gt_wvw_ResetWindow( usWinNum );
 }
 
 
@@ -140,19 +140,19 @@ HB_FUNC( WVW_ENABLEMENUITEM )
 
 HB_FUNC( WVW_GETLASTMENUEVENT )
 {
-   hb_retni( hb_gt_wvwGetLastMenuEvent( WVW_WHICH_WINDOW ) );
+   hb_retni( hb_gt_wvw_GetLastMenuEvent( WVW_WHICH_WINDOW ) );
 }
 
 
 HB_FUNC( WVW_SETLASTMENUEVENT )
 {
-   hb_retni( hb_gt_wvwSetLastMenuEvent( WVW_WHICH_WINDOW, hb_parni( 2 ) ) );
+   hb_retni( hb_gt_wvw_SetLastMenuEvent( WVW_WHICH_WINDOW, hb_parni( 2 ) ) );
 }
 
 
 HB_FUNC( WVW_SETMENUKEYEVENT )
 {
-   hb_retni( hb_gt_wvwSetMenuKeyEvent( WVW_WHICH_WINDOW, hb_parnl( 2 ) ) );
+   hb_retni( hb_gt_wvw_SetMenuKeyEvent( WVW_WHICH_WINDOW, hb_parnl( 2 ) ) );
 }
 
 #if 0
@@ -174,22 +174,22 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
    {
       hb_snprintf( szResname, sizeof( szResname ), "?%u", hb_parni( 4 ) );
 
-      hBitmapUnchecked = FindBitmapHandle( szResname, &iWidth, &iHeight );
+      hBitmapUnchecked = hb_gt_wvw_FindBitmapHandle( szResname, &iWidth, &iHeight );
 
       if( ! hBitmapUnchecked )
       {
-         hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 4 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-         AddBitmapHandle( szResname, hBitmapUnchecked, iWidth, iHeight );
+         hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_gt_wvw_GetWvwData()->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 4 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hb_gt_wvw_AddBitmapHandle( szResname, hBitmapUnchecked, iWidth, iHeight );
       }
    }
    else if( HB_ISCHAR( 4 ) )
    {
-      hBitmapUnchecked = FindBitmapHandle( hb_parc( 4 ), &iWidth, &iHeight );
+      hBitmapUnchecked = hb_gt_wvw_FindBitmapHandle( hb_parc( 4 ), &iWidth, &iHeight );
 
       if( ! hBitmapUnchecked )
       {
-         hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, hb_parc( 4 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-         AddBitmapHandle( hb_parc( 4 ), hBitmapUnchecked, iWidth, iHeight );
+         hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_gt_wvw_GetWvwData()->hInstance, hb_parc( 4 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hb_gt_wvw_AddBitmapHandle( hb_parc( 4 ), hBitmapUnchecked, iWidth, iHeight );
       }
    }
 
@@ -197,22 +197,22 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
    {
       hb_snprintf( szResname, sizeof( szResname ), "?%u", hb_parni( 5 ) );
 
-      hBitmapChecked = FindBitmapHandle( szResname, &iWidth, &iHeight );
+      hBitmapChecked = hb_gt_wvw_FindBitmapHandle( szResname, &iWidth, &iHeight );
 
       if( ! hBitmapChecked )
       {
-         hBitmapChecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 5 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-         AddBitmapHandle( szResname, hBitmapChecked, iWidth, iHeight );
+         hBitmapChecked = ( HBITMAP ) LoadImage( hb_gt_wvw_GetWvwData()->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 5 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hb_gt_wvw_AddBitmapHandle( szResname, hBitmapChecked, iWidth, iHeight );
       }
    }
    else if( HB_ISCHAR( 5 ) )
    {
-      hBitmapChecked = FindBitmapHandle( hb_parc( 5 ), &iWidth, &iHeight );
+      hBitmapChecked = hb_gt_wvw_FindBitmapHandle( hb_parc( 5 ), &iWidth, &iHeight );
 
       if( ! hBitmapChecked )
       {
-         hBitmapChecked = ( HBITMAP ) LoadImage( hb_getWvwData()->hInstance, hb_parc( 5 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-         AddBitmapHandle( hb_parc( 5 ), hBitmapChecked, iWidth, iHeight );
+         hBitmapChecked = ( HBITMAP ) LoadImage( hb_gt_wvw_GetWvwData()->hInstance, hb_parc( 5 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hb_gt_wvw_AddBitmapHandle( hb_parc( 5 ), hBitmapChecked, iWidth, iHeight );
       }
    }
 

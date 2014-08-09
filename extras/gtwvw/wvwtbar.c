@@ -131,7 +131,7 @@ HB_FUNC( WVW_TBCREATE )
                              WS_CHILD | WS_VISIBLE | dwStyle,
                              WVW_ID_BASE_TOOLBAR + usWinNum,
                              0,
-                             hb_getWvwData()->hInstance,
+                             hb_gt_wvw_GetWvwData()->hInstance,
                              0,
                              NULL,
                              0,
@@ -150,7 +150,7 @@ HB_FUNC( WVW_TBCREATE )
    }
 
    pWindowData->tbOldProc = ( WNDPROC ) SetWindowLongPtr( hWndTB,
-                                                          GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvwTBProc );
+                                                          GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_TBProc );
 
    if( iSystemBitmap > 0 )
    {
@@ -184,11 +184,11 @@ HB_FUNC( WVW_TBCREATE )
       hb_stornl( pWindowData->iStartViewBitmap, 8 );
       hb_stornl( pWindowData->iStartHistBitmap, 9 );
 
-      hb_gt_wvwTBinitSize( pWindowData, hWndTB );
+      hb_gt_wvw_TBinitSize( pWindowData, hWndTB );
 
       pWindowData->hToolBar = hWndTB;
 
-      hb_gt_wvwResetWindow( usWinNum );
+      hb_gt_wvw_ResetWindow( usWinNum );
    }
 
    hb_retnint( ( HB_PTRDIFF ) hWndTB );
@@ -254,11 +254,11 @@ HB_FUNC( WVW_TBADDBUTTON )
 
    usOldHeight = pWindowData->usTBHeight;
 
-   if( ! AddTBButton( hWndTB, szBitmap, uiBitmap, szLabel, iCommand, iBitmapType, bMap3Dcolors, pWindowData, bDropdown ) )
+   if( ! hb_gt_wvw_AddTBButton( hWndTB, szBitmap, uiBitmap, szLabel, iCommand, iBitmapType, bMap3Dcolors, pWindowData, bDropdown ) )
    {
       if( iBitmapType == 0 )
       {
-         if( ! AddTBButton( hWndTB, szBitmap, uiBitmap, szLabel, iCommand, 1, bMap3Dcolors, pWindowData, bDropdown ) )
+         if( ! hb_gt_wvw_AddTBButton( hWndTB, szBitmap, uiBitmap, szLabel, iCommand, 1, bMap3Dcolors, pWindowData, bDropdown ) )
          {
             MessageBox( NULL, TEXT( "Failed addbutton..." ),
                         hb_gt_wvw_GetAppName(), MB_ICONERROR );
@@ -275,10 +275,10 @@ HB_FUNC( WVW_TBADDBUTTON )
       }
    }
 
-   hb_gt_wvwTBinitSize( pWindowData, hWndTB );
+   hb_gt_wvw_TBinitSize( pWindowData, hWndTB );
 
    if( pWindowData->usTBHeight != usOldHeight )
-      hb_gt_wvwResetWindow( usWinNum );
+      hb_gt_wvw_ResetWindow( usWinNum );
 
    hb_retl( HB_TRUE );
 }
@@ -327,10 +327,10 @@ HB_FUNC( WVW_TBDELBUTTON )
       return;
    }
 
-   hb_gt_wvwTBinitSize( pWindowData, hWndTB );
+   hb_gt_wvw_TBinitSize( pWindowData, hWndTB );
 
    if( pWindowData->usTBHeight != usOldHeight )
-      hb_gt_wvwResetWindow( usWinNum );
+      hb_gt_wvw_ResetWindow( usWinNum );
 
    hb_retl( HB_TRUE );
 }
@@ -359,7 +359,7 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
 
    hb_arrayNew( aXY, 4 );
 
-   rcRect = hb_gt_wvwGetColRowFromXYRect( pWindowData, rc );
+   rcRect = hb_gt_wvw_GetColRowFromXYRect( pWindowData, rc );
    hb_arraySetForward( aXY, 1, hb_itemPutNL( temp, HB_MAX( 0, rcRect.top ) ) );
    hb_arraySetForward( aXY, 2, hb_itemPutNL( temp, rcRect.left ) );
 
@@ -393,7 +393,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
       return;
    }
 
-   iCommand = IndexToCommand( hWndTB, iButton );
+   iCommand = hb_gt_wvw_IndexToCommand( hWndTB, iButton );
    if( iCommand < 0 )
    {
       hb_retl( HB_FALSE );
@@ -408,10 +408,10 @@ HB_FUNC( WVW_TBENABLEBUTTON )
       return;
    }
 
-   hb_gt_wvwTBinitSize( pWindowData, hWndTB );
+   hb_gt_wvw_TBinitSize( pWindowData, hWndTB );
 
    if( pWindowData->usTBHeight != usOldHeight )
-      hb_gt_wvwResetWindow( usWinNum );
+      hb_gt_wvw_ResetWindow( usWinNum );
 
    hb_retl( HB_TRUE );
 }
@@ -430,7 +430,7 @@ HB_FUNC( WVW_TBDESTROY )
       pWindowData->hToolBar   = NULL;
       pWindowData->usTBHeight = 0;
 
-      hb_gt_wvwResetWindow( usWinNum );
+      hb_gt_wvw_ResetWindow( usWinNum );
    }
 }
 
@@ -443,7 +443,7 @@ HB_FUNC( WVW_TBINDEX2CMD )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HWND       hWndTB      = pWindowData->hToolBar;
    int        iIndex      = hb_parni( 2 );
-   int        iCmd        = IndexToCommand( hWndTB, iIndex );
+   int        iCmd        = hb_gt_wvw_IndexToCommand( hWndTB, iIndex );
 
    hb_retni( ( int ) ( iCmd > 0 ? iCmd : -1 ) );
 }
@@ -458,7 +458,7 @@ HB_FUNC( WVW_TBCMD2INDEX )
    HWND       hWndTB      = pWindowData->hToolBar;
    int        iCmd        = hb_parni( 2 );
 
-   hb_retni( CommandToIndex( hWndTB, iCmd ) );
+   hb_retni( hb_gt_wvw_CommandToIndex( hWndTB, iCmd ) );
 }
 
 
@@ -507,8 +507,8 @@ HB_FUNC( WVW_SETTOOLTIP )
    if( ! pWindowData->bToolTipActive )
       return;
 
-   if( hb_getWvwData()->s_bMainCoordMode )
-      hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
+   if( hb_gt_wvw_GetWvwData()->s_bMainCoordMode )
+      hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
    ti.cbSize = sizeof( TOOLINFO );
    ti.hwnd   = pWindowData->hWnd;
@@ -516,11 +516,11 @@ HB_FUNC( WVW_SETTOOLTIP )
 
    if( SendMessage( pWindowData->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
    {
-      xy    = hb_gt_wvwGetXYFromColRow( pWindowData, usLeft, usTop );
+      xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
       iTop  = xy.y;
       iLeft = xy.x;
 
-      xy      = hb_gt_wvwGetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
       iBottom = xy.y - 1;
       iRight  = xy.x - 1;
 

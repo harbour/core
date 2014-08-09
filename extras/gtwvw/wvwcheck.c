@@ -128,7 +128,7 @@ HB_FUNC( WVW_CXCREATE )
    iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
    iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
-   uiPBid = ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
+   uiPBid = hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
                           szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
                           iOffTop, iOffLeft, iOffBottom, iOffRight,
                           dStretch, bMap3Dcolors,
@@ -178,7 +178,7 @@ HB_FUNC( WVW_CXSETFOCUS )
 {
    UINT uiCtrlId = hb_parnl( 2 );
    byte bStyle;
-   HWND hWndCX = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
+   HWND hWndCX = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
 
    if( hWndCX )
       hb_retl( SetFocus( hWndCX ) != NULL );
@@ -199,7 +199,7 @@ HB_FUNC( WVW_CXENABLE )
    byte       bStyle;
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndCX      = FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
+   HWND       hWndCX      = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
 
    if( hWndCX )
    {
@@ -219,9 +219,9 @@ HB_FUNC( WVW_CXENABLE )
  */
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
-   WVW_DATA *     pData        = hb_getWvwData();
+   WVW_DATA *     pData        = hb_gt_wvw_GetWvwData();
    UINT           uiCXid       = ( UINT ) hb_parnl( 2 );
-   CONTROL_DATA * pcd          = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL           bOldSetting  = pData->s_bRecurseCBlock;
 
@@ -256,7 +256,7 @@ HB_FUNC( WVW_CXSETCHECK )
 {
    UINT  uiCXid       = ( UINT ) hb_parnl( 2 );
    ULONG ulCheck      = ( ULONG ) hb_parnidef( 3, BST_CHECKED );
-   CONTROL_DATA * pcd = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
    if( pcd->hWndCtrl )
       SendMessage( pcd->hWndCtrl,
@@ -275,7 +275,7 @@ HB_FUNC( WVW_CXGETCHECK )
 {
    UINT  uiCXid       = ( UINT ) hb_parnl( 2 );
    ULONG ulCheck      = 0;
-   CONTROL_DATA * pcd = GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
    if( pcd->hWndCtrl )
       ulCheck = ( int ) SendMessage( pcd->hWndCtrl,
@@ -288,7 +288,7 @@ HB_FUNC( WVW_CXGETCHECK )
 HB_FUNC( WVW_CXSETFONT )
 {
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   WVW_DATA * pData       = hb_getWvwData();
+   WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
 
    BOOL retval = HB_TRUE;
 
@@ -345,7 +345,7 @@ HB_FUNC( WVW_CXSTATUSFONT )
 
    UINT uiPBid        = ( UINT ) hb_parnl( 2 );
    BOOL bFocus        = hb_parldef( 3, HB_TRUE );
-   CONTROL_DATA * pcd = GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
 
    if( pcd->hWndCtrl )
    {
@@ -425,18 +425,18 @@ HB_FUNC( WVW_PGCREATE )
    iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
-      hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvwGetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy      = hb_gt_wvwGetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
    xy.y   -= pWindowData->byLineSpacing;
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
 
-   uiPGid = LastControlId( usWinNum, WVW_CONTROL_PROGRESSBAR );
+   uiPGid = hb_gt_wvw_LastControlId( usWinNum, WVW_CONTROL_PROGRESSBAR );
    if( uiPGid == 0 )
       uiPGid = WVW_ID_BASE_PROGRESSBAR;
    else
@@ -485,7 +485,7 @@ HB_FUNC( WVW_PGCREATE )
       rOffXB.bottom = iOffBottom;
       rOffXB.right  = iOffRight;
 
-      AddControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, hWndPG, uiPGid, NULL, rXB, rOffXB, ( byte ) iStyle );
+      hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_PROGRESSBAR, hWndPG, uiPGid, NULL, rXB, rOffXB, ( byte ) iStyle );
 
       hb_retnl( uiPGid );
    }
@@ -541,7 +541,7 @@ HB_FUNC( WVW_PGSETRANGE )
 {
    UINT uiPGid = ( UINT ) hb_parnl( 2 );
    byte bStyle;
-   HWND hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
+   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
    int  iMin   = ( int ) hb_parni( 3 );
    int  iMax   = ( int ) hb_parni( 4 );
 
@@ -566,7 +566,7 @@ HB_FUNC( WVW_PGSETPOS )
 {
    UINT    uiPGid = ( UINT ) hb_parnl( 2 );
    byte    bStyle;
-   HWND    hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
+   HWND    hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
    int     iPos   = ( int ) hb_parni( 3 );
    PBRANGE pbrange;
 
@@ -597,7 +597,7 @@ HB_FUNC( WVW_PGGETPOS )
 {
    UINT uiPGid = ( UINT ) hb_parnl( 2 );
    byte bStyle;
-   HWND hWndPG = FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
+   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
 
    if( uiPGid == 0 || hWndPG == NULL )
    {
