@@ -19,8 +19,8 @@ wvwedit.c
 wvwfuncs.c
 wvwmenu.c
 wvwpush.c
-wvwstbar.c
-wvwtbar.c
+scrollbr.c
+toolbar.c
 
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm
