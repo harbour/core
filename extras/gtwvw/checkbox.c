@@ -154,9 +154,8 @@ HB_FUNC( WVW_CXDESTROY )
  */
 HB_FUNC( WVW_CXSETFOCUS )
 {
-   UINT uiCtrlId = hb_parnl( 2 );
    byte bStyle;
-   HWND hWndCX = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
+   HWND hWndCX = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
 
    if( hWndCX )
       hb_retl( SetFocus( hWndCX ) != NULL );
@@ -172,15 +171,15 @@ HB_FUNC( WVW_CXSETFOCUS )
  */
 HB_FUNC( WVW_CXENABLE )
 {
-   UINT       uiCtrlId = ( UINT ) hb_parnl( 2 );
-   BOOL       bEnable  = hb_parldef( 3, HB_TRUE );
    byte       bStyle;
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndCX      = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, uiCtrlId, &bStyle );
+   HWND       hWndCX      = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
 
    if( hWndCX )
    {
+      BOOL bEnable = hb_parldef( 3, HB_TRUE );
+
       hb_retl( EnableWindow( hWndCX, bEnable ) == 0 );
 
       if( ! bEnable )

@@ -83,9 +83,8 @@
 #include "hbvm.h"
 
 #include "hbgfxdef.ch"
-#define SubclassWindow( hwnd, lpfn )       \
-   ( ( WNDPROC ) SetWindowLongPtr( hwnd, GWLP_WNDPROC, ( LPARAM ) ( WNDPROC ) ( lpfn ) ) )
 
+#define SubclassWindow( hwnd, lpfn )  ( ( WNDPROC ) SetWindowLongPtr( hwnd, GWLP_WNDPROC, ( LPARAM ) ( WNDPROC ) ( lpfn ) ) )
 
 /* settable by user: */
 
@@ -6840,7 +6839,7 @@ HB_FUNC( WVW_NOPENWINDOW )
    UINT       usWinNum;
 
    DWORD     dwStyle    = ( DWORD ) hb_parnldef( 6, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN );
-   INT       iParentWin = HB_ISNUM( 7 ) ? ( INT ) hb_parni( 7 ) : ( s_pWvwData->bMainCoordMode ? ( INT ) s_pWvwData->usNumWindows - 1 : ( INT ) s_pWvwData->usCurWindow );
+   INT       iParentWin = HB_ISNUM( 7 ) ? hb_parni( 7 ) : ( s_pWvwData->bMainCoordMode ? ( INT ) s_pWvwData->usNumWindows - 1 : ( INT ) s_pWvwData->usCurWindow );
    PHB_FNAME pFileName = NULL;
 
    if( s_pWvwData->usNumWindows == 0 )
@@ -8242,29 +8241,66 @@ IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, LONG * lwidth, LONG 
 
 static BITMAPINFO * PackedDibLoad( const char * szFileName )
 {
-   BITMAPFILEHEADER bmfh;
-   BITMAPINFO *     pbmi = NULL;
+#if 1
+   BITMAPINFO * pbmi = NULL;
+
+   HANDLE hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
+                       OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+
+   if( hFile != INVALID_HANDLE_VALUE )
+   {
+      BITMAPFILEHEADER bmfh;
+      DWORD dwBytesRead;
+
+      BOOL bSuccess = ReadFile( hFile, &bmfh, sizeof( bmfh ), &dwBytesRead, NULL );
+
+      if( bSuccess && dwBytesRead == sizeof( bmfh ) && bmfh.bfType == 0x4d42 /* "BM" */ )
+      {
+         DWORD dwPackedDibSize = bmfh.bfSize - sizeof( bmfh );
+
+         pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
+
+         bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
+
+         if( ! bSuccess || dwBytesRead != dwPackedDibSize )
+         {
+            hb_xfree( pbmi );
+            pbmi = NULL;
+         }
+      }
+
+      CloseHandle( hFile );
+   }
+
+   return pbmi;
+#else
+   /* TODO: see why this crashes */
+   BITMAPINFO * pbmi = NULL;
 
    HB_FHANDLE fhnd = hb_fsOpen( szFileName, FO_READ | FO_SHARED );
 
-   if( fhnd != FS_ERROR &&
-       hb_fsReadLarge( fhnd, &bmfh, sizeof( BITMAPFILEHEADER ) ) == sizeof( BITMAPFILEHEADER ) &&
-       bmfh.bfType == 0x4d42 /* "BM" */ )
+   if( fhnd != FS_ERROR )
    {
-      DWORD dwPackedDibSize = bmfh.bfSize - sizeof( BITMAPFILEHEADER );
+      BITMAPFILEHEADER bmfh;
 
-      pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
-
-      if( hb_fsReadLarge( fhnd, &pbmi, dwPackedDibSize ) != dwPackedDibSize )
+      if( ( DWORD ) hb_fsReadLarge( fhnd, &bmfh, sizeof( bmfh ) ) == sizeof( bmfh ) && bmfh.bfType == 0x4d42 /* "BM" */ )
       {
-         hb_xfree( pbmi );
-         pbmi = NULL;
+         DWORD dwPackedDibSize = bmfh.bfSize - sizeof( bmfh );
+
+         pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
+
+         if( ( DWORD ) hb_fsReadLarge( fhnd, &pbmi, dwPackedDibSize ) != dwPackedDibSize )
+         {
+            hb_xfree( pbmi );
+            pbmi = NULL;
+         }
       }
+
+      hb_fsClose( fhnd );
    }
 
-   hb_fsClose( fhnd );
-
    return pbmi;
+#endif
 }
 
 static int PackedDibGetWidth( BITMAPINFO * pPackedDib )

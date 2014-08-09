@@ -103,7 +103,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
       cText = NULL;
 
    hb_retnl( ( LONG ) SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                                          ( int ) hb_parni( 2 ),
+                                          hb_parni( 2 ),
                                           ( UINT ) hb_parni( 3 ),
                                           ( WPARAM ) hb_parnl( 4 ),
                                           ( cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnl( 5 ) ) ) );
@@ -130,19 +130,19 @@ HB_FUNC( WIN_SETFOCUS )
 
 HB_FUNC( WIN_SETTEXTCOLOR )
 {
-   hb_retnl( ( ULONG ) SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   hb_retnl( ( long ) SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 
 HB_FUNC( WIN_SETBKCOLOR )
 {
-   hb_retnl( ( ULONG ) SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   hb_retnl( ( long ) SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 
 HB_FUNC( WVW_SETBKMODE )
 {
-   hb_retni( ( int ) SetBkMode( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
+   hb_retni( SetBkMode( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
 
@@ -333,7 +333,7 @@ HB_FUNC( WIN_CREATEBRUSH )
 /* win_DrawText( hDC, cText, aRect, nFormat ) */
 HB_FUNC( WIN_DRAWTEXT )
 {
-   RECT rc = { 0 };
+   RECT rc;
 
    rc.left   = hb_parvni( 3, 1 );
    rc.top    = hb_parvni( 3, 2 );
@@ -378,95 +378,78 @@ HB_FUNC( WVW_GBCREATE )
 
 HB_FUNC( WVW_RBCREATE )
 {
-   int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-/* int  iStyle; */
-   UINT   uiPBid;
-   USHORT usTop          = ( USHORT ) hb_parni( 2 ),
-          usLeft         = ( USHORT ) hb_parni( 3 ),
-          usBottom       = ( USHORT ) hb_parni( 4 ),
-          usRight        = ( USHORT ) hb_parni( 5 );
-   LPCTSTR lpszCaption   = hb_parc( 6 );
-   const char * szBitmap = hb_parc( 7 );
-   UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
-   double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
-
-   if( ! HB_ISEVALITEM( 8 ) )
+   if( HB_ISEVALITEM( 8 ) )
    {
-      hb_retnl( 0 );
-      return;
+      USHORT usTop          = ( USHORT ) hb_parni( 2 ),
+             usLeft         = ( USHORT ) hb_parni( 3 ),
+             usBottom       = ( USHORT ) hb_parni( 4 ),
+             usRight        = ( USHORT ) hb_parni( 5 );
+      LPCTSTR lpszCaption   = hb_parc( 6 );
+      const char * szBitmap = hb_parc( 7 );
+      UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
+      double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+      BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
+
+      int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
+      int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
+      int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
+      int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
+
+      hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
+                             szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+                             iOffTop, iOffLeft, iOffBottom, iOffRight,
+                             dStretch, bMap3Dcolors,
+                             BS_AUTORADIOBUTTON /* | WS_GROUP */ ) );
    }
-
-   iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
-   iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
-   iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
-   iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
-
-   uiPBid = hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-                          szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-                          iOffTop, iOffLeft, iOffBottom, iOffRight,
-                          dStretch, bMap3Dcolors,
-                          BS_AUTORADIOBUTTON /*| WS_GROUP*/ );
-   hb_retnl( uiPBid );
+   else
+      hb_retnl( 0 );
 }
 
 HB_FUNC( WVW_SETCONTROLTEXT )
 {
-   UINT uiCtrlId = ( UINT ) hb_parnl( 2 );
    byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiCtrlId == 0 || hWndPB == NULL )
-      return;
-   SetWindowText( hWndPB, hb_parcx( 3 ) );
-   hb_retl( HB_TRUE );
+   if( hWndPB )
+   {
+      SetWindowText( hWndPB, hb_parcx( 3 ) );
+      hb_retl( HB_TRUE );
+   }
+   else
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVW_PBVISIBLE )
 {
-   UINT uiCtrlId = ( UINT ) hb_parnl( 2 );
-   BOOL bEnable  = hb_parldef( 3, HB_TRUE );
    byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
-   int  iCmdShow;
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiCtrlId == 0 || hWndPB == NULL )
-   {
-      hb_retl( HB_FALSE );
-      return;
-   }
-
-   if( bEnable )
-      iCmdShow = SW_SHOW;
+   if( hWndPB )
+      hb_retl( ShowWindow( hWndPB, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
    else
-      iCmdShow = SW_HIDE;
-   hb_retl( ShowWindow( hWndPB, iCmdShow ) == 0 );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVW_CBVISIBLE )
 {
-   UINT uiCtrlId = ( UINT ) hb_parnl( 2 );
-   BOOL bEnable  = hb_parldef( 3, HB_TRUE );
    byte bStyle;
-   HWND hWndCB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, uiCtrlId, &bStyle );
+   HWND hWndCB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
 
    if( hWndCB )
-      hb_retl( ShowWindow( hWndCB, bEnable ? SW_SHOW : SW_HIDE ) == 0 );
+      hb_retl( ShowWindow( hWndCB, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
    else
       hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVW_CXVISIBLE )
 {
-   UINT uiCtrlId = ( UINT ) hb_parnl( 2 );
-   BOOL bEnable  = hb_parldef( 3, HB_TRUE );
    byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiCtrlId == 0 || hWndPB == NULL )
-      hb_retl( HB_FALSE );
+   if( hWndPB )
+      hb_retl( ShowWindow( hWndPB, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
    else
-      hb_retl( ShowWindow( hWndPB, bEnable ? SW_SHOW : SW_HIDE ) == 0 );
+      hb_retl( HB_FALSE );
 }
 
 /* wvw_xbVisible( [nWinNum], nXBid, lShow )
@@ -479,15 +462,13 @@ HB_FUNC( WVW_CXVISIBLE )
  */
 HB_FUNC( WVW_XBVISIBLE )
 {
-   UINT uiXBid = ( UINT ) hb_parnl( 2 );
-   BOOL bShow  = ( BOOL ) hb_parldef( 3, HB_TRUE );
    byte bStyle;
-   HWND hWndXB = uiXBid == 0 ? NULL : hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, uiXBid, &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiXBid == 0 || hWndXB == NULL )
-      hb_retl( HB_FALSE );
+   if( hWndXB )
+      hb_retl( ShowScrollBar( hWndXB, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
    else
-      hb_retl( ShowScrollBar( hWndXB, SB_CTL, bShow ) );
+      hb_retl( HB_FALSE );
 }
 
 
@@ -938,7 +919,7 @@ HB_FUNC( SETTEXTCOLOR )
       ( HDC ) HB_PARHANDLE( 1 ),          /* handle of device context */
       ( COLORREF ) hb_parnl( 2 ) );       /* text color */
 
-   hb_retnl( ( LONG ) crColor );
+   hb_retnl( ( long ) crColor );
 }
 
 HB_FUNC( SETBKCOLOR )
@@ -947,7 +928,7 @@ HB_FUNC( SETBKCOLOR )
       ( HDC ) HB_PARHANDLE( 1 ),     /* handle of device context */
       ( COLORREF ) hb_parnl( 2 ) );  /* text color */
 
-   hb_retnl( ( LONG ) crColor );
+   hb_retnl( ( long ) crColor );
 }
 
 HB_FUNC( CREATESOLIDBRUSH )
@@ -967,7 +948,7 @@ HB_FUNC( RGB )
 #if ! defined( __HB_NO_REDUNDANT )
 HB_FUNC( GETSYSCOLOR )
 {
-   hb_retnl( ( LONG ) GetSysColor( hb_parni( 1 ) ) );
+   hb_retnl( ( long ) GetSysColor( hb_parni( 1 ) ) );
 }
 #endif
 
@@ -1015,10 +996,7 @@ HB_FUNC( SELECTFONT )
 {
    CHOOSEFONT cf;
    LOGFONT    lf;
-   HFONT      hfont;
    PHB_ITEM   pObj = hb_param( 1, HB_IT_OBJECT );
-/* PHB_ITEM temp1; */
-   PHB_ITEM aMetr = hb_itemArrayNew( 9 );
 
    cf.lStructSize    = sizeof( CHOOSEFONT );
    cf.hwndOwner      = NULL;
@@ -1038,29 +1016,26 @@ HB_FUNC( SELECTFONT )
    cf.nSizeMax  = 0;
 
    /* Display the CHOOSEFONT common-dialog box. */
-   if( ! ChooseFont( &cf ) )
+   if( ChooseFont( &cf ) )
    {
-      hb_itemRelease( aMetr );
-      hb_ret();
-      return;
+      PHB_ITEM aMetr = hb_itemArrayNew( 9 );
+
+      /* Create a logical font based on the user's selection and
+         return a handle identifying that font. */
+      HFONT hfont = CreateFontIndirect( cf.lpLogFont );
+
+      hb_arraySetNInt( aMetr, 1, ( HB_PTRDIFF ) hfont );
+      hb_arraySetC(  aMetr, 2, lf.lfFaceName );
+      hb_arraySetNL( aMetr, 3, lf.lfWidth );
+      hb_arraySetNL( aMetr, 4, lf.lfHeight );
+      hb_arraySetNL( aMetr, 5, lf.lfWeight );
+      hb_arraySetNI( aMetr, 6, lf.lfCharSet );
+      hb_arraySetNI( aMetr, 7, lf.lfItalic );
+      hb_arraySetNI( aMetr, 8, lf.lfUnderline );
+      hb_arraySetNI( aMetr, 9, lf.lfStrikeOut );
+
+      hb_itemReturnRelease( aMetr );
    }
-
-   /* Create a logical font based on the user's
-      selection and return a handle identifying
-      that font. */
-   hfont = CreateFontIndirect( cf.lpLogFont );
-
-   hb_arraySetNInt( aMetr, 1, ( HB_PTRDIFF ) hfont );
-   hb_arraySetC(  aMetr, 2, lf.lfFaceName );
-   hb_arraySetNL( aMetr, 3, lf.lfWidth );
-   hb_arraySetNL( aMetr, 4, lf.lfHeight );
-   hb_arraySetNL( aMetr, 5, lf.lfWeight );
-   hb_arraySetNI( aMetr, 6, lf.lfCharSet );
-   hb_arraySetNI( aMetr, 7, lf.lfItalic );
-   hb_arraySetNI( aMetr, 8, lf.lfUnderline );
-   hb_arraySetNI( aMetr, 9, lf.lfStrikeOut );
-
-   hb_itemReturnRelease( aMetr );
 }
 
 HB_FUNC( INVALIDATERECT )
@@ -1078,14 +1053,13 @@ HB_FUNC( INVALIDATERECT )
       memset( &rc, 0, sizeof( rc ) );
 
    InvalidateRect(
-      ( HWND ) HB_PARHANDLE( 1 ),         /* handle of window with changed update region */
-      ( hb_pcount() > 2 ) ? &rc : NULL,   /* address of rectangle coordinates */
-      hb_parni( 2 ) );                    /* erase-background flag */
+      ( HWND ) HB_PARHANDLE( 1 ),      /* handle of window with changed update region */
+      hb_pcount() > 2 ? &rc : NULL,    /* address of rectangle coordinates */
+      hb_parni( 2 ) );                 /* erase-background flag */
 }
 
 HB_FUNC( TOOLBARADDBUTTONS )
 {
-
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
@@ -1093,8 +1067,7 @@ HB_FUNC( TOOLBARADDBUTTONS )
    /* HWND hToolTip = ( HWND ) hb_parnl( 5 ) ; */
    PHB_ITEM   pArray   = hb_param( 3, HB_IT_ARRAY );
    int        iButtons = hb_parni( 4 );
-   TBBUTTON * tb       = ( struct _TBBUTTON * ) hb_xgrab( iButtons * sizeof( TBBUTTON ) );
-   PHB_ITEM   pTemp;
+   TBBUTTON * tb       = ( TBBUTTON * ) hb_xgrab( iButtons * sizeof( TBBUTTON ) );
 /* BOOL bSystem; */
 
    ULONG  ulCount;
@@ -1108,10 +1081,9 @@ HB_FUNC( TOOLBARADDBUTTONS )
 
    SendMessage( hWndCtrl, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0L );
    usOldHeight = pWindowData->usTBHeight;
-   for( ulCount = 0; ( ulCount < hb_arrayLen( pArray ) ); ulCount++ )
+   for( ulCount = 0; ulCount < hb_arrayLen( pArray ); ulCount++ )
    {
-
-      pTemp = hb_arrayGetItemPtr( pArray, ulCount + 1 );
+      PHB_ITEM pTemp = hb_arrayGetItemPtr( pArray, ulCount + 1 );
 #if 0
       ulID  = hb_arrayGetNI( pTemp, 1 );
       /* bSystem = hb_arrayGetL( pTemp, 9 ); */
@@ -1150,7 +1122,6 @@ HB_FUNC( SETBITMAPRESOURCEID )
    int         iBitmapType = hb_parni( 2 );
    int         iOffset;
 
-
    switch( iBitmapType )
    {
       case 0:
@@ -1179,7 +1150,6 @@ HB_FUNC( SETBITMAPRESOURCEID )
    else /* system bitmap */
       iNewBitmap = ( int ) uiBitmap + iOffset;
    hb_retni( iNewBitmap );
-
 }
 
 
@@ -1366,10 +1336,9 @@ HB_FUNC( WVW_GETPAINTRECT )
 HB_FUNC( WVW_SETPOINTER )
 {
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   int        iCursor     = hb_parni( 2 );
    HCURSOR    hCursor;
 
-   switch( iCursor )
+   switch( hb_parni( 2 ) )
    {
       case 1:
          hCursor = LoadCursor( NULL, IDC_ARROW );
@@ -1546,7 +1515,6 @@ HB_FUNC( WVW_MESSAGEBOX )
 
 /*       End of Drawing Primitives         */
 
-/*                                         */
 /* Utility Functions . A Natural Extension */
 /*   copied and modified from gtwvt        */
 
@@ -1556,7 +1524,6 @@ HB_FUNC( WVW_MESSAGEBOX )
 
 HB_FUNC( WVW_CHOOSEFONT )
 {
-
    CHOOSEFONT cf        = { 0 };
    LOGFONT    lf        = { 0 };
    LONG       PointSize = 0;
@@ -1593,11 +1560,11 @@ HB_FUNC( WVW_CHOOSEFONT )
    cf.nSizeMin       = 0;
    cf.nSizeMax       = 0;
 
+   hb_reta( 8 );
+
    if( ChooseFont( &cf ) )
    {
       PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( p->pWindows[ p->usNumWindows - 1 ]->hdc, LOGPIXELSY ) );
-
-      hb_reta( 8 );
 
       hb_storvc( lf.lfFaceName, -1, 1 );
       hb_storvnl( ( LONG ) PointSize, -1, 2 );
@@ -1610,8 +1577,6 @@ HB_FUNC( WVW_CHOOSEFONT )
    }
    else
    {
-      hb_reta( 8 );
-
       hb_storvc( NULL, -1, 1 );
       hb_storvnl( 0, -1, 2 );
       hb_storvni( 0, -1, 3 );
@@ -1621,15 +1586,12 @@ HB_FUNC( WVW_CHOOSEFONT )
       hb_storvl( 0, -1, 7 );
       hb_storvl( 0, -1, 8 );
    }
-
-   return;
 }
 
 
 /* wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
 HB_FUNC( WVW_CHOOSECOLOR )
 {
-
    CHOOSECOLOR cc;
    COLORREF    crCustClr[ 16 ];
    int         i;
@@ -1680,8 +1642,8 @@ HB_FUNC( WVW_SETMOUSEPOS )
 }
 
 
-/* by bdj                                                                                */
-/* none in gtwvt                                                                         */
+/* by bdj                                                                               */
+/* none in gtwvt                                                                        */
 /*    wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBcolor/hBrush,       */
 /*                       lTight, lUseBrush, aOffSet )                                   */
 /*                                                                                      */

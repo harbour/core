@@ -941,13 +941,10 @@ STATIC PROCEDURE CreateToolbar( nWinNum )
    LOCAL nSysBitmap := 1     // 0:none 1:small 2:large
    LOCAL lDisplayText := .F. // text will be displayed as tooltip instead
    LOCAL hWndTB
-   LOCAL ldefault
 
    wvw_tbDestroy( nWinNum )
 
-   ldefault := lYesNo( "would you like to use default toolbar setting?" )
-
-   IF ! ldefault
+   IF ! lYesNo( "would you like to use default toolbar setting?" )
       nSysBitmap := Alert( "Select toolbar button size", { "Small", "Big" } )
       nSysBitmap := iif( nSysBitmap == 0, 1, nSysBitmap )
       lDisplayText := Alert( "Display text in toolbar?", { "Yes", "No" } ) == 1
