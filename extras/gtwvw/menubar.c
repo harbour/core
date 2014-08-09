@@ -274,7 +274,6 @@ HB_FUNC( WIN_SETMENU )
  */
 HB_FUNC( WVW_NOSYSMENU )
 {
-   HB_BOOL    lRemoveClose = hb_parl( 2 );
    WIN_DATA * pWindowData  = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HMENU      hMenu        = GetSystemMenu( pWindowData->hWnd, FALSE );
 
@@ -286,7 +285,7 @@ HB_FUNC( WVW_NOSYSMENU )
       DeleteMenu( hMenu, SC_MOVE, MF_BYCOMMAND );
       DeleteMenu( hMenu, SC_RESTORE, MF_BYCOMMAND );
       DeleteMenu( hMenu, SC_NEXTWINDOW, MF_BYCOMMAND );
-      if( lRemoveClose )
+      if( hb_parl( 2 ) /* lRemoveClose */ )
       {
          DeleteMenu( hMenu, SC_CLOSE, MF_BYCOMMAND );
          DeleteMenu( hMenu, 0, MF_BYPOSITION );

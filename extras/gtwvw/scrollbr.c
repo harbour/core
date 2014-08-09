@@ -543,20 +543,21 @@ HB_FUNC( WVW_XBDESTROY )
       pcdPrev = pcd;
       pcd     = pcd->pNext;
    }
-   if( pcd == NULL )
-      return;
 
-   DestroyWindow( pcd->hWndCtrl );
+   if( pcd )
+   {
+      DestroyWindow( pcd->hWndCtrl );
 
-   if( pcdPrev == NULL )
-      pWindowData->pcdCtrlList = pcd->pNext;
-   else
-      pcdPrev->pNext = pcd->pNext;
+      if( pcdPrev )
+         pcdPrev->pNext = pcd->pNext;
+      else
+         pWindowData->pcdCtrlList = pcd->pNext;
 
-   if( pcd->phiCodeBlock )
-      hb_itemRelease( pcd->phiCodeBlock );
+      if( pcd->phiCodeBlock )
+         hb_itemRelease( pcd->phiCodeBlock );
 
-   hb_xfree( pcd );
+      hb_xfree( pcd );
+   }
 }
 
 /* wvw_xbUpdate(nWinNum, XBid, [nPos], [nPageSize], [nMin], [nMax])
@@ -568,42 +569,33 @@ HB_FUNC( WVW_XBDESTROY )
  */
 HB_FUNC( WVW_XBUPDATE )
 {
-   UINT       uiXBid = ( UINT ) hb_parnl( 2 );
-   byte       bStyle;
-   HWND       hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, uiXBid, &bStyle );
-   int        iPos   = ( int ) hb_parni( 3 );
-   int        iPage  = ( int ) hb_parni( 4 );
-   int        iMin   = ( int ) hb_parni( 5 );
-   int        iMax   = ( int ) hb_parni( 6 );
-   SCROLLINFO si;
-   int        iRetval;
-   UINT       fMask = SIF_DISABLENOSCROLL;
+   byte bStyle;
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   int  iPage  = hb_parni( 4 );
 
-   if( uiXBid == 0 || hWndXB == NULL || iPage < 0 )
+   if( hWndXB && iPage >= 0 )
    {
-      hb_retni( -1 );
-      return;
+      SCROLLINFO si;
+      UINT fMask = SIF_DISABLENOSCROLL;
+
+      if( HB_ISNUM( 3 ) )
+         fMask |= SIF_POS;
+      if( HB_ISNUM( 4 ) )
+         fMask |= SIF_PAGE;
+      if( HB_ISNUM( 5 ) || HB_ISNUM( 6 ) )
+         fMask |= SIF_RANGE;
+
+      si.cbSize = sizeof( si );
+      si.fMask  = fMask;
+      si.nMin   = hb_parni( 5 );
+      si.nMax   = hb_parni( 6 );
+      si.nPage  = ( UINT ) iPage;
+      si.nPos   = hb_parni( 3 );
+
+      hb_retni( SetScrollInfo( hWndXB, SB_CTL, &si, TRUE ) );
    }
-
-   if( ! HB_ISNIL( 3 ) )
-      fMask = fMask | SIF_POS;
-   if( ! HB_ISNIL( 4 ) )
-      fMask = fMask | SIF_PAGE;
-   if( ! HB_ISNIL( 5 ) && ! HB_ISNIL( 6 ) )
-      fMask = fMask | SIF_RANGE;
-
-   si.cbSize = sizeof( si );
-   si.fMask  = fMask;
-   si.nMin   = iMin;
-   si.nMax   = iMax;
-   si.nPage  = ( UINT ) iPage;
-   si.nPos   = iPos;
-   iRetval   = SetScrollInfo( hWndXB,
-                              SB_CTL,
-                              ( LPCSCROLLINFO ) &si,
-                              TRUE );
-
-   hb_retni( iRetval );
+   else
+      hb_retni( -1 );
 }
 
 /* wvw_xbInfo( [nWinNum], XBid )
@@ -612,36 +604,33 @@ HB_FUNC( WVW_XBUPDATE )
  */
 HB_FUNC( WVW_XBINFO )
 {
-   PHB_ITEM   aInfo;
-   SCROLLINFO si;
-
-   UINT uiXBid = ( UINT ) hb_parnl( 2 );
    byte bStyle;
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, uiXBid, &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiXBid == 0 || hWndXB == NULL )
+   if( hWndXB )
    {
-      hb_reta( 0 );
-      return;
+      SCROLLINFO si;
+
+      si.cbSize = sizeof( si );
+      si.fMask  = SIF_ALL;
+
+      if( GetScrollInfo( hWndXB, SB_CTL, &si ) )
+      {
+         PHB_ITEM aInfo = hb_itemArrayNew( 5 );
+
+         hb_arraySetNL( aInfo, 1, si.nMin );
+         hb_arraySetNL( aInfo, 2, si.nMax );
+         hb_arraySetNL( aInfo, 3, si.nPage );
+         hb_arraySetNL( aInfo, 4, si.nPos );
+         hb_arraySetNL( aInfo, 5, si.nTrackPos );
+
+         hb_itemReturnRelease( aInfo );
+      }
+      else
+         hb_reta( 0 );
    }
-
-   si.cbSize = sizeof( si );
-   si.fMask  = SIF_ALL;
-
-   if( ! GetScrollInfo( hWndXB, SB_CTL, &si ) )
-   {
+   else
       hb_reta( 0 );
-      return;
-   }
-
-   aInfo = hb_itemArrayNew( 5 );
-   hb_arraySetNL( aInfo, 1, si.nMin );
-   hb_arraySetNL( aInfo, 2, si.nMax );
-   hb_arraySetNL( aInfo, 3, si.nPage );
-   hb_arraySetNL( aInfo, 4, si.nPos );
-   hb_arraySetNL( aInfo, 5, si.nTrackPos );
-
-   hb_itemReturnRelease( aInfo );
 }
 
 /* wvw_xbEnable( [nWinNum], nXBid, nFlags )
@@ -654,15 +643,14 @@ HB_FUNC( WVW_XBINFO )
  */
 HB_FUNC( WVW_XBENABLE )
 {
-   UINT uiXBid  = ( UINT ) hb_parnl( 2 );
    UINT uiFlags = ( UINT ) hb_parni( 3 );
    byte bStyle;
-   HWND hWndXB = uiXBid == 0 ? NULL : hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, uiXBid, &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiXBid == 0 || hWndXB == NULL || uiFlags > ESB_DISABLE_BOTH )
-      hb_retl( HB_FALSE );
-   else
+   if( hWndXB && uiFlags <= ESB_DISABLE_BOTH )
       hb_retl( EnableScrollBar( hWndXB, SB_CTL, uiFlags ) );
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* wvw_xbShow( [nWinNum], nXBid, lShow )
@@ -674,15 +662,13 @@ HB_FUNC( WVW_XBENABLE )
  */
 HB_FUNC( WVW_XBSHOW )
 {
-   UINT uiXBid = ( UINT ) hb_parnl( 2 );
-   BOOL bShow  = ( BOOL ) hb_parldef( 3, HB_TRUE );
    byte bStyle;
-   HWND hWndXB = uiXBid == 0 ? NULL : hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, uiXBid, &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiXBid == 0 || hWndXB == NULL )
-      hb_retl( HB_FALSE );
+   if( hWndXB )
+      hb_retl( ShowScrollBar( hWndXB, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
    else
-      hb_retl( ShowScrollBar( hWndXB, SB_CTL, bShow ) );
+      hb_retl( HB_FALSE );
 }
 
 

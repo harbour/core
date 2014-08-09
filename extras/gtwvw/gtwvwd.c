@@ -290,7 +290,7 @@ static void   hb_wvw_UpdatePendingRect( WIN_DATA * pWindowData, USHORT usRow1, U
 
 static void   hb_gt_wvwFillLineSpace( WIN_DATA * pWindowData, HDC hdc, USHORT startCol, USHORT irow, USHORT len, BYTE byAttrib );
 
-static BITMAPINFO * PackedDibLoad( PTSTR szFileName );
+static BITMAPINFO * PackedDibLoad( const char * szFileName );
 static int PackedDibGetWidth( BITMAPINFO * pPackedDib );
 static int PackedDibGetHeight( BITMAPINFO * pPackedDib );
 static int PackedDibGetBitCount( BITMAPINFO * pPackedDib );
@@ -8240,8 +8240,7 @@ IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, LONG * lwidth, LONG 
 
 /* Supporting functions */
 
-
-static BITMAPINFO * PackedDibLoad( PTSTR szFileName )
+static BITMAPINFO * PackedDibLoad( const char * szFileName )
 {
    BITMAPFILEHEADER bmfh;
    BITMAPINFO *     pbmi = NULL;
@@ -8496,7 +8495,7 @@ static void AddUserBitmapHandle( const char * szFileName, HBITMAP hBitmap, int i
 }
 
 
-static HBITMAP hPrepareBitmap( char * szBitmap, UINT uiBitmap,
+static HBITMAP hPrepareBitmap( const char * szBitmap, UINT uiBitmap,
                                int iExpWidth, int iExpHeight,
                                BOOL bMap3Dcolors,
                                HWND hCtrl )
@@ -8671,7 +8670,7 @@ static HBITMAP hPrepareBitmap( char * szBitmap, UINT uiBitmap,
    uiBitmap is resource id
  */
 
-BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, char * szBitmap, UINT uiBitmap, char * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown )
+BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, UINT uiBitmap, const char * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown )
 {
    TBBUTTON    tbb;
    TBADDBITMAP tbab;
@@ -9401,7 +9400,7 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
  *         WVW_CONTROL_PUSHBUTTON == WVW_CONTROL_CHECKBOX
  */
 UINT hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, LPCTSTR lpszCaption,
-                   char * szBitmap, UINT uiBitmap, PHB_ITEM phbiCodeBlock,
+                   const char * szBitmap, UINT uiBitmap, PHB_ITEM phbiCodeBlock,
                    int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
                    double dStretch, BOOL bMap3Dcolors,
                    int iStyle )

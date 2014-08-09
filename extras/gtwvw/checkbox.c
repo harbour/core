@@ -88,36 +88,31 @@
 
 HB_FUNC( WVW_CXCREATE )
 {
-   int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-/* int   iStyle; */
-   UINT   uiPBid;
-   USHORT usTop         = ( BYTE ) hb_parni( 2 ),
-          usLeft        = ( BYTE ) hb_parni( 3 ),
-          usBottom      = ( BYTE ) hb_parni( 4 ),
-          usRight       = ( BYTE ) hb_parni( 5 );
-   LPCTSTR lpszCaption  = hb_parc( 6 );
-   char *  szBitmap     = ( char * ) hb_parc( 7 );
-   UINT    uiBitmap     = ( UINT ) hb_parni( 7 );
-   double  dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL    bMap3Dcolors = ( BOOL ) hb_parl( 11 );
-
-   if( ! HB_ISEVALITEM( 8 ) )
+   if( HB_ISEVALITEM( 8 ) )
    {
-      hb_retnl( 0 );
-      return;
+      USHORT usTop          = ( BYTE ) hb_parni( 2 ),
+             usLeft         = ( BYTE ) hb_parni( 3 ),
+             usBottom       = ( BYTE ) hb_parni( 4 ),
+             usRight        = ( BYTE ) hb_parni( 5 );
+      LPCTSTR lpszCaption   = hb_parc( 6 );
+      const char * szBitmap = hb_parc( 7 );
+      UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
+      double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+      BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
+
+      int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
+      int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
+      int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
+      int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
+
+      hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
+                             szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+                             iOffTop, iOffLeft, iOffBottom, iOffRight,
+                             dStretch, bMap3Dcolors,
+                             BS_AUTOCHECKBOX ) );
    }
-
-   iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
-   iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
-   iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
-   iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
-
-   uiPBid = hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-                          szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-                          iOffTop, iOffLeft, iOffBottom, iOffRight,
-                          dStretch, bMap3Dcolors,
-                          BS_AUTOCHECKBOX );
-   hb_retnl( uiPBid );
+   else
+      hb_retnl( 0 );
 }
 
 /* wvw_cxDestroy( [nWinNum], nCXid )
@@ -138,21 +133,20 @@ HB_FUNC( WVW_CXDESTROY )
       pcd     = pcd->pNext;
    }
 
-   if( pcd == NULL )
-      return;
+   if( pcd )
+   {
+      DestroyWindow( pcd->hWndCtrl );
 
-   DestroyWindow( pcd->hWndCtrl );
+      if( pcdPrev == NULL )
+         pWindowData->pcdCtrlList = pcd->pNext;
+      else
+         pcdPrev->pNext = pcd->pNext;
 
-   if( pcdPrev == NULL )
-      pWindowData->pcdCtrlList = pcd->pNext;
-   else
-      pcdPrev->pNext = pcd->pNext;
+      if( pcd->phiCodeBlock )
+         hb_itemRelease( pcd->phiCodeBlock );
 
-   if( pcd->phiCodeBlock )
-      hb_itemRelease( pcd->phiCodeBlock );
-
-
-   hb_xfree( pcd );
+      hb_xfree( pcd );
+   }
 }
 
 /* wvw_cxSetFocus( [nWinNum], nButtonId )
@@ -299,19 +293,18 @@ HB_FUNC( WVW_CXSETFONT )
       HFONT hFont    = CreateFontIndirect( &pData->lfCX );
       if( hFont )
       {
-         /*CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
+#if 0
+         CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
 
-            while (pcd)
-            {
-            if ((pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON) &&
-               ((HFONT) SendMessage( pcd->hWndCtrl, WM_GETFONT, (WPARAM) 0, (LPARAM) 0) == hOldFont)
-              )
-            {
-              SendMessage( pcd->hWndCtrl, WM_SETFONT, (WPARAM) hFont, (LPARAM) TRUE);
-            }
+         while (pcd)
+         {
+            if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON &&
+                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont )
+               SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE);
 
             pcd = pcd->pNext;
-            } */
+         }
+#endif
 
          pWindowData->hCXfont = hFont;
          DeleteObject( ( HFONT ) hOldFont );

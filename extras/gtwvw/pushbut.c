@@ -93,36 +93,32 @@
 
 HB_FUNC( WVW_PBCREATE )
 {
-   int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-/* int  iStyle; */
-   UINT   uiPBid;
-   USHORT usTop         = ( USHORT ) hb_parni( 2 ),
-          usLeft        = ( USHORT ) hb_parni( 3 ),
-          usBottom      = ( USHORT ) hb_parni( 4 ),
-          usRight       = ( USHORT ) hb_parni( 5 );
-   LPCTSTR lpszCaption  = hb_parc( 6 );
-   char *  szBitmap     = ( char * ) hb_parc( 7 );
-   UINT    uiBitmap     = ( UINT ) hb_parni( 7 );
-   double  dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL    bMap3Dcolors = ( BOOL ) hb_parl( 11 );
-
-   if( ! HB_ISEVALITEM( 8 ) )
+   if( HB_ISEVALITEM( 8 ) )
    {
-      hb_retnl( 0 );
-      return;
+      USHORT usTop          = ( USHORT ) hb_parni( 2 ),
+             usLeft         = ( USHORT ) hb_parni( 3 ),
+             usBottom       = ( USHORT ) hb_parni( 4 ),
+             usRight        = ( USHORT ) hb_parni( 5 );
+      LPCTSTR lpszCaption   = hb_parc( 6 );
+      const char * szBitmap = hb_parc( 7 );
+      UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
+      double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+      BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
+
+      int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
+      int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
+      int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
+      int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
+
+      hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
+                             szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+                             iOffTop, iOffLeft, iOffBottom, iOffRight,
+                             dStretch, bMap3Dcolors,
+                             BS_PUSHBUTTON ) );
    }
+   else
+      hb_retnl( 0 );
 
-   iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
-   iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
-   iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
-   iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
-
-   uiPBid = hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-                          szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-                          iOffTop, iOffLeft, iOffBottom, iOffRight,
-                          dStretch, bMap3Dcolors,
-                          BS_PUSHBUTTON );
-   hb_retnl( uiPBid );
 }
 
 /* wvw_pbDestroy( [nWinNum], nPBid )
@@ -143,21 +139,20 @@ HB_FUNC( WVW_PBDESTROY )
       pcd     = pcd->pNext;
    }
 
-   if( pcd == NULL )
-      return;
+   if( pcd )
+   {
+      DestroyWindow( pcd->hWndCtrl );
 
-   DestroyWindow( pcd->hWndCtrl );
+      if( pcdPrev )
+         pcdPrev->pNext = pcd->pNext;
+      else
+         pWindowData->pcdCtrlList = pcd->pNext;
 
-   if( pcdPrev == NULL )
-      pWindowData->pcdCtrlList = pcd->pNext;
-   else
-      pcdPrev->pNext = pcd->pNext;
+      if( pcd->phiCodeBlock )
+         hb_itemRelease( pcd->phiCodeBlock );
 
-   if( pcd->phiCodeBlock )
-      hb_itemRelease( pcd->phiCodeBlock );
-
-
-   hb_xfree( pcd );
+      hb_xfree( pcd );
+   }
 }
 
 /* wvw_pbSetFocus( [nWinNum], nButtonId )
@@ -165,9 +160,8 @@ HB_FUNC( WVW_PBDESTROY )
  */
 HB_FUNC( WVW_PBSETFOCUS )
 {
-   UINT uiCtrlId = hb_parnl( 2 );
    byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
 
    if( hWndPB )
       hb_retl( SetFocus( hWndPB ) != NULL );
@@ -196,14 +190,14 @@ HB_FUNC( WVW_PBISFOCUSED )
 HB_FUNC( WVW_PBENABLE )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
-   UINT       uiCtrlId    = hb_parnl( 2 );
-   BOOL       bEnable     = hb_parldef( 3, HB_TRUE );
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    byte       bStyle;
-   HWND       hWndPB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
+   HWND       hWndPB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
 
    if( hWndPB )
    {
+      BOOL bEnable = hb_parldef( 3, HB_TRUE );
+
       hb_retl( EnableWindow( hWndPB, bEnable ) == 0 );
 
       if( ! bEnable )
@@ -252,7 +246,6 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
 
    if( pcd->phiCodeBlock )
       hb_itemRelease( pcd->phiCodeBlock );
-
 
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 

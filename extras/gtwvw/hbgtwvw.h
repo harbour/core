@@ -651,7 +651,7 @@ extern BOOL       hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, in
 extern void       hb_gt_wvw_TBinitSize( WIN_DATA * pWindowData, HWND hWndTB );
 extern int        hb_gt_wvw_IndexToCommand( HWND hWndTB, int iIndex );
 extern int        hb_gt_wvw_CommandToIndex( HWND hWndTB, int iCommand );
-extern BOOL       hb_gt_wvw_AddTBButton( HWND hWndToolbar, char * szBitmap, UINT uiBitmap, char * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown );
+extern BOOL       hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, UINT uiBitmap, const char * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown );
 extern RECT       hb_gt_wvw_GetColRowFromXYRect( WIN_DATA * pWIndowData, RECT xy );
 extern BYTE       hb_gt_wvw_LineHeight( WIN_DATA * pWindowData );
 extern WPARAM     hb_gt_wvw_ProcessMessages( WIN_DATA * pWindowData );
@@ -663,7 +663,7 @@ extern void       hb_gt_wvw_AddControlHandle( UINT usWinNum, BYTE byCtrlClass, H
 extern BOOL       hb_gt_wvw_StoreControlProc( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, WNDPROC OldProc );
 extern WNDPROC    hb_gt_wvw_GetControlProc( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl );
 extern UINT       hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, LPCTSTR lpszCaption,
-                          char * szBitmap, UINT uiBitmap, PHB_ITEM phbiCodeBlock,
+                          const char * szBitmap, UINT uiBitmap, PHB_ITEM phbiCodeBlock,
                           int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
                           double dStretch, BOOL bMap3Dcolors,
                           int iStyle );

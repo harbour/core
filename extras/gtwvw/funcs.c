@@ -350,15 +350,15 @@ HB_FUNC( WVW_GBCREATE )
    int  iOffTop, iOffLeft, iOffBottom, iOffRight;
 /* int  iStyle; */
    UINT   uiPBid;
-   USHORT usTop         = ( USHORT ) hb_parni( 2 ),
-          usLeft        = ( USHORT ) hb_parni( 3 ),
-          usBottom      = ( USHORT ) hb_parni( 4 ),
-          usRight       = ( USHORT ) hb_parni( 5 );
-   LPCTSTR lpszCaption  = hb_parc( 6 );
-   char *  szBitmap     = ( char * ) hb_parc( 7 );
-   UINT    uiBitmap     = ( UINT ) hb_parni( 7 );
-   double  dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL    bMap3Dcolors = ( BOOL ) hb_parl( 11 );
+   USHORT usTop          = ( USHORT ) hb_parni( 2 ),
+          usLeft         = ( USHORT ) hb_parni( 3 ),
+          usBottom       = ( USHORT ) hb_parni( 4 ),
+          usRight        = ( USHORT ) hb_parni( 5 );
+   LPCTSTR lpszCaption   = hb_parc( 6 );
+   const char * szBitmap = hb_parc( 7 );
+   UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
+   double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+   BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
 
    iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -1;
    iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -1;
@@ -381,15 +381,15 @@ HB_FUNC( WVW_RBCREATE )
    int  iOffTop, iOffLeft, iOffBottom, iOffRight;
 /* int  iStyle; */
    UINT   uiPBid;
-   USHORT usTop         = ( USHORT ) hb_parni( 2 ),
-          usLeft        = ( USHORT ) hb_parni( 3 ),
-          usBottom      = ( USHORT ) hb_parni( 4 ),
-          usRight       = ( USHORT ) hb_parni( 5 );
-   LPCTSTR lpszCaption  = hb_parc( 6 );
-   char *  szBitmap     = ( char * ) hb_parc( 7 );
-   UINT    uiBitmap     = ( UINT ) hb_parni( 7 );
-   double  dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL    bMap3Dcolors = ( BOOL ) hb_parl( 11 );
+   USHORT usTop          = ( USHORT ) hb_parni( 2 ),
+          usLeft         = ( USHORT ) hb_parni( 3 ),
+          usBottom       = ( USHORT ) hb_parni( 4 ),
+          usRight        = ( USHORT ) hb_parni( 5 );
+   LPCTSTR lpszCaption   = hb_parc( 6 );
+   const char * szBitmap = hb_parc( 7 );
+   UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
+   double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+   BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
 
    if( ! HB_ISEVALITEM( 8 ) )
    {

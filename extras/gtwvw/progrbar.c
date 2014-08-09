@@ -196,20 +196,21 @@ HB_FUNC( WVW_PGDESTROY )
       pcdPrev = pcd;
       pcd     = pcd->pNext;
    }
-   if( pcd == NULL )
-      return;
 
-   DestroyWindow( pcd->hWndCtrl );
+   if( pcd )
+   {
+      DestroyWindow( pcd->hWndCtrl );
 
-   if( pcdPrev == NULL )
-      pWindowData->pcdCtrlList = pcd->pNext;
-   else
-      pcdPrev->pNext = pcd->pNext;
+      if( pcdPrev )
+         pcdPrev->pNext = pcd->pNext;
+      else
+         pWindowData->pcdCtrlList = pcd->pNext;
 
-   if( pcd->phiCodeBlock )
-      hb_itemRelease( pcd->phiCodeBlock );
+      if( pcd->phiCodeBlock )
+         hb_itemRelease( pcd->phiCodeBlock );
 
-   hb_xfree( pcd );
+      hb_xfree( pcd );
+   }
 }
 
 /* wvw_pgSetRange(nWinNum, PGid, [nMin], [nMax])
@@ -223,22 +224,20 @@ HB_FUNC( WVW_PGDESTROY )
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
-   UINT uiPGid = ( UINT ) hb_parnl( 2 );
    byte bStyle;
-   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
-   int  iMin   = ( int ) hb_parni( 3 );
-   int  iMax   = ( int ) hb_parni( 4 );
+   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   int  iMin   = hb_parni( 3 );
+   int  iMax   = hb_parni( 4 );
 
-   if( uiPGid == 0 || hWndPG == NULL || ( iMin > iMax ) )
+   if( hWndPG && iMin <= iMax )
    {
-      hb_retl( HB_FALSE );
-      return;
+      SendMessage( hWndPG, PBM_SETRANGE, 0, MAKELPARAM( iMin, iMax ) );
+      SendMessage( hWndPG, PBM_SETPOS, ( WPARAM ) iMin, 0 );
+
+      hb_retl( HB_TRUE );
    }
-
-   SendMessage( hWndPG, PBM_SETRANGE, 0, MAKELPARAM( iMin, iMax ) );
-   SendMessage( hWndPG, PBM_SETPOS, ( WPARAM ) iMin, 0 );
-
-   hb_retl( HB_TRUE );
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* wvw_pgSetPos(nWinNum, PGid, [nPos])
@@ -248,29 +247,27 @@ HB_FUNC( WVW_PGSETRANGE )
  */
 HB_FUNC( WVW_PGSETPOS )
 {
-   UINT    uiPGid = ( UINT ) hb_parnl( 2 );
    byte    bStyle;
-   HWND    hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
-   int     iPos   = ( int ) hb_parni( 3 );
-   PBRANGE pbrange;
+   HWND    hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiPGid == 0 || hWndPG == NULL )
+   if( hWndPG )
    {
-      hb_retl( HB_FALSE );
-      return;
+      int     iPos = hb_parni( 3 );
+      PBRANGE pbrange;
+
+      SendMessage( hWndPG, PBM_GETRANGE, ( WPARAM ) TRUE, ( LPARAM ) &pbrange );
+
+      if( iPos >= pbrange.iLow && iPos <= pbrange.iHigh )
+      {
+         SendMessage( hWndPG, PBM_SETPOS, ( WPARAM ) iPos, 0 );
+
+         hb_retl( HB_TRUE );
+      }
+      else
+         hb_retl( HB_FALSE );
    }
-
-   SendMessage( hWndPG, PBM_GETRANGE, ( WPARAM ) TRUE, ( LPARAM ) &pbrange );
-
-   if( iPos < pbrange.iLow || iPos > pbrange.iHigh )
-   {
+   else
       hb_retl( HB_FALSE );
-      return;
-   }
-
-   SendMessage( hWndPG, PBM_SETPOS, ( WPARAM ) iPos, 0 );
-
-   hb_retl( HB_TRUE );
 }
 
 /* wvw_pgGetPos(nWinNum, PGid)
@@ -279,12 +276,11 @@ HB_FUNC( WVW_PGSETPOS )
  */
 HB_FUNC( WVW_PGGETPOS )
 {
-   UINT uiPGid = ( UINT ) hb_parnl( 2 );
    byte bStyle;
-   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
+   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   if( uiPGid == 0 || hWndPG == NULL )
-      hb_retni( 0 );
-   else
+   if( hWndPG )
       hb_retni( ( int ) SendMessage( hWndPG, PBM_GETPOS, ( WPARAM ) 0, ( LPARAM ) 0 ) );
+   else
+      hb_retni( 0 );
 }

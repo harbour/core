@@ -25,6 +25,7 @@ pushbut.c
 scrollbr.c
 static.c
 toolbar.c
+tooltip.c
 
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm
