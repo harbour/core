@@ -13,15 +13,15 @@
 
 gtwvwd.c
 
-wvwcheck.c
-wvwedit.c
-wvwpush.c
-
-combobox.c
 draw.c
 funcs.c
+
+checkbox.c
+combobox.c
+editbox.c
 menubar.c
 progrbar.c
+pushbut.c
 scrollbr.c
 static.c
 toolbar.c
