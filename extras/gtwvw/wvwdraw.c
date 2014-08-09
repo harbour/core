@@ -1294,7 +1294,6 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
    BOOL       bUseArray    = HB_ISARRAY( 7 );
    BOOL       bTransparent = hb_parl( 8 );
    int        iOLeft, iOTop, iORight, iOBottom;
-   HB_BOOL    bResult = HB_FALSE;
    IPicture * pPic;
 
    pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
@@ -1342,7 +1341,10 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
 #endif
 
    if( pPic == NULL )
-      hb_retl( bResult );
+   {
+      hb_retl( HB_FALSE );
+      return;
+   }
 
    if( bActRight || bActBottom )
    {
@@ -1389,10 +1391,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
       }
    }
 
-   bResult = hb_gt_wvw_RenderPicture( usWinNum, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, pPic,
-                                     bTransparent );
-
-   hb_retl( bResult );
+   hb_retl( hb_gt_wvw_RenderPicture( usWinNum, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, pPic, bTransparent ) );
 }
 
 
@@ -1453,14 +1452,12 @@ HB_FUNC( WVW_DRAWLABEL )
 
       hb_retl( HB_TRUE );
    }
-
-   hb_retl( HB_FALSE );
+   else
+      hb_retl( HB_FALSE );
 }
 
 
-/* wvw_DrawOutline( nWinNum, ;
-                  nTop, nLeft, nBottom, nRight,
-                  nThick, nShape, nRGBColor ) */
+/* wvw_DrawOutline( nWinNum, nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor ) */
 HB_FUNC( WVW_DRAWOUTLINE )
 {
    UINT  usWinNum = WVW_WHICH_WINDOW;
@@ -1472,10 +1469,8 @@ HB_FUNC( WVW_DRAWOUTLINE )
           usLeft   = ( USHORT ) hb_parni( 3 ),
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
-   WIN_DATA * pWindowData;
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    APP_DATA * s_sApp = hb_gt_wvw_GetAppData();
-
-   pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -1493,7 +1488,6 @@ HB_FUNC( WVW_DRAWOUTLINE )
 
    if( HB_ISNUM( 6 ) )
    {
-
       hPen = CreatePen( hb_parni( 6 ), 0, ( COLORREF ) hb_parnl( 8 ) );
       if( hPen )
          hOldPen = ( HPEN ) SelectObject( pWindowData->hdc, hPen );
@@ -1514,10 +1508,8 @@ HB_FUNC( WVW_DRAWOUTLINE )
 }
 
 
-/*                1
-                  2      3       4       5        6        7       8       9      10      11      12
-   wvw_DrawLine( nWinNum, ;
-                 nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aOffset) */
+/*                1       2      3       4       5        6        7       8       9      10      11      12
+   wvw_DrawLine( nWinNum, nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aOffset) */
 
 HB_FUNC( WVW_DRAWLINE )
 {
@@ -1885,12 +1877,13 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 
    if( hBrush )
    {
-
       hb_retl( FillRect( pWindowData->hdc, &rc, hBrush ) );
 
       SelectObject( pWindowMainData->hdc, ( HBRUSH ) s_sApp->OriginalBrush );
       DeleteObject( hBrush );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 
@@ -1914,8 +1907,8 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usAtRow, &usLeft, NULL, &usRight );
 
-   iLeft  = ( usLeft * pWindowData->PTEXTSIZE.x );
-   iRight = ( ( ( usRight + 1 ) * pWindowData->PTEXTSIZE.x ) - 1 );
+   iLeft  = usLeft * pWindowData->PTEXTSIZE.x;
+   iRight = ( ( usRight + 1 ) * pWindowData->PTEXTSIZE.x ) - 1;
 
    if( s_sApp->gridPen == NULL )
       s_sApp->gridPen = CreatePen( 0, 0, GetSysColor( COLOR_BTNFACE ) );
@@ -1924,9 +1917,7 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
 
    for( i = 0; i < iRows; i++ )
    {
-
-      y = ( ( usAtRow ) * hb_gt_wvw_LineHeight( pWindowData ) );
-
+      y = usAtRow * hb_gt_wvw_LineHeight( pWindowData );
       y += pWindowData->usTBHeight;
 
       MoveToEx( pWindowData->hdc, iLeft, y, NULL );
@@ -2097,14 +2088,14 @@ HB_FUNC( WVW_DRAWBUTTON )
       xy.x = iLeft + ( ( iRight - iLeft + 1 ) / 2 );
 
       if( bImage )
-         xy.y = ( iBottom - 2 - iTextHeight );
+         xy.y = iBottom - 2 - iTextHeight;
       else
          xy.y = iTop + ( ( iBottom - iTop + 1 - iTextHeight ) / 2 );
 
       if( iFormat == 1 )
       {
-         xy.x = xy.x + 2;
-         xy.y = xy.y + 2;
+         xy.x += 2;
+         xy.y += 2;
       }
 
       iAlign = TA_CENTER + TA_TOP;
@@ -2277,20 +2268,21 @@ HB_FUNC( WVW_DRAWPICTURE )
    else
       iOTop = iOLeft = iOBottom = iORight = 0;
 
-   if( iSlot < WVW_PICTURES_MAX )
-      if( s_sApp->iPicture[ iSlot ] )
-      {
-         xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
-         iTop  = xy.y + iOTop;
-         iLeft = xy.x + iOLeft;
+   if( iSlot < WVW_PICTURES_MAX && s_sApp->iPicture[ iSlot ] )
+   {
+      xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+      iTop  = xy.y + iOTop;
+      iLeft = xy.x + iOLeft;
 
-         xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
-         iBottom = xy.y - 1 + iOBottom;
-         iRight  = xy.x - 1 + iORight;
+      xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+      iBottom = xy.y - 1 + iOBottom;
+      iRight  = xy.x - 1 + iORight;
 
-         hb_retl( hb_gt_wvw_RenderPicture( usWinNum, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, s_sApp->iPicture[ iSlot ],
-                                          FALSE ) );
-      }
+      hb_retl( hb_gt_wvw_RenderPicture( usWinNum, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, s_sApp->iPicture[ iSlot ],
+                                       FALSE ) );
+   }
+   else
+      hb_retl( HB_FALSE );
 }
 
 
@@ -2330,8 +2322,8 @@ HB_FUNC( WVW_DRAWLABELEX )
 
       hb_retl( HB_TRUE );
    }
-
-   hb_retl( HB_FALSE );
+   else
+      hb_retl( HB_FALSE );
 }
 
 
@@ -2378,12 +2370,12 @@ HB_FUNC( WVW_DRAWLINEEX )
       case 0:                    /* Center       */
          if( iOrient == 0 )      /* Horizontal   */
          {
-            iOffset = ( ( iBottom - iTop ) / 2 );
+            iOffset = ( iBottom - iTop ) / 2;
             y       = iTop + iOffset;
          }
          else
          {
-            iOffset = ( ( iRight - iLeft ) / 2 );
+            iOffset = ( iRight - iLeft ) / 2;
             x       = iLeft + iOffset;
          }
          break;

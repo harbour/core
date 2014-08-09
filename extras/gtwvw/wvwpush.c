@@ -136,7 +136,7 @@ HB_FUNC( WVW_PBCREATE )
                           iOffTop, iOffLeft, iOffBottom, iOffRight,
                           dStretch, bMap3Dcolors,
                           BS_PUSHBUTTON );
-   hb_retnl( ( LONG ) uiPBid );
+   hb_retnl( uiPBid );
 }
 
 /* wvw_pbDestroy( [nWinNum], nPBid )
@@ -238,7 +238,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    UINT           uiPBid       = ( UINT ) hb_parnl( 2 );
    CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
-   BOOL           bOldSetting  = pData->s_bRecurseCBlock;
+   BOOL           bOldSetting  = pData->bRecurseCBlock;
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
    {
@@ -261,7 +261,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
       return;
    }
 
-   pData->s_bRecurseCBlock = FALSE;
+   pData->bRecurseCBlock = FALSE;
    pcd->bBusy = TRUE;
 
    if( pcd->phiCodeBlock )
@@ -271,7 +271,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
    pcd->bBusy = FALSE;
-   pData->s_bRecurseCBlock = bOldSetting;
+   pData->bRecurseCBlock = bOldSetting;
 
    hb_retl( HB_TRUE );
 }
@@ -313,25 +313,25 @@ HB_FUNC( WVW_PBSETFONT )
    WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
    HB_BOOL    retval      = HB_TRUE;
 
-   pData->s_lfPB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
-   pData->s_lfPB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->s_lfPB.lfWidth;
-   pData->s_lfPB.lfEscapement  = 0;
-   pData->s_lfPB.lfOrientation = 0;
-   pData->s_lfPB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : pData->s_lfPB.lfWeight;
-   pData->s_lfPB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->s_lfPB.lfItalic;
-   pData->s_lfPB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->s_lfPB.lfUnderline;
-   pData->s_lfPB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->s_lfPB.lfStrikeOut;
-   pData->s_lfPB.lfCharSet     = DEFAULT_CHARSET;
+   pData->lfPB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
+   pData->lfPB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->lfPB.lfWidth;
+   pData->lfPB.lfEscapement  = 0;
+   pData->lfPB.lfOrientation = 0;
+   pData->lfPB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : pData->lfPB.lfWeight;
+   pData->lfPB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->lfPB.lfItalic;
+   pData->lfPB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->lfPB.lfUnderline;
+   pData->lfPB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->lfPB.lfStrikeOut;
+   pData->lfPB.lfCharSet     = DEFAULT_CHARSET;
 
-   pData->s_lfPB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfPB.lfQuality;
-   pData->s_lfPB.lfPitchAndFamily = FF_DONTCARE;
+   pData->lfPB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->lfPB.lfQuality;
+   pData->lfPB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( pData->s_lfPB.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfPB.lfFaceName ) - 1 );
+      hb_strncpy( pData->lfPB.lfFaceName, hb_parc( 2 ), sizeof( pData->lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hPBfont )
    {
       HFONT hOldFont = pWindowData->hPBfont;
-      HFONT hFont    = CreateFontIndirect( &pData->s_lfPB );
+      HFONT hFont    = CreateFontIndirect( &pData->lfPB );
       if( hFont )
       {
          CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
@@ -440,7 +440,7 @@ HB_FUNC( WVW_CBCREATE )
 
    if( pWindowData->hCBfont == NULL )
    {
-      pWindowData->hCBfont = CreateFontIndirect( &pData->s_lfCB );
+      pWindowData->hCBfont = CreateFontIndirect( &pData->lfCB );
       if( pWindowData->hCBfont == NULL )
       {
          hb_retnl( 0 );
@@ -681,7 +681,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, uiCBid );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    WVW_DATA *     pData        = hb_gt_wvw_GetWvwData();
-   BOOL bOldSetting = pData->s_bRecurseCBlock;
+   BOOL bOldSetting = pData->bRecurseCBlock;
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
    {
@@ -689,7 +689,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
       return;
    }
 
-   pData->s_bRecurseCBlock = FALSE;
+   pData->bRecurseCBlock = FALSE;
    pcd->bBusy = TRUE;
 
    if( pcd->phiCodeBlock )
@@ -699,7 +699,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
    pcd->bBusy = FALSE;
-   pData->s_bRecurseCBlock = bOldSetting;
+   pData->bRecurseCBlock = bOldSetting;
 
    hb_retl( HB_TRUE );
 }
@@ -719,25 +719,25 @@ HB_FUNC( WVW_CBSETFONT )
 
    HB_BOOL retval = HB_TRUE;
 
-   pData->s_lfCB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
-   pData->s_lfCB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->s_lfCB.lfWidth;
-   pData->s_lfCB.lfEscapement  = 0;
-   pData->s_lfCB.lfOrientation = 0;
-   pData->s_lfCB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : pData->s_lfCB.lfWeight;
-   pData->s_lfCB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->s_lfCB.lfItalic;
-   pData->s_lfCB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->s_lfCB.lfUnderline;
-   pData->s_lfCB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->s_lfCB.lfStrikeOut;
-   pData->s_lfCB.lfCharSet     = DEFAULT_CHARSET;
+   pData->lfCB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
+   pData->lfCB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->lfCB.lfWidth;
+   pData->lfCB.lfEscapement  = 0;
+   pData->lfCB.lfOrientation = 0;
+   pData->lfCB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : pData->lfCB.lfWeight;
+   pData->lfCB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->lfCB.lfItalic;
+   pData->lfCB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->lfCB.lfUnderline;
+   pData->lfCB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->lfCB.lfStrikeOut;
+   pData->lfCB.lfCharSet     = DEFAULT_CHARSET;
 
-   pData->s_lfCB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfCB.lfQuality;
-   pData->s_lfCB.lfPitchAndFamily = FF_DONTCARE;
+   pData->lfCB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->lfCB.lfQuality;
+   pData->lfCB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( pData->s_lfCB.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfPB.lfFaceName ) - 1 );
+      hb_strncpy( pData->lfCB.lfFaceName, hb_parc( 2 ), sizeof( pData->lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hCBfont )
    {
       HFONT hOldFont = pWindowData->hCBfont;
-      HFONT hFont    = CreateFontIndirect( &pData->s_lfCB );
+      HFONT hFont    = CreateFontIndirect( &pData->lfCB );
       if( hFont )
       {
          CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
@@ -813,15 +813,12 @@ HB_FUNC( WVW_CBGETINDEX )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, uiCBid );
 
    if( pcd == NULL )
-   {
       hb_retni( CB_ERR );
-      return;
-   }
-
-   hb_retni( ( int ) SendMessage( ( HWND ) pcd->hWndCtrl,
-                                  CB_GETCURSEL,
-                                  ( WPARAM ) 0,
-                                  ( LPARAM ) 0 ) );
+   else
+      hb_retni( ( int ) SendMessage( ( HWND ) pcd->hWndCtrl,
+                                     CB_GETCURSEL,
+                                     ( WPARAM ) 0,
+                                     ( LPARAM ) 0 ) );
 }
 
 /* wvw_cbFindString( [nWinNum], nCBid, cString )
@@ -837,15 +834,12 @@ HB_FUNC( WVW_CBFINDSTRING )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, uiCBid );
 
    if( pcd == NULL )
-   {
       hb_retni( CB_ERR );
-      return;
-   }
-
-   hb_retni( ( int ) SendMessage( ( HWND ) pcd->hWndCtrl,
-                                  CB_FINDSTRING,
-                                  ( WPARAM ) -1,
-                                  ( LPARAM ) ( LPCSTR ) hb_parcx( 3 ) ) );
+   else
+      hb_retni( ( int ) SendMessage( ( HWND ) pcd->hWndCtrl,
+                                     CB_FINDSTRING,
+                                     ( WPARAM ) -1,
+                                     ( LPARAM ) ( LPCSTR ) hb_parcx( 3 ) ) );
 }
 
 /* wvw_cbGetCurText( [nWinNum], nCBid )
@@ -886,10 +880,12 @@ HB_FUNC( WVW_CBGETCURTEXT )
                     ( WPARAM ) iCurSel,
                     ( LPARAM ) lptstr
                     ) == CB_ERR )
-      hb_retclen( lptstr, 0 );
+   {
+      hb_retc_null();
+      hb_xfree( lptstr );
+   }
    else
-      hb_retc( lptstr );
-   hb_xfree( lptstr );
+      hb_retc_buffer( lptstr );
 }
 
 /* wvw_cbIsDropped( [nWinNum], nCBid )
@@ -903,13 +899,10 @@ HB_FUNC( WVW_CBISDROPPED )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, uiCBid );
 
    if( pcd == NULL )
-   {
       hb_retl( HB_FALSE );
-      return;
-   }
-
-   hb_retl( ( HB_BOOL ) SendMessage( ( HWND ) pcd->hWndCtrl,
-                                     CB_GETDROPPEDSTATE,
-                                     ( WPARAM ) 0,
-                                     ( LPARAM ) 0 ) );
+   else
+      hb_retl( ( HB_BOOL ) SendMessage( ( HWND ) pcd->hWndCtrl,
+                                        CB_GETDROPPEDSTATE,
+                                        ( WPARAM ) 0,
+                                        ( LPARAM ) 0 ) );
 }

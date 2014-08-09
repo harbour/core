@@ -133,7 +133,7 @@ HB_FUNC( WVW_CXCREATE )
                           iOffTop, iOffLeft, iOffBottom, iOffRight,
                           dStretch, bMap3Dcolors,
                           BS_AUTOCHECKBOX );
-   hb_retnl( ( LONG ) uiPBid );
+   hb_retnl( uiPBid );
 }
 
 /* wvw_cxDestroy( [nWinNum], nCXid )
@@ -223,7 +223,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
    UINT           uiCXid       = ( UINT ) hb_parnl( 2 );
    CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
-   BOOL           bOldSetting  = pData->s_bRecurseCBlock;
+   BOOL           bOldSetting  = pData->bRecurseCBlock;
 
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
    {
@@ -231,7 +231,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
       return;
    }
 
-   pData->s_bRecurseCBlock = FALSE;
+   pData->bRecurseCBlock = FALSE;
    pcd->bBusy = TRUE;
 
    if( pcd->phiCodeBlock )
@@ -240,7 +240,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
    pcd->bBusy = FALSE;
-   pData->s_bRecurseCBlock = bOldSetting;
+   pData->bRecurseCBlock = bOldSetting;
 
    hb_retl( HB_TRUE );
 }
@@ -274,12 +274,14 @@ HB_FUNC( WVW_CXSETCHECK )
 HB_FUNC( WVW_CXGETCHECK )
 {
    UINT  uiCXid       = ( UINT ) hb_parnl( 2 );
-   ULONG ulCheck      = 0;
+   ULONG ulCheck;
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
 
    if( pcd->hWndCtrl )
       ulCheck = ( int ) SendMessage( pcd->hWndCtrl,
                              BM_GETCHECK, ( WPARAM ) 0, ( LPARAM ) 0 );
+   else
+      ulCheck = 0;
 
    hb_retnl( ulCheck );
 }
@@ -292,25 +294,25 @@ HB_FUNC( WVW_CXSETFONT )
 
    BOOL retval = HB_TRUE;
 
-   pData->s_lfCX.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
-   pData->s_lfCX.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->s_lfCX.lfWidth;
-   pData->s_lfCX.lfEscapement  = 0;
-   pData->s_lfCX.lfOrientation = 0;
-   pData->s_lfCX.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : pData->s_lfCX.lfWeight;
-   pData->s_lfCX.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->s_lfCX.lfItalic;
-   pData->s_lfCX.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->s_lfCX.lfUnderline;
-   pData->s_lfCX.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->s_lfCX.lfStrikeOut;
-   pData->s_lfCX.lfCharSet     = DEFAULT_CHARSET;
+   pData->lfCX.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
+   pData->lfCX.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->lfCX.lfWidth;
+   pData->lfCX.lfEscapement  = 0;
+   pData->lfCX.lfOrientation = 0;
+   pData->lfCX.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : pData->lfCX.lfWeight;
+   pData->lfCX.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->lfCX.lfItalic;
+   pData->lfCX.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->lfCX.lfUnderline;
+   pData->lfCX.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->lfCX.lfStrikeOut;
+   pData->lfCX.lfCharSet     = DEFAULT_CHARSET;
 
-   pData->s_lfCX.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfCX.lfQuality;
-   pData->s_lfCX.lfPitchAndFamily = FF_DONTCARE;
+   pData->lfCX.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->lfCX.lfQuality;
+   pData->lfCX.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( pData->s_lfCX.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfPB.lfFaceName ) - 1 );
+      hb_strncpy( pData->lfCX.lfFaceName, hb_parc( 2 ), sizeof( pData->lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hCXfont )
    {
       HFONT hOldFont = pWindowData->hCXfont;
-      HFONT hFont    = CreateFontIndirect( &pData->s_lfCX );
+      HFONT hFont    = CreateFontIndirect( &pData->lfCX );
       if( hFont )
       {
          /*CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
@@ -600,12 +602,9 @@ HB_FUNC( WVW_PGGETPOS )
    HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, uiPGid, &bStyle );
 
    if( uiPGid == 0 || hWndPG == NULL )
-   {
       hb_retni( 0 );
-      return;
-   }
-
-   hb_retni( ( int ) SendMessage( hWndPG, PBM_GETPOS, ( WPARAM ) 0, ( LPARAM ) 0 ) );
+   else
+      hb_retni( ( int ) SendMessage( hWndPG, PBM_GETPOS, ( WPARAM ) 0, ( LPARAM ) 0 ) );
 }
 
 /* PROGRESSBAR ends */

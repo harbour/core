@@ -546,67 +546,67 @@ typedef struct win_data
 
 typedef struct wvw_data
 {
-   UINT s_uiPaintRefresh;        /* milliseconds between timer check */
+   UINT uiPaintRefresh;        /* milliseconds between timer check */
 
-   BOOL s_bMainCoordMode;        /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
+   BOOL bMainCoordMode;        /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
 
-   BOOL s_bVertCaret;            /* if TRUE, caret is in Vertical style */
+   BOOL bVertCaret;            /* if TRUE, caret is in Vertical style */
 
-   BOOL s_bNOSTARTUPSUBWINDOW;   /* if TRUE, subwindow will not be displayed during opening */
+   BOOL bNOSTARTUPSUBWINDOW;   /* if TRUE, subwindow will not be displayed during opening */
    /* use wvw_NoStartupSubWindow() to check/set it */
 
-   BOOL s_bDefCentreWindow;   /* default CentreWindow setting for subwindows */
+   BOOL bDefCentreWindow;   /* default CentreWindow setting for subwindows */
 
-   BOOL s_bDefHCentreWindow;  /* default HCentreWindow setting for subwindows */
-   BOOL s_bDefVCentreWindow;  /* default VCentreWindow setting for subwindows */
+   BOOL bDefHCentreWindow;  /* default HCentreWindow setting for subwindows */
+   BOOL bDefVCentreWindow;  /* default VCentreWindow setting for subwindows */
 
-   int s_byDefLineSpacing;    /* default line spacing */
+   int byDefLineSpacing;    /* default line spacing */
 
-   int s_iDefLSpaceColor;     /* if >= 0 this will be the color index                                          for spacing between lines */
+   int iDefLSpaceColor;     /* if >= 0 this will be the color index                                          for spacing between lines */
 
-   BOOL s_bAllowNonTop;       /* allow non-topmost window's control to  accept input */
+   BOOL bAllowNonTop;       /* allow non-topmost window's control to  accept input */
 
-   BOOL s_bRecurseCBlock;     /* allow control's codeblock to recurse */
+   BOOL bRecurseCBlock;     /* allow control's codeblock to recurse */
 
-   LOGFONT s_lfPB;            /* default font for pushbuttons */
+   LOGFONT lfPB;            /* default font for pushbuttons */
 
-   LOGFONT s_lfSB;            /* default font for statusbar */
-   LOGFONT s_lfCB;            /* default font for comboboxes */
+   LOGFONT lfSB;            /* default font for statusbar */
+   LOGFONT lfCB;            /* default font for comboboxes */
 
-   LOGFONT s_lfEB;            /* default font for editboxes */
+   LOGFONT lfEB;            /* default font for editboxes */
 
-   LOGFONT s_lfCX;            /* font for 'focused'checkbox */
-   LOGFONT s_lfST;            /* font for  control */
+   LOGFONT lfCX;            /* font for 'focused'checkbox */
+   LOGFONT lfST;            /* font for  control */
 
    HWND hWndTT;               /* Window handle Tool Tip */
 
 /* read only by user ***/
 
 /* for GTWVW private use: */
-   BOOL s_bQuickSetMode;   /* quick SetMode(), to reset MaxRow() and MaxCol() only */
+   BOOL bQuickSetMode;   /* quick SetMode(), to reset MaxRow() and MaxCol() only */
 
-   BOOL s_bFlashingWindow;
+   HB_BOOL bFlashingWindow;
    /* topmost window is flashing
                                             due to invalid input on other
                                             window */
 
-   int s_iScrolling;             /* scrollbar is scrolling */
-   int s_iWrongButtonUp;         /* number of consecutive scrollbar's WM_LBUTTONUP encountered by gtProcessMessages */
-   int s_iMaxWrongButtonUp;
+   int iScrolling;             /* scrollbar is scrolling */
+   int iWrongButtonUp;         /* number of consecutive scrollbar's WM_LBUTTONUP encountered by gtProcessMessages */
+   int iMaxWrongButtonUp;
    /* max number of s_iWrongButtonUp. If it goes higher than this number,
                                              the scrollbar is forced to stop */
 
    TCHAR szAppName[ 13 ];
    TCHAR szSubWinName[ 25 ];
-   BOOL  s_bSWRegistered;
+   BOOL  bSWRegistered;
 
    HINSTANCE hInstance;
 
-   UINT s_usNumWindows;                      /* number of windows */
-   UINT s_usCurWindow;                       /* current window handled by HB_GT_FUNC(...) */
+   UINT usNumWindows;                      /* number of windows */
+   UINT usCurWindow;                       /* current window handled by HB_GT_FUNC(...) */
 
-   WIN_DATA * s_pWindows[ WVW_MAXWINDOWS ];  /* array of WIN_DATA */
-   APP_DATA * s_sApp;                        /* application wide vars */
+   WIN_DATA * pWindows[ WVW_MAXWINDOWS ];  /* array of WIN_DATA */
+   APP_DATA * sApp;                        /* application wide vars */
 
 } WVW_DATA;
 

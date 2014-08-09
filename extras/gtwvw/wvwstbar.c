@@ -94,7 +94,7 @@ HB_FUNC( WVW_SBCREATE )
    {
       RECT rSB = { 0 };
       if( pWindowData->hSBfont == NULL )
-         pWindowData->hSBfont = CreateFontIndirect( &pData->s_lfSB );
+         pWindowData->hSBfont = CreateFontIndirect( &pData->lfSB );
       if( GetClientRect( hWndSB, &rSB ) )
          pWindowData->usSBHeight = ( USHORT ) rSB.bottom;
       pWindowData->hStatusBar = hWndSB;
@@ -325,25 +325,25 @@ HB_FUNC( WVW_SBSETFONT )
 
    HB_BOOL retval = HB_TRUE;
 
-   pData->s_lfSB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
-   pData->s_lfSB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->s_lfSB.lfWidth;
-   pData->s_lfSB.lfEscapement  = 0;
-   pData->s_lfSB.lfOrientation = 0;
-   pData->s_lfSB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : pData->s_lfSB.lfWeight;
-   pData->s_lfSB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->s_lfSB.lfItalic;
-   pData->s_lfSB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->s_lfSB.lfUnderline;
-   pData->s_lfSB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->s_lfSB.lfStrikeOut;
-   pData->s_lfSB.lfCharSet     = DEFAULT_CHARSET;
+   pData->lfSB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
+   pData->lfSB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->lfSB.lfWidth;
+   pData->lfSB.lfEscapement  = 0;
+   pData->lfSB.lfOrientation = 0;
+   pData->lfSB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : pData->lfSB.lfWeight;
+   pData->lfSB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->lfSB.lfItalic;
+   pData->lfSB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->lfSB.lfUnderline;
+   pData->lfSB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->lfSB.lfStrikeOut;
+   pData->lfSB.lfCharSet     = DEFAULT_CHARSET;
 
-   pData->s_lfSB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->s_lfSB.lfQuality;
-   pData->s_lfSB.lfPitchAndFamily = FF_DONTCARE;
+   pData->lfSB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->lfSB.lfQuality;
+   pData->lfSB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( pData->s_lfSB.lfFaceName, hb_parc( 2 ), sizeof( pData->s_lfSB.lfFaceName ) - 1 );
+      hb_strncpy( pData->lfSB.lfFaceName, hb_parc( 2 ), sizeof( pData->lfSB.lfFaceName ) - 1 );
 
    if( pWindowData->hSBfont )
    {
       HFONT hOldFont = pWindowData->hSBfont;
-      HFONT hFont    = CreateFontIndirect( &pData->s_lfSB );
+      HFONT hFont    = CreateFontIndirect( &pData->lfSB );
       if( hFont )
       {
          pWindowData->hSBfont = hFont;
@@ -660,12 +660,9 @@ HB_FUNC( WVW_XBENABLE )
    HWND hWndXB = uiXBid == 0 ? NULL : hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, uiXBid, &bStyle );
 
    if( uiXBid == 0 || hWndXB == NULL || uiFlags > ESB_DISABLE_BOTH )
-   {
       hb_retl( HB_FALSE );
-      return;
-   }
-
-   hb_retl( EnableScrollBar( hWndXB, SB_CTL, uiFlags ) );
+   else
+      hb_retl( EnableScrollBar( hWndXB, SB_CTL, uiFlags ) );
 }
 
 /* wvw_xbShow( [nWinNum], nXBid, lShow )
@@ -683,13 +680,10 @@ HB_FUNC( WVW_XBSHOW )
    HWND hWndXB = uiXBid == 0 ? NULL : hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, uiXBid, &bStyle );
 
    if( uiXBid == 0 || hWndXB == NULL )
-   {
       hb_retl( HB_FALSE );
-      return;
-   }
-
-   hb_retl( ShowScrollBar( hWndXB, SB_CTL, bShow ) );
+   else
+      hb_retl( ShowScrollBar( hWndXB, SB_CTL, bShow ) );
 }
 
 
-/* SCROLLBAR ends                                                    */
+/* SCROLLBAR ends */

@@ -292,12 +292,9 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
    HWND       hWndTB = pWindowData->hToolBar;
 
    if( hWndTB == NULL )
-   {
       hb_retni( 0 );
-      return;
-   }
-
-   hb_retni( ( int ) SendMessage( hWndTB, TB_BUTTONCOUNT, ( WPARAM ) 0, ( LPARAM ) 0 ) );
+   else
+      hb_retni( ( int ) SendMessage( hWndTB, TB_BUTTONCOUNT, ( WPARAM ) 0, ( LPARAM ) 0 ) );
 }
 
 /* wvw_tbDelButton( [nWinNum], nButton )
@@ -507,7 +504,7 @@ HB_FUNC( WVW_SETTOOLTIP )
    if( ! pWindowData->bToolTipActive )
       return;
 
-   if( hb_gt_wvw_GetWvwData()->s_bMainCoordMode )
+   if( hb_gt_wvw_GetWvwData()->bMainCoordMode )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
    ti.cbSize = sizeof( TOOLINFO );
