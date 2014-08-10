@@ -2557,10 +2557,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             if( bTopMost || s_pWvwData->bAllowNonTop )
             {
                HWND hWndCtrl = ( HWND ) lParam;
-               UINT uiPBid;
-               byte bStyle;
+               UINT uiPBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_PUSHBUTTON, hWndCtrl, NULL );
 
-               uiPBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_PUSHBUTTON, hWndCtrl, &bStyle );
                if( uiPBid == 0 )
                {
                   hb_gt_wvwHandleMenuSelection( ( int ) LOWORD( wParam ) );
@@ -2600,10 +2598,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                   if( iEvent == CBN_KILLFOCUS || bTopMost || s_pWvwData->bAllowNonTop )
                   {
                      HWND hWndCtrl = ( HWND ) lParam;
-                     UINT uiCBid;
-                     byte bStyle;
+                     UINT uiCBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_COMBOBOX, hWndCtrl, NULL );
 
-                     uiCBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_COMBOBOX, hWndCtrl, &bStyle );
                      if( uiCBid == 0 )
                      {
                         hb_gt_wvwHandleMenuSelection( ( int ) LOWORD( wParam ) );
@@ -2650,10 +2646,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                   if( iEvent == EN_KILLFOCUS || bTopMost || s_pWvwData->bAllowNonTop )
                   {
                      HWND hWndCtrl = ( HWND ) lParam;
-                     UINT uiEBid;
-                     byte bStyle;
+                     UINT uiEBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_EDITBOX, hWndCtrl, NULL );
 
-                     uiEBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_EDITBOX, hWndCtrl, &bStyle );
                      if( uiEBid == 0 )
                      {
                         hb_gt_wvwHandleMenuSelection( ( int ) LOWORD( wParam ) );
@@ -3421,7 +3415,6 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
       {
          HWND hWndCtrl = ( HWND ) lParam;
          UINT uiXBid;
-         byte bStyle;
          BOOL bTopMost = ( s_pWvwData->usNumWindows == usWinNum + 1 );
 
          /* reject if not accepting input (topmost window not on focus) */
@@ -3434,7 +3427,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
          /* --- */
 
-         uiXBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_SCROLLBAR, hWndCtrl, &bStyle );
+         uiXBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_SCROLLBAR, hWndCtrl, NULL );
          if( uiXBid == 0 )
             return 0;
 
@@ -8880,7 +8873,8 @@ HWND hb_gt_wvw_FindControlHandle( UINT usWinNum, BYTE byCtrlClass, UINT uiCtrlid
    {
       if( byCtrlClass == pcd->byCtrlClass && uiCtrlid == pcd->uiCtrlid )
       {
-         *pbStyle = pcd->bStyle;
+         if( pbStyle )
+            *pbStyle = pcd->bStyle;
          return pcd->hWndCtrl;
       }
       pcd = pcd->pNext;
@@ -8897,7 +8891,8 @@ UINT hb_gt_wvw_FindControlId( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, by
    {
       if( byCtrlClass == pcd->byCtrlClass && hWndCtrl == pcd->hWndCtrl )
       {
-         *pbStyle = pcd->bStyle;
+         if( pbStyle )
+            *pbStyle = pcd->bStyle;
          return pcd->uiCtrlid;
       }
       pcd = pcd->pNext;
@@ -9227,7 +9222,6 @@ LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    UINT usWinNum;
 
    UINT uiXBid;
-   /* byte bStyle; */
    WNDPROC OldProc;
 
    if( message == WM_MOUSEACTIVATE )

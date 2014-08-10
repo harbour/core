@@ -160,8 +160,7 @@ HB_FUNC( WVW_PBDESTROY )
  */
 HB_FUNC( WVW_PBSETFOCUS )
 {
-   byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPB )
       hb_retl( SetFocus( hWndPB ) != NULL );
@@ -174,8 +173,7 @@ HB_FUNC( WVW_PBSETFOCUS )
  */
 HB_FUNC( WVW_PBISFOCUSED )
 {
-   byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    hb_retl( GetFocus() == hWndPB );
 }
@@ -190,8 +188,7 @@ HB_FUNC( WVW_PBENABLE )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   byte       bStyle;
-   HWND       hWndPB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND       hWndPB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPB )
    {

@@ -407,8 +407,7 @@ HB_FUNC( WVW_RBCREATE )
 
 HB_FUNC( WVW_SETCONTROLTEXT )
 {
-   byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPB )
    {
@@ -421,8 +420,7 @@ HB_FUNC( WVW_SETCONTROLTEXT )
 
 HB_FUNC( WVW_PBVISIBLE )
 {
-   byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPB )
       hb_retl( ShowWindow( hWndPB, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
@@ -432,8 +430,7 @@ HB_FUNC( WVW_PBVISIBLE )
 
 HB_FUNC( WVW_CBVISIBLE )
 {
-   byte bStyle;
-   HWND hWndCB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndCB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndCB )
       hb_retl( ShowWindow( hWndCB, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
@@ -443,8 +440,7 @@ HB_FUNC( WVW_CBVISIBLE )
 
 HB_FUNC( WVW_CXVISIBLE )
 {
-   byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPB )
       hb_retl( ShowWindow( hWndPB, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
@@ -462,8 +458,7 @@ HB_FUNC( WVW_CXVISIBLE )
  */
 HB_FUNC( WVW_XBVISIBLE )
 {
-   byte bStyle;
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndXB )
       hb_retl( ShowScrollBar( hWndXB, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );

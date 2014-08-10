@@ -281,8 +281,7 @@ HB_FUNC( WVW_CBDESTROY )
  */
 HB_FUNC( WVW_CBSETFOCUS )
 {
-   byte bStyle;
-   HWND hWndCB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndCB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndCB )
       hb_retl( SetFocus( hWndCB ) != NULL );
@@ -295,8 +294,7 @@ HB_FUNC( WVW_CBSETFOCUS )
  */
 HB_FUNC( WVW_CBISFOCUSED )
 {
-   byte bStyle;
-   HWND hWndCB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndCB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    hb_retl( GetFocus() == hWndCB );
 }
@@ -310,8 +308,7 @@ HB_FUNC( WVW_CBISFOCUSED )
 HB_FUNC( WVW_CBENABLE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
-   byte bStyle;
-   HWND hWndCB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndCB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndCB )
    {

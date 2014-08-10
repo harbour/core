@@ -569,8 +569,7 @@ HB_FUNC( WVW_XBDESTROY )
  */
 HB_FUNC( WVW_XBUPDATE )
 {
-   byte bStyle;
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
    int  iPage  = hb_parni( 4 );
 
    if( hWndXB && iPage >= 0 )
@@ -584,6 +583,8 @@ HB_FUNC( WVW_XBUPDATE )
          fMask |= SIF_PAGE;
       if( HB_ISNUM( 5 ) || HB_ISNUM( 6 ) )
          fMask |= SIF_RANGE;
+
+      memset( &si, 0, sizeof( si ) );
 
       si.cbSize = sizeof( si );
       si.fMask  = fMask;
@@ -604,12 +605,13 @@ HB_FUNC( WVW_XBUPDATE )
  */
 HB_FUNC( WVW_XBINFO )
 {
-   byte bStyle;
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndXB )
    {
       SCROLLINFO si;
+
+      memset( &si, 0, sizeof( si ) );
 
       si.cbSize = sizeof( si );
       si.fMask  = SIF_ALL;
@@ -644,8 +646,7 @@ HB_FUNC( WVW_XBINFO )
 HB_FUNC( WVW_XBENABLE )
 {
    UINT uiFlags = ( UINT ) hb_parni( 3 );
-   byte bStyle;
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndXB && uiFlags <= ESB_DISABLE_BOTH )
       hb_retl( EnableScrollBar( hWndXB, SB_CTL, uiFlags ) );
@@ -662,8 +663,7 @@ HB_FUNC( WVW_XBENABLE )
  */
 HB_FUNC( WVW_XBSHOW )
 {
-   byte bStyle;
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndXB )
       hb_retl( ShowScrollBar( hWndXB, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );

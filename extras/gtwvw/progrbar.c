@@ -224,8 +224,7 @@ HB_FUNC( WVW_PGDESTROY )
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
-   byte bStyle;
-   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), NULL );
    int  iMin   = hb_parni( 3 );
    int  iMax   = hb_parni( 4 );
 
@@ -247,8 +246,7 @@ HB_FUNC( WVW_PGSETRANGE )
  */
 HB_FUNC( WVW_PGSETPOS )
 {
-   byte    bStyle;
-   HWND    hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPG )
    {
@@ -276,8 +274,7 @@ HB_FUNC( WVW_PGSETPOS )
  */
 HB_FUNC( WVW_PGGETPOS )
 {
-   byte bStyle;
-   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndPG = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPG )
       hb_retni( ( int ) SendMessage( hWndPG, PBM_GETPOS, 0, 0 ) );

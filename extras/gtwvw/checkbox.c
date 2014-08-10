@@ -154,8 +154,7 @@ HB_FUNC( WVW_CXDESTROY )
  */
 HB_FUNC( WVW_CXSETFOCUS )
 {
-   byte bStyle;
-   HWND hWndCX = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndCX = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndCX )
       hb_retl( SetFocus( hWndCX ) != NULL );
@@ -171,10 +170,8 @@ HB_FUNC( WVW_CXSETFOCUS )
  */
 HB_FUNC( WVW_CXENABLE )
 {
-   byte       bStyle;
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndCX      = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   UINT usWinNum = WVW_WHICH_WINDOW;
+   HWND hWndCX = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndCX )
    {
@@ -183,7 +180,10 @@ HB_FUNC( WVW_CXENABLE )
       hb_retl( EnableWindow( hWndCX, bEnable ) == 0 );
 
       if( ! bEnable )
+      {
+         WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
          SetFocus( pWindowData->hWnd );
+      }
    }
    else
       hb_retl( HB_FALSE );
@@ -201,24 +201,23 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL           bOldSetting  = pData->bRecurseCBlock;
 
-   if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
+   if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
-      hb_retl( HB_FALSE );
-      return;
+      pData->bRecurseCBlock = FALSE;
+      pcd->bBusy = TRUE;
+
+      if( pcd->phiCodeBlock )
+         hb_itemRelease( pcd->phiCodeBlock );
+
+      pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
+
+      pcd->bBusy = FALSE;
+      pData->bRecurseCBlock = bOldSetting;
+
+      hb_retl( HB_TRUE );
    }
-
-   pData->bRecurseCBlock = FALSE;
-   pcd->bBusy = TRUE;
-
-   if( pcd->phiCodeBlock )
-      hb_itemRelease( pcd->phiCodeBlock );
-
-   pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
-
-   pcd->bBusy = FALSE;
-   pData->bRecurseCBlock = bOldSetting;
-
-   hb_retl( HB_TRUE );
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* wvw_cxSetCheck( [nWinNum], nCXid, nCheckState )

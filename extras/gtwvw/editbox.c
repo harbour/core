@@ -266,8 +266,7 @@ HB_FUNC( WVW_EBDESTROY )
  */
 HB_FUNC( WVW_EBSETFOCUS )
 {
-   byte bStyle;
-   HWND hWndEB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndEB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndEB )
       hb_retl( SetFocus( hWndEB ) != NULL );
@@ -280,8 +279,7 @@ HB_FUNC( WVW_EBSETFOCUS )
  */
 HB_FUNC( WVW_EBISFOCUSED )
 {
-   byte bStyle;
-   HWND hWndEB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndEB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    hb_retl( GetFocus() == hWndEB );
 }
@@ -295,8 +293,7 @@ HB_FUNC( WVW_EBISFOCUSED )
 HB_FUNC( WVW_EBENABLE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
-   byte bStyle;
-   HWND hWndEB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndEB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndEB )
    {
@@ -322,8 +319,7 @@ HB_FUNC( WVW_EBENABLE )
  */
 HB_FUNC( WVW_EBEDITABLE )
 {
-   byte bStyle;
-   HWND hWndEB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
+   HWND hWndEB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndEB )
    {
