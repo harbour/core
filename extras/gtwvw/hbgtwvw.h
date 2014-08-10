@@ -499,6 +499,10 @@ typedef struct wvw_data
    TCHAR   szSubWinName[ 25 ];
    HB_BOOL bSWRegistered;
 
+   int iCursorStyle;
+
+   HB_FHANDLE iStdIn, iStdOut, iStdErr;
+
    HINSTANCE hInstance;
 
    UINT usNumWindows;                      /* number of windows */

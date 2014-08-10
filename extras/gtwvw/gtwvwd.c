@@ -250,21 +250,9 @@ static int        s_GetControlClass( UINT usWinNum, HWND hWndCtrl );
 static void       s_RunControlBlock( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT message, WPARAM wParam, LPARAM lParam, int iEventType );
 static void       s_ReposControls( UINT usWinNum, BYTE byCtrlClass );
 
-
-/* mouse initialization was made in cmdarg.c */
-
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
-
-/* set in mainwin.c */
-
-extern int hb_iCmdShow;
-
-static int s_iCursorStyle;
-static int s_iOldCurStyle;
-
-static HB_FHANDLE s_iStdIn, s_iStdOut, s_iStdErr;
 
 static int s_GtId;
 static HB_GT_FUNCS SuperTable;
@@ -346,10 +334,9 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Init()" ) );
 
-   /* stdin && stdout && stderr */
-   s_iStdIn  = hFilenoStdin;
-   s_iStdOut = hFilenoStdout;
-   s_iStdErr = hFilenoStderr;
+   s_pWvwData->iStdIn  = hFilenoStdin;
+   s_pWvwData->iStdOut = hFilenoStdout;
+   s_pWvwData->iStdErr = hFilenoStderr;
 
    if( ! hb_winmainArgGet( &hInstance, &hPrevInstance, &iCmdShow ) )
    {
@@ -357,7 +344,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       iCmdShow  = 1;
    }
 
-   s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
+   s_pWvwData->iCursorStyle = SC_NORMAL;
 
    s_pWvwData->usNumWindows = 0;
    for( i = 0; i < WVW_MAXWINDOWS; i++ )
@@ -634,7 +621,7 @@ static int hb_gt_wvw_GetCursorStyle( PHB_GT pGT  )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   return s_iCursorStyle;
+   return s_pWvwData->iCursorStyle;
 }
 
 
@@ -655,7 +642,7 @@ static void hb_gt_wvw_SetCursorStyle( PHB_GT pGT, int iStyle )
    pWindowData = ( WVW_WIN * ) s_pWvwData->pWindows[ s_pWvwData->usNumWindows - 1 ];
    usFullSize  = ( USHORT ) ( s_pWvwData->bVertCaret ? pWindowData->PTEXTSIZE.x : pWindowData->PTEXTSIZE.y );
 
-   s_iCursorStyle = iStyle;
+   s_pWvwData->iCursorStyle = iStyle;
 
    switch( iStyle )
    {
@@ -942,7 +929,7 @@ static void hb_gt_wvw_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   hb_fsWriteLarge( s_iStdOut, pbyStr, ulLen );
+   hb_fsWriteLarge( s_pWvwData->iStdOut, pbyStr, ulLen );
 }
 
 
@@ -950,29 +937,15 @@ static void hb_gt_wvw_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   hb_fsWriteLarge( s_iStdErr, pbyStr, ulLen );
+   hb_fsWriteLarge( s_pWvwData->iStdErr, pbyStr, ulLen );
 }
 
 
 static HB_BOOL hb_gt_wvw_GetCharFromInputQueue( int * c )
 {
-   UINT       uiWindow = s_pWvwData->usNumWindows - 1;
+   UINT      uiWindow = s_pWvwData->usNumWindows - 1;
    WVW_WIN * pWindow  = s_pWvwData->pWindows[ uiWindow ];
 
-#if 0
-   int iNextPos;
-
-   *c = 0;
-
-   iNextPos = ( s_pWvwData->pWindows[ s_pWvwData->usNumWindows-1 ]->keyPointerOut >= WVW_CHAR_QUEUE_SIZE - 1 ) ? 0 : s_pWvwData->pWindows[ s_pWvwData->usNumWindows - 1 ]->keyPointerOut + 1;
-   if( iNextPos != s_pWvwData->pWindows[ s_pWvwData->usNumWindows-1 ]->keyPointerIn )
-   {
-      *c = s_pWvwData->pWindows[ s_pWvwData->usNumWindows-1 ]->Keys[ iNextPos ];
-      s_pWvwData->pWindows[ s_pWvwData->usNumWindows-1 ]->keyPointerOut = iNextPos;
-      return HB_TRUE;
-   }
-   return HB_FALSE;
-#endif
    if( pWindow->keyPointerOut != pWindow->keyPointerIn )
    {
       *c = pWindow->Keys[ pWindow->keyPointerOut ];
