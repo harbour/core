@@ -93,20 +93,22 @@
 
 HB_FUNC( WVW_EBCREATE )
 {
-   HANDLE    hInstance   = NULL;
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND      hWndParent  = pWindowData->hWnd;
-   HWND      hWndEB;
-   POINT     xy;
-   int       iTop, iLeft, iBottom, iRight;
-   int       iOffTop, iOffLeft, iOffBottom, iOffRight;
-   UINT      uiEBid;
-   USHORT    usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
-   LPTSTR lpszText    = ( LPTSTR ) hb_parcx( 6 );
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum    = WVW_WHICH_WINDOW;
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+
+   HANDLE hInstance  = NULL;
+   HWND   hWndParent = pWindowData->hWnd;
+   HWND   hWndEB;
+   POINT  xy;
+   int    iTop, iLeft, iBottom, iRight;
+   int    iOffTop, iOffLeft, iOffBottom, iOffRight;
+   UINT   uiEBid;
+   USHORT usTop    = ( USHORT ) hb_parni( 2 ),
+          usLeft   = ( USHORT ) hb_parni( 3 ),
+          usBottom = ( USHORT ) hb_parni( 4 ),
+          usRight  = ( USHORT ) hb_parni( 5 );
+   LPTSTR lpszText = ( LPTSTR ) hb_parcx( 6 );
 
    HB_BOOL bMultiline = hb_parl( 8 );
    BYTE    bEBType    = ( BYTE ) ( bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE );
@@ -115,12 +117,11 @@ HB_FUNC( WVW_EBCREATE )
 
    USHORT usMaxChar = ( USHORT ) ( hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0 );
 
-   DWORD      dwStyle;
-   WVW_GLOB * pData = hb_gt_wvw_GetWvwData();
+   DWORD dwStyle;
 
    if( pWindowData->hEBfont == NULL )
    {
-      pWindowData->hEBfont = CreateFontIndirect( &pData->lfEB );
+      pWindowData->hEBfont = CreateFontIndirect( &wvw->lfEB );
       if( pWindowData->hEBfont == NULL )
       {
          hb_retnl( 0 );
@@ -344,10 +345,10 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
-      WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
-      HB_BOOL    bOldSetting = pData->bRecurseCBlock;
+      WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
+      HB_BOOL    bOldSetting = wvw->bRecurseCBlock;
 
-      pData->bRecurseCBlock = HB_FALSE;
+      wvw->bRecurseCBlock = HB_FALSE;
       pcd->bBusy = HB_TRUE;
 
       if( pcd->phiCodeBlock )
@@ -356,7 +357,7 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
       pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
       pcd->bBusy = HB_FALSE;
-      pData->bRecurseCBlock = bOldSetting;
+      wvw->bRecurseCBlock = bOldSetting;
 
       hb_retl( HB_TRUE );
    }
@@ -374,29 +375,30 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
  */
 HB_FUNC( WVW_EBSETFONT )
 {
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
    WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HB_BOOL    retval      = HB_TRUE;
-   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
 
-   pData->lfEB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
-   pData->lfEB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->lfEB.lfWidth;
-   pData->lfEB.lfEscapement  = 0;
-   pData->lfEB.lfOrientation = 0;
-   pData->lfEB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : pData->lfEB.lfWeight;
-   pData->lfEB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->lfEB.lfItalic;
-   pData->lfEB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->lfEB.lfUnderline;
-   pData->lfEB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->lfEB.lfStrikeOut;
-   pData->lfEB.lfCharSet     = DEFAULT_CHARSET;
+   HB_BOOL retval = HB_TRUE;
 
-   pData->lfEB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->lfEB.lfQuality;
-   pData->lfEB.lfPitchAndFamily = FF_DONTCARE;
+   wvw->lfEB.lfHeight      = hb_parnldef( 3, pWindowData->fontHeight - 2 );
+   wvw->lfEB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfEB.lfWidth;
+   wvw->lfEB.lfEscapement  = 0;
+   wvw->lfEB.lfOrientation = 0;
+   wvw->lfEB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : wvw->lfEB.lfWeight;
+   wvw->lfEB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : wvw->lfEB.lfItalic;
+   wvw->lfEB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : wvw->lfEB.lfUnderline;
+   wvw->lfEB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : wvw->lfEB.lfStrikeOut;
+   wvw->lfEB.lfCharSet     = DEFAULT_CHARSET;
+
+   wvw->lfEB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : wvw->lfEB.lfQuality;
+   wvw->lfEB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( pData->lfEB.lfFaceName, hb_parc( 2 ), sizeof( pData->lfPB.lfFaceName ) - 1 );
+      hb_strncpy( wvw->lfEB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hEBfont )
    {
       HFONT hOldFont = pWindowData->hEBfont;
-      HFONT hFont    = CreateFontIndirect( &pData->lfEB );
+      HFONT hFont    = CreateFontIndirect( &wvw->lfEB );
       if( hFont )
       {
          WVW_CTRL * pcd = pWindowData->pcdCtrlList;

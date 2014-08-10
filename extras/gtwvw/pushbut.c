@@ -210,15 +210,15 @@ HB_FUNC( WVW_PBENABLE )
  */
 HB_FUNC( WVW_PBSETCODEBLOCK )
 {
-   WVW_GLOB * pData        = hb_gt_wvw_GetWvwData();
-   WVW_CTRL * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
    PHB_ITEM   phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
-      HB_BOOL bOldSetting = pData->bRecurseCBlock;
+      HB_BOOL bOldSetting = wvw->bRecurseCBlock;
 
-      pData->bRecurseCBlock = HB_FALSE;
+      wvw->bRecurseCBlock = HB_FALSE;
       pcd->bBusy = HB_TRUE;
 
       if( pcd->phiCodeBlock )
@@ -227,7 +227,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
       pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
       pcd->bBusy = HB_FALSE;
-      pData->bRecurseCBlock = bOldSetting;
+      wvw->bRecurseCBlock = bOldSetting;
 
       hb_retl( HB_TRUE );
    }
@@ -235,13 +235,13 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    {
 #if 0
       if( ! HB_ISEVALITEM( 3 ) )
-         MessageBox( NULL, TEXT( "Codeblock expected" ), pData->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Codeblock expected" ), wvw->szAppName, MB_ICONERROR );
 
       if( pcd == NULL )
-         MessageBox( NULL, TEXT( "Control data not found" ), pData->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Control data not found" ), wvw->szAppName, MB_ICONERROR );
 
       if( pcd->bBusy )
-         MessageBox( NULL, TEXT( "Codeblock is busy" ), pData->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Codeblock is busy" ), wvw->szAppName, MB_ICONERROR );
 #endif
       hb_retl( HB_FALSE );
    }
@@ -278,29 +278,30 @@ HB_FUNC( WVW_PBSETSTYLE )
  */
 HB_FUNC( WVW_PBSETFONT )
 {
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
    WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
-   HB_BOOL    retval      = HB_TRUE;
 
-   pData->lfPB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
-   pData->lfPB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->lfPB.lfWidth;
-   pData->lfPB.lfEscapement  = 0;
-   pData->lfPB.lfOrientation = 0;
-   pData->lfPB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : pData->lfPB.lfWeight;
-   pData->lfPB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->lfPB.lfItalic;
-   pData->lfPB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->lfPB.lfUnderline;
-   pData->lfPB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->lfPB.lfStrikeOut;
-   pData->lfPB.lfCharSet     = DEFAULT_CHARSET;
+   HB_BOOL retval = HB_TRUE;
 
-   pData->lfPB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->lfPB.lfQuality;
-   pData->lfPB.lfPitchAndFamily = FF_DONTCARE;
+   wvw->lfPB.lfHeight      = hb_parnldef( 3, pWindowData->fontHeight - 2 );
+   wvw->lfPB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfPB.lfWidth;
+   wvw->lfPB.lfEscapement  = 0;
+   wvw->lfPB.lfOrientation = 0;
+   wvw->lfPB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : wvw->lfPB.lfWeight;
+   wvw->lfPB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : wvw->lfPB.lfItalic;
+   wvw->lfPB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : wvw->lfPB.lfUnderline;
+   wvw->lfPB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : wvw->lfPB.lfStrikeOut;
+   wvw->lfPB.lfCharSet     = DEFAULT_CHARSET;
+
+   wvw->lfPB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : wvw->lfPB.lfQuality;
+   wvw->lfPB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( pData->lfPB.lfFaceName, hb_parc( 2 ), sizeof( pData->lfPB.lfFaceName ) - 1 );
+      hb_strncpy( wvw->lfPB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hPBfont )
    {
       HFONT hOldFont = pWindowData->hPBfont;
-      HFONT hFont    = CreateFontIndirect( &pData->lfPB );
+      HFONT hFont    = CreateFontIndirect( &wvw->lfPB );
       if( hFont )
       {
          WVW_CTRL * pcd = pWindowData->pcdCtrlList;

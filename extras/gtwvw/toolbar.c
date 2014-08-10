@@ -84,9 +84,9 @@ HB_FUNC( WVW_TBCREATE )
 #endif
    DWORD dwStyle = ( DWORD ) hb_parnidef( 3, TBSTYLE_ALTDRAG | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | TBSTYLE_TRANSPARENT | TBSTYLE_WRAPABLE );
 
-   int iSystemBitmap = ( int ) hb_parnidef( 4, 1 );
-   int iImageWidth   = ( int ) ( iSystemBitmap == 0 && HB_ISNUM( 5 ) ? hb_parni( 5 ) : -1 );
-   int iImageHeight  = ( int ) ( iSystemBitmap == 0 && HB_ISNUM( 6 ) ? hb_parni( 6 ) : -1 );
+   int iSystemBitmap = hb_parnidef( 4, 1 );
+   int iImageWidth   = iSystemBitmap == 0 && HB_ISNUM( 5 ) ? hb_parni( 5 ) : -1;
+   int iImageHeight  = iSystemBitmap == 0 && HB_ISNUM( 6 ) ? hb_parni( 6 ) : -1;
 
    InitCommonControls();
 

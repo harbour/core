@@ -94,11 +94,12 @@
 
 HB_FUNC( WVW_CBCREATE )
 {
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndParent  = pWindowData->hWnd;
-   HWND       hWndCB;
-   WVW_GLOB * pData = hb_gt_wvw_GetWvwData();
+
+   HWND hWndParent = pWindowData->hWnd;
+   HWND hWndCB;
 /* LONG cnt; */
    LONG numofchars;
    LONG avgwidth;
@@ -126,7 +127,7 @@ HB_FUNC( WVW_CBCREATE )
 
    if( pWindowData->hCBfont == NULL )
    {
-      pWindowData->hCBfont = CreateFontIndirect( &pData->lfCB );
+      pWindowData->hCBfont = CreateFontIndirect( &wvw->lfCB );
       if( pWindowData->hCBfont == NULL )
       {
          hb_retnl( 0 );
@@ -174,7 +175,7 @@ HB_FUNC( WVW_CBCREATE )
       iBottom - iTop + 1,
       hWndParent,
       ( HMENU ) ( HB_PTRDIFF ) uiCBid,
-      hb_gt_wvw_GetWvwData()->hInstance,
+      wvw->hInstance,
       NULL );
 
    if( hWndCB )
@@ -338,10 +339,10 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
-      WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
-      HB_BOOL    bOldSetting = pData->bRecurseCBlock;
+      WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
+      HB_BOOL    bOldSetting = wvw->bRecurseCBlock;
 
-      pData->bRecurseCBlock = HB_FALSE;
+      wvw->bRecurseCBlock = HB_FALSE;
       pcd->bBusy = HB_TRUE;
 
       if( pcd->phiCodeBlock )
@@ -350,7 +351,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
       pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
       pcd->bBusy = HB_FALSE;
-      pData->bRecurseCBlock = bOldSetting;
+      wvw->bRecurseCBlock = bOldSetting;
 
       hb_retl( HB_TRUE );
    }
@@ -368,30 +369,30 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
  */
 HB_FUNC( WVW_CBSETFONT )
 {
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
    WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
 
    HB_BOOL retval = HB_TRUE;
 
-   pData->lfCB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
-   pData->lfCB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->lfCB.lfWidth;
-   pData->lfCB.lfEscapement  = 0;
-   pData->lfCB.lfOrientation = 0;
-   pData->lfCB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : pData->lfCB.lfWeight;
-   pData->lfCB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : pData->lfCB.lfItalic;
-   pData->lfCB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : pData->lfCB.lfUnderline;
-   pData->lfCB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : pData->lfCB.lfStrikeOut;
-   pData->lfCB.lfCharSet     = DEFAULT_CHARSET;
+   wvw->lfCB.lfHeight      = hb_parnldef( 3, pWindowData->fontHeight - 2 );
+   wvw->lfCB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfCB.lfWidth;
+   wvw->lfCB.lfEscapement  = 0;
+   wvw->lfCB.lfOrientation = 0;
+   wvw->lfCB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : wvw->lfCB.lfWeight;
+   wvw->lfCB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : wvw->lfCB.lfItalic;
+   wvw->lfCB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : wvw->lfCB.lfUnderline;
+   wvw->lfCB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : wvw->lfCB.lfStrikeOut;
+   wvw->lfCB.lfCharSet     = DEFAULT_CHARSET;
 
-   pData->lfCB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : pData->lfCB.lfQuality;
-   pData->lfCB.lfPitchAndFamily = FF_DONTCARE;
+   wvw->lfCB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : wvw->lfCB.lfQuality;
+   wvw->lfCB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( pData->lfCB.lfFaceName, hb_parc( 2 ), sizeof( pData->lfPB.lfFaceName ) - 1 );
+      hb_strncpy( wvw->lfCB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 
    if( pWindowData->hCBfont )
    {
       HFONT hOldFont = pWindowData->hCBfont;
-      HFONT hFont    = CreateFontIndirect( &pData->lfCB );
+      HFONT hFont    = CreateFontIndirect( &wvw->lfCB );
       if( hFont )
       {
          WVW_CTRL * pcd = pWindowData->pcdCtrlList;

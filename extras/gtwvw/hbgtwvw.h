@@ -250,20 +250,20 @@ typedef BOOL ( WINAPI * wvwGradientFill )(
    ULONG dwNumMesh,
    ULONG dwMode      );
 
-typedef struct wvw_bmp
+typedef struct _WVW_BMP
 {
    char    szFilename[ HB_PATH_MAX + 1 ];
    HBITMAP hBitmap;
    int     iWidth, iHeight;
-   struct wvw_bmp * pNext;
+   struct _WVW_BMP * pNext;
 } WVW_BMP;
 
-typedef struct wvw_ipic
+typedef struct _WVW_IPIC
 {
    char       szFilename[ HB_PATH_MAX + 1 ];
    IPicture * iPicture;
    int        iWidth, iHeight;
-   struct wvw_ipic * pNext;
+   struct _WVW_IPIC * pNext;
 } WVW_IPIC;
 
 #define WVW_CONTROL_SCROLLBAR    1
@@ -277,7 +277,7 @@ typedef struct wvw_ipic
 #define WVW_MAXCAPTIONLENGTH     80
 
 
-typedef struct wvw_ctrl
+typedef struct _WVW_CTRL
 {
    BYTE     byCtrlClass;
    HWND     hWndCtrl;
@@ -295,71 +295,8 @@ typedef struct wvw_ctrl
    /* PUSHBUTTON & CHECKBOX specifics: */
    WNDPROC OldProc;
 
-   struct wvw_ctrl * pNext;
+   struct _WVW_CTRL * pNext;
 } WVW_CTRL;
-
-typedef struct
-{
-   HB_BOOL CaretExist;                       /* HB_TRUE if a caret has been created */
-   HB_BOOL displayCaret;                     /* flag to indicate if caret is on */
-
-   HB_BOOL Win9X;                            /* Flag to say if running on Win9x */
-   HB_BOOL AltF4Close;                       /* Can use Alt+F4 to close application */
-
-   HPEN   penWhite;                          /* White pen to draw GDI elements */
-   HPEN   penBlack;                          /* Black pen to draw GDI elements */
-   HPEN   penWhiteDim;                       /* White dim pen to draw GDI elements */
-   HPEN   penDarkGray;                       /* Dark gray pen to draw GDI elements */
-   HPEN   penGray;                           /* Gray pen equivalent to Clipper White */
-   HPEN   penNull;                           /* Null pen */
-   HPEN   OriginalPen;                       /* Handle da Pen original do Device Context */
-   HPEN   currentPen;                        /* Handle to current pen settable at runtime */
-   HPEN   gridPen;                           /* Handle da Pen para Grid */
-   HBRUSH currentBrush;                      /* Handle to current brush settable by runtime */
-   HBRUSH diagonalBrush;                     /* Handle to diaoganl brush to draw scrollbars */
-   HBRUSH solidBrush;                        /* Handle to solid brush */
-   HBRUSH wvwWhiteBrush;                     /* Wvw specific White colored brush */
-   HBRUSH OriginalBrush;                     /* Handle da Brush original do Device Context */
-
-   IPicture * iPicture[ WVW_PICTURES_MAX ];  /* Array to hold the Picture Streams to avoid recurring loading and unloading */
-   HFONT      hUserFonts[ WVW_FONTS_MAX ];   /* User defined font handles */
-   HPEN       hUserPens[ WVW_PENS_MAX ];     /* User defined pens */
-
-   HINSTANCE       hMSImg32;                 /* Handle to the loaded library msimg32.dll */
-   wvwGradientFill pfnGF;                    /* Pointer to Address of the GradientFill function in MSImg32.dll */
-
-   HWND hDlgModeless[ WVW_DLGML_MAX ];       /* Handle to a modeless dialog */
-
-   PHB_ITEM pFunc[ WVW_DLGML_MAX ];          /* Function pointer for WndProc */
-   int      iType[ WVW_DLGML_MAX ];          /* Type of Function Pointers - Function 1, Block 2, Method 3 */
-
-   HWND     hDlgModal[ WVW_DLGMD_MAX ];      /* Handle to a modal dialog */
-   PHB_ITEM pFuncModal[ WVW_DLGMD_MAX ];     /* Function pointer for WndProc */
-   int      iTypeModal[ WVW_DLGMD_MAX ];     /* Type of Function Pointers - Function 1, Block 2, Method 3 */
-
-   WVW_BMP *  pbhBitmapList;
-   WVW_IPIC * pphPictureList;
-
-   WVW_BMP * pbhUserBitmap;            /* User bitmap (wvw_drawimage) */
-   UINT uiBMcache;                     /* number of bitmap cached */
-   UINT uiMaxBMcache;                  /* maximum number of bitmap cached */
-
-   PHB_DYNS pSymWVW_PAINT;             /* Stores pointer to WVW_PAINT function */
-   PHB_DYNS pSymWVW_SETFOCUS;          /* Stores pointer to WVW_SETFOCUS function */
-   PHB_DYNS pSymWVW_KILLFOCUS;         /* Stores pointer to WVW_KILLFOCUS function */
-   PHB_DYNS pSymWVW_MOUSE;             /* Stores pointer to WVW_MOUSE function */
-   PHB_DYNS pSymWVW_TBMOUSE;           /* Stores pointer to WVW_TBMOUSE function */
-   PHB_DYNS pSymWVW_MENUSELECT;        /* Stores pointer to WVW_MENUSELECT function*/
-
-   PHB_DYNS pSymWVW_SIZE;              /* Stores pointer to WVW_SIZE function */
-   PHB_DYNS pSymWVW_MOVE;              /* Stores pointer to WVW_MOVE function */
-
-   PHB_DYNS pSymWVW_INPUTFOCUS;        /* Stores pointer to WVW_INPUTFOCUS function */
-
-   PHB_DYNS pSymWVW_TIMER;             /* Stores pointer to WVW_TIMER function */
-   PHB_DYNS pSymWVW_ONCTLCOLOR;        /* Stores pointer to WVW_TIMER function */
-
-} WVW_APP;
 
 typedef struct
 {
@@ -458,7 +395,7 @@ typedef struct
 
 } WVW_WIN;
 
-typedef struct wvw_data
+typedef struct
 {
    UINT    uiPaintRefresh;       /* milliseconds between timer check */
    HB_BOOL bMainCoordMode;       /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
@@ -509,7 +446,70 @@ typedef struct wvw_data
    UINT usCurWindow;                       /* current window handled by HB_GT_FUNC(...) */
 
    WVW_WIN * pWindows[ WVW_MAXWINDOWS ];  /* array of WVW_WIN */
-   WVW_APP * sApp;                        /* application wide vars */
+
+   /* --- WVW_APP --- */
+
+   struct
+   {
+      HB_BOOL CaretExist;                       /* HB_TRUE if a caret has been created */
+      HB_BOOL displayCaret;                     /* flag to indicate if caret is on */
+
+      HB_BOOL Win9X;                            /* Flag to say if running on Win9x */
+      HB_BOOL AltF4Close;                       /* Can use Alt+F4 to close application */
+
+      HPEN   penWhite;                          /* White pen to draw GDI elements */
+      HPEN   penBlack;                          /* Black pen to draw GDI elements */
+      HPEN   penWhiteDim;                       /* White dim pen to draw GDI elements */
+      HPEN   penDarkGray;                       /* Dark gray pen to draw GDI elements */
+      HPEN   penGray;                           /* Gray pen equivalent to Clipper White */
+      HPEN   penNull;                           /* Null pen */
+      HPEN   OriginalPen;                       /* Handle da Pen original do Device Context */
+      HPEN   currentPen;                        /* Handle to current pen settable at runtime */
+      HPEN   gridPen;                           /* Handle da Pen para Grid */
+      HBRUSH currentBrush;                      /* Handle to current brush settable by runtime */
+      HBRUSH diagonalBrush;                     /* Handle to diaoganl brush to draw scrollbars */
+      HBRUSH solidBrush;                        /* Handle to solid brush */
+      HBRUSH wvwWhiteBrush;                     /* Wvw specific White colored brush */
+      HBRUSH OriginalBrush;                     /* Handle da Brush original do Device Context */
+
+      IPicture * iPicture[ WVW_PICTURES_MAX ];  /* Array to hold the Picture Streams to avoid recurring loading and unloading */
+      HFONT      hUserFonts[ WVW_FONTS_MAX ];   /* User defined font handles */
+      HPEN       hUserPens[ WVW_PENS_MAX ];     /* User defined pens */
+
+      HINSTANCE       hMSImg32;                 /* Handle to the loaded library msimg32.dll */
+      wvwGradientFill pfnGF;                    /* Pointer to Address of the GradientFill function in MSImg32.dll */
+
+      HWND hDlgModeless[ WVW_DLGML_MAX ];       /* Handle to a modeless dialog */
+
+      PHB_ITEM pFunc[ WVW_DLGML_MAX ];          /* Function pointer for WndProc */
+      int      iType[ WVW_DLGML_MAX ];          /* Type of Function Pointers - Function 1, Block 2, Method 3 */
+
+      HWND     hDlgModal[ WVW_DLGMD_MAX ];      /* Handle to a modal dialog */
+      PHB_ITEM pFuncModal[ WVW_DLGMD_MAX ];     /* Function pointer for WndProc */
+      int      iTypeModal[ WVW_DLGMD_MAX ];     /* Type of Function Pointers - Function 1, Block 2, Method 3 */
+
+      WVW_BMP *  pbhBitmapList;
+      WVW_IPIC * pphPictureList;
+
+      WVW_BMP * pbhUserBitmap;            /* User bitmap (wvw_drawimage) */
+      UINT uiBMcache;                     /* number of bitmap cached */
+      UINT uiMaxBMcache;                  /* maximum number of bitmap cached */
+
+      PHB_DYNS pSymWVW_PAINT;             /* Stores pointer to WVW_PAINT function */
+      PHB_DYNS pSymWVW_SETFOCUS;          /* Stores pointer to WVW_SETFOCUS function */
+      PHB_DYNS pSymWVW_KILLFOCUS;         /* Stores pointer to WVW_KILLFOCUS function */
+      PHB_DYNS pSymWVW_MOUSE;             /* Stores pointer to WVW_MOUSE function */
+      PHB_DYNS pSymWVW_TBMOUSE;           /* Stores pointer to WVW_TBMOUSE function */
+      PHB_DYNS pSymWVW_MENUSELECT;        /* Stores pointer to WVW_MENUSELECT function*/
+
+      PHB_DYNS pSymWVW_SIZE;              /* Stores pointer to WVW_SIZE function */
+      PHB_DYNS pSymWVW_MOVE;              /* Stores pointer to WVW_MOVE function */
+
+      PHB_DYNS pSymWVW_INPUTFOCUS;        /* Stores pointer to WVW_INPUTFOCUS function */
+
+      PHB_DYNS pSymWVW_TIMER;             /* Stores pointer to WVW_TIMER function */
+      PHB_DYNS pSymWVW_ONCTLCOLOR;        /* Stores pointer to WVW_TIMER function */
+   } a;
 
 } WVW_GLOB;
 
@@ -531,7 +531,6 @@ HB_EXTERN_BEGIN
 extern HB_BOOL    hb_gt_wvw_GetMainCoordMode( void );
 extern UINT       hb_gt_wvw_GetNumWindows( void );
 extern UINT       hb_gt_wvw_GetCurWindow( void );
-extern WVW_APP * hb_gt_wvw_GetAppData( void );
 extern WVW_WIN * hb_gt_wvw_GetWindowsData( UINT iWin );
 extern WVW_GLOB * hb_gt_wvw_GetWvwData( void );
 extern char *     hb_gt_wvw_GetAppName( void );
@@ -548,7 +547,7 @@ extern void       hb_gt_wvw_HBFUNCPrologue( UINT usWinNum,
                                             USHORT * pusRow2, USHORT * pusCol2 );
 extern RECT       hb_gt_wvw_GetXYFromColRowRect( WVW_WIN * pWindowData, RECT colrow );
 extern POINT      hb_gt_wvw_GetXYFromColRow( WVW_WIN * pWindowData, USHORT col, USHORT row );
-extern DWORD      hb_gt_wvw_GetColorData( int iIndex );
+extern COLORREF   hb_gt_wvw_GetColorData( int iIndex );
 extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHeight );
 extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeight );
 extern void       hb_gt_wvw_TBinitSize( WVW_WIN * pWindowData, HWND hWndTB );

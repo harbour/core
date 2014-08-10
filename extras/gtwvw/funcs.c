@@ -469,14 +469,14 @@ HB_FUNC( WVW_XBVISIBLE )
 
 HB_FUNC( WVW_MOUSE_COL )
 {
-   WVW_GLOB * pData = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   if( pData )
+   if( wvw )
    {
       if( hb_gt_wvw_GetMainCoordMode() )
-         hb_retni( hb_gt_wvw_GetMouseX( pData->pWindows[ pData->usNumWindows - 1 ] ) + hb_gt_wvw_ColOfs( pData->usNumWindows - 1 ) );
+         hb_retni( hb_gt_wvw_GetMouseX( wvw->pWindows[ wvw->usNumWindows - 1 ] ) + hb_gt_wvw_ColOfs( wvw->usNumWindows - 1 ) );
       else
-         hb_retni( hb_gt_wvw_GetMouseX( pData->pWindows[ pData->usCurWindow ] ) );
+         hb_retni( hb_gt_wvw_GetMouseX( wvw->pWindows[ wvw->usCurWindow ] ) );
    }
    else
       hb_retni( 0 );
@@ -485,14 +485,14 @@ HB_FUNC( WVW_MOUSE_COL )
 
 HB_FUNC( WVW_MOUSE_ROW )
 {
-   WVW_GLOB * pData = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   if( pData )
+   if( wvw )
    {
       if( hb_gt_wvw_GetMainCoordMode() )
-         hb_retni( hb_gt_wvw_GetMouseY( pData->pWindows[ pData->usNumWindows - 1 ] ) + hb_gt_wvw_RowOfs( pData->usNumWindows - 1 ) );
+         hb_retni( hb_gt_wvw_GetMouseY( wvw->pWindows[ wvw->usNumWindows - 1 ] ) + hb_gt_wvw_RowOfs( wvw->usNumWindows - 1 ) );
       else
-         hb_retni( hb_gt_wvw_GetMouseY( pData->pWindows[ pData->usCurWindow ] ) );
+         hb_retni( hb_gt_wvw_GetMouseY( wvw->pWindows[ wvw->usCurWindow ] ) );
    }
    else
       hb_retni( 0 );
@@ -511,7 +511,7 @@ HB_FUNC( SENDMESSAGE )
 HB_FUNC( SETPARENT )
 {
    UINT      usWinNum     = WVW_WHICH_WINDOW;
-   UINT      usWinNum1    = HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : ( hb_gt_wvw_GetMainCoordMode() ? ( ( hb_gt_wvw_GetNumWindows() ) - 1 ) : hb_gt_wvw_GetCurWindow() );
+   UINT      usWinNum1    = HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : ( hb_gt_wvw_GetMainCoordMode() ? hb_gt_wvw_GetNumWindows() - 1 : hb_gt_wvw_GetCurWindow() );
    WVW_WIN * pWindowData  = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_WIN * pWindowData1 = hb_gt_wvw_GetWindowsData( usWinNum1 );
    HWND      hWndParent   = pWindowData->hWnd;
@@ -552,9 +552,10 @@ HB_FUNC( ISWINDOW )
 
 HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
 {
-/* HWND hWnd = ( HWND ) hb_parnl( 1 ); */
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
    WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
+
+/* HWND hWnd = ( HWND ) hb_parnl( 1 ); */
 
    int iStyle = TTS_ALWAYSTIP;
    INITCOMMONCONTROLSEX icex;
@@ -572,16 +573,14 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
 
 #if 0
    if( lToolTipBalloon )
-   {
-      iStyle = iStyle | TTS_BALLOON;
-   }
+      iStyle |= TTS_BALLOON;
 #endif
 
-   if( ! pData->hWndTT )
-      pData->hWndTT = CreateWindow( TOOLTIPS_CLASS, NULL, iStyle,
-                                    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-                                    NULL, NULL, GetModuleHandle( NULL ), NULL );
-   if( ! pData->hWndTT )
+   if( ! wvw->hWndTT )
+      wvw->hWndTT = CreateWindow( TOOLTIPS_CLASS, NULL, iStyle,
+                                  CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                                  NULL, NULL, GetModuleHandle( NULL ), NULL );
+   if( ! wvw->hWndTT )
    {
       hb_retnl( 0 );
       return;
@@ -598,7 +597,7 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
    ti.hinst    = GetModuleHandle( NULL );
    ti.lpszText = ( LPSTR ) hb_parc( 3 );  /* TOFIX: removing const */
 
-   hb_retl( ( HB_BOOL ) SendMessage( pData->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) &ti ) );
+   hb_retl( ( HB_BOOL ) ( BOOL ) SendMessage( wvw->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) &ti ) );
 }
 
 
@@ -1211,7 +1210,7 @@ HB_FUNC( WINDOW2BITMAP )
 }
 
 
-/* wvw_SetMaxBMCache([nMax])
+/* wvw_SetMaxBMCache( [nMax] )
    Get/Set maximum user-bitmap cache (default is 20, minimum is 1).
    Returns old setting of maximum user-bitmap cache.
 
@@ -1228,20 +1227,20 @@ HB_FUNC( WINDOW2BITMAP )
    instead.
 
    Example:
-   wvw_SetMaxBMCache(1)  :: this will cache one bitmap only
-   wvw_SetMaxBMCache(50) :: allows up to 50 bitmap stored in the cache
- */
+   wvw_SetMaxBMCache( 1 )  :: this will cache one bitmap only
+   wvw_SetMaxBMCache( 50 ) :: allows up to 50 bitmap stored in the cache */
 HB_FUNC( WVW_SETMAXBMCACHE )
 {
-   WVW_GLOB * p = hb_gt_wvw_GetWvwData();
-   UINT       uiOldMaxBMcache = 0;
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   if( p )
+   UINT uiOldMaxBMcache = 0;
+
+   if( wvw )
    {
-      uiOldMaxBMcache = p->sApp->uiMaxBMcache;
+      uiOldMaxBMcache = wvw->a.uiMaxBMcache;
 
       if( HB_ISNUM( 1 ) )
-         p->sApp->uiMaxBMcache = ( UINT ) hb_parni( 1 );
+         wvw->a.uiMaxBMcache = ( UINT ) hb_parni( 1 );
    }
 
    hb_retni( uiOldMaxBMcache );
@@ -1251,9 +1250,9 @@ HB_FUNC( WVW_SETMAXBMCACHE )
    Returns current number of user-bitmap cache. */
 HB_FUNC( WVW_NUMBMCACHE )
 {
-   WVW_GLOB * p = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   hb_retni( p ? p->sApp->uiBMcache : 0 );
+   hb_retni( wvw ? wvw->a.uiBMcache : 0 );
 }
 
 
@@ -1273,9 +1272,9 @@ HB_FUNC( WVW_NUMBMCACHE )
 /* 2004-06-02: WARNING: WVT is slightly different */
 HB_FUNC( WVW_SETTIMER )
 {
-   WVW_GLOB * p = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   if( p && p->sApp->pSymWVW_TIMER )
+   if( wvw && wvw->a.pSymWVW_TIMER )
    {
       UINT      usWinNum    = WVW_WHICH_WINDOW;
       WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
@@ -1295,14 +1294,15 @@ HB_FUNC( WVW_SETTIMER )
 /* 2004-06-02: WARNING: WVT is slightly different */
 HB_FUNC( WVW_KILLTIMER )
 {
-   WVW_GLOB * p = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   if( p && p->sApp->pSymWVW_TIMER )
+   if( wvw && wvw->a.pSymWVW_TIMER )
    {
       UINT      usWinNum    = WVW_WHICH_WINDOW;
       WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
       KillTimer( pWindowData->hWnd, WVW_ID_BASE_TIMER + usWinNum );
+
       hb_retl( HB_TRUE );
    }
    else
@@ -1310,13 +1310,13 @@ HB_FUNC( WVW_KILLTIMER )
 }
 
 
-/* wvw_GetPaintRect( nWinNum )   nWinNum is 0 based               */
-/* returns array of paint pending rect {top, left, bottom, right} */
-/* WARNING:                                                       */
-/* unlike WVT, top maybe > bottom                                 */
-/*             left maybe > right                                 */
-/* in these cases, no paint request is pending                    */
-/* (in WVT these is reflected in {0,0,0,0})                       */
+/* wvw_GetPaintRect( nWinNum )   nWinNum is 0 based
+   returns array of paint pending rect {top, left, bottom, right}
+   WARNING:
+   unlike WVT, top maybe > bottom
+               left maybe > right
+   in these cases, no paint request is pending
+   (in WVT these is reflected in {0,0,0,0}) */
 HB_FUNC( WVW_GETPAINTRECT )
 {
    WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
@@ -1414,19 +1414,19 @@ HB_FUNC( WVW_SETPOINTER )
 /* wvw_LoadPicture( nSlot, cFilePic ) */
 HB_FUNC( WVW_LOADPICTURE )
 {
-   HB_BOOL bResult = HB_FALSE;
-
-   WVW_GLOB * p        = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
    IPicture * iPicture = hb_gt_wvw_LoadPicture( hb_parcx( 2 ) );
 
-   if( p && iPicture )
+   HB_BOOL bResult = HB_FALSE;
+
+   if( wvw && iPicture )
    {
       int iSlot = hb_parni( 1 ) - 1;
 
-      if( p->sApp->iPicture[ iSlot ] )
-         hb_gt_wvw_DestroyPicture( p->sApp->iPicture[ iSlot ] );
+      if( wvw->a.iPicture[ iSlot ] )
+         hb_gt_wvw_DestroyPicture( wvw->a.iPicture[ iSlot ] );
 
-      p->sApp->iPicture[ iSlot ] = iPicture;
+      wvw->a.iPicture[ iSlot ] = iPicture;
 
       bResult = HB_TRUE;
    }
@@ -1439,11 +1439,11 @@ HB_FUNC( WVW_LOADPICTURE )
                  nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVW_LOADFONT )
 {
-   WVW_GLOB * p = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   if( p )
+   if( wvw )
    {
-      WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( p->usNumWindows - 1 );
+      WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( wvw->usNumWindows - 1 );
       LOGFONT   logfont;
       int       iSlot = hb_parni( 1 ) - 1;
       HFONT     hFont;
@@ -1454,22 +1454,22 @@ HB_FUNC( WVW_LOADFONT )
       logfont.lfItalic         = ( BYTE ) hb_parl( 6 );
       logfont.lfUnderline      = ( BYTE ) hb_parl( 7 );
       logfont.lfStrikeOut      = ( BYTE ) hb_parl( 8 );
-      logfont.lfCharSet        = HB_ISNUM( 9 ) ? ( BYTE ) hb_parni( 9 ) : ( BYTE ) pWindowData->CodePage;
+      logfont.lfCharSet        = ( BYTE ) hb_parnidef( 9, pWindowData->CodePage );
       logfont.lfOutPrecision   = 0;
       logfont.lfClipPrecision  = 0;
       logfont.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
       logfont.lfPitchAndFamily = FF_DONTCARE;
-      logfont.lfHeight         = HB_ISNUM( 3 ) ? hb_parni( 3 ) : pWindowData->fontHeight;
-      logfont.lfWidth = HB_ISNUM( 4 ) ? hb_parni( 4 ) : ( pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
+      logfont.lfHeight         = hb_parnidef( 3, pWindowData->fontHeight );
+      logfont.lfWidth = hb_parnidef( 4, pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
 
       hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 2 ) ? hb_parc( 2 ) : pWindowData->fontFace, sizeof( logfont.lfFaceName ) - 1 );
 
       hFont = CreateFontIndirect( &logfont );
       if( hFont )
       {
-         if( p->sApp->hUserFonts[ iSlot ] )
-            DeleteObject( p->sApp->hUserFonts[ iSlot ] );
-         p->sApp->hUserFonts[ iSlot ] = hFont;
+         if( wvw->a.hUserFonts[ iSlot ] )
+            DeleteObject( wvw->a.hUserFonts[ iSlot ] );
+         wvw->a.hUserFonts[ iSlot ] = hFont;
       }
    }
 }
@@ -1478,23 +1478,20 @@ HB_FUNC( WVW_LOADFONT )
 /* wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
 HB_FUNC( WVW_LOADPEN )
 {
-   WVW_GLOB * p = hb_gt_wvw_GetWvwData();
-   int        iPenWidth, iPenStyle;
-   COLORREF   crColor;
-   HPEN       hPen;
-   int        iSlot = hb_parni( 1 ) - 1;
+   int      iSlot     = hb_parni( 1 ) - 1;
+   int      iPenStyle = hb_parni( 2 );
+   int      iPenWidth = hb_parni( 3 );
+   COLORREF crColor   = ( COLORREF ) hb_parnldef( 4, RGB( 0, 0, 0 ) );
 
-   iPenStyle = hb_parni( 2 );
-   iPenWidth = hb_parni( 3 );
-   crColor   = ( COLORREF ) hb_parnldef( 4, RGB( 0, 0, 0 ) );
-
-   hPen = CreatePen( iPenStyle, iPenWidth, crColor );
+   HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
 
    if( hPen )
    {
-      if( p->sApp->hUserPens[ iSlot ] )
-         DeleteObject( p->sApp->hUserPens[ iSlot ] );
-      p->sApp->hUserPens[ iSlot ] = hPen;
+      WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+
+      if( wvw->a.hUserPens[ iSlot ] )
+         DeleteObject( wvw->a.hUserPens[ iSlot ] );
+      wvw->a.hUserPens[ iSlot ] = hPen;
 
       hb_retl( HB_TRUE );
    }
@@ -1510,25 +1507,23 @@ HB_FUNC( WVW_MESSAGEBOX )
    hb_retni( MessageBox( pWindowData->hWnd, hb_parcx( 2 ), hb_parcx( 3 ), hb_parnidef( 4, MB_OK ) ) );
 }
 
+/* End of Drawing Primitives */
 
-/*       End of Drawing Primitives         */
-
-/* Utility Functions . A Natural Extension */
-/*   copied and modified from gtwvt        */
-
+/* Utility functions. A natural extension */
+/*   copied and modified from gtwvt       */
 
 /* wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
                                   lItalic, lUnderline, lStrikeout ) */
-
 HB_FUNC( WVW_CHOOSEFONT )
 {
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+
    CHOOSEFONT cf;
    LOGFONT    lf;
    LONG       PointSize = 0;
-   WVW_GLOB * p         = hb_gt_wvw_GetWvwData();
 
    if( HB_ISNUM( 2 ) )
-      PointSize = -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( p->pWindows[ p->usNumWindows - 1 ]->hdc, LOGPIXELSY ), 72 );
+      PointSize = -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( wvw->pWindows[ wvw->usNumWindows - 1 ]->hdc, LOGPIXELSY ), 72 );
 
    memset( &lf, 0, sizeof( lf ) );
 
@@ -1547,7 +1542,7 @@ HB_FUNC( WVW_CHOOSEFONT )
    memset( &cf, 0, sizeof( cf ) );
 
    cf.lStructSize    = sizeof( cf );
-   cf.hwndOwner      = p->pWindows[ p->usNumWindows - 1 ]->hWnd;
+   cf.hwndOwner      = wvw->pWindows[ wvw->usNumWindows - 1 ]->hWnd;
    cf.hDC            = NULL;
    cf.lpLogFont      = &lf;
    cf.iPointSize     = 0;
@@ -1566,7 +1561,7 @@ HB_FUNC( WVW_CHOOSEFONT )
 
    if( ChooseFont( &cf ) )
    {
-      PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( p->pWindows[ p->usNumWindows - 1 ]->hdc, LOGPIXELSY ) );
+      PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( wvw->pWindows[ wvw->usNumWindows - 1 ]->hdc, LOGPIXELSY ) );
 
       hb_storvc( lf.lfFaceName, -1, 1 );
       hb_storvnl( ( long ) PointSize, -1, 2 );
@@ -1594,16 +1589,17 @@ HB_FUNC( WVW_CHOOSEFONT )
 /* wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
 HB_FUNC( WVW_CHOOSECOLOR )
 {
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+
    CHOOSECOLOR cc;
    COLORREF    crCustClr[ 16 ];
    int         i;
-   WVW_GLOB *  p = hb_gt_wvw_GetWvwData();
 
    for( i = 0; i < 16; i++ )
       crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
    cc.lStructSize  = sizeof( cc );
-   cc.hwndOwner    = p->pWindows[ p->usNumWindows - 1 ]->hWnd;
+   cc.hwndOwner    = wvw->pWindows[ wvw->usNumWindows - 1 ]->hWnd;
    cc.rgbResult    = ( COLORREF ) hb_parnl( 1 );
    cc.lpCustColors = crCustClr;
 
@@ -1616,13 +1612,13 @@ HB_FUNC( WVW_CHOOSECOLOR )
 }
 
 
-/* wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based */
-/* WHAT'S the difference with GT_FUNC( mouse_SetPos ) ???    */
-/* this func is able to position cursor on any window        */
+/* wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based
+   What's the difference with GT_FUNC( mouse_SetPos ) ???
+   this func is able to position cursor on any window
 
-/* NOTE: consider using 'standard' SetMouse() instead:       */
-/*       SetMouse(.t., nRow, nCol)                           */
-/*       This will treat (nRow,nCol) according to current s_pWvwData->bMainCoordMode setting */
+   NOTE: consider using 'standard' SetMouse() instead:
+         SetMouse(.t., nRow, nCol)
+         This will treat (nRow,nCol) according to current s_pWvwData->bMainCoordMode setting */
 
 HB_FUNC( WVW_SETMOUSEPOS )
 {
@@ -1644,31 +1640,31 @@ HB_FUNC( WVW_SETMOUSEPOS )
 }
 
 
-/* by bdj                                                                               */
-/* none in gtwvt                                                                        */
-/*    wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBcolor/hBrush,       */
-/*                       lTight, lUseBrush, aOffSet )                                   */
-/*                                                                                      */
-/*   if lTight, rect is drawn inside the character region                               */
-/*   AND top and left lines are lower two pixel down to make room for above/left object */
-/*   WARNING: gui object of this type subject to be overwritten by chars                */
-/*   NOTE that these lines are to be overwritten by displayed char,                     */
-/*        we are depending on the fact that gui object will be painted last             */
-/*                                                                                      */
-/*   if lUseBrush, nRGBcolor is treated as a BRUSH handle                               */
-/*                                                                                      */
+/* by bdj
+   none in gtwvt
+      wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBcolor/hBrush,
+                         lTight, lUseBrush, aOffSet )
+
+     if lTight, rect is drawn inside the character region
+     AND top and left lines are lower two pixel down to make room for above/left object
+     WARNING: gui object of this type subject to be overwritten by chars
+     NOTE that these lines are to be overwritten by displayed char,
+          we are depending on the fact that gui object will be painted last
+
+     if lUseBrush, nRGBcolor is treated as a BRUSH handle */
 
 HB_FUNC( WVW_FILLRECTANGLE )
 {
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
    UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_GLOB * p           = hb_gt_wvw_GetWvwData();
    WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   POINT      xy;
-   int        iTop, iLeft, iBottom, iRight;
-   USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
-              usLeft   = ( USHORT ) hb_parni( 3 ),
-              usBottom = ( USHORT ) hb_parni( 4 ),
-              usRight  = ( USHORT ) hb_parni( 5 );
+
+   POINT  xy;
+   int    iTop, iLeft, iBottom, iRight;
+   USHORT usTop        = ( USHORT ) hb_parni( 2 ),
+          usLeft       = ( USHORT ) hb_parni( 3 ),
+          usBottom     = ( USHORT ) hb_parni( 4 ),
+          usRight      = ( USHORT ) hb_parni( 5 );
    COLORREF crRGBcolor = hb_parnl( 6 );
    HB_BOOL  bTight     = hb_parl( 7 );
    HB_BOOL  bUseBrush  = hb_parl( 8 );
@@ -1718,7 +1714,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
 
    if( ! bUseBrush )
    {
-      SelectObject( p->pWindows[ 0 ]->hdc, p->sApp->OriginalBrush );
+      SelectObject( wvw->pWindows[ 0 ]->hdc, wvw->a.OriginalBrush );
       DeleteObject( hBrush );
    }
 
@@ -1781,18 +1777,19 @@ HB_FUNC( WVW_SETPEN )
 {
    if( HB_ISNUM( 1 ) )
    {
-      int        iPenStyle = hb_parni( 1 );
-      int        iPenWidth = hb_parni( 2 );
-      COLORREF   crColor   = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
-      WVW_GLOB * p         = hb_gt_wvw_GetWvwData();
-      HPEN       hPen      = CreatePen( iPenStyle, iPenWidth, crColor );
+      int      iPenStyle = hb_parni( 1 );
+      int      iPenWidth = hb_parni( 2 );
+      COLORREF crColor   = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
+      HPEN     hPen      = CreatePen( iPenStyle, iPenWidth, crColor );
 
       if( hPen )
       {
-         if( p->sApp->currentPen )
-            DeleteObject( p->sApp->currentPen );
+         WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-         p->sApp->currentPen = hPen;
+         if( wvw->a.currentPen )
+            DeleteObject( wvw->a.currentPen );
+
+         wvw->a.currentPen = hPen;
 
          hb_retl( HB_TRUE );
          return;
@@ -1812,9 +1809,8 @@ HB_FUNC( WVW_SETBRUSH )
 {
    if( HB_ISNUM( 1 ) )
    {
-      HBRUSH     hBrush;
-      LOGBRUSH   lb;
-      WVW_GLOB * p = hb_gt_wvw_GetWvwData();
+      HBRUSH   hBrush;
+      LOGBRUSH lb;
 
       memset( &lb, 0, sizeof( lb ) );
 
@@ -1826,12 +1822,14 @@ HB_FUNC( WVW_SETBRUSH )
 
       if( hBrush )
       {
-         if( p->sApp->currentBrush )
+         WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+
+         if( wvw->a.currentBrush )
          {
-            SelectObject( p->pWindows[ 0 ]->hdc, p->sApp->OriginalBrush );
-            DeleteObject( p->sApp->currentBrush );
+            SelectObject( wvw->pWindows[ 0 ]->hdc, wvw->a.OriginalBrush );
+            DeleteObject( wvw->a.currentBrush );
          }
-         p->sApp->currentBrush = hBrush;
+         wvw->a.currentBrush = hBrush;
 
          hb_retl( HB_TRUE );
          return;
@@ -1987,20 +1985,23 @@ HB_FUNC( WVW_UPDATEWINDOW )
 
 HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 {
-   PHB_ITEM   pFirst = hb_param( 3, HB_IT_ANY );
-   PHB_ITEM   pFunc  = NULL;
-   PHB_DYNS   pExecSym;
-   WVW_GLOB * p    = hb_gt_wvw_GetWvwData();
-   HWND       hDlg = NULL;
-   int        iIndex;
-   int        iType     = 0;
-   int        iResource = hb_parni( 4 );
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+
+   PHB_ITEM pFirst = hb_param( 3, HB_IT_ANY );
+   PHB_ITEM pFunc  = NULL;
+   PHB_DYNS pExecSym;
+   HWND     hDlg = NULL;
+   int      iIndex;
+   int      iType     = 0;
+   int      iResource = hb_parni( 4 );
 
    /* check if we still have room for a new dialog */
 
    for( iIndex = 0; iIndex < WVW_DLGML_MAX; iIndex++ )
-      if( p->sApp->hDlgModeless[ iIndex ] == NULL )
+   {
+      if( wvw->a.hDlgModeless[ iIndex ] == NULL )
          break;
+   }
 
    if( iIndex >= WVW_DLGML_MAX )
    {
@@ -2026,7 +2027,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
    if( HB_ISNUM( 3 ) )
       hDlg = CreateDialogIndirect( hb_gt_wvw_GetWvwData()->hInstance,
                                    ( LPDLGTEMPLATE ) hb_parc( 1 ),
-                                   hb_parl( 2 ) ? p->pWindows[ 0 ]->hWnd : NULL,
+                                   hb_parl( 2 ) ? wvw->pWindows[ 0 ]->hWnd : NULL,
                                    ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
    else
    {
@@ -2035,21 +2036,21 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
          case 0:
             hDlg = CreateDialog( hb_gt_wvw_GetWvwData()->hInstance,
                                  hb_parc( 1 ),
-                                 hb_parl( 2 ) ? p->pWindows[ 0 ]->hWnd : NULL,
+                                 hb_parl( 2 ) ? wvw->pWindows[ 0 ]->hWnd : NULL,
                                  ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
             break;
 
          case 1:
             hDlg = CreateDialog( hb_gt_wvw_GetWvwData()->hInstance,
                                  MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
-                                 hb_parl( 2 ) ? p->pWindows[ 0 ]->hWnd : NULL,
+                                 hb_parl( 2 ) ? wvw->pWindows[ 0 ]->hWnd : NULL,
                                  ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
             break;
 
          case 2:
             hDlg = CreateDialogIndirect( hb_gt_wvw_GetWvwData()->hInstance,
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
-                                         hb_parl( 2 ) ? p->pWindows[ 0 ]->hWnd : NULL,
+                                         hb_parl( 2 ) ? wvw->pWindows[ 0 ]->hWnd : NULL,
                                          ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
             break;
       }
@@ -2057,16 +2058,16 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 
    if( hDlg )
    {
-      p->sApp->hDlgModeless[ iIndex ] = hDlg;
+      wvw->a.hDlgModeless[ iIndex ] = hDlg;
       if( pFunc )
       {
-         p->sApp->pFunc[ iIndex ] = pFunc;
-         p->sApp->iType[ iIndex ] = iType;
+         wvw->a.pFunc[ iIndex ] = pFunc;
+         wvw->a.iType[ iIndex ] = iType;
       }
       else
       {
-         p->sApp->pFunc[ iIndex ] = NULL;
-         p->sApp->iType[ iIndex ] = 0;
+         wvw->a.pFunc[ iIndex ] = NULL;
+         wvw->a.iType[ iIndex ] = 0;
       }
       SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
    }
@@ -2075,7 +2076,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
       if( iType == 2 && pFunc )
          hb_itemRelease( pFunc );
 
-      p->sApp->hDlgModeless[ iIndex ] = NULL;
+      wvw->a.hDlgModeless[ iIndex ] = NULL;
    }
 
    hb_retnint( ( HB_PTRDIFF ) hDlg );
@@ -2084,19 +2085,20 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 
 HB_FUNC( WVW_CREATEDIALOGMODAL )
 {
-   PHB_ITEM   pFirst = hb_param( 3, HB_IT_ANY );
-   PHB_ITEM   pFunc  = NULL;
-   PHB_DYNS   pExecSym;
-   WVW_GLOB * p = hb_gt_wvw_GetWvwData();
-   int        iIndex;
-   int        iResource = hb_parni( 4 );
-   INT_PTR    iResult   = 0;
-   HWND       hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : p->pWindows[ 0 ]->hWnd;
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+
+   PHB_ITEM pFirst = hb_param( 3, HB_IT_ANY );
+   PHB_ITEM pFunc  = NULL;
+   PHB_DYNS pExecSym;
+   int      iIndex;
+   int      iResource = hb_parni( 4 );
+   INT_PTR  iResult   = 0;
+   HWND     hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : wvw->pWindows[ 0 ]->hWnd;
 
    /* check if we still have room for a new dialog */
    for( iIndex = 0; iIndex < WVW_DLGMD_MAX; iIndex++ )
    {
-      if( p->sApp->hDlgModal[ iIndex ] == NULL )
+      if( wvw->a.hDlgModal[ iIndex ] == NULL )
          break;
    }
 
@@ -2109,16 +2111,16 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
 
    if( HB_IS_EVALITEM( pFirst ) )
    {
-      p->sApp->pFuncModal[ iIndex ] = hb_itemNew( pFirst );
-      p->sApp->iTypeModal[ iIndex ] = 2;
+      wvw->a.pFuncModal[ iIndex ] = hb_itemNew( pFirst );
+      wvw->a.iTypeModal[ iIndex ] = 2;
    }
    else if( HB_IS_STRING( pFirst ) )
    {
       pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
       if( pExecSym )
          pFunc = ( PHB_ITEM ) pExecSym;
-      p->sApp->pFuncModal[ iIndex ] = pFunc;
-      p->sApp->iTypeModal[ iIndex ] = 1;
+      wvw->a.pFuncModal[ iIndex ] = pFunc;
+      wvw->a.iTypeModal[ iIndex ] = 1;
    }
 
    switch( iResource )
@@ -2242,18 +2244,18 @@ HB_FUNC( WVW_SAVESCREEN )
 }
 
 
-/* wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )*/
+/* wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP ) */
 
 /*TODO: reconsider, is it really needed? is it better to be handled by application?
         besides, with Windowing feature, it seems not needed anymore */
 
 HB_FUNC( WVW_RESTSCREEN )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
    WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   POINT     xy;
-   int       iTop, iLeft, iBottom, iRight, iWidth, iHeight;
+
+   POINT xy;
+   int   iTop, iLeft, iBottom, iRight, iWidth, iHeight;
 
    HBITMAP hBmp;
 
@@ -2318,17 +2320,18 @@ HB_FUNC( WVW_RESTSCREEN )
 }
 
 
-/* wvw_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,*/
-/*                 lStrikeout, nCharSet, nQuality, nEscapement )            */
+/* wvw_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
+                   lStrikeout, nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVW_CREATEFONT )
 {
-   WVW_GLOB * p        = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum = p->usNumWindows - 1;
-
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum    = wvw->usNumWindows - 1;
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
    LOGFONT logfont;
    HFONT   hFont;
+
+   memset( &logfont, 0, sizeof( logfont ) );
 
    logfont.lfEscapement     = hb_parni( 10 ) * 10;
    logfont.lfOrientation    = 0;
@@ -2336,13 +2339,13 @@ HB_FUNC( WVW_CREATEFONT )
    logfont.lfItalic         = ( BYTE ) hb_parl(  5 );
    logfont.lfUnderline      = ( BYTE ) hb_parl(  6 );
    logfont.lfStrikeOut      = ( BYTE ) hb_parl(  7 );
-   logfont.lfCharSet        = HB_ISNUM( 8 ) ? ( BYTE ) hb_parni( 8 ) : ( BYTE ) pWindowData->CodePage;
+   logfont.lfCharSet        = ( BYTE ) hb_parnidef( 8, pWindowData->CodePage );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
    logfont.lfQuality        = ( BYTE ) hb_parnidef( 9, DEFAULT_QUALITY );
    logfont.lfPitchAndFamily = FF_DONTCARE;
-   logfont.lfHeight         = HB_ISNUM( 2 ) ? hb_parni( 2 ) : pWindowData->fontHeight;
-   logfont.lfWidth = HB_ISNUM( 3 ) ? hb_parni( 3 ) : ( pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
+   logfont.lfHeight         = hb_parnidef( 2, pWindowData->fontHeight );
+   logfont.lfWidth = hb_parnidef( 3, pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
 
    hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 1 ) ? hb_parc( 1 ) : pWindowData->fontFace, sizeof( logfont.lfFaceName ) - 1 );
 
