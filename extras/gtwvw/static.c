@@ -53,8 +53,8 @@ HB_FUNC( WVW_STCREATE )
 {
    HANDLE     hInstance   = NULL;
    UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndCB;
 
@@ -164,8 +164,8 @@ HB_FUNC( WVW_STSETTEXT )
 
 HB_FUNC( WVW_STSETFONT )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
    HB_BOOL    retval      = HB_TRUE;
 
    pData->lfST.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
@@ -189,7 +189,7 @@ HB_FUNC( WVW_STSETFONT )
       HFONT hFont    = CreateFontIndirect( &pData->lfST );
       if( hFont )
       {
-         CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
+         WVW_CTRL * pcd = pWindowData->pcdCtrlList;
 
          while( pcd )
          {

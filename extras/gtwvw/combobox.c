@@ -95,10 +95,10 @@
 HB_FUNC( WVW_CBCREATE )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndCB;
-   WVW_DATA * pData = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * pData = hb_gt_wvw_GetWvwData();
 /* LONG cnt; */
    LONG numofchars;
    LONG avgwidth;
@@ -246,10 +246,10 @@ HB_FUNC( WVW_CBCREATE )
  */
 HB_FUNC( WVW_CBDESTROY )
 {
-   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT           uiCBid      = ( UINT ) hb_parnl( 2 );
-   CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
-   CONTROL_DATA * pcdPrev     = NULL;
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   UINT       uiCBid      = ( UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd         = pWindowData->pcdCtrlList;
+   WVW_CTRL * pcdPrev     = NULL;
 
    while( pcd )
    {
@@ -318,7 +318,7 @@ HB_FUNC( WVW_CBENABLE )
 
       if( ! bEnable )
       {
-         WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+         WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
          SetFocus( pWindowData->hWnd );
       }
    }
@@ -333,12 +333,12 @@ HB_FUNC( WVW_CBENABLE )
  */
 HB_FUNC( WVW_CBSETCODEBLOCK )
 {
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
-   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   PHB_ITEM   phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
-      WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
+      WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
       HB_BOOL    bOldSetting = pData->bRecurseCBlock;
 
       pData->bRecurseCBlock = HB_FALSE;
@@ -368,8 +368,8 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
  */
 HB_FUNC( WVW_CBSETFONT )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
 
    HB_BOOL retval = HB_TRUE;
 
@@ -394,7 +394,7 @@ HB_FUNC( WVW_CBSETFONT )
       HFONT hFont    = CreateFontIndirect( &pData->lfCB );
       if( hFont )
       {
-         CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
+         WVW_CTRL * pcd = pWindowData->pcdCtrlList;
 
          while( pcd )
          {
@@ -427,8 +427,8 @@ HB_FUNC( WVW_CBSETFONT )
  */
 HB_FUNC( WVW_CBSETINDEX )
 {
-   int iIndex         = hb_parni( 3 );
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   int        iIndex = hb_parni( 3 );
+   WVW_CTRL * pcd    = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd && iIndex >= 0 )
       hb_retl( SendMessage( pcd->hWndCtrl, CB_SETCURSEL, ( WPARAM ) iIndex, 0 ) == iIndex );
@@ -449,7 +449,7 @@ HB_FUNC( WVW_CBSETINDEX )
  */
 HB_FUNC( WVW_CBGETINDEX )
 {
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
       hb_retni( ( int ) SendMessage( pcd->hWndCtrl, CB_GETCURSEL, 0, 0 ) );
@@ -466,7 +466,7 @@ HB_FUNC( WVW_CBGETINDEX )
  */
 HB_FUNC( WVW_CBFINDSTRING )
 {
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
       hb_retni( ( int ) SendMessage( pcd->hWndCtrl, CB_FINDSTRING, ( WPARAM ) -1, ( LPARAM ) ( LPCSTR ) hb_parcx( 3 ) ) );
@@ -481,7 +481,7 @@ HB_FUNC( WVW_CBFINDSTRING )
  */
 HB_FUNC( WVW_CBGETCURTEXT )
 {
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
    {
@@ -513,7 +513,7 @@ HB_FUNC( WVW_CBGETCURTEXT )
  */
 HB_FUNC( WVW_CBISDROPPED )
 {
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
       hb_retl( ( HB_BOOL ) ( BOOL ) SendMessage( pcd->hWndCtrl, CB_GETDROPPEDSTATE, 0, 0 ) );

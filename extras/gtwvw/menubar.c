@@ -46,8 +46,8 @@
 
 HB_FUNC( WVW_SETMENU )
 {
-   UINT       usWinNum = WVW_WHICH_WINDOW;
-   WIN_DATA * pWinData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * pWinData = hb_gt_wvw_GetWindowsData( usWinNum );
 
    SetMenu( pWinData->hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
 
@@ -57,8 +57,8 @@ HB_FUNC( WVW_SETMENU )
 
 HB_FUNC( WVW_SETPOPUPMENU )
 {
-   WIN_DATA * pWinData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HMENU      hPopup   = pWinData->hPopup;
+   WVW_WIN * pWinData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   HMENU     hPopup   = pWinData->hPopup;
 
    pWinData->hPopup = ( HMENU ) HB_PARHANDLE( 2 );
    /* if( hPopup ) */
@@ -223,7 +223,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
 HB_FUNC( WVW_DRAWMENUBAR )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    DrawMenuBar( pWindowData->hWnd );
 }
@@ -237,7 +237,7 @@ HB_FUNC( WVW_ENDMENU )
 /* wvw_GetMenu([nWinNum]) */
 HB_FUNC( WVW_GETMENU )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    HB_RETHANDLE( GetMenu( pWindowData->hWnd ) );
 }
@@ -245,8 +245,8 @@ HB_FUNC( WVW_GETMENU )
 /* wvw_TrackPopupMenu([nWinNum], n) */
 HB_FUNC( WVW_TRACKPOPUPMENU )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   POINT      xy;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   POINT     xy;
 
    memset( &xy, 0, sizeof( xy ) );
 
@@ -274,8 +274,8 @@ HB_FUNC( WIN_SETMENU )
  */
 HB_FUNC( WVW_NOSYSMENU )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HMENU      hMenu       = GetSystemMenu( pWindowData->hWnd, FALSE );
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   HMENU     hMenu       = GetSystemMenu( pWindowData->hWnd, FALSE );
 
    if( hMenu )
    {
@@ -300,7 +300,7 @@ HB_FUNC( WVW_NOSYSMENU )
  */
 HB_FUNC( WVW_GETSYSTEMMENU )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    hb_retnint( ( HB_PTRDIFF ) GetSystemMenu( pWindowData->hWnd, hb_parl( 2 ) /* lReset */ ) );
 }

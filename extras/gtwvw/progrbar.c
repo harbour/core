@@ -82,23 +82,23 @@
 
 HB_FUNC( WVW_PGCREATE )
 {
-   HANDLE     hInstance   = NULL;
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndParent  = pWindowData->hWnd;
-   HWND       hWndPG;
-   POINT      xy;
-   int        iTop, iLeft, iBottom, iRight;
-   int        iStyle     = 0;
-   HB_BOOL    bBackColor = HB_ISNUM( 7 );
-   HB_BOOL    bBarColor  = HB_ISNUM( 8 );
-   HB_BOOL    bSmooth    = hb_parl( 9 );
-   HB_BOOL    bVertical  = hb_parl( 10 );
-   UINT       uiPGid;
-   USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
-              usLeft   = ( USHORT ) hb_parni( 3 ),
-              usBottom = ( USHORT ) hb_parni( 4 ),
-              usRight  = ( USHORT ) hb_parni( 5 );
+   HANDLE    hInstance   = NULL;
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   HWND      hWndParent  = pWindowData->hWnd;
+   HWND      hWndPG;
+   POINT     xy;
+   int       iTop, iLeft, iBottom, iRight;
+   int       iStyle     = 0;
+   HB_BOOL   bBackColor = HB_ISNUM( 7 );
+   HB_BOOL   bBarColor  = HB_ISNUM( 8 );
+   HB_BOOL   bSmooth    = hb_parl( 9 );
+   HB_BOOL   bVertical  = hb_parl( 10 );
+   UINT      uiPGid;
+   USHORT    usTop    = ( USHORT ) hb_parni( 2 ),
+             usLeft   = ( USHORT ) hb_parni( 3 ),
+             usBottom = ( USHORT ) hb_parni( 4 ),
+             usRight  = ( USHORT ) hb_parni( 5 );
 
    int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
    int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
@@ -182,10 +182,10 @@ HB_FUNC( WVW_PGCREATE )
  */
 HB_FUNC( WVW_PGDESTROY )
 {
-   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT           uiPGid      = ( UINT ) hb_parnl( 2 );
-   CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
-   CONTROL_DATA * pcdPrev     = NULL;
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   UINT       uiPGid      = ( UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd         = pWindowData->pcdCtrlList;
+   WVW_CTRL * pcdPrev     = NULL;
 
    while( pcd )
    {

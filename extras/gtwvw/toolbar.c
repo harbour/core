@@ -73,11 +73,11 @@
  */
 HB_FUNC( WVW_TBCREATE )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndParent  = pWindowData->hWnd;
-   HWND       hWndTB;
-   int        iMaxTextRows = ( int ) ( hb_parl( 2 ) ? 1 : 0 );
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   HWND      hWndParent  = pWindowData->hWnd;
+   HWND      hWndTB;
+   int       iMaxTextRows = ( int ) ( hb_parl( 2 ) ? 1 : 0 );
 
 #if 0
    DWORD dwStyle = ( DWORD ) hb_parnidef( 3, TBSTYLE_FLAT | TBSTYLE_TOOLTIPS );
@@ -220,9 +220,9 @@ HB_FUNC( WVW_TBCREATE )
  */
 HB_FUNC( WVW_TBADDBUTTON )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int        iCommand    = hb_parni( 2 );
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   int       iCommand    = hb_parni( 2 );
 
    const char * szBitmap = hb_parc( 3 );
    const char * szLabel  = hb_parcx( 4 );
@@ -290,8 +290,8 @@ HB_FUNC( WVW_TBADDBUTTON )
  */
 HB_FUNC( WVW_TBBUTTONCOUNT )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HWND       hWndTB      = pWindowData->hToolBar;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   HWND      hWndTB      = pWindowData->hToolBar;
 
    if( hWndTB )
       hb_retni( ( int ) SendMessage( hWndTB, TB_BUTTONCOUNT, 0, 0 ) );
@@ -306,10 +306,10 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
  */
 HB_FUNC( WVW_TBDELBUTTON )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int        iButton     = hb_parnidef( 2, -1 );
-   HWND       hWndTB      = pWindowData->hToolBar;
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   int       iButton     = hb_parnidef( 2, -1 );
+   HWND      hWndTB      = pWindowData->hToolBar;
 
    if( hWndTB && iButton >= 0 )
    {
@@ -336,10 +336,10 @@ HB_FUNC( WVW_TBDELBUTTON )
  */
 HB_FUNC( WVW_TBGETBUTTONRECT )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   int        iButton     = hb_parnidef( 2, -1 );
-   HWND       hWndTB      = pWindowData->hToolBar;
-   RECT       rc;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   int       iButton     = hb_parnidef( 2, -1 );
+   HWND      hWndTB      = pWindowData->hToolBar;
+   RECT      rc;
 
    PHB_ITEM aXY = hb_itemNew( NULL );
 
@@ -372,10 +372,10 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
  */
 HB_FUNC( WVW_TBENABLEBUTTON )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   int        iButton     = hb_parnidef( 2, -1 );
-   HWND       hWndTB      = pWindowData->hToolBar;
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   int       iButton     = hb_parnidef( 2, -1 );
+   HWND      hWndTB      = pWindowData->hToolBar;
 
    if( hWndTB && iButton >= 0 )
    {
@@ -409,8 +409,8 @@ HB_FUNC( WVW_TBENABLEBUTTON )
  */
 HB_FUNC( WVW_TBDESTROY )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
    if( pWindowData->hToolBar )
    {
@@ -428,9 +428,9 @@ HB_FUNC( WVW_TBDESTROY )
  */
 HB_FUNC( WVW_TBINDEX2CMD )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HWND       hWndTB      = pWindowData->hToolBar;
-   int        iCmd        = hb_gt_wvw_IndexToCommand( hWndTB, hb_parni( 2 ) );
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   HWND      hWndTB      = pWindowData->hToolBar;
+   int       iCmd        = hb_gt_wvw_IndexToCommand( hWndTB, hb_parni( 2 ) );
 
    hb_retni( iCmd > 0 ? iCmd : -1 );
 }
@@ -441,8 +441,8 @@ HB_FUNC( WVW_TBINDEX2CMD )
  */
 HB_FUNC( WVW_TBCMD2INDEX )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HWND       hWndTB      = pWindowData->hToolBar;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   HWND      hWndTB      = pWindowData->hToolBar;
 
    hb_retni( hb_gt_wvw_CommandToIndex( hWndTB, hb_parni( 2 ) ) );
 }

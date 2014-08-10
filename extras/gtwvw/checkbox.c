@@ -120,10 +120,10 @@ HB_FUNC( WVW_CXCREATE )
  */
 HB_FUNC( WVW_CXDESTROY )
 {
-   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT           uiCXid      = ( UINT ) hb_parnl( 2 );
-   CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
-   CONTROL_DATA * pcdPrev     = NULL;
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   UINT       uiCXid      = ( UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd         = pWindowData->pcdCtrlList;
+   WVW_CTRL * pcdPrev     = NULL;
 
    while( pcd )
    {
@@ -181,7 +181,7 @@ HB_FUNC( WVW_CXENABLE )
 
       if( ! bEnable )
       {
-         WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+         WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
          SetFocus( pWindowData->hWnd );
       }
    }
@@ -196,10 +196,10 @@ HB_FUNC( WVW_CXENABLE )
  */
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
-   WVW_DATA *     pData        = hb_gt_wvw_GetWvwData();
-   CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
-   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
-   HB_BOOL        bOldSetting  = pData->bRecurseCBlock;
+   WVW_GLOB * pData        = hb_gt_wvw_GetWvwData();
+   WVW_CTRL * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   PHB_ITEM   phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
+   HB_BOOL    bOldSetting  = pData->bRecurseCBlock;
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
@@ -229,7 +229,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
  */
 HB_FUNC( WVW_CXSETCHECK )
 {
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWndCtrl )
       SendMessage( pcd->hWndCtrl, BM_SETCHECK, ( WPARAM ) ( ULONG ) hb_parnidef( 3, BST_CHECKED ), 0 );
@@ -245,8 +245,8 @@ HB_FUNC( WVW_CXSETCHECK )
  */
 HB_FUNC( WVW_CXGETCHECK )
 {
-   ULONG ulCheck;
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   ULONG      ulCheck;
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWndCtrl )
       ulCheck = ( int ) SendMessage( pcd->hWndCtrl, BM_GETCHECK, 0, 0 );
@@ -259,8 +259,8 @@ HB_FUNC( WVW_CXGETCHECK )
 /* wvw_cxSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_CXSETFONT )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
 
    HB_BOOL retval = HB_TRUE;
 
@@ -286,7 +286,7 @@ HB_FUNC( WVW_CXSETFONT )
       if( hFont )
       {
 #if 0
-         CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
+         WVW_CTRL * pcd = pWindowData->pcdCtrlList;
 
          while( pcd )
          {
@@ -310,9 +310,8 @@ HB_FUNC( WVW_CXSETFONT )
 HB_FUNC( WVW_CXSTATUSFONT )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_CTRL * pcd         = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWndCtrl )
    {

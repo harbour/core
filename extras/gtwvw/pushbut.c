@@ -126,10 +126,10 @@ HB_FUNC( WVW_PBCREATE )
  */
 HB_FUNC( WVW_PBDESTROY )
 {
-   WIN_DATA *     pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT           uiPBid      = ( UINT ) hb_parnl( 2 );
-   CONTROL_DATA * pcd         = pWindowData->pcdCtrlList;
-   CONTROL_DATA * pcdPrev     = NULL;
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   UINT       uiPBid      = ( UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd         = pWindowData->pcdCtrlList;
+   WVW_CTRL * pcdPrev     = NULL;
 
    while( pcd )
    {
@@ -186,9 +186,9 @@ HB_FUNC( WVW_PBISFOCUSED )
  */
 HB_FUNC( WVW_PBENABLE )
 {
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndPB      = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
+   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   HWND      hWndPB      = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPB )
    {
@@ -210,9 +210,9 @@ HB_FUNC( WVW_PBENABLE )
  */
 HB_FUNC( WVW_PBSETCODEBLOCK )
 {
-   WVW_DATA *     pData        = hb_gt_wvw_GetWvwData();
-   CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
-   PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
+   WVW_GLOB * pData        = hb_gt_wvw_GetWvwData();
+   WVW_CTRL * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
+   PHB_ITEM   phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
@@ -262,7 +262,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
  */
 HB_FUNC( WVW_PBSETSTYLE )
 {
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWndCtrl )
       SendMessage( pcd->hWndCtrl, BM_SETSTYLE, ( WPARAM ) ( ULONG ) hb_parni( 3 ), ( LPARAM ) TRUE );
@@ -278,8 +278,8 @@ HB_FUNC( WVW_PBSETSTYLE )
  */
 HB_FUNC( WVW_PBSETFONT )
 {
-   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * pData       = hb_gt_wvw_GetWvwData();
    HB_BOOL    retval      = HB_TRUE;
 
    pData->lfPB.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
@@ -303,7 +303,7 @@ HB_FUNC( WVW_PBSETFONT )
       HFONT hFont    = CreateFontIndirect( &pData->lfPB );
       if( hFont )
       {
-         CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
+         WVW_CTRL * pcd = pWindowData->pcdCtrlList;
 
          while( pcd )
          {
