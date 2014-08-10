@@ -72,12 +72,12 @@
  */
 HB_FUNC( WVW_SBCREATE )
 {
-   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum = WVW_WHICH_WINDOW;
-   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   HB_UINT    nWin    = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
    HWND hWndParent;
-   HWND hWndSB;
+   HWND hWnd;
    int  ptArray[ WVW_MAX_STATUS_PARTS ];
 
    if( wvw_win->hStatusBar != NULL )
@@ -87,11 +87,11 @@ HB_FUNC( WVW_SBCREATE )
    }
 
    hWndParent = wvw_win->hWnd;
-   hWndSB     = CreateStatusWindow( WS_CHILD | WS_VISIBLE | WS_BORDER | SBT_TOOLTIPS,
+   hWnd       = CreateStatusWindow( WS_CHILD | WS_VISIBLE | WS_BORDER | SBT_TOOLTIPS,
                                     NULL,
                                     hWndParent,
-                                    WVW_ID_BASE_STATUSBAR + usWinNum );
-   if( hWndSB )
+                                    WVW_ID_BASE_STATUSBAR + nWin );
+   if( hWnd )
    {
       RECT rSB;
 
@@ -100,19 +100,19 @@ HB_FUNC( WVW_SBCREATE )
 
       memset( &rSB, 0, sizeof( rSB ) );
 
-      if( GetClientRect( hWndSB, &rSB ) )
+      if( GetClientRect( hWnd, &rSB ) )
          wvw_win->usSBHeight = ( USHORT ) rSB.bottom;
-      wvw_win->hStatusBar = hWndSB;
+      wvw_win->hStatusBar = hWnd;
 
-      hb_gt_wvw_ResetWindow( usWinNum );
+      hb_gt_wvw_ResetWindow( nWin );
 
       ptArray[ 0 ] = rSB.right;
-      SendMessage( hWndSB, WM_SETFONT, ( WPARAM ) wvw_win->hSBfont, ( LPARAM ) TRUE );
+      SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSBfont, ( LPARAM ) TRUE );
 
-      SendMessage( hWndSB, SB_SETPARTS, 1, ( LPARAM ) ( LPINT ) ptArray );
+      SendMessage( hWnd, SB_SETPARTS, 1, ( LPARAM ) ( LPINT ) ptArray );
    }
 
-   hb_retnint( ( HB_PTRDIFF ) hWndSB );
+   hb_retnint( ( HB_PTRDIFF ) hWnd );
 }
 
 /* wvw_sbDestroy( [nWinNum] )
@@ -120,8 +120,8 @@ HB_FUNC( WVW_SBCREATE )
  */
 HB_FUNC( WVW_SBDESTROY )
 {
-   UINT      usWinNum = WVW_WHICH_WINDOW;
-   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
+   HB_UINT   nWin    = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
    if( wvw_win->hStatusBar != NULL )
    {
@@ -132,10 +132,10 @@ HB_FUNC( WVW_SBDESTROY )
       }
       DestroyWindow( wvw_win->hStatusBar );
       wvw_win->hStatusBar = NULL;
-      wvw_win->bSBPaint   = HB_FALSE;
+      wvw_win->fSBPaint   = HB_FALSE;
       wvw_win->usSBHeight = 0;
 
-      hb_gt_wvw_ResetWindow( usWinNum );
+      hb_gt_wvw_ResetWindow( nWin );
    }
 }
 
@@ -154,7 +154,7 @@ HB_FUNC( WVW_SBDESTROY )
 HB_FUNC( WVW_SBADDPART )
 {
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HWND      hWndSB;
+   HWND      hWnd;
    int       ptArray[ WVW_MAX_STATUS_PARTS ];
    int       numOfParts;
    RECT      rSB;
@@ -163,8 +163,8 @@ HB_FUNC( WVW_SBADDPART )
    HB_BOOL   lResetParts;
    USHORT    usWidth;
 
-   hWndSB = wvw_win->hStatusBar;
-   if( hWndSB == NULL )
+   hWnd = wvw_win->hStatusBar;
+   if( hWnd == NULL )
    {
       hb_retnl( 0 );
       return;
@@ -176,10 +176,10 @@ HB_FUNC( WVW_SBADDPART )
 
    if( HB_ISCHAR( 2 ) )
    {
-      HDC  hDCSB = GetDC( hWndSB );
+      HDC  hDCSB = GetDC( hWnd );
       SIZE size;
 
-      HFONT hFont    = ( HFONT ) SendMessage( hWndSB, WM_GETFONT, 0, 0 );
+      HFONT hFont    = ( HFONT ) SendMessage( hWnd, WM_GETFONT, 0, 0 );
       HFONT hOldFont = ( HFONT ) SelectObject( hDCSB, hFont );
 
       memset( &size, 0, sizeof( size ) );
@@ -189,18 +189,18 @@ HB_FUNC( WVW_SBADDPART )
 
       SelectObject( hDCSB, hOldFont );
 
-      ReleaseDC( hWndSB, hDCSB );
+      ReleaseDC( hWnd, hDCSB );
    }
 
    if( ! lResetParts )
-      numOfParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, WVW_MAX_STATUS_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+      numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, WVW_MAX_STATUS_PARTS, ( LPARAM ) ( LPINT ) ptArray );
    else
       numOfParts = 0;
    numOfParts++;
 
    memset( &rSB, 0, sizeof( rSB ) );
 
-   GetClientRect( hWndSB, &rSB );
+   GetClientRect( hWnd, &rSB );
 
    ptArray[ numOfParts - 1 ] = rSB.right;
    if( ! lResetParts )
@@ -210,7 +210,7 @@ HB_FUNC( WVW_SBADDPART )
          ptArray[ n ] -= ( usWidth + WVW_SPACE_BETWEEN_PARTS );
    }
 
-   SendMessage( hWndSB, SB_SETPARTS, numOfParts, ( LPARAM ) ( LPINT ) ptArray );
+   SendMessage( hWnd, SB_SETPARTS, numOfParts, ( LPARAM ) ( LPINT ) ptArray );
 
    if( HB_ISCHAR( 6 ) )
    {
@@ -223,12 +223,12 @@ HB_FUNC( WVW_SBADDPART )
          hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), hb_parc( 6 ), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
 
       if( hIcon != NULL )
-         SendMessage( hWndSB, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
+         SendMessage( hWnd, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
    }
 
-   SendMessage( hWndSB, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, 0 );
+   SendMessage( hWnd, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, 0 );
    if( HB_ISCHAR( 7 ) )
-      SendMessage( hWndSB, SB_SETTIPTEXT, ( WPARAM ) ( numOfParts - 1 ), ( LPARAM ) hb_parc( 7 ) );
+      SendMessage( hWnd, SB_SETTIPTEXT, ( WPARAM ) ( numOfParts - 1 ), ( LPARAM ) hb_parc( 7 ) );
 
    hb_retni( numOfParts );
 }
@@ -242,21 +242,21 @@ HB_FUNC( WVW_SBADDPART )
 HB_FUNC( WVW_SBREFRESH )
 {
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HWND      hWndSB;
+   HWND      hWnd;
    int       ptArray[ WVW_MAX_STATUS_PARTS ];
    int       numOfParts;
    int       n;
    int       iDiff;
    RECT      rSB;
 
-   hWndSB = wvw_win->hStatusBar;
-   if( hWndSB == NULL )
+   hWnd = wvw_win->hStatusBar;
+   if( hWnd == NULL )
    {
       hb_retnl( 0 );
       return;
    }
 
-   numOfParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, WVW_MAX_STATUS_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+   numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, WVW_MAX_STATUS_PARTS, ( LPARAM ) ( LPINT ) ptArray );
    if( numOfParts == 0 )
    {
       hb_retnl( 0 );
@@ -265,13 +265,13 @@ HB_FUNC( WVW_SBREFRESH )
 
    memset( &rSB, 0, sizeof( rSB ) );
 
-   GetClientRect( hWndSB, &rSB );
+   GetClientRect( hWnd, &rSB );
    iDiff = rSB.right - ptArray[ numOfParts - 1 ];
 
    for( n = 0; n <= numOfParts - 1; n++ )
       ptArray[ n ] += iDiff;
 
-   SendMessage( hWndSB, SB_SETPARTS, numOfParts, ( LPARAM ) ( LPINT ) ptArray );
+   SendMessage( hWnd, SB_SETPARTS, numOfParts, ( LPARAM ) ( LPINT ) ptArray );
 
    hb_retni( numOfParts );
 }
@@ -296,7 +296,7 @@ HB_FUNC( WVW_SBSETTEXT )
 
    if( iPart == 0 && ( wvw_win->cSBColorForeground || wvw_win->cSBColorBackground ) )
    {
-      wvw_win->bSBPaint = HB_TRUE;
+      wvw_win->fSBPaint = HB_TRUE;
       SendMessage( wvw_win->hStatusBar, SB_SETTEXT, SBT_OWNERDRAW, ( LPARAM ) hb_parcx( 3 ) );
       hb_gt_wvw_ProcessMessages( wvw_win );
    }
@@ -423,20 +423,20 @@ HB_FUNC( WVW_SBSETFONT )
 
 HB_FUNC( WVW_XBCREATE )
 {
-   UINT      usWinNum = WVW_WHICH_WINDOW;
-   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
+   HB_UINT   nWin    = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   HWND   hWndParent = wvw_win->hWnd;
-   HWND   hWndXB;
-   POINT  xy;
-   int    iTop, iLeft, iBottom, iRight;
-   int    iOffTop, iOffLeft, iOffBottom, iOffRight;
-   int    iStyle = ( int ) hb_parnidef( 2, -1 );
-   UINT   uiXBid;
-   USHORT usTop  = ( USHORT ) hb_parni( 3 ),
-          usLeft = ( USHORT ) hb_parni( 4 ),
-          usBottom,
-          usRight;
+   HWND    hWndParent = wvw_win->hWnd;
+   HWND    hWnd;
+   POINT   xy;
+   int     iTop, iLeft, iBottom, iRight;
+   int     iOffTop, iOffLeft, iOffBottom, iOffRight;
+   int     iStyle = ( int ) hb_parnidef( 2, -1 );
+   HB_UINT nCtrlId;
+   USHORT  usTop  = ( USHORT ) hb_parni( 3 ),
+           usLeft = ( USHORT ) hb_parni( 4 ),
+           usBottom,
+           usRight;
 
    if( iStyle < SBS_HORZ || iStyle > SBS_VERT || ! HB_ISEVALITEM( 6 ) )
    {
@@ -459,14 +459,14 @@ HB_FUNC( WVW_XBCREATE )
       usRight  = usLeft + ( USHORT ) hb_parni( 5 ) - 1;
       usBottom = usTop;
 
-      iOffTop    = HB_ISARRAY( 7 ) ? hb_parvni( 7, 1 ) : 3 - wvw_win->byLineSpacing;
+      iOffTop    = HB_ISARRAY( 7 ) ? hb_parvni( 7, 1 ) : 3 - wvw_win->iLineSpacing;
       iOffLeft   = HB_ISARRAY( 7 ) ? hb_parvni( 7, 2 ) : 0;
       iOffBottom = HB_ISARRAY( 7 ) ? hb_parvni( 7, 3 ) : 0;
       iOffRight  = HB_ISARRAY( 7 ) ? hb_parvni( 7, 4 ) : 0;
    }
 
    if( hb_gt_wvw_GetMainCoordMode() )
-      hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
 
    xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
@@ -474,7 +474,7 @@ HB_FUNC( WVW_XBCREATE )
 
    xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= wvw_win->byLineSpacing;
+   xy.y -= wvw_win->iLineSpacing;
 
    if( iStyle == SBS_VERT )
    {
@@ -487,13 +487,13 @@ HB_FUNC( WVW_XBCREATE )
       iBottom = iTop + wvw_win->PTEXTSIZE.y - 1 + iOffBottom;
    }
 
-   uiXBid = hb_gt_wvw_LastControlId( usWinNum, WVW_CONTROL_SCROLLBAR );
-   if( uiXBid == 0 )
-      uiXBid = WVW_ID_BASE_SCROLLBAR;
+   nCtrlId = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_SCROLLBAR );
+   if( nCtrlId == 0 )
+      nCtrlId = WVW_ID_BASE_SCROLLBAR;
    else
-      uiXBid++;
+      nCtrlId++;
 
-   hWndXB = CreateWindowEx(
+   hWnd = CreateWindowEx(
       0L,                                       /* no extended styles */
       "SCROLLBAR",                              /* scroll bar control class */
       NULL,                                     /* text for window title bar */
@@ -503,11 +503,11 @@ HB_FUNC( WVW_XBCREATE )
       iRight - iLeft + 1,                       /* width of the scroll bar */
       iBottom - iTop + 1,                       /* height */
       hWndParent,                               /* handle to main window */
-      ( HMENU ) ( HB_PTRDIFF ) uiXBid,          /* id for this scroll bar control */
+      ( HMENU ) ( HB_PTRDIFF ) nCtrlId,         /* id for this scroll bar control */
       hb_gt_wvw_GetWvwData()->hInstance,        /* instance owning this window */
       NULL );                                   /* pointer not needed */
 
-   if( hWndXB )
+   if( hWnd )
    {
       RECT rXB, rOffXB;
 
@@ -523,16 +523,16 @@ HB_FUNC( WVW_XBCREATE )
       rOffXB.bottom = iOffBottom;
       rOffXB.right  = iOffRight;
 
-      SetScrollRange( hWndXB, SB_CTL, 0, 99, FALSE );
-      SetScrollPos( hWndXB, SB_CTL, 0, TRUE );
+      SetScrollRange( hWnd, SB_CTL, 0, 99, FALSE );
+      SetScrollPos( hWnd, SB_CTL, 0, TRUE );
 
-      hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, uiXBid, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( HB_BYTE ) iStyle );
+      hb_gt_wvw_AddControlHandle( nWin, WVW_CONTROL_SCROLLBAR, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( HB_BYTE ) iStyle );
 
-      OldProc = ( WNDPROC ) SetWindowLongPtr( hWndXB, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_XBProc );
+      OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_XBProc );
 
-      hb_gt_wvw_StoreControlProc( usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, OldProc );
+      hb_gt_wvw_StoreControlProc( nWin, WVW_CONTROL_SCROLLBAR, hWnd, OldProc );
 
-      hb_retnl( uiXBid );
+      hb_retnl( nCtrlId );
    }
    else
       hb_retnl( 0 );
@@ -544,13 +544,13 @@ HB_FUNC( WVW_XBCREATE )
 HB_FUNC( WVW_XBDESTROY )
 {
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT       uiXBid  = ( UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
+   HB_UINT    nCtrlId = ( HB_UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd     = wvw_win->pcdList;
    WVW_CTRL * pcdPrev = NULL;
 
    while( pcd )
    {
-      if( pcd->byCtrlClass == WVW_CONTROL_SCROLLBAR && pcd->uiCtrlid == uiXBid )
+      if( pcd->nClass == WVW_CONTROL_SCROLLBAR && pcd->nId == nCtrlId )
          break;
 
       pcdPrev = pcd;
@@ -559,15 +559,15 @@ HB_FUNC( WVW_XBDESTROY )
 
    if( pcd )
    {
-      DestroyWindow( pcd->hWndCtrl );
+      DestroyWindow( pcd->hWnd );
 
       if( pcdPrev )
          pcdPrev->pNext = pcd->pNext;
       else
-         wvw_win->pcdCtrlList = pcd->pNext;
+         wvw_win->pcdList = pcd->pNext;
 
-      if( pcd->phiCodeBlock )
-         hb_itemRelease( pcd->phiCodeBlock );
+      if( pcd->pBlock )
+         hb_itemRelease( pcd->pBlock );
 
       hb_xfree( pcd );
    }
@@ -582,10 +582,10 @@ HB_FUNC( WVW_XBDESTROY )
  */
 HB_FUNC( WVW_XBUPDATE )
 {
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
-   int  iPage  = hb_parni( 4 );
+   HWND hWnd  = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
+   int  iPage = hb_parni( 4 );
 
-   if( hWndXB && iPage >= 0 )
+   if( hWnd && iPage >= 0 )
    {
       SCROLLINFO si;
       UINT       fMask = SIF_DISABLENOSCROLL;
@@ -606,7 +606,7 @@ HB_FUNC( WVW_XBUPDATE )
       si.nPage  = ( UINT ) iPage;
       si.nPos   = hb_parni( 3 );
 
-      hb_retni( SetScrollInfo( hWndXB, SB_CTL, &si, TRUE ) );
+      hb_retni( SetScrollInfo( hWnd, SB_CTL, &si, TRUE ) );
    }
    else
       hb_retni( -1 );
@@ -618,9 +618,9 @@ HB_FUNC( WVW_XBUPDATE )
  */
 HB_FUNC( WVW_XBINFO )
 {
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWndXB )
+   if( hWnd )
    {
       SCROLLINFO si;
 
@@ -629,7 +629,7 @@ HB_FUNC( WVW_XBINFO )
       si.cbSize = sizeof( si );
       si.fMask  = SIF_ALL;
 
-      if( GetScrollInfo( hWndXB, SB_CTL, &si ) )
+      if( GetScrollInfo( hWnd, SB_CTL, &si ) )
       {
          PHB_ITEM aInfo = hb_itemArrayNew( 5 );
 
@@ -659,10 +659,10 @@ HB_FUNC( WVW_XBINFO )
 HB_FUNC( WVW_XBENABLE )
 {
    UINT uiFlags = ( UINT ) hb_parni( 3 );
-   HWND hWndXB  = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd    = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWndXB && uiFlags <= ESB_DISABLE_BOTH )
-      hb_retl( EnableScrollBar( hWndXB, SB_CTL, uiFlags ) );
+   if( hWnd && uiFlags <= ESB_DISABLE_BOTH )
+      hb_retl( EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
    else
       hb_retl( HB_FALSE );
 }
@@ -676,13 +676,10 @@ HB_FUNC( WVW_XBENABLE )
  */
 HB_FUNC( WVW_XBSHOW )
 {
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWndXB )
-      hb_retl( ShowScrollBar( hWndXB, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
+   if( hWnd )
+      hb_retl( ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
    else
       hb_retl( HB_FALSE );
 }
-
-
-/* SCROLLBAR ends */

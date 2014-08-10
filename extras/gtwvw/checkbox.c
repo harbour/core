@@ -97,7 +97,7 @@ HB_FUNC( WVW_CXCREATE )
 
       LPCTSTR      lpszCaption  = hb_parc( 6 );
       const char * szBitmap     = hb_parc( 7 );
-      UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
+      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parni( 7 );
       double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
       HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 
@@ -122,13 +122,13 @@ HB_FUNC( WVW_CXCREATE )
 HB_FUNC( WVW_CXDESTROY )
 {
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT       uiCXid  = ( UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
+   HB_UINT    nCtrlId = ( HB_UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd     = wvw_win->pcdList;
    WVW_CTRL * pcdPrev = NULL;
 
    while( pcd )
    {
-      if( pcd->byCtrlClass == WVW_CONTROL_CHECKBOX && pcd->uiCtrlid == uiCXid )
+      if( pcd->nClass == WVW_CONTROL_CHECKBOX && pcd->nId == nCtrlId )
          break;
       pcdPrev = pcd;
       pcd     = pcd->pNext;
@@ -136,15 +136,15 @@ HB_FUNC( WVW_CXDESTROY )
 
    if( pcd )
    {
-      DestroyWindow( pcd->hWndCtrl );
+      DestroyWindow( pcd->hWnd );
 
       if( pcdPrev == NULL )
-         wvw_win->pcdCtrlList = pcd->pNext;
+         wvw_win->pcdList = pcd->pNext;
       else
          pcdPrev->pNext = pcd->pNext;
 
-      if( pcd->phiCodeBlock )
-         hb_itemRelease( pcd->phiCodeBlock );
+      if( pcd->pBlock )
+         hb_itemRelease( pcd->pBlock );
 
       hb_xfree( pcd );
    }
@@ -155,10 +155,10 @@ HB_FUNC( WVW_CXDESTROY )
  */
 HB_FUNC( WVW_CXSETFOCUS )
 {
-   HWND hWndCX = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWndCX )
-      hb_retl( SetFocus( hWndCX ) != NULL );
+   if( hWnd )
+      hb_retl( SetFocus( hWnd ) != NULL );
    else
       hb_retl( HB_FALSE );
 }
@@ -171,18 +171,18 @@ HB_FUNC( WVW_CXSETFOCUS )
  */
 HB_FUNC( WVW_CXENABLE )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
-   HWND hWndCX   = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), NULL );
+   HB_UINT nWin = WVW_WHICH_WINDOW;
+   HWND    hWnd = hb_gt_wvw_FindControlHandle( nWin, WVW_CONTROL_CHECKBOX, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWndCX )
+   if( hWnd )
    {
       HB_BOOL bEnable = hb_parldef( 3, HB_TRUE );
 
-      hb_retl( EnableWindow( hWndCX, ( BOOL ) bEnable ) == 0 );
+      hb_retl( EnableWindow( hWnd, ( BOOL ) bEnable ) == 0 );
 
       if( ! bEnable )
       {
-         WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( usWinNum );
+         WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
          SetFocus( wvw_win->hWnd );
       }
    }
@@ -197,23 +197,23 @@ HB_FUNC( WVW_CXENABLE )
  */
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
-   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
-   PHB_ITEM   phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
-   HB_BOOL    bOldSetting  = wvw->bRecurseCBlock;
+   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
+   WVW_CTRL * pcd         = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
+   PHB_ITEM   pBlock      = hb_param( 3, HB_IT_EVALITEM );
+   HB_BOOL    fOldSetting = wvw->fRecurseCBlock;
 
-   if( phiCodeBlock && pcd && ! pcd->bBusy )
+   if( pBlock && pcd && ! pcd->fBusy )
    {
-      wvw->bRecurseCBlock = HB_FALSE;
-      pcd->bBusy = HB_TRUE;
+      wvw->fRecurseCBlock = HB_FALSE;
+      pcd->fBusy = HB_TRUE;
 
-      if( pcd->phiCodeBlock )
-         hb_itemRelease( pcd->phiCodeBlock );
+      if( pcd->pBlock )
+         hb_itemRelease( pcd->pBlock );
 
-      pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
+      pcd->pBlock = hb_itemNew( pBlock );
 
-      pcd->bBusy = HB_FALSE;
-      wvw->bRecurseCBlock = bOldSetting;
+      pcd->fBusy = HB_FALSE;
+      wvw->fRecurseCBlock = fOldSetting;
 
       hb_retl( HB_TRUE );
    }
@@ -230,10 +230,10 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
  */
 HB_FUNC( WVW_CXSETCHECK )
 {
-   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
-   if( pcd->hWndCtrl )
-      SendMessage( pcd->hWndCtrl, BM_SETCHECK, ( WPARAM ) ( ULONG ) hb_parnidef( 3, BST_CHECKED ), 0 );
+   if( pcd->hWnd )
+      SendMessage( pcd->hWnd, BM_SETCHECK, ( WPARAM ) ( ULONG ) hb_parnidef( 3, BST_CHECKED ), 0 );
 
    hb_retl( HB_TRUE );
 }
@@ -247,10 +247,10 @@ HB_FUNC( WVW_CXSETCHECK )
 HB_FUNC( WVW_CXGETCHECK )
 {
    ULONG      ulCheck;
-   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
-   if( pcd->hWndCtrl )
-      ulCheck = ( int ) SendMessage( pcd->hWndCtrl, BM_GETCHECK, 0, 0 );
+   if( pcd->hWnd )
+      ulCheck = ( int ) SendMessage( pcd->hWnd, BM_GETCHECK, 0, 0 );
    else
       ulCheck = 0;
 
@@ -287,13 +287,13 @@ HB_FUNC( WVW_CXSETFONT )
       if( hFont )
       {
 #if 0
-         WVW_CTRL * pcd = wvw_win->pcdCtrlList;
+         WVW_CTRL * pcd = wvw_win->pcdList;
 
          while( pcd )
          {
-            if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON &&
-                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
-               SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
+            if( pcd->nClass == WVW_CONTROL_PUSHBUTTON &&
+                ( HFONT ) SendMessage( pcd->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
+               SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
          }
@@ -310,16 +310,16 @@ HB_FUNC( WVW_CXSETFONT )
 
 HB_FUNC( WVW_CXSTATUSFONT )
 {
-   UINT       usWinNum = WVW_WHICH_WINDOW;
-   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
-   WVW_CTRL * pcd      = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
+   HB_UINT    nWin    = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( nWin, WVW_CONTROL_PUSHBUTTON, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
-   if( pcd->hWndCtrl )
+   if( pcd->hWnd )
    {
       if( hb_parldef( 3, HB_TRUE ) /* lFocus */ )
-         SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) wvw_win->hCXfont, ( LPARAM ) TRUE );
+         SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hCXfont, ( LPARAM ) TRUE );
       else
-         SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) wvw_win->hPBfont, ( LPARAM ) TRUE );
+         SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hPBfont, ( LPARAM ) TRUE );
    }
 
    hb_retl( HB_TRUE );

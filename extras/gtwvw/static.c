@@ -51,13 +51,13 @@
 
 HB_FUNC( WVW_STCREATE )
 {
-   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum = WVW_WHICH_WINDOW;
-   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   HB_UINT    nWin    = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
    HANDLE hInstance  = NULL;
    HWND   hWndParent = wvw_win->hWnd;
-   HWND   hWndCB;
+   HWND   hWnd;
 
    POINT   xy;
    int     iTop, iLeft, iBottom, iRight;
@@ -65,7 +65,7 @@ HB_FUNC( WVW_STCREATE )
    HB_BOOL bBorder   = hb_parl( 7 );
    ULONG   ulExStyle = bBorder ? WS_EX_CLIENTEDGE : 0;
 
-   UINT uiCBid;
+   HB_UINT uiCBid;
 
    USHORT usWidth  = ( USHORT ) hb_parni( 4 );
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
@@ -98,7 +98,7 @@ HB_FUNC( WVW_STCREATE )
    iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
-      hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
 
    xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
@@ -106,12 +106,12 @@ HB_FUNC( WVW_STCREATE )
 
    xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= wvw_win->byLineSpacing;
+   xy.y -= wvw_win->iLineSpacing;
 
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
 
-   uiCBid = hb_gt_wvw_LastControlId( usWinNum, WVW_CONTROL_STATIC );
+   uiCBid = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_STATIC );
    if( uiCBid == 0 )
       uiCBid = WVW_ID_BASE_STATIC;
    else
@@ -119,7 +119,7 @@ HB_FUNC( WVW_STCREATE )
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
-   hWndCB = CreateWindowEx(
+   hWnd = CreateWindowEx(
       ulExStyle,
       "STATIC",
       NULL,
@@ -133,16 +133,16 @@ HB_FUNC( WVW_STCREATE )
       ( HINSTANCE ) hInstance,
       NULL );
 
-   if( hWndCB )
+   if( hWnd )
    {
       if( HB_ISCHAR( 5 ) )
-         SendMessage( hWndCB, WM_SETTEXT, 0, ( LPARAM ) hb_parc( 5 ) );
+         SendMessage( hWnd, WM_SETTEXT, 0, ( LPARAM ) hb_parc( 5 ) );
       if( hFont )
-         SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
+         SendMessage( hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
       else
-         SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) wvw_win->hSTfont, ( LPARAM ) TRUE );
+         SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSTfont, ( LPARAM ) TRUE );
       hb_retnl( uiCBid );
-      HB_STOREHANDLE( hWndCB, 9 );
+      HB_STOREHANDLE( hWnd, 9 );
    }
    else
       hb_retnl( 0 );
@@ -151,11 +151,11 @@ HB_FUNC( WVW_STCREATE )
 
 HB_FUNC( WVW_STSETTEXT )
 {
-   HWND hWndCB = ( HWND ) HB_PARHANDLE( 2 );
+   HWND hWnd = ( HWND ) HB_PARHANDLE( 2 );
 
-   if( hWndCB )
+   if( hWnd )
    {
-      SetWindowText( ( HWND ) hWndCB, ( LPCTSTR ) hb_parc( 3 ) );
+      SetWindowText( ( HWND ) hWnd, ( LPCTSTR ) hb_parc( 3 ) );
       hb_retl( HB_TRUE );
    }
    else
@@ -191,13 +191,13 @@ HB_FUNC( WVW_STSETFONT )
       HFONT hFont    = CreateFontIndirect( &wvw->lfST );
       if( hFont )
       {
-         WVW_CTRL * pcd = wvw_win->pcdCtrlList;
+         WVW_CTRL * pcd = wvw_win->pcdList;
 
          while( pcd )
          {
-            if( pcd->byCtrlClass == WVW_CONTROL_STATIC &&
-                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
-               SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
+            if( pcd->nClass == WVW_CONTROL_STATIC &&
+                ( HFONT ) SendMessage( pcd->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
+               SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
          }

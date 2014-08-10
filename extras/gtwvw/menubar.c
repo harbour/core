@@ -46,12 +46,12 @@
 
 HB_FUNC( WVW_SETMENU )
 {
-   UINT      usWinNum = WVW_WHICH_WINDOW;
-   WVW_WIN * pWinData = hb_gt_wvw_GetWindowsData( usWinNum );
+   HB_UINT   nWin     = WVW_WHICH_WINDOW;
+   WVW_WIN * pWinData = hb_gt_wvw_GetWindowsData( nWin );
 
    SetMenu( pWinData->hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
 
-   hb_gt_wvw_ResetWindow( usWinNum );
+   hb_gt_wvw_ResetWindow( nWin );
 }
 
 

@@ -70,9 +70,9 @@
  *
  * lMap3Dcolors: defaults to .F.
  *          if .T. the following color mapping will be performed:
- *             RGB(192,192,192) --> COLOR_3DFACE   ("transparent")
- *             RGB(128,128,128) --> COLOR_3DSHADOW
- *             RGB(223,223,223) --> COLOR_3DLIGHT
+ *             RGB( 192, 192, 192 ) --> COLOR_3DFACE   ("transparent")
+ *             RGB( 128, 128, 128 ) --> COLOR_3DSHADOW
+ *             RGB( 223, 223, 223 ) --> COLOR_3DLIGHT
  *          This might be desirable to have transparent effect.
  *          LIMITATION: this will work on 256 colored bitmaps only
  *
@@ -90,7 +90,6 @@
  *
  * example:
  */
-
 HB_FUNC( WVW_PBCREATE )
 {
    if( HB_ISEVALITEM( 8 ) )
@@ -101,7 +100,7 @@ HB_FUNC( WVW_PBCREATE )
              usRight  = ( USHORT ) hb_parni( 5 );
       LPCTSTR      lpszCaption  = hb_parc( 6 );
       const char * szBitmap     = hb_parc( 7 );
-      UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
+      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parni( 7 );
       double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
       HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 
@@ -118,7 +117,6 @@ HB_FUNC( WVW_PBCREATE )
    }
    else
       hb_retnl( 0 );
-
 }
 
 /* wvw_pbDestroy( [nWinNum], nPBid )
@@ -127,13 +125,13 @@ HB_FUNC( WVW_PBCREATE )
 HB_FUNC( WVW_PBDESTROY )
 {
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT       uiPBid  = ( UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
+   HB_UINT    nCtrlId = ( HB_UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd     = wvw_win->pcdList;
    WVW_CTRL * pcdPrev = NULL;
 
    while( pcd )
    {
-      if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON && pcd->uiCtrlid == uiPBid )
+      if( pcd->nClass == WVW_CONTROL_PUSHBUTTON && pcd->nId == nCtrlId )
          break;
       pcdPrev = pcd;
       pcd     = pcd->pNext;
@@ -141,15 +139,15 @@ HB_FUNC( WVW_PBDESTROY )
 
    if( pcd )
    {
-      DestroyWindow( pcd->hWndCtrl );
+      DestroyWindow( pcd->hWnd );
 
       if( pcdPrev )
          pcdPrev->pNext = pcd->pNext;
       else
-         wvw_win->pcdCtrlList = pcd->pNext;
+         wvw_win->pcdList = pcd->pNext;
 
-      if( pcd->phiCodeBlock )
-         hb_itemRelease( pcd->phiCodeBlock );
+      if( pcd->pBlock )
+         hb_itemRelease( pcd->pBlock );
 
       hb_xfree( pcd );
    }
@@ -160,10 +158,10 @@ HB_FUNC( WVW_PBDESTROY )
  */
 HB_FUNC( WVW_PBSETFOCUS )
 {
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWndPB )
-      hb_retl( SetFocus( hWndPB ) != NULL );
+   if( hWnd )
+      hb_retl( SetFocus( hWnd ) != NULL );
    else
       hb_retl( HB_FALSE );
 }
@@ -173,9 +171,9 @@ HB_FUNC( WVW_PBSETFOCUS )
  */
 HB_FUNC( WVW_PBISFOCUSED )
 {
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   hb_retl( GetFocus() == hWndPB );
+   hb_retl( GetFocus() == hWnd );
 }
 
 /* wvw_pbEnable( [nWinNum], nButtonId, [lToggle] )
@@ -186,15 +184,15 @@ HB_FUNC( WVW_PBISFOCUSED )
  */
 HB_FUNC( WVW_PBENABLE )
 {
-   UINT      usWinNum = WVW_WHICH_WINDOW;
-   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND      hWndPB   = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
+   HB_UINT   nWin    = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   HWND      hWnd    = hb_gt_wvw_FindControlHandle( nWin, WVW_CONTROL_PUSHBUTTON, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWndPB )
+   if( hWnd )
    {
       HB_BOOL bEnable = hb_parldef( 3, HB_TRUE );
 
-      hb_retl( EnableWindow( hWndPB, ( BOOL ) bEnable ) == 0 );
+      hb_retl( EnableWindow( hWnd, ( BOOL ) bEnable ) == 0 );
 
       if( ! bEnable )
          SetFocus( wvw_win->hWnd );
@@ -210,24 +208,24 @@ HB_FUNC( WVW_PBENABLE )
  */
 HB_FUNC( WVW_PBSETCODEBLOCK )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
-   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
-   PHB_ITEM   phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
+   WVW_GLOB * wvw    = hb_gt_wvw_GetWvwData();
+   WVW_CTRL * pcd    = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( HB_UINT ) hb_parnl( 2 ) );
+   PHB_ITEM   pBlock = hb_param( 3, HB_IT_EVALITEM );
 
-   if( phiCodeBlock && pcd && ! pcd->bBusy )
+   if( pBlock && pcd && ! pcd->fBusy )
    {
-      HB_BOOL bOldSetting = wvw->bRecurseCBlock;
+      HB_BOOL fOldSetting = wvw->fRecurseCBlock;
 
-      wvw->bRecurseCBlock = HB_FALSE;
-      pcd->bBusy = HB_TRUE;
+      wvw->fRecurseCBlock = HB_FALSE;
+      pcd->fBusy = HB_TRUE;
 
-      if( pcd->phiCodeBlock )
-         hb_itemRelease( pcd->phiCodeBlock );
+      if( pcd->pBlock )
+         hb_itemRelease( pcd->pBlock );
 
-      pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
+      pcd->pBlock = hb_itemNew( pBlock );
 
-      pcd->bBusy = HB_FALSE;
-      wvw->bRecurseCBlock = bOldSetting;
+      pcd->fBusy = HB_FALSE;
+      wvw->fRecurseCBlock = fOldSetting;
 
       hb_retl( HB_TRUE );
    }
@@ -240,7 +238,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
       if( pcd == NULL )
          MessageBox( NULL, TEXT( "Control data not found" ), wvw->szAppName, MB_ICONERROR );
 
-      if( pcd->bBusy )
+      if( pcd->fBusy )
          MessageBox( NULL, TEXT( "Codeblock is busy" ), wvw->szAppName, MB_ICONERROR );
 #endif
       hb_retl( HB_FALSE );
@@ -262,16 +260,16 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
  */
 HB_FUNC( WVW_PBSETSTYLE )
 {
-   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
-   if( pcd->hWndCtrl )
-      SendMessage( pcd->hWndCtrl, BM_SETSTYLE, ( WPARAM ) ( ULONG ) hb_parni( 3 ), ( LPARAM ) TRUE );
+   if( pcd->hWnd )
+      SendMessage( pcd->hWnd, BM_SETSTYLE, ( WPARAM ) ( ULONG ) hb_parni( 3 ), ( LPARAM ) TRUE );
 
    hb_retl( HB_TRUE );
 }
 
-/* wvw_pbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
- *                             lItalic, lUnderline, lStrikeout
+/* wvw_pbSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
+ *                             lItalic, lUnderline, lStrikeout )
  * this will initialize font for ALL pushbuttons in window nWinNum
  * (including ones created later on)
  */
@@ -303,13 +301,13 @@ HB_FUNC( WVW_PBSETFONT )
       HFONT hFont    = CreateFontIndirect( &wvw->lfPB );
       if( hFont )
       {
-         WVW_CTRL * pcd = wvw_win->pcdCtrlList;
+         WVW_CTRL * pcd = wvw_win->pcdList;
 
          while( pcd )
          {
-            if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON &&
-                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
-               SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
+            if( pcd->nClass == WVW_CONTROL_PUSHBUTTON &&
+                ( HFONT ) SendMessage( pcd->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
+               SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
          }
