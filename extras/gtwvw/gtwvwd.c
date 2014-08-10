@@ -2110,13 +2110,13 @@ static void hb_gt_wvwCreateObjects( UINT usWinNum )
    if( usWinNum > 0 )
       return;
 
-   s_pWvwData->sApp->penWhite    = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 255, 255, 255 ) );
-   s_pWvwData->sApp->penBlack    = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0, 0, 0 ) );
-   s_pWvwData->sApp->penWhiteDim = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 205, 205, 205 ) );
-   s_pWvwData->sApp->penDarkGray = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 150, 150, 150 ) );
-   s_pWvwData->sApp->penGray     = CreatePen( PS_SOLID, 0, ( COLORREF ) s_COLORS[ 7 ] );
-   s_pWvwData->sApp->penNull     = CreatePen( PS_NULL, 0, ( COLORREF ) s_COLORS[ 7 ] );
-   s_pWvwData->sApp->currentPen  = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0, 0, 0 ) );
+   s_pWvwData->sApp->penWhite    = CreatePen( PS_SOLID, 0, RGB( 255, 255, 255 ) );
+   s_pWvwData->sApp->penBlack    = CreatePen( PS_SOLID, 0, RGB( 0, 0, 0 ) );
+   s_pWvwData->sApp->penWhiteDim = CreatePen( PS_SOLID, 0, RGB( 205, 205, 205 ) );
+   s_pWvwData->sApp->penDarkGray = CreatePen( PS_SOLID, 0, RGB( 150, 150, 150 ) );
+   s_pWvwData->sApp->penGray     = CreatePen( PS_SOLID, 0, s_COLORS[ 7 ] );
+   s_pWvwData->sApp->penNull     = CreatePen( PS_NULL, 0, s_COLORS[ 7 ] );
+   s_pWvwData->sApp->currentPen  = CreatePen( PS_SOLID, 0, RGB( 0, 0, 0 ) );
 
    memset( &lb, 0, sizeof( lb ) );
 
@@ -2131,7 +2131,7 @@ static void hb_gt_wvwCreateObjects( UINT usWinNum )
    s_pWvwData->sApp->diagonalBrush = CreateBrushIndirect( &lb );
 
    lb.lbStyle = BS_SOLID;
-   lb.lbColor = 0;                          /* RGB( 0,0,0 ); */
+   lb.lbColor = RGB( 0, 0, 0 );
    lb.lbHatch = 0;
    s_pWvwData->sApp->solidBrush = CreateBrushIndirect( &lb );
 
@@ -2727,8 +2727,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
          GetUpdateRect( hWnd, &updateRect, FALSE );
          /* WARNING!!!
-            the GetUpdateRect() call MUST be made BEFORE the BeginPaint call, since
-            BeginPaint resets the update rectangle - don't move it or nothing is drawn! */
+            the GetUpdateRect() call MUST be made BEFORE the BeginPaint() call, since
+            BeginPaint() resets the update rectangle - don't move it or nothing is drawn! */
 
          /* 2005-06-25 TODO: MSDN says app should NOT call BeginPaint if GetUpdateRect returns zero */
 
@@ -3703,8 +3703,8 @@ static void hb_gt_wvwCreateToolTipWindow( WIN_DATA * pWindowData )
 
       memset( &ti, 0, sizeof( ti ) );
 
-      /* Prepare TOOLINFO structure for use as tracking tooltip. */
-      ti.cbSize    = sizeof( TOOLINFO );
+      /* Prepare structure for use as tracking tooltip. */
+      ti.cbSize    = sizeof( ti );
       ti.uFlags    = TTF_SUBCLASS;
       ti.hwnd      = pWindowData->hWnd;
       ti.uId       = WVW_ID_BASE_TOOLTIP + pWindowData->byWinId;
@@ -6172,7 +6172,7 @@ BOOL hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeight )
    if( HB_VTBL( pPic )->get_Handle( HB_THIS_( pPic ) &oHtemp ) == S_OK )
    {
       BITMAP bmTemp;
-      GetObject( ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, sizeof( BITMAP ), ( LPSTR ) &bmTemp );
+      GetObject( ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, sizeof( bmTemp ), ( LPVOID ) &bmTemp );
       *pWidth  = bmTemp.bmWidth;
       *pHeight = bmTemp.bmHeight;
    }
@@ -6232,7 +6232,7 @@ static void DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, short xStart,
                                  0,
                                  0 );
 
-   GetObject( hBitmap, sizeof( BITMAP ), ( LPSTR ) &bm );
+   GetObject( hBitmap, sizeof( bm ), ( LPVOID ) &bm );
    ptSize.x = bm.bmWidth;
    ptSize.y = bm.bmHeight;
    DPtoLP( hdcCopy, &ptSize, 1 );
@@ -6345,7 +6345,7 @@ BOOL hb_gt_wvw_DrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const c
       if( ! hBitmap )
          return FALSE;
 
-      GetObject( hBitmap, sizeof( BITMAP ), ( LPSTR ) &bmTemp );
+      GetObject( hBitmap, sizeof( bmTemp ), ( LPVOID ) &bmTemp );
       iWidth  = bmTemp.bmWidth;
       iHeight = bmTemp.bmHeight;
 
@@ -7682,8 +7682,6 @@ HB_FUNC( WVW_GETTITLE )
 /*              0=Black, 1=Blue, etc                               */
 /*              as returned from hb_ColorToN()                     */
 /* Creat. Date: 2004-01-15                                         */
-/* Last Modif.: 2004-01-15                                         */
-
 
 HB_FUNC( WVW_GETRGBCOLOR )
 {
@@ -8162,7 +8160,7 @@ IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, UINT ires
 
       if( iPicture == NULL )
       {
-         picd.cbSizeofstruct = sizeof( PICTDESC );
+         picd.cbSizeofstruct = sizeof( picd );
          picd.picType        = PICTYPE_BITMAP;
          picd.bmp.hbitmap    = hbmpx;
          OleCreatePictureIndirect( &picd, HB_ID_REF( IID_IPicture ), TRUE, ( LPVOID * ) &iPicture );

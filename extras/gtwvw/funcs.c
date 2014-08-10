@@ -644,7 +644,7 @@ HB_FUNC( GETBITMAPSIZE )
    BITMAP   bitmap;
    PHB_ITEM aMetr = hb_itemArrayNew( 3 );
 
-   GetObject( ( HBITMAP ) HB_PARHANDLE( 1 ), sizeof( BITMAP ), ( LPVOID ) &bitmap );
+   GetObject( ( HBITMAP ) HB_PARHANDLE( 1 ), sizeof( bitmap ), ( LPVOID ) &bitmap );
 
    hb_arraySetNL( aMetr, 1, bitmap.bmWidth );
    hb_arraySetNL( aMetr, 2, bitmap.bmHeight );
@@ -835,10 +835,10 @@ HB_FUNC( OPENBITMAP )
    }
 
    /* Retrieve the BITMAPFILEHEADER structure. */
-   hb_fsReadLarge( fhnd, &bmfh, sizeof( BITMAPFILEHEADER ) );
+   hb_fsReadLarge( fhnd, &bmfh, sizeof( bmfh ) );
 
    /* Retrieve the BITMAPFILEHEADER structure. */
-   hb_fsReadLarge( fhnd, &bmih, sizeof( BITMAPINFOHEADER ) );
+   hb_fsReadLarge( fhnd, &bmih, sizeof( bmih ) );
 
    /* Allocate memory for the BITMAPINFO structure. */
 
@@ -1000,7 +1000,7 @@ HB_FUNC( SELECTFONT )
    LOGFONT    lf;
    PHB_ITEM   pObj = hb_param( 1, HB_IT_OBJECT );
 
-   cf.lStructSize    = sizeof( CHOOSEFONT );
+   cf.lStructSize    = sizeof( cf );
    cf.hwndOwner      = NULL;
    cf.hDC            = NULL;
    cf.lpLogFont      = &lf;
@@ -1178,7 +1178,7 @@ HB_FUNC( DRAWBITMAP )
    int     nHeightDest = hb_parni( 7 );
 
    SelectObject( hDCmem, hBitmap );
-   GetObject( hBitmap, sizeof( BITMAP ), ( LPVOID ) &bitmap );
+   GetObject( hBitmap, sizeof( hBitmap ), ( LPVOID ) &bitmap );
    if( nWidthDest && ( nWidthDest != bitmap.bmWidth || nHeightDest != bitmap.bmHeight ) )
       StretchBlt( hDC, hb_parni( 4 ), hb_parni( 5 ), nWidthDest, nHeightDest, hDCmem,
                   0, 0, bitmap.bmWidth, bitmap.bmHeight, dwraster );
@@ -1548,7 +1548,7 @@ HB_FUNC( WVW_CHOOSEFONT )
 
    memset( &cf, 0, sizeof( cf ) );
 
-   cf.lStructSize    = sizeof( CHOOSEFONT );
+   cf.lStructSize    = sizeof( cf );
    cf.hwndOwner      = p->pWindows[ p->usNumWindows - 1 ]->hWnd;
    cf.hDC            = NULL;
    cf.lpLogFont      = &lf;
@@ -1604,7 +1604,7 @@ HB_FUNC( WVW_CHOOSECOLOR )
    for( i = 0; i < 16; i++ )
       crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
-   cc.lStructSize  = sizeof( CHOOSECOLOR );
+   cc.lStructSize  = sizeof( cc );
    cc.hwndOwner    = p->pWindows[ p->usNumWindows - 1 ]->hWnd;
    cc.rgbResult    = ( COLORREF ) hb_parnl( 1 );
    cc.lpCustColors = crCustClr;

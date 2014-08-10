@@ -70,43 +70,6 @@
 #include "hbapiitm.h"
 #include "hbwinuni.h"
 
-/* Header file so MSVC can use ole in C mode while compile in C++ mode
-   Copyright 2006 Paul Tucker <ptucker@sympatico.ca> */
-#if 0
-#if defined( _MSC_VER ) && ! defined( HB_OS_WIN_64 ) && \
-   ! defined( __LCC__ ) && ! defined( __POCC__ ) && ! defined( __XCC__ )
-
-#ifndef CINTERFACE
-#define CINTERFACE              1
-#endif
-
-#ifndef _REFGUID_DEFINED
-#define _REFGUID_DEFINED        1
-#define REFGUID                 const GUID * const
-#endif
-
-#ifndef _REFIID_DEFINED
-#define _REFIID_DEFINED         1
-#define REFIID                  const IID * const
-#endif
-
-#ifndef _REFCLSID_DEFINED
-#define _REFCLSID_DEFINED       1
-#define REFCLSID                const IID * const
-#endif
-
-#ifndef _REFFMTID_DEFINED
-#define _REFFMTID_DEFINED       1
-#define REFFMTID                const IID * const
-#endif
-
-#ifndef _SYS_GUID_OPERATOR_EQ_
-#define _SYS_GUID_OPERATOR_EQ_  1
-#endif
-
-#endif
-#endif
-
 #if defined( __BORLANDC__ ) || \
    ( defined( __WATCOMC__ ) && ! defined( __cplusplus ) )
    #if ! defined( NONAMELESSUNION )
@@ -118,9 +81,6 @@
 #include <ole2.h>
 #include <ocidl.h>
 #include <olectl.h>
-#if defined( __DMC__ ) && ! defined( LONG_PTR )
-   typedef __int64 LONG_PTR;
-#endif
 
 #include <winuser.h>
 #include <commctrl.h>
@@ -143,10 +103,6 @@
    #ifndef SetClassLongPtr
    #define SetClassLongPtr      SetClassLong
    #endif
-#endif
-
-#if defined( __MSC6__ ) || defined( __DMC__ )
-   #define LONG_PTR               LONG
 #endif
 
 /* macros used to hide type of interface: C or C++ */
