@@ -82,10 +82,10 @@
 
 HB_FUNC( WVW_PGCREATE )
 {
-   HANDLE    hInstance   = NULL;
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND      hWndParent  = pWindowData->hWnd;
+   HANDLE    hInstance  = NULL;
+   UINT      usWinNum   = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( usWinNum );
+   HWND      hWndParent = wvw_win->hWnd;
    HWND      hWndPG;
    POINT     xy;
    int       iTop, iLeft, iBottom, iRight;
@@ -110,12 +110,12 @@ HB_FUNC( WVW_PGCREATE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
-   xy.y   -= pWindowData->byLineSpacing;
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+   xy.y   -= wvw_win->byLineSpacing;
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
 
@@ -182,10 +182,10 @@ HB_FUNC( WVW_PGCREATE )
  */
 HB_FUNC( WVW_PGDESTROY )
 {
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT       uiPGid      = ( UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd         = pWindowData->pcdCtrlList;
-   WVW_CTRL * pcdPrev     = NULL;
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   UINT       uiPGid  = ( UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
+   WVW_CTRL * pcdPrev = NULL;
 
    while( pcd )
    {
@@ -203,7 +203,7 @@ HB_FUNC( WVW_PGDESTROY )
       if( pcdPrev )
          pcdPrev->pNext = pcd->pNext;
       else
-         pWindowData->pcdCtrlList = pcd->pNext;
+         wvw_win->pcdCtrlList = pcd->pNext;
 
       if( pcd->phiCodeBlock )
          hb_itemRelease( pcd->phiCodeBlock );

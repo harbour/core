@@ -51,12 +51,12 @@
 
 HB_FUNC( WVW_STCREATE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HANDLE hInstance  = NULL;
-   HWND   hWndParent = pWindowData->hWnd;
+   HWND   hWndParent = wvw_win->hWnd;
    HWND   hWndCB;
 
    POINT   xy;
@@ -82,10 +82,10 @@ HB_FUNC( WVW_STCREATE )
 
    if( HB_ISNUM( 8 ) )
       hFont = ( HFONT ) HB_PARHANDLE( 8 );
-   else if( pWindowData->hSTfont == NULL )
+   else if( wvw_win->hSTfont == NULL )
    {
-      pWindowData->hSTfont = CreateFontIndirect( &wvw->lfST );
-      if( pWindowData->hSTfont == NULL )
+      wvw_win->hSTfont = CreateFontIndirect( &wvw->lfST );
+      if( wvw_win->hSTfont == NULL )
       {
          hb_retnl( 0 );
          return;
@@ -100,13 +100,13 @@ HB_FUNC( WVW_STCREATE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
@@ -140,7 +140,7 @@ HB_FUNC( WVW_STCREATE )
       if( hFont )
          SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
       else
-         SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) pWindowData->hSTfont, ( LPARAM ) TRUE );
+         SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) wvw_win->hSTfont, ( LPARAM ) TRUE );
       hb_retnl( uiCBid );
       HB_STOREHANDLE( hWndCB, 9 );
    }
@@ -165,12 +165,12 @@ HB_FUNC( WVW_STSETTEXT )
 
 HB_FUNC( WVW_STSETFONT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    HB_BOOL retval = HB_TRUE;
 
-   wvw->lfST.lfHeight      = hb_parnldef( 3, pWindowData->fontHeight - 2 );
+   wvw->lfST.lfHeight      = hb_parnldef( 3, wvw_win->fontHeight - 2 );
    wvw->lfST.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfST.lfWidth;
    wvw->lfST.lfEscapement  = 0;
    wvw->lfST.lfOrientation = 0;
@@ -185,13 +185,13 @@ HB_FUNC( WVW_STSETFONT )
    if( HB_ISCHAR( 2 ) )
       hb_strncpy( wvw->lfST.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 
-   if( pWindowData->hSTfont )
+   if( wvw_win->hSTfont )
    {
-      HFONT hOldFont = pWindowData->hSTfont;
+      HFONT hOldFont = wvw_win->hSTfont;
       HFONT hFont    = CreateFontIndirect( &wvw->lfST );
       if( hFont )
       {
-         WVW_CTRL * pcd = pWindowData->pcdCtrlList;
+         WVW_CTRL * pcd = wvw_win->pcdCtrlList;
 
          while( pcd )
          {
@@ -202,7 +202,7 @@ HB_FUNC( WVW_STSETFONT )
             pcd = pcd->pNext;
          }
 
-         pWindowData->hSTfont = hFont;
+         wvw_win->hSTfont = hFont;
          DeleteObject( hOldFont );
       }
       else

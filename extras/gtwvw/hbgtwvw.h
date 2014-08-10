@@ -545,18 +545,18 @@ extern void       hb_gt_wvw_FUNCEpilogue( void );
 extern void       hb_gt_wvw_HBFUNCPrologue( UINT usWinNum,
                                             USHORT * pusRow1, USHORT * pusCol1,
                                             USHORT * pusRow2, USHORT * pusCol2 );
-extern RECT       hb_gt_wvw_GetXYFromColRowRect( WVW_WIN * pWindowData, RECT colrow );
-extern POINT      hb_gt_wvw_GetXYFromColRow( WVW_WIN * pWindowData, USHORT col, USHORT row );
+extern RECT       hb_gt_wvw_GetXYFromColRowRect( WVW_WIN * wvw_win, RECT colrow );
+extern POINT      hb_gt_wvw_GetXYFromColRow( WVW_WIN * wvw_win, USHORT col, USHORT row );
 extern COLORREF   hb_gt_wvw_GetColorData( int iIndex );
 extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHeight );
 extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeight );
-extern void       hb_gt_wvw_TBinitSize( WVW_WIN * pWindowData, HWND hWndTB );
+extern void       hb_gt_wvw_TBinitSize( WVW_WIN * wvw_win, HWND hWndTB );
 extern int        hb_gt_wvw_IndexToCommand( HWND hWndTB, int iIndex );
 extern int        hb_gt_wvw_CommandToIndex( HWND hWndTB, int iCommand );
-extern HB_BOOL    hb_gt_wvw_AddTBButton( HWND hWndToolbar, const TCHAR * szBitmap, UINT uiBitmap, const char * pszLabel, int iCommand, int iBitmapType, HB_BOOL bMap3Dcolors, WVW_WIN * pWindowData, HB_BOOL bDropdown );
+extern HB_BOOL    hb_gt_wvw_AddTBButton( HWND hWndToolbar, const TCHAR * szBitmap, UINT uiBitmap, const char * pszLabel, int iCommand, int iBitmapType, HB_BOOL bMap3Dcolors, WVW_WIN * wvw_win, HB_BOOL bDropdown );
 extern RECT       hb_gt_wvw_GetColRowFromXYRect( WVW_WIN * pWIndowData, RECT xy );
-extern BYTE       hb_gt_wvw_LineHeight( WVW_WIN * pWindowData );
-extern WPARAM     hb_gt_wvw_ProcessMessages( WVW_WIN * pWindowData );
+extern BYTE       hb_gt_wvw_LineHeight( WVW_WIN * wvw_win );
+extern WPARAM     hb_gt_wvw_ProcessMessages( WVW_WIN * wvw_win );
 /* control (eg. scrollbar) supporters: */
 extern HWND       hb_gt_wvw_FindControlHandle( UINT usWinNum, BYTE byCtrlClass, UINT uiCtrlid, byte * pbStyle );
 extern UINT       hb_gt_wvw_FindControlId( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, byte * pbStyle );
@@ -571,8 +571,8 @@ extern UINT       hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT us
                                           int iStyle );
 extern LONG       hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f );
 extern HFONT      hb_gt_wvw_GetFont( const TCHAR * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage );
-extern USHORT     hb_gt_wvw_GetMouseX( WVW_WIN * pWindowData );
-extern USHORT     hb_gt_wvw_GetMouseY( WVW_WIN * pWindowData );
+extern USHORT     hb_gt_wvw_GetMouseX( WVW_WIN * wvw_win );
+extern USHORT     hb_gt_wvw_GetMouseY( WVW_WIN * wvw_win );
 extern USHORT     hb_gt_wvw_RowOfs( UINT usWinNum );
 extern USHORT     hb_gt_wvw_ColOfs( UINT usWinNum );
 extern IPicture * hb_gt_wvw_LoadPicture( const char * image );

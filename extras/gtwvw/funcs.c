@@ -53,13 +53,13 @@
 
 HB_FUNC( WVW_YESCLOSE )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HMENU     hMenu       = GetSystemMenu( pWindowData->hWnd, FALSE );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   HMENU     hMenu   = GetSystemMenu( wvw_win->hWnd, FALSE );
 
    if( hMenu )
    {
       AppendMenu( hMenu, SC_CLOSE, MF_BYCOMMAND, "" );
-      DrawMenuBar( pWindowData->hWnd );
+      DrawMenuBar( wvw_win->hWnd );
    }
 }
 
@@ -510,12 +510,12 @@ HB_FUNC( SENDMESSAGE )
 
 HB_FUNC( SETPARENT )
 {
-   UINT      usWinNum     = WVW_WHICH_WINDOW;
-   UINT      usWinNum1    = HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : ( hb_gt_wvw_GetMainCoordMode() ? hb_gt_wvw_GetNumWindows() - 1 : hb_gt_wvw_GetCurWindow() );
-   WVW_WIN * pWindowData  = hb_gt_wvw_GetWindowsData( usWinNum );
-   WVW_WIN * pWindowData1 = hb_gt_wvw_GetWindowsData( usWinNum1 );
-   HWND      hWndParent   = pWindowData->hWnd;
-   HWND      hWndParent1  = pWindowData1->hWnd;
+   UINT      usWinNum    = WVW_WHICH_WINDOW;
+   UINT      usWinNum1   = HB_ISNUM( 2 ) ? ( USHORT ) hb_parni( 2 ) : ( hb_gt_wvw_GetMainCoordMode() ? hb_gt_wvw_GetNumWindows() - 1 : hb_gt_wvw_GetCurWindow() );
+   WVW_WIN * wvw_win     = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_WIN * wvw_win1    = hb_gt_wvw_GetWindowsData( usWinNum1 );
+   HWND      hWndParent  = wvw_win->hWnd;
+   HWND      hWndParent1 = wvw_win1->hWnd;
 
    if( usWinNum1 != 0 )
       SetParent( hWndParent, hWndParent1 );
@@ -552,8 +552,8 @@ HB_FUNC( ISWINDOW )
 
 HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
 /* HWND hWnd = ( HWND ) hb_parnl( 1 ); */
 
@@ -589,7 +589,7 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
    memset( &ti, 0, sizeof( ti ) );
 
    ti.uFlags = TTF_SUBCLASS | TTF_IDISHWND;
-   ti.hwnd   = pWindowData->hWnd;
+   ti.hwnd   = wvw_win->hWnd;
    ti.uId    = ( UINT ) hb_parnl( 2 );
 #if 0
    ti.uId = ( UINT ) GetDlgItem( hWnd, hb_parni( 2 ) );
@@ -1057,8 +1057,8 @@ HB_FUNC( INVALIDATERECT )
 
 HB_FUNC( TOOLBARADDBUTTONS )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HWND hWndCtrl = ( HWND ) HB_PARHANDLE( 2 );
    /* HWND hToolTip = ( HWND ) hb_parnl( 5 ) ; */
@@ -1078,7 +1078,7 @@ HB_FUNC( TOOLBARADDBUTTONS )
    SetWindowLong( hWndCtrl, GWL_STYLE, style | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT );
 
    SendMessage( hWndCtrl, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0L );
-   usOldHeight = pWindowData->usTBHeight;
+   usOldHeight = wvw_win->usTBHeight;
    for( ulCount = 0; ulCount < hb_arrayLen( pArray ); ulCount++ )
    {
       PHB_ITEM pTemp = hb_arrayGetItemPtr( pArray, ulCount + 1 );
@@ -1101,9 +1101,9 @@ HB_FUNC( TOOLBARADDBUTTONS )
 
    SendMessage( hWndCtrl, TB_ADDBUTTONS, ( WPARAM ) iButtons, ( LPARAM ) ( LPTBBUTTON ) tb );
    SendMessage( hWndCtrl, TB_AUTOSIZE, 0, 0 );
-   hb_gt_wvw_TBinitSize( pWindowData, hWndCtrl );
+   hb_gt_wvw_TBinitSize( wvw_win, hWndCtrl );
 
-   if( pWindowData->usTBHeight != usOldHeight )
+   if( wvw_win->usTBHeight != usOldHeight )
       hb_gt_wvw_ResetWindow( usWinNum );
 
    hb_xfree( tb );
@@ -1111,11 +1111,11 @@ HB_FUNC( TOOLBARADDBUTTONS )
 
 HB_FUNC( SETBITMAPRESOURCEID )
 {
-   WVW_WIN *   pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN *   wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    TBADDBITMAP tbab;
    HBITMAP     hBitmap     = ( HBITMAP ) HB_PARHANDLE( 3 );
    UINT        uiBitmap    = ( UINT ) hb_parni( 4 );
-   HWND        hWndToolbar = pWindowData->hToolBar;
+   HWND        hWndToolbar = wvw_win->hToolBar;
    int         iNewBitmap;
    int         iBitmapType = hb_parni( 2 );
    int         iOffset;
@@ -1126,13 +1126,13 @@ HB_FUNC( SETBITMAPRESOURCEID )
          iOffset = 0;
          break;
       case 1:
-         iOffset = pWindowData->iStartStdBitmap;
+         iOffset = wvw_win->iStartStdBitmap;
          break;
       case 2:
-         iOffset = pWindowData->iStartViewBitmap;
+         iOffset = wvw_win->iStartViewBitmap;
          break;
       case 3:
-         iOffset = pWindowData->iStartHistBitmap;
+         iOffset = wvw_win->iStartHistBitmap;
          break;
       default:
          iOffset = 0;
@@ -1276,10 +1276,10 @@ HB_FUNC( WVW_SETTIMER )
 
    if( wvw && wvw->a.pSymWVW_TIMER )
    {
-      UINT      usWinNum    = WVW_WHICH_WINDOW;
-      WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+      UINT      usWinNum = WVW_WHICH_WINDOW;
+      WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
-      SetTimer( pWindowData->hWnd, WVW_ID_BASE_TIMER + usWinNum, ( UINT ) hb_parni( 2 ), NULL );
+      SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + usWinNum, ( UINT ) hb_parni( 2 ), NULL );
 
       hb_retl( HB_TRUE );
    }
@@ -1298,10 +1298,10 @@ HB_FUNC( WVW_KILLTIMER )
 
    if( wvw && wvw->a.pSymWVW_TIMER )
    {
-      UINT      usWinNum    = WVW_WHICH_WINDOW;
-      WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+      UINT      usWinNum = WVW_WHICH_WINDOW;
+      WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
-      KillTimer( pWindowData->hWnd, WVW_ID_BASE_TIMER + usWinNum );
+      KillTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + usWinNum );
 
       hb_retl( HB_TRUE );
    }
@@ -1319,9 +1319,9 @@ HB_FUNC( WVW_KILLTIMER )
    (in WVT these is reflected in {0,0,0,0}) */
 HB_FUNC( WVW_GETPAINTRECT )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   RECT      rPaintRect  = pWindowData->rPaintPending;
-   PHB_ITEM  info        = hb_itemArrayNew( 4 );
+   WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   RECT      rPaintRect = wvw_win->rPaintPending;
+   PHB_ITEM  info       = hb_itemArrayNew( 4 );
 
    hb_arraySetNI( info, 1, rPaintRect.top );
    hb_arraySetNI( info, 2, rPaintRect.left );
@@ -1334,7 +1334,7 @@ HB_FUNC( WVW_GETPAINTRECT )
 
 HB_FUNC( WVW_SETPOINTER )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HCURSOR   hCursor;
 
    switch( hb_parni( 2 ) )
@@ -1407,7 +1407,7 @@ HB_FUNC( WVW_SETPOINTER )
          hCursor = LoadCursor( NULL, IDC_ARROW );
    }
 
-   SetClassLongPtr( pWindowData->hWnd, GCLP_HCURSOR, ( LONG_PTR ) hCursor );
+   SetClassLongPtr( wvw_win->hWnd, GCLP_HCURSOR, ( LONG_PTR ) hCursor );
 }
 
 
@@ -1443,7 +1443,7 @@ HB_FUNC( WVW_LOADFONT )
 
    if( wvw )
    {
-      WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( wvw->usNumWindows - 1 );
+      WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( wvw->usNumWindows - 1 );
       LOGFONT   logfont;
       int       iSlot = hb_parni( 1 ) - 1;
       HFONT     hFont;
@@ -1454,15 +1454,15 @@ HB_FUNC( WVW_LOADFONT )
       logfont.lfItalic         = ( BYTE ) hb_parl( 6 );
       logfont.lfUnderline      = ( BYTE ) hb_parl( 7 );
       logfont.lfStrikeOut      = ( BYTE ) hb_parl( 8 );
-      logfont.lfCharSet        = ( BYTE ) hb_parnidef( 9, pWindowData->CodePage );
+      logfont.lfCharSet        = ( BYTE ) hb_parnidef( 9, wvw_win->CodePage );
       logfont.lfOutPrecision   = 0;
       logfont.lfClipPrecision  = 0;
       logfont.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
       logfont.lfPitchAndFamily = FF_DONTCARE;
-      logfont.lfHeight         = hb_parnidef( 3, pWindowData->fontHeight );
-      logfont.lfWidth = hb_parnidef( 4, pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
+      logfont.lfHeight         = hb_parnidef( 3, wvw_win->fontHeight );
+      logfont.lfWidth = hb_parnidef( 4, wvw_win->fontWidth < 0 ? -wvw_win->fontWidth : wvw_win->fontWidth );
 
-      hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 2 ) ? hb_parc( 2 ) : pWindowData->fontFace, sizeof( logfont.lfFaceName ) - 1 );
+      hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 2 ) ? hb_parc( 2 ) : wvw_win->fontFace, sizeof( logfont.lfFaceName ) - 1 );
 
       hFont = CreateFontIndirect( &logfont );
       if( hFont )
@@ -1502,9 +1502,9 @@ HB_FUNC( WVW_LOADPEN )
 
 HB_FUNC( WVW_MESSAGEBOX )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
-   hb_retni( MessageBox( pWindowData->hWnd, hb_parcx( 2 ), hb_parcx( 3 ), hb_parnidef( 4, MB_OK ) ) );
+   hb_retni( MessageBox( wvw_win->hWnd, hb_parcx( 2 ), hb_parcx( 3 ), hb_parnidef( 4, MB_OK ) ) );
 }
 
 /* End of Drawing Primitives */
@@ -1623,18 +1623,18 @@ HB_FUNC( WVW_CHOOSECOLOR )
 HB_FUNC( WVW_SETMOUSEPOS )
 {
    POINT     xy;
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   USHORT    usRow       = ( USHORT ) hb_parni( 2 ),
-             usCol = ( USHORT ) hb_parni( 3 );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
+   USHORT    usRow    = ( USHORT ) hb_parni( 2 ),
+             usCol    = ( USHORT ) hb_parni( 3 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usRow, &usCol, NULL, NULL );
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usCol, usRow );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
 
-   if( ClientToScreen( pWindowData->hWnd, &xy ) )
-      hb_retl( SetCursorPos( xy.x, xy.y + ( pWindowData->PTEXTSIZE.y / 2 ) ) );
+   if( ClientToScreen( wvw_win->hWnd, &xy ) )
+      hb_retl( SetCursorPos( xy.x, xy.y + ( wvw_win->PTEXTSIZE.y / 2 ) ) );
    else
       hb_retl( HB_FALSE );
 }
@@ -1655,9 +1655,9 @@ HB_FUNC( WVW_SETMOUSEPOS )
 
 HB_FUNC( WVW_FILLRECTANGLE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT  xy;
    int    iTop, iLeft, iBottom, iRight;
@@ -1680,13 +1680,13 @@ HB_FUNC( WVW_FILLRECTANGLE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = bTight ? xy.y + 2 : xy.y;
    iLeft = bTight ? xy.x + 2 : xy.x;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1;
    iRight  = xy.x - 1;
@@ -1710,7 +1710,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
 
    hBrush = ! bUseBrush ? CreateBrushIndirect( &lb ) : ( HBRUSH ) HB_PARHANDLE( 6 );
 
-   FillRect( pWindowData->hdc, &xyRect, hBrush );
+   FillRect( wvw_win->hdc, &xyRect, hBrush );
 
    if( ! bUseBrush )
    {
@@ -1965,18 +1965,18 @@ HB_FUNC( WVW_GETCURSORPOS )
 /* wvw_ShowWindow( [nWinNum], nCmdShow ) */
 HB_FUNC( WVW_SHOWWINDOW )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
-   ShowWindow( pWindowData->hWnd, hb_parnidef( 2, SW_SHOWNORMAL ) );
+   ShowWindow( wvw_win->hWnd, hb_parnidef( 2, SW_SHOWNORMAL ) );
 }
 
 
 /* wvw_UpdateWindow( [nWinNum] ) */
 HB_FUNC( WVW_UPDATEWINDOW )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
-   UpdateWindow( pWindowData->hWnd );
+   UpdateWindow( wvw_win->hWnd );
 }
 
 /* Dialogs
@@ -2162,14 +2162,14 @@ HB_FUNC( WVW_DELETEOBJECT )
 
 HB_FUNC( WVW_SETONTOP )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    RECT      rect;
 
    memset( &rect, 0, sizeof( rect ) );
 
-   GetWindowRect( pWindowData->hWnd, &rect );
+   GetWindowRect( wvw_win->hWnd, &rect );
 
-   hb_retl( SetWindowPos( pWindowData->hWnd, HWND_TOPMOST,
+   hb_retl( SetWindowPos( wvw_win->hWnd, HWND_TOPMOST,
                           rect.left,
                           rect.top,
                           0,
@@ -2180,14 +2180,14 @@ HB_FUNC( WVW_SETONTOP )
 
 HB_FUNC( WVW_SETASNORMAL )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    RECT      rect;
 
    memset( &rect, 0, sizeof( rect ) );
 
-   GetWindowRect( pWindowData->hWnd, &rect );
+   GetWindowRect( wvw_win->hWnd, &rect );
 
-   hb_retl( SetWindowPos( pWindowData->hWnd, HWND_NOTOPMOST,
+   hb_retl( SetWindowPos( wvw_win->hWnd, HWND_NOTOPMOST,
                           rect.left,
                           rect.top,
                           0,
@@ -2203,8 +2203,8 @@ HB_FUNC( WVW_SETASNORMAL )
 
 HB_FUNC( WVW_SAVESCREEN )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HBITMAP  hBmp, oldBmp;
    POINT    xy;
@@ -2219,22 +2219,22 @@ HB_FUNC( WVW_SAVESCREEN )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y;
    iLeft = xy.x;
 
-   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
    iBottom = xy.y - 1;
    iRight  = xy.x - 1;
 
    iWidth  = iRight - iLeft + 1;
    iHeight = iBottom - iTop + 1;
 
-   hBmp = CreateCompatibleBitmap( pWindowData->hdc, iWidth, iHeight );
+   hBmp = CreateCompatibleBitmap( wvw_win->hdc, iWidth, iHeight );
 
-   oldBmp = ( HBITMAP ) SelectObject( pWindowData->hCompDC, hBmp );
-   BitBlt( pWindowData->hCompDC, 0, 0, iWidth, iHeight, pWindowData->hdc, iLeft, iTop, SRCCOPY );
-   SelectObject( pWindowData->hCompDC, oldBmp );
+   oldBmp = ( HBITMAP ) SelectObject( wvw_win->hCompDC, hBmp );
+   BitBlt( wvw_win->hCompDC, 0, 0, iWidth, iHeight, wvw_win->hdc, iLeft, iTop, SRCCOPY );
+   SelectObject( wvw_win->hCompDC, oldBmp );
 
    hb_arraySetNI( info, 1, iWidth );
    hb_arraySetNI( info, 2, iHeight );
@@ -2251,8 +2251,8 @@ HB_FUNC( WVW_SAVESCREEN )
 
 HB_FUNC( WVW_RESTSCREEN )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight, iWidth, iHeight;
@@ -2270,39 +2270,39 @@ HB_FUNC( WVW_RESTSCREEN )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y;
    iLeft = xy.x;
 
-   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
    iBottom = xy.y - 1;
    iRight  = xy.x - 1;
 
    iWidth  = iRight - iLeft + 1;
    iHeight = iBottom - iTop + 1;
 
-   hBmp = ( HBITMAP ) SelectObject( pWindowData->hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 6, 3 ) );
+   hBmp = ( HBITMAP ) SelectObject( wvw_win->hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 6, 3 ) );
    if( hBmp )
    {
       if( iWidth == hb_parvni( 6, 1 ) && iHeight == hb_parvni( 6, 2 ) )
       {
-         if( BitBlt( pWindowData->hdc,
+         if( BitBlt( wvw_win->hdc,
                      iLeft,
                      iTop,
                      iWidth,
                      iHeight,
-                     pWindowData->hCompDC,
+                     wvw_win->hCompDC,
                      0,
                      0,
                      SRCCOPY ) )
             bResult = HB_TRUE;
       }
-      else if( StretchBlt( pWindowData->hdc,
+      else if( StretchBlt( wvw_win->hdc,
                            iLeft,
                            iTop,
                            iWidth,
                            iHeight,
-                           pWindowData->hCompDC,
+                           wvw_win->hCompDC,
                            0,
                            0,
                            hb_parvni( 6, 1 ),
@@ -2310,7 +2310,7 @@ HB_FUNC( WVW_RESTSCREEN )
                            SRCCOPY ) )
          bResult = HB_TRUE;
 
-      SelectObject( pWindowData->hCompDC, hBmp );
+      SelectObject( wvw_win->hCompDC, hBmp );
 
       if( ! bDoNotDestroyBMP )
          DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 6, 3 ) );
@@ -2324,9 +2324,9 @@ HB_FUNC( WVW_RESTSCREEN )
                    lStrikeout, nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVW_CREATEFONT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = wvw->usNumWindows - 1;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = wvw->usNumWindows - 1;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    LOGFONT logfont;
    HFONT   hFont;
@@ -2339,15 +2339,15 @@ HB_FUNC( WVW_CREATEFONT )
    logfont.lfItalic         = ( BYTE ) hb_parl(  5 );
    logfont.lfUnderline      = ( BYTE ) hb_parl(  6 );
    logfont.lfStrikeOut      = ( BYTE ) hb_parl(  7 );
-   logfont.lfCharSet        = ( BYTE ) hb_parnidef( 8, pWindowData->CodePage );
+   logfont.lfCharSet        = ( BYTE ) hb_parnidef( 8, wvw_win->CodePage );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
    logfont.lfQuality        = ( BYTE ) hb_parnidef( 9, DEFAULT_QUALITY );
    logfont.lfPitchAndFamily = FF_DONTCARE;
-   logfont.lfHeight         = hb_parnidef( 2, pWindowData->fontHeight );
-   logfont.lfWidth = hb_parnidef( 3, pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
+   logfont.lfHeight         = hb_parnidef( 2, wvw_win->fontHeight );
+   logfont.lfWidth = hb_parnidef( 3, wvw_win->fontWidth < 0 ? -wvw_win->fontWidth : wvw_win->fontWidth );
 
-   hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 1 ) ? hb_parc( 1 ) : pWindowData->fontFace, sizeof( logfont.lfFaceName ) - 1 );
+   hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 1 ) ? hb_parc( 1 ) : wvw_win->fontFace, sizeof( logfont.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &logfont );
    if( hFont )

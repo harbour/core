@@ -52,8 +52,8 @@
 /* wvw_DrawLabelObj( [nWinNum], nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aOffset ) */
 HB_FUNC( WVW_DRAWLABELOBJ )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT    xy;
    int      iTop, iLeft, iBottom, iRight, x, y;
@@ -77,13 +77,13 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + 1 + iOffBottom;
    iRight  = xy.x - 1 + 1 + iOffRight;
@@ -91,13 +91,13 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    iAlignHorz = hb_parni( 7 );
    iAlignVert = hb_parni( 8 );
 
-   oldTextColor = SetTextColor( pWindowData->hdc, ( COLORREF ) hb_parnldef( 9, pWindowData->foreground ) );
-   oldBkColor   = SetBkColor( pWindowData->hdc, ( COLORREF ) hb_parnldef( 10, pWindowData->background ) );
-   oldFont      = ( HFONT ) SelectObject( pWindowData->hdc, ( HFONT ) HB_PARHANDLE( 11 ) );
+   oldTextColor = SetTextColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 9, wvw_win->foreground ) );
+   oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 10, wvw_win->background ) );
+   oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, ( HFONT ) HB_PARHANDLE( 11 ) );
 
    memset( &sz, 0, sizeof( sz ) );
 
-   GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), ( int ) strlen( hb_parcx( 6 ) ), &sz );
+   GetTextExtentPoint32( wvw_win->hdc, hb_parcx( 6 ), ( int ) strlen( hb_parcx( 6 ) ), &sz );
 
    x = iLeft;
    y = iTop;
@@ -129,7 +129,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
          break;
    }
 
-   oldTextAlign = SetTextAlign( pWindowData->hdc, iAlignH | iAlignV );
+   oldTextAlign = SetTextAlign( wvw_win->hdc, iAlignH | iAlignV );
 
    rect.top    = iTop;
    rect.left   = iLeft;
@@ -138,12 +138,12 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
    uiOptions = ETO_CLIPPED | ETO_OPAQUE;
 
-   ExtTextOut( pWindowData->hdc, x, y, uiOptions, &rect, hb_parcx( 6 ), ( UINT ) strlen( hb_parcx( 6 ) ), NULL );
+   ExtTextOut( wvw_win->hdc, x, y, uiOptions, &rect, hb_parcx( 6 ), ( UINT ) strlen( hb_parcx( 6 ) ), NULL );
 
-   SelectObject( pWindowData->hdc, oldFont );
-   SetTextAlign( pWindowData->hdc, oldTextAlign );
-   SetBkColor( pWindowData->hdc, oldBkColor );
-   SetTextColor( pWindowData->hdc, oldTextColor );
+   SelectObject( wvw_win->hdc, oldFont );
+   SetTextAlign( wvw_win->hdc, oldTextAlign );
+   SetBkColor( wvw_win->hdc, oldBkColor );
+   SetTextColor( wvw_win->hdc, oldTextColor );
 
    hb_retl( HB_TRUE );
 }
@@ -152,9 +152,9 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 /* wvw_DrawToolButtonState( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOff, nState ) */
 HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight;
@@ -168,13 +168,13 @@ HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + hb_parvni( 6, 1 );
    iLeft = xy.x + hb_parvni( 6, 2 );
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + hb_parvni( 6, 3 );
    iRight  = xy.x - 1 + hb_parvni( 6, 4 );
@@ -182,55 +182,55 @@ HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
    switch( iState )
    {
       case 0:
-         SelectObject( pWindowData->hdc, wvw->a.penGray );
+         SelectObject( wvw_win->hdc, wvw->a.penGray );
 
-         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right  */
-         LineTo( pWindowData->hdc, iRight, iBottom + 1 );
+         MoveToEx( wvw_win->hdc, iRight, iTop, NULL );           /* Right  */
+         LineTo( wvw_win->hdc, iRight, iBottom + 1 );
 
-         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom */
-         LineTo( pWindowData->hdc, iRight, iBottom );
+         MoveToEx( wvw_win->hdc, iLeft, iBottom, NULL );         /* Bottom */
+         LineTo( wvw_win->hdc, iRight, iBottom );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left   */
-         LineTo( pWindowData->hdc, iLeft, iBottom );
+         MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Left   */
+         LineTo( wvw_win->hdc, iLeft, iBottom );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top    */
-         LineTo( pWindowData->hdc, iRight, iTop );
+         MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Top    */
+         LineTo( wvw_win->hdc, iRight, iTop );
          break;
 
       case 1:
-         SelectObject( pWindowData->hdc, wvw->a.penBlack );
+         SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
-         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right  */
-         LineTo( pWindowData->hdc, iRight, iBottom + 1 );
+         MoveToEx( wvw_win->hdc, iRight, iTop, NULL );           /* Right  */
+         LineTo( wvw_win->hdc, iRight, iBottom + 1 );
 
-         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom */
-         LineTo( pWindowData->hdc, iRight, iBottom );
+         MoveToEx( wvw_win->hdc, iLeft, iBottom, NULL );         /* Bottom */
+         LineTo( wvw_win->hdc, iRight, iBottom );
 
-         SelectObject( pWindowData->hdc, wvw->a.penWhite );
+         SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left   */
-         LineTo( pWindowData->hdc, iLeft, iBottom );
+         MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Left   */
+         LineTo( wvw_win->hdc, iLeft, iBottom );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top    */
-         LineTo( pWindowData->hdc, iRight, iTop );
+         MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Top    */
+         LineTo( wvw_win->hdc, iRight, iTop );
          break;
 
       case 2:
-         SelectObject( pWindowData->hdc, wvw->a.penWhite );
+         SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
-         MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right  */
-         LineTo( pWindowData->hdc, iRight, iBottom + 1 );
+         MoveToEx( wvw_win->hdc, iRight, iTop, NULL );           /* Right  */
+         LineTo( wvw_win->hdc, iRight, iBottom + 1 );
 
-         MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom */
-         LineTo( pWindowData->hdc, iRight, iBottom );
+         MoveToEx( wvw_win->hdc, iLeft, iBottom, NULL );         /* Bottom */
+         LineTo( wvw_win->hdc, iRight, iBottom );
 
-         SelectObject( pWindowData->hdc, wvw->a.penBlack );
+         SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left   */
-         LineTo( pWindowData->hdc, iLeft, iBottom );
+         MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Left   */
+         LineTo( wvw_win->hdc, iLeft, iBottom );
 
-         MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top    */
-         LineTo( pWindowData->hdc, iRight, iTop );
+         MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Top    */
+         LineTo( wvw_win->hdc, iRight, iTop );
          break;
 
    }
@@ -242,9 +242,9 @@ HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be usefull */
 HB_FUNC( WVW_DRAWSCROLLBUTTON )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    int     iTop, iLeft, iBottom, iRight;
    POINT * Point;
@@ -260,13 +260,13 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + hb_parvni( 6, 1 );
    iLeft = xy.x + hb_parvni( 6, 2 );
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + hb_parvni( 6, 3 );
    iRight  = xy.x - 1 + hb_parvni( 6, 4 );
@@ -280,7 +280,7 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
       hb_gt_wvw_DrawBoxRecessed( usWinNum, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, HB_FALSE );
    else
       hb_gt_wvw_DrawBoxRaised( usWinNum, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, HB_FALSE );
-   SelectObject( pWindowData->hdc, wvw->a.solidBrush );
+   SelectObject( wvw_win->hdc, wvw->a.solidBrush );
 
    switch( hb_parni( 7 ) )
    {
@@ -329,7 +329,7 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
          break;
    }
 
-   Polygon( pWindowData->hdc, Point, 3 );
+   Polygon( wvw_win->hdc, Point, 3 );
 
    hb_xfree( Point );
 }
@@ -339,9 +339,9 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be usefull */
 HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight;
@@ -360,33 +360,33 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTabTop, NULL, NULL, NULL );
    }
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + hb_parvni( 6, 1 );
    iLeft = xy.x + hb_parvni( 6, 2 );
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + hb_parvni( 6, 3 );
    iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-   SetBkColor( pWindowData->hdc, RGB( 230, 230, 230 ) );
-   SelectObject( pWindowData->hdc, wvw->a.diagonalBrush );
+   SetBkColor( wvw_win->hdc, RGB( 230, 230, 230 ) );
+   SelectObject( wvw_win->hdc, wvw->a.diagonalBrush );
 
-   SelectObject( pWindowData->hdc, wvw->a.penNull );
-   Rectangle( pWindowData->hdc, iLeft, iTop, iRight + 1, iBottom + 1 );
+   SelectObject( wvw_win->hdc, wvw->a.penNull );
+   Rectangle( wvw_win->hdc, iLeft, iTop, iRight + 1, iBottom + 1 );
 
-   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft /* dummy */, usTabTop );
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft /* dummy */, usTabTop );
    iTabTop = xy.y;
 
    iTabLft = iLeft;
-   iTabBtm = iTabTop + pWindowData->PTEXTSIZE.y - 1;
+   iTabBtm = iTabTop + wvw_win->PTEXTSIZE.y - 1;
    iTabRgt = iRight;
 
-   SelectObject( pWindowData->hdc, wvw->a.wvwWhiteBrush );
-   SelectObject( pWindowData->hdc, wvw->a.penGray );
-   Rectangle( pWindowData->hdc, iTabLft, iTabTop, iTabRgt + 1, iTabBtm );
+   SelectObject( wvw_win->hdc, wvw->a.wvwWhiteBrush );
+   SelectObject( wvw_win->hdc, wvw->a.penGray );
+   Rectangle( wvw_win->hdc, iTabLft, iTabTop, iTabRgt + 1, iTabBtm );
 
    hb_gt_wvw_DrawBoxRaised( usWinNum, iTabTop + 1, iTabLft + 1, iTabBtm - 2, iTabRgt - 2, HB_FALSE );
 }
@@ -396,9 +396,9 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be usefull */
 HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iThumbLeft, iThumbRight;
@@ -417,30 +417,30 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, NULL, &usThumbLeft, NULL, NULL );
    }
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + hb_parvni( 6, 1 );
    iLeft = xy.x + hb_parvni( 6, 2 );
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + hb_parvni( 6, 3 );
    iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-   xy         = hb_gt_wvw_GetXYFromColRow( pWindowData, usThumbLeft, usTop /* dummy */ );
+   xy         = hb_gt_wvw_GetXYFromColRow( wvw_win, usThumbLeft, usTop /* dummy */ );
    iThumbLeft = xy.x;
 
-   iThumbRight = iThumbLeft + ( pWindowData->PTEXTSIZE.x * 2 ) - 1;
+   iThumbRight = iThumbLeft + ( wvw_win->PTEXTSIZE.x * 2 ) - 1;
 
-   SetBkColor( pWindowData->hdc, RGB( 230, 230, 230 ) );
-   SelectObject( pWindowData->hdc, wvw->a.diagonalBrush );
-   SelectObject( pWindowData->hdc, wvw->a.penNull );
-   Rectangle( pWindowData->hdc, iLeft, iTop, iRight + 1, iBottom + 1 );
+   SetBkColor( wvw_win->hdc, RGB( 230, 230, 230 ) );
+   SelectObject( wvw_win->hdc, wvw->a.diagonalBrush );
+   SelectObject( wvw_win->hdc, wvw->a.penNull );
+   Rectangle( wvw_win->hdc, iLeft, iTop, iRight + 1, iBottom + 1 );
 
-   SelectObject( pWindowData->hdc, wvw->a.wvwWhiteBrush );
-   SelectObject( pWindowData->hdc, wvw->a.penGray );
-   Rectangle( pWindowData->hdc, iThumbLeft, iTop, iThumbRight, iBottom );
+   SelectObject( wvw_win->hdc, wvw->a.wvwWhiteBrush );
+   SelectObject( wvw_win->hdc, wvw->a.penGray );
+   Rectangle( wvw_win->hdc, iThumbLeft, iTop, iThumbRight, iBottom );
    hb_gt_wvw_DrawBoxRaised( usWinNum, iTop + 1, iThumbLeft + 1, iBottom - 2, iThumbRight - 2, HB_FALSE );
 }
 
@@ -448,9 +448,9 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
 /* wvw_DrawShadedRect( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, nHorVert, aRGBb, aRGBe ) */
 HB_FUNC( WVW_DRAWSHADEDRECT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HB_BOOL bGF = HB_FALSE;
 
@@ -471,13 +471,13 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
 
-      xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + hb_parvni( 6, 1 );
       iLeft = xy.x + hb_parvni( 6, 2 );
 
-      xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-      xy.y -= pWindowData->byLineSpacing;
+      xy.y -= wvw_win->byLineSpacing;
 
       iBottom = xy.y - 1 + hb_parvni( 6, 3 );
       iRight  = xy.x - 1 + hb_parvni( 6, 4 );
@@ -499,7 +499,7 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
       gRect.UpperLeft  = 0;
       gRect.LowerRight = 1;
 
-      bGF = ( HB_BOOL ) wvw->a.pfnGF( pWindowData->hdc, vert, 2, &gRect, 1, iMode );
+      bGF = ( HB_BOOL ) wvw->a.pfnGF( wvw_win->hdc, vert, 2, &gRect, 1, iMode );
    }
 
    hb_retl( bGF );
@@ -511,8 +511,8 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
                     nBackMode, hFont ) */
 HB_FUNC( WVW_DRAWTEXTBOX )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight;
@@ -533,13 +533,13 @@ HB_FUNC( WVW_DRAWTEXTBOX )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + hb_parvni( 6, 1 );
    iLeft = xy.x + hb_parvni( 6, 2 );
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + hb_parvni( 6, 3 );
    iRight  = xy.x - 1 + hb_parvni( 6, 4 );
@@ -562,19 +562,19 @@ HB_FUNC( WVW_DRAWTEXTBOX )
    rc.bottom = iBottom;
    rc.right  = iRight;
 
-   oldTextAlign = SetTextAlign( pWindowData->hdc, TA_TOP | TA_LEFT | TA_NOUPDATECP );
-   oldTextColor = SetTextColor( pWindowData->hdc, ( COLORREF ) hb_parnldef( 10, pWindowData->foreground ) );
-   oldBkColor   = SetBkColor( pWindowData->hdc, ( COLORREF ) hb_parnldef( 11, pWindowData->background ) );
-   oldBkMode    = SetBkMode( pWindowData->hdc, hb_parnidef( 12, OPAQUE ) );
-   oldFont      = ( HFONT ) SelectObject( pWindowData->hdc, ( HFONT ) HB_PARHANDLE( 13 ) );
+   oldTextAlign = SetTextAlign( wvw_win->hdc, TA_TOP | TA_LEFT | TA_NOUPDATECP );
+   oldTextColor = SetTextColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 10, wvw_win->foreground ) );
+   oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 11, wvw_win->background ) );
+   oldBkMode    = SetBkMode( wvw_win->hdc, hb_parnidef( 12, OPAQUE ) );
+   oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, ( HFONT ) HB_PARHANDLE( 13 ) );
 
-   DrawText( pWindowData->hdc, hb_parcx( 7 ), ( int ) strlen( hb_parcx( 7 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+   DrawText( wvw_win->hdc, hb_parcx( 7 ), ( int ) strlen( hb_parcx( 7 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
 
-   SetTextColor( pWindowData->hdc, oldTextColor );
-   SetBkColor( pWindowData->hdc, oldBkColor );
-   SetBkMode( pWindowData->hdc, oldBkMode );
-   SetTextAlign( pWindowData->hdc, oldTextAlign );
-   SelectObject( pWindowData->hdc, oldFont );
+   SetTextColor( wvw_win->hdc, oldTextColor );
+   SetBkColor( wvw_win->hdc, oldBkColor );
+   SetBkMode( wvw_win->hdc, oldBkMode );
+   SetTextAlign( wvw_win->hdc, oldTextAlign );
+   SelectObject( wvw_win->hdc, oldFont );
 }
 
 /* wvw_DrawProgressBar( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlTLBR, nPercent,;
@@ -583,7 +583,7 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
 {
    WVW_GLOB * wvw          = hb_gt_wvw_GetWvwData();
    UINT       usWinNum     = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData  = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_WIN *  wvw_win      = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_WIN *  pWinMainData = hb_gt_wvw_GetWindowsData( 0 );
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
@@ -606,13 +606,13 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + hb_parvni( 6, 1 );
    iLeft = xy.x + hb_parvni( 6, 2 );
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + hb_parvni( 6, 3 );
    iRight  = xy.x - 1 + hb_parvni( 6, 4 );
@@ -679,7 +679,7 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
 
       rc.bottom++;
       rc.right++;
-      FillRect( pWindowData->hdc, &rc, hBrush );
+      FillRect( wvw_win->hdc, &rc, hBrush );
 
       SelectObject( pWinMainData->hdc, wvw->a.OriginalBrush );
       DeleteObject( hBrush );
@@ -696,9 +696,9 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
  */
 HB_FUNC( WVW_DRAWBOXGET )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    POINT yz;
@@ -716,47 +716,47 @@ HB_FUNC( WVW_DRAWBOXGET )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usRow, &usCol, NULL, NULL );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usCol, usRow );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
    iTop  = xy.y - 1 + iOffTop;
    iLeft = xy.x - 1 + iOffLeft;
 
-   yz = hb_gt_wvw_GetXYFromColRow( pWindowData, usCol + usLen, usRow + 1 );
+   yz = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol + usLen, usRow + 1 );
 
-   yz.y -= pWindowData->byLineSpacing;
+   yz.y -= wvw_win->byLineSpacing;
 
    iBottom = yz.y + iOffBottom;
    iRight  = yz.x + iOffRight;
 
-   SelectObject( pWindowData->hdc, wvw->a.penBlack );
+   SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
-   MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );
-   LineTo( pWindowData->hdc, iRight, iTop );
+   MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );
+   LineTo( wvw_win->hdc, iRight, iTop );
 
-   MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );
-   LineTo( pWindowData->hdc, iLeft, iBottom );
+   MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );
+   LineTo( wvw_win->hdc, iLeft, iBottom );
 
-   SelectObject( pWindowData->hdc, wvw->a.penDarkGray );
+   SelectObject( wvw_win->hdc, wvw->a.penDarkGray );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );
-   LineTo( pWindowData->hdc, iRight + 1, iTop - 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iTop - 1, NULL );
+   LineTo( wvw_win->hdc, iRight + 1, iTop - 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );
-   LineTo( pWindowData->hdc, iLeft - 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iTop - 1, NULL );
+   LineTo( wvw_win->hdc, iLeft - 1, iBottom + 1 );
 
    /* GTWVW also draws right and bottom outer with single white line */
-   SelectObject( pWindowData->hdc, wvw->a.penWhite );
+   SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
-   MoveToEx( pWindowData->hdc, iRight + 1, iTop - 1, NULL );
-   LineTo( pWindowData->hdc, iRight + 1, iBottom + 1 + 1 );
+   MoveToEx( wvw_win->hdc, iRight + 1, iTop - 1, NULL );
+   LineTo( wvw_win->hdc, iRight + 1, iBottom + 1 + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iBottom + 1, NULL );
-   LineTo( pWindowData->hdc, iRight + 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iBottom + 1, NULL );
+   LineTo( wvw_win->hdc, iRight + 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );
-   LineTo( pWindowData->hdc, iRight, iBottom );
+   MoveToEx( wvw_win->hdc, iLeft, iBottom, NULL );
+   LineTo( wvw_win->hdc, iRight, iBottom );
 
-   MoveToEx( pWindowData->hdc, iRight, iTop, NULL );
-   LineTo( pWindowData->hdc, iRight, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iRight, iTop, NULL );
+   LineTo( wvw_win->hdc, iRight, iBottom + 1 );
 
    hb_retl( HB_TRUE );
 }
@@ -770,9 +770,9 @@ HB_FUNC( WVW_DRAWBOXGET )
  */
 HB_FUNC( WVW_DRAWBOXGET_XP )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    POINT yz;
@@ -790,30 +790,30 @@ HB_FUNC( WVW_DRAWBOXGET_XP )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usRow, &usCol, NULL, NULL );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usCol, usRow );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
    iTop  = xy.y - 1 + iOffTop;
    iLeft = xy.x - 1 + iOffLeft;
 
-   yz = hb_gt_wvw_GetXYFromColRow( pWindowData, usCol + usLen, usRow + 1 );
+   yz = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol + usLen, usRow + 1 );
 
-   yz.y -= pWindowData->byLineSpacing;
+   yz.y -= wvw_win->byLineSpacing;
 
    iBottom = yz.y + iOffBottom;
    iRight  = yz.x + iOffRight;
 
-   SelectObject( pWindowData->hdc, wvw->a.penGray );
+   SelectObject( wvw_win->hdc, wvw->a.penGray );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );
-   LineTo( pWindowData->hdc, iRight + 1, iTop - 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iTop - 1, NULL );
+   LineTo( wvw_win->hdc, iRight + 1, iTop - 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );
-   LineTo( pWindowData->hdc, iLeft - 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iTop - 1, NULL );
+   LineTo( wvw_win->hdc, iLeft - 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iBottom + 1, NULL );
-   LineTo( pWindowData->hdc, iRight + 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iBottom + 1, NULL );
+   LineTo( wvw_win->hdc, iRight + 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iRight + 1, iTop - 1, NULL );
-   LineTo( pWindowData->hdc, iRight + 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iRight + 1, iTop - 1, NULL );
+   LineTo( wvw_win->hdc, iRight + 1, iBottom + 1 );
 
    hb_retl( HB_TRUE );
 }
@@ -831,8 +831,8 @@ HB_FUNC( WVW_DRAWBOXGET_XP )
      ie. offset in pixel unit */
 HB_FUNC( WVW_DRAWBOXRAISED )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT   xy;
    int     iTop, iLeft, iBottom, iRight;
@@ -870,18 +870,18 @@ HB_FUNC( WVW_DRAWBOXRAISED )
       iORight  = 0;
    }
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOTop;
    iLeft = xy.x + iOLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y + iOBottom;
    iRight  = xy.x + iORight;
 
-   hb_gt_wvw_DrawBoxRaised( pWindowData->byWinId, iTop, iLeft, iBottom, iRight, bTight );
+   hb_gt_wvw_DrawBoxRaised( wvw_win->byWinId, iTop, iLeft, iBottom, iRight, bTight );
 
    hb_retl( HB_TRUE );
 }
@@ -899,8 +899,8 @@ HB_FUNC( WVW_DRAWBOXRAISED )
      ie. offset in pixel unit */
 HB_FUNC( WVW_DRAWBOXRECESSED )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT   xy;
    int     iTop, iLeft, iBottom, iRight;
@@ -938,18 +938,18 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
       iORight  = 0;
    }
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOTop;
    iLeft = xy.x + iOLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y + iOBottom;
    iRight  = xy.x + iORight;
 
-   hb_gt_wvw_DrawBoxRecessed( pWindowData->byWinId, iTop, iLeft, iBottom, iRight, bTight );
+   hb_gt_wvw_DrawBoxRecessed( wvw_win->byWinId, iTop, iLeft, iBottom, iRight, bTight );
 
    hb_retl( HB_TRUE );
 }
@@ -960,9 +960,9 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
  */
 HB_FUNC( WVW_DRAWBOXGROUP )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight;
@@ -980,44 +980,44 @@ HB_FUNC( WVW_DRAWBOXGROUP )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y - 1 + iOffTop;
    iLeft = xy.x - 1 + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y + iOffBottom;
    iRight  = xy.x + iOffRight;
 
-   SelectObject( pWindowData->hdc, wvw->a.penDarkGray );
+   SelectObject( wvw_win->hdc, wvw->a.penDarkGray );
 
-   MoveToEx( pWindowData->hdc, iRight, iTop, NULL );          /* Right Inner   */
-   LineTo( pWindowData->hdc, iRight, iBottom );
+   MoveToEx( wvw_win->hdc, iRight, iTop, NULL );          /* Right Inner   */
+   LineTo( wvw_win->hdc, iRight, iBottom );
 
-   MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );        /* Bottom Inner  */
-   LineTo( pWindowData->hdc, iRight, iBottom );
+   MoveToEx( wvw_win->hdc, iLeft, iBottom, NULL );        /* Bottom Inner  */
+   LineTo( wvw_win->hdc, iRight, iBottom );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );   /* Left Outer    */
-   LineTo( pWindowData->hdc, iLeft - 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iTop - 1, NULL );   /* Left Outer    */
+   LineTo( wvw_win->hdc, iLeft - 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );   /* Top Outer     */
-   LineTo( pWindowData->hdc, iRight + 1, iTop - 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iTop - 1, NULL );   /* Top Outer     */
+   LineTo( wvw_win->hdc, iRight + 1, iTop - 1 );
 
-   SelectObject( pWindowData->hdc, wvw->a.penWhite );
+   SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
-   MoveToEx( pWindowData->hdc, iRight + 1, iTop, NULL );       /* Right Outer   */
-   LineTo( pWindowData->hdc, iRight + 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iRight + 1, iTop, NULL );       /* Right Outer   */
+   LineTo( wvw_win->hdc, iRight + 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iBottom + 1, NULL );  /* Bottom Outer  */
-   LineTo( pWindowData->hdc, iRight + 1 + 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iBottom + 1, NULL );  /* Bottom Outer  */
+   LineTo( wvw_win->hdc, iRight + 1 + 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left Inner    */
-   LineTo( pWindowData->hdc, iLeft, iBottom );
+   MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Left Inner    */
+   LineTo( wvw_win->hdc, iLeft, iBottom );
 
-   MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top Inner     */
-   LineTo( pWindowData->hdc, iRight, iTop );
+   MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Top Inner     */
+   LineTo( wvw_win->hdc, iRight, iTop );
 
    hb_retl( HB_TRUE );
 }
@@ -1026,9 +1026,9 @@ HB_FUNC( WVW_DRAWBOXGROUP )
 /* wvw_DrawBoxRaised( nWinNum, nTop, nLeft, nBottom, nRight ) */
 HB_FUNC( WVW_DRAWBOXGROUPRAISED )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight;
@@ -1041,44 +1041,44 @@ HB_FUNC( WVW_DRAWBOXGROUPRAISED )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y - 1;
    iLeft = xy.x - 1;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y;
    iRight  = xy.x;
 
-   SelectObject( pWindowData->hdc, wvw->a.penWhite );
+   SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
-   MoveToEx( pWindowData->hdc, iRight, iTop, NULL );           /* Right Inner   */
-   LineTo( pWindowData->hdc, iRight, iBottom );
+   MoveToEx( wvw_win->hdc, iRight, iTop, NULL );           /* Right Inner   */
+   LineTo( wvw_win->hdc, iRight, iBottom );
 
-   MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );         /* Bottom Inner  */
-   LineTo( pWindowData->hdc, iRight, iBottom );
+   MoveToEx( wvw_win->hdc, iLeft, iBottom, NULL );         /* Bottom Inner  */
+   LineTo( wvw_win->hdc, iRight, iBottom );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );    /* Left Outer    */
-   LineTo( pWindowData->hdc, iLeft - 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iTop - 1, NULL );    /* Left Outer    */
+   LineTo( wvw_win->hdc, iLeft - 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );    /* Top Outer     */
-   LineTo( pWindowData->hdc, iRight + 1, iTop - 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iTop - 1, NULL );    /* Top Outer     */
+   LineTo( wvw_win->hdc, iRight + 1, iTop - 1 );
 
-   SelectObject( pWindowData->hdc, wvw->a.penDarkGray );
+   SelectObject( wvw_win->hdc, wvw->a.penDarkGray );
 
-   MoveToEx( pWindowData->hdc, iRight + 1, iTop, NULL );       /* Right Outer   */
-   LineTo( pWindowData->hdc, iRight + 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iRight + 1, iTop, NULL );       /* Right Outer   */
+   LineTo( wvw_win->hdc, iRight + 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft - 1, iBottom + 1, NULL );  /* Bottom Outer  */
-   LineTo( pWindowData->hdc, iRight + 1 + 1, iBottom + 1 );
+   MoveToEx( wvw_win->hdc, iLeft - 1, iBottom + 1, NULL );  /* Bottom Outer  */
+   LineTo( wvw_win->hdc, iRight + 1 + 1, iBottom + 1 );
 
-   MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Left Inner    */
-   LineTo( pWindowData->hdc, iLeft, iBottom );
+   MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Left Inner    */
+   LineTo( wvw_win->hdc, iLeft, iBottom );
 
-   MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );            /* Top Inner     */
-   LineTo( pWindowData->hdc, iRight, iTop );
+   MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );            /* Top Inner     */
+   LineTo( wvw_win->hdc, iRight, iTop );
 
    hb_retl( HB_TRUE );
 }
@@ -1106,9 +1106,9 @@ HB_FUNC( WVW_DRAWBOXGROUPRAISED )
 
 HB_FUNC( WVW_DRAWIMAGE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iLeft, iTop, iRight = 0, iBottom = 0;
@@ -1149,7 +1149,7 @@ HB_FUNC( WVW_DRAWIMAGE )
    else
       iOTop = iOLeft = iOBottom = iORight = 0;
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOTop;
    iLeft = xy.x + iOLeft;
 
@@ -1168,9 +1168,9 @@ HB_FUNC( WVW_DRAWIMAGE )
       }
    }
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    if( ! bActBottom )
       iBottom = xy.y - 1 + iOBottom;
@@ -1227,8 +1227,8 @@ HB_FUNC( WVW_DRAWIMAGE )
 
 HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iLeft, iTop, iRight = 0, iBottom = 0;
@@ -1268,7 +1268,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
    else
       iOTop = iOLeft = iOBottom = iORight = 0;
 
-   xy         = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy         = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop       = xy.y + iOTop;
    iLeft      = xy.x + iOLeft;
    lImgWidth  = 0;
@@ -1311,9 +1311,9 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
       }
    }
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    if( ! bActBottom )
       iBottom = xy.y - 1 + iOBottom;
@@ -1352,8 +1352,8 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
                   nQuality, nCharSet, lItalic, lUnderline, lStrikeOut ) */
 HB_FUNC( WVW_DRAWLABEL )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HFONT    hFont, oldFont;
    LOGFONT  logfont;
@@ -1374,33 +1374,33 @@ HB_FUNC( WVW_DRAWLABEL )
    logfont.lfItalic         = ( BYTE ) hb_parl( 15 );
    logfont.lfUnderline      = ( BYTE ) hb_parl( 16 );
    logfont.lfStrikeOut      = ( BYTE ) hb_parl( 17 );
-   logfont.lfCharSet        = ( BYTE ) hb_parnidef( 14, pWindowData->CodePage );
+   logfont.lfCharSet        = ( BYTE ) hb_parnidef( 14, wvw_win->CodePage );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
    logfont.lfQuality        = ( BYTE ) hb_parnidef( 13, DEFAULT_QUALITY );
    logfont.lfPitchAndFamily = FF_DONTCARE;
-   logfont.lfHeight         = hb_parnidef( 10, pWindowData->fontHeight );
-   logfont.lfWidth = hb_parnidef( 11, pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth );
+   logfont.lfHeight         = hb_parnidef( 10, wvw_win->fontHeight );
+   logfont.lfWidth = hb_parnidef( 11, wvw_win->fontWidth < 0 ? -wvw_win->fontWidth : wvw_win->fontWidth );
 
-   hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 9 ) ? hb_parc( 9 ) : pWindowData->fontFace, sizeof( logfont.lfFaceName ) - 1 );
+   hb_strncpy( logfont.lfFaceName, HB_ISCHAR( 9 ) ? hb_parc( 9 ) : wvw_win->fontFace, sizeof( logfont.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &logfont );
    if( hFont )
    {
-      POINT xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usCol, usRow );
+      POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
 
-      oldBkColor   = SetBkColor( pWindowData->hdc, ( COLORREF ) hb_parnldef( 8, pWindowData->background ) );
-      oldTextColor = SetTextColor( pWindowData->hdc, ( COLORREF ) hb_parnldef( 7, pWindowData->foreground ) );
-      oldTextAlign = SetTextAlign( pWindowData->hdc, hb_parnidef( 5, TA_LEFT ) );
-      oldFont      = ( HFONT ) SelectObject( pWindowData->hdc, hFont );
+      oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 8, wvw_win->background ) );
+      oldTextColor = SetTextColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 7, wvw_win->foreground ) );
+      oldTextAlign = SetTextAlign( wvw_win->hdc, hb_parnidef( 5, TA_LEFT ) );
+      oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, hFont );
 
-      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), ( UINT ) strlen( hb_parcx( 4 ) ), NULL );
+      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), ( UINT ) strlen( hb_parcx( 4 ) ), NULL );
 
-      SelectObject( pWindowData->hdc, oldFont );
+      SelectObject( wvw_win->hdc, oldFont );
       DeleteObject( hFont );
-      SetTextAlign( pWindowData->hdc, oldTextAlign );
-      SetBkColor( pWindowData->hdc, oldBkColor );
-      SetTextColor( pWindowData->hdc, oldTextColor );
+      SetTextAlign( wvw_win->hdc, oldTextAlign );
+      SetBkColor( wvw_win->hdc, oldBkColor );
+      SetTextColor( wvw_win->hdc, oldTextColor );
 
       hb_retl( HB_TRUE );
    }
@@ -1412,9 +1412,9 @@ HB_FUNC( WVW_DRAWLABEL )
 /* wvw_DrawOutline( nWinNum, nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor ) */
 HB_FUNC( WVW_DRAWOUTLINE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HPEN  hPen = 0, hOldPen = 0;
    POINT xy;
@@ -1428,13 +1428,13 @@ HB_FUNC( WVW_DRAWOUTLINE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y - 1;
    iLeft = xy.x - 1;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y;
    iRight  = xy.x;
@@ -1443,17 +1443,17 @@ HB_FUNC( WVW_DRAWOUTLINE )
    {
       hPen = CreatePen( hb_parni( 6 ), 0, ( COLORREF ) hb_parnl( 8 ) );
       if( hPen )
-         hOldPen = ( HPEN ) SelectObject( pWindowData->hdc, hPen );
+         hOldPen = ( HPEN ) SelectObject( wvw_win->hdc, hPen );
    }
    else
       /* hPen = 0; */
-      SelectObject( pWindowData->hdc, wvw->a.penBlack );
+      SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
    hb_gt_wvw_DrawOutline( usWinNum, iTop, iLeft, iBottom, iRight );
 
    if( hPen )
    {
-      SelectObject( pWindowData->hdc, hOldPen );
+      SelectObject( wvw_win->hdc, hOldPen );
       DeleteObject( hPen );
    }
 
@@ -1466,9 +1466,9 @@ HB_FUNC( WVW_DRAWOUTLINE )
 
 HB_FUNC( WVW_DRAWLINE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT    xy;
    int      iTop, iLeft, iBottom, iRight, iOffset;
@@ -1490,13 +1490,13 @@ HB_FUNC( WVW_DRAWLINE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
@@ -1548,69 +1548,69 @@ HB_FUNC( WVW_DRAWLINE )
    }
 
    hPen    = CreatePen( iStyle, iThick, cr );
-   hOldPen = ( HPEN ) SelectObject( pWindowData->hdc, hPen );
+   hOldPen = ( HPEN ) SelectObject( wvw_win->hdc, hPen );
 
    switch( iFormat )
    {
       case 0:                                         /* Raised        */
          if( iOrient == 0 )                           /*  Horizontal   */
          {
-            SelectObject( pWindowData->hdc, wvw->a.penWhite );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, iRight, y );
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y + 1, NULL );
-            LineTo( pWindowData->hdc, iRight, y + 1 );
+            SelectObject( wvw_win->hdc, wvw->a.penWhite );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, iRight, y );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y + 1, NULL );
+            LineTo( wvw_win->hdc, iRight, y + 1 );
          }
          else                                       /*  Vertical     */
          {
-            SelectObject( pWindowData->hdc, wvw->a.penWhite );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, x, iBottom );
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x + 1, y, NULL );
-            LineTo( pWindowData->hdc, x + 1, iBottom );
+            SelectObject( wvw_win->hdc, wvw->a.penWhite );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, x, iBottom );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x + 1, y, NULL );
+            LineTo( wvw_win->hdc, x + 1, iBottom );
          }
          break;
 
       case 1:                                      /* Recessed       */
          if( iOrient == 0 )                        /* Horizontal     */
          {
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, iRight, y );
-            SelectObject( pWindowData->hdc, wvw->a.penWhite );
-            MoveToEx( pWindowData->hdc, x, y + 1, NULL );
-            LineTo( pWindowData->hdc, iRight, y + 1 );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, iRight, y );
+            SelectObject( wvw_win->hdc, wvw->a.penWhite );
+            MoveToEx( wvw_win->hdc, x, y + 1, NULL );
+            LineTo( wvw_win->hdc, iRight, y + 1 );
          }
          else                                      /*  Vertical      */
          {
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, x, iBottom );
-            SelectObject( pWindowData->hdc, wvw->a.penWhite );
-            MoveToEx( pWindowData->hdc, x + 1, y, NULL );
-            LineTo( pWindowData->hdc, x + 1, iBottom );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, x, iBottom );
+            SelectObject( wvw_win->hdc, wvw->a.penWhite );
+            MoveToEx( wvw_win->hdc, x + 1, y, NULL );
+            LineTo( wvw_win->hdc, x + 1, iBottom );
          }
          break;
 
       case 2:                                      /* Plain          */
          if( iOrient == 0 )                        /* Horizontal     */
          {
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, iRight, y );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, iRight, y );
          }
          else                                      /*  Vertical      */
          {
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, x, iBottom );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, x, iBottom );
          }
          break;
    }
 
-   SelectObject( pWindowData->hdc, hOldPen );
+   SelectObject( wvw_win->hdc, hOldPen );
    DeleteObject( hPen );
    hb_retl( HB_TRUE );
 }
@@ -1620,9 +1620,9 @@ HB_FUNC( WVW_DRAWLINE )
 /* wvw_DrawEllipse( nWinNum, nTop, nLeft, nBottom, nRight, aOffset) */
 HB_FUNC( WVW_DRAWELLIPSE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight;
@@ -1640,30 +1640,30 @@ HB_FUNC( WVW_DRAWELLIPSE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
 
-   SelectObject( pWindowData->hdc, wvw->a.currentBrush );
-   SelectObject( pWindowData->hdc, wvw->a.currentPen );
+   SelectObject( wvw_win->hdc, wvw->a.currentBrush );
+   SelectObject( wvw_win->hdc, wvw->a.currentPen );
 
-   hb_retl( Ellipse( pWindowData->hdc, iLeft, iTop, iRight, iBottom ) );
+   hb_retl( Ellipse( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
 }
 
 
 /* wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight, aOffset, lUsaCurrentPen ) */
 HB_FUNC( WVW_DRAWRECTANGLE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData(  usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData(  usWinNum );
 
    POINT   xy;
    int     iTop, iLeft, iBottom, iRight;
@@ -1682,25 +1682,25 @@ HB_FUNC( WVW_DRAWRECTANGLE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
 
-   SelectObject( pWindowData->hdc, wvw->a.currentBrush );
+   SelectObject( wvw_win->hdc, wvw->a.currentBrush );
    /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
    if( bUseCurrentPen )
-      SelectObject( pWindowData->hdc, wvw->a.currentPen );
+      SelectObject( wvw_win->hdc, wvw->a.currentPen );
    else
-      SelectObject( pWindowData->hdc, wvw->a.penBlack );
+      SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
-   hb_retl( Rectangle( pWindowData->hdc, iLeft, iTop, iRight, iBottom ) );
+   hb_retl( Rectangle( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
 }
 
 /* wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, ;
@@ -1713,9 +1713,9 @@ HB_FUNC( WVW_DRAWRECTANGLE )
 
 HB_FUNC( WVW_DRAWROUNDRECT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight, iWd, iHt;
@@ -1733,13 +1733,13 @@ HB_FUNC( WVW_DRAWROUNDRECT )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
@@ -1747,18 +1747,18 @@ HB_FUNC( WVW_DRAWROUNDRECT )
    iWd = hb_parni( 8 );
    iHt = hb_parni( 7 );
 
-   SelectObject( pWindowData->hdc, wvw->a.currentBrush );
-   SelectObject( pWindowData->hdc, wvw->a.currentPen );
+   SelectObject( wvw_win->hdc, wvw->a.currentBrush );
+   SelectObject( wvw_win->hdc, wvw->a.currentPen );
 
-   hb_retl( RoundRect( pWindowData->hdc, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
+   hb_retl( RoundRect( wvw_win->hdc, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
 }
 
 
 /* wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffset ) */
 HB_FUNC( WVW_DRAWFOCUSRECT )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    RECT  rc;
    POINT xy;
@@ -1776,18 +1776,18 @@ HB_FUNC( WVW_DRAWFOCUSRECT )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    rc.top  = xy.y + iOffTop;
    rc.left = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    rc.bottom = xy.y - 1 + iOffBottom;
    rc.right  = xy.x - 1 + iOffRight;
 
-   hb_retl( DrawFocusRect( pWindowData->hdc, &rc ) );
+   hb_retl( DrawFocusRect( wvw_win->hdc, &rc ) );
 }
 
 /* NOTE: this is compatibility function with GTWVT similar with wvw_FillRectangle() */
@@ -1797,7 +1797,7 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 {
    WVW_GLOB * wvw             = hb_gt_wvw_GetWvwData();
    UINT       usWinNum        = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData     = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_WIN *  wvw_win         = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_WIN *  pWindowMainData = hb_gt_wvw_GetWindowsData( 0 );
 
    RECT   rc;
@@ -1817,13 +1817,13 @@ HB_FUNC( WVW_DRAWCOLORRECT )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    rc.top  = xy.y + iOffTop;
    rc.left = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    rc.bottom = xy.y - 1 + iOffBottom;
    rc.right  = xy.x - 1 + iOffRight;
@@ -1832,7 +1832,7 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 
    if( hBrush )
    {
-      hb_retl( FillRect( pWindowData->hdc, &rc, hBrush ) );
+      hb_retl( FillRect( wvw_win->hdc, &rc, hBrush ) );
 
       SelectObject( pWindowMainData->hdc, wvw->a.OriginalBrush );
       DeleteObject( hBrush );
@@ -1845,9 +1845,9 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 /* wvw_DrawGridHorz( nWinNum, nTop, nLeft, nRight, nRows ) */
 HB_FUNC( WVW_DRAWGRIDHORZ )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    USHORT usAtRow = ( USHORT ) hb_parni( 2 );
    int    iRows   = hb_parni( 5 );
@@ -1860,21 +1860,21 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usAtRow, &usLeft, NULL, &usRight );
 
-   iLeft  = usLeft * pWindowData->PTEXTSIZE.x;
-   iRight = ( ( usRight + 1 ) * pWindowData->PTEXTSIZE.x ) - 1;
+   iLeft  = usLeft * wvw_win->PTEXTSIZE.x;
+   iRight = ( ( usRight + 1 ) * wvw_win->PTEXTSIZE.x ) - 1;
 
    if( wvw->a.gridPen == NULL )
       wvw->a.gridPen = CreatePen( 0, 0, GetSysColor( COLOR_BTNFACE ) );
 
-   SelectObject( pWindowData->hdc, wvw->a.gridPen );
+   SelectObject( wvw_win->hdc, wvw->a.gridPen );
 
    for( i = 0; i < iRows; i++ )
    {
-      y  = usAtRow * hb_gt_wvw_LineHeight( pWindowData );
-      y += pWindowData->usTBHeight;
+      y  = usAtRow * hb_gt_wvw_LineHeight( wvw_win );
+      y += wvw_win->usTBHeight;
 
-      MoveToEx( pWindowData->hdc, iLeft, y, NULL );
-      LineTo( pWindowData->hdc, iRight, y );
+      MoveToEx( wvw_win->hdc, iLeft, y, NULL );
+      LineTo( wvw_win->hdc, iRight, y );
 
       usAtRow++;
    }
@@ -1889,9 +1889,9 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
  */
 HB_FUNC( WVW_DRAWGRIDVERT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    int iTop, iBottom;
    int i;
@@ -1917,17 +1917,17 @@ HB_FUNC( WVW_DRAWGRIDVERT )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, NULL, &usBottom, NULL );
 
-   iCharWidth = pWindowData->PTEXTSIZE.x;
+   iCharWidth = wvw_win->PTEXTSIZE.x;
 
-   iCharHeight = hb_gt_wvw_LineHeight( pWindowData );
+   iCharHeight = hb_gt_wvw_LineHeight( wvw_win );
 
-   iTop    = ( usTop * iCharHeight ) + pWindowData->usTBHeight + iOffTop;
-   iBottom = ( ( usBottom + 1 ) * iCharHeight ) - 1 + pWindowData->usTBHeight + iOffBottom;
+   iTop    = ( usTop * iCharHeight ) + wvw_win->usTBHeight + iOffTop;
+   iBottom = ( ( usBottom + 1 ) * iCharHeight ) - 1 + wvw_win->usTBHeight + iOffBottom;
 
    if( wvw->a.gridPen == NULL )
       wvw->a.gridPen = CreatePen( 0, 0, GetSysColor( COLOR_BTNFACE ) );
 
-   SelectObject( pWindowData->hdc, wvw->a.gridPen );
+   SelectObject( wvw_win->hdc, wvw->a.gridPen );
 
    for( i = 1; i <= iTabs; i++ )
    {
@@ -1935,12 +1935,12 @@ HB_FUNC( WVW_DRAWGRIDVERT )
       int    x;
 
       if( hb_gt_wvw_GetMainCoordMode() )
-         usCol -= pWindowData->usColOfs;
+         usCol -= wvw_win->usColOfs;
 
       x = ( usCol * iCharWidth ) + iOffLeft;
 
-      MoveToEx( pWindowData->hdc, x, iTop, NULL );
-      LineTo( pWindowData->hdc, x, iBottom );
+      MoveToEx( wvw_win->hdc, x, iTop, NULL );
+      LineTo( wvw_win->hdc, x, iBottom );
    }
 
    hb_retl( HB_TRUE );
@@ -1954,7 +1954,7 @@ HB_FUNC( WVW_DRAWBUTTON )
 {
    WVW_GLOB * wvw             = hb_gt_wvw_GetWvwData();
    UINT       usWinNum        = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData     = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_WIN *  wvw_win         = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_WIN *  pWindowMainData = hb_gt_wvw_GetWindowsData( 0 );
 
    POINT      xy;
@@ -1983,13 +1983,13 @@ HB_FUNC( WVW_DRAWBUTTON )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y;
    iLeft = xy.x;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1;
    iRight  = xy.x - 1;
@@ -2007,7 +2007,7 @@ HB_FUNC( WVW_DRAWBUTTON )
    rc.right  = iRight + 1;
    rc.bottom = iBottom + 1;
 
-   FillRect( pWindowData->hdc, &rc, hBrush );
+   FillRect( wvw_win->hdc, &rc, hBrush );
 
    SelectObject( pWindowMainData->hdc, wvw->a.OriginalBrush );
    DeleteObject( hBrush );
@@ -2015,28 +2015,28 @@ HB_FUNC( WVW_DRAWBUTTON )
    switch( iFormat )
    {
       case 1:
-         hb_gt_wvw_DrawBoxRecessed( pWindowData->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, HB_FALSE );
+         hb_gt_wvw_DrawBoxRecessed( wvw_win->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, HB_FALSE );
          break;
       case 2:
          break;
       case 3:
-         hb_gt_wvw_DrawOutline( pWindowData->byWinId, iTop, iLeft, iBottom, iRight );
+         hb_gt_wvw_DrawOutline( wvw_win->byWinId, iTop, iLeft, iBottom, iRight );
          break;
       case 4:
          break;
       default:
-         hb_gt_wvw_DrawBoxRaised( pWindowData->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, HB_FALSE );
+         hb_gt_wvw_DrawBoxRaised( wvw_win->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, HB_FALSE );
    }
 
    if( bText )
    {
       SIZE sz;
 
-      SelectObject( pWindowData->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
+      SelectObject( wvw_win->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
 
       memset( &sz, 0, sizeof( sz ) );
 
-      GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), ( int ) strlen( hb_parcx( 6 ) ), &sz );
+      GetTextExtentPoint32( wvw_win->hdc, hb_parcx( 6 ), ( int ) strlen( hb_parcx( 6 ) ), &sz );
 
       iTextHeight = sz.cy;
 
@@ -2055,15 +2055,15 @@ HB_FUNC( WVW_DRAWBUTTON )
 
       iAlign = TA_CENTER + TA_TOP;
 
-      oldTextAlign = SetTextAlign( pWindowData->hdc, iAlign );
-      oldBkMode    = SetBkMode( pWindowData->hdc, TRANSPARENT );
-      oldTextColor = SetTextColor( pWindowData->hdc, textColor );
+      oldTextAlign = SetTextAlign( wvw_win->hdc, iAlign );
+      oldBkMode    = SetBkMode( wvw_win->hdc, TRANSPARENT );
+      oldTextColor = SetTextColor( wvw_win->hdc, textColor );
 
-      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 6 ), ( UINT ) strlen( hb_parcx( 6 ) ), NULL );
+      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 6 ), ( UINT ) strlen( hb_parcx( 6 ) ), NULL );
 
-      SetTextColor( pWindowData->hdc, oldTextColor );
-      SetBkMode( pWindowData->hdc, oldBkMode );
-      SetTextAlign( pWindowData->hdc, oldTextAlign );
+      SetTextColor( wvw_win->hdc, oldTextColor );
+      SetBkMode( wvw_win->hdc, oldBkMode );
+      SetTextAlign( wvw_win->hdc, oldTextAlign );
    }
    else
       iTextHeight = -1;
@@ -2093,9 +2093,9 @@ HB_FUNC( WVW_DRAWBUTTON )
  */
 HB_FUNC( WVW_DRAWSTATUSBAR )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    int   iPanels = hb_parni( 2 );
    int   i, iNext = 0;
@@ -2117,32 +2117,32 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-      xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y;
       iLeft = xy.x + 1;
 
-      xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight, usBottom + 1 );
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight, usBottom + 1 );
 
-      xy.y -= pWindowData->byLineSpacing;
+      xy.y -= wvw_win->byLineSpacing;
 
       iBottom = xy.y - 1;
       iRight  = xy.x - 2;
 
-      SelectObject( pWindowData->hdc, wvw->a.penWhite );
+      SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
-      MoveToEx( pWindowData->hdc, iRight, iTop, NULL );            /* Right  */
-      LineTo( pWindowData->hdc, iRight, iBottom );
+      MoveToEx( wvw_win->hdc, iRight, iTop, NULL );            /* Right  */
+      LineTo( wvw_win->hdc, iRight, iBottom );
 
-      MoveToEx( pWindowData->hdc, iLeft, iBottom, NULL );          /* Bottom */
-      LineTo( pWindowData->hdc, iRight, iBottom );
+      MoveToEx( wvw_win->hdc, iLeft, iBottom, NULL );          /* Bottom */
+      LineTo( wvw_win->hdc, iRight, iBottom );
 
-      SelectObject( pWindowData->hdc, wvw->a.penDarkGray );
+      SelectObject( wvw_win->hdc, wvw->a.penDarkGray );
 
-      MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );             /* Left   */
-      LineTo( pWindowData->hdc, iLeft, iBottom );
+      MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );             /* Left   */
+      LineTo( wvw_win->hdc, iLeft, iBottom );
 
-      MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );             /* Top    */
-      LineTo( pWindowData->hdc, iRight, iTop );
+      MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );             /* Top    */
+      LineTo( wvw_win->hdc, iRight, iTop );
 
       iNext += 4;
    }
@@ -2153,32 +2153,32 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, NULL, NULL );
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iTop    = xy.y - 2;
    iLeft   = xy.x - 2;
    iBottom = iTop;
    iRight  = iLeft;
 
-   SelectObject( pWindowData->hdc, wvw->a.penBlack );
+   SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
-   MoveToEx( pWindowData->hdc, iLeft - 4, iBottom, NULL );
-   LineTo( pWindowData->hdc, iRight, iTop - 4 );
-   MoveToEx( pWindowData->hdc, iLeft - 7, iBottom, NULL );
-   LineTo( pWindowData->hdc, iRight, iTop - 7 );
-   MoveToEx( pWindowData->hdc, iLeft - 10, iBottom, NULL );
-   LineTo( pWindowData->hdc, iRight, iTop - 10 );
+   MoveToEx( wvw_win->hdc, iLeft - 4, iBottom, NULL );
+   LineTo( wvw_win->hdc, iRight, iTop - 4 );
+   MoveToEx( wvw_win->hdc, iLeft - 7, iBottom, NULL );
+   LineTo( wvw_win->hdc, iRight, iTop - 7 );
+   MoveToEx( wvw_win->hdc, iLeft - 10, iBottom, NULL );
+   LineTo( wvw_win->hdc, iRight, iTop - 10 );
 
-   SelectObject( pWindowData->hdc, wvw->a.penWhite );
+   SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
-   MoveToEx( pWindowData->hdc, iLeft - 5, iBottom, NULL );
-   LineTo( pWindowData->hdc, iRight, iTop - 5 );
-   MoveToEx( pWindowData->hdc, iLeft - 8, iBottom, NULL );
-   LineTo( pWindowData->hdc, iRight, iTop - 8 );
-   MoveToEx( pWindowData->hdc, iLeft - 11, iBottom, NULL );
-   LineTo( pWindowData->hdc, iRight, iTop - 11 );
+   MoveToEx( wvw_win->hdc, iLeft - 5, iBottom, NULL );
+   LineTo( wvw_win->hdc, iRight, iTop - 5 );
+   MoveToEx( wvw_win->hdc, iLeft - 8, iBottom, NULL );
+   LineTo( wvw_win->hdc, iRight, iTop - 8 );
+   MoveToEx( wvw_win->hdc, iLeft - 11, iBottom, NULL );
+   LineTo( wvw_win->hdc, iRight, iTop - 11 );
 }
 
 
@@ -2186,9 +2186,9 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
 /* nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right } */
 HB_FUNC( WVW_DRAWPICTURE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    int     iTop, iLeft, iBottom, iRight;
    int     iSlot     = hb_parni( 6 ) - 1;
@@ -2225,11 +2225,11 @@ HB_FUNC( WVW_DRAWPICTURE )
    {
       POINT xy;
 
-      xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOTop;
       iLeft = xy.x + iOLeft;
 
-      xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
       iBottom = xy.y - 1 + iOBottom;
       iRight  = xy.x - 1 + iORight;
 
@@ -2243,9 +2243,9 @@ HB_FUNC( WVW_DRAWPICTURE )
 /* wvw_DrawLabelEx( [nWinNum], nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont ) */
 HB_FUNC( WVW_DRAWLABELEX )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HFONT    oldFont;
    int      oldTextAlign;
@@ -2260,19 +2260,19 @@ HB_FUNC( WVW_DRAWLABELEX )
 
    if( wvw->a.hUserFonts[ iSlot ] )
    {
-      POINT xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+      POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
 
-      oldBkColor   = SetBkColor( pWindowData->hdc, ( COLORREF ) hb_parnldef( 7, pWindowData->background ) );
-      oldTextColor = SetTextColor( pWindowData->hdc, ( COLORREF ) hb_parnldef( 6, pWindowData->foreground ) );
-      oldTextAlign = SetTextAlign( pWindowData->hdc, hb_parnidef( 5, TA_LEFT ) );
-      oldFont      = ( HFONT ) SelectObject( pWindowData->hdc, wvw->a.hUserFonts[ iSlot ] );
+      oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 7, wvw_win->background ) );
+      oldTextColor = SetTextColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 6, wvw_win->foreground ) );
+      oldTextAlign = SetTextAlign( wvw_win->hdc, hb_parnidef( 5, TA_LEFT ) );
+      oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, wvw->a.hUserFonts[ iSlot ] );
 
-      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), ( UINT ) strlen( hb_parcx( 4 ) ), NULL );
+      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), ( UINT ) strlen( hb_parcx( 4 ) ), NULL );
 
-      SelectObject( pWindowData->hdc, oldFont );
-      SetTextAlign( pWindowData->hdc, oldTextAlign );
-      SetBkColor( pWindowData->hdc, oldBkColor );
-      SetTextColor( pWindowData->hdc, oldTextColor );
+      SelectObject( wvw_win->hdc, oldFont );
+      SetTextAlign( wvw_win->hdc, oldTextAlign );
+      SetBkColor( wvw_win->hdc, oldBkColor );
+      SetTextColor( wvw_win->hdc, oldTextColor );
 
       hb_retl( HB_TRUE );
    }
@@ -2285,9 +2285,9 @@ HB_FUNC( WVW_DRAWLABELEX )
 /* wvw_DrawLineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen ) */
 HB_FUNC( WVW_DRAWLINEEX )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight, iOffset;
@@ -2304,11 +2304,11 @@ HB_FUNC( WVW_DRAWLINEEX )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y;
    iLeft = xy.x;
 
-   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
    iBottom = xy.y - 1;
    iRight  = xy.x - 1;
 
@@ -2362,57 +2362,57 @@ HB_FUNC( WVW_DRAWLINEEX )
       case 0:                                         /* Raised       */
          if( iOrient == 0 )                           /*  Horizontal  */
          {
-            SelectObject( pWindowData->hdc, wvw->a.penWhite );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, iRight, y );
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y + 1, NULL );
-            LineTo( pWindowData->hdc, iRight, y + 1 );
+            SelectObject( wvw_win->hdc, wvw->a.penWhite );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, iRight, y );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y + 1, NULL );
+            LineTo( wvw_win->hdc, iRight, y + 1 );
          }
          else                                       /*  Vertical    */
          {
-            SelectObject( pWindowData->hdc, wvw->a.penWhite );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, x, iBottom );
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x + 1, y, NULL );
-            LineTo( pWindowData->hdc, x + 1, iBottom );
+            SelectObject( wvw_win->hdc, wvw->a.penWhite );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, x, iBottom );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x + 1, y, NULL );
+            LineTo( wvw_win->hdc, x + 1, iBottom );
          }
          break;
 
       case 1:                                      /* Recessed    */
          if( iOrient == 0 )                        /* Horizontal  */
          {
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, iRight, y );
-            SelectObject( pWindowData->hdc, wvw->a.penWhite );
-            MoveToEx( pWindowData->hdc, x, y + 1, NULL );
-            LineTo( pWindowData->hdc, iRight, y + 1 );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, iRight, y );
+            SelectObject( wvw_win->hdc, wvw->a.penWhite );
+            MoveToEx( wvw_win->hdc, x, y + 1, NULL );
+            LineTo( wvw_win->hdc, iRight, y + 1 );
          }
          else                                      /*  Vertical   */
          {
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, x, iBottom );
-            SelectObject( pWindowData->hdc, wvw->a.penWhite );
-            MoveToEx( pWindowData->hdc, x + 1, y, NULL );
-            LineTo( pWindowData->hdc, x + 1, iBottom );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, x, iBottom );
+            SelectObject( wvw_win->hdc, wvw->a.penWhite );
+            MoveToEx( wvw_win->hdc, x + 1, y, NULL );
+            LineTo( wvw_win->hdc, x + 1, iBottom );
          }
          break;
 
       case 2:                                      /* Plain      */
          if( iOrient == 0 )                        /* Horizontal */
          {
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, iRight, y );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, iRight, y );
          }
          else                                      /*  Vertical  */
          {
-            SelectObject( pWindowData->hdc, hPen );
-            MoveToEx( pWindowData->hdc, x, y, NULL );
-            LineTo( pWindowData->hdc, x, iBottom );
+            SelectObject( wvw_win->hdc, hPen );
+            MoveToEx( wvw_win->hdc, x, y, NULL );
+            LineTo( wvw_win->hdc, x, iBottom );
          }
          break;
    }
@@ -2424,9 +2424,9 @@ HB_FUNC( WVW_DRAWLINEEX )
 /* wvw_DrawOutlineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nSlotPen ) */
 HB_FUNC( WVW_DRAWOUTLINEEX )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight;
@@ -2440,18 +2440,18 @@ HB_FUNC( WVW_DRAWOUTLINEEX )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y - 1;
    iLeft = xy.x - 1;
 
-   xy      = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
    iBottom = xy.y;
    iRight  = xy.x;
 
    if( wvw->a.hUserPens[ iSlot ] )
-      SelectObject( pWindowData->hdc, wvw->a.hUserPens[ iSlot ] );
+      SelectObject( wvw_win->hdc, wvw->a.hUserPens[ iSlot ] );
    else
-      SelectObject( pWindowData->hdc, wvw->a.penBlack );
+      SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
    hb_gt_wvw_DrawOutline( usWinNum, iTop, iLeft, iBottom, iRight );
 }

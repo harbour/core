@@ -94,18 +94,18 @@
 
 HB_FUNC( WVW_CBCREATE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   HWND hWndParent = pWindowData->hWnd;
+   HWND hWndParent = wvw_win->hWnd;
    HWND hWndCB;
 /* LONG cnt; */
    LONG numofchars;
    LONG avgwidth;
    LONG LongComboWidth, NewLongComboWidth;
 /* RECT r; */
-   HFONT hFont = hb_gt_wvw_GetFont( pWindowData->fontFace, 10, pWindowData->fontWidth, pWindowData->fontWeight, pWindowData->fontQuality, pWindowData->CodePage );
+   HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
 
    POINT xy;
    int   iTop, iLeft, iBottom, iRight;
@@ -119,16 +119,16 @@ HB_FUNC( WVW_CBCREATE )
           usRight      = usLeft + usWidth - 1;
    USHORT usNumElement = ( USHORT ) ( HB_ISARRAY( 5 ) ? hb_arrayLen( hb_param( 5, HB_IT_ARRAY ) ) : 0 );
    USHORT usListLines  = ( USHORT ) hb_parnidef( 7, 3 );
-   BYTE   byCharHeight = hb_gt_wvw_LineHeight( pWindowData );
+   BYTE   byCharHeight = hb_gt_wvw_LineHeight( wvw_win );
 
    /* in the future combobox type might be selectable by 8th parameter */
    int  iStyle   = CBS_DROPDOWNLIST | WS_VSCROLL;
    BYTE bKbdType = ( BYTE ) hb_parnidef( 9, WVW_CB_KBD_STANDARD );
 
-   if( pWindowData->hCBfont == NULL )
+   if( wvw_win->hCBfont == NULL )
    {
-      pWindowData->hCBfont = CreateFontIndirect( &wvw->lfCB );
-      if( pWindowData->hCBfont == NULL )
+      wvw_win->hCBfont = CreateFontIndirect( &wvw->lfCB );
+      if( wvw_win->hCBfont == NULL )
       {
          hb_retnl( 0 );
          return;
@@ -145,13 +145,13 @@ HB_FUNC( WVW_CBCREATE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    iBottom = xy.y - 1 + ( iOffBottom * byCharHeight );
    iRight  = xy.x - 1 + iOffRight;
@@ -233,7 +233,7 @@ HB_FUNC( WVW_CBCREATE )
 
       hb_gt_wvw_StoreControlProc( usWinNum, WVW_CONTROL_COMBOBOX, hWndCB, OldProc );
 
-      SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) pWindowData->hCBfont, ( LPARAM ) TRUE );
+      SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) wvw_win->hCBfont, ( LPARAM ) TRUE );
       hb_stornint( ( HB_PTRDIFF ) hWndCB, 11 );
 
       hb_retnl( uiCBid );
@@ -247,10 +247,10 @@ HB_FUNC( WVW_CBCREATE )
  */
 HB_FUNC( WVW_CBDESTROY )
 {
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT       uiCBid      = ( UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd         = pWindowData->pcdCtrlList;
-   WVW_CTRL * pcdPrev     = NULL;
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   UINT       uiCBid  = ( UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
+   WVW_CTRL * pcdPrev = NULL;
 
    while( pcd )
    {
@@ -268,7 +268,7 @@ HB_FUNC( WVW_CBDESTROY )
       if( pcdPrev )
          pcdPrev->pNext = pcd->pNext;
       else
-         pWindowData->pcdCtrlList = pcd->pNext;
+         wvw_win->pcdCtrlList = pcd->pNext;
 
       if( pcd->phiCodeBlock )
          hb_itemRelease( pcd->phiCodeBlock );
@@ -319,8 +319,8 @@ HB_FUNC( WVW_CBENABLE )
 
       if( ! bEnable )
       {
-         WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-         SetFocus( pWindowData->hWnd );
+         WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( usWinNum );
+         SetFocus( wvw_win->hWnd );
       }
    }
    else
@@ -369,12 +369,12 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
  */
 HB_FUNC( WVW_CBSETFONT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    HB_BOOL retval = HB_TRUE;
 
-   wvw->lfCB.lfHeight      = hb_parnldef( 3, pWindowData->fontHeight - 2 );
+   wvw->lfCB.lfHeight      = hb_parnldef( 3, wvw_win->fontHeight - 2 );
    wvw->lfCB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfCB.lfWidth;
    wvw->lfCB.lfEscapement  = 0;
    wvw->lfCB.lfOrientation = 0;
@@ -389,13 +389,13 @@ HB_FUNC( WVW_CBSETFONT )
    if( HB_ISCHAR( 2 ) )
       hb_strncpy( wvw->lfCB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 
-   if( pWindowData->hCBfont )
+   if( wvw_win->hCBfont )
    {
-      HFONT hOldFont = pWindowData->hCBfont;
+      HFONT hOldFont = wvw_win->hCBfont;
       HFONT hFont    = CreateFontIndirect( &wvw->lfCB );
       if( hFont )
       {
-         WVW_CTRL * pcd = pWindowData->pcdCtrlList;
+         WVW_CTRL * pcd = wvw_win->pcdCtrlList;
 
          while( pcd )
          {
@@ -406,7 +406,7 @@ HB_FUNC( WVW_CBSETFONT )
             pcd = pcd->pNext;
          }
 
-         pWindowData->hCBfont = hFont;
+         wvw_win->hCBfont = hFont;
          DeleteObject( hOldFont );
       }
       else

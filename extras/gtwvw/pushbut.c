@@ -126,10 +126,10 @@ HB_FUNC( WVW_PBCREATE )
  */
 HB_FUNC( WVW_PBDESTROY )
 {
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT       uiPBid      = ( UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd         = pWindowData->pcdCtrlList;
-   WVW_CTRL * pcdPrev     = NULL;
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   UINT       uiPBid  = ( UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
+   WVW_CTRL * pcdPrev = NULL;
 
    while( pcd )
    {
@@ -146,7 +146,7 @@ HB_FUNC( WVW_PBDESTROY )
       if( pcdPrev )
          pcdPrev->pNext = pcd->pNext;
       else
-         pWindowData->pcdCtrlList = pcd->pNext;
+         wvw_win->pcdCtrlList = pcd->pNext;
 
       if( pcd->phiCodeBlock )
          hb_itemRelease( pcd->phiCodeBlock );
@@ -186,9 +186,9 @@ HB_FUNC( WVW_PBISFOCUSED )
  */
 HB_FUNC( WVW_PBENABLE )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND      hWndPB      = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
+   HWND      hWndPB   = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPB )
    {
@@ -197,7 +197,7 @@ HB_FUNC( WVW_PBENABLE )
       hb_retl( EnableWindow( hWndPB, ( BOOL ) bEnable ) == 0 );
 
       if( ! bEnable )
-         SetFocus( pWindowData->hWnd );
+         SetFocus( wvw_win->hWnd );
    }
    else
       hb_retl( HB_FALSE );
@@ -278,12 +278,12 @@ HB_FUNC( WVW_PBSETSTYLE )
  */
 HB_FUNC( WVW_PBSETFONT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    HB_BOOL retval = HB_TRUE;
 
-   wvw->lfPB.lfHeight      = hb_parnldef( 3, pWindowData->fontHeight - 2 );
+   wvw->lfPB.lfHeight      = hb_parnldef( 3, wvw_win->fontHeight - 2 );
    wvw->lfPB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfPB.lfWidth;
    wvw->lfPB.lfEscapement  = 0;
    wvw->lfPB.lfOrientation = 0;
@@ -298,13 +298,13 @@ HB_FUNC( WVW_PBSETFONT )
    if( HB_ISCHAR( 2 ) )
       hb_strncpy( wvw->lfPB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 
-   if( pWindowData->hPBfont )
+   if( wvw_win->hPBfont )
    {
-      HFONT hOldFont = pWindowData->hPBfont;
+      HFONT hOldFont = wvw_win->hPBfont;
       HFONT hFont    = CreateFontIndirect( &wvw->lfPB );
       if( hFont )
       {
-         WVW_CTRL * pcd = pWindowData->pcdCtrlList;
+         WVW_CTRL * pcd = wvw_win->pcdCtrlList;
 
          while( pcd )
          {
@@ -315,7 +315,7 @@ HB_FUNC( WVW_PBSETFONT )
             pcd = pcd->pNext;
          }
 
-         pWindowData->hPBfont = hFont;
+         wvw_win->hPBfont = hFont;
          DeleteObject( hOldFont );
       }
       else

@@ -72,21 +72,21 @@
  */
 HB_FUNC( WVW_SBCREATE )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   UINT       usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   UINT       usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN *  wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
    HWND hWndParent;
    HWND hWndSB;
    int  ptArray[ WVW_MAX_STATUS_PARTS ];
 
-   if( pWindowData->hStatusBar != NULL )
+   if( wvw_win->hStatusBar != NULL )
    {
       hb_retnl( 0 );
       return;
    }
 
-   hWndParent = pWindowData->hWnd;
+   hWndParent = wvw_win->hWnd;
    hWndSB     = CreateStatusWindow( WS_CHILD | WS_VISIBLE | WS_BORDER | SBT_TOOLTIPS,
                                     NULL,
                                     hWndParent,
@@ -95,19 +95,19 @@ HB_FUNC( WVW_SBCREATE )
    {
       RECT rSB;
 
-      if( pWindowData->hSBfont == NULL )
-         pWindowData->hSBfont = CreateFontIndirect( &wvw->lfSB );
+      if( wvw_win->hSBfont == NULL )
+         wvw_win->hSBfont = CreateFontIndirect( &wvw->lfSB );
 
       memset( &rSB, 0, sizeof( rSB ) );
 
       if( GetClientRect( hWndSB, &rSB ) )
-         pWindowData->usSBHeight = ( USHORT ) rSB.bottom;
-      pWindowData->hStatusBar = hWndSB;
+         wvw_win->usSBHeight = ( USHORT ) rSB.bottom;
+      wvw_win->hStatusBar = hWndSB;
 
       hb_gt_wvw_ResetWindow( usWinNum );
 
       ptArray[ 0 ] = rSB.right;
-      SendMessage( hWndSB, WM_SETFONT, ( WPARAM ) pWindowData->hSBfont, ( LPARAM ) TRUE );
+      SendMessage( hWndSB, WM_SETFONT, ( WPARAM ) wvw_win->hSBfont, ( LPARAM ) TRUE );
 
       SendMessage( hWndSB, SB_SETPARTS, 1, ( LPARAM ) ( LPINT ) ptArray );
    }
@@ -120,20 +120,20 @@ HB_FUNC( WVW_SBCREATE )
  */
 HB_FUNC( WVW_SBDESTROY )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   if( pWindowData->hStatusBar != NULL )
+   if( wvw_win->hStatusBar != NULL )
    {
-      if( pWindowData->hSBfont )
+      if( wvw_win->hSBfont )
       {
-         DeleteObject( pWindowData->hSBfont );
-         pWindowData->hSBfont = NULL;
+         DeleteObject( wvw_win->hSBfont );
+         wvw_win->hSBfont = NULL;
       }
-      DestroyWindow( pWindowData->hStatusBar );
-      pWindowData->hStatusBar = NULL;
-      pWindowData->bSBPaint   = HB_FALSE;
-      pWindowData->usSBHeight = 0;
+      DestroyWindow( wvw_win->hStatusBar );
+      wvw_win->hStatusBar = NULL;
+      wvw_win->bSBPaint   = HB_FALSE;
+      wvw_win->usSBHeight = 0;
 
       hb_gt_wvw_ResetWindow( usWinNum );
    }
@@ -153,7 +153,7 @@ HB_FUNC( WVW_SBDESTROY )
  */
 HB_FUNC( WVW_SBADDPART )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HWND      hWndSB;
    int       ptArray[ WVW_MAX_STATUS_PARTS ];
    int       numOfParts;
@@ -163,7 +163,7 @@ HB_FUNC( WVW_SBADDPART )
    HB_BOOL   lResetParts;
    USHORT    usWidth;
 
-   hWndSB = pWindowData->hStatusBar;
+   hWndSB = wvw_win->hStatusBar;
    if( hWndSB == NULL )
    {
       hb_retnl( 0 );
@@ -241,7 +241,7 @@ HB_FUNC( WVW_SBADDPART )
  */
 HB_FUNC( WVW_SBREFRESH )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HWND      hWndSB;
    int       ptArray[ WVW_MAX_STATUS_PARTS ];
    int       numOfParts;
@@ -249,7 +249,7 @@ HB_FUNC( WVW_SBREFRESH )
    int       iDiff;
    RECT      rSB;
 
-   hWndSB = pWindowData->hStatusBar;
+   hWndSB = wvw_win->hStatusBar;
    if( hWndSB == NULL )
    {
       hb_retnl( 0 );
@@ -281,27 +281,27 @@ HB_FUNC( WVW_SBREFRESH )
  */
 HB_FUNC( WVW_SBSETTEXT )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   int       iPart       = hb_parnidef( 2, 1 );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   int       iPart   = hb_parnidef( 2, 1 );
 
    if( HB_ISCHAR( 4 ) )
-      pWindowData->cSBColorForeground = strtol( hb_parc( 4 ), NULL, 10 );
+      wvw_win->cSBColorForeground = strtol( hb_parc( 4 ), NULL, 10 );
    else if( HB_ISNUM( 4 ) )
-      pWindowData->cSBColorForeground = hb_parnl( 4 );
+      wvw_win->cSBColorForeground = hb_parnl( 4 );
 
    if( HB_ISCHAR( 5 ) )
-      pWindowData->cSBColorBackground = strtol( hb_parc( 5 ), NULL, 10 );
+      wvw_win->cSBColorBackground = strtol( hb_parc( 5 ), NULL, 10 );
    else if( HB_ISNUM( 5 ) )
-      pWindowData->cSBColorBackground = hb_parnl( 5 );
+      wvw_win->cSBColorBackground = hb_parnl( 5 );
 
-   if( iPart == 0 && ( pWindowData->cSBColorForeground || pWindowData->cSBColorBackground ) )
+   if( iPart == 0 && ( wvw_win->cSBColorForeground || wvw_win->cSBColorBackground ) )
    {
-      pWindowData->bSBPaint = HB_TRUE;
-      SendMessage( pWindowData->hStatusBar, SB_SETTEXT, SBT_OWNERDRAW, ( LPARAM ) hb_parcx( 3 ) );
-      hb_gt_wvw_ProcessMessages( pWindowData );
+      wvw_win->bSBPaint = HB_TRUE;
+      SendMessage( wvw_win->hStatusBar, SB_SETTEXT, SBT_OWNERDRAW, ( LPARAM ) hb_parcx( 3 ) );
+      hb_gt_wvw_ProcessMessages( wvw_win );
    }
    else
-      SendMessage( pWindowData->hStatusBar, SB_SETTEXT, iPart, ( LPARAM ) hb_parcx( 3 ) );
+      SendMessage( wvw_win->hStatusBar, SB_SETTEXT, iPart, ( LPARAM ) hb_parcx( 3 ) );
 }
 
 /* wvw_sbGetText([nWinNum], [nPart])
@@ -309,11 +309,11 @@ HB_FUNC( WVW_SBSETTEXT )
  */
 HB_FUNC( WVW_SBGETTEXT )
 {
-   WVW_WIN * pWindowData     = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win         = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    int       iPart           = hb_parnidef( 2, 1 );
    char      cString[ 1024 ] = "";
 
-   SendMessage( pWindowData->hStatusBar, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) cString );
+   SendMessage( wvw_win->hStatusBar, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) cString );
    hb_retc( cString );
 }
 
@@ -322,8 +322,8 @@ HB_FUNC( WVW_SBGETTEXT )
  */
 HB_FUNC( WVW_SBGETPARTS )
 {
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   int       numOfParts  = ( int ) SendMessage( pWindowData->hStatusBar, SB_GETPARTS, WVW_MAX_STATUS_PARTS, 0 );
+   WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   int       numOfParts = ( int ) SendMessage( wvw_win->hStatusBar, SB_GETPARTS, WVW_MAX_STATUS_PARTS, 0 );
 
    hb_retni( numOfParts );
 }
@@ -333,12 +333,12 @@ HB_FUNC( WVW_SBGETPARTS )
  */
 HB_FUNC( WVW_SBSETFONT )
 {
-   WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
    HB_BOOL retval = HB_TRUE;
 
-   wvw->lfSB.lfHeight      = hb_parnldef( 3, pWindowData->fontHeight - 2 );
+   wvw->lfSB.lfHeight      = hb_parnldef( 3, wvw_win->fontHeight - 2 );
    wvw->lfSB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfSB.lfWidth;
    wvw->lfSB.lfEscapement  = 0;
    wvw->lfSB.lfOrientation = 0;
@@ -353,13 +353,13 @@ HB_FUNC( WVW_SBSETFONT )
    if( HB_ISCHAR( 2 ) )
       hb_strncpy( wvw->lfSB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfSB.lfFaceName ) - 1 );
 
-   if( pWindowData->hSBfont )
+   if( wvw_win->hSBfont )
    {
-      HFONT hOldFont = pWindowData->hSBfont;
+      HFONT hOldFont = wvw_win->hSBfont;
       HFONT hFont    = CreateFontIndirect( &wvw->lfSB );
       if( hFont )
       {
-         pWindowData->hSBfont = hFont;
+         wvw_win->hSBfont = hFont;
          DeleteObject( hOldFont );
       }
       else
@@ -424,10 +424,10 @@ HB_FUNC( WVW_SBSETFONT )
 
 HB_FUNC( WVW_XBCREATE )
 {
-   UINT      usWinNum    = WVW_WHICH_WINDOW;
-   WVW_WIN * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   HWND   hWndParent = pWindowData->hWnd;
+   HWND   hWndParent = wvw_win->hWnd;
    HWND   hWndXB;
    POINT  xy;
    int    iTop, iLeft, iBottom, iRight;
@@ -460,7 +460,7 @@ HB_FUNC( WVW_XBCREATE )
       usRight  = usLeft + ( USHORT ) hb_parni( 5 ) - 1;
       usBottom = usTop;
 
-      iOffTop    = HB_ISARRAY( 7 ) ? hb_parvni( 7, 1 ) : 3 - pWindowData->byLineSpacing;
+      iOffTop    = HB_ISARRAY( 7 ) ? hb_parvni( 7, 1 ) : 3 - wvw_win->byLineSpacing;
       iOffLeft   = HB_ISARRAY( 7 ) ? hb_parvni( 7, 2 ) : 0;
       iOffBottom = HB_ISARRAY( 7 ) ? hb_parvni( 7, 3 ) : 0;
       iOffRight  = HB_ISARRAY( 7 ) ? hb_parvni( 7, 4 ) : 0;
@@ -469,23 +469,23 @@ HB_FUNC( WVW_XBCREATE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
 
-   xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, usRight + 1, usBottom + 1 );
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-   xy.y -= pWindowData->byLineSpacing;
+   xy.y -= wvw_win->byLineSpacing;
 
    if( iStyle == SBS_VERT )
    {
       iBottom = xy.y - 1 + iOffBottom;
-      iRight  = iLeft + pWindowData->PTEXTSIZE.y - 1 + iOffRight;
+      iRight  = iLeft + wvw_win->PTEXTSIZE.y - 1 + iOffRight;
    }
    else
    {
       iRight  = xy.x - 1 + iOffRight;
-      iBottom = iTop + pWindowData->PTEXTSIZE.y - 1 + iOffBottom;
+      iBottom = iTop + wvw_win->PTEXTSIZE.y - 1 + iOffBottom;
    }
 
    uiXBid = hb_gt_wvw_LastControlId( usWinNum, WVW_CONTROL_SCROLLBAR );
@@ -544,10 +544,10 @@ HB_FUNC( WVW_XBCREATE )
  */
 HB_FUNC( WVW_XBDESTROY )
 {
-   WVW_WIN *  pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   UINT       uiXBid      = ( UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd         = pWindowData->pcdCtrlList;
-   WVW_CTRL * pcdPrev     = NULL;
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   UINT       uiXBid  = ( UINT ) hb_parnl( 2 );
+   WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
+   WVW_CTRL * pcdPrev = NULL;
 
    while( pcd )
    {
@@ -565,7 +565,7 @@ HB_FUNC( WVW_XBDESTROY )
       if( pcdPrev )
          pcdPrev->pNext = pcd->pNext;
       else
-         pWindowData->pcdCtrlList = pcd->pNext;
+         wvw_win->pcdCtrlList = pcd->pNext;
 
       if( pcd->phiCodeBlock )
          hb_itemRelease( pcd->phiCodeBlock );
