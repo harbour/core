@@ -165,7 +165,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 {
    HBITMAP hBitmapUnchecked = NULL;
    HBITMAP hBitmapChecked   = NULL;
-   char    szResname[ _MAX_PATH + 1 ];
+   char    szResname[ HB_PATH_MAX + 1 ];
    int     iWidth, iHeight;
 
    if( HB_ISNUM( 4 ) )

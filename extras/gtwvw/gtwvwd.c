@@ -7903,7 +7903,7 @@ IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, UINT ires
    IPicture * iPicture = NULL;
    PICTDESC   picd;
 /* int nSize; */
-   char szResname[ _MAX_PATH + 1 ];
+   char szResname[ HB_PATH_MAX + 1 ];
    int  iWidth, iHeight;
 
    iWidth  = *lwidth;
@@ -8314,7 +8314,7 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, UINT uiBitmap,
    HBITMAP hBitmap;
 
    UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
-   char szResname[ _MAX_PATH + 1 ];
+   char szResname[ HB_PATH_MAX + 1 ];
 
    if( szBitmap )
    {

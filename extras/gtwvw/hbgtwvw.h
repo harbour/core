@@ -54,18 +54,18 @@
 #define HB_WVW_H_
 
 #ifndef _WIN32_IE
-#define _WIN32_IE  0x0400
+#define _WIN32_IE   0x0400
 #endif
 
 #ifndef WINVER
-#define WINVER  0x0500
+#define WINVER      0x0500
 #endif
 
 /* NOTE: User programs should never call this layer directly! */
 
 /* This definition has to be placed before #include "hbapigt.h" */
 
-#define HB_GT_NAME            WVW
+#define HB_GT_NAME  WVW
 
 #include "hbapiitm.h"
 #include "hbwinuni.h"
@@ -95,46 +95,46 @@
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
    defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
    #ifndef GetWindowLongPtr
-   #define GetWindowLongPtr     GetWindowLong
+   #define GetWindowLongPtr  GetWindowLong
    #endif
    #ifndef SetWindowLongPtr
-   #define SetWindowLongPtr     SetWindowLong
+   #define SetWindowLongPtr  SetWindowLong
    #endif
    #ifndef SetClassLongPtr
-   #define SetClassLongPtr      SetClassLong
+   #define SetClassLongPtr   SetClassLong
    #endif
 #endif
 
 /* macros used to hide type of interface: C or C++ */
 #if defined( __cplusplus ) && ! defined( CINTERFACE ) && \
    ( defined( __BORLANDC__ ) || \
-     defined( __DMC__ ) || \
-     defined( _MSC_VER ) || \
-     defined( __MINGW32__ ) || \
-     ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1270 ) ) )
-   #define HB_ID_REF( id )     ( id )
-   #define HB_VTBL( pSelf )    ( pSelf )
+   defined( __DMC__ ) || \
+   defined( _MSC_VER ) || \
+   defined( __MINGW32__ ) || \
+   ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1270 ) ) )
+   #define HB_ID_REF( id )    ( id )
+   #define HB_VTBL( pSelf )   ( pSelf )
    #define HB_THIS( pSelf )
    #define HB_THIS_( pSelf )
 #else
-   #define HB_OLE_C_API        1
-   #define HB_ID_REF( id )     ( &id )
-   #define HB_VTBL( pSelf )    ( pSelf )->lpVtbl
-   #define HB_THIS( pSelf )    ( pSelf )
-   #define HB_THIS_( pSelf )   ( pSelf ),
+   #define HB_OLE_C_API           1
+   #define HB_ID_REF( id )    ( &id )
+   #define HB_VTBL( pSelf )   ( pSelf )->lpVtbl
+   #define HB_THIS( pSelf )   ( pSelf )
+   #define HB_THIS_( pSelf )  ( pSelf ),
 #endif
 
 #ifndef GRADIENT_FILL_RECT_H
-#define GRADIENT_FILL_RECT_H  0x00000000
+#define GRADIENT_FILL_RECT_H      0x00000000
 #endif
 #ifndef TPM_RECURSE
-#define TPM_RECURSE           0x0001L
+#define TPM_RECURSE               0x0001L
 #endif
 #ifndef TTS_BALLOON
-#define TTS_BALLOON           0x40
+#define TTS_BALLOON               0x40
 #endif
 #ifndef BTNS_WHOLEDROPDOWN
-#define BTNS_WHOLEDROPDOWN    0x0080
+#define BTNS_WHOLEDROPDOWN        0x0080
 #endif
 
 /* xHarbour compatible definitions */
@@ -218,7 +218,7 @@
 #define WVW_DEFAULT_MAX_BMCACHE   20
 
 /* Como as descricoes sao grandes, precisei aumetar isso - Peluffo - 2007-10-26
-   #define WVW_TB_LABELMAXLENGTH 40 */
+ #define WVW_TB_LABELMAXLENGTH 40 */
 #define WVW_TB_LABELMAXLENGTH     100
 
 #define WVW_WHICH_WINDOW          ( HB_ISNUM( 1 ) ? ( UINT ) hb_parni( 1 ) : ( hb_gt_wvw_GetMainCoordMode() ? hb_gt_wvw_GetNumWindows() - 1 : hb_gt_wvw_GetCurWindow() ) )
@@ -240,82 +240,19 @@
 #define YELLOW                    RGB( 0xFF, 0xFF, 0x00 )
 #define BRIGHT_WHITE              RGB( 0xFF, 0xFF, 0xFF )
 
-#if defined( __DMC__ )
-
-   #define SBT_TOOLTIPS           0x0800
-   #define SB_SETICON             ( WM_USER + 15 )
-   #define SB_SETTIPTEXT          ( WM_USER + 17 )
-   #define SB_GETTIPTEXT          ( WM_USER + 18 )
-   #define TBSTYLE_FLAT           0x0800
-   #define TBSTYLE_LIST           0x1000
-   #define BTNS_WHOLEDROPDOWN     0x0080
-   #define TBSTYLE_CUSTOMERASE    0x2000
-   #define IDB_HIST_SMALL_COLOR   8
-   #define IDB_HIST_LARGE_COLOR   9
-   #define TB_SETMAXTEXTROWS      ( WM_USER + 60 )
-   #define PBS_VERTICAL           0x04
-   #define PBS_SMOOTH             0x01
-   #define CCM_FIRST              0x2000
-   #define CCM_SETBKCOLOR         ( CCM_FIRST + 1 )
-   #define PBM_SETBKCOLOR         CCM_SETBKCOLOR
-   #define PBM_SETBARCOLOR        ( WM_USER + 9 )
-   #define PBM_GETRANGE           ( WM_USER + 7 )
-   #define PBM_GETPOS             ( WM_USER + 8 )
-
-typedef DWORD UINT_PTR;
-
-typedef struct
-{
-   int iLow;
-   int iHigh;
-} PBRANGE, * PPBRANGE;
-
-   #define ICC_BAR_CLASSES  0x00000004
-
-typedef USHORT COLOR16;
-
-typedef struct _TRIVERTEX
-{
-   LONG    x;
-   LONG    y;
-   COLOR16 Red;
-   COLOR16 Green;
-   COLOR16 Blue;
-   COLOR16 Alpha;
-} TRIVERTEX, * PTRIVERTEX, * LPTRIVERTEX;
-
-typedef struct tagINITCOMMONCONTROLSEX
-{
-   DWORD dwSize;
-   DWORD dwICC;
-} INITCOMMONCONTROLSEX, * LPINITCOMMONCONTROLSEX;
-
-WINCOMMCTRLAPI BOOL WINAPI InitCommonControlsEx( LPINITCOMMONCONTROLSEX );
-
-typedef struct _GRADIENT_RECT
-{
-   ULONG UpperLeft;
-   ULONG LowerRight;
-} GRADIENT_RECT, * PGRADIENT_RECT, * LPGRADIENT_RECT;
-#endif
-
-#define WM_MY_UPDATE_CARET  ( WM_USER + 0x0101 )
+#define WM_MY_UPDATE_CARET        ( WM_USER + 0x0101 )
 
 typedef BOOL ( WINAPI * wvwGradientFill )(
    HDC hdc,
-   PTRIVERTEX pVertex,
+   TRIVERTEX * pVertex,
    ULONG dwNumVertex,
    PVOID pMesh,
    ULONG dwNumMesh,
    ULONG dwMode      );
 
-#ifndef _MAX_PATH
-#define _MAX_PATH  256
-#endif
-
 typedef struct bitmap_handle
 {
-   char    szFilename[ _MAX_PATH + 1 ];
+   char    szFilename[ HB_PATH_MAX + 1 ];
    HBITMAP hBitmap;
    int     iWidth, iHeight;
    struct bitmap_handle * pNext;
@@ -323,7 +260,7 @@ typedef struct bitmap_handle
 
 typedef struct picture_handle
 {
-   char       szFilename[ _MAX_PATH + 1 ];
+   char       szFilename[ HB_PATH_MAX + 1 ];
    IPicture * iPicture;
    int        iWidth, iHeight;
    struct picture_handle * pNext;
@@ -430,27 +367,27 @@ typedef struct app_data
 
 typedef struct win_data
 {
-   UINT  byWinId;                            /*x Window's Id, a number 0..WVWMAXWINDOWS */
-   TCHAR szWinName[ WVW_MAXWINNAMELENGTH ];  /*x name of Window ~ szAppName for Window 0 */
+   UINT  byWinId;                            /* Window's Id, a number 0..WVWMAXWINDOWS */
+   TCHAR szWinName[ WVW_MAXWINNAMELENGTH ];  /* name of Window ~ szAppName for Window 0 */
 
-   int byLineSpacing;                        /*x linespacing in pixels */
-   int iLSpaceColor;                         /*x linespacing color index */
+   int     byLineSpacing;                    /* linespacing in pixels */
+   int     iLSpaceColor;                     /* linespacing color index */
 
-   USHORT  usRowOfs;                         /*x offset to Main Window's (0,0) */
-   USHORT  usColOfs;                         /*x offset to Main Window's (0,0) */
-   int     uiDispCount;                      /*x pending DispEnd() request */
-   HB_BOOL bPaintPending;                    /*x pending WVW_PAINT() execution */
-   RECT    rPaintPending;                    /*x rect of pending bPaintPending */
+   USHORT  usRowOfs;                         /* offset to Main Window's (0,0) */
+   USHORT  usColOfs;                         /* offset to Main Window's (0,0) */
+   int     uiDispCount;                      /* pending DispEnd() request */
+   HB_BOOL bPaintPending;                    /* pending WVW_PAINT() execution */
+   RECT    rPaintPending;                    /* rect of pending bPaintPending */
    HWND    hStatusBar;                       /* handle to status bar */
    USHORT  usSBHeight;                       /* height of status bar */
 
    HWND    hToolBar;                         /* TB handle to toolbar */
    USHORT  usTBHeight;                       /* TB height of toolbar */
-   int     iStartStdBitmap,
-           iStartViewBitmap,
-           iStartHistBitmap;           /* start of bitmap index */
-   int iTBImgWidth,
-       iTBImgHeight;                   /* image width and height */
+   int     iStartStdBitmap;
+   int     iStartViewBitmap;
+   int     iStartHistBitmap;                 /* start of bitmap index */
+   int     iTBImgWidth;
+   int     iTBImgHeight;                     /* image width and height */
    WNDPROC tbOldProc;
 
    CONTROL_DATA * pcdCtrlList;         /* lists of created controls, eg. scrollbars */
@@ -466,70 +403,68 @@ typedef struct win_data
    COLORREF cSBColorForeground;
    COLORREF cSBColorBackground;
 
-   HB_BOOL bIgnoreWM_SYSCHAR;
-   HB_BOOL bPaint;
-   HB_BOOL bGetFocus;
+   HB_BOOL  bIgnoreWM_SYSCHAR;
+   HB_BOOL  bPaint;
+   HB_BOOL  bGetFocus;
 
-   POINT    PTEXTSIZE;                             /* size of the fixed width font */
-   HB_BOOL  FixedFont;                             /* HB_TRUE if current font is a fixed font */
-   int      FixedSize[ WVW_MAX_COLS ];             /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
-   USHORT   ROWS;                                  /* number of displayable rows in window */
-   USHORT   COLS;                                  /* number of displayable columns in window */
-   COLORREF foreground;                            /* foreground color */
+   POINT    PTEXTSIZE;                                /* size of the fixed width font */
+   HB_BOOL  FixedFont;                                /* HB_TRUE if current font is a fixed font */
+   int      FixedSize[ WVW_MAX_COLS ];                /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
+   USHORT   ROWS;                                     /* number of displayable rows in window */
+   USHORT   COLS;                                     /* number of displayable columns in window */
+   COLORREF foreground;                               /* foreground color */
+   COLORREF background;                               /* background color */
 
-   COLORREF background;                            /* background color */
+   USHORT   BUFFERSIZE;                               /* size of the screen text buffer */
+   BYTE     byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ];  /* buffer with the text to be displayed on the screen */
+   BYTE     byColors[ WVW_MAX_ROWS * WVW_MAX_COLS ];
+   BYTE *   pBuffer;                                  /*   "     "    "    */
+   BYTE *   pColors;                                  /*   "     "    "    */
+   POINT    caretPos;                                 /* the current caret position */
 
-   USHORT BUFFERSIZE;                              /* size of the screen text buffer */
-   BYTE   byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ]; /* buffer with the text to be displayed on the screen */
-   BYTE   byColors[ WVW_MAX_ROWS * WVW_MAX_COLS ];
-   BYTE * pBuffer;                                 /*   "     "    "    */
-   BYTE * pColors;                                 /*   "     "    "    */
-   POINT  caretPos;                                /* the current caret position */
+   int      CaretSize;                                /* this may be specific to each windows, eg. different font size */
+   POINT    mousePos;                                 /* the last mousedown position */
+   HB_BOOL  MouseMove;                                /* Flag to say whether to return mouse movement events */
+   HWND     hWnd;                                     /* the window handle */
+   int      Keys[ WVW_CHAR_QUEUE_SIZE ];              /* Array to hold the characters & events */
+   int      keyPointerIn;                             /* Offset into key array for character to be placed */
+   int      keyPointerOut;                            /* Offset into key array of next character to read */
+   int      keyLast;
 
-   int     CaretSize;                              /* this may be specific to each windows, eg. different font size */
-   POINT   mousePos;                               /* the last mousedown position */
-   HB_BOOL MouseMove;                              /* Flag to say whether to return mouse movement events */
-   HWND    hWnd;                                   /* the window handle */
-   int     Keys[ WVW_CHAR_QUEUE_SIZE ];            /* Array to hold the characters & events */
-   int     keyPointerIn;                           /* Offset into key array for character to be placed */
-   int     keyPointerOut;                          /* Offset into key array of next character to read */
-   int     keyLast;
+   RECT     RectInvalid;               /* Invalid rectangle if DispBegin() active */
+   HFONT    hFont;
+   int      fontHeight;                /* requested font height */
+   int      fontWidth;                 /* requested font width */
+   int      fontWeight;                /* Bold level */
+   int      fontQuality;
+   TCHAR    fontFace[ LF_FACESIZE ];   /* requested font face name LF_FACESIZE #defined in wingdi.h */
 
-   RECT  RectInvalid;                  /* Invalid rectangle if DispBegin() active */
-   HFONT hFont;
-   int   fontHeight;                   /* requested font height */
-   int   fontWidth;                    /* requested font width */
-   int   fontWeight;                   /* Bold level */
-   int   fontQuality;
-   TCHAR fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
+   int      LastMenuEvent;             /* Last menu item selected */
+   int      MenuKeyEvent;              /* User definable event number for windows menu command */
+   HB_BOOL  CentreWindow;              /* True if window is to be Reset into centre of window */
 
-   int  LastMenuEvent;                 /* Last menu item selected */
-   int  MenuKeyEvent;                  /* User definable event number for windows menu command */
-   HB_BOOL CentreWindow;               /* True if window is to be Reset into centre of window */
+   /* if CentreWindow is HB_FALSE, two following settings are examined */
+   HB_BOOL  HCentreWindow;             /* True if window is to be Reset into centre of window, horizontally */
+   HB_BOOL  VCentreWindow;             /* True if window is to be Reset into centre of window, vertically */
 
-   /* if CentreWindow is FALSE, two following settings are examined */
-   HB_BOOL HCentreWindow;              /* True if window is to be Reset into centre of window, horizontally */
-   HB_BOOL VCentreWindow;              /* True if window is to be Reset into centre of window, vertically */
+   int      CodePage;                  /* Code page to use for display characters */
 
-   int CodePage;                       /* Code page to use for display characters */
+   HB_BOOL  InvalidateWindow;          /* Flag for controlling whether to use ScrollWindowEx() */
+   HB_BOOL  EnableShortCuts;           /* Determines whether ALT key enables menu or system menu */
 
-   HB_BOOL InvalidateWindow;           /* Flag for controlling whether to use ScrollWindowEx() */
-   HB_BOOL EnableShortCuts;            /* Determines whether ALT key enables menu or system menu */
+   HDC      hdc;                       /* Handle to Windows Device Context */
+   HMENU    hPopup;                    /* Handle of context menu invokable with right click */
 
-   HDC hdc;                            /* Handle to Windows Device Context */
-
-   HMENU hPopup;                       /* Handle of context menu invokable with right click */
-
-   HDC     hCompDC;                    /* Compatible DC to _s.hdc */
-   HWND    hWndTT;                     /* Handle to hold tooltip information */
-   HB_BOOL bToolTipActive;             /* Flag to set whether tooltip is active or not */
-   HICON   hIcon;
+   HDC      hCompDC;                   /* Compatible DC to _s.hdc */
+   HWND     hWndTT;                    /* Handle to hold tooltip information */
+   HB_BOOL  bToolTipActive;            /* Flag to set whether tooltip is active or not */
+   HICON    hIcon;
 
 } WIN_DATA;
 
 typedef struct wvw_data
 {
-   UINT uiPaintRefresh;          /* milliseconds between timer check */
+   UINT    uiPaintRefresh;       /* milliseconds between timer check */
    HB_BOOL bMainCoordMode;       /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
    HB_BOOL bVertCaret;           /* if TRUE, caret is in Vertical style */
    HB_BOOL bNOSTARTUPSUBWINDOW;  /* if TRUE, subwindow will not be displayed during opening */
@@ -537,8 +472,8 @@ typedef struct wvw_data
    HB_BOOL bDefCentreWindow;     /* default CentreWindow setting for subwindows */
    HB_BOOL bDefHCentreWindow;    /* default HCentreWindow setting for subwindows */
    HB_BOOL bDefVCentreWindow;    /* default VCentreWindow setting for subwindows */
-   int byDefLineSpacing;         /* default line spacing */
-   int iDefLSpaceColor;          /* if >= 0 this will be the color index                                          for spacing between lines */
+   int     byDefLineSpacing;     /* default line spacing */
+   int     iDefLSpaceColor;      /* if >= 0 this will be the color index                                          for spacing between lines */
    HB_BOOL bAllowNonTop;         /* allow non-topmost window's control to  accept input */
    HB_BOOL bRecurseCBlock;       /* allow control's codeblock to recurse */
 
@@ -557,21 +492,15 @@ typedef struct wvw_data
 /* read only by user ***/
 
 /* for GTWVW private use: */
-   HB_BOOL bQuickSetMode;   /* quick SetMode(), to reset MaxRow() and MaxCol() only */
-
-   HB_BOOL bFlashingWindow;
-   /* topmost window is flashing
-                                            due to invalid input on other
-                                            window */
+   HB_BOOL bQuickSetMode;      /* quick SetMode(), to reset MaxRow() and MaxCol() only */
+   HB_BOOL bFlashingWindow;    /* topmost window is flashing due to invalid input on other window */
 
    int iScrolling;             /* scrollbar is scrolling */
    int iWrongButtonUp;         /* number of consecutive scrollbar's WM_LBUTTONUP encountered by gtProcessMessages */
-   int iMaxWrongButtonUp;
-   /* max number of s_iWrongButtonUp. If it goes higher than this number,
-                                             the scrollbar is forced to stop */
+   int iMaxWrongButtonUp;      /* max number of iWrongButtonUp. If it goes higher than this number, the scrollbar is forced to stop */
 
-   TCHAR szAppName[ 13 ];
-   TCHAR szSubWinName[ 25 ];
+   TCHAR   szAppName[ 13 ];
+   TCHAR   szSubWinName[ 25 ];
    HB_BOOL bSWRegistered;
 
    HINSTANCE hInstance;
@@ -637,10 +566,10 @@ extern void       hb_gt_wvw_AddControlHandle( UINT usWinNum, BYTE byCtrlClass, H
 extern HB_BOOL    hb_gt_wvw_StoreControlProc( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, WNDPROC OldProc );
 extern WNDPROC    hb_gt_wvw_GetControlProc( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl );
 extern UINT       hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, LPCTSTR lpszCaption,
-                          const char * szBitmap, UINT uiBitmap, PHB_ITEM phbiCodeBlock,
-                          int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
-                          double dStretch, HB_BOOL bMap3Dcolors,
-                          int iStyle );
+                                          const char * szBitmap, UINT uiBitmap, PHB_ITEM phbiCodeBlock,
+                                          int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
+                                          double dStretch, HB_BOOL bMap3Dcolors,
+                                          int iStyle );
 extern LONG       hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f );
 extern HFONT      hb_gt_wvw_GetFont( const TCHAR * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage );
 extern USHORT     hb_gt_wvw_GetMouseX( WIN_DATA * pWindowData );
