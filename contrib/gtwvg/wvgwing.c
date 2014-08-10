@@ -1001,7 +1001,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
             https://msdn.microsoft.com/en-us/library/windows/desktop/bb787291(v=vs.85).aspx */
          bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
 #if ! defined( HB_OS_WIN_CE )
-         SendMessage( hWndTB, TB_SETPADDING, 0, ( LPARAM ) MAKELPARAM(  10, 10 ) );
+         SendMessage( hWndTB, TB_SETPADDING, 0, ( LPARAM ) MAKELPARAM( 10, 10 ) );
 #endif
          hb_retl( bSuccess );
          return;

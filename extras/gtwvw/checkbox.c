@@ -90,10 +90,10 @@ HB_FUNC( WVW_CXCREATE )
 {
    if( HB_ISEVALITEM( 8 ) )
    {
-      USHORT usTop          = ( BYTE ) hb_parni( 2 ),
-             usLeft         = ( BYTE ) hb_parni( 3 ),
-             usBottom       = ( BYTE ) hb_parni( 4 ),
-             usRight        = ( BYTE ) hb_parni( 5 );
+      USHORT usTop          = ( USHORT ) hb_parni( 2 ),
+             usLeft         = ( USHORT ) hb_parni( 3 ),
+             usBottom       = ( USHORT ) hb_parni( 4 ),
+             usRight        = ( USHORT ) hb_parni( 5 );
       LPCTSTR lpszCaption   = hb_parc( 6 );
       const char * szBitmap = hb_parc( 7 );
       UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
@@ -197,8 +197,7 @@ HB_FUNC( WVW_CXENABLE )
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
    WVW_DATA *     pData        = hb_gt_wvw_GetWvwData();
-   UINT           uiCXid       = ( UINT ) hb_parnl( 2 );
-   CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
    BOOL           bOldSetting  = pData->bRecurseCBlock;
 
@@ -231,12 +230,10 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
  */
 HB_FUNC( WVW_CXSETCHECK )
 {
-   UINT  uiCXid       = ( UINT ) hb_parnl( 2 );
-   ULONG ulCheck      = ( ULONG ) hb_parnidef( 3, BST_CHECKED );
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWndCtrl )
-      SendMessage( pcd->hWndCtrl, BM_SETCHECK, ( WPARAM ) ulCheck, 0 );
+      SendMessage( pcd->hWndCtrl, BM_SETCHECK, ( WPARAM ) ( ULONG ) hb_parnidef( 3, BST_CHECKED ), 0 );
 
    hb_retl( HB_TRUE );
 }
@@ -249,9 +246,8 @@ HB_FUNC( WVW_CXSETCHECK )
  */
 HB_FUNC( WVW_CXGETCHECK )
 {
-   UINT  uiCXid       = ( UINT ) hb_parnl( 2 );
    ULONG ulCheck;
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, uiCXid );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWndCtrl )
       ulCheck = ( int ) SendMessage( pcd->hWndCtrl, BM_GETCHECK, 0, 0 );
@@ -267,7 +263,7 @@ HB_FUNC( WVW_CXSETFONT )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
 
-   BOOL retval = HB_TRUE;
+   HB_BOOL retval = HB_TRUE;
 
    pData->lfCX.lfHeight      = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : pWindowData->fontHeight - 2;
    pData->lfCX.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : pData->lfCX.lfWidth;
@@ -293,19 +289,17 @@ HB_FUNC( WVW_CXSETFONT )
 #if 0
          CONTROL_DATA * pcd = pWindowData->pcdCtrlList;
 
-         while (pcd)
+         while( pcd )
          {
             if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON &&
                 ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
-               SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE);
+               SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
          }
 #endif
-
          pWindowData->hCXfont = hFont;
-         DeleteObject( ( HFONT ) hOldFont );
-
+         DeleteObject( hOldFont );
       }
       else
          retval = HB_FALSE;
@@ -319,13 +313,11 @@ HB_FUNC( WVW_CXSTATUSFONT )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   UINT uiPBid        = ( UINT ) hb_parnl( 2 );
-   BOOL bFocus        = hb_parldef( 3, HB_TRUE );
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWndCtrl )
    {
-      if( bFocus )
+      if( hb_parldef( 3, HB_TRUE ) /* lFocus */ )
          SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) pWindowData->hCXfont, ( LPARAM ) TRUE );
       else
          SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) pWindowData->hPBfont, ( LPARAM ) TRUE );

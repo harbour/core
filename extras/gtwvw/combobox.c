@@ -106,7 +106,7 @@ HB_FUNC( WVW_CBCREATE )
 /* RECT r; */
    HFONT hFont = hb_gt_wvw_GetFont( pWindowData->fontFace, 10, pWindowData->fontWidth, pWindowData->fontWeight, pWindowData->fontQuality, pWindowData->CodePage );
 
-   POINT xy = { 0 };
+   POINT xy;
    int   iTop, iLeft, iBottom, iRight;
    int   iOffTop, iOffLeft, iOffBottom, iOffRight;
 
@@ -123,7 +123,6 @@ HB_FUNC( WVW_CBCREATE )
    /* in the future combobox type might be selectable by 8th parameter */
    int  iStyle   = CBS_DROPDOWNLIST | WS_VSCROLL;
    BYTE bKbdType = ( BYTE ) hb_parnidef( 9, WVW_CB_KBD_STANDARD );
-
 
    if( pWindowData->hCBfont == NULL )
    {
@@ -180,7 +179,7 @@ HB_FUNC( WVW_CBCREATE )
 
    if( hWndCB )
    {
-      RECT    rXB = { 0 }, rOffXB = { 0 };
+      RECT    rXB, rOffXB;
       WNDPROC OldProc;
       USHORT  i;
       TCHAR   szDefault[] = TEXT( "empty" );
@@ -402,15 +401,15 @@ HB_FUNC( WVW_CBSETFONT )
 
          while( pcd )
          {
-            if( ( pcd->byCtrlClass == WVW_CONTROL_COMBOBOX ) &&
-                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont ) )
+            if( pcd->byCtrlClass == WVW_CONTROL_COMBOBOX &&
+                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
          }
 
          pWindowData->hCBfont = hFont;
-         DeleteObject( ( HFONT ) hOldFont );
+         DeleteObject( hOldFont );
       }
       else
          retval = HB_FALSE;

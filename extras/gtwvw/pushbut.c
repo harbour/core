@@ -174,11 +174,10 @@ HB_FUNC( WVW_PBSETFOCUS )
  */
 HB_FUNC( WVW_PBISFOCUSED )
 {
-   UINT uiCtrlId = hb_parnl( 2 );
    byte bStyle;
-   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
+   HWND hWndPB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   hb_retl( ( HWND ) GetFocus() == hWndPB );
+   hb_retl( GetFocus() == hWndPB );
 }
 
 /* wvw_pbEnable( [nWinNum], nButtonId, [lToggle] )
@@ -215,14 +214,28 @@ HB_FUNC( WVW_PBENABLE )
 HB_FUNC( WVW_PBSETCODEBLOCK )
 {
    WVW_DATA *     pData        = hb_gt_wvw_GetWvwData();
-   UINT           uiPBid       = ( UINT ) hb_parnl( 2 );
-   CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
+   CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
-   BOOL           bOldSetting  = pData->bRecurseCBlock;
 
-   if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
+   if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
+      BOOL bOldSetting = pData->bRecurseCBlock;
 
+      pData->bRecurseCBlock = FALSE;
+      pcd->bBusy = TRUE;
+
+      if( pcd->phiCodeBlock )
+         hb_itemRelease( pcd->phiCodeBlock );
+
+      pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
+
+      pcd->bBusy = FALSE;
+      pData->bRecurseCBlock = bOldSetting;
+
+      hb_retl( HB_TRUE );
+   }
+   else
+   {
 #if 0
       if( ! HB_ISEVALITEM( 3 ) )
          MessageBox( NULL, TEXT( "Codeblock Expected" ),
@@ -236,23 +249,8 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
          MessageBox( NULL, TEXT( "Codeblock is busy" ),
                      pData->szAppName, MB_ICONERROR );
 #endif
-
       hb_retl( HB_FALSE );
-      return;
    }
-
-   pData->bRecurseCBlock = FALSE;
-   pcd->bBusy = TRUE;
-
-   if( pcd->phiCodeBlock )
-      hb_itemRelease( pcd->phiCodeBlock );
-
-   pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
-
-   pcd->bBusy = FALSE;
-   pData->bRecurseCBlock = bOldSetting;
-
-   hb_retl( HB_TRUE );
 }
 
 /* wvw_pbSetStyle( [nWinNum], nPBid, nStyle )
@@ -270,12 +268,10 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
  */
 HB_FUNC( WVW_PBSETSTYLE )
 {
-   UINT  uiPBid       = ( UINT ) hb_parnl( 2 );
-   ULONG ulStyle      = ( ULONG ) hb_parni( 3 );
-   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWndCtrl )
-      SendMessage( pcd->hWndCtrl, BM_SETSTYLE, ( WPARAM ) ulStyle, ( LPARAM ) TRUE );
+      SendMessage( pcd->hWndCtrl, BM_SETSTYLE, ( WPARAM ) ( ULONG ) hb_parni( 3 ), ( LPARAM ) TRUE );
 
    hb_retl( HB_TRUE );
 }
@@ -317,15 +313,15 @@ HB_FUNC( WVW_PBSETFONT )
 
          while( pcd )
          {
-            if( ( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON ) &&
-                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont ) )
+            if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON &&
+                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
          }
 
          pWindowData->hPBfont = hFont;
-         DeleteObject( ( HFONT ) hOldFont );
+         DeleteObject( hOldFont );
       }
       else
          retval = HB_FALSE;

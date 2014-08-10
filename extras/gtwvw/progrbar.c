@@ -149,7 +149,7 @@ HB_FUNC( WVW_PGCREATE )
 
    if( hWndPG )
    {
-      RECT rXB = { 0 }, rOffXB = { 0 };
+      RECT rXB, rOffXB;
 
       if( bBackColor )
          SendMessage( hWndPG, PBM_SETBKCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnl( 7 ) );

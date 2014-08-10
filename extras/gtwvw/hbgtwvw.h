@@ -50,11 +50,6 @@
  *
  */
 
-/* TODO: Disabled UNICODE until this code gets support for it. */
-#if defined( UNICODE )
-   #undef UNICODE
-#endif
-
 #ifndef HB_WVW_H_
 #define HB_WVW_H_
 
@@ -126,6 +121,12 @@
 #include <winuser.h>
 #include <commctrl.h>
 #include <commdlg.h>
+
+#if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
+   #undef MAKELONG
+   #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
+                                          ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
+#endif
 
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
    defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
@@ -518,7 +519,7 @@ typedef struct win_data
    int   fontWidth;                    /* requested font width */
    int   fontWeight;                   /* Bold level */
    int   fontQuality;
-   char  fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
+   TCHAR fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
 
    int  LastMenuEvent;                 /* Last menu item selected */
    int  MenuKeyEvent;                  /* User definable event number for windows menu command */
@@ -651,7 +652,7 @@ extern BOOL       hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, in
 extern void       hb_gt_wvw_TBinitSize( WIN_DATA * pWindowData, HWND hWndTB );
 extern int        hb_gt_wvw_IndexToCommand( HWND hWndTB, int iIndex );
 extern int        hb_gt_wvw_CommandToIndex( HWND hWndTB, int iCommand );
-extern BOOL       hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, UINT uiBitmap, const char * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown );
+extern BOOL       hb_gt_wvw_AddTBButton( HWND hWndToolbar, const TCHAR * szBitmap, UINT uiBitmap, const char * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown );
 extern RECT       hb_gt_wvw_GetColRowFromXYRect( WIN_DATA * pWIndowData, RECT xy );
 extern BYTE       hb_gt_wvw_LineHeight( WIN_DATA * pWindowData );
 extern WPARAM     hb_gt_wvw_ProcessMessages( WIN_DATA * pWindowData );
@@ -668,13 +669,13 @@ extern UINT       hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT us
                           double dStretch, BOOL bMap3Dcolors,
                           int iStyle );
 extern LONG       hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f );
-extern HFONT      hb_gt_wvw_GetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage );
+extern HFONT      hb_gt_wvw_GetFont( const TCHAR * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage );
 extern USHORT     hb_gt_wvw_GetMouseX( WIN_DATA * pWindowData );
 extern USHORT     hb_gt_wvw_GetMouseY( WIN_DATA * pWindowData );
 extern USHORT     hb_gt_wvw_RowOfs( UINT usWinNum );
 extern USHORT     hb_gt_wvw_ColOfs( UINT usWinNum );
 extern IPicture * hb_gt_wvw_LoadPicture( const char * image );
-extern int        hb_gt_wvw_nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );
+extern int        hb_gt_wvw_nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn );
 extern LPWORD     hb_gt_wvw_lpwAlign( LPWORD lpIn );
 
 extern CONTROL_DATA * hb_gt_wvw_GetControlData( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT uiCtrlid );
@@ -691,7 +692,7 @@ extern HB_EXPORT BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, 
 extern HB_EXPORT int           hb_gt_wvw_GetLastMenuEvent( UINT usWinNum );
 extern HB_EXPORT int           hb_gt_wvw_SetLastMenuEvent( UINT usWinNum, int iLastMenuEvent );
 extern HB_EXPORT int           hb_gt_wvw_GetWindowTitle( UINT usWinNum, char * title, int length );
-extern HB_EXPORT BOOL          hb_gt_wvw_SetFont( UINT usWinNum, const char * fontFace, int height, int width, int Bold, int Quality );
+extern HB_EXPORT BOOL          hb_gt_wvw_SetFont( UINT usWinNum, const TCHAR * fontFace, int height, int width, int Bold, int Quality );
 extern HB_EXPORT HWND          hb_gt_wvw_GetWindowHandle( UINT usWinNum );
 extern HB_EXPORT void          hb_gt_wvw_PostMessage( UINT usWinNum, int message );
 extern HB_EXPORT BOOL          hb_gt_wvw_SetWindowPos( UINT usWinNum, int left, int top );

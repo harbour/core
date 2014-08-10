@@ -98,7 +98,7 @@ HB_FUNC( WVW_EBCREATE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndEB;
-   POINT      xy = { 0 };
+   POINT      xy;
    int        iTop, iLeft, iBottom, iRight;
    int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    UINT       uiEBid;
@@ -156,8 +156,7 @@ HB_FUNC( WVW_EBCREATE )
    dwStyle = WS_BORDER | WS_GROUP | WS_TABSTOP | dwMoreStyle;
 
    if( ( bEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE )
-      dwStyle |= ES_AUTOVSCROLL | ES_MULTILINE |
-                 ES_WANTRETURN | WS_BORDER | WS_VSCROLL;
+      dwStyle |= ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | WS_BORDER | WS_VSCROLL;
    else
       dwStyle |= ES_AUTOHSCROLL;
 
@@ -182,9 +181,9 @@ HB_FUNC( WVW_EBCREATE )
 
    if( hWndEB )
    {
-      RECT    rXB = { 0 }, rOffXB = { 0 };
+      RECT    rXB, rOffXB;
       WNDPROC OldProc;
-      /* USHORT i; */
+
       BOOL bFromOEM = ( pWindowData->CodePage == OEM_CHARSET );
 
       if( bFromOEM )
@@ -215,8 +214,7 @@ HB_FUNC( WVW_EBCREATE )
 
       hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_EDITBOX, hWndEB, uiEBid, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, ( byte ) bEBType );
 
-      OldProc = ( WNDPROC ) SetWindowLongPtr( hWndEB,
-                                              GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_EBProc );
+      OldProc = ( WNDPROC ) SetWindowLongPtr( hWndEB, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_EBProc );
 
       hb_gt_wvw_StoreControlProc( usWinNum, WVW_CONTROL_EDITBOX, hWndEB, OldProc );
 
@@ -285,7 +283,7 @@ HB_FUNC( WVW_EBISFOCUSED )
    byte bStyle;
    HWND hWndEB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), &bStyle );
 
-   hb_retl( ( HWND ) GetFocus() == hWndEB );
+   hb_retl( GetFocus() == hWndEB );
 }
 
 /* wvw_ebEnable( [nWinNum], nEditId, [lEnable] )
@@ -409,16 +407,15 @@ HB_FUNC( WVW_EBSETFONT )
 
          while( pcd )
          {
-            if( ( pcd->byCtrlClass == WVW_CONTROL_EDITBOX ) &&
-                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont ) )
+            if( pcd->byCtrlClass == WVW_CONTROL_EDITBOX &&
+                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
          }
 
          pWindowData->hEBfont = hFont;
-         DeleteObject( ( HFONT ) hOldFont );
-
+         DeleteObject( hOldFont );
       }
       else
          retval = HB_FALSE;
@@ -501,7 +498,7 @@ HB_FUNC( WVW_EBGETTEXT )
 HB_FUNC( WVW_EBSETTEXT )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
-   CONTROL_DATA * pcd         = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
    {

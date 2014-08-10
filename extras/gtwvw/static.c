@@ -63,11 +63,11 @@ HB_FUNC( WVW_STCREATE )
    HDC  hDc;
 #endif
 
-   POINT xy = { 0 };
+   POINT xy;
    int   iTop, iLeft, iBottom, iRight;
    int   iOffTop, iOffLeft, iOffBottom, iOffRight;
    BOOL  bBorder   = hb_parnl( 7 );
-   ULONG ulExStyle = 0 | ( bBorder ? WS_EX_CLIENTEDGE : 0 );
+   ULONG ulExStyle = bBorder ? WS_EX_CLIENTEDGE : 0;
 
    UINT uiCBid;
 
@@ -78,7 +78,7 @@ HB_FUNC( WVW_STCREATE )
           usRight  = HB_ISNUM( 12 ) ? ( USHORT ) hb_parni( 12 ) : usLeft + usWidth - 1;
    /* char * sText = hb_parc( 5 ); */
 
-   int   iStyle = ( bBorder ? WS_BORDER : 0 );
+   int   iStyle = bBorder ? WS_BORDER : 0;
    int   iBox   = hb_parni( 10 );
    HFONT hFont  = NULL;
 
@@ -200,16 +200,15 @@ HB_FUNC( WVW_STSETFONT )
 
          while( pcd )
          {
-            if( ( pcd->byCtrlClass == WVW_CONTROL_STATIC ) &&
-                ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont ) )
+            if( pcd->byCtrlClass == WVW_CONTROL_STATIC &&
+                ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, 0, 0 ) == hOldFont )
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
             pcd = pcd->pNext;
          }
 
          pWindowData->hSTfont = hFont;
-         DeleteObject( ( HFONT ) hOldFont );
-
+         DeleteObject( hOldFont );
       }
       else
          retval = HB_FALSE;

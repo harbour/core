@@ -81,14 +81,13 @@ HB_FUNC( WVW_CREATEPOPUPMENU )
 
 
 /* wvw_AppendMenu( hMenu, nFlags, nMenuItemId, cCaption ) */
-
 HB_FUNC( WVW_APPENDMENU )
 {
    char    ucBuf[ 256 ];
    LPCTSTR lpszCaption;
 
    if( ! ( hb_parni( 2 ) & ( MF_SEPARATOR | MF_POPUP ) ) &&
-       ( hb_parni( 3 ) >= WVW_ID_BASE_PUSHBUTTON ) )
+       hb_parni( 3 ) >= WVW_ID_BASE_PUSHBUTTON )
    {
       MessageBox( NULL, TEXT( "Menu Command Id too high. Potential conflict with pushbutton" ),
                   hb_gt_wvw_GetAppName(), MB_ICONERROR );
@@ -301,7 +300,6 @@ HB_FUNC( WVW_NOSYSMENU )
 HB_FUNC( WVW_GETSYSTEMMENU )
 {
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   BOOL       lReset      = hb_parl( 2 );
 
-   hb_retnint( ( HB_PTRDIFF ) GetSystemMenu( pWindowData->hWnd, lReset ) );
+   hb_retnint( ( HB_PTRDIFF ) GetSystemMenu( pWindowData->hWnd, hb_parl( 2 ) /* lReset */ ) );
 }

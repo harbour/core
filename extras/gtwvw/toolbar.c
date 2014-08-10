@@ -348,7 +348,7 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
 
    if( hWndTB && iButton >= 0 && SendMessage( hWndTB, TB_GETRECT, ( WPARAM ) iButton, ( LPARAM ) &rc ) )
    {
-      RECT rcRect = { 0 };
+      RECT rcRect;
 
       PHB_ITEM temp = hb_itemNew( NULL );
 

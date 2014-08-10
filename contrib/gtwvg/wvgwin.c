@@ -83,9 +83,9 @@
 #define wvg_rethandle( n )    ( hb_retnint( ( HB_PTRDIFF ) n ) )
 
 #if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
-    #undef MAKELONG
-    #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
-                                           ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
+   #undef MAKELONG
+   #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
+                                          ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
 #endif
 
 static HINSTANCE wvg_hInstance( void )

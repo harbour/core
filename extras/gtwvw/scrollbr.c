@@ -122,7 +122,7 @@ HB_FUNC( WVW_SBDESTROY )
    {
       if( pWindowData->hSBfont )
       {
-         DeleteObject( ( HFONT ) pWindowData->hSBfont );
+         DeleteObject( pWindowData->hSBfont );
          pWindowData->hSBfont = NULL;
       }
       DestroyWindow( pWindowData->hStatusBar );
@@ -347,7 +347,7 @@ HB_FUNC( WVW_SBSETFONT )
       if( hFont )
       {
          pWindowData->hSBfont = hFont;
-         DeleteObject( ( HFONT ) hOldFont );
+         DeleteObject( hOldFont );
       }
       else
          retval = HB_FALSE;
@@ -496,7 +496,7 @@ HB_FUNC( WVW_XBCREATE )
 
    if( hWndXB )
    {
-      RECT rXB = { 0 }, rOffXB = { 0 };
+      RECT rXB, rOffXB;
 
       WNDPROC OldProc;
 

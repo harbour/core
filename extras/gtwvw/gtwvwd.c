@@ -407,8 +407,8 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       s_pWvwData->iScrolling        = 0;
       s_pWvwData->iWrongButtonUp    = 0;
       s_pWvwData->iMaxWrongButtonUp = 500;
-      hb_strncpy( s_pWvwData->szAppName, "Harbour WVW", sizeof( s_pWvwData->szAppName ) - 1 );
-      hb_strncpy( s_pWvwData->szSubWinName, "Harbour WVW subwindows", sizeof( s_pWvwData->szSubWinName ) - 1 );
+      HB_STRNCPY( s_pWvwData->szAppName, TEXT( "Harbour WVW" ), HB_SIZEOFARRAY( s_pWvwData->szAppName ) - 1 );
+      HB_STRNCPY( s_pWvwData->szSubWinName, TEXT( "Harbour WVW subwindows" ), HB_SIZEOFARRAY( s_pWvwData->szSubWinName ) - 1 );
       s_pWvwData->bSWRegistered = FALSE;
       s_pWvwData->usCurWindow   = 0;
       bStartMode = HB_FALSE;
@@ -460,12 +460,12 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    /* Apos o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
       o handle original da PEN e BRUSH do Device Context */
-   s_pWvwData->sApp->OriginalPen   = ( HPEN ) SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->sApp->penWhite );
-   s_pWvwData->sApp->OriginalBrush = ( HBRUSH ) SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->sApp->currentBrush );
+   s_pWvwData->sApp->OriginalPen   = ( HPEN ) SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->penWhite );
+   s_pWvwData->sApp->OriginalBrush = ( HBRUSH ) SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->currentBrush );
    /* E, logo apos, restaura aos valores originais mantendo em s_pWvwData->sApp os valores salvos para restauracao
       quando for utilizar DeleteObject() */
-   SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->sApp->OriginalPen );
-   SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->sApp->OriginalBrush );
+   SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->OriginalPen );
+   SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->OriginalBrush );
 
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
@@ -517,7 +517,7 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
          if( s_pWvwData->sApp->pSymWVW_TIMER )
             KillTimer( pWindowData->hWnd, WVW_ID_BASE_TIMER + j );
 
-         DeleteObject( ( HFONT ) pWindowData->hFont );
+         DeleteObject( pWindowData->hFont );
 
          /* Faz apenas para a janela 0 (a primeira) ja que existe, na criacao das mesmas, uma condicao para que
             apenas a primeira seja criada
@@ -525,38 +525,38 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
          if( j == 0 )
          {
             /* Seleciona PEN e BRUSH Originais */
-            SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->sApp->OriginalPen );
-            SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->sApp->OriginalBrush );
+            SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->OriginalPen );
+            SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->OriginalBrush );
 
             /* Com PENs e BRUSHes liberadas, efetua exclusao */
             if( s_pWvwData->sApp->penWhite )
-               DeleteObject( ( HPEN ) s_pWvwData->sApp->penWhite );
+               DeleteObject( s_pWvwData->sApp->penWhite );
             if( s_pWvwData->sApp->penWhiteDim )
-               DeleteObject( ( HPEN ) s_pWvwData->sApp->penWhiteDim );
+               DeleteObject( s_pWvwData->sApp->penWhiteDim );
             if( s_pWvwData->sApp->penBlack )
-               DeleteObject( ( HPEN ) s_pWvwData->sApp->penBlack );
+               DeleteObject( s_pWvwData->sApp->penBlack );
             if( s_pWvwData->sApp->penDarkGray )
-               DeleteObject( ( HPEN ) s_pWvwData->sApp->penDarkGray );
+               DeleteObject( s_pWvwData->sApp->penDarkGray );
             if( s_pWvwData->sApp->penGray )
-               DeleteObject( ( HPEN ) s_pWvwData->sApp->penGray );
+               DeleteObject( s_pWvwData->sApp->penGray );
             if( s_pWvwData->sApp->penNull )
-               DeleteObject( ( HPEN ) s_pWvwData->sApp->penNull );
+               DeleteObject( s_pWvwData->sApp->penNull );
             if( s_pWvwData->sApp->currentPen )
-               DeleteObject( ( HPEN ) s_pWvwData->sApp->currentPen );
+               DeleteObject( s_pWvwData->sApp->currentPen );
             if( s_pWvwData->sApp->currentBrush )
-               DeleteObject( ( HBRUSH ) s_pWvwData->sApp->currentBrush );
+               DeleteObject( s_pWvwData->sApp->currentBrush );
             if( s_pWvwData->sApp->diagonalBrush )
-               DeleteObject( ( HBRUSH ) s_pWvwData->sApp->diagonalBrush );
+               DeleteObject( s_pWvwData->sApp->diagonalBrush );
             if( s_pWvwData->sApp->solidBrush )
-               DeleteObject( ( HBRUSH ) s_pWvwData->sApp->solidBrush );
+               DeleteObject( s_pWvwData->sApp->solidBrush );
             if( s_pWvwData->sApp->wvwWhiteBrush )
-               DeleteObject( ( HBRUSH ) s_pWvwData->sApp->wvwWhiteBrush );
+               DeleteObject( s_pWvwData->sApp->wvwWhiteBrush );
             if( s_pWvwData->sApp->gridPen )
-               DeleteObject( ( HPEN ) s_pWvwData->sApp->gridPen );
+               DeleteObject( s_pWvwData->sApp->gridPen );
          }
 
          if( pWindowData->hIcon )
-            DestroyIcon( ( HICON ) pWindowData->hIcon );
+            DestroyIcon( pWindowData->hIcon );
 
          if( pWindowData->hdc )
             ReleaseDC( pWindowData->hWnd, pWindowData->hdc );
@@ -580,19 +580,19 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
          DestroyWindow( pWindowData->hWnd );
 
          if( pWindowData->hPBfont )
-            DeleteObject( ( HFONT ) pWindowData->hPBfont );
+            DeleteObject( pWindowData->hPBfont );
 
          if( pWindowData->hCBfont )
-            DeleteObject( ( HFONT ) pWindowData->hCBfont );
+            DeleteObject( pWindowData->hCBfont );
 
          if( pWindowData->hCXfont )
-            DeleteObject( ( HFONT ) pWindowData->hCXfont );
+            DeleteObject( pWindowData->hCXfont );
 
          if( pWindowData->hSBfont )
-            DeleteObject( ( HFONT ) pWindowData->hSBfont );
+            DeleteObject( pWindowData->hSBfont );
 
          if( pWindowData->hSTfont )
-            DeleteObject( ( HFONT ) pWindowData->hSTfont );
+            DeleteObject( pWindowData->hSTfont );
       }
 
       hb_gt_wvwWindowEpilogue();
@@ -609,11 +609,11 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
 
    for( i = 0; i < WVW_FONTS_MAX; i++ )
       if( s_pWvwData->sApp->hUserFonts[ i ] )
-         DeleteObject( ( HFONT ) s_pWvwData->sApp->hUserFonts[ i ] );
+         DeleteObject( s_pWvwData->sApp->hUserFonts[ i ] );
 
    for( i = 0; i < WVW_PENS_MAX; i++ )
       if( s_pWvwData->sApp->hUserPens[ i ] )
-         DeleteObject( ( HPEN ) s_pWvwData->sApp->hUserPens[ i ] );
+         DeleteObject( s_pWvwData->sApp->hUserPens[ i ] );
 
    if( s_pWvwData->sApp->hMSImg32 )
       FreeLibrary( s_pWvwData->sApp->hMSImg32 );
@@ -1494,9 +1494,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_DESKTOPWIDTH:
       {
          RECT rDesk = { 0 };
-         HWND hDesk;
-
-         hDesk = GetDesktopWindow();
+         HWND hDesk = GetDesktopWindow();
          GetWindowRect( hDesk, &rDesk );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, rDesk.right - rDesk.left );
          break;
@@ -1691,7 +1689,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
  *          - Red is iTop, Green iLeft and Blue is iBottom for MAKECOLOR
  */
 
-#define SetGFXContext()  hPen = CreatePen( PS_SOLID, 1, color ); hOldPen = ( HPEN ) SelectObject( hdc, hPen ); hBrush = ( HBRUSH ) CreateSolidBrush( color ); hOldBrush = ( HBRUSH ) SelectObject( hdc, hBrush ); bOut = TRUE
+#define SetGFXContext()  hPen = CreatePen( PS_SOLID, 1, color ); hOldPen = ( HPEN ) SelectObject( hdc, hPen ); hBrush = CreateSolidBrush( color ); hOldBrush = ( HBRUSH ) SelectObject( hdc, hBrush ); bOut = TRUE
 
 /* WARNING: assume working on current window
  * NOTES: in MainCoord Mode current window is always the Main Window
@@ -1838,7 +1836,6 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
    int      iIndex, iType;
    long int bReturn = FALSE;
    PHB_ITEM pFunc   = NULL;
-
 
    iType = 0;
 
@@ -2193,17 +2190,18 @@ static BOOL hb_gt_wvwInitWindow( WIN_DATA * pWindowData, HWND hWnd, USHORT col, 
 static HB_BOOL hb_gt_wvwValidWindowSize( WIN_DATA * pWindowData, int rows, int cols, HFONT hFont, int iWidth,
                                          int * pmaxrows, int * pmaxcols )
 {
-   HDC        hdc;
-   HFONT      hOldFont;
-   USHORT     width, height, maxWidth, maxHeight;
-   USHORT     diffHeight, diffWidth;
-   TEXTMETRIC tm         = { 0 };
-   RECT       rcWorkArea = { 0 };
-
-   RECT wi = { 0 }, ci = { 0 };
+   RECT rcWorkArea = { 0 };
 
    if( SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
    {
+      HDC        hdc;
+      HFONT      hOldFont;
+      USHORT     width, height, maxWidth, maxHeight;
+      USHORT     diffHeight, diffWidth;
+      TEXTMETRIC tm         = { 0 };
+
+      RECT wi = { 0 }, ci = { 0 };
+
       maxWidth  = ( SHORT ) ( rcWorkArea.right - rcWorkArea.left + 1 );
       maxHeight = ( SHORT ) ( rcWorkArea.bottom - rcWorkArea.top + 1 );
 
@@ -2277,7 +2275,7 @@ static void hb_gt_wvw_ResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
    hFont = hb_gt_wvw_GetFont( pWindowData->fontFace, pWindowData->fontHeight, pWindowData->fontWidth, pWindowData->fontWeight, pWindowData->fontQuality, pWindowData->CodePage );
 
    if( pWindowData->hFont )
-      DeleteObject( ( HFONT ) pWindowData->hFont );
+      DeleteObject( pWindowData->hFont );
 
    pWindowData->hFont = hFont;
    hOldFont = ( HFONT ) SelectObject( hdc, hFont );
@@ -2305,7 +2303,6 @@ static void hb_gt_wvw_ResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
 
    if( IsZoomed( pWindowData->hWnd ) )
    {
-
       if( SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
       {
          wi.top    = rcWorkArea.top;
@@ -2318,7 +2315,6 @@ static void hb_gt_wvw_ResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
 
       height = ( ( USHORT ) ( LONG ) wi.bottom ) - ( ( USHORT ) ( LONG ) wi.top ) + 1;
       width  = ( ( USHORT ) ( LONG ) wi.right ) - ( ( USHORT ) ( LONG ) wi.left ) + 1;
-
    }
    else if( pWindowData->byWinId == 0 )
    {
@@ -2400,7 +2396,7 @@ static void hb_gt_wvw_ResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
 
             wi.top -= diffHeight;
 
-            wi.top += ( ( rcWorkArea.bottom - rcWorkArea.top ) - rcMainClientArea.bottom );
+            wi.top += ( rcWorkArea.bottom - rcWorkArea.top ) - rcMainClientArea.bottom;
 
             wi.top += ( *pMainWindow ).usTBHeight;
 
@@ -2601,7 +2597,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                case CBN_SETFOCUS:
                case CBN_KILLFOCUS:
 
-                  if( ( iEvent == CBN_KILLFOCUS ) || bTopMost || s_pWvwData->bAllowNonTop )
+                  if( iEvent == CBN_KILLFOCUS || bTopMost || s_pWvwData->bAllowNonTop )
                   {
                      HWND hWndCtrl = ( HWND ) lParam;
                      UINT uiCBid;
@@ -2610,7 +2606,6 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                      uiCBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_COMBOBOX, hWndCtrl, &bStyle );
                      if( uiCBid == 0 )
                      {
-
                         hb_gt_wvwHandleMenuSelection( ( int ) LOWORD( wParam ) );
 
                         return 0;
@@ -2652,7 +2647,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                case EN_KILLFOCUS:
                case EN_CHANGE:
 
-                  if( ( iEvent == EN_KILLFOCUS ) || bTopMost || s_pWvwData->bAllowNonTop )
+                  if( iEvent == EN_KILLFOCUS || bTopMost || s_pWvwData->bAllowNonTop )
                   {
                      HWND hWndCtrl = ( HWND ) lParam;
                      UINT uiEBid;
@@ -2661,7 +2656,6 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                      uiEBid = ( UINT ) hb_gt_wvw_FindControlId( usWinNum, WVW_CONTROL_EDITBOX, hWndCtrl, &bStyle );
                      if( uiEBid == 0 )
                      {
-
                         hb_gt_wvwHandleMenuSelection( ( int ) LOWORD( wParam ) );
 
                         return 0;
@@ -2792,7 +2786,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                   if( color != oldColor )
                   {
                      hb_gt_wvw_SetColors( pWindowData, hdc, oldColor );
-                     hb_gt_wvwTextOut( pWindowData, hdc, startCol, irow, ( char const * ) pWindowData->pBuffer + startIndex, len );
+                     hb_gt_wvwTextOut( pWindowData, hdc, startCol, irow, ( LPCTSTR ) pWindowData->pBuffer + startIndex, len );
 
                      if( pWindowData->byLineSpacing > 0 )
                         hb_gt_wvwFillLineSpace( pWindowData, hdc, startCol, irow, len, oldColor );
@@ -2809,7 +2803,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                }
 
                hb_gt_wvw_SetColors( pWindowData, hdc, oldColor );
-               hb_gt_wvwTextOut( pWindowData, hdc, startCol, irow, ( char const * ) pWindowData->pBuffer + startIndex, len );
+               hb_gt_wvwTextOut( pWindowData, hdc, startCol, irow, ( LPCTSTR ) pWindowData->pBuffer + startIndex, len );
 
                if( pWindowData->byLineSpacing > 0 )
                   hb_gt_wvwFillLineSpace( pWindowData, hdc, startCol, irow, len, oldColor );
@@ -2859,7 +2853,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
             FillRect( hdc, &rcRect, hBrush );
 
-            SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->sApp->OriginalBrush );
+            SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->OriginalBrush );
             DeleteObject( hBrush );
          }
 
@@ -2903,7 +2897,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
                FillRect( hdc, &rcRect, hBrush );
 
-               SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->sApp->OriginalBrush );
+               SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->OriginalBrush );
                DeleteObject( hBrush );
             }
 
@@ -2963,8 +2957,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             if( ! s_pWvwData->bMainCoordMode )
                hb_gtSetPos( ( SHORT ) pWindowData->caretPos.y, ( SHORT ) pWindowData->caretPos.x );
             else
-               hb_gtSetPos( ( ( USHORT ) ( LONG ) pWindowData->caretPos.y ) + hb_gt_wvw_RowOfs( usWinNum ),
-                            ( ( USHORT ) ( LONG ) pWindowData->caretPos.x ) + hb_gt_wvw_ColOfs( usWinNum ) );
+               hb_gtSetPos( ( USHORT ) ( LONG ) pWindowData->caretPos.y + hb_gt_wvw_RowOfs( usWinNum ),
+                            ( USHORT ) ( LONG ) pWindowData->caretPos.x + hb_gt_wvw_ColOfs( usWinNum ) );
 
             hb_gt_wvwCreateCaret( pWindowData );
          }
@@ -3698,7 +3692,7 @@ static void hb_gt_wvwCreateToolTipWindow( WIN_DATA * pWindowData )
    ti.hwnd      = pWindowData->hWnd;
    ti.uId       = WVW_ID_BASE_TOOLTIP + pWindowData->byWinId;
    ti.hinst     = s_pWvwData->hInstance;
-   ti.lpszText  = "";
+   ti.lpszText  = TEXT( "" );
    ti.rect.left = ti.rect.top = ti.rect.bottom = ti.rect.right = 0;
 
    /* Add the tool to the control, displaying an error if needed. */
@@ -3782,26 +3776,25 @@ POINT hb_gt_wvw_GetXYFromColRow( WIN_DATA * pWindowData, USHORT col, USHORT row 
 
 static void hb_gt_wvwUnreachedXY( WIN_DATA * pWindowData, int * cols, int * rows )
 {
-   RECT  ci = { 0 };
-   POINT xy = { 0 };
+   if( IsZoomed( pWindowData->hWnd ) )
+   {
+      POINT xy = hb_gt_wvw_GetXYFromColRow( pWindowData, pWindowData->COLS, pWindowData->ROWS );
+      RECT  ci = { 0 };
 
-   if( ! IsZoomed( pWindowData->hWnd ) )
+      GetClientRect( pWindowData->hWnd, &ci );
+
+      if( rows )
+         *rows = ci.bottom - xy.y - pWindowData->usSBHeight;
+      if( cols )
+         *cols = ci.right - xy.x;
+   }
+   else
    {
       if( rows )
          *rows = 0;
       if( cols )
          *cols = 0;
-      return;
    }
-
-   xy = hb_gt_wvw_GetXYFromColRow( pWindowData, pWindowData->COLS, pWindowData->ROWS );
-
-   GetClientRect( pWindowData->hWnd, &ci );
-
-   if( rows )
-      *rows = ci.bottom - xy.y - pWindowData->usSBHeight;
-   if( cols )
-      *cols = ci.right - xy.x;
 }
 
 
@@ -4142,7 +4135,7 @@ static int hb_gt_wvwJustTranslateKey( int key, int shiftkey, int altkey, int con
 /* font stuff */
 /* use the standard fixed oem font, unless the caller has requested set size fonts */
 
-HFONT hb_gt_wvw_GetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
+HFONT hb_gt_wvw_GetFont( const TCHAR * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
    HFONT hFont;
 
@@ -4184,7 +4177,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
    if( usWinNum == 0 )
    {
       pWindowData->byWinId = ( int ) usWinNum;
-      hb_strncpy( pWindowData->szWinName, lpszWinName, sizeof( pWindowData->szWinName ) - 1 );
+      HB_STRNCPY( pWindowData->szWinName, lpszWinName, HB_SIZEOFARRAY( pWindowData->szWinName ) - 1 );
 
       pWindowData->usRowOfs    = usRow1;
       pWindowData->usColOfs    = usCol1;
@@ -4223,7 +4216,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
       pWindowData->fontWidth   = 10;
       pWindowData->fontWeight  = FW_NORMAL;
       pWindowData->fontQuality = DEFAULT_QUALITY;
-      hb_strncpy( pWindowData->fontFace, "Courier New", sizeof( pWindowData->fontFace ) - 1 );
+      HB_STRNCPY( pWindowData->fontFace, TEXT( "Courier New" ), HB_SIZEOFARRAY( pWindowData->fontFace ) - 1 );
 
       pWindowData->LastMenuEvent = 0;
       pWindowData->MenuKeyEvent  = WVW_DEFAULT_MENUKEYEVENT;
@@ -4257,7 +4250,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
 
       s_pWvwData->lfPB.lfQuality        = DEFAULT_QUALITY;
       s_pWvwData->lfPB.lfPitchAndFamily = FF_DONTCARE;
-      hb_strncpy( s_pWvwData->lfPB.lfFaceName, "Arial", sizeof( s_pWvwData->lfPB.lfFaceName ) - 1 );
+      HB_STRNCPY( s_pWvwData->lfPB.lfFaceName, TEXT( "Arial" ), HB_SIZEOFARRAY( s_pWvwData->lfPB.lfFaceName ) - 1 );
 
       s_pWvwData->lfSB.lfHeight      = 12;
       s_pWvwData->lfSB.lfWidth       = 0;
@@ -4271,7 +4264,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
 
       s_pWvwData->lfSB.lfQuality        = DEFAULT_QUALITY;
       s_pWvwData->lfSB.lfPitchAndFamily = FF_DONTCARE;
-      hb_strncpy( s_pWvwData->lfSB.lfFaceName, "Arial", sizeof( s_pWvwData->lfSB.lfFaceName ) - 1 );
+      HB_STRNCPY( s_pWvwData->lfSB.lfFaceName, TEXT( "Arial" ), HB_SIZEOFARRAY( s_pWvwData->lfSB.lfFaceName ) - 1 );
 
       s_pWvwData->lfCB.lfHeight      = pWindowData->fontHeight - 2;
       s_pWvwData->lfCB.lfWidth       = 0;
@@ -4285,7 +4278,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
 
       s_pWvwData->lfCB.lfQuality        = DEFAULT_QUALITY;
       s_pWvwData->lfCB.lfPitchAndFamily = FF_DONTCARE;
-      hb_strncpy( s_pWvwData->lfCB.lfFaceName, "Arial", sizeof( s_pWvwData->lfCB.lfFaceName ) - 1 );
+      HB_STRNCPY( s_pWvwData->lfCB.lfFaceName, TEXT( "Arial" ), HB_SIZEOFARRAY( s_pWvwData->lfCB.lfFaceName ) - 1 );
 
       s_pWvwData->lfEB.lfHeight      = pWindowData->fontHeight - 2;
       s_pWvwData->lfEB.lfWidth       = 0;
@@ -4299,7 +4292,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
 
       s_pWvwData->lfEB.lfQuality        = DEFAULT_QUALITY;
       s_pWvwData->lfEB.lfPitchAndFamily = FF_DONTCARE;
-      hb_strncpy( s_pWvwData->lfEB.lfFaceName, "Arial", sizeof( s_pWvwData->lfEB.lfFaceName ) - 1 );
+      HB_STRNCPY( s_pWvwData->lfEB.lfFaceName, TEXT( "Arial" ), HB_SIZEOFARRAY( s_pWvwData->lfEB.lfFaceName ) - 1 );
 
       s_pWvwData->lfCX.lfHeight      = pWindowData->fontHeight - 2;
       s_pWvwData->lfCX.lfWidth       = 0;
@@ -4313,7 +4306,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
 
       s_pWvwData->lfCX.lfQuality        = DEFAULT_QUALITY;
       s_pWvwData->lfCX.lfPitchAndFamily = FF_DONTCARE;
-      hb_strncpy( s_pWvwData->lfCX.lfFaceName, "Arial", sizeof( s_pWvwData->lfCX.lfFaceName ) - 1 );
+      HB_STRNCPY( s_pWvwData->lfCX.lfFaceName, TEXT( "Arial" ), HB_SIZEOFARRAY( s_pWvwData->lfCX.lfFaceName ) - 1 );
 
       s_pWvwData->lfST.lfHeight      = pWindowData->fontHeight;
       s_pWvwData->lfST.lfWidth       = 0;
@@ -4327,7 +4320,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
 
       s_pWvwData->lfST.lfQuality        = DEFAULT_QUALITY;
       s_pWvwData->lfST.lfPitchAndFamily = FF_DONTCARE;
-      hb_strncpy( s_pWvwData->lfST.lfFaceName, pWindowData->fontFace, sizeof( s_pWvwData->lfST.lfFaceName ) - 1 );
+      HB_STRNCPY( s_pWvwData->lfST.lfFaceName, pWindowData->fontFace, HB_SIZEOFARRAY( s_pWvwData->lfST.lfFaceName ) - 1 );
 
       s_pWvwData->sApp->pSymWVW_PAINT      = hb_dynsymFind( "WVW_PAINT" );
       s_pWvwData->sApp->pSymWVW_SETFOCUS   = hb_dynsymFind( "WVW_SETFOCUS" );
@@ -4382,7 +4375,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
          pPrevWindow = s_pWvwData->pWindows[ usWinNum - 1 ];
 
       pWindowData->byWinId = usWinNum;
-      hb_strncpy( pWindowData->szWinName, lpszWinName, sizeof( pWindowData->szWinName ) - 1 );
+      HB_STRNCPY( pWindowData->szWinName, lpszWinName, HB_SIZEOFARRAY( pWindowData->szWinName ) - 1 );
       pWindowData->usRowOfs    = usRow1;
       pWindowData->usColOfs    = usCol1;
       pWindowData->uiDispCount = 0;
@@ -4415,7 +4408,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
       pWindowData->fontWidth        = pPrevWindow->fontWidth;
       pWindowData->fontWeight       = pPrevWindow->fontWeight;
       pWindowData->fontQuality      = pPrevWindow->fontQuality;
-      hb_strncpy( pWindowData->fontFace, pPrevWindow->fontFace, sizeof( pWindowData->fontFace ) - 1 );
+      HB_STRNCPY( pWindowData->fontFace, pPrevWindow->fontFace, HB_SIZEOFARRAY( pWindowData->fontFace ) - 1 );
       pWindowData->LastMenuEvent = 0;
       pWindowData->MenuKeyEvent  = WVW_DEFAULT_MENUKEYEVENT;
 
@@ -4532,7 +4525,7 @@ static void hb_gt_wvw_SetStringInTextBuffer( WIN_DATA * pWindowData, int col, in
       memset( pWindowData->pColors + index, color, length );
 
       /* determine bounds of rect around character to refresh */
-      end = hb_gt_wvw_GetColRowForTextBuffer( pWindowData, index + ( ( ( USHORT ) length ) - 1 ) );
+      end = hb_gt_wvw_GetColRowForTextBuffer( pWindowData, index + ( USHORT ) length - 1 );
       hb_gt_wvw_SetInvalidRect( pWindowData, ( USHORT ) col, ( USHORT ) row, ( USHORT ) end.x, ( USHORT ) end.y );
    }
 }
@@ -4973,8 +4966,8 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
    /* E, logo apos, restaura aos valores originais mantendo em s_pWvwData->sApp os valores salvos para restauracao
       quando for utilizar DeleteObject()
     */
-   SelectObject( s_pWvwData->pWindows[ s_pWvwData->usNumWindows - 1 ]->hdc, ( HPEN ) s_pWvwData->sApp->OriginalPen );
-   SelectObject( s_pWvwData->pWindows[ s_pWvwData->usNumWindows - 1 ]->hdc, ( HBRUSH ) s_pWvwData->sApp->OriginalBrush );
+   SelectObject( s_pWvwData->pWindows[ s_pWvwData->usNumWindows - 1 ]->hdc, s_pWvwData->sApp->OriginalPen );
+   SelectObject( s_pWvwData->pWindows[ s_pWvwData->usNumWindows - 1 ]->hdc, s_pWvwData->sApp->OriginalBrush );
 
    return s_pWvwData->usNumWindows - 1;
 }
@@ -5012,20 +5005,20 @@ static void hb_gt_wvwCloseWindow( void ) /* assume s_pWvwData->usNumWindows >= 2
        */
       #if 0
       /* 2004-09-23 choose #1 of above option */
-      DeleteObject( ( HPEN   ) pWindowData->penWhite );
-      DeleteObject( ( HPEN   ) pWindowData->penWhiteDim );
-      DeleteObject( ( HPEN   ) pWindowData->penBlack );
-      DeleteObject( ( HPEN   ) pWindowData->penDarkGray );
-      DeleteObject( ( HPEN   ) pWindowData->penGray );
-      DeleteObject( ( HPEN   ) pWindowData->penNull );
-      DeleteObject( ( HPEN   ) pWindowData->currentPen );
-      DeleteObject( ( HBRUSH ) pWindowData->currentBrush );
-      DeleteObject( ( HBRUSH ) pWindowData->diagonalBrush );
-      DeleteObject( ( HBRUSH ) pWindowData->solidBrush );
-      DeleteObject( ( HBRUSH ) pWindowData->wvwWhiteBrush );
+      DeleteObject( pWindowData->penWhite );
+      DeleteObject( pWindowData->penWhiteDim );
+      DeleteObject( pWindowData->penBlack );
+      DeleteObject( pWindowData->penDarkGray );
+      DeleteObject( pWindowData->penGray );
+      DeleteObject( pWindowData->penNull );
+      DeleteObject( pWindowData->currentPen );
+      DeleteObject( pWindowData->currentBrush );
+      DeleteObject( pWindowData->diagonalBrush );
+      DeleteObject( pWindowData->solidBrush );
+      DeleteObject( pWindowData->wvwWhiteBrush );
       #endif
 
-      DeleteObject( ( HFONT ) pWindowData->hFont );
+      DeleteObject( pWindowData->hFont );
 
       if( pWindowData->hdc )
          ReleaseDC( pWindowData->hWnd, pWindowData->hdc );
@@ -5049,22 +5042,22 @@ static void hb_gt_wvwCloseWindow( void ) /* assume s_pWvwData->usNumWindows >= 2
       DestroyWindow( pWindowData->hWnd );
 
       if( pWindowData->hPBfont )
-         DeleteObject( ( HFONT ) pWindowData->hPBfont );
+         DeleteObject( pWindowData->hPBfont );
 
       if( pWindowData->hCBfont )
-         DeleteObject( ( HFONT ) pWindowData->hCBfont );
+         DeleteObject( pWindowData->hCBfont );
 
       if( pWindowData->hCXfont )
-         DeleteObject( ( HFONT ) pWindowData->hCXfont );
+         DeleteObject( pWindowData->hCXfont );
 
       if( pWindowData->hSBfont )
-         DeleteObject( ( HFONT ) pWindowData->hSBfont );
+         DeleteObject( pWindowData->hSBfont );
 
       if( pWindowData->hSTfont )
-         DeleteObject( ( HFONT ) pWindowData->hSTfont );
+         DeleteObject( pWindowData->hSTfont );
 
       if( pWindowData->hIcon )
-         DestroyIcon( ( HICON ) pWindowData->hIcon );
+         DestroyIcon( pWindowData->hIcon );
    }
 
    hb_gt_wvwWindowEpilogue();
@@ -5878,7 +5871,7 @@ static void hb_wvw_UpdatePendingRect( WIN_DATA * pWindowData, USHORT usRow1, USH
 /* returns lineheight, ie. including linespacing if any */
 BYTE hb_gt_wvw_LineHeight( WIN_DATA * pWindowData )
 {
-   return ( ( BYTE ) ( LONG ) pWindowData->PTEXTSIZE.y ) + ( BYTE ) pWindowData->byLineSpacing;
+   return ( BYTE ) ( LONG ) pWindowData->PTEXTSIZE.y + ( BYTE ) pWindowData->byLineSpacing;
 }
 
 /* fills linespace above and below the text area.
@@ -5913,7 +5906,7 @@ static void hb_gt_wvwFillLineSpace( WIN_DATA * pWindowData, HDC hdc, USHORT star
    rc.bottom = rc.top + ( pWindowData->byLineSpacing / 2 );
    FillRect( hdc, &rc, hBrush );
 
-   SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->sApp->OriginalBrush );
+   SelectObject( s_pWvwData->pWindows[ 0 ]->hdc, s_pWvwData->sApp->OriginalBrush );
    DeleteObject( hBrush );
 }
 
@@ -6041,7 +6034,7 @@ int hb_gt_wvw_GetWindowTitle( UINT usWinNum, char * title, int length )
 }
 
 
-BOOL hb_gt_wvw_SetFont( UINT usWinNum, const char * fontFace, int height, int width, int Bold, int Quality )
+BOOL hb_gt_wvw_SetFont( UINT usWinNum, const TCHAR * fontFace, int height, int width, int Bold, int Quality )
 {
    size_t     size;
    BOOL       bResult     = FALSE;
@@ -6070,9 +6063,9 @@ BOOL hb_gt_wvw_SetFont( UINT usWinNum, const char * fontFace, int height, int wi
          pWindowData->fontWeight  = Bold;
          pWindowData->fontQuality = Quality;
 
-         size = strlen( fontFace );
+         size = HB_STRLEN( fontFace );
          if( size > 0 && ( size < LF_FACESIZE - 1 ) )
-            hb_strncpy( pWindowData->fontFace, fontFace, sizeof( pWindowData->fontFace ) - 1 );
+            HB_STRNCPY( pWindowData->fontFace, fontFace, HB_SIZEOFARRAY( pWindowData->fontFace ) - 1 );
 
          if( pWindowData->hWnd )
          {
@@ -6322,8 +6315,7 @@ BOOL hb_gt_wvw_DrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const c
        */
 
       if( pPic->lpVtbl->get_Handle( pPic, &oHtemp ) == S_OK )
-         hBitmap = ( HBITMAP ) CopyImage( ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, IMAGE_BITMAP, 0, 0,
-                                          LR_COPYRETURNORG );
+         hBitmap = ( HBITMAP ) CopyImage( ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG );
 
       hb_gt_wvw_DestroyPicture( pPic );
 
@@ -7643,11 +7635,11 @@ HB_FUNC( WVW_PROCESSMESSAGES )
 
 HB_FUNC( WVW_GETTITLE )
 {
-   BYTE ucText[ 1024 ];
+   char ucText[ 1024 ];
 
-   hb_gt_wvw_GetWindowTitle( WVW_WHICH_WINDOW, ( char * ) ucText, HB_SIZEOFARRAY( ucText ) - 1 );
+   hb_gt_wvw_GetWindowTitle( WVW_WHICH_WINDOW, ucText, HB_SIZEOFARRAY( ucText ) - 1 );
 
-   hb_retc( ( char * ) ucText );
+   hb_retc( ucText );
 }
 
 
@@ -8080,7 +8072,7 @@ LPWORD hb_gt_wvw_lpwAlign( LPWORD lpIn )
    return ( LPWORD ) ul;
 }
 
-int hb_gt_wvw_nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn )
+int hb_gt_wvw_nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn )
 {
    int nChar = 0;
 
@@ -8677,11 +8669,11 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, UINT uiBitmap,
    uiBitmap is resource id
  */
 
-BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, UINT uiBitmap, const char * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown )
+BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, UINT uiBitmap, const TCHAR * pszLabel, int iCommand, int iBitmapType, BOOL bMap3Dcolors, WIN_DATA * pWindowData, BOOL bDropdown )
 {
    TBBUTTON    tbb;
    TBADDBITMAP tbab;
-   char        szBuffer[ WVW_TB_LABELMAXLENGTH + 2 ];
+   TCHAR       szBuffer[ WVW_TB_LABELMAXLENGTH + 2 ];
    int         iNewBitmap, iNewString;
    int         iOffset;
    HBITMAP     hBitmap;
@@ -8735,7 +8727,7 @@ BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, UINT uiBitm
    else /* system bitmap */
       iNewBitmap = ( int ) uiBitmap + iOffset;
 
-   hb_strncpy( szBuffer, pszLabel, sizeof( szBuffer ) - 1 );
+   HB_STRNCPY( szBuffer, pszLabel, HB_SIZEOFARRAY( szBuffer ) - 1 );
 
    iNewString = ( int ) SendMessage( hWndToolbar, TB_ADDSTRING, 0, ( LPARAM ) szBuffer );
 
@@ -9037,9 +9029,7 @@ static void RunControlBlock( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UIN
    if( ( pcd->byCtrlClass == WVW_CONTROL_SCROLLBAR ||
          pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON ||
          pcd->byCtrlClass == WVW_CONTROL_COMBOBOX ||
-         pcd->byCtrlClass == WVW_CONTROL_EDITBOX
-         )
-       && pcd->phiCodeBlock )
+         pcd->byCtrlClass == WVW_CONTROL_EDITBOX ) && pcd->phiCodeBlock )
    {
       PHB_ITEM phiWinNum, phiXBid, phiXBmsg, phiXBpos;
       PHB_ITEM pReturn;
@@ -9172,7 +9162,7 @@ static void ReposControls( UINT usWinNum, BYTE byCtrlClass )
          iTop  = xy.y + pcd->rOffCtrl.top;
          iLeft = xy.x + pcd->rOffCtrl.left;
 
-         xy = hb_gt_wvw_GetXYFromColRow( pWindowData, ( ( USHORT ) ( LONG ) ( pcd->rCtrl.right ) ) + 1, ( ( USHORT ) ( LONG ) ( pcd->rCtrl.bottom ) ) + 1 );
+         xy = hb_gt_wvw_GetXYFromColRow( pWindowData, ( ( USHORT ) ( LONG ) pcd->rCtrl.right ) + 1, ( ( USHORT ) ( LONG ) pcd->rCtrl.bottom ) + 1 );
 
          xy.y -= pWindowData->byLineSpacing;
 
@@ -9456,7 +9446,7 @@ UINT hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT 
 
    if( hWndButton )
    {
-      RECT    rXB = { 0 }, rOffXB = { 0 };
+      RECT    rXB, rOffXB;
       WNDPROC OldProc;
 
       if( szBitmap || uiBitmap )
@@ -9491,13 +9481,11 @@ UINT hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT 
       hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, hWndButton, uiPBid, ( PHB_ITEM ) phbiCodeBlock, rXB, rOffXB, ( byte ) iStyle );
 
 #if 0
-      OldProc = SetWindowLongPtr( hWndButton,
-                                  GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_BtnProc );
+      OldProc = SetWindowLongPtr( hWndButton, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_BtnProc );
 #endif
       OldProc = SubclassWindow( hWndButton, hb_gt_wvw_BtnProc );
 
       hb_gt_wvw_StoreControlProc( usWinNum, WVW_CONTROL_PUSHBUTTON, hWndButton, OldProc );
-
 
       SendMessage( hWndButton, WM_SETFONT, ( WPARAM ) pWindowData->hPBfont, ( LPARAM ) TRUE );
       hb_stornint( ( HB_PTRDIFF ) hWndButton, 12 );
