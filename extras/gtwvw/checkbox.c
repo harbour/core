@@ -67,9 +67,9 @@
  *               (default is 1)
  * lMap3Dcolors: defaults to .F.
  *           if .T. the following color mapping will be performed:
- *              RGB(192,192,192) --> COLOR_3DFACE   ("transparent")
- *              RGB(128,128,128) --> COLOR_3DSHADOW
- *              RGB(223,223,223) --> COLOR_3DLIGHT
+ *              RGB( 192, 192, 192 ) --> COLOR_3DFACE   ("transparent")
+ *              RGB( 128, 128, 128 ) --> COLOR_3DSHADOW
+ *              RGB( 223, 223, 223 ) --> COLOR_3DLIGHT
  *           This might be desirable to have transparent effect.
  *           LIMITATION: this will work on 256 colored bitmaps only
  *
@@ -223,8 +223,8 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
 
 /* wvw_cxSetCheck( [nWinNum], nCXid, nCheckState )
  * assigns check-state of checkbox nCXid
- *           0==unchecked    BST_UNCHECKED
- *           1==checked      BST_CHECKED
+ *           0==unchecked     BST_UNCHECKED
+ *           1==checked       BST_CHECKED
  *           2==indeterminate BST_INDETERMINATE
  * this function always returns .T.
  */
@@ -240,8 +240,8 @@ HB_FUNC( WVW_CXSETCHECK )
 
 /* wvw_cxGetCheck( [nWinNum], nCXid )
  * returns check-state of checkbox nCXid
- *           0==unchecked    BST_UNCHECKED
- *           1==checked      BST_CHECKED
+ *           0==unchecked     BST_UNCHECKED
+ *           1==checked       BST_CHECKED
  *           2==indeterminate BST_INDETERMINATE
  */
 HB_FUNC( WVW_CXGETCHECK )
@@ -265,18 +265,18 @@ HB_FUNC( WVW_CXSETFONT )
 
    HB_BOOL retval = HB_TRUE;
 
-   wvw->lfCX.lfHeight      = hb_parnldef( 3, wvw_win->fontHeight - 2 );
-   wvw->lfCX.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfCX.lfWidth;
-   wvw->lfCX.lfEscapement  = 0;
-   wvw->lfCX.lfOrientation = 0;
-   wvw->lfCX.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : wvw->lfCX.lfWeight;
-   wvw->lfCX.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : wvw->lfCX.lfItalic;
-   wvw->lfCX.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : wvw->lfCX.lfUnderline;
-   wvw->lfCX.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : wvw->lfCX.lfStrikeOut;
-   wvw->lfCX.lfCharSet     = DEFAULT_CHARSET;
-
-   wvw->lfCX.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : wvw->lfCX.lfQuality;
+   wvw->lfCX.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
+   wvw->lfCX.lfWidth          = hb_parnldef( 4, wvw->lfCX.lfWidth );
+   wvw->lfCX.lfEscapement     = 0;
+   wvw->lfCX.lfOrientation    = 0;
+   wvw->lfCX.lfWeight         = hb_parnldef( 5, wvw->lfCX.lfWeight );
+   wvw->lfCX.lfQuality        = ( BYTE ) hb_parnidef( 6, wvw->lfCX.lfQuality );
+   wvw->lfCX.lfItalic         = ( BYTE ) hb_parldef( 7, wvw->lfCX.lfItalic );
+   wvw->lfCX.lfUnderline      = ( BYTE ) hb_parldef( 8, wvw->lfCX.lfUnderline );
+   wvw->lfCX.lfStrikeOut      = ( BYTE ) hb_parldef( 9, wvw->lfCX.lfStrikeOut );
+   wvw->lfCX.lfCharSet        = DEFAULT_CHARSET;
    wvw->lfCX.lfPitchAndFamily = FF_DONTCARE;
+
    if( HB_ISCHAR( 2 ) )
       hb_strncpy( wvw->lfCX.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 

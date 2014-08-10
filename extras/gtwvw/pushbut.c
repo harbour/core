@@ -282,18 +282,18 @@ HB_FUNC( WVW_PBSETFONT )
 
    HB_BOOL retval = HB_TRUE;
 
-   wvw->lfPB.lfHeight      = hb_parnldef( 3, wvw_win->fontHeight - 2 );
-   wvw->lfPB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfPB.lfWidth;
-   wvw->lfPB.lfEscapement  = 0;
-   wvw->lfPB.lfOrientation = 0;
-   wvw->lfPB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 )         : wvw->lfPB.lfWeight;
-   wvw->lfPB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : wvw->lfPB.lfItalic;
-   wvw->lfPB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : wvw->lfPB.lfUnderline;
-   wvw->lfPB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : wvw->lfPB.lfStrikeOut;
-   wvw->lfPB.lfCharSet     = DEFAULT_CHARSET;
-
-   wvw->lfPB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : wvw->lfPB.lfQuality;
+   wvw->lfPB.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
+   wvw->lfPB.lfWidth          = hb_parnldef( 4, wvw->lfPB.lfWidth );
+   wvw->lfPB.lfEscapement     = 0;
+   wvw->lfPB.lfOrientation    = 0;
+   wvw->lfPB.lfWeight         = hb_parnldef( 5, wvw->lfPB.lfWeight );
+   wvw->lfPB.lfQuality        = ( BYTE ) hb_parnidef( 6, wvw->lfPB.lfQuality );
+   wvw->lfPB.lfItalic         = ( BYTE ) hb_parldef( 7, wvw->lfPB.lfItalic );
+   wvw->lfPB.lfUnderline      = ( BYTE ) hb_parldef( 8, wvw->lfPB.lfUnderline );
+   wvw->lfPB.lfStrikeOut      = ( BYTE ) hb_parldef( 9, wvw->lfPB.lfStrikeOut );
+   wvw->lfPB.lfCharSet        = DEFAULT_CHARSET;
    wvw->lfPB.lfPitchAndFamily = FF_DONTCARE;
+
    if( HB_ISCHAR( 2 ) )
       hb_strncpy( wvw->lfPB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 

@@ -878,7 +878,7 @@ HB_FUNC( OPENBITMAP )
             break;
       }
 
-      /* Allocate memory for the required number of  bytes. */
+      /* Allocate memory for the required number of bytes. */
       hmem2 = GlobalAlloc( GHND, ( bmfh.bfSize - bmfh.bfOffBits ) );
       if( hmem2 )
       {

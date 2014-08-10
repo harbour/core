@@ -1960,10 +1960,8 @@ HB_FUNC( WVW_DRAWBUTTON )
    POINT      xy;
    RECT       rc;
    int        iTop, iLeft, iBottom, iRight;
-   int        iAlign, oldTextAlign, oldBkMode;
-   int        iTextHeight /*, iTextWidth */;
-   int        iImageWidth, iImageHeight;
-   COLORREF   oldTextColor;
+   int        iAlign;
+   int        iTextHeight;
    LOGBRUSH   lb;
    HBRUSH     hBrush;
    IPicture * iPicture;
@@ -2030,6 +2028,10 @@ HB_FUNC( WVW_DRAWBUTTON )
 
    if( bText )
    {
+      int      oldTextAlign;
+      int      oldBkMode;
+      COLORREF oldTextColor;
+
       SIZE sz;
 
       SelectObject( wvw_win->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
@@ -2070,9 +2072,8 @@ HB_FUNC( WVW_DRAWBUTTON )
 
    if( bImage )
    {
-      iImageWidth = iRight - iLeft + 1 - 8;
-
-      iImageHeight = iBottom - iTop + 1 - 8 - iTextHeight;
+      int iImageWidth  = iRight - iLeft + 1 - 8;
+      int iImageHeight = iBottom - iTop + 1 - 8 - iTextHeight;
 
       if( HB_ISNUM( 7 ) )
       {

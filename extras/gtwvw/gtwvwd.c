@@ -8636,7 +8636,7 @@ LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 /* --- start control (eg. scrollbar) list handler --- */
 
-HWND hb_gt_wvw_FindControlHandle( UINT usWinNum, BYTE byCtrlClass, UINT uiCtrlid, byte * pbStyle )
+HWND hb_gt_wvw_FindControlHandle( UINT usWinNum, BYTE byCtrlClass, UINT uiCtrlid, HB_BYTE * pbStyle )
 {
    WVW_WIN *  wvw_win = s_wvw->pWindows[ usWinNum ];
    WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
@@ -8654,7 +8654,7 @@ HWND hb_gt_wvw_FindControlHandle( UINT usWinNum, BYTE byCtrlClass, UINT uiCtrlid
    return NULL;
 }
 
-UINT hb_gt_wvw_FindControlId( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, byte * pbStyle )
+UINT hb_gt_wvw_FindControlId( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, HB_BYTE * pbStyle )
 {
    WVW_WIN *  wvw_win = s_wvw->pWindows[ usWinNum ];
    WVW_CTRL * pcd     = wvw_win->pcdCtrlList;
@@ -8686,39 +8686,39 @@ UINT hb_gt_wvw_LastControlId( UINT usWinNum, BYTE byCtrlClass )
       return 0;
 }
 
-void hb_gt_wvw_AddControlHandle( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT uiCtrlid, PHB_ITEM phiCodeBlock, RECT rCtrl, RECT rOffCtrl, byte bStyle )
+void hb_gt_wvw_AddControlHandle( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT uiCtrlid, PHB_ITEM phiCodeBlock, RECT rCtrl, RECT rOffCtrl, HB_BYTE bStyle )
 {
    WVW_WIN *  wvw_win = s_wvw->pWindows[ usWinNum ];
-   WVW_CTRL * pcdNew  = ( WVW_CTRL * ) hb_xgrabz( sizeof( WVW_CTRL ) );
+   WVW_CTRL * pcd  = ( WVW_CTRL * ) hb_xgrabz( sizeof( WVW_CTRL ) );
 
-   pcdNew->byCtrlClass = byCtrlClass;
-   pcdNew->hWndCtrl    = hWndCtrl;
-   pcdNew->uiCtrlid    = uiCtrlid;
+   pcd->byCtrlClass = byCtrlClass;
+   pcd->hWndCtrl    = hWndCtrl;
+   pcd->uiCtrlid    = uiCtrlid;
 
-   pcdNew->phiCodeBlock = NULL;
+   pcd->phiCodeBlock = NULL;
 
    if( phiCodeBlock != NULL )
-      pcdNew->phiCodeBlock = hb_itemNew( phiCodeBlock );
+      pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
-   pcdNew->bBusy  = HB_FALSE;
-   pcdNew->uiBusy = 0;
+   pcd->bBusy  = HB_FALSE;
+   pcd->uiBusy = 0;
 
-   pcdNew->rCtrl.top       = rCtrl.top;
-   pcdNew->rCtrl.left      = rCtrl.left;
-   pcdNew->rCtrl.bottom    = rCtrl.bottom;
-   pcdNew->rCtrl.right     = rCtrl.right;
-   pcdNew->rOffCtrl.top    = rOffCtrl.top;
-   pcdNew->rOffCtrl.left   = rOffCtrl.left;
-   pcdNew->rOffCtrl.bottom = rOffCtrl.bottom;
-   pcdNew->rOffCtrl.right  = rOffCtrl.right;
+   pcd->rCtrl.top       = rCtrl.top;
+   pcd->rCtrl.left      = rCtrl.left;
+   pcd->rCtrl.bottom    = rCtrl.bottom;
+   pcd->rCtrl.right     = rCtrl.right;
+   pcd->rOffCtrl.top    = rOffCtrl.top;
+   pcd->rOffCtrl.left   = rOffCtrl.left;
+   pcd->rOffCtrl.bottom = rOffCtrl.bottom;
+   pcd->rOffCtrl.right  = rOffCtrl.right;
 
-   pcdNew->bStyle = bStyle;
+   pcd->bStyle = bStyle;
 
-   pcdNew->OldProc = NULL;
+   pcd->OldProc = NULL;
 
-   pcdNew->pNext = wvw_win->pcdCtrlList;
+   pcd->pNext = wvw_win->pcdCtrlList;
 
-   wvw_win->pcdCtrlList = pcdNew;
+   wvw_win->pcdCtrlList = pcd;
 }
 
 WVW_CTRL * hb_gt_wvw_GetControlData( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT uiCtrlid )
@@ -9233,7 +9233,7 @@ UINT hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT 
       rOffXB.bottom = iOffBottom;
       rOffXB.right  = iOffRight;
 
-      hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, hWndButton, uiPBid, ( PHB_ITEM ) phbiCodeBlock, rXB, rOffXB, ( byte ) iStyle );
+      hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, hWndButton, uiPBid, ( PHB_ITEM ) phbiCodeBlock, rXB, rOffXB, ( HB_BYTE ) iStyle );
 
 #if 0
       OldProc = SetWindowLongPtr( hWndButton, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_BtnProc );

@@ -111,7 +111,7 @@ HB_FUNC( WVW_EBCREATE )
    LPTSTR lpszText = ( LPTSTR ) hb_parcx( 6 );
 
    HB_BOOL bMultiline = hb_parl( 8 );
-   BYTE    bEBType    = ( BYTE ) ( bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE );
+   HB_BYTE bEBType    = bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
 
    DWORD dwMoreStyle = ( DWORD ) hb_parnl( 9 );
 
@@ -213,7 +213,7 @@ HB_FUNC( WVW_EBCREATE )
       rOffXB.bottom = iOffBottom;
       rOffXB.right  = iOffRight;
 
-      hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_EDITBOX, hWndEB, uiEBid, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, ( byte ) bEBType );
+      hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_EDITBOX, hWndEB, uiEBid, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, bEBType );
 
       OldProc = ( WNDPROC ) SetWindowLongPtr( hWndEB, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_EBProc );
 
@@ -380,18 +380,18 @@ HB_FUNC( WVW_EBSETFONT )
 
    HB_BOOL retval = HB_TRUE;
 
-   wvw->lfEB.lfHeight      = hb_parnldef( 3, wvw_win->fontHeight - 2 );
-   wvw->lfEB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfEB.lfWidth;
-   wvw->lfEB.lfEscapement  = 0;
-   wvw->lfEB.lfOrientation = 0;
-   wvw->lfEB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : wvw->lfEB.lfWeight;
-   wvw->lfEB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : wvw->lfEB.lfItalic;
-   wvw->lfEB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : wvw->lfEB.lfUnderline;
-   wvw->lfEB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : wvw->lfEB.lfStrikeOut;
-   wvw->lfEB.lfCharSet     = DEFAULT_CHARSET;
-
-   wvw->lfEB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : wvw->lfEB.lfQuality;
+   wvw->lfEB.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
+   wvw->lfEB.lfWidth          = hb_parnldef( 4, wvw->lfEB.lfWidth );
+   wvw->lfEB.lfEscapement     = 0;
+   wvw->lfEB.lfOrientation    = 0;
+   wvw->lfEB.lfWeight         = hb_parnldef( 5, wvw->lfEB.lfWeight );
+   wvw->lfEB.lfQuality        = ( BYTE ) hb_parnidef( 6, wvw->lfEB.lfQuality );
+   wvw->lfEB.lfItalic         = ( BYTE ) hb_parldef( 7, wvw->lfEB.lfItalic );
+   wvw->lfEB.lfUnderline      = ( BYTE ) hb_parldef( 8, wvw->lfEB.lfUnderline );
+   wvw->lfEB.lfStrikeOut      = ( BYTE ) hb_parldef( 9, wvw->lfEB.lfStrikeOut );
+   wvw->lfEB.lfCharSet        = DEFAULT_CHARSET;
    wvw->lfEB.lfPitchAndFamily = FF_DONTCARE;
+
    if( HB_ISCHAR( 2 ) )
       hb_strncpy( wvw->lfEB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
 
@@ -420,7 +420,6 @@ HB_FUNC( WVW_EBSETFONT )
    }
 
    hb_retl( retval );
-
 }
 
 /* wvw_ebIsMultiline( [nWinNum], nEBid )

@@ -290,10 +290,10 @@ typedef struct _WVW_CTRL
    /* SCROLLBAR specifics: */
    /* also used by combobox to store kbd type */
    /* also used by editbox to store editbox type */
-   byte bStyle;
+   HB_BYTE  bStyle;
 
    /* PUSHBUTTON & CHECKBOX specifics: */
-   WNDPROC OldProc;
+   WNDPROC  OldProc;
 
    struct _WVW_CTRL * pNext;
 } WVW_CTRL;
@@ -558,10 +558,10 @@ extern RECT       hb_gt_wvw_GetColRowFromXYRect( WVW_WIN * pWIndowData, RECT xy 
 extern BYTE       hb_gt_wvw_LineHeight( WVW_WIN * wvw_win );
 extern WPARAM     hb_gt_wvw_ProcessMessages( WVW_WIN * wvw_win );
 /* control (eg. scrollbar) supporters: */
-extern HWND       hb_gt_wvw_FindControlHandle( UINT usWinNum, BYTE byCtrlClass, UINT uiCtrlid, byte * pbStyle );
-extern UINT       hb_gt_wvw_FindControlId( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, byte * pbStyle );
+extern HWND       hb_gt_wvw_FindControlHandle( UINT usWinNum, BYTE byCtrlClass, UINT uiCtrlid, HB_BYTE * pbStyle );
+extern UINT       hb_gt_wvw_FindControlId( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, HB_BYTE * pbStyle );
 extern UINT       hb_gt_wvw_LastControlId( UINT usWinNum, BYTE byCtrlClass );
-extern void       hb_gt_wvw_AddControlHandle( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT uiCtrlid, PHB_ITEM phiCodeBlock, RECT rCtrl, RECT rOffCtrl, byte bStyle );
+extern void       hb_gt_wvw_AddControlHandle( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, UINT uiCtrlid, PHB_ITEM phiCodeBlock, RECT rCtrl, RECT rOffCtrl, HB_BYTE bStyle );
 extern HB_BOOL    hb_gt_wvw_StoreControlProc( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl, WNDPROC OldProc );
 extern WNDPROC    hb_gt_wvw_GetControlProc( UINT usWinNum, BYTE byCtrlClass, HWND hWndCtrl );
 extern UINT       hb_gt_wvw_ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, LPCTSTR lpszCaption,

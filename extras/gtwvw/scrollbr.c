@@ -337,18 +337,18 @@ HB_FUNC( WVW_SBSETFONT )
 
    HB_BOOL retval = HB_TRUE;
 
-   wvw->lfSB.lfHeight      = hb_parnldef( 3, wvw_win->fontHeight - 2 );
-   wvw->lfSB.lfWidth       = HB_ISNUM( 4 ) ? hb_parni( 4 ) : wvw->lfSB.lfWidth;
-   wvw->lfSB.lfEscapement  = 0;
-   wvw->lfSB.lfOrientation = 0;
-   wvw->lfSB.lfWeight      = HB_ISNUM( 5 ) ? hb_parni( 5 ) : wvw->lfSB.lfWeight;
-   wvw->lfSB.lfItalic      = HB_ISLOG( 7 ) ? ( BYTE ) hb_parl( 7 ) : wvw->lfSB.lfItalic;
-   wvw->lfSB.lfUnderline   = HB_ISLOG( 8 ) ? ( BYTE ) hb_parl( 8 ) : wvw->lfSB.lfUnderline;
-   wvw->lfSB.lfStrikeOut   = HB_ISLOG( 9 ) ? ( BYTE ) hb_parl( 9 ) : wvw->lfSB.lfStrikeOut;
-   wvw->lfSB.lfCharSet     = DEFAULT_CHARSET;
-
-   wvw->lfSB.lfQuality        = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : wvw->lfSB.lfQuality;
+   wvw->lfSB.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
+   wvw->lfSB.lfWidth          = hb_parnldef( 4, wvw->lfSB.lfWidth );
+   wvw->lfSB.lfEscapement     = 0;
+   wvw->lfSB.lfOrientation    = 0;
+   wvw->lfSB.lfWeight         = hb_parnldef( 5, wvw->lfSB.lfWeight );
+   wvw->lfSB.lfQuality        = ( BYTE ) hb_parnidef( 6, wvw->lfSB.lfQuality );
+   wvw->lfSB.lfItalic         = ( BYTE ) hb_parldef( 7, wvw->lfSB.lfItalic );
+   wvw->lfSB.lfUnderline      = ( BYTE ) hb_parldef( 8, wvw->lfSB.lfUnderline );
+   wvw->lfSB.lfStrikeOut      = ( BYTE ) hb_parldef( 9, wvw->lfSB.lfStrikeOut );
+   wvw->lfSB.lfCharSet        = DEFAULT_CHARSET;
    wvw->lfSB.lfPitchAndFamily = FF_DONTCARE;
+
    if( HB_ISCHAR( 2 ) )
       hb_strncpy( wvw->lfSB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfSB.lfFaceName ) - 1 );
 
@@ -526,7 +526,7 @@ HB_FUNC( WVW_XBCREATE )
       SetScrollRange( hWndXB, SB_CTL, 0, 99, FALSE );
       SetScrollPos( hWndXB, SB_CTL, 0, TRUE );
 
-      hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, uiXBid, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( byte ) iStyle );
+      hb_gt_wvw_AddControlHandle( usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, uiXBid, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( HB_BYTE ) iStyle );
 
       OldProc = ( WNDPROC ) SetWindowLongPtr( hWndXB, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_XBProc );
 
