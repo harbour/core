@@ -139,9 +139,9 @@ HB_FUNC( WVW_SBDESTROY )
    }
 }
 
-/* wvw_sbAddPart(nWinNum, cMaxText, nWidth, nStyle, lResetParts, [cIcon , cToolTip])
+/* wvw_sbAddPart( nWinNum, cMaxText, nWidth, nStyle, lResetParts, [cIcon , cToolTip] )
  *  ps.
- *  lResetParts==.t. :: remove all previously created parts
+ *  lResetParts==.T. :: remove all previously created parts
  *  nStyle: 0 (default), 0x0200 (SBT_POPOUT), 0x0100 (SBT_NOBORDERS)
  *  nWidth: expected width in pixels
  *  NOTE: if cMaxText is passed, nWidth is ignored. width of cMaxText will be used instead
@@ -233,7 +233,7 @@ HB_FUNC( WVW_SBADDPART )
    hb_retni( numOfParts );
 }
 
-/* wvw_sbRefresh(nWinNum)
+/* wvw_sbRefresh( nWinNum )
  * reinitialize StatusBar's parts, eg. after window resize
  * TODO: do it automatically, after hb_gt_wvw_ResetWindowSize()
  * returns number of parts
@@ -276,7 +276,7 @@ HB_FUNC( WVW_SBREFRESH )
    hb_retni( numOfParts );
 }
 
-/* wvw_sbSetText([nWinNum], [nPart], cText)
+/* wvw_sbSetText( [nWinNum], [nPart], cText )
  * Set Text of status bar's part #npart
  */
 HB_FUNC( WVW_SBSETTEXT )
@@ -304,7 +304,7 @@ HB_FUNC( WVW_SBSETTEXT )
       SendMessage( wvw_win->hStatusBar, SB_SETTEXT, iPart, ( LPARAM ) hb_parcx( 3 ) );
 }
 
-/* wvw_sbGetText([nWinNum], [nPart])
+/* wvw_sbGetText( [nWinNum], [nPart] )
  * Get Text of status bar's part #npart
  */
 HB_FUNC( WVW_SBGETTEXT )
@@ -317,7 +317,7 @@ HB_FUNC( WVW_SBGETTEXT )
    hb_retc( cString );
 }
 
-/* wvw_sbGetParts([nWinNum])
+/* wvw_sbGetParts( [nWinNum] )
  * Get number of parts in statusbar of window nWinNum
  */
 HB_FUNC( WVW_SBGETPARTS )
@@ -328,9 +328,8 @@ HB_FUNC( WVW_SBGETPARTS )
    hb_retni( numOfParts );
 }
 
-/* wvw_sbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
- *                             lItalic, lUnderline, lStrikeout
- */
+/* wvw_sbSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
+                               lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_SBSETFONT )
 {
    WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
@@ -655,7 +654,7 @@ HB_FUNC( WVW_XBINFO )
  *        ESB_DISABLE_LEFT/ESB_DISABLE_UP    1: disable left/up arrow
  *        ESB_DISABLE_RIGHT/ESB_DISABLE_DOWN 2: disable right/down arrow
  *        ESB_DISABLE_BOTH                   3: disable both arrow
- * returns .t. if successful
+ * returns .T. if successful
  */
 HB_FUNC( WVW_XBENABLE )
 {
@@ -673,7 +672,7 @@ HB_FUNC( WVW_XBENABLE )
  *  nXBid is the handle of the scrolbar
  *  lShow: .T. shows the scrolbar (default)
  *       .F. hides the scrolbar
- * returns .t. if successful
+ * returns .T. if successful
  */
 HB_FUNC( WVW_XBSHOW )
 {

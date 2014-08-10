@@ -60,8 +60,8 @@
  *        dimension of progress bar. defaults: {0, 0, 0, 0}
  * nBackColor: color of background (as RGB value)
  * nBarColor: color of bar (as RGB value)
- * lSmooth: if .t., draw as smooth bar (default is .f.)
- * lVertical: if .t., draw as vertical progress bar (default is .f.)
+ * lSmooth: if .T., draw as smooth bar (default is .F.)
+ * lVertical: if .T., draw as vertical progress bar (default is .F.)
  *
  * returns control id of newly created progress bar of windows nWinNum
  * returns 0 if failed
@@ -126,9 +126,9 @@ HB_FUNC( WVW_PGCREATE )
       uiPGid++;
 
    if( bVertical )
-      iStyle = iStyle | PBS_VERTICAL;
+      iStyle |= PBS_VERTICAL;
    if( bSmooth )
-      iStyle = iStyle | PBS_SMOOTH;
+      iStyle |= PBS_SMOOTH;
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
@@ -212,14 +212,14 @@ HB_FUNC( WVW_PGDESTROY )
    }
 }
 
-/* wvw_pgSetRange(nWinNum, PGid, [nMin], [nMax])
+/* wvw_pgSetRange( nWinNum, PGid, [nMin], [nMax] )
  *  update progressbar data range (default is 0-100)
  *  nMin: a number in range of -32767 to +32767
  *  nMax: a number in range of -32767 to +32767
  *
  * Remark: progress position is reset to nMin
  *
- * returns .t. if operation considered successfull
+ * returns .T. if operation considered successfull
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
@@ -238,10 +238,10 @@ HB_FUNC( WVW_PGSETRANGE )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_pgSetPos(nWinNum, PGid, [nPos])
+/* wvw_pgSetPos( nWinNum, PGid, [nPos] )
  * update progressbar position within current range
  * nPos: a number in range of current range
- * returns .t. if operation considered successfull
+ * returns .T. if operation considered successfull
  */
 HB_FUNC( WVW_PGSETPOS )
 {
@@ -267,7 +267,7 @@ HB_FUNC( WVW_PGSETPOS )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_pgGetPos(nWinNum, PGid)
+/* wvw_pgGetPos( nWinNum, PGid )
  * get progressbar current position
  * returns 0 if operation failed
  */

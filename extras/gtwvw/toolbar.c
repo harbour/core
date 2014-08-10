@@ -65,7 +65,7 @@
 
 /* wvw_tbCreate( [nWinNum], lDisplayText, nStyle, nSystemBitmap, nImageWidth, nImageHeight )
  * creates a toolbar at the top (no button initially)
- * lDisplayText==.f. button's string is used as tooltips (default)
+ * lDisplayText==.F. button's string is used as tooltips (default)
  * nStyle: toolbar style, defaults to TBSTYLE_FLAT | TBSTYLE_TOOLTIPS
  * nSystemBitmap: 0:none, 1:small, 2:large (defaults: 1)
  *               small=16x16 large=24x24
@@ -73,11 +73,12 @@
  */
 HB_FUNC( WVW_TBCREATE )
 {
-   UINT      usWinNum   = WVW_WHICH_WINDOW;
-   WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND      hWndParent = wvw_win->hWnd;
-   HWND      hWndTB;
-   int       iMaxTextRows = ( int ) ( hb_parl( 2 ) ? 1 : 0 );
+   UINT      usWinNum = WVW_WHICH_WINDOW;
+   WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
+
+   HWND hWndParent = wvw_win->hWnd;
+   HWND hWndTB;
+   int  iMaxTextRows = hb_parl( 2 ) ? 1 : 0;
 
 #if 0
    DWORD dwStyle = ( DWORD ) hb_parnidef( 3, TBSTYLE_FLAT | TBSTYLE_TOOLTIPS );
@@ -199,7 +200,7 @@ HB_FUNC( WVW_TBCREATE )
    hb_retnint( ( HB_PTRDIFF ) hWndTB );
 }
 
-/* wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType,;
+/* wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType, ;
  *                            lMap3Dcolors, lDropdown)
  * adds one button on the right of existing buttons
  * xBitmap:
@@ -209,9 +210,9 @@ HB_FUNC( WVW_TBCREATE )
  * cLabel: if lDisplayText, it will be displayed below the bitmap
  *      otherwise it will be used as tooltip
  * nBitmapType: 0:custom, 1:system std bitmap, 2:system view bitmap, 3:system hist bitmap
- * lMap3Dcolors: defaults to .f.
+ * lMap3Dcolors: defaults to .F.
  *         (meaningfull for custom bitmap only)
- *         if .t. the following color mapping will be performed:
+ *         if .T. the following color mapping will be performed:
  *            RGB(192,192,192) --> COLOR_3DFACE   ("transparent")
  *            RGB(128,128,128) --> COLOR_3DSHADOW
  *            RGB(223,223,223) --> COLOR_3DLIGHT
@@ -222,8 +223,8 @@ HB_FUNC( WVW_TBADDBUTTON )
 {
    UINT      usWinNum = WVW_WHICH_WINDOW;
    WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( usWinNum );
-   int       iCommand = hb_parni( 2 );
 
+   int iCommand = hb_parni( 2 );
    const char * szBitmap = hb_parc( 3 );
    const char * szLabel  = hb_parcx( 4 );
 
@@ -368,7 +369,7 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
  * nButton is zero based index of button to enable/disable
  * index=0 is the leftmost button
  * NOTE: button separator is indexed too
- * returns .t. if successful
+ * returns .T. if successful
  */
 HB_FUNC( WVW_TBENABLEBUTTON )
 {

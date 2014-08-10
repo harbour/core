@@ -454,7 +454,7 @@ HB_FUNC( WVW_CXVISIBLE )
  *  nXBid is the handle of the scrolbar
  *  lShow: .T. shows the scrolbar (default)
  *       .F. hides the scrolbar
- * returns .t. if successful
+ * returns .T. if successful
  */
 HB_FUNC( WVW_XBVISIBLE )
 {
@@ -1267,7 +1267,7 @@ HB_FUNC( WVW_NUMBMCACHE )
  * set timer event for every nInterval millisec
  * (effective only if WVW_TIMER() function exists)
  * eg. it can be usefull to update clock on status bar
- * returns .t. if successfull
+ * returns .T. if successfull
  */
 /* 2004-06-02: WARNING: WVT is slightly different */
 HB_FUNC( WVW_SETTIMER )
@@ -1289,7 +1289,7 @@ HB_FUNC( WVW_SETTIMER )
 
 /* wvw_KillTimer([nWinNum])
  * kill the timer event handler for window nWinNum
- * returns .t. if successfull
+ * returns .T. if successfull
  */
 /* 2004-06-02: WARNING: WVT is slightly different */
 HB_FUNC( WVW_KILLTIMER )
@@ -1617,8 +1617,8 @@ HB_FUNC( WVW_CHOOSECOLOR )
    this func is able to position cursor on any window
 
    NOTE: consider using 'standard' SetMouse() instead:
-         SetMouse(.t., nRow, nCol)
-         This will treat (nRow,nCol) according to current s_pWvwData->bMainCoordMode setting */
+         SetMouse( .T., nRow, nCol )
+         This will treat (nRow,nCol) according to current wvw->bMainCoordMode setting */
 
 HB_FUNC( WVW_SETMOUSEPOS )
 {

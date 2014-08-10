@@ -4946,7 +4946,7 @@ static void hb_gt_wvwInputNotAllowed( UINT usWinNum, UINT message, WPARAM wParam
    uses coordinate relative to the physical screen area.
 
    This mode can be set and reset during runtime,eg.
-   oldCoordMode := wvw_SetMainCoord( .t. )
+   oldCoordMode := wvw_SetMainCoord( .T. )
 
    Illustration:
    *+------
@@ -6059,7 +6059,7 @@ static void DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, short xStart, short
 
 /* 2006-07-24 Notes:
    (1) Transparency
-   if bTransparent is .t., top-left pixel is used as the transparent color,
+   if bTransparent is .T., top-left pixel is used as the transparent color,
 
    (2) Caching
    WARNING this function will always CACHE the image.
@@ -6711,7 +6711,7 @@ HB_FUNC( WVW_SIZE_READY )
 
 /* wvw_lCloseWindow()
  * closes the last/topmost window
- * returns .t. if successful
+ * returns .T. if successful
  */
 HB_FUNC( WVW_LCLOSEWINDOW )
 {
@@ -6755,7 +6755,7 @@ HB_FUNC( WVW_NNUMWINDOWS )
 /* wvw_XReposWindow(lAnchored)
  * reposition all windows to their initial position
  *
- * if lAnchored == .t. (default)
+ * if lAnchored == .T. (default)
  *    all subwindows are positioned according to their respective (row1,col1) coordinate
  * else
  *    all subwindows are positioned according to whatever their "CenterWindow" setting
@@ -6887,7 +6887,7 @@ HB_FUNC( WVW_SETMAINCOORD )
 
 /* wvw_AddRows( [nWinNum], nRows)
  * add nRows rows to window nWinNum (nRows may be < 0)
- * returns .t. if successful
+ * returns .T. if successful
  *
  * NOTES: newly added rows (for nRows>0) will be colored with
  *        column 0 of original last row
@@ -7122,8 +7122,8 @@ HB_FUNC( WVW_SETPAINTREFRESH )
 
 /* wvw_SetVertCaret( [lOn] )
  * if lOn is supplied:
- * lOn == .t.: turn caret into vertical caret
- * lOn == .f.: turn caret into horizontal caret
+ * lOn == .T.: turn caret into vertical caret
+ * lOn == .F.: turn caret into horizontal caret
  * return old setting of s_wvw->bVertCaret
  */
 /* TODO: do you want to make it window selective? */
@@ -7305,9 +7305,9 @@ HB_FUNC( WVW_SETLSPACECOLOR )
  *
  * REMARKS:
  * s_wvw->bAllowNonTop determines how controls behave on non-topmost window
- * if s_wvw->bAllowNonTop==.t., control's codeblock will always be executed
+ * if s_wvw->bAllowNonTop==.T., control's codeblock will always be executed
  *                         when an event occurs on the control
- * if s_wvw->bAllowNonTop==.f. (the default)
+ * if s_wvw->bAllowNonTop==.F. (the default)
  *                         control's codeblock will be executed only
  *                         if the control is on the topmost window.
  * IMPORTANT NOTE: KILLFOCUS event will always be executed in all condition
@@ -7329,10 +7329,10 @@ HB_FUNC( WVW_ALLOWNONTOPEVENT )
  *
  * REMARKS:
  * s_wvw->bRecurseCBlock determines whether gtwvw allow recursion into control's codeblock
- * if s_wvw->bRecurseCBlock==.t., control's codeblock is allowed to recurse
- * if s_wvw->bRecurseCBlock==.f. (the default)
+ * if s_wvw->bRecurseCBlock==.T., control's codeblock is allowed to recurse
+ * if s_wvw->bRecurseCBlock==.F. (the default)
  *                         control's codeblock is not allowed to recurse
- * NOTE: if you are using s_wvw->bRecurseCBlock == .t. make sure your
+ * NOTE: if you are using s_wvw->bRecurseCBlock == .T. make sure your
  *       codeblock is reentrant, otherwise you may have weird result.
  */
 HB_FUNC( WVW_RECURSECBLOCK )
@@ -7347,8 +7347,8 @@ HB_FUNC( WVW_RECURSECBLOCK )
 
 /* wvw_NoStartupSubWindow( [lOn] )
  * if lOn is supplied:
- * lOn == .t.: when opening window, window will not be displayed
- * lOn == .f.: when opening window, window will be displayed (default)
+ * lOn == .T.: when opening window, window will not be displayed
+ * lOn == .F.: when opening window, window will be displayed (default)
  * return old setting of s_bNOSTARTUPWINDOW
  */
 HB_FUNC( WVW_NOSTARTUPSUBWINDOW )
@@ -7376,7 +7376,7 @@ HB_FUNC( WVW_GETSCREENHEIGHT )
 
 /* wvw_SetWindowCentre( nWinNum,   (0==MAIN)
  *                      lCentre,
- *                      lPaintIt)  (if .f. it will just assign lCentre to WVW_WIN)
+ *                      lPaintIt)  (if .F. it will just assign lCentre to WVW_WIN)
  */
 HB_FUNC( WVW_SETWINDOWCENTRE )
 {
@@ -7385,7 +7385,7 @@ HB_FUNC( WVW_SETWINDOWCENTRE )
 
 
 /* wvw_EnableShortcuts( nWinNum, lEnable )
- * lEnable defaults to .t.
+ * lEnable defaults to .T.
  *
  * returns old setting of EnableShortCuts
  */
@@ -8322,21 +8322,20 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, UINT uiBitmap, int iExpWid
    if( ! hBitmap && szBitmap )
    {
       /* loading from file */
-      int iWidth, iHeight;
-
       hBitmap = hb_gt_wvw_FindBitmapHandle( szBitmap, &iExpWidth, &iExpHeight );
 
       if( ! hBitmap )
       {
          BITMAPINFO * pPackedDib = NULL;
-         HDC          hdc;
 
          if( ! bMap3Dcolors )
             pPackedDib = PackedDibLoad( szBitmap );
 
          if( pPackedDib || bMap3Dcolors )
          {
-            hdc = GetDC( hCtrl );
+            int iWidth, iHeight;
+
+            HDC hdc = GetDC( hCtrl );
 
             if( ! bMap3Dcolors )
             {
@@ -8390,17 +8389,17 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, UINT uiBitmap, int iExpWid
                SelectObject( hdcTarget, hBitmap2 );
 
                bResult = StretchBlt(
-                  hdcTarget,   /* handle to destination DC                 */
+                  hdcTarget,   /* handle to destination DC */
                   0,           /* x-coord of destination upper-left corner */
                   0,           /* y-coord of destination upper-left corner */
-                  iExpWidth,   /* width of destination rectangle           */
-                  iExpHeight,  /* height of destination rectangle          */
-                  hdcSource,   /* handle to source DC                      */
-                  0,           /* x-coord of source upper-left corner      */
-                  0,           /* y-coord of source upper-left corner      */
-                  iWidth,      /* width of source rectangle                */
-                  iHeight,     /* height of source rectangle               */
-                  SRCCOPY );   /* raster operation code                    */
+                  iExpWidth,   /* width of destination rectangle */
+                  iExpHeight,  /* height of destination rectangle */
+                  hdcSource,   /* handle to source DC */
+                  0,           /* x-coord of source upper-left corner */
+                  0,           /* y-coord of source upper-left corner */
+                  iWidth,      /* width of source rectangle */
+                  iHeight,     /* height of source rectangle */
+                  SRCCOPY );   /* raster operation code */
 
                if( ! bResult )
                {

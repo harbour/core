@@ -49,7 +49,7 @@
 
 #include "hbgtwvw.h"
 
-/* wvw_pbCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
+/* wvw_pbCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset, ;
  *               nStretchBitmap, lMap3Dcolors)
  * create pushbutton for window nWinNum
  * nTop: row of top/left corner (in character unit)
@@ -68,8 +68,8 @@
  *               0: bitmap is not stretch
  *              (default is 1)
  *
- * lMap3Dcolors: defaults to .f.
- *          if .t. the following color mapping will be performed:
+ * lMap3Dcolors: defaults to .F.
+ *          if .T. the following color mapping will be performed:
  *             RGB(192,192,192) --> COLOR_3DFACE   ("transparent")
  *             RGB(128,128,128) --> COLOR_3DSHADOW
  *             RGB(223,223,223) --> COLOR_3DLIGHT
@@ -169,7 +169,7 @@ HB_FUNC( WVW_PBSETFOCUS )
 }
 
 /* wvw_pbIsFocused( [nWinNum], nPBid )
- * returns .t. if the focus is on button nPBid in window nWinNum
+ * returns .T. if the focus is on button nPBid in window nWinNum
  */
 HB_FUNC( WVW_PBISFOCUSED )
 {
@@ -180,7 +180,7 @@ HB_FUNC( WVW_PBISFOCUSED )
 
 /* wvw_pbEnable( [nWinNum], nButtonId, [lToggle] )
  *  enable/disable button nButtonId on window nWinNum
- * (lToggle defaults to .t., ie. enabling the button)
+ * (lToggle defaults to .T., ie. enabling the button)
  *  return previous state of the button (TRUE:enabled FALSE:disabled)
  * (if nButtonId is invalid, this function returns FALSE too)
  */
@@ -206,7 +206,7 @@ HB_FUNC( WVW_PBENABLE )
 /* wvw_pbSetCodeblock( [nWinNum], nPBid, bBlock )
  * assign (new) codeblock bBlock to button nPBid for window nWinNum
  *
- * return .t. if successful
+ * return .T. if successful
  */
 HB_FUNC( WVW_PBSETCODEBLOCK )
 {
@@ -258,7 +258,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
  * using other styles like BS_MULTILINE may also be usefull,
  * but I haven't tried that
  *
- * this function always return .t.
+ * this function always return .T.
  */
 HB_FUNC( WVW_PBSETSTYLE )
 {
@@ -270,9 +270,8 @@ HB_FUNC( WVW_PBSETSTYLE )
    hb_retl( HB_TRUE );
 }
 
-/* wvw_pbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+/* wvw_pbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
  *                             lItalic, lUnderline, lStrikeout
- *
  * this will initialize font for ALL pushbuttons in window nWinNum
  * (including ones created later on)
  */

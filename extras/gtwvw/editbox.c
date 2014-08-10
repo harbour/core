@@ -67,8 +67,8 @@
  *         nType  : event type (EN_SETFOCUS/EN_KILLFOCUS supported)
  *
  *
- * lMultiline: .f. :: single line editbox (default)
- *            .t. :: multi line editbox
+ * lMultiline: .F. :: single line editbox (default)
+ *            .T. :: multi line editbox
  * mapped internally into two types of editbox:
  *         WVW_EB_SINGLELINE (1): single line editbox
  *         WVW_EB_MULTILINE (2): multi line editbox
@@ -276,7 +276,7 @@ HB_FUNC( WVW_EBSETFOCUS )
 }
 
 /* wvw_ebIsFocused( [nWinNum], nEditId )
- * returns .t. if the focus is on editbox nEditId in window nWinNum
+ * returns .T. if the focus is on editbox nEditId in window nWinNum
  */
 HB_FUNC( WVW_EBISFOCUSED )
 {
@@ -287,7 +287,7 @@ HB_FUNC( WVW_EBISFOCUSED )
 
 /* wvw_ebEnable( [nWinNum], nEditId, [lEnable] )
  *  enable/disable editbox nEditId on window nWinNum
- * (lEnable defaults to .t., ie. enabling the editbox)
+ * (lEnable defaults to .T., ie. enabling the editbox)
  *  return previous state of the editbox (TRUE:enabled FALSE:disabled)
  * (if nEditId is invalid, this function returns FALSE too)
  */
@@ -336,7 +336,7 @@ HB_FUNC( WVW_EBEDITABLE )
 /* wvw_ebSetCodeblock( [nWinNum], nEBid, bBlock )
  * assign (new) codeblock bBlock to editbox nEBid for window nWinNum
  *
- * return .t. if successful
+ * return .T. if successful
  */
 HB_FUNC( WVW_EBSETCODEBLOCK )
 {
@@ -365,7 +365,7 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_ebSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+/* wvw_ebSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
  *                             lItalic, lUnderline, lStrikeout
  *
  * this will initialize font for ALL editboxes in window nWinNum
@@ -424,9 +424,9 @@ HB_FUNC( WVW_EBSETFONT )
 }
 
 /* wvw_ebIsMultiline( [nWinNum], nEBid )
- * returns .t. if editbox nEBid in window nWinNum is multiline
- * otherwise .f.
- * Also returns .f. if nEBid not valid
+ * returns .T. if editbox nEBid in window nWinNum is multiline
+ * otherwise .F.
+ * Also returns .F. if nEBid not valid
  */
 HB_FUNC( WVW_EBISMULTILINE )
 {
@@ -438,7 +438,7 @@ HB_FUNC( WVW_EBISMULTILINE )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_ebGetText( [nWinNum], nEBid,;
+/* wvw_ebGetText( [nWinNum], nEBid, ;
  *                          lSoftBreak )
  * returns current text from editbox nEBid in window nWinNum
  * lSoftBreak: Default is .F.
@@ -491,7 +491,7 @@ HB_FUNC( WVW_EBGETTEXT )
 
 /* wvw_ebSetText( [nWinNum], nEBid, cText )
  * set current text of editbox nEBid in window nWinNum
- * returns .t. if successful, .f. in case of error (eg. nEBid not valid)
+ * returns .T. if successful, .F. in case of error (eg. nEBid not valid)
  */
 HB_FUNC( WVW_EBSETTEXT )
 {
@@ -525,8 +525,8 @@ HB_FUNC( WVW_EBSETTEXT )
  * get selected text editbox nEBid in window nWinNum
  * the start selected text (0-based) is in nstart
  * the end selected text (0-based) is in nend
- * returns .t. if operation successful
- * returns .f. if not (eg. nEBid not valid)
+ * returns .T. if operation successful
+ * returns .F. if not (eg. nEBid not valid)
  */
 HB_FUNC( WVW_EBGETSEL )
 {
@@ -555,8 +555,8 @@ HB_FUNC( WVW_EBGETSEL )
  * the end selected text (0-based) is in nend
  * notes: nstart may be > nend (flipped selection)
  * notes: to selet all text: wvw_ebSetSel(nwinnum, nebid, 0, -1)
- * returns .t. if operation successful
- * returns .f. if not (eg. nEBid not valid)
+ * returns .T. if operation successful
+ * returns .F. if not (eg. nEBid not valid)
  */
 HB_FUNC( WVW_EBSETSEL )
 {

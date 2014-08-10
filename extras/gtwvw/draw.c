@@ -577,7 +577,7 @@ HB_FUNC( WVW_DRAWTEXTBOX )
    SelectObject( wvw_win->hdc, oldFont );
 }
 
-/* wvw_DrawProgressBar( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlTLBR, nPercent,;
+/* wvw_DrawProgressBar( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlTLBR, nPercent, ;
                         nBackColor, nBarColor, cImage, lVertical, nDirection ) */
 HB_FUNC( WVW_DRAWPROGRESSBAR )
 {
@@ -687,7 +687,7 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
 }
 
 
-/* wvw_DrawBoxGet( [nWinNum], nRow, nCol, nWidth,;
+/* wvw_DrawBoxGet( [nWinNum], nRow, nCol, nWidth, ;
  *                 aOffset )   <-- additional parm, not exist in GTWVT
  *
  * NOTES: unlike GTWVT, GTWVW draw white lines on outer right and outer bottom
@@ -761,7 +761,7 @@ HB_FUNC( WVW_DRAWBOXGET )
    hb_retl( HB_TRUE );
 }
 
-/* wvw_DrawBoxGet_XP( [nWinNum], nRow, nCol, nWidth,;
+/* wvw_DrawBoxGet_XP( [nWinNum], nRow, nCol, nWidth, ;
  *                    aOffset )   <-- additional parm, not exist in GTWVT
  *
  * NOTES: unlike GTWVT, GTWVW draw white lines on outer right and outer bottom
@@ -1086,7 +1086,7 @@ HB_FUNC( WVW_DRAWBOXGROUPRAISED )
 
 /* wvw_DrawImage( nWinNum, ;
                   nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, ;
-                  lTight/aOffset,;
+                  lTight/aOffset, ;
                   lTransparent) <--none in gtwvt */
 
 /* 2006-07-24 Notes:
@@ -1096,7 +1096,7 @@ HB_FUNC( WVW_DRAWBOXGROUPRAISED )
    if nBottom and nRight are BOTH NIL then original image dimension is used
 
    (2) Transparency
-   if lTransparent is .t., top-left pixel is used as the transparent color,
+   if lTransparent is .T., top-left pixel is used as the transparent color,
 
    (3) Caching
    Image will always be cached. See the WARNING in hb_gt_wvw_DrawImage().
@@ -1207,7 +1207,7 @@ HB_FUNC( WVW_DRAWIMAGE )
 
 /* wvw_DrawImage_Resource( nWinNum, ;
                   nTop, nLeft, nBottom, nRight, nPictureResource/cPictureResource, ;
-                  lTight/aOffset,;
+                  lTight/aOffset, ;
                   lTransparent) <--none in gtwvt */
 
 /* 2006-07-24 Notes:
@@ -1217,7 +1217,7 @@ HB_FUNC( WVW_DRAWIMAGE )
    if nBottom and nRight are BOTH NIL then original image dimension is used
 
    (2) Transparency
-   if lTransparent is .t., top-left pixel is used as the transparent color,
+   if lTransparent is .T., top-left pixel is used as the transparent color,
 
    (3) Caching
    Image will always be cached. See the WARNING in hb_gt_wvw_DrawImage().

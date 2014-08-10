@@ -49,7 +49,7 @@
 
 #include "hbgtwvw.h"
 
-/* wvw_cxCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
+/* wvw_cxCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset, ;
  *               nStretchBitmap, lMap3Dcolors)
  * create CHECKBOX for window nWinNum
  * nTop: row of top/left corner (in character unit)
@@ -65,8 +65,8 @@
  *                0.5: bitmap covers 50% of button
  *                0: bitmap is not stretch
  *               (default is 1)
- * lMap3Dcolors: defaults to .f.
- *           if .t. the following color mapping will be performed:
+ * lMap3Dcolors: defaults to .F.
+ *           if .T. the following color mapping will be performed:
  *              RGB(192,192,192) --> COLOR_3DFACE   ("transparent")
  *              RGB(128,128,128) --> COLOR_3DSHADOW
  *              RGB(223,223,223) --> COLOR_3DLIGHT
@@ -165,7 +165,7 @@ HB_FUNC( WVW_CXSETFOCUS )
 
 /* wvw_cxEnable( [nWinNum], nButtonId, [lToggle] )
  * enable/disable checkbox nButtonId on window nWinNum
- * (lToggle defaults to .t., ie. enabling the checkbox)
+ * (lToggle defaults to .T., ie. enabling the checkbox)
  * return previous state of the checkbox (TRUE:enabled FALSE:disabled)
  * (if nButtonId is invalid, this function returns FALSE too)
  */
@@ -193,7 +193,7 @@ HB_FUNC( WVW_CXENABLE )
 /* wvw_cxSetCodeblock( [nWinNum], nCXid, bBlock )
  * assign (new) codeblock bBlock to button nCXid for window nWinNum
  *
- * return .t. if successful
+ * return .T. if successful
  */
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
@@ -226,7 +226,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
  *           0==unchecked    BST_UNCHECKED
  *           1==checked      BST_CHECKED
  *           2==indeterminate BST_INDETERMINATE
- * this function always returns .t.
+ * this function always returns .T.
  */
 HB_FUNC( WVW_CXSETCHECK )
 {

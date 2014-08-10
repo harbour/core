@@ -291,7 +291,7 @@ HB_FUNC( WVW_CBSETFOCUS )
 }
 
 /* wvw_cbIsFocused( [nWinNum], nComboId )
- * returns .t. if the focus is on combobox nComboId in window nWinNum
+ * returns .T. if the focus is on combobox nComboId in window nWinNum
  */
 HB_FUNC( WVW_CBISFOCUSED )
 {
@@ -302,7 +302,7 @@ HB_FUNC( WVW_CBISFOCUSED )
 
 /* wvw_cbEnable( [nWinNum], nComboId, [lEnable] )
  * enable/disable button nComboId on window nWinNum
- *(lEnable defaults to .t., ie. enabling the combobox)
+ *(lEnable defaults to .T., ie. enabling the combobox)
  * return previous state of the combobox (TRUE:enabled FALSE:disabled)
  *(if nComboId is invalid, this function returns FALSE too)
  */
@@ -330,7 +330,7 @@ HB_FUNC( WVW_CBENABLE )
 /* wvw_cbSetCodeblock( [nWinNum], nCBid, bBlock )
  * assign (new) codeblock bBlock to combobox nCBid for window nWinNum
  *
- * return .t. if successful
+ * return .T. if successful
  */
 HB_FUNC( WVW_CBSETCODEBLOCK )
 {
@@ -359,7 +359,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_cbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+/* wvw_cbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
  *                             lItalic, lUnderline, lStrikeout
  *
  * this will initialize font for ALL comboboxes in window nWinNum
@@ -419,7 +419,7 @@ HB_FUNC( WVW_CBSETFONT )
 /* wvw_cbSetIndex( [nWinNum], nCBid, nIndex )
  *  set current selection of combobox nCBid in window nWinNum to nIndex
  *  (nIndex is 0 based)
- *  returns .t. if successful.
+ *  returns .T. if successful.
  *
  * NOTE: the better name to this function should be wvw_CBSetCurSel()
  *      but that name is already used.
@@ -509,8 +509,8 @@ HB_FUNC( WVW_CBGETCURTEXT )
 
 /* wvw_cbIsDropped( [nWinNum], nCBid )
  * get current dropped state of combobox nCBid in window nWinNum
- * returns .t. if listbox is being shown, otherwise .f.
- * Also returns .f. if nCBid not valid
+ * returns .T. if listbox is being shown, otherwise .F.
+ * Also returns .F. if nCBid not valid
  */
 HB_FUNC( WVW_CBISDROPPED )
 {
