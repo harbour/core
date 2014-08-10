@@ -263,7 +263,7 @@ HB_FUNC( WVW_CXSETFONT )
    WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
-   HB_BOOL retval = HB_TRUE;
+   HB_BOOL fResult = HB_TRUE;
 
    wvw->lfCX.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
    wvw->lfCX.lfWidth          = hb_parnldef( 4, wvw->lfCX.lfWidth );
@@ -302,10 +302,10 @@ HB_FUNC( WVW_CXSETFONT )
          DeleteObject( hOldFont );
       }
       else
-         retval = HB_FALSE;
+         fResult = HB_FALSE;
    }
 
-   hb_retl( retval );
+   hb_retl( fResult );
 }
 
 HB_FUNC( WVW_CXSTATUSFONT )

@@ -278,7 +278,7 @@ HB_FUNC( WVW_PBSETFONT )
    WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
-   HB_BOOL retval = HB_TRUE;
+   HB_BOOL fResult = HB_TRUE;
 
    wvw->lfPB.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
    wvw->lfPB.lfWidth          = hb_parnldef( 4, wvw->lfPB.lfWidth );
@@ -316,8 +316,8 @@ HB_FUNC( WVW_PBSETFONT )
          DeleteObject( hOldFont );
       }
       else
-         retval = HB_FALSE;
+         fResult = HB_FALSE;
    }
 
-   hb_retl( retval );
+   hb_retl( fResult );
 }

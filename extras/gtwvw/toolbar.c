@@ -340,26 +340,19 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
    HWND      hWnd    = wvw_win->hToolBar;
    RECT      rc;
 
-   PHB_ITEM aXY = hb_itemNew( NULL );
-
    if( hWnd && iButton >= 0 && SendMessage( hWnd, TB_GETRECT, ( WPARAM ) iButton, ( LPARAM ) &rc ) )
    {
-      RECT rcRect;
+      PHB_ITEM aXY = hb_itemArrayNew( 4 );
 
-      PHB_ITEM temp = hb_itemNew( NULL );
+      RECT rcRect = hb_gt_wvw_GetColRowFromXYRect( wvw_win, rc );
 
-      hb_arrayNew( aXY, 4 );
+      hb_arraySetNL( aXY, 1, HB_MAX( 0, rcRect.top ) );
+      hb_arraySetNL( aXY, 2, rcRect.left );
+      hb_arraySetNL( aXY, 3, HB_MIN( wvw_win->ROWS - 1, rcRect.bottom ) );
+      hb_arraySetNL( aXY, 4, rcRect.right );
 
-      rcRect = hb_gt_wvw_GetColRowFromXYRect( wvw_win, rc );
-      hb_arraySetForward( aXY, 1, hb_itemPutNL( temp, HB_MAX( 0, rcRect.top ) ) );
-      hb_arraySetForward( aXY, 2, hb_itemPutNL( temp, rcRect.left ) );
-
-      hb_arraySetForward( aXY, 3, hb_itemPutNL( temp, HB_MIN( wvw_win->ROWS - 1, rcRect.bottom ) ) );
-      hb_arraySetForward( aXY, 4, hb_itemPutNL( temp, rcRect.right ) );
-      hb_itemRelease( temp );
+      hb_itemReturnRelease( aXY );
    }
-
-   hb_itemReturnRelease( aXY );
 }
 
 

@@ -335,7 +335,7 @@ HB_FUNC( WVW_SBSETFONT )
    WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
-   HB_BOOL retval = HB_TRUE;
+   HB_BOOL fResult = HB_TRUE;
 
    wvw->lfSB.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
    wvw->lfSB.lfWidth          = hb_parnldef( 4, wvw->lfSB.lfWidth );
@@ -362,10 +362,10 @@ HB_FUNC( WVW_SBSETFONT )
          DeleteObject( hOldFont );
       }
       else
-         retval = HB_FALSE;
+         fResult = HB_FALSE;
    }
 
-   hb_retl( retval );
+   hb_retl( fResult );
 }
 
 
@@ -662,7 +662,7 @@ HB_FUNC( WVW_XBENABLE )
    HWND hWnd    = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
    if( hWnd && uiFlags <= ESB_DISABLE_BOTH )
-      hb_retl( EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
+      hb_retl( ( HB_BOOL ) EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
    else
       hb_retl( HB_FALSE );
 }
@@ -679,7 +679,7 @@ HB_FUNC( WVW_XBSHOW )
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
    if( hWnd )
-      hb_retl( ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
+      hb_retl( ( HB_BOOL ) ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
    else
       hb_retl( HB_FALSE );
 }

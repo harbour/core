@@ -452,7 +452,7 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
    HB_UINT    nWin    = WVW_WHICH_WINDOW;
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   HB_BOOL bGF = HB_FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -499,10 +499,10 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
       gRect.UpperLeft  = 0;
       gRect.LowerRight = 1;
 
-      bGF = ( HB_BOOL ) wvw->a.pfnGF( wvw_win->hdc, vert, 2, &gRect, 1, iMode );
+      fResult = ( HB_BOOL ) wvw->a.pfnGF( wvw_win->hdc, vert, 2, &gRect, 1, iMode );
    }
 
-   hb_retl( bGF );
+   hb_retl( fResult );
 }
 
 
@@ -1113,7 +1113,7 @@ HB_FUNC( WVW_DRAWIMAGE )
    POINT xy;
    int   iLeft, iTop, iRight = 0, iBottom = 0;
 
-   HB_BOOL bResult;
+   HB_BOOL fResult;
 
    HB_BOOL bActBottom   = ! HB_ISNUM( 4 );
    HB_BOOL bActRight    = ! HB_ISNUM( 5 );
@@ -1198,11 +1198,11 @@ HB_FUNC( WVW_DRAWIMAGE )
    }
 
    if( HB_ISNUM( 6 ) )
-      bResult = hb_gt_wvw_RenderPicture( nWin, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, wvw->a.iPicture[ hb_parni( 6 ) - 1 ], bTransparent );
+      fResult = hb_gt_wvw_RenderPicture( nWin, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, wvw->a.iPicture[ hb_parni( 6 ) - 1 ], bTransparent );
    else
-      bResult = hb_gt_wvw_DrawImage( nWin, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, hb_parcx( 6 ), bTransparent );
+      fResult = hb_gt_wvw_DrawImage( nWin, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, hb_parcx( 6 ), bTransparent );
 
-   hb_retl( bResult );
+   hb_retl( fResult );
 }
 
 /* wvw_DrawImage_Resource( nWinNum, ;
@@ -1654,7 +1654,7 @@ HB_FUNC( WVW_DRAWELLIPSE )
    SelectObject( wvw_win->hdc, wvw->a.currentBrush );
    SelectObject( wvw_win->hdc, wvw->a.currentPen );
 
-   hb_retl( Ellipse( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
+   hb_retl( ( HB_BOOL ) Ellipse( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
 }
 
 
@@ -1700,7 +1700,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
    else
       SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
-   hb_retl( Rectangle( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
+   hb_retl( ( HB_BOOL ) Rectangle( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
 }
 
 /* wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, ;
@@ -1750,7 +1750,7 @@ HB_FUNC( WVW_DRAWROUNDRECT )
    SelectObject( wvw_win->hdc, wvw->a.currentBrush );
    SelectObject( wvw_win->hdc, wvw->a.currentPen );
 
-   hb_retl( RoundRect( wvw_win->hdc, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
+   hb_retl( ( HB_BOOL ) RoundRect( wvw_win->hdc, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
 }
 
 
@@ -1787,7 +1787,7 @@ HB_FUNC( WVW_DRAWFOCUSRECT )
    rc.bottom = xy.y - 1 + iOffBottom;
    rc.right  = xy.x - 1 + iOffRight;
 
-   hb_retl( DrawFocusRect( wvw_win->hdc, &rc ) );
+   hb_retl( ( HB_BOOL ) DrawFocusRect( wvw_win->hdc, &rc ) );
 }
 
 /* NOTE: this is compatibility function with GTWVT similar with wvw_FillRectangle() */
@@ -1832,7 +1832,7 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 
    if( hBrush )
    {
-      hb_retl( FillRect( wvw_win->hdc, &rc, hBrush ) );
+      hb_retl( ( HB_BOOL ) FillRect( wvw_win->hdc, &rc, hBrush ) );
 
       SelectObject( pWindowMainData->hdc, wvw->a.OriginalBrush );
       DeleteObject( hBrush );

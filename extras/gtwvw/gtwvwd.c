@@ -1411,14 +1411,16 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iX = hb_itemGetNI( hb_arrayGetItemPtr( pInfo->pNewVal, 1 ) );
 
          if( iY > 0 )
+         {
 #if 0
-            HB_BOOL bOldCentre = wvw_win->CentreWindow;
-         pWVT->CentreWindow = pWVT->bMaximized;
+            HB_BOOL fOldCentre = wvw_win->CentreWindow;
+            pWVT->CentreWindow = pWVT->bMaximized;
 #endif
             hb_gt_wvw_bSetMode( wvw_win, ( USHORT ) ( iY / wvw_win->PTEXTSIZE.y ), ( USHORT ) ( iX / wvw_win->PTEXTSIZE.x ) );
 #if 0
-         wvw_win->CentreWindow = bOldCentre;
+            wvw_win->CentreWindow = fOldCentre;
 #endif
+         }
          break;
       }
 
@@ -5444,7 +5446,7 @@ static void  hb_gt_wvw_vSetAttribute( WVW_WIN * wvw_win, int iTop, int iLeft, in
 
 static HB_BOOL hb_gt_wvw_bSetMode( WVW_WIN * wvw_win, USHORT row, USHORT col )
 {
-   HB_BOOL bResult = HB_FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( row <= WVW_MAX_ROWS && col <= WVW_MAX_COLS )
    {
@@ -5461,7 +5463,7 @@ static HB_BOOL hb_gt_wvw_bSetMode( WVW_WIN * wvw_win, USHORT row, USHORT col )
              * x TODO: I THINK I am right to keep it, am I?
              */
             if( hb_gt_wvwValidWindowSize( wvw_win, row, col, hFont, wvw_win->fontWidth, NULL, NULL ) )
-               bResult = hb_gt_wvwInitWindow( wvw_win, wvw_win->hWnd, col, row );
+               fResult = hb_gt_wvwInitWindow( wvw_win, wvw_win->hWnd, col, row );
 
             DeleteObject( hFont );
 #if 0
@@ -5470,9 +5472,9 @@ static HB_BOOL hb_gt_wvw_bSetMode( WVW_WIN * wvw_win, USHORT row, USHORT col )
          }
       }
       else
-         bResult = hb_gt_wvwAllocSpBuffer( wvw_win, row, col );
+         fResult = hb_gt_wvwAllocSpBuffer( wvw_win, row, col );
    }
-   return bResult;
+   return fResult;
 }
 
 static void  hb_gt_wvw_vxPutch( WVW_WIN * wvw_win, USHORT iRow, USHORT iCol, int bColor, BYTE bChar )
@@ -5814,7 +5816,7 @@ int hb_gt_wvw_GetWindowTitle( HB_UINT nWin, char * title, int length )
 HB_BOOL hb_gt_wvw_SetFont( HB_UINT nWin, const TCHAR * fontFace, int height, int width, int Bold, int Quality )
 {
    size_t    size;
-   HB_BOOL   bResult = HB_FALSE;
+   HB_BOOL   fResult = HB_FALSE;
    HFONT     hFont   = hb_gt_wvw_GetFont( fontFace, height, width, Bold, Quality, s_wvw->pWin[ nWin ]->CodePage );
    WVW_WIN * wvw_win = s_wvw->pWin[ nWin ];
 
@@ -5853,11 +5855,11 @@ HB_BOOL hb_gt_wvw_SetFont( HB_UINT nWin, const TCHAR * fontFace, int height, int
             hb_gt_wvwKillCaret( wvw_win );
             hb_gt_wvwCreateCaret( wvw_win );
          }
-         bResult = HB_TRUE;
+         fResult = HB_TRUE;
       }
       DeleteObject( hFont );
    }
-   return bResult;
+   return fResult;
 }
 
 
@@ -5944,7 +5946,7 @@ HB_BOOL hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeigh
 HB_BOOL hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHeight )
 {
    HBITMAP hBitmap;
-   HB_BOOL bResult = HB_TRUE;
+   HB_BOOL fResult = HB_TRUE;
 
    *pWidth  = 0;
    *pHeight = 0;
@@ -5962,12 +5964,12 @@ HB_BOOL hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHe
       if( ! pPic )
          return HB_FALSE;
 
-      bResult = hb_gt_wvw_GetIPictDimension( pPic, pWidth, pHeight );
+      fResult = hb_gt_wvw_GetIPictDimension( pPic, pWidth, pHeight );
 
       hb_gt_wvw_DestroyPicture( pPic );
    }
 
-   return bResult;
+   return fResult;
 }
 
 static void DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, short xStart, short yStart,
@@ -6068,7 +6070,7 @@ static void DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, short xStart, short
 HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const char * image, HB_BOOL bTransparent )
 {
    HBITMAP hBitmap;
-   HB_BOOL bResult;
+   HB_BOOL fResult;
    int     iWidth, iHeight;
    HDC     hdc, hdcMem;
 
@@ -6120,7 +6122,7 @@ HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const
                              ( short ) y1,
                              wd,
                              ht );
-      bResult = HB_TRUE;
+      fResult = HB_TRUE;
    }
    else
    {
@@ -6132,7 +6134,7 @@ HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const
 
       iOldMode = SetStretchBltMode( hdc, COLORONCOLOR );
 
-      bResult = StretchBlt(
+      fResult = ( HB_BOOL ) StretchBlt(
          hdc,                          /* handle to destination DC */
          x1,                           /* x-coord of destination upper-left corner */
          y1,                           /* y-coord of destination upper-left corner */
@@ -6152,7 +6154,7 @@ HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const
 
    ReleaseDC( wvw_win->hWnd, hdc );
 
-   return bResult;
+   return fResult;
 }
 
 
@@ -6192,7 +6194,7 @@ IPicture * hb_gt_wvw_LoadPicture( const char * image )
 
 HB_BOOL hb_gt_wvw_RenderPicture( HB_UINT nWin, int x1, int y1, int wd, int ht, IPicture * iPicture, HB_BOOL bTransp )
 {
-   HB_BOOL bResult = HB_FALSE;
+   HB_BOOL fResult = HB_FALSE;
 
    if( iPicture )
    {
@@ -6231,11 +6233,11 @@ HB_BOOL hb_gt_wvw_RenderPicture( HB_UINT nWin, int x1, int y1, int wd, int ht, I
                                    ht );
             ReleaseDC( wvw_win->hWnd, hdc );
 
-            bResult = HB_TRUE;
+            fResult = HB_TRUE;
          }
          else
-            bResult = HB_FALSE;
-         return bResult;
+            fResult = HB_FALSE;
+         return fResult;
       }
       /* endif bTransp, we use different method */
 
@@ -6279,10 +6281,10 @@ HB_BOOL hb_gt_wvw_RenderPicture( HB_UINT nWin, int x1, int y1, int wd, int ht, I
       SelectClipRgn( wvw_win->hdc, NULL );
       DeleteObject( hrgn1 );
 
-      bResult = HB_TRUE;
+      fResult = HB_TRUE;
    }
 
-   return bResult;
+   return fResult;
 }
 
 
@@ -6300,15 +6302,13 @@ COLORREF hb_gt_wvw_GetColorData( int iIndex )
 
 HB_BOOL hb_gt_wvw_SetColorData( int iIndex, COLORREF ulCr )
 {
-   HB_BOOL bResult = HB_FALSE;
-
    if( iIndex >= 0 && iIndex < 16 )
    {
       s_COLORS[ iIndex ] = ulCr;
-      bResult = HB_TRUE;
+      return HB_TRUE;
    }
-
-   return bResult;
+   else
+      return HB_FALSE;
 }
 
 
@@ -6868,7 +6868,7 @@ HB_FUNC( WVW_UNREACHEDBR )
  */
 HB_FUNC( WVW_SETMAINCOORD )
 {
-   HB_BOOL bOldMainCoordMode = s_wvw->fMainCoordMode;
+   HB_BOOL fOldMainCoordMode = s_wvw->fMainCoordMode;
 
    if( HB_ISLOG( 1 ) )
    {
@@ -6880,7 +6880,7 @@ HB_FUNC( WVW_SETMAINCOORD )
          hb_gt_wvw_SetCurWindow( 0 );
    }
 
-   hb_retl( bOldMainCoordMode );
+   hb_retl( fOldMainCoordMode );
 }
 
 /* wvw_AddRows( [nWinNum], nRows)
@@ -7057,21 +7057,21 @@ HB_FUNC( WVW_ENABLEMAXIMIZE )
    HB_UINT  nWin    = WVW_WHICH_WINDOW;
    LONG_PTR lpStyle = GetWindowLongPtr( s_wvw->pWin[ nWin ]->hWnd, GWL_STYLE );
 
-   HB_BOOL bState = ( lpStyle & ( LONG_PTR ) WS_MAXIMIZEBOX ) != 0;
+   HB_BOOL fState = ( lpStyle & ( LONG_PTR ) WS_MAXIMIZEBOX ) != 0;
 
-   hb_retl( bState );
+   hb_retl( fState );
 
    if( HB_ISLOG( 2 ) )
    {
       if( hb_parl( 2 ) )
       {
-         if( bState )
+         if( fState )
             return;          /* no need */
          lpStyle |= ( LONG_PTR ) WS_MAXIMIZEBOX;
       }
       else
       {
-         if( ! bState )
+         if( ! fState )
             return;           /* no need */
          lpStyle &= ~( LONG_PTR ) WS_MAXIMIZEBOX;
       }
@@ -7127,7 +7127,7 @@ HB_FUNC( WVW_SETPAINTREFRESH )
 /* TODO: do you want to make it window selective? */
 HB_FUNC( WVW_SETVERTCARET )
 {
-   HB_BOOL   bOldVertCaret = s_wvw->fVertCaret;
+   HB_BOOL   fOldVertCaret = s_wvw->fVertCaret;
    WVW_WIN * wvw_win       = s_wvw->pWin[ s_wvw->usNumWindows - 1 ];
 
    if( HB_ISLOG( 1 ) )
@@ -7139,7 +7139,7 @@ HB_FUNC( WVW_SETVERTCARET )
       hb_gt_wvwCreateCaret( wvw_win );
    }
 
-   hb_retl( bOldVertCaret );
+   hb_retl( fOldVertCaret );
 }
 
 /* wvw_SetDefCentreWindow( [lCentre] )
@@ -7150,12 +7150,12 @@ HB_FUNC( WVW_SETVERTCARET )
  */
 HB_FUNC( WVW_SETDEFCENTREWINDOW )
 {
-   HB_BOOL bOldDef = s_wvw->fDevCentreWindow;
+   HB_BOOL fOldDef = s_wvw->fDevCentreWindow;
 
    if( HB_ISLOG( 1 ) )
       s_wvw->fDevCentreWindow = hb_parl( 1 );
 
-   hb_retl( bOldDef );
+   hb_retl( fOldDef );
 }
 
 /* wvw_SetDefHCentreWindow( [lCentre] )
@@ -7166,12 +7166,12 @@ HB_FUNC( WVW_SETDEFCENTREWINDOW )
  */
 HB_FUNC( WVW_SETDEFHCENTREWINDOW )
 {
-   HB_BOOL bOldDef = s_wvw->fDevHCentreWindow;
+   HB_BOOL fOldDef = s_wvw->fDevHCentreWindow;
 
    if( HB_ISLOG( 1 ) )
       s_wvw->fDevHCentreWindow = hb_parl( 1 );
 
-   hb_retl( bOldDef );
+   hb_retl( fOldDef );
 }
 
 /* wvw_SetDefVCentreWindow( [lCentre] )
@@ -7182,12 +7182,12 @@ HB_FUNC( WVW_SETDEFHCENTREWINDOW )
  */
 HB_FUNC( WVW_SETDEFVCENTREWINDOW )
 {
-   HB_BOOL bOldDef = s_wvw->fDevVCentreWindow;
+   HB_BOOL fOldDef = s_wvw->fDevVCentreWindow;
 
    if( HB_ISLOG( 1 ) )
       s_wvw->fDevVCentreWindow = hb_parl( 1 );
 
-   hb_retl( bOldDef );
+   hb_retl( fOldDef );
 }
 
 /* wvw_SetDefLineSpacing( [nLineSpacing] )
@@ -7351,12 +7351,12 @@ HB_FUNC( WVW_RECURSECBLOCK )
  */
 HB_FUNC( WVW_NOSTARTUPSUBWINDOW )
 {
-   HB_BOOL bOldNOSTARTUPSUBWINDOW = s_wvw->fNOSTARTUPSUBWINDOW;
+   HB_BOOL fOldNOSTARTUPSUBWINDOW = s_wvw->fNOSTARTUPSUBWINDOW;
 
    if( HB_ISLOG( 1 ) )
       s_wvw->fNOSTARTUPSUBWINDOW = hb_parl( 1 );
 
-   hb_retl( bOldNOSTARTUPSUBWINDOW );
+   hb_retl( fOldNOSTARTUPSUBWINDOW );
 }
 
 
@@ -7802,7 +7802,7 @@ HB_FUNC( WVW_RESTORE )
 /* about WVW_SIZE callback function:
 
    parameters:
-   function WVW_SIZE(nWinNum, hWnd, message, wParam, lParam)
+   function WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
 
    notes:
  * this function is called by gtwvw AFTER the size is changed
@@ -7811,22 +7811,8 @@ HB_FUNC( WVW_RESTORE )
  * WARNING: this function may be called AFTER xharbour vm cleans up static variables,
               so do NOT use static variables in this function (unless you guard the usage properly)!
               you may however uses MEMVAR such as PUBLIC variables
-
  */
 
-
-/* NOTE: this is not supported in GTWVW */
-#if 0
-HB_FUNC( WVW_SETGUI )
-{
-   HB_BOOL bGui = s_wvw->a.bGui;
-
-   if( HB_ISLOG( 1 ) )
-      s_wvw->a.bGui = hb_parl( 1 );
-
-   hb_retl( bGui );
-}
-#endif
 
 /* Helper routine.  Take an input pointer, return closest
  * pointer that is aligned on a DWORD (4 byte) boundary.
@@ -7969,7 +7955,6 @@ IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, LONG * lwidth, LONG 
    2004-09-08 TODO: GTWVT deliberately adds new parm aOffset before nRoundHeight
                     I hate it when doing such thing
  */
-
 
 /* Supporting functions */
 
@@ -8375,7 +8360,7 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
             {
                HDC     hdcSource, hdcTarget;
                HBITMAP hBitmap2;
-               BOOL    bResult;
+               BOOL    fResult;
 
                hdcSource = CreateCompatibleDC( hdc );
                SelectObject( hdcSource, hBitmap );
@@ -8384,7 +8369,7 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
                hBitmap2  = CreateCompatibleBitmap( hdcSource, iExpWidth, iExpHeight );
                SelectObject( hdcTarget, hBitmap2 );
 
-               bResult = StretchBlt(
+               fResult = StretchBlt(
                   hdcTarget,   /* handle to destination DC */
                   0,           /* x-coord of destination upper-left corner */
                   0,           /* y-coord of destination upper-left corner */
@@ -8397,7 +8382,7 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
                   iHeight,     /* height of source rectangle */
                   SRCCOPY );   /* raster operation code */
 
-               if( ! bResult )
+               if( ! fResult )
                {
                   MessageBox( NULL, TEXT( "Cannot shrink/stretch bitmap for WVW control" ), s_wvw->szAppName, MB_ICONERROR );
 
@@ -8785,7 +8770,7 @@ static void s_RunControlBlock( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, UINT mes
          pcd->nClass == WVW_CONTROL_COMBOBOX ||
          pcd->nClass == WVW_CONTROL_EDITBOX ) && pcd->pBlock )
    {
-      PHB_ITEM phiWinNum, phiXBid, phiXBmsg, phiXBpos;
+      PHB_ITEM phiWin, phiId, phiMsg, phiPos;
       PHB_ITEM pReturn;
 
       if( pcd->fBusy )
@@ -8795,28 +8780,22 @@ static void s_RunControlBlock( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, UINT mes
       pcd->fBusy = HB_TRUE;
       pcd->nBusy++;
 
-      phiWinNum = hb_itemNew( NULL );
-      hb_itemPutNI( phiWinNum, ( int ) nWin );
-
-      phiXBid = hb_itemNew( NULL );
-      hb_itemPutNI( phiXBid, ( int ) pcd->nId );
+      phiWin = hb_itemPutNL( NULL, nWin );
+      phiId  = hb_itemPutNL( NULL, pcd->nId );
 
       if( pcd->nClass == WVW_CONTROL_SCROLLBAR )
       {
-         phiXBmsg = hb_itemNew( NULL );
-         hb_itemPutNI( phiXBmsg, ( int ) LOWORD( wParam ) );
+         phiMsg = hb_itemPutNI( NULL, ( int ) LOWORD( wParam ) );
+         phiPos = hb_itemPutNI( NULL, ( int ) HIWORD( wParam ) );
 
-         phiXBpos = hb_itemNew( NULL );
-         hb_itemPutNI( phiXBpos, ( int ) HIWORD( wParam ) );
-
-         pReturn = hb_itemDo( pcd->pBlock, 4, phiWinNum, phiXBid, phiXBmsg, phiXBpos );
+         pReturn = hb_itemDo( pcd->pBlock, 4, phiWin, phiId, phiMsg, phiPos );
          hb_itemRelease( pReturn );
-         hb_itemRelease( phiXBmsg );
-         hb_itemRelease( phiXBpos );
+         hb_itemRelease( phiMsg );
+         hb_itemRelease( phiPos );
       }
       else if( pcd->nClass == WVW_CONTROL_PUSHBUTTON )
       {
-         pReturn = hb_itemDo( pcd->pBlock, 2, phiWinNum, phiXBid );
+         pReturn = hb_itemDo( pcd->pBlock, 2, phiWin, phiId );
          hb_itemRelease( pReturn );
       }
       else if( pcd->nClass == WVW_CONTROL_COMBOBOX )
@@ -8850,17 +8829,14 @@ static void s_RunControlBlock( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, UINT mes
 #endif
 
                /* now execute the codeblock */
-               phiEvent = hb_itemNew( NULL );
-               hb_itemPutNI( phiEvent, iEventType );
+               phiEvent = hb_itemPutNI( NULL, iEventType );
+               phiIndex = hb_itemPutNI( NULL, iCurSel );
 
-               phiIndex = hb_itemNew( NULL );
-               hb_itemPutNI( phiIndex, ( int ) iCurSel );
+               pReturn = hb_itemDo( pcd->pBlock, 4, phiWin, phiId, phiEvent, phiIndex );
 
-               pReturn = hb_itemDo( pcd->pBlock, 4, phiWinNum, phiXBid, phiEvent, phiIndex );
                hb_itemRelease( pReturn );
                hb_itemRelease( phiEvent );
                hb_itemRelease( phiIndex );
-
          }
       }
       else if( pcd->nClass == WVW_CONTROL_EDITBOX )
@@ -8874,11 +8850,10 @@ static void s_RunControlBlock( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, UINT mes
             case EN_CHANGE:
 
                /* now execute the codeblock */
-               phiEvent = hb_itemNew( NULL );
+               phiEvent = hb_itemPutNI( NULL, ( int ) iEventType );
 
-               hb_itemPutNI( phiEvent, ( int ) iEventType );
+               pReturn = hb_itemDo( pcd->pBlock, 3, phiWin, phiId, phiEvent );
 
-               pReturn = hb_itemDo( pcd->pBlock, 3, phiWinNum, phiXBid, phiEvent );
                hb_itemRelease( pReturn );
                hb_itemRelease( phiEvent );
 
@@ -8886,8 +8861,8 @@ static void s_RunControlBlock( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, UINT mes
          }
       }
 
-      hb_itemRelease( phiWinNum );
-      hb_itemRelease( phiXBid );
+      hb_itemRelease( phiWin );
+      hb_itemRelease( phiId );
 
       pcd->nBusy--;
 
@@ -9690,16 +9665,12 @@ LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
 
    if( iKey != 0 )
    {
-      PHB_ITEM pCodeblock;
-      PHB_ITEM hiKey = hb_itemNew( NULL );
-      PHB_ITEM pReturn;
-      HB_BOOL  bCodeExec = HB_FALSE;
-
-      hb_itemPutNI( hiKey, iKey );
-
-      pCodeblock = hb_itemDoC( "SETKEY", 1, hiKey );
+      HB_BOOL  bCodeExec  = HB_FALSE;
+      PHB_ITEM hiKey      = hb_itemPutNI( NULL, iKey );
+      PHB_ITEM pCodeblock = hb_itemDoC( "SETKEY", 1, hiKey );
       if( HB_IS_EVALITEM( pCodeblock ) )
       {
+         PHB_ITEM pReturn;
          SetFocus( hWndParent );
          pReturn = hb_itemDo( pCodeblock, 0 );
          hb_itemRelease( pReturn );
