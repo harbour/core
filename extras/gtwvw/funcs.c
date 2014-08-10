@@ -351,9 +351,6 @@ HB_FUNC( WIN_DRAWTEXT )
 
 HB_FUNC( WVW_GBCREATE )
 {
-   int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-/* int  iStyle; */
-   UINT   uiPBid;
    USHORT usTop          = ( USHORT ) hb_parni( 2 ),
           usLeft         = ( USHORT ) hb_parni( 3 ),
           usBottom       = ( USHORT ) hb_parni( 4 ),
@@ -364,17 +361,16 @@ HB_FUNC( WVW_GBCREATE )
    double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
    BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
 
-   iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -1;
-   iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -1;
-   iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 1;
-   iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 1;
+   int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -1;
+   int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -1;
+   int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 1;
+   int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 1;
 
-   uiPBid = hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-                          szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-                          iOffTop, iOffLeft, iOffBottom, iOffRight,
-                          dStretch, bMap3Dcolors,
-                          BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE );
-   hb_retnl( ( LONG ) uiPBid );
+   hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
+      szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+      iOffTop, iOffLeft, iOffBottom, iOffRight,
+      dStretch, bMap3Dcolors,
+      BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE ) );
 }
 
 /* BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE
@@ -400,10 +396,10 @@ HB_FUNC( WVW_RBCREATE )
       int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
       hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-                             szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-                             iOffTop, iOffLeft, iOffBottom, iOffRight,
-                             dStretch, bMap3Dcolors,
-                             BS_AUTORADIOBUTTON /* | WS_GROUP */ ) );
+         szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+         iOffTop, iOffLeft, iOffBottom, iOffRight,
+         dStretch, bMap3Dcolors,
+         BS_AUTORADIOBUTTON /* | WS_GROUP */ ) );
    }
    else
       hb_retnl( 0 );
@@ -1150,6 +1146,7 @@ HB_FUNC( SETBITMAPRESOURCEID )
    }
    else /* system bitmap */
       iNewBitmap = ( int ) uiBitmap + iOffset;
+
    hb_retni( iNewBitmap );
 }
 
@@ -1667,7 +1664,6 @@ HB_FUNC( WVW_FILLRECTANGLE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    POINT      xy;
    int        iTop, iLeft, iBottom, iRight;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
@@ -1679,13 +1675,13 @@ HB_FUNC( WVW_FILLRECTANGLE )
    HBRUSH   hBrush;
    RECT     xyRect;
 
+   int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 0;
+
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-
-   iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 0;
 
    xy    = hb_gt_wvw_GetXYFromColRow( pWindowData, usLeft, usTop );
    iTop  = bTight ? xy.y + 2 : xy.y;
@@ -1698,7 +1694,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
    iBottom = xy.y - 1;
    iRight  = xy.x - 1;
 
-   /* Aplica OffSet */
+   /* Apply offSet */
    iTop    += iOffTop;
    iLeft   += iOffLeft;
    iBottom += iOffBottom;

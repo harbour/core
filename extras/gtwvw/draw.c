@@ -78,7 +78,6 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    POINT      xy;
    int        iTop, iLeft, iBottom, iRight, x, y;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    RECT       rect;
    HFONT      oldFont;
    int        oldTextAlign, iAlignHorz, iAlignVert, iAlignH = 0, iAlignV;
@@ -91,10 +90,10 @@ HB_FUNC( WVW_DRAWLABELOBJ )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   iOffTop    = HB_ISARRAY( 12 ) ? hb_parvni( 12, 1 ) :  0;
-   iOffLeft   = HB_ISARRAY( 12 ) ? hb_parvni( 12, 2 ) :  0;
-   iOffBottom = HB_ISARRAY( 12 ) ? hb_parvni( 12, 3 ) :  0;
-   iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) :  0;
+   int iOffTop    = HB_ISARRAY( 12 ) ? hb_parvni( 12, 1 ) :  0;
+   int iOffLeft   = HB_ISARRAY( 12 ) ? hb_parvni( 12, 2 ) :  0;
+   int iOffBottom = HB_ISARRAY( 12 ) ? hb_parvni( 12, 3 ) :  0;
+   int iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) :  0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -714,22 +713,19 @@ HB_FUNC( WVW_DRAWBOXGET )
    UINT       usWinNum = WVW_WHICH_WINDOW;
    POINT      xy;
    POINT      yz;
-   WIN_DATA * pWindowData;
    APP_DATA * s_sApp = hb_gt_wvw_GetAppData();
    int        iTop, iLeft, iBottom, iRight;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
-   USHORT     usRow, usCol, usLen;
 
-   pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   usRow = ( USHORT ) hb_parni( 2 );
-   usCol = ( USHORT ) hb_parni( 3 );
-   usLen = ( USHORT ) hb_parni( 4 );
+   USHORT usRow = ( USHORT ) hb_parni( 2 );
+   USHORT usCol = ( USHORT ) hb_parni( 3 );
+   USHORT usLen = ( USHORT ) hb_parni( 4 );
 
-   iOffTop    = HB_ISARRAY( 5 ) ? hb_parvni( 5, 1 ) :  0;
-   iOffLeft   = HB_ISARRAY( 5 ) ? hb_parvni( 5, 2 ) :  0;
-   iOffBottom = HB_ISARRAY( 5 ) ? hb_parvni( 5, 3 ) :  0;
-   iOffRight  = HB_ISARRAY( 5 ) ? hb_parvni( 5, 4 ) :  0;
+   int iOffTop    = HB_ISARRAY( 5 ) ? hb_parvni( 5, 1 ) :  0;
+   int iOffLeft   = HB_ISARRAY( 5 ) ? hb_parvni( 5, 2 ) :  0;
+   int iOffBottom = HB_ISARRAY( 5 ) ? hb_parvni( 5, 3 ) :  0;
+   int iOffRight  = HB_ISARRAY( 5 ) ? hb_parvni( 5, 4 ) :  0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usRow, &usCol, NULL, NULL );
@@ -748,21 +744,17 @@ HB_FUNC( WVW_DRAWBOXGET )
    SelectObject( pWindowData->hdc, s_sApp->penBlack );
 
    MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );
-
    LineTo( pWindowData->hdc, iRight, iTop );
 
    MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );
-
    LineTo( pWindowData->hdc, iLeft, iBottom );
 
    SelectObject( pWindowData->hdc, s_sApp->penDarkGray );
 
    MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );
-
    LineTo( pWindowData->hdc, iRight + 1, iTop - 1 );
 
    MoveToEx( pWindowData->hdc, iLeft - 1, iTop - 1, NULL );
-
    LineTo( pWindowData->hdc, iLeft - 1, iBottom + 1 );
 
    /* GTWVW also draws right and bottom outer with single white line */
@@ -795,22 +787,19 @@ HB_FUNC( WVW_DRAWBOXGET_XP )
    UINT       usWinNum = WVW_WHICH_WINDOW;
    POINT      xy;
    POINT      yz;
-   WIN_DATA * pWindowData;
    APP_DATA * s_sApp = hb_gt_wvw_GetAppData();
    int        iTop, iLeft, iBottom, iRight;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
-   USHORT     usRow, usCol, usLen;
 
-   pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   usRow = ( USHORT ) hb_parni( 2 );
-   usCol = ( USHORT ) hb_parni( 3 );
-   usLen = ( USHORT ) hb_parni( 4 );
+   USHORT usRow = ( USHORT ) hb_parni( 2 );
+   USHORT usCol = ( USHORT ) hb_parni( 3 );
+   USHORT usLen = ( USHORT ) hb_parni( 4 );
 
-   iOffTop    = HB_ISARRAY( 5 ) ? hb_parvni( 5, 1 ) :  0;
-   iOffLeft   = HB_ISARRAY( 5 ) ? hb_parvni( 5, 2 ) :  0;
-   iOffBottom = HB_ISARRAY( 5 ) ? hb_parvni( 5, 3 ) :  0;
-   iOffRight  = HB_ISARRAY( 5 ) ? hb_parvni( 5, 4 ) :  0;
+   int iOffTop    = HB_ISARRAY( 5 ) ? hb_parvni( 5, 1 ) :  0;
+   int iOffLeft   = HB_ISARRAY( 5 ) ? hb_parvni( 5, 2 ) :  0;
+   int iOffBottom = HB_ISARRAY( 5 ) ? hb_parvni( 5, 3 ) :  0;
+   int iOffRight  = HB_ISARRAY( 5 ) ? hb_parvni( 5, 4 ) :  0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usRow, &usCol, NULL, NULL );
@@ -989,20 +978,18 @@ HB_FUNC( WVW_DRAWBOXGROUP )
    UINT       usWinNum = WVW_WHICH_WINDOW;
    POINT      xy;
    int        iTop, iLeft, iBottom, iRight;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
-   WIN_DATA * pWindowData;
    APP_DATA * s_sApp   = hb_gt_wvw_GetAppData();
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
 
-   pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -1498,7 +1485,6 @@ HB_FUNC( WVW_DRAWLINE )
    UINT     usWinNum = WVW_WHICH_WINDOW;
    POINT    xy;
    int      iTop, iLeft, iBottom, iRight, iOffset;
-   int      iOffTop, iOffLeft, iOffBottom, iOffRight;
    int      iOrient, iFormat, iAlign, iStyle, iThick;
    int      x, y;
    COLORREF cr;
@@ -1508,15 +1494,13 @@ HB_FUNC( WVW_DRAWLINE )
             usBottom = ( USHORT ) hb_parni( 4 ),
             usRight  = ( USHORT ) hb_parni( 5 );
 
-   WIN_DATA * pWindowData;
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    APP_DATA * s_sApp = hb_gt_wvw_GetAppData();
 
-   pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-
-   iOffTop    = HB_ISARRAY( 12 ) ? hb_parvni( 12, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 12 ) ? hb_parvni( 12, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 12 ) ? hb_parvni( 12, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) : 0;
+   int iOffTop    = HB_ISARRAY( 12 ) ? hb_parvni( 12, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 12 ) ? hb_parvni( 12, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 12 ) ? hb_parvni( 12, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -1656,16 +1640,15 @@ HB_FUNC( WVW_DRAWELLIPSE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    APP_DATA * s_sApp      = hb_gt_wvw_GetAppData();
    int        iTop, iLeft, iBottom, iRight;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
 
-   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -1696,18 +1679,16 @@ HB_FUNC( WVW_DRAWRECTANGLE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData(  usWinNum );
    APP_DATA * s_sApp      = hb_gt_wvw_GetAppData();
    int        iTop, iLeft, iBottom, iRight;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    USHORT     usTop    = ( USHORT ) hb_parni( 2 ),
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
-   /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
-   BOOL bUsaCurrentPen = hb_parldef( 7, HB_TRUE );
+   BOOL bUseCurrentPen = hb_parldef( 7, HB_TRUE );  /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
 
-   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -1725,7 +1706,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
 
    SelectObject( pWindowData->hdc, s_sApp->currentBrush );
    /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
-   if( bUsaCurrentPen )
+   if( bUseCurrentPen )
       SelectObject( pWindowData->hdc, s_sApp->currentPen );
    else
       SelectObject( pWindowData->hdc, s_sApp->penBlack );
@@ -1752,12 +1733,11 @@ HB_FUNC( WVW_DRAWROUNDRECT )
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
-   int iOffTop, iOffLeft, iOffBottom, iOffRight;
 
-   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -1794,12 +1774,11 @@ HB_FUNC( WVW_DRAWFOCUSRECT )
               usLeft      = ( USHORT ) hb_parni( 3 ),
               usBottom    = ( USHORT ) hb_parni( 4 ),
               usRight     = ( USHORT ) hb_parni( 5 );
-   int iOffTop, iOffLeft, iOffBottom, iOffRight;
 
-   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -1831,15 +1810,14 @@ HB_FUNC( WVW_DRAWCOLORRECT )
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
-   int    iOffTop, iOffLeft, iOffBottom, iOffRight;
    RECT   rc;
    POINT  xy;
    HBRUSH hBrush;
 
-   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -1920,23 +1898,20 @@ HB_FUNC( WVW_DRAWGRIDVERT )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
    int        iTop, iBottom, x;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    int        i;
    int        iCharHeight, iCharWidth;
    int        iTabs = hb_parni( 5 );
-   WIN_DATA * pWindowData;
    USHORT     usTop, usBottom, usCol;
    APP_DATA * s_sApp = hb_gt_wvw_GetAppData();
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
+   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;  /* is not actually used */
 
    if( ! iTabs )
       hb_retl( HB_FALSE );
-
-   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;  /* is not actually used */
 
    HB_SYMBOL_UNUSED( iOffRight );
 

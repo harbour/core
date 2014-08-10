@@ -89,7 +89,6 @@ HB_FUNC( WVW_PGCREATE )
    HWND       hWndPG;
    POINT      xy;
    int        iTop, iLeft, iBottom, iRight;
-   int        iOffTop, iOffLeft, iOffBottom, iOffRight;
    int        iStyle     = 0;
    HB_BOOL    bBackColor = HB_ISNUM( 7 );
    HB_BOOL    bBarColor  = HB_ISNUM( 8 );
@@ -101,12 +100,12 @@ HB_FUNC( WVW_PGCREATE )
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
 
-   InitCommonControls();
+   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
+   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
+   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
-   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   InitCommonControls();
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );

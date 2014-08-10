@@ -111,10 +111,10 @@ HB_FUNC( WVW_PBCREATE )
       int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
       hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-                             szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-                             iOffTop, iOffLeft, iOffBottom, iOffRight,
-                             dStretch, bMap3Dcolors,
-                             BS_PUSHBUTTON ) );
+         szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+         iOffTop, iOffLeft, iOffBottom, iOffRight,
+         dStretch, bMap3Dcolors,
+         BS_PUSHBUTTON ) );
    }
    else
       hb_retnl( 0 );

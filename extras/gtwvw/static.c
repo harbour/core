@@ -97,9 +97,8 @@ HB_FUNC( WVW_STCREATE )
       }
    }
 
-   iOffTop  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   iOffLeft = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-
+   iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
+   iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
    iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
    iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
