@@ -359,7 +359,7 @@ HB_FUNC( WVW_GBCREATE )
    const char * szBitmap     = hb_parc( 7 );
    UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
    double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL         bMap3Dcolors = ( BOOL ) hb_parl( 11 );
+   HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 
    int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -1;
    int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -1;
@@ -388,7 +388,7 @@ HB_FUNC( WVW_RBCREATE )
       const char * szBitmap     = hb_parc( 7 );
       UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
       double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-      BOOL         bMap3Dcolors = ( BOOL ) hb_parl( 11 );
+      HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -725,7 +725,7 @@ HB_FUNC( LOADBITMAPEX )
 HB_FUNC( OPENIMAGE )
 {
    const char * cFileName = hb_parc( 1 );
-   BOOL         lString   = hb_parl( 2 );
+   HB_BOOL      lString   = hb_parl( 2 );
    int          iFileSize;
    /* IPicture * pPic; */
    LPPICTURE pPic;
@@ -1066,7 +1066,7 @@ HB_FUNC( TOOLBARADDBUTTONS )
    PHB_ITEM   pArray   = hb_param( 3, HB_IT_ARRAY );
    int        iButtons = hb_parni( 4 );
    TBBUTTON * tb       = ( TBBUTTON * ) hb_xgrab( iButtons * sizeof( TBBUTTON ) );
-/* BOOL bSystem; */
+/* HB_BOOL bSystem; */
 
    ULONG ulCount;
 
@@ -1189,7 +1189,7 @@ HB_FUNC( DRAWBITMAP )
 HB_FUNC( WINDOW2BITMAP )
 {
    HWND    hWnd   = ( HWND ) HB_PARHANDLE( 1 );
-   BOOL    lFull  = ( BOOL ) hb_parl( 2 );
+   HB_BOOL lFull  = hb_parl( 2 );
    HDC     hDC    = lFull ? GetWindowDC( hWnd ) : GetDC( hWnd );
    HDC     hDCmem = CreateCompatibleDC( hDC );
    HBITMAP hBitmap;
@@ -1670,8 +1670,8 @@ HB_FUNC( WVW_FILLRECTANGLE )
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
    COLORREF crRGBcolor = hb_parnl( 6 );
-   BOOL     bTight     = hb_parl( 7 );
-   BOOL     bUseBrush  = hb_parl( 8 );
+   HB_BOOL  bTight     = hb_parl( 7 );
+   HB_BOOL  bUseBrush  = hb_parl( 8 );
    LOGBRUSH lb;
    HBRUSH   hBrush;
    RECT     xyRect;

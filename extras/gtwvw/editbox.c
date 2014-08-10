@@ -108,8 +108,8 @@ HB_FUNC( WVW_EBCREATE )
               usRight  = ( USHORT ) hb_parni( 5 );
    LPTSTR lpszText     = ( LPTSTR ) hb_parcx( 6 );
 
-   BOOL bMultiline = hb_parl( 8 );
-   BYTE bEBType    = ( BYTE ) ( bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE );
+   HB_BOOL bMultiline = hb_parl( 8 );
+   BYTE    bEBType    = ( BYTE ) ( bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE );
 
    DWORD dwMoreStyle = ( DWORD ) hb_parnl( 9 );
 
@@ -184,7 +184,7 @@ HB_FUNC( WVW_EBCREATE )
       RECT    rXB, rOffXB;
       WNDPROC OldProc;
 
-      BOOL bFromOEM = ( pWindowData->CodePage == OEM_CHARSET );
+      HB_BOOL bFromOEM = ( pWindowData->CodePage == OEM_CHARSET );
 
       if( bFromOEM )
       {
@@ -297,9 +297,9 @@ HB_FUNC( WVW_EBENABLE )
 
    if( hWndEB )
    {
-      BOOL bEnable = hb_parldef( 3, HB_TRUE );
+      HB_BOOL bEnable = hb_parldef( 3, HB_TRUE );
 
-      hb_retl( EnableWindow( hWndEB, bEnable ) == 0 );
+      hb_retl( EnableWindow( hWndEB, ( BOOL ) bEnable ) == 0 );
 
       if( ! bEnable )
       {
@@ -345,17 +345,17 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
       WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
-      BOOL       bOldSetting = pData->bRecurseCBlock;
+      HB_BOOL    bOldSetting = pData->bRecurseCBlock;
 
-      pData->bRecurseCBlock = FALSE;
-      pcd->bBusy = TRUE;
+      pData->bRecurseCBlock = HB_FALSE;
+      pcd->bBusy = HB_TRUE;
 
       if( pcd->phiCodeBlock )
          hb_itemRelease( pcd->phiCodeBlock );
 
       pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
-      pcd->bBusy = FALSE;
+      pcd->bBusy = HB_FALSE;
       pData->bRecurseCBlock = bOldSetting;
 
       hb_retl( HB_TRUE );
@@ -439,7 +439,7 @@ HB_FUNC( WVW_EBISMULTILINE )
 /* wvw_ebGetText( [nWinNum], nEBid,;
  *                          lSoftBreak )
  * returns current text from editbox nEBid in window nWinNum
- * lSoftBreak: Default is FALSE.
+ * lSoftBreak: Default is .F.
  *             insert soft line break character (CR+CR+LF) at wordwrap positions
  *             can be usefull to convert the text to MEMO format
  *             eg. converting editbox's softbreaks into memoline softbreak:
@@ -455,9 +455,9 @@ HB_FUNC( WVW_EBGETTEXT )
 
    if( pcd )
    {
-      BOOL       bSoftBreak  = hb_parl( 3 );
+      HB_BOOL    bSoftBreak  = hb_parl( 3 );
       WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-      BOOL       bToOEM      = ( pWindowData->CodePage == OEM_CHARSET );
+      HB_BOOL    bToOEM      = ( pWindowData->CodePage == OEM_CHARSET );
 
       USHORT usLen;
       LPTSTR lpszTextANSI;
@@ -499,21 +499,21 @@ HB_FUNC( WVW_EBSETTEXT )
    if( pcd )
    {
       WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-      BOOL       bFromOEM    = ( pWindowData->CodePage == OEM_CHARSET );
-      LPTSTR     lpszText    = ( LPTSTR ) hb_parcx( 3 );
+      HB_BOOL    bFromOEM    = ( pWindowData->CodePage == OEM_CHARSET );
+      LPCTSTR    lpszText    = ( LPCTSTR ) hb_parcx( 3 );
 
       if( bFromOEM )
       {
          ULONG  ulLen        = ( ULONG ) strlen( lpszText );
          LPTSTR lpszTextANSI = ( LPTSTR ) hb_xgrab( ulLen + 1 );
          OemToCharBuff( lpszText, lpszTextANSI, ulLen );
-         lpszText = lpszTextANSI;
+         lpszText = ( LPCTSTR ) lpszTextANSI;
       }
 
-      hb_retl( ( BOOL ) SendMessage( pcd->hWndCtrl, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
+      hb_retl( ( HB_BOOL ) ( BOOL ) SendMessage( pcd->hWndCtrl, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
 
       if( bFromOEM )
-         hb_xfree( lpszText );
+         hb_xfree( ( void * ) lpszText );
    }
    else
       hb_retl( HB_FALSE );

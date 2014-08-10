@@ -312,9 +312,9 @@ HB_FUNC( WVW_CBENABLE )
 
    if( hWndCB )
    {
-      BOOL bEnable = hb_parldef( 3, HB_TRUE );
+      HB_BOOL bEnable = hb_parldef( 3, HB_TRUE );
 
-      hb_retl( EnableWindow( hWndCB, bEnable ) == 0 );
+      hb_retl( EnableWindow( hWndCB, ( BOOL ) bEnable ) == 0 );
 
       if( ! bEnable )
       {
@@ -339,17 +339,17 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
       WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
-      BOOL       bOldSetting = pData->bRecurseCBlock;
+      HB_BOOL    bOldSetting = pData->bRecurseCBlock;
 
-      pData->bRecurseCBlock = FALSE;
-      pcd->bBusy = TRUE;
+      pData->bRecurseCBlock = HB_FALSE;
+      pcd->bBusy = HB_TRUE;
 
       if( pcd->phiCodeBlock )
          hb_itemRelease( pcd->phiCodeBlock );
 
       pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
-      pcd->bBusy = FALSE;
+      pcd->bBusy = HB_FALSE;
       pData->bRecurseCBlock = bOldSetting;
 
       hb_retl( HB_TRUE );
@@ -516,7 +516,7 @@ HB_FUNC( WVW_CBISDROPPED )
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
-      hb_retl( ( HB_BOOL ) SendMessage( pcd->hWndCtrl, CB_GETDROPPEDSTATE, 0, 0 ) );
+      hb_retl( ( HB_BOOL ) ( BOOL ) SendMessage( pcd->hWndCtrl, CB_GETDROPPEDSTATE, 0, 0 ) );
    else
       hb_retl( HB_FALSE );
 }

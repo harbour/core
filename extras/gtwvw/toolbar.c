@@ -229,11 +229,11 @@ HB_FUNC( WVW_TBADDBUTTON )
 
    UINT uiBitmap = ( UINT ) hb_parni( 3 );
 
-   int    iBitmapType  = hb_parni( 5 );
-   BOOL   bMap3Dcolors = hb_parl( 6 );
-   BOOL   bDropdown    = hb_parl( 7 );
-   HWND   hWndTB;
-   USHORT usOldHeight;
+   int     iBitmapType  = hb_parni( 5 );
+   HB_BOOL bMap3Dcolors = hb_parl( 6 );
+   HB_BOOL bDropdown    = hb_parl( 7 );
+   HWND    hWndTB;
+   USHORT  usOldHeight;
 
    hWndTB = pWindowData->hToolBar;
    if( hWndTB == NULL )
@@ -382,10 +382,10 @@ HB_FUNC( WVW_TBENABLEBUTTON )
       int iCommand = hb_gt_wvw_IndexToCommand( hWndTB, iButton );
       if( iCommand >= 0 )
       {
-         USHORT usOldHeight = pWindowData->usTBHeight;
-         BOOL   bEnable     = hb_parldef( 3, HB_TRUE );
+         USHORT  usOldHeight = pWindowData->usTBHeight;
+         HB_BOOL bEnable     = hb_parldef( 3, HB_TRUE );
 
-         if( SendMessage( hWndTB, TB_ENABLEBUTTON, ( WPARAM ) iCommand, ( LPARAM ) MAKELONG( bEnable, 0 ) ) )
+         if( SendMessage( hWndTB, TB_ENABLEBUTTON, ( WPARAM ) iCommand, ( LPARAM ) MAKELONG( ( BOOL ) bEnable, 0 ) ) )
          {
             hb_gt_wvw_TBinitSize( pWindowData, hWndTB );
 

@@ -118,7 +118,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
    memset( &sz, 0, sizeof( sz ) );
 
-   GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &sz );
+   GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), ( int ) strlen( hb_parcx( 6 ) ), &sz );
 
    x = iLeft;
    y = iTop;
@@ -159,7 +159,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
    uiOptions = ETO_CLIPPED | ETO_OPAQUE;
 
-   ExtTextOut( pWindowData->hdc, x, y, uiOptions, &rect, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), NULL );
+   ExtTextOut( pWindowData->hdc, x, y, uiOptions, &rect, hb_parcx( 6 ), ( UINT ) strlen( hb_parcx( 6 ) ), NULL );
 
    SelectObject( pWindowData->hdc, oldFont );
    SetTextAlign( pWindowData->hdc, oldTextAlign );
@@ -271,7 +271,7 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
    POINT * Point;
    POINT   xy;
    int     iHeight, iOff;
-   BOOL    bDepressed = hb_parl( 8 );
+   HB_BOOL bDepressed = hb_parl( 8 );
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -298,9 +298,9 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
    iHeight = iBottom - iTop + 1;
 
    if( bDepressed )
-      hb_gt_wvw_DrawBoxRecessed( usWinNum, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, FALSE );
+      hb_gt_wvw_DrawBoxRecessed( usWinNum, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, HB_FALSE );
    else
-      hb_gt_wvw_DrawBoxRaised( usWinNum, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, FALSE );
+      hb_gt_wvw_DrawBoxRaised( usWinNum, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, HB_FALSE );
    SelectObject( pWindowData->hdc, s_sApp->solidBrush );
 
    switch( hb_parni( 7 ) )
@@ -409,7 +409,7 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
    SelectObject( pWindowData->hdc, s_sApp->penGray );
    Rectangle( pWindowData->hdc, iTabLft, iTabTop, iTabRgt + 1, iTabBtm );
 
-   hb_gt_wvw_DrawBoxRaised( usWinNum, iTabTop + 1, iTabLft + 1, iTabBtm - 2, iTabRgt - 2, FALSE );
+   hb_gt_wvw_DrawBoxRaised( usWinNum, iTabTop + 1, iTabLft + 1, iTabBtm - 2, iTabRgt - 2, HB_FALSE );
 }
 
 
@@ -462,7 +462,7 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
    SelectObject( pWindowData->hdc, s_sApp->wvwWhiteBrush );
    SelectObject( pWindowData->hdc, s_sApp->penGray );
    Rectangle( pWindowData->hdc, iThumbLeft, iTop, iThumbRight, iBottom );
-   hb_gt_wvw_DrawBoxRaised( usWinNum, iTop + 1, iThumbLeft + 1, iBottom - 2, iThumbRight - 2, FALSE );
+   hb_gt_wvw_DrawBoxRaised( usWinNum, iTop + 1, iThumbLeft + 1, iBottom - 2, iThumbRight - 2, HB_FALSE );
 }
 
 
@@ -589,7 +589,7 @@ HB_FUNC( WVW_DRAWTEXTBOX )
    oldBkMode    = SetBkMode( pWindowData->hdc, hb_parnidef( 12, OPAQUE ) );
    oldFont      = ( HFONT ) SelectObject( pWindowData->hdc, ( HFONT ) HB_PARHANDLE( 13 ) );
 
-   DrawText( pWindowData->hdc, hb_parcx( 7 ), strlen( hb_parcx( 7 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+   DrawText( pWindowData->hdc, hb_parcx( 7 ), ( int ) strlen( hb_parcx( 7 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
 
    SetTextColor( pWindowData->hdc, oldTextColor );
    SetBkColor( pWindowData->hdc, oldBkColor );
@@ -612,12 +612,12 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int  iTop;
-   int  iLeft;
-   int  iBottom;
-   int  iRight;
-   int  iPercent, iBarUpto, iDirection;
-   BOOL bVertical, bImage;
+   int     iTop;
+   int     iLeft;
+   int     iBottom;
+   int     iRight;
+   int     iPercent, iBarUpto, iDirection;
+   HB_BOOL bVertical, bImage;
 
    COLORREF crBarColor;
    HBRUSH   hBrush;
@@ -683,7 +683,7 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
    }
 
    if( bImage )
-      hb_gt_wvw_DrawImage( usWinNum, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, hb_parc( 10 ), FALSE );
+      hb_gt_wvw_DrawImage( usWinNum, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, hb_parc( 10 ), HB_FALSE );
    else
    {
       LOGBRUSH lb;
@@ -855,11 +855,11 @@ HB_FUNC( WVW_DRAWBOXRAISED )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   POINT xy;
-   int   iTop, iLeft, iBottom, iRight;
-   BOOL  bUseArray = HB_ISARRAY( 6 );
-   BOOL  bTight    = hb_parl( 6 );
-   int   iOLeft, iOTop, iORight, iOBottom;
+   POINT   xy;
+   int     iTop, iLeft, iBottom, iRight;
+   HB_BOOL bUseArray = HB_ISARRAY( 6 );
+   HB_BOOL bTight    = hb_parl( 6 );
+   int     iOLeft, iOTop, iORight, iOBottom;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -923,11 +923,11 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
 
-   POINT xy;
-   int   iTop, iLeft, iBottom, iRight;
-   BOOL  bUseArray = HB_ISARRAY( 6 );
-   BOOL  bTight    = hb_parl( 6 );
-   int   iOLeft, iOTop, iORight, iOBottom;
+   POINT   xy;
+   int     iTop, iLeft, iBottom, iRight;
+   HB_BOOL bUseArray = HB_ISARRAY( 6 );
+   HB_BOOL bTight    = hb_parl( 6 );
+   int     iOLeft, iOTop, iORight, iOBottom;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -1136,14 +1136,14 @@ HB_FUNC( WVW_DRAWIMAGE )
 
    HB_BOOL bResult;
 
-   BOOL bActBottom   = ! HB_ISNUM( 4 );
-   BOOL bActRight    = ! HB_ISNUM( 5 );
-   int  iImgWidth    = 0;
-   int  iImgHeight   = 0;
-   BOOL bTight       = hb_parl( 7 );
-   BOOL bUseArray    = HB_ISARRAY( 7 );
-   BOOL bTransparent = hb_parl( 8 );
-   int  iOLeft, iOTop, iORight, iOBottom;
+   HB_BOOL bActBottom   = ! HB_ISNUM( 4 );
+   HB_BOOL bActRight    = ! HB_ISNUM( 5 );
+   int     iImgWidth    = 0;
+   int     iImgHeight   = 0;
+   HB_BOOL bTight       = hb_parl( 7 );
+   HB_BOOL bUseArray    = HB_ISARRAY( 7 );
+   HB_BOOL bTransparent = hb_parl( 8 );
+   int     iOLeft, iOTop, iORight, iOBottom;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -1179,8 +1179,8 @@ HB_FUNC( WVW_DRAWIMAGE )
       if( ( ! HB_ISNUM( 6 ) && ! hb_gt_wvw_GetImageDimension( hb_parcx( 6 ), &iImgWidth, &iImgHeight ) ) ||
           ( HB_ISNUM( 6 ) && ! hb_gt_wvw_GetIPictDimension( s_sApp->iPicture[ hb_parni( 6 ) - 1 ], &iImgWidth, &iImgHeight ) ) )
       {
-         bActRight  = FALSE;
-         bActBottom = FALSE;
+         bActRight  = HB_FALSE;
+         bActBottom = HB_FALSE;
       }
       else if( bActRight && bActBottom )
       {
@@ -1254,13 +1254,13 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
    POINT xy;
    int   iLeft, iTop, iRight = 0, iBottom = 0;
 
-   BOOL       bActBottom = ! HB_ISNUM( 4 );
-   BOOL       bActRight  = ! HB_ISNUM( 5 );
+   HB_BOOL    bActBottom = ! HB_ISNUM( 4 );
+   HB_BOOL    bActRight  = ! HB_ISNUM( 5 );
    int        iImgWidth, iImgHeight;
    LONG       lImgWidth, lImgHeight;
-   BOOL       bTight       = hb_parl( 7 );
-   BOOL       bUseArray    = HB_ISARRAY( 7 );
-   BOOL       bTransparent = hb_parl( 8 );
+   HB_BOOL    bTight       = hb_parl( 7 );
+   HB_BOOL    bUseArray    = HB_ISARRAY( 7 );
+   HB_BOOL    bTransparent = hb_parl( 8 );
    int        iOLeft, iOTop, iORight, iOBottom;
    IPicture * pPic;
 
@@ -1322,8 +1322,8 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
    {
       if( ! hb_gt_wvw_GetIPictDimension( pPic, &iImgWidth, &iImgHeight ) )
       {
-         bActRight  = FALSE;
-         bActBottom = FALSE;
+         bActRight  = HB_FALSE;
+         bActBottom = HB_FALSE;
       }
       else if( bActRight && bActBottom )
       {
@@ -1415,7 +1415,7 @@ HB_FUNC( WVW_DRAWLABEL )
       oldTextAlign = SetTextAlign( pWindowData->hdc, hb_parnidef( 5, TA_LEFT ) );
       oldFont      = ( HFONT ) SelectObject( pWindowData->hdc, hFont );
 
-      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), strlen( hb_parcx( 4 ) ), NULL );
+      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), ( UINT ) strlen( hb_parcx( 4 ) ), NULL );
 
       SelectObject( pWindowData->hdc, oldFont );
       DeleteObject( hFont );
@@ -1686,9 +1686,9 @@ HB_FUNC( WVW_DRAWRECTANGLE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData(  usWinNum );
    APP_DATA * s_sApp      = hb_gt_wvw_GetAppData();
 
-   POINT xy;
-   int   iTop, iLeft, iBottom, iRight;
-   BOOL  bUseCurrentPen = hb_parldef( 7, HB_TRUE ); /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
+   POINT   xy;
+   int     iTop, iLeft, iBottom, iRight;
+   HB_BOOL bUseCurrentPen = hb_parldef( 7, HB_TRUE );  /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -1978,20 +1978,20 @@ HB_FUNC( WVW_DRAWBUTTON )
    WIN_DATA * pWindowMainData = hb_gt_wvw_GetWindowsData( 0 );
    APP_DATA * s_sApp = hb_gt_wvw_GetAppData();
 
-   POINT xy;
-   RECT  rc;
-   int   iTop, iLeft, iBottom, iRight;
-   int   iAlign, oldTextAlign, oldBkMode;
-   int   iTextHeight /*, iTextWidth */;
-   int   iImageWidth, iImageHeight;
-   COLORREF /* oldBkColor, */ oldTextColor;
+   POINT      xy;
+   RECT       rc;
+   int        iTop, iLeft, iBottom, iRight;
+   int        iAlign, oldTextAlign, oldBkMode;
+   int        iTextHeight /*, iTextWidth */;
+   int        iImageWidth, iImageHeight;
+   COLORREF   oldTextColor;
    LOGBRUSH   lb;
    HBRUSH     hBrush;
    IPicture * iPicture;
 
-   BOOL bText   = HB_ISCHAR( 6 );
-   BOOL bImage  = HB_ISNUM( 7 ) || HB_ISCHAR( 7 );
-   int  iFormat = hb_parni( 8 );
+   HB_BOOL bText   = HB_ISCHAR( 6 );
+   HB_BOOL bImage  = HB_ISNUM( 7 ) || HB_ISCHAR( 7 );
+   int     iFormat = hb_parni( 8 );
 
    COLORREF textColor = ( COLORREF ) hb_parnldef(  9, s_COLORS[ 0 ] );
    COLORREF bkColor   = ( COLORREF ) hb_parnldef( 10, s_COLORS[ 7 ] );
@@ -2036,7 +2036,7 @@ HB_FUNC( WVW_DRAWBUTTON )
    switch( iFormat )
    {
       case 1:
-         hb_gt_wvw_DrawBoxRecessed( pWindowData->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, FALSE );
+         hb_gt_wvw_DrawBoxRecessed( pWindowData->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, HB_FALSE );
          break;
       case 2:
          break;
@@ -2046,7 +2046,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       case 4:
          break;
       default:
-         hb_gt_wvw_DrawBoxRaised( pWindowData->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, FALSE );
+         hb_gt_wvw_DrawBoxRaised( pWindowData->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, HB_FALSE );
    }
 
    if( bText )
@@ -2057,7 +2057,7 @@ HB_FUNC( WVW_DRAWBUTTON )
 
       memset( &sz, 0, sizeof( sz ) );
 
-      GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &sz );
+      GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), ( int ) strlen( hb_parcx( 6 ) ), &sz );
 
       iTextHeight = sz.cy;
 
@@ -2080,7 +2080,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       oldBkMode    = SetBkMode( pWindowData->hdc, TRANSPARENT );
       oldTextColor = SetTextColor( pWindowData->hdc, textColor );
 
-      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), NULL );
+      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 6 ), ( UINT ) strlen( hb_parcx( 6 ) ), NULL );
 
       SetTextColor( pWindowData->hdc, oldTextColor );
       SetBkMode( pWindowData->hdc, oldBkMode );
@@ -2099,10 +2099,10 @@ HB_FUNC( WVW_DRAWBUTTON )
       {
          iPicture = s_sApp->iPicture[ hb_parni( 7 ) - 1 ];
 
-         hb_gt_wvw_RenderPicture( usWinNum, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, iPicture, FALSE );
+         hb_gt_wvw_RenderPicture( usWinNum, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, iPicture, HB_FALSE );
       }
       else
-         hb_gt_wvw_DrawImage( usWinNum, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, hb_parcx( 7 ), FALSE );
+         hb_gt_wvw_DrawImage( usWinNum, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, hb_parcx( 7 ), HB_FALSE );
    }
 
    hb_retl( HB_TRUE );
@@ -2123,12 +2123,17 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
    int   iTop, iLeft, iBottom, iRight;
    POINT xy;
 
+   USHORT usTop;
+   USHORT usLeft;
+   USHORT usBottom;
+   USHORT usRight;
+
    for( i = 0; i < iPanels; i++ )
    {
-      USHORT usTop    = ( USHORT ) hb_parvni( 3, iNext + 1 );
-      USHORT usLeft   = ( USHORT ) hb_parvni( 3, iNext + 2 );
-      USHORT usBottom = ( USHORT ) hb_parvni( 3, iNext + 3 );
-      USHORT usRight  = ( USHORT ) hb_parvni( 3, iNext + 4 );
+      usTop    = ( USHORT ) hb_parvni( 3, iNext + 1 );
+      usLeft   = ( USHORT ) hb_parvni( 3, iNext + 2 );
+      usBottom = ( USHORT ) hb_parvni( 3, iNext + 3 );
+      usRight  = ( USHORT ) hb_parvni( 3, iNext + 4 );
 
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
@@ -2160,7 +2165,7 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
       MoveToEx( pWindowData->hdc, iLeft, iTop, NULL );             /* Top    */
       LineTo( pWindowData->hdc, iRight, iTop );
 
-      iNext = iNext + 4;
+      iNext += 4;
    }
 
    usTop  = ( USHORT ) hb_parvni( 3, ( 4 * iPanels ) - 1 );
@@ -2206,11 +2211,11 @@ HB_FUNC( WVW_DRAWPICTURE )
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    APP_DATA * s_sApp      = hb_gt_wvw_GetAppData();
 
-   int  iTop, iLeft, iBottom, iRight;
-   int  iSlot     = hb_parni( 6 ) - 1;
-   BOOL bTight    = hb_parl( 7 );
-   BOOL bUseArray = HB_ISARRAY( 7 );
-   int  iOLeft, iOTop, iORight, iOBottom;
+   int     iTop, iLeft, iBottom, iRight;
+   int     iSlot     = hb_parni( 6 ) - 1;
+   HB_BOOL bTight    = hb_parl( 7 );
+   HB_BOOL bUseArray = HB_ISARRAY( 7 );
+   int     iOLeft, iOTop, iORight, iOBottom;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -2249,8 +2254,7 @@ HB_FUNC( WVW_DRAWPICTURE )
       iBottom = xy.y - 1 + iOBottom;
       iRight  = xy.x - 1 + iORight;
 
-      hb_retl( hb_gt_wvw_RenderPicture( usWinNum, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, s_sApp->iPicture[ iSlot ],
-                                        FALSE ) );
+      hb_retl( hb_gt_wvw_RenderPicture( usWinNum, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, s_sApp->iPicture[ iSlot ], HB_FALSE ) );
    }
    else
       hb_retl( HB_FALSE );
@@ -2284,7 +2288,7 @@ HB_FUNC( WVW_DRAWLABELEX )
       oldTextAlign = SetTextAlign( pWindowData->hdc, hb_parnidef( 5, TA_LEFT ) );
       oldFont      = ( HFONT ) SelectObject( pWindowData->hdc, s_sApp->hUserFonts[ iSlot ] );
 
-      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), strlen( hb_parcx( 4 ) ), NULL );
+      ExtTextOut( pWindowData->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), ( UINT ) strlen( hb_parcx( 4 ) ), NULL );
 
       SelectObject( pWindowData->hdc, oldFont );
       SetTextAlign( pWindowData->hdc, oldTextAlign );

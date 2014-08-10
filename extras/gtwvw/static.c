@@ -58,16 +58,11 @@ HB_FUNC( WVW_STCREATE )
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndCB;
 
-#if 0
-   RECT r;
-   HDC  hDc;
-#endif
-
-   POINT xy;
-   int   iTop, iLeft, iBottom, iRight;
-   int   iOffTop, iOffLeft, iOffBottom, iOffRight;
-   BOOL  bBorder   = hb_parnl( 7 );
-   ULONG ulExStyle = bBorder ? WS_EX_CLIENTEDGE : 0;
+   POINT   xy;
+   int     iTop, iLeft, iBottom, iRight;
+   int     iOffTop, iOffLeft, iOffBottom, iOffRight;
+   HB_BOOL bBorder   = hb_parl( 7 );
+   ULONG   ulExStyle = bBorder ? WS_EX_CLIENTEDGE : 0;
 
    UINT uiCBid;
 
@@ -76,7 +71,6 @@ HB_FUNC( WVW_STCREATE )
           usLeft   = ( USHORT ) hb_parni( 3 ),
           usBottom = HB_ISNUM( 11 ) ? ( USHORT ) hb_parni( 11 ) : usTop,
           usRight  = HB_ISNUM( 12 ) ? ( USHORT ) hb_parni( 12 ) : usLeft + usWidth - 1;
-   /* char * sText = hb_parc( 5 ); */
 
    int   iStyle = bBorder ? WS_BORDER : 0;
    int   iBox   = hb_parni( 10 );

@@ -98,7 +98,7 @@ HB_FUNC( WVW_CXCREATE )
       const char * szBitmap     = hb_parc( 7 );
       UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
       double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-      BOOL         bMap3Dcolors = ( BOOL ) hb_parl( 11 );
+      HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -175,9 +175,9 @@ HB_FUNC( WVW_CXENABLE )
 
    if( hWndCX )
    {
-      BOOL bEnable = hb_parldef( 3, HB_TRUE );
+      HB_BOOL bEnable = hb_parldef( 3, HB_TRUE );
 
-      hb_retl( EnableWindow( hWndCX, bEnable ) == 0 );
+      hb_retl( EnableWindow( hWndCX, ( BOOL ) bEnable ) == 0 );
 
       if( ! bEnable )
       {
@@ -199,19 +199,19 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
    WVW_DATA *     pData        = hb_gt_wvw_GetWvwData();
    CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
-   BOOL bOldSetting = pData->bRecurseCBlock;
+   HB_BOOL        bOldSetting  = pData->bRecurseCBlock;
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
-      pData->bRecurseCBlock = FALSE;
-      pcd->bBusy = TRUE;
+      pData->bRecurseCBlock = HB_FALSE;
+      pcd->bBusy = HB_TRUE;
 
       if( pcd->phiCodeBlock )
          hb_itemRelease( pcd->phiCodeBlock );
 
       pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
-      pcd->bBusy = FALSE;
+      pcd->bBusy = HB_FALSE;
       pData->bRecurseCBlock = bOldSetting;
 
       hb_retl( HB_TRUE );
