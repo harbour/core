@@ -95,15 +95,15 @@ HB_FUNC( WVW_PBCREATE )
 {
    if( HB_ISEVALITEM( 8 ) )
    {
-      USHORT usTop          = ( USHORT ) hb_parni( 2 ),
-             usLeft         = ( USHORT ) hb_parni( 3 ),
-             usBottom       = ( USHORT ) hb_parni( 4 ),
-             usRight        = ( USHORT ) hb_parni( 5 );
-      LPCTSTR lpszCaption   = hb_parc( 6 );
-      const char * szBitmap = hb_parc( 7 );
-      UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
-      double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-      BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
+      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
+             usLeft   = ( USHORT ) hb_parni( 3 ),
+             usBottom = ( USHORT ) hb_parni( 4 ),
+             usRight  = ( USHORT ) hb_parni( 5 );
+      LPCTSTR      lpszCaption  = hb_parc( 6 );
+      const char * szBitmap     = hb_parc( 7 );
+      UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
+      double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+      BOOL         bMap3Dcolors = ( BOOL ) hb_parl( 11 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -111,10 +111,10 @@ HB_FUNC( WVW_PBCREATE )
       int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
       hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-         szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-         iOffTop, iOffLeft, iOffBottom, iOffRight,
-         dStretch, bMap3Dcolors,
-         BS_PUSHBUTTON ) );
+                                        szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+                                        iOffTop, iOffLeft, iOffBottom, iOffRight,
+                                        dStretch, bMap3Dcolors,
+                                        BS_PUSHBUTTON ) );
    }
    else
       hb_retnl( 0 );
@@ -188,7 +188,7 @@ HB_FUNC( WVW_PBENABLE )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-   HWND       hWndPB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND       hWndPB      = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndPB )
    {
@@ -235,16 +235,13 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    {
 #if 0
       if( ! HB_ISEVALITEM( 3 ) )
-         MessageBox( NULL, TEXT( "Codeblock Expected" ),
-                     pData->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Codeblock expected" ), pData->szAppName, MB_ICONERROR );
 
       if( pcd == NULL )
-         MessageBox( NULL, TEXT( "Control Data not Found" ),
-                     pData->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Control data not found" ), pData->szAppName, MB_ICONERROR );
 
       if( pcd->bBusy )
-         MessageBox( NULL, TEXT( "Codeblock is busy" ),
-                     pData->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Codeblock is busy" ), pData->szAppName, MB_ICONERROR );
 #endif
       hb_retl( HB_FALSE );
    }

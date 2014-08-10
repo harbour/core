@@ -624,7 +624,7 @@ HB_FUNC( ADSKEYNO )
 
       if( pArea )
       {
-         UNSIGNED32 pulKey = 0L;
+         UNSIGNED32 pulKey = 0;
          ADSHANDLE  hIndex = 0;
          UNSIGNED16 usFilterOption = pFilterOption ? ( UNSIGNED16 ) hb_itemGetNI( pFilterOption ) : ADS_IGNOREFILTERS;
 
@@ -679,7 +679,7 @@ HB_FUNC( ADSKEYCOUNT )
 
       if( pArea )
       {
-         UNSIGNED32 pulKey = 0L;
+         UNSIGNED32 pulKey = 0;
          ADSHANDLE  hIndex = 0;
          UNSIGNED16 usFilterOption = pFilterOption ? ( UNSIGNED16 ) hb_itemGetNI( pFilterOption ) : ADS_IGNOREFILTERS;
 

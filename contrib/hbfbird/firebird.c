@@ -473,7 +473,7 @@ HB_FUNC( FBFETCH )
       hb_retnl( isc_dsql_fetch( status,
                                 &stmt,
                                 dialect,
-                                sqlda ) == 100L ? -1 : isc_sqlcode( status ) );
+                                sqlda ) == 100 ? -1 : isc_sqlcode( status ) );
    }
    else
       hb_retnl( 0 );

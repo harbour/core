@@ -330,7 +330,7 @@ static int _ins_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
    hb_fsWrite( ft_text->handles[ ft_text->area ], WriteBuff, 0 );
 
    /* clear last_rec so next gobot will recount the records */
-   ft_text->last_rec[ ft_text->area ] = 0L;
+   ft_text->last_rec[ ft_text->area ] = 0;
    hb_fsSeekLarge( ft_text->handles[ ft_text->area ], ft_text->offset[ ft_text->area ], FS_SET );
 
    hb_xfree( ReadBuff  );
@@ -385,7 +385,7 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
    hb_fsWrite( ft_text->handles[ ft_text->area ], WriteBuff, 0 );
 
    /* clear last_rec so next gobot will recount the records */
-   ft_text->last_rec[ ft_text->area ] = 0L;
+   ft_text->last_rec[ ft_text->area ] = 0;
    hb_fsSeekLarge( ft_text->handles[ ft_text->area ], ft_text->offset[ ft_text->area ], FS_SET );
 
    hb_xfree( WriteBuff );
@@ -434,7 +434,7 @@ static long _ft_skip( long iRecs )
    /* iRecs is zero if they want to find the EOF, start a top of file */
    if( iRecs == 0 )
    {
-      fpOffset = 0L;
+      fpOffset = 0;
       ft_text->recno[ ft_text->area ] = 1;
    }
 
@@ -516,7 +516,7 @@ static long _ft_skip( long iRecs )
          do
          {
             /* calc offset to read area of file ahead of current pointer */
-            fpOffset = HB_MAX( ft_text->offset[ ft_text->area ] - BUFFSIZE, 0L );
+            fpOffset = HB_MAX( ft_text->offset[ ft_text->area ] - BUFFSIZE, 0 );
 
             /* move file pointer */
             hb_fsSeekLarge( ft_text->handles[ ft_text->area ], fpOffset, FS_SET );
@@ -627,12 +627,12 @@ HB_FUNC( FT_FUSE )
    {
       hb_fsClose( ft_text->handles[ ft_text->area ] );
       hb_retnint( 0 );
-      ft_text->recno[ ft_text->area ]    = 0L;
-      ft_text->offset[ ft_text->area ]   = 0L;
+      ft_text->recno[ ft_text->area ]    = 0;
+      ft_text->offset[ ft_text->area ]   = 0;
       ft_text->handles[ ft_text->area ]  = FS_ERROR;
-      ft_text->last_rec[ ft_text->area ] = 0L;
-      ft_text->last_off[ ft_text->area ] = 0L;
-      ft_text->lastbyte[ ft_text->area ] = 0L;
+      ft_text->last_rec[ ft_text->area ] = 0;
+      ft_text->last_off[ ft_text->area ] = 0;
+      ft_text->lastbyte[ ft_text->area ] = 0;
       ft_text->isBof[ ft_text->area ]    = HB_FALSE;
       ft_text->isEof[ ft_text->area ]    = HB_FALSE;
    }
@@ -673,8 +673,8 @@ HB_FUNC( FT_FGOTOP )
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_ft_text );
 
    ft_text->error[ ft_text->area ]  = 0;
-   ft_text->offset[ ft_text->area ] = 0L;
-   ft_text->recno[ ft_text->area ]  = 1L;
+   ft_text->offset[ ft_text->area ] = 0;
+   ft_text->recno[ ft_text->area ]  = 1;
    ft_text->isBof[ ft_text->area ]  = HB_FALSE;
    ft_text->isEof[ ft_text->area ]  = HB_FALSE;
 }
@@ -717,10 +717,10 @@ HB_FUNC( FT_FSKIP )
       if( hb_parnl( 1 ) )
          hb_retnl( _ft_skip( hb_parnl( 1 ) ) );
       else
-         hb_retnl( 0L );
+         hb_retnl( 0 );
    }
    else
-      hb_retnl( _ft_skip( 1L ) );
+      hb_retnl( _ft_skip( 1 ) );
 }
 
 HB_FUNC( FT_FREADLN )
@@ -789,7 +789,7 @@ HB_FUNC( FT_FDELETE )
    ft_text->offset[ ft_text->area ] = cur_off;
 
    /* re_calc EOF */
-   ft_text->lastbyte[ ft_text->area ] = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0L, FS_END );
+   ft_text->lastbyte[ ft_text->area ] = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0, FS_END );
    _ft_skip( 0 );
 
    /* restore pointers again */
@@ -1013,8 +1013,8 @@ HB_FUNC( FT_FGOTO )
       /* goto 0 passed, go top then skip back */
       target = ft_text->recno[ ft_text->area ];
 
-      ft_text->offset[ ft_text->area ] = 0L;
-      ft_text->recno[ ft_text->area ]  = 1L;
+      ft_text->offset[ ft_text->area ] = 0;
+      ft_text->recno[ ft_text->area ]  = 1;
       ft_text->isBof[ ft_text->area ]  = HB_FALSE;
       ft_text->isEof[ ft_text->area ]  = HB_FALSE;
 

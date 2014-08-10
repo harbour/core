@@ -173,12 +173,10 @@ static int query( char * sel_str )
 
 static int fetch( void )
 {
-   long       fetch_stat;
    ISC_STATUS status[ 20 ];
+   long       fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
 
-   fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
-
-   if( fetch_stat != 100L )
+   if( fetch_stat != 100 )
       ERREXIT( status, 1 );
 
    return fetch_stat;

@@ -78,6 +78,7 @@ HB_FUNC( WVW_TBCREATE )
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndTB;
    int        iMaxTextRows = ( int ) ( hb_parl( 2 ) ? 1 : 0 );
+
 #if 0
    DWORD dwStyle = ( DWORD ) hb_parnidef( 3, TBSTYLE_FLAT | TBSTYLE_TOOLTIPS );
 #endif
@@ -140,7 +141,7 @@ HB_FUNC( WVW_TBCREATE )
 
    if( hWndTB == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed CreateToolbarEx..." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed CreateToolbarEx()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
       hb_retnl( 0 );
       return;
    }
@@ -226,7 +227,7 @@ HB_FUNC( WVW_TBADDBUTTON )
    const char * szBitmap = hb_parc( 3 );
    const char * szLabel  = hb_parcx( 4 );
 
-   UINT   uiBitmap = ( UINT ) hb_parni( 3 );
+   UINT uiBitmap = ( UINT ) hb_parni( 3 );
 
    int    iBitmapType  = hb_parni( 5 );
    BOOL   bMap3Dcolors = hb_parl( 6 );
@@ -243,16 +244,14 @@ HB_FUNC( WVW_TBADDBUTTON )
 
    if( iCommand >= WVW_ID_BASE_PUSHBUTTON )
    {
-      MessageBox( NULL, TEXT( "Toolbar button Command Id too high. Potential conflict with pushbutton" ),
-                  hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Toolbar button command ID too high. Potential conflict with pushbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
       hb_retl( HB_FALSE );
       return;
    }
 
    if( strlen( szLabel ) > WVW_TB_LABELMAXLENGTH )
    {
-      MessageBox( NULL, TEXT( "Cannot addbutton, Label too long..." ),
-                  hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Cannot addbutton, label too long." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
       hb_retl( HB_FALSE );
       return;
    }
@@ -265,16 +264,14 @@ HB_FUNC( WVW_TBADDBUTTON )
       {
          if( ! hb_gt_wvw_AddTBButton( hWndTB, szBitmap, uiBitmap, szLabel, iCommand, 1, bMap3Dcolors, pWindowData, bDropdown ) )
          {
-            MessageBox( NULL, TEXT( "Failed addbutton..." ),
-                        hb_gt_wvw_GetAppName(), MB_ICONERROR );
+            MessageBox( NULL, TEXT( "Failed addbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
             hb_retl( HB_FALSE );
             return;
          }
       }
       else
       {
-         MessageBox( NULL, TEXT( "Failed addbutton..." ),
-                     hb_gt_wvw_GetAppName(), MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Failed addbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
          hb_retl( HB_FALSE );
          return;
       }
@@ -294,7 +291,7 @@ HB_FUNC( WVW_TBADDBUTTON )
 HB_FUNC( WVW_TBBUTTONCOUNT )
 {
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HWND       hWndTB = pWindowData->hToolBar;
+   HWND       hWndTB      = pWindowData->hToolBar;
 
    if( hWndTB )
       hb_retni( ( int ) SendMessage( hWndTB, TB_BUTTONCOUNT, 0, 0 ) );
@@ -386,7 +383,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
       if( iCommand >= 0 )
       {
          USHORT usOldHeight = pWindowData->usTBHeight;
-         BOOL bEnable = hb_parldef( 3, HB_TRUE );
+         BOOL   bEnable     = hb_parldef( 3, HB_TRUE );
 
          if( SendMessage( hWndTB, TB_ENABLEBUTTON, ( WPARAM ) iCommand, ( LPARAM ) MAKELONG( bEnable, 0 ) ) )
          {

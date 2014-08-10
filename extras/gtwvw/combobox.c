@@ -110,7 +110,7 @@ HB_FUNC( WVW_CBCREATE )
    int   iTop, iLeft, iBottom, iRight;
    int   iOffTop, iOffLeft, iOffBottom, iOffRight;
 
-   UINT uiCBid;
+   UINT   uiCBid;
    USHORT usWidth      = ( USHORT ) hb_parni( 4 );
    USHORT usTop        = ( USHORT ) hb_parni( 2 ),
           usLeft       = ( USHORT ) hb_parni( 3 ),
@@ -308,7 +308,7 @@ HB_FUNC( WVW_CBISFOCUSED )
 HB_FUNC( WVW_CBENABLE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
-   HWND hWndCB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWndCB   = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_COMBOBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndCB )
    {
@@ -338,8 +338,8 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
-      WVW_DATA * pData = hb_gt_wvw_GetWvwData();
-      BOOL bOldSetting = pData->bRecurseCBlock;
+      WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
+      BOOL       bOldSetting = pData->bRecurseCBlock;
 
       pData->bRecurseCBlock = FALSE;
       pcd->bBusy = TRUE;
@@ -427,7 +427,7 @@ HB_FUNC( WVW_CBSETFONT )
  */
 HB_FUNC( WVW_CBSETINDEX )
 {
-   int  iIndex        = hb_parni( 3 );
+   int iIndex         = hb_parni( 3 );
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd && iIndex >= 0 )
@@ -485,7 +485,7 @@ HB_FUNC( WVW_CBGETCURTEXT )
 
    if( pcd )
    {
-      int iCurSel = ( int ) SendMessage( pcd->hWndCtrl, CB_GETCURSEL, 0, 0 );
+      int iCurSel  = ( int ) SendMessage( pcd->hWndCtrl, CB_GETCURSEL, 0, 0 );
       int iTextLen = ( int ) SendMessage( pcd->hWndCtrl, CB_GETLBTEXTLEN, ( WPARAM ) iCurSel, 0 );
       if( iTextLen == CB_ERR )
          hb_retc_null();

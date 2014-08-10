@@ -148,7 +148,7 @@ HB_FUNC( WVT_CHOOSEFONT )
       cf.iPointSize     = 0;
       cf.Flags          = CF_SCREENFONTS | CF_EFFECTS | CF_SHOWHELP | CF_INITTOLOGFONTSTRUCT;
       cf.rgbColors      = RGB( 0, 0, 0 );
-      cf.lCustData      = 0L;
+      cf.lCustData      = 0;
       cf.lpfnHook       = NULL;
       cf.lpTemplateName = NULL;
       cf.hInstance      = NULL;

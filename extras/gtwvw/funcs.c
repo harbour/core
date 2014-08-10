@@ -79,8 +79,8 @@ HB_FUNC( WIN_SENDMESSAGE )
                                     ( UINT ) hb_parni( 2 ),
                                     ( WPARAM ) hb_parnl( 3 ),
                                     HB_ISBYREF( 4 ) ? ( LPARAM ) ( LPSTR ) cText :
-                                       ( HB_ISCHAR( 4 ) ? ( LPARAM ) ( LPSTR ) hb_parc( 4 ) :
-                                          ( LPARAM ) hb_parnl( 4 ) ) ) );
+                                    ( HB_ISCHAR( 4 ) ? ( LPARAM ) ( LPSTR ) hb_parc( 4 ) :
+                                      ( LPARAM ) hb_parnl( 4 ) ) ) );
 
    if( HB_ISBYREF( 4 ) )
    {
@@ -351,15 +351,15 @@ HB_FUNC( WIN_DRAWTEXT )
 
 HB_FUNC( WVW_GBCREATE )
 {
-   USHORT usTop          = ( USHORT ) hb_parni( 2 ),
-          usLeft         = ( USHORT ) hb_parni( 3 ),
-          usBottom       = ( USHORT ) hb_parni( 4 ),
-          usRight        = ( USHORT ) hb_parni( 5 );
-   LPCTSTR lpszCaption   = hb_parc( 6 );
-   const char * szBitmap = hb_parc( 7 );
-   UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
-   double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-   BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
+   USHORT usTop    = ( USHORT ) hb_parni( 2 ),
+          usLeft   = ( USHORT ) hb_parni( 3 ),
+          usBottom = ( USHORT ) hb_parni( 4 ),
+          usRight  = ( USHORT ) hb_parni( 5 );
+   LPCTSTR      lpszCaption  = hb_parc( 6 );
+   const char * szBitmap     = hb_parc( 7 );
+   UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
+   double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+   BOOL         bMap3Dcolors = ( BOOL ) hb_parl( 11 );
 
    int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -1;
    int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -1;
@@ -367,10 +367,10 @@ HB_FUNC( WVW_GBCREATE )
    int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 1;
 
    hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-      szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-      iOffTop, iOffLeft, iOffBottom, iOffRight,
-      dStretch, bMap3Dcolors,
-      BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE ) );
+                                     szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+                                     iOffTop, iOffLeft, iOffBottom, iOffRight,
+                                     dStretch, bMap3Dcolors,
+                                     BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE ) );
 }
 
 /* BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE
@@ -380,15 +380,15 @@ HB_FUNC( WVW_RBCREATE )
 {
    if( HB_ISEVALITEM( 8 ) )
    {
-      USHORT usTop          = ( USHORT ) hb_parni( 2 ),
-             usLeft         = ( USHORT ) hb_parni( 3 ),
-             usBottom       = ( USHORT ) hb_parni( 4 ),
-             usRight        = ( USHORT ) hb_parni( 5 );
-      LPCTSTR lpszCaption   = hb_parc( 6 );
-      const char * szBitmap = hb_parc( 7 );
-      UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
-      double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-      BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
+      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
+             usLeft   = ( USHORT ) hb_parni( 3 ),
+             usBottom = ( USHORT ) hb_parni( 4 ),
+             usRight  = ( USHORT ) hb_parni( 5 );
+      LPCTSTR      lpszCaption  = hb_parc( 6 );
+      const char * szBitmap     = hb_parc( 7 );
+      UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
+      double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+      BOOL         bMap3Dcolors = ( BOOL ) hb_parl( 11 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -396,10 +396,10 @@ HB_FUNC( WVW_RBCREATE )
       int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
       hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-         szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-         iOffTop, iOffLeft, iOffBottom, iOffRight,
-         dStretch, bMap3Dcolors,
-         BS_AUTORADIOBUTTON /* | WS_GROUP */ ) );
+                                        szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+                                        iOffTop, iOffLeft, iOffBottom, iOffRight,
+                                        dStretch, bMap3Dcolors,
+                                        BS_AUTORADIOBUTTON /* | WS_GROUP */ ) );
    }
    else
       hb_retnl( 0 );
@@ -593,7 +593,7 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
    ti.hwnd   = pWindowData->hWnd;
    ti.uId    = ( UINT ) hb_parnl( 2 );
 #if 0
-   ti.uId    = ( UINT ) GetDlgItem( hWnd, hb_parni( 2 ) );
+   ti.uId = ( UINT ) GetDlgItem( hWnd, hb_parni( 2 ) );
 #endif
    ti.hinst    = GetModuleHandle( NULL );
    ti.lpszText = ( LPSTR ) hb_parc( 3 );  /* TOFIX: removing const */
@@ -667,22 +667,22 @@ HB_FUNC( LOADIMAGE )
 {
    if( HB_ISNUM( 2 ) )
       hb_retnint( ( HB_PTRDIFF )
-                LoadImage( hb_gt_wvw_GetWvwData()->hInstance,                     /* ( HINSTANCE ) hb_parnldef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
-                           ( LPCTSTR ) MAKEINTRESOURCE( hb_parnint( 2 ) ), /* name or identifier of image */
-                           ( UINT ) hb_parni( 3 ),                         /* type of image */
-                           hb_parni( 4 ),                                  /* desired width */
-                           hb_parni( 5 ),                                  /* desired height */
-                           ( UINT ) hb_parni( 6 )                          /* load flags */
-                           ) );
+                  LoadImage( hb_gt_wvw_GetWvwData()->hInstance,              /* ( HINSTANCE ) hb_parnldef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
+                             ( LPCTSTR ) MAKEINTRESOURCE( hb_parnint( 2 ) ), /* name or identifier of image */
+                             ( UINT ) hb_parni( 3 ),                         /* type of image */
+                             hb_parni( 4 ),                                  /* desired width */
+                             hb_parni( 5 ),                                  /* desired height */
+                             ( UINT ) hb_parni( 6 )                          /* load flags */
+                             ) );
 
    else
       HB_RETHANDLE(
          LoadImage( ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 1 ), /* handle of the instance that contains the image */
-                    ( LPCTSTR ) hb_parc( 2 ),      /* name or identifier of image */
-                    ( UINT ) hb_parni( 3 ),        /* type of image */
-                    hb_parni( 4 ),                 /* desired width */
-                    hb_parni( 5 ),                 /* desired height */
-                    ( UINT ) hb_parni( 6 )         /* load flags */
+                    ( LPCTSTR ) hb_parc( 2 ),                     /* name or identifier of image */
+                    ( UINT ) hb_parni( 3 ),                       /* type of image */
+                    hb_parni( 4 ),                                /* desired width */
+                    hb_parni( 5 ),                                /* desired height */
+                    ( UINT ) hb_parni( 6 )                        /* load flags */
                     ) );
 
 }
@@ -693,7 +693,7 @@ HB_FUNC( LOADBITMAP )
    {
       if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
 #if 0
-         hb_retnint( ( HB_PTRDIFF ) LoadBitmap( GetModuleHandle( NULL ),  MAKEINTRESOURCE( hb_parnint( 1 ) ) ) );
+         hb_retnint( ( HB_PTRDIFF ) LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parnint( 1 ) ) ) );
 #endif
          HB_RETHANDLE( LoadBitmap( NULL, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
       else
@@ -754,7 +754,7 @@ HB_FUNC( OPENIMAGE )
       }
 
       iFileSize = ( int ) hb_fsSeek( fhnd, 0, FS_END );
-      hG = GlobalAlloc( GPTR, iFileSize );
+      hG        = GlobalAlloc( GPTR, iFileSize );
       if( ! hG )
       {
          hb_fsClose( fhnd );
@@ -971,19 +971,19 @@ HB_FUNC( CREATEFONT )
    DWORD fdwStrikeOut = hb_parnl( 8 );
 
    hFont = CreateFont(
-      hb_parni( 3 ),             /* logical height of font */
-      hb_parni( 2 ),             /* logical average character width */
-      0,                         /* angle of escapement */
-      0,                         /* base-line orientation angle */
-      fnWeight,                  /* font weight */
-      fdwItalic,                 /* italic attribute flag */
-      fdwUnderline,              /* underline attribute flag */
-      fdwStrikeOut,              /* strikeout attribute flag */
-      fdwCharSet,                /* character set identifier */
-      0,                         /* output precision */
-      0,                         /* clipping precision */
-      0,                         /* output quality */
-      0,                         /* pitch and family */
+      hb_parni( 3 ),              /* logical height of font */
+      hb_parni( 2 ),              /* logical average character width */
+      0,                          /* angle of escapement */
+      0,                          /* base-line orientation angle */
+      fnWeight,                   /* font weight */
+      fdwItalic,                  /* italic attribute flag */
+      fdwUnderline,               /* underline attribute flag */
+      fdwStrikeOut,               /* strikeout attribute flag */
+      fdwCharSet,                 /* character set identifier */
+      0,                          /* output precision */
+      0,                          /* clipping precision */
+      0,                          /* output quality */
+      0,                          /* pitch and family */
       ( LPCTSTR ) hb_parc( 1 ) ); /* pointer to typeface name string */
 
    HB_RETHANDLE( hFont );
@@ -1068,9 +1068,10 @@ HB_FUNC( TOOLBARADDBUTTONS )
    TBBUTTON * tb       = ( TBBUTTON * ) hb_xgrab( iButtons * sizeof( TBBUTTON ) );
 /* BOOL bSystem; */
 
-   ULONG  ulCount;
+   ULONG ulCount;
+
 #if 0
-   ULONG  ulID;
+   ULONG ulID;
 #endif
    DWORD  style = GetWindowLong( hWndCtrl, GWL_STYLE );
    USHORT usOldHeight;
@@ -1083,7 +1084,7 @@ HB_FUNC( TOOLBARADDBUTTONS )
    {
       PHB_ITEM pTemp = hb_arrayGetItemPtr( pArray, ulCount + 1 );
 #if 0
-      ulID  = hb_arrayGetNI( pTemp, 1 );
+      ulID = hb_arrayGetNI( pTemp, 1 );
       /* bSystem = hb_arrayGetL( pTemp, 9 ); */
 
       if( bSystem )
@@ -1782,15 +1783,15 @@ HB_FUNC( WVW_SETPEN )
    {
       int        iPenStyle = hb_parni( 1 );
       int        iPenWidth = hb_parni( 2 );
-      COLORREF   crColor = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
-      WVW_DATA * p = hb_gt_wvw_GetWvwData();
-      HPEN       hPen = CreatePen( iPenStyle, iPenWidth, crColor );
+      COLORREF   crColor   = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
+      WVW_DATA * p         = hb_gt_wvw_GetWvwData();
+      HPEN       hPen      = CreatePen( iPenStyle, iPenWidth, crColor );
 
       if( hPen )
       {
 #if 0
          /* 20040923, was */
-         if( s_pWvwData->pWindows[usWinNum]->currentPen )
+         if( s_pWvwData->pWindows[ usWinNum ]->currentPen )
             DeleteObject( s_pWvwData->pWindows[ usWinNum ]->currentPen );
          s_pWvwData->pWindows[ usWinNum ]->currentPen = hPen;
 #endif
@@ -1820,7 +1821,7 @@ HB_FUNC( WVW_SETBRUSH )
    {
       HBRUSH     hBrush;
       LOGBRUSH   lb;
-      WVW_DATA * p  = hb_gt_wvw_GetWvwData();
+      WVW_DATA * p = hb_gt_wvw_GetWvwData();
 
       memset( &lb, 0, sizeof( lb ) );
 
@@ -1863,9 +1864,9 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
    if( p )
    {
-      WORD   nItems = ( WORD ) hb_parvni( 1, 4 );
-      int    i, nchar;
-      DWORD  lStyle = hb_parvnl( 1, 3 );
+      WORD  nItems = ( WORD ) hb_parvni( 1, 4 );
+      int   i, nchar;
+      DWORD lStyle = hb_parvnl( 1, 3 );
 
       *p++ = 1;
       *p++ = 0xFFFF;

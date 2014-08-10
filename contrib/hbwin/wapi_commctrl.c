@@ -458,7 +458,7 @@ HB_FUNC( WAPI_TABCTRL_GETROWCOUNT )
 }
 
 /* TabCtrl_GetImageList(hwnd) */
-/* (HIMAGELIST)SNDMSG((hwnd), TCM_GETIMAGELIST, 0, 0L) */
+/* (HIMAGELIST)SNDMSG((hwnd), TCM_GETIMAGELIST, 0, 0) */
 HB_FUNC( WAPI_TABCTRL_GETIMAGELIST )
 {
    hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetImageList( hbwapi_par_raw_HWND( 1 ) ) );
@@ -490,14 +490,14 @@ HB_FUNC( WAPI_TABCTRL_SETITEM )
 }
 
 /* TabCtrl_DeleteAllItems(hwnd) */
-/* (BOOL)SNDMSG((hwnd), TCM_DELETEALLITEMS, 0, 0L) */
+/* (BOOL)SNDMSG((hwnd), TCM_DELETEALLITEMS, 0, 0) */
 HB_FUNC( WAPI_TABCTRL_DELETEALLITEMS )
 {
    hbwapi_ret_L( TabCtrl_DeleteAllItems( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 /* TabCtrl_DeleteItem(hwnd, i) */
-/* (BOOL)SNDMSG((hwnd), TCM_DELETEITEM, (WPARAM)(int)(i), 0L) */
+/* (BOOL)SNDMSG((hwnd), TCM_DELETEITEM, (WPARAM)(int)(i), 0) */
 HB_FUNC( WAPI_TABCTRL_DELETEITEM )
 {
    hbwapi_ret_L( TabCtrl_DeleteItem( hbwapi_par_raw_HWND( 1 ), ( WPARAM ) hbwapi_par_INT( 2 ) ) );
@@ -516,7 +516,7 @@ HB_FUNC( WAPI_TABCTRL_HITTEST )
 }
 
 /* TabCtrl_SetItemExtra(hwndTC, cb) */
-/* (BOOL)SNDMSG((hwndTC), TCM_SETITEMEXTRA, (WPARAM)(cb), 0L) */
+/* (BOOL)SNDMSG((hwndTC), TCM_SETITEMEXTRA, (WPARAM)(cb), 0) */
 HB_FUNC( WAPI_TABCTRL_SETITEMEXTRA )
 {
    hbwapi_ret_L( TabCtrl_SetItemExtra( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) );
@@ -552,7 +552,7 @@ HB_FUNC( WAPI_TABCTRL_SETITEMSIZE )
 }
 
 /* TabCtrl_RemoveImage(hwnd, i) */
-/* (void)SNDMSG((hwnd), TCM_REMOVEIMAGE, i, 0L) */
+/* (void)SNDMSG((hwnd), TCM_REMOVEIMAGE, i, 0) */
 HB_FUNC( WAPI_TABCTRL_REMOVEIMAGE )
 {
    TabCtrl_RemoveImage( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) );
@@ -566,7 +566,7 @@ HB_FUNC( WAPI_TABCTRL_SETPADDING )
 }
 
 /* TabCtrl_GetToolTips(hwnd) */
-/* (HWND)SNDMSG((hwnd), TCM_GETTOOLTIPS, 0, 0L) */
+/* (HWND)SNDMSG((hwnd), TCM_GETTOOLTIPS, 0, 0) */
 HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -577,7 +577,7 @@ HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
 }
 
 /* TabCtrl_SetToolTips(hwnd, hwndTT) */
-/* (void)SNDMSG((hwnd), TCM_SETTOOLTIPS, (WPARAM)(hwndTT), 0L) */
+/* (void)SNDMSG((hwnd), TCM_SETTOOLTIPS, (WPARAM)(hwndTT), 0) */
 HB_FUNC( WAPI_TABCTRL_SETTOOLTIPS )
 {
 #if ! defined( HB_OS_WIN_CE )

@@ -293,7 +293,7 @@ HB_FUNC( WVW_EBISFOCUSED )
 HB_FUNC( WVW_EBENABLE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
-   HWND hWndEB = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWndEB   = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_EDITBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndEB )
    {
@@ -339,13 +339,13 @@ HB_FUNC( WVW_EBEDITABLE )
  */
 HB_FUNC( WVW_EBSETCODEBLOCK )
 {
-   CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, NULL, ( UINT ) hb_parnl( 2 ) );
+   CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, NULL, ( UINT ) hb_parnl( 2 ) );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {
-      WVW_DATA * pData = hb_gt_wvw_GetWvwData();
-      BOOL bOldSetting = pData->bRecurseCBlock;
+      WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
+      BOOL       bOldSetting = pData->bRecurseCBlock;
 
       pData->bRecurseCBlock = FALSE;
       pcd->bBusy = TRUE;
@@ -455,9 +455,9 @@ HB_FUNC( WVW_EBGETTEXT )
 
    if( pcd )
    {
-      BOOL bSoftBreak = hb_parl( 3 );
+      BOOL       bSoftBreak  = hb_parl( 3 );
       WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-      BOOL bToOEM = ( pWindowData->CodePage == OEM_CHARSET );
+      BOOL       bToOEM      = ( pWindowData->CodePage == OEM_CHARSET );
 
       USHORT usLen;
       LPTSTR lpszTextANSI;
@@ -493,14 +493,14 @@ HB_FUNC( WVW_EBGETTEXT )
  */
 HB_FUNC( WVW_EBSETTEXT )
 {
-   UINT usWinNum = WVW_WHICH_WINDOW;
+   UINT usWinNum      = WVW_WHICH_WINDOW;
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, ( UINT ) hb_parnl( 2 ) );
 
    if( pcd )
    {
       WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-      BOOL bFromOEM = ( pWindowData->CodePage == OEM_CHARSET );
-      LPTSTR lpszText = ( LPTSTR ) hb_parcx( 3 );
+      BOOL       bFromOEM    = ( pWindowData->CodePage == OEM_CHARSET );
+      LPTSTR     lpszText    = ( LPTSTR ) hb_parcx( 3 );
 
       if( bFromOEM )
       {
@@ -529,7 +529,7 @@ HB_FUNC( WVW_EBSETTEXT )
 HB_FUNC( WVW_EBGETSEL )
 {
    CONTROL_DATA * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, NULL, ( UINT ) hb_parnl( 2 ) );
-   DWORD dwStart, dwEnd;
+   DWORD          dwStart, dwEnd;
 
    if( pcd )
    {

@@ -90,15 +90,15 @@ HB_FUNC( WVW_CXCREATE )
 {
    if( HB_ISEVALITEM( 8 ) )
    {
-      USHORT usTop          = ( USHORT ) hb_parni( 2 ),
-             usLeft         = ( USHORT ) hb_parni( 3 ),
-             usBottom       = ( USHORT ) hb_parni( 4 ),
-             usRight        = ( USHORT ) hb_parni( 5 );
-      LPCTSTR lpszCaption   = hb_parc( 6 );
-      const char * szBitmap = hb_parc( 7 );
-      UINT    uiBitmap      = ( UINT ) hb_parni( 7 );
-      double  dStretch      = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-      BOOL    bMap3Dcolors  = ( BOOL ) hb_parl( 11 );
+      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
+             usLeft   = ( USHORT ) hb_parni( 3 ),
+             usBottom = ( USHORT ) hb_parni( 4 ),
+             usRight  = ( USHORT ) hb_parni( 5 );
+      LPCTSTR      lpszCaption  = hb_parc( 6 );
+      const char * szBitmap     = hb_parc( 7 );
+      UINT         uiBitmap     = ( UINT ) hb_parni( 7 );
+      double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
+      BOOL         bMap3Dcolors = ( BOOL ) hb_parl( 11 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -106,10 +106,10 @@ HB_FUNC( WVW_CXCREATE )
       int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
       hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
-         szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
-         iOffTop, iOffLeft, iOffBottom, iOffRight,
-         dStretch, bMap3Dcolors,
-         BS_AUTOCHECKBOX ) );
+                                        szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+                                        iOffTop, iOffLeft, iOffBottom, iOffRight,
+                                        dStretch, bMap3Dcolors,
+                                        BS_AUTOCHECKBOX ) );
    }
    else
       hb_retnl( 0 );
@@ -171,7 +171,7 @@ HB_FUNC( WVW_CXSETFOCUS )
 HB_FUNC( WVW_CXENABLE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
-   HWND hWndCX = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWndCX   = hb_gt_wvw_FindControlHandle( usWinNum, WVW_CONTROL_CHECKBOX, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndCX )
    {
@@ -199,7 +199,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
    WVW_DATA *     pData        = hb_gt_wvw_GetWvwData();
    CONTROL_DATA * pcd          = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( UINT ) hb_parnl( 2 ) );
    PHB_ITEM       phiCodeBlock = hb_param( 3, HB_IT_EVALITEM );
-   BOOL           bOldSetting  = pData->bRecurseCBlock;
+   BOOL bOldSetting = pData->bRecurseCBlock;
 
    if( phiCodeBlock && pcd && ! pcd->bBusy )
    {

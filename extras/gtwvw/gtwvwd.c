@@ -3617,8 +3617,7 @@ static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    if( ! RegisterClass( &wndclass ) )
    {
-      MessageBox( NULL, TEXT( "Failed to register class." ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed to register class." ), s_pWvwData->szAppName, MB_ICONERROR );
       return 0;
    }
 
@@ -3639,8 +3638,7 @@ static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    if( hWnd == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed to create window." ),
-                  TEXT( "HARBOUR_WVW" ), MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed to create window." ), TEXT( "HARBOUR_WVW" ), MB_ICONERROR );
       return NULL;
    }
 
@@ -4869,8 +4867,7 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
 #if 0
    if( s_pWvwData->bMainCoordMode && ( ! hb_gt_wvwInWindow( 0, iRow1, iCol1 ) || ! hb_gt_wvwInWindow( 0, iRow2, iCol2 ) ) )
    {
-      MessageBox( NULL, TEXT( "Invalid (Row,Col)" ),
-                  lpszWinName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Invalid (Row,Col)" ), lpszWinName, MB_ICONERROR );
       return 0;
    }
 #endif
@@ -4898,8 +4895,7 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
       if( ! RegisterClass( &wndclass ) )
       {
 
-         MessageBox( NULL, TEXT( "Failed to register class." ),
-                     s_pWvwData->szSubWinName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Failed to register class." ), s_pWvwData->szSubWinName, MB_ICONERROR );
          return 0;
       }
 
@@ -4934,20 +4930,18 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
 
    if( hWnd == NULL )
    {
-      LPVOID lpMsgBuf = NULL;
+      LPTSTR lpMsgBuf = NULL;
 
       FormatMessage(
-         FORMAT_MESSAGE_ALLOCATE_BUFFER |
-         FORMAT_MESSAGE_FROM_SYSTEM |
-         FORMAT_MESSAGE_IGNORE_INSERTS,
+         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
          NULL,
          GetLastError(),
          MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
-         ( LPTSTR ) &lpMsgBuf,
+         &lpMsgBuf,
          0,
          NULL );
 
-      MessageBox( NULL, ( LPCTSTR ) lpMsgBuf, "WINAPI failed to CreateWindow", MB_ICONERROR );
+      MessageBox( NULL, lpMsgBuf, "WINAPI failed to CreateWindow", MB_ICONERROR );
       LocalFree( lpMsgBuf );
 
       hb_gt_wvwWindowEpilogue();
@@ -5086,8 +5080,7 @@ static void hb_gt_wvwCloseWindow( void ) /* assume s_pWvwData->usNumWindows >= 2
    {
       if( ! UnregisterClass( s_pWvwData->szSubWinName, s_pWvwData->hInstance ) )
       {
-         MessageBox( NULL, TEXT( "Failed UnregisterClass" ),
-                     s_pWvwData->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Failed UnregisterClass()" ), s_pWvwData->szAppName, MB_ICONERROR );
       }
    }
 #endif
@@ -6843,14 +6836,14 @@ HB_FUNC( WVW_NOPENWINDOW )
 
    if( s_pWvwData->usNumWindows == WVW_MAXWINDOWS )
    {
-      MessageBox( NULL, TEXT( "Too many Windows to open" ), TEXT( "Error" ), MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Too many windows to open" ), TEXT( "Error" ), MB_ICONERROR );
       hb_retni( 0 );
       return;
    }
 
    if( iParentWin > ( INT ) s_pWvwData->usNumWindows - 1 )
    {
-      MessageBox( NULL, TEXT( "Invalid Parent Window" ), TEXT( "Error" ), MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Invalid parent window" ), TEXT( "Error" ), MB_ICONERROR );
       hb_retni( 0 );
       return;
    }
@@ -6870,8 +6863,7 @@ HB_FUNC( WVW_NOPENWINDOW )
       HB_SIZE iLen = hb_parclen( 1 );
       if( iLen > WVW_MAXWINNAMELENGTH - 1 )
       {
-         MessageBox( NULL, TEXT( "Windows name too long" ),
-                     TEXT( "Error" ), MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Window name too long" ), TEXT( "Error" ), MB_ICONERROR );
          hb_retni( 0 );
          return;
       }
@@ -6974,8 +6966,7 @@ HB_FUNC( WVW_LCLOSEWINDOW )
 
    if( s_pWvwData->usNumWindows <= 1 )
    {
-      MessageBox( NULL, TEXT( "No more window to close" ),
-                  "Error", MB_ICONERROR );
+      MessageBox( NULL, TEXT( "No more window to close" ), "Error", MB_ICONERROR );
       hb_retl( HB_FALSE );
       return;
    }
@@ -8663,8 +8654,7 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, UINT uiBitmap,
 
                if( ! bResult )
                {
-                  MessageBox( NULL, TEXT( "Cannot shrink/stretch bitmap for WVW Control" ),
-                              s_pWvwData->szAppName, MB_ICONERROR );
+                  MessageBox( NULL, TEXT( "Cannot shrink/stretch bitmap for WVW control" ), s_pWvwData->szAppName, MB_ICONERROR );
 
                   DeleteObject( hBitmap2 );
                }
@@ -8809,8 +8799,7 @@ LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    if( hWndParent == NULL )
    {
       /* TODO: runtime/internal error is better */
-      MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): parent of toolbar is missing" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): parent of toolbar is missing" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -8824,8 +8813,7 @@ LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    if( usWinNum >= s_pWvwData->usNumWindows )
    {
       /* TODO: runtime/internal error is better */
-      MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): invalid handle of tollbar's parent" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): invalid handle of tollbar's parent" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -9282,8 +9270,7 @@ LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    uiXBid = ( UINT ) GetWindowLong( hWnd, GWL_ID );
    if( uiXBid == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId of Scrollbar" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId() of Scrollbar" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -9291,8 +9278,7 @@ LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    OldProc = hb_gt_wvw_GetControlProc( usWinNum, WVW_CONTROL_SCROLLBAR, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc of Scrollbar" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc() of Scrollbar" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -9353,8 +9339,7 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
    uiPBid = ( UINT ) GetWindowLong( hWnd, GWL_ID );
    if( uiPBid == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -9362,8 +9347,7 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
    OldProc = hb_gt_wvw_GetControlProc( usWinNum, WVW_CONTROL_PUSHBUTTON, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -9556,8 +9540,7 @@ LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
 
    if( uiCBid == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -9565,8 +9548,7 @@ LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    OldProc = hb_gt_wvw_GetControlProc( usWinNum, WVW_CONTROL_COMBOBOX, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -9757,8 +9739,7 @@ LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
 
    if( uiEBid == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -9766,8 +9747,7 @@ LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    OldProc = hb_gt_wvw_GetControlProc( usWinNum, WVW_CONTROL_EDITBOX, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc" ),
-                  s_pWvwData->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), s_pWvwData->szAppName, MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }

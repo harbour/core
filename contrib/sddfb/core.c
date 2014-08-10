@@ -553,7 +553,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
          pArea->pRow[ pArea->ulRecCount ]      = pArray;
          pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
       }
-      else if( lErr == 100L )
+      else if( lErr == 100 )
       {
          pArea->fFetched = HB_TRUE;
          if( isc_dsql_free_statement( status, phStmt, DSQL_drop ) )

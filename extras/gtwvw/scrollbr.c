@@ -501,7 +501,7 @@ HB_FUNC( WVW_XBCREATE )
       iBottom - iTop + 1,                       /* height */
       hWndParent,                               /* handle to main window */
       ( HMENU ) ( HB_PTRDIFF ) uiXBid,          /* id for this scroll bar control */
-      hb_gt_wvw_GetWvwData()->hInstance,               /* instance owning this window */
+      hb_gt_wvw_GetWvwData()->hInstance,        /* instance owning this window */
       NULL );                                   /* pointer not needed */
 
    if( hWndXB )
@@ -585,7 +585,7 @@ HB_FUNC( WVW_XBUPDATE )
    if( hWndXB && iPage >= 0 )
    {
       SCROLLINFO si;
-      UINT fMask = SIF_DISABLENOSCROLL;
+      UINT       fMask = SIF_DISABLENOSCROLL;
 
       if( HB_ISNUM( 3 ) )
          fMask |= SIF_POS;
@@ -656,7 +656,7 @@ HB_FUNC( WVW_XBINFO )
 HB_FUNC( WVW_XBENABLE )
 {
    UINT uiFlags = ( UINT ) hb_parni( 3 );
-   HWND hWndXB = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
+   HWND hWndXB  = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( UINT ) hb_parnl( 2 ), NULL );
 
    if( hWndXB && uiFlags <= ESB_DISABLE_BOTH )
       hb_retl( EnableScrollBar( hWndXB, SB_CTL, uiFlags ) );
