@@ -92,9 +92,13 @@ HB_FUNC( WVW_SBCREATE )
                                     WVW_ID_BASE_STATUSBAR + usWinNum );
    if( hWndSB )
    {
-      RECT rSB = { 0 };
+      RECT rSB;
+
       if( pWindowData->hSBfont == NULL )
          pWindowData->hSBfont = CreateFontIndirect( &pData->lfSB );
+
+      memset( &rSB, 0, sizeof( rSB ) );
+
       if( GetClientRect( hWndSB, &rSB ) )
          pWindowData->usSBHeight = ( USHORT ) rSB.bottom;
       pWindowData->hStatusBar = hWndSB;
@@ -153,7 +157,7 @@ HB_FUNC( WVW_SBADDPART )
    int        ptArray[ WVW_MAX_STATUS_PARTS ];
    int        numOfParts;
    int        n;
-   RECT       rSB = { 0 };
+   RECT       rSB;
    WORD       displayFlags;
    HICON      hIcon;
    BOOL       lResetParts;
@@ -173,10 +177,12 @@ HB_FUNC( WVW_SBADDPART )
    if( HB_ISCHAR( 2 ) )
    {
       HDC  hDCSB = GetDC( hWndSB );
-      SIZE size  = { 0 };
+      SIZE size;
 
       HFONT hFont    = ( HFONT ) SendMessage( hWndSB, WM_GETFONT, 0, 0 );
       HFONT hOldFont = ( HFONT ) SelectObject( hDCSB, hFont );
+
+      memset( &size, 0, sizeof( size ) );
 
       if( GetTextExtentPoint32( hDCSB, hb_parc( 2 ), ( int ) hb_parclen( 2 ) + 1, &size ) )
          usWidth = ( USHORT ) size.cx;
@@ -191,6 +197,8 @@ HB_FUNC( WVW_SBADDPART )
    else
       numOfParts = 0;
    numOfParts++;
+
+   memset( &rSB, 0, sizeof( rSB ) );
 
    GetClientRect( hWndSB, &rSB );
 
@@ -236,7 +244,7 @@ HB_FUNC( WVW_SBREFRESH )
    int        numOfParts;
    int        n;
    int        iDiff;
-   RECT       rSB = { 0 };
+   RECT       rSB;
 
    hWndSB = pWindowData->hStatusBar;
    if( hWndSB == NULL )
@@ -251,6 +259,8 @@ HB_FUNC( WVW_SBREFRESH )
       hb_retnl( 0 );
       return;
    }
+
+   memset( &rSB, 0, sizeof( rSB ) );
 
    GetClientRect( hWndSB, &rSB );
    iDiff = rSB.right - ptArray[ numOfParts - 1 ];

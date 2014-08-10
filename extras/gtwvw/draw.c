@@ -84,7 +84,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    int        oldTextAlign, iAlignHorz, iAlignVert, iAlignH = 0, iAlignV;
    COLORREF   oldBkColor, oldTextColor;
    UINT       uiOptions;
-   SIZE       sz = { 0 };
+   SIZE       sz;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -116,6 +116,8 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    oldTextColor = SetTextColor( pWindowData->hdc, HB_ISNUM( 9 ) ? ( COLORREF ) hb_parnl( 9 ) : pWindowData->foreground );
    oldBkColor   = SetBkColor( pWindowData->hdc, HB_ISNUM( 10 ) ? ( COLORREF ) hb_parnl( 10 ) : pWindowData->background );
    oldFont      = ( HFONT ) SelectObject( pWindowData->hdc, ( HFONT ) HB_PARHANDLE( 11 ) );
+
+   memset( &sz, 0, sizeof( sz ) );
 
    GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &sz );
 
@@ -613,7 +615,6 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
 
    COLORREF crBarColor;
    HBRUSH   hBrush;
-   LOGBRUSH lb = { 0 };
    RECT     rc;
    POINT    xy;
 
@@ -676,11 +677,14 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
    }
 
    if( bImage )
-      hb_gt_wvw_DrawImage( usWinNum, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, hb_parc( 10 ),
-                          FALSE );
+      hb_gt_wvw_DrawImage( usWinNum, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, hb_parc( 10 ), FALSE );
    else
    {
+      LOGBRUSH lb;
+
       crBarColor = HB_ISNUM( 9 ) ? ( COLORREF ) hb_parnl( 9 ) : hb_gt_wvw_GetColorData(  0 );
+
+      memset( &lb, 0, sizeof( lb ) );
 
       lb.lbStyle = BS_SOLID;
       lb.lbColor = crBarColor;
@@ -1382,17 +1386,17 @@ HB_FUNC( WVW_DRAWLABEL )
 {
    UINT       usWinNum = WVW_WHICH_WINDOW;
    HFONT      hFont, oldFont;
-   LOGFONT    logfont = { 0 };
+   LOGFONT    logfont;
    int        oldTextAlign;
    COLORREF   oldBkColor, oldTextColor;
-   WIN_DATA * pWindowData;
+   WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    USHORT     usRow = ( USHORT ) hb_parni( 2 ),
               usCol = ( USHORT ) hb_parni( 3 );
 
-   pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
-
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( usWinNum, &usRow, &usCol, NULL, NULL );
+
+   memset( &logfont, 0, sizeof( logfont ) );
 
    logfont.lfEscapement     = hb_parni( 6 ) * 10;
    logfont.lfOrientation    = 0;
@@ -1975,7 +1979,6 @@ HB_FUNC( WVW_DRAWGRIDVERT )
 HB_FUNC( WVW_DRAWBUTTON )
 {
    UINT  usWinNum = WVW_WHICH_WINDOW;
-   SIZE  sz       = { 0 };
    POINT xy;
    RECT  rc;
    int   iTop, iLeft, iBottom, iRight;
@@ -1983,7 +1986,7 @@ HB_FUNC( WVW_DRAWBUTTON )
    int   iTextHeight /*, iTextWidth */;
    int   iImageWidth, iImageHeight;
    COLORREF /* oldBkColor, */ oldTextColor;
-   LOGBRUSH   lb = { 0 };
+   LOGBRUSH   lb;
    HBRUSH     hBrush;
    IPicture * iPicture;
 
@@ -2018,6 +2021,8 @@ HB_FUNC( WVW_DRAWBUTTON )
    iBottom = xy.y - 1;
    iRight  = xy.x - 1;
 
+   memset( &lb, 0, sizeof( lb ) );
+
    lb.lbStyle = BS_SOLID;
    lb.lbColor = bkColor;
    lb.lbHatch = 0;
@@ -2048,12 +2053,15 @@ HB_FUNC( WVW_DRAWBUTTON )
          break;
       default:
          hb_gt_wvw_DrawBoxRaised( pWindowData->byWinId, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, FALSE );
-         break;
    }
 
    if( bText )
    {
+      SIZE sz;
+
       SelectObject( pWindowData->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
+
+      memset( &sz, 0, sizeof( sz ) );
 
       GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &sz );
 

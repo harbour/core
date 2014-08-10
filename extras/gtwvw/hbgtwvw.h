@@ -67,16 +67,12 @@
 
 #define HB_GT_NAME            WVW
 
-#ifndef CINTERFACE
-#define CINTERFACE            1
-#endif
-
 #include "hbapiitm.h"
 #include "hbwinuni.h"
 
 /* Header file so MSVC can use ole in C mode while compile in C++ mode
    Copyright 2006 Paul Tucker <ptucker@sympatico.ca> */
-
+#if 0
 #if defined( _MSC_VER ) && ! defined( HB_OS_WIN_64 ) && \
    ! defined( __LCC__ ) && ! defined( __POCC__ ) && ! defined( __XCC__ )
 
@@ -108,6 +104,14 @@
 #define _SYS_GUID_OPERATOR_EQ_  1
 #endif
 
+#endif
+#endif
+
+#if defined( __BORLANDC__ ) || \
+   ( defined( __WATCOMC__ ) && ! defined( __cplusplus ) )
+   #if ! defined( NONAMELESSUNION )
+      #define NONAMELESSUNION
+   #endif
 #endif
 
 #include <windows.h>
@@ -143,6 +147,25 @@
 
 #if defined( __MSC6__ ) || defined( __DMC__ )
    #define LONG_PTR               LONG
+#endif
+
+/* macros used to hide type of interface: C or C++ */
+#if defined( __cplusplus ) && ! defined( CINTERFACE ) && \
+   ( defined( __BORLANDC__ ) || \
+     defined( __DMC__ ) || \
+     defined( _MSC_VER ) || \
+     defined( __MINGW32__ ) || \
+     ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1270 ) ) )
+   #define HB_ID_REF( id )     ( id )
+   #define HB_VTBL( pSelf )    ( pSelf )
+   #define HB_THIS( pSelf )
+   #define HB_THIS_( pSelf )
+#else
+   #define HB_OLE_C_API        1
+   #define HB_ID_REF( id )     ( &id )
+   #define HB_VTBL( pSelf )    ( pSelf )->lpVtbl
+   #define HB_THIS( pSelf )    ( pSelf )
+   #define HB_THIS_( pSelf )   ( pSelf ),
 #endif
 
 #ifndef GRADIENT_FILL_RECT_H

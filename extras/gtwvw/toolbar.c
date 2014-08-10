@@ -86,7 +86,6 @@ HB_FUNC( WVW_TBCREATE )
    int iSystemBitmap = ( int ) hb_parnidef( 4, 1 );
    int iImageWidth   = ( int ) ( iSystemBitmap == 0 && HB_ISNUM( 5 ) ? hb_parni( 5 ) : -1 );
    int iImageHeight  = ( int ) ( iSystemBitmap == 0 && HB_ISNUM( 6 ) ? hb_parni( 6 ) : -1 );
-   TBADDBITMAP tbab  = { 0 };
 
    InitCommonControls();
 
@@ -108,7 +107,6 @@ HB_FUNC( WVW_TBCREATE )
             break;
          default:
             iImageWidth = 16;
-            break;
       }
    }
    if( iImageHeight < 0 )
@@ -123,7 +121,6 @@ HB_FUNC( WVW_TBCREATE )
             break;
          default:
             iImageHeight = iImageWidth;
-            break;
       }
    }
 
@@ -143,8 +140,7 @@ HB_FUNC( WVW_TBCREATE )
 
    if( hWndTB == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed CreateToolbarEx..." ),
-                  hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed CreateToolbarEx..." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
       hb_retnl( 0 );
       return;
    }
@@ -153,6 +149,10 @@ HB_FUNC( WVW_TBCREATE )
 
    if( iSystemBitmap > 0 )
    {
+      TBADDBITMAP tbab;
+
+      memset( &tbab, 0, sizeof( tbab ) );
+
       tbab.hInst = HINST_COMMCTRL;
 
       tbab.nID = iSystemBitmap == 1 ? IDB_STD_SMALL_COLOR : IDB_STD_LARGE_COLOR;

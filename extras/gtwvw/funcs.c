@@ -280,8 +280,10 @@ HB_FUNC( WIN_LOADIMAGE )
 
 HB_FUNC( WIN_GETCLIENTRECT )
 {
-   RECT     rc   = { 0 };
+   RECT     rc;
    PHB_ITEM info = hb_itemArrayNew( 4 );
+
+   memset( &rc, 0, sizeof( rc ) );
 
    GetClientRect( ( HWND ) HB_PARHANDLE( 1 ), &rc );
 
@@ -321,7 +323,9 @@ HB_FUNC( WVW_RECTANGLE )
 
 HB_FUNC( WIN_CREATEBRUSH )
 {
-   LOGBRUSH lb = { 0 };
+   LOGBRUSH lb;
+
+   memset( &lb, 0, sizeof( lb ) );
 
    lb.lbStyle = hb_parni( 1 );
    lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
@@ -557,8 +561,10 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
    WVW_DATA * pData       = hb_gt_wvw_GetWvwData();
 
    int iStyle = TTS_ALWAYSTIP;
-   INITCOMMONCONTROLSEX icex = { 0 };
-   TOOLINFO ti = { 0 };
+   INITCOMMONCONTROLSEX icex;
+   TOOLINFO ti;
+
+   memset( &icex, 0, sizeof( icex ) );
 
    /* Load the tooltip class from the DLL. */
    icex.dwSize = sizeof( icex );
@@ -584,6 +590,9 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
       hb_retnl( 0 );
       return;
    }
+
+   memset( &ti, 0, sizeof( ti ) );
+
    ti.uFlags = TTF_SUBCLASS | TTF_IDISHWND;
    ti.hwnd   = pWindowData->hWnd;
    ti.uId    = ( UINT ) hb_parnl( 2 );
@@ -591,9 +600,9 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
    ti.uId    = ( UINT ) GetDlgItem( hWnd, hb_parni( 2 ) );
 #endif
    ti.hinst    = GetModuleHandle( NULL );
-   ti.lpszText = ( LPSTR ) hb_parc( 3 );
+   ti.lpszText = ( LPSTR ) hb_parc( 3 );  /* TOFIX: removing const */
 
-   hb_retl( ( HB_BOOL ) SendMessage( pData->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) ( LPTOOLINFO ) &ti ) );
+   hb_retl( ( HB_BOOL ) SendMessage( pData->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) &ti ) );
 }
 
 
@@ -1131,7 +1140,6 @@ HB_FUNC( SETBITMAPRESOURCEID )
          break;
       default:
          iOffset = 0;
-         break;
    }
 
    if( iBitmapType == 0 )
@@ -1399,7 +1407,6 @@ HB_FUNC( WVW_SETPOINTER )
 
       default:
          hCursor = LoadCursor( NULL, IDC_ARROW );
-         break;
    }
 
    SetClassLongPtr( pWindowData->hWnd, GCLP_HCURSOR, ( LONG_PTR ) hCursor );
@@ -1517,13 +1524,15 @@ HB_FUNC( WVW_MESSAGEBOX )
 
 HB_FUNC( WVW_CHOOSEFONT )
 {
-   CHOOSEFONT cf        = { 0 };
-   LOGFONT    lf        = { 0 };
+   CHOOSEFONT cf;
+   LOGFONT    lf;
    LONG       PointSize = 0;
    WVW_DATA * p         = hb_gt_wvw_GetWvwData();
 
    if( HB_ISNUM( 2 ) )
       PointSize = -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( p->pWindows[ p->usNumWindows - 1 ]->hdc, LOGPIXELSY ), 72 );
+
+   memset( &lf, 0, sizeof( lf ) );
 
    lf.lfHeight         = PointSize;
    lf.lfWidth          = hb_parni( 3 );
@@ -1536,6 +1545,8 @@ HB_FUNC( WVW_CHOOSEFONT )
    lf.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 1 ) )
       hb_strncpy( lf.lfFaceName, hb_parc( 1 ), sizeof( lf.lfFaceName ) - 1 );
+
+   memset( &cf, 0, sizeof( cf ) );
 
    cf.lStructSize    = sizeof( CHOOSEFONT );
    cf.hwndOwner      = p->pWindows[ p->usNumWindows - 1 ]->hWnd;
@@ -1664,7 +1675,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
    COLORREF crRGBcolor = hb_parnl( 6 );
    BOOL     bTight     = hb_parl( 7 );
    BOOL     bUseBrush  = hb_parl( 8 );
-   LOGBRUSH lb         = { 0 };
+   LOGBRUSH lb;
    HBRUSH   hBrush;
    RECT     xyRect;
 
@@ -1697,6 +1708,8 @@ HB_FUNC( WVW_FILLRECTANGLE )
    xyRect.top    = iTop;
    xyRect.right  = iRight + 1;
    xyRect.bottom = iBottom + 1;
+
+   memset( &lb, 0, sizeof( lb ) );
 
    lb.lbStyle = BS_SOLID;
    lb.lbColor = crRGBcolor;
@@ -1810,8 +1823,10 @@ HB_FUNC( WVW_SETBRUSH )
    if( HB_ISNUM( 1 ) )
    {
       HBRUSH     hBrush;
-      LOGBRUSH   lb = { 0 };
+      LOGBRUSH   lb;
       WVW_DATA * p  = hb_gt_wvw_GetWvwData();
+
+      memset( &lb, 0, sizeof( lb ) );
 
       lb.lbStyle = hb_parnl( 1 );
       lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
@@ -1952,8 +1967,10 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
 HB_FUNC( WVW_GETCURSORPOS )
 {
-   POINT    xy   = { 0 };
+   POINT    xy;
    PHB_ITEM info = hb_itemArrayNew( 2 );
+
+   memset( &xy, 0, sizeof( xy ) );
 
    GetCursorPos( &xy );
 
@@ -2015,7 +2032,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
       pFunc = hb_itemNew( pFirst );
       iType = 2;
    }
-   else if( HB_IS_STRING( pFirst ) == HB_IT_STRING )
+   else if( HB_IS_STRING( pFirst ) )
    {
       pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
       if( pExecSym )
@@ -2120,7 +2137,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
       p->sApp->pFuncModal[ iIndex ] = pFunc;
       p->sApp->iTypeModal[ iIndex ] = 2;
    }
-   else if( HB_IS_STRING( pFirst ) == HB_IT_STRING )
+   else if( HB_IS_STRING( pFirst ) )
    {
       pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
       if( pExecSym )
@@ -2169,7 +2186,9 @@ HB_FUNC( WVW_DELETEOBJECT )
 HB_FUNC( WVW_SETONTOP )
 {
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   RECT       rect        = { 0 };
+   RECT       rect;
+
+   memset( &rect, 0, sizeof( rect ) );
 
    GetWindowRect( pWindowData->hWnd, &rect );
 
@@ -2185,7 +2204,9 @@ HB_FUNC( WVW_SETONTOP )
 HB_FUNC( WVW_SETASNORMAL )
 {
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   RECT       rect        = { 0 };
+   RECT       rect;
+
+   memset( &rect, 0, sizeof( rect ) );
 
    GetWindowRect( pWindowData->hWnd, &rect );
 

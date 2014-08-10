@@ -247,7 +247,9 @@ HB_FUNC( WVW_GETMENU )
 HB_FUNC( WVW_TRACKPOPUPMENU )
 {
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   POINT      xy = { 0 };
+   POINT      xy;
+
+   memset( &xy, 0, sizeof( xy ) );
 
    GetCursorPos( &xy );
 
