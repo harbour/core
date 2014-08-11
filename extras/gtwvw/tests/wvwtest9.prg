@@ -422,7 +422,7 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
 
 STATIC PROCEDURE Demo_Get()
 
-   LOCAL nCurWindow, getlist := {}
+   LOCAL nCurWindow, GetList := {}
    LOCAL cLabel := "This is the GET Demo Window"
    LOCAL nTop    := 4
    LOCAL nLeft    := 4
@@ -471,7 +471,7 @@ STATIC PROCEDURE Demo_Get()
    @ 16 - nTop, 61 - nLeft      SAY "< Salary >"
 
    @  7 - nTop, nColGet - nLeft GET get_1
-   @ 10 - nTop, nColGet - nLeft GET get_2 // VALID ( VouChoice() < 7 )
+   @ 10 - nTop, nColGet - nLeft GET get_2 // VALID VouChoice() < 7
    @ 13 - nTop, nColGet - nLeft GET get_3
    @ 15 - nTop, nColGet - nLeft GET get_4
    @ 17 - nTop, nColGet - nLeft GET get_5

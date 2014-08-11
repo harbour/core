@@ -65,57 +65,71 @@ HB_FUNC( WVW_YESCLOSE )
 
 HB_FUNC( WIN_SENDMESSAGE )
 {
-   char * cText;
+   PHB_ITEM pText = hb_param( 4, HB_IT_STRING );
 
-   if( HB_ISBYREF( 4 ) )
+   void *  hText = NULL;
+   HB_SIZE nLen  = 0;
+   LPCTSTR szText;
+
+   LPCTSTR szTextToPass;
+
+   if( pText )
    {
-      cText = ( char * ) hb_xgrab( hb_parclen( 4 ) + 1 );
-      hb_xmemcpy( cText, hb_parcx( 4 ), hb_parclen( 4 ) + 1 );
+      szText       = HB_ITEMGETSTR( pText, &hText, &nLen );
+      szTextToPass = HB_ISBYREF( 4 ) ? HB_STRDUP( szText ) : szText;
    }
    else
-      cText = NULL;
+      szTextToPass = NULL;
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
                             ( UINT ) hb_parni( 2 ),
                             ( WPARAM ) hb_parnint( 3 ),
-                            HB_ISBYREF( 4 ) ? ( LPARAM ) ( LPSTR ) cText :
-                            ( HB_ISCHAR( 4 ) ? ( LPARAM ) hb_parc( 4 ) : ( LPARAM ) hb_parnint( 4 ) ) ) );
+                            pText ? ( LPARAM ) szTextToPass : ( LPARAM ) hb_parnint( 4 ) ) );
 
-   if( cText )
+   if( pText && HB_ISBYREF( 4 ) )
    {
-      if( ! hb_storclen_buffer( cText, hb_parclen( 4 ), 4 ) )
-         hb_xfree( cText );
+      HB_STORSTRLEN( szTextToPass, nLen, 4 );
+      hb_xfree( ( void * ) szTextToPass );
    }
    else
       hb_storc( NULL, 4 );
+
+   hb_strfree( hText );
 }
 
 HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 {
-   char *   cText;
    PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
+
+   void *  hText = NULL;
+   HB_SIZE nLen  = 0;
+   LPCTSTR szText;
+
+   LPCTSTR szTextToPass;
 
    if( pText )
    {
-      cText = ( char * ) hb_xgrab( hb_itemGetCLen( pText ) + 1 );
-      hb_xmemcpy( cText, hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) + 1 );
+      szText       = HB_ITEMGETSTR( pText, &hText, &nLen );
+      szTextToPass = HB_ISBYREF( 5 ) ? HB_STRDUP( szText ) : szText;
    }
    else
-      cText = NULL;
+      szTextToPass = NULL;
 
    hb_retnint( SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                    hb_parni( 2 ),
                                    ( UINT ) hb_parni( 3 ),
                                    ( WPARAM ) hb_parnint( 4 ),
-                                   cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) ) );
+                                   pText ? ( LPARAM ) szTextToPass : ( LPARAM ) hb_parnint( 5 ) ) );
 
-   if( cText )
+   if( pText && HB_ISBYREF( 5 ) )
    {
-      if( ! hb_storclen_buffer( cText, hb_itemGetCLen( pText ), 5 ) )
-         hb_xfree( cText );
+      HB_STORSTRLEN( szTextToPass, nLen, 5 );
+      hb_xfree( ( void * ) szTextToPass );
    }
    else
       hb_storc( NULL, 5 );
+
+   hb_strfree( hText );
 }
 
 /* win_SetTimer( hWnd, nIdentifier, nTimeOut ) */
@@ -264,11 +278,9 @@ HB_FUNC( WIN_LOADICON )
       hIcon = LoadIcon( hb_gt_wvw_GetWvwData()->hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
    else
    {
-      void * hFile;
-
-      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTRDEF( 1, &hFile, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-
-      hb_strfree( hFile );
+      void * hName;
+      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTRDEF( 1, &hName, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      hb_strfree( hName );
    }
 
    HB_RETHANDLE( hIcon );
@@ -291,20 +303,16 @@ HB_FUNC( WIN_LOADIMAGE )
 
       case 1:
       {
-         void * hFile;
-
-         hImage = LoadBitmap( hb_gt_wvw_GetWvwData()->hInstance, HB_PARSTRDEF( 1, &hFile, NULL ) );
-
-         hb_strfree( hFile );
+         void * hName;
+         hImage = LoadBitmap( hb_gt_wvw_GetWvwData()->hInstance, HB_PARSTRDEF( 1, &hName, NULL ) );
+         hb_strfree( hName );
          break;
       }
       case 2:
       {
-         void * hFile;
-
-         hImage = ( HBITMAP ) LoadImage( NULL, HB_PARSTRDEF( 1, &hFile, NULL ), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
-
-         hb_strfree( hFile );
+         void * hName;
+         hImage = ( HBITMAP ) LoadImage( NULL, HB_PARSTRDEF( 1, &hName, NULL ), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
+         hb_strfree( hName );
          break;
       }
    }
@@ -553,11 +561,14 @@ HB_FUNC( WVW_MOUSE_ROW )
 
 HB_FUNC( SENDMESSAGE )
 {
-   hb_retnint( SendMessage(
-                  ( HWND ) HB_PARHANDLE( 1 ),                                                    /* handle of destination window */
-                  ( UINT ) hb_parni( 2 ),                                                        /* message to send */
-                  ( WPARAM ) hb_parnl( 3 ),                                                      /* first message parameter */
-                  ( HB_ISCHAR( 4 ) ) ? ( LPARAM ) hb_parc( 4 ) : ( LPARAM ) hb_parnint( 4 ) ) ); /* second message parameter */
+   void * hText;
+
+   hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
+                            ( UINT ) hb_parni( 2 ),
+                            ( WPARAM ) hb_parnl( 3 ),
+                            HB_ISCHAR( 4 ) ? ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) : ( LPARAM ) hb_parnint( 4 ) ) );
+
+   hb_strfree( hText );
 }
 
 HB_FUNC( SETPARENT )
@@ -716,14 +727,17 @@ HB_FUNC( LOADIMAGE )
                                ) );
 
    else
+   {
+      void * hName;
       HB_RETHANDLE( LoadImage( ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 1 ), /* handle of the instance that contains the image */
-                               ( LPCTSTR ) hb_parc( 2 ),                     /* name or identifier of image */
+                               HB_PARSTR( 2, &hName, NULL ),                 /* name or identifier of image */
                                ( UINT ) hb_parni( 3 ),                       /* type of image */
                                hb_parni( 4 ),                                /* desired width */
                                hb_parni( 5 ),                                /* desired height */
                                ( UINT ) hb_parni( 6 )                        /* load flags */
                                ) );
-
+      hb_strfree( hName );
+   }
 }
 
 HB_FUNC( LOADBITMAP )
@@ -739,7 +753,11 @@ HB_FUNC( LOADBITMAP )
          HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
    }
    else
-      HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), ( LPCTSTR ) hb_parc( 1 ) ) );
+   {
+      void * hName;
+      HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), HB_PARSTR( 2, &hName, NULL ) ) );
+      hb_strfree( hName );
+   }
 }
 
 HB_FUNC( LOADBITMAPEX )
@@ -757,7 +775,11 @@ HB_FUNC( LOADBITMAPEX )
          HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
    }
    else
-      HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) hb_parc( 2 ) ) );
+   {
+      void * hName;
+      HB_RETHANDLE( LoadBitmap( h, HB_PARSTR( 2, &hName, NULL ) ) );
+      hb_strfree( hName );
+   }
 }
 
 
@@ -985,21 +1007,24 @@ HB_FUNC( REDRAWWINDOW )
                [fdwItalic], [fdwUnderline], [fdwStrikeOut] ) */
 HB_FUNC( CREATEFONT )
 {
+   void * hName;
+
    HB_RETHANDLE( CreateFont(
-                    hb_parni( 3 ),                /* logical height of font */
-                    hb_parni( 2 ),                /* logical average character width */
-                    0,                            /* angle of escapement */
-                    0,                            /* base-line orientation angle */
-                    ( int ) hb_parni( 4 ),        /* font weight */
-                    ( DWORD ) hb_parnl( 6 ),      /* italic attribute flag */
-                    ( DWORD ) hb_parnl( 7 ),      /* underline attribute flag */
-                    ( DWORD ) hb_parnl( 8 ),      /* strikeout attribute flag */
-                    ( DWORD ) hb_parnl( 5 ),      /* character set identifier */
-                    0,                            /* output precision */
-                    0,                            /* clipping precision */
-                    0,                            /* output quality */
-                    0,                            /* pitch and family */
-                    ( LPCTSTR ) hb_parc( 1 ) ) ); /* pointer to typeface name string */
+                    hb_parni( 3 ),                    /* logical height of font */
+                    hb_parni( 2 ),                    /* logical average character width */
+                    0,                                /* angle of escapement */
+                    0,                                /* base-line orientation angle */
+                    ( int ) hb_parni( 4 ),            /* font weight */
+                    ( DWORD ) hb_parnl( 6 ),          /* italic attribute flag */
+                    ( DWORD ) hb_parnl( 7 ),          /* underline attribute flag */
+                    ( DWORD ) hb_parnl( 8 ),          /* strikeout attribute flag */
+                    ( DWORD ) hb_parnl( 5 ),          /* character set identifier */
+                    0,                                /* output precision */
+                    0,                                /* clipping precision */
+                    0,                                /* output quality */
+                    0,                                /* pitch and family */
+                    HB_PARSTR( 1, &hName, NULL ) ) ); /* pointer to typeface name string */
+   hb_strfree( hName );
 }
 
 
@@ -1177,7 +1202,11 @@ HB_FUNC( LOADICON )
    if( HB_ISNUM( 1 ) )
       HB_RETHANDLE( LoadIcon( NULL, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
    else
-      HB_RETHANDLE( LoadIcon( GetModuleHandle( NULL ), ( LPCTSTR ) hb_parc( 1 ) ) );
+   {
+      void * hName;
+      HB_RETHANDLE( LoadIcon( GetModuleHandle( NULL ), HB_PARSTR( 1, &hName, NULL ) ) );
+      hb_strfree( hName );
+   }
 }
 
 HB_FUNC( DRAWBITMAP )
@@ -1743,7 +1772,11 @@ HB_FUNC( WVW_FILLRECTANGLE )
 
 HB_FUNC( WVW_LBADDSTRING )
 {
-   SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) ( LPSTR ) hb_parcx( 3 ) );
+   void * hText;
+
+   SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTRDEF( 3, &hText, NULL ) );
+
+   hb_strfree( hText );
 }
 
 HB_FUNC( WVW_LBSETCURSEL )
@@ -1754,7 +1787,11 @@ HB_FUNC( WVW_LBSETCURSEL )
 /* WARNING!!! this function is not member of WVW_CB* group of functions */
 HB_FUNC( WVW_CBADDSTRING )
 {
-   SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) ( LPSTR ) hb_parcx( 3 ) );
+   void * hText;
+
+   SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTRDEF( 3, &hText, NULL ) );
+
+   hb_strfree( hText );
 }
 
 /* WARNING!!! this function is not member of WVW_CB* group of functions */
@@ -1771,11 +1808,9 @@ HB_FUNC( WVW_DLGSETICON )
       hIcon = LoadIcon( hb_gt_wvw_GetWvwData()->hInstance, MAKEINTRESOURCE( hb_parni( 2 ) ) );
    else
    {
-      void * hFile;
-
-      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTRDEF( 2, &hFile, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-
-      hb_strfree( hFile );
+      void * hName;
+      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTRDEF( 2, &hName, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      hb_strfree( hName );
    }
 
    if( hIcon )

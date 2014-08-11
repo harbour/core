@@ -76,7 +76,7 @@ PROCEDURE Main()
    LOCAL ltransp := .F.
    LOCAL nMaxCache
    LOCAL i, j, oWPaint
-   LOCAL getlist := {}
+   LOCAL GetList := {}
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )

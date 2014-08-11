@@ -87,7 +87,7 @@ STATIC PROCEDURE xGet1()
    LOCAL cPhone := PadR( "Phone", 15 )
    LOCAL cFax  := PadR( "Fax", 15 )
    LOCAL lDone := .F.
-   LOCAL getlist := {}
+   LOCAL GetList := {}
    LOCAL oldCurs := SetCursor( SC_NORMAL )
 #ifdef __GTWVW__
    LOCAL nWin

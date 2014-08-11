@@ -46,7 +46,7 @@ MEMVAR __nCBid__, __temp__
 
 PROCEDURE Main()
 
-   LOCAL getlist := {}
+   LOCAL GetList := {}
    LOCAL mname := PadR( "Budyanto Dj.", 30 ), msex := "MALE", mage := 17, mstat := "married"
    LOCAL __nCBid__, __temp__  // these two are temporary var required by CB get creation
 

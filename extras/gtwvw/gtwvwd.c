@@ -170,7 +170,7 @@ static USHORT  hb_gt_wvwCalcPixelHeight( WVW_WIN * wvw_win );
 static USHORT  hb_gt_wvwCalcPixelWidth( WVW_WIN * wvw_win );
 static HB_BOOL hb_gt_wvw_SetColors( WVW_WIN * wvw_win, HDC hdc, BYTE attr );
 
-static HB_BOOL hb_gt_wvwTextOut( WVW_WIN * wvw_win, HDC hdc, USHORT col, USHORT row, LPCTSTR lpString, USHORT cbString  );
+static HB_BOOL hb_gt_wvwTextOut( WVW_WIN * wvw_win, HDC hdc, USHORT col, USHORT row, LPCTSTR lpString, USHORT cbString );
 static void    hb_gt_wvw_SetStringInTextBuffer( WVW_WIN * wvw_win, int col, int row, BYTE color, BYTE attr, BYTE * sBuffer, HB_SIZE length );
 static USHORT  hb_gt_wvw_GetIndexForTextBuffer( WVW_WIN * wvw_win, USHORT col, USHORT row );
 
@@ -1338,9 +1338,9 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          HICON hIcon = NULL;
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            void * hIconName;
-            hIcon = ( HICON ) hb_gt_wvw_SetWindowIconFromFile( s_wvw->usCurWindow, HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
-            hb_strfree( hIconName );
+            void * hName;
+            hIcon = ( HICON ) hb_gt_wvw_SetWindowIconFromFile( s_wvw->usCurWindow, HB_ITEMGETSTR( pInfo->pNewVal, &hName, NULL ) );
+            hb_strfree( hName );
          }
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) hIcon );
          break;
@@ -1351,9 +1351,9 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          HICON hIcon = NULL;
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            void * hIconName;
-            hIcon = ( HICON ) hb_gt_wvw_SetWindowIcon( s_wvw->usCurWindow, 0, HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
-            hb_strfree( hIconName );
+            void * hName;
+            hIcon = ( HICON ) hb_gt_wvw_SetWindowIcon( s_wvw->usCurWindow, 0, HB_ITEMGETSTR( pInfo->pNewVal, &hName, NULL ) );
+            hb_strfree( hName );
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hIcon = ( HICON ) hb_gt_wvw_SetWindowIcon( s_wvw->usCurWindow, hb_itemGetNI( pInfo->pNewVal ), NULL );
@@ -6581,7 +6581,7 @@ WVW_GLOB * hb_gt_wvw_GetWvwData( void )
 HB_FUNC( WVW_NOPENWINDOW )
 {
    LPCTSTR lpszWinName;
-   void *  hWinName;
+   void *  hWinName = NULL;
 
    WVW_WIN * pParentWindow;
 
@@ -6626,20 +6626,23 @@ HB_FUNC( WVW_NOPENWINDOW )
 
    if( HB_ISCHAR( 1 ) )
    {
-      HB_SIZE iLen = hb_parclen( 1 );
+      HB_SIZE iLen;
+
+      lpszWinName = HB_PARSTR( 1, &hWinName, &iLen );
+
       if( iLen > WVW_MAXWINNAMELENGTH - 1 )
       {
          MessageBox( NULL, TEXT( "Window name too long" ), TEXT( "Error" ), MB_ICONERROR );
          hb_retni( 0 );
          return;
       }
-      lpszWinName = HB_PARSTR( 1, &hWinName, NULL );
    }
    else
    {
       PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
 
       lpszWinName = HB_ITEMGETSTR( pItem, &hWinName, NULL );
+
       hb_itemRelease( pItem );
    }
 
@@ -6648,8 +6651,7 @@ HB_FUNC( WVW_NOPENWINDOW )
    irow2 = hb_parnidef( 4, pParentWindow->ROWS - 1 );
    icol2 = hb_parnidef( 5, pParentWindow->COLS - 1 );
 
-   nWin = hb_gt_wvwOpenWindow( lpszWinName, irow1, icol1, irow2, icol2,
-                               dwStyle, iParentWin );
+   nWin = hb_gt_wvwOpenWindow( lpszWinName, irow1, icol1, irow2, icol2, dwStyle, iParentWin );
 
    hb_strfree( hWinName );
 
@@ -7522,14 +7524,14 @@ HB_FUNC( WVW_SETFONT )
 HB_FUNC( WVW_SETICON )
 {
    HB_UINT nWin = WVW_WHICH_WINDOW;
-   void *  hIconName;
+   void *  hName;
 
    if( HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
-      hb_retptr( ( void * ) hb_gt_wvw_SetWindowIcon( nWin, hb_parni( 2 ), HB_PARSTRDEF( 3, &hIconName, NULL ) ) );
+      hb_retptr( ( void * ) hb_gt_wvw_SetWindowIcon( nWin, hb_parni( 2 ), HB_PARSTRDEF( 3, &hName, NULL ) ) );
    else
-      hb_retptr( ( void * ) hb_gt_wvw_SetWindowIconFromFile( nWin, HB_PARSTRDEF( 2, &hIconName, NULL ) ) );
+      hb_retptr( ( void * ) hb_gt_wvw_SetWindowIconFromFile( nWin, HB_PARSTRDEF( 2, &hName, NULL ) ) );
 
-   hb_strfree( hIconName );
+   hb_strfree( hName );
 }
 
 

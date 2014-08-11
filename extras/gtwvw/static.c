@@ -137,7 +137,12 @@ HB_FUNC( WVW_STCREATE )
    if( hWnd )
    {
       if( HB_ISCHAR( 5 ) )
-         SendMessage( hWnd, WM_SETTEXT, 0, ( LPARAM ) hb_parc( 5 ) );
+      {
+         void * hText;
+         SendMessage( hWnd, WM_SETTEXT, 0, ( LPARAM ) HB_PARSTR( 5, &hText, NULL ) );
+         hb_strfree( hText );
+      }
+
       if( hFont )
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
       else
@@ -160,7 +165,9 @@ HB_FUNC( WVW_STSETTEXT )
 
    if( hWnd )
    {
-      SetWindowText( ( HWND ) hWnd, ( LPCTSTR ) hb_parc( 3 ) );
+      void * hText;
+      SetWindowText( ( HWND ) hWnd, HB_PARSTR( 3, &hText, NULL ) );
+      hb_strfree( hText );
       hb_retl( HB_TRUE );
    }
    else

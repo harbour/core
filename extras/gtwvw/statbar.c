@@ -207,14 +207,14 @@ HB_FUNC( WVW_SBADDPART )
       int cy = rSB.bottom - rSB.top - 4;
       int cx = cy;
 
-      void * hFile;
+      void * hName;
 
-      hIcon = ( HICON ) LoadImage( 0, HB_PARSTR( 6, &hFile, NULL ), IMAGE_ICON, cx, cy, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT | LR_DEFAULTSIZE );
+      hIcon = ( HICON ) LoadImage( 0, HB_PARSTR( 6, &hName, NULL ), IMAGE_ICON, cx, cy, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT | LR_DEFAULTSIZE );
 
       if( hIcon == NULL )
-         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), HB_PARSTR( 6, &hFile, NULL ), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
+         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), HB_PARSTR( 6, &hName, NULL ), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
 
-      hb_strfree( hFile );
+      hb_strfree( hName );
 
       if( hIcon != NULL )
          SendMessage( hWnd, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
@@ -222,7 +222,11 @@ HB_FUNC( WVW_SBADDPART )
 
    SendMessage( hWnd, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, 0 );
    if( HB_ISCHAR( 7 ) )
-      SendMessage( hWnd, SB_SETTIPTEXT, ( WPARAM ) ( numOfParts - 1 ), ( LPARAM ) hb_parc( 7 ) );
+   {
+      void * hText;
+      SendMessage( hWnd, SB_SETTIPTEXT, ( WPARAM ) ( numOfParts - 1 ), ( LPARAM ) HB_PARSTR( 7, &hText, NULL ) );
+      hb_strfree( hText );
+   }
 
    hb_retni( numOfParts );
 }
@@ -278,6 +282,8 @@ HB_FUNC( WVW_SBSETTEXT )
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    int       iPart   = hb_parnidef( 2, 1 );
 
+   void * hText;
+
    if( HB_ISCHAR( 4 ) )
       wvw_win->cSBColorForeground = strtol( hb_parc( 4 ), NULL, 10 );
    else if( HB_ISNUM( 4 ) )
@@ -291,11 +297,13 @@ HB_FUNC( WVW_SBSETTEXT )
    if( iPart == 0 && ( wvw_win->cSBColorForeground || wvw_win->cSBColorBackground ) )
    {
       wvw_win->fSBPaint = HB_TRUE;
-      SendMessage( wvw_win->hStatusBar, SB_SETTEXT, SBT_OWNERDRAW, ( LPARAM ) hb_parcx( 3 ) );
+      SendMessage( wvw_win->hStatusBar, SB_SETTEXT, SBT_OWNERDRAW, ( LPARAM ) HB_PARSTRDEF( 3, &hText, NULL ) );
       hb_gt_wvw_ProcessMessages( wvw_win );
    }
    else
-      SendMessage( wvw_win->hStatusBar, SB_SETTEXT, iPart, ( LPARAM ) hb_parcx( 3 ) );
+      SendMessage( wvw_win->hStatusBar, SB_SETTEXT, iPart, ( LPARAM ) HB_PARSTRDEF( 3, &hText, NULL ) );
+
+   hb_strfree( hText );
 }
 
 /* wvw_sbGetText( [nWinNum], [nPart] )

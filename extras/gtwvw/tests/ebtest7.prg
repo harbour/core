@@ -438,7 +438,7 @@ STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButt
    wvw_pbEnable( nwinnum, nOKbutton, .F. )
    wvw_pbEnable( nwinnum, nCancelbutton, .F. )
 
-   // clear the getlist
+   // clear the GetList
    ASize( aEBGets, 0 )
 
    // wait until user click the close button

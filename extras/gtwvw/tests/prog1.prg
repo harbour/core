@@ -76,7 +76,7 @@ STATIC PROCEDURE xGet1()
    LOCAL cPhone := PadR( "Phone", 15 )
    LOCAL cFax  := PadR( "Fax", 15 )
    LOCAL lDone := .F.
-   LOCAL getlist := {}
+   LOCAL GetList := {}
    LOCAL oldCurs := SetCursor( SC_NORMAL )
 
    znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )

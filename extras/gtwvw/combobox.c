@@ -184,21 +184,23 @@ HB_FUNC( WVW_CBCREATE )
       RECT    rXB, rOffXB;
       WNDPROC OldProc;
       USHORT  i;
-      TCHAR   szDefault[] = TEXT( "empty" );
 
       SendMessage( hWnd, WM_SETREDRAW, ( WPARAM ) TRUE, 0 );
 
       if( usNumElement == 0 )
       {
-         if( SendMessage( hWnd, CB_ADDSTRING, 0, ( LPARAM ) ( LPCTSTR ) szDefault ) < 0 )
+         if( SendMessage( hWnd, CB_ADDSTRING, 0, ( LPARAM ) TEXT( "empty" ) ) < 0 )
          {
             /* ignore failure */
          }
       }
       else
+      {
          for( i = 1; i <= usNumElement; i++ )
          {
-            if( SendMessage( hWnd, CB_ADDSTRING, 0, ( LPARAM ) ( LPCTSTR ) hb_parvcx( 5, i ) ) < 0 )
+            void * hText;
+
+            if( SendMessage( hWnd, CB_ADDSTRING, 0, ( LPARAM ) HB_PARASTR( 5, i, &hText, NULL ) ) < 0 )
             {
                /* ignore failure */
             }
@@ -207,9 +209,11 @@ HB_FUNC( WVW_CBCREATE )
                numofchars = ( int ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
                if( numofchars > LongComboWidth )
                   LongComboWidth = numofchars;
-
             }
+
+            hb_strfree( hText );
          }
+      }
 
       SendMessage( hWnd, CB_SETCURSEL, 0, 0 );
       SendMessage( hWnd, CB_SETEXTENDEDUI, ( WPARAM ) TRUE, 0 );
@@ -476,7 +480,7 @@ HB_FUNC( WVW_CBFINDSTRING )
    if( pcd )
    {
       void * hStr;
-      hb_retni( ( int ) SendMessage( pcd->hWnd, CB_FINDSTRING, ( WPARAM ) -1, ( LPARAM ) ( LPCTSTR ) HB_PARSTRDEF( 3, &hStr, NULL ) ) );
+      hb_retni( ( int ) SendMessage( pcd->hWnd, CB_FINDSTRING, ( WPARAM ) -1, ( LPARAM ) HB_PARSTRDEF( 3, &hStr, NULL ) ) );
       hb_strfree( hStr );
    }
    else
