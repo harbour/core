@@ -174,7 +174,7 @@ HB_FUNC( WVW_XBCREATE )
       nCtrlId++;
 
    hWnd = CreateWindowEx(
-      0L,                                       /* no extended styles */
+      0,                                        /* no extended styles */
       TEXT( "SCROLLBAR" ),                      /* scroll bar control class */
       NULL,                                     /* text for window title bar */
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle, /* scroll bar styles */

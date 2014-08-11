@@ -233,7 +233,7 @@ HB_FUNC( WVW_CXSETCHECK )
    WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWnd )
-      SendMessage( pcd->hWnd, BM_SETCHECK, ( WPARAM ) ( ULONG ) hb_parnidef( 3, BST_CHECKED ), 0 );
+      SendMessage( pcd->hWnd, BM_SETCHECK, ( WPARAM ) hb_parnidef( 3, BST_CHECKED ), 0 );
 
    hb_retl( HB_TRUE );
 }
@@ -246,15 +246,15 @@ HB_FUNC( WVW_CXSETCHECK )
  */
 HB_FUNC( WVW_CXGETCHECK )
 {
-   ULONG      ulCheck;
    WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
+   int        iCheck;
 
    if( pcd->hWnd )
-      ulCheck = ( int ) SendMessage( pcd->hWnd, BM_GETCHECK, 0, 0 );
+      iCheck = ( int ) SendMessage( pcd->hWnd, BM_GETCHECK, 0, 0 );
    else
-      ulCheck = 0;
+      iCheck = 0;
 
-   hb_retnl( ulCheck );
+   hb_retni( iCheck );
 }
 
 /* wvw_cxSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, lItalic, lUnderline, lStrikeout ) */

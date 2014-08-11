@@ -169,7 +169,7 @@ HB_FUNC( WVW_EBCREATE )
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
    hWnd = CreateWindowEx(
-      0L,
+      0,
       TEXT( "EDIT" ),
       NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) dwStyle,
@@ -193,9 +193,9 @@ HB_FUNC( WVW_EBCREATE )
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
       {
-         ULONG ulLen        = ( ULONG ) strlen( lpszText );
-         LPSTR lpszTextANSI = ( LPSTR ) hb_xgrab( ulLen + 1 );
-         OemToCharBuff( lpszText, lpszTextANSI, ulLen );
+         DWORD dwLen        = ( DWORD ) strlen( lpszText );
+         LPSTR lpszTextANSI = ( LPSTR ) hb_xgrab( dwLen + 1 );
+         OemToCharBuff( lpszText, lpszTextANSI, dwLen );
          lpszText = ( LPCTSTR ) lpszTextANSI;
       }
 #endif
@@ -484,8 +484,8 @@ HB_FUNC( WVW_EBGETTEXT )
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
       {
-         ULONG ulLen       = ( ULONG ) strlen( lpszText );
-         LPSTR lpszTextOEM = ( LPSTR ) hb_xgrab( ulLen + 1 );
+         DWORD dwLen       = ( DWORD ) strlen( lpszText );
+         LPSTR lpszTextOEM = ( LPSTR ) hb_xgrab( dwLen + 1 );
          CharToOem( lpszText, lpszTextOEM );
          hb_retc_buffer( lpszTextOEM );
       }
@@ -522,9 +522,9 @@ HB_FUNC( WVW_EBSETTEXT )
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
       {
-         ULONG ulLen        = ( ULONG ) strlen( lpszText );
-         LPSTR lpszTextANSI = ( LPSTR ) hb_xgrab( ulLen + 1 );
-         OemToCharBuff( lpszText, lpszTextANSI, ulLen );
+         DWORD dwLen        = ( DWORD ) strlen( lpszText );
+         LPSTR lpszTextANSI = ( LPSTR ) hb_xgrab( dwLen + 1 );
+         OemToCharBuff( lpszText, lpszTextANSI, dwLen );
          lpszText = ( LPCTSTR ) lpszTextANSI;
       }
 #endif

@@ -52,6 +52,10 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+/* TOFIX: MT support */
+/* TOFIX: GT UNICODE support */
+/* TOFIX: Replace MessageBox() popups with internal errors or RTEs */
+
 #ifndef HB_WVW_H_
 #define HB_WVW_H_
 
@@ -227,13 +231,7 @@
 
 #define WM_MY_UPDATE_CARET        ( WM_USER + 0x0101 )
 
-typedef BOOL ( WINAPI * wvwGradientFill )(
-   HDC hdc,
-   TRIVERTEX * pVertex,
-   ULONG dwNumVertex,
-   PVOID pMesh,
-   ULONG dwNumMesh,
-   ULONG dwMode      );
+typedef BOOL ( WINAPI * wvwGradientFill )( HDC hdc, TRIVERTEX * pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, ULONG ulMode );
 
 typedef struct _WVW_BMP
 {

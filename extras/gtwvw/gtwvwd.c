@@ -1785,23 +1785,15 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
 #if 0
             if( s_wvw->a.pFuncModal[ iIndex ]->type & HB_IT_EVALITEM )
             {
-               HB_ITEM  hihDlg, himessage, hiwParam, hilParam;
-               PHB_ITEM pReturn;
+               PHB_ITEM hihDlg    = hb_itemPutNInt( NULL, ( HB_PTRDIFF ) hDlg );
+               PHB_ITEM himessage = hb_itemPutNL( NULL, ( long ) message );
+               PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, wParam );
+               PHB_ITEM hilParam  = hb_itemPutNInt( NULL, lParam );
 
-               hihDlg.type = HB_IT_NIL;
-               hb_itemPutNL( &hihDlg, ( ULONG ) hDlg );
+               PHB_ITEM pReturn = hb_itemDo( ( PHB_ITEM ) s_wvw->a.pFuncModal[ iIndex ], 4, hihDlg, himessage, hiwParam, hilParam );
 
-               himessage.type = HB_IT_NIL;
-               hb_itemPutNL( &himessage, ( ULONG ) message );
-
-               hiwParam.type = HB_IT_NIL;
-               hb_itemPutNL( &hiwParam, ( ULONG ) wParam );
-
-               hilParam.type = HB_IT_NIL;
-               hb_itemPutNL( &hilParam, ( ULONG ) lParam );
-
-               pReturn = hb_itemDo( ( PHB_ITEM ) s_wvw->a.pFuncModal[ iIndex ], 4, &hihDlg, &himessage, &hiwParam, &hilParam );
                bReturn = hb_itemGetNL( pReturn );
+
                hb_itemRelease( pReturn );
             }
 #endif
@@ -4303,13 +4295,10 @@ static void hb_gt_wvw_SetMouseY( WVW_WIN * wvw_win, USHORT iy )
    It then determines the invalid rectangle, so the string will be displayed */
 static void hb_gt_wvw_SetStringInTextBuffer( WVW_WIN * wvw_win, int col, int row, BYTE color, BYTE attr, BYTE * sBuffer, HB_SIZE length )
 {
-   USHORT index;
-
-   HB_SYMBOL_UNUSED( attr );
-
    /* determine the index and put the string into the TextBuffer */
-   index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, ( USHORT ) col, ( USHORT ) row );
-   if( ( length + index ) <= ( ULONG ) wvw_win->BUFFERSIZE )
+   USHORT index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, ( USHORT ) col, ( USHORT ) row );
+
+   if( ( length + index ) <= ( HB_SIZE ) wvw_win->BUFFERSIZE )
    {
       POINT end;
 
@@ -4320,6 +4309,8 @@ static void hb_gt_wvw_SetStringInTextBuffer( WVW_WIN * wvw_win, int col, int row
       end = hb_gt_wvw_GetColRowForTextBuffer( wvw_win, index + ( USHORT ) length - 1 );
       hb_gt_wvw_SetInvalidRect( wvw_win, ( USHORT ) col, ( USHORT ) row, ( USHORT ) end.x, ( USHORT ) end.y );
    }
+
+   HB_SYMBOL_UNUSED( attr );
 }
 
 
@@ -4352,7 +4343,6 @@ static void hb_gt_wvwMouseEvent( WVW_WIN * wvw_win, HWND hWnd, UINT message, WPA
    POINT xy, colrow;
    SHORT keyCode  = 0;
    SHORT keyState = 0;
-   ULONG lPopupRet;
 
    HB_SYMBOL_UNUSED( hWnd );
    HB_SYMBOL_UNUSED( wParam );
@@ -4401,10 +4391,11 @@ static void hb_gt_wvwMouseEvent( WVW_WIN * wvw_win, HWND hWnd, UINT message, WPA
 
          if( wvw_win->hPopup )
          {
+            int nPopupRet;
             GetCursorPos( &xy );
-            lPopupRet = TrackPopupMenu( wvw_win->hPopup, TPM_CENTERALIGN + TPM_RETURNCMD, xy.x, xy.y, 0, hWnd, NULL );
-            if( lPopupRet )
-               hb_gt_wvwAddCharToInputQueue( lPopupRet );
+            nPopupRet = ( int ) TrackPopupMenu( wvw_win->hPopup, TPM_CENTERALIGN + TPM_RETURNCMD, xy.x, xy.y, 0, hWnd, NULL );
+            if( nPopupRet )
+               hb_gt_wvwAddCharToInputQueue( nPopupRet );
             return;
          }
          else
@@ -4477,7 +4468,6 @@ static void hb_gt_wvw_TBMouseEvent( WVW_WIN * wvw_win, HWND hWnd, UINT message, 
    POINT xy, colrow;
    SHORT keyCode  = 0;
    SHORT keyState = 0;
-   ULONG lPopupRet;
 
    HB_SYMBOL_UNUSED( hWnd );
    HB_SYMBOL_UNUSED( wParam );
@@ -4527,10 +4517,11 @@ static void hb_gt_wvw_TBMouseEvent( WVW_WIN * wvw_win, HWND hWnd, UINT message, 
 
          if( wvw_win->hPopup )
          {
+            int nPopupRet;
             GetCursorPos( &xy );
-            lPopupRet = TrackPopupMenu( wvw_win->hPopup, TPM_CENTERALIGN + TPM_RETURNCMD, xy.x, xy.y, 0, hWnd, NULL );
-            if( lPopupRet )
-               hb_gt_wvwAddCharToInputQueue( lPopupRet );
+            nPopupRet = ( int ) TrackPopupMenu( wvw_win->hPopup, TPM_CENTERALIGN + TPM_RETURNCMD, xy.x, xy.y, 0, hWnd, NULL );
+            if( nPopupRet )
+               hb_gt_wvwAddCharToInputQueue( nPopupRet );
             return;
          }
          else
@@ -6804,12 +6795,11 @@ HB_FUNC( WVW_XREPOSWINDOW )
  */
 HB_FUNC( WVW_NSETCURWINDOW )
 {
-   INT sWinNum;
-
    if( HB_ISNUM( 1 ) )
    {
-      sWinNum = hb_parni( 1 );
-      if( sWinNum >= 0 && sWinNum < ( INT ) s_wvw->usNumWindows )
+      int sWinNum = hb_parni( 1 );
+
+      if( sWinNum >= 0 && sWinNum < ( int ) s_wvw->usNumWindows )
          hb_retni( ( int ) hb_gt_wvw_SetCurWindow( sWinNum ) );
       else
          hb_errRT_TERM( EG_BOUND, 10001, "Window Number out of range", "WVW_nSetCurWindow()", 0, 0 );
@@ -8947,8 +8937,10 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
       return DefWindowProc( hWnd, message, wParam, lParam );
 
    for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
+   {
       if( s_wvw->pWin[ nWin ]->hWnd == hWndParent )
          break;
+   }
 
    if( nWin >= s_wvw->usNumWindows )
       return DefWindowProc( hWnd, message, wParam, lParam );
@@ -8978,24 +8970,20 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
          HB_BOOL bCtrl  = GetKeyState( VK_CONTROL ) & 0x8000;
          HB_BOOL bShift = GetKeyState( VK_SHIFT ) & 0x8000;
 
-         int c = ( int ) wParam;
-
          if( ! bAlt && ! bCtrl && ! bShift && wParam == VK_SPACE )
             break;
 
          if( ! hb_gt_wvwBufferedKey( ( LONG ) wParam ) )
             break;
 
-         switch( c )
-         {
 #if 0
-            case VK_RETURN:
+         if( ( int ) wParam == VK_RETURN )
                SendMessage( hWnd, BM_CLICK, 0, 0 );
-               break;
+         else
 #endif
-            default:
-               SetFocus( hWndParent );
-               PostMessage( hWndParent, message, wParam, lParam );
+         {
+            SetFocus( hWndParent );
+            PostMessage( hWndParent, message, wParam, lParam );
          }
          return 0;
       }
@@ -9066,7 +9054,7 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
       iStyle |= BS_BITMAP;
 
    hWnd = CreateWindowEx(
-      0L,                                       /* no extended styles */
+      0,                                        /* no extended styles */
       TEXT( "BUTTON" ),                         /* pushbutton/checkbox control class */
       lpszCaption,                              /* text for caption */
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle, /* button styles */

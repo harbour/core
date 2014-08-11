@@ -264,7 +264,7 @@ HB_FUNC( WVW_PBSETSTYLE )
    WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
    if( pcd->hWnd )
-      SendMessage( pcd->hWnd, BM_SETSTYLE, ( WPARAM ) ( ULONG ) hb_parni( 3 ), ( LPARAM ) TRUE );
+      SendMessage( pcd->hWnd, BM_SETSTYLE, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) TRUE );
 
    hb_retl( HB_TRUE );
 }

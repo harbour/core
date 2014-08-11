@@ -1041,7 +1041,7 @@ HB_FUNC( SELECTFONT )
    cf.iPointSize     = 0;
    cf.Flags          = CF_SCREENFONTS | ( pObj ? CF_INITTOLOGFONTSTRUCT : 0 );
    cf.rgbColors      = RGB( 0, 0, 0 );
-   cf.lCustData      = 0L;
+   cf.lCustData      = 0;
    cf.lpfnHook       = NULL;
    cf.lpTemplateName = NULL;
    cf.hInstance      = NULL;
@@ -1108,36 +1108,37 @@ HB_FUNC( TOOLBARADDBUTTONS )
    int        iButtons = hb_parni( 4 );
    TBBUTTON * tb       = ( TBBUTTON * ) hb_xgrab( iButtons * sizeof( TBBUTTON ) );
 
-   ULONG ulCount;
+   HB_SIZE nCount;
 
-#if 0
-   ULONG ulID;
-#endif
    DWORD  style = GetWindowLong( hWndCtrl, GWL_STYLE );
    USHORT usOldHeight;
 
    SetWindowLong( hWndCtrl, GWL_STYLE, style | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT );
 
-   SendMessage( hWndCtrl, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0L );
+   SendMessage( hWndCtrl, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0 );
+
    usOldHeight = wvw_win->usTBHeight;
-   for( ulCount = 0; ulCount < hb_arrayLen( pArray ); ulCount++ )
+
+   for( nCount = 0; nCount < hb_arrayLen( pArray ); ++nCount )
    {
-      PHB_ITEM pTemp = hb_arrayGetItemPtr( pArray, ulCount + 1 );
+      PHB_ITEM pTemp = hb_arrayGetItemPtr( pArray, nCount + 1 );
 #if 0
-      ulID    = hb_arrayGetNI( pTemp, 1 );
+      HB_SIZE nID = hb_arrayGetNS( pTemp, 1 );
       bSystem = hb_arrayGetL( pTemp, 9 );
 
       if( bSystem )
-         if( ulID > 0 && ulID < 31 )
-            tb[ ulCount ].iBitmap = ulID > 0 ? ( int ) ulID : -1;
+      {
+         if( nID > 0 && nID < 31 )
+            tb[ nCount ].iBitmap = nID > 0 ? ( int ) nID : -1;
          else
-            tb[ ulCount ].iBitmap = ulID > 0 ? ( int ) ulCount : -1;
+            tb[ nCount ].iBitmap = nID > 0 ? ( int ) nCount : -1;
+      }
 #endif
-      tb[ ulCount ].idCommand = hb_arrayGetNI( pTemp, 2 );
-      tb[ ulCount ].fsState   = ( BYTE ) hb_arrayGetNI( pTemp, 3 );
-      tb[ ulCount ].fsStyle   = ( BYTE ) hb_arrayGetNI( pTemp, 4 );
-      tb[ ulCount ].dwData    = hb_arrayGetNI( pTemp, 5 );
-      tb[ ulCount ].iString   = hb_arrayGetCLen( pTemp, 6 ) > 0 ? ( INT_PTR ) hb_arrayGetCPtr( pTemp, 6 ) : 0;
+      tb[ nCount ].idCommand = hb_arrayGetNI( pTemp, 2 );
+      tb[ nCount ].fsState   = ( BYTE ) hb_arrayGetNI( pTemp, 3 );
+      tb[ nCount ].fsStyle   = ( BYTE ) hb_arrayGetNI( pTemp, 4 );
+      tb[ nCount ].dwData    = hb_arrayGetNI( pTemp, 5 );
+      tb[ nCount ].iString   = hb_arrayGetCLen( pTemp, 6 ) > 0 ? ( INT_PTR ) hb_arrayGetCPtr( pTemp, 6 ) : 0;
    }
 
    SendMessage( hWndCtrl, TB_ADDBUTTONS, ( WPARAM ) iButtons, ( LPARAM ) ( LPTBBUTTON ) tb );
@@ -1603,7 +1604,7 @@ HB_FUNC( WVW_CHOOSEFONT )
    cf.iPointSize     = 0;
    cf.Flags          = CF_SCREENFONTS | CF_EFFECTS | CF_SHOWHELP | CF_INITTOLOGFONTSTRUCT;
    cf.rgbColors      = RGB( 0, 0, 0 );
-   cf.lCustData      = 0L;
+   cf.lCustData      = 0;
    cf.lpfnHook       = NULL;
    cf.lpTemplateName = NULL;
    cf.hInstance      = NULL;

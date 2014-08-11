@@ -166,7 +166,7 @@ HB_FUNC( WVW_CBCREATE )
    InitCommonControls();
 
    hWnd = CreateWindowEx(
-      0L,
+      0,
       TEXT( "COMBOBOX" ),
       NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,

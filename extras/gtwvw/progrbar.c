@@ -133,7 +133,7 @@ HB_FUNC( WVW_PGCREATE )
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
    hWnd = CreateWindowEx(
-      0L,
+      0,
       PROGRESS_CLASS,
       NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,

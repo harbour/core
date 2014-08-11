@@ -62,8 +62,7 @@ HB_FUNC( WVW_STCREATE )
    POINT   xy;
    int     iTop, iLeft, iBottom, iRight;
    int     iOffTop, iOffLeft, iOffBottom, iOffRight;
-   HB_BOOL bBorder   = hb_parl( 7 );
-   ULONG   ulExStyle = bBorder ? WS_EX_CLIENTEDGE : 0;
+   HB_BOOL bBorder = hb_parl( 7 );
 
    HB_UINT nCtrlId;
 
@@ -121,7 +120,7 @@ HB_FUNC( WVW_STCREATE )
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
    hWnd = CreateWindowEx(
-      ulExStyle,
+      bBorder ? WS_EX_CLIENTEDGE : 0,
       TEXT( "STATIC" ),
       NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
