@@ -191,12 +191,12 @@ FUNCTION __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " ~Help "
       MENU
-         MENUITEM " ~About Help "           ACTION oDebugger:ShowHelp( 0 )
+         MENUITEM " ~About Help "           ACTION oDebugger:ShowHelp()
          SEPARATOR
-         MENUITEM " ~Keys"                  ACTION oDebugger:ShowHelp( 2 )
-         MENUITEM " ~Windows"               ACTION oDebugger:ShowHelp( 6 )
-         MENUITEM " ~Menus"                 ACTION oDebugger:ShowHelp( 12 )
-         MENUITEM " ~Commands"              ACTION oDebugger:ShowHelp( 21 )
+         MENUITEM " ~Keys"                  ACTION oDebugger:ShowHelp( "Keys" )
+         MENUITEM " ~Windows"               ACTION oDebugger:ShowHelp( "Windows" )
+         MENUITEM " ~Menus"                 ACTION oDebugger:ShowHelp( "Menus" )
+         MENUITEM " ~Commands"              ACTION oDebugger:ShowHelp( "Commands" )
       ENDMENU
 
    ENDMENU

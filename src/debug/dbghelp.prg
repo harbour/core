@@ -59,10 +59,11 @@
 #include "box.ch"
 #include "inkey.ch"
 
-PROCEDURE __dbgHelp( nTopic )
+PROCEDURE __dbgHelp( cTopic )
 
    LOCAL cColor := iif( __dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
    LOCAL oBrw
+   LOCAL nTopic
    LOCAL aTopics := GetTopics()
 
    LOCAL oDlg := HBDbWindow():New( 2, 2, MaxRow() - 2, MaxCol() - 2, "Help", cColor )
@@ -77,8 +78,8 @@ PROCEDURE __dbgHelp( nTopic )
    oBrw:GoTopBlock := {|| oBrw:Cargo := 1 }
    oBrw:GoBottomBlock := {|| oBrw:Cargo := Len( aTopics ) }
 
-   hb_default( @nTopic, 1 )
-   IF nTopic > 1
+   IF HB_ISSTRING( cTopic ) .AND. ;
+      ( nTopic := Ascan( aTopics, {| x | hb_LeftEqI( x[ 1 ], cTopic ) } ) ) > 1
       oBrw:nFirstVisible := nTopic
    ENDIF
 

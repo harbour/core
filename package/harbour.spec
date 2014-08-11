@@ -505,6 +505,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbnf.a
 %{_libdir}/%{name}/libhbblink.a
 %{_libdir}/%{name}/libhbmisc.a
+%{_libdir}/%{name}/libmxml.a
+%{_libdir}/%{name}/libhbmxml.a
 %{_libdir}/%{name}/libminizip.a
 %{_libdir}/%{name}/libhbmzip.a
 %{_libdir}/%{name}/libhbnetio.a
