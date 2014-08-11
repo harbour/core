@@ -259,8 +259,6 @@ typedef struct _WVW_IPIC
 #define WVW_CONTROL_EDITBOX      5
 #define WVW_CONTROL_STATIC       6
 
-#define WVW_MAXCAPTIONLENGTH     80
-
 
 typedef struct _WVW_CTRL
 {

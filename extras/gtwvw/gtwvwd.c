@@ -5858,7 +5858,7 @@ HB_BOOL hb_gt_wvw_SetFont( HB_UINT nWin, const TCHAR * fontFace, int height, int
          wvw_win->fontQuality = Quality;
 
          size = HB_STRLEN( fontFace );
-         if( size > 0 && ( size < LF_FACESIZE - 1 ) )
+         if( size > 0 && ( size < HB_SIZEOFARRAY( wvw_win->fontFace ) - 1 ) )
             HB_STRNCPY( wvw_win->fontFace, fontFace, HB_SIZEOFARRAY( wvw_win->fontFace ) - 1 );
 
          if( wvw_win->hWnd )
