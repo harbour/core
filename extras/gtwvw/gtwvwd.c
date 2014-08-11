@@ -183,7 +183,7 @@ static void    hb_gt_wvw_TBMouseEvent( WVW_WIN * wvw_win, HWND hWnd, UINT messag
 static void    hb_gt_wvwCreateToolTipWindow( WVW_WIN * wvw_win );
 
 /* multi-window related static functions */
-static void    hb_gt_wvwWindowPrologue( void );
+static HB_BOOL hb_gt_wvwWindowPrologue( void );
 static void    hb_gt_wvwWindowEpilogue( void );
 
 static HB_UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int usRow1, int usCol1, int usRow2, int usCol2, DWORD dwStyle, int iParentWin );
@@ -261,7 +261,7 @@ HB_EXTERN_END
 
 LONG hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f )
 {
-   const TCHAR * tmp = TEXT( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" );
+   const TCHAR tmp[] = TEXT( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" );
 
    HFONT hFont;
    HFONT hFontOld;
@@ -297,8 +297,6 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HANDLE hInstance;
    HANDLE hPrevInstance;
    int    iCmdShow;
-
-   USHORT i;
 
    if( ! s_fInit )
    {
@@ -344,8 +342,6 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_wvw->iCursorStyle = SC_NORMAL;
 
    s_wvw->usNumWindows = 0;
-   for( i = 0; i < WVW_MAXWINDOWS; i++ )
-      s_wvw->pWin[ i ] = NULL;
 
    hb_gt_wvwWindowPrologue();
 
@@ -384,7 +380,6 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, s_wvw->pWin[ 0 ]->ROWS, s_wvw->pWin[ 0 ]->COLS );
-
 }
 
 
@@ -402,7 +397,6 @@ HB_BOOL hb_gt_wvw_DestroyPicture( IPicture * iPicture )
 
 static void hb_gt_wvw_Exit( PHB_GT pGT )
 {
-/* void gt_Exit( void ) */
    int        i;
    int        j;
    WVW_WIN *  wvw_win;
@@ -415,11 +409,12 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
    HB_GTSUPER_EXIT( pGT );
 
    for( i = 0; i < WVW_DLGML_MAX; i++ )
+   {
       if( s_wvw->a.hDlgModeless[ i ] )
          SendMessage( s_wvw->a.hDlgModeless[ i ], WM_CLOSE, 0, 0 );
+   }
 
    /* destroy all objects from all windows */
-
    for( j = ( int ) ( s_wvw->usNumWindows - 1 ); j >= 0; j-- )
    {
       wvw_win = ( WVW_WIN * ) s_wvw->pWin[ j ];
@@ -517,16 +512,22 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
    UnregisterClass( s_wvw->szAppName, s_wvw->hInstance );
 
    for( i = 0; i < WVW_PICTURES_MAX; i++ )
+   {
       if( s_wvw->a.iPicture[ i ] )
          hb_gt_wvw_DestroyPicture( s_wvw->a.iPicture[ i ] );
+   }
 
    for( i = 0; i < WVW_FONTS_MAX; i++ )
+   {
       if( s_wvw->a.hUserFonts[ i ] )
          DeleteObject( s_wvw->a.hUserFonts[ i ] );
+   }
 
    for( i = 0; i < WVW_PENS_MAX; i++ )
+   {
       if( s_wvw->a.hUserPens[ i ] )
          DeleteObject( s_wvw->a.hUserPens[ i ] );
+   }
 
    if( s_wvw->a.hMSImg32 )
       FreeLibrary( s_wvw->a.hMSImg32 );
@@ -2297,12 +2298,10 @@ static void xUserTimerNow( HB_UINT nWin, HWND hWnd, UINT message, WPARAM wParam,
 
 static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
-   long int res;
-
    HB_UINT   nWin;
    WVW_WIN * wvw_win;
 
-   for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
+   for( nWin = 0; nWin < s_wvw->usNumWindows; ++nWin )
    {
       if( s_wvw->pWin[ nWin ]->hWnd == hWnd )
          break;
@@ -2335,8 +2334,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          {
             if( bTopMost || s_wvw->fAllowNonTop )
             {
-               HWND    hWnd    = ( HWND ) lParam;
-               HB_UINT nCtrlId = hb_gt_wvw_FindControlId( nWin, WVW_CONTROL_PUSHBUTTON, hWnd, NULL );
+               HWND    hCtrlWnd = ( HWND ) lParam;
+               HB_UINT nCtrlId  = hb_gt_wvw_FindControlId( nWin, WVW_CONTROL_PUSHBUTTON, hCtrlWnd, NULL );
 
                if( nCtrlId == 0 )
                {
@@ -2345,7 +2344,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                   return 0;
                }
 
-               s_RunControlBlock( nWin, WVW_CONTROL_PUSHBUTTON, hWnd, message, wParam, lParam, 0 );
+               s_RunControlBlock( nWin, WVW_CONTROL_PUSHBUTTON, hCtrlWnd, message, wParam, lParam, 0 );
 
                return 0;
             }  /* button click */
@@ -2376,8 +2375,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
                   if( iEvent == CBN_KILLFOCUS || bTopMost || s_wvw->fAllowNonTop )
                   {
-                     HWND    hWnd    = ( HWND ) lParam;
-                     HB_UINT nCtrlId = hb_gt_wvw_FindControlId( nWin, WVW_CONTROL_COMBOBOX, hWnd, NULL );
+                     HWND    hCtrlWnd = ( HWND ) lParam;
+                     HB_UINT nCtrlId  = hb_gt_wvw_FindControlId( nWin, WVW_CONTROL_COMBOBOX, hCtrlWnd, NULL );
 
                      if( nCtrlId == 0 )
                      {
@@ -2386,7 +2385,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                         return 0;
                      }
 
-                     s_RunControlBlock( nWin, WVW_CONTROL_COMBOBOX, hWnd, message, wParam, lParam, ( int ) iEvent );
+                     s_RunControlBlock( nWin, WVW_CONTROL_COMBOBOX, hCtrlWnd, message, wParam, lParam, ( int ) iEvent );
 
                      return 0;
                   }
@@ -2424,8 +2423,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
                   if( iEvent == EN_KILLFOCUS || bTopMost || s_wvw->fAllowNonTop )
                   {
-                     HWND    hWnd    = ( HWND ) lParam;
-                     HB_UINT nCtrlId = hb_gt_wvw_FindControlId( nWin, WVW_CONTROL_EDITBOX, hWnd, NULL );
+                     HWND    hCtrlWnd = ( HWND ) lParam;
+                     HB_UINT nCtrlId  = hb_gt_wvw_FindControlId( nWin, WVW_CONTROL_EDITBOX, hCtrlWnd, NULL );
 
                      if( nCtrlId == 0 )
                      {
@@ -2434,7 +2433,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                         return 0;
                      }
 
-                     s_RunControlBlock( nWin, WVW_CONTROL_EDITBOX, hWnd, message, wParam, lParam, ( int ) iEvent );
+                     s_RunControlBlock( nWin, WVW_CONTROL_EDITBOX, hCtrlWnd, message, wParam, lParam, ( int ) iEvent );
 
                      return 0;
                   }
@@ -3196,7 +3195,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
       case WM_HSCROLL:
       case WM_VSCROLL:
       {
-         HWND    hWnd = ( HWND ) lParam;
+         HWND    hCtrlWnd = ( HWND ) lParam;
          HB_UINT nCtrlId;
          HB_BOOL bTopMost = ( s_wvw->usNumWindows == nWin + 1 );
 
@@ -3210,11 +3209,11 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
          /* --- */
 
-         nCtrlId = hb_gt_wvw_FindControlId( nWin, WVW_CONTROL_SCROLLBAR, hWnd, NULL );
+         nCtrlId = hb_gt_wvw_FindControlId( nWin, WVW_CONTROL_SCROLLBAR, hCtrlWnd, NULL );
          if( nCtrlId == 0 )
             return 0;
 
-         s_RunControlBlock( nWin, WVW_CONTROL_SCROLLBAR, hWnd, message, wParam, lParam, 0 );
+         s_RunControlBlock( nWin, WVW_CONTROL_SCROLLBAR, hCtrlWnd, message, wParam, lParam, 0 );
 
          return 0;
       } /* WM_VSCROLL  WM_HSCROLL */
@@ -3260,6 +3259,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          }
       case WM_CTLCOLORSTATIC:
       case WM_CTLCOLOREDIT:
+      {
+         long res;
 
          if( s_wvw->a.pSymWVW_ONCTLCOLOR )
          {
@@ -3274,7 +3275,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             if( res != -1 )
                return ( LRESULT ) res;
          }
-
+      }
       case WM_SYSCOMMAND: /* handle system menu items */  /*SP-ADDED*/
          if( s_wvw->usNumWindows != nWin + 1 )
             hb_gt_wvwInputNotAllowed( nWin, message, wParam, lParam );
@@ -4591,28 +4592,33 @@ static void hb_gt_wvw_TBMouseEvent( WVW_WIN * wvw_win, HWND hWnd, UINT message, 
 }
 
 
-static void hb_gt_wvwWindowPrologue( void )
+static HB_BOOL hb_gt_wvwWindowPrologue( void )
 {
-   HB_UINT uiWindow;
+   if( s_wvw->usNumWindows < WVW_MAXWINDOWS )
+   {
+      s_wvw->usNumWindows++;
+      s_wvw->pWin[ s_wvw->usNumWindows - 1 ] = ( WVW_WIN * ) hb_xgrabz( sizeof( WVW_WIN ) );
 
-   if( s_wvw->usNumWindows >= WVW_MAXWINDOWS )
-      /* Runtime error */
-      hb_errRT_TERM( EG_BOUND, 10001, "Maximum Number of Windows Exceeded", "hb_gt_wvwWindowPrologue()", 0, 0 );
+      return HB_TRUE;
+   }
 
-   s_wvw->usNumWindows++;
-   uiWindow = s_wvw->usNumWindows;
-   s_wvw->pWin[ uiWindow - 1 ] = ( WVW_WIN * ) hb_xgrabz( sizeof( WVW_WIN ) );
+   hb_errRT_TERM( EG_BOUND, 10001, "Maximum number of windows exceeded", "hb_gt_wvwWindowPrologue()", 0, 0 );
+
+   return HB_FALSE;
 }
 
 static void hb_gt_wvwWindowEpilogue( void )
 {
-   if( s_wvw->usNumWindows == 0 )
-      hb_errRT_TERM( EG_BOUND, 10001, "No more window to destroy", "hb_gt_wvwWindowEpilogue()", 0, 0 );
-   hb_xfree( s_wvw->pWin[ s_wvw->usNumWindows - 1 ] );
-   s_wvw->usNumWindows--;
-
    if( s_wvw->usNumWindows > 0 )
-      s_wvw->usCurWindow = s_wvw->usNumWindows - 1;
+   {
+      hb_xfree( s_wvw->pWin[ s_wvw->usNumWindows - 1 ] );
+      s_wvw->usNumWindows--;
+
+      if( s_wvw->usNumWindows > 0 )
+         s_wvw->usCurWindow = s_wvw->usNumWindows - 1;
+   }
+   else
+      hb_errRT_TERM( EG_BOUND, 10001, "No more window to destroy", "hb_gt_wvwWindowEpilogue()", 0, 0 );
 }
 
 static HB_UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int iRow2, int iCol2,
@@ -4661,7 +4667,6 @@ static HB_UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, i
 
       if( ! RegisterClass( &wndclass ) )
       {
-
          MessageBox( NULL, TEXT( "Failed to register class." ), s_wvw->szSubWinName, MB_ICONERROR );
          return 0;
       }
@@ -4669,7 +4674,9 @@ static HB_UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, i
       s_wvw->fSWRegistered = HB_TRUE;
    }
 
-   hb_gt_wvwWindowPrologue();
+   if( ! hb_gt_wvwWindowPrologue() )
+      return 0;
+
    hb_gtInitStatics( s_wvw->usNumWindows - 1, lpszWinName, ( USHORT ) iRow1, ( USHORT ) iCol1, ( USHORT ) iRow2, ( USHORT ) iCol2 );
 
    hWnd = CreateWindow( s_wvw->szSubWinName,
@@ -4694,17 +4701,18 @@ static HB_UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, i
    {
       LPTSTR lpMsgBuf = NULL;
 
-      FormatMessage(
+      if( FormatMessage(
          FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
          NULL,
          GetLastError(),
          MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
          ( LPTSTR ) &lpMsgBuf,
          0,
-         NULL );
-
-      MessageBox( NULL, lpMsgBuf, "Failed CreateWindow()", MB_ICONERROR );
-      LocalFree( lpMsgBuf );
+         NULL ) != 0 )
+      {
+         MessageBox( NULL, lpMsgBuf, "Failed CreateWindow()", MB_ICONERROR );
+         LocalFree( lpMsgBuf );
+      }
 
       hb_gt_wvwWindowEpilogue();
 
@@ -7663,7 +7671,7 @@ HB_FUNC( WVW_SETWINDOWPOS )
 
 HB_FUNC( WVW_GETWINDOWHANDLE )
 {
-   hb_retnint( ( HB_PTRDIFF ) hb_gt_wvw_GetWindowHandle( WVW_WHICH_WINDOW ) );
+   HB_RETHANDLE( hb_gt_wvw_GetWindowHandle( WVW_WHICH_WINDOW ) );
 }
 
 
@@ -9113,7 +9121,7 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
 {
    WVW_WIN * wvw_win    = s_wvw->pWin[ nWin ];
    HWND      hWndParent = wvw_win->hWnd;
-   HWND      hWndButton;
+   HWND      hWnd;
    POINT     xy;
    int       iTop, iLeft, iBottom, iRight;
    HB_UINT   nCtrlId;
@@ -9122,7 +9130,10 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
    {
       wvw_win->hPBfont = CreateFontIndirect( &s_wvw->lfPB );
       if( wvw_win->hPBfont == NULL )
+      {
+         HB_STOREHANDLE( NULL, 12 );
          return 0;
+      }
    }
 
    if( s_wvw->fMainCoordMode )
@@ -9148,7 +9159,7 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
    if( szBitmap || uiBitmap )
       iStyle |= BS_BITMAP;
 
-   hWndButton = CreateWindowEx(
+   hWnd = CreateWindowEx(
       0L,                                       /* no extended styles */
       "BUTTON",                                 /* pushbutton/checkbox control class */
       ( LPSTR ) lpszCaption,                    /* text for caption */
@@ -9162,7 +9173,7 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
       s_wvw->hInstance,                         /* instance owning this window */
       NULL );                                   /* pointer not needed */
 
-   if( hWndButton )
+   if( hWnd )
    {
       RECT    rXB, rOffXB;
       WNDPROC OldProc;
@@ -9175,10 +9186,10 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
          iExpWidth  = iRight - iLeft + 1;
          iExpHeight = iBottom - iTop + 1;
          hBitmap    = hPrepareBitmap( szBitmap, uiBitmap, ( int ) dStretch * iExpWidth, ( int ) dStretch * iExpHeight,
-                                      bMap3Dcolors, hWndButton );
+                                      bMap3Dcolors, hWnd );
 
          if( hBitmap )
-            SendMessage( hWndButton,               /* handle to destination window */
+            SendMessage( hWnd,                     /* handle to destination window */
                          BM_SETIMAGE,              /* message to send */
                          ( WPARAM ) IMAGE_BITMAP,  /* image type */
                          ( LPARAM ) hBitmap );     /* handle to the image (HANDLE) */
@@ -9194,20 +9205,20 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
       rOffXB.bottom = iOffBottom;
       rOffXB.right  = iOffRight;
 
-      hb_gt_wvw_AddControlHandle( nWin, WVW_CONTROL_PUSHBUTTON, hWndButton, nCtrlId, ( PHB_ITEM ) phbiCodeBlock, rXB, rOffXB, ( HB_BYTE ) iStyle );
+      hb_gt_wvw_AddControlHandle( nWin, WVW_CONTROL_PUSHBUTTON, hWnd, nCtrlId, ( PHB_ITEM ) phbiCodeBlock, rXB, rOffXB, ( HB_BYTE ) iStyle );
 
-      OldProc = ( WNDPROC ) SetWindowLongPtr( hWndButton, GWLP_WNDPROC, ( LPARAM ) ( WNDPROC ) hb_gt_wvw_BtnProc );
+      OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LPARAM ) ( WNDPROC ) hb_gt_wvw_BtnProc );
 
-      hb_gt_wvw_StoreControlProc( nWin, WVW_CONTROL_PUSHBUTTON, hWndButton, OldProc );
+      hb_gt_wvw_StoreControlProc( nWin, WVW_CONTROL_PUSHBUTTON, hWnd, OldProc );
 
-      SendMessage( hWndButton, WM_SETFONT, ( WPARAM ) wvw_win->hPBfont, ( LPARAM ) TRUE );
-      hb_stornint( ( HB_PTRDIFF ) hWndButton, 12 );
+      SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hPBfont, ( LPARAM ) TRUE );
 
+      HB_STOREHANDLE( hWnd, 12 );
       return nCtrlId;
    }
    else
    {
-      hb_stornint( 0, 12 );
+      HB_STOREHANDLE( NULL, 12 );
       return 0;
    }
 }

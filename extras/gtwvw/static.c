@@ -65,7 +65,7 @@ HB_FUNC( WVW_STCREATE )
    HB_BOOL bBorder   = hb_parl( 7 );
    ULONG   ulExStyle = bBorder ? WS_EX_CLIENTEDGE : 0;
 
-   HB_UINT uiCBid;
+   HB_UINT nCtrlId;
 
    USHORT usWidth  = ( USHORT ) hb_parni( 4 );
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
@@ -87,6 +87,7 @@ HB_FUNC( WVW_STCREATE )
       wvw_win->hSTfont = CreateFontIndirect( &wvw->lfST );
       if( wvw_win->hSTfont == NULL )
       {
+         HB_STOREHANDLE( NULL, 9 );
          hb_retnl( 0 );
          return;
       }
@@ -111,11 +112,11 @@ HB_FUNC( WVW_STCREATE )
    iBottom = xy.y - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
 
-   uiCBid = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_STATIC );
-   if( uiCBid == 0 )
-      uiCBid = WVW_ID_BASE_STATIC;
+   nCtrlId = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_STATIC );
+   if( nCtrlId == 0 )
+      nCtrlId = WVW_ID_BASE_STATIC;
    else
-      uiCBid++;
+      nCtrlId++;
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
@@ -129,7 +130,7 @@ HB_FUNC( WVW_STCREATE )
       iRight - iLeft + 1,
       iBottom - iTop + 1,
       hWndParent,
-      ( HMENU ) ( HB_PTRDIFF ) uiCBid,
+      ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
       ( HINSTANCE ) hInstance,
       NULL );
 
@@ -143,7 +144,7 @@ HB_FUNC( WVW_STCREATE )
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSTfont, ( LPARAM ) TRUE );
 
       HB_STOREHANDLE( hWnd, 9 );
-      hb_retnl( uiCBid );
+      hb_retnl( nCtrlId );
    }
    else
    {
@@ -187,7 +188,7 @@ HB_FUNC( WVW_STSETFONT )
    wvw->lfST.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfST.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
+      hb_strncpy( wvw->lfST.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfST.lfFaceName ) - 1 );
 
    if( wvw_win->hSTfont )
    {

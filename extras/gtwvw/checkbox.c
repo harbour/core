@@ -275,7 +275,7 @@ HB_FUNC( WVW_CXSETFONT )
    wvw->lfCX.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfCX.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
+      hb_strncpy( wvw->lfCX.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfCX.lfFaceName ) - 1 );
 
    if( wvw_win->hCXfont )
    {

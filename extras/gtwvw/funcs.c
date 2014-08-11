@@ -75,11 +75,11 @@ HB_FUNC( WIN_SENDMESSAGE )
    else
       cText = NULL;
 
-   hb_retnl( ( ULONG ) SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                                    ( UINT ) hb_parni( 2 ),
-                                    ( WPARAM ) hb_parnint( 3 ),
-                                    HB_ISBYREF( 4 ) ? ( LPARAM ) ( LPSTR ) cText :
-                                    ( HB_ISCHAR( 4 ) ? ( LPARAM ) hb_parc( 4 ) : ( LPARAM ) hb_parnint( 4 ) ) ) );
+   hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
+                            ( UINT ) hb_parni( 2 ),
+                            ( WPARAM ) hb_parnint( 3 ),
+                            HB_ISBYREF( 4 ) ? ( LPARAM ) ( LPSTR ) cText :
+                            ( HB_ISCHAR( 4 ) ? ( LPARAM ) hb_parc( 4 ) : ( LPARAM ) hb_parnint( 4 ) ) ) );
 
    if( cText )
    {
@@ -103,11 +103,11 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
    else
       cText = NULL;
 
-   hb_retnl( ( LONG ) SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                                          hb_parni( 2 ),
-                                          ( UINT ) hb_parni( 3 ),
-                                          ( WPARAM ) hb_parnint( 4 ),
-                                          cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) ) );
+   hb_retnint( SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
+                                   hb_parni( 2 ),
+                                   ( UINT ) hb_parni( 3 ),
+                                   ( WPARAM ) hb_parnint( 4 ),
+                                   cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) ) );
 
    if( cText )
    {
@@ -151,7 +151,7 @@ HB_FUNC( WVW_SETBKMODE )
 
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
-   hb_retnint( ( HB_PTRDIFF ) GetStockObject( hb_parnl( 1 ) ) );
+   HB_RETHANDLE( GetStockObject( hb_parnl( 1 ) ) );
 }
 
 
@@ -163,7 +163,7 @@ HB_FUNC( WIN_DELETEOBJECT )
 
 HB_FUNC( WIN_SELECTOBJECT )
 {
-   hb_retnint( ( HB_PTRDIFF ) SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
+   HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
 }
 
 
@@ -225,7 +225,7 @@ HB_FUNC( WIN_CHECKRADIOBUTTON )
 
 HB_FUNC( WIN_GETDLGITEM )
 {
-   hb_retnint( ( HB_PTRDIFF ) GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
+   HB_RETHANDLE( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
 
@@ -250,7 +250,7 @@ HB_FUNC( WIN_LOADICON )
    else
       hIcon = ( HICON ) LoadImage( NULL, hb_parc( 1 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
 
-   hb_retnint( ( HB_PTRDIFF ) hIcon );
+   HB_RETHANDLE( hIcon );
 }
 
 /* win_LoadImage( ncImage, nSource ) -> hImage
@@ -277,7 +277,7 @@ HB_FUNC( WIN_LOADIMAGE )
          break;
    }
 
-   hb_retnint( ( HB_PTRDIFF ) hImage );
+   HB_RETHANDLE( hImage );
 }
 
 
@@ -334,7 +334,7 @@ HB_FUNC( WIN_CREATEBRUSH )
    lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
    lb.lbHatch = hb_parni( 3 );
 
-   hb_retnint( ( HB_PTRDIFF ) CreateBrushIndirect( &lb ) );
+   HB_RETHANDLE( CreateBrushIndirect( &lb ) );
 }
 
 /* win_DrawText( hDC, cText, aRect, nFormat ) */
@@ -503,7 +503,7 @@ HB_FUNC( WVW_MOUSE_ROW )
 
 HB_FUNC( SENDMESSAGE )
 {
-   hb_retnl( ( long ) SendMessage(
+   hb_retnint( SendMessage(
                 ( HWND ) HB_PARHANDLE( 1 ),                                                    /* handle of destination window */
                 ( UINT ) hb_parni( 2 ),                                                        /* message to send */
                 ( WPARAM ) hb_parnl( 3 ),                                                      /* first message parameter */
@@ -656,24 +656,22 @@ HB_FUNC( GETICONSIZE )
 HB_FUNC( LOADIMAGE )
 {
    if( HB_ISNUM( 2 ) )
-      hb_retnint( ( HB_PTRDIFF )
-                  LoadImage( hb_gt_wvw_GetWvwData()->hInstance,              /* ( HINSTANCE ) hb_parnldef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
-                             ( LPCTSTR ) MAKEINTRESOURCE( hb_parnint( 2 ) ), /* name or identifier of image */
-                             ( UINT ) hb_parni( 3 ),                         /* type of image */
-                             hb_parni( 4 ),                                  /* desired width */
-                             hb_parni( 5 ),                                  /* desired height */
-                             ( UINT ) hb_parni( 6 )                          /* load flags */
-                             ) );
+      HB_RETHANDLE( LoadImage( hb_gt_wvw_GetWvwData()->hInstance,              /* ( HINSTANCE ) hb_parnldef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
+                               ( LPCTSTR ) MAKEINTRESOURCE( hb_parnint( 2 ) ), /* name or identifier of image */
+                               ( UINT ) hb_parni( 3 ),                         /* type of image */
+                               hb_parni( 4 ),                                  /* desired width */
+                               hb_parni( 5 ),                                  /* desired height */
+                               ( UINT ) hb_parni( 6 )                          /* load flags */
+                               ) );
 
    else
-      HB_RETHANDLE(
-         LoadImage( ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 1 ), /* handle of the instance that contains the image */
-                    ( LPCTSTR ) hb_parc( 2 ),                     /* name or identifier of image */
-                    ( UINT ) hb_parni( 3 ),                       /* type of image */
-                    hb_parni( 4 ),                                /* desired width */
-                    hb_parni( 5 ),                                /* desired height */
-                    ( UINT ) hb_parni( 6 )                        /* load flags */
-                    ) );
+      HB_RETHANDLE( LoadImage( ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 1 ), /* handle of the instance that contains the image */
+                               ( LPCTSTR ) hb_parc( 2 ),                     /* name or identifier of image */
+                               ( UINT ) hb_parni( 3 ),                       /* type of image */
+                               hb_parni( 4 ),                                /* desired width */
+                               hb_parni( 5 ),                                /* desired height */
+                               ( UINT ) hb_parni( 6 )                        /* load flags */
+                               ) );
 
 }
 
@@ -683,7 +681,7 @@ HB_FUNC( LOADBITMAP )
    {
       if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
 #if 0
-         hb_retnint( ( HB_PTRDIFF ) LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parnint( 1 ) ) ) );
+         HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parnint( 1 ) ) ) );
 #endif
          HB_RETHANDLE( LoadBitmap( NULL, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
       else
@@ -701,7 +699,7 @@ HB_FUNC( LOADBITMAPEX )
    {
       if( HB_ISLOG( 3 ) && hb_parl( 3 ) )
 #if 0
-         hb_retnint( ( HB_PTRDIFF ) LoadBitmap( h, MAKEINTRESOURCE( hb_parnint( 2 ) ) ) );
+         HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parnint( 2 ) ) ) );
 #endif
          HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 3 ) ) );
       else
@@ -785,7 +783,7 @@ HB_FUNC( OPENIMAGE )
    HB_VTBL( pPic )->get_Handle( HB_THIS_ ( pPic ) ( OLE_HANDLE * ) & hBitmap );
 #endif
 
-   hb_retnint( ( HB_PTRDIFF ) CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
+   HB_RETHANDLE( CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
 
 #if 0
    HB_VTBL( pPic )->Release( HB_THIS( pPic ) );
@@ -1710,8 +1708,7 @@ HB_FUNC( WVW_DLGSETICON )
       SendMessage( ( HWND ) HB_PARHANDLE( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );     /* Set Task List Icon */
    }
 
-   if( hIcon )
-      hb_retnint( ( HB_PTRDIFF ) hIcon );
+   HB_RETHANDLE( hIcon );
 }
 
 
@@ -2024,7 +2021,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
       wvw->a.hDlgModeless[ iIndex ] = NULL;
    }
 
-   hb_retnint( ( HB_PTRDIFF ) hDlg );
+   HB_RETHANDLE( hDlg );
 }
 
 
@@ -2269,7 +2266,6 @@ HB_FUNC( WVW_CREATEFONT )
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
    LOGFONT lf;
-   HFONT   hFont;
 
    memset( &lf, 0, sizeof( lf ) );
 
@@ -2289,11 +2285,7 @@ HB_FUNC( WVW_CREATEFONT )
 
    hb_strncpy( lf.lfFaceName, HB_ISCHAR( 1 ) ? hb_parc( 1 ) : wvw_win->fontFace, sizeof( lf.lfFaceName ) - 1 );
 
-   hFont = CreateFontIndirect( &lf );
-   if( hFont )
-      hb_retnint( ( HB_PTRDIFF ) hFont );
-   else
-      hb_retnint( 0 );
+   HB_RETHANDLE( CreateFontIndirect( &lf ) );
 }
 
 #if ! defined( __HB_NO_REDUNDANT )

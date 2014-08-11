@@ -302,5 +302,5 @@ HB_FUNC( WVW_GETSYSTEMMENU )
 {
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
-   hb_retnint( ( HB_PTRDIFF ) GetSystemMenu( wvw_win->hWnd, hb_parl( 2 ) /* lReset */ ) );
+   HB_RETHANDLE( GetSystemMenu( wvw_win->hWnd, hb_parl( 2 ) /* lReset */ ) );
 }

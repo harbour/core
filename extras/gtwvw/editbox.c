@@ -390,7 +390,7 @@ HB_FUNC( WVW_EBSETFONT )
    wvw->lfEB.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfEB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
+      hb_strncpy( wvw->lfEB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfEB.lfFaceName ) - 1 );
 
    if( wvw_win->hEBfont )
    {

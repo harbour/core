@@ -6,20 +6,6 @@
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
- * Video subsystem for Windows using GUI windows instead of Console
- *     Copyright 2003 Peter Rees <peter@rees.co.nz>
- *                    Rees Software & Systems Ltd
- * based on
- *   Bcc ConIO Video subsystem by
- *     Copyright 2002 Marek Paliwoda <paliwoda@inteia.pl>
- *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
- *   Video subsystem for Windows compilers
- *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
- *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_wvw_Tone()
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option )
@@ -112,7 +98,7 @@ HB_FUNC( WVW_SBCREATE )
       SendMessage( hWnd, SB_SETPARTS, 1, ( LPARAM ) ( LPINT ) ptArray );
    }
 
-   hb_retnint( ( HB_PTRDIFF ) hWnd );
+   HB_RETHANDLE( hWnd );
 }
 
 /* wvw_sbDestroy( [nWinNum] )

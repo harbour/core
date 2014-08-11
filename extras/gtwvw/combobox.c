@@ -130,6 +130,7 @@ HB_FUNC( WVW_CBCREATE )
       wvw_win->hCBfont = CreateFontIndirect( &wvw->lfCB );
       if( wvw_win->hCBfont == NULL )
       {
+         HB_STOREHANDLE( NULL, 11 );
          hb_retnl( 0 );
          return;
       }
@@ -234,13 +235,13 @@ HB_FUNC( WVW_CBCREATE )
       hb_gt_wvw_StoreControlProc( nWin, WVW_CONTROL_COMBOBOX, hWnd, OldProc );
 
       SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hCBfont, ( LPARAM ) TRUE );
-      hb_stornint( ( HB_PTRDIFF ) hWnd, 11 );
 
+      HB_STOREHANDLE( hWnd, 11 );
       hb_retnl( nCtrlId );
    }
    else
    {
-      hb_stornint( 0, 11 );
+      HB_STOREHANDLE( NULL, 11 );
       hb_retnl( 0 );
    }
 }
@@ -387,7 +388,7 @@ HB_FUNC( WVW_CBSETFONT )
    wvw->lfCB.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfCB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfPB.lfFaceName ) - 1 );
+      hb_strncpy( wvw->lfCB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfCB.lfFaceName ) - 1 );
 
    if( wvw_win->hCBfont )
    {
