@@ -187,7 +187,7 @@ HB_FUNC( WVW_EBCREATE )
       RECT    rXB, rOffXB;
       WNDPROC OldProc;
 
-      void * hText;
+      void *  hText;
       LPCTSTR lpszText = HB_PARSTRDEF( 6, &hText, NULL );
 
 #if ! defined( UNICODE )
@@ -466,7 +466,7 @@ HB_FUNC( WVW_EBGETTEXT )
    if( pcd )
    {
 #if ! defined( UNICODE )
-      WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( nWin );
+      WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 #endif
 
       USHORT usLen;
@@ -516,7 +516,7 @@ HB_FUNC( WVW_EBSETTEXT )
       WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 #endif
 
-      void * hText;
+      void *  hText;
       LPCTSTR lpszText = HB_PARSTRDEF( 3, &hText, NULL );
 
 #if ! defined( UNICODE )

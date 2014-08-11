@@ -193,7 +193,7 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
-   USHORT iLen   = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), ( UINT ) WM_GETTEXTLENGTH, 0, 0 ) + 1;
+   USHORT  iLen  = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), ( UINT ) WM_GETTEXTLENGTH, 0, 0 ) + 1;
    TCHAR * cText = ( TCHAR * ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
    GetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ),
@@ -374,7 +374,7 @@ HB_FUNC( WIN_DRAWTEXT )
    RECT rc;
 
    HB_SIZE nLen;
-   void * hText;
+   void *  hText;
    LPCTSTR szText = HB_PARSTRDEF( 2, &hText, &nLen );
 
    rc.left   = hb_parvni( 3, 1 );

@@ -172,30 +172,30 @@ MEMVAR _wvwtemp_
 
 /* Native Statusbar functions. Currently none in WVT.
    WVT uses different approach (Wvt_DrawStatusBar) */
-//wvw_sbCreate
-//wvw_sbDestroy
-//wvw_sbAddPart
-//wvw_sbRefresh
-//wvw_sbSetText
-//wvw_sbGetText
-//wvw_sbGetParts
+//wvw_sbCreate()
+//wvw_sbDestroy()
+//wvw_sbAddPart()
+//wvw_sbRefresh()
+//wvw_sbSetText()
+//wvw_sbGetText()
+//wvw_sbGetParts()
 
 /* Toolbar functions. Currently none in WVT. WVT uses different approach. */
-//wvw_tbCreate
-//wvw_tbAddButton
-//wvw_tbButtonCount
-//wvw_tbDelButton
-//wvw_tbEnableButton
-//wvw_tbDestroy
+//wvw_tbCreate()
+//wvw_tbAddButton()
+//wvw_tbButtonCount()
+//wvw_tbDelButton()
+//wvw_tbEnableButton()
+//wvw_tbDestroy()
 
 /* Scrollbar functions. Currently none in WVT. WVT uses different approach. */
-//wvw_xbCreate
-//wvw_xbDestroy
-//wvw_xbUpdate
-//wvw_xbEnable
+//wvw_xbCreate()
+//wvw_xbDestroy()
+//wvw_xbUpdate()
+//wvw_xbEnable()
 
 /* Line Spacing. Currently none in WVT. */
-//wvw_SetLineSpacing
+//wvw_SetLineSpacing()
 
 /* PART-3: RESERVED FUNCTION NAMES ("callback" prg functions, called by gtwvw) */
 /* =========================================================================== */
@@ -213,11 +213,11 @@ MEMVAR _wvwtemp_
   Typically your WVT_xxx function will need adjustment like below:
 
       FUNCTION WVT_xxx(...)
-         LOCAL nOldWin := wvw_nSetCurWindow( nWinNum ) //<-- add this
+         LOCAL nOldWin := wvw_nSetCurWindow( nWinNum )  // <-- add this
 
          ...existing code...
 
-         wvw_nSetCurWindow( nOldWin ) //<--add this
+         wvw_nSetCurWindow( nOldWin )  // <--add this
          RETURN NIL
 
   Although the above may be enough, each individual function may need careful review
@@ -233,8 +233,7 @@ MEMVAR _wvwtemp_
   (Alert(), AChoice(), GET, etc.).
 
   You may want to replace wvw_nSetCurWindow() with your own function in this case.
-
-*/
+ */
 
 #xtranslate FUNCTION Wvt_Paint( [<vlist,...>] ) => FUNCTION wvw_Paint( nWinNum [,<vlist>] )
 #xtranslate PROCEDURE Wvt_Paint( [<vlist,...>] ) => PROCEDURE wvw_Paint( nWinNum [,<vlist>] )
@@ -255,8 +254,6 @@ MEMVAR _wvwtemp_
 #xtranslate FUNCTION Wvt_Timer() => FUNCTION wvw_Timer( nWinNum, hWnd, message, wParam, lParam )
 #xtranslate PROCEDURE Wvt_Timer() => PROCEDURE wvw_Timer( nWinNum, hWnd, message, wParam, lParam )
 /* Currently Wvt_Timer() is never called by GTWVT.
-   There should never be any existing usage of this function.
-*/
+   There should never be any existing usage of this function. */
 
-/* Wvt_MenuSelect does not exist in WVT. */
-//Wvt_MenuSelect
+/* Wvt_MenuSelect() does not exist in WVT. */

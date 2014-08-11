@@ -75,7 +75,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    int iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) :  0;
 
    HB_SIZE nLen;
-   void * hText;
+   void *  hText;
    LPCTSTR szText = HB_PARSTRDEF( 6, &hText, &nLen );
 
    if( hb_gt_wvw_GetMainCoordMode() )
@@ -537,7 +537,7 @@ HB_FUNC( WVW_DRAWTEXTBOX )
           usRight  = ( USHORT ) hb_parni( 5 );
 
    HB_SIZE nLen;
-   void * hText;
+   void *  hText;
    LPCTSTR szText = HB_PARSTRDEF( 7, &hText, &nLen );
 
    if( hb_gt_wvw_GetMainCoordMode() )
@@ -1396,7 +1396,7 @@ HB_FUNC( WVW_DRAWLABEL )
    if( hFont )
    {
       HB_SIZE nLen;
-      void * hText;
+      void *  hText;
       LPCTSTR szText = HB_PARSTRDEF( 4, &hText, &nLen );
 
       POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
@@ -1526,8 +1526,8 @@ HB_FUNC( WVW_DRAWLINE )
 
    switch( iAlign )
    {
-      case 0:  /* Center */
-         if( iOrient == 0 )  /* Horizontal */
+      case 0:               /* Center */
+         if( iOrient == 0 ) /* Horizontal */
          {
             iOffset = ( iBottom - iTop ) / 2;
             y       = iTop + iOffset;
@@ -1565,8 +1565,8 @@ HB_FUNC( WVW_DRAWLINE )
 
    switch( iFormat )
    {
-      case 0:  /* Raised */
-         if( iOrient == 0 )  /* Horizontal */
+      case 0:               /* Raised */
+         if( iOrient == 0 ) /* Horizontal */
          {
             SelectObject( wvw_win->hdc, wvw->a.penWhite );
             MoveToEx( wvw_win->hdc, x, y, NULL );
@@ -1586,8 +1586,8 @@ HB_FUNC( WVW_DRAWLINE )
          }
          break;
 
-      case 1:  /* Recessed */
-         if( iOrient == 0 )  /* Horizontal */
+      case 1:               /* Recessed */
+         if( iOrient == 0 ) /* Horizontal */
          {
             SelectObject( wvw_win->hdc, hPen );
             MoveToEx( wvw_win->hdc, x, y, NULL );
@@ -1607,8 +1607,8 @@ HB_FUNC( WVW_DRAWLINE )
          }
          break;
 
-      case 2:  /* Plain */
-         if( iOrient == 0 )  /* Horizontal */
+      case 2:               /* Plain */
+         if( iOrient == 0 ) /* Horizontal */
          {
             SelectObject( wvw_win->hdc, hPen );
             MoveToEx( wvw_win->hdc, x, y, NULL );
@@ -2045,7 +2045,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       COLORREF oldTextColor;
 
       HB_SIZE nLen;
-      void * hText;
+      void *  hText;
       LPCTSTR szText = HB_PARSTRDEF( 6, &hText, &nLen );
 
       SIZE sz;
@@ -2281,7 +2281,7 @@ HB_FUNC( WVW_DRAWLABELEX )
       POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
 
       HB_SIZE nLen;
-      void * hText;
+      void *  hText;
       LPCTSTR szText = HB_PARSTRDEF( 4, &hText, &nLen );
 
       oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 7, wvw_win->background ) );
@@ -2345,8 +2345,8 @@ HB_FUNC( WVW_DRAWLINEEX )
 
    switch( iAlign )
    {
-      case 0:  /* Center */
-         if( iOrient == 0 )  /* Horizontal */
+      case 0:               /* Center */
+         if( iOrient == 0 ) /* Horizontal */
          {
             iOffset = ( iBottom - iTop ) / 2;
             y       = iTop + iOffset;
@@ -2361,8 +2361,8 @@ HB_FUNC( WVW_DRAWLINEEX )
       case 1:  /* Top */
          break;
 
-      case 2:  /* Bottom */
-         if( iFormat == 0 || iFormat == 1 )  /* Raised/Recessed */
+      case 2:                               /* Bottom */
+         if( iFormat == 0 || iFormat == 1 ) /* Raised/Recessed */
             y = iBottom - 1;
          else
             y = iBottom;
@@ -2371,8 +2371,8 @@ HB_FUNC( WVW_DRAWLINEEX )
       case 3:  /* Left */
          break;
 
-      case 4:  /* Right */
-         if( iFormat == 0 || iFormat == 1 )  /* Raised/Recessed */
+      case 4:                               /* Right */
+         if( iFormat == 0 || iFormat == 1 ) /* Raised/Recessed */
             x = iRight - 1;
          else
             x = iRight;
@@ -2383,8 +2383,8 @@ HB_FUNC( WVW_DRAWLINEEX )
 
    switch( iFormat )
    {
-      case 0:  /* Raised */
-         if( iOrient == 0 )  /* Horizontal */
+      case 0:               /* Raised */
+         if( iOrient == 0 ) /* Horizontal */
          {
             SelectObject( wvw_win->hdc, wvw->a.penWhite );
             MoveToEx( wvw_win->hdc, x, y, NULL );
@@ -2404,8 +2404,8 @@ HB_FUNC( WVW_DRAWLINEEX )
          }
          break;
 
-      case 1:  /* Recessed */
-         if( iOrient == 0 )  /* Horizontal */
+      case 1:               /* Recessed */
+         if( iOrient == 0 ) /* Horizontal */
          {
             SelectObject( wvw_win->hdc, hPen );
             MoveToEx( wvw_win->hdc, x, y, NULL );
@@ -2425,8 +2425,8 @@ HB_FUNC( WVW_DRAWLINEEX )
          }
          break;
 
-      case 2:  /* Plain */
-         if( iOrient == 0 )  /* Horizontal */
+      case 2:               /* Plain */
+         if( iOrient == 0 ) /* Horizontal */
          {
             SelectObject( wvw_win->hdc, hPen );
             MoveToEx( wvw_win->hdc, x, y, NULL );

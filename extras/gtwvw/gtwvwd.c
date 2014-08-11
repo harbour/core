@@ -133,7 +133,7 @@ static HB_BOOL hb_gt_wvwAllocSpBuffer( WVW_WIN * wvw_win, USHORT col, USHORT row
 
 static void    hb_gt_wvw_SetWindowTitle( HB_UINT nWin, LPCTSTR title );
 static PHB_ITEM hb_gt_wvw_GetWindowTitleItem( HB_UINT nWin, PHB_ITEM pItem );
-static HICON   hb_gt_wvw_SetWindowIcon( HB_UINT nWin, int icon, const char * lpIconName );
+static HICON   hb_gt_wvw_SetWindowIcon( HB_UINT nWin, int icon, const TCHAR * lpIconName );
 static HICON   hb_gt_wvw_SetWindowIconFromFile( HB_UINT nWin, LPCTSTR icon );
 
 
@@ -1338,9 +1338,9 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          HICON hIcon = NULL;
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            void * hImageName;
-            hIcon = ( HICON ) hb_gt_wvw_SetWindowIconFromFile( s_wvw->usCurWindow, HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ) );
-            hb_strfree( hImageName );
+            void * hIconName;
+            hIcon = ( HICON ) hb_gt_wvw_SetWindowIconFromFile( s_wvw->usCurWindow, HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
+            hb_strfree( hIconName );
          }
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) hIcon );
          break;
@@ -1351,8 +1351,9 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          HICON hIcon = NULL;
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            LPSTR lpIcon = ( LPSTR ) hb_itemGetCPtr( pInfo->pNewVal );
-            hIcon = ( HICON ) hb_gt_wvw_SetWindowIcon( s_wvw->usCurWindow, 0, ( char * ) lpIcon );
+            void * hIconName;
+            hIcon = ( HICON ) hb_gt_wvw_SetWindowIcon( s_wvw->usCurWindow, 0, HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
+            hb_strfree( hIconName );
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hIcon = ( HICON ) hb_gt_wvw_SetWindowIcon( s_wvw->usCurWindow, hb_itemGetNI( pInfo->pNewVal ), NULL );
@@ -2215,16 +2216,18 @@ static void hb_gt_wvw_ResetWindowSize( WVW_WIN * wvw_win, HWND hWnd )
 }
 
 
+#if ! defined( UNICODE )
 static int hb_wvw_key_ansi_to_oem( int c )
 {
    char pszAnsi[ 4 ];
    char pszOem[ 4 ];
 
    hb_snprintf( pszAnsi, sizeof( pszAnsi ), "%c", c );
-   CharToOemBuff( ( LPCSTR ) pszAnsi, ( LPTSTR ) pszOem, 1 );
+   CharToOemBuff( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
 
-   return ( BYTE ) *pszOem;
+   return ( int ) *pszOem;
 }
+#endif
 
 
 static void xUserPaintNow( HB_UINT nWin )
@@ -2971,9 +2974,10 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                      hb_gt_wvwAddCharToInputQueue( K_ESC );
                      break;
                   default:
-
+#if ! defined( UNICODE )
                      if( wvw_win->CodePage == OEM_CHARSET )
                         c = hb_wvw_key_ansi_to_oem( c );
+#endif
                      hb_gt_wvwAddCharToInputQueue( c );
                }
             }
@@ -4124,7 +4128,7 @@ static void hb_gtInitStatics( HB_UINT nWin, LPCTSTR lpszWinName, USHORT usRow1, 
       s_wvw->a.pSymWVW_TIMER      = hb_dynsymFind( "WVW_TIMER" );
       s_wvw->a.pSymWVW_ONCTLCOLOR = hb_dynsymFind( "WVW_ONCTLCOLOR" );
 
-      h = LoadLibrary( "msimg32.dll" );
+      h = LoadLibrary( TEXT( "msimg32.dll" ) );
       if( h )
       {
          s_wvw->a.pfnGF = ( wvwGradientFill ) HB_WINAPI_GETPROCADDRESS( h, "GradientFill" );
@@ -5783,7 +5787,7 @@ static PHB_ITEM hb_gt_wvw_GetWindowTitleItem( HB_UINT nWin, PHB_ITEM pItem )
 }
 
 
-static HICON hb_gt_wvw_SetWindowIcon( HB_UINT nWin, int icon, const char * lpIconName )
+static HICON hb_gt_wvw_SetWindowIcon( HB_UINT nWin, int icon, const TCHAR * lpIconName )
 {
    HICON hIcon;
 
@@ -5972,12 +5976,14 @@ HB_BOOL hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHe
       *pHeight = 0;
 
       pPic = hb_gt_wvw_LoadPicture( image );
-      if( ! pPic )
-         return HB_FALSE;
+      if( pPic )
+      {
+         fResult = hb_gt_wvw_GetIPictDimension( pPic, pWidth, pHeight );
 
-      fResult = hb_gt_wvw_GetIPictDimension( pPic, pWidth, pHeight );
-
-      hb_gt_wvw_DestroyPicture( pPic );
+         hb_gt_wvw_DestroyPicture( pPic );
+      }
+      else
+         fResult = HB_FALSE;
    }
 
    return fResult;
@@ -6172,7 +6178,12 @@ HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const
 IPicture * hb_gt_wvw_LoadPicture( const char * image )
 {
    LPVOID iPicture = NULL;
-   HANDLE hFile    = CreateFile( image, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+
+   LPTSTR lpFree;
+   HANDLE hFile = CreateFile( HB_FSNAMECONV( image, &lpFree ), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+
+   if( lpFree )
+      hb_xfree( lpFree );
 
    if( hFile != INVALID_HANDLE_VALUE )
    {
@@ -7518,15 +7529,14 @@ HB_FUNC( WVW_SETFONT )
 HB_FUNC( WVW_SETICON )
 {
    HB_UINT nWin = WVW_WHICH_WINDOW;
+   void *  hIconName;
 
    if( HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
-      hb_retptr( ( void * ) hb_gt_wvw_SetWindowIcon( nWin, hb_parni( 2 ), hb_parc( 3 ) ) );
+      hb_retptr( ( void * ) hb_gt_wvw_SetWindowIcon( nWin, hb_parni( 2 ), HB_PARSTRDEF( 3, &hIconName, NULL ) ) );
    else
-   {
-      void * hImageName;
-      hb_retptr( ( void * ) hb_gt_wvw_SetWindowIconFromFile( nWin, HB_PARSTRDEF( 2, &hImageName, NULL ) ) );
-      hb_strfree( hImageName );
-   }
+      hb_retptr( ( void * ) hb_gt_wvw_SetWindowIconFromFile( nWin, HB_PARSTRDEF( 2, &hIconName, NULL ) ) );
+
+   hb_strfree( hIconName );
 }
 
 
@@ -7735,14 +7745,28 @@ IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT i
    IPicture * iPicture = NULL;
    PICTDESC   picd;
 /* int nSize; */
-   char szResname[ HB_PATH_MAX + 1 ];
-   int  iWidth, iHeight;
+   int iWidth, iHeight;
 
    iWidth  = *lwidth;
    iHeight = *lheight;
 
-   if( resname == NULL )
+   if( resname )
    {
+      hbmpx = hb_gt_wvw_FindBitmapHandle( resname, &iWidth, &iHeight );
+
+      if( ! hbmpx )
+      {
+         LPTSTR lpFree;
+         hbmpx = ( HBITMAP ) LoadImage( s_wvw->hInstance, HB_FSNAMECONV( resname, &lpFree ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         if( lpFree )
+            hb_xfree( lpFree );
+         hb_gt_wvw_AddBitmapHandle( resname, hbmpx, iWidth, iHeight );
+      }
+   }
+   else
+   {
+      char szResname[ HB_PATH_MAX + 1 ];
+
       hb_snprintf( szResname, sizeof( szResname ), "?%u", iresimage );
 
       hbmpx = hb_gt_wvw_FindBitmapHandle( szResname, &iWidth, &iHeight );
@@ -7753,16 +7777,7 @@ IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT i
          hb_gt_wvw_AddBitmapHandle( szResname, hbmpx, iWidth, iHeight );
       }
    }
-   else
-   {
-      hbmpx = hb_gt_wvw_FindBitmapHandle( resname, &iWidth, &iHeight );
 
-      if( ! hbmpx )
-      {
-         hbmpx = ( HBITMAP ) LoadImage( s_wvw->hInstance, resname, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-         hb_gt_wvw_AddBitmapHandle( resname, hbmpx, iWidth, iHeight );
-      }
-   }
    *lwidth  = iWidth;
    *lheight = iHeight;
 
@@ -7849,8 +7864,14 @@ static BITMAPINFO * PackedDibLoad( const char * szFileName )
 #if 1
    BITMAPINFO * pbmi = NULL;
 
-   HANDLE hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
+   LPTSTR lpFree;
+
+   HANDLE hFile = CreateFile( HB_FSNAMECONV( szFileName, &lpFree ),
+                              GENERIC_READ, FILE_SHARE_READ, NULL,
                               OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+
+   if( lpFree )
+      hb_xfree( lpFree );
 
    if( hFile != INVALID_HANDLE_VALUE )
    {
@@ -8141,7 +8162,6 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
    HBITMAP hBitmap;
 
    UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
-   char szResname[ HB_PATH_MAX + 1 ];
 
    if( szBitmap )
    {
@@ -8149,12 +8169,18 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
 
       if( ! hBitmap )
       {
+         LPTSTR lpFree;
+
          hBitmap = ( HBITMAP ) LoadImage( s_wvw->hInstance,
-                                          szBitmap,
+                                          HB_FSNAMECONV( szBitmap, &lpFree ),
                                           IMAGE_BITMAP,
                                           iExpWidth,
                                           iExpHeight,
                                           uiOptions );
+
+         if( lpFree )
+            hb_xfree( lpFree );
+
          if( hBitmap )
          {
             hb_gt_wvw_AddBitmapHandle( szBitmap, hBitmap, iExpWidth, iExpHeight );
@@ -8164,6 +8190,8 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
    }
    else
    {
+      char szResname[ HB_PATH_MAX + 1 ];
+
       hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
       hBitmap = hb_gt_wvw_FindBitmapHandle( szResname, &iExpWidth, &iExpHeight );
 
@@ -8221,13 +8249,18 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
             }
             else
             {
+               LPTSTR lpFree;
+
                hBitmap = ( HBITMAP ) LoadImage( NULL,
-                                                szBitmap,
+                                                HB_FSNAMECONV( szBitmap, &lpFree ),
                                                 IMAGE_BITMAP,
                                                 iExpWidth,
                                                 iExpHeight,
 
                                                 LR_LOADFROMFILE | LR_LOADMAP3DCOLORS );
+
+               if( lpFree )
+                  hb_xfree( lpFree );
 
                if( hBitmap == NULL )
                   return NULL;
@@ -9420,8 +9453,10 @@ LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
                   iKey = K_ESC;
                   break;
                default:
+#if ! defined( UNICODE )
                   if( s_wvw->pWin[ nWin ]->CodePage == OEM_CHARSET )
                      c = hb_wvw_key_ansi_to_oem( c );
+#endif
                   iKey = c;
             }
          }

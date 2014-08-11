@@ -96,7 +96,7 @@ HB_FUNC( WVW_APPENDMENU )
 
    if( HB_ISCHAR( 4 ) )
    {
-      void * hCaption;
+      void *  hCaption;
       HB_SIZE iLen;
 
       lpszCaption = HB_PARSTR( 4, &hCaption, &iLen );

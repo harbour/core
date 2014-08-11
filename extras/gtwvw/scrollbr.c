@@ -169,7 +169,7 @@ HB_FUNC( WVW_SBADDPART )
       HFONT hOldFont = ( HFONT ) SelectObject( hDCSB, hFont );
 
       HB_SIZE nLen;
-      void * hText;
+      void *  hText;
       LPCTSTR szText = HB_PARSTR( 2, &hText, &nLen );
 
       memset( &size, 0, sizeof( size ) );

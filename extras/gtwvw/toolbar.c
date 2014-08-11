@@ -210,16 +210,16 @@ HB_FUNC( WVW_TBADDBUTTON )
    HB_UINT   nWin    = WVW_WHICH_WINDOW;
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   int          iCommand     = hb_parni( 2 );
-   HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 3 );
-   const char * szBitmap     = hb_parc( 3 );
+   int          iCommand = hb_parni( 2 );
+   HB_UINT      uiBitmap = ( HB_UINT ) hb_parnl( 3 );
+   const char * szBitmap = hb_parc( 3 );
    LPCTSTR      szLabel;
    int          iBitmapType  = hb_parni( 5 );
    HB_BOOL      bMap3Dcolors = hb_parl( 6 );
    HB_BOOL      bDropdown    = hb_parl( 7 );
    USHORT       usOldHeight;
 
-   void * hLabel;
+   void *  hLabel;
    HB_SIZE nLabelLen;
 
    HWND hWnd = wvw_win->hToolBar;
