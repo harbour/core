@@ -167,7 +167,7 @@ HB_FUNC( WVW_CBCREATE )
 
    hWnd = CreateWindowEx(
       0L,
-      "COMBOBOX",
+      TEXT( "COMBOBOX" ),
       NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
       iLeft,

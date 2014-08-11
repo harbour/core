@@ -5818,7 +5818,7 @@ static HICON hb_gt_wvw_SetWindowIconFromFile( HB_UINT nWin, LPCTSTR icon )
 }
 
 
-int hb_gt_wvw_GetWindowTitle( HB_UINT nWin, char * title, int length )
+int hb_gt_wvw_GetWindowTitle( HB_UINT nWin, LPTSTR title, int length )
 {
    return GetWindowText( s_wvw->pWin[ nWin ]->hWnd, title, length );
 }
@@ -7420,11 +7420,11 @@ HB_FUNC( WVW_PROCESSMESSAGES )
 
 HB_FUNC( WVW_GETTITLE )
 {
-   char ucText[ 1024 ];
+   TCHAR ucText[ 1024 ];
 
    hb_gt_wvw_GetWindowTitle( WVW_WHICH_WINDOW, ucText, HB_SIZEOFARRAY( ucText ) - 1 );
 
-   hb_retc( ucText );
+   HB_RETSTR( ucText );
 }
 
 HB_FUNC( WVW_GETRGBCOLOR )
@@ -9039,8 +9039,8 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
 
    hWnd = CreateWindowEx(
       0L,                                       /* no extended styles */
-      "BUTTON",                                 /* pushbutton/checkbox control class */
-      ( LPSTR ) lpszCaption,                    /* text for caption */
+      TEXT( "BUTTON" ),                         /* pushbutton/checkbox control class */
+      lpszCaption,                              /* text for caption */
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle, /* button styles */
       iLeft,                                    /* horizontal position */
       iTop,                                     /* vertical position */

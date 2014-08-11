@@ -58,7 +58,7 @@ HB_FUNC( WVW_YESCLOSE )
 
    if( hMenu )
    {
-      AppendMenu( hMenu, SC_CLOSE, MF_BYCOMMAND, "" );
+      AppendMenu( hMenu, SC_CLOSE, MF_BYCOMMAND, TEXT( "" ) );
       DrawMenuBar( wvw_win->hWnd );
    }
 }
@@ -183,21 +183,27 @@ HB_FUNC( WIN_GETDIALOGBASEUNITS )
 
 HB_FUNC( WIN_SETDLGITEMTEXT )
 {
-   SetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parc( 3 ) );
+   void * hText;
+
+   SetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), HB_PARSTR( 3, &hText, NULL ) );
+
+   hb_strfree( hText );
 }
 
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
-   USHORT iLen  = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), ( UINT ) WM_GETTEXTLENGTH, 0, 0 ) + 1;
-   char * cText = ( char * ) hb_xgrab( iLen + 1  );
+   USHORT iLen   = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), ( UINT ) WM_GETTEXTLENGTH, 0, 0 ) + 1;
+   TCHAR * cText = ( TCHAR * ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
    GetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ),
                    hb_parni( 2 ),
                    ( LPTSTR ) cText,
                    iLen );
 
-   hb_retc_buffer( cText );
+   HB_RETSTR( cText );
+
+   hb_xfree( cText );
 }
 
 
@@ -257,7 +263,13 @@ HB_FUNC( WIN_LOADICON )
    if( HB_ISNUM( 1 ) )
       hIcon = LoadIcon( hb_gt_wvw_GetWvwData()->hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
    else
-      hIcon = ( HICON ) LoadImage( NULL, hb_parc( 1 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+   {
+      void * hFile;
+
+      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTRDEF( 1, &hFile, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+
+      hb_strfree( hFile );
+   }
 
    HB_RETHANDLE( hIcon );
 }
@@ -278,12 +290,23 @@ HB_FUNC( WIN_LOADIMAGE )
          break;
 
       case 1:
-         hImage = LoadBitmap( hb_gt_wvw_GetWvwData()->hInstance, hb_parc( 1 ) );
-         break;
+      {
+         void * hFile;
 
-      case 2:
-         hImage = ( HBITMAP ) LoadImage( NULL, hb_parc( 1 ), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
+         hImage = LoadBitmap( hb_gt_wvw_GetWvwData()->hInstance, HB_PARSTRDEF( 1, &hFile, NULL ) );
+
+         hb_strfree( hFile );
          break;
+      }
+      case 2:
+      {
+         void * hFile;
+
+         hImage = ( HBITMAP ) LoadImage( NULL, HB_PARSTRDEF( 1, &hFile, NULL ), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
+
+         hb_strfree( hFile );
+         break;
+      }
    }
 
    HB_RETHANDLE( hImage );
@@ -309,7 +332,6 @@ HB_FUNC( WIN_GETCLIENTRECT )
 
 #if 0
 /* Win_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage ) in Pixels */
-
 /* sorry, not supported in GTWVW */
 HB_FUNC( WIN_DRAWIMAGE )
 {
@@ -351,12 +373,18 @@ HB_FUNC( WIN_DRAWTEXT )
 {
    RECT rc;
 
+   HB_SIZE nLen;
+   void * hText;
+   LPCTSTR szText = HB_PARSTRDEF( 2, &hText, &nLen );
+
    rc.left   = hb_parvni( 3, 1 );
    rc.top    = hb_parvni( 3, 2 );
    rc.right  = hb_parvni( 3, 3 );
    rc.bottom = hb_parvni( 3, 4 );
 
-   hb_retl( ( HB_BOOL ) DrawText( ( HDC ) HB_PARHANDLE( 1 ), hb_parcx( 2 ), ( int ) strlen( hb_parcx( 2 ) ), &rc, hb_parni( 4 ) ) );
+   hb_retl( ( HB_BOOL ) DrawText( ( HDC ) HB_PARHANDLE( 1 ), szText, ( int ) nLen, &rc, hb_parni( 4 ) ) );
+
+   hb_strfree( hText );
 }
 
 /* Adiciones a GtWVW desarrolladas por SOLUCIONES PERCEPTIVAS... */
@@ -431,7 +459,12 @@ HB_FUNC( WVW_SETCONTROLTEXT )
 
    if( hWnd )
    {
-      SetWindowText( hWnd, hb_parcx( 3 ) );
+      void * hText;
+
+      SetWindowText( hWnd, HB_PARSTRDEF( 3, &hText, NULL ) );
+
+      hb_strfree( hText );
+
       hb_retl( HB_TRUE );
    }
    else
@@ -1487,7 +1520,7 @@ HB_FUNC( WVW_MESSAGEBOX )
    void * hStr1;
    void * hStr2;
 
-   hb_retni( MessageBox( hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW ),
+   hb_retni( MessageBox( hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW )->hWnd,
                          HB_PARSTR( 2, &hStr1, NULL ),
                          HB_PARSTR( 3, &hStr2, NULL ),
                          hb_parnidef( 4, MB_OK ) ) );
@@ -1737,7 +1770,13 @@ HB_FUNC( WVW_DLGSETICON )
    if( HB_ISNUM( 2 ) )
       hIcon = LoadIcon( hb_gt_wvw_GetWvwData()->hInstance, MAKEINTRESOURCE( hb_parni( 2 ) ) );
    else
-      hIcon = ( HICON ) LoadImage( NULL, hb_parc( 2 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+   {
+      void * hFile;
+
+      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTRDEF( 2, &hFile, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+
+      hb_strfree( hFile );
+   }
 
    if( hIcon )
    {
@@ -2013,12 +2052,17 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
       switch( iResource )
       {
          case 0:
+         {
+            void * hText;
+
             hDlg = CreateDialog( hb_gt_wvw_GetWvwData()->hInstance,
-                                 hb_parc( 1 ),
+                                 HB_PARSTRDEF( 1, &hText, NULL ),
                                  hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
                                  ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
-            break;
 
+            hb_strfree( hText );
+            break;
+         }
          case 1:
             hDlg = CreateDialog( hb_gt_wvw_GetWvwData()->hInstance,
                                  MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
@@ -2100,13 +2144,18 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
    switch( iResource )
    {
       case 0:
+      {
+         void * hText;
+
          iResult = DialogBoxParam( hb_gt_wvw_GetWvwData()->hInstance,
-                                   hb_parc( 1 ),
+                                   HB_PARSTRDEF( 1, &hText, NULL ),
                                    hParent,
                                    ( DLGPROC ) hb_gt_wvw_DlgProcModal,
                                    ( LPARAM ) ( DWORD ) iIndex + 1 );
-         break;
 
+         hb_strfree( hText );
+         break;
+      }
       case 1:
          iResult = DialogBoxParam( hb_gt_wvw_GetWvwData()->hInstance,
                                    MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),

@@ -74,6 +74,10 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    int iOffBottom = HB_ISARRAY( 12 ) ? hb_parvni( 12, 3 ) :  0;
    int iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) :  0;
 
+   HB_SIZE nLen;
+   void * hText;
+   LPCTSTR szText = HB_PARSTRDEF( 6, &hText, &nLen );
+
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
 
@@ -97,7 +101,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
    memset( &sz, 0, sizeof( sz ) );
 
-   GetTextExtentPoint32( wvw_win->hdc, hb_parcx( 6 ), ( int ) strlen( hb_parcx( 6 ) ), &sz );
+   GetTextExtentPoint32( wvw_win->hdc, szText, ( int ) nLen, &sz );
 
    x = iLeft;
    y = iTop;
@@ -138,7 +142,9 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
    uiOptions = ETO_CLIPPED | ETO_OPAQUE;
 
-   ExtTextOut( wvw_win->hdc, x, y, uiOptions, &rect, hb_parcx( 6 ), ( UINT ) strlen( hb_parcx( 6 ) ), NULL );
+   ExtTextOut( wvw_win->hdc, x, y, uiOptions, &rect, szText, ( UINT ) nLen, NULL );
+
+   hb_strfree( hText );
 
    SelectObject( wvw_win->hdc, oldFont );
    SetTextAlign( wvw_win->hdc, oldTextAlign );
@@ -530,6 +536,10 @@ HB_FUNC( WVW_DRAWTEXTBOX )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
+   HB_SIZE nLen;
+   void * hText;
+   LPCTSTR szText = HB_PARSTRDEF( 7, &hText, &nLen );
+
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
 
@@ -568,7 +578,9 @@ HB_FUNC( WVW_DRAWTEXTBOX )
    oldBkMode    = SetBkMode( wvw_win->hdc, hb_parnidef( 12, OPAQUE ) );
    oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, ( HFONT ) HB_PARHANDLE( 13 ) );
 
-   DrawText( wvw_win->hdc, hb_parcx( 7 ), ( int ) strlen( hb_parcx( 7 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+   DrawText( wvw_win->hdc, szText, ( int ) nLen, &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+
+   hb_strfree( hText );
 
    SetTextColor( wvw_win->hdc, oldTextColor );
    SetBkColor( wvw_win->hdc, oldBkColor );
@@ -1383,6 +1395,10 @@ HB_FUNC( WVW_DRAWLABEL )
    hFont = CreateFontIndirect( &lf );
    if( hFont )
    {
+      HB_SIZE nLen;
+      void * hText;
+      LPCTSTR szText = HB_PARSTRDEF( 4, &hText, &nLen );
+
       POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
 
       oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 8, wvw_win->background ) );
@@ -1390,7 +1406,9 @@ HB_FUNC( WVW_DRAWLABEL )
       oldTextAlign = SetTextAlign( wvw_win->hdc, hb_parnidef( 5, TA_LEFT ) );
       oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, hFont );
 
-      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), ( UINT ) strlen( hb_parcx( 4 ) ), NULL );
+      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, szText, ( UINT ) nLen, NULL );
+
+      hb_strfree( hText );
 
       SelectObject( wvw_win->hdc, oldFont );
       DeleteObject( hFont );
@@ -2026,13 +2044,17 @@ HB_FUNC( WVW_DRAWBUTTON )
       int      oldBkMode;
       COLORREF oldTextColor;
 
+      HB_SIZE nLen;
+      void * hText;
+      LPCTSTR szText = HB_PARSTRDEF( 6, &hText, &nLen );
+
       SIZE sz;
 
       SelectObject( wvw_win->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
 
       memset( &sz, 0, sizeof( sz ) );
 
-      GetTextExtentPoint32( wvw_win->hdc, hb_parcx( 6 ), ( int ) strlen( hb_parcx( 6 ) ), &sz );
+      GetTextExtentPoint32( wvw_win->hdc, szText, ( int ) nLen, &sz );
 
       iTextHeight = sz.cy;
 
@@ -2055,7 +2077,9 @@ HB_FUNC( WVW_DRAWBUTTON )
       oldBkMode    = SetBkMode( wvw_win->hdc, TRANSPARENT );
       oldTextColor = SetTextColor( wvw_win->hdc, textColor );
 
-      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 6 ), ( UINT ) strlen( hb_parcx( 6 ) ), NULL );
+      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, szText, ( UINT ) nLen, NULL );
+
+      hb_strfree( hText );
 
       SetTextColor( wvw_win->hdc, oldTextColor );
       SetBkMode( wvw_win->hdc, oldBkMode );
@@ -2256,12 +2280,18 @@ HB_FUNC( WVW_DRAWLABELEX )
    {
       POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
 
+      HB_SIZE nLen;
+      void * hText;
+      LPCTSTR szText = HB_PARSTRDEF( 4, &hText, &nLen );
+
       oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 7, wvw_win->background ) );
       oldTextColor = SetTextColor( wvw_win->hdc, ( COLORREF ) hb_parnldef( 6, wvw_win->foreground ) );
       oldTextAlign = SetTextAlign( wvw_win->hdc, hb_parnidef( 5, TA_LEFT ) );
       oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, wvw->a.hUserFonts[ iSlot ] );
 
-      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 4 ), ( UINT ) strlen( hb_parcx( 4 ) ), NULL );
+      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, szText, ( UINT ) nLen, NULL );
+
+      hb_strfree( hText );
 
       SelectObject( wvw_win->hdc, oldFont );
       SetTextAlign( wvw_win->hdc, oldTextAlign );

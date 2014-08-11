@@ -168,10 +168,16 @@ HB_FUNC( WVW_SBADDPART )
       HFONT hFont    = ( HFONT ) SendMessage( hWnd, WM_GETFONT, 0, 0 );
       HFONT hOldFont = ( HFONT ) SelectObject( hDCSB, hFont );
 
+      HB_SIZE nLen;
+      void * hText;
+      LPCTSTR szText = HB_PARSTR( 2, &hText, &nLen );
+
       memset( &size, 0, sizeof( size ) );
 
-      if( GetTextExtentPoint32( hDCSB, hb_parc( 2 ), ( int ) hb_parclen( 2 ) + 1, &size ) )
+      if( GetTextExtentPoint32( hDCSB, szText, ( int ) ( nLen + 1 ), &size ) )
          usWidth = ( USHORT ) size.cx;
+
+      hb_strfree( hText );
 
       SelectObject( hDCSB, hOldFont );
 
@@ -203,10 +209,14 @@ HB_FUNC( WVW_SBADDPART )
       int cy = rSB.bottom - rSB.top - 4;
       int cx = cy;
 
-      hIcon = ( HICON ) LoadImage( 0, hb_parc( 6 ), IMAGE_ICON, cx, cy, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT | LR_DEFAULTSIZE );
+      void * hFile;
+
+      hIcon = ( HICON ) LoadImage( 0, HB_PARSTR( 6, &hFile, NULL ), IMAGE_ICON, cx, cy, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT | LR_DEFAULTSIZE );
 
       if( hIcon == NULL )
-         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), hb_parc( 6 ), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
+         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), HB_PARSTR( 6, &hFile, NULL ), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
+
+      hb_strfree( hFile );
 
       if( hIcon != NULL )
          SendMessage( hWnd, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
@@ -484,7 +494,7 @@ HB_FUNC( WVW_XBCREATE )
 
    hWnd = CreateWindowEx(
       0L,                                       /* no extended styles */
-      "SCROLLBAR",                              /* scroll bar control class */
+      TEXT( "SCROLLBAR" ),                      /* scroll bar control class */
       NULL,                                     /* text for window title bar */
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle, /* scroll bar styles */
       iLeft,                                    /* horizontal position */

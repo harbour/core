@@ -170,7 +170,7 @@ HB_FUNC( WVW_EBCREATE )
 
    hWnd = CreateWindowEx(
       0L,
-      "EDIT",
+      TEXT( "EDIT" ),
       NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) dwStyle,
       iLeft,

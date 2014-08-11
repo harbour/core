@@ -118,7 +118,7 @@ HB_FUNC( WVW_APPENDMENU )
    else
       lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );  /* TOFIX: delete this */
 
-   hb_retl( ( HB_BOOL ) AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parni( 3 ), ( LPCTSTR ) lpszCaption ) );
+   hb_retl( ( HB_BOOL ) AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parni( 3 ), lpszCaption ) );
 }
 
 

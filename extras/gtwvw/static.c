@@ -122,7 +122,7 @@ HB_FUNC( WVW_STCREATE )
 
    hWnd = CreateWindowEx(
       ulExStyle,
-      "STATIC",
+      TEXT( "STATIC" ),
       NULL,
       WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
       iLeft,

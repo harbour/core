@@ -587,7 +587,7 @@ extern HB_EXPORT BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, 
 extern HB_EXPORT BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 extern HB_EXPORT int           hb_gt_wvw_GetLastMenuEvent( HB_UINT nWin );
 extern HB_EXPORT int           hb_gt_wvw_SetLastMenuEvent( HB_UINT nWin, int iLastMenuEvent );
-extern HB_EXPORT int           hb_gt_wvw_GetWindowTitle( HB_UINT nWin, char * title, int length );
+extern HB_EXPORT int           hb_gt_wvw_GetWindowTitle( HB_UINT nWin, LPTSTR title, int length );
 extern HB_EXPORT HB_BOOL       hb_gt_wvw_SetFont( HB_UINT nWin, const TCHAR * fontFace, int height, int width, int Bold, int Quality );
 extern HB_EXPORT HWND          hb_gt_wvw_GetWindowHandle( HB_UINT nWin );
 extern HB_EXPORT void          hb_gt_wvw_PostMessage( HB_UINT nWin, int message );
