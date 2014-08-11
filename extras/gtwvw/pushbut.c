@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw pushbutton/ combobox functions
+ * gtwvw pushbutton/combobox functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -100,7 +100,7 @@ HB_FUNC( WVW_PBCREATE )
              usRight  = ( USHORT ) hb_parni( 5 );
       LPCTSTR      lpszCaption  = hb_parc( 6 );
       const char * szBitmap     = hb_parc( 7 );
-      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parni( 7 );
+      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 7 );
       double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
       HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 
@@ -248,12 +248,12 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
 /* wvw_pbSetStyle( [nWinNum], nPBid, nStyle )
  * assign new style nStyle to button nPBid for window nWinNum
  * typical usage: nStyle==BS_DEFPUSHBUTTON (==01) to turn the button
- *                                               into default push button
- *                                               (thick border)
- *                       BS_PUSHBUTTON    (==00) to turn the button
- *                                               into regular push button
+ *                                                into default push button
+ *                                                (thick border)
+ *                        BS_PUSHBUTTON    (==00) to turn the button
+ *                                                into regular push button
  *
- * using other styles like BS_MULTILINE may also be usefull,
+ * using other styles like BS_MULTILINE may also be useful,
  * but I haven't tried that
  *
  * this function always return .T.

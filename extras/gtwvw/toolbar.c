@@ -225,7 +225,7 @@ HB_FUNC( WVW_TBADDBUTTON )
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
    int          iCommand     = hb_parni( 2 );
-   HB_UINT      uiBitmap     = ( HB_UINT ) hb_parni( 3 );
+   HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 3 );
    const char * szBitmap     = hb_parc( 3 );
    const char * szLabel      = hb_parcx( 4 );
    int          iBitmapType  = hb_parni( 5 );

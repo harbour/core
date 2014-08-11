@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw checkbox/progressbar  functions
+ * gtwvw checkbox/progressbar functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -97,7 +97,7 @@ HB_FUNC( WVW_CXCREATE )
 
       LPCTSTR      lpszCaption  = hb_parc( 6 );
       const char * szBitmap     = hb_parc( 7 );
-      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parni( 7 );
+      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 7 );
       double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
       HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 

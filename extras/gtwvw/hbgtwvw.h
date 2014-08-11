@@ -217,7 +217,7 @@
 
 #define WVW_TB_LABELMAXLENGTH     100
 
-#define WVW_WHICH_WINDOW          ( HB_ISNUM( 1 ) ? ( HB_UINT ) hb_parni( 1 ) : ( hb_gt_wvw_GetMainCoordMode() ? hb_gt_wvw_GetNumWindows() - 1 : hb_gt_wvw_GetCurWindow() ) )
+#define WVW_WHICH_WINDOW          ( HB_ISNUM( 1 ) ? ( HB_UINT ) hb_parnl( 1 ) : ( hb_gt_wvw_GetMainCoordMode() ? hb_gt_wvw_GetNumWindows() - 1 : hb_gt_wvw_GetCurWindow() ) )
 
 #define BLACK                     RGB( 0x00, 0x00, 0x00 )
 #define BLUE                      RGB( 0x00, 0x00, 0x85 )

@@ -357,7 +357,7 @@ HB_FUNC( WVW_GBCREATE )
           usRight  = ( USHORT ) hb_parni( 5 );
    LPCTSTR      lpszCaption  = hb_parc( 6 );
    const char * szBitmap     = hb_parc( 7 );
-   HB_UINT      uiBitmap     = ( HB_UINT ) hb_parni( 7 );
+   HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 7 );
    double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
    HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 
@@ -386,7 +386,7 @@ HB_FUNC( WVW_RBCREATE )
              usRight  = ( USHORT ) hb_parni( 5 );
       LPCTSTR      lpszCaption  = hb_parc( 6 );
       const char * szBitmap     = hb_parc( 7 );
-      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parni( 7 );
+      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 7 );
       double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
       HB_BOOL      bMap3Dcolors = hb_parl( 11 );
 
@@ -1078,7 +1078,7 @@ HB_FUNC( SETBITMAPRESOURCEID )
    WVW_WIN *   wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    TBADDBITMAP tbab;
    HBITMAP     hBitmap     = ( HBITMAP ) HB_PARHANDLE( 3 );
-   HB_UINT     uiBitmap    = ( HB_UINT ) hb_parni( 4 );
+   HB_UINT     uiBitmap    = ( HB_UINT ) hb_parnl( 4 );
    HWND        hWndToolbar = wvw_win->hToolBar;
    int         iNewBitmap;
    int         iBitmapType = hb_parni( 2 );
@@ -1204,7 +1204,7 @@ HB_FUNC( WVW_SETMAXBMCACHE )
       uiOldMaxBMcache = wvw->a.uiMaxBMcache;
 
       if( HB_ISNUM( 1 ) )
-         wvw->a.uiMaxBMcache = ( HB_UINT ) hb_parni( 1 );
+         wvw->a.uiMaxBMcache = ( HB_UINT ) hb_parnl( 1 );
    }
 
    hb_retni( uiOldMaxBMcache );
@@ -1230,7 +1230,7 @@ HB_FUNC( WVW_NUMBMCACHE )
 /* wvw_SetTimer([nWinNum], nInterval)
  * set timer event for every nInterval millisec
  * (effective only if WVW_TIMER() function exists)
- * eg. it can be usefull to update clock on status bar
+ * eg. it can be useful to update clock on status bar
  * returns .T. if successfull
  */
 /* 2004-06-02: WARNING: WVT is slightly different */
