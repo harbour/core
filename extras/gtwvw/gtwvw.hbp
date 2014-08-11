@@ -4,6 +4,7 @@
 -olib/${hb_plat}/${hb_comp}/${hb_name}
 
 -w3 -es2
+-winuni
 
 "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform."
 
@@ -23,6 +24,8 @@ pushbut.c
 scrollbr.c
 static.c
 toolbar.c
+
+clipbrd.prg
 
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

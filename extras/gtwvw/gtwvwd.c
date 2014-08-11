@@ -1156,9 +1156,12 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_FONTNAME:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, wvw_win->fontFace );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
-            hb_strncpy( wvw_win->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), LF_FACESIZE - 1 );
+         pInfo->pResult = HB_ITEMPUTSTR( pInfo->pResult, wvw_win->fontFace );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
+            HB_ITEMCOPYSTR( pInfo->pNewVal, wvw_win->fontFace, HB_SIZEOFARRAY( wvw_win->fontFace ) );
+            wvw_win->fontFace[ HB_SIZEOFARRAY( wvw_win->fontFace ) - 1 ] = TEXT( '\0' );
+         }
          break;
 
       case HB_GTI_FONTWEIGHT:
@@ -3941,7 +3944,7 @@ HFONT hb_gt_wvw_GetFont( const TCHAR * pszFace, int iHeight, int iWidth, int iWe
       lf.lfHeight         = iHeight;
       lf.lfWidth = iWidth < 0 ? -iWidth : iWidth;
 
-      hb_strncpy( lf.lfFaceName, pszFace, sizeof( lf.lfFaceName ) - 1 );
+      HB_STRNCPY( lf.lfFaceName, pszFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
       hFont = CreateFontIndirect( &lf );
    }
@@ -4702,15 +4705,15 @@ static HB_UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, i
       LPTSTR lpMsgBuf = NULL;
 
       if( FormatMessage(
-         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-         NULL,
-         GetLastError(),
-         MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
-         ( LPTSTR ) &lpMsgBuf,
-         0,
-         NULL ) != 0 )
+             FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+             NULL,
+             GetLastError(),
+             MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
+             ( LPTSTR ) &lpMsgBuf,
+             0,
+             NULL ) != 0 )
       {
-         MessageBox( NULL, lpMsgBuf, "Failed CreateWindow()", MB_ICONERROR );
+         MessageBox( NULL, lpMsgBuf, TEXT( "Failed CreateWindow()" ), MB_ICONERROR );
          LocalFree( lpMsgBuf );
       }
 
@@ -5761,7 +5764,7 @@ int hb_gt_wvw_SetLastMenuEvent( HB_UINT nWin, int iLastMenuEvent )
 }
 
 
-static void hb_gt_wvw_SetWindowTitle( HB_UINT nWin, LPCSTR title )
+static void hb_gt_wvw_SetWindowTitle( HB_UINT nWin, LPCTSTR title )
 {
    SetWindowText( s_wvw->pWin[ nWin ]->hWnd, title );
 }
@@ -6527,7 +6530,7 @@ WVW_WIN * hb_gt_wvw_GetWindowsData( HB_UINT iWin )
    return s_wvw->pWin[ iWin ];
 }
 
-char * hb_gt_wvw_GetAppName( void )
+TCHAR * hb_gt_wvw_GetAppName( void )
 {
    return s_wvw->szAppName;
 }
@@ -6725,7 +6728,7 @@ HB_FUNC( WVW_LCLOSEWINDOW )
 
    if( s_wvw->usNumWindows <= 1 )
    {
-      MessageBox( NULL, TEXT( "No more window to close" ), "Error", MB_ICONERROR );
+      MessageBox( NULL, TEXT( "No more window to close" ), TEXT( "Error" ), MB_ICONERROR );
       hb_retl( HB_FALSE );
       return;
    }
@@ -7424,150 +7427,17 @@ HB_FUNC( WVW_GETTITLE )
    hb_retc( ucText );
 }
 
-
-/* Author.....: Francesco Saverio Giudice <info@fsgiudice.com>     */
-/* Syntax.....: wvw_GetRGBColor( nColor ) --> nRGBColor            */
-/* Description: Return the RGB values passing the color positional value */
-/*              0=Black, 1=Blue, etc                               */
-/*              as returned from hb_ColorToN()                     */
-/* Creat. Date: 2004-01-15                                         */
-
 HB_FUNC( WVW_GETRGBCOLOR )
 {
-   if( HB_ISNUM( 1 ) )
-   {
-      int iColor = hb_parni( 1 );
-      if( iColor >= 0 && iColor < 16 ) /* Test bound error */
-         hb_retnl( s_COLORS[ iColor ] );
-   }
-}
+   int iColor = hb_parnidef( 1, -1 );
 
-
-/* Giancarlo Niccolai */
-
-
-/* Clipboard functions */
-
-
-HB_FUNC( WVW_GETCLIPBOARD )
-{
-   HGLOBAL hglb;
-
-   if( ! IsClipboardFormatAvailable( CF_TEXT ) )
-      return;
-
-   if( ! OpenClipboard( NULL ) )
-      return;
-
-   hglb = GetClipboardData( CF_TEXT );
-   if( hglb != NULL )
-   {
-      LPTSTR lptstr = ( LPSTR ) GlobalLock( hglb );
-      if( lptstr != NULL )
-      {
-         hb_retc( lptstr );
-         GlobalUnlock( hglb );
-      }
-   }
-   CloseClipboard();
-}
-
-
-HB_FUNC( WVW_SETCLIPBOARD )
-{
-   LPTSTR       lptstrCopy;
-   HGLOBAL      hglbCopy;
-   const char * cText;
-   HB_SIZE      nLen;
-
-   if( ! IsClipboardFormatAvailable( CF_TEXT ) )
-   {
-      hb_retl( HB_FALSE );
-      return;
-   }
-
-   /* Check params */
-   if( ! HB_ISCHAR( 1 ) )
-   {
-      hb_retl( HB_FALSE );
-      return;
-   }
-
-   if( ! OpenClipboard( NULL ) )
-   {
-      hb_retl( HB_FALSE );
-      return;
-   }
-   EmptyClipboard();
-
-   /* Get text from PRG */
-   cText = hb_parcx( 1 );
-   nLen  = hb_parclen( 1 );
-
-   /* Allocate a global memory object for the text. */
-   hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ( nLen + 1 ) * sizeof( TCHAR ) );
-   if( hglbCopy == NULL )
-   {
-      CloseClipboard();
-      hb_retl( HB_FALSE );
-      return;
-   }
-
-   /* Lock the handle and copy the text to the buffer. */
-   lptstrCopy = ( LPSTR ) GlobalLock( hglbCopy );
-   if( lptstrCopy )
-   {
-      memcpy( lptstrCopy, cText, ( nLen + 1 ) * sizeof( TCHAR ) );
-      lptstrCopy[ nLen + 1 ] = ( TCHAR ) 0;
-   }
-   GlobalUnlock( hglbCopy );
-
-   /* Place the handle on the clipboard. */
-   SetClipboardData( CF_TEXT, hglbCopy );
-
-   CloseClipboard();
-   hb_retl( HB_TRUE );
-}
-
-
-HB_FUNC( WVW_PASTEFROMCLIPBOARD )
-{
-   HGLOBAL hglb;
-   LPTSTR  lptstr;
-   ULONG   ul;
-
-   if( ! IsClipboardFormatAvailable( CF_TEXT ) )
-      return;
-
-   if( ! OpenClipboard( NULL ) )
-      return;
-
-   hglb = GetClipboardData( CF_TEXT );
-   if( hglb != NULL )
-   {
-      lptstr = ( LPSTR ) GlobalLock( hglb );
-      if( lptstr != NULL )
-      {
-         /*TraceLog( NULL, "Clipboard %s\n", (LPSTR) lptstr );        */
-         /*TraceLog( NULL, "Clipboard size %u\n", GlobalSize(hglb) ); */
-
-         for( ul = 0; ul < GlobalSize( hglb ); ul++ )
-            hb_gt_wvwAddCharToInputQueue( ( int ) lptstr[ ul ] );
-         /*TraceLog( NULL, "Value %i\n", ( int ) lptstr[ ul ] );   */
-         GlobalUnlock( hglb );
-      }
-   }
-   CloseClipboard();
+   hb_retnl( iColor >= 0 && iColor < 16 ? s_COLORS[ iColor ] : 0 );
 }
 
 HB_FUNC( WVW_KEYBOARD )
 {
    hb_gt_wvwAddCharToInputQueue( hb_parnl( 1 ) );
 }
-
-
-/* End of Clipboard Functions */
-
 
 HB_FUNC( WVW_INVALIDATERECT )
 {
@@ -7632,12 +7502,16 @@ HB_FUNC( WVW_SETFONT )
    HB_UINT   nWin    = WVW_WHICH_WINDOW;
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
+   void * hFontFace = NULL;
+
    hb_retl( hb_gt_wvw_SetFont( nWin,
-                               HB_ISCHAR( 2 ) ? hb_parc( 2 ) : wvw_win->fontFace,
+                               HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hFontFace, NULL ) : wvw_win->fontFace,
                                hb_parnidef( 3, wvw_win->fontHeight ),
                                hb_parnidef( 4, wvw_win->fontWidth ),
                                hb_parnidef( 5, wvw_win->fontWeight ),
                                hb_parnidef( 6, wvw_win->fontQuality ) ) );
+
+   hb_strfree( hFontFace );
 }
 
 
@@ -7658,7 +7532,11 @@ HB_FUNC( WVW_SETICON )
 
 HB_FUNC( WVW_SETTITLE )
 {
-   hb_gt_wvw_SetWindowTitle( WVW_WHICH_WINDOW, hb_parcx( 2 ) );
+   void * hTitle;
+
+   hb_gt_wvw_SetWindowTitle( WVW_WHICH_WINDOW, HB_PARSTRDEF( 2, &hTitle, NULL ) );
+
+   hb_strfree( hTitle );
 }
 
 
@@ -7734,29 +7612,29 @@ HB_FUNC( WVW_GETROWCOLFROMXY )
 HB_FUNC( WVW_GETFONTINFO )
 {
    HB_UINT  nWin = WVW_WHICH_WINDOW;
-   PHB_ITEM info = hb_itemArrayNew( 7 );
+   PHB_ITEM aRet = hb_itemArrayNew( 7 );
 
-   hb_arraySetC(  info, 1, s_wvw->pWin[ nWin ]->fontFace    );
-   hb_arraySetNL( info, 2, s_wvw->pWin[ nWin ]->fontHeight  );
-   hb_arraySetNL( info, 3, s_wvw->pWin[ nWin ]->fontWidth   );
-   hb_arraySetNL( info, 4, s_wvw->pWin[ nWin ]->fontWeight  );
-   hb_arraySetNL( info, 5, s_wvw->pWin[ nWin ]->fontQuality );
-   hb_arraySetNL( info, 6, s_wvw->pWin[ nWin ]->PTEXTSIZE.y );
-   hb_arraySetNL( info, 7, s_wvw->pWin[ nWin ]->PTEXTSIZE.x );
+   HB_ARRAYSETSTR( aRet, 1, s_wvw->pWin[ nWin ]->fontFace );
+   hb_arraySetNL( aRet, 2, s_wvw->pWin[ nWin ]->fontHeight );
+   hb_arraySetNL( aRet, 3, s_wvw->pWin[ nWin ]->fontWidth );
+   hb_arraySetNL( aRet, 4, s_wvw->pWin[ nWin ]->fontWeight );
+   hb_arraySetNL( aRet, 5, s_wvw->pWin[ nWin ]->fontQuality );
+   hb_arraySetNL( aRet, 6, s_wvw->pWin[ nWin ]->PTEXTSIZE.y );
+   hb_arraySetNL( aRet, 7, s_wvw->pWin[ nWin ]->PTEXTSIZE.x );
 
-   hb_itemReturnRelease( info );
+   hb_itemReturnRelease( aRet );
 }
 
 
 HB_FUNC( WVW_GETPALETTE )
 {
-   PHB_ITEM info = hb_itemArrayNew( 16 );
+   PHB_ITEM aRet = hb_itemArrayNew( 16 );
    int      i;
 
    for( i = 0; i < 16; i++ )
-      hb_arraySetNL( info, i + 1, s_COLORS[ i ] );
+      hb_arraySetNL( aRet, i + 1, s_COLORS[ i ] );
 
-   hb_itemReturnRelease( info );
+   hb_itemReturnRelease( aRet );
 }
 
 
@@ -8827,7 +8705,7 @@ static void s_RunControlBlock( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, UINT mes
                   we don;t have to do this: */
 
                iTextLen       = SendMessage( pcd->hWnd, CB_GETLBTEXTLEN, ( WPARAM ) iCurSel; 0 );
-               lptstrSelected = ( char * ) hb_xgrab( iTextLen + 1 );
+               lptstrSelected = ( char * ) hb_xgrab( ( iTextLen + 1 ) * sizeof( TCHAR ) );
 
                SendMessage( pcd->hWnd, CB_GETLBTEXT, ( WPARAM ) iCurSel, ( LPARAM ) lptstrSelected );
 

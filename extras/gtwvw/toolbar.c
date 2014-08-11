@@ -213,11 +213,14 @@ HB_FUNC( WVW_TBADDBUTTON )
    int          iCommand     = hb_parni( 2 );
    HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 3 );
    const char * szBitmap     = hb_parc( 3 );
-   const char * szLabel      = hb_parcx( 4 );
+   LPCTSTR      szLabel;
    int          iBitmapType  = hb_parni( 5 );
    HB_BOOL      bMap3Dcolors = hb_parl( 6 );
    HB_BOOL      bDropdown    = hb_parl( 7 );
    USHORT       usOldHeight;
+
+   void * hLabel;
+   HB_SIZE nLabelLen;
 
    HWND hWnd = wvw_win->hToolBar;
 
@@ -234,8 +237,11 @@ HB_FUNC( WVW_TBADDBUTTON )
       return;
    }
 
-   if( strlen( szLabel ) > WVW_TB_LABELMAXLENGTH )
+   szLabel = HB_PARSTRDEF( 4, &hLabel, &nLabelLen );
+
+   if( nLabelLen > WVW_TB_LABELMAXLENGTH )
    {
+      hb_strfree( hLabel );
       MessageBox( NULL, TEXT( "Cannot addbutton, label too long." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
       hb_retl( HB_FALSE );
       return;
@@ -249,6 +255,7 @@ HB_FUNC( WVW_TBADDBUTTON )
       {
          if( ! hb_gt_wvw_AddTBButton( hWnd, szBitmap, uiBitmap, szLabel, iCommand, 1, bMap3Dcolors, wvw_win, bDropdown ) )
          {
+            hb_strfree( hLabel );
             MessageBox( NULL, TEXT( "Failed addbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
             hb_retl( HB_FALSE );
             return;
@@ -256,11 +263,14 @@ HB_FUNC( WVW_TBADDBUTTON )
       }
       else
       {
+         hb_strfree( hLabel );
          MessageBox( NULL, TEXT( "Failed addbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
          hb_retl( HB_FALSE );
          return;
       }
    }
+
+   hb_strfree( hLabel );
 
    hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 

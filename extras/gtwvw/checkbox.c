@@ -95,7 +95,7 @@ HB_FUNC( WVW_CXCREATE )
              usBottom = ( USHORT ) hb_parni( 4 ),
              usRight  = ( USHORT ) hb_parni( 5 );
 
-      LPCTSTR      lpszCaption  = hb_parc( 6 );
+      void *       hCaption;
       const char * szBitmap     = hb_parc( 7 );
       HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 7 );
       double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
@@ -106,11 +106,14 @@ HB_FUNC( WVW_CXCREATE )
       int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
       int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
-      hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight, lpszCaption,
+      hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight,
+                                        HB_PARSTR( 6, &hCaption, NULL ),
                                         szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         dStretch, bMap3Dcolors,
                                         BS_AUTOCHECKBOX ) );
+
+      hb_strfree( hCaption );
    }
    else
       hb_retnl( 0 );
@@ -275,7 +278,10 @@ HB_FUNC( WVW_CXSETFONT )
    wvw->lfCX.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfCX.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfCX.lfFaceName ) - 1 );
+   {
+      HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), wvw->lfCX.lfFaceName, HB_SIZEOFARRAY( wvw->lfCX.lfFaceName ) );
+      wvw_win->fontFace[ HB_SIZEOFARRAY( wvw->lfCX.lfFaceName ) - 1 ] = TEXT( '\0' );
+   }
 
    if( wvw_win->hCXfont )
    {

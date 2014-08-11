@@ -336,7 +336,10 @@ HB_FUNC( WVW_SBSETFONT )
    wvw->lfSB.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfSB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfSB.lfFaceName ) - 1 );
+   {
+      HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), wvw->lfSB.lfFaceName, HB_SIZEOFARRAY( wvw->lfSB.lfFaceName ) );
+      wvw_win->fontFace[ HB_SIZEOFARRAY( wvw->lfSB.lfFaceName ) - 1 ] = TEXT( '\0' );
+   }
 
    if( wvw_win->hSBfont )
    {

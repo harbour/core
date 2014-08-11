@@ -104,11 +104,11 @@ HB_FUNC( WVW_EBCREATE )
    int     iTop, iLeft, iBottom, iRight;
    int     iOffTop, iOffLeft, iOffBottom, iOffRight;
    HB_UINT nCtrlId;
-   USHORT  usTop    = ( USHORT ) hb_parni( 2 ),
-           usLeft   = ( USHORT ) hb_parni( 3 ),
-           usBottom = ( USHORT ) hb_parni( 4 ),
-           usRight  = ( USHORT ) hb_parni( 5 );
-   LPTSTR lpszText  = ( LPTSTR ) hb_parcx( 6 );
+
+   USHORT usTop    = ( USHORT ) hb_parni( 2 ),
+          usLeft   = ( USHORT ) hb_parni( 3 ),
+          usBottom = ( USHORT ) hb_parni( 4 ),
+          usRight  = ( USHORT ) hb_parni( 5 );
 
    HB_BOOL bMultiline = hb_parl( 8 );
    HB_BYTE bEBType    = bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
@@ -161,8 +161,10 @@ HB_FUNC( WVW_EBCREATE )
    else
       dwStyle |= ES_AUTOHSCROLL;
 
+#if ! defined( UNICODE )
    if( wvw_win->CodePage == OEM_CHARSET )
       dwStyle |= ES_OEMCONVERT;
+#endif
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
@@ -185,20 +187,27 @@ HB_FUNC( WVW_EBCREATE )
       RECT    rXB, rOffXB;
       WNDPROC OldProc;
 
-      HB_BOOL bFromOEM = ( wvw_win->CodePage == OEM_CHARSET );
+      void * hText;
+      LPCTSTR lpszText = HB_PARSTRDEF( 6, &hText, NULL );
 
-      if( bFromOEM )
+#if ! defined( UNICODE )
+      if( wvw_win->CodePage == OEM_CHARSET )
       {
-         ULONG  ulLen        = ( ULONG ) strlen( lpszText );
-         LPTSTR lpszTextANSI = ( LPTSTR ) hb_xgrab( ulLen + 1 );
+         ULONG ulLen        = ( ULONG ) strlen( lpszText );
+         LPSTR lpszTextANSI = ( LPSTR ) hb_xgrab( ulLen + 1 );
          OemToCharBuff( lpszText, lpszTextANSI, ulLen );
-         lpszText = lpszTextANSI;
+         lpszText = ( LPCTSTR ) lpszTextANSI;
       }
+#endif
 
       SendMessage( hWnd, WM_SETTEXT, 0, ( LPARAM ) lpszText );
 
-      if( bFromOEM )
+#if ! defined( UNICODE )
+      if( wvw_win->CodePage == OEM_CHARSET )
          hb_xfree( lpszText );
+#endif
+
+      hb_strfree( hText );
 
       if( usMaxChar > 0 )
          SendMessage( hWnd, EM_LIMITTEXT, ( WPARAM ) usMaxChar, 0 );
@@ -390,7 +399,10 @@ HB_FUNC( WVW_EBSETFONT )
    wvw->lfEB.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfEB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfEB.lfFaceName ) - 1 );
+   {
+      HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), wvw->lfEB.lfFaceName, HB_SIZEOFARRAY( wvw->lfEB.lfFaceName ) );
+      wvw_win->fontFace[ HB_SIZEOFARRAY( wvw->lfEB.lfFaceName ) - 1 ] = TEXT( '\0' );
+   }
 
    if( wvw_win->hEBfont )
    {
@@ -453,33 +465,37 @@ HB_FUNC( WVW_EBGETTEXT )
 
    if( pcd )
    {
-      HB_BOOL   bSoftBreak = hb_parl( 3 );
+#if ! defined( UNICODE )
       WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( nWin );
-      HB_BOOL   bToOEM     = ( wvw_win->CodePage == OEM_CHARSET );
+#endif
 
       USHORT usLen;
-      LPTSTR lpszTextANSI;
+      LPTSTR lpszText;
 
-      if( bSoftBreak )
+      if( hb_parl( 3 ) /* bSoftBreak */ )
          SendMessage( pcd->hWnd, EM_FMTLINES, ( WPARAM ) TRUE, 0 );
 
       usLen = ( USHORT ) SendMessage( pcd->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
 
-      lpszTextANSI = ( LPTSTR ) hb_xgrab( usLen );
+      lpszText = ( LPTSTR ) hb_xgrab( usLen * sizeof( TCHAR ) );
 
-      SendMessage( pcd->hWnd, WM_GETTEXT, usLen, ( LPARAM ) lpszTextANSI );
+      SendMessage( pcd->hWnd, WM_GETTEXT, usLen, ( LPARAM ) lpszText );
 
-      if( bToOEM )
+#if ! defined( UNICODE )
+      if( wvw_win->CodePage == OEM_CHARSET )
       {
-         ULONG  ulLen    = ( ULONG ) strlen( lpszTextANSI );
-         LPTSTR lpszText = ( LPTSTR ) hb_xgrab( ulLen + 1 );
-         CharToOem( lpszTextANSI, lpszText );
-         hb_retc_buffer( lpszText );
+         ULONG ulLen       = ( ULONG ) strlen( lpszText );
+         LPSTR lpszTextOEM = ( LPSTR ) hb_xgrab( ulLen + 1 );
+         CharToOem( lpszText, lpszTextOEM );
+         hb_retc_buffer( lpszTextOEM );
       }
       else
-         hb_retc( lpszTextANSI );
+         HB_RETSTR( lpszText );
+#else
+      HB_RETSTR( lpszText );
+#endif
 
-      hb_xfree( lpszTextANSI );
+      hb_xfree( lpszText );
    }
    else
       hb_retl( HB_FALSE );
@@ -496,22 +512,31 @@ HB_FUNC( WVW_EBSETTEXT )
 
    if( pcd )
    {
-      WVW_WIN * wvw_win  = hb_gt_wvw_GetWindowsData( nWin );
-      HB_BOOL   bFromOEM = ( wvw_win->CodePage == OEM_CHARSET );
-      LPCTSTR   lpszText = ( LPCTSTR ) hb_parcx( 3 );
+#if ! defined( UNICODE )
+      WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+#endif
 
-      if( bFromOEM )
+      void * hText;
+      LPCTSTR lpszText = HB_PARSTRDEF( 3, &hText, NULL );
+
+#if ! defined( UNICODE )
+      if( wvw_win->CodePage == OEM_CHARSET )
       {
-         ULONG  ulLen        = ( ULONG ) strlen( lpszText );
-         LPTSTR lpszTextANSI = ( LPTSTR ) hb_xgrab( ulLen + 1 );
+         ULONG ulLen        = ( ULONG ) strlen( lpszText );
+         LPSTR lpszTextANSI = ( LPSTR ) hb_xgrab( ulLen + 1 );
          OemToCharBuff( lpszText, lpszTextANSI, ulLen );
          lpszText = ( LPCTSTR ) lpszTextANSI;
       }
+#endif
 
       hb_retl( ( HB_BOOL ) ( BOOL ) SendMessage( pcd->hWnd, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
 
-      if( bFromOEM )
-         hb_xfree( ( void * ) lpszText );
+#if ! defined( UNICODE )
+      if( wvw_win->CodePage == OEM_CHARSET )
+         hb_xfree( lpszText );
+#endif
+
+      hb_strfree( hText );
    }
    else
       hb_retl( HB_FALSE );

@@ -397,8 +397,8 @@ typedef struct
 {
    HB_UINT uiPaintRefresh;       /* milliseconds between timer check */
    HB_BOOL fMainCoordMode;       /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
-   HB_BOOL fVertCaret;           /* if TRUE, caret is in Vertical style */
-   HB_BOOL fNOSTARTUPSUBWINDOW;  /* if TRUE, subwindow will not be displayed during opening */
+   HB_BOOL fVertCaret;           /* if HB_TRUE, caret is in Vertical style */
+   HB_BOOL fNOSTARTUPSUBWINDOW;  /* if HB_TRUE, subwindow will not be displayed during opening */
    /* use wvw_NoStartupSubWindow() to check/set it */
    HB_BOOL fDevCentreWindow;     /* default CentreWindow setting for subwindows */
    HB_BOOL fDevHCentreWindow;    /* default HCentreWindow setting for subwindows */
@@ -413,7 +413,7 @@ typedef struct
    LOGFONT lfCB;                 /* default font for comboboxes */
    LOGFONT lfEB;                 /* default font for editboxes */
    LOGFONT lfCX;                 /* font for 'focused' checkbox */
-   LOGFONT lfST;                 /* font for  control */
+   LOGFONT lfST;                 /* font for static control */
 
    HWND hWndTT;                  /* Window handle Tool Tip */
 
@@ -528,7 +528,7 @@ extern HB_UINT    hb_gt_wvw_GetNumWindows( void );
 extern HB_UINT    hb_gt_wvw_GetCurWindow( void );
 extern WVW_WIN *  hb_gt_wvw_GetWindowsData( HB_UINT iWin );
 extern WVW_GLOB * hb_gt_wvw_GetWvwData( void );
-extern char *     hb_gt_wvw_GetAppName( void );
+extern TCHAR *    hb_gt_wvw_GetAppName( void );
 extern void       hb_gt_wvw_ResetWindow( HB_UINT nWin );
 extern int        hb_gt_wvw_SetMenuKeyEvent( HB_UINT nWin, int iMenuKeyEvent );
 /* bitmap caching functions: */
@@ -548,7 +548,7 @@ extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, in
 extern void       hb_gt_wvw_TBinitSize( WVW_WIN * wvw_win, HWND hWndTB );
 extern int        hb_gt_wvw_IndexToCommand( HWND hWndTB, int iIndex );
 extern int        hb_gt_wvw_CommandToIndex( HWND hWndTB, int iCommand );
-extern HB_BOOL    hb_gt_wvw_AddTBButton( HWND hWndToolbar, const TCHAR * szBitmap, HB_UINT uiBitmap, const char * pszLabel, int iCommand, int iBitmapType, HB_BOOL bMap3Dcolors, WVW_WIN * wvw_win, HB_BOOL bDropdown );
+extern HB_BOOL    hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, HB_UINT uiBitmap, const TCHAR * pszLabel, int iCommand, int iBitmapType, HB_BOOL bMap3Dcolors, WVW_WIN * wvw_win, HB_BOOL bDropdown );
 extern RECT       hb_gt_wvw_GetColRowFromXYRect( WVW_WIN * pWIndowData, RECT xy );
 extern BYTE       hb_gt_wvw_LineHeight( WVW_WIN * wvw_win );
 extern WPARAM     hb_gt_wvw_ProcessMessages( WVW_WIN * wvw_win );

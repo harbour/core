@@ -188,7 +188,10 @@ HB_FUNC( WVW_STSETFONT )
    wvw->lfST.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfST.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfST.lfFaceName ) - 1 );
+   {
+      HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), wvw->lfST.lfFaceName, HB_SIZEOFARRAY( wvw->lfST.lfFaceName ) );
+      wvw_win->fontFace[ HB_SIZEOFARRAY( wvw->lfST.lfFaceName ) - 1 ] = TEXT( '\0' );
+   }
 
    if( wvw_win->hSTfont )
    {

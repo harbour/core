@@ -1372,7 +1372,13 @@ HB_FUNC( WVW_DRAWLABEL )
    lf.lfHeight         = hb_parnidef( 10, wvw_win->fontHeight );
    lf.lfWidth = hb_parnidef( 11, wvw_win->fontWidth < 0 ? -wvw_win->fontWidth : wvw_win->fontWidth );
 
-   hb_strncpy( lf.lfFaceName, HB_ISCHAR( 9 ) ? hb_parc( 9 ) : wvw_win->fontFace, sizeof( lf.lfFaceName ) - 1 );
+   if( HB_ISCHAR( 9 ) )
+   {
+      HB_ITEMCOPYSTR( hb_param( 9, HB_IT_STRING ), lf.lfFaceName, HB_SIZEOFARRAY( lf.lfFaceName ) );
+      wvw_win->fontFace[ HB_SIZEOFARRAY( lf.lfFaceName ) - 1 ] = TEXT( '\0' );
+   }
+   else
+      HB_STRNCPY( lf.lfFaceName, wvw_win->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &lf );
    if( hFont )

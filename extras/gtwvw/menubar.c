@@ -83,7 +83,7 @@ HB_FUNC( WVW_CREATEPOPUPMENU )
 /* wvw_AppendMenu( hMenu, nFlags, nMenuItemId, cCaption ) */
 HB_FUNC( WVW_APPENDMENU )
 {
-   char    ucBuf[ 256 ];
+   TCHAR   ucBuf[ 256 ];
    LPCTSTR lpszCaption;
 
    if( ! ( hb_parni( 2 ) & ( MF_SEPARATOR | MF_POPUP ) ) &&
@@ -96,23 +96,27 @@ HB_FUNC( WVW_APPENDMENU )
 
    if( HB_ISCHAR( 4 ) )
    {
-      HB_SIZE i, iLen = hb_parclen( 4 );
+      void * hCaption;
+      HB_SIZE iLen;
+
+      lpszCaption = HB_PARSTR( 4, &hCaption, &iLen );
+
       if( iLen > 0 && iLen < 256 )
       {
-         lpszCaption = hb_parcx( 4 );
+         HB_SIZE i;
+
          for( i = 0; i < iLen; i++ )
-         {
-            ucBuf[ i ] = ( *lpszCaption == '~' ) ? '&' : *lpszCaption;
-            lpszCaption++;
-         }
-         ucBuf[ iLen ] = '\0';
-         lpszCaption   = ucBuf;
+            ucBuf[ i ] = lpszCaption[ i ] == TEXT( '~' ) ? TEXT( '&' ) : lpszCaption[ i ];
+
+         ucBuf[ iLen ] = TEXT( '\0' );
+
+         lpszCaption = ucBuf;
       }
-      else
-         lpszCaption = hb_parcx( 4 );
+
+      hb_strfree( hCaption );
    }
    else
-      lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
+      lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );  /* TOFIX: delete this */
 
    hb_retl( ( HB_BOOL ) AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parni( 3 ), ( LPCTSTR ) lpszCaption ) );
 }
@@ -153,14 +157,7 @@ HB_FUNC( WVW_SETMENUKEYEVENT )
    hb_retni( hb_gt_wvw_SetMenuKeyEvent( WVW_WHICH_WINDOW, hb_parnl( 2 ) ) );
 }
 
-#if 0
-WVW_MENUITEM_SETBITMAPS(
-   hMenu,
-   nIDEnableItem,
-   nPosition,
-   ncBitmapUnchecked,
-   ncBimapChecked )
-#endif
+/* WVW_MENUITEM_SETBITMAPS( hMenu, nIDEnableItem, nPosition, ncBitmapUnchecked, ncBimapChecked ) */
 HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 {
    HBITMAP hBitmapUnchecked = NULL;
@@ -186,7 +183,9 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
       if( ! hBitmapUnchecked )
       {
-         hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_gt_wvw_GetWvwData()->hInstance, hb_parc( 4 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         void * hName;
+         hBitmapUnchecked = ( HBITMAP ) LoadImage( hb_gt_wvw_GetWvwData()->hInstance, HB_PARSTR( 4, &hName, NULL ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hb_strfree( hName );
          hb_gt_wvw_AddBitmapHandle( hb_parc( 4 ), hBitmapUnchecked, iWidth, iHeight );
       }
    }
@@ -209,7 +208,9 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
       if( ! hBitmapChecked )
       {
-         hBitmapChecked = ( HBITMAP ) LoadImage( hb_gt_wvw_GetWvwData()->hInstance, hb_parc( 5 ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         void * hName;
+         hBitmapChecked = ( HBITMAP ) LoadImage( hb_gt_wvw_GetWvwData()->hInstance, HB_PARSTR( 5, &hName, NULL ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hb_strfree( hName );
          hb_gt_wvw_AddBitmapHandle( hb_parc( 5 ), hBitmapChecked, iWidth, iHeight );
       }
    }

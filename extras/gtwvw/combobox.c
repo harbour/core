@@ -388,7 +388,10 @@ HB_FUNC( WVW_CBSETFONT )
    wvw->lfCB.lfPitchAndFamily = FF_DONTCARE;
 
    if( HB_ISCHAR( 2 ) )
-      hb_strncpy( wvw->lfCB.lfFaceName, hb_parc( 2 ), sizeof( wvw->lfCB.lfFaceName ) - 1 );
+   {
+      HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), wvw->lfCB.lfFaceName, HB_SIZEOFARRAY( wvw->lfCB.lfFaceName ) );
+      wvw_win->fontFace[ HB_SIZEOFARRAY( wvw->lfCB.lfFaceName ) - 1 ] = TEXT( '\0' );
+   }
 
    if( wvw_win->hCBfont )
    {
@@ -471,7 +474,11 @@ HB_FUNC( WVW_CBFINDSTRING )
    WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
    if( pcd )
-      hb_retni( ( int ) SendMessage( pcd->hWnd, CB_FINDSTRING, ( WPARAM ) -1, ( LPARAM ) ( LPCSTR ) hb_parcx( 3 ) ) );
+   {
+      void * hStr;
+      hb_retni( ( int ) SendMessage( pcd->hWnd, CB_FINDSTRING, ( WPARAM ) -1, ( LPARAM ) ( LPCTSTR ) HB_PARSTRDEF( 3, &hStr, NULL ) ) );
+      hb_strfree( hStr );
+   }
    else
       hb_retni( CB_ERR );
 }
@@ -493,15 +500,14 @@ HB_FUNC( WVW_CBGETCURTEXT )
          hb_retc_null();
       else
       {
-         LPTSTR lptstr = ( char * ) hb_xgrab( iTextLen + 1 );
+         LPTSTR lptstr = ( LPTSTR ) hb_xgrab( ( iTextLen + 1 ) * sizeof( TCHAR ) );
 
          if( SendMessage( pcd->hWnd, CB_GETLBTEXT, ( WPARAM ) iCurSel, ( LPARAM ) lptstr ) == CB_ERR )
-         {
             hb_retc_null();
-            hb_xfree( lptstr );
-         }
          else
-            hb_retc_buffer( lptstr );
+            HB_RETSTR( lptstr );
+
+         hb_xfree( lptstr );
       }
    }
    else
