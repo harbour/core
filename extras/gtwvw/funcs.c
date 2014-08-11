@@ -561,7 +561,7 @@ HB_FUNC( WVW_MOUSE_ROW )
 
 HB_FUNC( SENDMESSAGE )
 {
-   void * hText;
+   void * hText = NULL;
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
                             ( UINT ) hb_parni( 2 ),
