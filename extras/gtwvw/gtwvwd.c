@@ -5942,7 +5942,7 @@ HB_BOOL hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeigh
 {
    OLE_HANDLE oHtemp;
 
-   if( HB_VTBL( pPic )->get_Handle( HB_THIS_( pPic ) & oHtemp ) == S_OK )
+   if( HB_VTBL( pPic )->get_Handle( HB_THIS_( pPic ) &oHtemp ) == S_OK )
    {
       BITMAP bmTemp;
       GetObject( ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, sizeof( bmTemp ), ( LPVOID ) &bmTemp );
@@ -6086,24 +6086,22 @@ static void DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, short xStart, short
  */
 HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const char * image, HB_BOOL bTransparent )
 {
-   HBITMAP hBitmap;
-   HB_BOOL fResult;
-   int     iWidth, iHeight;
-   HDC     hdc, hdcMem;
-
    WVW_WIN * wvw_win = s_wvw->pWin[ nWin ];
 
-   iWidth  = 0;
-   iHeight = 0;
+   HB_BOOL fResult;
+   int     iWidth = 0;
+   int     iHeight = 0;
+   HDC     hdc, hdcMem;
 
-   hBitmap = s_FindUserBitmapHandle( image, &iWidth, &iHeight );
+   HBITMAP hBitmap = s_FindUserBitmapHandle( image, &iWidth, &iHeight );
+
    if( ! hBitmap )
    {
-      IPicture * pPic;
       OLE_HANDLE oHtemp;
       BITMAP     bmTemp;
 
-      pPic = hb_gt_wvw_LoadPicture( image );
+      IPicture * pPic = hb_gt_wvw_LoadPicture( image );
+
       if( ! pPic )
          return HB_FALSE;
 
@@ -6114,7 +6112,7 @@ HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const
          iHeight = ( int ) lHeight;
        */
 
-      if( HB_VTBL( pPic )->get_Handle( HB_THIS_( pPic ) & oHtemp ) == S_OK )
+      if( HB_VTBL( pPic )->get_Handle( HB_THIS_( pPic ) &oHtemp ) == S_OK )
          hBitmap = ( HBITMAP ) CopyImage( ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG );
 
       hb_gt_wvw_DestroyPicture( pPic );
@@ -6133,12 +6131,7 @@ HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const
 
    if( bTransparent )
    {
-      DrawTransparentBitmap( hdc,
-                             hBitmap,
-                             ( short ) x1,
-                             ( short ) y1,
-                             wd,
-                             ht );
+      DrawTransparentBitmap( hdc, hBitmap, ( short ) x1, ( short ) y1, wd, ht );
       fResult = HB_TRUE;
    }
    else
@@ -6152,17 +6145,17 @@ HB_BOOL hb_gt_wvw_DrawImage( HB_UINT nWin, int x1, int y1, int wd, int ht, const
       iOldMode = SetStretchBltMode( hdc, COLORONCOLOR );
 
       fResult = ( HB_BOOL ) StretchBlt(
-         hdc,                          /* handle to destination DC */
-         x1,                           /* x-coord of destination upper-left corner */
-         y1,                           /* y-coord of destination upper-left corner */
-         wd,                           /* width of destination rectangle */
-         ht,                           /* height of destination rectangle */
-         hdcMem,                       /* handle to source DC */
-         0,                            /* x-coord of source upper-left corner */
-         0,                            /* y-coord of source upper-left corner */
-         iWidth,                       /* width of source rectangle */
-         iHeight,                      /* height of source rectangle */
-         SRCCOPY );                    /* raster operation code */
+         hdc,        /* handle to destination DC */
+         x1,         /* x-coord of destination upper-left corner */
+         y1,         /* y-coord of destination upper-left corner */
+         wd,         /* width of destination rectangle */
+         ht,         /* height of destination rectangle */
+         hdcMem,     /* handle to source DC */
+         0,          /* x-coord of source upper-left corner */
+         0,          /* y-coord of source upper-left corner */
+         iWidth,     /* width of source rectangle */
+         iHeight,    /* height of source rectangle */
+         SRCCOPY );  /* raster operation code */
 
       SetStretchBltMode( hdc, iOldMode );
 
@@ -6242,7 +6235,7 @@ HB_BOOL hb_gt_wvw_RenderPicture( HB_UINT nWin, int x1, int y1, int wd, int ht, I
          OLE_HANDLE oHtemp;
          HDC        hdc;
 
-         HB_VTBL( iPicture )->get_Handle( HB_THIS_( iPicture ) & oHtemp );
+         HB_VTBL( iPicture )->get_Handle( HB_THIS_( iPicture ) &oHtemp );
 
          if( oHtemp )
          {

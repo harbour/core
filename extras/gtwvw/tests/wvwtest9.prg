@@ -249,21 +249,21 @@ PROCEDURE Main()
    wvwm_ResetMouseObjects( nCurWindow )
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!", MaxRow() - 2, 67, , , {|| xDebugInfo() } ) )
 
-   oMouse := WVWMouseButton():New( "Flat",   MaxRow() - 2, 67 - 11, , , {|| lboxmessage( "flat" ) }, 1 )
-   oMouse:cImage := "vouch1.gif"
+   oMouse := WVWMouseButton():New( "Flat", MaxRow() - 2, 67 - 11, , , {|| lboxmessage( "flat" ) }, 1 )
+   oMouse:cImage := hb_DirBase() + "vouch1.gif"
    oMouse:cCaption := ""
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-   oMouse := WVWMouseButton():New( "None",   MaxRow() - 2, 67 - 11 - 11, , , {|| lboxmessage( "none" ) }, 2 )
+   oMouse := WVWMouseButton():New( "None", MaxRow() - 2, 67 - 11 - 11, , , {|| lboxmessage( "none" ) }, 2 )
    oMouse:Enable( .T. )
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Hard",   MaxRow() - 2, 67 - 11 - 11 - 11, , , {|| lboxmessage( "hard" ) }, 3 ) )
-   oMouse := WVWMouseButton():New( "Disabled",   MaxRow() - 2, 67 - 11 - 11 - 11 - 11, , , {|| xDebugInfo() } )
+   oMouse := WVWMouseButton():New( "Disabled", MaxRow() - 2, 67 - 11 - 11 - 11 - 11, , , {|| xDebugInfo() } )
    oMouse:Enable( .F. )
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-   oMouse := WVWMouseButton():New( "Tight",   MaxRow() - 2, 67 - 11 - 11 - 11 - 11 - 11, , , {|| lboxmessage( "tight" ) } )
+   oMouse := WVWMouseButton():New( "Tight", MaxRow() - 2, 67 - 11 - 11 - 11 - 11 - 11, , , {|| lboxmessage( "tight" ) } )
    oMouse:lTight := .T.
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
@@ -452,7 +452,7 @@ STATIC PROCEDURE Demo_Get()
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxRecessed( nWindow, 7 - nTop, 61 - nLeft, 13 - nTop, 70 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxGroup( nWindow, 15 - nTop, 59 - nLeft, 18 - nTop, 72 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawImage( nWindow, 8 - nTop, 62 - nLeft, 12 - nTop, 69 - nLeft, "vouch1.bmp" ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawImage( nWindow, 8 - nTop, 62 - nLeft, 12 - nTop, 69 - nLeft, hb_DirBase() + "vouch1.bmp" ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxRecessed( nWindow, 7 - nTop, 48 - nLeft, 13 - nTop, 55 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | x := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
@@ -967,8 +967,8 @@ STATIC PROCEDURE CreateToolbar( nWinNum )
    wvw_tbAddButton( nWinNum )  // separator
 
    /* using custom bitmaps */
-   wvw_tbAddButton( nWinNum, IDM_DEMO_BROWSE, "def2.bmp", "Browse", 0 )
-   wvw_tbAddButton( nWinNum, IDM_DEMO_GET,    "vouch1.bmp",  "Get", 0 )
+   wvw_tbAddButton( nWinNum, IDM_DEMO_BROWSE, hb_DirBase() + "def2.bmp", "Browse", 0 )
+   wvw_tbAddButton( nWinNum, IDM_DEMO_GET,    hb_DirBase() + "vouch1.bmp",  "Get", 0 )
    wvw_tbAddButton( nWinNum )  // separator
 
    /* using system standard bitmaps */
@@ -1578,7 +1578,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
          IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_MessageBox( , "Button Failed wvw_DrawImage(" + ::cImage + ")" )
+            win_MessageBox( , "Button failed wvw_DrawImage( " + ::cImage + " )" )
          ENDIF
       ENDIF
 
@@ -1596,7 +1596,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
          IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_MessageBox( , "Button Failed wvw_DrawImage(" + ::cImage + ")" )
+            win_MessageBox( , "Button failed wvw_DrawImage( " + ::cImage + " )" )
          ENDIF
       ENDIF
 
