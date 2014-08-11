@@ -418,8 +418,7 @@ rm -f $HB_INSTALL_LIB/libbz2.a \
       $HB_INSTALL_LIB/libsqlite3.a \
       $HB_INSTALL_LIB/libexpat.a \
       $HB_INSTALL_LIB/liblzf.a \
-      $HB_INSTALL_LIB/libminilzo.a \
-      $HB_INSTALL_LIB/libmxml.a
+      $HB_INSTALL_LIB/libminilzo.a
 
 ######################################################################
 ## Post install/uninstall scripts
@@ -510,6 +509,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbnf.a
 %{_libdir}/%{name}/libhbblink.a
 %{_libdir}/%{name}/libhbmisc.a
+%{_libdir}/%{name}/libmxml.a
+%{_libdir}/%{name}/libhbmxml.a
 %{_libdir}/%{name}/libminizip.a
 %{_libdir}/%{name}/libhbmzip.a
 %{_libdir}/%{name}/libhbnetio.a

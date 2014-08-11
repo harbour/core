@@ -299,7 +299,7 @@ CREATE CLASS HBDebugger
    METHOD ShowAppScreen()
    METHOD ShowCallStack()
    METHOD ShowCodeLine( nProc )
-   METHOD ShowHelp( nTopic )
+   METHOD ShowHelp( cTopic )
    METHOD ShowVars()
    METHOD LocatePrgPath( cPrgName )
    METHOD Sort() INLINE ASort( ::aVars,,, {| x, y | x[ 1 ] < y[ 1 ] } ), ;
@@ -941,7 +941,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
          ::Open()
       CASE hb_LeftEq( "RESUME", cParam )
          ::Resume()
-      CASE hb_LeftEq( "OSSHELL", cParam )
+      CASE hb_LeftEq( "OS", cParam ) .OR. hb_LeftEq( "DOS", cParam )
          ::OSShell()
       CASE hb_LeftEq( "EXIT", cParam )
          ::Quit()
@@ -959,7 +959,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       ::Go()
 
    CASE cCommand == "HELP"
-      ::ShowHelp()
+      ::ShowHelp( cParam )
 
    CASE hb_LeftEqN( "INPUT", cCommand, 4 )
       IF Empty( cParam )
@@ -2695,9 +2695,9 @@ METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
    RETURN
 
 
-METHOD PROCEDURE ShowHelp( nTopic ) CLASS HBDebugger
+METHOD PROCEDURE ShowHelp( cTopic ) CLASS HBDebugger
 
-   __dbgHelp( nTopic )
+   __dbgHelp( cTopic )
 
    RETURN
 
