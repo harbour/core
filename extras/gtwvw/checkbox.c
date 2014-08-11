@@ -138,10 +138,10 @@ HB_FUNC( WVW_CXDESTROY )
    {
       DestroyWindow( pcd->hWnd );
 
-      if( pcdPrev == NULL )
-         wvw_win->pcdList = pcd->pNext;
-      else
+      if( pcdPrev )
          pcdPrev->pNext = pcd->pNext;
+      else
+         wvw_win->pcdList = pcd->pNext;
 
       if( pcd->pBlock )
          hb_itemRelease( pcd->pBlock );
@@ -157,10 +157,7 @@ HB_FUNC( WVW_CXSETFOCUS )
 {
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_CHECKBOX, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWnd )
-      hb_retl( SetFocus( hWnd ) != NULL );
-   else
-      hb_retl( HB_FALSE );
+   hb_retl( hWnd && SetFocus( hWnd ) != NULL );
 }
 
 /* wvw_cxEnable( [nWinNum], nButtonId, [lToggle] )

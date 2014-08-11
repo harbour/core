@@ -141,11 +141,15 @@ HB_FUNC( WVW_STCREATE )
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
       else
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSTfont, ( LPARAM ) TRUE );
-      hb_retnl( uiCBid );
+
       HB_STOREHANDLE( hWnd, 9 );
+      hb_retnl( uiCBid );
    }
    else
+   {
+      HB_STOREHANDLE( NULL, 9 );
       hb_retnl( 0 );
+   }
 }
 
 

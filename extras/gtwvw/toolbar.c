@@ -213,9 +213,9 @@ HB_FUNC( WVW_TBCREATE )
  * lMap3Dcolors: defaults to .F.
  *         (meaningfull for custom bitmap only)
  *         if .T. the following color mapping will be performed:
- *            RGB(192,192,192) --> COLOR_3DFACE   ("transparent")
- *            RGB(128,128,128) --> COLOR_3DSHADOW
- *            RGB(223,223,223) --> COLOR_3DLIGHT
+ *            RGB( 192, 192, 192 ) --> COLOR_3DFACE   ("transparent")
+ *            RGB( 128, 128, 128 ) --> COLOR_3DSHADOW
+ *            RGB( 223, 223, 223 ) --> COLOR_3DLIGHT
  *         This might be desirable to have transparent effect.
  *         LIMITATION: this will work on 256 colored bitmaps only
  */
@@ -292,10 +292,7 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
    HWND      hWnd    = wvw_win->hToolBar;
 
-   if( hWnd )
-      hb_retni( ( int ) SendMessage( hWnd, TB_BUTTONCOUNT, 0, 0 ) );
-   else
-      hb_retni( 0 );
+   hb_retni( hWnd ? ( int ) SendMessage( hWnd, TB_BUTTONCOUNT, 0, 0 ) : 0 );
 }
 
 /* wvw_tbDelButton( [nWinNum], nButton )
@@ -310,6 +307,8 @@ HB_FUNC( WVW_TBDELBUTTON )
    int       iButton = hb_parnidef( 2, -1 );
    HWND      hWnd    = wvw_win->hToolBar;
 
+   HB_BOOL fResult = HB_FALSE;
+
    if( hWnd && iButton >= 0 )
    {
       USHORT usOldHeight = wvw_win->usTBHeight;
@@ -321,13 +320,11 @@ HB_FUNC( WVW_TBDELBUTTON )
          if( wvw_win->usTBHeight != usOldHeight )
             hb_gt_wvw_ResetWindow( nWin );
 
-         hb_retl( HB_TRUE );
+         fResult = HB_TRUE;
       }
-      else
-         hb_retl( HB_FALSE );
    }
-   else
-      hb_retl( HB_FALSE );
+
+   hb_retl( fResult );
 }
 
 /* wvw_tbGetButtonRect( [nWinNum], nButton )
@@ -369,6 +366,8 @@ HB_FUNC( WVW_TBENABLEBUTTON )
    int       iButton = hb_parnidef( 2, -1 );
    HWND      hWnd    = wvw_win->hToolBar;
 
+   HB_BOOL fResult = HB_FALSE;
+
    if( hWnd && iButton >= 0 )
    {
       int iCommand = hb_gt_wvw_IndexToCommand( hWnd, iButton );
@@ -384,16 +383,12 @@ HB_FUNC( WVW_TBENABLEBUTTON )
             if( wvw_win->usTBHeight != usOldHeight )
                hb_gt_wvw_ResetWindow( nWin );
 
-            hb_retl( HB_TRUE );
+            fResult = HB_TRUE;
          }
-         else
-            hb_retl( HB_FALSE );
       }
-      else
-         hb_retl( HB_FALSE );
    }
-   else
-      hb_retl( HB_FALSE );
+
+   hb_retl( fResult );
 }
 
 /* wvw_tbDestroy( [nWinNum] )

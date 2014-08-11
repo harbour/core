@@ -9206,7 +9206,10 @@ HB_UINT hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usLeft, USHOR
       return nCtrlId;
    }
    else
+   {
+      hb_stornint( 0, 12 );
       return 0;
+   }
 }
 
 /* END button supporters

@@ -269,10 +269,7 @@ HB_FUNC( WVW_EBSETFOCUS )
 {
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_EDITBOX, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWnd )
-      hb_retl( SetFocus( hWnd ) != NULL );
-   else
-      hb_retl( HB_FALSE );
+   hb_retl( hWnd && SetFocus( hWnd ) != NULL );
 }
 
 /* wvw_ebIsFocused( [nWinNum], nEditId )

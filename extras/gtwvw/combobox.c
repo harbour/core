@@ -239,7 +239,10 @@ HB_FUNC( WVW_CBCREATE )
       hb_retnl( nCtrlId );
    }
    else
+   {
+      hb_stornint( 0, 11 );
       hb_retnl( 0 );
+   }
 }
 
 /* wvw_cbDestroy( [nWinNum], nCBid )
@@ -284,10 +287,7 @@ HB_FUNC( WVW_CBSETFOCUS )
 {
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
-   if( hWnd )
-      hb_retl( SetFocus( hWnd ) != NULL );
-   else
-      hb_retl( HB_FALSE );
+   hb_retl( hWnd && SetFocus( hWnd ) != NULL );
 }
 
 /* wvw_cbIsFocused( [nWinNum], nComboId )

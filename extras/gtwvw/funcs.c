@@ -69,24 +69,25 @@ HB_FUNC( WIN_SENDMESSAGE )
 
    if( HB_ISBYREF( 4 ) )
    {
-      cText = ( char * ) hb_xgrab( hb_parcsiz( 4 ) );
-      hb_xmemcpy( cText, hb_parcx( 4 ), hb_parcsiz( 4 ) );
+      cText = ( char * ) hb_xgrab( hb_parclen( 4 ) + 1 );
+      hb_xmemcpy( cText, hb_parcx( 4 ), hb_parclen( 4 ) + 1 );
    }
    else
       cText = NULL;
 
    hb_retnl( ( ULONG ) SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                     ( UINT ) hb_parni( 2 ),
-                                    ( WPARAM ) hb_parnl( 3 ),
+                                    ( WPARAM ) hb_parnint( 3 ),
                                     HB_ISBYREF( 4 ) ? ( LPARAM ) ( LPSTR ) cText :
-                                    ( HB_ISCHAR( 4 ) ? ( LPARAM ) ( LPSTR ) hb_parc( 4 ) :
-                                      ( LPARAM ) hb_parnl( 4 ) ) ) );
+                                    ( HB_ISCHAR( 4 ) ? ( LPARAM ) hb_parc( 4 ) : ( LPARAM ) hb_parnint( 4 ) ) ) );
 
-   if( HB_ISBYREF( 4 ) )
+   if( cText )
    {
-      hb_storclen( cText, hb_parcsiz( 4 ), 4 );
-      hb_xfree( cText );
+      if( ! hb_storclen_buffer( cText, hb_parclen( 4 ), 4 ) )
+         hb_xfree( cText );
    }
+   else
+      hb_storc( NULL, 4 );
 }
 
 HB_FUNC( WIN_SENDDLGITEMMESSAGE )
@@ -105,14 +106,16 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
    hb_retnl( ( LONG ) SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                           hb_parni( 2 ),
                                           ( UINT ) hb_parni( 3 ),
-                                          ( WPARAM ) hb_parnl( 4 ),
-                                          ( cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnl( 5 ) ) ) );
-
-   if( pText )
-      hb_storclen( cText, hb_itemGetCLen( pText ), 5 );
+                                          ( WPARAM ) hb_parnint( 4 ),
+                                          cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) ) );
 
    if( cText )
-      hb_xfree( cText );
+   {
+      if( ! hb_storclen_buffer( cText, hb_itemGetCLen( pText ), 5 ) )
+         hb_xfree( cText );
+   }
+   else
+      hb_storc( NULL, 5 );
 }
 
 /* win_SetTimer( hWnd, nIdentifier, nTimeOut ) */
@@ -1221,7 +1224,7 @@ HB_FUNC( WVW_NUMBMCACHE )
 
 
 /* Miscellaneous xHarbour callable functions */
-/* Budyanto Dj. <budyanto@centrin.net.id>    */
+/* Budyanto Dj. <budyanto@centrin.net.id> */
 
 
 /* TIMER */
@@ -1362,15 +1365,15 @@ HB_FUNC( WVW_SETPOINTER )
 /* wvw_LoadPicture( nSlot, cFilePic ) */
 HB_FUNC( WVW_LOADPICTURE )
 {
-   WVW_GLOB * wvw      = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+
+   int        iSlot    = hb_parni( 1 ) - 1;
    IPicture * iPicture = hb_gt_wvw_LoadPicture( hb_parcx( 2 ) );
 
    HB_BOOL fResult = HB_FALSE;
 
-   if( wvw && iPicture )
+   if( wvw && iPicture && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) )
    {
-      int iSlot = hb_parni( 1 ) - 1;
-
       if( wvw->a.iPicture[ iSlot ] )
          hb_gt_wvw_DestroyPicture( wvw->a.iPicture[ iSlot ] );
 
@@ -1389,9 +1392,11 @@ HB_FUNC( WVW_LOADFONT )
 {
    WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
+   int iSlot = hb_parni( 1 ) - 1;
+
    HB_BOOL fResult = HB_FALSE;
 
-   if( wvw )
+   if( wvw && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserFonts ) )
    {
       WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( wvw->usNumWindows - 1 );
       LOGFONT   lf;
@@ -1416,8 +1421,6 @@ HB_FUNC( WVW_LOADFONT )
       hFont = CreateFontIndirect( &lf );
       if( hFont )
       {
-         int iSlot = hb_parni( 1 ) - 1;
-
          if( wvw->a.hUserFonts[ iSlot ] )
             DeleteObject( wvw->a.hUserFonts[ iSlot ] );
 
@@ -1434,17 +1437,17 @@ HB_FUNC( WVW_LOADFONT )
 /* wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
 HB_FUNC( WVW_LOADPEN )
 {
+   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+
+   int      iSlot     = hb_parni( 1 ) - 1;
    int      iPenStyle = hb_parni( 2 );
    int      iPenWidth = hb_parni( 3 );
    COLORREF crColor   = ( COLORREF ) hb_parnldef( 4, RGB( 0, 0, 0 ) );
 
    HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
 
-   if( hPen )
+   if( hPen && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserPens ) )
    {
-      WVW_GLOB * wvw   = hb_gt_wvw_GetWvwData();
-      int        iSlot = hb_parni( 1 ) - 1;
-
       if( wvw->a.hUserPens[ iSlot ] )
          DeleteObject( wvw->a.hUserPens[ iSlot ] );
 
@@ -1464,13 +1467,11 @@ HB_FUNC( WVW_MESSAGEBOX )
    hb_retni( MessageBox( wvw_win->hWnd, hb_parcx( 2 ), hb_parcx( 3 ), hb_parnidef( 4, MB_OK ) ) );
 }
 
-/* End of Drawing Primitives */
+/* End of drawing primitives */
 
-/* Utility functions. A natural extension */
-/*   copied and modified from gtwvt       */
+/* Utility functions. A natural extension copied and modified from gtwvt */
 
-/* wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
-                                  lItalic, lUnderline, lStrikeout ) */
+/* wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_CHOOSEFONT )
 {
    WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
@@ -1514,32 +1515,24 @@ HB_FUNC( WVW_CHOOSEFONT )
    cf.nSizeMin       = 0;
    cf.nSizeMax       = 0;
 
-   hb_reta( 8 );
-
    if( ChooseFont( &cf ) )
-   {
       PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( wvw->pWin[ wvw->usNumWindows - 1 ]->hdc, LOGPIXELSY ) );
-
-      hb_storvc( lf.lfFaceName, -1, 1 );
-      hb_storvnl( ( long ) PointSize, -1, 2 );
-      hb_storvni( lf.lfWidth, -1, 3 );
-      hb_storvni( lf.lfWeight, -1, 4 );
-      hb_storvni( lf.lfQuality, -1, 5 );
-      hb_storvl( lf.lfItalic, -1, 6 );
-      hb_storvl( lf.lfUnderline, -1, 7 );
-      hb_storvl( lf.lfStrikeOut, -1, 8 );
-   }
    else
    {
-      hb_storvc( NULL, -1, 1 );
-      hb_storvnl( 0, -1, 2 );
-      hb_storvni( 0, -1, 3 );
-      hb_storvni( 0, -1, 4 );
-      hb_storvni( 0, -1, 5 );
-      hb_storvl( 0, -1, 6 );
-      hb_storvl( 0, -1, 7 );
-      hb_storvl( 0, -1, 8 );
+      PointSize = 0;
+      memset( &lf, 0, sizeof( lf ) );
    }
+
+   hb_reta( 8 );
+
+   hb_storvc( lf.lfFaceName, -1, 1 );
+   hb_storvnl( ( long ) PointSize, -1, 2 );
+   hb_storvni( lf.lfWidth, -1, 3 );
+   hb_storvni( lf.lfWeight, -1, 4 );
+   hb_storvni( lf.lfQuality, -1, 5 );
+   hb_storvl( lf.lfItalic, -1, 6 );
+   hb_storvl( lf.lfUnderline, -1, 7 );
+   hb_storvl( lf.lfStrikeOut, -1, 8 );
 }
 
 
