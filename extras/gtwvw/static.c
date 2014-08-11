@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw edit functions
+ * gtwvw static control functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *

@@ -49,6 +49,9 @@
 
 #include "hbgtwvw.h"
 
+#define WVW_MAX_STATUS_PARTS      40      /* max # of parts in Status Bar */
+#define WVW_SPACE_BETWEEN_PARTS   2       /* pixel space between Status Bar's parts */
+
 /* wvw_sbCreate( [nWinNum] )
  * create status bar for window nWinNum, with one part.
  * returns handle to status bar of windows nWinNum
@@ -183,7 +186,7 @@ HB_FUNC( WVW_SBADDPART )
    }
 
    if( ! lResetParts )
-      numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, WVW_MAX_STATUS_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+      numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, HB_SIZEOFARRAY( ptArray ), ( LPARAM ) ( LPINT ) ptArray );
    else
       numOfParts = 0;
    numOfParts++;
@@ -254,7 +257,7 @@ HB_FUNC( WVW_SBREFRESH )
       return;
    }
 
-   numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, WVW_MAX_STATUS_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+   numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, HB_SIZEOFARRAY( ptArray ), ( LPARAM ) ( LPINT ) ptArray );
    if( numOfParts == 0 )
    {
       hb_retnl( 0 );
@@ -324,10 +327,9 @@ HB_FUNC( WVW_SBGETTEXT )
  */
 HB_FUNC( WVW_SBGETPARTS )
 {
-   WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   int       numOfParts = ( int ) SendMessage( wvw_win->hStatusBar, SB_GETPARTS, WVW_MAX_STATUS_PARTS, 0 );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
 
-   hb_retni( numOfParts );
+   hb_retni( ( int ) SendMessage( wvw_win->hStatusBar, SB_GETPARTS, WVW_MAX_STATUS_PARTS, 0 ) );
 }
 
 /* wvw_sbSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;

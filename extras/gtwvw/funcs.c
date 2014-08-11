@@ -2051,13 +2051,13 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 
    /* check if we still have room for a new dialog */
 
-   for( iIndex = 0; iIndex < WVW_DLGML_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModeless ); iIndex++ )
    {
       if( wvw->a.hDlgModeless[ iIndex ] == NULL )
          break;
    }
 
-   if( iIndex >= WVW_DLGML_MAX )
+   if( iIndex >= ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModeless ) )
    {
       hb_retnl( 0 );  /* no more room */
       return;
@@ -2152,13 +2152,13 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
    HWND     hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : wvw->pWin[ 0 ]->hWnd;
 
    /* check if we still have room for a new dialog */
-   for( iIndex = 0; iIndex < WVW_DLGMD_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModal ); iIndex++ )
    {
       if( wvw->a.hDlgModal[ iIndex ] == NULL )
          break;
    }
 
-   if( iIndex >= WVW_DLGMD_MAX )
+   if( iIndex >= ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModal ) )
    {
       hb_retni( 0 );  /* no more room */
       return;

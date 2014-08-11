@@ -408,7 +408,7 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
 
    HB_GTSUPER_EXIT( pGT );
 
-   for( i = 0; i < WVW_DLGML_MAX; i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_wvw->a.hDlgModeless ); i++ )
    {
       if( s_wvw->a.hDlgModeless[ i ] )
          SendMessage( s_wvw->a.hDlgModeless[ i ], WM_CLOSE, 0, 0 );
@@ -511,19 +511,19 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
 
    UnregisterClass( s_wvw->szAppName, s_wvw->hInstance );
 
-   for( i = 0; i < WVW_PICTURES_MAX; i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_wvw->a.iPicture ); i++ )
    {
       if( s_wvw->a.iPicture[ i ] )
          hb_gt_wvw_DestroyPicture( s_wvw->a.iPicture[ i ] );
    }
 
-   for( i = 0; i < WVW_FONTS_MAX; i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_wvw->a.hUserFonts ); i++ )
    {
       if( s_wvw->a.hUserFonts[ i ] )
          DeleteObject( s_wvw->a.hUserFonts[ i ] );
    }
 
-   for( i = 0; i < WVW_PENS_MAX; i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_wvw->a.hUserPens ); i++ )
    {
       if( s_wvw->a.hUserPens[ i ] )
          DeleteObject( s_wvw->a.hUserPens[ i ] );
@@ -1623,7 +1623,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
 
    iType = 0;
 
-   for( iIndex = 0; iIndex < WVW_DLGML_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( s_wvw->a.hDlgModeless ); iIndex++ )
    {
       if( s_wvw->a.hDlgModeless[ iIndex ] != NULL && s_wvw->a.hDlgModeless[ iIndex ] == hDlg )
       {
@@ -1739,7 +1739,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
 
    int iFirst = ( int ) lParam;
 
-   if( iFirst > 0 && iFirst <= WVW_DLGMD_MAX )
+   if( iFirst > 0 && iFirst <= ( int ) HB_SIZEOFARRAY( s_wvw->a.hDlgModal ) )
    {
       s_wvw->a.hDlgModal[ iFirst - 1 ] = hDlg;
       SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
@@ -1748,7 +1748,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
 
    iType = 0;
 
-   for( iIndex = 0; iIndex < WVW_DLGMD_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( s_wvw->a.hDlgModal ); iIndex++ )
       if( s_wvw->a.hDlgModal[ iIndex ] != NULL && s_wvw->a.hDlgModal[ iIndex ] == hDlg )
       {
          if( s_wvw->a.pFuncModal[ iIndex ] != NULL )
@@ -3525,7 +3525,7 @@ WPARAM hb_gt_wvw_ProcessMessages( WVW_WIN * wvw_win )
       }
 
       bProcessed = HB_FALSE;
-      for( iIndex = 0; iIndex < WVW_DLGML_MAX; iIndex++ )
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( s_wvw->a.hDlgModeless ); iIndex++ )
       {
          if( s_wvw->a.hDlgModeless[ iIndex ] != 0 )
          {
@@ -4136,7 +4136,7 @@ static void hb_gtInitStatics( HB_UINT nWin, LPCTSTR lpszWinName, USHORT usRow1, 
             s_wvw->a.hMSImg32 = h;
       }
 
-      for( iIndex = 0; iIndex < WVW_DLGML_MAX; iIndex++ )
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( s_wvw->a.hDlgModeless ); iIndex++ )
       {
          s_wvw->a.hDlgModeless[ iIndex ] = NULL;
 
@@ -4144,7 +4144,7 @@ static void hb_gtInitStatics( HB_UINT nWin, LPCTSTR lpszWinName, USHORT usRow1, 
          s_wvw->a.iType[ iIndex ] = 0;
       }
 
-      for( iIndex = 0; iIndex < WVW_DLGMD_MAX; iIndex++ )
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( s_wvw->a.hDlgModal ); iIndex++ )
       {
          s_wvw->a.hDlgModal[ iIndex ]  = NULL;
          s_wvw->a.pFuncModal[ iIndex ] = NULL;
@@ -4601,7 +4601,7 @@ static void hb_gt_wvw_TBMouseEvent( WVW_WIN * wvw_win, HWND hWnd, UINT message, 
 
 static HB_BOOL hb_gt_wvwWindowPrologue( void )
 {
-   if( s_wvw->usNumWindows < WVW_MAXWINDOWS )
+   if( s_wvw->usNumWindows < HB_SIZEOFARRAY( s_wvw->pWin ) )
    {
       s_wvw->usNumWindows++;
       s_wvw->pWin[ s_wvw->usNumWindows - 1 ] = ( WVW_WIN * ) hb_xgrabz( sizeof( WVW_WIN ) );
@@ -6600,14 +6600,14 @@ HB_FUNC( WVW_NOPENWINDOW )
       return;
    }
 
-   if( s_wvw->usNumWindows == WVW_MAXWINDOWS )
+   if( s_wvw->usNumWindows == HB_SIZEOFARRAY( s_wvw->pWin ) )
    {
       MessageBox( NULL, TEXT( "Too many windows to open" ), TEXT( "Error" ), MB_ICONERROR );
       hb_retni( 0 );
       return;
    }
 
-   if( iParentWin > ( INT ) s_wvw->usNumWindows - 1 )
+   if( iParentWin > ( int ) s_wvw->usNumWindows - 1 )
    {
       MessageBox( NULL, TEXT( "Invalid parent window" ), TEXT( "Error" ), MB_ICONERROR );
       hb_retni( 0 );
@@ -6630,7 +6630,7 @@ HB_FUNC( WVW_NOPENWINDOW )
 
       lpszWinName = HB_PARSTR( 1, &hWinName, &iLen );
 
-      if( iLen > WVW_MAXWINNAMELENGTH - 1 )
+      if( iLen > HB_SIZEOFARRAY( wvw_win->szWinName ) - 1 )
       {
          MessageBox( NULL, TEXT( "Window name too long" ), TEXT( "Error" ), MB_ICONERROR );
          hb_retni( 0 );

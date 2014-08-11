@@ -151,14 +151,7 @@
 #define K_SH_ENTER                K_ENTER  /* Shift-Enter == Enter */
 #endif
 
-#define WVW_MAXWINDOWS            40
-
-#define WVW_MAXWINNAMELENGTH      256
-
 #define WVW_DEFAULT_MENUKEYEVENT  1024
-
-#define WVW_MAX_STATUS_PARTS      40      /* max # of parts in Status Bar */
-#define WVW_SPACE_BETWEEN_PARTS   2       /* pixel space between Status Bar's parts */
 
 #define WVW_ID_SYSTEM_TIMER       1
 
@@ -203,10 +196,6 @@
 #define WVW_DEFAULT_ROWS          25
 #define WVW_DEFAULT_COLS          80
 
-#define WVW_PICTURES_MAX          20
-
-#define WVW_FONTS_MAX             20
-#define WVW_PENS_MAX              20
 #define WVW_DLGML_MAX             20
 #define WVW_DLGMD_MAX             20
 
@@ -298,8 +287,8 @@ typedef struct _WVW_CTRL
 
 typedef struct
 {
-   HB_UINT nWinId;                             /* Window's Id, a number 0..WVWMAXWINDOWS */
-   TCHAR   szWinName[ WVW_MAXWINNAMELENGTH ];  /* name of Window ~ szAppName for Window 0 */
+   HB_UINT nWinId;                 /* Window's Id, a number 0..WVWMAXWINDOWS */
+   TCHAR   szWinName[ 256 ];       /* name of Window ~ szAppName for Window 0 */
 
    int     iLineSpacing;           /* linespacing in pixels */
    int     iLSpaceColor;           /* linespacing color index */
@@ -440,7 +429,7 @@ typedef struct
    HB_UINT usNumWindows;                  /* number of windows */
    HB_UINT usCurWindow;                   /* current window handled by HB_GT_FUNC(...) */
 
-   WVW_WIN * pWin[ WVW_MAXWINDOWS ];
+   WVW_WIN * pWin[ 40 ];
 
    /* --- former WVW_APP --- */
 
@@ -467,15 +456,14 @@ typedef struct
       HBRUSH wvwWhiteBrush;                     /* Wvw specific White colored brush */
       HBRUSH OriginalBrush;                     /* Handle da Brush original do Device Context */
 
-      IPicture * iPicture[ WVW_PICTURES_MAX ];  /* Array to hold the Picture Streams to avoid recurring loading and unloading */
-      HFONT      hUserFonts[ WVW_FONTS_MAX ];   /* User defined font handles */
-      HPEN       hUserPens[ WVW_PENS_MAX ];     /* User defined pens */
+      IPicture * iPicture[ 20 ];                /* Array to hold the Picture Streams to avoid recurring loading and unloading */
+      HFONT      hUserFonts[ 20 ];              /* User defined font handles */
+      HPEN       hUserPens[ 20 ];               /* User defined pens */
 
       HINSTANCE       hMSImg32;                 /* Handle to the loaded library msimg32.dll */
       wvwGradientFill pfnGF;                    /* Pointer to Address of the GradientFill function in MSImg32.dll */
 
-      HWND hDlgModeless[ WVW_DLGML_MAX ];       /* Handle to a modeless dialog */
-
+      HWND     hDlgModeless[ WVW_DLGML_MAX ];   /* Handle to a modeless dialog */
       PHB_ITEM pFunc[ WVW_DLGML_MAX ];          /* Function pointer for WndProc */
       int      iType[ WVW_DLGML_MAX ];          /* Type of Function Pointers - Function 1, Block 2, Method 3 */
 
