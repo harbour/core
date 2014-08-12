@@ -1882,9 +1882,10 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
    if( p )
    {
-      WORD  nItems = ( WORD ) hb_parvni( 1, 4 );
-      int   i, nchar;
-      DWORD lStyle = hb_parvnl( 1, 3 );
+      WORD    nItems = ( WORD ) hb_parvni( 1, 4 );
+      int     i;
+      HB_SIZE nchar;
+      DWORD   lStyle = hb_parvnl( 1, 3 );
 
       *p++ = 1;
       *p++ = 0xFFFF;
@@ -1907,20 +1908,30 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
       if( hb_parinfa( 1, 11 ) == HB_IT_STRING )
       {
-         nchar = hb_gt_wvw_nCopyAnsiToWideChar( p, hb_parvcx( 1, 11 ) );
-         p    += nchar;
+         void * hText;
+         LPCWSTR szText = hb_wstrnull( hb_parastr_u16( 1, 11, HB_CDP_ENDIAN_NATIVE, &hText, &nchar ) );
+
+         memcpy( p, szText, nchar * sizeof( WCHAR ) );
+         p += nchar;
+
+         hb_strfree( hText );
       }
       else
          *p++ = 0;
 
       if( ( lStyle & DS_SETFONT ) != 0 )
       {
+         void * hText;
+         LPCWSTR szText = hb_wstrnull( hb_parastr_u16( 1, 15, HB_CDP_ENDIAN_NATIVE, &hText, &nchar ) );
+
          *p++ = ( short ) hb_parvni( 1, 12 );
          *p++ = ( short ) hb_parvni( 1, 13 );
          *p++ = ( short ) hb_parvni( 1, 14 );
 
-         nchar = hb_gt_wvw_nCopyAnsiToWideChar( p, hb_parvcx( 1, 15 ) );
-         p    += nchar;
+         memcpy( p, szText, nchar * sizeof( WCHAR ) );
+         p += nchar;
+
+         hb_strfree( hText );
       }
 
       for( i = 1; i <= nItems; i++ )
@@ -1946,8 +1957,13 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
          if( hb_parinfa( 10, i ) == HB_IT_STRING )
          {
-            nchar = hb_gt_wvw_nCopyAnsiToWideChar( p, hb_parvcx( 10, i ) );
-            p    += nchar;
+            void * hText;
+            LPCWSTR szText = hb_parastr_u16( 10, i, HB_CDP_ENDIAN_NATIVE, &hText, &nchar );
+
+            memcpy( p, szText, nchar * sizeof( WCHAR ) );
+            p += nchar;
+
+            hb_strfree( hText );
          }
          else
          {
@@ -1957,8 +1973,13 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
          if( hb_parinfa( 11, i ) == HB_IT_STRING )
          {
-            nchar = hb_gt_wvw_nCopyAnsiToWideChar( p, hb_parvcx( 11, i ) );
-            p    += nchar;
+            void * hText;
+            LPCWSTR szText = hb_parastr_u16( 11, i, HB_CDP_ENDIAN_NATIVE, &hText, &nchar );
+
+            memcpy( p, szText, nchar * sizeof( WCHAR ) );
+            p += nchar;
+
+            hb_strfree( hText );
          }
          else
          {

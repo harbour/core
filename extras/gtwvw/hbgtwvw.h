@@ -52,6 +52,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+/* TOFIX: hang (infinite loop) when repainting toolbar in hb_gt_wvwWndProc()/WM_PAINT */
 /* TOFIX: MT support */
 /* TOFIX: GT UNICODE support */
 /* TOFIX: Replace MessageBox() popups with internal errors or RTEs */
@@ -521,9 +522,7 @@ extern void       hb_gt_wvw_AddBitmapHandle( const char * szFileName, HBITMAP hB
 
 extern void       hb_gt_wvw_FUNCPrologue( BYTE byNumCoord, int * iRow1, int * iCol1, int * iRow2, int * iCol2 );
 extern void       hb_gt_wvw_FUNCEpilogue( void );
-extern void       hb_gt_wvw_HBFUNCPrologue( HB_UINT nWin,
-                                            USHORT * pusRow1, USHORT * pusCol1,
-                                            USHORT * pusRow2, USHORT * pusCol2 );
+extern void       hb_gt_wvw_HBFUNCPrologue( HB_UINT nWin, USHORT * pusRow1, USHORT * pusCol1, USHORT * pusRow2, USHORT * pusCol2 );
 extern RECT       hb_gt_wvw_GetXYFromColRowRect( WVW_WIN * wvw_win, RECT colrow );
 extern POINT      hb_gt_wvw_GetXYFromColRow( WVW_WIN * wvw_win, int col, int row );
 extern COLORREF   hb_gt_wvw_GetColorData( int iIndex );
@@ -552,10 +551,9 @@ extern LONG       hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f );
 extern HFONT      hb_gt_wvw_GetFont( const TCHAR * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage );
 extern int        hb_gt_wvw_GetMouseX( WVW_WIN * wvw_win );
 extern int        hb_gt_wvw_GetMouseY( WVW_WIN * wvw_win );
-extern USHORT     hb_gt_wvw_RowOfs( HB_UINT nWin );
-extern USHORT     hb_gt_wvw_ColOfs( HB_UINT nWin );
+extern int        hb_gt_wvw_RowOfs( HB_UINT nWin );
+extern int        hb_gt_wvw_ColOfs( HB_UINT nWin );
 extern IPicture * hb_gt_wvw_LoadPicture( const char * image );
-extern int        hb_gt_wvw_nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn );
 extern LPWORD     hb_gt_wvw_lpwAlign( LPWORD lpIn );
 
 extern WVW_CTRL * hb_gt_wvw_GetControlData( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, HB_UINT nId );

@@ -942,76 +942,71 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          iType = 1;
       }
 
+      if( HB_ISNUM( 3 ) )
+         /* argument 1 is already unicode compliant, so no conversion */
+         hDlg = CreateDialogIndirect( ( HINSTANCE ) wvg_hInstance(),
+                                      ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                      hb_parl( 2 ) ? _s->hWnd : NULL,
+                                      ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
+      else
       {
-         if( HB_ISNUM( 3 ) )
+         switch( iResource )
          {
-            void * hTemplate;
-            hDlg = CreateDialogIndirect( ( HINSTANCE ) wvg_hInstance(),
-                                         ( LPDLGTEMPLATE ) HB_PARSTR( 1, &hTemplate, NULL ),
-                                         hb_parl( 2 ) ? _s->hWnd : NULL,
-                                         ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
-            hb_strfree( hTemplate );
-         }
-         else
-         {
-            switch( iResource )
+            case 0:
             {
-               case 0:
-               {
-                  void * hTemplate;
-                  hDlg = CreateDialog( ( HINSTANCE ) wvg_hInstance(),
-                                       HB_PARSTR( 1, &hTemplate, NULL ),
-                                       hb_parl( 2 ) ? _s->hWnd : NULL,
-                                       ( DLGPROC ) hb_wvt_gtDlgProcMLess );
-                  hb_strfree( hTemplate );
-               }
+               void * hTemplate;
+               hDlg = CreateDialog( ( HINSTANCE ) wvg_hInstance(),
+                                    HB_PARSTR( 1, &hTemplate, NULL ),
+                                    hb_parl( 2 ) ? _s->hWnd : NULL,
+                                    ( DLGPROC ) hb_wvt_gtDlgProcMLess );
+               hb_strfree( hTemplate );
+            }
+            break;
+
+            case 1:
+               hDlg = CreateDialog( ( HINSTANCE ) wvg_hInstance(),
+                                    MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
+                                    hb_parl( 2 ) ? _s->hWnd : NULL,
+                                    ( DLGPROC ) hb_wvt_gtDlgProcMLess );
                break;
 
-               case 1:
-                  hDlg = CreateDialog( ( HINSTANCE ) wvg_hInstance(),
-                                       MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
-                                       hb_parl( 2 ) ? _s->hWnd : NULL,
-                                       ( DLGPROC ) hb_wvt_gtDlgProcMLess );
-                  break;
-
-               case 2:
-                  /* argument 1 is already unicode compliant, so no conversion */
-                  hDlg = CreateDialogIndirect( ( HINSTANCE ) wvg_hInstance(),
-                                               ( LPDLGTEMPLATE ) hb_parc( 1 ),
-                                               hb_parl( 2 ) ? _s->hWnd : NULL,
-                                               ( DLGPROC ) hb_wvt_gtDlgProcMLess );
-                  break;
-            }
+            case 2:
+               /* argument 1 is already unicode compliant, so no conversion */
+               hDlg = CreateDialogIndirect( ( HINSTANCE ) wvg_hInstance(),
+                                            ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                            hb_parl( 2 ) ? _s->hWnd : NULL,
+                                            ( DLGPROC ) hb_wvt_gtDlgProcMLess );
+               break;
          }
+      }
 
-         if( hDlg )
+      if( hDlg )
+      {
+         _s->hDlgModeless[ iIndex ] = hDlg;
+
+         if( pFunc )
          {
-            _s->hDlgModeless[ iIndex ] = hDlg;
+            /* if codeblock, store the codeblock and lock it there */
+            if( HB_IS_EVALITEM( pFirst ) )
+               _s->pcbFunc[ iIndex ] = pFunc;
 
-            if( pFunc )
-            {
-               /* if codeblock, store the codeblock and lock it there */
-               if( HB_IS_EVALITEM( pFirst ) )
-                  _s->pcbFunc[ iIndex ] = pFunc;
-
-               _s->pFunc[ iIndex ] = pFunc;
-               _s->iType[ iIndex ] = iType;
-            }
-            else
-            {
-               _s->pFunc[ iIndex ] = NULL;
-               _s->iType[ iIndex ] = 0;
-            }
-            SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
+            _s->pFunc[ iIndex ] = pFunc;
+            _s->iType[ iIndex ] = iType;
          }
          else
          {
-            /* if codeblock item created earlier, release it */
-            if( iType == 2 && pFunc )
-               hb_itemRelease( pFunc );
-
-            _s->hDlgModeless[ iIndex ] = NULL;
+            _s->pFunc[ iIndex ] = NULL;
+            _s->iType[ iIndex ] = 0;
          }
+         SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
+      }
+      else
+      {
+         /* if codeblock item created earlier, release it */
+         if( iType == 2 && pFunc )
+            hb_itemRelease( pFunc );
+
+         _s->hDlgModeless[ iIndex ] = NULL;
       }
 
       hb_retnint( ( HB_PTRDIFF ) hDlg );
@@ -1116,9 +1111,10 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
    if( pdlgtemplate )
    {
-      WORD  nItems = ( WORD ) hb_parvni( 1, 4 );
-      DWORD lStyle = hb_parvnl( 1, 3 );
-      int   i, nchar;
+      WORD    nItems = ( WORD ) hb_parvni( 1, 4 );
+      DWORD   lStyle = hb_parvnl( 1, 3 );
+      int     i;
+      HB_SIZE nchar;
 
       /* start to fill in the dlgtemplate information.  addressing by WORDs */
 
@@ -1143,8 +1139,13 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
       if( hb_parinfa( 1, 11 ) == HB_IT_STRING )
       {
-         nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 1, 11 ) );
-         p    += nchar;
+         void * hText;
+         LPCWSTR szText = hb_wstrnull( hb_parastr_u16( 1, 11, HB_CDP_ENDIAN_NATIVE, &hText, &nchar ) );
+
+         memcpy( p, szText, nchar * sizeof( WCHAR ) );
+         p += nchar;
+
+         hb_strfree( hText );
       }
       else
          *p++ = 0;
@@ -1153,12 +1154,17 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
       if( ( lStyle & DS_SETFONT ) )
       {
+         void * hText;
+         LPCWSTR szText = hb_wstrnull( hb_parastr_u16( 1, 15, HB_CDP_ENDIAN_NATIVE, &hText, &nchar ) );
+
          *p++ = ( short ) hb_parvni( 1, 12 );
          *p++ = ( short ) hb_parvni( 1, 13 );
          *p++ = ( short ) hb_parvni( 1, 14 );
 
-         nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 1, 15 ) );
-         p    += nchar;
+         memcpy( p, szText, nchar * sizeof( WCHAR ) );
+         p += nchar;
+
+         hb_strfree( hText );
       }
 
       for( i = 1; i <= nItems; i++ )
@@ -1185,8 +1191,13 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
          if( hb_parinfa( 10, i ) == HB_IT_STRING )
          {
-            nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 10, i ) );   /* class */
-            p    += nchar;
+            void * hText;
+            LPCWSTR szText = hb_parastr_u16( 10, i, HB_CDP_ENDIAN_NATIVE, &hText, &nchar );
+
+            memcpy( p, szText, nchar * sizeof( WCHAR ) );
+            p += nchar;
+
+            hb_strfree( hText );
          }
          else
          {
@@ -1196,8 +1207,13 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
          if( hb_parinfa( 11, i ) == HB_IT_STRING )
          {
-            nchar = nCopyAnsiToWideChar( p, ( LPCSTR ) hb_parvc( 11, i ) );   /*  text  */
-            p    += nchar;
+            void * hText;
+            LPCWSTR szText = hb_parastr_u16( 11, i, HB_CDP_ENDIAN_NATIVE, &hText, &nchar );
+
+            memcpy( p, szText, nchar * sizeof( WCHAR ) );
+            p += nchar;
+
+            hb_strfree( hText );
          }
          else
          {
@@ -1229,20 +1245,6 @@ LPWORD lpwAlign( LPWORD lpIn )
    ul >>= 2;
    ul <<= 2;
    return ( LPWORD ) ul;
-}
-
-int nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn )
-{
-   int nChar = 0;
-
-   do
-   {
-      *lpWCStr++ = ( WORD ) *lpAnsiIn;
-      nChar++;
-   }
-   while( *lpAnsiIn++ );
-
-   return nChar;
 }
 
 HB_FUNC( WVT_LBADDSTRING )
