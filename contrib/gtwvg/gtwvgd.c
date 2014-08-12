@@ -263,7 +263,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    pWVT->pSymWVT_MOUSE     = NULL;
    pWVT->pSymWVT_TIMER     = NULL;
    pWVT->pSymWVT_KEY       = NULL;
-   for( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( pWVT->pFunc ); iIndex++ )
    {
       if( pWVT->pFunc[ iIndex ] != NULL && pWVT->iType[ iIndex ] == 2 )
       {
@@ -2328,7 +2328,7 @@ static HB_BOOL hb_gt_wvt_IsDialogMessage( PHB_GTWVT pWVT, LPMSG lpMsg )     /* P
 {
    int iIndex;
 
-   for( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( pWVT->hDlgModeless ); iIndex++ )
    {
       if( pWVT->hDlgModeless[ iIndex ] != 0 )
       {
@@ -4314,15 +4314,15 @@ static void hb_wvt_gtReleaseGuiData( void )
 {
    int i;
 
-   DeleteObject( ( HPEN   ) s_guiData->penWhite      );
-   DeleteObject( ( HPEN   ) s_guiData->penWhiteDim   );
-   DeleteObject( ( HPEN   ) s_guiData->penBlack      );
-   DeleteObject( ( HPEN   ) s_guiData->penDarkGray   );
-   DeleteObject( ( HPEN   ) s_guiData->penGray       );
-   DeleteObject( ( HPEN   ) s_guiData->penNull       );
-   DeleteObject( ( HBRUSH ) s_guiData->diagonalBrush );
-   DeleteObject( ( HBRUSH ) s_guiData->solidBrush    );
-   DeleteObject( ( HBRUSH ) s_guiData->whiteBrush    );
+   DeleteObject( s_guiData->penWhite      );
+   DeleteObject( s_guiData->penWhiteDim   );
+   DeleteObject( s_guiData->penBlack      );
+   DeleteObject( s_guiData->penDarkGray   );
+   DeleteObject( s_guiData->penGray       );
+   DeleteObject( s_guiData->penNull       );
+   DeleteObject( s_guiData->diagonalBrush );
+   DeleteObject( s_guiData->solidBrush    );
+   DeleteObject( s_guiData->whiteBrush    );
 
    if( s_guiData->hMSImg32 )
    {
@@ -4335,7 +4335,7 @@ static void hb_wvt_gtReleaseGuiData( void )
       s_guiData->hUser32 = NULL;
    }
 #if ! defined( HB_OS_WIN_CE )
-   for( i = 0; i < WVT_PICTURES_MAX; i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_guiData->iPicture ); i++ )
    {
       if( s_guiData->iPicture[ i ] )
       {
@@ -4344,7 +4344,7 @@ static void hb_wvt_gtReleaseGuiData( void )
       }
    }
 #endif
-   for( i = 0; i < WVT_FONTS_MAX; i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_guiData->hUserFonts ); i++ )
    {
       if( s_guiData->hUserFonts[ i ] )
       {
@@ -4353,7 +4353,7 @@ static void hb_wvt_gtReleaseGuiData( void )
       }
    }
 
-   for( i = 0; i < WVT_PENS_MAX; i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_guiData->hUserPens ); i++ )
    {
       if( s_guiData->hUserPens[ i ] )
       {
@@ -4405,13 +4405,13 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    pWVT->bToolTipActive     = HB_FALSE;
    pWVT->iFactor            = 255;
 
-   for( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( pWVT->hDlgModeless ); iIndex++ )
    {
       pWVT->hDlgModeless[ iIndex ] = NULL;
       pWVT->pFunc[ iIndex ]        = NULL;
       pWVT->iType[ iIndex ]        = 0;
    }
-   for( iIndex = 0; iIndex < WVT_DLGMD_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( pWVT->hDlgModal ); iIndex++ )
    {
       pWVT->hDlgModal[ iIndex ]    = NULL;
       pWVT->pFuncModal[ iIndex ]   = NULL;
@@ -4435,7 +4435,7 @@ static void hb_wvt_gtExitGui( PHB_GTWVT pWVT )
    if( hMenu )
       DestroyMenu( hMenu );
 #endif
-   for( i = 0; i < WVT_DLGML_MAX; i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( pWVT->hDlgModeless ); i++ )
    {
       if( pWVT->hDlgModeless[ i ] )
       {
@@ -4444,8 +4444,8 @@ static void hb_wvt_gtExitGui( PHB_GTWVT pWVT )
       }
    }
 
-   DeleteObject( ( HPEN   ) pWVT->currentPen    );
-   DeleteObject( ( HBRUSH ) pWVT->currentBrush  );
+   DeleteObject( pWVT->currentPen    );
+   DeleteObject( pWVT->currentBrush  );
 
    if( pWVT->hdc )
    {

@@ -138,14 +138,6 @@ HB_EXTERN_BEGIN
 #define HB_MSG_NOTIFYICON           ( WM_USER + 1399 )
 #define HB_ID_NOTIFYICON            99
 
-/*-*/
-#define WVT_PICTURES_MAX            50
-#define WVT_FONTS_MAX               50
-#define WVT_PENS_MAX                50
-#define WVT_DLGML_MAX               50
-#define WVT_DLGMD_MAX               50
-/*-*/
-
 #if defined( __DMC__ )
    #if ( _WIN32_IE >= 0x0300 )
       #if ! defined( ICC_BAR_CLASSES )

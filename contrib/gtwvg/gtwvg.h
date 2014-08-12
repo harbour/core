@@ -138,9 +138,6 @@ HB_EXTERN_BEGIN
 #define HB_ID_NOTIFYICON            99
 
 /* - */
-#define WVT_PICTURES_MAX            50
-#define WVT_FONTS_MAX               50
-#define WVT_PENS_MAX                50
 #define WVT_DLGML_MAX               50
 #define WVT_DLGMD_MAX               50
 /* - */
@@ -309,10 +306,10 @@ typedef struct
    HBRUSH    solidBrush;                    /* Handle to solid brush                                                      */
    HBRUSH    whiteBrush;                    /* Wvt specific White colored brush                                           */
 #if ! defined( HB_OS_WIN_CE )
-   IPicture * iPicture[ WVT_PICTURES_MAX ]; /* Array to hold the Picture Streams to avoid recurring loading and unloading */
+   IPicture * iPicture[ 50 ];               /* Array to hold the Picture Streams to avoid recurring loading and unloading */
 #endif
-   HFONT     hUserFonts[ WVT_FONTS_MAX ];   /* User defined font handles                                                  */
-   HPEN      hUserPens[ WVT_PENS_MAX ];     /* User defined pens                                                          */
+   HFONT     hUserFonts[ 50 ];              /* User defined font handles                                                  */
+   HPEN      hUserPens[ 50 ];               /* User defined pens                                                          */
    HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll                                   */
    wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll             */
    HINSTANCE hUser32;                       /* Handle to the loaded library user32.dll                                    */

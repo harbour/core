@@ -208,7 +208,7 @@ HB_FUNC( WVG_SETGOBJDATA )
                      gObj->iPicture = ( IPicture * ) ( HB_PTRDIFF ) hb_parni( 3 );
                   break;
                case GOBJ_OBJDATA_PICTURE:
-                  if( HB_ISNUM( 3 ) && hb_parni( 3 ) <= WVT_PICTURES_MAX )
+                  if( HB_ISNUM( 3 ) && hb_parni( 3 ) >= 1 && hb_parni( 3 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
                      gObj->iPicture = pWVT->pGUI->iPicture[ hb_parni( 3 ) - 1 ];
                   break;
                case GOBJ_OBJDATA_IMAGE:
@@ -217,7 +217,7 @@ HB_FUNC( WVG_SETGOBJDATA )
 
                   if( HB_ISNUM( 3 ) )
                   {
-                     if( hb_parni( 3 ) <= WVT_PICTURES_MAX )
+                     if( hb_parni( 3 ) >= 1 && hb_parni( 3 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
                         iPicture = pWVT->pGUI->iPicture[ hb_parni( 3 ) - 1 ];
                   }
                   else
@@ -1328,9 +1328,10 @@ static void hb_wvg_TextBox( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
 HB_FUNC( WVG_PICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
-   if( HB_ISNUM( 6 ) && hb_parni( 6 ) <= WVT_PICTURES_MAX )
+   PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
+
+   if( HB_ISNUM( 6 ) && hb_parni( 6 ) >= 1 && hb_parni( 6 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
    {
-      PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
       HB_GOBJS * gObj = hb_wvg_ObjectNew( pWVT );
 
       gObj->iObjType = GOBJ_OBJTYPE_PICTURE;
@@ -1410,7 +1411,7 @@ HB_FUNC( WVG_IMAGE )
    switch( iSource )
    {
       case GOBJ_IMAGESOURCE_SLOT:
-         if( HB_ISNUM( 7 ) && hb_parni( 7 ) <= WVT_PICTURES_MAX )
+         if( HB_ISNUM( 7 ) && hb_parni( 7 ) >= 1 && hb_parni( 7 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
             iPicture = pWVT->pGUI->iPicture[ hb_parni( 7 ) - 1 ];
          break;
       case GOBJ_IMAGESOURCE_RESOURCE:

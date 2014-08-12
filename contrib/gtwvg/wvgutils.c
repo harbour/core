@@ -116,11 +116,12 @@ HB_FUNC( WVT_CHOOSEFONT )
 
    if( _s )
    {
-      CHOOSEFONT cf;    /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
-      LOGFONT    lf;    /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
+      CHOOSEFONT cf;
+      LOGFONT    lf;
       LONG       PointSize = 0;
 
       memset( &cf, 0, sizeof( cf ) );
+      memset( &lf, 0, sizeof( lf ) );
 
       if( HB_ISNUM( 2 ) )
          PointSize = -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( _s->hdc, LOGPIXELSY ), 72 );
@@ -915,13 +916,13 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
       int      iResource = hb_parni( 4 );
 
       /* check if we still have room for a new dialog */
-      for( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( _s->hDlgModeless ); iIndex++ )
       {
          if( _s->hDlgModeless[ iIndex ] == NULL )
             break;
       }
 
-      if( iIndex >= WVT_DLGML_MAX )
+      if( iIndex >= ( int ) HB_SIZEOFARRAY( _s->hDlgModeless ) )
       {
          /* no more room */
          hb_retnint( 0 );
@@ -1028,13 +1029,13 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
       HWND       hParent   = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : _s->hWnd;
 
       /* check if we still have room for a new dialog */
-      for( iIndex = 0; iIndex < WVT_DLGMD_MAX; iIndex++ )
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( _s->hDlgModal ); iIndex++ )
       {
          if( _s->hDlgModal[ iIndex ] == NULL )
             break;
       }
 
-      if( iIndex >= WVT_DLGMD_MAX )
+      if( iIndex >= ( int ) HB_SIZEOFARRAY( _s->hDlgModal ) )
       {
          /* no more room */
          hb_retnint( 0 );
@@ -1338,7 +1339,7 @@ HB_FUNC( WVT_GETFONTHANDLE )
       HFONT hFont = 0;
       int   iSlot = hb_parni( 1 ) - 1;
 
-      if( iSlot >= 0 && iSlot < WVT_PICTURES_MAX )
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserFonts ) )
          hFont = _s->pGUI->hUserFonts[ iSlot ];
 
       hb_retnint( ( HB_PTRDIFF ) hFont );

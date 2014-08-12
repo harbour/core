@@ -794,12 +794,15 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
 HB_FUNC( WVG_CHOOSEFONT )
 {
 #if ! defined( HB_OS_WIN_CE )
-   CHOOSEFONT cf;    /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
-   LOGFONT    lf;    /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
+   CHOOSEFONT cf;
+   LOGFONT    lf;
    DWORD      Flags;
    LONG       PointSize = 0;
    HWND       hWnd      = wvg_parhwnd( 1 );
    TCHAR      szStyle[ MAX_PATH + 1 ];
+
+   memset( &cf, 0, sizeof( cf ) );
+   memset( &lf, 0, sizeof( lf ) );
 
    if( HB_ISCHAR( 3 ) )
    {

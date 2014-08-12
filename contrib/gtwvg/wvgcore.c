@@ -327,7 +327,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
 
       iType = 0;
 
-      for( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( _s->hDlgModeless ); iIndex++ )
       {
          if( _s->hDlgModeless[ iIndex ] != NULL && _s->hDlgModeless[ iIndex ] == hDlg )
          {
@@ -430,7 +430,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
       PHB_ITEM pFunc  = NULL;
       int      iFirst = ( int ) lParam;
 
-      if( iFirst > 0 && iFirst <= WVT_DLGMD_MAX )
+      if( iFirst > 0 && iFirst <= ( int ) HB_SIZEOFARRAY( _s->hDlgModal ) )
       {
          _s->hDlgModal[ iFirst - 1 ] = hDlg;
          SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
@@ -439,7 +439,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
 
       iType = 0;
 
-      for( iIndex = 0; iIndex < WVT_DLGMD_MAX; iIndex++ )
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( _s->hDlgModal ); iIndex++ )
       {
          if( _s->hDlgModal[ iIndex ] != NULL && _s->hDlgModal[ iIndex ] == hDlg )
          {
@@ -1096,8 +1096,10 @@ HB_FUNC( WVT_DRAWLABEL )
    {
       POINT   xy;
       HFONT   hFont, hOldFont, hOldFontGui;
-      LOGFONT logfont;     /* = { 0 };*/
+      LOGFONT logfont;
       void *  hText = NULL;
+
+      memset( &logfont, 0, sizeof( logfont ) );
 
       logfont.lfEscapement     = hb_parni( 5 ) * 10;
       logfont.lfOrientation    = 0;
@@ -1166,7 +1168,7 @@ HB_FUNC( WVT_DRAWLABELEX )
    {
       int iSlot = hb_parni( 7 ) - 1;
 
-      if( _s->pGUI->hUserFonts[ iSlot ] )
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserFonts ) && _s->pGUI->hUserFonts[ iSlot ] )
       {
          POINT    xy;
          void *   hText;
@@ -1199,8 +1201,8 @@ HB_FUNC( WVT_DRAWLABELEX )
          hb_strfree( hText );
          hb_retl( HB_TRUE );
       }
-
-      hb_retl( HB_FALSE );
+      else
+         hb_retl( HB_FALSE );
    }
 }
 
@@ -1368,27 +1370,31 @@ HB_FUNC( WVT_DRAWOUTLINEEX )
 
    if( _s )
    {
-      POINT xy;
-      int   iTop, iLeft, iBottom, iRight;
-      int   iSlot = hb_parni( 5 ) - 1;
+      int iSlot = hb_parni( 5 ) - 1;
 
-      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
-      iTop    = xy.y - 1 + hb_parvni( 6, 1 );
-      iLeft   = xy.x - 1 + hb_parvni( 6, 2 );
-      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
-      iBottom = xy.y + hb_parvni( 6, 3 );
-      iRight  = xy.x + hb_parvni( 6, 4 );
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserPens ) )
+      {
+         POINT xy;
+         int   iTop, iLeft, iBottom, iRight;
 
-      if( _s->pGUI->hUserPens[ iSlot ] )
-         SelectObject( _s->hdc, _s->pGUI->hUserPens[ iSlot ] );
-      else
-         SelectObject( _s->hdc, _s->pGUI->penBlack );
+         xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+         iTop    = xy.y - 1 + hb_parvni( 6, 1 );
+         iLeft   = xy.x - 1 + hb_parvni( 6, 2 );
+         xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+         iBottom = xy.y + hb_parvni( 6, 3 );
+         iRight  = xy.x + hb_parvni( 6, 4 );
 
-      hb_wvt_DrawOutline( _s->hdc, iTop, iLeft, iBottom, iRight );
-      #if defined( __SETGUI__ )
-      if( _s->bGui )
-         hb_wvt_DrawOutline( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
-      #endif
+         if( _s->pGUI->hUserPens[ iSlot ] )
+            SelectObject( _s->hdc, _s->pGUI->hUserPens[ iSlot ] );
+         else
+            SelectObject( _s->hdc, _s->pGUI->penBlack );
+
+         hb_wvt_DrawOutline( _s->hdc, iTop, iLeft, iBottom, iRight );
+         #if defined( __SETGUI__ )
+         if( _s->bGui )
+            hb_wvt_DrawOutline( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
+         #endif
+      }
    }
 }
 
@@ -1599,188 +1605,194 @@ HB_FUNC( WVT_DRAWLINEEX )
 
    if( _s )
    {
-      POINT xy;
-      int   iTop, iLeft, iBottom, iRight, iOffset;
-      int   iOrient, iFormat, iAlign;
-      int   x, y;
-      HPEN  hPen;
-      int   iSlot = hb_parni( 8 ) - 1;
+      int iSlot = hb_parni( 8 ) - 1;
 
-      xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
-      iTop  = xy.y + hb_parvni( 9, 1 );
-      iLeft = xy.x + hb_parvni( 9, 2 );
-
-      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
-      iBottom = xy.y - 1 + hb_parvni( 9, 4 );
-      iRight  = xy.x - 1 + hb_parvni( 9, 4 );
-
-      /* Resolve Parameters */
-      iOrient = hb_parni( 5 );
-      iFormat = hb_parni( 6 );
-      iAlign  = hb_parni( 7 );
-
-      x = iLeft;
-      y = iTop;
-
-      switch( iAlign )
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserPens ) )
       {
-         case 0:                    /* Center */
-            if( iOrient == 0 )      /* Horizontal */
-            {
-               iOffset = ( iBottom - iTop ) / 2;
-               y       = iTop + iOffset;
-            }
-            else
-            {
-               iOffset = ( iRight - iLeft ) / 2;
-               x       = iLeft + iOffset;
-            }
-            break;
+         POINT xy;
+         int   iTop, iLeft, iBottom, iRight, iOffset;
+         int   iOrient, iFormat, iAlign;
+         int   x, y;
+         HPEN  hPen;
 
-         case 1:                  /* Top */
-            break;
+         xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+         iTop  = xy.y + hb_parvni( 9, 1 );
+         iLeft = xy.x + hb_parvni( 9, 2 );
 
-         case 2:                                /* bottom */
-            if( iFormat == 0 || iFormat == 1 )  /* Raised/Recessd */
-               y = iBottom - 1;
-            else
-               y = iBottom;
-            break;
+         xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+         iBottom = xy.y - 1 + hb_parvni( 9, 4 );
+         iRight  = xy.x - 1 + hb_parvni( 9, 4 );
 
-         case 3:                  /* Left */
-            break;
+         /* Resolve Parameters */
+         iOrient = hb_parni( 5 );
+         iFormat = hb_parni( 6 );
+         iAlign  = hb_parni( 7 );
 
-         case 4:                                /* Right */
-            if( iFormat == 0 || iFormat == 1 )  /* Raised/Recessd */
-               x = iRight - 1;
-            else
-               x = iRight;
-            break;
+         x = iLeft;
+         y = iTop;
+
+         switch( iAlign )
+         {
+            case 0:                    /* Center */
+               if( iOrient == 0 )      /* Horizontal */
+               {
+                  iOffset = ( iBottom - iTop ) / 2;
+                  y       = iTop + iOffset;
+               }
+               else
+               {
+                  iOffset = ( iRight - iLeft ) / 2;
+                  x       = iLeft + iOffset;
+               }
+               break;
+
+            case 1:                  /* Top */
+               break;
+
+            case 2:                                /* bottom */
+               if( iFormat == 0 || iFormat == 1 )  /* Raised/Recessd */
+                  y = iBottom - 1;
+               else
+                  y = iBottom;
+               break;
+
+            case 3:                  /* Left */
+               break;
+
+            case 4:                                /* Right */
+               if( iFormat == 0 || iFormat == 1 )  /* Raised/Recessd */
+                  x = iRight - 1;
+               else
+                  x = iRight;
+               break;
+         }
+
+         hPen = _s->pGUI->hUserPens[ iSlot ];
+
+         switch( iFormat )
+         {
+            case 0:                                         /* Raised */
+               if( iOrient == 0 )                           /* Horizontal */
+               {
+                  SelectObject( _s->hdc, _s->pGUI->penWhite );
+                  MoveToEx( _s->hdc, x, y, NULL );
+                  LineTo( _s->hdc, iRight, y );
+                  SelectObject( _s->hdc, hPen );
+                  MoveToEx( _s->hdc, x, y + 1, NULL );
+                  LineTo( _s->hdc, iRight, y + 1 );
+                  #if defined( __SETGUI__ )
+                  if( _s->bGui )
+                  {
+                     SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
+                     MoveToEx( _s->hGuiDC, x, y, NULL );
+                     LineTo( _s->hGuiDC, iRight, y );
+                     SelectObject( _s->hGuiDC, hPen );
+                     MoveToEx( _s->hGuiDC, x, y + 1, NULL );
+                     LineTo( _s->hGuiDC, iRight, y + 1 );
+                  }
+                  #endif
+               }
+               else                                       /* Vertical */
+               {
+                  SelectObject( _s->hdc, _s->pGUI->penWhite );
+                  MoveToEx( _s->hdc, x, y, NULL );
+                  LineTo( _s->hdc, x, iBottom );
+                  SelectObject( _s->hdc, hPen );
+                  MoveToEx( _s->hdc, x + 1, y, NULL );
+                  LineTo( _s->hdc, x + 1, iBottom );
+                  #if defined( __SETGUI__ )
+                  if( _s->bGui )
+                  {
+                     SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
+                     MoveToEx( _s->hGuiDC, x, y, NULL );
+                     LineTo( _s->hGuiDC, x, iBottom );
+                     SelectObject( _s->hGuiDC, hPen );
+                     MoveToEx( _s->hGuiDC, x + 1, y, NULL );
+                     LineTo( _s->hGuiDC, x + 1, iBottom );
+                  }
+                  #endif
+               }
+               break;
+
+            case 1:                                      /* Recessed */
+               if( iOrient == 0 )                        /* Horizontal */
+               {
+                  SelectObject( _s->hdc, hPen );
+                  MoveToEx( _s->hdc, x, y, NULL );
+                  LineTo( _s->hdc, iRight, y );
+                  SelectObject( _s->hdc, _s->pGUI->penWhite );
+                  MoveToEx( _s->hdc, x, y + 1, NULL );
+                  LineTo( _s->hdc, iRight, y + 1 );
+                  #if defined( __SETGUI__ )
+                  if( _s->bGui )
+                  {
+                     SelectObject( _s->hGuiDC, hPen );
+                     MoveToEx( _s->hGuiDC, x, y, NULL );
+                     LineTo( _s->hGuiDC, iRight, y );
+                     SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
+                     MoveToEx( _s->hGuiDC, x, y + 1, NULL );
+                     LineTo( _s->hGuiDC, iRight, y + 1 );
+                  }
+                  #endif
+               }
+               else                                      /* Vertical */
+               {
+                  SelectObject( _s->hdc, hPen );
+                  MoveToEx( _s->hdc, x, y, NULL );
+                  LineTo( _s->hdc, x, iBottom );
+                  SelectObject( _s->hdc, _s->pGUI->penWhite );
+                  MoveToEx( _s->hdc, x + 1, y, NULL );
+                  LineTo( _s->hdc, x + 1, iBottom );
+                  #if defined( __SETGUI__ )
+                  if( _s->bGui )
+                  {
+                     SelectObject( _s->hGuiDC, hPen );
+                     MoveToEx( _s->hGuiDC, x, y, NULL );
+                     LineTo( _s->hGuiDC, x, iBottom );
+                     SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
+                     MoveToEx( _s->hGuiDC, x + 1, y, NULL );
+                     LineTo( _s->hGuiDC, x + 1, iBottom );
+                  }
+                  #endif
+               }
+               break;
+
+            case 2:                                      /* Plain */
+               if( iOrient == 0 )                        /* Horizontal */
+               {
+                  SelectObject( _s->hdc, hPen );
+                  MoveToEx( _s->hdc, x, y, NULL );
+                  LineTo( _s->hdc, iRight, y );
+                  #if defined( __SETGUI__ )
+                  if( _s->bGui )
+                  {
+                     SelectObject( _s->hGuiDC, hPen );
+                     MoveToEx( _s->hGuiDC, x, y, NULL );
+                     LineTo( _s->hGuiDC, iRight, y );
+                  }
+                  #endif
+               }
+               else                                      /* Vertical */
+               {
+                  SelectObject( _s->hdc, hPen );
+                  MoveToEx( _s->hdc, x, y, NULL );
+                  LineTo( _s->hdc, x, iBottom );
+                  #if defined( __SETGUI__ )
+                  if( _s->bGui )
+                  {
+                     SelectObject( _s->hGuiDC, hPen );
+                     MoveToEx( _s->hGuiDC, x, y, NULL );
+                     LineTo( _s->hGuiDC, x, iBottom );
+                  }
+                  #endif
+               }
+               break;
+         }
+
+         hb_retl( HB_TRUE );
       }
-
-      hPen = _s->pGUI->hUserPens[ iSlot ];
-
-      switch( iFormat )
-      {
-         case 0:                                         /* Raised */
-            if( iOrient == 0 )                           /* Horizontal */
-            {
-               SelectObject( _s->hdc, _s->pGUI->penWhite );
-               MoveToEx( _s->hdc, x, y, NULL );
-               LineTo( _s->hdc, iRight, y );
-               SelectObject( _s->hdc, hPen );
-               MoveToEx( _s->hdc, x, y + 1, NULL );
-               LineTo( _s->hdc, iRight, y + 1 );
-               #if defined( __SETGUI__ )
-               if( _s->bGui )
-               {
-                  SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
-                  MoveToEx( _s->hGuiDC, x, y, NULL );
-                  LineTo( _s->hGuiDC, iRight, y );
-                  SelectObject( _s->hGuiDC, hPen );
-                  MoveToEx( _s->hGuiDC, x, y + 1, NULL );
-                  LineTo( _s->hGuiDC, iRight, y + 1 );
-               }
-               #endif
-            }
-            else                                       /* Vertical */
-            {
-               SelectObject( _s->hdc, _s->pGUI->penWhite );
-               MoveToEx( _s->hdc, x, y, NULL );
-               LineTo( _s->hdc, x, iBottom );
-               SelectObject( _s->hdc, hPen );
-               MoveToEx( _s->hdc, x + 1, y, NULL );
-               LineTo( _s->hdc, x + 1, iBottom );
-               #if defined( __SETGUI__ )
-               if( _s->bGui )
-               {
-                  SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
-                  MoveToEx( _s->hGuiDC, x, y, NULL );
-                  LineTo( _s->hGuiDC, x, iBottom );
-                  SelectObject( _s->hGuiDC, hPen );
-                  MoveToEx( _s->hGuiDC, x + 1, y, NULL );
-                  LineTo( _s->hGuiDC, x + 1, iBottom );
-               }
-               #endif
-            }
-            break;
-
-         case 1:                                      /* Recessed */
-            if( iOrient == 0 )                        /* Horizontal */
-            {
-               SelectObject( _s->hdc, hPen );
-               MoveToEx( _s->hdc, x, y, NULL );
-               LineTo( _s->hdc, iRight, y );
-               SelectObject( _s->hdc, _s->pGUI->penWhite );
-               MoveToEx( _s->hdc, x, y + 1, NULL );
-               LineTo( _s->hdc, iRight, y + 1 );
-               #if defined( __SETGUI__ )
-               if( _s->bGui )
-               {
-                  SelectObject( _s->hGuiDC, hPen );
-                  MoveToEx( _s->hGuiDC, x, y, NULL );
-                  LineTo( _s->hGuiDC, iRight, y );
-                  SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
-                  MoveToEx( _s->hGuiDC, x, y + 1, NULL );
-                  LineTo( _s->hGuiDC, iRight, y + 1 );
-               }
-               #endif
-            }
-            else                                      /* Vertical */
-            {
-               SelectObject( _s->hdc, hPen );
-               MoveToEx( _s->hdc, x, y, NULL );
-               LineTo( _s->hdc, x, iBottom );
-               SelectObject( _s->hdc, _s->pGUI->penWhite );
-               MoveToEx( _s->hdc, x + 1, y, NULL );
-               LineTo( _s->hdc, x + 1, iBottom );
-               #if defined( __SETGUI__ )
-               if( _s->bGui )
-               {
-                  SelectObject( _s->hGuiDC, hPen );
-                  MoveToEx( _s->hGuiDC, x, y, NULL );
-                  LineTo( _s->hGuiDC, x, iBottom );
-                  SelectObject( _s->hGuiDC, _s->pGUI->penWhite );
-                  MoveToEx( _s->hGuiDC, x + 1, y, NULL );
-                  LineTo( _s->hGuiDC, x + 1, iBottom );
-               }
-               #endif
-            }
-            break;
-
-         case 2:                                      /* Plain */
-            if( iOrient == 0 )                        /* Horizontal */
-            {
-               SelectObject( _s->hdc, hPen );
-               MoveToEx( _s->hdc, x, y, NULL );
-               LineTo( _s->hdc, iRight, y );
-               #if defined( __SETGUI__ )
-               if( _s->bGui )
-               {
-                  SelectObject( _s->hGuiDC, hPen );
-                  MoveToEx( _s->hGuiDC, x, y, NULL );
-                  LineTo( _s->hGuiDC, iRight, y );
-               }
-               #endif
-            }
-            else                                      /* Vertical */
-            {
-               SelectObject( _s->hdc, hPen );
-               MoveToEx( _s->hdc, x, y, NULL );
-               LineTo( _s->hdc, x, iBottom );
-               #if defined( __SETGUI__ )
-               if( _s->bGui )
-               {
-                  SelectObject( _s->hGuiDC, hPen );
-                  MoveToEx( _s->hGuiDC, x, y, NULL );
-                  LineTo( _s->hGuiDC, x, iBottom );
-               }
-               #endif
-            }
-            break;
-      }
-
-      hb_retl( HB_TRUE );
+      else
+         hb_retl( HB_FALSE );
    }
 }
 
@@ -2261,7 +2273,7 @@ HB_FUNC( WVT_DRAWPICTURE )
    {
       int iSlot = hb_parni( 5 ) - 1;
 
-      if( iSlot < WVT_PICTURES_MAX )
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->iPicture ) )
       {
          if( _s->pGUI->iPicture[ iSlot ] )
          {
@@ -2778,15 +2790,17 @@ HB_FUNC( WVT_CREATEFONT )
 
    if( _s )
    {
-      LOGFONT logfont;     /* = { 0,0,0 }; */
+      LOGFONT logfont;
       void *  hText = NULL;
+
+      memset( &logfont, 0, sizeof( logfont ) );
 
       logfont.lfEscapement     = hb_parni( 10 ) * 10;
       logfont.lfOrientation    = 0;
       logfont.lfWeight         = hb_parni( 4 );
-      logfont.lfItalic         = ( BYTE ) hb_parl(  5 );
-      logfont.lfUnderline      = ( BYTE ) hb_parl(  6 );
-      logfont.lfStrikeOut      = ( BYTE ) hb_parl(  7 );
+      logfont.lfItalic         = ( BYTE ) hb_parl( 5 );
+      logfont.lfUnderline      = ( BYTE ) hb_parl( 6 );
+      logfont.lfStrikeOut      = ( BYTE ) hb_parl( 7 );
       logfont.lfCharSet        = ( BYTE ) hb_parnidef( 8, _s->CodePage );
       logfont.lfOutPrecision   = 0;
       logfont.lfClipPrecision  = 0;
@@ -2812,18 +2826,23 @@ HB_FUNC( WVT_LOADPICTURE )
 
    if( _s )
    {
-      void *     hImage;
-      IPicture * iPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 2, &hImage, NULL ) );
+      int iSlot = hb_parni( 1 ) - 1;
 
-      hb_strfree( hImage );
-      if( iPicture )
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->iPicture ) )
       {
-         int iSlot = hb_parni( 1 ) - 1;
+         void * hImage;
 
-         if( _s->pGUI->iPicture[ iSlot ] )
-            hb_wvt_gtDestroyPicture( _s->pGUI->iPicture[ iSlot ] );
-         _s->pGUI->iPicture[ iSlot ] = iPicture;
-         bResult = HB_TRUE;
+         IPicture * iPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 2, &hImage, NULL ) );
+
+         hb_strfree( hImage );
+
+         if( iPicture )
+         {
+            if( _s->pGUI->iPicture[ iSlot ] )
+               hb_wvt_gtDestroyPicture( _s->pGUI->iPicture[ iSlot ] );
+            _s->pGUI->iPicture[ iSlot ] = iPicture;
+            bResult = HB_TRUE;
+         }
       }
    }
 #endif
@@ -2857,21 +2876,25 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
 
    if( _s )
    {
-      void *     hResource;
-      void *     hSection;
-      IPicture * iPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 2, &hResource, NULL ), HB_PARSTR( 3, &hSection, NULL ) );
+      int iSlot = hb_parni( 1 ) - 1;
 
-      hb_strfree( hResource );
-      hb_strfree( hSection );
-
-      if( iPicture )
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->iPicture ) )
       {
-         int iSlot = hb_parni( 1 ) - 1;
+         void * hResource;
+         void * hSection;
 
-         if( _s->pGUI->iPicture[ iSlot ] )
-            hb_wvt_gtDestroyPicture( _s->pGUI->iPicture[ iSlot ] );
-         _s->pGUI->iPicture[ iSlot ] = iPicture;
-         bResult = HB_TRUE;
+         IPicture * iPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 2, &hResource, NULL ), HB_PARSTR( 3, &hSection, NULL ) );
+
+         hb_strfree( hResource );
+         hb_strfree( hSection );
+
+         if( iPicture )
+         {
+            if( _s->pGUI->iPicture[ iSlot ] )
+               hb_wvt_gtDestroyPicture( _s->pGUI->iPicture[ iSlot ] );
+            _s->pGUI->iPicture[ iSlot ] = iPicture;
+            bResult = HB_TRUE;
+         }
       }
    }
 #endif
@@ -2881,16 +2904,16 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
 HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
 {
 #if ! defined( HB_OS_WIN_CE )
-   void *     hResource;
-   void *     hSection;
+   void * hResource;
+   void * hSection;
+
    IPicture * iPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 1, &hResource, NULL ), HB_PARSTR( 2, &hSection, NULL ) );
 
    hb_strfree( hResource );
    hb_strfree( hSection );
+
    if( iPicture )
-   {
       hb_retnl( ( HB_PTRDIFF ) iPicture );
-   }
 #endif
 }
 
@@ -2902,35 +2925,40 @@ HB_FUNC( WVT_LOADFONT )
 
    if( _s )
    {
-      LOGFONT logfont;     /* = { 0 }; */
-      HFONT   hFont;
-      void *  hF = NULL;
+      int iSlot = hb_parni( 1 ) - 1;
 
-      logfont.lfEscapement     = hb_parni( 11 ) * 10;
-      logfont.lfOrientation    = 0;
-      logfont.lfWeight         = hb_parni( 5 );
-      logfont.lfItalic         = ( BYTE ) hb_parl(  6 );
-      logfont.lfUnderline      = ( BYTE ) hb_parl(  7 );
-      logfont.lfStrikeOut      = ( BYTE ) hb_parl(  8 );
-      logfont.lfCharSet        = ( BYTE ) hb_parnidef( 9, _s->CodePage );
-      logfont.lfOutPrecision   = 0;
-      logfont.lfClipPrecision  = 0;
-      logfont.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
-      logfont.lfPitchAndFamily = FF_DONTCARE;
-      logfont.lfHeight         = hb_parnidef( 3, _s->fontHeight );
-      logfont.lfWidth = hb_parnidef( 4, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
-
-      HB_STRNCPY( logfont.lfFaceName, ( HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hF, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
-      hb_strfree( hF );
-
-      hFont = CreateFontIndirect( &logfont );
-      if( hFont )
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserFonts ) )
       {
-         int iSlot = hb_parni( 1 ) - 1;
+         LOGFONT logfont;
+         HFONT   hFont;
+         void *  hF = NULL;
 
-         if( _s->pGUI->hUserFonts[ iSlot ] )
-            DeleteObject( _s->pGUI->hUserFonts[ iSlot ] );
-         _s->pGUI->hUserFonts[ iSlot ] = hFont;
+         memset( &logfont, 0, sizeof( logfont ) );
+
+         logfont.lfEscapement     = hb_parni( 11 ) * 10;
+         logfont.lfOrientation    = 0;
+         logfont.lfWeight         = hb_parni( 5 );
+         logfont.lfItalic         = ( BYTE ) hb_parl(  6 );
+         logfont.lfUnderline      = ( BYTE ) hb_parl(  7 );
+         logfont.lfStrikeOut      = ( BYTE ) hb_parl(  8 );
+         logfont.lfCharSet        = ( BYTE ) hb_parnidef( 9, _s->CodePage );
+         logfont.lfOutPrecision   = 0;
+         logfont.lfClipPrecision  = 0;
+         logfont.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
+         logfont.lfPitchAndFamily = FF_DONTCARE;
+         logfont.lfHeight         = hb_parnidef( 3, _s->fontHeight );
+         logfont.lfWidth = hb_parnidef( 4, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
+
+         HB_STRNCPY( logfont.lfFaceName, ( HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hF, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+         hb_strfree( hF );
+
+         hFont = CreateFontIndirect( &logfont );
+         if( hFont )
+         {
+            if( _s->pGUI->hUserFonts[ iSlot ] )
+               DeleteObject( _s->pGUI->hUserFonts[ iSlot ] );
+            _s->pGUI->hUserFonts[ iSlot ] = hFont;
+         }
       }
    }
 }
@@ -2938,29 +2966,34 @@ HB_FUNC( WVT_LOADFONT )
 /* Wvt_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
 HB_FUNC( WVT_LOADPEN )
 {
+   HB_BOOL bResult = HB_FALSE;
+
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
    {
-      int      iPenWidth = hb_parni( 2 );
-      int      iPenStyle = hb_parni( 3 );
-      COLORREF crColor   = ( COLORREF ) hb_parnldef( 4, RGB( 0, 0, 0 ) );
+      int iSlot = hb_parni( 1 ) - 1;
 
-      HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
-
-      if( hPen )
+      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserPens ) )
       {
-         int iSlot = hb_parni( 1 ) - 1;
+         int      iPenWidth = hb_parni( 2 );
+         int      iPenStyle = hb_parni( 3 );
+         COLORREF crColor   = ( COLORREF ) hb_parnldef( 4, RGB( 0, 0, 0 ) );
 
-         if( _s->pGUI->hUserPens[ iSlot ] )
-            DeleteObject( _s->pGUI->hUserPens[ iSlot ] );
-         _s->pGUI->hUserPens[ iSlot ] = hPen;
+         HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
 
-         hb_retl( HB_TRUE );
+         if( hPen )
+         {
+            if( _s->pGUI->hUserPens[ iSlot ] )
+               DeleteObject( _s->pGUI->hUserPens[ iSlot ] );
+            _s->pGUI->hUserPens[ iSlot ] = hPen;
+
+            bResult = HB_TRUE;
+         }
       }
-      else
-         hb_retl( HB_FALSE );
    }
+
+   hb_retl( bResult );
 }
 
 /* aScr := Wvt_SaveScreen( nTop, nLeft, nBottom, nRight ) */
