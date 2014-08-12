@@ -749,8 +749,9 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
    return aFont;
 }
 
-/*                   An Alternative to WndProc Callbacks                */
+/* An Alternative to WndProc Callbacks */
 
+#if ! defined( HB_OS_WIN_CE )
 BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
    HB_BOOL  bret  = HB_FALSE;
@@ -789,6 +790,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
 
    return bret;
 }
+#endif
 
 /* Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, ;
                    viewScreenFonts, viewPrinterFonts ) */
@@ -1112,7 +1114,12 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
    HWND     hWnd   = hbwapi_par_raw_HWND( 1 );
    PHB_ITEM pBlock = hb_itemNew( hb_param( 2, HB_IT_EVALITEM ) );
 
+#if defined( HB_OS_WIN_CE ) && defined( __MINGW32__ )
+   /* Workaround for bug in cegcc headers [as of version 0.55] */
+   SetProp( hWnd, ( LPCSTR ) TEXT( "BLOCKCALLBACK" ), pBlock );
+#else
    SetProp( hWnd, TEXT( "BLOCKCALLBACK" ), pBlock );
+#endif
 
 #if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
    oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) ControlWindowProcedure );

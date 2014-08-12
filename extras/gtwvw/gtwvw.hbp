@@ -6,7 +6,10 @@
 -w3 -es2
 #-winuni
 
-"-stop={!allwin}Skipped: '${hb_name}' only supported on win platform."
+"-stop={!win}Skipped: '${hb_name}' only supported on win platform."
+
+# Optimize build time and make sure we build even with this option
+-cflag=-DWIN32_LEAN_AND_MEAN
 
 -hbx=${hb_name}
 

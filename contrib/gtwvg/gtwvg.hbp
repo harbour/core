@@ -6,7 +6,7 @@
 -w3 -es2
 -winuni
 
--stop{!win}
+-stop{!allwin}
 
 hbwin.hbc
 

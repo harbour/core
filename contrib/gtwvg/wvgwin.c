@@ -713,8 +713,9 @@ HB_FUNC( WVG_ISMENUITEMCHECKED )
       hb_retl( HB_FALSE );
 }
 
-HB_FUNC( WVG_ISMENUITEMENABLED )
+HB_FUNC( WVG_ISMENUITEMENABLED )  /* = grayed */
 {
+#if ! defined( HB_OS_WIN_CE )
    MENUITEMINFO lpmii;
 
    memset( &lpmii, 0, sizeof( lpmii ) );
@@ -723,9 +724,12 @@ HB_FUNC( WVG_ISMENUITEMENABLED )
    lpmii.fMask  = MIIM_STATE;
 
    if( GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
-      hb_retl( ( lpmii.fState & MFS_DISABLED ) == 0 );
+      hb_retl( ( lpmii.fState & MFS_DISABLED /* equivalent to MFS_GRAYED */ ) == 0 );
    else
       hb_retl( HB_TRUE );
+#else
+   hb_retl( HB_TRUE );
+#endif
 }
 
 HB_FUNC( WVG_SETMENUITEM )
@@ -736,9 +740,17 @@ HB_FUNC( WVG_SETMENUITEM )
    memset( &lpmii, 0, sizeof( lpmii ) );
 
    lpmii.cbSize = sizeof( lpmii );
-   lpmii.fMask  = hb_parl( 5 ) ? MIIM_STRING : MIIM_SUBMENU;
+#if ! defined( HB_OS_WIN_CE )
    if( hb_parl( 5 ) )
+   {
+      lpmii.fMask = MIIM_STRING;
       lpmii.dwTypeData = ( LPTSTR ) HB_PARSTR( 4, &hText, NULL );
+   }
+   else
+      lpmii.fMask = MIIM_SUBMENU;
+#else
+   lpmii.fMask = MIIM_SUBMENU;
+#endif
 
    hb_retl( ( HB_BOOL ) SetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) );
 
@@ -1257,9 +1269,11 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       case CB_DELETESTRING:
          hb_retnint( SendMessage( hCB, CB_DELETESTRING, hb_parni( 3 ), 0 ) );
          break;
+#if defined( CB_DIR )
       case CB_DIR:
          hb_retnint( SendMessage( hCB, CB_DIR, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
          break;
+#endif
       case CB_FINDSTRING:
          hb_retnint( SendMessage( hCB, CB_FINDSTRING, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
          break;
@@ -1268,6 +1282,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
          break;
       case CB_GETCOMBOBOXINFO:
       {
+#if ! defined( HB_OS_WIN_CE )
          COMBOBOXINFO cbi;
          PHB_ITEM     pCbi = hb_itemNew( NULL );
          PHB_ITEM     pRc1 = hb_itemNew( NULL );
@@ -1305,6 +1320,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
             hb_itemRelease( pRc1 );
             hb_itemRelease( pRc2 );
          }
+#endif
          break;
       }
       case CB_GETCOUNT:

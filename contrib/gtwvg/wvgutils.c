@@ -902,12 +902,16 @@ HB_FUNC( WVT_TRACKPOPUPMENU )
 
 HB_FUNC( WVT_GETMENU )
 {
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
       hb_retnint( ( HB_PTRDIFF ) GetMenu( _s->hWnd ) );
    else
       hb_retnint( 0 );
+#else
+   hb_retnint( 0 );
+#endif
 }
 
 /* Dialogs */

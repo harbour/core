@@ -84,7 +84,7 @@
 
 #include "hbgfxdef.ch"
 
-static WVW_GLOB * s_wvw;  /* TOFIX: MT compatibility */
+static WVW_GLOB * s_wvw = NULL;  /* TOFIX: MT compatibility */
 static HB_BOOL    s_fInit = HB_FALSE;
 
 static COLORREF s_COLORS[] = {
@@ -6314,7 +6314,6 @@ void hb_gt_wvw_DrawOutline( HB_UINT nWin, int iTop, int iLeft, int iBottom, int 
 }
 
 /* NOTE: are these workable in MULTI_GT ? */
-/* static void gtFnInit( PHB_GT_FUNCS gt_funcs ) */
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p )", pFuncTable ) );
@@ -6373,27 +6372,27 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 HB_BOOL hb_gt_wvw_GetMainCoordMode( void )
 {
-   return s_wvw->fMainCoordMode;
+   return s_wvw ? s_wvw->fMainCoordMode : HB_FALSE;
 }
 
 HB_UINT hb_gt_wvw_GetNumWindows( void )
 {
-   return s_wvw->usNumWindows;
+   return s_wvw ? s_wvw->usNumWindows : 0;
 }
 
 HB_UINT hb_gt_wvw_GetCurWindow( void )
 {
-   return s_wvw->usCurWindow;
+   return s_wvw ? s_wvw->usCurWindow : 0;
 }
 
 WVW_WIN * hb_gt_wvw_GetWindowsData( HB_UINT iWin )
 {
-   return s_wvw->pWin[ iWin ];
+   return s_wvw ? s_wvw->pWin[ iWin ] : NULL;
 }
 
 TCHAR * hb_gt_wvw_GetAppName( void )
 {
-   return s_wvw->szAppName;
+   return s_wvw ? s_wvw->szAppName : TEXT( "" );
 }
 
 WVW_GLOB * hb_gt_wvw_GetWvwData( void )

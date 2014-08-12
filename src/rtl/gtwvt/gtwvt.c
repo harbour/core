@@ -170,7 +170,7 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
 
    HB_WVT_LOCK();
 
-   while( iCount && iPos < WVT_MAX_WINDOWS )
+   while( iCount && iPos < ( int ) HB_SIZEOFARRAY( s_wvtWindows ) )
    {
       if( s_wvtWindows[ iPos ] )
       {
@@ -195,7 +195,7 @@ static HB_BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 
    HB_WVT_LOCK();
 
-   if( s_wvtCount < WVT_MAX_WINDOWS )
+   if( s_wvtCount < ( int ) HB_SIZEOFARRAY( s_wvtWindows ) )
    {
       int iPos = 0;
       do
@@ -211,7 +211,7 @@ static HB_BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
          }
          ++iPos;
       }
-      while( iPos < WVT_MAX_WINDOWS );
+      while( iPos < ( int ) HB_SIZEOFARRAY( s_wvtWindows ) );
    }
 
    HB_WVT_UNLOCK();
@@ -1619,7 +1619,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
     * in the buffer - it's Clipper behavior, [druzus]
     */
    pWVT->Keys[ pWVT->keyLastPos = iPos ] = iKey;
-   if( ++iPos >= WVT_CHAR_QUEUE_SIZE )
+   if( ++iPos >= ( int ) HB_SIZEOFARRAY( pWVT->Keys ) )
       iPos = 0;
    if( iPos != pWVT->keyPointerOut )
       pWVT->keyPointerIn = iPos;
@@ -1630,7 +1630,7 @@ static HB_BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
    if( pWVT->keyPointerOut != pWVT->keyPointerIn )
    {
       *iKey = pWVT->Keys[ pWVT->keyPointerOut ];
-      if( ++pWVT->keyPointerOut >= WVT_CHAR_QUEUE_SIZE )
+      if( ++pWVT->keyPointerOut >= ( int ) HB_SIZEOFARRAY( pWVT->Keys ) )
          pWVT->keyPointerOut = 0;
 
       return HB_TRUE;

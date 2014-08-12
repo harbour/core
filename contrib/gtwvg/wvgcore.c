@@ -610,11 +610,12 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
    }
 #else
    HB_SYMBOL_UNUSED( hdc );
-   HB_SYMBOL_UNUSED( x1 );
-   HB_SYMBOL_UNUSED( y1 );
+   HB_SYMBOL_UNUSED( x );
+   HB_SYMBOL_UNUSED( y );
    HB_SYMBOL_UNUSED( wd );
    HB_SYMBOL_UNUSED( ht );
-   HB_SYMBOL_UNUSED( image );
+   HB_SYMBOL_UNUSED( lpImage );
+   HB_SYMBOL_UNUSED( bDoNotScale );
 #endif
 
    return bResult;
@@ -2888,7 +2889,11 @@ HB_FUNC( WVT_LOADPICTURE )
 
 HB_FUNC( WVT_DESTROYPICTURE )
 {
+#if ! defined( HB_OS_WIN_CE )
    hb_retl( hb_wvt_gtDestroyPicture( ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 /* Wvt_LoadPictureEx( cFilePic ) */

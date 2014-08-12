@@ -1,4 +1,6 @@
-{!allwin|!x86}skip=yes
+description=GTWVW (a GTWVG alternative, win-only)
+
+skip={!win}
 
 incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}

@@ -392,6 +392,7 @@ static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int a
    }
 }
 
+#if ! defined( UNICODE )
 static int hb_gt_wvt_key_ansi_to_oem( int c )
 {
    BYTE pszAnsi[ 2 ];
@@ -403,6 +404,7 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
 
    return *pszOem;
 }
+#endif
 
 static int hb_gt_wvt_SizeChanged( PHB_GTWVT pWVT )
 {
@@ -708,8 +710,10 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                            c = pWVT->keyTransTbl[ c ];
 #endif
                      }
+#if ! defined( UNICODE )
                      else if( pWVT->CodePage == OEM_CHARSET )
                         c = hb_gt_wvt_key_ansi_to_oem( c );
+#endif
                      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
                      break;
                }
@@ -1447,9 +1451,15 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             void * hImageName;
 
             pWVT->bIconToFree = HB_TRUE;
+#if defined( HB_OS_WIN_CE )
+            pWVT->hIcon = ( HICON ) LoadImage( NULL,
+                                               HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
+                                               IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+#else
             pWVT->hIcon = ( HICON ) LoadImage( NULL,
                                                HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
                                                IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE );
+#endif
             hb_strfree( hImageName );
             if( pWVT->hWnd )
             {
