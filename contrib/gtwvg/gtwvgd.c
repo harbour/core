@@ -875,11 +875,11 @@ static HB_BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 
             if( pWVT->bMaximized )
             {
-               left = ( ( wi.right - width ) / 2 );
-               top = ( ( wi.bottom - height ) / 2 );
+               left = ( wi.right - width ) / 2;
+               top = ( wi.bottom - height ) / 2;
 
-               left = ( left < 0 ? 0 : left );
-               top = ( top < 0 ? 0 : top );
+               left = left < 0 ? 0 : left;
+               top = top < 0 ? 0 : top;
             }
 
             if( ! pWVT->bFullScreen )
@@ -1250,7 +1250,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                right  = colrowRC.right;
                bottom = colrowRC.bottom;
 
-               nSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
+               nSize = ( bottom - top + 1 ) * ( right - left + 1 + 2 );
                sBuffer = ( TCHAR * ) hb_xgrab( nSize * sizeof( TCHAR ) + 1 );
 
                for( j = 0, irow = top; irow <= bottom; irow++ )
@@ -2486,8 +2486,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, HB_BOOL bResizable )
                   pWVT->ROWS = pWVT->pPP->width;
                   pWVT->COLS = pWVT->pPP->height;
 
-                  pt.x = ( pWVTp->PTEXTSIZE.x * pWVT->pPP->y );
-                  pt.y = ( pWVTp->PTEXTSIZE.y * pWVT->pPP->x );
+                  pt.x = pWVTp->PTEXTSIZE.x * pWVT->pPP->y;
+                  pt.y = pWVTp->PTEXTSIZE.y * pWVT->pPP->x;
                }
                else
                {
@@ -2508,7 +2508,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, HB_BOOL bResizable )
 
                if( pWVT->pPP->bRowCols )
                {
-                  iWidth = ( iBorderLeft * 2 ) + ( pWVT->COLS * pWVT->PTEXTSIZE.x ) + ( iBorderLeft * 2 );;
+                  iWidth = ( iBorderLeft * 2 ) + ( pWVT->COLS * pWVT->PTEXTSIZE.x ) + ( iBorderLeft * 2 );
                   iHeight = iTitlebarHeight + iBorderLeft + ( pWVT->ROWS * pWVT->PTEXTSIZE.y ) + iTitlebarHeight + iBorderLeft;
                   pWVT->pPP->width = iWidth;
                   pWVT->pPP->height = iHeight;
@@ -2539,8 +2539,8 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, HB_BOOL bResizable )
 
       if( pWVT->pPP->bRowCols )
       {
-         pt.x = ( pWVT->PTEXTSIZE.x * pWVT->pPP->y );
-         pt.y = ( pWVT->PTEXTSIZE.y * pWVT->pPP->x );
+         pt.x = pWVT->PTEXTSIZE.x * pWVT->pPP->y;
+         pt.y = pWVT->PTEXTSIZE.y * pWVT->pPP->x;
 
          pWVT->ROWS = pWVT->pPP->width;
          pWVT->COLS = pWVT->pPP->height;
@@ -3171,7 +3171,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             GetWindowRect( pWVT->hWnd, &wi );
 
             borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) ) / 2;
-            borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
+            borderHeight = wi.bottom - wi.top - ( ci.bottom - ci.top );
 
             pInfo->pResult = hb_itemNew( NULL );
             hb_arrayNew( pInfo->pResult, 4 );
@@ -4056,7 +4056,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             break;
 
          case HB_GFX_MAKECOLOR:
-            iRet = ( iTop << 16 ) | ( iLeft << 8 ) | ( iBottom );
+            iRet = ( iTop << 16 ) | ( iLeft << 8 ) | iBottom;
             break;
 
          case HB_GFX_PUTPIXEL:

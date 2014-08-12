@@ -228,7 +228,7 @@ HB_FUNC( WVT_CHOOSECOLOR )
       memset( &cc, 0, sizeof( cc ) );
 
       for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-         crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE ) );
+         crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
       cc.lStructSize  = sizeof( cc );
       cc.hwndOwner    = _s->hWnd;
@@ -1111,7 +1111,7 @@ static LPWORD lpwAlign( LPWORD lpIn )
    return ( LPWORD ) ul;
 }
 
-#define _BUFFERSIZE  65534  /* 64k allow to build up to 255 items on the dialog  */
+#define _BUFFERSIZE  65534  /* 64kB allows to build up to 255 items on the dialog */
 
 HB_FUNC( WVT__MAKEDLGTEMPLATE )
 {
@@ -1127,7 +1127,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
    DWORD   lStyle = hb_parvnl( 1, 3 );
    HB_SIZE nchar;
 
-   /* start to fill in the DLGTEMPLATE information.  addressing by WORDs */
+   /* Start to fill in the DLGTEMPLATE information. Addressing by WORDs */
 
    *p++ = 1;                            /* version */
    *p++ = 0xFFFF;                       /* signature */

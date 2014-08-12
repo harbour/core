@@ -2238,8 +2238,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
                rect = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
 
-               nSize = ( ( rect.bottom - rect.top + 1 ) *
-                         ( rect.right - rect.left + 1 + 2 ) );
+               nSize = ( rect.bottom - rect.top + 1 ) *
+                       ( rect.right - rect.left + 1 + 2 );
                sBuffer = ( TCHAR * ) hb_xgrab( nSize * sizeof( TCHAR ) + 1 );
 
                for( n = 0, row = rect.top; row <= rect.bottom; row++ )
@@ -4187,7 +4187,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             break;
 
          case HB_GFX_MAKECOLOR:
-            iRet = ( iTop << 16 ) | ( iLeft << 8 ) | ( iBottom );
+            iRet = ( iTop << 16 ) | ( iLeft << 8 ) | iBottom;
             break;
 
          case HB_GFX_PUTPIXEL:

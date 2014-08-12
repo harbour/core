@@ -255,7 +255,8 @@ static int PackedDibGetColorTableSize( BITMAPINFO * pPackedDib )
 #if ! defined( HB_OS_WIN_CE )
 static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
 {
-   return ( ( BYTE * ) pPackedDib ) + PackedDibGetInfoHeaderSize( pPackedDib ) +
+   return ( BYTE * ) pPackedDib +
+          PackedDibGetInfoHeaderSize( pPackedDib ) +
           PackedDibGetColorTableSize( pPackedDib );
 }
 #endif
@@ -373,7 +374,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
          UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
 
          hBitmap = ( HBITMAP ) LoadImage(
-            ( HINSTANCE ) wvg_hInstance(),
+            wvg_hInstance(),
             szBitmap,
             IMAGE_BITMAP,
             iExpWidth,
@@ -392,7 +393,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
          hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
 
          hBitmap = ( HBITMAP ) LoadImage(
-            ( HINSTANCE ) wvg_hInstance(),
+            wvg_hInstance(),
             ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) uiBitmap ),
             IMAGE_BITMAP,
             iExpWidth,
@@ -466,7 +467,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
          GetClientRect( hWndSB, &rc );
          width = ( int ) ( rc.right / ( iParts + 1 ) );
          for( n = 0; n < iParts; n++ )
-            ptArray[ n ] = ( width * ( n + 1 ) );
+            ptArray[ n ] = width * ( n + 1 );
 
          ptArray[ iParts ] = -1;
 
@@ -654,7 +655,7 @@ HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
 {
    HWND      hwnd = wvg_parhwnd( 1 );
    HTREEITEM hroot, hitem, hitem1, hitem2, hitem3;
-   int       iExpand = ( hb_parl( 2 ) ? TVE_EXPAND : TVE_COLLAPSE );
+   int       iExpand = hb_parl( 2 ) ? TVE_EXPAND : TVE_COLLAPSE;
    int       iLevels = hb_parni( 3 ) <= 0 ? 5 : hb_parni( 3 );
 
    hroot = TreeView_GetRoot( hwnd );
@@ -758,7 +759,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
    if( msg == WM_INITDIALOG )
    {
       CHOOSEFONT * cf     = ( CHOOSEFONT * ) lParam;
-      PHB_ITEM     pBlock = ( PHB_ITEM ) hb_itemNew( ( PHB_ITEM ) cf->lCustData );
+      PHB_ITEM     pBlock = hb_itemNew( ( PHB_ITEM ) cf->lCustData );
       SetProp( hwnd, TEXT( "DIALOGPROC" ), pBlock );
       binit = HB_TRUE;
    }
@@ -1035,7 +1036,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    memset( &wndclass, 0, sizeof( wndclass ) );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = DefWindowProc;
-   wndclass.hInstance     = ( HINSTANCE ) wvg_hInstance();
+   wndclass.hInstance     = wvg_hInstance();
    wndclass.hIcon         = NULL;
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
    wndclass.hbrBackground = NULL;
@@ -1080,7 +1081,6 @@ HB_FUNC( WVG_BEGINMOUSETRACKING )
 LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
    PHB_ITEM pBlock = ( PHB_ITEM ) GetProp( hwnd, TEXT( "BLOCKCALLBACK" ) );
-   long     lRet;
 
    if( pBlock )
    {
@@ -1099,8 +1099,7 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
       hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
       hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
       hb_vmDo( 4 );
-      lRet = ( long ) hb_parnint( -1 );
-      return lRet;
+      return ( LRESULT ) hb_parnint( -1 );
    }
    return DefWindowProc( hwnd, msg, wParam, lParam );
 }
@@ -1150,9 +1149,9 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 
    memset( &toolInfo, 0, sizeof( toolInfo ) );
    toolInfo.cbSize   = sizeof( toolInfo );
-   toolInfo.hwnd     = ( HWND ) wvg_parhwnd( 1 );
+   toolInfo.hwnd     = wvg_parhwnd( 1 );
    toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-   toolInfo.uId      = ( UINT_PTR ) ( HWND ) wvg_parhwnd( 1 );
+   toolInfo.uId      = ( UINT_PTR ) wvg_parhwnd( 1 );
    toolInfo.lpszText = ( LPTSTR ) TEXT( "" );
 
    if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
@@ -1168,9 +1167,9 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
 
    memset( &toolInfo, 0, sizeof( toolInfo ) );
    toolInfo.cbSize   = sizeof( toolInfo );
-   toolInfo.hwnd     = ( HWND ) wvg_parhwnd( 1 );
+   toolInfo.hwnd     = wvg_parhwnd( 1 );
    toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-   toolInfo.uId      = ( UINT_PTR ) ( HWND ) wvg_parhwnd( 1 );
+   toolInfo.uId      = ( UINT_PTR ) wvg_parhwnd( 1 );
    toolInfo.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
    SendMessage( wvg_parhwnd( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &toolInfo );

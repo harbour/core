@@ -3686,7 +3686,7 @@ static HB_BOOL hb_gt_wvw_SetCaretPos( WVW_WIN * wvw_win )
    if( wvw_win->CaretSize > 0 )
    {
       if( ! s_wvw->fVertCaret )
-         xy.y += ( wvw_win->PTEXTSIZE.y - wvw_win->CaretSize );
+         xy.y += wvw_win->PTEXTSIZE.y - wvw_win->CaretSize;
    }
    else
    {
@@ -5665,7 +5665,7 @@ static void hb_gt_wvwFillLineSpace( WVW_WIN * wvw_win, HDC hdc, USHORT startCol,
    hBrush = CreateBrushIndirect( &lb );
 
    rc.bottom = rc.top;
-   rc.top   -= ( wvw_win->iLineSpacing / 2 );
+   rc.top   -= wvw_win->iLineSpacing / 2;
    FillRect( hdc, &rc, hBrush );
 
    rc.top    = rc.bottom + wvw_win->PTEXTSIZE.y;

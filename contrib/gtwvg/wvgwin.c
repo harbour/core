@@ -210,6 +210,7 @@ HB_FUNC( WVG_SETDLGITEMTEXT )
    void * hText;
 
    SetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), HB_PARSTR( 3, &hText, NULL ) );
+
    hb_strfree( hText );
 }
 
@@ -564,7 +565,7 @@ HB_FUNC( WVG_CHOOSECOLOR )
    memset( &cc, 0, sizeof( cc ) );
 
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-      crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE ) );
+      crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
    cc.lStructSize  = sizeof( cc );
    cc.hwndOwner    = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
@@ -613,11 +614,11 @@ HB_FUNC( WVG_SETMENU )
 
    GetWindowRect( hWnd, &wi );
    GetClientRect( hWnd, &ci );
-   height = ( ci.bottom - ci.top );
-   width  = ( ci.right - ci.left );
+   height = ci.bottom - ci.top;
+   width  = ci.right - ci.left;
 
-   width  += ( wi.right - wi.left - ci.right );
-   height += ( wi.bottom - wi.top - ci.bottom );
+   width  += wi.right - wi.left - ci.right;
+   height += wi.bottom - wi.top - ci.bottom;
 
    SetWindowPos( hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
 
