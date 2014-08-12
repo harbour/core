@@ -482,7 +482,9 @@ STATIC PROCEDURE CancelVar( nwinnum, aEBGets, lDone )
 
    RETURN
 
-STATIC PROCEDURE ToCloseWindow( nwinnum, lPermitted )
+STATIC PROCEDURE ToCloseWindow( nwinnum, /* @ */ lPermitted )
+
+   HB_SYMBOL_UNUSED( lPermitted )
 
    // allow to close topmost window only
    IF nwinnum != wvw_nNumWindows() - 1

@@ -12,8 +12,8 @@
 
 gtwvwd.c
 
-draw.c
-funcs.c
+wvwdraw.c
+wvwutils.c
 
 checkbox.c
 combobox.c
@@ -25,6 +25,8 @@ scrollbr.c
 statbar.c
 static.c
 toolbar.c
+
+legacy.c
 
 clipbrd.prg
 

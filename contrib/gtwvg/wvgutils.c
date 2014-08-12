@@ -1123,9 +1123,8 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
    if( pdlgtemplate )
    {
-      WORD    nItems = ( WORD ) hb_parvni( 1, 4 );
+      WORD    nItems = ( WORD ) hb_parvni( 1, 4 ), i;
       DWORD   lStyle = hb_parvnl( 1, 3 );
-      int     i;
       HB_SIZE nchar;
 
       /* start to fill in the dlgtemplate information.  addressing by WORDs */
@@ -1251,6 +1250,7 @@ HB_FUNC( WVT_LBADDSTRING )
    void * hText;
 
    SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+
    hb_strfree( hText );
 }
 
@@ -1274,6 +1274,7 @@ HB_FUNC( WVT_CBADDSTRING )
    void * hText;
 
    SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+
    hb_strfree( hText );
 }
 

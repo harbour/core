@@ -244,7 +244,7 @@ PROCEDURE Main()
    CreateToolbar( nCurWindow )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawLabel( nWindow, 1, 40, cLabel, 6,, RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawLabel( nWindow, 1, 40, cLabel, 6,, wvw_RGB( 255, 255, 255 ), wvw_RGB( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!", MaxRow() - 2, 67, , , {|| xDebugInfo() } ) )
@@ -449,7 +449,7 @@ STATIC PROCEDURE Demo_Get()
    wvw_SetIcon( , hb_DirBase() + "vr_1.ico" )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawLabel( nWindow, 1, nRight - nLeft, cLabel, 2,, RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawLabel( nWindow, 1, nRight - nLeft, cLabel, 2,, wvw_RGB( 255, 255, 255 ), wvw_RGB( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxRecessed( nWindow, 7 - nTop, 61 - nLeft, 13 - nTop, 70 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxGroup( nWindow, 15 - nTop, 59 - nLeft, 18 - nTop, 72 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
@@ -546,7 +546,7 @@ STATIC PROCEDURE DEMO_Browse()
 
    oBrowse:configure()
 
-   wvw_SetPen( nStyle, 0, RGB( 210, 1210, 210 ) )
+   wvw_SetPen( nStyle, 0, wvw_RGB( 210, 1210, 210 ) )
    wvw_SetIcon( , hb_DirBase() + "dia_excl.ico" )
 
    aColumnsSep := Array( oBrowse:colCount )
@@ -1553,7 +1553,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
    LOCAL lMouseOver := ::lHover // 2004-03-03,was: ( MRow() >= ::nrow1 .AND. MRow() <= ::nrow2 .AND. MCol() >= ::ncol1 .AND. MCol() <= ::ncol2 )
    LOCAL lPressed := ::lPressed .AND. lMouseOver
    LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_GetFontInfo( nWinNum ), NIL )
-   LOCAL nLabelColor := iif( lPressed, RGB( 96, 96, 96 ), RGB( 0, 0, 0 ) )
+   LOCAL nLabelColor := iif( lPressed, wvw_RGB( 96, 96, 96 ), wvw_RGB( 0, 0, 0 ) )
    LOCAL lUseImage := HB_ISSTRING( ::cImage ) // 2004-03-25
 
    IF ! ::lVisible .OR. ::nType == _BUTTON_NONE
@@ -1584,7 +1584,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
       ENDIF
 
       IF ! Empty( ::cCaption )
-         wvw_DrawLabel( nWinNum, ::nRow1, _nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, RGB( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
+         wvw_DrawLabel( nWinNum, ::nRow1, _nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, wvw_RGB( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
       ENDIF
    ELSE
       IF lMouseOver .OR. ::nType == _BUTTON_NORMAL .OR. ::nType == _BUTTON_HARD
@@ -1602,13 +1602,13 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
       ENDIF
 
       IF ! ::lEnable
-         nLabelColor := RGB( 96, 96, 96 )
+         nLabelColor := wvw_RGB( 96, 96, 96 )
       ELSEIF lMouseOver
-         nLabelColor := RGB( 255, 0, 0 )
+         nLabelColor := wvw_RGB( 255, 0, 0 )
       ENDIF
 
       IF ! Empty( ::cCaption )
-         wvw_DrawLabel( nWinNum, ::nRow1, _nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, RGB( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
+         wvw_DrawLabel( nWinNum, ::nRow1, _nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, wvw_RGB( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
       ENDIF
    ENDIF
    SetCursor( nOldCursor )

@@ -170,7 +170,7 @@ STATIC PROCEDURE xBrowse1()
    nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
 
 #ifdef __GTWVW__
-   wvw_SetPen( 0, 0, RGB( 210, 1210, 210 ) )
+   wvw_SetPen( 0, 0, wvw_RGB( 210, 1210, 210 ) )
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep

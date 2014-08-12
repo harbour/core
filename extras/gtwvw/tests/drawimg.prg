@@ -285,7 +285,6 @@ STATIC FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum )
 STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict )
 
    LOCAL i
-   LOCAL nOperation := WOBJ_ADD_OVERWRITE
 
    // exist nType + cId ?
    IF ( i := AScan( s_aPObjList[ nWinNum + 1 ], {| x | x:nType == oWPaint:nType .AND. x:cId == oWPaint:cId } ) ) > 0
@@ -316,7 +315,7 @@ STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict )
 STATIC FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 
    LOCAL i
-   LOCAL lDelAll := ! HB_ISTRING( cId )
+   LOCAL lDelAll := ! HB_ISSTRING( cId )
    LOCAL nDeleted := 0
    LOCAL nLen
 
