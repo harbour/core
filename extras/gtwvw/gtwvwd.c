@@ -7676,22 +7676,6 @@ HB_FUNC( WVW_RESTORE )
               you may however uses MEMVAR such as PUBLIC variables
  */
 
-
-/* Helper routine.  Take an input pointer, return closest
- * pointer that is aligned on a DWORD (4 byte) boundary.
- */
-
-LPWORD hb_gt_wvw_lpwAlign( LPWORD lpIn )
-{
-   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
-
-   ul  += 3;
-   ul >>= 2;
-   ul <<= 2;
-
-   return ( LPWORD ) ul;
-}
-
 IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT iresimage, long * lwidth, long * lheight )
 {
    HBITMAP    hbmpx;

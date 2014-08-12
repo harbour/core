@@ -94,7 +94,7 @@
 
 HB_EXTERN_BEGIN
 
-/*-*/
+/* - */
 
 #define WVT_CHAR_QUEUE_SIZE         256
 #define WVT_MAX_TITLE_SIZE          128
@@ -137,13 +137,13 @@ HB_EXTERN_BEGIN
 #define HB_MSG_NOTIFYICON           ( WM_USER + 1399 )
 #define HB_ID_NOTIFYICON            99
 
-/*-*/
+/* - */
 #define WVT_PICTURES_MAX            50
 #define WVT_FONTS_MAX               50
 #define WVT_PENS_MAX                50
 #define WVT_DLGML_MAX               50
 #define WVT_DLGMD_MAX               50
-/*-*/
+/* - */
 
 #if defined( __DMC__ )
    #if ( _WIN32_IE >= 0x0300 )
@@ -216,7 +216,7 @@ HB_EXTERN_BEGIN
    #endif
 #endif
 
-/*-*/
+/* - */
 
 typedef BOOL ( WINAPI * wvtGradientFill )     (
                       HDC        hdc,
@@ -232,7 +232,7 @@ typedef BOOL ( WINAPI * wvtSetLayeredWindowAttributes )(
                       BYTE       bAlpha,
                       DWORD      dwFlags     );
 
-/*-*/
+/* - */
 
 typedef struct
 {
@@ -471,7 +471,7 @@ typedef struct
 
 } HB_GTWVT, * PHB_GTWVT;
 
-/*-*/
+/* - */
 
 #ifndef INVALID_FILE_SIZE
    #define INVALID_FILE_SIZE ( DWORD ) 0xFFFFFFFF
@@ -497,7 +497,7 @@ typedef struct
    #define TVIS_EXPANDPARTIAL 0x0080
 #endif
 
-/*-*/
+/* - */
 
 typedef enum
 {
@@ -525,7 +525,7 @@ typedef enum
    GTEVENT_SHUTDOWN   = 7
 } HB_gt_event_enum;
 
-/*-*/
+/* - */
 
 /* xHarbour compatible definitions */
 #if ! defined( K_SH_LEFT )
@@ -582,7 +582,6 @@ extern HB_EXPORT HB_BOOL       hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd
 extern HB_EXPORT void          hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 extern HB_EXPORT void          hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 
-extern HB_EXPORT LPWORD        lpwAlign( LPWORD lpIn );
 extern HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 extern HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 
@@ -593,7 +592,7 @@ extern HB_EXPORT PHB_GTWVT     hb_wvt_gtGetWVT( void );
 
 extern HB_EXPORT void          hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
 
-/*-*/
+/* - */
 
 extern HB_BOOL  wvt_Array2Rect( PHB_ITEM aRect, RECT * rc );
 extern PHB_ITEM wvt_Rect2Array( RECT * rc );

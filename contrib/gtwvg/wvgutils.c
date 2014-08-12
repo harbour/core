@@ -1098,6 +1098,18 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    }
 }
 
+/* Helper routine.  Take an input pointer, return closest
+   pointer that is aligned on a DWORD (4 byte) boundary. */
+static LPWORD lpwAlign( LPWORD lpIn )
+{
+   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
+
+   ul  += 3;
+   ul >>= 2;
+   ul <<= 2;
+   return ( LPWORD ) ul;
+}
+
 HB_FUNC( WVT__MAKEDLGTEMPLATE )
 {
    WORD * p, * pdlgtemplate;
@@ -1232,19 +1244,6 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
    }
    else
       hb_retc_null();
-}
-
-/* Helper routine.  Take an input pointer, return closest
- * pointer that is aligned on a DWORD (4 byte) boundary.
- */
-LPWORD lpwAlign( LPWORD lpIn )
-{
-   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
-
-   ul  += 3;
-   ul >>= 2;
-   ul <<= 2;
-   return ( LPWORD ) ul;
 }
 
 HB_FUNC( WVT_LBADDSTRING )

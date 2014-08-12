@@ -1873,6 +1873,18 @@ HB_FUNC( WVW_SETBRUSH )
    hb_retl( HB_FALSE );
 }
 
+/* Helper routine.  Take an input pointer, return closest
+   pointer that is aligned on a DWORD (4 byte) boundary. */
+static LPWORD hb_gt_wvw_lpwAlign( LPWORD lpIn )
+{
+   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
+
+   ul  += 3;
+   ul >>= 2;
+   ul <<= 2;
+
+   return ( LPWORD ) ul;
+}
 
 HB_FUNC( WVW__MAKEDLGTEMPLATE )
 {

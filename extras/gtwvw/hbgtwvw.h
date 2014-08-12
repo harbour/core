@@ -554,7 +554,6 @@ extern int        hb_gt_wvw_GetMouseY( WVW_WIN * wvw_win );
 extern int        hb_gt_wvw_RowOfs( HB_UINT nWin );
 extern int        hb_gt_wvw_ColOfs( HB_UINT nWin );
 extern IPicture * hb_gt_wvw_LoadPicture( const char * image );
-extern LPWORD     hb_gt_wvw_lpwAlign( LPWORD lpIn );
 
 extern WVW_CTRL * hb_gt_wvw_GetControlData( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, HB_UINT nId );
 
