@@ -842,11 +842,11 @@ HB_FUNC( WVW_DRAWBOXRAISED )
    HB_UINT   nWin    = WVW_WHICH_WINDOW;
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   POINT   xy;
-   int     iTop, iLeft, iBottom, iRight;
-   HB_BOOL bUseArray = HB_ISARRAY( 6 );
-   HB_BOOL bTight    = hb_parl( 6 );
-   int     iOLeft, iOTop, iORight, iOBottom;
+   HB_BOOL bTight = hb_parl( 6 );
+
+   POINT xy;
+   int   iTop, iLeft, iBottom, iRight;
+   int   iOLeft, iOTop, iORight, iOBottom;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -863,7 +863,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
       iOBottom = -1;
       iORight  = -1;
    }
-   else if( bUseArray )
+   else if( HB_ISARRAY( 6 ) )
    {
       iOTop    = hb_parvni( 6, 1 ) - 1;
       iOLeft   = hb_parvni( 6, 2 ) - 1;
@@ -910,11 +910,11 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
    HB_UINT   nWin    = WVW_WHICH_WINDOW;
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   POINT   xy;
-   int     iTop, iLeft, iBottom, iRight;
-   HB_BOOL bUseArray = HB_ISARRAY( 6 );
-   HB_BOOL bTight    = hb_parl( 6 );
-   int     iOLeft, iOTop, iORight, iOBottom;
+   HB_BOOL bTight = hb_parl( 6 );
+
+   POINT xy;
+   int   iTop, iLeft, iBottom, iRight;
+   int   iOLeft, iOTop, iORight, iOBottom;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -931,7 +931,7 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
       iOBottom = -1;
       iORight  = -1;
    }
-   else if( bUseArray )
+   else if( HB_ISARRAY( 6 ) )
    {
       iOTop    = hb_parvni( 6, 1 ) - 1;
       iOLeft   = hb_parvni( 6, 2 ) - 1;
@@ -1122,12 +1122,11 @@ HB_FUNC( WVW_DRAWIMAGE )
 
    HB_BOOL bActBottom   = ! HB_ISNUM( 4 );
    HB_BOOL bActRight    = ! HB_ISNUM( 5 );
-   int     iImgWidth    = 0;
-   int     iImgHeight   = 0;
    HB_BOOL bTight       = hb_parl( 7 );
-   HB_BOOL bUseArray    = HB_ISARRAY( 7 );
    HB_BOOL bTransparent = hb_parl( 8 );
-   int     iOLeft, iOTop, iORight, iOBottom;
+
+   int iImgWidth = 0, iImgHeight = 0;
+   int iOLeft, iOTop, iORight, iOBottom;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -1144,7 +1143,7 @@ HB_FUNC( WVW_DRAWIMAGE )
       iOBottom = -1;
       iORight  = -1;
    }
-   else if( bUseArray )
+   else if( HB_ISARRAY( 7 ) )
    {
       iOTop    = hb_parvni( 7, 1 );
       iOLeft   = hb_parvni( 7, 2 );
@@ -1252,17 +1251,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
    HB_UINT   nWin    = WVW_WHICH_WINDOW;
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   POINT xy;
-   int   iLeft, iTop, iRight = 0, iBottom = 0;
-
-   HB_BOOL    bActBottom = ! HB_ISNUM( 4 );
-   HB_BOOL    bActRight  = ! HB_ISNUM( 5 );
-   int        iImgWidth, iImgHeight;
-   LONG       lImgWidth, lImgHeight;
-   HB_BOOL    bTight       = hb_parl( 7 );
-   HB_BOOL    bUseArray    = HB_ISARRAY( 7 );
-   HB_BOOL    bTransparent = hb_parl( 8 );
-   int        iOLeft, iOTop, iORight, iOBottom;
+   long       lImgWidth = 0, lImgHeight = 0;
    IPicture * pPic;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
@@ -1273,96 +1262,97 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
 
-   if( bTight )
-   {
-      iOTop    = 2 + 1;
-      iOLeft   = 2 + 1;
-      iOBottom = -1;
-      iORight  = -1;
-   }
-   else if( bUseArray )
-   {
-      iOTop    = hb_parvni( 7, 1 );
-      iOLeft   = hb_parvni( 7, 2 );
-      iOBottom = hb_parvni( 7, 3 );
-      iORight  = hb_parvni( 7, 4 );
-   }
+   if( HB_ISNUM( 6 ) )
+      pPic = hb_gt_wvw_rr_LoadPictureFromResource( NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
    else
-      iOTop = iOLeft = iOBottom = iORight = 0;
-
-   xy         = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
-   iTop       = xy.y + iOTop;
-   iLeft      = xy.x + iOLeft;
-   lImgWidth  = 0;
-   lImgHeight = 0;
-   iImgWidth  = 0;
-   iImgHeight = 0;
-
-   if( ! HB_ISNUM( 6 ) )
    {
       pPic = hb_gt_wvw_rr_LoadPictureFromResource( hb_parcx( 6 ), 0, &lImgWidth, &lImgHeight );
 
       if( pPic == NULL )
          pPic = hb_gt_wvw_rr_LoadPicture( hb_parcx( 6 ), &lImgWidth, &lImgHeight );
    }
-   else
-      pPic = hb_gt_wvw_rr_LoadPictureFromResource( NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
 
-#if 0
-   lImgWidth  = iImgWidth;
-   lImgHeight = iImgHeight;
-#endif
-
-   if( pPic == NULL )
+   if( pPic )
    {
-      hb_retl( HB_FALSE );
-      return;
-   }
+      HB_BOOL bActBottom   = ! HB_ISNUM( 4 );
+      HB_BOOL bActRight    = ! HB_ISNUM( 5 );
+      HB_BOOL bTight       = hb_parl( 7 );
+      HB_BOOL bTransparent = hb_parl( 8 );
 
-   if( bActRight || bActBottom )
-   {
-      if( ! hb_gt_wvw_GetIPictDimension( pPic, &iImgWidth, &iImgHeight ) )
+      int iImgWidth = 0, iImgHeight = 0;
+      int iLeft, iTop, iRight = 0, iBottom = 0;
+      int iOLeft, iOTop, iORight, iOBottom;
+
+      POINT xy;
+
+      if( bTight )
       {
-         bActRight  = HB_FALSE;
-         bActBottom = HB_FALSE;
+         iOTop    = 2 + 1;
+         iOLeft   = 2 + 1;
+         iOBottom = -1;
+         iORight  = -1;
       }
-      else if( bActRight && bActBottom )
+      else if( HB_ISARRAY( 7 ) )
       {
-         iRight  = iLeft + iImgWidth;
-         iBottom = iTop + iImgHeight;
-      }
-   }
-
-   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
-
-   xy.y -= wvw_win->iLineSpacing;
-
-   if( ! bActBottom )
-      iBottom = xy.y - 1 + iOBottom;
-
-   if( ! bActRight )
-      iRight = xy.x - 1 + iORight;
-
-   if( ( bActBottom || bActRight ) && ! ( bActBottom && bActRight ) )
-   {
-      int iDispWidth, iDispHeight;
-      if( bActRight )
-      {
-         /* right corner (width) must be proportional to height */
-         iDispHeight = iBottom - iTop + 1;
-         iDispWidth  = ( int ) ( ( float ) iImgWidth / iImgHeight * iDispHeight );
-         iRight      = iLeft + iDispWidth - 1;
+         iOTop    = hb_parvni( 7, 1 );
+         iOLeft   = hb_parvni( 7, 2 );
+         iOBottom = hb_parvni( 7, 3 );
+         iORight  = hb_parvni( 7, 4 );
       }
       else
-      {
-         /* bottom corner (height) must be proportional to width */
-         iDispWidth  = iRight - iLeft + 1;
-         iDispHeight = ( int ) ( ( float ) iImgHeight / iImgWidth * iDispWidth );
-         iBottom     = iTop + iDispHeight - 1;
-      }
-   }
+         iOTop = iOLeft = iOBottom = iORight = 0;
 
-   hb_retl( hb_gt_wvw_RenderPicture( nWin, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, pPic, bTransparent ) );
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      iTop  = xy.y + iOTop;
+      iLeft = xy.x + iOLeft;
+
+      if( bActRight || bActBottom )
+      {
+         if( ! hb_gt_wvw_GetIPictDimension( pPic, &iImgWidth, &iImgHeight ) )
+         {
+            bActRight  = HB_FALSE;
+            bActBottom = HB_FALSE;
+         }
+         else if( bActRight && bActBottom )
+         {
+            iRight  = iLeft + iImgWidth;
+            iBottom = iTop + iImgHeight;
+         }
+      }
+
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+
+      xy.y -= wvw_win->iLineSpacing;
+
+      if( ! bActBottom )
+         iBottom = xy.y - 1 + iOBottom;
+
+      if( ! bActRight )
+         iRight = xy.x - 1 + iORight;
+
+      if( ( bActBottom || bActRight ) && ! ( bActBottom && bActRight ) )
+      {
+         int iDispWidth, iDispHeight;
+         if( bActRight )
+         {
+            /* right corner (width) must be proportional to height */
+            iDispHeight = iBottom - iTop + 1;
+            iDispWidth  = ( int ) ( ( float ) iImgWidth / iImgHeight * iDispHeight );
+            iRight      = iLeft + iDispWidth - 1;
+         }
+         else
+         {
+            /* bottom corner (height) must be proportional to width */
+            iDispWidth  = iRight - iLeft + 1;
+            iDispHeight = ( int ) ( ( float ) iImgHeight / iImgWidth * iDispWidth );
+            iBottom     = iTop + iDispHeight - 1;
+         }
+      }
+
+      hb_retl( hb_gt_wvw_RenderPicture( nWin, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, pPic, bTransparent ) );
+   }
+   else
+      hb_retl( HB_FALSE );
 }
 
 
@@ -2235,10 +2225,10 @@ HB_FUNC( WVW_DRAWPICTURE )
 
    if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) && wvw->a.iPicture[ iSlot ] )
    {
-      int     iTop, iLeft, iBottom, iRight;
-      HB_BOOL bTight    = hb_parl( 7 );
-      HB_BOOL bUseArray = HB_ISARRAY( 7 );
-      int     iOLeft, iOTop, iORight, iOBottom;
+      HB_BOOL bTight = hb_parl( 7 );
+
+      int iTop, iLeft, iBottom, iRight;
+      int iOLeft, iOTop, iORight, iOBottom;
 
       USHORT usTop    = ( USHORT ) hb_parni( 2 ),
              usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -2257,7 +2247,7 @@ HB_FUNC( WVW_DRAWPICTURE )
          iOBottom = -1;
          iORight  = -1;
       }
-      else if( bUseArray )
+      else if( HB_ISARRAY( 7 ) )
       {
          iOTop    = hb_parvni( 7, 1 );
          iOLeft   = hb_parvni( 7, 2 );

@@ -785,82 +785,60 @@ HB_FUNC( LOADBITMAPEX )
 
 HB_FUNC( OPENIMAGE )
 {
-   const char * cFileName = hb_parc( 1 );
-   HB_BOOL      lString   = hb_parl( 2 );
-   int          iFileSize;
+   HGLOBAL hG = NULL;
 
-#if 0
-   IPicture * pPic;
-#endif
-   LPPICTURE pPic;
-   IStream * pStream;
-   HGLOBAL   hG;
-   HBITMAP   hBitmap = 0;
-
-   if( lString )
+   if( hb_parl( 2 ) /* lString */ )
    {
-      iFileSize = ( int ) hb_parclen( 1 );
-      hG        = GlobalAlloc( GPTR, iFileSize );
-      if( ! hG )
-      {
-         hb_retnl( 0 );
-         return;
-      }
-      memcpy( hG, cFileName, ( int ) iFileSize );
+      SIZE_T nFileSize = ( SIZE_T ) hb_parclen( 1 );
+      hG = GlobalAlloc( GPTR, nFileSize );
+      if( hG )
+         memcpy( hG, hb_parcx( 1 ), nFileSize );
    }
    else
    {
-      HB_FHANDLE fhnd = hb_fsOpen( cFileName, FO_READ | FO_SHARED );
-      if( fhnd == FS_ERROR )
+      HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
+      if( fhnd != FS_ERROR )
       {
-         hb_retnl( 0 );
-         return;
-      }
-
-      iFileSize = ( int ) hb_fsSeek( fhnd, 0, FS_END );
-      hG        = GlobalAlloc( GPTR, iFileSize );
-      if( ! hG )
-      {
+         SIZE_T nFileSize = ( SIZE_T ) hb_fsSeek( fhnd, 0, FS_END );
+         hG = GlobalAlloc( GPTR, nFileSize );
+         if( hG )
+         {
+            hb_fsSeek( fhnd, 0, FS_SET );
+            hb_fsReadLarge( fhnd, hG, nFileSize );
+         }
          hb_fsClose( fhnd );
-         hb_retnl( 0 );
+      }
+   }
+
+   if( hG )
+   {
+      IPicture * pPicture = NULL;
+      IStream *  pStream  = NULL;
+
+      if( CreateStreamOnHGlobal( hG, 0, &pStream ) == S_OK && pStream )
+      {
+         OleLoadPicture( pStream, 0, 0, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
+         HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
+
+         GlobalFree( hG );
+      }
+
+      if( pPicture )
+      {
+         HBITMAP hBitmap;
+
+         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) &hBitmap ) == S_OK )
+            HB_RETHANDLE( CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
+         else
+            HB_RETHANDLE( NULL );
+
+         HB_VTBL( pPicture )->Release( HB_THIS( pPicture ) );
+
          return;
       }
-      hb_fsSeek( fhnd, 0, FS_SET );
-      hb_fsReadLarge( fhnd, hG, iFileSize );
-      hb_fsClose( fhnd );
    }
 
-   if( CreateStreamOnHGlobal( hG, 0, &pStream ) != S_OK || ! pStream )
-   {
-      GlobalFree( hG );
-      hb_retnl( 0 );
-      return;
-   }
-
-#if 0
-   OleLoadPicture( pStream, 0, 0, HB_ID_REF( IID_IPicture ), &pPic );
-   HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
-#else
-   pPic = NULL;
-#endif
-
-   GlobalFree( hG );
-
-   if( ! pPic )
-   {
-      hb_retnl( 0 );
-      return;
-   }
-
-#if 0
-   HB_VTBL( pPic )->get_Handle( HB_THIS_ ( pPic ) ( OLE_HANDLE * ) & hBitmap );
-#endif
-
-   HB_RETHANDLE( CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
-
-#if 0
-   HB_VTBL( pPic )->Release( HB_THIS( pPic ) );
-#endif
+   HB_RETHANDLE( NULL );
 }
 
 HB_FUNC( OPENBITMAP )

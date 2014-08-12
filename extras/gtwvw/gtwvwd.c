@@ -2223,10 +2223,11 @@ static int hb_wvw_key_ansi_to_oem( int c )
    pszDst[ 0 ] =
    pszDst[ 1 ] = 0;
 
-   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, ( LPCSTR ) pszSrc, 1, ( LPWSTR ) pszWide, 1 );
-   WideCharToMultiByte( CP_OEMCP, 0, ( LPCWSTR ) pszWide, 1, ( LPSTR ) pszDst, 1, NULL, NULL );
-
-   return pszDst[ 0 ];
+   if( MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, ( LPCSTR ) pszSrc, 1, ( LPWSTR ) pszWide, 1 ) != 0 &&
+       WideCharToMultiByte( CP_OEMCP, 0, ( LPCWSTR ) pszWide, 1, ( LPSTR ) pszDst, 1, NULL, NULL ) != 0 )
+      return pszDst[ 0 ];
+   else
+      return 0;
 }
 #endif
 
@@ -7709,16 +7710,13 @@ int hb_gt_wvw_nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn )
    return nChar;
 }
 
-IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT iresimage, LONG * lwidth, LONG * lheight )
+IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT iresimage, long * lwidth, long * lheight )
 {
    HBITMAP    hbmpx;
    IPicture * iPicture = NULL;
-   PICTDESC   picd;
-/* int nSize; */
-   int iWidth, iHeight;
 
-   iWidth  = *lwidth;
-   iHeight = *lheight;
+   int iWidth  = *lwidth;
+   int iHeight = *lheight;
 
    if( resname )
    {
@@ -7746,17 +7744,26 @@ IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT i
          hbmpx = ( HBITMAP ) LoadImage( s_wvw->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) iresimage ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
          hb_gt_wvw_AddBitmapHandle( szResname, hbmpx, iWidth, iHeight );
       }
+
+      resname = ( const char * ) szResname;
    }
 
    *lwidth  = iWidth;
    *lheight = iHeight;
 
-   if( hbmpx != NULL )
+   if( hbmpx )
    {
       iPicture = s_FindPictureHandle( resname, &iWidth, &iHeight );
 
-      if( iPicture == NULL )
+      if( iPicture )
       {
+         HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) lwidth );
+         HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) lheight );
+      }
+      else
+      {
+         PICTDESC picd;
+
          picd.cbSizeofstruct = sizeof( picd );
          picd.picType        = PICTYPE_BITMAP;
          picd.bmp.hbitmap    = hbmpx;
@@ -7764,15 +7771,11 @@ IPicture * hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT i
          s_AddPictureHandle( resname, iPicture, iWidth, iHeight );
       }
    }
-   if( iPicture != NULL )
-   {
-      HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) lwidth );
-      HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) lheight );
-   }
+
    return iPicture;
 }
 
-IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, LONG * lwidth, LONG * lheight )
+IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, long * lwidth, long * lheight )
 {
    IPicture * iPicture = NULL;
 
@@ -7796,18 +7799,18 @@ IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, LONG * lwidth, LONG 
             hb_fsSeek( fhnd, 0, FS_SET );
             hb_fsReadLarge( fhnd, pGlobal, nFileSize );
 
-            if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) != S_OK || iStream == NULL )
+            if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
             {
-               GlobalUnlock( hGlobal );
-               GlobalFree( hGlobal );
-               return NULL;
+               OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &iPicture );
+               HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
             }
-            OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &iPicture );
+            else
+               iPicture = NULL;
+
             GlobalUnlock( hGlobal );
             GlobalFree( hGlobal );
-            HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
-            iStream = NULL;
-            if( iPicture != NULL )
+
+            if( iPicture )
             {
                HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) lwidth );
                HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) lheight );

@@ -161,6 +161,8 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 
                   if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
                      OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
+
+                  /* TOFIX: iStream never ->Release()-d */
                }
             }
          }
@@ -192,9 +194,12 @@ IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
 
             if( ReadFile( hFile, hGlobal, nFileSize, &nReadByte, NULL ) )
             {
-               IStream * iStream;
+               IStream * iStream = NULL;
+
                if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
                   OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
+
+               /* TOFIX: iStream never ->Release()-d */
             }
             GlobalFree( hGlobal );
          }
@@ -553,6 +558,8 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
                if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
                   OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) iPictureRef );
+
+               /* TOFIX: iStream never ->Release()-d */
 
                if( iPicture )
                {
