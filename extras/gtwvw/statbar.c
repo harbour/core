@@ -314,12 +314,17 @@ HB_FUNC( WVW_SBSETTEXT )
  */
 HB_FUNC( WVW_SBGETTEXT )
 {
-   WVW_WIN * wvw_win         = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   int       iPart           = hb_parnidef( 2, 1 );
-   char      cString[ 1024 ] = "";
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   int       iPart   = hb_parnidef( 2, 1 );
 
-   SendMessage( wvw_win->hStatusBar, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) cString );
-   hb_retc( cString );
+   WORD   nLen   = LOWORD( SendMessage( wvw_win->hStatusBar, SB_GETTEXTLENGTH, ( WPARAM ) iPart, 0 ) );
+   LPTSTR szText = ( LPTSTR ) hb_xgrabz( ( nLen + 1 ) * sizeof( TCHAR ) );
+
+   SendMessage( wvw_win->hStatusBar, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) szText );
+
+   HB_RETSTRLEN( szText, nLen );
+
+   hb_xfree( szText );
 }
 
 /* wvw_sbGetParts( [nWinNum] )

@@ -758,7 +758,7 @@ static void hb_wvg_LabelEx2( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop
    iAlignV = TA_TOP;
 
    GetTextExtentPoint32( pWVT->hdc, gObj->lpText, lstrlen( gObj->lpText ), &sz );
-   y = iTop + ( ( iBottom - iTop + 1 - sz.cy ) / 2 );
+   y += ( iBottom - iTop + 1 - sz.cy ) / 2;
 
    SetTextAlign( pWVT->hdc, iAlignH | iAlignV );
 
@@ -1463,7 +1463,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
    if( iPicture )
    {
       LONG  lWidth, lHeight;
-      int   xe, ye, iWd = 0, iHt = 0, x, y, wd, ht;
+      int   xe, ye, x, y, wd, ht;
       HRGN  hrgn1;
       POINT lpp = { 0, 0 };
       HDC   hdc = pWVT->hGuiDC;
@@ -1484,8 +1484,8 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
       if( gObj->iData == 1 )
       {
-         iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
-         iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+         int iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
+         int iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
          x  += abs( ( iWd - wd ) / 2 );
          y  += abs( ( iHt - ht ) / 2 );
          wd  = iWd;

@@ -111,7 +111,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 
    if( ! RegisterClass( &wndclass ) )
    {
-      if( GetLastError() != 1410 )
+      if( GetLastError() != ERROR_CLASS_ALREADY_EXISTS )
          hb_errInternal( 10001, "Failed to register WGU window class", NULL, NULL );
    }
 }
@@ -311,9 +311,8 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
 
 static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
 {
-   PHB_ITEM pEvParams = hb_itemNew( NULL );
+   PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
-   hb_arrayNew( pEvParams, 2 );
    hb_arraySetNI( pEvParams, 1, iMode );
    hb_arraySetNI( pEvParams, 2, menuIndex );
 
@@ -408,12 +407,11 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
 
 static int hb_gt_wvt_SizeChanged( PHB_GTWVT pWVT )
 {
-   PHB_ITEM pEvParams = hb_itemNew( NULL );
+   PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
    RECT rc;
 
    GetClientRect( pWVT->hWnd, &rc );
 
-   hb_arrayNew( pEvParams, 4 );
    hb_arraySetNI( pEvParams, 1, pWVT->width );
    hb_arraySetNI( pEvParams, 2, pWVT->height );
    hb_arraySetNI( pEvParams, 3, rc.right - rc.left );
@@ -521,9 +519,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
    if( keyCode != 0 )
    {
-      PHB_ITEM pEvParams = hb_itemNew( NULL );
+      PHB_ITEM pEvParams = hb_itemArrayNew( 6 );
 
-      hb_arrayNew( pEvParams, 6 );
       hb_arraySetNL( pEvParams, 1, message );
       hb_arraySetNI( pEvParams, 2, keyCode );
       hb_arraySetNI( pEvParams, 3, xy.x );
@@ -866,9 +863,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             return 0;
          case WM_SETFOCUS:
          {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
+            PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
-            hb_arrayNew( pEvParams, 3 );
             hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) hWnd );
             hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
             hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
@@ -878,9 +874,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          case WM_KILLFOCUS:
          {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
+            PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
-            hb_arrayNew( pEvParams, 3 );
             hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) hWnd );
             hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
             hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
@@ -966,9 +961,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 #if ! defined( HB_OS_WIN_CE )
          case WM_MOUSEHOVER:
          {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
+            PHB_ITEM pEvParams = hb_itemArrayNew( 6 );
 
-            hb_arrayNew( pEvParams, 6 );
             hb_arraySetNI( pEvParams, 1, message );
             hb_arraySetNI( pEvParams, 2, 0 );
             hb_arraySetNI( pEvParams, 3, LOWORD( lParam ) );
@@ -979,9 +973,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          case WM_MOUSELEAVE:
          {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
+            PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
-            hb_arrayNew( pEvParams, 2 );
             hb_arraySetNI( pEvParams, 1, message );
             hb_arraySetNI( pEvParams, 2, 0 );
 
@@ -1002,13 +995,12 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             }
             else
             {
-               PHB_ITEM pEvParams = hb_itemNew( NULL );
+               PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
                int iLo, iHi;
 
                iLo = LOWORD( wParam );
                iHi = HIWORD( wParam );
 
-               hb_arrayNew( pEvParams, 3 );
                hb_arraySetNI( pEvParams, 1, iHi );                              /* Notification Code  */
                hb_arraySetNI( pEvParams, 2, iLo );                              /* Control identifier */
                hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); /* Controls hWnd      */
@@ -1018,9 +1010,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             return 0;
          case WM_NOTIFY:
          {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
-
-            hb_arrayNew( pEvParams, 2 );
+            PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
             hb_arraySetNI( pEvParams, 1, ( int ) wParam );
             hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
@@ -1049,9 +1039,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          case WM_CTLCOLORSTATIC:
          {
             int iResult;
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
-
-            hb_arrayNew( pEvParams, 2 );
+            PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
             hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) wParam );
             hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
@@ -1065,9 +1053,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          case WM_HSCROLL:
          {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
-
-            hb_arrayNew( pEvParams, 3 );
+            PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
@@ -1078,9 +1064,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          case WM_VSCROLL:
          {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
-
-            hb_arrayNew( pEvParams, 3 );
+            PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
@@ -1644,8 +1628,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             RECT rect = { 0, 0, 0, 0 };
             GetWindowRect( pWVT->hWnd, &rect );
 
-            pInfo->pResult = hb_itemNew( NULL );
-            hb_arrayNew( pInfo->pResult, 2 );
+            pInfo->pResult = hb_itemArrayNew( 2 );
 
             if( iType == HB_GTI_SETPOS_ROWCOL )
             {

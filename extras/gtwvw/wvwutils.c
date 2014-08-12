@@ -1023,7 +1023,8 @@ HB_FUNC( WVW_SELECTFONT )
 {
    CHOOSEFONT cf;
    LOGFONT    lf;
-   PHB_ITEM   pObj = hb_param( 1, HB_IT_OBJECT );
+
+   PHB_ITEM pObj = hb_param( 1, HB_IT_OBJECT );
 
    cf.lStructSize    = sizeof( cf );
    cf.hwndOwner      = NULL;

@@ -493,14 +493,9 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
-      int    iPart = hb_parnidef( 2, 1 );
-      TCHAR  szText[ 1024 ];
-      int    iFlags;
+      int    iPart = LOBYTE( hb_parnidef( 2, 1 ) - 1 );
+      int    iFlags = ( int ) HIWORD( SendMessage( hWndSB, SB_GETTEXTLENGTH, ( WPARAM ) iPart, 0 ) );
       void * hCaption;
-
-      iPart -= 1;           /* Zero based */
-
-      iFlags = ( int ) HIWORD( SendMessage( hWndSB, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) szText ) );
 
       SendMessage( hWndSB, SB_SETTEXT, ( WPARAM ) iPart | iFlags, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
 
@@ -510,7 +505,7 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
 
 HB_FUNC( WVG_STATUSBARREFRESH )
 {
-   #if 0
+#if 0
    HWND hWndSB = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
    if( hWndSB && IsWindow( hWndSB ) )
@@ -528,17 +523,17 @@ HB_FUNC( WVG_STATUSBARREFRESH )
          return;
       }
    }
+
    hb_retl( HB_FALSE );
-   #endif
+#endif
 }
 
 /* Wvg_GetNMHDrInfo( nlParam ) */
 HB_FUNC( WVG_GETNMHDRINFO )
 {
-   LPNMHDR  lpnmh     = ( LPNMHDR ) wvg_parlparam( 1 );
-   PHB_ITEM pEvParams = hb_itemNew( NULL );
+   LPNMHDR lpnmh = ( LPNMHDR ) wvg_parlparam( 1 );
 
-   hb_arrayNew( pEvParams, 3 );
+   PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
    hb_arraySetNI( pEvParams, 1, lpnmh->code );
    hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lpnmh->idFrom   );
@@ -550,11 +545,10 @@ HB_FUNC( WVG_GETNMHDRINFO )
 /* Wvg_GetNMMouseInfo( nlParam ) */
 HB_FUNC( WVG_GETNMMOUSEINFO )
 {
-   LPNMMOUSE nmm       = ( LPNMMOUSE ) wvg_parlparam( 1 );
-   NMHDR     nmh       = nmm->hdr;
-   PHB_ITEM  pEvParams = hb_itemNew( NULL );
+   LPNMMOUSE nmm = ( LPNMMOUSE ) wvg_parlparam( 1 );
+   NMHDR     nmh = nmm->hdr;
 
-   hb_arrayNew( pEvParams, 4 );
+   PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
 
    hb_arraySetNI( pEvParams, 1, nmh.code );
    hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom   );
@@ -570,9 +564,7 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
    LPNMTREEVIEW pnmtv = ( LPNMTREEVIEW ) wvg_parlparam( 1 );
    NMHDR        nmh   = pnmtv->hdr;
 
-   PHB_ITEM pEvParams = hb_itemNew( NULL );
-
-   hb_arrayNew( pEvParams, 4 );
+   PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
 
    hb_arraySetNI( pEvParams, 1, nmh.code );
    hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom   );
@@ -629,8 +621,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
    }
 }
 
-
-/* hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption ) */
+/* Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption ) -> hItem */
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
    TVINSERTSTRUCT tvis;
@@ -702,49 +693,26 @@ HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
    }
 }
 
-/*                            WvgFontDialog()                           */
+/* WvgFontDialog() */
 
-PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
+static PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf )
 {
-   PHB_ITEM aFont = hb_itemNew( NULL );
+   PHB_ITEM aFont = hb_itemArrayNew( 15 );
 
-   hb_arrayNew( aFont, 15 );
-
-   if( bEmpty )
-   {
-      hb_arraySetC( aFont, 1, NULL   );
-      hb_arraySetNL( aFont, 2, 0     );
-      hb_arraySetNL( aFont, 3, 0     );
-      hb_arraySetNL( aFont, 4, 0     );
-      hb_arraySetL(  aFont, 5, 0     );
-      hb_arraySetL(  aFont, 6, 0     );
-      hb_arraySetL(  aFont, 7, 0     );
-      hb_arraySetNI( aFont, 8, 0     );
-      hb_arraySetNI( aFont, 9, 0     );
-      hb_arraySetNI( aFont, 10, 0    );
-      hb_arraySetNI( aFont, 11, 0    );
-      hb_arraySetNI( aFont, 12, 0    );
-      hb_arraySetNI( aFont, 13, 0    );
-      hb_arraySetNI( aFont, 14, 0    );
-      hb_arraySetNInt( aFont, 15, 0  );
-   }
-   else
-   {
-      HB_ARRAYSETSTR( aFont, 1, lf->lfFaceName       );
-      hb_arraySetNL( aFont, 2, lf->lfHeight          );
-      hb_arraySetNL( aFont, 3, lf->lfWidth           );
-      hb_arraySetNL( aFont, 4, lf->lfWeight          );
-      hb_arraySetL(  aFont, 5, lf->lfItalic          );
-      hb_arraySetL(  aFont, 6, lf->lfUnderline       );
-      hb_arraySetL(  aFont, 7, lf->lfStrikeOut       );
-      hb_arraySetNI( aFont, 8, lf->lfCharSet         );
-      hb_arraySetNI( aFont, 9, lf->lfEscapement      );
-      hb_arraySetNI( aFont, 10, lf->lfOrientation    );
-      hb_arraySetNI( aFont, 11, lf->lfOutPrecision   );
-      hb_arraySetNI( aFont, 12, lf->lfClipPrecision  );
-      hb_arraySetNI( aFont, 13, lf->lfQuality        );
-      hb_arraySetNI( aFont, 14, lf->lfPitchAndFamily );
-   }
+   HB_ARRAYSETSTR( aFont,  1, lf->lfFaceName       );
+   hb_arraySetNL(  aFont,  2, lf->lfHeight         );
+   hb_arraySetNL(  aFont,  3, lf->lfWidth          );
+   hb_arraySetNL(  aFont,  4, lf->lfWeight         );
+   hb_arraySetL(   aFont,  5, lf->lfItalic         );
+   hb_arraySetL(   aFont,  6, lf->lfUnderline      );
+   hb_arraySetL(   aFont,  7, lf->lfStrikeOut      );
+   hb_arraySetNI(  aFont,  8, lf->lfCharSet        );
+   hb_arraySetNI(  aFont,  9, lf->lfEscapement     );
+   hb_arraySetNI(  aFont, 10, lf->lfOrientation    );
+   hb_arraySetNI(  aFont, 11, lf->lfOutPrecision   );
+   hb_arraySetNI(  aFont, 12, lf->lfClipPrecision  );
+   hb_arraySetNI(  aFont, 13, lf->lfQuality        );
+   hb_arraySetNI(  aFont, 14, lf->lfPitchAndFamily );
 
    return aFont;
 }
@@ -785,10 +753,11 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
          hb_itemRelease( block );
       }
    }
+
    if( binit )
       return HB_TRUE;
-
-   return bret;
+   else
+      return bret;
 }
 #endif
 
@@ -799,7 +768,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 #if ! defined( HB_OS_WIN_CE )
    CHOOSEFONT cf;
    LOGFONT    lf;
-   DWORD      Flags;
+   DWORD      Flags = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
    LONG       PointSize = 0;
    HWND       hWnd      = wvg_parhwnd( 1 );
    TCHAR      szStyle[ MAX_PATH + 1 ];
@@ -829,8 +798,6 @@ HB_FUNC( WVG_CHOOSEFONT )
    lf.lfQuality        = DEFAULT_QUALITY;
    lf.lfPitchAndFamily = FF_DONTCARE;
 
-   Flags = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
-
    #if 0
    Flags |= CF_TTONLY;
    Flags |= CF_FIXEDPITCHONLY;
@@ -841,9 +808,9 @@ HB_FUNC( WVG_CHOOSEFONT )
    #endif
 
    if( hb_parl( 5 ) )
-      Flags = Flags | CF_SCREENFONTS;
+      Flags |= CF_SCREENFONTS;
    if( hb_parl( 6 ) )
-      Flags = Flags | CF_PRINTERFONTS;
+      Flags |= CF_PRINTERFONTS;
 
    cf.lStructSize = sizeof( cf );
    cf.hwndOwner   = hWnd;
@@ -865,14 +832,14 @@ HB_FUNC( WVG_CHOOSEFONT )
 
    if( ChooseFont( &cf ) )
    {
-      PHB_ITEM aFont = wvg_logfontTOarray( &lf, HB_FALSE );
-      PHB_ITEM aInfo = hb_itemNew( NULL );
+      PHB_ITEM aFont = wvg_logfontTOarray( &lf );
+      PHB_ITEM aInfo = hb_itemArrayNew( 4 );
 
-      hb_arrayNew( aInfo, 4 );
       hb_arraySetNI( aInfo, 1, cf.iPointSize );
       hb_arraySetNInt( aInfo, 2, cf.rgbColors  );
       hb_arraySetNI( aInfo, 3, cf.nFontType  );
       HB_ARRAYSETSTR( aInfo, 4, cf.lpszStyle );
+
       hb_arraySet( aFont, 15, aInfo );
 
       hb_itemReturnRelease( aFont );
@@ -884,16 +851,13 @@ HB_FUNC( WVG_CHOOSEFONT )
 HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 {
 #if ! defined( HB_OS_WIN_CE )
-   LOGFONT  lf;
-   PHB_ITEM aFont;
+   LOGFONT lf;
 
    memset( &lf, 0, sizeof( lf ) );
 
    SendMessage( wvg_parhwnd( 1 ), WM_CHOOSEFONT_GETLOGFONT, 0, ( LPARAM ) &lf );
 
-   aFont = wvg_logfontTOarray( &lf, HB_FALSE );
-
-   hb_itemReturnRelease( aFont );
+   hb_itemReturnRelease( wvg_logfontTOarray( &lf ) );
 #endif
 }
 
@@ -901,11 +865,11 @@ HB_FUNC( WVG_FONTCREATE )
 {
    LOGFONT  lf;
    HFONT    hFont;
-   PHB_ITEM aFont;
+
+   PHB_ITEM aFont = hb_param( 1, HB_IT_ARRAY );
 
    memset( &lf, 0, sizeof( lf ) );
 
-   aFont = hb_param( 1, HB_IT_ARRAY );
    if( aFont )
    {
       HB_ITEMCOPYSTR( hb_arrayGetItemPtr( aFont, 1 ), lf.lfFaceName, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
@@ -929,11 +893,14 @@ HB_FUNC( WVG_FONTCREATE )
 
    if( hFont )
    {
-      aFont = wvg_logfontTOarray( &lf, HB_FALSE );
+      aFont = wvg_logfontTOarray( &lf );
       hb_arraySetNInt( aFont, 15, ( HB_PTRDIFF ) hFont );
    }
    else
-      aFont = wvg_logfontTOarray( &lf, HB_TRUE );
+   {
+      memset( &lf, 0, sizeof( lf ) );
+      aFont = wvg_logfontTOarray( &lf );
+   }
 
    hb_itemReturnRelease( aFont );
 }
@@ -976,19 +943,15 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 HB_FUNC( WVG_ADDTOOLBARBUTTON )
 {
    TBBUTTON tbb;
-   HB_BOOL  bSuccess;
-   HWND     hWndTB   = hbwapi_par_raw_HWND( 1 );
-   int      iCommand = hb_parni( 4 );
+   HWND     hWndTB = hbwapi_par_raw_HWND( 1 );
 
    switch( hb_parni( 5 ) )
    {
       case 1:  /* button from image */
       {
-         int iNewString;
-
-         /* set string */
          void * hCaption;
-         iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+         /* set string */
+         int iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
          hb_strfree( hCaption );
 
          if( hb_parl( 6 ) )
@@ -996,7 +959,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 
          /* add button */
          tbb.iBitmap   = hb_parni( 2 );
-         tbb.idCommand = iCommand;
+         tbb.idCommand = hb_parni( 4 );
          tbb.fsState   = TBSTATE_ENABLED;
          tbb.fsStyle   = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE;
          tbb.dwData    = 0;
@@ -1004,11 +967,10 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 
          /* Conversion of LRESULT to HB_BOOL:
             https://msdn.microsoft.com/en-us/library/windows/desktop/bb787291(v=vs.85).aspx */
-         bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+         hb_retl( ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
 #if ! defined( HB_OS_WIN_CE )
          SendMessage( hWndTB, TB_SETPADDING, 0, ( LPARAM ) MAKELPARAM( 10, 10 ) );
 #endif
-         hb_retl( bSuccess );
          return;
       }
 
@@ -1025,8 +987,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 
          /* Conversion of LRESULT to HB_BOOL:
             https://msdn.microsoft.com/en-us/library/windows/desktop/bb787291(v=vs.85).aspx */
-         bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
-         hb_retl( bSuccess );
+         hb_retl( ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
          return;
    }
 }
@@ -1048,8 +1009,10 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    wndclass.lpszClassName = HB_PARSTR( 1, &hClass, NULL );
 
    if( ! RegisterClass( &wndclass ) )
-      if( GetLastError() != 1410 )
+   {
+      if( GetLastError() != ERROR_CLASS_ALREADY_EXISTS )
          hb_errInternal( 10001, "Failed to register DA window class", NULL, NULL );
+   }
 
    hb_strfree( hClass );
 }
@@ -1142,31 +1105,35 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 /* Wvg_CreateToolTipWindow( hControl ) -> hWndTT */
 HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 {
-   HWND     hwndTip;
-   TOOLINFO toolInfo;
+   HWND hwndTip = CreateWindowEx( 0, TOOLTIPS_CLASS, 0,
+                                  WS_POPUP | TTS_ALWAYSTIP, /* | TTS_BALLOON, */
+                                  CW_USEDEFAULT, CW_USEDEFAULT,
+                                  CW_USEDEFAULT, CW_USEDEFAULT,
+                                  wvg_parhwnd( 1 ),
+                                  NULL,
+                                  wvg_hInstance(),
+                                  NULL );
 
-   hwndTip = CreateWindowEx( 0, TOOLTIPS_CLASS, 0,
-                             WS_POPUP | TTS_ALWAYSTIP, /* | TTS_BALLOON, */
-                             CW_USEDEFAULT, CW_USEDEFAULT,
-                             CW_USEDEFAULT, CW_USEDEFAULT,
-                             wvg_parhwnd( 1 ),
-                             NULL,
-                             wvg_hInstance(),
-                             NULL );
-   if( ! hwndTip )
-      return;
+   if( hwndTip )
+   {
+      TOOLINFO toolInfo;
 
-   memset( &toolInfo, 0, sizeof( toolInfo ) );
-   toolInfo.cbSize   = sizeof( toolInfo );
-   toolInfo.hwnd     = wvg_parhwnd( 1 );
-   toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-   toolInfo.uId      = ( UINT_PTR ) wvg_parhwnd( 1 );
-   toolInfo.lpszText = ( LPTSTR ) TEXT( "" );
+      memset( &toolInfo, 0, sizeof( toolInfo ) );
 
-   if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
-      wvg_rethandle( hwndTip );
-   else
-      wvg_rethandle( NULL );
+      toolInfo.cbSize   = sizeof( toolInfo );
+      toolInfo.hwnd     = wvg_parhwnd( 1 );
+      toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
+      toolInfo.uId      = ( UINT_PTR ) wvg_parhwnd( 1 );
+      toolInfo.lpszText = ( LPTSTR ) TEXT( "" );
+
+      if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
+      {
+         wvg_rethandle( hwndTip );
+         return;
+      }
+   }
+
+   wvg_rethandle( NULL );
 }
 
 HB_FUNC( WVG_SETTOOLTIPTEXT )

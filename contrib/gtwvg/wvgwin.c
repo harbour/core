@@ -119,7 +119,7 @@ HB_FUNC( WVG_SENDMESSAGE )
    hb_strfree( hText );
 }
 
-HB_FUNC( WVG_SENDDLGITEMMESSAGE )
+HB_FUNC( WVG_SENDDLGITEMMESSAGE )  /* TOFIX: UNICODE support? */
 {
    PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
    char *   cText = NULL;
@@ -136,8 +136,7 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )
                                           ( int ) hb_parni( 2 ),
                                           ( UINT ) hb_parni( 3 ),
                                           ( WPARAM ) hb_parnint( 4 ),
-                                          ( cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) )
-                                          ) );
+                                          ( cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) ) ) );
 
    if( cText )
    {
@@ -1284,18 +1283,15 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       {
 #if ! defined( HB_OS_WIN_CE )
          COMBOBOXINFO cbi;
-         PHB_ITEM     pCbi = hb_itemNew( NULL );
-         PHB_ITEM     pRc1 = hb_itemNew( NULL );
-         PHB_ITEM     pRc2 = hb_itemNew( NULL );
 
          memset( &cbi, 0, sizeof( cbi ) );
          cbi.cbSize = sizeof( cbi );
 
          if( GetComboBoxInfo( hCB, &cbi ) )
          {
-            hb_arrayNew( pCbi, 6 );
-            hb_arrayNew( pRc1, 4 );
-            hb_arrayNew( pRc2, 4 );
+            PHB_ITEM pCbi = hb_itemArrayNew( 6 );
+            PHB_ITEM pRc1 = hb_itemArrayNew( 4 );
+            PHB_ITEM pRc2 = hb_itemArrayNew( 4 );
 
             hb_arraySetNI( pRc1, 1, cbi.rcItem.left );
             hb_arraySetNI( pRc1, 2, cbi.rcItem.top );
@@ -1336,11 +1332,10 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       case CB_GETDROPPEDCONTROLRECT:
       {
          RECT     rc;
-         PHB_ITEM pRect = hb_itemNew( NULL );
+         PHB_ITEM pRect = hb_itemArrayNew( 4 );
 
          SendMessage( hCB, CB_GETDROPPEDCONTROLRECT, 0, ( LPARAM ) &rc );
 
-         hb_arrayNew( pRect, 4 );
          hb_arraySetNI( pRect, 1, rc.left );
          hb_arraySetNI( pRect, 2, rc.top );
          hb_arraySetNI( pRect, 3, rc.right );
@@ -1358,9 +1353,8 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       case CB_GETEDITSEL:
       {
          DWORD    range = ( DWORD ) SendMessage( hCB, CB_GETEDITSEL, 0, 0 );
-         PHB_ITEM pRng  = hb_itemNew( NULL );
+         PHB_ITEM pRng  = hb_itemArrayNew( 2 );
 
-         hb_arrayNew( pRng, 2 );
          hb_arraySetNI( pRng, 1, LOWORD( range ) );
          hb_arraySetNI( pRng, 1, HIWORD( range ) );
          hb_itemReturnRelease( pRng );

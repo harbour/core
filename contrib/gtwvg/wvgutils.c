@@ -120,6 +120,8 @@ HB_FUNC( WVT_CHOOSEFONT )
       LOGFONT    lf;
       LONG       PointSize = 0;
 
+      PHB_ITEM ary = hb_itemArrayNew( 9 );
+
       memset( &cf, 0, sizeof( cf ) );
       memset( &lf, 0, sizeof( lf ) );
 
@@ -159,49 +161,31 @@ HB_FUNC( WVT_CHOOSEFONT )
       cf.nSizeMax       = 0;
 
       if( ChooseFont( &cf ) )
-      {
-         PHB_ITEM ary = hb_itemNew( NULL );
-         hb_arrayNew( ary, 9 );
-
          PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( _s->hdc, LOGPIXELSY ) );
-
-         HB_ARRAYSETSTR( ary, 1, lf.lfFaceName );
-         hb_arraySetNI( ary, 2, PointSize );
-         hb_arraySetNI( ary, 3, lf.lfWidth );
-         hb_arraySetNI( ary, 4, lf.lfWeight );
-         hb_arraySetNI( ary, 5, lf.lfQuality );
-         hb_arraySetL( ary, 6, lf.lfItalic );
-         hb_arraySetL( ary, 7, lf.lfUnderline );
-         hb_arraySetL( ary, 8, lf.lfStrikeOut );
-         hb_arraySetNI( ary, 9, cf.rgbColors );
-
-         hb_itemReturnRelease( ary );
-      }
       else
       {
-         PHB_ITEM ary = hb_itemNew( NULL );
-         hb_arrayNew( ary, 9 );
-
-         HB_ARRAYSETSTR( ary, 1, NULL );
-         hb_arraySetNI( ary, 2, 0 );
-         hb_arraySetNI( ary, 3, 0 );
-         hb_arraySetNI( ary, 4, 0 );
-         hb_arraySetNI( ary, 5, 0 );
-         hb_arraySetL( ary, 6, 0 );
-         hb_arraySetL( ary, 7, 0 );
-         hb_arraySetL( ary, 8, 0 );
-         hb_arraySetNI( ary, 9, 0 );
-
-         hb_itemReturnRelease( ary );
+         PointSize = 0;
+         memset( &lf, 0, sizeof( lf ) );
       }
+
+      HB_ARRAYSETSTR( ary, 1, lf.lfFaceName );
+      hb_arraySetNL( ary, 2, ( long ) PointSize );
+      hb_arraySetNI( ary, 3, lf.lfWidth );
+      hb_arraySetNI( ary, 4, lf.lfWeight );
+      hb_arraySetNI( ary, 5, lf.lfQuality );
+      hb_arraySetL( ary, 6, lf.lfItalic );
+      hb_arraySetL( ary, 7, lf.lfUnderline );
+      hb_arraySetL( ary, 8, lf.lfStrikeOut );
+      hb_arraySetNI( ary, 9, cf.rgbColors );
+
+      hb_itemReturnRelease( ary );
    }
 #else
    {
-      PHB_ITEM ary = hb_itemNew( NULL );
-      hb_arrayNew( ary, 9 );
+      PHB_ITEM ary = hb_itemArrayNew( 9 );
 
       HB_ARRAYSETSTR( ary, 1, NULL );
-      hb_arraySetNI( ary, 2, 0 );
+      hb_arraySetNL( ary, 2, 0 );
       hb_arraySetNI( ary, 3, 0 );
       hb_arraySetNI( ary, 4, 0 );
       hb_arraySetNI( ary, 5, 0 );

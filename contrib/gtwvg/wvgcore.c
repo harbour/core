@@ -220,7 +220,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
       if( iPicture )
       {
          LONG  lWidth, lHeight;
-         int   xe, ye, iWd = 0, iHt = 0;
+         int   xe, ye;
          HRGN  hrgn1;
          POINT lpp = { 0, 0 };
          HDC   hdc = _s->hdc;
@@ -236,8 +236,8 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
 
          if( bDoNotScale )
          {
-            iHt = ( int ) ( ( float ) wd * lHeight / lWidth );
-            iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+            int iHt = ( int ) ( ( float ) wd * lHeight / lWidth );
+            int iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
             x  += abs( ( iWd - wd ) / 2 );
             y  += abs( ( iHt - ht ) / 2 );
             wd  = iWd;
@@ -564,7 +564,7 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
                if( iPicture )
                {
                   LONG  lWidth, lHeight;
-                  int   xe, ye, iWd = 0, iHt = 0;
+                  int   xe, ye;
                   HRGN  hrgn1;
                   POINT lpp = { 0, 0 };
 
@@ -579,8 +579,8 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
                   if( bDoNotScale )
                   {
-                     iHt = ( int ) ( ( float ) wd * lHeight / lWidth );
-                     iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+                     int iHt = ( int ) ( ( float ) wd * lHeight / lWidth );
+                     int iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
                      x  += abs( ( iWd - wd ) / 2 );
                      y  += abs( ( iHt - ht ) / 2 );
                      wd  = iWd;
@@ -1870,10 +1870,9 @@ HB_FUNC( WVT_DRAWROUNDRECT )
       int iLeft   = ( _s->PTEXTSIZE.x * hb_parni( 2 ) ) + hb_parvni( 5, 2 );
       int iBottom = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parvni( 5, 3 );
       int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5, 4 );
-      int iHt, iWd;
 
-      iHt = hb_parni( 6 );
-      iWd = hb_parni( 7 );
+      int iHt = hb_parni( 6 );
+      int iWd = hb_parni( 7 );
 
       SelectObject( _s->hdc, _s->currentBrush );
       SelectObject( _s->hdc, _s->currentPen   );
