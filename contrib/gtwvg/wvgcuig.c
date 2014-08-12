@@ -772,8 +772,7 @@ static void hb_wvg_LabelEx2( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop
 }
 
 /*               1      2       3        4       5       6        7         8
- * Wvg_Outline( nTop, nLeft, nBottom, nRight, aPxlOff, nThick, nShape, nRGBColor )
- */
+   Wvg_Outline( nTop, nLeft, nBottom, nRight, aPxlOff, nThick, nShape, nRGBColor ) */
 HB_FUNC( WVG_OUTLINE )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -863,8 +862,7 @@ static void hb_wvg_Outline( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
 }
 
 /*            1      2       3       4        5        6       7       8       9      10        11
- * Wvg_Line( nTop, nLeft, nBottom, nRight, aPxlOff, nOrient, nFormat, nAlign, nStyle, nThick, nColor )
- */
+   Wvg_Line( nTop, nLeft, nBottom, nRight, aPxlOff, nOrient, nFormat, nAlign, nStyle, nThick, nColor ) */
 HB_FUNC( WVG_LINE )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -898,8 +896,7 @@ HB_FUNC( WVG_LINE )
 }
 
 /*              1      2       3       4        5        6       7       8          9
- * Wvg_LineEx( nTop, nLeft, nBottom, nRight, aPxlOff, nOrient, nFormat, nAlign, nSlotPen )
- */
+   Wvg_LineEx( nTop, nLeft, nBottom, nRight, aPxlOff, nOrient, nFormat, nAlign, nSlotPen ) */
 HB_FUNC( WVG_LINEEX )
 {
    PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
@@ -956,7 +953,7 @@ static void hb_wvg_Line( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, in
          break;
 
       case 2:                                            /* bottom */
-         if( gObj->iFormat == 0 || gObj->iFormat == 1 )  /* Raised/Recessd */
+         if( gObj->iFormat == 0 || gObj->iFormat == 1 )  /* Raised/Recessed */
             y = iBottom - 1;
          else
             y = iBottom;
@@ -966,7 +963,7 @@ static void hb_wvg_Line( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, in
          break;
 
       case 4:                                            /* Right */
-         if( gObj->iFormat == 0 || gObj->iFormat == 1 )  /* Raised/Recessd */
+         if( gObj->iFormat == 0 || gObj->iFormat == 1 )  /* Raised/Recessed */
             x = iRight - 1;
          else
             x = iRight;
@@ -978,8 +975,8 @@ static void hb_wvg_Line( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, in
 
    switch( gObj->iFormat )
    {
-      case 0:                                         /* Raised */
-         if( gObj->iOrient == 0 )                     /* Horizontal */
+      case 0:                                      /* Raised */
+         if( gObj->iOrient == 0 )                  /* Horizontal */
          {
             SelectObject( hdc, pWVT->pGUI->penWhite );
             MoveToEx( hdc, x, y, NULL );
@@ -988,7 +985,7 @@ static void hb_wvg_Line( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, in
             MoveToEx( hdc, x, y + 1, NULL );
             LineTo( hdc, iRight, y + 1 );
          }
-         else                                       /*  Vertical */
+         else                                      /* Vertical */
          {
             SelectObject( hdc, pWVT->pGUI->penWhite );
             MoveToEx( hdc, x, y, NULL );
@@ -1009,7 +1006,7 @@ static void hb_wvg_Line( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, in
             MoveToEx( hdc, x, y + 1, NULL );
             LineTo( hdc, iRight, y + 1 );
          }
-         else                                      /*  Vertical */
+         else                                      /* Vertical */
          {
             SelectObject( hdc, hPen );
             MoveToEx( hdc, x, y, NULL );
@@ -1021,13 +1018,13 @@ static void hb_wvg_Line( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, in
          break;
 
       case 2:                                      /* Plain */
-         if( gObj->iOrient == 0 )                  /* Horizontal  */
+         if( gObj->iOrient == 0 )                  /* Horizontal */
          {
             SelectObject( hdc, hPen );
             MoveToEx( hdc, x, y, NULL );
             LineTo( hdc, iRight, y );
          }
-         else                                      /*  Vertical */
+         else                                      /* Vertical */
          {
             SelectObject( hdc, hPen );
             MoveToEx( hdc, x, y, NULL );
@@ -1238,7 +1235,6 @@ HB_FUNC( WVG_SHADEDRECT )
 
 static void hb_wvg_ShadedRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, int iRight, int iBottom )
 {
-   HB_BOOL       bGF;
    GRADIENT_RECT gRect;
 
    gRect.UpperLeft  = 0;
@@ -1250,9 +1246,7 @@ static void hb_wvg_ShadedRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iT
    gObj->vert[ 1 ].x = iRight;
    gObj->vert[ 1 ].y = iBottom;
 
-   bGF = ( HB_BOOL ) pWVT->pGUI->pfnGF( pWVT->hGuiDC, gObj->vert, 2, &gRect, 1, gObj->iData );
-
-   HB_SYMBOL_UNUSED( bGF );
+   pWVT->pGUI->pfnGF( pWVT->hGuiDC, gObj->vert, 2, &gRect, 1, gObj->iData );
 }
 
 /* Wvg_TextBox( nTop, nLeft, nBottom, nRight, aPxlOff, cText, ;
@@ -1328,7 +1322,7 @@ static void hb_wvg_TextBox( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
 HB_FUNC( WVG_PICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
-   PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
+   PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
 
    if( HB_ISNUM( 6 ) && hb_parni( 6 ) >= 1 && hb_parni( 6 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
    {
@@ -1401,12 +1395,6 @@ HB_FUNC( WVG_IMAGE )
    PHB_GTWVT  pWVT     = hb_wvt_gtGetWVT();
    int        iSource  = hb_parni( 6 );
    IPicture * iPicture = NULL;
-
-   if( iSource == 0 )
-   {
-      hb_retni( 0 );
-      return;
-   }
 
    switch( iSource )
    {
@@ -1593,7 +1581,6 @@ static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
    }
 }
 
-
 static void hb_wvg_GridHorz( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
 {
    int iAtRow = hb_arrayGetNI( pArray, 1 );
@@ -1631,7 +1618,7 @@ static void hb_wvg_GridHorz( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
    }
 }
 
-/*                       Owner Draw Implementation                      */
+/* Owner Draw Implementation */
 
 void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT * uRect )
 {

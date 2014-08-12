@@ -490,26 +490,27 @@ static HFONT hb_gt_wvt_GetFont( LPCTSTR lpFace, int iHeight, int iWidth, int iWe
 {
    if( iHeight > 0 )
    {
-      LOGFONT logfont;
+      LOGFONT lf;
 
-      memset( &logfont, 0, sizeof( logfont ) );
-      logfont.lfEscapement     = 0;
-      logfont.lfOrientation    = 0;
-      logfont.lfWeight         = iWeight;
-      logfont.lfItalic         = 0;
-      logfont.lfUnderline      = 0;
-      logfont.lfStrikeOut      = 0;
-      logfont.lfCharSet        = ( BYTE ) iCodePage;      /* OEM_CHARSET */
-      logfont.lfOutPrecision   = 0;
-      logfont.lfClipPrecision  = 0;
-      logfont.lfQuality        = ( BYTE ) iQuality;       /* DEFAULT_QUALITY, DRAFT_QUALITY or PROOF_QUALITY */
-      logfont.lfPitchAndFamily = FIXED_PITCH | FF_MODERN; /* all mapping depends on fixed width fonts! */
-      logfont.lfHeight         = iHeight;
-      logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
+      memset( &lf, 0, sizeof( lf ) );
 
-      HB_STRNCPY( logfont.lfFaceName, lpFace, HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+      lf.lfEscapement     = 0;
+      lf.lfOrientation    = 0;
+      lf.lfWeight         = iWeight;
+      lf.lfItalic         = 0;
+      lf.lfUnderline      = 0;
+      lf.lfStrikeOut      = 0;
+      lf.lfCharSet        = ( BYTE ) iCodePage;      /* OEM_CHARSET */
+      lf.lfOutPrecision   = 0;
+      lf.lfClipPrecision  = 0;
+      lf.lfQuality        = ( BYTE ) iQuality;       /* DEFAULT_QUALITY, DRAFT_QUALITY or PROOF_QUALITY */
+      lf.lfPitchAndFamily = FIXED_PITCH | FF_MODERN; /* all mapping depends on fixed width fonts! */
+      lf.lfHeight         = iHeight;
+      lf.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
 
-      return CreateFontIndirect( &logfont );
+      HB_STRNCPY( lf.lfFaceName, lpFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+
+      return CreateFontIndirect( &lf );
    }
    else
       return ( HFONT ) GetStockObject( OEM_FIXED_FONT /* SYSTEM_FIXED_FONT */ );

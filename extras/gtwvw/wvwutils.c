@@ -65,32 +65,20 @@ HB_FUNC( WVW_YESCLOSE )
 
 HB_FUNC( WIN_SENDMESSAGE )
 {
-   PHB_ITEM pText = hb_param( 4, HB_IT_STRING );
-
    void *  hText = NULL;
    HB_SIZE nLen  = 0;
-   LPCTSTR szText;
+   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
 
-   LPCTSTR szTextToPass;
-
-   if( pText )
-   {
-      szText       = HB_ITEMGETSTR( pText, &hText, &nLen );
-      szTextToPass = HB_ISBYREF( 4 ) ? HB_STRDUP( szText ) : szText;
-   }
-   else
-      szTextToPass = NULL;
+   if( szText && HB_ISBYREF( 4 ) )
+      szText = HB_STRUNSHARE( &hText, szText, nLen );
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
                             ( UINT ) hb_parni( 2 ),
                             ( WPARAM ) hb_parnint( 3 ),
-                            pText ? ( LPARAM ) szTextToPass : ( LPARAM ) hb_parnint( 4 ) ) );
+                            szText ? ( LPARAM ) szText : ( LPARAM ) hb_parnint( 4 ) ) );
 
-   if( pText && HB_ISBYREF( 4 ) )
-   {
-      HB_STORSTRLEN( szTextToPass, nLen, 4 );
-      hb_xfree( ( void * ) szTextToPass );
-   }
+   if( szText )
+      HB_STORSTRLEN( szText, nLen, 4 );
    else
       hb_storc( NULL, 4 );
 
@@ -1804,7 +1792,8 @@ HB_FUNC( WVW_SETPEN )
       int      iPenStyle = hb_parni( 1 );
       int      iPenWidth = hb_parni( 2 );
       COLORREF crColor   = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
-      HPEN     hPen      = CreatePen( iPenStyle, iPenWidth, crColor );
+
+      HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
 
       if( hPen )
       {
@@ -2066,113 +2055,108 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 {
    WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   PHB_ITEM pFirst = hb_param( 3, HB_IT_ANY );
-   PHB_ITEM pFunc  = NULL;
-   HWND     hDlg   = NULL;
-   int      iIndex;
-   int      iType     = 0;
-   int      iResource = hb_parni( 4 );
+   int iIndex;
 
    /* check if we still have room for a new dialog */
-
    for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModeless ); iIndex++ )
    {
       if( wvw->a.hDlgModeless[ iIndex ] == NULL )
          break;
    }
 
-   if( iIndex >= ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModeless ) )
+   if( iIndex < ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModeless ) )
    {
-      hb_retnl( 0 );  /* no more room */
-      return;
-   }
+      PHB_ITEM pFirst = hb_param( 3, HB_IT_ANY );
+      PHB_ITEM pFunc  = NULL;
+      HWND     hDlg   = NULL;
+      int      iType     = 0;
+      int      iResource = hb_parni( 4 );
 
-   if( HB_IS_EVALITEM( pFirst ) )
-   {
-      /* pFunc is pointing to stored code block (later) */
-      pFunc = hb_itemNew( pFirst );
-      iType = 2;
-   }
-   else if( HB_IS_STRING( pFirst ) )
-   {
-      PHB_DYNS pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
-      if( pExecSym )
-         pFunc = ( PHB_ITEM ) pExecSym;
-      iType = 1;
-   }
-
-   if( HB_ISNUM( 3 ) )
-      hDlg = CreateDialogIndirect( hb_gt_wvw_GetWvwData()->hInstance,
-                                   ( LPDLGTEMPLATE ) hb_parc( 1 ),
-                                   hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
-                                   ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
-   else
-   {
-      switch( iResource )
+      if( HB_IS_EVALITEM( pFirst ) )
       {
-         case 0:
-         {
-            void * hText;
-
-            hDlg = CreateDialog( hb_gt_wvw_GetWvwData()->hInstance,
-                                 HB_PARSTRDEF( 1, &hText, NULL ),
-                                 hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
-                                 ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
-
-            hb_strfree( hText );
-            break;
-         }
-         case 1:
-            hDlg = CreateDialog( hb_gt_wvw_GetWvwData()->hInstance,
-                                 MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
-                                 hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
-                                 ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
-            break;
-
-         case 2:
-            hDlg = CreateDialogIndirect( hb_gt_wvw_GetWvwData()->hInstance,
-                                         ( LPDLGTEMPLATE ) hb_parc( 1 ),
-                                         hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
-                                         ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
-            break;
+         /* pFunc is pointing to stored code block (later) */
+         pFunc = hb_itemNew( pFirst );
+         iType = 2;
       }
-   }
-
-   if( hDlg )
-   {
-      wvw->a.hDlgModeless[ iIndex ] = hDlg;
-      if( pFunc )
+      else if( HB_IS_STRING( pFirst ) )
       {
-         wvw->a.pFunc[ iIndex ] = pFunc;
-         wvw->a.iType[ iIndex ] = iType;
+         PHB_DYNS pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
+         if( pExecSym )
+            pFunc = ( PHB_ITEM ) pExecSym;
+         iType = 1;
+      }
+
+      if( HB_ISNUM( 3 ) )
+         hDlg = CreateDialogIndirect( hb_gt_wvw_GetWvwData()->hInstance,
+                                      ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                      hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
+                                      ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
+      else
+      {
+         switch( iResource )
+         {
+            case 0:
+            {
+               void * hText;
+
+               hDlg = CreateDialog( hb_gt_wvw_GetWvwData()->hInstance,
+                                    HB_PARSTRDEF( 1, &hText, NULL ),
+                                    hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
+                                    ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
+
+               hb_strfree( hText );
+               break;
+            }
+            case 1:
+               hDlg = CreateDialog( hb_gt_wvw_GetWvwData()->hInstance,
+                                    MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
+                                    hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
+                                    ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
+               break;
+
+            case 2:
+               hDlg = CreateDialogIndirect( hb_gt_wvw_GetWvwData()->hInstance,
+                                            ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                            hb_parl( 2 ) ? wvw->pWin[ 0 ]->hWnd : NULL,
+                                            ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
+               break;
+         }
+      }
+
+      if( hDlg )
+      {
+         wvw->a.hDlgModeless[ iIndex ] = hDlg;
+         if( pFunc )
+         {
+            wvw->a.pFunc[ iIndex ] = pFunc;
+            wvw->a.iType[ iIndex ] = iType;
+         }
+         else
+         {
+            wvw->a.pFunc[ iIndex ] = NULL;
+            wvw->a.iType[ iIndex ] = 0;
+         }
+         SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
       }
       else
       {
-         wvw->a.pFunc[ iIndex ] = NULL;
-         wvw->a.iType[ iIndex ] = 0;
+         if( iType == 2 && pFunc )
+            hb_itemRelease( pFunc );
+
+         wvw->a.hDlgModeless[ iIndex ] = NULL;
       }
-      SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
+
+      HB_RETHANDLE( hDlg );
    }
    else
-   {
-      if( iType == 2 && pFunc )
-         hb_itemRelease( pFunc );
-
-      wvw->a.hDlgModeless[ iIndex ] = NULL;
-   }
-
-   HB_RETHANDLE( hDlg );
+      HB_RETHANDLE( 0 );  /* no more room */
 }
 
 HB_FUNC( WVW_CREATEDIALOGMODAL )
 {
    WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   PHB_ITEM pFirst = hb_param( 3, HB_IT_ANY );
-   int      iIndex;
-   int      iResource = hb_parni( 4 );
-   INT_PTR  iResult   = 0;
-   HWND     hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : wvw->pWin[ 0 ]->hWnd;
+   int iIndex;
 
    /* check if we still have room for a new dialog */
    for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModal ); iIndex++ )
@@ -2181,57 +2165,61 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
          break;
    }
 
-   if( iIndex >= ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModal ) )
+   if( iIndex < ( int ) HB_SIZEOFARRAY( wvw->a.hDlgModal ) )
    {
-      hb_retni( 0 );  /* no more room */
-      return;
-   }
+      PHB_ITEM pFirst    = hb_param( 3, HB_IT_ANY );
+      int      iResource = hb_parni( 4 );
+      INT_PTR  iResult   = 0;
+      HWND     hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : wvw->pWin[ 0 ]->hWnd;
 
-   if( HB_IS_EVALITEM( pFirst ) )
-   {
-      wvw->a.pFuncModal[ iIndex ] = hb_itemNew( pFirst );
-      wvw->a.iTypeModal[ iIndex ] = 2;
-   }
-   else if( HB_IS_STRING( pFirst ) )
-   {
-      PHB_DYNS pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
-      wvw->a.pFuncModal[ iIndex ] = pExecSym ? ( PHB_ITEM ) pExecSym : NULL;
-      wvw->a.iTypeModal[ iIndex ] = 1;
-   }
-
-   switch( iResource )
-   {
-      case 0:
+      if( HB_IS_EVALITEM( pFirst ) )
       {
-         void * hText;
-
-         iResult = DialogBoxParam( hb_gt_wvw_GetWvwData()->hInstance,
-                                   HB_PARSTRDEF( 1, &hText, NULL ),
-                                   hParent,
-                                   ( DLGPROC ) hb_gt_wvw_DlgProcModal,
-                                   ( LPARAM ) ( DWORD ) iIndex + 1 );
-
-         hb_strfree( hText );
-         break;
+         wvw->a.pFuncModal[ iIndex ] = hb_itemNew( pFirst );
+         wvw->a.iTypeModal[ iIndex ] = 2;
       }
-      case 1:
-         iResult = DialogBoxParam( hb_gt_wvw_GetWvwData()->hInstance,
-                                   MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
-                                   hParent,
-                                   ( DLGPROC ) hb_gt_wvw_DlgProcModal,
-                                   ( LPARAM ) ( DWORD ) iIndex + 1 );
-         break;
+      else if( HB_IS_STRING( pFirst ) )
+      {
+         PHB_DYNS pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
+         wvw->a.pFuncModal[ iIndex ] = pExecSym ? ( PHB_ITEM ) pExecSym : NULL;
+         wvw->a.iTypeModal[ iIndex ] = 1;
+      }
 
-      case 2:
-         iResult = DialogBoxIndirectParam( hb_gt_wvw_GetWvwData()->hInstance,
-                                           ( LPDLGTEMPLATE ) hb_parc( 1 ),
-                                           hParent,
-                                           ( DLGPROC ) hb_gt_wvw_DlgProcModal,
-                                           ( LPARAM ) ( DWORD ) iIndex + 1 );
-         break;
+      switch( iResource )
+      {
+         case 0:
+         {
+            void * hText;
+
+            iResult = DialogBoxParam( hb_gt_wvw_GetWvwData()->hInstance,
+                                      HB_PARSTRDEF( 1, &hText, NULL ),
+                                      hParent,
+                                      ( DLGPROC ) hb_gt_wvw_DlgProcModal,
+                                      ( LPARAM ) ( DWORD ) iIndex + 1 );
+
+            hb_strfree( hText );
+            break;
+         }
+         case 1:
+            iResult = DialogBoxParam( hb_gt_wvw_GetWvwData()->hInstance,
+                                      MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
+                                      hParent,
+                                      ( DLGPROC ) hb_gt_wvw_DlgProcModal,
+                                      ( LPARAM ) ( DWORD ) iIndex + 1 );
+            break;
+
+         case 2:
+            iResult = DialogBoxIndirectParam( hb_gt_wvw_GetWvwData()->hInstance,
+                                              ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                              hParent,
+                                              ( DLGPROC ) hb_gt_wvw_DlgProcModal,
+                                              ( LPARAM ) ( DWORD ) iIndex + 1 );
+            break;
+      }
+
+      hb_retnint( iResult );
    }
-
-   hb_retnint( iResult );
+   else
+      hb_retnint( 0 );  /* no more room */
 }
 
 /* removed from GTWVT, so we remove it from here also. I really don't like doing it... */

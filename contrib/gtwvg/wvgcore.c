@@ -882,30 +882,27 @@ HB_FUNC( WVT_SETPEN )
 
    if( _s )
    {
-      int      iPenWidth, iPenStyle;
-      COLORREF crColor;
-      HPEN     hPen;
-
-      if( ! HB_ISNUM( 1 ) )
-         hb_retl( HB_FALSE );
-
-      iPenStyle = hb_parni( 1 );
-      iPenWidth = hb_parni( 2 );
-      crColor   = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
-
-      hPen = CreatePen( iPenStyle, iPenWidth, crColor );
-
-      if( hPen )
+      if( HB_ISNUM( 1 ) )
       {
-         if( _s->currentPen )
-            DeleteObject( _s->currentPen );
-         _s->currentPen = hPen;
+         int      iPenStyle = hb_parni( 1 );
+         int      iPenWidth = hb_parni( 2 );
+         COLORREF crColor   = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
 
-         hb_retl( HB_TRUE );
+         HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
+
+         if( hPen )
+         {
+            if( _s->currentPen )
+               DeleteObject( _s->currentPen );
+            _s->currentPen = hPen;
+
+            hb_retl( HB_TRUE );
+            return;
+         }
       }
-      else
-         hb_retl( HB_FALSE );
    }
+
+   hb_retl( HB_FALSE );
 }
 
 /* Wvt_SetBrush( nStyle, nColor, [ nHatch ] ) */
@@ -915,34 +912,37 @@ HB_FUNC( WVT_SETBRUSH )
 
    if( _s )
    {
-      HBRUSH   hBrush;
-      LOGBRUSH lb;
-
-      if( ! HB_ISNUM( 1 ) )
+      if( HB_ISNUM( 1 ) )
       {
-         hb_retl( HB_FALSE );
-         return;
-      }
+         HBRUSH   hBrush;
+         LOGBRUSH lb;
 
-      lb.lbStyle = hb_parnl( 1 );
-      lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
-      lb.lbHatch = hb_parnl( 3 );
+         memset( &lb, 0, sizeof( lb ) );
+
+         lb.lbStyle = hb_parnl( 1 );
+         lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
+         lb.lbHatch = hb_parnl( 3 );
+
 #if ! defined( HB_OS_WIN_CE )
-      hBrush = CreateBrushIndirect( &lb );
+         hBrush = CreateBrushIndirect( &lb );
 #else
-      hBrush = CreateSolidBrush( lb.lbColor );
+         hBrush = CreateSolidBrush( lb.lbColor );
 #endif
-      if( hBrush )
-      {
-         if( _s->currentBrush )
-            DeleteObject( _s->currentBrush );
-         _s->currentBrush = hBrush;
 
-         hb_retl( HB_TRUE );
+         if( hBrush )
+         {
+            if( _s->currentBrush )
+               DeleteObject( _s->currentBrush );
+
+            _s->currentBrush = hBrush;
+
+            hb_retl( HB_TRUE );
+            return;
+         }
       }
-      else
-         hb_retl( HB_FALSE );
    }
+
+   hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawBoxGet( nRow, nCol, nWidth ) */
@@ -1079,10 +1079,12 @@ HB_FUNC( WVT_DRAWIMAGE )
       }
 
       hb_retl( HB_TRUE );
+   }
+   else
+      hb_retl( HB_FALSE );
 #else
    hb_retl( HB_FALSE );
 #endif
-   }
 }
 
 /* Wvt_DrawLabel( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor, ;
@@ -1096,29 +1098,29 @@ HB_FUNC( WVT_DRAWLABEL )
    {
       POINT   xy;
       HFONT   hFont, hOldFont, hOldFontGui;
-      LOGFONT logfont;
+      LOGFONT lf;
       void *  hText = NULL;
 
-      memset( &logfont, 0, sizeof( logfont ) );
+      memset( &lf, 0, sizeof( lf ) );
 
-      logfont.lfEscapement     = hb_parni( 5 ) * 10;
-      logfont.lfOrientation    = 0;
-      logfont.lfWeight         = hb_parni( 11 );
-      logfont.lfItalic         = ( BYTE ) hb_parl( 14 );
-      logfont.lfUnderline      = ( BYTE ) hb_parl( 15 );
-      logfont.lfStrikeOut      = ( BYTE ) hb_parl( 16 );
-      logfont.lfCharSet        = ( BYTE ) hb_parnidef( 13, _s->CodePage );
-      logfont.lfOutPrecision   = 0;
-      logfont.lfClipPrecision  = 0;
-      logfont.lfQuality        = ( BYTE ) hb_parnidef( 12, DEFAULT_QUALITY );
-      logfont.lfPitchAndFamily = FF_DONTCARE;
-      logfont.lfHeight         = hb_parnidef( 9, _s->fontHeight );
-      logfont.lfWidth = hb_parnidef( 10, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
+      lf.lfEscapement     = hb_parni( 5 ) * 10;
+      lf.lfOrientation    = 0;
+      lf.lfWeight         = hb_parni( 11 );
+      lf.lfItalic         = ( BYTE ) hb_parl( 14 );
+      lf.lfUnderline      = ( BYTE ) hb_parl( 15 );
+      lf.lfStrikeOut      = ( BYTE ) hb_parl( 16 );
+      lf.lfCharSet        = ( BYTE ) hb_parnidef( 13, _s->CodePage );
+      lf.lfOutPrecision   = 0;
+      lf.lfClipPrecision  = 0;
+      lf.lfQuality        = ( BYTE ) hb_parnidef( 12, DEFAULT_QUALITY );
+      lf.lfPitchAndFamily = FF_DONTCARE;
+      lf.lfHeight         = hb_parnidef( 9, _s->fontHeight );
+      lf.lfWidth = hb_parnidef( 10, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-      HB_STRNCPY( logfont.lfFaceName, ( HB_ISCHAR( 8 ) ? HB_PARSTR( 8, &hText, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+      HB_STRNCPY( lf.lfFaceName, ( HB_ISCHAR( 8 ) ? HB_PARSTR( 8, &hText, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
 
-      hFont = CreateFontIndirect( &logfont );
+      hFont = CreateFontIndirect( &lf );
       if( hFont )
       {
          HB_SIZE  nLen;
@@ -1151,12 +1153,15 @@ HB_FUNC( WVT_DRAWLABEL )
          }
          #endif
          hb_strfree( hText );
-         DeleteObject( hFont );
-         hb_retl( HB_TRUE );
-      }
 
-      hb_retl( HB_FALSE );
+         DeleteObject( hFont );
+
+         hb_retl( HB_TRUE );
+         return;
+      }
    }
+
+   hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawLabelEx( nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont, aPxlOff ) */
@@ -1199,16 +1204,17 @@ HB_FUNC( WVT_DRAWLABELEX )
          }
          #endif
          hb_strfree( hText );
+
          hb_retl( HB_TRUE );
+         return;
       }
-      else
-         hb_retl( HB_FALSE );
    }
+
+   hb_retl( HB_FALSE );
 }
 
 /*                     1     2       3        4       5         6           7         8            9      10       11
- * Wvt_DrawLabelObj( nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aPxlOff )
- */
+   Wvt_DrawLabelObj( nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aPxlOff ) */
 HB_FUNC( WVT_DRAWLABELOBJ )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1301,13 +1307,15 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       }
       #endif
       hb_strfree( hText );
+
       hb_retl( HB_TRUE );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /*                   1      2       3        4       5       6        7         8
- * Wvt_DrawOutline( nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor, aPxlOff )
- */
+   Wvt_DrawOutline( nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor, aPxlOff ) */
 HB_FUNC( WVT_DRAWOUTLINE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1399,8 +1407,7 @@ HB_FUNC( WVT_DRAWOUTLINEEX )
 }
 
 /*                1      2       3       4        5        6       7       8       9      10        11
- * Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aPxlOff )
- */
+   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aPxlOff ) */
 HB_FUNC( WVT_DRAWLINE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1592,13 +1599,15 @@ HB_FUNC( WVT_DRAWLINE )
       if( hOldPenGUI )
          SelectObject( _s->hGuiDC, hOldPenGUI );
       DeleteObject( hPen );
+
       hb_retl( HB_TRUE );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /*                  1      2       3       4        5        6       7       8          9
- * Wvt_DrawLineEx( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen, aPxlOff )
- */
+   Wvt_DrawLineEx( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen, aPxlOff ) */
 HB_FUNC( WVT_DRAWLINEEX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1790,10 +1799,11 @@ HB_FUNC( WVT_DRAWLINEEX )
          }
 
          hb_retl( HB_TRUE );
+         return;
       }
-      else
-         hb_retl( HB_FALSE );
    }
+
+   hb_retl( HB_FALSE );
 }
 
 /* Inside the area requested!
@@ -1819,6 +1829,8 @@ HB_FUNC( WVT_DRAWELLIPSE )
          hb_retl( Ellipse( _s->hGuiDC, iLeft, iTop, iRight, iBottom ) );
       #endif
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawRectangle( nTop, nLeft, nBottom, nRight, aPxlOff ) */
@@ -1842,6 +1854,8 @@ HB_FUNC( WVT_DRAWRECTANGLE )
          hb_retl( Rectangle( _s->hGuiDC, iLeft, iTop, iRight, iBottom ) );
       #endif
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawRoundRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRoundHeight, nRoundWidth ) */
@@ -1869,6 +1883,8 @@ HB_FUNC( WVT_DRAWROUNDRECT )
          hb_retl( RoundRect( _s->hGuiDC, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
       #endif
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawFocusRect( nTop, nLeft, nBottom, nRight, aPxlOff ) */
@@ -1895,6 +1911,8 @@ HB_FUNC( WVT_DRAWFOCUSRECT )
          hb_retl( DrawFocusRect( _s->hGuiDC, &rc ) );
       #endif
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawColorRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRGB ) */
@@ -1925,14 +1943,17 @@ HB_FUNC( WVT_DRAWCOLORRECT )
             hb_retl( FillRect( _s->hGuiDC, &rc, hBrush ) );
          #endif
          DeleteObject( hBrush );
+
+         return;
       }
    }
+
+   hb_retl( HB_FALSE );
 }
 
 /*                     1     2       3      4       5
- * Wvt_DrawGridHorz( nTop, nLeft, nRight, nRows, aPxlOff )
- *                                               aPxlOff[ 2 ] and aPxlOff[ 4 ] used
- */
+   Wvt_DrawGridHorz( nTop, nLeft, nRight, nRows, aPxlOff )
+   aPxlOff[ 2 ] and aPxlOff[ 4 ] used */
 HB_FUNC( WVT_DRAWGRIDHORZ )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1980,11 +2001,12 @@ HB_FUNC( WVT_DRAWGRIDHORZ )
       #endif
       hb_retl( HB_TRUE );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawGridVert( nTop, nBottom, aCols, nCols, aPxlOff )
- *                                              aPxlOff[ 1 ] and aPxlOff[ 3 ] used
- */
+   aPxlOff[ 1 ] and aPxlOff[ 3 ] used */
 HB_FUNC( WVT_DRAWGRIDVERT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2029,6 +2051,8 @@ HB_FUNC( WVT_DRAWGRIDVERT )
       #endif
       hb_retl( HB_TRUE );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawButton( nTop, nLeft, nBottom, nRight, cText, cnImage, ;
@@ -2190,6 +2214,8 @@ HB_FUNC( WVT_DRAWBUTTON )
 
       hb_retl( HB_TRUE );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawStatusBar( nNumPanels, aTLBRofPanels ) */
@@ -2262,8 +2288,7 @@ HB_FUNC( WVT_DRAWSTATUSBAR )
 }
 
 /* Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff, lDoNotScale ) -> lOk
- * nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right }
- */
+   nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right } */
 HB_FUNC( WVT_DRAWPICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -2289,10 +2314,12 @@ HB_FUNC( WVT_DRAWPICTURE )
             iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
             hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, _s->pGUI->iPicture[ iSlot ], hb_parl( 7 ) ) );
+            return;
          }
       }
    }
 #endif
+   hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawPictureByHandle( nTop, nLeft, nBottom, nRight, hPicture, aPxlOff, lDoNotScale ) -> lOk */
@@ -2314,6 +2341,10 @@ HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
 
       hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 5 ), hb_parl( 7 ) ) );
    }
+   else
+      hb_retl( HB_FALSE );
+#else
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -2358,6 +2389,8 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
       }
       hb_retl( HB_TRUE );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawScrollButton( nTop, nLeft, nBottom, nRight, aPxlOff, nTLBR, lDepressed ) */
@@ -2612,6 +2645,8 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
       }
       hb_retl( bGF );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 /*#endif*/
 
@@ -2790,37 +2825,37 @@ HB_FUNC( WVT_CREATEFONT )
 
    if( _s )
    {
-      LOGFONT logfont;
+      LOGFONT lf;
       void *  hText = NULL;
 
-      memset( &logfont, 0, sizeof( logfont ) );
+      memset( &lf, 0, sizeof( lf ) );
 
-      logfont.lfEscapement     = hb_parni( 10 ) * 10;
-      logfont.lfOrientation    = 0;
-      logfont.lfWeight         = hb_parni( 4 );
-      logfont.lfItalic         = ( BYTE ) hb_parl( 5 );
-      logfont.lfUnderline      = ( BYTE ) hb_parl( 6 );
-      logfont.lfStrikeOut      = ( BYTE ) hb_parl( 7 );
-      logfont.lfCharSet        = ( BYTE ) hb_parnidef( 8, _s->CodePage );
-      logfont.lfOutPrecision   = 0;
-      logfont.lfClipPrecision  = 0;
-      logfont.lfQuality        = ( BYTE ) hb_parnidef( 9, DEFAULT_QUALITY );
-      logfont.lfPitchAndFamily = FF_DONTCARE;
-      logfont.lfHeight         = hb_parnidef( 2, _s->fontHeight );
-      logfont.lfWidth = hb_parnidef( 3, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
+      lf.lfEscapement     = hb_parni( 10 ) * 10;
+      lf.lfOrientation    = 0;
+      lf.lfWeight         = hb_parni( 4 );
+      lf.lfItalic         = ( BYTE ) hb_parl( 5 );
+      lf.lfUnderline      = ( BYTE ) hb_parl( 6 );
+      lf.lfStrikeOut      = ( BYTE ) hb_parl( 7 );
+      lf.lfCharSet        = ( BYTE ) hb_parnidef( 8, _s->CodePage );
+      lf.lfOutPrecision   = 0;
+      lf.lfClipPrecision  = 0;
+      lf.lfQuality        = ( BYTE ) hb_parnidef( 9, DEFAULT_QUALITY );
+      lf.lfPitchAndFamily = FF_DONTCARE;
+      lf.lfHeight         = hb_parnidef( 2, _s->fontHeight );
+      lf.lfWidth = hb_parnidef( 3, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-      HB_STRNCPY( logfont.lfFaceName, ( ! HB_ISCHAR( 1 ) ? _s->fontFace : HB_PARSTR( 1, &hText, NULL ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+      HB_STRNCPY( lf.lfFaceName, ( ! HB_ISCHAR( 1 ) ? _s->fontFace : HB_PARSTR( 1, &hText, NULL ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
 
-      hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &logfont ) );
+      hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &lf ) );
    }
+   else
+      hb_retnint( 0 );
 }
 
 /* Wvt_LoadPicture( nSlot, cFilePic ) */
 HB_FUNC( WVT_LOADPICTURE )
 {
-   HB_BOOL bResult = HB_FALSE;
-
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -2841,12 +2876,14 @@ HB_FUNC( WVT_LOADPICTURE )
             if( _s->pGUI->iPicture[ iSlot ] )
                hb_wvt_gtDestroyPicture( _s->pGUI->iPicture[ iSlot ] );
             _s->pGUI->iPicture[ iSlot ] = iPicture;
-            bResult = HB_TRUE;
+
+            hb_retl( HB_TRUE );
+            return;
          }
       }
    }
 #endif
-   hb_retl( bResult );
+   hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVT_DESTROYPICTURE )
@@ -2869,8 +2906,6 @@ HB_FUNC( WVT_LOADPICTUREEX )
 
 HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
 {
-   HB_BOOL bResult = HB_FALSE;
-
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -2893,12 +2928,14 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
             if( _s->pGUI->iPicture[ iSlot ] )
                hb_wvt_gtDestroyPicture( _s->pGUI->iPicture[ iSlot ] );
             _s->pGUI->iPicture[ iSlot ] = iPicture;
-            bResult = HB_TRUE;
+
+            hb_retl( HB_TRUE );
+            return;
          }
       }
    }
 #endif
-   hb_retl( bResult );
+   hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
@@ -2912,8 +2949,9 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
    hb_strfree( hResource );
    hb_strfree( hSection );
 
-   if( iPicture )
-      hb_retnl( ( HB_PTRDIFF ) iPicture );
+   hb_retnint( ( HB_PTRDIFF ) iPicture );
+#else
+   hb_retnint( 0 );
 #endif
 }
 
@@ -2929,30 +2967,30 @@ HB_FUNC( WVT_LOADFONT )
 
       if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserFonts ) )
       {
-         LOGFONT logfont;
+         LOGFONT lf;
          HFONT   hFont;
          void *  hF = NULL;
 
-         memset( &logfont, 0, sizeof( logfont ) );
+         memset( &lf, 0, sizeof( lf ) );
 
-         logfont.lfEscapement     = hb_parni( 11 ) * 10;
-         logfont.lfOrientation    = 0;
-         logfont.lfWeight         = hb_parni( 5 );
-         logfont.lfItalic         = ( BYTE ) hb_parl(  6 );
-         logfont.lfUnderline      = ( BYTE ) hb_parl(  7 );
-         logfont.lfStrikeOut      = ( BYTE ) hb_parl(  8 );
-         logfont.lfCharSet        = ( BYTE ) hb_parnidef( 9, _s->CodePage );
-         logfont.lfOutPrecision   = 0;
-         logfont.lfClipPrecision  = 0;
-         logfont.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
-         logfont.lfPitchAndFamily = FF_DONTCARE;
-         logfont.lfHeight         = hb_parnidef( 3, _s->fontHeight );
-         logfont.lfWidth = hb_parnidef( 4, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
+         lf.lfEscapement     = hb_parni( 11 ) * 10;
+         lf.lfOrientation    = 0;
+         lf.lfWeight         = hb_parni( 5 );
+         lf.lfItalic         = ( BYTE ) hb_parl(  6 );
+         lf.lfUnderline      = ( BYTE ) hb_parl(  7 );
+         lf.lfStrikeOut      = ( BYTE ) hb_parl(  8 );
+         lf.lfCharSet        = ( BYTE ) hb_parnidef( 9, _s->CodePage );
+         lf.lfOutPrecision   = 0;
+         lf.lfClipPrecision  = 0;
+         lf.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
+         lf.lfPitchAndFamily = FF_DONTCARE;
+         lf.lfHeight         = hb_parnidef( 3, _s->fontHeight );
+         lf.lfWidth = hb_parnidef( 4, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-         HB_STRNCPY( logfont.lfFaceName, ( HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hF, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
+         HB_STRNCPY( lf.lfFaceName, ( HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hF, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
          hb_strfree( hF );
 
-         hFont = CreateFontIndirect( &logfont );
+         hFont = CreateFontIndirect( &lf );
          if( hFont )
          {
             if( _s->pGUI->hUserFonts[ iSlot ] )
@@ -2966,8 +3004,6 @@ HB_FUNC( WVT_LOADFONT )
 /* Wvt_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
 HB_FUNC( WVT_LOADPEN )
 {
-   HB_BOOL bResult = HB_FALSE;
-
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
@@ -2988,15 +3024,16 @@ HB_FUNC( WVT_LOADPEN )
                DeleteObject( _s->pGUI->hUserPens[ iSlot ] );
             _s->pGUI->hUserPens[ iSlot ] = hPen;
 
-            bResult = HB_TRUE;
+            hb_retl( HB_TRUE );
+            return;
          }
       }
    }
 
-   hb_retl( bResult );
+   hb_retl( HB_FALSE );
 }
 
-/* aScr := Wvt_SaveScreen( nTop, nLeft, nBottom, nRight ) */
+/* Wvt_SaveScreen( nTop, nLeft, nBottom, nRight ) -> aSrc */
 HB_FUNC( WVT_SAVESCREEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -3096,6 +3133,8 @@ HB_FUNC( WVT_RESTSCREEN )
       }
       hb_retl( bResult );
    }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* - */

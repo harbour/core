@@ -101,20 +101,22 @@ HB_FUNC( WVG_SENDMESSAGE )
 {
    void *  hText  = NULL;
    HB_SIZE nLen   = 0;
-   LPCTSTR lpText = HB_PARSTR( 4, &hText, &nLen );
+   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
 
-   if( lpText && HB_ISBYREF( 4 ) )
-      lpText = HB_STRUNSHARE( &hText, lpText, nLen );
+   if( szText && HB_ISBYREF( 4 ) )
+      szText = HB_STRUNSHARE( &hText, szText, nLen );
 
-   hb_retnl( ( HB_ULONG ) SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
-                                       ( UINT ) hb_parni( 2 ),
-                                       ( ! HB_ISNUM( 3 ) ? 0 : ( WPARAM ) hb_parnint( 3 ) ),
-                                       ( lpText ? ( LPARAM ) lpText : ( LPARAM ) hb_parnint( 4 ) ) ) );
-   if( lpText )
-   {
-      HB_STORSTR( lpText, 4 );
-      hb_strfree( hText );
-   }
+   hb_retnint( SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
+                            ( UINT ) hb_parni( 2 ),
+                            ( WPARAM ) hb_parnint( 3 ),
+                            szText ? ( LPARAM ) szText : ( LPARAM ) hb_parnint( 4 ) ) );
+
+   if( szText )
+      HB_STORSTRLEN( szText, nLen, 4 );
+   else
+      hb_storc( NULL, 4 );
+
+   hb_strfree( hText );
 }
 
 HB_FUNC( WVG_SENDDLGITEMMESSAGE )
@@ -142,6 +144,8 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )
       hb_storclen( cText, iLen, 5 );
       hb_xfree( cText );
    }
+   else
+      hb_storc( NULL, 5 );
 }
 
 /* Wvg_SetTimer( hWnd, nIdentifier, nTimeOut ) */
@@ -259,10 +263,12 @@ HB_FUNC( WVG_GETDLGITEM )
 HB_FUNC( WVG_MESSAGEBOX )
 {
    HWND   hWnd = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
+
    void * hMsg;
    void * hTitle;
 
    hb_retni( MessageBox( hWnd, HB_PARSTR( 2, &hMsg, NULL ), HB_PARSTR( 3, &hTitle, NULL ), hb_parnidef( 4, MB_OK ) ) );
+
    hb_strfree( hMsg );
    hb_strfree( hTitle );
 }
@@ -291,7 +297,7 @@ HB_FUNC( WVG_LOADICON )
 
    if( HB_ISNUM( 1 ) )
    {
-      hIcon = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+      hIcon = LoadIcon( wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
    }
    else
    {
@@ -319,16 +325,16 @@ HB_FUNC( WVG_LOADIMAGE )
    {
       case 0:   /* Image from resource by numeric id */
          if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
-            hImage = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+            hImage = LoadIcon( wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          else
-            hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+            hImage = LoadBitmap( wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          break;
 
       case 1:   /* image from resource by name */
          if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
-            hImage = LoadIcon( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
+            hImage = LoadIcon( wvg_hInstance(), lpBuffer );
          else
-            hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
+            hImage = LoadBitmap( wvg_hInstance(), lpBuffer );
          break;
 
       case 2:   /* Image from disk file */
@@ -489,12 +495,11 @@ HB_FUNC( WVG_CLIENTTOSCREEN )
       {
          wvt_Point2ArrayEx( &Point, pArray );
          hb_retl( HB_TRUE );
+         return;
       }
-      else
-         hb_retl( HB_FALSE );
    }
-   else
-      hb_retl( HB_FALSE );
+
+   hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVG_SCREENTOCLIENT )
@@ -508,12 +513,11 @@ HB_FUNC( WVG_SCREENTOCLIENT )
       {
          wvt_Point2ArrayEx( &Point, pArray );
          hb_retl( HB_TRUE );
+         return;
       }
-      else
-         hb_retl( HB_FALSE );
    }
-   else
-      hb_retl( HB_FALSE );
+
+   hb_retl( HB_FALSE );
 }
 
 #ifdef HB_LEGACY_LEVEL5
@@ -598,7 +602,7 @@ HB_FUNC( WVG_SLEEP )
    Sleep( hb_parni( 1 ) );
 }
 
-/*                         Menu Manipulations                           */
+/* Menu Manipulations */
 
 HB_FUNC( WVG_SETMENU )
 {
@@ -696,23 +700,21 @@ HB_FUNC( WVG_CHECKMENUITEM )
 
 HB_FUNC( WVG_ISMENUITEMCHECKED )
 {
-   BOOL lSuccess;
    MENUITEMINFO lpmii;
 
    memset( &lpmii, 0, sizeof( lpmii ) );
+
    lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = MIIM_STATE;
 
-   lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
-   if( lSuccess )
-      hb_retl( lpmii.fState & MFS_CHECKED ? TRUE : FALSE );
+   if( GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
+      hb_retl( ( lpmii.fState & MFS_CHECKED ) != 0 );
    else
-      hb_retl( FALSE );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVG_ISMENUITEMENABLED )
 {
-   BOOL lSuccess;
    MENUITEMINFO lpmii;
 
    memset( &lpmii, 0, sizeof( lpmii ) );
@@ -720,30 +722,27 @@ HB_FUNC( WVG_ISMENUITEMENABLED )
    lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = MIIM_STATE;
 
-   lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
-   if( lSuccess )
-      hb_retl( lpmii.fState & MFS_DISABLED ? FALSE : TRUE );
+   if( GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
+      hb_retl( ( lpmii.fState & MFS_DISABLED ) == 0 );
    else
-      hb_retl( TRUE );
+      hb_retl( HB_TRUE );
 }
 
 HB_FUNC( WVG_SETMENUITEM )
 {
-   BOOL lSuccess;
    MENUITEMINFO lpmii;
    void *       hText = NULL;
 
    memset( &lpmii, 0, sizeof( lpmii ) );
+
    lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = hb_parl( 5 ) ? MIIM_STRING : MIIM_SUBMENU;
    if( hb_parl( 5 ) )
       lpmii.dwTypeData = ( LPTSTR ) HB_PARSTR( 4, &hText, NULL );
 
-   lSuccess = SetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
-   hb_retl( lSuccess );
+   hb_retl( ( HB_BOOL ) SetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) );
 
-   if( hText )
-      hb_strfree( hText );
+   hb_strfree( hText );
 }
 
 HB_FUNC( WVG_DRAWMENUBAR )
@@ -780,7 +779,7 @@ HB_FUNC( WVG_CREATEWINDOWEX )
                           hb_parni( 7 ), hb_parni( 8 ),
                           ( HWND ) ( HB_PTRDIFF ) hb_parnint( 9 ),
                           HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : NULL,
-                          HB_ISNUM( 11 ) ? ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 11 ) : ( HINSTANCE ) wvg_hInstance(),
+                          HB_ISNUM( 11 ) ? ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 11 ) : wvg_hInstance(),
                           NULL );
    hb_strfree( hClassName );
    hb_strfree( hWinName );
@@ -1439,6 +1438,5 @@ HB_FUNC( WVG_SENDCBMESSAGE )
          break;
    }
 
-   if( hText )
-      hb_strfree( hText );
+   hb_strfree( hText );
 }

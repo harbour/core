@@ -411,85 +411,75 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
 
 HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
 {
-   HBITMAP hBitmap;
    void *  hText;
 
-   hBitmap = hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 0 );
+   hb_retptr( ( void * ) hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
+                                         ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 0 ) );
+
    hb_strfree( hText );
-   hb_retptr( ( void * ) hBitmap );
 }
 
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
 {
-   HBITMAP hBitmap;
-
-   hBitmap = hPrepareBitmap( NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 2 );
-
-   hb_retptr( ( void * ) hBitmap );
+   hb_retptr( ( void * ) hPrepareBitmap( NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
+                                         ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 2 ) );
 }
 
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
 {
-   HBITMAP hBitmap;
-   void *  hText;
+   void * hText;
 
-   hBitmap = hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                             ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 1 );
+   hb_retptr( ( void * ) hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
+                                         ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 1 ) );
+
    hb_strfree( hText );
-   hb_retptr( ( void * ) hBitmap );
 }
 
 HB_FUNC( WVG_STATUSBARCREATEPANEL )
 {
    HWND hWndSB = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   int  iMode  = hb_parni( 2 );
 
-   if( hWndSB == NULL || ! IsWindow( hWndSB ) )
+   if( hWndSB && IsWindow( hWndSB ) )
    {
-      hb_retl( HB_FALSE );
-      return;
-   }
-
-   switch( iMode )
-   {
-      case 0:
+      switch( hb_parni( 2 ) /* nMode */ )
       {
-         int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
-         int  iParts;
-         RECT rc = { 0, 0, 0, 0 };
-         int  n;
-         int  width;
-
-         iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
-
-         GetClientRect( hWndSB, &rc );
-         width = ( int ) ( rc.right / ( iParts + 1 ) );
-         for( n = 0; n < iParts; n++ )
-            ptArray[ n ] = width * ( n + 1 );
-
-         ptArray[ iParts ] = -1;
-
-         if( SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) iParts + 1, ( LPARAM ) ( LPINT ) ptArray ) )
+         case 0:
          {
-            hb_retl( HB_TRUE );
-            return;
+            int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
+            int  iParts;
+            RECT rc = { 0, 0, 0, 0 };
+            int  n;
+            int  width;
+
+            iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+
+            GetClientRect( hWndSB, &rc );
+            width = ( int ) ( rc.right / ( iParts + 1 ) );
+            for( n = 0; n < iParts; n++ )
+               ptArray[ n ] = width * ( n + 1 );
+
+            ptArray[ iParts ] = -1;
+
+            if( SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) iParts + 1, ( LPARAM ) ( LPINT ) ptArray ) )
+            {
+               hb_retl( HB_TRUE );
+               return;
+            }
          }
-      }
-      case -1:
-      {
-         RECT rc = { 0, 0, 0, 0 };
-         int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
-
-         if( GetClientRect( hWndSB, &rc ) )
+         case -1:
          {
-            ptArray[ 0 ] = rc.right;
+            RECT rc = { 0, 0, 0, 0 };
+            int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
 
-            SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) 1, ( LPARAM ) ( LPINT ) ptArray );
+            if( GetClientRect( hWndSB, &rc ) )
+            {
+               ptArray[ 0 ] = rc.right;
 
-            hb_retl( HB_TRUE );
-            return;
+               SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) 1, ( LPARAM ) ( LPINT ) ptArray );
+
+               hb_retl( HB_TRUE );
+               return;
+            }
          }
       }
    }
@@ -614,6 +604,8 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 
       if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
          HB_STORSTR( text, 4 );
+      else
+         hb_storc( NULL, 4 );
 
       hParent = TreeView_GetParent( wvg_parhwnd( 1 ), hSelected );
       hb_stornint( ( HB_PTRDIFF ) hParent, 5 );
@@ -625,6 +617,15 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 
       if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
          HB_STORSTR( Parent, 3 );
+      else
+         hb_storc( NULL, 3 );
+   }
+   else
+   {
+      hb_storc( NULL, 3 );
+      hb_storc( NULL, 4 );
+      hb_stornint( 0, 5 );
+      hb_stornint( 0, 6 );
    }
 }
 
@@ -905,8 +906,7 @@ HB_FUNC( WVG_FONTCREATE )
    aFont = hb_param( 1, HB_IT_ARRAY );
    if( aFont )
    {
-      HB_ITEMCOPYSTR( hb_arrayGetItemPtr( aFont, 1 ),
-                      lf.lfFaceName, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+      HB_ITEMCOPYSTR( hb_arrayGetItemPtr( aFont, 1 ), lf.lfFaceName, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
       lf.lfHeight         = ( LONG ) hb_arrayGetNL( aFont, 2 );
       lf.lfWidth          = ( LONG ) hb_arrayGetNL( aFont, 3 );
@@ -970,8 +970,7 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 }
 
 /*                               IL  | DL
- * Wvg_AddToolBarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip )
- */
+   Wvg_AddToolBarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip ) */
 HB_FUNC( WVG_ADDTOOLBARBUTTON )
 {
    TBBUTTON tbb;
