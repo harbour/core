@@ -1,5 +1,4 @@
-/*
-   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
+/* Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
    Mapping of gtwvt functions and their coresponding ones in gtwvw.
 
@@ -8,12 +7,11 @@
 
    WARNING:
    This mapping is made globally. Should you find any error(s) please let me know.
-*/
+ */
 
 MEMVAR _wvwtemp_
 
 /* PART-1: WINDOW INDEPENDENT (the same parameter list) */
-/* ==================================================== */
 
 #xtranslate Wvt_CreateMenu         ( [<vlist,...>] )  => wvw_CreateMenu         ( [<vlist>] )
 #xtranslate Wvt_CreatePopupMenu    ( [<vlist,...>] )  => wvw_CreatePopupMenu    ( [<vlist>] )
@@ -57,7 +55,6 @@ MEMVAR _wvwtemp_
 //Wvt_SetDefLineSpacing  ( [<vlist,...>] )  => wvw_SetDefLineSpacing  ( [<vlist>] )
 
 /* PART-2: WINDOW DEPENDENT (additional nWinNum parameter) */
-/* ======================================================= */
 
 /*
   Notes:
@@ -75,7 +72,7 @@ MEMVAR _wvwtemp_
   You may want to replace NIL with your own function/variable by which you can decide
   which window to direct your output to.
 
-*/
+ */
 
 #xtranslate Wvt_SetMenu             ( [<vlist,...>] )    =>  wvw_SetMenu             ( [, <vlist>] )
 #xtranslate Wvt_SetPopupMenu        ( [<vlist,...>] )    =>  wvw_SetPopupMenu        ( [, <vlist>] )
@@ -198,7 +195,6 @@ MEMVAR _wvwtemp_
 //wvw_SetLineSpacing()
 
 /* PART-3: RESERVED FUNCTION NAMES ("callback" prg functions, called by gtwvw) */
-/* =========================================================================== */
 
 /*
   Notes:
