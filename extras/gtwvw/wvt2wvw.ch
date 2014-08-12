@@ -49,7 +49,6 @@ MEMVAR _wvwtemp_
 #xtranslate Wvt_CBSetCurSel        ( [<vlist,...>] )  => wvw_CBSetCurSel        ( [<vlist>] )
 #xtranslate Wvt_DlgSetIcon         ( [<vlist,...>] )  => wvw_DlgSetIcon         ( [<vlist>] )
 
-
 /* These functions do not exist in WVT. */
 //Wvt_SetVertCaret       ( [<vlist,...>] )  => wvw_SetVertCaret       ( [<vlist>] )
 //Wvt_SetDefLineSpacing  ( [<vlist,...>] )  => wvw_SetDefLineSpacing  ( [<vlist>] )

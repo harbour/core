@@ -138,48 +138,40 @@ HB_FUNC( WIN_SETTIMER )
    hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), hb_parnl( 2 ), hb_parni( 3 ), NULL ) != ( UINT_PTR ) NULL );
 }
 
-
 HB_FUNC( WIN_SETFOCUS )
 {
    SetFocus( ( HWND ) HB_PARHANDLE( 1 ) );
 }
-
 
 HB_FUNC( WIN_SETTEXTCOLOR )
 {
    hb_retnl( ( long ) SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
-
 HB_FUNC( WIN_SETBKCOLOR )
 {
    hb_retnl( ( long ) SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
-
 
 HB_FUNC( WVW_SETBKMODE )
 {
    hb_retni( SetBkMode( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
-
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
    HB_RETHANDLE( GetStockObject( hb_parnl( 1 ) ) );
 }
-
 
 HB_FUNC( WIN_DELETEOBJECT )
 {
    hb_retl( ( HB_BOOL ) DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
 }
 
-
 HB_FUNC( WIN_SELECTOBJECT )
 {
    HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
 }
-
 
 #if defined( HB_LEGACY_LEVEL4 )
 HB_FUNC( WIN_MULDIV )
@@ -204,7 +196,6 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
    hb_strfree( hText );
 }
 
-
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
    USHORT  iLen  = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), ( UINT ) WM_GETTEXTLENGTH, 0, 0 ) + 1;
@@ -220,19 +211,16 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
    hb_xfree( cText );
 }
 
-
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
    hb_retl( ( HB_BOOL ) CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
                                         HB_ISNUM( 3 ) ? ( UINT ) hb_parni( 3 ) : ( UINT ) hb_parl( 3 ) ) );
 }
 
-
 HB_FUNC( WIN_ISDLGBUTTONCHECKED )
 {
    hb_retni( IsDlgButtonChecked( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
-
 
 HB_FUNC( WIN_CHECKRADIOBUTTON )
 {
@@ -242,12 +230,10 @@ HB_FUNC( WIN_CHECKRADIOBUTTON )
                                           hb_parni( 4 ) ) );
 }
 
-
 HB_FUNC( WIN_GETDLGITEM )
 {
    HB_RETHANDLE( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
-
 
 HB_FUNC( WIN_MESSAGEBOX )
 {
@@ -262,7 +248,6 @@ HB_FUNC( WIN_MESSAGEBOX )
    hb_strfree( hStr1 );
    hb_strfree( hStr2 );
 }
-
 
 HB_FUNC( WIN_INVALIDATERECT )
 {
@@ -331,7 +316,6 @@ HB_FUNC( WIN_LOADIMAGE )
 
    HB_RETHANDLE( hImage );
 }
-
 
 HB_FUNC( WIN_GETCLIENTRECT )
 {
@@ -539,7 +523,6 @@ HB_FUNC( WVW_XBVISIBLE )
       hb_retl( HB_FALSE );
 }
 
-
 HB_FUNC( WVW_MOUSE_COL )
 {
    WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
@@ -554,7 +537,6 @@ HB_FUNC( WVW_MOUSE_COL )
    else
       hb_retni( 0 );
 }
-
 
 HB_FUNC( WVW_MOUSE_ROW )
 {
@@ -592,7 +574,6 @@ HB_FUNC( WVW_SETPARENT )
                  hb_gt_wvw_GetWindowsData( nWin1 )->hWnd );
 }
 
-
 HB_FUNC( WVW_BRINGTOTOP1 )
 {
    HWND hWnd = ( HWND ) HB_PARHANDLE( 1 );
@@ -612,7 +593,6 @@ HB_FUNC( WVW_ISWINDOW )
 {
    hb_retl( ( HB_BOOL ) IsWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
-
 
 HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 {
@@ -665,7 +645,6 @@ HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
       hb_retl( HB_FALSE );
 }
 
-
 /* CreateImageList( array, cx, cy, nGrow, flags ) */
 HB_FUNC( WVW_CREATEIMAGELIST )
 {
@@ -698,7 +677,6 @@ HB_FUNC( WVW_IMAGELIST_ADDMASKED )
    hb_retnl( ImageList_AddMasked( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), ( COLORREF ) hb_parnl( 3 ) ) );
 }
 
-
 HB_FUNC( WVW_GETBITMAPSIZE )
 {
    PHB_ITEM aMetr = hb_itemArrayNew( 3 );
@@ -725,7 +703,6 @@ HB_FUNC( WVW_GETICONSIZE )
 
    hb_itemReturnRelease( aMetr );
 }
-
 
 HB_FUNC( WVW_LOADIMAGE )
 {
@@ -793,7 +770,6 @@ HB_FUNC( WVW_LOADBITMAPEX )
       hb_strfree( hName );
    }
 }
-
 
 HB_FUNC( WVW_OPENIMAGE )
 {
@@ -1018,7 +994,6 @@ HB_FUNC( WIN_CREATEFONT )
    hb_strfree( hName );
 }
 
-
 /* wvw_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
                    lStrikeout, nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVW_CREATEFONT )
@@ -1055,7 +1030,6 @@ HB_FUNC( WVW_CREATEFONT )
 
    HB_RETHANDLE( CreateFontIndirect( &lf ) );
 }
-
 
 HB_FUNC( WVW_SELECTFONT )
 {
@@ -1201,7 +1175,6 @@ HB_FUNC( WVW_SETBITMAPRESOURCEID )
    hb_retni( iNewBitmap );
 }
 
-
 HB_FUNC( WVW_DRAWICON )
 {
    DrawIcon( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 3 ), hb_parni( 4 ), ( HICON ) HB_PARHANDLE( 2 ) );
@@ -1264,7 +1237,6 @@ HB_FUNC( WVW_WINDOW2BITMAP )
    HB_RETHANDLE( hBitmap );
 }
 
-
 /* wvw_SetMaxBMCache( [nMax] )
    Get/Set maximum user-bitmap cache (default is 20, minimum is 1).
    Returns old setting of maximum user-bitmap cache.
@@ -1310,13 +1282,10 @@ HB_FUNC( WVW_NUMBMCACHE )
    hb_retni( wvw ? wvw->a.uiBMcache : 0 );
 }
 
-
 /* Miscellaneous xHarbour callable functions */
 /* Budyanto Dj. <budyanto@centrin.net.id> */
 
-
 /* TIMER */
-
 
 /* wvw_SetTimer([nWinNum], nInterval)
  * set timer event for every nInterval millisec
@@ -1364,7 +1333,6 @@ HB_FUNC( WVW_KILLTIMER )
       hb_retl( HB_FALSE );
 }
 
-
 /* wvw_GetPaintRect( nWinNum )   nWinNum is 0 based
    returns array of paint pending rect {top, left, bottom, right}
    WARNING:
@@ -1385,7 +1353,6 @@ HB_FUNC( WVW_GETPAINTRECT )
 
    hb_itemReturnRelease( info );
 }
-
 
 HB_FUNC( WVW_SETPOINTER )
 {
@@ -1449,7 +1416,6 @@ HB_FUNC( WVW_SETPOINTER )
    SetClassLongPtr( wvw_win->hWnd, GCLP_HCURSOR, ( LONG_PTR ) hCursor );
 }
 
-
 /* wvw_LoadPicture( nSlot, cFilePic ) */
 HB_FUNC( WVW_LOADPICTURE )
 {
@@ -1472,7 +1438,6 @@ HB_FUNC( WVW_LOADPICTURE )
 
    hb_retl( fResult );
 }
-
 
 /* wvw_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
                  nCharSet, nQuality, nEscapement ) */
@@ -1527,7 +1492,6 @@ HB_FUNC( WVW_LOADFONT )
    hb_retl( fResult );
 }
 
-
 /* wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
 HB_FUNC( WVW_LOADPEN )
 {
@@ -1552,7 +1516,6 @@ HB_FUNC( WVW_LOADPEN )
    else
       hb_retl( HB_FALSE );
 }
-
 
 HB_FUNC( WVW_MESSAGEBOX )
 {
@@ -1642,7 +1605,6 @@ HB_FUNC( WVW_CHOOSEFONT )
    hb_itemReturnRelease( aRet );
 }
 
-
 /* wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
 HB_FUNC( WVW_CHOOSECOLOR )
 {
@@ -1668,7 +1630,6 @@ HB_FUNC( WVW_CHOOSECOLOR )
    else
       hb_retnl( -1 );
 }
-
 
 /* wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based
    What's the difference with GT_FUNC( mouse_SetPos ) ???
@@ -1696,7 +1657,6 @@ HB_FUNC( WVW_SETMOUSEPOS )
    else
       hb_retl( HB_FALSE );
 }
-
 
 /* by bdj
    none in gtwvt
@@ -1779,7 +1739,6 @@ HB_FUNC( WVW_FILLRECTANGLE )
    hb_retl( HB_TRUE );
 }
 
-
 HB_FUNC( WVW_LBADDSTRING )
 {
    void * hText;
@@ -1832,10 +1791,8 @@ HB_FUNC( WVW_DLGSETICON )
    HB_RETHANDLE( hIcon );
 }
 
-
 /* GUI Drawing Functions */
 /* Pritpal Bedi <pritpal@vouchcac.com> */
-
 
 /* wvw_SetPen( nPenStyle, nWidth, nColor ) */
 /* IMPORTANT: in prev release this functions has nWinNum parameter
@@ -1865,7 +1822,6 @@ HB_FUNC( WVW_SETPEN )
 
    hb_retl( HB_FALSE );
 }
-
 
 /* wvw_SetBrush( nStyle, nColor, [ nHatch ] ) */
 /* IMPORTANT: in prev release this functions has nWinNum parameter
@@ -2071,7 +2027,6 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
    hb_xfree( pdlgtemplate );
 }
 
-
 HB_FUNC( WVW_GETCURSORPOS )
 {
    PHB_ITEM info = hb_itemArrayNew( 2 );
@@ -2087,7 +2042,6 @@ HB_FUNC( WVW_GETCURSORPOS )
    hb_itemReturnRelease( info );
 }
 
-
 /* wvw_ShowWindow( [nWinNum], nCmdShow ) */
 HB_FUNC( WVW_SHOWWINDOW )
 {
@@ -2095,7 +2049,6 @@ HB_FUNC( WVW_SHOWWINDOW )
 
    ShowWindow( wvw_win->hWnd, hb_parnidef( 2, SW_SHOWNORMAL ) );
 }
-
 
 /* wvw_UpdateWindow( [nWinNum] ) */
 HB_FUNC( WVW_UPDATEWINDOW )
@@ -2211,7 +2164,6 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
    HB_RETHANDLE( hDlg );
 }
 
-
 HB_FUNC( WVW_CREATEDIALOGMODAL )
 {
    WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
@@ -2288,7 +2240,6 @@ HB_FUNC( WVW_DELETEOBJECT )
    hb_retl( ( HB_BOOL ) DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
 }
 
-
 HB_FUNC( WVW_SETONTOP )
 {
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
@@ -2306,7 +2257,6 @@ HB_FUNC( WVW_SETONTOP )
                                       SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
 }
 
-
 HB_FUNC( WVW_SETASNORMAL )
 {
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
@@ -2323,7 +2273,6 @@ HB_FUNC( WVW_SETASNORMAL )
                                       0,
                                       SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
 }
-
 
 /* aScr := wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight ) */
 
@@ -2371,7 +2320,6 @@ HB_FUNC( WVW_SAVESCREEN )
 
    hb_itemReturnRelease( info );
 }
-
 
 /* wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP ) */
 

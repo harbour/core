@@ -348,7 +348,6 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
    }
 }
 
-
 /* wvw_tbEnableButton( [nWinNum], nButton, [lToggle] )
  * nButton is zero based index of button to enable/disable
  * index=0 is the leftmost button

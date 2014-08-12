@@ -157,7 +157,6 @@ HB_FUNC( WVW_STCREATE )
    }
 }
 
-
 HB_FUNC( WVW_STSETTEXT )
 {
    HWND hWnd = ( HWND ) HB_PARHANDLE( 2 );
@@ -172,7 +171,6 @@ HB_FUNC( WVW_STSETTEXT )
    else
       hb_retl( HB_FALSE );
 }
-
 
 HB_FUNC( WVW_STSETFONT )
 {
