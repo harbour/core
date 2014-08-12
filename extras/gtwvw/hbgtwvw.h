@@ -525,7 +525,7 @@ extern void       hb_gt_wvw_HBFUNCPrologue( HB_UINT nWin,
                                             USHORT * pusRow1, USHORT * pusCol1,
                                             USHORT * pusRow2, USHORT * pusCol2 );
 extern RECT       hb_gt_wvw_GetXYFromColRowRect( WVW_WIN * wvw_win, RECT colrow );
-extern POINT      hb_gt_wvw_GetXYFromColRow( WVW_WIN * wvw_win, USHORT col, USHORT row );
+extern POINT      hb_gt_wvw_GetXYFromColRow( WVW_WIN * wvw_win, int col, int row );
 extern COLORREF   hb_gt_wvw_GetColorData( int iIndex );
 extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHeight );
 extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeight );
@@ -550,8 +550,8 @@ extern HB_UINT    hb_gt_wvw_ButtonCreate( HB_UINT nWin, USHORT usTop, USHORT usL
                                           int iStyle );
 extern LONG       hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f );
 extern HFONT      hb_gt_wvw_GetFont( const TCHAR * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage );
-extern USHORT     hb_gt_wvw_GetMouseX( WVW_WIN * wvw_win );
-extern USHORT     hb_gt_wvw_GetMouseY( WVW_WIN * wvw_win );
+extern int        hb_gt_wvw_GetMouseX( WVW_WIN * wvw_win );
+extern int        hb_gt_wvw_GetMouseY( WVW_WIN * wvw_win );
 extern USHORT     hb_gt_wvw_RowOfs( HB_UINT nWin );
 extern USHORT     hb_gt_wvw_ColOfs( HB_UINT nWin );
 extern IPicture * hb_gt_wvw_LoadPicture( const char * image );

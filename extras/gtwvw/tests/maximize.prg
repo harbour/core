@@ -58,7 +58,7 @@ STATIC PROCEDURE updatescr()
    FOR i := 0 TO MaxCol()
       @ MaxRow(), i SAY "B"
 #if 0
-      @ MaxRow() - 1, i SAY Right( Transform( i, "999" ), 1 )
+      @ MaxRow() - 1, i SAY Right( Str( i, 3 ), 1 )
 #endif
    NEXT
    FOR i := 0 TO MaxRow()

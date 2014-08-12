@@ -179,10 +179,10 @@ PROCEDURE Main()
    wvw_pbSetFont( , "Tahoma", 14 )
    nCursor := SetCursor( SC_NONE )
 
-   IF ! SetDefaultWindowSize()
-      ldebug( "Cannot setDefaultWindowSize()" )
-   ELSE
+   IF SetDefaultWindowSize()
       ldebug( "Successfully setDefaultWindowSize()" )
+   ELSE
+      ldebug( "Cannot setDefaultWindowSize()" )
    ENDIF
 
    IF wvw_sbCreate() > 0 .AND. ;
@@ -312,13 +312,12 @@ PROCEDURE Main()
 
    RETURN
 
-//
-
+// disables all Menu Items of window nWinNum
 STATIC PROCEDURE xDisableMenus( nWinNum, nNumItem )
 
-   // disables all Menu Items of window nWinNum
    LOCAL i
    LOCAL hMenu := wvw_GetMenu( nWinNum )
+
    FOR i := 0 TO nNumItem - 1
       wvw_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_GRAYED )
    NEXT
@@ -334,7 +333,7 @@ STATIC PROCEDURE xEnableMenus( nWinNum, nNumItem )
    FOR i := 0 TO nNumItem - 1
       wvw_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_ENABLED )
    NEXT
-   wvw_DrawMenuBar( nWinNum )   // to force redraw of menu
+   wvw_DrawMenuBar( nWinNum )  // to force redraw of menu
 
    RETURN
 
@@ -423,11 +422,12 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
 STATIC PROCEDURE Demo_Get()
 
    LOCAL nCurWindow, GetList := {}
-   LOCAL cLabel := "This is the GET Demo Window"
+
+   LOCAL cLabel  := "This is the GET Demo Window"
    LOCAL nTop    := 4
-   LOCAL nLeft    := 4
-   LOCAL nBottom    := 21
-   LOCAL nRight    := 75
+   LOCAL nLeft   := 4
+   LOCAL nBottom := 21
+   LOCAL nRight  := 75
    LOCAL nColGet := 8
    LOCAL get_1   := hb_SToD()
    LOCAL get_2   := PadR( "Pritpal Bedi", 35 )
@@ -436,7 +436,8 @@ STATIC PROCEDURE Demo_Get()
    LOCAL get_5   := PadR( hb_Version( HB_VERSION_URL_BASE ), 35 )
    LOCAL get_6   := 20000
    LOCAL nCursor := SetCursor( SC_NORMAL )
-   MEMVAR x
+
+   MEMVAR xx
 
    // x init window
    nCurWindow := wvw_nOpenWindow( "GET Demo", nTop, nLeft, nBottom, nRight )
@@ -445,7 +446,7 @@ STATIC PROCEDURE Demo_Get()
       RETURN
    ENDIF
 
-   wvw_SetIcon( , "vr_1.ico" )
+   wvw_SetIcon( , hb_DirBase() + "vr_1.ico" )
 
    ResetMiscObjects( nCurWindow )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawLabel( nWindow, 1, nRight - nLeft, cLabel, 2,, RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
@@ -454,12 +455,12 @@ STATIC PROCEDURE Demo_Get()
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawImage( nWindow, 8 - nTop, 62 - nLeft, 12 - nTop, 69 - nLeft, hb_DirBase() + "vouch1.bmp" ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxRecessed( nWindow, 7 - nTop, 48 - nLeft, 13 - nTop, 55 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | x := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | xx := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( xx, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
 
    /* we now use native push button
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", MaxRow() - 1, MaxCol() - 15, , , {|| xDebugInfo() } ))
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info", MaxRow() - 1, MaxCol() - 15, , , {|| xDebugInfo() }  ))
    */
    wvw_pbCreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", , {|| xDebugInfo() } )
 
@@ -546,7 +547,7 @@ STATIC PROCEDURE DEMO_Browse()
    oBrowse:configure()
 
    wvw_SetPen( nStyle, 0, RGB( 210, 1210, 210 ) )
-   wvw_SetIcon( , "dia_excl.ico" )
+   wvw_SetIcon( , hb_DirBase() + "dia_excl.ico" )
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep
@@ -724,8 +725,12 @@ STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    LOCAL nOldWin
    LOCAL lNeedStabilize
 
+#if 0
    // if we can't handle non topmost window we must return right away
-   // IF nWinNum != wvw_nNumWindows() - 1 ; RETURN ; ENDIF
+   IF nWinNum != wvw_nNumWindows() - 1
+      RETURN
+   ENDIF
+#endif
 
    nOldWin := wvw_nSetCurWindow( nWinNum )
 
@@ -825,18 +830,19 @@ STATIC FUNCTION DbSkipBlock( n )
 
    LOCAL nSkipped := 0
 
-   IF n == 0
+   DO CASE
+   CASE n == 0
       dbSkip( 0 )
 
-   ELSEIF n > 0
+   CASE n > 0
       DO WHILE nSkipped != n .AND. TBNext()
          nSkipped++
       ENDDO
-   ELSE
+   OTHERWISE
       DO WHILE nSkipped != n .AND. TBPrev()
          nSkipped--
       ENDDO
-   ENDIF
+   ENDCASE
 
    RETURN nSkipped
 
@@ -909,7 +915,7 @@ PROCEDURE WVW_SetFocus( hWnd, nWinNum )  /* must be a public function */
    s_nGotFocus++
    @ 0, 0 SAY s_nGotFocus
    IF s_nGotFocus % 3 == 0
-      Alert( "Got focus " + Transform( s_nGotFocus, "9999" ) + "th times" )
+      Alert( "Got focus " + hb_ntos( s_nGotFocus ) + "th times" )
    ENDIF
 
    RETURN
@@ -1128,8 +1134,6 @@ STATIC FUNCTION lDebug( cMsg )
 
 STATIC PROCEDURE xDebugInfo()
 
-   STATIC s_nfh := 0
-
    MSetPos( MaxRow(), MaxCol() )
 
 #if 0
@@ -1222,9 +1226,9 @@ STATIC FUNCTION SetDefaultWindowSize()
 
 STATIC PROCEDURE MyError( e )
 
-   LOCAL i := 1, cErr
+   LOCAL i := 1
 
-   cErr := "Runtime error" + hb_eol() + ;
+   LOCAL cErr := "Runtime error" + hb_eol() + ;
       hb_eol() + ;
       "Gencode: " + hb_ntos( e:GenCode ) + hb_eol() + ;
       "Desc: " + e:Description +  + hb_eol() + ;
@@ -1232,7 +1236,6 @@ STATIC PROCEDURE MyError( e )
       hb_eol() + ;
       "Call trace:" + hb_eol() + ;
       hb_eol()
-
 
    DO WHILE ! Empty( ProcName( ++i ) )
       cErr += RTrim( ProcName( i ) ) + "(" + hb_ntos( ProcLine( i ) ) + ")" + hb_eol()
@@ -1357,48 +1360,46 @@ ENDCLASS
 METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId ) CLASS WVWMouseButton
 
    hb_default( @cCaption, "" ) // 2004-03-25, was: "Button"
+
    hb_default( @nRow1, 0 )
    hb_default( @nCol1, 0 )
    hb_default( @nRow2, nRow1 )
    hb_default( @nCol2, nCol1 + Max( 10, Len( cCaption ) + 2 ) - 1 )
-   hb_default( @nType, _BUTTON_NORMAL )        // 2004-03-03
-   hb_default( @lDraw, .T. )
-   hb_default( @nWinId, wvw_nNumWindows() - 1 )  // 2004-03-03
 
 #if 0  // TODO
    ::nId := iif( Empty( s_amouseobjlist ), 1, ATail( s_amouseobjlist ):nGetId() + 1 )
    ::nHotKey := NIL
 #endif
-   ::nWinId := nWinId  // 2004-03-03
+   ::nWinId := hb_defaultValue( nWinId, wvw_nNumWindows() - 1 )  // 2004-03-03
 
    ::nRow1 := nRow1
    ::nCol1 := nCol1
    ::nRow2 := nRow2
    ::nCol2 := nCol2
 
-   ::bClickBlock   := iif( HB_ISEVALITEM( bClickBlock ), bClickBlock, NIL )
-   ::bPressBlock   := NIL
+   ::bClickBlock    := iif( HB_ISEVALITEM( bClickBlock ), bClickBlock, NIL )
+   ::bPressBlock    := NIL
 
-   ::lRepeatPress  := .F.
+   ::lRepeatPress   := .F.
+   ::lPressed       := .F.
+   ::lHover         := .F.  // 2004-03-03
 
-   ::lPressed  := .F.
-   ::lHover    := .F.  // 2004-03-03
-   ::cCaption := cCaption
-   ::cCaptionFont := _DEFAULT_CAPTION_FONT
+   ::cCaption       := cCaption
+   ::cCaptionFont   := _DEFAULT_CAPTION_FONT
    ::nCaptionHeight := _DEFAULT_CAPTION_HEIGHT
 
-   ::cImage    := NIL  // 2004-03-25
+   ::cImage         := NIL  // 2004-03-25
 
    // TODO: pls use current color
-   ::cNormalColor := "W"
-   ::cPressedColor := "W"
+   ::cNormalColor   := "W"
+   ::cPressedColor  := "W"
 
    ::lVisible := .T.
    ::lEnable  := .T.
    ::lTight   := .F.
-   ::nType := nType
+   ::nType    := hb_defaultValue( nType, _BUTTON_NORMAL )
 
-   IF lDraw  // 2004-03-04
+   IF hb_defaultValue( lDraw, .T. )  // 2004-03-04
       ::Draw( ::nWinId )
    ENDIF
 
@@ -1639,8 +1640,7 @@ STATIC FUNCTION wvwm_ResetMouseObjects( nWinNum )
 STATIC FUNCTION wvwm_AddMouseObjects( nWinNum, oMouse, nObjType )
 
    // adds a mouse object oMouse into window nWinNum
-   hb_default( @nObjType, _MOBJECT_BUTTON )
-   AAdd( s_amouseobjlist[ nWinNum + 1 ], { nObjType, oMouse } )
+   AAdd( s_amouseobjlist[ nWinNum + 1 ], { hb_defaultValue( nObjType, _MOBJECT_BUTTON ), oMouse } )
 
    RETURN .T.
 
@@ -1650,7 +1650,7 @@ STATIC FUNCTION wvwm_SetKeyRepeater( lSet )
    // if lSet is supplied, KeyRepeater is enable/disable accordingly
    LOCAL lWasSet := ( s_nkeyrepeater != NIL )
 
-   IF lSet != NIL
+   IF HB_ISLOGICAL( lSet )
       IF lSet
          IF ! lWasSet
             s_nkeyrepeater := hb_idleAdd( {|| xKeyRepeater() } )
@@ -1668,10 +1668,26 @@ STATIC FUNCTION wvwm_SetKeyRepeater( lSet )
 STATIC FUNCTION nButtonChecker( nkey, oMouseObj )
 
    LOCAL nrow := MRow(), ncol := MCol()
-   LOCAL lMouseOver
 
-   lMouseOver := ( nrow >= oMouseObj:nrow1 .AND. nrow <= oMouseObj:nrow2 .AND. ncol >= oMouseObj:ncol1 .AND. ncol <= oMouseObj:ncol2 )
-   IF ! lMouseOver
+   IF nrow >= oMouseObj:nrow1 .AND. nrow <= oMouseObj:nrow2 .AND. ncol >= oMouseObj:ncol1 .AND. ncol <= oMouseObj:ncol2
+      // cursor is over current mouse object area
+
+      IF oMouseObj:lHover
+         DO CASE
+         CASE nkey == K_LDBLCLK
+            // currently button not handle this events,
+            // so we will treat it as single key press
+            oMouseObj:OnPress()
+         CASE nkey == K_LBUTTONDOWN
+            oMouseObj:OnPress()
+         CASE nkey == K_LBUTTONUP
+            oMouseObj:OnRelease()
+         ENDCASE
+      ELSE
+         // user has just moved the cursor into over this button
+         oMouseObj:OnMouseOver()
+      ENDIF
+   ELSE
       // cursor is somewhere outside of current mouse object area
 
       IF oMouseObj:lHover
@@ -1685,26 +1701,6 @@ STATIC FUNCTION nButtonChecker( nkey, oMouseObj )
             ENDIF
          ENDCASE
       ENDIF
-
-   ELSE
-      // cursor is over current mouse object area
-
-      IF ! oMouseObj:lHover
-         // user has just moved the cursor into over this button
-         oMouseObj:OnMouseOver()
-      ELSE
-         DO CASE
-         CASE nkey == K_LDBLCLK
-            // currently button not handle this events,
-            // so we will treat it as single key press
-            oMouseObj:OnPress()
-         CASE nkey == K_LBUTTONDOWN
-            oMouseObj:OnPress()
-         CASE nkey == K_LBUTTONUP
-            oMouseObj:OnRelease()
-         ENDCASE
-      ENDIF
-
    ENDIF
 
    RETURN nkey
@@ -1770,9 +1766,7 @@ STATIC PROCEDURE xKeyRepeater( lInit )
    LOCAL nNow
    LOCAL nRepeatInterval
 
-   hb_default( @lInit, .F. )
-
-   IF lInit
+   IF hb_defaultValue( lInit, .F. )
       // simply init the locally static var
       s_lFirstRepeat := .T.
       s_nLastValidCheck := Seconds()

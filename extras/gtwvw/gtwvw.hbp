@@ -4,7 +4,7 @@
 -olib/${hb_plat}/${hb_comp}/${hb_name}
 
 -w3 -es2
--winuni
+#-winuni
 
 "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform."
 

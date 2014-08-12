@@ -65,7 +65,7 @@ PROCEDURE Main()
    DispEnd()
 #else
    ResetMiscObjects( 0 )   // make sure we start with no GUI objects
-   AddMiscObjects( 0, {| nWindow | wvw_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, "vouch1.bmp" ) } )
+   AddMiscObjects( 0, {| nWindow | wvw_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, hb_DirBase() + "vouch1.bmp" ) } )
 #endif
 
    lboxmessage( "Welcome to our test program." + hb_eol() + ;
@@ -320,9 +320,7 @@ STATIC FUNCTION lYesNo( cMsg )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   hb_default( @cMsg, "Please Confirm" )
-
-   cmsg := " " + AllTrim( cmsg ) + " "
+   cmsg := " " + AllTrim( hb_defaultValue( cMsg, "Please Confirm" ) ) + " "
    nWidth := Max( Len( cmsg ), Len( "Yes" ) )
    nTopLine := nBotLine - 2 - 1
 
@@ -354,9 +352,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   hb_default( @cTitle, "Info" )
-
-   cmsg := AllTrim( cmsg )
+   cmsg := AllTrim( hb_defaultValue( cTitle, "Info" ) )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
    nWidth := iif( nNumLines < 2, Len( cmsg ), nRight - nLeft - 1 )
    nTopLine := nBotLine - nNumLines - 1

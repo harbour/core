@@ -72,7 +72,7 @@ PROCEDURE Main()
       nrig := MaxCol() - 2, ;
       nmidver := Int( ( ntop + nbot ) / 2 ), ;
       nmidhor := Int( ( nleft + nrig ) / 2 )
-   LOCAL cpict := "vouch1.gif"
+   LOCAL cpict := hb_DirBase() + "vouch1.gif"
    LOCAL ltransp := .F.
    LOCAL nMaxCache
    LOCAL i, j, oWPaint
@@ -94,22 +94,22 @@ PROCEDURE Main()
       @ 0, 0 SAY "FileName  :" GET cpict PICTURE "@K" VALID hb_FileExists( AllTrim( cpict ) )
       @ 1, 0 SAY "Transpar? :" GET ltransp PICTURE "Y"
       @ 2, 0 SAY "Max Cache :" GET nMaxCache PICTURE "999"
-      @ 3, 0 SAY "NumOfCache=" + Transform( wvw_NumBMCache(), "999" ) + ;
-         ", Max NumOfCache=" + Transform( wvw_SetMaxBMCache(), "999" )
+      @ 3, 0 SAY "NumOfCache=" + Str( wvw_NumBMCache(), 3 ) + ", " + ;
+                 "Max NumOfCache=" + Str( wvw_SetMaxBMCache(), 3 )
       READ
       IF LastKey() == K_ESC
          EXIT
       ENDIF
       wvw_SetMaxBMCache( nMaxCache )
-      @ 3, 0 SAY "NumOfCache=" + Transform( wvw_NumBMCache(), "999" ) + ;
-         ", Max NumOfCache=" + Transform( wvw_SetMaxBMCache(), "999" )
+      @ 3, 0 SAY "NumOfCache=" + Str( wvw_NumBMCache(), 3 ) + ", " + ;
+                 "Max NumOfCache=" + Str( wvw_SetMaxBMCache(), 3 )
 
       @ 5, 0 SAY "TOPLEFT: stretched image                 TOPRIGHT: fit vertically (proportional)"
       @ 6, 0 SAY "BOTLEFT: fit horizontally (proportional) BOTRIGHT: actual image size"
 
       cpict := AllTrim( cpict )
 
-      // wvw_LoadPicture( 1, cpict ) //20060707
+      // wvw_LoadPicture( 1, cpict ) // 2006-07-07
 
       SetCursor( SC_NONE )
       DispBegin()
@@ -147,7 +147,7 @@ PROCEDURE Main()
 
       // delete all image objects
       wg_DelWPaintObj( 0, WPAINTOBJ_IMAGE )
-   ENDDO // WHILE .T.
+   ENDDO
    SetCursor( SC_NORMAL )
 
    RETURN
@@ -183,9 +183,6 @@ ENDCLASS
 
 METHOD New( nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp ) CLASS wPaintObj
 
-   hb_default( @aOffTLBR, { 0, 0, 0, 0 } )
-   hb_default( @lTransp, .F. )
-
    ::nWinNum := nWinNum
    ::lVisible := .T.
 
@@ -196,9 +193,9 @@ METHOD New( nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp )
    ::nRow2 := nRow2
    ::nCol2 := nCol2
 
-   ::aOffTLBR := AClone( aOffTLBR )
+   ::aOffTLBR := AClone( hb_defaultValue( aOffTLBR, { 0, 0, 0, 0 } ) )
 
-   ::lTransp := lTransp
+   ::lTransp := hb_defaultValue( lTransp, .F. )
 
    RETURN Self
 
@@ -273,46 +270,34 @@ METHOD PROCEDURE Show() CLASS wPaintObj
 
 // clears all wPaint objects from window nWinNum
 // if nObjNum specified, clears object >= nObjNum
-STATIC FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
-
-   hb_default( @nObjNum, 0 )
-   hb_default( @lStrict, .F. )
+STATIC FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum )
 
    DO WHILE Len( s_aPObjList ) < nWinNum + 1
       AAdd( s_aPObjList, {} )
    ENDDO
 
-   ASize( s_aPObjList[ nWinNum + 1 ], nObjNum )
+   ASize( s_aPObjList[ nWinNum + 1 ], hb_defaultValue( nObjNum, 0 ) )
 
    RETURN .T.
 
 // adds a WPaint object oWPaint into window nWinNum
 // returns ::cId if successful. "" if failed.
-STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
+STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict )
 
    LOCAL i
-
-   hb_default( @lStrict, .F. )
-   hb_default( @nOperation, WOBJ_ADD_OVERWRITE )
-
-   // simplified:
-   nOperation := WOBJ_ADD_OVERWRITE
-
-   // parameter checking...
-   // ...
+   LOCAL nOperation := WOBJ_ADD_OVERWRITE
 
    // exist nType + cId ?
    IF ( i := AScan( s_aPObjList[ nWinNum + 1 ], {| x | x:nType == oWPaint:nType .AND. x:cId == oWPaint:cId } ) ) > 0
       // so we are about to overwrite now...
       // ::Hide() is ideal, but it can be slow
       // let's do it only of user want strict/perfect operation
-      IF lStrict
+      IF hb_defaultValue( lStrict, .F. )
          s_aPObjList[ nWinNum + 1 ][ i ]:Hide()
       ELSE
          s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.
       ENDIF
       s_aPObjList[ nWinNum + 1 ][ i ] := oWPaint
-
    ELSE
       AAdd( s_aPObjList[ nWinNum + 1 ], oWPaint )
    ENDIF
@@ -322,7 +307,7 @@ STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
       oWPaint:draw()
    ENDIF
 
-   RETURN oWPaint:cId // 20040811 was .T.
+   RETURN oWPaint:cId // 2004-08-11 was .T.
 
 // deletes a WPaint object oWPaint from window nWinNum
 // returns number of object deleted.
@@ -331,11 +316,9 @@ STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 STATIC FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 
    LOCAL i
-   LOCAL lDelAll := ( cId == NIL )
+   LOCAL lDelAll := ! HB_ISTRING( cId )
    LOCAL nDeleted := 0
    LOCAL nLen
-
-   hb_default( @lStrict, .F. )
 
    // is nType set?
    IF nType < 1
@@ -348,7 +331,7 @@ STATIC FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
    DO WHILE i <= nLen
       IF s_aPObjList[ nWinNum + 1 ][ i ]:nType == nType .AND. ;
          ( lDelAll .OR. s_aPObjList[ nWinNum + 1 ][ i ]:cId == cId )
-         IF lStrict
+         IF hb_defaultValue( lStrict, .F. )
             s_aPObjList[ nWinNum + 1 ][ i ]:Hide()
          ELSE
             s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.

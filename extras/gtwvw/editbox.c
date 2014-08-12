@@ -204,7 +204,7 @@ HB_FUNC( WVW_EBCREATE )
 
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
-         hb_xfree( lpszText );
+         hb_xfree( ( void * ) lpszText );
 #endif
 
       hb_strfree( hText );
@@ -533,7 +533,7 @@ HB_FUNC( WVW_EBSETTEXT )
 
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
-         hb_xfree( lpszText );
+         hb_xfree( ( void * ) lpszText );
 #endif
 
       hb_strfree( hText );

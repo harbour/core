@@ -266,9 +266,7 @@ STATIC FUNCTION lYesNo( cMsg )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   hb_default( @cMsg, "Please Confirm" )
-
-   cmsg := " " + AllTrim( cmsg ) + " "
+   cmsg := " " + AllTrim( hb_defaultValue( cMsg, "Please Confirm" ) ) + " "
    nWidth := Max( Len( cmsg ), Len( "Yes" ) )
    nTopLine := nBotLine - 2 - 1
 
@@ -300,9 +298,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   hb_default( @cTitle, "Info" )
-
-   cmsg := AllTrim( cmsg )
+   cmsg := AllTrim( hb_defaultValue( cTitle, "Info" ) )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
    nWidth := iif( nNumLines < 2, Len( cmsg ), nRight - nLeft - 1 )
    nTopLine := nBotLine - nNumLines - 1

@@ -485,8 +485,7 @@ STATIC PROCEDURE CancelVar( nwinnum, aEBGets, lDone )
 STATIC PROCEDURE ToCloseWindow( nwinnum, lPermitted )
 
    // allow to close topmost window only
-   lPermitted := ( nwinnum == wvw_nNumWindows() - 1 )
-   IF ! lPermitted
+   IF nwinnum != wvw_nNumWindows() - 1
       MyMessageBox( nwinnum, ;
          "Window " + hb_ntos( nwinnum ) + " is not allowed to be closed, yet" + hb_eol() + ;
          "Please close window " + hb_ntos( wvw_nNumWindows() - 1 ) + " first" )
