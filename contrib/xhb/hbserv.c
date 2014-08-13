@@ -93,9 +93,9 @@ static void s_serviceSetHBSig( void );
 static void s_serviceSetDflSig( void );
 static void s_signalHandlersInit( void );
 
-static PHB_ITEM sp_hooks       = NULL;
-static HB_BOOL  bSignalEnabled = HB_TRUE;
-static int      sb_isService   = 0;
+static PHB_ITEM s_pHooks         = NULL;
+static HB_BOOL  s_bSignalEnabled = HB_TRUE;
+static int      s_fIsService     = HB_FALSE;
 
 /* There is a service mutex in multithreading */
 static HB_CRITICAL_NEW( s_ServiceMutex );
@@ -122,7 +122,7 @@ static int s_translateSignal( HB_UINT sig, HB_UINT subsig );
 #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
 /* TODO: Register the old signal action to allow graceful fallback
-         static struct sigaction sa_oldAction[ SIGUSR2 + 1 ]; */
+         static struct sigaction s_aOldAction[ SIGUSR2 + 1 ]; */
 
 /* Implementation of the signal translation table */
 static S_TUPLE s_sigTable[] =
@@ -160,20 +160,20 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
    /* avoid working if PRG signal handling has been disabled */
-   if( ! bSignalEnabled )
+   if( ! s_bSignalEnabled )
    {
       hb_threadLeaveCriticalSection( &s_ServiceMutex );
       return;
    }
 
-   bSignalEnabled = HB_FALSE;
-   nPos = hb_arrayLen( sp_hooks );
+   s_bSignalEnabled = HB_FALSE;
+   nPos = hb_arrayLen( s_pHooks );
    /* subsig not necessary */
    uiSig = ( HB_UINT ) s_translateSignal( ( HB_UINT ) sig, 0 );
 
    while( nPos > 0 )
    {
-      pFunction = hb_arrayGetItemPtr( sp_hooks, nPos );
+      pFunction = hb_arrayGetItemPtr( s_pHooks, nPos );
       uiMask    = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( uiMask & uiSig )
       {
@@ -218,12 +218,12 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
          switch( iRet )
          {
             case HB_SERVICE_HANDLED:
-               bSignalEnabled = HB_TRUE;
+               s_bSignalEnabled = HB_TRUE;
                hb_threadLeaveCriticalSection( &s_ServiceMutex );
                return;
 
             case HB_SERVICE_QUIT:
-               bSignalEnabled = HB_FALSE;
+               s_bSignalEnabled = HB_FALSE;
                hb_threadLeaveCriticalSection( &s_ServiceMutex );
                /* TODO: A service cleanup routine */
                hb_vmRequestQuit();
@@ -241,7 +241,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
       nPos--;
    }
 
-   bSignalEnabled = HB_TRUE;
+   s_bSignalEnabled = HB_TRUE;
    #if 0
    s_serviceSetHBSig();
    #endif
@@ -249,10 +249,10 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    #if 0
    if( uiSig != HB_SIGNAL_UNKNOWN )
    {
-      if( sa_oldAction[ sig ].sa_flags & SA_SIGINFO )
-         sa_oldAction[ sig ].sa_sigaction( sig, info, v );
+      if( s_aOldAction[ sig ].sa_flags & SA_SIGINFO )
+         s_aOldAction[ sig ].sa_sigaction( sig, info, v );
       else
-         sa_oldAction[ sig ].sa_handler( sig );
+         s_aOldAction[ sig ].sa_handler( sig );
    }
    #endif
 }
@@ -263,9 +263,10 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
 #if defined( HB_THREAD_SUPPORT ) && ! defined( HB_OS_OS2 )
 static void * s_signalListener( void * my_stack )
 {
-   static HB_BOOL bFirst = HB_TRUE;
-   sigset_t       passall;
-   HB_STACK *     pStack = ( HB_STACK * ) my_stack;
+   static HB_BOOL s_bFirst = HB_TRUE;
+
+   sigset_t   passall;
+   HB_STACK * pStack = ( HB_STACK * ) my_stack;
 
 #if defined( HB_OS_BSD )
    int sig;
@@ -310,10 +311,10 @@ static void * s_signalListener( void * my_stack )
       /* reset signal handling; this is done here (so I don't
          mangle with pthread_ calls, and I don't hold mutexes),
          and just once (doing it twice would be useless). */
-      if( bFirst )
+      if( s_bFirst )
       {
          pthread_sigmask( SIG_SETMASK, &passall, NULL );
-         bFirst = HB_FALSE;
+         s_bFirst = HB_FALSE;
       }
 
       /* This is also a cancelation point. When the main thread
@@ -412,20 +413,20 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
    hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
    /* avoid working if PRG signal handling has been disabled */
-   if( ! bSignalEnabled )
+   if( ! s_bSignalEnabled )
    {
       hb_threadLeaveCriticalSection( &s_ServiceMutex );
       return EXCEPTION_EXECUTE_HANDLER;
    }
 
-   bSignalEnabled = HB_FALSE;
-   nPos = hb_arrayLen( sp_hooks );
+   s_bSignalEnabled = HB_FALSE;
+   nPos = hb_arrayLen( s_pHooks );
    /* subsig not necessary */
    uiSig = ( HB_UINT ) s_translateSignal( ( HB_UINT ) type, ( HB_UINT ) sig );
 
    while( nPos > 0 )
    {
-      pFunction = hb_arrayGetItemPtr( sp_hooks, nPos );
+      pFunction = hb_arrayGetItemPtr( s_pHooks, nPos );
       uiMask    = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( ( uiMask & uiSig ) == uiSig )
       {
@@ -471,12 +472,12 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
          switch( iRet )
          {
             case HB_SERVICE_HANDLED:
-               bSignalEnabled = HB_TRUE;
+               s_bSignalEnabled = HB_TRUE;
                hb_threadLeaveCriticalSection( &s_ServiceMutex );
                return EXCEPTION_CONTINUE_EXECUTION;
 
             case HB_SERVICE_QUIT:
-               bSignalEnabled = HB_FALSE;
+               s_bSignalEnabled = HB_FALSE;
                hb_threadLeaveCriticalSection( &s_ServiceMutex );
                hb_vmRequestQuit();
 #ifndef HB_THREAD_SUPPORT
@@ -490,7 +491,7 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
       nPos--;
    }
 
-   bSignalEnabled = HB_TRUE;
+   s_bSignalEnabled = HB_TRUE;
    return EXCEPTION_EXECUTE_HANDLER;
 }
 
@@ -713,13 +714,12 @@ static void s_signalHandlersInit()
    s_serviceSetHBSig();
 #endif
 
-   sp_hooks = hb_itemNew( NULL );
-   hb_arrayNew( sp_hooks, 0 );
+   s_pHooks = hb_itemArrayNew( 0 );
    hb_vmAtQuit( hb_service_exit, NULL );
 }
 
 /**
- * HB_*Service routines
+ * hb_*Service routines
  * This is the core of the service system.
  */
 
@@ -729,12 +729,11 @@ static void s_signalHandlersInit()
  * On unix: if the parameter is .T., puts the server in daemonic mode, detaching
  * the main thread from the console and terminating it.
  */
-
 HB_FUNC( HB_STARTSERVICE )
 {
    #ifdef HB_THREAD_SUPPORT
    int iCount = hb_threadCountStacks();
-   if( iCount > 2 || ( sp_hooks == NULL && iCount > 1 ) )
+   if( iCount > 2 || ( s_pHooks == NULL && iCount > 1 ) )
    {
       /* TODO: Right error code here */
       hb_errRT_BASE_SubstR( EG_ARG, 3012, "Service must be started before starting threads", NULL, 0 );
@@ -768,7 +767,7 @@ HB_FUNC( HB_STARTSERVICE )
    #endif
 
    /* let's begin */
-   sb_isService = HB_TRUE;
+   s_fIsService = HB_TRUE;
 
    /* in Windows, we just detach from console */
    #ifdef HB_OS_WIN
@@ -777,7 +776,7 @@ HB_FUNC( HB_STARTSERVICE )
    #endif
 
    /* Initialize only if the service has not yet been initialized */
-   if( sp_hooks == NULL )
+   if( s_pHooks == NULL )
       s_signalHandlersInit();
 }
 
@@ -785,25 +784,23 @@ HB_FUNC( HB_STARTSERVICE )
  * Returns true if the current program is a service, that is if hb_StartService() has
  * Been called. C version useful for internal api
  */
-
 HB_BOOL hb_isService( void )
 {
-   return sb_isService;
+   return s_fIsService;
 }
 
 /**
  * Clean up when system exits
  * Called from hb_vmQuit()
  */
-
 void hb_serviceExit( void )
 {
-   if( sp_hooks != NULL )
+   if( s_pHooks != NULL )
    {
       /* reset default signal handling */
       s_serviceSetDflSig();
-      hb_itemRelease( sp_hooks );
-      sp_hooks = NULL;
+      hb_itemRelease( s_pHooks );
+      s_pHooks = NULL;
    }
 }
 
@@ -814,7 +811,7 @@ void hb_serviceExit( void )
  */
 HB_FUNC( HB_ISSERVICE )
 {
-   hb_retl( sb_isService );
+   hb_retl( s_fIsService );
 }
 
 /**
@@ -825,7 +822,6 @@ HB_FUNC( HB_ISSERVICE )
  * Under windows, it peeks the pending messages and send the relevant ones
  * (quit, user+1 and user+2) to our handling functions.
  */
-
 HB_FUNC( HB_SERVICELOOP )
 {
 #ifdef HB_OS_WIN
@@ -860,12 +856,12 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
    hb_arraySet( pHandEntry, 2, pFunc );
 
    /* if the hook is not initialized, initialize it */
-   if( sp_hooks == NULL )
+   if( s_pHooks == NULL )
       s_signalHandlersInit();
 
    hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
-   hb_arrayAddForward( sp_hooks, pHandEntry );
+   hb_arrayAddForward( s_pHooks, pHandEntry );
 
    hb_threadLeaveCriticalSection( &s_ServiceMutex );
 
@@ -877,21 +873,21 @@ HB_FUNC( HB_POPSIGNALHANDLER )
 {
    int nLen;
 
-   if( sp_hooks != NULL )
+   if( s_pHooks != NULL )
    {
       hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
-      nLen = hb_arrayLen( sp_hooks );
+      nLen = hb_arrayLen( s_pHooks );
       if( nLen > 0 )
       {
-         hb_arrayDel( sp_hooks, nLen );
-         hb_arrayDel( sp_hooks, nLen - 1 );
-         hb_arraySize( sp_hooks, nLen - 2 );
+         hb_arrayDel( s_pHooks, nLen );
+         hb_arrayDel( s_pHooks, nLen - 1 );
+         hb_arraySize( s_pHooks, nLen - 2 );
          hb_retl( HB_TRUE );
-         if( hb_arrayLen( sp_hooks ) == 0 )
+         if( hb_arrayLen( s_pHooks ) == 0 )
          {
-            hb_itemRelease( sp_hooks );
-            sp_hooks = NULL;              /* So it can be reinitilized */
+            hb_itemRelease( s_pHooks );
+            s_pHooks = NULL;              /* So it can be reinitilized */
          }
       }
       else
@@ -1083,9 +1079,9 @@ HB_FUNC( __HB_SERVICEGENERATEFAULT )
 
 HB_FUNC( __HB_SERVICEGENERATEFPE )
 {
-   static double a = 100.0, b = 0.0;
+   static double s_a = 100.0, s_b = 0.0;
 
-   a = a / b;
+   s_a = s_a / s_b;
 }
 
 #endif

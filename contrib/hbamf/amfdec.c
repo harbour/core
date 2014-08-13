@@ -735,8 +735,7 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
 
    /* Decode static attr names */
    static_attr_len = ( int ) ( header >> 4 );
-   pAttrs = hb_itemNew( NULL );
-   hb_arrayNew( pAttrs, static_attr_len );
+   pAttrs = hb_itemArrayNew( static_attr_len );
 
    for( i = 0; i < static_attr_len; i++ )
    {
