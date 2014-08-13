@@ -189,7 +189,7 @@ METHOD PROCEDURE LoadFile( cFileName ) CLASS HBBrwText
    LOCAL cLine
 
    ::cFileName := cFileName
-   ::aRows := Text2Array( MemoRead( cFileName ) )
+   ::aRows := __dbgTextToArray( MemoRead( cFileName ) )
    ::nRows := Len( ::aRows )
    ::nLineNoLen := Len( hb_ntos( ::nRows ) ) + 2
 
@@ -316,22 +316,3 @@ METHOD GoNext() CLASS HBBrwText
    ENDIF
 
    RETURN lMoved
-
-STATIC FUNCTION WhichEOL( cString )
-
-   LOCAL nCRPos := At( Chr( 13 ), cString )
-   LOCAL nLFPos := At( Chr( 10 ), cString )
-
-   DO CASE
-   CASE nCRPos > 0 .AND. nLFPos == 0
-      RETURN Chr( 13 )
-   CASE nCRPos == 0 .AND. nLFPos >  0
-      RETURN Chr( 10 )
-   CASE nCRPos > 0 .AND. nLFPos == nCRPos + 1
-      RETURN Chr( 13 ) + Chr( 10 )
-   ENDCASE
-
-   RETURN hb_eol()
-
-STATIC FUNCTION Text2Array( cString )
-   RETURN hb_ATokens( cString, WhichEOL( cString ) )

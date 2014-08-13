@@ -402,8 +402,8 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
          hb_dbgAddStack( info, szName, uiLine, hb_dbg_ProcLevel() );
          for( i = 0; i < info->nBreakPoints; i++ )
          {
-            if( info->aBreak[ i ].szFunction
-                && ! strcmp( info->aBreak[ i ].szFunction, szProcName ) )
+            if( info->aBreak[ i ].szFunction &&
+                ! strcmp( info->aBreak[ i ].szFunction, szProcName ) )
             {
                hb_dbg_InvokeDebug( HB_TRUE );
                break;
@@ -577,9 +577,11 @@ void hb_dbgAddBreak( void * handle, const char * szModule, int nLine, const char
    HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
    HB_BREAKPOINT * pBreak;
 
-   szModule = hb_dbgStripModuleName( szModule );
    pBreak = ARRAY_ADD( HB_BREAKPOINT, info->aBreak, info->nBreakPoints );
-   pBreak->szModule = hb_strdup( szModule );
+   if( szModule )
+      pBreak->szModule = hb_strdup( hb_dbgStripModuleName( szModule ) );
+   else
+      pBreak->szModule = NULL;
    pBreak->nLine = nLine;
 
    if( szFunction )
@@ -864,7 +866,8 @@ void hb_dbgDelBreak( void * handle, int nBreak )
    {
       HB_BREAKPOINT * pBreak = &info->aBreak[ nBreak ];
 
-      hb_xfree( pBreak->szModule );
+      if( pBreak->szModule )
+         hb_xfree( pBreak->szModule );
       if( pBreak->szFunction )
          hb_xfree( pBreak->szFunction );
 
@@ -1394,7 +1397,8 @@ static int hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, int n
    {
       HB_BREAKPOINT * point = &info->aBreak[ i ];
 
-      if( point->nLine == nLine && FILENAME_EQUAL( szModule, point->szModule ) )
+      if( point->nLine == nLine && point->szModule &&
+          FILENAME_EQUAL( szModule, point->szModule ) )
          return i;
    }
    return -1;
@@ -1760,7 +1764,7 @@ HB_FUNC( __DBGADDBREAK )
    void * ptr = hb_parptr( 1 );
 
    if( ptr )
-      hb_dbgAddBreak( ptr, hb_parc( 2 ), hb_parni( 3 ), NULL );
+      hb_dbgAddBreak( ptr, hb_parc( 2 ), hb_parni( 3 ), hb_parc( 4 ) );
 }
 
 HB_FUNC( __DBGDELBREAK )
