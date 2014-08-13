@@ -588,12 +588,12 @@ HB_FUNC( WIN_SETCOLOR )
    if( hDC )
    {
       if( HB_ISNUM( 2 ) )
-         hb_retnl( ( long ) SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) ) );
+         hb_retnl( ( long ) SetTextColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
       else
          hb_retnl( ( long ) GetTextColor( hDC ) );
 
       if( HB_ISNUM( 3 ) )
-         SetBkColor( hDC, ( COLORREF ) hb_parnl( 3 ) );
+         SetBkColor( hDC, hbwapi_par_COLORREF( 3 ) );
 
       if( HB_ISNUM( 4 ) )
          SetTextAlign( hDC, hb_parni( 4 ) );
@@ -614,9 +614,9 @@ HB_FUNC( WIN_SETPEN )
          hPen = hbwapi_par_HPEN( 2 );
       else
       {
-         hPen = CreatePen( hb_parni( 2 ),                /* pen style */
-                           hb_parni( 3 ),                /* pen width */
-                           ( COLORREF ) hb_parnl( 4 ) ); /* pen color */
+         hPen = CreatePen( hb_parni( 2 ),  /* pen style */
+                           hb_parni( 3 ),  /* pen width */
+                           hbwapi_par_COLORREF( 4 ) );  /* pen color */
 
          hbwapi_ret_HPEN( hPen );
       }
@@ -635,15 +635,15 @@ HB_FUNC( WIN_FILLRECT )
 
    if( hDC )
    {
-      HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnl( 6 ) );
-      RECT rct;
+      HBRUSH hBrush = CreateSolidBrush( hbwapi_par_COLORREF( 6 ) );
+      RECT rc;
 
-      rct.left   = hb_parnl( 2 );
-      rct.top    = hb_parnl( 3 );
-      rct.right  = hb_parnl( 4 );
-      rct.bottom = hb_parnl( 5 );
+      rc.left   = hb_parnl( 2 );
+      rc.top    = hb_parnl( 3 );
+      rc.right  = hb_parnl( 4 );
+      rc.bottom = hb_parnl( 5 );
 
-      if( FillRect( hDC, &rct, hBrush ) )
+      if( FillRect( hDC, &rc, hBrush ) )
          fResult = HB_TRUE;
 
       DeleteObject( hBrush );

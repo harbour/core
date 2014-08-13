@@ -7279,7 +7279,7 @@ HB_FUNC( WVW_GETRGBCOLOR )
 {
    int iColor = hb_parnidef( 1, -1 );
 
-   hb_retnl( iColor >= 0 && iColor < 16 ? s_COLORS[ iColor ] : 0 );
+   hb_retnint( iColor >= 0 && iColor < 16 ? s_COLORS[ iColor ] : 0 );
 }
 
 HB_FUNC( WVW_KEYBOARD )

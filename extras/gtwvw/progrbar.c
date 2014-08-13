@@ -151,9 +151,9 @@ HB_FUNC( WVW_PGCREATE )
       RECT rXB, rOffXB;
 
       if( bBackColor )
-         SendMessage( hWnd, PBM_SETBKCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnl( 7 ) );
+         SendMessage( hWnd, PBM_SETBKCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 7 ) );
       if( bBarColor )
-         SendMessage( hWnd, PBM_SETBARCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnl( 8 ) );
+         SendMessage( hWnd, PBM_SETBARCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 8 ) );
 
       SendMessage( hWnd, PBM_SETRANGE, 0, MAKELPARAM( 0, 100 ) );
       SendMessage( hWnd, PBM_SETPOS, 0, 0 );

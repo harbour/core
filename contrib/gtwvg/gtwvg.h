@@ -603,4 +603,8 @@ extern void     wvt_Size2ArrayEx( SIZE * siz, PHB_ITEM aSize );
 
 HB_EXTERN_END
 
+#define wvg_ishandle( n )     HB_ISNUM( n )
+#define wvg_parhandle( n )    ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_rethandle( n )    hb_retnint( ( HB_PTRDIFF ) n )
+
 #endif /* HB_WVT_H_ */

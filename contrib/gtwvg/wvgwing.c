@@ -78,10 +78,8 @@
    #endif
 #endif
 
-#include "gtwvg.h"
 #include "hbwapi.h"
-
-#include <windowsx.h>
+#include "gtwvg.h"
 
 #if defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1552 )
    #undef NONAMELESSUNION
@@ -98,23 +96,6 @@
 #endif
 
 #define WIN_STATUSBAR_MAX_PARTS  256
-
-#define wvg_parwparam( n )    ( ( WPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parlparam( n )    ( ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_ispar( n )        HB_ISNUM( n )
-#define wvg_parhandle( n )    ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhwnd( n )      ( ( HWND ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parwndproc( n )   ( ( WNDPROC ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhbrush( n )    ( ( HBRUSH ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhdc( n )       ( ( HDC ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parcolor( n )     ( ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_rethandle( n )    hb_retnint( ( HB_PTRDIFF ) n )
-
-#if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
-    #undef MAKELONG
-    #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
-                                           ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
-#endif
 
 static HINSTANCE wvg_hInstance( void )
 {
@@ -399,7 +380,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
    void *  hText;
 
    hb_retptr( ( void * ) hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         wvg_parhwnd( 5 ), 0 ) );
+                                         ( HWND ) wvg_parhandle( 5 ), 0 ) );
 
    hb_strfree( hText );
 }
@@ -407,7 +388,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
 {
    hb_retptr( ( void * ) hPrepareBitmap( NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         wvg_parhwnd( 5 ), 2 ) );
+                                         ( HWND ) wvg_parhandle( 5 ), 2 ) );
 }
 
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
@@ -415,14 +396,14 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
    void * hText;
 
    hb_retptr( ( void * ) hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         wvg_parhwnd( 5 ), 1 ) );
+                                         ( HWND ) wvg_parhandle( 5 ), 1 ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVG_STATUSBARCREATEPANEL )
 {
-   HWND hWndSB = wvg_parhwnd( 1 );
+   HWND hWndSB = ( HWND ) wvg_parhandle( 1 );
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
@@ -436,7 +417,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
             int  n;
             int  width;
 
-            iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+            iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) HB_SIZEOFARRAY( ptArray ), ( LPARAM ) ( LPINT ) ptArray );
 
             GetClientRect( hWndSB, &rc );
             width = ( int ) ( rc.right / ( iParts + 1 ) );
@@ -474,7 +455,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
 
 HB_FUNC( WVG_STATUSBARSETTEXT )
 {
-   HWND hWndSB = wvg_parhwnd( 1 );
+   HWND hWndSB = ( HWND ) wvg_parhandle( 1 );
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
@@ -491,14 +472,14 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
 HB_FUNC( WVG_STATUSBARREFRESH )
 {
 #if 0
-   HWND hWndSB = wvg_parhwnd( 1 );
+   HWND hWndSB = ( HWND ) wvg_parhandle( 1 );
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
       int ptArray[ WIN_STATUSBAR_MAX_PARTS ];
       int iParts, i;
 
-      iParts = SendMessage( hWndSB, SB_GETPARTS, WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+      iParts = SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) HB_SIZEOFARRAY( ptArray ), ( LPARAM ) ( LPINT ) ptArray );
 
       ptArray[ iParts - 1 ] = -1;
 
@@ -516,7 +497,7 @@ HB_FUNC( WVG_STATUSBARREFRESH )
 /* Wvg_GetNMHDrInfo( nlParam ) */
 HB_FUNC( WVG_GETNMHDRINFO )
 {
-   LPNMHDR lpnmh = ( LPNMHDR ) wvg_parlparam( 1 );
+   LPNMHDR lpnmh = ( LPNMHDR ) wvg_parhandle( 1 );
 
    PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
@@ -530,7 +511,7 @@ HB_FUNC( WVG_GETNMHDRINFO )
 /* Wvg_GetNMMouseInfo( nlParam ) */
 HB_FUNC( WVG_GETNMMOUSEINFO )
 {
-   LPNMMOUSE nmm = ( LPNMMOUSE ) wvg_parlparam( 1 );
+   LPNMMOUSE nmm = ( LPNMMOUSE ) wvg_parhandle( 1 );
    NMHDR     nmh = nmm->hdr;
 
    PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
@@ -546,7 +527,7 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
 /* Wvg_GetNMTreeViewInfo( nlParam ) */
 HB_FUNC( WVG_GETNMTREEVIEWINFO )
 {
-   LPNMTREEVIEW pnmtv = ( LPNMTREEVIEW ) wvg_parlparam( 1 );
+   LPNMTREEVIEW pnmtv = ( LPNMTREEVIEW ) wvg_parhandle( 1 );
    NMHDR        nmh   = pnmtv->hdr;
 
    PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
@@ -562,7 +543,7 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
 /* Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected ) */
 HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 {
-   LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) wvg_parlparam( 2 );
+   LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) wvg_parhandle( 2 );
    HTREEITEM    hSelected = pnmtv->itemNew.hItem;
 
    if( hSelected != NULL )
@@ -579,12 +560,12 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       item.pszText    = text;
       item.cchTextMax = MAX_PATH;
 
-      if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
+      if( TreeView_GetItem( ( HWND ) wvg_parhandle( 1 ), &item ) )
          HB_STORSTR( text, 4 );
       else
          hb_storc( NULL, 4 );
 
-      hParent = TreeView_GetParent( wvg_parhwnd( 1 ), hSelected );
+      hParent = TreeView_GetParent( ( HWND ) wvg_parhandle( 1 ), hSelected );
       hb_stornint( ( HB_PTRDIFF ) hParent, 5 );
 
       item.mask       = TVIF_HANDLE | TVIF_TEXT;
@@ -592,7 +573,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       item.pszText    = Parent;
       item.cchTextMax = MAX_PATH;
 
-      if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
+      if( TreeView_GetItem( ( HWND ) wvg_parhandle( 1 ), &item ) )
          HB_STORSTR( Parent, 3 );
       else
          hb_storc( NULL, 3 );
@@ -623,14 +604,14 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
    tvis.hParent = ( HTREEITEM ) wvg_parhandle( 2 );
    HB_WIN_V_UNION( tvis, item.pszText ) = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   hb_retnint( ( HB_PTRDIFF ) TreeView_InsertItem( wvg_parhwnd( 1 ), &tvis ) );
+   wvg_rethandle( TreeView_InsertItem( ( HWND ) wvg_parhandle( 1 ), &tvis ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
 {
-   HWND      hwnd = wvg_parhwnd( 1 );
+   HWND      hwnd = ( HWND ) wvg_parhandle( 1 );
    HTREEITEM hroot, hitem, hitem1, hitem2, hitem3;
    int       iExpand = hb_parl( 2 ) ? TVE_EXPAND : TVE_COLLAPSE;
    int       iLevels = hb_parni( 3 ) <= 0 ? 5 : hb_parni( 3 );
@@ -755,7 +736,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    LOGFONT    lf;
    DWORD      Flags = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
    LONG       PointSize = 0;
-   HWND       hWnd      = wvg_parhwnd( 1 );
+   HWND       hWnd      = ( HWND ) wvg_parhandle( 1 );
    TCHAR      szStyle[ MAX_PATH + 1 ];
 
    memset( &cf, 0, sizeof( cf ) );
@@ -842,7 +823,7 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 
    memset( &lf, 0, sizeof( lf ) );
 
-   SendMessage( wvg_parhwnd( 1 ), WM_CHOOSEFONT_GETLOGFONT, 0, ( LPARAM ) &lf );
+   SendMessage( ( HWND ) wvg_parhandle( 1 ), WM_CHOOSEFONT_GETLOGFONT, 0, ( LPARAM ) &lf );
 
    hb_itemReturnRelease( wvg_logfontTOarray( &lf ) );
 #endif
@@ -895,22 +876,22 @@ HB_FUNC( WVG_FONTCREATE )
 /* Wvg_PointSizeToHeight( hdc, nPointSize ) */
 HB_FUNC( WVG_POINTSIZETOHEIGHT )
 {
-   HDC hdc = wvg_ispar( 1 ) ? wvg_parhdc( 1 ) : GetDC( GetDesktopWindow() );
+   HDC hdc = wvg_ishandle( 1 ) ? ( HDC ) wvg_parhandle( 1 ) : GetDC( GetDesktopWindow() );
 
    hb_retnl( ( long ) -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 ) );
 
-   if( ! wvg_ispar( 1 ) )
+   if( ! wvg_ishandle( 1 ) )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
 /* Wvg_HeightToPointSize( hdc, nHeight ) */
 HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 {
-   HDC hdc = wvg_ispar( 1 ) ? wvg_parhdc( 1 ) : GetDC( GetDesktopWindow() );
+   HDC hdc = wvg_ishandle( 1 ) ? ( HDC ) wvg_parhandle( 1 ) : GetDC( GetDesktopWindow() );
 
    hb_retnl( ( long ) -MulDiv( ( LONG ) hb_parnl( 2 ), 72, GetDeviceCaps( hdc, LOGPIXELSY ) ) );
 
-   if( ! wvg_ispar( 1 ) )
+   if( ! wvg_ishandle( 1 ) )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
@@ -918,9 +899,9 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
 #if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-   SetClassLong( wvg_parhwnd( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnint( 2 ) );
+   SetClassLong( ( HWND ) wvg_parhandle( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnint( 2 ) );
 #else
-   SetClassLongPtr( wvg_parhwnd( 1 ), GCLP_HBRBACKGROUND, ( LONG_PTR ) hb_parnint( 2 ) );
+   SetClassLongPtr( ( HWND ) wvg_parhandle( 1 ), GCLP_HBRBACKGROUND, ( LONG_PTR ) hb_parnint( 2 ) );
 #endif
 #endif
 }
@@ -1015,7 +996,7 @@ HB_FUNC( WVG_FILLRECT )
    rc.right  = hb_parvni( 2, 3 );
    rc.bottom = hb_parvni( 2, 4 );
 
-   FillRect( wvg_parhdc( 1 ), &rc, wvg_parhbrush( 3 ) );
+   FillRect( ( HDC ) wvg_parhandle( 1 ), &rc, ( HBRUSH ) wvg_parhandle( 3 ) );
 }
 
 HB_FUNC( WVG_BEGINMOUSETRACKING )
@@ -1061,9 +1042,9 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
 
 HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 {
-   WNDPROC  oldProc;
    HWND     hWnd   = hbwapi_par_raw_HWND( 1 );
    PHB_ITEM pBlock = hb_itemNew( hb_param( 2, HB_IT_EVALITEM ) );
+   WNDPROC  oldProc;
 
 #if defined( HB_OS_WIN_CE ) && defined( __MINGW32__ )
    /* Workaround for bug in cegcc headers [as of version 0.55] */
@@ -1078,7 +1059,7 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
    oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) ControlWindowProcedure );
 #endif
 
-   hb_retnint( ( HB_PTRDIFF ) oldProc );
+   wvg_rethandle( oldProc );
 }
 
 HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
@@ -1097,7 +1078,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
                                   WS_POPUP | TTS_ALWAYSTIP /* | TTS_BALLOON */,
                                   CW_USEDEFAULT, CW_USEDEFAULT,
                                   CW_USEDEFAULT, CW_USEDEFAULT,
-                                  wvg_parhwnd( 1 ),
+                                  ( HWND ) wvg_parhandle( 1 ),
                                   NULL,
                                   wvg_hInstance(),
                                   NULL );
@@ -1109,9 +1090,9 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
       memset( &toolInfo, 0, sizeof( toolInfo ) );
 
       toolInfo.cbSize   = sizeof( toolInfo );
-      toolInfo.hwnd     = wvg_parhwnd( 1 );
+      toolInfo.hwnd     = ( HWND ) wvg_parhandle( 1 );
       toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-      toolInfo.uId      = ( UINT_PTR ) wvg_parhwnd( 1 );
+      toolInfo.uId      = ( UINT_PTR ) hb_parnint( 1 );
       toolInfo.lpszText = ( LPTSTR ) TEXT( "" );
 
       if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
@@ -1132,12 +1113,12 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
    memset( &toolInfo, 0, sizeof( toolInfo ) );
 
    toolInfo.cbSize   = sizeof( toolInfo );
-   toolInfo.hwnd     = wvg_parhwnd( 1 );
+   toolInfo.hwnd     = ( HWND ) wvg_parhandle( 1 );
    toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-   toolInfo.uId      = ( UINT_PTR ) wvg_parhwnd( 1 );
+   toolInfo.uId      = ( UINT_PTR ) hb_parnint( 1 );
    toolInfo.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   SendMessage( wvg_parhwnd( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &toolInfo );
+   SendMessage( ( HWND ) wvg_parhandle( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &toolInfo );
 
    hb_strfree( hText );
 }

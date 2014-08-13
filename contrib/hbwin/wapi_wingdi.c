@@ -615,7 +615,7 @@ HB_FUNC( WAPI_SETTEXTCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) ) );
+      hb_retnl( ( long ) SetTextColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -651,7 +651,7 @@ HB_FUNC( WAPI_SETBKCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) SetBkColor( hDC, ( COLORREF ) hb_parnl( 2 ) ) );
+      hb_retnl( ( long ) SetBkColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -670,12 +670,12 @@ HB_FUNC( WAPI_CREATEPEN )
 {
    hbwapi_ret_HPEN( CreatePen( hb_parni( 1 ) /* fnPenStyle */,
                                hb_parni( 2 ) /* nWidth */,
-                               ( COLORREF ) hb_parnl( 3 ) /* crColor */ ) );
+                               hbwapi_par_COLORREF( 3 ) /* crColor */ ) );
 }
 
 HB_FUNC( WAPI_CREATESOLIDBRUSH )
 {
-   HBRUSH h = CreateSolidBrush( ( COLORREF ) hb_parnl( 1 ) /* crColor */ );
+   HBRUSH h = CreateSolidBrush( hbwapi_par_COLORREF( 1 ) /* crColor */ );
 
 #if defined( HB_OS_WIN_CE )
    hbwapi_SetLastError( GetLastError() );
@@ -687,7 +687,7 @@ HB_FUNC( WAPI_CREATEHATCHBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
    hbwapi_ret_HBRUSH( CreateHatchBrush( hb_parni( 1 ) /* fnStyle */,
-                                        ( COLORREF ) hb_parnl( 2 ) /* crColor */ ) );
+                                        hbwapi_par_COLORREF( 2 ) /* crColor */ ) );
 #else
    hb_retptr( NULL );
 #endif

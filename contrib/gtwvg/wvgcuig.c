@@ -67,6 +67,7 @@
  *                             2009-02-28
  */
 
+#include "hbwapi.h"
 #include "hbwinole.h"
 #include "gtwvg.h"
 
@@ -204,8 +205,8 @@ HB_FUNC( WVG_SETGOBJDATA )
                   break;
 #if ! defined( HB_OS_WIN_CE )
                case GOBJ_OBJDATA_PICTUREEX:
-                  if( HB_ISNUM( 3 )  )
-                     gObj->iPicture = ( IPicture * ) ( HB_PTRDIFF ) hb_parni( 3 );
+                  if( wvg_ishandle( 3 )  )
+                     gObj->iPicture = ( IPicture * ) wvg_parhandle( 3 );
                   break;
                case GOBJ_OBJDATA_PICTURE:
                   if( hb_parni( 3 ) >= 1 && hb_parni( 3 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
@@ -247,29 +248,29 @@ HB_FUNC( WVG_SETGOBJDATA )
                case GOBJ_OBJDATA_HFONT:
                   if( gObj->hFont && gObj->bDestroyFont )
                      DeleteObject( gObj->hFont );
-                  gObj->hFont        = ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hFont        = ( HFONT ) wvg_parhandle( 3 );
                   gObj->bDestroyFont = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HPEN:
                   if( gObj->hPen && gObj->bDestroyPen )
                      DeleteObject( gObj->hPen );
-                  gObj->hPen        = ( HPEN ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hPen        = ( HPEN ) wvg_parhandle( 3 );
                   gObj->bDestroyPen = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HBRUSH:
                   if( gObj->hBrush && gObj->bDestroyBrush )
                      DeleteObject( gObj->hBrush );
-                  gObj->hBrush        = ( HBRUSH ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hBrush        = ( HBRUSH ) wvg_parhandle( 3 );
                   gObj->bDestroyBrush = HB_TRUE;
                   break;
                case GOBJ_OBJDATA_COLORTEXT:
                   if( HB_ISNUM( 3 ) )
-                     gObj->crRGBText = ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                     gObj->crRGBText = hbwapi_par_COLORREF( 3 );
                   else
                      bSuccess = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_COLORBK:
-                  gObj->crRGBBk = ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->crRGBBk = hbwapi_par_COLORREF( 3 );
                   break;
                case GOBJ_OBJDATA_BLOCK:
                   if( gObj->bBlock )
@@ -598,8 +599,8 @@ HB_FUNC( WVG_LABEL )
       gObj->lpText = HB_PARSTR( 4, &gObj->hText, NULL );
 
       gObj->iAlign       = hb_parnidef( 5, TA_LEFT );
-      gObj->crRGBText    = ( COLORREF ) hb_parnint( 7 );
-      gObj->crRGBBk      = ( COLORREF ) hb_parnint( 8 );
+      gObj->crRGBText    = hbwapi_par_COLORREF( 7 );
+      gObj->crRGBBk      = hbwapi_par_COLORREF( 8 );
       gObj->hFont        = hFont;
       gObj->bDestroyFont = HB_TRUE;
 
@@ -629,8 +630,8 @@ HB_FUNC( WVG_LABELEX )
    gObj->lpText = HB_PARSTR( 4, &gObj->hText, NULL );
 
    gObj->iAlign    = hb_parnidef( 5, TA_LEFT );
-   gObj->crRGBText = ( COLORREF ) hb_parnint( 6 );
-   gObj->crRGBBk   = ( COLORREF ) hb_parnint( 7 );
+   gObj->crRGBText = hbwapi_par_COLORREF( 6 );
+   gObj->crRGBBk   = hbwapi_par_COLORREF( 7 );
 
    gObj->hFont        = pWVT->pGUI->hUserFonts[ hb_parni( 8 ) - 1 ];
    gObj->bDestroyFont = HB_FALSE;
@@ -710,8 +711,8 @@ HB_FUNC( WVG_LABELEX2 )
       gObj->lpText = HB_PARSTR( 6, &gObj->hText, NULL );
 
       gObj->iAlign       = hb_parnidef( 7, TA_LEFT );
-      gObj->crRGBText    = ( COLORREF ) hb_parnint( 9 );
-      gObj->crRGBBk      = ( COLORREF ) hb_parnint( 10 );
+      gObj->crRGBText    = hbwapi_par_COLORREF( 9 );
+      gObj->crRGBBk      = hbwapi_par_COLORREF( 10 );
       gObj->hFont        = hFont;
       gObj->bDestroyFont = HB_TRUE;
 
@@ -792,7 +793,7 @@ HB_FUNC( WVG_OUTLINE )
 
    gObj->iWidth = hb_parni( 6 );             /* iThick */
    gObj->iStyle = hb_parni( 7 );             /* iShape */
-   gObj->crRGB  = ( COLORREF ) hb_parnl( 8 );
+   gObj->crRGB  = hbwapi_par_COLORREF( 8 );
 
    if( gObj->iWidth > 0 )
    {
@@ -886,7 +887,7 @@ HB_FUNC( WVG_LINE )
 
    gObj->iStyle = hb_parni( 9 );
    gObj->iWidth = hb_parni( 10 );           /* iThick */
-   gObj->crRGB  = ( COLORREF ) hb_parnl( 11 );
+   gObj->crRGB  = hbwapi_par_COLORREF( 11 );
 
    gObj->hPen        = CreatePen( gObj->iStyle, gObj->iWidth, gObj->crRGB );
    gObj->bDestroyPen = HB_TRUE;
@@ -1156,7 +1157,7 @@ static void hb_wvg_RoundRect( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTo
 /* Wvg_ColorRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRGB ) */
 HB_FUNC( WVG_COLORRECT )
 {
-   HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnint( 6 ) );
+   HBRUSH hBrush = CreateSolidBrush( hbwapi_par_COLORREF( 6 ) );
 
    if( hBrush )
    {
@@ -1285,10 +1286,10 @@ HB_FUNC( WVG_TEXTBOX )
    }
    gObj->iAlign = iAlignH;
 
-   gObj->crRGBText = ( COLORREF ) hb_parnint( 9 );
-   gObj->crRGBBk   = ( COLORREF ) hb_parnint( 10 );
+   gObj->crRGBText = hbwapi_par_COLORREF( 9 );
+   gObj->crRGBBk   = hbwapi_par_COLORREF( 10 );
 
-   gObj->hFont        = ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 11 );
+   gObj->hFont        = ( HFONT ) wvg_parhandle( 11 );
    gObj->bDestroyFont = HB_FALSE;
 
    gObj->gObjNext = pWVT->gObjs;
@@ -1357,7 +1358,7 @@ HB_FUNC( WVG_PICTURE )
 HB_FUNC( WVG_PICTUREEX )
 {
 #if ! defined( HB_OS_WIN_CE )
-   if( HB_ISNUM( 6 ) )
+   if( wvg_ishandle( 6 ) )
    {
       PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
       HB_GOBJS * gObj = hb_wvg_ObjectNew( pWVT );
@@ -1374,7 +1375,7 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 6 );
+      gObj->iPicture        = ( IPicture * ) wvg_parhandle( 6 );
       gObj->iData           = hb_parl( 7 ) ? 1 : 0;
       gObj->bDestroyPicture = HB_FALSE;
 

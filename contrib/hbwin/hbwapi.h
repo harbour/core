@@ -126,6 +126,12 @@
                                       ( ( HB_MAXUINT ) ( v ).HighPart << 32 ) )
 #endif
 
+#if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
+   #undef MAKELONG
+   #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
+                                          ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
+#endif
+
 HB_EXTERN_BEGIN
 
 /* Intentionally not used HB_EXPORT. These are UNICODE setting dependent functions,

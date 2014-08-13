@@ -55,6 +55,7 @@
  *
  */
 
+#include "hbwapi.h"
 #include "gtwvg.h"
 
 /* workaround for missing declaration in MinGW32 */
@@ -69,11 +70,6 @@
 #undef ChooseColor
 BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
 #endif /* __MINGW32CE__ */
-
-#define wvg_ispar( n )        HB_ISNUM( n )
-#define wvg_parhandle( n )    ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhwnd( n )      ( ( HWND ) ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_rethandle( n )    hb_retnint( ( HB_PTRDIFF ) n )
 
 static HINSTANCE wvg_hInstance( void )
 {
@@ -191,22 +187,22 @@ HB_FUNC( WVT_CHOOSECOLOR )
       memset( &cc, 0, sizeof( cc ) );
 
       for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-         crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
+         crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnint( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
       cc.lStructSize  = sizeof( cc );
       cc.hwndOwner    = _s->hWnd;
-      cc.rgbResult    = ( COLORREF ) hb_parnl( 1 );
+      cc.rgbResult    = hbwapi_par_COLORREF( 1 );
       cc.lpCustColors = crCustClr;
       cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
       if( ChooseColor( &cc ) )
       {
-         hb_retnl( cc.rgbResult );
+         hbwapi_ret_COLORREF( cc.rgbResult );
          return;
       }
    }
 
-   hb_retnl( -1 );
+   hbwapi_ret_COLORREF( -1 );
 }
 
 /* Wvt_MessageBox( cMessage, cTitle, nIcon, hWnd ) */
@@ -345,7 +341,7 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
       int iTipWidth = ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
       if( HB_ISNUM( 1 ) )
-         SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
+         SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) hb_parnint( 1 ) );
 
       hb_retni( iTipWidth );
       return;
@@ -364,13 +360,13 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
       COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
 
       if( HB_ISNUM( 1 ) )
-         SendMessage( _s->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
+         SendMessage( _s->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) hbwapi_par_COLORREF( 1 ), 0 );
 
-      hb_retnl( ( COLORREF ) cr );
+      hbwapi_ret_COLORREF( cr );
       return;
    }
 #endif
-   hb_retnl( 0 );
+   hbwapi_ret_COLORREF( 0 );
 }
 
 HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
@@ -383,13 +379,13 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
       COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
 
       if( HB_ISNUM( 1 ) )
-         SendMessage( _s->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
+         SendMessage( _s->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) hbwapi_par_COLORREF( 1 ), 0 );
 
-      hb_retnl( ( COLORREF ) cr );
+      hbwapi_ret_COLORREF( cr );
       return;
    }
 #endif
-   hb_retnl( 0 );
+   hbwapi_ret_COLORREF( 0 );
 }
 
 HB_FUNC( WVT_SETTOOLTIPTITLE )
@@ -435,11 +431,11 @@ HB_FUNC( WVT_GETTOOLTIPBKCOLOR )
 
    if( _s )
    {
-      hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
       return;
    }
 #endif
-   hb_retnl( 0 );
+   hbwapi_ret_COLORREF( 0 );
 }
 
 HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
@@ -449,11 +445,11 @@ HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
 
    if( _s )
    {
-      hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
       return;
    }
 #endif
-   hb_retnl( 0 );
+   hbwapi_ret_COLORREF( 0 );
 }
 
 HB_FUNC( WVT_SETGUI )
@@ -905,12 +901,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             iType = 1;
          }
 
-         if( HB_ISNUM( 3 ) )
+         if( wvg_ishandle( 3 ) )
             /* argument 1 is already unicode compliant, so no conversion */
             hDlg = CreateDialogIndirect( wvg_hInstance(),
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? _s->hWnd : NULL,
-                                         ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
+                                         ( DLGPROC ) wvg_parhandle( 3 ) );
          else
          {
             switch( iResource )
@@ -1002,7 +998,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          PHB_DYNS   pExecSym;
          int        iResource = hb_parni( 4 );
          HB_PTRDIFF iResult   = 0;
-         HWND       hParent   = wvg_ispar( 5 ) ? wvg_parhwnd( 5 ) : _s->hWnd;
+         HWND       hParent   = wvg_ishandle( 5 ) ? ( HWND ) wvg_parhandle( 5 ) : _s->hWnd;
 
          if( HB_IS_EVALITEM( pFirst ) )
          {
@@ -1235,38 +1231,38 @@ HB_FUNC( WVT_LBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
-   hb_retnl( ( long ) SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
+   hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
 }
 
 HB_FUNC( WVT_LBDELETESTRING )
 {
-   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
 }
 
 HB_FUNC( WVT_LBSETCURSEL )
 {
-   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 HB_FUNC( WVT_CBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_CBSETCURSEL )
 {
-   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 /* Wvt_DlgSetIcon( hDlg, ncIcon ) */
@@ -1278,18 +1274,18 @@ HB_FUNC( WVT_DLGSETICON )
       hIcon = LoadIcon( wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 2 ) ) );
    else
    {
-      void * hIcon;
-      LPCTSTR szIcon = HB_PARSTR( 2, &hIcon, NULL );
-      hIcon = ( HICON ) LoadImage( NULL, szIcon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      void * hName;
+      LPCTSTR szName = HB_PARSTR( 2, &hName, NULL );
+      hIcon = ( HICON ) LoadImage( NULL, szName, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
       if( ! hIcon )
-         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), szIcon, IMAGE_ICON, 0, 0, 0 );
-      hb_strfree( hIcon );
+         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), szName, IMAGE_ICON, 0, 0, 0 );
+      hb_strfree( hName );
    }
 
    if( hIcon )
    {
-      SendMessage( wvg_parhwnd( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
-      SendMessage( wvg_parhwnd( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
+      SendMessage( ( HWND ) wvg_parhandle( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
+      SendMessage( ( HWND ) wvg_parhandle( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
    }
 
    wvg_rethandle( hIcon );

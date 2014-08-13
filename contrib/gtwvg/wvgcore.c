@@ -56,6 +56,7 @@
 
 /* GUI Drawing Function */
 
+#include "hbwapi.h"
 #include "hbwinole.h"
 #include "gtwvg.h"
 
@@ -833,7 +834,7 @@ static COLORREF hb_wvt_BgColorParam( int iParam )
    COLORREF color;
 
    if( HB_ISNUM( iParam ) )
-      color = ( COLORREF ) hb_parnl( iParam );
+      color = hbwapi_par_COLORREF( iParam );
    else
    {
       int iColor = HB_ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) : -1;
@@ -852,7 +853,7 @@ static COLORREF hb_wvt_FgColorParam( int iParam )
    COLORREF color;
 
    if( HB_ISNUM( iParam ) )
-      color = ( COLORREF ) hb_parnl( iParam );
+      color = hbwapi_par_COLORREF( iParam );
    else
    {
       int iColor = HB_ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) : -1;
@@ -875,7 +876,7 @@ HB_FUNC( WVT_SETPEN )
       {
          int      iPenStyle = hb_parni( 1 );
          int      iPenWidth = hb_parni( 2 );
-         COLORREF crColor   = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
+         COLORREF crColor   = hbwapi_par_COLORREF( 3 );
 
          HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
 
@@ -909,7 +910,7 @@ HB_FUNC( WVT_SETBRUSH )
          memset( &lb, 0, sizeof( lb ) );
 
          lb.lbStyle = hb_parnl( 1 );
-         lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
+         lb.lbColor = hbwapi_par_COLORREF( 2 );
          lb.lbHatch = hb_parnl( 3 );
 
 #if ! defined( HB_OS_WIN_CE )
@@ -1114,8 +1115,8 @@ HB_FUNC( WVT_DRAWLABEL )
       {
          HB_SIZE  nLen;
          LPCTSTR  text  = HB_PARSTR( 3, &hText, &nLen );
-         COLORREF fgClr = hb_wvt_FgColorParam( 6 ),
-                  bgClr = hb_wvt_BgColorParam( 7 );
+         COLORREF fgClr = hb_wvt_FgColorParam( 6 );
+         COLORREF bgClr = hb_wvt_BgColorParam( 7 );
 
          xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
          xy.x += hb_parvni( 17, 2 );
@@ -1168,8 +1169,8 @@ HB_FUNC( WVT_DRAWLABELEX )
          void *   hText;
          HB_SIZE  nLen;
          LPCTSTR  text  = HB_PARSTR( 3, &hText, &nLen );
-         COLORREF fgClr = hb_wvt_FgColorParam( 5 ),
-                  bgClr = hb_wvt_BgColorParam( 6 );
+         COLORREF fgClr = hb_wvt_FgColorParam( 5 );
+         COLORREF bgClr = hb_wvt_BgColorParam( 6 );
 
          xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
          xy.x += hb_parvni( 8, 2 );
@@ -1219,8 +1220,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       void *   hText;
       HB_SIZE  nLen;
       LPCTSTR  text  = HB_PARSTR( 5, &hText, &nLen );
-      COLORREF fgClr = hb_wvt_FgColorParam( 8 ),
-               bgClr = hb_wvt_BgColorParam( 9 );
+      COLORREF fgClr = hb_wvt_FgColorParam( 8 );
+      COLORREF bgClr = hb_wvt_BgColorParam( 9 );
 
       xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       iTop    = xy.y + hb_parvni( 11, 1 );
@@ -1234,7 +1235,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 
       SetTextColor( _s->hdc, fgClr );
       SetBkColor( _s->hdc, bgClr );
-      SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 10 ) );
+      SelectObject( _s->hdc, ( HFONT ) wvg_parhandle( 10 ) );
 
       GetTextExtentPoint32( _s->hdc, text, ( int ) nLen, &sz );
 
@@ -1289,7 +1290,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       {
          SetTextColor( _s->hGuiDC, fgClr );
          SetBkColor( _s->hGuiDC, bgClr );
-         SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 10 ) );
+         SelectObject( _s->hGuiDC, ( HFONT ) wvg_parhandle( 10 ) );
          SetTextAlign( _s->hGuiDC, iAlignH | iAlignV );
 
          ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, text, ( UINT ) nLen, NULL );
@@ -1326,7 +1327,7 @@ HB_FUNC( WVT_DRAWOUTLINE )
 
       if( HB_ISNUM( 5 ) )
       {
-         hPen = CreatePen( hb_parni( 5 ), 0, ( COLORREF ) hb_parnl( 7 ) );
+         hPen = CreatePen( hb_parni( 5 ), 0, hbwapi_par_COLORREF( 7 ) );
          if( hPen )
             hOldPen = ( HPEN ) SelectObject( _s->hdc, hPen );
       }
@@ -1408,21 +1409,18 @@ HB_FUNC( WVT_DRAWLINE )
       int iBottom = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parvni( 11, 3 );
       int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 11, 4 );
 
-      int      iOrient, iFormat, iAlign, iStyle, iThick;
-      int      x, y, iOffset;
-      COLORREF cr;
-      HPEN     hPen, hOldPen, hOldPenGUI;
+      int      iOrient = hb_parni( 5 );
+      int      iFormat = hb_parni( 6 );
+      int      iAlign  = hb_parni( 7 );
+      int      iStyle  = hb_parni( 8 );
+      int      iThick  = hb_parni( 9 );
+      COLORREF cr      = hbwapi_par_COLORREF( 10 );
 
-      /* Resolve parameters */
-      iOrient = hb_parni( 5 );
-      iFormat = hb_parni( 6 );
-      iAlign  = hb_parni( 7 );
-      iStyle  = hb_parni( 8 );
-      iThick  = hb_parni( 9 );
-      cr      = ( COLORREF ) hb_parnl( 10 );
+      int  iOffset;
+      HPEN hPen, hOldPen, hOldPenGUI;
 
-      x = iLeft;
-      y = iTop;
+      int x = iLeft;
+      int y = iTop;
 
       switch( iAlign )
       {
@@ -1910,7 +1908,7 @@ HB_FUNC( WVT_DRAWCOLORRECT )
 
    if( _s )
    {
-      HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnl( 6 ) );
+      HBRUSH hBrush = CreateSolidBrush( hbwapi_par_COLORREF( 6 ) );
 
       if( hBrush )
       {
@@ -2063,8 +2061,8 @@ HB_FUNC( WVT_DRAWBUTTON )
       HB_BOOL  bText     = HB_ISCHAR( 5 );
       HB_BOOL  bImage    = HB_ISNUM( 6 ) || HB_ISCHAR( 6 );
       int      iFormat   = hb_parni( 7 );
-      COLORREF textColor = ( COLORREF ) hb_parnldef( 8, _s->COLORS[ 0 ] );
-      COLORREF bkColor   = ( COLORREF ) hb_parnldef( 9, _s->COLORS[ 7 ] );
+      COLORREF textColor = ( COLORREF ) hb_parnintdef( 8, _s->COLORS[ 0 ] );
+      COLORREF bkColor   = ( COLORREF ) hb_parnintdef( 9, _s->COLORS[ 7 ] );
 
 #if 0
       int      iImageAt  = hb_parni( 10 );
@@ -2314,7 +2312,7 @@ HB_FUNC( WVT_DRAWPICTURE )
 HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
 {
 #if ! defined( HB_OS_WIN_CE )
-   if( HB_ISNUM( 5 ) )
+   if( wvg_ishandle( 5 ) )
    {
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
@@ -2327,7 +2325,7 @@ HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
       iBottom = xy.y - 1 + hb_parvni( 6, 3 );
       iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 5 ), hb_parl( 7 ) ) );
+      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) wvg_parhandle( 5 ), hb_parl( 7 ) ) );
    }
    else
       hb_retl( HB_FALSE );
@@ -2545,10 +2543,9 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
       int iLeft   = ( _s->PTEXTSIZE.x * hb_parni( 2 ) ) + hb_parvni( 5, 2 );
       int iBottom = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parvni( 5, 3 );
       int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5, 4 );
-      int iThumbLeft, iThumbRight;
 
-      iThumbLeft  = _s->PTEXTSIZE.x * hb_parni( 6 );
-      iThumbRight = iThumbLeft + ( _s->PTEXTSIZE.x * 2 ) - 1;
+      int iThumbLeft  = _s->PTEXTSIZE.x * hb_parni( 6 );
+      int iThumbRight = iThumbLeft + ( _s->PTEXTSIZE.x * 2 ) - 1;
 
       /* Background */
       SetBkMode( _s->hdc, OPAQUE );
@@ -2682,7 +2679,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       SetTextColor( _s->hdc, fgClr );
       SetBkColor( _s->hdc, bgClr );
       SetBkMode( _s->hdc, hb_parnidef( 11, OPAQUE ) );
-      SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
+      SelectObject( _s->hdc, ( HFONT ) wvg_parhandle( 12 ) );
 
       {
          void *  hText;
@@ -2699,7 +2696,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
          SetTextColor( _s->hGuiDC, fgClr );
          SetBkColor( _s->hGuiDC, bgClr );
          SetBkMode( _s->hGuiDC, hb_parnidef( 11, OPAQUE ) );
-         SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
+         SelectObject( _s->hGuiDC, ( HFONT ) wvg_parhandle( 12 ) );
 
          {
             void *  hText;
@@ -2721,21 +2718,20 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
 
    if( _s )
    {
-      int      iTop    = ( _s->PTEXTSIZE.y * hb_parni( 1 ) ) + hb_parvni( 5, 1 );
-      int      iLeft   = ( _s->PTEXTSIZE.x * hb_parni( 2 ) ) + hb_parvni( 5, 2 );
-      int      iBottom = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parvni( 5, 3 );
-      int      iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5, 4 );
-      int      iPercent, iBarUpto, iDirection;
-      HB_BOOL  bVertical, bImage;
-      COLORREF crBarColor;
+      int iTop    = ( _s->PTEXTSIZE.y * hb_parni( 1 ) ) + hb_parvni( 5, 1 );
+      int iLeft   = ( _s->PTEXTSIZE.x * hb_parni( 2 ) ) + hb_parvni( 5, 2 );
+      int iBottom = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parvni( 5, 3 );
+      int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parvni( 5, 4 );
+
+      int     iPercent   = hb_parni( 6 );
+      HB_BOOL bImage     = HB_ISCHAR( 9 );
+      HB_BOOL bVertical  = hb_parl( 10 );
+      int     iDirection = hb_parni( 11 );
+
+      int      iBarUpto;
       HBRUSH   hBrush;
       LOGBRUSH lb = { 0, 0, 0 };
       RECT     rc = { 0, 0, 0, 0 };
-
-      iPercent   = hb_parni( 6 );
-      bImage     = HB_ISCHAR( 9 );
-      bVertical  = hb_parl( 10 );
-      iDirection = hb_parni( 11 );
 
       if( bVertical )
       {
@@ -2791,10 +2787,8 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
       }
       else
       {
-         crBarColor = ( COLORREF ) hb_parnldef( 8, _s->COLORS[ 0 ] );
-
          lb.lbStyle = BS_SOLID;
-         lb.lbColor = crBarColor;
+         lb.lbColor = ( COLORREF ) hb_parnintdef( 8, _s->COLORS[ 0 ] );
          lb.lbHatch = 0;
 #if ! defined( HB_OS_WIN_CE )
          hBrush = CreateBrushIndirect( &lb );
@@ -2844,10 +2838,10 @@ HB_FUNC( WVT_CREATEFONT )
       HB_STRNCPY( lf.lfFaceName, ( ! HB_ISCHAR( 1 ) ? _s->fontFace : HB_PARSTR( 1, &hText, NULL ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
 
-      hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &lf ) );
+      wvg_rethandle( CreateFontIndirect( &lf ) );
    }
    else
-      hb_retnint( 0 );
+      wvg_rethandle( 0 );
 }
 
 /* Wvt_LoadPicture( nSlot, cFilePic ) */
@@ -2886,7 +2880,7 @@ HB_FUNC( WVT_LOADPICTURE )
 HB_FUNC( WVT_DESTROYPICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retl( hb_wvt_gtDestroyPicture( ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+   hb_retl( hb_wvt_gtDestroyPicture( ( IPicture * ) wvg_parhandle( 1 ) ) );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -2899,9 +2893,9 @@ HB_FUNC( WVT_LOADPICTUREEX )
    void *     hImage;
    IPicture * iPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 1, &hImage, NULL ) );
    hb_strfree( hImage );
-   hb_retnint( ( HB_PTRDIFF ) iPicture );
+   wvg_rethandle( iPicture );
 #else
-   hb_retnint( 0 );
+   wvg_rethandle( 0 );
 #endif
 }
 
@@ -2950,9 +2944,9 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
    hb_strfree( hResource );
    hb_strfree( hSection );
 
-   hb_retnint( ( HB_PTRDIFF ) iPicture );
+   wvg_rethandle( iPicture );
 #else
-   hb_retnint( 0 );
+   wvg_rethandle( 0 );
 #endif
 }
 
@@ -3015,7 +3009,7 @@ HB_FUNC( WVT_LOADPEN )
       {
          int      iPenWidth = hb_parni( 2 );
          int      iPenStyle = hb_parni( 3 );
-         COLORREF crColor   = ( COLORREF ) hb_parnldef( 4, RGB( 0, 0, 0 ) );
+         COLORREF crColor   = hbwapi_par_COLORREF( 4 );
 
          HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
 

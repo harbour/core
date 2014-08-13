@@ -201,11 +201,11 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
          if( lOleError == S_OK )
          {
             MSG Msg;
-            RECT rct;
+            RECT rc;
 
             memset( &Msg, 0, sizeof( Msg ) );
-            GetClientRect( hWnd, &rct );
-            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rct );
+            GetClientRect( hWnd, &rc );
+            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rc );
          }
          HB_VTBL( lpOleObject )->Release( HB_THIS( lpOleObject ) );
       }

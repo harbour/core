@@ -133,12 +133,12 @@ HB_FUNC( WIN_SETFOCUS )
 
 HB_FUNC( WIN_SETTEXTCOLOR )
 {
-   hb_retnl( ( long ) SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   hb_retnint( SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnint( 2 ) ) );
 }
 
 HB_FUNC( WIN_SETBKCOLOR )
 {
-   hb_retnl( ( long ) SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   hb_retnint( SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnint( 2 ) ) );
 }
 
 HB_FUNC( WVW_SETBKMODE )
@@ -354,7 +354,7 @@ HB_FUNC( WIN_CREATEBRUSH )
    memset( &lb, 0, sizeof( lb ) );
 
    lb.lbStyle = hb_parni( 1 );
-   lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
+   lb.lbColor = ( COLORREF ) hb_parnint( 2 );
    lb.lbHatch = hb_parni( 3 );
 
    HB_RETHANDLE( CreateBrushIndirect( &lb ) );
@@ -547,7 +547,7 @@ HB_FUNC( WVW_SENDMESSAGE )
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
                             ( UINT ) hb_parni( 2 ),
-                            ( WPARAM ) hb_parnl( 3 ),
+                            ( WPARAM ) hb_parnint( 3 ),
                             HB_ISCHAR( 4 ) ? ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) : ( LPARAM ) hb_parnint( 4 ) ) );
 
    hb_strfree( hText );
@@ -662,7 +662,7 @@ HB_FUNC( WVW_IMAGELIST_ADD )
 
 HB_FUNC( WVW_IMAGELIST_ADDMASKED )
 {
-   hb_retnl( ImageList_AddMasked( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), ( COLORREF ) hb_parnl( 3 ) ) );
+   hb_retnl( ImageList_AddMasked( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), ( COLORREF ) hb_parnint( 3 ) ) );
 }
 
 HB_FUNC( WVW_GETBITMAPSIZE )
@@ -914,37 +914,37 @@ HB_FUNC( WVW_OPENBITMAP )
 
 HB_FUNC( WVW_SETTEXTCOLOR )
 {
-   hb_retnl( ( long ) SetTextColor(
-                ( HDC ) HB_PARHANDLE( 1 ),      /* handle of device context */
-                ( COLORREF ) hb_parnl( 2 ) ) ); /* text color */
+   hb_retnint( SetTextColor(
+                ( HDC ) HB_PARHANDLE( 1 ),  /* handle of device context */
+                ( COLORREF ) hb_parnint( 2 ) ) );  /* text color */
 }
 
 HB_FUNC( WVW_SETBKCOLOR )
 {
-   hb_retnl( ( long ) SetBkColor(
-                ( HDC ) HB_PARHANDLE( 1 ),      /* handle of device context */
-                ( COLORREF ) hb_parnl( 2 ) ) ); /* text color */
+   hb_retnint( SetBkColor(
+                ( HDC ) HB_PARHANDLE( 1 ),  /* handle of device context */
+                ( COLORREF ) hb_parnint( 2 ) ) );  /* text color */
 }
 
 HB_FUNC( WVW_CREATESOLIDBRUSH )
 {
-   HB_RETHANDLE( CreateSolidBrush( ( COLORREF ) hb_parnl( 1 ) /* brush color */ ) );
+   HB_RETHANDLE( CreateSolidBrush( ( COLORREF ) hb_parnint( 1 ) /* brush color */ ) );
 }
 
 HB_FUNC( WVW_CREATEHATCHBRUSH )
 {
-   HB_RETHANDLE( CreateHatchBrush( hb_parni( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
+   HB_RETHANDLE( CreateHatchBrush( hb_parni( 1 ), ( COLORREF ) hb_parnint( 2 ) ) );
 }
 
 HB_FUNC( WVW_RGB )
 {
-   hb_retnl( RGB( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
+   hb_retnint( RGB( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 #if ! defined( __HB_NO_REDUNDANT )
 HB_FUNC( WIN_GETSYSCOLOR )
 {
-   hb_retnl( ( long ) GetSysColor( hb_parni( 1 ) ) );
+   hb_retnint( GetSysColor( hb_parni( 1 ) ) );
 }
 #endif
 
@@ -1489,7 +1489,7 @@ HB_FUNC( WVW_LOADPEN )
    int      iSlot     = hb_parni( 1 ) - 1;
    int      iPenStyle = hb_parni( 2 );
    int      iPenWidth = hb_parni( 3 );
-   COLORREF crColor   = ( COLORREF ) hb_parnldef( 4, RGB( 0, 0, 0 ) );
+   COLORREF crColor   = ( COLORREF ) hb_parnint( 4 );
 
    HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
 
@@ -1604,20 +1604,20 @@ HB_FUNC( WVW_CHOOSECOLOR )
    int         i;
 
    for( i = 0; i < 16; ++i )
-      crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
+      crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnint( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
    memset( &cc, 0, sizeof( cc ) );
 
    cc.lStructSize  = sizeof( cc );
    cc.hwndOwner    = wvw->pWin[ wvw->usNumWindows - 1 ]->hWnd;
-   cc.rgbResult    = ( COLORREF ) hb_parnl( 1 );
+   cc.rgbResult    = ( COLORREF ) hb_parnint( 1 );
    cc.lpCustColors = crCustClr;
    cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
    if( ChooseColor( &cc ) )
-      hb_retnl( cc.rgbResult );
+      hb_retnint( cc.rgbResult );
    else
-      hb_retnl( -1 );
+      hb_retnint( 0 );
 }
 
 /* wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based
@@ -1672,7 +1672,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
           usLeft       = ( USHORT ) hb_parni( 3 ),
           usBottom     = ( USHORT ) hb_parni( 4 ),
           usRight      = ( USHORT ) hb_parni( 5 );
-   COLORREF crRGBcolor = hb_parnl( 6 );
+   COLORREF crRGBcolor = ( COLORREF ) hb_parnint( 6 );
    HB_BOOL  bTight     = hb_parl( 7 );
    HB_BOOL  bUseBrush  = hb_parl( 8 );
    LOGBRUSH lb;
@@ -1792,7 +1792,7 @@ HB_FUNC( WVW_SETPEN )
    {
       int      iPenStyle = hb_parni( 1 );
       int      iPenWidth = hb_parni( 2 );
-      COLORREF crColor   = ( COLORREF ) hb_parnldef( 3, RGB( 0, 0, 0 ) );
+      COLORREF crColor   = ( COLORREF ) hb_parnint( 3 );
 
       HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
 
@@ -1826,7 +1826,7 @@ HB_FUNC( WVW_SETBRUSH )
       memset( &lb, 0, sizeof( lb ) );
 
       lb.lbStyle = hb_parnl( 1 );
-      lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
+      lb.lbColor = ( COLORREF ) hb_parnint( 2 );
       lb.lbHatch = hb_parnl( 3 );
 
       hBrush = CreateBrushIndirect( &lb );
