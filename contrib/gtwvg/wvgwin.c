@@ -1069,13 +1069,9 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
       }
       case TB_ADDSTRING:
       {
-         int    iString;
          void * hCaption;
-
-         iString = ( int ) SendMessage( hTB, TB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+         hbwapi_ret_NI( ( int ) SendMessage( hTB, TB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) ) );
          hb_strfree( hCaption );
-
-         hbwapi_ret_NI( iString );
          break;
       }
       case TB_AUTOSIZE:

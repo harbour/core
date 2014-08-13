@@ -205,11 +205,9 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 {
-   PHB_GTWVT pWVT;
+   PHB_GTWVT pWVT = ( PHB_GTWVT ) hb_xgrabz( sizeof( HB_GTWVT ) );
 
-   pWVT = ( PHB_GTWVT ) hb_xgrabz( sizeof( HB_GTWVT ) );
-
-   pWVT->pGT               = pGT;
+   pWVT->pGT = pGT;
 
    if( ! hb_gt_wvt_Alloc( pWVT ) )
    {
@@ -252,7 +250,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    {
       PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
-
       pWVT->lpWindowTitle = HB_ITEMGETSTR( pItem, &pWVT->hWindowTitle, NULL );
       hb_itemRelease( pItem );
    }
@@ -319,9 +316,7 @@ static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
    hb_gt_wvt_FireEvent( pWVT, HB_GTE_MENU, pEvParams );
 }
 
-/*
- *  functions for handling the input queues for the mouse and keyboard
- */
+/* functions for handling the input queues for the mouse and keyboard */
 static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 {
    int iPos = pWVT->keyPointerIn;
@@ -333,8 +328,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
          return;
    }
 
-   /*
-    * When the buffer is full new event overwrite the last one
+   /* When the buffer is full new event overwrite the last one
     * in the buffer - it's Clipper behavior, [druzus]
     */
    pWVT->Keys[ iPos ] = pWVT->keyLast = iKey;
@@ -371,37 +365,32 @@ static HB_BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 
 static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
 {
-   int nVirtKey = GetKeyState( VK_MENU );
-
-   if( nVirtKey & 0x8000 ) /* alt + key */
+   if( GetKeyState( VK_MENU ) & 0x8000 ) /* alt + key */
       hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
-   else
-   {
-      nVirtKey = GetKeyState( VK_CONTROL );
-      if( nVirtKey & 0x8000 ) /* control + key */
-         hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
-      else
-      {
-         nVirtKey = GetKeyState( VK_SHIFT );
-         if( nVirtKey & 0x8000 ) /* shift + key */
-            hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
-         else /* just key */
-            hb_gt_wvt_AddCharToInputQueue( pWVT, key );
-      }
-   }
+   else if( GetKeyState( VK_CONTROL ) & 0x8000 ) /* control + key */
+      hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
+   else if( GetKeyState( VK_SHIFT ) & 0x8000 ) /* shift + key */
+      hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
+   else /* just key */
+      hb_gt_wvt_AddCharToInputQueue( pWVT, key );
 }
 
 #if ! defined( UNICODE )
 static int hb_gt_wvt_key_ansi_to_oem( int c )
 {
-   BYTE pszAnsi[ 2 ];
-   BYTE pszOem[ 2 ];
+   BYTE pszSrc[ 2 ];
+   wchar_t pszWide[ 1 ];
+   BYTE pszDst[ 2 ];
 
-   pszAnsi[ 0 ] = ( BYTE ) c;
-   pszAnsi[ 1 ] = 0;
-   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
+   pszSrc[ 0 ] = ( CHAR ) c;
+   pszSrc[ 1 ] =
+   pszDst[ 0 ] =
+   pszDst[ 1 ] = 0;
 
-   return *pszOem;
+   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, ( LPCSTR ) pszSrc, 1, ( LPWSTR ) pszWide, 1 );
+   WideCharToMultiByte( CP_OEMCP, 0, ( LPCWSTR ) pszWide, 1, ( LPSTR ) pszDst, 1, NULL, NULL );
+
+   return pszDst[ 0 ];
 }
 #endif
 

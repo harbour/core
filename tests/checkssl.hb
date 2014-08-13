@@ -24,7 +24,7 @@ procedure Main( cURLList )
       if Len( url := hb_ATokens( url, ":" ) ) >= 4
          if ! Empty( url[ 4 ] ) .and. ;
             ! url[ 4 ] $ { "//" => } .and. ;
-            ( ! "/3rd/" $ url [ 1 ] .or. "Makefile" $ url [ 1 ] .or. ".hb" $ url [ 1 ] )
+            ( ! "/3rd/" $ url[ 1 ] .or. "Makefile" $ url[ 1 ] .or. ".hb" $ url[ 1 ] )
 
             switch url[ 3 ]
             case "http"
