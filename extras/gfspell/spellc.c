@@ -805,7 +805,7 @@ static HB_BOOL WordSep( HB_UCHAR c )
           ( c != 39 && ( c > ' ' && c < '0' ) ) ||
           ( c > '9' && c < 'A' ) ||
           ( c > 'Z' && c < 'a' ) ||
-          ( c > 'z' && c < 128 ); /* Support international characters, too. */
+          ( c > 'z' && c < 128 );  /* Support international characters, too. */
 }
 
 /**
@@ -824,7 +824,6 @@ static HB_BOOL WordSep( HB_UCHAR c )
  */
 HB_FUNC( SP_LINE )
 {
-   int          nArgs      = hb_pcount();
    HB_BOOL      bLineBreak = HB_FALSE;
    HB_ISIZ      nCount     = 0;
    HB_ISIZ      nWrap      = 0;
@@ -835,11 +834,11 @@ HB_FUNC( SP_LINE )
    HB_ISIZ      nLineLen;
    HB_SIZE      nStop;
 
-   if( nArgs > 0 && HB_ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
       cIn   = hb_parc( 1 );
       nStop = hb_parclen( 1 );
-      if( nArgs > 1 && HB_ISNUM( 2 ) )
+      if( HB_ISNUM( 2 ) )
       {
          nOffset = hb_parns( 2 );
          if( nOffset > 0 )
@@ -849,7 +848,7 @@ HB_FUNC( SP_LINE )
       if( nOffset < nStop )                           /* In string somewhere */
       {
          /* Default line len to 75 */
-         nLineLen = nArgs > 2 && HB_ISNUM( 3 ) ? hb_parns( 3 ) - 1 : 75;
+         nLineLen = HB_ISNUM( 3 ) ? hb_parns( 3 ) - 1 : 75;
          p        = &cIn[ nOffset ];                  /* Starting pointer */
 
          if( nOffset + nLineLen > nStop )             /* Past end of string? */

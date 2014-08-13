@@ -1682,7 +1682,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
    IF hb_defaultValue( lEditable, .T. )
 
       IF ! cType == "C" .OR. Len( uValue ) < nWidth
-         uTemp := PadR( iif( cType == "N", hb_NToS( uValue ), ;
+         uTemp := PadR( iif( cType == "N", hb_ntos( uValue ), ;
                                            uValue ), nWidth )
       ENDIF
       IF bValid == NIL .AND. cType $ "N"
