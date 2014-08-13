@@ -70,6 +70,7 @@
 BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
 #endif /* __MINGW32CE__ */
 
+#define wvg_ispar( n )        HB_ISNUM( n )
 #define wvg_parhandle( n )    ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_parhwnd( n )      ( ( HWND ) ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_rethandle( n )    hb_retnint( ( HB_PTRDIFF ) n )
@@ -1001,7 +1002,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          PHB_DYNS   pExecSym;
          int        iResource = hb_parni( 4 );
          HB_PTRDIFF iResult   = 0;
-         HWND       hParent   = HB_ISNUM( 5 ) ? wvg_parhwnd( 5 ) : _s->hWnd;
+         HWND       hParent   = wvg_ispar( 5 ) ? wvg_parhwnd( 5 ) : _s->hWnd;
 
          if( HB_IS_EVALITEM( pFirst ) )
          {
@@ -1278,9 +1279,10 @@ HB_FUNC( WVT_DLGSETICON )
    else
    {
       void * cIcon;
-      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+      LPCTSTR szIcon = HB_PARSTR( 2, &cIcon, NULL );
+      hIcon = ( HICON ) LoadImage( NULL, szIcon, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
       if( ! hIcon )
-         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, 0 );
+         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), szIcon, IMAGE_ICON, 0, 0, 0 );
       hb_strfree( cIcon );
    }
 
