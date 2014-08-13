@@ -625,7 +625,7 @@ HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
       ti.hinst    = GetModuleHandle( NULL );
       ti.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );  /* TOFIX: drops const */
 
-      hb_retl( ( HB_BOOL ) ( BOOL ) SendMessage( wvw->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) &ti ) );
+      hb_retl( ( HB_BOOL ) SendMessage( wvw->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) &ti ) );
 
       hb_strfree( hText );
    }

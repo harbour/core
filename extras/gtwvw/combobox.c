@@ -100,11 +100,10 @@ HB_FUNC( WVW_CBCREATE )
 
    HWND hWndParent = wvw_win->hWnd;
    HWND hWnd;
-/* LONG cnt; */
    LONG numofchars;
    LONG avgwidth;
    LONG LongComboWidth, NewLongComboWidth;
-/* RECT r; */
+
    HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
 
    POINT xy;
@@ -488,10 +487,8 @@ HB_FUNC( WVW_CBFINDSTRING )
 }
 
 /* wvw_cbGetCurText( [nWinNum], nCBid )
- * get current selected cString in combobox nCBid in window nWinNum
- * returns "" if none selected
- *
- */
+   get current selected cString in combobox nCBid in window nWinNum
+   returns "" if none selected */
 HB_FUNC( WVW_CBGETCURTEXT )
 {
    WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
@@ -519,16 +516,15 @@ HB_FUNC( WVW_CBGETCURTEXT )
 }
 
 /* wvw_cbIsDropped( [nWinNum], nCBid )
- * get current dropped state of combobox nCBid in window nWinNum
- * returns .T. if listbox is being shown, otherwise .F.
- * Also returns .F. if nCBid not valid
- */
+   get current dropped state of combobox nCBid in window nWinNum
+   returns .T. if listbox is being shown, otherwise .F.
+   Also returns .F. if nCBid not valid */
 HB_FUNC( WVW_CBISDROPPED )
 {
    WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
    if( pcd )
-      hb_retl( ( HB_BOOL ) ( BOOL ) SendMessage( pcd->hWnd, CB_GETDROPPEDSTATE, 0, 0 ) );
+      hb_retl( ( HB_BOOL ) SendMessage( pcd->hWnd, CB_GETDROPPEDSTATE, 0, 0 ) );
    else
       hb_retl( HB_FALSE );
 }

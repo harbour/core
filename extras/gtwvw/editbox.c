@@ -529,7 +529,7 @@ HB_FUNC( WVW_EBSETTEXT )
       }
 #endif
 
-      hb_retl( ( HB_BOOL ) ( BOOL ) SendMessage( pcd->hWnd, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
+      hb_retl( ( HB_BOOL ) SendMessage( pcd->hWnd, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
 
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )

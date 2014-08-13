@@ -8098,7 +8098,7 @@ HB_BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, HB_UINT 
       tbb.dwData    = 0;
       tbb.iString   = 0;
 
-      return ( HB_BOOL ) ( BOOL ) SendMessage( hWndToolbar, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+      return ( HB_BOOL ) SendMessage( hWndToolbar, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
    }
 
    switch( iBitmapType )
@@ -8147,7 +8147,7 @@ HB_BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, HB_UINT 
    tbb.dwData  = 0;
    tbb.iString = iNewString;
 
-   return ( HB_BOOL ) ( BOOL ) SendMessage( hWndToolbar, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+   return ( HB_BOOL ) SendMessage( hWndToolbar, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
 }
 
 int hb_gt_wvw_IndexToCommand( HWND hWndTB, int iIndex )
@@ -8183,7 +8183,7 @@ LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    HB_UINT   nWin;
    WVW_WIN * wvw_win;
 
-   if( hWndParent == NULL )
+   if( s_wvw == NULL || hWndParent == NULL )
    {
       /* TODO: runtime/internal error is better */
       MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): parent of toolbar is missing" ), s_wvw->szAppName, MB_ICONERROR );
@@ -8279,18 +8279,21 @@ LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 HWND hb_gt_wvw_FindControlHandle( HB_UINT nWin, HB_BYTE nClass, HB_UINT nId, HB_BYTE * pnStyle )
 {
-   WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
-   WVW_CTRL * pcd     = wvw_win->pcdList;
-
-   while( pcd )
+   if( s_wvw )
    {
-      if( pcd->nClass == nClass && pcd->nId == nId )
+      WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
+      WVW_CTRL * pcd     = wvw_win->pcdList;
+
+      while( pcd )
       {
-         if( pnStyle )
-            *pnStyle = pcd->nStyle;
-         return pcd->hWnd;
+         if( pcd->nClass == nClass && pcd->nId == nId )
+         {
+            if( pnStyle )
+               *pnStyle = pcd->nStyle;
+            return pcd->hWnd;
+         }
+         pcd = pcd->pNext;
       }
-      pcd = pcd->pNext;
    }
 
    return NULL;
@@ -8298,18 +8301,21 @@ HWND hb_gt_wvw_FindControlHandle( HB_UINT nWin, HB_BYTE nClass, HB_UINT nId, HB_
 
 HB_UINT hb_gt_wvw_FindControlId( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, HB_BYTE * pnStyle )
 {
-   WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
-   WVW_CTRL * pcd     = wvw_win->pcdList;
-
-   while( pcd )
+   if( s_wvw )
    {
-      if( pcd->nClass == nClass && pcd->hWnd == hWnd )
+      WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
+      WVW_CTRL * pcd     = wvw_win->pcdList;
+
+      while( pcd )
       {
-         if( pnStyle )
-            *pnStyle = pcd->nStyle;
-         return pcd->nId;
+         if( pcd->nClass == nClass && pcd->hWnd == hWnd )
+         {
+            if( pnStyle )
+               *pnStyle = pcd->nStyle;
+            return pcd->nId;
+         }
+         pcd = pcd->pNext;
       }
-      pcd = pcd->pNext;
    }
 
    return 0;
@@ -8317,53 +8323,64 @@ HB_UINT hb_gt_wvw_FindControlId( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, HB_BYT
 
 HB_UINT hb_gt_wvw_LastControlId( HB_UINT nWin, HB_BYTE nClass )
 {
-   WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
-   WVW_CTRL * pcd     = wvw_win->pcdList;
+   if( s_wvw )
+   {
+      WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
+      WVW_CTRL * pcd     = wvw_win->pcdList;
 
-   while( pcd && pcd->nClass != nClass )
-      pcd = pcd->pNext;
+      while( pcd && pcd->nClass != nClass )
+         pcd = pcd->pNext;
 
-   return pcd ? pcd->nId : 0;
+      return pcd ? pcd->nId : 0;
+   }
+   else
+      return 0;
 }
 
 void hb_gt_wvw_AddControlHandle( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, HB_UINT nId, PHB_ITEM pBlock, RECT rect, RECT offs, HB_BYTE nStyle )
 {
-   WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
-   WVW_CTRL * pcd     = ( WVW_CTRL * ) hb_xgrabz( sizeof( WVW_CTRL ) );
+   if( s_wvw )
+   {
+      WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
+      WVW_CTRL * pcd     = ( WVW_CTRL * ) hb_xgrabz( sizeof( WVW_CTRL ) );
 
-   pcd->nClass      = nClass;
-   pcd->hWnd        = hWnd;
-   pcd->nId         = nId;
-   pcd->pBlock      = pBlock ? hb_itemNew( pBlock ) : NULL;
-   pcd->fBusy       = HB_FALSE;
-   pcd->nBusy       = 0;
-   pcd->rect.top    = rect.top;
-   pcd->rect.left   = rect.left;
-   pcd->rect.bottom = rect.bottom;
-   pcd->rect.right  = rect.right;
-   pcd->offs.top    = offs.top;
-   pcd->offs.left   = offs.left;
-   pcd->offs.bottom = offs.bottom;
-   pcd->offs.right  = offs.right;
-   pcd->nStyle      = nStyle;
-   pcd->OldProc     = NULL;
-   pcd->pNext       = wvw_win->pcdList;
+      pcd->nClass      = nClass;
+      pcd->hWnd        = hWnd;
+      pcd->nId         = nId;
+      pcd->pBlock      = pBlock ? hb_itemNew( pBlock ) : NULL;
+      pcd->fBusy       = HB_FALSE;
+      pcd->nBusy       = 0;
+      pcd->rect.top    = rect.top;
+      pcd->rect.left   = rect.left;
+      pcd->rect.bottom = rect.bottom;
+      pcd->rect.right  = rect.right;
+      pcd->offs.top    = offs.top;
+      pcd->offs.left   = offs.left;
+      pcd->offs.bottom = offs.bottom;
+      pcd->offs.right  = offs.right;
+      pcd->nStyle      = nStyle;
+      pcd->OldProc     = NULL;
+      pcd->pNext       = wvw_win->pcdList;
 
-   wvw_win->pcdList = pcd;
+      wvw_win->pcdList = pcd;
+   }
 }
 
 WVW_CTRL * hb_gt_wvw_GetControlData( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, HB_UINT nId )
 {
-   WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
-   WVW_CTRL * pcd     = wvw_win->pcdList;
-
-   while( pcd )
+   if( s_wvw )
    {
-      if( pcd->nClass == nClass &&
-          ( ( hWnd && pcd->hWnd == hWnd ) ||
-            ( nId && pcd->nId == nId ) ) )
-         return pcd;
-      pcd = pcd->pNext;
+      WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
+      WVW_CTRL * pcd     = wvw_win->pcdList;
+
+      while( pcd )
+      {
+         if( pcd->nClass == nClass &&
+             ( ( hWnd && pcd->hWnd == hWnd ) ||
+               ( nId && pcd->nId == nId ) ) )
+            return pcd;
+         pcd = pcd->pNext;
+      }
    }
 
    return NULL;
@@ -8371,17 +8388,20 @@ WVW_CTRL * hb_gt_wvw_GetControlData( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, HB
 
 HB_BOOL hb_gt_wvw_StoreControlProc( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, WNDPROC OldProc )
 {
-   WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
-   WVW_CTRL * pcd     = wvw_win->pcdList;
-
-   while( pcd )
+   if( s_wvw )
    {
-      if( pcd->nClass == nClass && pcd->hWnd == hWnd )
+      WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
+      WVW_CTRL * pcd     = wvw_win->pcdList;
+
+      while( pcd )
       {
-         pcd->OldProc = OldProc;
-         return HB_TRUE;
+         if( pcd->nClass == nClass && pcd->hWnd == hWnd )
+         {
+            pcd->OldProc = OldProc;
+            return HB_TRUE;
+         }
+         pcd = pcd->pNext;
       }
-      pcd = pcd->pNext;
    }
 
    return HB_FALSE;
@@ -8389,14 +8409,17 @@ HB_BOOL hb_gt_wvw_StoreControlProc( HB_UINT nWin, HB_BYTE nClass, HWND hWnd, WND
 
 WNDPROC hb_gt_wvw_GetControlProc( HB_UINT nWin, HB_BYTE nClass, HWND hWnd )
 {
-   WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
-   WVW_CTRL * pcd     = wvw_win->pcdList;
-
-   while( pcd )
+   if( s_wvw )
    {
-      if( pcd->nClass == nClass && pcd->hWnd == hWnd )
-         return pcd->OldProc;
-      pcd = pcd->pNext;
+      WVW_WIN *  wvw_win = s_wvw->pWin[ nWin ];
+      WVW_CTRL * pcd     = wvw_win->pcdList;
+
+      while( pcd )
+      {
+         if( pcd->nClass == nClass && pcd->hWnd == hWnd )
+            return pcd->OldProc;
+         pcd = pcd->pNext;
+      }
    }
 
    return NULL;
@@ -8616,11 +8639,11 @@ LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    HB_UINT nCtrlId;
    WNDPROC OldProc;
 
+   if( s_wvw == NULL || hWndParent == NULL )
+      return DefWindowProc( hWnd, message, wParam, lParam );
+
    if( message == WM_MOUSEACTIVATE )
       s_wvw->iScrolling = 1;
-
-   if( hWndParent == NULL )
-      return DefWindowProc( hWnd, message, wParam, lParam );
 
    for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
    {
@@ -8687,7 +8710,7 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
 
    WNDPROC OldProc;
 
-   if( hWndParent == NULL )
+   if( s_wvw == NULL || s_wvw == NULL || hWndParent == NULL )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
    for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
@@ -8881,7 +8904,7 @@ LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    WNDPROC OldProc;
    BYTE    bKbdType;
 
-   if( hWndParent == NULL )
+   if( s_wvw == NULL || hWndParent == NULL )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
    for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
@@ -9070,7 +9093,7 @@ LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
    BYTE    bEBType;
    int     iKey;
 
-   if( hWndParent == NULL )
+   if( s_wvw == NULL || hWndParent == NULL )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
    for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )

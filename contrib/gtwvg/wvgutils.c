@@ -88,11 +88,11 @@ HB_EXTERN_END
 
 static HINSTANCE wvg_hInstance( void )
 {
-   HANDLE hInstance;
+   HINSTANCE hInstance;
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
-   return ( HINSTANCE ) hInstance;
+   return hInstance;
 }
 
 /*
