@@ -97,9 +97,10 @@ HB_FUNC( WVW_EBCREATE )
    HB_UINT    nWin    = WVW_WHICH_WINDOW;
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   HANDLE  hInstance  = NULL;
-   HWND    hWndParent = wvw_win->hWnd;
-   HWND    hWnd;
+   HINSTANCE hInstance;
+   HWND      hWndParent = wvw_win->hWnd;
+   HWND      hWnd;
+
    POINT   xy;
    int     iTop, iLeft, iBottom, iRight;
    int     iOffTop, iOffLeft, iOffBottom, iOffRight;
@@ -179,7 +180,7 @@ HB_FUNC( WVW_EBCREATE )
       iBottom - iTop + 1,
       hWndParent,
       ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
-      ( HINSTANCE ) hInstance,
+      hInstance,
       NULL );
 
    if( hWnd )
