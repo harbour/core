@@ -82,7 +82,7 @@
 
 HB_FUNC( WVW_PGCREATE )
 {
-   HANDLE    hInstance  = NULL;
+   HINSTANCE hInstance;
    HB_UINT   nWin       = WVW_WHICH_WINDOW;
    WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( nWin );
    HWND      hWndParent = wvw_win->hWnd;
@@ -143,7 +143,7 @@ HB_FUNC( WVW_PGCREATE )
       iBottom - iTop + 1,
       hWndParent,
       ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
-      ( HINSTANCE ) hInstance,
+      hInstance,
       NULL );
 
    if( hWnd )

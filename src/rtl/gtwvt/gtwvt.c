@@ -3164,7 +3164,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HANDLE    hInstance;
+   HINSTANCE hInstance;
    int       iCmdShow;
    PHB_GTWVT pWVT;
 
@@ -3172,11 +3172,11 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
    {
-      hInstance = GetModuleHandle( NULL );
+      hInstance = ( HINSTANCE ) GetModuleHandle( NULL );
       iCmdShow = 1;
    }
 
-   pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
+   pWVT = hb_gt_wvt_New( pGT, hInstance, iCmdShow );
    if( pWVT )
    {
       HB_GTLOCAL( pGT ) = ( void * ) pWVT;
@@ -3818,7 +3818,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pWVT->bIconToFree = HB_FALSE;
             pWVT->hIcon = LoadIcon( pWVT->hInstance,
                                     MAKEINTRESOURCE( ( HB_MAXINT )
-                                         hb_itemGetNInt( pInfo->pNewVal ) ) );
+                                    hb_itemGetNInt( pInfo->pNewVal ) ) );
 
             if( pWVT->hWnd )
             {

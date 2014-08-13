@@ -80,7 +80,7 @@ static int       s_wvtCount = 0;
 
 static const TCHAR s_szClassName[] = TEXT( "Harbour_WVGGUI_Class" );
 
-static const int K_Ctrl[] =
+static const int s_K_Ctrl[] =
 {
    K_CTRL_A, K_CTRL_B, K_CTRL_C, K_CTRL_D, K_CTRL_E, K_CTRL_F, K_CTRL_G,
    K_CTRL_H, K_CTRL_I, K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_M, K_CTRL_N,
@@ -217,7 +217,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
       return NULL;
    }
 
-   pWVT->hInstance         = ( HINSTANCE ) hInstance;
+   pWVT->hInstance         = hInstance;
    pWVT->iCmdShow          = iCmdShow;
 
    pWVT->ROWS              = WVT_DEFAULT_ROWS;
@@ -679,7 +679,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
             if( bCtrl && iScanCode == 28 )  /* K_CTRL_RETURN */
                hb_gt_wvt_AddCharToInputQueue( pWVT, K_CTRL_RETURN );
             else if( bCtrl && ( c >= 1 && c <= 26 ) )  /* K_CTRL_A - Z */
-               hb_gt_wvt_AddCharToInputQueue( pWVT, K_Ctrl[ c - 1 ] );
+               hb_gt_wvt_AddCharToInputQueue( pWVT, s_K_Ctrl[ c - 1 ] );
             else
             {
                switch( c )
@@ -1176,7 +1176,7 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HANDLE    hInstance;
+   HINSTANCE hInstance;
    int       iCmdShow;
    PHB_GTWVT pWVT;
 
@@ -1188,7 +1188,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       iCmdShow = 1;
    }
 
-   pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
+   pWVT = hb_gt_wvt_New( pGT, hInstance, iCmdShow );
    if( pWVT )
    {
       HB_GTLOCAL( pGT ) = ( void * ) pWVT;

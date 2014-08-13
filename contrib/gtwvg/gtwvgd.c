@@ -336,7 +336,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
       return NULL;
    }
 
-   pWVT->hInstance         = ( HINSTANCE ) hInstance;
+   pWVT->hInstance         = hInstance;
    pWVT->iCmdShow          = iCmdShow;
 
    pWVT->ROWS              = WVT_DEFAULT_ROWS;
@@ -2710,7 +2710,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HANDLE    hInstance;
+   HINSTANCE hInstance;
    int       iCmdShow;
    PHB_GTWVT pWVT;
 
@@ -2722,7 +2722,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       iCmdShow = 1;
    }
 
-   pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
+   pWVT = hb_gt_wvt_New( pGT, hInstance, iCmdShow );
    if( pWVT )
    {
       HB_GTLOCAL( pGT ) = ( void * ) pWVT;

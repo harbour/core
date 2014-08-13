@@ -291,9 +291,9 @@ LONG hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f )
 
 static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HANDLE hInstance;
-   HANDLE hPrevInstance;
-   int    iCmdShow;
+   HINSTANCE hInstance;
+   HINSTANCE hPrevInstance;
+   int       iCmdShow;
 
    if( ! s_fInit )
    {
@@ -344,9 +344,9 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    hb_gtInitStatics( 0, ( LPCTSTR ) s_wvw->szAppName, 0, 0, WVW_DEFAULT_ROWS - 1, WVW_DEFAULT_COLS - 1 );
 
-   s_wvw->hInstance = ( HINSTANCE ) hInstance;
+   s_wvw->hInstance = hInstance;
 
-   s_wvw->pWin[ 0 ]->hWnd = hb_gt_wvwCreateWindow( ( HINSTANCE ) hInstance, ( HINSTANCE ) hPrevInstance, iCmdShow );
+   s_wvw->pWin[ 0 ]->hWnd = hb_gt_wvwCreateWindow( hInstance, hPrevInstance, iCmdShow );
 
    if( ! s_wvw->pWin[ 0 ]->hWnd )
       /* Runtime error */
