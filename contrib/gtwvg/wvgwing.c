@@ -130,9 +130,7 @@ HB_FUNC( WVG_HINSTANCE )
    hbwapi_ret_raw_HANDLE( wvg_hInstance() );
 }
 
-/*
- *              Bitmap Management Function . Coutesy GTWVW
- */
+/* Bitmap Management Function. Coutesy GTWVW */
 
 static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
 {
@@ -169,8 +167,8 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
       hb_xfree( pbmi );
       return NULL;
    }
-
-   return pbmi;
+   else
+      return pbmi;
 }
 
 #if ! defined( HB_OS_WIN_CE )
@@ -181,9 +179,7 @@ static int PackedDibGetWidth( BITMAPINFO * pPackedDib )
    else
       return pPackedDib->bmiHeader.biWidth;
 }
-#endif
 
-#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetHeight( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -191,9 +187,7 @@ static int PackedDibGetHeight( BITMAPINFO * pPackedDib )
    else
       return abs( pPackedDib->bmiHeader.biHeight );
 }
-#endif
 
-#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetBitCount( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -201,9 +195,7 @@ static int PackedDibGetBitCount( BITMAPINFO * pPackedDib )
    else
       return pPackedDib->bmiHeader.biBitCount;
 }
-#endif
 
-#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetInfoHeaderSize( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -216,9 +208,7 @@ static int PackedDibGetInfoHeaderSize( BITMAPINFO * pPackedDib )
    else
       return pPackedDib->bmiHeader.biSize;
 }
-#endif
 
-#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetColorsUsed( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -226,9 +216,7 @@ static int PackedDibGetColorsUsed( BITMAPINFO * pPackedDib )
    else
       return pPackedDib->bmiHeader.biClrUsed;
 }
-#endif
 
-#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetNumColors( BITMAPINFO * pPackedDib )
 {
    int iNumColors;
@@ -240,9 +228,7 @@ static int PackedDibGetNumColors( BITMAPINFO * pPackedDib )
 
    return iNumColors;
 }
-#endif
 
-#if ! defined( HB_OS_WIN_CE )
 static int PackedDibGetColorTableSize( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
@@ -250,9 +236,7 @@ static int PackedDibGetColorTableSize( BITMAPINFO * pPackedDib )
    else
       return PackedDibGetNumColors( pPackedDib ) * sizeof( RGBQUAD );
 }
-#endif
 
-#if ! defined( HB_OS_WIN_CE )
 static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
 {
    return ( BYTE * ) pPackedDib +
@@ -260,6 +244,7 @@ static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
           PackedDibGetColorTableSize( pPackedDib );
 }
 #endif
+
 static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
                                int iExpWidth, int iExpHeight,
                                HB_BOOL bMap3Dcolors,
@@ -338,17 +323,17 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
                   SelectObject( hdcTarget, hBitmap2 );
 
                   bResult = StretchBlt(
-                     hdcTarget,                       /* handle to destination DC                 */
-                     0,                               /* x-coord of destination upper-left corner */
-                     0,                               /* y-coord of destination upper-left corner */
-                     iExpWidth,                       /* width of destination rectangle           */
-                     iExpHeight,                      /* height of destination rectangle          */
-                     hdcSource,                       /* handle to source DC                      */
-                     0,                               /* x-coord of source upper-left corner      */
-                     0,                               /* y-coord of source upper-left corner      */
-                     iWidth,                          /* width of source rectangle                */
-                     iHeight,                         /* height of source rectangle               */
-                     SRCCOPY                          /* raster operation code                    */
+                     hdcTarget,   /* handle to destination DC */
+                     0,           /* x-coord of destination upper-left corner */
+                     0,           /* y-coord of destination upper-left corner */
+                     iExpWidth,   /* width of destination rectangle */
+                     iExpHeight,  /* height of destination rectangle */
+                     hdcSource,   /* handle to source DC */
+                     0,           /* x-coord of source upper-left corner */
+                     0,           /* y-coord of source upper-left corner */
+                     iWidth,      /* width of source rectangle */
+                     iHeight,     /* height of source rectangle */
+                     SRCCOPY      /* raster operation code */
                      );
 
                   if( ! bResult )
@@ -551,7 +536,7 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
    PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
 
    hb_arraySetNI( pEvParams, 1, nmh.code );
-   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom   );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom );
    hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) nmh.hwndFrom );
    hb_arraySetNInt( pEvParams, 4, ( HB_PTRDIFF ) nmm->dwItemSpec );
 
@@ -567,7 +552,7 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
    PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
 
    hb_arraySetNI( pEvParams, 1, nmh.code );
-   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom   );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom );
    hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) nmh.hwndFrom );
    hb_arraySetNI( pEvParams, 4, pnmtv->action );
 
@@ -782,12 +767,14 @@ HB_FUNC( WVG_CHOOSEFONT )
       HB_STRNCPY( lf.lfFaceName, HB_PARSTR( 3, &hText, NULL ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
    }
+
    if( hb_parnl( 4 ) )
    {
       HDC hdc = GetDC( hWnd );
       PointSize = -MulDiv( ( LONG ) hb_parnl( 4 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 );
       ReleaseDC( hWnd, hdc );
    }
+
    lf.lfHeight         = PointSize;
    lf.lfWidth          = 0;
    lf.lfWeight         = 0;
@@ -804,7 +791,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    Flags |= CF_SCALABLEONLY;
    Flags |= CF_NOVECTORFONTS;
    Flags |= CF_NOSCRIPTSEL;
-   Flags |= CF_NOSIMULATIONS;              /* ::synthesizeFonts  == .f. */
+   Flags |= CF_NOSIMULATIONS;  /* ::synthesizeFonts == .F. */
    #endif
 
    if( hb_parl( 5 ) )
@@ -814,7 +801,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 
    cf.lStructSize = sizeof( cf );
    cf.hwndOwner   = hWnd;
-   cf.hDC         = NULL;           /* only when ::oPrinterPS is defined */
+   cf.hDC         = NULL;  /* only when ::oPrinterPS is defined */
    cf.lpLogFont   = &lf;
    cf.iPointSize  = PointSize;
    cf.Flags       = Flags;
@@ -826,7 +813,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    cf.lpTemplateName = NULL;
    cf.hInstance      = NULL;
    cf.lpszStyle      = ( LPTSTR ) szStyle;
-   cf.nFontType      = SCREEN_FONTTYPE;     /* ?? */
+   cf.nFontType      = SCREEN_FONTTYPE;  /* ?? */
    cf.nSizeMin       = 0;
    cf.nSizeMax       = 0;
 
@@ -863,8 +850,8 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 
 HB_FUNC( WVG_FONTCREATE )
 {
-   LOGFONT  lf;
-   HFONT    hFont;
+   LOGFONT lf;
+   HFONT   hFont;
 
    PHB_ITEM aFont = hb_param( 1, HB_IT_ARRAY );
 
@@ -977,7 +964,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
       case 2:  /* system bitmap */
 
 
-      case 3:                 /* separator     */
+      case 3:                 /* separator */
          tbb.iBitmap   = 0;   /* Can be width of the separator */
          tbb.idCommand = 0;
          tbb.fsState   = TBSTATE_ENABLED;
@@ -999,6 +986,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    void *   hClass;
 
    memset( &wndclass, 0, sizeof( wndclass ) );
+
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = DefWindowProc;
    wndclass.hInstance     = wvg_hInstance();
@@ -1106,7 +1094,7 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 {
    HWND hwndTip = CreateWindowEx( 0, TOOLTIPS_CLASS, 0,
-                                  WS_POPUP | TTS_ALWAYSTIP, /* | TTS_BALLOON, */
+                                  WS_POPUP | TTS_ALWAYSTIP /* | TTS_BALLOON */,
                                   CW_USEDEFAULT, CW_USEDEFAULT,
                                   CW_USEDEFAULT, CW_USEDEFAULT,
                                   wvg_parhwnd( 1 ),
@@ -1142,6 +1130,7 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
    void *   hText;
 
    memset( &toolInfo, 0, sizeof( toolInfo ) );
+
    toolInfo.cbSize   = sizeof( toolInfo );
    toolInfo.hwnd     = wvg_parhwnd( 1 );
    toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;

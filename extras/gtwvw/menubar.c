@@ -114,22 +114,22 @@ HB_FUNC( WVW_APPENDMENU )
    else
       lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );  /* TOFIX: delete this */
 
-   hb_retl( ( HB_BOOL ) AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parnint( 3 ), lpszCaption ) );
+   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parnint( 3 ), lpszCaption ) );
 }
 
 HB_FUNC( WVW_DELETEMENU )
 {
-   hb_retl( ( HB_BOOL ) DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVW_DESTROYMENU )
 {
-   hb_retl( ( HB_BOOL ) DestroyMenu( ( HMENU ) HB_PARHANDLE( 1 ) ) );
+   hb_retl( DestroyMenu( ( HMENU ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVW_ENABLEMENUITEM )
 {
-   hb_retni( ( HB_BOOL ) EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retl( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVW_GETLASTMENUEVENT )
@@ -220,7 +220,7 @@ HB_FUNC( WVW_DRAWMENUBAR )
 
 HB_FUNC( WVW_ENDMENU )
 {
-   hb_retl( ( HB_BOOL ) EndMenu() );
+   hb_retl( EndMenu() );
 }
 
 /* wvw_GetMenu([nWinNum]) */

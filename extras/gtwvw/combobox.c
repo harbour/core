@@ -439,7 +439,7 @@ HB_FUNC( WVW_CBSETINDEX )
    WVW_CTRL * pcd    = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, NULL, ( HB_UINT ) hb_parnl( 2 ) );
 
    if( pcd && iIndex >= 0 )
-      hb_retl( SendMessage( pcd->hWnd, CB_SETCURSEL, ( WPARAM ) iIndex, 0 ) == iIndex );
+      hb_retl( ( HB_BOOL ) SendMessage( pcd->hWnd, CB_SETCURSEL, ( WPARAM ) iIndex, 0 ) == iIndex );
    else
       hb_retl( HB_FALSE );
 }

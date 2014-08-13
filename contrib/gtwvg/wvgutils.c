@@ -70,21 +70,9 @@
 BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
 #endif /* __MINGW32CE__ */
 
-#if 0
-HB_EXTERN_BEGIN
-
-extern HB_BOOL  wvt_Array2Rect( PHB_ITEM aRect, RECT * rc );
-extern PHB_ITEM wvt_Rect2Array( RECT * rc  );
-extern HB_BOOL  wvt_Array2Point( PHB_ITEM aPoint, POINT * pt );
-extern PHB_ITEM wvt_Point2Array( POINT * pt  );
-extern HB_BOOL  wvt_Array2Size( PHB_ITEM aSize, SIZE * siz );
-extern PHB_ITEM wvt_Size2Array( SIZE * siz  );
-extern void     wvt_Rect2ArrayEx( RECT * rc, PHB_ITEM aRect );
-extern void     wvt_Point2ArrayEx( POINT * pt, PHB_ITEM aPoint );
-extern void     wvt_Size2ArrayEx( SIZE * siz, PHB_ITEM aSize );
-
-HB_EXTERN_END
-#endif
+#define wvg_parhandle( n )    ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhwnd( n )      ( ( HWND ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_rethandle( n )    hb_retnint( ( HB_PTRDIFF ) n )
 
 static HINSTANCE wvg_hInstance( void )
 {
@@ -95,9 +83,7 @@ static HINSTANCE wvg_hInstance( void )
    return hInstance;
 }
 
-/*
- *               Pritpal Bedi <bedipritpal@hotmail.com>
- */
+/* Pritpal Bedi <bedipritpal@hotmail.com> */
 
 HB_FUNC( WVT_UTILS )
 {
@@ -106,67 +92,75 @@ HB_FUNC( WVT_UTILS )
 
 /* Wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
  *                                lItalic, lUnderline, lStrikeout )
- *          ->
- * { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
+ * -> { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
  */
 HB_FUNC( WVT_CHOOSEFONT )
 {
-#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
    {
-      CHOOSEFONT cf;
-      LOGFONT    lf;
-      LONG       PointSize = 0;
-
       PHB_ITEM ary = hb_itemArrayNew( 9 );
 
-      memset( &cf, 0, sizeof( cf ) );
+      LONG     PointSize = 0;
+      COLORREF Colors = 0;
+      LOGFONT  lf;
+
       memset( &lf, 0, sizeof( lf ) );
 
-      if( HB_ISNUM( 2 ) )
-         PointSize = -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( _s->hdc, LOGPIXELSY ), 72 );
-
-      lf.lfHeight         = PointSize;
-      lf.lfWidth          = hb_parni( 3 );
-      lf.lfWeight         = hb_parni( 4 );
-      lf.lfItalic         = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : ( BYTE ) hb_parl( 6 );
-      lf.lfUnderline      = HB_ISNUM( 7 ) ? ( BYTE ) hb_parni( 7 ) : ( BYTE ) hb_parl( 7 );
-      lf.lfStrikeOut      = HB_ISNUM( 8 ) ? ( BYTE ) hb_parni( 8 ) : ( BYTE ) hb_parl( 8 );
-      lf.lfCharSet        = DEFAULT_CHARSET;
-      lf.lfQuality        = ( BYTE ) hb_parnidef( 5, DEFAULT_QUALITY );
-      lf.lfPitchAndFamily = FF_DONTCARE;
-      if( HB_ISCHAR( 1 ) )
+#if ! defined( HB_OS_WIN_CE )
       {
-         void * hText;
-         HB_STRNCPY( lf.lfFaceName, HB_PARSTR( 1, &hText, NULL ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
-         hb_strfree( hText );
-      }
+         CHOOSEFONT cf;
 
-      cf.lStructSize    = sizeof( cf );
-      cf.hwndOwner      = _s->hWnd;
-      cf.hDC            = NULL;
-      cf.lpLogFont      = &lf;
-      cf.iPointSize     = 0;
-      cf.Flags          = CF_SCREENFONTS | CF_EFFECTS | CF_SHOWHELP | CF_INITTOLOGFONTSTRUCT;
-      cf.rgbColors      = RGB( 0, 0, 0 );
-      cf.lCustData      = 0;
-      cf.lpfnHook       = NULL;
-      cf.lpTemplateName = NULL;
-      cf.hInstance      = NULL;
-      cf.lpszStyle      = NULL;
-      cf.nFontType      = SCREEN_FONTTYPE;
-      cf.nSizeMin       = 0;
-      cf.nSizeMax       = 0;
+         memset( &cf, 0, sizeof( cf ) );
 
-      if( ChooseFont( &cf ) )
-         PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( _s->hdc, LOGPIXELSY ) );
-      else
-      {
-         PointSize = 0;
-         memset( &lf, 0, sizeof( lf ) );
+         if( HB_ISNUM( 2 ) )
+            PointSize = -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( _s->hdc, LOGPIXELSY ), 72 );
+
+         lf.lfHeight         = PointSize;
+         lf.lfWidth          = hb_parni( 3 );
+         lf.lfWeight         = hb_parni( 4 );
+         lf.lfItalic         = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : ( BYTE ) hb_parl( 6 );
+         lf.lfUnderline      = HB_ISNUM( 7 ) ? ( BYTE ) hb_parni( 7 ) : ( BYTE ) hb_parl( 7 );
+         lf.lfStrikeOut      = HB_ISNUM( 8 ) ? ( BYTE ) hb_parni( 8 ) : ( BYTE ) hb_parl( 8 );
+         lf.lfCharSet        = DEFAULT_CHARSET;
+         lf.lfQuality        = ( BYTE ) hb_parnidef( 5, DEFAULT_QUALITY );
+         lf.lfPitchAndFamily = FF_DONTCARE;
+         if( HB_ISCHAR( 1 ) )
+         {
+            void * hText;
+            HB_STRNCPY( lf.lfFaceName, HB_PARSTR( 1, &hText, NULL ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+            hb_strfree( hText );
+         }
+
+         cf.lStructSize    = sizeof( cf );
+         cf.hwndOwner      = _s->hWnd;
+         cf.hDC            = NULL;
+         cf.lpLogFont      = &lf;
+         cf.iPointSize     = 0;
+         cf.Flags          = CF_SCREENFONTS | CF_EFFECTS | CF_SHOWHELP | CF_INITTOLOGFONTSTRUCT;
+         cf.rgbColors      = RGB( 0, 0, 0 );
+         cf.lCustData      = 0;
+         cf.lpfnHook       = NULL;
+         cf.lpTemplateName = NULL;
+         cf.hInstance      = NULL;
+         cf.lpszStyle      = NULL;
+         cf.nFontType      = SCREEN_FONTTYPE;
+         cf.nSizeMin       = 0;
+         cf.nSizeMax       = 0;
+
+         if( ChooseFont( &cf ) )
+         {
+            PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( _s->hdc, LOGPIXELSY ) );
+            Colors = cf.rgbColors;
+         }
+         else
+         {
+            PointSize = 0;
+            memset( &lf, 0, sizeof( lf ) );
+         }
       }
+#endif
 
       HB_ARRAYSETSTR( ary, 1, lf.lfFaceName );
       hb_arraySetNL( ary, 2, ( long ) PointSize );
@@ -176,27 +170,10 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_arraySetL( ary, 6, lf.lfItalic );
       hb_arraySetL( ary, 7, lf.lfUnderline );
       hb_arraySetL( ary, 8, lf.lfStrikeOut );
-      hb_arraySetNI( ary, 9, cf.rgbColors );
+      hb_arraySetNL( ary, 9, Colors );
 
       hb_itemReturnRelease( ary );
    }
-#else
-   {
-      PHB_ITEM ary = hb_itemArrayNew( 9 );
-
-      HB_ARRAYSETSTR( ary, 1, NULL );
-      hb_arraySetNL( ary, 2, 0 );
-      hb_arraySetNI( ary, 3, 0 );
-      hb_arraySetNI( ary, 4, 0 );
-      hb_arraySetNI( ary, 5, 0 );
-      hb_arraySetL( ary, 6, 0 );
-      hb_arraySetL( ary, 7, 0 );
-      hb_arraySetL( ary, 8, 0 );
-      hb_arraySetNI( ary, 9, 0 );
-
-      hb_itemReturnRelease( ary );
-   }
-#endif
 }
 
 /* Wvt_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
@@ -370,12 +347,10 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
          SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
 
       hb_retni( iTipWidth );
+      return;
    }
-   else
-      hb_retni( 0 );
-#else
-   hb_retni( 0 );
 #endif
+   hb_retni( 0 );
 }
 
 HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
@@ -391,12 +366,10 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
          SendMessage( _s->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
 
       hb_retnl( ( COLORREF ) cr );
+      return;
    }
-   else
-      hb_retnl( 0 );
-#else
-   hb_retnl( 0 );
 #endif
+   hb_retnl( 0 );
 }
 
 HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
@@ -412,19 +385,15 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
          SendMessage( _s->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
 
       hb_retnl( ( COLORREF ) cr );
+      return;
    }
-   else
-      hb_retnl( 0 );
-#else
-   hb_retnl( 0 );
 #endif
+   hb_retnl( 0 );
 }
-
-#if _WIN32_IE > 0x400
 
 HB_FUNC( WVT_SETTOOLTIPTITLE )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE ) && ( _WIN32_IE > 0x400 )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
@@ -444,20 +413,18 @@ HB_FUNC( WVT_SETTOOLTIPTITLE )
 #endif
 }
 
-#endif
-
 HB_FUNC( WVT_GETTOOLTIPWIDTH )
 {
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
+   {
       hb_retni( ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
-   else
-      hb_retni( 0 );
-#else
-   hb_retni( 0 );
+      return;
+   }
 #endif
+   hb_retni( 0 );
 }
 
 HB_FUNC( WVT_GETTOOLTIPBKCOLOR )
@@ -466,12 +433,12 @@ HB_FUNC( WVT_GETTOOLTIPBKCOLOR )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
+   {
       hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
-   else
-      hb_retnl( 0 );
-#else
-   hb_retnl( 0 );
+      return;
+   }
 #endif
+   hb_retnl( 0 );
 }
 
 HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
@@ -480,12 +447,12 @@ HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
+   {
       hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
-   else
-      hb_retnl( 0 );
-#else
-   hb_retnl( 0 );
+      return;
+   }
 #endif
+   hb_retnl( 0 );
 }
 
 HB_FUNC( WVT_SETGUI )
@@ -546,10 +513,9 @@ HB_FUNC( WVT_SETPOINTER )
 
    if( _s )
    {
-      int     iCursor = hb_parni( 1 );
       HCURSOR hCursor;
 
-      switch( iCursor )
+      switch( hb_parni( 1 ) )
       {
          case 1:
             hCursor = LoadCursor( NULL, IDC_ARROW );
@@ -674,7 +640,7 @@ HB_FUNC( WVT_SETMENU )
       RECT rc = { 0, 0, 0, 0 };
       int  height, width;
 
-      SetMenu( _s->hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
+      SetMenu( _s->hWnd, ( HMENU ) wvg_parhandle( 1 ) );
 
       GetWindowRect( _s->hWnd, &wi );
       GetClientRect( _s->hWnd, &ci );
@@ -702,39 +668,39 @@ HB_FUNC( WVT_SETPOPUPMENU )
    {
       HMENU hPopup = _s->hPopup;
 
-      _s->hPopup = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
+      _s->hPopup = ( HMENU ) wvg_parhandle( 1 );
 
-      hb_retnint( ( HB_PTRDIFF ) hPopup );
+      wvg_rethandle( hPopup );
    }
    else
-      hb_retnint( 0 );
+      wvg_rethandle( 0 );
 }
 
 HB_FUNC( WVT_CREATEMENU )
 {
-   hb_retnint( ( HB_PTRDIFF ) CreateMenu() );
+   wvg_rethandle( CreateMenu() );
 }
 
 HB_FUNC( WVT_CREATEPOPUPMENU )
 {
-   hb_retnint( ( HB_PTRDIFF ) CreatePopupMenu() );
+   wvg_rethandle( CreatePopupMenu() );
 }
 
 HB_FUNC_TRANSLATE( WVT_APPENDMENU, WVG_APPENDMENU )
 
 HB_FUNC( WVT_DELETEMENU )
 {
-   hb_retl( DeleteMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retl( DeleteMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_DESTROYMENU )
 {
-   hb_retl( DestroyMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+   hb_retl( DestroyMenu( ( HMENU ) wvg_parhandle( 1 ) ) );
 }
 
 HB_FUNC( WVT_ENABLEMENUITEM )
 {
-   hb_retni( EnableMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retni( EnableMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_GETLASTMENUEVENT )
@@ -872,7 +838,7 @@ HB_FUNC( WVT_TRACKPOPUPMENU )
 
       GetCursorPos( &xy );
 
-      hb_retnl( TrackPopupMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ),
+      hb_retnl( TrackPopupMenu( ( HMENU ) wvg_parhandle( 1 ),
                                 TPM_CENTERALIGN | TPM_RETURNCMD,
                                 xy.x,
                                 xy.y,
@@ -890,12 +856,12 @@ HB_FUNC( WVT_GETMENU )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
-      hb_retnint( ( HB_PTRDIFF ) GetMenu( _s->hWnd ) );
-   else
-      hb_retnint( 0 );
-#else
-   hb_retnint( 0 );
+   {
+      wvg_rethandle( GetMenu( _s->hWnd ) );
+      return;
+   }
 #endif
+   wvg_rethandle( 0 );
 }
 
 /* Dialogs */
@@ -1005,12 +971,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             _s->hDlgModeless[ iIndex ] = NULL;
          }
 
-         hb_retnint( ( HB_PTRDIFF ) hDlg );
+         wvg_rethandle( hDlg );
          return;
       }
    }
 
-   hb_retnint( 0 );
+   wvg_rethandle( 0 );
 }
 
 HB_FUNC( WVT_CREATEDIALOGMODAL )
@@ -1035,7 +1001,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          PHB_DYNS   pExecSym;
          int        iResource = hb_parni( 4 );
          HB_PTRDIFF iResult   = 0;
-         HWND       hParent   = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : _s->hWnd;
+         HWND       hParent   = HB_ISNUM( 5 ) ? wvg_parhwnd( 5 ) : _s->hWnd;
 
          if( HB_IS_EVALITEM( pFirst ) )
          {
@@ -1268,38 +1234,38 @@ HB_FUNC( WVT_LBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
-   hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
+   hb_retnl( ( long ) SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
 }
 
 HB_FUNC( WVT_LBDELETESTRING )
 {
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
 }
 
 HB_FUNC( WVT_LBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 HB_FUNC( WVT_CBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_CBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( wvg_parhwnd( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 /* Wvt_DlgSetIcon( hDlg, ncIcon ) */
@@ -1320,11 +1286,11 @@ HB_FUNC( WVT_DLGSETICON )
 
    if( hIcon )
    {
-      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
-      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
+      SendMessage( wvg_parhwnd( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
+      SendMessage( wvg_parhwnd( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
    }
 
-   hb_retnint( ( HB_PTRDIFF ) hIcon );
+   wvg_rethandle( hIcon );
 }
 
 HB_FUNC( WVT_GETFONTHANDLE )
@@ -1339,10 +1305,10 @@ HB_FUNC( WVT_GETFONTHANDLE )
       if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserFonts ) )
          hFont = _s->pGUI->hUserFonts[ iSlot ];
 
-      hb_retnint( ( HB_PTRDIFF ) hFont );
+      wvg_rethandle( hFont );
    }
    else
-      hb_retnint( 0 );
+      wvg_rethandle( 0 );
 }
 
 /* Utility Functions - Not API */

@@ -1352,7 +1352,7 @@ HB_FUNC( WVW_DRAWELLIPSE )
    SelectObject( wvw_win->hdc, wvw->a.currentBrush );
    SelectObject( wvw_win->hdc, wvw->a.currentPen );
 
-   hb_retl( ( HB_BOOL ) Ellipse( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
+   hb_retl( Ellipse( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
 }
 
 /* wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight, aOffset, lUsaCurrentPen ) */
@@ -1397,7 +1397,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
    else
       SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
-   hb_retl( ( HB_BOOL ) Rectangle( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
+   hb_retl( Rectangle( wvw_win->hdc, iLeft, iTop, iRight, iBottom ) );
 }
 
 /* wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, ;
@@ -1447,7 +1447,7 @@ HB_FUNC( WVW_DRAWROUNDRECT )
    SelectObject( wvw_win->hdc, wvw->a.currentBrush );
    SelectObject( wvw_win->hdc, wvw->a.currentPen );
 
-   hb_retl( ( HB_BOOL ) RoundRect( wvw_win->hdc, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
+   hb_retl( RoundRect( wvw_win->hdc, iLeft, iTop, iRight, iBottom, iWd, iHt ) );
 }
 
 /* wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffset ) */
@@ -1483,7 +1483,7 @@ HB_FUNC( WVW_DRAWFOCUSRECT )
    rc.bottom = xy.y - 1 + iOffBottom;
    rc.right  = xy.x - 1 + iOffRight;
 
-   hb_retl( ( HB_BOOL ) DrawFocusRect( wvw_win->hdc, &rc ) );
+   hb_retl( DrawFocusRect( wvw_win->hdc, &rc ) );
 }
 
 /* NOTE: this is compatibility function with GTWVT similar with wvw_FillRectangle() */
@@ -1528,7 +1528,7 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 
    if( hBrush )
    {
-      hb_retl( ( HB_BOOL ) FillRect( wvw_win->hdc, &rc, hBrush ) );
+      hb_retl( FillRect( wvw_win->hdc, &rc, hBrush ) );
 
       SelectObject( pWindowMainData->hdc, wvw->a.OriginalBrush );
       DeleteObject( hBrush );

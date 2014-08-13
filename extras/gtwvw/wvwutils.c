@@ -153,7 +153,7 @@ HB_FUNC( WIN_GETSTOCKOBJECT )
 
 HB_FUNC( WIN_DELETEOBJECT )
 {
-   hb_retl( ( HB_BOOL ) DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
+   hb_retl( DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WIN_SELECTOBJECT )
@@ -201,7 +201,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
 
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
-   hb_retl( ( HB_BOOL ) CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
+   hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
                                         HB_ISNUM( 3 ) ? ( UINT ) hb_parni( 3 ) : ( UINT ) hb_parl( 3 ) ) );
 }
 
@@ -212,10 +212,10 @@ HB_FUNC( WIN_ISDLGBUTTONCHECKED )
 
 HB_FUNC( WIN_CHECKRADIOBUTTON )
 {
-   hb_retl( ( HB_BOOL ) CheckRadioButton( ( HWND ) HB_PARHANDLE( 1 ),
-                                          hb_parni( 2 ),
-                                          hb_parni( 3 ),
-                                          hb_parni( 4 ) ) );
+   hb_retl( CheckRadioButton( ( HWND ) HB_PARHANDLE( 1 ),
+                              hb_parni( 2 ),
+                              hb_parni( 3 ),
+                              hb_parni( 4 ) ) );
 }
 
 HB_FUNC( WIN_GETDLGITEM )
@@ -339,7 +339,7 @@ HB_FUNC( WIN_GETDC )
 
 HB_FUNC( WIN_RELEASEDC )
 {
-   hb_retl( ( HB_BOOL ) ReleaseDC( ( HWND ) HB_PARHANDLE( 1 ), ( HDC ) HB_PARHANDLE( 2 ) ) );
+   hb_retl( ReleaseDC( ( HWND ) HB_PARHANDLE( 1 ), ( HDC ) HB_PARHANDLE( 2 ) ) );
 }
 
 HB_FUNC( WVW_RECTANGLE )
@@ -374,7 +374,7 @@ HB_FUNC( WIN_DRAWTEXT )
    rc.right  = hb_parvni( 3, 3 );
    rc.bottom = hb_parvni( 3, 4 );
 
-   hb_retl( ( HB_BOOL ) DrawText( ( HDC ) HB_PARHANDLE( 1 ), szText, ( int ) nLen, &rc, hb_parni( 4 ) ) );
+   hb_retl( DrawText( ( HDC ) HB_PARHANDLE( 1 ), szText, ( int ) nLen, &rc, hb_parni( 4 ) ) );
 
    hb_strfree( hText );
 }
@@ -468,7 +468,7 @@ HB_FUNC( WVW_PBVISIBLE )
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
    if( hWnd )
-      hb_retl( ( HB_BOOL ) ShowWindow( hWnd, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
+      hb_retl( ShowWindow( hWnd, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
    else
       hb_retl( HB_FALSE );
 }
@@ -478,7 +478,7 @@ HB_FUNC( WVW_CBVISIBLE )
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_COMBOBOX, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
    if( hWnd )
-      hb_retl( ( HB_BOOL ) ShowWindow( hWnd, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
+      hb_retl( ShowWindow( hWnd, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
    else
       hb_retl( HB_FALSE );
 }
@@ -488,7 +488,7 @@ HB_FUNC( WVW_CXVISIBLE )
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
    if( hWnd )
-      hb_retl( ( HB_BOOL ) ShowWindow( hWnd, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
+      hb_retl( ShowWindow( hWnd, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
    else
       hb_retl( HB_FALSE );
 }
@@ -506,7 +506,7 @@ HB_FUNC( WVW_XBVISIBLE )
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
    if( hWnd )
-      hb_retl( ( HB_BOOL ) ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
+      hb_retl( ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
    else
       hb_retl( HB_FALSE );
 }
@@ -579,7 +579,7 @@ HB_FUNC( WVW_BRINGTOTOP1 )
 
 HB_FUNC( WVW_ISWINDOW )
 {
-   hb_retl( ( HB_BOOL ) IsWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
+   hb_retl( IsWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
@@ -1642,7 +1642,7 @@ HB_FUNC( WVW_SETMOUSEPOS )
    xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
 
    if( ClientToScreen( wvw_win->hWnd, &xy ) )
-      hb_retl( ( HB_BOOL ) SetCursorPos( xy.x, xy.y + ( wvw_win->PTEXTSIZE.y / 2 ) ) );
+      hb_retl( SetCursorPos( xy.x, xy.y + ( wvw_win->PTEXTSIZE.y / 2 ) ) );
    else
       hb_retl( HB_FALSE );
 }
@@ -2226,7 +2226,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
 /* removed from GTWVT, so we remove it from here also. I really don't like doing it... */
 HB_FUNC( WVW_DELETEOBJECT )
 {
-   hb_retl( ( HB_BOOL ) DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
+   hb_retl( DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVW_SETONTOP )
@@ -2238,12 +2238,12 @@ HB_FUNC( WVW_SETONTOP )
 
    GetWindowRect( wvw_win->hWnd, &rect );
 
-   hb_retl( ( HB_BOOL ) SetWindowPos( wvw_win->hWnd, HWND_TOPMOST,
-                                      rect.left,
-                                      rect.top,
-                                      0,
-                                      0,
-                                      SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
+   hb_retl( SetWindowPos( wvw_win->hWnd, HWND_TOPMOST,
+                          rect.left,
+                          rect.top,
+                          0,
+                          0,
+                          SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
 }
 
 HB_FUNC( WVW_SETASNORMAL )
@@ -2255,12 +2255,12 @@ HB_FUNC( WVW_SETASNORMAL )
 
    GetWindowRect( wvw_win->hWnd, &rect );
 
-   hb_retl( ( HB_BOOL ) SetWindowPos( wvw_win->hWnd, HWND_NOTOPMOST,
-                                      rect.left,
-                                      rect.top,
-                                      0,
-                                      0,
-                                      SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
+   hb_retl( SetWindowPos( wvw_win->hWnd, HWND_NOTOPMOST,
+                          rect.left,
+                          rect.top,
+                          0,
+                          0,
+                          SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
 }
 
 /* aScr := wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight ) */

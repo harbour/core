@@ -61,16 +61,6 @@
 
 #define __SETGUI__
 
-static void hb_wvt_DrawBoxRaised( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-static void hb_wvt_DrawBoxRecessed( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-static void hb_wvt_DrawOutline( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-static void hb_wvt_DrawBoxGet( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-static void hb_wvt_DrawBoxGroup( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-static void hb_wvt_DrawBoxGroupRaised( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-static void hb_wvt_DrawToolButtonFlat( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-static void hb_wvt_DrawToolButtonUp( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-static void hb_wvt_DrawToolButtonDown( HDC hdc, int iTop, int iLeft, int iBottom, int iRight );
-
 HB_FUNC( WVT_CORE )
 {
    /* Retained for legacy code. */
@@ -311,9 +301,7 @@ POINT  hb_wvt_gtGetXYFromColRow( int col, int row )
    return xy;
 }
 
-/*
- *                 Modeless Dialogs Implementation
- */
+/* Modeless Dialogs Implementation */
 
 BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -2667,11 +2655,8 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       int iAlignH = 0;
 
       RECT     rc;
-      void *   hText;
-      HB_SIZE  nLen;
-      LPCTSTR  text  = HB_PARSTR( 6, &hText, &nLen );
-      COLORREF fgClr = hb_wvt_FgColorParam( 9 ),
-               bgClr = hb_wvt_BgColorParam( 10 );
+      COLORREF fgClr = hb_wvt_FgColorParam( 9 );
+      COLORREF bgClr = hb_wvt_BgColorParam( 10 );
 
       switch( hb_parni( 7 ) /* default to 0 */ )
       {
@@ -2699,7 +2684,14 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       SetBkMode( _s->hdc, hb_parnidef( 11, OPAQUE ) );
       SelectObject( _s->hdc, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
-      DrawText( _s->hdc, text, nLen, &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+      {
+         void *  hText;
+         HB_SIZE nLen;
+         LPCTSTR text = HB_PARSTR( 6, &hText, &nLen );
+         DrawText( _s->hdc, text, ( int ) nLen, &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+         hb_strfree( hText );
+      }
+
       #if defined( __SETGUI__ )
       if( _s->bGui )
       {
@@ -2709,10 +2701,15 @@ HB_FUNC( WVT_DRAWTEXTBOX )
          SetBkMode( _s->hGuiDC, hb_parnidef( 11, OPAQUE ) );
          SelectObject( _s->hGuiDC, ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 12 ) );
 
-         DrawText( _s->hGuiDC, text, nLen, &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+         {
+            void *  hText;
+            HB_SIZE nLen;
+            LPCTSTR text = HB_PARSTR( 6, &hText, &nLen );
+            DrawText( _s->hGuiDC, text, ( int ) nLen, &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+            hb_strfree( hText );
+         }
       }
       #endif
-      hb_strfree( hText );
    }
 }
 

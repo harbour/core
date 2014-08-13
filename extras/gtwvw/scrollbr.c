@@ -342,7 +342,7 @@ HB_FUNC( WVW_XBENABLE )
    HWND hWnd    = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
    if( hWnd && uiFlags <= ESB_DISABLE_BOTH )
-      hb_retl( ( HB_BOOL ) EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
+      hb_retl( EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
    else
       hb_retl( HB_FALSE );
 }
@@ -359,7 +359,7 @@ HB_FUNC( WVW_XBSHOW )
    HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_SCROLLBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
 
    if( hWnd )
-      hb_retl( ( HB_BOOL ) ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
+      hb_retl( ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
    else
       hb_retl( HB_FALSE );
 }
