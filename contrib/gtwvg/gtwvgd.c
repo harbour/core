@@ -3585,7 +3585,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( hb_arrayLen( pInfo->pNewVal ) == 16 )
                {
                   for( i = 0; i < 16; i++ )
-                     pWVT->COLORS[ i ] = hb_arrayGetNInt( pInfo->pNewVal, i + 1 );
+                     pWVT->COLORS[ i ] = ( COLORREF ) hb_arrayGetNInt( pInfo->pNewVal, i + 1 );
 
                   if( pWVT->hWnd )
                      HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
@@ -4242,12 +4242,12 @@ static void hb_wvt_gtLoadGuiData( void )
 
    s_guiData = ( PHB_GUIDATA ) hb_xgrabz( sizeof( HB_GUIDATA ) );
 
-   s_guiData->penWhite       = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 255,255,255 ) );
-   s_guiData->penBlack       = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );
-   s_guiData->penWhiteDim    = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 205,205,205 ) );
-   s_guiData->penDarkGray    = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 150,150,150 ) );
-   s_guiData->penGray        = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB( 198,198,198 ) );
-   s_guiData->penNull        = CreatePen( PS_NULL , 0, ( COLORREF ) RGB( 198,198,198 ) );
+   s_guiData->penWhite       = CreatePen( PS_SOLID, 0, RGB( 255,255,255 ) );
+   s_guiData->penBlack       = CreatePen( PS_SOLID, 0, RGB(   0,  0,  0 ) );
+   s_guiData->penWhiteDim    = CreatePen( PS_SOLID, 0, RGB( 205,205,205 ) );
+   s_guiData->penDarkGray    = CreatePen( PS_SOLID, 0, RGB( 150,150,150 ) );
+   s_guiData->penGray        = CreatePen( PS_SOLID, 0, RGB( 198,198,198 ) );
+   s_guiData->penNull        = CreatePen( PS_NULL , 0, RGB( 198,198,198 ) );
 
 #if ! defined( HB_OS_WIN_CE )
    s_guiData->diagonalBrush  = CreateHatchBrush( HS_DIAGCROSS, RGB( 210,210,210 ) );
@@ -4338,7 +4338,7 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    pWVT->bDeferPaint        = HB_FALSE;
    pWVT->bTracking          = HB_FALSE;
 
-   pWVT->currentPen         = CreatePen( PS_SOLID, 0, ( COLORREF ) RGB(   0,  0,  0 ) );
+   pWVT->currentPen         = CreatePen( PS_SOLID, 0, RGB( 0, 0, 0 ) );
 
 #if ! defined( HB_OS_WIN_CE )
    {

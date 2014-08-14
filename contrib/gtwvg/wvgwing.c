@@ -335,41 +335,22 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
             }
          }
          break;
+
       case 1:
-      {
-         UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
+         hBitmap = ( HBITMAP ) LoadImage( wvg_hInstance(), szBitmap,
+            IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
+         break;
 
-         hBitmap = ( HBITMAP ) LoadImage(
-            wvg_hInstance(),
-            szBitmap,
-            IMAGE_BITMAP,
-            iExpWidth,
-            iExpHeight,
-            uiOptions );
-
-         if( hBitmap == NULL )
-            return NULL;
-      }
-      break;
-      case 2: /* loading from resourceid */
+      case 2:  /* loading from resourceid */
       {
-         UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
          char szResname[ MAX_PATH + 1 ];
 
          hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
 
-         hBitmap = ( HBITMAP ) LoadImage(
-            wvg_hInstance(),
-            ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) uiBitmap ),
-            IMAGE_BITMAP,
-            iExpWidth,
-            iExpHeight,
-            uiOptions );
-         if( hBitmap == NULL )
-            return NULL;
-
-      }     /* loading from resources */
-      break;
+         hBitmap = ( HBITMAP ) LoadImage( wvg_hInstance(), ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) uiBitmap ),
+            IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
+         break;
+      }
    }
 
    return hBitmap;
@@ -417,7 +398,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
             int  n;
             int  width;
 
-            iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) HB_SIZEOFARRAY( ptArray ), ( LPARAM ) ( LPINT ) ptArray );
+            iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) HB_SIZEOFARRAY( ptArray ) - 1, ( LPARAM ) ( LPINT ) ptArray );
 
             GetClientRect( hWndSB, &rc );
             width = ( int ) ( rc.right / ( iParts + 1 ) );
@@ -426,24 +407,18 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
 
             ptArray[ iParts ] = -1;
 
-            if( SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) iParts + 1, ( LPARAM ) ( LPINT ) ptArray ) )
-            {
-               hb_retl( HB_TRUE );
-               return;
-            }
+            hb_retl( ( HB_BOOL ) SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) iParts + 1, ( LPARAM ) ( LPINT ) ptArray ) );
+            return;
          }
          case -1:
          {
-            RECT rc = { 0, 0, 0, 0 };
-            int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
+            RECT rc;
 
             if( GetClientRect( hWndSB, &rc ) )
             {
-               ptArray[ 0 ] = rc.right;
+               int ptArray = rc.right;
 
-               SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) 1, ( LPARAM ) ( LPINT ) ptArray );
-
-               hb_retl( HB_TRUE );
+               hb_retl( ( HB_BOOL ) SendMessage( hWndSB, SB_SETPARTS, ( WPARAM ) 1, ( LPARAM ) &ptArray ) );
                return;
             }
          }
@@ -600,7 +575,7 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
                                              TVIS_EXPANDEDONCE | TVIS_SELECTED | TVIS_EXPANDPARTIAL |
                                              TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK;
 
-   HB_WIN_V_UNION( tvis, item.state ) = 0;        /* TVI_BOLD */
+   HB_WIN_V_UNION( tvis, item.state ) = 0;  /* TVI_BOLD */
    tvis.hParent = ( HTREEITEM ) wvg_parhandle( 2 );
    HB_WIN_V_UNION( tvis, item.pszText ) = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
@@ -727,8 +702,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
 }
 #endif
 
-/* Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, ;
-                   viewScreenFonts, viewPrinterFonts ) */
+/* Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, viewScreenFonts, viewPrinterFonts ) */
 HB_FUNC( WVG_CHOOSEFONT )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -858,7 +832,6 @@ HB_FUNC( WVG_FONTCREATE )
    }
 
    hFont = CreateFontIndirect( &lf );
-
    if( hFont )
    {
       aFont = wvg_logfontTOarray( &lf );

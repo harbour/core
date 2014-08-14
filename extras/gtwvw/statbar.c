@@ -65,7 +65,6 @@ HB_FUNC( WVW_SBCREATE )
 
    HWND hWndParent;
    HWND hWnd;
-   int  ptArray[ WVW_MAX_STATUS_PARTS ];
 
    if( wvw_win->hStatusBar != NULL )
    {
@@ -80,6 +79,8 @@ HB_FUNC( WVW_SBCREATE )
                                     WVW_ID_BASE_STATUSBAR + nWin );
    if( hWnd )
    {
+      int ptArray;
+
       RECT rSB;
 
       if( wvw_win->hSBfont == NULL )
@@ -93,10 +94,10 @@ HB_FUNC( WVW_SBCREATE )
 
       hb_gt_wvw_ResetWindow( nWin );
 
-      ptArray[ 0 ] = rSB.right;
+      ptArray = rSB.right;
       SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSBfont, ( LPARAM ) TRUE );
 
-      SendMessage( hWnd, SB_SETPARTS, 1, ( LPARAM ) ( LPINT ) ptArray );
+      SendMessage( hWnd, SB_SETPARTS, 1, ( LPARAM ) &ptArray );
    }
 
    HB_RETHANDLE( hWnd );
@@ -186,7 +187,7 @@ HB_FUNC( WVW_SBADDPART )
    }
 
    if( ! lResetParts )
-      numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, HB_SIZEOFARRAY( ptArray ), ( LPARAM ) ( LPINT ) ptArray );
+      numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, HB_SIZEOFARRAY( ptArray ) - 1, ( LPARAM ) ( LPINT ) ptArray );
    else
       numOfParts = 0;
    numOfParts++;
@@ -200,10 +201,10 @@ HB_FUNC( WVW_SBADDPART )
    {
       int n;
       for( n = 0; n < numOfParts - 1; n++ )
-         ptArray[ n ] -= ( usWidth + WVW_SPACE_BETWEEN_PARTS );
+         ptArray[ n ] -= usWidth + WVW_SPACE_BETWEEN_PARTS;
    }
 
-   SendMessage( hWnd, SB_SETPARTS, numOfParts, ( LPARAM ) ( LPINT ) ptArray );
+   SendMessage( hWnd, SB_SETPARTS, numOfParts, ( LPARAM ) ptArray );
 
    if( HB_ISCHAR( 6 ) )
    {

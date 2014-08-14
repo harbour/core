@@ -1486,12 +1486,9 @@ HB_FUNC( WVW_LOADPEN )
 {
    WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
 
-   int      iSlot     = hb_parni( 1 ) - 1;
-   int      iPenStyle = hb_parni( 2 );
-   int      iPenWidth = hb_parni( 3 );
-   COLORREF crColor   = ( COLORREF ) hb_parnint( 4 );
+   int iSlot = hb_parni( 1 ) - 1;
 
-   HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
+   HPEN hPen = CreatePen( hb_parni( 2 ), hb_parni( 3 ), ( COLORREF ) hb_parnint( 4 ) );
 
    if( hPen && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserPens ) )
    {
@@ -1790,11 +1787,7 @@ HB_FUNC( WVW_SETPEN )
 {
    if( HB_ISNUM( 1 ) )
    {
-      int      iPenStyle = hb_parni( 1 );
-      int      iPenWidth = hb_parni( 2 );
-      COLORREF crColor   = ( COLORREF ) hb_parnint( 3 );
-
-      HPEN hPen = CreatePen( iPenStyle, iPenWidth, crColor );
+      HPEN hPen = CreatePen( hb_parni( 1 ), hb_parni( 2 ), ( COLORREF ) hb_parnint( 3 ) );
 
       if( hPen )
       {
@@ -2232,15 +2225,15 @@ HB_FUNC( WVW_DELETEOBJECT )
 HB_FUNC( WVW_SETONTOP )
 {
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   RECT      rect;
+   RECT      rc;
 
-   memset( &rect, 0, sizeof( rect ) );
+   memset( &rc, 0, sizeof( rc ) );
 
-   GetWindowRect( wvw_win->hWnd, &rect );
+   GetWindowRect( wvw_win->hWnd, &rc );
 
    hb_retl( SetWindowPos( wvw_win->hWnd, HWND_TOPMOST,
-                          rect.left,
-                          rect.top,
+                          rc.left,
+                          rc.top,
                           0,
                           0,
                           SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
@@ -2249,15 +2242,15 @@ HB_FUNC( WVW_SETONTOP )
 HB_FUNC( WVW_SETASNORMAL )
 {
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   RECT      rect;
+   RECT      rc;
 
-   memset( &rect, 0, sizeof( rect ) );
+   memset( &rc, 0, sizeof( rc ) );
 
-   GetWindowRect( wvw_win->hWnd, &rect );
+   GetWindowRect( wvw_win->hWnd, &rc );
 
    hb_retl( SetWindowPos( wvw_win->hWnd, HWND_NOTOPMOST,
-                          rect.left,
-                          rect.top,
+                          rc.left,
+                          rc.top,
                           0,
                           0,
                           SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );

@@ -726,7 +726,7 @@ static void hb_wvg_LabelEx2( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop
    HFONT hOldFont;
    int   x, y, iAlignV, iAlignH;
    SIZE  sz = { 0, 0 };
-   RECT  rect = { 0, 0, 0, 0 };
+   RECT  rc = { 0, 0, 0, 0 };
 
    SetBkColor( pWVT->hdc, gObj->crRGBBk );
    SetTextColor( pWVT->hdc, gObj->crRGBText );
@@ -763,12 +763,12 @@ static void hb_wvg_LabelEx2( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop
 
    SetTextAlign( pWVT->hdc, iAlignH | iAlignV );
 
-   rect.top    = iTop;
-   rect.left   = iLeft;
-   rect.bottom = iBottom;
-   rect.right  = iRight;
+   rc.top    = iTop;
+   rc.left   = iLeft;
+   rc.bottom = iBottom;
+   rc.right  = iRight;
 
-   ExtTextOut( pWVT->hdc, x, y, ETO_CLIPPED | ETO_OPAQUE, &rect, gObj->lpText, lstrlen( gObj->lpText ), NULL );
+   ExtTextOut( pWVT->hdc, x, y, ETO_CLIPPED | ETO_OPAQUE, &rc, gObj->lpText, lstrlen( gObj->lpText ), NULL );
    SelectObject( pWVT->hdc, hOldFont );
 }
 
@@ -1469,9 +1469,9 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
       POINT lpp = { 0, 0 };
       HDC   hdc = pWVT->hGuiDC;
 
-      RECT  rect_dummy;
+      RECT  rc_dummy;
 
-      memset( &rect_dummy, 0, sizeof( rect_dummy ) );
+      memset( &rc_dummy, 0, sizeof( rc_dummy ) );
 
       if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &lWidth ) != S_OK )
          lWidth = 0;
@@ -1500,7 +1500,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
       hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
       SelectClipRgn( hdc, hrgn1 );
 
-      HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, &rect_dummy );
+      HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, &rc_dummy );
 
       SelectClipRgn( hdc, NULL );
       DeleteObject( hrgn1 );

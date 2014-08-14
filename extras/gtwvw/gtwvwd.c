@@ -1400,10 +1400,10 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             if( iIndex > 0 && iIndex <= 16 )
             {
-               pInfo->pResult = hb_itemPutNL( pInfo->pResult, s_COLORS[ iIndex - 1 ] );
+               pInfo->pResult = hb_itemPutNInt( pInfo->pResult, s_COLORS[ iIndex - 1 ] );
 
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
-                  s_COLORS[ iIndex - 1 ] = hb_itemGetNL( pInfo->pNewVal2 );
+                  s_COLORS[ iIndex - 1 ] = ( COLORREF ) hb_itemGetNInt( pInfo->pNewVal2 );
             }
          }
          else
@@ -1413,12 +1413,12 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pInfo->pResult = hb_itemNew( NULL );
             hb_arrayNew( pInfo->pResult, 16 );
             for( i = 1; i <= 16; i++ )
-               hb_itemPutNL( hb_arrayGetItemPtr( pInfo->pResult, i ), s_COLORS[ i - 1 ] );
+               hb_itemPutNInt( hb_arrayGetItemPtr( pInfo->pResult, i ), s_COLORS[ i - 1 ] );
 
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
                if( hb_arrayLen( pInfo->pNewVal ) == 16 )
                   for( i = 0; i < 16; i++ )
-                     s_COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
+                     s_COLORS[ i ] = ( COLORREF ) hb_arrayGetNInt( pInfo->pNewVal, i + 1 );
 
          }
          break;
@@ -6088,9 +6088,9 @@ HB_BOOL hb_gt_wvw_RenderPicture( HB_UINT nWin, int x1, int y1, int wd, int ht, I
       POINT     lpp;
       WVW_WIN * wvw_win = s_wvw->pWin[ nWin ];
 
-      RECT rect_dummy;
+      RECT rc_dummy;
 
-      memset( &rect_dummy, 0, sizeof( rect_dummy ) );
+      memset( &rc_dummy, 0, sizeof( rc_dummy ) );
 
       /* if bTransp, we use different method */
       if( bTransp )
@@ -6149,7 +6149,7 @@ HB_BOOL hb_gt_wvw_RenderPicture( HB_UINT nWin, int x1, int y1, int wd, int ht, I
          while( y < ye )
          {
             HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) wvw_win->hdc, x, y, dc, dr, 0,
-                                         lHeight, lWidth, -lHeight, &rect_dummy );
+                                         lHeight, lWidth, -lHeight, &rc_dummy );
             y += dr;
          }
          y  = r;

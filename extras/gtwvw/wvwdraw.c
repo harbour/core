@@ -814,7 +814,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
    POINT    xy;
    int      iTop, iLeft, iBottom, iRight, x, y;
-   RECT     rect;
+   RECT     rc;
    HFONT    oldFont;
    int      oldTextAlign, iAlignHorz, iAlignVert, iAlignH = 0, iAlignV;
    COLORREF oldBkColor, oldTextColor;
@@ -892,14 +892,14 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
    oldTextAlign = SetTextAlign( wvw_win->hdc, iAlignH | iAlignV );
 
-   rect.top    = iTop;
-   rect.left   = iLeft;
-   rect.bottom = iBottom;
-   rect.right  = iRight;
+   rc.top    = iTop;
+   rc.left   = iLeft;
+   rc.bottom = iBottom;
+   rc.right  = iRight;
 
    uiOptions = ETO_CLIPPED | ETO_OPAQUE;
 
-   ExtTextOut( wvw_win->hdc, x, y, uiOptions, &rect, szText, ( UINT ) nLen, NULL );
+   ExtTextOut( wvw_win->hdc, x, y, uiOptions, &rc, szText, ( UINT ) nLen, NULL );
 
    hb_strfree( hText );
 
@@ -2015,11 +2015,10 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
    HB_UINT    nWin    = WVW_WHICH_WINDOW;
    WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   int     iTop, iLeft, iBottom, iRight;
-   POINT * Point;
-   POINT   xy;
-   int     iHeight, iOff;
-   HB_BOOL bDepressed = hb_parl( 8 );
+   int   iTop, iLeft, iBottom, iRight;
+   POINT Point[ 3 ];
+   POINT xy;
+   int   iHeight, iOff;
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 ),
           usLeft   = ( USHORT ) hb_parni( 3 ),
@@ -2040,12 +2039,11 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
    iBottom = xy.y - 1 + hb_parvni( 6, 3 );
    iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-   Point = ( POINT * ) hb_xgrab( 3 * sizeof( POINT ) );
-   iOff  = 6;
+   iOff = 6;
 
    iHeight = iBottom - iTop + 1;
 
-   if( bDepressed )
+   if( hb_parl( 8 ) /* bDepressed */ )
       hb_gt_wvw_DrawBoxRecessed( nWin, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, HB_FALSE );
    else
       hb_gt_wvw_DrawBoxRaised( nWin, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, HB_FALSE );
@@ -2098,9 +2096,7 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
          break;
    }
 
-   Polygon( wvw_win->hdc, Point, 3 );
-
-   hb_xfree( Point );
+   Polygon( wvw_win->hdc, Point, HB_SIZEOFARRAY( Point ) );
 }
 
 /* Wvw_DrawScrollbarThumbVert( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlScroll, nThumbPos ) */
@@ -2265,7 +2261,7 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
       gRect.UpperLeft  = 0;
       gRect.LowerRight = 1;
 
-      fResult = ( HB_BOOL ) wvw->a.pfnGF( wvw_win->hdc, vert, 2, &gRect, 1, iMode );
+      fResult = ( HB_BOOL ) wvw->a.pfnGF( wvw_win->hdc, vert, HB_SIZEOFARRAY( vert ), &gRect, 1, iMode );
    }
 
    hb_retl( fResult );
