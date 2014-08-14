@@ -167,7 +167,7 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_arraySetL( ary, 6, lf.lfItalic );
       hb_arraySetL( ary, 7, lf.lfUnderline );
       hb_arraySetL( ary, 8, lf.lfStrikeOut );
-      hb_arraySetNL( ary, 9, Colors );
+      hb_arraySetNInt( ary, 9, Colors );
 
       hb_itemReturnRelease( ary );
    }

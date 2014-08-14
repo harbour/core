@@ -576,7 +576,7 @@ HB_FUNC( WVG_LABEL )
    lf.lfHeight         = hb_parnidef( 10, pWVT->fontHeight );
    lf.lfWidth          = hb_parnidef( 11, pWVT->fontWidth < 0 ? -pWVT->fontWidth : pWVT->fontWidth );
 
-   HB_STRNCPY( lf.lfFaceName, ( ! HB_ISCHAR( 9 ) ? pWVT->fontFace : HB_PARSTR( 9, &hText, NULL ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+   HB_STRNCPY( lf.lfFaceName, HB_ISCHAR( 9 ) ? HB_PARSTR( 9, &hText, NULL ) : pWVT->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
    hb_strfree( hText );
 
    hFont = CreateFontIndirect( &lf );
@@ -688,7 +688,7 @@ HB_FUNC( WVG_LABELEX2 )
    lf.lfHeight         = hb_parnidef( 12, pWVT->fontHeight );
    lf.lfWidth          = hb_parnidef( 13, pWVT->fontWidth < 0 ? -pWVT->fontWidth : pWVT->fontWidth );
 
-   HB_STRNCPY( lf.lfFaceName, ( ! HB_ISCHAR( 11 ) ? pWVT->fontFace : HB_PARSTR( 11, &hText, NULL ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+   HB_STRNCPY( lf.lfFaceName, HB_ISCHAR( 11 ) ? HB_PARSTR( 11, &hText, NULL ) : pWVT->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
    hb_strfree( hText );
 
    hFont = CreateFontIndirect( &lf );

@@ -47,16 +47,10 @@
 #ifndef _WVGWIN_CH
 #define _WVGWIN_CH
 
-//
-//                         GTWVT Specific
-//
-
 #xtranslate MAKELONG( <nLow>, <nHigh> )   => ( ( <nLow> ) + ( <nHigh> ) * 0x10000 )
 #xtranslate MAKELPARAM( <nLow>, <nHigh> ) => ( ( <nLow> ) + ( <nHigh> ) * 0x10000 )
 
-/*
- *   Wvt_DrawButton() constants
- */
+/* Wvt_DrawButton() constants */
 #define WVT_BTN_FORMAT_RAISED                     0                   // Default
 #define WVT_BTN_FORMAT_RECESSED                   1
 #define WVT_BTN_FORMAT_FLAT                       2
@@ -67,36 +61,32 @@
 #define WVT_BTN_IMAGE_BOTTOM                      2
 #define WVT_BTN_IMAGE_RIGHT                       3
 
-/*
- *   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, ;
- *                 nAlign, nStyle, nThick, nColor )
- */
-/*   nOrient   */
+/* Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor ) */
+
+/* nOrient */
 #define WVT_LINE_HORZ                             0                   // Default
 #define WVT_LINE_VERT                             1
 
-//   nFormat
+// nFormat
 #define WVT_LINE_RAISED                           0                   // Default
 #define WVT_LINE_RECESSED                         1
 #define WVT_LINE_PLAIN                            2
 
-//   nAlign
+// nAlign
 #define WVT_LINE_CENTER                           0                   // Default
 #define WVT_LINE_TOP                              1
 #define WVT_LINE_BOTTOM                           2
 #define WVT_LINE_LEFT                             3
 #define WVT_LINE_RIGHT                            4
 
-//   nStyle
+// nStyle
 #define WVT_LINE_SOLID                            0                   // Default
 #define WVT_LINE_DASH                             1
 #define WVT_LINE_DOT                              2
 #define WVT_LINE_DASHDOT                          3
 #define WVT_LINE_DASHDOTDOT                       4
 
-//
-//              Standard Mouse Pointer Shape Constants
-//
+// Standard Mouse Pointer Shape Constants
 #define WVT_IDC_ARROW                             1
 #define WVT_IDC_IBEAM                             2
 #define WVT_IDC_WAIT                              3
@@ -114,7 +104,7 @@
 #define WVT_IDC_APPSTARTING                       15
 #define WVT_IDC_HELP                              16
 
-/*-*/
+/* - */
 
 #define WVT_BLOCK_IMAGE                           1
 #define WVT_BLOCK_BOX                             2
@@ -128,7 +118,7 @@
 #define WVT_BLOCK_TOOLBAR                         10
 #define WVT_BLOCK_STATIC                          11
 
-/*-*/
+/* - */
 
 #define DLG_OBJ_BROWSE                            1
 #define DLG_OBJ_PICTURE                           2
@@ -149,13 +139,13 @@
 #define DLG_OBJ_TEXTBOX                           17
 #define DLG_OBJ_PROGRESSBAR                       18
 
-/*-*/
+/* - */
 
 #define TLB_BUTTON_TYPE_IMAGE                     0
 #define TLB_BUTTON_TYPE_SEPARATOR                 1
 #define TLB_BUTTON_TYPE_TEXT                      2
 
-/*-*/
+/* - */
 
 #define WVT_STATIC_LINE                           1
 #define WVT_STATIC_BOXRAISED                      2
@@ -185,15 +175,13 @@
 #define WVT_MENU_ACTION                           4
 #define WVT_MENU_MENUOBJ                          4
 
-/*-*/
+/* - */
 
 #ifndef RGB
 #define RGB( nR, nG, nB )   ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 #endif
 
-//
-//                          Windows Specific
-//
+// Windows Specific
 
 #define LVM_FIRST                                 0x1000      // ListView messages
 #define TV_FIRST                                  0x1100      // TreeView messages
@@ -216,9 +204,7 @@
 #define CCM_SETWINDOWTHEME                        0x200b
 #define CCM_DPISCALE                              0x200c
 
-//
-//                   Menu Manipulation Constants
-//
+// Menu Manipulation Constants
 
 #define MF_INSERT                                 0
 #define MF_CHANGE                                 128
@@ -250,7 +236,7 @@
 #define MF_UNHILITE                               0
 #define MF_HILITE                                 128
 
-/*-*/
+/* - */
 
 #define TPM_LEFTBUTTON                            0x0000
 #define TPM_RIGHTBUTTON                           0x0002
@@ -263,9 +249,9 @@
 #define TPM_VCENTERALIGN                          0x0010
 #define TPM_BOTTOMALIGN                           0x0020
 
-#define TPM_HORIZONTAL                            0x0000              /* Horz alignment matters more */
-#define TPM_VERTICAL                              0x0040              /* Vert alignment matters more */
-#define TPM_NONOTIFY                              0x0080              /* Don't send any notification msgs */
+#define TPM_HORIZONTAL                            0x0000  /* Horz alignment matters more */
+#define TPM_VERTICAL                              0x0040  /* Vert alignment matters more */
+#define TPM_NONOTIFY                              0x0080  /* Don't send any notification msgs */
 #define TPM_RETURNCMD                             0x0100
 
 /* ShowWindow() Commands */
@@ -334,25 +320,25 @@
 #define WM_QUERYDRAGICON                          55
 #define WM_COMPAREITEM                            57
 #define WM_GETOBJECT                              61
-#define WM_COMPACTING                             65                  // 0x0041
-#define WM_COMMNOTIFY                             68                  // 0x0044  /* no longer suported */
-#define WM_WINDOWPOSCHANGING                      70                  // 0x0046
-#define WM_WINDOWPOSCHANGED                       71                  // 0x0047
+#define WM_COMPACTING                             65   // 0x0041
+#define WM_COMMNOTIFY                             68   // 0x0044  /* no longer suported */
+#define WM_WINDOWPOSCHANGING                      70   // 0x0046
+#define WM_WINDOWPOSCHANGED                       71   // 0x0047
 #define WM_POWER                                  72
-#define WM_NOTIFY                                 78                  // 0x004E
-#define WM_INPUTLANGCHANGEREQUEST                 79                  // 0x0050
-#define WM_INPUTLANGCHANGE                        80                  // 0x0051
-#define WM_TCARD                                  81                  // 0x0052
-#define WM_HELP                                   82                  // 0x0053
-#define WM_USERCHANGED                            83                  // 0x0054
-#define WM_NOTIFYFORMAT                           84                  // 0x0055
+#define WM_NOTIFY                                 78   // 0x004E
+#define WM_INPUTLANGCHANGEREQUEST                 79   // 0x0050
+#define WM_INPUTLANGCHANGE                        80   // 0x0051
+#define WM_TCARD                                  81   // 0x0052
+#define WM_HELP                                   82   // 0x0053
+#define WM_USERCHANGED                            83   // 0x0054
+#define WM_NOTIFYFORMAT                           84   // 0x0055
 
-#define WM_CONTEXTMENU                            123                 // 0x007B
-#define WM_STYLECHANGING                          124                 // 0x007C
-#define WM_STYLECHANGED                           125                 // 0x007D
-#define WM_DISPLAYCHANGE                          126                 // 0x007E
-#define WM_GETICON                                127                 // 0x007F
-#define WM_SETICON                                128                 // 0x0080
+#define WM_CONTEXTMENU                            123  // 0x007B
+#define WM_STYLECHANGING                          124  // 0x007C
+#define WM_STYLECHANGED                           125  // 0x007D
+#define WM_DISPLAYCHANGE                          126  // 0x007E
+#define WM_GETICON                                127  // 0x007F
+#define WM_SETICON                                128  // 0x0080
 
 #define WM_NCCREATE                               129
 #define WM_NCDESTROY                              130
@@ -536,7 +522,7 @@
 #define WS_EX_LAYOUTRTL                           4194304             // 0x00400000L // Right to left mirroring
 #define WS_EX_NOACTIVATE                          134217728           // 0x08000000L
 
-/*-*/
+/* - */
 
 #define SC_SIZE                                   61440               // 0xF000
 #define SC_MOVE                                   61456               // 0xF010
@@ -964,7 +950,7 @@
 #define ICON_SMALL                                0
 #define ICON_BIG                                  1
 
-/*-*/
+/* - */
 
 #define IMAGE_BITMAP                              0
 #define IMAGE_ICON                                1
@@ -1441,15 +1427,13 @@
 #define SBARS_SIZEGRIP                            256
 #define SBARS_TOOLTIPS                            2048
 
-/*-*/
+/* - */
 
 #define WM_CHOOSEFONT_GETLOGFONT                  ( WM_USER + 1 )
 #define WM_CHOOSEFONT_SETLOGFONT                  ( WM_USER + 101 )
 #define WM_CHOOSEFONT_SETFLAGS                    ( WM_USER + 102 )
 
-//
-//                              SCROLLBARS
-//
+// SCROLLBARS
 
 #define SB_HORZ                                   0
 #define SB_VERT                                   1
@@ -1527,7 +1511,7 @@
 
 #define SB_SIMPLEID                               0x00ff
 
-/*-*/
+/* - */
 
 #define ILC_COLOR                                 0
 #define ILC_COLOR4                                4
@@ -1539,9 +1523,7 @@
 #define ILC_MASK                                  1
 #define ILC_PALETTE                               2048
 
-//
-//                               Tab Pages
-//
+// Tab Pages
 
 #define TCS_SCROLLOPPOSITE                        0x0001  // assumes multiline tab
 #define TCS_BOTTOM                                0x0002
@@ -1564,9 +1546,7 @@
 #define TCS_TOOLTIPS                              0x4000
 #define TCS_FOCUSNEVER                            0x8000
 
-//
-//                         Tree View Constants
-//
+// Tree View Constants
 
 #define WC_TREEVIEWA                              "SysTreeView32"
 #define WC_TREEVIEWW                              L"SysTreeView32"
@@ -1814,27 +1794,27 @@
 
 #define TVCDRF_NOIMAGES                           65536
 
-/*-*/
+/* - */
 
-#define R2_BLACK                                  1   /*  0       */
-#define R2_NOTMERGEPEN                            2   /* DPon     */
-#define R2_MASKNOTPEN                             3   /* DPna     */
-#define R2_NOTCOPYPEN                             4   /* PN       */
-#define R2_MASKPENNOT                             5   /* PDna     */
-#define R2_NOT                                    6   /* Dn       */
-#define R2_XORPEN                                 7   /* DPx      */
-#define R2_NOTMASKPEN                             8   /* DPan     */
-#define R2_MASKPEN                                9   /* DPa      */
-#define R2_NOTXORPEN                              10  /* DPxn     */
-#define R2_NOP                                    11  /* D        */
-#define R2_MERGENOTPEN                            12  /* DPno     */
-#define R2_COPYPEN                                13  /* P        */
-#define R2_MERGEPENNOT                            14  /* PDno     */
-#define R2_MERGEPEN                               15  /* DPo      */
-#define R2_WHITE                                  16  /*  1       */
+#define R2_BLACK                                  1   // 0
+#define R2_NOTMERGEPEN                            2   // DPon
+#define R2_MASKNOTPEN                             3   // DPna
+#define R2_NOTCOPYPEN                             4   // PN
+#define R2_MASKPENNOT                             5   // PDna
+#define R2_NOT                                    6   // Dn
+#define R2_XORPEN                                 7   // DPx
+#define R2_NOTMASKPEN                             8   // DPan
+#define R2_MASKPEN                                9   // DPa
+#define R2_NOTXORPEN                              10  // DPxn
+#define R2_NOP                                    11  // D
+#define R2_MERGENOTPEN                            12  // DPno
+#define R2_COPYPEN                                13  // P
+#define R2_MERGEPENNOT                            14  // PDno
+#define R2_MERGEPEN                               15  // DPo
+#define R2_WHITE                                  16  // 1
 #define R2_LAST                                   16
 
-/*-*/
+/* - */
 
 #define TOOLTIPS_CLASS                            "tooltips_class32"
 
@@ -1922,7 +1902,7 @@
 #define TTM_GETCURRENTTOOL                        TTM_GETCURRENTTOOLW
 #define TTM_SETTITLE                              TTM_SETTITLEW
 
-/*-*/
+/* - */
 
 #define CW_USEDEFAULT                             0x80000000
 
@@ -1943,7 +1923,7 @@
 #define SWP_NOOWNERZORDER                         0x0200  /* Don't do owner Z ordering */
 #define SWP_NOSENDCHANGING                        0x0400  /* Don't send WM_WINDOWPOSCHANGING */
 
-/*-*/
+/* - */
 
 #define PBM_SETRANGE                             ( WM_USER + 1 )
 #define PBM_SETPOS                               ( WM_USER + 2 )

@@ -1617,7 +1617,7 @@ HB_FUNC( WVW_CHOOSECOLOR )
    if( ChooseColor( &cc ) )
       hb_retnint( cc.rgbResult );
    else
-      hb_retnint( 0 );
+      hb_retnint( -1 );
 }
 
 /* wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based

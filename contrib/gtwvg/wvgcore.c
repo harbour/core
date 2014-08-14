@@ -1107,7 +1107,7 @@ HB_FUNC( WVT_DRAWLABEL )
       lf.lfHeight         = hb_parnidef( 9, _s->fontHeight );
       lf.lfWidth = hb_parnidef( 10, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-      HB_STRNCPY( lf.lfFaceName, ( HB_ISCHAR( 8 ) ? HB_PARSTR( 8, &hText, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+      HB_STRNCPY( lf.lfFaceName, HB_ISCHAR( 8 ) ? HB_PARSTR( 8, &hText, NULL ) : _s->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
 
       hFont = CreateFontIndirect( &lf );
@@ -2583,7 +2583,6 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
    }
 }
 
-/* #if WINVER > 0x500 */
 /* Wvt_DrawShadedRect( nTop, nLeft, nBottom, nRight, aPxlOff, nHorVert, aRGBb, aRGBe ) */
 HB_FUNC( WVT_DRAWSHADEDRECT )
 {
@@ -2633,7 +2632,6 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
    else
       hb_retl( HB_FALSE );
 }
-/*#endif*/
 
 /* Wvt_DrawTextBox( nTop, nLeft, nBottom, nRight, aPxlOff, cText, ;
                     nAlignHorz, nAlignVert, nTextColor, nBackColor, ;
@@ -2835,7 +2833,7 @@ HB_FUNC( WVT_CREATEFONT )
       lf.lfHeight         = hb_parnidef( 2, _s->fontHeight );
       lf.lfWidth = hb_parnidef( 3, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-      HB_STRNCPY( lf.lfFaceName, ( ! HB_ISCHAR( 1 ) ? _s->fontFace : HB_PARSTR( 1, &hText, NULL ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+      HB_STRNCPY( lf.lfFaceName, HB_ISCHAR( 1 ) ? HB_PARSTR( 1, &hText, NULL ) : _s->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
 
       wvg_rethandle( CreateFontIndirect( &lf ) );
@@ -2890,10 +2888,9 @@ HB_FUNC( WVT_DESTROYPICTURE )
 HB_FUNC( WVT_LOADPICTUREEX )
 {
 #if ! defined( HB_OS_WIN_CE )
-   void *     hImage;
-   IPicture * iPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 1, &hImage, NULL ) );
+   void * hImage;
+   wvg_rethandle( hb_wvt_gtLoadPicture( HB_PARSTR( 1, &hImage, NULL ) ) );
    hb_strfree( hImage );
-   wvg_rethandle( iPicture );
 #else
    wvg_rethandle( 0 );
 #endif
@@ -2939,12 +2936,10 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
    void * hResource;
    void * hSection;
 
-   IPicture * iPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 1, &hResource, NULL ), HB_PARSTR( 2, &hSection, NULL ) );
+   wvg_rethandle( hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 1, &hResource, NULL ), HB_PARSTR( 2, &hSection, NULL ) ) );
 
    hb_strfree( hResource );
    hb_strfree( hSection );
-
-   wvg_rethandle( iPicture );
 #else
    wvg_rethandle( 0 );
 #endif
@@ -2982,7 +2977,7 @@ HB_FUNC( WVT_LOADFONT )
          lf.lfHeight         = hb_parnidef( 3, _s->fontHeight );
          lf.lfWidth = hb_parnidef( 4, _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth );
 
-         HB_STRNCPY( lf.lfFaceName, ( HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hF, NULL ) : _s->fontFace ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+         HB_STRNCPY( lf.lfFaceName, HB_ISCHAR( 2 ) ? HB_PARSTR( 2, &hF, NULL ) : _s->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
          hb_strfree( hF );
 
          hFont = CreateFontIndirect( &lf );

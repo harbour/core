@@ -707,7 +707,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
       hb_vmPushEvalSym();
       hb_vmPush( block );
       hb_vmPushNumInt( ( HB_PTRDIFF ) hwnd );
-      hb_vmPushInteger( msg );
+      hb_vmPushNumInt( msg );
       hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
       hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
       hb_vmDo( 4 );
@@ -1031,7 +1031,7 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
          hb_vmPush( pBlock );
       }
       hb_vmPushNumInt( ( HB_PTRDIFF ) hwnd );
-      hb_vmPushInteger( msg );
+      hb_vmPushNumInt( msg );
       hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
       hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
       hb_vmDo( 4 );

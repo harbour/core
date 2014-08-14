@@ -560,7 +560,7 @@ HB_FUNC( WVG_CHOOSECOLOR )
    if( ChooseColor( &cc ) )
       hbwapi_ret_COLORREF( cc.rgbResult );
    else
-      hbwapi_ret_COLORREF( 0 );
+      hbwapi_ret_COLORREF( -1 );
 }
 
 HB_FUNC( WVG_FINDWINDOW )
