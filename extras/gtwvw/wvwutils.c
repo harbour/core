@@ -1679,10 +1679,10 @@ HB_FUNC( WVW_FILLRECTANGLE )
    HBRUSH   hBrush;
    RECT     xyRect;
 
-   int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 0;
+   int iOffTop    = hb_parvni( 9, 1 );
+   int iOffLeft   = hb_parvni( 9, 2 );
+   int iOffBottom = hb_parvni( 9, 3 );
+   int iOffRight  = hb_parvni( 9, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );

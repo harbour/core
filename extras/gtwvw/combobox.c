@@ -136,11 +136,11 @@ HB_FUNC( WVW_CBCREATE )
    }
 
    LongComboWidth = 0;
-   iOffTop        = HB_ISARRAY( 10 ) ? hb_parvni( 10, 1 ) : 0;
-   iOffLeft       = HB_ISARRAY( 10 ) ? hb_parvni( 10, 2 ) : 0;
+   iOffTop        = hb_parvni( 10, 1 );
+   iOffLeft       = hb_parvni( 10, 2 );
 
    iOffBottom = usListLines;
-   iOffRight  = HB_ISARRAY( 10 ) ? hb_parvni( 10, 4 ) : 0;
+   iOffRight  = hb_parvni( 10, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );

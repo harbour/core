@@ -129,10 +129,10 @@ HB_FUNC( WVW_XBCREATE )
       usBottom = usTop + ( USHORT ) hb_parni( 5 ) - 1;
       usRight  = usLeft;
 
-      iOffTop    = HB_ISARRAY( 7 ) ? hb_parvni( 7, 1 ) : 0;
+      iOffTop    = hb_parvni( 7, 1 );
       iOffLeft   = HB_ISARRAY( 7 ) ? hb_parvni( 7, 2 ) : 3;
-      iOffBottom = HB_ISARRAY( 7 ) ? hb_parvni( 7, 3 ) : 0;
-      iOffRight  = HB_ISARRAY( 7 ) ? hb_parvni( 7, 4 ) : 0;
+      iOffBottom = hb_parvni( 7, 3 );
+      iOffRight  = hb_parvni( 7, 4 );
    }
    else
    {
@@ -140,9 +140,9 @@ HB_FUNC( WVW_XBCREATE )
       usBottom = usTop;
 
       iOffTop    = HB_ISARRAY( 7 ) ? hb_parvni( 7, 1 ) : 3 - wvw_win->iLineSpacing;
-      iOffLeft   = HB_ISARRAY( 7 ) ? hb_parvni( 7, 2 ) : 0;
-      iOffBottom = HB_ISARRAY( 7 ) ? hb_parvni( 7, 3 ) : 0;
-      iOffRight  = HB_ISARRAY( 7 ) ? hb_parvni( 7, 4 ) : 0;
+      iOffLeft   = hb_parvni( 7, 2 );
+      iOffBottom = hb_parvni( 7, 3 );
+      iOffRight  = hb_parvni( 7, 4 );
    }
 
    if( hb_gt_wvw_GetMainCoordMode() )

@@ -130,10 +130,10 @@ HB_FUNC( WVW_EBCREATE )
       }
    }
 
-   iOffTop    = HB_ISARRAY( 12 ) ? hb_parvni( 12, 1 ) : 0;
-   iOffLeft   = HB_ISARRAY( 12 ) ? hb_parvni( 12, 2 ) : 0;
-   iOffBottom = HB_ISARRAY( 12 ) ? hb_parvni( 12, 3 ) : 0;
-   iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) : 0;
+   iOffTop    = hb_parvni( 12, 1 );
+   iOffLeft   = hb_parvni( 12, 2 );
+   iOffBottom = hb_parvni( 12, 3 );
+   iOffRight  = hb_parvni( 12, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );

@@ -100,10 +100,10 @@ HB_FUNC( WVW_PGCREATE )
              usBottom = ( USHORT ) hb_parni( 4 ),
              usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = hb_parvni( 6, 1 );
+   int iOffLeft   = hb_parvni( 6, 2 );
+   int iOffBottom = hb_parvni( 6, 3 );
+   int iOffRight  = hb_parvni( 6, 4 );
 
    InitCommonControls();
 

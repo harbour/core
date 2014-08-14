@@ -68,10 +68,10 @@ HB_FUNC( WVW_DRAWBOXGET )
    USHORT usCol = ( USHORT ) hb_parni( 3 );
    USHORT usLen = ( USHORT ) hb_parni( 4 );
 
-   int iOffTop    = HB_ISARRAY( 5 ) ? hb_parvni( 5, 1 ) :  0;
-   int iOffLeft   = HB_ISARRAY( 5 ) ? hb_parvni( 5, 2 ) :  0;
-   int iOffBottom = HB_ISARRAY( 5 ) ? hb_parvni( 5, 3 ) :  0;
-   int iOffRight  = HB_ISARRAY( 5 ) ? hb_parvni( 5, 4 ) :  0;
+   int iOffTop    = hb_parvni( 5, 1 );
+   int iOffLeft   = hb_parvni( 5, 2 );
+   int iOffBottom = hb_parvni( 5, 3 );
+   int iOffRight  = hb_parvni( 5, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usRow, &usCol, NULL, NULL );
@@ -140,10 +140,10 @@ HB_FUNC( WVW_DRAWBOXGET_XP )  /* Not in WVT */
    USHORT usCol = ( USHORT ) hb_parni( 3 );
    USHORT usLen = ( USHORT ) hb_parni( 4 );
 
-   int iOffTop    = HB_ISARRAY( 5 ) ? hb_parvni( 5, 1 ) :  0;
-   int iOffLeft   = HB_ISARRAY( 5 ) ? hb_parvni( 5, 2 ) :  0;
-   int iOffBottom = HB_ISARRAY( 5 ) ? hb_parvni( 5, 3 ) :  0;
-   int iOffRight  = HB_ISARRAY( 5 ) ? hb_parvni( 5, 4 ) :  0;
+   int iOffTop    = hb_parvni( 5, 1 );
+   int iOffLeft   = hb_parvni( 5, 2 );
+   int iOffBottom = hb_parvni( 5, 3 );
+   int iOffRight  = hb_parvni( 5, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usRow, &usCol, NULL, NULL );
@@ -212,19 +212,12 @@ HB_FUNC( WVW_DRAWBOXRAISED )
       iOBottom = -1;
       iORight  = -1;
    }
-   else if( HB_ISARRAY( 6 ) )
+   else
    {
       iOTop    = hb_parvni( 6, 1 ) - 1;
       iOLeft   = hb_parvni( 6, 2 ) - 1;
       iOBottom = hb_parvni( 6, 3 );
       iORight  = hb_parvni( 6, 4 );
-   }
-   else
-   {
-      iOTop    = -1;
-      iOLeft   = -1;
-      iOBottom = 0;
-      iORight  = 0;
    }
 
    xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
@@ -279,19 +272,12 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
       iOBottom = -1;
       iORight  = -1;
    }
-   else if( HB_ISARRAY( 6 ) )
+   else
    {
       iOTop    = hb_parvni( 6, 1 ) - 1;
       iOLeft   = hb_parvni( 6, 2 ) - 1;
       iOBottom = hb_parvni( 6, 3 );
       iORight  = hb_parvni( 6, 4 );
-   }
-   else
-   {
-      iOTop    = -1;
-      iOLeft   = -1;
-      iOBottom = 0;
-      iORight  = 0;
    }
 
    xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
@@ -326,10 +312,10 @@ HB_FUNC( WVW_DRAWBOXGROUP )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = hb_parvni( 6, 1 );
+   int iOffLeft   = hb_parvni( 6, 2 );
+   int iOffBottom = hb_parvni( 6, 3 );
+   int iOffRight  = hb_parvni( 6, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
@@ -489,15 +475,13 @@ HB_FUNC( WVW_DRAWIMAGE )
       iOBottom = -1;
       iORight  = -1;
    }
-   else if( HB_ISARRAY( 7 ) )
+   else
    {
       iOTop    = hb_parvni( 7, 1 );
       iOLeft   = hb_parvni( 7, 2 );
       iOBottom = hb_parvni( 7, 3 );
       iORight  = hb_parvni( 7, 4 );
    }
-   else
-      iOTop = iOLeft = iOBottom = iORight = 0;
 
    xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOTop;
@@ -638,15 +622,13 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
          iOBottom = -1;
          iORight  = -1;
       }
-      else if( HB_ISARRAY( 7 ) )
+      else
       {
          iOTop    = hb_parvni( 7, 1 );
          iOLeft   = hb_parvni( 7, 2 );
          iOBottom = hb_parvni( 7, 3 );
          iORight  = hb_parvni( 7, 4 );
       }
-      else
-         iOTop = iOLeft = iOBottom = iORight = 0;
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOTop;
@@ -844,10 +826,10 @@ HB_FUNC( WVW_DRAWLABELOBJ )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 12 ) ? hb_parvni( 12, 1 ) :  0;
-   int iOffLeft   = HB_ISARRAY( 12 ) ? hb_parvni( 12, 2 ) :  0;
-   int iOffBottom = HB_ISARRAY( 12 ) ? hb_parvni( 12, 3 ) :  0;
-   int iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) :  0;
+   int iOffTop    = hb_parvni( 12, 1 );
+   int iOffLeft   = hb_parvni( 12, 2 );
+   int iOffBottom = hb_parvni( 12, 3 );
+   int iOffRight  = hb_parvni( 12, 4 );
 
    HB_SIZE nLen;
    void *  hText;
@@ -1034,10 +1016,10 @@ HB_FUNC( WVW_DRAWLINE )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 12 ) ? hb_parvni( 12, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 12 ) ? hb_parvni( 12, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 12 ) ? hb_parvni( 12, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 12 ) ? hb_parvni( 12, 4 ) : 0;
+   int iOffTop    = hb_parvni( 12, 1 );
+   int iOffLeft   = hb_parvni( 12, 2 );
+   int iOffBottom = hb_parvni( 12, 3 );
+   int iOffRight  = hb_parvni( 12, 4 );
 
    int      iOrient = hb_parni( 6 );
    int      iFormat = hb_parni( 7 );
@@ -1328,10 +1310,10 @@ HB_FUNC( WVW_DRAWELLIPSE )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = hb_parvni( 6, 1 );
+   int iOffLeft   = hb_parvni( 6, 2 );
+   int iOffBottom = hb_parvni( 6, 3 );
+   int iOffRight  = hb_parvni( 6, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
@@ -1369,10 +1351,10 @@ HB_FUNC( WVW_DRAWRECTANGLE )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = hb_parvni( 6, 1 );
+   int iOffLeft   = hb_parvni( 6, 2 );
+   int iOffBottom = hb_parvni( 6, 3 );
+   int iOffRight  = hb_parvni( 6, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
@@ -1420,10 +1402,10 @@ HB_FUNC( WVW_DRAWROUNDRECT )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = hb_parvni( 6, 1 );
+   int iOffLeft   = hb_parvni( 6, 2 );
+   int iOffBottom = hb_parvni( 6, 3 );
+   int iOffRight  = hb_parvni( 6, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
@@ -1462,10 +1444,10 @@ HB_FUNC( WVW_DRAWFOCUSRECT )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = hb_parvni( 6, 1 );
+   int iOffLeft   = hb_parvni( 6, 2 );
+   int iOffBottom = hb_parvni( 6, 3 );
+   int iOffRight  = hb_parvni( 6, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
@@ -1503,10 +1485,10 @@ HB_FUNC( WVW_DRAWCOLORRECT )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;
+   int iOffTop    = hb_parvni( 6, 1 );
+   int iOffLeft   = hb_parvni( 6, 2 );
+   int iOffBottom = hb_parvni( 6, 3 );
+   int iOffRight  = hb_parvni( 6, 4 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
@@ -1589,10 +1571,10 @@ HB_FUNC( WVW_DRAWGRIDVERT )
    int iCharHeight, iCharWidth;
    int iTabs = hb_parni( 5 );
 
-   int iOffTop    = HB_ISARRAY( 6 ) ? hb_parvni( 6, 1 ) : 0;
-   int iOffLeft   = HB_ISARRAY( 6 ) ? hb_parvni( 6, 2 ) : 0;
-   int iOffBottom = HB_ISARRAY( 6 ) ? hb_parvni( 6, 3 ) : 0;
-   int iOffRight  = HB_ISARRAY( 6 ) ? hb_parvni( 6, 4 ) : 0;  /* is not actually used */
+   int iOffTop    = hb_parvni( 6, 1 );
+   int iOffLeft   = hb_parvni( 6, 2 );
+   int iOffBottom = hb_parvni( 6, 3 );
+   int iOffRight  = hb_parvni( 6, 4 );  /* is not actually used */
 
    USHORT usTop    = ( USHORT ) hb_parni( 2 );
    USHORT usBottom = ( USHORT ) hb_parni( 3 );
@@ -1915,15 +1897,13 @@ HB_FUNC( WVW_DRAWPICTURE )
          iOBottom = -1;
          iORight  = -1;
       }
-      else if( HB_ISARRAY( 7 ) )
+      else
       {
          iOTop    = hb_parvni( 7, 1 );
          iOLeft   = hb_parvni( 7, 2 );
          iOBottom = hb_parvni( 7, 3 );
          iORight  = hb_parvni( 7, 4 );
       }
-      else
-         iOTop = iOLeft = iOBottom = iORight = 0;
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOTop;
