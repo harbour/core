@@ -1463,7 +1463,9 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
    if( iPicture )
    {
-      LONG  lWidth, lHeight;
+      OLE_XSIZE_HIMETRIC lWidth;
+      OLE_YSIZE_HIMETRIC lHeight;
+
       int   xe, ye, x, y, wd, ht;
       HRGN  hrgn1;
       POINT lpp = { 0, 0 };

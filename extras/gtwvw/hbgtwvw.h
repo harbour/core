@@ -542,7 +542,7 @@ extern int        hb_gt_wvw_ButtonCreate( int nWin, USHORT usTop, USHORT usLeft,
                                           int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
                                           double dStretch, HB_BOOL bMap3Dcolors,
                                           int iStyle );
-extern LONG       hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f );
+extern long       hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f );
 extern HFONT      hb_gt_wvw_GetFont( const TCHAR * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage );
 extern int        hb_gt_wvw_GetMouseX( WVW_WIN * wvw_win );
 extern int        hb_gt_wvw_GetMouseY( WVW_WIN * wvw_win );

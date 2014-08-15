@@ -102,9 +102,6 @@ HB_FUNC( WVW_CBCREATE )
    {
       HWND hWndParent = wvw_win->hWnd;
       HWND hWnd;
-      LONG numofchars;
-      LONG avgwidth;
-      LONG LongComboWidth, NewLongComboWidth;
 
       HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
 
@@ -137,9 +134,8 @@ HB_FUNC( WVW_CBCREATE )
          }
       }
 
-      LongComboWidth = 0;
-      iOffTop        = hb_parvni( 10, 1 );
-      iOffLeft       = hb_parvni( 10, 2 );
+      iOffTop  = hb_parvni( 10, 1 );
+      iOffLeft = hb_parvni( 10, 2 );
 
       iOffBottom = usListLines;
       iOffRight  = hb_parvni( 10, 4 );
@@ -182,6 +178,8 @@ HB_FUNC( WVW_CBCREATE )
 
       if( hWnd )
       {
+         long LongComboWidth = 0, NewLongComboWidth;
+
          RECT    rXB, rOffXB;
          WNDPROC OldProc;
          USHORT  i;
@@ -207,7 +205,7 @@ HB_FUNC( WVW_CBCREATE )
                }
                else
                {
-                  numofchars = ( int ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
+                  long numofchars = ( int ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
                   if( numofchars > LongComboWidth )
                      LongComboWidth = numofchars;
                }
@@ -219,8 +217,7 @@ HB_FUNC( WVW_CBCREATE )
          SendMessage( hWnd, CB_SETCURSEL, 0, 0 );
          SendMessage( hWnd, CB_SETEXTENDEDUI, ( WPARAM ) TRUE, 0 );
 
-         avgwidth = hb_gt_wvw_GetFontDialogUnits( hWndParent, hFont );
-         NewLongComboWidth = ( LongComboWidth - 2 ) * avgwidth;
+         NewLongComboWidth = ( LongComboWidth - 2 ) * hb_gt_wvw_GetFontDialogUnits( hWndParent, hFont );
          SendMessage( hWnd, CB_SETDROPPEDWIDTH, ( WPARAM ) NewLongComboWidth + 100 /* LongComboWidth + 100 */, 0 );
 
          rXB.top    = usTop;

@@ -207,7 +207,9 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
    {
       if( iPicture )
       {
-         LONG  lWidth, lHeight;
+         OLE_XSIZE_HIMETRIC lWidth;
+         OLE_YSIZE_HIMETRIC lHeight;
+
          int   xe, ye;
          HRGN  hrgn1;
          POINT lpp = { 0, 0 };
@@ -547,7 +549,9 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
                if( iPicture )
                {
-                  LONG  lWidth, lHeight;
+                  OLE_XSIZE_HIMETRIC lWidth;
+                  OLE_YSIZE_HIMETRIC lHeight;
+
                   int   xe, ye;
                   HRGN  hrgn1;
                   POINT lpp = { 0, 0 };
@@ -2129,7 +2133,7 @@ HB_FUNC( WVT_DRAWBUTTON )
             xy.y = xy.y + 2;
          }
 
-         iAlign = TA_CENTER + TA_TOP;
+         iAlign = TA_CENTER | TA_TOP;
 
          SetTextAlign( _s->hdc, iAlign );
          SetBkMode( _s->hdc, TRANSPARENT );

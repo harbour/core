@@ -2307,12 +2307,7 @@ HB_FUNC( WVW_SETONTOP )
 
       GetWindowRect( wvw_win->hWnd, &rc );
 
-      hb_retl( SetWindowPos( wvw_win->hWnd, HWND_TOPMOST,
-                             rc.left,
-                             rc.top,
-                             0,
-                             0,
-                             SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
+      hb_retl( SetWindowPos( wvw_win->hWnd, HWND_TOPMOST, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
    }
    else
       hb_retl( HB_FALSE );
@@ -2330,12 +2325,7 @@ HB_FUNC( WVW_SETASNORMAL )
 
       GetWindowRect( wvw_win->hWnd, &rc );
 
-      hb_retl( SetWindowPos( wvw_win->hWnd, HWND_NOTOPMOST,
-                             rc.left,
-                             rc.top,
-                             0,
-                             0,
-                             SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
+      hb_retl( SetWindowPos( wvw_win->hWnd, HWND_NOTOPMOST, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
    }
    else
       hb_retl( HB_FALSE );

@@ -1843,7 +1843,7 @@ HB_FUNC( WVW_DRAWBUTTON )
             xy.y += 2;
          }
 
-         iAlign = TA_CENTER + TA_TOP;
+         iAlign = TA_CENTER | TA_TOP;
 
          oldTextAlign = SetTextAlign( wvw_win->hdc, iAlign );
          oldBkMode    = SetBkMode( wvw_win->hdc, TRANSPARENT );
