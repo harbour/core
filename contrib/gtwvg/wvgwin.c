@@ -62,15 +62,9 @@
 
 #include <windowsx.h>
 
-#if ! defined( GCLP_HBRBACKGROUND )
-   #define GCLP_HBRBACKGROUND     -10
+#if ! defined( CB_GETCOMBOBOXINFO ) && ! defined( HB_OS_WIN_CE )
+   #define CB_GETCOMBOBOXINFO  0x0164
 #endif
-
-#if ! defined( CB_GETCOMBOBOXINFO )
-   #define CB_GETCOMBOBOXINFO     0x0164
-#endif
-
-#define WIN_STATUSBAR_MAX_PARTS  256
 
 static HINSTANCE wvg_hInstance( void )
 {
@@ -1237,9 +1231,9 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       case CB_FINDSTRINGEXACT:
          hb_retnint( SendMessage( hCB, CB_FINDSTRINGEXACT, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
          break;
+#if defined( CB_GETCOMBOBOXINFO )
       case CB_GETCOMBOBOXINFO:
       {
-#if ! defined( HB_OS_WIN_CE )
          COMBOBOXINFO cbi;
 
          memset( &cbi, 0, sizeof( cbi ) );
@@ -1274,9 +1268,9 @@ HB_FUNC( WVG_SENDCBMESSAGE )
             hb_itemRelease( pRc1 );
             hb_itemRelease( pRc2 );
          }
-#endif
          break;
       }
+#endif
       case CB_GETCOUNT:
          hb_retnint( SendMessage( hCB, CB_GETCOUNT, 0, 0 ) );
          break;

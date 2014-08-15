@@ -82,98 +82,103 @@
 
 HB_FUNC( WVW_PGCREATE )
 {
-   HINSTANCE hInstance;
-   HB_UINT   nWin       = WVW_WHICH_WINDOW;
-   WVW_WIN * wvw_win    = hb_gt_wvw_GetWindowsData( nWin );
-   HWND      hWndParent = wvw_win->hWnd;
-   HWND      hWnd;
-   POINT     xy;
-   int       iTop, iLeft, iBottom, iRight;
-   int       iStyle     = 0;
-   HB_BOOL   bBackColor = HB_ISNUM( 7 );
-   HB_BOOL   bBarColor  = HB_ISNUM( 8 );
-   HB_BOOL   bSmooth    = hb_parl( 9 );
-   HB_BOOL   bVertical  = hb_parl( 10 );
-   HB_UINT   nCtrlId;
-   USHORT    usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+   int       nWin    = hb_gt_wvw_nWin();
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   int iOffTop    = hb_parvni( 6, 1 );
-   int iOffLeft   = hb_parvni( 6, 2 );
-   int iOffBottom = hb_parvni( 6, 3 );
-   int iOffRight  = hb_parvni( 6, 4 );
-
-   InitCommonControls();
-
-   if( hb_gt_wvw_GetMainCoordMode() )
-      hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
-
-   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
-   iTop  = xy.y + iOffTop;
-   iLeft = xy.x + iOffLeft;
-
-   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
-   xy.y   -= wvw_win->iLineSpacing;
-   iBottom = xy.y - 1 + iOffBottom;
-   iRight  = xy.x - 1 + iOffRight;
-
-   nCtrlId = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_PROGRESSBAR );
-   if( nCtrlId == 0 )
-      nCtrlId = WVW_ID_BASE_PROGRESSBAR;
-   else
-      nCtrlId++;
-
-   if( bVertical )
-      iStyle |= PBS_VERTICAL;
-   if( bSmooth )
-      iStyle |= PBS_SMOOTH;
-
-   hb_winmainArgGet( &hInstance, NULL, NULL );
-
-   hWnd = CreateWindowEx(
-      0,
-      PROGRESS_CLASS,
-      NULL,
-      WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
-      iLeft,
-      iTop,
-      iRight - iLeft + 1,
-      iBottom - iTop + 1,
-      hWndParent,
-      ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
-      hInstance,
-      NULL );
-
-   if( hWnd )
+   if( wvw_win )
    {
-      RECT rXB, rOffXB;
+      HINSTANCE hInstance;
+      HWND      hWndParent = wvw_win->hWnd;
+      HWND      hWnd;
+      POINT     xy;
+      int       iTop, iLeft, iBottom, iRight;
+      int       iStyle     = 0;
+      HB_BOOL   bBackColor = HB_ISNUM( 7 );
+      HB_BOOL   bBarColor  = HB_ISNUM( 8 );
+      HB_BOOL   bSmooth    = hb_parl( 9 );
+      HB_BOOL   bVertical  = hb_parl( 10 );
+      int       nCtrlId;
+      USHORT    usTop    = ( USHORT ) hb_parni( 2 ),
+                usLeft   = ( USHORT ) hb_parni( 3 ),
+                usBottom = ( USHORT ) hb_parni( 4 ),
+                usRight  = ( USHORT ) hb_parni( 5 );
 
-      if( bBackColor )
-         SendMessage( hWnd, PBM_SETBKCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 7 ) );
-      if( bBarColor )
-         SendMessage( hWnd, PBM_SETBARCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 8 ) );
+      int iOffTop    = hb_parvni( 6, 1 );
+      int iOffLeft   = hb_parvni( 6, 2 );
+      int iOffBottom = hb_parvni( 6, 3 );
+      int iOffRight  = hb_parvni( 6, 4 );
 
-      SendMessage( hWnd, PBM_SETRANGE, 0, MAKELPARAM( 0, 100 ) );
-      SendMessage( hWnd, PBM_SETPOS, 0, 0 );
+      InitCommonControls();
 
-      rXB.top    = usTop;
-      rXB.left   = usLeft;
-      rXB.bottom = usBottom;
-      rXB.right  = usRight;
+      if( hb_gt_wvw_GetMainCoordMode() )
+         hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
 
-      rOffXB.top    = iOffTop;
-      rOffXB.left   = iOffLeft;
-      rOffXB.bottom = iOffBottom;
-      rOffXB.right  = iOffRight;
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      iTop  = xy.y + iOffTop;
+      iLeft = xy.x + iOffLeft;
 
-      hb_gt_wvw_AddControlHandle( nWin, WVW_CONTROL_PROGRESSBAR, hWnd, nCtrlId, NULL, rXB, rOffXB, ( HB_BYTE ) iStyle );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy.y   -= wvw_win->iLineSpacing;
+      iBottom = xy.y - 1 + iOffBottom;
+      iRight  = xy.x - 1 + iOffRight;
 
-      hb_retnl( nCtrlId );
+      nCtrlId = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_PROGRESSBAR );
+      if( nCtrlId == 0 )
+         nCtrlId = WVW_ID_BASE_PROGRESSBAR;
+      else
+         nCtrlId++;
+
+      if( bVertical )
+         iStyle |= PBS_VERTICAL;
+      if( bSmooth )
+         iStyle |= PBS_SMOOTH;
+
+      hb_winmainArgGet( &hInstance, NULL, NULL );
+
+      hWnd = CreateWindowEx(
+         0,
+         PROGRESS_CLASS,
+         NULL,
+         WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
+         iLeft,
+         iTop,
+         iRight - iLeft + 1,
+         iBottom - iTop + 1,
+         hWndParent,
+         ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
+         hInstance,
+         NULL );
+
+      if( hWnd )
+      {
+         RECT rXB, rOffXB;
+
+         if( bBackColor )
+            SendMessage( hWnd, PBM_SETBKCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 7 ) );
+         if( bBarColor )
+            SendMessage( hWnd, PBM_SETBARCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 8 ) );
+
+         SendMessage( hWnd, PBM_SETRANGE, 0, MAKELPARAM( 0, 100 ) );
+         SendMessage( hWnd, PBM_SETPOS, 0, 0 );
+
+         rXB.top    = usTop;
+         rXB.left   = usLeft;
+         rXB.bottom = usBottom;
+         rXB.right  = usRight;
+
+         rOffXB.top    = iOffTop;
+         rOffXB.left   = iOffLeft;
+         rOffXB.bottom = iOffBottom;
+         rOffXB.right  = iOffRight;
+
+         hb_gt_wvw_AddControlHandle( nWin, WVW_CONTROL_PROGRESSBAR, hWnd, nCtrlId, NULL, rXB, rOffXB, ( HB_BYTE ) iStyle );
+
+         hb_retnl( nCtrlId );
+         return;
+      }
    }
-   else
-      hb_retnl( 0 );
+
+   hb_retnl( 0 );
 }
 
 /* wvw_pgDestroy( [nWinNum], nPGid )
@@ -182,33 +187,37 @@ HB_FUNC( WVW_PGCREATE )
  */
 HB_FUNC( WVW_PGDESTROY )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HB_UINT    nCtrlId = ( HB_UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd     = wvw_win->pcdList;
-   WVW_CTRL * pcdPrev = NULL;
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   while( pcd )
+   if( wvw_win )
    {
-      if( pcd->nClass == WVW_CONTROL_PROGRESSBAR && pcd->nId == nCtrlId )
-         break;
+      int        nCtrlId = hb_parni( 2 );
+      WVW_CTRL * pcd     = wvw_win->pcdList;
+      WVW_CTRL * pcdPrev = NULL;
 
-      pcdPrev = pcd;
-      pcd     = pcd->pNext;
-   }
+      while( pcd )
+      {
+         if( pcd->nClass == WVW_CONTROL_PROGRESSBAR && pcd->nId == nCtrlId )
+            break;
 
-   if( pcd )
-   {
-      DestroyWindow( pcd->hWnd );
+         pcdPrev = pcd;
+         pcd     = pcd->pNext;
+      }
 
-      if( pcdPrev )
-         pcdPrev->pNext = pcd->pNext;
-      else
-         wvw_win->pcdList = pcd->pNext;
+      if( pcd )
+      {
+         DestroyWindow( pcd->hWnd );
 
-      if( pcd->pBlock )
-         hb_itemRelease( pcd->pBlock );
+         if( pcdPrev )
+            pcdPrev->pNext = pcd->pNext;
+         else
+            wvw_win->pcdList = pcd->pNext;
 
-      hb_xfree( pcd );
+         if( pcd->pBlock )
+            hb_itemRelease( pcd->pBlock );
+
+         hb_xfree( pcd );
+      }
    }
 }
 
@@ -223,7 +232,7 @@ HB_FUNC( WVW_PGDESTROY )
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
    int  iMin = hb_parni( 3 );
    int  iMax = hb_parni( 4 );
 
@@ -245,7 +254,7 @@ HB_FUNC( WVW_PGSETRANGE )
  */
 HB_FUNC( WVW_PGSETPOS )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
 
    if( hWnd )
    {
@@ -273,7 +282,7 @@ HB_FUNC( WVW_PGSETPOS )
  */
 HB_FUNC( WVW_PGGETPOS )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PROGRESSBAR, ( HB_UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
 
    if( hWnd )
       hb_retni( ( int ) SendMessage( hWnd, PBM_GETPOS, 0, 0 ) );

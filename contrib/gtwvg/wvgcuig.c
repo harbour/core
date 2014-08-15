@@ -427,15 +427,15 @@ static void hb_wvg_BoxGet( PHB_GTWVT pWVT, int iLeft, int iTop, int iRight, int 
 
    SelectObject( hdc, pGUI->penBlack );
    MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );   /* Top Inner   */
-   LineTo(   hdc, iRight - 1, iTop - 1       );
+   LineTo(   hdc, iRight - 1, iTop - 1 );
    MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );   /* Left  Inner */
-   LineTo(   hdc, iLeft - 1, iBottom - 1    );
+   LineTo(   hdc, iLeft - 1, iBottom - 1 );
 
    SelectObject( hdc, pGUI->penDarkGray );
    MoveToEx( hdc, iLeft - 2, iTop - 2, NULL );   /* Top Outer   */
-   LineTo(   hdc, iRight, iTop - 2       );
+   LineTo(   hdc, iRight, iTop - 2 );
    MoveToEx( hdc, iLeft - 2, iTop - 2, NULL );   /* Left Outer  */
-   LineTo(   hdc, iLeft - 2, iBottom      );
+   LineTo(   hdc, iLeft - 2, iBottom );
 }
 
 /* Wvg_BoxGroup( nTop, nLeft, nBottom, nRight, aPxlOff ) -> NIL */

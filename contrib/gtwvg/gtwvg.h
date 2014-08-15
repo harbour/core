@@ -45,8 +45,8 @@
  *
  */
 
-#ifndef HB_WVT_H_
-#define HB_WVT_H_
+#ifndef HB_WVG_H_
+#define HB_WVG_H_
 
 #define HB_GT_NAME  WVG
 
@@ -215,19 +215,19 @@ HB_EXTERN_BEGIN
 
 /* - */
 
-typedef BOOL ( WINAPI * wvtGradientFill )     (
+typedef BOOL ( WINAPI * wvtGradientFill )(
                       HDC        hdc,
                       PTRIVERTEX pVertex,
                       ULONG      dwNumVertex,
                       PVOID      pMesh,
                       ULONG      dwNumMesh,
-                      ULONG      dwMode      );
+                      ULONG      dwMode );
 
 typedef BOOL ( WINAPI * wvtSetLayeredWindowAttributes )(
                       HWND       hwnd,
                       COLORREF   crKey,
                       BYTE       bAlpha,
-                      DWORD      dwFlags     );
+                      DWORD      dwFlags );
 
 /* - */
 
@@ -296,24 +296,24 @@ typedef struct
 
 typedef struct
 {
-   HPEN      penWhite;                      /* White pen to draw GDI elements                                             */
-   HPEN      penBlack;                      /* Black pen to draw GDI elements                                             */
-   HPEN      penWhiteDim;                   /* White dim pen to draw GDI elements                                         */
-   HPEN      penDarkGray;                   /* Dark gray pen to draw GDI elements                                         */
-   HPEN      penGray;                       /* Gray pen equivilant to Clipper White                                       */
-   HPEN      penNull;                       /* Null pen                                                                   */
-   HBRUSH    diagonalBrush;                 /* Handle to diaoganl brush to draw scrollbars                                */
-   HBRUSH    solidBrush;                    /* Handle to solid brush                                                      */
-   HBRUSH    whiteBrush;                    /* Wvt specific White colored brush                                           */
+   HPEN      penWhite;                      /* White pen to draw GDI elements */
+   HPEN      penBlack;                      /* Black pen to draw GDI elements */
+   HPEN      penWhiteDim;                   /* White dim pen to draw GDI elements */
+   HPEN      penDarkGray;                   /* Dark gray pen to draw GDI elements */
+   HPEN      penGray;                       /* Gray pen equivilant to Clipper White */
+   HPEN      penNull;                       /* Null pen */
+   HBRUSH    diagonalBrush;                 /* Handle to diaoganl brush to draw scrollbars */
+   HBRUSH    solidBrush;                    /* Handle to solid brush */
+   HBRUSH    whiteBrush;                    /* Wvt specific White colored brush */
 #if ! defined( HB_OS_WIN_CE )
    IPicture * iPicture[ 50 ];               /* Array to hold the Picture Streams to avoid recurring loading and unloading */
 #endif
-   HFONT     hUserFonts[ 50 ];              /* User defined font handles                                                  */
-   HPEN      hUserPens[ 50 ];               /* User defined pens                                                          */
-   HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll                                   */
-   wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll             */
-   HINSTANCE hUser32;                       /* Handle to the loaded library user32.dll                                    */
-   wvtSetLayeredWindowAttributes pfnLayered;/* Pointer to set Windows attribute - transparency.                           */
+   HFONT     hUserFonts[ 50 ];              /* User defined font handles */
+   HPEN      hUserPens[ 50 ];               /* User defined pens */
+   HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll */
+   wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll */
+   HINSTANCE hUser32;                       /* Handle to the loaded library user32.dll */
+   wvtSetLayeredWindowAttributes pfnLayered;/* Pointer to set Windows attribute - transparency. */
 
 } HB_GUIDATA, * PHB_GUIDATA;
 
@@ -396,21 +396,21 @@ typedef struct
    RECT     sRectNew;
    RECT     sRectOld;
 
-   /*          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            */
+   /*          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed> */
 
-   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()*/
-   int       rowStop;                       /* Holds nBottom of last WM_PAINT rectangle                               */
-   int       colStart;                      /* Holds nLeft   of last WM_PAINT rectangle                               */
-   int       colStop;                       /* Holds nRight  of last WM_PAINT rectangle                               */
+   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect() */
+   int       rowStop;                       /* Holds nBottom of last WM_PAINT rectangle */
+   int       colStart;                      /* Holds nLeft   of last WM_PAINT rectangle */
+   int       colStop;                       /* Holds nRight  of last WM_PAINT rectangle */
 
-   int       iFactor;                       /* Transparency factor 0~255                                              */
+   int       iFactor;                       /* Transparency factor 0~255 */
 
-   HDC       hdc;                           /* Handle to Windows Device Context                                       */
+   HDC       hdc;                           /* Handle to Windows Device Context */
 
-   int       LastMenuEvent;                 /* Last menu item selected                                                */
-   int       MenuKeyEvent;                  /* User definable event number for windows menu command                   */
-   HB_BOOL   InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx()                   */
-   HB_BOOL   EnableShortCuts;               /* Determines whether ALT key enables menu or system menu                 */
+   int       LastMenuEvent;                 /* Last menu item selected */
+   int       MenuKeyEvent;                  /* User definable event number for windows menu command */
+   HB_BOOL   InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx() */
+   HB_BOOL   EnableShortCuts;               /* Determines whether ALT key enables menu or system menu */
 
    HB_BOOL   bGui;
    HDC       hGuiDC;
@@ -423,76 +423,50 @@ typedef struct
    HB_BOOL   bSetFocus;
    HB_BOOL   bKillFocus;
 
-   PHB_DYNS  pSymWVT_PAINT;                 /* Stores pointer to WVT_PAINT function                      */
-   PHB_DYNS  pSymWVT_SETFOCUS;              /* Stores pointer to WVT_SETFOCUS function                   */
-   PHB_DYNS  pSymWVT_KILLFOCUS;             /* Stores pointer to WVT_KILLFOCUS function                  */
-   PHB_DYNS  pSymWVT_MOUSE;                 /* Stores pointer to WVT_MOUSE function                      */
-   PHB_DYNS  pSymWVT_TIMER;                 /* Stores pointer to WVT_TIMER function                      */
+   PHB_DYNS  pSymWVT_PAINT;                 /* Stores pointer to WVT_PAINT function */
+   PHB_DYNS  pSymWVT_SETFOCUS;              /* Stores pointer to WVT_SETFOCUS function */
+   PHB_DYNS  pSymWVT_KILLFOCUS;             /* Stores pointer to WVT_KILLFOCUS function */
+   PHB_DYNS  pSymWVT_MOUSE;                 /* Stores pointer to WVT_MOUSE function */
+   PHB_DYNS  pSymWVT_TIMER;                 /* Stores pointer to WVT_TIMER function */
    PHB_DYNS  pSymWVT_KEY;
 
-   HPEN      currentPen;                    /* Handle to current pen settable at runtime                 */
-   HBRUSH    currentBrush;                  /* Handle to current brush settable by runtime               */
+   HPEN      currentPen;                    /* Handle to current pen settable at runtime */
+   HBRUSH    currentBrush;                  /* Handle to current brush settable by runtime */
 
-   PHB_GUIDATA  pGUI;                       /* GUI Data Structure                                        */
+   PHB_GUIDATA  pGUI;                       /* GUI Data Structure */
 
 
-   HMENU     hPopup;                        /* Handle of context menu invokable with right click         */
-   HWND      hWndTT;                        /* Handle to hold tooltip information                        */
-   HB_BOOL   bToolTipActive;                /* Flag to set whether tooltip is active or not              */
+   HMENU     hPopup;                        /* Handle of context menu invokable with right click */
+   HWND      hWndTT;                        /* Handle to hold tooltip information */
+   HB_BOOL   bToolTipActive;                /* Flag to set whether tooltip is active or not */
 
-   HWND      hDlgModeless[ WVT_DLGML_MAX ]; /* Handle to a modeless dialog                               */
-   PHB_ITEM  pFunc[ WVT_DLGML_MAX ];        /* Function pointer for WndProc                              */
+   HWND      hDlgModeless[ WVT_DLGML_MAX ]; /* Handle to a modeless dialog */
+   PHB_ITEM  pFunc[ WVT_DLGML_MAX ];        /* Function pointer for WndProc */
    /* TODO: pcbFunc is redundant and should be removed */
-   PHB_ITEM  pcbFunc[ WVT_DLGML_MAX ];      /*codeblock for WndProc                                      */
+   PHB_ITEM  pcbFunc[ WVT_DLGML_MAX ];      /*codeblock for WndProc */
    int       iType[ WVT_DLGML_MAX ];        /* Type of Function Pointers - Function 1, Block 2, Method 3 */
-   HWND      hDlgModal[ WVT_DLGMD_MAX ];    /* Handle to a modeless dialog                               */
-   PHB_ITEM  pFuncModal[ WVT_DLGMD_MAX ];   /* Function pointer for WndProc                              */
+   HWND      hDlgModal[ WVT_DLGMD_MAX ];    /* Handle to a modeless dialog */
+   PHB_ITEM  pFuncModal[ WVT_DLGMD_MAX ];   /* Function pointer for WndProc */
    /* TODO: pcbFuncModal is redundant and should be removed */
-   PHB_ITEM  pcbFuncModal[ WVT_DLGMD_MAX ]; /* codeblock for WndProc                                     */
+   PHB_ITEM  pcbFuncModal[ WVT_DLGMD_MAX ]; /* codeblock for WndProc */
    int       iTypeModal[ WVT_DLGMD_MAX ];   /* Type of Function Pointers - Function 1, Block 2, Method 3 */
 
-   PHB_GT_PARAMS  pPP;                      /* Presentation Parameters                                   */
+   PHB_GT_PARAMS  pPP;                      /* Presentation Parameters */
 
-   HB_BOOL   bDeferPaint;                   /* To create pure Windows dialogs                            */
-   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area      */
+   HB_BOOL   bDeferPaint;                   /* To create pure Windows dialogs */
+   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area */
 
-   HB_BOOL   bResizing;                     /* To know when it is in resizing mode                       */
+   HB_BOOL   bResizing;                     /* To know when it is in resizing mode */
 
-   PHB_GOBJS gObjs;                         /* Graphic Objects                                           */
+   PHB_GOBJS gObjs;                         /* Graphic Objects */
 
-   HWND      hWndParent;                    /* Parent Window Handle, if any                              */
+   HWND      hWndParent;                    /* Parent Window Handle, if any */
 
-   PHB_ITEM  pNotifierGUI;                  /* Notifier to Wvg*Parts if embedded into a GT Window        */
+   PHB_ITEM  pNotifierGUI;                  /* Notifier to Wvg*Parts if embedded into a GT Window */
 
-   HB_THREAD_NO threadNO;                   /* Will hold the current THREAD No                           */
+   HB_THREAD_NO threadNO;                   /* Will hold the current THREAD No */
 
 } HB_GTWVT, * PHB_GTWVT;
-
-/* - */
-
-#ifndef INVALID_FILE_SIZE
-   #define INVALID_FILE_SIZE ( DWORD ) 0xFFFFFFFF
-#endif
-
-#ifndef CC_ANYCOLOR
-   #define CC_ANYCOLOR 0x00000100
-#endif
-
-#ifndef IDC_HAND
-   #define IDC_HAND MAKEINTRESOURCE( 32649 )
-#endif
-
-#ifndef GRADIENT_FILL_RECT_H
-   #define GRADIENT_FILL_RECT_H 0x00
-#endif
-
-#ifndef GCLP_HCURSOR
-   #define GCLP_HCURSOR ( -12 )
-#endif
-
-#ifndef TVIS_EXPANDPARTIAL
-   #define TVIS_EXPANDPARTIAL 0x0080
-#endif
 
 /* - */
 
@@ -526,18 +500,44 @@ typedef enum
 
 /* xHarbour compatible definitions */
 #if ! defined( K_SH_LEFT )
-#define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left  */
-#define K_SH_UP             K_UP     /* Shift-Up    == Up    */
+#define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left */
+#define K_SH_UP             K_UP     /* Shift-Up    == Up */
 #define K_SH_RIGHT          K_RIGHT  /* Shift-Right == Right */
-#define K_SH_DOWN           K_DOWN   /* Shift-Down  == Down  */
-#define K_SH_INS            K_INS    /* Shift-Ins   == Ins   */
-#define K_SH_DEL            K_DEL    /* Shift-Del   == Del   */
-#define K_SH_HOME           K_HOME   /* Shift-Home  == Home  */
-#define K_SH_END            K_END    /* Shift-End   == End   */
-#define K_SH_PGUP           K_PGUP   /* Shift-PgUp  == PgUp  */
-#define K_SH_PGDN           K_PGDN   /* Shift-PgDn  == PgDn  */
+#define K_SH_DOWN           K_DOWN   /* Shift-Down  == Down */
+#define K_SH_INS            K_INS    /* Shift-Ins   == Ins */
+#define K_SH_DEL            K_DEL    /* Shift-Del   == Del */
+#define K_SH_HOME           K_HOME   /* Shift-Home  == Home */
+#define K_SH_END            K_END    /* Shift-End   == End */
+#define K_SH_PGUP           K_PGUP   /* Shift-PgUp  == PgUp */
+#define K_SH_PGDN           K_PGDN   /* Shift-PgDn  == PgDn */
 #define K_SH_RETURN         K_RETURN /* Shift-Enter == Enter */
 #define K_SH_ENTER          K_ENTER  /* Shift-Enter == Enter */
+#endif
+
+/* - */
+
+#ifndef INVALID_FILE_SIZE
+#define INVALID_FILE_SIZE  ( DWORD ) 0xFFFFFFFF
+#endif
+
+#ifndef CC_ANYCOLOR
+#define CC_ANYCOLOR  0x00000100
+#endif
+
+#ifndef IDC_HAND
+#define IDC_HAND  MAKEINTRESOURCE( 32649 )
+#endif
+
+#ifndef GRADIENT_FILL_RECT_H
+#define GRADIENT_FILL_RECT_H  0x00
+#endif
+
+#ifndef GCLP_HCURSOR
+#define GCLP_HCURSOR  ( -12 )
+#endif
+
+#ifndef TVIS_EXPANDPARTIAL
+#define TVIS_EXPANDPARTIAL  0x0080
 #endif
 
 #ifndef WM_MOUSEWHEEL
@@ -551,13 +551,15 @@ typedef enum
 #endif
 
 #ifndef SWP_DEFERERASE
-#define SWP_DEFERERASE 0x2000
+#define SWP_DEFERERASE  0x2000
 #endif
+
 #ifndef SW_NORMAL
-#define SW_NORMAL 1
+#define SW_NORMAL  1
 #endif
+
 #ifndef SC_MAXIMIZE
-#define SC_MAXIMIZE 0xF030
+#define SC_MAXIMIZE  0xF030
 #endif
 
 #if defined( HB_OS_WIN_CE ) && ! defined( __MINGW32CE__ )
@@ -607,4 +609,4 @@ HB_EXTERN_END
 #define wvg_parhandle( n )    ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_rethandle( n )    hb_retnint( ( HB_PTRDIFF ) n )
 
-#endif /* HB_WVT_H_ */
+#endif /* HB_WVG_H_ */

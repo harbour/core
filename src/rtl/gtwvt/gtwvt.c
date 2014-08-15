@@ -2042,8 +2042,8 @@ static HB_BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
       pWVT->COLS = iCols;
       return HB_TRUE;
    }
-
-   return HB_FALSE;
+   else
+      return HB_FALSE;
 }
 
 static HB_BOOL hb_gt_wvt_InitWindow( PHB_GTWVT pWVT, int iRow, int iCol, HFONT hFont )
@@ -2114,7 +2114,8 @@ static HB_BOOL hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
       pWVT->MousePos.x = iCol;
       return HB_TRUE;
    }
-   return HB_FALSE;
+   else
+      return HB_FALSE;
 }
 
 static int hb_gt_wvt_GetKeyFlags( void )

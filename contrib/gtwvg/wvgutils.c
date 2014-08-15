@@ -58,7 +58,7 @@
 #include "hbwapi.h"
 #include "gtwvg.h"
 
-/* workaround for missing declaration in MinGW32 */
+/* workaround for missing declaration in MinGW */
 #if ! defined( TTM_SETTITLE ) && defined( TTM_SETTITLEA )
    #define TTM_SETTITLE  TTM_SETTITLEA
 #endif
@@ -69,7 +69,7 @@
  */
 #undef ChooseColor
 BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
-#endif /* __MINGW32CE__ */
+#endif
 
 static HINSTANCE wvg_hInstance( void )
 {

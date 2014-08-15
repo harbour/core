@@ -75,18 +75,19 @@ void hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE *
 
    for( j = 0, irow = top; irow <= bottom; irow++ )
    {
-      for( icol = left; icol <= right; icol++ )
+      for( icol = left; icol <= right; icol++, j++ )
       {
          int       iColor;
          HB_BYTE   bAttr;
          HB_USHORT usChar;
 
-         if( hb_gtGetScrChar( irow, icol, &iColor, &bAttr, &usChar ) == HB_FAILURE )
-            break;
-
-         sBuffer[ j ] = ( HB_BYTE ) usChar;
-         sAttrib[ j ] = ( HB_BYTE ) iColor;
-         j++;
+         if( hb_gtGetScrChar( irow, icol, &iColor, &bAttr, &usChar ) == HB_SUCCESS )
+         {
+            sBuffer[ j ] = ( HB_BYTE ) usChar;
+            sAttrib[ j ] = ( HB_BYTE ) iColor;
+         }
+         else
+            sBuffer[ j ] = sAttrib[ j ] = 0;
       }
    }
 }
@@ -100,12 +101,8 @@ void hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE *
    hb_gtBeginWrite();
    for( j = 0, irow = top; irow <= bottom; irow++ )
    {
-      for( icol = left; icol <= right; icol++ )
-      {
-         if( hb_gtPutScrChar( irow, icol, sAttrib[ j ], 0, sBuffer[ j ] ) == HB_FAILURE )
-            break;
-         j++;
-      }
+      for( icol = left; icol <= right; icol++, j++ )
+         hb_gtPutScrChar( irow, icol, sAttrib[ j ], 0, sBuffer[ j ] );
    }
    hb_gtEndWrite();
 }
@@ -134,7 +131,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 
          if( data )
          {
-            LONG    nFileSize = ( LONG ) SizeofResource( GetModuleHandle( NULL ), res );
+            DWORD   nFileSize = SizeofResource( GetModuleHandle( NULL ), res );
             HGLOBAL hGlobal   = GlobalAlloc( GMEM_MOVEABLE, nFileSize );
 
             if( hGlobal )
@@ -167,7 +164,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 
 IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
 {
-   LPVOID    iPicture = NULL;
+   LPVOID iPicture = NULL;
 
    HANDLE hFile = CreateFile( image, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 
@@ -271,19 +268,17 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
 
 HB_BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
 {
-   HB_BOOL bResult = HB_FALSE;
-
    if( iPicture )
    {
       HB_VTBL( iPicture )->Release( HB_THIS( iPicture ) );
-      bResult = HB_TRUE;
+      return HB_TRUE;
    }
-
-   return bResult;
+   else
+      return HB_FALSE;
 }
 #endif /* #if ! defined( HB_OS_WIN_CE ) */
 
-POINT  hb_wvt_gtGetXYFromColRow( int col, int row )
+POINT hb_wvt_gtGetXYFromColRow( int col, int row )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
    POINT     xy;
@@ -689,15 +684,15 @@ static void hb_wvt_DrawBoxGet( HDC hdc, int iTop, int iLeft, int iBottom, int iR
 
    SelectObject( hdc, _s->pGUI->penBlack );
    MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );        /* Top Inner  */
-   LineTo(   hdc, iRight - 1, iTop - 1       );
+   LineTo(   hdc, iRight - 1, iTop - 1 );
    MoveToEx( hdc, iLeft - 1, iTop - 1, NULL );        /* Left Inner */
-   LineTo(   hdc, iLeft - 1, iBottom - 1    );
+   LineTo(   hdc, iLeft - 1, iBottom - 1 );
 
    SelectObject( hdc, _s->pGUI->penDarkGray );
    MoveToEx( hdc, iLeft - 2, iTop - 2, NULL );        /* Top Outer  */
-   LineTo(   hdc, iRight, iTop - 2       );
+   LineTo(   hdc, iRight, iTop - 2 );
    MoveToEx( hdc, iLeft - 2, iTop - 2, NULL );        /* Left Outer */
-   LineTo(   hdc, iLeft - 2, iBottom      );
+   LineTo(   hdc, iLeft - 2, iBottom );
 }
 
 static void hb_wvt_DrawBoxGroup( HDC hdc, int iTop, int iLeft, int iBottom, int iRight )
@@ -2946,9 +2941,9 @@ HB_FUNC( WVT_LOADFONT )
          lf.lfEscapement     = hb_parni( 11 ) * 10;
          lf.lfOrientation    = 0;
          lf.lfWeight         = hb_parni( 5 );
-         lf.lfItalic         = ( BYTE ) hb_parl(  6 );
-         lf.lfUnderline      = ( BYTE ) hb_parl(  7 );
-         lf.lfStrikeOut      = ( BYTE ) hb_parl(  8 );
+         lf.lfItalic         = ( BYTE ) hb_parl( 6 );
+         lf.lfUnderline      = ( BYTE ) hb_parl( 7 );
+         lf.lfStrikeOut      = ( BYTE ) hb_parl( 8 );
          lf.lfCharSet        = ( BYTE ) hb_parnidef( 9, _s->CodePage );
          lf.lfOutPrecision   = 0;
          lf.lfClipPrecision  = 0;

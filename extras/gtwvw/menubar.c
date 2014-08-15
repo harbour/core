@@ -46,24 +46,33 @@
 
 HB_FUNC( WVW_SETMENU )
 {
-   HB_UINT   nWin     = WVW_WHICH_WINDOW;
-   WVW_WIN * pWinData = hb_gt_wvw_GetWindowsData( nWin );
+   int       nWin    = hb_gt_wvw_nWin();
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
 
-   SetMenu( pWinData->hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
+   if( wvw_win )
+   {
+      SetMenu( wvw_win->hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
 
-   hb_gt_wvw_ResetWindow( nWin );
+      hb_gt_wvw_ResetWindow( nWin );
+   }
 }
 
 HB_FUNC( WVW_SETPOPUPMENU )
 {
-   WVW_WIN * pWinData = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HMENU     hPopup   = pWinData->hPopup;
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   pWinData->hPopup = ( HMENU ) HB_PARHANDLE( 2 );
-   /* if( hPopup ) */
+   if( wvw_win )
    {
-      HB_RETHANDLE( hPopup );
+      HMENU hPopup = wvw_win->hPopup;
+
+      wvw_win->hPopup = ( HMENU ) HB_PARHANDLE( 2 );
+      /* if( hPopup ) */
+      {
+         HB_RETHANDLE( hPopup );
+      }
    }
+   else
+      HB_RETHANDLE( 0 );
 }
 
 HB_FUNC( WVW_CREATEMENU )
@@ -134,17 +143,17 @@ HB_FUNC( WVW_ENABLEMENUITEM )
 
 HB_FUNC( WVW_GETLASTMENUEVENT )
 {
-   hb_retni( hb_gt_wvw_GetLastMenuEvent( WVW_WHICH_WINDOW ) );
+   hb_retni( hb_gt_wvw_GetLastMenuEvent( hb_gt_wvw_nWin() ) );
 }
 
 HB_FUNC( WVW_SETLASTMENUEVENT )
 {
-   hb_retni( hb_gt_wvw_SetLastMenuEvent( WVW_WHICH_WINDOW, hb_parni( 2 ) ) );
+   hb_retni( hb_gt_wvw_SetLastMenuEvent( hb_gt_wvw_nWin(), hb_parni( 2 ) ) );
 }
 
 HB_FUNC( WVW_SETMENUKEYEVENT )
 {
-   hb_retni( hb_gt_wvw_SetMenuKeyEvent( WVW_WHICH_WINDOW, hb_parnl( 2 ) ) );
+   hb_retni( hb_gt_wvw_SetMenuKeyEvent( hb_gt_wvw_nWin(), hb_parnl( 2 ) ) );
 }
 
 /* WVW_MENUITEM_SETBITMAPS( hMenu, nIDEnableItem, nPosition, ncBitmapUnchecked, ncBimapChecked ) */
@@ -213,9 +222,10 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
 HB_FUNC( WVW_DRAWMENUBAR )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   DrawMenuBar( wvw_win->hWnd );
+   if( wvw_win )
+      DrawMenuBar( wvw_win->hWnd );
 }
 
 HB_FUNC( WVW_ENDMENU )
@@ -226,28 +236,37 @@ HB_FUNC( WVW_ENDMENU )
 /* wvw_GetMenu([nWinNum]) */
 HB_FUNC( WVW_GETMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   HB_RETHANDLE( GetMenu( wvw_win->hWnd ) );
+   if( wvw_win )
+      HB_RETHANDLE( GetMenu( wvw_win->hWnd ) );
+   else
+      HB_RETHANDLE( 0 );
 }
 
 /* wvw_TrackPopupMenu([nWinNum], n) */
 HB_FUNC( WVW_TRACKPOPUPMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   POINT     xy;
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   memset( &xy, 0, sizeof( xy ) );
+   if( wvw_win )
+   {
+      POINT xy;
 
-   GetCursorPos( &xy );
+      memset( &xy, 0, sizeof( xy ) );
 
-   hb_retnl( TrackPopupMenu( ( HMENU ) HB_PARHANDLE( 2 ),
-                             TPM_CENTERALIGN | TPM_RETURNCMD | TPM_RECURSE,
-                             xy.x,
-                             xy.y,
-                             0,
-                             wvw_win->hWnd,
-                             NULL ) );
+      GetCursorPos( &xy );
+
+      hb_retnl( TrackPopupMenu( ( HMENU ) HB_PARHANDLE( 2 ),
+                                TPM_CENTERALIGN | TPM_RETURNCMD | TPM_RECURSE,
+                                xy.x,
+                                xy.y,
+                                0,
+                                wvw_win->hWnd,
+                                NULL ) );
+   }
+   else
+      hb_retnl( 0 );
 }
 
 HB_FUNC( WIN_SETMENU )
@@ -263,23 +282,27 @@ HB_FUNC( WIN_SETMENU )
  */
 HB_FUNC( WVW_NOSYSMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HMENU     hMenu   = GetSystemMenu( wvw_win->hWnd, FALSE );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   if( hMenu )
+   if( wvw_win )
    {
-      DeleteMenu( hMenu, SC_MAXIMIZE, MF_BYCOMMAND );
-      DeleteMenu( hMenu, SC_MINIMIZE, MF_BYCOMMAND );
-      DeleteMenu( hMenu, SC_SIZE, MF_BYCOMMAND );
-      DeleteMenu( hMenu, SC_MOVE, MF_BYCOMMAND );
-      DeleteMenu( hMenu, SC_RESTORE, MF_BYCOMMAND );
-      DeleteMenu( hMenu, SC_NEXTWINDOW, MF_BYCOMMAND );
-      if( hb_parl( 2 ) /* lRemoveClose */ )
+      HMENU hMenu = GetSystemMenu( wvw_win->hWnd, FALSE );
+
+      if( hMenu )
       {
-         DeleteMenu( hMenu, SC_CLOSE, MF_BYCOMMAND );
-         DeleteMenu( hMenu, 0, MF_BYPOSITION );
+         DeleteMenu( hMenu, SC_MAXIMIZE, MF_BYCOMMAND );
+         DeleteMenu( hMenu, SC_MINIMIZE, MF_BYCOMMAND );
+         DeleteMenu( hMenu, SC_SIZE, MF_BYCOMMAND );
+         DeleteMenu( hMenu, SC_MOVE, MF_BYCOMMAND );
+         DeleteMenu( hMenu, SC_RESTORE, MF_BYCOMMAND );
+         DeleteMenu( hMenu, SC_NEXTWINDOW, MF_BYCOMMAND );
+         if( hb_parl( 2 ) /* lRemoveClose */ )
+         {
+            DeleteMenu( hMenu, SC_CLOSE, MF_BYCOMMAND );
+            DeleteMenu( hMenu, 0, MF_BYPOSITION );
+         }
+         DrawMenuBar( wvw_win->hWnd );
       }
-      DrawMenuBar( wvw_win->hWnd );
    }
 }
 
@@ -289,7 +312,10 @@ HB_FUNC( WVW_NOSYSMENU )
  */
 HB_FUNC( WVW_GETSYSTEMMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   HB_RETHANDLE( GetSystemMenu( wvw_win->hWnd, hb_parl( 2 ) /* lReset */ ) );
+   if( wvw_win )
+      HB_RETHANDLE( GetSystemMenu( wvw_win->hWnd, hb_parl( 2 ) /* lReset */ ) );
+   else
+      HB_RETHANDLE( 0 );
 }

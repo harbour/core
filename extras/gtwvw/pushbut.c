@@ -110,7 +110,7 @@ HB_FUNC( WVW_PBCREATE )
       int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
       int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
-      hb_retnl( hb_gt_wvw_ButtonCreate( WVW_WHICH_WINDOW, usTop, usLeft, usBottom, usRight,
+      hb_retnl( hb_gt_wvw_ButtonCreate( hb_gt_wvw_nWin(), usTop, usLeft, usBottom, usRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
@@ -128,32 +128,36 @@ HB_FUNC( WVW_PBCREATE )
  */
 HB_FUNC( WVW_PBDESTROY )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
-   HB_UINT    nCtrlId = ( HB_UINT ) hb_parnl( 2 );
-   WVW_CTRL * pcd     = wvw_win->pcdList;
-   WVW_CTRL * pcdPrev = NULL;
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   while( pcd )
+   if( wvw_win )
    {
-      if( pcd->nClass == WVW_CONTROL_PUSHBUTTON && pcd->nId == nCtrlId )
-         break;
-      pcdPrev = pcd;
-      pcd     = pcd->pNext;
-   }
+      int        nCtrlId = hb_parni( 2 );
+      WVW_CTRL * pcd     = wvw_win->pcdList;
+      WVW_CTRL * pcdPrev = NULL;
 
-   if( pcd )
-   {
-      DestroyWindow( pcd->hWnd );
+      while( pcd )
+      {
+         if( pcd->nClass == WVW_CONTROL_PUSHBUTTON && pcd->nId == nCtrlId )
+            break;
+         pcdPrev = pcd;
+         pcd     = pcd->pNext;
+      }
 
-      if( pcdPrev )
-         pcdPrev->pNext = pcd->pNext;
-      else
-         wvw_win->pcdList = pcd->pNext;
+      if( pcd )
+      {
+         DestroyWindow( pcd->hWnd );
 
-      if( pcd->pBlock )
-         hb_itemRelease( pcd->pBlock );
+         if( pcdPrev )
+            pcdPrev->pNext = pcd->pNext;
+         else
+            wvw_win->pcdList = pcd->pNext;
 
-      hb_xfree( pcd );
+         if( pcd->pBlock )
+            hb_itemRelease( pcd->pBlock );
+
+         hb_xfree( pcd );
+      }
    }
 }
 
@@ -162,7 +166,7 @@ HB_FUNC( WVW_PBDESTROY )
  */
 HB_FUNC( WVW_PBSETFOCUS )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( HB_UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_PUSHBUTTON, hb_parni( 2 ), NULL );
 
    hb_retl( hWnd && SetFocus( hWnd ) != NULL );
 }
@@ -172,7 +176,7 @@ HB_FUNC( WVW_PBSETFOCUS )
  */
 HB_FUNC( WVW_PBISFOCUSED )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, ( HB_UINT ) hb_parnl( 2 ), NULL );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_PUSHBUTTON, hb_parni( 2 ), NULL );
 
    hb_retl( GetFocus() == hWnd );
 }
@@ -185,9 +189,8 @@ HB_FUNC( WVW_PBISFOCUSED )
  */
 HB_FUNC( WVW_PBENABLE )
 {
-   HB_UINT   nWin    = WVW_WHICH_WINDOW;
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
-   HWND      hWnd    = hb_gt_wvw_FindControlHandle( nWin, WVW_CONTROL_PUSHBUTTON, ( HB_UINT ) hb_parnl( 2 ), NULL );
+   int  nWin = hb_gt_wvw_nWin();
+   HWND hWnd = hb_gt_wvw_FindControlHandle( nWin, WVW_CONTROL_PUSHBUTTON, hb_parni( 2 ), NULL );
 
    if( hWnd )
    {
@@ -196,7 +199,11 @@ HB_FUNC( WVW_PBENABLE )
       hb_retl( EnableWindow( hWnd, ( BOOL ) bEnable ) == 0 );
 
       if( ! bEnable )
-         SetFocus( wvw_win->hWnd );
+      {
+         WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+         if( wvw_win )
+            SetFocus( wvw_win->hWnd );
+      }
    }
    else
       hb_retl( HB_FALSE );
@@ -210,7 +217,7 @@ HB_FUNC( WVW_PBENABLE )
 HB_FUNC( WVW_PBSETCODEBLOCK )
 {
    WVW_GLOB * wvw    = hb_gt_wvw_GetWvwData();
-   WVW_CTRL * pcd    = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( HB_UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd    = hb_gt_wvw_GetControlData( hb_gt_wvw_nWin(), WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
    PHB_ITEM   pBlock = hb_param( 3, HB_IT_EVALITEM );
 
    if( pBlock && pcd && ! pcd->fBusy )
@@ -261,7 +268,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
  */
 HB_FUNC( WVW_PBSETSTYLE )
 {
-   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( WVW_WHICH_WINDOW, WVW_CONTROL_PUSHBUTTON, NULL, ( HB_UINT ) hb_parnl( 2 ) );
+   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( hb_gt_wvw_nWin(), WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
 
    if( pcd->hWnd )
       SendMessage( pcd->hWnd, BM_SETSTYLE, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) TRUE );
@@ -277,51 +284,56 @@ HB_FUNC( WVW_PBSETSTYLE )
 HB_FUNC( WVW_PBSETFONT )
 {
    WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( WVW_WHICH_WINDOW );
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   HB_BOOL fResult = HB_TRUE;
-
-   wvw->lfPB.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
-   wvw->lfPB.lfWidth          = hb_parnldef( 4, wvw->lfPB.lfWidth );
-   wvw->lfPB.lfEscapement     = 0;
-   wvw->lfPB.lfOrientation    = 0;
-   wvw->lfPB.lfWeight         = hb_parnldef( 5, wvw->lfPB.lfWeight );
-   wvw->lfPB.lfQuality        = ( BYTE ) hb_parnidef( 6, wvw->lfPB.lfQuality );
-   wvw->lfPB.lfItalic         = ( BYTE ) hb_parldef( 7, wvw->lfPB.lfItalic );
-   wvw->lfPB.lfUnderline      = ( BYTE ) hb_parldef( 8, wvw->lfPB.lfUnderline );
-   wvw->lfPB.lfStrikeOut      = ( BYTE ) hb_parldef( 9, wvw->lfPB.lfStrikeOut );
-   wvw->lfPB.lfCharSet        = DEFAULT_CHARSET;
-   wvw->lfPB.lfPitchAndFamily = FF_DONTCARE;
-
-   if( HB_ISCHAR( 2 ) )
+   if( wvw && wvw_win )
    {
-      HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), wvw->lfPB.lfFaceName, HB_SIZEOFARRAY( wvw->lfPB.lfFaceName ) );
-      wvw_win->fontFace[ HB_SIZEOFARRAY( wvw->lfPB.lfFaceName ) - 1 ] = TEXT( '\0' );
-   }
+      HB_BOOL fResult = HB_TRUE;
 
-   if( wvw_win->hPBfont )
-   {
-      HFONT hOldFont = wvw_win->hPBfont;
-      HFONT hFont    = CreateFontIndirect( &wvw->lfPB );
-      if( hFont )
+      wvw->lfPB.lfHeight         = hb_parnldef( 3, wvw_win->fontHeight - 2 );
+      wvw->lfPB.lfWidth          = hb_parnldef( 4, wvw->lfPB.lfWidth );
+      wvw->lfPB.lfEscapement     = 0;
+      wvw->lfPB.lfOrientation    = 0;
+      wvw->lfPB.lfWeight         = hb_parnldef( 5, wvw->lfPB.lfWeight );
+      wvw->lfPB.lfQuality        = ( BYTE ) hb_parnidef( 6, wvw->lfPB.lfQuality );
+      wvw->lfPB.lfItalic         = ( BYTE ) hb_parldef( 7, wvw->lfPB.lfItalic );
+      wvw->lfPB.lfUnderline      = ( BYTE ) hb_parldef( 8, wvw->lfPB.lfUnderline );
+      wvw->lfPB.lfStrikeOut      = ( BYTE ) hb_parldef( 9, wvw->lfPB.lfStrikeOut );
+      wvw->lfPB.lfCharSet        = DEFAULT_CHARSET;
+      wvw->lfPB.lfPitchAndFamily = FF_DONTCARE;
+
+      if( HB_ISCHAR( 2 ) )
       {
-         WVW_CTRL * pcd = wvw_win->pcdList;
-
-         while( pcd )
-         {
-            if( pcd->nClass == WVW_CONTROL_PUSHBUTTON &&
-                ( HFONT ) SendMessage( pcd->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
-               SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
-
-            pcd = pcd->pNext;
-         }
-
-         wvw_win->hPBfont = hFont;
-         DeleteObject( hOldFont );
+         HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), wvw->lfPB.lfFaceName, HB_SIZEOFARRAY( wvw->lfPB.lfFaceName ) );
+         wvw_win->fontFace[ HB_SIZEOFARRAY( wvw->lfPB.lfFaceName ) - 1 ] = TEXT( '\0' );
       }
-      else
-         fResult = HB_FALSE;
-   }
 
-   hb_retl( fResult );
+      if( wvw_win->hPBfont )
+      {
+         HFONT hOldFont = wvw_win->hPBfont;
+         HFONT hFont    = CreateFontIndirect( &wvw->lfPB );
+         if( hFont )
+         {
+            WVW_CTRL * pcd = wvw_win->pcdList;
+
+            while( pcd )
+            {
+               if( pcd->nClass == WVW_CONTROL_PUSHBUTTON &&
+                   ( HFONT ) SendMessage( pcd->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
+                  SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
+
+               pcd = pcd->pNext;
+            }
+
+            wvw_win->hPBfont = hFont;
+            DeleteObject( hOldFont );
+         }
+         else
+            fResult = HB_FALSE;
+      }
+
+      hb_retl( fResult );
+   }
+   else
+      hb_retl( HB_FALSE );
 }

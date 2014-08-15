@@ -62,6 +62,7 @@
  *
  */
 
+#include "hbwapi.h"
 #include "hbwinole.h"
 #include "gtwvg.h"
 
@@ -480,9 +481,7 @@ static void hb_gt_wvt_FireMenuEvent( PHB_GTWVT pWVT, int iMode, int menuIndex )
    hb_gt_wvt_FireEvent( pWVT, HB_GTE_MENU, pEvParams );
 }
 
-/*
- * use the standard fixed oem font, unless the caller has requested set size fonts
- */
+/* use the standard fixed oem font, unless the caller has requested set size fonts */
 static HFONT hb_gt_wvt_GetFont( LPCTSTR lpFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
    if( iHeight > 0 )
@@ -1073,8 +1072,8 @@ static HB_BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
       pWVT->COLS = iCol;
       return HB_TRUE;
    }
-
-   return HB_FALSE;
+   else
+      return HB_FALSE;
 }
 
 static HB_BOOL hb_gt_wvt_InitWindow( PHB_GTWVT pWVT, int iRow, int iCol )
@@ -1906,9 +1905,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
       }
    }
    else
-   {
       pWVT->bPaint = HB_TRUE;
-   }
 
    EndPaint( pWVT->hWnd, &ps );
 }
@@ -2810,7 +2807,8 @@ static HB_BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
 
       return HB_TRUE;
    }
-   return HB_FALSE;
+   else
+      return HB_FALSE;
 }
 
 /* --- */
@@ -4242,22 +4240,22 @@ static void hb_wvt_gtLoadGuiData( void )
 
    s_guiData = ( PHB_GUIDATA ) hb_xgrabz( sizeof( HB_GUIDATA ) );
 
-   s_guiData->penWhite       = CreatePen( PS_SOLID, 0, RGB( 255,255,255 ) );
-   s_guiData->penBlack       = CreatePen( PS_SOLID, 0, RGB(   0,  0,  0 ) );
-   s_guiData->penWhiteDim    = CreatePen( PS_SOLID, 0, RGB( 205,205,205 ) );
-   s_guiData->penDarkGray    = CreatePen( PS_SOLID, 0, RGB( 150,150,150 ) );
-   s_guiData->penGray        = CreatePen( PS_SOLID, 0, RGB( 198,198,198 ) );
-   s_guiData->penNull        = CreatePen( PS_NULL , 0, RGB( 198,198,198 ) );
+   s_guiData->penWhite       = CreatePen( PS_SOLID, 0, RGB( 255, 255, 255 ) );
+   s_guiData->penBlack       = CreatePen( PS_SOLID, 0, RGB(   0,   0,   0 ) );
+   s_guiData->penWhiteDim    = CreatePen( PS_SOLID, 0, RGB( 205, 205, 205 ) );
+   s_guiData->penDarkGray    = CreatePen( PS_SOLID, 0, RGB( 150, 150, 150 ) );
+   s_guiData->penGray        = CreatePen( PS_SOLID, 0, RGB( 198, 198, 198 ) );
+   s_guiData->penNull        = CreatePen( PS_NULL , 0, RGB( 198, 198, 198 ) );
 
 #if ! defined( HB_OS_WIN_CE )
-   s_guiData->diagonalBrush  = CreateHatchBrush( HS_DIAGCROSS, RGB( 210,210,210 ) );
+   s_guiData->diagonalBrush  = CreateHatchBrush( HS_DIAGCROSS, RGB( 210, 210, 210 ) );
 #else
-   s_guiData->diagonalBrush  = CreateSolidBrush( RGB( 210,210,210 ) );
+   s_guiData->diagonalBrush  = CreateSolidBrush( RGB( 210, 210, 210 ) );
 #endif
-   s_guiData->solidBrush     = CreateSolidBrush( RGB( 0,0,0 ) );
-   s_guiData->whiteBrush     = CreateSolidBrush( RGB( 198,198,198 ) );
+   s_guiData->solidBrush     = CreateSolidBrush( RGB(   0,   0,   0 ) );
+   s_guiData->whiteBrush     = CreateSolidBrush( RGB( 198, 198, 198 ) );
 
-   h = LoadLibrary( TEXT( "msimg32.dll" ) );
+   h = hbwapi_LoadLibrarySystem( TEXT( "msimg32.dll" ) );
    if( h )
    {
       /* workaround for wrong declarations in some old C compilers */
@@ -4333,7 +4331,7 @@ static void hb_wvt_gtReleaseGuiData( void )
 
 static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
 {
-   int         iIndex;
+   int iIndex;
 
    pWVT->bDeferPaint        = HB_FALSE;
    pWVT->bTracking          = HB_FALSE;
@@ -4509,13 +4507,8 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT )
                           NULL,
                           pWVT->hInstance,
                           NULL );
-   SetWindowPos( hwndTT,
-                 HWND_TOPMOST,
-                 0,
-                 0,
-                 0,
-                 0,
-                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE );
+
+   SetWindowPos( hwndTT, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE );
 
    /* Prepare TOOLINFO structure for use as tracking tooltip. */
    ti.cbSize    = sizeof( ti );

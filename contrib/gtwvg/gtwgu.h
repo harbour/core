@@ -45,8 +45,8 @@
  *
  */
 
-#ifndef HB_WVT_H_
-#define HB_WVT_H_
+#ifndef HB_WGU_H_
+#define HB_WGU_H_
 
 #define HB_GT_NAME  WGU
 
@@ -211,19 +211,19 @@ HB_EXTERN_BEGIN
 
 /*-*/
 
-typedef BOOL ( WINAPI * wvtGradientFill )     (
+typedef BOOL ( WINAPI * wvtGradientFill )(
                       HDC        hdc,
                       PTRIVERTEX pVertex,
                       ULONG      dwNumVertex,
                       PVOID      pMesh,
                       ULONG      dwNumMesh,
-                      ULONG      dwMode      );
+                      ULONG      dwMode );
 
 typedef BOOL ( WINAPI * wvtSetLayeredWindowAttributes )(
                       HWND       hwnd,
                       COLORREF   crKey,
                       BYTE       bAlpha,
-                      DWORD      dwFlags     );
+                      DWORD      dwFlags );
 
 /*-*/
 
@@ -296,60 +296,38 @@ typedef struct
    HB_BOOL  bResizable;
    HB_BOOL  bClosable;
 
-   /*          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            */
+   /* To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed> */
 
-   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()*/
-   int       rowStop;                       /* Holds nBottom of last WM_PAINT rectangle                               */
-   int       colStart;                      /* Holds nLeft   of last WM_PAINT rectangle                               */
-   int       colStop;                       /* Holds nRight  of last WM_PAINT rectangle                               */
+   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect() */
+   int       rowStop;                       /* Holds nBottom of last WM_PAINT rectangle */
+   int       colStart;                      /* Holds nLeft   of last WM_PAINT rectangle */
+   int       colStop;                       /* Holds nRight  of last WM_PAINT rectangle */
 
-   int       iFactor;                       /* Transparency factor 0~255                                              */
+   int       iFactor;                       /* Transparency factor 0~255 */
 
-   int       LastMenuEvent;                 /* Last menu item selected                                                */
-   int       MenuKeyEvent;                  /* User definable event number for windows menu command                   */
-   HB_BOOL   InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx()                   */
-   HB_BOOL   EnableShortCuts;               /* Determines whether ALT key enables menu or system menu                 */
+   int       LastMenuEvent;                 /* Last menu item selected */
+   int       MenuKeyEvent;                  /* User definable event number for windows menu command */
+   HB_BOOL   InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx() */
+   HB_BOOL   EnableShortCuts;               /* Determines whether ALT key enables menu or system menu */
 
    HB_BOOL   bPaint;
    HB_BOOL   bGetFocus;
    HB_BOOL   bSetFocus;
    HB_BOOL   bKillFocus;
 
-   HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll                      */
-   wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll*/
-   HINSTANCE hUser32;                       /* Handle to the loaded library user32.dll                       */
-   wvtSetLayeredWindowAttributes pfnLayered;/* Pointer to set Windows attribute - transparency.              */
+   HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll */
+   wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll */
+   HINSTANCE hUser32;                       /* Handle to the loaded library user32.dll */
+   wvtSetLayeredWindowAttributes pfnLayered;/* Pointer to set Windows attribute - transparency. */
 
-   PHB_GT_PARAMS  pPP;                      /* Presentation Parameters                                       */
+   PHB_GT_PARAMS  pPP;                      /* Presentation Parameters */
 
-   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area          */
-   HB_BOOL   bResizing;                     /* To know when it is in resizing mode                           */
+   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area */
+   HB_BOOL   bResizing;                     /* To know when it is in resizing mode */
    int       width;
    int       height;
 
 } HB_GTWVT, * PHB_GTWVT;
-
-/*-*/
-
-#ifndef INVALID_FILE_SIZE
-   #define INVALID_FILE_SIZE ( DWORD ) 0xFFFFFFFF
-#endif
-
-#ifndef CC_ANYCOLOR
-   #define CC_ANYCOLOR 0x00000100
-#endif
-
-#ifndef IDC_HAND
-   #define IDC_HAND MAKEINTRESOURCE( 32649 )
-#endif
-
-#ifndef GRADIENT_FILL_RECT_H
-   #define GRADIENT_FILL_RECT_H 0x00
-#endif
-
-#ifndef GCLP_HCURSOR
-   #define GCLP_HCURSOR ( -12 )
-#endif
 
 /*-*/
 
@@ -397,10 +375,30 @@ typedef enum
 #define K_SH_ENTER          K_ENTER  /* Shift-Enter == Enter */
 #endif
 
+#ifndef INVALID_FILE_SIZE
+#define INVALID_FILE_SIZE  ( DWORD ) 0xFFFFFFFF
+#endif
+
+#ifndef CC_ANYCOLOR
+#define CC_ANYCOLOR  0x00000100
+#endif
+
+#ifndef IDC_HAND
+#define IDC_HAND  MAKEINTRESOURCE( 32649 )
+#endif
+
+#ifndef GRADIENT_FILL_RECT_H
+#define GRADIENT_FILL_RECT_H  0x00
+#endif
+
+#ifndef GCLP_HCURSOR
+#define GCLP_HCURSOR  ( -12 )
+#endif
+
 #ifndef WM_MOUSEWHEEL
 #define WM_MOUSEWHEEL  0x020A
 #endif
 
 HB_EXTERN_END
 
-#endif /* HB_WVT_H_ */
+#endif /* HB_WGU_H_ */
