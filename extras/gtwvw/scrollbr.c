@@ -118,7 +118,7 @@ HB_FUNC( WVW_XBCREATE )
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
       int   iOffTop, iOffLeft, iOffBottom, iOffRight;
-      int   iStyle = ( int ) hb_parnidef( 2, -1 );
+      int   iStyle = hb_parnidef( 2, -1 );
       int   nCtrlId;
 
       if( iStyle < SBS_HORZ || iStyle > SBS_VERT || ! HB_ISEVALITEM( 6 ) )

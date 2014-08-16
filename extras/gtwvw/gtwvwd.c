@@ -4016,12 +4016,12 @@ static void hb_gt_wvwAddCharToInputQueue( int iKey )
 
 int hb_gt_wvw_GetMouseX( PWVW_WIN wvw_win )
 {
-   return ( int ) wvw_win->mousePos.x;
+   return wvw_win->mousePos.x;
 }
 
 int hb_gt_wvw_GetMouseY( PWVW_WIN wvw_win )
 {
-   return ( int ) wvw_win->mousePos.y;
+   return wvw_win->mousePos.y;
 }
 
 static void hb_gt_wvw_SetMouseX( PWVW_WIN wvw_win, int ix )
@@ -4223,8 +4223,8 @@ static void hb_gt_wvw_TBMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, W
 
    colrow = hb_gt_wvw_TBGetColRowFromXY( wvw_win, xy.x, xy.y );
 
-   hb_gt_wvw_SetMouseX( wvw_win, ( int ) colrow.x );
-   hb_gt_wvw_SetMouseY( wvw_win, ( int ) colrow.y );
+   hb_gt_wvw_SetMouseX( wvw_win, colrow.x );
+   hb_gt_wvw_SetMouseY( wvw_win, colrow.y );
 
    switch( message )
    {
@@ -4860,8 +4860,8 @@ int hb_gt_wvw_SetCurWindow( int nWin )
 
    /* tell GTAPI about the new Row(), Col() */
 
-   hb_gtSetPos( ( int ) s_wvw->pWin[ s_wvw->usCurWindow ]->caretPos.y,
-                ( int ) s_wvw->pWin[ s_wvw->usCurWindow ]->caretPos.x );
+   hb_gtSetPos( s_wvw->pWin[ s_wvw->usCurWindow ]->caretPos.y,
+                s_wvw->pWin[ s_wvw->usCurWindow ]->caretPos.x );
    /* done updating GTAPI's statics */
 
    s_wvw->fMainCoordMode = fMainCoordMode;

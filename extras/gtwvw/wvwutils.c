@@ -975,7 +975,7 @@ HB_FUNC( WIN_CREATEFONT )
          hb_parni( 2 ),                     /* logical average character width */
          0,                                 /* angle of escapement */
          0,                                 /* base-line orientation angle */
-         ( int ) hb_parni( 4 ),             /* font weight */
+         hb_parni( 4 ),                     /* font weight */
          ( DWORD ) hb_parnl( 6 ),           /* italic attribute flag */
          ( DWORD ) hb_parnl( 7 ),           /* underline attribute flag */
          ( DWORD ) hb_parnl( 8 ),           /* strikeout attribute flag */
