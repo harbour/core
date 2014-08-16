@@ -587,7 +587,7 @@ HB_FUNC( WVW_SETPAINTREFRESH )
 
       if( HB_ISNUM( 1 ) && ( hb_parni( 1 ) >= 50 || hb_parni( 1 ) == 0 ) )
       {
-         wvw->uiPaintRefresh = hb_parni( 1 );
+         wvw->uiPaintRefresh = ( HB_UINT ) hb_parni( 1 );
 
          if( wvw->a.pSymWVW_PAINT )
          {

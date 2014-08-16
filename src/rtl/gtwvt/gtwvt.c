@@ -1597,7 +1597,7 @@ static void hb_gt_wvt_KillCaret( PHB_GTWVT pWVT )
 }
 
 /*
- *  functions for handling the input queues for the mouse and keyboard
+ * functions for handling the input queues for the mouse and keyboard
  */
 static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 {

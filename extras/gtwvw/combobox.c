@@ -128,11 +128,10 @@ HB_FUNC( WVW_CBCREATE )
       HWND hWnd;
 
       HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
-
       POINT xy;
-      int   iTop, iLeft, iBottom, iRight;
-      int   iOffTop, iOffLeft, iOffBottom, iOffRight;
 
+      int iTop, iLeft, iBottom, iRight;
+      int iOffTop, iOffLeft, iOffBottom, iOffRight;
       int nCtrlId;
 
       int usWidth  = hb_parni( 4 );
@@ -141,9 +140,9 @@ HB_FUNC( WVW_CBCREATE )
           usBottom = usTop,
           usRight  = usLeft + usWidth - 1;
 
-      int  usNumElement = HB_ISARRAY( 5 ) ? ( int ) hb_arrayLen( hb_param( 5, HB_IT_ARRAY ) ) : 0;
-      int  usListLines  = hb_parnidef( 7, 3 );
-      BYTE byCharHeight = hb_gt_wvw_LineHeight( wvw_win );
+      int iNumElement = HB_ISARRAY( 5 ) ? ( int ) hb_arrayLen( hb_param( 5, HB_IT_ARRAY ) ) : 0;
+      int iListLines  = hb_parnidef( 7, 3 );
+      int iCharHeight = hb_gt_wvw_LineHeight( wvw_win );
 
       /* in the future combobox type might be selectable by 8th parameter */
       int     iStyle   = CBS_DROPDOWNLIST | WS_VSCROLL;
@@ -163,7 +162,7 @@ HB_FUNC( WVW_CBCREATE )
       iOffTop  = hb_parvni( 10, 1 );
       iOffLeft = hb_parvni( 10, 2 );
 
-      iOffBottom = usListLines;
+      iOffBottom = iListLines;
       iOffRight  = hb_parvni( 10, 4 );
 
       if( hb_gt_wvw_GetMainCoordMode() )
@@ -177,7 +176,7 @@ HB_FUNC( WVW_CBCREATE )
 
       xy.y -= wvw_win->iLineSpacing;
 
-      iBottom = xy.y - 1 + ( iOffBottom * byCharHeight );
+      iBottom = xy.y - 1 + ( iOffBottom * iCharHeight );
       iRight  = xy.x - 1 + iOffRight;
 
       nCtrlId = hb_gt_wvw_LastControlId( wvw_win, WVW_CONTROL_COMBOBOX );
@@ -211,7 +210,7 @@ HB_FUNC( WVW_CBCREATE )
 
          SendMessage( hWnd, WM_SETREDRAW, ( WPARAM ) TRUE, 0 );
 
-         if( usNumElement == 0 )
+         if( iNumElement == 0 )
          {
             if( SendMessage( hWnd, CB_ADDSTRING, 0, ( LPARAM ) TEXT( "empty" ) ) < 0 )
             {
@@ -222,7 +221,7 @@ HB_FUNC( WVW_CBCREATE )
          {
             int i;
 
-            for( i = 1; i <= usNumElement; i++ )
+            for( i = 1; i <= iNumElement; i++ )
             {
                void * hText;
 

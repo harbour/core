@@ -108,16 +108,16 @@ HB_FUNC( WVW_EBCREATE )
       HWND      hWnd;
 
       POINT xy;
-      int   iTop, iLeft, iBottom, iRight;
-      int   iOffTop, iOffLeft, iOffBottom, iOffRight;
-      int   nCtrlId;
 
-      HB_BOOL bMultiline = hb_parl( 8 );
-      HB_BYTE bEBType    = bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
+      int iTop, iLeft, iBottom, iRight;
+      int iOffTop, iOffLeft, iOffBottom, iOffRight;
+      int nCtrlId;
 
-      DWORD  dwMoreStyle = ( DWORD ) hb_parnl( 9 );
-      int    usMaxChar   = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
-      DWORD  dwStyle;
+      HB_BYTE bEBType = hb_parl( 8 ) ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
+
+      DWORD dwMoreStyle = ( DWORD ) hb_parnl( 9 );
+      int   usMaxChar   = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
+      DWORD dwStyle;
 
       if( wvw_win->hEBfont == NULL )
       {

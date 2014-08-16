@@ -313,66 +313,66 @@ typedef struct
    HFONT hCXfont;                  /* handle to font used by checkboxes when 'focused' */
    HFONT hSTfont;                  /* handle to font used by checkboxes when 'focused' */
 
-   HB_BOOL  fSBPaint;
-   COLORREF cSBColorForeground;
-   COLORREF cSBColorBackground;
+   HB_BOOL   fSBPaint;
+   COLORREF  cSBColorForeground;
+   COLORREF  cSBColorBackground;
 
-   HB_BOOL  fIgnoreWM_SYSCHAR;
-   HB_BOOL  fPaint;
-   HB_BOOL  fGetFocus;
+   HB_BOOL   fIgnoreWM_SYSCHAR;
+   HB_BOOL   fPaint;
+   HB_BOOL   fGetFocus;
 
-   POINT    PTEXTSIZE;                                /* size of the fixed width font */
-   HB_BOOL  FixedFont;                                /* HB_TRUE if current font is a fixed font */
-   int      FixedSize[ WVW_MAX_COLS ];                /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
-   int      ROWS;                                     /* number of displayable rows in window */
-   int      COLS;                                     /* number of displayable columns in window */
-   COLORREF foreground;                               /* foreground color */
-   COLORREF background;                               /* background color */
+   POINT     PTEXTSIZE;                                /* size of the fixed width font */
+   HB_BOOL   FixedFont;                                /* HB_TRUE if current font is a fixed font */
+   int       FixedSize[ WVW_MAX_COLS ];                /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
+   int       ROWS;                                     /* number of displayable rows in window */
+   int       COLS;                                     /* number of displayable columns in window */
+   COLORREF  foreground;                               /* foreground color */
+   COLORREF  background;                               /* background color */
 
-   HB_SIZE  BUFFERSIZE;                               /* size of the screen text buffer */
-   BYTE     byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ];  /* buffer with the text to be displayed on the screen */
-   BYTE     byColors[ WVW_MAX_ROWS * WVW_MAX_COLS ];
-   BYTE *   pBuffer;                                  /*   "     "    "    */
-   BYTE *   pColors;                                  /*   "     "    "    */
-   POINT    caretPos;                                 /* the current caret position */
+   HB_SIZE   BUFFERSIZE;                               /* size of the screen text buffer */
+   HB_BYTE   byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ];  /* buffer with the text to be displayed on the screen */
+   HB_BYTE   byColors[ WVW_MAX_ROWS * WVW_MAX_COLS ];
+   HB_BYTE * pBuffer;                                  /*   "     "    "    */
+   HB_BYTE * pColors;                                  /*   "     "    "    */
+   POINT     caretPos;                                 /* the current caret position */
 
-   int      CaretSize;                                /* this may be specific to each windows, eg. different font size */
-   POINT    mousePos;                                 /* the last mousedown position */
-   HB_BOOL  MouseMove;                                /* Flag to say whether to return mouse movement events */
-   HWND     hWnd;                                     /* the window handle */
-   int      Keys[ WVW_CHAR_QUEUE_SIZE ];              /* Array to hold the characters & events */
-   int      keyPointerIn;                             /* Offset into key array for character to be placed */
-   int      keyPointerOut;                            /* Offset into key array of next character to read */
-   int      keyLast;
+   int       CaretSize;                                /* this may be specific to each windows, eg. different font size */
+   POINT     mousePos;                                 /* the last mousedown position */
+   HB_BOOL   MouseMove;                                /* Flag to say whether to return mouse movement events */
+   HWND      hWnd;                                     /* the window handle */
+   int       Keys[ WVW_CHAR_QUEUE_SIZE ];              /* Array to hold the characters & events */
+   int       keyPointerIn;                             /* Offset into key array for character to be placed */
+   int       keyPointerOut;                            /* Offset into key array of next character to read */
+   int       keyLast;
 
-   RECT     RectInvalid;               /* Invalid rectangle if DispBegin() active */
-   HFONT    hFont;
-   int      fontHeight;                /* requested font height */
-   int      fontWidth;                 /* requested font width */
-   int      fontWeight;                /* Bold level */
-   int      fontQuality;
-   TCHAR    fontFace[ LF_FACESIZE ];   /* requested font face name LF_FACESIZE #defined in wingdi.h */
+   RECT      RectInvalid;               /* Invalid rectangle if DispBegin() active */
+   HFONT     hFont;
+   int       fontHeight;                /* requested font height */
+   int       fontWidth;                 /* requested font width */
+   int       fontWeight;                /* Bold level */
+   int       fontQuality;
+   TCHAR     fontFace[ LF_FACESIZE ];   /* requested font face name LF_FACESIZE #defined in wingdi.h */
 
-   int      LastMenuEvent;             /* Last menu item selected */
-   int      MenuKeyEvent;              /* User definable event number for windows menu command */
-   HB_BOOL  CentreWindow;              /* True if window is to be Reset into centre of window */
+   int       LastMenuEvent;             /* Last menu item selected */
+   int       MenuKeyEvent;              /* User definable event number for windows menu command */
+   HB_BOOL   CentreWindow;              /* True if window is to be Reset into centre of window */
 
    /* if CentreWindow is HB_FALSE, two following settings are examined */
-   HB_BOOL  HCentreWindow;             /* True if window is to be Reset into centre of window, horizontally */
-   HB_BOOL  VCentreWindow;             /* True if window is to be Reset into centre of window, vertically */
+   HB_BOOL   HCentreWindow;             /* True if window is to be Reset into centre of window, horizontally */
+   HB_BOOL   VCentreWindow;             /* True if window is to be Reset into centre of window, vertically */
 
-   int      CodePage;                  /* Code page to use for display characters */
+   int       CodePage;                  /* Code page to use for display characters */
 
-   HB_BOOL  InvalidateWindow;          /* Flag for controlling whether to use ScrollWindowEx() */
-   HB_BOOL  EnableShortCuts;           /* Determines whether ALT key enables menu or system menu */
+   HB_BOOL   InvalidateWindow;          /* Flag for controlling whether to use ScrollWindowEx() */
+   HB_BOOL   EnableShortCuts;           /* Determines whether ALT key enables menu or system menu */
 
-   HDC      hdc;                       /* Handle to Windows Device Context */
-   HMENU    hPopup;                    /* Handle of context menu invokable with right click */
+   HDC       hdc;                       /* Handle to Windows Device Context */
+   HMENU     hPopup;                    /* Handle of context menu invokable with right click */
 
-   HDC      hCompDC;                   /* Compatible DC to _s.hdc */
-   HWND     hWndTT;                    /* Handle to hold tooltip information */
-   HB_BOOL  fToolTipActive;            /* Flag to set whether tooltip is active or not */
-   HICON    hIcon;
+   HDC       hCompDC;                   /* Compatible DC to _s.hdc */
+   HWND      hWndTT;                    /* Handle to hold tooltip information */
+   HB_BOOL   fToolTipActive;            /* Flag to set whether tooltip is active or not */
+   HICON     hIcon;
 
 } WVW_WIN, * PWVW_WIN;
 
@@ -527,7 +527,6 @@ extern void       hb_gt_wvw_SetInvalidRect( PWVW_WIN wvw_win, int left, int top,
 extern void       hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd );
 extern HB_BOOL    hb_gt_wvw_ValidWindowSize( PWVW_WIN wvw_win, int rows, int cols, HFONT hFont, int iWidth, int * pmaxrows, int * pmaxcols );
 extern int        hb_gt_wvw_SetCodePage( PWVW_WIN wvw_win, int iCodePage );
-extern void       hb_gt_wvw_FUNCPrologue( BYTE byNumCoord, int * iRow1, int * iCol1, int * iRow2, int * iCol2 );
 extern void       hb_gt_wvw_FUNCEpilogue( void );
 extern void       hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * pusRow1, int * pusCol1, int * pusRow2, int * pusCol2 );
 extern RECT       hb_gt_wvw_GetXYFromColRowRect( PWVW_WIN wvw_win, RECT colrow );
@@ -541,7 +540,7 @@ extern int        hb_gt_wvw_IndexToCommand( HWND hWndTB, int iIndex );
 extern int        hb_gt_wvw_CommandToIndex( HWND hWndTB, int iCommand );
 extern HB_BOOL    hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, HB_UINT uiBitmap, const TCHAR * pszLabel, int iCommand, int iBitmapType, HB_BOOL bMap3Dcolors, PWVW_WIN wvw_win, HB_BOOL bDropdown );
 extern RECT       hb_gt_wvw_GetColRowFromXYRect( PWVW_WIN pWIndowData, RECT xy );
-extern BYTE       hb_gt_wvw_LineHeight( PWVW_WIN wvw_win );
+extern int        hb_gt_wvw_LineHeight( PWVW_WIN wvw_win );
 extern WPARAM     hb_gt_wvw_ProcessMessages( PWVW_WIN wvw_win );
 /* control (eg. scrollbar) supporters: */
 extern HWND       hb_gt_wvw_FindControlHandle( PWVW_WIN wvw_win, HB_BYTE nClass, int nId, HB_BYTE * pnStyle );
@@ -586,7 +585,6 @@ extern HB_EXPORT int           hb_gt_wvw_GetWindowTitle( PWVW_WIN wvw_win, LPTST
 extern HB_EXPORT void          hb_gt_wvw_PostMessage( PWVW_WIN wvw_win, int message );
 extern HB_EXPORT HB_BOOL       hb_gt_wvw_SetAltF4Close( HB_BOOL bCanClose );
 extern HB_EXPORT HB_BOOL       hb_gt_wvw_EnableShortCuts( PWVW_WIN wvw_win, HB_BOOL bEnable );
-extern HB_EXPORT HB_BOOL       hb_gt_wvw_SetColorData( int iIndex, COLORREF ulCr );
 extern HB_EXPORT IPicture *    hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT iresimage, long * lwidth, long * lheight );
 extern HB_EXPORT IPicture *    hb_gt_wvw_rr_LoadPicture( const char * filename, long * lwidth, long * lheight );
 
