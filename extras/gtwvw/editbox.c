@@ -98,6 +98,11 @@ HB_FUNC( WVW_EBCREATE )
 
    if( wvw && wvw_win )
    {
+      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
+             usLeft   = ( USHORT ) hb_parni( 3 ),
+             usBottom = ( USHORT ) hb_parni( 4 ),
+             usRight  = ( USHORT ) hb_parni( 5 );
+
       HINSTANCE hInstance;
       HWND      hWndParent = wvw_win->hWnd;
       HWND      hWnd;
@@ -107,19 +112,12 @@ HB_FUNC( WVW_EBCREATE )
       int   iOffTop, iOffLeft, iOffBottom, iOffRight;
       int   nCtrlId;
 
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
-
       HB_BOOL bMultiline = hb_parl( 8 );
       HB_BYTE bEBType    = bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
 
-      DWORD dwMoreStyle = ( DWORD ) hb_parnl( 9 );
-
-      USHORT usMaxChar = ( USHORT ) ( hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0 );
-
-      DWORD dwStyle;
+      DWORD  dwMoreStyle = ( DWORD ) hb_parnl( 9 );
+      USHORT usMaxChar   = ( USHORT ) ( hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0 );
+      DWORD  dwStyle;
 
       if( wvw_win->hEBfont == NULL )
       {

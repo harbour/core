@@ -3696,8 +3696,6 @@ static int hb_gt_wvwJustTranslateKey( int key, int shiftkey, int altkey, int con
 
 HFONT hb_gt_wvw_GetFont( LPCTSTR pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
-   HFONT hFont;
-
    if( iHeight > 0 )
    {
       LOGFONT lf;
@@ -3720,12 +3718,10 @@ HFONT hb_gt_wvw_GetFont( LPCTSTR pszFace, int iHeight, int iWidth, int iWeight, 
 
       HB_STRNCPY( lf.lfFaceName, pszFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
-      hFont = CreateFontIndirect( &lf );
+      return CreateFontIndirect( &lf );
    }
    else
-      hFont = ( HFONT ) GetStockObject( OEM_FIXED_FONT );
-
-   return hFont;
+      return ( HFONT ) GetStockObject( OEM_FIXED_FONT );
 }
 
 static void hb_gtInitStatics( int nWin, LPCTSTR lpszWinName, USHORT usRow1, USHORT usCol1, USHORT usRow2, USHORT usCol2 )
@@ -4594,16 +4590,12 @@ void hb_gt_wvw_CloseWindow( void )
 
       if( wvw_win->hPBfont )
          DeleteObject( wvw_win->hPBfont );
-
       if( wvw_win->hCBfont )
          DeleteObject( wvw_win->hCBfont );
-
       if( wvw_win->hCXfont )
          DeleteObject( wvw_win->hCXfont );
-
       if( wvw_win->hSBfont )
          DeleteObject( wvw_win->hSBfont );
-
       if( wvw_win->hSTfont )
          DeleteObject( wvw_win->hSTfont );
 

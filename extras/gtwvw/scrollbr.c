@@ -108,17 +108,18 @@ HB_FUNC( WVW_XBCREATE )
 
    if( wvw && wvw_win )
    {
-      HWND   hWndParent = wvw_win->hWnd;
-      HWND   hWnd;
-      POINT  xy;
-      int    iTop, iLeft, iBottom, iRight;
-      int    iOffTop, iOffLeft, iOffBottom, iOffRight;
-      int    iStyle = ( int ) hb_parnidef( 2, -1 );
-      int    nCtrlId;
       USHORT usTop  = ( USHORT ) hb_parni( 3 ),
              usLeft = ( USHORT ) hb_parni( 4 ),
              usBottom,
              usRight;
+
+      HWND  hWndParent = wvw_win->hWnd;
+      HWND  hWnd;
+      POINT xy;
+      int   iTop, iLeft, iBottom, iRight;
+      int   iOffTop, iOffLeft, iOffBottom, iOffRight;
+      int   iStyle = ( int ) hb_parnidef( 2, -1 );
+      int   nCtrlId;
 
       if( iStyle < SBS_HORZ || iStyle > SBS_VERT || ! HB_ISEVALITEM( 6 ) )
       {

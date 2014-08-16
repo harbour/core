@@ -86,26 +86,28 @@ HB_FUNC( WVW_PGCREATE )
 
    if( wvw_win )
    {
-      HINSTANCE hInstance;
-      HWND      hWndParent = wvw_win->hWnd;
-      HWND      hWnd;
-      POINT     xy;
-      int       iTop, iLeft, iBottom, iRight;
-      int       iStyle     = 0;
-      HB_BOOL   bBackColor = HB_ISNUM( 7 );
-      HB_BOOL   bBarColor  = HB_ISNUM( 8 );
-      HB_BOOL   bSmooth    = hb_parl( 9 );
-      HB_BOOL   bVertical  = hb_parl( 10 );
-      int       nCtrlId;
-      USHORT    usTop    = ( USHORT ) hb_parni( 2 ),
-                usLeft   = ( USHORT ) hb_parni( 3 ),
-                usBottom = ( USHORT ) hb_parni( 4 ),
-                usRight  = ( USHORT ) hb_parni( 5 );
+      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
+             usLeft   = ( USHORT ) hb_parni( 3 ),
+             usBottom = ( USHORT ) hb_parni( 4 ),
+             usRight  = ( USHORT ) hb_parni( 5 );
 
       int iOffTop    = hb_parvni( 6, 1 );
       int iOffLeft   = hb_parvni( 6, 2 );
       int iOffBottom = hb_parvni( 6, 3 );
       int iOffRight  = hb_parvni( 6, 4 );
+
+      HB_BOOL bBackColor = HB_ISNUM( 7 );
+      HB_BOOL bBarColor  = HB_ISNUM( 8 );
+      HB_BOOL bSmooth    = hb_parl( 9 );
+      HB_BOOL bVertical  = hb_parl( 10 );
+
+      HINSTANCE hInstance;
+      HWND      hWndParent = wvw_win->hWnd;
+      HWND      hWnd;
+      POINT     xy;
+      int       iTop, iLeft, iBottom, iRight;
+      int       iStyle = 0;
+      int       nCtrlId;
 
       InitCommonControls();
 
