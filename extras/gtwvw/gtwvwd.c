@@ -1337,7 +1337,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             int iIndex = hb_itemGetNI( pInfo->pNewVal );
 
-            if( iIndex > 0 && iIndex <= 16 )
+            if( iIndex > 0 && iIndex <= 16 )  /* TOFIX: should be zero based, like other GTs */
             {
                pInfo->pResult = hb_itemPutNInt( pInfo->pResult, s_COLORS[ iIndex - 1 ] );
 
@@ -5723,41 +5723,9 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 /* GetSet Functions for static Variable */
 
-HB_BOOL hb_gt_wvw_GetMainCoordMode( void )
+WVW_GLOB * hb_gt_wvw( void )
 {
-   return s_wvw ? s_wvw->fMainCoordMode : HB_FALSE;
-}
-
-int hb_gt_wvw_GetNumWindows( void )
-{
-   return s_wvw ? s_wvw->usNumWindows : 0;
-}
-
-int hb_gt_wvw_GetTopWindow( void )
-{
-   return s_wvw && s_wvw->usNumWindows > 0 ? s_wvw->usNumWindows - 1 : 0;
-}
-
-int hb_gt_wvw_GetCurWindow( void )
-{
-   return s_wvw ? s_wvw->usCurWindow : 0;
-}
-
-int hb_gt_wvw_nWin( void )
-{
-   if( s_wvw )
-   {
-      if( HB_ISNUM( 1 ) )
-      {
-         int nWin = hb_parni( 1 );
-
-         return nWin >= 0 && nWin < s_wvw->usNumWindows ? nWin : 0;
-      }
-      else
-         return s_wvw->fMainCoordMode ? s_wvw->usNumWindows - 1 : s_wvw->usCurWindow;
-   }
-   else
-      return 0;
+   return s_wvw;
 }
 
 int hb_gt_wvw_nWin_N( int iPar )
@@ -5777,19 +5745,55 @@ int hb_gt_wvw_nWin_N( int iPar )
       return 0;
 }
 
-WVW_WIN * hb_gt_wvw_GetWindowsData( int nWin )
+WVW_WIN * hb_gt_wvw_win( int nWin )
 {
    return s_wvw && nWin >= 0 && nWin < s_wvw->usNumWindows ? s_wvw->pWin[ nWin ] : NULL;
 }
 
-TCHAR * hb_gt_wvw_GetAppName( void )
+WVW_WIN * hb_gt_wvw_win_par( void )
 {
-   return s_wvw ? s_wvw->szAppName : TEXT( "" );
+   if( s_wvw )
+   {
+      int nWin = HB_ISNUM( 1 ) ? hb_parni( 1 ) : ( s_wvw->fMainCoordMode ? s_wvw->usNumWindows - 1 : s_wvw->usCurWindow );
+
+      return nWin >= 0 && nWin < s_wvw->usNumWindows ? s_wvw->pWin[ nWin ] : NULL;
+   }
+   else
+      return NULL;
 }
 
-WVW_GLOB * hb_gt_wvw_GetWvwData( void )
+WVW_WIN * hb_gt_wvw_win_top( void )
 {
-   return s_wvw;
+   if( s_wvw )
+   {
+      int nWin = s_wvw->usNumWindows > 0 ? s_wvw->usNumWindows - 1 : 0;
+
+      return nWin >= 0 && nWin < s_wvw->usNumWindows ? s_wvw->pWin[ nWin ] : NULL;
+   }
+   else
+      return NULL;
+}
+
+WVW_WIN * hb_gt_wvw_win_cur( void )
+{
+   if( s_wvw )
+   {
+      int nWin = s_wvw->usCurWindow;
+
+      return nWin >= 0 && nWin < s_wvw->usNumWindows ? s_wvw->pWin[ nWin ] : NULL;
+   }
+   else
+      return NULL;
+}
+
+HB_BOOL hb_gt_wvw_GetMainCoordMode( void )
+{
+   return s_wvw ? s_wvw->fMainCoordMode : HB_FALSE;
+}
+
+TCHAR * hb_gt_wvw_GetAppName( void )
+{
+   return s_wvw ? s_wvw->szAppName : NULL;
 }
 
 /* about WVW_SIZE callback function:
@@ -7758,10 +7762,9 @@ LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
 /* WARNING! this function relies on the fact that char/attr buffers are static! */
 HB_FUNC( WVW_ADDROWS )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   int        nWin    = hb_gt_wvw_nWin();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
-   WVW_WIN *  wvw_zer = hb_gt_wvw_GetWindowsData( 0 );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   WVW_WIN *  wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_win )
    {
@@ -7806,7 +7809,7 @@ HB_FUNC( WVW_ADDROWS )
       {
          int usCurWindow = wvw->usCurWindow;
 
-         wvw->usCurWindow = nWin;
+         wvw->usCurWindow = wvw_win->nWinId;
 
          wvw->fQuickSetMode = HB_TRUE;
 
@@ -7876,7 +7879,7 @@ HB_FUNC( WVW_ADDROWS )
  */
 HB_FUNC( WVW_SETLINESPACING )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {

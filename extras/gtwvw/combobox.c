@@ -119,8 +119,8 @@ static long hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f )
 
 HB_FUNC( WVW_CBCREATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -277,7 +277,7 @@ HB_FUNC( WVW_CBCREATE )
  */
 HB_FUNC( WVW_CBDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -316,7 +316,7 @@ HB_FUNC( WVW_CBDESTROY )
  */
 HB_FUNC( WVW_CBSETFOCUS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hb_parni( 2 ), NULL );
 
@@ -328,7 +328,7 @@ HB_FUNC( WVW_CBSETFOCUS )
  */
 HB_FUNC( WVW_CBISFOCUSED )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hb_parni( 2 ), NULL );
 
@@ -343,7 +343,7 @@ HB_FUNC( WVW_CBISFOCUSED )
  */
 HB_FUNC( WVW_CBENABLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hb_parni( 2 ), NULL );
 
@@ -367,13 +367,13 @@ HB_FUNC( WVW_CBENABLE )
  */
 HB_FUNC( WVW_CBSETCODEBLOCK )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_COMBOBOX, NULL, hb_parni( 2 ) );
    PHB_ITEM   pBlock  = hb_param( 3, HB_IT_EVALITEM );
 
    if( pBlock && pcd && ! pcd->fBusy )
    {
-      WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
+      WVW_GLOB * wvw         = hb_gt_wvw();
       HB_BOOL    fOldSetting = wvw->fRecurseCBlock;
 
       wvw->fRecurseCBlock = HB_FALSE;
@@ -403,8 +403,8 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
  */
 HB_FUNC( WVW_CBSETFONT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -470,7 +470,7 @@ HB_FUNC( WVW_CBSETFONT )
  */
 HB_FUNC( WVW_CBSETINDEX )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_COMBOBOX, NULL, hb_parni( 2 ) );
    int        iIndex  = hb_parni( 3 );
 
@@ -493,7 +493,7 @@ HB_FUNC( WVW_CBSETINDEX )
  */
 HB_FUNC( WVW_CBGETINDEX )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_COMBOBOX, NULL, hb_parni( 2 ) );
 
    if( pcd )
@@ -511,7 +511,7 @@ HB_FUNC( WVW_CBGETINDEX )
  */
 HB_FUNC( WVW_CBFINDSTRING )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_COMBOBOX, NULL, hb_parni( 2 ) );
 
    if( pcd )
@@ -529,7 +529,7 @@ HB_FUNC( WVW_CBFINDSTRING )
    returns "" if none selected */
 HB_FUNC( WVW_CBGETCURTEXT )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_COMBOBOX, NULL, hb_parni( 2 ) );
 
    if( pcd )
@@ -560,7 +560,7 @@ HB_FUNC( WVW_CBGETCURTEXT )
    Also returns .F. if nCBid not valid */
 HB_FUNC( WVW_CBISDROPPED )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_COMBOBOX, NULL, hb_parni( 2 ) );
 
    if( pcd )
@@ -571,7 +571,7 @@ HB_FUNC( WVW_CBISDROPPED )
 
 HB_FUNC( WVW_CBVISIBLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hb_parni( 2 ), NULL );
 

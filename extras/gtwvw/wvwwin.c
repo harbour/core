@@ -99,7 +99,7 @@ static HB_BOOL hb_gt_wvw_SetCentreWindow( WVW_WIN * wvw_win, HB_BOOL fCentre, HB
 
 HB_FUNC( WVW_NOPENWINDOW )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -128,7 +128,7 @@ HB_FUNC( WVW_NOPENWINDOW )
          return;
       }
 
-      if( iParentWin > hb_gt_wvw_GetTopWindow() )
+      if( iParentWin > ( wvw->usNumWindows - 1 ) )
       {
          MessageBox( NULL, TEXT( "Invalid parent window" ), TEXT( "Error" ), MB_ICONERROR );
          hb_retni( 0 );
@@ -138,12 +138,12 @@ HB_FUNC( WVW_NOPENWINDOW )
       if( iParentWin < 0 )
       {
          if( hb_gt_wvw_GetMainCoordMode() )
-            wvw_par = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+            wvw_par = hb_gt_wvw_win_top();
          else
-            wvw_par = hb_gt_wvw_GetWindowsData( wvw->usCurWindow );
+            wvw_par = hb_gt_wvw_win( wvw->usCurWindow );
       }
       else
-         wvw_par = hb_gt_wvw_GetWindowsData( iParentWin );
+         wvw_par = hb_gt_wvw_win( iParentWin );
 
       if( HB_ISCHAR( 1 ) )
       {
@@ -176,7 +176,7 @@ HB_FUNC( WVW_NOPENWINDOW )
 
       if( nWin > 0 )
       {
-         WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+         WVW_WIN * wvw_win = hb_gt_wvw_win( nWin );
 
          RECT wi, rcWorkArea;
 
@@ -191,7 +191,7 @@ HB_FUNC( WVW_NOPENWINDOW )
             if( wi.right < rcWorkArea.left || wi.left > rcWorkArea.right ||
                 wi.top > rcWorkArea.bottom || wi.bottom < rcWorkArea.top )
             {
-               hb_gt_wvw_SetCentreWindow( hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() ), HB_TRUE, HB_TRUE );
+               hb_gt_wvw_SetCentreWindow( hb_gt_wvw_win_top(), HB_TRUE, HB_TRUE );
                hb_gt_wvw_SetCentreWindow( wvw_win, wvw->fDevCentreWindow, HB_TRUE );
             }
          }
@@ -222,7 +222,7 @@ HB_FUNC( WVW_NOPENWINDOW )
  */
 HB_FUNC( WVW_LCLOSEWINDOW )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -237,7 +237,7 @@ HB_FUNC( WVW_LCLOSEWINDOW )
 
       hb_gt_wvw_CloseWindow();
 
-      wvw_top = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+      wvw_top = hb_gt_wvw_win_top();
 
       if( wvw_top )
       {
@@ -261,7 +261,7 @@ HB_FUNC( WVW_LCLOSEWINDOW )
 
 HB_FUNC( WVW_GET_HND_WINDOW )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       HB_RETHANDLE( wvw_win->hWnd );
@@ -274,7 +274,7 @@ HB_FUNC( WVW_GET_HND_WINDOW )
  */
 HB_FUNC( WVW_NNUMWINDOWS )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
       hb_retni( wvw->usNumWindows );
@@ -293,7 +293,7 @@ HB_FUNC( WVW_NNUMWINDOWS )
  */
 HB_FUNC( WVW_XREPOSWINDOW )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -301,12 +301,12 @@ HB_FUNC( WVW_XREPOSWINDOW )
       HB_BOOL bAnchored = hb_parldef( 1, HB_TRUE );
 
       /* centerize Main Window, only if not maximized */
-      hb_gt_wvw_SetCentreWindow( hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() ), HB_TRUE, HB_TRUE );
+      hb_gt_wvw_SetCentreWindow( hb_gt_wvw_win_top(), HB_TRUE, HB_TRUE );
 
       /* reposition all subwindows */
       for( i = 1; i < wvw->usNumWindows; i++ )
       {
-         WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( i );
+         WVW_WIN * wvw_win = hb_gt_wvw_win( i );
 
          if( wvw_win )
          {
@@ -329,7 +329,7 @@ HB_FUNC( WVW_XREPOSWINDOW )
  */
 HB_FUNC( WVW_NSETCURWINDOW )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -355,7 +355,7 @@ HB_FUNC( WVW_NSETCURWINDOW )
  */
 HB_FUNC( WVW_NROWOFS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retni( hb_gt_wvw_RowOfs( wvw_win ) );
@@ -368,7 +368,7 @@ HB_FUNC( WVW_NROWOFS )
    nWinNum defaults to topmost window */
 HB_FUNC( WVW_NCOLOFS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retni( hb_gt_wvw_ColOfs( wvw_win ) );
@@ -380,7 +380,7 @@ HB_FUNC( WVW_NCOLOFS )
    returns maximum possible MaxRow() in current screen setting for font used by window nWinNum */
 HB_FUNC( WVW_MAXMAXROW )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -399,7 +399,7 @@ HB_FUNC( WVW_MAXMAXROW )
    returns maximum possible MaxCol() in current screen setting for font used by window nWinNum */
 HB_FUNC( WVW_MAXMAXCOL )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -421,7 +421,7 @@ HB_FUNC( WVW_MAXMAXCOL )
  */
 HB_FUNC( WVW_UNREACHEDBR )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    int cols = 0, rows = 0;
 
@@ -451,7 +451,7 @@ HB_FUNC( WVW_UNREACHEDBR )
  */
 HB_FUNC( WVW_SETMAINCOORD )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -478,7 +478,7 @@ HB_FUNC( WVW_SETMAINCOORD )
  */
 HB_FUNC( WVW_NOCLOSE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -504,7 +504,7 @@ HB_FUNC( WVW_NOCLOSE )
  */
 HB_FUNC( WVW_SETWINSTYLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -534,7 +534,7 @@ HB_FUNC( WVW_SETWINSTYLE )
  */
 HB_FUNC( WVW_ENABLEMAXIMIZE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -579,7 +579,7 @@ HB_FUNC( WVW_ENABLEMAXIMIZE )
  */
 HB_FUNC( WVW_SETPAINTREFRESH )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -594,7 +594,7 @@ HB_FUNC( WVW_SETPAINTREFRESH )
             int i;
             for( i = 0; i < wvw->usNumWindows; i++ )
             {
-               WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( i );
+               WVW_WIN * wvw_win = hb_gt_wvw_win( i );
 
                if( wvw_win )
                {
@@ -620,7 +620,7 @@ HB_FUNC( WVW_SETPAINTREFRESH )
 /* TODO: do you want to make it window selective? */
 HB_FUNC( WVW_SETVERTCARET )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -628,7 +628,7 @@ HB_FUNC( WVW_SETVERTCARET )
 
       if( HB_ISLOG( 1 ) )
       {
-         WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+         WVW_WIN * wvw_win = hb_gt_wvw_win_top();
 
          wvw->fVertCaret = hb_parl( 1 );
 
@@ -652,7 +652,7 @@ HB_FUNC( WVW_SETVERTCARET )
  */
 HB_FUNC( WVW_SETDEFCENTREWINDOW )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -673,7 +673,7 @@ HB_FUNC( WVW_SETDEFCENTREWINDOW )
  */
 HB_FUNC( WVW_SETDEFHCENTREWINDOW )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -694,7 +694,7 @@ HB_FUNC( WVW_SETDEFHCENTREWINDOW )
  */
 HB_FUNC( WVW_SETDEFVCENTREWINDOW )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -718,7 +718,7 @@ HB_FUNC( WVW_SETDEFVCENTREWINDOW )
  */
 HB_FUNC( WVW_SETDEFLINESPACING )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -744,7 +744,7 @@ HB_FUNC( WVW_SETDEFLINESPACING )
  */
 HB_FUNC( WVW_SETDEFLSPACECOLOR )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -769,7 +769,7 @@ HB_FUNC( WVW_SETDEFLSPACECOLOR )
  */
 HB_FUNC( WVW_SETLSPACECOLOR )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -805,7 +805,7 @@ HB_FUNC( WVW_SETLSPACECOLOR )
  */
 HB_FUNC( WVW_ALLOWNONTOPEVENT )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -832,7 +832,7 @@ HB_FUNC( WVW_ALLOWNONTOPEVENT )
  */
 HB_FUNC( WVW_RECURSECBLOCK )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -853,7 +853,7 @@ HB_FUNC( WVW_RECURSECBLOCK )
  */
 HB_FUNC( WVW_NOSTARTUPSUBWINDOW )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -882,7 +882,7 @@ HB_FUNC( WVW_GETSCREENHEIGHT )
  */
 HB_FUNC( WVW_SETWINDOWCENTRE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_gt_wvw_SetCentreWindow( wvw_win, hb_parl( 2 ), hb_parl( 3 ) );
@@ -895,7 +895,7 @@ HB_FUNC( WVW_SETWINDOWCENTRE )
  */
 HB_FUNC( WVW_ENABLESHORTCUTS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retl( hb_gt_wvw_EnableShortCuts( wvw_win, hb_parldef( 2, HB_TRUE ) ) );
@@ -917,7 +917,7 @@ HB_FUNC( WVW_PROCESSMESSAGES )
 
 HB_FUNC( WVW_GETTITLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -933,7 +933,7 @@ HB_FUNC( WVW_GETTITLE )
 
 HB_FUNC( WVW_INVALIDATERECT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -966,7 +966,7 @@ HB_FUNC( WVW_ISLBUTTONPRESSED )
 
 HB_FUNC( WVW_CLIENTTOSCREEN )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    PHB_ITEM paXY = hb_itemArrayNew( 2 );
    POINT    xy;

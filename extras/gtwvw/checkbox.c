@@ -88,7 +88,7 @@
 
 HB_FUNC( WVW_CXCREATE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = NULL;
 
@@ -128,7 +128,7 @@ HB_FUNC( WVW_CXCREATE )
    destroy checkbox nCXid for window nWinNum */
 HB_FUNC( WVW_CXDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -165,7 +165,7 @@ HB_FUNC( WVW_CXDESTROY )
    set the focus to checkbox nButtonId in window nWinNum */
 HB_FUNC( WVW_CXSETFOCUS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_CHECKBOX, hb_parni( 2 ), NULL );
 
@@ -180,7 +180,7 @@ HB_FUNC( WVW_CXSETFOCUS )
  */
 HB_FUNC( WVW_CXENABLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_CHECKBOX, hb_parni( 2 ), NULL );
 
@@ -204,11 +204,11 @@ HB_FUNC( WVW_CXENABLE )
  */
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
-      WVW_WIN *  wvw_win     = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+      WVW_WIN *  wvw_win     = hb_gt_wvw_win_par();
       WVW_CTRL * pcd         = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
       PHB_ITEM   pBlock      = hb_param( 3, HB_IT_EVALITEM );
       HB_BOOL    fOldSetting = wvw->fRecurseCBlock;
@@ -243,7 +243,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
  */
 HB_FUNC( WVW_CXSETCHECK )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
 
    if( pcd->hWnd )
@@ -260,7 +260,7 @@ HB_FUNC( WVW_CXSETCHECK )
  */
 HB_FUNC( WVW_CXGETCHECK )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
    int        iCheck;
 
@@ -275,8 +275,8 @@ HB_FUNC( WVW_CXGETCHECK )
 /* wvw_cxSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_CXSETFONT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -330,11 +330,11 @@ HB_FUNC( WVW_CXSETFONT )
 
 HB_FUNC( WVW_CXSTATUSFONT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
-      WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+      WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
       WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
 
       if( pcd->hWnd )
@@ -353,7 +353,7 @@ HB_FUNC( WVW_CXSTATUSFONT )
 
 HB_FUNC( WVW_CXVISIBLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PUSHBUTTON, hb_parni( 2 ), NULL );
 

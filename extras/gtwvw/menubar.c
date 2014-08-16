@@ -46,7 +46,7 @@
 
 HB_FUNC( WVW_SETMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -58,7 +58,7 @@ HB_FUNC( WVW_SETMENU )
 
 HB_FUNC( WVW_SETPOPUPMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -142,7 +142,7 @@ HB_FUNC( WVW_ENABLEMENUITEM )
 
 HB_FUNC( WVW_GETLASTMENUEVENT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retni( hb_gt_wvw_GetLastMenuEvent( wvw_win ) );
@@ -152,7 +152,7 @@ HB_FUNC( WVW_GETLASTMENUEVENT )
 
 HB_FUNC( WVW_SETLASTMENUEVENT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retni( hb_gt_wvw_SetLastMenuEvent( wvw_win, hb_parni( 2 ) ) );
@@ -162,7 +162,7 @@ HB_FUNC( WVW_SETLASTMENUEVENT )
 
 HB_FUNC( WVW_SETMENUKEYEVENT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retni( hb_gt_wvw_SetMenuKeyEvent( wvw_win, hb_parnl( 2 ) ) );
@@ -173,7 +173,7 @@ HB_FUNC( WVW_SETMENUKEYEVENT )
 /* WVW_MENUITEM_SETBITMAPS( hMenu, nIDEnableItem, nPosition, ncBitmapUnchecked, ncBimapChecked ) */
 HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -241,7 +241,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
 HB_FUNC( WVW_DRAWMENUBAR )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       DrawMenuBar( wvw_win->hWnd );
@@ -255,7 +255,7 @@ HB_FUNC( WVW_ENDMENU )
 /* wvw_GetMenu([nWinNum]) */
 HB_FUNC( WVW_GETMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       HB_RETHANDLE( GetMenu( wvw_win->hWnd ) );
@@ -266,7 +266,7 @@ HB_FUNC( WVW_GETMENU )
 /* wvw_TrackPopupMenu([nWinNum], n) */
 HB_FUNC( WVW_TRACKPOPUPMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -301,7 +301,7 @@ HB_FUNC( WIN_SETMENU )
  */
 HB_FUNC( WVW_NOSYSMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -331,7 +331,7 @@ HB_FUNC( WVW_NOSYSMENU )
  */
 HB_FUNC( WVW_GETSYSTEMMENU )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       HB_RETHANDLE( GetSystemMenu( wvw_win->hWnd, hb_parl( 2 ) /* lReset */ ) );

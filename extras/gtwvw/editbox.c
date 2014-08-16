@@ -93,8 +93,8 @@
 
 HB_FUNC( WVW_EBCREATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -245,7 +245,7 @@ HB_FUNC( WVW_EBCREATE )
  */
 HB_FUNC( WVW_EBDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -284,7 +284,7 @@ HB_FUNC( WVW_EBDESTROY )
  */
 HB_FUNC( WVW_EBSETFOCUS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hb_parni( 2 ), NULL );
 
@@ -296,7 +296,7 @@ HB_FUNC( WVW_EBSETFOCUS )
  */
 HB_FUNC( WVW_EBISFOCUSED )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hb_parni( 2 ), NULL );
 
@@ -311,7 +311,7 @@ HB_FUNC( WVW_EBISFOCUSED )
  */
 HB_FUNC( WVW_EBENABLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hb_parni( 2 ), NULL );
 
@@ -336,7 +336,7 @@ HB_FUNC( WVW_EBENABLE )
  */
 HB_FUNC( WVW_EBEDITABLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hb_parni( 2 ), NULL );
 
@@ -358,13 +358,13 @@ HB_FUNC( WVW_EBEDITABLE )
  */
 HB_FUNC( WVW_EBSETCODEBLOCK )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
    PHB_ITEM   pBlock  = hb_param( 3, HB_IT_EVALITEM );
 
    if( pBlock && pcd && ! pcd->fBusy )
    {
-      WVW_GLOB * wvw         = hb_gt_wvw_GetWvwData();
+      WVW_GLOB * wvw         = hb_gt_wvw();
       HB_BOOL    fOldSetting = wvw->fRecurseCBlock;
 
       wvw->fRecurseCBlock = HB_FALSE;
@@ -394,8 +394,8 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
  */
 HB_FUNC( WVW_EBSETFONT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -456,7 +456,7 @@ HB_FUNC( WVW_EBSETFONT )
  */
 HB_FUNC( WVW_EBISMULTILINE )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
 
    if( pcd )
@@ -479,7 +479,7 @@ HB_FUNC( WVW_EBISMULTILINE )
  */
 HB_FUNC( WVW_EBGETTEXT )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
 
    if( pcd )
@@ -522,7 +522,7 @@ HB_FUNC( WVW_EBGETTEXT )
  */
 HB_FUNC( WVW_EBSETTEXT )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
 
    if( pcd )
@@ -562,7 +562,7 @@ HB_FUNC( WVW_EBSETTEXT )
  */
 HB_FUNC( WVW_EBGETSEL )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
    DWORD      dwStart, dwEnd;
 
@@ -593,7 +593,7 @@ HB_FUNC( WVW_EBGETSEL )
  */
 HB_FUNC( WVW_EBSETSEL )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
    WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
 
    if( pcd )

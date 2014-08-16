@@ -82,7 +82,7 @@
 
 HB_FUNC( WVW_PGCREATE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -186,7 +186,7 @@ HB_FUNC( WVW_PGCREATE )
  */
 HB_FUNC( WVW_PGDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -231,7 +231,7 @@ HB_FUNC( WVW_PGDESTROY )
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
    int  iMin = hb_parni( 3 );
@@ -255,7 +255,7 @@ HB_FUNC( WVW_PGSETRANGE )
  */
 HB_FUNC( WVW_PGSETPOS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
 
@@ -285,7 +285,7 @@ HB_FUNC( WVW_PGSETPOS )
  */
 HB_FUNC( WVW_PGGETPOS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
 

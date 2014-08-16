@@ -103,8 +103,8 @@
 
 HB_FUNC( WVW_XBCREATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -226,7 +226,7 @@ HB_FUNC( WVW_XBCREATE )
    destroy scrollbar nXBid for window nWinNum */
 HB_FUNC( WVW_XBDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -269,7 +269,7 @@ HB_FUNC( WVW_XBDESTROY )
  */
 HB_FUNC( WVW_XBUPDATE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -310,7 +310,7 @@ HB_FUNC( WVW_XBUPDATE )
    return an empty array {} if invalid parameter passed. */
 HB_FUNC( WVW_XBINFO )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
 
@@ -351,7 +351,7 @@ HB_FUNC( WVW_XBINFO )
  */
 HB_FUNC( WVW_XBENABLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd    = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
    UINT uiFlags = ( UINT ) hb_parni( 3 );
@@ -368,7 +368,7 @@ HB_FUNC( WVW_XBENABLE )
  */
 HB_FUNC( WVW_XBVISIBLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
 

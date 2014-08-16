@@ -53,7 +53,7 @@
 
 HB_FUNC( WVW_YESCLOSE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -260,7 +260,7 @@ HB_FUNC( WIN_LOADICON )
 
    if( HB_ISNUM( 1 ) )
    {
-      WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+      WVW_GLOB * wvw = hb_gt_wvw();
 
       if( wvw )
          hIcon = LoadIcon( wvw->hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
@@ -282,7 +282,7 @@ HB_FUNC( WIN_LOADICON )
  */
 HB_FUNC( WIN_LOADIMAGE )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    HBITMAP hImage = NULL;
 
@@ -392,7 +392,7 @@ HB_FUNC( WIN_DRAWTEXT )
 
 HB_FUNC( WVW_GBCREATE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = NULL;
 
@@ -433,7 +433,7 @@ HB_FUNC( WVW_GBCREATE )
 
 HB_FUNC( WVW_RBCREATE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = NULL;
 
@@ -471,7 +471,7 @@ HB_FUNC( WVW_RBCREATE )
 
 HB_FUNC( WVW_SETCONTROLTEXT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PUSHBUTTON, hb_parni( 2 ), NULL );
 
@@ -491,7 +491,7 @@ HB_FUNC( WVW_MOUSE_COL )
 {
    if( hb_gt_wvw_GetMainCoordMode() )
    {
-      WVW_WIN * wvw_top = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+      WVW_WIN * wvw_top = hb_gt_wvw_win_top();
 
       if( wvw_top )
       {
@@ -501,7 +501,7 @@ HB_FUNC( WVW_MOUSE_COL )
    }
    else
    {
-      WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetCurWindow() );
+      WVW_WIN * wvw_win = hb_gt_wvw_win_cur();
 
       if( wvw_win )
       {
@@ -517,7 +517,7 @@ HB_FUNC( WVW_MOUSE_ROW )
 {
    if( hb_gt_wvw_GetMainCoordMode() )
    {
-      WVW_WIN * wvw_top = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+      WVW_WIN * wvw_top = hb_gt_wvw_win_top();
 
       if( wvw_top )
       {
@@ -527,7 +527,7 @@ HB_FUNC( WVW_MOUSE_ROW )
    }
    else
    {
-      WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetCurWindow() );
+      WVW_WIN * wvw_win = hb_gt_wvw_win_cur();
 
       if( wvw_win )
       {
@@ -557,8 +557,8 @@ HB_FUNC( WVW_SETPARENT )
 
    if( nWin2 != 0 )
    {
-      WVW_WIN * wvw_win2 = hb_gt_wvw_GetWindowsData( nWin2 );
-      WVW_WIN * wvw_win1 = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+      WVW_WIN * wvw_win1 = hb_gt_wvw_win_par();
+      WVW_WIN * wvw_win2 = hb_gt_wvw_win( nWin2 );
 
       if( wvw_win1 && wvw_win2 )
          SetParent( wvw_win1->hWnd, wvw_win2->hWnd );
@@ -587,8 +587,8 @@ HB_FUNC( WVW_ISWINDOW )
 
 HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -701,7 +701,7 @@ HB_FUNC( WVW_LOADIMAGE )
 {
    if( HB_ISNUM( 2 ) )
    {
-      WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+      WVW_GLOB * wvw = hb_gt_wvw();
 
       if( wvw )
          HB_RETHANDLE( LoadImage( wvw->hInstance,                                 /* ( HINSTANCE ) hb_parnldef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
@@ -812,7 +812,7 @@ HB_FUNC( WVW_OPENIMAGE )
       {
          HBITMAP hBitmap;
 
-         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_ ( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK )
+         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) &hBitmap ) == S_OK )
             HB_RETHANDLE( CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
          else
             HB_RETHANDLE( NULL );
@@ -828,95 +828,92 @@ HB_FUNC( WVW_OPENIMAGE )
 
 HB_FUNC( WVW_OPENBITMAP )
 {
-   BITMAPFILEHEADER bmfh;
-   BITMAPINFOHEADER bmih;
-   HGLOBAL          hmem1;
-   HBITMAP          hbm = NULL;
-
    HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
 
-   if( fhnd == FS_ERROR )
+   HBITMAP hbm = NULL;
+
+   if( fhnd != FS_ERROR )
    {
-      HB_RETHANDLE( NULL );
-      return;
-   }
+      BITMAPFILEHEADER bmfh;
+      BITMAPINFOHEADER bmih;
+      HGLOBAL          hmem1;
 
-   hb_fsReadLarge( fhnd, &bmfh, sizeof( bmfh ) );  /* Retrieve the BITMAPFILEHEADER structure. */
-   hb_fsReadLarge( fhnd, &bmih, sizeof( bmih ) );  /* Retrieve the BITMAPFILEHEADER structure. */
+      hb_fsReadLarge( fhnd, &bmfh, sizeof( bmfh ) );  /* Retrieve the BITMAPFILEHEADER structure. */
+      hb_fsReadLarge( fhnd, &bmih, sizeof( bmih ) );  /* Retrieve the BITMAPFILEHEADER structure. */
 
-   /* Allocate memory for the BITMAPINFO structure. */
-   hmem1 = GlobalAlloc( GHND, sizeof( BITMAPINFOHEADER ) +
-                        ( ( SIZE_T ) 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) );
-   if( hmem1 )
-   {
-      HGLOBAL hmem2;
-
-      LPBITMAPINFO lpbmi = ( LPBITMAPINFO ) GlobalLock( hmem1 );
-
-      /* Load BITMAPINFOHEADER into the BITMAPINFO  structure. */
-      lpbmi->bmiHeader.biSize   = bmih.biSize;
-      lpbmi->bmiHeader.biWidth  = bmih.biWidth;
-      lpbmi->bmiHeader.biHeight = bmih.biHeight;
-      lpbmi->bmiHeader.biPlanes = bmih.biPlanes;
-
-      lpbmi->bmiHeader.biBitCount      = bmih.biBitCount;
-      lpbmi->bmiHeader.biCompression   = bmih.biCompression;
-      lpbmi->bmiHeader.biSizeImage     = bmih.biSizeImage;
-      lpbmi->bmiHeader.biXPelsPerMeter = bmih.biXPelsPerMeter;
-      lpbmi->bmiHeader.biYPelsPerMeter = bmih.biYPelsPerMeter;
-      lpbmi->bmiHeader.biClrUsed       = bmih.biClrUsed;
-      lpbmi->bmiHeader.biClrImportant  = bmih.biClrImportant;
-
-      /* Retrieve the color table.
-       * 1 << bmih.biBitCount == 2 ^ bmih.biBitCount
-       */
-      switch( bmih.biBitCount )
+      /* Allocate memory for the BITMAPINFO structure. */
+      hmem1 = GlobalAlloc( GHND, sizeof( BITMAPINFOHEADER ) +
+                           ( ( SIZE_T ) 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) );
+      if( hmem1 )
       {
-         case 1:
-         case 4:
-         case 8:
-            hb_fsReadLarge( fhnd, lpbmi->bmiColors, ( ( SIZE_T ) 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) );
-            break;
+         HGLOBAL hmem2;
 
-         case 16:
-         case 32:
-            if( bmih.biCompression == BI_BITFIELDS )
-               hb_fsReadLarge( fhnd, lpbmi->bmiColors, 3 * sizeof( RGBQUAD ) );
-            break;
+         LPBITMAPINFO lpbmi = ( LPBITMAPINFO ) GlobalLock( hmem1 );
 
-         case 24:
-            break;
+         /* Load BITMAPINFOHEADER into the BITMAPINFO  structure. */
+         lpbmi->bmiHeader.biSize   = bmih.biSize;
+         lpbmi->bmiHeader.biWidth  = bmih.biWidth;
+         lpbmi->bmiHeader.biHeight = bmih.biHeight;
+         lpbmi->bmiHeader.biPlanes = bmih.biPlanes;
+
+         lpbmi->bmiHeader.biBitCount      = bmih.biBitCount;
+         lpbmi->bmiHeader.biCompression   = bmih.biCompression;
+         lpbmi->bmiHeader.biSizeImage     = bmih.biSizeImage;
+         lpbmi->bmiHeader.biXPelsPerMeter = bmih.biXPelsPerMeter;
+         lpbmi->bmiHeader.biYPelsPerMeter = bmih.biYPelsPerMeter;
+         lpbmi->bmiHeader.biClrUsed       = bmih.biClrUsed;
+         lpbmi->bmiHeader.biClrImportant  = bmih.biClrImportant;
+
+         /* Retrieve the color table.
+            1 << bmih.biBitCount == 2 ^ bmih.biBitCount */
+         switch( bmih.biBitCount )
+         {
+            case 1:
+            case 4:
+            case 8:
+               hb_fsReadLarge( fhnd, lpbmi->bmiColors, ( ( SIZE_T ) 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) );
+               break;
+
+            case 16:
+            case 32:
+               if( bmih.biCompression == BI_BITFIELDS )
+                  hb_fsReadLarge( fhnd, lpbmi->bmiColors, 3 * sizeof( RGBQUAD ) );
+               break;
+
+            case 24:
+               break;
+         }
+
+         /* Allocate memory for the required number of bytes. */
+         hmem2 = GlobalAlloc( GHND, ( bmfh.bfSize - bmfh.bfOffBits ) );
+         if( hmem2 )
+         {
+            HDC hDC = ( HDC ) HB_PARHANDLE( 2 );
+
+            LPVOID lpvBits = GlobalLock( hmem2 );
+
+            /* Retrieve the bitmap data. */
+            hb_fsReadLarge( fhnd, lpvBits, bmfh.bfSize - bmfh.bfOffBits );
+
+            if( ! hDC )
+               hDC = GetDC( 0 );
+
+            /* Create a bitmap from the data stored in the .bmp file.  */
+            hbm = CreateDIBitmap( hDC, &bmih, CBM_INIT, lpvBits, lpbmi, DIB_RGB_COLORS );
+
+            if( ! HB_ISHANDLE( 2 ) )
+               ReleaseDC( 0, hDC );
+
+            GlobalUnlock( hmem2 );
+            GlobalFree( hmem2 );
+         }
+
+         GlobalUnlock( hmem1 );
+         GlobalFree( hmem1 );
       }
 
-      /* Allocate memory for the required number of bytes. */
-      hmem2 = GlobalAlloc( GHND, ( bmfh.bfSize - bmfh.bfOffBits ) );
-      if( hmem2 )
-      {
-         HDC hDC = ( HDC ) HB_PARHANDLE( 2 );
-
-         LPVOID lpvBits = GlobalLock( hmem2 );
-
-         /* Retrieve the bitmap data. */
-         hb_fsReadLarge( fhnd, lpvBits, bmfh.bfSize - bmfh.bfOffBits );
-
-         if( ! hDC )
-            hDC = GetDC( 0 );
-
-         /* Create a bitmap from the data stored in the .bmp file.  */
-         hbm = CreateDIBitmap( hDC, &bmih, CBM_INIT, lpvBits, lpbmi, DIB_RGB_COLORS );
-
-         if( ! HB_ISHANDLE( 2 ) )
-            ReleaseDC( 0, hDC );
-
-         GlobalUnlock( hmem2 );
-         GlobalFree( hmem2 );
-      }
-
-      GlobalUnlock( hmem1 );
-      GlobalFree( hmem1 );
+      hb_fsClose( fhnd );
    }
-
-   hb_fsClose( fhnd );
 
    HB_RETHANDLE( hbm );
 }
@@ -974,20 +971,20 @@ HB_FUNC( WIN_CREATEFONT )
 
    HB_RETHANDLE(
       CreateFont(
-         hb_parni( 3 ),                               /* logical height of font */
-         hb_parni( 2 ),                               /* logical average character width */
-         0,                                           /* angle of escapement */
-         0,                                           /* base-line orientation angle */
-         ( int ) hb_parni( 4 ),                       /* font weight */
-         ( DWORD ) hb_parnl( 6 ),                     /* italic attribute flag */
-         ( DWORD ) hb_parnl( 7 ),                     /* underline attribute flag */
-         ( DWORD ) hb_parnl( 8 ),                     /* strikeout attribute flag */
-         ( DWORD ) hb_parnl( 5 ),                     /* character set identifier */
-         0,                                           /* output precision */
-         0,                                           /* clipping precision */
-         0,                                           /* output quality */
-         0,                                           /* pitch and family */
-         HB_PARSTR( 1, &hName, NULL ) ) );            /* pointer to typeface name string */
+         hb_parni( 3 ),                     /* logical height of font */
+         hb_parni( 2 ),                     /* logical average character width */
+         0,                                 /* angle of escapement */
+         0,                                 /* base-line orientation angle */
+         ( int ) hb_parni( 4 ),             /* font weight */
+         ( DWORD ) hb_parnl( 6 ),           /* italic attribute flag */
+         ( DWORD ) hb_parnl( 7 ),           /* underline attribute flag */
+         ( DWORD ) hb_parnl( 8 ),           /* strikeout attribute flag */
+         ( DWORD ) hb_parnl( 5 ),           /* character set identifier */
+         0,                                 /* output precision */
+         0,                                 /* clipping precision */
+         0,                                 /* output quality */
+         0,                                 /* pitch and family */
+         HB_PARSTR( 1, &hName, NULL ) ) );  /* pointer to typeface name string */
 
    hb_strfree( hName );
 }
@@ -996,8 +993,8 @@ HB_FUNC( WIN_CREATEFONT )
                    lStrikeout, nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVW_CREATEFONT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_top = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_top = hb_gt_wvw_win_top();
 
    if( wvw && wvw_top )
    {
@@ -1081,7 +1078,7 @@ HB_FUNC( WVW_SELECTFONT )
 
 HB_FUNC( WVW_TOOLBARADDBUTTONS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1144,7 +1141,7 @@ HB_FUNC( WVW_TOOLBARADDBUTTONS )
 
 HB_FUNC( WVW_SETBITMAPRESOURCEID )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1268,7 +1265,7 @@ HB_FUNC( WVW_WINDOW2BITMAP )
    wvw_SetMaxBMCache( 50 ) :: allows up to 50 bitmap stored in the cache */
 HB_FUNC( WVW_SETMAXBMCACHE )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    HB_UINT uiOldMaxBMcache = 0;
 
@@ -1287,7 +1284,7 @@ HB_FUNC( WVW_SETMAXBMCACHE )
    Returns current number of user-bitmap cache. */
 HB_FUNC( WVW_NUMBMCACHE )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    hb_retni( wvw ? wvw->a.uiBMcache : 0 );
 }
@@ -1306,11 +1303,11 @@ HB_FUNC( WVW_NUMBMCACHE )
 /* 2004-06-02: WARNING: WVT is slightly different */
 HB_FUNC( WVW_SETTIMER )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw && wvw->a.pSymWVW_TIMER )
    {
-      WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+      WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
       if( wvw_win )
       {
@@ -1331,11 +1328,11 @@ HB_FUNC( WVW_SETTIMER )
 /* 2004-06-02: WARNING: WVT is slightly different */
 HB_FUNC( WVW_KILLTIMER )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw && wvw->a.pSymWVW_TIMER )
    {
-      WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+      WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
       if( wvw_win )
       {
@@ -1358,7 +1355,7 @@ HB_FUNC( WVW_KILLTIMER )
    (in WVT these is reflected in {0,0,0,0}) */
 HB_FUNC( WVW_GETPAINTRECT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    PHB_ITEM info = hb_itemArrayNew( 4 );
    RECT     rc;
@@ -1378,7 +1375,7 @@ HB_FUNC( WVW_GETPAINTRECT )
 
 HB_FUNC( WVW_SETPOINTER )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1445,7 +1442,7 @@ HB_FUNC( WVW_SETPOINTER )
 /* wvw_LoadPicture( nSlot, cFilePic ) */
 HB_FUNC( WVW_LOADPICTURE )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    int        iSlot    = hb_parni( 1 ) - 1;
    IPicture * iPicture = hb_gt_wvw_LoadPicture( hb_parcx( 2 ) );
@@ -1469,7 +1466,7 @@ HB_FUNC( WVW_LOADPICTURE )
                  nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVW_LOADFONT )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    int iSlot = hb_parni( 1 ) - 1;
 
@@ -1477,7 +1474,7 @@ HB_FUNC( WVW_LOADFONT )
 
    if( wvw && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserFonts ) )
    {
-      WVW_WIN * wvw_top = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+      WVW_WIN * wvw_top = hb_gt_wvw_win_top();
 
       if( wvw_top )
       {
@@ -1525,7 +1522,7 @@ HB_FUNC( WVW_LOADFONT )
 /* wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
 HB_FUNC( WVW_LOADPEN )
 {
-   WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+   WVW_GLOB * wvw = hb_gt_wvw();
 
    if( wvw )
    {
@@ -1550,7 +1547,7 @@ HB_FUNC( WVW_LOADPEN )
 
 HB_FUNC( WVW_MESSAGEBOX )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1576,8 +1573,8 @@ HB_FUNC( WVW_MESSAGEBOX )
 /* wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_CHOOSEFONT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_top = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_top = hb_gt_wvw_win_top();
 
    PHB_ITEM aRet = hb_itemArrayNew( 8 );
 
@@ -1651,8 +1648,8 @@ HB_FUNC( WVW_CHOOSEFONT )
 /* wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
 HB_FUNC( WVW_CHOOSECOLOR )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_top = hb_gt_wvw_GetWindowsData( hb_gt_wvw_GetTopWindow() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_top = hb_gt_wvw_win_top();
 
    if( wvw && wvw_top )
    {
@@ -1691,7 +1688,7 @@ HB_FUNC( WVW_CHOOSECOLOR )
 
 HB_FUNC( WVW_SETMOUSEPOS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1729,9 +1726,9 @@ HB_FUNC( WVW_SETMOUSEPOS )
 
 HB_FUNC( WVW_FILLRECTANGLE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
-   WVW_WIN *  wvw_zer = hb_gt_wvw_GetWindowsData( 0 );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   WVW_WIN *  wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_win )
    {
@@ -1838,7 +1835,7 @@ HB_FUNC( WVW_DLGSETICON )
 
    if( HB_ISNUM( 2 ) )
    {
-      WVW_GLOB * wvw = hb_gt_wvw_GetWvwData();
+      WVW_GLOB * wvw = hb_gt_wvw();
 
       if( wvw )
          hIcon = LoadIcon( wvw->hInstance, MAKEINTRESOURCE( hb_parni( 2 ) ) );
@@ -2047,7 +2044,7 @@ HB_FUNC( WVW_GETCURSORPOS )
 /* wvw_ShowWindow( [nWinNum], nCmdShow ) */
 HB_FUNC( WVW_SHOWWINDOW )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       ShowWindow( wvw_win->hWnd, hb_parnidef( 2, SW_SHOWNORMAL ) );
@@ -2056,7 +2053,7 @@ HB_FUNC( WVW_SHOWWINDOW )
 /* wvw_UpdateWindow( [nWinNum] ) */
 HB_FUNC( WVW_UPDATEWINDOW )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       UpdateWindow( wvw_win->hWnd );
@@ -2068,8 +2065,8 @@ HB_FUNC( WVW_UPDATEWINDOW )
 
 HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_zer = hb_gt_wvw_GetWindowsData( 0 );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_zer )
    {
@@ -2174,8 +2171,8 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 
 HB_FUNC( WVW_CREATEDIALOGMODAL )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_zer = hb_gt_wvw_GetWindowsData( 0 );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_zer )
    {
@@ -2255,7 +2252,7 @@ HB_FUNC( WVW_DELETEOBJECT )
 
 HB_FUNC( WVW_SETONTOP )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2273,7 +2270,7 @@ HB_FUNC( WVW_SETONTOP )
 
 HB_FUNC( WVW_SETASNORMAL )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2296,7 +2293,7 @@ HB_FUNC( WVW_SETASNORMAL )
 
 HB_FUNC( WVW_SAVESCREEN )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2345,7 +2342,7 @@ HB_FUNC( WVW_SAVESCREEN )
 
 HB_FUNC( WVW_RESTSCREEN )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2421,7 +2418,7 @@ HB_FUNC( WVW_RESTSCREEN )
 
 HB_FUNC( WVW_SETFONT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HB_BOOL fResult = HB_FALSE;
 
@@ -2485,7 +2482,7 @@ HB_FUNC( WVW_SETFONT )
 
 HB_FUNC( WVW_SETICON )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2504,7 +2501,7 @@ HB_FUNC( WVW_SETICON )
 
 HB_FUNC( WVW_SETTITLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2517,7 +2514,7 @@ HB_FUNC( WVW_SETTITLE )
 /* wvw_SetWindowPos( nWinNum, nXposition, nYposition)  (position in pixel) */
 HB_FUNC( WVW_SETWINDOWPOS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2533,14 +2530,14 @@ HB_FUNC( WVW_SETWINDOWPOS )
 
 HB_FUNC( WVW_GETWINDOWHANDLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    HB_RETHANDLE( wvw_win ? wvw_win->hWnd : NULL );
 }
 
 HB_FUNC( WVW_SETCODEPAGE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retni( hb_gt_wvw_SetCodePage( wvw_win, hb_parni( 2 ) ) );
@@ -2551,7 +2548,7 @@ HB_FUNC( WVW_SETCODEPAGE )
 /* wvw_CenterWindow( nWinNum, lCenter, lPaint )   (nWinNum==0==MAIN) */
 HB_FUNC( WVW_CENTERWINDOW )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2575,7 +2572,7 @@ HB_FUNC( WVW_CENTERWINDOW )
 
 HB_FUNC( WVW_SETMOUSEMOVE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2590,7 +2587,7 @@ HB_FUNC( WVW_SETMOUSEMOVE )
 
 HB_FUNC( WVW_GETXYFROMROWCOL )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    PHB_ITEM aRet = hb_itemArrayNew( 2 );
    POINT    xy;
@@ -2611,7 +2608,7 @@ HB_FUNC( WVW_GETXYFROMROWCOL )
  */
 HB_FUNC( WVW_GETROWCOLFROMXY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    PHB_ITEM aRet = hb_itemArrayNew( 2 );
    POINT    xy;
@@ -2629,7 +2626,7 @@ HB_FUNC( WVW_GETROWCOLFROMXY )
 
 HB_FUNC( WVW_GETFONTINFO )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    PHB_ITEM aRet = hb_itemArrayNew( 7 );
 
@@ -2659,7 +2656,7 @@ HB_FUNC( WVW_GETFONTINFO )
 
 HB_FUNC( WVW_MINIMIZE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       ShowWindow( wvw_win->hWnd, SW_MINIMIZE );
@@ -2673,8 +2670,8 @@ HB_FUNC( WVW_MINIMIZE )
  */
 HB_FUNC( WVW_MAXIMIZE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2695,7 +2692,7 @@ HB_FUNC( WVW_MAXIMIZE )
  */
 HB_FUNC( WVW_RESTORE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       ShowWindow( wvw_win->hWnd, SW_RESTORE );

@@ -502,15 +502,15 @@ typedef struct
 HB_EXTERN_BEGIN
 
 /* Get functions for internal Data */
-extern HB_BOOL    hb_gt_wvw_GetMainCoordMode( void );
-extern int        hb_gt_wvw_GetNumWindows( void );
-extern int        hb_gt_wvw_GetTopWindow( void );
-extern int        hb_gt_wvw_GetCurWindow( void );
-extern int        hb_gt_wvw_nWin( void );
+extern WVW_GLOB * hb_gt_wvw( void );
 extern int        hb_gt_wvw_nWin_N( int iPar );
-extern WVW_WIN *  hb_gt_wvw_GetWindowsData( int nWin );
-extern WVW_GLOB * hb_gt_wvw_GetWvwData( void );
+extern WVW_WIN *  hb_gt_wvw_win( int nWin );
+extern WVW_WIN *  hb_gt_wvw_win_par( void );
+extern WVW_WIN *  hb_gt_wvw_win_top( void );
+extern WVW_WIN *  hb_gt_wvw_win_cur( void );
+extern HB_BOOL    hb_gt_wvw_GetMainCoordMode( void );
 extern TCHAR *    hb_gt_wvw_GetAppName( void );
+
 extern void       hb_gt_wvw_ResetWindow( WVW_WIN * wvw_win );
 extern int        hb_gt_wvw_SetMenuKeyEvent( WVW_WIN * wvw_win, int iMenuKeyEvent );
 /* bitmap caching functions: */

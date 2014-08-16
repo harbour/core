@@ -59,8 +59,8 @@
  */
 HB_FUNC( WVW_SBCREATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -112,7 +112,7 @@ HB_FUNC( WVW_SBCREATE )
  */
 HB_FUNC( WVW_SBDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win && wvw_win->hStatusBar != NULL )
    {
@@ -144,7 +144,7 @@ HB_FUNC( WVW_SBDESTROY )
  */
 HB_FUNC( WVW_SBADDPART )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
    HWND      hWnd;
 
    if( wvw_win && ( hWnd = wvw_win->hStatusBar ) != NULL )
@@ -241,7 +241,7 @@ HB_FUNC( WVW_SBADDPART )
  */
 HB_FUNC( WVW_SBREFRESH )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
    HWND      hWnd;
 
    if( wvw_win && ( hWnd = wvw_win->hStatusBar ) != NULL )
@@ -277,7 +277,7 @@ HB_FUNC( WVW_SBREFRESH )
  */
 HB_FUNC( WVW_SBSETTEXT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -313,7 +313,7 @@ HB_FUNC( WVW_SBSETTEXT )
  */
 HB_FUNC( WVW_SBGETTEXT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -334,7 +334,7 @@ HB_FUNC( WVW_SBGETTEXT )
  */
 HB_FUNC( WVW_SBGETPARTS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retni( ( int ) SendMessage( wvw_win->hStatusBar, SB_GETPARTS, WVW_MAX_STATUS_PARTS, 0 ) );
@@ -344,8 +344,8 @@ HB_FUNC( WVW_SBGETPARTS )
                                lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_SBSETFONT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_GLOB * wvw     = hb_gt_wvw();
+   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
