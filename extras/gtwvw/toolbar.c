@@ -59,10 +59,10 @@
  */
 HB_FUNC( WVW_TBCREATE )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   if( wvw_win && wvw_win->hToolBar == NULL )
+   if( wvw && wvw_win && wvw_win->hToolBar == NULL )
    {
       HWND hWndParent = wvw_win->hWnd;
       HWND hWnd;
@@ -109,9 +109,9 @@ HB_FUNC( WVW_TBCREATE )
 
       hWnd = CreateToolbarEx( hWndParent,
                               WS_CHILD | WS_VISIBLE | dwStyle,
-                              WVW_ID_BASE_TOOLBAR + nWin,
+                              WVW_ID_BASE_TOOLBAR + wvw_win->nWinId,
                               0,
-                              hb_gt_wvw_GetWvwData()->hInstance,
+                              wvw->hInstance,
                               0,
                               NULL,
                               0,
@@ -162,7 +162,7 @@ HB_FUNC( WVW_TBCREATE )
 
          wvw_win->hToolBar = hWnd;
 
-         hb_gt_wvw_ResetWindow( nWin );
+         hb_gt_wvw_ResetWindow( wvw_win );
 
          HB_RETHANDLE( hWnd );
          return;
@@ -175,7 +175,7 @@ HB_FUNC( WVW_TBCREATE )
    hb_stornl( 0, 8 );
    hb_stornl( 0, 9 );
 
-   HB_RETHANDLE( 0 );
+   HB_RETHANDLE( NULL );
 }
 
 /* wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType, ;
@@ -199,8 +199,7 @@ HB_FUNC( WVW_TBCREATE )
  */
 HB_FUNC( WVW_TBADDBUTTON )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    if( wvw_win )
    {
@@ -269,7 +268,7 @@ HB_FUNC( WVW_TBADDBUTTON )
       hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
       if( wvw_win->usTBHeight != usOldHeight )
-         hb_gt_wvw_ResetWindow( nWin );
+         hb_gt_wvw_ResetWindow( wvw_win );
 
       hb_retl( HB_TRUE );
    }
@@ -299,8 +298,7 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
  */
 HB_FUNC( WVW_TBDELBUTTON )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    HB_BOOL fResult = HB_FALSE;
 
@@ -318,7 +316,7 @@ HB_FUNC( WVW_TBDELBUTTON )
             hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
             if( wvw_win->usTBHeight != usOldHeight )
-               hb_gt_wvw_ResetWindow( nWin );
+               hb_gt_wvw_ResetWindow( wvw_win );
 
             fResult = HB_TRUE;
          }
@@ -365,8 +363,7 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
  */
 HB_FUNC( WVW_TBENABLEBUTTON )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    HB_BOOL fResult = HB_FALSE;
 
@@ -388,7 +385,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
                hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
                if( wvw_win->usTBHeight != usOldHeight )
-                  hb_gt_wvw_ResetWindow( nWin );
+                  hb_gt_wvw_ResetWindow( wvw_win );
 
                fResult = HB_TRUE;
             }
@@ -404,8 +401,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
  */
 HB_FUNC( WVW_TBDESTROY )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    if( wvw_win && wvw_win->hToolBar )
    {
@@ -413,7 +409,7 @@ HB_FUNC( WVW_TBDESTROY )
       wvw_win->hToolBar   = NULL;
       wvw_win->usTBHeight = 0;
 
-      hb_gt_wvw_ResetWindow( nWin );
+      hb_gt_wvw_ResetWindow( wvw_win );
    }
 }
 

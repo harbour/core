@@ -17,6 +17,7 @@ gtwvwd.c
 
 wvwdraw.c
 wvwutils.c
+wvwwin.c
 
 checkbox.c
 combobox.c
@@ -31,7 +32,7 @@ toolbar.c
 
 legacy.c
 
-clipbrd.prg
+wvwharb.prg
 
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

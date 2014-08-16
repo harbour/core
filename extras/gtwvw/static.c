@@ -52,8 +52,7 @@
 HB_FUNC( WVW_STCREATE )
 {
    WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   int        nWin    = hb_gt_wvw_nWin();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    if( wvw && wvw_win )
    {
@@ -100,7 +99,7 @@ HB_FUNC( WVW_STCREATE )
       iOffRight  = hb_parvni( 6, 4 );
 
       if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
+         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -113,7 +112,7 @@ HB_FUNC( WVW_STCREATE )
       iBottom = xy.y - 1 + iOffBottom;
       iRight  = xy.x - 1 + iOffRight;
 
-      nCtrlId = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_STATIC );
+      nCtrlId = hb_gt_wvw_LastControlId( wvw_win, WVW_CONTROL_STATIC );
       if( nCtrlId == 0 )
          nCtrlId = WVW_ID_BASE_STATIC;
       else

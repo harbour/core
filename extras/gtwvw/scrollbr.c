@@ -103,10 +103,10 @@
 
 HB_FUNC( WVW_XBCREATE )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   if( wvw_win )
+   if( wvw && wvw_win )
    {
       HWND   hWndParent = wvw_win->hWnd;
       HWND   hWnd;
@@ -148,7 +148,7 @@ HB_FUNC( WVW_XBCREATE )
       }
 
       if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
+         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -169,7 +169,7 @@ HB_FUNC( WVW_XBCREATE )
          iBottom = iTop + wvw_win->PTEXTSIZE.y - 1 + iOffBottom;
       }
 
-      nCtrlId = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_SCROLLBAR );
+      nCtrlId = hb_gt_wvw_LastControlId( wvw_win, WVW_CONTROL_SCROLLBAR );
       if( nCtrlId == 0 )
          nCtrlId = WVW_ID_BASE_SCROLLBAR;
       else
@@ -186,7 +186,7 @@ HB_FUNC( WVW_XBCREATE )
          iBottom - iTop + 1,                       /* height */
          hWndParent,                               /* handle to main window */
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,         /* id for this scroll bar control */
-         hb_gt_wvw_GetWvwData()->hInstance,        /* instance owning this window */
+         wvw->hInstance,                           /* instance owning this window */
          NULL );                                   /* pointer not needed */
 
       if( hWnd )
@@ -208,11 +208,11 @@ HB_FUNC( WVW_XBCREATE )
          SetScrollRange( hWnd, SB_CTL, 0, 99, FALSE );
          SetScrollPos( hWnd, SB_CTL, 0, TRUE );
 
-         hb_gt_wvw_AddControlHandle( nWin, WVW_CONTROL_SCROLLBAR, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( HB_BYTE ) iStyle );
+         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( HB_BYTE ) iStyle );
 
          OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_XBProc );
 
-         hb_gt_wvw_StoreControlProc( nWin, WVW_CONTROL_SCROLLBAR, hWnd, OldProc );
+         hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd, OldProc );
 
          hb_retnl( nCtrlId );
          return;
@@ -223,8 +223,7 @@ HB_FUNC( WVW_XBCREATE )
 }
 
 /* wvw_xbDestroy( [nWinNum], nXBid )
- * destroy scrollbar nXBid for window nWinNum
- */
+   destroy scrollbar nXBid for window nWinNum */
 HB_FUNC( WVW_XBDESTROY )
 {
    WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
@@ -270,43 +269,50 @@ HB_FUNC( WVW_XBDESTROY )
  */
 HB_FUNC( WVW_XBUPDATE )
 {
-   HWND hWnd  = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
-   int  iPage = hb_parni( 4 );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   if( hWnd && iPage >= 0 )
+   if( wvw_win )
    {
-      SCROLLINFO si;
-      UINT       fMask = SIF_DISABLENOSCROLL;
+      HWND hWnd  = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
+      int  iPage = hb_parni( 4 );
 
-      if( HB_ISNUM( 3 ) )
-         fMask |= SIF_POS;
-      if( HB_ISNUM( 4 ) )
-         fMask |= SIF_PAGE;
-      if( HB_ISNUM( 5 ) || HB_ISNUM( 6 ) )
-         fMask |= SIF_RANGE;
+      if( hWnd && iPage >= 0 )
+      {
+         SCROLLINFO si;
+         UINT       fMask = SIF_DISABLENOSCROLL;
 
-      memset( &si, 0, sizeof( si ) );
+         if( HB_ISNUM( 3 ) )
+            fMask |= SIF_POS;
+         if( HB_ISNUM( 4 ) )
+            fMask |= SIF_PAGE;
+         if( HB_ISNUM( 5 ) || HB_ISNUM( 6 ) )
+            fMask |= SIF_RANGE;
 
-      si.cbSize = sizeof( si );
-      si.fMask  = fMask;
-      si.nMin   = hb_parni( 5 );
-      si.nMax   = hb_parni( 6 );
-      si.nPage  = ( UINT ) iPage;
-      si.nPos   = hb_parni( 3 );
+         memset( &si, 0, sizeof( si ) );
 
-      hb_retni( SetScrollInfo( hWnd, SB_CTL, &si, TRUE ) );
+         si.cbSize = sizeof( si );
+         si.fMask  = fMask;
+         si.nMin   = hb_parni( 5 );
+         si.nMax   = hb_parni( 6 );
+         si.nPage  = ( UINT ) iPage;
+         si.nPos   = hb_parni( 3 );
+
+         hb_retni( SetScrollInfo( hWnd, SB_CTL, &si, TRUE ) );
+         return;
+      }
    }
-   else
-      hb_retni( -1 );
+
+   hb_retni( -1 );
 }
 
 /* wvw_xbInfo( [nWinNum], XBid )
- * return an array {nMin, nMax, nPageSize, nPos, nTrackPos }
- * return an empty array {} if invalid parameter passed.
- */
+   return an array {nMin, nMax, nPageSize, nPos, nTrackPos }
+   return an empty array {} if invalid parameter passed. */
 HB_FUNC( WVW_XBINFO )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
 
    if( hWnd )
    {
@@ -328,12 +334,11 @@ HB_FUNC( WVW_XBINFO )
          hb_arraySetNL( aInfo, 5, si.nTrackPos );
 
          hb_itemReturnRelease( aInfo );
+         return;
       }
-      else
-         hb_reta( 0 );
    }
-   else
-      hb_reta( 0 );
+
+   hb_reta( 0 );
 }
 
 /* wvw_xbEnable( [nWinNum], nXBid, nFlags )
@@ -346,28 +351,30 @@ HB_FUNC( WVW_XBINFO )
  */
 HB_FUNC( WVW_XBENABLE )
 {
-   UINT uiFlags = ( UINT ) hb_parni( 3 );
-   HWND hWnd    = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   if( hWnd && uiFlags <= ESB_DISABLE_BOTH )
-      hb_retl( EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
-   else
-      hb_retl( HB_FALSE );
+   HWND hWnd    = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
+   UINT uiFlags = ( UINT ) hb_parni( 3 );
+
+   hb_retl( hWnd && uiFlags <= ESB_DISABLE_BOTH && EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
 }
 
-/* wvw_xbShow( [nWinNum], nXBid, lShow )
+/* wvw_xbVisible( [nWinNum], nXBid, lShow )
  *  show/hide scrollbar nXBid in window nWinNum (default to topmost window)
- *  nXBid is the handle of the scrolbar
- *  lShow: .T. shows the scrolbar (default)
- *       .F. hides the scrolbar
+ *  nXBid is the handle of the scrollbar
+ *  lShow: .T. shows the scrollbar (default)
+ *         .F. hides the scrollbar
  * returns .T. if successful
  */
-HB_FUNC( WVW_XBSHOW )
+HB_FUNC( WVW_XBVISIBLE )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
-   if( hWnd )
-      hb_retl( ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
-   else
-      hb_retl( HB_FALSE );
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
+
+   hb_retl( hWnd && ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
 }
+
+#if ! defined( __HB_NO_REDUNDANT )
+HB_FUNC_TRANSLATE( WVW_XBSHOW, WVW_XBVISIBLE )
+#endif

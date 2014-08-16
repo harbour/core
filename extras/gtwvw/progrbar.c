@@ -82,8 +82,7 @@
 
 HB_FUNC( WVW_PGCREATE )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    if( wvw_win )
    {
@@ -111,7 +110,7 @@ HB_FUNC( WVW_PGCREATE )
       InitCommonControls();
 
       if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( nWin, &usTop, &usLeft, &usBottom, &usRight );
+         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -122,7 +121,7 @@ HB_FUNC( WVW_PGCREATE )
       iBottom = xy.y - 1 + iOffBottom;
       iRight  = xy.x - 1 + iOffRight;
 
-      nCtrlId = hb_gt_wvw_LastControlId( nWin, WVW_CONTROL_PROGRESSBAR );
+      nCtrlId = hb_gt_wvw_LastControlId( wvw_win, WVW_CONTROL_PROGRESSBAR );
       if( nCtrlId == 0 )
          nCtrlId = WVW_ID_BASE_PROGRESSBAR;
       else
@@ -171,7 +170,7 @@ HB_FUNC( WVW_PGCREATE )
          rOffXB.bottom = iOffBottom;
          rOffXB.right  = iOffRight;
 
-         hb_gt_wvw_AddControlHandle( nWin, WVW_CONTROL_PROGRESSBAR, hWnd, nCtrlId, NULL, rXB, rOffXB, ( HB_BYTE ) iStyle );
+         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hWnd, nCtrlId, NULL, rXB, rOffXB, ( HB_BYTE ) iStyle );
 
          hb_retnl( nCtrlId );
          return;
@@ -232,7 +231,9 @@ HB_FUNC( WVW_PGDESTROY )
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
    int  iMin = hb_parni( 3 );
    int  iMax = hb_parni( 4 );
 
@@ -254,7 +255,9 @@ HB_FUNC( WVW_PGSETRANGE )
  */
 HB_FUNC( WVW_PGSETPOS )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
 
    if( hWnd )
    {
@@ -282,7 +285,9 @@ HB_FUNC( WVW_PGSETPOS )
  */
 HB_FUNC( WVW_PGGETPOS )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
 
    if( hWnd )
       hb_retni( ( int ) SendMessage( hWnd, PBM_GETPOS, 0, 0 ) );

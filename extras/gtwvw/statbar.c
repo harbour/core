@@ -60,8 +60,7 @@
 HB_FUNC( WVW_SBCREATE )
 {
    WVW_GLOB * wvw     = hb_gt_wvw_GetWvwData();
-   int        nWin    = hb_gt_wvw_nWin();
-   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    if( wvw && wvw_win )
    {
@@ -78,7 +77,7 @@ HB_FUNC( WVW_SBCREATE )
       hWnd       = CreateStatusWindow( WS_CHILD | WS_VISIBLE | WS_BORDER | SBT_TOOLTIPS,
                                        NULL,
                                        hWndParent,
-                                       WVW_ID_BASE_STATUSBAR + nWin );
+                                       WVW_ID_BASE_STATUSBAR + wvw_win->nWinId );
       if( hWnd )
       {
          int ptArray;
@@ -94,7 +93,7 @@ HB_FUNC( WVW_SBCREATE )
             wvw_win->usSBHeight = ( USHORT ) rSB.bottom;
          wvw_win->hStatusBar = hWnd;
 
-         hb_gt_wvw_ResetWindow( nWin );
+         hb_gt_wvw_ResetWindow( wvw_win );
 
          ptArray = rSB.right;
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSBfont, ( LPARAM ) TRUE );
@@ -105,7 +104,7 @@ HB_FUNC( WVW_SBCREATE )
       HB_RETHANDLE( hWnd );
    }
    else
-      HB_RETHANDLE( 0 );
+      HB_RETHANDLE( NULL );
 }
 
 /* wvw_sbDestroy( [nWinNum] )
@@ -113,8 +112,7 @@ HB_FUNC( WVW_SBCREATE )
  */
 HB_FUNC( WVW_SBDESTROY )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    if( wvw_win && wvw_win->hStatusBar != NULL )
    {
@@ -128,7 +126,7 @@ HB_FUNC( WVW_SBDESTROY )
       wvw_win->fSBPaint   = HB_FALSE;
       wvw_win->usSBHeight = 0;
 
-      hb_gt_wvw_ResetWindow( nWin );
+      hb_gt_wvw_ResetWindow( wvw_win );
    }
 }
 

@@ -88,35 +88,40 @@
 
 HB_FUNC( WVW_CXCREATE )
 {
-   if( HB_ISEVALITEM( 8 ) )
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+
+   HWND hWnd = NULL;
+
+   if( wvw_win && HB_ISEVALITEM( 8 ) )
    {
       USHORT usTop    = ( USHORT ) hb_parni( 2 ),
              usLeft   = ( USHORT ) hb_parni( 3 ),
              usBottom = ( USHORT ) hb_parni( 4 ),
              usRight  = ( USHORT ) hb_parni( 5 );
 
-      void *       hCaption;
-      const char * szBitmap     = hb_parc( 7 );
-      HB_UINT      uiBitmap     = ( HB_UINT ) hb_parnl( 7 );
-      double       dStretch     = HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1;
-      HB_BOOL      bMap3Dcolors = hb_parl( 11 );
+      void * hCaption;
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
       int iOffBottom = HB_ISARRAY( 9 ) ? hb_parvni( 9, 3 ) : 2;
       int iOffRight  = HB_ISARRAY( 9 ) ? hb_parvni( 9, 4 ) : 2;
 
-      hb_retnl( hb_gt_wvw_ButtonCreate( hb_gt_wvw_nWin(), usTop, usLeft, usBottom, usRight,
+      hb_retnl( hb_gt_wvw_ButtonCreate( wvw_win, usTop, usLeft, usBottom, usRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
-                                        szBitmap, uiBitmap, hb_param( 8, HB_IT_EVALITEM ),
+                                        hb_parc( 7 ),
+                                        ( HB_UINT ) hb_parnl( 7 ),
+                                        hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
-                                        dStretch, bMap3Dcolors,
-                                        BS_AUTOCHECKBOX ) );
+                                        HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
+                                        hb_parl( 11 ) /* bMap3Dcolors */,
+                                        BS_AUTOCHECKBOX, &hWnd ) );
 
       hb_strfree( hCaption );
    }
    else
       hb_retnl( 0 );
+
+   HB_STOREHANDLE( hWnd, 12 );
 }
 
 /* wvw_cxDestroy( [nWinNum], nCXid )
@@ -160,7 +165,9 @@ HB_FUNC( WVW_CXDESTROY )
    set the focus to checkbox nButtonId in window nWinNum */
 HB_FUNC( WVW_CXSETFOCUS )
 {
-   HWND hWnd = hb_gt_wvw_FindControlHandle( hb_gt_wvw_nWin(), WVW_CONTROL_CHECKBOX, hb_parni( 2 ), NULL );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_CHECKBOX, hb_parni( 2 ), NULL );
 
    hb_retl( hWnd && SetFocus( hWnd ) != NULL );
 }
@@ -173,8 +180,9 @@ HB_FUNC( WVW_CXSETFOCUS )
  */
 HB_FUNC( WVW_CXENABLE )
 {
-   int  nWin = hb_gt_wvw_nWin();
-   HWND hWnd = hb_gt_wvw_FindControlHandle( nWin, WVW_CONTROL_CHECKBOX, hb_parni( 2 ), NULL );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_CHECKBOX, hb_parni( 2 ), NULL );
 
    if( hWnd )
    {
@@ -183,11 +191,7 @@ HB_FUNC( WVW_CXENABLE )
       hb_retl( EnableWindow( hWnd, ( BOOL ) bEnable ) == 0 );
 
       if( ! bEnable )
-      {
-         WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
-         if( wvw_win )
-            SetFocus( wvw_win->hWnd );
-      }
+         SetFocus( wvw_win->hWnd );
    }
    else
       hb_retl( HB_FALSE );
@@ -204,7 +208,8 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
 
    if( wvw )
    {
-      WVW_CTRL * pcd         = hb_gt_wvw_GetControlData( hb_gt_wvw_nWin(), WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
+      WVW_WIN *  wvw_win     = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+      WVW_CTRL * pcd         = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
       PHB_ITEM   pBlock      = hb_param( 3, HB_IT_EVALITEM );
       HB_BOOL    fOldSetting = wvw->fRecurseCBlock;
 
@@ -238,7 +243,8 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
  */
 HB_FUNC( WVW_CXSETCHECK )
 {
-   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( hb_gt_wvw_nWin(), WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
 
    if( pcd->hWnd )
       SendMessage( pcd->hWnd, BM_SETCHECK, ( WPARAM ) hb_parnidef( 3, BST_CHECKED ), 0 );
@@ -254,7 +260,8 @@ HB_FUNC( WVW_CXSETCHECK )
  */
 HB_FUNC( WVW_CXGETCHECK )
 {
-   WVW_CTRL * pcd = hb_gt_wvw_GetControlData( hb_gt_wvw_nWin(), WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
+   WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_CHECKBOX, NULL, hb_parni( 2 ) );
    int        iCheck;
 
    if( pcd->hWnd )
@@ -323,12 +330,12 @@ HB_FUNC( WVW_CXSETFONT )
 
 HB_FUNC( WVW_CXSTATUSFONT )
 {
-   int       nWin    = hb_gt_wvw_nWin();
-   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( nWin );
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
 
    if( wvw_win )
    {
-      WVW_CTRL * pcd = hb_gt_wvw_GetControlData( nWin, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
+      WVW_WIN *  wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+      WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
 
       if( pcd->hWnd )
       {
@@ -342,4 +349,13 @@ HB_FUNC( WVW_CXSTATUSFONT )
    }
    else
       hb_retl( HB_FALSE );
+}
+
+HB_FUNC( WVW_CXVISIBLE )
+{
+   WVW_WIN * wvw_win = hb_gt_wvw_GetWindowsData( hb_gt_wvw_nWin() );
+
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PUSHBUTTON, hb_parni( 2 ), NULL );
+
+   hb_retl( hWnd && ShowWindow( hWnd, hb_parldef( 3, HB_TRUE ) ? SW_SHOW : SW_HIDE ) == 0 );
 }
