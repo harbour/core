@@ -137,7 +137,7 @@ HB_FUNC( WVW_PBDESTROY )
 
    if( wvw_win )
    {
-      int        nCtrlId = hb_parni( 2 );
+      int      nCtrlId     = hb_parni( 2 );
       PWVW_CTL wvw_ctl     = wvw_win->ctlList;
       PWVW_CTL wvw_ctlPrev = NULL;
 
@@ -223,23 +223,23 @@ HB_FUNC( WVW_PBENABLE )
 HB_FUNC( WVW_PBSETCODEBLOCK )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
-   PWVW_CTL wvw_ctl     = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
-   PHB_ITEM   pBlock  = hb_param( 3, HB_IT_EVALITEM );
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
+   PHB_ITEM pBlock  = hb_param( 3, HB_IT_EVALITEM );
 
    if( pBlock && wvw_ctl && ! wvw_ctl->fBusy )
    {
       HB_BOOL fOldSetting = wvw->fRecurseCBlock;
 
       wvw->fRecurseCBlock = HB_FALSE;
-      wvw_ctl->fBusy = HB_TRUE;
+      wvw_ctl->fBusy      = HB_TRUE;
 
       if( wvw_ctl->pBlock )
          hb_itemRelease( wvw_ctl->pBlock );
 
       wvw_ctl->pBlock = hb_itemNew( pBlock );
 
-      wvw_ctl->fBusy = HB_FALSE;
+      wvw_ctl->fBusy      = HB_FALSE;
       wvw->fRecurseCBlock = fOldSetting;
 
       hb_retl( HB_TRUE );
@@ -275,8 +275,8 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
  */
 HB_FUNC( WVW_PBSETSTYLE )
 {
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
-   PWVW_CTL wvw_ctl     = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
 
    if( wvw_ctl && wvw_ctl->hWnd )
       SendMessage( wvw_ctl->hWnd, BM_SETSTYLE, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) TRUE );
@@ -292,7 +292,7 @@ HB_FUNC( WVW_PBSETSTYLE )
 HB_FUNC( WVW_PBSETFONT )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {

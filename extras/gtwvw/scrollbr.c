@@ -104,7 +104,7 @@
 HB_FUNC( WVW_XBCREATE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -230,7 +230,7 @@ HB_FUNC( WVW_XBDESTROY )
 
    if( wvw_win )
    {
-      int        nCtrlId = hb_parni( 2 );
+      int      nCtrlId     = hb_parni( 2 );
       PWVW_CTL wvw_ctl     = wvw_win->ctlList;
       PWVW_CTL wvw_ctlPrev = NULL;
 

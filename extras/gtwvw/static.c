@@ -52,7 +52,7 @@
 HB_FUNC( WVW_STCREATE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -176,7 +176,7 @@ HB_FUNC( WVW_STSETTEXT )
 HB_FUNC( WVW_STSETFONT )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {

@@ -60,7 +60,7 @@
 HB_FUNC( WVW_TBCREATE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win && wvw_win->hToolBar == NULL )
    {

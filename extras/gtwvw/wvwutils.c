@@ -588,7 +588,7 @@ HB_FUNC( WVW_ISWINDOW )
 HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -812,7 +812,7 @@ HB_FUNC( WVW_OPENIMAGE )
       {
          HBITMAP hBitmap;
 
-         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) &hBitmap ) == S_OK )
+         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_ ( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK )
             HB_RETHANDLE( CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
          else
             HB_RETHANDLE( NULL );
@@ -994,7 +994,7 @@ HB_FUNC( WIN_CREATEFONT )
 HB_FUNC( WVW_CREATEFONT )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_top = hb_gt_wvw_win_top();
+   PWVW_WIN wvw_top = hb_gt_wvw_win_top();
 
    if( wvw && wvw_top )
    {
@@ -1574,7 +1574,7 @@ HB_FUNC( WVW_MESSAGEBOX )
 HB_FUNC( WVW_CHOOSEFONT )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_top = hb_gt_wvw_win_top();
+   PWVW_WIN wvw_top = hb_gt_wvw_win_top();
 
    PHB_ITEM aRet = hb_itemArrayNew( 8 );
 
@@ -1649,7 +1649,7 @@ HB_FUNC( WVW_CHOOSEFONT )
 HB_FUNC( WVW_CHOOSECOLOR )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_top = hb_gt_wvw_win_top();
+   PWVW_WIN wvw_top = hb_gt_wvw_win_top();
 
    if( wvw && wvw_top )
    {
@@ -1727,8 +1727,8 @@ HB_FUNC( WVW_SETMOUSEPOS )
 HB_FUNC( WVW_FILLRECTANGLE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
-   PWVW_WIN  wvw_zer = hb_gt_wvw_win( 0 );
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_win )
    {
@@ -2066,7 +2066,7 @@ HB_FUNC( WVW_UPDATEWINDOW )
 HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_zer = hb_gt_wvw_win( 0 );
+   PWVW_WIN wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_zer )
    {
@@ -2172,7 +2172,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 HB_FUNC( WVW_CREATEDIALOGMODAL )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_zer = hb_gt_wvw_win( 0 );
+   PWVW_WIN wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_zer )
    {
@@ -2671,7 +2671,7 @@ HB_FUNC( WVW_MINIMIZE )
 HB_FUNC( WVW_MAXIMIZE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {

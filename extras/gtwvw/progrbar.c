@@ -190,7 +190,7 @@ HB_FUNC( WVW_PGDESTROY )
 
    if( wvw_win )
    {
-      int        nCtrlId = hb_parni( 2 );
+      int      nCtrlId     = hb_parni( 2 );
       PWVW_CTL wvw_ctl     = wvw_win->ctlList;
       PWVW_CTL wvw_ctlPrev = NULL;
 

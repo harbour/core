@@ -60,7 +60,7 @@
 HB_FUNC( WVW_SBCREATE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -145,7 +145,7 @@ HB_FUNC( WVW_SBDESTROY )
 HB_FUNC( WVW_SBADDPART )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-   HWND      hWnd;
+   HWND     hWnd;
 
    if( wvw_win && ( hWnd = wvw_win->hStatusBar ) != NULL )
    {
@@ -242,7 +242,7 @@ HB_FUNC( WVW_SBADDPART )
 HB_FUNC( WVW_SBREFRESH )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-   HWND      hWnd;
+   HWND     hWnd;
 
    if( wvw_win && ( hWnd = wvw_win->hStatusBar ) != NULL )
    {
@@ -345,7 +345,7 @@ HB_FUNC( WVW_SBGETPARTS )
 HB_FUNC( WVW_SBSETFONT )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
