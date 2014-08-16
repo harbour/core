@@ -93,8 +93,8 @@
 
 HB_FUNC( WVW_EBCREATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -245,36 +245,36 @@ HB_FUNC( WVW_EBCREATE )
  */
 HB_FUNC( WVW_EBDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
       int        nCtrlId = hb_parni( 2 );
-      WVW_CTRL * pcd     = wvw_win->pcdList;
-      WVW_CTRL * pcdPrev = NULL;
+      PWVW_CTL wvw_ctl     = wvw_win->ctlList;
+      PWVW_CTL wvw_ctlPrev = NULL;
 
-      while( pcd )
+      while( wvw_ctl )
       {
-         if( pcd->nClass == WVW_CONTROL_EDITBOX && pcd->nId == nCtrlId )
+         if( wvw_ctl->nClass == WVW_CONTROL_EDITBOX && wvw_ctl->nId == nCtrlId )
             break;
 
-         pcdPrev = pcd;
-         pcd     = pcd->pNext;
+         wvw_ctlPrev = wvw_ctl;
+         wvw_ctl     = wvw_ctl->pNext;
       }
 
-      if( pcd )
+      if( wvw_ctl )
       {
-         DestroyWindow( pcd->hWnd );
+         DestroyWindow( wvw_ctl->hWnd );
 
-         if( pcdPrev )
-            pcdPrev->pNext = pcd->pNext;
+         if( wvw_ctlPrev )
+            wvw_ctlPrev->pNext = wvw_ctl->pNext;
          else
-            wvw_win->pcdList = pcd->pNext;
+            wvw_win->ctlList = wvw_ctl->pNext;
 
-         if( pcd->pBlock )
-            hb_itemRelease( pcd->pBlock );
+         if( wvw_ctl->pBlock )
+            hb_itemRelease( wvw_ctl->pBlock );
 
-         hb_xfree( pcd );
+         hb_xfree( wvw_ctl );
       }
    }
 }
@@ -284,7 +284,7 @@ HB_FUNC( WVW_EBDESTROY )
  */
 HB_FUNC( WVW_EBSETFOCUS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hb_parni( 2 ), NULL );
 
@@ -296,7 +296,7 @@ HB_FUNC( WVW_EBSETFOCUS )
  */
 HB_FUNC( WVW_EBISFOCUSED )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hb_parni( 2 ), NULL );
 
@@ -311,7 +311,7 @@ HB_FUNC( WVW_EBISFOCUSED )
  */
 HB_FUNC( WVW_EBENABLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hb_parni( 2 ), NULL );
 
@@ -336,7 +336,7 @@ HB_FUNC( WVW_EBENABLE )
  */
 HB_FUNC( WVW_EBEDITABLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hb_parni( 2 ), NULL );
 
@@ -358,24 +358,24 @@ HB_FUNC( WVW_EBEDITABLE )
  */
 HB_FUNC( WVW_EBSETCODEBLOCK )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl     = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
    PHB_ITEM   pBlock  = hb_param( 3, HB_IT_EVALITEM );
 
-   if( pBlock && pcd && ! pcd->fBusy )
+   if( pBlock && wvw_ctl && ! wvw_ctl->fBusy )
    {
-      WVW_GLOB * wvw         = hb_gt_wvw();
+      PWVW_GLO wvw         = hb_gt_wvw();
       HB_BOOL    fOldSetting = wvw->fRecurseCBlock;
 
       wvw->fRecurseCBlock = HB_FALSE;
-      pcd->fBusy = HB_TRUE;
+      wvw_ctl->fBusy = HB_TRUE;
 
-      if( pcd->pBlock )
-         hb_itemRelease( pcd->pBlock );
+      if( wvw_ctl->pBlock )
+         hb_itemRelease( wvw_ctl->pBlock );
 
-      pcd->pBlock = hb_itemNew( pBlock );
+      wvw_ctl->pBlock = hb_itemNew( pBlock );
 
-      pcd->fBusy = HB_FALSE;
+      wvw_ctl->fBusy = HB_FALSE;
       wvw->fRecurseCBlock = fOldSetting;
 
       hb_retl( HB_TRUE );
@@ -394,8 +394,8 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
  */
 HB_FUNC( WVW_EBSETFONT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -425,15 +425,15 @@ HB_FUNC( WVW_EBSETFONT )
          HFONT hFont    = CreateFontIndirect( &wvw->lfEB );
          if( hFont )
          {
-            WVW_CTRL * pcd = wvw_win->pcdList;
+            PWVW_CTL wvw_ctl = wvw_win->ctlList;
 
-            while( pcd )
+            while( wvw_ctl )
             {
-               if( pcd->nClass == WVW_CONTROL_EDITBOX &&
-                   ( HFONT ) SendMessage( pcd->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
-                  SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
+               if( wvw_ctl->nClass == WVW_CONTROL_EDITBOX &&
+                   ( HFONT ) SendMessage( wvw_ctl->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
+                  SendMessage( wvw_ctl->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
-               pcd = pcd->pNext;
+               wvw_ctl = wvw_ctl->pNext;
             }
 
             wvw_win->hEBfont = hFont;
@@ -456,11 +456,11 @@ HB_FUNC( WVW_EBSETFONT )
  */
 HB_FUNC( WVW_EBISMULTILINE )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl     = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
 
-   if( pcd )
-      hb_retl( ( pcd->nStyle & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE );
+   if( wvw_ctl )
+      hb_retl( ( wvw_ctl->nStyle & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE );
    else
       hb_retl( HB_FALSE );
 }
@@ -479,22 +479,22 @@ HB_FUNC( WVW_EBISMULTILINE )
  */
 HB_FUNC( WVW_EBGETTEXT )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl     = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
 
-   if( pcd )
+   if( wvw_ctl )
    {
       USHORT usLen;
       LPTSTR lpszText;
 
       if( hb_parl( 3 ) /* bSoftBreak */ )
-         SendMessage( pcd->hWnd, EM_FMTLINES, ( WPARAM ) TRUE, 0 );
+         SendMessage( wvw_ctl->hWnd, EM_FMTLINES, ( WPARAM ) TRUE, 0 );
 
-      usLen = ( USHORT ) SendMessage( pcd->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
+      usLen = ( USHORT ) SendMessage( wvw_ctl->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
 
       lpszText = ( LPTSTR ) hb_xgrab( usLen * sizeof( TCHAR ) );
 
-      SendMessage( pcd->hWnd, WM_GETTEXT, usLen, ( LPARAM ) lpszText );
+      SendMessage( wvw_ctl->hWnd, WM_GETTEXT, usLen, ( LPARAM ) lpszText );
 
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
@@ -522,10 +522,10 @@ HB_FUNC( WVW_EBGETTEXT )
  */
 HB_FUNC( WVW_EBSETTEXT )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl     = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
 
-   if( pcd )
+   if( wvw_ctl )
    {
       void *  hText;
       LPCTSTR lpszText = HB_PARSTRDEF( 3, &hText, NULL );
@@ -540,7 +540,7 @@ HB_FUNC( WVW_EBSETTEXT )
       }
 #endif
 
-      hb_retl( ( HB_BOOL ) SendMessage( pcd->hWnd, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
+      hb_retl( ( HB_BOOL ) SendMessage( wvw_ctl->hWnd, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
 
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
@@ -562,13 +562,13 @@ HB_FUNC( WVW_EBSETTEXT )
  */
 HB_FUNC( WVW_EBGETSEL )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl     = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
    DWORD      dwStart, dwEnd;
 
-   if( pcd )
+   if( wvw_ctl )
    {
-      SendMessage( pcd->hWnd, EM_GETSEL, ( WPARAM ) &dwStart, ( LPARAM ) &dwEnd );
+      SendMessage( wvw_ctl->hWnd, EM_GETSEL, ( WPARAM ) &dwStart, ( LPARAM ) &dwEnd );
 
       hb_retl( HB_TRUE );
    }
@@ -593,15 +593,15 @@ HB_FUNC( WVW_EBGETSEL )
  */
 HB_FUNC( WVW_EBSETSEL )
 {
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_CTRL * pcd     = hb_gt_wvw_GetControlData( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl     = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_EDITBOX, NULL, hb_parni( 2 ) );
 
-   if( pcd )
+   if( wvw_ctl )
    {
       DWORD dwStart = ( DWORD ) hb_parnl( 3 );
       DWORD dwEnd   = ( DWORD ) hb_parnl( 4 );
 
-      SendMessage( pcd->hWnd, EM_SETSEL, ( WPARAM ) dwStart, ( LPARAM ) dwEnd );
+      SendMessage( wvw_ctl->hWnd, EM_SETSEL, ( WPARAM ) dwStart, ( LPARAM ) dwEnd );
 
       hb_retl( HB_TRUE );
    }

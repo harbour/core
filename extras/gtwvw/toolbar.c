@@ -59,8 +59,8 @@
  */
 HB_FUNC( WVW_TBCREATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win && wvw_win->hToolBar == NULL )
    {
@@ -199,7 +199,7 @@ HB_FUNC( WVW_TBCREATE )
  */
 HB_FUNC( WVW_TBADDBUTTON )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -281,7 +281,7 @@ HB_FUNC( WVW_TBADDBUTTON )
  */
 HB_FUNC( WVW_TBBUTTONCOUNT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -298,7 +298,7 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
  */
 HB_FUNC( WVW_TBDELBUTTON )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HB_BOOL fResult = HB_FALSE;
 
@@ -331,7 +331,7 @@ HB_FUNC( WVW_TBDELBUTTON )
  */
 HB_FUNC( WVW_TBGETBUTTONRECT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -363,7 +363,7 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
  */
 HB_FUNC( WVW_TBENABLEBUTTON )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HB_BOOL fResult = HB_FALSE;
 
@@ -401,7 +401,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
  */
 HB_FUNC( WVW_TBDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win && wvw_win->hToolBar )
    {
@@ -419,7 +419,7 @@ HB_FUNC( WVW_TBDESTROY )
  */
 HB_FUNC( WVW_TBINDEX2CMD )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -441,7 +441,7 @@ HB_FUNC( WVW_TBINDEX2CMD )
  */
 HB_FUNC( WVW_TBCMD2INDEX )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
       hb_retni( hb_gt_wvw_CommandToIndex( wvw_win->hToolBar, hb_parni( 2 ) ) );

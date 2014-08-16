@@ -103,8 +103,8 @@
 
 HB_FUNC( WVW_XBCREATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -226,36 +226,36 @@ HB_FUNC( WVW_XBCREATE )
    destroy scrollbar nXBid for window nWinNum */
 HB_FUNC( WVW_XBDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
       int        nCtrlId = hb_parni( 2 );
-      WVW_CTRL * pcd     = wvw_win->pcdList;
-      WVW_CTRL * pcdPrev = NULL;
+      PWVW_CTL wvw_ctl     = wvw_win->ctlList;
+      PWVW_CTL wvw_ctlPrev = NULL;
 
-      while( pcd )
+      while( wvw_ctl )
       {
-         if( pcd->nClass == WVW_CONTROL_SCROLLBAR && pcd->nId == nCtrlId )
+         if( wvw_ctl->nClass == WVW_CONTROL_SCROLLBAR && wvw_ctl->nId == nCtrlId )
             break;
 
-         pcdPrev = pcd;
-         pcd     = pcd->pNext;
+         wvw_ctlPrev = wvw_ctl;
+         wvw_ctl     = wvw_ctl->pNext;
       }
 
-      if( pcd )
+      if( wvw_ctl )
       {
-         DestroyWindow( pcd->hWnd );
+         DestroyWindow( wvw_ctl->hWnd );
 
-         if( pcdPrev )
-            pcdPrev->pNext = pcd->pNext;
+         if( wvw_ctlPrev )
+            wvw_ctlPrev->pNext = wvw_ctl->pNext;
          else
-            wvw_win->pcdList = pcd->pNext;
+            wvw_win->ctlList = wvw_ctl->pNext;
 
-         if( pcd->pBlock )
-            hb_itemRelease( pcd->pBlock );
+         if( wvw_ctl->pBlock )
+            hb_itemRelease( wvw_ctl->pBlock );
 
-         hb_xfree( pcd );
+         hb_xfree( wvw_ctl );
       }
    }
 }
@@ -269,7 +269,7 @@ HB_FUNC( WVW_XBDESTROY )
  */
 HB_FUNC( WVW_XBUPDATE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -310,7 +310,7 @@ HB_FUNC( WVW_XBUPDATE )
    return an empty array {} if invalid parameter passed. */
 HB_FUNC( WVW_XBINFO )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
 
@@ -351,7 +351,7 @@ HB_FUNC( WVW_XBINFO )
  */
 HB_FUNC( WVW_XBENABLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd    = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
    UINT uiFlags = ( UINT ) hb_parni( 3 );
@@ -368,7 +368,7 @@ HB_FUNC( WVW_XBENABLE )
  */
 HB_FUNC( WVW_XBVISIBLE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
 

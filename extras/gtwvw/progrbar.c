@@ -82,7 +82,7 @@
 
 HB_FUNC( WVW_PGCREATE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -186,36 +186,36 @@ HB_FUNC( WVW_PGCREATE )
  */
 HB_FUNC( WVW_PGDESTROY )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
       int        nCtrlId = hb_parni( 2 );
-      WVW_CTRL * pcd     = wvw_win->pcdList;
-      WVW_CTRL * pcdPrev = NULL;
+      PWVW_CTL wvw_ctl     = wvw_win->ctlList;
+      PWVW_CTL wvw_ctlPrev = NULL;
 
-      while( pcd )
+      while( wvw_ctl )
       {
-         if( pcd->nClass == WVW_CONTROL_PROGRESSBAR && pcd->nId == nCtrlId )
+         if( wvw_ctl->nClass == WVW_CONTROL_PROGRESSBAR && wvw_ctl->nId == nCtrlId )
             break;
 
-         pcdPrev = pcd;
-         pcd     = pcd->pNext;
+         wvw_ctlPrev = wvw_ctl;
+         wvw_ctl     = wvw_ctl->pNext;
       }
 
-      if( pcd )
+      if( wvw_ctl )
       {
-         DestroyWindow( pcd->hWnd );
+         DestroyWindow( wvw_ctl->hWnd );
 
-         if( pcdPrev )
-            pcdPrev->pNext = pcd->pNext;
+         if( wvw_ctlPrev )
+            wvw_ctlPrev->pNext = wvw_ctl->pNext;
          else
-            wvw_win->pcdList = pcd->pNext;
+            wvw_win->ctlList = wvw_ctl->pNext;
 
-         if( pcd->pBlock )
-            hb_itemRelease( pcd->pBlock );
+         if( wvw_ctl->pBlock )
+            hb_itemRelease( wvw_ctl->pBlock );
 
-         hb_xfree( pcd );
+         hb_xfree( wvw_ctl );
       }
    }
 }
@@ -231,7 +231,7 @@ HB_FUNC( WVW_PGDESTROY )
  */
 HB_FUNC( WVW_PGSETRANGE )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
    int  iMin = hb_parni( 3 );
@@ -255,7 +255,7 @@ HB_FUNC( WVW_PGSETRANGE )
  */
 HB_FUNC( WVW_PGSETPOS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
 
@@ -285,7 +285,7 @@ HB_FUNC( WVW_PGSETPOS )
  */
 HB_FUNC( WVW_PGGETPOS )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hb_parni( 2 ), NULL );
 

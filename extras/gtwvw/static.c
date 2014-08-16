@@ -51,8 +51,8 @@
 
 HB_FUNC( WVW_STCREATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -175,8 +175,8 @@ HB_FUNC( WVW_STSETTEXT )
 
 HB_FUNC( WVW_STSETFONT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -206,15 +206,15 @@ HB_FUNC( WVW_STSETFONT )
          HFONT hFont    = CreateFontIndirect( &wvw->lfST );
          if( hFont )
          {
-            WVW_CTRL * pcd = wvw_win->pcdList;
+            PWVW_CTL wvw_ctl = wvw_win->ctlList;
 
-            while( pcd )
+            while( wvw_ctl )
             {
-               if( pcd->nClass == WVW_CONTROL_STATIC &&
-                   ( HFONT ) SendMessage( pcd->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
-                  SendMessage( pcd->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
+               if( wvw_ctl->nClass == WVW_CONTROL_STATIC &&
+                   ( HFONT ) SendMessage( wvw_ctl->hWnd, WM_GETFONT, 0, 0 ) == hOldFont )
+                  SendMessage( wvw_ctl->hWnd, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
-               pcd = pcd->pNext;
+               wvw_ctl = wvw_ctl->pNext;
             }
 
             wvw_win->hSTfont = hFont;

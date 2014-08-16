@@ -55,9 +55,9 @@
 
    TODO: combine it with aOffset like DrawImage ?
  */
-static void hb_gt_wvw_DrawBoxRecessed( WVW_WIN * wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BOOL bTight )
+static void hb_gt_wvw_DrawBoxRecessed( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BOOL bTight )
 {
-   WVW_GLOB * wvw = hb_gt_wvw();
+   PWVW_GLO wvw = hb_gt_wvw();
 
    if( ! bTight )
       SelectObject( wvw_win->hdc, wvw->a.penWhiteDim );
@@ -107,9 +107,9 @@ static void hb_gt_wvw_DrawBoxRecessed( WVW_WIN * wvw_win, int iTop, int iLeft, i
 
    TODO: combine it with aOffset like DrawImage ?
  */
-static void hb_gt_wvw_DrawBoxRaised( WVW_WIN * wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BOOL bTight ) /* <-- none in gtwvt */
+static void hb_gt_wvw_DrawBoxRaised( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BOOL bTight ) /* <-- none in gtwvt */
 {
-   WVW_GLOB * wvw = hb_gt_wvw();
+   PWVW_GLO wvw = hb_gt_wvw();
 
    if( ! bTight )
       SelectObject( wvw_win->hdc, wvw->a.penWhiteDim );
@@ -156,7 +156,7 @@ static void hb_gt_wvw_DrawBoxRaised( WVW_WIN * wvw_win, int iTop, int iLeft, int
    }
 }
 
-static void hb_gt_wvw_DrawOutline( WVW_WIN * wvw_win, int iTop, int iLeft, int iBottom, int iRight )
+static void hb_gt_wvw_DrawOutline( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight )
 {
    MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );     /* Top    */
    LineTo( wvw_win->hdc, iRight, iTop );
@@ -253,7 +253,7 @@ static void s_DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, int xStart, int y
    is never closed.
    TODO: make it an option.
  */
-static HB_BOOL hb_gt_wvw_DrawImage( WVW_WIN * wvw_win, int x1, int y1, int wd, int ht, const char * image, HB_BOOL bTransparent )
+static HB_BOOL hb_gt_wvw_DrawImage( PWVW_WIN wvw_win, int x1, int y1, int wd, int ht, const char * image, HB_BOOL bTransparent )
 {
    HB_BOOL fResult;
    int     iWidth = 0;
@@ -335,7 +335,7 @@ static HB_BOOL hb_gt_wvw_DrawImage( WVW_WIN * wvw_win, int x1, int y1, int wd, i
    return fResult;
 }
 
-static HB_BOOL hb_gt_wvw_RenderPicture( WVW_WIN * wvw_win, int x1, int y1, int wd, int ht, IPicture * iPicture, HB_BOOL bTransp )
+static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd, int ht, IPicture * iPicture, HB_BOOL bTransp )
 {
    HB_BOOL fResult = HB_FALSE;
 
@@ -438,7 +438,7 @@ HB_FUNC( WVW_SETPEN )
 
       if( hPen )
       {
-         WVW_GLOB * wvw = hb_gt_wvw();
+         PWVW_GLO wvw = hb_gt_wvw();
 
          if( wvw )
          {
@@ -476,8 +476,8 @@ HB_FUNC( WVW_SETBRUSH )
 
       if( hBrush )
       {
-         WVW_GLOB * wvw     = hb_gt_wvw();
-         WVW_WIN *  wvw_zer = hb_gt_wvw_win( 0 );
+         PWVW_GLO wvw     = hb_gt_wvw();
+         PWVW_WIN  wvw_zer = hb_gt_wvw_win( 0 );
 
          if( wvw && wvw_zer )
          {
@@ -504,8 +504,8 @@ HB_FUNC( WVW_SETBRUSH )
           two pixel out of char boundary */
 HB_FUNC( WVW_DRAWBOXGET )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -580,8 +580,8 @@ HB_FUNC( WVW_DRAWBOXGET )
           two pixel out of char boundary */
 HB_FUNC( WVW_DRAWBOXGET_XP )  /* Not in WVT */
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -644,7 +644,7 @@ HB_FUNC( WVW_DRAWBOXGET_XP )  /* Not in WVT */
      ie. offset in pixel unit */
 HB_FUNC( WVW_DRAWBOXRAISED )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -708,7 +708,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
      ie. offset in pixel unit */
 HB_FUNC( WVW_DRAWBOXRECESSED )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -764,8 +764,8 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
 /* NOTE: aOffset is TLBR offset in pixel. none in GTWVT */
 HB_FUNC( WVW_DRAWBOXGROUP )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -833,8 +833,8 @@ HB_FUNC( WVW_DRAWBOXGROUP )
 /* wvw_DrawBoxRaised( nWinNum, nTop, nLeft, nBottom, nRight ) */
 HB_FUNC( WVW_DRAWBOXGROUPRAISED )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -915,8 +915,8 @@ HB_FUNC( WVW_DRAWBOXGROUPRAISED )
 
 HB_FUNC( WVW_DRAWIMAGE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1054,7 +1054,7 @@ HB_FUNC( WVW_DRAWIMAGE )
 
 HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1169,7 +1169,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
                   nQuality, nCharSet, lItalic, lUnderline, lStrikeOut ) */
 HB_FUNC( WVW_DRAWLABEL )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1244,8 +1244,8 @@ HB_FUNC( WVW_DRAWLABEL )
 /* wvw_DrawLabelEx( [nWinNum], nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont ) */
 HB_FUNC( WVW_DRAWLABELEX )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1297,7 +1297,7 @@ HB_FUNC( WVW_DRAWLABELEX )
 /* wvw_DrawLabelObj( [nWinNum], nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aOffset ) */
 HB_FUNC( WVW_DRAWLABELOBJ )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1406,8 +1406,8 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 /* wvw_DrawOutline( nWinNum, nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor ) */
 HB_FUNC( WVW_DRAWOUTLINE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1461,8 +1461,8 @@ HB_FUNC( WVW_DRAWOUTLINE )
 /* wvw_DrawOutlineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nSlotPen ) */
 HB_FUNC( WVW_DRAWOUTLINEEX )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1502,8 +1502,8 @@ HB_FUNC( WVW_DRAWOUTLINEEX )
    wvw_DrawLine( nWinNum, nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aOffset) */
 HB_FUNC( WVW_DRAWLINE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1658,8 +1658,8 @@ HB_FUNC( WVW_DRAWLINE )
 /* wvw_DrawLineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen ) */
 HB_FUNC( WVW_DRAWLINEEX )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1806,8 +1806,8 @@ HB_FUNC( WVW_DRAWLINEEX )
 /* wvw_DrawEllipse( nWinNum, nTop, nLeft, nBottom, nRight, aOffset) */
 HB_FUNC( WVW_DRAWELLIPSE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1850,8 +1850,8 @@ HB_FUNC( WVW_DRAWELLIPSE )
 /* wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight, aOffset, lUsaCurrentPen ) */
 HB_FUNC( WVW_DRAWRECTANGLE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1906,8 +1906,8 @@ HB_FUNC( WVW_DRAWRECTANGLE )
 
 HB_FUNC( WVW_DRAWROUNDRECT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -1953,7 +1953,7 @@ HB_FUNC( WVW_DRAWROUNDRECT )
 /* wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffset ) */
 HB_FUNC( WVW_DRAWFOCUSRECT )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -1995,9 +1995,9 @@ HB_FUNC( WVW_DRAWFOCUSRECT )
 /* wvw_DrawColorRect( nWinNum, nTop, nLeft, nBottom, nRight, aPxlOff, nRGB ) */
 HB_FUNC( WVW_DRAWCOLORRECT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_WIN *  wvw_zer = hb_gt_wvw_win( 0 );
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN  wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_win && wvw_zer )
    {
@@ -2048,8 +2048,8 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 /* wvw_DrawGridHorz( nWinNum, nTop, nLeft, nRight, nRows ) */
 HB_FUNC( WVW_DRAWGRIDHORZ )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2094,8 +2094,8 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
          actually aOffset[ 4 ] (Right Offset) is not used here */
 HB_FUNC( WVW_DRAWGRIDVERT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2160,9 +2160,9 @@ HB_FUNC( WVW_DRAWGRIDVERT )
                    nTextColor, nBkColor, nImageAt ) */
 HB_FUNC( WVW_DRAWBUTTON )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_WIN *  wvw_zer = hb_gt_wvw_win( 0 );
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN  wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_win && wvw_zer )
    {
@@ -2315,8 +2315,8 @@ HB_FUNC( WVW_DRAWBUTTON )
    WVW_SBxxxx() functions are recommended instead. */
 HB_FUNC( WVW_DRAWSTATUSBAR )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2409,8 +2409,8 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
 /* nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right } */
 HB_FUNC( WVW_DRAWPICTURE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2468,8 +2468,8 @@ HB_FUNC( WVW_DRAWPICTURE )
 /* wvw_DrawToolButtonState( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOff, nState ) */
 HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2561,8 +2561,8 @@ HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be useful */
 HB_FUNC( WVW_DRAWSCROLLBUTTON )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2658,8 +2658,8 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be useful */
 HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2716,8 +2716,8 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
 /* NOTE: with WVW_XB (scrollbar) this function does not seem to be useful */
 HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2770,8 +2770,8 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
 /* wvw_DrawShadedRect( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, nHorVert, aRGBb, aRGBe ) */
 HB_FUNC( WVW_DRAWSHADEDRECT )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
 
    if( wvw && wvw_win )
    {
@@ -2836,7 +2836,7 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
                     nBackMode, hFont ) */
 HB_FUNC( WVW_DRAWTEXTBOX )
 {
-   WVW_WIN * wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
    {
@@ -2915,9 +2915,9 @@ HB_FUNC( WVW_DRAWTEXTBOX )
                         nBackColor, nBarColor, cImage, lVertical, nDirection ) */
 HB_FUNC( WVW_DRAWPROGRESSBAR )
 {
-   WVW_GLOB * wvw     = hb_gt_wvw();
-   WVW_WIN *  wvw_win = hb_gt_wvw_win_par();
-   WVW_WIN *  wvw_zer = hb_gt_wvw_win( 0 );
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN  wvw_win = hb_gt_wvw_win_par();
+   PWVW_WIN  wvw_zer = hb_gt_wvw_win( 0 );
 
    if( wvw && wvw_win && wvw_zer )
    {
