@@ -112,7 +112,8 @@ static COLORREF s_COLORS[] = {
 static int s_nCountPuts = 0, s_nCountScroll = 0, s_nCountPaint = 0, s_nSetFocus = 0, s_nKillFocus = 0;
 #endif
 
-static const int s_K_Ctrl[] = {
+static const int s_K_Ctrl[] =
+{
    K_CTRL_A, K_CTRL_B, K_CTRL_C, K_CTRL_D, K_CTRL_E, K_CTRL_F, K_CTRL_G, K_CTRL_H,
    K_CTRL_I, K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_M, K_CTRL_N, K_CTRL_O, K_CTRL_P,
    K_CTRL_Q, K_CTRL_R, K_CTRL_S, K_CTRL_T, K_CTRL_U, K_CTRL_V, K_CTRL_W, K_CTRL_X,
@@ -124,7 +125,6 @@ static const int s_K_Ctrl[] = {
 HB_EXTERN_BEGIN
 
 static void    hb_gtInitStatics( int nWin, LPCTSTR lpszWinName, int usRow1, int usCol1, int usRow2, int usCol2 );
-static void    hb_gt_wvwAddCharToInputQueue( int data );
 static HWND    hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, int iCmdShow );
 static HB_BOOL hb_gt_wvwInitWindow( PWVW_WIN wvw_win, HWND hWnd, int col, int row );
 
@@ -138,17 +138,11 @@ static void    hb_gt_wvw_SetCaretOn( PWVW_WIN wvw_win, HB_BOOL bOn );
 static HB_BOOL hb_gt_wvw_SetCaretPos( PWVW_WIN wvw_win );
 static void    hb_gt_wvwValidateCaret( PWVW_WIN wvw_win );
 
-static void    hb_gt_wvw_SetMouseX( PWVW_WIN wvw_win, int ix );
-static void    hb_gt_wvw_SetMouseY( PWVW_WIN wvw_win, int iy );
-
-static int     hb_gt_wvwJustTranslateKey( int key, int shiftkey, int altkey, int controlkey );
 static void    hb_gt_wvwTranslateKey( int key, int shiftkey, int altkey, int controlkey );
 
 static void    hb_gt_wvw_DoInvalidateRect( PWVW_WIN wvw_win );
 
 static void    hb_gt_wvwHandleMenuSelection( int menuIndex );
-
-static POINT   hb_gt_wvw_TBGetColRowFromXY( PWVW_WIN wvw_win, int x, int y );
 
 static POINT   hb_gt_wvw_GetColRowForTextBuffer( PWVW_WIN wvw_win, HB_SIZE index );
 
@@ -165,16 +159,12 @@ static HB_SIZE hb_gt_wvw_GetIndexForTextBuffer( PWVW_WIN wvw_win, int col, int r
 
 static void    hb_gt_wvwCreateObjects( int nWin );
 static void    hb_gt_wvwMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
-static void    hb_gt_wvw_TBMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
 static void    hb_gt_wvwCreateToolTipWindow( PWVW_WIN wvw_win );
 
 /* multi-window related static functions */
 static HB_BOOL hb_gt_wvwWindowPrologue( void );
 static void    hb_gt_wvwWindowEpilogue( void );
-
-static HB_BOOL hb_gt_wvwAcceptingInput( void );
-static HB_BOOL hb_gt_wvwBufferedKey( long lKey );
 
 static void    hb_gt_wvwInputNotAllowed( int nWin, UINT message, WPARAM wParam, LPARAM lParam );
 
@@ -224,11 +214,8 @@ static BYTE *       PackedDibGetBitsPtr( BITMAPINFO * pPackedDib );
 static IPicture * s_FindPictureHandle( const char * szFileName, int * piWidth, int * piHeight );
 static void       s_AddPictureHandle( const char * szFileName, IPicture * iPicture, int iWidth, int iHeight );
 
-static int        hb_gt_wvw_FindControlId( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, HB_BYTE * pnStyle );
-
-static int        s_GetControlClass( PWVW_WIN wvw_win, HWND hWnd );
-static void       s_RunControlBlock( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, int iEventType );
-static void       s_ReposControls( PWVW_WIN wvw_win, HB_BYTE nClass );
+static void       s_RunControlBlock( PWVW_WIN wvw_win, int nClass, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, int iEventType );
+static void       s_ReposControls( PWVW_WIN wvw_win, int nClass );
 
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -2069,9 +2056,9 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
       HB_GTSELF_RESIZE( hb_gt_Base(), wvw_win->ROWS, wvw_win->COLS );
 }
 
-#if ! defined( UNICODE )
-static int hb_wvw_key_ansi_to_oem( int c )
+int hb_gt_wvw_key_ansi_to_oem( int c )
 {
+#if ! defined( UNICODE )
    BYTE    pszSrc[ 2 ];
    wchar_t pszWide[ 1 ];
    BYTE    pszDst[ 2 ];
@@ -2086,8 +2073,10 @@ static int hb_wvw_key_ansi_to_oem( int c )
       return pszDst[ 0 ];
    else
       return 0;
-}
+#else
+   return c;
 #endif
+}
 
 static void xUserPaintNow( PWVW_WIN wvw_win )
 {
@@ -2625,9 +2614,9 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
       {
          HB_BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
 
-         if( ! hb_gt_wvwAcceptingInput() )
+         if( ! hb_gt_wvw_AcceptingInput() )
          {
-            if( hb_gt_wvwBufferedKey( ( long ) wParam ) )
+            if( hb_gt_wvw_BufferedKey( ( long ) wParam ) )
                hb_gt_wvwInputNotAllowed( nWin, message, wParam, lParam );
             return 0;
          }
@@ -2711,19 +2700,19 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                int     iScanCode = HIWORD( lParam ) & 0xFF;
 
                if( bCtrl && iScanCode == 76 )       /* CTRL_VK_NUMPAD5 ) */
-                  hb_gt_wvwAddCharToInputQueue( KP_CTRL_5 );
+                  hb_gt_wvw_AddCharToInputQueue( KP_CTRL_5 );
                else if( bCtrl && wParam == VK_TAB ) /* K_CTRL_TAB */
                {
                   if( bShift )
-                     hb_gt_wvwAddCharToInputQueue( K_CTRL_SH_TAB );
+                     hb_gt_wvw_AddCharToInputQueue( K_CTRL_SH_TAB );
                   else
-                     hb_gt_wvwAddCharToInputQueue( K_CTRL_TAB );
+                     hb_gt_wvw_AddCharToInputQueue( K_CTRL_TAB );
                }
                else if( iScanCode == 70 )                            /* Ctrl_Break key OR Scroll LOCK key */
                {
                   if( bCtrl )                                        /* Not scroll lock */
                   {
-                     hb_gt_wvwAddCharToInputQueue( HB_BREAK_FLAG );  /* Pretend Alt+C pressed */
+                     hb_gt_wvw_AddCharToInputQueue( HB_BREAK_FLAG );  /* Pretend Alt+C pressed */
 
                      wvw_win->fIgnoreWM_SYSCHAR = HB_TRUE;
                   }
@@ -2731,7 +2720,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                      DefWindowProc( hWnd, message, wParam, lParam );  /* Let windows handle ScrollLock */
                }
                else if( bCtrl && iScanCode == 53 && bShift )
-                  hb_gt_wvwAddCharToInputQueue( K_CTRL_QUESTION );
+                  hb_gt_wvw_AddCharToInputQueue( K_CTRL_QUESTION );
                else if( ( bAlt || bCtrl ) &&
                         ( wParam == VK_MULTIPLY || wParam == VK_ADD || wParam == VK_SUBTRACT || wParam == VK_DIVIDE ) )
                {
@@ -2771,7 +2760,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          if( hMouseCapturer )
             SendMessage( hMouseCapturer, WM_LBUTTONUP, 0, 0 );
 
-         if( ! hb_gt_wvwAcceptingInput() )
+         if( ! hb_gt_wvw_AcceptingInput() )
          {
             hb_gt_wvwInputNotAllowed( nWin, message, wParam, lParam );
             return 0;
@@ -2780,9 +2769,9 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          if( ! wvw_win->fIgnoreWM_SYSCHAR )
          {
             if( bCtrl && iScanCode == 28 )        /* K_CTRL_RETURN */
-               hb_gt_wvwAddCharToInputQueue( K_CTRL_RETURN );
+               hb_gt_wvw_AddCharToInputQueue( K_CTRL_RETURN );
             else if( bCtrl && c >= 1 && c <= 26 ) /* K_CTRL_A - Z */
-               hb_gt_wvwAddCharToInputQueue( s_K_Ctrl[ c - 1 ]  );
+               hb_gt_wvw_AddCharToInputQueue( s_K_Ctrl[ c - 1 ]  );
             else
             {
                switch( c )
@@ -2798,14 +2787,14 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                      hb_gt_wvwTranslateKey( K_RETURN, K_SH_RETURN, K_ALT_RETURN, K_CTRL_RETURN );
                      break;
                   case VK_ESCAPE:
-                     hb_gt_wvwAddCharToInputQueue( K_ESC );
+                     hb_gt_wvw_AddCharToInputQueue( K_ESC );
                      break;
                   default:
 #if ! defined( UNICODE )
                      if( wvw_win->CodePage == OEM_CHARSET )
-                        c = hb_wvw_key_ansi_to_oem( c );
+                        c = hb_gt_wvw_key_ansi_to_oem( c );
 #endif
-                     hb_gt_wvwAddCharToInputQueue( c );
+                     hb_gt_wvw_AddCharToInputQueue( c );
                }
             }
          }
@@ -2816,7 +2805,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
       case WM_SYSCHAR:
 
-         if( ! hb_gt_wvwAcceptingInput() )
+         if( ! hb_gt_wvw_AcceptingInput() )
          {
             hb_gt_wvwInputNotAllowed( nWin, message, wParam, lParam );
 
@@ -2946,7 +2935,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                default:
                   c = ( int ) wParam;
             }
-            hb_gt_wvwAddCharToInputQueue( c );
+            hb_gt_wvw_AddCharToInputQueue( c );
          }
 
          wvw_win->fIgnoreWM_SYSCHAR = HB_FALSE;
@@ -2965,7 +2954,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
          /* 2004-06-10
             reject if not accepting input (topmost window not on focus) */
-         if( ! hb_gt_wvwAcceptingInput() )
+         if( ! hb_gt_wvw_AcceptingInput() )
          {
 
             hb_gt_wvwInputNotAllowed( nWin, message, wParam, lParam );
@@ -2980,11 +2969,11 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                However, if there is no gtSetCloseHandler, ALT+C effect is not produced as it should.
                So for now I put it back to the old behaviour with the following two lines, until hb_gtHandleClose() is fixed.
              */
-/*          hb_gt_wvwAddCharToInputQueue( HB_BREAK_FLAG ); */
-            hb_gt_wvwAddCharToInputQueue( K_ESC );
+/*          hb_gt_wvw_AddCharToInputQueue( HB_BREAK_FLAG ); */
+            hb_gt_wvw_AddCharToInputQueue( K_ESC );
 
          else
-            hb_gt_wvwAddCharToInputQueue( K_ESC );
+            hb_gt_wvw_AddCharToInputQueue( K_ESC );
 
          return 0;
 
@@ -3010,7 +2999,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
       case WM_MOUSEWHEEL:
       case WM_NCMOUSEMOVE:
 
-         if( hb_gt_wvwAcceptingInput() && ( nWin == s_wvw->usNumWindows - 1 ) )
+         if( hb_gt_wvw_AcceptingInput() && ( nWin == s_wvw->usNumWindows - 1 ) )
             hb_gt_wvwMouseEvent( wvw_win, hWnd, message, wParam, lParam );
          return 0;
 
@@ -3377,16 +3366,6 @@ POINT hb_gt_wvw_GetColRowFromXY( PWVW_WIN wvw_win, int x, int y )
    return colrow;
 }
 
-static POINT hb_gt_wvw_TBGetColRowFromXY( PWVW_WIN wvw_win, int x, int y )
-{
-   POINT colrow;
-
-   colrow.x = x / wvw_win->PTEXTSIZE.x;
-   colrow.y = y / ( wvw_win->PTEXTSIZE.y + wvw_win->iLineSpacing );
-
-   return colrow;
-}
-
 /* return a rectangle with row and column data, corresponding to the XY pixel coordinates
    This works because we are using the FIXED system font */
 RECT hb_gt_wvw_GetColRowFromXYRect( PWVW_WIN wvw_win, RECT xy )
@@ -3648,10 +3627,10 @@ static void hb_gt_wvw_DoInvalidateRect( PWVW_WIN wvw_win )
          (in current design, only topmost window accepting input) */
 static void hb_gt_wvwTranslateKey( int key, int shiftkey, int altkey, int controlkey )
 {
-   hb_gt_wvwAddCharToInputQueue( hb_gt_wvwJustTranslateKey( key, shiftkey, altkey, controlkey ) );
+   hb_gt_wvw_AddCharToInputQueue( hb_gt_wvw_JustTranslateKey( key, shiftkey, altkey, controlkey ) );
 }
 
-static int hb_gt_wvwJustTranslateKey( int key, int shiftkey, int altkey, int controlkey )
+int hb_gt_wvw_JustTranslateKey( int key, int shiftkey, int altkey, int controlkey )
 {
    if( GetKeyState( VK_MENU ) & 0x8000 )
       return altkey;
@@ -3996,7 +3975,7 @@ static void hb_gtInitStatics( int nWin, LPCTSTR lpszWinName, int usRow1, int usC
 
 /* NOTE: current design allows topmost window only who accepts input */
 
-static void hb_gt_wvwAddCharToInputQueue( int iKey )
+void hb_gt_wvw_AddCharToInputQueue( int iKey )
 {
    int nWin     = s_wvw->usNumWindows - 1;
    int iNextPos = s_wvw->pWin[ nWin ]->keyPointerIn;
@@ -4024,12 +4003,12 @@ int hb_gt_wvw_GetMouseY( PWVW_WIN wvw_win )
    return wvw_win->mousePos.y;
 }
 
-static void hb_gt_wvw_SetMouseX( PWVW_WIN wvw_win, int ix )
+void hb_gt_wvw_SetMouseX( PWVW_WIN wvw_win, int ix )
 {
    wvw_win->mousePos.x = ix;
 }
 
-static void hb_gt_wvw_SetMouseY( PWVW_WIN wvw_win, int iy )
+void hb_gt_wvw_SetMouseY( PWVW_WIN wvw_win, int iy )
 {
    wvw_win->mousePos.y = iy;
 }
@@ -4075,7 +4054,7 @@ static void hb_gt_wvw_SetCaretOn( PWVW_WIN wvw_win, HB_BOOL bOn )
 static void hb_gt_wvwHandleMenuSelection( int menuIndex )
 {
    s_wvw->pWin[ s_wvw->usNumWindows - 1 ]->LastMenuEvent = menuIndex;
-   hb_gt_wvwAddCharToInputQueue( s_wvw->pWin[ s_wvw->usNumWindows - 1 ]->MenuKeyEvent );
+   hb_gt_wvw_AddCharToInputQueue( s_wvw->pWin[ s_wvw->usNumWindows - 1 ]->MenuKeyEvent );
 }
 
 static void hb_gt_wvwMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
@@ -4115,7 +4094,7 @@ static void hb_gt_wvwMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPAR
       {
          HWND hWndFocus = GetFocus();
 
-         if( s_GetControlClass( wvw_win, hWndFocus ) > 0 )
+         if( hb_gt_wvw_GetControlClass( wvw_win, hWndFocus ) > 0 )
             SetFocus( hWnd );
 
          keyCode = K_LBUTTONDOWN;
@@ -4137,7 +4116,7 @@ static void hb_gt_wvwMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPAR
             GetCursorPos( &xy );
             nPopupRet = ( int ) TrackPopupMenu( wvw_win->hPopup, TPM_CENTERALIGN + TPM_RETURNCMD, xy.x, xy.y, 0, hWnd, NULL );
             if( nPopupRet )
-               hb_gt_wvwAddCharToInputQueue( nPopupRet );
+               hb_gt_wvw_AddCharToInputQueue( nPopupRet );
             return;
          }
          else
@@ -4200,133 +4179,7 @@ static void hb_gt_wvwMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPAR
       hb_vmRequestRestore();
    }
 
-   hb_gt_wvwAddCharToInputQueue( keyCode );
-}
-
-static void hb_gt_wvw_TBMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   POINT xy, colrow;
-   SHORT keyCode  = 0;
-   SHORT keyState = 0;
-
-   HB_SYMBOL_UNUSED( hWnd );
-   HB_SYMBOL_UNUSED( wParam );
-
-   if( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE )
-   {
-      if( ! wvw_win->MouseMove )
-         return;
-   }
-
-   xy.x = LOWORD( lParam );
-   xy.y = HIWORD( lParam );
-
-   colrow = hb_gt_wvw_TBGetColRowFromXY( wvw_win, xy.x, xy.y );
-
-   hb_gt_wvw_SetMouseX( wvw_win, colrow.x );
-   hb_gt_wvw_SetMouseY( wvw_win, colrow.y );
-
-   switch( message )
-   {
-      case WM_LBUTTONDBLCLK:
-         keyCode = K_LDBLCLK;
-         break;
-
-      case WM_RBUTTONDBLCLK:
-         keyCode = K_RDBLCLK;
-         break;
-
-      case WM_LBUTTONDOWN:
-      {
-         HWND hWndFocus = GetFocus();
-
-         if( s_GetControlClass( wvw_win, hWndFocus ) > 0 )
-            SetFocus( hWnd );
-
-         keyCode = K_LBUTTONDOWN;
-         break;
-      }
-
-      case WM_RBUTTONDOWN:
-         keyCode = K_RBUTTONDOWN;
-         break;
-
-      case WM_LBUTTONUP:
-         keyCode = K_LBUTTONUP;
-         break;
-
-      case WM_RBUTTONUP:
-
-         if( wvw_win->hPopup )
-         {
-            int nPopupRet;
-            GetCursorPos( &xy );
-            nPopupRet = ( int ) TrackPopupMenu( wvw_win->hPopup, TPM_CENTERALIGN + TPM_RETURNCMD, xy.x, xy.y, 0, hWnd, NULL );
-            if( nPopupRet )
-               hb_gt_wvwAddCharToInputQueue( nPopupRet );
-            return;
-         }
-         else
-         {
-            keyCode = K_RBUTTONUP;
-            break;
-         }
-
-      case WM_MBUTTONDOWN:
-         keyCode = K_MBUTTONDOWN;
-         break;
-
-      case WM_MBUTTONUP:
-         keyCode = K_MBUTTONUP;
-         break;
-
-      case WM_MBUTTONDBLCLK:
-         keyCode = K_MDBLCLK;
-         break;
-
-      case WM_MOUSEMOVE:
-         keyState = ( SHORT ) wParam;
-
-         if( keyState == MK_LBUTTON )
-            keyCode = K_MMLEFTDOWN;
-         else if( keyState == MK_RBUTTON )
-            keyCode = K_MMRIGHTDOWN;
-         else if( keyState == MK_MBUTTON )
-            keyCode = K_MMMIDDLEDOWN;
-         else
-            keyCode = K_MOUSEMOVE;
-         break;
-
-      case WM_MOUSEWHEEL:
-         keyState = HIWORD( wParam );
-
-         if( keyState > 0 )
-            keyCode = K_MWFORWARD;
-         else
-            keyCode = K_MWBACKWARD;
-
-         break;
-
-      case WM_NCMOUSEMOVE:
-         keyCode = K_NCMOUSEMOVE;
-         break;
-   }
-
-   if( s_wvw->a.pSymWVW_TBMOUSE && keyCode != 0 && hb_vmRequestReenter() )
-   {
-      hb_vmPushDynSym( s_wvw->a.pSymWVW_TBMOUSE );
-      hb_vmPushNil();
-      hb_vmPushInteger( wvw_win->nWinId );
-      hb_vmPushLong( ( long ) keyCode );
-      hb_vmPushLong( ( long ) colrow.y );
-      hb_vmPushLong( ( long ) colrow.x );
-      hb_vmPushLong( ( long ) keyState );
-      hb_vmDo( 5 );
-
-      hb_vmRequestRestore();
-   }
-
-   hb_gt_wvwAddCharToInputQueue( keyCode );
+   hb_gt_wvw_AddCharToInputQueue( keyCode );
 }
 
 static HB_BOOL hb_gt_wvwWindowPrologue( void )
@@ -4582,7 +4435,7 @@ void hb_gt_wvw_CloseWindow( void )
    {
       if( ! UnregisterClass( s_wvw->szSubWinName, s_wvw->hInstance ) )
       {
-         MessageBox( NULL, TEXT( "Failed UnregisterClass()" ), s_wvw->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Failed UnregisterClass()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
       }
    }
 #endif
@@ -4590,7 +4443,7 @@ void hb_gt_wvw_CloseWindow( void )
    SetFocus( s_wvw->pWin[ s_wvw->usNumWindows - 1 ]->hWnd );
 }
 
-static HB_BOOL hb_gt_wvwBufferedKey( long lKey )
+HB_BOOL hb_gt_wvw_BufferedKey( long lKey )
 {
    return lKey != VK_SHIFT &&
           lKey != VK_MENU &&
@@ -4603,12 +4456,12 @@ static HB_BOOL hb_gt_wvwBufferedKey( long lKey )
 
 /* returns HB_TRUE if we are accepting input,
    ie. Current focused window is the topmost window */
-static HB_BOOL hb_gt_wvwAcceptingInput( void )
+HB_BOOL hb_gt_wvw_AcceptingInput( void )
 {
    HWND     hWndFocus = GetFocus();
    PWVW_WIN wvw_win   = s_wvw->pWin[ s_wvw->usNumWindows - 1 ];
 
-   return hWndFocus == wvw_win->hWnd || s_GetControlClass( wvw_win, hWndFocus ) > 0;
+   return hWndFocus == wvw_win->hWnd || hb_gt_wvw_GetControlClass( wvw_win, hWndFocus ) > 0;
 }
 
 /* this TIMERPROC is to flash the topmost window using FlashWindow.
@@ -6136,8 +5989,8 @@ void hb_gt_wvw_AddUserBitmapHandle( const char * szFileName, HBITMAP hBitmap, in
    s_wvw->a.pbhUserBitmap = pbhNew;
 }
 
-static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExpWidth, int iExpHeight,
-                               HB_BOOL bMap3Dcolors, HWND hCtrl )
+HBITMAP hb_gt_wvw_PrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExpWidth, int iExpHeight,
+                                 HB_BOOL bMap3Dcolors, HWND hCtrl )
 {
    HBITMAP hBitmap;
 
@@ -6283,7 +6136,7 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
 
                if( ! fResult )
                {
-                  MessageBox( NULL, TEXT( "Cannot shrink/stretch bitmap for WVW control" ), s_wvw->szAppName, MB_ICONERROR );
+                  MessageBox( NULL, TEXT( "Cannot shrink/stretch bitmap for WVW control" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
 
                   DeleteObject( hBitmap2 );
                }
@@ -6314,206 +6167,7 @@ static HBITMAP hPrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExp
    return hBitmap;
 }
 
-/* add one button to existing Toolbar */
-/* uiBitmap is resource id */
-
-HB_BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, HB_UINT uiBitmap, LPCTSTR pszLabel, int iCommand, int iBitmapType, HB_BOOL bMap3Dcolors, PWVW_WIN wvw_win, BOOL bDropdown )
-{
-   TBBUTTON    tbb;
-   TBADDBITMAP tbab;
-   TCHAR       szBuffer[ WVW_TB_LABELMAXLENGTH + 2 ];
-   int         iNewBitmap, iNewString;
-   int         iOffset;
-
-   if( iCommand == 0 )
-   {
-      tbb.iBitmap   = 0;
-      tbb.idCommand = 0;
-      tbb.fsState   = TBSTATE_ENABLED;
-      tbb.fsStyle   = TBSTYLE_SEP;
-      tbb.dwData    = 0;
-      tbb.iString   = 0;
-
-      return ( HB_BOOL ) SendMessage( hWndToolbar, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
-   }
-
-   switch( iBitmapType )
-   {
-      case 0:
-         iOffset = 0;
-         break;
-      case 1:
-         iOffset = wvw_win->iStartStdBitmap;
-         break;
-      case 2:
-         iOffset = wvw_win->iStartViewBitmap;
-         break;
-      case 3:
-         iOffset = wvw_win->iStartHistBitmap;
-         break;
-      default:
-         iOffset = 0;
-   }
-
-   if( iBitmapType == 0 )
-   {
-      HBITMAP hBitmap = hPrepareBitmap( szBitmap, uiBitmap, wvw_win->iTBImgWidth, wvw_win->iTBImgHeight,
-                                        bMap3Dcolors, hWndToolbar );
-
-      if( ! hBitmap )
-         return HB_FALSE;
-
-      tbab.hInst = NULL;
-      tbab.nID   = ( UINT_PTR ) hBitmap;
-      iNewBitmap = ( int ) SendMessage( hWndToolbar, TB_ADDBITMAP, ( WPARAM ) 1, ( WPARAM ) &tbab );
-   }
-   else /* system bitmap */
-      iNewBitmap = ( int ) uiBitmap + iOffset;
-
-   HB_STRNCPY( szBuffer, pszLabel, HB_SIZEOFARRAY( szBuffer ) - 1 );
-
-   iNewString = ( int ) SendMessage( hWndToolbar, TB_ADDSTRING, 0, ( LPARAM ) szBuffer );
-
-   tbb.iBitmap   = iNewBitmap;
-   tbb.idCommand = iCommand;
-   tbb.fsState   = TBSTATE_ENABLED;
-   tbb.fsStyle   = TBSTYLE_BUTTON;
-   if( bDropdown )
-      tbb.fsStyle |= BTNS_WHOLEDROPDOWN;
-   tbb.dwData  = 0;
-   tbb.iString = iNewString;
-
-   return ( HB_BOOL ) SendMessage( hWndToolbar, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
-}
-
-int hb_gt_wvw_IndexToCommand( HWND hWndTB, int iIndex )
-{
-   TBBUTTON tbb;
-
-   if( SendMessage( hWndTB, TB_GETBUTTON, ( WPARAM ) iIndex, ( LPARAM ) ( LPTBBUTTON ) &tbb ) )
-      return tbb.idCommand;
-   else
-      return 0;
-}
-
-int hb_gt_wvw_CommandToIndex( HWND hWndTB, int iCommand )
-{
-   return ( int ) SendMessage( hWndTB, TB_COMMANDTOINDEX, ( WPARAM ) iCommand, 0 );
-}
-
-void hb_gt_wvw_TBinitSize( PWVW_WIN wvw_win, HWND hWndTB )
-{
-   RECT rTB;
-
-   SendMessage( hWndTB, TB_AUTOSIZE, 0, 0 );
-
-   memset( &rTB, 0, sizeof( rTB ) );
-
-   if( GetClientRect( hWndTB, &rTB ) )
-      wvw_win->usTBHeight = rTB.bottom + 2;
-}
-
-LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   HWND     hWndParent = GetParent( hWnd );
-   int      nWin;
-   PWVW_WIN wvw_win;
-
-   if( s_wvw == NULL || hWndParent == NULL )
-   {
-      /* TODO: runtime/internal error is better */
-      MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): parent of toolbar is missing" ), TEXT( "Error" ), MB_ICONERROR );
-
-      return DefWindowProc( hWnd, message, wParam, lParam );
-   }
-
-   for( nWin = 0; nWin < s_wvw->usNumWindows; ++nWin )
-   {
-      if( s_wvw->pWin[ nWin ]->hWnd == hWndParent )
-         break;
-   }
-
-   if( nWin >= s_wvw->usNumWindows )
-   {
-      /* TODO: runtime/internal error is better */
-      MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): invalid handle of toolbar's parent" ), s_wvw->szAppName, MB_ICONERROR );
-
-      return DefWindowProc( hWnd, message, wParam, lParam );
-   }
-
-   wvw_win = s_wvw->pWin[ nWin ];
-
-   switch( message )
-   {
-      case WM_RBUTTONDOWN:
-      case WM_LBUTTONDOWN:
-      case WM_RBUTTONUP:
-      case WM_LBUTTONUP:
-      case WM_RBUTTONDBLCLK:
-      case WM_LBUTTONDBLCLK:
-      case WM_MBUTTONDOWN:
-      case WM_MBUTTONUP:
-      case WM_MBUTTONDBLCLK:
-      case WM_MOUSEMOVE:
-      case WM_MOUSEWHEEL:
-      case WM_NCMOUSEMOVE:
-
-         if( ! hb_gt_wvwAcceptingInput() || ( nWin != s_wvw->usNumWindows - 1 ) )
-            return 0;
-
-         hb_gt_wvw_TBMouseEvent( wvw_win, hWnd, message, wParam, lParam );
-#if 0
-         return 0;
-         TB_ISBUTTONHIGHLIGHTED
-#endif
-      case WM_PAINT:
-      {
-         HGDIOBJ hOldObj;
-         HDC     hdc;
-         RECT    rTB;
-         int     iTop, iRight;
-
-         CallWindowProc( wvw_win->tbOldProc, hWnd, message, wParam, lParam );
-
-         memset( &rTB, 0, sizeof( rTB ) );
-
-         GetClientRect( hWnd, &rTB );
-         iTop   = rTB.bottom - 3;
-         iRight = rTB.right;
-
-         hdc = GetDC( hWnd );
-
-         hOldObj = SelectObject( hdc, s_wvw->a.penWhite );
-
-         MoveToEx( hdc, 0, iTop, NULL );          /* Top */
-         LineTo( hdc, iRight, iTop );
-
-         SelectObject( hdc, s_wvw->a.penBlack );
-
-         MoveToEx( hdc, 0, iTop + 2, NULL );      /* Bottom */
-         LineTo( hdc, iRight, iTop + 2 );
-
-         SelectObject( hdc, s_wvw->a.penDarkGray );
-         MoveToEx( hdc, 0, iTop + 1, NULL );      /* Middle */
-         LineTo( hdc, iRight, iTop + 1 );
-
-         SelectObject( wvw_win->hdc, hOldObj );
-         ReleaseDC( hWnd, hdc );
-
-         return 0;
-      }
-   }
-
-   return CallWindowProc( wvw_win->tbOldProc, hWnd, message, wParam, lParam );
-}
-
-/* .prg callable functions */
-
-/* SCROLLBAR begins */
-
-/* --- start control (eg. scrollbar) list handler --- */
-
-HWND hb_gt_wvw_FindControlHandle( PWVW_WIN wvw_win, HB_BYTE nClass, int nId, HB_BYTE * pnStyle )
+HWND hb_gt_wvw_FindControlHandle( PWVW_WIN wvw_win, int nClass, int nId, int * pnStyle )
 {
    if( wvw_win )
    {
@@ -6534,7 +6188,7 @@ HWND hb_gt_wvw_FindControlHandle( PWVW_WIN wvw_win, HB_BYTE nClass, int nId, HB_
    return NULL;
 }
 
-static int hb_gt_wvw_FindControlId( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, HB_BYTE * pnStyle )
+int hb_gt_wvw_FindControlId( PWVW_WIN wvw_win, int nClass, HWND hWnd, int * pnStyle )
 {
    if( wvw_win )
    {
@@ -6555,7 +6209,7 @@ static int hb_gt_wvw_FindControlId( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd,
    return 0;
 }
 
-int hb_gt_wvw_LastControlId( PWVW_WIN wvw_win, HB_BYTE nClass )
+int hb_gt_wvw_LastControlId( PWVW_WIN wvw_win, int nClass )
 {
    if( wvw_win )
    {
@@ -6570,7 +6224,7 @@ int hb_gt_wvw_LastControlId( PWVW_WIN wvw_win, HB_BYTE nClass )
       return 0;
 }
 
-void hb_gt_wvw_AddControlHandle( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, int nId, PHB_ITEM pBlock, RECT rect, RECT offs, HB_BYTE nStyle )
+void hb_gt_wvw_AddControlHandle( PWVW_WIN wvw_win, int nClass, HWND hWnd, int nId, PHB_ITEM pBlock, RECT rect, RECT offs, int nStyle )
 {
    if( wvw_win )
    {
@@ -6598,7 +6252,7 @@ void hb_gt_wvw_AddControlHandle( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, in
    }
 }
 
-PWVW_CTL hb_gt_wvw_ctl( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, int nId )
+PWVW_CTL hb_gt_wvw_ctl( PWVW_WIN wvw_win, int nClass, HWND hWnd, int nId )
 {
    if( wvw_win )
    {
@@ -6617,7 +6271,7 @@ PWVW_CTL hb_gt_wvw_ctl( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, int nId )
    return NULL;
 }
 
-HB_BOOL hb_gt_wvw_StoreControlProc( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, WNDPROC OldProc )
+HB_BOOL hb_gt_wvw_StoreControlProc( PWVW_WIN wvw_win, int nClass, HWND hWnd, WNDPROC OldProc )
 {
    if( wvw_win )
    {
@@ -6637,7 +6291,7 @@ HB_BOOL hb_gt_wvw_StoreControlProc( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd,
    return HB_FALSE;
 }
 
-WNDPROC hb_gt_wvw_GetControlProc( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd )
+WNDPROC hb_gt_wvw_GetControlProc( PWVW_WIN wvw_win, int nClass, HWND hWnd )
 {
    if( wvw_win )
    {
@@ -6654,7 +6308,7 @@ WNDPROC hb_gt_wvw_GetControlProc( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd )
    return NULL;
 }
 
-static int s_GetControlClass( PWVW_WIN wvw_win, HWND hWnd )
+int hb_gt_wvw_GetControlClass( PWVW_WIN wvw_win, HWND hWnd )
 {
    if( wvw_win )
    {
@@ -6671,7 +6325,7 @@ static int s_GetControlClass( PWVW_WIN wvw_win, HWND hWnd )
    return 0;
 }
 
-static void s_RunControlBlock( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, int iEventType )
+static void s_RunControlBlock( PWVW_WIN wvw_win, int nClass, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, int iEventType )
 {
    PWVW_CTL wvw_ctl;
 
@@ -6797,7 +6451,7 @@ static void s_RunControlBlock( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, UINT
    HB_SYMBOL_UNUSED( lParam );
 }
 
-static void s_ReposControls( PWVW_WIN wvw_win, HB_BYTE nClass )
+static void s_ReposControls( PWVW_WIN wvw_win, int nClass )
 {
    PWVW_CTL wvw_ctl = wvw_win->ctlList;
 
@@ -6864,81 +6518,10 @@ static void s_ReposControls( PWVW_WIN wvw_win, HB_BYTE nClass )
    }
 }
 
-/* --- end control (eg. scrollbar) list handler --- */
+/* BEGIN button supporters
+   for pushbutton and checkbox */
 
-/* SCROLLBAR begins */
-
-LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   HWND hWndParent = GetParent( hWnd );
-   int  nWin;
-
-   int     nCtrlId;
-   WNDPROC OldProc;
-
-   if( s_wvw == NULL || hWndParent == NULL )
-      return DefWindowProc( hWnd, message, wParam, lParam );
-
-   if( message == WM_MOUSEACTIVATE )
-      s_wvw->iScrolling = 1;
-
-   for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
-   {
-      if( s_wvw->pWin[ nWin ]->hWnd == hWndParent )
-         break;
-   }
-
-   if( nWin >= s_wvw->usNumWindows )
-      return DefWindowProc( hWnd, message, wParam, lParam );
-
-   nCtrlId = ( int ) GetWindowLong( hWnd, GWL_ID );
-   if( nCtrlId == 0 )
-   {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId() of Scrollbar" ), s_wvw->szAppName, MB_ICONERROR );
-
-      return DefWindowProc( hWnd, message, wParam, lParam );
-   }
-
-   OldProc = hb_gt_wvw_GetControlProc( s_wvw->pWin[ nWin ], WVW_CONTROL_SCROLLBAR, hWnd );
-   if( OldProc == NULL )
-   {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc() of Scrollbar" ), s_wvw->szAppName, MB_ICONERROR );
-
-      return DefWindowProc( hWnd, message, wParam, lParam );
-   }
-
-   switch( message )
-   {
-      case WM_LBUTTONUP:
-
-         CallWindowProc( OldProc, hWnd, message, wParam, lParam );
-         if( GetCapture() == hWnd )
-         {
-            ReleaseCapture();
-
-            InvalidateRect( hWnd, NULL, FALSE );
-         }
-         return 0;
-
-      case WM_RBUTTONDOWN:
-
-         s_wvw->iScrolling = 0;
-
-         return 0;
-      case WM_RBUTTONUP:
-
-         return 0;
-   }
-
-   if( message == WM_CAPTURECHANGED )
-      s_wvw->iScrolling = 0;
-
-   return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
-}
-
-/* PUSHBUTTON begins */
-
-LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
+static LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
    HWND hWndParent = GetParent( hWnd );
    int  nWin;
@@ -6946,30 +6529,35 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
 
    WNDPROC OldProc;
 
-   if( s_wvw == NULL || hWndParent == NULL )
+   PWVW_GLO wvw = hb_gt_wvw();
+   PWVW_WIN wvw_win;
+
+   if( wvw == NULL || hWndParent == NULL )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
-   for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
+   for( nWin = 0; nWin < wvw->usNumWindows; nWin++ )
    {
-      if( s_wvw->pWin[ nWin ]->hWnd == hWndParent )
+      if( wvw->pWin[ nWin ]->hWnd == hWndParent )
          break;
    }
 
-   if( nWin >= s_wvw->usNumWindows )
+   if( nWin >= wvw->usNumWindows )
       return DefWindowProc( hWnd, message, wParam, lParam );
+
+   wvw_win = wvw->pWin[ nWin ];
 
    nCtrlId = ( int ) GetWindowLong( hWnd, GWL_ID );
    if( nCtrlId == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), s_wvw->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
 
-   OldProc = hb_gt_wvw_GetControlProc( s_wvw->pWin[ nWin ], WVW_CONTROL_PUSHBUTTON, hWnd );
+   OldProc = hb_gt_wvw_GetControlProc( wvw_win, WVW_CONTROL_PUSHBUTTON, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), s_wvw->szAppName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -6986,7 +6574,7 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
          if( ! bAlt && ! bCtrl && ! bShift && wParam == VK_SPACE )
             break;
 
-         if( ! hb_gt_wvwBufferedKey( ( long ) wParam ) )
+         if( ! hb_gt_wvw_BufferedKey( ( long ) wParam ) )
             break;
 
 #if 0
@@ -7013,9 +6601,6 @@ LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPAR
 
    return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
 }
-
-/* BEGIN button supporters
-   for pushbutton and checkbox */
 
 /* ASSUME: WVW_ID_BASE_PUSHBUTTON == WVW_ID_BASE_CHECKBOX
  *         WVW_CONTROL_PUSHBUTTON == WVW_CONTROL_CHECKBOX
@@ -7088,8 +6673,7 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
          int iExpWidth  = iRight - iLeft + 1;
          int iExpHeight = iBottom - iTop + 1;
 
-         HBITMAP hBitmap = hPrepareBitmap( szBitmap, uiBitmap, ( int ) dStretch * iExpWidth, ( int ) dStretch * iExpHeight,
-                                           bMap3Dcolors, hWnd );
+         HBITMAP hBitmap = hb_gt_wvw_PrepareBitmap( szBitmap, uiBitmap, ( int ) dStretch * iExpWidth, ( int ) dStretch * iExpHeight, bMap3Dcolors, hWnd );
 
          if( hBitmap )
             SendMessage( hWnd,                     /* handle to destination window */
@@ -7108,7 +6692,7 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
       rOffXB.bottom = iOffBottom;
       rOffXB.right  = iOffRight;
 
-      hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PUSHBUTTON, hWnd, nCtrlId, ( PHB_ITEM ) phbiCodeBlock, rXB, rOffXB, ( HB_BYTE ) iStyle );
+      hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PUSHBUTTON, hWnd, nCtrlId, ( PHB_ITEM ) phbiCodeBlock, rXB, rOffXB, iStyle );
 
       OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LPARAM ) ( WNDPROC ) hb_gt_wvw_BtnProc );
 
@@ -7124,582 +6708,6 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
 
 /* END button supporters
    for pushbutton and checkbox */
-
-LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   HWND hWndParent = GetParent( hWnd );
-   int  nWin;
-
-   int     nCtrlId;
-   WNDPROC OldProc;
-   HB_BYTE byKbdType;
-
-   if( s_wvw == NULL || hWndParent == NULL )
-      return DefWindowProc( hWnd, message, wParam, lParam );
-
-   for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
-   {
-      if( s_wvw->pWin[ nWin ]->hWnd == hWndParent )
-         break;
-   }
-
-   if( nWin >= s_wvw->usNumWindows )
-      return DefWindowProc( hWnd, message, wParam, lParam );
-
-   nCtrlId = hb_gt_wvw_FindControlId( s_wvw->pWin[ nWin ], WVW_CONTROL_COMBOBOX, hWnd, &byKbdType );
-   if( nCtrlId == 0 )
-   {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), s_wvw->szAppName, MB_ICONERROR );
-
-      return DefWindowProc( hWnd, message, wParam, lParam );
-   }
-
-   OldProc = hb_gt_wvw_GetControlProc( s_wvw->pWin[ nWin ], WVW_CONTROL_COMBOBOX, hWnd );
-   if( OldProc == NULL )
-   {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), s_wvw->szAppName, MB_ICONERROR );
-
-      return DefWindowProc( hWnd, message, wParam, lParam );
-   }
-
-   switch( message )
-   {
-      case WM_KEYDOWN:
-      case WM_SYSKEYDOWN:
-      {
-         HB_BOOL bAlt   = GetKeyState( VK_MENU ) & 0x8000;
-         HB_BOOL bCtrl  = GetKeyState( VK_CONTROL ) & 0x8000;
-         HB_BOOL bShift = GetKeyState( VK_SHIFT ) & 0x8000;
-         int     c      = ( int ) wParam;
-         HB_BOOL bDropped;
-
-         if( ! hb_gt_wvwBufferedKey( ( long ) wParam ) )
-            break;
-
-         bDropped = ( HB_BOOL ) SendMessage( hWnd, CB_GETDROPPEDSTATE, 0, 0 );
-
-         if( byKbdType == WVW_CB_KBD_STANDARD )
-         {
-            switch( c )
-            {
-               case VK_F4:
-                  if( bAlt )
-                  {
-                     SetFocus( hWndParent );
-                     PostMessage( hWndParent, message, wParam, lParam );
-                     return 0;
-                  }
-                  break;
-
-               case VK_ESCAPE:
-                  if( ! bCtrl && ! bAlt && ! bShift && ! bDropped )
-                  {
-                     SetFocus( hWndParent );
-                     PostMessage( hWndParent, message, wParam, lParam );
-                     return 0;
-                  }
-                  break;
-
-               case VK_TAB:
-                  if( ! bCtrl && ! bAlt )
-                  {
-                     SetFocus( hWndParent );
-                     PostMessage( hWndParent, message, wParam, lParam );
-                     return 0;
-                  }
-                  break;
-
-               case VK_NEXT:
-
-                  if( bDropped || bAlt || bShift || bCtrl )
-                     break;
-                  else
-                  {
-                     if( ! bDropped )
-                        SendMessage( hWnd, CB_SHOWDROPDOWN, ( WPARAM ) TRUE, 0 );
-                     else
-                     {
-                        SetFocus( hWndParent );
-                        PostMessage( hWndParent, message, wParam, lParam );
-                     }
-                     return 0;
-                  }
-
-               case VK_RETURN:
-                  if( ! bCtrl && ! bAlt && ! bShift && ! bDropped )
-                  {
-                     SetFocus( hWndParent );
-                     PostMessage( hWndParent, message, wParam, lParam );
-                     return 0;
-                  }
-                  break;
-            }
-            break;
-
-         }     /* WVW_CB_KBD_STANDARD */
-         else  /* assume WVW_CB_KBD_CLIPPER */
-         {
-            switch( c )
-            {
-               case VK_F4:
-                  if( bAlt )
-                  {
-                     SetFocus( hWndParent );
-                     PostMessage( hWndParent, message, wParam, lParam );
-                     return 0;
-                  }
-                  break;
-
-               case VK_RETURN:
-
-                  if( bDropped || bAlt || bShift || bCtrl )
-                     break;
-                  else
-                  {
-                     if( ! bDropped )
-                     {
-                        SendMessage( hWnd, CB_SHOWDROPDOWN, ( WPARAM ) TRUE, 0 );
-                        return 0;
-                     }
-                     else
-                     {
-                        SetFocus( hWndParent );
-                        PostMessage( hWndParent, message, wParam, lParam );
-                        return 0;
-                     }
-                  }
-
-               case VK_ESCAPE:
-                  if( bDropped || bAlt || bShift || bCtrl )
-                     break;
-                  else
-                  {
-                     SetFocus( hWndParent );
-                     PostMessage( hWndParent, message, wParam, lParam );
-                     return 0;
-                  }
-
-               case VK_UP:
-               case VK_DOWN:
-               case VK_RIGHT:
-               case VK_LEFT:
-               case VK_HOME:
-               case VK_END:
-               case VK_PRIOR:
-               case VK_NEXT:
-                  if( bDropped )
-                     break;
-                  else
-                  {
-                     SetFocus( hWndParent );
-                     PostMessage( hWndParent, message, wParam, lParam );
-                     return 0;
-                  }
-
-               case VK_TAB:
-                  if( ! bCtrl && ! bAlt )
-                  {
-                     SetFocus( hWndParent );
-                     PostMessage( hWndParent, message, wParam, lParam );
-                     return 0;
-                  }
-                  break;
-            }
-            break;
-         }
-      }
-   }
-
-   return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
-}
-
-/* EDITBOX begins (experimental) */
-
-LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   HWND hWndParent = GetParent( hWnd );
-   int  nWin;
-
-   int     nCtrlId;
-   WNDPROC OldProc;
-   HB_BYTE byEBType;
-   int     iKey;
-
-   if( s_wvw == NULL || hWndParent == NULL )
-      return DefWindowProc( hWnd, message, wParam, lParam );
-
-   for( nWin = 0; nWin < s_wvw->usNumWindows; nWin++ )
-   {
-      if( s_wvw->pWin[ nWin ]->hWnd == hWndParent )
-         break;
-   }
-
-   if( nWin >= s_wvw->usNumWindows )
-      return DefWindowProc( hWnd, message, wParam, lParam );
-
-   nCtrlId = hb_gt_wvw_FindControlId( s_wvw->pWin[ nWin ], WVW_CONTROL_EDITBOX, hWnd, &byEBType );
-   if( nCtrlId == 0 )
-   {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), s_wvw->szAppName, MB_ICONERROR );
-
-      return DefWindowProc( hWnd, message, wParam, lParam );
-   }
-
-   OldProc = hb_gt_wvw_GetControlProc( s_wvw->pWin[ nWin ], WVW_CONTROL_EDITBOX, hWnd );
-   if( OldProc == NULL )
-   {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), s_wvw->szAppName, MB_ICONERROR );
-
-      return DefWindowProc( hWnd, message, wParam, lParam );
-   }
-
-   iKey = 0;
-   switch( message )
-   {
-      case WM_KEYDOWN:
-      case WM_SYSKEYDOWN:
-      {
-         HB_BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
-         int     c    = ( int ) wParam;
-         switch( c )
-         {
-            case VK_F1:
-               iKey = hb_gt_wvwJustTranslateKey( K_F1, K_SH_F1, K_ALT_F1, K_CTRL_F1 );
-               break;
-            case VK_F2:
-               iKey = hb_gt_wvwJustTranslateKey( K_F2, K_SH_F2, K_ALT_F2, K_CTRL_F2 );
-               break;
-            case VK_F3:
-               iKey = hb_gt_wvwJustTranslateKey( K_F3, K_SH_F3, K_ALT_F3, K_CTRL_F3 );
-               break;
-            case VK_F4:
-               if( bAlt )
-               {
-                  SetFocus( hWndParent );
-                  PostMessage( hWndParent, message, wParam, lParam );
-                  return 0;
-               }
-               else
-                  iKey = hb_gt_wvwJustTranslateKey( K_F4, K_SH_F4, K_ALT_F4, K_CTRL_F4 );
-               break;
-            case VK_F5:
-               iKey = hb_gt_wvwJustTranslateKey( K_F5, K_SH_F5, K_ALT_F5, K_CTRL_F5 );
-               break;
-            case VK_F6:
-               iKey = hb_gt_wvwJustTranslateKey( K_F6, K_SH_F6, K_ALT_F6, K_CTRL_F6 );
-               break;
-            case VK_F7:
-               iKey = hb_gt_wvwJustTranslateKey( K_F7, K_SH_F7, K_ALT_F7, K_CTRL_F7 );
-               break;
-            case VK_F8:
-               iKey = hb_gt_wvwJustTranslateKey( K_F8, K_SH_F8, K_ALT_F8, K_CTRL_F8 );
-               break;
-            case VK_F9:
-               iKey = hb_gt_wvwJustTranslateKey( K_F9, K_SH_F9, K_ALT_F9, K_CTRL_F9 );
-               break;
-            case VK_F10:
-               iKey = hb_gt_wvwJustTranslateKey( K_F10, K_SH_F10, K_ALT_F10, K_CTRL_F10 );
-               break;
-            case VK_F11:
-               iKey = hb_gt_wvwJustTranslateKey( K_F11, K_SH_F11, K_ALT_F11, K_CTRL_F11 );
-               break;
-            case VK_F12:
-               iKey = hb_gt_wvwJustTranslateKey( K_F12, K_SH_F12, K_ALT_F12, K_CTRL_F12 );
-               break;
-         }
-         break;
-      }
-
-      case WM_CHAR:
-      {
-         HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
-         int     iScanCode = HIWORD( lParam ) & 0xFF;
-         int     c         = ( int ) wParam;
-         if( bCtrl && iScanCode == 28 )
-            iKey = K_CTRL_RETURN;
-         else if( bCtrl && ( c >= 1 && c <= 26 ) )
-            iKey = s_K_Ctrl[ c - 1 ];
-         else
-         {
-            switch( c )
-            {
-               case VK_BACK:
-                  iKey = hb_gt_wvwJustTranslateKey( K_BS, K_SH_BS, K_ALT_BS, K_CTRL_BS );
-                  break;
-               case VK_TAB:
-                  iKey = hb_gt_wvwJustTranslateKey( K_TAB, K_SH_TAB, K_ALT_TAB, K_CTRL_TAB );
-                  break;
-               case VK_RETURN:
-                  iKey = hb_gt_wvwJustTranslateKey( K_RETURN, K_SH_RETURN, K_ALT_RETURN, K_CTRL_RETURN );
-                  break;
-               case VK_ESCAPE:
-                  iKey = K_ESC;
-                  break;
-               default:
-#if ! defined( UNICODE )
-                  if( s_wvw->pWin[ nWin ]->CodePage == OEM_CHARSET )
-                     c = hb_wvw_key_ansi_to_oem( c );
-#endif
-                  iKey = c;
-            }
-         }
-         break;
-      }
-
-      case WM_SYSCHAR:
-      {
-         int c, iScanCode = HIWORD( lParam ) & 0xFF;
-         switch( iScanCode )
-         {
-            case  2:
-               c = K_ALT_1;
-               break;
-            case  3:
-               c = K_ALT_2;
-               break;
-            case  4:
-               c = K_ALT_3;
-               break;
-            case  5:
-               c = K_ALT_4;
-               break;
-            case  6:
-               c = K_ALT_5;
-               break;
-            case  7:
-               c = K_ALT_6;
-               break;
-            case  8:
-               c = K_ALT_7;
-               break;
-            case  9:
-               c = K_ALT_8;
-               break;
-            case 10:
-               c = K_ALT_9;
-               break;
-            case 11:
-               c = K_ALT_0;
-               break;
-            case 13:
-               c = K_ALT_EQUALS;
-               break;
-            case 14:
-               c = K_ALT_BS;
-               break;
-            case 16:
-               c = K_ALT_Q;
-               break;
-            case 17:
-               c = K_ALT_W;
-               break;
-            case 18:
-               c = K_ALT_E;
-               break;
-            case 19:
-               c = K_ALT_R;
-               break;
-            case 20:
-               c = K_ALT_T;
-               break;
-            case 21:
-               c = K_ALT_Y;
-               break;
-            case 22:
-               c = K_ALT_U;
-               break;
-            case 23:
-               c = K_ALT_I;
-               break;
-            case 24:
-               c = K_ALT_O;
-               break;
-            case 25:
-               c = K_ALT_P;
-               break;
-            case 30:
-               c = K_ALT_A;
-               break;
-            case 31:
-               c = K_ALT_S;
-               break;
-            case 32:
-               c = K_ALT_D;
-               break;
-            case 33:
-               c = K_ALT_F;
-               break;
-            case 34:
-               c = K_ALT_G;
-               break;
-            case 35:
-               c = K_ALT_H;
-               break;
-            case 36:
-               c = K_ALT_J;
-               break;
-            case 37:
-               c = K_ALT_K;
-               break;
-            case 38:
-               c = K_ALT_L;
-               break;
-            case 44:
-               c = K_ALT_Z;
-               break;
-            case 45:
-               c = K_ALT_X;
-               break;
-            case 46:
-               c = K_ALT_C;
-               break;
-            case 47:
-               c = K_ALT_V;
-               break;
-            case 48:
-               c = K_ALT_B;
-               break;
-            case 49:
-               c = K_ALT_N;
-               break;
-            case 50:
-               c = K_ALT_M;
-               break;
-            default:
-               c = ( int ) wParam;
-         }
-         iKey = c;
-         break;
-      }
-   }
-
-   if( iKey != 0 )
-   {
-      HB_BOOL  bCodeExec  = HB_FALSE;
-      PHB_ITEM hiKey      = hb_itemPutNI( NULL, iKey );
-      PHB_ITEM pCodeblock = hb_itemDoC( "SETKEY", 1, hiKey );
-      if( HB_IS_EVALITEM( pCodeblock ) )
-      {
-         PHB_ITEM pReturn;
-         SetFocus( hWndParent );
-         pReturn = hb_itemDo( pCodeblock, 0 );
-         hb_itemRelease( pReturn );
-         SetFocus( hWnd );
-         bCodeExec = HB_TRUE;
-      }
-      hb_itemRelease( pCodeblock );
-      hb_itemRelease( hiKey );
-      if( bCodeExec )
-         return 0;
-   }
-
-   switch( message )
-   {
-      case WM_KEYDOWN:
-      case WM_SYSKEYDOWN:
-      {
-         HB_BOOL bAlt   = GetKeyState( VK_MENU ) & 0x8000;
-         HB_BOOL bCtrl  = GetKeyState( VK_CONTROL ) & 0x8000;
-         HB_BOOL bShift = GetKeyState( VK_SHIFT ) & 0x8000;
-         int     c      = ( int ) wParam;
-         HB_BOOL bMultiline;
-
-         if( ! hb_gt_wvwBufferedKey( ( long ) wParam ) )
-            break;
-
-         bMultiline = ( ( byEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE );
-
-         switch( c )
-         {
-            case VK_F4:
-               if( bAlt )
-               {
-                  SetFocus( hWndParent );
-                  PostMessage( hWndParent, message, wParam, lParam );
-                  return 0;
-               }
-               break;
-
-            case VK_RETURN:
-               if( bMultiline || bAlt || bShift || bCtrl )
-                  break;
-               else if( ! bMultiline )
-               {
-                  SetFocus( hWndParent );
-                  PostMessage( hWndParent, message, wParam, lParam );
-                  return 0;
-               }
-
-            case VK_ESCAPE:
-
-               if( bAlt || bShift || bCtrl )
-                  break;
-               else
-               {
-                  SetFocus( hWndParent );
-                  PostMessage( hWndParent, message, wParam, lParam );
-                  return 0;
-               }
-
-            case VK_UP:
-            case VK_DOWN:
-
-            case VK_PRIOR:
-            case VK_NEXT:
-               if( bMultiline )
-                  break;
-               else
-               {
-                  SetFocus( hWndParent );
-                  PostMessage( hWndParent, message, wParam, lParam );
-                  return 0;
-               }
-
-            case VK_TAB:
-               if( ! bCtrl && ! bAlt )
-               {
-
-                  SetFocus( hWndParent );
-                  PostMessage( hWndParent, message, wParam, lParam );
-                  return 0;
-               }
-               break;
-
-            case VK_BACK:
-               if( ! bAlt )
-                  break;
-               if( SendMessage( hWnd, EM_CANUNDO, 0, 0 ) )
-               {
-                  SendMessage( hWnd, EM_UNDO, 0, 0 );
-                  return 0;
-               }
-               break;
-         }
-         break;
-      }
-
-      case WM_CHAR:
-      {
-         HB_BOOL bCtrl = GetKeyState( VK_CONTROL ) & 0x8000;
-         switch( ( int ) wParam )
-         {
-            case VK_TAB:
-               return 0;
-
-            case 1:
-               if( bCtrl )
-               {
-                  SendMessage( hWnd, EM_SETSEL, 0, ( LPARAM ) -1 );
-                  return 0;
-               }
-               break;
-         }
-         break;
-      }
-   }
-
-   return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
-}
 
 /* wvw_AddRows( [nWinNum], nRows)
  * add nRows rows to window nWinNum (nRows may be < 0)
@@ -7885,5 +6893,5 @@ HB_FUNC( WVW_SIZE_READY )
 
 HB_FUNC( WVW_KEYBOARD )
 {
-   hb_gt_wvwAddCharToInputQueue( hb_parnl( 1 ) );
+   hb_gt_wvw_AddCharToInputQueue( hb_parnl( 1 ) );
 }

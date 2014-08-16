@@ -172,7 +172,7 @@ HB_FUNC( WVW_PGCREATE )
          rOffXB.bottom = iOffBottom;
          rOffXB.right  = iOffRight;
 
-         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hWnd, nCtrlId, NULL, rXB, rOffXB, ( HB_BYTE ) iStyle );
+         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hWnd, nCtrlId, NULL, rXB, rOffXB, iStyle );
 
          hb_retnl( nCtrlId );
          return;

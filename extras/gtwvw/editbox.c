@@ -49,6 +49,408 @@
 
 #include "hbgtwvw.h"
 
+/* EDITBOX begins (experimental) */
+
+static const int s_K_Ctrl[] =
+{
+   K_CTRL_A, K_CTRL_B, K_CTRL_C, K_CTRL_D, K_CTRL_E, K_CTRL_F, K_CTRL_G, K_CTRL_H,
+   K_CTRL_I, K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_M, K_CTRL_N, K_CTRL_O, K_CTRL_P,
+   K_CTRL_Q, K_CTRL_R, K_CTRL_S, K_CTRL_T, K_CTRL_U, K_CTRL_V, K_CTRL_W, K_CTRL_X,
+   K_CTRL_Y, K_CTRL_Z
+};
+
+static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
+{
+   HWND hWndParent = GetParent( hWnd );
+   int  nWin;
+
+   int     nCtrlId;
+   WNDPROC OldProc;
+   int     nEBType;
+   int     iKey;
+
+   PWVW_GLO wvw = hb_gt_wvw();
+   PWVW_WIN wvw_win;
+
+   if( wvw == NULL || hWndParent == NULL )
+      return DefWindowProc( hWnd, message, wParam, lParam );
+
+   for( nWin = 0; nWin < wvw->usNumWindows; nWin++ )
+   {
+      if( wvw->pWin[ nWin ]->hWnd == hWndParent )
+         break;
+   }
+
+   if( nWin >= wvw->usNumWindows )
+      return DefWindowProc( hWnd, message, wParam, lParam );
+
+   wvw_win = wvw->pWin[ nWin ];
+
+   nCtrlId = hb_gt_wvw_FindControlId( wvw_win, WVW_CONTROL_EDITBOX, hWnd, &nEBType );
+   if( nCtrlId == 0 )
+   {
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+
+      return DefWindowProc( hWnd, message, wParam, lParam );
+   }
+
+   OldProc = hb_gt_wvw_GetControlProc( wvw_win, WVW_CONTROL_EDITBOX, hWnd );
+   if( OldProc == NULL )
+   {
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+
+      return DefWindowProc( hWnd, message, wParam, lParam );
+   }
+
+   iKey = 0;
+   switch( message )
+   {
+      case WM_KEYDOWN:
+      case WM_SYSKEYDOWN:
+      {
+         HB_BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
+         int     c    = ( int ) wParam;
+         switch( c )
+         {
+            case VK_F1:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F1, K_SH_F1, K_ALT_F1, K_CTRL_F1 );
+               break;
+            case VK_F2:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F2, K_SH_F2, K_ALT_F2, K_CTRL_F2 );
+               break;
+            case VK_F3:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F3, K_SH_F3, K_ALT_F3, K_CTRL_F3 );
+               break;
+            case VK_F4:
+               if( bAlt )
+               {
+                  SetFocus( hWndParent );
+                  PostMessage( hWndParent, message, wParam, lParam );
+                  return 0;
+               }
+               else
+                  iKey = hb_gt_wvw_JustTranslateKey( K_F4, K_SH_F4, K_ALT_F4, K_CTRL_F4 );
+               break;
+            case VK_F5:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F5, K_SH_F5, K_ALT_F5, K_CTRL_F5 );
+               break;
+            case VK_F6:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F6, K_SH_F6, K_ALT_F6, K_CTRL_F6 );
+               break;
+            case VK_F7:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F7, K_SH_F7, K_ALT_F7, K_CTRL_F7 );
+               break;
+            case VK_F8:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F8, K_SH_F8, K_ALT_F8, K_CTRL_F8 );
+               break;
+            case VK_F9:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F9, K_SH_F9, K_ALT_F9, K_CTRL_F9 );
+               break;
+            case VK_F10:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F10, K_SH_F10, K_ALT_F10, K_CTRL_F10 );
+               break;
+            case VK_F11:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F11, K_SH_F11, K_ALT_F11, K_CTRL_F11 );
+               break;
+            case VK_F12:
+               iKey = hb_gt_wvw_JustTranslateKey( K_F12, K_SH_F12, K_ALT_F12, K_CTRL_F12 );
+               break;
+         }
+         break;
+      }
+
+      case WM_CHAR:
+      {
+         HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
+         int     iScanCode = HIWORD( lParam ) & 0xFF;
+         int     c         = ( int ) wParam;
+
+         if( bCtrl && iScanCode == 28 )
+            iKey = K_CTRL_RETURN;
+         else if( bCtrl && ( c >= 1 && c <= 26 ) )
+            iKey = s_K_Ctrl[ c - 1 ];
+         else
+         {
+            switch( c )
+            {
+               case VK_BACK:
+                  iKey = hb_gt_wvw_JustTranslateKey( K_BS, K_SH_BS, K_ALT_BS, K_CTRL_BS );
+                  break;
+               case VK_TAB:
+                  iKey = hb_gt_wvw_JustTranslateKey( K_TAB, K_SH_TAB, K_ALT_TAB, K_CTRL_TAB );
+                  break;
+               case VK_RETURN:
+                  iKey = hb_gt_wvw_JustTranslateKey( K_RETURN, K_SH_RETURN, K_ALT_RETURN, K_CTRL_RETURN );
+                  break;
+               case VK_ESCAPE:
+                  iKey = K_ESC;
+                  break;
+               default:
+#if ! defined( UNICODE )
+                  if( wvw_win->CodePage == OEM_CHARSET )
+                     c = hb_gt_wvw_key_ansi_to_oem( c );
+#endif
+                  iKey = c;
+            }
+         }
+         break;
+      }
+
+      case WM_SYSCHAR:
+      {
+         int c, iScanCode = HIWORD( lParam ) & 0xFF;
+         switch( iScanCode )
+         {
+            case  2:
+               c = K_ALT_1;
+               break;
+            case  3:
+               c = K_ALT_2;
+               break;
+            case  4:
+               c = K_ALT_3;
+               break;
+            case  5:
+               c = K_ALT_4;
+               break;
+            case  6:
+               c = K_ALT_5;
+               break;
+            case  7:
+               c = K_ALT_6;
+               break;
+            case  8:
+               c = K_ALT_7;
+               break;
+            case  9:
+               c = K_ALT_8;
+               break;
+            case 10:
+               c = K_ALT_9;
+               break;
+            case 11:
+               c = K_ALT_0;
+               break;
+            case 13:
+               c = K_ALT_EQUALS;
+               break;
+            case 14:
+               c = K_ALT_BS;
+               break;
+            case 16:
+               c = K_ALT_Q;
+               break;
+            case 17:
+               c = K_ALT_W;
+               break;
+            case 18:
+               c = K_ALT_E;
+               break;
+            case 19:
+               c = K_ALT_R;
+               break;
+            case 20:
+               c = K_ALT_T;
+               break;
+            case 21:
+               c = K_ALT_Y;
+               break;
+            case 22:
+               c = K_ALT_U;
+               break;
+            case 23:
+               c = K_ALT_I;
+               break;
+            case 24:
+               c = K_ALT_O;
+               break;
+            case 25:
+               c = K_ALT_P;
+               break;
+            case 30:
+               c = K_ALT_A;
+               break;
+            case 31:
+               c = K_ALT_S;
+               break;
+            case 32:
+               c = K_ALT_D;
+               break;
+            case 33:
+               c = K_ALT_F;
+               break;
+            case 34:
+               c = K_ALT_G;
+               break;
+            case 35:
+               c = K_ALT_H;
+               break;
+            case 36:
+               c = K_ALT_J;
+               break;
+            case 37:
+               c = K_ALT_K;
+               break;
+            case 38:
+               c = K_ALT_L;
+               break;
+            case 44:
+               c = K_ALT_Z;
+               break;
+            case 45:
+               c = K_ALT_X;
+               break;
+            case 46:
+               c = K_ALT_C;
+               break;
+            case 47:
+               c = K_ALT_V;
+               break;
+            case 48:
+               c = K_ALT_B;
+               break;
+            case 49:
+               c = K_ALT_N;
+               break;
+            case 50:
+               c = K_ALT_M;
+               break;
+            default:
+               c = ( int ) wParam;
+         }
+         iKey = c;
+         break;
+      }
+   }
+
+   if( iKey != 0 )
+   {
+      HB_BOOL  bCodeExec  = HB_FALSE;
+      PHB_ITEM hiKey      = hb_itemPutNI( NULL, iKey );
+      PHB_ITEM pCodeblock = hb_itemDoC( "SETKEY", 1, hiKey );
+      if( HB_IS_EVALITEM( pCodeblock ) )
+      {
+         PHB_ITEM pReturn;
+         SetFocus( hWndParent );
+         pReturn = hb_itemDo( pCodeblock, 0 );
+         hb_itemRelease( pReturn );
+         SetFocus( hWnd );
+         bCodeExec = HB_TRUE;
+      }
+      hb_itemRelease( pCodeblock );
+      hb_itemRelease( hiKey );
+      if( bCodeExec )
+         return 0;
+   }
+
+   switch( message )
+   {
+      case WM_KEYDOWN:
+      case WM_SYSKEYDOWN:
+      {
+         HB_BOOL bAlt   = GetKeyState( VK_MENU ) & 0x8000;
+         HB_BOOL bCtrl  = GetKeyState( VK_CONTROL ) & 0x8000;
+         HB_BOOL bShift = GetKeyState( VK_SHIFT ) & 0x8000;
+         int     c      = ( int ) wParam;
+         HB_BOOL bMultiline;
+
+         if( ! hb_gt_wvw_BufferedKey( ( long ) wParam ) )
+            break;
+
+         bMultiline = ( ( nEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE );
+
+         switch( c )
+         {
+            case VK_F4:
+               if( bAlt )
+               {
+                  SetFocus( hWndParent );
+                  PostMessage( hWndParent, message, wParam, lParam );
+                  return 0;
+               }
+               break;
+
+            case VK_RETURN:
+               if( bMultiline || bAlt || bShift || bCtrl )
+                  break;
+               else if( ! bMultiline )
+               {
+                  SetFocus( hWndParent );
+                  PostMessage( hWndParent, message, wParam, lParam );
+                  return 0;
+               }
+
+            case VK_ESCAPE:
+
+               if( bAlt || bShift || bCtrl )
+                  break;
+               else
+               {
+                  SetFocus( hWndParent );
+                  PostMessage( hWndParent, message, wParam, lParam );
+                  return 0;
+               }
+
+            case VK_UP:
+            case VK_DOWN:
+
+            case VK_PRIOR:
+            case VK_NEXT:
+               if( bMultiline )
+                  break;
+               else
+               {
+                  SetFocus( hWndParent );
+                  PostMessage( hWndParent, message, wParam, lParam );
+                  return 0;
+               }
+
+            case VK_TAB:
+               if( ! bCtrl && ! bAlt )
+               {
+
+                  SetFocus( hWndParent );
+                  PostMessage( hWndParent, message, wParam, lParam );
+                  return 0;
+               }
+               break;
+
+            case VK_BACK:
+               if( ! bAlt )
+                  break;
+               if( SendMessage( hWnd, EM_CANUNDO, 0, 0 ) )
+               {
+                  SendMessage( hWnd, EM_UNDO, 0, 0 );
+                  return 0;
+               }
+               break;
+         }
+         break;
+      }
+
+      case WM_CHAR:
+      {
+         HB_BOOL bCtrl = GetKeyState( VK_CONTROL ) & 0x8000;
+         switch( ( int ) wParam )
+         {
+            case VK_TAB:
+               return 0;
+
+            case 1:
+               if( bCtrl )
+               {
+                  SendMessage( hWnd, EM_SETSEL, 0, ( LPARAM ) -1 );
+                  return 0;
+               }
+               break;
+         }
+         break;
+      }
+   }
+
+   return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
+}
+
 /* wvw_ebCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, bBlock, ;
  *                         lMultiline, nMoreStyle, nMaxChar, nReserved, aOffset)
  * create editbox for window nWinNum
@@ -113,7 +515,7 @@ HB_FUNC( WVW_EBCREATE )
       int iOffTop, iOffLeft, iOffBottom, iOffRight;
       int nCtrlId;
 
-      HB_BYTE bEBType = hb_parl( 8 ) ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
+      int nEBType = hb_parl( 8 ) ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
 
       DWORD dwMoreStyle = ( DWORD ) hb_parnl( 9 );
       int   usMaxChar   = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
@@ -156,7 +558,7 @@ HB_FUNC( WVW_EBCREATE )
 
       dwStyle = WS_BORDER | WS_GROUP | WS_TABSTOP | dwMoreStyle;
 
-      if( ( bEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE )
+      if( ( nEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE )
          dwStyle |= ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | WS_BORDER | WS_VSCROLL;
       else
          dwStyle |= ES_AUTOHSCROLL;
@@ -222,7 +624,7 @@ HB_FUNC( WVW_EBCREATE )
          rOffXB.bottom = iOffBottom;
          rOffXB.right  = iOffRight;
 
-         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hWnd, nCtrlId, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, bEBType );
+         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hWnd, nCtrlId, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, nEBType );
 
          OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_EBProc );
 
@@ -482,7 +884,7 @@ HB_FUNC( WVW_EBGETTEXT )
 
    if( wvw_ctl )
    {
-      int usLen;
+      int    usLen;
       LPTSTR lpszText;
 
       if( hb_parl( 3 ) /* bSoftBreak */ )

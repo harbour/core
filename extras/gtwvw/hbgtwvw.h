@@ -258,7 +258,7 @@ typedef struct _WVW_IPIC
 
 typedef struct _WVW_CTL
 {
-   HB_BYTE  nClass;
+   int      nClass;
    HWND     hWnd;
    int      nId;
    PHB_ITEM pBlock;
@@ -270,7 +270,7 @@ typedef struct _WVW_CTL
    /* SCROLLBAR specifics */
    /* also used by combobox to store kbd type */
    /* also used by editbox to store editbox type */
-   HB_BYTE  nStyle;
+   int      nStyle;
 
    /* PUSHBUTTON & CHECKBOX specifics */
    WNDPROC  OldProc;
@@ -535,19 +535,18 @@ extern POINT      hb_gt_wvw_GetColRowFromXY( PWVW_WIN wvw_win, int x, int y );
 extern COLORREF   hb_gt_wvw_GetColorData( int iIndex );
 extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHeight );
 extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeight );
-extern void       hb_gt_wvw_TBinitSize( PWVW_WIN wvw_win, HWND hWndTB );
-extern int        hb_gt_wvw_IndexToCommand( HWND hWndTB, int iIndex );
-extern int        hb_gt_wvw_CommandToIndex( HWND hWndTB, int iCommand );
-extern HB_BOOL    hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, HB_UINT uiBitmap, const TCHAR * pszLabel, int iCommand, int iBitmapType, HB_BOOL bMap3Dcolors, PWVW_WIN wvw_win, HB_BOOL bDropdown );
 extern RECT       hb_gt_wvw_GetColRowFromXYRect( PWVW_WIN pWIndowData, RECT xy );
 extern int        hb_gt_wvw_LineHeight( PWVW_WIN wvw_win );
 extern WPARAM     hb_gt_wvw_ProcessMessages( PWVW_WIN wvw_win );
+extern HBITMAP    hb_gt_wvw_PrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iExpWidth, int iExpHeight, HB_BOOL bMap3Dcolors, HWND hCtrl );
 /* control (eg. scrollbar) supporters: */
-extern HWND       hb_gt_wvw_FindControlHandle( PWVW_WIN wvw_win, HB_BYTE nClass, int nId, HB_BYTE * pnStyle );
-extern int        hb_gt_wvw_LastControlId( PWVW_WIN wvw_win, HB_BYTE nClass );
-extern void       hb_gt_wvw_AddControlHandle( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, int nId, PHB_ITEM pBlock, RECT rect, RECT offs, HB_BYTE nStyle );
-extern HB_BOOL    hb_gt_wvw_StoreControlProc( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, WNDPROC OldProc );
-extern WNDPROC    hb_gt_wvw_GetControlProc( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd );
+extern int        hb_gt_wvw_GetControlClass( PWVW_WIN wvw_win, HWND hWnd );
+extern HWND       hb_gt_wvw_FindControlHandle( PWVW_WIN wvw_win, int nClass, int nId, int * pnStyle );
+extern int        hb_gt_wvw_FindControlId( PWVW_WIN wvw_win, int nClass, HWND hWnd, int * pnStyle );
+extern int        hb_gt_wvw_LastControlId( PWVW_WIN wvw_win, int nClass );
+extern void       hb_gt_wvw_AddControlHandle( PWVW_WIN wvw_win, int nClass, HWND hWnd, int nId, PHB_ITEM pBlock, RECT rect, RECT offs, int nStyle );
+extern HB_BOOL    hb_gt_wvw_StoreControlProc( PWVW_WIN wvw_win, int nClass, HWND hWnd, WNDPROC OldProc );
+extern WNDPROC    hb_gt_wvw_GetControlProc( PWVW_WIN wvw_win, int nClass, HWND hWnd );
 extern int        hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBottom, int usRight, LPCTSTR lpszCaption,
                                           const char * szBitmap, HB_UINT uiBitmap, PHB_ITEM phbiCodeBlock,
                                           int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
@@ -560,7 +559,16 @@ extern int        hb_gt_wvw_RowOfs( PWVW_WIN wvw_win );
 extern int        hb_gt_wvw_ColOfs( PWVW_WIN wvw_win );
 extern IPicture * hb_gt_wvw_LoadPicture( const char * image );
 
-extern PWVW_CTL hb_gt_wvw_ctl( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, int nId );
+extern HB_BOOL    hb_gt_wvw_BufferedKey( long lKey );
+extern int        hb_gt_wvw_key_ansi_to_oem( int c );
+extern int        hb_gt_wvw_JustTranslateKey( int key, int shiftkey, int altkey, int controlkey );
+extern HB_BOOL    hb_gt_wvw_AcceptingInput( void );
+extern void       hb_gt_wvw_AddCharToInputQueue( int data );
+
+extern void       hb_gt_wvw_SetMouseX( PWVW_WIN wvw_win, int ix );
+extern void       hb_gt_wvw_SetMouseY( PWVW_WIN wvw_win, int iy );
+
+extern PWVW_CTL   hb_gt_wvw_ctl( PWVW_WIN wvw_win, int nClass, HWND hWnd, int nId );
 
 extern int        hb_gt_wvw_OpenWindow( LPCTSTR lpszWinName, int usRow1, int usCol1, int usRow2, int usCol2, DWORD dwStyle, int iParentWin );
 extern void       hb_gt_wvw_CloseWindow( void );
@@ -569,12 +577,6 @@ extern int        hb_gt_wvw_SetCurWindow( int nWin );
 /* bitmap caching functions for user drawn bitmaps (wvw_drawimage) */
 extern HBITMAP    hb_gt_wvw_FindUserBitmapHandle( const char * szFileName, int * piWidth, int * piHeight );
 extern void       hb_gt_wvw_AddUserBitmapHandle( const char * szFileName, HBITMAP hBitmap, int iWidth, int iHeight );
-
-extern LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
-extern LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
-extern LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
-extern LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
-extern LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
 extern HB_EXPORT HB_BOOL       hb_gt_wvw_DestroyPicture( IPicture * iPicture );
 extern HB_EXPORT BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );

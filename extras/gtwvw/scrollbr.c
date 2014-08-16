@@ -49,6 +49,79 @@
 
 #include "hbgtwvw.h"
 
+static LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
+{
+   HWND hWndParent = GetParent( hWnd );
+   int  nWin;
+
+   int     nCtrlId;
+   WNDPROC OldProc;
+
+   PWVW_GLO wvw = hb_gt_wvw();
+   PWVW_WIN wvw_win;
+
+   if( wvw == NULL || hWndParent == NULL )
+      return DefWindowProc( hWnd, message, wParam, lParam );
+
+   if( message == WM_MOUSEACTIVATE )
+      wvw->iScrolling = 1;
+
+   for( nWin = 0; nWin < wvw->usNumWindows; nWin++ )
+   {
+      if( wvw->pWin[ nWin ]->hWnd == hWndParent )
+         break;
+   }
+
+   if( nWin >= wvw->usNumWindows )
+      return DefWindowProc( hWnd, message, wParam, lParam );
+
+   wvw_win = wvw->pWin[ nWin ];
+
+   nCtrlId = ( int ) GetWindowLong( hWnd, GWL_ID );
+   if( nCtrlId == 0 )
+   {
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId() of Scrollbar" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+
+      return DefWindowProc( hWnd, message, wParam, lParam );
+   }
+
+   OldProc = hb_gt_wvw_GetControlProc( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd );
+   if( OldProc == NULL )
+   {
+      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc() of Scrollbar" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+
+      return DefWindowProc( hWnd, message, wParam, lParam );
+   }
+
+   switch( message )
+   {
+      case WM_LBUTTONUP:
+
+         CallWindowProc( OldProc, hWnd, message, wParam, lParam );
+         if( GetCapture() == hWnd )
+         {
+            ReleaseCapture();
+
+            InvalidateRect( hWnd, NULL, FALSE );
+         }
+         return 0;
+
+      case WM_RBUTTONDOWN:
+
+         wvw->iScrolling = 0;
+
+         return 0;
+      case WM_RBUTTONUP:
+
+         return 0;
+   }
+
+   if( message == WM_CAPTURECHANGED )
+      wvw->iScrolling = 0;
+
+   return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
+}
+
 /* wvw_xbCreate( [nWinNum], nStyle, nTop, nLeft, nLength, bBlock, aOffset)
  * create scroll bar for window nWinNum
  * nStyle: SBS_HORZ (0)=horizontal, SBS_VERT (1)=vertical
@@ -209,7 +282,7 @@ HB_FUNC( WVW_XBCREATE )
          SetScrollRange( hWnd, SB_CTL, 0, 99, FALSE );
          SetScrollPos( hWnd, SB_CTL, 0, TRUE );
 
-         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, ( HB_BYTE ) iStyle );
+         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, iStyle );
 
          OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_XBProc );
 

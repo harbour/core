@@ -190,7 +190,7 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
-   int iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
+   int    iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
    LPTSTR cText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
    GetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), cText, iLen );
@@ -1073,69 +1073,6 @@ HB_FUNC( WVW_SELECTFONT )
       hb_arraySetNI( aMetr, 9, lf.lfStrikeOut );
 
       hb_itemReturnRelease( aMetr );
-   }
-}
-
-HB_FUNC( WVW_TOOLBARADDBUTTONS )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      HWND hWndCtrl = ( HWND ) HB_PARHANDLE( 2 );
-
-      #if 0
-      HWND    hToolTip = ( HWND ) hb_parnl( 5 );
-      HB_BOOL bSystem;
-      #endif
-
-      PHB_ITEM   pArray   = hb_param( 3, HB_IT_ARRAY );
-      int        iButtons = hb_parni( 4 );
-      TBBUTTON * tb       = ( TBBUTTON * ) hb_xgrab( iButtons * sizeof( TBBUTTON ) );
-
-      HB_SIZE nCount;
-
-      DWORD  style = GetWindowLong( hWndCtrl, GWL_STYLE );
-      int usOldHeight;
-
-      SetWindowLong( hWndCtrl, GWL_STYLE, style | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT );
-
-      SendMessage( hWndCtrl, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0 );
-
-      usOldHeight = wvw_win->usTBHeight;
-
-      for( nCount = 0; nCount < hb_arrayLen( pArray ); ++nCount )
-      {
-         PHB_ITEM pTemp = hb_arrayGetItemPtr( pArray, nCount + 1 );
-
-         #if 0
-         HB_SIZE nID = hb_arrayGetNS( pTemp, 1 );
-         bSystem = hb_arrayGetL( pTemp, 9 );
-
-         if( bSystem )
-         {
-            if( nID > 0 && nID < 31 )
-               tb[ nCount ].iBitmap = nID > 0 ? ( int ) nID : -1;
-            else
-               tb[ nCount ].iBitmap = nID > 0 ? ( int ) nCount : -1;
-         }
-         #endif
-
-         tb[ nCount ].idCommand = hb_arrayGetNI( pTemp, 2 );
-         tb[ nCount ].fsState   = ( BYTE ) hb_arrayGetNI( pTemp, 3 );
-         tb[ nCount ].fsStyle   = ( BYTE ) hb_arrayGetNI( pTemp, 4 );
-         tb[ nCount ].dwData    = hb_arrayGetNI( pTemp, 5 );
-         tb[ nCount ].iString   = hb_arrayGetCLen( pTemp, 6 ) > 0 ? ( INT_PTR ) hb_arrayGetCPtr( pTemp, 6 ) : 0;
-      }
-
-      SendMessage( hWndCtrl, TB_ADDBUTTONS, ( WPARAM ) iButtons, ( LPARAM ) ( LPTBBUTTON ) tb );
-      SendMessage( hWndCtrl, TB_AUTOSIZE, 0, 0 );
-      hb_gt_wvw_TBinitSize( wvw_win, hWndCtrl );
-
-      if( wvw_win->usTBHeight != usOldHeight )
-         hb_gt_wvw_ResetWindow( wvw_win );
-
-      hb_xfree( tb );
    }
 }
 
