@@ -98,10 +98,10 @@ HB_FUNC( WVW_EBCREATE )
 
    if( wvw && wvw_win )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       HINSTANCE hInstance;
       HWND      hWndParent = wvw_win->hWnd;
@@ -116,7 +116,7 @@ HB_FUNC( WVW_EBCREATE )
       HB_BYTE bEBType    = bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
 
       DWORD  dwMoreStyle = ( DWORD ) hb_parnl( 9 );
-      USHORT usMaxChar   = ( USHORT ) ( hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0 );
+      int    usMaxChar   = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
       DWORD  dwStyle;
 
       if( wvw_win->hEBfont == NULL )
@@ -482,13 +482,13 @@ HB_FUNC( WVW_EBGETTEXT )
 
    if( wvw_ctl )
    {
-      USHORT usLen;
+      int usLen;
       LPTSTR lpszText;
 
       if( hb_parl( 3 ) /* bSoftBreak */ )
          SendMessage( wvw_ctl->hWnd, EM_FMTLINES, ( WPARAM ) TRUE, 0 );
 
-      usLen = ( USHORT ) SendMessage( wvw_ctl->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
+      usLen = ( int ) SendMessage( wvw_ctl->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
 
       lpszText = ( LPTSTR ) hb_xgrab( usLen * sizeof( TCHAR ) );
 

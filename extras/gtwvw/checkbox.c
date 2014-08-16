@@ -94,10 +94,10 @@ HB_FUNC( WVW_CXCREATE )
 
    if( wvw_win && HB_ISEVALITEM( 8 ) )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -328,24 +328,17 @@ HB_FUNC( WVW_CXSETFONT )
 HB_FUNC( WVW_CXSTATUSFONT )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
+   PWVW_CTL wvw_ctl = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
 
-   if( wvw_win )
+   if( wvw_ctl && wvw_ctl->hWnd )
    {
-      PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-      PWVW_CTL wvw_ctl = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
-
-      if( wvw_ctl && wvw_ctl->hWnd )
-      {
-         if( hb_parldef( 3, HB_TRUE ) /* lFocus */ )
-            SendMessage( wvw_ctl->hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hCXfont, ( LPARAM ) TRUE );
-         else
-            SendMessage( wvw_ctl->hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hPBfont, ( LPARAM ) TRUE );
-      }
-
-      hb_retl( HB_TRUE );
+      if( hb_parldef( 3, HB_TRUE ) /* lFocus */ )
+         SendMessage( wvw_ctl->hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hCXfont, ( LPARAM ) TRUE );
+      else
+         SendMessage( wvw_ctl->hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hPBfont, ( LPARAM ) TRUE );
    }
-   else
-      hb_retl( HB_FALSE );
+
+   hb_retl( HB_TRUE );
 }
 
 HB_FUNC( WVW_CXVISIBLE )

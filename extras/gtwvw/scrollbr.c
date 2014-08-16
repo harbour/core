@@ -108,10 +108,10 @@ HB_FUNC( WVW_XBCREATE )
 
    if( wvw && wvw_win )
    {
-      USHORT usTop  = ( USHORT ) hb_parni( 3 ),
-             usLeft = ( USHORT ) hb_parni( 4 ),
-             usBottom,
-             usRight;
+      int usTop  = hb_parni( 3 ),
+          usLeft = hb_parni( 4 ),
+          usBottom,
+          usRight;
 
       HWND  hWndParent = wvw_win->hWnd;
       HWND  hWnd;
@@ -129,7 +129,7 @@ HB_FUNC( WVW_XBCREATE )
 
       if( iStyle == SBS_VERT )
       {
-         usBottom = usTop + ( USHORT ) hb_parni( 5 ) - 1;
+         usBottom = usTop + hb_parni( 5 ) - 1;
          usRight  = usLeft;
 
          iOffTop    = hb_parvni( 7, 1 );
@@ -139,7 +139,7 @@ HB_FUNC( WVW_XBCREATE )
       }
       else
       {
-         usRight  = usLeft + ( USHORT ) hb_parni( 5 ) - 1;
+         usRight  = usLeft + hb_parni( 5 ) - 1;
          usBottom = usTop;
 
          iOffTop    = HB_ISARRAY( 7 ) ? hb_parvni( 7, 1 ) : 3 - wvw_win->iLineSpacing;

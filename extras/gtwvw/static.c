@@ -67,11 +67,11 @@ HB_FUNC( WVW_STCREATE )
 
       int nCtrlId;
 
-      USHORT usWidth  = ( USHORT ) hb_parni( 4 );
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parnidef( 11, usTop ),
-             usRight  = ( USHORT ) hb_parnidef( 12, usLeft + usWidth - 1 );
+      int usWidth  = hb_parni( 4 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parnidef( 11, usTop ),
+          usRight  = hb_parnidef( 12, usLeft + usWidth - 1 );
 
       int   iStyle = bBorder ? WS_BORDER : 0;
       int   iBox   = hb_parni( 10 );

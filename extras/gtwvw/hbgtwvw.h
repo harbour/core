@@ -287,16 +287,16 @@ typedef struct
    int     iLineSpacing;           /* linespacing in pixels */
    int     iLSpaceColor;           /* linespacing color index */
 
-   USHORT  usRowOfs;               /* offset to Main Window's (0,0) */
-   USHORT  usColOfs;               /* offset to Main Window's (0,0) */
+   int     usRowOfs;               /* offset to Main Window's (0,0) */
+   int     usColOfs;               /* offset to Main Window's (0,0) */
    int     uiDispCount;            /* pending DispEnd() request */
    HB_BOOL fPaintPending;          /* pending WVW_PAINT() execution */
    RECT    rPaintPending;          /* rect of pending fPaintPending */
    HWND    hStatusBar;             /* handle to status bar */
-   USHORT  usSBHeight;             /* height of status bar */
+   int     usSBHeight;             /* height of status bar */
 
    HWND    hToolBar;               /* TB handle to toolbar */
-   USHORT  usTBHeight;             /* TB height of toolbar */
+   int     usTBHeight;             /* TB height of toolbar */
    int     iStartStdBitmap;
    int     iStartViewBitmap;
    int     iStartHistBitmap;       /* start of bitmap index */
@@ -324,8 +324,8 @@ typedef struct
    POINT    PTEXTSIZE;                                /* size of the fixed width font */
    HB_BOOL  FixedFont;                                /* HB_TRUE if current font is a fixed font */
    int      FixedSize[ WVW_MAX_COLS ];                /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
-   USHORT   ROWS;                                     /* number of displayable rows in window */
-   USHORT   COLS;                                     /* number of displayable columns in window */
+   int      ROWS;                                     /* number of displayable rows in window */
+   int      COLS;                                     /* number of displayable columns in window */
    COLORREF foreground;                               /* foreground color */
    COLORREF background;                               /* background color */
 
@@ -522,17 +522,17 @@ extern void       hb_gt_wvw_CreateCaret( PWVW_WIN wvw_win );
 
 extern HICON      hb_gt_wvw_SetWindowIcon( PWVW_WIN wvw_win, int icon, LPCTSTR lpIconName );
 extern HICON      hb_gt_wvw_SetWindowIconFromFile( PWVW_WIN wvw_win, LPCTSTR icon );
-extern void       hb_gt_wvw_SetInvalidRect( PWVW_WIN wvw_win, USHORT left, USHORT top, USHORT right, USHORT bottom );
+extern void       hb_gt_wvw_SetInvalidRect( PWVW_WIN wvw_win, int left, int top, int right, int bottom );
 
 extern void       hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd );
 extern HB_BOOL    hb_gt_wvw_ValidWindowSize( PWVW_WIN wvw_win, int rows, int cols, HFONT hFont, int iWidth, int * pmaxrows, int * pmaxcols );
 extern int        hb_gt_wvw_SetCodePage( PWVW_WIN wvw_win, int iCodePage );
 extern void       hb_gt_wvw_FUNCPrologue( BYTE byNumCoord, int * iRow1, int * iCol1, int * iRow2, int * iCol2 );
 extern void       hb_gt_wvw_FUNCEpilogue( void );
-extern void       hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, USHORT * pusRow1, USHORT * pusCol1, USHORT * pusRow2, USHORT * pusCol2 );
+extern void       hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * pusRow1, int * pusCol1, int * pusRow2, int * pusCol2 );
 extern RECT       hb_gt_wvw_GetXYFromColRowRect( PWVW_WIN wvw_win, RECT colrow );
 extern POINT      hb_gt_wvw_GetXYFromColRow( PWVW_WIN wvw_win, int col, int row );
-extern POINT      hb_gt_wvw_GetColRowFromXY( PWVW_WIN wvw_win, USHORT x, USHORT y );
+extern POINT      hb_gt_wvw_GetColRowFromXY( PWVW_WIN wvw_win, int x, int y );
 extern COLORREF   hb_gt_wvw_GetColorData( int iIndex );
 extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHeight );
 extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeight );
@@ -549,7 +549,7 @@ extern int        hb_gt_wvw_LastControlId( PWVW_WIN wvw_win, HB_BYTE nClass );
 extern void       hb_gt_wvw_AddControlHandle( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, int nId, PHB_ITEM pBlock, RECT rect, RECT offs, HB_BYTE nStyle );
 extern HB_BOOL    hb_gt_wvw_StoreControlProc( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd, WNDPROC OldProc );
 extern WNDPROC    hb_gt_wvw_GetControlProc( PWVW_WIN wvw_win, HB_BYTE nClass, HWND hWnd );
-extern int        hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, LPCTSTR lpszCaption,
+extern int        hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBottom, int usRight, LPCTSTR lpszCaption,
                                           const char * szBitmap, HB_UINT uiBitmap, PHB_ITEM phbiCodeBlock,
                                           int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
                                           double dStretch, HB_BOOL bMap3Dcolors,

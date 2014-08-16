@@ -190,7 +190,7 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
-   USHORT iLen  = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), ( UINT ) WM_GETTEXTLENGTH, 0, 0 ) + 1;
+   int iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
    LPTSTR cText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
    GetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), cText, iLen );
@@ -398,10 +398,10 @@ HB_FUNC( WVW_GBCREATE )
 
    if( wvw_win )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -1;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -1;
@@ -439,10 +439,10 @@ HB_FUNC( WVW_RBCREATE )
 
    if( wvw_win && HB_ISEVALITEM( 8 ) )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -1096,7 +1096,7 @@ HB_FUNC( WVW_TOOLBARADDBUTTONS )
       HB_SIZE nCount;
 
       DWORD  style = GetWindowLong( hWndCtrl, GWL_STYLE );
-      USHORT usOldHeight;
+      int usOldHeight;
 
       SetWindowLong( hWndCtrl, GWL_STYLE, style | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT );
 
@@ -1692,9 +1692,9 @@ HB_FUNC( WVW_SETMOUSEPOS )
 
    if( wvw_win )
    {
-      POINT  xy;
-      USHORT usRow = ( USHORT ) hb_parni( 2 ),
-             usCol = ( USHORT ) hb_parni( 3 );
+      POINT xy;
+      int   usRow = hb_parni( 2 ),
+            usCol = hb_parni( 3 );
 
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
@@ -1732,10 +1732,10 @@ HB_FUNC( WVW_FILLRECTANGLE )
 
    if( wvw && wvw_win )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       int iOffTop    = hb_parvni( 9, 1 );
       int iOffLeft   = hb_parvni( 9, 2 );
@@ -2297,10 +2297,10 @@ HB_FUNC( WVW_SAVESCREEN )
 
    if( wvw_win )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       HBITMAP  hBmp, oldBmp;
       POINT    xy;
@@ -2346,10 +2346,10 @@ HB_FUNC( WVW_RESTSCREEN )
 
    if( wvw_win )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       POINT xy;
       int   iTop, iLeft, iBottom, iRight, iWidth, iHeight;
@@ -2506,7 +2506,7 @@ HB_FUNC( WVW_SETTITLE )
    if( wvw_win )
    {
       void * hTitle;
-      SetWindowText( wvw_win, HB_PARSTRDEF( 2, &hTitle, NULL ) );
+      SetWindowText( wvw_win->hWnd, HB_PARSTRDEF( 2, &hTitle, NULL ) );
       hb_strfree( hTitle );
    }
 }
@@ -2593,7 +2593,7 @@ HB_FUNC( WVW_GETXYFROMROWCOL )
    POINT    xy;
 
    if( wvw_win )
-      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, ( USHORT ) hb_parni( 3 ), ( USHORT ) hb_parni( 2 ) );
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, hb_parni( 3 ), hb_parni( 2 ) );
    else
       memset( &xy, 0, sizeof( xy ) );
 
@@ -2614,7 +2614,7 @@ HB_FUNC( WVW_GETROWCOLFROMXY )
    POINT    xy;
 
    if( wvw_win )
-      xy = hb_gt_wvw_GetColRowFromXY( wvw_win, ( USHORT ) hb_parni( 2 ), ( USHORT ) hb_parni( 3 ) );
+      xy = hb_gt_wvw_GetColRowFromXY( wvw_win, hb_parni( 2 ), hb_parni( 3 ) );
    else
       memset( &xy, 0, sizeof( xy ) );
 

@@ -937,10 +937,10 @@ HB_FUNC( WVW_INVALIDATERECT )
 
    if( wvw_win )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       RECT  rc;
       POINT xy;
@@ -973,8 +973,8 @@ HB_FUNC( WVW_CLIENTTOSCREEN )
 
    if( wvw_win )
    {
-      USHORT usTop  = ( USHORT ) hb_parni( 2 ),
-             usLeft = ( USHORT ) hb_parni( 3 );
+      int usTop  = hb_parni( 2 ),
+          usLeft = hb_parni( 3 );
 
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );

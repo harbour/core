@@ -133,15 +133,17 @@ HB_FUNC( WVW_CBCREATE )
       int   iTop, iLeft, iBottom, iRight;
       int   iOffTop, iOffLeft, iOffBottom, iOffRight;
 
-      int    nCtrlId;
-      USHORT usWidth      = ( USHORT ) hb_parni( 4 );
-      USHORT usTop        = ( USHORT ) hb_parni( 2 ),
-             usLeft       = ( USHORT ) hb_parni( 3 ),
-             usBottom     = usTop,
-             usRight      = usLeft + usWidth - 1;
-      USHORT usNumElement = ( USHORT ) ( HB_ISARRAY( 5 ) ? hb_arrayLen( hb_param( 5, HB_IT_ARRAY ) ) : 0 );
-      USHORT usListLines  = ( USHORT ) hb_parnidef( 7, 3 );
-      BYTE   byCharHeight = hb_gt_wvw_LineHeight( wvw_win );
+      int nCtrlId;
+
+      int usWidth  = hb_parni( 4 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = usTop,
+          usRight  = usLeft + usWidth - 1;
+
+      int  usNumElement = HB_ISARRAY( 5 ) ? ( int ) hb_arrayLen( hb_param( 5, HB_IT_ARRAY ) ) : 0;
+      int  usListLines  = hb_parnidef( 7, 3 );
+      BYTE byCharHeight = hb_gt_wvw_LineHeight( wvw_win );
 
       /* in the future combobox type might be selectable by 8th parameter */
       int     iStyle   = CBS_DROPDOWNLIST | WS_VSCROLL;
@@ -206,7 +208,6 @@ HB_FUNC( WVW_CBCREATE )
 
          RECT    rXB, rOffXB;
          WNDPROC OldProc;
-         USHORT  i;
 
          SendMessage( hWnd, WM_SETREDRAW, ( WPARAM ) TRUE, 0 );
 
@@ -219,6 +220,8 @@ HB_FUNC( WVW_CBCREATE )
          }
          else
          {
+            int i;
+
             for( i = 1; i <= usNumElement; i++ )
             {
                void * hText;
@@ -229,7 +232,7 @@ HB_FUNC( WVW_CBCREATE )
                }
                else
                {
-                  long numofchars = ( int ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
+                  long numofchars = ( long ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
                   if( numofchars > LongComboWidth )
                      LongComboWidth = numofchars;
                }

@@ -86,10 +86,10 @@ HB_FUNC( WVW_PGCREATE )
 
    if( wvw_win )
    {
-      USHORT usTop    = ( USHORT ) hb_parni( 2 ),
-             usLeft   = ( USHORT ) hb_parni( 3 ),
-             usBottom = ( USHORT ) hb_parni( 4 ),
-             usRight  = ( USHORT ) hb_parni( 5 );
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
       int iOffTop    = hb_parvni( 6, 1 );
       int iOffLeft   = hb_parvni( 6, 2 );

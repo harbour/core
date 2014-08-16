@@ -90,7 +90,7 @@ HB_FUNC( WVW_SBCREATE )
          memset( &rSB, 0, sizeof( rSB ) );
 
          if( GetClientRect( hWnd, &rSB ) )
-            wvw_win->usSBHeight = ( USHORT ) rSB.bottom;
+            wvw_win->usSBHeight = rSB.bottom;
          wvw_win->hStatusBar = hWnd;
 
          hb_gt_wvw_ResetWindow( wvw_win );
@@ -155,7 +155,7 @@ HB_FUNC( WVW_SBADDPART )
       WORD    displayFlags = ( WORD ) hb_parnl( 4 );
       HICON   hIcon;
       HB_BOOL lResetParts = hb_parl( 5 );
-      USHORT  usWidth     = hb_parni( 3 ) <= 0 ? 5 * WVW_SPACE_BETWEEN_PARTS : ( USHORT ) hb_parni( 3 );
+      int     usWidth     = hb_parni( 3 ) <= 0 ? 5 * WVW_SPACE_BETWEEN_PARTS : hb_parni( 3 );
 
       if( HB_ISCHAR( 2 ) )
       {
@@ -172,7 +172,7 @@ HB_FUNC( WVW_SBADDPART )
          memset( &size, 0, sizeof( size ) );
 
          if( GetTextExtentPoint32( hDCSB, szText, ( int ) ( nLen + 1 ), &size ) )
-            usWidth = ( USHORT ) size.cx;
+            usWidth = size.cx;
 
          hb_strfree( hText );
 

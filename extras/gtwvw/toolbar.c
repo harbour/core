@@ -210,7 +210,7 @@ HB_FUNC( WVW_TBADDBUTTON )
       int          iBitmapType  = hb_parni( 5 );
       HB_BOOL      bMap3Dcolors = hb_parl( 6 );
       HB_BOOL      bDropdown    = hb_parl( 7 );
-      USHORT       usOldHeight;
+      int          usOldHeight;
 
       void *  hLabel;
       HB_SIZE nLabelLen;
@@ -309,7 +309,7 @@ HB_FUNC( WVW_TBDELBUTTON )
 
       if( hWnd && iButton >= 0 )
       {
-         USHORT usOldHeight = wvw_win->usTBHeight;
+         int usOldHeight = wvw_win->usTBHeight;
 
          if( SendMessage( hWnd, TB_DELETEBUTTON, ( WPARAM ) iButton, 0 ) )
          {
@@ -377,7 +377,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
          int iCommand = hb_gt_wvw_IndexToCommand( hWnd, iButton );
          if( iCommand >= 0 )
          {
-            USHORT  usOldHeight = wvw_win->usTBHeight;
+            int     usOldHeight = wvw_win->usTBHeight;
             HB_BOOL bEnable     = hb_parldef( 3, HB_TRUE );
 
             if( SendMessage( hWnd, TB_ENABLEBUTTON, ( WPARAM ) iCommand, ( LPARAM ) MAKELONG( ( BOOL ) bEnable, 0 ) ) )
