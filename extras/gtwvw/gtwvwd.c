@@ -150,7 +150,7 @@ static void    hb_gt_wvwHandleMenuSelection( int menuIndex );
 
 static POINT   hb_gt_wvw_TBGetColRowFromXY( PWVW_WIN wvw_win, int x, int y );
 
-static POINT   hb_gt_wvw_GetColRowForTextBuffer( PWVW_WIN wvw_win, USHORT index );
+static POINT   hb_gt_wvw_GetColRowForTextBuffer( PWVW_WIN wvw_win, HB_SIZE index );
 
 static void    hb_gt_wvwValidateCol( PWVW_WIN wvw_win );
 static void    hb_gt_wvwValidateRow( PWVW_WIN wvw_win );
@@ -159,9 +159,9 @@ static int     hb_gt_wvwCalcPixelHeight( PWVW_WIN wvw_win );
 static int     hb_gt_wvwCalcPixelWidth( PWVW_WIN wvw_win );
 static HB_BOOL hb_gt_wvw_SetColors( PWVW_WIN wvw_win, HDC hdc, BYTE attr );
 
-static HB_BOOL hb_gt_wvwTextOut( PWVW_WIN wvw_win, HDC hdc, int col, int row, LPCTSTR lpString, USHORT cbString );
+static HB_BOOL hb_gt_wvwTextOut( PWVW_WIN wvw_win, HDC hdc, int col, int row, LPCTSTR lpString, HB_SIZE cbString );
 static void    hb_gt_wvw_SetStringInTextBuffer( PWVW_WIN wvw_win, int col, int row, BYTE color, BYTE attr, BYTE * sBuffer, HB_SIZE length );
-static USHORT  hb_gt_wvw_GetIndexForTextBuffer( PWVW_WIN wvw_win, int col, int row );
+static HB_SIZE hb_gt_wvw_GetIndexForTextBuffer( PWVW_WIN wvw_win, int col, int row );
 
 static void    hb_gt_wvwCreateObjects( int nWin );
 static void    hb_gt_wvwMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
@@ -203,7 +203,7 @@ static void    hb_gt_wvw_vSetPos( PWVW_WIN wvw_win, int iRow, int iCol );
 static void    hb_wvw_InitPendingRect( PWVW_WIN wvw_win );
 static void    hb_wvw_UpdatePendingRect( PWVW_WIN wvw_win, int usRow1, int usCol1, int usRow2, int usCol2 );
 
-static void    hb_gt_wvwFillLineSpace( PWVW_WIN wvw_win, HDC hdc, int startCol, int irow, USHORT len, BYTE byAttrib );
+static void    hb_gt_wvwFillLineSpace( PWVW_WIN wvw_win, HDC hdc, int startCol, int irow, HB_SIZE len, BYTE byAttrib );
 
 static HB_BOOL hb_wvw_Move_Ready( HB_BOOL bIsReady );
 static HB_BOOL hb_wvw_Size_Ready( HB_BOOL bSizeIsReady );
@@ -647,7 +647,7 @@ static int hb_gt_wvw_PutText( PHB_GT pGT, int iRow, int iCol, int bColor, const 
    if( s_wvw->fMainCoordMode )
       hb_gt_wvw_FUNCPrologue( 2, &iRow, &iCol, NULL, NULL );
 
-   hb_gt_wvw_vPutText( s_wvw->pWin[ s_wvw->usCurWindow ], iRow, iCol, iRow, ( USHORT ) nLen == 0 ? ( USHORT ) 0 : ( USHORT ) iCol + ( USHORT ) nLen - 1, pText, bColor );
+   hb_gt_wvw_vPutText( s_wvw->pWin[ s_wvw->usCurWindow ], iRow, iCol, iRow, nLen == 0 ? 0 : iCol + ( int ) nLen - 1, pText, bColor );
 
    if( s_wvw->fMainCoordMode )
       hb_gt_wvw_FUNCEpilogue();
@@ -1823,7 +1823,7 @@ static HB_BOOL hb_gt_wvwAllocSpBuffer( PWVW_WIN wvw_win, int col, int row )
 {
    wvw_win->COLS       = col;
    wvw_win->ROWS       = row;
-   wvw_win->BUFFERSIZE = ( USHORT ) ( col * row * sizeof( char ) );
+   wvw_win->BUFFERSIZE = ( HB_SIZE ) ( col * row * sizeof( char ) );
    wvw_win->pBuffer    = wvw_win->byBuffer;
    wvw_win->pColors    = wvw_win->byColors;
 
@@ -2407,9 +2407,9 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
             for( irow = rowStart; irow <= rowStop; irow++ )
             {
-               int    icol, startCol;
-               USHORT index, startIndex, len;
-               BYTE   oldColor, color;
+               int     icol, startCol;
+               HB_SIZE index, startIndex, len;
+               BYTE    oldColor, color;
 
                icol       = colStart;
                index      = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, icol, irow );
@@ -3571,44 +3571,44 @@ static void hb_gt_wvwValidateCaret( PWVW_WIN wvw_win )
 
 /* takes a row and column, and returns the appropriate index into the screen Text buffer */
 
-static USHORT hb_gt_wvw_GetIndexForTextBuffer( PWVW_WIN wvw_win, int col, int row )
+static HB_SIZE hb_gt_wvw_GetIndexForTextBuffer( PWVW_WIN wvw_win, int col, int row )
 {
-   return ( USHORT ) ( row * wvw_win->COLS + col );
+   return ( HB_SIZE ) ( row * wvw_win->COLS + col );
 }
 
 /* takes an index into the screen Text buffer and returns the corresponding row and column */
-static POINT hb_gt_wvw_GetColRowForTextBuffer( PWVW_WIN wvw_win, USHORT index )
+static POINT hb_gt_wvw_GetColRowForTextBuffer( PWVW_WIN wvw_win, HB_SIZE index )
 {
    POINT colrow;
 
    colrow.x = index % wvw_win->COLS;
-   colrow.y = index / wvw_win->COLS;
+   colrow.y = ( int ) ( index / wvw_win->COLS );
 
    return colrow;
 }
 
 /* converts col and row to x and y ( pixels ) and calls the Windows function TextOut
    with the expected coordinates */
-static HB_BOOL hb_gt_wvwTextOut( PWVW_WIN wvw_win, HDC hdc, int col, int row, LPCTSTR lpString, USHORT cbString )
+static HB_BOOL hb_gt_wvwTextOut( PWVW_WIN wvw_win, HDC hdc, int col, int row, LPCTSTR lpString, HB_SIZE cbString )
 {
    POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, col, row );
    RECT  mClip;
 
-   if( cbString > ( USHORT ) wvw_win->COLS )
-      cbString = ( USHORT ) wvw_win->COLS;
+   if( cbString > ( HB_SIZE ) wvw_win->COLS )
+      cbString = ( HB_SIZE ) wvw_win->COLS;
 
    /* safer solution by Oscar Hernandez Suarez: */
 
    memset( &mClip, 0, sizeof( mClip ) );
 
-   SetRect( &mClip, xy.x, xy.y, xy.x + cbString * wvw_win->PTEXTSIZE.x, xy.y + wvw_win->PTEXTSIZE.y );
+   SetRect( &mClip, xy.x, xy.y, xy.x + ( int ) cbString * wvw_win->PTEXTSIZE.x, xy.y + wvw_win->PTEXTSIZE.y );
 
    if( wvw_win->FixedFont )
       return ( HB_BOOL ) ExtTextOut( hdc, xy.x, xy.y, ETO_CLIPPED | ETO_OPAQUE, &mClip, lpString,
-                                     cbString, NULL );
+                                     ( UINT ) cbString, NULL );
    else
       return ( HB_BOOL ) ExtTextOut( hdc, xy.x, xy.y, ETO_CLIPPED | ETO_OPAQUE, &mClip, lpString,
-                                     cbString, wvw_win->FixedSize );
+                                     ( UINT ) cbString, wvw_win->FixedSize );
 }
 
 /* get for and background colors from attribute and set them for window */
@@ -4070,9 +4070,9 @@ static void hb_gt_wvw_SetMouseY( PWVW_WIN wvw_win, int iy )
 static void hb_gt_wvw_SetStringInTextBuffer( PWVW_WIN wvw_win, int col, int row, BYTE color, BYTE attr, BYTE * sBuffer, HB_SIZE length )
 {
    /* determine the index and put the string into the TextBuffer */
-   USHORT index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, col, row );
+   HB_SIZE index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, col, row );
 
-   if( ( length + index ) <= ( HB_SIZE ) wvw_win->BUFFERSIZE )
+   if( ( length + index ) <= wvw_win->BUFFERSIZE )
    {
       POINT end;
 
@@ -4080,7 +4080,7 @@ static void hb_gt_wvw_SetStringInTextBuffer( PWVW_WIN wvw_win, int col, int row,
       memset( wvw_win->pColors + index, color, length );
 
       /* determine bounds of rect around character to refresh */
-      end = hb_gt_wvw_GetColRowForTextBuffer( wvw_win, index + ( USHORT ) length - 1 );
+      end = hb_gt_wvw_GetColRowForTextBuffer( wvw_win, index + length - 1 );
       hb_gt_wvw_SetInvalidRect( wvw_win, col, row, end.x, end.y );
    }
 
@@ -4951,12 +4951,12 @@ static void hb_gt_wvw_vDispEnd( PWVW_WIN wvw_win )
 static void hb_gt_wvw_vGetText( PWVW_WIN wvw_win, int top, int left, int bottom, int right, BYTE * sBuffer )
 {
    int irow, icol;
-   USHORT index, j;
 
-   j = 0;
+   HB_SIZE j = 0;
+
    for( irow = top; irow <= bottom; irow++ )
    {
-      index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, left, irow );
+      HB_SIZE index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, left, irow );
       for( icol = left; icol <= right; icol++ )
       {
          if( index >= wvw_win->BUFFERSIZE )
@@ -5153,12 +5153,12 @@ static void hb_gt_wvw_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 static void hb_gt_wvw_vPutText( PWVW_WIN wvw_win, int top, int left, int bottom, int right, const char * sBuffer, int bColor )
 {
    int irow, icol;
-   USHORT index, j;
 
-   j = 0;
+   HB_SIZE j = 0;
+
    for( irow = top; irow <= bottom; irow++ )
    {
-      index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, left, irow );
+      HB_SIZE index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, left, irow );
       for( icol = left; icol <= right; icol++ )
       {
          if( index >= wvw_win->BUFFERSIZE )
@@ -5180,11 +5180,11 @@ static void hb_gt_wvw_vPutText( PWVW_WIN wvw_win, int top, int left, int bottom,
 
 static void  hb_gt_wvw_vSetAttribute( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, int bColor )
 {
-   int irow, icol, index;
+   int irow, icol;
 
    for( irow = iTop; irow <= iBottom; irow++ )
    {
-      index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, iLeft, irow );
+      HB_SIZE index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, iLeft, irow );
       for( icol = iLeft; icol <= iRight; icol++ )
       {
          if( index >= wvw_win->BUFFERSIZE )
@@ -5231,7 +5231,7 @@ static HB_BOOL hb_gt_wvw_bSetMode( PWVW_WIN wvw_win, int row, int col )
 
 static void  hb_gt_wvw_vxPutch( PWVW_WIN wvw_win, int iRow, int iCol, int bColor, BYTE bChar )
 {
-   USHORT index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, iCol, iRow );
+   HB_SIZE index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, iCol, iRow );
 
    if( index < wvw_win->BUFFERSIZE )
    {
@@ -5400,7 +5400,7 @@ BYTE hb_gt_wvw_LineHeight( PWVW_WIN wvw_win )
 /* fills linespace above and below the text area.
    caller should check that linespacing is > 0.
    has no effect if linespacing == 0 */
-static void hb_gt_wvwFillLineSpace( PWVW_WIN wvw_win, HDC hdc, int startCol, int irow, USHORT len, BYTE byAttrib )
+static void hb_gt_wvwFillLineSpace( PWVW_WIN wvw_win, HDC hdc, int startCol, int irow, HB_SIZE len, BYTE byAttrib )
 {
    RECT     rc;
    LOGBRUSH lb;
@@ -5412,7 +5412,7 @@ static void hb_gt_wvwFillLineSpace( PWVW_WIN wvw_win, HDC hdc, int startCol, int
    rc.top    = irow;
    rc.left   = startCol;
    rc.bottom = irow;
-   rc.right  = startCol + len - 1;
+   rc.right  = ( int ) ( startCol + len - 1 );
    rc        = hb_gt_wvw_GetXYFromColRowRect( wvw_win, rc );
 
    memset( &lb, 0, sizeof( lb ) );
@@ -7764,9 +7764,9 @@ HB_FUNC( WVW_ADDROWS )
 
    if( wvw && wvw_win )
    {
-      int    iRows = hb_parni( 2 );
-      int    height, width;
-      USHORT usNumChars;
+      int     iRows = hb_parni( 2 );
+      int     height, width;
+      HB_SIZE usNumChars;
 
       RECT wi, ci;
 
@@ -7785,16 +7785,16 @@ HB_FUNC( WVW_ADDROWS )
          return;
       }
 
-      usNumChars = ( USHORT ) ( iRows * wvw_win->COLS );
+      usNumChars = ( HB_SIZE ) ( iRows * wvw_win->COLS );
 
       if( iRows > 0 )
       {
          /* initialize chars and attributes */
-         USHORT usBufLastRow = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, 0, wvw_win->ROWS - 1 );
-         USHORT usBufStart   = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, 0, wvw_win->ROWS );
+         HB_SIZE usBufLastRow = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, 0, wvw_win->ROWS - 1 );
+         HB_SIZE usBufStart   = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, 0, wvw_win->ROWS );
 
          memset( &wvw_win->byBuffer[ usBufStart ], ' ', usNumChars );
-         memset( &wvw_win->byColors[ usBufStart ], ( char ) wvw_win->byColors[ usBufLastRow ], usNumChars );
+         memset( &wvw_win->byColors[ usBufStart ], wvw_win->byColors[ usBufLastRow ], usNumChars );
       }
 
       /* update vars */

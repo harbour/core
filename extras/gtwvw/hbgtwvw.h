@@ -329,7 +329,7 @@ typedef struct
    COLORREF foreground;                               /* foreground color */
    COLORREF background;                               /* background color */
 
-   USHORT   BUFFERSIZE;                               /* size of the screen text buffer */
+   HB_SIZE  BUFFERSIZE;                               /* size of the screen text buffer */
    BYTE     byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ];  /* buffer with the text to be displayed on the screen */
    BYTE     byColors[ WVW_MAX_ROWS * WVW_MAX_COLS ];
    BYTE *   pBuffer;                                  /*   "     "    "    */
