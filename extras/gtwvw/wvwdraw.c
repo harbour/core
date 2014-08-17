@@ -428,6 +428,164 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
    return fResult;
 }
 
+/* s_FindPictureHandle() and s_AddPictureHandle() are for bitmaps associated with
+   Windows controls such as toolbar, pushbutton, checkbox, etc */
+static IPicture * s_FindPictureHandle( PWVW_GLO wvw, const char * szFileName, int * piWidth, int * piHeight )
+{
+   WVW_IPIC * pph = wvw->a.pphPictureList;
+
+   HB_BOOL bStrictDimension = ! ( *piWidth == 0 && *piHeight == 0 );
+
+   while( pph )
+   {
+      if( strcmp( szFileName, pph->szFilename ) == 0 &&
+          ( ! bStrictDimension ||
+            ( *piWidth == pph->iWidth &&
+              *piHeight == pph->iHeight
+            )
+          ) )
+      {
+         if( ! bStrictDimension )
+         {
+            *piWidth  = pph->iWidth;
+            *piHeight = pph->iHeight;
+         }
+         return pph->iPicture;
+      }
+
+      pph = pph->pNext;
+   }
+
+   return NULL;
+}
+
+static void s_AddPictureHandle( PWVW_GLO wvw, const char * szFileName, IPicture * iPicture, int iWidth, int iHeight )
+{
+   WVW_IPIC * pphNew = ( WVW_IPIC * ) hb_xgrabz( sizeof( WVW_IPIC ) );
+
+   hb_strncpy( pphNew->szFilename, szFileName, sizeof( pphNew->szFilename ) - 1 );
+   pphNew->iPicture = iPicture;
+   pphNew->iWidth   = iWidth;
+   pphNew->iHeight  = iHeight;
+   pphNew->pNext    = wvw->a.pphPictureList;
+
+   wvw->a.pphPictureList = pphNew;
+}
+
+static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char * resname, HB_UINT iresimage, long * lwidth, long * lheight )
+{
+   HBITMAP    hbmpx;
+   IPicture * iPicture = NULL;
+
+   int iWidth  = *lwidth;
+   int iHeight = *lheight;
+
+   if( resname )
+   {
+      hbmpx = hb_gt_wvw_FindBitmapHandle( resname, &iWidth, &iHeight );
+
+      if( ! hbmpx )
+      {
+         LPTSTR lpFree;
+         hbmpx = ( HBITMAP ) LoadImage( wvw->hInstance, HB_FSNAMECONV( resname, &lpFree ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         if( lpFree )
+            hb_xfree( lpFree );
+         hb_gt_wvw_AddBitmapHandle( resname, hbmpx, iWidth, iHeight );
+      }
+   }
+   else
+   {
+      char szResname[ HB_PATH_MAX + 1 ];
+
+      hb_snprintf( szResname, sizeof( szResname ), "?%u", iresimage );
+
+      hbmpx = hb_gt_wvw_FindBitmapHandle( szResname, &iWidth, &iHeight );
+
+      if( ! hbmpx )
+      {
+         hbmpx = ( HBITMAP ) LoadImage( wvw->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) iresimage ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hb_gt_wvw_AddBitmapHandle( szResname, hbmpx, iWidth, iHeight );
+      }
+
+      resname = ( const char * ) szResname;
+   }
+
+   *lwidth  = iWidth;
+   *lheight = iHeight;
+
+   if( hbmpx )
+   {
+      iPicture = s_FindPictureHandle( wvw, resname, &iWidth, &iHeight );
+
+      if( iPicture )
+      {
+         HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) lwidth );
+         HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) lheight );
+      }
+      else
+      {
+         PICTDESC picd;
+
+         picd.cbSizeofstruct = sizeof( picd );
+         picd.picType        = PICTYPE_BITMAP;
+         picd.bmp.hbitmap    = hbmpx;
+         OleCreatePictureIndirect( &picd, HB_ID_REF( IID_IPicture ), TRUE, ( LPVOID * ) &iPicture );
+         s_AddPictureHandle( wvw, resname, iPicture, iWidth, iHeight );
+      }
+   }
+
+   return iPicture;
+}
+
+static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, long * lwidth, long * lheight )
+{
+   IPicture * iPicture = NULL;
+
+   HB_FHANDLE fhnd = hb_fsOpen( filename, FO_READ | FO_SHARED );
+
+   if( fhnd != FS_ERROR )
+   {
+      DWORD   nFileSize = ( DWORD ) hb_fsSeek( fhnd, 0, FS_END );
+      HGLOBAL hGlobal   = GlobalAlloc( GMEM_MOVEABLE, nFileSize + 4096 );
+
+      if( hGlobal )
+      {
+         void * pGlobal = GlobalLock( hGlobal );
+
+         if( pGlobal )
+         {
+            IStream * iStream = NULL;
+
+            memset( pGlobal, 0, nFileSize );
+
+            hb_fsSeek( fhnd, 0, FS_SET );
+            hb_fsReadLarge( fhnd, pGlobal, nFileSize );
+
+            if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
+            {
+               OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &iPicture );
+               HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
+            }
+            else
+               iPicture = NULL;
+
+            GlobalUnlock( hGlobal );
+            GlobalFree( hGlobal );
+
+            if( iPicture )
+            {
+               HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) lwidth );
+               HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) lheight );
+            }
+         }
+
+         hb_fsClose( fhnd );
+      }
+   }
+
+   return iPicture;
+}
+
 /* wvw_SetPen( nPenStyle, nWidth, nColor ) */
 /* IMPORTANT: in prev release this functions has nWinNum parameter
               PENs are now application-wide. */
@@ -1055,9 +1213,10 @@ HB_FUNC( WVW_DRAWIMAGE )
 
 HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
 {
+   PWVW_GLO wvw     = hb_gt_wvw();
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw_win )
+   if( wvw && wvw_win )
    {
       int usTop    = hb_parni( 2 ),
           usLeft   = hb_parni( 3 ),
@@ -1071,10 +1230,10 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       if( HB_ISNUM( 6 ) )
-         pPic = hb_gt_wvw_rr_LoadPictureFromResource( NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
+         pPic = hb_gt_wvw_rr_LoadPictureFromResource( wvw, NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
       else
       {
-         pPic = hb_gt_wvw_rr_LoadPictureFromResource( hb_parcx( 6 ), 0, &lImgWidth, &lImgHeight );
+         pPic = hb_gt_wvw_rr_LoadPictureFromResource( wvw, hb_parcx( 6 ), 0, &lImgWidth, &lImgHeight );
 
          if( pPic == NULL )
             pPic = hb_gt_wvw_rr_LoadPicture( hb_parcx( 6 ), &lImgWidth, &lImgHeight );

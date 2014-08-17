@@ -581,14 +581,6 @@ extern void       hb_gt_wvw_AddUserBitmapHandle( const char * szFileName, HBITMA
 extern HB_EXPORT HB_BOOL       hb_gt_wvw_DestroyPicture( IPicture * iPicture );
 extern HB_EXPORT BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 extern HB_EXPORT BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-extern HB_EXPORT int           hb_gt_wvw_GetLastMenuEvent( PWVW_WIN wvw_win );
-extern HB_EXPORT int           hb_gt_wvw_SetLastMenuEvent( PWVW_WIN wvw_win, int iLastMenuEvent );
-extern HB_EXPORT int           hb_gt_wvw_GetWindowTitle( PWVW_WIN wvw_win, LPTSTR title, int length );
-extern HB_EXPORT void          hb_gt_wvw_PostMessage( PWVW_WIN wvw_win, int message );
-extern HB_EXPORT HB_BOOL       hb_gt_wvw_SetAltF4Close( HB_BOOL bCanClose );
-extern HB_EXPORT HB_BOOL       hb_gt_wvw_EnableShortCuts( PWVW_WIN wvw_win, HB_BOOL bEnable );
-extern HB_EXPORT IPicture *    hb_gt_wvw_rr_LoadPictureFromResource( const char * resname, HB_UINT iresimage, long * lwidth, long * lheight );
-extern HB_EXPORT IPicture *    hb_gt_wvw_rr_LoadPicture( const char * filename, long * lwidth, long * lheight );
 
 HB_EXTERN_END
 

@@ -44,7 +44,7 @@ and interfaces to popular APIs.
 ### Harbour stable binary download
 
 You can find links to the latest stable release (3.0.0)
-of Harbour in the README of the upstream source.
+of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md#stable-versions) of the upstream source.
 
 
 ## Unstable versions
@@ -80,6 +80,10 @@ Download source archive from any of these links and unpack:
 * [RSS](https://github.com/vszakats/harbour-core/commits/master.atom)
 * [Mac app](https://itunes.apple.com/us/app/committed/id560767719)
 * [Mac tool](https://github.com/marcocampana/git-notifier)
+
+### Harbour unstable with Homebrew (OS X)
+
+    brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb
 
 
 # How to Build

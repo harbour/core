@@ -3,6 +3,7 @@ require "formula"
 class Harbour < Formula
   homepage "https://github.com/vszakats/harbour-core/"
   url "https://github.com/vszakats/harbour-core/archive/master.tar.gz"
+  version '3.4.0'
 
   depends_on "pcre"
   depends_on :x11 => :recommended

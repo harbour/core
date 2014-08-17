@@ -898,14 +898,27 @@ HB_FUNC( WVW_ENABLESHORTCUTS )
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
-      hb_retl( hb_gt_wvw_EnableShortCuts( wvw_win, hb_parldef( 2, HB_TRUE ) ) );
+   {
+      hb_retl( wvw_win->EnableShortCuts );
+
+      wvw_win->EnableShortCuts = hb_parldef( 2, HB_TRUE );
+   }
    else
       hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVW_SETALTF4CLOSE )
 {
-   hb_retl( hb_gt_wvw_SetAltF4Close( hb_parl( 1 ) ) );
+   PWVW_GLO wvw = hb_gt_wvw();
+
+   if( wvw )
+   {
+      hb_retl( wvw->a.AltF4Close );
+
+      wvw->a.AltF4Close = hb_parl( 1 );
+   }
+   else
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WVW_PROCESSMESSAGES )
@@ -923,7 +936,7 @@ HB_FUNC( WVW_GETTITLE )
    {
       TCHAR ucText[ 1024 ];
 
-      hb_gt_wvw_GetWindowTitle( wvw_win, ucText, HB_SIZEOFARRAY( ucText ) - 1 );
+      GetWindowText( wvw_win->hWnd, ucText, HB_SIZEOFARRAY( ucText ) - 1 );
 
       HB_RETSTR( ucText );
    }

@@ -145,7 +145,7 @@ HB_FUNC( WVW_GETLASTMENUEVENT )
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
-      hb_retni( hb_gt_wvw_GetLastMenuEvent( wvw_win ) );
+      hb_retni( wvw_win->LastMenuEvent );
    else
       hb_retni( 0 );
 }
@@ -155,7 +155,11 @@ HB_FUNC( WVW_SETLASTMENUEVENT )
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
-      hb_retni( hb_gt_wvw_SetLastMenuEvent( wvw_win, hb_parni( 2 ) ) );
+   {
+      hb_retni( wvw_win->LastMenuEvent );
+
+      wvw_win->LastMenuEvent = hb_parni( 2 );
+   }
    else
       hb_retni( 0 );
 }
