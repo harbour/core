@@ -1874,17 +1874,16 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
-         hb_arrayNew( pInfo->pResult, 8 );
+         hb_arrayNew( pInfo->pResult, 6 );
          HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
          hb_arraySetNI( pInfo->pResult, 1, iRow );
          hb_arraySetNI( pInfo->pResult, 2, iCol );
          hb_arraySetNI( pInfo->pResult, 3, HB_GTSELF_GETCURSORSTYLE( pGT ) );
-         hb_arraySetC ( pInfo->pResult, 4, hb_conSetColor( NULL ) );
 
          iRow = HB_GTSELF_MAXROW( pGT );
          iCol = HB_GTSELF_MAXCOL( pGT );
-         hb_arraySetNI( pInfo->pResult, 5, iRow );
-         hb_arraySetNI( pInfo->pResult, 6, iCol );
+         hb_arraySetNI( pInfo->pResult, 4, iRow );
+         hb_arraySetNI( pInfo->pResult, 5, iCol );
 
          iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
          nSize = HB_GTSELF_RECTSIZE( pGT, 0, 0, iRow, iCol );
@@ -1892,7 +1891,7 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             void * pBuffer = hb_xgrab( nSize + 1 );
             HB_GTSELF_SAVE( pGT, 0, 0, iRow, iCol, pBuffer );
-            hb_arraySetCLPtr( pInfo->pResult, 7, ( char * ) pBuffer, nSize );
+            hb_arraySetCLPtr( pInfo->pResult, 6, ( char * ) pBuffer, nSize );
          }
          if( iFlag != 0 )
             HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
@@ -1900,21 +1899,20 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
       case HB_GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) &&
-             hb_arrayLen( pInfo->pNewVal ) == 8 )
+             hb_arrayLen( pInfo->pNewVal ) == 6 )
          {
             HB_GTSELF_DISPBEGIN( pGT );
-            if( hb_arrayGetCLen( pInfo->pNewVal, 7 ) > 0 )
+            if( hb_arrayGetCLen( pInfo->pNewVal, 6 ) > 0 )
             {
                int iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
-               HB_GTSELF_REST( pGT, 0, 0, hb_arrayGetNI( pInfo->pNewVal, 5 ),
-                               hb_arrayGetNI( pInfo->pNewVal, 6 ),
-                               hb_arrayGetCPtr( pInfo->pNewVal, 7 ) );
+               HB_GTSELF_REST( pGT, 0, 0, hb_arrayGetNI( pInfo->pNewVal, 4 ),
+                               hb_arrayGetNI( pInfo->pNewVal, 5 ),
+                               hb_arrayGetCPtr( pInfo->pNewVal, 6 ) );
                HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
             }
             HB_GTSELF_SETPOS( pGT, hb_arrayGetNI( pInfo->pNewVal, 1 ),
                                    hb_arrayGetNI( pInfo->pNewVal, 2 ) );
             HB_GTSELF_SETCURSORSTYLE( pGT, hb_arrayGetNI( pInfo->pNewVal, 3 ) );
-            hb_conSetColor( hb_arrayGetCPtr( pInfo->pNewVal, 4 ) );
             HB_GTSELF_DISPEND( pGT );
             HB_GTSELF_FLUSH( pGT );
          }
