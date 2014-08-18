@@ -420,8 +420,8 @@ typedef struct
 
    HINSTANCE hInstance;
 
-   int usNumWindows;                            /* number of windows */
-   int usCurWindow;                             /* current window handled by HB_GT_FUNC(...) */
+   int iNumWindows;                             /* number of windows */
+   int iCurWindow;                              /* current window handled by HB_GT_FUNC(...) */
 
    PWVW_WIN pWin[ 40 ];
 
@@ -533,8 +533,8 @@ extern RECT       hb_gt_wvw_GetXYFromColRowRect( PWVW_WIN wvw_win, RECT colrow )
 extern POINT      hb_gt_wvw_GetXYFromColRow( PWVW_WIN wvw_win, int col, int row );
 extern POINT      hb_gt_wvw_GetColRowFromXY( PWVW_WIN wvw_win, int x, int y );
 extern COLORREF   hb_gt_wvw_GetColorData( int iIndex );
-extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * image, int * pWidth, int * pHeight );
-extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * pWidth, int * pHeight );
+extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * image, int * piWidth, int * piHeight );
+extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * piWidth, int * piHeight );
 extern RECT       hb_gt_wvw_GetColRowFromXYRect( PWVW_WIN pWIndowData, RECT xy );
 extern int        hb_gt_wvw_LineHeight( PWVW_WIN wvw_win );
 extern WPARAM     hb_gt_wvw_ProcessMessages( PWVW_WIN wvw_win );
@@ -547,8 +547,8 @@ extern int        hb_gt_wvw_LastControlId( PWVW_WIN wvw_win, int nClass );
 extern void       hb_gt_wvw_AddControlHandle( PWVW_WIN wvw_win, int nClass, HWND hWnd, int nId, PHB_ITEM pBlock, RECT rect, RECT offs, int nStyle );
 extern HB_BOOL    hb_gt_wvw_StoreControlProc( PWVW_WIN wvw_win, int nClass, HWND hWnd, WNDPROC OldProc );
 extern WNDPROC    hb_gt_wvw_GetControlProc( PWVW_WIN wvw_win, int nClass, HWND hWnd );
-extern int        hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBottom, int usRight, LPCTSTR lpszCaption,
-                                          const char * szBitmap, HB_UINT uiBitmap, PHB_ITEM phbiCodeBlock,
+extern int        hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBottom, int usRight, LPCTSTR szCaption,
+                                          const char * szBitmap, HB_UINT uiBitmap, PHB_ITEM pBlock,
                                           int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
                                           double dStretch, HB_BOOL bMap3Dcolors,
                                           int iStyle, HWND * phWnd );
@@ -559,7 +559,7 @@ extern int        hb_gt_wvw_RowOfs( PWVW_WIN wvw_win );
 extern int        hb_gt_wvw_ColOfs( PWVW_WIN wvw_win );
 extern IPicture * hb_gt_wvw_LoadPicture( const char * image );
 
-extern HB_BOOL    hb_gt_wvw_BufferedKey( long lKey );
+extern HB_BOOL    hb_gt_wvw_BufferedKey( int iKey );
 extern int        hb_gt_wvw_key_ansi_to_oem( int c );
 extern int        hb_gt_wvw_JustTranslateKey( int key, int shiftkey, int altkey, int controlkey );
 extern HB_BOOL    hb_gt_wvw_AcceptingInput( void );
@@ -570,7 +570,7 @@ extern void       hb_gt_wvw_SetMouseY( PWVW_WIN wvw_win, int iy );
 
 extern PWVW_CTL   hb_gt_wvw_ctl( PWVW_WIN wvw_win, int nClass, HWND hWnd, int nId );
 
-extern int        hb_gt_wvw_OpenWindow( LPCTSTR lpszWinName, int usRow1, int usCol1, int usRow2, int usCol2, DWORD dwStyle, int iParentWin );
+extern int        hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int usRow1, int usCol1, int usRow2, int usCol2, DWORD dwStyle, HWND hWndParent );
 extern void       hb_gt_wvw_CloseWindow( void );
 extern int        hb_gt_wvw_SetCurWindow( int nWin );
 

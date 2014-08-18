@@ -50,16 +50,16 @@
 #include "hbgtwvw.h"
 
 /* difference with gtwvt's:
-   here we have an option bTight.
+   here we have an option fTight.
    if it is true, only one pixel lines used (outer lines are not drawn)
 
    TODO: combine it with aOffset like DrawImage ?
  */
-static void hb_gt_wvw_DrawBoxRecessed( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BOOL bTight )
+static void hb_gt_wvw_DrawBoxRecessed( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BOOL fTight )
 {
    PWVW_GLO wvw = hb_gt_wvw();
 
-   if( ! bTight )
+   if( ! fTight )
       SelectObject( wvw_win->hdc, wvw->a.penWhiteDim );
    else
       SelectObject( wvw_win->hdc, wvw->a.penWhite );
@@ -70,7 +70,7 @@ static void hb_gt_wvw_DrawBoxRecessed( PWVW_WIN wvw_win, int iTop, int iLeft, in
    MoveToEx( wvw_win->hdc, iLeft, iBottom, NULL );          /* Bottom Inner */
    LineTo( wvw_win->hdc, iRight, iBottom );
 
-   if( ! bTight )
+   if( ! fTight )
    {
       SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
@@ -89,7 +89,7 @@ static void hb_gt_wvw_DrawBoxRecessed( PWVW_WIN wvw_win, int iTop, int iLeft, in
    MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );             /* Top Inner  */
    LineTo( wvw_win->hdc, iRight, iTop );
 
-   if( ! bTight )
+   if( ! fTight )
    {
       SelectObject( wvw_win->hdc, wvw->a.penDarkGray );
 
@@ -102,16 +102,16 @@ static void hb_gt_wvw_DrawBoxRecessed( PWVW_WIN wvw_win, int iTop, int iLeft, in
 }
 
 /* difference with gtwvt's:
-   here we have an option bTight.
+   here we have an option fTight.
    if it is true, only one pixel lines used (outer lines are not drawn)
 
    TODO: combine it with aOffset like DrawImage ?
  */
-static void hb_gt_wvw_DrawBoxRaised( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BOOL bTight ) /* <-- none in gtwvt */
+static void hb_gt_wvw_DrawBoxRaised( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BOOL fTight ) /* <-- none in gtwvt */
 {
    PWVW_GLO wvw = hb_gt_wvw();
 
-   if( ! bTight )
+   if( ! fTight )
       SelectObject( wvw_win->hdc, wvw->a.penWhiteDim );
    else
       SelectObject( wvw_win->hdc, wvw->a.penWhite );
@@ -122,7 +122,7 @@ static void hb_gt_wvw_DrawBoxRaised( PWVW_WIN wvw_win, int iTop, int iLeft, int 
    MoveToEx( wvw_win->hdc, iLeft, iTop, NULL );  /* Left Inner */
    LineTo( wvw_win->hdc, iLeft, iBottom );
 
-   if( ! bTight )
+   if( ! fTight )
    {
       SelectObject( wvw_win->hdc, wvw->a.penWhite );
 
@@ -133,7 +133,7 @@ static void hb_gt_wvw_DrawBoxRaised( PWVW_WIN wvw_win, int iTop, int iLeft, int 
       LineTo( wvw_win->hdc, iLeft - 1, iBottom + 1 );
    }
 
-   if( ! bTight )
+   if( ! fTight )
       SelectObject( wvw_win->hdc, wvw->a.penDarkGray );
    else
       SelectObject( wvw_win->hdc, wvw->a.penBlack );
@@ -144,7 +144,7 @@ static void hb_gt_wvw_DrawBoxRaised( PWVW_WIN wvw_win, int iTop, int iLeft, int 
    MoveToEx( wvw_win->hdc, iRight, iBottom, NULL );  /* Right Inner */
    LineTo( wvw_win->hdc, iRight, iTop );
 
-   if( ! bTight )
+   if( ! fTight )
    {
       SelectObject( wvw_win->hdc, wvw->a.penBlack );
 
@@ -246,7 +246,7 @@ static void s_DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, int xStart, int y
 
 /* 2006-07-24 Notes:
    (1) Transparency
-   if bTransparent is .T., top-left pixel is used as the transparent color,
+   if fTransparent is .T., top-left pixel is used as the transparent color,
 
    (2) Caching
    WARNING this function will always CACHE the image.
@@ -254,7 +254,7 @@ static void s_DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, int xStart, int y
    is never closed.
    TODO: make it an option.
  */
-static HB_BOOL hb_gt_wvw_DrawImage( PWVW_WIN wvw_win, int x1, int y1, int wd, int ht, const char * image, HB_BOOL bTransparent )
+static HB_BOOL hb_gt_wvw_DrawImage( PWVW_WIN wvw_win, int x1, int y1, int wd, int ht, const char * image, HB_BOOL fTransparent )
 {
    HB_BOOL fResult;
    int     iWidth  = 0;
@@ -298,7 +298,7 @@ static HB_BOOL hb_gt_wvw_DrawImage( PWVW_WIN wvw_win, int x1, int y1, int wd, in
 
    hdc = GetDC( wvw_win->hWnd );
 
-   if( bTransparent )
+   if( fTransparent )
    {
       s_DrawTransparentBitmap( hdc, hBitmap, x1, y1, wd, ht );
       fResult = HB_TRUE;
@@ -434,18 +434,18 @@ static IPicture * s_FindPictureHandle( PWVW_GLO wvw, const char * szFileName, in
 {
    WVW_IPIC * pph = wvw->a.pphPictureList;
 
-   HB_BOOL bStrictDimension = ! ( *piWidth == 0 && *piHeight == 0 );
+   HB_BOOL fStrictDimension = ! ( *piWidth == 0 && *piHeight == 0 );
 
    while( pph )
    {
       if( strcmp( szFileName, pph->szFilename ) == 0 &&
-          ( ! bStrictDimension ||
+          ( ! fStrictDimension ||
             ( *piWidth == pph->iWidth &&
               *piHeight == pph->iHeight
             )
           ) )
       {
-         if( ! bStrictDimension )
+         if( ! fStrictDimension )
          {
             *piWidth  = pph->iWidth;
             *piHeight = pph->iHeight;
@@ -472,13 +472,13 @@ static void s_AddPictureHandle( PWVW_GLO wvw, const char * szFileName, IPicture 
    wvw->a.pphPictureList = pphNew;
 }
 
-static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char * resname, HB_UINT iresimage, long * lwidth, long * lheight )
+static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char * resname, HB_UINT iresimage, int * piWidth, int * piHeight )
 {
    HBITMAP    hbmpx;
    IPicture * iPicture = NULL;
 
-   int iWidth  = *lwidth;
-   int iHeight = *lheight;
+   int iWidth  = *piWidth;
+   int iHeight = *piHeight;
 
    if( resname )
    {
@@ -510,8 +510,8 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
       resname = ( const char * ) szResname;
    }
 
-   *lwidth  = iWidth;
-   *lheight = iHeight;
+   *piWidth  = iWidth;
+   *piHeight = iHeight;
 
    if( hbmpx )
    {
@@ -519,8 +519,16 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
 
       if( iPicture )
       {
-         HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) lwidth );
-         HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) lheight );
+         OLE_XSIZE_HIMETRIC nWidth;
+         OLE_YSIZE_HIMETRIC nHeight;
+
+         if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) & nWidth ) != S_OK )
+            nWidth = 0;
+         if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) & nHeight ) != S_OK )
+            nHeight = 0;
+
+         *piWidth = ( int ) nWidth;
+         *piHeight = ( int ) nHeight;
       }
       else
       {
@@ -537,7 +545,7 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
    return iPicture;
 }
 
-static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, long * lwidth, long * lheight )
+static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth, int * piHeight )
 {
    IPicture * iPicture = NULL;
 
@@ -574,8 +582,16 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, long * lwidth
 
             if( iPicture )
             {
-               HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) lwidth );
-               HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) lheight );
+               OLE_XSIZE_HIMETRIC nWidth;
+               OLE_YSIZE_HIMETRIC nHeight;
+
+               if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) & nWidth ) != S_OK )
+                  nWidth = 0;
+               if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) & nHeight ) != S_OK )
+                  nHeight = 0;
+
+               *piWidth = ( int ) nWidth;
+               *piHeight = ( int ) nHeight;
             }
          }
 
@@ -627,9 +643,9 @@ HB_FUNC( WVW_SETBRUSH )
 
       memset( &lb, 0, sizeof( lb ) );
 
-      lb.lbStyle = hb_parnl( 1 );
+      lb.lbStyle = ( UINT ) hb_parnint( 1 );
       lb.lbColor = ( COLORREF ) hb_parnint( 2 );
-      lb.lbHatch = hb_parnl( 3 );
+      lb.lbHatch = ( ULONG_PTR ) hb_parnint( 3 );
 
       hBrush = CreateBrushIndirect( &lb );
 
@@ -812,7 +828,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
           usBottom = hb_parni( 4 ),
           usRight  = hb_parni( 5 );
 
-      HB_BOOL bTight = hb_parl( 6 );
+      HB_BOOL fTight = hb_parl( 6 );
 
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
@@ -821,7 +837,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
-      if( bTight )
+      if( fTight )
       {
          iOTop    = 2;
          iOLeft   = 2;
@@ -847,7 +863,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
       iBottom = xy.y + iOBottom;
       iRight  = xy.x + iORight;
 
-      hb_gt_wvw_DrawBoxRaised( wvw_win, iTop, iLeft, iBottom, iRight, bTight );
+      hb_gt_wvw_DrawBoxRaised( wvw_win, iTop, iLeft, iBottom, iRight, fTight );
 
       hb_retl( HB_TRUE );
    }
@@ -876,7 +892,7 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
           usBottom = hb_parni( 4 ),
           usRight  = hb_parni( 5 );
 
-      HB_BOOL bTight = hb_parl( 6 );
+      HB_BOOL fTight = hb_parl( 6 );
 
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
@@ -885,7 +901,7 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
-      if( bTight )
+      if( fTight )
       {
          iOTop    = 2;
          iOLeft   = 2;
@@ -911,7 +927,7 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
       iBottom = xy.y + iOBottom;
       iRight  = xy.x + iORight;
 
-      hb_gt_wvw_DrawBoxRecessed( wvw_win, iTop, iLeft, iBottom, iRight, bTight );
+      hb_gt_wvw_DrawBoxRecessed( wvw_win, iTop, iLeft, iBottom, iRight, fTight );
 
       hb_retl( HB_TRUE );
    }
@@ -1089,10 +1105,10 @@ HB_FUNC( WVW_DRAWIMAGE )
 
       HB_BOOL fResult;
 
-      HB_BOOL bActBottom   = ! HB_ISNUM( 4 );
-      HB_BOOL bActRight    = ! HB_ISNUM( 5 );
-      HB_BOOL bTight       = hb_parl( 7 );
-      HB_BOOL bTransparent = hb_parl( 8 );
+      HB_BOOL fActBottom   = ! HB_ISNUM( 4 );
+      HB_BOOL fActRight    = ! HB_ISNUM( 5 );
+      HB_BOOL fTight       = hb_parl( 7 );
+      HB_BOOL fTransparent = hb_parl( 8 );
 
       int iImgWidth = 0, iImgHeight = 0;
       int iOLeft, iOTop, iORight, iOBottom;
@@ -1100,7 +1116,7 @@ HB_FUNC( WVW_DRAWIMAGE )
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
-      if( bTight )
+      if( fTight )
       {
          iOTop    = 2 + 1;
          iOLeft   = 2 + 1;
@@ -1119,7 +1135,7 @@ HB_FUNC( WVW_DRAWIMAGE )
       iTop  = xy.y + iOTop;
       iLeft = xy.x + iOLeft;
 
-      if( bActRight || bActBottom )
+      if( fActRight || fActBottom )
       {
          HB_BOOL fSuccess = HB_FALSE;
 
@@ -1135,10 +1151,10 @@ HB_FUNC( WVW_DRAWIMAGE )
 
          if( ! fSuccess )
          {
-            bActRight  = HB_FALSE;
-            bActBottom = HB_FALSE;
+            fActRight  = HB_FALSE;
+            fActBottom = HB_FALSE;
          }
-         else if( bActRight && bActBottom )
+         else if( fActRight && fActBottom )
          {
             iRight  = iLeft + iImgWidth - 1;
             iBottom = iTop + iImgHeight - 1;
@@ -1149,16 +1165,16 @@ HB_FUNC( WVW_DRAWIMAGE )
 
       xy.y -= wvw_win->iLineSpacing;
 
-      if( ! bActBottom )
+      if( ! fActBottom )
          iBottom = xy.y - 1 + iOBottom;
 
-      if( ! bActRight )
+      if( ! fActRight )
          iRight = xy.x - 1 + iORight;
 
-      if( ( bActBottom || bActRight ) && ! ( bActBottom && bActRight ) )
+      if( ( fActBottom || fActRight ) && ! ( fActBottom && fActRight ) )
       {
          int iDispWidth, iDispHeight;
-         if( bActRight )
+         if( fActRight )
          {
             /* right corner (width) must be proportional to height */
             iDispHeight = iBottom - iTop + 1;
@@ -1179,12 +1195,12 @@ HB_FUNC( WVW_DRAWIMAGE )
          int iSlot = hb_parni( 6 ) - 1;
 
          if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) )
-            fResult = hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, wvw->a.iPicture[ iSlot ], bTransparent );
+            fResult = hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, wvw->a.iPicture[ iSlot ], fTransparent );
          else
             fResult = HB_FALSE;
       }
       else
-         fResult = hb_gt_wvw_DrawImage( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, hb_parcx( 6 ), bTransparent );
+         fResult = hb_gt_wvw_DrawImage( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, hb_parcx( 6 ), fTransparent );
 
       hb_retl( fResult );
    }
@@ -1223,36 +1239,35 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
           usBottom = hb_parni( 4 ),
           usRight  = hb_parni( 5 );
 
-      long       lImgWidth = 0, lImgHeight = 0;
+      int        iImgWidth = 0, iImgHeight = 0;
       IPicture * pPic;
 
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       if( HB_ISNUM( 6 ) )
-         pPic = hb_gt_wvw_rr_LoadPictureFromResource( wvw, NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
+         pPic = hb_gt_wvw_rr_LoadPictureFromResource( wvw, NULL, hb_parni( 6 ), &iImgWidth, &iImgHeight );
       else
       {
-         pPic = hb_gt_wvw_rr_LoadPictureFromResource( wvw, hb_parcx( 6 ), 0, &lImgWidth, &lImgHeight );
+         pPic = hb_gt_wvw_rr_LoadPictureFromResource( wvw, hb_parcx( 6 ), 0, &iImgWidth, &iImgHeight );
 
          if( pPic == NULL )
-            pPic = hb_gt_wvw_rr_LoadPicture( hb_parcx( 6 ), &lImgWidth, &lImgHeight );
+            pPic = hb_gt_wvw_rr_LoadPicture( hb_parcx( 6 ), &iImgWidth, &iImgHeight );
       }
 
       if( pPic )
       {
-         HB_BOOL bActBottom   = ! HB_ISNUM( 4 );
-         HB_BOOL bActRight    = ! HB_ISNUM( 5 );
-         HB_BOOL bTight       = hb_parl( 7 );
-         HB_BOOL bTransparent = hb_parl( 8 );
+         HB_BOOL fActBottom   = ! HB_ISNUM( 4 );
+         HB_BOOL fActRight    = ! HB_ISNUM( 5 );
+         HB_BOOL fTight       = hb_parl( 7 );
+         HB_BOOL fTransparent = hb_parl( 8 );
 
-         int iImgWidth = 0, iImgHeight = 0;
          int iLeft, iTop, iRight = 0, iBottom = 0;
          int iOLeft, iOTop, iORight, iOBottom;
 
          POINT xy;
 
-         if( bTight )
+         if( fTight )
          {
             iOTop    = 2 + 1;
             iOLeft   = 2 + 1;
@@ -1271,14 +1286,14 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
          iTop  = xy.y + iOTop;
          iLeft = xy.x + iOLeft;
 
-         if( bActRight || bActBottom )
+         if( fActRight || fActBottom )
          {
             if( ! hb_gt_wvw_GetIPictDimension( pPic, &iImgWidth, &iImgHeight ) )
             {
-               bActRight  = HB_FALSE;
-               bActBottom = HB_FALSE;
+               fActRight  = HB_FALSE;
+               fActBottom = HB_FALSE;
             }
-            else if( bActRight && bActBottom )
+            else if( fActRight && fActBottom )
             {
                iRight  = iLeft + iImgWidth;
                iBottom = iTop + iImgHeight;
@@ -1289,16 +1304,16 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
 
          xy.y -= wvw_win->iLineSpacing;
 
-         if( ! bActBottom )
+         if( ! fActBottom )
             iBottom = xy.y - 1 + iOBottom;
 
-         if( ! bActRight )
+         if( ! fActRight )
             iRight = xy.x - 1 + iORight;
 
-         if( ( bActBottom || bActRight ) && ! ( bActBottom && bActRight ) )
+         if( ( fActBottom || fActRight ) && ! ( fActBottom && fActRight ) )
          {
             int iDispWidth, iDispHeight;
-            if( bActRight )
+            if( fActRight )
             {
                /* right corner (width) must be proportional to height */
                iDispHeight = iBottom - iTop + 1;
@@ -1314,7 +1329,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
             }
          }
 
-         hb_retl( hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, pPic, bTransparent ) );
+         hb_retl( hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, pPic, fTransparent ) );
       }
       else
          hb_retl( HB_FALSE );
@@ -1346,9 +1361,9 @@ HB_FUNC( WVW_DRAWLABEL )
 
       memset( &lf, 0, sizeof( lf ) );
 
-      lf.lfEscapement     = hb_parni( 6 ) * 10;
+      lf.lfEscapement     = hb_parnl( 6 ) * 10;
       lf.lfOrientation    = 0;
-      lf.lfWeight         = hb_parni( 12 );
+      lf.lfWeight         = hb_parnl( 12 );
       lf.lfItalic         = ( BYTE ) hb_parl( 15 );
       lf.lfUnderline      = ( BYTE ) hb_parl( 16 );
       lf.lfStrikeOut      = ( BYTE ) hb_parl( 17 );
@@ -1357,8 +1372,8 @@ HB_FUNC( WVW_DRAWLABEL )
       lf.lfClipPrecision  = 0;
       lf.lfQuality        = ( BYTE ) hb_parnidef( 13, DEFAULT_QUALITY );
       lf.lfPitchAndFamily = FF_DONTCARE;
-      lf.lfHeight         = hb_parnidef( 10, wvw_win->fontHeight );
-      lf.lfWidth = hb_parnidef( 11, wvw_win->fontWidth < 0 ? -wvw_win->fontWidth : wvw_win->fontWidth );
+      lf.lfHeight         = hb_parnldef( 10, wvw_win->fontHeight );
+      lf.lfWidth          = hb_parnldef( 11, wvw_win->fontWidth < 0 ? -wvw_win->fontWidth : wvw_win->fontWidth );
 
       if( HB_ISCHAR( 9 ) )
       {
@@ -1407,48 +1422,43 @@ HB_FUNC( WVW_DRAWLABELEX )
    PWVW_GLO wvw     = hb_gt_wvw();
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw && wvw_win )
+   int iSlot = hb_parni( 8 ) - 1;
+
+   if( wvw && wvw_win && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserFonts ) && wvw->a.hUserFonts[ iSlot ] )
    {
-      int iSlot = hb_parni( 8 ) - 1;
+      int usTop  = hb_parni( 2 );
+      int usLeft = hb_parni( 3 );
 
-      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserFonts ) && wvw->a.hUserFonts[ iSlot ] )
-      {
-         int usTop  = hb_parni( 2 );
-         int usLeft = hb_parni( 3 );
+      HFONT    oldFont;
+      int      oldTextAlign;
+      COLORREF oldBkColor, oldTextColor;
 
-         HFONT    oldFont;
-         int      oldTextAlign;
-         COLORREF oldBkColor, oldTextColor;
+      HB_SIZE nLen;
+      void *  hText;
+      LPCTSTR szText = HB_PARSTRDEF( 4, &hText, &nLen );
 
-         HB_SIZE nLen;
-         void *  hText;
-         LPCTSTR szText = HB_PARSTRDEF( 4, &hText, &nLen );
+      POINT xy;
 
-         POINT xy;
+      if( hb_gt_wvw_GetMainCoordMode() )
+         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
 
-         if( hb_gt_wvw_GetMainCoordMode() )
-            hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
 
-         xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnintdef( 7, wvw_win->background ) );
+      oldTextColor = SetTextColor( wvw_win->hdc, ( COLORREF ) hb_parnintdef( 6, wvw_win->foreground ) );
+      oldTextAlign = SetTextAlign( wvw_win->hdc, hb_parnidef( 5, TA_LEFT ) );
+      oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, wvw->a.hUserFonts[ iSlot ] );
 
-         oldBkColor   = SetBkColor( wvw_win->hdc, ( COLORREF ) hb_parnintdef( 7, wvw_win->background ) );
-         oldTextColor = SetTextColor( wvw_win->hdc, ( COLORREF ) hb_parnintdef( 6, wvw_win->foreground ) );
-         oldTextAlign = SetTextAlign( wvw_win->hdc, hb_parnidef( 5, TA_LEFT ) );
-         oldFont      = ( HFONT ) SelectObject( wvw_win->hdc, wvw->a.hUserFonts[ iSlot ] );
+      ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, szText, ( UINT ) nLen, NULL );
 
-         ExtTextOut( wvw_win->hdc, xy.x, xy.y, 0, NULL, szText, ( UINT ) nLen, NULL );
+      hb_strfree( hText );
 
-         hb_strfree( hText );
+      SelectObject( wvw_win->hdc, oldFont );
+      SetTextAlign( wvw_win->hdc, oldTextAlign );
+      SetBkColor( wvw_win->hdc, oldBkColor );
+      SetTextColor( wvw_win->hdc, oldTextColor );
 
-         SelectObject( wvw_win->hdc, oldFont );
-         SetTextAlign( wvw_win->hdc, oldTextAlign );
-         SetBkColor( wvw_win->hdc, oldBkColor );
-         SetTextColor( wvw_win->hdc, oldTextColor );
-
-         hb_retl( HB_TRUE );
-      }
-      else
-         hb_retl( HB_FALSE );
+      hb_retl( HB_TRUE );
    }
    else
       hb_retl( HB_FALSE );
@@ -1821,142 +1831,137 @@ HB_FUNC( WVW_DRAWLINEEX )
    PWVW_GLO wvw     = hb_gt_wvw();
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw && wvw_win )
+   int iSlot = hb_parni( 9 ) - 1;
+
+   if( wvw && wvw_win && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserPens ) )
    {
-      int iSlot = hb_parni( 9 ) - 1;
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
-      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserPens ) )
+      HPEN hPen = wvw->a.hUserPens[ iSlot ];
+
+      POINT xy;
+      int   iTop, iLeft, iBottom, iRight, iOffset;
+      int   iOrient, iFormat, iAlign;
+      int   x, y;
+
+      if( hb_gt_wvw_GetMainCoordMode() )
+         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      iTop  = xy.y;
+      iLeft = xy.x;
+
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      iBottom = xy.y - 1;
+      iRight  = xy.x - 1;
+
+      iOrient = hb_parni( 6 );
+      iFormat = hb_parni( 7 );
+      iAlign  = hb_parni( 8 );
+
+      x = iLeft;
+      y = iTop;
+
+      switch( iAlign )
       {
-         int usTop    = hb_parni( 2 ),
-             usLeft   = hb_parni( 3 ),
-             usBottom = hb_parni( 4 ),
-             usRight  = hb_parni( 5 );
+         case 0:               /* Center */
+            if( iOrient == 0 ) /* Horizontal */
+            {
+               iOffset = ( iBottom - iTop ) / 2;
+               y       = iTop + iOffset;
+            }
+            else
+            {
+               iOffset = ( iRight - iLeft ) / 2;
+               x       = iLeft + iOffset;
+            }
+            break;
 
-         HPEN hPen = wvw->a.hUserPens[ iSlot ];
+         case 1: /* Top */
+            break;
 
-         POINT xy;
-         int   iTop, iLeft, iBottom, iRight, iOffset;
-         int   iOrient, iFormat, iAlign;
-         int   x, y;
+         case 2:                               /* Bottom */
+            if( iFormat == 0 || iFormat == 1 ) /* Raised/Recessed */
+               y = iBottom - 1;
+            else
+               y = iBottom;
+            break;
 
-         if( hb_gt_wvw_GetMainCoordMode() )
-            hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+         case 3: /* Left */
+            break;
 
-         xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
-         iTop  = xy.y;
-         iLeft = xy.x;
-
-         xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
-         iBottom = xy.y - 1;
-         iRight  = xy.x - 1;
-
-         iOrient = hb_parni( 6 );
-         iFormat = hb_parni( 7 );
-         iAlign  = hb_parni( 8 );
-
-         x = iLeft;
-         y = iTop;
-
-         switch( iAlign )
-         {
-            case 0:               /* Center */
-               if( iOrient == 0 ) /* Horizontal */
-               {
-                  iOffset = ( iBottom - iTop ) / 2;
-                  y       = iTop + iOffset;
-               }
-               else
-               {
-                  iOffset = ( iRight - iLeft ) / 2;
-                  x       = iLeft + iOffset;
-               }
-               break;
-
-            case 1: /* Top */
-               break;
-
-            case 2:                               /* Bottom */
-               if( iFormat == 0 || iFormat == 1 ) /* Raised/Recessed */
-                  y = iBottom - 1;
-               else
-                  y = iBottom;
-               break;
-
-            case 3: /* Left */
-               break;
-
-            case 4:                               /* Right */
-               if( iFormat == 0 || iFormat == 1 ) /* Raised/Recessed */
-                  x = iRight - 1;
-               else
-                  x = iRight;
-               break;
-         }
-
-         switch( iFormat )
-         {
-            case 0:               /* Raised */
-               if( iOrient == 0 ) /* Horizontal */
-               {
-                  SelectObject( wvw_win->hdc, wvw->a.penWhite );
-                  MoveToEx( wvw_win->hdc, x, y, NULL );
-                  LineTo( wvw_win->hdc, iRight, y );
-                  SelectObject( wvw_win->hdc, hPen );
-                  MoveToEx( wvw_win->hdc, x, y + 1, NULL );
-                  LineTo( wvw_win->hdc, iRight, y + 1 );
-               }
-               else  /* Vertical */
-               {
-                  SelectObject( wvw_win->hdc, wvw->a.penWhite );
-                  MoveToEx( wvw_win->hdc, x, y, NULL );
-                  LineTo( wvw_win->hdc, x, iBottom );
-                  SelectObject( wvw_win->hdc, hPen );
-                  MoveToEx( wvw_win->hdc, x + 1, y, NULL );
-                  LineTo( wvw_win->hdc, x + 1, iBottom );
-               }
-               break;
-
-            case 1:               /* Recessed */
-               if( iOrient == 0 ) /* Horizontal */
-               {
-                  SelectObject( wvw_win->hdc, hPen );
-                  MoveToEx( wvw_win->hdc, x, y, NULL );
-                  LineTo( wvw_win->hdc, iRight, y );
-                  SelectObject( wvw_win->hdc, wvw->a.penWhite );
-                  MoveToEx( wvw_win->hdc, x, y + 1, NULL );
-                  LineTo( wvw_win->hdc, iRight, y + 1 );
-               }
-               else  /* Vertical */
-               {
-                  SelectObject( wvw_win->hdc, hPen );
-                  MoveToEx( wvw_win->hdc, x, y, NULL );
-                  LineTo( wvw_win->hdc, x, iBottom );
-                  SelectObject( wvw_win->hdc, wvw->a.penWhite );
-                  MoveToEx( wvw_win->hdc, x + 1, y, NULL );
-                  LineTo( wvw_win->hdc, x + 1, iBottom );
-               }
-               break;
-
-            case 2:               /* Plain */
-               if( iOrient == 0 ) /* Horizontal */
-               {
-                  SelectObject( wvw_win->hdc, hPen );
-                  MoveToEx( wvw_win->hdc, x, y, NULL );
-                  LineTo( wvw_win->hdc, iRight, y );
-               }
-               else  /* Vertical */
-               {
-                  SelectObject( wvw_win->hdc, hPen );
-                  MoveToEx( wvw_win->hdc, x, y, NULL );
-                  LineTo( wvw_win->hdc, x, iBottom );
-               }
-               break;
-         }
-
-         hb_retl( HB_TRUE );
+         case 4:                               /* Right */
+            if( iFormat == 0 || iFormat == 1 ) /* Raised/Recessed */
+               x = iRight - 1;
+            else
+               x = iRight;
+            break;
       }
-      else
-         hb_retl( HB_FALSE );
+
+      switch( iFormat )
+      {
+         case 0:               /* Raised */
+            if( iOrient == 0 ) /* Horizontal */
+            {
+               SelectObject( wvw_win->hdc, wvw->a.penWhite );
+               MoveToEx( wvw_win->hdc, x, y, NULL );
+               LineTo( wvw_win->hdc, iRight, y );
+               SelectObject( wvw_win->hdc, hPen );
+               MoveToEx( wvw_win->hdc, x, y + 1, NULL );
+               LineTo( wvw_win->hdc, iRight, y + 1 );
+            }
+            else  /* Vertical */
+            {
+               SelectObject( wvw_win->hdc, wvw->a.penWhite );
+               MoveToEx( wvw_win->hdc, x, y, NULL );
+               LineTo( wvw_win->hdc, x, iBottom );
+               SelectObject( wvw_win->hdc, hPen );
+               MoveToEx( wvw_win->hdc, x + 1, y, NULL );
+               LineTo( wvw_win->hdc, x + 1, iBottom );
+            }
+            break;
+
+         case 1:               /* Recessed */
+            if( iOrient == 0 ) /* Horizontal */
+            {
+               SelectObject( wvw_win->hdc, hPen );
+               MoveToEx( wvw_win->hdc, x, y, NULL );
+               LineTo( wvw_win->hdc, iRight, y );
+               SelectObject( wvw_win->hdc, wvw->a.penWhite );
+               MoveToEx( wvw_win->hdc, x, y + 1, NULL );
+               LineTo( wvw_win->hdc, iRight, y + 1 );
+            }
+            else  /* Vertical */
+            {
+               SelectObject( wvw_win->hdc, hPen );
+               MoveToEx( wvw_win->hdc, x, y, NULL );
+               LineTo( wvw_win->hdc, x, iBottom );
+               SelectObject( wvw_win->hdc, wvw->a.penWhite );
+               MoveToEx( wvw_win->hdc, x + 1, y, NULL );
+               LineTo( wvw_win->hdc, x + 1, iBottom );
+            }
+            break;
+
+         case 2:               /* Plain */
+            if( iOrient == 0 ) /* Horizontal */
+            {
+               SelectObject( wvw_win->hdc, hPen );
+               MoveToEx( wvw_win->hdc, x, y, NULL );
+               LineTo( wvw_win->hdc, iRight, y );
+            }
+            else  /* Vertical */
+            {
+               SelectObject( wvw_win->hdc, hPen );
+               MoveToEx( wvw_win->hdc, x, y, NULL );
+               LineTo( wvw_win->hdc, x, iBottom );
+            }
+            break;
+      }
+
+      hb_retl( HB_TRUE );
    }
    else
       hb_retl( HB_FALSE );
@@ -2027,7 +2032,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
 
       POINT   xy;
       int     iTop, iLeft, iBottom, iRight;
-      HB_BOOL bUseCurrentPen = hb_parldef( 7, HB_TRUE );  /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
+      HB_BOOL fUseCurrentPen = hb_parldef( 7, HB_TRUE );  /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
 
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
@@ -2045,7 +2050,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
 
       SelectObject( wvw_win->hdc, wvw->a.currentBrush );
       /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
-      if( bUseCurrentPen )
+      if( fUseCurrentPen )
          SelectObject( wvw_win->hdc, wvw->a.currentPen );
       else
          SelectObject( wvw_win->hdc, wvw->a.penBlack );
@@ -2257,7 +2262,9 @@ HB_FUNC( WVW_DRAWGRIDVERT )
    PWVW_GLO wvw     = hb_gt_wvw();
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw && wvw_win )
+   int iTabs = hb_parni( 5 );
+
+   if( wvw && wvw_win && iTabs > 0 )
    {
       int usTop    = hb_parni( 2 );
       int usBottom = hb_parni( 3 );
@@ -2270,13 +2277,6 @@ HB_FUNC( WVW_DRAWGRIDVERT )
       int iTop, iBottom;
       int i;
       int iCharHeight, iCharWidth;
-      int iTabs = hb_parni( 5 );
-
-      if( ! iTabs )
-      {
-         hb_retl( HB_FALSE );
-         return;
-      }
 
       HB_SYMBOL_UNUSED( iOffRight );
 
@@ -2297,13 +2297,13 @@ HB_FUNC( WVW_DRAWGRIDVERT )
 
       for( i = 1; i <= iTabs; i++ )
       {
-         int usCol = hb_parvni( 4, i );
+         int iCol = hb_parvni( 4, i );
          int x;
 
          if( hb_gt_wvw_GetMainCoordMode() )
-            usCol -= wvw_win->usColOfs;
+            iCol -= wvw_win->usColOfs;
 
-         x = ( usCol * iCharWidth ) + iOffLeft;
+         x = ( iCol * iCharWidth ) + iOffLeft;
 
          MoveToEx( wvw_win->hdc, x, iTop, NULL );
          LineTo( wvw_win->hdc, x, iBottom );
@@ -2340,8 +2340,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       HBRUSH     hBrush;
       IPicture * iPicture;
 
-      HB_BOOL bText   = HB_ISCHAR( 6 );
-      HB_BOOL bImage  = HB_ISNUM( 7 ) || HB_ISCHAR( 7 );
+      HB_BOOL fImage  = HB_ISNUM( 7 ) || HB_ISCHAR( 7 );
       int     iFormat = hb_parni( 8 );
 
       COLORREF textColor = ( COLORREF ) hb_parnintdef(  9, hb_gt_wvw_GetColorData( 0 ) );
@@ -2395,7 +2394,7 @@ HB_FUNC( WVW_DRAWBUTTON )
             hb_gt_wvw_DrawBoxRaised( wvw_win, iTop + 1, iLeft + 1, iBottom - 1, iRight - 1, HB_FALSE );
       }
 
-      if( bText )
+      if( HB_ISCHAR( 6 ) )
       {
          int      oldTextAlign;
          int      oldBkMode;
@@ -2417,7 +2416,7 @@ HB_FUNC( WVW_DRAWBUTTON )
 
          xy.x = iLeft + ( ( iRight - iLeft + 1 ) / 2 );
 
-         if( bImage )
+         if( fImage )
             xy.y = iBottom - 2 - iTextHeight;
          else
             xy.y = iTop + ( ( iBottom - iTop + 1 - iTextHeight ) / 2 );
@@ -2445,7 +2444,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       else
          iTextHeight = -1;
 
-      if( bImage )
+      if( fImage )
       {
          int iImageWidth  = iRight - iLeft + 1 - 8;
          int iImageHeight = iBottom - iTop + 1 - 8 - iTextHeight;
@@ -2572,54 +2571,49 @@ HB_FUNC( WVW_DRAWPICTURE )
    PWVW_GLO wvw     = hb_gt_wvw();
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw && wvw_win )
+   int iSlot = hb_parni( 6 ) - 1;
+
+   if( wvw && wvw_win && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) && wvw->a.iPicture[ iSlot ] )
    {
-      int iSlot = hb_parni( 6 ) - 1;
+      int usTop    = hb_parni( 2 ),
+          usLeft   = hb_parni( 3 ),
+          usBottom = hb_parni( 4 ),
+          usRight  = hb_parni( 5 );
 
-      if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) && wvw->a.iPicture[ iSlot ] )
+      HB_BOOL fTight = hb_parl( 7 );
+
+      int iTop, iLeft, iBottom, iRight;
+      int iOLeft, iOTop, iORight, iOBottom;
+
+      POINT xy;
+
+      if( hb_gt_wvw_GetMainCoordMode() )
+         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+
+      if( fTight )
       {
-         int usTop    = hb_parni( 2 ),
-             usLeft   = hb_parni( 3 ),
-             usBottom = hb_parni( 4 ),
-             usRight  = hb_parni( 5 );
-
-         HB_BOOL bTight = hb_parl( 7 );
-
-         int iTop, iLeft, iBottom, iRight;
-         int iOLeft, iOTop, iORight, iOBottom;
-
-         POINT xy;
-
-         if( hb_gt_wvw_GetMainCoordMode() )
-            hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
-
-         if( bTight )
-         {
-            iOTop    = 2 + 1;
-            iOLeft   = 2 + 1;
-            iOBottom = -1;
-            iORight  = -1;
-         }
-         else
-         {
-            iOTop    = hb_parvni( 7, 1 );
-            iOLeft   = hb_parvni( 7, 2 );
-            iOBottom = hb_parvni( 7, 3 );
-            iORight  = hb_parvni( 7, 4 );
-         }
-
-         xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
-         iTop  = xy.y + iOTop;
-         iLeft = xy.x + iOLeft;
-
-         xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
-         iBottom = xy.y - 1 + iOBottom;
-         iRight  = xy.x - 1 + iORight;
-
-         hb_retl( hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, wvw->a.iPicture[ iSlot ], HB_FALSE ) );
+         iOTop    = 2 + 1;
+         iOLeft   = 2 + 1;
+         iOBottom = -1;
+         iORight  = -1;
       }
       else
-         hb_retl( HB_FALSE );
+      {
+         iOTop    = hb_parvni( 7, 1 );
+         iOLeft   = hb_parvni( 7, 2 );
+         iOBottom = hb_parvni( 7, 3 );
+         iORight  = hb_parvni( 7, 4 );
+      }
+
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      iTop  = xy.y + iOTop;
+      iLeft = xy.x + iOLeft;
+
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      iBottom = xy.y - 1 + iOBottom;
+      iRight  = xy.x - 1 + iORight;
+
+      hb_retl( hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, wvw->a.iPicture[ iSlot ], HB_FALSE ) );
    }
    else
       hb_retl( HB_FALSE );

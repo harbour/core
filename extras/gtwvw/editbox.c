@@ -75,13 +75,13 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
    if( wvw == NULL || hWndParent == NULL )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
-   for( nWin = 0; nWin < wvw->usNumWindows; nWin++ )
+   for( nWin = 0; nWin < wvw->iNumWindows; nWin++ )
    {
       if( wvw->pWin[ nWin ]->hWnd == hWndParent )
          break;
    }
 
-   if( nWin >= wvw->usNumWindows )
+   if( nWin >= wvw->iNumWindows )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
    wvw_win = wvw->pWin[ nWin ];
@@ -325,9 +325,9 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 
    if( iKey != 0 )
    {
-      HB_BOOL  bCodeExec  = HB_FALSE;
-      PHB_ITEM hiKey      = hb_itemPutNI( NULL, iKey );
-      PHB_ITEM pCodeblock = hb_itemDoC( "SETKEY", 1, hiKey );
+      HB_BOOL  fCodeExec  = HB_FALSE;
+      PHB_ITEM pKey       = hb_itemPutNI( NULL, iKey );
+      PHB_ITEM pCodeblock = hb_itemDoC( "SETKEY", 1, pKey );
       if( HB_IS_EVALITEM( pCodeblock ) )
       {
          PHB_ITEM pReturn;
@@ -335,11 +335,11 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
          pReturn = hb_itemDo( pCodeblock, 0 );
          hb_itemRelease( pReturn );
          SetFocus( hWnd );
-         bCodeExec = HB_TRUE;
+         fCodeExec = HB_TRUE;
       }
       hb_itemRelease( pCodeblock );
-      hb_itemRelease( hiKey );
-      if( bCodeExec )
+      hb_itemRelease( pKey );
+      if( fCodeExec )
          return 0;
    }
 
@@ -352,12 +352,12 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
          HB_BOOL bCtrl  = GetKeyState( VK_CONTROL ) & 0x8000;
          HB_BOOL bShift = GetKeyState( VK_SHIFT ) & 0x8000;
          int     c      = ( int ) wParam;
-         HB_BOOL bMultiline;
+         HB_BOOL fMultiline;
 
-         if( ! hb_gt_wvw_BufferedKey( ( long ) wParam ) )
+         if( ! hb_gt_wvw_BufferedKey( ( int ) wParam ) )
             break;
 
-         bMultiline = ( ( nEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE );
+         fMultiline = ( ( nEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE );
 
          switch( c )
          {
@@ -371,9 +371,9 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
                break;
 
             case VK_RETURN:
-               if( bMultiline || bAlt || bShift || bCtrl )
+               if( fMultiline || bAlt || bShift || bCtrl )
                   break;
-               else if( ! bMultiline )
+               else if( ! fMultiline )
                {
                   SetFocus( hWndParent );
                   PostMessage( hWndParent, message, wParam, lParam );
@@ -396,7 +396,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 
             case VK_PRIOR:
             case VK_NEXT:
-               if( bMultiline )
+               if( fMultiline )
                   break;
                else
                {
@@ -452,7 +452,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 }
 
 /* wvw_ebCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, bBlock, ;
- *                         lMultiline, nMoreStyle, nMaxChar, nReserved, aOffset)
+ *                          lMultiline, nMoreStyle, nMaxChar, nReserved, aOffset )
  * create editbox for window nWinNum
  * nTop: row of top/left corner (in character unit)
  * nLeft: col of top/left corner (in character unit)
@@ -506,7 +506,6 @@ HB_FUNC( WVW_EBCREATE )
           usRight  = hb_parni( 5 );
 
       HINSTANCE hInstance;
-      HWND      hWndParent = wvw_win->hWnd;
       HWND      hWnd;
 
       POINT xy;
@@ -517,16 +516,16 @@ HB_FUNC( WVW_EBCREATE )
 
       int nEBType = hb_parl( 8 ) ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
 
-      DWORD dwMoreStyle = ( DWORD ) hb_parnl( 9 );
-      int   usMaxChar   = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
       DWORD dwStyle;
+      DWORD dwMoreStyle = ( DWORD ) hb_parnint( 9 );
+      int   iMaxChar    = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
 
       if( wvw_win->hEBfont == NULL )
       {
          wvw_win->hEBfont = CreateFontIndirect( &wvw->lfEB );
          if( wvw_win->hEBfont == NULL )
          {
-            hb_retnl( 0 );
+            hb_retni( 0 );
             return;
          }
       }
@@ -579,7 +578,7 @@ HB_FUNC( WVW_EBCREATE )
          iTop,
          iRight - iLeft + 1,
          iBottom - iTop + 1,
-         hWndParent,
+         wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
          hInstance,
          NULL );
@@ -590,29 +589,31 @@ HB_FUNC( WVW_EBCREATE )
          WNDPROC OldProc;
 
          void *  hText;
-         LPCTSTR lpszText = HB_PARSTRDEF( 6, &hText, NULL );
+         HB_SIZE nLen;
+         LPCTSTR szText = HB_PARSTRDEF( 6, &hText, &nLen );
 
 #if ! defined( UNICODE )
          if( wvw_win->CodePage == OEM_CHARSET )
          {
-            DWORD dwLen        = ( DWORD ) strlen( lpszText );
-            LPSTR lpszTextANSI = ( LPSTR ) hb_xgrab( dwLen + 1 );
-            OemToCharBuff( lpszText, lpszTextANSI, dwLen );
-            lpszText = ( LPCTSTR ) lpszTextANSI;
+            LPSTR szTextANSI = ( LPSTR ) hb_xgrab( ( DWORD ) nLen + 1 );
+            OemToCharBuff( szText, szTextANSI, ( DWORD ) nLen );
+            szText = ( LPCTSTR ) szTextANSI;
          }
+#else
+         HB_SYMBOL_UNUSED( nLen );
 #endif
 
-         SendMessage( hWnd, WM_SETTEXT, 0, ( LPARAM ) lpszText );
+         SendMessage( hWnd, WM_SETTEXT, 0, ( LPARAM ) szText );
 
 #if ! defined( UNICODE )
          if( wvw_win->CodePage == OEM_CHARSET )
-            hb_xfree( ( void * ) lpszText );
+            hb_xfree( ( void * ) szText );
 #endif
 
          hb_strfree( hText );
 
-         if( usMaxChar > 0 )
-            SendMessage( hWnd, EM_LIMITTEXT, ( WPARAM ) usMaxChar, 0 );
+         if( iMaxChar > 0 )
+            SendMessage( hWnd, EM_LIMITTEXT, ( WPARAM ) iMaxChar, 0 );
 
          rXB.top    = usTop;
          rXB.left   = usLeft;
@@ -632,12 +633,12 @@ HB_FUNC( WVW_EBCREATE )
 
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hEBfont, ( LPARAM ) TRUE );
 
-         hb_retnl( nCtrlId );
+         hb_retni( nCtrlId );
          return;
       }
    }
 
-   hb_retnl( 0 );
+   hb_retni( 0 );
 }
 
 /* wvw_ebDestroy( [nWinNum], nEBid )
@@ -717,11 +718,11 @@ HB_FUNC( WVW_EBENABLE )
 
    if( hWnd )
    {
-      HB_BOOL bEnable = hb_parldef( 3, HB_TRUE );
+      HB_BOOL fEnable = hb_parldef( 3, HB_TRUE );
 
-      hb_retl( EnableWindow( hWnd, ( BOOL ) bEnable ) == 0 );
+      hb_retl( EnableWindow( hWnd, ( BOOL ) fEnable ) == 0 );
 
-      if( ! bEnable )
+      if( ! fEnable )
          SetFocus( wvw_win->hWnd );
    }
    else
@@ -784,8 +785,8 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_ebSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
- *                             lItalic, lUnderline, lStrikeout
+/* wvw_ebSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
+ *                           lItalic, lUnderline, lStrikeout )
  *
  * this will initialize font for ALL editboxes in window nWinNum
  * (including ones created later on)
@@ -865,8 +866,7 @@ HB_FUNC( WVW_EBISMULTILINE )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_ebGetText( [nWinNum], nEBid, ;
- *                          lSoftBreak )
+/* wvw_ebGetText( [nWinNum], nEBid, lSoftBreak )
  * returns current text from editbox nEBid in window nWinNum
  * lSoftBreak: Default is .F.
  *             insert soft line break character (CR+CR+LF) at wordwrap positions
@@ -884,33 +884,32 @@ HB_FUNC( WVW_EBGETTEXT )
 
    if( wvw_ctl )
    {
-      int    usLen;
-      LPTSTR lpszText;
+      int    iLen;
+      LPTSTR szText;
 
-      if( hb_parl( 3 ) /* bSoftBreak */ )
+      if( hb_parl( 3 ) /* fSoftBreak */ )
          SendMessage( wvw_ctl->hWnd, EM_FMTLINES, ( WPARAM ) TRUE, 0 );
 
-      usLen = ( int ) SendMessage( wvw_ctl->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
+      iLen = ( int ) SendMessage( wvw_ctl->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
 
-      lpszText = ( LPTSTR ) hb_xgrab( usLen * sizeof( TCHAR ) );
+      szText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
 
-      SendMessage( wvw_ctl->hWnd, WM_GETTEXT, usLen, ( LPARAM ) lpszText );
+      SendMessage( wvw_ctl->hWnd, WM_GETTEXT, iLen, ( LPARAM ) szText );
 
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
       {
-         DWORD dwLen       = ( DWORD ) strlen( lpszText );
-         LPSTR lpszTextOEM = ( LPSTR ) hb_xgrab( dwLen + 1 );
-         CharToOem( lpszText, lpszTextOEM );
-         hb_retc_buffer( lpszTextOEM );
+         LPSTR szTextOEM = ( LPSTR ) hb_xgrab( ( DWORD ) iLen + 1 );
+         CharToOemBuff( szText, szTextOEM, ( DWORD ) iLen );
+         hb_retc_buffer( szTextOEM );
       }
       else
-         HB_RETSTR( lpszText );
+         HB_RETSTR( szText );
 #else
-      HB_RETSTR( lpszText );
+      HB_RETSTR( szText );
 #endif
 
-      hb_xfree( lpszText );
+      hb_xfree( szText );
    }
    else
       hb_retl( HB_FALSE );
@@ -928,23 +927,25 @@ HB_FUNC( WVW_EBSETTEXT )
    if( wvw_ctl )
    {
       void *  hText;
-      LPCTSTR lpszText = HB_PARSTRDEF( 3, &hText, NULL );
+      HB_SIZE nLen;
+      LPCTSTR szText = HB_PARSTRDEF( 3, &hText, &nLen );
 
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
       {
-         DWORD dwLen        = ( DWORD ) strlen( lpszText );
-         LPSTR lpszTextANSI = ( LPSTR ) hb_xgrab( dwLen + 1 );
-         OemToCharBuff( lpszText, lpszTextANSI, dwLen );
-         lpszText = ( LPCTSTR ) lpszTextANSI;
+         LPSTR szTextANSI = ( LPSTR ) hb_xgrab( ( DWORD ) nLen + 1 );
+         OemToCharBuff( szText, szTextANSI, ( DWORD ) nLen );
+         szText = ( LPCTSTR ) szTextANSI;
       }
+#else
+      HB_SYMBOL_UNUSED( nLen );
 #endif
 
-      hb_retl( ( HB_BOOL ) SendMessage( wvw_ctl->hWnd, WM_SETTEXT, 0, ( LPARAM ) lpszText ) );
+      hb_retl( ( HB_BOOL ) SendMessage( wvw_ctl->hWnd, WM_SETTEXT, 0, ( LPARAM ) szText ) );
 
 #if ! defined( UNICODE )
       if( wvw_win->CodePage == OEM_CHARSET )
-         hb_xfree( ( void * ) lpszText );
+         hb_xfree( ( void * ) szText );
 #endif
 
       hb_strfree( hText );
@@ -998,8 +999,8 @@ HB_FUNC( WVW_EBSETSEL )
 
    if( wvw_ctl )
    {
-      DWORD dwStart = ( DWORD ) hb_parnl( 3 );
-      DWORD dwEnd   = ( DWORD ) hb_parnl( 4 );
+      DWORD dwStart = ( DWORD ) hb_parnint( 3 );
+      DWORD dwEnd   = ( DWORD ) hb_parnint( 4 );
 
       SendMessage( wvw_ctl->hWnd, EM_SETSEL, ( WPARAM ) dwStart, ( LPARAM ) dwEnd );
 

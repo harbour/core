@@ -110,10 +110,10 @@ HB_FUNC( WVW_PBCREATE )
 
       void * hCaption;
 
-      hb_retnl( hb_gt_wvw_ButtonCreate( wvw_win, usTop, usLeft, usBottom, usRight,
+      hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, usTop, usLeft, usBottom, usRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
-                                        ( HB_UINT ) hb_parnl( 7 ),
+                                        ( HB_UINT ) hb_parnint( 7 ),
                                         hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
@@ -123,14 +123,13 @@ HB_FUNC( WVW_PBCREATE )
       hb_strfree( hCaption );
    }
    else
-      hb_retnl( 0 );
+      hb_retni( 0 );
 
    HB_STOREHANDLE( hWnd, 12 );
 }
 
 /* wvw_pbDestroy( [nWinNum], nPBid )
- * destroy button nPBid for window nWinNum
- */
+   destroy button nPBid for window nWinNum */
 HB_FUNC( WVW_PBDESTROY )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -167,8 +166,7 @@ HB_FUNC( WVW_PBDESTROY )
 }
 
 /* wvw_pbSetFocus( [nWinNum], nButtonId )
- * set the focus to button nButtonId in window nWinNum
- */
+   set the focus to button nButtonId in window nWinNum */
 HB_FUNC( WVW_PBSETFOCUS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -179,8 +177,7 @@ HB_FUNC( WVW_PBSETFOCUS )
 }
 
 /* wvw_pbIsFocused( [nWinNum], nPBid )
- * returns .T. if the focus is on button nPBid in window nWinNum
- */
+   returns .T. if the focus is on button nPBid in window nWinNum */
 HB_FUNC( WVW_PBISFOCUSED )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -204,11 +201,11 @@ HB_FUNC( WVW_PBENABLE )
 
    if( hWnd )
    {
-      HB_BOOL bEnable = hb_parldef( 3, HB_TRUE );
+      HB_BOOL fEnable = hb_parldef( 3, HB_TRUE );
 
-      hb_retl( EnableWindow( hWnd, ( BOOL ) bEnable ) == 0 );
+      hb_retl( EnableWindow( hWnd, ( BOOL ) fEnable ) == 0 );
 
-      if( ! bEnable )
+      if( ! fEnable )
          SetFocus( wvw_win->hWnd );
    }
    else

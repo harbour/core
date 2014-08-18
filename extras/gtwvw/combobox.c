@@ -64,13 +64,13 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
    if( wvw == NULL || hWndParent == NULL )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
-   for( nWin = 0; nWin < wvw->usNumWindows; nWin++ )
+   for( nWin = 0; nWin < wvw->iNumWindows; nWin++ )
    {
       if( wvw->pWin[ nWin ]->hWnd == hWndParent )
          break;
    }
 
-   if( nWin >= wvw->usNumWindows )
+   if( nWin >= wvw->iNumWindows )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
    wvw_win = wvw->pWin[ nWin ];
@@ -100,12 +100,12 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
          HB_BOOL bCtrl  = GetKeyState( VK_CONTROL ) & 0x8000;
          HB_BOOL bShift = GetKeyState( VK_SHIFT ) & 0x8000;
          int     c      = ( int ) wParam;
-         HB_BOOL bDropped;
+         HB_BOOL fDropped;
 
-         if( ! hb_gt_wvw_BufferedKey( ( long ) wParam ) )
+         if( ! hb_gt_wvw_BufferedKey( ( int ) wParam ) )
             break;
 
-         bDropped = ( HB_BOOL ) SendMessage( hWnd, CB_GETDROPPEDSTATE, 0, 0 );
+         fDropped = ( HB_BOOL ) SendMessage( hWnd, CB_GETDROPPEDSTATE, 0, 0 );
 
          if( nKbdType == WVW_CB_KBD_STANDARD )
          {
@@ -121,7 +121,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
                   break;
 
                case VK_ESCAPE:
-                  if( ! bCtrl && ! bAlt && ! bShift && ! bDropped )
+                  if( ! bCtrl && ! bAlt && ! bShift && ! fDropped )
                   {
                      SetFocus( hWndParent );
                      PostMessage( hWndParent, message, wParam, lParam );
@@ -140,11 +140,11 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
 
                case VK_NEXT:
 
-                  if( bDropped || bAlt || bShift || bCtrl )
+                  if( fDropped || bAlt || bShift || bCtrl )
                      break;
                   else
                   {
-                     if( ! bDropped )
+                     if( ! fDropped )
                         SendMessage( hWnd, CB_SHOWDROPDOWN, ( WPARAM ) TRUE, 0 );
                      else
                      {
@@ -155,7 +155,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
                   }
 
                case VK_RETURN:
-                  if( ! bCtrl && ! bAlt && ! bShift && ! bDropped )
+                  if( ! bCtrl && ! bAlt && ! bShift && ! fDropped )
                   {
                      SetFocus( hWndParent );
                      PostMessage( hWndParent, message, wParam, lParam );
@@ -181,11 +181,11 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
 
                case VK_RETURN:
 
-                  if( bDropped || bAlt || bShift || bCtrl )
+                  if( fDropped || bAlt || bShift || bCtrl )
                      break;
                   else
                   {
-                     if( ! bDropped )
+                     if( ! fDropped )
                      {
                         SendMessage( hWnd, CB_SHOWDROPDOWN, ( WPARAM ) TRUE, 0 );
                         return 0;
@@ -199,7 +199,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
                   }
 
                case VK_ESCAPE:
-                  if( bDropped || bAlt || bShift || bCtrl )
+                  if( fDropped || bAlt || bShift || bCtrl )
                      break;
                   else
                   {
@@ -216,7 +216,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
                case VK_END:
                case VK_PRIOR:
                case VK_NEXT:
-                  if( bDropped )
+                  if( fDropped )
                      break;
                   else
                   {
@@ -242,7 +242,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
    return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
 }
 
-static long hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f )
+static int hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f )
 {
    const TCHAR tmp[] = TEXT( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" );
 
@@ -317,7 +317,6 @@ HB_FUNC( WVW_CBCREATE )
 
    if( wvw && wvw_win )
    {
-      HWND hWndParent = wvw_win->hWnd;
       HWND hWnd;
 
       HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
@@ -347,7 +346,7 @@ HB_FUNC( WVW_CBCREATE )
          if( wvw_win->hCBfont == NULL )
          {
             HB_STOREHANDLE( NULL, 11 );
-            hb_retnl( 0 );
+            hb_retni( 0 );
             return;
          }
       }
@@ -389,14 +388,14 @@ HB_FUNC( WVW_CBCREATE )
          iTop,
          iRight - iLeft + 1,
          iBottom - iTop + 1,
-         hWndParent,
+         wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
          wvw->hInstance,
          NULL );
 
       if( hWnd )
       {
-         long LongComboWidth = 0, NewLongComboWidth;
+         int LongComboWidth = 0, NewLongComboWidth;
 
          RECT    rXB, rOffXB;
          WNDPROC OldProc;
@@ -424,7 +423,7 @@ HB_FUNC( WVW_CBCREATE )
                }
                else
                {
-                  long numofchars = ( long ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
+                  int numofchars = ( int ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
                   if( numofchars > LongComboWidth )
                      LongComboWidth = numofchars;
                }
@@ -436,7 +435,7 @@ HB_FUNC( WVW_CBCREATE )
          SendMessage( hWnd, CB_SETCURSEL, 0, 0 );
          SendMessage( hWnd, CB_SETEXTENDEDUI, ( WPARAM ) TRUE, 0 );
 
-         NewLongComboWidth = ( LongComboWidth - 2 ) * hb_gt_wvw_GetFontDialogUnits( hWndParent, hFont );
+         NewLongComboWidth = ( LongComboWidth - 2 ) * hb_gt_wvw_GetFontDialogUnits( wvw_win->hWnd, hFont );
          SendMessage( hWnd, CB_SETDROPPEDWIDTH, ( WPARAM ) NewLongComboWidth + 100 /* LongComboWidth + 100 */, 0 );
 
          rXB.top    = usTop;
@@ -458,13 +457,13 @@ HB_FUNC( WVW_CBCREATE )
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hCBfont, ( LPARAM ) TRUE );
 
          HB_STOREHANDLE( hWnd, 11 );
-         hb_retnl( nCtrlId );
+         hb_retni( nCtrlId );
          return;
       }
    }
 
    HB_STOREHANDLE( NULL, 11 );
-   hb_retnl( 0 );
+   hb_retni( 0 );
 }
 
 /* wvw_cbDestroy( [nWinNum], nCBid )
@@ -544,11 +543,11 @@ HB_FUNC( WVW_CBENABLE )
 
    if( hWnd )
    {
-      HB_BOOL bEnable = hb_parldef( 3, HB_TRUE );
+      HB_BOOL fEnable = hb_parldef( 3, HB_TRUE );
 
-      hb_retl( EnableWindow( hWnd, ( BOOL ) bEnable ) == 0 );
+      hb_retl( EnableWindow( hWnd, ( BOOL ) fEnable ) == 0 );
 
-      if( ! bEnable )
+      if( ! fEnable )
          SetFocus( wvw_win->hWnd );
    }
    else

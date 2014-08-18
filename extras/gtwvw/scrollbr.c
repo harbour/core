@@ -66,13 +66,13 @@ static LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam
    if( message == WM_MOUSEACTIVATE )
       wvw->iScrolling = 1;
 
-   for( nWin = 0; nWin < wvw->usNumWindows; nWin++ )
+   for( nWin = 0; nWin < wvw->iNumWindows; nWin++ )
    {
       if( wvw->pWin[ nWin ]->hWnd == hWndParent )
          break;
    }
 
-   if( nWin >= wvw->usNumWindows )
+   if( nWin >= wvw->iNumWindows )
       return DefWindowProc( hWnd, message, wParam, lParam );
 
    wvw_win = wvw->pWin[ nWin ];
@@ -186,7 +186,6 @@ HB_FUNC( WVW_XBCREATE )
           usBottom,
           usRight;
 
-      HWND  hWndParent = wvw_win->hWnd;
       HWND  hWnd;
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
@@ -196,7 +195,7 @@ HB_FUNC( WVW_XBCREATE )
 
       if( iStyle < SBS_HORZ || iStyle > SBS_VERT || ! HB_ISEVALITEM( 6 ) )
       {
-         hb_retnl( 0 );
+         hb_retni( 0 );
          return;
       }
 
@@ -258,7 +257,7 @@ HB_FUNC( WVW_XBCREATE )
          iTop,                                     /* vertical position */
          iRight - iLeft + 1,                       /* width of the scroll bar */
          iBottom - iTop + 1,                       /* height */
-         hWndParent,                               /* handle to main window */
+         wvw_win->hWnd,                            /* handle to main window */
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,         /* id for this scroll bar control */
          wvw->hInstance,                           /* instance owning this window */
          NULL );                                   /* pointer not needed */
@@ -288,12 +287,12 @@ HB_FUNC( WVW_XBCREATE )
 
          hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd, OldProc );
 
-         hb_retnl( nCtrlId );
+         hb_retni( nCtrlId );
          return;
       }
    }
 
-   hb_retnl( 0 );
+   hb_retni( 0 );
 }
 
 /* wvw_xbDestroy( [nWinNum], nXBid )

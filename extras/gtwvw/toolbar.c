@@ -53,7 +53,7 @@
 
 /* add one button to existing Toolbar */
 /* uiBitmap is resource id */
-static HB_BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, HB_UINT uiBitmap, LPCTSTR pszLabel, int iCommand, int iBitmapType, HB_BOOL bMap3Dcolors, PWVW_WIN wvw_win, BOOL bDropdown )
+static HB_BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, HB_UINT uiBitmap, LPCTSTR pszLabel, int iCommand, int iBitmapType, HB_BOOL fMap3Dcolors, PWVW_WIN wvw_win, BOOL fDropdown )
 {
    TBBUTTON    tbb;
    TBADDBITMAP tbab;
@@ -93,7 +93,7 @@ static HB_BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, H
 
    if( iBitmapType == 0 )
    {
-      HBITMAP hBitmap = hb_gt_wvw_PrepareBitmap( szBitmap, uiBitmap, wvw_win->iTBImgWidth, wvw_win->iTBImgHeight, bMap3Dcolors, hWndToolbar );
+      HBITMAP hBitmap = hb_gt_wvw_PrepareBitmap( szBitmap, uiBitmap, wvw_win->iTBImgWidth, wvw_win->iTBImgHeight, fMap3Dcolors, hWndToolbar );
 
       if( ! hBitmap )
          return HB_FALSE;
@@ -113,7 +113,7 @@ static HB_BOOL hb_gt_wvw_AddTBButton( HWND hWndToolbar, const char * szBitmap, H
    tbb.idCommand = iCommand;
    tbb.fsState   = TBSTATE_ENABLED;
    tbb.fsStyle   = TBSTYLE_BUTTON;
-   if( bDropdown )
+   if( fDropdown )
       tbb.fsStyle |= BTNS_WHOLEDROPDOWN;
    tbb.dwData  = 0;
    tbb.iString = iNewString;
@@ -274,10 +274,10 @@ static void hb_gt_wvw_TBMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, W
       hb_vmPushDynSym( wvw->a.pSymWVW_TBMOUSE );
       hb_vmPushNil();
       hb_vmPushInteger( wvw_win->nWinId );
-      hb_vmPushLong( ( long ) keyCode );
-      hb_vmPushLong( ( long ) colrow.y );
-      hb_vmPushLong( ( long ) colrow.x );
-      hb_vmPushLong( ( long ) keyState );
+      hb_vmPushInteger( keyCode );
+      hb_vmPushInteger( colrow.y );
+      hb_vmPushInteger( colrow.x );
+      hb_vmPushInteger( keyState );
       hb_vmDo( 5 );
 
       hb_vmRequestRestore();
@@ -302,13 +302,13 @@ static LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
 
-   for( nWin = 0; nWin < wvw->usNumWindows; ++nWin )
+   for( nWin = 0; nWin < wvw->iNumWindows; ++nWin )
    {
       if( wvw->pWin[ nWin ]->hWnd == hWndParent )
          break;
    }
 
-   if( nWin >= wvw->usNumWindows )
+   if( nWin >= wvw->iNumWindows )
    {
       /* TODO: runtime/internal error is better */
       MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): invalid handle of toolbar's parent" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
@@ -333,7 +333,7 @@ static LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam
       case WM_MOUSEWHEEL:
       case WM_NCMOUSEMOVE:
 
-         if( ! hb_gt_wvw_AcceptingInput() || ( nWin != wvw->usNumWindows - 1 ) )
+         if( ! hb_gt_wvw_AcceptingInput() || ( nWin != wvw->iNumWindows - 1 ) )
             return 0;
 
          hb_gt_wvw_TBMouseEvent( wvw_win, hWnd, message, wParam, lParam );
@@ -397,7 +397,6 @@ HB_FUNC( WVW_TBCREATE )
 
    if( wvw && wvw_win && wvw_win->hToolBar == NULL )
    {
-      HWND hWndParent = wvw_win->hWnd;
       HWND hWnd;
 
       #if 0
@@ -440,7 +439,7 @@ HB_FUNC( WVW_TBCREATE )
          }
       }
 
-      hWnd = CreateToolbarEx( hWndParent,
+      hWnd = CreateToolbarEx( wvw_win->hWnd,
                               WS_CHILD | WS_VISIBLE | dwStyle,
                               WVW_ID_BASE_TOOLBAR + wvw_win->nWinId,
                               0,
@@ -537,16 +536,16 @@ HB_FUNC( WVW_TBADDBUTTON )
    if( wvw_win )
    {
       int          iCommand = hb_parni( 2 );
-      HB_UINT      uiBitmap = ( HB_UINT ) hb_parnl( 3 );
+      HB_UINT      uiBitmap = ( HB_UINT ) hb_parnint( 3 );
       const char * szBitmap = hb_parc( 3 );
       LPCTSTR      szLabel;
       int          iBitmapType  = hb_parni( 5 );
-      HB_BOOL      bMap3Dcolors = hb_parl( 6 );
-      HB_BOOL      bDropdown    = hb_parl( 7 );
-      int          usOldHeight;
+      HB_BOOL      fMap3Dcolors = hb_parl( 6 );
+      HB_BOOL      fDropdown    = hb_parl( 7 );
+      int          iOldHeight;
 
       void *  hLabel;
-      HB_SIZE nLabelLen;
+      HB_SIZE nLen;
 
       HWND hWnd = wvw_win->hToolBar;
 
@@ -563,9 +562,9 @@ HB_FUNC( WVW_TBADDBUTTON )
          return;
       }
 
-      szLabel = HB_PARSTRDEF( 4, &hLabel, &nLabelLen );
+      szLabel = HB_PARSTRDEF( 4, &hLabel, &nLen );
 
-      if( nLabelLen > WVW_TB_LABELMAXLENGTH )
+      if( nLen > WVW_TB_LABELMAXLENGTH )
       {
          hb_strfree( hLabel );
          MessageBox( NULL, TEXT( "Cannot addbutton, label too long." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
@@ -573,13 +572,13 @@ HB_FUNC( WVW_TBADDBUTTON )
          return;
       }
 
-      usOldHeight = wvw_win->usTBHeight;
+      iOldHeight = wvw_win->usTBHeight;
 
-      if( ! hb_gt_wvw_AddTBButton( hWnd, szBitmap, uiBitmap, szLabel, iCommand, iBitmapType, bMap3Dcolors, wvw_win, bDropdown ) )
+      if( ! hb_gt_wvw_AddTBButton( hWnd, szBitmap, uiBitmap, szLabel, iCommand, iBitmapType, fMap3Dcolors, wvw_win, fDropdown ) )
       {
          if( iBitmapType == 0 )
          {
-            if( ! hb_gt_wvw_AddTBButton( hWnd, szBitmap, uiBitmap, szLabel, iCommand, 1, bMap3Dcolors, wvw_win, bDropdown ) )
+            if( ! hb_gt_wvw_AddTBButton( hWnd, szBitmap, uiBitmap, szLabel, iCommand, 1, fMap3Dcolors, wvw_win, fDropdown ) )
             {
                hb_strfree( hLabel );
                MessageBox( NULL, TEXT( "Failed addbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
@@ -600,7 +599,7 @@ HB_FUNC( WVW_TBADDBUTTON )
 
       hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
-      if( wvw_win->usTBHeight != usOldHeight )
+      if( wvw_win->usTBHeight != iOldHeight )
          hb_gt_wvw_ResetWindow( wvw_win );
 
       hb_retl( HB_TRUE );
@@ -642,13 +641,13 @@ HB_FUNC( WVW_TBDELBUTTON )
 
       if( hWnd && iButton >= 0 )
       {
-         int usOldHeight = wvw_win->usTBHeight;
+         int iOldHeight = wvw_win->usTBHeight;
 
          if( SendMessage( hWnd, TB_DELETEBUTTON, ( WPARAM ) iButton, 0 ) )
          {
             hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
-            if( wvw_win->usTBHeight != usOldHeight )
+            if( wvw_win->usTBHeight != iOldHeight )
                hb_gt_wvw_ResetWindow( wvw_win );
 
             fResult = HB_TRUE;
@@ -710,14 +709,13 @@ HB_FUNC( WVW_TBENABLEBUTTON )
          int iCommand = hb_gt_wvw_IndexToCommand( hWnd, iButton );
          if( iCommand >= 0 )
          {
-            int     usOldHeight = wvw_win->usTBHeight;
-            HB_BOOL bEnable     = hb_parldef( 3, HB_TRUE );
+            int iOldHeight = wvw_win->usTBHeight;
 
-            if( SendMessage( hWnd, TB_ENABLEBUTTON, ( WPARAM ) iCommand, ( LPARAM ) MAKELONG( ( BOOL ) bEnable, 0 ) ) )
+            if( SendMessage( hWnd, TB_ENABLEBUTTON, ( WPARAM ) iCommand, ( LPARAM ) MAKELONG( ( BOOL ) hb_parldef( 3, HB_TRUE ) /* fEnable */, 0 ) ) )
             {
                hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
-               if( wvw_win->usTBHeight != usOldHeight )
+               if( wvw_win->usTBHeight != iOldHeight )
                   hb_gt_wvw_ResetWindow( wvw_win );
 
                fResult = HB_TRUE;
@@ -797,7 +795,7 @@ HB_FUNC( WVW_TOOLBARADDBUTTONS )
          void **    hStr = ( void ** ) hb_xgrab( iButtons * sizeof( void * ) );
 
          int nCount;
-         int usOldHeight = wvw_win->usTBHeight;
+         int iOldHeight = wvw_win->usTBHeight;
 
          SetWindowLong( hWndCtrl, GWL_STYLE, GetWindowLong( hWndCtrl, GWL_STYLE ) | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT );
          SendMessage( hWndCtrl, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0 );
@@ -818,7 +816,7 @@ HB_FUNC( WVW_TOOLBARADDBUTTONS )
 
          hb_gt_wvw_TBinitSize( wvw_win, hWndCtrl );
 
-         if( wvw_win->usTBHeight != usOldHeight )
+         if( wvw_win->usTBHeight != iOldHeight )
             hb_gt_wvw_ResetWindow( wvw_win );
 
          hb_xfree( tb );

@@ -96,13 +96,12 @@ HB_FUNC( WVW_PGCREATE )
       int iOffBottom = hb_parvni( 6, 3 );
       int iOffRight  = hb_parvni( 6, 4 );
 
-      HB_BOOL bBackColor = HB_ISNUM( 7 );
-      HB_BOOL bBarColor  = HB_ISNUM( 8 );
-      HB_BOOL bSmooth    = hb_parl( 9 );
-      HB_BOOL bVertical  = hb_parl( 10 );
+      HB_BOOL fBackColor = HB_ISNUM( 7 );
+      HB_BOOL fBarColor  = HB_ISNUM( 8 );
+      HB_BOOL fSmooth    = hb_parl( 9 );
+      HB_BOOL fVertical  = hb_parl( 10 );
 
       HINSTANCE hInstance;
-      HWND      hWndParent = wvw_win->hWnd;
       HWND      hWnd;
       POINT     xy;
       int       iTop, iLeft, iBottom, iRight;
@@ -129,9 +128,9 @@ HB_FUNC( WVW_PGCREATE )
       else
          nCtrlId++;
 
-      if( bVertical )
+      if( fVertical )
          iStyle |= PBS_VERTICAL;
-      if( bSmooth )
+      if( fSmooth )
          iStyle |= PBS_SMOOTH;
 
       hb_winmainArgGet( &hInstance, NULL, NULL );
@@ -145,7 +144,7 @@ HB_FUNC( WVW_PGCREATE )
          iTop,
          iRight - iLeft + 1,
          iBottom - iTop + 1,
-         hWndParent,
+         wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
          hInstance,
          NULL );
@@ -154,9 +153,9 @@ HB_FUNC( WVW_PGCREATE )
       {
          RECT rXB, rOffXB;
 
-         if( bBackColor )
+         if( fBackColor )
             SendMessage( hWnd, PBM_SETBKCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 7 ) );
-         if( bBarColor )
+         if( fBarColor )
             SendMessage( hWnd, PBM_SETBARCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 8 ) );
 
          SendMessage( hWnd, PBM_SETRANGE, 0, MAKELPARAM( 0, 100 ) );
@@ -174,12 +173,12 @@ HB_FUNC( WVW_PGCREATE )
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hWnd, nCtrlId, NULL, rXB, rOffXB, iStyle );
 
-         hb_retnl( nCtrlId );
+         hb_retni( nCtrlId );
          return;
       }
    }
 
-   hb_retnl( 0 );
+   hb_retni( 0 );
 }
 
 /* wvw_pgDestroy( [nWinNum], nPGid )

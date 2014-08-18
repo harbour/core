@@ -62,25 +62,15 @@ HB_FUNC( WVW_SBCREATE )
    PWVW_GLO wvw     = hb_gt_wvw();
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw && wvw_win )
+   if( wvw && wvw_win && wvw_win->hStatusBar == NULL )
    {
-      HWND hWndParent;
-      HWND hWnd;
-
-      if( wvw_win->hStatusBar != NULL )
-      {
-         hb_retnl( 0 );
-         return;
-      }
-
-      hWndParent = wvw_win->hWnd;
-      hWnd       = CreateStatusWindow( WS_CHILD | WS_VISIBLE | WS_BORDER | SBT_TOOLTIPS,
-                                       NULL,
-                                       hWndParent,
-                                       WVW_ID_BASE_STATUSBAR + wvw_win->nWinId );
+      HWND hWnd = CreateStatusWindow( WS_CHILD | WS_VISIBLE | WS_BORDER | SBT_TOOLTIPS,
+                                      NULL,
+                                      wvw_win->hWnd,
+                                      WVW_ID_BASE_STATUSBAR + wvw_win->nWinId );
       if( hWnd )
       {
-         int ptArray;
+         int piArray;
 
          RECT rSB;
 
@@ -95,10 +85,10 @@ HB_FUNC( WVW_SBCREATE )
 
          hb_gt_wvw_ResetWindow( wvw_win );
 
-         ptArray = rSB.right;
+         piArray = rSB.right;
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSBfont, ( LPARAM ) TRUE );
 
-         SendMessage( hWnd, SB_SETPARTS, 1, ( LPARAM ) &ptArray );
+         SendMessage( hWnd, SB_SETPARTS, 1, ( LPARAM ) &piArray );
       }
 
       HB_RETHANDLE( hWnd );
@@ -149,13 +139,13 @@ HB_FUNC( WVW_SBADDPART )
 
    if( wvw_win && ( hWnd = wvw_win->hStatusBar ) != NULL )
    {
-      int     ptArray[ WVW_MAX_STATUS_PARTS ];
-      int     numOfParts;
+      int     piArray[ WVW_MAX_STATUS_PARTS ];
+      int     iNumOfParts;
       RECT    rSB;
       WORD    displayFlags = ( WORD ) hb_parnl( 4 );
       HICON   hIcon;
-      HB_BOOL lResetParts = hb_parl( 5 );
-      int     usWidth     = hb_parni( 3 ) <= 0 ? 5 * WVW_SPACE_BETWEEN_PARTS : hb_parni( 3 );
+      HB_BOOL fResetParts = hb_parl( 5 );
+      int     iWidth      = hb_parni( 3 ) <= 0 ? 5 * WVW_SPACE_BETWEEN_PARTS : hb_parni( 3 );
 
       if( HB_ISCHAR( 2 ) )
       {
@@ -172,7 +162,7 @@ HB_FUNC( WVW_SBADDPART )
          memset( &size, 0, sizeof( size ) );
 
          if( GetTextExtentPoint32( hDCSB, szText, ( int ) ( nLen + 1 ), &size ) )
-            usWidth = size.cx;
+            iWidth = size.cx;
 
          hb_strfree( hText );
 
@@ -181,25 +171,25 @@ HB_FUNC( WVW_SBADDPART )
          ReleaseDC( hWnd, hDCSB );
       }
 
-      if( ! lResetParts )
-         numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, HB_SIZEOFARRAY( ptArray ) - 1, ( LPARAM ) ( LPINT ) ptArray );
+      if( ! fResetParts )
+         iNumOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, HB_SIZEOFARRAY( piArray ) - 1, ( LPARAM ) ( LPINT ) piArray );
       else
-         numOfParts = 0;
-      numOfParts++;
+         iNumOfParts = 0;
+      iNumOfParts++;
 
       memset( &rSB, 0, sizeof( rSB ) );
 
       GetClientRect( hWnd, &rSB );
 
-      ptArray[ numOfParts - 1 ] = rSB.right;
-      if( ! lResetParts )
+      piArray[ iNumOfParts - 1 ] = rSB.right;
+      if( ! fResetParts )
       {
          int n;
-         for( n = 0; n < numOfParts - 1; n++ )
-            ptArray[ n ] -= usWidth + WVW_SPACE_BETWEEN_PARTS;
+         for( n = 0; n < iNumOfParts - 1; n++ )
+            piArray[ n ] -= iWidth + WVW_SPACE_BETWEEN_PARTS;
       }
 
-      SendMessage( hWnd, SB_SETPARTS, numOfParts, ( LPARAM ) ptArray );
+      SendMessage( hWnd, SB_SETPARTS, iNumOfParts, ( LPARAM ) piArray );
 
       if( HB_ISCHAR( 6 ) )
       {
@@ -216,21 +206,21 @@ HB_FUNC( WVW_SBADDPART )
          hb_strfree( hName );
 
          if( hIcon != NULL )
-            SendMessage( hWnd, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
+            SendMessage( hWnd, SB_SETICON, ( WPARAM ) iNumOfParts - 1, ( LPARAM ) hIcon );
       }
 
-      SendMessage( hWnd, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, 0 );
+      SendMessage( hWnd, SB_SETTEXT, ( iNumOfParts - 1 ) | displayFlags, 0 );
       if( HB_ISCHAR( 7 ) )
       {
          void * hText;
-         SendMessage( hWnd, SB_SETTIPTEXT, ( WPARAM ) ( numOfParts - 1 ), ( LPARAM ) HB_PARSTR( 7, &hText, NULL ) );
+         SendMessage( hWnd, SB_SETTIPTEXT, ( WPARAM ) ( iNumOfParts - 1 ), ( LPARAM ) HB_PARSTR( 7, &hText, NULL ) );
          hb_strfree( hText );
       }
 
-      hb_retni( numOfParts );
+      hb_retni( iNumOfParts );
    }
    else
-      hb_retnl( 0 );
+      hb_retni( 0 );
 }
 
 /* wvw_sbRefresh( nWinNum )
@@ -246,9 +236,9 @@ HB_FUNC( WVW_SBREFRESH )
 
    if( wvw_win && ( hWnd = wvw_win->hStatusBar ) != NULL )
    {
-      int ptArray[ WVW_MAX_STATUS_PARTS ];
-      int numOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, HB_SIZEOFARRAY( ptArray ), ( LPARAM ) ( LPINT ) ptArray );
-      if( numOfParts > 0 )
+      int piArray[ WVW_MAX_STATUS_PARTS ];
+      int iNumOfParts = ( int ) SendMessage( hWnd, SB_GETPARTS, HB_SIZEOFARRAY( piArray ), ( LPARAM ) ( LPINT ) piArray );
+      if( iNumOfParts > 0 )
       {
          int  n;
          int  iDiff;
@@ -257,14 +247,14 @@ HB_FUNC( WVW_SBREFRESH )
          memset( &rSB, 0, sizeof( rSB ) );
 
          GetClientRect( hWnd, &rSB );
-         iDiff = rSB.right - ptArray[ numOfParts - 1 ];
+         iDiff = rSB.right - piArray[ iNumOfParts - 1 ];
 
-         for( n = 0; n <= numOfParts - 1; n++ )
-            ptArray[ n ] += iDiff;
+         for( n = 0; n <= iNumOfParts - 1; n++ )
+            piArray[ n ] += iDiff;
 
-         SendMessage( hWnd, SB_SETPARTS, numOfParts, ( LPARAM ) ( LPINT ) ptArray );
+         SendMessage( hWnd, SB_SETPARTS, iNumOfParts, ( LPARAM ) ( LPINT ) piArray );
 
-         hb_retni( numOfParts );
+         hb_retni( iNumOfParts );
          return;
       }
    }
@@ -288,12 +278,12 @@ HB_FUNC( WVW_SBSETTEXT )
       if( HB_ISCHAR( 4 ) )
          wvw_win->cSBColorForeground = strtol( hb_parc( 4 ), NULL, 10 );
       else if( HB_ISNUM( 4 ) )
-         wvw_win->cSBColorForeground = hb_parnl( 4 );
+         wvw_win->cSBColorForeground = ( COLORREF ) hb_parnint( 4 );
 
       if( HB_ISCHAR( 5 ) )
          wvw_win->cSBColorBackground = strtol( hb_parc( 5 ), NULL, 10 );
       else if( HB_ISNUM( 5 ) )
-         wvw_win->cSBColorBackground = hb_parnl( 5 );
+         wvw_win->cSBColorBackground = ( COLORREF ) hb_parnint( 5 );
 
       if( iPart == 0 && ( wvw_win->cSBColorForeground || wvw_win->cSBColorBackground ) )
       {

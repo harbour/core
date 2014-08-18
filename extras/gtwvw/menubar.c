@@ -88,7 +88,7 @@ HB_FUNC( WVW_CREATEPOPUPMENU )
 HB_FUNC( WVW_APPENDMENU )
 {
    TCHAR   ucBuf[ 256 ];
-   LPCTSTR lpszCaption;
+   LPCTSTR szCaption;
 
    if( ! ( hb_parni( 2 ) & ( MF_SEPARATOR | MF_POPUP ) ) &&
        hb_parni( 3 ) >= WVW_ID_BASE_PUSHBUTTON )
@@ -101,28 +101,28 @@ HB_FUNC( WVW_APPENDMENU )
    if( HB_ISCHAR( 4 ) )
    {
       void *  hCaption;
-      HB_SIZE iLen;
+      HB_SIZE nLen;
 
-      lpszCaption = HB_PARSTR( 4, &hCaption, &iLen );
+      szCaption = HB_PARSTR( 4, &hCaption, &nLen );
 
-      if( iLen > 0 && iLen < 256 )
+      if( nLen > 0 && nLen < 256 )
       {
          HB_SIZE i;
 
-         for( i = 0; i < iLen; i++ )
-            ucBuf[ i ] = lpszCaption[ i ] == TEXT( '~' ) ? TEXT( '&' ) : lpszCaption[ i ];
+         for( i = 0; i < nLen; i++ )
+            ucBuf[ i ] = szCaption[ i ] == TEXT( '~' ) ? TEXT( '&' ) : szCaption[ i ];
 
-         ucBuf[ iLen ] = TEXT( '\0' );
+         ucBuf[ nLen ] = TEXT( '\0' );
 
-         lpszCaption = ucBuf;
+         szCaption = ucBuf;
       }
 
       hb_strfree( hCaption );
    }
    else
-      lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );  /* TOFIX: delete this */
+      szCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );  /* TOFIX: delete this */
 
-   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parnint( 3 ), lpszCaption ) );
+   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parnint( 3 ), szCaption ) );
 }
 
 HB_FUNC( WVW_DELETEMENU )
@@ -169,7 +169,7 @@ HB_FUNC( WVW_SETMENUKEYEVENT )
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    if( wvw_win )
-      hb_retni( hb_gt_wvw_SetMenuKeyEvent( wvw_win, hb_parnl( 2 ) ) );
+      hb_retni( hb_gt_wvw_SetMenuKeyEvent( wvw_win, hb_parni( 2 ) ) );
    else
       hb_retni( 0 );
 }
@@ -280,7 +280,7 @@ HB_FUNC( WVW_TRACKPOPUPMENU )
 
       GetCursorPos( &xy );
 
-      hb_retnl( TrackPopupMenu( ( HMENU ) HB_PARHANDLE( 2 ),
+      hb_retni( TrackPopupMenu( ( HMENU ) HB_PARHANDLE( 2 ),
                                 TPM_CENTERALIGN | TPM_RETURNCMD | TPM_RECURSE,
                                 xy.x,
                                 xy.y,
@@ -289,7 +289,7 @@ HB_FUNC( WVW_TRACKPOPUPMENU )
                                 NULL ) );
    }
    else
-      hb_retnl( 0 );
+      hb_retni( 0 );
 }
 
 HB_FUNC( WIN_SETMENU )

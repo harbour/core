@@ -103,32 +103,34 @@ HB_FUNC( WVW_NOPENWINDOW )
 
    if( wvw )
    {
-      LPCTSTR lpszWinName;
+      LPCTSTR szWinName;
       void *  hWinName = NULL;
 
       PWVW_WIN wvw_par;
 
-      int irow1, icol1, irow2, icol2;
+      int iRow1, iCol1, iRow2, iCol2;
       int nWin;
 
-      DWORD     dwStyle    = ( DWORD ) hb_parnldef( 6, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN );
+      HWND hWndParent;
+
+      DWORD     dwStyle    = ( DWORD ) hb_parnintdef( 6, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN );
       int       iParentWin = hb_gt_wvw_nWin_N( 7 );
       PHB_FNAME pFileName  = NULL;
 
-      if( wvw->usNumWindows <= 0 )
+      if( wvw->iNumWindows <= 0 )
       {
          hb_retni( 0 );
          return;
       }
 
-      if( wvw->usNumWindows == HB_SIZEOFARRAY( wvw->pWin ) )
+      if( wvw->iNumWindows == HB_SIZEOFARRAY( wvw->pWin ) )
       {
          MessageBox( NULL, TEXT( "Too many windows to open" ), TEXT( "Error" ), MB_ICONERROR );
          hb_retni( 0 );
          return;
       }
 
-      if( iParentWin > ( wvw->usNumWindows - 1 ) )
+      if( iParentWin > ( wvw->iNumWindows - 1 ) )
       {
          MessageBox( NULL, TEXT( "Invalid parent window" ), TEXT( "Error" ), MB_ICONERROR );
          hb_retni( 0 );
@@ -140,18 +142,24 @@ HB_FUNC( WVW_NOPENWINDOW )
          if( hb_gt_wvw_GetMainCoordMode() )
             wvw_par = hb_gt_wvw_win_top();
          else
-            wvw_par = hb_gt_wvw_win( wvw->usCurWindow );
+            wvw_par = hb_gt_wvw_win( wvw->iCurWindow );
+
+         hWndParent = NULL;
       }
       else
+      {
          wvw_par = hb_gt_wvw_win( iParentWin );
+
+         hWndParent = wvw_par->hWnd;
+      }
 
       if( HB_ISCHAR( 1 ) )
       {
-         HB_SIZE iLen;
+         HB_SIZE nLen;
 
-         lpszWinName = HB_PARSTR( 1, &hWinName, &iLen );
+         szWinName = HB_PARSTR( 1, &hWinName, &nLen );
 
-         if( iLen > HB_SIZEOFARRAY( wvw_par->szWinName ) - 1 )
+         if( nLen > HB_SIZEOFARRAY( wvw_par->szWinName ) - 1 )
          {
             MessageBox( NULL, TEXT( "Window name too long" ), TEXT( "Error" ), MB_ICONERROR );
             hb_retni( 0 );
@@ -161,16 +169,16 @@ HB_FUNC( WVW_NOPENWINDOW )
       else
       {
          PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
-         lpszWinName = HB_ITEMGETSTR( pItem, &hWinName, NULL );
+         szWinName = HB_ITEMGETSTR( pItem, &hWinName, NULL );
          hb_itemRelease( pItem );
       }
 
-      irow1 = hb_parni( 2 );
-      icol1 = hb_parni( 3 );
-      irow2 = hb_parnidef( 4, wvw_par->ROWS - 1 );
-      icol2 = hb_parnidef( 5, wvw_par->COLS - 1 );
+      iRow1 = hb_parni( 2 );
+      iCol1 = hb_parni( 3 );
+      iRow2 = hb_parnidef( 4, wvw_par->ROWS - 1 );
+      iCol2 = hb_parnidef( 5, wvw_par->COLS - 1 );
 
-      nWin = hb_gt_wvw_OpenWindow( lpszWinName, irow1, icol1, irow2, icol2, dwStyle, iParentWin );
+      nWin = hb_gt_wvw_OpenWindow( szWinName, iRow1, iCol1, iRow2, iCol2, dwStyle, hWndParent );
 
       hb_strfree( hWinName );
 
@@ -197,7 +205,7 @@ HB_FUNC( WVW_NOPENWINDOW )
          }
 
          if( hb_gt_wvw_GetMainCoordMode() )
-            wvw->usCurWindow = nWin;
+            wvw->iCurWindow = nWin;
 
          hb_gtSetMode( wvw_win->ROWS, wvw_win->COLS );
 
@@ -228,7 +236,7 @@ HB_FUNC( WVW_LCLOSEWINDOW )
    {
       PWVW_WIN wvw_top;
 
-      if( wvw->usNumWindows <= 1 )
+      if( wvw->iNumWindows <= 1 )
       {
          MessageBox( NULL, TEXT( "No more window to close" ), TEXT( "Error" ), MB_ICONERROR );
          hb_retl( HB_FALSE );
@@ -277,7 +285,7 @@ HB_FUNC( WVW_NNUMWINDOWS )
    PWVW_GLO wvw = hb_gt_wvw();
 
    if( wvw )
-      hb_retni( wvw->usNumWindows );
+      hb_retni( wvw->iNumWindows );
    else
       hb_retni( 0 );
 }
@@ -298,19 +306,19 @@ HB_FUNC( WVW_XREPOSWINDOW )
    if( wvw )
    {
       int     i;
-      HB_BOOL bAnchored = hb_parldef( 1, HB_TRUE );
+      HB_BOOL fAnchored = hb_parldef( 1, HB_TRUE );
 
       /* centerize Main Window, only if not maximized */
       hb_gt_wvw_SetCentreWindow( hb_gt_wvw_win_top(), HB_TRUE, HB_TRUE );
 
       /* reposition all subwindows */
-      for( i = 1; i < wvw->usNumWindows; i++ )
+      for( i = 1; i < wvw->iNumWindows; i++ )
       {
          PWVW_WIN wvw_win = hb_gt_wvw_win( i );
 
          if( wvw_win )
          {
-            if( bAnchored )
+            if( fAnchored )
                hb_gt_wvw_SetCentreWindow( wvw_win, HB_FALSE, HB_TRUE );
             else
                hb_gt_wvw_SetCentreWindow( wvw_win, wvw_win->CentreWindow, HB_TRUE );
@@ -320,7 +328,7 @@ HB_FUNC( WVW_XREPOSWINDOW )
 }
 
 /* wvw_nSetCurWindow( nWinNum )   (0==MAIN)
- *  assigns nWinNum as the new current window (wvw->usCurWindow)
+ *  assigns nWinNum as the new current window (wvw->iCurWindow)
  *  returns old current window
  *  example: saved := wvw_nSetCurWindow(0)
  *         ? "This will be displayed in Main Window"
@@ -337,13 +345,13 @@ HB_FUNC( WVW_NSETCURWINDOW )
       {
          int nWin = hb_parni( 1 );
 
-         if( nWin >= 0 && nWin < wvw->usNumWindows )
+         if( nWin >= 0 && nWin < wvw->iNumWindows )
             hb_retni( hb_gt_wvw_SetCurWindow( nWin ) );
          else
             hb_errRT_TERM( EG_BOUND, 10001, "Window Number out of range", "WVW_nSetCurWindow()", 0, 0 );
       }
       else
-         hb_retni( wvw->usCurWindow );
+         hb_retni( wvw->iCurWindow );
    }
    else
       hb_retni( 0 );
@@ -464,7 +472,7 @@ HB_FUNC( WVW_SETMAINCOORD )
          if( wvw->fMainCoordMode )
             hb_gt_wvw_SetCurWindow( 0 );
          else
-            hb_gt_wvw_SetCurWindow( wvw->usNumWindows - 1 );
+            hb_gt_wvw_SetCurWindow( wvw->iNumWindows - 1 );
       }
    }
    else
@@ -512,7 +520,7 @@ HB_FUNC( WVW_SETWINSTYLE )
 
       if( HB_ISNUM( 2 ) )
       {
-         lpStyle = SetWindowLongPtr( wvw_win->hWnd, GWL_STYLE, ( LONG_PTR ) hb_parnl( 2 ) );
+         lpStyle = SetWindowLongPtr( wvw_win->hWnd, GWL_STYLE, ( LONG_PTR ) hb_parnint( 2 ) );
          SetWindowPos( wvw_win->hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED );
          ShowWindow( wvw_win->hWnd, SW_SHOWNORMAL );
       }
@@ -592,7 +600,7 @@ HB_FUNC( WVW_SETPAINTREFRESH )
          if( wvw->a.pSymWVW_PAINT )
          {
             int i;
-            for( i = 0; i < wvw->usNumWindows; i++ )
+            for( i = 0; i < wvw->iNumWindows; i++ )
             {
                PWVW_WIN wvw_win = hb_gt_wvw_win( i );
 
@@ -981,7 +989,7 @@ HB_FUNC( WVW_CLIENTTOSCREEN )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   PHB_ITEM paXY = hb_itemArrayNew( 2 );
+   PHB_ITEM aXY = hb_itemArrayNew( 2 );
    POINT    xy;
 
    if( wvw_win )
@@ -999,8 +1007,8 @@ HB_FUNC( WVW_CLIENTTOSCREEN )
    else
       memset( &xy, 0, sizeof( xy ) );
 
-   hb_arraySetNL( paXY, 1, xy.x );
-   hb_arraySetNL( paXY, 2, xy.y );
+   hb_arraySetNL( aXY, 1, xy.x );
+   hb_arraySetNL( aXY, 2, xy.y );
 
-   hb_itemReturnRelease( paXY );
+   hb_itemReturnRelease( aXY );
 }

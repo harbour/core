@@ -57,13 +57,12 @@ HB_FUNC( WVW_STCREATE )
    if( wvw && wvw_win )
    {
       HINSTANCE hInstance;
-      HWND      hWndParent = wvw_win->hWnd;
       HWND      hWnd;
 
       POINT   xy;
       int     iTop, iLeft, iBottom, iRight;
       int     iOffTop, iOffLeft, iOffBottom, iOffRight;
-      HB_BOOL bBorder = hb_parl( 7 );
+      HB_BOOL fBorder = hb_parl( 7 );
 
       int nCtrlId;
 
@@ -73,7 +72,7 @@ HB_FUNC( WVW_STCREATE )
           usBottom = hb_parnidef( 11, usTop ),
           usRight  = hb_parnidef( 12, usLeft + usWidth - 1 );
 
-      int   iStyle = bBorder ? WS_BORDER : 0;
+      int   iStyle = fBorder ? WS_BORDER : 0;
       int   iBox   = hb_parni( 10 );
       HFONT hFont  = NULL;
 
@@ -88,7 +87,7 @@ HB_FUNC( WVW_STCREATE )
          if( wvw_win->hSTfont == NULL )
          {
             HB_STOREHANDLE( NULL, 9 );
-            hb_retnl( 0 );
+            hb_retni( 0 );
             return;
          }
       }
@@ -121,7 +120,7 @@ HB_FUNC( WVW_STCREATE )
       hb_winmainArgGet( &hInstance, NULL, NULL );
 
       hWnd = CreateWindowEx(
-         bBorder ? WS_EX_CLIENTEDGE : 0,
+         fBorder ? WS_EX_CLIENTEDGE : 0,
          TEXT( "STATIC" ),
          NULL,
          WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
@@ -129,7 +128,7 @@ HB_FUNC( WVW_STCREATE )
          iTop,
          iRight - iLeft + 1,
          iBottom - iTop + 1,
-         hWndParent,
+         wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
          hInstance,
          NULL );
@@ -149,13 +148,13 @@ HB_FUNC( WVW_STCREATE )
             SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSTfont, ( LPARAM ) TRUE );
 
          HB_STOREHANDLE( hWnd, 9 );
-         hb_retnl( nCtrlId );
+         hb_retni( nCtrlId );
          return;
       }
    }
 
    HB_STOREHANDLE( NULL, 9 );
-   hb_retnl( 0 );
+   hb_retni( 0 );
 }
 
 HB_FUNC( WVW_STSETTEXT )
