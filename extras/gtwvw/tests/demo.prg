@@ -140,8 +140,8 @@
 #define IDM_PASTE         406
 
 
-STATIC s_amiscobjlist := {}      // x misc object list (actually: list of codeblocks)
-STATIC s_afontinfo := {}         // x current font info
+STATIC s_amiscobjlist := {}      // misc object list (actually: list of codeblocks)
+STATIC s_afontinfo := {}         // current font info
 
 //
 
@@ -353,11 +353,9 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    hb_default( @nBottom, nTop + 10 )
    hb_default( @nRight, nLeft + 45 )
 
-   cWinName := "Typewriter (Win#" + hb_ntos( wvw_nNumWindows() ) + "); CtrlW: New Window; ESC: Exit"
+   cWinName := "Typewriter (Win#" + hb_ntos( wvw_nNumWindows() ) + "); <Ctrl+W>: New Window; <Esc>: Exit"
 
-   // x init window
-   nCurWindow := wvw_nOpenWindow( cWinName, nTop, nLeft, nBottom, nRight )
-   IF nCurWindow == 0
+   IF ( nCurWindow := wvw_nOpenWindow( cWinName, nTop, nLeft, nBottom, nRight ) ) == 0
       lboxmessage( "Failed Opening new window!" )
       RETURN
    ENDIF
@@ -371,11 +369,10 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
 
    // --- begin typewriter mode ---
    CLS
-   ?? "Press Ctrl+E to toggle between echoing what you type to previous window"
+   ?? "Press <Ctrl+E> to toggle between echoing what you type to previous window"
    ?
-   DO WHILE Inkey() != 0; ENDDO  // clear typeahead
-   ch := Inkey( 0 )
-   DO WHILE ch != K_ESC
+   CLEAR TYPEAHEAD
+   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
       IF ch == K_ENTER
          ?? hb_keyChar( ch ) + Chr( 10 )
          IF lEchoing
@@ -400,7 +397,6 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
             wvw_nSetCurWindow( nCurWindow )
          ENDIF
       ENDIF
-      ch := Inkey( 0 )
    ENDDO
 
    // --- end typewriter mode ---
@@ -439,9 +435,7 @@ STATIC PROCEDURE Demo_Get()
 
    MEMVAR xx
 
-   // x init window
-   nCurWindow := wvw_nOpenWindow( "GET Demo", nTop, nLeft, nBottom, nRight )
-   IF nCurWindow == 0
+   IF ( nCurWindow := wvw_nOpenWindow( "GET Demo", nTop, nLeft, nBottom, nRight ) ) == 0
       lboxmessage( "Failed Opening new window!" )
       RETURN
    ENDIF
@@ -510,9 +504,7 @@ STATIC PROCEDURE DEMO_Browse()
 
    LOCAL aColumnsSep, tmp
 
-   // x init window
-   nCurWindow := wvw_nOpenWindow( "BROWSE Demo", nTop, nLeft, nBottom, nRight )
-   IF nCurWindow == 0
+   IF ( nCurWindow := wvw_nOpenWindow( "BROWSE Demo", nTop, nLeft, nBottom, nRight ) ) == 0
       lboxmessage( "Failed Opening new window!" )
       RETURN
    ENDIF
@@ -1034,6 +1026,7 @@ STATIC FUNCTION nAfterInkey( nkey )
    // (1) menu command, or
    // (2) mouse button action
    LOCAL bAction
+
    IF nkey == WVW_DEFAULT_MENUKEYEVENT
       // MenuKeyEvent
       RETURN nMenuChecker( wvw_GetLastMenuEvent() )
@@ -1180,8 +1173,8 @@ STATIC PROCEDURE xHelp()
       hb_eol() + ;
       "CONSOLE: a simple CONSOLE session" + hb_eol() + ;
       "You are interacting in a typewriter mode." + hb_eol() + ;
-      "Press Ctrl+W to open a new, bigger window." + hb_eol() + ;
-      "Press ESC to exit)" + hb_eol() + ;
+      "Press <Ctrl+W> to open a new, bigger window." + hb_eol() + ;
+      "Press <Esc> to exit)" + hb_eol() + ;
       hb_eol() + ;
       "Maximum number of windows opened: " + hb_ntos( WVW_MAXWINDOWS ) + hb_eol() + ;
       hb_eol() + ;
@@ -1195,29 +1188,27 @@ STATIC PROCEDURE xHelp()
 
 STATIC FUNCTION SetDefaultWindowSize()
 
-   // x was: LOCAL Result:= SetMode(32,98), ScreenWidth
-   LOCAL Result := .T., ScreenWidth
+   LOCAL Result, ScreenWidth
 
    SetMode( 25, 80 )
 
-   IF Result
-      screenWidth := wvw_GetScreenWidth()
-      DO CASE
-      CASE screenWidth >= 1024
-         Result := wvw_SetFont( , "Terminal", 20, 10 )
-      CASE screenWidth >= 800
-         IF hb_osIsWinNT()
-            Result := wvw_SetFont( , "Lucida Console", 16, - 8 )
-         ELSE
-            Result := wvw_SetFont( , "System", 16, - 8 )
-         ENDIF
-      OTHERWISE
-         Result := wvw_SetFont( , "Terminal", 12, 6 )
-      ENDCASE
-      IF Result
-         wvw_SetCodepage( , 255 )  // #define OEM_CHARSET 255 - from wingdi.h
-         CLS
+   screenWidth := wvw_GetScreenWidth()
+   DO CASE
+   CASE screenWidth >= 1024
+      Result := wvw_SetFont( , "Terminal", 20, 10 )
+   CASE screenWidth >= 800
+      IF hb_osIsWinNT()
+         Result := wvw_SetFont( , "Lucida Console", 16, - 8 )
+      ELSE
+         Result := wvw_SetFont( , "System", 16, - 8 )
       ENDIF
+   OTHERWISE
+      Result := wvw_SetFont( , "Terminal", 12, 6 )
+   ENDCASE
+
+   IF Result
+      wvw_SetCodepage( , 255 )  // #define OEM_CHARSET 255 - from wingdi.h
+      CLS
    ENDIF
 
    RETURN Result

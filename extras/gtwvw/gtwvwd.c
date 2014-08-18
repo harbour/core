@@ -286,7 +286,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    if( ! s_wvw->pWin[ 0 ]->hWnd )
       /* Runtime error */
-      hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
+      hb_errRT_TERM( EG_CREATE, 10001, "Windows API CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
    {
       PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
@@ -6292,7 +6292,7 @@ static void s_ReposControls( PWVW_WIN wvw_win, int nClass )
          }
          else
          {
-            hb_errRT_TERM( EG_NOFUNC, 10001, "Undefined Control Class", "s_ReposControls()", 0, 0 );
+            hb_errRT_TERM( EG_NOFUNC, 10001, "Undefined control class", "s_ReposControls()", 0, 0 );
 
             iBottom = 0;
             iRight  = 0;

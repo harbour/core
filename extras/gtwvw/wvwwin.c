@@ -348,7 +348,7 @@ HB_FUNC( WVW_NSETCURWINDOW )
          if( nWin >= 0 && nWin < wvw->iNumWindows )
             hb_retni( hb_gt_wvw_SetCurWindow( nWin ) );
          else
-            hb_errRT_TERM( EG_BOUND, 10001, "Window Number out of range", "WVW_nSetCurWindow()", 0, 0 );
+            hb_errRT_TERM( EG_BOUND, 10001, "Window number out of range", "wvw_nSetCurWindow()", 0, 0 );
       }
       else
          hb_retni( wvw->iCurWindow );

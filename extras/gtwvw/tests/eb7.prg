@@ -55,11 +55,10 @@
 #define WM_MENUCHAR                     0x0120
 #define WM_ENTERIDLE                    0x0121
 
-#command @ <row>, <col> EBGET <var>                                       ;
-      [LABEL <label>]                                   ;
-      [<multiline: MULTILINE>]                        ;
-      [PICTURE <pic>]                                 ;
-      ;
+#command @ <row>, <col> EBGET <var> ;
+      [LABEL <label>] ;
+      [<multiline: MULTILINE>] ;
+      [PICTURE <pic>] ;
       => AddEBGet( aEBGets, <row>, <col>, @<var>, <"var">, {| x | <var> := x }, <label>, <.multiline.>, <pic> )
 
 // constants to aEBGets member,
@@ -88,7 +87,7 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+//   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
    SetMode( 4, 54 )   // a small window
    SetColor( "N/W" )
    wvw_SetFont( 0, "Courier New", 16, - 7 )
@@ -96,14 +95,14 @@ PROCEDURE Main()
    wvw_pbSetFont( 0, "Arial" )  // font for pushbuttons
 
    wvw_SetCodepage( 0, 255 )
-   wvw_AllowNonTopEvent( .T. )   // this will make pushbuttons to work
+   wvw_AllowNonTopEvent( .T. )  // this will make pushbuttons to work
    // even on non-topmost window
-   wvw_RecurseCBlock( .T. ) // this will allow recursed execution
+   wvw_RecurseCBlock( .T. )  // this will allow recursed execution
    // of control's codeblocks
    // eg. multiple executions of pushbutton's codeblock
    //    invoking "GetSession()"
 
-   SetCursor( SC_NONE ) // we don't need cursor
+   SetCursor( SC_NONE )  // we don't need cursor
 
    CLS
    @ 0, 1 SAY "Click NEW to open a new GET session, CLOSE when done"
@@ -127,6 +126,7 @@ PROCEDURE Main()
 STATIC PROCEDURE GetSession()
 
    STATIC s_nsession := 0
+
    LOCAL aEBGets := {}
    LOCAL cName      := Space( 30 )
    LOCAL cNickName  := Space( 10 )
@@ -262,8 +262,7 @@ STATIC FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, m
 STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
 
    LOCAL nmaxrow, nmincol
-   LOCAL aGet, nlen, lmultiline, clabel, ;
-      nrow1, ncol1, nrow2, ncol2
+   LOCAL aGet, nlen, lmultiline, clabel, nrow1, ncol1, nrow2, ncol2
    LOCAL nOKbutton, nCancelbutton, nClosebutton, ldone := .F.
    LOCAL lclosePermitted := .F.
    LOCAL nNumGets := Len( aEBGets )
@@ -484,10 +483,8 @@ STATIC PROCEDURE CancelVar( nwinnum, aEBGets, lDone )
 
 STATIC PROCEDURE ToCloseWindow( nwinnum, /* @ */ lPermitted )
 
-   HB_SYMBOL_UNUSED( lPermitted )
-
    // allow to close topmost window only
-   IF nwinnum != wvw_nNumWindows() - 1
+   IF !( lPermitted := ( nwinnum == wvw_nNumWindows() - 1 ) )
       MyMessageBox( nwinnum, ;
          "Window " + hb_ntos( nwinnum ) + " is not allowed to be closed, yet" + hb_eol() + ;
          "Please close window " + hb_ntos( wvw_nNumWindows() - 1 ) + " first" )
