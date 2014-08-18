@@ -180,8 +180,8 @@ HB_EXTERN_BEGIN
 /*
  indexSig:
    0x01     - CLIP like, ignoreCase significant
-   0x20     - ASCII ADI
-   0x00     - UNICODE ADI
+   0x20     - in index header: ADI file, in ADI tag header: ASCII
+   0x00     - in ADI tag header: UNICODE
 */
 /* CDX index node strucutres */
 /* Compact Index Header Record */
