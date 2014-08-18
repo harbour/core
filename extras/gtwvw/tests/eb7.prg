@@ -87,7 +87,7 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-//   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
    SetMode( 4, 54 )   // a small window
    SetColor( "N/W" )
    wvw_SetFont( 0, "Courier New", 16, - 7 )
@@ -872,23 +872,13 @@ STATIC FUNCTION GetNumMask( Text, mcvaltype )
 
 // from tget.prg
 
-STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
-
-   LOCAL cBuffer2
+STATIC FUNCTION IsBadDate( cBuffer )
 
    IF Empty( cBuffer )
       RETURN .F.
    ENDIF
 
-#if 0
-   IF "E" $ cPicFunc
-      cBuffer := InvertDwM( cBuffer )
-   ENDIF
-#endif
-
-   cBuffer2 := hb_StrReplace( cBuffer, "/-." )
-
-   IF Empty( cBuffer2 )
+   IF Empty( hb_StrReplace( cBuffer, "/-." ) )
       RETURN .F.
    ENDIF
 

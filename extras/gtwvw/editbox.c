@@ -562,11 +562,6 @@ HB_FUNC( WVW_EBCREATE )
       else
          dwStyle |= ES_AUTOHSCROLL;
 
-#if ! defined( UNICODE )
-      if( wvw_win->CodePage == OEM_CHARSET )
-         dwStyle |= ES_OEMCONVERT;
-#endif
-
       hb_winmainArgGet( &hInstance, NULL, NULL );
 
       hWnd = CreateWindowEx(
@@ -589,26 +584,9 @@ HB_FUNC( WVW_EBCREATE )
          WNDPROC OldProc;
 
          void *  hText;
-         HB_SIZE nLen;
-         LPCTSTR szText = HB_PARSTRDEF( 6, &hText, &nLen );
-
-#if ! defined( UNICODE )
-         if( wvw_win->CodePage == OEM_CHARSET )
-         {
-            LPSTR szTextANSI = ( LPSTR ) hb_xgrab( ( DWORD ) nLen + 1 );
-            OemToCharBuff( szText, szTextANSI, ( DWORD ) nLen );
-            szText = ( LPCTSTR ) szTextANSI;
-         }
-#else
-         HB_SYMBOL_UNUSED( nLen );
-#endif
+         LPCTSTR szText = HB_PARSTRDEF( 6, &hText, NULL );
 
          SendMessage( hWnd, WM_SETTEXT, 0, ( LPARAM ) szText );
-
-#if ! defined( UNICODE )
-         if( wvw_win->CodePage == OEM_CHARSET )
-            hb_xfree( ( void * ) szText );
-#endif
 
          hb_strfree( hText );
 
@@ -896,18 +874,7 @@ HB_FUNC( WVW_EBGETTEXT )
 
       SendMessage( wvw_ctl->hWnd, WM_GETTEXT, iLen, ( LPARAM ) szText );
 
-#if ! defined( UNICODE )
-      if( wvw_win->CodePage == OEM_CHARSET )
-      {
-         LPSTR szTextOEM = ( LPSTR ) hb_xgrab( ( DWORD ) iLen + 1 );
-         CharToOemBuff( szText, szTextOEM, ( DWORD ) iLen );
-         hb_retc_buffer( szTextOEM );
-      }
-      else
-         HB_RETSTR( szText );
-#else
       HB_RETSTR( szText );
-#endif
 
       hb_xfree( szText );
    }
@@ -927,26 +894,9 @@ HB_FUNC( WVW_EBSETTEXT )
    if( wvw_ctl )
    {
       void *  hText;
-      HB_SIZE nLen;
-      LPCTSTR szText = HB_PARSTRDEF( 3, &hText, &nLen );
-
-#if ! defined( UNICODE )
-      if( wvw_win->CodePage == OEM_CHARSET )
-      {
-         LPSTR szTextANSI = ( LPSTR ) hb_xgrab( ( DWORD ) nLen + 1 );
-         OemToCharBuff( szText, szTextANSI, ( DWORD ) nLen );
-         szText = ( LPCTSTR ) szTextANSI;
-      }
-#else
-      HB_SYMBOL_UNUSED( nLen );
-#endif
+      LPCTSTR szText = HB_PARSTRDEF( 3, &hText, NULL );
 
       hb_retl( ( HB_BOOL ) SendMessage( wvw_ctl->hWnd, WM_SETTEXT, 0, ( LPARAM ) szText ) );
-
-#if ! defined( UNICODE )
-      if( wvw_win->CodePage == OEM_CHARSET )
-         hb_xfree( ( void * ) szText );
-#endif
 
       hb_strfree( hText );
    }
