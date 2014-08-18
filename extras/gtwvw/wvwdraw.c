@@ -265,26 +265,26 @@ static HB_BOOL hb_gt_wvw_DrawImage( PWVW_WIN wvw_win, int x1, int y1, int wd, in
 
    if( ! hBitmap )
    {
-      OLE_HANDLE oHtemp;
-      BITMAP     bmTemp;
+      HBITMAP hBitmapTemp;
+      BITMAP  bmTemp;
 
-      IPicture * pPic = hb_gt_wvw_LoadPicture( image );
+      IPicture * pPicture = hb_gt_wvw_LoadPicture( image );
 
-      if( ! pPic )
+      if( ! pPicture )
          return HB_FALSE;
 
       #if 0
       /* 2006-07-24 canNOT do it this way: */
-      HB_VTBL( pPic )->get_Width( HB_THIS_( pPic ) & lWidth );
-      HB_VTBL( pPic )->get_Height( HB_THIS_( pPic ) & lHeight );
+      HB_VTBL( pPicture )->get_Width( HB_THIS_( pPicture ) & lWidth );
+      HB_VTBL( pPicture )->get_Height( HB_THIS_( pPicture ) & lHeight );
       iWidth  = ( int ) lWidth;
       iHeight = ( int ) lHeight;
       #endif
 
-      if( HB_VTBL( pPic )->get_Handle( HB_THIS_( pPic ) & oHtemp ) == S_OK )
-         hBitmap = ( HBITMAP ) CopyImage( ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG );
+      if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) & hBitmapTemp ) == S_OK )
+         hBitmap = ( HBITMAP ) CopyImage( hBitmapTemp, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG );
 
-      hb_gt_wvw_DestroyPicture( pPic );
+      hb_gt_wvw_DestroyPicture( pPicture );
 
       if( ! hBitmap )
          return HB_FALSE;
@@ -336,14 +336,14 @@ static HB_BOOL hb_gt_wvw_DrawImage( PWVW_WIN wvw_win, int x1, int y1, int wd, in
    return fResult;
 }
 
-static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd, int ht, IPicture * iPicture, HB_BOOL bTransp )
+static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd, int ht, IPicture * pPicture, HB_BOOL bTransp )
 {
    HB_BOOL fResult = HB_FALSE;
 
-   if( iPicture )
+   if( pPicture )
    {
-      OLE_XSIZE_HIMETRIC lWidth;
-      OLE_YSIZE_HIMETRIC lHeight;
+      OLE_XSIZE_HIMETRIC nWidth;
+      OLE_YSIZE_HIMETRIC nHeight;
 
       int x, y, xe, ye;
       int c   = x1;
@@ -363,15 +363,15 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
       /* if bTransp, we use different method */
       if( bTransp )
       {
-         OLE_HANDLE oHtemp;
-         HDC        hdc;
+         HBITMAP hBitmap;
+         HDC     hdc;
 
-         HB_VTBL( iPicture )->get_Handle( HB_THIS_( iPicture ) & oHtemp );
+         HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) & hBitmap );
 
-         if( oHtemp )
+         if( hBitmap )
          {
             hdc = GetDC( wvw_win->hWnd );
-            s_DrawTransparentBitmap( hdc, ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, x1, y1, wd, ht );
+            s_DrawTransparentBitmap( hdc, hBitmap, x1, y1, wd, ht );
             ReleaseDC( wvw_win->hWnd, hdc );
 
             fResult = HB_TRUE;
@@ -382,15 +382,15 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
       }
       /* endif bTransp, we use different method */
 
-      if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) & lWidth ) != S_OK )
-         lWidth = 0;
-      if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) & lHeight ) != S_OK )
-         lHeight = 0;
+      if( HB_VTBL( pPicture )->get_Width( HB_THIS_( pPicture ) & nWidth ) != S_OK )
+         nWidth = 0;
+      if( HB_VTBL( pPicture )->get_Height( HB_THIS_( pPicture ) & nHeight ) != S_OK )
+         nHeight = 0;
 
       if( dc == 0 )
-         dc = ( int ) ( ( float ) dr * lWidth / lHeight );
+         dc = ( int ) ( ( float ) dr * nWidth / nHeight );
       if( dr == 0 )
-         dr = ( int ) ( ( float ) dc * lHeight / lWidth );
+         dr = ( int ) ( ( float ) dc * nHeight / nWidth );
       if( tor == 0 )
          tor = dr;
       if( toc == 0 )
@@ -411,8 +411,7 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
       {
          while( y < ye )
          {
-            HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) wvw_win->hdc, x, y, dc, dr, 0,
-                                         lHeight, lWidth, -lHeight, &rc_dummy );
+            HB_VTBL( pPicture )->Render( HB_THIS_( pPicture ) wvw_win->hdc, x, y, dc, dr, 0, ( OLE_YPOS_HIMETRIC ) nHeight, nWidth, -nHeight, &rc_dummy );
             y += dr;
          }
          y  = r;
@@ -450,7 +449,7 @@ static IPicture * s_FindPictureHandle( PWVW_GLO wvw, const char * szFileName, in
             *piWidth  = pph->iWidth;
             *piHeight = pph->iHeight;
          }
-         return pph->iPicture;
+         return pph->pPicture;
       }
 
       pph = pph->pNext;
@@ -459,12 +458,12 @@ static IPicture * s_FindPictureHandle( PWVW_GLO wvw, const char * szFileName, in
    return NULL;
 }
 
-static void s_AddPictureHandle( PWVW_GLO wvw, const char * szFileName, IPicture * iPicture, int iWidth, int iHeight )
+static void s_AddPictureHandle( PWVW_GLO wvw, const char * szFileName, IPicture * pPicture, int iWidth, int iHeight )
 {
    WVW_IPIC * pphNew = ( WVW_IPIC * ) hb_xgrabz( sizeof( WVW_IPIC ) );
 
    hb_strncpy( pphNew->szFilename, szFileName, sizeof( pphNew->szFilename ) - 1 );
-   pphNew->iPicture = iPicture;
+   pphNew->pPicture = pPicture;
    pphNew->iWidth   = iWidth;
    pphNew->iHeight  = iHeight;
    pphNew->pNext    = wvw->a.pphPictureList;
@@ -475,7 +474,7 @@ static void s_AddPictureHandle( PWVW_GLO wvw, const char * szFileName, IPicture 
 static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char * resname, HB_UINT iresimage, int * piWidth, int * piHeight )
 {
    HBITMAP    hbmpx;
-   IPicture * iPicture = NULL;
+   IPicture * pPicture = NULL;
 
    int iWidth  = *piWidth;
    int iHeight = *piHeight;
@@ -515,16 +514,16 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
 
    if( hbmpx )
    {
-      iPicture = s_FindPictureHandle( wvw, resname, &iWidth, &iHeight );
+      pPicture = s_FindPictureHandle( wvw, resname, &iWidth, &iHeight );
 
-      if( iPicture )
+      if( pPicture )
       {
          OLE_XSIZE_HIMETRIC nWidth;
          OLE_YSIZE_HIMETRIC nHeight;
 
-         if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) & nWidth ) != S_OK )
+         if( HB_VTBL( pPicture )->get_Width( HB_THIS_( pPicture ) & nWidth ) != S_OK )
             nWidth = 0;
-         if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) & nHeight ) != S_OK )
+         if( HB_VTBL( pPicture )->get_Height( HB_THIS_( pPicture ) & nHeight ) != S_OK )
             nHeight = 0;
 
          *piWidth = ( int ) nWidth;
@@ -537,17 +536,17 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
          picd.cbSizeofstruct = sizeof( picd );
          picd.picType        = PICTYPE_BITMAP;
          picd.bmp.hbitmap    = hbmpx;
-         OleCreatePictureIndirect( &picd, HB_ID_REF( IID_IPicture ), TRUE, ( LPVOID * ) &iPicture );
-         s_AddPictureHandle( wvw, resname, iPicture, iWidth, iHeight );
+         OleCreatePictureIndirect( &picd, HB_ID_REF( IID_IPicture ), TRUE, ( LPVOID * ) &pPicture );
+         s_AddPictureHandle( wvw, resname, pPicture, iWidth, iHeight );
       }
    }
 
-   return iPicture;
+   return pPicture;
 }
 
 static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth, int * piHeight )
 {
-   IPicture * iPicture = NULL;
+   IPicture * pPicture = NULL;
 
    HB_FHANDLE fhnd = hb_fsOpen( filename, FO_READ | FO_SHARED );
 
@@ -571,23 +570,23 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
 
             if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
             {
-               OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &iPicture );
+               OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
                HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
             }
             else
-               iPicture = NULL;
+               pPicture = NULL;
 
             GlobalUnlock( hGlobal );
             GlobalFree( hGlobal );
 
-            if( iPicture )
+            if( pPicture )
             {
                OLE_XSIZE_HIMETRIC nWidth;
                OLE_YSIZE_HIMETRIC nHeight;
 
-               if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) & nWidth ) != S_OK )
+               if( HB_VTBL( pPicture )->get_Width( HB_THIS_( pPicture ) & nWidth ) != S_OK )
                   nWidth = 0;
-               if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) & nHeight ) != S_OK )
+               if( HB_VTBL( pPicture )->get_Height( HB_THIS_( pPicture ) & nHeight ) != S_OK )
                   nHeight = 0;
 
                *piWidth = ( int ) nWidth;
@@ -599,7 +598,7 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
       }
    }
 
-   return iPicture;
+   return pPicture;
 }
 
 /* wvw_SetPen( nPenStyle, nWidth, nColor ) */
@@ -1143,8 +1142,8 @@ HB_FUNC( WVW_DRAWIMAGE )
          {
             int iSlot = hb_parni( 6 ) - 1;
 
-            if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) )
-               fSuccess = hb_gt_wvw_GetIPictDimension( wvw->a.iPicture[ iSlot ], &iImgWidth, &iImgHeight );
+            if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.pPicture ) )
+               fSuccess = hb_gt_wvw_GetIPictDimension( wvw->a.pPicture[ iSlot ], &iImgWidth, &iImgHeight );
          }
          else
             fSuccess = hb_gt_wvw_GetImageDimension( hb_parcx( 6 ), &iImgWidth, &iImgHeight );
@@ -1194,8 +1193,8 @@ HB_FUNC( WVW_DRAWIMAGE )
       {
          int iSlot = hb_parni( 6 ) - 1;
 
-         if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) )
-            fResult = hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, wvw->a.iPicture[ iSlot ], fTransparent );
+         if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.pPicture ) )
+            fResult = hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, wvw->a.pPicture[ iSlot ], fTransparent );
          else
             fResult = HB_FALSE;
       }
@@ -1240,22 +1239,22 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
           usRight  = hb_parni( 5 );
 
       int        iImgWidth = 0, iImgHeight = 0;
-      IPicture * pPic;
+      IPicture * pPicture;
 
       if( hb_gt_wvw_GetMainCoordMode() )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       if( HB_ISNUM( 6 ) )
-         pPic = hb_gt_wvw_rr_LoadPictureFromResource( wvw, NULL, hb_parni( 6 ), &iImgWidth, &iImgHeight );
+         pPicture = hb_gt_wvw_rr_LoadPictureFromResource( wvw, NULL, hb_parni( 6 ), &iImgWidth, &iImgHeight );
       else
       {
-         pPic = hb_gt_wvw_rr_LoadPictureFromResource( wvw, hb_parcx( 6 ), 0, &iImgWidth, &iImgHeight );
+         pPicture = hb_gt_wvw_rr_LoadPictureFromResource( wvw, hb_parcx( 6 ), 0, &iImgWidth, &iImgHeight );
 
-         if( pPic == NULL )
-            pPic = hb_gt_wvw_rr_LoadPicture( hb_parcx( 6 ), &iImgWidth, &iImgHeight );
+         if( pPicture == NULL )
+            pPicture = hb_gt_wvw_rr_LoadPicture( hb_parcx( 6 ), &iImgWidth, &iImgHeight );
       }
 
-      if( pPic )
+      if( pPicture )
       {
          HB_BOOL fActBottom   = ! HB_ISNUM( 4 );
          HB_BOOL fActRight    = ! HB_ISNUM( 5 );
@@ -1288,7 +1287,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
 
          if( fActRight || fActBottom )
          {
-            if( ! hb_gt_wvw_GetIPictDimension( pPic, &iImgWidth, &iImgHeight ) )
+            if( ! hb_gt_wvw_GetIPictDimension( pPicture, &iImgWidth, &iImgHeight ) )
             {
                fActRight  = HB_FALSE;
                fActBottom = HB_FALSE;
@@ -1329,7 +1328,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
             }
          }
 
-         hb_retl( hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, pPic, fTransparent ) );
+         hb_retl( hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, pPicture, fTransparent ) );
       }
       else
          hb_retl( HB_FALSE );
@@ -2338,7 +2337,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       int        iTextHeight;
       LOGBRUSH   lb;
       HBRUSH     hBrush;
-      IPicture * iPicture;
+      IPicture * pPicture;
 
       HB_BOOL fImage  = HB_ISNUM( 7 ) || HB_ISCHAR( 7 );
       int     iFormat = hb_parni( 8 );
@@ -2453,11 +2452,11 @@ HB_FUNC( WVW_DRAWBUTTON )
          {
             int iSlot = hb_parni( 7 ) - 1;
 
-            if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) )
+            if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.pPicture ) )
             {
-               iPicture = wvw->a.iPicture[ iSlot ];
+               pPicture = wvw->a.pPicture[ iSlot ];
 
-               hb_gt_wvw_RenderPicture( wvw_win, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, iPicture, HB_FALSE );
+               hb_gt_wvw_RenderPicture( wvw_win, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, pPicture, HB_FALSE );
             }
          }
          else
@@ -2573,7 +2572,7 @@ HB_FUNC( WVW_DRAWPICTURE )
 
    int iSlot = hb_parni( 6 ) - 1;
 
-   if( wvw && wvw_win && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) && wvw->a.iPicture[ iSlot ] )
+   if( wvw && wvw_win && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.pPicture ) && wvw->a.pPicture[ iSlot ] )
    {
       int usTop    = hb_parni( 2 ),
           usLeft   = hb_parni( 3 ),
@@ -2613,7 +2612,7 @@ HB_FUNC( WVW_DRAWPICTURE )
       iBottom = xy.y - 1 + iOBottom;
       iRight  = xy.x - 1 + iORight;
 
-      hb_retl( hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, wvw->a.iPicture[ iSlot ], HB_FALSE ) );
+      hb_retl( hb_gt_wvw_RenderPicture( wvw_win, iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, wvw->a.pPicture[ iSlot ], HB_FALSE ) );
    }
    else
       hb_retl( HB_FALSE );
@@ -2748,7 +2747,7 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
 
       iHeight = iBottom - iTop + 1;
 
-      if( hb_parl( 8 ) /* bDepressed */ )
+      if( hb_parl( 8 ) /* fDepressed */ )
          hb_gt_wvw_DrawBoxRecessed( wvw_win, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, HB_FALSE );
       else
          hb_gt_wvw_DrawBoxRaised( wvw_win, iTop + 1, iLeft + 1, iBottom - 2, iRight - 2, HB_FALSE );
@@ -3106,7 +3105,7 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
       iBottom = xy.y - 1 + hb_parvni( 6, 3 );
       iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-      if( hb_parl( 11 ) /* bVertical */ )
+      if( hb_parl( 11 ) /* fVertical */ )
       {
          if( iDirection == 0 )
          {

@@ -65,10 +65,8 @@ HB_FUNC( WVW_SETPOPUPMENU )
       HMENU hPopup = wvw_win->hPopup;
 
       wvw_win->hPopup = ( HMENU ) HB_PARHANDLE( 2 );
-      /* if( hPopup ) */
-      {
-         HB_RETHANDLE( hPopup );
-      }
+
+      HB_RETHANDLE( hPopup );
    }
    else
       HB_RETHANDLE( NULL );
@@ -105,7 +103,7 @@ HB_FUNC( WVW_APPENDMENU )
 
       szCaption = HB_PARSTR( 4, &hCaption, &nLen );
 
-      if( nLen > 0 && nLen < 256 )
+      if( nLen > 0 && nLen < HB_SIZEOFARRAY( ucBuf ) )
       {
          HB_SIZE i;
 
@@ -183,19 +181,19 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
    {
       HBITMAP hBitmapUnchecked = NULL;
       HBITMAP hBitmapChecked   = NULL;
-      char    szResname[ HB_PATH_MAX + 1 ];
+      char    szResName[ HB_PATH_MAX + 1 ];
       int     iWidth, iHeight;
 
       if( HB_ISNUM( 4 ) )
       {
-         hb_snprintf( szResname, sizeof( szResname ), "?%u", hb_parni( 4 ) );
+         hb_snprintf( szResName, sizeof( szResName ), "?%u", hb_parni( 4 ) );
 
-         hBitmapUnchecked = hb_gt_wvw_FindBitmapHandle( szResname, &iWidth, &iHeight );
+         hBitmapUnchecked = hb_gt_wvw_FindBitmapHandle( szResName, &iWidth, &iHeight );
 
          if( ! hBitmapUnchecked )
          {
             hBitmapUnchecked = ( HBITMAP ) LoadImage( wvw->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 4 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-            hb_gt_wvw_AddBitmapHandle( szResname, hBitmapUnchecked, iWidth, iHeight );
+            hb_gt_wvw_AddBitmapHandle( szResName, hBitmapUnchecked, iWidth, iHeight );
          }
       }
       else if( HB_ISCHAR( 4 ) )
@@ -213,14 +211,14 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
       if( HB_ISNUM( 5 ) )
       {
-         hb_snprintf( szResname, sizeof( szResname ), "?%u", hb_parni( 5 ) );
+         hb_snprintf( szResName, sizeof( szResName ), "?%u", hb_parni( 5 ) );
 
-         hBitmapChecked = hb_gt_wvw_FindBitmapHandle( szResname, &iWidth, &iHeight );
+         hBitmapChecked = hb_gt_wvw_FindBitmapHandle( szResName, &iWidth, &iHeight );
 
          if( ! hBitmapChecked )
          {
             hBitmapChecked = ( HBITMAP ) LoadImage( wvw->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) hb_parni( 5 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
-            hb_gt_wvw_AddBitmapHandle( szResname, hBitmapChecked, iWidth, iHeight );
+            hb_gt_wvw_AddBitmapHandle( szResName, hBitmapChecked, iWidth, iHeight );
          }
       }
       else if( HB_ISCHAR( 5 ) )
@@ -319,7 +317,7 @@ HB_FUNC( WVW_NOSYSMENU )
          DeleteMenu( hMenu, SC_MOVE, MF_BYCOMMAND );
          DeleteMenu( hMenu, SC_RESTORE, MF_BYCOMMAND );
          DeleteMenu( hMenu, SC_NEXTWINDOW, MF_BYCOMMAND );
-         if( hb_parl( 2 ) /* lRemoveClose */ )
+         if( hb_parl( 2 ) /* fRemoveClose */ )
          {
             DeleteMenu( hMenu, SC_CLOSE, MF_BYCOMMAND );
             DeleteMenu( hMenu, 0, MF_BYPOSITION );
@@ -331,7 +329,6 @@ HB_FUNC( WVW_NOSYSMENU )
 
 /* wvw_GetSystemMenu( [nWinNum], lReset )
  * returns the System Menu of a window
- * if lRemoveClose is .T., also removes the 'Close' command and 'X' button
  */
 HB_FUNC( WVW_GETSYSTEMMENU )
 {

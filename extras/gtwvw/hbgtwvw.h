@@ -243,7 +243,7 @@ typedef struct _WVW_BMP
 typedef struct _WVW_IPIC
 {
    char       szFilename[ HB_PATH_MAX + 1 ];
-   IPicture * iPicture;
+   IPicture * pPicture;
    int        iWidth, iHeight;
    struct _WVW_IPIC * pNext;
 } WVW_IPIC;
@@ -450,7 +450,7 @@ typedef struct
       HBRUSH wvwWhiteBrush;                     /* Wvw specific White colored brush */
       HBRUSH OriginalBrush;                     /* Handle da Brush original do Device Context */
 
-      IPicture * iPicture[ 20 ];                /* Array to hold the Picture Streams to avoid recurring loading and unloading */
+      IPicture * pPicture[ 20 ];                /* Array to hold the Picture Streams to avoid recurring loading and unloading */
       HFONT      hUserFonts[ 20 ];              /* User defined font handles */
       HPEN       hUserPens[ 20 ];               /* User defined pens */
 
@@ -578,7 +578,7 @@ extern int        hb_gt_wvw_SetCurWindow( int nWin );
 extern HBITMAP    hb_gt_wvw_FindUserBitmapHandle( const char * szFileName, int * piWidth, int * piHeight );
 extern void       hb_gt_wvw_AddUserBitmapHandle( const char * szFileName, HBITMAP hBitmap, int iWidth, int iHeight );
 
-extern HB_EXPORT HB_BOOL       hb_gt_wvw_DestroyPicture( IPicture * iPicture );
+extern HB_EXPORT HB_BOOL       hb_gt_wvw_DestroyPicture( IPicture * pPicture );
 extern HB_EXPORT BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 extern HB_EXPORT BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 

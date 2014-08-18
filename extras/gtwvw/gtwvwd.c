@@ -315,11 +315,11 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSELF_RESIZE( pGT, s_wvw->pWin[ 0 ]->ROWS, s_wvw->pWin[ 0 ]->COLS );
 }
 
-HB_BOOL hb_gt_wvw_DestroyPicture( IPicture * iPicture )
+HB_BOOL hb_gt_wvw_DestroyPicture( IPicture * pPicture )
 {
-   if( iPicture )
+   if( pPicture )
    {
-      HB_VTBL( iPicture )->Release( HB_THIS( iPicture ) );
+      HB_VTBL( pPicture )->Release( HB_THIS( pPicture ) );
       return HB_TRUE;
    }
    else
@@ -432,10 +432,10 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
 
    UnregisterClass( s_wvw->szAppName, s_wvw->hInstance );
 
-   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_wvw->a.iPicture ); i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_wvw->a.pPicture ); i++ )
    {
-      if( s_wvw->a.iPicture[ i ] )
-         hb_gt_wvw_DestroyPicture( s_wvw->a.iPicture[ i ] );
+      if( s_wvw->a.pPicture[ i ] )
+         hb_gt_wvw_DestroyPicture( s_wvw->a.pPicture[ i ] );
    }
 
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_wvw->a.hUserFonts ); i++ )
@@ -465,7 +465,7 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
    while( s_wvw->a.pphPictureList )
    {
       WVW_IPIC * pph = s_wvw->a.pphPictureList->pNext;
-      hb_gt_wvw_DestroyPicture( s_wvw->a.pphPictureList->iPicture );
+      hb_gt_wvw_DestroyPicture( s_wvw->a.pphPictureList->pPicture );
 
       hb_xfree( s_wvw->a.pphPictureList );
       s_wvw->a.pphPictureList = pph;
@@ -531,14 +531,14 @@ static void hb_gt_wvw_SetCursorStyle( PHB_GT pGT, int iStyle )
 {
    HB_BOOL  fCursorOn = HB_TRUE;
    PWVW_WIN wvw_win;
-   int      usFullSize;
+   int      iFullSize;
 
    HB_SYMBOL_UNUSED( pGT );
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_SetCursorStyle(%i)", iStyle ) );
 
-   wvw_win    = s_wvw->pWin[ s_wvw->iNumWindows - 1 ];
-   usFullSize = s_wvw->fVertCaret ? wvw_win->PTEXTSIZE.x : wvw_win->PTEXTSIZE.y;
+   wvw_win   = s_wvw->pWin[ s_wvw->iNumWindows - 1 ];
+   iFullSize = s_wvw->fVertCaret ? wvw_win->PTEXTSIZE.x : wvw_win->PTEXTSIZE.y;
 
    s_wvw->iCursorStyle = iStyle;
 
@@ -549,13 +549,13 @@ static void hb_gt_wvw_SetCursorStyle( PHB_GT pGT, int iStyle )
          fCursorOn = HB_FALSE;
          break;
       case SC_INSERT:
-         wvw_win->CaretSize = usFullSize / 2;
+         wvw_win->CaretSize = iFullSize / 2;
          break;
       case SC_SPECIAL1:
-         wvw_win->CaretSize = usFullSize;
+         wvw_win->CaretSize = iFullSize;
          break;
       case SC_SPECIAL2:
-         wvw_win->CaretSize = -( usFullSize / 2 );
+         wvw_win->CaretSize = -( iFullSize / 2 );
          break;
       case SC_NORMAL:
       default:
@@ -1325,136 +1325,142 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
  *     - Red is iTop, Green iLeft and Blue is iBottom for MAKECOLOR
  */
 
-#define SetGFXContext()  \
-   hPen      = CreatePen( PS_SOLID, 1, color ); \
-   hOldPen   = ( HPEN ) SelectObject( hdc, hPen ); \
-   hBrush    = CreateSolidBrush( color ); \
-   hOldBrush = ( HBRUSH ) SelectObject( hdc, hBrush ); \
-   fOut      = HB_TRUE
+#define SetGFXContext( c ) \
+   do { \
+      COLORREF color = RGB( HB_ULBYTE( c ), HB_HIBYTE( c ), HB_LOBYTE( c ) ); \
+      hdc       = GetDC( wvw_win->hWnd ); \
+      hPen      = CreatePen( PS_SOLID, 1, color ); \
+      hOldPen   = ( HPEN ) SelectObject( hdc, hPen ); \
+      hBrush    = CreateSolidBrush( color ); \
+      hOldBrush = ( HBRUSH ) SelectObject( hdc, hBrush ); \
+   } while( 0 )
+
+#define ClearGFXContext() \
+   do { \
+      SelectObject( hdc, hOldPen ); \
+      SelectObject( hdc, hOldBrush ); \
+      DeleteObject( hBrush ); \
+      DeleteObject( hPen ); \
+      ReleaseDC( wvw_win->hWnd, hdc ); \
+   } while( 0 )
 
 /* WARNING: assume working on current window
    NOTES: in MainCoord Mode current window is always the Main Window */
 static int hb_gt_wvw_gfxPrimitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
-   COLORREF color;
-   HPEN     hPen    = NULL, hOldPen = NULL;
-   HBRUSH   hBrush  = NULL, hOldBrush = NULL;
-   HB_BOOL  fOut    = HB_FALSE;
-   int      iRet    = 0;
-   PWVW_WIN wvw_win = s_wvw->pWin[ s_wvw->iCurWindow ];
-
-   HDC hdc = GetDC( wvw_win->hWnd );
+   PWVW_WIN wvw_win = hb_gt_wvw_win( s_wvw->iCurWindow );
+   HDC      hdc;
+   HPEN     hPen, hOldPen;
+   HBRUSH   hBrush, hOldBrush;
+   RECT     r;
+   int      iRet = 0;
 
    HB_SYMBOL_UNUSED( pGT );
 
-   switch( iType )
+   if( wvw_win && wvw_win->hWnd )
    {
-      case HB_GFX_ACQUIRESCREEN:
-      case HB_GFX_RELEASESCREEN:
-         ReleaseDC( wvw_win->hWnd, hdc );
-         return 1;
-      case HB_GFX_MAKECOLOR:
-         ReleaseDC( wvw_win->hWnd, hdc );
-         return ( int ) ( ( iTop << 16 ) | ( iLeft << 8 ) | iBottom );
-      case HB_GFX_PUTPIXEL:
-         color = RGB( iBottom >> 16, ( iBottom & 0xFF00 ) >> 8, iBottom & 0xFF );
-         SetGFXContext();
-
-         MoveToEx( hdc, iLeft, iTop, NULL );
-         LineTo( hdc, iLeft, iTop );
-
-         iRet = 1;
-         break;
-      case HB_GFX_LINE:
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         MoveToEx( hdc, iLeft, iTop, NULL );
-         LineTo( hdc, iRight, iBottom );
-
-         iRet = 1;
-         break;
-      case HB_GFX_RECT:
+      switch( iType )
       {
-         RECT r;
+         case HB_GFX_ACQUIRESCREEN:
+         case HB_GFX_RELEASESCREEN:
+            iRet = 1;
+            break;
 
-         r.left   = iLeft;
-         r.top    = iTop;
-         r.right  = iRight;
-         r.bottom = iBottom;
+         case HB_GFX_MAKECOLOR:
+            iRet = ( iTop << 16 ) | ( iLeft << 8 ) | iBottom;
+            break;
 
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
+         case HB_GFX_PUTPIXEL:
+            SetGFXContext( iBottom );
 
-         FrameRect( hdc, &r, hBrush );
+            iRet = ( MoveToEx( hdc, iLeft, iTop, NULL ) &&
+                     LineTo( hdc, iLeft, iTop ) ) ? 1 : 0;
 
-         iRet = 1;
-         break;
+            ClearGFXContext();
+            break;
+
+         case HB_GFX_LINE:
+            SetGFXContext( iColor );
+
+            iRet = ( MoveToEx( hdc, iLeft, iTop, NULL ) &&
+                     LineTo( hdc, iRight, iBottom ) ) ? 1 : 0;
+
+            ClearGFXContext();
+            break;
+
+         case HB_GFX_RECT:
+            r.left   = HB_MIN( iLeft, iRight );
+            r.top    = HB_MIN( iTop, iBottom );
+            r.right  = HB_MAX( iLeft, iRight ) + 1;
+            r.bottom = HB_MAX( iTop, iBottom ) + 1;
+
+            SetGFXContext( iColor );
+
+            iRet = FrameRect( hdc, &r, hBrush ) ? 1 : 0;
+
+            ClearGFXContext();
+            break;
+
+         case HB_GFX_FILLEDRECT:
+            SetGFXContext( iColor );
+
+            r.left   = HB_MIN( iLeft, iRight );
+            r.top    = HB_MIN( iTop, iBottom );
+            r.right  = HB_MAX( iLeft, iRight ) + 1;
+            r.bottom = HB_MAX( iTop, iBottom ) + 1;
+
+            iRet = Rectangle( hdc, r.left, r.top, r.right, r.bottom ) ? 1 : 0;
+
+            ClearGFXContext();
+            break;
+
+         case HB_GFX_CIRCLE:
+            SetGFXContext( iRight );
+
+            iRet = Arc( hdc, iLeft - iBottom, iTop - iBottom, iLeft + iBottom + 1, iTop + iBottom + 1, 0, 0, 0, 0 ) ? 1 : 0;
+
+            ClearGFXContext();
+            break;
+
+         case HB_GFX_FILLEDCIRCLE:
+            SetGFXContext( iRight );
+
+            iRet = Ellipse( hdc, iLeft - iBottom, iTop - iBottom, iLeft + iBottom + 1, iTop + iBottom + 1 ) ? 1 : 0;
+
+            ClearGFXContext();
+            break;
+
+         case HB_GFX_ELLIPSE:
+            SetGFXContext( iColor );
+
+            iRet = Arc( hdc, iLeft - iRight, iTop - iBottom, iLeft + iRight + 1, iTop + iBottom + 1, 0, 0, 0, 0 ) ? 1 : 0;
+
+            ClearGFXContext();
+            break;
+
+         case HB_GFX_FILLEDELLIPSE:
+            SetGFXContext( iColor );
+
+            iRet = Ellipse( hdc, iLeft - iRight, iTop - iBottom, iLeft + iRight, iTop + iBottom ) ? 1 : 0;
+
+            ClearGFXContext();
+            break;
+
+         case HB_GFX_FLOODFILL:
+            SetGFXContext( iBottom );
+
+            iRet = FloodFill( hdc, iLeft, iTop, iColor ) ? 1 : 0;
+
+            ClearGFXContext();
+            break;
       }
-      case HB_GFX_FILLEDRECT:
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         Rectangle( hdc, iLeft, iTop, iRight, iBottom );
-
-         iRet = 1;
-         break;
-      case HB_GFX_CIRCLE:
-         color = RGB( iRight >> 16, ( iRight & 0xFF00 ) >> 8, iRight & 0xFF );
-         SetGFXContext();
-
-         Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
-
-         iRet = 1;
-         break;
-      case HB_GFX_FILLEDCIRCLE:
-         color = RGB( iRight >> 16, ( iRight & 0xFF00 ) >> 8, iRight & 0xFF );
-         SetGFXContext();
-
-         Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 );
-
-         iRet = 1;
-         break;
-      case HB_GFX_ELLIPSE:
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
-
-         iRet = 1;
-         break;
-      case HB_GFX_FILLEDELLIPSE:
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 );
-
-         iRet = 1;
-         break;
-      case HB_GFX_FLOODFILL:
-         color = RGB( iBottom >> 16, ( iBottom & 0xFF00 ) >> 8, iBottom & 0xFF );
-         SetGFXContext();
-
-         FloodFill( hdc, iLeft, iTop, iColor );
-
-         iRet = 1;
-         break;
    }
-
-   if( fOut )
-   {
-      SelectObject( hdc, hOldPen );
-      SelectObject( hdc, hOldBrush );
-      DeleteObject( hBrush );
-      DeleteObject( hPen );
-   }
-
-   ReleaseDC( wvw_win->hWnd, hdc );
 
    return iRet;
 }
 
-void gt_gfxText( int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
+#if 0
+static void gt_gfxText( int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
 {
    HB_SYMBOL_UNUSED( iTop );
    HB_SYMBOL_UNUSED( iLeft );
@@ -1463,6 +1469,7 @@ void gt_gfxText( int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iW
    HB_SYMBOL_UNUSED( iSize );
    HB_SYMBOL_UNUSED( iWidth );
 }
+#endif
 
 /* --- Graphics API end --- */
 
@@ -2691,7 +2698,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             {
                HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
                HB_BOOL bShift    = GetKeyState( VK_SHIFT ) & 0x8000;
-               int     iScanCode = HIWORD( lParam ) & 0xFF;
+               int     iScanCode = HB_LOBYTE( HIWORD( lParam ) );
 
                if( bCtrl && iScanCode == 76 )       /* CTRL_VK_NUMPAD5 ) */
                   hb_gt_wvw_AddCharToInputQueue( KP_CTRL_5 );
@@ -2746,7 +2753,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
       case WM_CHAR:
       {
          HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
-         int     iScanCode = HIWORD( lParam ) & 0xFF;
+         int     iScanCode = HB_LOBYTE( HIWORD( lParam ) );
          int     c         = ( int ) wParam;
          HWND    hMouseCapturer;
 
@@ -2809,8 +2816,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
          if( ! wvw_win->fIgnoreWM_SYSCHAR )
          {
-            int c, iScanCode = HIWORD( lParam ) & 0xFF;
-            switch( iScanCode )
+            int c;
+            switch( HB_LOBYTE( HIWORD( lParam ) ) )
             {
                case  2:
                   c = K_ALT_1;
@@ -5326,22 +5333,19 @@ HICON hb_gt_wvw_SetWindowIconFromFile( PWVW_WIN wvw_win, LPCTSTR icon )
    return hIcon;
 }
 
-HB_BOOL hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * piWidth, int * piHeight )
+HB_BOOL hb_gt_wvw_GetIPictDimension( IPicture * pPicture, int * piWidth, int * piHeight )
 {
-   OLE_HANDLE oHtemp;
+   HBITMAP hBitmap;
 
-   if( HB_VTBL( pPic )->get_Handle( HB_THIS_( pPic ) & oHtemp ) == S_OK )
+   if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK )
    {
-      BITMAP bmTemp;
-      GetObject( ( HBITMAP ) ( HB_PTRDIFF ) oHtemp, sizeof( bmTemp ), ( LPVOID ) &bmTemp );
-      *piWidth  = bmTemp.bmWidth;
-      *piHeight = bmTemp.bmHeight;
+      BITMAP bm;
+      GetObject( hBitmap, sizeof( bm ), ( LPVOID ) &bm );
+      *piWidth  = bm.bmWidth;
+      *piHeight = bm.bmHeight;
    }
    else
-   {
-      *piWidth  = 0;
-      *piHeight = 0;
-   }
+      *piWidth = *piHeight = 0;
 
    return HB_TRUE;
 }
@@ -5351,24 +5355,21 @@ HB_BOOL hb_gt_wvw_GetImageDimension( const char * image, int * piWidth, int * pi
    HBITMAP hBitmap;
    HB_BOOL fResult = HB_TRUE;
 
-   *piWidth  = 0;
-   *piHeight = 0;
+   *piWidth = *piHeight = 0;
 
    hBitmap = hb_gt_wvw_FindUserBitmapHandle( image, piWidth, piHeight );
 
    if( ! hBitmap )
    {
-      IPicture * pPic;
+      IPicture * pPicture = hb_gt_wvw_LoadPicture( image );
 
-      *piWidth  = 0;
-      *piHeight = 0;
+      *piWidth = *piHeight = 0;
 
-      pPic = hb_gt_wvw_LoadPicture( image );
-      if( pPic )
+      if( pPicture )
       {
-         fResult = hb_gt_wvw_GetIPictDimension( pPic, piWidth, piHeight );
+         fResult = hb_gt_wvw_GetIPictDimension( pPicture, piWidth, piHeight );
 
-         hb_gt_wvw_DestroyPicture( pPic );
+         hb_gt_wvw_DestroyPicture( pPicture );
       }
       else
          fResult = HB_FALSE;
@@ -5379,7 +5380,7 @@ HB_BOOL hb_gt_wvw_GetImageDimension( const char * image, int * piWidth, int * pi
 
 IPicture * hb_gt_wvw_LoadPicture( const char * image )
 {
-   LPVOID iPicture = NULL;
+   IPicture * pPicture = NULL;
 
    LPTSTR lpFree;
    HANDLE hFile = CreateFile( HB_FSNAMECONV( image, &lpFree ), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
@@ -5404,7 +5405,7 @@ IPicture * hb_gt_wvw_LoadPicture( const char * image )
                IStream * iStream;
 
                if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
-                  OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
+                  OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
             }
             GlobalFree( hGlobal );
          }
@@ -5412,7 +5413,7 @@ IPicture * hb_gt_wvw_LoadPicture( const char * image )
       CloseHandle( hFile );
    }
 
-   return ( IPicture * ) iPicture;
+   return pPicture;
 }
 
 COLORREF hb_gt_wvw_GetColorData( int iIndex )

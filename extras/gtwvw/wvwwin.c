@@ -982,7 +982,7 @@ HB_FUNC( WVW_INVALIDATERECT )
 
 HB_FUNC( WVW_ISLBUTTONPRESSED )
 {
-   hb_retl( GetKeyState( VK_LBUTTON ) & 0x8000 );
+   hb_retl( ( GetKeyState( VK_LBUTTON ) & 0x8000 ) != 0 );
 }
 
 HB_FUNC( WVW_CLIENTTOSCREEN )

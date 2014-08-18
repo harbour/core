@@ -162,7 +162,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
       case WM_CHAR:
       {
          HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
-         int     iScanCode = HIWORD( lParam ) & 0xFF;
+         int     iScanCode = HB_LOBYTE( HIWORD( lParam ) );
          int     c         = ( int ) wParam;
 
          if( bCtrl && iScanCode == 28 )
@@ -198,7 +198,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 
       case WM_SYSCHAR:
       {
-         int c, iScanCode = HIWORD( lParam ) & 0xFF;
+         int c, iScanCode = HB_LOBYTE( HIWORD( lParam ) );
          switch( iScanCode )
          {
             case  2:

@@ -3981,11 +3981,11 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 #define SetGFXContext( c ) \
    do { \
-      COLORREF color = RGB( ( c ) >> 16, ( ( c ) & 0xFF00 ) >> 8, ( c ) & 0xFF ); \
+      COLORREF color = RGB( HB_ULBYTE( c ), HB_HIBYTE( c ), HB_LOBYTE( c ) ); \
       hdc       = GetDC( pWVT->hWnd ); \
       hPen      = CreatePen( PS_SOLID, 1, color ); \
       hOldPen   = ( HPEN ) SelectObject( hdc, hPen ); \
-      hBrush    = ( HBRUSH ) CreateSolidBrush( color ); \
+      hBrush    = CreateSolidBrush( color ); \
       hOldBrush = ( HBRUSH ) SelectObject( hdc, hBrush ); \
    } while( 0 )
 

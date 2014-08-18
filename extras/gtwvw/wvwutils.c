@@ -673,13 +673,13 @@ HB_FUNC( WVW_IMAGELIST_ADDMASKED )
 HB_FUNC( WVW_GETBITMAPSIZE )
 {
    PHB_ITEM aMetr = hb_itemArrayNew( 3 );
-   BITMAP   bitmap;
+   BITMAP   bm;
 
-   GetObject( ( HBITMAP ) HB_PARHANDLE( 1 ), sizeof( bitmap ), ( LPVOID ) &bitmap );
+   GetObject( ( HBITMAP ) HB_PARHANDLE( 1 ), sizeof( bm ), ( LPVOID ) &bm );
 
-   hb_arraySetNL( aMetr, 1, bitmap.bmWidth );
-   hb_arraySetNL( aMetr, 2, bitmap.bmHeight );
-   hb_arraySetNL( aMetr, 3, bitmap.bmBitsPixel );
+   hb_arraySetNL( aMetr, 1, bm.bmWidth );
+   hb_arraySetNL( aMetr, 2, bm.bmHeight );
+   hb_arraySetNI( aMetr, 3, bm.bmBitsPixel );
 
    hb_itemReturnRelease( aMetr );
 }
@@ -1142,17 +1142,17 @@ HB_FUNC( WVW_DRAWBITMAP )
    HDC     hDCmem   = CreateCompatibleDC( hDC );
    DWORD   dwraster = ( DWORD ) hb_parnintdef( 3, SRCCOPY );
    HBITMAP hBitmap  = ( HBITMAP ) HB_PARHANDLE( 2 );
-   BITMAP  bitmap;
+   BITMAP  bm;
    int     nWidthDest  = hb_parni( 6 );
    int     nHeightDest = hb_parni( 7 );
 
    SelectObject( hDCmem, hBitmap );
-   GetObject( hBitmap, sizeof( hBitmap ), ( LPVOID ) &bitmap );
-   if( nWidthDest && ( nWidthDest != bitmap.bmWidth || nHeightDest != bitmap.bmHeight ) )
+   GetObject( hBitmap, sizeof( bm ), ( LPVOID ) &bm );
+   if( nWidthDest && ( nWidthDest != bm.bmWidth || nHeightDest != bm.bmHeight ) )
       StretchBlt( hDC, hb_parni( 4 ), hb_parni( 5 ), nWidthDest, nHeightDest, hDCmem,
-                  0, 0, bitmap.bmWidth, bitmap.bmHeight, dwraster );
+                  0, 0, bm.bmWidth, bm.bmHeight, dwraster );
    else
-      BitBlt( hDC, hb_parni( 4 ), hb_parni( 5 ), bitmap.bmWidth, bitmap.bmHeight, hDCmem, 0, 0, dwraster );
+      BitBlt( hDC, hb_parni( 4 ), hb_parni( 5 ), bm.bmWidth, bm.bmHeight, hDCmem, 0, 0, dwraster );
 
    DeleteDC( hDCmem );
 }
@@ -1382,16 +1382,16 @@ HB_FUNC( WVW_LOADPICTURE )
    PWVW_GLO wvw = hb_gt_wvw();
 
    int        iSlot    = hb_parni( 1 ) - 1;
-   IPicture * iPicture = hb_gt_wvw_LoadPicture( hb_parcx( 2 ) );
+   IPicture * pPicture = hb_gt_wvw_LoadPicture( hb_parcx( 2 ) );
 
    HB_BOOL fResult = HB_FALSE;
 
-   if( wvw && iPicture && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.iPicture ) )
+   if( wvw && pPicture && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.pPicture ) )
    {
-      if( wvw->a.iPicture[ iSlot ] )
-         hb_gt_wvw_DestroyPicture( wvw->a.iPicture[ iSlot ] );
+      if( wvw->a.pPicture[ iSlot ] )
+         hb_gt_wvw_DestroyPicture( wvw->a.pPicture[ iSlot ] );
 
-      wvw->a.iPicture[ iSlot ] = iPicture;
+      wvw->a.pPicture[ iSlot ] = pPicture;
 
       fResult = HB_TRUE;
    }
