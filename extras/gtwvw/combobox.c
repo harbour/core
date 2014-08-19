@@ -242,29 +242,20 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
    return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
 }
 
-static int hb_gt_wvw_GetFontDialogUnits( HWND hWnd, HFONT f )
+static int hb_gt_wvw_GetFontDialogUnits( HWND hWnd, HFONT hFont )
 {
    const TCHAR tmp[] = TEXT( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" );
 
-   /* get the hdc to the main window */
-   HDC hDC = GetDC( hWnd );
-
-   /* with the current font attributes, select the font */
-   HFONT hFont    = f;  /* GetStockObject( ANSI_VAR_FONT ); */
-   HFONT hFontOld = ( HFONT ) SelectObject( hDC, &hFont );
-
    SIZE sz;
 
-   /* get its length */
-   GetTextExtentPoint32( hDC, tmp, HB_SIZEOFARRAY( tmp ), &sz );
+   HDC hDC = GetDC( hWnd );  /* get the DC to the window */
 
-   /* re-select the previous font & delete the hDC */
-   SelectObject( hDC, hFontOld );
-   DeleteObject( hFont );
+   SelectObject( hDC, hFont );  /* with the current font attributes, select the font */
+   GetTextExtentPoint32( hDC, tmp, HB_SIZEOFARRAY( tmp ), &sz );  /* get its length */
+
    ReleaseDC( hWnd, hDC );
 
-   /* calculate the average character width */
-   return sz.cx / HB_SIZEOFARRAY( tmp );
+   return sz.cx / HB_SIZEOFARRAY( tmp );  /* calculate the average character width */
 }
 
 /* wvw_cbCreate( [nWinNum], nTop, nLeft, nWidth, aText, bBlock, nListLines, ;
@@ -319,7 +310,6 @@ HB_FUNC( WVW_CBCREATE )
    {
       HWND hWnd;
 
-      HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
       POINT xy;
 
       int iOffTop, iOffLeft, iOffBottom, iOffRight;
@@ -440,7 +430,11 @@ HB_FUNC( WVW_CBCREATE )
          SendMessage( hWnd, CB_SETCURSEL, 0, 0 );
          SendMessage( hWnd, CB_SETEXTENDEDUI, ( WPARAM ) TRUE, 0 );
 
-         NewLongComboWidth = ( LongComboWidth - 2 ) * hb_gt_wvw_GetFontDialogUnits( wvw_win->hWnd, hFont );
+         {
+            HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
+            NewLongComboWidth = ( LongComboWidth - 2 ) * hb_gt_wvw_GetFontDialogUnits( wvw_win->hWnd, hFont );
+            DeleteObject( hFont );
+         }
          SendMessage( hWnd, CB_SETDROPPEDWIDTH, ( WPARAM ) NewLongComboWidth + 100 /* LongComboWidth + 100 */, 0 );
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, nKbdType );
