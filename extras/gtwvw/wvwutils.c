@@ -1014,7 +1014,7 @@ HB_FUNC( WVW_CREATEFONT )
       lf.lfQuality        = ( BYTE ) hb_parnidef( 9, DEFAULT_QUALITY );
       lf.lfPitchAndFamily = FF_DONTCARE;
       lf.lfHeight         = hb_parnldef( 2, wvw_top->fontHeight );
-      lf.lfWidth          = hb_parnldef( 3, wvw_top->fontWidth < 0 ? -wvw_top->fontWidth : wvw_top->fontWidth );
+      lf.lfWidth = hb_parnldef( 3, wvw_top->fontWidth < 0 ? -wvw_top->fontWidth : wvw_top->fontWidth );
 
       if( HB_ISCHAR( 1 ) )
       {
@@ -1429,7 +1429,7 @@ HB_FUNC( WVW_LOADFONT )
          lf.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
          lf.lfPitchAndFamily = FF_DONTCARE;
          lf.lfHeight         = hb_parnldef( 3, wvw_top->fontHeight );
-         lf.lfWidth          = hb_parnldef( 4, wvw_top->fontWidth < 0 ? -wvw_top->fontWidth : wvw_top->fontWidth );
+         lf.lfWidth = hb_parnldef( 4, wvw_top->fontWidth < 0 ? -wvw_top->fontWidth : wvw_top->fontWidth );
 
          if( HB_ISCHAR( 2 ) )
          {
@@ -1692,26 +1692,17 @@ HB_FUNC( WVW_FILLRECTANGLE )
          hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
-      iTop  = fTight ? xy.y + 2 : xy.y;
-      iLeft = fTight ? xy.x + 2 : xy.x;
+      iTop  = ( fTight ? xy.y + 2 : xy.y ) + iOffTop;
+      iLeft = ( fTight ? xy.x + 2 : xy.x ) + iOffLeft;
 
-      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
-
-      xy.y -= wvw_win->iLineSpacing;
-
-      iBottom = xy.y - 1;
-      iRight  = xy.x - 1;
-
-      /* Apply offSet */
-      iTop    += iOffTop;
-      iLeft   += iOffLeft;
-      iBottom += iOffBottom;
-      iRight  += iOffRight;
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      iBottom = xy.y - wvw_win->iLineSpacing - 1 + 1 + iOffBottom;
+      iRight  = xy.x - 1 + 1 + iOffRight;
 
       xyRect.left   = iLeft;
       xyRect.top    = iTop;
-      xyRect.right  = iRight + 1;
-      xyRect.bottom = iBottom + 1;
+      xyRect.right  = iRight;
+      xyRect.bottom = iBottom;
 
       memset( &lb, 0, sizeof( lb ) );
 

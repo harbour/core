@@ -229,11 +229,9 @@ HB_FUNC( WVW_XBCREATE )
 
       xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
 
-      xy.y -= wvw_win->iLineSpacing;
-
       if( iStyle == SBS_VERT )
       {
-         iBottom = xy.y - 1 + iOffBottom;
+         iBottom = xy.y - wvw_win->iLineSpacing - 1 + iOffBottom;
          iRight  = iLeft + wvw_win->PTEXTSIZE.y - 1 + iOffRight;
       }
       else

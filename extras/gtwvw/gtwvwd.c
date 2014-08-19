@@ -1835,8 +1835,8 @@ HB_BOOL hb_gt_wvw_ValidWindowSize( PWVW_WIN wvw_win, int iRows, int iCols, HFONT
       memset( &wi, 0, sizeof( wi ) );
       memset( &ci, 0, sizeof( ci ) );
 
-      maxWidth  = ( SHORT ) ( rcWorkArea.right - rcWorkArea.left + 1 );
-      maxHeight = ( SHORT ) ( rcWorkArea.bottom - rcWorkArea.top + 1 );
+      maxWidth  = rcWorkArea.right - rcWorkArea.left + 1;
+      maxHeight = rcWorkArea.bottom - rcWorkArea.top + 1;
 
       hdc      = GetDC( wvw_win->hWnd );
       hOldFont = ( HFONT ) SelectObject( hdc, hFont );
@@ -1895,7 +1895,7 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
    RECT     rcWorkArea;
    RECT     rcMainClientArea;
    int      n;
-   PWVW_WIN pMainWindow;
+   PWVW_WIN wvw_zer;
 
    memset( &tm, 0, sizeof( tm ) );
    memset( &wi, 0, sizeof( wi ) );
@@ -1904,7 +1904,7 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
    memset( &rcWorkArea, 0, sizeof( rcWorkArea ) );
    memset( &rcMainClientArea, 0, sizeof( rcMainClientArea ) );
 
-   pMainWindow = s_wvw->pWin[ 0 ];
+   wvw_zer = s_wvw->pWin[ 0 ];
 
    /* set the font and get it's size to determine the size of the client area
       for the required number of rows and columns */
@@ -1962,8 +1962,8 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
       GetWindowRect( hWnd, &wi );
       GetClientRect( hWnd, &ci );
 
-      diffWidth  = ( SHORT ) ( ( wi.right - wi.left ) - ci.right );
-      diffHeight = ( SHORT ) ( ( wi.bottom - wi.top ) - ci.bottom );
+      diffWidth  = ( wi.right - wi.left ) - ci.right;
+      diffHeight = ( wi.bottom - wi.top ) - ci.bottom;
       width     += diffWidth;
       height    += diffHeight;
 
@@ -2010,8 +2010,8 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
 
       /* Centre the window within the area of the MAIN WINDOW
          but only if wvw_win->CentreWindow == HB_TRUE */
-      GetWindowRect( ( *pMainWindow ).hWnd, &rcWorkArea );
-      GetClientRect( ( *pMainWindow ).hWnd, &rcMainClientArea );
+      GetWindowRect( wvw_zer->hWnd, &rcWorkArea );
+      GetClientRect( wvw_zer->hWnd, &rcMainClientArea );
 
       if( wvw_win->CentreWindow )
       {
@@ -2023,16 +2023,16 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
          if( wvw_win->HCentreWindow )
             wi.left = rcWorkArea.left + ( ( ( rcWorkArea.right - rcWorkArea.left ) - width ) / 2 );
          else
-            wi.left = rcWorkArea.left + ( wvw_win->iColOfs * ( *pMainWindow ).PTEXTSIZE.x );
+            wi.left = rcWorkArea.left + ( wvw_win->iColOfs * wvw_zer->PTEXTSIZE.x );
 
          if( wvw_win->VCentreWindow )
             wi.top = rcWorkArea.top + ( ( ( rcWorkArea.bottom - rcWorkArea.top ) - height ) / 2 );
          else
          {
-            wi.top  = rcWorkArea.top + ( wvw_win->iRowOfs * hb_gt_wvw_LineHeight( pMainWindow ) );
+            wi.top  = rcWorkArea.top + ( wvw_win->iRowOfs * hb_gt_wvw_LineHeight( wvw_zer ) );
             wi.top -= diffHeight;
             wi.top += ( rcWorkArea.bottom - rcWorkArea.top ) - rcMainClientArea.bottom;
-            wi.top += pMainWindow->iTBHeight;
+            wi.top += wvw_zer->iTBHeight;
             wi.top -= wvw_win->iTBHeight;
          }
       }
@@ -4675,14 +4675,17 @@ void hb_gt_wvw_FUNCEpilogue( void )
 
 void hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * piRow1, int * piCol1, int * piRow2, int * piCol2 )
 {
-   if( piRow1 )
-      *piRow1 -= hb_gt_wvw_RowOfs( wvw_win );
-   if( piCol1 )
-      *piCol1 -= hb_gt_wvw_ColOfs( wvw_win );
-   if( piRow2 )
-      *piRow2 -= hb_gt_wvw_RowOfs( wvw_win );
-   if( piCol2 )
-      *piCol2 -= hb_gt_wvw_ColOfs( wvw_win );
+   if( s_wvw && s_wvw->fMainCoordMode )
+   {
+      if( piRow1 )
+         *piRow1 -= hb_gt_wvw_RowOfs( wvw_win );
+      if( piCol1 )
+         *piCol1 -= hb_gt_wvw_ColOfs( wvw_win );
+      if( piRow2 )
+         *piRow2 -= hb_gt_wvw_RowOfs( wvw_win );
+      if( piCol2 )
+         *piCol2 -= hb_gt_wvw_ColOfs( wvw_win );
+   }
 }
 
 /* assigns a new value to s_wvw->iCurWindow
@@ -5546,7 +5549,7 @@ PWVW_WIN hb_gt_wvw_win_cur( void )
 
 HB_BOOL hb_gt_wvw_GetMainCoordMode( void )
 {
-   return s_wvw ? s_wvw->fMainCoordMode : HB_FALSE;
+   return s_wvw && s_wvw->fMainCoordMode;
 }
 
 TCHAR * hb_gt_wvw_GetAppName( void )
@@ -6427,11 +6430,8 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
-
-   xy.y -= wvw_win->iLineSpacing;
-
-   iBottom = xy.y - 1 + iOffBottom;
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+   iBottom = xy.y - wvw_win->iLineSpacing - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
 
    nCtrlId = hb_gt_wvw_LastControlId( wvw_win, WVW_CONTROL_PUSHBUTTON );
@@ -6687,4 +6687,47 @@ HB_FUNC( WVW_SIZE_READY )
 HB_FUNC( WVW_KEYBOARD )
 {
    hb_gt_wvw_AddCharToInputQueue( hb_parni( 1 ) );
+}
+
+void hb_gt_wvw_GetCoord( PWVW_WIN wvw_win, int iBase, int iOffs, int * piTop, int * piLeft, int * piBottom, int * piRight )
+{
+   int iTop    = hb_parni( iBase );
+   int iLeft   = hb_parni( iBase + 1 );
+   int iBottom = hb_parni( iBase + 2 );
+   int iRight  = hb_parni( iBase + 3 );
+
+   int iOffTop;
+   int iOffLeft;
+   int iOffBottom;
+   int iOffRight;
+
+   POINT xy;
+
+   if( s_wvw && s_wvw->fMainCoordMode )
+   {
+      iTop    -= wvw_win->iRowOfs;
+      iLeft   -= wvw_win->iColOfs;
+      iBottom -= wvw_win->iRowOfs;
+      iRight  -= wvw_win->iColOfs;
+   }
+
+   if( iOffs > 0 )
+   {
+      iOffTop    = hb_parvni( iOffs, 1 );
+      iOffLeft   = hb_parvni( iOffs, 2 );
+      iOffBottom = hb_parvni( iOffs, 3 );
+      iOffRight  = hb_parvni( iOffs, 4 );
+   }
+   else
+      iOffTop = iOffLeft = iOffBottom = iOffRight = 0;
+
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
+
+   *piTop  = xy.y - 1 + iOffTop;
+   *piLeft = xy.x - 1 + iOffLeft;
+
+   xy = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
+
+   *piBottom = xy.y - wvw_win->iLineSpacing + iOffBottom;
+   *piRight  = xy.x + iOffRight;
 }

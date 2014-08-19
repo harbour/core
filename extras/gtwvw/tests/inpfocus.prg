@@ -58,12 +58,10 @@ PROCEDURE Main()
    CreateToolbar( 0 )
    CreateStatusbar( 0 )
 
-   ch := Inkey( 0 )
-   DO WHILE ch != K_ESC
+   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
       IF ch == wvw_SetMenuKeyEvent( 0 )
          MenuAction( 0, wvw_GetLastMenuEvent( 0 ) )
       ENDIF
-      ch := Inkey( 0 )
    ENDDO
 
    wvw_MessageBox( 0, "Thanks for trying this program", "Goodbye", MB_OK )
@@ -81,9 +79,7 @@ STATIC FUNCTION CreateToolbar( nWinNum )
 
    wvw_tbDestroy( nWinNum )   // just in case
 
-   hWndTB := wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap )
-
-   IF hWndTB == 0
+   IF ( hWndTB := wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap ) ) == 0
       wvw_MessageBox( nWinNum, "FAILED to create toolbar", "Error", MB_OK + MB_ICONEXCLAMATION )
       RETURN .F.
    ENDIF
@@ -100,8 +96,7 @@ STATIC FUNCTION CreateStatusbar( nWinNum )
    LOCAL hWndSB
 
    wvw_sbDestroy( nWinNum )   // just in case
-   hWndSB := wvw_sbCreate( nWinNum )
-   IF hWndSB == 0
+   IF ( hWndSB := wvw_sbCreate( nWinNum ) ) == 0
       wvw_MessageBox( nWinNum, "FAILED to create statusbar", "Error", MB_OK + MB_ICONEXCLAMATION )
       RETURN .F.
    ENDIF
@@ -162,10 +157,8 @@ STATIC FUNCTION OpenNewWindow()
 
    // then echoing user input, until user press ESC
    SetCursor( SC_NORMAL )
-   ch := Inkey( 0 )
-   DO WHILE ch != K_ESC
+   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
       typing( ch )
-      ch := Inkey( 0 )
    ENDDO
 
    // close current window

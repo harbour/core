@@ -118,8 +118,7 @@ HB_FUNC( WVW_PGCREATE )
       iLeft = xy.x + iOffLeft;
 
       xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
-      xy.y   -= wvw_win->iLineSpacing;
-      iBottom = xy.y - 1 + iOffBottom;
+      iBottom = xy.y - wvw_win->iLineSpacing - 1 + iOffBottom;
       iRight  = xy.x - 1 + iOffRight;
 
       nCtrlId = hb_gt_wvw_LastControlId( wvw_win, WVW_CONTROL_PROGRESSBAR );

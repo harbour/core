@@ -557,6 +557,7 @@ extern int        hb_gt_wvw_GetMouseY( PWVW_WIN wvw_win );
 extern int        hb_gt_wvw_RowOfs( PWVW_WIN wvw_win );
 extern int        hb_gt_wvw_ColOfs( PWVW_WIN wvw_win );
 extern IPicture * hb_gt_wvw_LoadPicture( const char * szImage );
+extern void       hb_gt_wvw_GetCoord( PWVW_WIN wvw_win, int iBase, int iOffs, int * piTop, int * piLeft, int * piBottom, int * piRight );
 
 extern HB_BOOL    hb_gt_wvw_BufferedKey( int iKey );
 extern int        hb_gt_wvw_key_ansi_to_oem( int c );
