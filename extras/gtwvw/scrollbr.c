@@ -188,9 +188,10 @@ HB_FUNC( WVW_XBCREATE )
 
       HWND  hWnd;
       POINT xy;
-      int   iOffTop, iOffLeft, iOffBottom, iOffRight;
-      int   iStyle = hb_parnidef( 2, -1 );
-      int   nCtrlId;
+
+      int iOffTop, iOffLeft, iOffBottom, iOffRight;
+      int iStyle = hb_parnidef( 2, -1 );
+      int nCtrlId;
 
       RECT rXB, rOffXB;
 

@@ -322,12 +322,6 @@ HB_FUNC( WVW_CBCREATE )
           iRight  = iLeft + iWidth - 1;
 
       int iNumElement = HB_ISARRAY( 5 ) ? ( int ) hb_arrayLen( hb_param( 5, HB_IT_ARRAY ) ) : 0;
-      int iListLines  = hb_parnidef( 7, 3 );
-      int iCharHeight = hb_gt_wvw_LineHeight( wvw_win );
-
-      /* in the future combobox type might be selectable by 8th parameter */
-      int iStyle   = CBS_DROPDOWNLIST | WS_VSCROLL;
-      int nKbdType = hb_parnidef( 9, WVW_CB_KBD_STANDARD );
 
       RECT rXB, rOffXB;
 
@@ -344,7 +338,7 @@ HB_FUNC( WVW_CBCREATE )
 
       iOffTop    = hb_parvni( 10, 1 );
       iOffLeft   = hb_parvni( 10, 2 );
-      iOffBottom = iListLines;
+      iOffBottom = hb_parnidef( 7, 3 );  /* nListLines */
       iOffRight  = hb_parvni( 10, 4 );
 
       rXB.top    = iTop;
@@ -364,7 +358,7 @@ HB_FUNC( WVW_CBCREATE )
       iLeft = xy.x + iOffLeft;
 
       xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
-      iBottom = xy.y - wvw_win->iLineSpacing - 1 + ( iOffBottom * iCharHeight );
+      iBottom = xy.y - wvw_win->iLineSpacing - 1 + ( iOffBottom * hb_gt_wvw_LineHeight( wvw_win ) );
       iRight  = xy.x - 1 + iOffRight;
 
       nCtrlId = hb_gt_wvw_LastControlId( wvw_win, WVW_CONTROL_COMBOBOX );
@@ -379,7 +373,7 @@ HB_FUNC( WVW_CBCREATE )
          0,
          TEXT( "COMBOBOX" ),
          NULL,
-         WS_CHILD | WS_VISIBLE | ( DWORD ) iStyle,
+         WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | WS_VSCROLL,
          iLeft,
          iTop,
          iRight - iLeft + 1,
@@ -437,7 +431,8 @@ HB_FUNC( WVW_CBCREATE )
          }
          SendMessage( hWnd, CB_SETDROPPEDWIDTH, ( WPARAM ) NewLongComboWidth + 100 /* LongComboWidth + 100 */, 0 );
 
-         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, nKbdType );
+         hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ),
+                                     rXB, rOffXB, hb_parnidef( 9, WVW_CB_KBD_STANDARD ) );
 
          OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_CBProc );
 

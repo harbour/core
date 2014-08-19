@@ -505,9 +505,7 @@ HB_FUNC( WVW_EBCREATE )
           iBottom = hb_parni( 4 ),
           iRight  = hb_parni( 5 );
 
-      HINSTANCE hInstance;
-      HWND      hWnd;
-
+      HWND  hWnd;
       POINT xy;
 
       int iOffTop, iOffLeft, iOffBottom, iOffRight;
@@ -515,9 +513,8 @@ HB_FUNC( WVW_EBCREATE )
 
       int nEBType = hb_parl( 8 ) ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
 
-      DWORD dwStyle;
-      DWORD dwMoreStyle = ( DWORD ) hb_parnint( 9 );
-      int   iMaxChar    = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
+      DWORD dwStyle  = ( DWORD ) hb_parnint( 9 );
+      int   iMaxChar = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
 
       RECT rXB, rOffXB;
 
@@ -562,14 +559,12 @@ HB_FUNC( WVW_EBCREATE )
       else
          nCtrlId++;
 
-      dwStyle = WS_BORDER | WS_GROUP | WS_TABSTOP | dwMoreStyle;
+      dwStyle |= WS_BORDER | WS_GROUP | WS_TABSTOP;
 
       if( ( nEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE )
          dwStyle |= ES_AUTOVSCROLL | ES_MULTILINE | ES_WANTRETURN | WS_BORDER | WS_VSCROLL;
       else
          dwStyle |= ES_AUTOHSCROLL;
-
-      hb_winmainArgGet( &hInstance, NULL, NULL );
 
       hWnd = CreateWindowEx(
          0,
@@ -582,7 +577,7 @@ HB_FUNC( WVW_EBCREATE )
          iBottom - iTop + 1,
          wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
-         hInstance,
+         wvw->hInstance,
          NULL );
 
       if( hWnd )

@@ -82,9 +82,10 @@
 
 HB_FUNC( WVW_PGCREATE )
 {
+   PWVW_GLO wvw     = hb_gt_wvw();
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw_win )
+   if( wvw && wvw_win )
    {
       int iTop    = hb_parni( 2 ),
           iLeft   = hb_parni( 3 ),
@@ -96,16 +97,11 @@ HB_FUNC( WVW_PGCREATE )
       int iOffBottom = hb_parvni( 6, 3 );
       int iOffRight  = hb_parvni( 6, 4 );
 
-      HB_BOOL fBackColor = HB_ISNUM( 7 );
-      HB_BOOL fBarColor  = HB_ISNUM( 8 );
-      HB_BOOL fSmooth    = hb_parl( 9 );
-      HB_BOOL fVertical  = hb_parl( 10 );
+      HWND  hWnd;
+      POINT xy;
 
-      HINSTANCE hInstance;
-      HWND      hWnd;
-      POINT     xy;
-      int       iStyle = 0;
-      int       nCtrlId;
+      int iStyle = 0;
+      int nCtrlId;
 
       RECT rXB, rOffXB;
 
@@ -137,12 +133,10 @@ HB_FUNC( WVW_PGCREATE )
       else
          nCtrlId++;
 
-      if( fVertical )
-         iStyle |= PBS_VERTICAL;
-      if( fSmooth )
+      if( hb_parl( 9 ) /* fSmooth */ )
          iStyle |= PBS_SMOOTH;
-
-      hb_winmainArgGet( &hInstance, NULL, NULL );
+      if( hb_parl( 10 ) /* fVertical */ )
+         iStyle |= PBS_VERTICAL;
 
       hWnd = CreateWindowEx(
          0,
@@ -155,14 +149,14 @@ HB_FUNC( WVW_PGCREATE )
          iBottom - iTop + 1,
          wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
-         hInstance,
+         wvw->hInstance,
          NULL );
 
       if( hWnd )
       {
-         if( fBackColor )
+         if( HB_ISNUM( 7 ) )
             SendMessage( hWnd, PBM_SETBKCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 7 ) );
-         if( fBarColor )
+         if( HB_ISNUM( 8 ) )
             SendMessage( hWnd, PBM_SETBARCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 8 ) );
 
          SendMessage( hWnd, PBM_SETRANGE, 0, MAKELPARAM( 0, 100 ) );

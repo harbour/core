@@ -56,10 +56,9 @@ HB_FUNC( WVW_STCREATE )
 
    if( wvw && wvw_win )
    {
-      HINSTANCE hInstance;
-      HWND      hWnd;
+      HWND  hWnd;
+      POINT xy;
 
-      POINT   xy;
       int     iOffTop, iOffLeft, iOffBottom, iOffRight;
       HB_BOOL fBorder = hb_parl( 7 );
 
@@ -112,8 +111,6 @@ HB_FUNC( WVW_STCREATE )
       else
          nCtrlId++;
 
-      hb_winmainArgGet( &hInstance, NULL, NULL );
-
       hWnd = CreateWindowEx(
          fBorder ? WS_EX_CLIENTEDGE : 0,
          TEXT( "STATIC" ),
@@ -125,7 +122,7 @@ HB_FUNC( WVW_STCREATE )
          iBottom - iTop + 1,
          wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
-         hInstance,
+         wvw->hInstance,
          NULL );
 
       if( hWnd )
