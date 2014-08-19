@@ -444,7 +444,7 @@ HB_FUNC( WVW_UNREACHEDBR )
 
          GetClientRect( wvw_win->hWnd, &ci );
 
-         rows = ci.bottom - xy.y - wvw_win->usSBHeight;
+         rows = ci.bottom - xy.y - wvw_win->iSBHeight;
          cols = ci.right - xy.x;
       }
    }

@@ -145,7 +145,7 @@ static void hb_gt_wvw_TBinitSize( PWVW_WIN wvw_win, HWND hWndTB )
    memset( &rTB, 0, sizeof( rTB ) );
 
    if( GetClientRect( hWndTB, &rTB ) )
-      wvw_win->usTBHeight = rTB.bottom + 2;
+      wvw_win->iTBHeight = rTB.bottom + 2;
 }
 
 static POINT hb_gt_wvw_TBGetColRowFromXY( PWVW_WIN wvw_win, int x, int y )
@@ -572,7 +572,7 @@ HB_FUNC( WVW_TBADDBUTTON )
          return;
       }
 
-      iOldHeight = wvw_win->usTBHeight;
+      iOldHeight = wvw_win->iTBHeight;
 
       if( ! hb_gt_wvw_AddTBButton( hWnd, szBitmap, uiBitmap, szLabel, iCommand, iBitmapType, fMap3Dcolors, wvw_win, fDropdown ) )
       {
@@ -599,7 +599,7 @@ HB_FUNC( WVW_TBADDBUTTON )
 
       hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
-      if( wvw_win->usTBHeight != iOldHeight )
+      if( wvw_win->iTBHeight != iOldHeight )
          hb_gt_wvw_ResetWindow( wvw_win );
 
       hb_retl( HB_TRUE );
@@ -641,13 +641,13 @@ HB_FUNC( WVW_TBDELBUTTON )
 
       if( hWnd && iButton >= 0 )
       {
-         int iOldHeight = wvw_win->usTBHeight;
+         int iOldHeight = wvw_win->iTBHeight;
 
          if( SendMessage( hWnd, TB_DELETEBUTTON, ( WPARAM ) iButton, 0 ) )
          {
             hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
-            if( wvw_win->usTBHeight != iOldHeight )
+            if( wvw_win->iTBHeight != iOldHeight )
                hb_gt_wvw_ResetWindow( wvw_win );
 
             fResult = HB_TRUE;
@@ -709,13 +709,13 @@ HB_FUNC( WVW_TBENABLEBUTTON )
          int iCommand = hb_gt_wvw_IndexToCommand( hWnd, iButton );
          if( iCommand >= 0 )
          {
-            int iOldHeight = wvw_win->usTBHeight;
+            int iOldHeight = wvw_win->iTBHeight;
 
             if( SendMessage( hWnd, TB_ENABLEBUTTON, ( WPARAM ) iCommand, ( LPARAM ) MAKELONG( ( BOOL ) hb_parldef( 3, HB_TRUE ) /* fEnable */, 0 ) ) )
             {
                hb_gt_wvw_TBinitSize( wvw_win, hWnd );
 
-               if( wvw_win->usTBHeight != iOldHeight )
+               if( wvw_win->iTBHeight != iOldHeight )
                   hb_gt_wvw_ResetWindow( wvw_win );
 
                fResult = HB_TRUE;
@@ -737,8 +737,8 @@ HB_FUNC( WVW_TBDESTROY )
    if( wvw_win && wvw_win->hToolBar )
    {
       DestroyWindow( wvw_win->hToolBar );
-      wvw_win->hToolBar   = NULL;
-      wvw_win->usTBHeight = 0;
+      wvw_win->hToolBar  = NULL;
+      wvw_win->iTBHeight = 0;
 
       hb_gt_wvw_ResetWindow( wvw_win );
    }
@@ -795,7 +795,7 @@ HB_FUNC( WVW_TOOLBARADDBUTTONS )
          void **    hStr = ( void ** ) hb_xgrab( iButtons * sizeof( void * ) );
 
          int nCount;
-         int iOldHeight = wvw_win->usTBHeight;
+         int iOldHeight = wvw_win->iTBHeight;
 
          SetWindowLong( hWndCtrl, GWL_STYLE, GetWindowLong( hWndCtrl, GWL_STYLE ) | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT );
          SendMessage( hWndCtrl, TB_BUTTONSTRUCTSIZE, sizeof( TBBUTTON ), 0 );
@@ -816,7 +816,7 @@ HB_FUNC( WVW_TOOLBARADDBUTTONS )
 
          hb_gt_wvw_TBinitSize( wvw_win, hWndCtrl );
 
-         if( wvw_win->usTBHeight != iOldHeight )
+         if( wvw_win->iTBHeight != iOldHeight )
             hb_gt_wvw_ResetWindow( wvw_win );
 
          hb_xfree( tb );

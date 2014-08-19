@@ -470,7 +470,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
  *
  *
  * lMultiline: .F. :: single line editbox (default)
- *            .T. :: multi line editbox
+ *             .T. :: multi line editbox
  * mapped internally into two types of editbox:
  *         WVW_EB_SINGLELINE (1): single line editbox
  *         WVW_EB_MULTILINE (2): multi line editbox

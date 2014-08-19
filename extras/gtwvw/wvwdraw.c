@@ -806,7 +806,7 @@ HB_FUNC( WVW_DRAWBOXGET_XP )  /* Not in WVT */
       hb_retl( HB_FALSE );
 }
 
-/* wvw_DrawBoxRaised( nWinNum, nTop, nLeft, nBottom, nRight, lTight/aOffset) */
+/* wvw_DrawBoxRaised( nWinNum, nTop, nLeft, nBottom, nRight, lTight/aOffset ) */
 
 /* if lTight, box is drawn inside the character region
    AND top and left lines are lower two pixel down to make room for above/left object
@@ -870,7 +870,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_DrawBoxRecessed( nWinNum, nTop, nLeft, nBottom, nRight, lTight/aOffset) <--none in gtwvt */
+/* wvw_DrawBoxRecessed( nWinNum, nTop, nLeft, nBottom, nRight, lTight/aOffset ) <--none in gtwvt */
 
 /* if lTight, box is drawn inside the character region
    AND top and left lines are lower two pixel down to make room for above/left object
@@ -2239,7 +2239,7 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
       for( i = 0; i < iRows; i++ )
       {
          y  = usAtRow * hb_gt_wvw_LineHeight( wvw_win );
-         y += wvw_win->usTBHeight;
+         y += wvw_win->iTBHeight;
 
          MoveToEx( wvw_win->hdc, iLeft, y, NULL );
          LineTo( wvw_win->hdc, iRight, y );
@@ -2286,8 +2286,8 @@ HB_FUNC( WVW_DRAWGRIDVERT )
 
       iCharHeight = hb_gt_wvw_LineHeight( wvw_win );
 
-      iTop    = ( usTop * iCharHeight ) + wvw_win->usTBHeight + iOffTop;
-      iBottom = ( ( usBottom + 1 ) * iCharHeight ) - 1 + wvw_win->usTBHeight + iOffBottom;
+      iTop    = ( usTop * iCharHeight ) + wvw_win->iTBHeight + iOffTop;
+      iBottom = ( ( usBottom + 1 ) * iCharHeight ) - 1 + wvw_win->iTBHeight + iOffBottom;
 
       if( wvw->a.gridPen == NULL )
          wvw->a.gridPen = CreatePen( 0, 0, GetSysColor( COLOR_BTNFACE ) );
@@ -2300,7 +2300,7 @@ HB_FUNC( WVW_DRAWGRIDVERT )
          int x;
 
          if( hb_gt_wvw_GetMainCoordMode() )
-            iCol -= wvw_win->usColOfs;
+            iCol -= wvw_win->iColOfs;
 
          x = ( iCol * iCharWidth ) + iOffLeft;
 

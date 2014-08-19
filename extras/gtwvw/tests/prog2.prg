@@ -22,7 +22,7 @@ STATIC s_zwin := {}
 STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
 
 #ifdef __GTWVW__
-STATIC s_amiscobjlist := {}      // x misc object list (actually: list of codeblocks)
+STATIC s_amiscobjlist := {}      // misc object list (actually: list of codeblocks)
 #endif
 
 PROCEDURE Main()

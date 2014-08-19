@@ -52,7 +52,6 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-/* TOFIX: hang (infinite loop) when repainting toolbar in hb_gt_wvwWndProc()/WM_PAINT */
 /* TOFIX: MT support */
 /* TOFIX: GT UNICODE support */
 /* TOFIX: Replace MessageBox() popups with internal errors or RTEs */
@@ -287,16 +286,16 @@ typedef struct
    int     iLineSpacing;           /* linespacing in pixels */
    int     iLSpaceColor;           /* linespacing color index */
 
-   int     usRowOfs;               /* offset to Main Window's (0,0) */
-   int     usColOfs;               /* offset to Main Window's (0,0) */
-   int     uiDispCount;            /* pending DispEnd() request */
+   int     iRowOfs;                /* offset to Main Window's (0,0) */
+   int     iColOfs;                /* offset to Main Window's (0,0) */
+   int     iDispCount;             /* pending DispEnd() request */
    HB_BOOL fPaintPending;          /* pending WVW_PAINT() execution */
    RECT    rPaintPending;          /* rect of pending fPaintPending */
    HWND    hStatusBar;             /* handle to status bar */
-   int     usSBHeight;             /* height of status bar */
+   int     iSBHeight;              /* height of status bar */
 
    HWND    hToolBar;               /* TB handle to toolbar */
-   int     usTBHeight;             /* TB height of toolbar */
+   int     iTBHeight;              /* TB height of toolbar */
    int     iStartStdBitmap;
    int     iStartViewBitmap;
    int     iStartHistBitmap;       /* start of bitmap index */
@@ -520,21 +519,21 @@ extern void       hb_gt_wvw_AddBitmapHandle( const char * szFileName, HBITMAP hB
 extern void       hb_gt_wvw_KillCaret( PWVW_WIN wvw_win );
 extern void       hb_gt_wvw_CreateCaret( PWVW_WIN wvw_win );
 
-extern HICON      hb_gt_wvw_SetWindowIcon( PWVW_WIN wvw_win, int icon, LPCTSTR lpIconName );
-extern HICON      hb_gt_wvw_SetWindowIconFromFile( PWVW_WIN wvw_win, LPCTSTR icon );
-extern void       hb_gt_wvw_SetInvalidRect( PWVW_WIN wvw_win, int left, int top, int right, int bottom );
+extern HICON      hb_gt_wvw_SetWindowIcon( PWVW_WIN wvw_win, int nIcon, LPCTSTR szIconName );
+extern HICON      hb_gt_wvw_SetWindowIconFromFile( PWVW_WIN wvw_win, LPCTSTR szIconName );
+extern void       hb_gt_wvw_SetInvalidRect( PWVW_WIN wvw_win, int iLeft, int iTop, int iRight, int iBottom );
 
 extern void       hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd );
-extern HB_BOOL    hb_gt_wvw_ValidWindowSize( PWVW_WIN wvw_win, int rows, int cols, HFONT hFont, int iWidth, int * pmaxrows, int * pmaxcols );
+extern HB_BOOL    hb_gt_wvw_ValidWindowSize( PWVW_WIN wvw_win, int iRows, int iCols, HFONT hFont, int iWidth, int * piMaxRows, int * piMaxCols );
 extern int        hb_gt_wvw_SetCodePage( PWVW_WIN wvw_win, int iCodePage );
 extern void       hb_gt_wvw_FUNCEpilogue( void );
-extern void       hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * pusRow1, int * pusCol1, int * pusRow2, int * pusCol2 );
+extern void       hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * piRow1, int * piCol1, int * piRow2, int * piCol2 );
 extern RECT       hb_gt_wvw_GetXYFromColRowRect( PWVW_WIN wvw_win, RECT colrow );
-extern POINT      hb_gt_wvw_GetXYFromColRow( PWVW_WIN wvw_win, int col, int row );
+extern POINT      hb_gt_wvw_GetXYFromColRow( PWVW_WIN wvw_win, int iCol, int iRow );
 extern POINT      hb_gt_wvw_GetColRowFromXY( PWVW_WIN wvw_win, int x, int y );
 extern COLORREF   hb_gt_wvw_GetColorData( int iIndex );
-extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * image, int * piWidth, int * piHeight );
-extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPic, int * piWidth, int * piHeight );
+extern HB_BOOL    hb_gt_wvw_GetImageDimension( const char * szImage, int * piWidth, int * piHeight );
+extern HB_BOOL    hb_gt_wvw_GetIPictDimension( IPicture * pPicture, int * piWidth, int * piHeight );
 extern RECT       hb_gt_wvw_GetColRowFromXYRect( PWVW_WIN pWIndowData, RECT xy );
 extern int        hb_gt_wvw_LineHeight( PWVW_WIN wvw_win );
 extern WPARAM     hb_gt_wvw_ProcessMessages( PWVW_WIN wvw_win );
@@ -557,7 +556,7 @@ extern int        hb_gt_wvw_GetMouseX( PWVW_WIN wvw_win );
 extern int        hb_gt_wvw_GetMouseY( PWVW_WIN wvw_win );
 extern int        hb_gt_wvw_RowOfs( PWVW_WIN wvw_win );
 extern int        hb_gt_wvw_ColOfs( PWVW_WIN wvw_win );
-extern IPicture * hb_gt_wvw_LoadPicture( const char * image );
+extern IPicture * hb_gt_wvw_LoadPicture( const char * szImage );
 
 extern HB_BOOL    hb_gt_wvw_BufferedKey( int iKey );
 extern int        hb_gt_wvw_key_ansi_to_oem( int c );
@@ -570,7 +569,7 @@ extern void       hb_gt_wvw_SetMouseY( PWVW_WIN wvw_win, int iy );
 
 extern PWVW_CTL   hb_gt_wvw_ctl( PWVW_WIN wvw_win, int nClass, HWND hWnd, int nId );
 
-extern int        hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int usRow1, int usCol1, int usRow2, int usCol2, DWORD dwStyle, HWND hWndParent );
+extern int        hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, int iCol2, DWORD dwStyle, HWND hWndParent );
 extern void       hb_gt_wvw_CloseWindow( void );
 extern int        hb_gt_wvw_SetCurWindow( int nWin );
 

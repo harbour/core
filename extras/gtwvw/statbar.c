@@ -80,7 +80,7 @@ HB_FUNC( WVW_SBCREATE )
          memset( &rSB, 0, sizeof( rSB ) );
 
          if( GetClientRect( hWnd, &rSB ) )
-            wvw_win->usSBHeight = rSB.bottom;
+            wvw_win->iSBHeight = rSB.bottom;
          wvw_win->hStatusBar = hWnd;
 
          hb_gt_wvw_ResetWindow( wvw_win );
@@ -114,7 +114,7 @@ HB_FUNC( WVW_SBDESTROY )
       DestroyWindow( wvw_win->hStatusBar );
       wvw_win->hStatusBar = NULL;
       wvw_win->fSBPaint   = HB_FALSE;
-      wvw_win->usSBHeight = 0;
+      wvw_win->iSBHeight  = 0;
 
       hb_gt_wvw_ResetWindow( wvw_win );
    }

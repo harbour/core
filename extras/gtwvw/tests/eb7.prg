@@ -583,8 +583,8 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    // Get Current Content
    InBuffer := wvw_ebGetText( mnwinnum, mnebid )
 
-   pc := 0 // x for clarity
-   pFlag := .F. // x for clarity
+   pc := 0  // for clarity
+   pFlag := .F.  // for clarity
    IF mcvaltype == "N"
       // RL 104
       IF hb_LeftEq( AllTrim( InBuffer ), "-" ) .AND. Val( InBuffer ) == 0
@@ -622,7 +622,6 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
    IF Len( InBuffer ) < Len( Mask )
       InBufferLeft := Left( InBuffer, icp )
-
       InBufferRight := Right( InBuffer, Len( InBuffer ) - icp )
 
       IF CharMaskTekstOK( InBufferLeft + " " + InBufferRight, mcvaltype, Mask ) .AND. ;
@@ -633,19 +632,17 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       ENDIF
    ENDIF
 
-   IF Len( InBuffer ) > Len( Mask ) .AND. ;
-         Len( Mask ) > 0
+   IF Len( InBuffer ) > Len( Mask ) .AND. Len( Mask ) > 0
 
       InBufferLeft := Left( InBuffer, icp )
-
       InBufferRight := Right( InBuffer, Len( InBuffer ) - icp - 1 )
 
       InBuffer := InBufferLeft + InBufferRight
    ENDIF
 
    // Process Mask
-   OutBuffer := "" // x for clarity
-   BadEntry := .F. // x for clarity
+   OutBuffer := ""  // for clarity
+   BadEntry := .F.  // for clarity
    FOR x := 1 TO Len( Mask )
       CB := SubStr( InBuffer, x, 1 )
       CM := SubStr( Mask, x, 1 )
@@ -669,7 +666,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
       CASE CM == "9"
          IF IsDigit( CB ) .OR. CB == " " .OR. ;
-            ( mcvaltype == "N" .AND. ; // x
+            ( mcvaltype == "N" .AND. ;
             CB == "-" .AND. x == fnb .AND. PCount() > 1 )
 
             OutBuffer += CB
@@ -694,7 +691,6 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
             ENDIF
          ENDIF
 
-         // x
       CASE CM == "X"
          OutBuffer += CB
 
@@ -716,7 +712,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       IF NegativeZero
          Output := Transform( GetValFromText( wvw_ebGetText( mnwinnum, mnebid ), mcvaltype ), Mask )
 
-         // x better:
+         // better:
          ol := Len( Output )
          Output := PadL( "-" + SubStr( Output, At( ".", OutBuffer ) - 1 ), ol )
 

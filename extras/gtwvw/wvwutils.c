@@ -1262,8 +1262,7 @@ HB_FUNC( WVW_SETTIMER )
  * kill the timer event handler for window nWinNum
  * returns .T. if successfull
  */
-/* 2004-06-02: WARNING: WVT is slightly different */
-HB_FUNC( WVW_KILLTIMER )
+HB_FUNC( WVW_KILLTIMER )  /* 2004-06-02: WARNING: WVT is slightly different */
 {
    PWVW_GLO wvw = hb_gt_wvw();
 
