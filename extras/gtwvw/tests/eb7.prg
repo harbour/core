@@ -569,13 +569,14 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    LOCAL Output
    LOCAL ol
 
-   IF mcvaltype == "N"
+   DO CASE
+   CASE mcvaltype == "N"
       Mask := GetNumMask( mcpict, mcvaltype )
-   ELSEIF mcvaltype == "D"
-      Mask := mcpict // "9999-99-99"
-   ELSE
+   CASE mcvaltype == "D"
+      Mask := mcpict  // "9999-99-99"
+   OTHERWISE
       Mask := mcpict
-   ENDIF
+   ENDCASE
 
    // Store Initial CaretPos
    wvw_ebGetSel( mnwinnum, mnebid, , @icp )
@@ -594,8 +595,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       IF PCount() > 1
          // Point Count For Numeric InputMask
          FOR x := 1 TO Len( InBuffer )
-            CB := SubStr( InBuffer, x, 1 )
-            IF CB == "." .OR. CB == ","
+            IF SubStr( InBuffer, x, 1 ) $ ",."
                pc++
             ENDIF
          NEXT
@@ -607,8 +607,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
          // Find First Non-Blank Position
          FOR x := 1 TO Len( InBuffer )
-            CB := SubStr( InBuffer, x, 1 )
-            IF !( CB == " " )
+            IF !( SubStr( InBuffer, x, 1 ) == " " )
                fnb := x
                EXIT
             ENDIF
@@ -755,12 +754,12 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
 // from h_textbox.prg
 
-STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
+STATIC FUNCTION CharMaskTekstOK( cString, cValType, cMask )
 
    // LOCAL lPassed := .T.
    LOCAL CB, CM, x
 
-   IF cvaltype == "D"
+   IF cValType == "D"
       FOR x := 1 TO Min( Len( cString ), Len( cMask ) )
          CB := SubStr( cString, x, 1 )
          CM := SubStr( cMask, x, 1 )
@@ -815,14 +814,12 @@ STATIC FUNCTION GetValFromText( Text, mcvaltype )
    // eg. GetValFromText( "999,999.99" ) --> 999999.99
    LOCAL x, c, s
 
-   IF mcvaltype == "C"
-      RETURN TEXT
-   ENDIF
-
-   IF mcvaltype == "D"
-      s := CToD( Text )
-      RETURN s
-   ENDIF
+   DO CASE
+   CASE mcvaltype == "C"
+      RETURN Text
+   CASE mcvaltype == "D"
+      RETURN CToD( Text )
+   ENDCASE
 
    // ASSUME numeric
    s := ""
@@ -891,7 +888,6 @@ STATIC FUNCTION IsBadDate( cBuffer )
 // only handles WM_CHAR, thus not all input characters are accepted
 FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
-   LOCAL ch
    LOCAL bhandler
 
    HB_SYMBOL_UNUSED( hWnd )
@@ -909,10 +905,9 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
 
    DO CASE
    CASE message == WM_CHAR
-      ch := wParam
       bhandler := inp_handler( nWinNum )
       IF HB_ISEVALITEM( bhandler )
-         Eval( bhandler, nWinNum, ch )
+         Eval( bhandler, nWinNum, wParam )
          RETURN .T.
       ELSE
          RETURN .F.

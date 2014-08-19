@@ -1,9 +1,9 @@
 /* Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
-   Mapping of gtwvt functions and their coresponding ones in gtwvw.
+   Mapping of GTWVT functions and their coresponding ones in GTWVW.
 
-   header file to be included in your gtwvt program if you
-   wish to link it with gtwvw.
+   header file to be included in your GTWVT program if you
+   wish to link it with GTWVW.
 
    WARNING:
    This mapping is made globally. Should you find any error(s) please let me know.
@@ -58,14 +58,14 @@ MEMVAR _wvwtemp_
 /*
   Notes:
 
-  nWinNum parameter passed as NIL will be translated by gtwvw into :
+  nWinNum parameter passed as NIL will be translated by GTWVW into :
     IF MainCoordMode
        Topmost Window
     ELSE
        Current Window
     ENDIF
 
-  Since gtwvt application can't be in MainCoordMode,
+  Since GTWVT application can't be in MainCoordMode,
   the following approach makes these functions work on current window.
 
   You may want to replace NIL with your own function/variable by which you can decide
@@ -132,8 +132,8 @@ MEMVAR _wvwtemp_
 
 #xtranslate Wvt_SetMousePos         ( [<vlist,...>] )    =>  wvw_SetMousePos         ( [, <vlist>] )
 
-/* in gtwvt no pending rect is reflected as {0,0,0,0}
-   in gtwvw no pending rect is reflected as {y1,x1,y2,x2} where y1 > y2 or x1 > x2
+/* in GTWVT no pending rect is reflected as {0,0,0,0}
+   in GTWVW no pending rect is reflected as {y1,x1,y2,x2} where y1 > y2 or x1 > x2
    thus we need some temporary var to check this exception
 */
 #xtranslate Wvt_GetPaintRect        ( [<vlist,...>] )    =>  ( _wvwtemp_ := wvw_GetPaintRect( [, <vlist>] ), ;
@@ -193,7 +193,7 @@ MEMVAR _wvwtemp_
 /* Line Spacing. Currently none in WVT. */
 //wvw_SetLineSpacing()
 
-/* PART-3: RESERVED FUNCTION NAMES ("callback" prg functions, called by gtwvw) */
+/* PART-3: RESERVED FUNCTION NAMES ("callback" prg functions, called by GTWVW) */
 
 /*
   Notes:
@@ -216,7 +216,7 @@ MEMVAR _wvwtemp_
          RETURN NIL
 
   Although the above may be enough, each individual function may need careful review
-  to make sure it follows gtwvw convention. For example, if you have multiple
+  to make sure it follows GTWVW convention. For example, if you have multiple
   exit points in that function.
 
   IMPORTANT NOTES ON MainCoord Mode:

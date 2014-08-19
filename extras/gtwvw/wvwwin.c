@@ -57,10 +57,7 @@ static HB_BOOL hb_gt_wvw_SetCentreWindow( PWVW_WIN wvw_win, HB_BOOL fCentre, HB_
 
    if( fPaint )
    {
-      if( IsZoomed( wvw_win->hWnd ) )
-         ShowWindow( wvw_win->hWnd, SW_MAXIMIZE );
-      else
-         ShowWindow( wvw_win->hWnd, SW_RESTORE );
+      ShowWindow( wvw_win->hWnd, IsZoomed( wvw_win->hWnd ) ? SW_MAXIMIZE : SW_RESTORE );
 
       hb_gt_wvw_ResetWindowSize( wvw_win, wvw_win->hWnd );
    }
@@ -71,7 +68,7 @@ static HB_BOOL hb_gt_wvw_SetCentreWindow( PWVW_WIN wvw_win, HB_BOOL fCentre, HB_
 /* 2004-07-13 this function was named WVW_lOpenWindow()
  *  now it is wvw_nOpenWindow()
  *  it now returns numeric
-
+ *
  *  wvw_nOpenWindow(cWinName, row1, col1, row2, col2, ;
  *                nStyle, nParentWin)
  * rowx and colx are relative to MAIN WINDOW (not current window!)
@@ -92,11 +89,9 @@ static HB_BOOL hb_gt_wvw_SetCentreWindow( PWVW_WIN wvw_win, HB_BOOL fCentre, HB_
  *       If you want the new window to not have parent,
  *       pass -1 as nParentWin.
  *
- *
  * returns window number if successful
  * returns 0 if failed
  */
-
 HB_FUNC( WVW_NOPENWINDOW )
 {
    PWVW_GLO wvw = hb_gt_wvw();
@@ -225,9 +220,8 @@ HB_FUNC( WVW_NOPENWINDOW )
 }
 
 /* wvw_lCloseWindow()
- * closes the last/topmost window
- * returns .T. if successful
- */
+   closes the last/topmost window
+   returns .T. if successful */
 HB_FUNC( WVW_LCLOSEWINDOW )
 {
    PWVW_GLO wvw = hb_gt_wvw();
@@ -278,8 +272,7 @@ HB_FUNC( WVW_GET_HND_WINDOW )
 }
 
 /* wvw_nNumWindows()
- * returns number of windows opened (including main window)
- */
+   returns number of windows opened (including main window) */
 HB_FUNC( WVW_NNUMWINDOWS )
 {
    PWVW_GLO wvw = hb_gt_wvw();
@@ -348,7 +341,10 @@ HB_FUNC( WVW_NSETCURWINDOW )
          if( nWin >= 0 && nWin < wvw->iNumWindows )
             hb_retni( hb_gt_wvw_SetCurWindow( nWin ) );
          else
+         {
             hb_errRT_TERM( EG_BOUND, 10001, "Window number out of range", "wvw_nSetCurWindow()", 0, 0 );
+            hb_retni( wvw->iCurWindow );
+         }
       }
       else
          hb_retni( wvw->iCurWindow );
@@ -358,9 +354,8 @@ HB_FUNC( WVW_NSETCURWINDOW )
 }
 
 /* wvw_nRowOfs( [nWinNum] )
- * returns row offset of window #nWinNum (0==MAIN), relative to Main Window
- * nWinNum defaults to current window
- */
+   returns row offset of window #nWinNum (0==MAIN), relative to Main Window
+   nWinNum defaults to current window */
 HB_FUNC( WVW_NROWOFS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -392,12 +387,12 @@ HB_FUNC( WVW_MAXMAXROW )
 
    if( wvw_win )
    {
-      int maxrows;
+      int iMaxRows;
 
       /* rows and cols passed are dummy ones */
-      hb_gt_wvw_ValidWindowSize( wvw_win, 10, 10, wvw_win->hFont, wvw_win->fontWidth, &maxrows, NULL );
+      hb_gt_wvw_ValidWindowSize( wvw_win, 10, 10, wvw_win->hFont, wvw_win->fontWidth, &iMaxRows, NULL );
 
-      hb_retni( maxrows - 1 );
+      hb_retni( iMaxRows - 1 );
    }
    else
       hb_retni( 0 );
@@ -411,12 +406,12 @@ HB_FUNC( WVW_MAXMAXCOL )
 
    if( wvw_win )
    {
-      int maxcols;
+      int iMaxCols;
 
       /* rows and cols passed are dummy ones */
-      hb_gt_wvw_ValidWindowSize( wvw_win, 10, 10, wvw_win->hFont, wvw_win->fontWidth, NULL, &maxcols );
+      hb_gt_wvw_ValidWindowSize( wvw_win, 10, 10, wvw_win->hFont, wvw_win->fontWidth, NULL, &iMaxCols );
 
-      hb_retni( maxcols - 1 );
+      hb_retni( iMaxCols - 1 );
    }
    else
       hb_retni( 0 );
@@ -431,26 +426,26 @@ HB_FUNC( WVW_UNREACHEDBR )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   int cols = 0, rows = 0;
+   int iCols, iRows;
 
-   if( wvw_win )
+   if( wvw_win && IsZoomed( wvw_win->hWnd ) )
    {
-      if( IsZoomed( wvw_win->hWnd ) )
-      {
-         POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, wvw_win->COLS, wvw_win->ROWS );
-         RECT  ci;
+      POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, wvw_win->COLS, wvw_win->ROWS );
+      RECT  ci;
 
-         memset( &ci, 0, sizeof( ci ) );
+      memset( &ci, 0, sizeof( ci ) );
 
-         GetClientRect( wvw_win->hWnd, &ci );
+      GetClientRect( wvw_win->hWnd, &ci );
 
-         rows = ci.bottom - xy.y - wvw_win->iSBHeight;
-         cols = ci.right - xy.x;
-      }
+      iRows = ci.bottom - xy.y - wvw_win->iSBHeight;
+      iCols = ci.right - xy.x;
    }
+   else
+      iCols = iRows = 0;
 
-   hb_storni( rows, 2 );
-   hb_storni( cols, 3 );
+
+   hb_storni( iRows, 2 );
+   hb_storni( iCols, 3 );
 }
 
 /* wvw_SetMainCoord( [lMainCoord] )
@@ -479,11 +474,8 @@ HB_FUNC( WVW_SETMAINCOORD )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_NoClose( [nWinNum] )
- * disable CLOSE 'X' button of a window
- *
- * no return value
- */
+/* wvw_NoClose( [nWinNum] ) -> NIL
+   disable CLOSE 'X' button of a window */
 HB_FUNC( WVW_NOCLOSE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -504,10 +496,8 @@ HB_FUNC( WVW_NOCLOSE )
  * Get/Set window style
  * NOTES: if window has controls (eg. pushbutton, scrollbar)
  *      you should include WS_CLIPCHILDREN in nStyle
- *
  * SIDE EFFECT:
  *       if window is hidden, applying nStyle here will cause it to show
- *
  * return Window Style prior to applying the new style
  */
 HB_FUNC( WVW_SETWINSTYLE )
@@ -535,9 +525,7 @@ HB_FUNC( WVW_SETWINSTYLE )
 
 /* wvw_EnableMaximize( [nWinNum], [lEnable] )
  * Get/Set maximize button
- *
  * returns maximize box state prior to applying the new style
- *
  * NOTE: in order to enable MAXIMIZE button, app should have WVW_SIZE() callback function
  */
 HB_FUNC( WVW_ENABLEMAXIMIZE )
@@ -580,10 +568,10 @@ HB_FUNC( WVW_ENABLEMAXIMIZE )
 /* Budyanto Dj. <budyanto@centrin.net.id> */
 
 /* wvw_SetPaintRefresh( [nPaintRefresh] )
- * returns old setting of wvw->uiPaintRefresh (millisec between calls to WVW_PAINT)
- * then assigns wvw->uiPaintRefresh:= nPaintRefresh (if supplied)
+ * returns old setting of wvw->iPaintRefresh (millisec between calls to WVW_PAINT)
+ * then assigns wvw->iPaintRefresh := nPaintRefresh (if supplied)
  * NOTES: nPaintRefresh must be >= 50
- *       or nPaintRefresh == 0, causing Repaint to execute immediately, as GTWVT
+ *        or nPaintRefresh == 0, causing Repaint to execute immediately, as GTWVT
  */
 HB_FUNC( WVW_SETPAINTREFRESH )
 {
@@ -591,11 +579,11 @@ HB_FUNC( WVW_SETPAINTREFRESH )
 
    if( wvw )
    {
-      hb_retni( wvw->uiPaintRefresh );
+      hb_retni( wvw->iPaintRefresh );
 
       if( HB_ISNUM( 1 ) && ( hb_parni( 1 ) >= 50 || hb_parni( 1 ) == 0 ) )
       {
-         wvw->uiPaintRefresh = ( HB_UINT ) hb_parni( 1 );
+         wvw->iPaintRefresh = hb_parni( 1 );
 
          if( wvw->a.pSymWVW_PAINT )
          {
@@ -606,8 +594,8 @@ HB_FUNC( WVW_SETPAINTREFRESH )
 
                if( wvw_win )
                {
-                  if( wvw->uiPaintRefresh > 0 )
-                     SetTimer( wvw_win->hWnd, WVW_ID_SYSTEM_TIMER, ( UINT ) wvw->uiPaintRefresh, NULL );
+                  if( wvw->iPaintRefresh > 0 )
+                     SetTimer( wvw_win->hWnd, WVW_ID_SYSTEM_TIMER, ( UINT ) wvw->iPaintRefresh, NULL );
                   else
                      KillTimer( wvw_win->hWnd, WVW_ID_SYSTEM_TIMER );
                }
@@ -625,8 +613,7 @@ HB_FUNC( WVW_SETPAINTREFRESH )
  * lOn == .F.: turn caret into horizontal caret
  * return old setting of wvw->fVertCaret
  */
-/* TODO: do you want to make it window selective? */
-HB_FUNC( WVW_SETVERTCARET )
+HB_FUNC( WVW_SETVERTCARET )  /* TODO: do you want to make it window selective? */
 {
    PWVW_GLO wvw = hb_gt_wvw();
 
@@ -809,7 +796,6 @@ HB_FUNC( WVW_SETLSPACECOLOR )
  *                         control's codeblock will be executed only
  *                         if the control is on the topmost window.
  * IMPORTANT NOTE: KILLFOCUS event will always be executed in all condition
- *
  */
 HB_FUNC( WVW_ALLOWNONTOPEVENT )
 {
@@ -831,7 +817,7 @@ HB_FUNC( WVW_ALLOWNONTOPEVENT )
  * and set wvw->fRecurseCBlock := lAllow (if this optional param is passed)
  *
  * REMARKS:
- * wvw->fRecurseCBlock determines whether gtwvw allow recursion into control's codeblock
+ * wvw->fRecurseCBlock determines whether GTWVW allow recursion into control's codeblock
  * if wvw->fRecurseCBlock==.T., control's codeblock is allowed to recurse
  * if wvw->fRecurseCBlock==.F. (the default)
  *                         control's codeblock is not allowed to recurse
@@ -885,9 +871,8 @@ HB_FUNC( WVW_GETSCREENHEIGHT )
 }
 
 /* wvw_SetWindowCentre( nWinNum,   (0==MAIN)
- *                      lCentre,
- *                      lPaintIt)  (if .F. it will just assign lCentre to WVW_WIN)
- */
+                        lCentre,
+                        lPaintIt ) (if .F. it will just assign lCentre to WVW_WIN) */
 HB_FUNC( WVW_SETWINDOWCENTRE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -897,10 +882,8 @@ HB_FUNC( WVW_SETWINDOWCENTRE )
 }
 
 /* wvw_EnableShortcuts( nWinNum, lEnable )
- * lEnable defaults to .T.
- *
- * returns old setting of EnableShortCuts
- */
+   lEnable defaults to .T.
+   returns old setting of EnableShortCuts */
 HB_FUNC( WVW_ENABLESHORTCUTS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -958,20 +941,20 @@ HB_FUNC( WVW_INVALIDATERECT )
 
    if( wvw_win )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 );
+      int iLeft   = hb_parni( 3 );
+      int iBottom = hb_parni( 4 );
+      int iRight  = hb_parni( 5 );
 
       RECT  rc;
       POINT xy;
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
 
-      xy        = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      xy        = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       rc.top    = xy.y;
       rc.left   = xy.x;
-      xy        = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy        = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
       rc.bottom = xy.y - 1;
       rc.right  = xy.x - 1;
 
@@ -993,12 +976,12 @@ HB_FUNC( WVW_CLIENTTOSCREEN )
 
    if( wvw_win )
    {
-      int usTop  = hb_parni( 2 ),
-          usLeft = hb_parni( 3 );
+      int iTop  = hb_parni( 2 );
+      int iLeft = hb_parni( 3 );
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, NULL, NULL );
 
-      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
 
       ClientToScreen( wvw_win->hWnd, &xy );
    }

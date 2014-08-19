@@ -81,10 +81,10 @@ PROCEDURE Main()
    AEval( s_aComboList, {| x | wvw_cbEnable( , x[ 1 ], .F. ) } )
 
    DevPos( 5, 0 )
-   ? "name: '" + mname + "'"
-   ? "sex : '" + msex + "'"
-   ? "stat: '" + mstat + "'"
-   ? "age : " + hb_ntos( mage )
+   ? "name:", "'" + mname + "'"
+   ? "sex :", "'" + msex + "'"
+   ? "stat:", "'" + mstat + "'"
+   ? "age :", hb_ntos( mage )
    ? "that's what you've got from GET"
    Inkey( 0 )
 
@@ -121,7 +121,7 @@ PROCEDURE Main()
  */
 STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
-   LOCAL i, ccursel
+   LOCAL i
    LOCAL oGet := GetActive()
 
    HB_SYMBOL_UNUSED( nIndex )
@@ -181,9 +181,8 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    CASE nEvent == 4 // CBN_KILLFOCUS
       // put current content of combobox into GET variable beneath it.
-      cCurSel := wvw_cbGetCurText( nWinNum, nId )
-      oGet:varput( cCurSel )
-      oGet:display() // this is optional
+      oGet:varput( wvw_cbGetCurText( nWinNum, nId ) )
+      oGet:display()  // this is optional
 
    ENDCASE
 
@@ -294,9 +293,7 @@ STATIC FUNCTION MoveToGet( GetList, nPos )
 // Set FOCUS to window nWinNum
 STATIC PROCEDURE SetWinFocus( nWinNum )
 
-   LOCAL hWnd := wvw_GetWindowHandle( nWinNum )
-
-   win_SetFocus( hWnd )
+   win_SetFocus( wvw_GetWindowHandle( nWinNum ) )
 
    RETURN
 

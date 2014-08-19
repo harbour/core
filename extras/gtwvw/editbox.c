@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw edit functions
+ * GTWVW edit functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -500,17 +500,16 @@ HB_FUNC( WVW_EBCREATE )
 
    if( wvw && wvw_win )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parni( 4 ),
+          iRight  = hb_parni( 5 );
 
       HINSTANCE hInstance;
       HWND      hWnd;
 
       POINT xy;
 
-      int iTop, iLeft, iBottom, iRight;
       int iOffTop, iOffLeft, iOffBottom, iOffRight;
       int nCtrlId;
 
@@ -519,6 +518,8 @@ HB_FUNC( WVW_EBCREATE )
       DWORD dwStyle;
       DWORD dwMoreStyle = ( DWORD ) hb_parnint( 9 );
       int   iMaxChar    = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
+
+      RECT rXB, rOffXB;
 
       if( wvw_win->hEBfont == NULL )
       {
@@ -535,13 +536,23 @@ HB_FUNC( WVW_EBCREATE )
       iOffBottom = hb_parvni( 12, 3 );
       iOffRight  = hb_parvni( 12, 4 );
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      rXB.top    = iTop;
+      rXB.left   = iLeft;
+      rXB.bottom = iBottom;
+      rXB.right  = iRight;
 
-      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      rOffXB.top    = iOffTop;
+      rOffXB.left   = iOffLeft;
+      rOffXB.bottom = iOffBottom;
+      rOffXB.right  = iOffRight;
+
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
+
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       iTop  = xy.y + iOffTop;
       iLeft = xy.x + iOffLeft;
 
-      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
       iBottom = xy.y - wvw_win->iLineSpacing - 1 + iOffBottom;
       iRight  = xy.x - 1 + iOffRight;
 
@@ -576,7 +587,6 @@ HB_FUNC( WVW_EBCREATE )
 
       if( hWnd )
       {
-         RECT    rXB, rOffXB;
          WNDPROC OldProc;
 
          void *  hText;
@@ -588,16 +598,6 @@ HB_FUNC( WVW_EBCREATE )
 
          if( iMaxChar > 0 )
             SendMessage( hWnd, EM_LIMITTEXT, ( WPARAM ) iMaxChar, 0 );
-
-         rXB.top    = usTop;
-         rXB.left   = usLeft;
-         rXB.bottom = usBottom;
-         rXB.right  = usRight;
-
-         rOffXB.top    = iOffTop;
-         rOffXB.left   = iOffLeft;
-         rOffXB.bottom = iOffBottom;
-         rOffXB.right  = iOffRight;
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hWnd, nCtrlId, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, nEBType );
 

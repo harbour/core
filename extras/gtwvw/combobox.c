@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw combobox functions
+ * GTWVW combobox functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -322,15 +322,14 @@ HB_FUNC( WVW_CBCREATE )
       HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
       POINT xy;
 
-      int iTop, iLeft, iBottom, iRight;
       int iOffTop, iOffLeft, iOffBottom, iOffRight;
       int nCtrlId;
 
-      int usWidth  = hb_parni( 4 );
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = usTop,
-          usRight  = usLeft + usWidth - 1;
+      int iWidth  = hb_parni( 4 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = iTop,
+          iRight  = iLeft + iWidth - 1;
 
       int iNumElement = HB_ISARRAY( 5 ) ? ( int ) hb_arrayLen( hb_param( 5, HB_IT_ARRAY ) ) : 0;
       int iListLines  = hb_parnidef( 7, 3 );
@@ -339,6 +338,8 @@ HB_FUNC( WVW_CBCREATE )
       /* in the future combobox type might be selectable by 8th parameter */
       int iStyle   = CBS_DROPDOWNLIST | WS_VSCROLL;
       int nKbdType = hb_parnidef( 9, WVW_CB_KBD_STANDARD );
+
+      RECT rXB, rOffXB;
 
       if( wvw_win->hCBfont == NULL )
       {
@@ -351,19 +352,28 @@ HB_FUNC( WVW_CBCREATE )
          }
       }
 
-      iOffTop  = hb_parvni( 10, 1 );
-      iOffLeft = hb_parvni( 10, 2 );
-
+      iOffTop    = hb_parvni( 10, 1 );
+      iOffLeft   = hb_parvni( 10, 2 );
       iOffBottom = iListLines;
       iOffRight  = hb_parvni( 10, 4 );
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      rXB.top    = iTop;
+      rXB.left   = iLeft;
+      rXB.bottom = iBottom;
+      rXB.right  = iRight;
 
-      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      rOffXB.top    = iOffTop;
+      rOffXB.left   = iOffLeft;
+      rOffXB.bottom = iOffBottom;
+      rOffXB.right  = iOffRight;
+
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
+
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       iTop  = xy.y + iOffTop;
       iLeft = xy.x + iOffLeft;
 
-      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
       iBottom = xy.y - wvw_win->iLineSpacing - 1 + ( iOffBottom * iCharHeight );
       iRight  = xy.x - 1 + iOffRight;
 
@@ -393,7 +403,6 @@ HB_FUNC( WVW_CBCREATE )
       {
          int LongComboWidth = 0, NewLongComboWidth;
 
-         RECT    rXB, rOffXB;
          WNDPROC OldProc;
 
          SendMessage( hWnd, WM_SETREDRAW, ( WPARAM ) TRUE, 0 );
@@ -433,16 +442,6 @@ HB_FUNC( WVW_CBCREATE )
 
          NewLongComboWidth = ( LongComboWidth - 2 ) * hb_gt_wvw_GetFontDialogUnits( wvw_win->hWnd, hFont );
          SendMessage( hWnd, CB_SETDROPPEDWIDTH, ( WPARAM ) NewLongComboWidth + 100 /* LongComboWidth + 100 */, 0 );
-
-         rXB.top    = usTop;
-         rXB.left   = usLeft;
-         rXB.bottom = usBottom;
-         rXB.right  = usRight;
-
-         rOffXB.top    = iOffTop;
-         rOffXB.left   = iOffLeft;
-         rOffXB.bottom = iOffBottom;
-         rOffXB.right  = iOffRight;
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, nKbdType );
 

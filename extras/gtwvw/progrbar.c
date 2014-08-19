@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw progressbar functions
+ * GTWVW progressbar functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -86,10 +86,10 @@ HB_FUNC( WVW_PGCREATE )
 
    if( wvw_win )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parni( 4 ),
+          iRight  = hb_parni( 5 );
 
       int iOffTop    = hb_parvni( 6, 1 );
       int iOffLeft   = hb_parvni( 6, 2 );
@@ -104,19 +104,30 @@ HB_FUNC( WVW_PGCREATE )
       HINSTANCE hInstance;
       HWND      hWnd;
       POINT     xy;
-      int       iTop, iLeft, iBottom, iRight;
       int       iStyle = 0;
       int       nCtrlId;
 
+      RECT rXB, rOffXB;
+
       InitCommonControls();
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      rXB.top    = iTop;
+      rXB.left   = iLeft;
+      rXB.bottom = iBottom;
+      rXB.right  = iRight;
 
-      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      rOffXB.top    = iOffTop;
+      rOffXB.left   = iOffLeft;
+      rOffXB.bottom = iOffBottom;
+      rOffXB.right  = iOffRight;
+
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
+
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       iTop  = xy.y + iOffTop;
       iLeft = xy.x + iOffLeft;
 
-      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
       iBottom = xy.y - wvw_win->iLineSpacing - 1 + iOffBottom;
       iRight  = xy.x - 1 + iOffRight;
 
@@ -149,8 +160,6 @@ HB_FUNC( WVW_PGCREATE )
 
       if( hWnd )
       {
-         RECT rXB, rOffXB;
-
          if( fBackColor )
             SendMessage( hWnd, PBM_SETBKCOLOR, 0, ( LPARAM ) ( COLORREF ) hb_parnint( 7 ) );
          if( fBarColor )
@@ -158,16 +167,6 @@ HB_FUNC( WVW_PGCREATE )
 
          SendMessage( hWnd, PBM_SETRANGE, 0, MAKELPARAM( 0, 100 ) );
          SendMessage( hWnd, PBM_SETPOS, 0, 0 );
-
-         rXB.top    = usTop;
-         rXB.left   = usLeft;
-         rXB.bottom = usBottom;
-         rXB.right  = usRight;
-
-         rOffXB.top    = iOffTop;
-         rOffXB.left   = iOffLeft;
-         rOffXB.bottom = iOffBottom;
-         rOffXB.right  = iOffRight;
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PROGRESSBAR, hWnd, nCtrlId, NULL, rXB, rOffXB, iStyle );
 

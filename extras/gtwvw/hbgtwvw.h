@@ -346,9 +346,9 @@ typedef struct
 
    RECT      RectInvalid;               /* Invalid rectangle if DispBegin() active */
    HFONT     hFont;
-   int       fontHeight;                /* requested font height */
-   int       fontWidth;                 /* requested font width */
-   int       fontWeight;                /* Bold level */
+   long      fontHeight;                /* requested font height */
+   long      fontWidth;                 /* requested font width */
+   long      fontWeight;                /* Bold level */
    int       fontQuality;
    TCHAR     fontFace[ LF_FACESIZE ];   /* requested font face name LF_FACESIZE #defined in wingdi.h */
 
@@ -377,7 +377,7 @@ typedef struct
 
 typedef struct
 {
-   HB_UINT uiPaintRefresh;       /* milliseconds between timer check */
+   int     iPaintRefresh;        /* milliseconds between timer check */
    HB_BOOL fMainCoordMode;       /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
    HB_BOOL fVertCaret;           /* if HB_TRUE, caret is in Vertical style */
    HB_BOOL fNOSTARTUPSUBWINDOW;  /* if HB_TRUE, subwindow will not be displayed during opening */
@@ -468,8 +468,8 @@ typedef struct
       WVW_IPIC * pphPictureList;
 
       WVW_BMP * pbhUserBitmap;            /* User bitmap (wvw_drawimage) */
-      HB_UINT uiBMcache;                  /* number of bitmap cached */
-      HB_UINT uiMaxBMcache;               /* maximum number of bitmap cached */
+      int       iBMcache;                 /* number of bitmap cached */
+      int       iMaxBMcache;              /* maximum number of bitmap cached */
 
       PHB_DYNS pSymWVW_PAINT;             /* Stores pointer to WVW_PAINT function */
       PHB_DYNS pSymWVW_SETFOCUS;          /* Stores pointer to WVW_SETFOCUS function */

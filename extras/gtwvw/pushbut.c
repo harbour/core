@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw pushbutton functions
+ * GTWVW pushbutton functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -98,10 +98,10 @@ HB_FUNC( WVW_PBCREATE )
 
    if( wvw_win && HB_ISEVALITEM( 8 ) )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parni( 4 ),
+          iRight  = hb_parni( 5 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -110,7 +110,7 @@ HB_FUNC( WVW_PBCREATE )
 
       void * hCaption;
 
-      hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, usTop, usLeft, usBottom, usRight,
+      hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, iTop, iLeft, iBottom, iRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
                                         ( HB_UINT ) hb_parnint( 7 ),

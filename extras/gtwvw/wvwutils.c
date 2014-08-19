@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw draw functions
+ * GTWVW draw functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -77,7 +77,7 @@ HB_FUNC( WIN_SENDMESSAGE )
       szText = HB_STRUNSHARE( &hText, szText, nLen );
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parni( 2 ),
+                            ( UINT ) hb_parnint( 2 ),
                             ( WPARAM ) hb_parnint( 3 ),
                             szText ? ( LPARAM ) szText : ( LPARAM ) hb_parnint( 4 ) ) );
 
@@ -109,7 +109,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 
    hb_retnint( SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                    hb_parni( 2 ),
-                                   ( UINT ) hb_parni( 3 ),
+                                   ( UINT ) hb_parnint( 3 ),
                                    ( WPARAM ) hb_parnint( 4 ),
                                    pText ? ( LPARAM ) szTextToPass : ( LPARAM ) hb_parnint( 5 ) ) );
 
@@ -203,7 +203,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
    hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
-                            HB_ISNUM( 3 ) ? ( UINT ) hb_parni( 3 ) : ( UINT ) hb_parl( 3 ) ) );
+                            HB_ISNUM( 3 ) ? ( UINT ) hb_parnint( 3 ) : ( UINT ) hb_parl( 3 ) ) );
 }
 
 HB_FUNC( WIN_ISDLGBUTTONCHECKED )
@@ -323,10 +323,10 @@ HB_FUNC( WIN_GETCLIENTRECT )
 
    GetClientRect( ( HWND ) HB_PARHANDLE( 1 ), &rc );
 
-   hb_arraySetNI( info, 1, rc.left );
-   hb_arraySetNI( info, 2, rc.top );
-   hb_arraySetNI( info, 3, rc.right );
-   hb_arraySetNI( info, 4, rc.bottom );
+   hb_arraySetNL( info, 1, rc.left );
+   hb_arraySetNL( info, 2, rc.top );
+   hb_arraySetNL( info, 3, rc.right );
+   hb_arraySetNL( info, 4, rc.bottom );
 
    hb_itemReturnRelease( info );
 }
@@ -398,10 +398,10 @@ HB_FUNC( WVW_GBCREATE )
 
    if( wvw_win )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parni( 4 ),
+          iRight  = hb_parni( 5 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -1;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -1;
@@ -410,7 +410,7 @@ HB_FUNC( WVW_GBCREATE )
 
       void * hCaption;
 
-      hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, usTop, usLeft, usBottom, usRight,
+      hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, iTop, iLeft, iBottom, iRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
                                         ( HB_UINT ) hb_parnint( 7 ),
@@ -439,10 +439,10 @@ HB_FUNC( WVW_RBCREATE )
 
    if( wvw_win && HB_ISEVALITEM( 8 ) )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parni( 4 ),
+          iRight  = hb_parni( 5 );
 
       int iOffTop    = HB_ISARRAY( 9 ) ? hb_parvni( 9, 1 ) : -2;
       int iOffLeft   = HB_ISARRAY( 9 ) ? hb_parvni( 9, 2 ) : -2;
@@ -451,7 +451,7 @@ HB_FUNC( WVW_RBCREATE )
 
       void * hCaption;
 
-      hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, usTop, usLeft, usBottom, usRight,
+      hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, iTop, iLeft, iBottom, iRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
                                         ( HB_UINT ) hb_parnint( 7 ),
@@ -544,7 +544,7 @@ HB_FUNC( WVW_SENDMESSAGE )
    void * hText = NULL;
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parni( 2 ),
+                            ( UINT ) hb_parnint( 2 ),
                             ( WPARAM ) hb_parnint( 3 ),
                             HB_ISCHAR( 4 ) ? ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) : ( LPARAM ) hb_parnint( 4 ) ) );
 
@@ -706,10 +706,10 @@ HB_FUNC( WVW_LOADIMAGE )
       if( wvw )
          HB_RETHANDLE( LoadImage( wvw->hInstance,                                 /* ( HINSTANCE ) hb_parnintdef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
                                   ( LPCTSTR ) MAKEINTRESOURCE( hb_parnint( 2 ) ), /* name or identifier of image */
-                                  ( UINT ) hb_parni( 3 ),                         /* type of image */
+                                  ( UINT ) hb_parnint( 3 ),                       /* type of image */
                                   hb_parni( 4 ),                                  /* desired width */
                                   hb_parni( 5 ),                                  /* desired height */
-                                  ( UINT ) hb_parni( 6 ) ) );                     /* load flags */
+                                  ( UINT ) hb_parnint( 6 ) ) );                   /* load flags */
       else
          HB_RETHANDLE( NULL );
    }
@@ -718,10 +718,10 @@ HB_FUNC( WVW_LOADIMAGE )
       void * hName;
       HB_RETHANDLE( LoadImage( ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 1 ), /* handle of the instance that contains the image */
                                HB_PARSTR( 2, &hName, NULL ),                 /* name or identifier of image */
-                               ( UINT ) hb_parni( 3 ),                       /* type of image */
+                               ( UINT ) hb_parnint( 3 ),                     /* type of image */
                                hb_parni( 4 ),                                /* desired width */
                                hb_parni( 5 ),                                /* desired height */
-                               ( UINT ) hb_parni( 6 ) ) );                   /* load flags */
+                               ( UINT ) hb_parnint( 6 ) ) );                 /* load flags */
       hb_strfree( hName );
    }
 }
@@ -960,7 +960,7 @@ HB_FUNC( WVW_REDRAWWINDOW )
       ( HWND ) HB_PARHANDLE( 1 ),   /* handle of window */
       NULL,                         /* address of structure with update rectangle */
       NULL,                         /* handle of update region */
-      ( UINT ) hb_parni( 2 ) );     /* array of redraw flags */
+      ( UINT ) hb_parnint( 2 ) );   /* array of redraw flags */
 }
 
 /* win_CreateFont( fontName, nWidth, hHeight, [fnWeight], [fdwCharSet],
@@ -1204,17 +1204,15 @@ HB_FUNC( WVW_SETMAXBMCACHE )
 {
    PWVW_GLO wvw = hb_gt_wvw();
 
-   HB_UINT uiOldMaxBMcache = 0;
-
    if( wvw )
    {
-      uiOldMaxBMcache = wvw->a.uiMaxBMcache;
+      hb_retni( wvw->a.iMaxBMcache );
 
       if( HB_ISNUM( 1 ) )
-         wvw->a.uiMaxBMcache = ( HB_UINT ) hb_parnint( 1 );
+         wvw->a.iMaxBMcache = HB_MAX( hb_parni( 1 ), 0 );
    }
-
-   hb_retni( uiOldMaxBMcache );
+   else
+      hb_retni( 0 );
 }
 
 /* wvw_NumBMCache()
@@ -1223,7 +1221,7 @@ HB_FUNC( WVW_NUMBMCACHE )
 {
    PWVW_GLO wvw = hb_gt_wvw();
 
-   hb_retni( wvw ? wvw->a.uiBMcache : 0 );
+   hb_retni( wvw ? wvw->a.iBMcache : 0 );
 }
 
 /* Miscellaneous xHarbour callable functions */
@@ -1240,22 +1238,17 @@ HB_FUNC( WVW_NUMBMCACHE )
 /* 2004-06-02: WARNING: WVT is slightly different */
 HB_FUNC( WVW_SETTIMER )
 {
-   PWVW_GLO wvw = hb_gt_wvw();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw && wvw->a.pSymWVW_TIMER )
+   if( wvw && wvw->a.pSymWVW_TIMER && wvw_win )
    {
-      PWVW_WIN wvw_win = hb_gt_wvw_win_par();
+      SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId, ( UINT ) hb_parnint( 2 ), NULL );
 
-      if( wvw_win )
-      {
-         SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId, ( UINT ) hb_parni( 2 ), NULL );
-
-         hb_retl( HB_TRUE );
-         return;
-      }
+      hb_retl( HB_TRUE );
    }
-
-   hb_retl( HB_FALSE );
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* wvw_KillTimer([nWinNum])
@@ -1264,22 +1257,17 @@ HB_FUNC( WVW_SETTIMER )
  */
 HB_FUNC( WVW_KILLTIMER )  /* 2004-06-02: WARNING: WVT is slightly different */
 {
-   PWVW_GLO wvw = hb_gt_wvw();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw && wvw->a.pSymWVW_TIMER )
+   if( wvw && wvw->a.pSymWVW_TIMER && wvw_win )
    {
-      PWVW_WIN wvw_win = hb_gt_wvw_win_par();
+      KillTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId );
 
-      if( wvw_win )
-      {
-         KillTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId );
-
-         hb_retl( HB_TRUE );
-         return;
-      }
+      hb_retl( HB_TRUE );
    }
-
-   hb_retl( HB_FALSE );
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* wvw_GetPaintRect( nWinNum )   nWinNum is 0 based
@@ -1301,10 +1289,10 @@ HB_FUNC( WVW_GETPAINTRECT )
    else
       memset( &rc, 0, sizeof( rc ) );
 
-   hb_arraySetNI( info, 1, rc.top );
-   hb_arraySetNI( info, 2, rc.left );
-   hb_arraySetNI( info, 3, rc.bottom );
-   hb_arraySetNI( info, 4, rc.right );
+   hb_arraySetNL( info, 1, rc.top );
+   hb_arraySetNL( info, 2, rc.left );
+   hb_arraySetNL( info, 3, rc.bottom );
+   hb_arraySetNL( info, 4, rc.right );
 
    hb_itemReturnRelease( info );
 }
@@ -1402,57 +1390,52 @@ HB_FUNC( WVW_LOADPICTURE )
                  nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVW_LOADFONT )
 {
-   PWVW_GLO wvw = hb_gt_wvw();
+   PWVW_GLO wvw     = hb_gt_wvw();
+   PWVW_WIN wvw_top = hb_gt_wvw_win_top();
 
    int iSlot = hb_parni( 1 ) - 1;
 
-   HB_BOOL fResult = HB_FALSE;
-
-   if( wvw && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserFonts ) )
+   if( wvw && wvw_top && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserFonts ) )
    {
-      PWVW_WIN wvw_top = hb_gt_wvw_win_top();
+      LOGFONT lf;
+      HFONT   hFont;
 
-      if( wvw_top )
+      lf.lfEscapement     = hb_parnl( 11 ) * 10;
+      lf.lfOrientation    = 0;
+      lf.lfWeight         = hb_parnl( 5 );
+      lf.lfItalic         = ( BYTE ) hb_parl( 6 );
+      lf.lfUnderline      = ( BYTE ) hb_parl( 7 );
+      lf.lfStrikeOut      = ( BYTE ) hb_parl( 8 );
+      lf.lfCharSet        = ( BYTE ) hb_parnidef( 9, wvw_top->CodePage );
+      lf.lfOutPrecision   = 0;
+      lf.lfClipPrecision  = 0;
+      lf.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
+      lf.lfPitchAndFamily = FF_DONTCARE;
+      lf.lfHeight         = hb_parnldef( 3, wvw_top->fontHeight );
+      lf.lfWidth = hb_parnldef( 4, wvw_top->fontWidth < 0 ? -wvw_top->fontWidth : wvw_top->fontWidth );
+
+      if( HB_ISCHAR( 2 ) )
       {
-         LOGFONT lf;
-         HFONT   hFont;
+         HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), lf.lfFaceName, HB_SIZEOFARRAY( lf.lfFaceName ) );
+         wvw_top->fontFace[ HB_SIZEOFARRAY( lf.lfFaceName ) - 1 ] = TEXT( '\0' );
+      }
+      else
+         HB_STRNCPY( lf.lfFaceName, wvw_top->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
-         lf.lfEscapement     = hb_parnl( 11 ) * 10;
-         lf.lfOrientation    = 0;
-         lf.lfWeight         = hb_parnl( 5 );
-         lf.lfItalic         = ( BYTE ) hb_parl( 6 );
-         lf.lfUnderline      = ( BYTE ) hb_parl( 7 );
-         lf.lfStrikeOut      = ( BYTE ) hb_parl( 8 );
-         lf.lfCharSet        = ( BYTE ) hb_parnidef( 9, wvw_top->CodePage );
-         lf.lfOutPrecision   = 0;
-         lf.lfClipPrecision  = 0;
-         lf.lfQuality        = ( BYTE ) hb_parnidef( 10, DEFAULT_QUALITY );
-         lf.lfPitchAndFamily = FF_DONTCARE;
-         lf.lfHeight         = hb_parnldef( 3, wvw_top->fontHeight );
-         lf.lfWidth = hb_parnldef( 4, wvw_top->fontWidth < 0 ? -wvw_top->fontWidth : wvw_top->fontWidth );
+      hFont = CreateFontIndirect( &lf );
+      if( hFont )
+      {
+         if( wvw->a.hUserFonts[ iSlot ] )
+            DeleteObject( wvw->a.hUserFonts[ iSlot ] );
 
-         if( HB_ISCHAR( 2 ) )
-         {
-            HB_ITEMCOPYSTR( hb_param( 2, HB_IT_STRING ), lf.lfFaceName, HB_SIZEOFARRAY( lf.lfFaceName ) );
-            wvw_top->fontFace[ HB_SIZEOFARRAY( lf.lfFaceName ) - 1 ] = TEXT( '\0' );
-         }
-         else
-            HB_STRNCPY( lf.lfFaceName, wvw_top->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
+         wvw->a.hUserFonts[ iSlot ] = hFont;
 
-         hFont = CreateFontIndirect( &lf );
-         if( hFont )
-         {
-            if( wvw->a.hUserFonts[ iSlot ] )
-               DeleteObject( wvw->a.hUserFonts[ iSlot ] );
-
-            wvw->a.hUserFonts[ iSlot ] = hFont;
-
-            fResult = HB_TRUE;
-         }
+         hb_retl( HB_TRUE );
+         return;
       }
    }
 
-   hb_retl( fResult );
+   hb_retl( HB_FALSE );
 }
 
 /* wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
@@ -1460,13 +1443,13 @@ HB_FUNC( WVW_LOADPEN )
 {
    PWVW_GLO wvw = hb_gt_wvw();
 
-   if( wvw )
-   {
-      int iSlot = hb_parni( 1 ) - 1;
+   int iSlot = hb_parni( 1 ) - 1;
 
+   if( wvw && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserPens ) )
+   {
       HPEN hPen = CreatePen( hb_parni( 2 ), hb_parni( 3 ), ( COLORREF ) hb_parnint( 4 ) );
 
-      if( hPen && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserPens ) )
+      if( hPen )
       {
          if( wvw->a.hUserPens[ iSlot ] )
             DeleteObject( wvw->a.hUserPens[ iSlot ] );
@@ -1504,7 +1487,7 @@ HB_FUNC( WVW_MESSAGEBOX )
 
 /* End of drawing primitives */
 
-/* Utility functions. A natural extension copied and modified from gtwvt */
+/* Utility functions. A natural extension copied and modified from GTWVT */
 
 /* wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_CHOOSEFONT )
@@ -1629,12 +1612,12 @@ HB_FUNC( WVW_SETMOUSEPOS )
    if( wvw_win )
    {
       POINT xy;
-      int   usRow = hb_parni( 2 ),
+      int   iRow  = hb_parni( 2 ),
             usCol = hb_parni( 3 );
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iRow, &usCol, NULL, NULL );
 
-      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, iRow );
 
       if( ClientToScreen( wvw_win->hWnd, &xy ) )
       {
@@ -1647,7 +1630,7 @@ HB_FUNC( WVW_SETMOUSEPOS )
 }
 
 /* by bdj
-   none in gtwvt
+   none in GTWVT
       wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBcolor/hBrush,
                          lTight, lUseBrush, aOffSet )
 
@@ -1667,10 +1650,10 @@ HB_FUNC( WVW_FILLRECTANGLE )
 
    if( wvw && wvw_win )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parni( 4 ),
+          iRight  = hb_parni( 5 );
 
       int iOffTop    = hb_parvni( 9, 1 );
       int iOffLeft   = hb_parvni( 9, 2 );
@@ -1678,7 +1661,6 @@ HB_FUNC( WVW_FILLRECTANGLE )
       int iOffRight  = hb_parvni( 9, 4 );
 
       POINT xy;
-      int   iTop, iLeft, iBottom, iRight;
 
       COLORREF crRGBcolor = ( COLORREF ) hb_parnint( 6 );
       HB_BOOL  fTight     = hb_parl( 7 );
@@ -1687,13 +1669,13 @@ HB_FUNC( WVW_FILLRECTANGLE )
       HBRUSH   hBrush;
       RECT     xyRect;
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
 
-      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       iTop  = ( fTight ? xy.y + 2 : xy.y ) + iOffTop;
       iLeft = ( fTight ? xy.x + 2 : xy.x ) + iOffLeft;
 
-      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
       iBottom = xy.y - wvw_win->iLineSpacing - 1 + 1 + iOffBottom;
       iRight  = xy.x - 1 + 1 + iOffRight;
 
@@ -1960,8 +1942,8 @@ HB_FUNC( WVW_GETCURSORPOS )
 
    GetCursorPos( &xy );
 
-   hb_arraySetNI( info, 1, xy.x );
-   hb_arraySetNI( info, 2, xy.y );
+   hb_arraySetNL( info, 1, xy.x );
+   hb_arraySetNL( info, 2, xy.y );
 
    hb_itemReturnRelease( info );
 }
@@ -2222,23 +2204,23 @@ HB_FUNC( WVW_SAVESCREEN )
 
    if( wvw_win )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parni( 4 ),
+          iRight  = hb_parni( 5 );
 
       HBITMAP  hBmp, oldBmp;
       POINT    xy;
-      int      iTop, iLeft, iBottom, iRight, iWidth, iHeight;
+      int      iWidth, iHeight;
       PHB_ITEM info = hb_itemArrayNew( 3 );
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
 
-      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       iTop  = xy.y;
       iLeft = xy.x;
 
-      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
       iBottom = xy.y - 1;
       iRight  = xy.x - 1;
 
@@ -2270,25 +2252,25 @@ HB_FUNC( WVW_RESTSCREEN )
 
    if( wvw_win )
    {
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parni( 4 ),
-          usRight  = hb_parni( 5 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parni( 4 ),
+          iRight  = hb_parni( 5 );
 
       POINT xy;
-      int   iTop, iLeft, iBottom, iRight, iWidth, iHeight;
+      int   iWidth, iHeight;
 
       HBITMAP hBmp;
 
       HB_BOOL fResult = HB_FALSE;
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
 
-      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       iTop  = xy.y;
       iLeft = xy.x;
 
-      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
       iBottom = xy.y - 1;
       iRight  = xy.x - 1;
 
@@ -2365,7 +2347,7 @@ HB_FUNC( WVW_SETFONT )
           * This makes effectively impossible to enlarge the window from it's
           * initial size.
           *
-          * x with the above remark, gtwvt comments out the following condition:
+          * x with the above remark, GTWVT comments out the following condition:
           * x TODO: I THINK I am I to keep it, am I?
           */
 
@@ -2480,10 +2462,7 @@ HB_FUNC( WVW_CENTERWINDOW )
 
       if( hb_parl( 3 ) /* fPaint */ )
       {
-         if( IsZoomed( wvw_win->hWnd ) )
-            ShowWindow( wvw_win->hWnd, SW_MAXIMIZE );
-         else
-            ShowWindow( wvw_win->hWnd, SW_RESTORE );
+         ShowWindow( wvw_win->hWnd, IsZoomed( wvw_win->hWnd ) ? SW_MAXIMIZE : SW_RESTORE );
 
          hb_gt_wvw_ResetWindowSize( wvw_win, wvw_win->hWnd );
       }
@@ -2558,7 +2537,7 @@ HB_FUNC( WVW_GETFONTINFO )
       hb_arraySetNL( aRet, 2, wvw_win->fontHeight );
       hb_arraySetNL( aRet, 3, wvw_win->fontWidth );
       hb_arraySetNL( aRet, 4, wvw_win->fontWeight );
-      hb_arraySetNL( aRet, 5, wvw_win->fontQuality );
+      hb_arraySetNI( aRet, 5, wvw_win->fontQuality );
       hb_arraySetNL( aRet, 6, wvw_win->PTEXTSIZE.y );
       hb_arraySetNL( aRet, 7, wvw_win->PTEXTSIZE.x );
    }
@@ -2568,7 +2547,7 @@ HB_FUNC( WVW_GETFONTINFO )
       hb_arraySetNL( aRet, 2, 0 );
       hb_arraySetNL( aRet, 3, 0 );
       hb_arraySetNL( aRet, 4, 0 );
-      hb_arraySetNL( aRet, 5, 0 );
+      hb_arraySetNI( aRet, 5, 0 );
       hb_arraySetNL( aRet, 6, 0 );
       hb_arraySetNL( aRet, 7, 0 );
    }
@@ -2587,7 +2566,7 @@ HB_FUNC( WVW_MINIMIZE )
 /* wvw_Maximize( [nWinNum] )
    maximizes the window, if callback function WVW_SIZE exists
 
-   note: in gtwvt Wvt_Maximize() restores the window, not maximizes it
+   note: in GTWVT Wvt_Maximize() restores the window, not maximizes it
    see also: wvw_Restore(), wvw_MaxMaxRow(), wvw_MaxMaxCol()
  */
 HB_FUNC( WVW_MAXIMIZE )
@@ -2600,12 +2579,12 @@ HB_FUNC( WVW_MAXIMIZE )
       if( wvw->a.pSymWVW_SIZE )
          ShowWindow( wvw_win->hWnd, SW_MAXIMIZE );  /* app seems to be ready to handle the maximized window */
       else
-         ShowWindow( wvw_win->hWnd, SW_RESTORE );   /* the old, default behaviour as in gtwvt */
+         ShowWindow( wvw_win->hWnd, SW_RESTORE );   /* the old, default behaviour as in GTWVT */
    }
 }
 
 /* wvw_Restore( [nWinNum] )
-   restores the window (similar with gtwvt's Wvt_Maximize())
+   restores the window (similar with GTWVT's Wvt_Maximize())
 
    WARNING: restoring window from its maximized state might need handling
             in callback function WVW_SIZE,

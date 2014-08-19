@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw static control functions
+ * GTWVW static control functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -60,17 +60,16 @@ HB_FUNC( WVW_STCREATE )
       HWND      hWnd;
 
       POINT   xy;
-      int     iTop, iLeft, iBottom, iRight;
       int     iOffTop, iOffLeft, iOffBottom, iOffRight;
       HB_BOOL fBorder = hb_parl( 7 );
 
       int nCtrlId;
 
-      int usWidth  = hb_parni( 4 );
-      int usTop    = hb_parni( 2 ),
-          usLeft   = hb_parni( 3 ),
-          usBottom = hb_parnidef( 11, usTop ),
-          usRight  = hb_parnidef( 12, usLeft + usWidth - 1 );
+      int iWidth  = hb_parni( 4 );
+      int iTop    = hb_parni( 2 ),
+          iLeft   = hb_parni( 3 ),
+          iBottom = hb_parnidef( 11, iTop ),
+          iRight  = hb_parnidef( 12, iLeft + iWidth - 1 );
 
       int   iStyle = fBorder ? WS_BORDER : 0;
       int   iBox   = hb_parni( 10 );
@@ -97,13 +96,13 @@ HB_FUNC( WVW_STCREATE )
       iOffBottom = hb_parvni( 6, 3 );
       iOffRight  = hb_parvni( 6, 4 );
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
 
-      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       iTop  = xy.y + iOffTop;
       iLeft = xy.x + iOffLeft;
 
-      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
       iBottom = xy.y - wvw_win->iLineSpacing - 1 + iOffBottom;
       iRight  = xy.x - 1 + iOffRight;
 

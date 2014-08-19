@@ -236,7 +236,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    {
       s_wvw = ( PWVW_GLO ) hb_xgrabz( sizeof( WVW_GLO ) );
 
-      s_wvw->uiPaintRefresh      = 100;
+      s_wvw->iPaintRefresh       = 100;
       s_wvw->fMainCoordMode      = HB_FALSE;
       s_wvw->fVertCaret          = HB_FALSE;
       s_wvw->fNOSTARTUPSUBWINDOW = HB_FALSE;
@@ -1529,9 +1529,9 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
             if( HB_IS_EVALITEM( pFunc ) )
             {
                PHB_ITEM hihDlg    = hb_itemPutNInt( NULL, ( HB_PTRDIFF ) hDlg );
-               PHB_ITEM himessage = hb_itemPutNL( NULL, ( long ) message );
-               PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, ( HB_MAXINT ) wParam );
-               PHB_ITEM hilParam  = hb_itemPutNInt( NULL, ( HB_MAXINT ) lParam );
+               PHB_ITEM himessage = hb_itemPutNInt( NULL, message );
+               PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, wParam );
+               PHB_ITEM hilParam  = hb_itemPutNInt( NULL, lParam );
 
                PHB_ITEM pReturn = hb_itemDo( pFunc, 4, hihDlg, himessage, hiwParam, hilParam );
 
@@ -1655,9 +1655,9 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
             if( HB_IS_EVALITEM( pFunc ) )
             {
                PHB_ITEM hihDlg    = hb_itemPutNInt( NULL, ( HB_PTRDIFF ) hDlg );
-               PHB_ITEM himessage = hb_itemPutNL( NULL, ( long ) message );
-               PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, ( HB_MAXINT ) wParam );
-               PHB_ITEM hilParam  = hb_itemPutNInt( NULL, ( HB_MAXINT ) lParam );
+               PHB_ITEM himessage = hb_itemPutNInt( NULL, message );
+               PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, wParam );
+               PHB_ITEM hilParam  = hb_itemPutNInt( NULL, lParam );
 
                PHB_ITEM pReturn = hb_itemDo( pFunc, 4, hihDlg, himessage, hiwParam, hilParam );
 
@@ -2038,13 +2038,10 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
       }
    }
 
-   if( ! IsZoomed( hWnd ) )
-      SetWindowPos( hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
-   else
-   {
-      SetWindowPos( hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+   SetWindowPos( hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+
+   if( IsZoomed( hWnd ) )
       InvalidateRect( hWnd, NULL, FALSE );
-   }
 
    if( wvw_win->hStatusBar != NULL )
       SetWindowPos( wvw_win->hStatusBar, NULL, wi.left, wi.bottom - wvw_win->iSBHeight, width, wvw_win->iSBHeight, SWP_NOZORDER );
@@ -2089,7 +2086,7 @@ static void xUserPaintNow( PWVW_WIN wvw_win )
    static HB_BOOL s_fRunning = HB_FALSE;
 
    /* make sure we don't execute it > 1 time
-      eg. if s_wvw->uiPaintRefresh is too small */
+      eg. if s_wvw->iPaintRefresh is too small */
    if( ! s_fRunning )
    {
       s_fRunning = HB_TRUE;
@@ -2545,7 +2542,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
                hb_wvw_UpdatePendingRect( wvw_win, rowStart, colStart, rowStop, colStop );
 
-               if( s_wvw->uiPaintRefresh == 0 )
+               if( s_wvw->iPaintRefresh == 0 )
                   xUserPaintNow( wvw_win );
             }
          }
@@ -3224,8 +3221,8 @@ static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    s_wvw->pWin[ s_wvw->iNumWindows - 1 ]->hWnd = hWnd;
 
-   if( s_wvw->a.pSymWVW_PAINT && s_wvw->uiPaintRefresh > 0 )
-      SetTimer( hWnd, WVW_ID_SYSTEM_TIMER, ( UINT ) s_wvw->uiPaintRefresh, NULL );
+   if( s_wvw->a.pSymWVW_PAINT && s_wvw->iPaintRefresh > 0 )
+      SetTimer( hWnd, WVW_ID_SYSTEM_TIMER, ( UINT ) s_wvw->iPaintRefresh, NULL );
 
    /* If you wish to show window the way you want, put somewhere in your application
     * ANNOUNCE HB_NOSTARTUPWINDOW
@@ -3878,8 +3875,8 @@ static void hb_gtInitStatics( int nWin, LPCTSTR szWinName, int iRow1, int iCol1,
       s_wvw->a.pphPictureList = NULL;
 
       s_wvw->a.pbhUserBitmap = NULL;
-      s_wvw->a.uiBMcache     = 0;
-      s_wvw->a.uiMaxBMcache  = WVW_DEFAULT_MAX_BMCACHE;
+      s_wvw->a.iBMcache      = 0;
+      s_wvw->a.iMaxBMcache   = WVW_DEFAULT_MAX_BMCACHE;
 
    }
    else
@@ -4309,8 +4306,8 @@ int hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, in
       return 0;
    }
 
-   if( s_wvw->a.pSymWVW_PAINT && s_wvw->uiPaintRefresh > 0 )
-      SetTimer( hWnd, WVW_ID_SYSTEM_TIMER, ( UINT ) s_wvw->uiPaintRefresh, NULL );
+   if( s_wvw->a.pSymWVW_PAINT && s_wvw->iPaintRefresh > 0 )
+      SetTimer( hWnd, WVW_ID_SYSTEM_TIMER, ( UINT ) s_wvw->iPaintRefresh, NULL );
 
    /* If you wish to show window the way you want, put somewhere in your application
     * ANNOUNCE HB_NOSTARTUPWINDOW
@@ -5564,10 +5561,10 @@ TCHAR * hb_gt_wvw_GetAppName( void )
    function WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
 
    notes:
- * this function is called by gtwvw AFTER the size is changed
- * WARNING: screen repainting is not performed completely by gtwvw at this point of call
- * WARNING: this function may be called BEFORE gtwvw initialization (use wvw_gtinit() to check)
- * WARNING: this function may be called AFTER xharbour vm cleans up static variables,
+ * this function is called by GTWVW AFTER the size is changed
+ * WARNING: screen repainting is not performed completely by GTWVW at this point of call
+ * WARNING: this function may be called BEFORE GTWVW initialization (use wvw_gtinit() to check)
+ * WARNING: this function may be called AFTER xHarbour vm cleans up static variables,
               so do NOT use static variables in this function (unless you guard the usage properly)!
               you may however uses MEMVAR such as PUBLIC variables
  */
@@ -5759,7 +5756,7 @@ void hb_gt_wvw_AddUserBitmapHandle( const char * szFileName, HBITMAP hBitmap, in
    pbhNew->iWidth  = iWidth;
    pbhNew->iHeight = iHeight;
 
-   if( s_wvw->a.uiBMcache >= s_wvw->a.uiMaxBMcache )
+   if( s_wvw->a.iBMcache >= s_wvw->a.iMaxBMcache )
    {
       WVW_BMP * pbhTail, * pbhPrev;
 
@@ -5779,11 +5776,11 @@ void hb_gt_wvw_AddUserBitmapHandle( const char * szFileName, HBITMAP hBitmap, in
             pbhPrev->pNext = NULL;
          else
             s_wvw->a.pbhUserBitmap = NULL;
-         s_wvw->a.uiBMcache--;
+         s_wvw->a.iBMcache--;
       }
    }
 
-   s_wvw->a.uiBMcache++;
+   s_wvw->a.iBMcache++;
    pbhNew->pNext = s_wvw->a.pbhUserBitmap;
    s_wvw->a.pbhUserBitmap = pbhNew;
 }

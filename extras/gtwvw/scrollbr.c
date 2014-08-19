@@ -2,7 +2,7 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw scrollbar functions
+ * GTWVW scrollbar functions
  * GTWVW is initially created based on:
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
@@ -181,17 +181,18 @@ HB_FUNC( WVW_XBCREATE )
 
    if( wvw && wvw_win )
    {
-      int usTop  = hb_parni( 3 ),
-          usLeft = hb_parni( 4 ),
-          usBottom,
-          usRight;
+      int iTop  = hb_parni( 3 ),
+          iLeft = hb_parni( 4 ),
+          iBottom,
+          iRight;
 
       HWND  hWnd;
       POINT xy;
-      int   iTop, iLeft, iBottom, iRight;
       int   iOffTop, iOffLeft, iOffBottom, iOffRight;
       int   iStyle = hb_parnidef( 2, -1 );
       int   nCtrlId;
+
+      RECT rXB, rOffXB;
 
       if( iStyle < SBS_HORZ || iStyle > SBS_VERT || ! HB_ISEVALITEM( 6 ) )
       {
@@ -201,8 +202,8 @@ HB_FUNC( WVW_XBCREATE )
 
       if( iStyle == SBS_VERT )
       {
-         usBottom = usTop + hb_parni( 5 ) - 1;
-         usRight  = usLeft;
+         iBottom = iTop + hb_parni( 5 ) - 1;
+         iRight  = iLeft;
 
          iOffTop    = hb_parvni( 7, 1 );
          iOffLeft   = HB_ISARRAY( 7 ) ? hb_parvni( 7, 2 ) : 3;
@@ -211,8 +212,8 @@ HB_FUNC( WVW_XBCREATE )
       }
       else
       {
-         usRight  = usLeft + hb_parni( 5 ) - 1;
-         usBottom = usTop;
+         iRight  = iLeft + hb_parni( 5 ) - 1;
+         iBottom = iTop;
 
          iOffTop    = HB_ISARRAY( 7 ) ? hb_parvni( 7, 1 ) : 3 - wvw_win->iLineSpacing;
          iOffLeft   = hb_parvni( 7, 2 );
@@ -220,13 +221,23 @@ HB_FUNC( WVW_XBCREATE )
          iOffRight  = hb_parvni( 7, 4 );
       }
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      rXB.top    = iTop;
+      rXB.left   = iLeft;
+      rXB.bottom = iBottom;
+      rXB.right  = iRight;
 
-      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+      rOffXB.top    = iOffTop;
+      rOffXB.left   = iOffLeft;
+      rOffXB.bottom = iOffBottom;
+      rOffXB.right  = iOffRight;
+
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
+
+      xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
       iTop  = xy.y + iOffTop;
       iLeft = xy.x + iOffLeft;
 
-      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
 
       if( iStyle == SBS_VERT )
       {
@@ -261,19 +272,7 @@ HB_FUNC( WVW_XBCREATE )
 
       if( hWnd )
       {
-         RECT rXB, rOffXB;
-
          WNDPROC OldProc;
-
-         rXB.top    = usTop;
-         rXB.left   = usLeft;
-         rXB.bottom = usBottom;
-         rXB.right  = usRight;
-
-         rOffXB.top    = iOffTop;
-         rOffXB.left   = iOffLeft;
-         rOffXB.bottom = iOffBottom;
-         rOffXB.right  = iOffRight;
 
          SetScrollRange( hWnd, SB_CTL, 0, 99, FALSE );
          SetScrollPos( hWnd, SB_CTL, 0, TRUE );
@@ -341,38 +340,34 @@ HB_FUNC( WVW_XBUPDATE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw_win )
+   HWND hWnd = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
+
+   if( hWnd )
    {
-      HWND hWnd  = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
-      int  iPage = hb_parni( 4 );
+      SCROLLINFO si;
 
-      if( hWnd && iPage >= 0 )
-      {
-         SCROLLINFO si;
-         UINT       fMask = SIF_DISABLENOSCROLL;
+      UINT fMask = SIF_DISABLENOSCROLL;
 
-         if( HB_ISNUM( 3 ) )
-            fMask |= SIF_POS;
-         if( HB_ISNUM( 4 ) )
-            fMask |= SIF_PAGE;
-         if( HB_ISNUM( 5 ) || HB_ISNUM( 6 ) )
-            fMask |= SIF_RANGE;
+      if( HB_ISNUM( 3 ) )
+         fMask |= SIF_POS;
+      if( HB_ISNUM( 4 ) )
+         fMask |= SIF_PAGE;
+      if( HB_ISNUM( 5 ) || HB_ISNUM( 6 ) )
+         fMask |= SIF_RANGE;
 
-         memset( &si, 0, sizeof( si ) );
+      memset( &si, 0, sizeof( si ) );
 
-         si.cbSize = sizeof( si );
-         si.fMask  = fMask;
-         si.nMin   = hb_parni( 5 );
-         si.nMax   = hb_parni( 6 );
-         si.nPage  = ( UINT ) iPage;
-         si.nPos   = hb_parni( 3 );
+      si.cbSize = sizeof( si );
+      si.fMask  = fMask;
+      si.nMin   = hb_parni( 5 );
+      si.nMax   = hb_parni( 6 );
+      si.nPage  = ( UINT ) hb_parnint( 4 );
+      si.nPos   = hb_parni( 3 );
 
-         hb_retni( SetScrollInfo( hWnd, SB_CTL, &si, TRUE ) );
-         return;
-      }
+      hb_retni( SetScrollInfo( hWnd, SB_CTL, &si, TRUE ) );
    }
-
-   hb_retni( -1 );
+   else
+      hb_retni( -1 );
 }
 
 /* wvw_xbInfo( [nWinNum], XBid )
@@ -397,11 +392,11 @@ HB_FUNC( WVW_XBINFO )
       {
          PHB_ITEM aInfo = hb_itemArrayNew( 5 );
 
-         hb_arraySetNL( aInfo, 1, si.nMin );
-         hb_arraySetNL( aInfo, 2, si.nMax );
-         hb_arraySetNL( aInfo, 3, si.nPage );
-         hb_arraySetNL( aInfo, 4, si.nPos );
-         hb_arraySetNL( aInfo, 5, si.nTrackPos );
+         hb_arraySetNI( aInfo, 1, si.nMin );
+         hb_arraySetNI( aInfo, 2, si.nMax );
+         hb_arraySetNInt( aInfo, 3, si.nPage );
+         hb_arraySetNI( aInfo, 4, si.nPos );
+         hb_arraySetNI( aInfo, 5, si.nTrackPos );
 
          hb_itemReturnRelease( aInfo );
          return;
@@ -424,7 +419,7 @@ HB_FUNC( WVW_XBENABLE )
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd    = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
-   UINT uiFlags = ( UINT ) hb_parni( 3 );
+   UINT uiFlags = ( UINT ) hb_parnint( 3 );
 
    hb_retl( hWnd && uiFlags <= ESB_DISABLE_BOTH && EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
 }

@@ -9,7 +9,8 @@
 STATIC s_cQuestion := "Quick survey: What do you think about GTWVW?"
 STATIC s_cHint     := "Hint: Please be positive..."
 
-STATIC s_aAnswers  := { "1-GTWVW is a great library!", ;
+STATIC s_aAnswers  := { ;
+      "1-GTWVW is a great library!", ;
       "2-GT who? I never heard about him", ;
       "3-Sorry, I don't like it" }
 
@@ -100,16 +101,16 @@ PROCEDURE Main()
 STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
 
    DO CASE
-   CASE nEvent == 3 // CBN_SETFOCUS
+   CASE nEvent == 3  // CBN_SETFOCUS
       // none
-   CASE nEvent == 4 // CBN_KILLFOCUS
+   CASE nEvent == 4  // CBN_KILLFOCUS
       // none
       IF nIndex == 0
          wvw_pbEnable( nWinNum, nPBid, .T. )
       ELSE
          wvw_pbEnable( nWinNum, nPBid, .F. )
       ENDIF
-   CASE nEvent == 1 // CBN_SELCHANGE
+   CASE nEvent == 1  // CBN_SELCHANGE
       IF ! wvw_cbIsDropped( nWinNum, nId )
          // nIndex is 0-based
          IF nIndex == 0
