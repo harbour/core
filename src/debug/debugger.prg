@@ -215,6 +215,7 @@ CREATE CLASS HBDebugger
    VAR lLineNumbers      INIT .T.
    VAR nHelpPage         INIT 1
    VAR nWaFocus          INIT 1
+   VAR nCmdWndHight      INIT 3
    VAR lWindowsAutoSized INIT .T.
 
    METHOD New()
@@ -227,6 +228,7 @@ CREATE CLASS HBDebugger
    METHOD BarDisplay()
    METHOD BuildCommandWindow()
    METHOD BuildBrowseStack()
+   METHOD ResizeCmdWnd( nLines )
 
    METHOD CallStackProcessKey( nKey )
    METHOD ClrModal() INLINE iif( ::lMonoDisplay, "N/W, W+/W, W/N, W+/N", ;
@@ -380,7 +382,9 @@ METHOD New() CLASS HBDebugger
 
    ::oPullDown := __dbgBuildMenu( Self )
 
-   ::oWndCode             := HBDbWindow():New( 1, 0, ::nMaxRow - 6, ::nMaxCol )
+   ::oWndCode             := HBDbWindow():New( 1, 0, ;
+                                               ::nMaxRow - ::nCmdWndHight - 3, ;
+                                               ::nMaxCol )
    ::oWndCode:bKeyPressed := {| nKey | ::CodeWindowProcessKey( nKey ) }
 
    AAdd( ::aWindows, ::oWndCode )
@@ -501,7 +505,7 @@ METHOD PROCEDURE BuildBrowseStack() CLASS HBDebugger
 
    IF ::oBrwStack == NIL
       aColors := __dbgColors()
-      ::oBrwStack := HBDbBrowser():New( 2, ::nMaxCol - 14, ::nMaxRow - 7, ::nMaxCol - 1 )
+      ::oBrwStack := HBDbBrowser():New( 2, ::nMaxCol - 14, ::nMaxRow - ::nCmdWndHight - 4, ::nMaxCol - 1 )
       ::oBrwStack:ColorSpec := aColors[ 3 ] + "," + aColors[ 4 ] + "," + aColors[ 5 ] + "," + aColors[ 6 ]
       ::oBrwStack:goTopBlock := {|| ::oBrwStack:Cargo := 1 }
       ::oBrwStack:goBottomBlock := {|| ::oBrwStack:Cargo := Len( ::aProcStack ) }
@@ -523,7 +527,8 @@ METHOD PROCEDURE BuildCommandWindow() CLASS HBDebugger
 
    LOCAL nSize
 
-   ::oWndCommand := HBDbWindow():New( ::nMaxRow - 5, 0, ::nMaxRow - 1, ::nMaxCol, "Command" )
+   ::oWndCommand := HBDbWindow():New( ::nMaxRow - ::nCmdWndHight - 2, 0, ;
+                                      ::nMaxRow - 1, ::nMaxCol, "Command" )
 
    ::oWndCommand:bKeyPressed := {| nKey | ::CommandWindowProcessKey( nKey ) }
    ::oWndCommand:bPainted    := {|| ::CommandWindowDisplay(), ;
@@ -1534,10 +1539,16 @@ METHOD PROCEDURE HandleEvent() CLASS HBDebugger
             ::aWindows[ ::nCurrentWindow ]:KeyPressed( nKey )
             EXIT
 
+         CASE K_ALT_U /* Move the border between Command and Code windows Up */
+            ::ResizeCmdWnd( 1 )
+            EXIT
+
+         CASE K_ALT_D /* Move the border between Command and Code windows Down */
+            ::ResizeCmdWnd( -1 )
+            EXIT
+
          CASE K_ALT_G /* Grow active window */
          CASE K_ALT_S /* Shrink active window */
-         CASE K_ALT_U /* Move the border between Command and Code windows Up */
-         CASE K_ALT_D /* Move the border between Command and Code windows Down */
             ::NotSupported()
             EXIT
 
@@ -2384,15 +2395,15 @@ METHOD PROCEDURE SaveAppScreen() CLASS HBDebugger
       ::nMaxCol := MaxCol()
       nTop := 1
       nRight := ::nMaxCol
-      ::oWndCommand:Resize( ::nMaxRow - 5, 0, ::nMaxRow - 1, ::nMaxCol )
+      ::oWndCommand:Resize( ::nMaxRow - ::nCmdWndHight - 2, 0, ::nMaxRow - 1, ::nMaxCol )
       ::oGetCommand:newPos( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 )
       ::oBrwStack:nTop := 2
       ::oBrwStack:nLeft := ::nMaxCol - 14
       ::oBrwStack:nRight := ::nMaxCol - 1
-      ::oBrwStack:nBottom := ::nMaxRow - 7
+      ::oBrwStack:nBottom := ::nMaxRow - ::nCmdWndHight - 4
       IF ::oWndStack != NIL
          nRight -= 16
-         ::oWndStack:Resize( , nRight + 1, ::nMaxRow - 6, ::nMaxCol )
+         ::oWndStack:Resize( , nRight + 1, ::nMaxRow - ::nCmdWndHight - 3, ::nMaxCol )
       ENDIF
       IF ::oWndVars != NIL
          ::oWndVars:Resize( , , , nRight )
@@ -2402,7 +2413,7 @@ METHOD PROCEDURE SaveAppScreen() CLASS HBDebugger
          ::oWndPnt:Resize( , , , nRight )
          nTop := Max( nTop, ::oWndPnt:nBottom + 1 )
       ENDIF
-      ::oWndCode:Resize( nTop, 0, ::nMaxRow - 6, nRight )
+      ::oWndCode:Resize( nTop, 0, ::nMaxRow - ::nCmdWndHight - 3, nRight )
       ::oPullDown:Refresh()
       ::BarDisplay()
       DispEnd()
@@ -2524,6 +2535,79 @@ METHOD PROCEDURE SaveSettings( cFileName ) CLASS HBDebugger
    RETURN
 
 
+METHOD ResizeCmdWnd( nLines ) CLASS HBDebugger
+
+   LOCAL nRight
+   LOCAL nTop
+   LOCAL aShow
+   LOCAL oWnd
+
+   nTop := 1
+   nRight := ::nMaxCol
+   IF ::oWndVars != NIL
+      nTop := Max( nTop, ::oWndVars:nBottom + 1 )
+   ENDIF
+   IF ::oWndPnt != NIL
+      nTop := Max( nTop, ::oWndPnt:nBottom + 1 )
+   ENDIF
+   IF ::oWndStack != NIL
+      nRight -= 16
+   ENDIF
+
+   IF ::nCmdWndHight + nLines >= 2 .AND. ;
+      ::nMaxRow - ( ::nCmdWndHight + nLines + 4 ) > nTop
+
+      DispBegin()
+      aShow := {}
+      IF ::oWndCode:lVisible
+         ::oWndCode:Hide()
+         AAdd( aShow, ::oWndCode )
+      ENDIF
+      IF ::oWndPnt != NIL .AND. ::oWndPnt:lVisible
+         ::oWndPnt:Hide()
+         AAdd( aShow, ::oWndPnt )
+      ENDIF
+      IF ::oWndVars != NIL .AND. ::oWndVars:lVisible
+         ::oWndVars:Hide()
+         AAdd( aShow, ::oWndVars )
+      ENDIF
+      IF ::oWndStack != NIL .AND. ::oWndStack:lVisible
+         ::oWndStack:Hide()
+         AAdd( aShow, ::oWndStack )
+      ENDIF
+      IF ::oWndCommand:lVisible
+         ::oWndCommand:Hide()
+         AAdd( aShow, ::oWndCommand )
+      ENDIF
+
+      ::nCmdWndHight += nLines
+      ::oWndCommand:Resize( ::nMaxRow - ::nCmdWndHight - 2, 0, ::nMaxRow - 1, ::nMaxCol )
+      ::oGetCommand:newPos( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 )
+      ::oBrwStack:nTop := 2
+      ::oBrwStack:nLeft := ::nMaxCol - 14
+      ::oBrwStack:nRight := ::nMaxCol - 1
+      ::oBrwStack:nBottom := ::nMaxRow - ::nCmdWndHight - 4
+      ::oBrwStack:Configure()
+      IF ::oWndStack != NIL
+         ::oWndStack:Resize( , nRight + 1, ::nMaxRow - ::nCmdWndHight - 3, ::nMaxCol )
+      ENDIF
+      IF ::oWndVars != NIL
+         ::oWndVars:Resize( , , , nRight )
+      ENDIF
+      IF ::oWndPnt != NIL
+         ::oWndPnt:Resize( , , , nRight )
+      ENDIF
+      ::oWndCode:Resize( nTop, 0, ::nMaxRow - ::nCmdWndHight - 3, nRight )
+      FOR EACH oWnd IN aShow DESCEND
+         oWnd:Show()
+      NEXT
+      DispEnd()
+
+   ENDIF
+
+   RETURN Self
+
+
 METHOD PROCEDURE SearchLine( cLine ) CLASS HBDebugger
 
    ::GotoLine( Max( 1, iif( HB_ISSTRING( cLine ) .AND. IsDigit( cLine ), ;
@@ -2590,8 +2674,9 @@ METHOD PROCEDURE ShowCallStack() CLASS HBDebugger
          ::aWindows[ ::nCurrentWindow ]:Show( .F. )
       ENDIF
 
-      ::oWndStack := HBDbWindow():New( 1, ::nMaxCol - 15, ::nMaxRow - 6, ::nMaxCol, ;
-         "Calls" )
+      ::oWndStack := HBDbWindow():New( 1, ::nMaxCol - 15, ;
+                                       ::nMaxRow - ::nCmdWndHight - 3, ;
+                                       ::nMaxCol, "Calls" )
       ::oWndStack:bKeyPressed  := {| nKey | ::CallStackProcessKey( nKey ) }
       ::oWndStack:bLButtonDown := {|| ::CallStackProcessKey( K_LBUTTONDOWN ) }
 
