@@ -966,8 +966,7 @@ HB_FUNC( WVW_INVALIDATERECT )
       RECT  rc;
       POINT xy;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy        = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       rc.top    = xy.y;
@@ -997,8 +996,7 @@ HB_FUNC( WVW_CLIENTTOSCREEN )
       int usTop  = hb_parni( 2 ),
           usLeft = hb_parni( 3 );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
 
       xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
 

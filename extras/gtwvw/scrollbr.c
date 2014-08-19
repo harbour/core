@@ -220,8 +220,7 @@ HB_FUNC( WVW_XBCREATE )
          iOffRight  = hb_parvni( 7, 4 );
       }
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;

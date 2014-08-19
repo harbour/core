@@ -4686,6 +4686,7 @@ void hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * piRow1, int * piCol1, int
       if( piCol2 )
          *piCol2 -= hb_gt_wvw_ColOfs( wvw_win );
    }
+   /* else: do not touch the values */
 }
 
 /* assigns a new value to s_wvw->iCurWindow
@@ -6423,8 +6424,7 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
       }
    }
 
-   if( s_wvw->fMainCoordMode )
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+   hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
    xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
    iTop  = xy.y + iOffTop;

@@ -695,8 +695,7 @@ HB_FUNC( WVW_DRAWBOXGET )
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
       iTop  = xy.y - 1 + iOffTop;
@@ -767,8 +766,7 @@ HB_FUNC( WVW_DRAWBOXGET_XP )  /* Not in WVT */
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
       iTop  = xy.y - 1 + iOffTop;
@@ -825,8 +823,7 @@ HB_FUNC( WVW_DRAWBOXRAISED )
       int   iTop, iLeft, iBottom, iRight;
       int   iOffLeft, iOffTop, iOffRight, iOffBottom;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       if( fTight )
       {
@@ -886,8 +883,7 @@ HB_FUNC( WVW_DRAWBOXRECESSED )
       int   iTop, iLeft, iBottom, iRight;
       int   iOffLeft, iOffTop, iOffRight, iOffBottom;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       if( fTight )
       {
@@ -1057,8 +1053,7 @@ HB_FUNC( WVW_DRAWIMAGE )
       int iImgWidth = 0, iImgHeight = 0;
       int iOffLeft, iOffTop, iOffRight, iOffBottom;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       if( fTight )
       {
@@ -1184,8 +1179,7 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )  /* Not in WVT */
       int        iImgWidth = 0, iImgHeight = 0;
       IPicture * pPicture;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       if( HB_ISNUM( 6 ) )
          pPicture = hb_gt_wvw_rr_LoadPictureFromResource( wvw, NULL, hb_parni( 6 ), &iImgWidth, &iImgHeight );
@@ -1296,8 +1290,7 @@ HB_FUNC( WVW_DRAWLABEL )
       int      oldTextAlign;
       COLORREF oldBkColor, oldTextColor;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
 
       memset( &lf, 0, sizeof( lf ) );
 
@@ -1380,8 +1373,7 @@ HB_FUNC( WVW_DRAWLABELEX )
 
       POINT xy;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
 
       xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
 
@@ -1430,8 +1422,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
       void *  hText;
       LPCTSTR szText = HB_PARSTRDEF( 6, &hText, &nLen );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -1523,8 +1514,7 @@ HB_FUNC( WVW_DRAWOUTLINE )
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y - 1;
@@ -1576,8 +1566,7 @@ HB_FUNC( WVW_DRAWOUTLINEEX )
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y - 1;
@@ -1629,8 +1618,7 @@ HB_FUNC( WVW_DRAWLINE )
       int      iThick  = hb_parni( 10 );
       COLORREF cr      = ( COLORREF ) hb_parnint( 11 );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -1774,8 +1762,7 @@ HB_FUNC( WVW_DRAWLINEEX )
       int   iOrient, iFormat, iAlign;
       int   x, y;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y;
@@ -1916,8 +1903,7 @@ HB_FUNC( WVW_DRAWELLIPSE )
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -1958,8 +1944,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
       int     iTop, iLeft, iBottom, iRight;
       HB_BOOL fUseCurrentPen = hb_parldef( 7, HB_TRUE );  /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -2010,8 +1995,7 @@ HB_FUNC( WVW_DRAWROUNDRECT )
       POINT xy;
       int   iTop, iLeft, iBottom, iRight, iWd, iHt;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -2053,8 +2037,7 @@ HB_FUNC( WVW_DRAWFOCUSRECT )
       RECT  rc;
       POINT xy;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       rc.top  = xy.y + iOffTop;
@@ -2095,8 +2078,7 @@ HB_FUNC( WVW_DRAWCOLORRECT )
       RECT   rc;
       HBRUSH hBrush;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       rc.top  = xy.y + iOffTop;
@@ -2138,8 +2120,7 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
       int i, y;
       int iLeft, iRight;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usAtRow, &usLeft, NULL, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usAtRow, &usLeft, NULL, &usRight );
 
       iLeft  = usLeft * wvw_win->PTEXTSIZE.x;
       iRight = ( ( usRight + 1 ) * wvw_win->PTEXTSIZE.x ) - 1;
@@ -2192,8 +2173,7 @@ HB_FUNC( WVW_DRAWGRIDVERT )
 
       HB_SYMBOL_UNUSED( iOffRight );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, NULL, &usBottom, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, NULL, &usBottom, NULL );
 
       iCharWidth = wvw_win->PTEXTSIZE.x;
 
@@ -2258,8 +2238,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       COLORREF textColor = ( COLORREF ) hb_parnintdef(  9, hb_gt_wvw_GetColorData( 0 ) );
       COLORREF bkColor   = ( COLORREF ) hb_parnintdef( 10, hb_gt_wvw_GetColorData( 7 ) );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y;
@@ -2405,8 +2384,7 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
          usBottom = hb_parvni( 3, iNext + 3 );
          usRight  = hb_parvni( 3, iNext + 4 );
 
-         if( hb_gt_wvw_GetMainCoordMode() )
-            hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
          xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
          iTop  = xy.y;
@@ -2438,8 +2416,7 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
       usTop  = hb_parvni( 3, ( 4 * iPanels ) - 1 );
       usLeft = hb_parvni( 3, 4 * iPanels );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, NULL, NULL );
 
       xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop + 1 );
       iTop    = iBottom = xy.y - wvw_win->iLineSpacing - 2;
@@ -2488,8 +2465,7 @@ HB_FUNC( WVW_DRAWPICTURE )
 
       POINT xy;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       if( fTight )
       {
@@ -2542,8 +2518,7 @@ HB_FUNC( WVW_DRAWTOOLBUTTONSTATE )
       int   iTop, iLeft, iBottom, iRight;
       int   iState = hb_parni( 7 );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -2638,8 +2613,7 @@ HB_FUNC( WVW_DRAWSCROLLBUTTON )
       POINT xy;
       int   iHeight, iOff;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -2738,11 +2712,8 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBVERT )
       int   iTop, iLeft, iBottom, iRight;
       int   iTabTop, iTabLft, iTabBtm, iTabRgt;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-      {
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTabTop, NULL, NULL, NULL );
-      }
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTabTop, NULL, NULL, NULL );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -2798,11 +2769,8 @@ HB_FUNC( WVW_DRAWSCROLLTHUMBHORZ )
       int   iThumbLeft, iThumbRight;
       int   iTop, iLeft, iBottom, iRight;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-      {
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, NULL, &usThumbLeft, NULL, NULL );
-      }
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, NULL, &usThumbLeft, NULL, NULL );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -2859,8 +2827,7 @@ HB_FUNC( WVW_DRAWSHADEDRECT )
          POINT xy;
          int   iTop, iLeft, iBottom, iRight;
 
-         if( hb_gt_wvw_GetMainCoordMode() )
-            hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
          xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
          iTop  = xy.y + iOffTop;
@@ -2929,8 +2896,7 @@ HB_FUNC( WVW_DRAWTEXTBOX )
       void *  hText;
       LPCTSTR szText = HB_PARSTRDEF( 7, &hText, &nLen );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;
@@ -3010,8 +2976,7 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
       RECT  rc;
       POINT xy;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;

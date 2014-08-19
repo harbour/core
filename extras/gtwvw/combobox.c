@@ -357,8 +357,7 @@ HB_FUNC( WVW_CBCREATE )
       iOffBottom = iListLines;
       iOffRight  = hb_parvni( 10, 4 );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y + iOffTop;

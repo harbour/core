@@ -1632,8 +1632,7 @@ HB_FUNC( WVW_SETMOUSEPOS )
       int   usRow = hb_parni( 2 ),
             usCol = hb_parni( 3 );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usRow, &usCol, NULL, NULL );
 
       xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, usRow );
 
@@ -1688,8 +1687,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
       HBRUSH   hBrush;
       RECT     xyRect;
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = ( fTight ? xy.y + 2 : xy.y ) + iOffTop;
@@ -2234,8 +2232,7 @@ HB_FUNC( WVW_SAVESCREEN )
       int      iTop, iLeft, iBottom, iRight, iWidth, iHeight;
       PHB_ITEM info = hb_itemArrayNew( 3 );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y;
@@ -2284,10 +2281,8 @@ HB_FUNC( WVW_RESTSCREEN )
       HBITMAP hBmp;
 
       HB_BOOL fResult = HB_FALSE;
-      HB_BOOL fDoNotDestroyBMP = hb_parl( 7 );
 
-      if( hb_gt_wvw_GetMainCoordMode() )
-         hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
 
       xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
       iTop  = xy.y;
@@ -2331,7 +2326,7 @@ HB_FUNC( WVW_RESTSCREEN )
 
          SelectObject( wvw_win->hCompDC, hBmp );
 
-         if( ! fDoNotDestroyBMP )
+         if( ! hb_parl( 7 ) /* fDoNotDestroyBMP */ )
             DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 6, 3 ) );
       }
 
