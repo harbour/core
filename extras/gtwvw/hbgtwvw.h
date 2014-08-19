@@ -365,7 +365,7 @@ typedef struct
    HB_BOOL   InvalidateWindow;          /* Flag for controlling whether to use ScrollWindowEx() */
    HB_BOOL   EnableShortCuts;           /* Determines whether ALT key enables menu or system menu */
 
-   HDC       hdc;                       /* Handle to Windows Device Context */
+   HDC       hdc;                       /* Handle to Windows Device Context (TOFIX: ? non-MT compatible to store it, even with CS_OWNDC?) */
    HMENU     hPopup;                    /* Handle of context menu invokable with right click */
 
    HDC       hCompDC;                   /* Compatible DC to _s.hdc */

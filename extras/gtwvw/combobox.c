@@ -242,26 +242,26 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
    return CallWindowProc( OldProc, hWnd, message, wParam, lParam );
 }
 
-static int hb_gt_wvw_GetFontDialogUnits( HWND h, HFONT f )
+static int hb_gt_wvw_GetFontDialogUnits( HWND hWnd, HFONT f )
 {
    const TCHAR tmp[] = TEXT( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" );
 
    /* get the hdc to the main window */
-   HDC hDc = GetDC( h );
+   HDC hDC = GetDC( hWnd );
 
    /* with the current font attributes, select the font */
-   HFONT hFont    = f; /* GetStockObject( ANSI_VAR_FONT ); */
-   HFONT hFontOld = ( HFONT ) SelectObject( hDc, &hFont );
+   HFONT hFont    = f;  /* GetStockObject( ANSI_VAR_FONT ); */
+   HFONT hFontOld = ( HFONT ) SelectObject( hDC, &hFont );
 
    SIZE sz;
 
    /* get its length */
-   GetTextExtentPoint32( hDc, tmp, HB_SIZEOFARRAY( tmp ), &sz );
+   GetTextExtentPoint32( hDC, tmp, HB_SIZEOFARRAY( tmp ), &sz );
 
-   /* re-select the previous font & delete the hDc */
-   SelectObject( hDc, hFontOld );
+   /* re-select the previous font & delete the hDC */
+   SelectObject( hDC, hFontOld );
    DeleteObject( hFont );
-   ReleaseDC( h, hDc );
+   ReleaseDC( hWnd, hDC );
 
    /* calculate the average character width */
    return sz.cx / HB_SIZEOFARRAY( tmp );
