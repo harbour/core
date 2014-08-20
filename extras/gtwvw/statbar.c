@@ -149,24 +149,22 @@ HB_FUNC( WVW_SBADDPART )
 
       if( HB_ISCHAR( 2 ) )
       {
-         HDC  hDCSB = GetDC( hWnd );
-         SIZE size;
-
-         HFONT hFont    = ( HFONT ) SendMessage( hWnd, WM_GETFONT, 0, 0 );
-         HFONT hOldFont = ( HFONT ) SelectObject( hDCSB, hFont );
+         HDC hDCSB = GetDC( hWnd );
 
          HB_SIZE nLen;
          void *  hText;
          LPCTSTR szText = HB_PARSTR( 2, &hText, &nLen );
 
+         SIZE size;
+
          memset( &size, 0, sizeof( size ) );
+
+         SelectObject( hDCSB, ( HFONT ) SendMessage( hWnd, WM_GETFONT, 0, 0 ) );
 
          if( GetTextExtentPoint32( hDCSB, szText, ( int ) ( nLen + 1 ), &size ) )
             iWidth = size.cx;
 
          hb_strfree( hText );
-
-         SelectObject( hDCSB, hOldFont );
 
          ReleaseDC( hWnd, hDCSB );
       }
@@ -197,11 +195,11 @@ HB_FUNC( WVW_SBADDPART )
          int cx = cy;
 
          void * hName;
+         LPCTSTR szName = HB_PARSTR( 6, &hName, NULL );
 
-         hIcon = ( HICON ) LoadImage( 0, HB_PARSTR( 6, &hName, NULL ), IMAGE_ICON, cx, cy, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT | LR_DEFAULTSIZE );
-
+         hIcon = ( HICON ) LoadImage( 0, szName, IMAGE_ICON, cx, cy, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT | LR_DEFAULTSIZE );
          if( hIcon == NULL )
-            hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), HB_PARSTR( 6, &hName, NULL ), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
+            hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), szName, IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
 
          hb_strfree( hName );
 
