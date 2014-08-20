@@ -86,6 +86,7 @@
 
 #include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbgtcore.h"
 #include "hbwinuni.h"
 
 #if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
@@ -323,18 +324,17 @@ typedef struct
    POINT     PTEXTSIZE;                                /* size of the fixed width font */
    HB_BOOL   FixedFont;                                /* HB_TRUE if current font is a fixed font */
    int       FixedSize[ WVW_MAX_COLS ];                /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
+   TCHAR     TextLine[ WVW_MAX_COLS ];                 /* buffer for ExtTextOut() */
    int       ROWS;                                     /* number of displayable rows in window */
    int       COLS;                                     /* number of displayable columns in window */
    COLORREF  foreground;                               /* foreground color */
    COLORREF  background;                               /* background color */
 
    HB_SIZE   BUFFERSIZE;                               /* size of the screen text buffer */
-   TCHAR     byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ];  /* buffer with the text to be displayed on the screen */
-   HB_BYTE   byColors[ WVW_MAX_ROWS * WVW_MAX_COLS ];
-   TCHAR *   pBuffer;                                  /*   "     "    "    */
-   HB_BYTE * pColors;                                  /*   "     "    "    */
-   POINT     caretPos;                                 /* the current caret position */
 
+   HB_SCREENCELL screenBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ];
+
+   POINT     caretPos;                                 /* the current caret position */
    int       CaretSize;                                /* this may be specific to each windows, eg. different font size */
    POINT     mousePos;                                 /* the last mousedown position */
    HB_BOOL   MouseMove;                                /* Flag to say whether to return mouse movement events */

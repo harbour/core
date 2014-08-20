@@ -107,7 +107,7 @@ STATIC PROCEDURE xBrowse1()
 
    LOCAL aColumnsSep, tmp
 
-   USE "..\..\..\tests\test.dbf" NEW
+   USE "..\..\..\tests\test.dbf" NEW READONLY
    IF NetErr()
       RETURN
    ENDIF
