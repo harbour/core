@@ -3768,9 +3768,10 @@ static void hb_vmExactlyEqual( void )
    else if( HB_IS_STRING( pItem1 ) && HB_IS_STRING( pItem2 ) )
    {
       HB_BOOL fResult = pItem1->item.asString.length == pItem2->item.asString.length &&
-                        memcmp( pItem1->item.asString.value,
-                                pItem2->item.asString.value,
-                                pItem1->item.asString.length ) == 0;
+                        ( pItem1->item.asString.value == pItem2->item.asString.value ||
+                          memcmp( pItem1->item.asString.value,
+                                  pItem2->item.asString.value,
+                                  pItem1->item.asString.length ) == 0 );
       hb_stackPop();
       hb_itemClear( pItem1 );
       pItem1->type = HB_IT_LOGICAL;
