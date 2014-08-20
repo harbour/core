@@ -318,7 +318,7 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
    /*
    cFrom      -> Required. Email address of the sender
    xTo        -> Required. Character string or array of email addresses to send the email to
-   xCC        -> Optional. Character string or array of email adresses for CC (Carbon Copy)
+   xCC        -> Optional. Character string or array of email addresses for CC (Carbon Copy)
    cBody      -> Optional. The body message of the email as text, or the filename of the HTML message to send.
    cSubject   -> Optional. Subject of the sending email
    aFiles     -> Optional. Array of attachments to the email to send

@@ -2261,6 +2261,10 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
 
    szFirst = pFirst->item.asString.value;
    szSecond = pSecond->item.asString.value;
+
+   if( szFirst == szSecond )
+      return 0;
+
    nLenFirst = pFirst->item.asString.length;
    nLenSecond = pSecond->item.asString.length;
 
