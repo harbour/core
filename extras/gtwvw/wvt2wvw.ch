@@ -1,15 +1,6 @@
 /* Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
-
    Mapping of GTWVT functions and their coresponding ones in GTWVW.
-
-   header file to be included in your GTWVT program if you
-   wish to link it with GTWVW.
-
-   WARNING:
-   This mapping is made globally. Should you find any error(s) please let me know.
- */
-
-MEMVAR _wvwtemp_
+   Header file to be included in your GTWVT program if you wish to link it with GTWVW. */
 
 /* PART-1: WINDOW INDEPENDENT (the same parameter list) */
 
@@ -78,7 +69,6 @@ MEMVAR _wvwtemp_
 #xtranslate Wvt_GetLastMenuEvent    ( [<vlist,...>] )    =>  wvw_GetLastMenuEvent    ( [, <vlist>] )
 #xtranslate Wvt_SetMenuKeyEvent     ( [<vlist,...>] )    =>  wvw_SetMenuKeyEvent     ( [, <vlist>] )
 #xtranslate Wvt_DrawMenuBar         ( [<vlist,...>] )    =>  wvw_DrawMenuBar         ( [, <vlist>] )
-#xtranslate WVT_SETWINDOWCENTRE     ( [<vlist,...>] )    =>  wvw_SetWindowCentre     ( [, <vlist>] )
 #xtranslate Wvt_ProcessMessages     ( [<vlist,...>] )    =>  wvw_ProcessMessages     ( [, <vlist>] )
 #xtranslate Wvt_GetTitle            ( [<vlist,...>] )    =>  wvw_GetTitle            ( [, <vlist>] )
 #xtranslate Wvt_InvalidateRect      ( [<vlist,...>] )    =>  wvw_InvalidateRect      ( [, <vlist>] )
@@ -110,7 +100,6 @@ MEMVAR _wvwtemp_
 #xtranslate Wvt_TrackPopupMenu      ( [<vlist,...>] )    =>  wvw_TrackPopupMenu      ( [, <vlist>] )
 #xtranslate Wvt_GetMenu             ( [<vlist,...>] )    =>  wvw_GetMenu             ( [, <vlist>] )
 #xtranslate Wvt_ShowWindow          ( [<vlist,...>] )    =>  wvw_ShowWindow          ( [, <vlist>] )
-#xtranslate Wvt_UpdateWINDOW        ( [<vlist,...>] )    =>  wvw_UpdateWindow        ( [, <vlist>] )
 #xtranslate Wvt_DrawBoxGet          ( [<vlist,...>] )    =>  wvw_DrawBoxGet          ( [, <vlist>] )
 #xtranslate Wvt_DrawBoxRaised       ( [<vlist,...>] )    =>  wvw_DrawBoxRaised       ( [, <vlist>] )
 #xtranslate Wvt_DrawBoxRecessed     ( [<vlist,...>] )    =>  wvw_DrawBoxRecessed     ( [, <vlist>] )
@@ -122,7 +111,6 @@ MEMVAR _wvwtemp_
 #xtranslate Wvt_DrawLine            ( [<vlist,...>] )    =>  wvw_DrawLine            ( [, <vlist>] )
 #xtranslate Wvt_DrawEllipse         ( [<vlist,...>] )    =>  wvw_DrawEllipse         ( [, <vlist>] )
 #xtranslate Wvt_DrawRectangle       ( [<vlist,...>] )    =>  wvw_DrawRectangle       ( [, <vlist>] )
-#xtranslate WVT_FILLRECTANGLE       ( [<vlist,...>] )    =>  wvw_FillRectangle       ( [, <vlist>] )
 #xtranslate Wvt_DrawColorRect       ( [<vlist,...>] )    =>  wvw_DrawColorRect       ( [, <vlist>] )
 #xtranslate Wvt_DrawRoundRect       ( [<vlist,...>] )    =>  wvw_DrawRoundRect       ( [, <vlist>] )
 #xtranslate Wvt_DrawFocusRect       ( [<vlist,...>] )    =>  wvw_DrawFocusRect       ( [, <vlist>] )
@@ -136,7 +124,7 @@ MEMVAR _wvwtemp_
    in GTWVW no pending rect is reflected as {y1,x1,y2,x2} where y1 > y2 or x1 > x2
    thus we need some temporary var to check this exception
 */
-#xtranslate Wvt_GetPaintRect        ( [<vlist,...>] )    =>  ( _wvwtemp_ := wvw_GetPaintRect( [, <vlist>] ), ;
+#xtranslate Wvt_GetPaintRect        ( [<vlist,...>] )    =>  Eval( {| _wvwtemp_ | _wvwtemp_ := wvw_GetPaintRect( [, <vlist>] ), ;
                                                              iif( _wvwtemp_\[ 1 \] > _wvwtemp_\[ 3 \] .OR. _wvwtemp_\[ 2 \] > _wvwtemp_\[ 4 \], ;
                                                                   { 0, 0, 0, 0 }, _wvwtemp_ ) )
 
