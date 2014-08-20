@@ -126,7 +126,7 @@
 */
 #xtranslate Wvt_GetPaintRect        ( [<vlist,...>] )    =>  Eval( {| _wvwtemp_ | _wvwtemp_ := wvw_GetPaintRect( [, <vlist>] ), ;
                                                              iif( _wvwtemp_\[ 1 \] > _wvwtemp_\[ 3 \] .OR. _wvwtemp_\[ 2 \] > _wvwtemp_\[ 4 \], ;
-                                                                  { 0, 0, 0, 0 }, _wvwtemp_ ) )
+                                                                  { 0, 0, 0, 0 }, _wvwtemp_ ) } )
 
 #xtranslate Wvt_SetPointer          ( [<vlist,...>] )    =>  wvw_SetPointer          ( [, <vlist>] )
 #xtranslate Wvt_DrawPicture         ( [<vlist,...>] )    =>  wvw_DrawPicture         ( [, <vlist>] )

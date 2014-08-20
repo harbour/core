@@ -397,9 +397,6 @@ HB_FUNC( WVW_TBCREATE )
    {
       HWND hWnd;
 
-      #if 0
-      DWORD dwStyle = ( DWORD ) hb_parnidef( 3, TBSTYLE_FLAT | TBSTYLE_TOOLTIPS );
-      #endif
       DWORD dwStyle = ( DWORD ) hb_parnidef( 3, TBSTYLE_ALTDRAG | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | TBSTYLE_TRANSPARENT | TBSTYLE_WRAPABLE );
 
       int iSystemBitmap = hb_parnidef( 4, 1 );

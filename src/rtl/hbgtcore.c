@@ -1309,13 +1309,14 @@ static void hb_gt_def_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom
 {
    while( iTop <= iBottom )
    {
-      int iColorOld;
-      HB_BYTE bAttr;
-      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
+         int iColorOld;
+         HB_BYTE bAttr;
+         HB_USHORT usChar;
+
          if( ! HB_GTSELF_GETCHAR( pGT, iTop, iCol, &iColorOld, &bAttr, &usChar ) )
             break;
          if( ! HB_GTSELF_PUTCHAR( pGT, iTop, iCol, iColor, bAttr, usChar ) )
