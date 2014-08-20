@@ -89,7 +89,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
    nCtrlId = hb_gt_wvw_FindControlId( wvw_win, WVW_CONTROL_EDITBOX, hWnd, &nEBType );
    if( nCtrlId == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10010, "EditBox: Control ID not found with hb_gt_wvw_FindControlId()", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -97,7 +97,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
    OldProc = hb_gt_wvw_GetControlProc( wvw_win, WVW_CONTROL_EDITBOX, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10011, "EditBox: Failed hb_gt_wvw_GetControlProc()", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -582,8 +582,6 @@ HB_FUNC( WVW_EBCREATE )
 
       if( hWnd )
       {
-         WNDPROC OldProc;
-
          void *  hText;
          LPCTSTR szText = HB_PARSTRDEF( 6, &hText, NULL );
 
@@ -595,10 +593,8 @@ HB_FUNC( WVW_EBCREATE )
             SendMessage( hWnd, EM_LIMITTEXT, ( WPARAM ) iMaxChar, 0 );
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_EDITBOX, hWnd, nCtrlId, hb_param( 7, HB_IT_EVALITEM ), rXB, rOffXB, nEBType );
-
-         OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_EBProc );
-
-         hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_EDITBOX, hWnd, OldProc );
+         hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_EDITBOX, hWnd,
+            ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_EBProc ) );
 
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hEBfont, ( LPARAM ) TRUE );
 

@@ -46,7 +46,6 @@
 
 #include "hbgtwvw.h"
 
-#include "hbapierr.h"
 #include "hbmath.h"
 
 static HB_BOOL hb_gt_wvw_SetCentreWindow( PWVW_WIN wvw_win, HB_BOOL fCentre, HB_BOOL fPaint )
@@ -120,14 +119,14 @@ HB_FUNC( WVW_NOPENWINDOW )
 
       if( wvw->iNumWindows == HB_SIZEOFARRAY( wvw->pWin ) )
       {
-         MessageBox( NULL, TEXT( "Too many windows to open" ), TEXT( "Error" ), MB_ICONERROR );
+         hb_errRT_TERM( EG_BOUND, 10002, "Too many windows to open", HB_ERR_FUNCNAME, 0, 0 );
          hb_retni( 0 );
          return;
       }
 
       if( iParentWin > ( wvw->iNumWindows - 1 ) )
       {
-         MessageBox( NULL, TEXT( "Invalid parent window" ), TEXT( "Error" ), MB_ICONERROR );
+         hb_errRT_TERM( EG_ARG, 10003, "Invalid parent window", HB_ERR_FUNCNAME, 0, 0 );
          hb_retni( 0 );
          return;
       }
@@ -156,7 +155,7 @@ HB_FUNC( WVW_NOPENWINDOW )
 
          if( nLen > HB_SIZEOFARRAY( wvw_par->szWinName ) - 1 )
          {
-            MessageBox( NULL, TEXT( "Window name too long" ), TEXT( "Error" ), MB_ICONERROR );
+            hb_errRT_TERM( EG_LIMIT, 10004, "Window name too long", HB_ERR_FUNCNAME, 0, 0 );
             hb_retni( 0 );
             return;
          }
@@ -232,7 +231,7 @@ HB_FUNC( WVW_LCLOSEWINDOW )
 
       if( wvw->iNumWindows <= 1 )
       {
-         MessageBox( NULL, TEXT( "No more window to close" ), TEXT( "Error" ), MB_ICONERROR );
+         hb_errRT_TERM( EG_BOUND, 10005, "No more window to close", HB_ERR_FUNCNAME, 0, 0 );
          hb_retl( HB_FALSE );
          return;
       }

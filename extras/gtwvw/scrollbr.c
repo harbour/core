@@ -80,7 +80,7 @@ static LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam
    nCtrlId = ( int ) GetWindowLong( hWnd, GWL_ID );
    if( nCtrlId == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId() of Scrollbar" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10010, "ScrollBar: Control ID not found with hb_gt_wvw_FindControlId()", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -88,7 +88,7 @@ static LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam
    OldProc = hb_gt_wvw_GetControlProc( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc() of Scrollbar" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10011, "ScrollBar: Failed hb_gt_wvw_GetControlProc()", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -273,16 +273,12 @@ HB_FUNC( WVW_XBCREATE )
 
       if( hWnd )
       {
-         WNDPROC OldProc;
-
          SetScrollRange( hWnd, SB_CTL, 0, 99, FALSE );
          SetScrollPos( hWnd, SB_CTL, 0, TRUE );
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ), rXB, rOffXB, iStyle );
-
-         OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_XBProc );
-
-         hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd, OldProc );
+         hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_SCROLLBAR, hWnd,
+            ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_XBProc ) );
 
          hb_retni( nCtrlId );
          return;

@@ -242,19 +242,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
       hb_retl( HB_TRUE );
    }
    else
-   {
-#if 0
-      if( ! HB_ISEVALITEM( 3 ) )
-         MessageBox( NULL, TEXT( "Codeblock expected" ), wvw->szAppName, MB_ICONERROR );
-
-      if( wvw_ctl == NULL )
-         MessageBox( NULL, TEXT( "Control data not found" ), wvw->szAppName, MB_ICONERROR );
-
-      if( wvw_ctl->fBusy )
-         MessageBox( NULL, TEXT( "Codeblock is busy" ), wvw->szAppName, MB_ICONERROR );
-#endif
       hb_retl( HB_FALSE );
-   }
 }
 
 /* wvw_pbSetStyle( [nWinNum], nPBid, nStyle )

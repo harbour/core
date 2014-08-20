@@ -296,8 +296,7 @@ static LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam
 
    if( wvw == NULL || hWndParent == NULL )
    {
-      /* TODO: runtime/internal error is better */
-      MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): parent of toolbar is missing" ), TEXT( "Error" ), MB_ICONERROR );
+      hb_errInternal( 10012, "ToolBar: Parent window is missing", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -310,8 +309,7 @@ static LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam
 
    if( nWin >= wvw->iNumWindows )
    {
-      /* TODO: runtime/internal error is better */
-      MessageBox( NULL, TEXT( "hb_gt_wvw_TBProc(): invalid handle of toolbar's parent" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10013, "ToolBar: Invalid parent Window ID", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -500,7 +498,7 @@ HB_FUNC( WVW_TBCREATE )
          return;
       }
       else
-         MessageBox( NULL, TEXT( "Failed CreateToolbarEx()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+         hb_errRT_TERM( EG_CREATE, 10001, "Windows API CreateToolbarEx() failed", HB_ERR_FUNCNAME, 0, 0 );
    }
 
    hb_stornl( 0, 7 );
@@ -557,7 +555,7 @@ HB_FUNC( WVW_TBADDBUTTON )
 
       if( iCommand >= WVW_ID_BASE_PUSHBUTTON )
       {
-         MessageBox( NULL, TEXT( "Toolbar button command ID too high. Potential conflict with pushbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+         hb_errRT_TERM( EG_ARG, 10001, "ToolBar button command ID too high. Potential conflict with PushButton.", HB_ERR_FUNCNAME, 0, 0 );
          hb_retl( HB_FALSE );
          return;
       }
@@ -567,7 +565,7 @@ HB_FUNC( WVW_TBADDBUTTON )
       if( nLen > WVW_TB_LABELMAXLENGTH )
       {
          hb_strfree( hLabel );
-         MessageBox( NULL, TEXT( "Cannot addbutton, label too long." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+         hb_errRT_TERM( EG_LIMIT, 10001, "ToolBar label too long.", HB_ERR_FUNCNAME, 0, 0 );
          hb_retl( HB_FALSE );
          return;
       }
@@ -581,7 +579,7 @@ HB_FUNC( WVW_TBADDBUTTON )
             if( ! hb_gt_wvw_AddTBButton( hWnd, szBitmap, uiBitmap, szLabel, iCommand, 1, fMap3Dcolors, wvw_win, fDropdown ) )
             {
                hb_strfree( hLabel );
-               MessageBox( NULL, TEXT( "Failed addbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+               hb_errRT_TERM( EG_CREATE, 10001, "Failed hb_gt_wvw_AddTBButton()", HB_ERR_FUNCNAME, 0, 0 );
                hb_retl( HB_FALSE );
                return;
             }
@@ -589,7 +587,7 @@ HB_FUNC( WVW_TBADDBUTTON )
          else
          {
             hb_strfree( hLabel );
-            MessageBox( NULL, TEXT( "Failed addbutton." ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+            hb_errRT_TERM( EG_CREATE, 10002, "Failed hb_gt_wvw_AddTBButton()", HB_ERR_FUNCNAME, 0, 0 );
             hb_retl( HB_FALSE );
             return;
          }

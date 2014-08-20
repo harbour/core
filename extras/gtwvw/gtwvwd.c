@@ -78,7 +78,6 @@
 
 #include "hbgtcore.h"
 #include "hbinit.h"
-#include "hbapierr.h"
 #include "hbmath.h"
 #include "hbvm.h"
 
@@ -285,8 +284,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_wvw->pWin[ 0 ]->hWnd = hb_gt_wvwCreateWindow( hInstance, hPrevInstance, iCmdShow );
 
    if( ! s_wvw->pWin[ 0 ]->hWnd )
-      /* Runtime error */
-      hb_errRT_TERM( EG_CREATE, 10001, "Windows API CreateWindow() failed", "hb_gt_Init()", 0, 0 );
+      hb_errRT_TERM( EG_CREATE, 10001, "Windows API CreateWindow() failed", HB_ERR_FUNCNAME, 0, 0 );
 
    {
       PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
@@ -3245,8 +3243,9 @@ static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    if( ! RegisterClass( &wndclass ) )
    {
-      MessageBox( NULL, TEXT( "Failed to register class." ), s_wvw->szAppName, MB_ICONERROR );
-      return 0;
+      if( GetLastError() != ERROR_CLASS_ALREADY_EXISTS )
+         hb_errInternal( 10001, "Failed to register WVW window class", NULL, NULL );
+      return NULL;
    }
 
    hWnd = CreateWindow( s_wvw->szAppName,                                          /* classname */
@@ -3264,7 +3263,7 @@ static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    if( hWnd == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed to create window." ), TEXT( "HARBOUR_WVW" ), MB_ICONERROR );
+      hb_errInternal( 10001, "Failed to create WVW window", NULL, NULL );
       return NULL;
    }
 
@@ -4240,7 +4239,7 @@ static HB_BOOL hb_gt_wvwWindowPrologue( void )
    }
    else
    {
-      hb_errRT_TERM( EG_BOUND, 10001, "Maximum number of windows exceeded", "hb_gt_wvwWindowPrologue()", 0, 0 );
+      hb_errRT_TERM( EG_BOUND, 10001, "Maximum number of windows exceeded", HB_ERR_FUNCNAME, 0, 0 );
       return HB_FALSE;
    }
 }
@@ -4256,7 +4255,7 @@ static void hb_gt_wvwWindowEpilogue( void )
          s_wvw->iCurWindow = s_wvw->iNumWindows - 1;
    }
    else
-      hb_errRT_TERM( EG_BOUND, 10001, "No more window to destroy", "hb_gt_wvwWindowEpilogue()", 0, 0 );
+      hb_errRT_TERM( EG_BOUND, 10001, "No more window to destroy", HB_ERR_FUNCNAME, 0, 0 );
 }
 
 /* assume s_wvw->iNumWindows >= 1 (ie. this will be the second or third window)
@@ -4276,7 +4275,7 @@ int hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, in
 #if 0
    if( s_wvw->fMainCoordMode && ( ! hb_gt_wvwInWindow( 0, iRow1, iCol1 ) || ! hb_gt_wvwInWindow( 0, iRow2, iCol2 ) ) )
    {
-      MessageBox( NULL, TEXT( "Invalid (Row,Col)" ), szWinName, MB_ICONERROR );
+      MessageBox( NULL, TEXT( "TRACE: Invalid (Row,Col)" ), szWinName, MB_ICONERROR );
       return 0;
    }
 #endif
@@ -4298,7 +4297,8 @@ int hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, in
 
       if( ! RegisterClass( &wndclass ) )
       {
-         MessageBox( NULL, TEXT( "Failed to register class." ), s_wvw->szSubWinName, MB_ICONERROR );
+         if( GetLastError() != ERROR_CLASS_ALREADY_EXISTS )
+            hb_errRT_TERM( EG_ARG, 10001, "Failed to register WVW window class", HB_ERR_FUNCNAME, 0, 0 );
          return 0;
       }
 
@@ -4330,23 +4330,8 @@ int hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, in
 
    if( hWnd == NULL )
    {
-      LPTSTR lpMsgBuf = NULL;
-
-      if( FormatMessage(
-             FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-             NULL,
-             GetLastError(),
-             MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
-             ( LPTSTR ) &lpMsgBuf,
-             0,
-             NULL ) != 0 )
-      {
-         MessageBox( NULL, lpMsgBuf, TEXT( "Failed CreateWindow()" ), MB_ICONERROR );
-         LocalFree( lpMsgBuf );
-      }
-
+      hb_errRT_TERM( EG_ARG, 10002, "Failed to create WVW window", HB_ERR_FUNCNAME, 0, 0 );
       hb_gt_wvwWindowEpilogue();
-
       return 0;
    }
 
@@ -4473,7 +4458,7 @@ void hb_gt_wvw_CloseWindow( void )
    if( s_wvw->iNumWindows == 1 )
    {
       if( ! UnregisterClass( s_wvw->szSubWinName, s_wvw->hInstance ) )
-         MessageBox( NULL, TEXT( "Failed UnregisterClass()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+         MessageBox( NULL, TEXT( "TRACE: Failed UnregisterClass()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
    }
 #endif
 
@@ -5960,7 +5945,7 @@ HBITMAP hb_gt_wvw_PrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iE
 
                if( ! fResult )
                {
-                  MessageBox( NULL, TEXT( "Cannot shrink/stretch bitmap for WVW control" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+                  hb_errRT_TERM( EG_ARG, 10012, "Cannot shrink/stretch bitmap for WVW control", HB_ERR_FUNCNAME, 0, 0 );
 
                   DeleteObject( hBitmap2 );
                }
@@ -6329,7 +6314,7 @@ static void s_ReposControls( PWVW_WIN wvw_win, int nClass )
          }
          else
          {
-            hb_errRT_TERM( EG_NOFUNC, 10001, "Undefined control class", "s_ReposControls()", 0, 0 );
+            hb_errRT_TERM( EG_NOFUNC, 10001, "Undefined control class", HB_ERR_FUNCNAME, 0, 0 );
 
             iBottom = 0;
             iRight  = 0;
@@ -6373,7 +6358,7 @@ static LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wPara
    nCtrlId = ( int ) GetWindowLong( hWnd, GWL_ID );
    if( nCtrlId == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10010, "Control ID not found", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -6381,7 +6366,7 @@ static LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wPara
    OldProc = hb_gt_wvw_GetControlProc( wvw_win, WVW_CONTROL_PUSHBUTTON, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10011, "Failed hb_gt_wvw_GetControlProc()", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -6497,8 +6482,6 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, 
 
    if( hWnd )
    {
-      WNDPROC OldProc;
-
       if( szBitmap || uiBitmap )
       {
          int iExpWidth  = iRight - iLeft + 1;
@@ -6511,10 +6494,8 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, 
       }
 
       hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PUSHBUTTON, hWnd, nCtrlId, pBlock, rXB, rOffXB, iStyle );
-
-      OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LPARAM ) ( WNDPROC ) hb_gt_wvw_BtnProc );
-
-      hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_PUSHBUTTON, hWnd, OldProc );
+      hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_PUSHBUTTON, hWnd,
+         ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LPARAM ) ( WNDPROC ) hb_gt_wvw_BtnProc ) );
 
       SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hPBfont, ( LPARAM ) TRUE );
 

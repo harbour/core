@@ -78,7 +78,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
    nCtrlId = hb_gt_wvw_FindControlId( wvw_win, WVW_CONTROL_COMBOBOX, hWnd, &nKbdType );
    if( nCtrlId == 0 )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_FindControlId()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10010, "ComboBox: Control ID not found with hb_gt_wvw_FindControlId()", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -86,7 +86,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
    OldProc = hb_gt_wvw_GetControlProc( wvw_win, WVW_CONTROL_COMBOBOX, hWnd );
    if( OldProc == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed hb_gt_wvw_GetControlProc()" ), hb_gt_wvw_GetAppName(), MB_ICONERROR );
+      hb_errInternal( 10011, "ComboBox: Failed hb_gt_wvw_GetControlProc()", NULL, NULL );
 
       return DefWindowProc( hWnd, message, wParam, lParam );
    }
@@ -387,8 +387,6 @@ HB_FUNC( WVW_CBCREATE )
       {
          int LongComboWidth = 0, NewLongComboWidth;
 
-         WNDPROC OldProc;
-
          SendMessage( hWnd, WM_SETREDRAW, ( WPARAM ) TRUE, 0 );
 
          if( iNumElement == 0 )
@@ -433,10 +431,8 @@ HB_FUNC( WVW_CBCREATE )
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ),
                                      rXB, rOffXB, hb_parnidef( 9, WVW_CB_KBD_STANDARD ) );
-
-         OldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_CBProc );
-
-         hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_COMBOBOX, hWnd, OldProc );
+         hb_gt_wvw_StoreControlProc( wvw_win, WVW_CONTROL_COMBOBOX, hWnd,
+            ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( LONG_PTR ) hb_gt_wvw_CBProc ) );
 
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hCBfont, ( LPARAM ) TRUE );
 

@@ -54,7 +54,6 @@
 
 /* TOFIX: MT support */
 /* TOFIX: GT UNICODE support */
-/* TOFIX: Replace MessageBox() popups with internal errors or RTEs */
 
 #ifndef HB_WVW_H_
 #define HB_WVW_H_
@@ -85,6 +84,7 @@
 #include <commctrl.h>
 #include <commdlg.h>
 
+#include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbwinuni.h"
 
