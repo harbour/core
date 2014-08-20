@@ -1658,7 +1658,7 @@ HB_FUNC( __OLEENUMNEXT )
 
 HB_FUNC( WIN_OLEERROR )
 {
-   hb_retnl( hb_oleGetError() );
+   hb_retnint( hb_oleGetError() );
 }
 
 

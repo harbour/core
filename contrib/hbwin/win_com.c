@@ -211,11 +211,11 @@ HB_FUNC( WIN_COMWRITE )
       s_PortData[ iPort ].iFunction = HB_WIN_COM_FUN_WRITEFILE;
       s_PortData[ iPort ].dwError = 0;
       if( WriteFile( hCommPort, lpBuffer, dwNumberofBytesToWrite, &dwNumberofBytesWritten, NULL ) )
-         hb_retnl( dwNumberofBytesWritten );
+         hb_retnint( dwNumberofBytesWritten );
       else
       {
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retnl( -1 );
+         hb_retnint( -1 );
       }
    }
    else
@@ -240,14 +240,14 @@ HB_FUNC( WIN_COMREAD )
       {
          if( ! hb_storclen_buffer( lpBuffer, dwNumberOfBytesRead, 2 ) )
             hb_xfree( lpBuffer );
-         hb_retnl( dwNumberOfBytesRead );
+         hb_retnint( dwNumberOfBytesRead );
       }
       else
       {
          hb_storc( NULL, 2 );
          hb_xfree( lpBuffer );
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_retnl( -1 );
+         hb_retnint( -1 );
       }
    }
    else
@@ -271,14 +271,14 @@ HB_FUNC( WIN_COMRECV )
       if( ReadFile( hCommPort, lpBuffer, dwNumberOfBytesToRead, &dwNumberOfBytesRead, NULL ) )
       {
          hb_retclen_buffer( lpBuffer, dwNumberOfBytesRead );
-         hb_stornl( dwNumberOfBytesRead, 3 );
+         hb_stornint( dwNumberOfBytesRead, 3 );
       }
       else
       {
          hb_retc_null();
          hb_xfree( lpBuffer );
          s_PortData[ iPort ].dwError = GetLastError();
-         hb_stornl( -1, 3 );
+         hb_stornint( -1, 3 );
       }
    }
    else
@@ -364,8 +364,8 @@ HB_FUNC( WIN_COMQUEUESTATUS )
          hb_storl( ComStat.fRlsdHold, 4 );
          hb_storl( ComStat.fXoffHold, 5 );
          hb_storl( ComStat.fXoffSent, 6 );
-         hb_stornl( ComStat.cbInQue, 7 );
-         hb_stornl( ComStat.cbOutQue, 8 ); /* This value will be zero for a nonoverlapped write */
+         hb_stornint( ComStat.cbInQue, 7 );
+         hb_stornint( ComStat.cbOutQue, 8 ); /* This value will be zero for a nonoverlapped write */
 
          hb_retl( HB_TRUE );
       }
@@ -378,8 +378,8 @@ HB_FUNC( WIN_COMQUEUESTATUS )
          hb_storl( HB_FALSE, 4 );
          hb_storl( HB_FALSE, 5 );
          hb_storl( HB_FALSE, 6 );
-         hb_stornl( 0, 7 );
-         hb_stornl( 0, 8 );
+         hb_stornint( 0, 7 );
+         hb_stornint( 0, 8 );
 
          hb_retl( HB_FALSE );
       }
@@ -734,7 +734,7 @@ HB_FUNC( WIN_COMERROR )
    int iPort = hb_parni( 1 );
 
    if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) )
-      hb_retnl( s_PortData[ iPort ].dwError );
+      hb_retnint( s_PortData[ iPort ].dwError );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

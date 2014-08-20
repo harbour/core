@@ -151,7 +151,7 @@ HB_FUNC( WIN_TEXTOUT )
 
    if( hDC && HB_ISCHAR( 4 ) )
    {
-      HB_SIZE nLen = hb_parnl( 5 );
+      HB_SIZE nLen = hb_parns( 5 );
 
       void * hData;
       HB_SIZE nDataLen;
@@ -203,7 +203,7 @@ HB_FUNC( WIN_GETTEXTSIZE )
 
    if( hDC && HB_ISCHAR( 2 ) )
    {
-      HB_SIZE nLen = hb_parnl( 3 );
+      HB_SIZE nLen = hb_parns( 3 );
 
       void * hData;
       HB_SIZE nDataLen;
@@ -253,7 +253,7 @@ HB_FUNC( WIN_GETDEVICECAPS )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
-   hb_retni( hDC && HB_ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
+   hb_retni( hDC && HB_ISNUM( 2 ) ? GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN_SETMAPMODE )
@@ -311,7 +311,7 @@ HB_FUNC( WIN_CREATEFONT )
       lf.lfItalic         = ( BYTE ) hb_parl( 8 );
       lf.lfUnderline      = ( BYTE ) hb_parl( 7 );
       lf.lfStrikeOut      = ( BYTE ) 0;
-      lf.lfCharSet        = ( BYTE ) hb_parnl( 9 );
+      lf.lfCharSet        = ( BYTE ) hb_parni( 9 );
 #if defined( HB_OS_WIN_CE )
       lf.lfOutPrecision   = ( BYTE ) OUT_DEFAULT_PRECIS;
 #else
@@ -588,9 +588,9 @@ HB_FUNC( WIN_SETCOLOR )
    if( hDC )
    {
       if( HB_ISNUM( 2 ) )
-         hb_retnl( ( long ) SetTextColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
+         hb_retnint( SetTextColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
       else
-         hb_retnl( ( long ) GetTextColor( hDC ) );
+         hb_retnint( GetTextColor( hDC ) );
 
       if( HB_ISNUM( 3 ) )
          SetBkColor( hDC, hbwapi_par_COLORREF( 3 ) );
@@ -599,7 +599,7 @@ HB_FUNC( WIN_SETCOLOR )
          SetTextAlign( hDC, hb_parni( 4 ) );
    }
    else
-      hb_retnl( ( long ) CLR_INVALID );
+      hb_retnint( CLR_INVALID );
 }
 
 HB_FUNC( WIN_SETPEN )

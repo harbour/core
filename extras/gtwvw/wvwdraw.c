@@ -496,7 +496,7 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
 
       if( ! hbmpx )
       {
-         hbmpx = ( HBITMAP ) LoadImage( wvw->hInstance, ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) iresimage ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hbmpx = ( HBITMAP ) LoadImage( wvw->hInstance, MAKEINTRESOURCE( iresimage ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
          hb_gt_wvw_AddBitmapHandle( szResname, hbmpx, iWidth, iHeight );
       }
 

@@ -70,7 +70,7 @@ static BOOL CALLBACK wapi_DialogFuncProc( HWND hDlg, UINT message, WPARAM wParam
       hb_vmPushSymbol( pSymbol );
       hb_vmPushNil();
       hb_vmPushPointer( hDlg );
-      hb_vmPushLong( message );
+      hb_vmPushNumInt( message );
       hb_vmPushNumInt( wParam );
       hb_vmPushNumInt( lParam );
 
@@ -92,7 +92,7 @@ HB_FUNC( WAPI_DIALOGBOXPARAM )
 {
    INT_PTR nResult = DialogBoxParam(
       hbwapi_par_raw_HINSTANCE( 1 ),                              /* hInstance */
-      ( LPCTSTR ) MAKEINTRESOURCE( hbwapi_par_INT( 2 ) ),         /* lpTemplate */
+      MAKEINTRESOURCE( hbwapi_par_INT( 2 ) ),                     /* lpTemplate */
       hbwapi_par_raw_HWND( 3 ),                                   /* hWndParent */
       ( DLGPROC ) wapi_DialogFuncProc,                            /* lpDialogFunc */
       ( LPARAM ) hb_itemGetSymbol( hb_param( 4, HB_IT_SYMBOL ) )  /* dwInitParam */

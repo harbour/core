@@ -81,8 +81,8 @@ HB_FUNC( WIN_REGCREATEKEYEX )
                                       HB_PARSTRDEF( 2, &hKey, NULL ),
                                       0,
                                       NULL,
-                                      hb_parnl( 5 ) /* dwOptions */,
-                                      hb_parnl( 6 ) /* samDesired */,
+                                      ( DWORD ) hb_parnl( 5 ) /* dwOptions */,
+                                      ( REGSAM ) hb_parnl( 6 ) /* samDesired */,
                                       NULL /* lpSecurityAttributes */,
                                       &hkResult,
                                       &dwDisposition ) == ERROR_SUCCESS;
@@ -92,12 +92,12 @@ HB_FUNC( WIN_REGCREATEKEYEX )
    if( bSuccess )
    {
       hb_storptr( hkResult, 8 );
-      hb_stornl( dwDisposition, 9 );
+      hb_stornint( dwDisposition, 9 );
    }
    else
    {
       hb_storptr( NULL, 8 );
-      hb_stornl( 0, 9 );
+      hb_stornint( 0, 9 );
    }
 
    hb_strfree( hKey );
@@ -111,7 +111,7 @@ HB_FUNC( WIN_REGOPENKEYEX )
    HB_BOOL bSuccess = RegOpenKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
                                     HB_PARSTRDEF( 2, &hKey, NULL ),
                                     0 /* dwOptions */,
-                                    hb_parnl( 4 ) /* samDesired */,
+                                    ( REGSAM ) hb_parnl( 4 ) /* samDesired */,
                                     &hkResult ) == ERROR_SUCCESS;
 
    hb_retl( bSuccess );
@@ -189,14 +189,14 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
 
    if( bSuccess )
    {
-      hb_stornl( dwType, 4 );
-      hb_retnl( dwSize );
+      hb_stornint( dwType, 4 );
+      hb_retnint( dwSize );
    }
    else
    {
       hb_stor( 5 );
-      hb_stornl( 0, 4 );
-      hb_retnl( 0 );
+      hb_stornint( 0, 4 );
+      hb_retnint( 0 );
    }
 
    hb_strfree( hKey );

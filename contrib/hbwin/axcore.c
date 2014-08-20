@@ -213,7 +213,7 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 
    hb_oleSetError( lOleError );
 
-   hb_retnl( lOleError );
+   hb_retnint( lOleError );
 }
 
 

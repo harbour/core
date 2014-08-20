@@ -336,7 +336,7 @@ HB_FUNC( WIN_GETCLIENTRECT )
 /* sorry, not supported in GTWVW */
 HB_FUNC( WIN_DRAWIMAGE )
 {
-   hb_retl( hb_wvt_DrawImage( ( HDC ) hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( hb_wvt_DrawImage( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ),
                               hb_parni( 4 ), hb_parni( 5 ), hb_parc( 6 ) ) );
 }
 #endif
@@ -704,24 +704,24 @@ HB_FUNC( WVW_LOADIMAGE )
       PWVW_GLO wvw = hb_gt_wvw();
 
       if( wvw )
-         HB_RETHANDLE( LoadImage( wvw->hInstance,                                 /* ( HINSTANCE ) hb_parnintdef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
-                                  ( LPCTSTR ) MAKEINTRESOURCE( hb_parnint( 2 ) ), /* name or identifier of image */
-                                  ( UINT ) hb_parnint( 3 ),                       /* type of image */
-                                  hb_parni( 4 ),                                  /* desired width */
-                                  hb_parni( 5 ),                                  /* desired height */
-                                  ( UINT ) hb_parnint( 6 ) ) );                   /* load flags */
+         HB_RETHANDLE( LoadImage( wvw->hInstance,                    /* ( HINSTANCE ) hb_parnintdef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
+                                  MAKEINTRESOURCE( hb_parni( 2 ) ),  /* name or identifier of image */
+                                  ( UINT ) hb_parnint( 3 ),          /* type of image */
+                                  hb_parni( 4 ),                     /* desired width */
+                                  hb_parni( 5 ),                     /* desired height */
+                                  ( UINT ) hb_parnint( 6 ) ) );      /* load flags */
       else
          HB_RETHANDLE( NULL );
    }
    else
    {
       void * hName;
-      HB_RETHANDLE( LoadImage( ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 1 ), /* handle of the instance that contains the image */
-                               HB_PARSTR( 2, &hName, NULL ),                 /* name or identifier of image */
-                               ( UINT ) hb_parnint( 3 ),                     /* type of image */
-                               hb_parni( 4 ),                                /* desired width */
-                               hb_parni( 5 ),                                /* desired height */
-                               ( UINT ) hb_parnint( 6 ) ) );                 /* load flags */
+      HB_RETHANDLE( LoadImage( ( HINSTANCE ) HB_PARHANDLE( 1 ),  /* handle of the instance that contains the image */
+                               HB_PARSTR( 2, &hName, NULL ),     /* name or identifier of image */
+                               ( UINT ) hb_parnint( 3 ),         /* type of image */
+                               hb_parni( 4 ),                    /* desired width */
+                               hb_parni( 5 ),                    /* desired height */
+                               ( UINT ) hb_parnint( 6 ) ) );     /* load flags */
       hb_strfree( hName );
    }
 }
@@ -732,11 +732,11 @@ HB_FUNC( WVW_LOADBITMAP )
    {
       if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
 #if 0
-         HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parnint( 1 ) ) ) );
+         HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) ) );
 #endif
-         HB_RETHANDLE( LoadBitmap( NULL, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+         HB_RETHANDLE( LoadBitmap( NULL, ( LPCTSTR ) HB_PARHANDLE( 1 ) ) );
       else
-         HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+         HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), ( LPCTSTR ) HB_PARHANDLE( 1 ) ) );
    }
    else
    {
@@ -748,17 +748,17 @@ HB_FUNC( WVW_LOADBITMAP )
 
 HB_FUNC( WVW_LOADBITMAPEX )
 {
-   HINSTANCE h = HB_ISNUM( 1 ) ? ( HINSTANCE ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetModuleHandle( NULL );
+   HINSTANCE h = HB_ISNUM( 1 ) ? ( HINSTANCE ) HB_PARHANDLE( 1 ) : GetModuleHandle( NULL );
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
       if( HB_ISLOG( 3 ) && hb_parl( 3 ) )
 #if 0
-         HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parnint( 2 ) ) ) );
+         HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parni( 2 ) ) ) );
 #endif
-         HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 3 ) ) );
+         HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) HB_PARHANDLE( 3 ) ) );
       else
-         HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) ) );
+         HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) HB_PARHANDLE( 2 ) ) );
    }
    else
    {
@@ -1127,7 +1127,7 @@ HB_FUNC( WVW_DRAWICON )
 HB_FUNC( WVW_LOADICON )
 {
    if( HB_ISNUM( 1 ) )
-      HB_RETHANDLE( LoadIcon( NULL, ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+      HB_RETHANDLE( LoadIcon( NULL, ( LPCTSTR ) HB_PARHANDLE( 1 ) ) );
    else
    {
       void * hName;
@@ -1981,7 +1981,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
             hDlg = CreateDialogIndirect( wvw->hInstance,
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
-                                         ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
+                                         ( DLGPROC ) HB_PARHANDLE( 3 ) );
          else
          {
             switch( iResource )
@@ -2000,7 +2000,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
                }
                case 1:
                   hDlg = CreateDialog( wvw->hInstance,
-                                       MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
+                                       MAKEINTRESOURCE( hb_parni( 1 ) ),
                                        hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                        ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
                   break;
@@ -2097,7 +2097,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
             }
             case 1:
                iResult = DialogBoxParam( wvw->hInstance,
-                                         MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
+                                         MAKEINTRESOURCE( hb_parni( 1 ) ),
                                          hParent,
                                          ( DLGPROC ) hb_gt_wvw_DlgProcModal,
                                          ( LPARAM ) ( DWORD ) iIndex + 1 );

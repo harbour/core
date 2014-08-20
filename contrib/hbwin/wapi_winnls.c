@@ -48,12 +48,12 @@
 
 HB_FUNC( WAPI_GETACP )
 {
-   hb_retnl( GetACP() );
+   hb_retnint( GetACP() );
 }
 
 HB_FUNC( WAPI_GETOEMCP )
 {
-   hb_retnl( GetOEMCP() );
+   hb_retnint( GetOEMCP() );
 }
 
 HB_FUNC( WAPI_ISVALIDCODEPAGE )

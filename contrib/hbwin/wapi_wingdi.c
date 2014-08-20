@@ -555,7 +555,7 @@ HB_FUNC( WAPI_TEXTOUT )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
-   hb_retnl( HB_FALSE );
+   hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WAPI_EXTTEXTOUT )
@@ -615,7 +615,7 @@ HB_FUNC( WAPI_SETTEXTCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) SetTextColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
+      hb_retnint( SetTextColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -625,7 +625,7 @@ HB_FUNC( WAPI_GETTEXTCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) GetTextColor( hDC ) );
+      hb_retnint( GetTextColor( hDC ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -651,7 +651,7 @@ HB_FUNC( WAPI_SETBKCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) SetBkColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
+      hb_retnint( SetBkColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -661,7 +661,7 @@ HB_FUNC( WAPI_GETBKCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) GetBkColor( hDC ) );
+      hb_retnint( GetBkColor( hDC ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

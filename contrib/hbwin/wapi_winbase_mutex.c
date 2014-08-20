@@ -100,7 +100,7 @@ HB_FUNC( WAPI_OPENMUTEX )
 {
 #if ! defined( HB_OS_WIN_CE )
    void * hName;
-   HANDLE hMutex = OpenMutex( hb_parnl( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
+   HANDLE hMutex = OpenMutex( ( DWORD ) hb_parnl( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
 
    hbwapi_SetLastError( GetLastError() );
    hbwapi_mutex_ret( hMutex );

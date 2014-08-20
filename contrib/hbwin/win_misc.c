@@ -95,7 +95,7 @@ HB_FUNC( WIN_RUNDETACHED )
       hb_retl( HB_TRUE );
 
 #if ! defined( HB_OS_WIN_CE )
-      hb_stornl( pi.dwProcessId, 3 );
+      hb_stornint( pi.dwProcessId, 3 );
 
       /* Close process and thread handles. */
       CloseHandle( pi.hProcess );
@@ -104,7 +104,7 @@ HB_FUNC( WIN_RUNDETACHED )
    }
    else
    {
-      hb_stornl( -1, 3 );
+      hb_stornint( -1, 3 );
       hb_retl( HB_FALSE );
    }
 

@@ -137,9 +137,9 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
 HB_FUNC( WIN_SERVICEGETSTATUS )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retnl( s_ServiceStatus.dwCurrentState );
+   hb_retnint( s_ServiceStatus.dwCurrentState );
 #else
-   hb_retnl( 0 );
+   hb_retnint( 0 );
 #endif
 }
 
@@ -209,8 +209,7 @@ HB_FUNC( WIN_SERVICEINSTALL )
                                  lpDisplayName,             /* service name to display */
                                  SERVICE_ALL_ACCESS,        /* desired access */
                                  SERVICE_WIN32_OWN_PROCESS, /* service type */
-                                 HB_ISNUM( 4 ) ? ( DWORD ) hb_parnl( 4 ) : SERVICE_DEMAND_START,
-                                                            /* start type */
+                                 ( DWORD ) hb_parnldef( 4, SERVICE_DEMAND_START ),  /* start type */
                                  SERVICE_ERROR_NORMAL,      /* error control type */
                                  lpPath,                    /* path to service's binary */
                                  NULL,                      /* no load ordering group */

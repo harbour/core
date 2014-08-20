@@ -81,7 +81,7 @@ HB_FUNC( WIN_MAPISENDMAIL )
    HINSTANCE hMapiDll;
 
    /* Set default return value */
-   hb_retnl( -1 );
+   hb_retnint( -1 );
 
    if( ( hMapiDll = hbwapi_LoadLibrarySystem(
 #if defined( HB_UNICODE_ORI ) || defined( UNICODE )

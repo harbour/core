@@ -19,7 +19,7 @@ HB_FUNC( GT_CHARMIX )
       char *       s3;
       HB_ISIZ      i, pos3 = 0;
 
-      s3 = ( char * ) hb_xgrab( l1 + l2 + 1 );   /* grab us some mem to work with */
+      s3 = ( char * ) hb_xgrab( l1 + l2 + 1 );  /* grab us some mem to work with */
 
       for( i = 0; i < l1; i++ )
       {

@@ -77,7 +77,7 @@ HB_FUNC( WAPI_WAITFORSINGLEOBJECT )
    DWORD dwResult = WaitForSingleObject( hbwapi_par_raw_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) );
 
    hbwapi_SetLastError( GetLastError() );
-   hb_retnl( dwResult );
+   hb_retnint( dwResult );
 }
 
 HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
@@ -98,7 +98,7 @@ HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
 #endif
 
    hbwapi_SetLastError( dwLastError );
-   hb_retnl( dwResult );
+   hb_retnint( dwResult );
 }
 
 HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
@@ -118,7 +118,7 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
       dwResult = WaitForMultipleObjects( nCount, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ) );
 
       hbwapi_SetLastError( GetLastError() );
-      hb_retnl( dwResult );
+      hb_retnint( dwResult );
 
       hb_xfree( handles );
    }
@@ -144,7 +144,7 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
       dwResult = WaitForMultipleObjectsEx( nCount, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ), hb_parl( 5 ) );
 
       hbwapi_SetLastError( GetLastError() );
-      hb_retnl( dwResult );
+      hb_retnint( dwResult );
 
       hb_xfree( handles );
    }
@@ -156,7 +156,7 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
     * MsgWaitFor{Single,Multiple}Object[Ex]()
     */
    hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
-   hb_retnl( 0 );
+   hb_retnint( 0 );
 #endif
 }
 
@@ -183,7 +183,7 @@ HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
 
 HB_FUNC( WAPI_GETLASTERROR )
 {
-   hb_retnl( ( long ) hbwapi_GetLastError() );
+   hb_retnint( hbwapi_GetLastError() );
 }
 
 HB_FUNC( WAPI_SETLASTERROR )
@@ -297,7 +297,7 @@ HB_FUNC( WAPI_FORMATMESSAGE )
                                 NULL /* TODO: Add support for this parameter. */ );
 
       hbwapi_SetLastError( GetLastError() );
-      hb_retnl( dwRetVal );
+      hb_retnint( dwRetVal );
 
       HB_STORSTR( dwRetVal ? lpBuffer : NULL, 5 );
       hb_xfree( lpBuffer );
@@ -308,7 +308,7 @@ HB_FUNC( WAPI_FORMATMESSAGE )
    {
       hb_storc( NULL, 5 );
       hbwapi_SetLastError( ERROR_EMPTY );
-      hb_retnl( -1 );
+      hb_retnint( -1 );
    }
 
    hb_strfree( hBuffer );
