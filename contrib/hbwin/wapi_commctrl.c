@@ -274,8 +274,7 @@ HB_FUNC( WAPI_IMAGELIST_LOADIMAGE )
                                                hbwapi_par_UINT( 6 ),
                                                hbwapi_par_UINT( 7 ) ) );
 
-   if( hImage )
-      hb_strfree( hImage );
+   hb_strfree( hImage );
 #else
    hbwapi_ret_raw_HANDLE( NULL );
 #endif

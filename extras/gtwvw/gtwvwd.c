@@ -177,9 +177,6 @@ static void    hb_wvw_vmouse_SetPos( PWVW_WIN wvw_win, int iRow, int iCol );
 static int     hb_gt_wvw_usDispCount( PWVW_WIN wvw_win );
 static void    hb_gt_wvw_vDispBegin( PWVW_WIN wvw_win );
 static void    hb_gt_wvw_vDispEnd( PWVW_WIN wvw_win );
-#if 0
-static void    hb_gt_wvw_vGetText( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BYTE * pbyBuffer );
-#endif
 static void    hb_gt_wvw_vReplicate( PHB_GT pGT, PWVW_WIN wvw_win, int iRow, int iCol, int iColor, HB_BYTE bAttr, HB_USHORT usChar, HB_SIZE nLen );
 static HB_BOOL hb_gt_wvw_bSetMode( PWVW_WIN wvw_win, int iRow, int iCol );
 static void    hb_gt_wvw_vxPutch( PWVW_WIN wvw_win, int iRow, int iCol, int iColor, HB_USHORT usChar );
@@ -1637,18 +1634,6 @@ static int hb_gt_wvw_gfxPrimitive( PHB_GT pGT, int iType, int iTop, int iLeft, i
 
    return iRet;
 }
-
-#if 0
-static void gt_gfxText( int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
-{
-   HB_SYMBOL_UNUSED( iTop );
-   HB_SYMBOL_UNUSED( iLeft );
-   HB_SYMBOL_UNUSED( cBuf );
-   HB_SYMBOL_UNUSED( iColor );
-   HB_SYMBOL_UNUSED( iSize );
-   HB_SYMBOL_UNUSED( iWidth );
-}
-#endif
 
 /* --- Graphics API end --- */
 
@@ -4362,8 +4347,8 @@ int hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, in
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvwOpenWindow()" ) );
 
-   /* in MainCoord Mode make sure that iRowx and iColx are within Main Window's bound! */
 #if 0
+   /* in MainCoord Mode make sure that iRowx and iColx are within Main Window's bound! */
    if( s_wvw->fMainCoordMode && ( ! hb_gt_wvwInWindow( 0, iRow1, iCol1 ) || ! hb_gt_wvwInWindow( 0, iRow2, iCol2 ) ) )
    {
       MessageBox( NULL, TEXT( "TRACE: Invalid (Row,Col)" ), szWinName, MB_ICONERROR );
@@ -4888,33 +4873,6 @@ static void hb_gt_wvw_vDispEnd( PWVW_WIN wvw_win )
    if( wvw_win->iDispCount <= 0 )
       hb_gt_wvw_DoInvalidateRect( wvw_win );
 }
-
-#if 0
-
-static void hb_gt_wvw_vGetText( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, HB_BYTE * pbyBuffer )
-{
-   int iRow, iCol;
-
-   HB_SIZE j = 0;
-
-   for( iRow = iTop; iRow <= iBottom; iRow++ )
-   {
-      HB_SIZE index = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, iLeft, iRow );
-      for( iCol = iLeft; iCol <= iRight; iCol++ )
-      {
-         if( index >= wvw_win->BUFFERSIZE )
-            break;
-         else
-         {
-            pbyBuffer[ j++ ] = wvw_win->pBuffer[ index ];
-            pbyBuffer[ j++ ] = wvw_win->pColors[ index ];
-            index++;
-         }
-      }
-   }
-}
-
-#endif
 
 static void hb_gt_wvw_vReplicate( PHB_GT pGT, PWVW_WIN wvw_win, int iRow, int iCol, int iColor, HB_BYTE bAttr, HB_USHORT usChar, HB_SIZE nLen )
 {
