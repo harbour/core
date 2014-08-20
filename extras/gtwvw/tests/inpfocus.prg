@@ -75,11 +75,10 @@ STATIC FUNCTION CreateToolbar( nWinNum )
 
    LOCAL nSysBitmap := 1     // 0:none 1:small 2:large
    LOCAL lDisplayText := .F. // text will be displayed as tooltip instead
-   LOCAL hWndTB
 
    wvw_tbDestroy( nWinNum )   // just in case
 
-   IF ( hWndTB := wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap ) ) == 0
+   IF wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap ) == 0
       wvw_MessageBox( nWinNum, "FAILED to create toolbar", "Error", MB_OK + MB_ICONEXCLAMATION )
       RETURN .F.
    ENDIF
@@ -93,10 +92,9 @@ STATIC FUNCTION CreateToolbar( nWinNum )
 
 STATIC FUNCTION CreateStatusbar( nWinNum )
 
-   LOCAL hWndSB
-
    wvw_sbDestroy( nWinNum )   // just in case
-   IF ( hWndSB := wvw_sbCreate( nWinNum ) ) == 0
+
+   IF wvw_sbCreate( nWinNum ) == 0
       wvw_MessageBox( nWinNum, "FAILED to create statusbar", "Error", MB_OK + MB_ICONEXCLAMATION )
       RETURN .F.
    ENDIF

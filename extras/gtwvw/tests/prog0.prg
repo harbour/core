@@ -25,6 +25,8 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
+   wvw_SetCodepage( , 255 )
+
    Set( _SET_SCOREBOARD, .F. )
    SetColor( s_cStdColor )
    SetCursor( SC_NONE )
@@ -282,7 +284,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   cmsg := AllTrim( hb_defaultValue( cTitle, "Info" ) )
+   cmsg := AllTrim( cmsg )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
    nWidth := iif( nNumLines < 2, Len( cmsg ), nRight - nLeft - 1 )
    nTopLine := nBotLine - nNumLines - 1
@@ -300,7 +302,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    nRight := nLeft + nMaxWidth + 1
 
    // open window
-   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, hb_defaultValue( cTitle, "Info" ) )
    DispBegin()
    FOR i := 1 TO nNumLines
       cAline := MemoLine( cMsg, nWidth, i )
@@ -322,7 +324,6 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 // wtype       : Window border type, eg. "┌─┐│┘─└│"
 // r1,c1,r2,c2 : coordinates
 // Return      : Numeric id of the new window
-
 STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    LOCAL i := Len( s_zwin )

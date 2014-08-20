@@ -329,9 +329,9 @@ typedef struct
    COLORREF  background;                               /* background color */
 
    HB_SIZE   BUFFERSIZE;                               /* size of the screen text buffer */
-   HB_BYTE   byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ];  /* buffer with the text to be displayed on the screen */
+   TCHAR     byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ];  /* buffer with the text to be displayed on the screen */
    HB_BYTE   byColors[ WVW_MAX_ROWS * WVW_MAX_COLS ];
-   HB_BYTE * pBuffer;                                  /*   "     "    "    */
+   TCHAR *   pBuffer;                                  /*   "     "    "    */
    HB_BYTE * pColors;                                  /*   "     "    "    */
    POINT     caretPos;                                 /* the current caret position */
 
@@ -526,7 +526,6 @@ extern void       hb_gt_wvw_SetInvalidRect( PWVW_WIN wvw_win, int iLeft, int iTo
 extern void       hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd );
 extern HB_BOOL    hb_gt_wvw_ValidWindowSize( PWVW_WIN wvw_win, int iRows, int iCols, HFONT hFont, int iWidth, int * piMaxRows, int * piMaxCols );
 extern int        hb_gt_wvw_SetCodePage( PWVW_WIN wvw_win, int iCodePage );
-extern void       hb_gt_wvw_FUNCEpilogue( void );
 extern void       hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * piRow1, int * piCol1, int * piRow2, int * piCol2 );
 extern RECT       hb_gt_wvw_GetXYFromColRowRect( PWVW_WIN wvw_win, RECT colrow );
 extern POINT      hb_gt_wvw_GetXYFromColRow( PWVW_WIN wvw_win, int iCol, int iRow );

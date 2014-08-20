@@ -1237,19 +1237,21 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 
    while( iTop <= iBottom )
    {
-      int iColor;
-      HB_BYTE bAttr;
-      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
+         int iColor;
+         HB_BYTE bAttr;
+         HB_USHORT usChar;
+
          if( ! HB_GTSELF_GETCHAR( pGT, iTop, iCol, &iColor, &bAttr, &usChar ) )
          {
             usChar = HB_GTSELF_GETCLEARCHAR( pGT );
             iColor = HB_GTSELF_GETCLEARCOLOR( pGT );
             bAttr  = 0x00;
          }
+
          if( pGT->fVgaCell )
          {
             *pbyBuffer++ = hb_cdpGetChar( cdp, usChar );
@@ -1275,13 +1277,14 @@ static void hb_gt_def_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 
    while( iTop <= iBottom )
    {
-      int iColor;
-      HB_BYTE bAttr;
-      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
+         int iColor;
+         HB_BYTE bAttr;
+         HB_USHORT usChar;
+
          if( pGT->fVgaCell )
          {
             usChar = hb_cdpGetU16( cdp, *pbyBuffer++ );

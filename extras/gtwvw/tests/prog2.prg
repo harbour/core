@@ -14,31 +14,20 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#ifdef __HARBOUR__
-#define __GTWVW__
-#endif
-
 STATIC s_zwin := {}
 STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
 
-#ifdef __GTWVW__
 STATIC s_amiscobjlist := {}      // misc object list (actually: list of codeblocks)
-#endif
 
 PROCEDURE Main()
 
-#ifdef __GTWVW__
    LOCAL nMaxRow
    LOCAL nMaxCol
-#else
-   LOCAL i, j
-#endif
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-#ifdef __GTWVW__
    wvw_SetMainCoord( .T. )
    nMaxRow := MaxRow()
    nMaxCol := MaxCol()
@@ -46,7 +35,6 @@ PROCEDURE Main()
    wvw_SetFont( , "Lucida Console", 16, -8 )
    wvw_SetCodepage( , 255 )
    wvw_sbCreate()
-#endif
 
    Set( _SET_SCOREBOARD, .F. )
    SetColor( s_cStdColor )
@@ -55,18 +43,8 @@ PROCEDURE Main()
    @ 0, 0 SAY PadC( "This is the Main Window", MaxCol() + 1 )
 
    // screen background
-#ifndef __GTWVW__
-   DispBegin()
-   FOR i := 1 TO MaxRow() - 1
-      FOR j := 0 TO MaxCol()
-         hb_DispOutAtBox( i, j, hb_UTF8ToStrBox( "▒" ) )
-      NEXT
-   NEXT
-   DispEnd()
-#else
    ResetMiscObjects( 0 )   // make sure we start with no GUI objects
    AddMiscObjects( 0, {| nWindow | wvw_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, hb_DirBase() + "vouch1.bmp" ) } )
-#endif
 
    lboxmessage( "Welcome to our test program." + hb_eol() + ;
       "This program will show typical GET and BROWSE dialogs " + ;
@@ -89,23 +67,12 @@ STATIC PROCEDURE xGet1()
    LOCAL lDone := .F.
    LOCAL GetList := {}
    LOCAL oldCurs := SetCursor( SC_NORMAL )
-#ifdef __GTWVW__
    LOCAL nWin
    MEMVAR __temp__
-#endif
 
-#ifdef __GTWVW__
    nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
 
    AddMiscObjects( nWin, {| nWindow | __temp__ := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( __temp__, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
-#else
-   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
-#endif
-
-#if 0
-   @ 21, 21 say "Inside the window" color "R/W"
-   @ 23, 0  say "Outside the window" color "R/W"
-#endif
 
    DO WHILE ! lDone
       @ 12, 22 SAY "Name    : " GET cName  PICTURE "@!K" WHEN lMessage( "Please enter your name" )
@@ -138,9 +105,7 @@ STATIC PROCEDURE xBrowse1()
    LOCAL nCursor := SetCursor( SC_NONE )
    LOCAL nWin
 
-#ifdef __GTWVW__
    LOCAL aColumnsSep, tmp
-#endif
 
    USE "..\..\..\tests\test.dbf" NEW
    IF NetErr()
@@ -150,13 +115,8 @@ STATIC PROCEDURE xBrowse1()
    SetColor( "N/W*,N/GR*,,,N/W* " )
    oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
 
-#ifndef __GTWVW__
-   oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
-   oBrowse:HeadSep       := hb_UTF8ToStrBox( "═" )
-#else
    oBrowse:ColSep        := "  "     // we'll draw a line between these spaces
    oBrowse:HeadSep       := "__"
-#endif
    oBrowse:GoTopBlock    := {|| dbGoTop() }
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
    oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip ) }
@@ -169,7 +129,6 @@ STATIC PROCEDURE xBrowse1()
 
    nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
 
-#ifdef __GTWVW__
    wvw_SetPen( 0, 0, wvw_RGB( 210, 210, 210 ) )
 
    aColumnsSep := Array( oBrowse:colCount )
@@ -180,7 +139,6 @@ STATIC PROCEDURE xBrowse1()
    AddMiscObjects( nWin, {| nWindow | wvw_DrawBoxRecessed( nWindow, nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 ) } )
    AddMiscObjects( nWin, {| nWindow | wvw_DrawGridHorz( nWindow, oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
    AddMiscObjects( nWin, {| nWindow | wvw_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
-#endif
 
    DO WHILE ! lEnd
       oBrowse:ForceStable()
@@ -293,19 +251,8 @@ STATIC FUNCTION TBPrev()
 // displays a message on MaxRow() and returns .T.
 STATIC FUNCTION lMessage( cMsg )
 
-#ifndef __GTWVW__
-
-   LOCAL cOldColor := SetColor( s_cStdColor )
-
-   @ MaxRow(), 0 SAY PadC( cMsg, MaxCol() + 1 )
-   SetColor( cOldColor )
-
-#else
-
    // displays a message on status bar of Main Window and returns .T.
    wvw_sbSetText( 0, 0, cMsg )
-
-#endif
 
    RETURN .T.
 
@@ -352,7 +299,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   cmsg := AllTrim( hb_defaultValue( cTitle, "Info" ) )
+   cmsg := AllTrim( cmsg )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
    nWidth := iif( nNumLines < 2, Len( cmsg ), nRight - nLeft - 1 )
    nTopLine := nBotLine - nNumLines - 1
@@ -370,7 +317,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    nRight := nLeft + nMaxWidth + 1
 
    // open window
-   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, hb_defaultValue( cTitle, "Info" ) )
    DispBegin()
    FOR i := 1 TO nNumLines
       cAline := MemoLine( cMsg, nWidth, i )
@@ -405,10 +352,8 @@ STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    SetColor( ccolor )
 
-#ifdef __GTWVW__
    wvw_nOpenWindow( ctitle, r1, c1, r2, c2 )
    ResetMiscObjects()   // make sure we start with no GUI objects
-#endif
 
    AAdd( s_zwin, { i + 1, r1, c1, r2, c2, cScreen, ctitle, nrow, ncol, coldcolor } )
 
@@ -416,16 +361,7 @@ STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    hb_Scroll( r1, c1, r2, c2 )
 
-#ifdef __GTWVW__
    HB_SYMBOL_UNUSED( wtype )
-#else
-   // GTWVW doesn't need box or textual title
-   hb_DispBox( r1, c1, r2, c2, wtype )
-   IF ! Empty( ctitle )
-      cTitle := " " + AllTrim( ctitle ) + " "
-      hb_DispOutAt( r1, nCeiling( ( c2 + c1 - Len( cTitle ) ) / 2 ), cTitle )
-   ENDIF
-#endif
 
    SetColor( cOldColor )
 
@@ -441,10 +377,8 @@ STATIC PROCEDURE ZREVWINDOW()
       RETURN
    ENDIF
 
-#ifdef __GTWVW__
    ResetMiscObjects()   // clear all GUI objects, if any
    wvw_lCloseWindow()
-#endif
 
    // restore states
    RestScreen( s_zwin[ i ][ 2 ], s_zwin[ i ][ 3 ], s_zwin[ i ][ 4 ], s_zwin[ i ][ 5 ], s_zwin[ i ][ 6 ] )
@@ -455,8 +389,6 @@ STATIC PROCEDURE ZREVWINDOW()
    hb_ADel( s_zwin, i, .T. )
 
    RETURN
-
-#ifdef __GTWVW__
 
 //
 //      WVW_Paint() must be a FUNCTION in your application
@@ -488,10 +420,3 @@ STATIC FUNCTION AddMiscObjects( nWinNum, bAction )
    AAdd( s_amiscobjlist[ nWinNum + 1 ], bAction )
 
    RETURN .T.
-
-#else
-
-STATIC FUNCTION nCeiling( nNumber )
-   RETURN Int( nNumber ) + iif( ( nNumber - Int( nNumber ) ) > 0, 1, 0 )
-
-#endif

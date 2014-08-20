@@ -16,9 +16,6 @@
    Since the original Clipper code uses ZNEWWINDOW() and ZREVWINDOW() to
    open and close any window, we only have to change these two functions
    and let all other functions unchanged (xGet1(), xBrowse1(), ...).
-
-   All changes are guarded by #ifdef, so this program is still compilable
-   in Clipper resulting its original behaviour.
 */
 
 #require "gtwvw"
@@ -125,7 +122,7 @@ STATIC PROCEDURE xBrowse1()
    oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
 
    oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
-   oBrowse:HeadSep       := hb_UTF8ToStrBox( "═" )
+   oBrowse:HeadSep       := hb_UTF8ToStrBox( "─" )
    oBrowse:GoTopBlock    := {|| dbGoTop() }
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
    oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip ) }
@@ -246,18 +243,19 @@ STATIC FUNCTION TBPrev()
 
 // supporting functions
 
+// displays a message on MaxRow() and returns .T.
 STATIC FUNCTION lMessage( cMsg )
 
-   // displays a message on MaxRow() and returns .T.
    LOCAL cOldColor := SetColor( s_cStdColor )
+
    @ MaxRow(), 0 SAY PadC( cMsg, MaxCol() + 1 )
    SetColor( cOldColor )
 
    RETURN .T.
 
+// display cmsg with Yes/No option, returns .T. if Yes selected
 STATIC FUNCTION lYesNo( cMsg )
 
-   // display cmsg with Yes/No option, returns .T. if Yes selected
    LOCAL nTopLine, ;
       nLeft := 5, ;
       nBotLine := MaxRow() - 2, ;
@@ -298,7 +296,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   cmsg := AllTrim( hb_defaultValue( cTitle, "Info" ) )
+   cmsg := AllTrim( cmsg )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
    nWidth := iif( nNumLines < 2, Len( cmsg ), nRight - nLeft - 1 )
    nTopLine := nBotLine - nNumLines - 1
@@ -316,7 +314,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    nRight := nLeft + nMaxWidth + 1
 
    // open window
-   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, hb_defaultValue( cTitle, "Info" ) )
    DispBegin()
    FOR i := 1 TO nNumLines
       cAline := MemoLine( cMsg, nWidth, i )
