@@ -921,20 +921,20 @@ HB_FUNC( WVW_OPENBITMAP )
 HB_FUNC( WVW_SETTEXTCOLOR )
 {
    hb_retnint( SetTextColor(
-                  ( HDC ) HB_PARHANDLE( 1 ),        /* handle of device context */
-                  ( COLORREF ) hb_parnint( 2 ) ) ); /* text color */
+                  ( HDC ) HB_PARHANDLE( 1 ),         /* handle of device context */
+                  ( COLORREF ) hb_parnint( 2 ) ) );  /* text color */
 }
 
 HB_FUNC( WVW_SETBKCOLOR )
 {
    hb_retnint( SetBkColor(
-                  ( HDC ) HB_PARHANDLE( 1 ),        /* handle of device context */
-                  ( COLORREF ) hb_parnint( 2 ) ) ); /* text color */
+                  ( HDC ) HB_PARHANDLE( 1 ),         /* handle of device context */
+                  ( COLORREF ) hb_parnint( 2 ) ) );  /* text color */
 }
 
 HB_FUNC( WVW_CREATESOLIDBRUSH )
 {
-   HB_RETHANDLE( CreateSolidBrush( ( COLORREF ) hb_parnint( 1 ) /* brush color */ ) );
+   HB_RETHANDLE( CreateSolidBrush( ( COLORREF ) hb_parnint( 1 ) /* nBrushColor */ ) );
 }
 
 HB_FUNC( WVW_CREATEHATCHBRUSH )
@@ -957,10 +957,10 @@ HB_FUNC( WIN_GETSYSCOLOR )
 HB_FUNC( WVW_REDRAWWINDOW )
 {
    RedrawWindow(
-      ( HWND ) HB_PARHANDLE( 1 ),   /* handle of window */
-      NULL,                         /* address of structure with update rectangle */
-      NULL,                         /* handle of update region */
-      ( UINT ) hb_parnint( 2 ) );   /* array of redraw flags */
+      ( HWND ) HB_PARHANDLE( 1 ),  /* handle of window */
+      NULL,                        /* address of structure with update rectangle */
+      NULL,                        /* handle of update region */
+      ( UINT ) hb_parnint( 2 ) );  /* array of redraw flags */
 }
 
 /* win_CreateFont( fontName, nWidth, hHeight, [fnWeight], [fdwCharSet],
@@ -1178,6 +1178,7 @@ HB_FUNC( WVW_WINDOW2BITMAP )
 
    DeleteDC( hDCmem );
    DeleteDC( hDC );
+
    HB_RETHANDLE( hBitmap );
 }
 
@@ -1307,56 +1308,23 @@ HB_FUNC( WVW_SETPOINTER )
 
       switch( hb_parni( 2 ) )
       {
-         case 1:
-            hCursor = LoadCursor( NULL, IDC_ARROW );
-            break;
-         case 2:
-            hCursor = LoadCursor( NULL, IDC_IBEAM );
-            break;
-         case 3:
-            hCursor = LoadCursor( NULL, IDC_WAIT );
-            break;
-         case 4:
-            hCursor = LoadCursor( NULL, IDC_CROSS );
-            break;
-         case 5:
-            hCursor = LoadCursor( NULL, IDC_UPARROW );
-            break;
-         case 6:
-            hCursor = LoadCursor( NULL, IDC_SIZE );
-            break;
-         case 7:
-            hCursor = LoadCursor( NULL, IDC_ICON );
-            break;
-         case 8:
-            hCursor = LoadCursor( NULL, IDC_SIZENWSE );
-            break;
-         case 9:
-            hCursor = LoadCursor( NULL, IDC_SIZENESW );
-            break;
-         case 10:
-            hCursor = LoadCursor( NULL, IDC_SIZEWE );
-            break;
-         case 11:
-            hCursor = LoadCursor( NULL, IDC_SIZENS );
-            break;
-         case 12:
-            hCursor = LoadCursor( NULL, IDC_SIZEALL );
-            break;
-         case 13:
-            hCursor = LoadCursor( NULL, IDC_NO );
-            break;
-         case 14:
-            hCursor = LoadCursor( NULL, IDC_HAND );
-            break;
-         case 15:
-            hCursor = LoadCursor( NULL, IDC_APPSTARTING );
-            break;
-         case 16:
-            hCursor = LoadCursor( NULL, IDC_HELP );
-            break;
-         default:
-            hCursor = LoadCursor( NULL, IDC_ARROW );
+         case  1: hCursor = LoadCursor( NULL, IDC_ARROW ); break;
+         case  2: hCursor = LoadCursor( NULL, IDC_IBEAM ); break;
+         case  3: hCursor = LoadCursor( NULL, IDC_WAIT ); break;
+         case  4: hCursor = LoadCursor( NULL, IDC_CROSS ); break;
+         case  5: hCursor = LoadCursor( NULL, IDC_UPARROW ); break;
+         case  6: hCursor = LoadCursor( NULL, IDC_SIZE ); break;
+         case  7: hCursor = LoadCursor( NULL, IDC_ICON ); break;
+         case  8: hCursor = LoadCursor( NULL, IDC_SIZENWSE ); break;
+         case  9: hCursor = LoadCursor( NULL, IDC_SIZENESW ); break;
+         case 10: hCursor = LoadCursor( NULL, IDC_SIZEWE ); break;
+         case 11: hCursor = LoadCursor( NULL, IDC_SIZENS ); break;
+         case 12: hCursor = LoadCursor( NULL, IDC_SIZEALL ); break;
+         case 13: hCursor = LoadCursor( NULL, IDC_NO ); break;
+         case 14: hCursor = LoadCursor( NULL, IDC_HAND ); break;
+         case 15: hCursor = LoadCursor( NULL, IDC_APPSTARTING ); break;
+         case 16: hCursor = LoadCursor( NULL, IDC_HELP ); break;
+         default: hCursor = LoadCursor( NULL, IDC_ARROW );
       }
 
       SetClassLongPtr( wvw_win->hWnd, GCLP_HCURSOR, ( LONG_PTR ) hCursor );
@@ -1612,8 +1580,9 @@ HB_FUNC( WVW_SETMOUSEPOS )
    if( wvw_win )
    {
       POINT xy;
-      int   iRow  = hb_parni( 2 ),
-            iCol = hb_parni( 3 );
+
+      int iRow = hb_parni( 2 );
+      int iCol = hb_parni( 3 );
 
       hb_gt_wvw_HBFUNCPrologue( wvw_win, &iRow, &iCol, NULL, NULL );
 

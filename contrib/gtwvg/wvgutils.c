@@ -232,12 +232,10 @@ HB_FUNC( WVT_SETTOOLTIPACTIVE )
 
    if( _s )
    {
-      HB_BOOL bActive = _s->bToolTipActive;
+      hb_retl( _s->bToolTipActive );
 
       if( HB_ISLOG( 1 ) )
          _s->bToolTipActive = hb_parl( 1 );
-
-      hb_retl( bActive );
    }
    else
       hb_retl( HB_FALSE );
@@ -338,12 +336,11 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
 
    if( _s )
    {
-      int iTipWidth = ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
+      hb_retni( ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
 
       if( HB_ISNUM( 1 ) )
          SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) hb_parnint( 1 ) );
 
-      hb_retni( iTipWidth );
       return;
    }
 #endif
@@ -357,12 +354,11 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
 
    if( _s )
    {
-      COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
+      hbwapi_ret_COLORREF( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
 
       if( HB_ISNUM( 1 ) )
          SendMessage( _s->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) hbwapi_par_COLORREF( 1 ), 0 );
 
-      hbwapi_ret_COLORREF( cr );
       return;
    }
 #endif
@@ -376,12 +372,11 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 
    if( _s )
    {
-      COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
+      hbwapi_ret_COLORREF( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
 
       if( HB_ISNUM( 1 ) )
          SendMessage( _s->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) hbwapi_par_COLORREF( 1 ), 0 );
 
-      hbwapi_ret_COLORREF( cr );
       return;
    }
 #endif
@@ -458,12 +453,10 @@ HB_FUNC( WVT_SETGUI )
 
    if( _s )
    {
-      HB_BOOL bGui = _s->bGui;
+      hb_retl( _s->bGui );
 
       if( HB_ISLOG( 1 ) )
          _s->bGui = hb_parl( 1 );
-
-      hb_retl( bGui );
    }
    else
       hb_retl( HB_FALSE );
@@ -514,57 +507,23 @@ HB_FUNC( WVT_SETPOINTER )
 
       switch( hb_parni( 1 ) )
       {
-         case 1:
-            hCursor = LoadCursor( NULL, IDC_ARROW );
-            break;
-         case 2:
-            hCursor = LoadCursor( NULL, IDC_IBEAM );
-            break;
-         case 3:
-            hCursor = LoadCursor( NULL, IDC_WAIT  );
-            break;
-         case 4:
-            hCursor = LoadCursor( NULL, IDC_CROSS );
-            break;
-         case 5:
-            hCursor = LoadCursor( NULL, IDC_UPARROW );
-            break;
-         case 6:
-            hCursor = LoadCursor( NULL, IDC_SIZE );
-            break;
-         case 7:
-            hCursor = LoadCursor( NULL, IDC_ICON );
-            break;
-         case 8:
-            hCursor = LoadCursor( NULL, IDC_SIZENWSE );
-            break;
-         case 9:
-            hCursor = LoadCursor( NULL, IDC_SIZENESW );
-            break;
-         case 10:
-            hCursor = LoadCursor( NULL, IDC_SIZEWE );
-            break;
-         case 11:
-            hCursor = LoadCursor( NULL, IDC_SIZENS );
-            break;
-         case 12:
-            hCursor = LoadCursor( NULL, IDC_SIZEALL );
-            break;
-         case 13:
-            hCursor = LoadCursor( NULL, IDC_NO );
-            break;
-         case 14:
-            hCursor = LoadCursor( NULL, IDC_HAND );
-            break;
-         case 15:
-            hCursor = LoadCursor( NULL, IDC_APPSTARTING );
-            break;
-         case 16:
-            hCursor = LoadCursor( NULL, IDC_HELP );
-            break;
-         default:
-            hCursor = LoadCursor( NULL, IDC_ARROW );
-            break;
+         case  1: hCursor = LoadCursor( NULL, IDC_ARROW ); break;
+         case  2: hCursor = LoadCursor( NULL, IDC_IBEAM ); break;
+         case  3: hCursor = LoadCursor( NULL, IDC_WAIT  ); break;
+         case  4: hCursor = LoadCursor( NULL, IDC_CROSS ); break;
+         case  5: hCursor = LoadCursor( NULL, IDC_UPARROW ); break;
+         case  6: hCursor = LoadCursor( NULL, IDC_SIZE ); break;
+         case  7: hCursor = LoadCursor( NULL, IDC_ICON ); break;
+         case  8: hCursor = LoadCursor( NULL, IDC_SIZENWSE ); break;
+         case  9: hCursor = LoadCursor( NULL, IDC_SIZENESW ); break;
+         case 10: hCursor = LoadCursor( NULL, IDC_SIZEWE ); break;
+         case 11: hCursor = LoadCursor( NULL, IDC_SIZENS ); break;
+         case 12: hCursor = LoadCursor( NULL, IDC_SIZEALL ); break;
+         case 13: hCursor = LoadCursor( NULL, IDC_NO ); break;
+         case 14: hCursor = LoadCursor( NULL, IDC_HAND ); break;
+         case 15: hCursor = LoadCursor( NULL, IDC_APPSTARTING ); break;
+         case 16: hCursor = LoadCursor( NULL, IDC_HELP ); break;
+         default: hCursor = LoadCursor( NULL, IDC_ARROW );
       }
 
 #if ! defined( HB_ARCH_64BIT ) && ( defined( __WATCOMC__ ) || defined( __DMC__ ) || \
@@ -582,12 +541,10 @@ HB_FUNC( WVT_SETMOUSEMOVE )
 
    if( _s )
    {
-      HB_BOOL bMouseMove = _s->MouseMove;
+      hb_retl( _s->MouseMove );
 
       if( HB_ISLOG( 1 ) )
          _s->MouseMove = hb_parl( 1 );
-
-      hb_retl( bMouseMove );
    }
    else
       hb_retl( HB_FALSE );
@@ -663,11 +620,9 @@ HB_FUNC( WVT_SETPOPUPMENU )
 
    if( _s )
    {
-      HMENU hPopup = _s->hPopup;
+      wvg_rethandle( _s->hPopup );
 
       _s->hPopup = ( HMENU ) wvg_parhandle( 1 );
-
-      wvg_rethandle( hPopup );
    }
    else
       wvg_rethandle( 0 );
@@ -716,12 +671,10 @@ HB_FUNC( WVT_SETLASTMENUEVENT )
 
    if( _s )
    {
-      int iEvent = _s->LastMenuEvent;
+      hb_retni( _s->LastMenuEvent );
 
       if( HB_ISNUM( 1 ) )
          _s->LastMenuEvent = hb_parni( 1 );
-
-      hb_retni( iEvent );
    }
    else
       hb_retni( 0 );
@@ -733,12 +686,10 @@ HB_FUNC( WVT_SETMENUKEYEVENT )
 
    if( _s )
    {
-      int iOldEvent = _s->MenuKeyEvent;
+      hb_retni( _s->MenuKeyEvent );
 
       if( HB_ISNUM( 1 ) )
          _s->MenuKeyEvent = hb_parni( 1 );
-
-      hb_retni( iOldEvent );
    }
    else
       hb_retni( 0 );
@@ -758,12 +709,10 @@ HB_FUNC( WVT_ENABLESHORTCUTS )
 
    if( _s )
    {
-      HB_BOOL bWas = _s->EnableShortCuts;
+      hb_retl( _s->EnableShortCuts );
 
       if( HB_ISLOG( 1 ) )
          _s->EnableShortCuts = hb_parl( 1 );
-
-      hb_retl( bWas );
    }
    else
       hb_retl( HB_FALSE );
