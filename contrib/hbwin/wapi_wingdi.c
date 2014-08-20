@@ -554,8 +554,6 @@ HB_FUNC( WAPI_TEXTOUT )
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-   hb_retl( HB_FALSE );
 }
 
 HB_FUNC( WAPI_EXTTEXTOUT )
@@ -689,7 +687,7 @@ HB_FUNC( WAPI_CREATEHATCHBRUSH )
    hbwapi_ret_HBRUSH( CreateHatchBrush( hb_parni( 1 ) /* fnStyle */,
                                         hbwapi_par_COLORREF( 2 ) /* crColor */ ) );
 #else
-   hb_retptr( NULL );
+   hbwapi_ret_HBRUSH( NULL );
 #endif
 }
 
