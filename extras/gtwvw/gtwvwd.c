@@ -3422,20 +3422,17 @@ POINT hb_gt_wvw_GetColRowFromXY( PWVW_WIN wvw_win, int x, int y )
 RECT hb_gt_wvw_GetColRowFromXYRect( PWVW_WIN wvw_win, RECT xy )
 {
    RECT colrow;
-   int  usLineSpaces;
+   int  iLineSpacing = wvw_win->iLineSpacing;  /* TODO: pls improve efficiency */
 
    xy.top    -= wvw_win->iTBHeight;
    xy.bottom -= wvw_win->iTBHeight;
 
-   /* TODO: pls improve efficiency */
-   usLineSpaces = wvw_win->iLineSpacing;
-
    colrow.left = xy.left / wvw_win->PTEXTSIZE.x;
-   colrow.top  = xy.top / ( wvw_win->PTEXTSIZE.y + usLineSpaces );
+   colrow.top  = xy.top / ( wvw_win->PTEXTSIZE.y + iLineSpacing );
 
    /* Adjust for when rectangle EXACTLY overlaps characters */
    colrow.right  = xy.right / wvw_win->PTEXTSIZE.x - ( ( xy.right % wvw_win->PTEXTSIZE.x ) ? 0 : 1 );
-   colrow.bottom = xy.bottom / ( wvw_win->PTEXTSIZE.y + usLineSpaces ) - ( ( xy.bottom % ( wvw_win->PTEXTSIZE.y + usLineSpaces ) ) ? 0 : 1 );
+   colrow.bottom = xy.bottom / ( wvw_win->PTEXTSIZE.y + iLineSpacing ) - ( ( xy.bottom % ( wvw_win->PTEXTSIZE.y + iLineSpacing ) ) ? 0 : 1 );
 
    return colrow;
 }
@@ -6430,9 +6427,8 @@ static LRESULT CALLBACK hb_gt_wvw_BtnProc( HWND hWnd, UINT message, WPARAM wPara
 }
 
 /* ASSUME: WVW_ID_BASE_PUSHBUTTON == WVW_ID_BASE_CHECKBOX
- *         WVW_CONTROL_PUSHBUTTON == WVW_CONTROL_CHECKBOX
- */
-int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBottom, int usRight, LPCTSTR szCaption,
+           WVW_CONTROL_PUSHBUTTON == WVW_CONTROL_CHECKBOX */
+int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight, LPCTSTR szCaption,
                             const char * szBitmap, HB_UINT uiBitmap, PHB_ITEM pBlock,
                             int iOffTop, int iOffLeft, int iOffBottom, int iOffRight,
                             double dStretch, HB_BOOL fMap3Dcolors,
@@ -6440,8 +6436,9 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
 {
    HWND  hWnd;
    POINT xy;
-   int   iTop, iLeft, iBottom, iRight;
    int   nCtrlId;
+
+   RECT rXB, rOffXB;
 
    if( wvw_win->hPBfont == NULL )
    {
@@ -6453,13 +6450,23 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
       }
    }
 
-   hb_gt_wvw_HBFUNCPrologue( wvw_win, &usTop, &usLeft, &usBottom, &usRight );
+   rXB.top    = iTop;
+   rXB.left   = iLeft;
+   rXB.bottom = iBottom;
+   rXB.right  = iRight;
 
-   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, usLeft, usTop );
+   rOffXB.top    = iOffTop;
+   rOffXB.left   = iOffLeft;
+   rOffXB.bottom = iOffBottom;
+   rOffXB.right  = iOffRight;
+
+   hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
+
+   xy    = hb_gt_wvw_GetXYFromColRow( wvw_win, iLeft, iTop );
    iTop  = xy.y + iOffTop;
    iLeft = xy.x + iOffLeft;
 
-   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, usRight + 1, usBottom + 1 );
+   xy      = hb_gt_wvw_GetXYFromColRow( wvw_win, iRight + 1, iBottom + 1 );
    iBottom = xy.y - wvw_win->iLineSpacing - 1 + iOffBottom;
    iRight  = xy.x - 1 + iOffRight;
 
@@ -6490,7 +6497,6 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
 
    if( hWnd )
    {
-      RECT    rXB, rOffXB;
       WNDPROC OldProc;
 
       if( szBitmap || uiBitmap )
@@ -6503,16 +6509,6 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int usTop, int usLeft, int usBotto
          if( hBitmap )
             SendMessage( hWnd, BM_SETIMAGE, ( WPARAM ) IMAGE_BITMAP, ( LPARAM ) hBitmap );
       }
-
-      rXB.top    = usTop;
-      rXB.left   = usLeft;
-      rXB.bottom = usBottom;
-      rXB.right  = usRight;
-
-      rOffXB.top    = iOffTop;
-      rOffXB.left   = iOffLeft;
-      rOffXB.bottom = iOffBottom;
-      rOffXB.right  = iOffRight;
 
       hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_PUSHBUTTON, hWnd, nCtrlId, pBlock, rXB, rOffXB, iStyle );
 
@@ -6553,7 +6549,7 @@ HB_FUNC( WVW_ADDROWS )
    {
       int     iRows = hb_parni( 2 );
       int     height, width;
-      HB_SIZE usNumChars;
+      HB_SIZE nNumChars;
 
       RECT wi, ci;
 
@@ -6572,21 +6568,21 @@ HB_FUNC( WVW_ADDROWS )
          return;
       }
 
-      usNumChars = ( HB_SIZE ) ( iRows * wvw_win->COLS );
+      nNumChars = ( HB_SIZE ) ( iRows * wvw_win->COLS );
 
       if( iRows > 0 )
       {
          /* initialize chars and attributes */
-         HB_SIZE usBufLastRow = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, 0, wvw_win->ROWS - 1 );
-         HB_SIZE usBufStart   = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, 0, wvw_win->ROWS );
+         HB_SIZE nBufLastRow = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, 0, wvw_win->ROWS - 1 );
+         HB_SIZE nBufStart   = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, 0, wvw_win->ROWS );
 
-         memset( &wvw_win->byBuffer[ usBufStart ], ' ', usNumChars );
-         memset( &wvw_win->byColors[ usBufStart ], wvw_win->byColors[ usBufLastRow ], usNumChars );
+         memset( &wvw_win->byBuffer[ nBufStart ], ' ', nNumChars );
+         memset( &wvw_win->byColors[ nBufStart ], wvw_win->byColors[ nBufLastRow ], nNumChars );
       }
 
       /* update vars */
       wvw_win->ROWS       += iRows;
-      wvw_win->BUFFERSIZE += usNumChars * sizeof( char );
+      wvw_win->BUFFERSIZE += nNumChars * sizeof( char );
 
       if( ! hb_gt_wvw_GetMainCoordMode() )
       {

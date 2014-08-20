@@ -1613,11 +1613,11 @@ HB_FUNC( WVW_SETMOUSEPOS )
    {
       POINT xy;
       int   iRow  = hb_parni( 2 ),
-            usCol = hb_parni( 3 );
+            iCol = hb_parni( 3 );
 
-      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iRow, &usCol, NULL, NULL );
+      hb_gt_wvw_HBFUNCPrologue( wvw_win, &iRow, &iCol, NULL, NULL );
 
-      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, usCol, iRow );
+      xy = hb_gt_wvw_GetXYFromColRow( wvw_win, iCol, iRow );
 
       if( ClientToScreen( wvw_win->hWnd, &xy ) )
       {
