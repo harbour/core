@@ -77,7 +77,7 @@ HB_FUNC( WIN_SENDMESSAGE )
       szText = HB_STRUNSHARE( &hText, szText, nLen );
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parnl( 2 ),
+                            ( UINT ) hb_parni( 2 ),
                             ( WPARAM ) hb_parnint( 3 ),
                             szText ? ( LPARAM ) szText : ( LPARAM ) hb_parnint( 4 ) ) );
 
@@ -109,7 +109,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 
    hb_retnint( SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                    hb_parni( 2 ),
-                                   ( UINT ) hb_parnl( 3 ),
+                                   ( UINT ) hb_parni( 3 ),
                                    ( WPARAM ) hb_parnint( 4 ),
                                    pText ? ( LPARAM ) szTextToPass : ( LPARAM ) hb_parnint( 5 ) ) );
 
@@ -127,7 +127,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 /* win_SetTimer( hWnd, nIdentifier, nTimeOut ) */
 HB_FUNC( WIN_SETTIMER )
 {
-   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), ( UINT_PTR ) hb_parnint( 2 ), ( UINT ) hb_parnl( 3 ), NULL ) != ( UINT_PTR ) NULL );
+   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), ( UINT_PTR ) hb_parnint( 2 ), ( UINT ) hb_parni( 3 ), NULL ) != ( UINT_PTR ) NULL );
 }
 
 HB_FUNC( WIN_SETFOCUS )
@@ -203,7 +203,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
    hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
-                            HB_ISNUM( 3 ) ? ( UINT ) hb_parnl( 3 ) : ( UINT ) hb_parl( 3 ) ) );
+                            HB_ISNUM( 3 ) ? ( UINT ) hb_parni( 3 ) : ( UINT ) hb_parl( 3 ) ) );
 }
 
 HB_FUNC( WIN_ISDLGBUTTONCHECKED )
@@ -413,7 +413,7 @@ HB_FUNC( WVW_GBCREATE )
       hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, iTop, iLeft, iBottom, iRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
-                                        ( HB_UINT ) hb_parnl( 7 ),
+                                        ( HB_UINT ) hb_parni( 7 ),
                                         hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
@@ -454,7 +454,7 @@ HB_FUNC( WVW_RBCREATE )
       hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, iTop, iLeft, iBottom, iRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
-                                        ( HB_UINT ) hb_parnl( 7 ),
+                                        ( HB_UINT ) hb_parni( 7 ),
                                         hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
@@ -544,7 +544,7 @@ HB_FUNC( WVW_SENDMESSAGE )
    void * hText = NULL;
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parnl( 2 ),
+                            ( UINT ) hb_parni( 2 ),
                             ( WPARAM ) hb_parnint( 3 ),
                             HB_ISCHAR( 4 ) ? ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) : ( LPARAM ) hb_parnint( 4 ) ) );
 
@@ -624,7 +624,7 @@ HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 
          ti.uFlags   = TTF_SUBCLASS | TTF_IDISHWND;
          ti.hwnd     = wvw_win->hWnd;
-         ti.uId      = ( UINT ) hb_parnl( 2 );
+         ti.uId      = ( UINT ) hb_parni( 2 );
          ti.hinst    = GetModuleHandle( NULL );
          ti.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );  /* TOFIX: drops const */
 
@@ -646,7 +646,7 @@ HB_FUNC( WVW_CREATEIMAGELIST )
 
    HIMAGELIST himl = ImageList_Create( hb_parni( 2 ),
                                        hb_parni( 3 ),
-                                       ( UINT ) hb_parnldef( 5, ILC_COLOR ),
+                                       ( UINT ) hb_parnidef( 5, ILC_COLOR ),
                                        ulLen,
                                        hb_parni( 4 ) );
 
@@ -706,10 +706,10 @@ HB_FUNC( WVW_LOADIMAGE )
       if( wvw )
          HB_RETHANDLE( LoadImage( wvw->hInstance,                    /* ( HINSTANCE ) hb_parnintdef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
                                   MAKEINTRESOURCE( hb_parni( 2 ) ),  /* name or identifier of image */
-                                  ( UINT ) hb_parnl( 3 ),            /* type of image */
+                                  ( UINT ) hb_parni( 3 ),            /* type of image */
                                   hb_parni( 4 ),                     /* desired width */
                                   hb_parni( 5 ),                     /* desired height */
-                                  ( UINT ) hb_parnl( 6 ) ) );        /* load flags */
+                                  ( UINT ) hb_parni( 6 ) ) );        /* load flags */
       else
          HB_RETHANDLE( NULL );
    }
@@ -718,10 +718,10 @@ HB_FUNC( WVW_LOADIMAGE )
       void * hName;
       HB_RETHANDLE( LoadImage( ( HINSTANCE ) HB_PARHANDLE( 1 ),  /* handle of the instance that contains the image */
                                HB_PARSTR( 2, &hName, NULL ),     /* name or identifier of image */
-                               ( UINT ) hb_parnl( 3 ),           /* type of image */
+                               ( UINT ) hb_parni( 3 ),           /* type of image */
                                hb_parni( 4 ),                    /* desired width */
                                hb_parni( 5 ),                    /* desired height */
-                               ( UINT ) hb_parnl( 6 ) ) );       /* load flags */
+                               ( UINT ) hb_parni( 6 ) ) );       /* load flags */
       hb_strfree( hName );
    }
 }
@@ -960,7 +960,7 @@ HB_FUNC( WVW_REDRAWWINDOW )
       ( HWND ) HB_PARHANDLE( 1 ),  /* handle of window */
       NULL,                        /* address of structure with update rectangle */
       NULL,                        /* handle of update region */
-      ( UINT ) hb_parnl( 2 ) );    /* array of redraw flags */
+      ( UINT ) hb_parni( 2 ) );    /* array of redraw flags */
 }
 
 /* win_CreateFont( fontName, nWidth, hHeight, [fnWeight], [fdwCharSet],
@@ -1112,7 +1112,7 @@ HB_FUNC( WVW_SETBITMAPRESOURCEID )
                iOffset = 0;
          }
 
-         hb_retnint( ( HB_UINT ) hb_parnl( 4 ) + iOffset );
+         hb_retnint( ( HB_UINT ) hb_parni( 4 ) + iOffset );
       }
    }
    else
@@ -1244,7 +1244,7 @@ HB_FUNC( WVW_SETTIMER )
 
    if( wvw && wvw->a.pSymWVW_TIMER && wvw_win )
    {
-      SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId, ( UINT ) hb_parnl( 2 ), NULL );
+      SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId, ( UINT ) hb_parni( 2 ), NULL );
 
       hb_retl( HB_TRUE );
    }

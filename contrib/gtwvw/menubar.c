@@ -120,12 +120,12 @@ HB_FUNC( WVW_APPENDMENU )
    else
       szCaption = ( LPCTSTR ) HB_PARHANDLE( 4 );  /* TOFIX: delete this */
 
-   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parnl( 2 ), ( UINT_PTR ) hb_parnint( 3 ), szCaption ) );
+   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parnint( 3 ), szCaption ) );
 }
 
 HB_FUNC( WVW_DELETEMENU )
 {
-   hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parnl( 2 ), ( UINT ) hb_parnl( 3 ) ) );
+   hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVW_DESTROYMENU )
@@ -135,7 +135,7 @@ HB_FUNC( WVW_DESTROYMENU )
 
 HB_FUNC( WVW_ENABLEMENUITEM )
 {
-   hb_retl( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parnl( 2 ), ( UINT ) hb_parnl( 3 ) ) );
+   hb_retl( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVW_GETLASTMENUEVENT )

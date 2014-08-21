@@ -638,7 +638,7 @@ HB_FUNC( WVW_SETBRUSH )
 
       memset( &lb, 0, sizeof( lb ) );
 
-      lb.lbStyle = ( UINT ) hb_parnl( 1 );
+      lb.lbStyle = ( UINT ) hb_parni( 1 );
       lb.lbColor = ( COLORREF ) hb_parnl( 2 );
       lb.lbHatch = ( ULONG_PTR ) hb_parnint( 3 );
 

@@ -642,7 +642,7 @@ HB_FUNC_TRANSLATE( WVT_APPENDMENU, WVG_APPENDMENU )
 
 HB_FUNC( WVT_DELETEMENU )
 {
-   hb_retl( DeleteMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parnl( 2 ), ( UINT ) hb_parnl( 3 ) ) );
+   hb_retl( DeleteMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_DESTROYMENU )
@@ -652,7 +652,7 @@ HB_FUNC( WVT_DESTROYMENU )
 
 HB_FUNC( WVT_ENABLEMENUITEM )
 {
-   hb_retni( EnableMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parnl( 2 ), ( UINT ) hb_parnl( 3 ) ) );
+   hb_retni( EnableMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_GETLASTMENUEVENT )

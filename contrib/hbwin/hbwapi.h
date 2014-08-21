@@ -82,7 +82,7 @@
 
 #define hbwapi_par_BOOL( n )                ( ( BOOL  ) ( hb_parl( n ) ? TRUE : FALSE ) )
 #define hbwapi_par_INT( n )                 ( ( INT   ) hb_parni( n ) )
-#define hbwapi_par_UINT( n )                ( ( UINT  ) hb_parnl( n ) )
+#define hbwapi_par_UINT( n )                ( ( UINT  ) hb_parni( n ) )
 #define hbwapi_par_LONG( n )                ( ( LONG  ) hb_parnl( n ) )
 #define hbwapi_par_WORD( n )                ( ( WORD  ) hb_parnl( n ) )
 #define hbwapi_par_DWORD( n )               ( ( DWORD ) hb_parnl( n ) )

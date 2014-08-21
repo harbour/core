@@ -61,7 +61,7 @@ HB_FUNC( WAPI_SETWINDOWPOS )
                                 hb_parni( 4 ),
                                 hb_parni( 5 ),
                                 hb_parni( 6 ),
-                                ( UINT ) hb_parnl( 7 ) );
+                                ( UINT ) hb_parni( 7 ) );
 
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
@@ -455,7 +455,7 @@ HB_FUNC( WAPI_LOADIMAGE )
    HANDLE hImage = LoadImage( hbwapi_par_raw_HINSTANCE( 1 ),
                               HB_ISNUM( 2 ) ? MAKEINTRESOURCE( hbwapi_par_INT( 2 ) ) :
                                               HB_PARSTR( 2, &hString, NULL ),
-                              ( UINT ) hb_parnldef( 3, IMAGE_BITMAP ),
+                              ( UINT ) hb_parnidef( 3, IMAGE_BITMAP ),
                               hbwapi_par_INT( 4 ),       /* desired width */
                               hbwapi_par_INT( 5 ),       /* desired height */
                               hbwapi_par_UINT( 6 ) );    /* load flags */

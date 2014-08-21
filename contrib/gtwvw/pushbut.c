@@ -113,7 +113,7 @@ HB_FUNC( WVW_PBCREATE )
       hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, iTop, iLeft, iBottom, iRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
-                                        ( HB_UINT ) hb_parnl( 7 ),
+                                        ( HB_UINT ) hb_parni( 7 ),
                                         hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
