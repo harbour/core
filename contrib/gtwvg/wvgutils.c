@@ -187,7 +187,7 @@ HB_FUNC( WVT_CHOOSECOLOR )
       memset( &cc, 0, sizeof( cc ) );
 
       for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-         crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnint( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
+         crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
       cc.lStructSize  = sizeof( cc );
       cc.hwndOwner    = _s->hWnd;
@@ -642,7 +642,7 @@ HB_FUNC_TRANSLATE( WVT_APPENDMENU, WVG_APPENDMENU )
 
 HB_FUNC( WVT_DELETEMENU )
 {
-   hb_retl( DeleteMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retl( DeleteMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parnl( 2 ), ( UINT ) hb_parnl( 3 ) ) );
 }
 
 HB_FUNC( WVT_DESTROYMENU )
@@ -652,7 +652,7 @@ HB_FUNC( WVT_DESTROYMENU )
 
 HB_FUNC( WVT_ENABLEMENUITEM )
 {
-   hb_retni( EnableMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retni( EnableMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parnl( 2 ), ( UINT ) hb_parnl( 3 ) ) );
 }
 
 HB_FUNC( WVT_GETLASTMENUEVENT )

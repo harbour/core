@@ -107,7 +107,7 @@ HB_FUNC( WVW_NOPENWINDOW )
 
       HWND hWndParent;
 
-      DWORD     dwStyle    = ( DWORD ) hb_parnintdef( 6, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN );
+      DWORD     dwStyle    = ( DWORD ) hb_parnldef( 6, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN );
       int       iParentWin = hb_gt_wvw_nWin_N( 7 );
       PHB_FNAME pFileName  = NULL;
 

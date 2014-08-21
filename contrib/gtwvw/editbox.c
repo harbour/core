@@ -492,7 +492,6 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
  *
  * example:
  */
-
 HB_FUNC( WVW_EBCREATE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
@@ -513,7 +512,7 @@ HB_FUNC( WVW_EBCREATE )
 
       int nEBType = hb_parl( 8 ) ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE;
 
-      DWORD dwStyle  = ( DWORD ) hb_parnint( 9 );
+      DWORD dwStyle  = ( DWORD ) hb_parnl( 9 );
       int   iMaxChar = hb_parni( 10 ) > 0 ? hb_parni( 10 ) : 0;
 
       RECT rXB, rOffXB;
@@ -936,8 +935,8 @@ HB_FUNC( WVW_EBSETSEL )
 
    if( wvw_ctl )
    {
-      DWORD dwStart = ( DWORD ) hb_parnint( 3 );
-      DWORD dwEnd   = ( DWORD ) hb_parnint( 4 );
+      DWORD dwStart = ( DWORD ) hb_parnl( 3 );
+      DWORD dwEnd   = ( DWORD ) hb_parnl( 4 );
 
       SendMessage( wvw_ctl->hWnd, EM_SETSEL, ( WPARAM ) dwStart, ( LPARAM ) dwEnd );
 

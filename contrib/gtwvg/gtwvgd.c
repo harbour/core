@@ -3584,7 +3584,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( hb_arrayLen( pInfo->pNewVal ) == 16 )
                {
                   for( i = 0; i < 16; i++ )
-                     pWVT->COLORS[ i ] = ( COLORREF ) hb_arrayGetNInt( pInfo->pNewVal, i + 1 );
+                     pWVT->COLORS[ i ] = ( COLORREF ) hb_arrayGetNL( pInfo->pNewVal, i + 1 );
 
                   if( pWVT->hWnd )
                      HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );

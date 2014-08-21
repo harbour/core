@@ -507,7 +507,7 @@ HB_FUNC( WAPI_SETTEXTALIGN )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retni( ( int ) SetTextAlign( hDC, ( UINT ) hb_parni( 2 ) ) );
+      hb_retni( ( int ) SetTextAlign( hDC, ( UINT ) hb_parnl( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -593,7 +593,7 @@ HB_FUNC( WAPI_EXTTEXTOUT )
       hb_retl( ExtTextOut( hDC,
                            hb_parni( 2 ) /* iRow */,
                            hb_parni( 3 ) /* iCol */,
-                           ( UINT ) hb_parni( 4 ) /* fuOptions */,
+                           ( UINT ) hb_parnl( 4 ) /* fuOptions */,
                            hbwapi_par_RECT( &rect, 5, HB_FALSE ),
                            lpData,
                            ( UINT ) nDataLen,

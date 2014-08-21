@@ -872,7 +872,7 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
 #if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-   SetClassLong( ( HWND ) wvg_parhandle( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnint( 2 ) );
+   SetClassLong( ( HWND ) wvg_parhandle( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnl( 2 ) );
 #else
    SetClassLongPtr( ( HWND ) wvg_parhandle( 1 ), GCLP_HBRBACKGROUND, ( LONG_PTR ) hb_parnint( 2 ) );
 #endif

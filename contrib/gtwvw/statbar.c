@@ -276,12 +276,12 @@ HB_FUNC( WVW_SBSETTEXT )
       if( HB_ISCHAR( 4 ) )
          wvw_win->cSBColorForeground = strtol( hb_parc( 4 ), NULL, 10 );
       else if( HB_ISNUM( 4 ) )
-         wvw_win->cSBColorForeground = ( COLORREF ) hb_parnint( 4 );
+         wvw_win->cSBColorForeground = ( COLORREF ) hb_parnl( 4 );
 
       if( HB_ISCHAR( 5 ) )
          wvw_win->cSBColorBackground = strtol( hb_parc( 5 ), NULL, 10 );
       else if( HB_ISNUM( 5 ) )
-         wvw_win->cSBColorBackground = ( COLORREF ) hb_parnint( 5 );
+         wvw_win->cSBColorBackground = ( COLORREF ) hb_parnl( 5 );
 
       if( iPart == 0 && ( wvw_win->cSBColorForeground || wvw_win->cSBColorBackground ) )
       {

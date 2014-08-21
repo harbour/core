@@ -1492,7 +1492,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                pInfo->pResult = hb_itemPutNInt( pInfo->pResult, s_COLORS[ iIndex - 1 ] );
 
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
-                  s_COLORS[ iIndex - 1 ] = ( COLORREF ) hb_itemGetNInt( pInfo->pNewVal2 );
+                  s_COLORS[ iIndex - 1 ] = ( COLORREF ) hb_itemGetNL( pInfo->pNewVal2 );
             }
          }
          else
@@ -1506,7 +1506,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY && hb_arrayLen( pInfo->pNewVal ) == 16 )
                for( i = 0; i < 16; i++ )
-                  s_COLORS[ i ] = ( COLORREF ) hb_arrayGetNInt( pInfo->pNewVal, i + 1 );
+                  s_COLORS[ i ] = ( COLORREF ) hb_arrayGetNL( pInfo->pNewVal, i + 1 );
 
          }
          break;

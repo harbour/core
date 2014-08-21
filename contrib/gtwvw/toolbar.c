@@ -531,7 +531,7 @@ HB_FUNC( WVW_TBADDBUTTON )
    if( wvw_win )
    {
       int          iCommand = hb_parni( 2 );
-      HB_UINT      uiBitmap = ( HB_UINT ) hb_parnint( 3 );
+      HB_UINT      uiBitmap = ( HB_UINT ) hb_parnl( 3 );
       const char * szBitmap = hb_parc( 3 );
       LPCTSTR      szLabel;
       int          iBitmapType  = hb_parni( 5 );

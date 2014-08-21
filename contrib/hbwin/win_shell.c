@@ -107,7 +107,7 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
    {
       if( HB_ITEMCOPYSTR( hb_param( 7, HB_IT_ANY ), tnid.szInfo, HB_SIZEOFARRAY( tnid.szInfo ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
-      HB_WIN_V_UNION( tnid, uTimeout ) = ( UINT ) hb_parni( 8 );
+      HB_WIN_V_UNION( tnid, uTimeout ) = ( UINT ) hb_parnl( 8 );
       if( HB_ITEMCOPYSTR( hb_param( 9, HB_IT_ANY ), tnid.szInfoTitle, HB_SIZEOFARRAY( tnid.szInfoTitle ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
       tnid.dwInfoFlags = ( DWORD ) hb_parnl( 10 );
@@ -222,7 +222,7 @@ HB_FUNC( WIN_SHFILEOPERATION )
 
    memset( &fop, 0, sizeof( fop ) );
    fop.hwnd                  = hbwapi_par_raw_HWND( 1 );
-   fop.wFunc                 = ( UINT ) hb_parni( 2 );
+   fop.wFunc                 = ( UINT ) hb_parnl( 2 );
    fop.pFrom                 = ( LPCTSTR ) s_StringList( 3 );
    fop.pTo                   = ( LPCTSTR ) s_StringList( 4 );
    fop.fFlags                = ( FILEOP_FLAGS ) hb_parnl( 5 );

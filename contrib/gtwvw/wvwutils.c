@@ -77,7 +77,7 @@ HB_FUNC( WIN_SENDMESSAGE )
       szText = HB_STRUNSHARE( &hText, szText, nLen );
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parnint( 2 ),
+                            ( UINT ) hb_parnl( 2 ),
                             ( WPARAM ) hb_parnint( 3 ),
                             szText ? ( LPARAM ) szText : ( LPARAM ) hb_parnint( 4 ) ) );
 
@@ -109,7 +109,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 
    hb_retnint( SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                    hb_parni( 2 ),
-                                   ( UINT ) hb_parnint( 3 ),
+                                   ( UINT ) hb_parnl( 3 ),
                                    ( WPARAM ) hb_parnint( 4 ),
                                    pText ? ( LPARAM ) szTextToPass : ( LPARAM ) hb_parnint( 5 ) ) );
 
@@ -127,7 +127,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 /* win_SetTimer( hWnd, nIdentifier, nTimeOut ) */
 HB_FUNC( WIN_SETTIMER )
 {
-   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), ( UINT_PTR ) hb_parnint( 2 ), ( UINT ) hb_parnint( 3 ), NULL ) != ( UINT_PTR ) NULL );
+   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), ( UINT_PTR ) hb_parnint( 2 ), ( UINT ) hb_parnl( 3 ), NULL ) != ( UINT_PTR ) NULL );
 }
 
 HB_FUNC( WIN_SETFOCUS )
@@ -137,12 +137,12 @@ HB_FUNC( WIN_SETFOCUS )
 
 HB_FUNC( WIN_SETTEXTCOLOR )
 {
-   hb_retnint( SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnint( 2 ) ) );
+   hb_retnint( SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 HB_FUNC( WIN_SETBKCOLOR )
 {
-   hb_retnint( SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnint( 2 ) ) );
+   hb_retnint( SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 HB_FUNC( WVW_SETBKMODE )
@@ -203,7 +203,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
    hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
-                            HB_ISNUM( 3 ) ? ( UINT ) hb_parnint( 3 ) : ( UINT ) hb_parl( 3 ) ) );
+                            HB_ISNUM( 3 ) ? ( UINT ) hb_parnl( 3 ) : ( UINT ) hb_parl( 3 ) ) );
 }
 
 HB_FUNC( WIN_ISDLGBUTTONCHECKED )
@@ -363,7 +363,7 @@ HB_FUNC( WIN_CREATEBRUSH )
    memset( &lb, 0, sizeof( lb ) );
 
    lb.lbStyle = hb_parni( 1 );
-   lb.lbColor = ( COLORREF ) hb_parnint( 2 );
+   lb.lbColor = ( COLORREF ) hb_parnl( 2 );
    lb.lbHatch = hb_parni( 3 );
 
    HB_RETHANDLE( CreateBrushIndirect( &lb ) );
@@ -413,7 +413,7 @@ HB_FUNC( WVW_GBCREATE )
       hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, iTop, iLeft, iBottom, iRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
-                                        ( HB_UINT ) hb_parnint( 7 ),
+                                        ( HB_UINT ) hb_parnl( 7 ),
                                         hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
@@ -454,7 +454,7 @@ HB_FUNC( WVW_RBCREATE )
       hb_retni( hb_gt_wvw_ButtonCreate( wvw_win, iTop, iLeft, iBottom, iRight,
                                         HB_PARSTR( 6, &hCaption, NULL ),
                                         hb_parc( 7 ),
-                                        ( HB_UINT ) hb_parnint( 7 ),
+                                        ( HB_UINT ) hb_parnl( 7 ),
                                         hb_param( 8, HB_IT_EVALITEM ),
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
@@ -544,7 +544,7 @@ HB_FUNC( WVW_SENDMESSAGE )
    void * hText = NULL;
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parnint( 2 ),
+                            ( UINT ) hb_parnl( 2 ),
                             ( WPARAM ) hb_parnint( 3 ),
                             HB_ISCHAR( 4 ) ? ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) : ( LPARAM ) hb_parnint( 4 ) ) );
 
@@ -624,7 +624,7 @@ HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 
          ti.uFlags   = TTF_SUBCLASS | TTF_IDISHWND;
          ti.hwnd     = wvw_win->hWnd;
-         ti.uId      = ( UINT ) hb_parnint( 2 );
+         ti.uId      = ( UINT ) hb_parnl( 2 );
          ti.hinst    = GetModuleHandle( NULL );
          ti.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );  /* TOFIX: drops const */
 
@@ -646,7 +646,7 @@ HB_FUNC( WVW_CREATEIMAGELIST )
 
    HIMAGELIST himl = ImageList_Create( hb_parni( 2 ),
                                        hb_parni( 3 ),
-                                       ( UINT ) hb_parnintdef( 5, ILC_COLOR ),
+                                       ( UINT ) hb_parnldef( 5, ILC_COLOR ),
                                        ulLen,
                                        hb_parni( 4 ) );
 
@@ -667,7 +667,7 @@ HB_FUNC( WVW_IMAGELIST_ADD )
 
 HB_FUNC( WVW_IMAGELIST_ADDMASKED )
 {
-   hb_retni( ImageList_AddMasked( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), ( COLORREF ) hb_parnint( 3 ) ) );
+   hb_retni( ImageList_AddMasked( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), ( COLORREF ) hb_parnl( 3 ) ) );
 }
 
 HB_FUNC( WVW_GETBITMAPSIZE )
@@ -706,10 +706,10 @@ HB_FUNC( WVW_LOADIMAGE )
       if( wvw )
          HB_RETHANDLE( LoadImage( wvw->hInstance,                    /* ( HINSTANCE ) hb_parnintdef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
                                   MAKEINTRESOURCE( hb_parni( 2 ) ),  /* name or identifier of image */
-                                  ( UINT ) hb_parnint( 3 ),          /* type of image */
+                                  ( UINT ) hb_parnl( 3 ),            /* type of image */
                                   hb_parni( 4 ),                     /* desired width */
                                   hb_parni( 5 ),                     /* desired height */
-                                  ( UINT ) hb_parnint( 6 ) ) );      /* load flags */
+                                  ( UINT ) hb_parnl( 6 ) ) );        /* load flags */
       else
          HB_RETHANDLE( NULL );
    }
@@ -718,10 +718,10 @@ HB_FUNC( WVW_LOADIMAGE )
       void * hName;
       HB_RETHANDLE( LoadImage( ( HINSTANCE ) HB_PARHANDLE( 1 ),  /* handle of the instance that contains the image */
                                HB_PARSTR( 2, &hName, NULL ),     /* name or identifier of image */
-                               ( UINT ) hb_parnint( 3 ),         /* type of image */
+                               ( UINT ) hb_parnl( 3 ),           /* type of image */
                                hb_parni( 4 ),                    /* desired width */
                                hb_parni( 5 ),                    /* desired height */
-                               ( UINT ) hb_parnint( 6 ) ) );     /* load flags */
+                               ( UINT ) hb_parnl( 6 ) ) );       /* load flags */
       hb_strfree( hName );
    }
 }
@@ -921,25 +921,25 @@ HB_FUNC( WVW_OPENBITMAP )
 HB_FUNC( WVW_SETTEXTCOLOR )
 {
    hb_retnint( SetTextColor(
-                  ( HDC ) HB_PARHANDLE( 1 ),         /* handle of device context */
-                  ( COLORREF ) hb_parnint( 2 ) ) );  /* text color */
+                  ( HDC ) HB_PARHANDLE( 1 ),       /* handle of device context */
+                  ( COLORREF ) hb_parnl( 2 ) ) );  /* text color */
 }
 
 HB_FUNC( WVW_SETBKCOLOR )
 {
    hb_retnint( SetBkColor(
-                  ( HDC ) HB_PARHANDLE( 1 ),         /* handle of device context */
-                  ( COLORREF ) hb_parnint( 2 ) ) );  /* text color */
+                  ( HDC ) HB_PARHANDLE( 1 ),       /* handle of device context */
+                  ( COLORREF ) hb_parnl( 2 ) ) );  /* text color */
 }
 
 HB_FUNC( WVW_CREATESOLIDBRUSH )
 {
-   HB_RETHANDLE( CreateSolidBrush( ( COLORREF ) hb_parnint( 1 ) /* nBrushColor */ ) );
+   HB_RETHANDLE( CreateSolidBrush( ( COLORREF ) hb_parnl( 1 ) /* nBrushColor */ ) );
 }
 
 HB_FUNC( WVW_CREATEHATCHBRUSH )
 {
-   HB_RETHANDLE( CreateHatchBrush( hb_parni( 1 ), ( COLORREF ) hb_parnint( 2 ) ) );
+   HB_RETHANDLE( CreateHatchBrush( hb_parni( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 HB_FUNC( WVW_RGB )
@@ -960,7 +960,7 @@ HB_FUNC( WVW_REDRAWWINDOW )
       ( HWND ) HB_PARHANDLE( 1 ),  /* handle of window */
       NULL,                        /* address of structure with update rectangle */
       NULL,                        /* handle of update region */
-      ( UINT ) hb_parnint( 2 ) );  /* array of redraw flags */
+      ( UINT ) hb_parnl( 2 ) );    /* array of redraw flags */
 }
 
 /* win_CreateFont( fontName, nWidth, hHeight, [fnWeight], [fdwCharSet],
@@ -976,10 +976,10 @@ HB_FUNC( WIN_CREATEFONT )
          0,                                 /* angle of escapement */
          0,                                 /* base-line orientation angle */
          hb_parni( 4 ),                     /* font weight */
-         ( DWORD ) hb_parnint( 6 ),         /* italic attribute flag */
-         ( DWORD ) hb_parnint( 7 ),         /* underline attribute flag */
-         ( DWORD ) hb_parnint( 8 ),         /* strikeout attribute flag */
-         ( DWORD ) hb_parnint( 5 ),         /* character set identifier */
+         ( DWORD ) hb_parnl( 6 ),           /* italic attribute flag */
+         ( DWORD ) hb_parnl( 7 ),           /* underline attribute flag */
+         ( DWORD ) hb_parnl( 8 ),           /* strikeout attribute flag */
+         ( DWORD ) hb_parnl( 5 ),           /* character set identifier */
          0,                                 /* output precision */
          0,                                 /* clipping precision */
          0,                                 /* output quality */
@@ -1112,7 +1112,7 @@ HB_FUNC( WVW_SETBITMAPRESOURCEID )
                iOffset = 0;
          }
 
-         hb_retnint( ( HB_UINT ) hb_parnint( 4 ) + iOffset );
+         hb_retnint( ( HB_UINT ) hb_parnl( 4 ) + iOffset );
       }
    }
    else
@@ -1140,7 +1140,7 @@ HB_FUNC( WVW_DRAWBITMAP )
 {
    HDC     hDC      = ( HDC ) HB_PARHANDLE( 1 );
    HDC     hDCmem   = CreateCompatibleDC( hDC );
-   DWORD   dwraster = ( DWORD ) hb_parnintdef( 3, SRCCOPY );
+   DWORD   dwraster = ( DWORD ) hb_parnldef( 3, SRCCOPY );
    HBITMAP hBitmap  = ( HBITMAP ) HB_PARHANDLE( 2 );
    BITMAP  bm;
    int     nWidthDest  = hb_parni( 6 );
@@ -1244,7 +1244,7 @@ HB_FUNC( WVW_SETTIMER )
 
    if( wvw && wvw->a.pSymWVW_TIMER && wvw_win )
    {
-      SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId, ( UINT ) hb_parnint( 2 ), NULL );
+      SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId, ( UINT ) hb_parnl( 2 ), NULL );
 
       hb_retl( HB_TRUE );
    }
@@ -1415,7 +1415,7 @@ HB_FUNC( WVW_LOADPEN )
 
    if( wvw && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserPens ) )
    {
-      HPEN hPen = CreatePen( hb_parni( 2 ), hb_parni( 3 ), ( COLORREF ) hb_parnint( 4 ) );
+      HPEN hPen = CreatePen( hb_parni( 2 ), hb_parni( 3 ), ( COLORREF ) hb_parnl( 4 ) );
 
       if( hPen )
       {
@@ -1545,13 +1545,13 @@ HB_FUNC( WVW_CHOOSECOLOR )
       int         i;
 
       for( i = 0; i < 16; ++i )
-         crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnint( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
+         crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
       memset( &cc, 0, sizeof( cc ) );
 
       cc.lStructSize  = sizeof( cc );
       cc.hwndOwner    = wvw_top->hWnd;
-      cc.rgbResult    = ( COLORREF ) hb_parnint( 1 );
+      cc.rgbResult    = ( COLORREF ) hb_parnl( 1 );
       cc.lpCustColors = crCustClr;
       cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
@@ -1631,7 +1631,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
 
       POINT xy;
 
-      COLORREF crRGBcolor = ( COLORREF ) hb_parnint( 6 );
+      COLORREF crRGBcolor = ( COLORREF ) hb_parnl( 6 );
       HB_BOOL  fTight     = hb_parl( 7 );
       HB_BOOL  fUseBrush  = hb_parl( 8 );
       LOGBRUSH lb;

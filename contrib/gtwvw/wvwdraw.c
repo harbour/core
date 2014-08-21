@@ -606,7 +606,7 @@ HB_FUNC( WVW_SETPEN )
 
    if( wvw && HB_ISNUM( 1 ) )
    {
-      HPEN hPen = CreatePen( hb_parni( 1 ), hb_parni( 2 ), ( COLORREF ) hb_parnint( 3 ) );
+      HPEN hPen = CreatePen( hb_parni( 1 ), hb_parni( 2 ), ( COLORREF ) hb_parnl( 3 ) );
 
       if( hPen )
       {
@@ -638,8 +638,8 @@ HB_FUNC( WVW_SETBRUSH )
 
       memset( &lb, 0, sizeof( lb ) );
 
-      lb.lbStyle = ( UINT ) hb_parnint( 1 );
-      lb.lbColor = ( COLORREF ) hb_parnint( 2 );
+      lb.lbStyle = ( UINT ) hb_parnl( 1 );
+      lb.lbColor = ( COLORREF ) hb_parnl( 2 );
       lb.lbHatch = ( ULONG_PTR ) hb_parnint( 3 );
 
       hBrush = CreateBrushIndirect( &lb );
@@ -1287,8 +1287,8 @@ HB_FUNC( WVW_DRAWLABEL )
 
          HFONT    oldFont      = ( HFONT ) SelectObject( hDC, hFont );
          int      oldTextAlign = SetTextAlign( hDC, hb_parnidef( 5, TA_LEFT ) );
-         COLORREF oldBkColor   = SetBkColor( hDC, ( COLORREF ) hb_parnintdef( 8, wvw_win->background ) );
-         COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnintdef( 7, wvw_win->foreground ) );
+         COLORREF oldBkColor   = SetBkColor( hDC, ( COLORREF ) hb_parnldef( 8, wvw_win->background ) );
+         COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnldef( 7, wvw_win->foreground ) );
 
          HB_SIZE nLen;
          void *  hText;
@@ -1334,8 +1334,8 @@ HB_FUNC( WVW_DRAWLABELEX )
       HDC hDC = wvw_win->hdc;
 
       int      oldTextAlign = SetTextAlign( hDC, hb_parnidef( 5, TA_LEFT ) );
-      COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnintdef( 6, wvw_win->foreground ) );
-      COLORREF oldBkColor   = SetBkColor( hDC, ( COLORREF ) hb_parnintdef( 7, wvw_win->background ) );
+      COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnldef( 6, wvw_win->foreground ) );
+      COLORREF oldBkColor   = SetBkColor( hDC, ( COLORREF ) hb_parnldef( 7, wvw_win->background ) );
       HFONT    oldFont      = ( HFONT ) SelectObject( hDC, wvw->a.hUserFonts[ iSlot ] );
 
       POINT xy;
@@ -1385,8 +1385,8 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
       HDC hDC = wvw_win->hdc;
 
-      COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnintdef( 9, wvw_win->foreground ) );
-      COLORREF oldBkColor   = SetBkColor( hDC, ( COLORREF ) hb_parnintdef( 10, wvw_win->background ) );
+      COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnldef( 9, wvw_win->foreground ) );
+      COLORREF oldBkColor   = SetBkColor( hDC, ( COLORREF ) hb_parnldef( 10, wvw_win->background ) );
       HFONT    oldFont      = ( HFONT ) SelectObject( hDC, ( HFONT ) HB_PARHANDLE( 11 ) );
 
       HB_SIZE nLen;
@@ -1494,7 +1494,7 @@ HB_FUNC( WVW_DRAWOUTLINE )
 
       if( HB_ISNUM( 6 ) )
       {
-         hPen = CreatePen( hb_parni( 6 ), 0, ( COLORREF ) hb_parnint( 8 ) );
+         hPen = CreatePen( hb_parni( 6 ), 0, ( COLORREF ) hb_parnl( 8 ) );
          if( hPen )
             hOldPen = ( HPEN ) SelectObject( hDC, hPen );
       }
@@ -1635,7 +1635,7 @@ HB_FUNC( WVW_DRAWLINE )
             break;
       }
 
-      hPen    = CreatePen( iStyle, iThick, ( COLORREF ) hb_parnint( 11 ) );
+      hPen    = CreatePen( iStyle, iThick, ( COLORREF ) hb_parnl( 11 ) );
       hOldPen = ( HPEN ) SelectObject( hDC, hPen );
 
       switch( iFormat )
@@ -2028,7 +2028,7 @@ HB_FUNC( WVW_DRAWCOLORRECT )
 
    if( wvw && wvw_win && wvw_zer )
    {
-      HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnint( 7 ) );
+      HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnl( 7 ) );
 
       if( hBrush )
       {
@@ -2205,7 +2205,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       memset( &lb, 0, sizeof( lb ) );
 
       lb.lbStyle = BS_SOLID;
-      lb.lbColor = ( COLORREF ) hb_parnintdef( 10, hb_gt_wvw_GetColorData( 7 ) );
+      lb.lbColor = ( COLORREF ) hb_parnldef( 10, hb_gt_wvw_GetColorData( 7 ) );
       lb.lbHatch = 0;
 
       hBrush = CreateBrushIndirect( &lb );
@@ -2240,7 +2240,7 @@ HB_FUNC( WVW_DRAWBUTTON )
       {
          int      oldTextAlign = SetTextAlign( hDC, TA_CENTER | TA_TOP );
          int      oldBkMode    = SetBkMode( hDC, TRANSPARENT );
-         COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnintdef(  9, hb_gt_wvw_GetColorData( 0 ) ) );
+         COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnldef(  9, hb_gt_wvw_GetColorData( 0 ) ) );
 
          HB_SIZE nLen;
          void *  hText;
@@ -2833,8 +2833,8 @@ HB_FUNC( WVW_DRAWTEXTBOX )
       int iAlignH = 0;
 
       int      oldTextAlign = SetTextAlign( hDC, TA_TOP | TA_LEFT | TA_NOUPDATECP );
-      COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnintdef( 10, wvw_win->foreground ) );
-      COLORREF oldBkColor   = SetBkColor( hDC, ( COLORREF ) hb_parnintdef( 11, wvw_win->background ) );
+      COLORREF oldTextColor = SetTextColor( hDC, ( COLORREF ) hb_parnldef( 10, wvw_win->foreground ) );
+      COLORREF oldBkColor   = SetBkColor( hDC, ( COLORREF ) hb_parnldef( 11, wvw_win->background ) );
       int      oldBkMode    = SetBkMode( hDC, hb_parnidef( 12, OPAQUE ) );
       HFONT    oldFont      = ( HFONT ) SelectObject( hDC, ( HFONT ) HB_PARHANDLE( 13 ) );
 
@@ -2965,7 +2965,7 @@ HB_FUNC( WVW_DRAWPROGRESSBAR )
          memset( &lb, 0, sizeof( lb ) );
 
          lb.lbStyle = BS_SOLID;
-         lb.lbColor = ( COLORREF ) hb_parnintdef( 9, hb_gt_wvw_GetColorData( 0 ) );
+         lb.lbColor = ( COLORREF ) hb_parnldef( 9, hb_gt_wvw_GetColorData( 0 ) );
          lb.lbHatch = 0;
 
          hBrush = CreateBrushIndirect( &lb );
