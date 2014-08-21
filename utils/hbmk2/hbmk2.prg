@@ -15304,7 +15304,8 @@ FUNCTION hbshell_ext_load( cName )
                         to filters)
                   TODO: In the future the .hbc should specify a list of dynamic libs
                         to load, and we should load those, if any. */
-               IF ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSER ] )
+               IF ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSER ] ) .OR. ;
+                  ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSERGT ] )
                   cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ), ;
                                            iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
                   IF Empty( cFileName )

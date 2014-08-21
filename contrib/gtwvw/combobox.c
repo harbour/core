@@ -300,7 +300,6 @@ static int hb_gt_wvw_GetFontDialogUnits( HWND hWnd, HFONT hFont )
  *
  * example:
  */
-
 HB_FUNC( WVW_CBCREATE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();

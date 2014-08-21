@@ -79,7 +79,6 @@
  * ProgressRange is initially set as 0 - 100.
  * Initial ProgressPos is 0
  */
-
 HB_FUNC( WVW_PGCREATE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();

@@ -85,7 +85,6 @@
  * returns control id of newly created CHECKBOX of windows nWinNum
  * returns 0 if failed
  */
-
 HB_FUNC( WVW_CXCREATE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

@@ -173,7 +173,6 @@ static LRESULT CALLBACK hb_gt_wvw_XBProc( HWND hWnd, UINT message, WPARAM wParam
  * ScrollRange is always 0 - 100.
  * Initial ScrollPos is 0
  */
-
 HB_FUNC( WVW_XBCREATE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
