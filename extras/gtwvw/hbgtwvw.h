@@ -53,7 +53,6 @@
 /* NOTE: User programs should never call this layer directly! */
 
 /* TOFIX: MT support */
-/* TOFIX: GT UNICODE support */
 
 #ifndef HB_WVW_H_
 #define HB_WVW_H_

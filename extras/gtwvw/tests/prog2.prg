@@ -150,34 +150,20 @@ STATIC PROCEDURE xBrowse1()
       DO CASE
       CASE nKey == K_ESC .OR. nKey == K_ENTER
          lEnd := lYesNo( "Done?" )
-      CASE nKey == K_DOWN
-         oBrowse:Down()
-      CASE nKey == K_UP
-         oBrowse:Up()
-      CASE nKey == K_LEFT
-         oBrowse:Left()
-      CASE nKey == K_RIGHT
-         oBrowse:Right()
-      CASE nKey == K_PGDN
-         oBrowse:pageDown()
-      CASE nKey == K_PGUP
-         oBrowse:pageUp()
-      CASE nKey == K_CTRL_PGUP
-         oBrowse:goTop()
-      CASE nKey == K_CTRL_PGDN
-         oBrowse:goBottom()
-      CASE nKey == K_HOME
-         oBrowse:home()
-      CASE nKey == K_END
-         oBrowse:end()
-      CASE nKey == K_CTRL_LEFT
-         oBrowse:panLeft()
-      CASE nKey == K_CTRL_RIGHT
-         oBrowse:panRight()
-      CASE nKey == K_CTRL_HOME
-         oBrowse:panHome()
-      CASE nKey == K_CTRL_END
-         oBrowse:panEnd()
+      CASE nKey == K_DOWN       ; oBrowse:Down()
+      CASE nKey == K_UP         ; oBrowse:Up()
+      CASE nKey == K_LEFT       ; oBrowse:Left()
+      CASE nKey == K_RIGHT      ; oBrowse:Right()
+      CASE nKey == K_PGDN       ; oBrowse:pageDown()
+      CASE nKey == K_PGUP       ; oBrowse:pageUp()
+      CASE nKey == K_CTRL_PGUP  ; oBrowse:goTop()
+      CASE nKey == K_CTRL_PGDN  ; oBrowse:goBottom()
+      CASE nKey == K_HOME       ; oBrowse:home()
+      CASE nKey == K_END        ; oBrowse:end()
+      CASE nKey == K_CTRL_LEFT  ; oBrowse:panLeft()
+      CASE nKey == K_CTRL_RIGHT ; oBrowse:panRight()
+      CASE nKey == K_CTRL_HOME  ; oBrowse:panHome()
+      CASE nKey == K_CTRL_END   ; oBrowse:panEnd()
       ENDCASE
    ENDDO
 
@@ -390,11 +376,9 @@ STATIC PROCEDURE ZREVWINDOW()
 
    RETURN
 
-//
-//      WVW_Paint() must be a FUNCTION in your application
-//      as it is called when Window gets WM_PAINT message.
+// WVW_Paint() must be a FUNCTION in your application
+// as it is called when Window gets WM_PAINT message.
 // WARNING: it now receives only nWinNum parameter
-//
 
 FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 

@@ -743,7 +743,7 @@ static const char * hb_gt_wvw_Version( PHB_GT pGT, int iType )
 }
 
 static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight,
-                             const char * pbyFrame, int iColor )
+                             const char * szFrame, int iColor )
 {
    int sWidth  = wvw_win->COLS;
    int sHeight = wvw_win->ROWS;
@@ -759,17 +759,40 @@ static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, 
       int iHeight;
       int iWidth;
 
+      i = 0;
+
+#if defined( UNICODE )
+      HB_WCHAR szBox[ 10 ];
+      HB_WCHAR bPadCh = HB_GTSELF_GETCLEARCHAR( pGT );
+
+      if( szFrame )
+      {
+         PHB_CODEPAGE cdp = HB_GTSELF_BOXCP( pGT );
+         HB_WCHAR wc;
+         HB_SIZE nLen = strlen( szFrame ), nIndex = 0;
+
+         while( i < 9 && HB_CDPCHAR_GET( cdp, szFrame, nLen, &nIndex, &wc ) )
+            bPadCh = szBox[ i++ ] = wc;
+         while( i < 8 )
+            szBox[ i++ ] = bPadCh;
+      }
+      else
+      {
+         for( ; i < 9; ++i )
+            szBox[ i ] = ' ';
+      }
+#else
       BYTE szBox[ 10 ];                                              /* TOFIX */
       BYTE bPadCh = ( BYTE ) HB_GTSELF_GETCLEARCHAR( hb_gt_Base() ); /* TOFIX */
 
-      if( pbyFrame )
-         for( i = 0; *pbyFrame && i < 9; ++i )
-            bPadCh = szBox[ i ] = *pbyFrame++;
-      else
-         i = 0;
+      if( szFrame )
+         for( ; *szFrame && i < 9; ++i )
+            bPadCh = szBox[ i ] = *szFrame++;
 
       while( i < 8 )
          szBox[ i++ ] = bPadCh;
+#endif
+
       szBox[ i ] = '\0';
 
       /* Ensure that box is drawn from Top Left to Bottom Right. */
@@ -858,7 +881,7 @@ static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, 
    }
 }
 
-static void hb_gt_wvw_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char * pbyFrame, int iColor )
+static void hb_gt_wvw_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, const char * szFrame, int iColor )
 {
    iTop    = iTop < 0 ? 0 : iTop;
    iLeft   = iLeft < 0 ? 0 : iLeft;
@@ -867,7 +890,7 @@ static void hb_gt_wvw_Box( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRi
 
    hb_gt_wvw_FUNCPrologue( 4, &iTop, &iLeft, &iBottom, &iRight );
 
-   hb_gt_wvw_usBox( pGT, s_wvw->pWin[ s_wvw->iCurWindow ], iTop, iLeft, iBottom, iRight, pbyFrame, iColor );
+   hb_gt_wvw_usBox( pGT, s_wvw->pWin[ s_wvw->iCurWindow ], iTop, iLeft, iBottom, iRight, szFrame, iColor );
 
    hb_gt_wvw_FUNCEpilogue();
 }
