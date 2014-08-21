@@ -2221,20 +2221,20 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
 int hb_gt_wvw_key_ansi_to_oem( int c )
 {
 #if ! defined( UNICODE )
-   BYTE    pszSrc[ 2 ];
+   BYTE pszSrc[ 2 ];
    wchar_t pszWide[ 1 ];
-   BYTE    pszDst[ 2 ];
+   BYTE pszDst[ 2 ];
 
-   pszSrc[ 0 ]       = ( CHAR ) c;
-   pszSrc[ 1 ]       =
-      pszDst[ 0 ]    =
-         pszDst[ 1 ] = 0;
+   pszSrc[ 0 ] = ( CHAR ) c;
+   pszSrc[ 1 ] =
+   pszDst[ 0 ] =
+   pszDst[ 1 ] = 0;
 
-   if( MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, ( LPCSTR ) pszSrc, 1, ( LPWSTR ) pszWide, 1 ) != 0 &&
-       WideCharToMultiByte( CP_OEMCP, 0, ( LPCWSTR ) pszWide, 1, ( LPSTR ) pszDst, 1, NULL, NULL ) != 0 )
+   if( MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, ( LPCSTR ) pszSrc, 1, ( LPWSTR ) pszWide, 1 ) &&
+       WideCharToMultiByte( CP_OEMCP, 0, ( LPCWSTR ) pszWide, 1, ( LPSTR ) pszDst, 1, NULL, NULL ) )
       return pszDst[ 0 ];
    else
-      return 0;
+      return c;
 #else
    return c;
 #endif
