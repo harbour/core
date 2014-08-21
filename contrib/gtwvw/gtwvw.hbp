@@ -1,12 +1,12 @@
 -hblib
 -inc
 
--olib/${hb_plat}/${hb_comp}/${hb_name}
+-o${hb_name}
 
 -w3 -es2
 -winuni
 
-"-stop={!win}Skipped: '${hb_name}' only supported on win platform."
+-stop{!win}
 
 # Optimize build time and make sure we build even with this option
 -cflag=-DWIN32_LEAN_AND_MEAN
@@ -33,6 +33,3 @@ toolbar.c
 legacy.c
 
 wvwharb.prg
-
-$hb_pkg_dynlib.hbm
-$hb_pkg_install.hbm

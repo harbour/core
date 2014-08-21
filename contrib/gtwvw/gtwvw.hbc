@@ -1,9 +1,9 @@
-description=GTWVW (a GTWVG alternative, win-only)
+description=GTWVW (a GTWVG alternative with multi-window support, win-only)
 
-skip={!win}
+skip={!allwin}
 
 incpaths=.
-libpaths=lib/${hb_plat}/${hb_comp}
 
-gt=${hb_name}
+gt=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
 gui=yes
