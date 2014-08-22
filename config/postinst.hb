@@ -356,7 +356,7 @@ PROCEDURE Main( ... )
 
    IF Empty( GetEnvC( "HB_HOST_BIN" ) ) .AND. ;
       GetEnvC( "HB_HOST_PLAT" ) == GetEnvC( "HB_PLATFORM" )
-      OutStd( hb_StrFormat( "! %1$s  C compiler: %2$s", Version(), hb_Compiler() ) )
+      OutStd( hb_StrFormat( "! %1$s  C compiler: %2$s", Version(), hb_Compiler() ) + hb_eol() )
    ENDIF
 
    IF nErrorLevel == 0
