@@ -1007,7 +1007,7 @@ METHOD WvtBrowse:SetVBar()
       ::oVBar:nBarType   := WVT_SCROLLBAR_VERT
       ::oVBar:bTotal     := ::bTotalRecords
       ::oVBar:bCurrent   := ::bCurrentRecord
-      ::oVBar:aPxlBtnTop := { - 2, 2, 0, 0 }
+      ::oVBar:aPxlBtnTop := { -2, 2, 0, 0 }
       ::oVBar:aPxlBtnBtm := {  0, 2, 2, 0 }
       ::oVBar:aPxlScroll := {  0, 2, 0, 0 }
       ::oVBar:Create()
@@ -1037,7 +1037,7 @@ METHOD WvtBrowse:SetHBar()
       ::oHBar:nBarType   := 2
       ::oHBar:bTotal     := ::bTotalColumns
       ::oHBar:bCurrent   := ::bCurrentColumn
-      ::oHBar:aPxlBtnLft := { 2, - 2, 0, 0 }
+      ::oHBar:aPxlBtnLft := { 2, -2, 0, 0 }
       ::oHBar:aPxlBtnRgt := { 2, 0, 0, 2 }
       ::oHBar:aPxlScroll := { 2, 0, 0, 0 }
       ::oHBar:Create()
@@ -1669,7 +1669,7 @@ METHOD WvtToolButton:PaintButton()
 
    IF ::lActive
       IF ::nBtnType == TLB_BUTTON_TYPE_IMAGE
-         Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cFileImage, { 4, 4, - 6, - 4 } )
+         Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cFileImage, { 4, 4, -6, -4 } )
       ELSE
          Wvt_DrawLine( ::nTop, ::nLeft, ::nBottom, ::nRight, 1, 1, , , , ::oParent:nRGBSep )
       ENDIF
@@ -1923,7 +1923,7 @@ METHOD WvtPushButton:Create()
 METHOD WvtPushButton:PaintButton()
 
    IF ::cCaption == NIL
-      Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cFileImage, { 4, 4, - 4, - 4 } )
+      Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cFileImage, { 4, 4, -4, -4 } )
    ELSE
       Wvt_DrawButton( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cCaption, , 4 )
    ENDIF

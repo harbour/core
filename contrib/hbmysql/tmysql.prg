@@ -774,7 +774,6 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          // remove last " AND "
          cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
          cDeleteQuery += cWhere
-
       ELSE
          // MakePrimaryKeyWhere is based in fields part of a primary key
          cDeleteQuery += ::MakePrimaryKeyWhere()
@@ -825,7 +824,6 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             IF lRefresh
                ::refresh()
             ENDIF
-
          ELSE
             ::lError := .T.
          ENDIF
@@ -1161,12 +1159,13 @@ METHOD SelectDB( cDBName ) CLASS TMySQLServer
 
 METHOD SelectDB( cDBName ) CLASS TMySQLServer
 
-   IF mysql_select_db( ::nSocket, cDBName ) == 0     /* table exists */
+   IF mysql_select_db( ::nSocket, cDBName ) == 0  /* table exists */
       ::cDBName := cDBName
       RETURN ::lError := .F.
    ENDIF
 
    ::cDBName := ""
+
    RETURN ::lError := .T.
 
 METHOD CreateDatabase( cDataBase ) CLASS TMySQLServer
@@ -1421,7 +1420,7 @@ STATIC FUNCTION HarbValueToSQL( Value )
    CASE "U" ; RETURN "NULL"
    ENDSWITCH
 
-   RETURN "''"       // NOTE: Here we lose values we cannot convert
+   RETURN "''"  // NOTE: Here we lose values we cannot convert
 
 STATIC FUNCTION SQLTypeToHarb( nType )
 

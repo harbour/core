@@ -2570,11 +2570,11 @@ HB_FUNC( WVW_GETKEYSTATE )
 
 HB_FUNC( WVW_LOWORD )
 {
-   hb_retni( ( int ) LOWORD( hb_parnint( 1 ) ) );
+   hb_retni( ( int ) LOWORD( ( DWORD ) hb_parnl( 1 ) ) );
 }
 
 HB_FUNC( WVW_HIWORD )
 {
-   hb_retni( ( int ) HIWORD( hb_parnint( 1 ) ) );
+   hb_retni( ( int ) HIWORD( ( DWORD ) hb_parnl( 1 ) ) );
 }
 #endif

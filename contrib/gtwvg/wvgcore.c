@@ -207,8 +207,8 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
    {
       if( iPicture )
       {
-         OLE_XSIZE_HIMETRIC lWidth;
-         OLE_YSIZE_HIMETRIC lHeight;
+         OLE_XSIZE_HIMETRIC nWidth;
+         OLE_YSIZE_HIMETRIC nHeight;
 
          int   xe, ye;
          HRGN  hrgn1;
@@ -219,15 +219,15 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
 
          memset( &rc_dummy, 0, sizeof( rc_dummy ) );
 
-         if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &lWidth ) != S_OK )
-            lWidth = 0;
-         if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &lHeight ) != S_OK )
-            lHeight = 0;
+         if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &nWidth ) != S_OK )
+            nWidth = 0;
+         if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &nHeight ) != S_OK )
+            nHeight = 0;
 
          if( bDoNotScale )
          {
-            int iHt = ( int ) ( ( float ) wd * lHeight / lWidth );
-            int iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+            int iHt = ( int ) ( ( float ) wd * nHeight / nWidth );
+            int iWd = ( int ) ( ( float ) iHt * nWidth / nHeight );
             x  += abs( ( iWd - wd ) / 2 );
             y  += abs( ( iHt - ht ) / 2 );
             wd  = iWd;
@@ -241,7 +241,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
          hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
          SelectClipRgn( hdc, hrgn1 );
 
-         HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, &rc_dummy );
+         HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, nHeight, nWidth, -nHeight, &rc_dummy );
 
          SelectClipRgn( hdc, NULL );
          DeleteObject( hrgn1 );
@@ -255,7 +255,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
             hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
             SelectClipRgn( hdc, hrgn1 );
 
-            HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, &rc_dummy );
+            HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, nHeight, nWidth, -nHeight, &rc_dummy );
 
             SelectClipRgn( hdc, NULL );
             DeleteObject( hrgn1 );
@@ -549,8 +549,8 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
                if( iPicture )
                {
-                  OLE_XSIZE_HIMETRIC lWidth;
-                  OLE_YSIZE_HIMETRIC lHeight;
+                  OLE_XSIZE_HIMETRIC nWidth;
+                  OLE_YSIZE_HIMETRIC nHeight;
 
                   int   xe, ye;
                   HRGN  hrgn1;
@@ -560,15 +560,15 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
                   memset( &rc_dummy, 0, sizeof( rc_dummy ) );
 
-                  if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &lWidth ) != S_OK )
-                     lWidth = 0;
-                  if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &lHeight ) != S_OK )
-                     lHeight = 0;
+                  if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &nWidth ) != S_OK )
+                     nWidth = 0;
+                  if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &nHeight ) != S_OK )
+                     nHeight = 0;
 
                   if( bDoNotScale )
                   {
-                     int iHt = ( int ) ( ( float ) wd * lHeight / lWidth );
-                     int iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+                     int iHt = ( int ) ( ( float ) wd * nHeight / nWidth );
+                     int iWd = ( int ) ( ( float ) iHt * nWidth / nHeight );
                      x  += abs( ( iWd - wd ) / 2 );
                      y  += abs( ( iHt - ht ) / 2 );
                      wd  = iWd;
@@ -582,7 +582,7 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
                   hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
                   SelectClipRgn( hdc, hrgn1 );
 
-                  HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, &rc_dummy );
+                  HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, nHeight, nWidth, -nHeight, &rc_dummy );
 
                   SelectClipRgn( hdc, NULL );
                   DeleteObject( hrgn1 );
@@ -1064,12 +1064,10 @@ HB_FUNC( WVT_DRAWIMAGE )
       }
 
       hb_retl( HB_TRUE );
+      return;
    }
-   else
-      hb_retl( HB_FALSE );
-#else
-   hb_retl( HB_FALSE );
 #endif
+   hb_retl( HB_FALSE );
 }
 
 /* Wvt_DrawLabel( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor, ;
@@ -2311,12 +2309,10 @@ HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
       iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
       hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) wvg_parhandle( 5 ), hb_parl( 7 ) ) );
+      return;
    }
-   else
-      hb_retl( HB_FALSE );
-#else
-   hb_retl( HB_FALSE );
 #endif
+   hb_retl( HB_FALSE );
 }
 
 /* nState 0 Flat, 1 Raised, 2 Recessed

@@ -173,12 +173,12 @@ HB_FUNC( WVG_SELECTOBJECT )
 
 HB_FUNC( WVG_LOWORD )
 {
-   hb_retnl( LOWORD( hb_parnl( 1 ) ) );
+   hb_retni( ( int ) LOWORD( ( DWORD ) hb_parnl( 1 ) ) );
 }
 
 HB_FUNC( WVG_HIWORD )
 {
-   hb_retnl( HIWORD( hb_parnl( 1 ) ) );
+   hb_retni( ( int ) HIWORD( ( DWORD ) hb_parnl( 1 ) ) );
 }
 
 HB_FUNC( WVG_GETDIALOGBASEUNITS )

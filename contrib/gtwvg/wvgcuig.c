@@ -113,11 +113,9 @@ HB_FUNC( WVG_CLEARGUIOBJECTS )
 
    if( pWVT->gObjs )
    {
-      PHB_GOBJS gObj;
-
       while( pWVT->gObjs )
       {
-         gObj = pWVT->gObjs->gObjNext;
+         PHB_GOBJS gObj = pWVT->gObjs->gObjNext;
 
          if( pWVT->gObjs->hText )
             hb_strfree( pWVT->gObjs->hText );
@@ -1317,9 +1315,7 @@ static void hb_wvg_TextBox( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
    DrawText( hdc, gObj->lpText, lstrlen( gObj->lpText ), &rc, gObj->iAlign | DT_WORDBREAK | DT_TOP );
 }
 
-/* Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff ) -> lOk
- * Wvg_Picture( nTop, nLeft, nBottom, nRight, aPxlOff, nSlot, lDoNotScale ) -> NIL
- */
+/* Wvg_Picture( nTop, nLeft, nBottom, nRight, aPxlOff, nSlot, lDoNotScale ) -> NIL */
 HB_FUNC( WVG_PICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -1348,10 +1344,6 @@ HB_FUNC( WVG_PICTURE )
       gObj->gObjNext = pWVT->gObjs;
       pWVT->gObjs    = gObj;
    }
-   else
-      hb_retni( 0 );
-#else
-   hb_retni( 0 );
 #endif
 }
 
@@ -1382,10 +1374,6 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->gObjNext = pWVT->gObjs;
       pWVT->gObjs    = gObj;
    }
-   else
-      hb_retni( 0 );
-#else
-   hb_retni( 0 );
 #endif
 }
 
@@ -1448,10 +1436,6 @@ HB_FUNC( WVG_IMAGE )
       gObj->gObjNext = pWVT->gObjs;
       pWVT->gObjs    = gObj;
    }
-   else
-      hb_retni( 0 );
-#else
-   hb_retni( 0 );
 #endif
 }
 
@@ -1463,22 +1447,22 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
    if( iPicture )
    {
-      OLE_XSIZE_HIMETRIC lWidth;
-      OLE_YSIZE_HIMETRIC lHeight;
+      OLE_XSIZE_HIMETRIC nWidth;
+      OLE_YSIZE_HIMETRIC nHeight;
 
       int   xe, ye, x, y, wd, ht;
       HRGN  hrgn1;
       POINT lpp = { 0, 0 };
       HDC   hdc = pWVT->hGuiDC;
 
-      RECT  rc_dummy;
+      RECT rc_dummy;
 
       memset( &rc_dummy, 0, sizeof( rc_dummy ) );
 
-      if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &lWidth ) != S_OK )
-         lWidth = 0;
-      if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &lHeight ) != S_OK )
-         lHeight = 0;
+      if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &nWidth ) != S_OK )
+         nWidth = 0;
+      if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &nHeight ) != S_OK )
+         nHeight = 0;
 
       x = iLeft;
       y = iTop;
@@ -1487,8 +1471,8 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
       if( gObj->iData == 1 )
       {
-         int iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
-         int iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+         int iHt = ( int ) ( ( float )  wd * nHeight / nWidth );
+         int iWd = ( int ) ( ( float ) iHt * nWidth / nHeight );
          x  += abs( ( iWd - wd ) / 2 );
          y  += abs( ( iHt - ht ) / 2 );
          wd  = iWd;
@@ -1502,7 +1486,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
       hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
       SelectClipRgn( hdc, hrgn1 );
 
-      HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, &rc_dummy );
+      HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, nHeight, nWidth, -nHeight, &rc_dummy );
 
       SelectClipRgn( hdc, NULL );
       DeleteObject( hrgn1 );
@@ -1588,13 +1572,13 @@ static void hb_wvg_GridHorz( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
 {
    int iAtRow = hb_arrayGetNI( pArray, 1 );
    int iRows  = hb_arrayGetNI( pArray, 4 );
-   int i, y, iLeft, iRight, iTop, iBottom;
+   int i, y;
    HDC hdc;
 
-   iLeft   = hb_arrayGetNI( pArray, 2 ) * pWVT->PTEXTSIZE.x;
-   iRight  = ( ( hb_arrayGetNI( pArray, 3 ) + 1 ) * pWVT->PTEXTSIZE.x ) - 1;
-   iTop    = iAtRow * pWVT->PTEXTSIZE.y;
-   iBottom = ( iAtRow + iRows ) * pWVT->PTEXTSIZE.y;  /* do not add 1 */
+   int iLeft   = hb_arrayGetNI( pArray, 2 ) * pWVT->PTEXTSIZE.x;
+   int iRight  = ( ( hb_arrayGetNI( pArray, 3 ) + 1 ) * pWVT->PTEXTSIZE.x ) - 1;
+   int iTop    = iAtRow * pWVT->PTEXTSIZE.y;
+   int iBottom = ( iAtRow + iRows ) * pWVT->PTEXTSIZE.y;  /* do not add 1 */
 
    if( ( uRect->left > iRight ) || ( uRect->top > iBottom ) ||
        ( uRect->bottom < iTop ) || ( uRect->right < iLeft ) )
@@ -1626,15 +1610,15 @@ static void hb_wvg_GridHorz( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
 void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT * uRect )
 {
    PHB_GOBJS gObj = pWVT->gObjs;
-   int       iTop = 0, iLeft = 0, iBottom = 0, iRight = 0;
-   int       iObjType;
 
    while( gObj )
    {
-      iObjType = 0;
+      int iObjType = 0;
 
       if( gObj->iState == GOBJ_OBJSTATE_ENABLED )
       {
+         int iTop = 0, iLeft = 0, iBottom = 0, iRight = 0;
+
          if( gObj->iObjType == GOBJ_OBJTYPE_OBJECT )
          {
             if( hb_vmRequestReenter() )
@@ -1751,7 +1735,6 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT * uRect )
                {
                   switch( iObjType )
                   {
-
                      case GOBJ_OBJTYPE_LINE:
                      case GOBJ_OBJTYPE_LINEEX:
                         hb_wvg_Line( pWVT, gObj, iLeft, iTop, iRight, iBottom );
