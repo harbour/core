@@ -242,9 +242,9 @@ STATIC FUNCTION lMessage( cMsg )
 
    RETURN .T.
 
+// display cmsg with Yes/No option, returns .T. if Yes selected
 STATIC FUNCTION lYesNo( cMsg )
 
-   // display cmsg with Yes/No option, returns .T. if Yes selected
    LOCAL nTopLine, ;
       nLeft := 5, ;
       nBotLine := MaxRow() - 2, ;
@@ -325,7 +325,6 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 // wtype       : Window border type, eg. "┌─┐│┘─└│"
 // r1,c1,r2,c2 : coordinates
 // Return      : Numeric id of the new window
-
 STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    LOCAL i := Len( s_zwin )
@@ -353,9 +352,9 @@ STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    RETURN i + 1
 
+// Closes the last window and remove it from window list
 STATIC PROCEDURE ZREVWINDOW()
 
-   // Closes the last window and remove it from window list
    LOCAL i := Len( s_zwin )
 
    IF i == 0

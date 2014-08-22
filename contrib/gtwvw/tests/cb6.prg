@@ -10,9 +10,8 @@
 #include "inkey.ch"
 
 /* Two different keyboard handling method
- * (notes: WVW_CB_KBD_CLIPPER doesn't mimic anything from Clipper
- *         it just 'feels like Clipper' to me)
- */
+   (notes: WVW_CB_KBD_CLIPPER doesn't mimic anything from Clipper
+           it just 'feels like Clipper' to me) */
 #define WVW_CB_KBD_STANDARD  0
 #define WVW_CB_KBD_CLIPPER   1
 
@@ -127,8 +126,7 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
    HB_SYMBOL_UNUSED( nIndex )
 
    /* if GetList is empty, then READ session is already ended
-    * this should not be happenning!
-    */
+      this should not be happenning! */
 
    IF Empty( GetList )
       MyAlert( "Bad practice: you left an active combobox, but READ already ended" )
@@ -170,7 +168,7 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
             SetWinFocus( nWinNum )
             MSetPos( GetList[ i ]:row, GetList[ i ]:col + 1 )
             hb_keyPut( K_LBUTTONDOWN )
-         ENDIF // oGet:HasFocus
+         ENDIF  // oGet:HasFocus
 
       ELSE
          /* there's no GET object beneath the combobox.
