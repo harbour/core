@@ -38,4 +38,4 @@ FUNCTION wvw_GetRGBColor( nColor )
 
    hb_default( @nColor, -1 )
 
-   RETURN iif( nColor >= 0 .AND. nColor <= 15, hb_gtInfo( HB_GTI_PALETTE, nColor + 1 ), 0 )
+   RETURN iif( nColor >= 0 .AND. nColor <= 15, hb_gtInfo( HB_GTI_PALETTE, nColor ), 0 )

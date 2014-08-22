@@ -1489,12 +1489,12 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             int iIndex = hb_itemGetNI( pInfo->pNewVal );
 
-            if( iIndex > 0 && iIndex <= 16 )  /* TOFIX: should be zero based, like other GTs */
+            if( iIndex >= 0 && iIndex < 16 )  /* TOFIX: should be zero based, like other GTs */
             {
-               pInfo->pResult = hb_itemPutNInt( pInfo->pResult, s_COLORS[ iIndex - 1 ] );
+               pInfo->pResult = hb_itemPutNInt( pInfo->pResult, s_COLORS[ iIndex ] );
 
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
-                  s_COLORS[ iIndex - 1 ] = ( COLORREF ) hb_itemGetNL( pInfo->pNewVal2 );
+                  s_COLORS[ iIndex ] = ( COLORREF ) hb_itemGetNL( pInfo->pNewVal2 );
             }
          }
          else
@@ -1503,8 +1503,8 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( ! pInfo->pResult )
                pInfo->pResult = hb_itemNew( NULL );
             hb_arrayNew( pInfo->pResult, 16 );
-            for( i = 1; i <= 16; i++ )
-               hb_itemPutNInt( hb_arrayGetItemPtr( pInfo->pResult, i ), s_COLORS[ i - 1 ] );
+            for( i = 0; i < 16; i++ )
+               hb_itemPutNInt( hb_arrayGetItemPtr( pInfo->pResult, i + 1 ), s_COLORS[ i ] );
 
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY && hb_arrayLen( pInfo->pNewVal ) == 16 )
                for( i = 0; i < 16; i++ )

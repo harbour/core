@@ -1,23 +1,20 @@
-/*
-  copyright (c) Budyanto Dj. <budyanto@centrin.net.id>
+/* Copyright (c) Budyanto Dj. <budyanto@centrin.net.id>
 
-  Editbox demo
-  multi-field GET session(s) using editboxes
-  with a simple sample of @...EBGET command translation
+   Editbox demo
+   multi-field GET session(s) using editboxes
+   with a simple sample of @...EBGET command translation
 
-  This sample also shows simple implementation of WVW_INPUTFOCUS()
-  to handle some keyboard inputs on non topmost window
+   This sample also shows simple implementation of WVW_INPUTFOCUS()
+   to handle some keyboard inputs on non topmost window
 
-  (The editbox itself always accept input independent of WVW_INPUTFOCUS())
+   (The editbox itself always accept input independent of WVW_INPUTFOCUS())
 
-  Some parts of this sample are modifications from MINIGUI's sourcecode
-  to handle "masks" during editbox input session:
-    ProcessCharMask()
-    CharMaskTekstOK()
-    GetValFromText()
-    GetNumMask()
-
- */
+   Some parts of this sample are modifications from MINIGUI's sourcecode
+   to handle "masks" during editbox input session:
+     ProcessCharMask()
+     CharMaskTekstOK()
+     GetValFromText()
+     GetNumMask() */
 
 #require "gtwvw"
 

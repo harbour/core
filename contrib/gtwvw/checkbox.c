@@ -325,12 +325,9 @@ HB_FUNC( WVW_CXSTATUSFONT )
    PWVW_CTL wvw_ctl = hb_gt_wvw_ctl( wvw_win, WVW_CONTROL_PUSHBUTTON, NULL, hb_parni( 2 ) );
 
    if( wvw_ctl && wvw_ctl->hWnd )
-   {
-      if( hb_parldef( 3, HB_TRUE ) /* fFocus */ )
-         SendMessage( wvw_ctl->hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hCXfont, ( LPARAM ) TRUE );
-      else
-         SendMessage( wvw_ctl->hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hPBfont, ( LPARAM ) TRUE );
-   }
+      SendMessage( wvw_ctl->hWnd, WM_SETFONT,
+         ( WPARAM ) ( hb_parldef( 3, HB_TRUE ) /* fFocus */ ? wvw_win->hCXfont : wvw_win->hPBfont ),
+         ( LPARAM ) TRUE );
 
    hb_retl( HB_TRUE );
 }

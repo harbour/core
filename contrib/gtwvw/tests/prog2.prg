@@ -5,17 +5,16 @@
    Once you understand how GTWVW draws these objects, you can put
    pseudo-GUI objects onto each window, one by one.
 
-   Notes: GTWVW now also has native Windows Controls. See other samples.
-*/
+   Notes: GTWVW now also has native Windows Controls. See other samples. */
 
 #require "gtwvw"
 
 #include "dbstruct.ch"
 #include "inkey.ch"
 
-STATIC s_zwin := {}
-STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
+#define _STD_COLOR_  "N/W,N/GR*,,,N/W*"
 
+STATIC s_zwin := {}
 STATIC s_amiscobjlist := {}      // misc object list (actually: list of codeblocks)
 
 PROCEDURE Main()
@@ -36,7 +35,7 @@ PROCEDURE Main()
    wvw_sbCreate()
 
    Set( _SET_SCOREBOARD, .F. )
-   SetColor( s_cStdColor )
+   SetColor( _STD_COLOR_ )
    SetCursor( SC_NONE )
    CLS
    @ 0, 0 SAY PadC( "This is the Main Window", MaxCol() + 1 )
@@ -45,7 +44,8 @@ PROCEDURE Main()
    ResetMiscObjects( 0 )   // make sure we start with no GUI objects
    AddMiscObjects( 0, {| nWindow | wvw_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, hb_DirBase() + "vouch1.bmp" ) } )
 
-   lboxmessage( "Welcome to our test program." + hb_eol() + ;
+   lboxmessage( ;
+      "Welcome to our test program." + hb_eol() + ;
       "This program will show typical GET and BROWSE dialogs " + ;
       "with brief help on the bottom of the screen." )
    xGet1()
@@ -248,7 +248,7 @@ STATIC FUNCTION lYesNo( cMsg )
       nRight := MaxCol() - 5
    LOCAL nChoice, nWidth
    LOCAL oldCurs := SetCursor( SC_NONE )
-   LOCAL oldColor := SetColor( s_cStdColor )
+   LOCAL oldColor := SetColor( _STD_COLOR_ )
 
    cmsg := " " + AllTrim( hb_defaultValue( cMsg, "Please Confirm" ) ) + " "
    nWidth := Max( Len( cmsg ), Len( "Yes" ) )
@@ -280,7 +280,7 @@ STATIC PROCEDURE lBoxMessage( cMsg, cTitle )
       nRight := MaxCol() - 5
    LOCAL nwidth, nmaxwidth, i, nNumLines, cAline
    LOCAL oldCurs := SetCursor( SC_NONE )
-   LOCAL oldColor := SetColor( s_cStdColor )
+   LOCAL oldColor := SetColor( _STD_COLOR_ )
 
    cmsg := AllTrim( cmsg )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
@@ -330,7 +330,7 @@ STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    LOCAL nrow := Row(), ncol := Col()
 
    hb_default( @ctitle, "" )
-   hb_default( @ccolor, s_cStdColor )
+   hb_default( @ccolor, _STD_COLOR_ )
 
    SetColor( ccolor )
 

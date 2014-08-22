@@ -2735,7 +2735,10 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
       case HB_IT_POINTER:
       {
          int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
-         HB_PTRDIFF addr = ( HB_PTRDIFF ) hb_itemGetPtr( pItem );
+
+         HB_PTRDIFF addr = hb_vmInternalsEnabled() ?
+            ( HB_PTRDIFF ) hb_itemGetPtr( pItem ) :
+            ( HB_PTRDIFF ) ( hb_itemGetPtr( pItem ) ? -1 : 0 );
 
          *nLen = size - 1;
          *bFreeReq = HB_TRUE;

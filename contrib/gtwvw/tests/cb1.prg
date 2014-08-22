@@ -100,16 +100,19 @@ PROCEDURE Main()
 
 STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
 
-   DO CASE
-   CASE nEvent == 3  // CBN_SETFOCUS
+   SWITCH nEvent
+   CASE 3  // CBN_SETFOCUS
       // none
-   CASE nEvent == 4  // CBN_KILLFOCUS
+      EXIT
+   CASE 4  // CBN_KILLFOCUS
       wvw_pbEnable( nWinNum, nPBid, nIndex == 0 )
-   CASE nEvent == 1  // CBN_SELCHANGE
+      EXIT
+   CASE 1  // CBN_SELCHANGE
       IF ! wvw_cbIsDropped( nWinNum, nId )
          wvw_pbEnable( nWinNum, nPBid, nIndex == 0 )  // nIndex is 0-based
          wvw_cbSetFocus( nWinNum, nId )
       ENDIF
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN

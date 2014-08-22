@@ -15,8 +15,7 @@
 
    Since the original Clipper code uses ZNEWWINDOW() and ZREVWINDOW() to
    open and close any window, we only have to change these two functions
-   and let all other functions unchanged (xGet1(), xBrowse1(), ...).
-*/
+   and let all other functions unchanged (xGet1(), xBrowse1(), ...). */
 
 #require "gtwvw"
 
@@ -24,7 +23,8 @@
 #include "inkey.ch"
 
 STATIC s_zwin := {}
-STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
+
+#define _STD_COLOR_  "N/W,N/GR*,,,N/W*"
 
 PROCEDURE Main()
 
@@ -39,7 +39,7 @@ PROCEDURE Main()
    wvw_SetCodepage( , 255 )
 
    Set( _SET_SCOREBOARD, .F. )
-   SetColor( s_cStdColor )
+   SetColor( _STD_COLOR_ )
    SetCursor( SC_NONE )
    CLS
    @ 0, 0 SAY PadC( "This is the Main Window", MaxCol() + 1 )
@@ -227,7 +227,7 @@ STATIC FUNCTION TBPrev()
 // displays a message on MaxRow() and returns .T.
 STATIC FUNCTION lMessage( cMsg )
 
-   LOCAL cOldColor := SetColor( s_cStdColor )
+   LOCAL cOldColor := SetColor( _STD_COLOR_ )
 
    @ MaxRow(), 0 SAY PadC( cMsg, MaxCol() + 1 )
    SetColor( cOldColor )
@@ -243,7 +243,7 @@ STATIC FUNCTION lYesNo( cMsg )
       nRight := MaxCol() - 5
    LOCAL nChoice, nWidth
    LOCAL oldCurs := SetCursor( SC_NONE )
-   LOCAL oldColor := SetColor( s_cStdColor )
+   LOCAL oldColor := SetColor( _STD_COLOR_ )
 
    cmsg := " " + AllTrim( hb_defaultValue( cMsg, "Please Confirm" ) ) + " "
    nWidth := Max( Len( cmsg ), Len( "Yes" ) )
@@ -275,7 +275,7 @@ STATIC PROCEDURE lBoxMessage( cMsg, cTitle )
       nRight := MaxCol() - 5
    LOCAL nwidth, nmaxwidth, i, nNumLines, cAline
    LOCAL oldCurs := SetCursor( SC_NONE )
-   LOCAL oldColor := SetColor( s_cStdColor )
+   LOCAL oldColor := SetColor( _STD_COLOR_ )
 
    cmsg := AllTrim( cmsg )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
@@ -325,7 +325,7 @@ STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    LOCAL nrow := Row(), ncol := Col()
 
    hb_default( @ctitle, "" )
-   hb_default( @ccolor, s_cStdColor )
+   hb_default( @ccolor, _STD_COLOR_ )
 
    SetColor( ccolor )
 

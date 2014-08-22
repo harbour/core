@@ -257,12 +257,11 @@ HB_FUNC( WVW_PGSETPOS )
          SendMessage( hWnd, PBM_SETPOS, ( WPARAM ) iPos, 0 );
 
          hb_retl( HB_TRUE );
+         return;
       }
-      else
-         hb_retl( HB_FALSE );
    }
-   else
-      hb_retl( HB_FALSE );
+
+   hb_retl( HB_FALSE );
 }
 
 /* wvw_pgGetPos( nWinNum, PGid )

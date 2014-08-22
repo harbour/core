@@ -102,7 +102,9 @@ HB_FUNC( HB_NUMTOHEX )
    if( HB_ISNUM( 1 ) )
       ulNum = hb_parnint( 1 );
    else if( HB_ISPOINTER( 1 ) )
-      ulNum = ( HB_PTRDIFF ) hb_parptr( 1 );
+      ulNum = hb_vmInternalsEnabled() ?
+         ( HB_PTRDIFF ) hb_parptr( 1 ) :
+         ( HB_PTRDIFF ) ( hb_parptr( 1 ) ? -1 : 0 );
    else
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

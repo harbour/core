@@ -1,4 +1,4 @@
-/* This is a sample of how to display an image file (.bmp,.gif,.jpg)
+/* This is a sample of how to display an image file (.bmp, .gif, .jpg)
    in four ways:
    1. Image stretched to fit a region
       (all four coordinates are defined)
@@ -17,8 +17,7 @@
             since gtwvw already store it in memory.
    2. Transparency
       If this option is used, topleft pixel is used as the transparent mask
-      of the image.
- */
+      of the image. */
 
 #require "gtwvw"
 
@@ -205,7 +204,7 @@ METHOD PROCEDURE Draw() CLASS wPaintObj
 
    IF ::lVisible
       DO CASE
-      case ::nType == WPAINTOBJ_IMAGE
+      CASE ::nType == WPAINTOBJ_IMAGE
          IF ! Empty( ::cImage )
             wvw_DrawImage( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
                ::cImage, ::aOffTLBR, ::lTransp )

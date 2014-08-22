@@ -433,7 +433,7 @@ STATIC PROCEDURE Demo_Get()
    LOCAL get_6   := 20000
    LOCAL nCursor := SetCursor( SC_NORMAL )
 
-   MEMVAR xx
+   MEMVAR __temp__
 
    IF ( nCurWindow := wvw_nOpenWindow( "GET Demo", nTop, nLeft, nBottom, nRight ) ) == 0
       lboxmessage( "Failed Opening new window!" )
@@ -449,7 +449,7 @@ STATIC PROCEDURE Demo_Get()
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawImage( nWindow, 8 - nTop, 62 - nLeft, 12 - nTop, 69 - nLeft, hb_DirBase() + "vouch1.bmp" ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxRecessed( nWindow, 7 - nTop, 48 - nLeft, 13 - nTop, 55 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | xx := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( xx, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | __temp__ := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( __temp__, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
 
@@ -524,7 +524,7 @@ STATIC PROCEDURE DEMO_Browse()
       RETURN
    ENDIF
 
-   INDEX ON FIELD->LAST TO test1  // 2004-07-07
+   INDEX ON FIELD->LAST TO test1.ntx  // 2004-07-07
 
    oBrowse := TBrowseNew( 3, 2, MaxRow() - 3, MaxCol() - 3 )
 
@@ -645,6 +645,8 @@ STATIC PROCEDURE DEMO_Browse()
 
    dbCloseArea()
 
+   hb_dbDrop( "test1.ntx" )
+
    // epilogue
    // lboxmessage("Thanks for trying the BROWSE Demo!")
    wvw_lCloseWindow()
@@ -656,7 +658,6 @@ STATIC PROCEDURE DEMO_Browse()
    wvw_SetPen( 0 )
 
    SetColor( cColor )
-   // SetCursor( nCursor )
 
    RETURN
 
@@ -1034,8 +1035,7 @@ STATIC FUNCTION nAfterInkey( nkey )
       // MenuKeyEvent
       RETURN nMenuChecker( wvw_GetLastMenuEvent() )
       // was: elseif AScan({K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE}, nKey) > 0
-   ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN, ;
-         K_LDBLCLK }, nKey ) > 0
+   ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN, K_LDBLCLK }, nKey ) > 0
       // MouseEvent
       RETURN wvwm_nMouseChecker( nkey )
    ELSEIF ( bAction := SetKey( nKey ) ) != NIL
@@ -1514,7 +1514,7 @@ METHOD OnMouseOut() CLASS WVWMouseButton
       RETURN Self
    ENDIF
 
-   if ::lRepeatPress .AND. ::lPressed
+   IF ::lRepeatPress .AND. ::lPressed
       wvwm_SetKeyRepeater( .F. )   // stop key repeater
    ENDIF
 
@@ -1532,7 +1532,7 @@ METHOD OnMouseOver() CLASS WVWMouseButton
       RETURN Self
    ENDIF
 
-   if ::lRepeatPress .AND. ::lPressed
+   IF ::lRepeatPress .AND. ::lPressed
       wvwm_SetKeyRepeater( .T. )   // activate key repeater
    ENDIF
 
@@ -1555,7 +1555,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
       RETURN Self
    ENDIF
 
-   if ::nrow1 > ::nrow2 .OR. ::ncol1 > ::ncol2
+   IF ::nrow1 > ::nrow2 .OR. ::ncol1 > ::ncol2
       SetCursor( nOldCursor ) // 2004-03-03
       RETURN Self
    ENDIF
@@ -1731,21 +1731,18 @@ STATIC FUNCTION wvwm_nMouseChecker( nkey )
       RETURN nkey
    ENDIF
 
-   s_ncurkey := nkey   // 2004-03-03
+   s_ncurkey := nkey  // 2004-03-03
 
    FOR EACH i IN s_amouseobjlist[ nCurWindow + 1 ]
+
       oMouseObj := i[ 2 ]
 
-      DO CASE
-      CASE i[ 1 ] == _MOBJECT_BUTTON
-         nButtonChecker( nkey, oMouseObj )
-      CASE i[ 1 ] == _MOBJECT_HSCROLL
-         nScrollChecker( nkey, "H", oMouseObj )
-      CASE i[ 1 ] == _MOBJECT_VSCROLL
-         nScrollChecker( nkey, "V", oMouseObj )
-      OTHERWISE
-         // runtime error!
-      ENDCASE
+      SWITCH i[ 1 ]
+      CASE _MOBJECT_BUTTON  ; nButtonChecker( nkey, oMouseObj ) ; EXIT
+      CASE _MOBJECT_HSCROLL ; nScrollChecker( nkey, "H", oMouseObj ) ; EXIT
+      CASE _MOBJECT_VSCROLL ; nScrollChecker( nkey, "V", oMouseObj ) ; EXIT
+      OTHERWISE  // runtime error!
+      ENDSWITCH
    NEXT
 
    s_ncurkey := 0  // 2004-03-03
@@ -1771,13 +1768,11 @@ STATIC PROCEDURE xKeyRepeater( lInit )
 
    nNow := Seconds()
    IF nNow - s_nLastValidCheck < nRepeatInterval  // s_nrepeatrate
-      // not yet
-      RETURN
+      RETURN  // not yet
    ENDIF
 
    IF ! MLeftDown()
-      // mouse is not pressed
-      RETURN
+      RETURN  // mouse is not pressed
    ENDIF
 
    // mouse is down long enough since last valid check

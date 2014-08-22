@@ -21,26 +21,22 @@ STATIC s_nCB_Kbd := WVW_CB_KBD_CLIPPER
 // list of created comboboxes
 STATIC s_aComboList := {}
 
-// create these two as local, otherwise it will be assumed PRIVATE
-MEMVAR __nCBid__, __temp__
-
-#xcommand @ <row>, <col> COMBOBOX <var>                        ;
-      OPTIONS <aOptions>                    ;
-      WIDTH <nWidth>   =>                   ;
-      ;
+#xcommand @ <row>, <col> COMBOBOX <var> ;
+      OPTIONS <aOptions> ;
+      WIDTH <nWidth>   => ;
       ;
       __nCBid__ := wvw_cbCreate( , <row>, <col>, <nWidth>, ;
       <aOptions>, ;
-      {| nWinNum, nId, nEvent, nIndex, temp |     ;
-      CBhandler( nWinNum, nId, nEvent, nIndex, <"var">, GetList ), HB_SYMBOL_UNUSED( temp );
-      },                                          ;
-      , , s_nCB_Kbd );                     ;
-      AAdd( s_aComboList, { __nCBid__, <"var"> } );                        ;
-      __temp__ := wvw_cbFindString( , __nCBid__, <var> );             ;
-      iif( __temp__ >= 0, wvw_cbSetIndex( , __nCBid__, __temp__ ), NIL );   ;
-      SetPos( <row>, <col> );                                              ;
-      AAdd( GetList, _GET_( <var>, <"var">, Replicate( "X", <nWidth> ),, ) ) ;   ;
-      ATail( GetList ):cargo := __nCBid__;                                ;
+      {| nWinNum, nId, nEvent, nIndex, temp | ;
+      CBhandler( nWinNum, nId, nEvent, nIndex, <"var">, GetList ), HB_SYMBOL_UNUSED( temp ) ;
+      }, ;
+      , , s_nCB_Kbd ); ;
+      AAdd( s_aComboList, { __nCBid__, <"var"> } ); ;
+      __temp__ := wvw_cbFindString( , __nCBid__, <var> ); ;
+      iif( __temp__ >= 0, wvw_cbSetIndex( , __nCBid__, __temp__ ), NIL ); ;
+      SetPos( <row>, <col> ); ;
+      AAdd( GetList, _GET_( <var>, <"var">, Replicate( "X", <nWidth> ),, ) ) ; ;
+      ATail( GetList ):cargo := __nCBid__; ;
       ATail( GetList ):reader := {| get | CBreader( get ) }
 
 PROCEDURE Main()
@@ -133,8 +129,8 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
       RETURN  // ignore this event
    ENDIF
 
-   DO CASE
-   CASE nEvent == 3 // CBN_SETFOCUS
+   SWITCH nEvent
+   CASE 3  // CBN_SETFOCUS
 
       IF ( i := AScan( GetList, {| x | x:Name == cVar } ) ) > 0
          /* ! oGet:HasFocus means
@@ -169,20 +165,21 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
             MSetPos( GetList[ i ]:row, GetList[ i ]:col + 1 )
             hb_keyPut( K_LBUTTONDOWN )
          ENDIF  // oGet:HasFocus
-
       ELSE
          /* there's no GET object beneath the combobox.
           * This must be a combobox living in the wild.
           * Do what you want with it, we do nothing here.
           */
       ENDIF
+      EXIT
 
-   CASE nEvent == 4 // CBN_KILLFOCUS
+   CASE 4 // CBN_KILLFOCUS
       // put current content of combobox into GET variable beneath it.
       oGet:varput( wvw_cbGetCurText( nWinNum, nId ) )
       oGet:display()  // this is optional
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN
 
