@@ -320,13 +320,11 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiLen  = 4;
             break;
 
-#if 0
+         case MYSQL_TYPE_NULL:
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
          case MYSQL_TYPE_ENUM:
          case MYSQL_TYPE_SET:
-#endif
-
          default:
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) pMyField->type;

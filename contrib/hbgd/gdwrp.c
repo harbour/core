@@ -1564,8 +1564,8 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       /* Write string */
       hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion,
                                       ( char * ) fontname, points,
-                                      HB_ISCHAR( 9 ) ? ( char * ) hb_parstr_utf8( 9, &hTop, NULL ) : "",
-                                      HB_ISCHAR( 10 ) ? ( char * ) hb_parstr_utf8( 10, &hBottom, NULL ) : "", fgcolor ) );
+                                      ( char * ) ( HB_ISCHAR( 9 ) ? hb_parstr_utf8( 9, &hTop, NULL ) : "" ),
+                                      ( char * ) ( HB_ISCHAR( 10 ) ? hb_parstr_utf8( 10, &hBottom, NULL ) : "" ), fgcolor ) );
 
       hb_strfree( hTop );
       hb_strfree( hBottom );

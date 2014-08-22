@@ -73,7 +73,7 @@ static void STAItm( PHB_ITEM pItmPar )
    hb_itemPutCLPtr( pItmPar, cRes, i );
 }
 
-static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOut, int IsIndW,
+static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, const char * cParFrm, int iCOut, int IsIndW,
                       int iIndWidth, int IsIndP, int iIndPrec,
                       PHB_ITEM pItmPar )
 {
