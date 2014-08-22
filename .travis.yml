@@ -2,11 +2,7 @@ language: c
 compiler:
  - clang
  - gcc
-env:
-  matrix:
-    - HB_COMPILER=clang
-    - HB_COMPILER=gcc
-script: make
+script: export HB_COMPILER=$CC && make
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq -m firebird2.1-dev
