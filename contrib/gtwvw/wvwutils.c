@@ -1234,7 +1234,7 @@ HB_FUNC( WVW_NUMBMCACHE )
  * set timer event for every nInterval millisec
  * (effective only if WVW_TIMER() function exists)
  * eg. it can be useful to update clock on status bar
- * returns .T. if successfull
+ * returns .T. if successful
  */
 /* 2004-06-02: WARNING: WVT is slightly different */
 HB_FUNC( WVW_SETTIMER )
@@ -1253,9 +1253,8 @@ HB_FUNC( WVW_SETTIMER )
 }
 
 /* wvw_KillTimer([nWinNum])
- * kill the timer event handler for window nWinNum
- * returns .T. if successfull
- */
+   kill the timer event handler for window nWinNum
+   returns .T. if successful */
 HB_FUNC( WVW_KILLTIMER )  /* 2004-06-02: WARNING: WVT is slightly different */
 {
    PWVW_GLO wvw     = hb_gt_wvw();
@@ -1572,7 +1571,6 @@ HB_FUNC( WVW_CHOOSECOLOR )
    NOTE: consider using 'standard' SetMouse() instead:
          SetMouse( .T., nRow, nCol )
          This will treat (nRow,nCol) according to current wvw->fMainCoordMode setting */
-
 HB_FUNC( WVW_SETMOUSEPOS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -1610,7 +1608,6 @@ HB_FUNC( WVW_SETMOUSEPOS )
           we are depending on the fact that gui object will be painted last
 
      if lUseBrush, nRGBcolor is treated as a BRUSH handle */
-
 HB_FUNC( WVW_FILLRECTANGLE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
@@ -2418,7 +2415,7 @@ HB_FUNC( WVW_SETCODEPAGE )
       hb_retni( 0 );
 }
 
-/* wvw_CenterWindow( nWinNum, lCenter, lPaint )   (nWinNum==0==MAIN) */
+/* wvw_CenterWindow( nWinNum, lCenter, lPaint )  (nWinNum==0==MAIN) */
 HB_FUNC( WVW_CENTERWINDOW )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -2474,8 +2471,7 @@ HB_FUNC( WVW_GETXYFROMROWCOL )
 }
 
 /* wvw_GetRowColFromXY( [nWinNum], nX, nY )
- * return an array {nRow, nCol}
- */
+   return an array {nRow, nCol} */
 HB_FUNC( WVW_GETROWCOLFROMXY )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -2536,8 +2532,7 @@ HB_FUNC( WVW_MINIMIZE )
    maximizes the window, if callback function WVW_SIZE exists
 
    note: in GTWVT Wvt_Maximize() restores the window, not maximizes it
-   see also: wvw_Restore(), wvw_MaxMaxRow(), wvw_MaxMaxCol()
- */
+   see also: wvw_Restore(), wvw_MaxMaxRow(), wvw_MaxMaxCol() */
 HB_FUNC( WVW_MAXIMIZE )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
@@ -2558,8 +2553,7 @@ HB_FUNC( WVW_MAXIMIZE )
    WARNING: restoring window from its maximized state might need handling
             in callback function WVW_SIZE,
             because this function assumes no change in MaxRow()/MaxCol()
-   see also: wvw_Maximize(), wvw_MaxMaxRow(), wvw_MaxMaxCol()
- */
+   see also: wvw_Maximize(), wvw_MaxMaxRow(), wvw_MaxMaxCol() */
 HB_FUNC( WVW_RESTORE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

@@ -2,7 +2,7 @@
 
 #require "rddado"
 
-#include "adordd.ch"
+#include "rddado.ch"
 
 REQUEST ADORDD
 

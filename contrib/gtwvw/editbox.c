@@ -489,8 +489,6 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
  *
  * returns control id of newly created editbox of windows nWinNum
  * returns 0 if failed
- *
- * example:
  */
 HB_FUNC( WVW_EBCREATE )
 {
@@ -606,8 +604,7 @@ HB_FUNC( WVW_EBCREATE )
 }
 
 /* wvw_ebDestroy( [nWinNum], nEBid )
- * destroy editbox nEBid for window nWinNum
- */
+   destroy editbox nEBid for window nWinNum */
 HB_FUNC( WVW_EBDESTROY )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -645,8 +642,7 @@ HB_FUNC( WVW_EBDESTROY )
 }
 
 /* wvw_ebSetFocus( [nWinNum], nEditId )
- * set the focus to editbox nEditId in window nWinNum
- */
+   set the focus to editbox nEditId in window nWinNum */
 HB_FUNC( WVW_EBSETFOCUS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -657,8 +653,7 @@ HB_FUNC( WVW_EBSETFOCUS )
 }
 
 /* wvw_ebIsFocused( [nWinNum], nEditId )
- * returns .T. if the focus is on editbox nEditId in window nWinNum
- */
+   returns .T. if the focus is on editbox nEditId in window nWinNum */
 HB_FUNC( WVW_EBISFOCUSED )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -717,10 +712,8 @@ HB_FUNC( WVW_EBEDITABLE )
 }
 
 /* wvw_ebSetCodeblock( [nWinNum], nEBid, bBlock )
- * assign (new) codeblock bBlock to editbox nEBid for window nWinNum
- *
- * return .T. if successful
- */
+   assign (new) codeblock bBlock to editbox nEBid for window nWinNum
+   return .T. if successful */
 HB_FUNC( WVW_EBSETCODEBLOCK )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -815,10 +808,9 @@ HB_FUNC( WVW_EBSETFONT )
 }
 
 /* wvw_ebIsMultiline( [nWinNum], nEBid )
- * returns .T. if editbox nEBid in window nWinNum is multiline
- * otherwise .F.
- * Also returns .F. if nEBid not valid
- */
+   returns .T. if editbox nEBid in window nWinNum is multiline
+   otherwise .F.
+   Also returns .F. if nEBid not valid */
 HB_FUNC( WVW_EBISMULTILINE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -869,9 +861,8 @@ HB_FUNC( WVW_EBGETTEXT )
 }
 
 /* wvw_ebSetText( [nWinNum], nEBid, cText )
- * set current text of editbox nEBid in window nWinNum
- * returns .T. if successful, .F. in case of error (eg. nEBid not valid)
- */
+   set current text of editbox nEBid in window nWinNum
+   returns .T. if successful, .F. in case of error (eg. nEBid not valid) */
 HB_FUNC( WVW_EBSETTEXT )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

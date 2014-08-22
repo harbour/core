@@ -172,9 +172,8 @@ HB_FUNC( WVW_PGCREATE )
 }
 
 /* wvw_pgDestroy( [nWinNum], nPGid )
- * destroy progressbar nPGid for window nWinNum
- * This function has no return value.
- */
+   destroy progressbar nPGid for window nWinNum
+   This function has no return value. */
 HB_FUNC( WVW_PGDESTROY )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -212,14 +211,11 @@ HB_FUNC( WVW_PGDESTROY )
 }
 
 /* wvw_pgSetRange( nWinNum, PGid, [nMin], [nMax] )
- *  update progressbar data range (default is 0-100)
- *  nMin: a number in range of -32767 to +32767
- *  nMax: a number in range of -32767 to +32767
- *
- * Remark: progress position is reset to nMin
- *
- * returns .T. if operation considered successfull
- */
+    update progressbar data range (default is 0-100)
+    nMin: a number in range of -32767 to +32767
+    nMax: a number in range of -32767 to +32767
+   Remark: progress position is reset to nMin
+   returns .T. if operation considered successful */
 HB_FUNC( WVW_PGSETRANGE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -240,10 +236,9 @@ HB_FUNC( WVW_PGSETRANGE )
 }
 
 /* wvw_pgSetPos( nWinNum, PGid, [nPos] )
- * update progressbar position within current range
- * nPos: a number in range of current range
- * returns .T. if operation considered successfull
- */
+   update progressbar position within current range
+   nPos: a number in range of current range
+   returns .T. if operation considered successful */
 HB_FUNC( WVW_PGSETPOS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -271,9 +266,8 @@ HB_FUNC( WVW_PGSETPOS )
 }
 
 /* wvw_pgGetPos( nWinNum, PGid )
- * get progressbar current position
- * returns 0 if operation failed
- */
+   get progressbar current position
+   returns 0 if operation failed */
 HB_FUNC( WVW_PGGETPOS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

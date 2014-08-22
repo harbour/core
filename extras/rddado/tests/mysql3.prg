@@ -2,7 +2,7 @@
 
 // Testing LOCATE and CONTINUE
 
-#include "adordd.ch"
+#include "rddado.ch"
 
 REQUEST ADORDD
 

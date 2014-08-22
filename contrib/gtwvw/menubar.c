@@ -296,11 +296,9 @@ HB_FUNC( WIN_SETMENU )
 }
 
 /* wvw_NoSysMenu( [nWinNum], lRemoveClose )
- * removes System Menu of a window
- * if lRemoveClose is .T., also removes the 'Close' command and 'X' button
- *
- * no return value
- */
+   removes System Menu of a window
+   if lRemoveClose is .T., also removes the 'Close' command and 'X' button
+   no return value */
 HB_FUNC( WVW_NOSYSMENU )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -328,8 +326,7 @@ HB_FUNC( WVW_NOSYSMENU )
 }
 
 /* wvw_GetSystemMenu( [nWinNum], lReset )
- * returns the System Menu of a window
- */
+   returns the System Menu of a window */
 HB_FUNC( WVW_GETSYSTEMMENU )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

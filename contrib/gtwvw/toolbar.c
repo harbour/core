@@ -604,8 +604,7 @@ HB_FUNC( WVW_TBADDBUTTON )
 }
 
 /* wvw_tbButtonCount( [nWinNum] )
- * returns number of buttons in toolbar on window nWinNum
- */
+   returns number of buttons in toolbar on window nWinNum */
 HB_FUNC( WVW_TBBUTTONCOUNT )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -654,8 +653,7 @@ HB_FUNC( WVW_TBDELBUTTON )
 }
 
 /* wvw_tbGetButtonRect( [nWinNum], nButton )
- * return an array {nRowStart, nColStart, nRowStop, nColStop}
- */
+   return an array {nRowStart, nColStart, nRowStop, nColStop} */
 HB_FUNC( WVW_TBGETBUTTONRECT )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -723,8 +721,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
 }
 
 /* wvw_tbDestroy( [nWinNum] )
- * destroy toolbar for window nWinNum
- */
+   destroy toolbar for window nWinNum */
 HB_FUNC( WVW_TBDESTROY )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -740,9 +737,8 @@ HB_FUNC( WVW_TBDESTROY )
 }
 
 /* wvw_tbIndex2Cmd( [nWinNum], nIndex )
- * returns Command Id of button nIndex (0 based)
- * returns -1 if the button does not exist
- */
+   returns Command Id of button nIndex (0 based)
+   returns -1 if the button does not exist */
 HB_FUNC( WVW_TBINDEX2CMD )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -762,9 +758,8 @@ HB_FUNC( WVW_TBINDEX2CMD )
 }
 
 /* wvw_tbCmd2Index( [nWinNum], nCmd )
- * returns Index (0 based) of button whose command id is nCmd
- * returns -1 if the button does not exist
- */
+   returns Index (0 based) of button whose command id is nCmd
+   returns -1 if the button does not exist */
 HB_FUNC( WVW_TBCMD2INDEX )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

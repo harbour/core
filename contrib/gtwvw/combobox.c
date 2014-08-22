@@ -297,8 +297,6 @@ static int hb_gt_wvw_GetFontDialogUnits( HWND hWnd, HFONT hFont )
  *
  * returns control id of newly created combobox of windows nWinNum
  * returns 0 if failed
- *
- * example:
  */
 HB_FUNC( WVW_CBCREATE )
 {
@@ -446,8 +444,7 @@ HB_FUNC( WVW_CBCREATE )
 }
 
 /* wvw_cbDestroy( [nWinNum], nCBid )
- * destroy combobox nCBid for window nWinNum
- */
+   destroy combobox nCBid for window nWinNum */
 HB_FUNC( WVW_CBDESTROY )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -485,8 +482,7 @@ HB_FUNC( WVW_CBDESTROY )
 }
 
 /* wvw_cbSetFocus( [nWinNum], nComboId )
- * set the focus to combobox nComboId in window nWinNum
- */
+   set the focus to combobox nComboId in window nWinNum */
 HB_FUNC( WVW_CBSETFOCUS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -497,8 +493,7 @@ HB_FUNC( WVW_CBSETFOCUS )
 }
 
 /* wvw_cbIsFocused( [nWinNum], nComboId )
- * returns .T. if the focus is on combobox nComboId in window nWinNum
- */
+   returns .T. if the focus is on combobox nComboId in window nWinNum */
 HB_FUNC( WVW_CBISFOCUSED )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -534,10 +529,8 @@ HB_FUNC( WVW_CBENABLE )
 }
 
 /* wvw_cbSetCodeblock( [nWinNum], nCBid, bBlock )
- * assign (new) codeblock bBlock to combobox nCBid for window nWinNum
- *
- * return .T. if successful
- */
+   assign (new) codeblock bBlock to combobox nCBid for window nWinNum
+   return .T. if successful */
 HB_FUNC( WVW_CBSETCODEBLOCK )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -676,12 +669,10 @@ HB_FUNC( WVW_CBGETINDEX )
 }
 
 /* wvw_cbFindString( [nWinNum], nCBid, cString )
- *  find index of cString in combobox nCBid in window nWinNum
- *  returns index of cString (0 based)
- *  returns CB_ERR (-1) if string not found
- *
- * NOTE:case insensitive
- */
+    find index of cString in combobox nCBid in window nWinNum
+    returns index of cString (0 based)
+    returns CB_ERR (-1) if string not found
+   NOTE:case insensitive */
 HB_FUNC( WVW_CBFINDSTRING )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

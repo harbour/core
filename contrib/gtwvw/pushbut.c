@@ -87,8 +87,6 @@
  *
  * returns control id of newly created pushbutton of windows nWinNum
  * returns 0 if failed
- *
- * example:
  */
 HB_FUNC( WVW_PBCREATE )
 {
@@ -213,10 +211,8 @@ HB_FUNC( WVW_PBENABLE )
 }
 
 /* wvw_pbSetCodeblock( [nWinNum], nPBid, bBlock )
- * assign (new) codeblock bBlock to button nPBid for window nWinNum
- *
- * return .T. if successful
- */
+   assign (new) codeblock bBlock to button nPBid for window nWinNum
+   return .T. if successful */
 HB_FUNC( WVW_PBSETCODEBLOCK )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
@@ -270,10 +266,9 @@ HB_FUNC( WVW_PBSETSTYLE )
 }
 
 /* wvw_pbSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
- *                             lItalic, lUnderline, lStrikeout )
- * this will initialize font for ALL pushbuttons in window nWinNum
- * (including ones created later on)
- */
+                  lItalic, lUnderline, lStrikeout )
+   this will initialize font for ALL pushbuttons in window nWinNum
+   (including ones created later on) */
 HB_FUNC( WVW_PBSETFONT )
 {
    PWVW_GLO wvw     = hb_gt_wvw();

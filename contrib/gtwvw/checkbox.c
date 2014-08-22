@@ -172,11 +172,10 @@ HB_FUNC( WVW_CXSETFOCUS )
 }
 
 /* wvw_cxEnable( [nWinNum], nButtonId, [lToggle] )
- * enable/disable checkbox nButtonId on window nWinNum
- * (lToggle defaults to .T., ie. enabling the checkbox)
- * return previous state of the checkbox (TRUE:enabled FALSE:disabled)
- * (if nButtonId is invalid, this function returns FALSE too)
- */
+   enable/disable checkbox nButtonId on window nWinNum
+   (lToggle defaults to .T., ie. enabling the checkbox)
+   return previous state of the checkbox (TRUE:enabled FALSE:disabled)
+   (if nButtonId is invalid, this function returns FALSE too) */
 HB_FUNC( WVW_CXENABLE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -197,10 +196,8 @@ HB_FUNC( WVW_CXENABLE )
 }
 
 /* wvw_cxSetCodeblock( [nWinNum], nCXid, bBlock )
- * assign (new) codeblock bBlock to button nCXid for window nWinNum
- *
- * return .T. if successful
- */
+   assign (new) codeblock bBlock to button nCXid for window nWinNum
+   return .T. if successful */
 HB_FUNC( WVW_CXSETCODEBLOCK )
 {
    PWVW_GLO wvw = hb_gt_wvw();
@@ -234,12 +231,11 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
 }
 
 /* wvw_cxSetCheck( [nWinNum], nCXid, nCheckState )
- * assigns check-state of checkbox nCXid
- *           0==unchecked     BST_UNCHECKED
- *           1==checked       BST_CHECKED
- *           2==indeterminate BST_INDETERMINATE
- * this function always returns .T.
- */
+   assigns check-state of checkbox nCXid
+             0==unchecked     BST_UNCHECKED
+             1==checked       BST_CHECKED
+             2==indeterminate BST_INDETERMINATE
+   this function always returns .T. */
 HB_FUNC( WVW_CXSETCHECK )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -252,11 +248,10 @@ HB_FUNC( WVW_CXSETCHECK )
 }
 
 /* wvw_cxGetCheck( [nWinNum], nCXid )
- * returns check-state of checkbox nCXid
- *           0==unchecked     BST_UNCHECKED
- *           1==checked       BST_CHECKED
- *           2==indeterminate BST_INDETERMINATE
- */
+   returns check-state of checkbox nCXid
+             0==unchecked     BST_UNCHECKED
+             1==checked       BST_CHECKED
+             2==indeterminate BST_INDETERMINATE */
 HB_FUNC( WVW_CXGETCHECK )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

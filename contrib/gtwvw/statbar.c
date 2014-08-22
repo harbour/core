@@ -98,8 +98,7 @@ HB_FUNC( WVW_SBCREATE )
 }
 
 /* wvw_sbDestroy( [nWinNum] )
- * destroy status bar for window nWinNum
- */
+   destroy status bar for window nWinNum */
 HB_FUNC( WVW_SBDESTROY )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -261,8 +260,7 @@ HB_FUNC( WVW_SBREFRESH )
 }
 
 /* wvw_sbSetText( [nWinNum], [nPart], cText )
- * Set Text of status bar's part #npart
- */
+   Set Text of status bar's part #npart */
 HB_FUNC( WVW_SBSETTEXT )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -297,8 +295,7 @@ HB_FUNC( WVW_SBSETTEXT )
 }
 
 /* wvw_sbGetText( [nWinNum], [nPart] )
- * Get Text of status bar's part #npart
- */
+   Get Text of status bar's part #npart */
 HB_FUNC( WVW_SBGETTEXT )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -318,8 +315,7 @@ HB_FUNC( WVW_SBGETTEXT )
 }
 
 /* wvw_sbGetParts( [nWinNum] )
- * Get number of parts in statusbar of window nWinNum
- */
+   Get number of parts in statusbar of window nWinNum */
 HB_FUNC( WVW_SBGETPARTS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -329,7 +325,7 @@ HB_FUNC( WVW_SBGETPARTS )
 }
 
 /* wvw_sbSetFont( [nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality, ;
-                               lItalic, lUnderline, lStrikeout ) */
+                  lItalic, lUnderline, lStrikeout ) */
 HB_FUNC( WVW_SBSETFONT )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
