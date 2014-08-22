@@ -60,34 +60,35 @@ PROCEDURE Main()
 
 STATIC PROCEDURE xGet1()
 
-   LOCAL cName := PadR( "Name", 20 )
-   LOCAL cAddr := PadR( "Address", 25 )
+   LOCAL cName  := PadR( "Name", 20 )
+   LOCAL cAddr  := PadR( "Address", 25 )
    LOCAL cPhone := PadR( "Phone", 15 )
-   LOCAL cFax  := PadR( "Fax", 15 )
-   LOCAL lDone := .F.
-   LOCAL GetList := {}
-   LOCAL oldCurs := SetCursor( SC_NORMAL )
-   LOCAL nWin
-   MEMVAR __temp__
+   LOCAL cFax   := PadR( "Fax", 15 )
+   LOCAL cEmail := PadR( "E-mail", 15 )
 
-   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
+   LOCAL nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
+   LOCAL GetList := {}
+
+   MEMVAR __temp__
 
    AddMiscObjects( nWin, {| nWindow | __temp__ := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( __temp__, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
-   DO WHILE ! lDone
-      @ 12, 22 SAY "Name    : " GET cName  PICTURE "@!K" WHEN lMessage( "Please enter your name" )
-      @ 14, 22 SAY "Address : " GET cAddr  PICTURE "@!K" WHEN lMessage( "Please enter your address" )
-      @ 16, 22 SAY "Phone   : " GET cPhone PICTURE "@K"  WHEN lMessage( "Please enter your phone number" )
-      @ 18, 22 SAY "Fax     : " GET cFax   PICTURE "@K"  WHEN lMessage( "Please enter your fax number" )
+   DO WHILE .T.
+      @ 12, 22 SAY "Name    :" GET cName  PICTURE "@!K" WHEN lMessage( "Please enter your name" )
+      @ 14, 22 SAY "Address :" GET cAddr  PICTURE "@!K" WHEN lMessage( "Please enter your address" )
+      @ 16, 22 SAY "Phone   :" GET cPhone PICTURE "@K"  WHEN lMessage( "Please enter your phone number" )
+      @ 18, 22 SAY "Fax     :" GET cFax   PICTURE "@K"  WHEN lMessage( "Please enter your fax number" )
+      @  8, 22 SAY "Email   :" GET cEmail PICTURE "@K"  WHEN lMessage( "Please enter your email address" )
       READ
 
       lMessage( "" )
-      lDone := lyesno( "Done?" )
+
+      IF lyesno( "Done?" )
+         EXIT
+      ENDIF
    ENDDO
 
    zrevwindow()
-
-   SetCursor( oldCurs )
 
    RETURN
 
@@ -381,7 +382,7 @@ STATIC PROCEDURE ZREVWINDOW()
 
 FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
-   IF Len( s_amiscobjlist ) >= nWinNum + 1
+   IF nWinNum + 1 <= Len( s_amiscobjlist )
       AEval( s_amiscobjlist[ nWinNum + 1 ], {| e | Eval( e, nWinNum ) } )
    ENDIF
 

@@ -659,6 +659,8 @@ static int hb_gt_wvw_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const 
          for( pos = 0; pos < nLen; ++pos )
             HB_GTSELF_PUTCHAR( pGT, iRow, iCol++, iColor, 0, szText[ pos ] );
       }
+      if( nLen > 0 )
+         iCol--;
    }
 #else
    iCol = nLen == 0 ? 0 : iColSav + ( int ) nLen - 1;
@@ -4781,22 +4783,6 @@ static void hb_gt_wvw_FUNCPrologue( int iNumCoord, int * iRow1, int * iCol1, int
    }
 }
 
-/* this is the epilogue for any HB_GT_FUNC() that is output/coordinate oriented
-   called only if s_wvw->fMainCoordMode */
-static void hb_gt_wvw_FUNCEpilogue( void )
-{
-   if( s_wvw->fMainCoordMode )
-   {
-      s_wvw->pWin[ 0 ]->caretPos.y = s_wvw->pWin[ s_wvw->iCurWindow ]->caretPos.y + hb_gt_wvw_RowOfs( s_wvw->pWin[ s_wvw->iCurWindow ] );
-      s_wvw->pWin[ 0 ]->caretPos.x = s_wvw->pWin[ s_wvw->iCurWindow ]->caretPos.x + hb_gt_wvw_ColOfs( s_wvw->pWin[ s_wvw->iCurWindow ] );
-
-      hb_gt_wvw_SetCurWindow( 0 );
-
-      if( s_wvw->a.CaretExist && s_wvw->a.displayCaret )
-         hb_gt_wvw_SetCaretPos( s_wvw->pWin[ s_wvw->iNumWindows - 1 ] );
-   }
-}
-
 void hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * piRow1, int * piCol1, int * piRow2, int * piCol2 )
 {
    if( s_wvw && s_wvw->fMainCoordMode )
@@ -4811,6 +4797,22 @@ void hb_gt_wvw_HBFUNCPrologue( PWVW_WIN wvw_win, int * piRow1, int * piCol1, int
          *piCol2 -= hb_gt_wvw_ColOfs( wvw_win );
    }
    /* else: do not touch the values */
+}
+
+/* this is the epilogue for any HB_GT_FUNC() that is output/coordinate oriented
+   called only if s_wvw->fMainCoordMode */
+static void hb_gt_wvw_FUNCEpilogue( void )
+{
+   if( s_wvw->fMainCoordMode )
+   {
+      s_wvw->pWin[ 0 ]->caretPos.y = s_wvw->pWin[ s_wvw->iCurWindow ]->caretPos.y + hb_gt_wvw_RowOfs( s_wvw->pWin[ s_wvw->iCurWindow ] );
+      s_wvw->pWin[ 0 ]->caretPos.x = s_wvw->pWin[ s_wvw->iCurWindow ]->caretPos.x + hb_gt_wvw_ColOfs( s_wvw->pWin[ s_wvw->iCurWindow ] );
+
+      hb_gt_wvw_SetCurWindow( 0 );
+
+      if( s_wvw->a.CaretExist && s_wvw->a.displayCaret )
+         hb_gt_wvw_SetCaretPos( s_wvw->pWin[ s_wvw->iNumWindows - 1 ] );
+   }
 }
 
 /* assigns a new value to s_wvw->iCurWindow
@@ -4993,6 +4995,11 @@ static void hb_gt_wvw_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
    PHB_CODEPAGE cdp = pGT->fVgaCell ? HB_GTSELF_HOSTCP( pGT ) : NULL;
 #endif
 
+   iTop    = iTop < 0 ? 0 : iTop;
+   iLeft   = iLeft < 0 ? 0 : iLeft;
+   iBottom = iBottom < 0 ? 0 : iBottom;
+   iRight  = iRight < 0 ? 0 : iRight;
+
    hb_gt_wvw_FUNCPrologue( 4, &iTop, &iLeft, &iBottom, &iRight );
 
    while( iTop <= iBottom )
@@ -5046,6 +5053,11 @@ static void hb_gt_wvw_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
    PWVW_WIN wvw_win = s_wvw->pWin[ s_wvw->iNumWindows - 1 ];
 
    int iSaveTop;
+
+   iTop    = iTop < 0 ? 0 : iTop;
+   iLeft   = iLeft < 0 ? 0 : iLeft;
+   iBottom = iBottom < 0 ? 0 : iBottom;
+   iRight  = iRight < 0 ? 0 : iRight;
 
    hb_gt_wvw_FUNCPrologue( 4, &iTop, &iLeft, &iBottom, &iRight );
 

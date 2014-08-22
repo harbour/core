@@ -68,13 +68,12 @@ PROCEDURE Main()
 
 STATIC PROCEDURE xGet1()
 
-   LOCAL cName := PadR( "Name", 20 )
-   LOCAL cAddr := PadR( "Address", 25 )
+   LOCAL cName  := PadR( "Name", 20 )
+   LOCAL cAddr  := PadR( "Address", 25 )
    LOCAL cPhone := PadR( "Phone", 15 )
-   LOCAL cFax  := PadR( "Fax", 15 )
-   LOCAL lDone := .F.
+   LOCAL cFax   := PadR( "Fax", 15 )
+
    LOCAL GetList := {}
-   LOCAL oldCurs := SetCursor( SC_NORMAL )
 
    znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
 
@@ -83,20 +82,20 @@ STATIC PROCEDURE xGet1()
    @ 23, 0  SAY "Outside the window" COLOR "R/W"
 #endif
 
-   DO WHILE ! lDone
-      @ 12, 22 SAY "Name    : " GET cName  PICTURE "@!K" WHEN lMessage( "Please enter your name" )
-      @ 14, 22 SAY "Address : " GET cAddr  PICTURE "@!K" WHEN lMessage( "Please enter your address" )
-      @ 16, 22 SAY "Phone   : " GET cPhone PICTURE "@K"  WHEN lMessage( "Please enter your phone number" )
-      @ 18, 22 SAY "Fax     : " GET cFax   PICTURE "@K"  WHEN lMessage( "Please enter your fax number" )
+   DO WHILE .T.
+      @ 12, 22 SAY "Name    :" GET cName  PICTURE "@!K" WHEN lMessage( "Please enter your name" )
+      @ 14, 22 SAY "Address :" GET cAddr  PICTURE "@!K" WHEN lMessage( "Please enter your address" )
+      @ 16, 22 SAY "Phone   :" GET cPhone PICTURE "@K"  WHEN lMessage( "Please enter your phone number" )
+      @ 18, 22 SAY "Fax     :" GET cFax   PICTURE "@K"  WHEN lMessage( "Please enter your fax number" )
       READ
 
       lMessage( "" )
-      lDone := lyesno( "Done?" )
+      IF lyesno( "Done?" )
+         EXIT
+      ENDIF
    ENDDO
 
    zrevwindow()
-
-   SetCursor( oldCurs )
 
    RETURN
 
