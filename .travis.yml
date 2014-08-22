@@ -3,8 +3,9 @@ compiler:
  - clang
  - gcc
 env:
-  global:
-    - HB_COMPILER=$CC
+  matrix:
+    - HB_COMPILER=clang
+    - HB_COMPILER=gcc
 script: make
 before_install:
  - sudo apt-get update -qq
