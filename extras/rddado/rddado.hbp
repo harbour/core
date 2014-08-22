@@ -9,7 +9,7 @@
 
 -hbx=${hb_name}
 
-core.prg
+ado.prg
 
 {hbdyn}-env:_HB_DYNSUFF=_dll
 {hbdyn}hbwin.hbc
