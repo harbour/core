@@ -13,7 +13,6 @@
 #include "dbstruct.ch"
 #include "hbgtinfo.ch"
 #include "inkey.ch"
-#include "setcurs.ch"
 
 STATIC s_zwin := {}
 STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
@@ -49,9 +48,6 @@ PROCEDURE Main()
    xGet1()
    xBrowse1()
    lboxmessage( "That's all folks" )
-
-   // restore state
-   SetCursor( SC_NORMAL )
 
    RETURN
 
@@ -260,7 +256,7 @@ STATIC FUNCTION lYesNo( cMsg )
 
    RETURN nChoice == 1
 
-STATIC FUNCTION lBoxMessage( cMsg, cTitle )
+STATIC PROCEDURE lBoxMessage( cMsg, cTitle )
 
    LOCAL nTopLine, ;
       nLeft := 5, ;
@@ -304,7 +300,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    SetCursor( oldCurs )
    SetColor( oldColor )
 
-   RETURN .T.
+   RETURN
 
 // Draw a new window on screen and register it in window list
 // wtype       : Window border type, eg. "┌─┐│┘─└│"

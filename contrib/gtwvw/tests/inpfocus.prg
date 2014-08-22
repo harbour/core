@@ -209,8 +209,7 @@ STATIC PROCEDURE typing( ch )
 #define WM_COMMAND                      0x0111
 #define WM_CHAR                         0x0102
 
-/*
- * WVW_INPUTFOCUS() is a special, callback function
+/* WVW_INPUTFOCUS() is a special, callback function
  * This function will be called by GTWVW everytime input occurs on
  * non-topmost window.
  * This includes Menu, Toolbar, Pushbutton, Scrollbar, or plain keyboard
@@ -221,9 +220,7 @@ STATIC PROCEDURE typing( ch )
  *
  * This function should return .T. if it has handled the event,
  * otherwise return .F. to sign GTWVW that the input is considered invalid.
- *
  */
-
 FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    LOCAL wParamLow := wvw_LOWORD( wParam )

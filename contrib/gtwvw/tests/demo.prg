@@ -453,9 +453,11 @@ STATIC PROCEDURE Demo_Get()
 
    wvwm_ResetMouseObjects( nCurWindow )
 
-   /* we now use native push button
+#if 0
+   /* we now use native push button */
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info", MaxRow() - 1, MaxCol() - 15, , , {|| xDebugInfo() }  ))
-   */
+#endif
+
    wvw_pbCreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", , {|| xDebugInfo() } )
 
    CLS
@@ -550,9 +552,10 @@ STATIC PROCEDURE DEMO_Browse()
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawGridHorz( nWindow, oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
 
-   /* we now use native push button
+#if 0
+   /* we now use native push button */
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", MaxRow(), MaxCol() - 15, , , {|| xDebugInfo() } ))
-   */
+#endif
    wvw_pbCreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", , {|| xDebugInfo() } )
 
    nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
@@ -1001,20 +1004,20 @@ STATIC PROCEDURE xEnableToolbar( nWinNum )
 
 //
 
-STATIC FUNCTION ResetMiscObjects( nWinNum )
+STATIC PROCEDURE ResetMiscObjects( nWinNum )
 
    DO WHILE Len( s_amiscobjlist ) < nWinNum + 1
       AAdd( s_amiscobjlist, {} )
    ENDDO
    s_amiscobjlist[ nWinNum + 1 ] := {}
 
-   RETURN .T.
+   RETURN
 
-STATIC FUNCTION AddMiscObjects( nWinNum, bAction )
+STATIC PROCEDURE AddMiscObjects( nWinNum, bAction )
 
    AAdd( s_amiscobjlist[ nWinNum + 1 ], bAction )
 
-   RETURN .T.
+   RETURN
 
 // Inkey() handler
 
@@ -1619,21 +1622,21 @@ STATIC PROCEDURE wvwm_paint( nWinNum )
    RETURN
 
 // clears all mouse objects from window nWinNum
-STATIC FUNCTION wvwm_ResetMouseObjects( nWinNum )
+STATIC PROCEDURE wvwm_ResetMouseObjects( nWinNum )
 
    DO WHILE Len( s_amouseobjlist ) < nWinNum + 1
       AAdd( s_amouseobjlist, {} )
    ENDDO
    s_amouseobjlist[ nWinNum + 1 ] := {}
 
-   RETURN .T.
+   RETURN
 
-STATIC FUNCTION wvwm_AddMouseObjects( nWinNum, oMouse, nObjType )
+STATIC PROCEDURE wvwm_AddMouseObjects( nWinNum, oMouse, nObjType )
 
    // adds a mouse object oMouse into window nWinNum
    AAdd( s_amouseobjlist[ nWinNum + 1 ], { hb_defaultValue( nObjType, _MOBJECT_BUTTON ), oMouse } )
 
-   RETURN .T.
+   RETURN
 
 STATIC FUNCTION wvwm_SetKeyRepeater( lSet )
 

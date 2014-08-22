@@ -66,12 +66,7 @@ STATIC s_aPObjList := {}
 
 PROCEDURE Main()
 
-   LOCAL ntop := 7, ;
-      nleft := 3, ;
-      nbot := MaxRow() - 2, ;
-      nrig := MaxCol() - 2, ;
-      nmidver := Int( ( ntop + nbot ) / 2 ), ;
-      nmidhor := Int( ( nleft + nrig ) / 2 )
+   LOCAL ntop, nleft, nbot, nrig, nmidver, nmidhor
    LOCAL cpict := hb_DirBase() + "vouch1.gif"
    LOCAL ltransp := .F.
    LOCAL nMaxCache
@@ -81,6 +76,13 @@ PROCEDURE Main()
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
 #endif
+
+   ntop := 7
+   nleft := 3
+   nbot := MaxRow() - 2
+   nrig := MaxCol() - 2
+   nmidver := Int( ( ntop + nbot ) / 2 )
+   nmidhor := Int( ( nleft + nrig ) / 2 )
 
    nMaxCache := wvw_SetMaxBMCache()
 
@@ -201,20 +203,18 @@ METHOD New( nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp )
 
 METHOD PROCEDURE Draw() CLASS wPaintObj
 
-   IF ! ::lVisible
-      RETURN
+   IF ::lVisible
+      DO CASE
+      case ::nType == WPAINTOBJ_IMAGE
+         IF ! Empty( ::cImage )
+            wvw_DrawImage( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
+               ::cImage, ::aOffTLBR, ::lTransp )
+         ENDIF
+
+      OTHERWISE
+         // lBoxErrMessage()
+      ENDCASE
    ENDIF
-
-   DO CASE
-   case ::nType == WPAINTOBJ_IMAGE
-      IF ! Empty( ::cImage )
-         wvw_DrawImage( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
-            ::cImage, ::aOffTLBR, ::lTransp )
-      ENDIF
-
-   OTHERWISE
-      // lBoxErrMessage()
-   ENDCASE
 
    RETURN
 
@@ -224,14 +224,14 @@ METHOD PROCEDURE Draw() CLASS wPaintObj
 METHOD PROCEDURE Undraw() CLASS wPaintObj
 
    LOCAL cScreen
-   LOCAL nRow1, nCol1, nRow2, nCol2, nMaxRow, nMaxCol
+   LOCAL nRow1, nCol1, nRow2, nCol2
 
    // to be safer, the area can be enlarged first
-   nMaxRow := MaxRow()
-   nMaxCol := MaxCol()
+   LOCAL nMaxRow := MaxRow()
+   LOCAL nMaxCol := MaxCol()
 
    DO CASE
-   case ::nType == WPAINTOBJ_LABEL
+   CASE ::nType == WPAINTOBJ_LABEL
       nRow1 := ::nRow1
       nCol1 := ::nCol1
       nRow2 := ::nRow2
@@ -270,7 +270,7 @@ METHOD PROCEDURE Show() CLASS wPaintObj
 
 // clears all wPaint objects from window nWinNum
 // if nObjNum specified, clears object >= nObjNum
-STATIC FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum )
+STATIC PROCEDURE wg_ResetWPaintObj( nWinNum, nObjNum )
 
    DO WHILE Len( s_aPObjList ) < nWinNum + 1
       AAdd( s_aPObjList, {} )
@@ -278,11 +278,11 @@ STATIC FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum )
 
    ASize( s_aPObjList[ nWinNum + 1 ], hb_defaultValue( nObjNum, 0 ) )
 
-   RETURN .T.
+   RETURN
 
 // adds a WPaint object oWPaint into window nWinNum
 // returns ::cId if successful. "" if failed.
-STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict )
+STATIC PROCEDURE wg_AddWPaintObj( nWinNum, oWPaint, lStrict )
 
    LOCAL i
 
@@ -306,41 +306,46 @@ STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict )
       oWPaint:draw()
    ENDIF
 
-   RETURN oWPaint:cId // 2004-08-11 was .T.
+   RETURN
 
 // deletes a WPaint object oWPaint from window nWinNum
 // returns number of object deleted.
 //
 // NOTE: if cId is NIL, delete all object of type nType
-STATIC FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
+STATIC PROCEDURE wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 
    LOCAL i
    LOCAL lDelAll := ! HB_ISSTRING( cId )
-   LOCAL nDeleted := 0
    LOCAL nLen
 
    // is nType set?
-   IF nType < 1
-      RETURN nDeleted
+   IF nType >= 1
+      // exist nType + cId ?
+      i := 1
+      nLen := Len( s_aPObjList[ nWinNum + 1 ] )
+      DO WHILE i <= nLen
+         IF s_aPObjList[ nWinNum + 1 ][ i ]:nType == nType .AND. ;
+            ( lDelAll .OR. s_aPObjList[ nWinNum + 1 ][ i ]:cId == cId )
+            IF hb_defaultValue( lStrict, .F. )
+               s_aPObjList[ nWinNum + 1 ][ i ]:Hide()
+            ELSE
+               s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.
+            ENDIF
+            hb_ADel( s_aPObjList[ nWinNum + 1 ], i, .T. )
+            nLen--
+         ELSE
+            i++
+         ENDIF
+      ENDDO
    ENDIF
 
-   // exist nType + cId ?
-   i := 1
-   nLen := Len( s_aPObjList[ nWinNum + 1 ] )
-   DO WHILE i <= nLen
-      IF s_aPObjList[ nWinNum + 1 ][ i ]:nType == nType .AND. ;
-         ( lDelAll .OR. s_aPObjList[ nWinNum + 1 ][ i ]:cId == cId )
-         IF hb_defaultValue( lStrict, .F. )
-            s_aPObjList[ nWinNum + 1 ][ i ]:Hide()
-         ELSE
-            s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.
-         ENDIF
-         hb_ADel( s_aPObjList[ nWinNum + 1 ], i, .T. )
-         nLen--
-         nDeleted++
-      ELSE
-         i++
-      ENDIF
-   ENDDO
+   RETURN
 
-   RETURN nDeleted
+FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
+
+   IF Len( s_aPObjList ) >= nWinNum + 1
+      // simple redraw, ignoring wpaint obj dependency with each other:
+     AEval( s_aPObjList[ nWinNum + 1 ], {| oWPaint | oWPaint:draw() } )
+   ENDIF
+
+   RETURN 0

@@ -12,7 +12,6 @@
 
 #include "dbstruct.ch"
 #include "inkey.ch"
-#include "setcurs.ch"
 
 STATIC s_zwin := {}
 STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
@@ -52,9 +51,6 @@ PROCEDURE Main()
    xGet1()
    xBrowse1()
    lboxmessage( "That's all folks" )
-
-   // restore state
-   SetCursor( SC_NORMAL )
 
    RETURN
 
@@ -276,7 +272,7 @@ STATIC FUNCTION lYesNo( cMsg )
 
    RETURN nChoice == 1
 
-STATIC FUNCTION lBoxMessage( cMsg, cTitle )
+STATIC PROCEDURE lBoxMessage( cMsg, cTitle )
 
    LOCAL nTopLine, ;
       nLeft := 5, ;
@@ -320,7 +316,7 @@ STATIC FUNCTION lBoxMessage( cMsg, cTitle )
    SetCursor( oldCurs )
    SetColor( oldColor )
 
-   RETURN .T.
+   RETURN
 
 // Draw a new window on screen and register it in window list
 // wtype       : Window border type, eg. "┌─┐│┘─└│"
@@ -388,7 +384,7 @@ FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
    RETURN 0
 
-STATIC FUNCTION ResetMiscObjects( nWinNum )
+STATIC PROCEDURE ResetMiscObjects( nWinNum )
 
    hb_default( @nWinNum, wvw_nNumWindows() - 1 )
 
@@ -397,10 +393,10 @@ STATIC FUNCTION ResetMiscObjects( nWinNum )
    ENDDO
    s_amiscobjlist[ nWinNum + 1 ] := {}
 
-   RETURN .T.
+   RETURN
 
-STATIC FUNCTION AddMiscObjects( nWinNum, bAction )
+STATIC PROCEDURE AddMiscObjects( nWinNum, bAction )
 
    AAdd( s_amiscobjlist[ nWinNum + 1 ], bAction )
 
-   RETURN .T.
+   RETURN
