@@ -244,15 +244,15 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
    HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutC(%p, %s)", pItem, szText ) );
 
    nLen = szText ? strlen( szText ) : 0;
-   if( nLen > 1 )
+   if( nLen <= 1 )
    {
-      nAlloc = nLen + 1;
-      szText = ( char * ) hb_xmemcpy( hb_xgrab( nAlloc ), szText, nAlloc );
+      nAlloc = 0;
+      szText = hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
    }
    else
    {
-      nAlloc = 0;
-      szText = ( nLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
+      nAlloc = nLen + 1;
+      szText = ( char * ) hb_xmemcpy( hb_xgrab( nAlloc ), szText, nAlloc );
    }
 
    if( pItem )
@@ -278,16 +278,16 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCL(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) nLen, szText, nLen ) );
 
-   if( nLen > 1 )
+   if( nLen <= 1 )
+   {
+      nAlloc = 0;
+      szValue = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+   }
+   else
    {
       nAlloc = nLen + 1;
       szValue = ( char * ) hb_xmemcpy( hb_xgrab( nAlloc ), szText, nLen );
       szValue[ nLen ] = '\0';
-   }
-   else
-   {
-      nAlloc = 0;
-      szValue = ( char * ) ( nLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
    }
 
    if( pItem )
@@ -312,6 +312,8 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 
 PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
 {
+   HB_SIZE nLen;
+
    HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCConst(%p, %s)", pItem, szText ) );
 
    if( pItem )
@@ -322,19 +324,13 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = HB_IT_STRING;
-   pItem->item.asString.allocated = 0;
+   nLen = szText ? strlen( szText ) : 0;
 
-   if( szText == NULL )
-   {
-      pItem->item.asString.value  = ( char * ) "";
-      pItem->item.asString.length = 0;
-   }
-   else
-   {
-      pItem->item.asString.value  = ( char * ) szText;
-      pItem->item.asString.length = strlen( szText );
-   }
+   pItem->type = HB_IT_STRING;
+   pItem->item.asString.length = nLen;
+   pItem->item.asString.allocated = 0;
+   pItem->item.asString.value = ( char * ) ( nLen > 1 ? szText :
+                     hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
 
    return pItem;
 }
@@ -355,10 +351,10 @@ PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
    pItem->item.asString.length = nLen;
    pItem->item.asString.allocated = 0;
 
-   if( nLen == 0 )
-      pItem->item.asString.value  = ( char * ) "";
+   if( nLen <= 1 )
+      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
    else if( szText[ nLen ] == '\0' )
-      pItem->item.asString.value  = ( char * ) szText;
+      pItem->item.asString.value = ( char * ) szText;
    else
       hb_errInternal( 6003, "Internal error: hb_itemPutCLConst() missing termination character", NULL, NULL );
 
@@ -383,23 +379,17 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = nLen;
-   if( nLen == 0 )
+   if( nLen <= 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = ( char * ) "";
+      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
       if( szText )
          hb_xfree( szText );
-   }
-   else if( nLen == 1 )
-   {
-      pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = ( char * ) hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ];
-      hb_xfree( szText );
    }
    else
    {
       pItem->item.asString.allocated = nLen + 1;
-      pItem->item.asString.value     = szText;
+      pItem->item.asString.value = szText;
    }
 
    return pItem;
@@ -419,23 +409,17 @@ PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE nLen )
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = nLen;
-   if( nLen == 0 )
+   if( nLen <= 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = ( char * ) "";
-      hb_xfree( szText );
-   }
-   else if( nLen == 1 )
-   {
-      pItem->item.asString.allocated = 0;
-      pItem->item.asString.value     = ( char * ) hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ];
+      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
       hb_xfree( szText );
    }
    else
    {
       szText[ nLen ] = '\0';
       pItem->item.asString.allocated = nLen + 1;
-      pItem->item.asString.value     = szText;
+      pItem->item.asString.value = szText;
    }
 
    return pItem;
@@ -2261,12 +2245,12 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
 
    szFirst = pFirst->item.asString.value;
    szSecond = pSecond->item.asString.value;
-
-   if( szFirst == szSecond )
-      return 0;
-
    nLenFirst = pFirst->item.asString.length;
    nLenSecond = pSecond->item.asString.length;
+
+   if( szFirst == szSecond && nLenFirst == nLenSecond )
+      return 0;
+
 
    if( ! bForceExact && hb_stackSetStruct()->HB_SET_EXACT )
    {

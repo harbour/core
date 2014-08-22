@@ -6865,9 +6865,10 @@ void hb_vmPushStringPcode( const char * szText, HB_SIZE nLength )
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmPushStringPcode(%s, %" HB_PFS "u)", szText, nLength ) );
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.length    = nLength;
    pItem->item.asString.allocated = 0;
-   pItem->item.asString.value     = ( char * ) szText;
+   pItem->item.asString.length = nLength;
+   pItem->item.asString.value = ( char * ) ( nLength <= 1 ?
+                        hb_szAscii[ ( unsigned char ) szText[ 0 ] ] : szText );
 }
 
 void hb_vmPushSymbol( PHB_SYMB pSym )
