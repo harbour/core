@@ -1,5 +1,5 @@
 /*
- * ADORDD - RDD to automatically manage Microsoft ADO
+ * RDDADO - RDD to automatically manage Microsoft ADO
  *
  * Copyright 2007 Fernando Mancera <fmancera@viaopen.com>
  * Copyright 2007 Antonio Linares <alinares@fivetechsoft.com>
@@ -67,9 +67,10 @@
 #include "rddsys.ch"
 #include "fileio.ch"
 #include "error.ch"
-#include "adordd.ch"
 #include "dbstruct.ch"
 #include "dbinfo.ch"
+
+#include "rddado.ch"
 
 #include "hbusrrdd.ch"
 
