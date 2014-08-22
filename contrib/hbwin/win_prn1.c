@@ -311,7 +311,7 @@ HB_FUNC( WIN_CREATEFONT )
       lf.lfItalic         = ( BYTE ) hb_parl( 8 );
       lf.lfUnderline      = ( BYTE ) hb_parl( 7 );
       lf.lfStrikeOut      = ( BYTE ) 0;
-      lf.lfCharSet        = ( BYTE ) hb_parni( 9 );
+      lf.lfCharSet        = ( BYTE ) hb_parnidef( 9, DEFAULT_CHARSET );
 #if defined( HB_OS_WIN_CE )
       lf.lfOutPrecision   = ( BYTE ) OUT_DEFAULT_PRECIS;
 #else
@@ -557,22 +557,22 @@ HB_FUNC( WIN_ENUMFONTFAMILIES )
 #if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
    HB_BOOL fNullDC = ( ! hDC );
-   LOGFONT Logfont;
+   LOGFONT lf;
 
-   memset( &Logfont, 0, sizeof( Logfont ) );
+   memset( &lf, 0, sizeof( lf ) );
 
-   Logfont.lfCharSet = ( BYTE ) hb_parnidef( 1, DEFAULT_CHARSET );
+   lf.lfCharSet = ( BYTE ) hb_parnidef( 1, DEFAULT_CHARSET );
    if( HB_ISCHAR( 2 ) )
    {
       void * hText;
-      HB_STRNCPY( Logfont.lfFaceName, HB_PARSTR( 2, &hText, NULL ), HB_SIZEOFARRAY( Logfont.lfFaceName ) - 1 );
+      HB_STRNCPY( lf.lfFaceName, HB_PARSTR( 2, &hText, NULL ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
    }
 
    if( fNullDC )
       hDC = GetDC( NULL );
 
-   EnumFontFamiliesEx( hDC, &Logfont, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray, 0 );
+   EnumFontFamiliesEx( hDC, &lf, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray, 0 );
 
    if( fNullDC )
       ReleaseDC( NULL, hDC );
