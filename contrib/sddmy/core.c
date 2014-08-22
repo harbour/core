@@ -323,7 +323,6 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_NULL:
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
-         case MYSQL_TYPE_ENUM:
          case MYSQL_TYPE_SET:
          default:
             bError  = HB_TRUE;
