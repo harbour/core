@@ -1,5 +1,5 @@
 /*
- * ADORDD - RDD to automatically manage Microsoft ADO
+ * RDDADO - RDD to automatically manage Microsoft ADO
  *
  * Copyright 2007 Fernando Mancera <fmancera@viaopen.com>
  * Copyright 2007 Antonio Linares <alinares@fivetechsoft.com>
@@ -45,8 +45,8 @@
  *
  */
 
-#ifndef _ADORDD_CH
-#define _ADORDD_CH
+#ifndef _RDDADO_CH
+#define _RDDADO_CH
 
 /* Cursor Type */
 #define adOpenForwardOnly               0

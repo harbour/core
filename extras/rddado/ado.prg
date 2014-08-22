@@ -99,14 +99,18 @@
 
 #define RDD_SIZE        2
 
-ANNOUNCE ADORDD
-
 THREAD STATIC t_cTableName := ""
 THREAD STATIC t_cEngine := ""
 THREAD STATIC t_cServer := ""
 THREAD STATIC t_cUserName := ""
 THREAD STATIC t_cPassword := ""
 THREAD STATIC t_cQuery := ""
+
+PROCEDURE ADO()  /* ANNOUNCE */
+   RETURN
+
+PROCEDURE ADORDD()  /* ANNOUNCE */  /* DEPRECATED */
+   RETURN
 
 STATIC FUNCTION ADO_INIT( nRDD )
 
@@ -1330,7 +1334,10 @@ STATIC FUNCTION ADO_FOUND( nWA, /* @ */ lFound )
 
    RETURN HB_SUCCESS
 
-FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+FUNCTION ADORDD_GETFUNCTABLE( ... )  /* DEPRECATED */
+   RETURN ADO_GETFUNCTABLE( ... )
+
+FUNCTION ADO_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
 
    LOCAL aADOFunc[ UR_METHODCOUNT ]
 
@@ -1389,9 +1396,10 @@ FUNCTION ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       /* NO SUPER RDD */, aADOFunc )
 
-INIT PROCEDURE ADORDD_INIT()
+INIT PROCEDURE ADO_INIT()
 
-   rddRegister( "ADORDD", RDT_FULL )
+   rddRegister( "ADO", RDT_FULL )
+   rddRegister( "ADORDD", RDT_FULL )  /* DEPRECATED */
 
    RETURN
 

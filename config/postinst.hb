@@ -354,6 +354,11 @@ PROCEDURE Main( ... )
       mk_extern_core()
    ENDIF
 
+   IF Empty( GetEnvC( "HB_HOST_BIN" ) ) .AND. ;
+      GetEnvC( "HB_HOST_PLAT" ) == GetEnvC( "HB_PLATFORM" )
+      OutStd( "! %1$s  C compiler: %2$s", Version(), hb_Compiler() )
+   ENDIF
+
    IF nErrorLevel == 0
       OutStd( "! postinst script finished" + hb_eol() )
    ELSE

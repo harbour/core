@@ -4,11 +4,11 @@
 
 #include "rddado.ch"
 
-REQUEST ADORDD
+REQUEST ADO
 
 PROCEDURE Main()
 
-   USE test00 VIA "ADORDD" TABLE "ACCOUNTS" MYSQL ;
+   USE test00 VIA "ADO" TABLE "ACCOUNTS" MYSQL ;
       FROM "www.freesql.org" USER "myuser" PASSWORD "mypass"
 
    LOCATE FOR "City LIKE 'Chi*'"

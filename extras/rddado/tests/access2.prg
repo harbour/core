@@ -4,7 +4,7 @@
 
 #include "rddado.ch"
 
-REQUEST ADORDD
+REQUEST ADO
 
 PROCEDURE Main()
 
@@ -14,9 +14,9 @@ PROCEDURE Main()
       { "FIRST",   "C", 10, 0 }, ;
       { "LAST",    "C", 10, 0 }, ;
       { "AGE",     "N",  8, 0 }, ;
-      { "MYDATE",  "D",  8, 0 } }, "ADORDD" )
+      { "MYDATE",  "D",  8, 0 } }, "ADO" )
 
-   USE test2.mdb VIA "ADORDD" TABLE "table1"
+   USE test2.mdb VIA "ADO" TABLE "table1"
 
    dbAppend()
    test2->FIRST  := "Homer"

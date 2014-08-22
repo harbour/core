@@ -2,13 +2,13 @@
 
 #include "rddado.ch"
 
-REQUEST ADORDD
+REQUEST ADO
 
 PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   USE ( hb_DirBase() + "test.mdb" ) VIA "ADORDD" TABLE "Table1"
+   USE ( hb_DirBase() + "test.mdb" ) VIA "ADO" TABLE "Table1"
 
    CLS
    Browse()

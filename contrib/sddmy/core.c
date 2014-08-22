@@ -324,6 +324,9 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
          case MYSQL_TYPE_SET:
+         case MYSQL_TYPE_VARCHAR:
+         case MYSQL_TYPE_BIT:
+         case MYSQL_TYPE_GEOMETRY:
          default:
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) pMyField->type;
