@@ -139,7 +139,8 @@ HB_EXTERN_BEGIN
 extern TCHAR *   hbwapi_tstrdup( const TCHAR * pszText );
 extern TCHAR *   hbwapi_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen );
 extern HB_SIZE   hbwapi_tstrlen( const TCHAR * pText );
-extern HMODULE   hbwapi_LoadLibrarySystem( LPCTSTR pFileName );
+
+extern HB_EXPORT HMODULE   hbwapi_LoadLibrarySystem( LPCTSTR pFileName );
 
 extern HB_EXPORT void      hbwapi_SetLastError( DWORD dwLastError );
 extern HB_EXPORT DWORD     hbwapi_GetLastError( void );
