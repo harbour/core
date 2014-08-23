@@ -2766,10 +2766,10 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          if( nWin == s_wvw->iNumWindows - 1 )
          {
             if( ! s_wvw->fMainCoordMode )
-               hb_gtSetPos( ( int ) wvw_win->caretPos.y, ( int ) wvw_win->caretPos.x );
+               hb_gtSetPos( wvw_win->caretPos.y, wvw_win->caretPos.x );
             else
-               hb_gtSetPos( ( int ) wvw_win->caretPos.y + hb_gt_wvw_RowOfs( wvw_win ),
-                            ( int ) wvw_win->caretPos.x + hb_gt_wvw_ColOfs( wvw_win ) );
+               hb_gtSetPos( wvw_win->caretPos.y + hb_gt_wvw_RowOfs( wvw_win ),
+                            wvw_win->caretPos.x + hb_gt_wvw_ColOfs( wvw_win ) );
 
             hb_gt_wvw_CreateCaret( wvw_win );
          }
@@ -3641,7 +3641,7 @@ void hb_gt_wvw_KillCaret( PWVW_WIN wvw_win )
    the Windows function SetCaretPos ( with the expected coordinates ) */
 static HB_BOOL hb_gt_wvw_SetCaretPos( PWVW_WIN wvw_win )
 {
-   POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, ( int ) wvw_win->caretPos.x, ( int ) wvw_win->caretPos.y );
+   POINT xy = hb_gt_wvw_GetXYFromColRow( wvw_win, wvw_win->caretPos.x, wvw_win->caretPos.y );
 
    if( wvw_win->CaretSize > 0 )
    {
@@ -5252,7 +5252,7 @@ static void hb_gt_wvwFillLineSpace( PWVW_WIN wvw_win, HDC hdc, int startCol, int
    rc.top    = iRow;
    rc.left   = startCol;
    rc.bottom = iRow;
-   rc.right  = ( int ) ( startCol + len - 1 );
+   rc.right  = startCol + ( int ) len - 1;
    rc        = hb_gt_wvw_GetXYFromColRowRect( wvw_win, rc );
 
    memset( &lb, 0, sizeof( lb ) );
@@ -5448,22 +5448,22 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p)", pFuncTable ) );
 
-   pFuncTable->Init           = hb_gt_wvw_Init;
-   pFuncTable->Exit           = hb_gt_wvw_Exit;
-   pFuncTable->MaxCol         = hb_gt_wvw_MaxCol;
-   pFuncTable->MaxRow         = hb_gt_wvw_MaxRow;
-   pFuncTable->SetPos         = hb_gt_wvw_SetPos;
-   pFuncTable->GetCursorStyle = hb_gt_wvw_GetCursorStyle;
-   pFuncTable->SetCursorStyle = hb_gt_wvw_SetCursorStyle;
-   pFuncTable->DispBegin      = hb_gt_wvw_DispBegin;
-   pFuncTable->DispEnd        = hb_gt_wvw_DispEnd;
-   pFuncTable->DispCount      = hb_gt_wvw_DispCount;
-   pFuncTable->Replicate      = hb_gt_wvw_Replicate;
-   pFuncTable->WriteAt        = hb_gt_wvw_WriteAt;
-   pFuncTable->PutText        = hb_gt_wvw_PutText;
-   pFuncTable->SetAttribute   = hb_gt_wvw_SetAttribute;
-   pFuncTable->SetMode        = hb_gt_wvw_SetMode;
-   pFuncTable->Version        = hb_gt_wvw_Version;
+   pFuncTable->Init             = hb_gt_wvw_Init;
+   pFuncTable->Exit             = hb_gt_wvw_Exit;
+   pFuncTable->MaxCol           = hb_gt_wvw_MaxCol;
+   pFuncTable->MaxRow           = hb_gt_wvw_MaxRow;
+   pFuncTable->SetPos           = hb_gt_wvw_SetPos;
+   pFuncTable->GetCursorStyle   = hb_gt_wvw_GetCursorStyle;
+   pFuncTable->SetCursorStyle   = hb_gt_wvw_SetCursorStyle;
+   pFuncTable->DispBegin        = hb_gt_wvw_DispBegin;
+   pFuncTable->DispEnd          = hb_gt_wvw_DispEnd;
+   pFuncTable->DispCount        = hb_gt_wvw_DispCount;
+   pFuncTable->Replicate        = hb_gt_wvw_Replicate;
+   pFuncTable->WriteAt          = hb_gt_wvw_WriteAt;
+   pFuncTable->PutText          = hb_gt_wvw_PutText;
+   pFuncTable->SetAttribute     = hb_gt_wvw_SetAttribute;
+   pFuncTable->SetMode          = hb_gt_wvw_SetMode;
+   pFuncTable->Version          = hb_gt_wvw_Version;
    pFuncTable->Box              = hb_gt_wvw_Box;
    pFuncTable->HorizLine        = hb_gt_wvw_HorizLine;
    pFuncTable->VertLine         = hb_gt_wvw_VertLine;
