@@ -4032,7 +4032,7 @@ static void hb_gtInitStatics( int nWin, LPCTSTR szWinName, int iRow1, int iCol1,
       s_wvw->a.pSymWVW_ONCTLCOLOR = hb_dynsymFind( "WVW_ONCTLCOLOR" );
 
 #if defined( __HBWAPI_H )
-      h = hbwapi_LoadLibrarySystem( TEXT( "msimg32.dll" ) );
+      h = hbwapi_LoadLibrarySystemVM( "msimg32.dll" );
 #else
       h = LoadLibrary( TEXT( "msimg32.dll" ) );
 #endif

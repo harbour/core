@@ -140,3 +140,16 @@ HMODULE hbwapi_LoadLibrarySystem( LPCTSTR pFileName )
 
    return h;
 }
+
+/* Version of the above that is exposed as a public API */
+HMODULE hbwapi_LoadLibrarySystemVM( const char * szFileName )
+{
+   LPTSTR lpFree;
+
+   HMODULE h = hbwapi_LoadLibrarySystem( HB_FSNAMECONV( szFileName, &lpFree ) );
+
+   if( lpFree )
+      hb_xfree( lpFree );
+
+   return h;
+}
