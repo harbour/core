@@ -264,10 +264,7 @@ HB_FUNC( WVW_GET_HND_WINDOW )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw_win )
-      HB_RETHANDLE( wvw_win->hWnd );
-   else
-      HB_RETHANDLE( NULL );
+   HB_RETHANDLE( wvw_win ? wvw_win->hWnd : NULL );
 }
 
 /* wvw_nNumWindows()
@@ -276,10 +273,7 @@ HB_FUNC( WVW_NNUMWINDOWS )
 {
    PWVW_GLO wvw = hb_gt_wvw();
 
-   if( wvw )
-      hb_retni( wvw->iNumWindows );
-   else
-      hb_retni( 0 );
+   hb_retni( wvw ? wvw->iNumWindows : 0 );
 }
 
 /* wvw_XReposWindow(lAnchored)
@@ -333,20 +327,17 @@ HB_FUNC( WVW_NSETCURWINDOW )
 
    if( wvw )
    {
+      hb_retni( wvw->iCurWindow );
+
       if( HB_ISNUM( 1 ) )
       {
          int nWin = hb_parni( 1 );
 
          if( nWin >= 0 && nWin < wvw->iNumWindows )
-            hb_retni( hb_gt_wvw_SetCurWindow( nWin ) );
+            hb_gt_wvw_SetCurWindow( nWin );
          else
-         {
             hb_errRT_TERM( EG_BOUND, 10001, "Window number out of range", "wvw_nSetCurWindow()", 0, 0 );
-            hb_retni( wvw->iCurWindow );
-         }
       }
-      else
-         hb_retni( wvw->iCurWindow );
    }
    else
       hb_retni( 0 );
@@ -359,10 +350,7 @@ HB_FUNC( WVW_NROWOFS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw_win )
-      hb_retni( hb_gt_wvw_RowOfs( wvw_win ) );
-   else
-      hb_retni( 0 );
+   hb_retni( wvw_win ? hb_gt_wvw_RowOfs( wvw_win ) : 0 );
 }
 
 /* wvw_nColOfs( [nWinNum] )
@@ -372,10 +360,7 @@ HB_FUNC( WVW_NCOLOFS )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw_win )
-      hb_retni( hb_gt_wvw_ColOfs( wvw_win ) );
-   else
-      hb_retni( 0 );
+   hb_retni( wvw_win ? hb_gt_wvw_ColOfs( wvw_win ) : 0 );
 }
 
 /* wvw_MaxMaxRow( [nWinNum] )

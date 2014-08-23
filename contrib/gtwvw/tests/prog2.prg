@@ -11,6 +11,7 @@
 
 #include "dbstruct.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 #define _STD_COLOR_  "N/W,N/GR*,,,N/W*"
 
