@@ -665,6 +665,8 @@ METHOD FileSize( cFileSpec ) CLASS TIPClientFTP
    UNIX version 3: drwxr-xr-x 1      1   1  512 Jan 29 23:32 prog
    UNIX symlink  : lrwxr-xr-x 1 user01 ftp  512 Jan 29 23:32 prog -> prog2000
    DOS style/IIS : 01-29-97 11:32PM <DIR> prog
+   DOS style/IIS : 01-29-97 11:32PM    512 prog
+   DOS style/IIS : 01-29-2010 11:32PM <DIR> prog
  */
 
 // Parse the :list() string into a Directory() compatible 2-dim array
@@ -696,60 +698,94 @@ METHOD ListFiles( cFileSpec ) CLASS TIPClientFTP
          aFile[ F_ATTR ] := SubStr( cEntry, nStart, nEnd - nStart )
          nStart          := nEnd
 
-         // # of links
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
-         ENDDO
-         nEnd               := hb_At( " ", cEntry, nStart )
-         aFile[ F_LEN + 1 ] := Val( SubStr( cEntry, nStart, nEnd - nStart ) )
-         nStart             := nEnd
+         IF Val( StrTran( aFile[ F_ATTR ], "-" ) ) == 0
 
-         // owner name
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
-         ENDDO
-         nEnd               := hb_At( " ", cEntry, nStart )
-         aFile[ F_LEN + 2 ] := SubStr( cEntry, nStart, nEnd - nStart )
-         nStart             := nEnd
+            // continue with UNIX format
 
-         // group name
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
-         ENDDO
-         nEnd               := hb_At( " ", cEntry, nStart )
-         aFile[ F_LEN + 3 ] := SubStr( cEntry, nStart, nEnd - nStart )
-         nStart             := nEnd
+            // # of links
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd               := hb_At( " ", cEntry, nStart )
+            aFile[ F_LEN + 1 ] := Val( SubStr( cEntry, nStart, nEnd - nStart ) )
+            nStart             := nEnd
 
-         // file size
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
-         ENDDO
-         nEnd            := hb_At( " ", cEntry, nStart )
-         aFile[ F_SIZE ] := Val( SubStr( cEntry, nStart, nEnd - nStart ) )
-         nStart          := nEnd
+            // owner name
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd               := hb_At( " ", cEntry, nStart )
+            aFile[ F_LEN + 2 ] := SubStr( cEntry, nStart, nEnd - nStart )
+            nStart             := nEnd
 
-         // Month
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
-         ENDDO
-         nEnd          := hb_At( " ", cEntry, nStart )
-         cMonth        := StrZero( hb_AScan( aMonth, SubStr( cEntry, nStart, nEnd - nStart ), , , .T. ), 2 )
-         nStart        := nEnd
+            // group name
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd               := hb_At( " ", cEntry, nStart )
+            aFile[ F_LEN + 3 ] := SubStr( cEntry, nStart, nEnd - nStart )
+            nStart             := nEnd
 
-         // Day
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
-         ENDDO
-         nEnd          := hb_At( " ", cEntry, nStart )
-         cDay          := SubStr( cEntry, nStart, nEnd - nStart )
-         nStart        := nEnd
+            // file size
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd            := hb_At( " ", cEntry, nStart )
+            aFile[ F_SIZE ] := Val( SubStr( cEntry, nStart, nEnd - nStart ) )
+            nStart          := nEnd
 
-         // Year
-         DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
-         ENDDO
-         nEnd          := hb_At( " ", cEntry, nStart )
-         cYear         := SubStr( cEntry, nStart, nEnd - nStart )
-         nStart        := nEnd
+            // Month
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd          := hb_At( " ", cEntry, nStart )
+            cMonth        := StrZero( hb_AScan( aMonth, SubStr( cEntry, nStart, nEnd - nStart ), , , .T. ), 2 )
+            nStart        := nEnd
 
-         IF ":" $ cYear
-            cTime := cYear
-            cYear := StrZero( Year( Date() ), 4 )
+            // Day
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd          := hb_At( " ", cEntry, nStart )
+            cDay          := SubStr( cEntry, nStart, nEnd - nStart )
+            nStart        := nEnd
+
+            // Year
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd          := hb_At( " ", cEntry, nStart )
+            cYear         := SubStr( cEntry, nStart, nEnd - nStart )
+            nStart        := nEnd
+
+            IF ":" $ cYear
+               cTime := cYear
+               cYear := StrZero( Year( Date() ), 4 )
+            ELSE
+               cTime := ""
+            ENDIF
+
+            aFile[ F_DATE ] := hb_SToD( cYear + cMonth + cDay )
+            aFile[ F_TIME ] := cTime
+
          ELSE
-            cTime := ""
+
+            // DOS style/IIS format
+
+            aFile[ F_LEN + 1 ] := 0
+            aFile[ F_LEN + 2 ] := aFile[ F_LEN + 3 ] := aFile[ F_ATTR ] := ""
+
+            aFile[ F_DATE ] := hb_CToD( aFile[ F_ATTR ], "mm-dd-yy" )
+
+            // # time
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd   := hb_At( " ", cEntry, nStart )
+            cTime  := SubStr( cEntry, nStart, nEnd - nStart )
+            nStart := nEnd
+
+            aFile[ F_TIME ] := Left( TString( Secs( Left( cTime, 5 ) ) + iif( Right( cTime, 2 ) == "PM", 43200, 0 ) ), 5 )
+
+            // file size
+            DO WHILE SubStr( cEntry, ++nStart, 1 ) == " "
+            ENDDO
+            nEnd            := hb_At( " ", cEntry, nStart )
+            aFile[ F_SIZE ] := Val( SubStr( cEntry, nStart, nEnd - nStart ) )
+            nStart          := nEnd
+
          ENDIF
 
          // file name
@@ -757,8 +793,6 @@ METHOD ListFiles( cFileSpec ) CLASS TIPClientFTP
          ENDDO
 
          aFile[ F_NAME ] := SubStr( cEntry, nStart )
-         aFile[ F_DATE ] := hb_SToD( cYear + cMonth + cDay )
-         aFile[ F_TIME ] := cTime
 
          cEntry := aFile
       ENDIF
