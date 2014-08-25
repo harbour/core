@@ -237,9 +237,9 @@ STATIC FUNCTION __CPStdToHb( cCPStd, cCtryStd )
                RETURN cdp
             ENDIF
          NEXT
-         FOR EACH cdp IN ASort( aCP )
+         FOR EACH cdp IN aCP
             IF cCPStd == hb_cdpUniID( cdp )
-               RETURN cdp
+               RETURN hb_cdpUniID( cdp )
             ENDIF
          NEXT
       ENDSWITCH

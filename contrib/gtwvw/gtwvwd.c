@@ -780,11 +780,11 @@ static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, 
 
    if( iTop <= iMaxRow && iLeft <= iMaxCol && iBottom >= 0 && iRight >= 0 )
    {
-      i = 0;
-
 #if defined( UNICODE )
       HB_WCHAR szBoxW[ 10 ];
       HB_WCHAR bPadCh = HB_GTSELF_GETCLEARCHAR( pGT );
+
+      i = 0;
 
       if( szFrame )
       {
@@ -805,6 +805,8 @@ static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, 
 #else
       BYTE szBoxW[ 10 ];                                             /* TOFIX */
       BYTE bPadCh = ( BYTE ) HB_GTSELF_GETCLEARCHAR( hb_gt_Base() ); /* TOFIX */
+
+      i = 0;
 
       if( szFrame )
          for( ; *szFrame && i < 9; ++i )
