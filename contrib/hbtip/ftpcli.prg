@@ -658,7 +658,7 @@ METHOD FileSize( cFileSpec ) CLASS TIPClientFTP
 
    RETURN nSize
 
-/* TODO: listing formats from libcurl
+/* Listing formats (from libcurl)
    https://github.com/bagder/curl/blob/master/lib/ftplistparser.c
    UNIX version 1: drwxr-xr-x 1 user01 ftp  512 Jan 29 23:32 prog
    UNIX version 2: drwxr-xr-x 1 user01 ftp  512 Jan 29 1997  prog
