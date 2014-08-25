@@ -257,19 +257,15 @@ FUNCTION hb_ZipFile( ;
    LOCAL cName, cExt, cDrive, cPath
    LOCAL nSize
    LOCAL tTime
+   LOCAL nAttr
 
    LOCAL aExclFile
    LOCAL aProcFile
    LOCAL cFN
    LOCAL aFile
-   LOCAL tmp
 
    hb_default( @lOverwrite, .F. )
-   hb_default( @lFullPath, .T. )
-
-   /* TODO: Implement */
-   HB_SYMBOL_UNUSED( lFullPath )
-   HB_SYMBOL_UNUSED( acExclude )
+   hb_default( @lFullPath, .F. )
 
    IF Set( _SET_DEFEXTENSIONS )
       cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
@@ -292,8 +288,7 @@ FUNCTION hb_ZipFile( ;
       aExclFile := { hb_FNameNameExt( cFileName ) }
       FOR EACH cFN IN hb_defaultValue( acExclude, {} )
          IF "?" $ cFN .OR. "*" $ cFN
-            tmp := Directory( cFN )
-            FOR EACH aFile IN tmp
+            FOR EACH aFile IN Directory( cFN )
                AAdd( aExclFile, aFile[ F_NAME ] )
             NEXT
          ELSE
@@ -303,17 +298,25 @@ FUNCTION hb_ZipFile( ;
 
       aProcFile := {}
       FOR EACH cFN IN hb_defaultValue( acFiles, {} )
+         hb_FNameSplit( cFN, @cPath, NIL, NIL, @cDrive )
+         IF hb_LeftEq( cPath, "." + hb_ps() )  /* strip current dir if any */
+            cPath := SubStr( cPath, Len( "." + hb_ps() ) + 1 )
+         ENDIF
          IF "?" $ cFN .OR. "*" $ cFN
-            tmp := Directory( cFN )
-            FOR EACH aFile IN tmp
+            IF lFullPath
+               cPath := hb_PathJoin( hb_cwd(), cPath )
+            ENDIF
+            FOR EACH aFile IN Directory( cFN )
                IF AScan( aExclFile, {| cExclFile | hb_FileMatch( aFile[ F_NAME ], cExclFile ) } ) == 0
-                  AAdd( aProcFile, aFile[ F_NAME ] )
+                  AAdd( aProcFile, cPath + aFile[ F_NAME ] )
                ENDIF
             NEXT
          ELSE
             cName := hb_FNameNameExt( cFN )
             IF AScan( aExclFile, {| cExclFile | hb_FileMatch( cName, cExclFile ) } ) == 0
-               AAdd( aProcFile, cFN )
+               IF hb_FileExists( cFN )
+                  AAdd( aProcFile, iif( lFullPath, hb_PathJoin( hb_cwd(), cFN ), cFN ) )
+               ENDIF
             ENDIF
          ENDIF
       NEXT
@@ -340,7 +343,10 @@ FUNCTION hb_ZipFile( ;
             hb_FGetDateTime( cFileToZip, @tTime )
 
             hb_FNameSplit( cFileToZip, @cPath, @cName, @cExt, @cDrive )
-            hb_zipFileCreate( hZip, hb_FNameMerge( iif( lWithPath, cPath, NIL ), cName, cExt, iif( lWithDrive, cDrive, NIL ) ), ;
+            IF ! lWithDrive .AND. ! Empty( cDrive ) .AND. hb_LeftEq( cPath, cDrive + hb_osDriveSeparator() )
+               cPath := SubStr( cPath, Len( cDrive + hb_osDriveSeparator() ) + 1 )
+            ENDIF
+            hb_zipFileCreate( hZip, StrTran( hb_FNameMerge( iif( lWithPath, cPath, NIL ), cName, cExt ), "\", "/" ), ;
                tTime,,,,, nLevel, cPassword, iif( Empty( cPassword ), NIL, hb_zipFileCRC32( cFileToZip ) ), NIL )
 
             DO WHILE ( nLen := FRead( hHandle, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
@@ -357,7 +363,9 @@ FUNCTION hb_ZipFile( ;
 
             FClose( hHandle )
 
-            /* TODO: Clear ARCHIVE bit. */
+            IF hb_FGetAttr( cFileToZip, @nAttr )
+               hb_FSetAttr( cFileToZip, hb_bitAnd( nAttr, hb_bitNot( HB_FA_ARCHIVE ) ) )
+            ENDIF
          ENDIF
       NEXT
 
