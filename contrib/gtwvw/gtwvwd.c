@@ -760,24 +760,30 @@ static const char * hb_gt_wvw_Version( PHB_GT pGT, int iType )
 static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, int iRight,
                              const char * szFrame, int iColor )
 {
-   int sWidth  = wvw_win->COLS;
-   int sHeight = wvw_win->ROWS;
+   int iMaxRow, iMaxCol, i;
 
-   if( ( iLeft >= 0 && iLeft < sWidth ) ||
-       ( iRight >= 0 && iRight < sWidth ) ||
-       ( iTop >= 0 && iTop < sHeight ) ||
-       ( iBottom >= 0 && iBottom < sHeight ) )
+   if( iTop > iBottom )
    {
-      int i;
-      int iRow;
-      int iCol;
-      int iHeight;
-      int iWidth;
+      i = iTop;
+      iTop = iBottom;
+      iBottom = i;
+   }
+   if( iLeft > iRight )
+   {
+      i = iLeft;
+      iLeft = iRight;
+      iRight = i;
+   }
 
+   iMaxRow = wvw_win->ROWS - 1;
+   iMaxCol = wvw_win->COLS - 1;
+
+   if( iTop <= iMaxRow && iLeft <= iMaxCol && iBottom >= 0 && iRight >= 0 )
+   {
       i = 0;
 
 #if defined( UNICODE )
-      HB_WCHAR szBox[ 10 ];
+      HB_WCHAR szBoxW[ 10 ];
       HB_WCHAR bPadCh = HB_GTSELF_GETCLEARCHAR( pGT );
 
       if( szFrame )
@@ -787,109 +793,78 @@ static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, 
          HB_SIZE nLen = strlen( szFrame ), nIndex = 0;
 
          while( i < 9 && HB_CDPCHAR_GET( cdp, szFrame, nLen, &nIndex, &wc ) )
-            bPadCh = szBox[ i++ ] = wc;
+            bPadCh = szBoxW[ i++ ] = wc;
          while( i < 8 )
-            szBox[ i++ ] = bPadCh;
+            szBoxW[ i++ ] = bPadCh;
       }
       else
       {
          for( ; i < 9; ++i )
-            szBox[ i ] = ' ';
+            szBoxW[ i ] = ' ';
       }
 #else
-      BYTE szBox[ 10 ];                                              /* TOFIX */
+      BYTE szBoxW[ 10 ];                                             /* TOFIX */
       BYTE bPadCh = ( BYTE ) HB_GTSELF_GETCLEARCHAR( hb_gt_Base() ); /* TOFIX */
 
       if( szFrame )
          for( ; *szFrame && i < 9; ++i )
-            bPadCh = szBox[ i ] = *szFrame++;
+            bPadCh = szBoxW[ i ] = *szFrame++;
 
       while( i < 8 )
-         szBox[ i++ ] = bPadCh;
+         szBoxW[ i++ ] = bPadCh;
 #endif
 
-      szBox[ i ] = '\0';
-
-      /* Ensure that box is drawn from Top Left to Bottom Right. */
-      if( iTop > iBottom )
-      {
-         iRow    = iTop;
-         iTop    = iBottom;
-         iBottom = iRow;
-      }
-      if( iLeft > iRight )
-      {
-         iRow   = iLeft;
-         iLeft  = iRight;
-         iRight = iRow;
-      }
-
-      /* Draw the box or line as specified */
-      iHeight = iBottom - iTop + 1;
-      iWidth  = iRight - iLeft + 1;
+      szBoxW[ i ] = '\0';
 
       hb_gt_wvw_vDispBegin( wvw_win );
 
-      if( iHeight > 1 && iWidth > 1 &&
-          iTop >= 0 && iTop < sHeight &&
-          iLeft >= 0 && iLeft < sWidth )
-         hb_gt_wvw_vPutCharX( wvw_win, iTop, iLeft, iColor, HB_GT_ATTR_BOX, szBox[ 0 ] );  /* Upper Left corner */
-
-      iCol = iWidth > 1 ? iLeft + 1 : iLeft;
-      if( iCol < 0 )
+      if( iTop == iBottom )
+         hb_gt_wvw_vReplicate( wvw_win, iTop, iLeft, iColor, HB_GT_ATTR_BOX, szBoxW[ 1 ], iRight - iLeft + 1 );
+      else if( iLeft == iRight )
       {
-         iWidth += iCol;
-         iCol    = 0;
-      }
-      if( iRight >= sWidth )
-         iWidth -= iRight - sWidth;
-
-      if( iCol < iRight && iCol < sWidth &&
-          iTop >= 0 && iTop < sHeight )
-         hb_gt_wvw_vReplicate( wvw_win, iTop, iCol, iColor, HB_GT_ATTR_BOX, szBox[ 1 ], iWidth + ( ( iRight - iLeft ) > 1 ? -2 : 0 ) );    /* iTop line */
-      if( iHeight > 1 &&
-          ( iRight - iLeft ) > 0 && iRight < sWidth &&
-          iTop >= 0 && iTop < sHeight )
-         hb_gt_wvw_vPutCharX( wvw_win, iTop, iRight, iColor, HB_GT_ATTR_BOX, szBox[ 2 ] );  /* Upper Right corner */
-      if( szBox[ 8 ] && iHeight > 2 && iWidth > 2 )
-      {
-         for( iRow = iTop + 1; iRow < iBottom; iRow++ )
-            if( iRow >= 0 && iRow < sHeight )
-            {
-               iCol = iLeft;
-               if( iCol < 0 )
-                  iCol = 0;                                                                                 /* The width was corrected earlier. */
-               else
-                  hb_gt_wvw_vPutCharX( wvw_win, iRow, iCol++, iColor, HB_GT_ATTR_BOX, szBox[ 7 ] );                           /* Left side */
-
-               hb_gt_wvw_vReplicate( wvw_win, iRow, iCol, iColor, HB_GT_ATTR_BOX, szBox[ 8 ], iWidth - 2 ); /* Fill */
-               if( iRight < sWidth )
-                  hb_gt_wvw_vPutCharX( wvw_win, iRow, iRight, iColor, HB_GT_ATTR_BOX, szBox[ 3 ] );                           /* Right side */
-            }
+         while( iTop <= iBottom )
+            hb_gt_wvw_vPutCharX( wvw_win, iTop++, iLeft, iColor, HB_GT_ATTR_BOX, szBoxW[ 3 ] );
       }
       else
       {
-         for( iRow = ( iWidth > 1 ? iTop + 1 : iTop ); iRow < ( ( iRight - iLeft ) > 1 ? iBottom : iBottom + 1 ); iRow++ )
-            if( iRow >= 0 && iRow < sHeight )
-            {
-               if( iLeft >= 0 && iLeft < sWidth )
-                  hb_gt_wvw_vPutCharX( wvw_win, iRow, iLeft, iColor, HB_GT_ATTR_BOX, szBox[ 7 ] );            /* Left side */
-               if( ( iWidth > 1 || iLeft < 0 ) && iRight < sWidth )
-                  hb_gt_wvw_vPutCharX( wvw_win, iRow, iRight, iColor, HB_GT_ATTR_BOX, szBox[ 3 ] );           /* Right side */
-            }
-      }
+         HB_BYTE bAttr = HB_GT_ATTR_BOX;
 
-      if( iHeight > 1 && iWidth > 1 )
-      {
-         if( iLeft >= 0 && iBottom < sHeight )
-            hb_gt_wvw_vPutCharX( wvw_win, iBottom, iLeft, iColor, HB_GT_ATTR_BOX, szBox[ 6 ] );              /* Bottom iLeft corner */
-         iCol = iLeft + 1;
-         if( iCol < 0 )
-            iCol = 0;                                                                                        /* The width was corrected earlier. */
-         if( iCol <= iRight && iBottom < sHeight )
-            hb_gt_wvw_vReplicate( wvw_win, iBottom, iCol, iColor, HB_GT_ATTR_BOX, szBox[ 5 ], iWidth - 2 );  /* Bottom line */
-         if( iRight < sWidth && iBottom < sHeight )
-            hb_gt_wvw_vPutCharX( wvw_win, iBottom, iRight, iColor, HB_GT_ATTR_BOX, szBox[ 4 ] );                               /* Bottom Right corner */
+         int iRows  = ( iBottom > iMaxRow ? iMaxRow + 1 : iBottom ) -
+                      ( iTop < 0 ? -1 : iTop ) - 1;
+         int iCols  = ( iRight > iMaxCol ? iMaxCol + 1 : iRight ) -
+                      ( iLeft < 0 ? -1 : iLeft ) - 1;
+         int iFirst = iLeft < 0 ? 0 : iLeft + 1;
+
+         if( iTop >= 0 )
+         {
+            if( iLeft >= 0 )
+               hb_gt_wvw_vPutCharX( wvw_win, iTop, iLeft, iColor, bAttr, szBoxW[ 0 ] );
+            if( iCols )
+               hb_gt_wvw_vReplicate( wvw_win, iTop, iFirst, iColor, bAttr, szBoxW[ 1 ], iCols );
+            if( iRight <= iMaxCol )
+               hb_gt_wvw_vPutCharX( wvw_win, iTop, iFirst + iCols, iColor, bAttr, szBoxW[ 2 ] );
+            iTop++;
+         }
+         else
+            iTop = 0;
+         for( i = 0; i < iRows; ++i )
+         {
+            if( iLeft >= 0 )
+               hb_gt_wvw_vPutCharX( wvw_win, iTop + i, iLeft, iColor, bAttr, szBoxW[ 7 ] );
+            if( iCols && szBoxW[ 8 ] )
+               hb_gt_wvw_vReplicate( wvw_win, iTop + i, iFirst, iColor, bAttr, szBoxW[ 8 ], iCols );
+            if( iRight <= iMaxCol )
+               hb_gt_wvw_vPutCharX( wvw_win, iTop + i, iFirst + iCols, iColor, bAttr, szBoxW[ 3 ] );
+         }
+         if( iBottom <= iMaxRow )
+         {
+            if( iLeft >= 0 )
+               hb_gt_wvw_vPutCharX( wvw_win, iBottom, iLeft, iColor, bAttr, szBoxW[ 6 ] );
+            if( iCols )
+               hb_gt_wvw_vReplicate( wvw_win, iBottom, iFirst, iColor, bAttr, szBoxW[ 5 ], iCols );
+            if( iRight <= iMaxCol )
+               hb_gt_wvw_vPutCharX( wvw_win, iBottom, iFirst + iCols, iColor, bAttr, szBoxW[ 4 ] );
+         }
       }
 
       hb_gt_wvw_vDispEnd( wvw_win );
@@ -4995,6 +4970,8 @@ static HB_BOOL hb_gt_wvw_PutChar( PHB_GT pGT, int iRow, int iCol, int iColor, HB
 
    HB_SYMBOL_UNUSED( pGT );
 
+   /* TOFIX: missing hb_gt_wvw_SetInvalidRect() call. Though it should
+             be resolved differently to avoid a heavy performance hit. */
    return hb_gt_wvw_vPutChar( wvw_win, iRow, iCol, iColor, bAttr, usChar );
 }
 

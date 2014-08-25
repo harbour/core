@@ -29,8 +29,6 @@ STATIC s_zwin := {}
 
 PROCEDURE Main()
 
-   LOCAL i, j
-
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
 #endif
@@ -45,16 +43,10 @@ PROCEDURE Main()
    CLS
    @ 0, 0 SAY PadC( "This is the Main Window", MaxCol() + 1 )
 
-   // screen background
-   DispBegin()
-   FOR i := 1 TO MaxRow() - 1
-      FOR j := 0 TO MaxCol()
-         hb_DispOutAtBox( i, j, hb_UTF8ToStrBox( "▒" ) )
-      NEXT
-   NEXT
-   DispEnd()
+   hb_Scroll( 1, 0, MaxRow() - 1, MaxCol(),,,, hb_UTF8ToStrBox( "▒" ) )  // screen background
 
-   lboxmessage( "Welcome to our test program." + hb_eol() + ;
+   lboxmessage( ;
+      "Welcome to our test program." + hb_eol() + ;
       "This program will show typical GET and BROWSE dialogs " + ;
       "with brief help on the bottom of the screen." )
    xGet1()
@@ -355,8 +347,7 @@ STATIC PROCEDURE ZREVWINDOW()
    LOCAL i := Len( s_zwin )
 
    IF i == 0
-      // no window to close
-      RETURN
+      RETURN  // no window to close
    ENDIF
 
    wvw_lCloseWindow()

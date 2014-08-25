@@ -1551,7 +1551,7 @@ static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, HB_USHORT usC
 static void hb_gt_def_BoxW( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                             const HB_WCHAR * szFrame, int iColor )
 {
-   int iMaxRow, iMaxCol, iRows, iCols, iFirst, i;
+   int iMaxRow, iMaxCol, i;
 
    if( iTop > iBottom )
    {
@@ -1595,11 +1595,12 @@ static void hb_gt_def_BoxW( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
       else
       {
          HB_BYTE bAttr = HB_GT_ATTR_BOX;
-         iRows = ( iBottom > iMaxRow ? iMaxRow + 1 : iBottom ) -
-                 ( iTop < 0 ? -1 : iTop ) - 1;
-         iCols = ( iRight > iMaxCol ? iMaxCol + 1 : iRight ) -
-                 ( iLeft < 0 ? -1 : iLeft ) - 1;
-         iFirst = iLeft < 0 ? 0 : iLeft + 1;
+
+         int iRows  = ( iBottom > iMaxRow ? iMaxRow + 1 : iBottom ) -
+                      ( iTop < 0 ? -1 : iTop ) - 1;
+         int iCols  = ( iRight > iMaxCol ? iMaxCol + 1 : iRight ) -
+                      ( iLeft < 0 ? -1 : iLeft ) - 1;
+         int iFirst = iLeft < 0 ? 0 : iLeft + 1;
 
          if( iTop >= 0 )
          {

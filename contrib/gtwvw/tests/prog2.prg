@@ -356,8 +356,7 @@ STATIC PROCEDURE ZREVWINDOW()
    LOCAL i := Len( s_zwin )
 
    IF i == 0
-      // no window to close
-      RETURN
+      RETURN  // no window to close
    ENDIF
 
    ResetMiscObjects()   // clear all GUI objects, if any
