@@ -10,8 +10,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw__MakeDlgTemplate( Dlg ,; aItens1,; aItens2,; aItens3,; aItens4,; aItens5,;
-      aItens6,; aItens7,; aItens8,; aItens9,; aItens10 )
+      wvw__MakeDlgTemplate( Dlg, aItens1, aItens2, aItens3, aItens4, aItens5,
+      aItens6, aItens7, aItens8, aItens9, aItens10 )
    $ARGUMENTS$
       <aDlg> <aItens1> <aItens2> <aItens3> <aItens4> <aItens5> <aItens6> <aItens7>
       <aItens8> <aItens9> <aItens10>
@@ -112,8 +112,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_cbCreate( nWinNum ,; nTop ,; nLeft ,; nWidth ,; aText ,; bBlock ,;
-      nListLines,; nReserved ,; nKbdType ,; aOffset )
+      wvw_cbCreate( nWinNum, nTop, nLeft, nWidth, aText, bBlock,
+      nListLines, nReserved, nKbdType, aOffset )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop>, <nLeft>
       Coordinates of combobox. <nWidth> Width of combobox. <aText> Array with all
@@ -121,6 +121,25 @@
       following events : CBN_SELCHANGE: CBN_SETFOCUS : CBN_KILLFOCUS: User change
       selection ( not executed when made by program itself ) When focus go to
       combobox When focus lost from combobox
+
+      This code block will be evaluated with the following arguments : nWinNum nCBId
+      nType nIndex Actual windows number Combobox ID Event type ( only the three
+      types above are supported ) Index on selected item ( start from 0 )
+
+      <nListLines> Number of lines to list items ( default is 3 ). will be
+      automatically truncated if this parameter is greater than Len(aText).
+      <nReserved> Reserved for future use. <nKbdType> Specifies the behavior of
+      combobox. Can be one of the following values : 0: 1: Similar to standard
+      windows convention (i.e., ENTER/ESC will kill focus from combobox) Similar to
+      CA-Clipper (i.e., ENTER shows all combobox's items, UP/DOWN/TAB/SHIFTAB/ESC
+      will kill focus from combobox)
+
+      Default is 0.
+
+      <aOffset> Array with four elements containing offsets to corner pixels
+      {x1,y1,x2,y2}, to adjust dimension of combobox. Default is {-2,-2,+2,+2}. The
+      third element (y2) is actually ignored. Height of combobox is always 1 char
+      height.
    $DESCRIPTION$
       Create a combobox in current window.
    $RETURNS$
@@ -347,8 +366,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_cbSetFont( nWinNum ,; cFontFace ,; nHeight ,; nWidth ,; nWeight ,;
-      nQuality ,; lItalic ,; lUnderline,; lStrikeout )
+      wvw_cbSetFont( nWinNum, cFontFace, nHeight, nWidth, nWeight,
+      nQuality, lItalic, lUnderline, lStrikeout )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <cFontName> Name of the
       font. <nHeight> Height of the font's character. <nWidth> Specifies average
@@ -401,6 +420,8 @@
       GTWVW
    $SYNTAX$
       wvw_CenterWindow( nWinNum, lCenter, lPaint )
+
+      See function wvw_SetWindowCentre().
    $END$
  */
 
@@ -539,8 +560,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_CreateFont(cFontFace ,; nHeight ,; nWidth ,; nWeight ,; lItalic ,;
-      lUnderline,; lStrikeout,; nCharset ,; nQuality ,; nEscapement )
+      wvw_CreateFont(cFontFace, nHeight, nWidth, nWeight, lItalic,
+      lUnderline, lStrikeout, nCharset, nQuality, nEscapement )
    $ARGUMENTS$
       <cFontFace> Name of the font. <nHeight> Height of the font's character.
       <nWidth> Specifies average width of character in the font. <nWeight> Specifies
@@ -619,8 +640,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_cxCreate( nWinNum ,; nTop ,; nLeft ,; nBottom ,; nRight ,; cText ,;
-      cImage/nImage ,; bBlock ,; aOffset ,; nStretchBitmap,; lMap3DColors )
+      wvw_cxCreate( nWinNum, nTop, nLeft, nBottom, nRight, cText,
+      cImage/nImage, bBlock, aOffset, nStretchBitmap, lMap3DColors )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft> Row/column
       of top/left corner. <nBottom, nRight> Row/column of bottom/right corner.
@@ -634,6 +655,9 @@
       {-2,-2,+2,+2}. <nStretchBitmap> A number between 0 and 1 (inclusive) as a
       factor to stretch the bitmap. Example : 1.0 0.5 0 Bitmap covers the whole
       button Bitmap covers 50% of button Bitmap is not stretch
+
+      Default is 1. <lMap3Dcolors> If image will have transparent effect (.T.) or
+      not (.F.). This will work on 256 colored bitmaps only.
    $DESCRIPTION$
       Creates a checkbox.
    $RETURNS$
@@ -967,14 +991,17 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawButton( nWinNum ,; nTop ,; nLEft ,; nBottom ,; nRight ,; cText ,;
-      cImage/nImage,; nFormat ,; nTextColor ,; nBkClor ,; nImageAt )
+      wvw_DrawButton( nWinNum, nTop, nLEft, nBottom, nRight, cText,
+      cImage/nImage, nFormat, nTextColor, nBkClor, nImageAt )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nButtom,
       nRight> Coordinates to draws a button. <cText> Text of button. <cImage/nImage>
       If string, specifies a bitmap filename ( full path is required ). If numeric,
       specifies the position of image in application image cache. <nFormat>
       Specifies shape of button : 0 1 2 Raised ( default ) Recessed Outline
+
+      <nTextColor> Index to button's color. <nBkColor> Index of button's background
+      color. <nImageAt> Ignored.
    $DESCRIPTION$
       Draws a button.
    $RETURNS$
@@ -1119,8 +1146,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawImage( nWinNum ,; nTop ,; nLeft ,; nBottom ,; nRight ,;
-      cImage/nPictureSlot,; lTight/aOffset ,; lTransparent )
+      wvw_DrawImage( nWinNum, nTop, nLeft, nBottom, nRight,
+      cImage/nPictureSlot, lTight/aOffset, lTransparent )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window.
       <nTop,nLeft,nBottom,nRight> Coordinates to draw an image. If <nBottom> is NIL,
@@ -1153,9 +1180,9 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawLabel( nWinNum ,; nRow ,; nCol ,; cLabel ,; nAlign ,; nEscapement,;
-      nTextColor ,; nBkColor ,; cFontFace ,; nHeight ,; nWidth ,; nWeight ,;
-      nQuality ,; nCharSet ,; lItalic ,; lUnderline ,; lStrikeOut )
+      wvw_DrawLabel( nWinNum, nRow, nCol, cLabel, nAlign, nEscapement,
+      nTextColor, nBkColor, cFontFace, nHeight, nWidth, nWeight,
+      nQuality, nCharSet, lItalic, lUnderline, lStrikeOut )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nRow,nCol> Row/column to
       draw a label. <cLabel> String to be draw. <nAlign> String alignment. Default
@@ -1165,6 +1192,10 @@
       font's character. <nWidth> Specifies average width of character in the font.
       <nWeight> Specifies the weight of the font in the range 0 through 1000 ( see
       About Fonts section ). <nQuality> Specifies the output quality.
+
+      <nCharSet> Specifies set of characters to be used. <lItalic> Specifies an
+      italic font if set to TRUE. <lUnderline> Specifies an underline font if set to
+      TRUE. <lStrikeOut> Specifies a strikeout font if set to TRUE.
    $DESCRIPTION$
       Draws a label.
    $RETURNS$
@@ -1213,8 +1244,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawLabelObj( nWinNum ,; nTop ,; nLeft ,; nBottom ,; nRight ,; cLabel ,;
-      nAlignHorz,; nAlignVert,; nTextColor,; nBkColor ,; hFont ,; aOffset )
+      wvw_DrawLabelObj( nWinNum, nTop, nLeft, nBottom, nRight, cLabel,
+      nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aOffset )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to draw a label. <cLabel> String to be draw. <nAlignHorz>
@@ -1242,12 +1273,23 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawLine( nWinNum,; nTop ,; nLeft ,; nBottom,; nRight ,; nOrient,;
-      nFormat,; nAlign ,; nStyle ,; nThick ,; nColor ,; aOffset )
+      wvw_DrawLine( nWinNum, nTop, nLeft, nBottom, nRight, nOrient,
+      nFormat, nAlign, nStyle, nThick, nColor, aOffset )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to draw a line. <nOrient> Line orientation : 0 1
       Horizontal Vertical
+
+      <nFormat> Line format : 0 1 2 Raised Recessed Plain
+
+      <nAlign> Line alignment : 0 1 2 3 4 Center Top Bottom Left Right
+
+      <nStyle> Specifies pen style. See WINGDI.CH ( PS_SOLID, PS_DOT, etc. ).
+      <nThick> Specifies the width of the pen, in logical units. If zero, the pen is
+      a single pixel wide, regardless of the current transformation. Default is zero
+      (width of one pixel). <nColor> Specifies a color reference for the pen color (
+      a 32 bit value from RGB color ). <aOffset> Array of four row/column. elements
+      with top/left, bottom/right of coordinates to align line with
    $DESCRIPTION$
       Draws a line.
    $RETURNS$
@@ -1273,6 +1315,12 @@
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to draw a line. <nOrient> Line orientation : 0 1
       Horizontal Vertical
+
+      <nFormat> Line format : 0 1 2 Raised Recessed Plain
+
+      <nAlign> Line alignment : 0 1 2 3 4 Center Top Bottom Left Right
+
+      <nSlotPen> Index on pen´s cache.
    $DESCRIPTION$
       Draws a line ( using an index of pen´s cache ).
    $RETURNS$
@@ -1391,8 +1439,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawProgressBar( nWinNum ,; nTop ,; nLeft ,; nBottom ,; nRight ,;
-      aOffPixels,; nPercent ,; nBackColor,; nBarColor ,; cImage ,; lVertical ,;
+      wvw_DrawProgressBar( nWinNum, nTop, nLeft, nBottom, nRight,
+      aOffPixels, nPercent, nBackColor, nBarColor, cImage, lVertical,
       nDirection )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window.
@@ -1481,6 +1529,8 @@
       elements with top/left, bottom/right coordinates to align scrollbutton with
       row/column. <nTLBR> Specifies scrollbutton direction : 1 2 3 4 Up arrow button
       Left arrow button Bottom arrow button Right arrow button
+
+      <lDepressed> If .F., specifies raised button, .T. recessed button.
    $DESCRIPTION$
       Draws a scrollbutton. With functions WVW_XB***(), this function becomes
       obsolete.
@@ -1610,8 +1660,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawTextBox( nWinNum ,; nTop ,; nLeft ,; nBottom ,; nRight ,; aOffPixels,;
-      cText ,; nAlignHorz,; nAlignVert,; nTextColor,; nBackColor,; nBackMode ,;
+      wvw_DrawTextBox( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      cText, nAlignHorz, nAlignVert, nTextColor, nBackColor, nBackMode,
       hFont )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
@@ -1619,6 +1669,10 @@
       <cText> Text to be draw. <nAlignHorz> Specifies text alignment inside
       coordinates : 0 1 2 Left ( default ) Right Centralized elements with top/left,
       bottom/right coordinates to align text with
+
+      <nAlignVert> Ignored. <nTextColor> Color of text. <nBackColor> Background
+      color. <nBackMode> Background mode how color is used. Default is OPAQUE ( see
+      WINGDI.CH for all definitions ). <hFont> Font of the text.
    $DESCRIPTION$
       Draws a text in a rectangle.
    $RETURNS$
@@ -1737,8 +1791,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_FillRectangle( nWinNum ,; nTop ,; nLeft ,; nBottom ,; nRight ,;
-      nRGBColor/hBrush,; lTight ,; lUseBrush )
+      wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight,
+      nRGBColor/hBrush, lTight, lUseBrush )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to fill a rectangle. <nRGBColor/hBrush> Rectangle filling
@@ -2279,8 +2333,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_LoadFont( nSlotFont ,; cFontName ,; nHeight ,; nWidth ,; nWeight ,;
-      lItalic ,; lUnderline,; lStrikeout,; nCharSet ,; nQuality ,; nEscapement )
+      wvw_LoadFont( nSlotFont, cFontName, nHeight, nWidth, nWeight,
+      lItalic, lUnderline, lStrikeout, nCharSet, nQuality, nEscapement )
    $ARGUMENTS$
       <nSlotFont> Index of font cache. <cFontName> Name of the font. <nHeight>
       Height of the font's character. <nWidth> Specifies average width of character
@@ -2698,8 +2752,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_pbCreate( nWinNum ,; nTop ,; nLeft ,; nBottom ,; nRight ,; cText ,;
-      cImage/nImage ,; bBlock ,; aOffset ,; nStretchBitmap,; lMap3DColors )
+      wvw_pbCreate( nWinNum, nTop, nLeft, nBottom, nRight, cText,
+      cImage/nImage, bBlock, aOffset, nStretchBitmap, lMap3DColors )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to create the button. <cText> Text of the button. Default
@@ -2709,6 +2763,13 @@
       and release the button). Always pass as a parameter : <nWinNum> and ID of
       button. <aOffset> Array of four row/column. elements with top/left,
       bottom/right coordinates to align button with
+
+      <nStretchBitmap> Number between 0 and 1 ( inclusive ) as a stretch factor :
+      1.0 0.5 0 The bitmap will cover all button. The bitmap will cover only 50% of
+      the button. The bitmap will not be stretched.
+
+      Default is 1. <lMap3DColors> Specified if an image will be transparent ( .T. )
+      or not ( .F. ). This will work on 256 colored bitmaps only.
    $DESCRIPTION$
       Creates a pushbutton in current window.
    $RETURNS$
@@ -2822,8 +2883,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_pbSetFont( nWinNum ,; cFontFace ,; nHeight ,; nWidth ,; nWeight ,;
-      nQuality ,; lItalic ,; lUnderline,; lStrikeout )
+      wvw_pbSetFont( nWinNum, cFontFace, nHeight, nWidth, nWeight,
+      nQuality, lItalic, lUnderline, lStrikeout )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <cFontName> Name of the
       font. <nHeight> Height of the font's character. <nWidth> Specifies average
@@ -2858,6 +2919,9 @@
       <nStyle> Define style of pushbutton. You can see all possibilities
       BS_PUSHBUTTON, BS_DEFPUSHBUTTON, etc. ). Typical usage : BS_DEFPUSHBUTTON
       BS_PUSHBUTTON in file WINUSER.CH (
+
+      1: Turn the button into default button ( thick border ) 0: Turn the button
+      into regular pushbutton
    $DESCRIPTION$
       Assign new style to button in current window.
    $RETURNS$
@@ -2877,8 +2941,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_pgCreate( nWinNum ,; nTop ,; nLeft ,; nBottom ,; nRight ,; aOffset ,;
-      nBackColor,; nBarColor ,; lSmooth ,; lVertical )
+      wvw_pgCreate( nWinNum, nTop, nLeft, nBottom, nRight, aOffset,
+      nBackColor, nBarColor, lSmooth, lVertical )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to create a progress bar. <aOffset> Array of four elements
@@ -3079,6 +3143,10 @@
       width of status bar will be the width of this text. <nWidth> Width of status
       bar part. Ignored, if <cMaxText> is passed. <nStyle> Style of status bar : 0
       0x100 0x200 Recessed ( default ) No borders Raised
+
+      <lResetParts> If .T., remove all previously created parts. If .F., a new
+      status bar part will be created and added to previous parts. <cIcon/cTooltip>
+      Ignored.
    $DESCRIPTION$
       Adds a new division in a status <cMaxText/nWidth> and <nStyle>. bar, with
       width and style specified in arguments
@@ -4072,6 +4140,8 @@
       <nWinNum> Window number. Default is current window. <nIcon> Identify if it
       will be displayed an icon with text in tooltip. Is allowed one of the
       following values : 0 1 2 3 no icon ( default ) information warning Error
+
+      any other value greater than 3, the gtwvw convert to 0.
    $DESCRIPTION$
       None.
    $END$
@@ -4242,6 +4312,9 @@
       otherwise will be used as a tooltip. <nBitmapType> Bitmap type. Can be : 0 1 2
       3 Custom Standard windows bitmaps ( COPY, PAST, FIND, OPEN, etc. ) System view
       bitmaps System history bitmaps
+
+      <lMap3DColors> If the image will be transparent ( meaningful for custom bitmap
+      only ).
    $DESCRIPTION$
       Adds one button on the right of existing buttons, in a toolbar.
    $RETURNS$
@@ -4316,6 +4389,9 @@
       <nSystemBitmap> Points out if will be used Windows system bitmaps. Can be : 0
       1 2 Do not use Windows system bitmaps Use Windows system bitmaps ( small ) Use
       Windows system bitmaps ( large )
+
+      <nImageWidth, nImageHeight> Length and width of image ( meaningful only if
+      <nSystemBitmap> is zero ).
    $DESCRIPTION$
       Creates a toolbar on top of current window ( with no button ).
    $RETURNS$
@@ -4506,6 +4582,20 @@
       execute on every VM_VSCROLL/VM_HSCROLL. This code block will be evaluated with
       these parameters: nWinNum nXBid nXBmsg window number scrollbar ID scrollbar
       message. Can be divided in two categories :
+
+      The "must be handled" messages : SB_LINEUP/SB_LINELEFT
+      SB_LINEDOWN/SB_LINERIGHT SB_PAGEUP/SB_PAGELEFT SB_PAGEDOWN/SB_PAGERIGHT 0: 1:
+      2: 3: up/left button clicked down/right button clicked upper/left shaft
+      clicked lower/right shaft clicked
+
+      The "may not be handled" messages: SB_TUMBPOSITION SB_THUMBTRACK SB_ENDSCROLL
+      nXBPos 4: scroll thumb is released at position nXBpos 5: scroll thumb is being
+      dragged at position nXBpos 8: end of scroll
+
+      scrollthumb position (only if message = SB_THUMBPOSITION or SB_THUMBTRACK)
+
+      <aOffset> Array with four elements with top/left, bottom/right coordinates, in
+      pixels, to adjust the dimensions of scrollbar.
    $DESCRIPTION$
       Creates a scollbar in current window.
    $RETURNS$
@@ -4581,6 +4671,8 @@
       nTrackPos Minimum positions to scrolling Maximum positions to scrolling Page
       size Position of scrolling button Exact position of the scrolling button, when
       the user beginning a drag-and-drop operation.
+
+      If failed, returns an empty array.
    $PLATFORMS$
       Windows
    $END$

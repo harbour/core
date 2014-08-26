@@ -10,9 +10,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw__MakeDlgTemplate(
-      Dlg,aItens1,aItens2,aItens3,aItens4,aItens5,aItens6,aItens7,aItens8, aItens9,
-      aItens10 )
+      wvw__MakeDlgTemplate( Dlg, aItens1, aItens2, aItens3, aItens4, aItens5, aItens6,
+      aItens7, aItens8, aItens9, aItens10 )
    $ARGUMENTS$
       aDlg aItens1 aItens2 aItens3 aItens4 aItens5 aItens6 aItens7 aItens8 aItens9
       aItens10
@@ -1839,7 +1838,7 @@
    $ARGUMENTS$
       hMenu Identifica o menu. nPosition Especifica o item do menu que será
       habilitado ou desabilitado, conforme o parâmetro nFlag. nFlag Na prática, para
-      o xHarbour, deveremos definir os seguintes valores : MF_DISABLE MF_ENABLE
+      o Harbour, deveremos definir os seguintes valores : MF_DISABLE MF_ENABLE
    $DESCRIPTION$
       Habilita ou desabilita itens do menu.
    $RETURNS$
