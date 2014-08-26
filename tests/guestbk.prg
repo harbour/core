@@ -44,6 +44,27 @@
  *
  */
 
+/* How to create and test the Harbour Guestbook
+
+   You'll find guestbk.prg and guestbk.html files.
+   To build the executable, review guestbk.prg and
+   check the directories for locating guestbk.ini
+   and guestbk.html correctly.
+
+   With that done, build it using hbmk2. Put the resulting
+   executable and .html files on a script-enabled directory
+   and call guestbk executable via WebBrowser.
+
+   The best thing about this guestbook is its highly
+   configurable architecture. Please review guestbk.ini
+   for configuration options and further explanation.
+
+   That's it!
+
+   PS: If you don't have a WebServer, I will be pleased to
+   demonstrate it to you. Just contact me via ICQ, my
+   UIN is #19504786. Thanks! */
+
 #define _WWW_ROOT_DIR_  hb_DirSepAdd( hb_DirSepToOS( "/www/root/" ) )
 
 PROCEDURE Main()
@@ -146,7 +167,17 @@ PROCEDURE Main()
 
    RETURN
 
+#if ! defined( __HBSCRIPT__HBSHELL )
+
+PROCEDURE hb_GTSYS()  /* must be a public function */
+
+   REQUEST HB_GT_CGI_DEFAULT
+
+   RETURN
+
+#endif
+
 #if defined( __HBSCRIPT__HBSHELL )
-SET PROCEDURE TO "_cgi.prg"
-SET PROCEDURE TO "_inifile.prg"
+SET PROCEDURE TO "cgi.prg"
+SET PROCEDURE TO "inifile.prg"
 #endif

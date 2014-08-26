@@ -5,7 +5,7 @@
 
 -w3 -es2
 
--depurlbase=libusb:http://libusb.org/
+-depurlbase=libusb:https://libusb.org/
 -deppkgname=libusb:libusb-devel{rpm}
 -deppkgname=libusb:libusb-dev{deb}
 -deppkgname=libusb:libusb{homebrew}
