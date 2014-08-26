@@ -620,6 +620,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "*/RELNOTES.txt", ;
       "*/HARBOUR_README_*.txt", ;
       "ChangeLog.txt", ;
+      "*/doc/*/*.txt", ;
       "*.po", ;
       "*.md" }
 
