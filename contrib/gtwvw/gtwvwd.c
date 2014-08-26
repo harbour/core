@@ -1030,7 +1030,6 @@ static int hb_gt_wvw_ReadKey( PHB_GT pGT, int eventmask )
 }
 
 /* dDuration is in 'Ticks' (18.2 per second) */
-
 static void hb_gt_wvw_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Tone(%lf, %lf)", dFrequency, dDuration ) );

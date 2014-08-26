@@ -2359,14 +2359,14 @@ HB_FUNC( WVW_SETICON )
       void * hName;
 
       if( HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
-         hb_retptr( hb_gt_wvw_SetWindowIcon( wvw_win, hb_parni( 2 ), HB_PARSTRDEF( 3, &hName, NULL ) ) );
+         HB_RETHANDLE( hb_gt_wvw_SetWindowIcon( wvw_win, hb_parni( 2 ), HB_PARSTRDEF( 3, &hName, NULL ) ) );
       else
-         hb_retptr( hb_gt_wvw_SetWindowIconFromFile( wvw_win, HB_PARSTRDEF( 2, &hName, NULL ) ) );
+         HB_RETHANDLE( hb_gt_wvw_SetWindowIconFromFile( wvw_win, HB_PARSTRDEF( 2, &hName, NULL ) ) );
 
       hb_strfree( hName );
    }
    else
-      hb_retptr( NULL );
+      HB_RETHANDLE( NULL );
 }
 
 HB_FUNC( WVW_SETTITLE )
