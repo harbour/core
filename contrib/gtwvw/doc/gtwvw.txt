@@ -505,8 +505,40 @@ system's client (desktop) area. That's why some overly sized window, as in
 HARBOUR CALLABLE FUNCTIONS (HB_FUNC(...))
 =========================================
 
-Please read funclist.txt.
+This section contains list (and description) of GTWVW .prg callable functions.
+These descriptions and function list are taken from GTWVW source code,
+with only a few additional notes. I've done my best to list all GTWVW
+functions here. However, you will see that some of them are not
+accompanied with description at all. Additionally, even the descriptions
+given herein may not be accurate.
 
+In other words, do not take this document as a reference. It is merely
+an aid to help you get start with GTWVW. If you need a complete reference,
+read the source code :-).
+
+- GTWVW specific function list (with brief descriptions)
+  = Window operation
+  = GTWVW parameter settings
+    == Paint Refresh Interval
+    == Vertical/Horizontal Caret
+    == Line Spacing
+  = Status Bar
+  = Timer
+  = Tool Bar
+  = Scroll Bar
+  = Push Buttons
+  = Progress Bar
+
+- GTWVT compatibility function list (imported from GTWVT)
+  = Window independent functions
+  = Window dependent functions
+  = General Windows API functions
+
+- Callback functions
+
+- Brief descriptions of some GTWVW functions imported from GTWVT
+
+/* see function skeletons in source and in doc folder */
 
 ===============
 FUTURE OF GTWVW

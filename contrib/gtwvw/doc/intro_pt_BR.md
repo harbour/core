@@ -3,9 +3,9 @@
 ## INTRODUÇĂO
 
 Alguns agradecimentos săo indispensáveis: Harbour Claro, sem
-essa fantástica ferramenta todo esse trabalho năo existiria ( os
+essa fantástica ferramenta todo esse trabalho năo existiria (os
 agradecimentos, na verdade, săo para todas as pessoas que
-desenvolvem/contribuem ). GTWVW O autor da GTWVW ( Budyanto Dj. )
+desenvolvem/contribuem). GTWVW O autor da GTWVW (Budyanto Dj.)
 e seus "ancestrais". Marcos Antonio Gambeta Ele escreveu um guia de
 programaçăo para a GTWVT e disponibilizou como freeware. A leitura
 desse manual me ajudou a resolver diversas dúvidas quanto aos
@@ -18,14 +18,14 @@ trabalho na WVWTOOLS abriu meus olhos para as reais possibilidades da
 GTWVW. A realizaçăo desse trabalho de documentaçăo das funções da GTWVW
 foi feito com muita atençăo, mas nem por isso, está imune a falhas,
 erros de interpretaçăo e gramaticais. É a versăo 0.01 alpha para
-exemplos, trechos de códigos. Criei um grupo no yahoo características
+exemplos, trechos de códigos. Criei um grupo no Yahoo características
 técnicas, relacionado com a GTWVW. portuguęs, cabe aos usuários da
 GTWVW fornecer correções,
 
 <https://br.groups.yahoo.com/neo/groups/gtwvw/info> para discussăo
 das resoluçăo de problemas, trocas de experięncias e tudo mais
 
-Manoel Angeiras( angeiras@gmail.com, angeiras@yahoo.com ) Versăo
+Manoel Angeiras(angeiras@gmail.com, angeiras@yahoo.com) Versăo
 2007 Janeiro
 
 
@@ -38,26 +38,26 @@ para a plataforma win32. Usando a GTWVW o programador pode usar todas
 as funções padrăo da GT, normalmente chamadas indiretamente pelo
 Harbour, como:
 
-   ?, ?? (QOut(), QQOut())
-   @ ... SAY ... (DevPos(), DevOut())
-   Scroll()
-   SetPos()
-   _GET_()
-   ReadModal()
-   Inkey()
-   AChoice()
-   Alert()
-   etc.
+   - ?, ?? (QOut(), QQOut())
+   - @ ... SAY ... (DevPos(), DevOut())
+   - Scroll()
+   - SetPos()
+   - _GET_()
+   - ReadModal()
+   - Inkey()
+   - AChoice()
+   - Alert()
+   - etc.
 
 Todos os comandos e funções tem o mesmo comportamento que teriam em
-outras GTs ( por exemplo, no modo console ). Podemos citar algumas
+outras GTs (por exemplo, no modo console). Podemos citar algumas
 características especiais da GTWVW:
 
-- Permite ao programador maximizar, etc ). realizar operações sobre
-  janelas ( abrir, fechar, minimizar,
+- Permite ao programador maximizar, etc). realizar operações sobre
+  janelas (abrir, fechar, minimizar,
 - Pode mesclar elementos de texto e GUI em uma mesma janela.
-- Controle nativos do windows ( statusbar, toolbars, scrollbars,
-  pushbuttons, checkboxes ). Veremos essas e outras características
+- Controle nativos do windows (statusbar, toolbars, scrollbars,
+  pushbuttons, checkboxes). Veremos essas e outras características
   com detalhes mais adiante.
 
 
@@ -71,7 +71,7 @@ características especiais da GTWVW:
 - Todas as janelas săo automaticamente fechadas quando o programa
   termina.
 - A janela-pai da janela n que será aberta é a janela atual
-  ( tipicamente a janela n-1 ).
+  (tipicamente a janela n-1).
 - A grande maioria das funções tem como primeiro parâmetro o número
   da janela atual, mas a GTWVW năo utiliza esse parâmetro. Ao invés
   disso, a GTWVW "acha" a janela mais atual e utiliza-a. Mesmo
@@ -97,8 +97,8 @@ selecionar/mudar a qualquer momento:
   os limites da janela atual.
 
 #### Maincoord Mode
-- Nesse modo as coordenadas săo relativas a janela principal ( como
-  no Clipper ). - Todas as saídas/entradas trabalham baseadas na
+- Nesse modo as coordenadas săo relativas a janela principal (como
+  no Clipper). - Todas as saídas/entradas trabalham baseadas na
   janela atual. Internamente, existe um processo que verifica em
   qual janela deve ser feita a operaçăo de saída/entrada, dependendo
   da linha/coluna. Após cada operaçăo, a janela atual é sempre
@@ -132,9 +132,9 @@ Observe que o redesenho năo é feito de forma imediata pela GTWVW.
 O intervalo para redesenho pode ser definido pela nossa aplicaçăo
 através da funçăo wvw_SetPaintRefresh(). Se setarmos o intervalo para
 redesenho para zero, a GTWVW chamará a funçăo WVW_PAINT() cada vez que
-foi requisitado o redesenho, pelo windows ( exceto se uma chamada prévia
-ainda năo foi retornada ). Se o intervalo para redesenho for setado para
-maior que zero ( valores válidos maiores que 50 ), entăo a funçăo
+foi requisitado o redesenho, pelo windows (exceto se uma chamada prévia
+ainda năo foi retornada). Se o intervalo para redesenho for setado para
+maior que zero (valores válidos maiores que 50), entăo a funçăo
 WVW_PAINT() será chamada após esse intervalo, em milisegundos, apenas
 se ainda persistir uma açăo de redesenho pendente. O intervalo default
 para o redesenho é de 100.
@@ -142,13 +142,13 @@ para o redesenho é de 100.
 
 ## SOBRE O CURSOR
 
-Existem dois estilos para o cursor: Horizontal ( como em aplicações
-MS-DOS ) Vertical ( mais comum em aplicações Windows ) O programador
+Existem dois estilos para o cursor: Horizontal (como em aplicações
+MS-DOS) Vertical (mais comum em aplicações Windows) O programador
 pode wvw_SetVertCaret(). selecionar qual o estilo que deseja, através
 da funçăo
 
-O novo estilo do cursor será aplicado para todas as janelas ( atualmente
-o cursor é apenas mostrado na janela atual ). O estilo default é o
+O novo estilo do cursor será aplicado para todas as janelas (atualmente
+o cursor é apenas mostrado na janela atual). O estilo default é o
 horizontal.
 
 
@@ -180,16 +180,16 @@ de parâmetros:
 - `nWidth` O tamanho da fonte.
 - `nWeight` Especifica o "peso" da fonte, variando de 0 até 1000. Por
   exemplo, um "peso" de 400 geralmente determina uma fonte normal,
-  já 700, negrito. Existem 15 ( quinze ) modelos de "peso" de fonte,
-  que podem ser encontradas no arquivo WINGDI.CH (FW_DONTCARE, FW_THIN,
+  já 700, negrito. Existem 15 (quinze) modelos de "peso" de fonte,
+  que podem ser encontradas no arquivo `wingdi.ch` (FW_DONTCARE, FW_THIN,
   etc.).
 - `lItalic` Identifica se a fonte será itálica ou năo.
 - `lUnderline` Identifica uma fonte sublinhada ou năo.
-- `lStrikeOut` Identifica uma fonte strikeout ( fonte com linha traçada
-  no meio das letras ).
+- `lStrikeOut` Identifica uma fonte strikeout (fonte com linha traçada
+  no meio das letras).
 - `nCharSet` Especifica o cojnunto de caracteres a ser usado. Por exemplo,
-  ANSI_CHARSET, DEFAULT_CHARSET, OEM_CHARSET, etc. ( os modelo estăo no
-  arquivo WINGDI.CH ).
+  ANSI_CHARSET, DEFAULT_CHARSET, OEM_CHARSET, etc. (os modelo estăo no
+  arquivo `wingdi.ch`).
 - `nQuality` Identifica a qualidade de saída da fonte. Essa característica
   define como a GDI deve interpretar a forma lógica da fonte, com a sua
   forma de apresentaçăo física. Existem tręs valores possíveis para
@@ -210,7 +210,7 @@ funções săo:
 - WVW_PAINT( nWinNum )
 
   Essa funçăo é chamada sempre que o Windows recebe uma mensagem
-  WM_PAINT ( para redesenho da tela ). Na verdade o intervalo para
+  WM_PAINT (para redesenho da tela). Na verdade o intervalo para
   chamada de WVW_PAINT() pode ser configurado, através da funçăo
   wvw_SetPaintRefresh().
 

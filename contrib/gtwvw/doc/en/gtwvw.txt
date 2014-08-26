@@ -37,7 +37,7 @@
       wvw_AddRows( nWinNum, nRows )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nRows> Number of lines to
-      add or reduce ( if nRows < 0 ).
+      add or reduce (if nRows < 0).
    $DESCRIPTION$
       Adds or reduces lines from window. The new lines will be colored from column
       zero color, from prior line. There's no checking to determine if the window is
@@ -64,7 +64,7 @@
    $ARGUMENTS$
       <hMenu> Identifies the menu to be changed. <nFlags> Specifies flags to control
       the appearance and behavior of the new menu item. This parameter can be a
-      combination of values ( all flags can be viewed in WinUser.ch file ).
+      combination of values ( all flags can be viewed in winuser.ch file ).
       <nMenuItemId> Specifies either the identifier of the new menu item or, if the
       uFlags parameter is set to MF_POPUP, the handle to the drop-down menu or
       submenu. <cCaption> Specifies the string content of the new menu item or full
@@ -1186,7 +1186,7 @@
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nRow,nCol> Row/column to
       draw a label. <cLabel> String to be draw. <nAlign> String alignment. Default
-      is TA_LEFT ( another definitions : see file WINGDI.CH ). <nEscapement>
+      is TA_LEFT ( another definitions : see file wingdi.ch ). <nEscapement>
       Specifies angle. <nTextColor> Color index of label. <nBkColor> Color index of
       background of label. <cFontFace> Name of the font. <nHeight> Height of the
       font's character. <nWidth> Specifies average width of character in the font.
@@ -1220,7 +1220,7 @@
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nRow,nCol> Row/column to
       draw a label. <cLabel> String to be draw. <nAlign> Text alignment. Default is
-      TA_LEFT ( see WINGDI.CH to another definitions ). <cTextColor> Index color of
+      TA_LEFT ( see wingdi.ch to another definitions ). <cTextColor> Index color of
       the font. <nBkColor> Index color of label background. <nSlotFont> Index of
       application cache fonts. If image cache is empty ( or index does not exist ),
       function will be not executed.
@@ -1284,7 +1284,7 @@
 
       <nAlign> Line alignment : 0 1 2 3 4 Center Top Bottom Left Right
 
-      <nStyle> Specifies pen style. See WINGDI.CH ( PS_SOLID, PS_DOT, etc. ).
+      <nStyle> Specifies pen style. See wingdi.ch ( PS_SOLID, PS_DOT, etc. ).
       <nThick> Specifies the width of the pen, in logical units. If zero, the pen is
       a single pixel wide, regardless of the current transformation. Default is zero
       (width of one pixel). <nColor> Specifies a color reference for the pen color (
@@ -1368,7 +1368,7 @@
       nRGBColor )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
-      nRight> Coordinates to draw a box. <nThick> Style of pen. See WINGDI.CH file
+      nRight> Coordinates to draw a box. <nThick> Style of pen. See wingdi.ch file
       for definitions ( PS_SOLID, PS_DOT, etc. ). <nShape> Ignored. <nRGBColor>
       Specifies color reference for pen ( a 32 bit RGB color value ).
    $DESCRIPTION$
@@ -1612,7 +1612,7 @@
       nRight> Coordinates to draw a rectangle. <aOffPixels> Array of four elements
       with top/left, bottom/right coordinates to align rectangle with row/column.
       <nHorVert> Specifies draws method and how to interpret rectangle fill array (
-      <aRGBb> and <aRGBe> ). Default is GRADIENT_FILL_RECT_H ( see WINGDI.CH file
+      <aRGBb> and <aRGBe> ). Default is GRADIENT_FILL_RECT_H ( see wingdi.ch file
       for all definitions ). <aRGBb> Array of four color position ( Red, Gree, Blue,
       Alpha ), with initial rectangle position. <aRGBe> Array of four color position
       ( Red, Gree, Blue, Alpha ), with final rectangle position.
@@ -1672,7 +1672,7 @@
 
       <nAlignVert> Ignored. <nTextColor> Color of text. <nBackColor> Background
       color. <nBackMode> Background mode how color is used. Default is OPAQUE ( see
-      WINGDI.CH for all definitions ). <hFont> Font of the text.
+      wingdi.ch for all definitions ). <hFont> Font of the text.
    $DESCRIPTION$
       Draws a text in a rectangle.
    $RETURNS$
@@ -2343,7 +2343,7 @@
       TRUE. <lUnderline> Specifies an underlined font if set to TRUE. <lStrikeout>
       Specifies a strikeout font if set to TRUE. <nCharSet> Identify the character
       set. For example, ANSI_CHARSET, DEFAULT_CHARSET, OEM_CHARSET, etc. ( all
-      models can be viewed in file WINGDI.CH ). <nQuality> Specifies the output
+      models can be viewed in file wingdi.ch ). <nQuality> Specifies the output
       quality. <nEscapement> Angle of escapement of the font.
    $DESCRIPTION$
       Load all information about the specified font, writing it in font cache.
@@ -2489,14 +2489,14 @@
       <nWinNum> Window number. Default is current window. <cMessage> Message to be
       displayed. <cTitle> Dialog box title. <nOption> Specifies a set of buttons
       that determine the contents and behavior of the dialog box. Default is MB_OK (
-      OK button, without icons ). You can see all definitions in file WINUSER.CH.
+      OK button, without icons ). You can see all definitions in file winuser.ch.
    $DESCRIPTION$
       Creates, displays, and operates a message box. The message box contains an
       applicationdefined message and title, plus any combination of predefined icons
       and push buttons.
    $RETURNS$
       Number of selected option ( IDOK to OK button, IDCANCEL to Cancel button, etc.
-      ). You can see all definitions in file WINUSER.CH
+      ). You can see all definitions in file winuser.ch
    $PLATFORMS$
       Windows
    $END$
@@ -2610,7 +2610,7 @@
       This coordinates are used to : 1) Put window in initial position. 2) Determine
       size of the window ( new MaxRow() and MaxCol() ). 3) Save in RowOfs and ColOfs
       to MainCoord mode. <nStyle > Style of the window. All definitions are in file
-      WINUSER.CH. Default is WS_CAPTION|WS_SYSMENU|WS_CLIPCHILDREN. If you will use
+      winuser.ch. Default is WS_CAPTION|WS_SYSMENU|WS_CLIPCHILDREN. If you will use
       controls such as PUSHBUTTON, you MUST include WS_CLIPCHILDREN. <nParentWin> Is
       the mother of the new window. Default is current window ( in Standard mode )
       and the last window ( in MainCoord mode ). If you want the new window to not
@@ -2918,7 +2918,7 @@
       <nWinNum> Window number. Default is current window. <nPBId> ID of pushbutton.
       <nStyle> Define style of pushbutton. You can see all possibilities
       BS_PUSHBUTTON, BS_DEFPUSHBUTTON, etc. ). Typical usage : BS_DEFPUSHBUTTON
-      BS_PUSHBUTTON in file WINUSER.CH (
+      BS_PUSHBUTTON in file winuser.ch (
 
       1: Turn the button into default button ( thick border ) 0: Turn the button
       into regular pushbutton
@@ -3349,9 +3349,9 @@
    $SYNTAX$
       wvw_SetBrush( nStyle, nColor, nHatch )
    $ARGUMENTS$
-      <nStyle> Identify pen style. All definitions can be viewed in file WINGDI.CH (
+      <nStyle> Identify pen style. All definitions can be viewed in file wingdi.ch (
       BS_SOLID, BS_NULL, etc. ). <nColor> Index color to pen draw. <nHatch> Define
-      the filling pattern of pen. All definitions can be viewed in file WINGDI.CH (
+      the filling pattern of pen. All definitions can be viewed in file wingdi.ch (
       HS_VERTICAL, HS_HORIZONTAL, etc. ).
    $DESCRIPTION$
       Define style, color and pattern of pen filling.
@@ -3879,7 +3879,7 @@
    $SYNTAX$
       wvw_SetPen( nPenStyle, nWidth, nColor )
    $ARGUMENTS$
-      <nPenStyle> Defines pen style. All definition are in file WINGDI.CH (
+      <nPenStyle> Defines pen style. All definition are in file wingdi.ch (
       PS_SOLID, PS_DOT, etc. ). <nWidth> Specifies width of the pen. <nColor> Index
       color of pen.
    $DESCRIPTION$
@@ -3906,7 +3906,7 @@
       <nWinNum> Window number. Default is current window. <nIcon> Model of icon to
       be read. May be a string which identify a resource in a RC file or may be a
       predefined window model ( default is IDC_ARROW ). All definition are in
-      WINUSER.CH file.
+      winuser.ch file.
    $DESCRIPTION$
       Change mouse cursor.
    $RETURNS$
@@ -4282,7 +4282,7 @@
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nMode> Points out how
       window will be showed. Default is SW_SHOWNORMAL ( another definitions in file
-      WINUSER.CH ).
+      winuser.ch ).
    $DESCRIPTION$
       Set the mode of showing window.
    $RETURNS$

@@ -66,7 +66,7 @@
       hMenu identifica o menu que será incluido o item. nFlags Especifica os flags
       para controlar a aparencia e o comportamento do item que está sendo incluido.
       Esse parâmetro pode ser uma combinaçao de diversos valores ( as definiçoes dos
-      flags válidos estao no arquivo WINUSER.CH ) hMenuItemId Especifica cada um dos
+      flags válidos estao no arquivo winuser.ch ) hMenuItemId Especifica cada um dos
       identificadores do novo item do menu ou, se o parâmetro nFlags estiver setado
       para MF_POPUP, o handle do submenu. cCaption Especifica ou a string que será
       apresentada no menu/submenu ou o caminho para o bitmap que será apresentado no
@@ -1237,7 +1237,7 @@
    $ARGUMENTS$
       nWinNum Número da janela. O default é a janela atual. nRow,nCol Linha/Coluna
       para desenho do label. cLabel String que será desenhada. nAlign Alinhamento
-      WINGDI.CH). nEscapement Especifica o ângulo. nTextColor Índice da cor do
+      wingdi.ch). nEscapement Especifica o ângulo. nTextColor Índice da cor do
       label. nBkColor Índice da cor de fundo do label. cFontFace Nome da fonte.
       nHeight Largura da fonte. nWidth Altura da fonte. nWeight "Peso" da fonte.
       nQuality Identifica a qualidade de saída da fonte. nCharSet Especifica o
@@ -1271,7 +1271,7 @@
       nWinNum Número da janela. O default é a janela atual. nRow,nCol Linha/Coluna
       para desenho do label. cLabel String que será desenhada. nAlign Alinhamento do
       texto no label. O default é TA_LEFT ( as outras definiçoes estao no arquivo
-      WINGDI.CH ). cTextColor Índice da cor para o texto. nBkColor Índice da cor de
+      wingdi.ch ). cTextColor Índice da cor para o texto. nBkColor Índice da cor de
       fundo do label. nSlotFont Índice do cache de fontes da aplicaçao. Se nao
       existir uma fonte associada ao índice passado, a funçao nao será executada.
    $DESCRIPTION$
@@ -1334,7 +1334,7 @@
 
       nAlign Alinhamento da linha : 0 1 2 3 4 Center Top Bottom Left Right
 
-      nStyle Estilo do traço. As definiçoes estao no arquivo WINGDI.CH ( PS_SOLID,
+      nStyle Estilo do traço. As definiçoes estao no arquivo wingdi.ch ( PS_SOLID,
       PS_DOT, etc. ). nThick Largura do traço. O default é 0, que indica a largura
       de um único pixel. nColor Cor da linha ( valor com 32 bits de uma cor RGB ).
       aOffset Matriz com quatro elementos com coordenadas dos cantos superior,
@@ -1418,7 +1418,7 @@
    $ARGUMENTS$
       nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
       nRight Coordenadas para desenho do quadro. nThick Formato do traço. As
-      definiçoes estao no arquivo WINGDI.CH ( PS_SOLID, PS_DOT, etc. ). nShape
+      definiçoes estao no arquivo wingdi.ch ( PS_SOLID, PS_DOT, etc. ). nShape
       Parâmetro ignorado. nRGBColor Especifica a referencia de cor para o traço (
       valor com 32 bits de uma cor RGB ).
    $DESCRIPTION$
@@ -1698,7 +1698,7 @@
       para alinhamento do retângulo com as linhas/colunas. nHorVert Especifica o
       modo de desenho e como interpretar a matriz de preenchimento do retângulo ­
       aRGBb e aRGBe. O default é GRADIENT_FILL_RECT_H ( as outras definçoes
-      possíveis estao em WINGDI.CH ). aRGBb Matriz com quatro posiçoes de cores (
+      possíveis estao em wingdi.ch ). aRGBb Matriz com quatro posiçoes de cores (
       Red, Green, Blue, Alpha ) da coordenada inicial do retângulo. aRGBe Matriz com
       quatro posiçoes de cores ( Red, Green, Blue, Alpha ) da coordenada final do
       retângulo.
@@ -1760,7 +1760,7 @@
 
       O default é alinhamento a esquerda. nAlignVert Parâmetro ignorado nTextColor
       Cor do texto. nBackColor Cor de fundo. nBackMode O modo como a cor de fundo
-      será usada. O default é OPAQUE ( outras definiçoes no arquivo WINGDI.CH )
+      será usada. O default é OPAQUE ( outras definiçoes no arquivo wingdi.ch )
       hFont Fonte usada para o texto.
    $DESCRIPTION$
       Desenha um texto formatado no retângulo especificado pelas coordenadas dos
@@ -2562,13 +2562,13 @@
       nWinNum Número da janela. O default é a janela atual. cMessage Mensagem que
       será exibida. cTitle Título da janela de mensagem. nOption Indica quais os
       botoes serao usados na janela. O default é MB_OK ( botao OK sem ícones ). As
-      outras definiçoes estao no arquivo WINUSER.CH.
+      outras definiçoes estao no arquivo winuser.ch.
    $DESCRIPTION$
       Exibe uma janela de mensagem. A janela de mensagem pode ter um ícone e um ou
       mais botoes com opçoes para o usuário escolher.
    $RETURNS$
       O número da opção escolhida ( IDOK para o botão OK, IDCANCEL para o botão
-      cancelar, etc. ). As definições para o retorno estão no arquivo WINUSER.CH.
+      cancelar, etc. ). As definições para o retorno estão no arquivo winuser.ch.
    $PLATFORMS$
       Windows
    $END$
@@ -2684,7 +2684,7 @@
       : 1) colocar a janela em seu posicionamento inicial. 2) determinar o tamanho
       da janela ( novo MaxRow() e MaxCol() ). 3) salvar em RowOfs e ColOfs para o
       modo de MainCoord. nStyle É o estilo da janela ( por ex. WS_OVERLAPPEDWINDOW,
-      etc ). As definiçoes estao em WINUSER.CH. O default é
+      etc ). As definiçoes estao em winuser.ch. O default é
       WS_CAPTION|WS_SYSMENU|WS_CLIPCHILDREN. Se for usar na janela controles como
       PUSHBUTTON, voce deve incluir o estilo WS_CLIPCHILDREN. nParentWin É a janela
       mae da nova janela que está sendo aberta. O default é a janela atual ( no modo
@@ -2997,7 +2997,7 @@
    $ARGUMENTS$
       nWinNum Número da janela. O default é a janela atual. nPBId Identificador do
       pushbutton. nStyle Define o estilo do pushbutton. As possíveis definiçoes
-      estao no arquivo WINUSER.CH ( BS_PUSHBUTTON, BS_DEFPUSHBUTTON, etc. ). O uso
+      estao no arquivo winuser.ch ( BS_PUSHBUTTON, BS_DEFPUSHBUTTON, etc. ). O uso
       mais comum é através dos seguintes valores : BS_DEFPUSHBUTTON BS_PUSHBUTTON
    $DESCRIPTION$
       Atribui um novo estilo ao pushbutton da janela atual.
@@ -3435,9 +3435,9 @@
       wvw_SetBrush( nStyle, nColor, nHatch )
    $ARGUMENTS$
       nStyle Identifica o estilo do pincel. As definiçoes podem ser encontradas no
-      arquivo WINGDI.CH ( BS_SOLID, BS_NULL, etc. ). nColor Índice da cor para
+      arquivo wingdi.ch ( BS_SOLID, BS_NULL, etc. ). nColor Índice da cor para
       desenho do pincel. nHatch Define o padrao de preenchimento do pincel. As
-      definiçoes estao no arquivo WINGDI.CH ( HS_VERTICAL, HS_HORIZONTAL, etc. ).
+      definiçoes estao no arquivo wingdi.ch ( HS_VERTICAL, HS_HORIZONTAL, etc. ).
    $DESCRIPTION$
       Define o estilo, cor e padrao de preenchimento do pincel.
    $RETURNS$
@@ -3970,7 +3970,7 @@
    $SYNTAX$
       wvw_SetPen( nPenStyle, nWidth, nColor )
    $ARGUMENTS$
-      nPenStyle Define o estilo do traço. As definiçoes estao no arquivo WINGDI.CH
+      nPenStyle Define o estilo do traço. As definiçoes estao no arquivo wingdi.ch
       (PS_SOLID, PS_DOT, etc.). nWidth Especifica a largura do traço. nColor Indice
       da cor do traço.
    $DESCRIPTION$
@@ -3997,7 +3997,7 @@
       nWinNum Número da janela. O default é a janela atual. nIcon Modelo do cursor a
       ser lido. Pode ser uma string que identifica um RESOUCE em um arquivo RC ou
       pode ser um modelo predefinido do windows ( o default é IDC_ARROW ). Outras
-      definiçoes estao no arquivo WINUSER.CH )
+      definiçoes estao no arquivo winuser.ch )
    $DESCRIPTION$
       Altera o cursor do mouse.
    $RETURNS$
@@ -4381,7 +4381,7 @@
       wvw_ShowWindow( nWinNum, nMode )
    $ARGUMENTS$
       nWinNum Número da janela. O default é a janela atual. nMode Indica o modo como
-      a janela será apresentada. definiçoes estao no arquivo WINUSER.CH ).
+      a janela será apresentada. definiçoes estao no arquivo winuser.ch ).
    $DESCRIPTION$
       Configura o estado de apresentaçao da janela.
    $RETURNS$

@@ -10,9 +10,9 @@ or an incorrect concept, please send an email to angeiras@gmail.com or
 angeiras@yahoo.com, with the correct information. By the way, this is not
 really an English documentation of GTWVW. This is a Portuguese documentation
 translated to English. So, please, correct me if you find something awful.
-There is a group in Yahoo ( <https://br.groups.yahoo.com/neo/groups/gtwvw/info> ),
+There is a group in Yahoo (<https://br.groups.yahoo.com/neo/groups/gtwvw/info>),
 in Portuguese, but you can send your question or suggestion in English,
-Spanish, Italian, etc. ( maybe I'll not answer in your mother tongue, but
+Spanish, Italian, etc. (maybe I'll not answer in your mother tongue, but
 I'll give a try :).
 
 Copyright © 2008 July/August Manoel N. Angeiras N., All rights reserved.
@@ -29,21 +29,23 @@ Using GTWVW programmer can use all standard GT functions, normally
 indirectly called through standard Harbour I/O functions/commands
 as:
 
-   ?, ?? (QOut(), QQOut())
-   @ ... SAY ... (DevPos(), DevOut()) Scroll()
-   SetPos()
-   _GET_()
-   ReadModal()
-   Inkey()
-   AChoice()
-   Alert() etc.
+   - ?, ?? (QOut(), QQOut())
+   - @ ... SAY ... (DevPos(), DevOut())
+   - Scroll()
+   - SetPos()
+   - _GET_()
+   - ReadModal()
+   - Inkey()
+   - AChoice()
+   - Alert()
+   - etc.
 
 All those commands/functions behave the same way as in other GTs. Unlike
 other GTs, however, GTWVW supports multi-windows.
 
-To use GTWVW, build GTWVW library using hbmk2 ( in /contrib/gtwvw ),
-then link it to your application as your GT using `gtwvw.hbc` ( currently
-GTWVW cannot coexist with GTWVT in a MULTIGT environment ).
+To use GTWVW, build GTWVW library using hbmk2 (in `/contrib/gtwvw`),
+then link it to your application as your GT using `gtwvw.hbc` (currently
+GTWVW cannot coexist with GTWVT in a MULTIGT environment).
 
 Some special characteristics of GTWVW:
 
@@ -77,8 +79,8 @@ Some special characteristics of GTWVW:
 
 ### COORDINATES
 
-There are two screen coordinate models ( and the user can switch at any
-moment ):
+There are two screen coordinate models (and the user can switch at any
+moment):
 
 #### Standard Mode
 - In this mode, all coordinates are relative to topmost window.
@@ -89,14 +91,14 @@ moment ):
   of topmost window.
 
 #### Maincoord Mode
-- In this mode, the coordinates are relative to main window ( like Clipper ).
+- In this mode, the coordinates are relative to main window (like Clipper).
 - All output work in current window, which is internally switched depending
   of requested row/column position. After each operation, current window is
   reset back to main window. Notice that this way MaxRow() and MaxCol() will
   always return main window's, as they do in Clipper. To support this feature,
   each window keeps records of row and column offset to the main window,
   specified during window opening.
-- MainCoord Mode is not supported by exported C functions ( user must specify
+- MainCoord Mode is not supported by exported C functions (user must specify
   which window to write, using coordinates within that window.)
 - MainCoord Mode it was projected to be the quickest way of porting an
   existing Clipper application to Harbour + GTWVW.
@@ -106,8 +108,8 @@ moment ):
 
 Some GUI elements of GTWVW are not repainted when windows are minimized and
 maximized or covered by another GUI elements. Our application must "remember"
-which GUI elements need to be repainted ( and GTWVW has some specific
-functions to help us ).
+which GUI elements need to be repainted (and GTWVW has some specific
+functions to help us).
 
 There is a function, WVW_PAINT(), defined in our application, which is called
 to GTWVW when we need to repaint our GUI elements or anything else.
@@ -124,11 +126,11 @@ The repainting is not an automatic feature of GTWVW. The interval to repaint
 can be defined by application using the function wvw_SetPaintRefresh().
 
 If we set the interval to zero, GTWVW will call the function WVW_PAINT() in
-every repaint requisition by the Windows ( except if a previous call has not
-returned ).
+every repaint requisition by the Windows (except if a previous call has not
+returned).
 
-If we set the interval for values greater than zero ( valid values greater
-than 50 ), so the WVW_PAINT() function will be called after this interval,
+If we set the interval for values greater than zero (valid values greater
+than 50), so the WVW_PAINT() function will be called after this interval,
 in millisecond, only if there was a pending WM_PAINT() request. The default
 interval value is set to 100.
 
@@ -136,12 +138,12 @@ interval value is set to 100.
 ## Cursor
 
 There are two styles of caret: horizontal (classic, console style) and
-vertical ( commonly used in GUI applications ).
+vertical (commonly used in GUI applications).
 
 Programmer can select which style to choose, using wvw_SetVertCaret()
 function. Currently the chosen style will be applied to all windows
-( in current implementation of GTWVW caret can only be displayed on
-topmost window, the only one allowed to accept input ). Default caret
+(in current implementation of GTWVW caret can only be displayed on
+topmost window, the only one allowed to accept input). Default caret
 style is horizontal.
 
 
@@ -179,14 +181,14 @@ example, the wvw_CreateFont() function has the following list of parameters:
   determined by the absolute value of the difference.
 - `nWeight` Specify the weight of font, varying from 0 to 1000. For example,
   a weight of 400 determine a normal font, a weight of 700, bold. There are
-  15 models of font weight ( you can see all the models in file `wingdi.ch`
-  ( FW_DONTCARE, FW_THIN, etc. ).
+  15 models of font weight (you can see all the models in file `wingdi.ch`
+  FW_DONTCARE, FW_THIN, etc.).
 - `lItalic` Specifies an italic font if set to TRUE.
 - `lUnderline` Specifies an underlined font if set to TRUE.
 - `lStrikeOut` Specifies a strikeout font if set to TRUE.
 - `nCharSet` Identify the character set. For example, ANSI_CHARSET,
-  DEFAULT_CHARSET, OEM_CHARSET, etc. ( all models can be viewed in file
-  `wingdi.ch` ).
+  DEFAULT_CHARSET, OEM_CHARSET, etc. (all models can be viewed in file
+  `wingdi.ch`).
 - `nQuality` Specifies the output quality. The output quality defines how
   carefully the graphics device interface (GDI) must attempt to match the
   logical-font attributes to those of an actual physical font. It can be
@@ -214,13 +216,13 @@ example, the wvw_CreateFont() function has the following list of parameters:
 ## Callback Functions
 
 There are some functions in GTWVW that need to be defined in our program
-( in fact, these functions are called from GTWVW directly ). Some of these
+(in fact, these functions are called from GTWVW directly). Some of these
 functions:
 
 - WVW_PAINT( nWinNum )
 
-  Is called every time Windows receive a message WV_PAINT ( to repaint
-  screen ). The interval of WVW_PAINT() calling can be configured by
+  Is called every time Windows receive a message WV_PAINT (to repaint
+  screen). The interval of WVW_PAINT() calling can be configured by
   function wvw_SetPaintRefresh().
 
 - WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
@@ -238,6 +240,6 @@ functions:
 
 In my personal web site () you can download an example of application,
 screen shots of converted applications and some sample of code, exploring
-a lot of interesting features ( menus, google maps, skype, crystal reports,
-MSN, etc. ). And of course, you can download this little documentation.
+a lot of interesting features (menus, google maps, skype, crystal reports,
+MSN, etc.). And of course, you can download this little documentation.
 Enjoy it !
