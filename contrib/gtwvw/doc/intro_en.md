@@ -160,6 +160,7 @@ moment during run time by using wvw_SetMainCoord()):
   to the Main Window, specified during Window opening.
   Example:
       Assume this window states:
+
       ---
       +------...
       |Main Window (Window 0)
@@ -182,6 +183,7 @@ moment during run time by using wvw_SetMainCoord()):
       ?? "t"   //Window 1
       ?? "4"   //Window 1
       ---
+
   Note that the whole "text3" will be written to Main Window, but
   "ext4" will be written to Window 1.<br />
   Note also that all window corners must be within MAIN window's scope.
