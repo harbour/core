@@ -31,7 +31,7 @@ as:
    - @ ... SAY ... (DevPos(), DevOut())
    - Scroll()
    - SetPos()
-   - _GET_()
+   - \_GET\_()
    - ReadModal()
    - Inkey()
    - AChoice()
