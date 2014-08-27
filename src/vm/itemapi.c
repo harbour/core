@@ -2116,12 +2116,7 @@ PHB_ITEM hb_itemClone( PHB_ITEM pItem )
    if( HB_IS_ARRAY( pItem ) )
    {
       if( HB_IS_OBJECT( pItem ) )
-      {
-         PHB_ITEM pResult = hb_itemNew( NULL );
-
-         hb_objCloneTo( pResult, pItem, NULL );
-         return pResult;
-      }
+         return hb_objCloneTo( hb_itemNew( NULL ), pItem );
       else
          return hb_arrayClone( pItem );
    }
@@ -2138,7 +2133,7 @@ void hb_itemCloneTo( PHB_ITEM pDest, PHB_ITEM pSource )
    if( HB_IS_ARRAY( pSource ) )
    {
       if( HB_IS_OBJECT( pSource ) )
-         hb_objCloneTo( pDest, pSource, NULL );
+         hb_objCloneTo( pDest, pSource );
       else
          hb_arrayCloneTo( pDest, pSource );
    }

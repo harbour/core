@@ -183,74 +183,191 @@ complex ones:
 
 #define HB_SERIAL_DUMMYOFFSET ( ( HB_SIZE ) -1 )
 
-typedef struct _HB_CYCLIC_REF
+#define HB_SERIAL_REFLSTINIT  16
+
+typedef struct
 {
    void *   value;
    HB_SIZE  nOffset;
    int      iRefs;
    int      iType;
-   struct _HB_CYCLIC_REF * pNext;
-} HB_CYCLIC_REF, * PHB_CYCLIC_REF;
+} HB_REF_ITEM, * PHB_REF_ITEM;
+
+typedef struct
+{
+   HB_SIZE        nSize;
+   HB_SIZE        nCount;
+   PHB_REF_ITEM   pRefs;
+} HB_REF_LIST, * PHB_REF_LIST;
 
 static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
                                    PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
                                    const HB_UCHAR * pBuffer, HB_SIZE nOffset,
-                                   PHB_CYCLIC_REF pRef );
+                                   PHB_REF_LIST pRefList );
 
-/* used by hb_itemSerialSize() for HB_IT_ARRAY and HB_IT_HASH */
-static HB_BOOL hb_itemSerialValueRef( PHB_CYCLIC_REF * pRefPtr, void * value,
-                                      HB_SIZE nOffset )
+/*
+static void hb_itemSerialRefListShow( PHB_REF_LIST pRefList )
 {
-   while( *pRefPtr )
+   HB_SIZE nPos;
+
+   printf( "\n================================\n" );
+   printf( "pRefList->nSize=%ld, pRefList->nCount=%ld\n", pRefList->nSize, pRefList->nCount );
+
+   for( nPos = 0; nPos < pRefList->nCount; ++nPos )
    {
-      if( ( *pRefPtr )->value == value )
+      printf( "\t%ld] value=0x%p, nOffset=%ld, iRefs=%d, iType=%d\n", nPos,
+              pRefList->pRefs[ nPos ].value,
+              pRefList->pRefs[ nPos ].nOffset,
+              pRefList->pRefs[ nPos ].iRefs,
+              pRefList->pRefs[ nPos ].iType );
+   }
+   printf( "================================\n" ); fflush( stdout );
+}
+*/
+
+static void hb_itemSerialRefListInit( PHB_REF_LIST pRefList )
+{
+   memset( pRefList, 0, sizeof( HB_REF_LIST ) );
+}
+
+static void hb_itemSerialRefListFree( PHB_REF_LIST pRefList )
+{
+   if( pRefList->nSize )
+      hb_xfree( pRefList->pRefs );
+}
+
+static PHB_REF_ITEM hb_itemSerialValueFind( PHB_REF_LIST pRefList, void * value,
+                                            HB_SIZE * pnPos )
+{
+   HB_SIZE nFirst, nLast, nMiddle;
+
+   nFirst = 0;
+   nLast = pRefList->nCount;
+   nMiddle = ( nFirst + nLast ) >> 1;
+
+   while( nFirst < nLast )
+   {
+      if( ( HB_PTRUINT ) pRefList->pRefs[ nMiddle ].value < ( HB_PTRUINT ) value )
+         nFirst = nMiddle + 1;
+      else if( ( HB_PTRUINT ) pRefList->pRefs[ nMiddle ].value > ( HB_PTRUINT ) value )
+         nLast = nMiddle;
+      else
       {
-         ( *pRefPtr )->iRefs = 1;
-         return HB_TRUE;
+         * pnPos = nMiddle;
+         return &pRefList->pRefs[ nMiddle ];
       }
-      pRefPtr = &( *pRefPtr )->pNext;
+      nMiddle = ( nFirst + nLast ) >> 1;
    }
 
-   *pRefPtr = ( PHB_CYCLIC_REF ) hb_xgrab( sizeof( HB_CYCLIC_REF ) );
-   ( *pRefPtr )->value = value;
-   ( *pRefPtr )->nOffset = nOffset;
-   ( *pRefPtr )->iRefs = 0;
-   ( *pRefPtr )->iType = 0;
-   ( *pRefPtr )->pNext = NULL;
+   * pnPos = nMiddle;
+
+   return NULL;
+}
+
+static PHB_REF_ITEM hb_itemSerialOffsetFind( PHB_REF_LIST pRefList, HB_SIZE nOffset,
+                                             int iType, HB_SIZE * pnPos )
+{
+   HB_SIZE nFirst, nLast, nMiddle;
+
+   nFirst = 0;
+   nLast = pRefList->nCount;
+   nMiddle = ( nFirst + nLast ) >> 1;
+
+   while( nFirst < nLast )
+   {
+      if( pRefList->pRefs[ nMiddle ].nOffset < nOffset )
+         nFirst = nMiddle + 1;
+      else if( pRefList->pRefs[ nMiddle ].nOffset > nOffset )
+         nLast = nMiddle;
+      else if( pRefList->pRefs[ nMiddle ].iType < iType )
+         nFirst = nMiddle + 1;
+      else if( pRefList->pRefs[ nMiddle ].iType > iType )
+         nLast = nMiddle;
+      else
+      {
+         * pnPos = nMiddle;
+         return &pRefList->pRefs[ nMiddle ];
+      }
+      nMiddle = ( nFirst + nLast ) >> 1;
+   }
+
+   * pnPos = nMiddle;
+
+   return NULL;
+}
+
+/* used by hb_itemSerialSize() for HB_IT_ARRAY and HB_IT_HASH */
+static HB_BOOL hb_itemSerialValueRef( PHB_REF_LIST pRefList, void * value,
+                                      HB_SIZE nOffset )
+{
+   PHB_REF_ITEM pRef;
+   HB_SIZE nPos;
+
+   if( ( pRef = hb_itemSerialValueFind( pRefList, value, &nPos ) ) != NULL )
+   {
+      pRef->iRefs = 1;
+      return HB_TRUE;
+   }
+
+   if( pRefList->nCount >= pRefList->nSize )
+   {
+      if( pRefList->nSize == 0 )
+         pRefList->nSize = HB_SERIAL_REFLSTINIT;
+      else
+         pRefList->nSize += pRefList->nSize >> 1;
+      pRefList->pRefs = ( PHB_REF_ITEM )
+                        hb_xrealloc( pRefList->pRefs,
+                                     pRefList->nSize * sizeof( HB_REF_ITEM ) );
+   }
+
+   pRef = &pRefList->pRefs[ nPos ];
+   if( nPos < pRefList->nCount )
+      memmove( pRef + 1, pRef, ( pRefList->nCount - nPos ) * sizeof( HB_REF_ITEM ) );
+   pRefList->nCount++;
+
+   pRef->value = value;
+   pRef->nOffset = nOffset;
+   pRef->iRefs = 0;
+   pRef->iType = 0;
 
    return HB_FALSE;
 }
 
 /* used between hb_itemSerialSize() and hb_serializeItem() */
-static void hb_itemSerialUnRefFree( PHB_CYCLIC_REF * pRefPtr )
+static void hb_itemSerialUnusedFree( PHB_REF_LIST pRefList )
 {
-   PHB_CYCLIC_REF pRef;
-
-   while( *pRefPtr )
+   if( pRefList->nSize )
    {
-      pRef = *pRefPtr;
-      if( pRef->iRefs == 0 )
+      HB_SIZE nPos, nCount;
+
+      for( nPos = nCount = 0; nPos < pRefList->nCount; ++nPos )
       {
-         *pRefPtr = pRef->pNext;
-         hb_xfree( pRef );
+         if( pRefList->pRefs[ nPos ].iRefs != 0 )
+         {
+            if( nCount != nPos )
+               memcpy( &pRefList->pRefs[ nCount ], &pRefList->pRefs[ nPos ],
+                       sizeof( HB_REF_ITEM ) );
+            ++nCount;
+         }
       }
-      else
-         pRefPtr = &pRef->pNext;
+      pRefList->nSize = pRefList->nCount = nCount;
+      pRefList->pRefs = ( PHB_REF_ITEM )
+                        hb_xrealloc( pRefList->pRefs,
+                                     nCount * sizeof( HB_REF_ITEM ) );
    }
 }
 
 /* used by hb_serializeItem() for HB_IT_ARRAY and HB_IT_HASH */
-static HB_BOOL hb_itemSerialValueOffset( PHB_CYCLIC_REF pRef, void * value,
+static HB_BOOL hb_itemSerialValueOffset( PHB_REF_LIST pRefList, void * value,
                                          HB_SIZE nOffset, HB_SIZE * pnRef )
 {
-   while( pRef )
+   PHB_REF_ITEM pRef;
+   HB_SIZE nPos;
+
+   if( ( pRef = hb_itemSerialValueFind( pRefList, value, &nPos ) ) != NULL )
    {
-      if( pRef->value == value )
-      {
-         *pnRef = pRef->nOffset;
-         return pRef->nOffset < nOffset;
-      }
-      pRef = pRef->pNext;
+      *pnRef = pRef->nOffset;
+      return pRef->nOffset < nOffset;
    }
 
    *pnRef = HB_SERIAL_DUMMYOFFSET;
@@ -259,128 +376,129 @@ static HB_BOOL hb_itemSerialValueOffset( PHB_CYCLIC_REF pRef, void * value,
 
 /* used by hb_deserializeTest()
    for HB_SERIAL_ARRAYREF*, HB_SERIAL_HASHREF*, HB_SERIAL_REF */
-static HB_BOOL hb_itemSerialOffsetRef( PHB_CYCLIC_REF * pRefPtr, HB_SIZE nOffset )
+static HB_BOOL hb_itemSerialOffsetRef( PHB_REF_LIST pRefList, HB_SIZE nOffset )
 {
-   while( *pRefPtr )
+   PHB_REF_ITEM pRef;
+   HB_SIZE nPos;
+
+   if( hb_itemSerialOffsetFind( pRefList, nOffset, 0, &nPos ) != NULL )
+      return HB_TRUE;
+
+   if( pRefList->nCount >= pRefList->nSize )
    {
-      if( ( *pRefPtr )->nOffset == nOffset )
-         return HB_TRUE;
-      pRefPtr = &( *pRefPtr )->pNext;
+      if( pRefList->nSize == 0 )
+         pRefList->nSize = HB_SERIAL_REFLSTINIT;
+      else
+         pRefList->nSize += pRefList->nSize >> 1;
+      pRefList->pRefs = ( PHB_REF_ITEM )
+                        hb_xrealloc( pRefList->pRefs,
+                                     pRefList->nSize * sizeof( HB_REF_ITEM ) );
    }
 
-   *pRefPtr = ( PHB_CYCLIC_REF ) hb_xgrab( sizeof( HB_CYCLIC_REF ) );
-   ( *pRefPtr )->value = NULL;
-   ( *pRefPtr )->nOffset = nOffset;
-   ( *pRefPtr )->iRefs = 0;
-   ( *pRefPtr )->iType = 0;
-   ( *pRefPtr )->pNext = NULL;
+   pRef = &pRefList->pRefs[ nPos ];
+   if( nPos < pRefList->nCount )
+      memmove( pRef + 1, pRef, ( pRefList->nCount - nPos ) * sizeof( HB_REF_ITEM ) );
+   pRefList->nCount++;
+
+   pRef->value = NULL;
+   pRef->nOffset = nOffset;
+   pRef->iRefs = 0;
+   pRef->iType = 0;
 
    return HB_FALSE;
 }
 
 /* used by hb_deserializeTest() for HB_SERIAL_XHB_R */
-static void hb_itemSerialTypedRef( PHB_CYCLIC_REF * pRefPtr, int iType,
+static void hb_itemSerialTypedRef( PHB_REF_LIST pRefList, int iType,
                                    HB_SIZE nIndex )
 {
-   PHB_CYCLIC_REF pRef;
+   HB_SIZE nPos;
 
-   while( *pRefPtr )
+   if( hb_itemSerialOffsetFind( pRefList, nIndex, iType, &nPos ) == NULL )
    {
-      if( ( *pRefPtr )->iType == iType && ( *pRefPtr )->nOffset <= nIndex )
-      {
-         if( ( *pRefPtr )->nOffset == nIndex )
-            return;
-         else
-            break;
-      }
-      pRefPtr = &( *pRefPtr )->pNext;
-   }
+      PHB_REF_ITEM pRef;
 
-   pRef = ( PHB_CYCLIC_REF ) hb_xgrab( sizeof( HB_CYCLIC_REF ) );
-   pRef->value = NULL;
-   pRef->nOffset = nIndex;
-   pRef->iRefs = 0;
-   pRef->iType = iType;
-   pRef->pNext = *pRefPtr;
-   *pRefPtr = pRef;
+      if( pRefList->nCount >= pRefList->nSize )
+      {
+         if( pRefList->nSize == 0 )
+            pRefList->nSize = HB_SERIAL_REFLSTINIT;
+         else
+            pRefList->nSize += pRefList->nSize >> 1;
+         pRefList->pRefs = ( PHB_REF_ITEM )
+                           hb_xrealloc( pRefList->pRefs,
+                                        pRefList->nSize * sizeof( HB_REF_ITEM ) );
+      }
+
+      pRef = &pRefList->pRefs[ nPos ];
+      if( nPos < pRefList->nCount )
+         memmove( pRef + 1, pRef, ( pRefList->nCount - nPos ) * sizeof( HB_REF_ITEM ) );
+      pRefList->nCount++;
+
+      pRef->value = NULL;
+      pRef->nOffset = nIndex;
+      pRef->iRefs = 0;
+      pRef->iType = iType;
+   }
 }
 
 /* used by hb_deserializeItem()
    for HB_SERIAL_ARRAYREF* and HB_SERIAL_HASHREF* */
-static void hb_itemSerialOffsetSet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem,
+static void hb_itemSerialOffsetSet( PHB_REF_LIST pRefList, PHB_ITEM pItem,
                                     HB_SIZE nOffset )
 {
-   while( pRef )
-   {
-      if( pRef->nOffset == nOffset && pRef->iRefs == 0 )
-      {
-         pRef->value = ( void * ) pItem;
-         break;
-      }
-      pRef = pRef->pNext;
-   }
+   PHB_REF_ITEM pRef;
+   HB_SIZE nPos;
+
+   if( ( pRef = hb_itemSerialOffsetFind( pRefList, nOffset, 0, &nPos ) ) != NULL )
+      pRef->value = ( void * ) pItem;
 }
 
 /* used by hb_deserializeItem() for HB_SERIAL_REF */
-static void hb_itemSerialOffsetGet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem,
+static void hb_itemSerialOffsetGet( PHB_REF_LIST pRefList, PHB_ITEM pItem,
                                     HB_SIZE nOffset )
 {
-   while( pRef )
-   {
-      if( pRef->nOffset == nOffset && pRef->iRefs == 0 )
-      {
-         hb_itemCopy( pItem, ( PHB_ITEM ) pRef->value );
-         break;
-      }
-      pRef = pRef->pNext;
-   }
+   PHB_REF_ITEM pRef;
+   HB_SIZE nPos;
+
+   if( ( pRef = hb_itemSerialOffsetFind( pRefList, nOffset, 0, &nPos ) ) != NULL )
+      hb_itemCopy( pItem, ( PHB_ITEM ) pRef->value );
 }
 
 /* used by hb_deserializeItem() for
    HB_SERIAL_XHB_A, HB_SERIAL_XHB_H, HB_SERIAL_XHB_Q, HB_SERIAL_XHB_O */
-static void hb_itemSerialTypedSet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem, int iType )
+static void hb_itemSerialTypedSet( PHB_REF_LIST pRefList, PHB_ITEM pItem, int iType )
 {
-   while( pRef )
+   HB_SIZE nPos = pRefList->nCount;
+
+   while( nPos-- )
    {
+      PHB_REF_ITEM pRef = &pRefList->pRefs[ nPos ];
+
       if( pRef->iType == iType && pRef->value == NULL )
       {
          if( ( HB_SIZE ) ++pRef->iRefs == pRef->nOffset )
             pRef->value = ( void * ) pItem;
       }
-      pRef = pRef->pNext;
    }
 }
 
 /* used by hb_deserializeItem() for HB_SERIAL_XHB_R */
-static void hb_itemSerialTypedGet( PHB_CYCLIC_REF pRef, PHB_ITEM pItem,
+static void hb_itemSerialTypedGet( PHB_REF_LIST pRefList, PHB_ITEM pItem,
                                    int iType, HB_SIZE nIndex )
 {
-   while( pRef )
-   {
-      if( pRef->iType == iType && pRef->nOffset == nIndex )
-      {
-         if( pRef->value )
-            hb_itemCopy( pItem, ( PHB_ITEM ) pRef->value );
-         break;
-      }
-      pRef = pRef->pNext;
-   }
-}
+   PHB_REF_ITEM pRef;
+   HB_SIZE nPos;
 
-/* free reference list after serialization/deserialization process */
-static void hb_itemSerialRefFree( PHB_CYCLIC_REF pRef )
-{
-   while( pRef )
+   if( ( pRef = hb_itemSerialOffsetFind( pRefList, nIndex, iType, &nPos ) ) != NULL )
    {
-      PHB_CYCLIC_REF pFree = pRef;
-      pRef = pRef->pNext;
-      hb_xfree( pFree );
+      if( pRef->value )
+         hb_itemCopy( pItem, ( PHB_ITEM ) pRef->value );
    }
 }
 
 static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
                                   PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
-                                  PHB_CYCLIC_REF * pRefPtr, HB_SIZE nOffset )
+                                  PHB_REF_LIST pRefList, HB_SIZE nOffset )
 {
    HB_SIZE nSize, nLen, u;
    HB_MAXINT lVal;
@@ -468,7 +586,8 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
             if( szClass && szFunc )
                nSize += strlen( szClass ) + strlen( szFunc ) + 3;
          }
-         if( hb_itemSerialValueRef( pRefPtr, hb_arrayId( pItem ), nOffset + nSize ) )
+         if( ( iFlags & HB_SERIALIZE_IGNOREREF ) == 0 &&
+             hb_itemSerialValueRef( pRefList, hb_arrayId( pItem ), nOffset + nSize ) )
          {
             nSize = 5;
          }
@@ -483,12 +602,13 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
                nSize += 5;
             for( u = 1; u <= nLen; u++ )
                nSize += hb_itemSerialSize( hb_arrayGetItemPtr( pItem, u ), iFlags,
-                                           cdpIn, cdpOut, pRefPtr, nOffset + nSize );
+                                           cdpIn, cdpOut, pRefList, nOffset + nSize );
          }
          break;
 
       case HB_IT_HASH:
-         if( hb_itemSerialValueRef( pRefPtr, hb_hashId( pItem ), nOffset ) )
+         if( ( iFlags & HB_SERIALIZE_IGNOREREF ) == 0 &&
+             hb_itemSerialValueRef( pRefList, hb_hashId( pItem ), nOffset ) )
          {
             nSize = 5;
          }
@@ -503,7 +623,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
             {
                nSize++;
                nSize += hb_itemSerialSize( pDefVal, iFlags,
-                                            cdpIn, cdpOut, pRefPtr, nOffset + nSize );
+                                            cdpIn, cdpOut, pRefList, nOffset + nSize );
             }
             nLen = hb_hashLen( pItem );
             if( nLen <= 255 )
@@ -515,9 +635,9 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
             for( u = 1; u <= nLen; u++ )
             {
                nSize += hb_itemSerialSize( hb_hashGetKeyAt( pItem, u ), iFlags,
-                                           cdpIn, cdpOut, pRefPtr, nOffset + nSize );
+                                           cdpIn, cdpOut, pRefList, nOffset + nSize );
                nSize += hb_itemSerialSize( hb_hashGetValueAt( pItem, u ), iFlags,
-                                           cdpIn, cdpOut, pRefPtr, nOffset + nSize );
+                                           cdpIn, cdpOut, pRefList, nOffset + nSize );
             }
          }
          break;
@@ -533,7 +653,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
 static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
                                  PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
                                  HB_UCHAR * pBuffer, HB_SIZE nOffset,
-                                 PHB_CYCLIC_REF pRef )
+                                 PHB_REF_LIST pRefList )
 {
    HB_MAXINT lVal;
    double d;
@@ -754,7 +874,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
          break;
 
       case HB_IT_ARRAY:
-         if( hb_itemSerialValueOffset( pRef, hb_arrayId( pItem ), nOffset, &nRef ) )
+         if( hb_itemSerialValueOffset( pRefList, hb_arrayId( pItem ), nOffset, &nRef ) )
          {
             pBuffer[ nOffset++ ] = HB_SERIAL_REF;
             HB_PUT_LE_UINT32( &pBuffer[ nOffset ], nRef );
@@ -801,12 +921,12 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
             }
             for( n = 1; n <= nLen; n++ )
                nOffset = hb_serializeItem( hb_arrayGetItemPtr( pItem, n ), iFlags,
-                                           cdpIn, cdpOut, pBuffer, nOffset, pRef );
+                                           cdpIn, cdpOut, pBuffer, nOffset, pRefList );
          }
          break;
 
       case HB_IT_HASH:
-         if( hb_itemSerialValueOffset( pRef, hb_hashId( pItem ), nOffset, &nRef ) )
+         if( hb_itemSerialValueOffset( pRefList, hb_hashId( pItem ), nOffset, &nRef ) )
          {
             pBuffer[ nOffset++ ] = HB_SERIAL_REF;
             HB_PUT_LE_UINT32( &pBuffer[ nOffset ], nRef );
@@ -827,7 +947,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
             {
                pBuffer[ nOffset++ ] = HB_SERIAL_HASHDEFVAL;
                nOffset = hb_serializeItem( pDefVal, iHashFlags,
-                                           cdpIn, cdpOut, pBuffer, nOffset, pRef );
+                                           cdpIn, cdpOut, pBuffer, nOffset, pRefList );
             }
             nLen = hb_hashLen( pItem );
             if( nLen <= 255 )
@@ -853,9 +973,9 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
             for( n = 1; n <= nLen; n++ )
             {
                nOffset = hb_serializeItem( hb_hashGetKeyAt( pItem, n ), iFlags,
-                                           cdpIn, cdpOut, pBuffer, nOffset, pRef );
+                                           cdpIn, cdpOut, pBuffer, nOffset, pRefList );
                nOffset = hb_serializeItem( hb_hashGetValueAt( pItem, n ), iFlags,
-                                           cdpIn, cdpOut, pBuffer, nOffset, pRef );
+                                           cdpIn, cdpOut, pBuffer, nOffset, pRefList );
             }
          }
          break;
@@ -870,7 +990,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
 }
 
 static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSize,
-                                   HB_SIZE nOffset, PHB_CYCLIC_REF * pRefPtr )
+                                   HB_SIZE nOffset, PHB_REF_LIST pRefList )
 {
    const HB_UCHAR * pBuffer = *pBufferPtr;
    HB_SIZE nSize = *pnSize, nLen = 0;
@@ -937,7 +1057,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
          nSize = 9 + ( nSize >= 9 ? HB_GET_LE_UINT32( pBuffer ) : nSize );
          break;
       case HB_SERIAL_ARRAYREF8:
-         if( hb_itemSerialOffsetRef( pRefPtr, nOffset ) )
+         if( hb_itemSerialOffsetRef( pRefList, nOffset ) )
             return HB_FALSE;
       case HB_SERIAL_ARRAY8:
          if( nSize >= 2 )
@@ -949,7 +1069,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
             nSize++;
          break;
       case HB_SERIAL_ARRAYREF16:
-         if( hb_itemSerialOffsetRef( pRefPtr, nOffset ) )
+         if( hb_itemSerialOffsetRef( pRefList, nOffset ) )
             return HB_FALSE;
       case HB_SERIAL_ARRAY16:
          if( nSize >= 3 )
@@ -961,7 +1081,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
             nSize++;
          break;
       case HB_SERIAL_ARRAYREF32:
-         if( hb_itemSerialOffsetRef( pRefPtr, nOffset ) )
+         if( hb_itemSerialOffsetRef( pRefList, nOffset ) )
             return HB_FALSE;
       case HB_SERIAL_ARRAY32:
          if( nSize >= 5 )
@@ -973,7 +1093,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
             nSize++;
          break;
       case HB_SERIAL_HASHREF8:
-         if( hb_itemSerialOffsetRef( pRefPtr, nOffset ) )
+         if( hb_itemSerialOffsetRef( pRefList, nOffset ) )
             return HB_FALSE;
       case HB_SERIAL_HASH8:
          if( nSize >= 2 )
@@ -985,7 +1105,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
             nSize++;
          break;
       case HB_SERIAL_HASHREF16:
-         if( hb_itemSerialOffsetRef( pRefPtr, nOffset ) )
+         if( hb_itemSerialOffsetRef( pRefList, nOffset ) )
             return HB_FALSE;
       case HB_SERIAL_HASH16:
          if( nSize >= 3 )
@@ -997,7 +1117,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
             nSize++;
          break;
       case HB_SERIAL_HASHREF32:
-         if( hb_itemSerialOffsetRef( pRefPtr, nOffset ) )
+         if( hb_itemSerialOffsetRef( pRefList, nOffset ) )
             return HB_FALSE;
       case HB_SERIAL_HASH32:
          if( nSize >= 5 )
@@ -1009,7 +1129,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
             nSize++;
          break;
       case HB_SERIAL_REF:
-         if( ! hb_itemSerialOffsetRef( pRefPtr, HB_GET_LE_UINT32( pBuffer ) ) )
+         if( ! hb_itemSerialOffsetRef( pRefList, HB_GET_LE_UINT32( pBuffer ) ) )
             return HB_FALSE;
          nSize = 5;
          break;
@@ -1113,7 +1233,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
                case HB_SERIAL_XHB_A:
                case HB_SERIAL_XHB_H:
                case HB_SERIAL_XHB_O:
-                  hb_itemSerialTypedRef( pRefPtr, pBuffer[ 0 ],
+                  hb_itemSerialTypedRef( pRefList, pBuffer[ 0 ],
                               ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ 1 ] ) );
                case HB_SERIAL_XHB_B:
                   nSize = 10;
@@ -1137,7 +1257,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
    {
       nOffset += nSize;
       nSize = *pnSize;
-      if( ! hb_deserializeTest( pBufferPtr, pnSize, nOffset, pRefPtr ) )
+      if( ! hb_deserializeTest( pBufferPtr, pnSize, nOffset, pRefList ) )
          return HB_FALSE;
       nSize -= *pnSize;
       --nLen;
@@ -1149,11 +1269,9 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
 static HB_SIZE hb_deserializeHash( PHB_ITEM pItem,
                                    PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
                                    const HB_UCHAR * pBuffer, HB_SIZE nOffset,
-                                   HB_SIZE nLen, PHB_CYCLIC_REF pRef, int iType )
+                                   HB_SIZE nLen, PHB_REF_LIST pRefList )
 {
    hb_hashNew( pItem );
-   if( iType != 0 )
-      hb_itemSerialTypedSet( pRef, pItem, iType );
 
    if( nLen )
    {
@@ -1164,8 +1282,8 @@ static HB_SIZE hb_deserializeHash( PHB_ITEM pItem,
       hb_hashPreallocate( pItem, nLen );
       while( nLen-- )
       {
-         nOffset = hb_deserializeItem( pKey, cdpIn, cdpOut, pBuffer, nOffset, pRef );
-         nOffset = hb_deserializeItem( pVal, cdpIn, cdpOut, pBuffer, nOffset, pRef );
+         nOffset = hb_deserializeItem( pKey, cdpIn, cdpOut, pBuffer, nOffset, pRefList );
+         nOffset = hb_deserializeItem( pVal, cdpIn, cdpOut, pBuffer, nOffset, pRefList );
          hb_hashAdd( pItem, pKey, pVal );
       }
       hb_itemRelease( pKey );
@@ -1179,8 +1297,8 @@ static HB_SIZE hb_deserializeHash( PHB_ITEM pItem,
       {
          if( hb_hashAllocNewPair( pItem, &pKey, &pVal ) )
          {
-            nOffset = hb_deserializeItem( pKey, cdpIn, cdpOut, pBuffer, nOffset, pRef );
-            nOffset = hb_deserializeItem( pVal, cdpIn, cdpOut, pBuffer, nOffset, pRef );
+            nOffset = hb_deserializeItem( pKey, cdpIn, cdpOut, pBuffer, nOffset, pRefList );
+            nOffset = hb_deserializeItem( pVal, cdpIn, cdpOut, pBuffer, nOffset, pRefList );
          }
       }
 #endif
@@ -1192,16 +1310,15 @@ static HB_SIZE hb_deserializeHash( PHB_ITEM pItem,
 static HB_SIZE hb_deserializeArray( PHB_ITEM pItem,
                                     PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
                                     const HB_UCHAR * pBuffer, HB_SIZE nOffset,
-                                    HB_SIZE nLen, PHB_CYCLIC_REF pRef, int iType )
+                                    HB_SIZE nLen, PHB_REF_LIST pRefList )
 {
    HB_SIZE u;
 
    hb_arrayNew( pItem, nLen );
-   if( iType != 0 )
-      hb_itemSerialTypedSet( pRef, pItem, iType );
+
    for( u = 1; u <= nLen; u++ )
       nOffset = hb_deserializeItem( hb_arrayGetItemPtr( pItem, u ),
-                                    cdpIn, cdpOut, pBuffer, nOffset, pRef );
+                                    cdpIn, cdpOut, pBuffer, nOffset, pRefList );
 
    return nOffset;
 }
@@ -1209,7 +1326,7 @@ static HB_SIZE hb_deserializeArray( PHB_ITEM pItem,
 static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
                                    PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
                                    const HB_UCHAR * pBuffer, HB_SIZE nOffset,
-                                   PHB_CYCLIC_REF pRef )
+                                   PHB_REF_LIST pRefList )
 {
    HB_SIZE nLen, nPad, nSize;
    char * szVal;
@@ -1384,45 +1501,45 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          break;
 
       case HB_SERIAL_ARRAYREF8:
-         hb_itemSerialOffsetSet( pRef, pItem, nOffset - 1 );
+         hb_itemSerialOffsetSet( pRefList, pItem, nOffset - 1 );
       case HB_SERIAL_ARRAY8:
          nLen = pBuffer[ nOffset++ ];
-         nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer, nOffset, nLen, pRef, 0 );
+         nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer, nOffset, nLen, pRefList );
          break;
       case HB_SERIAL_ARRAYREF16:
-         hb_itemSerialOffsetSet( pRef, pItem, nOffset - 1 );
+         hb_itemSerialOffsetSet( pRefList, pItem, nOffset - 1 );
       case HB_SERIAL_ARRAY16:
          nLen = HB_GET_LE_UINT16( &pBuffer[ nOffset ] );
-         nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer, nOffset + 2, nLen, pRef, 0 );
+         nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer, nOffset + 2, nLen, pRefList );
          break;
       case HB_SERIAL_ARRAYREF32:
-         hb_itemSerialOffsetSet( pRef, pItem, nOffset - 1 );
+         hb_itemSerialOffsetSet( pRefList, pItem, nOffset - 1 );
       case HB_SERIAL_ARRAY32:
          nLen = HB_GET_LE_UINT32( &pBuffer[ nOffset ] );
-         nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer, nOffset + 4, nLen, pRef, 0 );
+         nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer, nOffset + 4, nLen, pRefList );
          break;
 
       case HB_SERIAL_HASHREF8:
-         hb_itemSerialOffsetSet( pRef, pItem, nOffset - 1 );
+         hb_itemSerialOffsetSet( pRefList, pItem, nOffset - 1 );
       case HB_SERIAL_HASH8:
          nLen = pBuffer[ nOffset++ ];
-         nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer, nOffset, nLen, pRef, 0 );
+         nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer, nOffset, nLen, pRefList );
          break;
       case HB_SERIAL_HASHREF16:
-         hb_itemSerialOffsetSet( pRef, pItem, nOffset - 1 );
+         hb_itemSerialOffsetSet( pRefList, pItem, nOffset - 1 );
       case HB_SERIAL_HASH16:
          nLen = HB_GET_LE_UINT16( &pBuffer[ nOffset ] );
-         nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer, nOffset + 2, nLen, pRef, 0 );
+         nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer, nOffset + 2, nLen, pRefList );
          break;
       case HB_SERIAL_HASHREF32:
-         hb_itemSerialOffsetSet( pRef, pItem, nOffset - 1 );
+         hb_itemSerialOffsetSet( pRefList, pItem, nOffset - 1 );
       case HB_SERIAL_HASH32:
          nLen = HB_GET_LE_UINT32( &pBuffer[ nOffset ] );
-         nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer, nOffset + 4, nLen, pRef, 0 );
+         nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer, nOffset + 4, nLen, pRefList );
          break;
 
       case HB_SERIAL_REF:
-         hb_itemSerialOffsetGet( pRef, pItem,
+         hb_itemSerialOffsetGet( pRefList, pItem,
                                  HB_GET_LE_UINT32( &pBuffer[ nOffset ] ) );
          nOffset += 4;
          break;
@@ -1434,7 +1551,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          nLen = strlen( szClass );
          szFunc = szClass + nLen + 1;
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                              nOffset + nLen + strlen( szFunc ) + 2, pRef );
+                              nOffset + nLen + strlen( szFunc ) + 2, pRefList );
          hb_objSetClass( pItem, szClass, szFunc );
          break;
       }
@@ -1443,7 +1560,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       {
          int iHashFlags = HB_GET_LE_UINT16( &pBuffer[ nOffset ] );
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                       nOffset + 2, pRef );
+                                       nOffset + 2, pRefList );
          hb_hashClearFlags( pItem, HB_HASH_FLAG_MASK );
          if( ( iHashFlags & ( HB_HASH_KEEPORDER | HB_HASH_BINARY ) ) != HB_HASH_BINARY )
             iHashFlags |= HB_HASH_RESORT;
@@ -1455,9 +1572,9 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       {
          PHB_ITEM pDefVal = hb_itemNew( NULL );
          nOffset = hb_deserializeItem( pDefVal, cdpIn, cdpOut, pBuffer,
-                                       nOffset, pRef );
+                                       nOffset, pRefList );
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                       nOffset, pRef );
+                                       nOffset, pRefList );
          hb_hashSetDefault( pItem, pDefVal );
          hb_itemRelease( pDefVal );
          break;
@@ -1474,13 +1591,15 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          {
             case HB_ZLIB_RES_OK:
             {
-               PHB_CYCLIC_REF pRefZ = NULL;
+               HB_REF_LIST refListZ;
+
+               hb_itemSerialRefListInit( &refListZ );
                pBuffer = ( const HB_UCHAR * ) szVal;
-               if( hb_deserializeTest( &pBuffer, &nLen, 0, &pRefZ ) )
-                  hb_deserializeItem( pItem, cdpIn, cdpOut, ( const HB_UCHAR * ) szVal, 0, pRefZ );
+               if( hb_deserializeTest( &pBuffer, &nLen, 0, &refListZ ) )
+                  hb_deserializeItem( pItem, cdpIn, cdpOut, ( const HB_UCHAR * ) szVal, 0, &refListZ );
                else
                   hb_itemClear( pItem );
-               hb_itemSerialRefFree( pRefZ );
+               hb_itemSerialRefListFree( &refListZ );
                break;
             }
             case HB_ZLIB_RES_UNSUPPORTED:
@@ -1549,20 +1668,20 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          break;
       case HB_SERIAL_XHB_A:
          nLen = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] );
-         nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer,
-                                        nOffset + 8, nLen, pRef, HB_SERIAL_XHB_A );
+         hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_A );
+         nOffset = hb_deserializeArray( pItem, cdpIn, cdpOut, pBuffer, nOffset + 8, nLen, pRefList );
          break;
       case HB_SERIAL_XHB_B:
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                       nOffset, pRef );
+                                       nOffset, pRefList );
          /* we do not support codeblock deserialization: HB_RestoreBlock( pItem ) */
-         /* hb_itemSerialTypedSet( pRef, pItem, HB_SERIAL_XHB_O ); */
+         /* hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_B ); */
          hb_itemClear( pItem );
          break;
       case HB_SERIAL_XHB_H:
          nLen = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] );
-         nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer,
-                                       nOffset + 8, nLen, pRef, HB_SERIAL_XHB_H );
+         hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_H );
+         nOffset = hb_deserializeHash( pItem, cdpIn, cdpOut, pBuffer, nOffset + 8, nLen, pRefList );
          hb_hashSetFlags( pItem, HB_HASH_KEEPORDER | HB_HASH_RESORT );
          break;
       case HB_SERIAL_XHB_O:
@@ -1572,7 +1691,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          nLen = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] );
          /* deserialize :className */
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                       nOffset + 8, pRef );
+                                       nOffset + 8, pRefList );
          /* find class handle */
          uiClass = hb_clsFindClass( hb_itemGetCPtr( pItem ), NULL );
          if( uiClass && hb_vmRequestReenter() )
@@ -1582,14 +1701,14 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
 
             hb_clsAssociate( uiClass );
             hb_itemMove( pItem, hb_stackReturnItem() );
-            hb_itemSerialTypedSet( pRef, pItem, HB_SERIAL_XHB_O );
+            hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_O );
 
             while( nLen-- )
             {
                nOffset = hb_deserializeItem( pMsg, cdpIn, cdpOut, pBuffer,
-                                             nOffset, pRef );
+                                             nOffset, pRefList );
                nOffset = hb_deserializeItem( pVal, cdpIn, cdpOut, pBuffer,
-                                             nOffset, pRef );
+                                             nOffset, pRefList );
                if( hb_vmRequestQuery() == 0 )
                {
                   char szMsg[ HB_SYMBOL_NAME_LEN ];
@@ -1603,13 +1722,13 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          }
          else
          {
-            hb_itemSerialTypedSet( pRef, pItem, HB_SERIAL_XHB_O );
+            hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_O );
             while( nLen-- )
             {
                nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                             nOffset, pRef );
+                                             nOffset, pRefList );
                nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                             nOffset, pRef );
+                                             nOffset, pRefList );
             }
             hb_itemClear( pItem );
          }
@@ -1622,7 +1741,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          nPad = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] ) + nOffset + 8;
          /* deserialize :className */
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
-                                       nOffset + 8, pRef );
+                                       nOffset + 8, pRefList );
          nLen = nPad - nOffset;
          /* get serialized HBPERSISTENT text */
          szVal = hb_cdpnDup( ( const char * ) &pBuffer[ nOffset ], &nLen,
@@ -1644,11 +1763,11 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          }
          else
             hb_itemClear( pItem );
-         hb_itemSerialTypedSet( pRef, pItem, HB_SERIAL_XHB_O );
+         hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_O );
          break;
       }
       case HB_SERIAL_XHB_R:
-         hb_itemSerialTypedGet( pRef, pItem, pBuffer[ nOffset ],
+         hb_itemSerialTypedGet( pRefList, pItem, pBuffer[ nOffset ],
                      ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset + 1 ] ) );
          nOffset += 9;
          break;
@@ -1668,13 +1787,16 @@ char * hb_itemSerializeCP( PHB_ITEM pItem, int iFlags,
                            PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut,
                            HB_SIZE * pnSize )
 {
-   PHB_CYCLIC_REF pRef = NULL;
-   HB_SIZE nSize = hb_itemSerialSize( pItem, iFlags, cdpIn, cdpOut, &pRef, 0 );
-   HB_UCHAR * pBuffer = ( HB_UCHAR * ) hb_xgrab( nSize + 1 );
+   HB_REF_LIST refList;
+   HB_UCHAR * pBuffer;
+   HB_SIZE nSize;
 
-   hb_itemSerialUnRefFree( &pRef );
-   hb_serializeItem( pItem, iFlags, cdpIn, cdpOut, pBuffer, 0, pRef );
-   hb_itemSerialRefFree( pRef );
+   hb_itemSerialRefListInit( &refList );
+   nSize = hb_itemSerialSize( pItem, iFlags, cdpIn, cdpOut, &refList, 0 );
+   pBuffer = ( HB_UCHAR * ) hb_xgrab( nSize + 1 );
+   hb_itemSerialUnusedFree( &refList );
+   hb_serializeItem( pItem, iFlags, cdpIn, cdpOut, pBuffer, 0, &refList );
+   hb_itemSerialRefListFree( &refList );
 
    if( ( iFlags & HB_SERIALIZE_COMPRESS ) != 0 && nSize > 20 )
    {
@@ -1711,16 +1833,17 @@ char * hb_itemSerialize( PHB_ITEM pItem, int iFlags, HB_SIZE *pnSize )
 PHB_ITEM hb_itemDeserializeCP( const char ** pBufferPtr, HB_SIZE * pnSize,
                                PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   PHB_CYCLIC_REF pRef = NULL;
    const HB_UCHAR * pBuffer = ( const HB_UCHAR * ) *pBufferPtr;
    PHB_ITEM pItem = NULL;
+   HB_REF_LIST refList;
 
-   if( ! pnSize || hb_deserializeTest( ( const HB_UCHAR ** ) pBufferPtr, pnSize, 0, &pRef ) )
+   hb_itemSerialRefListInit( &refList );
+   if( ! pnSize || hb_deserializeTest( ( const HB_UCHAR ** ) pBufferPtr, pnSize, 0, &refList ) )
    {
       pItem = hb_itemNew( NULL );
-      hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer, 0, pRef );
+      hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer, 0, &refList );
    }
-   hb_itemSerialRefFree( pRef );
+   hb_itemSerialRefListFree( &refList );
 
    return pItem;
 }
