@@ -1,6 +1,4 @@
-# GTWVW DOCUMENTAÇÃO
-
-## INTRODUÇĂO
+# INTRODUÇĂO
 
 Alguns agradecimentos săo indispensáveis: Harbour Claro, sem
 essa fantástica ferramenta todo esse trabalho năo existiria (os
@@ -29,7 +27,7 @@ Manoel Angeiras(angeiras@gmail.com, angeiras@yahoo.com) Versăo
 2007 Janeiro
 
 
-## SOBRE A GTWVW
+# SOBRE A GTWVW
 
 GTWVW é um driver de terminal para Harbour com algumas bibliotecas em
 tempo de execuçăo, permitindo ao programador mesclar texto e elementos
@@ -61,9 +59,9 @@ características especiais da GTWVW:
   com detalhes mais adiante.
 
 
-## SOBRE JANELAS
+# SOBRE JANELAS
 
-### Algumas convenções básicas:
+## Algumas convenções básicas:
 - As janelas săo numeradas de 0..n, sendo 0 a janela principal,
   e n a janela atual.
 - A janela principal é automaticamente aberta durante a
@@ -83,12 +81,12 @@ características especiais da GTWVW:
   tanto faz chamarmos a funçăo assim wvw_cbDestroy( nWinNum, nCBId )
   ou assim wvw_cbDestroy( , nCBId )
 
-### COORDENADAS
+## COORDENADAS
 
 Existem dois modelos de coordenadas da tela, que o usuário pode
 selecionar/mudar a qualquer momento:
 
-#### Standard Mode
+### Standard Mode
 - Nesse modo as coordenadas săo relativas a janela atual.
 - A janela atual é sempre setada, no início do programa ou em cada
   operaçăo de abertura e fechamento de janela.
@@ -96,7 +94,7 @@ selecionar/mudar a qualquer momento:
   principal. Dessa forma as funções MaxRow() e MaxCol() retornarăo
   os limites da janela atual.
 
-#### Maincoord Mode
+### Maincoord Mode
 - Nesse modo as coordenadas săo relativas a janela principal (como
   no Clipper). - Todas as saídas/entradas trabalham baseadas na
   janela atual. Internamente, existe um processo que verifica em
@@ -109,7 +107,7 @@ selecionar/mudar a qualquer momento:
   para portar aplicativos do Clipper para Harbour.
 
 
-## SOBRE MINIMIZAR, MAXIMIZAR E REDESENHAR TELAS
+# SOBRE MINIMIZAR, MAXIMIZAR E REDESENHAR TELAS
 
 Algumas funções da GTWVW năo săo automaticamente redesenhadas quando as
 janelas săo minimizadas ou sobrepostas por outros elementos. Nossa
@@ -140,7 +138,7 @@ se ainda persistir uma açăo de redesenho pendente. O intervalo default
 para o redesenho é de 100.
 
 
-## SOBRE O CURSOR
+# SOBRE O CURSOR
 
 Existem dois estilos para o cursor: Horizontal (como em aplicações
 MS-DOS) Vertical (mais comum em aplicações Windows) O programador
@@ -152,7 +150,7 @@ o cursor é apenas mostrado na janela atual). O estilo default é o
 horizontal.
 
 
-## SOBRE O ESPAÇAMENTO DE LINHAS
+# SOBRE O ESPAÇAMENTO DE LINHAS
 
 O programador pode escolher se haverá espaço entre linhas. Isso pode
 desejável, entre outras razões, porque os elementos GUI podem
@@ -164,7 +162,7 @@ através da funçăo wvw_SetDefLineSpacing().
 O espaçamento default é de zero.
 
 
-## SOBRE FONTES
+# SOBRE FONTES
 
 Nas diversas funções da GTWVW sobre as fontes, existem diversos
 parâmetros para controlar o tipo, largura, altura e outros fatores da
@@ -201,7 +199,7 @@ de parâmetros:
   a melhor forma possível.
 
 
-## FUNÇÕES CALLBACK
+# FUNÇÕES CALLBACK
 
 Existem algumas funções que devem ser definidas na nossa aplicaçăo, que
 săo na verdade, chamadas diretamente pela GTWVW. Algumas das principais
@@ -226,7 +224,7 @@ funções săo:
   processamento de WVW_Size() deve ser realizado ou năo.
 
 
-## EXEMPLOS
+# EXEMPLOS
 
 No site do grupo tem uma pequena aplicaçăo de exemplo do uso da GTWVW,
 algumas extensões, exemplos de tela, aquivo manifest, etc.

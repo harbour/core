@@ -1,6 +1,4 @@
-# GTWVW CONTENTS
-
-## Introduction
+# Introduction
 
 Thanks to: All developers of Harbour. Budyanto Dj., the author of
 GTWVW. xHarbour Newsgroup. Forum Clipper on line, a Brazilian forum to
@@ -18,7 +16,7 @@ I'll give a try :).
 Copyright © 2008 July/August Manoel N. Angeiras N., All rights reserved.
 
 
-## GTWVW
+# GTWVW
 
 GTWVW is a General Terminal (GT) driver for Harbour, with some runtime
 library allowing programmer to have text and GUI elements mixed, in
@@ -53,7 +51,7 @@ Some special characteristics of GTWVW:
   toolbars, scrollbars and pushbuttons.
 
 
-## ACKNOWLEDGEMENTS
+# ACKNOWLEDGEMENTS
 
 GTWVW does not exist without the followings:
 - Peter Rees, the original author of GTWVT
@@ -67,7 +65,7 @@ Also thanks to those who gave me feedbacks during the initial stage of GTWVW.
 And to those who has been persistenly asking me to continue developing it :-).
 
 
-## VERSION INFO
+# VERSION INFO
 
 This document is written when GTWVW version info is as follows.
 
@@ -85,9 +83,9 @@ gtwvt of:
 =Id: wvtcore.c,v 1.10 2004/08/30 14:10:20 vouchcac Exp =
 
 
-## Windows
+# Windows
 
-### Some basic conventions:
+## Some basic conventions:
 - Windows are numbered from 0 to n, with 0 being the main window, and 'n'
   the topmost window.
 - Main window is automatically opened during program init.
@@ -105,7 +103,7 @@ gtwvt of:
         or
      wvw_cbDestroy( , nCBId )
 
-### INPUT
+## INPUT
 
 - Mouse and keyboard input accepted only when topmost window is on focus.
   (That is, currently GTWVW windows are modals.)
@@ -113,12 +111,12 @@ gtwvt of:
 - Inputs on non topmost window can now be handled via WVW_INPUTFOCUS function
   (menu, toolbar, scrollbar, pushbutton, and other keyboard/mouse events).
 
-### COORDINATES
+## COORDINATES
 
 There are two screen coordinate models (and the user can switch at any
 moment during run time by using wvw_SetMainCoord()):
 
-#### Standard Mode (default)
+### Standard Mode (default)
 - In this mode, all coordinates are relative to current (topmost) window.
 - Topmost window are always set, from the beginning of program or in
   every operation of opening (wvw_nOpenWindow()) and closing (wvw_lCloseWindow()).
@@ -138,7 +136,7 @@ moment during run time by using wvw_SetMainCoord()):
 - All .prg level GTWVW functions work on window designated by nWinNum
   parameter.
 
-#### Maincoord Mode
+### Maincoord Mode
 - In this mode, the coordinates are relative to main window (like Clipper).
 - All output work in current window, which is internally switched depending
   of requested row/column position. After each operation, current window is
@@ -203,7 +201,7 @@ MainCoord Mode is meant to be the quickest way of porting an existing
 Clipper application to Harbour + GTWVW.
 
 
-## Minimize, Maximize and Repainting
+# Minimize, Maximize and Repainting
 
 Some GUI elements of GTWVW are not repainted when windows are minimized and
 maximized or covered by another GUI elements. Our application must "remember"
@@ -238,7 +236,7 @@ regions needing actual repainting.
 The default interval value is set to 100.
 
 
-## Cursor
+# Cursor
 
 There are two styles of caret: horizontal (classic, console style) and
 vertical (commonly used in GUI applications).
@@ -251,7 +249,7 @@ topmost window, the only one allowed to accept input).
 Default caret style is horizontal.
 
 
-## Line Spacing
+# Line Spacing
 
 Programmer may choose to have spacing between lines. This may be desirable,
 among other reasons, because GUI elements may overwrite the line above or
@@ -264,7 +262,7 @@ via wvw_SetDefLineSpacing() function.
 nDefLineSpacing is initially 0.
 
 
-## Fonts
+# Fonts
 
 In many GTWVW font functions, there are a lot of parameters to control
 type, height, width and others styles like underline, bold, etc. For
@@ -317,7 +315,7 @@ example, the wvw_CreateFont() function has the following list of parameters:
   is parallel to the base line of a row of text. Default is zero.
 
 
-## Callback Functions
+# Callback Functions
 
 There are some functions in GTWVW that need to be defined in our program
 (in fact, these functions are called from GTWVW directly). Some of these
@@ -340,7 +338,7 @@ functions:
   of function WVW_Size() is needed.
 
 
-## Status Bar
+# Status Bar
 
 GTWVW uses native Windows Status Bar Control. This Status Bar will be placed
 below the MaxRow() line. In GTWVT, on the other hand, Status Bar is drawn
@@ -352,7 +350,7 @@ automatically destroyed when its parent window is closed.
 Status Bar functions are named WVW_SB*().
 
 
-## Timer
+# Timer
 
 Programmer may set a timer process using wvw_SetTimer(), and end it using
 wvw_KillTimer(). This is meant for a quick, simple timer process like displaying
@@ -361,7 +359,7 @@ clock on the status bar.
 GTWVT has similar feature, but currently it is not activated.
 
 
-## Tool Bar
+# Tool Bar
 
 GTWVW uses native Windows Tool Bar Control. This Tool Bar will be placed
 above the 0 line. In GTWVT, on the other hand, Tool Bar is drawn anywhere
@@ -375,7 +373,7 @@ when its parent window is closed.
 Tool Bar functions are named WVW_TB*().
 
 
-## Scroll Bar
+# Scroll Bar
 
 GTWVW uses native Windows Scroll Bar Control. This Scroll Bar will be placed
 inside text area, floating above the texts. In GTWVT, on the other hand,
@@ -391,7 +389,7 @@ destroyed when its parent window is closed.
 Scroll Bar functions are named WVW_XB*().
 
 
-## Push Button
+# Push Button
 
 GTWVW uses native Windows Push Button Control. This Push Button will be placed
 inside text area, floating above the texts. In GTWVT, on the other hand,
@@ -408,7 +406,7 @@ destroyed when its parent window is closed.
 Push button functions are named WVW_PB*().
 
 
-## Progress Bar
+# Progress Bar
 
 GTWVW uses native Windows Progress Bar Control. This Progress Bar will be placed
 inside text area, floating above the texts. In GTWVT, on the other hand,
@@ -423,7 +421,7 @@ destroyed when its parent window is closed.
 Progress bar functions are named WVW_PG*().
 
 
-## HARBOUR CALLABLE FUNCTIONS
+# HARBOUR CALLABLE FUNCTIONS
 
 This section contains list (and description) of GTWVW .prg callable functions.
 These descriptions and function list are taken from GTWVW source code,
@@ -457,9 +455,9 @@ read the source code :-).
 See function skeletons inside the source code and in doc folder.
 
 
-## GTWVW and GTWVT
+# GTWVW and GTWVT
 
-### Compiling GTWVT program in GTWVW
+## Compiling GTWVT program in GTWVW
 
 GTWVW uses the same framework as its parent, GTWVT, and is maintained to be
 as similar as possible in structure. Although it is not a correct perpective
@@ -477,19 +475,19 @@ after adding `#include "wvt2wvw.ch"`, using GTWVW.
 Notes:
 There is no guarantee that GTWVW will always be compatible with GTWVT.
 
-### Compiling GTWVW program in GTWVT
+## Compiling GTWVW program in GTWVT
 
 I can't imagine that one will ever need to run his program in GTWVW and GTWVT
 back and forth. Converting GTWVT program to GTWVW is fairly simple, but not the
 other way around. Well, except if the program never calls GTWVW specific functions.
 But then in that case why bother linking it with GTWVW anyway?
 
-### Differences
+## Differences
 
 There are some differences between GTWVW and GTWVT, besides the fact that GTWVW allows
 multi-window operation, as described below.
 
-### Miscellaneous
+## Miscellaneous
 
 There are also some lower level differences between GTWVW and GTWVT. For example,
 when executing SetMode() GTWVW will validate that the window size must not exceed
@@ -497,7 +495,7 @@ system's client (desktop) area. That's why some overly sized window, as in
 "Dialog 1" of WVT*Class demo, will work in GTWVT but not in GTWVW.
 
 
-## FUTURE OF GTWVW
+# FUTURE OF GTWVW
 
 Current GTWVW is not put into Harbour core as another standard GT, because it is
 not ideal according to Harbour standards of GT. Ideally GTWVW should be split into
@@ -543,7 +541,7 @@ are also expected. Lorenzo Fiorini and others are helping me with it at the
 moment.
 
 
-## Examples
+# Examples
 
 In my personal web site () you can download an example of application,
 screen shots of converted applications and some sample of code, exploring
@@ -552,7 +550,7 @@ MSN, etc.). And of course, you can download this little documentation.
 Enjoy it !
 
 
-## EPILOGUE
+# EPILOGUE
 
 - This document may contain errors, because nobody is perfect :-)
 - All specifications herein may change due to further development of GTWVW.
