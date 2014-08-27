@@ -37,16 +37,16 @@
 
   * contrib/gtwvw/gtwvw.c
     ! Fix wrong handling of HB_ITEM causing memory leak, for the following functions:
-      HB_FUNC( WVW_CLIENTTOSCREEN )
-      HB_FUNC( WVW_GETXYFROMROWCOL )
-      HB_FUNC( WVW_GETROWCOLFROMXY )
-      HB_FUNC( WVW_GETFONTINFO )
-      HB_FUNC( WVW_GETPALETTE )
-      HB_FUNC( WVW_SAVESCREEN )
-      HB_FUNC( WVW_GETCURSORPOS )
-      HB_FUNC( WVW_GETPAINTRECT )
-      HB_FUNC( WVW_XBINFO )
-      HB_FUNC( WIN_GETCLIENTRECT )
+      wvw_ClientToScreen()
+      wvw_GetXYFromRowCol()
+      wvw_GetRowColFromXY()
+      wvw_GetFontInfo()
+      wvw_GetPalette()
+      wvw_SaveScreen()
+      wvw_GetCursorPos()
+      wvw_GetPaintRect()
+      wvw_xbInfo()
+      win_GetClientRect()
       Thanks to Pritpal Bedi for noticing these errors.
 
     + support native EDITBOX
@@ -96,7 +96,7 @@
     * hb_wvw_gtRenderPicture()
       Modified to support displaying transparent image if
       bTransp parameter is TRUE.
-    * HB_FUNC( WVW_DRAWIMAGE )
+    * wvw_DrawImage()
       Added lTransp optional parameter.
       Supports displaying images with proportional height/width ratio.
     + .prg callable wvw_SetMaxBMCache()
@@ -113,7 +113,7 @@
     Notes on wvw_DrawImage()
     /*
        (1) Transparency
-       if bTransparent is .t., top-left pixel is used as the transparent color,
+       if bTransparent is .T., top-left pixel is used as the transparent color,
 
        (2) Image dimension
        if nBottom is NIL, then image height will be proportional to original image.
@@ -140,7 +140,7 @@
 2005-10-31 23:55 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
   * contrib/gtwvw/gtwvw.c
     * wvw_pbCreate() now support bitmap on buttons.
-    ! wvw_pbSetFocus() and wvw_cbSetFocus() was always returning .f., fixed.
+    ! wvw_pbSetFocus() and wvw_cbSetFocus() was always returning .F., fixed.
 
 2005-10-19 18:00 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
   * contrib/gtwvw/hbgtwvw.h
@@ -212,29 +212,29 @@ WINDOW POSITIONING
    Some new functions regarding window positioning:
 
    + wvw_SetDefCentreWindow() to change default CentreWindow setting.
-     CentreWindow==.t. will cause subsequent opened windows be centered vertically and horizontally.
+     CentreWindow == .T. will cause subsequent opened windows be centered vertically and horizontally.
 
    + wvw_SetDefHCentreWindow() to change default HCentreWindow setting.
-     HCentreWindow==.t. will cause subsequent opened windows be centered horizontally.
+     HCentreWindow == .T. will cause subsequent opened windows be centered horizontally.
 
    + wvw_SetDefVCentreWindow() to change default VCentreWindow setting.
-     VCentreWindow==.t. will cause subsequent opened windows be centered vertically.
+     VCentreWindow == .T. will cause subsequent opened windows be centered vertically.
 
-   * wvw_XReposWindow() now has an optional param lAnchored (default is .t.).
-     If it's .f. then subwindows will be positioned according to each CentreWindow setting.
+   * wvw_XReposWindow() now has an optional param lAnchored (default is .T.).
+     If it's .F. then subwindows will be positioned according to each CentreWindow setting.
 
    /*
    DefCentreWindow, DefHCentreWindow, DefVCentreWindow are default setting used when opening a new subwindow.
-   if DefCentreWindow == .t.
+   IF DefCentreWindow
       newly open subwindow will be placed centered both vertically and horizontally in respect to Main Window
-   else
-      if DefHCentreWindow == .t.
+   ELSE
+      IF DefHCentreWindow
          newly open subwindow will be horizontally centered in respect to Main Window
-      endif
-      if DefVCentreWindow == .t.
+      ENDIF
+      IF DefVCentreWindow
          newly open subwindow will be vertically centered in respect to Main Window
-      endif
-   endif
+      ENDIF
+   ENDIF
    */
 
 
@@ -273,7 +273,7 @@ MISCELLANEOUS
      will repaint it on MaxCol()/MaxRow() event
 
    * WM_CLOSE on Main Window is now followed by K_ESC,
-     thus in a case where SetCancel() is .f. an app can still handle this event.
+     thus in a case where SetCancel() is .F. an app can still handle this event.
 
 2005-08-30 23:45 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id> :: END
 =========================================================================
@@ -348,8 +348,8 @@ MISCELLANEOUS
    - PackedDibGetColorTablePtr  , unused function
    - PackedDibGetColorTableEntry, unused function
    - gt_xPutch, unused function
-   * hb_Inp9x, hb_Outp9x: XCC, WATCOMC, MINGW32 compiler support
-   * gt_Tone: WATCOMC, MINGW32 compiler support
+   * hb_Inp9x, hb_Outp9x: XCC, WATCOMC, MINGW compiler support
+   * gt_Tone: WATCOMC, MINGW compiler support
  * hbgtwvw.h:
    * changes required by some C compilers
 
@@ -372,7 +372,7 @@ MISCELLANEOUS
  * gtwvw.c
  * hbgtwvw.h
    * Many type castings by Andi Jahja to allow GTWVW to be compiled in
-     MSVC/OW/PellesC/XCC/MinGW32. Thanks!!!
+     MSVC/OW/PellesC/XCC/MinGW. Thanks!!!
 
  2004-12-31:
  * gtwvw.c
@@ -382,9 +382,9 @@ MISCELLANEOUS
 
  2004-12-23:
  * gtwvw.c
-   ! HB_FUNC( WVW_SETICON ) should pass hb_parc(3) instead of hb_parcx(3) to
+   ! wvw_SetIcon() should pass hb_parc( 3 ) instead of hb_parcx( 3 ) to
      hb_wvw_gtSetWindowIcon() in order to allow proper NULL checking there.
-     (hb_parcx(3) never returns NULL, even if param 3 is NIL.
+     (hb_parcx( 3 ) never returns NULL, even if param 3 is NIL.
 
  2004-12-22:
  Combobox (dropdown listbox) is introduced.
@@ -496,7 +496,7 @@ MISCELLANEOUS
    + some #define by Lorenzo Fiorini
    - some unused functions and variables
    - some castings
-   This is to get rid of warnings in mingw32 as reported by Lorenzo Fiorini.
+   This is to get rid of warnings in mingw as reported by Lorenzo Fiorini.
 
 
  2004-10-18:
@@ -518,12 +518,12 @@ MISCELLANEOUS
  the window's handle.
 
  * gtwvw.c
-   + HB_FUNC( WVW_CREATEDIALOGMODAL )
+   + wvw_CreateDialogModal()
 
 
  2004-10-14:
  * gtwvw.c:
-   ! wvw_pbEnable(): after wvw_pbEnable(..., ..., .f.) focus should be
+   ! wvw_pbEnable(): after wvw_pbEnable(..., ..., .F.) focus should be
      set to parent window, otherwise no input is accepted. Fixed.
      Thanks to Fabio for reporting it.
 
@@ -677,11 +677,11 @@ Typically GTWVW will produce an asterisk sound and flash the topmost
 window to tell user which window is expecting input.
 
 In current GTWVW, prior to do that GTWVW will call WVW_INPUTFOCUS()
-function, if exists, and inspect its return value. If it returns .t.,
+function, if exists, and inspect its return value. If it returns .T.,
 then GTWVW do nothing, assuming the event has been handled properly
 by WVW_INPUTFOCUS().
 
-If no WVW_INPUTFOCUS() exists, or if it returns .f., GTWVW will do
+If no WVW_INPUTFOCUS() exists, or if it returns .F., GTWVW will do
 the usual response: asterisk sound and flashing window.
 
 See inpfocus.prg sample program demonstrating this feature.
@@ -839,8 +839,8 @@ WVW_Draw* functions.
    (adopted from Pritpal Bedi's work on GTWVT)
 
  + New .prg / HB_FUNC functions: (adopted from Pritpal Bedi's on GTWVT)
-   + HB_FUNC( WVW_UPDATEWINDOW )
-   + HB_FUNC( WVW_DRAWCOLORRECT ) (similar to WVW_FillRectangle)
+   + wvw_UpdateWindow()
+   + wvw_DrawColorRect() (similar to WVW_FillRectangle)
    + DlgModeless functions
    + many WIN_* functions, general window API wrapper functions
 

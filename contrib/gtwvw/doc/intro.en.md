@@ -161,7 +161,6 @@ moment during run time by using wvw_SetMainCoord()):
   Example:
       Assume this window states:
 
-      ---
       +------...
       |Main Window (Window 0)
       |MaxRow()=24 MaxCol()=79
@@ -173,16 +172,15 @@ moment during run time by using wvw_SetMainCoord()):
       |   |          |MaxRow()=3 MaxCol()=49
       |   |          |
 
-      @ 6,15 SAY "text1" will be written to Window2 starting at 0,0
-      @ 3,15 SAY "text2" will be written to Window1 starting at 0,11
-      @ 3, 2 SAY "text3" will be written to Main Window starting at 3,2
-      @ 4, 2 SAY ""    //Main Window
-      ?? "t"   //Main Window
-      ?? "e"   //Window 1
-      ?? "x"   //Window 1
-      ?? "t"   //Window 1
-      ?? "4"   //Window 1
-      ---
+      @ 6,15 SAY "text1" // will be written to Window2 starting at 0, 0
+      @ 3,15 SAY "text2" // will be written to Window1 starting at 0, 11
+      @ 3, 2 SAY "text3" // will be written to Main Window starting at 3, 2
+      @ 4, 2 SAY ""      // Main Window
+      ?? "t"             // Main Window
+      ?? "e"             // Window 1
+      ?? "x"             // Window 1
+      ?? "t"             // Window 1
+      ?? "4"             // Window 1
 
   Note that the whole "text3" will be written to Main Window, but
   "ext4" will be written to Window 1.<br />

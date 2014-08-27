@@ -15,9 +15,8 @@ procedure main()
    local cPath
    local i, j, k
 
-   /* Set EN CP-437 encoding */
-   hb_cdpSelect( "EN" )
-   hb_SetTermCP( "EN" )
+   hb_cdpSelect( "cp437" )
+   hb_SetTermCP( "cp437" )
 
    /* Set font size */
    hb_gtInfo( HB_GTI_FONTWIDTH, 6 )

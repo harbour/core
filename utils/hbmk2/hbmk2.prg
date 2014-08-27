@@ -9130,7 +9130,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
        * containing non UTF8 characters. For this expression we do
        * not need UTF8 or any other fixed encoding.
        */
-      tmp := hb_cdpSelect( "EN" )
+      tmp := hb_cdpSelect( "cp437" )
       t_pRegexInclude := hb_regexComp( _HBMK_REGEX_INCLUDE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
       /* TOFIX: Checking for #require should ideally be done
                 by the compiler after PP phase. The same
@@ -13642,7 +13642,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
    DO CASE
    CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
       hb_processRun( cPath_CompC,, @cStdOutErr, @cStdOutErr )
-      tmp := hb_cdpSelect( "EN" )
+      tmp := hb_cdpSelect( "cp437" )
       IF ( tmp1 := hb_AtX( R_( "Version [0-9][0-9]\.[0-9]" ), cStdOutErr ) ) != NIL
          nVer := Val( Stuff( SubStr( tmp1, Len( "Version " ) + 1 ), 3, 1, "" ) + "0" )
       ENDIF
@@ -14361,7 +14361,7 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
    LOCAL tmp
    LOCAL cLine
 
-   LOCAL cOldCP := hb_cdpSelect( "EN" )
+   LOCAL cOldCP := hb_cdpSelect( "cp437" )
 
    IF ! Empty( pRegex := hb_regexComp( R_( "HB_FUN_([A-Z_][A-Z_0-9]*)" ), .T., .T. ) )
       FOR EACH cLine IN hb_ATokens( StrTran( cString, Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
@@ -14539,7 +14539,7 @@ STATIC FUNCTION __hb_extern_get_list_hrb( cInputName )
          ENDIF
       NEXT
 
-      tmp := hb_cdpSelect( "EN" )
+      tmp := hb_cdpSelect( "cp437" )
       ASort( aExtern )
       hb_cdpSelect( tmp )
    ENDIF
@@ -14598,7 +14598,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
                      hExtern[ tmp[ 2 ] ] := NIL
                   ENDIF
                NEXT
-               tmp := hb_cdpSelect( "EN" )
+               tmp := hb_cdpSelect( "cp437" )
                ASort( aExtern )
                hb_cdpSelect( tmp )
             ENDIF
@@ -15218,7 +15218,7 @@ STATIC PROCEDURE __hbshell_LoadExtFromSource( aExtension, cFileName )
    LOCAL pRegex
    LOCAL tmp
 
-   tmp := hb_cdpSelect( "EN" )
+   tmp := hb_cdpSelect( "cp437" )
    pRegex := hb_regexComp( _HBMK_REGEX_REQUIRE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
    hb_cdpSelect( tmp )
 
@@ -16828,7 +16828,7 @@ STATIC FUNCTION FixFuncCase( hbmk, cFileName )
 
 STATIC FUNCTION en_hb_regexAll( ... )
 
-   LOCAL cOldCP := hb_cdpSelect( "EN" )
+   LOCAL cOldCP := hb_cdpSelect( "cp437" )
    LOCAL aMatch := hb_regexAll( ... )
 
    hb_cdpSelect( cOldCP )

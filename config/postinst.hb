@@ -674,7 +674,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                      hExtern[ tmp[ 2 ] ] := NIL
                   ENDIF
                NEXT
-               tmp := hb_cdpSelect( "EN" )
+               tmp := hb_cdpSelect( "cp437" )
                ASort( aExtern )
                hb_cdpSelect( tmp )
 
