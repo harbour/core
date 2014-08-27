@@ -2689,15 +2689,25 @@ static PHB_SYMB hb_objGetFuncSym( PHB_ITEM pItem )
 }
 
 /* clone object if user defined clone method or copy it */
-void hb_objCloneTo( PHB_ITEM pDest, PHB_ITEM pSource, PHB_NESTED_CLONED pClonedList )
+void hb_objCloneBody( PHB_ITEM pDest, PHB_ITEM pObject, PHB_NESTED_CLONED pClonedList )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_objCloneTo(%p,%p,%p)", pDest, pSource, pClonedList ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_objCloneBody(%p,%p,%p)", pDest, pObject, pClonedList ) );
 
    HB_SYMBOL_UNUSED( pClonedList );
 
    /* TODO: add support for user defined clone operation */
 
-   hb_itemCopy( pDest, pSource );
+   hb_itemCopy( pDest, pObject );
+}
+
+/* clone object if user defined clone method or copy it */
+PHB_ITEM hb_objCloneTo( PHB_ITEM pDest, PHB_ITEM pObject )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_objCloneTo(%p,%p)", pDest, pObject ) );
+
+   hb_objCloneBody( pDest, pObject, NULL );
+
+   return pDest;
 }
 
 /* send message which allows to set execution context for debugger */

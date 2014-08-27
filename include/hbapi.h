@@ -459,11 +459,17 @@ typedef struct _HB_EXTREF
    HB_EXTREF_FUNC0 mark;
 } HB_EXTREF, * PHB_EXTREF;
 
-typedef struct _HB_NESTED_CLONED
+typedef struct
 {
    void *   value;
    PHB_ITEM pDest;
-   struct _HB_NESTED_CLONED * pNext;
+} HB_NESTED_REF, * PHB_NESTED_REF;
+
+typedef struct
+{
+   HB_SIZE        nSize;
+   HB_SIZE        nCount;
+   PHB_NESTED_REF pRefs;
 } HB_NESTED_CLONED, * PHB_NESTED_CLONED;
 
 #endif /* _HB_API_INTERNAL_ */
@@ -862,8 +868,10 @@ extern HB_EXPORT HB_LONGLONG  hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE nIndex );
 /* internal array API not exported */
 extern void hb_arrayPushBase( PHB_BASEARRAY pBaseArray );
 extern void hb_arraySwap( PHB_ITEM pArray1, PHB_ITEM pArray2 );
-extern void hb_cloneNested( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pClonedList );
-extern void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED pClonedList );
+extern void hb_nestedCloneInit( PHB_NESTED_CLONED pClonedList, void * pValue, PHB_ITEM pDest );
+extern void hb_nestedCloneFree( PHB_NESTED_CLONED pClonedList );
+extern void hb_nestedCloneDo( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pClonedList );
+extern void hb_hashCloneBody( PHB_ITEM pDest, PHB_ITEM pHash, PHB_NESTED_CLONED pClonedList );
 #endif
 
 

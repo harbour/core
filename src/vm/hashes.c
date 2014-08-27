@@ -949,11 +949,11 @@ void * hb_hashId( PHB_ITEM pHash )
       return NULL;
 }
 
-void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED pClonedList )
+void hb_hashCloneBody( PHB_ITEM pDest, PHB_ITEM pHash, PHB_NESTED_CLONED pClonedList )
 {
    HB_SIZE nPos;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_hashCloneBody(%p,%p,%p)", pHash, pDest, pClonedList ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hashCloneBody(%p,%p,%p)", pDest, pHash, pClonedList ) );
 
    hb_hashNew( pDest );
    pDest->item.asHash.value->iFlags = pHash->item.asHash.value->iFlags;
@@ -976,7 +976,7 @@ void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED pCloned
       hb_itemCopy( &pDest->item.asHash.value->pPairs[ nPos ].key,
                    &pHash->item.asHash.value->pPairs[ nPos ].key );
       pDest->item.asHash.value->nLen++;
-      hb_cloneNested( &pDest->item.asHash.value->pPairs[ nPos ].value, pValue, pClonedList );
+      hb_nestedCloneDo( &pDest->item.asHash.value->pPairs[ nPos ].value, pValue, pClonedList );
    }
 }
 
@@ -986,22 +986,11 @@ PHB_ITEM hb_hashCloneTo( PHB_ITEM pDest, PHB_ITEM pHash )
 
    if( HB_IS_HASH( pHash ) )
    {
-      PHB_NESTED_CLONED pClonedList, pCloned;
+      HB_NESTED_CLONED clonedList;
 
-      pClonedList = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
-      pClonedList->value = ( void * ) pHash->item.asHash.value;
-      pClonedList->pDest = pDest;
-      pClonedList->pNext = NULL;
-
-      hb_hashCloneBody( pHash, pDest, pClonedList );
-
-      do
-      {
-         pCloned = pClonedList;
-         pClonedList = pClonedList->pNext;
-         hb_xfree( pCloned );
-      }
-      while( pClonedList );
+      hb_nestedCloneInit( &clonedList, ( void * ) pHash->item.asHash.value, pDest );
+      hb_hashCloneBody( pDest, pHash, &clonedList );
+      hb_nestedCloneFree( &clonedList );
    }
 
    return pDest;

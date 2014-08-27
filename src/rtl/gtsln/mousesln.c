@@ -368,7 +368,7 @@ void hb_gt_sln_mouse_Init( void )
 
          s_bMousePresent = HB_TRUE;
 
-         while( GetGpmEvent( &Evt ) );
+         while( GetGpmEvent( &Evt ) )
          {
             s_iMouseRow = Evt.y;
             s_iMouseCol = Evt.x;

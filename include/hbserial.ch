@@ -54,5 +54,6 @@
 #define HB_SERIALIZE_NUMSIZE        0x01
 #define HB_SERIALIZE_OBJECTSTRUCT   0x02
 #define HB_SERIALIZE_COMPRESS       0x04
+#define HB_SERIALIZE_IGNOREREF      0x08
 
 #endif /* HB_SERIAL_CH_ */
