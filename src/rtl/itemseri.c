@@ -205,7 +205,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
                                    const HB_UCHAR * pBuffer, HB_SIZE nOffset,
                                    PHB_REF_LIST pRefList );
 
-/*
+#if 0
 static void hb_itemSerialRefListShow( PHB_REF_LIST pRefList )
 {
    HB_SIZE nPos;
@@ -223,7 +223,7 @@ static void hb_itemSerialRefListShow( PHB_REF_LIST pRefList )
    }
    printf( "================================\n" ); fflush( stdout );
 }
-*/
+#endif
 
 static void hb_itemSerialRefListInit( PHB_REF_LIST pRefList )
 {
