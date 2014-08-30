@@ -463,8 +463,7 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_ChooseFont(
-      cFontName,nHeight,nWidth,nWeight,nQuality,lItalic,lUnderline,lStrikeout )
+      wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout )
    $ARGUMENTS$
       cFontName Nome da fonte. nHeight Largura da fonte. nWidth Altura da fonte.
       nWeight "Peso" da fonte. nQuality Qualidade da fonte. lItalic Indica se a
@@ -513,8 +512,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_CreateDialogDynamic(cDlgTemplate|nResource, lHandle,
-      cDlgProc|bDlgProc|nDlgProc, nFlag)
+      wvw_CreateDialogDynamic( cDlgTemplate|nResource, lHandle,
+      cDlgProc|bDlgProc|nDlgProc, nFlag )
    $ARGUMENTS$
       cDlgTemplate|nResource lHandle cDlgProc|bDlgProc|nDlgProc nFlag
    $DESCRIPTION$
@@ -536,8 +535,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_CreateDialogModal(cDialog|nResource|cDlgTemplate, NIL,
-      bDlgProc|cDlgProc,nFlag,nHandle)
+      wvw_CreateDialogModal( cDialog|nResource|cDlgTemplate, NIL,
+      bDlgProc|cDlgProc, nFlag, nHandle )
    $ARGUMENTS$
       cDialog|nResource|cDlgTemplate bDlgProc|cDlgProc nFlag nHandle
    $DESCRIPTION$
@@ -897,8 +896,7 @@
       wvw_DrawBoxGet( nWinNum, nRow, nCol, nWidth, aOffset )
    $DESCRIPTION$
       Desenha um quadro para a entrada de dados. Essa funçao desenha linhas brancas
-      na parte externa do lado direito e da parte de baixo (diferentemente da GTWVT
-      ).
+      na parte externa do lado direito e da parte de baixo (diferentemente da GTWVT)
    $RETURNS$
       .T. inferior e
    $PLATFORMS$
@@ -918,8 +916,8 @@
    $SYNTAX$
       wvw_DrawBoxGroup( nWinNum, nTop, nLeft, nBottom, nRight, aOffset )
    $ARGUMENTS$
-      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom
-      ,nRight Coordenadas para desenho do quadro. aOffset Matriz com quatro
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do quadro. aOffset Matriz com quatro
       elementos com coordenadas dos cantos superior, direito de offset para
       alinhamento do quadro com as linhas/colunas.
    $DESCRIPTION$
@@ -1197,7 +1195,7 @@
       lTight/aOffset, lTransparent )
    $ARGUMENTS$
       nWinNum Número da janela. O default é a janela atual.
-      nTop,nLeft,nBottom,nRight Coordenadas para desenho da imagem. Se a coordenada
+      nTop, nLeft, nBottom, nRight Coordenadas para desenho da imagem. Se a coordenada
       nBottom é NIL, então a altura da imagem será proporcional a largura da imagem.
       Se a coordenada nRight é NIL, então a largura da imagem será proporcional a
       altura da imagem. Se ambas as coordenadas nBottom e nRight são NIL, então o
@@ -1235,7 +1233,7 @@
       nBkColor, cFontFace, nHeight, nWidth, nWeight, nQuality, nCharSet, lItalic ,
       lUnderline, lStrikeOut )
    $ARGUMENTS$
-      nWinNum Número da janela. O default é a janela atual. nRow,nCol Linha/Coluna
+      nWinNum Número da janela. O default é a janela atual. nRow, nCol Linha/Coluna
       para desenho do label. cLabel String que será desenhada. nAlign Alinhamento
       wingdi.ch). nEscapement Especifica o ângulo. nTextColor Índice da cor do
       label. nBkColor Índice da cor de fundo do label. cFontFace Nome da fonte.
@@ -1268,7 +1266,7 @@
       wvw_DrawLabelEx( nWinNum, nRow, nCol, cLabel, nAlign, cTextColor, nBkColor,
       nSlotFont )
    $ARGUMENTS$
-      nWinNum Número da janela. O default é a janela atual. nRow,nCol Linha/Coluna
+      nWinNum Número da janela. O default é a janela atual. nRow, nCol Linha/Coluna
       para desenho do label. cLabel String que será desenhada. nAlign Alinhamento do
       texto no label. O default é TA_LEFT (as outras definiçoes estao no arquivo
       wingdi.ch). cTextColor Índice da cor para o texto. nBkColor Índice da cor de
@@ -1422,7 +1420,7 @@
       Parâmetro ignorado. nRGBColor Especifica a referencia de cor para o traço (
       valor com 32 bits de uma cor RGB).
    $DESCRIPTION$
-      Desenha um quadro nas coordenadas nTop,nLeft,nBottom,nRight, com os parâmetros
+      Desenha um quadro nas coordenadas nTop, nLeft, nBottom, nRight, com os parâmetros
       de estilo e cor especificados em nThick e nRGBColor.
    $RETURNS$
       .T.
@@ -1493,7 +1491,7 @@
       nPercent, nBackColor, nBarColor, cImage, lVertical, nDirection )
    $ARGUMENTS$
       nWinNum Número da janela. O default é a janela atual.
-      nTop,nLeft,nBottom,nRight Coordenadas para desenho da barra de progresso.
+      nTop, nLeft, nBottom, nRight Coordenadas para desenho da barra de progresso.
       aOffPixels Matriz com quatro elementos com coordenadas dos cantos superior,
       esquerdo, direito de offset para alinhamento da barra de progresso com as
       linhas/colunas. nPercent Valor que identifica o preenchimento total da barra
@@ -1683,8 +1681,7 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawShadedRect(
-      nWinNum,nTop,nLeft,nBottom,nRight,aOffPixels,nHorVert,aRGBb,aRGBe )
+      wvw_DrawShadedRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels, nHorVert, aRGBb, aRGBe )
    $ARGUMENTS$
       nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
       nRight Coordenadas para desenhar o retângulo. aOffPixels Matriz com quatro
@@ -1879,8 +1876,7 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_FillRectangle(nWinNum,nTop,nLeft,nBottom,nRight, nRGBColor/hBrush, lTight,
-      lUseBrush)
+      wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBColor|hBrush, lTight, lUseBrush )
    $ARGUMENTS$
       nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
       nRight Coordenadas para preenchimento do retângulo. nRGBColor/hBrush Cor para

@@ -176,7 +176,7 @@ HB_FUNC( WVW_SETTOOLTIPWIDTH )
       hb_retni( SendMessage( wvw_win->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
 
       if( HB_ISNUM( 2 ) )
-         SendMessage( wvw_win->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( int ) hb_parni( 2 ) );
+         SendMessage( wvw_win->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) hb_parni( 2 ) );
 
       return;
    }
@@ -227,12 +227,14 @@ HB_FUNC( WVW_SETTOOLTIPTITLE )
 
    if( wvw_win && HB_ISCHAR( 3 ) )
    {
-      void * hTitle;
+      void * hText;
+
       int iIcon = hb_parni( 2 );
       if( iIcon > 3 )
          iIcon = 0;
-      SendMessage( wvw_win->hWndTT, TTM_SETTITLE, ( WPARAM ) iIcon, ( LPARAM ) HB_PARSTR( 3, &hTitle, NULL ) );
-      hb_strfree( hTitle );
+
+      SendMessage( wvw_win->hWndTT, TTM_SETTITLE, ( WPARAM ) iIcon, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+      hb_strfree( hText );
    }
 #endif
 }

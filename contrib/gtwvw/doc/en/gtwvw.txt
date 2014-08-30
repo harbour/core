@@ -462,13 +462,12 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_ChooseFont(
-      cFontName,nHeight,nWidth,nWeight,nQuality,lItalic,lUnderline,lStrikeout )
+      wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout )
    $ARGUMENTS$
       <cFontName> Name of the font. <nHeight> Height of the font's character.
       <nWidth> Specifies average width of character in the font. <nWeight> Specifies
-      the weight of the font in the range 0 through 1000 (see About Fonts section
-      ). <nQuality> Specifies the output quality. <lItalic> Specifies an italic font
+      the weight of the font in the range 0 through 1000 (see About Fonts section)
+      <nQuality> Specifies the output quality. <lItalic> Specifies an italic font
       if set to TRUE. <lUnderline> Specifies an underlined font if set to TRUE.
       <lStrikeout> Specifies a strikeout font if set to TRUE.
    $DESCRIPTION$
@@ -537,8 +536,8 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_CreateDialogModal(cDialog|nResource|cDlgTemplate, NIL,
-      bDlgProc|cDlgProc,nFlag,nHandle)
+      wvw_CreateDialogModal( cDialog|nResource|cDlgTemplate, NIL,
+      bDlgProc|cDlgProc, nFlag, nHandle )
    $ARGUMENTS$
       <cDialog|nResource|cDlgTemplate> <bDlgProc|cDlgProc> <nFlag> <nHandle>
    $DESCRIPTION$
@@ -565,8 +564,8 @@
    $ARGUMENTS$
       <cFontFace> Name of the font. <nHeight> Height of the font's character.
       <nWidth> Specifies average width of character in the font. <nWeight> Specifies
-      the weight of the font in the range 0 through 1000 (see About Fonts section
-      ). <lItalic> Specifies an italic font if set to TRUE. <lUnderline> Specifies
+      the weight of the font in the range 0 through 1000 (see About Fonts section)
+      <lItalic> Specifies an italic font if set to TRUE. <lUnderline> Specifies
       an underlined font if set to TRUE. <lStrikeOut> Specifies a strikeout font if
       set to TRUE. <nCharSet> Identify the character set. <nQuality> Specifies the
       output quality <nEscapement> Specifies the angle, in tenths of degrees,
@@ -917,8 +916,8 @@
    $SYNTAX$
       wvw_DrawBoxGroup( nWinNum, nTop, nLeft, nBottom, nRight, aOffset )
    $ARGUMENTS$
-      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom
-      ,nRight> Coordinates to draw a box. <aOffset> Array of four elements with
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a box. <aOffset> Array of four elements with
       top/left and bottom/right corner coordinates to align the box with row/column.
    $DESCRIPTION$
       Draws a box.
@@ -1150,7 +1149,7 @@
       cImage/nPictureSlot, lTight/aOffset, lTransparent )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window.
-      <nTop,nLeft,nBottom,nRight> Coordinates to draw an image. If <nBottom> is NIL,
+      <nTop, nLeft, nBottom, nRight> Coordinates to draw an image. If <nBottom> is NIL,
       so image's height will be proportional to image's width. If <nRight> is NIL,
       so image's width will be proportional to image's height. If both <nbottom> and
       <nRight> are NIL, so original size of image will be used.
@@ -1184,7 +1183,7 @@
       nTextColor, nBkColor, cFontFace, nHeight, nWidth, nWeight,
       nQuality, nCharSet, lItalic, lUnderline, lStrikeOut )
    $ARGUMENTS$
-      <nWinNum> Window number. Default is current window. <nRow,nCol> Row/column to
+      <nWinNum> Window number. Default is current window. <nRow, nCol> Row/column to
       draw a label. <cLabel> String to be draw. <nAlign> String alignment. Default
       is TA_LEFT (another definitions: see file wingdi.ch). <nEscapement>
       Specifies angle. <nTextColor> Color index of label. <nBkColor> Color index of
@@ -1218,7 +1217,7 @@
       wvw_DrawLabelEx( nWinNum, nRow, nCol, cLabel, nAlign, cTextColor, nBkColor,
       nSlotFont )
    $ARGUMENTS$
-      <nWinNum> Window number. Default is current window. <nRow,nCol> Row/column to
+      <nWinNum> Window number. Default is current window. <nRow, nCol> Row/column to
       draw a label. <cLabel> String to be draw. <nAlign> Text alignment. Default is
       TA_LEFT (see wingdi.ch to another definitions). <cTextColor> Index color of
       the font. <nBkColor> Index color of label background. <nSlotFont> Index of
@@ -1372,7 +1371,7 @@
       for definitions (PS_SOLID, PS_DOT, etc.). <nShape> Ignored. <nRGBColor>
       Specifies color reference for pen (a 32 bit RGB color value).
    $DESCRIPTION$
-      Draws a outline arguments. box in <nTop,nLeft,nBottom,nRight> coordinates,
+      Draws a outline arguments. box in <nTop, nLeft, nBottom, nRight> coordinates,
       with style and color
    $RETURNS$
       Always .T.
@@ -1444,7 +1443,7 @@
       nDirection )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window.
-      <nTop,nLeft,nBottom,nRight> Coordinates to draw a progress bar. <aOffPixels>
+      <nTop, nLeft, nBottom, nRight> Coordinates to draw a progress bar. <aOffPixels>
       Array with four elemets with top/left, bottom/right coordinates to align
       progress bar with row/column. <nPercent> Maximum range value. <nBackColor>
       Background color. <nBarColor> Progress bar color. <cImage> An image to show
@@ -1605,8 +1604,7 @@
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_DrawShadedRect(
-      nWinNum,nTop,nLeft,nBottom,nRight,aOffPixels,nHorVert,aRGBb,aRGBe )
+      wvw_DrawShadedRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels, nHorVert, aRGBb, aRGBe )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to draw a rectangle. <aOffPixels> Array of four elements
@@ -2495,8 +2493,8 @@
       applicationdefined message and title, plus any combination of predefined icons
       and push buttons.
    $RETURNS$
-      Number of selected option (IDOK to OK button, IDCANCEL to Cancel button, etc.
-      ). You can see all definitions in file winuser.ch
+      Number of selected option (IDOK to OK button, IDCANCEL to Cancel button, etc.)
+      You can see all definitions in file winuser.ch
    $PLATFORMS$
       Windows
    $END$
@@ -3591,8 +3589,7 @@
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nMenuEvent> Menu's item.
    $DESCRIPTION$
-      Set the last selected item of the menu (returned from wvw_GetLastMenuEvent()
-      ).
+      Set the last selected item of the menu (returned from wvw_GetLastMenuEvent())
    $RETURNS$
       Last valid configuration.
    $PLATFORMS$
