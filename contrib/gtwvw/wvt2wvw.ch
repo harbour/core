@@ -222,8 +222,8 @@
 #xtranslate PROCEDURE Wvt_Paint( [<vlist,...>] ) => PROCEDURE wvw_Paint( nWinNum [,<vlist>] )
 #xtranslate Wvt_Paint( [<vlist,...>] ) => wvw_Paint( [,<vlist>] )
 
-#xtranslate FUNCTION Wvt_SetFocus( [<vlist,...>] )  => FUNCTION wvw_SetFocus( nWinNum [,<vlist>] )
-#xtranslate PROCEDURE Wvt_SetFocus( [<vlist,...>] )  => PROCEDURE wvw_SetFocus( nWinNum [,<vlist>] )
+#xtranslate FUNCTION Wvt_SetFocus( [<vlist,...>] ) => FUNCTION wvw_SetFocus( nWinNum [,<vlist>] )
+#xtranslate PROCEDURE Wvt_SetFocus( [<vlist,...>] ) => PROCEDURE wvw_SetFocus( nWinNum [,<vlist>] )
 #xtranslate Wvt_SetFocus( [<vlist,...>] ) => wvw_SetFocus( [,<vlist>] )
 
 #xtranslate FUNCTION Wvt_KillFocus( [<vlist,...>] ) => FUNCTION wvw_KillFocus( nWinNum [,<vlist>] )

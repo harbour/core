@@ -806,15 +806,13 @@ STATIC PROCEDURE RefreshVXB( oBrowse, nWinNum, XBid )
 
    RETURN
 
+// recalc the pos
 STATIC PROCEDURE RefreshHXB( oBrowse, nWinNum, XBid )
 
-   LOCAL nMin, nMax, nPage, nPos
-
-   // recalc the pos
-   nMin := 1
-   nMax := oBrowse:ColCount
-   nPage := oBrowse:RightVisible - oBrowse:LeftVisible + 1
-   nPos := iif( oBrowse:RightVisible == oBrowse:ColCount, nMax, oBrowse:LeftVisible )
+   LOCAL nMin := 1
+   LOCAL nMax := oBrowse:ColCount
+   LOCAL nPage := oBrowse:RightVisible - oBrowse:LeftVisible + 1
+   LOCAL nPos := iif( oBrowse:RightVisible == oBrowse:ColCount, nMax, oBrowse:LeftVisible )
 
    wvw_xbUpdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
