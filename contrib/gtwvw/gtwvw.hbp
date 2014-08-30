@@ -29,6 +29,7 @@ scrollbr.c
 statbar.c
 static.c
 toolbar.c
+tooltip.c
 
 legacy.c
 

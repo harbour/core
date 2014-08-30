@@ -198,6 +198,9 @@ DYNAMIC wvw_GetScreenHeight
 DYNAMIC wvw_GetScreenWidth
 DYNAMIC wvw_GetSystemMenu
 DYNAMIC wvw_GetTitle
+DYNAMIC wvw_GetToolTipBkColor
+DYNAMIC wvw_GetToolTipTextColor
+DYNAMIC wvw_GetToolTipWidth
 DYNAMIC wvw_GetWindowHandle
 DYNAMIC wvw_GetXYFromRowCol
 DYNAMIC wvw_Get_hnd_Window
@@ -309,6 +312,14 @@ DYNAMIC wvw_SetPopupMenu
 DYNAMIC wvw_SetTextColor
 DYNAMIC wvw_SetTimer
 DYNAMIC wvw_SetTitle
+DYNAMIC wvw_SetToolTip
+DYNAMIC wvw_SetToolTipActive
+DYNAMIC wvw_SetToolTipBkColor
+DYNAMIC wvw_SetToolTipMargin
+DYNAMIC wvw_SetToolTipText
+DYNAMIC wvw_SetToolTipTextColor
+DYNAMIC wvw_SetToolTipTitle
+DYNAMIC wvw_SetToolTipWidth
 DYNAMIC wvw_SetVertCaret
 DYNAMIC wvw_SetWindowCentre
 DYNAMIC wvw_SetWindowPos

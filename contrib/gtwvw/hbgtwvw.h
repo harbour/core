@@ -58,7 +58,7 @@
 #define HB_WVW_H_
 
 #ifndef _WIN32_IE
-#define _WIN32_IE   0x0400
+#define _WIN32_IE   0x0500
 #endif
 
 #ifndef WINVER
@@ -571,6 +571,7 @@ extern PWVW_CTL   hb_gt_wvw_ctl( PWVW_WIN wvw_win, int nClass, HWND hWnd, int nI
 extern int        hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, int iCol2, DWORD dwStyle, HWND hWndParent );
 extern void       hb_gt_wvw_CloseWindow( void );
 extern int        hb_gt_wvw_SetCurWindow( int nWin );
+extern void       hb_gt_wvw_CreateToolTipWindow( PWVW_WIN wvw_win );
 
 /* bitmap caching functions for user drawn bitmaps (wvw_drawimage) */
 extern HBITMAP    hb_gt_wvw_FindUserBitmapHandle( const char * szFileName, int * piWidth, int * piHeight );

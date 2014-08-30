@@ -155,8 +155,6 @@ static HB_SIZE hb_gt_wvw_GetIndexForTextBuffer( PWVW_WIN wvw_win, int iCol, int 
 static void    hb_gt_wvwCreateObjects( int nWin );
 static void    hb_gt_wvwMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
-static void    hb_gt_wvwCreateToolTipWindow( PWVW_WIN wvw_win );
-
 /* multi-window related static functions */
 static HB_BOOL hb_gt_wvwWindowPrologue( void );
 static void    hb_gt_wvwWindowEpilogue( void );
@@ -1044,7 +1042,7 @@ static void hb_gt_wvw_mouse_Init( PHB_GT pGT )
    HB_SYMBOL_UNUSED( pGT );
 
    hb_gt_wvw_mouse_vInit();
-   hb_gt_wvwCreateToolTipWindow( s_wvw->pWin[ 0 ] );
+   hb_gt_wvw_CreateToolTipWindow( s_wvw->pWin[ 0 ] );
 }
 
 static void hb_gt_wvw_mouse_Exit( PHB_GT pGT )
@@ -3415,7 +3413,7 @@ static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
    return hWnd;
 }
 
-static void hb_gt_wvwCreateToolTipWindow( PWVW_WIN wvw_win )
+void hb_gt_wvw_CreateToolTipWindow( PWVW_WIN wvw_win )
 {
    INITCOMMONCONTROLSEX icex;
 

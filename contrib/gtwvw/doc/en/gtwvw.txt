@@ -1532,7 +1532,7 @@
 
       <lDepressed> If .F., specifies raised button, .T. recessed button.
    $DESCRIPTION$
-      Draws a scrollbutton. With functions wvw_XB*(), this function becomes
+      Draws a scrollbutton. With functions wvw_xb*(), this function becomes
       obsolete.
    $RETURNS$
       None.
@@ -1559,7 +1559,7 @@
       four elements with top/left, bottom/right coordinates to align scrollbar
       movement button with row/column. <nThumbPos> Initial column position.
    $DESCRIPTION$
-      Draws a horizontal obsolete. scrollbar button. With functions wvw_XB*(),
+      Draws a horizontal obsolete. scrollbar button. With functions wvw_xb*(),
       this function becomes
    $RETURNS$
       None.
@@ -1586,7 +1586,7 @@
       four elements with top/left, bottom/right coordinates to align scrollbar
       movement button with row/column. <nThumbPos> Initital line position.
    $DESCRIPTION$
-      Draws a vertical obsolete. scrollbar button. With functions wvw_XB*(), this
+      Draws a vertical obsolete. scrollbar button. With functions wvw_xb*(), this
       function becomes
    $RETURNS$
       None.
@@ -1641,7 +1641,7 @@
       <nWinNum> Window number. Default is current window. <nPanels> Number of parts
       in a status bar. <aPos> Array with row/column positions to divide status bar.
    $DESCRIPTION$
-      Draws a status bar. Only for compatibility with GTWVT. wvw_SB*() functions
+      Draws a status bar. Only for compatibility with GTWVT. wvw_sb*() functions
       are recommended instead.
    $RETURNS$
       None.
@@ -2082,13 +2082,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_GetTooltipBkColor()
+      wvw_GetToolTipBkColor()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_GetTooltipBkColor()
+      wvw_GetToolTipBkColor()
    $ARGUMENTS$
       None.
    $DESCRIPTION$
@@ -2104,13 +2104,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_GetTooltipTextColor()
+      wvw_GetToolTipTextColor()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_GetTooltipTextColor()
+      wvw_GetToolTipTextColor()
    $ARGUMENTS$
       None.
    $DESCRIPTION$
@@ -2126,13 +2126,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_GetTooltipWidth()
+      wvw_GetToolTipWidth()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_GetTooltipWidth()
+      wvw_GetToolTipWidth()
    $ARGUMENTS$
       None.
    $DESCRIPTION$
@@ -3989,13 +3989,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_SetTooltip()
+      wvw_SetToolTip()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_SetTooltip( nWinNum, nTop, nLeft, nBottom, nRight, cToolText )
+      wvw_SetToolTip( nWinNum, nTop, nLeft, nBottom, nRight, cToolText )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to show tooltip. <cToolText> Tooltip text.
@@ -4012,13 +4012,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_SetTooltipActive()
+      wvw_SetToolTipActive()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_SetTooltipActive( nWinNum, lToggle )
+      wvw_SetToolTipActive( nWinNum, lToggle )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <lToggle> .T. enable
       tooltip. .F. disable tooltip. If not passed, returns actual configuration.
@@ -4035,13 +4035,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_SetTooltipBkColor()
+      wvw_SetToolTipBkColor()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_SetTooltipBkColor( nWinNum, nColor )
+      wvw_SetToolTipBkColor( nWinNum, nColor )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nColor> Color index of
       tooltip.
@@ -4059,13 +4059,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_SetTooltipMargin()
+      wvw_SetToolTipMargin()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_SetTooltipMargin( nWinNum, nTop, nLeft, nBottom, nRight )
+      wvw_SetToolTipMargin( nWinNum, nTop, nLeft, nBottom, nRight )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
       nRight> Coordinates to draw tooltip.
@@ -4083,13 +4083,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_SetTooltipText()
+      wvw_SetToolTipText()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_SetTooltipText( nWinNum, cText )
+      wvw_SetToolTipText( nWinNum, cText )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <cText> Text of tooltip.
    $DESCRIPTION$
@@ -4105,13 +4105,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_SetTooltipTextColor()
+      wvw_SetToolTipTextColor()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_SetTooltipTextColor( nWinNum, nColor )
+      wvw_SetToolTipTextColor( nWinNum, nColor )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nColor> Color index to
       text in tooltip.
@@ -4129,13 +4129,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_SetTooltipTitle()
+      wvw_SetToolTipTitle()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_SetTooltipTitle( nWinNum, nIcon, cTitle )
+      wvw_SetToolTipTitle( nWinNum, nIcon, cTitle )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nIcon> Identify if it
       will be displayed an icon with text in tooltip. Is allowed one of the
@@ -4151,13 +4151,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      WVW_SetTooltipWidth()
+      wvw_SetToolTipWidth()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      WVW_SetTooltipWidth( nWinNum, nWidth )
+      wvw_SetToolTipWidth( nWinNum, nWidth )
    $ARGUMENTS$
       <nWinNum> Window number. Default is current window. <nWidth> Width of tooltip
       area.
