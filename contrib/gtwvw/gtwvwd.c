@@ -4648,7 +4648,7 @@ static void hb_gt_wvwInputNotAllowed( int nWin, UINT message, WPARAM wParam, LPA
    MainCoord Mode
    ---
    In this mode an xHarbour program uses (row,col) coordinate relative to
-   Main Window's coordinate. It is similar to old Clipper program which
+   Main Window's coordinate. It is similar to old Cl*pper program which
    uses coordinate relative to the physical screen area.
 
    This mode can be set and reset during runtime,eg.

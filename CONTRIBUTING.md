@@ -159,6 +159,8 @@ Evaluate these points before reporting an issue:
     it against original implementation (for example, test legacy Cl*pper
     core language elements against real CA-Cl*pper 5.2e or 5.3b, or hbct
     functions against CT3 library, etc)
+    Notice that Harbour is Cl*pper Summer '87 compatible exactly as
+    much as Cl*pper 5.2e/5.3b is, meaning almost, but not completely.
 
 
 ---

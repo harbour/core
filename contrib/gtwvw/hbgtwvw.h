@@ -437,7 +437,7 @@ typedef struct
       HPEN   penBlack;                          /* Black pen to draw GDI elements */
       HPEN   penWhiteDim;                       /* White dim pen to draw GDI elements */
       HPEN   penDarkGray;                       /* Dark gray pen to draw GDI elements */
-      HPEN   penGray;                           /* Gray pen equivalent to Clipper White */
+      HPEN   penGray;                           /* Gray pen equivalent to Cl*pper White */
       HPEN   penNull;                           /* Null pen */
       HPEN   OriginalPen;                       /* Handle da Pen original do Device Context */
       HPEN   currentPen;                        /* Handle to current pen settable at runtime */

@@ -17301,7 +17301,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-hb30"              , H_( "enable Harbour 3.0.x compatibility mode" ) }, ;
       { "-xhb"               , H_( "enable xhb mode" ) }, ;
       { "-hbc"               , H_( "enable pure C mode" ) }, ;
-      { "-blinker"           , hb_StrFormat( H_( e"emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect" ), _SELF_NAME_ ) }, ;
+      { "-blinker"           , hb_StrFormat( H_( e"emulate Cl*pper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect" ), _SELF_NAME_ ) }, ;
       { "-exospace"          , H_( "see above" ) }, ;
       { "-rtlink"            , H_( "see above" ) }, ;
       , ; /* HARBOUR_SUPPORT */
@@ -17371,10 +17371,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "hbrun*|*hbrun" , H_( "mode script runner / interactive shell" ) }, ;
       { "hbrund|hbrun*d", H_( "mode script runner / interactive shell in debug mode" ) }, ;
       { "harbour"       , hb_StrFormat( H_( "mode %1$s (emulate - raw - Harbour compiler)" ), "-hbraw" ) }, ;
-      { "clipper"       , hb_StrFormat( H_( "mode %1$s (emulate Clipper compiler)" ), "-hbcmp" ) }, ;
-      { "rtlink"        , hb_StrFormat( H_( "mode %1$s (emulate Clipper linker)" ), "-rtlink" ) }, ;
-      { "exospace"      , hb_StrFormat( H_( "mode %1$s (emulate Clipper linker)" ), "-rtlink" ) }, ;
-      { "blinker"       , hb_StrFormat( H_( "mode %1$s (emulate Clipper linker)" ), "-rtlink" ) }, ;
+      { "clipper"       , hb_StrFormat( H_( "mode %1$s (emulate Cl*pper compiler)" ), "-hbcmp" ) }, ;
+      { "rtlink"        , hb_StrFormat( H_( "mode %1$s (emulate Cl*pper linker)" ), "-rtlink" ) }, ;
+      { "exospace"      , hb_StrFormat( H_( "mode %1$s (emulate Cl*pper linker)" ), "-rtlink" ) }, ;
+      { "blinker"       , hb_StrFormat( H_( "mode %1$s (emulate Cl*pper linker)" ), "-rtlink" ) }, ;
       { "*10"           , hb_StrFormat( H_( "option %1$s" ), "-hb10" ) }, ;
       { "*20"           , hb_StrFormat( H_( "option %1$s" ), "-hb20" ) }, ;
       { "*30"           , hb_StrFormat( H_( "option %1$s" ), "-hb30" ) }, ;
@@ -17664,7 +17664,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aLst_APIShell := { ;
       , ;
       { "hbshell_gtSelect( [<cGT>] ) -> NIL"                , hb_StrFormat( I_( "Switch GT. Default [*]: '%1$s'" ), Lower( __hbshell_gtDefault() ) ) }, ;
-      { "hbshell_Clipper() -> NIL"                          , I_( "Enable Clipper compatibility (non-Unicode) mode." ) }, ;
+      { "hbshell_Clipper() -> NIL"                          , I_( "Enable Cl*pper compatibility (non-Unicode) mode." ) }, ;
       { "hbshell_include( <cHeader> ) -> <lSuccess>"        , I_( "Load Harbour header." ) }, ;
       { "hbshell_uninclude( <cHeader> ) -> <lSuccess>"      , I_( "Unload Harbour header." ) }, ;
       { "hbshell_include_list() -> NIL"                     , I_( "Display list of loaded Harbour header." ) }, ;

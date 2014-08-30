@@ -8,7 +8,7 @@ e seus "ancestrais". Marcos Antonio Gambeta Ele escreveu um guia de
 programaçăo para a GTWVT e disponibilizou como freeware. A leitura
 desse manual me ajudou a resolver diversas dúvidas quanto aos
 parâmetros das funções, retorno de valores, etc. Forum de notícias
-Harbour Leitura obrigatória. Forum Clipper on line Muita gente boa
+Harbour Leitura obrigatória. Forum Cl*pper on line Muita gente boa
 disposta a dividir seus conhecimentos. MS SDK HELP FILES Leitura
 indispensável para entender realmente como e porquę de alguns
 parâmetros e características da GTWVW. Julio C. Cantillo Molina Seu
@@ -96,7 +96,7 @@ selecionar/mudar a qualquer momento:
 
 ### Maincoord Mode
 - Nesse modo as coordenadas săo relativas a janela principal (como
-  no Clipper). - Todas as saídas/entradas trabalham baseadas na
+  no Cl*pper). - Todas as saídas/entradas trabalham baseadas na
   janela atual. Internamente, existe um processo que verifica em
   qual janela deve ser feita a operaçăo de saída/entrada, dependendo
   da linha/coluna. Após cada operaçăo, a janela atual é sempre
@@ -104,7 +104,7 @@ selecionar/mudar a qualquer momento:
   sempre retornarăo as coordenadas máximas da janela principal, năo
   importando o número de janelas abertas.
 - Esse modo foi projetado para ser a forma mais rápida e eficiente
-  para portar aplicativos do Clipper para Harbour.
+  para portar aplicativos do Cl*pper para Harbour.
 
 
 # SOBRE MINIMIZAR, MAXIMIZAR E REDESENHAR TELAS

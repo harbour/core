@@ -1,8 +1,8 @@
 # Introduction
 
 Thanks to: All developers of Harbour. Budyanto Dj., the author of
-GTWVW. xHarbour Newsgroup. Forum Clipper on line, a Brazilian forum to
-discuss Clipper and Harbour with a lot of great people, ready to help
+GTWVW. xHarbour Newsgroup. Forum Cl*pper on line, a Brazilian forum to
+discuss Cl*pper and Harbour with a lot of great people, ready to help
 and share knowledge. This is a working in progress. If you find an error
 or an incorrect concept, please send an email to angeiras@gmail.com or
 angeiras@yahoo.com, with the correct information. By the way, this is not
@@ -137,23 +137,23 @@ moment during run time by using wvw_SetMainCoord()):
   parameter.
 
 ### Maincoord Mode
-- In this mode, the coordinates are relative to main window (like Clipper).
+- In this mode, the coordinates are relative to main window (like Cl*pper).
 - All output work in current window, which is internally switched depending
   of requested row/column position. After each operation, current window is
   reset back to main window. Notice that this way MaxRow() and MaxCol() will
-  always return main window's, as they do in Clipper. To support this feature,
+  always return main window's, as they do in Cl*pper. To support this feature,
   each window keeps records of row and column offset to the main window,
   specified during window opening.
 - MainCoord Mode is not supported by exported C functions (user must specify
   which window to write, using coordinates within that window.)
 - MainCoord Mode it was projected to be the quickest way of porting an
-  existing Clipper application to Harbour + GTWVW.
+  existing Cl*pper application to Harbour + GTWVW.
 - CurrentWindow is automatically reset to MAIN window during program start
   and after wvw_nOpenWindow() and after wvw_lCloseWindow().
 - All output oriented GT_FUNC() work on CurrentWindow, which is internally
   switched depending of requested row,col position. After each operation,
   CurrentWindow is reset back to MAIN window. Notice that this way MaxRow()
-  and MaxCol() will always return MAIN window's, as they do in Clipper.
+  and MaxCol() will always return MAIN window's, as they do in Cl*pper.
   To support this feature, each window keeps records of Row and Col Offset
   to the Main Window, specified during Window opening.
   Example:
@@ -198,7 +198,7 @@ moment during run time by using wvw_SetMainCoord()):
 
 Notes:
 MainCoord Mode is meant to be the quickest way of porting an existing
-Clipper application to Harbour + GTWVW.
+Cl*pper application to Harbour + GTWVW.
 
 
 # Minimize, Maximize and Repainting

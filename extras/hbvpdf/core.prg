@@ -1000,7 +1000,7 @@ PROCEDURE pdfPageSize( _cPageSize, _nWidth, _nHeight )
       { "LETTER",     8.50, 11.00 }, ;
       { "LEGAL",      8.50, 14.00 }, ;
       { "LEDGER",    11.00, 17.00 }, ;
-      { "EXECUTIVE" , 7.25, 10.50 }, ;
+      { "EXECUTIVE",  7.25, 10.50 }, ;
       { "A4",         8.27, 11.69 }, ;
       { "A3",        11.69, 16.54 }, ;
       { "JIS B4",    10.12, 14.33 }, ;
