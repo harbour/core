@@ -86,8 +86,8 @@ HB_FUNC( WVG_SENDMESSAGE )
 
    hb_retnint( SendMessage( ( HWND ) wvg_parhandle( 1 ),
                             ( UINT ) hb_parni( 2 ),
-                            ( WPARAM ) hb_parnint( 3 ),
-                            szText ? ( LPARAM ) szText : ( LPARAM ) hb_parnint( 4 ) ) );
+                            ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
+                            szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) ) );
 
    if( szText )
       HB_STORSTRLEN( szText, nLen, 4 );
@@ -113,8 +113,8 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )  /* TOFIX: UNICODE support? */
    hb_retnl( ( long ) SendDlgItemMessage( ( HWND ) wvg_parhandle( 1 ),
                                           ( int ) hb_parni( 2 ),
                                           ( UINT ) hb_parni( 3 ),
-                                          ( WPARAM ) hb_parnint( 4 ),
-                                          ( cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) ) ) );
+                                          ( WPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
+                                          ( cText ? ( LPARAM ) cText : ( LPARAM ) ( HB_ISPOINTER( 5 ) ? ( HB_PTRDIFF ) hb_parptr( 5 ) : hb_parnint( 5 ) ) ) ) );
 
    if( cText )
    {
@@ -616,11 +616,15 @@ HB_FUNC( WVG_APPENDMENU )
    if( HB_ISCHAR( 4 ) )
    {
       void * hBuffer;
-      hb_retl( AppendMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parnint( 3 ), HB_PARSTR( 4, &hBuffer, NULL ) ) );
+      hb_retl( AppendMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ),
+         ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
+         HB_PARSTR( 4, &hBuffer, NULL ) ) );
       hb_strfree( hBuffer );
    }
    else /* It is a SEPARATOR or Submenu */
-      hb_retl( AppendMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parnint( 3 ), ( LPCTSTR ) wvg_parhandle( 4 ) ) );
+      hb_retl( AppendMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ),
+         ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
+         ( LPCTSTR ) wvg_parhandle( 4 ) ) );
 }
 
 HB_FUNC( WVG_INSERTMENU )
@@ -630,13 +634,15 @@ HB_FUNC( WVG_INSERTMENU )
    if( HB_ISCHAR( 5 ) )
    {
       void * hBuffer;
-      hb_retl( InsertMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ),
-                           flags, ( UINT_PTR ) hb_parnint( 4 ), HB_PARSTR( 5, &hBuffer, NULL ) ) );
+      hb_retl( InsertMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), flags,
+         ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
+         HB_PARSTR( 5, &hBuffer, NULL ) ) );
       hb_strfree( hBuffer );
    }
    else /* It is a SEPARATOR or Submenu */
-      hb_retl( InsertMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ),
-                           flags, ( UINT_PTR ) hb_parnint( 4 ), ( LPCTSTR ) wvg_parhandle( 5 ) ) );
+      hb_retl( InsertMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), flags,
+         ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
+         ( LPCTSTR ) wvg_parhandle( 5 ) ) );
 }
 
 HB_FUNC( WVG_DELETEMENU )

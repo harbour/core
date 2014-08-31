@@ -19,7 +19,6 @@
 #require "gtwvg"
 
 #include "inkey.ch"
-#include "setcurs.ch"
 #include "hbgtinfo.ch"
 #include "hbver.ch"
 #include "wvgparts.ch"
@@ -114,7 +113,7 @@ PROCEDURE Main()
    SetKey( K_CTRL_V     , {|| __Keyboard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
    SetKey( K_RBUTTONDOWN, {|| __Keyboard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
 
-   hPopup  := Wvt_SetPopupMenu()
+   hPopup := Wvt_SetPopupMenu()
 
    pGT := SetGT( 1, hb_gtSelect() )
 
@@ -138,7 +137,7 @@ PROCEDURE Main()
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
-   /* XBase++ compatible pure GUI controls onto CUI console */
+   /* Xbase++ compatible pure GUI controls onto CUI console */
    BuildButtons()
 
    scr := SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -237,6 +236,8 @@ PROCEDURE WvtNextGets()  /* must be a public function */
 
 STATIC PROCEDURE WvtNextGets_X()
 
+   STATIC s_nPalletMultiplier := 0
+
    LOCAL aLastPaint, clr
    LOCAL dDate      := hb_SToD()
    LOCAL cName      := Space( 35 )
@@ -254,8 +255,6 @@ STATIC PROCEDURE WvtNextGets_X()
    LOCAL nCol       := Col()
    LOCAL scr        := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL wvtScr     := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
-
-   STATIC s_nPalletMultiplier := 0
 
    // Change the values of pallatte arbitrarily though yu can fine tune
    // these values with realistic values.
@@ -494,7 +493,6 @@ STATIC FUNCTION BuildMainMenu()
 STATIC PROCEDURE GoogleMap()
 
    LOCAL mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
-   LOCAL nCursor
    LOCAL getlist := {}
 
    SetMode( 22, 65 )
@@ -502,23 +500,21 @@ STATIC PROCEDURE GoogleMap()
    cls
    hb_gtInfo( HB_GTI_WINTITLE, "Google Maps" )
 
-   mfrom1  := mto1  := Space( 20 )
-   mfrom2  := mto2  := Space( 40 )
-   mfrom3  := mto3  := Space( 50 )
+   mfrom1 := mto1 := Space( 20 )
+   mfrom2 := mto2 := Space( 40 )
+   mfrom3 := mto3 := Space( 50 )
 
    DO WHILE .T.
       @  5, 01 SAY "FROM :"
-      @  7, 01 SAY "State ...:" GET mfrom1  PICTURE "@!"
-      @  8, 01 SAY "City ....:" GET mfrom2  PICTURE "@!"
-      @  9, 01 SAY "Street ..:" GET mfrom3  PICTURE "@!"
+      @  7, 01 SAY "State ...:" GET mfrom1 PICTURE "@!"
+      @  8, 01 SAY "City ....:" GET mfrom2 PICTURE "@!"
+      @  9, 01 SAY "Street ..:" GET mfrom3 PICTURE "@!"
       @ 11, 01 SAY "TO :"
-      @ 13, 01 SAY "State ...:" GET mto1    PICTURE "@!"
-      @ 14, 01 SAY "City ....:" GET mto2    PICTURE "@!"
-      @ 15, 01 SAY "Street ..:" GET mto3    PICTURE "@!"
+      @ 13, 01 SAY "State ...:" GET mto1   PICTURE "@!"
+      @ 14, 01 SAY "City ....:" GET mto2   PICTURE "@!"
+      @ 15, 01 SAY "Street ..:" GET mto3   PICTURE "@!"
 
-      nCursor := SetCursor( SC_NORMAL )
       READ
-      SetCursor( nCursor )
 
       IF LastKey() == K_ESC
          EXIT
@@ -670,7 +666,7 @@ STATIC PROCEDURE GCUIConsole( oCrt )
 
    hTxt := Wvg_TextBox( 3, 57, 16, 75, { 10, 10, -10, -10 }, "This is first TextBox Line!", 2, 2 )
 
-   Wvg_Image( 15, 36, 16, 42, { -3, -3, 3, 3 }, GOBJ_IMAGESOURCE_FILE, GetResource( "Vouch1.bmp" ) )
+   Wvg_Image( 15, 36, 16, 42, { -3, -3, 3, 3 }, GOBJ_IMAGESOURCE_FILE, GetResource( "vouch1.bmp" ) )
    Wvg_BoxRaised( 15, 36, 16, 42, { -2, -2, 2, 2 } )
 
    Wvg_ShadedRect( 1, 54, 18, 79, { -5, -5, 5, 5 }, 0, { 65000, 21000, 7000, 56000 }, { 255, 32255, 16000, 32500 } )
@@ -700,7 +696,7 @@ STATIC FUNCTION FetchText( nMode )
          "This demonstration is a proof of that."
    CASE 3
       RETURN ;
-         "Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! " + ;
+         "Do you know Harbour is a multi-GT, multi-window, multi-thread compiler far superior than others in the market! " + ;
          "And is FREE."
    CASE 4
       RETURN "Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!"

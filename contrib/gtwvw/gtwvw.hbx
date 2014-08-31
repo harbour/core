@@ -39,6 +39,7 @@
 // HB_FUNC_EXCLUDE win_GetDialogBaseUnits
 // HB_FUNC_EXCLUDE win_GetSysColor
 // HB_FUNC_EXCLUDE win_MulDiv
+// HB_FUNC_EXCLUDE win_SendMessage
 // HB_FUNC_EXCLUDE wvw_GetKeyState
 // HB_FUNC_EXCLUDE wvw_HIWORD
 // HB_FUNC_EXCLUDE wvw_LOWORD
@@ -81,7 +82,6 @@ DYNAMIC win_MessageBox
 DYNAMIC win_ReleaseDC
 DYNAMIC win_SelectObject
 DYNAMIC win_SendDlgItemMessage
-DYNAMIC win_SendMessage
 DYNAMIC win_SetBkColor
 DYNAMIC win_SetDlgItemText
 DYNAMIC win_SetFocus

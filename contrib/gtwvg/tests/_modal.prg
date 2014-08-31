@@ -253,11 +253,10 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
 STATIC FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
       lCenter, nRow, nCol )
 
-   LOCAL oCrt, aPos
+   LOCAL aPos := iif( hb_defaultValue( lCenter, .F. ), { -1, -1 }, iif( HB_ISNUMERIC( nRow ), { nRow, nCol }, { nT, nL } ) )
 
-   aPos := iif( hb_defaultValue( lCenter, .F. ), { -1, -1 }, iif( HB_ISNUMERIC( nRow ), { nRow, nCol }, { nT, nL } ) )
+   LOCAL oCrt := WvgCrt():new( ,, aPos, { nB - nT, nR - nL },, ! hb_defaultValue( lHidden, .F. ) )
 
-   oCrt := WvgCrt():new( ,, aPos, { nB - nT, nR - nL },, ! hb_defaultValue( lHidden, .F. ) )
    oCrt:lModal := hb_defaultValue( lModal, .T. )
    IF lRowCols
       oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS

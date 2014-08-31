@@ -393,7 +393,7 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
    hDlg := Wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
 
-   IF hDlg != 0
+   IF ! Empty( hDlg )
       IF ncIcon != NIL
          Wvt_DlgSetIcon( hDlg, ncIcon )
       ENDIF

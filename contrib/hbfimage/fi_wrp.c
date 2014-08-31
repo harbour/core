@@ -1502,7 +1502,7 @@ HB_FUNC( FI_WINDRAW )
 {
 #if defined( HB_OS_WIN )
    if( hb_FIBITMAP_is( 1 ) &&
-       HB_ISNUM( 2 ) &&
+       ( HB_ISNUM( 2 ) || HB_ISPOINTER( 2 ) ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&

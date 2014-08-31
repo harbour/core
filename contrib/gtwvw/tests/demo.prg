@@ -185,7 +185,7 @@ PROCEDURE Main()
       ldebug( "Cannot setDefaultWindowSize()" )
    ENDIF
 
-   IF wvw_sbCreate() > 0 .AND. ;
+   IF ! Empty( wvw_sbCreate() ) .AND. ;
       wvw_sbAddPart( , "99:99:99" ) > 0
       wvw_SetTimer( , 1000 )
    ENDIF
@@ -947,7 +947,7 @@ STATIC PROCEDURE CreateToolbar( nWinNum )
       lDisplayText := Alert( "Display text in toolbar?", { "Yes", "No" } ) == 1
    ENDIF
 
-   IF wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap ) == 0
+   IF Empty( wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap ) )
       lboxmessage( "FAILED create toolbar" )
       RETURN
    ENDIF
@@ -1030,7 +1030,7 @@ STATIC FUNCTION nAfterInkey( nkey )
    IF nkey == WVW_DEFAULT_MENUKEYEVENT
       // MenuKeyEvent
       RETURN nMenuChecker( wvw_GetLastMenuEvent() )
-      // was: elseif AScan({K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE}, nKey) > 0
+      // was: elseif AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE }, nKey ) > 0
    ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN, K_LDBLCLK }, nKey ) > 0
       // MouseEvent
       RETURN wvwm_nMouseChecker( nkey )
@@ -1102,7 +1102,7 @@ STATIC FUNCTION nMenuChecker( nMenuEvent )
       xDebugInfo()
       EXIT
    OTHERWISE
-      lboxmessage( "Sorry, unknown menu option" )
+      lboxmessage( "Sorry, unknown menu option: " + hb_ntos( nMenuEvent ) )
    ENDSWITCH
 
    // xEnableToolbar( 0 )

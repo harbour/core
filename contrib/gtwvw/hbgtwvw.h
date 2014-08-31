@@ -435,16 +435,20 @@ typedef struct
 
 } WVW_GLO, * PWVW_GLO;
 
-#if 0
-   #define HB_RETHANDLE( h )       hb_retptr( ( void * ) ( h ) )
-   #define HB_ISHANDLE( n )        HB_ISPOINTER( n )
-   #define HB_PARHANDLE( n )       hb_parptr( n )
-   #define HB_STOREHANDLE( h, n )  hb_storptr( ( void * ) ( h ), n )
+#if defined( __GTWVX_UNSAFE_POINTERS )
+   #define HB_ISHANDLE( n )              HB_ISNUM( n )
+   #define HB_PARHANDLE( n )             ( ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define HB_RETHANDLE( h )             hb_retnint( ( HB_PTRDIFF ) ( h ) )
+   #define HB_STOREHANDLE( h, n )        hb_stornint( ( HB_PTRDIFF ) ( h ), n )
+   #define HB_ITEMPUTHANDLE( i, h )      hb_itemPutNInt( i, ( HB_PTRDIFF ) ( h ) )
+   #define HB_ARRAYSETHANDLE( a, i, h )  hb_arraySetNInt( a, i, ( HB_PTRDIFF ) ( h ) )
 #else
-   #define HB_RETHANDLE( h )       hb_retnint( ( HB_PTRDIFF ) ( h ) )
-   #define HB_ISHANDLE( n )        HB_ISNUM( n )
-   #define HB_PARHANDLE( n )       ( ( HB_PTRDIFF ) hb_parnint( n ) )
-   #define HB_STOREHANDLE( h, n )  hb_stornint( ( HB_PTRDIFF ) ( h ), n )
+   #define HB_ISHANDLE( n )              HB_ISPOINTER( n )
+   #define HB_PARHANDLE( n )             hb_parptr( n )
+   #define HB_RETHANDLE( h )             hb_retptr( ( void * ) ( h ) )
+   #define HB_STOREHANDLE( h, n )        hb_storptr( ( void * ) ( h ), n )
+   #define HB_ITEMPUTHANDLE( i, h )      hb_itemPutPtr( i, ( void * ) ( h ) )
+   #define HB_ARRAYSETHANDLE( a, i, h )  hb_arraySetPtr( a, i, ( void * ) ( h ) )
 #endif
 
 HB_EXTERN_BEGIN

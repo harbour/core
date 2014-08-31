@@ -401,4 +401,20 @@ typedef enum
 
 HB_EXTERN_END
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
+   #define wvg_ishandle( n )              HB_ISNUM( n )
+   #define wvg_parhandle( n )             ( ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define wvg_rethandle( h )             hb_retnint( ( HB_PTRDIFF ) h )
+   #define wvg_storhandle( h, n )         hb_stornint( ( HB_PTRDIFF ) ( h ), n )
+   #define wvg_itemputhandle( i, h )      hb_itemPutNInt( i, ( HB_PTRDIFF ) ( h ) )
+   #define wvg_arraysethandle( a, i, h )  hb_arraySetNInt( a, i, ( HB_PTRDIFF ) ( h ) )
+#else
+   #define wvg_ishandle( n )              HB_ISPOINTER( n )
+   #define wvg_parhandle( n )             hb_parptr( n )
+   #define wvg_rethandle( h )             hb_retptr( ( void * ) ( h ) )
+   #define wvg_storhandle( h, n )         hb_storptr( ( void * ) ( h ), n )
+   #define wvg_itemputhandle( i, h )      hb_itemPutPtr( i, ( void * ) ( h ) )
+   #define wvg_arraysethandle( a, i, h )  hb_arraySetPtr( a, i, ( void * ) ( h ) )
+#endif
+
 #endif /* HB_WGU_H_ */

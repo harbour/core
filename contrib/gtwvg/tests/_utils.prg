@@ -118,10 +118,10 @@ PROCEDURE Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
    STATIC s_nLastObj := 0
    STATIC s_nLastKey := 0
 
-   LOCAL nLen, aObjects := WvtSetObjects()
-   LOCAL nObj
+   LOCAL aObjects := WvtSetObjects()
+   LOCAL nObj, oObj
 
-   IF ( nLen := Len( aObjects ) ) == 0
+   IF Len( aObjects ) == 0
       RETURN
    ENDIF
 
@@ -130,27 +130,31 @@ PROCEDURE Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
    ENDIF
 
    IF nKey == -1000001
-      FOR nObj := 1 TO nLen
-         DO CASE
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_DISP
-            Eval( aObjects[ nObj, WVT_OBJ_ONDISP ] )
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_MOUSEOVER
-            Eval( aObjects[ nObj, WVT_OBJ_ONMOUSEOVER ] )
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_BUTTONDOWN
-            Eval( aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] )
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_BUTTONUP
-            Eval( aObjects[ nObj, WVT_OBJ_ONDISP ] )
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_HIDE
-
-         ENDCASE
+      FOR EACH oObj IN aObjects
+         SWITCH oObj[ WVT_OBJ_STATE ]
+         CASE OBJ_STATE_DISP
+            Eval( oObj[ WVT_OBJ_ONDISP ] )
+            EXIT
+         CASE OBJ_STATE_MOUSEOVER
+            Eval( oObj[ WVT_OBJ_ONMOUSEOVER ] )
+            EXIT
+         CASE OBJ_STATE_BUTTONDOWN
+            Eval( oObj[ WVT_OBJ_ONBUTTONDOWN ] )
+            EXIT
+         CASE OBJ_STATE_BUTTONUP
+            Eval( oObj[ WVT_OBJ_ONDISP ] )
+            EXIT
+         CASE OBJ_STATE_HIDE
+            EXIT
+         ENDSWITCH
       NEXT
       RETURN
    ENDIF
 
-   nObj := AScan( aObjects, {| e_ | e_[ WVT_OBJ_ROW   ] <= nRow .AND. ;
+   nObj := AScan( aObjects, {| e_ | e_[ WVT_OBJ_ROW ] <= nRow .AND. ;
       e_[ WVT_OBJ_ROWTO ] >= nRow .AND. ;
       e_[ WVT_OBJ_COL   ] <= nCol .AND. ;
-      e_[ WVT_OBJ_COLTO ] >= nCol     } )
+      e_[ WVT_OBJ_COLTO ] >= nCol } )
    IF nObj == 0
       IF s_nLastObj > 0
          aObjects[ s_nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_DISP

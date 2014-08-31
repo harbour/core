@@ -152,7 +152,7 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
    ::hMenu := Wvg_CreateMenu()
 
-   IF ::hMenu != 0
+   IF ! Empty( ::hMenu )
       /* TODO: check for if the parent already has a menu
                we need to destroy that first */
       /* finally set the menu */
@@ -267,7 +267,6 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    nStyle   := aItem[ 3 ]
    nAttrib  := aItem[ 4 ]
 
-
    /* xCaption : NIL | cPrompt | ncResource | oMenu */
    SWITCH ValType( xCaption )
    CASE "U"  /* Separator */
@@ -310,7 +309,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
             iif( HB_ISSTRING( aItem[ 3 ] ), StrTran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
       ELSE
          IF HB_ISSTRING( xCaption )
-            aItem[ 2 ] := ::aMenuItems[ nItemIndex, 2 ]
+            aItem[ 2 ] := ::aMenuItems[ nItemIndex ][ 2 ]
          ENDIF
          ::aMenuItems[ nItemIndex ] := aItem
          Wvg_SetMenuItem( ::hMenu, ;
@@ -545,7 +544,7 @@ METHOD WvgMenu:Popup( oXbp, aPos, nDefaultItem, nControl )
    LOCAL nCmd, aMenuItem
 
    HB_SYMBOL_UNUSED( nDefaultItem )
-   HB_SYMBOL_UNUSED( nControl     )
+   HB_SYMBOL_UNUSED( nControl )
 
    nCmd := Wvg_TrackPopupMenu( ::hMenu, TPM_LEFTALIGN + TPM_TOPALIGN + TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
 

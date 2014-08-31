@@ -220,12 +220,18 @@ HB_FUNC( WIN_UNICODE )
 
 HB_FUNC( WIN_N2P )
 {
-   hb_retptr( ( void * ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( hb_parptr( 1 ) );
+   else
+      hb_retptr( ( void * ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
 }
 
 HB_FUNC( WIN_P2N )
 {
-   hb_retnint( ( HB_PTRDIFF ) hb_parptr( 1 ) );
+   if( HB_ISNUM( 1 ) )
+      hb_retnint( hb_parnint( 1 ) );
+   else
+      hb_retnint( ( HB_PTRDIFF ) hb_parptr( 1 ) );
 }
 
 HB_FUNC( WIN_HINSTANCE )

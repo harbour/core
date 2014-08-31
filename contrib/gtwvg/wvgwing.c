@@ -528,7 +528,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       TV_ITEM   item;
       HTREEITEM hParent;
 
-      hb_stornint( ( HB_PTRDIFF ) hSelected, 6 );
+      wvg_storhandle( hSelected, 6 );
 
       item.mask       = TVIF_HANDLE | TVIF_TEXT | TVIF_IMAGE;
       item.hItem      = hSelected;
@@ -541,7 +541,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
          hb_storc( NULL, 4 );
 
       hParent = TreeView_GetParent( ( HWND ) wvg_parhandle( 1 ), hSelected );
-      hb_stornint( ( HB_PTRDIFF ) hParent, 5 );
+      wvg_storhandle( hParent, 5 );
 
       item.mask       = TVIF_HANDLE | TVIF_TEXT;
       item.hItem      = hParent;
@@ -557,8 +557,8 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
    {
       hb_storc( NULL, 3 );
       hb_storc( NULL, 4 );
-      hb_stornint( 0, 5 );
-      hb_stornint( 0, 6 );
+      wvg_storhandle( NULL, 5 );
+      wvg_storhandle( NULL, 6 );
    }
 }
 

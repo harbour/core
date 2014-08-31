@@ -174,7 +174,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
    CASE "COMBOBOX"
       IF HB_ISARRAY( ::sl_editBuffer )
          // NOT sure which way it should behave.
-         // XBase++ documentation IN this regard is crappy.
+         // Xbase++ documentation IN this regard is crappy.
          FOR EACH s IN ::sl_editBuffer
             ::addItem( s )
          NEXT

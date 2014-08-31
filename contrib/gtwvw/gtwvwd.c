@@ -1158,15 +1158,15 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_INPUTFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) GetStdHandle( STD_INPUT_HANDLE ) );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) GetStdHandle( STD_INPUT_HANDLE ) );
          break;
 
       case HB_GTI_OUTPUTFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) GetStdHandle( STD_OUTPUT_HANDLE ) );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) GetStdHandle( STD_OUTPUT_HANDLE ) );
          break;
 
       case HB_GTI_ERRORFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) GetStdHandle( STD_ERROR_HANDLE ) );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) GetStdHandle( STD_ERROR_HANDLE ) );
          break;
 
       case HB_GTI_FONTSIZE:
@@ -1390,7 +1390,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hIcon = hb_gt_wvw_SetWindowIconFromFile( wvw_win, HB_ITEMGETSTR( pInfo->pNewVal, &hName, NULL ) );
             hb_strfree( hName );
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) hIcon );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) hIcon );
          break;
       }
 
@@ -1405,7 +1405,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hIcon = hb_gt_wvw_SetWindowIcon( wvw_win, hb_itemGetNI( pInfo->pNewVal ), NULL );
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) hIcon );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) hIcon );
          break;
       }
 
@@ -1703,7 +1703,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
 #if 0
             if( HB_IS_EVALITEM( pFunc ) )
             {
-               PHB_ITEM hihDlg    = hb_itemPutNInt( NULL, ( HB_PTRDIFF ) hDlg );
+               PHB_ITEM hihDlg    = HB_ITEMPUTHANDLE( NULL, hDlg );
                PHB_ITEM himessage = hb_itemPutNInt( NULL, message );
                PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, wParam );
                PHB_ITEM hilParam  = hb_itemPutNInt( NULL, lParam );
@@ -1829,7 +1829,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
 #if 0
             if( HB_IS_EVALITEM( pFunc ) )
             {
-               PHB_ITEM hihDlg    = hb_itemPutNInt( NULL, ( HB_PTRDIFF ) hDlg );
+               PHB_ITEM hihDlg    = HB_ITEMPUTHANDLE( NULL, hDlg );
                PHB_ITEM himessage = hb_itemPutNInt( NULL, message );
                PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, wParam );
                PHB_ITEM hilParam  = hb_itemPutNInt( NULL, lParam );

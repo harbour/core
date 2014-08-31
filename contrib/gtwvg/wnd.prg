@@ -456,7 +456,7 @@ METHOD WvgWindow:setColorBG( nRGB )
    ENDIF
    IF HB_ISNUMERIC( nRGB )
       hBrush := Wvg_CreateBrush( BS_SOLID, nRGB, 0 )
-      IF hBrush != 0
+      IF ! Empty( hBrush )
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
 
@@ -635,9 +635,7 @@ METHOD WvgWindow:currentPos()
 
 METHOD WvgWindow:currentSize()
 
-   LOCAL aRect
-
-   aRect := Wvg_GetClientRect( ::hWnd )
+   LOCAL aRect := Wvg_GetClientRect( ::hWnd )
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 

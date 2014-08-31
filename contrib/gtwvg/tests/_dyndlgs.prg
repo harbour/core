@@ -189,7 +189,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       Wvg_SetTimer( hDlg, 5001, 1000 ) // 1 sec
 
       IF Empty( aHFonts := SetFonts() )
-         IF ( hFont := Wvt_CreateFont( "Times New Roman", 18 ) ) != 0
+         IF ! Empty( hFont := Wvt_CreateFont( "Times New Roman", 18 ) )
             SetFonts( hFont )
          ENDIF
       ENDIF
@@ -209,12 +209,12 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       IF t_hImage == NIL
          t_hImage := Wvg_LoadImage( "vouch1.bmp", 2 )
       ENDIF
-      IF t_hImage != NIL .AND. t_hImage != 0
+      IF t_hImage != NIL .AND. ! Empty( t_hImage )
          Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
       ENDIF
 #endif
       Wvg_SetDlgItemText( hDlg, ID_MLE, GetEditText() )
-      Wvg_CheckDlgButton( hDlg, ID_CHK_SATIS, .T.           )
+      Wvg_CheckDlgButton( hDlg, ID_CHK_SATIS, .T. )
 
       Wvg_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
 

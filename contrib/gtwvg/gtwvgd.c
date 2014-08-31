@@ -1963,7 +1963,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                }
                {  /* To evoke if that portion is covered by GUI control */
                   PHB_ITEM pEvParams = hb_itemNew( NULL );
-                  hb_itemPutNInt( pEvParams, ( HB_PTRDIFF ) hWnd );
+                  wvg_itemputhandle( pEvParams, hWnd );
                   hb_gt_wvt_FireEvent( pWVT, HB_GTE_PAINT, pEvParams );
                }
                return 0;
@@ -1974,7 +1974,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
-            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+            wvg_arraysethandle( pEvParams, 3, lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_HSCROLL, pEvParams );
             return 0;
@@ -1985,7 +1985,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
-            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+            wvg_arraysethandle( pEvParams, 3, lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_VSCROLL, pEvParams );
             return 0;
@@ -2020,7 +2020,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             {  /* For mixing gui/cui items */
                PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
-               hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) hWnd );
+               wvg_arraysethandle( pEvParams, 1, hWnd );
                hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
                hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
 
@@ -2046,7 +2046,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             { /* To mix gui/cui items */
                PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
-               hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) hWnd );
+               wvg_arraysethandle( pEvParams, 1, hWnd );
                hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
                hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
 
@@ -2200,9 +2200,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                iHi = HIWORD( wParam );
                iLo = LOWORD( wParam );
 
-               hb_arraySetNI( pEvParams, 1, iHi );                              /* Notification Code  */
-               hb_arraySetNI( pEvParams, 2, iLo );                              /* Control identifier */
-               hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); /* Controls hWnd      */
+               hb_arraySetNI( pEvParams, 1, iHi );                   /* Notification Code  */
+               hb_arraySetNI( pEvParams, 2, iLo );                   /* Control identifier */
+               wvg_arraysethandle( pEvParams, 3, ( HWND ) lParam );  /* Controls hWnd      */
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, pEvParams );
             }
@@ -2244,7 +2244,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
             hb_arraySetNI( pEvParams, 1, ( int ) wParam );
-            hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
+            wvg_arraysethandle( pEvParams, 2, lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
             break;
@@ -2260,8 +2260,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             int iResult;
             PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
-            hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) wParam );
-            hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
+            wvg_arraysethandle( pEvParams, 1, wParam );
+            wvg_arraysethandle( pEvParams, 2, lParam );
 
             iResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
 
@@ -2277,7 +2277,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
-            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+            wvg_arraysethandle( pEvParams, 3, lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_KEYTOITEM, pEvParams );
             break;
@@ -2732,7 +2732,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
    if( pWVT && pWVT->hWnd )
    {
       PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
-      hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) pWVT->hWnd );
+      wvg_arraysethandle( pEvParams, 1, pWVT->hWnd );
       hb_arraySetNInt( pEvParams, 2, pWVT->threadNO );
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSED, pEvParams );
    }
@@ -3651,7 +3651,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             case HB_GTS_WINDOWHANDLE:
                if( pWVT->hWnd )
-                  pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hWnd );
+                  pInfo->pResult = wvg_itemputhandle( pInfo->pResult, pWVT->hWnd );
                break;
 
             case HB_GTS_CENTERWINDOW:
@@ -4172,7 +4172,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
          if( pWVT->hWnd )
          {
             PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
-            hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) pWVT->hWnd );
+            wvg_arraysethandle( pEvParams, 1, pWVT->hWnd );
             hb_arraySetNInt( pEvParams, 2, pWVT->threadNO );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_CREATED, pEvParams );
          }

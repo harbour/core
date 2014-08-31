@@ -417,7 +417,7 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
             oCom:RMCStyle         := 2
             oCom:RMCUserWatermark := "Vouch"
 
-            oCom:Region( 1 ):SetProperties( 5.0, 5.0, -5.0, -5.0 )
+            oCom:Region( 1 ):SetProperties( 5, 5, -5, -5 )
 
             oCom:Draw( .T. )
             EXIT

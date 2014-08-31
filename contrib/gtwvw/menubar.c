@@ -118,9 +118,11 @@ HB_FUNC( WVW_APPENDMENU )
       hb_strfree( hCaption );
    }
    else
-      szCaption = ( LPCTSTR ) HB_PARHANDLE( 4 );  /* TOFIX: delete this */
+      szCaption = ( LPCTSTR ) HB_PARHANDLE( 4 );
 
-   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parnint( 3 ), szCaption ) );
+   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ),
+      ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
+      szCaption ) );
 }
 
 HB_FUNC( WVW_DELETEMENU )

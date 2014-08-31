@@ -316,7 +316,7 @@ METHOD PROCEDURE WvtDialog:Destroy()
    SetColor( ::cOldColor )
    SetCursor( ::nOldCursor )
 
-   IF ::oldMenuHandle != NIL .AND. ::oldMenuHandle != 0
+   IF ::oldMenuHandle != NIL .AND. ! Empty( ::oldMenuHandle )
       Wvt_SetMenu( ::oldMenuHandle )
    ENDIF
    SetKey( Wvt_SetMenuKeyEvent(), ::oldMenuBlock )
@@ -1383,7 +1383,7 @@ METHOD WvtLabel:Create( lConfg )
 
    ::hFont := Wvt_CreateFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontWeight, ::lItalic, ;
       ::lUnderline, ::lStrikeout, ::nCharSet, ::nFontQuality, ::nAngle )
-   IF ::hFont != 0
+   IF ! Empty( ::hFont )
       IF ! lConfg
          ::bPaint := {|| Wvt_DrawLabelObj( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
             ::Text, ::nAlignHorz, ::nAlignVert, ::nTextColor, ::nBackColor, ::hFont ) }
@@ -1435,7 +1435,7 @@ METHOD WvtLabel:Configure()
    ::nTextColorHoverOff := ::nTextColor
    ::nBackColorHoverOff := ::nBackColor
 
-   IF ::hFont != 0
+   IF ! Empty( ::hFont )
       Wvg_DeleteObject( ::hFont )
    ENDIF
 
@@ -2751,7 +2751,7 @@ METHOD WvtTextBox:Create()
       ::nFontWeight, ::lItalic, ::lUnderline, ::lStrikeout, ;
       ::nCharSet, ::nFontQuality, 0 )
 
-   IF ::hFont != 0
+   IF ! Empty( ::hFont )
       ::bPaint := {|| Wvt_DrawTextBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
          ::aPxlTLBR, ::cText, ::nAlignHorz, ::nAlignVert, ;
          ::nTextColor, ::nBackColor, ::nBackMode, ::hFont ) }

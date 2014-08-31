@@ -67,28 +67,6 @@ HB_FUNC( WVW_YESCLOSE )
    }
 }
 
-HB_FUNC( WIN_SENDMESSAGE )
-{
-   void *  hText  = NULL;
-   HB_SIZE nLen   = 0;
-   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
-
-   if( szText && HB_ISBYREF( 4 ) )
-      szText = HB_STRUNSHARE( &hText, szText, nLen );
-
-   hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parni( 2 ),
-                            ( WPARAM ) hb_parnint( 3 ),
-                            szText ? ( LPARAM ) szText : ( LPARAM ) hb_parnint( 4 ) ) );
-
-   if( szText )
-      HB_STORSTRLEN( szText, nLen, 4 );
-   else
-      hb_storc( NULL, 4 );
-
-   hb_strfree( hText );
-}
-
 HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 {
    PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
@@ -110,8 +88,8 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
    hb_retnint( SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                    hb_parni( 2 ),
                                    ( UINT ) hb_parni( 3 ),
-                                   ( WPARAM ) hb_parnint( 4 ),
-                                   pText ? ( LPARAM ) szTextToPass : ( LPARAM ) hb_parnint( 5 ) ) );
+                                   ( WPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 3 ) ),
+                                   pText ? ( LPARAM ) szTextToPass : ( LPARAM ) ( HB_ISPOINTER( 5 ) ? ( HB_PTRDIFF ) hb_parptr( 5 ) : hb_parnint( 5 ) ) ) );
 
    if( pText && HB_ISBYREF( 5 ) )
    {
@@ -527,12 +505,22 @@ HB_FUNC( WVW_MOUSE_ROW )
 
 HB_FUNC( WVW_SENDMESSAGE )
 {
-   void * hText = NULL;
+   void *  hText  = NULL;
+   HB_SIZE nLen;
+   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
+
+   if( szText && HB_ISBYREF( 4 ) )
+      szText = HB_STRUNSHARE( &hText, szText, nLen );
 
    hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
                             ( UINT ) hb_parni( 2 ),
-                            ( WPARAM ) hb_parnint( 3 ),
-                            HB_ISCHAR( 4 ) ? ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) : ( LPARAM ) hb_parnint( 4 ) ) );
+                            ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
+                            szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) ) );
+
+   if( szText )
+      HB_STORSTRLEN( szText, nLen, 4 );
+   else
+      hb_storc( NULL, 4 );
 
    hb_strfree( hText );
 }
@@ -1034,7 +1022,7 @@ HB_FUNC( WVW_SELECTFONT )
          return a handle identifying that font. */
       HFONT hfont = CreateFontIndirect( cf.lpLogFont );
 
-      hb_arraySetNInt( aMetr, 1, ( HB_PTRDIFF ) hfont );
+      HB_ARRAYSETHANDLE( aMetr, 1, hfont );
       HB_ARRAYSETSTR( aMetr, 2, lf.lfFaceName );
       hb_arraySetNL( aMetr, 3, lf.lfWidth );
       hb_arraySetNL( aMetr, 4, lf.lfHeight );
@@ -2173,7 +2161,7 @@ HB_FUNC( WVW_SAVESCREEN )
 
       hb_arraySetNI( info, 1, iWidth );
       hb_arraySetNI( info, 2, iHeight );
-      hb_arraySetNInt( info, 3, ( HB_PTRDIFF ) hBmp );
+      HB_ARRAYSETHANDLE( info, 3, hBmp );
 
       hb_itemReturnRelease( info );
    }
