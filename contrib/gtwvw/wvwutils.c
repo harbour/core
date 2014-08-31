@@ -928,11 +928,6 @@ HB_FUNC( WVW_CREATEHATCHBRUSH )
    HB_RETHANDLE( CreateHatchBrush( hb_parni( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
-HB_FUNC( WVW_RGB )
-{
-   hb_retnint( RGB( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
-}
-
 HB_FUNC( WVW_REDRAWWINDOW )
 {
    RedrawWindow(
@@ -1014,14 +1009,12 @@ HB_FUNC( WVW_SELECTFONT )
    CHOOSEFONT cf;
    LOGFONT    lf;
 
-   PHB_ITEM pObj = hb_param( 1, HB_IT_OBJECT );
-
    cf.lStructSize    = sizeof( cf );
    cf.hwndOwner      = NULL;
    cf.hDC            = NULL;
    cf.lpLogFont      = &lf;
    cf.iPointSize     = 0;
-   cf.Flags          = CF_SCREENFONTS | ( pObj ? CF_INITTOLOGFONTSTRUCT : 0 );
+   cf.Flags          = CF_SCREENFONTS | ( HB_ISOBJECT( 1 ) ? CF_INITTOLOGFONTSTRUCT : 0 );
    cf.rgbColors      = RGB( 0, 0, 0 );
    cf.lCustData      = 0;
    cf.lpfnHook       = NULL;
@@ -2539,4 +2532,9 @@ HB_FUNC( WVW_RESTORE )
 
    if( wvw_win )
       ShowWindow( wvw_win->hWnd, SW_RESTORE );
+}
+
+HB_FUNC( WVW_RGB )
+{
+   hb_retnint( RGB( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
