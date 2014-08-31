@@ -239,7 +239,7 @@ METHOD WvtDialog:Create()
    ENDIF
 
    aPalette      := hb_gtInfo( HB_GTI_PALETTE )
-   aPalette[ 9 ] := RGB( 175, 175, 175 )
+   aPalette[ 9 ] := WIN_RGB( 175, 175, 175 )
    hb_gtInfo( HB_GTI_PALETTE, aPalette )
 
    ::cScreen     := SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -1376,7 +1376,7 @@ METHOD WvtLabel:Create( lConfg )
 
    __defaultNIL( @::nBottom, ::nTop )
    __defaultNIL( @::nRight, ::nLeft + Len( ::Text ) )
-   __defaultNIL( @::nTextColor, RGB( 0, 0, 0 ) )
+   __defaultNIL( @::nTextColor, WIN_RGB( 0, 0, 0 ) )
 
    ::nTextColorHoverOff := ::nTextColor
    ::nBackColorHoverOff := ::nBackColor
@@ -1494,7 +1494,7 @@ CREATE CLASS WvtToolBar FROM WvtObject
    VAR    wScreen
    VAR    cScreen
    VAR    nBtnLeft                                INIT 0
-   VAR    nRGBSep                                 INIT RGB( 150, 150, 150 )
+   VAR    nRGBSep                                 INIT WIN_RGB( 150, 150, 150 )
 
    ACCESS nButtons                                INLINE Len( ::aButtons )
 
@@ -2808,7 +2808,7 @@ CREATE CLASS WvtProgressBar FROM WvtObject
    VAR    lVertical                               INIT .F.
    VAR    lActive                                 INIT .F.
 
-   VAR    nBarColor                               INIT RGB( 0, 0, 128 )
+   VAR    nBarColor                               INIT WIN_RGB( 0, 0, 128 )
    VAR    nCurrent                                INIT 0
    VAR    nTotal                                  INIT 1
    VAR    nPercent                                INIT 0
@@ -2836,8 +2836,8 @@ METHOD WvtProgressBar:Create()
    __defaultNIL( @::nLeft, 0 )
    __defaultNIL( @::nBottom, iif( ::lVertical, ::nTop + 9, ::nTop ) )
    __defaultNIL( @::nRight, iif( ::lVertical, ::nLeft + 1, ::nLeft + 19 ) )
-   __defaultNIL( @::nTextColor, RGB( 255, 255, 255 ) )
-   __defaultNIL( @::nBackColor, RGB( 198, 198, 198 ) )
+   __defaultNIL( @::nTextColor, WIN_RGB( 255, 255, 255 ) )
+   __defaultNIL( @::nBackColor, WIN_RGB( 198, 198, 198 ) )
 
    ::bPaint := {|| ::Display() }
    AAdd( ::aPaint, { ::bPaint, { WVT_BLOCK_LABEL, ::nTop, ::nLeft, ::nBottom, ::nRight } } )

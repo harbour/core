@@ -82,7 +82,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
 
    oDlg := WvtDialog():New( nWinRows, nWinCols, cWinTitle, cFont, nHeight )
    oDlg:nTooltipWidth     := 300
-   oDlg:nTooltipTextColor := RGB( 255, 0, 0 )
+   oDlg:nTooltipTextColor := WIN_RGB( 255, 0, 0 )
 
    oBar := WvtStatusBar():New( oDlg, 201 )
    oBar:SetPanels( { 50, 100 } )
@@ -103,10 +103,10 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oText:nAlignHorz        := 2
    oText:nAlignVert        := 2
    oText:nFontWeight       := 700
-   oText:nTextColor        := RGB( 100, 255,  12 )
-   oText:nBackColor        := RGB(   0,   0, 255 )
-   oText:nTextColorHoverOn := RGB( 255, 255,   0 )
-   oText:nBackColorHoverOn := RGB( 255, 100,  12 )
+   oText:nTextColor        := WIN_RGB( 100, 255,  12 )
+   oText:nBackColor        := WIN_RGB(   0,   0, 255 )
+   oText:nTextColorHoverOn := WIN_RGB( 255, 255,   0 )
+   oText:nBackColorHoverOn := WIN_RGB( 255, 100,  12 )
    oText:lItalic           := .T.
    oText:ToolTip           := "Software that GROWS with you"
    oText:bOnSelect         := {|| .T. }
@@ -152,7 +152,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oDlg:AddObject( oBtn2 )
 
    oPBar2 := WvtProgressBar():New( oDlg, , 14, 129, 25, 137 )
-   oPBar2:nBarColor  := RGB( 240, 240, 0 )
+   oPBar2:nBarColor  := WIN_RGB( 240, 240, 0 )
    oPBar2:cBackColor := "W/N*"
    oPBar2:lVertical  := .T.
    oPBar2:nDirection := 0
@@ -160,7 +160,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oDlg:AddObject( oPBar2 )
 
    oPBar3 := WvtProgressBar():New( oDlg, , 26, 129, 36, 137 )
-   oPBar3:nBarColor  := RGB( 240, 240, 0 )
+   oPBar3:nBarColor  := WIN_RGB( 240, 240, 0 )
    oPBar3:cBackColor := "W/N*"
    oPBar3:lVertical  := .T.
    oPBar3:nDirection := 1
@@ -195,10 +195,10 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oBnr:nFontWeight       := 0
    oBnr:nDirection        := 0
    oBnr:nAlignVert        := 2
-   oBnr:nTextColor        := RGB( 253, 251, 170 )
-   oBnr:nBackColor        := RGB( 128, 227, 142 )
-   oBnr:nTextColorHoverOn := RGB( 255, 255,  0 )
-   oBnr:nBackColorHoverOn := RGB( 255, 100, 12 )
+   oBnr:nTextColor        := WIN_RGB( 253, 251, 170 )
+   oBnr:nBackColor        := WIN_RGB( 128, 227, 142 )
+   oBnr:nTextColorHoverOn := WIN_RGB( 255, 255,  0 )
+   oBnr:nBackColorHoverOn := WIN_RGB( 255, 100, 12 )
    oBnr:Tooltip           := "WvtBanner():New()"
    oDlg:AddObject( oBnr )
 
@@ -219,8 +219,8 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oTBx:lItalic     := .T.
    oTBx:lUnderline  := .T.
    oTBx:nAlignHorz  := 2
-   oTBx:nTextColor  := RGB( 255, 255, 255 )
-   oTBx:nTextColorHoverOn := RGB( 0, 0, 255 )
+   oTBx:nTextColor  := WIN_RGB( 255, 255, 255 )
+   oTBx:nTextColorHoverOn := WIN_RGB( 0, 0, 255 )
    oTBx:aPopup      := {}
    AAdd( oTBx:aPopup, { "Getsome", {|| .T. } } )
    AAdd( oTBx:aPopup, { "Getsome2", {|| .T. } } )
@@ -343,20 +343,20 @@ PROCEDURE DialogWvgClassesTwo()
    oDlg:oMenu := g_oMenuBar
 
    oPBar := WvtProgressBar():New( oDlg, , 3, 10, 5, 80 )
-   oPBar:nBarColor   := RGB( 0, 240, 240 )
+   oPBar:nBarColor   := WIN_RGB( 0, 240, 240 )
    oPBar:cBackColor  := "W/N*"
    oPBar:nDirection  := 1
    oPBar:cImage      := "vouch1.bmp"
    oDlg:AddObject( oPBar )
 
    oPBar1 := WvtProgressBar():New( oDlg, , 7, 10, 8, 80 )
-   oPBar1:nBarColor  := RGB( 11, 255, 196 )
+   oPBar1:nBarColor  := WIN_RGB( 11, 255, 196 )
    oPBar1:cBackColor := "W/N*"
    oPBar1:nDirection := 0
    oDlg:AddObject( oPBar1 )
 
    oPBar2 := WvtProgressBar():New( oDlg, , 11, 10, 28, 19 )
-   oPBar2:nBarColor  := RGB( 240, 240, 0 )
+   oPBar2:nBarColor  := WIN_RGB( 240, 240, 0 )
    oPBar2:cBackColor := "W/N*"
    oPBar2:lVertical  := .T.
    oPBar2:nDirection := 0
@@ -364,14 +364,14 @@ PROCEDURE DialogWvgClassesTwo()
    oDlg:AddObject( oPBar2 )
 
    oPBar3 := WvtProgressBar():New( oDlg, , 11, 77, 28, 80 )
-   oPBar3:nBarColor  := RGB( 0, 0, 255 )
+   oPBar3:nBarColor  := WIN_RGB( 0, 0, 255 )
    oPBar3:cBackColor := "W/N*"
    oPBar3:lVertical  := .T.
    oPBar3:nDirection := 1
    oDlg:AddObject( oPBar3 )
 
    oPBar4 := WvtProgressBar():New( oDlg, , 22, 22, 28, 74 )
-   oPBar4:nBarColor  := RGB( 255, 255, 0 )
+   oPBar4:nBarColor  := WIN_RGB( 255, 255, 0 )
    oPBar4:cBackColor := "W/N*"
    oPBar4:lVertical  := .T.
    oPBar4:nDirection := 0

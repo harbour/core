@@ -44,10 +44,6 @@ MEMVAR cCdxExp, First, Last, City
 
 THREAD STATIC t_wvtScreen := {}
 
-#ifdef __XCC__
-STATIC s_paint_ := { { "", {} } }
-#endif
-
 EXIT PROCEDURE CleanHandles()
 
    LOCAL obj
@@ -127,7 +123,7 @@ PROCEDURE Main()
 
    AAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
    AAdd( aBlocks, {|| hb_gtInfo( HB_GTI_WINTITLE, "Vouch" ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLabel( 1, 40, cLabel, 6,, RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLabel( 1, 40, cLabel, 6,, WIN_RGB( 255, 255, 255 ), WIN_RGB( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) } )
@@ -269,20 +265,20 @@ STATIC PROCEDURE WvtNextGets_X()
 
    AAdd( aBlocks, {|| hb_gtInfo( HB_GTI_WINTITLE, "Wvt Gets 2nd Window with Different Palette" ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1, 0, MaxRow() - 1, MaxCol() ) } )
-   AAdd( aBlocks, {|| Wvt_SetBrush( 0, RGB( 32, 255, 100 ) )    } )
+   AAdd( aBlocks, {|| Wvt_SetBrush( 0, WIN_RGB( 32, 255, 100 ) )    } )
    AAdd( aBlocks, {|| Wvt_DrawEllipse( 6, 50, 10, 58 )           } )
-   AAdd( aBlocks, {|| Wvt_SetBrush( 2, RGB( 255, 255, 100 ), 1 ) } )
+   AAdd( aBlocks, {|| Wvt_SetBrush( 2, WIN_RGB( 255, 255, 100 ), 1 ) } )
    AAdd( aBlocks, {|| Wvt_DrawRectangle( 11, 50, 13, 58 )     } )
    AAdd( aBlocks, {|| Wvt_DrawBoxGroupRaised( 5, 6, 19, 72 )  } )
    AAdd( aBlocks, {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    AAdd( aBlocks, {|| Wvt_DrawButton( 21,  6, 22,  9, "New", "vouch1.bmp" )                             } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 11, 22, 14, "Browse", "vouch1.bmp", 1, RGB( 255, 255, 255 ) )      } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 11, 22, 14, "Browse", "vouch1.bmp", 1, WIN_RGB( 255, 255, 255 ) )      } )
    AAdd( aBlocks, {|| Wvt_DrawButton( 21, 16, 22, 19, , "vouch1.bmp" )                                    } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 21, 22, 24, "Data",, 0, RGB( 100, 22, 241 ), RGB( 198, 198, 198 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 21, 22, 24, "Data",, 0, WIN_RGB( 100, 22, 241 ), WIN_RGB( 198, 198, 198 ) ) } )
    AAdd( aBlocks, {|| Wvt_DrawButton( 21, 26, 22, 29, "Flat", IMAGE_VR, 2 )                                 } )
    AAdd( aBlocks, {|| Wvt_DrawButton( 21, 31, 22, 34, "Outline", IMAGE_VR, 3 )                              } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 22, 36, 22, 41, "Data",, 0, RGB( 100, 22, 241 ), RGB( 198, 198, 198 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 22, 36, 22, 41, "Data",, 0, WIN_RGB( 100, 22, 241 ), WIN_RGB( 198, 198, 198 ) ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
@@ -374,8 +370,8 @@ PROCEDURE WvtLines()  /* must be a public function */
 
    AAdd( aBlocks, {|| Wvt_DrawLine( 0, 0, 0, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( 1, 0, 1, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_TOP )    } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 2, 0, 2, nCols, WVT_LINE_HORZ, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_SOLID, 4, RGB( 255, 255, 255 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 3, 0, 3, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER, WVT_LINE_DASH, 0, RGB( 255, 0, 0 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 2, 0, 2, nCols, WVT_LINE_HORZ, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_SOLID, 4, WIN_RGB( 255, 255, 255 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 3, 0, 3, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER, WVT_LINE_DASH, 0, WIN_RGB( 255, 0, 0 ) ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( 4, 0, 4, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
 
    @ 0,  1 SAY "Center Raised"
@@ -392,9 +388,9 @@ PROCEDURE WvtLines()  /* must be a public function */
    AAdd( aBlocks, {|| Wvt_DrawLine( 11, 7, nRows - 2, 7, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_LEFT   ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( 11, 8, nRows - 2, 8, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( 11, 9, nRows - 2, 9, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_RIGHT  ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 10, nRows - 2, 10, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DOT,     0, RGB( 0, 0, 255 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 11, nRows - 2, 11, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASH,    0, RGB( 255, 0, 0 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 12, nRows - 2, 12, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASHDOT, 0, RGB( 0, 255, 0 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 10, nRows - 2, 10, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DOT,     0, WIN_RGB( 0, 0, 255 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 11, nRows - 2, 11, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASH,    0, WIN_RGB( 255, 0, 0 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 12, nRows - 2, 12, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASHDOT, 0, WIN_RGB( 0, 255, 0 ) ) } )
 
    WvtSetBlocks( aBlocks )
 
@@ -643,22 +639,22 @@ STATIC PROCEDURE GCUIConsole( oCrt )
 
    @  3, nColGet GET dDate  ;
       WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 1 ) ) } ;
-      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 0, 0 ) ), .T. }
+      VALID {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 0, 0 ) ), .T. }
    @  6, nColGet GET cName  ;
       WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 2 ) ) } ;
-      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 255, 0 ) ), ;
+      VALID {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 255, 0 ) ), ;
       Wvg_SetGObjState( hBoxR, 3 ), .T. }
    @  9, nColGet GET cAdd1  ;
       WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 3 ) ) } ;
-      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 0, 255 ) ), .T. }
+      VALID {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 0, 255 ) ), .T. }
    @ 11, nColGet GET cAdd2  ;
       WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 4 ) ) } ;
-      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 255, 255 ) ), ;
+      VALID {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 255, 255 ) ), ;
       Wvg_SetGObjState( hBoxR, 1 ), .T. }
    @ 13, nColGet GET cAdd3  ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 198, 21, 140 ) ), .T. }
+      WHEN  {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 198, 21, 140 ) ), .T. }
    @ 16, nColGet GET nSlry PICTURE "@Z 9999999.99" ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 0, 0, 0 ) ), .T. }
+      WHEN  {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 0, 0, 0 ) ), .T. }
 
    // The only additional calls to render your console GUI
    // The GETLIST  : This can be embedded via  @ GET preprocessor command

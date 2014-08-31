@@ -177,8 +177,13 @@
 
 /* - */
 
+#ifdef HB_LEGACY_LEVEL5
+
 #ifndef RGB
+/* Deprecated. Use WIN_RGB() instead. */
 #define RGB( nR, nG, nB )   ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+#endif
+
 #endif
 
 // Windows Specific

@@ -61,7 +61,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oStatic:caption := Chr( 13 ) + "Implemented   Xbase++ Parts"
    oStatic:create( , , { 0, oTBar:currentSize()[ 2 ] + 3 }, { 120, oCrt:currentSize()[ 2 ] - ;
       oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
-   oStatic:setColorBG( RGB( 198, 198, 198 ) )
+   oStatic:setColorBG( WIN_RGB( 198, 198, 198 ) )
 
 #if 0  // panel
    // --- Static + Radio + Checkbox ---
@@ -70,7 +70,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oStatic2:exStyle += WS_EX_WINDOWEDGE
 // oStatic2:options := WVGSTATIC_FRAMETHICK
    oStatic2:create()
-// oStatic2:setColorBG( RGB( 198,198,198 ) )
+// oStatic2:setColorBG( WIN_RGB( 198,198,198 ) )
 
    oXbp    := WvgPushButton():new( oStatic2 )
    oXbp:caption     := "Hide"
@@ -144,7 +144,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
-   oListBox:setColorFG( RGB( 218, 61, 34 ) )
+   oListBox:setColorFG( WIN_RGB( 218, 61, 34 ) )
 
    AAdd( aParts, "XbpDialog"      )
    AAdd( aParts, "XbpMenuBar"     )
@@ -180,8 +180,8 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oTree:hasButtons := .T.
    oTree:alwaysShowSelection := .T.
    oTree:create()
-   oTree:setColorBG( RGB( 120, 15, 240 ) )
-   oTree:setColorFG( RGB( 15, 240, 120 ) )
+   oTree:setColorBG( WIN_RGB( 120, 15, 240 ) )
+   oTree:setColorFG( WIN_RGB( 15, 240, 120 ) )
    oTree:itemSelected := {| oItem | iif( oItem != NIL, Wvg_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
@@ -321,7 +321,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
       oCom:Id    := 5
 
       oCom:mapEvent( evDblClk, {|| oCom:Value     := Seconds() / 86400, ;
-         oCom:BackColor := RGB( 0, 140, 210 ), ;
+         oCom:BackColor := WIN_RGB( 0, 140, 210 ), ;
          oCom:Refresh(), ;
          oCom:ShowSecondsHand := .T., ;
          oCom:Hands3D := .T., ;
@@ -381,12 +381,12 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
 
    CASE 5
       oCom:loadMultiPage( hb_DirBase() + "myharu.pdf", 2 )
-      oCom:addGradientBorder( 10, RGB( 12, 20, 233 ), RGB( 100, 255, 20 ), 0 )
+      oCom:addGradientBorder( 10, WIN_RGB( 12, 20, 233 ), WIN_RGB( 100, 255, 20 ), 0 )
       oCom:drawText( 10, 10, "Vouch" )
       // oCom:emboss( 3,0 )
       oCom:copy2ClipBoard()
       oCom:view := 11
-      oCom:setBackGroundColor( RGB( 225, 225, 225 ) )
+      oCom:setBackGroundColor( WIN_RGB( 225, 225, 225 ) )
 #if 0
       oCom:rotate90()
 #endif

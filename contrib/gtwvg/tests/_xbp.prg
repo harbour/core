@@ -49,15 +49,15 @@ PROCEDURE demoxbp()
 
    oStatic:create( , , { 0, oTBar:currentSize()[ 2 ] + 3 }, { 120, oCrt:currentSize()[ 2 ] - ;
       oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
-   oStatic:setColorBG( RGB( 200, 200, 200 ) )
+   oStatic:setColorBG( WIN_RGB( 200, 200, 200 ) )
 
    // --- ListBox ---
    oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
-   oListBox:setColorFG( RGB( 218, 61, 34 ) )
+   oListBox:setColorFG( WIN_RGB( 218, 61, 34 ) )
 #if 0
-   oListBox:setColorBG( RGB( 250, 244, 182 ) )
+   oListBox:setColorBG( WIN_RGB( 250, 244, 182 ) )
 #endif
 
    AAdd( aParts, "XbpDialog"         )
@@ -102,8 +102,8 @@ PROCEDURE demoxbp()
    oTree:hasButtons := .T.
    oTree:alwaysShowSelection := .T.
    oTree:create()
-   oTree:setColorBG( RGB( 120, 15, 240 ) )
-   oTree:setColorFG( RGB( 15, 240, 120 ) )
+   oTree:setColorBG( WIN_RGB( 120, 15, 240 ) )
+   oTree:setColorFG( WIN_RGB( 15, 240, 120 ) )
    oTree:itemSelected := {| oItem | iif( oItem != NIL, Wvg_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
@@ -145,8 +145,8 @@ PROCEDURE demoxbp()
    oAddr:border       := .T.
    cNavigate          := hb_Version( HB_VERSION_URL_BASE )
    oAddr:dataLink     := {| x | iif( x == NIL, cNavigate, cNavigate := x ) }
-   oAddr:setColorFG( RGB( 0, 0, 255   ) )
-   oAddr:setColorBG( RGB( 0, 255, 255 ) )
+   oAddr:setColorFG( WIN_RGB( 0, 0, 255   ) )
+   oAddr:setColorBG( WIN_RGB( 0, 255, 255 ) )
    oAddr:create( oDA, , { 120, oTBar:currentSize()[ 2 ] }, { 500, 20 }, , .T. )
    oAddr:setData()
    oAddr:killInputFocus := {| m1, m2, oS | m1 := m1, m2 := m2, oS:getData(), oCom:navigate( cNavigate ) }
@@ -161,7 +161,7 @@ PROCEDURE demoxbp()
    oStatic2:options := WVGSTATIC_FRAMETHICK
 #endif
    oStatic2:create()
-   oStatic2:setColorBG( RGB( 175, 175, 175 ) )
+   oStatic2:setColorBG( WIN_RGB( 175, 175, 175 ) )
 
    oXbp := WvgPushButton():new( oStatic2 )
    oXbp:caption     := "Hide"

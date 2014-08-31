@@ -258,7 +258,7 @@ PROCEDURE Main()
    oMouse:Enable( .T. )
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Hard",   MaxRow() - 2, 67 - 11 - 11 - 11, , , {|| lboxmessage( "hard" ) }, 3 ) )
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Hard", MaxRow() - 2, 67 - 11 - 11 - 11, , , {|| lboxmessage( "hard" ) }, 3 ) )
    oMouse := WVWMouseButton():New( "Disabled", MaxRow() - 2, 67 - 11 - 11 - 11 - 11, , , {|| xDebugInfo() } )
    oMouse:Enable( .F. )
    wvwm_AddMouseObjects( nCurWindow, oMouse )
@@ -493,10 +493,10 @@ STATIC PROCEDURE DEMO_Browse()
 
    LOCAL nKey, oBrowse, i
    LOCAL lEnd    := .F.
-   LOCAL nTop    :=  3             // pls notice that this is relative to PARENT window!
-   LOCAL nLeft   :=  3             // pls notice that this is relative to PARENT window!
-   LOCAL nBottom := MaxRow() - 2   // pls notice that this is relative to PARENT window!
-   LOCAL nRight  := MaxCol() - 3   // pls notice that this is relative to PARENT window!
+   LOCAL nTop    := 3             // pls notice that this is relative to PARENT window!
+   LOCAL nLeft   := 3             // pls notice that this is relative to PARENT window!
+   LOCAL nBottom := MaxRow() - 1  // pls notice that this is relative to PARENT window!
+   LOCAL nRight  := MaxCol() - 3  // pls notice that this is relative to PARENT window!
    LOCAL cColor
 
    LOCAL nStyle := 0
@@ -516,7 +516,7 @@ STATIC PROCEDURE DEMO_Browse()
 
    cColor := SetColor( "N/W" )
    CLS
-   SetColor( "N/W*,N/GR*,,,N/W* " )
+   SetColor( "N/W*,N/GR*,,,N/W*" )
 
    USE "..\..\..\tests\test.dbf" NEW READONLY
    IF NetErr()
@@ -526,7 +526,7 @@ STATIC PROCEDURE DEMO_Browse()
 
    INDEX ON FIELD->LAST TO test1.ntx  // 2004-07-07
 
-   oBrowse := TBrowseNew( 3, 2, MaxRow() - 3, MaxCol() - 3 )
+   oBrowse := TBrowseNew( 3, 2, MaxRow() - 4, MaxCol() - 3 )
 
    oBrowse:ColSep        := "  "
    oBrowse:HeadSep       := "__"
@@ -556,7 +556,7 @@ STATIC PROCEDURE DEMO_Browse()
    /* we now use native push button */
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", MaxRow(), MaxCol() - 15, , , {|| xDebugInfo() } ))
 #endif
-   wvw_pbCreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", , {|| xDebugInfo() } )
+   wvw_pbCreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", , {|| xDebugInfo() } )
 
    nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
    nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
@@ -579,13 +579,13 @@ STATIC PROCEDURE DEMO_Browse()
          oBrowse:Down()
 
       CASE nKey == K_MWBACKWARD
-         oBrowse:Down() // simple scroll down
+         oBrowse:Down()  // simple scroll down
 
       CASE nKey == K_UP
          oBrowse:Up()
 
       CASE nKey == K_MWFORWARD
-         oBrowse:Up()   // simple scroll up
+         oBrowse:Up()  // simple scroll up
 
       CASE nKey == K_LEFT
          IF oBrowse:colPos == 1
@@ -638,8 +638,8 @@ STATIC PROCEDURE DEMO_Browse()
       oBrowse:ForceStable()
 
       // refresh the scrollbars due to keyboard navigation
-      RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) // 2004-07-04
-      RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) // 2004-07-04
+      RefreshHXB( oBrowse, nCurWindow, nHScrollBar )  // 2004-07-04
+      RefreshVXB( oBrowse, nCurWindow, nVScrollBar )  // 2004-07-04
 
    ENDDO
 
@@ -667,32 +667,34 @@ STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    LOCAL nOldWin
    LOCAL lNeedStabilize
 
+#if 0
    // if we can't handle non topmost window we must return right away
-   // IF nWinNum != wvw_nNumWindows() - 1
-   //    RETURN
-   // ENDIF
+   IF nWinNum != wvw_nNumWindows() - 1
+      RETURN
+   ENDIF
+#endif
 
    nOldWin := wvw_nSetCurWindow( nWinNum )
 
    lNeedStabilize := .F.
    DO WHILE .T.  // dummy loop
       DO CASE
-      CASE XBmsg == 0 // SB_LINEUP
+      CASE XBmsg == 0  // SB_LINEUP
          IF ordKeyNo() == 1
             EXIT
          ENDIF
          oBrowse:up()
-      CASE XBmsg == 1 // SB_LINEDOWN
+      CASE XBmsg == 1  // SB_LINEDOWN
          IF ordKeyNo() == ordKeyCount()
             EXIT
          ENDIF
          oBrowse:down()
-      CASE XBmsg == 2 // SB_PAGEUP
+      CASE XBmsg == 2  // SB_PAGEUP
          IF ordKeyNo() == 1
             EXIT
          ENDIF
          oBrowse:pageup()
-      CASE XBmsg == 3 // SB_PAGEDOWN
+      CASE XBmsg == 3  // SB_PAGEDOWN
          IF ordKeyNo() == ordKeyCount()
             EXIT
          ENDIF
@@ -704,7 +706,7 @@ STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
       ENDCASE
       lNeedStabilize := .T.
       EXIT
-   ENDDO // dummy loop
+   ENDDO
 
    IF lNeedStabilize
       oBrowse:ForceStable()
@@ -733,22 +735,22 @@ STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    lNeedStabilize := .F.
    DO WHILE .T.  // dummy loop
       DO CASE
-      CASE XBmsg == 0 // SB_LINELEFT
+      CASE XBmsg == 0  // SB_LINELEFT
          IF oBrowse:colPos == 1
             EXIT
          ENDIF
          oBrowse:Left()
-      CASE XBmsg == 1 // SB_LINERIGHT
+      CASE XBmsg == 1  // SB_LINERIGHT
          IF oBrowse:colpos == oBrowse:colCount
             EXIT
          ENDIF
          oBrowse:Right()
-      CASE XBmsg == 2 // SB_PAGELEFT
+      CASE XBmsg == 2  // SB_PAGELEFT
          IF oBrowse:colPos == 1
             EXIT
          ENDIF
          oBrowse:panleft()
-      CASE XBmsg == 3 // SB_PAGERIGHT
+      CASE XBmsg == 3  // SB_PAGERIGHT
          IF oBrowse:colpos == oBrowse:colCount
             EXIT
          ENDIF
@@ -760,7 +762,7 @@ STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
       ENDCASE
       lNeedStabilize := .T.
       EXIT
-   ENDDO // dummy loop
+   ENDDO
    IF lNeedStabilize
       oBrowse:ForceStable()
       RefreshHXB( oBrowse, nWinNum, XBid )
@@ -770,15 +772,13 @@ STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    RETURN
 
-/*
- 2004-07-04 notes:
+/* 2004-07-04 notes:
 
- 0 <= nPage <= ( nMax - nMin + 1 )
- nPage :: pagesize
+   0 <= nPage <= ( nMax - nMin + 1 )
+   nPage :: pagesize
 
- nMin <= nPos <= ( nMax - Max( nPage - 1, 0 ) )
-*/
-
+   nMin <= nPos <= ( nMax - Max( nPage - 1, 0 ) )
+ */
 STATIC PROCEDURE RefreshVXB( oBrowse, nWinNum, XBid )
 
    LOCAL nMin, nMax, nPage, nPos
@@ -818,8 +818,6 @@ STATIC PROCEDURE RefreshHXB( oBrowse, nWinNum, XBid )
 
    RETURN
 
-//
-
 STATIC FUNCTION DbSkipBlock( n )
 
    LOCAL nSkipped := 0
@@ -840,8 +838,6 @@ STATIC FUNCTION DbSkipBlock( n )
 
    RETURN nSkipped
 
-//
-
 STATIC FUNCTION TBNext()
 
    LOCAL nSaveRecNum := RecNo()
@@ -859,8 +855,6 @@ STATIC FUNCTION TBNext()
 
    RETURN lMoved
 
-//
-
 STATIC FUNCTION TBPrev()
 
    LOCAL nSaveRecNum := RecNo()
@@ -875,17 +869,21 @@ STATIC FUNCTION TBPrev()
 
    RETURN lMoved
 
-//      WVW_Paint() must be a FUNCTION in your application
-//      as it is called when Window gets WM_PAINT message.
+// WVW_Paint() must be a FUNCTION in your application
+// as it is called when Window gets WM_PAINT message.
 //
 // 2004-03-30, was: FUNCTION WVW_Paint( hWnd, msg, wParam, lParam, nWinNum )
 // 2004-04-08, was: FUNCTION WVW_Paint( nWinNum, nrow1, ncol1, nrow2, ncol2 )
 
 FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
-   // ldebug( "WVW_Paint:" + hb_eol() +;
-   //        "hWnd: " + hb_ntos( hWnd ) + hb_eol() +;
-   //        "nWinNum: " + hb_ntos( nWinNum ) )
+#if 0
+   ldebug( ;
+      "WVW_Paint:" + hb_eol() + ;
+      "hWnd: " + hb_ntos( hWnd ) + hb_eol() + ;
+      "nWinNum: " + hb_ntos( nWinNum ) )
+#endif
+
    IF Len( s_amiscobjlist ) >= nWinNum + 1
       AEval( s_amiscobjlist[ nWinNum + 1 ], {| e | Eval( e, nWinNum ) } )
    ENDIF
@@ -894,9 +892,9 @@ FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
    RETURN 0
 
-//      WVW_SetFocus() must be a FUNCTION in your application
-//      needs to process messages sent through WM_SETFOCUS message
-//      received by the window.
+// WVW_SetFocus() must be a FUNCTION in your application
+// needs to process messages sent through WM_SETFOCUS message
+// received by the window.
 //
 #if 0
 PROCEDURE WVW_SetFocus( hWnd, nWinNum )  /* must be a public function */
@@ -1198,11 +1196,7 @@ STATIC FUNCTION SetDefaultWindowSize()
    CASE screenWidth >= 1024
       Result := wvw_SetFont( , "Terminal", 20, 10 )
    CASE screenWidth >= 800
-      IF hb_osIsWinNT()
-         Result := wvw_SetFont( , "Lucida Console", 16, - 8 )
-      ELSE
-         Result := wvw_SetFont( , "System", 16, - 8 )
-      ENDIF
+      Result := wvw_SetFont( , iif( hb_osIsWinNT(), "Lucida Console", "System" ), 16, -8 )
    OTHERWISE
       Result := wvw_SetFont( , "Terminal", 12, 6 )
    ENDCASE
@@ -1240,21 +1234,19 @@ STATIC PROCEDURE MyError( e )
 
    RETURN
 
-/*
-  Pseudo mouse object in GTWVW GUI
-  copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
+/* Pseudo mouse object in GTWVW GUI
+   copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
-  This is a sample of implementation of a pseudo GUI object in GTWVW,
-  using GTWVW GUI primitives.
+   This is a sample of implementation of a pseudo GUI object in GTWVW,
+   using GTWVW GUI primitives.
 
-  Example on how to use it is given in wvwtest9.prg.
-  eg. WVWMouseObject():New( "Button1", MaxRow() - 1, 10, , , {|| Tone( 660, 3 ) } )
+   Example on how to use it is given in wvwtest9.prg.
+   eg. WVWMouseObject():New( "Button1", MaxRow() - 1, 10, , , {|| Tone( 660, 3 ) } )
 
-  NOTES:
-  This is just a sample. You may not want to see it as a 'model'.
-  There are many other ways to handle pseudo GUI objects in GTWVW, just
-  use your imagination :-)
-*/
+   NOTES:
+   This is just a sample. You may not want to see it as a 'model'.
+   There are many other ways to handle pseudo GUI objects in GTWVW, just
+   use your imagination :-) */
 
 #include "hbclass.ch"
 
@@ -1351,7 +1343,7 @@ ENDCLASS
 
 METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId ) CLASS WVWMouseButton
 
-   hb_default( @cCaption, "" ) // 2004-03-25, was: "Button"
+   hb_default( @cCaption, "" )  // 2004-03-25, was: "Button"
 
    hb_default( @nRow1, 0 )
    hb_default( @nCol1, 0 )
@@ -1440,11 +1432,11 @@ METHOD OnPress() CLASS WVWMouseButton
    ::lPressed := .T.
    ::Draw()
 
-   IF ::lRepeatPress // .AND. ::lPressed
+   IF ::lRepeatPress  // .AND. ::lPressed
       IF ! lWasPressed
-         xKeyRepeater( .T. ) // init it
+         xKeyRepeater( .T. )  // init it
       ENDIF
-      wvwm_SetKeyRepeater( .T. )   // activate key repeater
+      wvwm_SetKeyRepeater( .T. )  // activate key repeater
    ENDIF
 
    IF HB_ISEVALITEM( ::bPressBlock )
@@ -1513,7 +1505,7 @@ METHOD OnMouseOut() CLASS WVWMouseButton
    ENDIF
 
    IF ::lRepeatPress .AND. ::lPressed
-      wvwm_SetKeyRepeater( .F. )   // stop key repeater
+      wvwm_SetKeyRepeater( .F. )  // stop key repeater
    ENDIF
 
    ::lHover := .F.
@@ -1531,7 +1523,7 @@ METHOD OnMouseOver() CLASS WVWMouseButton
    ENDIF
 
    IF ::lRepeatPress .AND. ::lPressed
-      wvwm_SetKeyRepeater( .T. )   // activate key repeater
+      wvwm_SetKeyRepeater( .T. )  // activate key repeater
    ENDIF
 
    ::lHover := .T.
@@ -1546,21 +1538,21 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
    LOCAL lPressed := ::lPressed .AND. lMouseOver
    LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_GetFontInfo( nWinNum ), NIL )
    LOCAL nLabelColor := iif( lPressed, wvw_RGB( 96, 96, 96 ), wvw_RGB( 0, 0, 0 ) )
-   LOCAL lUseImage := HB_ISSTRING( ::cImage ) // 2004-03-25
+   LOCAL lUseImage := HB_ISSTRING( ::cImage )  // 2004-03-25
 
    IF ! ::lVisible .OR. ::nType == _BUTTON_NONE
-      SetCursor( nOldCursor ) // 2004-03-03
+      SetCursor( nOldCursor )  // 2004-03-03
       RETURN Self
    ENDIF
 
    IF ::nrow1 > ::nrow2 .OR. ::ncol1 > ::ncol2
-      SetCursor( nOldCursor ) // 2004-03-03
+      SetCursor( nOldCursor )  // 2004-03-03
       RETURN Self
    ENDIF
 
    hb_default( @nWinNum, ::nWinId )
 
-   IF lPressed // ::lPressed
+   IF lPressed  // ::lPressed
       IF ::nType != _BUTTON_HARD
          wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cPressedColor ) ), ::lTight )
          wvw_DrawBoxRecessed( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )  // wvw

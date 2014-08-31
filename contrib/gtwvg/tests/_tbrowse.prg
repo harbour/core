@@ -119,7 +119,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    IF s_nStyle > 5
       s_nStyle := 0
    ENDIF
-   Wvt_SetPen( s_nStyle, 0, RGB( 210,1210,210 ) )
+   Wvt_SetPen( s_nStyle, 0, WIN_RGB( 210,1210,210 ) )
    s_nStyle++
    hb_gtInfo( HB_GTI_WINTITLE, "WVT Gui TBrowse()" )
 
@@ -501,7 +501,7 @@ STATIC PROCEDURE BrwBuildButtons( oCrt, oBrw )
          oPB:create( , , { {|| -MaxRow() }, -nOff }, { -1, -aW[ i ] } )
       ENDIF
       oPB:activate := aAct[ i ]
-      oPB:setColorFG( RGB( 0, 255, 0 ) )
+      oPB:setColorFG( WIN_RGB( 0, 255, 0 ) )
       oPB:tooltipText := aPmt[ i ]
 
       nOff += aW[ i ] + nG
@@ -559,7 +559,7 @@ STATIC FUNCTION BrwBuildMenu( oCrt )
 
 STATIC FUNCTION BrwBuildToolBar( oCrt )
 
-   LOCAL oTBar, nRGB := RGB( 172, 172, 172 )
+   LOCAL oTBar, nRGB := WIN_RGB( 172, 172, 172 )
 
    oTBar := WvgToolBar():new( oCrt, , { -0.1, -0.1 }, { -3, {|| -( MaxCol() + 1 ) } } )
 

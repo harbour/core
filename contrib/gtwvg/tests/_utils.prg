@@ -418,7 +418,7 @@ FUNCTION Popups( nID, lDestroy )
 
 FUNCTION DispStatusMsg( cMsg )
 
-   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, RGB( 198, 198, 198 ), "Arial", 18, , 900 )
+   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, WIN_RGB( 198, 198, 198 ), "Arial", 18, , 900 )
 
    RETURN .T.
 

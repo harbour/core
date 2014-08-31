@@ -168,19 +168,19 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
    CASE WM_CTLCOLOREDIT
       DO CASE
       CASE Wvg_GetDlgItem( hDlg, ID_MLE ) == lParam
-         Wvg_SetTextColor( wParam, RGB( 0, 0, 255 ) )
-         Wvg_SetBkColor( wParam, RGB( 255, 255, 200 ) )
+         Wvg_SetTextColor( wParam, WIN_RGB( 0, 0, 255 ) )
+         Wvg_SetBkColor( wParam, WIN_RGB( 255, 255, 200 ) )
          RETURN 1
       CASE Wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam
-         Wvg_SetTextColor( wParam, RGB( 255, 255, 255 ) )
-         Wvg_SetBkColor( wParam, RGB( 10, 200, 45 ) )
+         Wvg_SetTextColor( wParam, WIN_RGB( 255, 255, 255 ) )
+         Wvg_SetBkColor( wParam, WIN_RGB( 10, 200, 45 ) )
          RETURN 1
       ENDCASE
       EXIT
 
    CASE WM_CTLCOLORSTATIC
       IF Wvg_GetDlgItem( hDlg, ID_STA_TEXT ) == lParam
-         Wvg_SetTextColor( wParam, RGB( 255, 255, 255 ) )
+         Wvg_SetTextColor( wParam, WIN_RGB( 255, 255, 255 ) )
          RETURN 1
       ENDIF
       EXIT
