@@ -2257,13 +2257,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      wvw_LBAddString()
+      wvw_lbAddString()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_LBAddString( nHandleDialog, nIDListBox, cItem )
+      wvw_lbAddString( nHandleDialog, nIDListBox, cItem )
    $ARGUMENTS$
       <nHandleDialog> Handle of dialog window. <nIDListBox> ID of listbox. <cItem>
       Item to add in listbox.
@@ -2280,13 +2280,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      wvw_LBSetCurSel()
+      wvw_lbSetCurSel()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_LBSetCurSel( nHandleDialog, nIDListBox, nItem )
+      wvw_lbSetCurSel( nHandleDialog, nIDListBox, nItem )
    $ARGUMENTS$
       <nHandleDialog> Handle of dialog window. <nIDListBox> ID of listbox. <nItem>
       Item index (start from zero).

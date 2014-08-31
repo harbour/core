@@ -165,20 +165,6 @@ HB_FUNC( WIN_SELECTOBJECT )
    HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
 }
 
-#if defined( HB_LEGACY_LEVEL4 )
-HB_FUNC( WIN_MULDIV )
-{
-   hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
-}
-#endif
-
-#if ! defined( __HB_NO_REDUNDANT )
-HB_FUNC( WIN_GETDIALOGBASEUNITS )
-{
-   hb_retnl( ( long ) GetDialogBaseUnits() );
-}
-#endif
-
 HB_FUNC( WIN_SETDLGITEMTEXT )
 {
    void * hText;
@@ -946,13 +932,6 @@ HB_FUNC( WVW_RGB )
 {
    hb_retnint( RGB( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
-
-#if ! defined( __HB_NO_REDUNDANT )
-HB_FUNC( WIN_GETSYSCOLOR )
-{
-   hb_retnint( GetSysColor( hb_parni( 1 ) ) );
-}
-#endif
 
 HB_FUNC( WVW_REDRAWWINDOW )
 {
@@ -2561,20 +2540,3 @@ HB_FUNC( WVW_RESTORE )
    if( wvw_win )
       ShowWindow( wvw_win->hWnd, SW_RESTORE );
 }
-
-#if ! defined( __HB_NO_REDUNDANT )
-HB_FUNC( WVW_GETKEYSTATE )
-{
-   hb_retni( GetKeyState( hb_parni( 1 ) ) );
-}
-
-HB_FUNC( WVW_LOWORD )
-{
-   hb_retni( ( int ) LOWORD( ( DWORD ) hb_parnl( 1 ) ) );
-}
-
-HB_FUNC( WVW_HIWORD )
-{
-   hb_retni( ( int ) HIWORD( ( DWORD ) hb_parnl( 1 ) ) );
-}
-#endif

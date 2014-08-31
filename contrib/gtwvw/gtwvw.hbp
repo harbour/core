@@ -8,6 +8,8 @@
 
 -stop{!win}
 
+hbwin.hbc
+
 # Optimize build time and make sure we build even with this option
 -cflag=-DWIN32_LEAN_AND_MEAN
 

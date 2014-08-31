@@ -82,6 +82,8 @@
 
 #include "hbgfxdef.ch"
 
+#define HB_GT_NAME  WVW
+
 static PWVW_GLO s_wvw          = NULL; /* TOFIX: MT compatibility */
 static HB_BOOL  s_fInit        = HB_FALSE;
 static HB_BOOL  s_fIsReady     = HB_FALSE;
@@ -4005,11 +4007,7 @@ static void hb_gtInitStatics( int nWin, LPCTSTR szWinName, int iRow1, int iCol1,
       s_wvw->a.pSymWVW_TIMER      = hb_dynsymFind( "WVW_TIMER" );
       s_wvw->a.pSymWVW_ONCTLCOLOR = hb_dynsymFind( "WVW_ONCTLCOLOR" );
 
-#if defined( __HBWAPI_H )
       h = hbwapi_LoadLibrarySystemVM( "msimg32.dll" );
-#else
-      h = LoadLibrary( TEXT( "msimg32.dll" ) );
-#endif
       if( h )
       {
          s_wvw->a.pfnGF = ( wvwGradientFill ) HB_WINAPI_GETPROCADDRESS( h, "GradientFill" );

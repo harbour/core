@@ -36,6 +36,13 @@
 // HB_FUNC_EXCLUDE SetTextColor
 // HB_FUNC_EXCLUDE ToolBarAddButtons
 // HB_FUNC_EXCLUDE Window2Bitmap
+// HB_FUNC_EXCLUDE win_GetDialogBaseUnits
+// HB_FUNC_EXCLUDE win_GetSysColor
+// HB_FUNC_EXCLUDE win_MulDiv
+// HB_FUNC_EXCLUDE wvw_GetKeyState
+// HB_FUNC_EXCLUDE wvw_HIWORD
+// HB_FUNC_EXCLUDE wvw_LOWORD
+// HB_FUNC_EXCLUDE wvw_xbShow
 
 /* --------------------------------------------------------------------
  * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
@@ -62,11 +69,9 @@ DYNAMIC win_DeleteObject
 DYNAMIC win_DrawText
 DYNAMIC win_GetClientRect
 DYNAMIC win_GetDC
-DYNAMIC win_GetDialogBaseUnits
 DYNAMIC win_GetDlgItem
 DYNAMIC win_GetDlgItemText
 DYNAMIC win_GetStockObject
-DYNAMIC win_GetSysColor
 DYNAMIC win_InvalidateRect
 DYNAMIC win_IsDlgButtonChecked
 DYNAMIC win_LoadIcon
@@ -187,7 +192,6 @@ DYNAMIC wvw_GetClipboard
 DYNAMIC wvw_GetCursorPos
 DYNAMIC wvw_GetFontInfo
 DYNAMIC wvw_GetIconSize
-DYNAMIC wvw_GetKeyState
 DYNAMIC wvw_GetLastMenuEvent
 DYNAMIC wvw_GetMenu
 DYNAMIC wvw_GetPaintRect
@@ -204,7 +208,6 @@ DYNAMIC wvw_GetToolTipWidth
 DYNAMIC wvw_GetWindowHandle
 DYNAMIC wvw_GetXYFromRowCol
 DYNAMIC wvw_Get_hnd_Window
-DYNAMIC wvw_HIWORD
 DYNAMIC wvw_ImageList_Add
 DYNAMIC wvw_ImageList_AddMasked
 DYNAMIC wvw_InvalidateRect
@@ -212,8 +215,8 @@ DYNAMIC wvw_IsLButtonPressed
 DYNAMIC wvw_IsWindow
 DYNAMIC wvw_Keyboard
 DYNAMIC wvw_KillTimer
-DYNAMIC wvw_LBAddString
-DYNAMIC wvw_LBSetCurSel
+DYNAMIC wvw_lbAddString
+DYNAMIC wvw_lbSetCurSel
 DYNAMIC wvw_lCloseWindow
 DYNAMIC wvw_LoadBitmap
 DYNAMIC wvw_LoadBitmapEx
@@ -222,7 +225,6 @@ DYNAMIC wvw_LoadIcon
 DYNAMIC wvw_LoadImage
 DYNAMIC wvw_LoadPen
 DYNAMIC wvw_LoadPicture
-DYNAMIC wvw_LOWORD
 DYNAMIC wvw_Maximize
 DYNAMIC wvw_MaxMaxCol
 DYNAMIC wvw_MaxMaxRow
@@ -347,7 +349,6 @@ DYNAMIC wvw_xbCreate
 DYNAMIC wvw_xbDestroy
 DYNAMIC wvw_xbEnable
 DYNAMIC wvw_xbInfo
-DYNAMIC wvw_xbShow
 DYNAMIC wvw_xbUpdate
 DYNAMIC wvw_xbVisible
 DYNAMIC wvw_XReposWindow

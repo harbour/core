@@ -65,66 +65,16 @@
 #define WINVER      0x0500
 #endif
 
-#define HB_GT_NAME  WVW
+#include "hbwapi.h"
+#include "hbwinole.h"
 
-#if defined( __BORLANDC__ ) || \
-   ( defined( __WATCOMC__ ) && ! defined( __cplusplus ) )
-   #if ! defined( NONAMELESSUNION )
-      #define NONAMELESSUNION
-   #endif
-#endif
-
-#include <windows.h>
-#include <ole2.h>
-#include <ocidl.h>
 #include <olectl.h>
-
-#include <winuser.h>
 #include <commctrl.h>
 #include <commdlg.h>
 
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbgtcore.h"
-#include "hbwinuni.h"
-
-#if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
-   #undef MAKELONG
-   #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
-                                          ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
-#endif
-
-#if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
-   defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-   #ifndef GetWindowLongPtr
-   #define GetWindowLongPtr  GetWindowLong
-   #endif
-   #ifndef SetWindowLongPtr
-   #define SetWindowLongPtr  SetWindowLong
-   #endif
-   #ifndef SetClassLongPtr
-   #define SetClassLongPtr   SetClassLong
-   #endif
-#endif
-
-/* macros used to hide type of interface: C or C++ */
-#if defined( __cplusplus ) && ! defined( CINTERFACE ) && \
-   ( defined( __BORLANDC__ ) || \
-   defined( __DMC__ ) || \
-   defined( _MSC_VER ) || \
-   defined( __MINGW32__ ) || \
-   ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1270 ) ) )
-   #define HB_ID_REF( id )    ( id )
-   #define HB_VTBL( pSelf )   ( pSelf )
-   #define HB_THIS( pSelf )
-   #define HB_THIS_( pSelf )
-#else
-   #define HB_OLE_C_API           1
-   #define HB_ID_REF( id )    ( &id )
-   #define HB_VTBL( pSelf )   ( pSelf )->lpVtbl
-   #define HB_THIS( pSelf )   ( pSelf )
-   #define HB_THIS_( pSelf )  ( pSelf ),
-#endif
 
 #ifndef GRADIENT_FILL_RECT_H
 #define GRADIENT_FILL_RECT_H      0x00000000

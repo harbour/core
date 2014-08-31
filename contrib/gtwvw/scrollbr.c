@@ -435,7 +435,3 @@ HB_FUNC( WVW_XBVISIBLE )
 
    hb_retl( hWnd && ShowScrollBar( hWnd, SB_CTL, ( BOOL ) hb_parldef( 3, HB_TRUE ) ) );
 }
-
-#if ! defined( __HB_NO_REDUNDANT )
-HB_FUNC_TRANSLATE( WVW_XBSHOW, WVW_XBVISIBLE )
-#endif

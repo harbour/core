@@ -113,6 +113,9 @@
    #ifndef SetWindowLongPtr
    #define SetWindowLongPtr  SetWindowLong
    #endif
+   #ifndef SetClassLongPtr
+   #define SetClassLongPtr   SetClassLong
+   #endif
    #ifndef GWLP_USERDATA
    #define GWLP_USERDATA     GWL_USERDATA
    #endif
