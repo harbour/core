@@ -43,6 +43,7 @@
 // HB_FUNC_EXCLUDE wvw_HIWORD
 // HB_FUNC_EXCLUDE wvw_LOWORD
 // HB_FUNC_EXCLUDE wvw_xbShow
+// HB_FUNC_EXCLUDE wvw_RGB
 
 /* --------------------------------------------------------------------
  * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
@@ -267,7 +268,6 @@ DYNAMIC wvw_RecurseCBlock
 DYNAMIC wvw_RedrawWindow
 DYNAMIC wvw_Restore
 DYNAMIC wvw_RestScreen
-DYNAMIC wvw_RGB
 DYNAMIC wvw_SaveScreen
 DYNAMIC wvw_sbAddPart
 DYNAMIC wvw_sbCreate
