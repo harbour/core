@@ -15,6 +15,7 @@ C_SOURCES := \
    jccoefct.c \
    jccolor.c \
    jcdctmgr.c \
+   jchuff.c \
    jcinit.c \
    jcmainct.c \
    jcmarker.c \

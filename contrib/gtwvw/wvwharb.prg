@@ -40,6 +40,14 @@ FUNCTION wvw_GetRGBColor( nColor )
 
    RETURN iif( nColor >= 0 .AND. nColor <= 15, hb_gtInfo( HB_GTI_PALETTE, nColor ), 0 )
 
+FUNCTION wvw_GetCursorPos()
+
+   LOCAL xy
+
+   wapi_GetCursorPos( @xy )
+
+   RETURN xy
+
 #if ! defined( __GTWVX_UNSAFE_POINTERS )
 FUNCTION win_GetClientRect( hWnd )
 

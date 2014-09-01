@@ -72,6 +72,7 @@ HB_FUNC( WVW_SETPOPUPMENU )
       HB_RETHANDLE( NULL );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVW_CREATEMENU )
 {
    HB_RETHANDLE( CreateMenu() );
@@ -81,6 +82,7 @@ HB_FUNC( WVW_CREATEPOPUPMENU )
 {
    HB_RETHANDLE( CreatePopupMenu() );
 }
+#endif
 
 /* wvw_AppendMenu( hMenu, nFlags, nMenuItemId, cCaption ) */
 HB_FUNC( WVW_APPENDMENU )
@@ -125,6 +127,7 @@ HB_FUNC( WVW_APPENDMENU )
       szCaption ) );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVW_DELETEMENU )
 {
    hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
@@ -139,6 +142,7 @@ HB_FUNC( WVW_ENABLEMENUITEM )
 {
    hb_retl( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
+#endif
 
 HB_FUNC( WVW_GETLASTMENUEVENT )
 {
@@ -251,10 +255,12 @@ HB_FUNC( WVW_DRAWMENUBAR )
       DrawMenuBar( wvw_win->hWnd );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVW_ENDMENU )
 {
    hb_retl( EndMenu() );
 }
+#endif
 
 /* wvw_GetMenu([nWinNum]) */
 HB_FUNC( WVW_GETMENU )
@@ -292,9 +298,7 @@ HB_FUNC( WVW_TRACKPOPUPMENU )
       hb_retni( 0 );
 }
 
-#if ! defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC_TRANSLATE( WIN_SETMENU, WAPI_SETMENU )
-#else
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WIN_SETMENU )
 {
    SetMenu( ( HWND ) HB_PARHANDLE( 1 ), ( HMENU ) HB_PARHANDLE( 2 ) );
@@ -342,3 +346,13 @@ HB_FUNC( WVW_GETSYSTEMMENU )
    else
       HB_RETHANDLE( NULL );
 }
+
+#if ! defined( __GTWVX_UNSAFE_POINTERS )
+HB_FUNC_TRANSLATE( WVW_CREATEMENU      , WAPI_CREATEMENU      )
+HB_FUNC_TRANSLATE( WVW_CREATEPOPUPMENU , WAPI_CREATEPOPUPMENU )
+HB_FUNC_TRANSLATE( WVW_DELETEMENU      , WAPI_DELETEMENU      )
+HB_FUNC_TRANSLATE( WVW_DESTROYMENU     , WAPI_DESTROYMENU     )
+HB_FUNC_TRANSLATE( WVW_ENABLEMENUITEM  , WAPI_ENABLEMENUITEM  )
+HB_FUNC_TRANSLATE( WVW_ENDMENU         , WAPI_ENDMENU         )
+HB_FUNC_TRANSLATE( WIN_SETMENU         , WAPI_SETMENU         )
+#endif

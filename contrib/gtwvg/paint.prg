@@ -706,7 +706,31 @@ FUNCTION Wvt_ShowWindow( nState )
 FUNCTION Wvt_Update()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
 
+FUNCTION Wvt_GetCursorPos()
+
+   LOCAL xy
+
+   wapi_GetCursorPos( @xy )
+
+   RETURN xy
+
 #if ! defined( __GTWVX_UNSAFE_POINTERS )
+FUNCTION Wvg_GetWindowRect( hWnd )
+
+   LOCAL rc
+
+   wapi_GetWindowRect( hWnd, @rc )
+
+   RETURN rc
+
+FUNCTION Wvg_GetClientRect( hWnd )
+
+   LOCAL rc
+
+   wapi_GetClientRect( hWnd, @rc )
+
+   RETURN rc
+
 FUNCTION Wvg_SetTimer( ... )
    RETURN ! Empty( wapi_SetTimer( ... ) )
 

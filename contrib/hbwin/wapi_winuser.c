@@ -581,6 +581,13 @@ HB_FUNC( WAPI_CHECKMENURADIOITEM )
    hbwapi_ret_L( fResult );
 }
 
+HB_FUNC( WAPI_ENDMENU )
+{
+   BOOL fResult = EndMenu();
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( fResult );
+}
+
 HB_FUNC( WAPI_DELETEMENU )
 {
    BOOL fResult = DeleteMenu( hbwapi_par_raw_HMENU( 1 ),
@@ -861,6 +868,27 @@ HB_FUNC( WAPI_GETCLIENTRECT )
    hbwapi_ret_L( bResult );
 }
 
+HB_FUNC( WAPI_GETWINDOWRECT )
+{
+   PHB_ITEM info = hb_itemArrayNew( 4 );
+   RECT     rc;
+   BOOL     bResult;
+
+   memset( &rc, 0, sizeof( rc ) );
+
+   bResult = GetWindowRect( hbwapi_par_raw_HWND( 1 ), &rc );
+   hbwapi_SetLastError( GetLastError() );
+
+   hb_arraySetNL( info, 1, rc.left );
+   hb_arraySetNL( info, 2, rc.top );
+   hb_arraySetNL( info, 3, rc.right );
+   hb_arraySetNL( info, 4, rc.bottom );
+
+   hb_itemParamStore( 2, info );
+
+   hbwapi_ret_L( bResult );
+}
+
 HB_FUNC( WAPI_CHECKRADIOBUTTON )
 {
    BOOL bResult = CheckRadioButton( hbwapi_par_raw_HWND( 1 ),  /* handle of dialog box */
@@ -955,4 +983,23 @@ HB_FUNC( WAPI_INVALIDATERECT )
    RECT rc;
 
    hbwapi_ret_L( InvalidateRect( hbwapi_par_raw_HWND( 1 ), hbwapi_par_RECT( &rc, 2, HB_FALSE ), hb_parl( 3 ) ) );
+}
+
+HB_FUNC( WAPI_GETCURSORPOS )
+{
+   PHB_ITEM info = hb_itemArrayNew( 2 );
+   POINT    xy;
+   BOOL     bResult;
+
+   memset( &xy, 0, sizeof( xy ) );
+
+   bResult = GetCursorPos( &xy );
+   hbwapi_SetLastError( GetLastError() );
+
+   hb_arraySetNL( info, 1, xy.x );
+   hb_arraySetNL( info, 2, xy.y );
+
+   hb_itemParamStore( 1, info );
+
+   hbwapi_ret_L( bResult );
 }

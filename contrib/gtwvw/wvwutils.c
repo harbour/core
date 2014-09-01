@@ -333,6 +333,7 @@ HB_FUNC( WIN_CREATEBRUSH )
    HB_RETHANDLE( CreateBrushIndirect( &lb ) );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 /* win_DrawText( hDC, cText, aRect, nFormat ) */
 HB_FUNC( WIN_DRAWTEXT )
 {
@@ -351,6 +352,7 @@ HB_FUNC( WIN_DRAWTEXT )
 
    hb_strfree( hText );
 }
+#endif
 
 /* Additions to GTWVW developed by SOLUCIONES PERCEPTIVAS */
 
@@ -1861,21 +1863,6 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
    hb_xfree( pdlgtemplate );
 }
 
-HB_FUNC( WVW_GETCURSORPOS )
-{
-   PHB_ITEM info = hb_itemArrayNew( 2 );
-   POINT    xy;
-
-   memset( &xy, 0, sizeof( xy ) );
-
-   GetCursorPos( &xy );
-
-   hb_arraySetNL( info, 1, xy.x );
-   hb_arraySetNL( info, 2, xy.y );
-
-   hb_itemReturnRelease( info );
-}
-
 /* wvw_ShowWindow( [nWinNum], nCmdShow ) */
 HB_FUNC( WVW_SHOWWINDOW )
 {
@@ -2547,4 +2534,5 @@ HB_FUNC_TRANSLATE( WIN_MESSAGEBOX         , WAPI_MESSAGEBOX         )
 HB_FUNC_TRANSLATE( WVW_SENDMESSAGE        , WAPI_SENDMESSAGE        )
 HB_FUNC_TRANSLATE( WVW_ISWINDOW           , WAPI_ISWINDOW           )
 HB_FUNC_TRANSLATE( WVW_RECTANGLE          , WAPI_RECTANGLE          )
+HB_FUNC_TRANSLATE( WIN_DRAWTEXT           , WAPI_DRAWTEXT           )
 #endif

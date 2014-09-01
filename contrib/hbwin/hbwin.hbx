@@ -58,6 +58,7 @@ DYNAMIC wapi_EnableScrollBar
 DYNAMIC wapi_EnableWindow
 DYNAMIC wapi_EndDialog
 DYNAMIC wapi_EndDoc
+DYNAMIC wapi_EndMenu
 DYNAMIC wapi_EndPage
 DYNAMIC wapi_ExtTextOut
 DYNAMIC wapi_FillRect
@@ -74,6 +75,7 @@ DYNAMIC wapi_GetCurrentProcess
 DYNAMIC wapi_GetCurrentProcessId
 DYNAMIC wapi_GetCurrentThread
 DYNAMIC wapi_GetCurrentThreadId
+DYNAMIC wapi_GetCursorPos
 DYNAMIC wapi_GetDesktopWindow
 DYNAMIC wapi_GetDeviceCaps
 DYNAMIC wapi_GetDialogBaseUnits
@@ -107,6 +109,7 @@ DYNAMIC wapi_GetTextAlign
 DYNAMIC wapi_GetTextColor
 DYNAMIC wapi_GetTextFace
 DYNAMIC wapi_GetVolumeInformation
+DYNAMIC wapi_GetWindowRect
 DYNAMIC wapi_GetWindowsDirectory
 DYNAMIC wapi_ImageList_Add
 DYNAMIC wapi_ImageList_AddMasked

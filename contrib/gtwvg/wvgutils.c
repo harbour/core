@@ -761,19 +761,6 @@ HB_FUNC( WVT_CLIENTTOSCREEN )
    }
 }
 
-HB_FUNC( WVT_GETCURSORPOS )
-{
-   POINT    xy   = { 0, 0 };
-   PHB_ITEM info = hb_itemArrayNew( 2 );
-
-   GetCursorPos( &xy );
-
-   hb_arraySetNI( info, 1, xy.x );
-   hb_arraySetNI( info, 2, xy.y );
-
-   hb_itemReturnRelease( info );
-}
-
 HB_FUNC( WVT_TRACKPOPUPMENU )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
