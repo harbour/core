@@ -900,7 +900,9 @@ HB_FUNC( WAPI_SETWINDOWTEXT )
 
 HB_FUNC( WAPI_SETWINDOWLONGPTR )
 {
-   hb_retnint( SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( LONG_PTR ) hb_parnint( 3 ) ) );
+   HB_PTRDIFF nRetVal = SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( LONG_PTR ) hb_parnint( 3 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retnint( nRetVal );
 }
 
 HB_FUNC( WAPI_ENABLEWINDOW )
