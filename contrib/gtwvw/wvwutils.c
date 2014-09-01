@@ -67,6 +67,7 @@ HB_FUNC( WVW_YESCLOSE )
    }
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 {
    PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
@@ -108,7 +109,6 @@ HB_FUNC( WIN_SETTIMER )
    hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), ( UINT_PTR ) hb_parnint( 2 ), ( UINT ) hb_parni( 3 ), NULL ) != ( UINT_PTR ) NULL );
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WIN_SETFOCUS )
 {
    SetFocus( ( HWND ) HB_PARHANDLE( 1 ) );
@@ -193,7 +193,6 @@ HB_FUNC( WIN_MESSAGEBOX )
    hb_strfree( hStr1 );
    hb_strfree( hStr2 );
 }
-#endif
 
 HB_FUNC( WIN_INVALIDATERECT )
 {
@@ -212,6 +211,7 @@ HB_FUNC( WIN_INVALIDATERECT )
                    fIsRect ? &rc : NULL,
                    HB_ISLOG( 2 ) ? ( BOOL ) hb_parl( 2 ) : ( BOOL ) hb_parnidef( 2, ( int ) HB_TRUE ) /* bErase */ );
 }
+#endif
 
 /* win_LoadIcon( ncIcon ) */
 HB_FUNC( WIN_LOADICON )
@@ -503,9 +503,10 @@ HB_FUNC( WVW_MOUSE_ROW )
    hb_retni( 0 );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVW_SENDMESSAGE )
 {
-   void *  hText  = NULL;
+   void *  hText;
    HB_SIZE nLen;
    LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
 
@@ -524,6 +525,7 @@ HB_FUNC( WVW_SENDMESSAGE )
 
    hb_strfree( hText );
 }
+#endif
 
 HB_FUNC( WVW_SETPARENT )
 {
@@ -2528,6 +2530,7 @@ HB_FUNC( WVW_RGB )
 }
 
 #if ! defined( __GTWVX_UNSAFE_POINTERS )
+HB_FUNC_TRANSLATE( WIN_SENDDLGITEMMESSAGE , WAPI_SENDDLGITEMMESSAGE )
 HB_FUNC_TRANSLATE( WIN_SETFOCUS           , WAPI_SETFOCUS           )
 HB_FUNC_TRANSLATE( WVW_SETTEXTCOLOR       , WAPI_SETTEXTCOLOR       )
 HB_FUNC_TRANSLATE( WIN_SETTEXTCOLOR       , WAPI_SETTEXTCOLOR       )
@@ -2541,6 +2544,7 @@ HB_FUNC_TRANSLATE( WIN_ISDLGBUTTONCHECKED , WAPI_ISDLGBUTTONCHECKED )
 HB_FUNC_TRANSLATE( WIN_CHECKRADIOBUTTON   , WAPI_CHECKRADIOBUTTON   )
 HB_FUNC_TRANSLATE( WIN_GETDLGITEM         , WAPI_GETDLGITEM         )
 HB_FUNC_TRANSLATE( WIN_MESSAGEBOX         , WAPI_MESSAGEBOX         )
+HB_FUNC_TRANSLATE( WVW_SENDMESSAGE        , WAPI_SENDMESSAGE        )
 HB_FUNC_TRANSLATE( WVW_ISWINDOW           , WAPI_ISWINDOW           )
 HB_FUNC_TRANSLATE( WVW_RECTANGLE          , WAPI_RECTANGLE          )
 #endif

@@ -75,9 +75,10 @@ static HINSTANCE wvg_hInstance( void )
    return hInstance;
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_SENDMESSAGE )
 {
-   void *  hText  = NULL;
+   void *  hText;
    HB_SIZE nLen;
    LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
 
@@ -131,19 +132,16 @@ HB_FUNC( WVG_SETTIMER )
    hb_retl( SetTimer( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) != 0 );
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_SETFOCUS )
 {
    SetFocus( ( HWND ) wvg_parhandle( 1 ) );
 }
-#endif
 
 HB_FUNC( WVG_GETFOCUS )
 {
    wvg_rethandle( GetFocus() );
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_SETTEXTCOLOR )
 {
    hbwapi_ret_COLORREF( SetTextColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
@@ -244,7 +242,6 @@ HB_FUNC( WVG_MESSAGEBOX )
    hb_strfree( hMsg );
    hb_strfree( hTitle );
 }
-#endif
 
 HB_FUNC( WVG_INVALIDATERECT )
 {
@@ -262,6 +259,7 @@ HB_FUNC( WVG_INVALIDATERECT )
    else
       hb_retl( InvalidateRect( ( HWND ) wvg_parhandle( 1 ), NULL, TRUE ) );
 }
+#endif
 
 /* Wvg_LoadIcon( ncIcon ) */
 HB_FUNC( WVG_LOADICON )
@@ -1404,6 +1402,8 @@ HB_FUNC( WVG_SENDCBMESSAGE )
 }
 
 #if ! defined( __GTWVX_UNSAFE_POINTERS )
+HB_FUNC_TRANSLATE( WVG_SENDDLGITEMMESSAGE  , WAPI_SENDDLGITEMMESSAGE  )
+HB_FUNC_TRANSLATE( WVG_GETFOCUS            , WAPI_GETFOCUS            )
 HB_FUNC_TRANSLATE( WVG_SETFOCUS            , WAPI_SETFOCUS            )
 HB_FUNC_TRANSLATE( WVG_SETTEXTCOLOR        , WAPI_SETTEXTCOLOR        )
 HB_FUNC_TRANSLATE( WVG_SETBKCOLOR          , WAPI_SETBKCOLOR          )
@@ -1423,6 +1423,7 @@ HB_FUNC_TRANSLATE( WVG_BRINGWINDOWTOTOP    , WAPI_BRINGWINDOWTOTOP    )
 HB_FUNC_TRANSLATE( WVG_SETFOREGROUNDWINDOW , WAPI_BRINGWINDOWTOTOP    )
 HB_FUNC_TRANSLATE( WVG_SETWINDOWTEXT       , WAPI_SETWINDOWTEXT       )
 HB_FUNC_TRANSLATE( WVG_SETWINDOWLONG       , WAPI_SETWINDOWLONGPTR    )
+HB_FUNC_TRANSLATE( WVG_SENDMESSAGE         , WAPI_SENDMESSAGE         )
 HB_FUNC_TRANSLATE( WVG_ISWINDOW            , WAPI_ISWINDOW            )
 HB_FUNC_TRANSLATE( WVG_ENABLEWINDOW        , WAPI_ENABLEWINDOW        )
 HB_FUNC_TRANSLATE( WVG_DESTROYWINDOW       , WAPI_DESTROYWINDOW       )

@@ -48,4 +48,11 @@ FUNCTION win_GetClientRect( hWnd )
    wapi_GetClientRect( hWnd, @rc )
 
    RETURN rc
+
+FUNCTION win_SetTimer( ... )
+   RETURN ! Empty( wapi_SetTimer( ... ) )
+
+FUNCTION win_InvalidateRect( w, e, l, t, r, b )
+   RETURN wapi_InvalidateRect( w, iif( PCount() > 2, { l, t, r, b }, NIL ), ;
+      iif( HB_ISLOGICAL( e ), e, hb_defaultValue( e, 1 ) != 0 ) )
 #endif

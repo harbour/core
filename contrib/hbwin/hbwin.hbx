@@ -79,6 +79,7 @@ DYNAMIC wapi_GetDeviceCaps
 DYNAMIC wapi_GetDialogBaseUnits
 DYNAMIC wapi_GetDlgItem
 DYNAMIC wapi_GetDlgItemText
+DYNAMIC wapi_GetFocus
 DYNAMIC wapi_GetKeyboardLayout
 DYNAMIC wapi_GetKeyboardLayoutName
 DYNAMIC wapi_GetKeyState
@@ -135,6 +136,7 @@ DYNAMIC wapi_ImageList_SetDragCursorImage
 DYNAMIC wapi_ImageList_SetIconSize
 DYNAMIC wapi_ImageList_SetImageCount
 DYNAMIC wapi_InsertMenu
+DYNAMIC wapi_InvalidateRect
 DYNAMIC wapi_IsDlgButtonChecked
 DYNAMIC wapi_IsIconic
 DYNAMIC wapi_IsMenu
@@ -164,6 +166,8 @@ DYNAMIC wapi_RemoveMenu
 DYNAMIC wapi_ResetDC
 DYNAMIC wapi_RoundRect
 DYNAMIC wapi_SelectObject
+DYNAMIC wapi_SendDlgItemMessage
+DYNAMIC wapi_SendMessage
 DYNAMIC wapi_SetActiveWindow
 DYNAMIC wapi_SetBkColor
 DYNAMIC wapi_SetBkMode
@@ -181,6 +185,7 @@ DYNAMIC wapi_SetScrollPos
 DYNAMIC wapi_SetScrollRange
 DYNAMIC wapi_SetTextAlign
 DYNAMIC wapi_SetTextColor
+DYNAMIC wapi_SetTimer
 DYNAMIC wapi_SetWindowLongPtr
 DYNAMIC wapi_SetWindowPos
 DYNAMIC wapi_SetWindowText

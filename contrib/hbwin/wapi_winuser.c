@@ -413,6 +413,11 @@ HB_FUNC( WAPI_SHOWSCROLLBAR )
    hbwapi_ret_L( bResult );
 }
 
+HB_FUNC( WAPI_GETFOCUS )
+{
+   hbwapi_ret_raw_HWND( GetFocus() );
+}
+
 HB_FUNC( WAPI_SETFOCUS )
 {
    HWND hWnd = SetFocus( hbwapi_par_raw_HWND( 1 ) );
@@ -900,7 +905,7 @@ HB_FUNC( WAPI_SETWINDOWTEXT )
 
 HB_FUNC( WAPI_SETWINDOWLONGPTR )
 {
-   HB_PTRDIFF nRetVal = SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( LONG_PTR ) hb_parnint( 3 ) );
+   LONG_PTR nRetVal = SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( LONG_PTR ) hb_parnint( 3 ) );
    hbwapi_SetLastError( GetLastError() );
    hb_retnint( nRetVal );
 }
@@ -910,4 +915,44 @@ HB_FUNC( WAPI_ENABLEWINDOW )
    BOOL bResult = EnableWindow( hbwapi_par_raw_HWND( 1 ), hb_parl( 2 ) );
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
+}
+
+HB_FUNC( WAPI_SETTIMER )
+{
+   UINT_PTR result = SetTimer( hbwapi_par_raw_HWND( 1 ), ( UINT_PTR ) hb_parnint( 2 ), ( UINT ) hb_parni( 3 ), NULL );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retnint( result );
+}
+
+HB_FUNC( WAPI_SENDMESSAGE )
+{
+   void *  hText;
+   HB_SIZE nLen;
+   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
+
+   LRESULT result;
+
+   if( szText )
+      szText = HB_STRUNSHARE( &hText, szText, nLen );
+
+   result = SendMessage( hbwapi_par_raw_HWND( 1 ),
+                         ( UINT ) hb_parni( 2 ),
+                         ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
+                         szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retnint( result );
+
+   if( szText )
+      HB_STORSTRLEN( szText, nLen, 4 );
+   else
+      hb_storc( NULL, 4 );
+
+   hb_strfree( hText );
+}
+
+HB_FUNC( WAPI_INVALIDATERECT )
+{
+   RECT rc;
+
+   hbwapi_ret_L( InvalidateRect( hbwapi_par_raw_HWND( 1 ), hbwapi_par_RECT( &rc, 2, HB_FALSE ), hb_parl( 3 ) ) );
 }

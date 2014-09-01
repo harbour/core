@@ -178,3 +178,30 @@ HB_FUNC( WAPI_GETDIALOGBASEUNITS )
 {
    hb_retnl( GetDialogBaseUnits() );
 }
+
+HB_FUNC( WAPI_SENDDLGITEMMESSAGE )
+{
+   void *  hText;
+   HB_SIZE nLen;
+   LPCTSTR szText = HB_PARSTR( 5, &hText, &nLen );
+
+   LRESULT result;
+
+   if( szText )
+      szText = HB_STRUNSHARE( &hText, szText, nLen );
+
+   result = SendDlgItemMessage( hbwapi_par_raw_HWND( 1 ),
+                                hb_parni( 2 ),
+                                ( UINT ) hb_parni( 3 ),
+                                ( WPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 3 ) ),
+                                szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 5 ) ? ( HB_PTRDIFF ) hb_parptr( 5 ) : hb_parnint( 5 ) ) );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retnint( result );
+
+   if( szText )
+      HB_STORSTRLEN( szText, nLen, 5 );
+   else
+      hb_storc( NULL, 5 );
+
+   hb_strfree( hText );
+}

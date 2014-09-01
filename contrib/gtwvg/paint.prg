@@ -705,3 +705,11 @@ FUNCTION Wvt_ShowWindow( nState )
 
 FUNCTION Wvt_Update()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
+
+#if ! defined( __GTWVX_UNSAFE_POINTERS )
+FUNCTION Wvg_SetTimer( ... )
+   RETURN ! Empty( wapi_SetTimer( ... ) )
+
+FUNCTION Wvg_InvalidateRect( w, r, e )
+   RETURN wapi_InvalidateRect( w, r, hb_defaultValue( e, .T. ) )
+#endif

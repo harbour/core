@@ -533,7 +533,9 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       item.mask       = TVIF_HANDLE | TVIF_TEXT | TVIF_IMAGE;
       item.hItem      = hSelected;
       item.pszText    = text;
-      item.cchTextMax = MAX_PATH;
+      item.cchTextMax = HB_SIZEOFARRAY( text ) - 1;
+
+      text[ 0 ] = TEXT( '\0' );
 
       if( TreeView_GetItem( ( HWND ) wvg_parhandle( 1 ), &item ) )
          HB_STORSTR( text, 4 );
@@ -546,7 +548,9 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       item.mask       = TVIF_HANDLE | TVIF_TEXT;
       item.hItem      = hParent;
       item.pszText    = Parent;
-      item.cchTextMax = MAX_PATH;
+      item.cchTextMax = HB_SIZEOFARRAY( Parent ) - 1;
+
+      Parent[ 0 ] = TEXT( '\0' );
 
       if( TreeView_GetItem( ( HWND ) wvg_parhandle( 1 ), &item ) )
          HB_STORSTR( Parent, 3 );
