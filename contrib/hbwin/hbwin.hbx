@@ -28,8 +28,11 @@ DYNAMIC wapi_AddFontResource
 DYNAMIC wapi_AddFontResourceEx
 DYNAMIC wapi_AppendMenu
 DYNAMIC wapi_Arc
+DYNAMIC wapi_BringWindowToTop
+DYNAMIC wapi_CheckDlgButton
 DYNAMIC wapi_CheckMenuItem
 DYNAMIC wapi_CheckMenuRadioItem
+DYNAMIC wapi_CheckRadioButton
 DYNAMIC wapi_ComboBox_AddString
 DYNAMIC wapi_CreateAcceleratorTable
 DYNAMIC wapi_CreateDC
@@ -52,6 +55,7 @@ DYNAMIC wapi_DrawText
 DYNAMIC wapi_Ellipse
 DYNAMIC wapi_EnableMenuItem
 DYNAMIC wapi_EnableScrollBar
+DYNAMIC wapi_EnableWindow
 DYNAMIC wapi_EndDialog
 DYNAMIC wapi_EndDoc
 DYNAMIC wapi_EndPage
@@ -64,6 +68,7 @@ DYNAMIC wapi_GetACP
 DYNAMIC wapi_GetActiveWindow
 DYNAMIC wapi_GetBkColor
 DYNAMIC wapi_GetBkMode
+DYNAMIC wapi_GetClientRect
 DYNAMIC wapi_GetCommandLine
 DYNAMIC wapi_GetCurrentProcess
 DYNAMIC wapi_GetCurrentProcessId
@@ -130,6 +135,7 @@ DYNAMIC wapi_ImageList_SetDragCursorImage
 DYNAMIC wapi_ImageList_SetIconSize
 DYNAMIC wapi_ImageList_SetImageCount
 DYNAMIC wapi_InsertMenu
+DYNAMIC wapi_IsDlgButtonChecked
 DYNAMIC wapi_IsIconic
 DYNAMIC wapi_IsMenu
 DYNAMIC wapi_IsUserAnAdmin
@@ -143,6 +149,7 @@ DYNAMIC wapi_LoadMenu
 DYNAMIC wapi_MessageBeep
 DYNAMIC wapi_MessageBox
 DYNAMIC wapi_MoveToEx
+DYNAMIC wapi_MoveWindow
 DYNAMIC wapi_MulDiv
 DYNAMIC wapi_OpenMutex
 DYNAMIC wapi_OutputDebugString
@@ -167,13 +174,16 @@ DYNAMIC wapi_SetLastError
 DYNAMIC wapi_SetMapMode
 DYNAMIC wapi_SetMenu
 DYNAMIC wapi_SetMenuDefaultItem
+DYNAMIC wapi_SetParent
 DYNAMIC wapi_SetProcessWorkingSetSize
 DYNAMIC wapi_SetScrollInfo
 DYNAMIC wapi_SetScrollPos
 DYNAMIC wapi_SetScrollRange
 DYNAMIC wapi_SetTextAlign
 DYNAMIC wapi_SetTextColor
+DYNAMIC wapi_SetWindowLongPtr
 DYNAMIC wapi_SetWindowPos
+DYNAMIC wapi_SetWindowText
 DYNAMIC wapi_ShellExecute
 DYNAMIC wapi_ShowScrollBar
 DYNAMIC wapi_Sleep

@@ -292,10 +292,14 @@ HB_FUNC( WVW_TRACKPOPUPMENU )
       hb_retni( 0 );
 }
 
+#if ! defined( __GTWVX_UNSAFE_POINTERS )
+HB_FUNC_TRANSLATE( WIN_SETMENU, WAPI_SETMENU )
+#else
 HB_FUNC( WIN_SETMENU )
 {
    SetMenu( ( HWND ) HB_PARHANDLE( 1 ), ( HMENU ) HB_PARHANDLE( 2 ) );
 }
+#endif
 
 /* wvw_NoSysMenu( [nWinNum], lRemoveClose )
    removes System Menu of a window

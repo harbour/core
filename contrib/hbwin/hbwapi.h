@@ -96,10 +96,10 @@
 #define hbwapi_ret_WORD( n )                ( hb_retnl( n ) )
 #define hbwapi_ret_DWORD( n )               ( hb_retnint( n ) )
 
-#define hbwapi_ret_raw_HANDLE( h )          ( hb_retptr( h ) )
-#define hbwapi_ret_raw_HWND( h )            ( hb_retptr( h ) )
-#define hbwapi_ret_raw_HMENU( h )           ( hb_retptr( h ) )
-#define hbwapi_ret_raw_HACCEL( h )          ( hb_retptr( h ) )
+#define hbwapi_ret_raw_HANDLE( h )          ( hb_retptr( ( void * ) h ) )
+#define hbwapi_ret_raw_HWND( h )            ( hb_retptr( ( void * ) h ) )
+#define hbwapi_ret_raw_HMENU( h )           ( hb_retptr( ( void * ) h ) )
+#define hbwapi_ret_raw_HACCEL( h )          ( hb_retptr( ( void * ) h ) )
 
 #define hbwapi_ret_HRESULT( hr )            ( hb_retnint( hr ) )
 #define hbwapi_ret_LRESULT( hr )            ( hb_retnint( hr ) )

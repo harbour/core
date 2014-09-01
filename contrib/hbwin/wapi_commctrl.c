@@ -447,14 +447,14 @@ HB_FUNC( WAPI_TABCTRL_GETITEMRECT )
    PHB_ITEM aRect = hb_itemArrayNew( 4 );
    RECT rc;
 
-   ( void ) TabCtrl_GetItemRect( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), &rc );
+   hbwapi_ret_L( TabCtrl_GetItemRect( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), &rc ) );
 
    hb_arraySetNL( aRect, 1, rc.left );
    hb_arraySetNL( aRect, 2, rc.top );
    hb_arraySetNL( aRect, 3, rc.right );
    hb_arraySetNL( aRect, 4, rc.bottom );
 
-   hb_itemReturnRelease( aRect );
+   hb_itemParamStore( 3, aRect );
 }
 
 HB_FUNC( WAPI_TABCTRL_GETROWCOUNT )

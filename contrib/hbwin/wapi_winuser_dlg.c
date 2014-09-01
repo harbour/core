@@ -111,24 +111,39 @@ HB_FUNC( WAPI_ENDDIALOG )
    hbwapi_SetLastError( GetLastError() );
 }
 
+HB_FUNC( WAPI_CHECKDLGBUTTON )
+{
+   BOOL bResult = CheckDlgButton( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ),
+                                  ( UINT ) ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+}
+
+HB_FUNC( WAPI_ISDLGBUTTONCHECKED )
+{
+   int iResult = IsDlgButtonChecked( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retni( iResult );
+}
+
 /* Sets the title or text of a control in a dialog box. */
 HB_FUNC( WAPI_SETDLGITEMTEXT )
 {
    void * hStr;
-   int    iResult = SetDlgItemText( hbwapi_par_raw_HWND( 1 ),
-                                    hbwapi_par_INT( 2 ),
-                                    HB_PARSTR( 3, &hStr, NULL ) );
+
+   BOOL bResult = SetDlgItemText( hbwapi_par_raw_HWND( 1 ),
+                                  hbwapi_par_INT( 2 ),
+                                  HB_PARSTR( 3, &hStr, NULL ) );
 
    hbwapi_SetLastError( GetLastError() );
-   hbwapi_ret_NI( iResult );
+   hbwapi_ret_L( bResult );
    hb_strfree( hStr );
 }
 
 /* Retrieves the title or text associated with a control in a dialog box. */
 HB_FUNC( WAPI_GETDLGITEMTEXT )
 {
-   HWND    nItem    = GetDlgItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) );
-   int     nSize    = ( int ) SendMessage( nItem, WM_GETTEXTLENGTH, 0, 0 );
+   int     nSize    = ( int ) SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ), WM_GETTEXTLENGTH, 0, 0 );
    TCHAR * lpResult = ( TCHAR * ) hb_xgrab( ( nSize + 1 ) * sizeof( TCHAR ) );
 
    UINT nResult = GetDlgItemText( hbwapi_par_raw_HWND( 1 ),

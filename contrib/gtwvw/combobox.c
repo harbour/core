@@ -709,7 +709,7 @@ HB_FUNC( WVW_CBGETCURTEXT )
          if( SendMessage( wvw_ctl->hWnd, CB_GETLBTEXT, ( WPARAM ) iCurSel, ( LPARAM ) lptstr ) == CB_ERR )
             hb_retc_null();
          else
-            HB_RETSTR( lptstr );
+            HB_RETSTRLEN( lptstr, iTextLen );
 
          hb_xfree( lptstr );
       }

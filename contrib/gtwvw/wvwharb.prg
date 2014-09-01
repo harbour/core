@@ -39,3 +39,13 @@ FUNCTION wvw_GetRGBColor( nColor )
    hb_default( @nColor, -1 )
 
    RETURN iif( nColor >= 0 .AND. nColor <= 15, hb_gtInfo( HB_GTI_PALETTE, nColor ), 0 )
+
+#if ! defined( __GTWVX_UNSAFE_POINTERS )
+FUNCTION win_GetClientRect( hWnd )
+
+   LOCAL rc
+
+   wapi_GetClientRect( hWnd, @rc )
+
+   RETURN rc
+#endif

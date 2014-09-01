@@ -578,9 +578,6 @@ METHOD WvgWindow:toBack()
    RETURN Wvg_SetWindowPosToBack( ::hWnd )
 
 METHOD WvgWindow:toFront()
-#if 0
-   RETURN Wvg_SetForegroundWindow( ::hWnd )
-#endif
    RETURN Wvg_SetWindowPosToTop( ::hWnd )
 
 METHOD WvgWindow:unlockPS()

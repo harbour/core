@@ -47,6 +47,7 @@
 
 #include "hbwapi.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
 
 /* For: ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) */
 #ifndef WS_OVERLAPPEDWINDOW
@@ -832,4 +833,79 @@ HB_FUNC( WAPI_GETKEYBOARDLAYOUTNAME )
 HB_FUNC( WAPI_GETSYSCOLOR )
 {
    hbwapi_ret_DWORD( GetSysColor( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( WAPI_GETCLIENTRECT )
+{
+   PHB_ITEM info = hb_itemArrayNew( 4 );
+   RECT     rc;
+   BOOL     bResult;
+
+   memset( &rc, 0, sizeof( rc ) );
+
+   bResult = GetClientRect( hbwapi_par_raw_HWND( 1 ), &rc );
+   hbwapi_SetLastError( GetLastError() );
+
+   hb_arraySetNL( info, 1, rc.left );
+   hb_arraySetNL( info, 2, rc.top );
+   hb_arraySetNL( info, 3, rc.right );
+   hb_arraySetNL( info, 4, rc.bottom );
+
+   hb_itemParamStore( 2, info );
+
+   hbwapi_ret_L( bResult );
+}
+
+HB_FUNC( WAPI_CHECKRADIOBUTTON )
+{
+   BOOL bResult = CheckRadioButton( hbwapi_par_raw_HWND( 1 ),  /* handle of dialog box */
+                                    hb_parni( 2 ),             /* identifier of first radio button in group */
+                                    hb_parni( 3 ),             /* identifier of last radio button in group */
+                                    hb_parni( 4 ) );           /* identifier of radio button to select */
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+}
+
+HB_FUNC( WAPI_MOVEWINDOW )
+{
+   BOOL bResult = MoveWindow( hbwapi_par_raw_HWND( 1 ), hb_parnl( 2 ), hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ), hb_parl( 6 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+}
+
+HB_FUNC( WAPI_SETPARENT )
+{
+   HWND hWnd = SetParent( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HWND( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_raw_HWND( hWnd );
+}
+
+HB_FUNC( WAPI_BRINGWINDOWTOTOP )
+{
+   BOOL bResult = BringWindowToTop( hbwapi_par_raw_HWND( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+}
+
+HB_FUNC( WAPI_SETWINDOWTEXT )
+{
+   void * hText;
+
+   BOOL bResult = SetWindowText( hbwapi_par_raw_HWND( 1 ), HB_PARSTR( 2, &hText, NULL ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+
+   hb_strfree( hText );
+}
+
+HB_FUNC( WAPI_SETWINDOWLONGPTR )
+{
+   hb_retnint( SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( LONG_PTR ) hb_parnint( 3 ) ) );
+}
+
+HB_FUNC( WAPI_ENABLEWINDOW )
+{
+   BOOL bResult = EnableWindow( hbwapi_par_raw_HWND( 1 ), hb_parl( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
 }

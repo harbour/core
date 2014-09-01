@@ -131,16 +131,19 @@ HB_FUNC( WVG_SETTIMER )
    hb_retl( SetTimer( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) != 0 );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_SETFOCUS )
 {
    SetFocus( ( HWND ) wvg_parhandle( 1 ) );
 }
+#endif
 
 HB_FUNC( WVG_GETFOCUS )
 {
    wvg_rethandle( GetFocus() );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_SETTEXTCOLOR )
 {
    hbwapi_ret_COLORREF( SetTextColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
@@ -155,6 +158,7 @@ HB_FUNC( WVG_SETBKMODE )
 {
    hb_retni( SetBkMode( ( HDC ) wvg_parhandle( 1 ), hb_parni( 2 ) ) );
 }
+#endif
 
 HB_FUNC( WVG_GETSTOCKOBJECT )
 {
@@ -171,16 +175,10 @@ HB_FUNC( WVG_SELECTOBJECT )
    wvg_rethandle( SelectObject( ( HDC ) wvg_parhandle( 1 ), ( HGDIOBJ ) wvg_parhandle( 2 ) ) );
 }
 
-HB_FUNC( WVG_LOWORD )
-{
-   hb_retni( ( int ) LOWORD( ( DWORD ) hb_parnl( 1 ) ) );
-}
+HB_FUNC_TRANSLATE( WVG_LOWORD, WIN_LOWORD )
+HB_FUNC_TRANSLATE( WVG_HIWORD, WIN_HIWORD )
 
-HB_FUNC( WVG_HIWORD )
-{
-   hb_retni( ( int ) HIWORD( ( DWORD ) hb_parnl( 1 ) ) );
-}
-
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_GETDIALOGBASEUNITS )
 {
    hb_retnl( ( long ) GetDialogBaseUnits() );
@@ -198,15 +196,14 @@ HB_FUNC( WVG_SETDLGITEMTEXT )
 HB_FUNC( WVG_GETDLGITEMTEXT )
 {
    int    iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
-   LPTSTR cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
+   LPTSTR cText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
    UINT iResult = GetDlgItemText( ( HWND ) wvg_parhandle( 1 ),  /* handle of dialog box */
                                   hb_parni( 2 ),                /* identifier of control */
                                   cText,                        /* address of buffer for text */
                                   iLen );                       /* maximum size of string */
 
-   cText[ iResult ] = '\0';
-   HB_RETSTR( cText );
+   HB_RETSTRLEN( cText, iResult );
    hb_xfree( cText );
 }
 
@@ -247,6 +244,7 @@ HB_FUNC( WVG_MESSAGEBOX )
    hb_strfree( hMsg );
    hb_strfree( hTitle );
 }
+#endif
 
 HB_FUNC( WVG_INVALIDATERECT )
 {
@@ -405,6 +403,7 @@ HB_FUNC( WVG_GETWINDOWRECT )
    hb_itemReturnRelease( info );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 /* Wvg_MoveWindow( hWnd, nLeft, nTop, nWidth, nHeight, lRePaint ) */
 HB_FUNC( WVG_MOVEWINDOW )
 {
@@ -426,10 +425,7 @@ HB_FUNC( WVG_BRINGWINDOWTOTOP )
    hb_retl( BringWindowToTop( ( HWND ) wvg_parhandle( 1 ) ) );
 }
 
-HB_FUNC( WVG_SETFOREGROUNDWINDOW )
-{
-   hb_retl( BringWindowToTop( ( HWND ) wvg_parhandle( 1 ) ) );
-}
+HB_FUNC_TRANSLATE( WVG_SETFOREGROUNDWINDOW, WVG_BRINGWINDOWTOTOP )
 
 HB_FUNC( WVG_SETWINDOWTEXT )
 {
@@ -459,6 +455,7 @@ HB_FUNC( WVG_DESTROYWINDOW )
 {
    hb_retl( DestroyWindow( ( HWND ) wvg_parhandle( 1 ) ) );
 }
+#endif
 
 HB_FUNC( WVG_CLIENTTOSCREEN )
 {
@@ -569,10 +566,7 @@ HB_FUNC( WVG_FINDWINDOW )
       wvg_rethandle( -1 );
 }
 
-HB_FUNC( WVG_SLEEP )
-{
-   Sleep( hb_parni( 1 ) );
-}
+HB_FUNC_TRANSLATE( WVG_SLEEP, WAPI_SLEEP )
 
 /* Menu manipulations */
 
@@ -912,9 +906,9 @@ HB_FUNC( WVG_ISZOOMED )
 HB_FUNC( WVG_SETDCBRUSHCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   wvg_rethandle( SetDCBrushColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hb_retnint( SetDCBrushColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
-   wvg_rethandle( NULL );
+   hb_retnint( 0 );
 #endif
 }
 
@@ -922,9 +916,9 @@ HB_FUNC( WVG_SETDCBRUSHCOLOR )
 HB_FUNC( WVG_SETDCPENCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   wvg_rethandle( SetDCPenColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hb_retnint( SetDCPenColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
-   wvg_rethandle( NULL );
+   hb_retnint( 0 );
 #endif
 }
 
@@ -1334,9 +1328,9 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       case CB_GETLBTEXT:
       {
          HB_ISIZ iSize = SendMessage( hCB, CB_GETLBTEXTLEN, ( WPARAM ) hb_parnint( 3 ), 0 );
-         LPTSTR  text  = ( LPTSTR ) hb_xgrab( iSize + 1 );
+         LPTSTR  text  = ( LPTSTR ) hb_xgrab( ( iSize + 1 ) * sizeof( TCHAR ) );
          SendMessage( hCB, CB_GETLBTEXT, iSize, ( LPARAM ) text );
-         HB_RETSTR( text );
+         HB_RETSTRLEN( text, iSize );
          hb_xfree( text );
          break;
       }
@@ -1408,3 +1402,28 @@ HB_FUNC( WVG_SENDCBMESSAGE )
 
    hb_strfree( hText );
 }
+
+#if ! defined( __GTWVX_UNSAFE_POINTERS )
+HB_FUNC_TRANSLATE( WVG_SETFOCUS            , WAPI_SETFOCUS            )
+HB_FUNC_TRANSLATE( WVG_SETTEXTCOLOR        , WAPI_SETTEXTCOLOR        )
+HB_FUNC_TRANSLATE( WVG_SETBKCOLOR          , WAPI_SETBKCOLOR          )
+HB_FUNC_TRANSLATE( WVG_SETBKMODE           , WAPI_SETBKMODE           )
+HB_FUNC_TRANSLATE( WVG_GETDIALOGBASEUNITS  , WAPI_GETDIALOGBASEUNITS  )
+HB_FUNC_TRANSLATE( WVG_SETDLGITEMTEXT      , WAPI_SETDLGITEMTEXT      )
+HB_FUNC_TRANSLATE( WVG_GETDLGITEMTEXT      , WAPI_GETDLGITEMTEXT      )
+HB_FUNC_TRANSLATE( WVG_CHECKDLGBUTTON      , WAPI_CHECKDLGBUTTON      )
+HB_FUNC_TRANSLATE( WVG_ISDLGBUTTONCHECKED  , WAPI_ISDLGBUTTONCHECKED  )
+HB_FUNC_TRANSLATE( WVG_CHECKRADIOBUTTON    , WAPI_CHECKRADIOBUTTON    )
+HB_FUNC_TRANSLATE( WVG_GETDLGITEM          , WAPI_GETDLGITEM          )
+HB_FUNC_TRANSLATE( WVG_MESSAGEBOX          , WAPI_MESSAGEBOX          )
+HB_FUNC_TRANSLATE( WVG_MOVEWINDOW          , WAPI_MOVEWINDOW          )
+HB_FUNC_TRANSLATE( WVG_GETDESKTOPWINDOW    , WAPI_GETDESKTOPWINDOW    )
+HB_FUNC_TRANSLATE( WVG_SETPARENT           , WAPI_SETPARENT           )
+HB_FUNC_TRANSLATE( WVG_BRINGWINDOWTOTOP    , WAPI_BRINGWINDOWTOTOP    )
+HB_FUNC_TRANSLATE( WVG_SETFOREGROUNDWINDOW , WAPI_BRINGWINDOWTOTOP    )
+HB_FUNC_TRANSLATE( WVG_SETWINDOWTEXT       , WAPI_SETWINDOWTEXT       )
+HB_FUNC_TRANSLATE( WVG_SETWINDOWLONG       , WAPI_SETWINDOWLONGPTR    )
+HB_FUNC_TRANSLATE( WVG_ISWINDOW            , WAPI_ISWINDOW            )
+HB_FUNC_TRANSLATE( WVG_ENABLEWINDOW        , WAPI_ENABLEWINDOW        )
+HB_FUNC_TRANSLATE( WVG_DESTROYWINDOW       , WAPI_DESTROYWINDOW       )
+#endif

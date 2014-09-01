@@ -73,8 +73,8 @@ PROCEDURE Main()
 // for toolbar:
 STATIC FUNCTION CreateToolbar( nWinNum )
 
-   LOCAL nSysBitmap := 1     // 0:none 1:small 2:large
-   LOCAL lDisplayText := .F. // text will be displayed as tooltip instead
+   LOCAL nSysBitmap := 1      // 0:none 1:small 2:large
+   LOCAL lDisplayText := .F.  // text will be displayed as tooltip instead
 
    wvw_tbDestroy( nWinNum )   // just in case
 
@@ -92,7 +92,7 @@ STATIC FUNCTION CreateToolbar( nWinNum )
 
 STATIC FUNCTION CreateStatusbar( nWinNum )
 
-   wvw_sbDestroy( nWinNum )   // just in case
+   wvw_sbDestroy( nWinNum )  // just in case
 
    IF Empty( wvw_sbCreate( nWinNum ) )
       wvw_MessageBox( nWinNum, "FAILED to create statusbar", "Error", MB_OK + MB_ICONEXCLAMATION )
@@ -102,7 +102,6 @@ STATIC FUNCTION CreateStatusbar( nWinNum )
    RETURN .T.
 
 // Handle Menu/Toolbar actions
-
 STATIC PROCEDURE MenuAction( nWinNum, nCommand )
 
    DO CASE
@@ -188,20 +187,21 @@ STATIC PROCEDURE KeyHandler( nWinNum, ch )
    LOCAL nOldWin := wvw_nSetCurWindow( nWinNum )
 
    typing( ch )
+
    wvw_nSetCurWindow( nOldWin )
 
    RETURN
 
 STATIC PROCEDURE typing( ch )
 
-   IF ch >= 0 .AND. ch <= 255 // TOFIX for unicode
+   DO CASE
+   CASE ch == K_ENTER
+      ?? Chr( 10 )
+   CASE ch == K_BS
+      ?? " " + Chr( 8 )
+   OTHERWISE
       ?? hb_keyChar( ch )
-      IF ch == K_ENTER
-         ?? Chr( 10 )
-      ELSEIF ch == K_BS
-         ?? " " + Chr( 8 )
-      ENDIF
-   ENDIF
+   ENDCASE
 
    RETURN
 
@@ -228,10 +228,6 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
 
    HB_SYMBOL_UNUSED( hWnd )
    HB_SYMBOL_UNUSED( lParam )
-
-#if 0
-   LOCAL cdebug
-#endif
 
    // did user perform a menu/toolbar action on Main Window?
    IF message == WM_COMMAND .AND. nWinNum == 0  // menu,toolbar,pushbutton
@@ -261,14 +257,12 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
    ENDCASE
 
 #if 0
-   cdebug := "Sorry we can't handle this event:" + hb_eol() + ;
+   wvw_MessageBox( 0, "Sorry we can't handle this event:" + hb_eol() + ;
       "nWinNum == " + hb_ntos( nWinNum ) + hb_eol() + ;
       "message == " + hb_ntos( message ) + hb_eol() + ;
       "wParam == " + hb_ntos( wParam ) + hb_eol() + ;
       "wParamLow == " + hb_ntos( wParamLow ) + hb_eol() + ;
-      "wParamHi == " + hb_ntos( wParamHi )
-
-   wvw_MessageBox( 0, cdebug, "Debug", MB_OK )
+      "wParamHi == " + hb_ntos( wParamHi ), "Debug", MB_OK )
 #endif
 
    RETURN .F.

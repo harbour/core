@@ -848,11 +848,11 @@ HB_FUNC( WVW_EBGETTEXT )
 
       iLen = ( int ) SendMessage( wvw_ctl->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
 
-      szText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
+      szText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
       SendMessage( wvw_ctl->hWnd, WM_GETTEXT, iLen, ( LPARAM ) szText );
 
-      HB_RETSTR( szText );
+      HB_RETSTRLEN( szText, iLen );
 
       hb_xfree( szText );
    }

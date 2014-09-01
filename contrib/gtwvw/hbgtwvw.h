@@ -420,17 +420,17 @@ typedef struct
       int       iBMcache;                 /* number of bitmap cached */
       int       iMaxBMcache;              /* maximum number of bitmap cached */
 
-      PHB_DYNS pSymWVW_PAINT;             /* Stores pointer to WVW_PAINT function */
-      PHB_DYNS pSymWVW_SETFOCUS;          /* Stores pointer to WVW_SETFOCUS function */
-      PHB_DYNS pSymWVW_KILLFOCUS;         /* Stores pointer to WVW_KILLFOCUS function */
-      PHB_DYNS pSymWVW_MOUSE;             /* Stores pointer to WVW_MOUSE function */
-      PHB_DYNS pSymWVW_TBMOUSE;           /* Stores pointer to WVW_TBMOUSE function */
-      PHB_DYNS pSymWVW_MENUSELECT;        /* Stores pointer to WVW_MENUSELECT function*/
-      PHB_DYNS pSymWVW_SIZE;              /* Stores pointer to WVW_SIZE function */
-      PHB_DYNS pSymWVW_MOVE;              /* Stores pointer to WVW_MOVE function */
-      PHB_DYNS pSymWVW_INPUTFOCUS;        /* Stores pointer to WVW_INPUTFOCUS function */
-      PHB_DYNS pSymWVW_TIMER;             /* Stores pointer to WVW_TIMER function */
-      PHB_DYNS pSymWVW_ONCTLCOLOR;        /* Stores pointer to WVW_TIMER function */
+      PHB_DYNS pSymWVW_PAINT;             /* Pointer to WVW_PAINT() function */
+      PHB_DYNS pSymWVW_SETFOCUS;          /* Pointer to WVW_SETFOCUS() function */
+      PHB_DYNS pSymWVW_KILLFOCUS;         /* Pointer to WVW_KILLFOCUS() function */
+      PHB_DYNS pSymWVW_MOUSE;             /* Pointer to WVW_MOUSE() function */
+      PHB_DYNS pSymWVW_TBMOUSE;           /* Pointer to WVW_TBMOUSE() function */
+      PHB_DYNS pSymWVW_MENUSELECT;        /* Pointer to WVW_MENUSELECT() function*/
+      PHB_DYNS pSymWVW_SIZE;              /* Pointer to WVW_SIZE() function */
+      PHB_DYNS pSymWVW_MOVE;              /* Pointer to WVW_MOVE() function */
+      PHB_DYNS pSymWVW_INPUTFOCUS;        /* Pointer to WVW_INPUTFOCUS() function */
+      PHB_DYNS pSymWVW_TIMER;             /* Pointer to WVW_TIMER() function */
+      PHB_DYNS pSymWVW_ONCTLCOLOR;        /* Pointer to WVW_ONCTLCOLOR() function */
    } a;
 
 } WVW_GLO, * PWVW_GLO;
