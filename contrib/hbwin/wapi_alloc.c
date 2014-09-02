@@ -45,7 +45,7 @@
  */
 
 #include "hbwapi.h"
-
+#include "hbapierr.h"
 #include "hbapiitm.h"
 
 static HB_GARBAGE_FUNC( s_gc_HDC_release )
@@ -258,24 +258,50 @@ PDEVMODE hbwapi_par_PDEVMODE( int iParam )
    return ph ? ( PDEVMODE ) *ph : NULL;
 }
 
+#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
+static int s_iDbgUnsafeMode = -1;  /* 0 = disallow, 1 = trace, 2 = trace + RTE, other = allow */
+
+HB_FUNC( __WAPI_DBGUNSAFEHANDLES )
+{
+   hb_retni( s_iDbgUnsafeMode );
+
+   if( HB_ISNUM( 1 ) )
+      s_iDbgUnsafeMode = hb_parni( 1 );
+}
+
+/* The goal is to minimize numeric pointers circulating
+   on .prg level, so make them visible. */
+static HB_BOOL s_handle_trace( int n )
+{
+   switch( s_iDbgUnsafeMode )
+   {
+      case 0:
+         return HB_FALSE;
+      case 1:
+      case 2:
+      {
+         char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+         char file[ HB_PATH_MAX ];
+         HB_USHORT line;
+
+         hb_procinfo( 0, procname, &line, file );
+
+         HB_TRACE( HB_TR_ALWAYS, ( "%s:%s:%i: __hbwapi_par*_handle(%d)", file, procname, line, n ) );
+
+         if( s_iDbgUnsafeMode == 2 )
+            hb_errRT_BASE( EG_ARG, 19000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      }
+   }
+
+   return HB_TRUE;
+}
+#endif
+
 void * __hbwapi_par_handle( int n )
 {
-#if ! defined( __HBWIN_NO_UNSAFE_POINTERS )
+#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
    if( HB_ISNUM( n ) )
-   {
-#if 0
-      char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-      char file[ HB_PATH_MAX ];
-      HB_USHORT line;
-
-      hb_procinfo( 0, procname, &line, file );
-
-      /* The goal is to minimize numeric pointers circulating
-         on .prg level, so trace them. */
-      HB_TRACE( HB_TR_ALWAYS, ( "%s:%s:%i: __hbwapi_par_handle(%d)", file, procname, line, n ) );
-#endif
-      return ( void * ) ( HB_PTRDIFF ) hb_parnint( n );
-   }
+      return s_handle_trace( n ) ? ( void * ) ( HB_PTRDIFF ) hb_parnint( n ) : NULL;
    else
 #endif
       return hb_parptr( n );
@@ -283,22 +309,9 @@ void * __hbwapi_par_handle( int n )
 
 void * __hbwapi_parv_handle( int n, int i )
 {
-#if ! defined( __HBWIN_NO_UNSAFE_POINTERS )
+#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
    if( HB_ISNUM( n ) )
-   {
-#if 0
-      char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-      char file[ HB_PATH_MAX ];
-      HB_USHORT line;
-
-      hb_procinfo( 0, procname, &line, file );
-
-      /* The goal is to minimize numeric pointers circulating
-         on .prg level, so trace them. */
-      HB_TRACE( HB_TR_ALWAYS, ( "%s:%s:%i: __hbwapi_parv_handle(%d, %d)", file, procname, line, n, i ) );
-#endif
-      return ( void * ) ( HB_PTRDIFF ) hb_parvnint( n, i );
-   }
+      return s_handle_trace( n ) ? ( void * ) ( HB_PTRDIFF ) hb_parvnint( n, i ) : NULL;
    else
 #endif
       return hb_parvptr( n, i );
@@ -306,7 +319,7 @@ void * __hbwapi_parv_handle( int n, int i )
 
 void * hbwapi_itemGet_HANDLE( PHB_ITEM pItem )
 {
-#if ! defined( __HBWIN_NO_UNSAFE_POINTERS )
+#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
    if( pItem && HB_IS_NUMERIC( pItem ) )
       return ( void * ) ( HB_PTRDIFF ) hb_itemGetNInt( pItem );
    else
@@ -318,4 +331,13 @@ void * hbwapi_itemGet_HANDLE( PHB_ITEM pItem )
 void * hbwapi_arrayGet_HANDLE( PHB_ITEM pArray, HB_SIZE nIndex )
 {
    return hbwapi_itemGet_HANDLE( hb_arrayGetItemPtr( pArray, nIndex ) );
+}
+
+HB_BOOL hbwapi_is_HANDLE( int iParam )
+{
+#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
+   return hb_param( iParam, HB_IT_POINTER | HB_IT_NUMERIC ) != NULL;
+#else
+   return hb_param( iParam, HB_IT_POINTER ) != NULL;
+#endif
 }

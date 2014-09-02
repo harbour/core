@@ -54,8 +54,6 @@
 
 #include <windows.h>
 
-#define hbwapi_is_HANDLE( n )               hb_param( n, HB_IT_POINTER | HB_IT_NUMERIC )
-
 #define hbwapi_par_WPARAM( n )              ( ( WPARAM           ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_LPARAM( n )              ( ( LPARAM           ) __hbwapi_par_handle( n ) )
 
@@ -176,6 +174,8 @@ extern HB_EXPORT void      hbwapi_ret_HPEN( HPEN p );
 extern HB_EXPORT void      hbwapi_ret_HBRUSH( HBRUSH p );
 extern HB_EXPORT void      hbwapi_ret_HFONT( HFONT p );
 extern HB_EXPORT void      hbwapi_ret_PDEVMODE( PDEVMODE p );
+
+extern HB_EXPORT HB_BOOL   hbwapi_is_HANDLE( int iParam );
 
 extern HB_EXPORT void *    hbwapi_itemGet_HANDLE( PHB_ITEM pItem );
 extern HB_EXPORT void *    hbwapi_arrayGet_HANDLE( PHB_ITEM pArray, HB_SIZE nIndex );

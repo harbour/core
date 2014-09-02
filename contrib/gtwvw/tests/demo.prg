@@ -170,6 +170,8 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
+   __wapi_DbgUnsafeHandles( 2 )
+
    Set( _SET_EVENTMASK, INKEY_ALL )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
