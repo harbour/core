@@ -391,7 +391,7 @@ HB_FUNC( WVW_GBCREATE )
    else
       hb_retni( 0 );
 
-   HB_STOREHANDLE( hWnd, 12 );
+   HB_STORHANDLE( hWnd, 12 );
 }
 
 /* BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE
@@ -432,7 +432,7 @@ HB_FUNC( WVW_RBCREATE )
    else
       hb_retni( 0 );
 
-   HB_STOREHANDLE( hWnd, 12 );
+   HB_STORHANDLE( hWnd, 12 );
 }
 
 HB_FUNC( WVW_SETCONTROLTEXT )

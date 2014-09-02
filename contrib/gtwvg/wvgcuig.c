@@ -203,8 +203,8 @@ HB_FUNC( WVG_SETGOBJDATA )
                   break;
 #if ! defined( HB_OS_WIN_CE )
                case GOBJ_OBJDATA_PICTUREEX:
-                  if( wvg_ishandle( 3 )  )
-                     gObj->iPicture = ( IPicture * ) wvg_parhandle( 3 );
+                  if( HB_ISHANDLE( 3 )  )
+                     gObj->iPicture = ( IPicture * ) HB_PARHANDLE( 3 );
                   break;
                case GOBJ_OBJDATA_PICTURE:
                   if( hb_parni( 3 ) >= 1 && hb_parni( 3 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
@@ -246,19 +246,19 @@ HB_FUNC( WVG_SETGOBJDATA )
                case GOBJ_OBJDATA_HFONT:
                   if( gObj->hFont && gObj->bDestroyFont )
                      DeleteObject( gObj->hFont );
-                  gObj->hFont        = ( HFONT ) wvg_parhandle( 3 );
+                  gObj->hFont        = ( HFONT ) HB_PARHANDLE( 3 );
                   gObj->bDestroyFont = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HPEN:
                   if( gObj->hPen && gObj->bDestroyPen )
                      DeleteObject( gObj->hPen );
-                  gObj->hPen        = ( HPEN ) wvg_parhandle( 3 );
+                  gObj->hPen        = ( HPEN ) HB_PARHANDLE( 3 );
                   gObj->bDestroyPen = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HBRUSH:
                   if( gObj->hBrush && gObj->bDestroyBrush )
                      DeleteObject( gObj->hBrush );
-                  gObj->hBrush        = ( HBRUSH ) wvg_parhandle( 3 );
+                  gObj->hBrush        = ( HBRUSH ) HB_PARHANDLE( 3 );
                   gObj->bDestroyBrush = HB_TRUE;
                   break;
                case GOBJ_OBJDATA_COLORTEXT:
@@ -1287,7 +1287,7 @@ HB_FUNC( WVG_TEXTBOX )
    gObj->crRGBText = hbwapi_par_COLORREF( 9 );
    gObj->crRGBBk   = hbwapi_par_COLORREF( 10 );
 
-   gObj->hFont        = ( HFONT ) wvg_parhandle( 11 );
+   gObj->hFont        = ( HFONT ) HB_PARHANDLE( 11 );
    gObj->bDestroyFont = HB_FALSE;
 
    gObj->gObjNext = pWVT->gObjs;
@@ -1350,7 +1350,7 @@ HB_FUNC( WVG_PICTURE )
 HB_FUNC( WVG_PICTUREEX )
 {
 #if ! defined( HB_OS_WIN_CE )
-   if( wvg_ishandle( 6 ) )
+   if( HB_ISHANDLE( 6 ) )
    {
       PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
       HB_GOBJS * gObj = hb_wvg_ObjectNew( pWVT );
@@ -1367,7 +1367,7 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = ( IPicture * ) wvg_parhandle( 6 );
+      gObj->iPicture        = ( IPicture * ) HB_PARHANDLE( 6 );
       gObj->iData           = hb_parl( 7 ) ? 1 : 0;
       gObj->bDestroyPicture = HB_FALSE;
 

@@ -85,7 +85,7 @@ HB_FUNC( WVG_SENDMESSAGE )
    if( szText && HB_ISBYREF( 4 ) )
       szText = HB_STRUNSHARE( &hText, szText, nLen );
 
-   hb_retnint( SendMessage( ( HWND ) wvg_parhandle( 1 ),
+   hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
                             ( UINT ) hb_parni( 2 ),
                             ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
                             szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) ) );
@@ -111,7 +111,7 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )  /* TOFIX: UNICODE support? */
       hb_xmemcpy( cText, hb_itemGetCPtr( pText ), iLen + 1 );
    }
 
-   hb_retnl( ( long ) SendDlgItemMessage( ( HWND ) wvg_parhandle( 1 ),
+   hb_retnl( ( long ) SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                           ( int ) hb_parni( 2 ),
                                           ( UINT ) hb_parni( 3 ),
                                           ( WPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
@@ -129,48 +129,48 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )  /* TOFIX: UNICODE support? */
 /* Wvg_SetTimer( hWnd, nIdentifier, nTimeOut ) */
 HB_FUNC( WVG_SETTIMER )
 {
-   hb_retl( SetTimer( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) != 0 );
+   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) != 0 );
 }
 
 HB_FUNC( WVG_SETFOCUS )
 {
-   SetFocus( ( HWND ) wvg_parhandle( 1 ) );
+   SetFocus( ( HWND ) HB_PARHANDLE( 1 ) );
 }
 
 HB_FUNC( WVG_GETFOCUS )
 {
-   wvg_rethandle( GetFocus() );
+   HB_RETHANDLE( GetFocus() );
 }
 
 HB_FUNC( WVG_SETTEXTCOLOR )
 {
-   hbwapi_ret_COLORREF( SetTextColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 }
 
 HB_FUNC( WVG_SETBKCOLOR )
 {
-   hbwapi_ret_COLORREF( SetBkColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 }
 
 HB_FUNC( WVG_SETBKMODE )
 {
-   hb_retni( SetBkMode( ( HDC ) wvg_parhandle( 1 ), hb_parni( 2 ) ) );
+   hb_retni( SetBkMode( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 #endif
 
 HB_FUNC( WVG_GETSTOCKOBJECT )
 {
-   wvg_rethandle( GetStockObject( hb_parni( 1 ) ) );
+   HB_RETHANDLE( GetStockObject( hb_parni( 1 ) ) );
 }
 
 HB_FUNC( WVG_DELETEOBJECT )
 {
-   hb_retl( DeleteObject( ( HGDIOBJ ) wvg_parhandle( 1 ) ) );
+   hb_retl( DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVG_SELECTOBJECT )
 {
-   wvg_rethandle( SelectObject( ( HDC ) wvg_parhandle( 1 ), ( HGDIOBJ ) wvg_parhandle( 2 ) ) );
+   HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
 }
 
 HB_FUNC_TRANSLATE( WVG_LOWORD, WIN_LOWORD )
@@ -186,17 +186,17 @@ HB_FUNC( WVG_SETDLGITEMTEXT )
 {
    void * hText;
 
-   SetDlgItemText( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ), HB_PARSTR( 3, &hText, NULL ) );
+   SetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), HB_PARSTR( 3, &hText, NULL ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVG_GETDLGITEMTEXT )
 {
-   int    iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
+   int    iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
    LPTSTR cText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
-   UINT iResult = GetDlgItemText( ( HWND ) wvg_parhandle( 1 ),  /* handle of dialog box */
+   UINT iResult = GetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ),  /* handle of dialog box */
                                   hb_parni( 2 ),                /* identifier of control */
                                   cText,                        /* address of buffer for text */
                                   iLen );                       /* maximum size of string */
@@ -207,18 +207,18 @@ HB_FUNC( WVG_GETDLGITEMTEXT )
 
 HB_FUNC( WVG_CHECKDLGBUTTON )
 {
-   hb_retl( CheckDlgButton( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ),
+   hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
                             ( UINT ) ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) ) );
 }
 
 HB_FUNC( WVG_ISDLGBUTTONCHECKED )
 {
-   hb_retni( IsDlgButtonChecked( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ) );
+   hb_retni( IsDlgButtonChecked( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
 HB_FUNC( WVG_CHECKRADIOBUTTON )
 {
-   hb_retl( CheckRadioButton( ( HWND ) wvg_parhandle( 1 ),  /* handle of dialog box */
+   hb_retl( CheckRadioButton( ( HWND ) HB_PARHANDLE( 1 ),  /* handle of dialog box */
                               hb_parni( 2 ),                /* identifier of first radio button in group */
                               hb_parni( 3 ),                /* identifier of last radio button in group */
                               hb_parni( 4 ) ) );            /* identifier of radio button to select */
@@ -226,7 +226,7 @@ HB_FUNC( WVG_CHECKRADIOBUTTON )
 
 HB_FUNC( WVG_GETDLGITEM )
 {
-   wvg_rethandle( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ) );
+   HB_RETHANDLE( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
 HB_FUNC( WVG_MESSAGEBOX )
@@ -234,7 +234,7 @@ HB_FUNC( WVG_MESSAGEBOX )
    void * hMsg;
    void * hTitle;
 
-   hb_retni( MessageBox( wvg_ishandle( 1 ) ? ( HWND ) wvg_parhandle( 1 ) : GetActiveWindow(),
+   hb_retni( MessageBox( HB_ISHANDLE( 1 ) ? ( HWND ) HB_PARHANDLE( 1 ) : GetActiveWindow(),
                          HB_PARSTR( 2, &hMsg, NULL ),
                          HB_PARSTR( 3, &hTitle, NULL ),
                          hb_parnidef( 4, MB_OK ) ) );
@@ -254,10 +254,10 @@ HB_FUNC( WVG_INVALIDATERECT )
       rc.right  = hb_parvni( 2, 3 );
       rc.bottom = hb_parvni( 2, 4 );
 
-      hb_retl( InvalidateRect( ( HWND ) wvg_parhandle( 1 ), &rc, TRUE ) );
+      hb_retl( InvalidateRect( ( HWND ) HB_PARHANDLE( 1 ), &rc, TRUE ) );
    }
    else
-      hb_retl( InvalidateRect( ( HWND ) wvg_parhandle( 1 ), NULL, TRUE ) );
+      hb_retl( InvalidateRect( ( HWND ) HB_PARHANDLE( 1 ), NULL, TRUE ) );
 }
 #endif
 
@@ -275,7 +275,7 @@ HB_FUNC( WVG_LOADICON )
       hb_strfree( hBuffer );
    }
 
-   wvg_rethandle( hIcon );
+   HB_RETHANDLE( hIcon );
 }
 
 /* Wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
@@ -315,7 +315,7 @@ HB_FUNC( WVG_LOADIMAGE )
    }
 
    hb_strfree( hBuffer );
-   wvg_rethandle( hImage );
+   HB_RETHANDLE( hImage );
 }
 
 #if defined( __GTWVX_UNSAFE_POINTERS )
@@ -324,7 +324,7 @@ HB_FUNC( WVG_GETCLIENTRECT )
    PHB_ITEM info = hb_itemArrayNew( 4 );
    RECT     rc   = { 0, 0, 0, 0 };
 
-   GetClientRect( ( HWND ) wvg_parhandle( 1 ), &rc );
+   GetClientRect( ( HWND ) HB_PARHANDLE( 1 ), &rc );
 
    hb_arraySetNI( info, 1, rc.left   );
    hb_arraySetNI( info, 2, rc.top    );
@@ -340,7 +340,7 @@ HB_FUNC( WVG_DRAWIMAGE )
 {
    void * hImage;
 
-   hb_retl( hb_wvt_DrawImage( ( HDC ) wvg_parhandle( 1 ), hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( hb_wvt_DrawImage( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ),
                               hb_parni( 4 ), hb_parni( 5 ), HB_PARSTR( 6, &hImage, NULL ), hb_parl( 7 ) ) );
 
    hb_strfree( hImage );
@@ -348,12 +348,12 @@ HB_FUNC( WVG_DRAWIMAGE )
 
 HB_FUNC( WVG_GETDC )
 {
-   wvg_rethandle( GetDC( ( HWND ) wvg_parhandle( 1 ) ) );
+   HB_RETHANDLE( GetDC( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVG_RELEASEDC )
 {
-   hb_retl( ReleaseDC( ( HWND ) wvg_parhandle( 1 ), ( HDC ) wvg_parhandle( 2 ) ) );
+   hb_retl( ReleaseDC( ( HWND ) HB_PARHANDLE( 1 ), ( HDC ) HB_PARHANDLE( 2 ) ) );
 }
 
 HB_FUNC( WVG_CREATEBRUSH )
@@ -364,9 +364,9 @@ HB_FUNC( WVG_CREATEBRUSH )
    lb.lbColor = hbwapi_par_COLORREF( 2 );
    lb.lbHatch = hb_parni( 3 );
 #if ! defined( HB_OS_WIN_CE )
-   wvg_rethandle( CreateBrushIndirect( &lb ) );
+   HB_RETHANDLE( CreateBrushIndirect( &lb ) );
 #else
-   wvg_rethandle( CreateSolidBrush( lb.lbColor ) );
+   HB_RETHANDLE( CreateSolidBrush( lb.lbColor ) );
 #endif
 }
 
@@ -384,7 +384,7 @@ HB_FUNC( WVG_DRAWTEXT )
    rc.right  = hb_parvni( 3, 3 );
    rc.bottom = hb_parvni( 3, 4 );
 
-   hb_retl( DrawText( ( HDC ) wvg_parhandle( 1 ), lpBuffer, ( int ) nLen, &rc, hb_parni( 4 ) ) );
+   hb_retl( DrawText( ( HDC ) HB_PARHANDLE( 1 ), lpBuffer, ( int ) nLen, &rc, hb_parni( 4 ) ) );
 
    hb_strfree( hBuffer );
 }
@@ -394,7 +394,7 @@ HB_FUNC( WVG_GETWINDOWRECT )
    PHB_ITEM info = hb_itemArrayNew( 4 );
    RECT     rc;
 
-   GetWindowRect( ( HWND ) wvg_parhandle( 1 ), &rc );
+   GetWindowRect( ( HWND ) HB_PARHANDLE( 1 ), &rc );
 
    hb_arraySetNI( info, 1, rc.left   );
    hb_arraySetNI( info, 2, rc.top    );
@@ -407,22 +407,22 @@ HB_FUNC( WVG_GETWINDOWRECT )
 /* Wvg_MoveWindow( hWnd, nLeft, nTop, nWidth, nHeight, lRePaint ) */
 HB_FUNC( WVG_MOVEWINDOW )
 {
-   MoveWindow( ( HWND ) wvg_parhandle( 1 ), hb_parnl( 2 ), hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ), hb_parl( 6 ) );
+   MoveWindow( ( HWND ) HB_PARHANDLE( 1 ), hb_parnl( 2 ), hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ), hb_parl( 6 ) );
 }
 
 HB_FUNC( WVG_GETDESKTOPWINDOW )
 {
-   wvg_rethandle( GetDesktopWindow() );
+   HB_RETHANDLE( GetDesktopWindow() );
 }
 
 HB_FUNC( WVG_SETPARENT )
 {
-   wvg_rethandle( SetParent( ( HWND ) wvg_parhandle( 1 ), ( HWND ) wvg_parhandle( 2 ) ) );
+   HB_RETHANDLE( SetParent( ( HWND ) HB_PARHANDLE( 1 ), ( HWND ) HB_PARHANDLE( 2 ) ) );
 }
 
 HB_FUNC( WVG_BRINGWINDOWTOTOP )
 {
-   hb_retl( BringWindowToTop( ( HWND ) wvg_parhandle( 1 ) ) );
+   hb_retl( BringWindowToTop( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC_TRANSLATE( WVG_SETFOREGROUNDWINDOW, WVG_BRINGWINDOWTOTOP )
@@ -431,29 +431,29 @@ HB_FUNC( WVG_SETWINDOWTEXT )
 {
    void * hText;
 
-   SetWindowText( ( HWND ) wvg_parhandle( 1 ), HB_PARSTR( 2, &hText, NULL ) );
+   SetWindowText( ( HWND ) HB_PARHANDLE( 1 ), HB_PARSTR( 2, &hText, NULL ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVG_SETWINDOWLONG )
 {
-   hb_retnl( SetWindowLong( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
+   hb_retnl( SetWindowLong( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
 }
 
 HB_FUNC( WVG_ISWINDOW )
 {
-   hb_retl( IsWindow( ( HWND ) wvg_parhandle( 1 ) ) );
+   hb_retl( IsWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVG_ENABLEWINDOW )
 {
-   hb_retl( EnableWindow( ( HWND ) wvg_parhandle( 1 ), hb_parl( 2 ) ) );
+   hb_retl( EnableWindow( ( HWND ) HB_PARHANDLE( 1 ), hb_parl( 2 ) ) );
 }
 
 HB_FUNC( WVG_DESTROYWINDOW )
 {
-   hb_retl( DestroyWindow( ( HWND ) wvg_parhandle( 1 ) ) );
+   hb_retl( DestroyWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVG_CLIENTTOSCREEN )
@@ -462,7 +462,7 @@ HB_FUNC( WVG_CLIENTTOSCREEN )
 
    if( hbwapi_par_POINT( &Point, 2, HB_FALSE ) )
    {
-      if( ClientToScreen( ( HWND ) wvg_parhandle( 1 ), &Point ) )
+      if( ClientToScreen( ( HWND ) HB_PARHANDLE( 1 ), &Point ) )
       {
          hbwapi_stor_POINT( &Point, 2 );
          hb_retl( HB_TRUE );
@@ -479,7 +479,7 @@ HB_FUNC( WVG_SCREENTOCLIENT )
 
    if( hbwapi_par_POINT( &Point, 2, HB_FALSE ) )
    {
-      if( ScreenToClient( ( HWND ) wvg_parhandle( 1 ), &Point ) > 0 )
+      if( ScreenToClient( ( HWND ) HB_PARHANDLE( 1 ), &Point ) > 0 )
       {
          hbwapi_stor_POINT( &Point, 2 );
          hb_retl( HB_TRUE );
@@ -512,9 +512,9 @@ HB_FUNC( WVG_NOT )
 
 HB_FUNC( WVG_TRACKPOPUPMENU )
 {
-   HMENU hMenu  = ( HMENU ) wvg_parhandle( 1 );
+   HMENU hMenu  = ( HMENU ) HB_PARHANDLE( 1 );
    UINT  uFlags = hb_parnldef( 2, TPM_CENTERALIGN | TPM_RETURNCMD );
-   HWND  hWnd   = wvg_ishandle( 5 ) ? ( HWND ) wvg_parhandle( 5 ) : GetActiveWindow();
+   HWND  hWnd   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : GetActiveWindow();
 
    POINT xy = { 0, 0 };
 
@@ -541,7 +541,7 @@ HB_FUNC( WVG_CHOOSECOLOR )
    memset( &cc, 0, sizeof( cc ) );
 
    cc.lStructSize  = sizeof( cc );
-   cc.hwndOwner    = ( HWND ) wvg_parhandle( 4 );
+   cc.hwndOwner    = ( HWND ) HB_PARHANDLE( 4 );
    cc.rgbResult    = hbwapi_par_COLORREF( 1 );
    cc.lpCustColors = crCustClr;
    cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
@@ -559,9 +559,9 @@ HB_FUNC( WVG_FINDWINDOW )
    hb_strfree( hText );
 
    if( hwnd )
-      wvg_rethandle( hwnd );
+      HB_RETHANDLE( hwnd );
    else
-      wvg_rethandle( -1 );
+      HB_RETHANDLE( -1 );
 }
 
 HB_FUNC_TRANSLATE( WVG_SLEEP, WAPI_SLEEP )
@@ -570,9 +570,9 @@ HB_FUNC_TRANSLATE( WVG_SLEEP, WAPI_SLEEP )
 
 HB_FUNC( WVG_SETMENU )
 {
-   HWND hWnd = ( HWND ) wvg_parhandle( 1 );
+   HWND hWnd = ( HWND ) HB_PARHANDLE( 1 );
 
-   HB_BOOL bSet = SetMenu( hWnd, ( HMENU ) wvg_parhandle( 2 ) );
+   HB_BOOL bSet = SetMenu( hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
 
    #if 1
    RECT wi = { 0, 0, 0, 0 };
@@ -596,12 +596,12 @@ HB_FUNC( WVG_SETMENU )
 #if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_CREATEMENU )
 {
-   wvg_rethandle( CreateMenu() );
+   HB_RETHANDLE( CreateMenu() );
 }
 
 HB_FUNC( WVG_CREATEPOPUPMENU )
 {
-   wvg_rethandle( CreatePopupMenu() );
+   HB_RETHANDLE( CreatePopupMenu() );
 }
 #endif
 
@@ -610,15 +610,15 @@ HB_FUNC( WVG_APPENDMENU )
    if( HB_ISCHAR( 4 ) )
    {
       void * hBuffer;
-      hb_retl( AppendMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ),
+      hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ),
          ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
          HB_PARSTR( 4, &hBuffer, NULL ) ) );
       hb_strfree( hBuffer );
    }
    else /* It is a SEPARATOR or Submenu */
-      hb_retl( AppendMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ),
+      hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ),
          ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-         ( LPCTSTR ) wvg_parhandle( 4 ) ) );
+         ( LPCTSTR ) HB_PARHANDLE( 4 ) ) );
 }
 
 HB_FUNC( WVG_INSERTMENU )
@@ -628,36 +628,36 @@ HB_FUNC( WVG_INSERTMENU )
    if( HB_ISCHAR( 5 ) )
    {
       void * hBuffer;
-      hb_retl( InsertMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), flags,
+      hb_retl( InsertMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), flags,
          ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
          HB_PARSTR( 5, &hBuffer, NULL ) ) );
       hb_strfree( hBuffer );
    }
    else /* It is a SEPARATOR or Submenu */
-      hb_retl( InsertMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), flags,
+      hb_retl( InsertMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), flags,
          ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
-         ( LPCTSTR ) wvg_parhandle( 5 ) ) );
+         ( LPCTSTR ) HB_PARHANDLE( 5 ) ) );
 }
 
 #if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_DELETEMENU )
 {
-   hb_retl( DeleteMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVG_DESTROYMENU )
 {
-   hb_retl( DestroyMenu( ( HMENU ) wvg_parhandle( 1 ) ) );
+   hb_retl( DestroyMenu( ( HMENU ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVG_ENABLEMENUITEM )
 {
-   hb_retl( EnableMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retl( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVG_CHECKMENUITEM )
 {
-   hb_retni( CheckMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retni( CheckMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 #endif
 
@@ -670,7 +670,7 @@ HB_FUNC( WVG_ISMENUITEMCHECKED )
    lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = MIIM_STATE;
 
-   if( GetMenuItemInfo( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
+   if( GetMenuItemInfo( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
       hb_retl( ( lpmii.fState & MFS_CHECKED ) != 0 );
    else
       hb_retl( HB_FALSE );
@@ -686,7 +686,7 @@ HB_FUNC( WVG_ISMENUITEMENABLED )  /* = grayed */
    lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = MIIM_STATE;
 
-   if( GetMenuItemInfo( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
+   if( GetMenuItemInfo( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
       hb_retl( ( lpmii.fState & MFS_DISABLED /* equivalent to MFS_GRAYED */ ) == 0 );
    else
       hb_retl( HB_TRUE );
@@ -715,7 +715,7 @@ HB_FUNC( WVG_SETMENUITEM )
    lpmii.fMask = MIIM_SUBMENU;
 #endif
 
-   hb_retl( SetMenuItemInfo( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) );
+   hb_retl( SetMenuItemInfo( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) );
 
    hb_strfree( hText );
 }
@@ -723,17 +723,17 @@ HB_FUNC( WVG_SETMENUITEM )
 #if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_DRAWMENUBAR )
 {
-   DrawMenuBar( ( HWND ) wvg_parhandle( 1 ) );
+   DrawMenuBar( ( HWND ) HB_PARHANDLE( 1 ) );
 }
 
 HB_FUNC( WVG_UPDATEWINDOW )
 {
-   hb_retl( UpdateWindow( ( HWND ) wvg_parhandle( 1 ) ) );
+   hb_retl( UpdateWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVG_SHOWWINDOW )
 {
-   hb_retl( ShowWindow( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ) );
+   hb_retl( ShowWindow( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 #endif
 
@@ -744,16 +744,16 @@ HB_FUNC( WVG_CREATEWINDOWEX )
    void * hClassName;
    void * hWinName;
 
-   wvg_rethandle( CreateWindowEx(
+   HB_RETHANDLE( CreateWindowEx(
       ( DWORD ) hb_parnl( 1 ),
       HB_PARSTR( 2, &hClassName, NULL ),
       HB_PARSTR( 3, &hWinName, NULL ),
       ( DWORD ) hb_parnl( 4 ),
       hb_parni( 5 ), hb_parni( 6 ),
       hb_parni( 7 ), hb_parni( 8 ),
-      ( HWND ) wvg_parhandle( 9 ),
-      ( HMENU ) wvg_parhandle( 10 ),
-      wvg_ishandle( 11 ) ? ( HINSTANCE ) wvg_parhandle( 11 ) : wvg_hInstance(),
+      ( HWND ) HB_PARHANDLE( 9 ),
+      ( HMENU ) HB_PARHANDLE( 10 ),
+      HB_ISHANDLE( 11 ) ? ( HINSTANCE ) HB_PARHANDLE( 11 ) : wvg_hInstance(),
       NULL ) );
 
    hb_strfree( hClassName );
@@ -765,7 +765,7 @@ HB_FUNC( WVG_SENDMESSAGETEXT )
 {
    void * hBuffer;
 
-   SendMessage( ( HWND ) wvg_parhandle( 1 ),
+   SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
                 hb_parni( 2 ),
                 ( WPARAM ) hb_parni( 3 ),
                 ( LPARAM ) HB_PARSTR( 4, &hBuffer, NULL ) );
@@ -779,7 +779,7 @@ HB_FUNC( WVG_GETMESSAGETEXT )
 
    cText[ 0 ] = TEXT( '\0' );
 
-   SendMessage( ( HWND ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( WPARAM ) hb_parnint( 3 ), ( LPARAM ) cText );
+   SendMessage( ( HWND ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( WPARAM ) hb_parnint( 3 ), ( LPARAM ) cText );
 
    HB_RETSTR( cText );
 
@@ -789,8 +789,8 @@ HB_FUNC( WVG_GETMESSAGETEXT )
 
 HB_FUNC( WVG_SETWNDPROC )
 {
-   HWND    hWnd    = ( HWND ) wvg_parhandle( 1 );
-   WNDPROC wndProc = ( WNDPROC ) wvg_parhandle( 2 );
+   HWND    hWnd    = ( HWND ) HB_PARHANDLE( 1 );
+   WNDPROC wndProc = ( WNDPROC ) HB_PARHANDLE( 2 );
    WNDPROC oldProc;
 
 #if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
@@ -799,12 +799,12 @@ HB_FUNC( WVG_SETWNDPROC )
    oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) wndProc );
 #endif
 
-   wvg_rethandle( oldProc );
+   HB_RETHANDLE( oldProc );
 }
 
 HB_FUNC( WVG_DEFWINDOWPROC )
 {
-   hb_retnint( DefWindowProc( ( HWND ) wvg_parhandle( 1 ),
+   hb_retnint( DefWindowProc( ( HWND ) HB_PARHANDLE( 1 ),
                               hb_parni( 2 ),
                               ( WPARAM ) hb_parnint( 3 ),
                               ( LPARAM ) hb_parnint( 4 ) ) );
@@ -812,8 +812,8 @@ HB_FUNC( WVG_DEFWINDOWPROC )
 
 HB_FUNC( WVG_CALLWINDOWPROC )
 {
-   hb_retnint( CallWindowProc( ( WNDPROC ) wvg_parhandle( 1 ),
-                               ( HWND ) wvg_parhandle( 2 ),
+   hb_retnint( CallWindowProc( ( WNDPROC ) HB_PARHANDLE( 1 ),
+                               ( HWND ) HB_PARHANDLE( 2 ),
                                ( UINT ) hb_parni( 3 ),
                                ( WPARAM ) hb_parnint( 4 ),
                                ( LPARAM ) hb_parnint( 5 ) ) );
@@ -825,39 +825,39 @@ HB_FUNC( WVG_CALLWINDOWPROC )
 HB_FUNC( WVG_TREEVIEW_SETTEXTCOLOR )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retl( TreeView_SetTextColor( ( HWND ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hb_retl( TreeView_SetTextColor( ( HWND ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #endif
 }
 
 HB_FUNC( WVG_TREEVIEW_SETBKCOLOR )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retl( TreeView_SetBkColor( ( HWND ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hb_retl( TreeView_SetBkColor( ( HWND ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #endif
 }
 
 HB_FUNC( WVG_TREEVIEW_SETLINECOLOR )
 {
    #if 0
-   hb_retl( TreeView_SetLineColor( ( HWND ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hb_retl( TreeView_SetLineColor( ( HWND ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
    #endif
 }
 
 HB_FUNC( WVG_TREEVIEW_SELECTITEM )
 {
-   hb_retl( TreeView_SelectItem( ( HWND ) wvg_parhandle( 1 ), wvg_parhandle( 2 ) ) );
+   hb_retl( TreeView_SelectItem( ( HWND ) HB_PARHANDLE( 1 ), HB_PARHANDLE( 2 ) ) );
 }
 #endif
 
 HB_FUNC( WVG_TREEVIEW_EXPAND )
 {
-   hb_retl( TreeView_Expand( ( HWND ) wvg_parhandle( 1 ), wvg_parhandle( 2 ), ( hb_parl( 3 ) ? TVE_EXPAND : TVE_COLLAPSE ) ) );
+   hb_retl( TreeView_Expand( ( HWND ) HB_PARHANDLE( 1 ), HB_PARHANDLE( 2 ), ( hb_parl( 3 ) ? TVE_EXPAND : TVE_COLLAPSE ) ) );
 }
 
 HB_FUNC( WVG_TVIS_EXPANDED )
 {
    #if 0
-   hb_retl( TreeView_GetItemState( ( HWND ) wvg_parhandle( 1 ), wvg_parhandle( 2 ), ( UINT ) TVIS_EXPANDED ) );
+   hb_retl( TreeView_GetItemState( ( HWND ) HB_PARHANDLE( 1 ), HB_PARHANDLE( 2 ), ( UINT ) TVIS_EXPANDED ) );
    #endif
 }
 
@@ -865,7 +865,7 @@ HB_FUNC( WVG_TVIS_EXPANDED )
 
 HB_FUNC( WVG_LBGETTEXT )
 {
-   HWND hWnd = ( HWND ) wvg_parhandle( 1 );
+   HWND hWnd = ( HWND ) HB_PARHANDLE( 1 );
    int iIndex = hb_parni( 2 );
    int iLen = ListBox_GetTextLen( hWnd, iIndex );
    LPTSTR szText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
@@ -877,26 +877,26 @@ HB_FUNC( WVG_LBGETTEXT )
 
 HB_FUNC( WVG_LBGETCURSEL )
 {
-   hb_retni( ListBox_GetCurSel( ( HWND ) wvg_parhandle( 1 ) ) );
+   hb_retni( ListBox_GetCurSel( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVG_LBSETCURSEL )
 {
-   hb_retni( ListBox_SetCurSel( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ) );
+   hb_retni( ListBox_SetCurSel( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
 /* Buttons */
 
 HB_FUNC( WVG_BUTTON_GETCHECK )
 {
-   hb_retnl( Button_GetCheck( ( HWND ) wvg_parhandle( 1 ) ) );
+   hb_retnl( Button_GetCheck( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
 #if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVG_ISICONIC )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retl( IsIconic( ( HWND ) wvg_parhandle( 1 ) ) );
+   hb_retl( IsIconic( ( HWND ) HB_PARHANDLE( 1 ) ) );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -905,7 +905,7 @@ HB_FUNC( WVG_ISICONIC )
 HB_FUNC( WVG_ISZOOMED )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retl( IsZoomed( ( HWND ) wvg_parhandle( 1 ) ) );
+   hb_retl( IsZoomed( ( HWND ) HB_PARHANDLE( 1 ) ) );
 #else
    hb_retl( HB_TRUE );
 #endif
@@ -916,7 +916,7 @@ HB_FUNC( WVG_ISZOOMED )
 HB_FUNC( WVG_SETDCBRUSHCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   hb_retnint( SetDCBrushColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hb_retnint( SetDCBrushColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
    hb_retnint( 0 );
 #endif
@@ -926,7 +926,7 @@ HB_FUNC( WVG_SETDCBRUSHCOLOR )
 HB_FUNC( WVG_SETDCPENCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   hb_retnint( SetDCPenColor( ( HDC ) wvg_parhandle( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hb_retnint( SetDCPenColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
    hb_retnint( 0 );
 #endif
@@ -935,61 +935,61 @@ HB_FUNC( WVG_SETDCPENCOLOR )
 /* Wvg_GetCurrentObject( hDC, nObjType ) */
 HB_FUNC( WVG_GETCURRENTOBJECT )
 {
-   wvg_rethandle( GetCurrentObject( ( HDC ) wvg_parhandle( 1 ), hb_parni( 2 ) ) );
+   HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
 /* Wvg_GetCurrentBrush( hDC ) */
 HB_FUNC( WVG_GETCURRENTBRUSH )
 {
-   wvg_rethandle( GetCurrentObject( ( HDC ) wvg_parhandle( 1 ), OBJ_BRUSH ) );
+   HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), OBJ_BRUSH ) );
 }
 
 /* Wvg_GetCurrentFont( hDC ) */
 HB_FUNC( WVG_GETCURRENTFONT )
 {
-   wvg_rethandle( GetCurrentObject( ( HDC ) wvg_parhandle( 1 ), OBJ_FONT ) );
+   HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), OBJ_FONT ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSTOBACK )
 {
-   hb_retl( SetWindowPos( ( HWND ) wvg_parhandle( 1 ), HWND_BOTTOM, 0, 0, 0, 0,
+   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_BOTTOM, 0, 0, 0, 0,
                           SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSTOTOP )
 {
-   hb_retl( SetWindowPos( ( HWND ) wvg_parhandle( 1 ), HWND_TOP, 0, 0, 0, 0,
+   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_TOP, 0, 0, 0, 0,
                           SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
 }
 
 HB_FUNC( WVG_SETWINDOWSIZE )
 {
-   hb_retl( SetWindowPos( ( HWND ) wvg_parhandle( 1 ), NULL, 0, 0, hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), NULL, 0, 0, hb_parni( 2 ), hb_parni( 3 ),
                           hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE  ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSITION )
 {
-   hb_retl( SetWindowPos( ( HWND ) wvg_parhandle( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ), 0, 0,
+   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ), 0, 0,
                           hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSANDSIZE )
 {
-   hb_retl( SetWindowPos( ( HWND ) wvg_parhandle( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
                           hb_parni( 4 ), hb_parni( 5 ),
                           ( hb_parl( 6 ) ? 0 : SWP_NOREDRAW ) | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED ) );
 }
 
 HB_FUNC( WVG_POSTMESSAGE )
 {
-   hb_retl( PostMessage( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ), ( WPARAM ) hb_parni( 3 ), ( LPARAM ) hb_parni( 4 ) ) );
+   hb_retl( PostMessage( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), ( WPARAM ) hb_parni( 3 ), ( LPARAM ) hb_parni( 4 ) ) );
 }
 
 HB_FUNC( WVG_FORCEWINDOWTOTOP )
 {
-   SetWindowPos( ( HWND ) wvg_parhandle( 1 ), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
-   SetWindowPos( ( HWND ) wvg_parhandle( 1 ), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
+   SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
+   SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
 }
 
 /* Wvg_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] ) */

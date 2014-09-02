@@ -84,7 +84,7 @@ HB_FUNC( WVW_STCREATE )
          wvw_win->hSTfont = CreateFontIndirect( &wvw->lfST );
          if( wvw_win->hSTfont == NULL )
          {
-            HB_STOREHANDLE( NULL, 9 );
+            HB_STORHANDLE( NULL, 9 );
             hb_retni( 0 );
             return;
          }
@@ -139,13 +139,13 @@ HB_FUNC( WVW_STCREATE )
          else
             SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hSTfont, ( LPARAM ) TRUE );
 
-         HB_STOREHANDLE( hWnd, 9 );
+         HB_STORHANDLE( hWnd, 9 );
          hb_retni( nCtrlId );
          return;
       }
    }
 
-   HB_STOREHANDLE( NULL, 9 );
+   HB_STORHANDLE( NULL, 9 );
    hb_retni( 0 );
 }
 

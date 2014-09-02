@@ -120,7 +120,7 @@ HB_FUNC( WVW_CXCREATE )
    else
       hb_retni( 0 );
 
-   HB_STOREHANDLE( hWnd, 12 );
+   HB_STORHANDLE( hWnd, 12 );
 }
 
 /* wvw_cxDestroy( [nWinNum], nCXid )

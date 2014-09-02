@@ -596,7 +596,7 @@ HB_FUNC( WVT_SETMENU )
       RECT rc = { 0, 0, 0, 0 };
       int  height, width;
 
-      SetMenu( _s->hWnd, ( HMENU ) wvg_parhandle( 1 ) );
+      SetMenu( _s->hWnd, ( HMENU ) HB_PARHANDLE( 1 ) );
 
       GetWindowRect( _s->hWnd, &wi );
       GetClientRect( _s->hWnd, &ci );
@@ -622,23 +622,23 @@ HB_FUNC( WVT_SETPOPUPMENU )
 
    if( _s )
    {
-      wvg_rethandle( _s->hPopup );
+      HB_RETHANDLE( _s->hPopup );
 
-      _s->hPopup = ( HMENU ) wvg_parhandle( 1 );
+      _s->hPopup = ( HMENU ) HB_PARHANDLE( 1 );
    }
    else
-      wvg_rethandle( 0 );
+      HB_RETHANDLE( 0 );
 }
 
 #if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVT_CREATEMENU )
 {
-   wvg_rethandle( CreateMenu() );
+   HB_RETHANDLE( CreateMenu() );
 }
 
 HB_FUNC( WVT_CREATEPOPUPMENU )
 {
-   wvg_rethandle( CreatePopupMenu() );
+   HB_RETHANDLE( CreatePopupMenu() );
 }
 #endif
 
@@ -647,17 +647,17 @@ HB_FUNC_TRANSLATE( WVT_APPENDMENU, WVG_APPENDMENU )
 #if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVT_DELETEMENU )
 {
-   hb_retl( DeleteMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_DESTROYMENU )
 {
-   hb_retl( DestroyMenu( ( HMENU ) wvg_parhandle( 1 ) ) );
+   hb_retl( DestroyMenu( ( HMENU ) HB_PARHANDLE( 1 ) ) );
 }
 
 HB_FUNC( WVT_ENABLEMENUITEM )
 {
-   hb_retni( EnableMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retni( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 #endif
 
@@ -777,7 +777,7 @@ HB_FUNC( WVT_TRACKPOPUPMENU )
 
       GetCursorPos( &xy );
 
-      hb_retnl( TrackPopupMenu( ( HMENU ) wvg_parhandle( 1 ),
+      hb_retnl( TrackPopupMenu( ( HMENU ) HB_PARHANDLE( 1 ),
                                 TPM_CENTERALIGN | TPM_RETURNCMD,
                                 xy.x,
                                 xy.y,
@@ -796,11 +796,11 @@ HB_FUNC( WVT_GETMENU )
 
    if( _s )
    {
-      wvg_rethandle( GetMenu( _s->hWnd ) );
+      HB_RETHANDLE( GetMenu( _s->hWnd ) );
       return;
    }
 #endif
-   wvg_rethandle( 0 );
+   HB_RETHANDLE( 0 );
 }
 
 /* Modeless Dialogs Implementation */
@@ -839,7 +839,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wPar
                {
                   hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
                   hb_vmPushNil();
-                  wvg_vmpushhandle( hDlg );
+                  HB_VMPUSHHANDLE( hDlg );
                   hb_vmPushNumInt( message );
                   hb_vmPushNumInt( wParam );
                   hb_vmPushNumInt( lParam );
@@ -857,7 +857,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wPar
                   {
                      hb_vmPushEvalSym();
                      hb_vmPush( _s->pFunc[ iIndex ] );
-                     wvg_vmpushhandle( hDlg );
+                     HB_VMPUSHHANDLE( hDlg );
                      hb_vmPushNumInt( message );
                      hb_vmPushNumInt( wParam );
                      hb_vmPushNumInt( lParam );
@@ -951,7 +951,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wPar
                {
                   hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
                   hb_vmPushNil();
-                  wvg_vmpushhandle( hDlg );
+                  HB_VMPUSHHANDLE( hDlg );
                   hb_vmPushNumInt( message );
                   hb_vmPushNumInt( wParam );
                   hb_vmPushNumInt( lParam );
@@ -969,7 +969,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wPar
                   {
                      hb_vmPushEvalSym();
                      hb_vmPush( pFunc );
-                     wvg_vmpushhandle( hDlg );
+                     HB_VMPUSHHANDLE( hDlg );
                      hb_vmPushNumInt( message );
                      hb_vmPushNumInt( wParam );
                      hb_vmPushNumInt( lParam );
@@ -1061,12 +1061,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             iType = 1;
          }
 
-         if( wvg_ishandle( 3 ) )
+         if( HB_ISHANDLE( 3 ) )
             /* argument 1 is already unicode compliant, so no conversion */
             hDlg = CreateDialogIndirect( wvg_hInstance(),
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? _s->hWnd : NULL,
-                                         ( DLGPROC ) wvg_parhandle( 3 ) );
+                                         ( DLGPROC ) HB_PARHANDLE( 3 ) );
          else
          {
             switch( iResource )
@@ -1128,12 +1128,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             _s->hDlgModeless[ iIndex ] = NULL;
          }
 
-         wvg_rethandle( hDlg );
+         HB_RETHANDLE( hDlg );
          return;
       }
    }
 
-   wvg_rethandle( 0 );
+   HB_RETHANDLE( 0 );
 }
 
 HB_FUNC( WVT_CREATEDIALOGMODAL )
@@ -1158,7 +1158,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          PHB_DYNS   pExecSym;
          int        iResource = hb_parni( 4 );
          HB_PTRDIFF iResult   = 0;
-         HWND       hParent   = wvg_ishandle( 5 ) ? ( HWND ) wvg_parhandle( 5 ) : _s->hWnd;
+         HWND       hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : _s->hWnd;
 
          if( HB_IS_EVALITEM( pFirst ) )
          {
@@ -1226,38 +1226,38 @@ HB_FUNC( WVT_LBADDSTRING )
 {
    void * hText;
 
-   hb_retni( ListBox_AddString( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), HB_PARSTR( 3, &hText, NULL ) ) );
+   hb_retni( ListBox_AddString( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), HB_PARSTR( 3, &hText, NULL ) ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
-   hb_retni( ListBox_GetCount( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ) ) );
+   hb_retni( ListBox_GetCount( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) ) );
 }
 
 HB_FUNC( WVT_LBDELETESTRING )
 {
-   hb_retni( ListBox_DeleteString( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
+   hb_retni( ListBox_DeleteString( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_LBSETCURSEL )
 {
-   hb_retni( ListBox_SetCurSel( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
+   hb_retni( ListBox_SetCurSel( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_CBADDSTRING )
 {
    void * hText;
 
-   hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) ) );
+   hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_CBSETCURSEL )
 {
-   hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 ) );
+   hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 ) );
 }
 
 /* Wvt_DlgSetIcon( hDlg, ncIcon ) */
@@ -1279,11 +1279,11 @@ HB_FUNC( WVT_DLGSETICON )
 
    if( hIcon )
    {
-      SendMessage( ( HWND ) wvg_parhandle( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
-      SendMessage( ( HWND ) wvg_parhandle( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
+      SendMessage( ( HWND ) HB_PARHANDLE( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
+      SendMessage( ( HWND ) HB_PARHANDLE( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
    }
 
-   wvg_rethandle( hIcon );
+   HB_RETHANDLE( hIcon );
 }
 
 HB_FUNC( WVT_GETFONTHANDLE )
@@ -1298,10 +1298,10 @@ HB_FUNC( WVT_GETFONTHANDLE )
       if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserFonts ) )
          hFont = _s->pGUI->hUserFonts[ iSlot ];
 
-      wvg_rethandle( hFont );
+      HB_RETHANDLE( hFont );
    }
    else
-      wvg_rethandle( 0 );
+      HB_RETHANDLE( 0 );
 }
 
 #if ! defined( __GTWVX_UNSAFE_POINTERS )

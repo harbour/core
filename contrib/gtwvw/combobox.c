@@ -327,7 +327,7 @@ HB_FUNC( WVW_CBCREATE )
          wvw_win->hCBfont = CreateFontIndirect( &wvw->lfCB );
          if( wvw_win->hCBfont == NULL )
          {
-            HB_STOREHANDLE( NULL, 11 );
+            HB_STORHANDLE( NULL, 11 );
             hb_retni( 0 );
             return;
          }
@@ -433,13 +433,13 @@ HB_FUNC( WVW_CBCREATE )
 
          SendMessage( hWnd, WM_SETFONT, ( WPARAM ) wvw_win->hCBfont, ( LPARAM ) TRUE );
 
-         HB_STOREHANDLE( hWnd, 11 );
+         HB_STORHANDLE( hWnd, 11 );
          hb_retni( nCtrlId );
          return;
       }
    }
 
-   HB_STOREHANDLE( NULL, 11 );
+   HB_STORHANDLE( NULL, 11 );
    hb_retni( 0 );
 }
 

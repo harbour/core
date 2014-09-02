@@ -123,7 +123,7 @@ HB_FUNC( WVW_PBCREATE )
    else
       hb_retni( 0 );
 
-   HB_STOREHANDLE( hWnd, 12 );
+   HB_STORHANDLE( hWnd, 12 );
 }
 
 /* wvw_pbDestroy( [nWinNum], nPBid )

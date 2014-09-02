@@ -1012,7 +1012,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 
       SetTextColor( _s->hdc, fgClr );
       SetBkColor( _s->hdc, bgClr );
-      SelectObject( _s->hdc, ( HFONT ) wvg_parhandle( 10 ) );
+      SelectObject( _s->hdc, ( HFONT ) HB_PARHANDLE( 10 ) );
 
       GetTextExtentPoint32( _s->hdc, text, ( int ) nLen, &sz );
 
@@ -1067,7 +1067,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       {
          SetTextColor( _s->hGuiDC, fgClr );
          SetBkColor( _s->hGuiDC, bgClr );
-         SelectObject( _s->hGuiDC, ( HFONT ) wvg_parhandle( 10 ) );
+         SelectObject( _s->hGuiDC, ( HFONT ) HB_PARHANDLE( 10 ) );
          SetTextAlign( _s->hGuiDC, iAlignH | iAlignV );
 
          ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rc, text, ( UINT ) nLen, NULL );
@@ -2077,7 +2077,7 @@ HB_FUNC( WVT_DRAWPICTURE )
 HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
 {
 #if ! defined( HB_OS_WIN_CE )
-   if( wvg_ishandle( 5 ) )
+   if( HB_ISHANDLE( 5 ) )
    {
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
@@ -2090,7 +2090,7 @@ HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
       iBottom = xy.y - 1 + hb_parvni( 6, 3 );
       iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) wvg_parhandle( 5 ), hb_parl( 7 ) ) );
+      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) HB_PARHANDLE( 5 ), hb_parl( 7 ) ) );
       return;
    }
 #endif
@@ -2435,7 +2435,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       SetTextColor( _s->hdc, fgClr );
       SetBkColor( _s->hdc, bgClr );
       SetBkMode( _s->hdc, hb_parnidef( 11, OPAQUE ) );
-      SelectObject( _s->hdc, ( HFONT ) wvg_parhandle( 12 ) );
+      SelectObject( _s->hdc, ( HFONT ) HB_PARHANDLE( 12 ) );
 
       {
          void *  hText;
@@ -2452,7 +2452,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
          SetTextColor( _s->hGuiDC, fgClr );
          SetBkColor( _s->hGuiDC, bgClr );
          SetBkMode( _s->hGuiDC, hb_parnidef( 11, OPAQUE ) );
-         SelectObject( _s->hGuiDC, ( HFONT ) wvg_parhandle( 12 ) );
+         SelectObject( _s->hGuiDC, ( HFONT ) HB_PARHANDLE( 12 ) );
 
          {
             void *  hText;
@@ -2593,10 +2593,10 @@ HB_FUNC( WVT_CREATEFONT )
       HB_STRNCPY( lf.lfFaceName, HB_ISCHAR( 1 ) ? HB_PARSTR( 1, &hText, NULL ) : _s->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
 
-      wvg_rethandle( CreateFontIndirect( &lf ) );
+      HB_RETHANDLE( CreateFontIndirect( &lf ) );
    }
    else
-      wvg_rethandle( 0 );
+      HB_RETHANDLE( 0 );
 }
 
 /* Wvt_LoadPicture( nSlot, cFilePic ) */
@@ -2635,7 +2635,7 @@ HB_FUNC( WVT_LOADPICTURE )
 HB_FUNC( WVT_DESTROYPICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retl( hb_wvt_gtDestroyPicture( ( IPicture * ) wvg_parhandle( 1 ) ) );
+   hb_retl( hb_wvt_gtDestroyPicture( ( IPicture * ) HB_PARHANDLE( 1 ) ) );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -2646,10 +2646,10 @@ HB_FUNC( WVT_LOADPICTUREEX )
 {
 #if ! defined( HB_OS_WIN_CE )
    void * hImage;
-   wvg_rethandle( hb_wvt_gtLoadPicture( HB_PARSTR( 1, &hImage, NULL ) ) );
+   HB_RETHANDLE( hb_wvt_gtLoadPicture( HB_PARSTR( 1, &hImage, NULL ) ) );
    hb_strfree( hImage );
 #else
-   wvg_rethandle( 0 );
+   HB_RETHANDLE( 0 );
 #endif
 }
 
@@ -2693,12 +2693,12 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
    void * hResource;
    void * hSection;
 
-   wvg_rethandle( hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 1, &hResource, NULL ), HB_PARSTR( 2, &hSection, NULL ) ) );
+   HB_RETHANDLE( hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 1, &hResource, NULL ), HB_PARSTR( 2, &hSection, NULL ) ) );
 
    hb_strfree( hResource );
    hb_strfree( hSection );
 #else
-   wvg_rethandle( 0 );
+   HB_RETHANDLE( 0 );
 #endif
 }
 
