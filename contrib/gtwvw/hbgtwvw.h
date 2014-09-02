@@ -450,7 +450,7 @@ typedef struct
    #define HB_STOREHANDLE( h, n )        hb_storptr( ( void * ) ( h ), n )
    #define HB_ITEMPUTHANDLE( i, h )      hb_itemPutPtr( i, ( void * ) ( h ) )
    #define HB_ARRAYSETHANDLE( a, i, h )  hb_arraySetPtr( a, i, ( void * ) ( h ) )
-   #define HB_VMPUSHHANDLE( h )          hb_vmPushNumInt( ( void * ) ( h ) )
+   #define HB_VMPUSHHANDLE( h )          hb_vmPushPointer( ( void * ) ( h ) )
 #endif
 
 HB_EXTERN_BEGIN

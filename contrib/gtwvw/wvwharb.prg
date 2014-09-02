@@ -2,6 +2,8 @@
 
 #include "hbgtinfo.ch"
 
+#include "hbwin.ch"
+
 FUNCTION wvw_GetClipboard()
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA )
 
@@ -39,6 +41,9 @@ FUNCTION wvw_GetRGBColor( nColor )
    hb_default( @nColor, -1 )
 
    RETURN iif( nColor >= 0 .AND. nColor <= 15, hb_gtInfo( HB_GTI_PALETTE, nColor ), 0 )
+
+FUNCTION wvw_RGB( ... )
+   RETURN WIN_RGB( ... )
 
 FUNCTION wvw_GetCursorPos()
 

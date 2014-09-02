@@ -2346,11 +2346,6 @@ HB_FUNC( WVW_RESTORE )
       ShowWindow( wvw_win->hWnd, SW_RESTORE );
 }
 
-HB_FUNC( WVW_RGB )
-{
-   hb_retnint( RGB( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
-}
-
 #if ! defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC_TRANSLATE( WIN_SENDDLGITEMMESSAGE , WAPI_SENDDLGITEMMESSAGE )
 HB_FUNC_TRANSLATE( WIN_SETFOCUS           , WAPI_SETFOCUS           )

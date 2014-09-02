@@ -269,34 +269,27 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nXM :=  5.25
       nYM := 10.25
 
-      nX  := ( nX * nXM / nBaseUnitsX )
-      nY  := ( nY * nYM / nBaseUnitsY )
-      nW  := ( nW * nXM / nBaseUnitsX )
-      nH  := ( nH * nYM / nBaseUnitsY )
+      nX := nX * nXM / nBaseUnitsX
+      nY := nY * nYM / nBaseUnitsY
+      nW := nW * nXM / nBaseUnitsX
+      nH := nH * nYM / nBaseUnitsY
    ELSE
-      nX  := nLeft
-      nY  := nTop
-      nW  := nCols
-      nH  := nRows
-   ENDIF
-
-   IF ! HB_ISNUMERIC( nStyle )
-      nStyle := ;
-         WS_CAPTION + WS_SYSMENU + WS_GROUP      + ;
-         WS_TABSTOP + DS_SETFONT + WS_THICKFRAME + ;
-         WS_VISIBLE + WS_POPUP   + DS_3DLOOK
+      nX := nLeft
+      nY := nTop
+      nW := nCols
+      nH := nRows
    ENDIF
 
    AAdd( aDlg[ 1 ], hb_defaultValue( nHelpId, 0 ) )
    AAdd( aDlg[ 1 ], hb_defaultValue( nExStyle, 0 ) )
-   AAdd( aDlg[ 1 ], nStyle  )
-   AAdd( aDlg[ 1 ], 0       )
-   AAdd( aDlg[ 1 ], nX      )
-   AAdd( aDlg[ 1 ], nY      )
-   AAdd( aDlg[ 1 ], nW      )
-   AAdd( aDlg[ 1 ], nH      )
-   AAdd( aDlg[ 1 ], 0       )
-   AAdd( aDlg[ 1 ], 0       )
+   AAdd( aDlg[ 1 ], hb_defaultValue( nStyle, WS_CAPTION + WS_SYSMENU + WS_GROUP + WS_TABSTOP + DS_SETFONT + WS_THICKFRAME + WS_VISIBLE + WS_POPUP + DS_3DLOOK ) )
+   AAdd( aDlg[ 1 ], 0 )
+   AAdd( aDlg[ 1 ], nX )
+   AAdd( aDlg[ 1 ], nY )
+   AAdd( aDlg[ 1 ], nW )
+   AAdd( aDlg[ 1 ], nH )
+   AAdd( aDlg[ 1 ], 0 )
+   AAdd( aDlg[ 1 ], 0 )
    AAdd( aDlg[ 1 ], hb_defaultValue( cTitle, "" ) )
 
    IF hb_bitAnd( nStyle, DS_SETFONT ) != 0
@@ -344,15 +337,15 @@ FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       nXM :=  5.25
       nYM := 10.25
 
-      nX  := ( nX * nXM / nBaseUnitsX )
-      nY  := ( nY * nYM / nBaseUnitsY )
-      nW  := ( nW * nXM / nBaseUnitsX )
-      nH  := ( nH * nYM / nBaseUnitsY )
+      nX := nX * nXM / nBaseUnitsX
+      nY := nY * nYM / nBaseUnitsY
+      nW := nW * nXM / nBaseUnitsX
+      nH := nH * nYM / nBaseUnitsY
    ELSE
-      nX  := nLeft
-      nY  := nTop
-      nW  := nCols
-      nH  := nRows
+      nX := nLeft
+      nY := nTop
+      nW := nCols
+      nH := nRows
    ENDIF
 
    aDlg[ 1, 4 ]++      /* item count */
@@ -373,20 +366,16 @@ FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
 
 FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
 
-   LOCAL hDlg, cType, xTemplate, nDlgMode
+   LOCAL hDlg, xTemplate, nDlgMode
 
    IF HB_ISSTRING( cbDlgProc )
       cbDlgProc := Upper( cbDlgProc )
    ENDIF
 
-   cType    := ValType( acnDlg )
-   nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
+   nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
-   IF cType == "A"
-      xTemplate := Wvt__MakeDlgTemplate( ;
-         acnDlg[ 1 ], acnDlg[  2 ], acnDlg[  3 ], acnDlg[  4 ], ;
-         acnDlg[ 5 ], acnDlg[  6 ], acnDlg[  7 ], acnDlg[  8 ], ;
-         acnDlg[ 9 ], acnDlg[ 10 ], acnDlg[ 11 ], acnDlg[ 12 ] )
+   IF HB_ISARRAY( acnDlg )
+      xTemplate := Wvt__MakeDlgTemplate( hb_ArrayToParams( acnDlg ) )
    ELSE
       xTemplate := acnDlg
    ENDIF
@@ -420,10 +409,7 @@ FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
    IF HB_ISARRAY( acnDlg )
-      xTemplate := Wvt__MakeDlgTemplate( ;
-         acnDlg[ 1 ], acnDlg[  2 ], acnDlg[  3 ], acnDlg[  4 ], ;
-         acnDlg[ 5 ], acnDlg[  6 ], acnDlg[  7 ], acnDlg[  8 ], ;
-         acnDlg[ 9 ], acnDlg[ 10 ], acnDlg[ 11 ], acnDlg[ 12 ] )
+      xTemplate := Wvt__MakeDlgTemplate( hb_ArrayToParams( acnDlg ) )
    ELSE
       xTemplate := acnDlg
    ENDIF
