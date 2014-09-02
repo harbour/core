@@ -145,6 +145,7 @@ DYNAMIC Wvg_MoveWindow
 DYNAMIC Wvg_Object
 DYNAMIC Wvg_Outline
 DYNAMIC Wvg_OutlineEx
+DYNAMIC wvg_n2p
 DYNAMIC Wvg_Picture
 DYNAMIC Wvg_PictureEx
 DYNAMIC Wvg_PointSizeToHeight

@@ -366,7 +366,6 @@ DYNAMIC win_LoadBitmapFile
 DYNAMIC win_LoadResource
 DYNAMIC win_LOWORD
 DYNAMIC win_MAPISendMail
-DYNAMIC win_N2P
 DYNAMIC win_nCmdShow
 DYNAMIC win_OEMToANSI
 DYNAMIC win_oleAuto
@@ -396,7 +395,6 @@ DYNAMIC win_osIsXP
 DYNAMIC win_osNetRegOk
 DYNAMIC win_osNetVRedirOk
 DYNAMIC win_osVersionInfo
-DYNAMIC win_P2N
 DYNAMIC win_PrintDlgDC
 DYNAMIC win_printerExists
 DYNAMIC win_printerGetDefault

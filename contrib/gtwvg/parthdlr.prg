@@ -446,14 +446,14 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE WM_ERASEBKGND
       IF ::objType == objTypeDA .AND. ! Empty( ::hBrushBG )
-         ::handleEvent( HB_GTE_CTLCOLOR, { win_N2P( nwParam ), win_N2P( nlParam ) } )
+         ::handleEvent( HB_GTE_CTLCOLOR, { wvg_n2p( nwParam ), wvg_n2p( nlParam ) } )
       ENDIF
       EXIT
 
    CASE WM_COMMAND
       nCtrlID   := Wvg_LOWORD( nwParam )
       nNotifctn := Wvg_HIWORD( nwParam )
-      hWndCtrl  := win_N2P( nlParam )
+      hWndCtrl  := wvg_n2p( nlParam )
 
       IF Empty( hWndCtrl )                   /* It is menu */
          IF HB_ISOBJECT( ::oMenu )
@@ -478,7 +478,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE WM_NOTIFY
       IF ( nObj := AScan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
-         nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, win_N2P( nlParam ) } )
+         nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, wvg_n2p( nlParam ) } )
          IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_HANDLED
             RETURN 0
          ELSEIF HB_ISLOGICAL( nReturn )
@@ -494,9 +494,9 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
    CASE WM_CTLCOLORDLG
    CASE WM_CTLCOLORSCROLLBAR
    CASE WM_CTLCOLORSTATIC
-      oObj := ::findObjectByHandle( win_N2P( nlParam ) )
+      oObj := ::findObjectByHandle( wvg_n2p( nlParam ) )
       IF HB_ISOBJECT( oObj )
-         nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { win_N2P( nwParam ), win_N2P( nlParam ) } )
+         nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { wvg_n2p( nwParam ), wvg_n2p( nlParam ) } )
          IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_UNHANDLED
             RETURN Wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
          ELSE
@@ -547,11 +547,11 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE WM_VKEYTOITEM
    CASE WM_CHARTOITEM
-      ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, win_N2P( nlParam ) } )
+      ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, wvg_n2p( nlParam ) } )
       EXIT
 
    OTHERWISE
-      IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, win_N2P( nlParam ) } ) == EVENT_HANDLED
+      IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, wvg_n2p( nlParam ) } ) == EVENT_HANDLED
          RETURN 0
       ENDIF
       EXIT

@@ -164,7 +164,7 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
       ::oParent:oMenu := Self
 
-      ::pMenu := win_N2P( ::hMenu )
+      ::pMenu := wvg_n2p( ::hMenu )
    ENDIF
 
    RETURN Self

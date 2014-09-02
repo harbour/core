@@ -165,22 +165,22 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
    CASE WM_CTLCOLOREDIT
       DO CASE
-      CASE Wvg_GetDlgItem( hDlg, ID_MLE ) == win_N2P( lParam )
-         Wvg_SetTextColor( win_N2P( wParam ), WIN_RGB( 0, 0, 255 ) )
-         Wvg_SetBkColor( win_N2P( wParam ), WIN_RGB( 255, 255, 200 ) )
+      CASE Wvg_GetDlgItem( hDlg, ID_MLE ) == wvg_n2p( lParam )
+         Wvg_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 255 ) )
+         Wvg_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 200 ) )
          RETURN 1
-      CASE Wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == win_N2P( lParam )
-         Wvg_SetTextColor( win_N2P( wParam ), WIN_RGB( 255, 255, 255 ) )
-         Wvg_SetBkColor( win_N2P( wParam ), WIN_RGB( 10, 200, 45 ) )
+      CASE Wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == wvg_n2p( lParam )
+         Wvg_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
+         Wvg_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 10, 200, 45 ) )
          RETURN 1
       ENDCASE
       EXIT
 
    CASE WM_CTLCOLORSTATIC
 #if 0
-      IF Wvg_GetDlgItem( hDlg, ID_STA_TEXT ) == win_N2P( lParam )
-         Wvg_SetTextColor( win_N2P( wParam ), WIN_RGB( 255, 255, 255 ) )
-         Wvg_SetBkColor( win_N2P( wParam ), WIN_RGB( 0, 0, 0 ) )
+      IF Wvg_GetDlgItem( hDlg, ID_STA_TEXT ) == wvg_n2p( lParam )
+         Wvg_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
+         Wvg_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 0 ) )
          RETURN 1
       ENDIF
 #endif

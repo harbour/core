@@ -143,12 +143,12 @@ METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oSLE := WvgSLE():new()
       ::oSLE:oParent := Self
       ::oSLE:hWnd := ::aInfo[ 5 ]
-      ::oSLE:pWnd := win_N2P( ::aInfo[ 5 ] )
+      ::oSLE:pWnd := wvg_n2p( ::aInfo[ 5 ] )
 
       ::oListBox := WvgListBox():new()
       ::oListBox:oParent := Self
       ::oListBox:hWnd := ::aInfo[ 6 ]
-      ::oListBox:pWnd := win_N2P( ::aInfo[ 6 ] )
+      ::oListBox:pWnd := wvg_n2p( ::aInfo[ 6 ] )
    ENDIF
 
    RETURN Self

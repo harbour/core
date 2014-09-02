@@ -1201,7 +1201,7 @@ METHOD WvgWindow:createControl()
 
    IF Wvg_IsWindow( hWnd )
       ::hWnd := hWnd
-      ::pWnd := win_N2P( hWnd )
+      ::pWnd := wvg_n2p( hWnd )
       ::sendMessage( WM_SETFONT, Wvg_GetStockObject( DEFAULT_GUI_FONT ), 1 )
       ::hWndTT := Wvg_CreateToolTipWindow( ::hWnd )
    ENDIF

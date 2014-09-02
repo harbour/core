@@ -273,27 +273,32 @@ HB_FUNC( __WAPI_DBGUNSAFEHANDLES )
    on .prg level, so make them visible. */
 static HB_BOOL s_handle_trace( int n )
 {
-   switch( s_iDbgUnsafeMode )
+   if( hb_vmInternalsEnabled() )
    {
-      case 0:
-         return HB_FALSE;
-      case 1:
-      case 2:
+      switch( s_iDbgUnsafeMode )
       {
-         char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-         char file[ HB_PATH_MAX ];
-         HB_USHORT line;
+         case 0:
+            return HB_FALSE;
+         case 1:
+         case 2:
+         {
+            char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+            char file[ HB_PATH_MAX ];
+            HB_USHORT line;
 
-         hb_procinfo( 0, procname, &line, file );
+            hb_procinfo( 0, procname, &line, file );
 
-         HB_TRACE( HB_TR_ALWAYS, ( "%s:%s:%i: __hbwapi_par*_handle(%d)", file, procname, line, n ) );
+            HB_TRACE( HB_TR_ALWAYS, ( "%s:%s:%i: __hbwapi_par*_handle(%d)", file, procname, line, n ) );
 
-         if( s_iDbgUnsafeMode == 2 )
-            hb_errRT_BASE( EG_ARG, 19000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+            if( s_iDbgUnsafeMode == 2 )
+               hb_errRT_BASE( EG_ARG, 19000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         }
       }
-   }
 
-   return HB_TRUE;
+      return HB_TRUE;
+   }
+   else
+      return HB_FALSE;
 }
 #endif
 

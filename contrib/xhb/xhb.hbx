@@ -485,6 +485,7 @@ DYNAMIC __mvSymbolInfo
 DYNAMIC __olePDisp
 DYNAMIC __OutDebug
 DYNAMIC __SendRawMsg
+DYNAMIC __xhb_p2n
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__XHB__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

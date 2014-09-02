@@ -193,7 +193,7 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOleAuto
       IF ::__hObj == NIL
          RETURN Throw( s_oleError( 0, "Invalid argument to constructor!" ) )
       ENDIF
-      ::cClassName := iif( HB_ISSTRING( cClass ), cClass, hb_ntos( win_P2N( ::__hObj ) ) )
+      ::cClassName := iif( HB_ISSTRING( cClass ), cClass, hb_ntos( __xhb_p2n( ::__hObj ) ) )
    ENDIF
 
    RETURN Self
