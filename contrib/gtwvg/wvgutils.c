@@ -55,7 +55,6 @@
  *
  */
 
-#include "hbwapi.h"
 #include "gtwvg.h"
 
 #include <windowsx.h>

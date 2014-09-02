@@ -78,7 +78,6 @@
    #endif
 #endif
 
-#include "hbwapi.h"
 #include "gtwvg.h"
 
 #if defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1552 )

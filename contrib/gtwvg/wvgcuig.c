@@ -67,8 +67,6 @@
  *                             2009-02-28
  */
 
-#include "hbwapi.h"
-#include "hbwinole.h"
 #include "gtwvg.h"
 
 static PHB_GOBJS hb_wvg_ObjectNew( PHB_GTWVT pWVT )

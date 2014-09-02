@@ -62,8 +62,6 @@
  *
  */
 
-#include "hbwapi.h"
-#include "hbwinole.h"
 #include "gtwvg.h"
 
 #ifndef WS_EX_LAYERED
