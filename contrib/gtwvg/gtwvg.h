@@ -63,12 +63,22 @@
    #define WINVER  0x0500
 #endif
 
-#include "hbset.h"
+#include "hbwapi.h"
+#include "hbwinole.h"
+
+#if ! defined( HB_OS_WIN_CE )
+#include <olectl.h>
+#endif
+#include <commctrl.h>
+#include <commdlg.h>
+#include <shellapi.h>
+
 #include "hbgtcore.h"
-#include "hbinit.h"
 #include "hbapicdp.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbset.h"
+#include "hbinit.h"
 #include "inkey.ch"
 #include "error.ch"
 #include "hbvm.h"
@@ -78,16 +88,6 @@
 
 #include "hbgtwvg.ch"
 
-#include <windows.h>
-#include <winuser.h>
-#include <commctrl.h>
-#if ! defined( HB_OS_WIN_CE )
-   #include <ole2.h>
-   #include <olectl.h>
-   #include <ocidl.h>
-#endif
-#include <commdlg.h>
-#include <shellapi.h>
 #if defined( HB_OS_WIN_CE )
    #include "hbwince.h"
 #endif
@@ -599,13 +599,13 @@ HB_EXTERN_END
    #define wvg_arraysethandle( a, i, h )  hb_arraySetNInt( a, i, ( HB_PTRDIFF ) ( h ) )
    #define wvg_vmpushhandle( h )          hb_vmPushNumInt( ( HB_PTRDIFF ) ( h ) )
 #else
-   #define wvg_ishandle( n )              HB_ISPOINTER( n )
-   #define wvg_parhandle( n )             hb_parptr( n )
-   #define wvg_rethandle( h )             hb_retptr( ( void * ) ( h ) )
-   #define wvg_storhandle( h, n )         hb_storptr( ( void * ) ( h ), n )
-   #define wvg_itemputhandle( i, h )      hb_itemPutPtr( i, ( void * ) ( h ) )
-   #define wvg_arraysethandle( a, i, h )  hb_arraySetPtr( a, i, ( void * ) ( h ) )
-   #define wvg_vmpushhandle( h )          hb_vmPushPointer( ( void * ) ( h ) )
+   #define wvg_ishandle( n )              hbwapi_is_HANDLE( n )
+   #define wvg_parhandle( n )             hbwapi_par_raw_HANDLE( n )
+   #define wvg_rethandle( h )             hbwapi_ret_raw_HANDLE( h )
+   #define wvg_storhandle( h, n )         hbwapi_stor_HANDLE( h, n )
+   #define wvg_itemputhandle( i, h )      hbwapi_itemPut_HANDLE( i, h )
+   #define wvg_arraysethandle( a, i, h )  hbwapi_ArraySet_HANDLE( a, i, h )
+   #define wvg_vmpushhandle( h )          hbwapi_vmPush_HANDLE( h )
 #endif
 
 #endif /* HB_WVG_H_ */

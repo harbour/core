@@ -86,7 +86,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    cFileDbf   := hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" )
    cFileIndex := "test.cdx"
 
-   USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
+   USE ( cFileDbf ) NEW SHARED READONLY VIA ( cRDD )
    IF NetErr()
       RETURN
    ENDIF
@@ -473,15 +473,21 @@ STATIC PROCEDURE BrwReposButtons( oCrt )
 STATIC PROCEDURE BrwBuildButtons( oCrt, oBrw )
 
    LOCAL oPB, nOff, nTtl, nG, i
-   LOCAL aPmt := { "Modal Window", "Maximize", "Go Top", "Go Bottom", "Right Most" }
-   LOCAL aAct := { {|| Wvt_Keyboard( K_F3 ) }, ;
+   LOCAL aPmt := { ;
+      "Modal Window", ;
+      "Maximize", ;
+      "Go Top", ;
+      "Go Bottom", ;
+      "Right Most" }
+   LOCAL aAct := { ;
+      {|| Wvt_Keyboard( K_F3 ) }, ;
       {|| Wvt_Keyboard( K_F4 ) }, ;
       {|| oBrw:goTop(), oBrw:forceStable() }, ;
       {|| oBrw:goBottom(), oBrw:forceStable() }, ;
       {|| oBrw:panEnd(), oBrw:forceStable() } }
    LOCAL aW   := { 10, 10, 10, 10, 10 }
 
-   nG := 2
+   nG   := 2
    nTtl := 0
    AEval( aW, {| e | nTtl += e } )
    nTtl += ( Len( aW ) - 1 ) * nG

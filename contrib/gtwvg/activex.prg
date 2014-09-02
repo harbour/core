@@ -107,7 +107,7 @@ CREATE CLASS WvgActiveXControl FROM WvgWindow
    METHOD mouseMove()
    METHOD activate()
 
-   ERROR HANDLER OnError
+   ERROR HANDLER OnError()
 
 ENDCLASS
 

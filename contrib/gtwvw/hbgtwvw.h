@@ -444,13 +444,13 @@ typedef struct
    #define HB_ARRAYSETHANDLE( a, i, h )  hb_arraySetNInt( a, i, ( HB_PTRDIFF ) ( h ) )
    #define HB_VMPUSHHANDLE( h )          hb_vmPushNumInt( ( HB_PTRDIFF ) ( h ) )
 #else
-   #define HB_ISHANDLE( n )              HB_ISPOINTER( n )
-   #define HB_PARHANDLE( n )             hb_parptr( n )
-   #define HB_RETHANDLE( h )             hb_retptr( ( void * ) ( h ) )
-   #define HB_STOREHANDLE( h, n )        hb_storptr( ( void * ) ( h ), n )
-   #define HB_ITEMPUTHANDLE( i, h )      hb_itemPutPtr( i, ( void * ) ( h ) )
-   #define HB_ARRAYSETHANDLE( a, i, h )  hb_arraySetPtr( a, i, ( void * ) ( h ) )
-   #define HB_VMPUSHHANDLE( h )          hb_vmPushPointer( ( void * ) ( h ) )
+   #define HB_ISHANDLE( n )              hbwapi_is_HANDLE( n )
+   #define HB_PARHANDLE( n )             hbwapi_par_raw_HANDLE( n )
+   #define HB_RETHANDLE( h )             hbwapi_ret_raw_HANDLE( h )
+   #define HB_STOREHANDLE( h, n )        hbwapi_stor_HANDLE( h, n )
+   #define HB_ITEMPUTHANDLE( i, h )      hbwapi_itemPut_HANDLE( i, h )
+   #define HB_ARRAYSETHANDLE( a, i, h )  hbwapi_ArraySet_HANDLE( a, i, h )
+   #define HB_VMPUSHHANDLE( h )          hbwapi_vmPush_HANDLE( h )
 #endif
 
 HB_EXTERN_BEGIN

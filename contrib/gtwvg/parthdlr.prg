@@ -347,8 +347,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    CASE nEvent == HB_GTE_GUIPARTS
       /* Eventally every window be checked if it falls within returned rectangle or not
-       * then it will avoid a lot of flickering
-       */
+         then it will avoid a lot of flickering */
       AEval( ::aChildren, {| o | Wvg_InvalidateRect( o:hWnd ) } )
 
    CASE nEvent == HB_GTE_CLOSE
@@ -363,10 +362,8 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
             IF ! Empty( aMenuItem := ::oMenu:FindMenuItemById( xParams[ 2 ] ) )
                IF HB_ISEVALITEM( aMenuItem[ 2 ] )
                   Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
-
                ELSEIF HB_ISEVALITEM( aMenuItem[ 3 ] )
                   Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
-
                ENDIF
             ENDIF
          ENDIF
@@ -455,24 +452,22 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE WM_ERASEBKGND
       IF ::objType == objTypeDA .AND. ! Empty( ::hBrushBG )
-         ::handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
+         ::handleEvent( HB_GTE_CTLCOLOR, { win_N2P( nwParam ), win_N2P( nlParam ) } )
       ENDIF
       EXIT
 
    CASE WM_COMMAND
       nCtrlID   := Wvg_LOWORD( nwParam )
       nNotifctn := Wvg_HIWORD( nwParam )
-      hWndCtrl  := nlParam
+      hWndCtrl  := win_N2P( nlParam )
 
-      IF hWndCtrl == 0                            /* It is menu */
+      IF Empty( hWndCtrl )                   /* It is menu */
          IF HB_ISOBJECT( ::oMenu )
             IF ! Empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
                IF HB_ISEVALITEM( aMenuItem[ 2 ] )
                   Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
-
                ELSEIF HB_ISEVALITEM( aMenuItem[ 3 ] )
                   Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
-
                ENDIF
             ENDIF
          ENDIF
@@ -489,7 +484,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE WM_NOTIFY
       IF ( nObj := AScan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
-         nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
+         nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, win_N2P( nlParam ) } )
          IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_HANDLED
             RETURN 0
          ELSEIF HB_ISLOGICAL( nReturn )
@@ -505,9 +500,9 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
    CASE WM_CTLCOLORDLG
    CASE WM_CTLCOLORSCROLLBAR
    CASE WM_CTLCOLORSTATIC
-      oObj := ::findObjectByHandle( nlParam )
+      oObj := ::findObjectByHandle( win_N2P( nlParam ) )
       IF HB_ISOBJECT( oObj )
-         nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
+         nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { win_N2P( nwParam ), win_N2P( nlParam ) } )
          IF nReturn == EVENT_UNHANDLED
             RETURN Wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
          ELSE
@@ -558,11 +553,11 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE WM_VKEYTOITEM
    CASE WM_CHARTOITEM
-      ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, nlParam } )
+      ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, win_N2P( nlParam ) } )
       EXIT
 
    OTHERWISE
-      IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, nlParam } ) == EVENT_HANDLED
+      IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, win_N2P( nlParam ) } ) == EVENT_HANDLED
          RETURN 0
       ENDIF
       EXIT

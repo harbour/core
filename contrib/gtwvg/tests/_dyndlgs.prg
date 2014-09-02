@@ -29,7 +29,6 @@ FUNCTION DynWinDialog( nInfo )
 
    LOCAL hDlg, aDlg, nStyle, cDlgIcon, lOnTop, hMenu
 
-   LOCAL bDlgProc
    LOCAL nTimerTicks
 
    nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
@@ -79,7 +78,7 @@ FUNCTION DynWinDialog( nInfo )
    aDlg   := Wvt_AddDlgItem( aDlg, 10, 43,  1, 14, {}, ID_RDO_XBASE , "BUTTON" , nStyle, "Xbase++"  )
 
    nStyle := WS_CHILD + WS_VISIBLE + SS_LEFT
-   aDlg   := Wvt_AddDlgItem( aDlg, 12, 41, 1, 17, { 3, 0, 0, 0 }, ID_STA_TEXT, "STATIC" , nStyle, "Scrollable Text"    )
+   aDlg   := Wvt_AddDlgItem( aDlg, 12, 41, 1, 17, { 3, 0, 0, 0 }, ID_STA_TEXT, "STATIC" , nStyle, "Scrollable Text" )
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + ES_AUTOHSCROLL + WS_BORDER
    aDlg   := Wvt_AddDlgItem( aDlg, 13, 41, 1, 17, {}, ID_EDT_TEXT  , "EDIT"   , nStyle, "This is Text Field" )
 
@@ -96,7 +95,6 @@ FUNCTION DynWinDialog( nInfo )
    Wvt_AppendMenu( hMenu, MF_STRING + MF_ENABLED, ID_MNU_CONTROL, "Controls" )
 
    lOnTop      := .F.
-   bDlgProc    := {| ... | DynDlgProc( ... ) }
    cDlgIcon    := "v_notes.ico"
 #if 0
    nTimerTicks := 1000  // 1 second
@@ -106,10 +104,10 @@ FUNCTION DynWinDialog( nInfo )
 
    IF nInfo == 2
       // Modal Dialog
-      hDlg := Wvt_DialogBox( aDlg, bDlgProc, Wvt_GetWindowHandle() )
+      hDlg := Wvt_DialogBox( aDlg, @DynDlgProc(), Wvt_GetWindowHandle() )
    ELSE
       // Modeless Dialog
-      hDlg  := Wvt_CreateDialog( aDlg, lOnTop, bDlgProc, cDlgIcon, nTimerTicks, hMenu )
+      hDlg := Wvt_CreateDialog( aDlg, lOnTop, @DynDlgProc(), cDlgIcon, nTimerTicks, hMenu )
    ENDIF
 
    RETURN hDlg
@@ -167,22 +165,25 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
    CASE WM_CTLCOLOREDIT
       DO CASE
-      CASE Wvg_GetDlgItem( hDlg, ID_MLE ) == lParam
-         Wvg_SetTextColor( wParam, WIN_RGB( 0, 0, 255 ) )
-         Wvg_SetBkColor( wParam, WIN_RGB( 255, 255, 200 ) )
+      CASE Wvg_GetDlgItem( hDlg, ID_MLE ) == win_N2P( lParam )
+         Wvg_SetTextColor( win_N2P( wParam ), WIN_RGB( 0, 0, 255 ) )
+         Wvg_SetBkColor( win_N2P( wParam ), WIN_RGB( 255, 255, 200 ) )
          RETURN 1
-      CASE Wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam
-         Wvg_SetTextColor( wParam, WIN_RGB( 255, 255, 255 ) )
-         Wvg_SetBkColor( wParam, WIN_RGB( 10, 200, 45 ) )
+      CASE Wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == win_N2P( lParam )
+         Wvg_SetTextColor( win_N2P( wParam ), WIN_RGB( 255, 255, 255 ) )
+         Wvg_SetBkColor( win_N2P( wParam ), WIN_RGB( 10, 200, 45 ) )
          RETURN 1
       ENDCASE
       EXIT
 
    CASE WM_CTLCOLORSTATIC
-      IF Wvg_GetDlgItem( hDlg, ID_STA_TEXT ) == lParam
-         Wvg_SetTextColor( wParam, WIN_RGB( 255, 255, 255 ) )
+#if 0
+      IF Wvg_GetDlgItem( hDlg, ID_STA_TEXT ) == win_N2P( lParam )
+         Wvg_SetTextColor( win_N2P( wParam ), WIN_RGB( 255, 255, 255 ) )
+         Wvg_SetBkColor( win_N2P( wParam ), WIN_RGB( 0, 0, 0 ) )
          RETURN 1
       ENDIF
+#endif
       EXIT
 
    CASE WM_INITDIALOG
@@ -286,7 +287,7 @@ FUNCTION DlgSlideShow()
 
    aDlg   := Wvt_MakeDlgTemplate( 0, 0, 20, 40, {}, "Slide Show", nStyle )
 
-   hDlg   := Wvt_CreateDialog( aDlg, .F., {| ... | DlgSlideShowProc( ... ) }, "vr_1.ico", 5000 )
+   hDlg   := Wvt_CreateDialog( aDlg, .F., @DlgSlideShowProc(), "vr_1.ico", 5000 )
 
    RETURN hDlg
 

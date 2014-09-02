@@ -280,9 +280,11 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nH := nRows
    ENDIF
 
+   hb_default( @nStyle, WS_CAPTION + WS_SYSMENU + WS_GROUP + WS_TABSTOP + DS_SETFONT + WS_THICKFRAME + WS_VISIBLE + WS_POPUP + DS_3DLOOK )
+
    AAdd( aDlg[ 1 ], hb_defaultValue( nHelpId, 0 ) )
    AAdd( aDlg[ 1 ], hb_defaultValue( nExStyle, 0 ) )
-   AAdd( aDlg[ 1 ], hb_defaultValue( nStyle, WS_CAPTION + WS_SYSMENU + WS_GROUP + WS_TABSTOP + DS_SETFONT + WS_THICKFRAME + WS_VISIBLE + WS_POPUP + DS_3DLOOK ) )
+   AAdd( aDlg[ 1 ], nStyle )
    AAdd( aDlg[ 1 ], 0 )
    AAdd( aDlg[ 1 ], nX )
    AAdd( aDlg[ 1 ], nY )

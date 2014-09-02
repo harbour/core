@@ -85,7 +85,7 @@ HDC hbwapi_par_HDC( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HDC_funcs, iParam );
 
-   return ph ? ( HDC ) *ph : ( HDC ) hb_parptr( iParam );
+   return ph ? ( HDC ) *ph : ( HDC ) __hbwapi_par_handle( iParam );
 }
 
 static HB_GARBAGE_FUNC( s_gc_HPEN_release )
