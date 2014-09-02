@@ -455,18 +455,16 @@ HB_FUNC( WVG_DESTROYWINDOW )
 {
    hb_retl( DestroyWindow( ( HWND ) wvg_parhandle( 1 ) ) );
 }
-#endif
 
 HB_FUNC( WVG_CLIENTTOSCREEN )
 {
-   POINT    Point;
-   PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
+   POINT Point;
 
-   if( wvt_Array2Point( pArray, &Point ) )
+   if( hbwapi_par_POINT( &Point, 2, HB_FALSE ) )
    {
       if( ClientToScreen( ( HWND ) wvg_parhandle( 1 ), &Point ) )
       {
-         wvt_Point2ArrayEx( &Point, pArray );
+         hbwapi_stor_POINT( &Point, 2 );
          hb_retl( HB_TRUE );
          return;
       }
@@ -477,14 +475,13 @@ HB_FUNC( WVG_CLIENTTOSCREEN )
 
 HB_FUNC( WVG_SCREENTOCLIENT )
 {
-   POINT    Point;
-   PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
+   POINT Point;
 
-   if( wvt_Array2Point( pArray, &Point ) )
+   if( hbwapi_par_POINT( &Point, 2, HB_FALSE ) )
    {
       if( ScreenToClient( ( HWND ) wvg_parhandle( 1 ), &Point ) > 0 )
       {
-         wvt_Point2ArrayEx( &Point, pArray );
+         hbwapi_stor_POINT( &Point, 2 );
          hb_retl( HB_TRUE );
          return;
       }
@@ -492,6 +489,7 @@ HB_FUNC( WVG_SCREENTOCLIENT )
 
    hb_retl( HB_FALSE );
 }
+#endif
 
 #ifdef HB_LEGACY_LEVEL5
 
@@ -727,7 +725,6 @@ HB_FUNC( WVG_DRAWMENUBAR )
 {
    DrawMenuBar( ( HWND ) wvg_parhandle( 1 ) );
 }
-#endif
 
 HB_FUNC( WVG_UPDATEWINDOW )
 {
@@ -738,11 +735,9 @@ HB_FUNC( WVG_SHOWWINDOW )
 {
    hb_retl( ShowWindow( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ) );
 }
+#endif
 
-HB_FUNC( WVG_MAKELPARAM )
-{
-   hb_retnint( MAKELPARAM( hb_parnint( 1 ), hb_parnint( 2 ) ) );
-}
+HB_FUNC_TRANSLATE( WVG_MAKELPARAM, WAPI_MAKELPARAM )
 
 HB_FUNC( WVG_CREATEWINDOWEX )
 {
@@ -1446,6 +1441,8 @@ HB_FUNC_TRANSLATE( WVG_SENDMESSAGETEXT       , WAPI_SENDMESSAGE           )
 HB_FUNC_TRANSLATE( WVG_ISWINDOW              , WAPI_ISWINDOW              )
 HB_FUNC_TRANSLATE( WVG_ENABLEWINDOW          , WAPI_ENABLEWINDOW          )
 HB_FUNC_TRANSLATE( WVG_DESTROYWINDOW         , WAPI_DESTROYWINDOW         )
+HB_FUNC_TRANSLATE( WVG_CLIENTTOSCREEN        , WAPI_CLIENTTOSCREEN        )
+HB_FUNC_TRANSLATE( WVG_SCREENTOCLIENT        , WAPI_SCREENTOCLIENT        )
 HB_FUNC_TRANSLATE( WVG_TREEVIEW_SETTEXTCOLOR , WAPI_TREEVIEW_SETLINECOLOR )
 HB_FUNC_TRANSLATE( WVG_TREEVIEW_SETBKCOLOR   , WAPI_TREEVIEW_SETBKCOLOR   )
 HB_FUNC_TRANSLATE( WVG_TREEVIEW_SETLINECOLOR , WAPI_TREEVIEW_SETLINECOLOR )
@@ -1459,4 +1456,6 @@ HB_FUNC_TRANSLATE( WVG_DESTROYMENU           , WAPI_DESTROYMENU           )
 HB_FUNC_TRANSLATE( WVG_ENABLEMENUITEM        , WAPI_ENABLEMENUITEM        )
 HB_FUNC_TRANSLATE( WVG_CHECKMENUITEM         , WAPI_CHECKMENUITEM         )
 HB_FUNC_TRANSLATE( WVG_DRAWMENUBAR           , WAPI_DRAWMENUBAR           )
+HB_FUNC_TRANSLATE( WVG_UPDATEWINDOW          , WAPI_UPDATEWINDOW          )
+HB_FUNC_TRANSLATE( WVG_SHOWWINDOW            , WAPI_SHOWWINDOW            )
 #endif

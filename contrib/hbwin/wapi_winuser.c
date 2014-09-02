@@ -1003,3 +1003,37 @@ HB_FUNC( WAPI_GETCURSORPOS )
 
    hbwapi_ret_L( bResult );
 }
+
+HB_FUNC( WAPI_UPDATEWINDOW )
+{
+   hbwapi_ret_L( UpdateWindow( hbwapi_par_raw_HWND( 1 ) ) );
+}
+
+HB_FUNC( WAPI_SHOWWINDOW )
+{
+   hbwapi_ret_L( ShowWindow( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ) );
+}
+
+HB_FUNC( WAPI_CLIENTTOSCREEN )
+{
+   POINT xy;
+   hbwapi_ret_L( ClientToScreen( hbwapi_par_raw_HWND( 1 ), hbwapi_par_POINT( &xy, 2, HB_FALSE ) ) );
+   hbwapi_stor_POINT( &xy, 2 );
+}
+
+HB_FUNC( WAPI_SCREENTOCLIENT )
+{
+   POINT xy;
+   hbwapi_ret_L( ScreenToClient( hbwapi_par_raw_HWND( 1 ), hbwapi_par_POINT( &xy, 2, HB_FALSE ) ) );
+   hbwapi_stor_POINT( &xy, 2 );
+}
+
+HB_FUNC( WAPI_MAKELPARAM )
+{
+   hb_retnint( MAKELPARAM( hb_parnint( 1 ), hb_parnint( 2 ) ) );
+}
+
+HB_FUNC( WAPI_MAKEWPARAM )
+{
+   hb_retnint( MAKEWPARAM( hb_parnint( 1 ), hb_parnint( 2 ) ) );
+}

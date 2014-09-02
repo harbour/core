@@ -97,15 +97,18 @@ void hbwapi_stor_POINT( POINT * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   if( pStru && HB_IS_HASH( pStru ) )
+   if( pStru )
    {
-      s_hb_hashSetCItemNL( pStru, "x", p->x );
-      s_hb_hashSetCItemNL( pStru, "y", p->y );
-   }
-   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
-   {
-      hb_arraySetNL( pStru, 1, p->x );
-      hb_arraySetNL( pStru, 2, p->y );
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemNL( pStru, "x", p->x );
+         s_hb_hashSetCItemNL( pStru, "y", p->y );
+      }
+      else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
+      {
+         hb_arraySetNL( pStru, 1, p->x );
+         hb_arraySetNL( pStru, 2, p->y );
+      }
    }
 }
 
@@ -143,19 +146,22 @@ void hbwapi_stor_RECT( RECT * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   if( pStru && HB_IS_HASH( pStru ) )
+   if( pStru )
    {
-      s_hb_hashSetCItemNL( pStru, "left"  , p->left   );
-      s_hb_hashSetCItemNL( pStru, "top"   , p->top    );
-      s_hb_hashSetCItemNL( pStru, "right" , p->right  );
-      s_hb_hashSetCItemNL( pStru, "bottom", p->bottom );
-   }
-   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
-   {
-      hb_arraySetNL( pStru, 1, p->left   );
-      hb_arraySetNL( pStru, 2, p->top    );
-      hb_arraySetNL( pStru, 3, p->right  );
-      hb_arraySetNL( pStru, 4, p->bottom );
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemNL( pStru, "left"  , p->left   );
+         s_hb_hashSetCItemNL( pStru, "top"   , p->top    );
+         s_hb_hashSetCItemNL( pStru, "right" , p->right  );
+         s_hb_hashSetCItemNL( pStru, "bottom", p->bottom );
+      }
+      else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+      {
+         hb_arraySetNL( pStru, 1, p->left   );
+         hb_arraySetNL( pStru, 2, p->top    );
+         hb_arraySetNL( pStru, 3, p->right  );
+         hb_arraySetNL( pStru, 4, p->bottom );
+      }
    }
 }
 

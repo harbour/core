@@ -33,6 +33,7 @@ DYNAMIC wapi_CheckDlgButton
 DYNAMIC wapi_CheckMenuItem
 DYNAMIC wapi_CheckMenuRadioItem
 DYNAMIC wapi_CheckRadioButton
+DYNAMIC wapi_ClientToScreen
 DYNAMIC wapi_ComboBox_AddString
 DYNAMIC wapi_CreateAcceleratorTable
 DYNAMIC wapi_CreateDC
@@ -151,6 +152,8 @@ DYNAMIC wapi_LineTo
 DYNAMIC wapi_LoadImage
 DYNAMIC wapi_LoadLibrary
 DYNAMIC wapi_LoadMenu
+DYNAMIC wapi_MAKELPARAM
+DYNAMIC wapi_MAKEWPARAM
 DYNAMIC wapi_MessageBeep
 DYNAMIC wapi_MessageBox
 DYNAMIC wapi_MoveToEx
@@ -168,6 +171,7 @@ DYNAMIC wapi_RemoveFontResourceEx
 DYNAMIC wapi_RemoveMenu
 DYNAMIC wapi_ResetDC
 DYNAMIC wapi_RoundRect
+DYNAMIC wapi_ScreenToClient
 DYNAMIC wapi_SelectObject
 DYNAMIC wapi_SendDlgItemMessage
 DYNAMIC wapi_SendMessage
@@ -194,6 +198,7 @@ DYNAMIC wapi_SetWindowPos
 DYNAMIC wapi_SetWindowText
 DYNAMIC wapi_ShellExecute
 DYNAMIC wapi_ShowScrollBar
+DYNAMIC wapi_ShowWindow
 DYNAMIC wapi_Sleep
 DYNAMIC wapi_StartDoc
 DYNAMIC wapi_StartPage
@@ -287,6 +292,7 @@ DYNAMIC wapi_TreeView_SetTextColor
 DYNAMIC wapi_TreeView_SetToolTips
 DYNAMIC wapi_TreeView_SetUnicodeFormat
 DYNAMIC wapi_TreeView_SortChildren
+DYNAMIC wapi_UpdateWindow
 DYNAMIC wapi_WaitForMultipleObjects
 DYNAMIC wapi_WaitForMultipleObjectsEx
 DYNAMIC wapi_WaitForSingleObject

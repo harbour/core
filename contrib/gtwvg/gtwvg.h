@@ -588,18 +588,6 @@ extern HB_EXPORT PHB_GTWVT     hb_wvt_gtGetWVT( void );
 
 extern HB_EXPORT void          hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
 
-/* - */
-
-extern HB_BOOL  wvt_Array2Rect( PHB_ITEM aRect, RECT * rc );
-extern PHB_ITEM wvt_Rect2Array( RECT * rc );
-extern HB_BOOL  wvt_Array2Point( PHB_ITEM aPoint, POINT * pt );
-extern PHB_ITEM wvt_Point2Array( POINT * pt );
-extern HB_BOOL  wvt_Array2Size( PHB_ITEM aSize, SIZE * siz );
-extern PHB_ITEM wvt_Size2Array( SIZE * siz );
-extern void     wvt_Rect2ArrayEx( RECT *rc, PHB_ITEM aRect );
-extern void     wvt_Point2ArrayEx( POINT * pt, PHB_ITEM aPoint );
-extern void     wvt_Size2ArrayEx( SIZE * siz, PHB_ITEM aSize );
-
 HB_EXTERN_END
 
 #if defined( __GTWVX_UNSAFE_POINTERS )
