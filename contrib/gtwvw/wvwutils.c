@@ -2090,7 +2090,7 @@ HB_FUNC( WVW_MINIMIZE )
 /* wvw_Maximize( [nWinNum] )
    maximizes the window, if callback function WVW_SIZE exists
 
-   note: in GTWVT Wvt_Maximize() restores the window, not maximizes it
+   note: in GTWVT wvt_Maximize() restores the window, not maximizes it
    see also: wvw_Restore(), wvw_MaxMaxRow(), wvw_MaxMaxCol() */
 HB_FUNC( WVW_MAXIMIZE )
 {
@@ -2107,7 +2107,7 @@ HB_FUNC( WVW_MAXIMIZE )
 }
 
 /* wvw_Restore( [nWinNum] )
-   restores the window (similar with GTWVT's Wvt_Maximize())
+   restores the window (similar with GTWVT's wvt_Maximize())
 
    WARNING: restoring window from its maximized state might need handling
             in callback function WVW_SIZE,

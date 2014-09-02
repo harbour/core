@@ -66,7 +66,7 @@ FUNCTION WvtPaintObjects()
    LOCAL aBlocks := WvtSetPaint()
 
    IF Len( aBlocks ) > 0
-      tlbr_ := Wvt_GetPaintRect()
+      tlbr_ := wvt_GetPaintRect()
 
       FOR EACH blk IN aBlocks
          lExe := .T.
@@ -137,7 +137,7 @@ FUNCTION WvtSetPaint( a_ )
 
    RETURN o
 
-FUNCTION Wvg_SetPaint( cID, nAction, xData, aAttr )
+FUNCTION wvg_SetPaint( cID, nAction, xData, aAttr )
 
    LOCAL n, n1, oldData
 
@@ -158,7 +158,7 @@ FUNCTION Wvg_SetPaint( cID, nAction, xData, aAttr )
 
    RETURN oldData
 
-FUNCTION Wvg_GetPaint( cID )
+FUNCTION wvg_GetPaint( cID )
 
    LOCAL n
 
@@ -168,7 +168,7 @@ FUNCTION Wvg_GetPaint( cID )
 
    RETURN {}
 
-FUNCTION Wvg_DelPaint( cID, nAction )
+FUNCTION wvg_DelPaint( cID, nAction )
 
    LOCAL xData, n1, n
 
@@ -181,7 +181,7 @@ FUNCTION Wvg_DelPaint( cID, nAction )
 
    RETURN xData
 
-FUNCTION Wvg_PurgePaint( cID, lDummy )
+FUNCTION wvg_PurgePaint( cID, lDummy )
 
    LOCAL n, aPaint
 
@@ -196,7 +196,7 @@ FUNCTION Wvg_PurgePaint( cID, lDummy )
 
    RETURN aPaint
 
-PROCEDURE Wvg_InsertPaint( cID, aPaint, lSet )
+PROCEDURE wvg_InsertPaint( cID, aPaint, lSet )
 
    LOCAL n
 
@@ -216,7 +216,7 @@ PROCEDURE Wvg_InsertPaint( cID, aPaint, lSet )
  * Courtesy hbwhat library
  */
 /* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
-FUNCTION Wvt_SetDlgCoMode( nMode )
+FUNCTION wvt_SetDlgCoMode( nMode )
 
    STATIC sMode := 0
 
@@ -229,14 +229,14 @@ FUNCTION Wvt_SetDlgCoMode( nMode )
 
    RETURN nOldMode
 
-FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
+FUNCTION wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
       cFaceName, nPointSize, nWeight, lItalic, nHelpId, nExStyle )
 
    LOCAL aDlg := { {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} }
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
-   LOCAL aFont := Wvt_GetFontInfo()
-   LOCAL nMode := Wvt_SetDlgCoMode()
+   LOCAL aFont := wvt_GetFontInfo()
+   LOCAL nMode := wvt_SetDlgCoMode()
 
    IF nMode == 0
       hb_default( @aOffSet, {} )
@@ -246,16 +246,16 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       hb_default( @aOffSet[ 3 ], 0 )
       hb_default( @aOffSet[ 4 ], 0 )
 
-      nBaseUnits  := Wvg_GetDialogBaseUnits()
-      nBaseUnitsX := Wvg_LOWORD( nBaseUnits )
-      nBaseUnitsY := Wvg_HIWORD( nBaseUnits )
+      nBaseUnits  := wvg_GetDialogBaseUnits()
+      nBaseUnitsX := wvg_LOWORD( nBaseUnits )
+      nBaseUnitsY := wvg_HIWORD( nBaseUnits )
 
       nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
       nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
 
       /* Position it exactly where user has requested */
 
-      aXY := Wvt_ClientToScreen( nTop, nLeft )
+      aXY := wvt_ClientToScreen( nTop, nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
 
@@ -301,13 +301,13 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
 
    RETURN aDlg
 
-FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
+FUNCTION wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       cnId, cnDlgClass, nStyle, cText, nHelpId, nExStyle )
 
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
    LOCAL nBottom, nRight
-   LOCAL nMode := Wvt_SetDlgCoMode()
+   LOCAL nMode := wvt_SetDlgCoMode()
 
    IF nMode == 0
       nBottom := nTop  + nRows - 1
@@ -322,15 +322,15 @@ FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       hb_default( @aOffSet[ 3 ], 0 )
       hb_default( @aOffSet[ 4 ], 0 )
 
-      nBaseUnits  := Wvg_GetDialogBaseUnits()
-      nBaseUnitsX := Wvg_LOWORD( nBaseUnits )
-      nBaseUnitsY := Wvg_HIWORD( nBaseUnits )
+      nBaseUnits  := wvg_GetDialogBaseUnits()
+      nBaseUnitsX := wvg_LOWORD( nBaseUnits )
+      nBaseUnitsY := wvg_HIWORD( nBaseUnits )
 
-      aXY := Wvt_GetXYFromRowCol( nTop, nLeft )
+      aXY := wvt_GetXYFromRowCol( nTop, nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
 
-      aXY := Wvt_GetXYFromRowCol( nBottom + 1, nRight + 1 )
+      aXY := wvt_GetXYFromRowCol( nBottom + 1, nRight + 1 )
       nW  := aXY[ 1 ] + aOffSet[ 4 ] - nX
       nH  := aXY[ 2 ] + aOffSet[ 3 ] - nY
 
@@ -364,7 +364,7 @@ FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
 
    RETURN aDlg
 
-FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
+FUNCTION wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
 
    LOCAL hDlg, xTemplate, nDlgMode
 
@@ -375,30 +375,30 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
    nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
    IF HB_ISARRAY( acnDlg )
-      xTemplate := Wvt__MakeDlgTemplate( hb_ArrayToParams( acnDlg ) )
+      xTemplate := wvt__MakeDlgTemplate( hb_ArrayToParams( acnDlg ) )
    ELSE
       xTemplate := acnDlg
    ENDIF
 
-   hDlg := Wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
+   hDlg := wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
 
    IF ! Empty( hDlg )
       IF ncIcon != NIL
-         Wvt_DlgSetIcon( hDlg, ncIcon )
+         wvt_DlgSetIcon( hDlg, ncIcon )
       ENDIF
 
       IF HB_ISNUMERIC( nTimerTicks )
-         Wvg_SetTimer( hDlg, 1001, nTimerTicks )
+         wvg_SetTimer( hDlg, 1001, nTimerTicks )
       ENDIF
 
       IF hMenu != NIL
-         Wvg_SetMenu( hDlg, hMenu )
+         wvg_SetMenu( hDlg, hMenu )
       ENDIF
    ENDIF
 
    RETURN hDlg
 
-FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
+FUNCTION wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 
    LOCAL nResult, xTemplate, nDlgMode
 
@@ -409,18 +409,18 @@ FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
    IF HB_ISARRAY( acnDlg )
-      xTemplate := Wvt__MakeDlgTemplate( hb_ArrayToParams( acnDlg ) )
+      xTemplate := wvt__MakeDlgTemplate( hb_ArrayToParams( acnDlg ) )
    ELSE
       xTemplate := acnDlg
    ENDIF
 
-   nResult := Wvt_CreateDialogModal( xTemplate, .F., cbDlgProc, nDlgMode, hWndParent )
+   nResult := wvt_CreateDialogModal( xTemplate, .F., cbDlgProc, nDlgMode, hWndParent )
 
-   Wvg_SetFocus( hWndParent )
+   wvg_SetFocus( hWndParent )
 
    RETURN nResult
 
-/* Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
+/* wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
 
 hWnd:     Handle to parent window
 cPath:    (optional) if OFN_ALLOWMULTISELECT the path is stored
@@ -434,7 +434,7 @@ cDefName: DEFAULT file name
 
 Returns:  If OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
 */
-FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
+FUNCTION wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
 
    LOCAL cRet, aTmp, xRet, i
 
@@ -463,7 +463,7 @@ FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
 
    RETURN xRet
 
-/* Wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
+/* wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
 
 hWnd:     Handle to parent window
 cDefName: (optional) Default FileName
@@ -476,7 +476,7 @@ nIndex:   Index position of types
 
 Returns:  FileName.
 */
-FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
+FUNCTION wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
 
    LOCAL cRet, aTmp, xRet, i, cPath
 
@@ -519,7 +519,7 @@ FUNCTION Wvt_GetTitle()
 
 #endif
 
-PROCEDURE Wvt_SetIcon( ncIconRes, cIconName )
+PROCEDURE wvt_SetIcon( ncIconRes, cIconName )
 
    DO CASE
    CASE HB_ISNUMERIC( ncIconRes ) ; hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
@@ -529,7 +529,7 @@ PROCEDURE Wvt_SetIcon( ncIconRes, cIconName )
 
    RETURN
 
-FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
+FUNCTION wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
    RETURN hb_gtInfo( HB_GTI_SETFONT, { ;
       hb_defaultValue( cFontName, hb_gtInfo( HB_GTI_FONTNAME ) ), ;
       hb_defaultValue( nSize, hb_gtInfo( HB_GTI_FONTSIZE ) ), ;
@@ -570,7 +570,7 @@ FUNCTION Wvt_GetRGBColor( nIndex )
 #define YELLOW              WIN_RGB( 0xFF, 0xFF, 0x00 )
 #define WHITE               WIN_RGB( 0xFF, 0xFF, 0xFF )
 
-FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
+FUNCTION wvt_GetRGBColorByString( cColor, nForeBack )
 
    LOCAL s, n, lEnh
    LOCAL nIndex := 0
@@ -613,22 +613,22 @@ FUNCTION Wvt_GetScreenHeight()
 
 #endif
 
-FUNCTION Wvt_GetWindowHandle()
+FUNCTION wvt_GetWindowHandle()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
-FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
+FUNCTION wvt_CenterWindow( lCenter, lRePaint )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { hb_defaultValue( lCenter, .T. ), hb_defaultValue( lRePaint, .F. ) } )
 
-FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
+FUNCTION wvt_WindowCentre( lCenter, lRePaint )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { hb_defaultValue( lCenter, .T. ), hb_defaultValue( lRePaint, .F. ) } )
 
-FUNCTION Wvt_ProcessMessages()
+FUNCTION wvt_ProcessMessages()
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_PROCESSMESSAGES )
 
    RETURN .T.
 
-PROCEDURE Wvt_Keyboard( nKey )
+PROCEDURE wvt_Keyboard( nKey )
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_KEYBOARD, nKey )
 
@@ -644,55 +644,55 @@ FUNCTION Wvt_SetClipboard( cText )
 
 #endif
 
-PROCEDURE Wvt_PasteFromClipboard()
+PROCEDURE wvt_PasteFromClipboard()
 
    LOCAL cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
    LOCAL nLen := Len( cText )
    LOCAL i
 
    FOR i := 1 TO nLen
-      Wvt_Keyboard( hb_keyCode( SubStr( cText, i, 1 ) ) )
+      wvt_Keyboard( hb_keyCode( SubStr( cText, i, 1 ) ) )
    NEXT
 
    RETURN
 
-FUNCTION Wvt_ResetWindow()
+FUNCTION wvt_ResetWindow()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
-FUNCTION Wvt_SetTimer( nTimerID, nMiliSeconds )
+FUNCTION wvt_SetTimer( nTimerID, nMiliSeconds )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
 
-FUNCTION Wvt_KillTimer( nTimerID )
+FUNCTION wvt_KillTimer( nTimerID )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
 
-FUNCTION Wvt_SetOnTop()
+FUNCTION wvt_SetOnTop()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
 
-FUNCTION Wvt_SetAsNormal()
+FUNCTION wvt_SetAsNormal()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
 
-FUNCTION Wvt_Minimize()
+FUNCTION wvt_Minimize()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
 
-FUNCTION Wvt_Maximize()
+FUNCTION wvt_Maximize()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
 
-FUNCTION Wvt_Hide()
+FUNCTION wvt_Hide()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
 
-FUNCTION Wvt_Show()
+FUNCTION wvt_Show()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
 
-FUNCTION Wvt_SetWindowPos( nX, nY )
+FUNCTION wvt_SetWindowPos( nX, nY )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
 
-FUNCTION Wvt_ShowWindow( nState )
+FUNCTION wvt_ShowWindow( nState )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
 
-FUNCTION Wvt_Update()
+FUNCTION wvt_Update()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
 
-FUNCTION Wvt_GetCursorPos()
+FUNCTION wvt_GetCursorPos()
 
    LOCAL xy
 
@@ -700,7 +700,7 @@ FUNCTION Wvt_GetCursorPos()
 
    RETURN xy
 
-FUNCTION Wvg_GetWindowRect( hWnd )
+FUNCTION wvg_GetWindowRect( hWnd )
 
    LOCAL rc
 
@@ -708,7 +708,7 @@ FUNCTION Wvg_GetWindowRect( hWnd )
 
    RETURN rc
 
-FUNCTION Wvg_GetClientRect( hWnd )
+FUNCTION wvg_GetClientRect( hWnd )
 
    LOCAL rc
 
@@ -716,13 +716,13 @@ FUNCTION Wvg_GetClientRect( hWnd )
 
    RETURN rc
 
-FUNCTION Wvg_SetTimer( ... )
+FUNCTION wvg_SetTimer( ... )
    RETURN ! Empty( wapi_SetTimer( ... ) )
 
-FUNCTION Wvg_InvalidateRect( w, r, e )
+FUNCTION wvg_InvalidateRect( w, r, e )
    RETURN wapi_InvalidateRect( w, r, hb_defaultValue( e, .T. ) )
 
-FUNCTION Wvg_GetMessageText( w, p1, p2 )
+FUNCTION wvg_GetMessageText( w, p1, p2 )
 
    LOCAL cText := Replicate( Chr( 0 ), 64000 )
 

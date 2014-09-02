@@ -4694,7 +4694,7 @@ static void hb_gt_wvwInputNotAllowed( int nWin, UINT message, WPARAM wParam, LPA
    - etc.
 
    Higher level functions uses coord as passed by user, eg.:
-   - WVW_NOPENWINDOW()
+   - wvw_nOpenWindow()
    - etc.
 
    Lower level functions (both static and exported ones) use coord relative

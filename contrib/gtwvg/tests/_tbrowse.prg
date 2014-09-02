@@ -35,7 +35,7 @@ PROCEDURE WvtMyBrowse()
          oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS, ;
          oCrt:icon := GetResource( "dia_excl.ico" ), ;
          oCrt:create(), ;
-         Wvt_SetGUI( .T. ), ;
+         wvt_SetGUI( .T. ), ;
          ExecBrowser( oCrt ), ;
          oCrt:destroy();
          } )
@@ -61,7 +61,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    LOCAL nCol       := Col()
    LOCAL cColor     := SetColor( "N/W*,N/GR*,,,N/W*" )
    LOCAL aObjects   := WvtSetObjects( {} )
-   LOCAL hPopup     := Wvt_SetPopupMenu()
+   LOCAL hPopup     := wvt_SetPopupMenu()
    LOCAL oVBar, oHBar, oCom, oTre, oChk, oSLE, oLBx, aNvg, oIdx
 
    STATIC s_nStyle := 0
@@ -118,14 +118,14 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    IF s_nStyle > 5
       s_nStyle := 0
    ENDIF
-   Wvt_SetPen( s_nStyle, 0, WIN_RGB( 210,1210,210 ) )
+   wvt_SetPen( s_nStyle, 0, WIN_RGB( 210,1210,210 ) )
    s_nStyle++
    hb_gtInfo( HB_GTI_WINTITLE, "WVT Gui TBrowse()" )
 
-   AAdd( aBlocks, {|| Wvt_DrawBoxRaised( oBrowse:nTop - 2, oBrowse:nLeft - 2, oBrowse:nBottom + 1, oBrowse:nRight + 2 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
-   AAdd( aBlocks, {|| Wvt_DrawGridHorz( oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, Len( oBrowse:aColumnsSep ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxRaised( oBrowse:nTop - 2, oBrowse:nLeft - 2, oBrowse:nBottom + 1, oBrowse:nRight + 2 ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxRecessed( oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
+   AAdd( aBlocks, {|| wvt_DrawGridHorz( oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
+   AAdd( aBlocks, {|| wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, Len( oBrowse:aColumnsSep ) ) } )
 
    Vou_BrwAddScrollBars( oCrt, oBrowse, @oVBar, @oHBar )
 
@@ -143,7 +143,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    BrwBuildButtons( oCrt, oBrowse )
    oTre := BrwBuildTree( oCrt, oBrowse )
 
-   Wvt_Keyboard( HB_K_RESIZE ) /* Refresh All GUI Controls */
+   wvt_Keyboard( HB_K_RESIZE ) /* Refresh All GUI Controls */
 
    DO WHILE ! lEnd
       DispBegin()
@@ -197,7 +197,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
       ENDCASE
    ENDDO
 
-   Wvt_SetPen( 0 )
+   wvt_SetPen( 0 )
    WvtSetBlocks( aLastPaint )
    WvtSetObjects( aObjects )
 
@@ -209,7 +209,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    IF oCrt == NIL
       RestScreen( 0, 0, MaxRow(), MaxCol(), cScr )
    ENDIF
-   Wvt_SetPopupMenu( hPopup )
+   wvt_SetPopupMenu( hPopup )
    SetGT( 2, pGT )
 
    RETURN
@@ -297,7 +297,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oTree:create( , , { -24, -1 }, { {|| -( MaxRow() - 1 - 24 ) }, -10 } )
    oTree:setColorFG( "W+" )
    oTree:setColorBG( "R*" )
-   oTree:itemSelected := {| oItem | Wvg_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
+   oTree:itemSelected := {| oItem | wvg_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -440,7 +440,7 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    oXbp := WvgCheckBox():new( oCrt )
    oXbp:pointerFocus := .F.
    oXbp:caption      := "ActiveX"
-   oXbp:selected     := {| x, y, o | x := y, lActiveX := o:getData(), Wvt_Keyboard( HB_K_RESIZE ) }
+   oXbp:selected     := {| x, y, o | x := y, lActiveX := o:getData(), wvt_Keyboard( HB_K_RESIZE ) }
    oXbp:selection    := .F.
    oXbp:create( , , { -23, -1 }, { -1, -10 } )
    oXbp:setColorFG( "R+" )
@@ -481,8 +481,8 @@ STATIC PROCEDURE BrwBuildButtons( oCrt, oBrw )
       "Go Bottom", ;
       "Right Most" }
    LOCAL aAct := { ;
-      {|| Wvt_Keyboard( K_F3 ) }, ;
-      {|| Wvt_Keyboard( K_F4 ) }, ;
+      {|| wvt_Keyboard( K_F3 ) }, ;
+      {|| wvt_Keyboard( K_F4 ) }, ;
       {|| oBrw:goTop(), oBrw:forceStable() }, ;
       {|| oBrw:goBottom(), oBrw:forceStable() }, ;
       {|| oBrw:panEnd(), oBrw:forceStable() } }
@@ -783,19 +783,19 @@ STATIC PROCEDURE Vou_ExecTBarAction( oBtn )
 
    SWITCH oBtn:caption
    CASE "New"
-      Wvt_Keyboard( K_DOWN      ); EXIT
+      wvt_Keyboard( K_DOWN      ); EXIT
    CASE "Select"
-      Wvt_Keyboard( K_UP        ); EXIT
+      wvt_Keyboard( K_UP        ); EXIT
    CASE "Calendar"
-      Wvt_Keyboard( K_RIGHT     ); EXIT
+      wvt_Keyboard( K_RIGHT     ); EXIT
    CASE "Tools"
-      Wvt_Keyboard( K_LEFT      ); EXIT
+      wvt_Keyboard( K_LEFT      ); EXIT
    CASE "Index"
-      Wvt_Keyboard( K_PGDN      ); EXIT
+      wvt_Keyboard( K_PGDN      ); EXIT
    CASE "Show"
-      Wvt_Keyboard( K_PGUP      ); EXIT
+      wvt_Keyboard( K_PGUP      ); EXIT
    CASE "Hide"
-      Wvt_Keyboard( K_CTRL_HOME ); EXIT
+      wvt_Keyboard( K_CTRL_HOME ); EXIT
    ENDSWITCH
 
    RETURN

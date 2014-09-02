@@ -320,7 +320,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    CASE nEvent == HB_GTE_SETFOCUS
 #if 0
-      AEval( ::aChildren, {| o | Wvg_InvalidateRect( o:hWnd ) } )
+      AEval( ::aChildren, {| o | wvg_InvalidateRect( o:hWnd ) } )
 #endif
 
       IF HB_ISEVALITEM( ::sl_setInputFocus )
@@ -336,13 +336,13 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    CASE nEvent == HB_GTE_PAINT
 #if 0
-      AEval( ::aChildren, {| o | Wvg_InvalidateRect( o:hWnd ) } )
+      AEval( ::aChildren, {| o | wvg_InvalidateRect( o:hWnd ) } )
 #endif
 
    CASE nEvent == HB_GTE_GUIPARTS
       /* Eventally every window be checked if it falls within returned rectangle or not
          then it will avoid a lot of flickering */
-      AEval( ::aChildren, {| o | Wvg_InvalidateRect( o:hWnd ) } )
+      AEval( ::aChildren, {| o | wvg_InvalidateRect( o:hWnd ) } )
 
    CASE nEvent == HB_GTE_CLOSE
       IF HB_ISEVALITEM( ::close )
@@ -451,8 +451,8 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       EXIT
 
    CASE WM_COMMAND
-      nCtrlID   := Wvg_LOWORD( nwParam )
-      nNotifctn := Wvg_HIWORD( nwParam )
+      nCtrlID   := wvg_LOWORD( nwParam )
+      nNotifctn := wvg_HIWORD( nwParam )
       hWndCtrl  := wvg_n2p( nlParam )
 
       IF Empty( hWndCtrl )                   /* It is menu */
@@ -498,7 +498,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       IF HB_ISOBJECT( oObj )
          nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { wvg_n2p( nwParam ), wvg_n2p( nlParam ) } )
          IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_UNHANDLED
-            RETURN Wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+            RETURN wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
          ELSE
             RETURN nReturn
          ENDIF
@@ -506,11 +506,11 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       EXIT
 
    CASE WM_HSCROLL
-      ::handleEvent( HB_GTE_HSCROLL, { Wvg_LOWORD( nwParam ), Wvg_HIWORD( nwParam ), nlParam } )
+      ::handleEvent( HB_GTE_HSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), nlParam } )
       RETURN 0
 
    CASE WM_VSCROLL
-      IF ::handleEvent( HB_GTE_VSCROLL, { Wvg_LOWORD( nwParam ), Wvg_HIWORD( nwParam ), nlParam } ) == EVENT_HANDLED
+      IF ::handleEvent( HB_GTE_VSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), nlParam } ) == EVENT_HANDLED
          RETURN 0
       ENDIF
       EXIT
@@ -521,7 +521,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
    CASE WM_MOUSEMOVE
       IF ::objType == objTypeScrollBar
          IF ! ::lTracking
-            ::lTracking := Wvg_BeginMouseTracking( ::hWnd )
+            ::lTracking := wvg_BeginMouseTracking( ::hWnd )
          ENDIF
       ENDIF
       EXIT
@@ -558,4 +558,4 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    ENDSWITCH
 
-   RETURN Wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+   RETURN wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )

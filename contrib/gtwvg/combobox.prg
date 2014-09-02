@@ -70,7 +70,7 @@ CREATE CLASS WvgComboBox INHERIT WvgWindow, WvgDataRef
    METHOD destroy()
    METHOD handleEvent( nMessage, aNM )
 
-   METHOD sendCBMessage( nMsg, wParam, lParam ) INLINE Wvg_SendCBMessage( ::pWnd, nMsg, wParam, lParam )
+   METHOD sendCBMessage( nMsg, wParam, lParam ) INLINE wvg_SendCBMessage( ::pWnd, nMsg, wParam, lParam )
    METHOD listBoxFocus( lFocus )
    METHOD listBoxSize()
    METHOD sleSize()
@@ -186,7 +186,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
       CASE aNM[ 1 ] == CBN_SELCHANGE
-         ::nCurSelected := ::editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
+         ::nCurSelected := ::editBuffer := wvg_LBGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
@@ -232,12 +232,12 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 

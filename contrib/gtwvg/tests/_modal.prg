@@ -145,7 +145,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
    DispBegin()
    SetColor( pal_[ DLG_CLR_TEXT ] )
 
-   Wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
+   wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
 
    SetColor( pal_[ DLG_CLR_TEXT ] )
    IF ! Empty( aText_ )
@@ -170,7 +170,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
    SetColor( pal_[ DLG_CLR_HISEL ] )
    @ nBtnRow, nBtnCol_[ sel ] + 2 SAY Left( aButtons_[ sel ], 1 )
 
-   AEval( x_, {| e_ | Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
+   AEval( x_, {| e_ | wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
 
    DispEnd()
 

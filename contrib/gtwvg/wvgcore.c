@@ -644,7 +644,7 @@ static COLORREF hb_wvt_FgColorParam( int iParam )
    return color;
 }
 
-/* Wvt_SetPen( nPenStyle, nWidth, nColor ) */
+/* wvt_SetPen( nPenStyle, nWidth, nColor ) */
 HB_FUNC( WVT_SETPEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -670,7 +670,7 @@ HB_FUNC( WVT_SETPEN )
    hb_retl( HB_FALSE );
 }
 
-/* Wvt_SetBrush( nStyle, nColor, [ nHatch ] ) */
+/* wvt_SetBrush( nStyle, nColor, [ nHatch ] ) */
 HB_FUNC( WVT_SETBRUSH )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -710,7 +710,7 @@ HB_FUNC( WVT_SETBRUSH )
    hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawBoxGet( nRow, nCol, nWidth ) */
+/* wvt_DrawBoxGet( nRow, nCol, nWidth ) */
 HB_FUNC( WVT_DRAWBOXGET )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -728,7 +728,7 @@ HB_FUNC( WVT_DRAWBOXGET )
    }
 }
 
-/* Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff ) */
+/* wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVT_DRAWBOXRAISED )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -748,7 +748,7 @@ HB_FUNC( WVT_DRAWBOXRAISED )
    }
 }
 
-/* Wvt_DrawBoxRecessed( nTop, nLeft, nBottom, nRight, aPxlOff ) */
+/* wvt_DrawBoxRecessed( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVT_DRAWBOXRECESSED )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -768,7 +768,7 @@ HB_FUNC( WVT_DRAWBOXRECESSED )
    }
 }
 
-/* Wvt_DrawBoxGroup( nTop, nLeft, nBottom, nRight, aPxlOff ) */
+/* wvt_DrawBoxGroup( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVT_DRAWBOXGROUP )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -788,7 +788,7 @@ HB_FUNC( WVT_DRAWBOXGROUP )
    }
 }
 
-/* Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff ) */
+/* wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVT_DRAWBOXGROUPRAISED )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -808,7 +808,7 @@ HB_FUNC( WVT_DRAWBOXGROUPRAISED )
    }
 }
 
-/* Wvt_DrawImage( nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, aPxlOff, lDoNotScale ) */
+/* wvt_DrawImage( nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, aPxlOff, lDoNotScale ) */
 HB_FUNC( WVT_DRAWIMAGE )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -850,7 +850,7 @@ HB_FUNC( WVT_DRAWIMAGE )
    hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawLabel( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor, ;
+/* wvt_DrawLabel( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor, ;
                   cFontFace, nFontHeight, nFontWidth, nFontWeight, nQuality, ;
                   nCharSet, lItalics, lUnderline, lStrikeOut, aPxlOff ) */
 HB_FUNC( WVT_DRAWLABEL )
@@ -929,7 +929,7 @@ HB_FUNC( WVT_DRAWLABEL )
    hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawLabelEx( nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont, aPxlOff ) */
+/* wvt_DrawLabelEx( nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont, aPxlOff ) */
 HB_FUNC( WVT_DRAWLABELEX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -979,7 +979,7 @@ HB_FUNC( WVT_DRAWLABELEX )
 }
 
 /*                     1     2       3        4       5         6           7         8            9      10       11
-   Wvt_DrawLabelObj( nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aPxlOff ) */
+   wvt_DrawLabelObj( nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aPxlOff ) */
 HB_FUNC( WVT_DRAWLABELOBJ )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1080,7 +1080,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 }
 
 /*                   1      2       3        4       5       6        7         8
-   Wvt_DrawOutline( nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor, aPxlOff ) */
+   wvt_DrawOutline( nTop, nLeft, nBottom, nRight, nThick, nShape, nRGBColor, aPxlOff ) */
 HB_FUNC( WVT_DRAWOUTLINE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1136,7 +1136,7 @@ HB_FUNC( WVT_DRAWOUTLINE )
    }
 }
 
-/* Wvt_DrawOutlineEx( nTop, nLeft, nBottom, nRight, nSlotPen, aPxlOff ) */
+/* wvt_DrawOutlineEx( nTop, nLeft, nBottom, nRight, nSlotPen, aPxlOff ) */
 HB_FUNC( WVT_DRAWOUTLINEEX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1172,7 +1172,7 @@ HB_FUNC( WVT_DRAWOUTLINEEX )
 }
 
 /*                1      2       3       4        5        6       7       8       9      10        11
-   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aPxlOff ) */
+   wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor, aPxlOff ) */
 HB_FUNC( WVT_DRAWLINE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1369,7 +1369,7 @@ HB_FUNC( WVT_DRAWLINE )
 }
 
 /*                  1      2       3       4        5        6       7       8          9
-   Wvt_DrawLineEx( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen, aPxlOff ) */
+   wvt_DrawLineEx( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen, aPxlOff ) */
 HB_FUNC( WVT_DRAWLINEEX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1569,7 +1569,7 @@ HB_FUNC( WVT_DRAWLINEEX )
 }
 
 /* Inside the area requested!
- * Wvt_DrawEllipse( nTop, nLeft, nBottom, nRight, aPxlOff )
+ * wvt_DrawEllipse( nTop, nLeft, nBottom, nRight, aPxlOff )
  */
 HB_FUNC( WVT_DRAWELLIPSE )
 {
@@ -1595,7 +1595,7 @@ HB_FUNC( WVT_DRAWELLIPSE )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawRectangle( nTop, nLeft, nBottom, nRight, aPxlOff ) */
+/* wvt_DrawRectangle( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVT_DRAWRECTANGLE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1620,7 +1620,7 @@ HB_FUNC( WVT_DRAWRECTANGLE )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawRoundRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRoundHeight, nRoundWidth ) */
+/* wvt_DrawRoundRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRoundHeight, nRoundWidth ) */
 HB_FUNC( WVT_DRAWROUNDRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1648,7 +1648,7 @@ HB_FUNC( WVT_DRAWROUNDRECT )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawFocusRect( nTop, nLeft, nBottom, nRight, aPxlOff ) */
+/* wvt_DrawFocusRect( nTop, nLeft, nBottom, nRight, aPxlOff ) */
 HB_FUNC( WVT_DRAWFOCUSRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1677,7 +1677,7 @@ HB_FUNC( WVT_DRAWFOCUSRECT )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawColorRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRGB ) */
+/* wvt_DrawColorRect( nTop, nLeft, nBottom, nRight, aPxlOff, nRGB ) */
 HB_FUNC( WVT_DRAWCOLORRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1715,7 +1715,7 @@ HB_FUNC( WVT_DRAWCOLORRECT )
 }
 
 /*                     1     2       3      4       5
-   Wvt_DrawGridHorz( nTop, nLeft, nRight, nRows, aPxlOff )
+   wvt_DrawGridHorz( nTop, nLeft, nRight, nRows, aPxlOff )
    aPxlOff[ 2 ] and aPxlOff[ 4 ] used */
 HB_FUNC( WVT_DRAWGRIDHORZ )
 {
@@ -1761,7 +1761,7 @@ HB_FUNC( WVT_DRAWGRIDHORZ )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawGridVert( nTop, nBottom, aCols, nCols, aPxlOff )
+/* wvt_DrawGridVert( nTop, nBottom, aCols, nCols, aPxlOff )
    aPxlOff[ 1 ] and aPxlOff[ 3 ] used */
 HB_FUNC( WVT_DRAWGRIDVERT )
 {
@@ -1811,7 +1811,7 @@ HB_FUNC( WVT_DRAWGRIDVERT )
    hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawButton( nTop, nLeft, nBottom, nRight, cText, cnImage, ;
+/* wvt_DrawButton( nTop, nLeft, nBottom, nRight, cText, cnImage, ;
                   nFormat, nTextColor, nBkColor, nImageAt, aPxlOff ) */
 HB_FUNC( WVT_DRAWBUTTON )
 {
@@ -1967,7 +1967,7 @@ HB_FUNC( WVT_DRAWBUTTON )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawStatusBar( nNumPanels, aTLBRofPanels ) */
+/* wvt_DrawStatusBar( nNumPanels, aTLBRofPanels ) */
 HB_FUNC( WVT_DRAWSTATUSBAR )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2036,7 +2036,7 @@ HB_FUNC( WVT_DRAWSTATUSBAR )
    }
 }
 
-/* Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff, lDoNotScale ) -> lOk
+/* wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff, lDoNotScale ) -> lOk
    nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right } */
 HB_FUNC( WVT_DRAWPICTURE )
 {
@@ -2096,7 +2096,7 @@ HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
 }
 
 /* nState 0 Flat, 1 Raised, 2 Recessed
-   Wvt_DrawToolButtonState( nTop, nLeft, nBottom, nRight, aPxlOff, nState ) */
+   wvt_DrawToolButtonState( nTop, nLeft, nBottom, nRight, aPxlOff, nState ) */
 HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2140,7 +2140,7 @@ HB_FUNC( WVT_DRAWTOOLBUTTONSTATE )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawScrollButton( nTop, nLeft, nBottom, nRight, aPxlOff, nTLBR, lDepressed ) */
+/* wvt_DrawScrollButton( nTop, nLeft, nBottom, nRight, aPxlOff, nTLBR, lDepressed ) */
 HB_FUNC( WVT_DRAWSCROLLBUTTON )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2339,7 +2339,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
    }
 }
 
-/* Wvt_DrawShadedRect( nTop, nLeft, nBottom, nRight, aPxlOff, nHorVert, aRGBb, aRGBe ) */
+/* wvt_DrawShadedRect( nTop, nLeft, nBottom, nRight, aPxlOff, nHorVert, aRGBb, aRGBe ) */
 HB_FUNC( WVT_DRAWSHADEDRECT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2389,7 +2389,7 @@ HB_FUNC( WVT_DRAWSHADEDRECT )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawTextBox( nTop, nLeft, nBottom, nRight, aPxlOff, cText, ;
+/* wvt_DrawTextBox( nTop, nLeft, nBottom, nRight, aPxlOff, cText, ;
                     nAlignHorz, nAlignVert, nTextColor, nBackColor, ;
                     nBackMode, hFont ) */
 HB_FUNC( WVT_DRAWTEXTBOX )
@@ -2464,7 +2464,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    }
 }
 
-/* Wvt_DrawProgressBar( nTop, nLeft, nBottom, nRight, aPxlOff, nPercent, ;
+/* wvt_DrawProgressBar( nTop, nLeft, nBottom, nRight, aPxlOff, nPercent, ;
                         nBackColor, nBarColor, cImage, lVertical, nDirection ) */
 HB_FUNC( WVT_DRAWPROGRESSBAR )
 {
@@ -2561,7 +2561,7 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
    }
 }
 
-/* Wvt_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
+/* wvt_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
                    lStrikeout, nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVT_CREATEFONT )
 {
@@ -2597,7 +2597,7 @@ HB_FUNC( WVT_CREATEFONT )
       HB_RETHANDLE( 0 );
 }
 
-/* Wvt_LoadPicture( nSlot, cFilePic ) */
+/* wvt_LoadPicture( nSlot, cFilePic ) */
 HB_FUNC( WVT_LOADPICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -2639,7 +2639,7 @@ HB_FUNC( WVT_DESTROYPICTURE )
 #endif
 }
 
-/* Wvt_LoadPictureEx( cFilePic ) */
+/* wvt_LoadPictureEx( cFilePic ) */
 HB_FUNC( WVT_LOADPICTUREEX )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -2700,7 +2700,7 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
 #endif
 }
 
-/* Wvt_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
+/* wvt_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
                  nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVT_LOADFONT )
 {
@@ -2746,7 +2746,7 @@ HB_FUNC( WVT_LOADFONT )
    }
 }
 
-/* Wvt_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
+/* wvt_LoadPen( nSlot, nStyle, nWidth, nRGBColor ) */
 HB_FUNC( WVT_LOADPEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2774,7 +2774,7 @@ HB_FUNC( WVT_LOADPEN )
    hb_retl( HB_FALSE );
 }
 
-/* Wvt_SaveScreen( nTop, nLeft, nBottom, nRight ) -> aSrc */
+/* wvt_SaveScreen( nTop, nLeft, nBottom, nRight ) -> aSrc */
 HB_FUNC( WVT_SAVESCREEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2814,7 +2814,7 @@ HB_FUNC( WVT_SAVESCREEN )
    }
 }
 
-/* Wvt_RestScreen( nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP ) */
+/* wvt_RestScreen( nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP ) */
 HB_FUNC( WVT_RESTSCREEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();

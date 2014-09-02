@@ -55,7 +55,7 @@
  *
  */
 
-/* Direct WinApi Functions - Prefixed Wvg_*() */
+/* Direct WinApi Functions - Prefixed wvg_*() */
 
 #if defined( __BORLANDC__ )
    #if ! defined( NONAMELESSUNION )
@@ -468,7 +468,7 @@ HB_FUNC( WVG_STATUSBARREFRESH )
 #endif
 }
 
-/* Wvg_GetNMHDrInfo( nlParam ) */
+/* wvg_GetNMHdrInfo( nlParam ) */
 HB_FUNC( WVG_GETNMHDRINFO )
 {
    LPNMHDR lpnmh = ( LPNMHDR ) HB_PARHANDLE( 1 );
@@ -482,7 +482,7 @@ HB_FUNC( WVG_GETNMHDRINFO )
    hb_itemReturnRelease( pEvParams );
 }
 
-/* Wvg_GetNMMouseInfo( nlParam ) */
+/* wvg_GetNMMouseInfo( nlParam ) */
 HB_FUNC( WVG_GETNMMOUSEINFO )
 {
    LPNMMOUSE nmm = ( LPNMMOUSE ) HB_PARHANDLE( 1 );
@@ -498,7 +498,7 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
    hb_itemReturnRelease( pEvParams );
 }
 
-/* Wvg_GetNMTreeViewInfo( nlParam ) */
+/* wvg_GetNMTreeViewInfo( nlParam ) */
 HB_FUNC( WVG_GETNMTREEVIEWINFO )
 {
    LPNMTREEVIEW pnmtv = ( LPNMTREEVIEW ) HB_PARHANDLE( 1 );
@@ -514,7 +514,7 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
    hb_itemReturnRelease( pEvParams );
 }
 
-/* Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected ) */
+/* wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected ) */
 HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 {
    LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) HB_PARHANDLE( 2 );
@@ -565,7 +565,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
    }
 }
 
-/* Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption ) -> hItem */
+/* wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption ) -> hItem */
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
    TVINSERTSTRUCT tvis;
@@ -705,7 +705,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
 }
 #endif
 
-/* Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, viewScreenFonts, viewPrinterFonts ) */
+/* wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, viewScreenFonts, viewPrinterFonts ) */
 HB_FUNC( WVG_CHOOSEFONT )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -849,7 +849,7 @@ HB_FUNC( WVG_FONTCREATE )
    hb_itemReturnRelease( aFont );
 }
 
-/* Wvg_PointSizeToHeight( hdc, nPointSize ) */
+/* wvg_PointSizeToHeight( hdc, nPointSize ) */
 HB_FUNC( WVG_POINTSIZETOHEIGHT )
 {
    HDC hdc = HB_ISHANDLE( 1 ) ? ( HDC ) HB_PARHANDLE( 1 ) : GetDC( GetDesktopWindow() );
@@ -860,7 +860,7 @@ HB_FUNC( WVG_POINTSIZETOHEIGHT )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
-/* Wvg_HeightToPointSize( hdc, nHeight ) */
+/* wvg_HeightToPointSize( hdc, nHeight ) */
 HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 {
    HDC hdc = HB_ISHANDLE( 1 ) ? ( HDC ) HB_PARHANDLE( 1 ) : GetDC( GetDesktopWindow() );
@@ -883,7 +883,7 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 }
 
 /*                               IL  | DL
-   Wvg_AddToolBarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip ) */
+   wvg_AddToolBarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip ) */
 HB_FUNC( WVG_ADDTOOLBARBUTTON )
 {
    TBBUTTON tbb;
@@ -936,7 +936,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
    }
 }
 
-/* Wvg_RegisterClass( cClassName, */
+/* wvg_RegisterClass_ByName( cClassName ) */
 HB_FUNC( WVG_REGISTERCLASS_BYNAME )
 {
    WNDCLASS wndclass;
@@ -1047,7 +1047,7 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
       hb_itemRelease( pBlock );
 }
 
-/* Wvg_CreateToolTipWindow( hControl ) -> hWndTT */
+/* wvg_CreateToolTipWindow( hControl ) -> hWndTT */
 HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 {
    HWND hwndTip = CreateWindowEx( 0, TOOLTIPS_CLASS, 0,

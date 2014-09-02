@@ -88,7 +88,7 @@ HB_FUNC( WVT_UTILS )
    /* Retained for legacy code. */
 }
 
-/* Wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
+/* wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
  *                                lItalic, lUnderline, lStrikeout )
  * -> { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
  */
@@ -174,7 +174,7 @@ HB_FUNC( WVT_CHOOSEFONT )
    }
 }
 
-/* Wvt_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
+/* wvt_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
 HB_FUNC( WVT_CHOOSECOLOR )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -206,7 +206,7 @@ HB_FUNC( WVT_CHOOSECOLOR )
    hbwapi_ret_COLORREF( -1 );
 }
 
-/* Wvt_MessageBox( cMessage, cTitle, nIcon, hWnd ) */
+/* wvt_MessageBox( cMessage, cTitle, nIcon, hWnd ) */
 HB_FUNC( WVT_MESSAGEBOX )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -242,7 +242,7 @@ HB_FUNC( WVT_SETTOOLTIPACTIVE )
       hb_retl( HB_FALSE );
 }
 
-/* Wvt_SetToolTip( nTop, nLeft, nBottom, nRight, cToolText ) */
+/* wvt_SetToolTip( nTop, nLeft, nBottom, nRight, cToolText ) */
 HB_FUNC( WVT_SETTOOLTIP )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1226,7 +1226,7 @@ HB_FUNC( WVT_CBSETCURSEL )
    hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 ) );
 }
 
-/* Wvt_DlgSetIcon( hDlg, ncIcon ) */
+/* wvt_DlgSetIcon( hDlg, ncIcon ) */
 HB_FUNC( WVT_DLGSETICON )
 {
    HICON hIcon;

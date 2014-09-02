@@ -89,7 +89,7 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::oParent:addChild( Self )
 
-   Wvg_RegisterClass_ByName( ::className() )
+   wvg_RegisterClass_ByName( ::className() )
 
    ::createControl()
 
@@ -110,11 +110,11 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF ! Empty( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
-         Wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
+         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
          RETURN EVENT_HANDLED
       ENDIF
 

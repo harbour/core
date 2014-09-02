@@ -191,12 +191,12 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    CASE nMessage ==  HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 
@@ -266,8 +266,8 @@ METHOD WvgMLE:copyMarked()
    LOCAL n, nB, nE
 
    n := ::sendMessage( EM_GETSEL )
-   nB := Wvg_LOWORD( n )
-   nE := Wvg_HIWORD( n )
+   nB := wvg_LOWORD( n )
+   nE := wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
       hb_gtInfo( HB_GTI_CLIPBOARDDATA, SubStr( ::getData(), nB, n ) )
@@ -280,8 +280,8 @@ METHOD WvgMLE:cutMarked()
    LOCAL n, nB, nE, cText
 
    n := ::sendMessage( EM_GETSEL )
-   nB := Wvg_LOWORD( n )
-   nE := Wvg_HIWORD( n )
+   nB := wvg_LOWORD( n )
+   nE := wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
       cText := ::getData()

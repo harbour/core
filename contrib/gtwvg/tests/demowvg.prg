@@ -48,11 +48,11 @@ EXIT PROCEDURE CleanHandles()
    LOCAL obj
 
    FOR EACH obj IN SetFonts()
-      Wvg_DeleteObject( obj )
+      wvg_DeleteObject( obj )
       obj := NIL
    NEXT
    FOR EACH obj IN SetIcons()
-      Wvg_DeleteObject( obj )
+      wvg_DeleteObject( obj )
       obj := NIL
    NEXT
 
@@ -90,24 +90,24 @@ PROCEDURE Main()
 
    Set( _SET_EVENTMASK, hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) )
 
-   Wvt_SetGUI( .T. )
+   wvt_SetGUI( .T. )
    WvtSetKeys( .T. )
    Popups( 1 )
-   Wvt_SetMouseMove( .T. )
-   Wvt_SetFont( "Courier New", 18, 0, 0 )
+   wvt_SetMouseMove( .T. )
+   wvt_SetFont( "Courier New", 18, 0, 0 )
 
    CLS
-   Wvt_ShowWindow( SW_RESTORE )
+   wvt_ShowWindow( SW_RESTORE )
 
    /* Xbase++ compatible menu protocol */
    oLastMenu := BuildMainMenu()
    oLastMenu:disableItem( 11 )
    oLastMenu:checkItem( 1 )
    oLastMenu:insItem( 11, { "I am inserted later !", ;
-      {|| Wvg_MessageBox( , "Hi " + iif( oLastMenu:isItemChecked( 1 ), "Yes", "No" ) + ;
+      {|| wvg_MessageBox( , "Hi " + iif( oLastMenu:isItemChecked( 1 ), "Yes", "No" ) + ;
       iif( oLastMenu:isItemEnabled( 12 ), " Yes", " No" ) ) } } )
 
-   oLastMenu:setItem( 14, { "This is Set Against Prev Menu", {|| Wvg_MessageBox( , "Hi" ) } } )
+   oLastMenu:setItem( 14, { "This is Set Against Prev Menu", {|| wvg_MessageBox( , "Hi" ) } } )
 
    SetMode( MaxRow() + 1, MaxCol() + 1 )  /* Needed to accomodate attached menu */
 
@@ -115,25 +115,25 @@ PROCEDURE Main()
    SetKey( K_CTRL_V     , {|| __Keyboard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
    SetKey( K_RBUTTONDOWN, {|| __Keyboard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
 
-   hPopup := Wvt_SetPopupMenu()
+   hPopup := wvt_SetPopupMenu()
 
    pGT := SetGT( 1, hb_gtSelect() )
 
    /*  Force mouse pointer right below the Harbour label */
-   Wvt_SetMousePos( 2, 40 )
+   wvt_SetMousePos( 2, 40 )
 
-   AAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
+   AAdd( aBlocks, {|| wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
    AAdd( aBlocks, {|| hb_gtInfo( HB_GTI_WINTITLE, "Vouch" ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLabel( 1, 40, cLabel, 6,, WIN_RGB( 255, 255, 255 ), WIN_RGB( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) } )
-   AAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
-   AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawBoxGroup( 5, 6, 19, 44 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawImage( 8, 62, 12, 69, IMAGE_VOUCH, , .T. ) } )
-   AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 2, 0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1, 41, MaxRow(), 41, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
-   AAdd( aBlocks, {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   AAdd( aBlocks, {|| wvt_DrawLabel( 1, 40, cLabel, 6,, WIN_RGB( 255, 255, 255 ), WIN_RGB( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxGroup( 15, 59, 18, 72 ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxGroup( 5, 6, 19, 44 ) } )
+   AAdd( aBlocks, {|| wvt_DrawImage( 8, 62, 12, 69, IMAGE_VOUCH, , .T. ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxRecessed( 7, 48, 13, 55 ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( MaxRow() - 2, 0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( MaxRow() - 1, 41, MaxRow(), 41, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| AEval( GetList, {| oGet | wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    AAdd( aBlocks, {|| Wvt_Mouse( -1000001 ) } )
 
@@ -171,7 +171,7 @@ PROCEDURE Main()
    SetColor( clr )
    RestScreen( 0, 0, MaxRow(), MaxCol(), scr )
    WvtSetKeys( .F. )
-   Wvt_SetPopupMenu( hPopup )
+   wvt_SetPopupMenu( hPopup )
 
    Popups( 1, .T. )
    SetGT( 1, pGT )
@@ -228,8 +228,8 @@ STATIC PROCEDURE WvtNextGetsConsole()
 PROCEDURE WvtNextGets()  /* must be a public function */
 
    IF hb_mtvm()
-      hb_threadStart( {|| hb_gtReload( "WVG" ), Wvt_SetFont( "Terminal", 20 ), ;
-         hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
+      hb_threadStart( {|| hb_gtReload( "WVG" ), wvt_SetFont( "Terminal", 20 ), ;
+         hb_clear(), wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
    ELSE
       WvtNextGets_X()
    ENDIF
@@ -256,7 +256,7 @@ STATIC PROCEDURE WvtNextGets_X()
    LOCAL nRow       := Row()
    LOCAL nCol       := Col()
    LOCAL scr        := SaveScreen( 0, 0, MaxRow(), MaxCol() )
-   LOCAL wvtScr     := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
+   LOCAL wvtScr     := wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
 
    // Change the values of pallatte arbitrarily though yu can fine tune
    // these values with realistic values.
@@ -265,21 +265,21 @@ STATIC PROCEDURE WvtNextGets_X()
    hb_gtInfo( HB_GTI_PALETTE, aNewPalette )
 
    AAdd( aBlocks, {|| hb_gtInfo( HB_GTI_WINTITLE, "Wvt Gets 2nd Window with Different Palette" ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1, 0, MaxRow() - 1, MaxCol() ) } )
-   AAdd( aBlocks, {|| Wvt_SetBrush( 0, WIN_RGB( 32, 255, 100 ) )    } )
-   AAdd( aBlocks, {|| Wvt_DrawEllipse( 6, 50, 10, 58 )           } )
-   AAdd( aBlocks, {|| Wvt_SetBrush( 2, WIN_RGB( 255, 255, 100 ), 1 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawRectangle( 11, 50, 13, 58 )     } )
-   AAdd( aBlocks, {|| Wvt_DrawBoxGroupRaised( 5, 6, 19, 72 )  } )
-   AAdd( aBlocks, {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( MaxRow() - 1, 0, MaxRow() - 1, MaxCol() ) } )
+   AAdd( aBlocks, {|| wvt_SetBrush( 0, WIN_RGB( 32, 255, 100 ) )    } )
+   AAdd( aBlocks, {|| wvt_DrawEllipse( 6, 50, 10, 58 )           } )
+   AAdd( aBlocks, {|| wvt_SetBrush( 2, WIN_RGB( 255, 255, 100 ), 1 ) } )
+   AAdd( aBlocks, {|| wvt_DrawRectangle( 11, 50, 13, 58 )     } )
+   AAdd( aBlocks, {|| wvt_DrawBoxGroupRaised( 5, 6, 19, 72 )  } )
+   AAdd( aBlocks, {|| AEval( GetList, {| oGet | wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21,  6, 22,  9, "New", "vouch1.bmp" )                             } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 11, 22, 14, "Browse", "vouch1.bmp", 1, WIN_RGB( 255, 255, 255 ) )      } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 16, 22, 19, , "vouch1.bmp" )                                    } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 21, 22, 24, "Data",, 0, WIN_RGB( 100, 22, 241 ), WIN_RGB( 198, 198, 198 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 26, 22, 29, "Flat", IMAGE_VR, 2 )                                 } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 31, 22, 34, "Outline", IMAGE_VR, 3 )                              } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 22, 36, 22, 41, "Data",, 0, WIN_RGB( 100, 22, 241 ), WIN_RGB( 198, 198, 198 ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawButton( 21,  6, 22,  9, "New", "vouch1.bmp" )                             } )
+   AAdd( aBlocks, {|| wvt_DrawButton( 21, 11, 22, 14, "Browse", "vouch1.bmp", 1, WIN_RGB( 255, 255, 255 ) )      } )
+   AAdd( aBlocks, {|| wvt_DrawButton( 21, 16, 22, 19, , "vouch1.bmp" )                                    } )
+   AAdd( aBlocks, {|| wvt_DrawButton( 21, 21, 22, 24, "Data",, 0, WIN_RGB( 100, 22, 241 ), WIN_RGB( 198, 198, 198 ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawButton( 21, 26, 22, 29, "Flat", IMAGE_VR, 2 )                                 } )
+   AAdd( aBlocks, {|| wvt_DrawButton( 21, 31, 22, 34, "Outline", IMAGE_VR, 3 )                              } )
+   AAdd( aBlocks, {|| wvt_DrawButton( 22, 36, 22, 41, "Data",, 0, WIN_RGB( 100, 22, 241 ), WIN_RGB( 198, 198, 198 ) ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
@@ -309,7 +309,7 @@ STATIC PROCEDURE WvtNextGets_X()
    SetColor( clr )
 
    RestScreen( 0, 0, MaxRow(), MaxCol(), scr )
-   Wvt_RestScreen( wvtScr )
+   wvt_RestScreen( wvtScr )
    SetPos( nRow, nCol )
 
    RETURN
@@ -317,42 +317,42 @@ STATIC PROCEDURE WvtNextGets_X()
 PROCEDURE WvtPartialScreen()  /* must be a public function */
 
    LOCAL scr        := SaveScreen( 7, 20, 15, 60 )
-   LOCAL wvtScr     := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
+   LOCAL wvtScr     := wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL wvtScr1
    LOCAL aLastPaint
-   LOCAL hPopup     := Wvt_SetPopupMenu()
+   LOCAL hPopup     := wvt_SetPopupMenu()
 
    aLastPaint := WvtSetBlocks( {} )
 
    hb_DispBox( 7, 20, 15, 60, "         ", "W/GR*" )
-   @ 10, 25 SAY "Wvt_SaveScreen()" COLOR "N/GR*"
-   @ 11, 25 SAY "Wvt_RestScreen()" COLOR "N/GR*"
+   @ 10, 25 SAY "wvt_SaveScreen()" COLOR "N/GR*"
+   @ 11, 25 SAY "wvt_RestScreen()" COLOR "N/GR*"
    @ 13, 25 SAY "Press Esc "       COLOR "N/GR*"
-   Wvt_DrawBoxRecessed( 8, 22, 14, 58 )
+   wvt_DrawBoxRecessed( 8, 22, 14, 58 )
 
-   wvtScr1 := Wvt_SaveScreen( 7, 20, 15, 60 )
+   wvtScr1 := wvt_SaveScreen( 7, 20, 15, 60 )
 
    DO WHILE Inkey( 0 ) != K_ESC
    ENDDO
 
    hb_DispBox( 7, 20, 15, 60, "         ", "W/B*" )
-   @ 10, 25 SAY "Wvt_SaveScreen()" COLOR "N/B*"
-   @ 11, 25 SAY "Wvt_RestScreen()" COLOR "N/B*"
+   @ 10, 25 SAY "wvt_SaveScreen()" COLOR "N/B*"
+   @ 11, 25 SAY "wvt_RestScreen()" COLOR "N/B*"
    @ 13, 25 SAY "Press Esc "       COLOR "N/B*"
-   Wvt_DrawBoxRecessed( 8, 22, 14, 58 )
+   wvt_DrawBoxRecessed( 8, 22, 14, 58 )
 
    DO WHILE Inkey( 0 ) != K_ESC
    ENDDO
 
-   Wvt_RestScreen( 7, 20, 15, 60, wvtScr1 )
+   wvt_RestScreen( 7, 20, 15, 60, wvtScr1 )
 
    DO WHILE Inkey( 0 ) != K_ESC
    ENDDO
 
    RestScreen( 7, 20, 15, 60, scr )
-   Wvt_RestScreen( 0, 0, MaxRow(), MaxCol(), wvtScr )
+   wvt_RestScreen( 0, 0, MaxRow(), MaxCol(), wvtScr )
    WvtSetBlocks( aLastPaint )
-   Wvt_SetPopupMenu( hPopup )
+   wvt_SetPopupMenu( hPopup )
 
    RETURN
 
@@ -364,16 +364,16 @@ PROCEDURE WvtLines()  /* must be a public function */
    LOCAL nCols      := MaxCol()
    LOCAL aLastPaint := WvtSetBlocks( {} )
    LOCAL aObjects   := WvtSetObjects( {} )
-   LOCAL hPopup     := Wvt_SetPopupMenu()
+   LOCAL hPopup     := wvt_SetPopupMenu()
    LOCAL aBlocks    := {}
 
    CLS
 
-   AAdd( aBlocks, {|| Wvt_DrawLine( 0, 0, 0, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 1, 0, 1, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_TOP )    } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 2, 0, 2, nCols, WVT_LINE_HORZ, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_SOLID, 4, WIN_RGB( 255, 255, 255 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 3, 0, 3, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER, WVT_LINE_DASH, 0, WIN_RGB( 255, 0, 0 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 4, 0, 4, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 0, 0, 0, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 1, 0, 1, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_TOP )    } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 2, 0, 2, nCols, WVT_LINE_HORZ, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_SOLID, 4, WIN_RGB( 255, 255, 255 ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 3, 0, 3, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER, WVT_LINE_DASH, 0, WIN_RGB( 255, 0, 0 ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 4, 0, 4, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
 
    @ 0,  1 SAY "Center Raised"
    @ 1, 11 SAY "Top Recessed"
@@ -384,14 +384,14 @@ PROCEDURE WvtLines()  /* must be a public function */
 
    @ nRows, 0 SAY PadC( "Press ESC to Quit", nCols + 1 ) COLOR "GR+/W"
 
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 5, nRows - 2, 5, WVT_LINE_VERT, WVT_LINE_RAISED, WVT_LINE_CENTER ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 6, nRows - 2, 6, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 7, nRows - 2, 7, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_LEFT   ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 8, nRows - 2, 8, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 9, nRows - 2, 9, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_RIGHT  ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 10, nRows - 2, 10, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DOT,     0, WIN_RGB( 0, 0, 255 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 11, nRows - 2, 11, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASH,    0, WIN_RGB( 255, 0, 0 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 12, nRows - 2, 12, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASHDOT, 0, WIN_RGB( 0, 255, 0 ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 11, 5, nRows - 2, 5, WVT_LINE_VERT, WVT_LINE_RAISED, WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 11, 6, nRows - 2, 6, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 11, 7, nRows - 2, 7, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_LEFT   ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 11, 8, nRows - 2, 8, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 11, 9, nRows - 2, 9, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_RIGHT  ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 11, 10, nRows - 2, 10, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DOT,     0, WIN_RGB( 0, 0, 255 ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 11, 11, nRows - 2, 11, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASH,    0, WIN_RGB( 255, 0, 0 ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawLine( 11, 12, nRows - 2, 12, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASHDOT, 0, WIN_RGB( 0, 255, 0 ) ) } )
 
    WvtSetBlocks( aBlocks )
 
@@ -409,7 +409,7 @@ PROCEDURE WvtLines()  /* must be a public function */
 
    WvtSetBlocks( aLastPaint )
    WvtSetObjects( aObjects )
-   Wvt_SetPopupMenu( hPopup )
+   wvt_SetPopupMenu( hPopup )
 
    RestScreen( 0, 0, MaxRow(), MaxCol(), scr )
 
@@ -451,9 +451,9 @@ STATIC FUNCTION BuildMainMenu()
 
    oMenu := WvgMenu():new( g_oMenuBar, , .T. ):create()
    oMenu:Caption := "Common Dialogs"
-   oMenu:AddItem( "Fonts"                       , {|| Wvt_ChooseFont()  } )
+   oMenu:AddItem( "Fonts"                       , {|| wvt_ChooseFont()  } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Colors"                      , {|| Wvt_ChooseColor() } )
+   oMenu:AddItem( "Colors"                      , {|| wvt_ChooseColor() } )
    g_oMenuBar:addItem( { oMenu, "Common Dialogs" } )
 
    oMenu := WvgMenu():new( g_oMenuBar, , .T. ):create()
@@ -461,7 +461,7 @@ STATIC FUNCTION BuildMainMenu()
    oMenu:AddItem( "Expand"                      , {|| WvtWindowExpand(  1 ) } )
    oMenu:AddItem( "Shrink"                      , {|| WvtWindowExpand( -1 ) } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Minimize"                    , {|| Wvt_Minimize()   } )
+   oMenu:AddItem( "Minimize"                    , {|| wvt_Minimize()   } )
    oMenu:AddItem( "Maximize"                    , {|| hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED ) } )
    g_oMenuBar:addItem( { oMenu, "Functionality" } )
 
@@ -538,40 +538,40 @@ STATIC PROCEDURE BuildButtons()
    oXbp:pointerFocus := .F.
    oXbp:caption := "Hi"
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -1 }, { -2, -4 } )
-   oXbp:activate := {|| Wvg_MessageBox( , "Harbour!" ) }
+   oXbp:activate := {|| wvg_MessageBox( , "Harbour!" ) }
    oXbp:toolTipText := "Harbour CUI/GUI Console"
 
    oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_VOUCH
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -6 }, { -2, -4 } )
-   oXbp:activate := {|| Wvt_Keyboard( K_F2 ) }
+   oXbp:activate := {|| wvt_Keyboard( K_F2 ) }
    oXbp:toolTipText := "Open Another GET Screen"
 
    oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_BROWSE
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -11 }, { -2, -4 } )
-   oXbp:activate := {|| Wvt_Keyboard( K_F5 ) }
+   oXbp:activate := {|| wvt_Keyboard( K_F5 ) }
    oXbp:toolTipText := "TBrowse + GUI Controls"
 
    oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_NOTES
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -16 }, { -2, -4 } )
-   oXbp:activate := {|| Wvt_Keyboard( K_F3 ) }
+   oXbp:activate := {|| wvt_Keyboard( K_F3 ) }
 
    oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_TOOLS
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -21 }, { -2, -4 } )
-   oXbp:activate := {|| Wvt_Keyboard( K_F6 ) }
+   oXbp:activate := {|| wvt_Keyboard( K_F6 ) }
 
    oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_HELP
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -26 }, { -2, -4 } )
-   oXbp:activate := {|| Wvt_Keyboard( K_F7 ) }
+   oXbp:activate := {|| wvt_Keyboard( K_F7 ) }
 
    oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
@@ -636,44 +636,44 @@ STATIC PROCEDURE GCUIConsole( oCrt )
    @ 15, nColGet SAY "< Salary >"
 
    @  3, nColGet GET dDate  ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 1 ) ) } ;
-      VALID {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 0, 0 ) ), .T. }
+      WHEN  {|| wvg_SetGObjData( hTxt, 1, FetchText( 1 ) ) } ;
+      VALID {|| wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 0, 0 ) ), .T. }
    @  6, nColGet GET cName  ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 2 ) ) } ;
-      VALID {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 255, 0 ) ), ;
-      Wvg_SetGObjState( hBoxR, 3 ), .T. }
+      WHEN  {|| wvg_SetGObjData( hTxt, 1, FetchText( 2 ) ) } ;
+      VALID {|| wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 255, 0 ) ), ;
+      wvg_SetGObjState( hBoxR, 3 ), .T. }
    @  9, nColGet GET cAdd1  ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 3 ) ) } ;
-      VALID {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 0, 255 ) ), .T. }
+      WHEN  {|| wvg_SetGObjData( hTxt, 1, FetchText( 3 ) ) } ;
+      VALID {|| wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 0, 255 ) ), .T. }
    @ 11, nColGet GET cAdd2  ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 4 ) ) } ;
-      VALID {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 255, 255 ) ), ;
-      Wvg_SetGObjState( hBoxR, 1 ), .T. }
+      WHEN  {|| wvg_SetGObjData( hTxt, 1, FetchText( 4 ) ) } ;
+      VALID {|| wvg_SetGObjData( hTxt, 6, WIN_RGB( 255, 255, 255 ) ), ;
+      wvg_SetGObjState( hBoxR, 1 ), .T. }
    @ 13, nColGet GET cAdd3  ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 198, 21, 140 ) ), .T. }
+      WHEN  {|| wvg_SetGObjData( hTxt, 6, WIN_RGB( 198, 21, 140 ) ), .T. }
    @ 16, nColGet GET nSlry PICTURE "@Z 9999999.99" ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 6, WIN_RGB( 0, 0, 0 ) ), .T. }
+      WHEN  {|| wvg_SetGObjData( hTxt, 6, WIN_RGB( 0, 0, 0 ) ), .T. }
 
    // The only additional calls to render your console GUI
    // The GETLIST  : This can be embedded via  @ GET preprocessor command
-   AEval( GetList, {| oGet | Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
+   AEval( GetList, {| oGet | wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
 
-   hBoxR := Wvg_BoxRaised( 1, 2, 18, 49, { -5, -5, 5, 5 } )
+   hBoxR := wvg_BoxRaised( 1, 2, 18, 49, { -5, -5, 5, 5 } )
 
-   Wvg_BoxRecessed( 1, 2, 18, 49 )
+   wvg_BoxRecessed( 1, 2, 18, 49 )
 
-   // Wvg_BoxGroup( 2, 4, 17, 47 )
+   // wvg_BoxGroup( 2, 4, 17, 47 )
 
-   Wvg_BoxGroupRaised( 2, 4, 17, 47, { -7, -7, 7, 7 } )
+   wvg_BoxGroupRaised( 2, 4, 17, 47, { -7, -7, 7, 7 } )
 
-   hTxt := Wvg_TextBox( 3, 57, 16, 75, { 10, 10, -10, -10 }, "This is first TextBox Line!", 2, 2 )
+   hTxt := wvg_TextBox( 3, 57, 16, 75, { 10, 10, -10, -10 }, "This is first TextBox Line!", 2, 2 )
 
-   Wvg_Image( 15, 36, 16, 42, { -3, -3, 3, 3 }, GOBJ_IMAGESOURCE_FILE, GetResource( "vouch1.bmp" ) )
-   Wvg_BoxRaised( 15, 36, 16, 42, { -2, -2, 2, 2 } )
+   wvg_Image( 15, 36, 16, 42, { -3, -3, 3, 3 }, GOBJ_IMAGESOURCE_FILE, GetResource( "vouch1.bmp" ) )
+   wvg_BoxRaised( 15, 36, 16, 42, { -2, -2, 2, 2 } )
 
-   Wvg_ShadedRect( 1, 54, 18, 79, { -5, -5, 5, 5 }, 0, { 65000, 21000, 7000, 56000 }, { 255, 32255, 16000, 32500 } )
+   wvg_ShadedRect( 1, 54, 18, 79, { -5, -5, 5, 5 }, 0, { 65000, 21000, 7000, 56000 }, { 255, 32255, 16000, 32500 } )
 
-   Wvg_BoxRaised( 1, 54, 18, 79, { -5, -5, 5, 5 } )
+   wvg_BoxRaised( 1, 54, 18, 79, { -5, -5, 5, 5 } )
 
    // Instruct GT to Repaint the Screen with GUI elements.
    oCrt:refresh()

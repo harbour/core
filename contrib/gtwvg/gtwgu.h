@@ -297,7 +297,7 @@ typedef struct
 
    /* To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed> */
 
-   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect() */
+   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by wvt_GetPaintRect() */
    int       rowStop;                       /* Holds nBottom of last WM_PAINT rectangle */
    int       colStart;                      /* Holds nLeft   of last WM_PAINT rectangle */
    int       colStop;                       /* Holds nRight  of last WM_PAINT rectangle */

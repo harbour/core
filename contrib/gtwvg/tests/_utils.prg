@@ -40,11 +40,11 @@ PROCEDURE WvtSetKeys( lSet )
       t_keys_[  3 ] := SetKey( K_F3, {|| WvtWindowExpand( 1 )  } )
       t_keys_[  4 ] := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
       t_keys_[  5 ] := SetKey( K_F5, {|| WvtMyBrowse()         } )
-      t_keys_[  6 ] := SetKey( K_F6, {|| Wvt_Minimize()        } )
+      t_keys_[  6 ] := SetKey( K_F6, {|| wvt_Minimize()        } )
       t_keys_[  7 ] := SetKey( K_F7, {|| WvtPartialScreen()    } )
       t_keys_[  8 ] := SetKey( K_F8, {|| WvtLines()            } )
-      t_keys_[  9 ] := SetKey( K_F9, {|| Wvt_ChooseFont()      } )
-      t_keys_[ 10 ] := SetKey( K_F10, {|| Wvt_ChooseColor()     } )
+      t_keys_[  9 ] := SetKey( K_F9, {|| wvt_ChooseFont()      } )
+      t_keys_[ 10 ] := SetKey( K_F10, {|| wvt_ChooseColor()     } )
    ELSE
       SetKey( K_F2,  t_keys_[ 2 ] )
       SetKey( K_F3,  t_keys_[ 3 ] )
@@ -254,7 +254,7 @@ FUNCTION WvtWindowExpand( nUnits )
 
    s_nUnits += nUnits
 
-   Wvt_SetFont( "Courier New", s_nUnits )
+   wvt_SetFont( "Courier New", s_nUnits )
 
    RETURN .T.
 
@@ -357,12 +357,12 @@ FUNCTION Popups( nID, lDestroy )
    LOCAL nPrompt := MF_ENABLED + MF_STRING
 
    IF nID == NIL
-      Wvt_SetPopupMenu()
+      wvt_SetPopupMenu()
       RETURN NIL
    ENDIF
 
    IF lDestroy != NIL
-      Wvg_DestroyMenu( t_hPop_[ nID ] )
+      wvg_DestroyMenu( t_hPop_[ nID ] )
       RETURN NIL
    ENDIF
 
@@ -372,20 +372,20 @@ FUNCTION Popups( nID, lDestroy )
    CASE 1   //  Data Entry Module
 
       IF hPop == NIL
-         hPop := Wvg_CreatePopupMenu()
-         Wvg_AppendMenu( hPop, nPrompt, K_F2, "Second Get Screen" )
-         Wvg_AppendMenu( hPop, nPrompt, K_F3, "Expand Window"     )
-         Wvg_AppendMenu( hPop, nPrompt, K_F4, "Shrink Window"     )
-         Wvg_AppendMenu( hPop, nPrompt, K_F5, "Browse"            )
-         Wvg_AppendMenu( hPop, nPrompt, K_F6, "Minimize"          )
-         Wvg_AppendMenu( hPop, nPrompt, K_F7, "Partial Screen"    )
-         Wvg_AppendMenu( hPop, nPrompt, K_F8, "Lines"             )
-         Wvg_AppendMenu( hPop, nPrompt, K_F9, "Choose Font"       )
-         Wvg_AppendMenu( hPop, nPrompt, K_F10, "Choose Color"      )
+         hPop := wvg_CreatePopupMenu()
+         wvg_AppendMenu( hPop, nPrompt, K_F2, "Second Get Screen" )
+         wvg_AppendMenu( hPop, nPrompt, K_F3, "Expand Window"     )
+         wvg_AppendMenu( hPop, nPrompt, K_F4, "Shrink Window"     )
+         wvg_AppendMenu( hPop, nPrompt, K_F5, "Browse"            )
+         wvg_AppendMenu( hPop, nPrompt, K_F6, "Minimize"          )
+         wvg_AppendMenu( hPop, nPrompt, K_F7, "Partial Screen"    )
+         wvg_AppendMenu( hPop, nPrompt, K_F8, "Lines"             )
+         wvg_AppendMenu( hPop, nPrompt, K_F9, "Choose Font"       )
+         wvg_AppendMenu( hPop, nPrompt, K_F10, "Choose Color"      )
 
-         Wvg_AppendMenu( hPop, MF_SEPARATOR )
+         wvg_AppendMenu( hPop, MF_SEPARATOR )
 
-         Wvg_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
+         wvg_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
 
       ENDIF
       EXIT
@@ -393,23 +393,23 @@ FUNCTION Popups( nID, lDestroy )
    CASE 2   //  Browser
 
       IF hPop == NIL
-         hPop := Wvg_CreatePopupMenu()
-         Wvg_AppendMenu( hPop, nPrompt, K_DOWN     , "Down"      )
-         Wvg_AppendMenu( hPop, nPrompt, K_UP       , "Up"        )
-         Wvg_AppendMenu( hPop, nPrompt, K_PGDN     , "Page Down" )
-         Wvg_AppendMenu( hPop, nPrompt, K_PGUP     , "Page Up"   )
-         Wvg_AppendMenu( hPop, nPrompt, K_CTRL_PGUP, "Top"       )
-         Wvg_AppendMenu( hPop, nPrompt, K_CTRL_PGDN, "Bottom"    )
+         hPop := wvg_CreatePopupMenu()
+         wvg_AppendMenu( hPop, nPrompt, K_DOWN     , "Down"      )
+         wvg_AppendMenu( hPop, nPrompt, K_UP       , "Up"        )
+         wvg_AppendMenu( hPop, nPrompt, K_PGDN     , "Page Down" )
+         wvg_AppendMenu( hPop, nPrompt, K_PGUP     , "Page Up"   )
+         wvg_AppendMenu( hPop, nPrompt, K_CTRL_PGUP, "Top"       )
+         wvg_AppendMenu( hPop, nPrompt, K_CTRL_PGDN, "Bottom"    )
 
-         Wvg_AppendMenu( hPop, MF_SEPARATOR )
+         wvg_AppendMenu( hPop, MF_SEPARATOR )
 
-         hPop1 := Wvg_CreatePopupMenu()
-         Wvg_AppendMenu( hPop1, nPrompt, K_RIGHT   , "Right"     )
-         Wvg_AppendMenu( hPop1, nPrompt, K_LEFT    , "Left"      )
-         Wvg_AppendMenu( hPop1, nPrompt, K_END     , "End"       )
-         Wvg_AppendMenu( hPop1, nPrompt, K_HOME    , "Home"      )
+         hPop1 := wvg_CreatePopupMenu()
+         wvg_AppendMenu( hPop1, nPrompt, K_RIGHT   , "Right"     )
+         wvg_AppendMenu( hPop1, nPrompt, K_LEFT    , "Left"      )
+         wvg_AppendMenu( hPop1, nPrompt, K_END     , "End"       )
+         wvg_AppendMenu( hPop1, nPrompt, K_HOME    , "Home"      )
 
-         Wvg_AppendMenu( hPop, MF_ENABLED + MF_POPUP, hPop1, "Column Movement" )
+         wvg_AppendMenu( hPop, MF_ENABLED + MF_POPUP, hPop1, "Column Movement" )
 
       ENDIF
       EXIT
@@ -418,11 +418,11 @@ FUNCTION Popups( nID, lDestroy )
 
    t_hPop_[ nID ] := hPop
 
-   RETURN Wvt_SetPopupMenu( t_hPop_[ nID ] )
+   RETURN wvt_SetPopupMenu( t_hPop_[ nID ] )
 
 FUNCTION DispStatusMsg( cMsg )
 
-   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, WIN_RGB( 198, 198, 198 ), "Arial", 18, , 900 )
+   wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, WIN_RGB( 198, 198, 198 ), "Arial", 18, , 900 )
 
    RETURN .T.
 
@@ -441,7 +441,7 @@ PROCEDURE WvtPictures( nSlot, cFilePic )
 
    IF nSlot != NIL .AND. nSlot <= 20 .AND. hb_FileExists( cFilePic )
       IF !( t_pic_[ nSlot ] == cFilePic )
-         IF Wvt_LoadPicture( cFilePic, nSlot )
+         IF wvt_LoadPicture( cFilePic, nSlot )
             t_pic_[ nSlot ] := cFilePic
          ENDIF
       ENDIF
@@ -452,7 +452,7 @@ PROCEDURE WvtPictures( nSlot, cFilePic )
 PROCEDURE WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
    IF t_pic_[ nSlot ] != NIL
-      Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
+      wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
    ENDIF
 
    RETURN

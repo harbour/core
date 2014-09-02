@@ -130,7 +130,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
-      aNMH := Wvg_GetNMMouseInfo( aNM[ 2 ] )
+      aNMH := wvg_GetNMMouseInfo( aNM[ 2 ] )
 
       DO CASE
       CASE aNMH[ NMH_code ] == NM_CLICK
@@ -149,12 +149,12 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 
@@ -187,7 +187,7 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    oPanel:oParent := self
    oPanel:index := ::numItems + 1
 
-   IF Wvg_StatusBarCreatePanel( ::hWnd, hb_defaultValue( nMode, 0 ) )
+   IF wvg_StatusBarCreatePanel( ::hWnd, hb_defaultValue( nMode, 0 ) )
       AAdd( ::aItems, oPanel )
       RETURN oPanel
    ENDIF
@@ -305,7 +305,7 @@ METHOD WvgStatusBarPanel:caption( cCaption )
 
       ::sl_caption := cCaption
 
-      Wvg_StatusBarSetText( ::oParent:hWnd, ::index, cCaption )
+      wvg_StatusBarSetText( ::oParent:hWnd, ::index, cCaption )
    ENDIF
 
    RETURN Self

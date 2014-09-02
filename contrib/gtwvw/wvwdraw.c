@@ -664,7 +664,7 @@ HB_FUNC( WVW_SETBRUSH )
 /* wvw_DrawBoxGet( [nWinNum], nRow, nCol, nWidth, ;
                    aOffset )   <-- additional parm, not exist in GTWVT */
 /* NOTES: unlike GTWVT, GTWVW draw white lines on outer right and outer bottom
-          Besides, scope is the same as WVW_DRAWBOXRECESSED(), ie.
+          Besides, scope is the same as wvw_DrawBoxRecessed(), ie.
           two pixel out of char boundary */
 HB_FUNC( WVW_DRAWBOXGET )
 {
@@ -736,7 +736,7 @@ HB_FUNC( WVW_DRAWBOXGET )
 /* wvw_DrawBoxGet_XP( [nWinNum], nRow, nCol, nWidth, ;
                       aOffset )   <-- additional parm, not exist in GTWVT */
 /* NOTES: unlike GTWVT, GTWVW draw white lines on outer right and outer bottom
-          Besides, scope is the same as WVW_DRAWBOXRECESSED(), ie.
+          Besides, scope is the same as wvw_DrawBoxRecessed(), ie.
           two pixel out of char boundary */
 HB_FUNC( WVW_DRAWBOXGET_XP )  /* Not in WVT */
 {

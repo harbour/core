@@ -115,7 +115,7 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
+   ::editBuffer := wvg_Button_GetCheck( ::hWnd )
 
    RETURN Self
 
@@ -126,7 +126,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
    DO CASE
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
+         ::editBuffer := wvg_Button_GetCheck( ::hWnd )
 
          IF HB_ISEVALITEM( ::sl_lbClick )
             Eval( ::sl_lbClick, ::editBuffer, , self )
@@ -136,12 +136,12 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 
@@ -167,7 +167,7 @@ METHOD Wvg3State:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

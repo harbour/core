@@ -52,7 +52,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    WvtSetKeys( .F. )
    lChkMouse := SetMouseCheck( .F. )
 
-   hPopup := Wvt_SetPopupMenu()
+   hPopup := wvt_SetPopupMenu()
    Popups()
 
    cTxt := "GTWVG is capable of designing virtually any preceivable control "
@@ -72,7 +72,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    AAdd( aImg_, GetResource( "v_notes1.bmp" ) )
    AAdd( aImg_, GetResource( "v_selct1.bmp" ) )
    ? "."
-   Wvt_ShowWindow( 1 )
+   wvt_ShowWindow( 1 )
    nWinRows  := 55
    nWinCols  := 185
    cWinTitle := "WvtGui Dialog One"
@@ -140,7 +140,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
 
    oBtn := WvtPushButton():New( oDlg, 124, 6, 129, 7, 137 )
    oBtn:cCaption  := "Print"
-   oBtn:bOnLeftUp := {|| Wvt_Keyboard( K_CTRL_PRTSCR ) }
+   oBtn:bOnLeftUp := {|| wvt_Keyboard( K_CTRL_PRTSCR ) }
    oBtn:Tooltip   := "Open Printing Dialog for the Browser in Focus"
    oDlg:AddObject( oBtn )
 
@@ -281,7 +281,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oMenu:Caption := "Other Dialogs"
    oMenu:AddItem( "Dialog Two", {|| DialogWvgClassesTwo() } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Exit",       {|| Wvt_Keyboard( K_ESC ) } )
+   oMenu:AddItem( "Exit",       {|| wvt_Keyboard( K_ESC ) } )
    g_oMenuBar:addItem( "", oMenu )
 
    oDlg:oMenu := g_oMenuBar
@@ -319,7 +319,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
 
    WvtSetBlocks( aObjects )
    WvtSetKeys( .T. )
-   Wvt_SetPopupMenu( hPopup )
+   wvt_SetPopupMenu( hPopup )
    SetMouseCheck( lChkMouse )
 
    RETURN
@@ -336,7 +336,7 @@ PROCEDURE DialogWvgClassesTwo()
    oMenu:Caption := "Miscellaneous"
    oMenu:AddItem( "Progressbar", {|| ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 ) } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Exit",        {|| Wvt_Keyboard( K_ESC ) } )
+   oMenu:AddItem( "Exit",        {|| wvt_Keyboard( K_ESC ) } )
    g_oMenuBar:addItem( "", oMenu )
 
    oDlg:oMenu := g_oMenuBar

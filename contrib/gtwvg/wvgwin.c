@@ -55,7 +55,7 @@
  *
  */
 
-/* Direct WinApi Functions - Prefixed Wvg_*() */
+/* Direct WinApi Functions - Prefixed wvg_*() */
 
 #include "gtwvg.h"
 
@@ -89,7 +89,7 @@ HB_FUNC( WVG_SELECTOBJECT )
    HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
 }
 
-/* Wvg_LoadIcon( ncIcon ) */
+/* wvg_LoadIcon( ncIcon ) */
 HB_FUNC( WVG_LOADICON )
 {
    HICON hIcon;
@@ -106,7 +106,7 @@ HB_FUNC( WVG_LOADICON )
    HB_RETHANDLE( hIcon );
 }
 
-/* Wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
+/* wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
  *   nSource == 0 ResourceIdByNumber
  *   nSource == 1 ResourceIdByName
  *   nSource == 2 ImageFromDiskFile
@@ -146,7 +146,7 @@ HB_FUNC( WVG_LOADIMAGE )
    HB_RETHANDLE( hImage );
 }
 
-/* Wvg_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage, lDoNotScale ) in Pixels */
+/* wvg_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage, lDoNotScale ) in Pixels */
 HB_FUNC( WVG_DRAWIMAGE )
 {
    void * hImage;
@@ -453,7 +453,7 @@ HB_FUNC( WVG_BUTTON_GETCHECK )
    hb_retnl( Button_GetCheck( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
 
-/* Wvg_SetDCBrushColor( hDC, nRGB ) */
+/* wvg_SetDCBrushColor( hDC, nRGB ) */
 HB_FUNC( WVG_SETDCBRUSHCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
@@ -463,7 +463,7 @@ HB_FUNC( WVG_SETDCBRUSHCOLOR )
 #endif
 }
 
-/* Wvg_SetDCPenColor( hDC, nRGB ) */
+/* wvg_SetDCPenColor( hDC, nRGB ) */
 HB_FUNC( WVG_SETDCPENCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
@@ -473,19 +473,19 @@ HB_FUNC( WVG_SETDCPENCOLOR )
 #endif
 }
 
-/* Wvg_GetCurrentObject( hDC, nObjType ) */
+/* wvg_GetCurrentObject( hDC, nObjType ) */
 HB_FUNC( WVG_GETCURRENTOBJECT )
 {
    HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
-/* Wvg_GetCurrentBrush( hDC ) */
+/* wvg_GetCurrentBrush( hDC ) */
 HB_FUNC( WVG_GETCURRENTBRUSH )
 {
    HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), OBJ_BRUSH ) );
 }
 
-/* Wvg_GetCurrentFont( hDC ) */
+/* wvg_GetCurrentFont( hDC ) */
 HB_FUNC( WVG_GETCURRENTFONT )
 {
    HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), OBJ_FONT ) );
@@ -533,7 +533,7 @@ HB_FUNC( WVG_FORCEWINDOWTOTOP )
    SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
 }
 
-/* Wvg_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] ) */
+/* wvg_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] ) */
 HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
 {
 #if ( _WIN32_WINNT >= 0x0500 )

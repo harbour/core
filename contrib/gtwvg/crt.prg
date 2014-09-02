@@ -400,8 +400,8 @@ METHOD WvgCrt:enable()
 METHOD WvgCrt:getFrameState()
 
    DO CASE
-   CASE Wvg_IsIconic( ::hWnd ) ; RETURN WVGDLG_FRAMESTAT_MINIMIZED
-   CASE Wvg_IsZoomed( ::hWnd ) ; RETURN WVGDLG_FRAMESTAT_MAXIMIZED
+   CASE wvg_IsIconic( ::hWnd ) ; RETURN WVGDLG_FRAMESTAT_MINIMIZED
+   CASE wvg_IsZoomed( ::hWnd ) ; RETURN WVGDLG_FRAMESTAT_MAXIMIZED
    ENDCASE
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
@@ -422,12 +422,12 @@ METHOD WvgCrt:hide()
    RETURN Self
 
 METHOD WvgCrt:refreshEx()
-   Wvg_InvalidateRect( ::hWnd )
+   wvg_InvalidateRect( ::hWnd )
    RETURN Self
 
 METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
 
-   Wvt_InvalidateRect( ;
+   wvt_InvalidateRect( ;
       hb_defaultValue( nTop, 0 ), ;
       hb_defaultValue( nLeft, 0 ), ;
       hb_defaultValue( nBottom, MaxRow() ), ;
@@ -522,7 +522,7 @@ METHOD WvgCrt:toBack()
    RETURN Self
 
 METHOD WvgCrt:toFront()
-   RETURN Wvg_SetWindowPosToTop( ::hWnd )
+   RETURN wvg_SetWindowPosToTop( ::hWnd )
 
 METHOD WvgCrt:unlockPS()
    RETURN Self

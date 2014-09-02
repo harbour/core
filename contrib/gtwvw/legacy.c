@@ -23,7 +23,7 @@ HB_FUNC_TRANSLATE( LOADIMAGE              , WVW_LOADIMAGE           )
 HB_FUNC_TRANSLATE( OPENBITMAP             , WVW_OPENBITMAP          )
 HB_FUNC_TRANSLATE( OPENIMAGE              , WVW_OPENIMAGE           )
 HB_FUNC_TRANSLATE( REDRAWWINDOW           , WVW_REDRAWWINDOW        )
-HB_FUNC_TRANSLATE( RGB                    , WVW_RGB                 ) /* WVW_RGB() recent compat wrapper, to be deleted */
+HB_FUNC_TRANSLATE( RGB                    , WVW_RGB                 ) /* wvw_RGB() recent compat wrapper, to be deleted */
 HB_FUNC_TRANSLATE( SELECTFONT             , WVW_SELECTFONT          )
 HB_FUNC_TRANSLATE( SENDMESSAGE            , WAPI_SENDMESSAGE        )
 HB_FUNC_TRANSLATE( SETBITMAPRESOURCEID    , WVW_SETBITMAPRESOURCEID )

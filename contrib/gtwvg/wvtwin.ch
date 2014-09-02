@@ -50,7 +50,7 @@
 #xtranslate MAKELONG( <nLow>, <nHigh> )   => ( ( <nLow> ) + ( <nHigh> ) * 0x10000 )
 #xtranslate MAKELPARAM( <nLow>, <nHigh> ) => ( ( <nLow> ) + ( <nHigh> ) * 0x10000 )
 
-/* Wvt_DrawButton() constants */
+/* wvt_DrawButton() constants */
 #define WVT_BTN_FORMAT_RAISED                     0  // Default
 #define WVT_BTN_FORMAT_RECESSED                   1
 #define WVT_BTN_FORMAT_FLAT                       2
@@ -61,7 +61,7 @@
 #define WVT_BTN_IMAGE_BOTTOM                      2
 #define WVT_BTN_IMAGE_RIGHT                       3
 
-/* Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor ) */
+/* wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor ) */
 
 /* nOrient */
 #define WVT_LINE_HORZ                             0  // Default

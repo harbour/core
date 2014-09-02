@@ -114,7 +114,7 @@ METHOD WvgRadioButton:handleEvent( nMessage, aNM )
 
    CASE HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+         ::editBuffer := ( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
 
          IF HB_ISEVALITEM( ::sl_lbClick )
             Eval( ::sl_lbClick, ::editBuffer, , self )
@@ -143,7 +143,7 @@ METHOD WvgRadioButton:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

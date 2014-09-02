@@ -149,7 +149,7 @@ HB_FUNC( WVW_SETMENUKEYEVENT )
       hb_retni( 0 );
 }
 
-/* WVW_MENUITEM_SETBITMAPS( hMenu, nIDEnableItem, nPosition, ncBitmapUnchecked, ncBimapChecked ) */
+/* wvw_MenuItem_SetBitmaps( hMenu, nIDEnableItem, nPosition, ncBitmapUnchecked, ncBimapChecked ) */
 HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 {
    PWVW_GLO wvw = hb_gt_wvw();

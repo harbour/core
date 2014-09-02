@@ -2362,7 +2362,7 @@ static void hb_gt_wvt_ShowWindow( PHB_GTWVT pWVT )
       /*
        * If you wish to show window the way you want, put somewhere in your application
        * ANNOUNCE HB_NOSTARTUPWINDOW
-       * If so compiled, then you need to issue Wvt_ShowWindow( SW_RESTORE )
+       * If so compiled, then you need to issue wvt_ShowWindow( SW_RESTORE )
        * at the point you desire in your code.
        */
       if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )

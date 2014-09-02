@@ -98,11 +98,11 @@ METHOD WvgDataRef:getData()
       EXIT
 
    CASE "EDIT"
-      ::sl_editBuffer := Wvg_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
+      ::sl_editBuffer := wvg_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
       EXIT
 
    CASE "LISTBOX"
-      ::sl_editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
+      ::sl_editBuffer := wvg_LBGetCurSel( ::hWnd ) + 1
 
 #if 0 /* This is contrary the documentation of Xbase++ */
       IF ::oParent:className() == "COMBOBOX"
@@ -111,7 +111,7 @@ METHOD WvgDataRef:getData()
             AAdd( ::sl_editBuffer, ::getItem( i ) )
          NEXT
       ELSE
-         ::sl_editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
+         ::sl_editBuffer := wvg_LBGetCurSel( ::hWnd ) + 1
       ENDIF
 #endif
       EXIT
@@ -143,19 +143,19 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    CASE "LISTBOX"    /* Single Selection */
       IF HB_ISNUMERIC( ::sl_editBuffer )
-         RETURN Wvg_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
+         RETURN wvg_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
       EXIT
 
    CASE "SysTreeView32"
       IF ::sl_editBuffer != NIL .AND. ::sl_editBuffer:hItem != NIL
-         Wvg_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
+         wvg_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
       EXIT
 
    CASE "EDIT"
       IF HB_ISSTRING( ::sl_editBuffer )
-         Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
+         wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
       EXIT
 

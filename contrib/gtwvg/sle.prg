@@ -187,12 +187,12 @@ METHOD WvgSLE:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ENDIF
 
@@ -260,8 +260,8 @@ METHOD WvgSLE:clear()
 METHOD WvgSLE:copyMarked()
 
    LOCAL n := ::sendMessage( EM_GETSEL )
-   LOCAL nB := Wvg_LOWORD( n )
-   LOCAL nE := Wvg_HIWORD( n )
+   LOCAL nB := wvg_LOWORD( n )
+   LOCAL nE := wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
       hb_gtInfo( HB_GTI_CLIPBOARDDATA, SubStr( ::getData(), nB, n ) )
@@ -272,8 +272,8 @@ METHOD WvgSLE:copyMarked()
 METHOD WvgSLE:cutMarked()
 
    LOCAL n := ::sendMessage( EM_GETSEL )
-   LOCAL nB := Wvg_LOWORD( n )
-   LOCAL nE := Wvg_HIWORD( n )
+   LOCAL nB := wvg_LOWORD( n )
+   LOCAL nE := wvg_HIWORD( n )
 
    LOCAL cText
 

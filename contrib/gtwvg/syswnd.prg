@@ -141,7 +141,7 @@ METHOD WvgSysWindow:show()
 
 METHOD WvgSysWindow:SetPos( aPos )
 
-   Wvg_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .F. )
+   wvg_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .F. )
 
    RETURN Self
 
@@ -149,7 +149,7 @@ METHOD WvgSysWindow:currentPos()
 
    LOCAL aRect
 
-   aRect := Wvg_GetWindowRect( ::hWnd )
+   aRect := wvg_GetWindowRect( ::hWnd )
 
    RETURN { aRect[ 1 ], aRect[ 2 ] }
 
@@ -157,7 +157,7 @@ METHOD WvgSysWindow:currentSize()
 
    LOCAL aRect
 
-   aRect := Wvg_GetClientRect( ::hWnd )
+   aRect := wvg_GetClientRect( ::hWnd )
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
@@ -294,43 +294,43 @@ METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
       ::hWnd := hWnd
 
       IF ! Empty( ::title )
-         Wvg_SetWindowText( ::hWnd, ::title )
+         wvg_SetWindowText( ::hWnd, ::title )
       ENDIF
       IF ! ::buttonCancel
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, IDCANCEL ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, IDCANCEL ), .F. )
       ENDIF
       IF ! ::buttonApply
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1026 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1026 ), .F. )
       ENDIF
       IF ! ::buttonHelp
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1038 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1038 ), .F. )
       ENDIF
       IF ! ::strikeOut
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1040 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1040 ), .F. )
       ENDIF
       IF ! ::underscore
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1041 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1041 ), .F. )
       ENDIF
       IF ! ::name
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1136 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1136 ), .F. )
       ENDIF
       IF ! ::style
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1137 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1137 ), .F. )
       ENDIF
       IF ! ::size
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1138 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1138 ), .F. )
       ENDIF
 
       IF ::aPos[ 1 ] > 0 .OR. ::aPos[ 2 ] > 0
-         aRect := Wvg_GetWindowRect( ::hWnd )
-         Wvg_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ], .F. )
+         aRect := wvg_GetWindowRect( ::hWnd )
+         wvg_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ], .F. )
       ENDIF
 
       RETURN 1
 
    CASE nMessage == WM_COMMAND
-      nL := Wvg_LOWORD( nwParam )
-      nH := Wvg_HIWORD( nwParam )
+      nL := wvg_LOWORD( nwParam )
+      nH := wvg_HIWORD( nwParam )
 
       HB_SYMBOL_UNUSED( nH )
 
@@ -367,11 +367,11 @@ METHOD WvgFontDialog:display( nMode )
    IF nMode == 0
       hWnd := ::oParent:hWnd
    ELSE
-      hWnd := Wvg_GetDesktopWindow()
+      hWnd := wvg_GetDesktopWindow()
    ENDIF
 
    ::ok := .F.
-   aInfo := Wvg_ChooseFont( hWnd, {| h, m, w, l | ::wndProc( h, m, w, l ) }, ::familyName, ;
+   aInfo := wvg_ChooseFont( hWnd, {| h, m, w, l | ::wndProc( h, m, w, l ) }, ::familyName, ;
       ::nominalPointSize, ::viewScreenFonts, ::viewPrinterFonts )
    IF ! ::ok
       RETURN NIL
@@ -393,14 +393,14 @@ METHOD WvgFontDialog:GetWvgFont( aFont )
    LOCAL oWvgFont
 
    IF ! HB_ISARRAY( aFont )
-      aFont := Wvg_ChooseFont_GetLogFont( ::hWnd )
+      aFont := wvg_ChooseFont_GetLogFont( ::hWnd )
    ENDIF
 
    oWvgFont := WvgFont():new()
 
    oWvgFont:familyName       := aFont[ 1 ]
    oWvgFont:height           := aFont[ 2 ]
-   oWvgFont:nominalPointSize := Wvg_HeightToPointSize( /* hdc */, oWvgFont:height )
+   oWvgFont:nominalPointSize := wvg_HeightToPointSize( /* hdc */, oWvgFont:height )
    oWvgFont:width            := aFont[ 3 ]
    oWvgFont:bold             := aFont[ 4 ] > 400
    oWvgFont:italic           := aFont[ 5 ]
@@ -493,7 +493,7 @@ METHOD WvgFont:configure( cFontName )
 METHOD WvgFont:destroy()
 
    IF ::hFont != NIL
-      Wvg_DeleteObject( ::hFont )
+      wvg_DeleteObject( ::hFont )
    ENDIF
 
    RETURN Self
@@ -506,12 +506,12 @@ METHOD WvgFont:createFont()
    LOCAL aFont
 
    IF ::hFont != NIL
-      Wvg_DeleteObject( ::hFont )
+      wvg_DeleteObject( ::hFont )
       ::hFont := NIL
    ENDIF
 
    IF ::oPS != NIL
-      ::height := Wvg_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
+      ::height := wvg_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
    ENDIF
 
    ::aFontInfo := Array( 15 )
@@ -531,7 +531,7 @@ METHOD WvgFont:createFont()
    ::aFontInfo[ 13 ] := DEFAULT_QUALITY
    ::aFontInfo[ 14 ] := NIL
 
-   aFont := Wvg_FontCreate( ::aFontInfo )
+   aFont := wvg_FontCreate( ::aFontInfo )
 
    IF Empty( aFont[ 1 ] )
       RETURN NIL

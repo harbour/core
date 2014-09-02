@@ -94,7 +94,7 @@ METHOD WvgBitmap:new()
 METHOD WvgBitmap:create( oPScompat )
 
    IF oPScompat == NIL
-      ::hDCComp := Wvg_GetDC()
+      ::hDCComp := wvg_GetDC()
       ::lDCToDestroy := .T.
    ELSE
       ::hDCComp := oPScompat:hDC
@@ -105,10 +105,10 @@ METHOD WvgBitmap:create( oPScompat )
 METHOD WvgBitmap:destroy()
 
    IF ::hBitmap != NIL
-      Wvg_DeleteObject( ::hBitmap )
+      wvg_DeleteObject( ::hBitmap )
    ENDIF
    IF ::lDCtoDestroy
-      Wvg_ReleaseDC( ::hDCcompat )
+      wvg_ReleaseDC( ::hDCcompat )
    ENDIF
 
    RETURN Self
