@@ -260,6 +260,7 @@ PDEVMODE hbwapi_par_PDEVMODE( int iParam )
 
 void * __hbwapi_par_handle( int n )
 {
+#if ! defined( __HBWIN_NO_UNSAFE_POINTERS )
    if( HB_ISNUM( n ) )
    {
 #if 0
@@ -276,11 +277,13 @@ void * __hbwapi_par_handle( int n )
       return ( void * ) ( HB_PTRDIFF ) hb_parnint( n );
    }
    else
+#endif
       return hb_parptr( n );
 }
 
 void * __hbwapi_parv_handle( int n, int i )
 {
+#if ! defined( __HBWIN_NO_UNSAFE_POINTERS )
    if( HB_ISNUM( n ) )
    {
 #if 0
@@ -297,20 +300,18 @@ void * __hbwapi_parv_handle( int n, int i )
       return ( void * ) ( HB_PTRDIFF ) hb_parvnint( n, i );
    }
    else
+#endif
       return hb_parvptr( n, i );
 }
 
 void * hbwapi_itemGet_HANDLE( PHB_ITEM pItem )
 {
-   if( pItem )
-   {
-      if( HB_IS_NUMERIC( pItem ) )
-         return hb_itemGetPtr( pItem );
-      else
-         return ( void * ) ( HB_PTRDIFF ) hb_itemGetNInt( pItem );
-   }
-
-   return NULL;
+#if ! defined( __HBWIN_NO_UNSAFE_POINTERS )
+   if( pItem && HB_IS_NUMERIC( pItem ) )
+      return ( void * ) ( HB_PTRDIFF ) hb_itemGetNInt( pItem );
+   else
+#endif
+      return hb_itemGetPtr( pItem );
 }
 
 /* pArray must not be NULL */
