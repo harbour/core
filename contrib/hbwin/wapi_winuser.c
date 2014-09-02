@@ -56,13 +56,33 @@
 
 HB_FUNC( WAPI_SETWINDOWPOS )
 {
-   BOOL bResult = SetWindowPos( hbwapi_par_raw_HWND( 1 ),
-                                HB_ISNUM( 2 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parni( 2 ) : hbwapi_par_raw_HWND( 2 ),
-                                hb_parni( 3 ),
-                                hb_parni( 4 ),
-                                hb_parni( 5 ),
-                                hb_parni( 6 ),
-                                ( UINT ) hb_parni( 7 ) );
+   HWND hWndInsertAfter;
+   BOOL bResult;
+
+   if( hbwapi_is_HANDLE( 2 ) )
+      hWndInsertAfter = hbwapi_par_raw_HWND( 2 );
+   else if( HB_ISNUM( 2 ) )
+   {
+      /* Do not delete this, it will be active if
+         numeric pointers are not accepted above */
+      hWndInsertAfter = ( HWND ) ( HB_PTRDIFF ) hb_parni( 2 );
+
+      if( !( hWndInsertAfter == HWND_TOP ||
+             hWndInsertAfter == HWND_BOTTOM ||
+             hWndInsertAfter == HWND_TOPMOST ||
+             hWndInsertAfter == HWND_NOTOPMOST ) )
+         hWndInsertAfter = NULL;
+   }
+   else
+      hWndInsertAfter = NULL;
+
+   bResult = SetWindowPos( hbwapi_par_raw_HWND( 1 ),
+                           hWndInsertAfter,
+                           hb_parni( 3 ),
+                           hb_parni( 4 ),
+                           hb_parni( 5 ),
+                           hb_parni( 6 ),
+                           ( UINT ) hb_parni( 7 ) );
 
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
