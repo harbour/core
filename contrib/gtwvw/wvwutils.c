@@ -2027,7 +2027,7 @@ HB_FUNC( WVW_RESTSCREEN )
       iWidth  = iRight - iLeft + 1;
       iHeight = iBottom - iTop + 1;
 
-      hBmp = ( HBITMAP ) SelectObject( wvw_win->hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 6, 3 ) );
+      hBmp = ( HBITMAP ) SelectObject( wvw_win->hCompDC, ( HBITMAP ) HB_PARVHANDLE( 6, 3 ) );
       if( hBmp )
       {
          if( iWidth == hb_parvni( 6, 1 ) && iHeight == hb_parvni( 6, 2 ) )
@@ -2059,7 +2059,7 @@ HB_FUNC( WVW_RESTSCREEN )
          SelectObject( wvw_win->hCompDC, hBmp );
 
          if( ! hb_parl( 7 ) /* fDoNotDestroyBMP */ )
-            DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 6, 3 ) );
+            DeleteObject( ( HBITMAP ) HB_PARVHANDLE( 6, 3 ) );
       }
 
       hb_retl( fResult );

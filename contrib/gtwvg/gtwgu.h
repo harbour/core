@@ -403,6 +403,7 @@ HB_EXTERN_END
 #if defined( __GTWVX_UNSAFE_POINTERS )
    #define wvg_ishandle( n )              HB_ISNUM( n )
    #define wvg_parhandle( n )             ( ( HB_PTRDIFF ) hb_parnint( n ) )
+   #define HB_PARVHANDLE( n, i )         ( ( HB_PTRDIFF ) hb_parvnint( n, i ) )
    #define wvg_rethandle( h )             hb_retnint( ( HB_PTRDIFF ) h )
    #define wvg_storhandle( h, n )         hb_stornint( ( HB_PTRDIFF ) ( h ), n )
    #define wvg_itemputhandle( i, h )      hb_itemPutNInt( i, ( HB_PTRDIFF ) ( h ) )
@@ -411,6 +412,7 @@ HB_EXTERN_END
 #else
    #define wvg_ishandle( n )              hbwapi_is_HANDLE( n )
    #define wvg_parhandle( n )             hbwapi_par_raw_HANDLE( n )
+   #define HB_PARVHANDLE( n, i )          hbwapi_parv_raw_HANDLE( n, i )
    #define wvg_rethandle( h )             hbwapi_ret_raw_HANDLE( h )
    #define wvg_storhandle( h, n )         hbwapi_stor_HANDLE( h, n )
    #define wvg_itemputhandle( i, h )      hbwapi_itemPut_HANDLE( i, h )

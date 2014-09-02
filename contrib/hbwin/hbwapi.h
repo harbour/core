@@ -55,10 +55,14 @@
 #include <windows.h>
 
 #define __hbwapi_par_handle( n )            ( HB_ISNUM( n ) ? ( ( void * ) ( HB_PTRDIFF ) hb_parnint( n ) ) : hb_parptr( n ) )
+#define __hbwapi_parv_handle( n, i )        ( HB_ISNUM( n ) ? ( ( void * ) ( HB_PTRDIFF ) hb_parvnint( n, i ) ) : hb_parvptr( n, i ) )
+
 #define hbwapi_is_HANDLE( n )               hb_param( n, HB_IT_POINTER | HB_IT_NUMERIC )
 
 #define hbwapi_par_WPARAM( n )              ( ( WPARAM           ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_LPARAM( n )              ( ( LPARAM           ) __hbwapi_par_handle( n ) )
+
+#define hbwapi_parv_raw_HANDLE( n, i )      ( ( HANDLE           ) __hbwapi_parv_handle( n, i ) )
 
 #define hbwapi_par_raw_WNDPROC( n )         ( ( WNDPROC          ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_HWND( n )            ( ( HWND             ) __hbwapi_par_handle( n ) )

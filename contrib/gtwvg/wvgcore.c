@@ -2826,7 +2826,7 @@ HB_FUNC( WVT_RESTSCREEN )
       HB_BOOL bResult = HB_FALSE;
 
       HDC     hCompDC = CreateCompatibleDC( _s->hdc );
-      HBITMAP hBmp = ( HBITMAP ) SelectObject( hCompDC, ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 5, 3 ) );
+      HBITMAP hBmp = ( HBITMAP ) SelectObject( hCompDC, ( HBITMAP ) HB_PARVHANDLE( 5, 3 ) );
 
       if( hBmp )
       {
@@ -2871,7 +2871,7 @@ HB_FUNC( WVT_RESTSCREEN )
       {
          if( hBmp )
             SelectObject( hCompDC, hBmp );
-         DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) hb_parvnint( 5, 3 ) );
+         DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) HB_PARVHANDLE( 5, 3 ) );
       }
       hb_retl( bResult );
    }

@@ -42,8 +42,8 @@ FUNCTION wvw_GetRGBColor( nColor )
 
    RETURN iif( nColor >= 0 .AND. nColor <= 15, hb_gtInfo( HB_GTI_PALETTE, nColor ), 0 )
 
-FUNCTION wvw_RGB( ... )
-   RETURN WIN_RGB( ... )
+FUNCTION wvw_RGB( r, g, b )
+   RETURN WIN_RGB( r, g, b )
 
 FUNCTION wvw_GetCursorPos()
 
