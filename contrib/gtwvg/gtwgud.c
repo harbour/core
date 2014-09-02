@@ -284,17 +284,21 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    return pWVT;
 }
 
-static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
+static LRESULT hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
 {
-   int nResult = 0; /* Unhandled */
+   LRESULT nResult = 0; /* Unhandled */
 
    if( pWVT->pGT->pNotifierBlock )
    {
       if( hb_vmRequestReenter() )
       {
          PHB_ITEM pEvent = hb_itemPutNI( NULL, nEvent );
+         PHB_ITEM pResult = hb_vmEvalBlockV( ( PHB_ITEM ) pWVT->pGT->pNotifierBlock, 2, pEvent, pParams );
 
-         nResult = hb_itemGetNI( hb_vmEvalBlockV( ( PHB_ITEM ) pWVT->pGT->pNotifierBlock, 2, pEvent, pParams ) );
+         if( HB_IS_POINTER( pResult ) )
+            nResult = ( HB_PTRDIFF ) hb_itemGetPtr( pResult );
+         else
+            nResult = hb_itemGetNInt( pResult );
 
          hb_itemRelease( pEvent );
 
@@ -1026,18 +1030,18 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          case WM_CTLCOLORSCROLLBAR:
          case WM_CTLCOLORSTATIC:
          {
-            int iResult;
+            LRESULT nResult;
             PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
             HB_ARRAYSETHANDLE( pEvParams, 1, wParam );
             HB_ARRAYSETHANDLE( pEvParams, 2, lParam );
 
-            iResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
+            nResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
 
-            if( iResult == 0 )
+            if( nResult == 0 )
                break;
             else
-               return iResult;
+               return nResult;
          }
          case WM_HSCROLL:
          {

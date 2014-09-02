@@ -233,11 +233,11 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       IF HB_ISNUMERIC( ::clr_FG )
          Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF ! Empty( ::hBrushBG )
+      IF Empty( ::hBrushBG )
+         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+      ELSE
          Wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
-      ELSE
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    CASE nMessage == HB_GTE_ANY               /* This will never be reached */

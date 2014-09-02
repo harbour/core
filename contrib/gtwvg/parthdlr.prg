@@ -503,7 +503,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       oObj := ::findObjectByHandle( win_N2P( nlParam ) )
       IF HB_ISOBJECT( oObj )
          nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { win_N2P( nwParam ), win_N2P( nlParam ) } )
-         IF nReturn == EVENT_UNHANDLED
+         IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_UNHANDLED
             RETURN Wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
          ELSE
             RETURN nReturn

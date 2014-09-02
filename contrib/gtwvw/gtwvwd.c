@@ -3267,7 +3267,10 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             hb_vmPushNumInt( wParam  );
             hb_vmPushNumInt( lParam  );
             hb_vmDo( 2 );
-            res = ( LRESULT ) hb_parnint( -1 );
+            if( HB_ISPOINTER( -1 ) )
+               res = ( LRESULT ) ( HB_PTRDIFF ) hb_parptr( -1 );
+            else
+               res = ( LRESULT ) hb_parnint( -1 );
 
             if( res != -1 )
                return res;

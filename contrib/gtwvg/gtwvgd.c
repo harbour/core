@@ -446,7 +446,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
 static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
 {
-   int nResult = 0; /* Unhandled */
+   LRESULT nResult = 0; /* Unhandled */
 
    if( pWVT->pGT->pNotifierBlock || pWVT->pNotifierGUI )
    {
@@ -455,10 +455,24 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
          PHB_ITEM pEvent = hb_itemPutNI( NULL, nEvent );
 
          if( pWVT->pGT->pNotifierBlock )
-            nResult = hb_itemGetNI( hb_vmEvalBlockV( pWVT->pGT->pNotifierBlock, 2, pEvent, pParams ) );
+         {
+            PHB_ITEM pResult = hb_vmEvalBlockV( pWVT->pGT->pNotifierBlock, 2, pEvent, pParams );
+
+            if( HB_IS_POINTER( pResult ) )
+               nResult = ( HB_PTRDIFF ) hb_itemGetPtr( pResult );
+            else
+               nResult = hb_itemGetNInt( pResult );
+         }
 
          if( pWVT->pNotifierGUI )
-            nResult = hb_itemGetNI( hb_vmEvalBlockV( pWVT->pNotifierGUI, 2, pEvent, pParams ) );
+         {
+            PHB_ITEM pResult = hb_vmEvalBlockV( pWVT->pNotifierGUI, 2, pEvent, pParams );
+
+            if( HB_IS_POINTER( pResult ) )
+               nResult = ( HB_PTRDIFF ) hb_itemGetPtr( pResult );
+            else
+               nResult = hb_itemGetNInt( pResult );
+         }
 
          hb_itemRelease( pEvent );
          hb_vmRequestRestore();
@@ -2249,18 +2263,18 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          case WM_CTLCOLORSCROLLBAR:
          case WM_CTLCOLORSTATIC:
          {
-            int iResult;
+            LRESULT nResult;
             PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
             HB_ARRAYSETHANDLE( pEvParams, 1, wParam );
             HB_ARRAYSETHANDLE( pEvParams, 2, lParam );
 
-            iResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
+            nResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
 
-            if( iResult == 0 )
+            if( nResult == 0 )
                break;
             else
-               return iResult;
+               return nResult;
          }
          case WM_CHARTOITEM:
          case WM_VKEYTOITEM:
