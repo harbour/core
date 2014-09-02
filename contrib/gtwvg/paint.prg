@@ -702,7 +702,6 @@ FUNCTION Wvt_GetCursorPos()
 
    RETURN xy
 
-#if ! defined( __GTWVX_UNSAFE_POINTERS )
 FUNCTION Wvg_GetWindowRect( hWnd )
 
    LOCAL rc
@@ -734,4 +733,3 @@ FUNCTION Wvg_GetMessageText( w, p1, p2 )
    cText += Chr( 0 )
 
    RETURN Left( cText, At( Chr( 0 ), cText ) - 1 )
-#endif

@@ -263,12 +263,12 @@ HB_FUNC( __WAPI_DLGTEMPLATE_RAW_NEW )
       void *  hText;
       LPCWSTR szText = hb_wstrnull( hb_parastr_u16( 1, 11, HB_CDP_ENDIAN_NATIVE, &hText, &nchar ) );
 
-      nchar = hb_wstrnlen( ( HB_WCHAR * ) szText, nchar );
+      nchar = hb_wstrnlen( szText, nchar );
 
       if( nchar > 256 )
          nchar = 256;
 
-      hb_wstrncpy( p, ( HB_WCHAR * ) szText, nchar );
+      hb_wstrncpy( ( HB_WCHAR * ) p, szText, nchar );
       p += nchar + 1;
 
       hb_strfree( hText );
@@ -287,12 +287,12 @@ HB_FUNC( __WAPI_DLGTEMPLATE_RAW_NEW )
       *p++ = ( short ) hb_parvni( 1, 13 );
       *p++ = ( short ) hb_parvni( 1, 14 );
 
-      nchar = hb_wstrnlen( ( HB_WCHAR * ) szText, nchar );
+      nchar = hb_wstrnlen( szText, nchar );
 
       if( nchar > 256 )
          nchar = 256;
 
-      hb_wstrncpy( p, ( HB_WCHAR * ) szText, nchar );
+      hb_wstrncpy( ( HB_WCHAR * ) p, szText, nchar );
       p += nchar + 1;
 
       hb_strfree( hText );
@@ -325,12 +325,12 @@ HB_FUNC( __WAPI_DLGTEMPLATE_RAW_NEW )
          void *  hText;
          LPCWSTR szText = hb_parastr_u16( 10, i, HB_CDP_ENDIAN_NATIVE, &hText, &nchar );
 
-         nchar = hb_wstrnlen( ( HB_WCHAR * ) szText, nchar );
+         nchar = hb_wstrnlen( szText, nchar );
 
          if( nchar > 256 )
             nchar = 256;
 
-         hb_wstrncpy( p, ( HB_WCHAR * ) szText, nchar );
+         hb_wstrncpy( ( HB_WCHAR * ) p, szText, nchar );
          p += nchar + 1;
 
          hb_strfree( hText );
@@ -346,12 +346,12 @@ HB_FUNC( __WAPI_DLGTEMPLATE_RAW_NEW )
          void *  hText;
          LPCWSTR szText = hb_parastr_u16( 11, i, HB_CDP_ENDIAN_NATIVE, &hText, &nchar );
 
-         nchar = hb_wstrnlen( ( HB_WCHAR * ) szText, nchar );
+         nchar = hb_wstrnlen( szText, nchar );
 
          if( nchar > 256 )
             nchar = 256;
 
-         hb_wstrncpy( p, ( HB_WCHAR * ) szText, nchar );
+         hb_wstrncpy( ( HB_WCHAR * ) p, szText, nchar );
          p += nchar + 1;
 
          hb_strfree( hText );

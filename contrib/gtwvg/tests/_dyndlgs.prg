@@ -90,9 +90,9 @@ FUNCTION DynWinDialog( nInfo )
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_PUSHBUTTON
    aDlg   := Wvt_AddDlgItem( aDlg, 18, 50, 1,  8, { -3, 0, 3, 0 }, ID_BTN_OK, "BUTTON" , nStyle, "OK" )
 
-   hMenu  := Wvt_CreateMenu()
-   Wvt_AppendMenu( hMenu, MF_STRING + MF_ENABLED, ID_MNU_FILE   , "File"     )
-   Wvt_AppendMenu( hMenu, MF_STRING + MF_ENABLED, ID_MNU_CONTROL, "Controls" )
+   hMenu  := Wvg_CreateMenu()
+   Wvg_AppendMenu( hMenu, MF_STRING + MF_ENABLED, ID_MNU_FILE   , "File"     )
+   Wvg_AppendMenu( hMenu, MF_STRING + MF_ENABLED, ID_MNU_CONTROL, "Controls" )
 
    lOnTop      := .F.
    cDlgIcon    := "v_notes.ico"

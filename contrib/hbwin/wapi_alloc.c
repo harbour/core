@@ -46,6 +46,8 @@
 
 #include "hbwapi.h"
 
+#include "hbapiitm.h"
+
 static HB_GARBAGE_FUNC( s_gc_HDC_release )
 {
    void ** ph = ( void ** ) Cargo;
@@ -296,4 +298,23 @@ void * __hbwapi_parv_handle( int n, int i )
    }
    else
       return hb_parvptr( n, i );
+}
+
+void * hbwapi_itemGet_HANDLE( PHB_ITEM pItem )
+{
+   if( pItem )
+   {
+      if( HB_IS_NUMERIC( pItem ) )
+         return hb_itemGetPtr( pItem );
+      else
+         return ( void * ) ( HB_PTRDIFF ) hb_itemGetNInt( pItem );
+   }
+
+   return NULL;
+}
+
+/* pArray must not be NULL */
+void * hbwapi_arrayGet_HANDLE( PHB_ITEM pArray, HB_SIZE nIndex )
+{
+   return hbwapi_itemGet_HANDLE( hb_arrayGetItemPtr( pArray, nIndex ) );
 }

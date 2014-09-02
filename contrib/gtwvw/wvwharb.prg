@@ -53,7 +53,6 @@ FUNCTION wvw_GetCursorPos()
 
    RETURN xy
 
-#if ! defined( __GTWVX_UNSAFE_POINTERS )
 FUNCTION win_GetClientRect( hWnd )
 
    LOCAL rc
@@ -68,4 +67,3 @@ FUNCTION win_SetTimer( ... )
 FUNCTION win_InvalidateRect( w, e, l, t, r, b )
    RETURN wapi_InvalidateRect( w, iif( PCount() > 2, { l, t, r, b }, NIL ), ;
       iif( HB_ISLOGICAL( e ), e, hb_defaultValue( e, 1 ) != 0 ) )
-#endif

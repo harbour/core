@@ -67,62 +67,6 @@ HB_FUNC( WVW_YESCLOSE )
    }
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WIN_SENDDLGITEMMESSAGE )
-{
-   PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
-
-   void *  hText = NULL;
-   HB_SIZE nLen  = 0;
-   LPCTSTR szText;
-
-   LPCTSTR szTextToPass;
-
-   if( pText )
-   {
-      szText       = HB_ITEMGETSTR( pText, &hText, &nLen );
-      szTextToPass = HB_ISBYREF( 5 ) ? HB_STRDUP( szText ) : szText;
-   }
-   else
-      szTextToPass = NULL;
-
-   hb_retnint( SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                                   hb_parni( 2 ),
-                                   ( UINT ) hb_parni( 3 ),
-                                   ( WPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 3 ) ),
-                                   pText ? ( LPARAM ) szTextToPass : ( LPARAM ) ( HB_ISPOINTER( 5 ) ? ( HB_PTRDIFF ) hb_parptr( 5 ) : hb_parnint( 5 ) ) ) );
-
-   if( pText && HB_ISBYREF( 5 ) )
-   {
-      HB_STORSTRLEN( szTextToPass, nLen, 5 );
-      hb_xfree( ( void * ) szTextToPass );
-   }
-   else
-      hb_storc( NULL, 5 );
-
-   hb_strfree( hText );
-}
-
-/* win_SetTimer( hWnd, nIdentifier, nTimeOut ) */
-HB_FUNC( WIN_SETTIMER )
-{
-   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), ( UINT_PTR ) hb_parnint( 2 ), ( UINT ) hb_parni( 3 ), NULL ) != ( UINT_PTR ) NULL );
-}
-
-HB_FUNC( WIN_SETFOCUS )
-{
-   SetFocus( ( HWND ) HB_PARHANDLE( 1 ) );
-}
-
-HB_FUNC_TRANSLATE( WIN_SETTEXTCOLOR, WVW_SETTEXTCOLOR )
-HB_FUNC_TRANSLATE( WIN_SETBKCOLOR, WVW_SETBKCOLOR )
-
-HB_FUNC( WVW_SETBKMODE )
-{
-   hb_retni( SetBkMode( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
-}
-#endif
-
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
    HB_RETHANDLE( GetStockObject( hb_parni( 1 ) ) );
@@ -137,81 +81,6 @@ HB_FUNC( WIN_SELECTOBJECT )
 {
    HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WIN_SETDLGITEMTEXT )
-{
-   void * hText;
-
-   SetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), HB_PARSTR( 3, &hText, NULL ) );
-
-   hb_strfree( hText );
-}
-
-HB_FUNC( WIN_GETDLGITEMTEXT )
-{
-   int    iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
-   LPTSTR cText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
-
-   UINT iResult = GetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), cText, iLen );
-
-   HB_RETSTRLEN( cText, iResult );
-   hb_xfree( cText );
-}
-
-HB_FUNC( WIN_CHECKDLGBUTTON )
-{
-   hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
-                            HB_ISNUM( 3 ) ? ( UINT ) hb_parni( 3 ) : ( UINT ) hb_parl( 3 ) ) );
-}
-
-HB_FUNC( WIN_ISDLGBUTTONCHECKED )
-{
-   hb_retni( IsDlgButtonChecked( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
-}
-
-HB_FUNC( WIN_CHECKRADIOBUTTON )
-{
-   hb_retl( CheckRadioButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
-}
-
-HB_FUNC( WIN_GETDLGITEM )
-{
-   HB_RETHANDLE( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
-}
-
-HB_FUNC( WIN_MESSAGEBOX )
-{
-   void * hStr1;
-   void * hStr2;
-
-   hb_retni( MessageBox( ( HWND ) HB_PARHANDLE( 1 ),
-                         HB_PARSTR( 2, &hStr1, NULL ),
-                         HB_PARSTR( 3, &hStr2, NULL ),
-                         hb_parnidef( 4, MB_OK ) ) );
-
-   hb_strfree( hStr1 );
-   hb_strfree( hStr2 );
-}
-
-HB_FUNC( WIN_INVALIDATERECT )
-{
-   HB_BOOL fIsRect = hb_pcount() > 2;
-   RECT    rc;
-
-   if( fIsRect )
-   {
-      rc.left   = hb_parni( 3 );
-      rc.top    = hb_parni( 4 );
-      rc.right  = hb_parni( 5 );
-      rc.bottom = hb_parni( 6 );
-   }
-
-   InvalidateRect( ( HWND ) HB_PARHANDLE( 1 ),
-                   fIsRect ? &rc : NULL,
-                   HB_ISLOG( 2 ) ? ( BOOL ) hb_parl( 2 ) : ( BOOL ) hb_parnidef( 2, ( int ) HB_TRUE ) /* bErase */ );
-}
-#endif
 
 /* win_LoadIcon( ncIcon ) */
 HB_FUNC( WIN_LOADICON )
@@ -274,35 +143,6 @@ HB_FUNC( WIN_LOADIMAGE )
    HB_RETHANDLE( hImage );
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WIN_GETCLIENTRECT )
-{
-   PHB_ITEM info = hb_itemArrayNew( 4 );
-   RECT     rc;
-
-   memset( &rc, 0, sizeof( rc ) );
-
-   GetClientRect( ( HWND ) HB_PARHANDLE( 1 ), &rc );
-
-   hb_arraySetNL( info, 1, rc.left );
-   hb_arraySetNL( info, 2, rc.top );
-   hb_arraySetNL( info, 3, rc.right );
-   hb_arraySetNL( info, 4, rc.bottom );
-
-   hb_itemReturnRelease( info );
-}
-#endif
-
-#if 0
-/* Win_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage ) in Pixels */
-/* sorry, not supported in GTWVW */
-HB_FUNC( WIN_DRAWIMAGE )
-{
-   hb_retl( hb_wvt_DrawImage( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ),
-                              hb_parni( 4 ), hb_parni( 5 ), hb_parc( 6 ) ) );
-}
-#endif
-
 HB_FUNC( WIN_GETDC )
 {
    HB_RETHANDLE( GetDC( ( HWND ) HB_PARHANDLE( 1 ) ) );
@@ -312,13 +152,6 @@ HB_FUNC( WIN_RELEASEDC )
 {
    hb_retl( ReleaseDC( ( HWND ) HB_PARHANDLE( 1 ), ( HDC ) HB_PARHANDLE( 2 ) ) );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVW_RECTANGLE )
-{
-   Rectangle( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-}
-#endif
 
 HB_FUNC( WIN_CREATEBRUSH )
 {
@@ -332,27 +165,6 @@ HB_FUNC( WIN_CREATEBRUSH )
 
    HB_RETHANDLE( CreateBrushIndirect( &lb ) );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-/* win_DrawText( hDC, cText, aRect, nFormat ) */
-HB_FUNC( WIN_DRAWTEXT )
-{
-   RECT rc;
-
-   HB_SIZE nLen;
-   void *  hText;
-   LPCTSTR szText = HB_PARSTRDEF( 2, &hText, &nLen );
-
-   rc.left   = hb_parvni( 3, 1 );
-   rc.top    = hb_parvni( 3, 2 );
-   rc.right  = hb_parvni( 3, 3 );
-   rc.bottom = hb_parvni( 3, 4 );
-
-   hb_retl( DrawText( ( HDC ) HB_PARHANDLE( 1 ), szText, ( int ) nLen, &rc, hb_parni( 4 ) ) );
-
-   hb_strfree( hText );
-}
-#endif
 
 /* Additions to GTWVW developed by SOLUCIONES PERCEPTIVAS */
 
@@ -505,30 +317,6 @@ HB_FUNC( WVW_MOUSE_ROW )
    hb_retni( 0 );
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVW_SENDMESSAGE )
-{
-   void *  hText;
-   HB_SIZE nLen;
-   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
-
-   if( szText && HB_ISBYREF( 4 ) )
-      szText = HB_STRUNSHARE( &hText, szText, nLen );
-
-   hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parni( 2 ),
-                            ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-                            szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) ) );
-
-   if( szText )
-      HB_STORSTRLEN( szText, nLen, 4 );
-   else
-      hb_storc( NULL, 4 );
-
-   hb_strfree( hText );
-}
-#endif
-
 HB_FUNC( WVW_SETPARENT )
 {
    int nWin2 = hb_gt_wvw_nWin_N( 2 );
@@ -557,13 +345,6 @@ HB_FUNC( WVW_BRINGTOTOP1 )
 
    hb_retl( HB_TRUE );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVW_ISWINDOW )
-{
-   hb_retl( IsWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
-}
-#endif
 
 HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 {
@@ -622,22 +403,28 @@ HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 HB_FUNC( WVW_CREATEIMAGELIST )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-   int      ul, ulLen = ( int ) hb_arrayLen( pArray );
 
-   HIMAGELIST himl = ImageList_Create( hb_parni( 2 ),
-                                       hb_parni( 3 ),
-                                       ( UINT ) hb_parnidef( 5, ILC_COLOR ),
-                                       ulLen,
-                                       hb_parni( 4 ) );
-
-   for( ul = 1; ul <= ulLen; ++ul )
+   if( pArray )
    {
-      HBITMAP hbmp = ( HBITMAP ) ( HB_PTRDIFF ) hb_arrayGetNInt( pArray, ul );
-      ImageList_Add( himl, hbmp, NULL );
-      DeleteObject( hbmp );
-   }
+      int ul, ulLen = ( int ) hb_arrayLen( pArray );
 
-   HB_RETHANDLE( himl );
+      HIMAGELIST himl = ImageList_Create( hb_parni( 2 ),
+                                          hb_parni( 3 ),
+                                          ( UINT ) hb_parnidef( 5, ILC_COLOR ),
+                                          ulLen,
+                                          hb_parni( 4 ) );
+
+      for( ul = 1; ul <= ulLen; ++ul )
+      {
+         HBITMAP hbmp = ( HBITMAP ) HB_ARRAYGETHANDLE( pArray, ul );
+         ImageList_Add( himl, hbmp, NULL );
+         DeleteObject( hbmp );
+      }
+
+      HB_RETHANDLE( himl );
+   }
+   else
+      HB_RETHANDLE( NULL );
 }
 
 HB_FUNC( WVW_IMAGELIST_ADD )
@@ -897,18 +684,6 @@ HB_FUNC( WVW_OPENBITMAP )
 
    HB_RETHANDLE( hbm );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVW_SETTEXTCOLOR )
-{
-   hb_retnint( SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
-}
-
-HB_FUNC( WVW_SETBKCOLOR )
-{
-   hb_retnint( SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
-}
-#endif
 
 HB_FUNC( WVW_CREATESOLIDBRUSH )
 {
@@ -2345,24 +2120,3 @@ HB_FUNC( WVW_RESTORE )
    if( wvw_win )
       ShowWindow( wvw_win->hWnd, SW_RESTORE );
 }
-
-#if ! defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC_TRANSLATE( WIN_SENDDLGITEMMESSAGE , WAPI_SENDDLGITEMMESSAGE )
-HB_FUNC_TRANSLATE( WIN_SETFOCUS           , WAPI_SETFOCUS           )
-HB_FUNC_TRANSLATE( WVW_SETTEXTCOLOR       , WAPI_SETTEXTCOLOR       )
-HB_FUNC_TRANSLATE( WIN_SETTEXTCOLOR       , WAPI_SETTEXTCOLOR       )
-HB_FUNC_TRANSLATE( WVW_SETBKCOLOR         , WAPI_SETBKCOLOR         )
-HB_FUNC_TRANSLATE( WIN_SETBKCOLOR         , WAPI_SETBKCOLOR         )
-HB_FUNC_TRANSLATE( WVW_SETBKMODE          , WAPI_SETBKMODE          )
-HB_FUNC_TRANSLATE( WIN_SETDLGITEMTEXT     , WAPI_SETDLGITEMTEXT     )
-HB_FUNC_TRANSLATE( WIN_GETDLGITEMTEXT     , WAPI_GETDLGITEMTEXT     )
-HB_FUNC_TRANSLATE( WIN_CHECKDLGBUTTON     , WAPI_CHECKDLGBUTTON     )
-HB_FUNC_TRANSLATE( WIN_ISDLGBUTTONCHECKED , WAPI_ISDLGBUTTONCHECKED )
-HB_FUNC_TRANSLATE( WIN_CHECKRADIOBUTTON   , WAPI_CHECKRADIOBUTTON   )
-HB_FUNC_TRANSLATE( WIN_GETDLGITEM         , WAPI_GETDLGITEM         )
-HB_FUNC_TRANSLATE( WIN_MESSAGEBOX         , WAPI_MESSAGEBOX         )
-HB_FUNC_TRANSLATE( WVW_SENDMESSAGE        , WAPI_SENDMESSAGE        )
-HB_FUNC_TRANSLATE( WVW_ISWINDOW           , WAPI_ISWINDOW           )
-HB_FUNC_TRANSLATE( WVW_RECTANGLE          , WAPI_RECTANGLE          )
-HB_FUNC_TRANSLATE( WIN_DRAWTEXT           , WAPI_DRAWTEXT           )
-#endif

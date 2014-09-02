@@ -609,11 +609,11 @@
 #define WIN_SWP_DRAWFRAME                  WIN_SWP_FRAMECHANGED
 #define WIN_SWP_NOREPOSITION               WIN_SWP_NOOWNERZORDER
 
-/* Predefined window IDs */
-#define WIN_HWND_TOP                       win_N2P( 0 )
-#define WIN_HWND_BOTTOM                    win_N2P( 1 )
-#define WIN_HWND_TOPMOST                   win_N2P( -1 )
-#define WIN_HWND_NOTOPMOST                 win_N2P( -2 )
+/* wapi_SetWindowPos() predefined window IDs */
+#define WIN_HWND_TOP                       0
+#define WIN_HWND_BOTTOM                    1
+#define WIN_HWND_TOPMOST                   -1
+#define WIN_HWND_NOTOPMOST                 -2
 
 /* window messages */
 #define WIN_WM_USER                        1024

@@ -57,7 +57,7 @@
 HB_FUNC( WAPI_SETWINDOWPOS )
 {
    BOOL bResult = SetWindowPos( hbwapi_par_raw_HWND( 1 ),
-                                hbwapi_par_raw_HWND( 2 ),
+                                HB_ISNUM( 2 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parni( 2 ) : hbwapi_par_raw_HWND( 2 ),
                                 hb_parni( 3 ),
                                 hb_parni( 4 ),
                                 hb_parni( 5 ),

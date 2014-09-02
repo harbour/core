@@ -111,7 +111,7 @@
 
 #define hbwapi_stor_HANDLE( h, n )          hb_storptr( ( void * ) ( h ), n )
 #define hbwapi_itemPut_HANDLE( i, h )       hb_itemPutPtr( i, ( void * ) ( h ) )
-#define hbwapi_ArraySet_HANDLE( a, i, h )   hb_arraySetPtr( a, i, ( void * ) ( h ) )
+#define hbwapi_arraySet_HANDLE( a, i, h )   hb_arraySetPtr( a, i, ( void * ) ( h ) )
 #define hbwapi_vmPush_HANDLE( h )           hb_vmPushPointer( ( void * ) ( h ) )
 
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
@@ -176,6 +176,9 @@ extern HB_EXPORT void      hbwapi_ret_HPEN( HPEN p );
 extern HB_EXPORT void      hbwapi_ret_HBRUSH( HBRUSH p );
 extern HB_EXPORT void      hbwapi_ret_HFONT( HFONT p );
 extern HB_EXPORT void      hbwapi_ret_PDEVMODE( PDEVMODE p );
+
+extern HB_EXPORT void *    hbwapi_itemGet_HANDLE( PHB_ITEM pItem );
+extern HB_EXPORT void *    hbwapi_arrayGet_HANDLE( PHB_ITEM pArray, HB_SIZE nIndex );
 
 extern HB_EXPORT void *    __hbwapi_par_handle( int n );
 extern HB_EXPORT void *    __hbwapi_parv_handle( int n, int i );

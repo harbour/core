@@ -362,7 +362,7 @@ FUNCTION Popups( nID, lDestroy )
    ENDIF
 
    IF lDestroy != NIL
-      Wvt_DestroyMenu( t_hPop_[ nID ] )
+      Wvg_DestroyMenu( t_hPop_[ nID ] )
       RETURN NIL
    ENDIF
 
@@ -372,20 +372,20 @@ FUNCTION Popups( nID, lDestroy )
    CASE 1   //  Data Entry Module
 
       IF hPop == NIL
-         hPop := Wvt_CreatePopupMenu()
-         Wvt_AppendMenu( hPop, nPrompt, K_F2, "Second Get Screen" )
-         Wvt_AppendMenu( hPop, nPrompt, K_F3, "Expand Window"     )
-         Wvt_AppendMenu( hPop, nPrompt, K_F4, "Shrink Window"     )
-         Wvt_AppendMenu( hPop, nPrompt, K_F5, "Browse"            )
-         Wvt_AppendMenu( hPop, nPrompt, K_F6, "Minimize"          )
-         Wvt_AppendMenu( hPop, nPrompt, K_F7, "Partial Screen"    )
-         Wvt_AppendMenu( hPop, nPrompt, K_F8, "Lines"             )
-         Wvt_AppendMenu( hPop, nPrompt, K_F9, "Choose Font"       )
-         Wvt_AppendMenu( hPop, nPrompt, K_F10, "Choose Color"      )
+         hPop := Wvg_CreatePopupMenu()
+         Wvg_AppendMenu( hPop, nPrompt, K_F2, "Second Get Screen" )
+         Wvg_AppendMenu( hPop, nPrompt, K_F3, "Expand Window"     )
+         Wvg_AppendMenu( hPop, nPrompt, K_F4, "Shrink Window"     )
+         Wvg_AppendMenu( hPop, nPrompt, K_F5, "Browse"            )
+         Wvg_AppendMenu( hPop, nPrompt, K_F6, "Minimize"          )
+         Wvg_AppendMenu( hPop, nPrompt, K_F7, "Partial Screen"    )
+         Wvg_AppendMenu( hPop, nPrompt, K_F8, "Lines"             )
+         Wvg_AppendMenu( hPop, nPrompt, K_F9, "Choose Font"       )
+         Wvg_AppendMenu( hPop, nPrompt, K_F10, "Choose Color"      )
 
-         Wvt_AppendMenu( hPop, MF_SEPARATOR )
+         Wvg_AppendMenu( hPop, MF_SEPARATOR )
 
-         Wvt_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
+         Wvg_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
 
       ENDIF
       EXIT
@@ -393,23 +393,23 @@ FUNCTION Popups( nID, lDestroy )
    CASE 2   //  Browser
 
       IF hPop == NIL
-         hPop := Wvt_CreatePopupMenu()
-         Wvt_AppendMenu( hPop, nPrompt, K_DOWN     , "Down"      )
-         Wvt_AppendMenu( hPop, nPrompt, K_UP       , "Up"        )
-         Wvt_AppendMenu( hPop, nPrompt, K_PGDN     , "Page Down" )
-         Wvt_AppendMenu( hPop, nPrompt, K_PGUP     , "Page Up"   )
-         Wvt_AppendMenu( hPop, nPrompt, K_CTRL_PGUP, "Top"       )
-         Wvt_AppendMenu( hPop, nPrompt, K_CTRL_PGDN, "Bottom"    )
+         hPop := Wvg_CreatePopupMenu()
+         Wvg_AppendMenu( hPop, nPrompt, K_DOWN     , "Down"      )
+         Wvg_AppendMenu( hPop, nPrompt, K_UP       , "Up"        )
+         Wvg_AppendMenu( hPop, nPrompt, K_PGDN     , "Page Down" )
+         Wvg_AppendMenu( hPop, nPrompt, K_PGUP     , "Page Up"   )
+         Wvg_AppendMenu( hPop, nPrompt, K_CTRL_PGUP, "Top"       )
+         Wvg_AppendMenu( hPop, nPrompt, K_CTRL_PGDN, "Bottom"    )
 
-         Wvt_AppendMenu( hPop, MF_SEPARATOR )
+         Wvg_AppendMenu( hPop, MF_SEPARATOR )
 
-         hPop1 := Wvt_CreatePopupMenu()
-         Wvt_AppendMenu( hPop1, nPrompt, K_RIGHT   , "Right"     )
-         Wvt_AppendMenu( hPop1, nPrompt, K_LEFT    , "Left"      )
-         Wvt_AppendMenu( hPop1, nPrompt, K_END     , "End"       )
-         Wvt_AppendMenu( hPop1, nPrompt, K_HOME    , "Home"      )
+         hPop1 := Wvg_CreatePopupMenu()
+         Wvg_AppendMenu( hPop1, nPrompt, K_RIGHT   , "Right"     )
+         Wvg_AppendMenu( hPop1, nPrompt, K_LEFT    , "Left"      )
+         Wvg_AppendMenu( hPop1, nPrompt, K_END     , "End"       )
+         Wvg_AppendMenu( hPop1, nPrompt, K_HOME    , "Home"      )
 
-         Wvt_AppendMenu( hPop, MF_ENABLED + MF_POPUP, hPop1, "Column Movement" )
+         Wvg_AppendMenu( hPop, MF_ENABLED + MF_POPUP, hPop1, "Column Movement" )
 
       ENDIF
       EXIT

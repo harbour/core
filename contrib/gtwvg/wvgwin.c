@@ -74,89 +74,6 @@ static HINSTANCE wvg_hInstance( void )
    return hInstance;
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_SENDMESSAGE )
-{
-   void *  hText;
-   HB_SIZE nLen;
-   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
-
-   if( szText && HB_ISBYREF( 4 ) )
-      szText = HB_STRUNSHARE( &hText, szText, nLen );
-
-   hb_retnint( SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                            ( UINT ) hb_parni( 2 ),
-                            ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-                            szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) ) );
-
-   if( szText )
-      HB_STORSTRLEN( szText, nLen, 4 );
-   else
-      hb_storc( NULL, 4 );
-
-   hb_strfree( hText );
-}
-
-HB_FUNC( WVG_SENDDLGITEMMESSAGE )  /* TOFIX: UNICODE support? */
-{
-   PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
-   char *   cText = NULL;
-   HB_ISIZ  iLen  = 0;
-
-   if( pText )
-   {
-      iLen  = hb_itemGetCLen( pText );
-      cText = ( char * ) hb_xgrab( iLen + 1 );
-      hb_xmemcpy( cText, hb_itemGetCPtr( pText ), iLen + 1 );
-   }
-
-   hb_retnl( ( long ) SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                                          ( int ) hb_parni( 2 ),
-                                          ( UINT ) hb_parni( 3 ),
-                                          ( WPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
-                                          ( cText ? ( LPARAM ) cText : ( LPARAM ) ( HB_ISPOINTER( 5 ) ? ( HB_PTRDIFF ) hb_parptr( 5 ) : hb_parnint( 5 ) ) ) ) );
-
-   if( cText )
-   {
-      hb_storclen( cText, iLen, 5 );
-      hb_xfree( cText );
-   }
-   else
-      hb_storc( NULL, 5 );
-}
-
-/* Wvg_SetTimer( hWnd, nIdentifier, nTimeOut ) */
-HB_FUNC( WVG_SETTIMER )
-{
-   hb_retl( SetTimer( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ), NULL ) != 0 );
-}
-
-HB_FUNC( WVG_SETFOCUS )
-{
-   SetFocus( ( HWND ) HB_PARHANDLE( 1 ) );
-}
-
-HB_FUNC( WVG_GETFOCUS )
-{
-   HB_RETHANDLE( GetFocus() );
-}
-
-HB_FUNC( WVG_SETTEXTCOLOR )
-{
-   hbwapi_ret_COLORREF( SetTextColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-}
-
-HB_FUNC( WVG_SETBKCOLOR )
-{
-   hbwapi_ret_COLORREF( SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-}
-
-HB_FUNC( WVG_SETBKMODE )
-{
-   hb_retni( SetBkMode( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
-}
-#endif
-
 HB_FUNC( WVG_GETSTOCKOBJECT )
 {
    HB_RETHANDLE( GetStockObject( hb_parni( 1 ) ) );
@@ -171,94 +88,6 @@ HB_FUNC( WVG_SELECTOBJECT )
 {
    HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
 }
-
-HB_FUNC_TRANSLATE( WVG_LOWORD, WIN_LOWORD )
-HB_FUNC_TRANSLATE( WVG_HIWORD, WIN_HIWORD )
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_GETDIALOGBASEUNITS )
-{
-   hb_retnl( ( long ) GetDialogBaseUnits() );
-}
-
-HB_FUNC( WVG_SETDLGITEMTEXT )
-{
-   void * hText;
-
-   SetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), HB_PARSTR( 3, &hText, NULL ) );
-
-   hb_strfree( hText );
-}
-
-HB_FUNC( WVG_GETDLGITEMTEXT )
-{
-   int    iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
-   LPTSTR cText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
-
-   UINT iResult = GetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ),  /* handle of dialog box */
-                                  hb_parni( 2 ),                /* identifier of control */
-                                  cText,                        /* address of buffer for text */
-                                  iLen );                       /* maximum size of string */
-
-   HB_RETSTRLEN( cText, iResult );
-   hb_xfree( cText );
-}
-
-HB_FUNC( WVG_CHECKDLGBUTTON )
-{
-   hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
-                            ( UINT ) ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) ) );
-}
-
-HB_FUNC( WVG_ISDLGBUTTONCHECKED )
-{
-   hb_retni( IsDlgButtonChecked( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
-}
-
-HB_FUNC( WVG_CHECKRADIOBUTTON )
-{
-   hb_retl( CheckRadioButton( ( HWND ) HB_PARHANDLE( 1 ),  /* handle of dialog box */
-                              hb_parni( 2 ),                /* identifier of first radio button in group */
-                              hb_parni( 3 ),                /* identifier of last radio button in group */
-                              hb_parni( 4 ) ) );            /* identifier of radio button to select */
-}
-
-HB_FUNC( WVG_GETDLGITEM )
-{
-   HB_RETHANDLE( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
-}
-
-HB_FUNC( WVG_MESSAGEBOX )
-{
-   void * hMsg;
-   void * hTitle;
-
-   hb_retni( MessageBox( HB_ISHANDLE( 1 ) ? ( HWND ) HB_PARHANDLE( 1 ) : GetActiveWindow(),
-                         HB_PARSTR( 2, &hMsg, NULL ),
-                         HB_PARSTR( 3, &hTitle, NULL ),
-                         hb_parnidef( 4, MB_OK ) ) );
-
-   hb_strfree( hMsg );
-   hb_strfree( hTitle );
-}
-
-HB_FUNC( WVG_INVALIDATERECT )
-{
-   if( HB_ISARRAY( 2 ) )
-   {
-      RECT rc;
-
-      rc.left   = hb_parvni( 2, 1 );
-      rc.top    = hb_parvni( 2, 2 );
-      rc.right  = hb_parvni( 2, 3 );
-      rc.bottom = hb_parvni( 2, 4 );
-
-      hb_retl( InvalidateRect( ( HWND ) HB_PARHANDLE( 1 ), &rc, TRUE ) );
-   }
-   else
-      hb_retl( InvalidateRect( ( HWND ) HB_PARHANDLE( 1 ), NULL, TRUE ) );
-}
-#endif
 
 /* Wvg_LoadIcon( ncIcon ) */
 HB_FUNC( WVG_LOADICON )
@@ -317,23 +146,6 @@ HB_FUNC( WVG_LOADIMAGE )
    HB_RETHANDLE( hImage );
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_GETCLIENTRECT )
-{
-   PHB_ITEM info = hb_itemArrayNew( 4 );
-   RECT     rc   = { 0, 0, 0, 0 };
-
-   GetClientRect( ( HWND ) HB_PARHANDLE( 1 ), &rc );
-
-   hb_arraySetNI( info, 1, rc.left   );
-   hb_arraySetNI( info, 2, rc.top    );
-   hb_arraySetNI( info, 3, rc.right  );
-   hb_arraySetNI( info, 4, rc.bottom );
-
-   hb_itemReturnRelease( info );
-}
-#endif
-
 /* Wvg_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage, lDoNotScale ) in Pixels */
 HB_FUNC( WVG_DRAWIMAGE )
 {
@@ -368,146 +180,6 @@ HB_FUNC( WVG_CREATEBRUSH )
    HB_RETHANDLE( CreateSolidBrush( lb.lbColor ) );
 #endif
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-/* Wvg_DrawText( hDC, cText, aRect, nFormat ) */
-HB_FUNC( WVG_DRAWTEXT )
-{
-   void *  hBuffer;
-   HB_SIZE nLen;
-   LPCTSTR lpBuffer = HB_PARSTR( 2, &hBuffer, &nLen );
-   RECT    rc;
-
-   rc.left   = hb_parvni( 3, 1 );
-   rc.top    = hb_parvni( 3, 2 );
-   rc.right  = hb_parvni( 3, 3 );
-   rc.bottom = hb_parvni( 3, 4 );
-
-   hb_retl( DrawText( ( HDC ) HB_PARHANDLE( 1 ), lpBuffer, ( int ) nLen, &rc, hb_parni( 4 ) ) );
-
-   hb_strfree( hBuffer );
-}
-
-HB_FUNC( WVG_GETWINDOWRECT )
-{
-   PHB_ITEM info = hb_itemArrayNew( 4 );
-   RECT     rc;
-
-   GetWindowRect( ( HWND ) HB_PARHANDLE( 1 ), &rc );
-
-   hb_arraySetNI( info, 1, rc.left   );
-   hb_arraySetNI( info, 2, rc.top    );
-   hb_arraySetNI( info, 3, rc.right  );
-   hb_arraySetNI( info, 4, rc.bottom );
-
-   hb_itemReturnRelease( info );
-}
-
-/* Wvg_MoveWindow( hWnd, nLeft, nTop, nWidth, nHeight, lRePaint ) */
-HB_FUNC( WVG_MOVEWINDOW )
-{
-   MoveWindow( ( HWND ) HB_PARHANDLE( 1 ), hb_parnl( 2 ), hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ), hb_parl( 6 ) );
-}
-
-HB_FUNC( WVG_GETDESKTOPWINDOW )
-{
-   HB_RETHANDLE( GetDesktopWindow() );
-}
-
-HB_FUNC( WVG_SETPARENT )
-{
-   HB_RETHANDLE( SetParent( ( HWND ) HB_PARHANDLE( 1 ), ( HWND ) HB_PARHANDLE( 2 ) ) );
-}
-
-HB_FUNC( WVG_BRINGWINDOWTOTOP )
-{
-   hb_retl( BringWindowToTop( ( HWND ) HB_PARHANDLE( 1 ) ) );
-}
-
-HB_FUNC_TRANSLATE( WVG_SETFOREGROUNDWINDOW, WVG_BRINGWINDOWTOTOP )
-
-HB_FUNC( WVG_SETWINDOWTEXT )
-{
-   void * hText;
-
-   SetWindowText( ( HWND ) HB_PARHANDLE( 1 ), HB_PARSTR( 2, &hText, NULL ) );
-
-   hb_strfree( hText );
-}
-
-HB_FUNC( WVG_SETWINDOWLONG )
-{
-   hb_retnl( SetWindowLong( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
-}
-
-HB_FUNC( WVG_ISWINDOW )
-{
-   hb_retl( IsWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
-}
-
-HB_FUNC( WVG_ENABLEWINDOW )
-{
-   hb_retl( EnableWindow( ( HWND ) HB_PARHANDLE( 1 ), hb_parl( 2 ) ) );
-}
-
-HB_FUNC( WVG_DESTROYWINDOW )
-{
-   hb_retl( DestroyWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
-}
-
-HB_FUNC( WVG_CLIENTTOSCREEN )
-{
-   POINT Point;
-
-   if( hbwapi_par_POINT( &Point, 2, HB_FALSE ) )
-   {
-      if( ClientToScreen( ( HWND ) HB_PARHANDLE( 1 ), &Point ) )
-      {
-         hbwapi_stor_POINT( &Point, 2 );
-         hb_retl( HB_TRUE );
-         return;
-      }
-   }
-
-   hb_retl( HB_FALSE );
-}
-
-HB_FUNC( WVG_SCREENTOCLIENT )
-{
-   POINT Point;
-
-   if( hbwapi_par_POINT( &Point, 2, HB_FALSE ) )
-   {
-      if( ScreenToClient( ( HWND ) HB_PARHANDLE( 1 ), &Point ) > 0 )
-      {
-         hbwapi_stor_POINT( &Point, 2 );
-         hb_retl( HB_TRUE );
-         return;
-      }
-   }
-
-   hb_retl( HB_FALSE );
-}
-#endif
-
-#ifdef HB_LEGACY_LEVEL5
-
-HB_FUNC( WVG_AND )
-{
-   hb_retnl( hb_parnl( 1 ) & hb_parnl( 2 ) );
-}
-
-HB_FUNC( WVG_OR )
-{
-   hb_retnl( hb_parnl( 1 ) | hb_parnl( 2 ) );
-}
-
-HB_FUNC( WVG_NOT )
-{
-   hb_retnl( ~( hb_parnl( 1 ) ) );
-}
-
-#endif
 
 HB_FUNC( WVG_TRACKPOPUPMENU )
 {
@@ -563,8 +235,6 @@ HB_FUNC( WVG_FINDWINDOW )
       HB_RETHANDLE( -1 );
 }
 
-HB_FUNC_TRANSLATE( WVG_SLEEP, WAPI_SLEEP )
-
 /* Menu manipulations */
 
 HB_FUNC( WVG_SETMENU )
@@ -591,18 +261,6 @@ HB_FUNC( WVG_SETMENU )
 
    hb_retl( bSet );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_CREATEMENU )
-{
-   HB_RETHANDLE( CreateMenu() );
-}
-
-HB_FUNC( WVG_CREATEPOPUPMENU )
-{
-   HB_RETHANDLE( CreatePopupMenu() );
-}
-#endif
 
 HB_FUNC( WVG_APPENDMENU )
 {
@@ -637,28 +295,6 @@ HB_FUNC( WVG_INSERTMENU )
          ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
          ( LPCTSTR ) HB_PARHANDLE( 5 ) ) );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_DELETEMENU )
-{
-   hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
-}
-
-HB_FUNC( WVG_DESTROYMENU )
-{
-   hb_retl( DestroyMenu( ( HMENU ) HB_PARHANDLE( 1 ) ) );
-}
-
-HB_FUNC( WVG_ENABLEMENUITEM )
-{
-   hb_retl( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
-}
-
-HB_FUNC( WVG_CHECKMENUITEM )
-{
-   hb_retni( CheckMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
-}
-#endif
 
 HB_FUNC( WVG_ISMENUITEMCHECKED )
 {
@@ -719,25 +355,6 @@ HB_FUNC( WVG_SETMENUITEM )
    hb_strfree( hText );
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_DRAWMENUBAR )
-{
-   DrawMenuBar( ( HWND ) HB_PARHANDLE( 1 ) );
-}
-
-HB_FUNC( WVG_UPDATEWINDOW )
-{
-   hb_retl( UpdateWindow( ( HWND ) HB_PARHANDLE( 1 ) ) );
-}
-
-HB_FUNC( WVG_SHOWWINDOW )
-{
-   hb_retl( ShowWindow( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
-}
-#endif
-
-HB_FUNC_TRANSLATE( WVG_MAKELPARAM, WAPI_MAKELPARAM )
-
 HB_FUNC( WVG_CREATEWINDOWEX )
 {
    void * hClassName;
@@ -758,33 +375,6 @@ HB_FUNC( WVG_CREATEWINDOWEX )
    hb_strfree( hClassName );
    hb_strfree( hWinName );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_SENDMESSAGETEXT )
-{
-   void * hBuffer;
-
-   SendMessage( ( HWND ) HB_PARHANDLE( 1 ),
-                hb_parni( 2 ),
-                ( WPARAM ) hb_parni( 3 ),
-                ( LPARAM ) HB_PARSTR( 4, &hBuffer, NULL ) );
-
-   hb_strfree( hBuffer );
-}
-
-HB_FUNC( WVG_GETMESSAGETEXT )
-{
-   TCHAR * cText = ( TCHAR * ) hb_xgrab( 32000 * sizeof( TCHAR ) );
-
-   cText[ 0 ] = TEXT( '\0' );
-
-   SendMessage( ( HWND ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( WPARAM ) hb_parnint( 3 ), ( LPARAM ) cText );
-
-   HB_RETSTR( cText );
-
-   hb_xfree( cText );
-}
-#endif
 
 HB_FUNC( WVG_SETWNDPROC )
 {
@@ -819,34 +409,6 @@ HB_FUNC( WVG_CALLWINDOWPROC )
 }
 
 /* TreeView Functions */
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_TREEVIEW_SETTEXTCOLOR )
-{
-#if ! defined( HB_OS_WIN_CE )
-   hb_retl( TreeView_SetTextColor( ( HWND ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-#endif
-}
-
-HB_FUNC( WVG_TREEVIEW_SETBKCOLOR )
-{
-#if ! defined( HB_OS_WIN_CE )
-   hb_retl( TreeView_SetBkColor( ( HWND ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-#endif
-}
-
-HB_FUNC( WVG_TREEVIEW_SETLINECOLOR )
-{
-   #if 0
-   hb_retl( TreeView_SetLineColor( ( HWND ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-   #endif
-}
-
-HB_FUNC( WVG_TREEVIEW_SELECTITEM )
-{
-   hb_retl( TreeView_SelectItem( ( HWND ) HB_PARHANDLE( 1 ), HB_PARHANDLE( 2 ) ) );
-}
-#endif
 
 HB_FUNC( WVG_TREEVIEW_EXPAND )
 {
@@ -890,26 +452,6 @@ HB_FUNC( WVG_BUTTON_GETCHECK )
 {
    hb_retnl( Button_GetCheck( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVG_ISICONIC )
-{
-#if ! defined( HB_OS_WIN_CE )
-   hb_retl( IsIconic( ( HWND ) HB_PARHANDLE( 1 ) ) );
-#else
-   hb_retl( HB_FALSE );
-#endif
-}
-
-HB_FUNC( WVG_ISZOOMED )
-{
-#if ! defined( HB_OS_WIN_CE )
-   hb_retl( IsZoomed( ( HWND ) HB_PARHANDLE( 1 ) ) );
-#else
-   hb_retl( HB_TRUE );
-#endif
-}
-#endif
 
 /* Wvg_SetDCBrushColor( hDC, nRGB ) */
 HB_FUNC( WVG_SETDCBRUSHCOLOR )
@@ -1411,50 +953,3 @@ HB_FUNC( WVG_SENDCBMESSAGE )
 
    hb_strfree( hText );
 }
-
-#if ! defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC_TRANSLATE( WVG_SENDDLGITEMMESSAGE    , WAPI_SENDDLGITEMMESSAGE    )
-HB_FUNC_TRANSLATE( WVG_GETFOCUS              , WAPI_GETFOCUS              )
-HB_FUNC_TRANSLATE( WVG_SETFOCUS              , WAPI_SETFOCUS              )
-HB_FUNC_TRANSLATE( WVG_SETTEXTCOLOR          , WAPI_SETTEXTCOLOR          )
-HB_FUNC_TRANSLATE( WVG_SETBKCOLOR            , WAPI_SETBKCOLOR            )
-HB_FUNC_TRANSLATE( WVG_SETBKMODE             , WAPI_SETBKMODE             )
-HB_FUNC_TRANSLATE( WVG_GETDIALOGBASEUNITS    , WAPI_GETDIALOGBASEUNITS    )
-HB_FUNC_TRANSLATE( WVG_SETDLGITEMTEXT        , WAPI_SETDLGITEMTEXT        )
-HB_FUNC_TRANSLATE( WVG_GETDLGITEMTEXT        , WAPI_GETDLGITEMTEXT        )
-HB_FUNC_TRANSLATE( WVG_CHECKDLGBUTTON        , WAPI_CHECKDLGBUTTON        )
-HB_FUNC_TRANSLATE( WVG_ISDLGBUTTONCHECKED    , WAPI_ISDLGBUTTONCHECKED    )
-HB_FUNC_TRANSLATE( WVG_CHECKRADIOBUTTON      , WAPI_CHECKRADIOBUTTON      )
-HB_FUNC_TRANSLATE( WVG_GETDLGITEM            , WAPI_GETDLGITEM            )
-HB_FUNC_TRANSLATE( WVG_MESSAGEBOX            , WAPI_MESSAGEBOX            )
-HB_FUNC_TRANSLATE( WVG_DRAWTEXT              , WAPI_DRAWTEXT              )
-HB_FUNC_TRANSLATE( WVG_MOVEWINDOW            , WAPI_MOVEWINDOW            )
-HB_FUNC_TRANSLATE( WVG_GETDESKTOPWINDOW      , WAPI_GETDESKTOPWINDOW      )
-HB_FUNC_TRANSLATE( WVG_SETPARENT             , WAPI_SETPARENT             )
-HB_FUNC_TRANSLATE( WVG_BRINGWINDOWTOTOP      , WAPI_BRINGWINDOWTOTOP      )
-HB_FUNC_TRANSLATE( WVG_SETFOREGROUNDWINDOW   , WAPI_BRINGWINDOWTOTOP      )
-HB_FUNC_TRANSLATE( WVG_SETWINDOWTEXT         , WAPI_SETWINDOWTEXT         )
-HB_FUNC_TRANSLATE( WVG_SETWINDOWLONG         , WAPI_SETWINDOWLONGPTR      )
-HB_FUNC_TRANSLATE( WVG_SENDMESSAGE           , WAPI_SENDMESSAGE           )
-HB_FUNC_TRANSLATE( WVG_SENDMESSAGETEXT       , WAPI_SENDMESSAGE           )
-HB_FUNC_TRANSLATE( WVG_ISWINDOW              , WAPI_ISWINDOW              )
-HB_FUNC_TRANSLATE( WVG_ENABLEWINDOW          , WAPI_ENABLEWINDOW          )
-HB_FUNC_TRANSLATE( WVG_DESTROYWINDOW         , WAPI_DESTROYWINDOW         )
-HB_FUNC_TRANSLATE( WVG_CLIENTTOSCREEN        , WAPI_CLIENTTOSCREEN        )
-HB_FUNC_TRANSLATE( WVG_SCREENTOCLIENT        , WAPI_SCREENTOCLIENT        )
-HB_FUNC_TRANSLATE( WVG_TREEVIEW_SETTEXTCOLOR , WAPI_TREEVIEW_SETLINECOLOR )
-HB_FUNC_TRANSLATE( WVG_TREEVIEW_SETBKCOLOR   , WAPI_TREEVIEW_SETBKCOLOR   )
-HB_FUNC_TRANSLATE( WVG_TREEVIEW_SETLINECOLOR , WAPI_TREEVIEW_SETLINECOLOR )
-HB_FUNC_TRANSLATE( WVG_TREEVIEW_SELECTITEM   , WAPI_TREEVIEW_SELECTITEM   )
-HB_FUNC_TRANSLATE( WVG_ISICONIC              , WAPI_ISICONIC              )
-HB_FUNC_TRANSLATE( WVG_ISZOOMED              , WAPI_ISZOOMED              )
-HB_FUNC_TRANSLATE( WVG_CREATEMENU            , WAPI_CREATEMENU            )
-HB_FUNC_TRANSLATE( WVG_CREATEPOPUPMENU       , WAPI_CREATEPOPUPMENU       )
-HB_FUNC_TRANSLATE( WVG_DELETEMENU            , WAPI_DELETEMENU            )
-HB_FUNC_TRANSLATE( WVG_DESTROYMENU           , WAPI_DESTROYMENU           )
-HB_FUNC_TRANSLATE( WVG_ENABLEMENUITEM        , WAPI_ENABLEMENUITEM        )
-HB_FUNC_TRANSLATE( WVG_CHECKMENUITEM         , WAPI_CHECKMENUITEM         )
-HB_FUNC_TRANSLATE( WVG_DRAWMENUBAR           , WAPI_DRAWMENUBAR           )
-HB_FUNC_TRANSLATE( WVG_UPDATEWINDOW          , WAPI_UPDATEWINDOW          )
-HB_FUNC_TRANSLATE( WVG_SHOWWINDOW            , WAPI_SHOWWINDOW            )
-#endif

@@ -629,37 +629,6 @@ HB_FUNC( WVT_SETPOPUPMENU )
       HB_RETHANDLE( 0 );
 }
 
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVT_CREATEMENU )
-{
-   HB_RETHANDLE( CreateMenu() );
-}
-
-HB_FUNC( WVT_CREATEPOPUPMENU )
-{
-   HB_RETHANDLE( CreatePopupMenu() );
-}
-#endif
-
-HB_FUNC_TRANSLATE( WVT_APPENDMENU, WVG_APPENDMENU )
-
-#if defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC( WVT_DELETEMENU )
-{
-   hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
-}
-
-HB_FUNC( WVT_DESTROYMENU )
-{
-   hb_retl( DestroyMenu( ( HMENU ) HB_PARHANDLE( 1 ) ) );
-}
-
-HB_FUNC( WVT_ENABLEMENUITEM )
-{
-   hb_retni( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
-}
-#endif
-
 HB_FUNC( WVT_GETLASTMENUEVENT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -1219,8 +1188,6 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    hb_retnint( 0 );
 }
 
-HB_FUNC_TRANSLATE( WVT__MAKEDLGTEMPLATE, __WAPI_DLGTEMPLATE_RAW_NEW )
-
 HB_FUNC( WVT_LBADDSTRING )
 {
    void * hText;
@@ -1302,11 +1269,3 @@ HB_FUNC( WVT_GETFONTHANDLE )
    else
       HB_RETHANDLE( 0 );
 }
-
-#if ! defined( __GTWVX_UNSAFE_POINTERS )
-HB_FUNC_TRANSLATE( WVT_CREATEMENU            , WAPI_CREATEMENU            )
-HB_FUNC_TRANSLATE( WVT_CREATEPOPUPMENU       , WAPI_CREATEPOPUPMENU       )
-HB_FUNC_TRANSLATE( WVT_DELETEMENU            , WAPI_DELETEMENU            )
-HB_FUNC_TRANSLATE( WVT_DESTROYMENU           , WAPI_DESTROYMENU           )
-HB_FUNC_TRANSLATE( WVT_ENABLEMENUITEM        , WAPI_ENABLEMENUITEM        )
-#endif

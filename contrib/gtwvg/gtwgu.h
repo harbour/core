@@ -403,6 +403,8 @@ HB_EXTERN_END
 #define HB_ISHANDLE( n )              hbwapi_is_HANDLE( n )
 #define HB_PARHANDLE( n )             hbwapi_par_raw_HANDLE( n )
 #define HB_PARVHANDLE( n, i )         hbwapi_parv_raw_HANDLE( n, i )
+#define HB_ITEMGETHANDLE( i )         hbwapi_itemGet_HANDLE( i )
+#define HB_ARRAYGETHANDLE( a, i )     hbwapi_arrayGet_HANDLE( a, i )
 
 #if defined( __GTWVX_RETURN_UNSAFE_POINTERS )
    #define HB_RETHANDLE( h )             hb_retnint( ( HB_PTRDIFF ) h )
@@ -414,7 +416,7 @@ HB_EXTERN_END
    #define HB_RETHANDLE( h )             hbwapi_ret_raw_HANDLE( h )
    #define HB_STORHANDLE( h, n )         hbwapi_stor_HANDLE( h, n )
    #define HB_ITEMPUTHANDLE( i, h )      hbwapi_itemPut_HANDLE( i, h )
-   #define HB_ARRAYSETHANDLE( a, i, h )  hbwapi_ArraySet_HANDLE( a, i, h )
+   #define HB_ARRAYSETHANDLE( a, i, h )  hbwapi_arraySet_HANDLE( a, i, h )
    #define HB_VMPUSHHANDLE( h )          hbwapi_vmPush_HANDLE( h )
 #endif
 
