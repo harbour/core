@@ -205,3 +205,178 @@ HB_FUNC( WAPI_SENDDLGITEMMESSAGE )  /* NOTE: unsafe function, may corrupt memory
 
    hb_strfree( hText );
 }
+
+#define _BUFFERSIZE  65534  /* 64kB allows to build up to 255 items on the dialog */
+
+/* Take an input pointer, return closest pointer that is
+   aligned on a DWORD (4 byte) boundary. */
+static LPWORD s_AlignOnDWORD( LPWORD p )
+{
+   HB_PTRDIFF ul = ( HB_PTRDIFF ) p;
+
+   ul  += 3;
+   ul >>= 2;
+   ul <<= 2;
+
+   return ( LPWORD ) ul;
+}
+
+HB_FUNC( __WAPI_DLGTEMPLATE_RAW_NEW )
+{
+   WORD * p;
+   WORD * pdlgtemplate = p = ( WORD * ) hb_xgrabz( _BUFFERSIZE );
+   WORD * pItems;
+
+   /* Parameters: 12 arrays
+      1 for DLG template
+      11 for item properties */
+
+   WORD    nItems = ( WORD ) hb_parvni( 1, 4 ), i;
+   DWORD   lStyle = hb_parvnl( 1, 3 );
+   HB_SIZE nchar;
+
+   /* Start to fill in the DLGTEMPLATE information. Addressing by WORDs */
+
+   *p++ = 1;                            /* version */
+   *p++ = 0xFFFF;                       /* signature */
+   *p++ = LOWORD( hb_parvnl( 1, 1 ) );  /* Help Id */
+   *p++ = HIWORD( hb_parvnl( 1, 1 ) );
+
+   *p++ = LOWORD( hb_parvnl( 1, 2 ) );  /* ext. style */
+   *p++ = HIWORD( hb_parvnl( 1, 2 ) );
+
+   *p++ = LOWORD( lStyle );
+   *p++ = HIWORD( lStyle );
+
+   pItems = p;
+
+   *p++ = ( WORD ) nItems;              /* NumberOfItems */
+   *p++ = ( short ) hb_parvni( 1, 5 );  /* x */
+   *p++ = ( short ) hb_parvni( 1, 6 );  /* y */
+   *p++ = ( short ) hb_parvni( 1, 7 );  /* cx */
+   *p++ = ( short ) hb_parvni( 1, 8 );  /* cy */
+   *p++ = ( short ) 0;                  /* Menu (ignored for now.) */
+   *p++ = ( short ) 0x00;               /* Class also ignored */
+
+   if( hb_parinfa( 1, 11 ) == HB_IT_STRING )
+   {
+      void *  hText;
+      LPCWSTR szText = hb_wstrnull( hb_parastr_u16( 1, 11, HB_CDP_ENDIAN_NATIVE, &hText, &nchar ) );
+
+      nchar = hb_wstrnlen( szText, nchar );
+
+      if( nchar > 256 )
+         nchar = 256;
+
+      hb_wstrncpy( p, szText, nchar );
+      p += nchar + 1;
+
+      hb_strfree( hText );
+   }
+   else
+      *p++ = 0;
+
+   /* add in the wPointSize and szFontName here iff the DS_SETFONT bit on */
+
+   if( ( lStyle & DS_SETFONT ) != 0 )
+   {
+      void *  hText;
+      LPCWSTR szText = hb_wstrnull( hb_parastr_u16( 1, 15, HB_CDP_ENDIAN_NATIVE, &hText, &nchar ) );
+
+      *p++ = ( short ) hb_parvni( 1, 12 );
+      *p++ = ( short ) hb_parvni( 1, 13 );
+      *p++ = ( short ) hb_parvni( 1, 14 );
+
+      nchar = hb_wstrnlen( szText, nchar );
+
+      if( nchar > 256 )
+         nchar = 256;
+
+      hb_wstrncpy( p, szText, nchar );
+      p += nchar + 1;
+
+      hb_strfree( hText );
+   }
+
+   for( i = 1; i <= nItems; i++ )
+   {
+      /* make sure each item starts on a DWORD boundary */
+      p = s_AlignOnDWORD( p );
+
+      *p++ = LOWORD( hb_parvnl( 2, i ) );  /* help id */
+      *p++ = HIWORD( hb_parvnl( 2, i ) );
+
+      *p++ = LOWORD( hb_parvnl( 3, i ) );  /* ext. style */
+      *p++ = HIWORD( hb_parvnl( 3, i ) );
+
+      *p++ = LOWORD( hb_parvnl( 4, i ) );  /* style */
+      *p++ = HIWORD( hb_parvnl( 4, i ) );
+
+      *p++ = ( short ) hb_parvni( 5, i );  /* x */
+      *p++ = ( short ) hb_parvni( 6, i );  /* y */
+      *p++ = ( short ) hb_parvni( 7, i );  /* cx */
+      *p++ = ( short ) hb_parvni( 8, i );  /* cy */
+
+      *p++ = LOWORD( hb_parvnl( 9, i ) );  /* id */
+      *p++ = HIWORD( hb_parvnl( 9, i ) );  /* id */
+
+      if( hb_parinfa( 10, i ) == HB_IT_STRING )
+      {
+         void *  hText;
+         LPCWSTR szText = hb_parastr_u16( 10, i, HB_CDP_ENDIAN_NATIVE, &hText, &nchar );
+
+         nchar = hb_wstrnlen( szText, nchar );
+
+         if( nchar > 256 )
+            nchar = 256;
+
+         hb_wstrncpy( p, szText, nchar );
+         p += nchar + 1;
+
+         hb_strfree( hText );
+      }
+      else
+      {
+         *p++ = 0xFFFF;
+         *p++ = ( WORD ) hb_parvni( 10, i );
+      }
+
+      if( hb_parinfa( 11, i ) == HB_IT_STRING )
+      {
+         void *  hText;
+         LPCWSTR szText = hb_parastr_u16( 11, i, HB_CDP_ENDIAN_NATIVE, &hText, &nchar );
+
+         nchar = hb_wstrnlen( szText, nchar );
+
+         if( nchar > 256 )
+            nchar = 256;
+
+         hb_wstrncpy( p, szText, nchar );
+         p += nchar + 1;
+
+         hb_strfree( hText );
+      }
+      else
+      {
+         *p++ = 0xFFFF;
+         *p++ = ( WORD ) hb_parvni( 11, i );
+      }
+
+      *p++ = 0x00;  /* extras (in array 12) */
+
+      /* 768 is the maximum size of one item */
+      if( ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) > _BUFFERSIZE - 768 )
+      {
+         nItems = i;
+         break;
+      }
+   }
+
+   *pItems = ( WORD ) nItems;
+
+   p = s_AlignOnDWORD( p );
+
+   hb_retclen( ( char * ) pdlgtemplate, ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate );
+
+   hb_xfree( pdlgtemplate );
+}

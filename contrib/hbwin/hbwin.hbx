@@ -457,6 +457,7 @@ DYNAMIC __oleVariantNew
 DYNAMIC __wapi_DEVMODE_Get
 DYNAMIC __wapi_DEVMODE_New
 DYNAMIC __wapi_DEVMODE_Set
+DYNAMIC __wapi_DLGTEMPLATE_Raw_New
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBWIN__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

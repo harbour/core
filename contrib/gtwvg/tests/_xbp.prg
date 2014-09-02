@@ -220,7 +220,7 @@ PROCEDURE demoxbp()
    oXbp:killInputFocus := {| x, y, oSLE | x := x, y := y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := hb_MemoRead( GetResource( "hbmk.hbm" ) )
+   cText   := hb_MemoRead( GetResource( __FILE__ ) )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()
