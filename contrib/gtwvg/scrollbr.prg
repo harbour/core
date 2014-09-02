@@ -145,7 +145,7 @@ METHOD WvgScrollBar:handleEvent( nMessage, aNM )
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      IF HB_ISNUMERIC( ::hBrushBG )
+      IF ! Empty( ::hBrushBG )
          Wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ENDIF

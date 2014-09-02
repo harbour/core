@@ -240,7 +240,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
       IF HB_ISNUMERIC( ::clr_FG )
          Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF HB_ISNUMERIC( ::hBrushBG )
+      IF ! Empty( ::hBrushBG )
          Wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE

@@ -118,7 +118,7 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
       IF HB_ISNUMERIC( ::clr_FG )
          Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF HB_ISNUMERIC( ::hBrushBG )
+      IF ! Empty( ::hBrushBG )
          Wvg_SetBkMode( aNM[ 1 ], 1 )
          Wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
          RETURN EVENT_HANDLED

@@ -255,3 +255,45 @@ PDEVMODE hbwapi_par_PDEVMODE( int iParam )
 
    return ph ? ( PDEVMODE ) *ph : NULL;
 }
+
+void * __hbwapi_par_handle( int n )
+{
+   if( HB_ISNUM( n ) )
+   {
+#if 0
+      char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+      char file[ HB_PATH_MAX ];
+      HB_USHORT line;
+
+      hb_procinfo( 0, procname, &line, file );
+
+      /* The goal is to minimize numeric pointers circulating
+         on .prg level, so trace them. */
+      HB_TRACE( HB_TR_ALWAYS, ( "%s:%s:%i: __hbwapi_par_handle(%d)", file, procname, line, n ) );
+#endif
+      return ( void * ) ( HB_PTRDIFF ) hb_parnint( n );
+   }
+   else
+      return hb_parptr( n );
+}
+
+void * __hbwapi_parv_handle( int n, int i )
+{
+   if( HB_ISNUM( n ) )
+   {
+#if 0
+      char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+      char file[ HB_PATH_MAX ];
+      HB_USHORT line;
+
+      hb_procinfo( 0, procname, &line, file );
+
+      /* The goal is to minimize numeric pointers circulating
+         on .prg level, so trace them. */
+      HB_TRACE( HB_TR_ALWAYS, ( "%s:%s:%i: __hbwapi_parv_handle(%d, %d)", file, procname, line, n, i ) );
+#endif
+      return ( void * ) ( HB_PTRDIFF ) hb_parvnint( n, i );
+   }
+   else
+      return hb_parvptr( n, i );
+}

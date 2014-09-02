@@ -135,7 +135,7 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
    ::license    := cLicense
    ::hContainer := ::oParent:getHWND()
 
-   IF ! HB_ISNUMERIC( ::hContainer ) .OR. ! HB_ISSTRING( ::CLSID )
+   IF Empty( ::hContainer ) .OR. ! HB_ISSTRING( ::CLSID )
       RETURN NIL
    ENDIF
 
@@ -150,7 +150,7 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
    IF Empty( hWnd )
       RETURN NIL
    ENDIF
-   ::hWnd := win_P2N( hWnd )
+   ::hWnd := hWnd
    ::pWnd := hWnd
 
    hObj := __axGetControl( ::pWnd )

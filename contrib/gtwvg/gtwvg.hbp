@@ -10,6 +10,7 @@
 
 hbwin.hbc
 
+#-cflag=-D__GTWVX_RETURN_UNSAFE_POINTERS
 #-cflag=-D__GTWVX_UNSAFE_POINTERS
 #-prgflag=-D__GTWVX_UNSAFE_POINTERS
 

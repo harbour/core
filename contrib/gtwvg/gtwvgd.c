@@ -649,8 +649,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
    }
    /* Fire event to be trapped by the application */
    {
-      PHB_ITEM pEvParams = hb_itemNew( NULL );
-      hb_itemPutNI( pEvParams, iKey );
+      PHB_ITEM pEvParams = hb_itemPutNI( NULL, iKey );
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_KEYBOARD, pEvParams );
    }
 }
@@ -1960,8 +1959,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                      return DefWindowProc( hWnd, message, wParam, lParam );
                }
                {  /* To evoke if that portion is covered by GUI control */
-                  PHB_ITEM pEvParams = hb_itemNew( NULL );
-                  HB_ITEMPUTHANDLE( pEvParams, hWnd );
+                  PHB_ITEM pEvParams = HB_ITEMPUTHANDLE( NULL, hWnd );
                   hb_gt_wvt_FireEvent( pWVT, HB_GTE_PAINT, pEvParams );
                }
                return 0;
@@ -2193,13 +2191,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             else
             {
                PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
-               int iLo, iHi;
 
-               iHi = HIWORD( wParam );
-               iLo = LOWORD( wParam );
-
-               hb_arraySetNI( pEvParams, 1, iHi );                   /* Notification Code  */
-               hb_arraySetNI( pEvParams, 2, iLo );                   /* Control identifier */
+               hb_arraySetNI( pEvParams, 1, HIWORD( wParam ) );     /* Notification Code  */
+               hb_arraySetNI( pEvParams, 2, LOWORD( wParam ) );     /* Control identifier */
                HB_ARRAYSETHANDLE( pEvParams, 3, ( HWND ) lParam );  /* Controls hWnd      */
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, pEvParams );

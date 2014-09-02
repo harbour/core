@@ -617,7 +617,7 @@ HB_FUNC( WVG_APPENDMENU )
    else /* It is a SEPARATOR or Submenu */
       hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ),
          ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-         ( LPCTSTR ) HB_PARHANDLE( 4 ) ) );
+         HB_ISNUM( 4 ) ? ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( LPCTSTR ) HB_PARHANDLE( 4 ) ) );
 }
 
 HB_FUNC( WVG_INSERTMENU )
@@ -751,7 +751,7 @@ HB_FUNC( WVG_CREATEWINDOWEX )
       hb_parni( 5 ), hb_parni( 6 ),
       hb_parni( 7 ), hb_parni( 8 ),
       ( HWND ) HB_PARHANDLE( 9 ),
-      ( HMENU ) HB_PARHANDLE( 10 ),
+      HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : ( HMENU ) HB_PARHANDLE( 10 ),
       HB_ISHANDLE( 11 ) ? ( HINSTANCE ) HB_PARHANDLE( 11 ) : wvg_hInstance(),
       NULL ) );
 
@@ -1269,9 +1269,9 @@ HB_FUNC( WVG_SENDCBMESSAGE )
             hb_arraySet( pCbi, 2, pRc2 );
 
             hb_arraySetNInt( pCbi, 3, cbi.stateButton );
-            hb_arraySetNInt( pCbi, 4, ( HB_PTRDIFF ) cbi.hwndCombo );
-            hb_arraySetNInt( pCbi, 5, ( HB_PTRDIFF ) cbi.hwndItem );
-            hb_arraySetNInt( pCbi, 6, ( HB_PTRDIFF ) cbi.hwndList );
+            HB_ARRAYSETHANDLE( pCbi, 4, cbi.hwndCombo );
+            HB_ARRAYSETHANDLE( pCbi, 5, cbi.hwndItem );
+            HB_ARRAYSETHANDLE( pCbi, 6, cbi.hwndList );
 
             hb_itemReturnRelease( pCbi );
             hb_itemRelease( pRc1 );
