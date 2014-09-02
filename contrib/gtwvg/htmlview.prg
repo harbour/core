@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpHtmlViewer compatible Class
  *
  * Copyright 2008 Andy Wos
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
@@ -45,14 +45,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                Xbase++ xbpHtmlViewer compatible Class
- *
- *                 Pritpal Bedi <bedipritpal@hotmail.com>
- *                              2008-12-08
  */
 
 #include "hbclass.ch"

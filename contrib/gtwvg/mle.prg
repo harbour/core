@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpMLE compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                    Xbase++ xbpMLE compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               2008-12-07
  */
 
 #include "hbclass.ch"
@@ -202,7 +196,7 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
       IF Empty( ::hBrushBG )
          RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 

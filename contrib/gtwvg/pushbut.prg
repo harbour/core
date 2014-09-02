@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpPushButton Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                 Xbase++ xbpPushButton Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               2008-11-26
  */
 
 #include "hbclass.ch"
@@ -184,7 +178,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
          Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF ! Empty( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 

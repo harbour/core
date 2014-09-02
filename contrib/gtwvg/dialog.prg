@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpDialog Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                  Xbase++ Compatible xbpDialog Class
- *
- *                 Pritpal Bedi <bedipritpal@hotmail.com>
- *                              2008-11-17
  */
 
 #include "hbclass.ch"

@@ -62,9 +62,6 @@
  *                     CUI Enhancement Oriented
  *                         No Callbacks etc.
  *                            Pure Statics
- *                                 .
- *                Pritpal Bedi <bedipritpal@hotmail.com>
- *                             2009-02-28
  */
 
 #include "gtwvg.h"

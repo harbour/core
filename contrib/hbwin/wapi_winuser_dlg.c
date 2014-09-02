@@ -106,9 +106,10 @@ HB_FUNC( WAPI_DIALOGBOXPARAM )
    dialog box. */
 HB_FUNC( WAPI_ENDDIALOG )
 {
-   hbwapi_ret_L( EndDialog( hbwapi_par_raw_HWND( 1 ),
-                            hbwapi_par_INT( 2 ) ) );
+   BOOL bResult = EndDialog( hbwapi_par_raw_HWND( 1 ),
+                             hbwapi_par_INT( 2 ) );
    hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
 }
 
 HB_FUNC( WAPI_CHECKDLGBUTTON )
@@ -151,16 +152,17 @@ HB_FUNC( WAPI_GETDLGITEMTEXT )
                                   lpResult,
                                   nSize + 1 );
 
-   HB_RETSTRLEN( lpResult, ( HB_SIZE ) nResult );
    hbwapi_SetLastError( GetLastError() );
+   HB_RETSTRLEN( lpResult, ( HB_SIZE ) nResult );
    hb_xfree( lpResult );
 }
 
 /* Retrieves a handle to a control in the specified dialog box. */
 HB_FUNC( WAPI_GETDLGITEM )
 {
-   hbwapi_ret_raw_HWND( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) );
+   HWND hWnd = GetDlgItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) );
    hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_raw_HWND( hWnd );
 }
 
 /* Adds a string to a list in a combo box. */

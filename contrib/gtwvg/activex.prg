@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpActiveXControl Class
  *
  * Copyright 2008 Andy Wos
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
@@ -45,14 +45,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *              Xbase++ Compatible xbpActiveXControl Class
- *
- *                 Pritpal Bedi <bedipritpal@hotmail.com>
- *                              2008-11-08
  */
 
 #include "hbclass.ch"

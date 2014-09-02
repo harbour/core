@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpTreeView compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbpTreeView compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               2008-11-26
  */
 
 #include "hbclass.ch"
@@ -239,7 +233,7 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
       IF Empty( ::hBrushBG )
          RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 

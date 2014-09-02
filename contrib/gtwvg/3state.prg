@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbp3State Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbp3State Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               2008-12-07
  */
 
 #include "hbclass.ch"
@@ -127,7 +121,7 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD Wvg3State:handleEvent( nMessage, aNM )
 
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", ::ClassName(), nMessage )
 
    DO CASE
    CASE nMessage == HB_GTE_COMMAND
@@ -147,7 +141,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
       IF Empty( ::hBrushBG )
          RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 
@@ -157,7 +151,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
 
 METHOD PROCEDURE Wvg3State:destroy()
 
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", ::ClassName() )
 
    ::WvgWindow:destroy()
 

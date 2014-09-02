@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpStatusBar Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                 Xbase++ xbpStatusBar Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                              2008-11-25
  */
 
 #include "hbclass.ch"
@@ -160,7 +154,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
       IF Empty( ::hBrushBG )
          RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 

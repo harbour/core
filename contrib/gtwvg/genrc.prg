@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Parts Compatible functions
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,10 @@
  *
  */
 
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                  Xbase++ Parts Compatible functions
-//
-//                Pritpal Bedi <bedipritpal@hotmail.com>
-//                              2011-12-03
-//
+/*                                EkOnkar
+ *                          ( The LORD is ONE )
+ */
+
 #include "hbclass.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
@@ -64,7 +60,7 @@ THREAD STATIC t_oCrt
 
 EXIT PROCEDURE KillGTChildren()
 
-   IF HB_ISOBJECT( t_oCrt ) .AND. __objGetClsName( t_oCrt ) == "WVGCRT" .AND. t_oCrt:isGT
+   IF HB_ISOBJECT( t_oCrt ) .AND. t_oCrt:ClassName() == "WVGCRT" .AND. t_oCrt:isGT
       t_oCrt:destroy()
       t_oCrt := NIL
    ENDIF

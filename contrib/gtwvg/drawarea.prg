@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ WvgDialog's Helper Class
  *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                   Xbase++ WvgDialog's Helper Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               2009-02-15
  */
 
 #include "hbclass.ch"
@@ -119,7 +113,7 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
          Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF ! Empty( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          Wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
          RETURN EVENT_HANDLED
       ENDIF

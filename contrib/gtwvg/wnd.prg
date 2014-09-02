@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpWindow Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                  Xbase++ Compatible xbpWindow Class
- *
- *                 Pritpal Bedi <bedipritpal@hotmail.com>
- *                              2008-11-08
  */
 
 #include "hbclass.ch"
@@ -294,7 +288,7 @@ METHOD WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::visible     := lVisible
 
    IF Empty( ::oParent )
-      IF !( __objGetClsName( Self ) $ "WVGCRT,WVGDIALOG" )
+      IF !( ::ClassName() $ "WVGCRT,WVGDIALOG" )
          ::oParent := WvgSetAppWindow()
       ENDIF
    ENDIF
@@ -460,7 +454,7 @@ METHOD WvgWindow:setColorBG( nRGB )
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
 
-         IF ::className() == "WVGDIALOG" .OR. __objGetClsName( Self ) == "WVGCHECKBOX"
+         IF ::ClassName() == "WVGDIALOG" .OR. ::ClassName() == "WVGCHECKBOX"
             Wvg_SetCurrentBrush( ::hWnd, ::hBrushBG )
          ENDIF
       ENDIF
@@ -549,7 +543,7 @@ METHOD WvgWindow:setSize( aSize, lPaint )
 METHOD WvgWindow:isDerivedFrom( cClassORoObject )
 
    LOCAL lTrue := .F.
-   LOCAL cCls := __objGetClsName( self )
+   LOCAL cCls := ::ClassName()
 
    /* Compares without Xbp or Wvg prefixes  */
 

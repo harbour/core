@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpTabPage compatible Class
  *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbpTabPage compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               2009-03-01
  */
 
 #include "hbclass.ch"

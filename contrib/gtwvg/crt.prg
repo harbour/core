@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpCrt Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,13 +44,9 @@
  *
  */
 
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                    Xbase++ Compatible xbpCrt Class
-//
-//                 Pritpal Bedi  <bedipritpal@hotmail.com>
-//                              2008-11-08
+/*                                EkOnkar
+ *                          ( The LORD is ONE )
+ */
 
 #include "hbclass.ch"
 #include "inkey.ch"

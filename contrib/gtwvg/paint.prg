@@ -1,5 +1,5 @@
 /*
- * Paint functions
+ * Routines to manage Wvt*Classes Gui Painting
  *
  * Copyright 2004 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -43,8 +43,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
-/* Routines to manage Wvt*Classes Gui Painting */
 
 #include "wvtwin.ch"
 

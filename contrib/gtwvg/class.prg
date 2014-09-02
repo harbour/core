@@ -1,5 +1,5 @@
 /*
- * GUI Components
+ * Wvt*Classes
  *
  * Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * Based On:
@@ -46,12 +46,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/*
- *                            Wvt*Classes
- *                               2004
- *                Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
 #include "hbclass.ch"

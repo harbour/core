@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpMenuBar Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                  Xbase++ Compatible xbpMenuBar Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                              2008-11-22
  */
 
 #include "hbclass.ch"

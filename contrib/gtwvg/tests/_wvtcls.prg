@@ -1,8 +1,7 @@
-/*
- * Wvt*Classes Demonstration
+/* Wvt*Classes Demonstration
  *
  * This protocol can be clubbed with pure console implementation
- * AND can be called IN a separate thread as well as modal TO
+ * and can be called in a separate thread as well as modal to
  * current window.
  *
  * Pritpal Bedi <bedipritpal@hotmail.com>
