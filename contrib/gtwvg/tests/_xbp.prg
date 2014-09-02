@@ -26,10 +26,10 @@ PROCEDURE demoxbp()
    oDA := oCrt:drawingArea
 
    // --- Menu ---
-   ActiveXBuildMenuXbp( oCrt, @oStatic, @oStatic2 )
+   BuildMenuXbp( oCrt, @oStatic, @oStatic2 )
 
    // --- ToolBar ---
-   oTBar := ActiveXBuildToolBarXbp( oDA )
+   oTBar := BuildToolBarXbp( oDA )
 
    // --- StatusBar ---
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .T. )
@@ -125,8 +125,8 @@ PROCEDURE demoxbp()
 
    oTree:setData( oItem2 )
 
-   // --- Active-X ---
    hb_gtInfo( HB_GTI_WINTITLE, hb_Version( HB_VERSION_URL_BASE ) )
+   // --- ActiveX ---
 #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
    oCom:CLSID := "Shell.Explorer.2"
@@ -220,7 +220,7 @@ PROCEDURE demoxbp()
    oXbp:killInputFocus := {| x, y, oSLE | x := x, y := y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( GetResource( "gtwvg.hbc" ) )
+   cText   := hb_MemoRead( GetResource( "hbmk.hbm" ) )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()
@@ -245,7 +245,7 @@ PROCEDURE demoxbp()
    oCrt:sendMessage( WM_SIZE, 0, 0 )
    oCrt:show()
 
-   DO WHILE Inkey() != K_ESC
+   DO WHILE Inkey( 0 ) != K_ESC
    ENDDO
 
    oCrt:Destroy()
@@ -276,7 +276,7 @@ STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr
 
    RETURN 1
 
-STATIC PROCEDURE ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
+STATIC PROCEDURE BuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    LOCAL oMenuBar, oSubMenu
 
@@ -316,7 +316,7 @@ STATIC PROCEDURE ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    RETURN
 
-STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
+STATIC FUNCTION BuildToolBarXbp( oCrt )
 
    LOCAL oTBar := WvgToolBar():new( oCrt, , { 0, 0 }, { 0, 0 }, , .T. )
 

@@ -58,6 +58,8 @@
 #include "hbwapi.h"
 #include "gtwvg.h"
 
+#include <windowsx.h>
+
 /* workaround for missing declaration in MinGW */
 #if ! defined( TTM_SETTITLE ) && defined( TTM_SETTITLEA )
    #define TTM_SETTITLE  TTM_SETTITLEA
@@ -628,6 +630,7 @@ HB_FUNC( WVT_SETPOPUPMENU )
       wvg_rethandle( 0 );
 }
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVT_CREATEMENU )
 {
    wvg_rethandle( CreateMenu() );
@@ -637,9 +640,11 @@ HB_FUNC( WVT_CREATEPOPUPMENU )
 {
    wvg_rethandle( CreatePopupMenu() );
 }
+#endif
 
 HB_FUNC_TRANSLATE( WVT_APPENDMENU, WVG_APPENDMENU )
 
+#if defined( __GTWVX_UNSAFE_POINTERS )
 HB_FUNC( WVT_DELETEMENU )
 {
    hb_retl( DeleteMenu( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
@@ -654,6 +659,7 @@ HB_FUNC( WVT_ENABLEMENUITEM )
 {
    hb_retni( EnableMenuItem( ( HMENU ) wvg_parhandle( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
+#endif
 
 HB_FUNC( WVT_GETLASTMENUEVENT )
 {
@@ -795,6 +801,224 @@ HB_FUNC( WVT_GETMENU )
    }
 #endif
    wvg_rethandle( 0 );
+}
+
+/* Modeless Dialogs Implementation */
+
+static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+{
+   PHB_GTWVT _s      = hb_wvt_gtGetWVT();
+   long      lReturn = 0;
+
+   if( _s )
+   {
+      int      iIndex, iType;
+      PHB_ITEM pFunc = NULL;
+
+      iType = 0;
+
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( _s->hDlgModeless ); iIndex++ )
+      {
+         if( _s->hDlgModeless[ iIndex ] != NULL && _s->hDlgModeless[ iIndex ] == hDlg )
+         {
+            if( _s->pFunc[ iIndex ] != NULL )
+            {
+               pFunc = _s->pFunc[ iIndex ];
+               iType = _s->iType[ iIndex ];
+            }
+            break;
+         }
+      }
+
+      if( pFunc )
+      {
+         switch( iType )
+         {
+            case 1: /* Function Name */
+               if( hb_vmRequestReenter() )
+               {
+                  hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
+                  hb_vmPushNil();
+                  wvg_vmpushhandle( hDlg );
+                  hb_vmPushNumInt( message );
+                  hb_vmPushNumInt( wParam );
+                  hb_vmPushNumInt( lParam );
+                  hb_vmDo( 4 );
+                  lReturn = hb_parnl( -1 );
+                  hb_vmRequestRestore();
+               }
+               break;
+
+            case 2: /* Block */
+               /* eval the codeblock */
+               if( HB_IS_EVALITEM( pFunc ) )
+               {
+                  if( hb_vmRequestReenter() )
+                  {
+                     hb_vmPushEvalSym();
+                     hb_vmPush( _s->pFunc[ iIndex ] );
+                     wvg_vmpushhandle( hDlg );
+                     hb_vmPushNumInt( message );
+                     hb_vmPushNumInt( wParam );
+                     hb_vmPushNumInt( lParam );
+                     hb_vmSend( 4 );
+                     lReturn = hb_parnl( -1 );
+                     hb_vmRequestRestore();
+                  }
+               }
+               else
+               {
+                  /* TODO: internal error: missing codeblock */
+               }
+               break;
+         }
+      }
+
+      switch( message )
+      {
+         case WM_COMMAND:
+            switch( LOWORD( wParam ) )
+            {
+               case IDOK:
+                  DestroyWindow( hDlg );
+                  lReturn = 1;
+                  break;
+
+               case IDCANCEL:
+                  DestroyWindow( hDlg );
+                  lReturn = 0;
+                  break;
+            }
+            break;
+
+#if ! defined( HB_OS_WIN_CE )
+         case WM_NCDESTROY:
+#else
+         case WM_DESTROY:
+#endif
+            if( _s->pFunc[ iIndex ] != NULL && _s->iType[ iIndex ] == 2 )
+               hb_itemRelease( ( PHB_ITEM ) _s->pFunc[ iIndex ] );
+            _s->hDlgModeless[ iIndex ] = NULL;
+            _s->pFunc[ iIndex ]        = NULL;
+            _s->iType[ iIndex ]        = 0;
+            lReturn = 0;
+            break;
+      }
+   }
+
+   return lReturn;
+}
+
+static BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+{
+   PHB_GTWVT _s      = hb_wvt_gtGetWVT();
+   long      lReturn = 0;
+
+   if( _s )
+   {
+      int      iIndex, iType;
+      PHB_ITEM pFunc  = NULL;
+      int      iFirst = ( int ) lParam;
+
+      if( iFirst > 0 && iFirst <= ( int ) HB_SIZEOFARRAY( _s->hDlgModal ) )
+      {
+         _s->hDlgModal[ iFirst - 1 ] = hDlg;
+         SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
+         return lReturn;
+      }
+
+      iType = 0;
+
+      for( iIndex = 0; iIndex < ( int ) HB_SIZEOFARRAY( _s->hDlgModal ); iIndex++ )
+      {
+         if( _s->hDlgModal[ iIndex ] != NULL && _s->hDlgModal[ iIndex ] == hDlg )
+         {
+            if( _s->pFuncModal[ iIndex ] != NULL )
+            {
+               pFunc = _s->pFuncModal[ iIndex ];
+               iType = _s->iTypeModal[ iIndex ];
+            }
+            break;
+         }
+      }
+
+      if( pFunc )
+      {
+         switch( iType )
+         {
+            case 1: /* Function Name */
+               if( hb_vmRequestReenter() )
+               {
+                  hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
+                  hb_vmPushNil();
+                  wvg_vmpushhandle( hDlg );
+                  hb_vmPushNumInt( message );
+                  hb_vmPushNumInt( wParam );
+                  hb_vmPushNumInt( lParam );
+                  hb_vmDo( 4 );
+                  lReturn = hb_parnl( -1 );
+                  hb_vmRequestRestore();
+               }
+               break;
+
+            case 2: /* Block */
+               /* eval the codeblock */
+               if( HB_IS_EVALITEM( pFunc ) )
+               {
+                  if( hb_vmRequestReenter() )
+                  {
+                     hb_vmPushEvalSym();
+                     hb_vmPush( pFunc );
+                     wvg_vmpushhandle( hDlg );
+                     hb_vmPushNumInt( message );
+                     hb_vmPushNumInt( wParam );
+                     hb_vmPushNumInt( lParam );
+                     hb_vmSend( 4 );
+                     lReturn = hb_parnl( -1 );
+                     hb_vmRequestRestore();
+                  }
+               }
+               else
+               {
+                  /* TODO: internal error: missing codeblock */
+               }
+               break;
+         }
+      }
+
+      switch( message )
+      {
+         case WM_COMMAND:
+            switch( LOWORD( wParam ) )
+            {
+               case IDOK:
+                  EndDialog( hDlg, IDOK );
+                  lReturn = 0;
+                  break;
+
+               case IDCANCEL:
+                  EndDialog( hDlg, IDCANCEL );
+                  lReturn = 0;
+                  break;
+            }
+            break;
+
+#if ! defined( HB_OS_WIN_CE )
+         case WM_NCDESTROY:
+#else
+         case WM_DESTROY:
+#endif
+            if( _s->pFuncModal[ iIndex ] != NULL && _s->iTypeModal[ iIndex ] == 2 )
+               hb_itemRelease( ( PHB_ITEM ) _s->pFuncModal[ iIndex ] );
+            _s->hDlgModal[ iIndex ]  = NULL;
+            _s->pFuncModal[ iIndex ] = NULL;
+            _s->iTypeModal[ iIndex ] = 0;
+            lReturn = 0;
+            break;
+      }
+   }
+
+   return lReturn;
 }
 
 /* Dialogs */
@@ -1058,6 +1282,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
       memcpy( p, szText, nchar * sizeof( WCHAR ) );
       p += nchar;
+      *p++ = 0;
 
       hb_strfree( hText );
    }
@@ -1080,6 +1305,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
       memcpy( p, szText, nchar * sizeof( WCHAR ) );
       p += nchar;
+      *p++ = 0;
 
       hb_strfree( hText );
    }
@@ -1116,6 +1342,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
          memcpy( p, szText, nchar * sizeof( WCHAR ) );
          p += nchar;
+         *p++ = 0;
 
          hb_strfree( hText );
       }
@@ -1135,6 +1362,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
          memcpy( p, szText, nchar * sizeof( WCHAR ) );
          p += nchar;
+         *p++ = 0;
 
          hb_strfree( hText );
       }
@@ -1167,38 +1395,38 @@ HB_FUNC( WVT_LBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   hb_retni( ListBox_AddString( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), HB_PARSTR( 3, &hText, NULL ) ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
-   hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
+   hb_retni( ListBox_GetCount( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ) ) );
 }
 
 HB_FUNC( WVT_LBDELETESTRING )
 {
-   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
+   hb_retni( ListBox_DeleteString( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_LBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
+   hb_retni( ListBox_SetCurSel( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_CBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_CBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
+   hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) wvg_parhandle( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 ) );
 }
 
 /* Wvt_DlgSetIcon( hDlg, ncIcon ) */
@@ -1336,3 +1564,11 @@ void wvt_Size2ArrayEx( SIZE * siz, PHB_ITEM aSize )
    hb_arraySetNL( aSize, 1, siz->cx );
    hb_arraySetNL( aSize, 2, siz->cy );
 }
+
+#if ! defined( __GTWVX_UNSAFE_POINTERS )
+HB_FUNC_TRANSLATE( WVT_CREATEMENU            , WAPI_CREATEMENU            )
+HB_FUNC_TRANSLATE( WVT_CREATEPOPUPMENU       , WAPI_CREATEPOPUPMENU       )
+HB_FUNC_TRANSLATE( WVT_DELETEMENU            , WAPI_DELETEMENU            )
+HB_FUNC_TRANSLATE( WVT_DESTROYMENU           , WAPI_DESTROYMENU           )
+HB_FUNC_TRANSLATE( WVT_ENABLEMENUITEM        , WAPI_ENABLEMENUITEM        )
+#endif

@@ -179,7 +179,7 @@ HB_FUNC( WAPI_GETDIALOGBASEUNITS )
    hb_retnl( GetDialogBaseUnits() );
 }
 
-HB_FUNC( WAPI_SENDDLGITEMMESSAGE )
+HB_FUNC( WAPI_SENDDLGITEMMESSAGE )  /* NOTE: unsafe function, may corrupt memory */
 {
    void *  hText;
    HB_SIZE nLen;

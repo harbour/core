@@ -222,7 +222,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
 #else
    HB_SYMBOL_UNUSED( nActiveX )
    oCrt:show()
-   DO WHILE Inkey() != K_ESC
+   DO WHILE Inkey( 0 ) != K_ESC
    ENDDO
 #endif
 
@@ -394,7 +394,7 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
 
    ENDSWITCH
 
-   DO WHILE ( nKey := Inkey() ) != K_ESC
+   DO WHILE ( nKey := Inkey( 0 ) ) != K_ESC
 
       IF nActiveX == 2
          oCom:Value := Seconds() / 86400

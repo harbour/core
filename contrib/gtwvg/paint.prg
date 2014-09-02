@@ -439,7 +439,7 @@ FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 hWnd:     Handle to parent window
 cPath:    (optional) if OFN_ALLOWMULTISELECT the path is stored
 cTitle:   Window Title
-aFilter:  Array of Files Types i.e. { { "Data Bases", "*.dbf" }, { "Clipper", "*.prg" } }
+aFilter:  Array of Files Types i.e. { { "Databases", "*.dbf" }, { "Harbour", "*.prg" } }
 nFlags:   OFN_* values default to OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
@@ -482,7 +482,7 @@ FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
 hWnd:     Handle to parent window
 cDefName: (optional) Default FileName
 cTitle:   Window Title
-aFilter:  Array of Files Types i.e. { { "Data Bases", "*.dbf" }, { "Clipper", "*.prg" } }
+aFilter:  Array of Files Types i.e. { { "Databases", "*.dbf" }, { "Harbour", "*.prg" } }
 nFlags:   OFN_* values default to OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
@@ -736,4 +736,14 @@ FUNCTION Wvg_SetTimer( ... )
 
 FUNCTION Wvg_InvalidateRect( w, r, e )
    RETURN wapi_InvalidateRect( w, r, hb_defaultValue( e, .T. ) )
+
+FUNCTION Wvg_GetMessageText( w, p1, p2 )
+
+   LOCAL cText := Replicate( Chr( 0 ), 64000 )
+
+   wapi_SendMessage( w, p1, p2, @cText )
+
+   cText += Chr( 0 )
+
+   RETURN Left( cText, At( Chr( 0 ), cText ) - 1 )
 #endif

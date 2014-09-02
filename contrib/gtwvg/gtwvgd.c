@@ -2007,7 +2007,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                   {
                      hb_vmPushDynSym( pWVT->pSymWVT_SETFOCUS );
                      hb_vmPushNil();
-                     hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
+                     wvg_vmpushhandle( hWnd );
                      hb_vmDo( 1 );
                      hb_vmRequestRestore();
                   }
@@ -2038,7 +2038,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                {
                   hb_vmPushDynSym( pWVT->pSymWVT_KILLFOCUS );
                   hb_vmPushNil();
-                  hb_vmPushNumInt( ( HB_PTRDIFF ) hWnd );
+                  wvg_vmpushhandle( hWnd );
                   hb_vmDo( 1 );
                   hb_vmRequestRestore();
                }

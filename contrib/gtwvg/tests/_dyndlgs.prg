@@ -282,11 +282,11 @@ FUNCTION DlgSlideShow()
 
    t_aSlides := { "vouch1.bmp", "v_notes.ico", "2000.gif", "v_lock.bmp", "v_help.ico" }
 
-   nStyle  := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
+   nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
 
-   aDlg    := Wvt_MakeDlgTemplate( 0, 0, 20, 40, {}, "Slide Show", nStyle )
+   aDlg   := Wvt_MakeDlgTemplate( 0, 0, 20, 40, {}, "Slide Show", nStyle )
 
-   hDlg    := Wvt_CreateDialog( aDlg, .F., {| ... | DlgSlideShowProc( ... ) }, "vr_1.ico", 5000 )
+   hDlg   := Wvt_CreateDialog( aDlg, .F., {| ... | DlgSlideShowProc( ... ) }, "vr_1.ico", 5000 )
 
    RETURN hDlg
 
@@ -321,10 +321,8 @@ STATIC FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
 STATIC PROCEDURE DrawSlide( hDlg, nSlide )
 
-   LOCAL hDC, aRect
-
-   hDC   := Wvg_GetDC( hDlg )
-   aRect := Wvg_GetClientRect( hDlg )
+   LOCAL hDC   := Wvg_GetDC( hDlg )
+   LOCAL aRect := Wvg_GetClientRect( hDlg )
 
    win_Rectangle( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - 10, aRect[ 4 ] - 10 )
    Wvg_DrawImage( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - aRect[ 1 ] - 20, ;

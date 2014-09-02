@@ -777,7 +777,6 @@ HB_FUNC( WVG_SENDMESSAGETEXT )
 
    hb_strfree( hBuffer );
 }
-#endif
 
 HB_FUNC( WVG_GETMESSAGETEXT )
 {
@@ -791,6 +790,7 @@ HB_FUNC( WVG_GETMESSAGETEXT )
 
    hb_xfree( cText );
 }
+#endif
 
 HB_FUNC( WVG_SETWNDPROC )
 {
@@ -870,11 +870,14 @@ HB_FUNC( WVG_TVIS_EXPANDED )
 
 HB_FUNC( WVG_LBGETTEXT )
 {
-   TCHAR text[ MAX_PATH + 1 ];
+   HWND hWnd = ( HWND ) wvg_parhandle( 1 );
+   int iIndex = hb_parni( 2 );
+   int iLen = ListBox_GetTextLen( hWnd, iIndex );
+   LPTSTR szText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
-   SendMessage( ( HWND ) wvg_parhandle( 1 ), LB_GETTEXT, ( WPARAM ) hb_parnint( 2 ), ( LPARAM ) text  );
+   ListBox_GetText( hWnd, iIndex, szText );
 
-   HB_RETSTR( text );
+   HB_RETSTRLEN( szText, iLen );
 }
 
 HB_FUNC( WVG_LBGETCURSEL )

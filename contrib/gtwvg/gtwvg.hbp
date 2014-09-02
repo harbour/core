@@ -10,6 +10,9 @@
 
 hbwin.hbc
 
+#-cflag=-D__GTWVX_UNSAFE_POINTERS
+#-prgflag=-D__GTWVX_UNSAFE_POINTERS
+
 # Optimize build time and make sure we build even with this option
 -cflag=-DWIN32_LEAN_AND_MEAN
 

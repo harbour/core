@@ -952,7 +952,7 @@ HB_FUNC( WAPI_SETTIMER )
    hb_retnint( result );
 }
 
-HB_FUNC( WAPI_SENDMESSAGE )
+HB_FUNC( WAPI_SENDMESSAGE )  /* NOTE: unsafe function, may corrupt memory */
 {
    void *  hText;
    HB_SIZE nLen;

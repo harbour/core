@@ -1758,6 +1758,7 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
       memcpy( p, szText, nchar * sizeof( WCHAR ) );
       p += nchar;
+      *p++ = 0;
 
       hb_strfree( hText );
    }
@@ -1780,6 +1781,7 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
       memcpy( p, szText, nchar * sizeof( WCHAR ) );
       p += nchar;
+      *p++ = 0;
 
       hb_strfree( hText );
    }
@@ -1816,6 +1818,7 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
          memcpy( p, szText, nchar * sizeof( WCHAR ) );
          p += nchar;
+         *p++ = 0;
 
          hb_strfree( hText );
       }
@@ -1835,6 +1838,7 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
          memcpy( p, szText, nchar * sizeof( WCHAR ) );
          p += nchar;
+         *p++ = 0;
 
          hb_strfree( hText );
       }

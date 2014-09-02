@@ -442,6 +442,7 @@ typedef struct
    #define HB_STOREHANDLE( h, n )        hb_stornint( ( HB_PTRDIFF ) ( h ), n )
    #define HB_ITEMPUTHANDLE( i, h )      hb_itemPutNInt( i, ( HB_PTRDIFF ) ( h ) )
    #define HB_ARRAYSETHANDLE( a, i, h )  hb_arraySetNInt( a, i, ( HB_PTRDIFF ) ( h ) )
+   #define HB_VMPUSHHANDLE( h )          hb_vmPushNumInt( ( HB_PTRDIFF ) ( h ) )
 #else
    #define HB_ISHANDLE( n )              HB_ISPOINTER( n )
    #define HB_PARHANDLE( n )             hb_parptr( n )
@@ -449,6 +450,7 @@ typedef struct
    #define HB_STOREHANDLE( h, n )        hb_storptr( ( void * ) ( h ), n )
    #define HB_ITEMPUTHANDLE( i, h )      hb_itemPutPtr( i, ( void * ) ( h ) )
    #define HB_ARRAYSETHANDLE( a, i, h )  hb_arraySetPtr( a, i, ( void * ) ( h ) )
+   #define HB_VMPUSHHANDLE( h )          hb_vmPushNumInt( ( void * ) ( h ) )
 #endif
 
 HB_EXTERN_BEGIN

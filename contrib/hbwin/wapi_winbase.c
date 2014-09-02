@@ -506,12 +506,12 @@ HB_FUNC( WAPI_GETVOLUMEINFORMATION )
    if( HB_ISBYREF( 2 ) )
    {
       dwVolNameSize = MAX_PATH + 1;
-      lpVolNameBuf = ( LPTSTR ) hb_xgrab( MAX_PATH + 1 );
+      lpVolNameBuf = ( LPTSTR ) hb_xgrab( dwVolNameSize * sizeof( TCHAR ) );
    }
    if( HB_ISBYREF( 6 ) )
    {
       dwFSNameSize = MAX_PATH + 1;
-      lpFSNameBuf = ( LPTSTR ) hb_xgrab( MAX_PATH + 1 );
+      lpFSNameBuf = ( LPTSTR ) hb_xgrab( dwFSNameSize * sizeof( TCHAR ) );
    }
 
    bResult = GetVolumeInformation( lpRootPath,         /* RootPathName */

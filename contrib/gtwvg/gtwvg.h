@@ -581,9 +581,6 @@ extern HB_EXPORT HB_BOOL       hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd
 extern HB_EXPORT void          hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 extern HB_EXPORT void          hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 
-extern HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-extern HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-
 extern HB_EXPORT void          hb_wvt_wvtCore( void );
 extern HB_EXPORT void          hb_wvt_wvtUtils( void );
 
@@ -612,6 +609,7 @@ HB_EXTERN_END
    #define wvg_storhandle( h, n )         hb_stornint( ( HB_PTRDIFF ) ( h ), n )
    #define wvg_itemputhandle( i, h )      hb_itemPutNInt( i, ( HB_PTRDIFF ) ( h ) )
    #define wvg_arraysethandle( a, i, h )  hb_arraySetNInt( a, i, ( HB_PTRDIFF ) ( h ) )
+   #define wvg_vmpushhandle( h )          hb_vmPushNumInt( ( HB_PTRDIFF ) ( h ) )
 #else
    #define wvg_ishandle( n )              HB_ISPOINTER( n )
    #define wvg_parhandle( n )             hb_parptr( n )
@@ -619,6 +617,7 @@ HB_EXTERN_END
    #define wvg_storhandle( h, n )         hb_storptr( ( void * ) ( h ), n )
    #define wvg_itemputhandle( i, h )      hb_itemPutPtr( i, ( void * ) ( h ) )
    #define wvg_arraysethandle( a, i, h )  hb_arraySetPtr( a, i, ( void * ) ( h ) )
+   #define wvg_vmpushhandle( h )          hb_vmPushPointer( ( void * ) ( h ) )
 #endif
 
 #endif /* HB_WVG_H_ */

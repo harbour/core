@@ -611,7 +611,7 @@ STATIC PROCEDURE ExecGCUI()
 STATIC PROCEDURE GCUIConsole( oCrt )
 
    LOCAL dDate   := Date()
-   LOCAL cName   := PadR( "Some Usefule Name", 35 )
+   LOCAL cName   := PadR( "Some Useful Name", 35 )
    LOCAL cAdd1   := PadR( "Linda Goldman Avenue", 35 )
    LOCAL cAdd2   := PadR( "Excellent Street", 35 )
    LOCAL cAdd3   := PadR( "Suit #415", 35 )

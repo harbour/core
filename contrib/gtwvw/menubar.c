@@ -262,7 +262,7 @@ HB_FUNC( WVW_ENDMENU )
 }
 #endif
 
-/* wvw_GetMenu([nWinNum]) */
+/* wvw_GetMenu( [nWinNum] ) */
 HB_FUNC( WVW_GETMENU )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -273,7 +273,7 @@ HB_FUNC( WVW_GETMENU )
       HB_RETHANDLE( NULL );
 }
 
-/* wvw_TrackPopupMenu([nWinNum], n) */
+/* wvw_TrackPopupMenu( [nWinNum], n ) */
 HB_FUNC( WVW_TRACKPOPUPMENU )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
