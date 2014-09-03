@@ -114,12 +114,12 @@ HB_FUNC( WIN_RUNDETACHED )
 
 HB_FUNC( WIN_LOADRESOURCE )
 {
-   HANDLE hInstance = NULL;
+   HANDLE hInstance = hbwapi_Instance();
 
    /* Set default return value */
    hb_retc_null();
 
-   if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
+   if( hInstance )
    {
       HRSRC hRes;
 
@@ -220,11 +220,7 @@ HB_FUNC( WIN_UNICODE )
 
 HB_FUNC( WIN_HINSTANCE )
 {
-   HANDLE hInstance;
-
-   hb_winmainArgGet( &hInstance, NULL, NULL );
-
-   hb_retptr( hInstance );
+   hb_retptr( hbwapi_Instance() );
 }
 
 HB_FUNC( WIN_HPREVINSTANCE )

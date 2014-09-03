@@ -96,20 +96,6 @@
 
 #define WIN_STATUSBAR_MAX_PARTS  256
 
-static HINSTANCE wvg_hInstance( void )
-{
-   HINSTANCE hInstance;
-
-   hb_winmainArgGet( &hInstance, NULL, NULL );
-
-   return hInstance;
-}
-
-HB_FUNC( WVG_HINSTANCE )
-{
-   hbwapi_ret_raw_HANDLE( wvg_hInstance() );
-}
-
 /* Bitmap Management Function. Coutesy GTWVW */
 
 static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
@@ -336,7 +322,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
          break;
 
       case 1:
-         hBitmap = ( HBITMAP ) LoadImage( wvg_hInstance(), szBitmap,
+         hBitmap = ( HBITMAP ) LoadImage( hbwapi_Instance(), szBitmap,
             IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
          break;
 
@@ -346,7 +332,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
 
          hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
 
-         hBitmap = ( HBITMAP ) LoadImage( wvg_hInstance(), ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) uiBitmap ),
+         hBitmap = ( HBITMAP ) LoadImage( hbwapi_Instance(), ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) uiBitmap ),
             IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
          break;
       }
@@ -946,7 +932,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
 
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = DefWindowProc;
-   wndclass.hInstance     = wvg_hInstance();
+   wndclass.hInstance     = hbwapi_Instance();
    wndclass.hIcon         = NULL;
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
    wndclass.hbrBackground = NULL;
@@ -1056,7 +1042,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
                                   CW_USEDEFAULT, CW_USEDEFAULT,
                                   ( HWND ) HB_PARHANDLE( 1 ),
                                   NULL,
-                                  wvg_hInstance(),
+                                  hbwapi_Instance(),
                                   NULL );
 
    if( hwndTip )

@@ -88,12 +88,7 @@ HB_FUNC( WIN_LOADICON )
    HICON hIcon = NULL;
 
    if( HB_ISNUM( 1 ) )
-   {
-      PWVW_GLO wvw = hb_gt_wvw();
-
-      if( wvw )
-         hIcon = LoadIcon( wvw->hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
-   }
+      hIcon = LoadIcon( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
    else
    {
       void * hName;
@@ -111,26 +106,21 @@ HB_FUNC( WIN_LOADICON )
  */
 HB_FUNC( WIN_LOADIMAGE )
 {
-   PWVW_GLO wvw = hb_gt_wvw();
-
    HBITMAP hImage = NULL;
 
    switch( hb_parni( 2 ) )
    {
       case 0:
-         if( wvw )
-            hImage = LoadBitmap( wvw->hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
+         hImage = LoadBitmap( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          break;
 
       case 1:
-         if( wvw )
-         {
-            void * hName;
-            hImage = LoadBitmap( wvw->hInstance, HB_PARSTRDEF( 1, &hName, NULL ) );
-            hb_strfree( hName );
-         }
+      {
+         void * hName;
+         hImage = LoadBitmap( hbwapi_Instance(), HB_PARSTRDEF( 1, &hName, NULL ) );
+         hb_strfree( hName );
          break;
-
+      }
       case 2:
       {
          void * hName;
@@ -452,19 +442,12 @@ HB_FUNC( WVW_GETICONSIZE )
 HB_FUNC( WVW_LOADIMAGE )
 {
    if( HB_ISNUM( 2 ) )
-   {
-      PWVW_GLO wvw = hb_gt_wvw();
-
-      if( wvw )
-         HB_RETHANDLE( LoadImage( wvw->hInstance,                    /* ( HINSTANCE ) hb_parnintdef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
-                                  MAKEINTRESOURCE( hb_parni( 2 ) ),  /* name or identifier of image */
-                                  ( UINT ) hb_parni( 3 ),            /* type of image */
-                                  hb_parni( 4 ),                     /* desired width */
-                                  hb_parni( 5 ),                     /* desired height */
-                                  ( UINT ) hb_parni( 6 ) ) );        /* load flags */
-      else
-         HB_RETHANDLE( NULL );
-   }
+      HB_RETHANDLE( LoadImage( hbwapi_Instance(),                 /* ( HINSTANCE ) hb_parnintdef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
+                               MAKEINTRESOURCE( hb_parni( 2 ) ),  /* name or identifier of image */
+                               ( UINT ) hb_parni( 3 ),            /* type of image */
+                               hb_parni( 4 ),                     /* desired width */
+                               hb_parni( 5 ),                     /* desired height */
+                               ( UINT ) hb_parni( 6 ) ) );        /* load flags */
    else
    {
       void * hName;
@@ -482,7 +465,7 @@ HB_FUNC( WVW_LOADBITMAP )
 {
    if( HB_ISNUM( 1 ) )
    {
-      if( HB_ISLOG( 2 ) && hb_parl( 2 ) )
+      if( hb_parl( 2 ) )
 #if 0
          HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) ) );
 #endif
@@ -504,7 +487,7 @@ HB_FUNC( WVW_LOADBITMAPEX )
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      if( HB_ISLOG( 3 ) && hb_parl( 3 ) )
+      if( hb_parl( 3 ) )
 #if 0
          HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parni( 2 ) ) ) );
 #endif
@@ -1431,12 +1414,7 @@ HB_FUNC( WVW_DLGSETICON )
    HICON hIcon = NULL;
 
    if( HB_ISNUM( 2 ) )
-   {
-      PWVW_GLO wvw = hb_gt_wvw();
-
-      if( wvw )
-         hIcon = LoadIcon( wvw->hInstance, MAKEINTRESOURCE( hb_parni( 2 ) ) );
-   }
+      hIcon = LoadIcon( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 2 ) ) );
    else
    {
       void * hName;
@@ -1517,7 +1495,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
          }
 
          if( HB_ISNUM( 3 ) )
-            hDlg = CreateDialogIndirect( wvw->hInstance,
+            hDlg = CreateDialogIndirect( hbwapi_Instance(),
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                          ( DLGPROC ) HB_PARHANDLE( 3 ) );
@@ -1529,7 +1507,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
                {
                   void * hText;
 
-                  hDlg = CreateDialog( wvw->hInstance,
+                  hDlg = CreateDialog( hbwapi_Instance(),
                                        HB_PARSTRDEF( 1, &hText, NULL ),
                                        hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                        ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
@@ -1538,14 +1516,14 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
                   break;
                }
                case 1:
-                  hDlg = CreateDialog( wvw->hInstance,
+                  hDlg = CreateDialog( hbwapi_Instance(),
                                        MAKEINTRESOURCE( hb_parni( 1 ) ),
                                        hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                        ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
                   break;
 
                case 2:
-                  hDlg = CreateDialogIndirect( wvw->hInstance,
+                  hDlg = CreateDialogIndirect( hbwapi_Instance(),
                                                ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                                hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                                ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
@@ -1625,7 +1603,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
             {
                void * hText;
 
-               iResult = DialogBoxParam( wvw->hInstance,
+               iResult = DialogBoxParam( hbwapi_Instance(),
                                          HB_PARSTRDEF( 1, &hText, NULL ),
                                          hParent,
                                          ( DLGPROC ) hb_gt_wvw_DlgProcModal,
@@ -1635,7 +1613,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
                break;
             }
             case 1:
-               iResult = DialogBoxParam( wvw->hInstance,
+               iResult = DialogBoxParam( hbwapi_Instance(),
                                          MAKEINTRESOURCE( hb_parni( 1 ) ),
                                          hParent,
                                          ( DLGPROC ) hb_gt_wvw_DlgProcModal,
@@ -1643,7 +1621,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
                break;
 
             case 2:
-               iResult = DialogBoxIndirectParam( wvw->hInstance,
+               iResult = DialogBoxIndirectParam( hbwapi_Instance(),
                                                  ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                                  hParent,
                                                  ( DLGPROC ) hb_gt_wvw_DlgProcModal,

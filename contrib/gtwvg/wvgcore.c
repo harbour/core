@@ -109,12 +109,11 @@ void hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE *
 #if ! defined( HB_OS_WIN_CE )
 IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 {
-   LPVOID iPicture = NULL;
-
+   LPVOID    iPicture  = NULL;
    HRSRC     res;
-   HINSTANCE hInstance;
+   HINSTANCE hInstance = hbwapi_Instance();
 
-   if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
+   if( hInstance )
       res = FindResource( hInstance, resource, section );
    else
       res = 0;

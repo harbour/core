@@ -153,3 +153,12 @@ HMODULE hbwapi_LoadLibrarySystemVM( const char * szFileName )
 
    return h;
 }
+
+HINSTANCE hbwapi_Instance( void )
+{
+   HINSTANCE hInstance;
+
+   hb_winmainArgGet( &hInstance, NULL, NULL );
+
+   return hInstance;
+}

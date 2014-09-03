@@ -148,7 +148,7 @@ HB_FUNC( WVW_PGCREATE )
          iBottom - iTop + 1,
          wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
-         wvw->hInstance,
+         hbwapi_Instance(),
          NULL );
 
       if( hWnd )

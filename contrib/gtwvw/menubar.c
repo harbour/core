@@ -169,7 +169,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
          if( ! hBitmapUnchecked )
          {
-            hBitmapUnchecked = ( HBITMAP ) LoadImage( wvw->hInstance, MAKEINTRESOURCE( hb_parni( 4 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+            hBitmapUnchecked = ( HBITMAP ) LoadImage( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 4 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
             hb_gt_wvw_AddBitmapHandle( szResName, hBitmapUnchecked, iWidth, iHeight );
          }
       }
@@ -180,7 +180,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
          if( ! hBitmapUnchecked )
          {
             void * hName;
-            hBitmapUnchecked = ( HBITMAP ) LoadImage( wvw->hInstance, HB_PARSTR( 4, &hName, NULL ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+            hBitmapUnchecked = ( HBITMAP ) LoadImage( hbwapi_Instance(), HB_PARSTR( 4, &hName, NULL ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
             hb_strfree( hName );
             hb_gt_wvw_AddBitmapHandle( hb_parc( 4 ), hBitmapUnchecked, iWidth, iHeight );
          }
@@ -194,7 +194,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 
          if( ! hBitmapChecked )
          {
-            hBitmapChecked = ( HBITMAP ) LoadImage( wvw->hInstance, MAKEINTRESOURCE( hb_parni( 5 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+            hBitmapChecked = ( HBITMAP ) LoadImage( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 5 ) ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
             hb_gt_wvw_AddBitmapHandle( szResName, hBitmapChecked, iWidth, iHeight );
          }
       }
@@ -205,7 +205,7 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
          if( ! hBitmapChecked )
          {
             void * hName;
-            hBitmapChecked = ( HBITMAP ) LoadImage( wvw->hInstance, HB_PARSTR( 5, &hName, NULL ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+            hBitmapChecked = ( HBITMAP ) LoadImage( hbwapi_Instance(), HB_PARSTR( 5, &hName, NULL ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
             hb_strfree( hName );
             hb_gt_wvw_AddBitmapHandle( hb_parc( 5 ), hBitmapChecked, iWidth, iHeight );
          }
