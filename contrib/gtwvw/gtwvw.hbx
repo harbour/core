@@ -36,15 +36,6 @@
 // HB_FUNC_EXCLUDE SetTextColor
 // HB_FUNC_EXCLUDE ToolBarAddButtons
 // HB_FUNC_EXCLUDE Window2Bitmap
-// HB_FUNC_EXCLUDE win_GetDialogBaseUnits
-// HB_FUNC_EXCLUDE win_GetSysColor
-// HB_FUNC_EXCLUDE win_MulDiv
-// HB_FUNC_EXCLUDE win_SendMessage
-// HB_FUNC_EXCLUDE wvw_GetKeyState
-// HB_FUNC_EXCLUDE wvw_HIWORD
-// HB_FUNC_EXCLUDE wvw_LOWORD
-// HB_FUNC_EXCLUDE wvw_xbShow
-// HB_FUNC_EXCLUDE wvw_RGB
 
 /* --------------------------------------------------------------------
  * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
@@ -71,17 +62,21 @@ DYNAMIC win_DeleteObject
 DYNAMIC win_DrawText
 DYNAMIC win_GetClientRect
 DYNAMIC win_GetDC
+DYNAMIC win_GetDialogBaseUnits
 DYNAMIC win_GetDlgItem
 DYNAMIC win_GetDlgItemText
 DYNAMIC win_GetStockObject
+DYNAMIC win_GetSysColor
 DYNAMIC win_InvalidateRect
 DYNAMIC win_IsDlgButtonChecked
 DYNAMIC win_LoadIcon
 DYNAMIC win_LoadImage
 DYNAMIC win_MessageBox
+DYNAMIC win_MulDiv
 DYNAMIC win_ReleaseDC
 DYNAMIC win_SelectObject
 DYNAMIC win_SendDlgItemMessage
+DYNAMIC win_SendMessage
 DYNAMIC win_SetBkColor
 DYNAMIC win_SetDlgItemText
 DYNAMIC win_SetFocus
@@ -193,6 +188,7 @@ DYNAMIC wvw_GetClipboard
 DYNAMIC wvw_GetCursorPos
 DYNAMIC wvw_GetFontInfo
 DYNAMIC wvw_GetIconSize
+DYNAMIC wvw_GetKeyState
 DYNAMIC wvw_GetLastMenuEvent
 DYNAMIC wvw_GetMenu
 DYNAMIC wvw_GetPaintRect
@@ -209,6 +205,7 @@ DYNAMIC wvw_GetToolTipWidth
 DYNAMIC wvw_GetWindowHandle
 DYNAMIC wvw_GetXYFromRowCol
 DYNAMIC wvw_Get_hnd_Window
+DYNAMIC wvw_HIWORD
 DYNAMIC wvw_ImageList_Add
 DYNAMIC wvw_ImageList_AddMasked
 DYNAMIC wvw_InvalidateRect
@@ -226,6 +223,7 @@ DYNAMIC wvw_LoadIcon
 DYNAMIC wvw_LoadImage
 DYNAMIC wvw_LoadPen
 DYNAMIC wvw_LoadPicture
+DYNAMIC wvw_LOWORD
 DYNAMIC wvw_Maximize
 DYNAMIC wvw_MaxMaxCol
 DYNAMIC wvw_MaxMaxRow
@@ -278,11 +276,9 @@ DYNAMIC wvw_sbRefresh
 DYNAMIC wvw_sbSetFont
 DYNAMIC wvw_sbSetText
 DYNAMIC wvw_SelectFont
-DYNAMIC wvw_SendMessage
 DYNAMIC wvw_SetAltF4Close
 DYNAMIC wvw_SetAsNormal
 DYNAMIC wvw_SetBitmapResourceId
-DYNAMIC wvw_SetBkColor
 DYNAMIC wvw_SetBkMode
 DYNAMIC wvw_SetBrush
 DYNAMIC wvw_SetClipboard
@@ -311,7 +307,6 @@ DYNAMIC wvw_SetParent
 DYNAMIC wvw_SetPen
 DYNAMIC wvw_SetPointer
 DYNAMIC wvw_SetPopupMenu
-DYNAMIC wvw_SetTextColor
 DYNAMIC wvw_SetTimer
 DYNAMIC wvw_SetTitle
 DYNAMIC wvw_SetToolTip

@@ -1471,8 +1471,6 @@ HB_FUNC( WVW_DLGSETICON )
 /* GUI Drawing Functions */
 /* Pritpal Bedi <pritpal@vouchcac.com> */
 
-HB_FUNC_TRANSLATE( WVW__MAKEDLGTEMPLATE, __WAPI_DLGTEMPLATE_RAW_NEW )
-
 /* wvw_ShowWindow( [nWinNum], nCmdShow ) */
 HB_FUNC( WVW_SHOWWINDOW )
 {
