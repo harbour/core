@@ -112,6 +112,7 @@ DYNAMIC wapi_GetTextFace
 DYNAMIC wapi_GetVolumeInformation
 DYNAMIC wapi_GetWindowRect
 DYNAMIC wapi_GetWindowsDirectory
+DYNAMIC wapi_HIWORD
 DYNAMIC wapi_ImageList_Add
 DYNAMIC wapi_ImageList_AddMasked
 DYNAMIC wapi_ImageList_BeginDrag
@@ -152,6 +153,7 @@ DYNAMIC wapi_LineTo
 DYNAMIC wapi_LoadImage
 DYNAMIC wapi_LoadLibrary
 DYNAMIC wapi_LoadMenu
+DYNAMIC wapi_LOWORD
 DYNAMIC wapi_MAKELPARAM
 DYNAMIC wapi_MAKEWPARAM
 DYNAMIC wapi_MessageBeep
@@ -170,6 +172,7 @@ DYNAMIC wapi_RemoveFontResource
 DYNAMIC wapi_RemoveFontResourceEx
 DYNAMIC wapi_RemoveMenu
 DYNAMIC wapi_ResetDC
+DYNAMIC wapi_RGB
 DYNAMIC wapi_RoundRect
 DYNAMIC wapi_ScreenToClient
 DYNAMIC wapi_SelectObject
@@ -359,12 +362,10 @@ DYNAMIC win_GetPrinterFontName
 DYNAMIC win_GetSaveFileName
 DYNAMIC win_GetTextSize
 DYNAMIC win_hInstance
-DYNAMIC win_HIWORD
 DYNAMIC win_hPrevInstance
 DYNAMIC win_LineTo
 DYNAMIC win_LoadBitmapFile
 DYNAMIC win_LoadResource
-DYNAMIC win_LOWORD
 DYNAMIC win_MAPISendMail
 DYNAMIC win_nCmdShow
 DYNAMIC win_OEMToANSI

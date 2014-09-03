@@ -1048,6 +1048,16 @@ HB_FUNC( WAPI_SCREENTOCLIENT )
    hbwapi_stor_POINT( &xy, 2 );
 }
 
+HB_FUNC( WAPI_LOWORD )
+{
+   hb_retni( ( int ) LOWORD( ( DWORD ) hb_parnl( 1 ) ) );
+}
+
+HB_FUNC( WAPI_HIWORD )
+{
+   hb_retni( ( int ) HIWORD( ( DWORD ) hb_parnl( 1 ) ) );
+}
+
 HB_FUNC( WAPI_MAKELPARAM )
 {
    hb_retnint( MAKELPARAM( hb_parnint( 1 ), hb_parnint( 2 ) ) );
@@ -1056,4 +1066,9 @@ HB_FUNC( WAPI_MAKELPARAM )
 HB_FUNC( WAPI_MAKEWPARAM )
 {
    hb_retnint( MAKEWPARAM( hb_parnint( 1 ), hb_parnint( 2 ) ) );
+}
+
+HB_FUNC( WAPI_RGB )
+{
+   hbwapi_ret_COLORREF( RGB( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }

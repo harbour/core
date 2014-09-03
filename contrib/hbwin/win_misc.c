@@ -245,16 +245,6 @@ HB_FUNC( WIN_NCMDSHOW )
    hb_retni( nCmdShow );
 }
 
-HB_FUNC( WIN_LOWORD )
-{
-   hb_retni( ( int ) LOWORD( ( DWORD ) hb_parnl( 1 ) ) );
-}
-
-HB_FUNC( WIN_HIWORD )
-{
-   hb_retni( ( int ) HIWORD( ( DWORD ) hb_parnl( 1 ) ) );
-}
-
 HB_FUNC( WIN_SYSREFRESH )
 {
    HANDLE hDummyEvent = CreateEvent( NULL, FALSE, FALSE, NULL );

@@ -23,7 +23,7 @@ HB_FUNC_TRANSLATE( LOADIMAGE              , WVW_LOADIMAGE           )
 HB_FUNC_TRANSLATE( OPENBITMAP             , WVW_OPENBITMAP          )
 HB_FUNC_TRANSLATE( OPENIMAGE              , WVW_OPENIMAGE           )
 HB_FUNC_TRANSLATE( REDRAWWINDOW           , WVW_REDRAWWINDOW        )
-HB_FUNC_TRANSLATE( RGB                    , WVW_RGB                 ) /* wvw_RGB() recent compat wrapper, to be deleted */
+HB_FUNC_TRANSLATE( RGB                    , WAPI_RGB                )
 HB_FUNC_TRANSLATE( SELECTFONT             , WVW_SELECTFONT          )
 HB_FUNC_TRANSLATE( SENDMESSAGE            , WAPI_SENDMESSAGE        )
 HB_FUNC_TRANSLATE( SETBITMAPRESOURCEID    , WVW_SETBITMAPRESOURCEID )
@@ -59,6 +59,7 @@ HB_FUNC_TRANSLATE( WVW_SENDMESSAGE        , WAPI_SENDMESSAGE        ) /* recent 
 HB_FUNC_TRANSLATE( WVW_ISWINDOW           , WAPI_ISWINDOW           ) /* recent compat wrapper, to be deleted */
 HB_FUNC_TRANSLATE( WVW_RECTANGLE          , WAPI_RECTANGLE          )
 HB_FUNC_TRANSLATE( WIN_DRAWTEXT           , WAPI_DRAWTEXT           )
+HB_FUNC_TRANSLATE( WVW_RGB                , WAPI_RGB                ) /* recent compat wrapper, to be deleted */
 
 HB_FUNC_TRANSLATE( GETSYSCOLOR            , WAPI_GETSYSCOLOR        )
 HB_FUNC_TRANSLATE( WIN_GETDIALOGBASEUNITS , WAPI_GETDIALOGBASEUNITS )
@@ -66,6 +67,6 @@ HB_FUNC_TRANSLATE( WIN_GETSYSCOLOR        , WAPI_GETSYSCOLOR        )
 HB_FUNC_TRANSLATE( WIN_MULDIV             , WAPI_MULDIV             )
 HB_FUNC_TRANSLATE( WIN_SENDMESSAGE        , WAPI_SENDMESSAGE        )
 HB_FUNC_TRANSLATE( WVW_GETKEYSTATE        , WAPI_GETKEYSTATE        )
-HB_FUNC_TRANSLATE( WVW_HIWORD             , WIN_HIWORD              )
-HB_FUNC_TRANSLATE( WVW_LOWORD             , WIN_LOWORD              )
+HB_FUNC_TRANSLATE( WVW_HIWORD             , WAPI_HIWORD             )
+HB_FUNC_TRANSLATE( WVW_LOWORD             , WAPI_LOWORD             )
 HB_FUNC_TRANSLATE( WVW_XBSHOW             , WVW_XBVISIBLE           )

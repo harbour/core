@@ -49,8 +49,8 @@ HB_FUNC_TRANSLATE( WVG_UPDATEWINDOW          , WAPI_UPDATEWINDOW          )
 HB_FUNC_TRANSLATE( WVG_SHOWWINDOW            , WAPI_SHOWWINDOW            )
 
 /* mappings to hbwin */
-HB_FUNC_TRANSLATE( WVG_LOWORD                , WIN_LOWORD                 )
-HB_FUNC_TRANSLATE( WVG_HIWORD                , WIN_HIWORD                 )
+HB_FUNC_TRANSLATE( WVG_LOWORD                , WAPI_LOWORD                )
+HB_FUNC_TRANSLATE( WVG_HIWORD                , WAPI_HIWORD                )
 HB_FUNC_TRANSLATE( WVG_MAKELPARAM            , WAPI_MAKELPARAM            )
 HB_FUNC_TRANSLATE( WVG_SLEEP                 , WAPI_SLEEP                 )
 HB_FUNC_TRANSLATE( WVT__MAKEDLGTEMPLATE      , __WAPI_DLGTEMPLATE_RAW_NEW )

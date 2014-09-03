@@ -155,6 +155,12 @@
 #define HB_WIN_BITMAP_JPEG                 2
 #define HB_WIN_BITMAP_PNG                  3
 
+#define WIN_LOWORD( dw )                   hb_bitAnd( dw, 0xFFFF )
+#define WIN_HIWORD( dw )                   hb_bitAnd( hb_bitShift( dw, -16 ), 0xFFFF )
+
+#define WIN_MAKELPARAM( l, h )             hb_bitOr( hb_bitShift( h, 16 ), l )
+#define WIN_MAKEWPARAM( l, h )             hb_bitOr( hb_bitShift( h, 16 ), l )
+
 #define WIN_RGB( nR, nG, nB )              ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 
 /* Color constants for convenience */
