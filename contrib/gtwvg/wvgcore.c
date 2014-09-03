@@ -2070,7 +2070,7 @@ HB_FUNC( WVT_DRAWPICTURE )
    hb_retl( HB_FALSE );
 }
 
-/* Wvt_DrawPictureByHandle( nTop, nLeft, nBottom, nRight, hPicture, aPxlOff, lDoNotScale ) -> lOk */
+/* wvt_DrawPictureEx( nTop, nLeft, nBottom, nRight, hPicture, aPxlOff, lDoNotScale ) -> lOk */
 HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -2232,7 +2232,7 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
    }
 }
 
-/* Wvt_DrawScrollbarThumbVert( nTop, nLeft, nBottom, nRight, aPxlOff, nThumbPos ) */
+/* wvt_DrawScrollThumbVert( nTop, nLeft, nBottom, nRight, aPxlOff, nThumbPos ) */
 HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
@@ -2287,7 +2287,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBVERT )
    }
 }
 
-/* Wvt_DrawScrollbarThumbHorz( nTop, nLeft, nBottom, nRight, aPxlOff, nThumbPos ) */
+/* wvt_DrawScrollThumbHorz( nTop, nLeft, nBottom, nRight, aPxlOff, nThumbPos ) */
 HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();

@@ -59,10 +59,10 @@ PROCEDURE WvtSetKeys( lSet )
 
    RETURN
 
-// Wvt_Paint() must be a FUNCTION in your application
+// wvt_Paint() must be a FUNCTION in your application
 // as it is called when Window gets WM_PAINT message.
 
-FUNCTION Wvt_Paint()  /* must be a public function */
+FUNCTION wvt_Paint()  /* must be a public function */
 
    LOCAL aBlocks := WvtSetBlocks()
 
@@ -72,13 +72,13 @@ FUNCTION Wvt_Paint()  /* must be a public function */
 
    RETURN 0
 
-// Wvt_SetFocus() must be a FUNCTION in your application
+// wvt_SetFocus() must be a FUNCTION in your application
 // needs to process messages sent through WM_SETFOCUS message
 // received by the window.
 
 #if 0
 
-PROCEDURE Wvt_SetFocus()  /* must be a public function */
+PROCEDURE wvt_SetFocus()  /* must be a public function */
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -91,13 +91,13 @@ PROCEDURE Wvt_SetFocus()  /* must be a public function */
 
 #endif
 
-// Wvt_KillFocus() must be a FUNCTION in your application
+// wvt_KillFocus() must be a FUNCTION in your application
 // needs to process messages sent through WM_KILLFOCUS message
 // received by the window.
 
 #if 0
 
-PROCEDURE Wvt_KillFocus()  /* must be a public function */
+PROCEDURE wvt_KillFocus()  /* must be a public function */
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -110,10 +110,10 @@ PROCEDURE Wvt_KillFocus()  /* must be a public function */
 
 #endif
 
-// Wvt_Mouse() must be present if you want to catch and fire
+// wvt_Mouse() must be present if you want to catch and fire
 // mouse call back outside of the Inkey() loop.
 
-PROCEDURE Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
+PROCEDURE wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
 
    STATIC s_nLastObj := 0
    STATIC s_nLastKey := 0
@@ -196,7 +196,7 @@ PROCEDURE Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
 
    RETURN
 
-//  WvtSetBlocks() is a get/set FUNCTION to be used by Wvt_Paint()
+//  WvtSetBlocks() is a get/set FUNCTION to be used by wvt_Paint()
 
 FUNCTION WvtSetBlocks( a_ )
 
@@ -210,7 +210,7 @@ FUNCTION WvtSetBlocks( a_ )
 
    RETURN o
 
-// WvtSetObjects() is a get/set FUNCTION to be used by Wvt_Mouse()
+// WvtSetObjects() is a get/set FUNCTION to be used by wvt_Mouse()
 
 FUNCTION WvtSetObjects( aObject )
 

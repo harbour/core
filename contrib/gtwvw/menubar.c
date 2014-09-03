@@ -119,10 +119,7 @@ HB_FUNC( WVW_GETLASTMENUEVENT )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   if( wvw_win )
-      hb_retni( wvw_win->LastMenuEvent );
-   else
-      hb_retni( 0 );
+   hb_retni( wvw_win ? wvw_win->LastMenuEvent : 0 );
 }
 
 HB_FUNC( WVW_SETLASTMENUEVENT )

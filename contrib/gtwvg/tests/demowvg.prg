@@ -135,7 +135,7 @@ PROCEDURE Main()
    AAdd( aBlocks, {|| wvt_DrawLine( MaxRow() - 1, 41, MaxRow(), 41, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
    AAdd( aBlocks, {|| AEval( GetList, {| oGet | wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
-   AAdd( aBlocks, {|| Wvt_Mouse( -1000001 ) } )
+   AAdd( aBlocks, {|| wvt_Mouse( -1000001 ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 

@@ -74,11 +74,6 @@ BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
 
 /* Pritpal Bedi <bedipritpal@hotmail.com> */
 
-HB_FUNC( WVT_UTILS )
-{
-   /* Retained for legacy code. */
-}
-
 /* wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
  *                                lItalic, lUnderline, lStrikeout )
  * -> { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
@@ -624,10 +619,7 @@ HB_FUNC( WVT_GETLASTMENUEVENT )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   if( _s )
-      hb_retni( _s->LastMenuEvent );
-   else
-      hb_retni( 0 );
+   hb_retni( _s ? _s->LastMenuEvent : 0 );
 }
 
 HB_FUNC( WVT_SETLASTMENUEVENT )

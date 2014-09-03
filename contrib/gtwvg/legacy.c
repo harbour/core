@@ -65,6 +65,11 @@ HB_FUNC_TRANSLATE( WVT_ENABLEMENUITEM        , WVG_ENABLEMENUITEM         )
 
 #ifdef HB_LEGACY_LEVEL5
 
+HB_FUNC( WVT_UTILS )
+{
+   /* Retained for legacy code. */
+}
+
 HB_FUNC( WVG_AND )
 {
    hb_retnl( hb_parnl( 1 ) & hb_parnl( 2 ) );

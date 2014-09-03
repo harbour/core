@@ -1899,10 +1899,10 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
            updateRect.right - updateRect.left, updateRect.bottom - updateRect.top,
            pWVT->hGuiDC, updateRect.left, updateRect.top, SRCCOPY );
 
-   /*  Paint Graphic Objects Supporting CUI Elements  */
+   /* Paint Graphic Objects Supporting CUI Elements  */
    hb_gt_wvt_PaintGObjects( pWVT, &updateRect );
 
-   /*  Tell PRG code to execute paint objects - Wvt_Draw*() */
+   /* Tell PRG code to execute paint objects - wvt_Draw*() */
    if( pWVT->bPaint )
    {
       if( pWVT->pSymWVT_PAINT )

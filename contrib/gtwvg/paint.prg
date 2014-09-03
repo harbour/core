@@ -51,7 +51,7 @@ THREAD STATIC t_paint_ := { { "", {} } }
 /* This function must have to be defined in your applications */
 #if 0
 
-PROCEDURE Wvt_Paint()
+PROCEDURE wvt_Paint()
 
    WvtPaintObjects()  /* Call this function from this funtion */
 
@@ -511,10 +511,10 @@ FUNCTION wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
 #ifdef HB_LEGACY_LEVEL4
 
-FUNCTION Wvt_SetTitle( cTitle )
+FUNCTION wvt_SetTitle( cTitle )
    RETURN hb_gtInfo( HB_GTI_WINTITLE, cTitle )
 
-FUNCTION Wvt_GetTitle()
+FUNCTION wvt_GetTitle()
    RETURN hb_gtInfo( HB_GTI_WINTITLE )
 
 #endif
@@ -539,16 +539,16 @@ FUNCTION wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
 #ifdef HB_LEGACY_LEVEL4
 
-FUNCTION Wvt_SetCodepage( nCodePage )
+FUNCTION wvt_SetCodepage( nCodePage )
    RETURN hb_gtInfo( HB_GTI_CODEPAGE, nCodePage )
 
-FUNCTION Wvt_GetPalette()
+FUNCTION wvt_GetPalette()
    RETURN hb_gtInfo( HB_GTI_PALETTE )
 
-FUNCTION Wvt_SetPalette( aRGB )
+FUNCTION wvt_SetPalette( aRGB )
    RETURN hb_gtInfo( HB_GTI_PALETTE, aRGB )
 
-FUNCTION Wvt_GetRGBColor( nIndex )
+FUNCTION wvt_GetRGBColor( nIndex )
    RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
 #endif
@@ -602,13 +602,13 @@ FUNCTION wvt_GetRGBColorByString( cColor, nForeBack )
 
 #ifdef HB_LEGACY_LEVEL4
 
-FUNCTION Wvt_SetAltF4Close( lSetClose )
+FUNCTION wvt_SetAltF4Close( lSetClose )
    RETURN hb_gtInfo( HB_GTI_CLOSABLE, lSetClose )
 
-FUNCTION Wvt_GetScreenWidth()
+FUNCTION wvt_GetScreenWidth()
    RETURN hb_gtInfo( HB_GTI_DESKTOPWIDTH )
 
-FUNCTION Wvt_GetScreenHeight()
+FUNCTION wvt_GetScreenHeight()
    RETURN hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
 
 #endif
@@ -636,10 +636,10 @@ PROCEDURE wvt_Keyboard( nKey )
 
 #ifdef HB_LEGACY_LEVEL4
 
-FUNCTION Wvt_GetClipboard()
+FUNCTION wvt_GetClipboard()
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA )
 
-FUNCTION Wvt_SetClipboard( cText )
+FUNCTION wvt_SetClipboard( cText )
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA, cText )
 
 #endif

@@ -59,7 +59,7 @@ PROCEDURE Main()
 
 /* This function must be linked with the application */
 
-FUNCTION Wvt_Paint()  /* must be a public function */
+FUNCTION wvt_Paint()  /* must be a public function */
 
    WvtPaintObjects()
 
