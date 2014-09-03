@@ -463,38 +463,24 @@ HB_FUNC( WVW_LOADIMAGE )
 
 HB_FUNC( WVW_LOADBITMAP )
 {
+   HINSTANCE h = hb_parl( 2 ) ? NULL : GetModuleHandle( NULL );
+
    if( HB_ISNUM( 1 ) )
-   {
-      if( hb_parl( 2 ) )
-#if 0
-         HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) ) );
-#endif
-         HB_RETHANDLE( LoadBitmap( NULL, ( LPCTSTR ) HB_PARHANDLE( 1 ) ) );
-      else
-         HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), ( LPCTSTR ) HB_PARHANDLE( 1 ) ) );
-   }
+      HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parni( 1 ) ) ) );
    else
    {
       void * hName;
-      HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), HB_PARSTR( 2, &hName, NULL ) ) );
+      HB_RETHANDLE( LoadBitmap( h, HB_PARSTR( 1, &hName, NULL ) ) );
       hb_strfree( hName );
    }
 }
 
 HB_FUNC( WVW_LOADBITMAPEX )
 {
-   HINSTANCE h = HB_ISNUM( 1 ) ? ( HINSTANCE ) HB_PARHANDLE( 1 ) : GetModuleHandle( NULL );
+   HINSTANCE h = HB_ISHANDLE( 1 ) ? ( HINSTANCE ) HB_PARHANDLE( 1 ) : GetModuleHandle( NULL );
 
-   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
-   {
-      if( hb_parl( 3 ) )
-#if 0
-         HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parni( 2 ) ) ) );
-#endif
-         HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) HB_PARHANDLE( 3 ) ) );
-      else
-         HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) HB_PARHANDLE( 2 ) ) );
-   }
+   if( HB_ISNUM( 2 ) )
+      HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parni( 2 ) ) ) );
    else
    {
       void * hName;

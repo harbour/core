@@ -332,7 +332,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
 
          hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
 
-         hBitmap = ( HBITMAP ) LoadImage( hbwapi_Instance(), ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) uiBitmap ),
+         hBitmap = ( HBITMAP ) LoadImage( hbwapi_Instance(), MAKEINTRESOURCE( ( WORD ) uiBitmap ),
             IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
          break;
       }
