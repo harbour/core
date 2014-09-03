@@ -47,8 +47,16 @@
 #ifndef _WVGWIN_CH
 #define _WVGWIN_CH
 
-#xtranslate MAKELONG( <nLow>, <nHigh> )   => ( ( <nLow> ) + ( <nHigh> ) * 0x10000 )
-#xtranslate MAKELPARAM( <nLow>, <nHigh> ) => ( ( <nLow> ) + ( <nHigh> ) * 0x10000 )
+#include "hbwin.ch"
+
+#ifdef HB_LEGACY_LEVEL5
+/* Deprecated. Use WIN_* equivalent instead. */
+#xtranslate MAKELONG( <nLow>, <nHigh> )   => WIN_MAKELONG( <nLow>, <nHigh> )
+#xtranslate MAKELPARAM( <nLow>, <nHigh> ) => WIN_MAKELPARAM( <nLow>, <nHigh> )
+#ifndef RGB
+#define RGB( nR, nG, nB )  WIN_RGB( nR, nG, nB )
+#endif
+#endif
 
 /* wvt_DrawButton() constants */
 #define WVT_BTN_FORMAT_RAISED                     0  // Default
@@ -174,17 +182,6 @@
 #define WVT_MENU_CAPTION                          3
 #define WVT_MENU_ACTION                           4
 #define WVT_MENU_MENUOBJ                          4
-
-/* - */
-
-#ifdef HB_LEGACY_LEVEL5
-
-#ifndef RGB
-/* Deprecated. Use WIN_RGB() instead. */
-#define RGB( nR, nG, nB )   ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
-#endif
-
-#endif
 
 // Windows Specific
 

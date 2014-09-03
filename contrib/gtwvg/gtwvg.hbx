@@ -131,9 +131,9 @@ DYNAMIC wvg_IsZoomed
 DYNAMIC wvg_Label
 DYNAMIC wvg_LabelEx
 DYNAMIC wvg_LabelEx2
-DYNAMIC wvg_LBGetCurSel
-DYNAMIC wvg_LBGetText
-DYNAMIC wvg_LBSetCurSel
+DYNAMIC wvg_lbGetCurSel
+DYNAMIC wvg_lbGetText
+DYNAMIC wvg_lbSetCurSel
 DYNAMIC wvg_Line
 DYNAMIC wvg_LineEx
 DYNAMIC wvg_LoadIcon

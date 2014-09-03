@@ -102,7 +102,7 @@ METHOD WvgDataRef:getData()
       EXIT
 
    CASE "LISTBOX"
-      ::sl_editBuffer := wvg_LBGetCurSel( ::hWnd ) + 1
+      ::sl_editBuffer := wvg_lbGetCurSel( ::hWnd ) + 1
 
 #if 0 /* This is contrary the documentation of Xbase++ */
       IF ::oParent:className() == "COMBOBOX"
@@ -111,7 +111,7 @@ METHOD WvgDataRef:getData()
             AAdd( ::sl_editBuffer, ::getItem( i ) )
          NEXT
       ELSE
-         ::sl_editBuffer := wvg_LBGetCurSel( ::hWnd ) + 1
+         ::sl_editBuffer := wvg_lbGetCurSel( ::hWnd ) + 1
       ENDIF
 #endif
       EXIT
@@ -143,7 +143,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    CASE "LISTBOX"    /* Single Selection */
       IF HB_ISNUMERIC( ::sl_editBuffer )
-         RETURN wvg_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
+         RETURN wvg_lbSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
       EXIT
 

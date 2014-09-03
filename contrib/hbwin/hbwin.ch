@@ -158,8 +158,12 @@
 #define WIN_LOWORD( dw )                   hb_bitAnd( dw, 0xFFFF )
 #define WIN_HIWORD( dw )                   hb_bitAnd( hb_bitShift( dw, -16 ), 0xFFFF )
 
-#define WIN_MAKELPARAM( l, h )             hb_bitOr( hb_bitShift( h, 16 ), l )
-#define WIN_MAKEWPARAM( l, h )             hb_bitOr( hb_bitShift( h, 16 ), l )
+#define WIN_MAKEWORD( lb, hb )             hb_bitOr( hb_bitShift( hb_bitAnd( hb, 0xFF ), 8 ), hb_bitAnd( lb, 0xFF ) )
+#define WIN_MAKELONG( lw, hw )             hb_bitOr( hb_bitShift( hb_bitAnd( hw, 0xFFFF ), 16 ), hb_bitAnd( lw, 0xFFFF ) )
+
+#define WIN_MAKELPARAM( lw, hw )           WIN_MAKELONG( lw, hw )
+#define WIN_MAKEWPARAM( lw, hw )           WIN_MAKELONG( lw, hw )
+#define WIN_MAKELRESULT( lw, hw )          WIN_MAKELONG( lw, hw )
 
 #define WIN_RGB( nR, nG, nB )              ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 

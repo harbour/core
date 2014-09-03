@@ -336,13 +336,13 @@
    $TEMPLATE$
       Function
    $NAME$
-      wvw_CBSetCurSel()
+      wvw_cbSetCurSel()
    $CATEGORY$
       API
    $SUBCATEGORY$
       GTWVW
    $SYNTAX$
-      wvw_CBSetCurSel( nHandleDialog, nIDCombobox, nIndex )
+      wvw_cbSetCurSel( nHandleDialog, nIDCombobox, nIndex )
    $ARGUMENTS$
       <nHandleDialog> Handle of window dialog. <nIDCombobox> ID of combobox.
       <nIndex> Index of item (start from zero). If ­1, remove current selection

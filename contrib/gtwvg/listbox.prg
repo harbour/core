@@ -82,7 +82,7 @@ CREATE CLASS WvgListBox INHERIT WvgWindow, WvgDataRef
    METHOD addItem( cItem )                      INLINE  wvg_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
    METHOD clear()
    METHOD delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex - 1, 0 )
-   METHOD getItem( nIndex )                     INLINE  wvg_LBGetText( ::hWnd, nIndex - 1 )
+   METHOD getItem( nIndex )                     INLINE  wvg_lbGetText( ::hWnd, nIndex - 1 )
    METHOD getTabstops()                         VIRTUAL
    METHOD insItem( nIndex, cItem )              INLINE  wvg_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
    METHOD setColumnWidth()                      VIRTUAL
@@ -171,7 +171,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
       CASE aNM[ 1 ] == LBN_SELCHANGE
-         ::nCurSelected := wvg_LBGetCurSel( ::hWnd ) + 1
+         ::nCurSelected := wvg_lbGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
@@ -237,7 +237,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_ANY               /* This will never be reached */
       DO CASE
       CASE aNM[ 1 ] == WM_LBUTTONUP
-         ::nCurSelected := wvg_LBGetCurSel( ::hWnd ) + 1
+         ::nCurSelected := wvg_lbGetCurSel( ::hWnd ) + 1
          IF HB_ISEVALITEM( ::sl_itemMarked )
             IF ::isParentCrt()
                ::oParent:setFocus()
@@ -262,8 +262,8 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
          ENDIF
 
       CASE aNM[ 1 ] == WM_KEYUP
-         IF ::nCurSelected != wvg_LBGetCurSel( ::hWnd ) + 1
-            ::nCurSelected := wvg_LBGetCurSel( ::hWnd ) + 1
+         IF ::nCurSelected != wvg_lbGetCurSel( ::hWnd ) + 1
+            ::nCurSelected := wvg_lbGetCurSel( ::hWnd ) + 1
             IF HB_ISEVALITEM( ::sl_itemMarked )
                IF ::isParentCrt()
                   ::oParent:setFocus()

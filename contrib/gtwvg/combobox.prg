@@ -186,7 +186,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
       CASE aNM[ 1 ] == CBN_SELCHANGE
-         ::nCurSelected := ::editBuffer := wvg_LBGetCurSel( ::hWnd ) + 1
+         ::nCurSelected := ::editBuffer := wvg_lbGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF

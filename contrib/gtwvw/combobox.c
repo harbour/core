@@ -629,9 +629,9 @@ HB_FUNC( WVW_CBSETFONT )
  *  (nIndex is 0 based)
  *  returns .T. if successful.
  *
- * NOTE: the better name to this function should be wvw_CBSetCurSel()
+ * NOTE: the better name to this function should be wvw_cbSetCurSel()
  *      but that name is already used.
- *      (wvw_CBSetCurSel() and wvw_cbAddString() is NOT related to other
+ *      (wvw_cbSetCurSel() and wvw_cbAddString() is NOT related to other
  *       WVW_CB* functions)
  */
 HB_FUNC( WVW_CBSETINDEX )
@@ -652,9 +652,9 @@ HB_FUNC( WVW_CBSETINDEX )
  *  returns CB_ERR (-1) if none selected
  *
  * NOTE: the better name to this function should be WVW_CBgetCurSel()
- *      but that name is potentially misleading to WVW_CBsetCursel
- *      which is not our family of WVW_CB* functions
- *      (wvw_CBSetCurSel() and wvw_cbAddString() is NOT related to other
+ *      but that name is potentially misleading to wvw_cbSetCurSel
+ *      which is not our family of wvw_cb*() functions
+ *      (wvw_cbSetCurSel() and wvw_cbAddString() is NOT related to other
  *       WVW_CB* functions)
  */
 HB_FUNC( WVW_CBGETINDEX )

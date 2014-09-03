@@ -98,7 +98,7 @@ DYNAMIC wvw_cbGetIndex
 DYNAMIC wvw_cbIsDropped
 DYNAMIC wvw_cbIsFocused
 DYNAMIC wvw_cbSetCodeblock
-DYNAMIC wvw_CBSetCurSel
+DYNAMIC wvw_cbSetCurSel
 DYNAMIC wvw_cbSetFocus
 DYNAMIC wvw_cbSetFont
 DYNAMIC wvw_cbSetIndex
@@ -182,7 +182,7 @@ DYNAMIC wvw_EnableMenuItem
 DYNAMIC wvw_EnableShortcuts
 DYNAMIC wvw_EndMenu
 DYNAMIC wvw_FillRectangle
-DYNAMIC wvw_GBCreate
+DYNAMIC wvw_gbCreate
 DYNAMIC wvw_GetBitmapSize
 DYNAMIC wvw_GetClipboard
 DYNAMIC wvw_GetCursorPos
@@ -260,7 +260,7 @@ DYNAMIC wvw_pgGetPos
 DYNAMIC wvw_pgSetPos
 DYNAMIC wvw_pgSetRange
 DYNAMIC wvw_ProcessMessages
-DYNAMIC wvw_RBCreate
+DYNAMIC wvw_rbCreate
 DYNAMIC wvw_Rectangle
 DYNAMIC wvw_RecurseCBlock
 DYNAMIC wvw_RedrawWindow

@@ -34,10 +34,10 @@
 #xtranslate wvt_CreateDialogDynamic( [<vlist,...>] )  => wvw_CreateDialogDynamic( [<vlist>] )
 #xtranslate wvt_CreateDialogModal  ( [<vlist,...>] )  => wvw_CreateDialogModal  ( [<vlist>] )
 #xtranslate wvt__MakeDlgTemplate   ( [<vlist,...>] )  => wvw__MakeDlgTemplate   ( [<vlist>] )
-#xtranslate wvt_LBAddString        ( [<vlist,...>] )  => wvw_LBAddString        ( [<vlist>] )
-#xtranslate wvt_LBSetCurSel        ( [<vlist,...>] )  => wvw_LBSetCurSel        ( [<vlist>] )
-#xtranslate wvt_CBAddString        ( [<vlist,...>] )  => wvw_cbAddString        ( [<vlist>] )
-#xtranslate wvt_CBSetCurSel        ( [<vlist,...>] )  => wvw_CBSetCurSel        ( [<vlist>] )
+#xtranslate wvt_lbAddString        ( [<vlist,...>] )  => wvw_lbAddString        ( [<vlist>] )
+#xtranslate wvt_lbSetCurSel        ( [<vlist,...>] )  => wvw_lbSetCurSel        ( [<vlist>] )
+#xtranslate wvt_cbAddString        ( [<vlist,...>] )  => wvw_cbAddString        ( [<vlist>] )
+#xtranslate wvt_cbSetCurSel        ( [<vlist,...>] )  => wvw_cbSetCurSel        ( [<vlist>] )
 #xtranslate wvt_DlgSetIcon         ( [<vlist,...>] )  => wvw_DlgSetIcon         ( [<vlist>] )
 
 /* These functions do not exist in WVT. */
