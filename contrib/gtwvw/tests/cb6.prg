@@ -288,7 +288,7 @@ STATIC FUNCTION MoveToGet( GetList, nPos )
 // Set FOCUS to window nWinNum
 STATIC PROCEDURE SetWinFocus( nWinNum )
 
-   win_SetFocus( wvw_GetWindowHandle( nWinNum ) )
+   wapi_SetFocus( wvw_GetWindowHandle( nWinNum ) )
 
    RETURN
 

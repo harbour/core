@@ -36,6 +36,35 @@
 // HB_FUNC_EXCLUDE SetTextColor
 // HB_FUNC_EXCLUDE ToolBarAddButtons
 // HB_FUNC_EXCLUDE Window2Bitmap
+// HB_FUNC_EXCLUDE win_CheckDlgButton
+// HB_FUNC_EXCLUDE win_CheckRadioButton
+// HB_FUNC_EXCLUDE win_CreateBrush
+// HB_FUNC_EXCLUDE win_CreateFont
+// HB_FUNC_EXCLUDE win_DeleteObject
+// HB_FUNC_EXCLUDE win_DrawText
+// HB_FUNC_EXCLUDE win_GetClientRect
+// HB_FUNC_EXCLUDE win_GetDC
+// HB_FUNC_EXCLUDE win_GetDialogBaseUnits
+// HB_FUNC_EXCLUDE win_GetDlgItem
+// HB_FUNC_EXCLUDE win_GetDlgItemText
+// HB_FUNC_EXCLUDE win_GetStockObject
+// HB_FUNC_EXCLUDE win_GetSysColor
+// HB_FUNC_EXCLUDE win_InvalidateRect
+// HB_FUNC_EXCLUDE win_IsDlgButtonChecked
+// HB_FUNC_EXCLUDE win_LoadIcon
+// HB_FUNC_EXCLUDE win_LoadImage
+// HB_FUNC_EXCLUDE win_MessageBox
+// HB_FUNC_EXCLUDE win_MulDiv
+// HB_FUNC_EXCLUDE win_ReleaseDC
+// HB_FUNC_EXCLUDE win_SelectObject
+// HB_FUNC_EXCLUDE win_SendDlgItemMessage
+// HB_FUNC_EXCLUDE win_SendMessage
+// HB_FUNC_EXCLUDE win_SetBkColor
+// HB_FUNC_EXCLUDE win_SetDlgItemText
+// HB_FUNC_EXCLUDE win_SetFocus
+// HB_FUNC_EXCLUDE win_SetMenu
+// HB_FUNC_EXCLUDE win_SetTextColor
+// HB_FUNC_EXCLUDE win_SetTimer
 
 /* --------------------------------------------------------------------
  * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
@@ -54,35 +83,6 @@
 #endif
 
 DYNAMIC HB_GT_WVW
-DYNAMIC win_CheckDlgButton
-DYNAMIC win_CheckRadioButton
-DYNAMIC win_CreateBrush
-DYNAMIC win_CreateFont
-DYNAMIC win_DeleteObject
-DYNAMIC win_DrawText
-DYNAMIC win_GetClientRect
-DYNAMIC win_GetDC
-DYNAMIC win_GetDialogBaseUnits
-DYNAMIC win_GetDlgItem
-DYNAMIC win_GetDlgItemText
-DYNAMIC win_GetStockObject
-DYNAMIC win_GetSysColor
-DYNAMIC win_InvalidateRect
-DYNAMIC win_IsDlgButtonChecked
-DYNAMIC win_LoadIcon
-DYNAMIC win_LoadImage
-DYNAMIC win_MessageBox
-DYNAMIC win_MulDiv
-DYNAMIC win_ReleaseDC
-DYNAMIC win_SelectObject
-DYNAMIC win_SendDlgItemMessage
-DYNAMIC win_SendMessage
-DYNAMIC win_SetBkColor
-DYNAMIC win_SetDlgItemText
-DYNAMIC win_SetFocus
-DYNAMIC win_SetMenu
-DYNAMIC win_SetTextColor
-DYNAMIC win_SetTimer
 DYNAMIC wvw_AddRows
 DYNAMIC wvw_AddToolTipEx
 DYNAMIC wvw_AllowNonTopEvent

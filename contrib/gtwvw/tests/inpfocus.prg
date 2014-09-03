@@ -223,7 +223,7 @@ STATIC PROCEDURE typing( ch )
  */
 FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
-   LOCAL wParamLow := win_LOWORD( wParam )
+   LOCAL wParamLow := wapi_LOWORD( wParam )
    LOCAL nCommand, ch
 
    HB_SYMBOL_UNUSED( hWnd )

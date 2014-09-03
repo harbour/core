@@ -934,7 +934,7 @@ STATIC FUNCTION inp_handler( nwinnum, bhandler )
 /* --- general helpers --- */
 
 STATIC FUNCTION MyMessageBox( nwinnum, cMessage, cCaption, nFlags )
-   RETURN win_MessageBox( wvw_GetWindowHandle( nwinnum ), cMessage, hb_defaultValue( cCaption, "Debug Message" ), nFlags )
+   RETURN wapi_MessageBox( wvw_GetWindowHandle( nwinnum ), cMessage, hb_defaultValue( cCaption, "Debug Message" ), nFlags )
 
 #define VK_SHIFT            16
 

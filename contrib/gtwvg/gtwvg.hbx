@@ -210,7 +210,6 @@ DYNAMIC wvg_TreeView_SetBkColor
 DYNAMIC wvg_TreeView_SetLineColor
 DYNAMIC wvg_TreeView_SetTextColor
 DYNAMIC wvg_TreeView_ShowExpanded
-DYNAMIC wvg_TVIs_Expanded
 DYNAMIC wvg_UpdateWindow
 DYNAMIC WvtBanner
 DYNAMIC WvtBrowse

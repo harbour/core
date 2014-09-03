@@ -1116,12 +1116,12 @@ STATIC FUNCTION nMenuChecker( nMenuEvent )
 
 STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 
-   win_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Info" ), MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
+   wapi_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Info" ), MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
 
    RETURN .T.
 
 STATIC FUNCTION lYesNo( cMsg, cTitle )
-   RETURN win_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Confirmation" ), MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
+   RETURN wapi_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Confirmation" ), MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
 
 STATIC FUNCTION lDebug( cMsg )
    RETURN lBoxMessage( cMsg, "Debug" )
@@ -1565,7 +1565,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
          IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_MessageBox( , "Button failed wvw_DrawImage( " + ::cImage + " )" )
+            wapi_MessageBox( , "Button failed wvw_DrawImage( " + ::cImage + " )" )
          ENDIF
       ENDIF
 
@@ -1583,7 +1583,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
          IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_MessageBox( , "Button failed wvw_DrawImage( " + ::cImage + " )" )
+            wapi_MessageBox( , "Button failed wvw_DrawImage( " + ::cImage + " )" )
          ENDIF
       ENDIF
 

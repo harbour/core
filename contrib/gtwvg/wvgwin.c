@@ -415,12 +415,12 @@ HB_FUNC( WVG_TREEVIEW_EXPAND )
    hb_retl( TreeView_Expand( ( HWND ) HB_PARHANDLE( 1 ), HB_PARHANDLE( 2 ), ( hb_parl( 3 ) ? TVE_EXPAND : TVE_COLLAPSE ) ) );
 }
 
-HB_FUNC( WVG_TVIS_EXPANDED )
+#if 0
+HB_FUNC( WVG_TREEVIEW_ISEXPANDED )
 {
-   #if 0
    hb_retl( TreeView_GetItemState( ( HWND ) HB_PARHANDLE( 1 ), HB_PARHANDLE( 2 ), ( UINT ) TVIS_EXPANDED ) );
-   #endif
 }
+#endif
 
 /* ListBox Functions */
 
