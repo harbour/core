@@ -53,6 +53,72 @@ FUNCTION wvw_BringToTop1( hWnd )
 
    RETURN .T.
 
+FUNCTION wvw_LoadIcon( ncRes )
+   RETURN wapi_LoadIcon( iif( HB_ISNUMERIC( ncRes ),, wapi_GetModuleHandle() ), ncRes )
+
+FUNCTION wvw_LoadImage( hInstance, ncRes, ... )
+   RETURN wapi_LoadImage( iif( HB_ISNUMERIC( ncRes ), wapi_GetModuleHandle(), hInstance ), ncRes, ... )
+
+FUNCTION wvw_LoadBitmap( ncRes, lNULLInstance )
+   RETURN wapi_LoadBitmap( iif( hb_defaultValue( lNULLInstance, .F. ),, wapi_GetModuleHandle() ), ncRes )
+
+FUNCTION wvw_LoadBitmapEx( hInstance, ncRes )
+   RETURN wapi_LoadBitmap( hb_defaultValue( hInstance, wapi_GetModuleHandle() ), ncRes )
+
+FUNCTION wvw_DrawIcon( hDC, hIcon, x, y )
+   RETURN wapi_DrawIcon( hDC, x, y, hIcon )
+
+FUNCTION wvw_RedrawWindow( hWnd, nFlags )
+   RETURN wapi_RedrawWindow( hWnd,,, nFlags )
+
+/* removes System Menu of a window
+   if lRemoveClose is .T., also removes the 'Close' command and 'X' button */
+PROCEDURE wvw_NoSysMenu( nWin, lRemoveClose )
+
+   LOCAL hWnd
+   LOCAL hMenu
+
+   IF ! Empty( hWnd := wvw_Get_hnd_Window( nWin ) ) .AND. ;
+      ! Empty( hMenu := wapi_GetSystemMenu( hWnd, .F. ) )
+
+      wapi_DeleteMenu( hMenu, WIN_SC_MAXIMIZE, WIN_MF_BYCOMMAND )
+      wapi_DeleteMenu( hMenu, WIN_SC_MINIMIZE, WIN_MF_BYCOMMAND )
+      wapi_DeleteMenu( hMenu, WIN_SC_SIZE, WIN_MF_BYCOMMAND )
+      wapi_DeleteMenu( hMenu, WIN_SC_MOVE, WIN_MF_BYCOMMAND )
+      wapi_DeleteMenu( hMenu, WIN_SC_RESTORE, WIN_MF_BYCOMMAND )
+      wapi_DeleteMenu( hMenu, WIN_SC_NEXTWINDOW, WIN_MF_BYCOMMAND )
+      IF hb_defaultValue( lRemoveClose, .F. )
+         wapi_DeleteMenu( hMenu, WIN_SC_CLOSE, WIN_MF_BYCOMMAND )
+         wapi_DeleteMenu( hMenu, 0, WIN_MF_BYPOSITION )
+      ENDIF
+      wapi_DrawMenuBar( hWnd )
+   ENDIF
+
+   RETURN
+
+FUNCTION wvw_GetMenu( nWin )
+
+   LOCAL hWnd := wvw_Get_hnd_Window( nWin )
+
+   RETURN iif( Empty( hWnd ),, wapi_GetMenu( hWnd ) )
+
+PROCEDURE wvw_DrawMenuBar( nWin )
+
+   LOCAL hWnd
+
+   IF ! Empty( hWnd := wvw_Get_hnd_Window( nWin ) )
+      wapi_DrawMenuBar( hWnd )
+   ENDIF
+
+   RETURN
+
+/* returns the System Menu of a window */
+FUNCTION wvw_GetSystemMenu( nWin, lReset )
+
+   LOCAL hWnd := wvw_Get_hnd_Window( nWin )
+
+   RETURN iif( Empty( hWnd ),, wapi_GetSystemMenu( hWnd, lReset ) )
+
 FUNCTION wvw_GetCursorPos()
 
    LOCAL xy

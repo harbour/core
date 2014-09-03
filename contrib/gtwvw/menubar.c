@@ -218,25 +218,6 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
    }
 }
 
-HB_FUNC( WVW_DRAWMENUBAR )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-      DrawMenuBar( wvw_win->hWnd );
-}
-
-/* wvw_GetMenu( [nWinNum] ) */
-HB_FUNC( WVW_GETMENU )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-      HB_RETHANDLE( GetMenu( wvw_win->hWnd ) );
-   else
-      HB_RETHANDLE( NULL );
-}
-
 /* wvw_TrackPopupMenu( [nWinNum], n ) */
 HB_FUNC( WVW_TRACKPOPUPMENU )
 {
@@ -260,46 +241,4 @@ HB_FUNC( WVW_TRACKPOPUPMENU )
    }
    else
       hb_retni( 0 );
-}
-
-/* wvw_NoSysMenu( [nWinNum], lRemoveClose )
-   removes System Menu of a window
-   if lRemoveClose is .T., also removes the 'Close' command and 'X' button
-   no return value */
-HB_FUNC( WVW_NOSYSMENU )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      HMENU hMenu = GetSystemMenu( wvw_win->hWnd, FALSE );
-
-      if( hMenu )
-      {
-         DeleteMenu( hMenu, SC_MAXIMIZE, MF_BYCOMMAND );
-         DeleteMenu( hMenu, SC_MINIMIZE, MF_BYCOMMAND );
-         DeleteMenu( hMenu, SC_SIZE, MF_BYCOMMAND );
-         DeleteMenu( hMenu, SC_MOVE, MF_BYCOMMAND );
-         DeleteMenu( hMenu, SC_RESTORE, MF_BYCOMMAND );
-         DeleteMenu( hMenu, SC_NEXTWINDOW, MF_BYCOMMAND );
-         if( hb_parl( 2 ) /* fRemoveClose */ )
-         {
-            DeleteMenu( hMenu, SC_CLOSE, MF_BYCOMMAND );
-            DeleteMenu( hMenu, 0, MF_BYPOSITION );
-         }
-         DrawMenuBar( wvw_win->hWnd );
-      }
-   }
-}
-
-/* wvw_GetSystemMenu( [nWinNum], lReset )
-   returns the System Menu of a window */
-HB_FUNC( WVW_GETSYSTEMMENU )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-      HB_RETHANDLE( GetSystemMenu( wvw_win->hWnd, hb_parl( 2 ) /* lReset */ ) );
-   else
-      HB_RETHANDLE( NULL );
 }

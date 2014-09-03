@@ -439,56 +439,6 @@ HB_FUNC( WVW_GETICONSIZE )
    hb_itemReturnRelease( aMetr );
 }
 
-HB_FUNC( WVW_LOADIMAGE )
-{
-   if( HB_ISNUM( 2 ) )
-      HB_RETHANDLE( LoadImage( hbwapi_Instance(),                 /* ( HINSTANCE ) hb_parnintdef( 1, GetModuleHandle( NULL ) )  handle of the instance that contains the image */
-                               MAKEINTRESOURCE( hb_parni( 2 ) ),  /* name or identifier of image */
-                               ( UINT ) hb_parni( 3 ),            /* type of image */
-                               hb_parni( 4 ),                     /* desired width */
-                               hb_parni( 5 ),                     /* desired height */
-                               ( UINT ) hb_parni( 6 ) ) );        /* load flags */
-   else
-   {
-      void * hName;
-      HB_RETHANDLE( LoadImage( ( HINSTANCE ) HB_PARHANDLE( 1 ),  /* handle of the instance that contains the image */
-                               HB_PARSTR( 2, &hName, NULL ),     /* name or identifier of image */
-                               ( UINT ) hb_parni( 3 ),           /* type of image */
-                               hb_parni( 4 ),                    /* desired width */
-                               hb_parni( 5 ),                    /* desired height */
-                               ( UINT ) hb_parni( 6 ) ) );       /* load flags */
-      hb_strfree( hName );
-   }
-}
-
-HB_FUNC( WVW_LOADBITMAP )
-{
-   HINSTANCE h = hb_parl( 2 ) ? NULL : GetModuleHandle( NULL );
-
-   if( HB_ISNUM( 1 ) )
-      HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parni( 1 ) ) ) );
-   else
-   {
-      void * hName;
-      HB_RETHANDLE( LoadBitmap( h, HB_PARSTR( 1, &hName, NULL ) ) );
-      hb_strfree( hName );
-   }
-}
-
-HB_FUNC( WVW_LOADBITMAPEX )
-{
-   HINSTANCE h = HB_ISHANDLE( 1 ) ? ( HINSTANCE ) HB_PARHANDLE( 1 ) : GetModuleHandle( NULL );
-
-   if( HB_ISNUM( 2 ) )
-      HB_RETHANDLE( LoadBitmap( h, MAKEINTRESOURCE( hb_parni( 2 ) ) ) );
-   else
-   {
-      void * hName;
-      HB_RETHANDLE( LoadBitmap( h, HB_PARSTR( 2, &hName, NULL ) ) );
-      hb_strfree( hName );
-   }
-}
-
 HB_FUNC( WVW_OPENIMAGE )
 {
    HGLOBAL hG = NULL;
@@ -649,15 +599,6 @@ HB_FUNC( WVW_CREATEHATCHBRUSH )
    HB_RETHANDLE( CreateHatchBrush( hb_parni( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
-HB_FUNC( WVW_REDRAWWINDOW )
-{
-   RedrawWindow(
-      ( HWND ) HB_PARHANDLE( 1 ),  /* handle of window */
-      NULL,                        /* address of structure with update rectangle */
-      NULL,                        /* handle of update region */
-      ( UINT ) hb_parni( 2 ) );    /* array of redraw flags */
-}
-
 /* win_CreateFont( fontName, nWidth, hHeight, [fnWeight], [fdwCharSet],
                    [fdwItalic], [fdwUnderline], [fdwStrikeOut] ) */
 HB_FUNC( WIN_CREATEFONT )
@@ -810,23 +751,6 @@ HB_FUNC( WVW_SETBITMAPRESOURCEID )
    }
    else
       hb_retni( 0 );
-}
-
-HB_FUNC( WVW_DRAWICON )
-{
-   DrawIcon( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 3 ), hb_parni( 4 ), ( HICON ) HB_PARHANDLE( 2 ) );
-}
-
-HB_FUNC( WVW_LOADICON )
-{
-   if( HB_ISNUM( 1 ) )
-      HB_RETHANDLE( LoadIcon( NULL, MAKEINTRESOURCE( hb_parni( 1 ) ) ) );
-   else
-   {
-      void * hName;
-      HB_RETHANDLE( LoadIcon( GetModuleHandle( NULL ), HB_PARSTR( 1, &hName, NULL ) ) );
-      hb_strfree( hName );
-   }
 }
 
 HB_FUNC( WVW_DRAWBITMAP )

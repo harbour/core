@@ -6,20 +6,6 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-// MessageBox() Flags (from winuser.h)
-#define MB_OK                0
-#define MB_OKCANCEL          1
-#define MB_ABORTRETRYIGNORE  2
-#define MB_YESNOCANCEL       3
-#define MB_YESNO             4
-#define MB_RETRYCANCEL       5
-
-// MessageBox() Icons (from winuser.h)
-#define MB_ICONHAND          16 // 0x00000010L
-#define MB_ICONQUESTION      32 // 0x00000020L
-#define MB_ICONEXCLAMATION   48 // 0x00000030L
-#define MB_ICONASTERISK      64 // 0x00000040L
-
 // icon indexes for standard bitmap (from commctrl.h)
 #define STD_DELETE              5
 #define STD_FILENEW             6
@@ -47,7 +33,7 @@ PROCEDURE Main()
 #endif
 
    IF ! SetMode( 25, 80 )
-      wvw_MessageBox( 0, "Cannot set to (25,80) screen", "Warning", MB_OK + MB_ICONEXCLAMATION )
+      wvw_MessageBox( 0, "Cannot set to (25,80) screen", "Warning", WIN_MB_OK + WIN_MB_ICONEXCLAMATION )
    ENDIF
    SetColor( "W*/N+" )
    CLS
@@ -64,7 +50,7 @@ PROCEDURE Main()
       ENDIF
    ENDDO
 
-   wvw_MessageBox( 0, "Thanks for trying this program", "Goodbye", MB_OK )
+   wvw_MessageBox( 0, "Thanks for trying this program", "Goodbye", WIN_MB_OK )
 
    // let toolbar and statusbar be autodestroyed
 
@@ -79,7 +65,7 @@ STATIC FUNCTION CreateToolbar( nWinNum )
    wvw_tbDestroy( nWinNum )   // just in case
 
    IF Empty( wvw_tbCreate( nWinNum, lDisplayText, , nSysBitmap ) )
-      wvw_MessageBox( nWinNum, "FAILED to create toolbar", "Error", MB_OK + MB_ICONEXCLAMATION )
+      wvw_MessageBox( nWinNum, "FAILED to create toolbar", "Error", WIN_MB_OK + WIN_MB_ICONEXCLAMATION )
       RETURN .F.
    ENDIF
 
@@ -95,7 +81,7 @@ STATIC FUNCTION CreateStatusbar( nWinNum )
    wvw_sbDestroy( nWinNum )  // just in case
 
    IF Empty( wvw_sbCreate( nWinNum ) )
-      wvw_MessageBox( nWinNum, "FAILED to create statusbar", "Error", MB_OK + MB_ICONEXCLAMATION )
+      wvw_MessageBox( nWinNum, "FAILED to create statusbar", "Error", WIN_MB_OK + WIN_MB_ICONEXCLAMATION )
       RETURN .F.
    ENDIF
 
@@ -112,7 +98,7 @@ STATIC PROCEDURE MenuAction( nWinNum, nCommand )
    CASE nCommand == IDM_ARRANGEWIN
       wvw_XReposWindow()
    OTHERWISE
-      wvw_MessageBox( nWinNum, "Unknown menu command", "Internal Error", MB_OK + MB_ICONEXCLAMATION )
+      wvw_MessageBox( nWinNum, "Unknown menu command", "Internal Error", WIN_MB_OK + WIN_MB_ICONEXCLAMATION )
    ENDCASE
 
    RETURN
@@ -126,7 +112,7 @@ STATIC FUNCTION OpenNewWindow()
 
    IF nWinNum > _MAX_WINNUM
       wvw_MessageBox( nWinNum - 1, "Sorry, I don't think you can handle that many of windows :-)", ;
-         "Sorry", MB_OK + MB_ICONASTERISK )
+         "Sorry", WIN_MB_OK + WIN_MB_ICONASTERISK )
       RETURN .F.
    ENDIF
 
@@ -142,7 +128,7 @@ STATIC FUNCTION OpenNewWindow()
    IF wvw_nOpenWindow( ctitle, nrow1, ncol1, nrow2, ncol2, , 0 ) != nWinNum
       // currently wvw_nOpenWindow() will always return sequentially numbered window
       wvw_MessageBox( 0, "Something horrible has happened, program aborted", ;
-         "Internal Error", MB_OK + MB_ICONHAND )
+         "Internal Error", WIN_MB_OK + WIN_MB_ICONHAND )
       QUIT
    ENDIF
    wvw_NoClose( nWinNum )  // disable close button
@@ -262,7 +248,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
       "message == " + hb_ntos( message ) + hb_eol() + ;
       "wParam == " + hb_ntos( wParam ) + hb_eol() + ;
       "wParamLow == " + hb_ntos( wParamLow ) + hb_eol() + ;
-      "wParamHi == " + hb_ntos( wParamHi ), "Debug", MB_OK )
+      "wParamHi == " + hb_ntos( wParamHi ), "Debug", WIN_MB_OK )
 #endif
 
    RETURN .F.

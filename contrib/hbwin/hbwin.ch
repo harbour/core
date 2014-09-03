@@ -285,35 +285,38 @@
 #define WIN_ETO_REVERSE_INDEX_MAP          0x10000
 
 /* wapi_DrawText() format methods */
-#define WIN_DT_BOTTOM                      0x00008
-#define WIN_DT_CALCRECT                    0x00400
-#define WIN_DT_CENTER                      0x00001
-#define WIN_DT_EDITCONTROL                 0x02000
-#define WIN_DT_END_ELLIPSIS                0x08000
-#define WIN_DT_PATH_ELLIPSIS               0x04000
-#define WIN_DT_WORD_ELLIPSIS               0x40000
-#define WIN_DT_EXPANDTABS                  0x00040
-#define WIN_DT_EXTERNALLEADING             0x00200
-#define WIN_DT_LEFT                        0x00000
-#define WIN_DT_MODIFYSTRING                0x10000
-#define WIN_DT_NOCLIP                      0x00100
-#define WIN_DT_NOPREFIX                    0x00800
-#define WIN_DT_RIGHT                       0x00002
-#define WIN_DT_RTLREADING                  0x20000
-#define WIN_DT_SINGLELINE                  0x00020
-#define WIN_DT_TABSTOP                     0x00080
-#define WIN_DT_TOP                         0x00000
-#define WIN_DT_VCENTER                     0x00004
-#define WIN_DT_WORDBREAK                   0x00010
-#define WIN_DT_INTERNAL                    0x01000
+#define WIN_DT_TOP                         0x000000
+#define WIN_DT_LEFT                        0x000000
+#define WIN_DT_CENTER                      0x000001
+#define WIN_DT_RIGHT                       0x000002
+#define WIN_DT_VCENTER                     0x000004
+#define WIN_DT_BOTTOM                      0x000008
+#define WIN_DT_WORDBREAK                   0x000010
+#define WIN_DT_SINGLELINE                  0x000020
+#define WIN_DT_EXPANDTABS                  0x000040
+#define WIN_DT_TABSTOP                     0x000080
+#define WIN_DT_NOCLIP                      0x000100
+#define WIN_DT_EXTERNALLEADING             0x000200
+#define WIN_DT_CALCRECT                    0x000400
+#define WIN_DT_NOPREFIX                    0x000800
+#define WIN_DT_INTERNAL                    0x001000
+#define WIN_DT_EDITCONTROL                 0x002000
+#define WIN_DT_PATH_ELLIPSIS               0x004000
+#define WIN_DT_END_ELLIPSIS                0x008000
+#define WIN_DT_MODIFYSTRING                0x010000
+#define WIN_DT_RTLREADING                  0x020000
+#define WIN_DT_WORD_ELLIPSIS               0x040000
+#define WIN_DT_NOFULLWIDTHCHARBREAK        0x080000
+#define WIN_DT_HIDEPREFIX                  0x100000
+#define WIN_DT_PREFIXONLY                  0x200000
 
 /* wapi_CreateHatchBrush() styles */
-#define WIN_HS_BDIAGONAL                   3
-#define WIN_HS_CROSS                       4
-#define WIN_HS_DIAGCROSS                   5
-#define WIN_HS_FDIAGONAL                   2
-#define WIN_HS_HORIZONTAL                  0
-#define WIN_HS_VERTICAL                    1
+#define WIN_HS_HORIZONTAL                  0  /* ----- */
+#define WIN_HS_VERTICAL                    1  /* ||||| */
+#define WIN_HS_FDIAGONAL                   2  /* \\\\\ */
+#define WIN_HS_BDIAGONAL                   3  /* ///// */
+#define WIN_HS_CROSS                       4  /* +++++ */
+#define WIN_HS_DIAGCROSS                   5  /* xxxxx */
 
 /* wapi_AddFontResourceEx()/wapi_RemoveFontResourceEx() flags */
 #define WIN_FR_PRIVATE                     0x10
@@ -468,12 +471,15 @@
 
 /* win_SetPen() pen styles */
 #define WIN_PS_SOLID                       0
-#define WIN_PS_DASH                        1
-#define WIN_PS_DOT                         2
-#define WIN_PS_DASHDOT                     3
-#define WIN_PS_DASHDOTDOT                  4
+#define WIN_PS_DASH                        1  /* ------- */
+#define WIN_PS_DOT                         2  /* ....... */
+#define WIN_PS_DASHDOT                     3  /* _._._._ */
+#define WIN_PS_DASHDOTDOT                  4  /* _.._.._ */
 #define WIN_PS_NULL                        5
 #define WIN_PS_INSIDEFRAME                 6
+#define WIN_PS_USERSTYLE                   7
+#define WIN_PS_ALTERNATE                   8
+#define WIN_PS_STYLE_MASK                  15
 
 /* win_GetOpenFileName()/win_GetSaveFileName() */
 #define WIN_OFN_READONLY                   0x00000001
@@ -540,46 +546,57 @@
 #define WIN_NIIF_ICON_MASK                 0x0000000F
 
 /* constants for MENU functions */
+#define WIN_MF_INSERT                      0x0000
+#define WIN_MF_CHANGE                      0x0080
+#define WIN_MF_APPEND                      0x0100
+#define WIN_MF_DELETE                      0x0200
+#define WIN_MF_REMOVE                      0x1000
+
+#define WIN_MF_BYCOMMAND                   0x0000
+#define WIN_MF_BYPOSITION                  0x0400
+
+#define WIN_MF_SEPARATOR                   0x0800
+
 #define WIN_MF_ENABLED                     0x0000
 #define WIN_MF_GRAYED                      0x0001
 #define WIN_MF_DISABLED                    0x0002
-#define WIN_MF_BITMAP                      0x0004
+
 #define WIN_MF_UNCHECKED                   0x0000
 #define WIN_MF_CHECKED                     0x0008
+#define WIN_MF_USECHECKBITMAPS             0x0200
+
+#define WIN_MF_STRING                      0x0000
+#define WIN_MF_BITMAP                      0x0004
+#define WIN_MF_OWNERDRAW                   0x0100
+
 #define WIN_MF_POPUP                       0x0010
 #define WIN_MF_MENUBARBREAK                0x0020
 #define WIN_MF_MENUBREAK                   0x0040
-#define WIN_MF_OWNERDRAW                   0x0100
-#define WIN_MF_SEPARATOR                   0x0800
-#define WIN_MF_STRING                      0x0000
+
+#define WIN_MF_UNHILITE                    0x0000
+#define WIN_MF_HILITE                      0x0080
+
 #define WIN_MF_DEFAULT                     0x1000
 #define WIN_MF_SYSMENU                     0x2000
 #define WIN_MF_HELP                        0x4000
 #define WIN_MF_END                         0x0080
 #define WIN_MF_RIGHTJUSTIFY                0x4000
 #define WIN_MF_MOUSESELECT                 0x8000
-#define WIN_MF_INSERT                      0x0000
-#define WIN_MF_CHANGE                      0x0080
-#define WIN_MF_APPEND                      0x0100
-#define WIN_MF_DELETE                      0x0200
-#define WIN_MF_REMOVE                      0x1000
-#define WIN_MF_USECHECKBITMAPS             0x0200
-#define WIN_MF_UNHILITE                    0x0000
-#define WIN_MF_HILITE                      0x0080
-#define WIN_MF_BYCOMMAND                   0x0000
-#define WIN_MF_BYPOSITION                  0x0400
 
 /* wapi_TrackPopupMenu() */
-#define WIN_TPM_CENTERALIGN                4
-#define WIN_TPM_LEFTALIGN                  0
-#define WIN_TPM_RIGHTALIGN                 8
 #define WIN_TPM_LEFTBUTTON                 0
 #define WIN_TPM_RIGHTBUTTON                2
-#define WIN_TPM_HORIZONTAL                 0
-#define WIN_TPM_VERTICAL                   64
+
+#define WIN_TPM_LEFTALIGN                  0
+#define WIN_TPM_CENTERALIGN                4
+#define WIN_TPM_RIGHTALIGN                 8
+
 #define WIN_TPM_TOPALIGN                   0
 #define WIN_TPM_VCENTERALIGN               16
 #define WIN_TPM_BOTTOMALIGN                32
+
+#define WIN_TPM_HORIZONTAL                 0
+#define WIN_TPM_VERTICAL                   64
 #define WIN_TPM_NONOTIFY                   128
 #define WIN_TPM_RETURNCMD                  256
 #define WIN_TPM_RECURSE                    1
@@ -640,7 +657,6 @@
 #define WIN_WS_VSCROLL                     0x00200000
 #define WIN_WS_DLGFRAME                    0x00400000
 #define WIN_WS_BORDER                      0x00800000
-#define WIN_WS_CAPTION                     0x00C00000
 #define WIN_WS_MAXIMIZE                    0x01000000
 #define WIN_WS_CLIPCHILDREN                0x02000000
 #define WIN_WS_CLIPSIBLINGS                0x04000000
@@ -653,6 +669,7 @@
 #define WIN_WS_ICONIC                      WIN_WS_MINIMIZE
 #define WIN_WS_SIZEBOX                     WIN_WS_THICKFRAME
 #define WIN_WS_TILEDWINDOW                 WIN_WS_OVERLAPPEDWINDOW
+#define WIN_WS_CAPTION                     hb_bitOr( WIN_WS_BORDER, WIN_WS_DLGFRAME )
 #define WIN_WS_OVERLAPPEDWINDOW            hb_bitOr( WIN_WS_OVERLAPPED, WIN_WS_CAPTION, WIN_WS_SYSMENU, WIN_WS_THICKFRAME, WIN_WS_MINIMIZEBOX, WIN_WS_MAXIMIZEBOX )
 #define WIN_WS_POPUPWINDOW                 hb_bitOr( WIN_WS_POPUP, WIN_WS_BORDER, WIN_WS_SYSMENU )
 #define WIN_WS_CHILDWINDOW                 WIN_WS_CHILD
@@ -690,6 +707,7 @@
 #define WIN_MB_YESNO                       0x00000004
 #define WIN_MB_RETRYCANCEL                 0x00000005
 #define WIN_MB_CANCELTRYCONTINUE           0x00000006
+
 #define WIN_MB_ICONHAND                    0x00000010
 #define WIN_MB_ICONQUESTION                0x00000020
 #define WIN_MB_ICONEXCLAMATION             0x00000030
@@ -699,25 +717,41 @@
 #define WIN_MB_ICONERROR                   WIN_MB_ICONHAND
 #define WIN_MB_ICONINFORMATION             WIN_MB_ICONASTERISK
 #define WIN_MB_ICONSTOP                    WIN_MB_ICONHAND
+
 #define WIN_MB_DEFBUTTON1                  0x00000000
 #define WIN_MB_DEFBUTTON2                  0x00000100
 #define WIN_MB_DEFBUTTON3                  0x00000200
 #define WIN_MB_DEFBUTTON4                  0x00000300
+
 #define WIN_MB_APPLMODAL                   0x00000000
 #define WIN_MB_SYSTEMMODAL                 0x00001000
 #define WIN_MB_TASKMODAL                   0x00002000
 #define WIN_MB_HELP                        0x00004000
+
 #define WIN_MB_NOFOCUS                     0x00008000
 #define WIN_MB_SETFOREGROUND               0x00010000
 #define WIN_MB_DEFAULT_DESKTOP_ONLY        0x00020000
+
 #define WIN_MB_TOPMOST                     0x00040000
 #define WIN_MB_RIGHT                       0x00080000
 #define WIN_MB_RTLREADING                  0x00100000
+
 #define WIN_MB_TYPEMASK                    0x0000000F
 #define WIN_MB_ICONMASK                    0x000000F0
 #define WIN_MB_DEFMASK                     0x00000F00
 #define WIN_MB_MODEMASK                    0x00003000
 #define WIN_MB_MISCMASK                    0x0000C000
+
+/* wapi_MessageBox() return values */
+#define WIN_IDOK                           1
+#define WIN_IDCANCEL                       2
+#define WIN_IDABORT                        3
+#define WIN_IDRETRY                        4
+#define WIN_IDIGNORE                       5
+#define WIN_IDYES                          6
+#define WIN_IDNO                           7
+#define WIN_IDTRYAGAIN                     10  /* WINVER >= 0x0500 */
+#define WIN_IDCONTINUE                     11  /* WINVER >= 0x0500 */
 
 /* win_SHFileOperation() functions */
 #define WIN_FO_MOVE                        0x0001
@@ -855,6 +889,7 @@
 #define WIN_SW_HIDE                        0
 #define WIN_SW_MAXIMIZE                    3
 #define WIN_SW_MINIMIZE                    6
+#define WIN_SW_NORMAL                      WIN_SW_SHOWNORMAL
 #define WIN_SW_RESTORE                     9
 #define WIN_SW_SHOW                        5
 #define WIN_SW_SHOWDEFAULT                 10
@@ -864,5 +899,27 @@
 #define WIN_SW_SHOWNA                      8
 #define WIN_SW_SHOWNOACTIVATE              4
 #define WIN_SW_SHOWNORMAL                  1
+
+/* System Menu command values */
+#define WIN_SC_SIZE                        0xF000
+#define WIN_SC_MOVE                        0xF010
+#define WIN_SC_MINIMIZE                    0xF020
+#define WIN_SC_MAXIMIZE                    0xF030
+#define WIN_SC_NEXTWINDOW                  0xF040
+#define WIN_SC_PREVWINDOW                  0xF050
+#define WIN_SC_CLOSE                       0xF060
+#define WIN_SC_VSCROLL                     0xF070
+#define WIN_SC_HSCROLL                     0xF080
+#define WIN_SC_MOUSEMENU                   0xF090
+#define WIN_SC_KEYMENU                     0xF100
+#define WIN_SC_ARRANGE                     0xF110
+#define WIN_SC_RESTORE                     0xF120
+#define WIN_SC_TASKLIST                    0xF130
+#define WIN_SC_SCREENSAVE                  0xF140
+#define WIN_SC_HOTKEY                      0xF150
+#define WIN_SC_DEFAULT                     0xF160
+#define WIN_SC_MONITORPOWER                0xF170
+#define WIN_SC_CONTEXTHELP                 0xF180
+#define WIN_SC_SEPARATOR                   0xF00F
 
 #endif /* HBWIN_CH_ */

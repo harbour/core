@@ -185,11 +185,11 @@
 
 // Windows Specific
 
-#define LVM_FIRST                                 0x1000      // ListView messages
-#define TV_FIRST                                  0x1100      // TreeView messages
+#define LVM_FIRST                                 0x1000  // ListView messages
+#define TV_FIRST                                  0x1100  // TreeView messages
 #define TVN_FIRST                                 -400
-#define HDM_FIRST                                 0x1200      // Header messages
-#define TCM_FIRST                                 0x1300      // Tab control messages
+#define HDM_FIRST                                 0x1200  // Header messages
+#define TCM_FIRST                                 0x1300  // Tab control messages
 
 
 #define CCM_FIRST                                 0x2000
@@ -208,69 +208,69 @@
 
 // Menu Manipulation Constants
 
-#define MF_INSERT                                 0
-#define MF_CHANGE                                 128
-#define MF_APPEND                                 256
-#define MF_DELETE                                 512
-#define MF_REMOVE                                 4096
+#define MF_INSERT                                 WIN_MF_INSERT
+#define MF_CHANGE                                 WIN_MF_CHANGE
+#define MF_APPEND                                 WIN_MF_APPEND
+#define MF_DELETE                                 WIN_MF_DELETE
+#define MF_REMOVE                                 WIN_MF_REMOVE
 
-#define MF_BYCOMMAND                              0
-#define MF_BYPOSITION                             1024
+#define MF_BYCOMMAND                              WIN_MF_BYCOMMAND
+#define MF_BYPOSITION                             WIN_MF_BYPOSITION
 
-#define MF_SEPARATOR                              2048
+#define MF_SEPARATOR                              WIN_MF_SEPARATOR
 
-#define MF_ENABLED                                0
-#define MF_GRAYED                                 1
-#define MF_DISABLED                               2
+#define MF_ENABLED                                WIN_MF_ENABLED
+#define MF_GRAYED                                 WIN_MF_GRAYED
+#define MF_DISABLED                               WIN_MF_DISABLED
 
-#define MF_UNCHECKED                              0
-#define MF_CHECKED                                8
-#define MF_USECHECKBITMAPS                        512
+#define MF_UNCHECKED                              WIN_MF_UNCHECKED
+#define MF_CHECKED                                WIN_MF_CHECKED
+#define MF_USECHECKBITMAPS                        WIN_MF_USECHECKBITMAPS
 
-#define MF_STRING                                 0
-#define MF_BITMAP                                 4
-#define MF_OWNERDRAW                              256
+#define MF_STRING                                 WIN_MF_STRING
+#define MF_BITMAP                                 WIN_MF_BITMAP
+#define MF_OWNERDRAW                              WIN_MF_OWNERDRAW
 
-#define MF_POPUP                                  16
-#define MF_MENUBARBREAK                           32
-#define MF_MENUBREAK                              64
+#define MF_POPUP                                  WIN_MF_POPUP
+#define MF_MENUBARBREAK                           WIN_MF_MENUBARBREAK
+#define MF_MENUBREAK                              WIN_MF_MENUBREAK
 
-#define MF_UNHILITE                               0
-#define MF_HILITE                                 128
+#define MF_UNHILITE                               WIN_MF_UNHILITE
+#define MF_HILITE                                 WIN_MF_HILITE
 
 /* - */
 
-#define TPM_LEFTBUTTON                            0x0000
-#define TPM_RIGHTBUTTON                           0x0002
+#define TPM_LEFTBUTTON                            WIN_TPM_LEFTBUTTON
+#define TPM_RIGHTBUTTON                           WIN_TPM_RIGHTBUTTON
 
-#define TPM_LEFTALIGN                             0x0000
-#define TPM_CENTERALIGN                           0x0004
-#define TPM_RIGHTALIGN                            0x0008
+#define TPM_LEFTALIGN                             WIN_TPM_LEFTALIGN
+#define TPM_CENTERALIGN                           WIN_TPM_CENTERALIGN
+#define TPM_RIGHTALIGN                            WIN_TPM_RIGHTALIGN
 
-#define TPM_TOPALIGN                              0x0000
-#define TPM_VCENTERALIGN                          0x0010
-#define TPM_BOTTOMALIGN                           0x0020
+#define TPM_TOPALIGN                              WIN_TPM_TOPALIGN
+#define TPM_VCENTERALIGN                          WIN_TPM_VCENTERALIGN
+#define TPM_BOTTOMALIGN                           WIN_TPM_BOTTOMALIGN
 
-#define TPM_HORIZONTAL                            0x0000  /* Horz alignment matters more */
-#define TPM_VERTICAL                              0x0040  /* Vert alignment matters more */
-#define TPM_NONOTIFY                              0x0080  /* Don't send any notification msgs */
-#define TPM_RETURNCMD                             0x0100
+#define TPM_HORIZONTAL                            WIN_TPM_HORIZONTAL   /* Horz alignment matters more */
+#define TPM_VERTICAL                              WIN_TPM_VERTICAL     /* Vert alignment matters more */
+#define TPM_NONOTIFY                              WIN_TPM_NONOTIFY     /* Don't send any notification msgs */
+#define TPM_RETURNCMD                             WIN_TPM_RETURNCMD
 
 /* ShowWindow() Commands */
-#define SW_HIDE                                   0
-#define SW_SHOWNORMAL                             1
-#define SW_NORMAL                                 1
-#define SW_SHOWMINIMIZED                          2
-#define SW_SHOWMAXIMIZED                          3
-#define SW_MAXIMIZE                               3
-#define SW_SHOWNOACTIVATE                         4
-#define SW_SHOW                                   5
-#define SW_MINIMIZE                               6
-#define SW_SHOWMINNOACTIVE                        7
-#define SW_SHOWNA                                 8
-#define SW_RESTORE                                9
-#define SW_SHOWDEFAULT                            10
-#define SW_FORCEMINIMIZE                          11
+#define SW_HIDE                                   WIN_SW_HIDE
+#define SW_SHOWNORMAL                             WIN_SW_SHOWNORMAL
+#define SW_NORMAL                                 WIN_SW_NORMAL
+#define SW_SHOWMINIMIZED                          WIN_SW_SHOWMINIMIZED
+#define SW_SHOWMAXIMIZED                          WIN_SW_SHOWMAXIMIZED
+#define SW_MAXIMIZE                               WIN_SW_MAXIMIZE
+#define SW_SHOWNOACTIVATE                         WIN_SW_SHOWNOACTIVATE
+#define SW_SHOW                                   WIN_SW_SHOW
+#define SW_MINIMIZE                               WIN_SW_MINIMIZE
+#define SW_SHOWMINNOACTIVE                        WIN_SW_SHOWMINNOACTIVE
+#define SW_SHOWNA                                 WIN_SW_SHOWNA
+#define SW_RESTORE                                WIN_SW_RESTORE
+#define SW_SHOWDEFAULT                            WIN_SW_SHOWDEFAULT
+#define SW_FORCEMINIMIZE                          WIN_SW_FORCEMINIMIZE
 #define SW_MAX                                    11
 
 /* Window Messages */
@@ -361,8 +361,8 @@
 #define WM_NCMBUTTONUP                            168
 #define WM_NCMBUTTONDBLCLK                        169
 
-#define WM_KEYDOWN                                256                 // 0x0100
-#define WM_KEYUP                                  257                 // 0x0101
+#define WM_KEYDOWN                                256  // 0x0100
+#define WM_KEYUP                                  257  // 0x0101
 
 #define WM_KEYFIRST                               256
 #define WM_CHAR                                   258
@@ -459,147 +459,139 @@
 #define WM_HOTKEY                                 786
 
 /* Window Styles */
-#define WS_OVERLAPPED                             0
-#define WS_POPUP                                  2147483648          // 0x80000000
-#define WS_CHILD                                  1073741824          // 0x40000000
-#define WS_MINIMIZE                               536870912           // 0x20000000
-#define WS_VISIBLE                                268435456           // 0x10000000
-#define WS_DISABLED                               134217728           // 0x08000000
-#define WS_BORDER                                 8388608             // 0x00800000
-#define WS_DLGFRAME                               4194304             // 0x00400000
-#define WS_VSCROLL                                2097152             // 0x00200000
-#define WS_HSCROLL                                1048576             // 0x00100000
-#define WS_SYSMENU                                524288              // 0x00080000
-#define WS_THICKFRAME                             262144              // 0x00040000
-#define WS_GROUP                                  131072              // 0x00020000
-#define WS_TABSTOP                                65536               // 0x00010000
-#define WS_CLIPSIBLINGS                           67108864
-#define WS_CLIPCHILDREN                           33554432
-#define WS_MAXIMIZE                               16777216
-#define WS_CAPTION                                12582912            // WS_BORDER | WS_DLGFRAME
-
-#define WS_MINIMIZEBOX                            131072
-#define WS_MAXIMIZEBOX                            65536
-
-#define WS_TILED                                  WS_OVERLAPPED
-#define WS_ICONIC                                 WS_MINIMIZE
-#define WS_SIZEBOX                                WS_THICKFRAME
-#define WS_TILEDWINDOW                            WS_OVERLAPPEDWINDOW
-
-#define WS_OVERLAPPEDWINDOW                       ( WS_OVERLAPPED + ;
-                                                       WS_CAPTION + ;
-                                                       WS_SYSMENU + ;
-                                                    WS_THICKFRAME + ;
-                                                   WS_MINIMIZEBOX + ;
-                                                   WS_MAXIMIZEBOX )
+#define WS_OVERLAPPED                             WIN_WS_OVERLAPPED
+#define WS_TABSTOP                                WIN_WS_TABSTOP
+#define WS_MAXIMIZEBOX                            WIN_WS_MAXIMIZEBOX
+#define WS_MINIMIZEBOX                            WIN_WS_MINIMIZEBOX
+#define WS_GROUP                                  WIN_WS_GROUP
+#define WS_THICKFRAME                             WIN_WS_THICKFRAME
+#define WS_SYSMENU                                WIN_WS_SYSMENU
+#define WS_HSCROLL                                WIN_WS_HSCROLL
+#define WS_VSCROLL                                WIN_WS_VSCROLL
+#define WS_DLGFRAME                               WIN_WS_DLGFRAME
+#define WS_BORDER                                 WIN_WS_BORDER
+#define WS_MAXIMIZE                               WIN_WS_MAXIMIZE
+#define WS_CLIPCHILDREN                           WIN_WS_CLIPCHILDREN
+#define WS_CLIPSIBLINGS                           WIN_WS_CLIPSIBLINGS
+#define WS_DISABLED                               WIN_WS_DISABLED
+#define WS_VISIBLE                                WIN_WS_VISIBLE
+#define WS_MINIMIZE                               WIN_WS_MINIMIZE
+#define WS_CHILD                                  WIN_WS_CHILD
+#define WS_POPUP                                  WIN_WS_POPUP
+#define WS_TILED                                  WIN_WS_TILED
+#define WS_ICONIC                                 WIN_WS_ICONIC
+#define WS_SIZEBOX                                WIN_WS_SIZEBOX
+#define WS_TILEDWINDOW                            WIN_WS_TILEDWINDOW
+#define WS_CAPTION                                WIN_WS_CAPTION
+#define WS_OVERLAPPEDWINDOW                       WIN_WS_OVERLAPPEDWINDOW
 
 /* Extended Window Styles */
-#define WS_EX_DLGMODALFRAME                       1                   // 0x00000001
-#define WS_EX_NOPARENTNOTIFY                      4                   // 0x00000004
-#define WS_EX_TOPMOST                             8                   // 0x00000008
-#define WS_EX_ACCEPTFILES                         16                  // 0x00000010
-#define WS_EX_TRANSPARENT                         32                  // 0x00000020
-#define WS_EX_MDICHILD                            64                  // 0x00000040
-#define WS_EX_TOOLWINDOW                          128                 // 0x00000080
-#define WS_EX_WINDOWEDGE                          256                 // 0x00000100
-#define WS_EX_CLIENTEDGE                          512                 // 0x00000200
-#define WS_EX_CONTEXTHELP                         1024                // 0x00000400
+#define WS_EX_DLGMODALFRAME                       0x00000001
+#define WS_EX_NOPARENTNOTIFY                      0x00000004
+#define WS_EX_TOPMOST                             0x00000008
+#define WS_EX_ACCEPTFILES                         0x00000010
+#define WS_EX_TRANSPARENT                         0x00000020
+#define WS_EX_MDICHILD                            0x00000040
+#define WS_EX_TOOLWINDOW                          0x00000080
+#define WS_EX_WINDOWEDGE                          0x00000100
+#define WS_EX_CLIENTEDGE                          0x00000200
+#define WS_EX_CONTEXTHELP                         0x00000400
 
-#define WS_EX_RIGHT                               4096                // 0x00001000
-#define WS_EX_LEFT                                0                   // 0x00000000
-#define WS_EX_RTLREADING                          8192                // 0x00002000
-#define WS_EX_LTRREADING                          0                   // 0x00000000
-#define WS_EX_LEFTSCROLLBAR                       16384               // 0x00004000
-#define WS_EX_RIGHTSCROLLBAR                      0                   // 0x00000000
+#define WS_EX_RIGHT                               0x00001000
+#define WS_EX_LEFT                                0x00000000
+#define WS_EX_RTLREADING                          0x00002000
+#define WS_EX_LTRREADING                          0x00000000
+#define WS_EX_LEFTSCROLLBAR                       0x00004000
+#define WS_EX_RIGHTSCROLLBAR                      0x00000000
 
-#define WS_EX_CONTROLPARENT                       65536               // 0x00010000
-#define WS_EX_STATICEDGE                          131072              // 0x00020000
-#define WS_EX_APPWINDOW                           262144              // 0x00040000
+#define WS_EX_CONTROLPARENT                       0x00010000
+#define WS_EX_STATICEDGE                          0x00020000
+#define WS_EX_APPWINDOW                           0x00040000
 
 #define WS_EX_OVERLAPPEDWINDOW                    ( WS_EX_WINDOWEDGE + WS_EX_CLIENTEDGE )
 #define WS_EX_PALETTEWINDOW                       ( WS_EX_WINDOWEDGE + WS_EX_TOOLWINDOW + WS_EX_TOPMOST )
 
-#define WS_EX_LAYERED                             524288              // 0x00080000
-#define WS_EX_NOINHERITLAYOUT                     1048576             // 0x00100000  // Disable inheritence of mirroring by children
-#define WS_EX_LAYOUTRTL                           4194304             // 0x00400000  // Right to left mirroring
-#define WS_EX_NOACTIVATE                          134217728           // 0x08000000
+#define WS_EX_LAYERED                             0x00080000
+#define WS_EX_NOINHERITLAYOUT                     0x00100000  // Disable inheritence of mirroring by children
+#define WS_EX_LAYOUTRTL                           0x00400000  // Right to left mirroring
+#define WS_EX_NOACTIVATE                          0x08000000
 
 /* - */
 
-#define SC_SIZE                                   61440               // 0xF000
-#define SC_MOVE                                   61456               // 0xF010
-#define SC_MINIMIZE                               61472               // 0xF020
-#define SC_MAXIMIZE                               61488               // 0xF030
-#define SC_NEXTWINDOW                             61504               // 0xF040
-#define SC_PREVWINDOW                             61520               // 0xF050
-#define SC_CLOSE                                  61536               // 0xF060
-#define SC_VSCROLL                                61552               // 0xF070
-#define SC_HSCROLL                                61568               // 0xF080
-#define SC_MOUSEMENU                              61584               // 0xF090
-#define SC_KEYMENU                                61696               // 0xF100
-#define SC_ARRANGE                                61712               // 0xF110
-#define SC_RESTORE                                61728               // 0xF120
-#define SC_TASKLIST                               61744               // 0xF130
-#define SC_SCREENSAVE                             61760               // 0xF140
-#define SC_HOTKEY                                 61776               // 0xF150
-#define SC_DEFAULT                                61792               // 0xF160
-#define SC_MONITORPOWER                           61808               // 0xF170
-#define SC_CONTEXTHELP                            61824               // 0xF180
-#define SC_SEPARATOR                              61455               // 0xF00F
+#define SC_SIZE                                   WIN_SC_SIZE
+#define SC_MOVE                                   WIN_SC_MOVE
+#define SC_MINIMIZE                               WIN_SC_MINIMIZE
+#define SC_MAXIMIZE                               WIN_SC_MAXIMIZE
+#define SC_NEXTWINDOW                             WIN_SC_NEXTWINDOW
+#define SC_PREVWINDOW                             WIN_SC_PREVWINDOW
+#define SC_CLOSE                                  WIN_SC_CLOSE
+#define SC_VSCROLL                                WIN_SC_VSCROLL
+#define SC_HSCROLL                                WIN_SC_HSCROLL
+#define SC_MOUSEMENU                              WIN_SC_MOUSEMENU
+#define SC_KEYMENU                                WIN_SC_KEYMENU
+#define SC_ARRANGE                                WIN_SC_ARRANGE
+#define SC_RESTORE                                WIN_SC_RESTORE
+#define SC_TASKLIST                               WIN_SC_TASKLIST
+#define SC_SCREENSAVE                             WIN_SC_SCREENSAVE
+#define SC_HOTKEY                                 WIN_SC_HOTKEY
+#define SC_DEFAULT                                WIN_SC_DEFAULT
+#define SC_MONITORPOWER                           WIN_SC_MONITORPOWER
+#define SC_CONTEXTHELP                            WIN_SC_CONTEXTHELP
+#define SC_SEPARATOR                              WIN_SC_SEPARATOR
 
 /* Dialog styles */
-#define DS_ABSALIGN                               1                   // 0x01
-#define DS_SYSMODAL                               2                   // 0x02
-#define DS_3DLOOK                                 4                   // 0x04
-#define DS_FIXEDSYS                               8                   // 0x08
-#define DS_NOFAILCREATE                           16                  // 0x10
-#define DS_LOCALEDIT                              32                  // 0x20
-#define DS_SETFONT                                64                  // 0x40
-#define DS_MODALFRAME                             128                 // 0x80
-#define DS_NOIDLEMSG                              256                 // 0x100
-#define DS_CONTROL                                1024                // 0x400
-#define DS_CENTER                                 2048                // 0x800
-#define DS_CENTERMOUSE                            4096                // 0x1000
-#define DS_CONTEXTHELP                            8192                // 0x2000
+#define DS_ABSALIGN                               0x01
+#define DS_SYSMODAL                               0x02
+#define DS_3DLOOK                                 0x04
+#define DS_FIXEDSYS                               0x08
+#define DS_NOFAILCREATE                           0x10
+#define DS_LOCALEDIT                              0x20
+#define DS_SETFONT                                0x40
+#define DS_MODALFRAME                             0x80
+#define DS_NOIDLEMSG                              0x100
+#define DS_CONTROL                                0x400
+#define DS_CENTER                                 0x800
+#define DS_CENTERMOUSE                            0x1000
+#define DS_CONTEXTHELP                            0x2000
 
 /* Dialog Box Command IDs */
-#define IDOK                                      1
-#define IDCANCEL                                  2
-#define IDABORT                                   3
-#define IDRETRY                                   4
-#define IDIGNORE                                  5
-#define IDYES                                     6
-#define IDNO                                      7
-#define IDTRYAGAIN                                10                  // WINVER >= 0x0500
-#define IDCONTINUE                                11                  // WINVER >= 0x0500
+#define IDOK                                      WIN_IDOK
+#define IDCANCEL                                  WIN_IDCANCEL
+#define IDABORT                                   WIN_IDABORT
+#define IDRETRY                                   WIN_IDRETRY
+#define IDIGNORE                                  WIN_IDIGNORE
+#define IDYES                                     WIN_IDYES
+#define IDNO                                      WIN_IDNO
+#define IDTRYAGAIN                                WIN_IDTRYAGAIN
+#define IDCONTINUE                                WIN_IDCONTINUE
 
 /* Button Control Styles */
-#define BS_PUSHBUTTON                             0                   // 0x00000000
-#define BS_DEFPUSHBUTTON                          1                   // 0x00000001
-#define BS_CHECKBOX                               2                   // 0x00000002
-#define BS_AUTOCHECKBOX                           3                   // 0x00000003
-#define BS_RADIOBUTTON                            4                   // 0x00000004
-#define BS_3STATE                                 5                   // 0x00000005
-#define BS_AUTO3STATE                             6                   // 0x00000006
-#define BS_GROUPBOX                               7                   // 0x00000007
-#define BS_USERBUTTON                             8                   // 0x00000008
-#define BS_AUTORADIOBUTTON                        9                   // 0x00000009
-#define BS_OWNERDRAW                              11                  // 0x0000000B
-#define BS_LEFTTEXT                               32                  // 0x00000020
+#define BS_PUSHBUTTON                             0x00000000
+#define BS_DEFPUSHBUTTON                          0x00000001
+#define BS_CHECKBOX                               0x00000002
+#define BS_AUTOCHECKBOX                           0x00000003
+#define BS_RADIOBUTTON                            0x00000004
+#define BS_3STATE                                 0x00000005
+#define BS_AUTO3STATE                             0x00000006
+#define BS_GROUPBOX                               0x00000007
+#define BS_USERBUTTON                             0x00000008
+#define BS_AUTORADIOBUTTON                        0x00000009
+#define BS_OWNERDRAW                              0x0000000B
+#define BS_LEFTTEXT                               0x00000020
 
-#define BS_TEXT                                   0                   // 0x00000000
-#define BS_ICON                                   64                  // 0x00000040
-#define BS_BITMAP                                 128                 // 0x00000080
-#define BS_LEFT                                   256                 // 0x00000100
-#define BS_RIGHT                                  512                 // 0x00000200
-#define BS_CENTER                                 768                 // 0x00000300
-#define BS_TOP                                    1024                // 0x00000400
-#define BS_BOTTOM                                 2048                // 0x00000800
-#define BS_VCENTER                                3072                // 0x00000C00
-#define BS_PUSHLIKE                               4096                // 0x00001000
-#define BS_MULTILINE                              8192                // 0x00002000
-#define BS_NOTIFY                                 16384               // 0x00004000
-#define BS_FLAT                                   32768               // 0x00008000
+#define BS_TEXT                                   0x00000000
+#define BS_ICON                                   0x00000040
+#define BS_BITMAP                                 0x00000080
+#define BS_LEFT                                   0x00000100
+#define BS_RIGHT                                  0x00000200
+#define BS_CENTER                                 0x00000300
+#define BS_TOP                                    0x00000400
+#define BS_BOTTOM                                 0x00000800
+#define BS_VCENTER                                0x00000C00
+#define BS_PUSHLIKE                               0x00001000
+#define BS_MULTILINE                              0x00002000
+#define BS_NOTIFY                                 0x00004000
+#define BS_FLAT                                   0x00008000
 #define BS_RIGHTBUTTON                            BS_LEFTTEXT
 
 /* User Button Notification Codes */
@@ -648,14 +640,14 @@
 #define ES_NUMBER                                 8192
 
 /* Edit Control Notification Codes */
-#define EN_SETFOCUS                               256                 // 0x0100
-#define EN_KILLFOCUS                              512                 // 0x0200
-#define EN_CHANGE                                 768                 // 0x0300
-#define EN_UPDATE                                 1024                // 0x0400
-#define EN_ERRSPACE                               1280                // 0x0500
-#define EN_MAXTEXT                                1281                // 0x0501
-#define EN_HSCROLL                                1537                // 0x0601
-#define EN_VSCROLL                                1538                // 0x0602
+#define EN_SETFOCUS                               0x0100
+#define EN_KILLFOCUS                              0x0200
+#define EN_CHANGE                                 0x0300
+#define EN_UPDATE                                 0x0400
+#define EN_ERRSPACE                               0x0500
+#define EN_MAXTEXT                                0x0501
+#define EN_HSCROLL                                0x0601
+#define EN_VSCROLL                                0x0602
 
 /* Edit Control Messages */
 #define EM_GETSEL                                 176
@@ -697,19 +689,19 @@
 #define EM_CHARFROMPOS                            215
 
 /* Combo Box styles */
-#define CBS_SIMPLE                                1                   // 0x0001
-#define CBS_DROPDOWN                              2                   // 0x0002
-#define CBS_DROPDOWNLIST                          3                   // 0x0003
-#define CBS_OWNERDRAWFIXED                        16                  // 0x0010
-#define CBS_OWNERDRAWVARIABLE                     32                  // 0x0020
-#define CBS_AUTOHSCROLL                           64                  // 0x0040
-#define CBS_OEMCONVERT                            128                 // 0x0080
-#define CBS_SORT                                  256                 // 0x0100
-#define CBS_HASSTRINGS                            512                 // 0x0200
-#define CBS_NOINTEGRALHEIGHT                      1024                // 0x0400
-#define CBS_DISABLENOSCROLL                       2048                // 0x0800
-#define CBS_UPPERCASE                             8192                // 0x2000
-#define CBS_LOWERCASE                             16384               // 0x4000
+#define CBS_SIMPLE                                0x0001
+#define CBS_DROPDOWN                              0x0002
+#define CBS_DROPDOWNLIST                          0x0003
+#define CBS_OWNERDRAWFIXED                        0x0010
+#define CBS_OWNERDRAWVARIABLE                     0x0020
+#define CBS_AUTOHSCROLL                           0x0040
+#define CBS_OEMCONVERT                            0x0080
+#define CBS_SORT                                  0x0100
+#define CBS_HASSTRINGS                            0x0200
+#define CBS_NOINTEGRALHEIGHT                      0x0400
+#define CBS_DISABLENOSCROLL                       0x0800
+#define CBS_UPPERCASE                             0x2000
+#define CBS_LOWERCASE                             0x4000
 
 /* Combo Box Notification Codes */
 #define CBN_ERRSPACE                              -1
@@ -763,39 +755,38 @@
 #define CB_GETCOMBOBOXINFO                        0x0164
 #define CB_MSGMAX                                 0x0165
 
-
 /* Combo Box return Values */
 #define CB_OKAY                                   0
 #define CB_ERR                                    -1
 #define CB_ERRSPACE                               -2
 
 /* Static Control Constants */
-#define SS_LEFT                                   0                   // 0x00000000
-#define SS_CENTER                                 1                   // 0x00000001
-#define SS_RIGHT                                  2                   // 0x00000002
-#define SS_ICON                                   3                   // 0x00000003
-#define SS_BLACKRECT                              4                   // 0x00000004
-#define SS_GRAYRECT                               5                   // 0x00000005
-#define SS_WHITERECT                              6                   // 0x00000006
-#define SS_BLACKFRAME                             7                   // 0x00000007
-#define SS_GRAYFRAME                              8                   // 0x00000008
-#define SS_WHITEFRAME                             9                   // 0x00000009
-#define SS_USERITEM                               10                  // 0x0000000A
-#define SS_SIMPLE                                 11                  // 0x0000000B
-#define SS_LEFTNOWORDWRAP                         12                  // 0x0000000C
-#define SS_OWNERDRAW                              13                  // 0x0000000D
-#define SS_BITMAP                                 14                  // 0x0000000E
-#define SS_ENHMETAFILE                            15                  // 0x0000000F
-#define SS_ETCHEDHORZ                             16                  // 0x00000010
-#define SS_ETCHEDVERT                             17                  // 0x00000011
-#define SS_ETCHEDFRAME                            18                  // 0x00000012
-#define SS_TYPEMASK                               31                  // 0x0000001F
-#define SS_NOPREFIX                               128                 // Don't do "&" character translation
-#define SS_NOTIFY                                 256                 // 0x00000100
-#define SS_CENTERIMAGE                            512                 // 0x00000200
-#define SS_RIGHTJUST                              1024                // 0x00000400
-#define SS_REALSIZEIMAGE                          2048                // 0x00000800
-#define SS_SUNKEN                                 4096                // 0x00001000
+#define SS_LEFT                                   0x00000000
+#define SS_CENTER                                 0x00000001
+#define SS_RIGHT                                  0x00000002
+#define SS_ICON                                   0x00000003
+#define SS_BLACKRECT                              0x00000004
+#define SS_GRAYRECT                               0x00000005
+#define SS_WHITERECT                              0x00000006
+#define SS_BLACKFRAME                             0x00000007
+#define SS_GRAYFRAME                              0x00000008
+#define SS_WHITEFRAME                             0x00000009
+#define SS_USERITEM                               0x0000000A
+#define SS_SIMPLE                                 0x0000000B
+#define SS_LEFTNOWORDWRAP                         0x0000000C
+#define SS_OWNERDRAW                              0x0000000D
+#define SS_BITMAP                                 0x0000000E
+#define SS_ENHMETAFILE                            0x0000000F
+#define SS_ETCHEDHORZ                             0x00000010
+#define SS_ETCHEDVERT                             0x00000011
+#define SS_ETCHEDFRAME                            0x00000012
+#define SS_TYPEMASK                               0x0000001F
+#define SS_NOPREFIX                               0x00000080  // Don't do "&" character translation
+#define SS_NOTIFY                                 0x00000100
+#define SS_CENTERIMAGE                            0x00000200
+#define SS_RIGHTJUST                              0x00000400
+#define SS_REALSIZEIMAGE                          0x00000800
+#define SS_SUNKEN                                 0x00001000
 
 #define SS_ENDELLIPSIS                            16384
 #define SS_PATHELLIPSIS                           32768
@@ -882,49 +873,47 @@
 #define LBN_KILLFOCUS                             5
 
 /* MessageBox() Flags */
-#define MB_OK                                     0
-#define MB_OKCANCEL                               1
-#define MB_ABORTRETRYIGNORE                       2
-#define MB_YESNOCANCEL                            3
-#define MB_YESNO                                  4
-#define MB_RETRYCANCEL                            5
-#define MB_CANCELTRYCONTINUE                      6
+#define MB_OK                                     WIN_MB_OK
+#define MB_OKCANCEL                               WIN_MB_OKCANCEL
+#define MB_ABORTRETRYIGNORE                       WIN_MB_ABORTRETRYIGNORE
+#define MB_YESNOCANCEL                            WIN_MB_YESNOCANCEL
+#define MB_YESNO                                  WIN_MB_YESNO
+#define MB_RETRYCANCEL                            WIN_MB_RETRYCANCEL
+#define MB_CANCELTRYCONTINUE                      WIN_MB_CANCELTRYCONTINUE
 
-#define MB_ICONHAND                               16
-#define MB_ICONQUESTION                           32
-#define MB_ICONEXCLAMATION                        48
-#define MB_ICONASTERISK                           64
+#define MB_ICONHAND                               WIN_MB_ICONHAND
+#define MB_ICONQUESTION                           WIN_MB_ICONQUESTION
+#define MB_ICONEXCLAMATION                        WIN_MB_ICONEXCLAMATION
+#define MB_ICONASTERISK                           WIN_MB_ICONASTERISK
+#define MB_USERICON                               WIN_MB_USERICON
+#define MB_ICONWARNING                            WIN_MB_ICONWARNING
+#define MB_ICONERROR                              WIN_MB_ICONERROR
+#define MB_ICONINFORMATION                        WIN_MB_ICONINFORMATION
+#define MB_ICONSTOP                               WIN_MB_ICONSTOP
 
-#define MB_USERICON                               128
-#define MB_ICONWARNING                            MB_ICONEXCLAMATION
-#define MB_ICONERROR                              MB_ICONHAND
+#define MB_DEFBUTTON1                             WIN_MB_DEFBUTTON1
+#define MB_DEFBUTTON2                             WIN_MB_DEFBUTTON2
+#define MB_DEFBUTTON3                             WIN_MB_DEFBUTTON3
+#define MB_DEFBUTTON4                             WIN_MB_DEFBUTTON4
 
-#define MB_ICONINFORMATION                        MB_ICONASTERISK
-#define MB_ICONSTOP                               MB_ICONHAND
+#define MB_APPLMODAL                              WIN_MB_APPLMODAL
+#define MB_SYSTEMMODAL                            WIN_MB_SYSTEMMODAL
+#define MB_TASKMODAL                              WIN_MB_TASKMODAL
+#define MB_HELP                                   WIN_MB_HELP
 
-#define MB_DEFBUTTON1                             0
-#define MB_DEFBUTTON2                             256
-#define MB_DEFBUTTON3                             512
-#define MB_DEFBUTTON4                             768
+#define MB_NOFOCUS                                WIN_MB_NOFOCUS
+#define MB_SETFOREGROUND                          WIN_MB_SETFOREGROUND
+#define MB_DEFAULT_DESKTOP_ONLY                   WIN_MB_DEFAULT_DESKTOP_ONLY
 
-#define MB_APPLMODAL                              0
-#define MB_SYSTEMMODAL                            4096
-#define MB_TASKMODAL                              8192
-#define MB_HELP                                   16384               // Help Button
+#define MB_TOPMOST                                WIN_MB_TOPMOST
+#define MB_RIGHT                                  WIN_MB_RIGHT
+#define MB_RTLREADING                             WIN_MB_RTLREADING
 
-#define MB_NOFOCUS                                32768
-#define MB_SETFOREGROUND                          65536
-#define MB_DEFAULT_DESKTOP_ONLY                   131072
-
-#define MB_TOPMOST                                262144
-#define MB_RIGHT                                  524288
-#define MB_RTLREADING                             1048576
-
-#define MB_TYPEMASK                               15
-#define MB_ICONMASK                               240
-#define MB_DEFMASK                                3840
-#define MB_MODEMASK                               12288
-#define MB_MISCMASK                               49152
+#define MB_TYPEMASK                               WIN_MB_TYPEMASK
+#define MB_ICONMASK                               WIN_MB_ICONMASK
+#define MB_DEFMASK                                WIN_MB_DEFMASK
+#define MB_MODEMASK                               WIN_MB_MODEMASK
+#define MB_MISCMASK                               WIN_MB_MISCMASK
 
 /* Stock Logical Objects */
 #define WHITE_BRUSH                               0
@@ -954,36 +943,36 @@
 
 /* - */
 
-#define IMAGE_BITMAP                              0
-#define IMAGE_ICON                                1
-#define IMAGE_CURSOR                              2
-#define IMAGE_ENHMETAFILE                         3
+#define IMAGE_BITMAP                              WIN_IMAGE_BITMAP
+#define IMAGE_ICON                                WIN_IMAGE_ICON
+#define IMAGE_CURSOR                              WIN_IMAGE_CURSOR
+#define IMAGE_ENHMETAFILE                         WIN_IMAGE_ENHMETAFILE
 
 /* DrawText() Format Flags */
-#define DT_TOP                                    0
-#define DT_LEFT                                   0
-#define DT_CENTER                                 1
-#define DT_RIGHT                                  2
-#define DT_VCENTER                                4
-#define DT_BOTTOM                                 8
-#define DT_WORDBREAK                              16
-#define DT_SINGLELINE                             32
-#define DT_EXPANDTABS                             64
-#define DT_TABSTOP                                128
-#define DT_NOCLIP                                 256
-#define DT_EXTERNALLEADING                        512
-#define DT_CALCRECT                               1024
-#define DT_NOPREFIX                               2048
-#define DT_INTERNAL                               4096
-#define DT_EDITCONTROL                            8192
-#define DT_PATH_ELLIPSIS                          16384
-#define DT_END_ELLIPSIS                           32768
-#define DT_MODIFYSTRING                           65536
-#define DT_RTLREADING                             131072
-#define DT_WORD_ELLIPSIS                          262144
-#define DT_NOFULLWIDTHCHARBREAK                   524288
-#define DT_HIDEPREFIX                             1048576
-#define DT_PREFIXONLY                             2097152
+#define DT_TOP                                    WIN_DT_TOP
+#define DT_LEFT                                   WIN_DT_LEFT
+#define DT_CENTER                                 WIN_DT_CENTER
+#define DT_RIGHT                                  WIN_DT_RIGHT
+#define DT_VCENTER                                WIN_DT_VCENTER
+#define DT_BOTTOM                                 WIN_DT_BOTTOM
+#define DT_WORDBREAK                              WIN_DT_WORDBREAK
+#define DT_SINGLELINE                             WIN_DT_SINGLELINE
+#define DT_EXPANDTABS                             WIN_DT_EXPANDTABS
+#define DT_TABSTOP                                WIN_DT_TABSTOP
+#define DT_NOCLIP                                 WIN_DT_NOCLIP
+#define DT_EXTERNALLEADING                        WIN_DT_EXTERNALLEADING
+#define DT_CALCRECT                               WIN_DT_CALCRECT
+#define DT_NOPREFIX                               WIN_DT_NOPREFIX
+#define DT_INTERNAL                               WIN_DT_INTERNAL
+#define DT_EDITCONTROL                            WIN_DT_EDITCONTROL
+#define DT_PATH_ELLIPSIS                          WIN_DT_PATH_ELLIPSIS
+#define DT_END_ELLIPSIS                           WIN_DT_END_ELLIPSIS
+#define DT_MODIFYSTRING                           WIN_DT_MODIFYSTRING
+#define DT_RTLREADING                             WIN_DT_RTLREADING
+#define DT_WORD_ELLIPSIS                          WIN_DT_WORD_ELLIPSIS
+#define DT_NOFULLWIDTHCHARBREAK                   WIN_DT_NOFULLWIDTHCHARBREAK
+#define DT_HIDEPREFIX                             WIN_DT_HIDEPREFIX
+#define DT_PREFIXONLY                             WIN_DT_PREFIXONLY
 
 /* Brush Styles */
 #define BS_SOLID                                  0
@@ -999,24 +988,24 @@
 #define BS_MONOPATTERN                            9
 
 // Hatch Styles
-#define HS_HORIZONTAL                             0  // -----
-#define HS_VERTICAL                               1  // |||||
-#define HS_FDIAGONAL                              2  // \\\\\
-#define HS_BDIAGONAL                              3  // /////
-#define HS_CROSS                                  4  // +++++
-#define HS_DIAGCROSS                              5  // xxxxx
+#define HS_HORIZONTAL                             WIN_HS_HORIZONTAL
+#define HS_VERTICAL                               WIN_HS_VERTICAL
+#define HS_FDIAGONAL                              WIN_HS_FDIAGONAL
+#define HS_BDIAGONAL                              WIN_HS_BDIAGONAL
+#define HS_CROSS                                  WIN_HS_CROSS
+#define HS_DIAGCROSS                              WIN_HS_DIAGCROSS
 
 // Pen Styles
-#define PS_SOLID                                  0
-#define PS_DASH                                   1  // -------
-#define PS_DOT                                    2  // .......
-#define PS_DASHDOT                                3  // _._._._
-#define PS_DASHDOTDOT                             4  // _.._.._
-#define PS_NULL                                   5
-#define PS_INSIDEFRAME                            6
-#define PS_USERSTYLE                              7
-#define PS_ALTERNATE                              8
-#define PS_STYLE_MASK                             15
+#define PS_SOLID                                  WIN_PS_SOLID
+#define PS_DASH                                   WIN_PS_DASH
+#define PS_DOT                                    WIN_PS_DOT
+#define PS_DASHDOT                                WIN_PS_DASHDOT
+#define PS_DASHDOTDOT                             WIN_PS_DASHDOTDOT
+#define PS_NULL                                   WIN_PS_NULL
+#define PS_INSIDEFRAME                            WIN_PS_INSIDEFRAME
+#define PS_USERSTYLE                              WIN_PS_USERSTYLE
+#define PS_ALTERNATE                              WIN_PS_ALTERNATE
+#define PS_STYLE_MASK                             WIN_PS_STYLE_MASK
 
 #define PS_ENDCAP_ROUND                           0
 #define PS_ENDCAP_SQUARE                          256
@@ -1033,67 +1022,67 @@
 #define PS_TYPE_MASK                              983040
 
 // font weight values
-#define FW_DONTCARE                               0
-#define FW_THIN                                   100
-#define FW_EXTRALIGHT                             200
-#define FW_ULTRALIGHT                             200
-#define FW_LIGHT                                  300
-#define FW_NORMAL                                 400
-#define FW_REGULAR                                400
-#define FW_MEDIUM                                 500
-#define FW_SEMIBOLD                               600
-#define FW_DEMIBOLD                               600
-#define FW_BOLD                                   700
-#define FW_EXTRABOLD                              800
-#define FW_ULTRABOLD                              800
-#define FW_HEAVY                                  900
-#define FW_BLACK                                  900
+#define FW_DONTCARE                               WIN_FW_DONTCARE
+#define FW_THIN                                   WIN_FW_THIN
+#define FW_EXTRALIGHT                             WIN_FW_EXTRALIGHT
+#define FW_ULTRALIGHT                             WIN_FW_ULTRALIGHT
+#define FW_LIGHT                                  WIN_FW_LIGHT
+#define FW_NORMAL                                 WIN_FW_NORMAL
+#define FW_REGULAR                                WIN_FW_REGULAR
+#define FW_MEDIUM                                 WIN_FW_MEDIUM
+#define FW_SEMIBOLD                               WIN_FW_SEMIBOLD
+#define FW_DEMIBOLD                               WIN_FW_DEMIBOLD
+#define FW_BOLD                                   WIN_FW_BOLD
+#define FW_EXTRABOLD                              WIN_FW_EXTRABOLD
+#define FW_ULTRABOLD                              WIN_FW_ULTRABOLD
+#define FW_HEAVY                                  WIN_FW_HEAVY
+#define FW_BLACK                                  WIN_FW_BLACK
 
 // font quality values
-#define DEFAULT_QUALITY                           0
-#define DRAFT_QUALITY                             1
-#define PROOF_QUALITY                             2
-#define NONANTIALIASED_QUALITY                    3                   // WINVER >= 0x0400
-#define ANTIALISED_QUALITY                        4                   // WINVER >= 0x0400
+#define DEFAULT_QUALITY                           WIN_DEFAULT_QUALITY
+#define DRAFT_QUALITY                             WIN_DRAFT_QUALITY
+#define PROOF_QUALITY                             WIN_PROOF_QUALITY
+#define NONANTIALIASED_QUALITY                    WIN_NONANTIALIASED_QUALITY  // WINVER >= 0x0400
+#define ANTIALISED_QUALITY                        WIN_ANTIALIASED_QUALITY     // WINVER >= 0x0400
 
-#define ANSI_CHARSET                              0
-#define DEFAULT_CHARSET                           1
-#define SYMBOL_CHARSET                            2
-#define SHIFTJIS_CHARSET                          128
-#define HANGEUL_CHARSET                           129
-#define HANGUL_CHARSET                            129
-#define GB2312_CHARSET                            134
-#define CHINESEBIG5_CHARSET                       136
-#define OEM_CHARSET                               255
-#define JOHAB_CHARSET                             130
-#define HEBREW_CHARSET                            177
-#define ARABIC_CHARSET                            178
-#define GREEK_CHARSET                             161
-#define TURKISH_CHARSET                           162
-#define VIETNAMESE_CHARSET                        163
-#define THAI_CHARSET                              222
-#define EASTEUROPE_CHARSET                        238
-#define RUSSIAN_CHARSET                           204
-#define MAC_CHARSET                               77
-#define BALTIC_CHARSET                            186
+#define ANSI_CHARSET                              WIN_ANSI_CHARSET
+#define DEFAULT_CHARSET                           WIN_DEFAULT_CHARSET
+#define SYMBOL_CHARSET                            WIN_SYMBOL_CHARSET
+#define MAC_CHARSET                               WIN_MAC_CHARSET
+#define SHIFTJIS_CHARSET                          WIN_SHIFTJIS_CHARSET
+#define HANGEUL_CHARSET                           WIN_HANGEUL_CHARSET
+#define HANGUL_CHARSET                            WIN_HANGUL_CHARSET
+#define JOHAB_CHARSET                             WIN_JOHAB_CHARSET
+#define GB2312_CHARSET                            WIN_GB2312_CHARSET
+#define CHINESEBIG5_CHARSET                       WIN_CHINESEBIG5_CHARSET
+#define GREEK_CHARSET                             WIN_GREEK_CHARSET
+#define TURKISH_CHARSET                           WIN_TURKISH_CHARSET
+#define VIETNAMESE_CHARSET                        WIN_VIETNAMESE_CHARSET
+#define HEBREW_CHARSET                            WIN_HEBREW_CHARSET
+#define ARABIC_CHARSET                            WIN_ARABIC_CHARSET
+#define BALTIC_CHARSET                            WIN_BALTIC_CHARSET
+#define RUSSIAN_CHARSET                           WIN_RUSSIAN_CHARSET
+#define THAI_CHARSET                              WIN_THAI_CHARSET
+#define EASTEUROPE_CHARSET                        WIN_EASTEUROPE_CHARSET
+#define OEM_CHARSET                               WIN_OEM_CHARSET
 
-#define BOLD_FONTTYPE                             256                 // 0x0100
-#define ITALIC_FONTTYPE                           512                 // 0x0200
-#define REGULAR_FONTTYPE                          1024                // 0x0400
-#define SCREEN_FONTTYPE                           8192                // 0x2000
-#define PRINTER_FONTTYPE                          16384               // 0x4000
-#define SIMULATED_FONTTYPE                        32768               // 0x8000
+#define BOLD_FONTTYPE                             0x0100
+#define ITALIC_FONTTYPE                           0x0200
+#define REGULAR_FONTTYPE                          0x0400
+#define SCREEN_FONTTYPE                           0x2000
+#define PRINTER_FONTTYPE                          0x4000
+#define SIMULATED_FONTTYPE                        0x8000
 
 // flags (CHOOSECOLOR structure)
-#define CC_RGBINIT                                1                   // 0x00000001
-#define CC_FULLOPEN                               2                   // 0x00000002
-#define CC_PREVENTFULLOPEN                        4                   // 0x00000004
-#define CC_SHOWHELP                               8                   // 0x00000008
-#define CC_ENABLEHOOK                             16                  // 0x00000010
-#define CC_ENABLETEMPLATE                         32                  // 0x00000020
-#define CC_ENABLETEMPLATEHANDLE                   64                  // 0x00000040
-#define CC_SOLIDCOLOR                             128                 // 0x00000080 // WINVER >= 0x0400
-#define CC_ANYCOLOR                               256                 // 0x00000100 // WINVER >= 0x0400
+#define CC_RGBINIT                                0x00000001
+#define CC_FULLOPEN                               0x00000002
+#define CC_PREVENTFULLOPEN                        0x00000004
+#define CC_SHOWHELP                               0x00000008
+#define CC_ENABLEHOOK                             0x00000010
+#define CC_ENABLETEMPLATE                         0x00000020
+#define CC_ENABLETEMPLATEHANDLE                   0x00000040
+#define CC_SOLIDCOLOR                             0x00000080  // WINVER >= 0x0400
+#define CC_ANYCOLOR                               0x00000100  // WINVER >= 0x0400
 
 /* Window field offsets for GetWindowLong() */
 #define GWL_WNDPROC                               -4
@@ -1183,32 +1172,32 @@
 #define VK_SCROLL                                 145
 
 /* File Open/Save Dialog Constants */
-#define OFN_READONLY                              1
-#define OFN_OVERWRITEPROMPT                       2
-#define OFN_HIDEREADONLY                          4
-#define OFN_NOCHANGEDIR                           8
-#define OFN_SHOWHELP                              16
-#define OFN_ENABLEHOOK                            32
-#define OFN_ENABLETEMPLATE                        64
-#define OFN_ENABLETEMPLATEHANDLE                  128
-#define OFN_NOVALIDATE                            256
-#define OFN_ALLOWMULTISELECT                      512
-#define OFN_EXTENSIONDIFFERENT                    1024
-#define OFN_PATHMUSTEXIST                         2048
-#define OFN_FILEMUSTEXIST                         4096
-#define OFN_CREATEPROMPT                          8192
-#define OFN_SHAREAWARE                            16384
-#define OFN_NOREADONLYRETURN                      32768
-#define OFN_NOTESTFILECREATE                      65536
-#define OFN_NONETWORKBUTTON                       131072
-#define OFN_NOLONGNAMES                           262144              // force no long names for 4.x modules
-#define OFN_EXPLORER                              524288              // new look commdlg
-#define OFN_NODEREFERENCELINKS                    1048576
-#define OFN_LONGNAMES                             2097152             // force long names for 3.x modules
-#define OFN_ENABLEINCLUDENOTIFY                   4194304             // send include message to callback
-#define OFN_ENABLESIZING                          8388608
-#define OFN_DONTADDTORECENT                       33554432
-#define OFN_FORCESHOWHIDDEN                       268435456           // Show All files including System and hidden files
+#define OFN_READONLY                              WIN_OFN_READONLY
+#define OFN_OVERWRITEPROMPT                       WIN_OFN_OVERWRITEPROMPT
+#define OFN_HIDEREADONLY                          WIN_OFN_HIDEREADONLY
+#define OFN_NOCHANGEDIR                           WIN_OFN_NOCHANGEDIR
+#define OFN_SHOWHELP                              WIN_OFN_SHOWHELP
+#define OFN_ENABLEHOOK                            WIN_OFN_ENABLEHOOK
+#define OFN_ENABLETEMPLATE                        WIN_OFN_ENABLETEMPLATE
+#define OFN_ENABLETEMPLATEHANDLE                  WIN_OFN_ENABLETEMPLATEHANDLE
+#define OFN_NOVALIDATE                            WIN_OFN_NOVALIDATE
+#define OFN_ALLOWMULTISELECT                      WIN_OFN_ALLOWMULTISELECT
+#define OFN_EXTENSIONDIFFERENT                    WIN_OFN_EXTENSIONDIFFERENT
+#define OFN_PATHMUSTEXIST                         WIN_OFN_PATHMUSTEXIST
+#define OFN_FILEMUSTEXIST                         WIN_OFN_FILEMUSTEXIST
+#define OFN_CREATEPROMPT                          WIN_OFN_CREATEPROMPT
+#define OFN_SHAREAWARE                            WIN_OFN_SHAREAWARE
+#define OFN_NOREADONLYRETURN                      WIN_OFN_NOREADONLYRETURN
+#define OFN_NOTESTFILECREATE                      WIN_OFN_NOTESTFILECREATE
+#define OFN_NONETWORKBUTTON                       WIN_OFN_NONETWORKBUTTON
+#define OFN_NOLONGNAMES                           WIN_OFN_NOLONGNAMES
+#define OFN_EXPLORER                              WIN_OFN_EXPLORER
+#define OFN_NODEREFERENCELINKS                    WIN_OFN_NODEREFERENCELINKS
+#define OFN_LONGNAMES                             WIN_OFN_LONGNAMES
+#define OFN_ENABLEINCLUDENOTIFY                   WIN_OFN_ENABLEINCLUDENOTIFY
+#define OFN_ENABLESIZING                          WIN_OFN_ENABLESIZING
+#define OFN_DONTADDTORECENT                       WIN_OFN_DONTADDTORECENT
+#define OFN_FORCESHOWHIDDEN                       WIN_OFN_FORCESHOWHIDDEN
 
 /* Common Control Constants */
 #define CCS_TOP                                   1
@@ -1908,22 +1897,22 @@
 
 #define CW_USEDEFAULT                             0x80000000
 
-#define HWND_TOP                                  0
-#define HWND_BOTTOM                               1
-#define HWND_TOPMOST                              -1
-#define HWND_NOTOPMOST                            -2
+#define HWND_TOP                                  WIN_HWND_TOP
+#define HWND_BOTTOM                               WIN_HWND_BOTTOM
+#define HWND_TOPMOST                              WIN_HWND_TOPMOST
+#define HWND_NOTOPMOST                            WIN_HWND_NOTOPMOST
 
-#define SWP_NOSIZE                                0x0001
-#define SWP_NOMOVE                                0x0002
-#define SWP_NOZORDER                              0x0004
-#define SWP_NOREDRAW                              0x0008
-#define SWP_NOACTIVATE                            0x0010
-#define SWP_FRAMECHANGED                          0x0020  /* The frame changed: send WM_NCCALCSIZE */
-#define SWP_SHOWWINDOW                            0x0040
-#define SWP_HIDEWINDOW                            0x0080
-#define SWP_NOCOPYBITS                            0x0100
-#define SWP_NOOWNERZORDER                         0x0200  /* Don't do owner Z ordering */
-#define SWP_NOSENDCHANGING                        0x0400  /* Don't send WM_WINDOWPOSCHANGING */
+#define SWP_NOSIZE                                WIN_SWP_NOSIZE
+#define SWP_NOMOVE                                WIN_SWP_NOMOVE
+#define SWP_NOZORDER                              WIN_SWP_NOZORDER
+#define SWP_NOREDRAW                              WIN_SWP_NOREDRAW
+#define SWP_NOACTIVATE                            WIN_SWP_NOACTIVATE
+#define SWP_FRAMECHANGED                          WIN_SWP_FRAMECHANGED     /* The frame changed: send WM_NCCALCSIZE */
+#define SWP_SHOWWINDOW                            WIN_SWP_SHOWWINDOW
+#define SWP_HIDEWINDOW                            WIN_SWP_HIDEWINDOW
+#define SWP_NOCOPYBITS                            WIN_SWP_NOCOPYBITS
+#define SWP_NOOWNERZORDER                         WIN_SWP_NOOWNERZORDER    /* Don't do owner Z ordering */
+#define SWP_NOSENDCHANGING                        WIN_SWP_NOSENDCHANGING   /* Don't send WM_WINDOWPOSCHANGING */
 
 /* - */
 

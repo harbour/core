@@ -1,9 +1,7 @@
-/*
- * This example demonstrates how to work with some features of the native Windows
- * API. The following function displays a dialog created with an external
- * resource editor.
- * 2010-06-10 - 00:16:41 - [vailtom]
- */
+/* This example demonstrates how to work with some features of the native Windows
+   API. The following function displays a dialog created with an external
+   resource editor.
+   2010-06-10 - 00:16:41 - [vailtom] */
 
 #require "hbwin"
 
@@ -17,7 +15,6 @@
 #define WM_COMMAND          0x0111
 #define WM_SYSCOMMAND       0x0112
 #define WM_CLOSE            0x0010
-#define MB_ICONASTERISK     0x00000040
 
 PROCEDURE Main()
 
@@ -58,7 +55,7 @@ STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
    CASE WM_COMMAND
       SWITCH wPLow
       CASE IDC_BUTTON1
-         wapi_MessageBox( 0, "Hello [" + wapi_GetDlgItemText( hWnd, IDC_EDIT1 ) + "]!" + Chr( 13 ) + "How are you?", "Hi!", MB_ICONASTERISK )
+         wapi_MessageBox( 0, "Hello [" + wapi_GetDlgItemText( hWnd, IDC_EDIT1 ) + "]!" + Chr( 13 ) + "How are you?", "Hi!", WIN_MB_ICONASTERISK )
          RETURN .T.
       ENDSWITCH
    ENDSWITCH

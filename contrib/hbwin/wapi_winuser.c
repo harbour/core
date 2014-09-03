@@ -1113,3 +1113,14 @@ HB_FUNC( WAPI_DRAWICON )
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
 }
+
+HB_FUNC( WAPI_REDRAWWINDOW )
+{
+   RECT rc;
+
+   hbwapi_ret_L( RedrawWindow(
+      hbwapi_par_raw_HWND( 1 ),             /* handle of window */
+      hbwapi_par_RECT( &rc, 2, HB_FALSE ),  /* address of structure with update rectangle */
+      ( HRGN ) hbwapi_par_raw_HANDLE( 3 ),  /* handle of update region */
+      ( UINT ) hb_parni( 4 ) ) );           /* array of redraw flags */
+}

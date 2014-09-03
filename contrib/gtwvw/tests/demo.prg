@@ -52,57 +52,6 @@
 #define MF_UNHILITE                   0
 #define MF_HILITE                   128
 
-#define MB_OK                                 0
-#define MB_OKCANCEL                           1
-#define MB_ABORTRETRYIGNORE                   2
-#define MB_YESNOCANCEL                        3
-#define MB_YESNO                              4
-#define MB_RETRYCANCEL                        5
-#define MB_CANCELTRYCONTINUE                  6
-
-
-#define MB_ICONHAND                          16
-#define MB_ICONQUESTION                      32
-#define MB_ICONEXCLAMATION                   48
-#define MB_ICONASTERISK                      64
-
-#define MB_USERICON                         128
-#define MB_ICONWARNING              MB_ICONEXCLAMATION
-#define MB_ICONERROR                MB_ICONHAND
-
-#define MB_ICONINFORMATION          MB_ICONASTERISK
-#define MB_ICONSTOP                 MB_ICONHAND
-
-#define MB_DEFBUTTON1                         0
-#define MB_DEFBUTTON2                       256
-#define MB_DEFBUTTON3                       512
-#define MB_DEFBUTTON4                       768
-
-#define MB_APPLMODAL                          0
-#define MB_SYSTEMMODAL                     4096
-#define MB_TASKMODAL                       8192
-#define MB_HELP                           16384 // Help Button
-
-#define MB_NOFOCUS                        32768
-#define MB_SETFOREGROUND                  65536
-#define MB_DEFAULT_DESKTOP_ONLY          131072
-
-#define MB_TOPMOST                       262144
-#define MB_RIGHT                         524288
-#define MB_RTLREADING                   1048576
-
-#define IDOK                1
-#define IDCANCEL            2
-#define IDABORT             3
-#define IDRETRY             4
-#define IDIGNORE            5
-#define IDYES               6
-#define IDNO                7
-#define IDCLOSE             8
-#define IDHELP              9
-
-#define IDTRYAGAIN          10
-
 #define WVW_MAXWINDOWS    20             // ! must match with hbgtwvw.h
 #define WVW_DEFAULT_MENUKEYEVENT  1024   // ! must match with hbgtwvw.h
 
@@ -1116,12 +1065,12 @@ STATIC FUNCTION nMenuChecker( nMenuEvent )
 
 STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 
-   wapi_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Info" ), MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
+   wapi_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Info" ), WIN_MB_OK + WIN_MB_ICONINFORMATION + WIN_MB_SYSTEMMODAL )
 
    RETURN .T.
 
 STATIC FUNCTION lYesNo( cMsg, cTitle )
-   RETURN wapi_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Confirmation" ), MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
+   RETURN wapi_MessageBox( wvw_GetWindowHandle(), cMsg, hb_defaultValue( cTitle, "Confirmation" ), WIN_MB_YESNO + WIN_MB_ICONQUESTION + WIN_MB_SYSTEMMODAL ) == WIN_IDYES
 
 STATIC FUNCTION lDebug( cMsg )
    RETURN lBoxMessage( cMsg, "Debug" )

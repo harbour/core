@@ -170,6 +170,7 @@ DYNAMIC wapi_PlaySound
 DYNAMIC wapi_QueryPerformanceCounter
 DYNAMIC wapi_QueryPerformanceFrequency
 DYNAMIC wapi_Rectangle
+DYNAMIC wapi_RedrawWindow
 DYNAMIC wapi_ReleaseMutex
 DYNAMIC wapi_RemoveFontResource
 DYNAMIC wapi_RemoveFontResourceEx
