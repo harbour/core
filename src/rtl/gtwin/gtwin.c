@@ -72,6 +72,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbwinuni.h"
+#include "hbdate.h"
 
 #include "hbapicdp.h"
 
@@ -812,6 +813,45 @@ static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 #endif
 }
 
+HWND hb_getConsoleWindowHandle( void )
+{
+   TCHAR oldTitle[ 256 ], tmpTitle[ 32 ];
+   HWND hWnd = NULL;
+
+   if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
+   {
+      int iTmp = 0;
+      DWORD dwVal;
+
+      tmpTitle[ iTmp++ ] = TEXT( '>' );
+      tmpTitle[ iTmp++ ] = TEXT( '>' );
+      dwVal = GetCurrentProcessId();
+      do
+         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+      while( ( dwVal /= 26 ) );
+      tmpTitle[ iTmp++ ] = TEXT( ':' );
+      dwVal = GetTickCount();
+      do
+         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+      while( ( dwVal /= 26 ) );
+      tmpTitle[ iTmp++ ] = TEXT( '<' );
+      tmpTitle[ iTmp++ ] = TEXT( '<' );
+      tmpTitle[ iTmp ] = TEXT( '\0' );
+
+      if( SetConsoleTitle( tmpTitle ) )
+      {
+         HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
+         /* repeat in a loop to be sure title is changed */
+         do
+            hWnd = FindWindow( NULL, tmpTitle );
+         while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
+         SetConsoleTitle( oldTitle );
+      }
+   }
+
+   return hWnd;
+}
+
 static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 {
    static HB_BOOL s_bChecked = HB_FALSE;
@@ -825,6 +865,7 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 #endif
 
    HB_BOOL bOldClosable = HB_TRUE;
+   HWND hWnd;
 
    if( ! s_bChecked )
    {
@@ -840,8 +881,13 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
    }
 
    if( s_pGetConsoleWindow )
+      hWnd = s_pGetConsoleWindow();
+   else
+      hWnd = hb_getConsoleWindowHandle();
+
+   if( hWnd )
    {
-      HMENU hSysMenu = GetSystemMenu( s_pGetConsoleWindow(), FALSE );
+      HMENU hSysMenu = GetSystemMenu( hWnd, FALSE );
 
       if( hSysMenu )
       {
