@@ -152,7 +152,6 @@ extern HB_SIZE   hbwapi_tstrlen( const TCHAR * pText );
 extern HMODULE   hbwapi_LoadLibrarySystem( LPCTSTR pFileName );
 
 extern HB_EXPORT HMODULE   hbwapi_LoadLibrarySystemVM( const char * szFileName );
-extern HB_EXPORT HINSTANCE hbwapi_Instance( void );
 
 extern HB_EXPORT void      hbwapi_SetLastError( DWORD dwLastError );
 extern HB_EXPORT DWORD     hbwapi_GetLastError( void );

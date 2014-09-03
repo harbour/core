@@ -111,7 +111,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 {
    LPVOID    iPicture  = NULL;
    HRSRC     res;
-   HINSTANCE hInstance = hbwapi_Instance();
+   HINSTANCE hInstance = GetModuleHandle( NULL );
 
    if( hInstance )
       res = FindResource( hInstance, resource, section );

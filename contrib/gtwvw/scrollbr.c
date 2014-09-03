@@ -267,7 +267,7 @@ HB_FUNC( WVW_XBCREATE )
          iBottom - iTop + 1,                       /* height */
          wvw_win->hWnd,                            /* handle to main window */
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,         /* id for this scroll bar control */
-         hbwapi_Instance(),                        /* instance owning this window */
+         GetModuleHandle( NULL ),                  /* instance owning this window */
          NULL );                                   /* pointer not needed */
 
       if( hWnd )

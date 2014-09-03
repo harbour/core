@@ -122,7 +122,7 @@ HB_FUNC( WVW_STCREATE )
          iBottom - iTop + 1,
          wvw_win->hWnd,
          ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
-         hbwapi_Instance(),
+         GetModuleHandle( NULL ),
          NULL );
 
       if( hWnd )

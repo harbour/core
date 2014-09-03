@@ -86,7 +86,7 @@ HB_FUNC( WVG_LOADICON )
    HICON hIcon;
 
    if( HB_ISNUM( 1 ) )
-      hIcon = LoadIcon( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+      hIcon = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
    else
    {
       void * hBuffer;
@@ -113,16 +113,16 @@ HB_FUNC( WVG_LOADIMAGE )
    {
       case 0:   /* Image from resource by numeric id */
          if( hb_parni( 3 ) == IMAGE_ICON )
-            hImage = LoadIcon( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+            hImage = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          else
-            hImage = LoadBitmap( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+            hImage = LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          break;
 
       case 1:   /* image from resource by name */
          if( hb_parni( 3 ) == IMAGE_ICON )
-            hImage = LoadIcon( hbwapi_Instance(), lpBuffer );
+            hImage = LoadIcon( GetModuleHandle( NULL ), lpBuffer );
          else
-            hImage = LoadBitmap( hbwapi_Instance(), lpBuffer );
+            hImage = LoadBitmap( GetModuleHandle( NULL ), lpBuffer );
          break;
 
       case 2:   /* Image from disk file */
@@ -360,7 +360,7 @@ HB_FUNC( WVG_CREATEWINDOWEX )
       hb_parni( 7 ), hb_parni( 8 ),
       ( HWND ) HB_PARHANDLE( 9 ),
       HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : ( HMENU ) HB_PARHANDLE( 10 ),
-      HB_ISHANDLE( 11 ) ? ( HINSTANCE ) HB_PARHANDLE( 11 ) : hbwapi_Instance(),
+      HB_ISHANDLE( 11 ) ? ( HINSTANCE ) HB_PARHANDLE( 11 ) : GetModuleHandle( NULL ),
       NULL ) );
 
    hb_strfree( hClassName );

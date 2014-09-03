@@ -88,7 +88,7 @@ HB_FUNC( WIN_LOADICON )
    HICON hIcon = NULL;
 
    if( HB_ISNUM( 1 ) )
-      hIcon = LoadIcon( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+      hIcon = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
    else
    {
       void * hName;
@@ -111,13 +111,13 @@ HB_FUNC( WIN_LOADIMAGE )
    switch( hb_parni( 2 ) )
    {
       case 0:
-         hImage = LoadBitmap( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+         hImage = LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          break;
 
       case 1:
       {
          void * hName;
-         hImage = LoadBitmap( hbwapi_Instance(), HB_PARSTRDEF( 1, &hName, NULL ) );
+         hImage = LoadBitmap( GetModuleHandle( NULL ), HB_PARSTRDEF( 1, &hName, NULL ) );
          hb_strfree( hName );
          break;
       }
@@ -1324,7 +1324,7 @@ HB_FUNC( WVW_DLGSETICON )
    HICON hIcon = NULL;
 
    if( HB_ISNUM( 2 ) )
-      hIcon = LoadIcon( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 2 ) ) );
+      hIcon = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 2 ) ) );
    else
    {
       void * hName;
@@ -1405,7 +1405,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
          }
 
          if( HB_ISNUM( 3 ) )
-            hDlg = CreateDialogIndirect( hbwapi_Instance(),
+            hDlg = CreateDialogIndirect( GetModuleHandle( NULL ),
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                          ( DLGPROC ) HB_PARHANDLE( 3 ) );
@@ -1417,7 +1417,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
                {
                   void * hText;
 
-                  hDlg = CreateDialog( hbwapi_Instance(),
+                  hDlg = CreateDialog( GetModuleHandle( NULL ),
                                        HB_PARSTRDEF( 1, &hText, NULL ),
                                        hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                        ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
@@ -1426,14 +1426,14 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
                   break;
                }
                case 1:
-                  hDlg = CreateDialog( hbwapi_Instance(),
+                  hDlg = CreateDialog( GetModuleHandle( NULL ),
                                        MAKEINTRESOURCE( hb_parni( 1 ) ),
                                        hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                        ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
                   break;
 
                case 2:
-                  hDlg = CreateDialogIndirect( hbwapi_Instance(),
+                  hDlg = CreateDialogIndirect( GetModuleHandle( NULL ),
                                                ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                                hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
                                                ( DLGPROC ) hb_gt_wvw_DlgProcMLess );
@@ -1513,7 +1513,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
             {
                void * hText;
 
-               iResult = DialogBoxParam( hbwapi_Instance(),
+               iResult = DialogBoxParam( GetModuleHandle( NULL ),
                                          HB_PARSTRDEF( 1, &hText, NULL ),
                                          hParent,
                                          ( DLGPROC ) hb_gt_wvw_DlgProcModal,
@@ -1523,7 +1523,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
                break;
             }
             case 1:
-               iResult = DialogBoxParam( hbwapi_Instance(),
+               iResult = DialogBoxParam( GetModuleHandle( NULL ),
                                          MAKEINTRESOURCE( hb_parni( 1 ) ),
                                          hParent,
                                          ( DLGPROC ) hb_gt_wvw_DlgProcModal,
@@ -1531,7 +1531,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
                break;
 
             case 2:
-               iResult = DialogBoxIndirectParam( hbwapi_Instance(),
+               iResult = DialogBoxIndirectParam( GetModuleHandle( NULL ),
                                                  ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                                  hParent,
                                                  ( DLGPROC ) hb_gt_wvw_DlgProcModal,

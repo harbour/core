@@ -438,7 +438,7 @@ HB_FUNC( WVW_TBCREATE )
                               WS_CHILD | WS_VISIBLE | dwStyle,
                               WVW_ID_BASE_TOOLBAR + wvw_win->nWinId,
                               0,
-                              hbwapi_Instance(),
+                              GetModuleHandle( NULL ),
                               0,
                               NULL,
                               0,

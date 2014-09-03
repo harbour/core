@@ -322,7 +322,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
          break;
 
       case 1:
-         hBitmap = ( HBITMAP ) LoadImage( hbwapi_Instance(), szBitmap,
+         hBitmap = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ), szBitmap,
             IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
          break;
 
@@ -332,7 +332,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
 
          hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
 
-         hBitmap = ( HBITMAP ) LoadImage( hbwapi_Instance(), MAKEINTRESOURCE( ( WORD ) uiBitmap ),
+         hBitmap = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ), MAKEINTRESOURCE( ( WORD ) uiBitmap ),
             IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
          break;
       }
@@ -932,7 +932,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
 
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = DefWindowProc;
-   wndclass.hInstance     = hbwapi_Instance();
+   wndclass.hInstance     = GetModuleHandle( NULL );
    wndclass.hIcon         = NULL;
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
    wndclass.hbrBackground = NULL;
@@ -1042,7 +1042,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
                                   CW_USEDEFAULT, CW_USEDEFAULT,
                                   ( HWND ) HB_PARHANDLE( 1 ),
                                   NULL,
-                                  hbwapi_Instance(),
+                                  GetModuleHandle( NULL ),
                                   NULL );
 
    if( hwndTip )

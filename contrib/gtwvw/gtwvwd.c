@@ -5304,9 +5304,9 @@ HICON hb_gt_wvw_SetWindowIcon( PWVW_WIN wvw_win, int nIcon, LPCTSTR szIconName )
    HICON hIcon;
 
    if( szIconName == NULL )
-      hIcon = LoadIcon( s_wvw->hInstance, MAKEINTRESOURCE( nIcon ) );
+      hIcon = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( nIcon ) );
    else
-      hIcon = LoadIcon( s_wvw->hInstance, szIconName );
+      hIcon = LoadIcon( GetModuleHandle( NULL ), szIconName );
 
    if( hIcon )
    {
@@ -5792,7 +5792,7 @@ HBITMAP hb_gt_wvw_PrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iE
       {
          LPTSTR lpFree;
 
-         hBitmap = ( HBITMAP ) LoadImage( s_wvw->hInstance,
+         hBitmap = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ),
                                           HB_FSNAMECONV( szBitmap, &lpFree ),
                                           IMAGE_BITMAP,
                                           iExpWidth,
@@ -5818,8 +5818,8 @@ HBITMAP hb_gt_wvw_PrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iE
 
       if( ! hBitmap )
       {
-         hBitmap = ( HBITMAP ) LoadImage( s_wvw->hInstance,
-                                          ( LPCTSTR ) MAKEINTRESOURCE( ( WORD ) uiBitmap ),
+         hBitmap = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ),
+                                          MAKEINTRESOURCE( ( WORD ) uiBitmap ),
                                           IMAGE_BITMAP,
                                           iExpWidth,
                                           iExpHeight,
@@ -6453,7 +6453,7 @@ int hb_gt_wvw_ButtonCreate( PWVW_WIN wvw_win, int iTop, int iLeft, int iBottom, 
       iBottom - iTop + 1,                        /* height */
       wvw_win->hWnd,                             /* handle to parent window */
       ( HMENU ) ( HB_PTRDIFF ) nCtrlId,          /* id for this button control */
-      s_wvw->hInstance,                          /* instance owning this window */
+      GetModuleHandle( NULL ),                   /* instance owning this window */
       NULL );                                    /* pointer not needed */
 
    *phWnd = hWnd;

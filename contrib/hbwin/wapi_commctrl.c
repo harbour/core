@@ -679,7 +679,7 @@ HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
 HB_FUNC( WAPI_TABCTRL_CREATE )
 {
    HWND hwnd = hbwapi_par_raw_HWND( 1 );
-   HWND hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, ( LONG ) hb_parnl( 6 ) /* style */, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
+   HWND hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, ( LONG ) hb_parnl( 6 ) /* style */, hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
 
    SendMessage( hbutton, ( UINT ) WM_SETFONT, ( WPARAM ) ( HFONT ) SendMessage( hwnd, WM_GETFONT, 0, 0 ), 1 );
    hbwapi_ret_raw_HANDLE( hbutton );

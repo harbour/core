@@ -1014,7 +1014,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
 
          if( HB_ISHANDLE( 3 ) )
             /* argument 1 is already unicode compliant, so no conversion */
-            hDlg = CreateDialogIndirect( hbwapi_Instance(),
+            hDlg = CreateDialogIndirect( GetModuleHandle( NULL ),
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? _s->hWnd : NULL,
                                          ( DLGPROC ) HB_PARHANDLE( 3 ) );
@@ -1025,7 +1025,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
                case 0:
                {
                   void * hTemplate;
-                  hDlg = CreateDialog( hbwapi_Instance(),
+                  hDlg = CreateDialog( GetModuleHandle( NULL ),
                                        HB_PARSTR( 1, &hTemplate, NULL ),
                                        hb_parl( 2 ) ? _s->hWnd : NULL,
                                        ( DLGPROC ) hb_wvt_gtDlgProcMLess );
@@ -1034,7 +1034,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
                break;
 
                case 1:
-                  hDlg = CreateDialog( hbwapi_Instance(),
+                  hDlg = CreateDialog( GetModuleHandle( NULL ),
                                        MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
                                        hb_parl( 2 ) ? _s->hWnd : NULL,
                                        ( DLGPROC ) hb_wvt_gtDlgProcMLess );
@@ -1042,7 +1042,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
 
                case 2:
                   /* argument 1 is already unicode compliant, so no conversion */
-                  hDlg = CreateDialogIndirect( hbwapi_Instance(),
+                  hDlg = CreateDialogIndirect( GetModuleHandle( NULL ),
                                                ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                                hb_parl( 2 ) ? _s->hWnd : NULL,
                                                ( DLGPROC ) hb_wvt_gtDlgProcMLess );
@@ -1136,7 +1136,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
             case 0:
             {
                void * hTemplate;
-               iResult = DialogBoxParam( hbwapi_Instance(),
+               iResult = DialogBoxParam( GetModuleHandle( NULL ),
                                          HB_PARSTR( 1, &hTemplate, NULL ),
                                          hParent,
                                          ( DLGPROC ) hb_wvt_gtDlgProcModal,
@@ -1146,7 +1146,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
             break;
 
             case 1:
-               iResult = DialogBoxParam( hbwapi_Instance(),
+               iResult = DialogBoxParam( GetModuleHandle( NULL ),
                                          MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
                                          hParent,
                                          ( DLGPROC ) hb_wvt_gtDlgProcModal,
@@ -1155,7 +1155,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
 
             case 2:
                /* argument 1 is already unicode compliant, so no conversion */
-               iResult = DialogBoxIndirectParam( hbwapi_Instance(),
+               iResult = DialogBoxIndirectParam( GetModuleHandle( NULL ),
                                                  ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                                  hParent,
                                                  ( DLGPROC ) hb_wvt_gtDlgProcModal,
@@ -1215,7 +1215,7 @@ HB_FUNC( WVT_DLGSETICON )
    HICON hIcon;
 
    if( HB_ISNUM( 2 ) )
-      hIcon = LoadIcon( hbwapi_Instance(), MAKEINTRESOURCE( hb_parni( 2 ) ) );
+      hIcon = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 2 ) ) );
    else
    {
       void * hName;

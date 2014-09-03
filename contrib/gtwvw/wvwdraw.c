@@ -480,7 +480,7 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
       if( ! hbmpx )
       {
          LPTSTR lpFree;
-         hbmpx = ( HBITMAP ) LoadImage( hbwapi_Instance(), HB_FSNAMECONV( resname, &lpFree ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hbmpx = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ), HB_FSNAMECONV( resname, &lpFree ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
          if( lpFree )
             hb_xfree( lpFree );
          hb_gt_wvw_AddBitmapHandle( resname, hbmpx, iWidth, iHeight );
@@ -496,7 +496,7 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
 
       if( ! hbmpx )
       {
-         hbmpx = ( HBITMAP ) LoadImage( hbwapi_Instance(), MAKEINTRESOURCE( iresimage ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
+         hbmpx = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ), MAKEINTRESOURCE( iresimage ), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR );
          hb_gt_wvw_AddBitmapHandle( szResname, hbmpx, iWidth, iHeight );
       }
 
