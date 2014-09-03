@@ -331,21 +331,6 @@ HB_FUNC( WVW_SETPARENT )
    }
 }
 
-HB_FUNC( WVW_BRINGTOTOP1 )
-{
-   HWND hWnd = ( HWND ) HB_PARHANDLE( 1 );
-
-   if( IsIconic( hWnd ) )
-      ShowWindow( hWnd, SW_RESTORE );
-   else
-   {
-      BringWindowToTop( hWnd );  /* IE 5.5 related hack */
-      SetForegroundWindow( hWnd );
-   }
-
-   hb_retl( HB_TRUE );
-}
-
 HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 {
    PWVW_GLO wvw     = hb_gt_wvw();

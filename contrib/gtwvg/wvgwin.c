@@ -785,6 +785,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
 #if defined( CB_GETCOMBOBOXINFO )
       case CB_GETCOMBOBOXINFO:
       {
+#if ! defined( HB_OS_WIN_CE )
          COMBOBOXINFO cbi;
 
          memset( &cbi, 0, sizeof( cbi ) );
@@ -819,6 +820,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
             hb_itemRelease( pRc1 );
             hb_itemRelease( pRc2 );
          }
+#endif
          break;
       }
 #endif

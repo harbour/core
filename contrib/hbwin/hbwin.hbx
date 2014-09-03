@@ -181,9 +181,11 @@ DYNAMIC wapi_SendMessage
 DYNAMIC wapi_SetActiveWindow
 DYNAMIC wapi_SetBkColor
 DYNAMIC wapi_SetBkMode
+DYNAMIC wapi_SetCursorPos
 DYNAMIC wapi_SetDlgItemText
 DYNAMIC wapi_SetErrorMode
 DYNAMIC wapi_SetFocus
+DYNAMIC wapi_SetForegroundWindow
 DYNAMIC wapi_SetLastError
 DYNAMIC wapi_SetMapMode
 DYNAMIC wapi_SetMenu

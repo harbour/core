@@ -846,4 +846,19 @@
 #define WIN_COLOR_3DHILIGHT                WIN_COLOR_BTNHIGHLIGHT
 #define WIN_COLOR_BTNHILIGHT               WIN_COLOR_BTNHIGHLIGHT
 
+/* wapi_ShowWindow() commands */
+#define WIN_SW_FORCEMINIMIZE               11
+#define WIN_SW_HIDE                        0
+#define WIN_SW_MAXIMIZE                    3
+#define WIN_SW_MINIMIZE                    6
+#define WIN_SW_RESTORE                     9
+#define WIN_SW_SHOW                        5
+#define WIN_SW_SHOWDEFAULT                 10
+#define WIN_SW_SHOWMAXIMIZED               3
+#define WIN_SW_SHOWMINIMIZED               2
+#define WIN_SW_SHOWMINNOACTIVE             7
+#define WIN_SW_SHOWNA                      8
+#define WIN_SW_SHOWNOACTIVATE              4
+#define WIN_SW_SHOWNORMAL                  1
+
 #endif /* HBWIN_CH_ */

@@ -461,7 +461,7 @@ static LRESULT hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams
             if( HB_IS_POINTER( pResult ) )
                nResult = ( HB_PTRDIFF ) hb_itemGetPtr( pResult );
             else
-               nResult = hb_itemGetNInt( pResult );
+               nResult = ( LRESULT ) hb_itemGetNInt( pResult );
          }
 
          if( pWVT->pNotifierGUI )
@@ -471,7 +471,7 @@ static LRESULT hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams
             if( HB_IS_POINTER( pResult ) )
                nResult = ( HB_PTRDIFF ) hb_itemGetPtr( pResult );
             else
-               nResult = hb_itemGetNInt( pResult );
+               nResult = ( LRESULT ) hb_itemGetNInt( pResult );
          }
 
          hb_itemRelease( pEvent );

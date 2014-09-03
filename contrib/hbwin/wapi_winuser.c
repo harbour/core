@@ -603,9 +603,13 @@ HB_FUNC( WAPI_CHECKMENURADIOITEM )
 
 HB_FUNC( WAPI_ENDMENU )
 {
+#if defined( HB_OS_WIN_CE )
+   hbwapi_ret_L( FALSE );
+#else
    BOOL fResult = EndMenu();
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( fResult );
+#endif
 }
 
 HB_FUNC( WAPI_DELETEMENU )
@@ -940,6 +944,11 @@ HB_FUNC( WAPI_BRINGWINDOWTOTOP )
    hbwapi_ret_L( bResult );
 }
 
+HB_FUNC( WAPI_SETFOREGROUNDWINDOW )
+{
+   hbwapi_ret_L( SetForegroundWindow( hbwapi_par_raw_HWND( 1 ) ) );
+}
+
 HB_FUNC( WAPI_SETWINDOWTEXT )
 {
    void * hText;
@@ -1021,6 +1030,13 @@ HB_FUNC( WAPI_GETCURSORPOS )
 
    hb_itemParamStore( 1, info );
 
+   hbwapi_ret_L( bResult );
+}
+
+HB_FUNC( WAPI_SETCURSORPOS )
+{
+   BOOL bResult = SetCursorPos( hb_parni( 1 ), hb_parni( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
 }
 
