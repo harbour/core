@@ -820,7 +820,7 @@ HB_FUNC( WVW_DRAWICON )
 HB_FUNC( WVW_LOADICON )
 {
    if( HB_ISNUM( 1 ) )
-      HB_RETHANDLE( LoadIcon( NULL, ( LPCTSTR ) HB_PARHANDLE( 1 ) ) );
+      HB_RETHANDLE( LoadIcon( NULL, MAKEINTRESOURCE( hb_parni( 1 ) ) ) );
    else
    {
       void * hName;
