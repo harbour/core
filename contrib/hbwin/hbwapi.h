@@ -82,6 +82,7 @@
 #define hbwapi_par_raw_STRUCT( n )          hb_parc( n )
 
 #define hbwapi_par_COLORREF( n )            ( ( COLORREF ) hb_parnl( n ) )
+#define hbwapi_parv_COLORREF( n, i )        ( ( COLORREF ) hb_parvnl( n, i ) )
 #define hbwapi_par_COLORREF_def( n, d )     ( ( COLORREF ) hb_parnldef( n, d ) )
 
 #define hbwapi_par_BOOL( n )                ( ( BOOL  ) ( hb_parl( n ) ? TRUE : FALSE ) )

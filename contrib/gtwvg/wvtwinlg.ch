@@ -75,6 +75,7 @@
 #define SW_RESTORE                                WIN_SW_RESTORE
 #define SW_SHOWDEFAULT                            WIN_SW_SHOWDEFAULT
 #define SW_FORCEMINIMIZE                          WIN_SW_FORCEMINIMIZE
+#define SW_MAX                                    WIN_SW_MAX
 
 /* Window Styles */
 #define WS_OVERLAPPED                             WIN_WS_OVERLAPPED

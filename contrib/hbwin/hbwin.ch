@@ -930,6 +930,7 @@
 #define WIN_SW_SHOWNA                      8
 #define WIN_SW_SHOWNOACTIVATE              4
 #define WIN_SW_SHOWNORMAL                  1
+#define WIN_SW_MAX                         11
 
 /* System Menu command values */
 #define WIN_SC_SIZE                        0xF000

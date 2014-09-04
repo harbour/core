@@ -2,8 +2,6 @@
 
 #require "hbwin"
 
-#include "hbgtinfo.ch"
-
 PROCEDURE Main()
 
    LOCAL xy, i, ii

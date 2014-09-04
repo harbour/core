@@ -198,7 +198,7 @@ HB_FUNC( WVG_CHOOSECOLOR )
    int         i;
 
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-      crCustClr[ i ] = HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
+      crCustClr[ i ] = HB_ISARRAY( 2 ) ? hbwapi_parv_COLORREF( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
 
    memset( &cc, 0, sizeof( cc ) );
 
