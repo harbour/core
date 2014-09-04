@@ -93,7 +93,7 @@ POINT * hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory )
    return NULL;
 }
 
-void hbwapi_stor_POINT( POINT * p, int iParam )
+void hbwapi_stor_POINT( const POINT * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
@@ -104,8 +104,13 @@ void hbwapi_stor_POINT( POINT * p, int iParam )
          s_hb_hashSetCItemNL( pStru, "x", p->x );
          s_hb_hashSetCItemNL( pStru, "y", p->y );
       }
-      else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
+      else
       {
+         if( ! HB_IS_ARRAY( pStru ) )
+            hb_itemParamStore( ( USHORT ) iParam, hb_itemArrayNew( 2 ) );
+         else if( hb_arrayLen( pStru ) < 2 )
+            hb_arraySize( pStru, 2 );
+
          hb_arraySetNL( pStru, 1, p->x );
          hb_arraySetNL( pStru, 2, p->y );
       }
@@ -142,7 +147,7 @@ RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
    return NULL;
 }
 
-void hbwapi_stor_RECT( RECT * p, int iParam )
+void hbwapi_stor_RECT( const RECT * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
@@ -155,8 +160,13 @@ void hbwapi_stor_RECT( RECT * p, int iParam )
          s_hb_hashSetCItemNL( pStru, "right" , p->right  );
          s_hb_hashSetCItemNL( pStru, "bottom", p->bottom );
       }
-      else if( HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
+      else
       {
+         if( ! HB_IS_ARRAY( pStru ) )
+            hb_itemParamStore( ( USHORT ) iParam, hb_itemArrayNew( 4 ) );
+         else if( hb_arrayLen( pStru ) < 4 )
+            hb_arraySize( pStru, 4 );
+
          hb_arraySetNL( pStru, 1, p->left   );
          hb_arraySetNL( pStru, 2, p->top    );
          hb_arraySetNL( pStru, 3, p->right  );
@@ -725,10 +735,10 @@ HB_FUNC( WAPI_CREATEFONT )
 
 HB_FUNC( WAPI_CREATEFONTINDIRECT )
 {
-   LOGFONT p;
+   LOGFONT lf;
 
-   if( hbwapi_par_LOGFONT( &p, 1, HB_TRUE ) )
-      hbwapi_ret_HFONT( CreateFontIndirect( &p ) );
+   if( hbwapi_par_LOGFONT( &lf, 1, HB_TRUE ) )
+      hbwapi_ret_HFONT( CreateFontIndirect( &lf ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -764,13 +774,13 @@ HB_FUNC( WAPI_MOVETOEX )
 
    if( hDC )
    {
-      POINT p;
+      POINT xy;
 
-      if( hbwapi_par_POINT( &p, 4, HB_FALSE ) )
+      if( hbwapi_par_POINT( &xy, 4, HB_FALSE ) )
       {
-         hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &p ) );
+         hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &xy ) );
 
-         hbwapi_stor_POINT( &p, 4 );
+         hbwapi_stor_POINT( &xy, 4 );
       }
       else
          hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, NULL ) );

@@ -84,6 +84,7 @@ DYNAMIC wapi_GetDialogBaseUnits
 DYNAMIC wapi_GetDlgItem
 DYNAMIC wapi_GetDlgItemText
 DYNAMIC wapi_GetFocus
+DYNAMIC wapi_GetIconInfo
 DYNAMIC wapi_GetKeyboardLayout
 DYNAMIC wapi_GetKeyboardLayoutName
 DYNAMIC wapi_GetKeyState
@@ -111,8 +112,10 @@ DYNAMIC wapi_GetTextAlign
 DYNAMIC wapi_GetTextColor
 DYNAMIC wapi_GetTextFace
 DYNAMIC wapi_GetVolumeInformation
+DYNAMIC wapi_GetWindowLongPtr
 DYNAMIC wapi_GetWindowRect
 DYNAMIC wapi_GetWindowsDirectory
+DYNAMIC wapi_GetWindowText
 DYNAMIC wapi_HIWORD
 DYNAMIC wapi_ImageList_Add
 DYNAMIC wapi_ImageList_AddMasked
@@ -182,6 +185,7 @@ DYNAMIC wapi_ScreenToClient
 DYNAMIC wapi_SelectObject
 DYNAMIC wapi_SendDlgItemMessage
 DYNAMIC wapi_SendMessage
+DYNAMIC wapi_SendMessageTimeout
 DYNAMIC wapi_SetActiveWindow
 DYNAMIC wapi_SetBkColor
 DYNAMIC wapi_SetBkMode

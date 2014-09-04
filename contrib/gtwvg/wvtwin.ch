@@ -1085,17 +1085,16 @@
 #define CC_ANYCOLOR                               0x00000100  // WINVER >= 0x0400
 
 /* Window field offsets for GetWindowLong() */
-#define GWL_WNDPROC                               -4
-#define GWL_HINSTANCE                             -6
-#define GWL_HWNDPARENT                            -8
-#define GWL_STYLE                                 -16
-#define GWL_EXSTYLE                               -20
-#define GWL_USERDATA                              -21
-#define GWL_ID                                    -12
-
-#define DWL_MSGRESULT                             0
-#define DWL_DLGPROC                               4
-#define DWL_USER                                  8
+#define GWL_WNDPROC                               WIN_GWLP_WNDPROC
+#define GWL_HINSTANCE                             WIN_GWLP_HINSTANCE
+#define GWL_HWNDPARENT                            WIN_GWLP_HWNDPARENT
+#define GWL_ID                                    WIN_GWL_ID
+#define GWL_STYLE                                 WIN_GWL_STYLE
+#define GWL_EXSTYLE                               WIN_GWL_EXSTYLE
+#define GWL_USERDATA                              WIN_GWLP_USERDATA
+#define DWL_MSGRESULT                             WIN_DWLP_MSGRESULT
+#define DWL_DLGPROC                               WIN_DWLP_DLGPROC
+#define DWL_USER                                  WIN_DWLP_USER
 
 /* Virtual Key Codes */
 #define VK_LBUTTON                                1

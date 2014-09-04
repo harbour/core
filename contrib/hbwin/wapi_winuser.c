@@ -1,8 +1,8 @@
 /*
  * Windows API functions (winuser)
  *
+ * Copyright 2009-2014 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -209,9 +209,9 @@ HB_FUNC( WAPI_ISWINDOW )
 HB_FUNC( WAPI_DRAWTEXT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
-   RECT rect;
+   RECT rc;
 
-   if( hDC && hbwapi_par_RECT( &rect, 3, HB_TRUE ) )
+   if( hDC && hbwapi_par_RECT( &rc, 3, HB_TRUE ) )
    {
       void * hText;
       HB_SIZE nTextLen;
@@ -220,12 +220,12 @@ HB_FUNC( WAPI_DRAWTEXT )
       hbwapi_ret_NI( DrawText( hDC,
                                lpText,
                                ( int ) nTextLen,
-                               &rect,
+                               &rc,
                                hbwapi_par_UINT( 4 ) ) );
 
       hb_strfree( hText );
 
-      hbwapi_stor_RECT( &rect, 3 );
+      hbwapi_stor_RECT( &rc, 3 );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -873,43 +873,29 @@ HB_FUNC( WAPI_GETSYSCOLOR )
 
 HB_FUNC( WAPI_GETCLIENTRECT )
 {
-   PHB_ITEM info = hb_itemArrayNew( 4 );
-   RECT     rc;
-   BOOL     bResult;
+   RECT rc;
+   BOOL bResult;
 
    memset( &rc, 0, sizeof( rc ) );
 
    bResult = GetClientRect( hbwapi_par_raw_HWND( 1 ), &rc );
    hbwapi_SetLastError( GetLastError() );
 
-   hb_arraySetNL( info, 1, rc.left );
-   hb_arraySetNL( info, 2, rc.top );
-   hb_arraySetNL( info, 3, rc.right );
-   hb_arraySetNL( info, 4, rc.bottom );
-
-   hb_itemParamStore( 2, info );
-
+   hbwapi_stor_RECT( &rc, 2 );
    hbwapi_ret_L( bResult );
 }
 
 HB_FUNC( WAPI_GETWINDOWRECT )
 {
-   PHB_ITEM info = hb_itemArrayNew( 4 );
-   RECT     rc;
-   BOOL     bResult;
+   RECT rc;
+   BOOL bResult;
 
    memset( &rc, 0, sizeof( rc ) );
 
    bResult = GetWindowRect( hbwapi_par_raw_HWND( 1 ), &rc );
    hbwapi_SetLastError( GetLastError() );
 
-   hb_arraySetNL( info, 1, rc.left );
-   hb_arraySetNL( info, 2, rc.top );
-   hb_arraySetNL( info, 3, rc.right );
-   hb_arraySetNL( info, 4, rc.bottom );
-
-   hb_itemParamStore( 2, info );
-
+   hbwapi_stor_RECT( &rc, 2 );
    hbwapi_ret_L( bResult );
 }
 
@@ -960,11 +946,97 @@ HB_FUNC( WAPI_SETWINDOWTEXT )
    hb_strfree( hText );
 }
 
+/* https://blogs.msdn.com/b/oldnewthing/archive/2003/08/21/54675.aspx */
+HB_FUNC( WAPI_GETWINDOWTEXT )
+{
+   HWND hWnd = hbwapi_par_raw_HWND( 1 );
+   int nLen = GetWindowTextLength( hWnd );
+   LPTSTR szText = ( TCHAR * ) hb_xgrab( ( nLen + 1 ) * sizeof( TCHAR ) );
+
+   nLen = GetWindowText( hWnd, szText, nLen + 1 );
+   hbwapi_SetLastError( GetLastError() );
+
+   HB_RETSTRLEN( szText, nLen );
+   hb_xfree( szText );
+}
+
+#if defined( HB_OS_WIN_CE )
+#ifndef GWLP_WNDPROC
+#define GWLP_WNDPROC     ( -4 )
+#endif
+#ifndef GWLP_HINSTANCE
+#define GWLP_HINSTANCE   ( -6 )
+#endif
+#ifndef GWLP_HWNDPARENT
+#define GWLP_HWNDPARENT  ( -8 )
+#endif
+#ifndef GWLP_USERDATA
+#define GWLP_USERDATA    ( -21 )
+#endif
+#ifndef DWLP_DLGPROC
+#define DWLP_DLGPROC     4
+#endif
+#ifndef DWLP_USER
+#define DWLP_USER        8
+#endif
+#endif
+
 HB_FUNC( WAPI_SETWINDOWLONGPTR )
 {
-   LONG_PTR nRetVal = SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( LONG_PTR ) hb_parnint( 3 ) );
+   int iIndex = hb_parni( 2 );
+   LONG_PTR nRetVal;
+
+   switch( iIndex )
+   {
+      case GWLP_WNDPROC:
+      case GWLP_HINSTANCE:
+      case GWLP_HWNDPARENT:
+      case GWLP_USERDATA:
+      case DWLP_DLGPROC:
+      case DWLP_USER:
+         nRetVal = ( LONG_PTR ) hbwapi_par_raw_HANDLE( 3 );
+         break;
+      default:
+         nRetVal = ( LONG_PTR ) hb_parnint( 3 );
+   }
+
+   nRetVal = SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ), iIndex, nRetVal );
    hbwapi_SetLastError( GetLastError() );
-   hb_retnint( nRetVal );
+
+   switch( iIndex )
+   {
+      case GWLP_WNDPROC:
+      case GWLP_HINSTANCE:
+      case GWLP_HWNDPARENT:
+      case GWLP_USERDATA:
+      case DWLP_DLGPROC:
+      case DWLP_USER:
+         hbwapi_ret_raw_HANDLE( nRetVal );
+         break;
+      default:
+         hb_retnint( nRetVal );
+   }
+}
+
+HB_FUNC( WAPI_GETWINDOWLONGPTR )
+{
+   int iIndex = hb_parni( 2 );
+   LONG_PTR nRetVal = GetWindowLongPtr( hbwapi_par_raw_HWND( 1 ), iIndex );
+   hbwapi_SetLastError( GetLastError() );
+
+   switch( iIndex )
+   {
+      case GWLP_WNDPROC:
+      case GWLP_HINSTANCE:
+      case GWLP_HWNDPARENT:
+      case GWLP_USERDATA:
+      case DWLP_DLGPROC:
+      case DWLP_USER:
+         hbwapi_ret_raw_HANDLE( nRetVal );
+         break;
+      default:
+         hb_retnint( nRetVal );
+   }
 }
 
 HB_FUNC( WAPI_ENABLEWINDOW )
@@ -981,7 +1053,7 @@ HB_FUNC( WAPI_SETTIMER )
    hb_retnint( result );
 }
 
-HB_FUNC( WAPI_SENDMESSAGE )  /* NOTE: unsafe function, may corrupt memory */
+HB_FUNC( WAPI_SENDMESSAGE )  /* NOTE: unsafe function, may write past buffer */
 {
    void *  hText;
    HB_SIZE nLen;
@@ -1007,6 +1079,38 @@ HB_FUNC( WAPI_SENDMESSAGE )  /* NOTE: unsafe function, may corrupt memory */
    hb_strfree( hText );
 }
 
+HB_FUNC( WAPI_SENDMESSAGETIMEOUT )  /* NOTE: unsafe function, may write past buffer */
+{
+   void *    hText;
+   HB_SIZE   nLen;
+   LPCTSTR   szText = HB_PARSTR( 4, &hText, &nLen );
+   DWORD_PTR pdwResult = NULL;
+
+   LRESULT result;
+
+   if( szText )
+      szText = HB_STRUNSHARE( &hText, szText, nLen );
+
+   result = SendMessageTimeout( hbwapi_par_raw_HWND( 1 ),
+                                ( UINT ) hb_parni( 2 ),
+                                ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
+                                szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
+                                ( UINT ) hb_parni( 5 ),
+                                ( UINT ) hb_parni( 6 ),
+                                &pdwResult );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retnint( result );
+
+   if( szText )
+      HB_STORSTRLEN( szText, nLen, 4 );
+   else
+      hb_storc( NULL, 4 );
+
+   hb_stornint( ( HB_PTRDIFF ) pdwResult, 7 );
+
+   hb_strfree( hText );
+}
+
 HB_FUNC( WAPI_INVALIDATERECT )
 {
    RECT rc;
@@ -1016,20 +1120,15 @@ HB_FUNC( WAPI_INVALIDATERECT )
 
 HB_FUNC( WAPI_GETCURSORPOS )
 {
-   PHB_ITEM info = hb_itemArrayNew( 2 );
-   POINT    xy;
-   BOOL     bResult;
+   POINT xy;
+   BOOL  bResult;
 
    memset( &xy, 0, sizeof( xy ) );
 
    bResult = GetCursorPos( &xy );
    hbwapi_SetLastError( GetLastError() );
 
-   hb_arraySetNL( info, 1, xy.x );
-   hb_arraySetNL( info, 2, xy.y );
-
-   hb_itemParamStore( 1, info );
-
+   hbwapi_stor_POINT( &xy, 1 );
    hbwapi_ret_L( bResult );
 }
 
@@ -1123,4 +1222,25 @@ HB_FUNC( WAPI_REDRAWWINDOW )
       hbwapi_par_RECT( &rc, 2, HB_FALSE ),  /* address of structure with update rectangle */
       ( HRGN ) hbwapi_par_raw_HANDLE( 3 ),  /* handle of update region */
       ( UINT ) hb_parni( 4 ) ) );           /* array of redraw flags */
+}
+
+HB_FUNC( WAPI_GETICONINFO )
+{
+   PHB_ITEM aInfo = hb_itemArrayNew( 5 );
+   ICONINFO ii;
+   BOOL bResult;
+
+   memset( &ii, 0, sizeof( ii ) );
+
+   bResult = GetIconInfo( hbwapi_par_raw_HICON( 1 ), &ii );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+
+   hb_arraySetL( aInfo, 1, ii.fIcon );
+   hb_arraySetNL( aInfo, 2, ii.xHotspot );
+   hb_arraySetNL( aInfo, 3, ii.yHotspot );
+   hbwapi_arraySet_HANDLE( aInfo, 4, ii.hbmMask );
+   hbwapi_arraySet_HANDLE( aInfo, 5, ii.hbmColor );
+
+   hb_itemParamStore( 2, aInfo );
 }

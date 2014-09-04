@@ -72,49 +72,6 @@ HB_FUNC( WVW_SETPOPUPMENU )
       HB_RETHANDLE( NULL );
 }
 
-/* wvw_AppendMenu( hMenu, nFlags, nMenuItemId, cCaption ) */
-HB_FUNC( WVW_APPENDMENU )
-{
-   TCHAR   ucBuf[ 256 ];
-   LPCTSTR szCaption;
-
-   if( ! ( hb_parni( 2 ) & ( MF_SEPARATOR | MF_POPUP ) ) &&
-       hb_parni( 3 ) >= WVW_ID_BASE_PUSHBUTTON )
-   {
-      hb_errRT_TERM( EG_ARG, 10001, "Menu command ID too high. Potential conflict with PushButton.", HB_ERR_FUNCNAME, 0, 0 );
-      hb_retl( HB_FALSE );
-      return;
-   }
-
-   if( HB_ISCHAR( 4 ) )
-   {
-      void *  hCaption;
-      HB_SIZE nLen;
-
-      szCaption = HB_PARSTR( 4, &hCaption, &nLen );
-
-      if( nLen > 0 && nLen < HB_SIZEOFARRAY( ucBuf ) )
-      {
-         HB_SIZE i;
-
-         for( i = 0; i < nLen; i++ )
-            ucBuf[ i ] = szCaption[ i ] == TEXT( '~' ) ? TEXT( '&' ) : szCaption[ i ];
-
-         ucBuf[ nLen ] = TEXT( '\0' );
-
-         szCaption = ucBuf;
-      }
-
-      hb_strfree( hCaption );
-   }
-   else
-      szCaption = ( LPCTSTR ) HB_PARHANDLE( 4 );
-
-   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ),
-      ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-      szCaption ) );
-}
-
 HB_FUNC( WVW_GETLASTMENUEVENT )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
@@ -213,29 +170,4 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
       else
          SetMenuItemBitmaps( ( HMENU ) HB_PARHANDLE( 1 ), hb_parni( 3 ), MF_BYPOSITION, ( HBITMAP ) hBitmapUnchecked, ( HBITMAP ) hBitmapChecked );
    }
-}
-
-/* wvw_TrackPopupMenu( [nWinNum], n ) */
-HB_FUNC( WVW_TRACKPOPUPMENU )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      POINT xy;
-
-      memset( &xy, 0, sizeof( xy ) );
-
-      GetCursorPos( &xy );
-
-      hb_retni( TrackPopupMenu( ( HMENU ) HB_PARHANDLE( 2 ),
-                                TPM_CENTERALIGN | TPM_RETURNCMD | TPM_RECURSE,
-                                xy.x,
-                                xy.y,
-                                0,
-                                wvw_win->hWnd,
-                                NULL ) );
-   }
-   else
-      hb_retni( 0 );
 }

@@ -806,16 +806,16 @@
 /* RPC status code (win_UuidCreateString() first reference parameter) */
 #define HB_RPC_S_ERROR                     ( -1 )
 #define HB_RPC_S_OK                        0
-#define HB_RPC_S_INVALID_ARG               87
+#define HB_RPC_S_ACCESS_DENIED             5
 #define HB_RPC_S_OUT_OF_MEMORY             14
-#define HB_RPC_S_OUT_OF_THREADS            164
+#define HB_RPC_S_INVALID_ARG               87
 #define HB_RPC_S_INVALID_LEVEL             87
 #define HB_RPC_S_BUFFER_TOO_SMALL          122
-#define HB_RPC_S_INVALID_SECURITY_DESC     1338
-#define HB_RPC_S_ACCESS_DENIED             5
-#define HB_RPC_S_SERVER_OUT_OF_MEMORY      1130
+#define HB_RPC_S_OUT_OF_THREADS            164
 #define HB_RPC_S_ASYNC_CALL_PENDING        997
+#define HB_RPC_S_SERVER_OUT_OF_MEMORY      1130
 #define HB_RPC_S_UNKNOWN_PRINCIPAL         1332
+#define HB_RPC_S_INVALID_SECURITY_DESC     1338
 #define HB_RPC_S_TIMEOUT                   1460
 
 /* Resource types (win_LoadResource() second parameter) */
@@ -921,5 +921,24 @@
 #define WIN_SC_MONITORPOWER                0xF170
 #define WIN_SC_CONTEXTHELP                 0xF180
 #define WIN_SC_SEPARATOR                   0xF00F
+
+/* wapi_SendMessageTimeout() flag values */
+#define WIN_SMTO_NORMAL                    0x0000
+#define WIN_SMTO_BLOCK                     0x0001
+#define WIN_SMTO_ABORTIFHUNG               0x0002
+#define WIN_SMTO_NOTIMEOUTIFNOTHUNG        0x0008
+#define WIN_SMTO_ERRORONEXIT               0x0020
+
+/* wapi_SetWindowLongPtr()/wapi_GetWindowLongPtr() index values */
+#define WIN_GWLP_WNDPROC                   ( -4 )
+#define WIN_GWLP_HINSTANCE                 ( -6 )
+#define WIN_GWLP_HWNDPARENT                ( -8 )
+#define WIN_GWL_ID                         ( -12 )
+#define WIN_GWL_STYLE                      ( -16 )
+#define WIN_GWL_EXSTYLE                    ( -20 )
+#define WIN_GWLP_USERDATA                  ( -21 )
+#define WIN_DWLP_MSGRESULT                 0
+#define WIN_DWLP_DLGPROC                   4
+#define WIN_DWLP_USER                      8
 
 #endif /* HBWIN_CH_ */

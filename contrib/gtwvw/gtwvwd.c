@@ -5483,14 +5483,9 @@ int hb_gt_wvw_nWin_N( int iPar )
 {
    if( s_wvw )
    {
-      if( HB_ISNUM( iPar ) )
-      {
-         int nWin = hb_parni( iPar );
+      int nWin = HB_ISNUM( iPar ) ? hb_parni( iPar ) : ( s_wvw->fMainCoordMode ? s_wvw->iNumWindows - 1 : s_wvw->iCurWindow );
 
-         return nWin >= 0 && nWin < s_wvw->iNumWindows ? nWin : 0;
-      }
-      else
-         return s_wvw->fMainCoordMode ? s_wvw->iNumWindows - 1 : s_wvw->iCurWindow;
+      return nWin >= 0 && nWin < s_wvw->iNumWindows ? nWin : 0;
    }
    else
       return 0;

@@ -458,96 +458,6 @@ HB_FUNC( WVW_SETMAINCOORD )
       hb_retl( HB_FALSE );
 }
 
-/* wvw_NoClose( [nWinNum] ) -> NIL
-   disable CLOSE 'X' button of a window */
-HB_FUNC( WVW_NOCLOSE )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      HMENU hMenu = GetSystemMenu( wvw_win->hWnd, FALSE );
-
-      if( hMenu )
-      {
-         DeleteMenu( hMenu, SC_CLOSE, MF_BYCOMMAND );
-         DrawMenuBar( wvw_win->hWnd );
-      }
-   }
-}
-
-/* wvw_SetWinStyle( [nWinNum], [nStyle] )
- * Get/Set window style
- * NOTES: if window has controls (eg. pushbutton, scrollbar)
- *      you should include WS_CLIPCHILDREN in nStyle
- * SIDE EFFECT:
- *       if window is hidden, applying nStyle here will cause it to show
- * return Window Style prior to applying the new style
- */
-HB_FUNC( WVW_SETWINSTYLE )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      LONG_PTR lpStyle;
-
-      if( HB_ISNUM( 2 ) )
-      {
-         lpStyle = SetWindowLongPtr( wvw_win->hWnd, GWL_STYLE, ( LONG_PTR ) hb_parnint( 2 ) );
-         SetWindowPos( wvw_win->hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED );
-         ShowWindow( wvw_win->hWnd, SW_SHOWNORMAL );
-      }
-      else
-         lpStyle = GetWindowLongPtr( wvw_win->hWnd, GWL_STYLE );
-
-      hb_retnint( lpStyle );
-   }
-   else
-      hb_retnint( 0 );
-}
-
-/* wvw_EnableMaximize( [nWinNum], [lEnable] )
- * Get/Set maximize button
- * returns maximize box state prior to applying the new style
- * NOTE: in order to enable MAXIMIZE button, app should have WVW_SIZE() callback function
- */
-HB_FUNC( WVW_ENABLEMAXIMIZE )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      LONG_PTR lpStyle = GetWindowLongPtr( wvw_win->hWnd, GWL_STYLE );
-
-      HB_BOOL fState = ( lpStyle & ( LONG_PTR ) WS_MAXIMIZEBOX ) != 0;
-
-      hb_retl( fState );
-
-      if( HB_ISLOG( 2 ) )
-      {
-         if( hb_parl( 2 ) )
-         {
-            if( fState )
-               return;  /* no need */
-            lpStyle |= ( LONG_PTR ) WS_MAXIMIZEBOX;
-         }
-         else
-         {
-            if( ! fState )
-               return;  /* no need */
-            lpStyle &= ~( LONG_PTR ) WS_MAXIMIZEBOX;
-         }
-
-         SetWindowLongPtr( wvw_win->hWnd, GWL_STYLE, lpStyle );
-         SetWindowPos( wvw_win->hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED );
-         ShowWindow( wvw_win->hWnd, SW_SHOW );
-      }
-   }
-   else
-      hb_retl( HB_FALSE );
-}
-
 /* GTWVW parameter setting from .prg */
 /* Budyanto Dj. <budyanto@centrin.net.id> */
 
@@ -844,16 +754,6 @@ HB_FUNC( WVW_NOSTARTUPSUBWINDOW )
       hb_retl( HB_FALSE );
 }
 
-HB_FUNC( WVW_GETSCREENWIDTH )
-{
-   hb_retni( GetSystemMetrics( SM_CXSCREEN ) );
-}
-
-HB_FUNC( WVW_GETSCREENHEIGHT )
-{
-   hb_retni( GetSystemMetrics( SM_CYSCREEN ) );
-}
-
 /* wvw_SetWindowCentre( nWinNum,   (0==MAIN)
                         lCentre,
                         lPaintIt ) (if .F. it will just assign lCentre to WVW_WIN) */
@@ -901,22 +801,6 @@ HB_FUNC( WVW_PROCESSMESSAGES )
    hb_gt_wvw_ProcessMessages( NULL );
 
    hb_retl( HB_TRUE );
-}
-
-HB_FUNC( WVW_GETTITLE )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      TCHAR ucText[ 1024 ];
-
-      GetWindowText( wvw_win->hWnd, ucText, HB_SIZEOFARRAY( ucText ) - 1 );
-
-      HB_RETSTR( ucText );
-   }
-   else
-      hb_retc_null();
 }
 
 HB_FUNC( WVW_INVALIDATERECT )

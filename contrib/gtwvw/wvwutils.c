@@ -51,22 +51,6 @@
 
 #include "hbapifs.h"
 
-HB_FUNC( WVW_YESCLOSE )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      HMENU hMenu = GetSystemMenu( wvw_win->hWnd, FALSE );
-
-      if( hMenu )
-      {
-         AppendMenu( hMenu, SC_CLOSE, MF_BYCOMMAND, TEXT( "" ) );
-         DrawMenuBar( wvw_win->hWnd );
-      }
-   }
-}
-
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
    HB_RETHANDLE( GetStockObject( hb_parni( 1 ) ) );
@@ -80,57 +64,6 @@ HB_FUNC( WIN_DELETEOBJECT )
 HB_FUNC( WIN_SELECTOBJECT )
 {
    HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
-}
-
-/* win_LoadIcon( ncIcon ) */
-HB_FUNC( WIN_LOADICON )
-{
-   HICON hIcon = NULL;
-
-   if( HB_ISNUM( 1 ) )
-      hIcon = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
-   else
-   {
-      void * hName;
-      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTRDEF( 1, &hName, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-      hb_strfree( hName );
-   }
-
-   HB_RETHANDLE( hIcon );
-}
-
-/* win_LoadImage( ncImage, nSource ) -> hImage
- *   nSource == 0 ResourceIdByNumber
- *   nSource == 0 ResourceIdByName
- *   nSource == 0 ImageFromDiskFile
- */
-HB_FUNC( WIN_LOADIMAGE )
-{
-   HBITMAP hImage = NULL;
-
-   switch( hb_parni( 2 ) )
-   {
-      case 0:
-         hImage = LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
-         break;
-
-      case 1:
-      {
-         void * hName;
-         hImage = LoadBitmap( GetModuleHandle( NULL ), HB_PARSTRDEF( 1, &hName, NULL ) );
-         hb_strfree( hName );
-         break;
-      }
-      case 2:
-      {
-         void * hName;
-         hImage = ( HBITMAP ) LoadImage( NULL, HB_PARSTRDEF( 1, &hName, NULL ), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
-         hb_strfree( hName );
-         break;
-      }
-   }
-
-   HB_RETHANDLE( hImage );
 }
 
 HB_FUNC( WIN_GETDC )
@@ -307,20 +240,6 @@ HB_FUNC( WVW_MOUSE_ROW )
    hb_retni( 0 );
 }
 
-HB_FUNC( WVW_SETPARENT )
-{
-   int nWin2 = hb_gt_wvw_nWin_N( 2 );
-
-   if( nWin2 != 0 )
-   {
-      PWVW_WIN wvw_win1 = hb_gt_wvw_win_par();
-      PWVW_WIN wvw_win2 = hb_gt_wvw_win( nWin2 );
-
-      if( wvw_win1 && wvw_win2 )
-         SetParent( wvw_win1->hWnd, wvw_win2->hWnd );
-   }
-}
-
 HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 {
    PWVW_GLO wvw     = hb_gt_wvw();
@@ -422,19 +341,6 @@ HB_FUNC( WVW_GETBITMAPSIZE )
    hb_arraySetNL( aMetr, 1, bm.bmWidth );
    hb_arraySetNL( aMetr, 2, bm.bmHeight );
    hb_arraySetNI( aMetr, 3, bm.bmBitsPixel );
-
-   hb_itemReturnRelease( aMetr );
-}
-
-HB_FUNC( WVW_GETICONSIZE )
-{
-   PHB_ITEM aMetr = hb_itemArrayNew( 2 );
-   ICONINFO iinfo;
-
-   GetIconInfo( ( HICON ) HB_PARHANDLE( 1 ), &iinfo );
-
-   hb_arraySetNL( aMetr, 1, iinfo.xHotspot * 2 );
-   hb_arraySetNL( aMetr, 2, iinfo.yHotspot * 2 );
 
    hb_itemReturnRelease( aMetr );
 }
@@ -1048,27 +954,6 @@ HB_FUNC( WVW_LOADPEN )
    hb_retl( HB_FALSE );
 }
 
-HB_FUNC( WVW_MESSAGEBOX )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      void * hStr1;
-      void * hStr2;
-
-      hb_retni( MessageBox( wvw_win->hWnd,
-                            HB_PARSTR( 2, &hStr1, NULL ),
-                            HB_PARSTR( 3, &hStr2, NULL ),
-                            hb_parnidef( 4, MB_OK ) ) );
-
-      hb_strfree( hStr1 );
-      hb_strfree( hStr2 );
-   }
-   else
-      hb_retni( -1 );
-}
-
 /* End of drawing primitives */
 
 /* Utility functions. A natural extension copied and modified from GTWVT */
@@ -1344,24 +1229,6 @@ HB_FUNC( WVW_DLGSETICON )
 /* GUI Drawing Functions */
 /* Pritpal Bedi <pritpal@vouchcac.com> */
 
-/* wvw_ShowWindow( [nWinNum], nCmdShow ) */
-HB_FUNC( WVW_SHOWWINDOW )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-      ShowWindow( wvw_win->hWnd, hb_parnidef( 2, SW_SHOWNORMAL ) );
-}
-
-/* wvw_UpdateWindow( [nWinNum] ) */
-HB_FUNC( WVW_UPDATEWINDOW )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-      UpdateWindow( wvw_win->hWnd );
-}
-
 /* Dialogs
  * original work by Pritpal Bedi in wvtutils.c
  */
@@ -1551,42 +1418,6 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
 HB_FUNC( WVW_DELETEOBJECT )
 {
    hb_retl( DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
-}
-
-HB_FUNC( WVW_SETONTOP )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      RECT rc;
-
-      memset( &rc, 0, sizeof( rc ) );
-
-      GetWindowRect( wvw_win->hWnd, &rc );
-
-      hb_retl( SetWindowPos( wvw_win->hWnd, HWND_TOPMOST, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
-   }
-   else
-      hb_retl( HB_FALSE );
-}
-
-HB_FUNC( WVW_SETASNORMAL )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      RECT rc;
-
-      memset( &rc, 0, sizeof( rc ) );
-
-      GetWindowRect( wvw_win->hWnd, &rc );
-
-      hb_retl( SetWindowPos( wvw_win->hWnd, HWND_NOTOPMOST, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
-   }
-   else
-      hb_retl( HB_FALSE );
 }
 
 /* aScr := wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight ) */

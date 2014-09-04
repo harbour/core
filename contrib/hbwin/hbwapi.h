@@ -160,8 +160,8 @@ extern HB_EXPORT POINT *   hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMan
 extern HB_EXPORT RECT *    hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory );
 extern HB_EXPORT DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** h );
 
-extern HB_EXPORT void      hbwapi_stor_POINT( POINT * p, int iParam );
-extern HB_EXPORT void      hbwapi_stor_RECT( RECT * p, int iParam );
+extern HB_EXPORT void      hbwapi_stor_POINT( const POINT * p, int iParam );
+extern HB_EXPORT void      hbwapi_stor_RECT( const RECT * p, int iParam );
 
 extern HB_EXPORT HDC       hbwapi_par_HDC( int iParam );
 extern HB_EXPORT HPEN      hbwapi_par_HPEN( int iParam );
