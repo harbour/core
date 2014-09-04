@@ -352,7 +352,6 @@ DYNAMIC wvt_Show
 DYNAMIC wvt_ShowWindow
 DYNAMIC wvt_TrackPopupMenu
 DYNAMIC wvt_Update
-DYNAMIC wvt_Utils
 DYNAMIC wvt_WindowCentre
 DYNAMIC wvt__MakeDlgTemplate
 

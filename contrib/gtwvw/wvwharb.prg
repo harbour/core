@@ -203,6 +203,16 @@ PROCEDURE wvw_DrawMenuBar( nWin )
 
    RETURN
 
+PROCEDURE wvw_SetTitle( nWin, cTitle )
+
+   LOCAL hWnd
+
+   IF ! Empty( hWnd := wvw_Get_hnd_Window( nWin ) )
+      wapi_SetWindowText( hWnd, hb_defaultValue( cTitle, "" ) )
+   ENDIF
+
+   RETURN
+
 FUNCTION wvw_GetTitle( nWin )
 
    LOCAL hWnd
@@ -226,7 +236,6 @@ FUNCTION wvw_TrackPopupMenu( nWin, hMenu )
    ENDIF
 
    xy := { => }
-
    wapi_GetCursorPos( @xy )
 
    RETURN wapi_TrackPopupMenu( hMenu, hb_bitOr( WIN_TPM_CENTERALIGN, WIN_TPM_RETURNCMD, WIN_TPM_RECURSE ), ;
@@ -298,6 +307,21 @@ PROCEDURE wvw_UpdateWindow( nWin )
 
    RETURN
 
+PROCEDURE wvw_SetWindowPos( nWin, x, y )  /* position in pixel */
+
+   LOCAL hWnd
+   LOCAL rc
+
+   IF ! Empty( hWnd := wvw_Get_hnd_Window( nWin ) )
+      rc := { => }
+      wapi_GetWindowRect( hWnd, @rc )
+      wapi_SetWindowPos( hWnd,, x, y, ;
+         ( rc[ "right" ] - rc[ "left" ] ) + 1, ;
+         ( rc[ "bottom" ] - rc[ "top" ] ) + 1, WIN_SWP_NOZORDER )
+   ENDIF
+
+   RETURN
+
 FUNCTION wvw_SetOnTop( nWin )
 
    LOCAL hWnd
@@ -308,7 +332,6 @@ FUNCTION wvw_SetOnTop( nWin )
    ENDIF
 
    rc := { => }
-
    wapi_GetWindowRect( hWnd, @rc )
 
    RETURN wapi_SetWindowPos( hWnd, WIN_HWND_TOPMOST, ;
@@ -324,7 +347,6 @@ FUNCTION wvw_SetAsNormal( nWin )
    ENDIF
 
    rc := { => }
-
    wapi_GetWindowRect( hWnd, @rc )
 
    RETURN wapi_SetWindowPos( hWnd, WIN_HWND_NOTOPMOST, ;
@@ -350,7 +372,7 @@ FUNCTION wvw_SetWinStyle( nWin, nStyle )
       wapi_SetWindowPos( hWnd,, 0, 0, 0, 0, hb_bitOr( WIN_SWP_NOMOVE, WIN_SWP_NOSIZE, WIN_SWP_NOZORDER, WIN_SWP_FRAMECHANGED ) )
       wapi_ShowWindow( hWnd, WIN_SW_SHOWNORMAL )
    ELSE
-      nStyleOld := GetWindowLongPtr( hWnd, WIN_GWL_STYLE )
+      nStyleOld := wapi_GetWindowLongPtr( hWnd, WIN_GWL_STYLE )
    ENDIF
 
    RETURN nStyleOld
@@ -379,6 +401,9 @@ FUNCTION wvw_EnableMaximize( nWin, lEnable )
    ENDIF
 
    RETURN lEnableOld
+
+FUNCTION wvw_IsLButtonPressed()
+   RETURN hb_bitAnd( wapi_GetKeyState( WIN_VK_LBUTTON ), 0x8000 ) != 0
 
 FUNCTION wvw_GetScreenWidth()
    RETURN wapi_GetSystemMetrics( WIN_SM_CXSCREEN )

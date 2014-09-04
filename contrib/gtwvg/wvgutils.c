@@ -695,11 +695,6 @@ HB_FUNC( WVT_INVALIDATERECT )
    }
 }
 
-HB_FUNC( WVT_ISLBUTTONPRESSED )
-{
-   hb_retl( GetKeyState( VK_LBUTTON ) & 0x8000 );
-}
-
 HB_FUNC( WVT_CLIENTTOSCREEN )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();

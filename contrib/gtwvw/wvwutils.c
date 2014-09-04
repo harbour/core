@@ -1630,35 +1630,6 @@ HB_FUNC( WVW_SETICON )
       HB_RETHANDLE( NULL );
 }
 
-HB_FUNC( WVW_SETTITLE )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      void * hTitle;
-      SetWindowText( wvw_win->hWnd, HB_PARSTRDEF( 2, &hTitle, NULL ) );
-      hb_strfree( hTitle );
-   }
-}
-
-/* wvw_SetWindowPos( nWinNum, nXposition, nYposition)  (position in pixel) */
-HB_FUNC( WVW_SETWINDOWPOS )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-   {
-      RECT wi;
-
-      memset( &wi, 0, sizeof( wi ) );
-
-      GetWindowRect( wvw_win->hWnd, &wi );
-
-      SetWindowPos( wvw_win->hWnd, NULL, hb_parni( 2 ), hb_parni( 3 ), ( wi.right - wi.left ) + 1, ( wi.bottom - wi.top ) + 1, SWP_NOZORDER );
-   }
-}
-
 HB_FUNC( WVW_GETWINDOWHANDLE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();

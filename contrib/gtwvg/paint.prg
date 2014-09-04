@@ -731,3 +731,6 @@ FUNCTION wvg_GetMessageText( w, p1, p2 )
    cText += Chr( 0 )
 
    RETURN Left( cText, At( Chr( 0 ), cText ) - 1 )
+
+FUNCTION wvt_IsLButtonPressed()
+   RETURN hb_bitAnd( wapi_GetKeyState( WIN_VK_LBUTTON ), 0x8000 ) != 0
