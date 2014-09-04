@@ -191,15 +191,15 @@ HB_FUNC( WVW_SETTOOLTIPBKCOLOR )
 
    if( wvw_win )
    {
-      hb_retnint( ( COLORREF ) SendMessage( wvw_win->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( SendMessage( wvw_win->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
 
       if( HB_ISNUM( 2 ) )
-         SendMessage( wvw_win->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 2 ), 0 );
+         SendMessage( wvw_win->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) hbwapi_par_COLORREF( 2 ), 0 );
 
       return;
    }
 #endif
-   hb_retnint( 0 );
+   hbwapi_ret_COLORREF( 0 );
 }
 
 HB_FUNC( WVW_SETTOOLTIPTEXTCOLOR )
@@ -209,15 +209,15 @@ HB_FUNC( WVW_SETTOOLTIPTEXTCOLOR )
 
    if( wvw_win )
    {
-      hb_retnint( ( COLORREF ) SendMessage( wvw_win->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( SendMessage( wvw_win->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
 
       if( HB_ISNUM( 2 ) )
-         SendMessage( wvw_win->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 2 ), 0 );
+         SendMessage( wvw_win->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) hbwapi_par_COLORREF( 2 ), 0 );
 
       return;
    }
 #endif
-   hb_retnint( 0 );
+   hbwapi_ret_COLORREF( 0 );
 }
 
 HB_FUNC( WVW_SETTOOLTIPTITLE )
@@ -260,11 +260,11 @@ HB_FUNC( WVW_GETTOOLTIPBKCOLOR )
 
    if( wvw_win )
    {
-      hb_retnint( ( COLORREF ) SendMessage( wvw_win->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( SendMessage( wvw_win->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
       return;
    }
 #endif
-   hb_retnint( 0 );
+   hbwapi_ret_COLORREF( 0 );
 }
 
 HB_FUNC( WVW_GETTOOLTIPTEXTCOLOR )
@@ -274,9 +274,9 @@ HB_FUNC( WVW_GETTOOLTIPTEXTCOLOR )
 
    if( wvw_win )
    {
-      hb_retnint( ( COLORREF ) SendMessage( wvw_win->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( SendMessage( wvw_win->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
       return;
    }
 #endif
-   hb_retnint( 0 );
+   hbwapi_ret_COLORREF( 0 );
 }

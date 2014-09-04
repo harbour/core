@@ -1830,8 +1830,8 @@ HB_FUNC( WVT_DRAWBUTTON )
 
       HB_BOOL  bImage    = HB_ISNUM( 6 ) || HB_ISCHAR( 6 );
       int      iFormat   = hb_parni( 7 );
-      COLORREF textColor = ( COLORREF ) hb_parnldef( 8, _s->COLORS[ 0 ] );
-      COLORREF bkColor   = ( COLORREF ) hb_parnldef( 9, _s->COLORS[ 7 ] );
+      COLORREF textColor = hbwapi_par_COLORREF_def( 8, _s->COLORS[ 0 ] );
+      COLORREF bkColor   = hbwapi_par_COLORREF_def( 9, _s->COLORS[ 7 ] );
 
       xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       iTop    = xy.y + hb_parvni( 11, 1 );
@@ -2540,7 +2540,7 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
          LOGBRUSH lb = { 0, 0, 0 };
 
          lb.lbStyle = BS_SOLID;
-         lb.lbColor = ( COLORREF ) hb_parnldef( 8, _s->COLORS[ 0 ] );
+         lb.lbColor = hbwapi_par_COLORREF_def( 8, _s->COLORS[ 0 ] );
          lb.lbHatch = 0;
 #if ! defined( HB_OS_WIN_CE )
          hBrush = CreateBrushIndirect( &lb );

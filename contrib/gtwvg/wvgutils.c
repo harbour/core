@@ -341,7 +341,7 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
 
    if( _s )
    {
-      hbwapi_ret_COLORREF( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
 
       if( HB_ISNUM( 1 ) )
          SendMessage( _s->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) hbwapi_par_COLORREF( 1 ), 0 );
@@ -359,7 +359,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 
    if( _s )
    {
-      hbwapi_ret_COLORREF( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
 
       if( HB_ISNUM( 1 ) )
          SendMessage( _s->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) hbwapi_par_COLORREF( 1 ), 0 );
@@ -413,7 +413,7 @@ HB_FUNC( WVT_GETTOOLTIPBKCOLOR )
 
    if( _s )
    {
-      hbwapi_ret_COLORREF( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
       return;
    }
 #endif
@@ -427,7 +427,7 @@ HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
 
    if( _s )
    {
-      hbwapi_ret_COLORREF( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
+      hbwapi_ret_COLORREF( SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
       return;
    }
 #endif

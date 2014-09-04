@@ -448,9 +448,9 @@ HB_FUNC( WVG_BUTTON_GETCHECK )
 HB_FUNC( WVG_SETDCBRUSHCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   hb_retnint( SetDCBrushColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( SetDCBrushColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
-   hb_retnint( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 
@@ -458,9 +458,9 @@ HB_FUNC( WVG_SETDCBRUSHCOLOR )
 HB_FUNC( WVG_SETDCPENCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   hb_retnint( SetDCPenColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( SetDCPenColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
-   hb_retnint( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 
@@ -537,7 +537,7 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
       if( pfnLayered )
       {
          HWND     hWnd = hbwapi_par_raw_HWND( 1 );
-         COLORREF cr   = ( COLORREF ) hb_parnldef( 2, RGB( 255, 255, 255 ) );
+         COLORREF cr   = hbwapi_par_COLORREF_def( 2, RGB( 255, 255, 255 ) );
 
          SetWindowLong( hWnd, GWL_EXSTYLE, GetWindowLong( hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 

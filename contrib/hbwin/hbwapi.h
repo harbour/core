@@ -81,6 +81,7 @@
 #define hbwapi_par_raw_STRUCT( n )          hb_parc( n )
 
 #define hbwapi_par_COLORREF( n )            ( ( COLORREF ) hb_parnl( n ) )
+#define hbwapi_par_COLORREF_def( n, d )     ( ( COLORREF ) hb_parnldef( n, d ) )
 
 #define hbwapi_par_BOOL( n )                ( ( BOOL  ) ( hb_parl( n ) ? TRUE : FALSE ) )
 #define hbwapi_par_INT( n )                 ( ( INT   ) hb_parni( n ) )
@@ -105,7 +106,7 @@
 
 #define hbwapi_ret_HRESULT( hr )            hb_retnint( hr )
 #define hbwapi_ret_LRESULT( hr )            hb_retnint( hr )
-#define hbwapi_ret_COLORREF( cr )           hb_retnint( cr )
+#define hbwapi_ret_COLORREF( cr )           hb_retnint( ( COLORREF ) cr )
 
 #define hbwapi_stor_HANDLE( h, n )          hb_storptr( ( void * ) ( h ), n )
 #define hbwapi_itemPut_HANDLE( i, h )       hb_itemPutPtr( i, ( void * ) ( h ) )

@@ -316,7 +316,7 @@ HB_FUNC( WVW_IMAGELIST_ADD )
 
 HB_FUNC( WVW_IMAGELIST_ADDMASKED )
 {
-   hb_retni( ImageList_AddMasked( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), ( COLORREF ) hb_parnl( 3 ) ) );
+   hb_retni( ImageList_AddMasked( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), hbwapi_par_COLORREF( 3 ) ) );
 }
 
 HB_FUNC( WVW_GETBITMAPSIZE )
@@ -915,7 +915,7 @@ HB_FUNC( WVW_LOADPEN )
 
    if( wvw && iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( wvw->a.hUserPens ) )
    {
-      HPEN hPen = CreatePen( hb_parni( 2 ), hb_parni( 3 ), ( COLORREF ) hb_parnl( 4 ) );
+      HPEN hPen = CreatePen( hb_parni( 2 ), hb_parni( 3 ), hbwapi_par_COLORREF( 4 ) );
 
       if( hPen )
       {
@@ -1030,18 +1030,18 @@ HB_FUNC( WVW_CHOOSECOLOR )
 
       cc.lStructSize  = sizeof( cc );
       cc.hwndOwner    = wvw_top->hWnd;
-      cc.rgbResult    = ( COLORREF ) hb_parnl( 1 );
+      cc.rgbResult    = hbwapi_par_COLORREF( 1 );
       cc.lpCustColors = crCustClr;
       cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
       if( ChooseColor( &cc ) )
       {
-         hb_retnint( cc.rgbResult );
+         hbwapi_ret_COLORREF( cc.rgbResult );
          return;
       }
    }
 
-   hb_retnint( -1 );
+   hbwapi_ret_COLORREF( -1 );
 }
 
 /* wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based
@@ -1108,7 +1108,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
 
       POINT xy;
 
-      COLORREF crRGBcolor = ( COLORREF ) hb_parnl( 6 );
+      COLORREF crRGBcolor = hbwapi_par_COLORREF( 6 );
       HB_BOOL  fTight     = hb_parl( 7 );
       HB_BOOL  fUseBrush  = hb_parl( 8 );
       LOGBRUSH lb;
