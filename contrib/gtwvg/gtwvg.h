@@ -590,17 +590,4 @@ extern HB_EXPORT void          hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uR
 
 HB_EXTERN_END
 
-#if defined( __GTWVX_RETURN_UNSAFE_POINTERS )
-   #undef hbwapi_ret_raw_HANDLE
-   #undef hbwapi_stor_HANDLE
-   #undef hbwapi_itemPut_HANDLE
-   #undef hbwapi_arraySet_HANDLE
-   #undef hbwapi_vmPush_HANDLE
-   #define hbwapi_ret_raw_HANDLE( h )         hb_retnint( ( HB_PTRDIFF ) h )
-   #define hbwapi_stor_HANDLE( h, n )         hb_stornint( ( HB_PTRDIFF ) ( h ), n )
-   #define hbwapi_itemPut_HANDLE( i, h )      hb_itemPutNInt( i, ( HB_PTRDIFF ) ( h ) )
-   #define hbwapi_arraySet_HANDLE( a, i, h )  hb_arraySetNInt( a, i, ( HB_PTRDIFF ) ( h ) )
-   #define hbwapi_vmPush_HANDLE( h )          hb_vmPushNumInt( ( HB_PTRDIFF ) ( h ) )
-#endif
-
 #endif /* HB_WVG_H_ */

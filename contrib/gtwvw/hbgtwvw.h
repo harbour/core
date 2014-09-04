@@ -435,19 +435,6 @@ typedef struct
 
 } WVW_GLO, * PWVW_GLO;
 
-#if defined( __GTWVX_RETURN_UNSAFE_POINTERS )
-   #undef hbwapi_ret_raw_HANDLE
-   #undef hbwapi_stor_HANDLE
-   #undef hbwapi_itemPut_HANDLE
-   #undef hbwapi_arraySet_HANDLE
-   #undef hbwapi_vmPush_HANDLE
-   #define hbwapi_ret_raw_HANDLE( h )         hb_retnint( ( HB_PTRDIFF ) h )
-   #define hbwapi_stor_HANDLE( h, n )         hb_stornint( ( HB_PTRDIFF ) ( h ), n )
-   #define hbwapi_itemPut_HANDLE( i, h )      hb_itemPutNInt( i, ( HB_PTRDIFF ) ( h ) )
-   #define hbwapi_arraySet_HANDLE( a, i, h )  hb_arraySetNInt( a, i, ( HB_PTRDIFF ) ( h ) )
-   #define hbwapi_vmPush_HANDLE( h )          hb_vmPushNumInt( ( HB_PTRDIFF ) ( h ) )
-#endif
-
 HB_EXTERN_BEGIN
 
 /* Get functions for internal Data */
