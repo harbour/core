@@ -1874,7 +1874,8 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
-         hb_arrayNew( pInfo->pResult, 6 );
+         hb_arrayNew( pInfo->pResult, 7 );
+         /* 7-th item is allocated for GTCTW window number */
          HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
          hb_arraySetNI( pInfo->pResult, 1, iRow );
          hb_arraySetNI( pInfo->pResult, 2, iCol );
@@ -1897,9 +1898,9 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
          break;
       }
-      case HB_GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
+      case HB_GTI_SETWIN:  /* restore screen buffer, cursor shape and position */
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) &&
-             hb_arrayLen( pInfo->pNewVal ) == 6 )
+             hb_arrayLen( pInfo->pNewVal ) == 7 )
          {
             HB_GTSELF_DISPBEGIN( pGT );
             if( hb_arrayGetCLen( pInfo->pNewVal, 6 ) > 0 )
@@ -3192,8 +3193,6 @@ static void hb_gt_def_MouseSetBounds( PHB_GT pGT, int iTop, int iLeft, int iBott
 
 static void hb_gt_def_MouseGetBounds( PHB_GT pGT, int * piTop, int * piLeft, int * piBottom, int * piRight )
 {
-   HB_SYMBOL_UNUSED( pGT );
-
    *piTop = *piLeft = 0;
    HB_GTSELF_GETSIZE( pGT, piBottom, piRight );
    --( *piBottom );
