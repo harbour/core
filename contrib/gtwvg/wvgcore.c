@@ -1009,7 +1009,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 
       SetTextColor( _s->hdc, fgClr );
       SetBkColor( _s->hdc, bgClr );
-      SelectObject( _s->hdc, ( HFONT ) HB_PARHANDLE( 10 ) );
+      SelectObject( _s->hdc, hbwapi_par_raw_HFONT( 10 ) );
 
       GetTextExtentPoint32( _s->hdc, text, ( int ) nLen, &sz );
 
@@ -1064,7 +1064,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       {
          SetTextColor( _s->hGuiDC, fgClr );
          SetBkColor( _s->hGuiDC, bgClr );
-         SelectObject( _s->hGuiDC, ( HFONT ) HB_PARHANDLE( 10 ) );
+         SelectObject( _s->hGuiDC, hbwapi_par_raw_HFONT( 10 ) );
          SetTextAlign( _s->hGuiDC, iAlignH | iAlignV );
 
          ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rc, text, ( UINT ) nLen, NULL );
@@ -2074,7 +2074,7 @@ HB_FUNC( WVT_DRAWPICTURE )
 HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
 {
 #if ! defined( HB_OS_WIN_CE )
-   if( HB_ISHANDLE( 5 ) )
+   if( hbwapi_is_HANDLE( 5 ) )
    {
       POINT xy;
       int   iTop, iLeft, iBottom, iRight;
@@ -2087,7 +2087,7 @@ HB_FUNC( WVT_DRAWPICTUREEX )  /* Not in WVW */
       iBottom = xy.y - 1 + hb_parvni( 6, 3 );
       iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) HB_PARHANDLE( 5 ), hb_parl( 7 ) ) );
+      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) hbwapi_par_raw_HANDLE( 5 ), hb_parl( 7 ) ) );
       return;
    }
 #endif
@@ -2432,7 +2432,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       SetTextColor( _s->hdc, fgClr );
       SetBkColor( _s->hdc, bgClr );
       SetBkMode( _s->hdc, hb_parnidef( 11, OPAQUE ) );
-      SelectObject( _s->hdc, ( HFONT ) HB_PARHANDLE( 12 ) );
+      SelectObject( _s->hdc, hbwapi_par_raw_HFONT( 12 ) );
 
       {
          void *  hText;
@@ -2449,7 +2449,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
          SetTextColor( _s->hGuiDC, fgClr );
          SetBkColor( _s->hGuiDC, bgClr );
          SetBkMode( _s->hGuiDC, hb_parnidef( 11, OPAQUE ) );
-         SelectObject( _s->hGuiDC, ( HFONT ) HB_PARHANDLE( 12 ) );
+         SelectObject( _s->hGuiDC, hbwapi_par_raw_HFONT( 12 ) );
 
          {
             void *  hText;
@@ -2632,7 +2632,7 @@ HB_FUNC( WVT_LOADPICTURE )
 HB_FUNC( WVT_DESTROYPICTURE )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retl( hb_wvt_gtDestroyPicture( ( IPicture * ) HB_PARHANDLE( 1 ) ) );
+   hb_retl( hb_wvt_gtDestroyPicture( ( IPicture * ) hbwapi_par_raw_HANDLE( 1 ) ) );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -2823,7 +2823,7 @@ HB_FUNC( WVT_RESTSCREEN )
       HB_BOOL bResult = HB_FALSE;
 
       HDC     hCompDC = CreateCompatibleDC( _s->hdc );
-      HBITMAP hBmp = ( HBITMAP ) SelectObject( hCompDC, ( HBITMAP ) HB_PARVHANDLE( 5, 3 ) );
+      HBITMAP hBmp = ( HBITMAP ) SelectObject( hCompDC, ( HBITMAP ) hbwapi_parv_raw_HANDLE( 5, 3 ) );
 
       if( hBmp )
       {
@@ -2868,7 +2868,7 @@ HB_FUNC( WVT_RESTSCREEN )
       {
          if( hBmp )
             SelectObject( hCompDC, hBmp );
-         DeleteObject( ( HBITMAP ) ( HB_PTRDIFF ) HB_PARVHANDLE( 5, 3 ) );
+         DeleteObject( ( HBITMAP ) hbwapi_parv_raw_HANDLE( 5, 3 ) );
       }
       hb_retl( bResult );
    }

@@ -78,7 +78,7 @@ HB_FUNC( WVW_STCREATE )
          iStyle |= iBox;
 
       if( HB_ISNUM( 8 ) )
-         hFont = ( HFONT ) HB_PARHANDLE( 8 );
+         hFont = hbwapi_par_raw_HFONT( 8 );
       else if( wvw_win->hSTfont == NULL )
       {
          wvw_win->hSTfont = CreateFontIndirect( &wvw->lfST );

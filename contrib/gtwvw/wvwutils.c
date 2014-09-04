@@ -59,22 +59,22 @@ HB_FUNC( WIN_GETSTOCKOBJECT )
 /* removed from GTWVT, so we remove it from here also. I really don't like doing it... */
 HB_FUNC( WVW_DELETEOBJECT )
 {
-   hb_retl( DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
+   hb_retl( DeleteObject( hbwapi_par_raw_HGDIOBJ( 1 ) ) );
 }
 
 HB_FUNC( WIN_SELECTOBJECT )
 {
-   HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
+   HB_RETHANDLE( SelectObject( hbwapi_par_raw_HDC( 1 ), hbwapi_par_raw_HGDIOBJ( 2 ) ) );
 }
 
 HB_FUNC( WIN_GETDC )
 {
-   HB_RETHANDLE( GetDC( ( HWND ) HB_PARHANDLE( 1 ) ) );
+   HB_RETHANDLE( GetDC( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 HB_FUNC( WIN_RELEASEDC )
 {
-   hb_retl( ReleaseDC( ( HWND ) HB_PARHANDLE( 1 ), ( HDC ) HB_PARHANDLE( 2 ) ) );
+   hb_retl( ReleaseDC( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HDC( 2 ) ) );
 }
 
 /* Additions to GTWVW developed by SOLUCIONES PERCEPTIVAS */
@@ -298,7 +298,7 @@ HB_FUNC( WVW_CREATEIMAGELIST )
 
       for( ul = 1; ul <= ulLen; ++ul )
       {
-         HBITMAP hbmp = ( HBITMAP ) HB_ARRAYGETHANDLE( pArray, ul );
+         HBITMAP hbmp = ( HBITMAP ) hbwapi_arrayGet_HANDLE( pArray, ul );
          ImageList_Add( himl, hbmp, NULL );
          DeleteObject( hbmp );
       }
@@ -311,12 +311,12 @@ HB_FUNC( WVW_CREATEIMAGELIST )
 
 HB_FUNC( WVW_IMAGELIST_ADD )
 {
-   hb_retni( ImageList_Add( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), NULL ) );
+   hb_retni( ImageList_Add( hbwapi_par_raw_HIMAGELIST( 1 ), hbwapi_par_raw_HBITMAP( 2 ), NULL ) );
 }
 
 HB_FUNC( WVW_IMAGELIST_ADDMASKED )
 {
-   hb_retni( ImageList_AddMasked( ( HIMAGELIST ) HB_PARHANDLE( 1 ), ( HBITMAP ) HB_PARHANDLE( 2 ), hbwapi_par_COLORREF( 3 ) ) );
+   hb_retni( ImageList_AddMasked( hbwapi_par_raw_HIMAGELIST( 1 ), hbwapi_par_raw_HBITMAP( 2 ), hbwapi_par_COLORREF( 3 ) ) );
 }
 
 HB_FUNC( WVW_GETBITMAPSIZE )
@@ -324,7 +324,7 @@ HB_FUNC( WVW_GETBITMAPSIZE )
    PHB_ITEM aMetr = hb_itemArrayNew( 3 );
    BITMAP   bm;
 
-   GetObject( ( HBITMAP ) HB_PARHANDLE( 1 ), sizeof( bm ), ( LPVOID ) &bm );
+   GetObject( hbwapi_par_raw_HBITMAP( 1 ), sizeof( bm ), ( LPVOID ) &bm );
 
    hb_arraySetNL( aMetr, 1, bm.bmWidth );
    hb_arraySetNL( aMetr, 2, bm.bmHeight );
@@ -453,7 +453,7 @@ HB_FUNC( WVW_OPENBITMAP )
          hmem2 = GlobalAlloc( GHND, ( bmfh.bfSize - bmfh.bfOffBits ) );
          if( hmem2 )
          {
-            HDC hDC = ( HDC ) HB_PARHANDLE( 2 );
+            HDC hDC = hbwapi_par_raw_HDC( 2 );
 
             LPVOID lpvBits = GlobalLock( hmem2 );
 
@@ -466,7 +466,7 @@ HB_FUNC( WVW_OPENBITMAP )
             /* Create a bitmap from the data stored in the .bmp file.  */
             hbm = CreateDIBitmap( hDC, &bmih, CBM_INIT, lpvBits, lpbmi, DIB_RGB_COLORS );
 
-            if( ! HB_ISHANDLE( 2 ) )
+            if( ! hbwapi_is_HANDLE( 2 ) )
                ReleaseDC( 0, hDC );
 
             GlobalUnlock( hmem2 );
@@ -607,7 +607,7 @@ HB_FUNC( WVW_SETBITMAPRESOURCEID )
          TBADDBITMAP tbab;
 
          tbab.hInst = NULL;
-         tbab.nID   = ( UINT_PTR ) ( HBITMAP ) HB_PARHANDLE( 3 );
+         tbab.nID   = ( UINT_PTR ) hbwapi_par_raw_HBITMAP( 3 );
 
          hb_retni( ( int ) SendMessage( wvw_win->hToolBar, TB_ADDBITMAP, ( WPARAM ) 1, ( WPARAM ) &tbab ) );
       }
@@ -639,10 +639,10 @@ HB_FUNC( WVW_SETBITMAPRESOURCEID )
 
 HB_FUNC( WVW_DRAWBITMAP )
 {
-   HDC     hDC      = ( HDC ) HB_PARHANDLE( 1 );
+   HDC     hDC      = hbwapi_par_raw_HDC( 1 );
    HDC     hDCmem   = CreateCompatibleDC( hDC );
    DWORD   dwraster = ( DWORD ) hb_parnldef( 3, SRCCOPY );
-   HBITMAP hBitmap  = ( HBITMAP ) HB_PARHANDLE( 2 );
+   HBITMAP hBitmap  = hbwapi_par_raw_HBITMAP( 2 );
    BITMAP  bm;
    int     nWidthDest  = hb_parni( 6 );
    int     nHeightDest = hb_parni( 7 );
@@ -660,7 +660,7 @@ HB_FUNC( WVW_DRAWBITMAP )
 
 HB_FUNC( WVW_WINDOW2BITMAP )
 {
-   HWND    hWnd   = ( HWND ) HB_PARHANDLE( 1 );
+   HWND    hWnd   = hbwapi_par_raw_HWND( 1 );
    HB_BOOL fFull  = hb_parl( 2 );
    HDC     hDC    = fFull ? GetWindowDC( hWnd ) : GetDC( hWnd );
    HDC     hDCmem = CreateCompatibleDC( hDC );
@@ -1156,14 +1156,14 @@ HB_FUNC( WVW_LBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTRDEF( 3, &hText, NULL ) );
+   SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTRDEF( 3, &hText, NULL ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVW_LBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 /* WARNING!!! this function is not member of WVW_CB* group of functions */
@@ -1171,7 +1171,7 @@ HB_FUNC( WVW_CBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTRDEF( 3, &hText, NULL ) );
+   SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTRDEF( 3, &hText, NULL ) );
 
    hb_strfree( hText );
 }
@@ -1179,7 +1179,7 @@ HB_FUNC( WVW_CBADDSTRING )
 /* WARNING!!! this function is not member of WVW_CB* group of functions */
 HB_FUNC( WVW_CBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 HB_FUNC( WVW_DLGSETICON )
@@ -1197,8 +1197,8 @@ HB_FUNC( WVW_DLGSETICON )
 
    if( hIcon )
    {
-      SendMessage( ( HWND ) HB_PARHANDLE( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );   /* Set Title Bar ICON */
-      SendMessage( ( HWND ) HB_PARHANDLE( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );     /* Set Task List Icon */
+      SendMessage( hbwapi_par_raw_HWND( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );   /* Set Title Bar ICON */
+      SendMessage( hbwapi_par_raw_HWND( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );     /* Set Task List Icon */
    }
 
    HB_RETHANDLE( hIcon );
@@ -1253,7 +1253,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
             hDlg = CreateDialogIndirect( GetModuleHandle( NULL ),
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? wvw_zer->hWnd : NULL,
-                                         ( DLGPROC ) HB_PARHANDLE( 3 ) );
+                                         hbwapi_par_raw_DLGPROC( 3 ) );
          else
          {
             switch( iResource )
@@ -1338,7 +1338,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
          PHB_ITEM pFirst    = hb_param( 3, HB_IT_ANY );
          int      iResource = hb_parni( 4 );
          INT_PTR  iResult   = 0;
-         HWND     hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : wvw_zer->hWnd;
+         HWND     hParent   = hbwapi_is_HANDLE( 5 ) ? hbwapi_par_raw_HWND( 5 ) : wvw_zer->hWnd;
 
          if( HB_IS_EVALITEM( pFirst ) )
          {
@@ -1476,7 +1476,7 @@ HB_FUNC( WVW_RESTSCREEN )
       iWidth  = iRight - iLeft + 1;
       iHeight = iBottom - iTop + 1;
 
-      hBmp = ( HBITMAP ) SelectObject( wvw_win->hCompDC, ( HBITMAP ) HB_PARVHANDLE( 6, 3 ) );
+      hBmp = ( HBITMAP ) SelectObject( wvw_win->hCompDC, ( HBITMAP ) hbwapi_parv_raw_HANDLE( 6, 3 ) );
       if( hBmp )
       {
          if( iWidth == hb_parvni( 6, 1 ) && iHeight == hb_parvni( 6, 2 ) )
@@ -1508,7 +1508,7 @@ HB_FUNC( WVW_RESTSCREEN )
          SelectObject( wvw_win->hCompDC, hBmp );
 
          if( ! hb_parl( 7 ) /* fDoNotDestroyBMP */ )
-            DeleteObject( ( HBITMAP ) HB_PARVHANDLE( 6, 3 ) );
+            DeleteObject( ( HBITMAP ) hbwapi_parv_raw_HANDLE( 6, 3 ) );
       }
 
       hb_retl( fResult );

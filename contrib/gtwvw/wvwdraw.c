@@ -1387,7 +1387,7 @@ HB_FUNC( WVW_DRAWLABELOBJ )
 
       COLORREF oldTextColor = SetTextColor( hDC, hbwapi_par_COLORREF_def( 9, wvw_win->foreground ) );
       COLORREF oldBkColor   = SetBkColor( hDC, hbwapi_par_COLORREF_def( 10, wvw_win->background ) );
-      HFONT    oldFont      = ( HFONT ) SelectObject( hDC, ( HFONT ) HB_PARHANDLE( 11 ) );
+      HFONT    oldFont      = ( HFONT ) SelectObject( hDC, hbwapi_par_raw_HFONT( 11 ) );
 
       HB_SIZE nLen;
       void *  hText;
@@ -2836,7 +2836,7 @@ HB_FUNC( WVW_DRAWTEXTBOX )
       COLORREF oldTextColor = SetTextColor( hDC, hbwapi_par_COLORREF_def( 10, wvw_win->foreground ) );
       COLORREF oldBkColor   = SetBkColor( hDC, hbwapi_par_COLORREF_def( 11, wvw_win->background ) );
       int      oldBkMode    = SetBkMode( hDC, hb_parnidef( 12, OPAQUE ) );
-      HFONT    oldFont      = ( HFONT ) SelectObject( hDC, ( HFONT ) HB_PARHANDLE( 13 ) );
+      HFONT    oldFont      = ( HFONT ) SelectObject( hDC, hbwapi_par_raw_HFONT( 13 ) );
 
       HB_SIZE nLen;
       void *  hText;

@@ -909,7 +909,7 @@ HB_FUNC( WAPI_TREEVIEW_GETNEXTITEM )
 /* HTREEITEM TreeView_GetNextSelected( HWND hwnd, TREEITEM *hitem ); */
 HB_FUNC( WAPI_TREEVIEW_GETNEXTSELECTED )
 {
-   hbwapi_ret_raw_HANDLE( TreeView_GetNextSelected( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_TREEITEM( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetNextSelected( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HTREEITEM( 2 ) ) );
 }
 #endif
 

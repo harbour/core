@@ -346,7 +346,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
    void *  hText;
 
    hb_retptr( ( void * ) hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         ( HWND ) HB_PARHANDLE( 5 ), 0 ) );
+                                         hbwapi_par_raw_HWND( 5 ), 0 ) );
 
    hb_strfree( hText );
 }
@@ -354,7 +354,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
 {
    hb_retptr( ( void * ) hPrepareBitmap( NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         ( HWND ) HB_PARHANDLE( 5 ), 2 ) );
+                                         hbwapi_par_raw_HWND( 5 ), 2 ) );
 }
 
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
@@ -362,14 +362,14 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
    void * hText;
 
    hb_retptr( ( void * ) hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         ( HWND ) HB_PARHANDLE( 5 ), 1 ) );
+                                         hbwapi_par_raw_HWND( 5 ), 1 ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVG_STATUSBARCREATEPANEL )
 {
-   HWND hWndSB = ( HWND ) HB_PARHANDLE( 1 );
+   HWND hWndSB = hbwapi_par_raw_HWND( 1 );
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
@@ -415,7 +415,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
 
 HB_FUNC( WVG_STATUSBARSETTEXT )
 {
-   HWND hWndSB = ( HWND ) HB_PARHANDLE( 1 );
+   HWND hWndSB = hbwapi_par_raw_HWND( 1 );
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
@@ -432,7 +432,7 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
 HB_FUNC( WVG_STATUSBARREFRESH )
 {
 #if 0
-   HWND hWndSB = ( HWND ) HB_PARHANDLE( 1 );
+   HWND hWndSB = hbwapi_par_raw_HWND( 1 );
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
@@ -457,7 +457,7 @@ HB_FUNC( WVG_STATUSBARREFRESH )
 /* wvg_GetNMHdrInfo( nlParam ) */
 HB_FUNC( WVG_GETNMHDRINFO )
 {
-   LPNMHDR lpnmh = ( LPNMHDR ) HB_PARHANDLE( 1 );
+   LPNMHDR lpnmh = ( LPNMHDR ) hbwapi_par_raw_HANDLE( 1 );
 
    PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
@@ -471,7 +471,7 @@ HB_FUNC( WVG_GETNMHDRINFO )
 /* wvg_GetNMMouseInfo( nlParam ) */
 HB_FUNC( WVG_GETNMMOUSEINFO )
 {
-   LPNMMOUSE nmm = ( LPNMMOUSE ) HB_PARHANDLE( 1 );
+   LPNMMOUSE nmm = ( LPNMMOUSE ) hbwapi_par_raw_HANDLE( 1 );
    NMHDR     nmh = nmm->hdr;
 
    PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
@@ -487,7 +487,7 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
 /* wvg_GetNMTreeViewInfo( nlParam ) */
 HB_FUNC( WVG_GETNMTREEVIEWINFO )
 {
-   LPNMTREEVIEW pnmtv = ( LPNMTREEVIEW ) HB_PARHANDLE( 1 );
+   LPNMTREEVIEW pnmtv = ( LPNMTREEVIEW ) hbwapi_par_raw_HANDLE( 1 );
    NMHDR        nmh   = pnmtv->hdr;
 
    PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
@@ -503,7 +503,7 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
 /* wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected ) */
 HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 {
-   LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) HB_PARHANDLE( 2 );
+   LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) hbwapi_par_raw_HANDLE( 2 );
    HTREEITEM    hSelected = pnmtv->itemNew.hItem;
 
    if( hSelected != NULL )
@@ -522,12 +522,12 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 
       text[ 0 ] = TEXT( '\0' );
 
-      if( TreeView_GetItem( ( HWND ) HB_PARHANDLE( 1 ), &item ) )
+      if( TreeView_GetItem( hbwapi_par_raw_HWND( 1 ), &item ) )
          HB_STORSTR( text, 4 );
       else
          hb_storc( NULL, 4 );
 
-      hParent = TreeView_GetParent( ( HWND ) HB_PARHANDLE( 1 ), hSelected );
+      hParent = TreeView_GetParent( hbwapi_par_raw_HWND( 1 ), hSelected );
       HB_STORHANDLE( hParent, 5 );
 
       item.mask       = TVIF_HANDLE | TVIF_TEXT;
@@ -537,7 +537,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 
       Parent[ 0 ] = TEXT( '\0' );
 
-      if( TreeView_GetItem( ( HWND ) HB_PARHANDLE( 1 ), &item ) )
+      if( TreeView_GetItem( hbwapi_par_raw_HWND( 1 ), &item ) )
          HB_STORSTR( Parent, 3 );
       else
          hb_storc( NULL, 3 );
@@ -565,17 +565,17 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
                                              TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK;
 
    HB_WIN_V_UNION( tvis, item.state ) = 0;  /* TVI_BOLD */
-   tvis.hParent = ( HTREEITEM ) HB_PARHANDLE( 2 );
+   tvis.hParent = hbwapi_par_raw_HTREEITEM( 2 );
    HB_WIN_V_UNION( tvis, item.pszText ) = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   HB_RETHANDLE( TreeView_InsertItem( ( HWND ) HB_PARHANDLE( 1 ), &tvis ) );
+   HB_RETHANDLE( TreeView_InsertItem( hbwapi_par_raw_HWND( 1 ), &tvis ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
 {
-   HWND      hwnd = ( HWND ) HB_PARHANDLE( 1 );
+   HWND      hwnd = hbwapi_par_raw_HWND( 1 );
    HTREEITEM hroot, hitem, hitem1, hitem2, hitem3;
    int       iExpand = hb_parl( 2 ) ? TVE_EXPAND : TVE_COLLAPSE;
    int       iLevels = hb_parni( 3 ) <= 0 ? 5 : hb_parni( 3 );
@@ -699,7 +699,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    LOGFONT    lf;
    DWORD      Flags = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
    LONG       PointSize = 0;
-   HWND       hWnd      = ( HWND ) HB_PARHANDLE( 1 );
+   HWND       hWnd      = hbwapi_par_raw_HWND( 1 );
    TCHAR      szStyle[ MAX_PATH + 1 ];
 
    memset( &cf, 0, sizeof( cf ) );
@@ -786,7 +786,7 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 
    memset( &lf, 0, sizeof( lf ) );
 
-   SendMessage( ( HWND ) HB_PARHANDLE( 1 ), WM_CHOOSEFONT_GETLOGFONT, 0, ( LPARAM ) &lf );
+   SendMessage( hbwapi_par_raw_HWND( 1 ), WM_CHOOSEFONT_GETLOGFONT, 0, ( LPARAM ) &lf );
 
    hb_itemReturnRelease( wvg_logfontTOarray( &lf ) );
 #endif
@@ -838,22 +838,22 @@ HB_FUNC( WVG_FONTCREATE )
 /* wvg_PointSizeToHeight( hdc, nPointSize ) */
 HB_FUNC( WVG_POINTSIZETOHEIGHT )
 {
-   HDC hdc = HB_ISHANDLE( 1 ) ? ( HDC ) HB_PARHANDLE( 1 ) : GetDC( GetDesktopWindow() );
+   HDC hdc = hbwapi_is_HANDLE( 1 ) ? hbwapi_par_raw_HDC( 1 ) : GetDC( GetDesktopWindow() );
 
    hb_retnl( ( long ) -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( hdc, LOGPIXELSY ), 72 ) );
 
-   if( ! HB_ISHANDLE( 1 ) )
+   if( ! hbwapi_is_HANDLE( 1 ) )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
 /* wvg_HeightToPointSize( hdc, nHeight ) */
 HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 {
-   HDC hdc = HB_ISHANDLE( 1 ) ? ( HDC ) HB_PARHANDLE( 1 ) : GetDC( GetDesktopWindow() );
+   HDC hdc = hbwapi_is_HANDLE( 1 ) ? hbwapi_par_raw_HDC( 1 ) : GetDC( GetDesktopWindow() );
 
    hb_retnl( ( long ) -MulDiv( ( LONG ) hb_parnl( 2 ), 72, GetDeviceCaps( hdc, LOGPIXELSY ) ) );
 
-   if( ! HB_ISHANDLE( 1 ) )
+   if( ! hbwapi_is_HANDLE( 1 ) )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
@@ -861,9 +861,9 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
 #if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-   SetClassLong( ( HWND ) HB_PARHANDLE( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnl( 2 ) );
+   SetClassLong( hbwapi_par_raw_HWND( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnl( 2 ) );
 #else
-   SetClassLongPtr( ( HWND ) HB_PARHANDLE( 1 ), GCLP_HBRBACKGROUND, ( LONG_PTR ) hb_parnint( 2 ) );
+   SetClassLongPtr( hbwapi_par_raw_HWND( 1 ), GCLP_HBRBACKGROUND, ( LONG_PTR ) hb_parnint( 2 ) );
 #endif
 #endif
 }
@@ -958,7 +958,7 @@ HB_FUNC( WVG_FILLRECT )
    rc.right  = hb_parvni( 2, 3 );
    rc.bottom = hb_parvni( 2, 4 );
 
-   FillRect( ( HDC ) HB_PARHANDLE( 1 ), &rc, hbwapi_par_HBRUSH( 3 ) );
+   FillRect( hbwapi_par_raw_HDC( 1 ), &rc, hbwapi_par_HBRUSH( 3 ) );
 }
 
 HB_FUNC( WVG_BEGINMOUSETRACKING )
@@ -1040,7 +1040,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
                                   WS_POPUP | TTS_ALWAYSTIP /* | TTS_BALLOON */,
                                   CW_USEDEFAULT, CW_USEDEFAULT,
                                   CW_USEDEFAULT, CW_USEDEFAULT,
-                                  ( HWND ) HB_PARHANDLE( 1 ),
+                                  hbwapi_par_raw_HWND( 1 ),
                                   NULL,
                                   GetModuleHandle( NULL ),
                                   NULL );
@@ -1052,7 +1052,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
       memset( &toolInfo, 0, sizeof( toolInfo ) );
 
       toolInfo.cbSize   = sizeof( toolInfo );
-      toolInfo.hwnd     = ( HWND ) HB_PARHANDLE( 1 );
+      toolInfo.hwnd     = hbwapi_par_raw_HWND( 1 );
       toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
       toolInfo.uId      = ( UINT_PTR ) hb_parnint( 1 );
       toolInfo.lpszText = ( LPTSTR ) TEXT( "" );
@@ -1075,12 +1075,12 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
    memset( &toolInfo, 0, sizeof( toolInfo ) );
 
    toolInfo.cbSize   = sizeof( toolInfo );
-   toolInfo.hwnd     = ( HWND ) HB_PARHANDLE( 1 );
+   toolInfo.hwnd     = hbwapi_par_raw_HWND( 1 );
    toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
    toolInfo.uId      = ( UINT_PTR ) hb_parnint( 1 );
    toolInfo.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   SendMessage( ( HWND ) HB_PARHANDLE( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &toolInfo );
+   SendMessage( hbwapi_par_raw_HWND( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &toolInfo );
 
    hb_strfree( hText );
 }

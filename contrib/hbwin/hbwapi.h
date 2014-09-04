@@ -60,6 +60,7 @@
 #define hbwapi_parv_raw_HANDLE( n, i )      ( ( HANDLE           ) __hbwapi_parv_handle( n, i ) )
 
 #define hbwapi_par_raw_WNDPROC( n )         ( ( WNDPROC          ) __hbwapi_par_handle( n ) )
+#define hbwapi_par_raw_DLGPROC( n )         ( ( DLGPROC          ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_HWND( n )            ( ( HWND             ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_HDC( n )             ( ( HDC              ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_HANDLE( n )          ( ( HANDLE           ) __hbwapi_par_handle( n ) )
@@ -72,7 +73,7 @@
 #define hbwapi_par_raw_HIMAGELIST( n )      ( ( HIMAGELIST       ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_HFONT( n )           ( ( HFONT            ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_HINSTANCE( n )       ( ( HINSTANCE        ) __hbwapi_par_handle( n ) )
-#define hbwapi_par_raw_TREEITEM( n )        ( ( HTREEITEM        ) __hbwapi_par_handle( n ) )
+#define hbwapi_par_raw_HTREEITEM( n )       ( ( HTREEITEM        ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_HITEM( n )           ( ( HTREEITEM        ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_TVHITTESTINFO( n )   ( ( TVHITTESTINFO *  ) __hbwapi_par_handle( n ) )
 #define hbwapi_par_raw_TVINSERTSTRUCT( n )  ( ( TVINSERTSTRUCT * ) __hbwapi_par_handle( n ) )

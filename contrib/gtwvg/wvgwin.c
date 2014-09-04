@@ -72,12 +72,12 @@ HB_FUNC( WVG_GETSTOCKOBJECT )
 
 HB_FUNC( WVG_DELETEOBJECT )
 {
-   hb_retl( DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
+   hb_retl( DeleteObject( hbwapi_par_raw_HGDIOBJ( 1 ) ) );
 }
 
 HB_FUNC( WVG_SELECTOBJECT )
 {
-   HB_RETHANDLE( SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
+   HB_RETHANDLE( SelectObject( hbwapi_par_raw_HDC( 1 ), hbwapi_par_raw_HGDIOBJ( 2 ) ) );
 }
 
 /* wvg_LoadIcon( ncIcon ) */
@@ -142,7 +142,7 @@ HB_FUNC( WVG_DRAWIMAGE )
 {
    void * hImage;
 
-   hb_retl( hb_wvt_DrawImage( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( hb_wvt_DrawImage( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ), hb_parni( 3 ),
                               hb_parni( 4 ), hb_parni( 5 ), HB_PARSTR( 6, &hImage, NULL ), hb_parl( 7 ) ) );
 
    hb_strfree( hImage );
@@ -150,12 +150,12 @@ HB_FUNC( WVG_DRAWIMAGE )
 
 HB_FUNC( WVG_GETDC )
 {
-   HB_RETHANDLE( GetDC( ( HWND ) HB_PARHANDLE( 1 ) ) );
+   HB_RETHANDLE( GetDC( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 HB_FUNC( WVG_RELEASEDC )
 {
-   hb_retl( ReleaseDC( ( HWND ) HB_PARHANDLE( 1 ), ( HDC ) HB_PARHANDLE( 2 ) ) );
+   hb_retl( ReleaseDC( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HDC( 2 ) ) );
 }
 
 HB_FUNC( WVG_CREATEBRUSH )
@@ -174,9 +174,9 @@ HB_FUNC( WVG_CREATEBRUSH )
 
 HB_FUNC( WVG_TRACKPOPUPMENU )
 {
-   HMENU hMenu  = ( HMENU ) HB_PARHANDLE( 1 );
+   HMENU hMenu  = hbwapi_par_raw_HMENU( 1 );
    UINT  uFlags = hb_parnldef( 2, TPM_CENTERALIGN | TPM_RETURNCMD );
-   HWND  hWnd   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : GetActiveWindow();
+   HWND  hWnd   = hbwapi_is_HANDLE( 5 ) ? hbwapi_par_raw_HWND( 5 ) : GetActiveWindow();
 
    POINT xy = { 0, 0 };
 
@@ -203,7 +203,7 @@ HB_FUNC( WVG_CHOOSECOLOR )
    memset( &cc, 0, sizeof( cc ) );
 
    cc.lStructSize  = sizeof( cc );
-   cc.hwndOwner    = ( HWND ) HB_PARHANDLE( 4 );
+   cc.hwndOwner    = hbwapi_par_raw_HWND( 4 );
    cc.rgbResult    = hbwapi_par_COLORREF( 1 );
    cc.lpCustColors = crCustClr;
    cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
@@ -230,9 +230,9 @@ HB_FUNC( WVG_FINDWINDOW )
 
 HB_FUNC( WVG_SETMENU )
 {
-   HWND hWnd = ( HWND ) HB_PARHANDLE( 1 );
+   HWND hWnd = hbwapi_par_raw_HWND( 1 );
 
-   HB_BOOL bSet = SetMenu( hWnd, ( HMENU ) HB_PARHANDLE( 2 ) );
+   HB_BOOL bSet = SetMenu( hWnd, hbwapi_par_raw_HMENU( 2 ) );
 
    #if 1
    RECT wi = { 0, 0, 0, 0 };
@@ -258,15 +258,15 @@ HB_FUNC( WVG_APPENDMENU )
    if( HB_ISCHAR( 4 ) )
    {
       void * hBuffer;
-      hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ),
+      hb_retl( AppendMenu( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ),
          ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
          HB_PARSTR( 4, &hBuffer, NULL ) ) );
       hb_strfree( hBuffer );
    }
    else /* It is a SEPARATOR or Submenu */
-      hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ),
+      hb_retl( AppendMenu( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ),
          ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-         HB_ISNUM( 4 ) ? ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( LPCTSTR ) HB_PARHANDLE( 4 ) ) );
+         HB_ISNUM( 4 ) ? ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( LPCTSTR ) hbwapi_par_raw_HANDLE( 4 ) ) );
 }
 
 HB_FUNC( WVG_INSERTMENU )
@@ -276,15 +276,15 @@ HB_FUNC( WVG_INSERTMENU )
    if( HB_ISCHAR( 5 ) )
    {
       void * hBuffer;
-      hb_retl( InsertMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), flags,
+      hb_retl( InsertMenu( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ), flags,
          ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
          HB_PARSTR( 5, &hBuffer, NULL ) ) );
       hb_strfree( hBuffer );
    }
    else /* It is a SEPARATOR or Submenu */
-      hb_retl( InsertMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), flags,
+      hb_retl( InsertMenu( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ), flags,
          ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
-         ( LPCTSTR ) HB_PARHANDLE( 5 ) ) );
+         ( LPCTSTR ) hbwapi_par_raw_HANDLE( 5 ) ) );
 }
 
 HB_FUNC( WVG_ISMENUITEMCHECKED )
@@ -296,7 +296,7 @@ HB_FUNC( WVG_ISMENUITEMCHECKED )
    lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = MIIM_STATE;
 
-   if( GetMenuItemInfo( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
+   if( GetMenuItemInfo( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
       hb_retl( ( lpmii.fState & MFS_CHECKED ) != 0 );
    else
       hb_retl( HB_FALSE );
@@ -312,7 +312,7 @@ HB_FUNC( WVG_ISMENUITEMENABLED )  /* = grayed */
    lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = MIIM_STATE;
 
-   if( GetMenuItemInfo( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
+   if( GetMenuItemInfo( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) )
       hb_retl( ( lpmii.fState & MFS_DISABLED /* equivalent to MFS_GRAYED */ ) == 0 );
    else
       hb_retl( HB_TRUE );
@@ -341,7 +341,7 @@ HB_FUNC( WVG_SETMENUITEM )
    lpmii.fMask = MIIM_SUBMENU;
 #endif
 
-   hb_retl( SetMenuItemInfo( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) );
+   hb_retl( SetMenuItemInfo( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii ) );
 
    hb_strfree( hText );
 }
@@ -358,9 +358,9 @@ HB_FUNC( WVG_CREATEWINDOWEX )
       ( DWORD ) hb_parnl( 4 ),
       hb_parni( 5 ), hb_parni( 6 ),
       hb_parni( 7 ), hb_parni( 8 ),
-      ( HWND ) HB_PARHANDLE( 9 ),
-      HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : ( HMENU ) HB_PARHANDLE( 10 ),
-      HB_ISHANDLE( 11 ) ? ( HINSTANCE ) HB_PARHANDLE( 11 ) : GetModuleHandle( NULL ),
+      hbwapi_par_raw_HWND( 9 ),
+      HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : hbwapi_par_raw_HMENU( 10 ),
+      hbwapi_is_HANDLE( 11 ) ? hbwapi_par_raw_HINSTANCE( 11 ) : GetModuleHandle( NULL ),
       NULL ) );
 
    hb_strfree( hClassName );
@@ -369,8 +369,8 @@ HB_FUNC( WVG_CREATEWINDOWEX )
 
 HB_FUNC( WVG_SETWNDPROC )
 {
-   HWND    hWnd    = ( HWND ) HB_PARHANDLE( 1 );
-   WNDPROC wndProc = ( WNDPROC ) HB_PARHANDLE( 2 );
+   HWND    hWnd    = hbwapi_par_raw_HWND( 1 );
+   WNDPROC wndProc = hbwapi_par_raw_WNDPROC( 2 );
    WNDPROC oldProc;
 
 #if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
@@ -384,7 +384,7 @@ HB_FUNC( WVG_SETWNDPROC )
 
 HB_FUNC( WVG_DEFWINDOWPROC )
 {
-   hb_retnint( DefWindowProc( ( HWND ) HB_PARHANDLE( 1 ),
+   hb_retnint( DefWindowProc( hbwapi_par_raw_HWND( 1 ),
                               hb_parni( 2 ),
                               ( WPARAM ) hb_parnint( 3 ),
                               ( LPARAM ) hb_parnint( 4 ) ) );
@@ -392,8 +392,8 @@ HB_FUNC( WVG_DEFWINDOWPROC )
 
 HB_FUNC( WVG_CALLWINDOWPROC )
 {
-   hb_retnint( CallWindowProc( ( WNDPROC ) HB_PARHANDLE( 1 ),
-                               ( HWND ) HB_PARHANDLE( 2 ),
+   hb_retnint( CallWindowProc( hbwapi_par_raw_WNDPROC( 1 ),
+                               hbwapi_par_raw_HWND( 2 ),
                                ( UINT ) hb_parni( 3 ),
                                ( WPARAM ) hb_parnint( 4 ),
                                ( LPARAM ) hb_parnint( 5 ) ) );
@@ -403,13 +403,13 @@ HB_FUNC( WVG_CALLWINDOWPROC )
 
 HB_FUNC( WVG_TREEVIEW_EXPAND )
 {
-   hb_retl( TreeView_Expand( ( HWND ) HB_PARHANDLE( 1 ), HB_PARHANDLE( 2 ), ( hb_parl( 3 ) ? TVE_EXPAND : TVE_COLLAPSE ) ) );
+   hb_retl( TreeView_Expand( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HTREEITEM( 2 ), ( hb_parl( 3 ) ? TVE_EXPAND : TVE_COLLAPSE ) ) );
 }
 
 #if 0
 HB_FUNC( WVG_TREEVIEW_ISEXPANDED )
 {
-   hb_retl( TreeView_GetItemState( ( HWND ) HB_PARHANDLE( 1 ), HB_PARHANDLE( 2 ), ( UINT ) TVIS_EXPANDED ) );
+   hb_retl( TreeView_GetItemState( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HTREEITEM( 2 ), ( UINT ) TVIS_EXPANDED ) );
 }
 #endif
 
@@ -417,7 +417,7 @@ HB_FUNC( WVG_TREEVIEW_ISEXPANDED )
 
 HB_FUNC( WVG_LBGETTEXT )
 {
-   HWND hWnd = ( HWND ) HB_PARHANDLE( 1 );
+   HWND hWnd = hbwapi_par_raw_HWND( 1 );
    int iIndex = hb_parni( 2 );
    int iLen = ListBox_GetTextLen( hWnd, iIndex );
    LPTSTR szText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
@@ -429,26 +429,26 @@ HB_FUNC( WVG_LBGETTEXT )
 
 HB_FUNC( WVG_LBGETCURSEL )
 {
-   hb_retni( ListBox_GetCurSel( ( HWND ) HB_PARHANDLE( 1 ) ) );
+   hb_retni( ListBox_GetCurSel( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 HB_FUNC( WVG_LBSETCURSEL )
 {
-   hb_retni( ListBox_SetCurSel( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
+   hb_retni( ListBox_SetCurSel( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ) );
 }
 
 /* Buttons */
 
 HB_FUNC( WVG_BUTTON_GETCHECK )
 {
-   hb_retnl( Button_GetCheck( ( HWND ) HB_PARHANDLE( 1 ) ) );
+   hb_retnl( Button_GetCheck( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 /* wvg_SetDCBrushColor( hDC, nRGB ) */
 HB_FUNC( WVG_SETDCBRUSHCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   hbwapi_ret_COLORREF( SetDCBrushColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( SetDCBrushColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
    hbwapi_ret_COLORREF( 0 );
 #endif
@@ -458,7 +458,7 @@ HB_FUNC( WVG_SETDCBRUSHCOLOR )
 HB_FUNC( WVG_SETDCPENCOLOR )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   hbwapi_ret_COLORREF( SetDCPenColor( ( HDC ) HB_PARHANDLE( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( SetDCPenColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
    hbwapi_ret_COLORREF( 0 );
 #endif
@@ -467,61 +467,61 @@ HB_FUNC( WVG_SETDCPENCOLOR )
 /* wvg_GetCurrentObject( hDC, nObjType ) */
 HB_FUNC( WVG_GETCURRENTOBJECT )
 {
-   HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
+   HB_RETHANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ) ) );
 }
 
 /* wvg_GetCurrentBrush( hDC ) */
 HB_FUNC( WVG_GETCURRENTBRUSH )
 {
-   HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), OBJ_BRUSH ) );
+   HB_RETHANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), OBJ_BRUSH ) );
 }
 
 /* wvg_GetCurrentFont( hDC ) */
 HB_FUNC( WVG_GETCURRENTFONT )
 {
-   HB_RETHANDLE( GetCurrentObject( ( HDC ) HB_PARHANDLE( 1 ), OBJ_FONT ) );
+   HB_RETHANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), OBJ_FONT ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSTOBACK )
 {
-   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_BOTTOM, 0, 0, 0, 0,
+   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), HWND_BOTTOM, 0, 0, 0, 0,
                           SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSTOTOP )
 {
-   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_TOP, 0, 0, 0, 0,
+   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), HWND_TOP, 0, 0, 0, 0,
                           SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
 }
 
 HB_FUNC( WVG_SETWINDOWSIZE )
 {
-   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), NULL, 0, 0, hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), NULL, 0, 0, hb_parni( 2 ), hb_parni( 3 ),
                           hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE  ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSITION )
 {
-   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ), 0, 0,
+   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ), 0, 0,
                           hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSANDSIZE )
 {
-   hb_retl( SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
+   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
                           hb_parni( 4 ), hb_parni( 5 ),
                           ( hb_parl( 6 ) ? 0 : SWP_NOREDRAW ) | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED ) );
 }
 
 HB_FUNC( WVG_POSTMESSAGE )
 {
-   hb_retl( PostMessage( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), ( WPARAM ) hb_parni( 3 ), ( LPARAM ) hb_parni( 4 ) ) );
+   hb_retl( PostMessage( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( WPARAM ) hb_parni( 3 ), ( LPARAM ) hb_parni( 4 ) ) );
 }
 
 HB_FUNC( WVG_FORCEWINDOWTOTOP )
 {
-   SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
-   SetWindowPos( ( HWND ) HB_PARHANDLE( 1 ), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
+   SetWindowPos( hbwapi_par_raw_HWND( 1 ), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
+   SetWindowPos( hbwapi_par_raw_HWND( 1 ), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
 }
 
 /* wvg_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] ) */

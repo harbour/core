@@ -435,12 +435,6 @@ typedef struct
 
 } WVW_GLO, * PWVW_GLO;
 
-#define HB_ISHANDLE( n )              hbwapi_is_HANDLE( n )
-#define HB_PARHANDLE( n )             hbwapi_par_raw_HANDLE( n )
-#define HB_PARVHANDLE( n, i )         hbwapi_parv_raw_HANDLE( n, i )
-#define HB_ITEMGETHANDLE( i )         hbwapi_itemGet_HANDLE( i )
-#define HB_ARRAYGETHANDLE( a, i )     hbwapi_arrayGet_HANDLE( a, i )
-
 #if defined( __GTWVX_RETURN_UNSAFE_POINTERS )
    #define HB_RETHANDLE( h )             hb_retnint( ( HB_PTRDIFF ) ( h ) )
    #define HB_STORHANDLE( h, n )         hb_stornint( ( HB_PTRDIFF ) ( h ), n )

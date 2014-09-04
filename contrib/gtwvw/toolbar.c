@@ -779,7 +779,7 @@ HB_FUNC( WVW_TOOLBARADDBUTTONS )
 
       if( iButtons > 0 )
       {
-         HWND hWndCtrl = ( HWND ) HB_PARHANDLE( 2 );
+         HWND hWndCtrl = hbwapi_par_raw_HWND( 2 );
 
          TBBUTTON * tb   = ( TBBUTTON * ) hb_xgrab( iButtons * sizeof( TBBUTTON ) );
          void **    hStr = ( void ** ) hb_xgrab( iButtons * sizeof( void * ) );

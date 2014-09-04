@@ -581,7 +581,7 @@ HB_FUNC( WVT_SETMENU )
       RECT rc = { 0, 0, 0, 0 };
       int  height, width;
 
-      SetMenu( _s->hWnd, ( HMENU ) HB_PARHANDLE( 1 ) );
+      SetMenu( _s->hWnd, hbwapi_par_raw_HMENU( 1 ) );
 
       GetWindowRect( _s->hWnd, &wi );
       GetClientRect( _s->hWnd, &ci );
@@ -609,7 +609,7 @@ HB_FUNC( WVT_SETPOPUPMENU )
    {
       HB_RETHANDLE( _s->hPopup );
 
-      _s->hPopup = ( HMENU ) HB_PARHANDLE( 1 );
+      _s->hPopup = hbwapi_par_raw_HMENU( 1 );
    }
    else
       HB_RETHANDLE( 0 );
@@ -723,7 +723,7 @@ HB_FUNC( WVT_TRACKPOPUPMENU )
 
       GetCursorPos( &xy );
 
-      hb_retnl( TrackPopupMenu( ( HMENU ) HB_PARHANDLE( 1 ),
+      hb_retnl( TrackPopupMenu( hbwapi_par_raw_HMENU( 1 ),
                                 TPM_CENTERALIGN | TPM_RETURNCMD,
                                 xy.x,
                                 xy.y,
@@ -1007,12 +1007,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             iType = 1;
          }
 
-         if( HB_ISHANDLE( 3 ) )
+         if( hbwapi_is_HANDLE( 3 ) )
             /* argument 1 is already unicode compliant, so no conversion */
             hDlg = CreateDialogIndirect( GetModuleHandle( NULL ),
                                          ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? _s->hWnd : NULL,
-                                         ( DLGPROC ) HB_PARHANDLE( 3 ) );
+                                         hbwapi_par_raw_DLGPROC( 3 ) );
          else
          {
             switch( iResource )
@@ -1104,7 +1104,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          PHB_DYNS   pExecSym;
          int        iResource = hb_parni( 4 );
          HB_PTRDIFF iResult   = 0;
-         HWND       hParent   = HB_ISHANDLE( 5 ) ? ( HWND ) HB_PARHANDLE( 5 ) : _s->hWnd;
+         HWND       hParent   = hbwapi_is_HANDLE( 5 ) ? hbwapi_par_raw_HWND( 5 ) : _s->hWnd;
 
          if( HB_IS_EVALITEM( pFirst ) )
          {
@@ -1170,38 +1170,38 @@ HB_FUNC( WVT_LBADDSTRING )
 {
    void * hText;
 
-   hb_retni( ListBox_AddString( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), HB_PARSTR( 3, &hText, NULL ) ) );
+   hb_retni( ListBox_AddString( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), HB_PARSTR( 3, &hText, NULL ) ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
-   hb_retni( ListBox_GetCount( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) ) );
+   hb_retni( ListBox_GetCount( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ) ) );
 }
 
 HB_FUNC( WVT_LBDELETESTRING )
 {
-   hb_retni( ListBox_DeleteString( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
+   hb_retni( ListBox_DeleteString( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_LBSETCURSEL )
 {
-   hb_retni( ListBox_SetCurSel( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
+   hb_retni( ListBox_SetCurSel( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_CBADDSTRING )
 {
    void * hText;
 
-   hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) ) );
+   hb_retni( ( int ) SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) ) );
 
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_CBSETCURSEL )
 {
-   hb_retni( ( int ) SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 ) );
+   hb_retni( ( int ) SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 ) );
 }
 
 /* wvt_DlgSetIcon( hDlg, ncIcon ) */
@@ -1223,8 +1223,8 @@ HB_FUNC( WVT_DLGSETICON )
 
    if( hIcon )
    {
-      SendMessage( ( HWND ) HB_PARHANDLE( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
-      SendMessage( ( HWND ) HB_PARHANDLE( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
+      SendMessage( hbwapi_par_raw_HWND( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
+      SendMessage( hbwapi_par_raw_HWND( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
    }
 
    HB_RETHANDLE( hIcon );
