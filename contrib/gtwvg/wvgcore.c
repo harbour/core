@@ -2590,10 +2590,10 @@ HB_FUNC( WVT_CREATEFONT )
       HB_STRNCPY( lf.lfFaceName, HB_ISCHAR( 1 ) ? HB_PARSTR( 1, &hText, NULL ) : _s->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
 
-      HB_RETHANDLE( CreateFontIndirect( &lf ) );
+      hbwapi_ret_raw_HANDLE( CreateFontIndirect( &lf ) );
    }
    else
-      HB_RETHANDLE( 0 );
+      hbwapi_ret_raw_HANDLE( 0 );
 }
 
 /* wvt_LoadPicture( nSlot, cFilePic ) */
@@ -2643,10 +2643,10 @@ HB_FUNC( WVT_LOADPICTUREEX )
 {
 #if ! defined( HB_OS_WIN_CE )
    void * hImage;
-   HB_RETHANDLE( hb_wvt_gtLoadPicture( HB_PARSTR( 1, &hImage, NULL ) ) );
+   hbwapi_ret_raw_HANDLE( hb_wvt_gtLoadPicture( HB_PARSTR( 1, &hImage, NULL ) ) );
    hb_strfree( hImage );
 #else
-   HB_RETHANDLE( 0 );
+   hbwapi_ret_raw_HANDLE( 0 );
 #endif
 }
 
@@ -2690,12 +2690,12 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
    void * hResource;
    void * hSection;
 
-   HB_RETHANDLE( hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 1, &hResource, NULL ), HB_PARSTR( 2, &hSection, NULL ) ) );
+   hbwapi_ret_raw_HANDLE( hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 1, &hResource, NULL ), HB_PARSTR( 2, &hSection, NULL ) ) );
 
    hb_strfree( hResource );
    hb_strfree( hSection );
 #else
-   HB_RETHANDLE( 0 );
+   hbwapi_ret_raw_HANDLE( 0 );
 #endif
 }
 

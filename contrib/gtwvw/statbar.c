@@ -91,10 +91,10 @@ HB_FUNC( WVW_SBCREATE )
          SendMessage( hWnd, SB_SETPARTS, 1, ( LPARAM ) &piArray );
       }
 
-      HB_RETHANDLE( hWnd );
+      hbwapi_ret_raw_HANDLE( hWnd );
    }
    else
-      HB_RETHANDLE( NULL );
+      hbwapi_ret_raw_HANDLE( NULL );
 }
 
 /* wvw_sbDestroy( [nWinNum] )

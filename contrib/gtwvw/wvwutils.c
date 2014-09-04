@@ -53,7 +53,7 @@
 
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
-   HB_RETHANDLE( GetStockObject( hb_parni( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( GetStockObject( hb_parni( 1 ) ) );
 }
 
 /* removed from GTWVT, so we remove it from here also. I really don't like doing it... */
@@ -64,12 +64,12 @@ HB_FUNC( WVW_DELETEOBJECT )
 
 HB_FUNC( WIN_SELECTOBJECT )
 {
-   HB_RETHANDLE( SelectObject( hbwapi_par_raw_HDC( 1 ), hbwapi_par_raw_HGDIOBJ( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( SelectObject( hbwapi_par_raw_HDC( 1 ), hbwapi_par_raw_HGDIOBJ( 2 ) ) );
 }
 
 HB_FUNC( WIN_GETDC )
 {
-   HB_RETHANDLE( GetDC( hbwapi_par_raw_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( GetDC( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 HB_FUNC( WIN_RELEASEDC )
@@ -114,7 +114,7 @@ HB_FUNC( WVW_GBCREATE )
    else
       hb_retni( 0 );
 
-   HB_STORHANDLE( hWnd, 12 );
+   hbwapi_stor_HANDLE( hWnd, 12 );
 }
 
 /* BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE
@@ -155,7 +155,7 @@ HB_FUNC( WVW_RBCREATE )
    else
       hb_retni( 0 );
 
-   HB_STORHANDLE( hWnd, 12 );
+   hbwapi_stor_HANDLE( hWnd, 12 );
 }
 
 HB_FUNC( WVW_SETCONTROLTEXT )
@@ -303,10 +303,10 @@ HB_FUNC( WVW_CREATEIMAGELIST )
          DeleteObject( hbmp );
       }
 
-      HB_RETHANDLE( himl );
+      hbwapi_ret_raw_HANDLE( himl );
    }
    else
-      HB_RETHANDLE( NULL );
+      hbwapi_ret_raw_HANDLE( NULL );
 }
 
 HB_FUNC( WVW_IMAGELIST_ADD )
@@ -378,9 +378,9 @@ HB_FUNC( WVW_OPENIMAGE )
          HBITMAP hBitmap;
 
          if( HB_VTBL( pPicture )->get_Handle( HB_THIS_ ( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK )
-            HB_RETHANDLE( CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
+            hbwapi_ret_raw_HANDLE( CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
          else
-            HB_RETHANDLE( NULL );
+            hbwapi_ret_raw_HANDLE( NULL );
 
          HB_VTBL( pPicture )->Release( HB_THIS( pPicture ) );
 
@@ -388,7 +388,7 @@ HB_FUNC( WVW_OPENIMAGE )
       }
    }
 
-   HB_RETHANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( NULL );
 }
 
 HB_FUNC( WVW_OPENBITMAP )
@@ -480,7 +480,7 @@ HB_FUNC( WVW_OPENBITMAP )
       hb_fsClose( fhnd );
    }
 
-   HB_RETHANDLE( hbm );
+   hbwapi_ret_raw_HANDLE( hbm );
 }
 
 /* win_CreateFont( fontName, nWidth, hHeight, [fnWeight], [fdwCharSet],
@@ -489,7 +489,7 @@ HB_FUNC( WIN_CREATEFONT )
 {
    void * hName;
 
-   HB_RETHANDLE(
+   hbwapi_ret_raw_HANDLE(
       CreateFont(
          hb_parni( 3 ),                     /* logical height of font */
          hb_parni( 2 ),                     /* logical average character width */
@@ -544,10 +544,10 @@ HB_FUNC( WVW_CREATEFONT )
       else
          HB_STRNCPY( lf.lfFaceName, wvw_top->fontFace, HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
-      HB_RETHANDLE( CreateFontIndirect( &lf ) );
+      hbwapi_ret_raw_HANDLE( CreateFontIndirect( &lf ) );
    }
    else
-      HB_RETHANDLE( NULL );
+      hbwapi_ret_raw_HANDLE( NULL );
 }
 
 HB_FUNC( WVW_SELECTFONT )
@@ -580,7 +580,7 @@ HB_FUNC( WVW_SELECTFONT )
          return a handle identifying that font. */
       HFONT hfont = CreateFontIndirect( cf.lpLogFont );
 
-      HB_ARRAYSETHANDLE( aMetr, 1, hfont );
+      hbwapi_arraySet_HANDLE( aMetr, 1, hfont );
       HB_ARRAYSETSTR( aMetr, 2, lf.lfFaceName );
       hb_arraySetNL( aMetr, 3, lf.lfWidth );
       hb_arraySetNL( aMetr, 4, lf.lfHeight );
@@ -680,7 +680,7 @@ HB_FUNC( WVW_WINDOW2BITMAP )
    DeleteDC( hDCmem );
    DeleteDC( hDC );
 
-   HB_RETHANDLE( hBitmap );
+   hbwapi_ret_raw_HANDLE( hBitmap );
 }
 
 /* wvw_SetMaxBMCache( [nMax] )
@@ -1201,7 +1201,7 @@ HB_FUNC( WVW_DLGSETICON )
       SendMessage( hbwapi_par_raw_HWND( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );     /* Set Task List Icon */
    }
 
-   HB_RETHANDLE( hIcon );
+   hbwapi_ret_raw_HANDLE( hIcon );
 }
 
 /* GUI Drawing Functions */
@@ -1309,12 +1309,12 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
             wvw->a.hDlgModeless[ iIndex ] = NULL;
          }
 
-         HB_RETHANDLE( hDlg );
+         hbwapi_ret_raw_HANDLE( hDlg );
          return;
       }
    }
 
-   HB_RETHANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( NULL );
 }
 
 HB_FUNC( WVW_CREATEDIALOGMODAL )
@@ -1434,7 +1434,7 @@ HB_FUNC( WVW_SAVESCREEN )
 
       hb_arraySetNI( info, 1, iWidth );
       hb_arraySetNI( info, 2, iHeight );
-      HB_ARRAYSETHANDLE( info, 3, hBmp );
+      hbwapi_arraySet_HANDLE( info, 3, hBmp );
 
       hb_itemReturnRelease( info );
    }
@@ -1592,21 +1592,21 @@ HB_FUNC( WVW_SETICON )
       void * hName;
 
       if( HB_ISNUM( 2 ) && HB_ISCHAR( 3 ) )
-         HB_RETHANDLE( hb_gt_wvw_SetWindowIcon( wvw_win, hb_parni( 2 ), HB_PARSTRDEF( 3, &hName, NULL ) ) );
+         hbwapi_ret_raw_HANDLE( hb_gt_wvw_SetWindowIcon( wvw_win, hb_parni( 2 ), HB_PARSTRDEF( 3, &hName, NULL ) ) );
       else
-         HB_RETHANDLE( hb_gt_wvw_SetWindowIconFromFile( wvw_win, HB_PARSTRDEF( 2, &hName, NULL ) ) );
+         hbwapi_ret_raw_HANDLE( hb_gt_wvw_SetWindowIconFromFile( wvw_win, HB_PARSTRDEF( 2, &hName, NULL ) ) );
 
       hb_strfree( hName );
    }
    else
-      HB_RETHANDLE( NULL );
+      hbwapi_ret_raw_HANDLE( NULL );
 }
 
 HB_FUNC( WVW_GETWINDOWHANDLE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   HB_RETHANDLE( wvw_win ? wvw_win->hWnd : NULL );
+   hbwapi_ret_raw_HANDLE( wvw_win ? wvw_win->hWnd : NULL );
 }
 
 HB_FUNC( WVW_SETCODEPAGE )

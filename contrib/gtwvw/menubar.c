@@ -66,10 +66,10 @@ HB_FUNC( WVW_SETPOPUPMENU )
 
       wvw_win->hPopup = hbwapi_par_raw_HMENU( 2 );
 
-      HB_RETHANDLE( hPopup );
+      hbwapi_ret_raw_HANDLE( hPopup );
    }
    else
-      HB_RETHANDLE( NULL );
+      hbwapi_ret_raw_HANDLE( NULL );
 }
 
 HB_FUNC( WVW_GETLASTMENUEVENT )

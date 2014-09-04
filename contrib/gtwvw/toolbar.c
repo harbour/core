@@ -491,7 +491,7 @@ HB_FUNC( WVW_TBCREATE )
 
          hb_gt_wvw_ResetWindow( wvw_win );
 
-         HB_RETHANDLE( hWnd );
+         hbwapi_ret_raw_HANDLE( hWnd );
          return;
       }
       else
@@ -502,7 +502,7 @@ HB_FUNC( WVW_TBCREATE )
    hb_stornl( 0, 8 );
    hb_stornl( 0, 9 );
 
-   HB_RETHANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( NULL );
 }
 
 /* wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType, ;

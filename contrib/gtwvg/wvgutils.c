@@ -607,12 +607,12 @@ HB_FUNC( WVT_SETPOPUPMENU )
 
    if( _s )
    {
-      HB_RETHANDLE( _s->hPopup );
+      hbwapi_ret_raw_HANDLE( _s->hPopup );
 
       _s->hPopup = hbwapi_par_raw_HMENU( 1 );
    }
    else
-      HB_RETHANDLE( 0 );
+      hbwapi_ret_raw_HANDLE( 0 );
 }
 
 HB_FUNC( WVT_GETLASTMENUEVENT )
@@ -742,11 +742,11 @@ HB_FUNC( WVT_GETMENU )
 
    if( _s )
    {
-      HB_RETHANDLE( GetMenu( _s->hWnd ) );
+      hbwapi_ret_raw_HANDLE( GetMenu( _s->hWnd ) );
       return;
    }
 #endif
-   HB_RETHANDLE( 0 );
+   hbwapi_ret_raw_HANDLE( 0 );
 }
 
 /* Modeless Dialogs Implementation */
@@ -785,7 +785,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wPar
                {
                   hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
                   hb_vmPushNil();
-                  HB_VMPUSHHANDLE( hDlg );
+                  hbwapi_vmPush_HANDLE( hDlg );
                   hb_vmPushNumInt( message );
                   hb_vmPushNumInt( wParam );
                   hb_vmPushNumInt( lParam );
@@ -803,7 +803,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wPar
                   {
                      hb_vmPushEvalSym();
                      hb_vmPush( _s->pFunc[ iIndex ] );
-                     HB_VMPUSHHANDLE( hDlg );
+                     hbwapi_vmPush_HANDLE( hDlg );
                      hb_vmPushNumInt( message );
                      hb_vmPushNumInt( wParam );
                      hb_vmPushNumInt( lParam );
@@ -897,7 +897,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wPar
                {
                   hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
                   hb_vmPushNil();
-                  HB_VMPUSHHANDLE( hDlg );
+                  hbwapi_vmPush_HANDLE( hDlg );
                   hb_vmPushNumInt( message );
                   hb_vmPushNumInt( wParam );
                   hb_vmPushNumInt( lParam );
@@ -915,7 +915,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wPar
                   {
                      hb_vmPushEvalSym();
                      hb_vmPush( pFunc );
-                     HB_VMPUSHHANDLE( hDlg );
+                     hbwapi_vmPush_HANDLE( hDlg );
                      hb_vmPushNumInt( message );
                      hb_vmPushNumInt( wParam );
                      hb_vmPushNumInt( lParam );
@@ -1074,12 +1074,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             _s->hDlgModeless[ iIndex ] = NULL;
          }
 
-         HB_RETHANDLE( hDlg );
+         hbwapi_ret_raw_HANDLE( hDlg );
          return;
       }
    }
 
-   HB_RETHANDLE( 0 );
+   hbwapi_ret_raw_HANDLE( 0 );
 }
 
 HB_FUNC( WVT_CREATEDIALOGMODAL )
@@ -1227,7 +1227,7 @@ HB_FUNC( WVT_DLGSETICON )
       SendMessage( hbwapi_par_raw_HWND( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
    }
 
-   HB_RETHANDLE( hIcon );
+   hbwapi_ret_raw_HANDLE( hIcon );
 }
 
 HB_FUNC( WVT_GETFONTHANDLE )
@@ -1242,10 +1242,10 @@ HB_FUNC( WVT_GETFONTHANDLE )
       if( iSlot >= 0 && iSlot < ( int ) HB_SIZEOFARRAY( _s->pGUI->hUserFonts ) )
          hFont = _s->pGUI->hUserFonts[ iSlot ];
 
-      HB_RETHANDLE( hFont );
+      hbwapi_ret_raw_HANDLE( hFont );
    }
    else
-      HB_RETHANDLE( 0 );
+      hbwapi_ret_raw_HANDLE( 0 );
 }
 
 HB_FUNC( WVG_N2P )  /* NOTE: Unsafe: allows to pass arbitary pointers to functions, potentially causing a crash or worse. */

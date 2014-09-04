@@ -513,7 +513,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
       TV_ITEM   item;
       HTREEITEM hParent;
 
-      HB_STORHANDLE( hSelected, 6 );
+      hbwapi_stor_HANDLE( hSelected, 6 );
 
       item.mask       = TVIF_HANDLE | TVIF_TEXT | TVIF_IMAGE;
       item.hItem      = hSelected;
@@ -528,7 +528,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
          hb_storc( NULL, 4 );
 
       hParent = TreeView_GetParent( hbwapi_par_raw_HWND( 1 ), hSelected );
-      HB_STORHANDLE( hParent, 5 );
+      hbwapi_stor_HANDLE( hParent, 5 );
 
       item.mask       = TVIF_HANDLE | TVIF_TEXT;
       item.hItem      = hParent;
@@ -546,8 +546,8 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
    {
       hb_storc( NULL, 3 );
       hb_storc( NULL, 4 );
-      HB_STORHANDLE( NULL, 5 );
-      HB_STORHANDLE( NULL, 6 );
+      hbwapi_stor_HANDLE( NULL, 5 );
+      hbwapi_stor_HANDLE( NULL, 6 );
    }
 }
 
@@ -568,7 +568,7 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
    tvis.hParent = hbwapi_par_raw_HTREEITEM( 2 );
    HB_WIN_V_UNION( tvis, item.pszText ) = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   HB_RETHANDLE( TreeView_InsertItem( hbwapi_par_raw_HWND( 1 ), &tvis ) );
+   hbwapi_ret_raw_HANDLE( TreeView_InsertItem( hbwapi_par_raw_HWND( 1 ), &tvis ) );
 
    hb_strfree( hText );
 }
@@ -670,7 +670,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
    {
       hb_vmPushEvalSym();
       hb_vmPush( block );
-      HB_VMPUSHHANDLE( hwnd );
+      hbwapi_vmPush_HANDLE( hwnd );
       hb_vmPushNumInt( msg );
       hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
       hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
@@ -992,7 +992,7 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
          hb_vmPushEvalSym();
          hb_vmPush( pBlock );
       }
-      HB_VMPUSHHANDLE( hwnd );
+      hbwapi_vmPush_HANDLE( hwnd );
       hb_vmPushNumInt( msg );
       hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
       hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
@@ -1021,7 +1021,7 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
    oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) ControlWindowProcedure );
 #endif
 
-   HB_RETHANDLE( oldProc );
+   hbwapi_ret_raw_HANDLE( oldProc );
 }
 
 HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
@@ -1059,12 +1059,12 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 
       if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
       {
-         HB_RETHANDLE( hwndTip );
+         hbwapi_ret_raw_HANDLE( hwndTip );
          return;
       }
    }
 
-   HB_RETHANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( NULL );
 }
 
 HB_FUNC( WVG_SETTOOLTIPTEXT )

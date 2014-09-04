@@ -264,7 +264,7 @@ HB_FUNC( WVW_GET_HND_WINDOW )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
-   HB_RETHANDLE( wvw_win ? wvw_win->hWnd : NULL );
+   hbwapi_ret_raw_HANDLE( wvw_win ? wvw_win->hWnd : NULL );
 }
 
 /* wvw_nNumWindows()

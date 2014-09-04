@@ -1688,7 +1688,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
             {
                hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
                hb_vmPushNil();
-               HB_VMPUSHHANDLE( hDlg );
+               hbwapi_vmPush_HANDLE( hDlg );
                hb_vmPushNumInt( message );
                hb_vmPushNumInt( wParam );
                hb_vmPushNumInt( lParam );
@@ -1703,7 +1703,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
 #if 0
             if( HB_IS_EVALITEM( pFunc ) )
             {
-               PHB_ITEM hihDlg    = HB_ITEMPUTHANDLE( NULL, hDlg );
+               PHB_ITEM hihDlg    = hbwapi_itemPut_HANDLE( NULL, hDlg );
                PHB_ITEM himessage = hb_itemPutNInt( NULL, message );
                PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, wParam );
                PHB_ITEM hilParam  = hb_itemPutNInt( NULL, lParam );
@@ -1724,7 +1724,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
             {
                hb_vmPushEvalSym();
                hb_vmPush( pFunc );
-               HB_VMPUSHHANDLE( hDlg );
+               hbwapi_vmPush_HANDLE( hDlg );
                hb_vmPushNumInt( message );
                hb_vmPushNumInt( wParam );
                hb_vmPushNumInt( lParam );
@@ -1814,7 +1814,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
                hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
 
                hb_vmPushNil();
-               HB_VMPUSHHANDLE( hDlg );
+               hbwapi_vmPush_HANDLE( hDlg );
                hb_vmPushNumInt( message );
                hb_vmPushNumInt( wParam );
                hb_vmPushNumInt( lParam );
@@ -1829,7 +1829,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
 #if 0
             if( HB_IS_EVALITEM( pFunc ) )
             {
-               PHB_ITEM hihDlg    = HB_ITEMPUTHANDLE( NULL, hDlg );
+               PHB_ITEM hihDlg    = hbwapi_itemPut_HANDLE( NULL, hDlg );
                PHB_ITEM himessage = hb_itemPutNInt( NULL, message );
                PHB_ITEM hiwParam  = hb_itemPutNInt( NULL, wParam );
                PHB_ITEM hilParam  = hb_itemPutNInt( NULL, lParam );
@@ -1850,7 +1850,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
             {
                hb_vmPushEvalSym();
                hb_vmPush( pFunc );
-               HB_VMPUSHHANDLE( hDlg );
+               hbwapi_vmPush_HANDLE( hDlg );
                hb_vmPushNumInt( message );
                hb_vmPushNumInt( wParam );
                hb_vmPushNumInt( lParam );
@@ -2303,7 +2303,7 @@ static void xUserTimerNow( int nWin, HWND hWnd, UINT message, WPARAM wParam, LPA
          hb_vmPushDynSym( s_wvw->a.pSymWVW_TIMER );
          hb_vmPushNil();
          hb_vmPushInteger( nWin );
-         HB_VMPUSHHANDLE( hWnd );
+         hbwapi_vmPush_HANDLE( hWnd );
          hb_vmPushNumInt( message );
          hb_vmPushNumInt( wParam  );
          hb_vmPushNumInt( lParam  );
@@ -2468,7 +2468,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             hb_vmPushDynSym( s_wvw->a.pSymWVW_MENUSELECT );
             hb_vmPushNil();
             hb_vmPushInteger( nWin );
-            HB_VMPUSHHANDLE( hWnd );
+            hbwapi_vmPush_HANDLE( hWnd );
             hb_vmPushNumInt( message );
             hb_vmPushNumInt( wParam  );
             hb_vmPushNumInt( lParam  );
@@ -2757,7 +2757,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                hb_vmPushDynSym( s_wvw->a.pSymWVW_SETFOCUS );
                hb_vmPushNil();
                hb_vmPushInteger( nWin );
-               HB_VMPUSHHANDLE( hWnd );
+               hbwapi_vmPush_HANDLE( hWnd );
                hb_vmDo( 2 );
                hb_vmRequestRestore();
             }
@@ -2779,7 +2779,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             hb_vmPushDynSym( s_wvw->a.pSymWVW_KILLFOCUS );
             hb_vmPushNil();
             hb_vmPushInteger( nWin );
-            HB_VMPUSHHANDLE( hWnd );
+            hbwapi_vmPush_HANDLE( hWnd );
             hb_vmDo( 2 );
             hb_vmRequestRestore();
          }
@@ -3225,7 +3225,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                hb_vmPushDynSym( s_wvw->a.pSymWVW_SIZE );
                hb_vmPushNil();
                hb_vmPushInteger( nWin );
-               HB_VMPUSHHANDLE( hWnd );
+               hbwapi_vmPush_HANDLE( hWnd );
                hb_vmPushNumInt( message );
                hb_vmPushNumInt( wParam  );
                hb_vmPushNumInt( lParam  );
@@ -4610,7 +4610,7 @@ static void hb_gt_wvwInputNotAllowed( int nWin, UINT message, WPARAM wParam, LPA
          hb_vmPushDynSym( s_wvw->a.pSymWVW_INPUTFOCUS );
          hb_vmPushNil();
          hb_vmPushInteger( nWin );
-         HB_VMPUSHHANDLE( s_wvw->pWin[ nWin ]->hWnd );
+         hbwapi_vmPush_HANDLE( s_wvw->pWin[ nWin ]->hWnd );
          hb_vmPushNumInt( message );
          hb_vmPushNumInt( wParam  );
          hb_vmPushNumInt( lParam  );

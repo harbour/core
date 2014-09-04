@@ -67,7 +67,7 @@
 
 HB_FUNC( WVG_GETSTOCKOBJECT )
 {
-   HB_RETHANDLE( GetStockObject( hb_parni( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( GetStockObject( hb_parni( 1 ) ) );
 }
 
 HB_FUNC( WVG_DELETEOBJECT )
@@ -77,7 +77,7 @@ HB_FUNC( WVG_DELETEOBJECT )
 
 HB_FUNC( WVG_SELECTOBJECT )
 {
-   HB_RETHANDLE( SelectObject( hbwapi_par_raw_HDC( 1 ), hbwapi_par_raw_HGDIOBJ( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( SelectObject( hbwapi_par_raw_HDC( 1 ), hbwapi_par_raw_HGDIOBJ( 2 ) ) );
 }
 
 /* wvg_LoadIcon( ncIcon ) */
@@ -94,7 +94,7 @@ HB_FUNC( WVG_LOADICON )
       hb_strfree( hBuffer );
    }
 
-   HB_RETHANDLE( hIcon );
+   hbwapi_ret_raw_HANDLE( hIcon );
 }
 
 /* wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
@@ -134,7 +134,7 @@ HB_FUNC( WVG_LOADIMAGE )
    }
 
    hb_strfree( hBuffer );
-   HB_RETHANDLE( hImage );
+   hbwapi_ret_raw_HANDLE( hImage );
 }
 
 /* wvg_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage, lDoNotScale ) in Pixels */
@@ -150,7 +150,7 @@ HB_FUNC( WVG_DRAWIMAGE )
 
 HB_FUNC( WVG_GETDC )
 {
-   HB_RETHANDLE( GetDC( hbwapi_par_raw_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( GetDC( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 HB_FUNC( WVG_RELEASEDC )
@@ -166,9 +166,9 @@ HB_FUNC( WVG_CREATEBRUSH )
    lb.lbColor = hbwapi_par_COLORREF( 2 );
    lb.lbHatch = hb_parni( 3 );
 #if ! defined( HB_OS_WIN_CE )
-   HB_RETHANDLE( CreateBrushIndirect( &lb ) );
+   hbwapi_ret_raw_HANDLE( CreateBrushIndirect( &lb ) );
 #else
-   HB_RETHANDLE( CreateSolidBrush( lb.lbColor ) );
+   hbwapi_ret_raw_HANDLE( CreateSolidBrush( lb.lbColor ) );
 #endif
 }
 
@@ -221,9 +221,9 @@ HB_FUNC( WVG_FINDWINDOW )
    hb_strfree( hText );
 
    if( hwnd )
-      HB_RETHANDLE( hwnd );
+      hbwapi_ret_raw_HANDLE( hwnd );
    else
-      HB_RETHANDLE( -1 );
+      hbwapi_ret_raw_HANDLE( -1 );
 }
 
 /* Menu manipulations */
@@ -351,7 +351,7 @@ HB_FUNC( WVG_CREATEWINDOWEX )
    void * hClassName;
    void * hWinName;
 
-   HB_RETHANDLE( CreateWindowEx(
+   hbwapi_ret_raw_HANDLE( CreateWindowEx(
       ( DWORD ) hb_parnl( 1 ),
       HB_PARSTR( 2, &hClassName, NULL ),
       HB_PARSTR( 3, &hWinName, NULL ),
@@ -379,7 +379,7 @@ HB_FUNC( WVG_SETWNDPROC )
    oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) wndProc );
 #endif
 
-   HB_RETHANDLE( oldProc );
+   hbwapi_ret_raw_HANDLE( oldProc );
 }
 
 HB_FUNC( WVG_DEFWINDOWPROC )
@@ -467,19 +467,19 @@ HB_FUNC( WVG_SETDCPENCOLOR )
 /* wvg_GetCurrentObject( hDC, nObjType ) */
 HB_FUNC( WVG_GETCURRENTOBJECT )
 {
-   HB_RETHANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ) ) );
 }
 
 /* wvg_GetCurrentBrush( hDC ) */
 HB_FUNC( WVG_GETCURRENTBRUSH )
 {
-   HB_RETHANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), OBJ_BRUSH ) );
+   hbwapi_ret_raw_HANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), OBJ_BRUSH ) );
 }
 
 /* wvg_GetCurrentFont( hDC ) */
 HB_FUNC( WVG_GETCURRENTFONT )
 {
-   HB_RETHANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), OBJ_FONT ) );
+   hbwapi_ret_raw_HANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), OBJ_FONT ) );
 }
 
 HB_FUNC( WVG_SETWINDOWPOSTOBACK )
@@ -803,9 +803,9 @@ HB_FUNC( WVG_SENDCBMESSAGE )
             hb_arraySet( pCbi, 2, pRc2 );
 
             hb_arraySetNInt( pCbi, 3, cbi.stateButton );
-            HB_ARRAYSETHANDLE( pCbi, 4, cbi.hwndCombo );
-            HB_ARRAYSETHANDLE( pCbi, 5, cbi.hwndItem );
-            HB_ARRAYSETHANDLE( pCbi, 6, cbi.hwndList );
+            hbwapi_arraySet_HANDLE( pCbi, 4, cbi.hwndCombo );
+            hbwapi_arraySet_HANDLE( pCbi, 5, cbi.hwndItem );
+            hbwapi_arraySet_HANDLE( pCbi, 6, cbi.hwndList );
 
             hb_itemReturnRelease( pCbi );
             hb_itemRelease( pRc1 );
