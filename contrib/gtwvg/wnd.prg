@@ -131,7 +131,7 @@ CREATE CLASS WvgWindow INHERIT WvgPartHandler
    VAR    closable                              INIT .T.
    VAR    resizable                             INIT .T.
    VAR    resizeMode                            INIT 0
-   VAR    style                                 INIT WS_OVERLAPPEDWINDOW
+   VAR    style                                 INIT WIN_WS_OVERLAPPEDWINDOW
    VAR    exStyle                               INIT 0
    VAR    lModal                                INIT .F.
    VAR    pGTp
@@ -426,7 +426,7 @@ METHOD WvgWindow:enable()
 METHOD WvgWindow:hide()
 
    IF wvg_IsWindow( ::hWnd )
-      wvg_ShowWindow( ::hWnd, SW_HIDE )
+      wvg_ShowWindow( ::hWnd, WIN_SW_HIDE )
       ::is_hidden := .T.
    ENDIF
 
@@ -449,7 +449,7 @@ METHOD WvgWindow:setColorBG( nRGB )
       nRGB := wvt_GetRGBColorByString( nRGB, 1 )
    ENDIF
    IF HB_ISNUMERIC( nRGB )
-      hBrush := wvg_CreateBrush( BS_SOLID, nRGB, 0 )
+      hBrush := wvg_CreateBrush( WIN_BS_SOLID, nRGB, 0 )
       IF ! Empty( hBrush )
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
@@ -562,7 +562,7 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
 
 METHOD WvgWindow:show()
 
-   wvg_ShowWindow( ::hWnd, SW_NORMAL )
+   wvg_ShowWindow( ::hWnd, WIN_SW_NORMAL )
    ::is_hidden      := .F.
    ::lHasInputFocus := .T.
 

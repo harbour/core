@@ -105,7 +105,7 @@ METHOD WvgSLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD
+   ::style       := WIN_WS_CHILD
    ::className   := "EDIT"
    ::objType     := objTypeSLE
 
@@ -121,7 +121,7 @@ METHOD WvgSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::style += ES_AUTOHSCROLL
 
    IF ::tabStop
-      ::style += WS_TABSTOP
+      ::style += WIN_WS_TABSTOP
    ENDIF
    IF ::autoSize
 
@@ -133,7 +133,7 @@ METHOD WvgSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::style += ES_PASSWORD
    ENDIF
    IF ::border
-      ::style += WS_BORDER
+      ::style += WIN_WS_BORDER
    ENDIF
 
    ::oParent:addChild( Self )
@@ -218,7 +218,7 @@ METHOD WvgSLE:handleEvent( nMessage, aNM )
             IF HB_ISEVALITEM( ::sl_returnPressed )
                Eval( ::sl_returnPressed, , , Self )
             ENDIF
-         CASE aNM[ 2 ] == VK_TAB
+         CASE aNM[ 2 ] == WIN_VK_TAB
             IF ::isParentCrt()
                ::oParent:setFocus()
                RETURN EVENT_HANDLED

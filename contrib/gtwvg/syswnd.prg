@@ -297,7 +297,7 @@ METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
          wvg_SetWindowText( ::hWnd, ::title )
       ENDIF
       IF ! ::buttonCancel
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, IDCANCEL ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, WIN_IDCANCEL ), .F. )
       ENDIF
       IF ! ::buttonApply
          wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1026 ), .F. )
@@ -336,13 +336,13 @@ METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
 
       DO CASE
 
-      CASE nL == IDOK
+      CASE nL == WIN_IDOK
          ::ok := .T.
          IF HB_ISEVALITEM( ::sl_activateOk )
             Eval( ::sl_activateOk, ::GetWvgFont(), , Self )
          ENDIF
 
-      CASE nL == IDCANCEL
+      CASE nL == WIN_IDCANCEL
          IF HB_ISEVALITEM( ::sl_activateCancel )
             Eval( ::sl_activateCancel, , , Self )
          ENDIF
@@ -428,12 +428,12 @@ CREATE CLASS WvgFont
    VAR    widthClass                            INIT .F.
 
    VAR    bold                                  INIT .F.
-   VAR    weightClass                           INIT FW_DONTCARE
+   VAR    weightClass                           INIT WIN_FW_DONTCARE
 
    VAR    italic                                INIT .F.
    VAR    strikeout                             INIT .F.
    VAR    underscore                            INIT .F.
-   VAR    codePage                              INIT DEFAULT_CHARSET
+   VAR    codePage                              INIT WIN_DEFAULT_CHARSET
 
    VAR    fixed                                 INIT .F.
    VAR    antiAliased                           INIT .F.
@@ -519,7 +519,7 @@ METHOD WvgFont:createFont()
    ::aFontInfo[  1 ] := ::familyName
    ::aFontInfo[  2 ] := ::height
    ::aFontInfo[  3 ] := ::width
-   ::aFontInfo[  4 ] := iif( ::bold, FW_BOLD, 0 )
+   ::aFontInfo[  4 ] := iif( ::bold, WIN_FW_BOLD, 0 )
    ::aFontInfo[  5 ] := ::italic
    ::aFontInfo[  6 ] := ::underscore
    ::aFontInfo[  7 ] := ::strikeout
@@ -528,7 +528,7 @@ METHOD WvgFont:createFont()
    ::aFontInfo[ 10 ] := 0
    ::aFontInfo[ 11 ] := 0
    ::aFontInfo[ 12 ] := 0
-   ::aFontInfo[ 13 ] := DEFAULT_QUALITY
+   ::aFontInfo[ 13 ] := WIN_DEFAULT_QUALITY
    ::aFontInfo[ 14 ] := NIL
 
    aFont := wvg_FontCreate( ::aFontInfo )

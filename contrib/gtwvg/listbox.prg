@@ -123,8 +123,8 @@ METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP + WS_CLIPSIBLINGS + LBS_NOINTEGRALHEIGHT + LBS_WANTKEYBOARDINPUT
-   ::exStyle     := WS_EX_CLIENTEDGE // + WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
+   ::style       := WIN_WS_CHILD + WIN_WS_OVERLAPPED + WIN_WS_TABSTOP + WIN_WS_CLIPSIBLINGS + LBS_NOINTEGRALHEIGHT + LBS_WANTKEYBOARDINPUT
+   ::exStyle     := WIN_WS_EX_CLIENTEDGE // + WIN_WS_EX_LEFT + WIN_WS_EX_LTRREADING + WIN_WS_EX_RIGHTSCROLLBAR
    ::className   := "LISTBOX"
    ::objType     := objTypeListBox
 
@@ -135,10 +135,10 @@ METHOD WvgListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF ::horizScroll
-      ::style += WS_HSCROLL
+      ::style += WIN_WS_HSCROLL
    ENDIF
    IF ::vertScroll
-      ::style += WS_VSCROLL
+      ::style += WIN_WS_VSCROLL
    ENDIF
    IF ::multiColumn
       ::style += LBS_MULTICOLUMN

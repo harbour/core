@@ -85,7 +85,7 @@ METHOD WvgScrollBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD  /* + SBS_SIZEBOX + SBS_SIZEGRIP */
+   ::style       := WIN_WS_CHILD  /* + SBS_SIZEBOX + SBS_SIZEGRIP */
    ::className   := "SCROLLBAR"
    ::objType     := objTypeScrollBar
 

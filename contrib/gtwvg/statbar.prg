@@ -84,7 +84,7 @@ METHOD WvgStatusBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + WS_BORDER + SBARS_TOOLTIPS
+   ::style       := WIN_WS_CHILD + WIN_WS_BORDER + SBARS_TOOLTIPS
    ::className   := STATUSCLASSNAME
    ::objType     := objTypeStatusBar
 

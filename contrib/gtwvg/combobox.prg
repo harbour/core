@@ -102,9 +102,9 @@ METHOD WvgComboBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + WS_TABSTOP + WS_BORDER + WS_VSCROLL + CBS_NOINTEGRALHEIGHT + CBS_AUTOHSCROLL
+   ::style       := WIN_WS_CHILD + WIN_WS_TABSTOP + WIN_WS_BORDER + WIN_WS_VSCROLL + CBS_NOINTEGRALHEIGHT + CBS_AUTOHSCROLL
 #if 0
-   ::exStyle     := WS_EX_CLIENTEDGE
+   ::exStyle     := WIN_WS_EX_CLIENTEDGE
 #endif
 
    ::className   := "COMBOBOX"

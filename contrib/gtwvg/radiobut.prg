@@ -80,7 +80,7 @@ METHOD WvgRadioButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_AUTORADIOBUTTON
+   ::style       := WIN_WS_CHILD + BS_AUTORADIOBUTTON
    ::className   := "BUTTON"
    ::objType     := objTypeRadioButton
 

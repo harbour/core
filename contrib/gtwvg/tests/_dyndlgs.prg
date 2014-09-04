@@ -31,63 +31,63 @@ FUNCTION DynWinDialog( nInfo )
 
    LOCAL nTimerTicks
 
-   nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
+   nStyle := DS_SETFONT + WIN_WS_VISIBLE + WIN_WS_POPUP + WIN_WS_CAPTION + WIN_WS_SYSMENU + WIN_WS_THICKFRAME + WIN_WS_MINIMIZEBOX
 
    aDlg := wvt_MakeDlgTemplate( 1, 4, 21, 60, { 0, 0, 0, 0 },  ;
       "Dialog First [ " + hb_ntos( nInfo ) + " ] " + ;
       iif( nInfo % 2 == 0, "Modeless", "Modal" ), " Dialog !", nStyle )
 
    // Multi line edit control
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + ES_AUTOVSCROLL + ES_MULTILINE + ;
-      ES_WANTRETURN + WS_BORDER  + WS_VSCROLL
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + ES_AUTOVSCROLL + ES_MULTILINE + ;
+      ES_WANTRETURN + WIN_WS_BORDER  + WIN_WS_VSCROLL
    aDlg   := wvt_AddDlgItem( aDlg,  1, 2, 15, 35, {}, ID_MLE       , "EDIT"   , nStyle, /* cText, nHelpId, nExStyle */ )
 
    // Two Horz and Vert Lines
-   nStyle := WS_CHILD + WS_VISIBLE + SS_ETCHEDVERT
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + SS_ETCHEDVERT
    aDlg   := wvt_AddDlgItem( aDlg, 1, 39,  16, 1, {}, 111          , "STATIC" , nStyle )
-   nStyle := WS_CHILD + WS_VISIBLE + SS_ETCHEDHORZ
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + SS_ETCHEDHORZ
    aDlg   := wvt_AddDlgItem( aDlg, 17, 2,  1, 56, {}, 112          , "STATIC" , nStyle )
 
    // Icon
-   nStyle := WS_CHILD + WS_VISIBLE + SS_ICON //+ SS_CENTERIMAGE
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + SS_ICON //+ SS_CENTERIMAGE
    aDlg   := wvt_AddDlgItem( aDlg, 18, 2, 2, 6, {}, ID_ICO_VOUCH  , "STATIC" , nStyle, "" )
 #if 0
    // Bitmap
-   nStyle := WS_CHILD + WS_VISIBLE + SS_BITMAP + SS_REALSIZEIMAGE
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + SS_BITMAP + SS_REALSIZEIMAGE
    aDlg   := wvt_AddDlgItem( aDlg, 18, 41, 2,8, { -3, 0, 3 }, ID_STA_IMAGE, "STATIC" , nStyle, "" )
 #endif
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_AUTOCHECKBOX
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + BS_AUTOCHECKBOX
    aDlg   := wvt_AddDlgItem( aDlg, 18, 15,  1, 10, {}, ID_CHK_SATIS , "BUTTON" , nStyle, "Satisfied?" )
 
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + ES_RIGHT + ES_READONLY
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + ES_RIGHT + ES_READONLY
    aDlg   := wvt_AddDlgItem( aDlg, 18, 30,  1,  7, { 3 }, ID_EDT_TIME , "EDIT" , nStyle, "" )
 
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + LBS_NOTIFY + WS_VSCROLL + WS_BORDER
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + LBS_NOTIFY + WIN_WS_VSCROLL + WIN_WS_BORDER
    aDlg   := wvt_AddDlgItem( aDlg,  1, 41,  4, 17, {}, ID_LST_LIST  , "LISTBOX", nStyle, "ListBox"  )
 
-   nStyle := WS_CHILD + WS_VISIBLE + SS_LEFT
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + SS_LEFT
    aDlg   := wvt_AddDlgItem( aDlg,  4, 41,  1, 17, { 3, 0, 0, 0 }, -1    , "STATIC" , nStyle, "Degree"     )
-   nStyle := WS_VISIBLE + WS_TABSTOP + CBS_DROPDOWNLIST + WS_BORDER + WS_VSCROLL
+   nStyle := WIN_WS_VISIBLE + WIN_WS_TABSTOP + CBS_DROPDOWNLIST + WIN_WS_BORDER + WIN_WS_VSCROLL
    aDlg   := wvt_AddDlgItem( aDlg,  5, 41,  6, 17, {}, ID_CMB_COMBO , "COMBOBOX" , nStyle, "Combo" )
 
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_GROUPBOX
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + BS_GROUPBOX
    aDlg   := wvt_AddDlgItem( aDlg,  7, 41,  4, 17, { 0, 0, 4, 0 }, ID_GRP_COMP, "BUTTON" , nStyle, "Compiler" )
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_AUTORADIOBUTTON
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + BS_AUTORADIOBUTTON
    aDlg   := wvt_AddDlgItem( aDlg,  8, 43,  1, 14, {}, ID_RDO_XH    , "BUTTON" , nStyle, "Harbour"  )
    aDlg   := wvt_AddDlgItem( aDlg,  9, 43,  1, 14, {}, ID_RDO_CLIP  , "BUTTON" , nStyle, "Clipper"  )
    aDlg   := wvt_AddDlgItem( aDlg, 10, 43,  1, 14, {}, ID_RDO_XBASE , "BUTTON" , nStyle, "Xbase++"  )
 
-   nStyle := WS_CHILD + WS_VISIBLE + SS_LEFT
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + SS_LEFT
    aDlg   := wvt_AddDlgItem( aDlg, 12, 41, 1, 17, { 3, 0, 0, 0 }, ID_STA_TEXT, "STATIC" , nStyle, "Scrollable Text" )
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + ES_AUTOHSCROLL + WS_BORDER
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + ES_AUTOHSCROLL + WIN_WS_BORDER
    aDlg   := wvt_AddDlgItem( aDlg, 13, 41, 1, 17, {}, ID_EDT_TEXT  , "EDIT"   , nStyle, "This is Text Field" )
 
-   nStyle := WS_CHILD + WS_VISIBLE + SS_LEFT
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + SS_LEFT
    aDlg   := wvt_AddDlgItem( aDlg, 14, 41, 1, 17, { 3, 0, 0, 0 }, -1, "STATIC" , nStyle, "Right Justified Numerics" )
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + ES_AUTOHSCROLL + ES_NUMBER + ES_RIGHT + WS_BORDER
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + ES_AUTOHSCROLL + ES_NUMBER + ES_RIGHT + WIN_WS_BORDER
    aDlg   := wvt_AddDlgItem( aDlg, 15, 41, 1, 17, {}, ID_EDT_NUMB  , "EDIT"   , nStyle, "1234567" )
 
-   nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_PUSHBUTTON
+   nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + BS_PUSHBUTTON
    aDlg   := wvt_AddDlgItem( aDlg, 18, 50, 1,  8, { -3, 0, 3, 0 }, ID_BTN_OK, "BUTTON" , nStyle, "OK" )
 
    hMenu  := wvg_CreateMenu()
@@ -203,7 +203,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
          SetIcons( wvg_LoadIcon( "vr_1.ico" ) )
       ENDIF
       IF ! Empty( SetIcons() )
-         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, SetIcons()[ 1 ] )
+         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, WIN_IMAGE_ICON, SetIcons()[ 1 ] )
       ENDIF
 
 #if 0
@@ -211,7 +211,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
          t_hImage := wvg_LoadImage( "vouch1.bmp", 2 )
       ENDIF
       IF t_hImage != NIL .AND. ! Empty( t_hImage )
-         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
+         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, WIN_IMAGE_BITMAP, t_hImage )
       ENDIF
 #endif
       wvg_SetDlgItemText( hDlg, ID_MLE, GetEditText() )
@@ -283,7 +283,7 @@ FUNCTION DlgSlideShow()
 
    t_aSlides := { "vouch1.bmp", "v_notes.ico", "2000.gif", "v_lock.bmp", "v_help.ico" }
 
-   nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
+   nStyle := DS_SETFONT + WIN_WS_VISIBLE + WIN_WS_POPUP + WIN_WS_CAPTION + WIN_WS_SYSMENU + WIN_WS_THICKFRAME + WIN_WS_MINIMIZEBOX
 
    aDlg   := wvt_MakeDlgTemplate( 0, 0, 20, 40, {}, "Slide Show", nStyle )
 

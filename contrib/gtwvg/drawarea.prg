@@ -73,7 +73,7 @@ METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD
+   ::style       := WIN_WS_CHILD
    ::exStyle     := 0
    ::className   := "DrawingArea"
    ::objType     := objTypeDA

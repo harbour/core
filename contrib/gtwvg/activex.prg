@@ -109,8 +109,8 @@ METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style      := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
-   ::exStyle    := WS_EX_CLIENTEDGE
+   ::style      := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_CLIPCHILDREN + WIN_WS_CLIPSIBLINGS
+   ::exStyle    := WIN_WS_EX_CLIENTEDGE
    ::objType    := objTypeActiveX
    ::className  := "WIN_OLEAUTO"
 

@@ -540,7 +540,7 @@ METHOD WvgMenu:Popup( oXbp, aPos, nDefaultItem, nControl )
    HB_SYMBOL_UNUSED( nDefaultItem )
    HB_SYMBOL_UNUSED( nControl )
 
-   nCmd := wvg_TrackPopupMenu( ::hMenu, TPM_LEFTALIGN + TPM_TOPALIGN + TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
+   nCmd := wvg_TrackPopupMenu( ::hMenu, WIN_TPM_LEFTALIGN + WIN_TPM_TOPALIGN + WIN_TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
 
    aMenuItem := ::findMenuItemById( nCmd )
    IF HB_ISARRAY( aMenuItem ) .AND. HB_ISEVALITEM( aMenuItem[ 2 ] )

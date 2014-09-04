@@ -905,7 +905,7 @@ METHOD WvtObject:ShowPopup()
    IF ::hPopup != NIL
       aPos := wvt_GetCursorPos()
 
-      nRet := wvt_TrackPopupMenu( ::hPopup, TPM_CENTERALIGN + TPM_RETURNCMD, ;
+      nRet := wvt_TrackPopupMenu( ::hPopup, WIN_TPM_CENTERALIGN + WIN_TPM_RETURNCMD, ;
          aPos[ 1 ], aPos[ 2 ], 0, wvt_GetWindowHandle() )
       IF nRet > 0
          IF ( n := AScan( ::aPopup, {| e_ | e_[ 3 ] == nRet } ) ) > 0

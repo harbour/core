@@ -85,7 +85,7 @@ METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_AUTO3STATE
+   ::style       := WIN_WS_CHILD + BS_AUTO3STATE
    ::className   := "BUTTON"
    ::objType     := objType3State
 

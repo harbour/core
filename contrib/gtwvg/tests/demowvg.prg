@@ -95,7 +95,7 @@ PROCEDURE Main()
    wvt_SetFont( "Courier New", 18, 0, 0 )
 
    CLS
-   wvt_ShowWindow( SW_RESTORE )
+   wvt_ShowWindow( WIN_SW_RESTORE )
 
    /* Xbase++ compatible menu protocol */
    oLastMenu := BuildMainMenu()
@@ -227,7 +227,7 @@ PROCEDURE WvtNextGets()  /* must be a public function */
 
    IF hb_mtvm()
       hb_threadStart( {|| hb_gtReload( "WVG" ), wvt_SetFont( "Terminal", 20 ), ;
-         hb_clear(), wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
+         hb_clear(), wvt_ShowWindow( WIN_SW_RESTORE ), WvtNextGets_X() } )
    ELSE
       WvtNextGets_X()
    ENDIF

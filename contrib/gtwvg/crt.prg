@@ -137,7 +137,7 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    /*  HARUR implementation */
    VAR    resizable                             INIT .T.
    VAR    resizeMode                            INIT HB_GTI_RESIZEMODE_FONT
-   VAR    style                                 INIT ( WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX )
+   VAR    style                                 INIT ( WIN_WS_OVERLAPPED + WIN_WS_CAPTION + WIN_WS_SYSMENU + WIN_WS_SIZEBOX + WIN_WS_MINIMIZEBOX + WIN_WS_MAXIMIZEBOX )
    VAR    exStyle                               INIT 0
    VAR    lModal                                INIT .F.
    VAR    pGTp
@@ -294,9 +294,9 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hb_gtInfo( HB_GTI_NOTIFIERBLOCK   , {| nEvent, ... | ::notifierBlock( nEvent, ... ) } )
 
    IF ::lModal
-      ::style := WS_POPUP + WS_CAPTION + WS_SYSMENU
+      ::style := WIN_WS_POPUP + WIN_WS_CAPTION + WIN_WS_SYSMENU
       IF ::resizable
-         ::style += WS_MINIMIZEBOX + WS_MAXIMIZEBOX + WS_THICKFRAME
+         ::style += WIN_WS_MINIMIZEBOX + WIN_WS_MAXIMIZEBOX + WIN_WS_THICKFRAME
       ENDIF
    ENDIF
 
@@ -327,7 +327,7 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    IF ::visible
-      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
+      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, WIN_SW_NORMAL )
       ::lHasInputFocus := .T.
    ENDIF
 
@@ -471,9 +471,9 @@ METHOD WvgCrt:setFrameState( nState )
 
    IF HB_ISNUMERIC( nState )
       SWITCH nState
-      CASE WVGDLG_FRAMESTAT_MINIMIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 )
-      CASE WVGDLG_FRAMESTAT_MAXIMIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 )
-      CASE WVGDLG_FRAMESTAT_NORMALIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 )
+      CASE WVGDLG_FRAMESTAT_MINIMIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, WIN_SC_MINIMIZE, 0 )
+      CASE WVGDLG_FRAMESTAT_MAXIMIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, WIN_SC_MAXIMIZE, 0 )
+      CASE WVGDLG_FRAMESTAT_NORMALIZED ; RETURN ::sendMessage( WM_SYSCOMMAND, WIN_SC_RESTORE, 0 )
       ENDSWITCH
    ENDIF
 
@@ -510,7 +510,7 @@ METHOD WvgCrt:setSize( aSize, lPaint )
 
 METHOD WvgCrt:show()
 
-   hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
+   hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, WIN_SW_NORMAL )
    ::lHasInputFocus := .T.
 
    RETURN Self

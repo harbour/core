@@ -111,8 +111,8 @@ METHOD WvgMLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + ES_MULTILINE + ES_WANTRETURN
-   ::exStyle     := WS_EX_CLIENTEDGE
+   ::style       := WIN_WS_CHILD + ES_MULTILINE + ES_WANTRETURN
+   ::exStyle     := WIN_WS_EX_CLIENTEDGE
    ::className   := "EDIT"
    ::objType     := objTypeMLE
 
@@ -123,23 +123,23 @@ METHOD WvgMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF ::tabStop
-      ::style += WS_TABSTOP
+      ::style += WIN_WS_TABSTOP
    ENDIF
    IF ! ::editable
       ::style += ES_READONLY
    ENDIF
    IF ::border
-      ::style += WS_BORDER
+      ::style += WIN_WS_BORDER
    ENDIF
    IF ! ::wordWrap
       IF ::horizScroll
-         ::style += WS_HSCROLL
+         ::style += WIN_WS_HSCROLL
       ELSE
          ::style += ES_AUTOHSCROLL
       ENDIF
    ENDIF
    IF ::vertScroll
-      ::style += WS_VSCROLL
+      ::style += WIN_WS_VSCROLL
    ELSE
       ::style += ES_AUTOVSCROLL
    ENDIF
@@ -205,7 +205,7 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
          DO CASE
          CASE aNM[ NMH_code ] == WM_KEYDOWN
-            IF aNM[ 2 ] == VK_TAB
+            IF aNM[ 2 ] == WIN_VK_TAB
                ::oParent:setFocus()
                RETURN EVENT_HANDLED
             ENDIF

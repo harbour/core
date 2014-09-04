@@ -674,6 +674,37 @@
 #define WIN_WS_POPUPWINDOW                 hb_bitOr( WIN_WS_POPUP, WIN_WS_BORDER, WIN_WS_SYSMENU )
 #define WIN_WS_CHILDWINDOW                 WIN_WS_CHILD
 
+/* window styles (extended) */
+#define WIN_WS_EX_DLGMODALFRAME            0x00000001
+#define WIN_WS_EX_NOPARENTNOTIFY           0x00000004
+#define WIN_WS_EX_TOPMOST                  0x00000008
+#define WIN_WS_EX_ACCEPTFILES              0x00000010
+#define WIN_WS_EX_TRANSPARENT              0x00000020
+#define WIN_WS_EX_MDICHILD                 0x00000040
+#define WIN_WS_EX_TOOLWINDOW               0x00000080
+#define WIN_WS_EX_WINDOWEDGE               0x00000100
+#define WIN_WS_EX_CLIENTEDGE               0x00000200
+#define WIN_WS_EX_CONTEXTHELP              0x00000400
+
+#define WIN_WS_EX_RIGHT                    0x00001000
+#define WIN_WS_EX_LEFT                     0x00000000
+#define WIN_WS_EX_RTLREADING               0x00002000
+#define WIN_WS_EX_LTRREADING               0x00000000
+#define WIN_WS_EX_LEFTSCROLLBAR            0x00004000
+#define WIN_WS_EX_RIGHTSCROLLBAR           0x00000000
+
+#define WIN_WS_EX_CONTROLPARENT            0x00010000
+#define WIN_WS_EX_STATICEDGE               0x00020000
+#define WIN_WS_EX_APPWINDOW                0x00040000
+
+#define WIN_WS_EX_OVERLAPPEDWINDOW         hb_bitOr( WIN_WS_EX_WINDOWEDGE, WIN_WS_EX_CLIENTEDGE )
+#define WIN_WS_EX_PALETTEWINDOW            hb_bitOr( WIN_WS_EX_WINDOWEDGE, WIN_WS_EX_TOOLWINDOW, WIN_WS_EX_TOPMOST )
+
+#define WIN_WS_EX_LAYERED                  0x00080000
+#define WIN_WS_EX_NOINHERITLAYOUT          0x00100000
+#define WIN_WS_EX_LAYOUTRTL                0x00400000
+#define WIN_WS_EX_NOACTIVATE               0x08000000
+
 /* win_ReportEvent() event types */
 #define WIN_EVENTLOG_SUCCESS               0x0000
 #define WIN_EVENTLOG_ERROR_TYPE            0x0001

@@ -113,7 +113,7 @@ METHOD WvgToolBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 #if 0
    /* + TBSTYLE_LIST   caption to the right, otherwise caption to the bottom */
-   ::style       := WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE + CCS_NODIVIDER + CCS_VERT
+   ::style       := WIN_WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE + CCS_NODIVIDER + CCS_VERT
 #endif
 
    ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER + TBSTYLE_EX_MIXEDBUTTONS
@@ -133,7 +133,7 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ELSE
       ::style := 0
    ENDIF
-   ::style += WS_CHILD
+   ::style += WIN_WS_CHILD
 
    IF ::wrappable
       ::style += TBSTYLE_WRAPABLE
@@ -142,7 +142,7 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::style += TBSTYLE_TOOLTIPS
    ENDIF
    IF ::borderStyle == WVGFRAME_RECT
-      ::style += WS_BORDER
+      ::style += WIN_WS_BORDER
    ENDIF
 #if 0
    IF ::appearance == WVG_APPEARANCE_3D

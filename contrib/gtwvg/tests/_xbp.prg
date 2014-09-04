@@ -156,7 +156,7 @@ PROCEDURE demoxbp()
 #if 0
    oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
 #endif
-   oStatic2:exStyle += WS_EX_WINDOWEDGE
+   oStatic2:exStyle += WIN_WS_EX_WINDOWEDGE
 #if 0
    oStatic2:options := WVGSTATIC_FRAMETHICK
 #endif

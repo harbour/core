@@ -83,7 +83,7 @@ METHOD WvgStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* SS_NOTIFY  SS_ETCHEDFRAME  SS_SUNKEN  SS_WHITERECT */
 
-   ::style       := WS_CHILD + WS_CLIPCHILDREN
+   ::style       := WIN_WS_CHILD + WIN_WS_CLIPCHILDREN
    ::className   := "STATIC"
    ::objType     := objTypeStatic
 
@@ -180,9 +180,9 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF AScan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0
       DO CASE
       CASE hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) != 0
-         ::style += WS_BORDER
+         ::style += WIN_WS_BORDER
       CASE hb_bitAnd( ::options, WVGSTATIC_FRAMETHICK ) != 0
-         ::style += WS_DLGFRAME
+         ::style += WIN_WS_DLGFRAME
       ENDCASE
    ENDIF
 #endif
@@ -190,9 +190,9 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::type == WVGSTATIC_TYPE_TEXT
       DO CASE
       CASE ::options == WVGSTATIC_FRAMETHIN
-         ::style += WS_BORDER
+         ::style += WIN_WS_BORDER
       CASE ::options == WVGSTATIC_FRAMETHICK
-         ::style += WS_DLGFRAME
+         ::style += WIN_WS_DLGFRAME
       ENDCASE
    ENDIF
 #endif
@@ -279,7 +279,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
 
       ::hBitmap := wvg_LoadImage( ::caption, iif( HB_ISNUMERIC( ::caption ), 1, 2 ) )
 
-      wvg_SendMessage( ::hWnd, STM_SETIMAGE, IMAGE_BITMAP, ::hBitmap )
+      wvg_SendMessage( ::hWnd, STM_SETIMAGE, WIN_IMAGE_BITMAP, ::hBitmap )
 
    ENDCASE
 

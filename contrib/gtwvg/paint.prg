@@ -278,7 +278,7 @@ FUNCTION wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nH := nRows
    ENDIF
 
-   hb_default( @nStyle, WS_CAPTION + WS_SYSMENU + WS_GROUP + WS_TABSTOP + DS_SETFONT + WS_THICKFRAME + WS_VISIBLE + WS_POPUP + DS_3DLOOK )
+   hb_default( @nStyle, WIN_WS_CAPTION + WIN_WS_SYSMENU + WIN_WS_GROUP + WIN_WS_TABSTOP + DS_SETFONT + WIN_WS_THICKFRAME + WIN_WS_VISIBLE + WIN_WS_POPUP + DS_3DLOOK )
 
    AAdd( aDlg[ 1 ], hb_defaultValue( nHelpId, 0 ) )
    AAdd( aDlg[ 1 ], hb_defaultValue( nExStyle, 0 ) )
@@ -352,7 +352,7 @@ FUNCTION wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
 
    AAdd( aDlg[  2 ], hb_defaultValue( nHelpId, 0 ) )
    AAdd( aDlg[  3 ], hb_defaultValue( nExStyle, 0 ) )
-   AAdd( aDlg[  4 ], hb_defaultValue( nStyle, WS_CHILD + WS_VISIBLE ) )
+   AAdd( aDlg[  4 ], hb_defaultValue( nStyle, WIN_WS_CHILD + WIN_WS_VISIBLE ) )
    AAdd( aDlg[  5 ], nX )
    AAdd( aDlg[  6 ], nY )
    AAdd( aDlg[  7 ], nW )
@@ -423,16 +423,16 @@ FUNCTION wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 /* wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
 
 hWnd:     Handle to parent window
-cPath:    (optional) if OFN_ALLOWMULTISELECT the path is stored
+cPath:    (optional) if WIN_OFN_ALLOWMULTISELECT the path is stored
 cTitle:   Window Title
 aFilter:  Array of Files Types i.e. { { "Databases", "*.dbf" }, { "Harbour", "*.prg" } }
-nFlags:   OFN_* values default to OFN_EXPLORER
+nFlags:   WIN_OFN_* values default to WIN_OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
 nIndex:   Index position of types
 cDefName: DEFAULT file name
 
-Returns:  If OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
+Returns:  If WIN_OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
 */
 FUNCTION wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
 
@@ -441,7 +441,7 @@ FUNCTION wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
    HB_SYMBOL_UNUSED( hWnd )
 
    hb_default( @cPath, "" )
-   hb_default( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
+   hb_default( @nFlags, WIN_OFN_EXPLORER + WIN_OFN_NOCHANGEDIR )
 
 /* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
@@ -449,7 +449,7 @@ FUNCTION wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
  */
    cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /* nBufferSize */, cDefName )
 
-   IF hb_bitAnd( nFlags, OFN_ALLOWMULTISELECT ) != 0
+   IF hb_bitAnd( nFlags, WIN_OFN_ALLOWMULTISELECT ) != 0
       xRet := {}
       IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]
@@ -469,7 +469,7 @@ hWnd:     Handle to parent window
 cDefName: (optional) Default FileName
 cTitle:   Window Title
 aFilter:  Array of Files Types i.e. { { "Databases", "*.dbf" }, { "Harbour", "*.prg" } }
-nFlags:   OFN_* values default to OFN_EXPLORER
+nFlags:   WIN_OFN_* values default to WIN_OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
 nIndex:   Index position of types
@@ -482,7 +482,7 @@ FUNCTION wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    HB_SYMBOL_UNUSED( hWnd )
 
-   hb_default( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
+   hb_default( @nFlags, WIN_OFN_EXPLORER + WIN_OFN_NOCHANGEDIR )
 
 /* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
@@ -490,7 +490,7 @@ FUNCTION wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
  */
    cRet := win_GetSaveFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
 
-   IF hb_bitAnd( nFlags, OFN_ALLOWMULTISELECT ) != 0
+   IF hb_bitAnd( nFlags, WIN_OFN_ALLOWMULTISELECT ) != 0
       xRet := {}
       IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]

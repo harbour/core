@@ -106,8 +106,8 @@ METHOD WvgTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + WS_TABSTOP + WS_CLIPSIBLINGS
-   ::exStyle     := WS_EX_CLIENTEDGE // WS_EX_STATICEDGE /* + TVS_EX_FADEINOUTEXPANDOS */
+   ::style       := WIN_WS_CHILD + WIN_WS_TABSTOP + WIN_WS_CLIPSIBLINGS
+   ::exStyle     := WIN_WS_EX_CLIENTEDGE // WIN_WS_EX_STATICEDGE /* + TVS_EX_FADEINOUTEXPANDOS */
 
    ::className   := "SysTreeView32"
    ::objType     := objTypeTreeView

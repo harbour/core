@@ -84,7 +84,7 @@ METHOD WvgTabPage:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD
+   ::style       := WIN_WS_CHILD
    ::className   := "SysTabControl32"
    ::objType     := objTypeTabPage
 
@@ -98,10 +98,10 @@ METHOD WvgTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::style += TCS_BOTTOM
    ENDIF
    IF ::clipSiblings
-      ::style += WS_CLIPSIBLINGS
+      ::style += WIN_WS_CLIPSIBLINGS
    ENDIF
 #if 0
-   ::style += WS_DLGFRAME
+   ::style += WIN_WS_DLGFRAME
 #endif
 
    ::style += TCS_FOCUSNEVER
