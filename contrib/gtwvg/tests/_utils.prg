@@ -354,7 +354,7 @@ FUNCTION Popups( nID, lDestroy )
    THREAD STATIC t_hPop_ := { , , , , , , , , }
 
    LOCAL hPop, hPop1
-   LOCAL nPrompt := MF_ENABLED + MF_STRING
+   LOCAL nPrompt := WIN_MF_ENABLED + WIN_MF_STRING
 
    IF nID == NIL
       wvt_SetPopupMenu()
@@ -383,7 +383,7 @@ FUNCTION Popups( nID, lDestroy )
          wvg_AppendMenu( hPop, nPrompt, K_F9, "Choose Font"       )
          wvg_AppendMenu( hPop, nPrompt, K_F10, "Choose Color"      )
 
-         wvg_AppendMenu( hPop, MF_SEPARATOR )
+         wvg_AppendMenu( hPop, WIN_MF_SEPARATOR )
 
          wvg_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
 
@@ -401,7 +401,7 @@ FUNCTION Popups( nID, lDestroy )
          wvg_AppendMenu( hPop, nPrompt, K_CTRL_PGUP, "Top"       )
          wvg_AppendMenu( hPop, nPrompt, K_CTRL_PGDN, "Bottom"    )
 
-         wvg_AppendMenu( hPop, MF_SEPARATOR )
+         wvg_AppendMenu( hPop, WIN_MF_SEPARATOR )
 
          hPop1 := wvg_CreatePopupMenu()
          wvg_AppendMenu( hPop1, nPrompt, K_RIGHT   , "Right"     )
@@ -409,7 +409,7 @@ FUNCTION Popups( nID, lDestroy )
          wvg_AppendMenu( hPop1, nPrompt, K_END     , "End"       )
          wvg_AppendMenu( hPop1, nPrompt, K_HOME    , "Home"      )
 
-         wvg_AppendMenu( hPop, MF_ENABLED + MF_POPUP, hPop1, "Column Movement" )
+         wvg_AppendMenu( hPop, WIN_MF_ENABLED + WIN_MF_POPUP, hPop1, "Column Movement" )
 
       ENDIF
       EXIT

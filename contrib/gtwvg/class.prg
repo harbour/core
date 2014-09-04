@@ -892,7 +892,7 @@ METHOD WvtObject:CreatePopup()
          ASize( i, 3 )
          i[ 3 ] := nID := ::nPopupItemID++
 
-         wvg_AppendMenu( ::hPopup, MF_ENABLED + MF_STRING, nID, i[ 1 ] )
+         wvg_AppendMenu( ::hPopup, WIN_MF_ENABLED + WIN_MF_STRING, nID, i[ 1 ] )
       NEXT
    ENDIF
 
@@ -2940,11 +2940,11 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
    IF ! Empty( ::hMenu ) .AND. ( ! Empty( cCaption ) .OR. ! Empty( bAction ) )
       IF HB_ISOBJECT( bAction )
          cCaption := iif( Empty( cCaption ), bAction:Caption, cCaption )
-         aItem := { MF_POPUP, bAction:hMenu, cCaption, bAction }   /* bAction is a wvtMenu object reference */
+         aItem := { WIN_MF_POPUP, bAction:hMenu, cCaption, bAction }   /* bAction is a wvtMenu object reference */
       ELSEIF HB_ISEVALITEM( bAction )
-         aItem := { MF_STRING, ::MenuItemId++, cCaption, bAction } /* bAction is a code block to execute */
+         aItem := { WIN_MF_STRING, ::MenuItemId++, cCaption, bAction } /* bAction is a code block to execute */
       ELSEIF hb_LeftEq( cCaption, "-" )
-         aItem := { MF_SEPARATOR, 0, 0, NIL }
+         aItem := { WIN_MF_SEPARATOR, 0, 0, NIL }
       ELSE
 #if 0
          Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction }, __FILE__ ) )
@@ -2981,11 +2981,11 @@ METHOD wvtMenu:DelItem( nItemNum )
    LOCAL lResult := .F.
 
    IF nItemNum >= 1 .AND. nItemNum <= ::NumItems()
-      IF ::aItems[ nItemNum, WVT_MENU_TYPE ] == MF_POPUP
+      IF ::aItems[ nItemNum, WVT_MENU_TYPE ] == WIN_MF_POPUP
          ::aItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
-      IF ( lResult := wvg_DeleteMenu( ::hMenu, nItemNum - 1, MF_BYPOSITION ) ) /* Remember ZERO base */
+      IF ( lResult := wvg_DeleteMenu( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION ) ) /* Remember ZERO base */
          hb_ADel( ::aItems, nItemNum, .T. )
       ELSE
 #if 0
@@ -2999,7 +2999,7 @@ METHOD wvtMenu:DelItem( nItemNum )
 METHOD wvtMenu:EnableItem( nItemNum )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum >= 1
-      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
+      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_ENABLED )
    ENDIF
 
    RETURN -1
@@ -3007,7 +3007,7 @@ METHOD wvtMenu:EnableItem( nItemNum )
 METHOD wvtMenu:DisableItem( nItemNum )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum >= 1
-      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
+      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_GRAYED )
    ENDIF
 
    RETURN -1
@@ -3032,7 +3032,7 @@ METHOD wvtMenu:FindMenuItemById( nId )
    IF ! Empty( nId )
       x := ::NumItems()
       DO WHILE x > 0 .AND. Empty( aResult )
-         IF ::aItems[ x, WVT_MENU_TYPE ] == MF_POPUP
+         IF ::aItems[ x, WVT_MENU_TYPE ] == WIN_MF_POPUP
             aResult := ::aItems[ x, WVT_MENU_MENUOBJ ]:FindMenuItemById( nId )
          ELSEIF ::aItems[ x, WVT_MENU_IDENTIFIER ] == nId
             aResult := ::aItems[ x ]

@@ -259,7 +259,7 @@ PDEVMODE hbwapi_par_PDEVMODE( int iParam )
 }
 
 #if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
-static int s_iDbgUnsafeMode = -1;  /* 0 = disallow, 1 = trace, 2 = trace + RTE, other = allow */
+static int s_iDbgUnsafeMode = 2;  /* 0 = disallow, 1 = trace, 2 = trace + RTE, other = allow */
 
 HB_FUNC( __WAPI_DBGUNSAFEHANDLES )
 {

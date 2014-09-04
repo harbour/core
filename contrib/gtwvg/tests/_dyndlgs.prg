@@ -91,8 +91,8 @@ FUNCTION DynWinDialog( nInfo )
    aDlg   := wvt_AddDlgItem( aDlg, 18, 50, 1,  8, { -3, 0, 3, 0 }, ID_BTN_OK, "BUTTON" , nStyle, "OK" )
 
    hMenu  := wvg_CreateMenu()
-   wvg_AppendMenu( hMenu, MF_STRING + MF_ENABLED, ID_MNU_FILE   , "File"     )
-   wvg_AppendMenu( hMenu, MF_STRING + MF_ENABLED, ID_MNU_CONTROL, "Controls" )
+   wvg_AppendMenu( hMenu, WIN_MF_STRING + WIN_MF_ENABLED, ID_MNU_FILE   , "File"     )
+   wvg_AppendMenu( hMenu, WIN_MF_STRING + WIN_MF_ENABLED, ID_MNU_CONTROL, "Controls" )
 
    lOnTop      := .F.
    cDlgIcon    := "v_notes.ico"

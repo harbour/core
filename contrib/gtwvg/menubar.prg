@@ -214,11 +214,11 @@ METHOD WvgMenuBar:delItem( nItemNum )
    LOCAL lResult := .F.
 
    IF nItemNum >= 1 .AND. nItemNum <= ::numItems()
-      IF ::aMenuItems[ nItemNum, WVT_MENU_TYPE ] == MF_POPUP
+      IF ::aMenuItems[ nItemNum, WVT_MENU_TYPE ] == WIN_MF_POPUP
          ::aMenuItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
-      IF ( lResult := wvg_DeleteMenu( ::hMenu, nItemNum - 1, MF_BYPOSITION ) ) /* Remember ZERO base */
+      IF ( lResult := wvg_DeleteMenu( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION ) ) /* Remember ZERO base */
          hb_ADel( ::aMenuItems, nItemNum, .T. )
       ELSE
 #if 0
@@ -264,20 +264,20 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    /* xCaption : NIL | cPrompt | ncResource | oMenu */
    SWITCH ValType( xCaption )
    CASE "U"  /* Separator */
-      aItem := { MF_SEPARATOR, 0, 0, NIL, nStyle, nAttrib }
+      aItem := { WIN_MF_SEPARATOR, 0, 0, NIL, nStyle, nAttrib }
       EXIT
 
    CASE "C"
       IF hb_LeftEq( xCaption, "-" )
-         aItem := { MF_SEPARATOR, 0, 0, NIL, nStyle, nAttrib }
+         aItem := { WIN_MF_SEPARATOR, 0, 0, NIL, nStyle, nAttrib }
       ELSE
-         aItem := { MF_STRING, ++::nMenuItemID, xCaption, bAction, nStyle, nAttrib }
+         aItem := { WIN_MF_STRING, ++::nMenuItemID, xCaption, bAction, nStyle, nAttrib }
       ENDIF
       EXIT
 
    CASE "O"
       cCaption := iif( bAction == NIL, xCaption:title, bAction )
-      aItem    := { MF_POPUP, xCaption:hMenu, cCaption, xCaption, nStyle, nAttrib }
+      aItem    := { WIN_MF_POPUP, xCaption:hMenu, cCaption, xCaption, nStyle, nAttrib }
       EXIT
 
    CASE "N"  /* Resource ID */
@@ -298,7 +298,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
          ::aMenuItems := hb_AIns( ::aMenuItems, nPos, aItem, .T. )
          wvg_InsertMenu( ::hMenu, ;
             nItemIndex - 1, ;
-            aItem[ 1 ] + MF_BYPOSITION, ;
+            aItem[ 1 ] + WIN_MF_BYPOSITION, ;
             aItem[ 2 ], ;
             iif( HB_ISSTRING( aItem[ 3 ] ), StrTran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
       ELSE
@@ -334,7 +334,7 @@ METHOD WvgMenuBar:findMenuItemById( nId )
       x := ::numItems()
 
       DO WHILE x > 0 .AND. Empty( aResult )
-         IF ::aMenuItems[ x, WVT_MENU_TYPE ] == MF_POPUP
+         IF ::aMenuItems[ x, WVT_MENU_TYPE ] == WIN_MF_POPUP
             aResult := ::aMenuItems[ x, WVT_MENU_MENUOBJ ]:findMenuItemById( nId )
 
          ELSEIF ::aMenuItems[ x, WVT_MENU_IDENTIFIER ] == nId
@@ -355,7 +355,7 @@ METHOD WvgMenuBar:findMenuPosById( nId )
       x := ::numItems()
 
       DO WHILE x > 0 .AND. Empty( nPos )
-         IF ::aMenuItems[ x, WVT_MENU_TYPE ] == MF_POPUP
+         IF ::aMenuItems[ x, WVT_MENU_TYPE ] == WIN_MF_POPUP
             nPos := ::aMenuItems[ x, WVT_MENU_MENUOBJ ]:findMenuPosById( nId )
 
          ELSEIF ::aMenuItems[ x, WVT_MENU_IDENTIFIER ] == nId
@@ -375,7 +375,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
    __defaultNIL( @lCheck, .T. )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
-      nRet := wvg_CheckMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + iif( lCheck, MF_CHECKED, MF_UNCHECKED ) )
+      nRet := wvg_CheckMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + iif( lCheck, WIN_MF_CHECKED, WIN_MF_UNCHECKED ) )
    ENDIF
 
    RETURN iif( nRet == -1, .F., .T. )
@@ -383,7 +383,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 METHOD WvgMenuBar:enableItem( nItemNum )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
-      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
+      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_ENABLED )
    ENDIF
 
    RETURN .F.
@@ -391,7 +391,7 @@ METHOD WvgMenuBar:enableItem( nItemNum )
 METHOD WvgMenuBar:disableItem( nItemNum )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
-      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
+      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_GRAYED )
    ENDIF
 
    RETURN .F.

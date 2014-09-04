@@ -9,9 +9,6 @@
 //      GTWVT Console GUI Interface
 // by Pritpal Bedi <pritpal@vouchcac.com>
 //
-//                 GTWVT
-//   by Peter Rees <peter@rees.co.nz>
-//
 // parts of this program are copyrights of their respective owners
 
 #require "gtwvw"
@@ -21,36 +18,6 @@
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
 #include "hbver.ch"
-
-#define MF_INSERT                     0
-#define MF_CHANGE                   128
-#define MF_APPEND                   256
-#define MF_DELETE                   512
-#define MF_REMOVE                  4096
-
-#define MF_BYCOMMAND                  0
-#define MF_BYPOSITION              1024
-
-#define MF_SEPARATOR               2048
-
-#define MF_ENABLED                    0
-#define MF_GRAYED                     1
-#define MF_DISABLED                   2
-
-#define MF_UNCHECKED                  0
-#define MF_CHECKED                    8
-#define MF_USECHECKBITMAPS          512
-
-#define MF_STRING                     0
-#define MF_BITMAP                     4
-#define MF_OWNERDRAW                256
-
-#define MF_POPUP                     16
-#define MF_MENUBARBREAK              32
-#define MF_MENUBREAK                 64
-
-#define MF_UNHILITE                   0
-#define MF_HILITE                   128
 
 #define WVW_MAXWINDOWS    20             // ! must match with hbgtwvw.h
 #define WVW_DEFAULT_MENUKEYEVENT  1024   // ! must match with hbgtwvw.h
@@ -119,8 +86,6 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   __wapi_DbgUnsafeHandles( 2 )
-
    Set( _SET_EVENTMASK, INKEY_ALL )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
@@ -157,34 +122,34 @@ PROCEDURE Main()
 
    hMenu := wvw_CreateMenu()
    hPopupMenu := wvw_CreateMenu()
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
-   // wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
-   wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
-   wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Demos",  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_GET, "~GET demo"  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
+   // wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_SEPARATOR )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
+   wvw_AppendMenu( hMenu, WIN_MF_ENABLED + WIN_MF_POPUP, hPopupMenu, "~Demos",  )
 
    hPopupMenu := wvw_CreateMenu()
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
-   wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
-   wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Toolbar",  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_SEPARATOR )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
+   wvw_AppendMenu( hMenu, WIN_MF_ENABLED + WIN_MF_POPUP, hPopupMenu, "~Toolbar",  )
 
    hPopupMenu := wvw_CreateMenu()
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
-   wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
-   wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Window",  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_SEPARATOR )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
+   wvw_AppendMenu( hMenu, WIN_MF_ENABLED + WIN_MF_POPUP, hPopupMenu, "~Window",  )
 
    hPopupMenu := wvw_CreateMenu()
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
-   wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
-   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
-   wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Help",  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_SEPARATOR )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
+   wvw_AppendMenu( hMenu, WIN_MF_ENABLED + WIN_MF_POPUP, hPopupMenu, "~Help",  )
 
    wvw_SetMenu( , hMenu )
 
@@ -270,7 +235,7 @@ STATIC PROCEDURE xDisableMenus( nWinNum, nNumItem )
    LOCAL hMenu := wvw_GetMenu( nWinNum )
 
    FOR i := 0 TO nNumItem - 1
-      wvw_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_GRAYED )
+      wvw_EnableMenuItem( hMenu, i, WIN_MF_BYPOSITION + WIN_MF_GRAYED )
    NEXT
 
    RETURN
@@ -282,7 +247,7 @@ STATIC PROCEDURE xEnableMenus( nWinNum, nNumItem )
    LOCAL hMenu := wvw_GetMenu( nWinNum )
 
    FOR i := 0 TO nNumItem - 1
-      wvw_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_ENABLED )
+      wvw_EnableMenuItem( hMenu, i, WIN_MF_BYPOSITION + WIN_MF_ENABLED )
    NEXT
    wvw_DrawMenuBar( nWinNum )  // to force redraw of menu
 
