@@ -1505,7 +1505,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
    IF lPressed  // ::lPressed
       IF ::nType != _BUTTON_HARD
-         wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cPressedColor ) ), ::lTight )
+         wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, win_CreateBrush( WIN_BS_HATCHED,, WIN_HS_FDIAGONAL ), ::lTight, .T. )
          wvw_DrawBoxRecessed( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )  // wvw
       ELSE
          wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cNormalColor ) ), ::lTight )

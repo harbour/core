@@ -107,7 +107,11 @@ void hbwapi_stor_POINT( const POINT * p, int iParam )
       else
       {
          if( ! HB_IS_ARRAY( pStru ) )
-            hb_itemParamStore( ( USHORT ) iParam, hb_itemArrayNew( 2 ) );
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 2 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
          else if( hb_arrayLen( pStru ) < 2 )
             hb_arraySize( pStru, 2 );
 
@@ -163,7 +167,11 @@ void hbwapi_stor_RECT( const RECT * p, int iParam )
       else
       {
          if( ! HB_IS_ARRAY( pStru ) )
-            hb_itemParamStore( ( USHORT ) iParam, hb_itemArrayNew( 4 ) );
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 4 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
          else if( hb_arrayLen( pStru ) < 4 )
             hb_arraySize( pStru, 4 );
 
@@ -245,6 +253,64 @@ LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
       return p;
 
    return NULL;
+}
+
+LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   memset( p, 0, sizeof( LOGBRUSH ) );
+
+   if( pStru && HB_IS_HASH( pStru ) )
+   {
+      p->lbStyle  = ( UINT ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lbStyle" ) );
+      p->lbColor  = ( COLORREF ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lbColor" ) );
+      switch( p->lbStyle )
+      {
+         case BS_SOLID:
+         case BS_HOLLOW:
+         case BS_HATCHED:
+            p->lbHatch = ( ULONG_PTR ) hb_itemGetNInt( hb_hashGetCItemPtr( pStru, "lbHatch" ) );
+            break;
+         default:
+            p->lbHatch = ( ULONG_PTR ) hb_itemGetPtr( hb_hashGetCItemPtr( pStru, "lbHatch" ) );
+      }
+   }
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 3 )
+   {
+      p->lbStyle  = ( UINT ) hb_arrayGetNI( pStru, 1 );
+      p->lbColor  = ( COLORREF ) hb_arrayGetNL( pStru, 2 );
+      switch( p->lbStyle )
+      {
+         case BS_SOLID:
+         case BS_HOLLOW:
+         case BS_HATCHED:
+            p->lbHatch = ( ULONG_PTR ) hb_arrayGetNInt( pStru, 3 );
+            break;
+         default:
+            p->lbHatch = ( ULONG_PTR ) hb_arrayGetPtr( pStru, 3 );
+      }
+   }
+#if 0
+   else
+   {
+      /* Just an experiment */
+      p->lbStyle = ( UINT ) hb_parni( iParam );
+      p->lbColor = hbwapi_par_COLORREF( iParam + 1 );
+      switch( p->lbStyle )
+      {
+         case BS_SOLID:
+         case BS_HOLLOW:
+         case BS_HATCHED:
+            p->lbHatch = ( ULONG_PTR ) hb_parnint( iParam + 2 );
+            break;
+         default:
+            p->lbHatch = ( ULONG_PTR ) hbwapi_par_raw_HANDLE( iParam + 2 );
+      }
+   }
+#endif
+
+   return p;
 }
 
 DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** ph )
@@ -703,7 +769,17 @@ HB_FUNC( WAPI_CREATEHATCHBRUSH )
    hbwapi_ret_HBRUSH( CreateHatchBrush( hb_parni( 1 ) /* fnStyle */,
                                         hbwapi_par_COLORREF( 2 ) /* crColor */ ) );
 #else
-   hbwapi_ret_HBRUSH( NULL );
+   hb_retptr( NULL );
+#endif
+}
+
+HB_FUNC( WAPI_CREATEBRUSHINDIRECT )
+{
+#if ! defined( HB_OS_WIN_CE )
+   LOGBRUSH lb;
+   hbwapi_ret_HBRUSH( CreateBrushIndirect( hbwapi_par_LOGBRUSH( &lb, 1 ) ) );
+#else
+   hb_retptr( NULL );
 #endif
 }
 

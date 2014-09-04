@@ -975,17 +975,17 @@
 #define DT_PREFIXONLY                             WIN_DT_PREFIXONLY
 
 /* Brush Styles */
-#define BS_SOLID                                  0
-#define BS_NULL                                   1
-#define BS_HOLLOW                                 BS_NULL
-#define BS_HATCHED                                2
-#define BS_PATTERN                                3
-#define BS_INDEXED                                4
-#define BS_DIBPATTERN                             5
-#define BS_DIBPATTERNPT                           6
-#define BS_PATTERN8X8                             7
-#define BS_DIBPATTERN8X8                          8
-#define BS_MONOPATTERN                            9
+#define BS_SOLID                                  WIN_BS_SOLID
+#define BS_NULL                                   WIN_BS_NULL
+#define BS_HOLLOW                                 WIN_BS_HOLLOW
+#define BS_HATCHED                                WIN_BS_HATCHED
+#define BS_PATTERN                                WIN_BS_PATTERN
+#define BS_INDEXED                                WIN_BS_INDEXED
+#define BS_DIBPATTERN                             WIN_BS_DIBPATTERN
+#define BS_DIBPATTERNPT                           WIN_BS_DIBPATTERNPT
+#define BS_PATTERN8X8                             WIN_BS_PATTERN8X8
+#define BS_DIBPATTERN8X8                          WIN_BS_DIBPATTERN8X8
+#define BS_MONOPATTERN                            WIN_BS_MONOPATTERN
 
 // Hatch Styles
 #define HS_HORIZONTAL                             WIN_HS_HORIZONTAL
@@ -1042,8 +1042,8 @@
 #define DEFAULT_QUALITY                           WIN_DEFAULT_QUALITY
 #define DRAFT_QUALITY                             WIN_DRAFT_QUALITY
 #define PROOF_QUALITY                             WIN_PROOF_QUALITY
-#define NONANTIALIASED_QUALITY                    WIN_NONANTIALIASED_QUALITY  // WINVER >= 0x0400
-#define ANTIALISED_QUALITY                        WIN_ANTIALIASED_QUALITY     // WINVER >= 0x0400
+#define NONANTIALIASED_QUALITY                    WIN_NONANTIALIASED_QUALITY
+#define ANTIALISED_QUALITY                        WIN_ANTIALIASED_QUALITY
 
 #define ANSI_CHARSET                              WIN_ANSI_CHARSET
 #define DEFAULT_CHARSET                           WIN_DEFAULT_CHARSET

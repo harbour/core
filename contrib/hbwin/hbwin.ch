@@ -254,8 +254,8 @@
 #define WIN_DEFAULT_QUALITY                0
 #define WIN_DRAFT_QUALITY                  1
 #define WIN_PROOF_QUALITY                  2
-#define WIN_NONANTIALIASED_QUALITY         3
-#define WIN_ANTIALIASED_QUALITY            4
+#define WIN_NONANTIALIASED_QUALITY         3  /* WINVER >= 0x0400 */
+#define WIN_ANTIALIASED_QUALITY            4  /* WINVER >= 0x0400 */
 
 /* wapi_CreateFont() output precision values */
 #define WIN_OUT_DEFAULT_PRECIS             0
@@ -1014,5 +1014,22 @@
 #define WIN_VK_F24                         135
 #define WIN_VK_NUMLOCK                     144
 #define WIN_VK_SCROLL                      145
+
+/* wapi_CreateBrushIndirect() brush styles */
+#define WIN_BS_SOLID                       0
+#define WIN_BS_NULL                        1
+#define WIN_BS_HOLLOW                      WIN_BS_NULL
+#define WIN_BS_HATCHED                     2
+#define WIN_BS_PATTERN                     3
+#define WIN_BS_INDEXED                     4
+#define WIN_BS_DIBPATTERN                  5
+#define WIN_BS_DIBPATTERNPT                6
+#define WIN_BS_PATTERN8X8                  7
+#define WIN_BS_DIBPATTERN8X8               8
+#define WIN_BS_MONOPATTERN                 9
+
+/* wapi_CreateBrushIndirect() special color values */
+#define WIN_DIB_RGB_COLORS                 0
+#define WIN_DIB_PAL_COLORS                 1
 
 #endif /* HBWIN_CH_ */

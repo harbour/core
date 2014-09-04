@@ -76,19 +76,6 @@ HB_FUNC( WIN_RELEASEDC )
    hb_retl( ReleaseDC( ( HWND ) HB_PARHANDLE( 1 ), ( HDC ) HB_PARHANDLE( 2 ) ) );
 }
 
-HB_FUNC( WIN_CREATEBRUSH )
-{
-   LOGBRUSH lb;
-
-   memset( &lb, 0, sizeof( lb ) );
-
-   lb.lbStyle = hb_parni( 1 );
-   lb.lbColor = ( COLORREF ) hb_parnl( 2 );
-   lb.lbHatch = hb_parni( 3 );
-
-   HB_RETHANDLE( CreateBrushIndirect( &lb ) );
-}
-
 /* Additions to GTWVW developed by SOLUCIONES PERCEPTIVAS */
 
 HB_FUNC( WVW_GBCREATE )
@@ -493,16 +480,6 @@ HB_FUNC( WVW_OPENBITMAP )
    }
 
    HB_RETHANDLE( hbm );
-}
-
-HB_FUNC( WVW_CREATESOLIDBRUSH )
-{
-   HB_RETHANDLE( CreateSolidBrush( ( COLORREF ) hb_parnl( 1 ) /* nBrushColor */ ) );
-}
-
-HB_FUNC( WVW_CREATEHATCHBRUSH )
-{
-   HB_RETHANDLE( CreateHatchBrush( hb_parni( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
 
 /* win_CreateFont( fontName, nWidth, hHeight, [fnWeight], [fdwCharSet],
@@ -1158,7 +1135,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
       lb.lbColor = crRGBcolor;
       lb.lbHatch = 0;
 
-      hBrush = ! fUseBrush ? CreateBrushIndirect( &lb ) : ( HBRUSH ) HB_PARHANDLE( 6 );
+      hBrush = fUseBrush ? hbwapi_par_HBRUSH( 6 ) : CreateBrushIndirect( &lb );
 
       FillRect( wvw_win->hdc, &xyRect, hBrush );
 

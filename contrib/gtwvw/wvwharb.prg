@@ -314,7 +314,7 @@ PROCEDURE wvw_SetWindowPos( nWin, x, y )  /* position in pixel */
 
    IF ! Empty( hWnd := wvw_Get_hnd_Window( nWin ) )
       rc := { => }
-      wapi_GetWindowRect( hWnd, @rc )
+      wapi_GetWindowRect( hWnd, rc )
       wapi_SetWindowPos( hWnd,, x, y, ;
          ( rc[ "right" ] - rc[ "left" ] ) + 1, ;
          ( rc[ "bottom" ] - rc[ "top" ] ) + 1, WIN_SWP_NOZORDER )
@@ -332,7 +332,7 @@ FUNCTION wvw_SetOnTop( nWin )
    ENDIF
 
    rc := { => }
-   wapi_GetWindowRect( hWnd, @rc )
+   wapi_GetWindowRect( hWnd, rc )
 
    RETURN wapi_SetWindowPos( hWnd, WIN_HWND_TOPMOST, ;
       rc[ "left" ], rc[ "top" ], 0, 0, hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) )
@@ -347,7 +347,7 @@ FUNCTION wvw_SetAsNormal( nWin )
    ENDIF
 
    rc := { => }
-   wapi_GetWindowRect( hWnd, @rc )
+   wapi_GetWindowRect( hWnd, rc )
 
    RETURN wapi_SetWindowPos( hWnd, WIN_HWND_NOTOPMOST, ;
       rc[ "left" ], rc[ "top" ], 0, 0, hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) )
@@ -433,3 +433,6 @@ FUNCTION win_SetTimer( ... )
 FUNCTION win_InvalidateRect( w, e, l, t, r, b )
    RETURN wapi_InvalidateRect( w, iif( PCount() > 2, { l, t, r, b }, NIL ), ;
       iif( HB_ISLOGICAL( e ), e, hb_defaultValue( e, 1 ) != 0 ) )
+
+FUNCTION win_CreateBrush( ... )
+   RETURN wapi_CreateBrushIndirect( { ... } )

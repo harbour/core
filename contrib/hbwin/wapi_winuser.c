@@ -1242,5 +1242,6 @@ HB_FUNC( WAPI_GETICONINFO )
    hbwapi_arraySet_HANDLE( aInfo, 4, ii.hbmMask );
    hbwapi_arraySet_HANDLE( aInfo, 5, ii.hbmColor );
 
-   hb_itemParamStore( 2, aInfo );
+   if( ! hb_itemParamStoreRelease( 2, aInfo ) )
+      hb_itemRelease( aInfo );
 }

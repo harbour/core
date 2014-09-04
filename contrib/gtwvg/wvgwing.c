@@ -958,7 +958,7 @@ HB_FUNC( WVG_FILLRECT )
    rc.right  = hb_parvni( 2, 3 );
    rc.bottom = hb_parvni( 2, 4 );
 
-   FillRect( ( HDC ) HB_PARHANDLE( 1 ), &rc, ( HBRUSH ) HB_PARHANDLE( 3 ) );
+   FillRect( ( HDC ) HB_PARHANDLE( 1 ), &rc, hbwapi_par_HBRUSH( 3 ) );
 }
 
 HB_FUNC( WVG_BEGINMOUSETRACKING )

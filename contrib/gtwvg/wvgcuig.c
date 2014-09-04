@@ -247,13 +247,13 @@ HB_FUNC( WVG_SETGOBJDATA )
                case GOBJ_OBJDATA_HPEN:
                   if( gObj->hPen && gObj->bDestroyPen )
                      DeleteObject( gObj->hPen );
-                  gObj->hPen        = ( HPEN ) HB_PARHANDLE( 3 );
+                  gObj->hPen        = hbwapi_par_HPEN( 3 );
                   gObj->bDestroyPen = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HBRUSH:
                   if( gObj->hBrush && gObj->bDestroyBrush )
                      DeleteObject( gObj->hBrush );
-                  gObj->hBrush        = ( HBRUSH ) HB_PARHANDLE( 3 );
+                  gObj->hBrush        = hbwapi_par_HBRUSH( 3 );
                   gObj->bDestroyBrush = HB_TRUE;
                   break;
                case GOBJ_OBJDATA_COLORTEXT:
