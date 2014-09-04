@@ -56,7 +56,8 @@ HB_FUNC( WIN_GETSTOCKOBJECT )
    HB_RETHANDLE( GetStockObject( hb_parni( 1 ) ) );
 }
 
-HB_FUNC( WIN_DELETEOBJECT )
+/* removed from GTWVT, so we remove it from here also. I really don't like doing it... */
+HB_FUNC( WVW_DELETEOBJECT )
 {
    hb_retl( DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
 }
@@ -1391,12 +1392,6 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
    hb_retnint( 0 );
 }
 
-/* removed from GTWVT, so we remove it from here also. I really don't like doing it... */
-HB_FUNC( WVW_DELETEOBJECT )
-{
-   hb_retl( DeleteObject( ( HGDIOBJ ) HB_PARHANDLE( 1 ) ) );
-}
-
 /* aScr := wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight ) */
 
 /*TODO: reconsider, is it really needed? is it better to be handled by application?
@@ -1727,14 +1722,6 @@ HB_FUNC( WVW_GETFONTINFO )
    }
 
    hb_itemReturnRelease( aRet );
-}
-
-HB_FUNC( WVW_MINIMIZE )
-{
-   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
-
-   if( wvw_win )
-      ShowWindow( wvw_win->hWnd, SW_MINIMIZE );
 }
 
 /* wvw_Maximize( [nWinNum] )

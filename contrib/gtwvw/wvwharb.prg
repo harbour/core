@@ -402,6 +402,16 @@ FUNCTION wvw_EnableMaximize( nWin, lEnable )
 
    RETURN lEnableOld
 
+PROCEDURE wvw_Minimize( nWin )
+
+   LOCAL hWnd
+
+   IF ! Empty( hWnd := wvw_Get_hnd_Window( nWin ) )
+      wapi_ShowWindow( hWnd, WIN_SW_MINIMIZE )
+   ENDIF
+
+   RETURN
+
 FUNCTION wvw_IsLButtonPressed()
    RETURN hb_bitAnd( wapi_GetKeyState( WIN_VK_LBUTTON ), 0x8000 ) != 0
 
@@ -410,6 +420,17 @@ FUNCTION wvw_GetScreenWidth()
 
 FUNCTION wvw_GetScreenHeight()
    RETURN wapi_GetSystemMetrics( WIN_SM_CYSCREEN )
+
+FUNCTION wvw_stSetText( dummy, hWnd, cText )  /* QUESTION: Is this correct? */
+
+   HB_SYMBOL_UNUSED( dummy )
+
+   IF ! Empty( hWnd )
+      wapi_SetWindowText( hWnd, cText )
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 FUNCTION wvw_GetCursorPos()
 

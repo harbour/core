@@ -149,21 +149,6 @@ HB_FUNC( WVW_STCREATE )
    hb_retni( 0 );
 }
 
-HB_FUNC( WVW_STSETTEXT )
-{
-   HWND hWnd = ( HWND ) HB_PARHANDLE( 2 );
-
-   if( hWnd )
-   {
-      void * hText;
-      SetWindowText( ( HWND ) hWnd, HB_PARSTR( 3, &hText, NULL ) );
-      hb_strfree( hText );
-      hb_retl( HB_TRUE );
-   }
-   else
-      hb_retl( HB_FALSE );
-}
-
 HB_FUNC( WVW_STSETFONT )
 {
    PWVW_GLO wvw     = hb_gt_wvw();
