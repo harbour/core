@@ -1339,7 +1339,7 @@ METHOD unTransform() CLASS Get
                ENDIF
             ENDIF
 
-            xValue := Val( cBuffer )
+            xValue := hb_Val( cBuffer )
 
             EXIT
 
