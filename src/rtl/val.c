@@ -49,7 +49,7 @@
 #include "hbapierr.h"
 
 /* returns the numeric value of a character string representation of a number  */
-HB_FUNC( VAL )
+static void hb_val( HB_BOOL fExt )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
@@ -63,43 +63,23 @@ HB_FUNC( VAL )
 
       fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue, &iDec, &iWidth );
 
-      if( ! fDbl )
-         hb_retnintlen( lValue, iWidth );
-      else
-         hb_retndlen( dValue, iWidth, iDec );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 1098, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( HB_VAL )
-{
-   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
-
-   if( pText )
-   {
-      const char * szText = hb_itemGetCPtr( pText );
-      int iWidth, iDec, iLen = ( int ) hb_itemGetCLen( pText );
-      HB_BOOL fDbl;
-      HB_MAXINT lValue;
-      double dValue;
-
-      fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue, &iDec, &iWidth );
-
-      if( HB_ISNUM( 2 ) )
-         iLen = hb_parni( 2 );
-
-      if( fDbl && iDec > 0 )
-         iLen -= iDec + 1;
-
-      if( iLen > iWidth )
-         iWidth = iLen;
-      else if( iLen > 0 )
+      if( fExt )
       {
-         while( iWidth > iLen && *szText == ' ' )
+         if( HB_ISNUM( 2 ) )
+            iLen = hb_parni( 2 );
+
+         if( fDbl && iDec > 0 )
+            iLen -= iDec + 1;
+
+         if( iLen > iWidth )
+            iWidth = iLen;
+         else if( iLen > 0 )
          {
-            iWidth--;
-            szText++;
+            while( iWidth > iLen && *szText == ' ' )
+            {
+               iWidth--;
+               szText++;
+            }
          }
       }
 
@@ -110,4 +90,14 @@ HB_FUNC( HB_VAL )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1098, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( VAL )
+{
+   hb_val( HB_FALSE );
+}
+
+HB_FUNC( HB_VAL )
+{
+   hb_val( HB_TRUE );
 }
