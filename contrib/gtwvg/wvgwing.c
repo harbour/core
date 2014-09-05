@@ -1011,13 +1011,7 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
    SetProp( hWnd, TEXT( "BLOCKCALLBACK" ), pBlock );
 #endif
 
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-   oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) ControlWindowProcedure );
-#else
-   oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) ControlWindowProcedure );
-#endif
-
-   hbwapi_ret_raw_HANDLE( oldProc );
+   hbwapi_ret_raw_HANDLE( ( WNDPROC ) SetWindowLongPtr( hWnd, GWL_WNDPROC, ( HB_PTRDIFF ) ControlWindowProcedure ) );
 }
 
 HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )

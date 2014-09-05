@@ -348,8 +348,8 @@ HB_FUNC( WVG_DEFWINDOWPROC )
 {
    hb_retnint( DefWindowProc( hbwapi_par_raw_HWND( 1 ),
                               hb_parni( 2 ),
-                              ( WPARAM ) hb_parnint( 3 ),
-                              ( LPARAM ) hb_parnint( 4 ) ) );
+                              HB_ISPOINTER( 3 ) ? ( WPARAM ) hb_parptr( 3 ) : ( WPARAM ) hb_parnint( 3 ),
+                              HB_ISPOINTER( 4 ) ? ( LPARAM ) hb_parptr( 4 ) : ( LPARAM ) hb_parnint( 4 ) ) );
 }
 
 HB_FUNC( WVG_CALLWINDOWPROC )
@@ -357,8 +357,8 @@ HB_FUNC( WVG_CALLWINDOWPROC )
    hb_retnint( CallWindowProc( hbwapi_par_raw_WNDPROC( 1 ),
                                hbwapi_par_raw_HWND( 2 ),
                                ( UINT ) hb_parni( 3 ),
-                               ( WPARAM ) hb_parnint( 4 ),
-                               ( LPARAM ) hb_parnint( 5 ) ) );
+                               HB_ISPOINTER( 4 ) ? ( WPARAM ) hb_parptr( 4 ) : ( WPARAM ) hb_parnint( 4 ),
+                               HB_ISPOINTER( 5 ) ? ( LPARAM ) hb_parptr( 5 ) : ( LPARAM ) hb_parnint( 5 ) ) );
 }
 
 /* TreeView Functions */

@@ -4349,7 +4349,7 @@ static void hb_wvt_gtCreateObjects( PHB_GTWVT pWVT )
    {
       LOGBRUSH lb;
       lb.lbStyle               = BS_NULL;
-      lb.lbColor               = RGB( 198,198,198 );
+      lb.lbColor               = RGB( 198, 198, 198 );
       lb.lbHatch               = 0;
       pWVT->currentBrush       = CreateBrushIndirect( &lb );
    }

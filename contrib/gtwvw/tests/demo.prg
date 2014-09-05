@@ -210,8 +210,7 @@ PROCEDURE Main()
       ENDCASE
    ENDDO
 
-   lboxmessage( "Thanks for trying this program." + hb_eol() + ;
-      "Good bye!" )
+   lboxmessage( "Thanks for trying this program." + hb_eol() + "Good bye!" )
 
    // restore state
    wvwm_ResetMouseObjects( nCurWindow )
@@ -415,7 +414,6 @@ STATIC PROCEDURE DEMO_Browse()
    LOCAL nRight  := MaxCol() - 3  // pls notice that this is relative to PARENT window!
    LOCAL cColor
 
-   LOCAL nStyle := 0
    LOCAL nCurWindow
 
    LOCAL nHScrollBar, nVScrollBar
@@ -456,7 +454,7 @@ STATIC PROCEDURE DEMO_Browse()
 
    oBrowse:configure()
 
-   wvw_SetPen( nStyle, 0, WIN_RGB( 210, 1210, 210 ) )
+   wvw_SetPen( WIN_PS_SOLID, 0, WIN_RGB( 210, 210, 210 ) )
    wvw_SetIcon( , hb_DirBase() + "dia_excl.ico" )
 
    aColumnsSep := Array( oBrowse:colCount )

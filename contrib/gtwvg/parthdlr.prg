@@ -506,11 +506,11 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       EXIT
 
    CASE WM_HSCROLL
-      ::handleEvent( HB_GTE_HSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), nlParam } )
+      ::handleEvent( HB_GTE_HSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), wvg_n2p( nlParam ) } )
       RETURN 0
 
    CASE WM_VSCROLL
-      IF ::handleEvent( HB_GTE_VSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), nlParam } ) == EVENT_HANDLED
+      IF ::handleEvent( HB_GTE_VSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), wvg_n2p( nlParam ) } ) == EVENT_HANDLED
          RETURN 0
       ENDIF
       EXIT

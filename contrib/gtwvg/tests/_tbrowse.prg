@@ -7,6 +7,7 @@
  * Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
+#include "button.ch"
 #include "dbstruct.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -37,8 +38,7 @@ PROCEDURE WvtMyBrowse()
          oCrt:create(), ;
          wvt_SetGUI( .T. ), ;
          ExecBrowser( oCrt ), ;
-         oCrt:destroy();
-         } )
+         oCrt:destroy() } )
 
    ELSE
       ExecBrowser()
@@ -64,7 +64,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    LOCAL hPopup     := wvt_SetPopupMenu()
    LOCAL oVBar, oHBar, oCom, oTre, oChk, oSLE, oLBx, aNvg, oIdx
 
-   STATIC s_nStyle := 0
+   STATIC s_nStyle := WIN_PS_SOLID
 
    THREAD STATIC t_nFactor := 200
    THREAD STATIC t_lActiveX := .F.
@@ -115,12 +115,11 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    NEXT
    oBrowse:configure()
 
-   IF s_nStyle > 5
-      s_nStyle := 0
+   IF s_nStyle > WIN_PS_NULL
+      s_nStyle := WIN_PS_SOLID
    ENDIF
-   wvt_SetPen( s_nStyle, 0, WIN_RGB( 210,1210,210 ) )
-   s_nStyle++
-   hb_gtInfo( HB_GTI_WINTITLE, "WVT Gui TBrowse()" )
+   wvt_SetPen( s_nStyle++, 0, WIN_RGB( 210, 210, 210 ) )
+   hb_gtInfo( HB_GTI_WINTITLE, "WVT GUI TBrowse()" )
 
    AAdd( aBlocks, {|| wvt_DrawBoxRaised( oBrowse:nTop - 2, oBrowse:nLeft - 2, oBrowse:nBottom + 1, oBrowse:nRight + 2 ) } )
    AAdd( aBlocks, {|| wvt_DrawBoxRecessed( oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
@@ -692,7 +691,7 @@ STATIC FUNCTION Vou_NavigateToCell( oBrowse )
    LOCAL nCount
 
    IF LastKey() == K_LBUTTONUP
-      IF oBrowse:HitTest( MRow(), MCol() ) == -5121   // on a cell
+      IF oBrowse:HitTest( MRow(), MCol() ) == HTCELL
          oBrowse:deHilite()
          oBrowse:refreshCurrent()
          oBrowse:forceStable()
@@ -706,7 +705,7 @@ STATIC FUNCTION Vou_NavigateToCell( oBrowse )
          ENDDO
 
          DO WHILE nCount > 0
-            nCount --
+            nCount--
             oBrowse:Down()
          ENDDO
 
