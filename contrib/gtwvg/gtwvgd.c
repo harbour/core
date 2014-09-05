@@ -1984,7 +1984,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
-            hbwapi_arraySet_HANDLE( pEvParams, 3, lParam );
+            hbwapi_arraySet_HANDLE( pEvParams, 3, ( HANDLE ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_HSCROLL, pEvParams );
             return 0;
@@ -1995,7 +1995,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
-            hbwapi_arraySet_HANDLE( pEvParams, 3, lParam );
+            hbwapi_arraySet_HANDLE( pEvParams, 3, ( HANDLE ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_VSCROLL, pEvParams );
             return 0;
@@ -2031,8 +2031,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
                hbwapi_arraySet_HANDLE( pEvParams, 1, hWnd );
-               hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
-               hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+               hbwapi_arraySet_HANDLE( pEvParams, 2, ( HWND ) wParam );
+               hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );  /* unused */
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS, pEvParams );
             }
@@ -2057,8 +2057,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
                hbwapi_arraySet_HANDLE( pEvParams, 1, hWnd );
-               hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
-               hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+               hbwapi_arraySet_HANDLE( pEvParams, 2, ( HWND ) wParam );
+               hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );  /* unused */
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS, pEvParams );
             }
@@ -2250,7 +2250,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
             hb_arraySetNI( pEvParams, 1, ( int ) wParam );
-            hbwapi_arraySet_HANDLE( pEvParams, 2, lParam );
+            hbwapi_arraySet_HANDLE( pEvParams, 2, ( NMHDR * ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
             break;
@@ -2266,8 +2266,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             LRESULT nResult;
             PHB_ITEM pEvParams = hb_itemArrayNew( 2 );
 
-            hbwapi_arraySet_HANDLE( pEvParams, 1, wParam );
-            hbwapi_arraySet_HANDLE( pEvParams, 2, lParam );
+            hbwapi_arraySet_HANDLE( pEvParams, 1, ( HDC ) wParam );
+            hbwapi_arraySet_HANDLE( pEvParams, 2, ( HWND ) lParam );
 
             nResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
 
@@ -2283,7 +2283,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
-            hbwapi_arraySet_HANDLE( pEvParams, 3, lParam );
+            hbwapi_arraySet_HANDLE( pEvParams, 3, ( HANDLE ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_KEYTOITEM, pEvParams );
             break;

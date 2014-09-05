@@ -49,6 +49,11 @@
 
 #include "hbgtwvw.h"
 
+/* workaround for missing declaration in MinGW */
+#if ! defined( TTM_SETTITLE ) && defined( TTM_SETTITLEA )
+   #define TTM_SETTITLE  TTM_SETTITLEA
+#endif
+
 /* wvw_SetToolTopActive( [nWinNum], [lToggle] ) */
 HB_FUNC( WVW_SETTOOLTIPACTIVE )
 {
