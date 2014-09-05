@@ -50,6 +50,8 @@
 #ifndef HBWIN_CH_
 #define HBWIN_CH_
 
+#define WIN_CLR_INVALID                    0xFFFFFFFF
+
 /* win_MAPISendMail() address types */
 #define WIN_MAPI_TO                        1
 #define WIN_MAPI_CC                        2

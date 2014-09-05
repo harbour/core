@@ -206,6 +206,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    SetCursor( nCursor )
 
    dbCloseArea()
+   hb_dbDrop( cFileIndex )
    IF oCrt == NIL
       RestScreen( 0, 0, MaxRow(), MaxCol(), cScr )
    ENDIF

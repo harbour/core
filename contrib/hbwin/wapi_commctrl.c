@@ -49,12 +49,6 @@
 
 #include <commctrl.h>
 
-#if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
-   #undef MAKELONG
-   #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
-                                          ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
-#endif
-
 /* --- BEGIN - ImageList_* - API --- */
 /* int ImageList_Add( HIMAGELIST himl, HBITMAP hbmImage, HBITMAP hbmMask ); */
 HB_FUNC( WAPI_IMAGELIST_ADD )

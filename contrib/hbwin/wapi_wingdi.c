@@ -263,8 +263,11 @@ LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
 
    if( pStru && HB_IS_HASH( pStru ) )
    {
-      p->lbStyle  = ( UINT ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lbStyle" ) );
-      p->lbColor  = ( COLORREF ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lbColor" ) );
+      p->lbStyle = ( UINT ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lbStyle" ) );
+      p->lbColor = ( COLORREF ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lbColor" ) );
+      #if defined( HB_OS_WIN_CE )
+      p->lbHatch = 0;
+      #else
       switch( p->lbStyle )
       {
          case BS_SOLID:
@@ -275,11 +278,15 @@ LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
          default:
             p->lbHatch = ( ULONG_PTR ) hb_itemGetPtr( hb_hashGetCItemPtr( pStru, "lbHatch" ) );
       }
+      #endif
    }
    else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 3 )
    {
-      p->lbStyle  = ( UINT ) hb_arrayGetNI( pStru, 1 );
-      p->lbColor  = ( COLORREF ) hb_arrayGetNL( pStru, 2 );
+      p->lbStyle = ( UINT ) hb_arrayGetNI( pStru, 1 );
+      p->lbColor = ( COLORREF ) hb_arrayGetNL( pStru, 2 );
+      #if defined( HB_OS_WIN_CE )
+      p->lbHatch = 0;
+      #else
       switch( p->lbStyle )
       {
          case BS_SOLID:
@@ -290,6 +297,7 @@ LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
          default:
             p->lbHatch = ( ULONG_PTR ) hb_arrayGetPtr( pStru, 3 );
       }
+      #endif
    }
 #if 0
    else
@@ -297,6 +305,9 @@ LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
       /* Just an experiment */
       p->lbStyle = ( UINT ) hb_parni( iParam );
       p->lbColor = hbwapi_par_COLORREF( iParam + 1 );
+      #if defined( HB_OS_WIN_CE )
+      p->lbHatch = 0;
+      #else
       switch( p->lbStyle )
       {
          case BS_SOLID:
@@ -307,6 +318,7 @@ LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
          default:
             p->lbHatch = ( ULONG_PTR ) hbwapi_par_raw_HANDLE( iParam + 2 );
       }
+      #endif
    }
 #endif
 
@@ -775,11 +787,12 @@ HB_FUNC( WAPI_CREATEHATCHBRUSH )
 
 HB_FUNC( WAPI_CREATEBRUSHINDIRECT )
 {
-#if ! defined( HB_OS_WIN_CE )
    LOGBRUSH lb;
-   hbwapi_ret_HBRUSH( CreateBrushIndirect( hbwapi_par_LOGBRUSH( &lb, 1 ) ) );
+   hbwapi_par_LOGBRUSH( &lb, 1 );
+#if ! defined( HB_OS_WIN_CE )
+   hbwapi_ret_HBRUSH( CreateBrushIndirect( &lb ) );
 #else
-   hb_retptr( NULL );
+   hbwapi_ret_HBRUSH( CreateSolidBrush( lb.lbColor ) );
 #endif
 }
 
@@ -951,4 +964,22 @@ HB_FUNC( WAPI_ELLIPSE )
                         hb_parni( 5 ) /* nBottomRect */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WAPI_SETDCBRUSHCOLOR )
+{
+#if ( _WIN32_WINNT >= 0x0500 )
+   hbwapi_ret_COLORREF( SetDCBrushColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+#else
+   hbwapi_ret_COLORREF( 0 );
+#endif
+}
+
+HB_FUNC( WAPI_SETDCPENCOLOR )
+{
+#if ( _WIN32_WINNT >= 0x0500 )
+   hbwapi_ret_COLORREF( SetDCPenColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) ) );
+#else
+   hbwapi_ret_COLORREF( 0 );
+#endif
 }

@@ -191,6 +191,8 @@ DYNAMIC wapi_SetActiveWindow
 DYNAMIC wapi_SetBkColor
 DYNAMIC wapi_SetBkMode
 DYNAMIC wapi_SetCursorPos
+DYNAMIC wapi_SetDCBrushColor
+DYNAMIC wapi_SetDCPenColor
 DYNAMIC wapi_SetDlgItemText
 DYNAMIC wapi_SetErrorMode
 DYNAMIC wapi_SetFocus

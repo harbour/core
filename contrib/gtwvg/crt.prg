@@ -134,10 +134,10 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    sl_dragLeave
    VAR    sl_dragDrop
 
-   /*  HARUR implementation */
+   /*  Harbour implementation */
    VAR    resizable                             INIT .T.
    VAR    resizeMode                            INIT HB_GTI_RESIZEMODE_FONT
-   VAR    style                                 INIT ( WIN_WS_OVERLAPPED + WIN_WS_CAPTION + WIN_WS_SYSMENU + WIN_WS_SIZEBOX + WIN_WS_MINIMIZEBOX + WIN_WS_MAXIMIZEBOX )
+   VAR    style                                 INIT WIN_WS_OVERLAPPED + WIN_WS_CAPTION + WIN_WS_SYSMENU + WIN_WS_SIZEBOX + WIN_WS_MINIMIZEBOX + WIN_WS_MAXIMIZEBOX
    VAR    exStyle                               INIT 0
    VAR    lModal                                INIT .F.
    VAR    pGTp

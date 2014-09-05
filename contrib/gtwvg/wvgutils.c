@@ -513,12 +513,7 @@ HB_FUNC( WVT_SETPOINTER )
          default: hCursor = LoadCursor( NULL, IDC_ARROW );
       }
 
-#if ! defined( HB_ARCH_64BIT ) && ( defined( __WATCOMC__ ) || defined( __DMC__ ) || \
-      ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) )
-      SetClassLong( _s->hWnd, GCLP_HCURSOR, ( DWORD ) hCursor );
-#else
-      SetClassLongPtr( _s->hWnd, GCLP_HCURSOR, ( LONG_PTR ) hCursor );
-#endif
+      SetClassLongPtr( _s->hWnd, GCL_HCURSOR, ( LONG_PTR ) hCursor );
    }
 }
 

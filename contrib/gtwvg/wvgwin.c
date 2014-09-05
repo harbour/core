@@ -80,23 +80,6 @@ HB_FUNC( WVG_SELECTOBJECT )
    hbwapi_ret_raw_HANDLE( SelectObject( hbwapi_par_raw_HDC( 1 ), hbwapi_par_raw_HGDIOBJ( 2 ) ) );
 }
 
-/* wvg_LoadIcon( ncIcon ) */
-HB_FUNC( WVG_LOADICON )
-{
-   HICON hIcon;
-
-   if( HB_ISNUM( 1 ) )
-      hIcon = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
-   else
-   {
-      void * hBuffer;
-      hIcon = ( HICON ) LoadImage( NULL, HB_PARSTR( 1, &hBuffer, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-      hb_strfree( hBuffer );
-   }
-
-   hbwapi_ret_raw_HANDLE( hIcon );
-}
-
 /* wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
  *   nSource == 0 ResourceIdByNumber
  *   nSource == 1 ResourceIdByName
@@ -212,18 +195,6 @@ HB_FUNC( WVG_CHOOSECOLOR )
       hbwapi_ret_COLORREF( cc.rgbResult );
    else
       hbwapi_ret_COLORREF( -1 );
-}
-
-HB_FUNC( WVG_FINDWINDOW )
-{
-   void * hText;
-   HWND   hwnd = FindWindow( NULL, HB_PARSTR( 1, &hText, NULL ) );
-   hb_strfree( hText );
-
-   if( hwnd )
-      hbwapi_ret_raw_HANDLE( hwnd );
-   else
-      hbwapi_ret_raw_HANDLE( -1 );
 }
 
 /* Menu manipulations */
@@ -369,17 +340,8 @@ HB_FUNC( WVG_CREATEWINDOWEX )
 
 HB_FUNC( WVG_SETWNDPROC )
 {
-   HWND    hWnd    = hbwapi_par_raw_HWND( 1 );
-   WNDPROC wndProc = hbwapi_par_raw_WNDPROC( 2 );
-   WNDPROC oldProc;
-
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-   oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) wndProc );
-#else
-   oldProc = ( WNDPROC ) SetWindowLongPtr( hWnd, GWLP_WNDPROC, ( HB_PTRDIFF ) wndProc );
-#endif
-
-   hbwapi_ret_raw_HANDLE( oldProc );
+   hbwapi_ret_raw_HANDLE( ( WNDPROC ) SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ),
+      GWL_WNDPROC, ( HB_PTRDIFF ) hbwapi_par_raw_WNDPROC( 2 ) ) );
 }
 
 HB_FUNC( WVG_DEFWINDOWPROC )
@@ -444,26 +406,6 @@ HB_FUNC( WVG_BUTTON_GETCHECK )
    hb_retnl( Button_GetCheck( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
-/* wvg_SetDCBrushColor( hDC, nRGB ) */
-HB_FUNC( WVG_SETDCBRUSHCOLOR )
-{
-#if ( _WIN32_WINNT >= 0x0500 )
-   hbwapi_ret_COLORREF( SetDCBrushColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-#else
-   hbwapi_ret_COLORREF( 0 );
-#endif
-}
-
-/* wvg_SetDCPenColor( hDC, nRGB ) */
-HB_FUNC( WVG_SETDCPENCOLOR )
-{
-#if ( _WIN32_WINNT >= 0x0500 )
-   hbwapi_ret_COLORREF( SetDCPenColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-#else
-   hbwapi_ret_COLORREF( 0 );
-#endif
-}
-
 /* wvg_GetCurrentObject( hDC, nObjType ) */
 HB_FUNC( WVG_GETCURRENTOBJECT )
 {
@@ -482,46 +424,9 @@ HB_FUNC( WVG_GETCURRENTFONT )
    hbwapi_ret_raw_HANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), OBJ_FONT ) );
 }
 
-HB_FUNC( WVG_SETWINDOWPOSTOBACK )
-{
-   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), HWND_BOTTOM, 0, 0, 0, 0,
-                          SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
-}
-
-HB_FUNC( WVG_SETWINDOWPOSTOTOP )
-{
-   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), HWND_TOP, 0, 0, 0, 0,
-                          SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE ) );
-}
-
-HB_FUNC( WVG_SETWINDOWSIZE )
-{
-   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), NULL, 0, 0, hb_parni( 2 ), hb_parni( 3 ),
-                          hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE  ) );
-}
-
-HB_FUNC( WVG_SETWINDOWPOSITION )
-{
-   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ), 0, 0,
-                          hb_parl( 4 ) ? 0 : SWP_NOREDRAW | SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE ) );
-}
-
-HB_FUNC( WVG_SETWINDOWPOSANDSIZE )
-{
-   hb_retl( SetWindowPos( hbwapi_par_raw_HWND( 1 ), NULL, hb_parni( 2 ), hb_parni( 3 ),
-                          hb_parni( 4 ), hb_parni( 5 ),
-                          ( hb_parl( 6 ) ? 0 : SWP_NOREDRAW ) | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED ) );
-}
-
 HB_FUNC( WVG_POSTMESSAGE )
 {
    hb_retl( PostMessage( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( WPARAM ) hb_parni( 3 ), ( LPARAM ) hb_parni( 4 ) ) );
-}
-
-HB_FUNC( WVG_FORCEWINDOWTOTOP )
-{
-   SetWindowPos( hbwapi_par_raw_HWND( 1 ), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
-   SetWindowPos( hbwapi_par_raw_HWND( 1 ), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
 }
 
 /* wvg_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] ) */

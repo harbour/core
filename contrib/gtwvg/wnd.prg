@@ -328,7 +328,7 @@ METHOD PROCEDURE WvgWindow:destroy()
       wvg_DestroyWindow( ::hWnd )
    ENDIF
 
-   IF ::hBrushBG != NIL
+   IF ! Empty( ::hBrushBG )
       wvg_DeleteObject( ::hBrushBG )
    ENDIF
 

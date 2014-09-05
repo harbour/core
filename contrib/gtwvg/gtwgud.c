@@ -1582,7 +1582,9 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
 #endif
 #if defined( HB_OS_WIN_CE ) && ! defined( __MINGW32CE__ )
+   #ifndef SWP_DEFERERASE
    #define SWP_DEFERERASE  0
+   #endif
 #endif
                   SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                 SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );

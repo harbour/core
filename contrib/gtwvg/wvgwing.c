@@ -860,11 +860,7 @@ HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 HB_FUNC( WVG_SETCURRENTBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
-#if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
-   SetClassLong( hbwapi_par_raw_HWND( 1 ), GCL_HBRBACKGROUND, ( DWORD ) hb_parnl( 2 ) );
-#else
-   SetClassLongPtr( hbwapi_par_raw_HWND( 1 ), GCLP_HBRBACKGROUND, ( LONG_PTR ) hb_parnint( 2 ) );
-#endif
+   SetClassLongPtr( hbwapi_par_raw_HWND( 1 ), GCL_HBRBACKGROUND, ( HB_PTRDIFF ) hbwapi_par_HBRUSH( 2 ) );
 #endif
 }
 
