@@ -2069,10 +2069,10 @@ static HB_BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          hb_ctw_SelectWindow( HB_GTCTW_GET( pGT ), 0, HB_TRUE );
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
 
-         if( fResult && hb_arrayLen( pInfo->pResult ) >= 8 )
+         if( fResult && hb_arrayLen( pInfo->pResult ) >= 7 )
          {
             PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
-            hb_arraySetNI( pInfo->pResult, 8, HB_CTW_GETCURRENT( pCTW ) );
+            hb_arraySetNI( pInfo->pResult, 7, HB_CTW_GETCURRENT( pCTW ) );
          }
          return fResult;
       }
@@ -2084,8 +2084,8 @@ static HB_BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          hb_ctw_SelectWindow( pCTW, 0, HB_TRUE );
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
-         if( fResult && hb_arrayLen( pInfo->pResult ) >= 8 )
-            hb_arraySetNI( pInfo->pResult, 8, iWindow );
+         if( fResult && hb_arrayLen( pInfo->pResult ) >= 7 )
+            hb_arraySetNI( pInfo->pResult, 7, iWindow );
          return fResult;
       }
       case HB_GTI_SETWIN:
@@ -2095,8 +2095,8 @@ static HB_BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          hb_ctw_SelectWindow( pCTW, 0, HB_TRUE );
          fResult = HB_GTSUPER_INFO( pGT, iType, pInfo );
-         if( fResult && hb_arrayLen( pInfo->pNewVal ) >= 8 )
-            hb_ctw_SelectWindow( pCTW, hb_arrayGetNI( pInfo->pNewVal, 8 ),
+         if( fResult && hb_arrayLen( pInfo->pNewVal ) >= 7 )
+            hb_ctw_SelectWindow( pCTW, hb_arrayGetNI( pInfo->pNewVal, 7 ),
                                  HB_TRUE );
          return fResult;
       }

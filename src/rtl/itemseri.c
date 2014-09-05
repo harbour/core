@@ -1236,6 +1236,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
                   hb_itemSerialTypedRef( pRefList, pBuffer[ 0 ],
                               ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ 1 ] ) );
                case HB_SERIAL_XHB_B:
+                  /* we do not support xHarbour codeblock deserialization: HB_RestoreBlock( pItem ) */
                   nSize = 10;
                   break;
             }
@@ -1674,7 +1675,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       case HB_SERIAL_XHB_B:
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
                                        nOffset, pRefList );
-         /* we do not support codeblock deserialization: HB_RestoreBlock( pItem ) */
+         /* we do not support xHarbour codeblock deserialization: HB_RestoreBlock( pItem ) */
          /* hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_B ); */
          hb_itemClear( pItem );
          break;
