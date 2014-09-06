@@ -120,17 +120,6 @@ HB_FUNC( WVG_LOADIMAGE )
    hbwapi_ret_raw_HANDLE( hImage );
 }
 
-/* wvg_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage, lDoNotScale ) in Pixels */
-HB_FUNC( WVG_DRAWIMAGE )
-{
-   void * hImage;
-
-   hb_retl( hb_wvt_DrawImage( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ), hb_parni( 3 ),
-                              hb_parni( 4 ), hb_parni( 5 ), HB_PARSTR( 6, &hImage, NULL ), hb_parl( 7 ) ) );
-
-   hb_strfree( hImage );
-}
-
 HB_FUNC( WVG_GETDC )
 {
    hbwapi_ret_raw_HANDLE( GetDC( hbwapi_par_raw_HWND( 1 ) ) );

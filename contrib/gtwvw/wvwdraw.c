@@ -565,15 +565,9 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
             hb_fsReadLarge( fhnd, pGlobal, nFileSize );
 
             if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
-            {
                OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
-               HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
-            }
-            else
-               pPicture = NULL;
 
             GlobalUnlock( hGlobal );
-            GlobalFree( hGlobal );
 
             if( pPicture )
             {
@@ -588,9 +582,14 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
                *piWidth  = ( int ) nWidth;
                *piHeight = ( int ) nHeight;
             }
+
+            if( iStream )
+               HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
          }
 
          hb_fsClose( fhnd );
+
+         GlobalFree( hGlobal );
       }
    }
 

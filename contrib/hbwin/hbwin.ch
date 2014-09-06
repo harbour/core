@@ -1067,4 +1067,8 @@
 #define WIN_DIB_RGB_COLORS                 0
 #define WIN_DIB_PAL_COLORS                 1
 
+/* wapi_SetArcDirection() values */
+#define WIN_AD_COUNTERCLOCKWISE            1
+#define WIN_AD_CLOCKWISE                   2
+
 #endif /* HBWIN_CH_ */

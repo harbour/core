@@ -46,6 +46,8 @@
 
 #include "wvtwin.ch"
 
+#include "hbgtinfo.ch"
+
 THREAD STATIC t_paint_ := { { "", {} } }
 
 /* This function must have to be defined in your applications */
@@ -789,3 +791,17 @@ PROCEDURE wvg_ForceWindowToTop( hWnd )
 
 FUNCTION wvg_SetWndProc( hWnd, pWndProc )
    RETURN wapi_SetWindowLongPtr( hWnd, WIN_GWLP_WNDPROC, pWndProc )
+
+STATIC FUNCTION wvg_hWnd()
+   RETURN hb_gtInfo( HB_GTI_WINHANDLE )
+
+/* wvt_MessageBox( cMessage, cTitle, nIcon, hWnd ) */
+FUNCTION wvt_MessageBox( ... )
+
+   LOCAL hWnd := wvg_hWnd()
+
+   IF Empty( hWnd )
+      RETURN 0
+   ENDIF
+
+   RETURN wapi_MessageBox( hWnd, ... )

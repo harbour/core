@@ -5403,8 +5403,11 @@ IPicture * hb_gt_wvw_LoadPicture( const char * szImage )
             {
                IStream * iStream;
 
-               if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
+               if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
+               {
                   OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
+                  HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
+               }
             }
             GlobalFree( hGlobal );
          }

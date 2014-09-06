@@ -369,9 +369,9 @@ HB_FUNC( WVW_OPENIMAGE )
       {
          OleLoadPicture( pStream, 0, 0, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
          HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
-
-         GlobalFree( hG );
       }
+
+      GlobalFree( hG );
 
       if( pPicture )
       {

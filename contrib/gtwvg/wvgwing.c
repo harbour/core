@@ -944,19 +944,6 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    hb_strfree( hClass );
 }
 
-/* Function with win_FillRect() exists in hbwin with different approach. */
-HB_FUNC( WVG_FILLRECT )
-{
-   RECT rc;
-
-   rc.left   = hb_parvni( 2, 1 );
-   rc.top    = hb_parvni( 2, 2 );
-   rc.right  = hb_parvni( 2, 3 );
-   rc.bottom = hb_parvni( 2, 4 );
-
-   FillRect( hbwapi_par_raw_HDC( 1 ), &rc, hbwapi_par_HBRUSH( 3 ) );
-}
-
 HB_FUNC( WVG_BEGINMOUSETRACKING )
 {
 #if ! defined( HB_OS_WIN_CE )

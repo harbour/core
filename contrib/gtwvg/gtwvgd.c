@@ -3650,6 +3650,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_WINHANDLE:
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, pWVT->hWnd );
+         break;
+
       case HB_GTI_SPEC:
       {
          int iMessage = hb_itemGetNI( pInfo->pNewVal );

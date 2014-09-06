@@ -109,9 +109,9 @@ void hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE *
 #if ! defined( HB_OS_WIN_CE )
 IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 {
-   LPVOID    iPicture  = NULL;
-   HRSRC     res;
-   HINSTANCE hInstance = GetModuleHandle( NULL );
+   IPicture * iPicture = NULL;
+   HRSRC      res;
+   HINSTANCE  hInstance = GetModuleHandle( NULL );
 
    if( hInstance )
       res = FindResource( hInstance, resource, section );
@@ -144,11 +144,14 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
                {
                   IStream * iStream = NULL;
 
-                  if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
-                     OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
-
-                  /* TOFIX: iStream never ->Release()-d */
+                  if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
+                  {
+                     OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &iPicture );
+                     HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
+                  }
                }
+
+               GlobalFree( hGlobal );
             }
          }
 
@@ -161,7 +164,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 
 IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
 {
-   LPVOID iPicture = NULL;
+   IPicture * iPicture = NULL;
 
    HANDLE hFile = CreateFile( image, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 
@@ -181,10 +184,11 @@ IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
             {
                IStream * iStream = NULL;
 
-               if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
-                  OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
-
-               /* TOFIX: iStream never ->Release()-d */
+               if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
+               {
+                  OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &iPicture );
+                  HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
+               }
             }
             GlobalFree( hGlobal );
          }
@@ -195,7 +199,7 @@ IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
    return ( IPicture * ) iPicture;
 }
 
-HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPicture, HB_BOOL bDoNotScale )
+static HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPicture, HB_BOOL bDoNotScale )
 {
    PHB_GTWVT _s      = hb_wvt_gtGetWVT();
    HB_BOOL   bResult = HB_FALSE;
@@ -265,7 +269,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
    return bResult;
 }
 
-HB_BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
+static HB_BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
 {
    if( iPicture )
    {
@@ -296,7 +300,7 @@ POINT hb_wvt_gtGetXYFromColRow( int col, int row )
    return xy;
 }
 
-HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage, HB_BOOL bDoNotScale )
+static HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage, HB_BOOL bDoNotScale )
 {
    HB_BOOL bResult = HB_FALSE;
 
@@ -317,14 +321,11 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
             if( ReadFile( hFile, hGlobal, nFileSize, &nReadByte, NULL ) )
             {
-               IStream *   iStream;
-               IPicture *  iPicture;
-               IPicture ** iPictureRef = &iPicture;
+               IStream *  iStream;
+               IPicture * iPicture = NULL;
 
-               if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
-                  OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) iPictureRef );
-
-               /* TOFIX: iStream never ->Release()-d */
+               if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
+                  OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &iPicture );
 
                if( iPicture )
                {
@@ -369,6 +370,9 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
                   HB_VTBL( iPicture )->Release( HB_THIS( iPicture ) );
                   bResult = HB_TRUE;
                }
+
+               if( iStream )
+                  HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
             }
             GlobalFree( hGlobal );
          }
@@ -805,6 +809,17 @@ HB_FUNC( WVT_DRAWBOXGROUPRAISED )
          hb_wvt_DrawBoxGroupRaised( _s->hGuiDC, iTop, iLeft, iBottom, iRight );
       #endif
    }
+}
+
+/* wvg_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage, lDoNotScale ) in Pixels */
+HB_FUNC( WVG_DRAWIMAGE )
+{
+   void * hImage;
+
+   hb_retl( hb_wvt_DrawImage( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ), hb_parni( 3 ),
+                              hb_parni( 4 ), hb_parni( 5 ), HB_PARSTR( 6, &hImage, NULL ), hb_parl( 7 ) ) );
+
+   hb_strfree( hImage );
 }
 
 /* wvt_DrawImage( nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, aPxlOff, lDoNotScale ) */
@@ -1775,8 +1790,8 @@ HB_FUNC( WVT_DRAWGRIDVERT )
          int iCharWidth  = _s->PTEXTSIZE.x;
          int iCharHeight = _s->PTEXTSIZE.y;
 
-         int iTop     = hb_parvni( 5, 1 ) + iCharHeight * hb_parni( 1 );
-         int iBottom  = hb_parvni( 5, 3 ) + iCharHeight * ( hb_parni( 2 ) + 1 ) - 1;
+         int iTop    = hb_parvni( 5, 1 ) + iCharHeight * hb_parni( 1 );
+         int iBottom = hb_parvni( 5, 3 ) + iCharHeight * ( hb_parni( 2 ) + 1 ) - 1;
 
          SelectObject( _s->hdc, _s->currentPen );
 

@@ -105,7 +105,7 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
    wndclass.hInstance     = hInstance;
 /* wndclass.hIcon         = NULL; */
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
-   wndclass.hbrBackground = NULL; /*( HBRUSH ) ( COLOR_BTNFACE + 1 ); */
+   wndclass.hbrBackground = NULL; /* ( HBRUSH ) ( COLOR_BTNFACE + 1 ); */
 /* wndclass.lpszMenuName  = NULL; */
    wndclass.lpszClassName = s_szClassName;
 
@@ -255,7 +255,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    }
 
    pWVT->pPP               = ( HB_GT_PARAMS * ) hb_xgrab( sizeof( HB_GT_PARAMS ) );
-   pWVT->pPP->style        = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
+   pWVT->pPP->style        = WS_THICKFRAME | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
    pWVT->pPP->exStyle      = 0;
    pWVT->pPP->x            = 0;
    pWVT->pPP->y            = 0;

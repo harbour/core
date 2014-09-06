@@ -659,7 +659,7 @@ HB_FUNC( WAPI_EXTTEXTOUT )
       void * hData;
       HB_SIZE nDataLen;
       LPCTSTR lpData = HB_PARSTR( 6, &hData, &nDataLen );
-      RECT rect;
+      RECT rc;
       PHB_ITEM pFontWidths = hb_param( 7, HB_IT_ARRAY );
       INT * lpFontWidths;
 
@@ -688,7 +688,7 @@ HB_FUNC( WAPI_EXTTEXTOUT )
                            hb_parni( 2 ) /* iRow */,
                            hb_parni( 3 ) /* iCol */,
                            ( UINT ) hb_parni( 4 ) /* fuOptions */,
-                           hbwapi_par_RECT( &rect, 5, HB_FALSE ),
+                           hbwapi_par_RECT( &rc, 5, HB_FALSE ),
                            lpData,
                            ( UINT ) nDataLen,
                            lpFontWidths ) );
@@ -891,11 +891,11 @@ HB_FUNC( WAPI_LINETO )
 HB_FUNC( WAPI_FILLRECT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
-   RECT rect;
+   RECT rc;
    HBRUSH hBrush = hbwapi_par_HBRUSH( 3 );
 
-   if( hDC && hbwapi_par_RECT( &rect, 2, HB_TRUE ) && hBrush )
-      hb_retni( FillRect( hDC, &rect, hBrush ) );
+   if( hDC && hbwapi_par_RECT( &rc, 2, HB_TRUE ) && hBrush )
+      hb_retni( FillRect( hDC, &rc, hBrush ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -982,4 +982,9 @@ HB_FUNC( WAPI_SETDCPENCOLOR )
 #else
    hbwapi_ret_COLORREF( 0 );
 #endif
+}
+
+HB_FUNC( WAPI_SETARCDIRECTION )
+{
+   hb_retni( SetArcDirection( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ) ) );
 }

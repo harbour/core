@@ -192,25 +192,6 @@ HB_FUNC( WVT_CHOOSECOLOR )
    hbwapi_ret_COLORREF( -1 );
 }
 
-/* wvt_MessageBox( cMessage, cTitle, nIcon, hWnd ) */
-HB_FUNC( WVT_MESSAGEBOX )
-{
-   PHB_GTWVT _s = hb_wvt_gtGetWVT();
-
-   if( _s )
-   {
-      void * hTitle;
-      void * hMsg;
-
-      hb_retni( MessageBox( _s->hWnd, HB_PARSTR( 1, &hTitle, NULL ), HB_PARSTR( 2, &hMsg, NULL ), hb_parnidef( 3, MB_OK ) ) );
-
-      hb_strfree( hTitle );
-      hb_strfree( hMsg );
-   }
-   else
-      hb_retni( 0 );
-}
-
 /* Tooltips */
 
 HB_FUNC( WVT_SETTOOLTIPACTIVE )

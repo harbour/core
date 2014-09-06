@@ -192,7 +192,7 @@ METHOD WvgSLE:handleEvent( nMessage, aNM )
       IF Empty( ::hBrushBG )
          RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 
@@ -223,7 +223,7 @@ METHOD WvgSLE:handleEvent( nMessage, aNM )
                ::oParent:setFocus()
                RETURN EVENT_HANDLED
             ENDIF
-         CASE aNM[ 2 ] == 65
+         CASE aNM[ 2 ] == hb_keyCode( "A" )  /* ~ */
             // RETURN EVENT_HANDLED
          ENDCASE
 
