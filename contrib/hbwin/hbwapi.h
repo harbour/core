@@ -54,8 +54,8 @@
 
 #include <windows.h>
 
-#define hbwapi_par_WPARAM( n )              ( HB_ISPOINTER( n ) ? ( WPARAM ) hb_parptr( n ) : ( WPARAM ) hb_parnint( n ) )
-#define hbwapi_par_LPARAM( n )              ( HB_ISPOINTER( n ) ? ( LPARAM ) hb_parptr( n ) : ( LPARAM ) hb_parnint( n ) )
+#define hbwapi_par_WPARAM( n )              ( ( WPARAM ) ( HB_ISPOINTER( n ) ? ( HB_PTRDIFF ) hb_parptr( n ) : hb_parnint( n ) ) )
+#define hbwapi_par_LPARAM( n )              ( ( LPARAM ) ( HB_ISPOINTER( n ) ? ( HB_PTRDIFF ) hb_parptr( n ) : hb_parnint( n ) ) )
 
 #define hbwapi_parv_raw_HANDLE( n, i )      ( ( HANDLE           ) __hbwapi_parv_handle( n, i ) )
 
@@ -86,6 +86,7 @@
 #define hbwapi_par_COLORREF_def( n, d )     ( ( COLORREF ) hb_parnldef( n, d ) )
 
 #define hbwapi_par_BOOL( n )                ( ( BOOL  ) ( hb_parl( n ) ? TRUE : FALSE ) )
+#define hbwapi_par_BYTE( n )                ( ( BYTE  ) hb_parni( n ) )
 #define hbwapi_par_INT( n )                 ( ( INT   ) hb_parni( n ) )
 #define hbwapi_par_UINT( n )                ( ( UINT  ) hb_parni( n ) )
 #define hbwapi_par_LONG( n )                ( ( LONG  ) hb_parnl( n ) )

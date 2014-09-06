@@ -303,7 +303,7 @@ LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
    else
    {
       /* Just an experiment */
-      p->lbStyle = ( UINT ) hb_parni( iParam );
+      p->lbStyle = hbwapi_par_UINT( iParam );
       p->lbColor = hbwapi_par_COLORREF( iParam + 1 );
       #if defined( HB_OS_WIN_CE )
       p->lbHatch = 0;
@@ -601,7 +601,7 @@ HB_FUNC( WAPI_SETTEXTALIGN )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retni( ( int ) SetTextAlign( hDC, ( UINT ) hb_parni( 2 ) ) );
+      hb_retni( ( int ) SetTextAlign( hDC, hbwapi_par_UINT( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -687,7 +687,7 @@ HB_FUNC( WAPI_EXTTEXTOUT )
       hb_retl( ExtTextOut( hDC,
                            hb_parni( 2 ) /* iRow */,
                            hb_parni( 3 ) /* iCol */,
-                           ( UINT ) hb_parni( 4 ) /* fuOptions */,
+                           hbwapi_par_UINT( 4 ) /* fuOptions */,
                            hbwapi_par_RECT( &rc, 5, HB_FALSE ),
                            lpData,
                            ( UINT ) nDataLen,

@@ -357,7 +357,7 @@ HB_FUNC( WVW_XBUPDATE )
       si.fMask  = fMask;
       si.nMin   = hb_parni( 5 );
       si.nMax   = hb_parni( 6 );
-      si.nPage  = ( UINT ) hb_parni( 4 );
+      si.nPage  = hbwapi_par_UINT( 4 );
       si.nPos   = hb_parni( 3 );
 
       hb_retni( SetScrollInfo( hWnd, SB_CTL, &si, TRUE ) );
@@ -415,7 +415,7 @@ HB_FUNC( WVW_XBENABLE )
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
 
    HWND hWnd    = hb_gt_wvw_FindControlHandle( wvw_win, WVW_CONTROL_SCROLLBAR, hb_parni( 2 ), NULL );
-   UINT uiFlags = ( UINT ) hb_parni( 3 );
+   UINT uiFlags = hbwapi_par_UINT( 3 );
 
    hb_retl( hWnd && uiFlags <= ESB_DISABLE_BOTH && EnableScrollBar( hWnd, SB_CTL, uiFlags ) );
 }

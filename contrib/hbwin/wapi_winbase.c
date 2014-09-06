@@ -197,9 +197,9 @@ HB_FUNC( WAPI_SETLASTERROR )
 HB_FUNC( WAPI_SETERRORMODE )
 {
 #if defined( HB_OS_WIN_CE )
-   hb_retni( 0 );
+   hbwapi_ret_UINT( 0 );
 #else
-   hb_retni( SetErrorMode( ( UINT ) hb_parni( 1 ) ) );
+   hbwapi_ret_UINT( SetErrorMode( hbwapi_par_UINT( 1 ) ) );
 #endif
 }
 

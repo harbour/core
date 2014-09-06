@@ -267,7 +267,7 @@ HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 
          ti.uFlags   = TTF_SUBCLASS | TTF_IDISHWND;
          ti.hwnd     = wvw_win->hWnd;
-         ti.uId      = ( UINT ) hb_parni( 2 );
+         ti.uId      = hbwapi_par_UINT( 2 );
          ti.hinst    = GetModuleHandle( NULL );
          ti.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );  /* TOFIX: drops const */
 
@@ -745,7 +745,7 @@ HB_FUNC( WVW_SETTIMER )
 
    if( wvw && wvw->a.pSymWVW_TIMER && wvw_win )
    {
-      SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId, ( UINT ) hb_parni( 2 ), NULL );
+      SetTimer( wvw_win->hWnd, WVW_ID_BASE_TIMER + wvw_win->nWinId, hbwapi_par_UINT( 2 ), NULL );
 
       hb_retl( HB_TRUE );
    }

@@ -115,7 +115,7 @@ HB_FUNC( WAPI_ENDDIALOG )
 HB_FUNC( WAPI_CHECKDLGBUTTON )
 {
    BOOL bResult = CheckDlgButton( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ),
-                                  ( UINT ) ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) );
+                                  HB_ISNUM( 3 ) ? hbwapi_par_UINT( 3 ) : ( UINT ) hb_parl( 3 ) );
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
 }
@@ -194,9 +194,9 @@ HB_FUNC( WAPI_SENDDLGITEMMESSAGE )  /* NOTE: unsafe function, may corrupt memory
 
    result = SendDlgItemMessage( hbwapi_par_raw_HWND( 1 ),
                                 hb_parni( 2 ),
-                                ( UINT ) hb_parni( 3 ),
-                                ( WPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 3 ) ),
-                                szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 5 ) ? ( HB_PTRDIFF ) hb_parptr( 5 ) : hb_parnint( 5 ) ) );
+                                hbwapi_par_UINT( 3 ),
+                                hbwapi_par_WPARAM( 4 ),
+                                szText ? ( LPARAM ) szText : hbwapi_par_LPARAM( 5 ) );
    hbwapi_SetLastError( GetLastError() );
    hb_retnint( result );
 

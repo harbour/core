@@ -65,7 +65,7 @@ HB_FUNC( WAPI_SETWINDOWPOS )
    {
       /* Do not delete this, it will be active if
          numeric pointers are not accepted above */
-      hWndInsertAfter = ( HWND ) ( HB_PTRDIFF ) hb_parni( 2 );
+      hWndInsertAfter = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
 
       if( !( hWndInsertAfter == HWND_TOP ||
              hWndInsertAfter == HWND_BOTTOM ||
@@ -82,7 +82,7 @@ HB_FUNC( WAPI_SETWINDOWPOS )
                            hb_parni( 4 ),
                            hb_parni( 5 ),
                            hb_parni( 6 ),
-                           ( UINT ) hb_parni( 7 ) );
+                           hbwapi_par_UINT( 7 ) );
 
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
@@ -1085,7 +1085,7 @@ HB_FUNC( WAPI_ENABLEWINDOW )
 
 HB_FUNC( WAPI_SETTIMER )
 {
-   UINT_PTR result = SetTimer( hbwapi_par_raw_HWND( 1 ), ( UINT_PTR ) hb_parnint( 2 ), ( UINT ) hb_parni( 3 ), NULL );
+   UINT_PTR result = SetTimer( hbwapi_par_raw_HWND( 1 ), ( UINT_PTR ) hb_parnint( 2 ), hbwapi_par_UINT( 3 ), NULL );
    hbwapi_SetLastError( GetLastError() );
    hb_retnint( result );
 }
@@ -1102,9 +1102,9 @@ HB_FUNC( WAPI_POSTMESSAGE )  /* NOTE: unsafe function, may write past buffer */
       szText = HB_STRUNSHARE( &hText, szText, nLen );
 
    bResult = PostMessage( hbwapi_par_raw_HWND( 1 ),
-                          ( UINT ) hb_parni( 2 ),
-                          ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-                          szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) );
+                          hbwapi_par_UINT( 2 ),
+                          hbwapi_par_WPARAM( 3 ),
+                          szText ? ( LPARAM ) szText : hbwapi_par_LPARAM( 4 ) );
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
 
@@ -1123,9 +1123,9 @@ HB_FUNC( WAPI_SENDMESSAGE )  /* NOTE: unsafe function, may write past buffer */
       szText = HB_STRUNSHARE( &hText, szText, nLen );
 
    result = SendMessage( hbwapi_par_raw_HWND( 1 ),
-                         ( UINT ) hb_parni( 2 ),
-                         ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-                         szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) );
+                         hbwapi_par_UINT( 2 ),
+                         hbwapi_par_WPARAM( 3 ),
+                         szText ? ( LPARAM ) szText : hbwapi_par_LPARAM( 4 ) );
    hbwapi_SetLastError( GetLastError() );
    hb_retnint( result );
 
@@ -1150,11 +1150,11 @@ HB_FUNC( WAPI_SENDMESSAGETIMEOUT )  /* NOTE: unsafe function, may write past buf
       szText = HB_STRUNSHARE( &hText, szText, nLen );
 
    result = SendMessageTimeout( hbwapi_par_raw_HWND( 1 ),
-                                ( UINT ) hb_parni( 2 ),
-                                ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-                                szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
-                                ( UINT ) hb_parni( 5 ),
-                                ( UINT ) hb_parni( 6 ),
+                                hbwapi_par_UINT( 2 ),
+                                hbwapi_par_WPARAM( 3 ),
+                                szText ? ( LPARAM ) szText : hbwapi_par_LPARAM( 4 ),
+                                hbwapi_par_UINT( 5 ),
+                                hbwapi_par_UINT( 6 ),
                                 &pdwResult );
    hbwapi_SetLastError( GetLastError() );
    hb_retnint( result );
@@ -1279,7 +1279,7 @@ HB_FUNC( WAPI_REDRAWWINDOW )
       hbwapi_par_raw_HWND( 1 ),             /* handle of window */
       hbwapi_par_RECT( &rc, 2, HB_FALSE ),  /* address of structure with update rectangle */
       ( HRGN ) hbwapi_par_raw_HANDLE( 3 ),  /* handle of update region */
-      ( UINT ) hb_parni( 4 ) ) );           /* array of redraw flags */
+      hbwapi_par_UINT( 4 ) ) );             /* array of redraw flags */
 }
 
 HB_FUNC( WAPI_GETICONINFO )
@@ -1307,7 +1307,7 @@ HB_FUNC( WAPI_GETICONINFO )
 HB_FUNC( WAPI_DEFWINDOWPROC )
 {
    hbwapi_ret_LRESULT( DefWindowProc( hbwapi_par_raw_HWND( 1 ),
-                                      ( UINT ) hb_parni( 2 ),
+                                      hbwapi_par_UINT( 2 ),
                                       hbwapi_par_WPARAM( 3 ),
                                       hbwapi_par_LPARAM( 4 ) ) );
 }
@@ -1316,7 +1316,7 @@ HB_FUNC( WAPI_CALLWINDOWPROC )
 {
    hbwapi_ret_LRESULT( CallWindowProc( hbwapi_par_raw_WNDPROC( 1 ),
                                        hbwapi_par_raw_HWND( 2 ),
-                                       ( UINT ) hb_parni( 3 ),
+                                       hbwapi_par_UINT( 3 ),
                                        hbwapi_par_WPARAM( 4 ),
                                        hbwapi_par_LPARAM( 5 ) ) );
 }
