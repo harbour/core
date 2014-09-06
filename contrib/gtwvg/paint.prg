@@ -786,3 +786,6 @@ PROCEDURE wvg_ForceWindowToTop( hWnd )
    wapi_SetWindowPos( hWnd, WIN_HWND_NOTOPMOST, 0, 0, 0, 0, hb_bitOr( WIN_SWP_NOMOVE, WIN_SWP_NOSIZE ) )
 
    RETURN
+
+FUNCTION wvg_SetWndProc( hWnd, pWndProc )
+   RETURN wapi_SetWindowLongPtr( hWnd, WIN_GWLP_WNDPROC, pWndProc )

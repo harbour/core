@@ -1002,7 +1002,6 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 {
    HWND     hWnd   = hbwapi_par_raw_HWND( 1 );
    PHB_ITEM pBlock = hb_itemNew( hb_param( 2, HB_IT_EVALITEM ) );
-   WNDPROC  oldProc;
 
 #if defined( HB_OS_WIN_CE ) && defined( __MINGW32__ )
    /* Workaround for bug in cegcc headers [as of version 0.55] */

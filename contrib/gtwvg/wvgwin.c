@@ -283,50 +283,6 @@ HB_FUNC( WVG_SETMENUITEM )
    hb_strfree( hText );
 }
 
-HB_FUNC( WVG_CREATEWINDOWEX )
-{
-   void * hClassName;
-   void * hWinName;
-
-   hbwapi_ret_raw_HANDLE( CreateWindowEx(
-      ( DWORD ) hb_parnl( 1 ),
-      HB_PARSTR( 2, &hClassName, NULL ),
-      HB_PARSTR( 3, &hWinName, NULL ),
-      ( DWORD ) hb_parnl( 4 ),
-      hb_parni( 5 ), hb_parni( 6 ),
-      hb_parni( 7 ), hb_parni( 8 ),
-      hbwapi_par_raw_HWND( 9 ),
-      HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : hbwapi_par_raw_HMENU( 10 ),
-      hbwapi_is_HANDLE( 11 ) ? hbwapi_par_raw_HINSTANCE( 11 ) : GetModuleHandle( NULL ),
-      NULL ) );
-
-   hb_strfree( hClassName );
-   hb_strfree( hWinName );
-}
-
-HB_FUNC( WVG_SETWNDPROC )
-{
-   hbwapi_ret_raw_HANDLE( ( WNDPROC ) SetWindowLongPtr( hbwapi_par_raw_HWND( 1 ),
-      GWL_WNDPROC, ( HB_PTRDIFF ) hbwapi_par_raw_WNDPROC( 2 ) ) );
-}
-
-HB_FUNC( WVG_DEFWINDOWPROC )
-{
-   hb_retnint( DefWindowProc( hbwapi_par_raw_HWND( 1 ),
-                              hb_parni( 2 ),
-                              HB_ISPOINTER( 3 ) ? ( WPARAM ) hb_parptr( 3 ) : ( WPARAM ) hb_parnint( 3 ),
-                              HB_ISPOINTER( 4 ) ? ( LPARAM ) hb_parptr( 4 ) : ( LPARAM ) hb_parnint( 4 ) ) );
-}
-
-HB_FUNC( WVG_CALLWINDOWPROC )
-{
-   hb_retnint( CallWindowProc( hbwapi_par_raw_WNDPROC( 1 ),
-                               hbwapi_par_raw_HWND( 2 ),
-                               ( UINT ) hb_parni( 3 ),
-                               HB_ISPOINTER( 4 ) ? ( WPARAM ) hb_parptr( 4 ) : ( WPARAM ) hb_parnint( 4 ),
-                               HB_ISPOINTER( 5 ) ? ( LPARAM ) hb_parptr( 5 ) : ( LPARAM ) hb_parnint( 5 ) ) );
-}
-
 /* TreeView Functions */
 
 HB_FUNC( WVG_TREEVIEW_EXPAND )
@@ -388,11 +344,6 @@ HB_FUNC( WVG_GETCURRENTBRUSH )
 HB_FUNC( WVG_GETCURRENTFONT )
 {
    hbwapi_ret_raw_HANDLE( GetCurrentObject( hbwapi_par_raw_HDC( 1 ), OBJ_FONT ) );
-}
-
-HB_FUNC( WVG_POSTMESSAGE )
-{
-   hb_retl( PostMessage( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ), ( WPARAM ) hb_parni( 3 ), ( LPARAM ) hb_parni( 4 ) ) );
 }
 
 /* wvg_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] ) */

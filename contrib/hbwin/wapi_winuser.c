@@ -179,7 +179,7 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
       hbwapi_par_INT( 7 ),                              /* nWidth */
       hbwapi_par_INT( 8 ),                              /* nHeight */
       hbwapi_par_raw_HWND( 9 ),                         /* hWndParent, default to HWND_DESKTOP */
-      hbwapi_par_raw_HMENU( 10 ),                       /* hMenu */
+      HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : hbwapi_par_raw_HMENU( 10 ),  /* hMenu */
       hbwapi_par_raw_HINSTANCE( 11 ),                   /* hInstance */
       ( LPVOID ) hb_parptr( 12 ) );                     /* lpParam */
 
@@ -650,22 +650,25 @@ HB_FUNC( WAPI_INSERTMENU )
          uIDNewItem = ( UINT_PTR ) hb_parnint( 4 );
    }
 
-   if( lpNewItem )
-      uFlags |= MF_STRING;
-   else if( HB_ISNUM( 5 ) )
+   if( ( uFlags & MF_SEPARATOR ) == 0 )
    {
-      lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 5 );
       if( lpNewItem )
-         uFlags |= MF_OWNERDRAW;
+         uFlags |= MF_STRING;
+      else if( HB_ISNUM( 5 ) )
+      {
+         lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 5 );
+         if( lpNewItem )
+            uFlags |= MF_OWNERDRAW;
+      }
+      else if( hbwapi_is_HANDLE( 5 ) )
+      {
+         lpNewItem = ( LPCTSTR ) hbwapi_par_raw_HBITMAP( 5 );
+         if( lpNewItem )
+            uFlags |= MF_BITMAP;
+      }
+      else if( hb_pcount() <= 3 )
+         uFlags |= MF_SEPARATOR;
    }
-   else if( hbwapi_is_HANDLE( 5 ) )
-   {
-      lpNewItem = ( LPCTSTR ) hbwapi_par_raw_HBITMAP( 5 );
-      if( lpNewItem )
-         uFlags |= MF_BITMAP;
-   }
-   else if( hb_pcount() <= 3 )
-      uFlags |= MF_SEPARATOR;
 
    fResult = InsertMenu( hMenu, uPosition, uFlags, uIDNewItem, lpNewItem );
    hbwapi_SetLastError( GetLastError() );
@@ -695,22 +698,25 @@ HB_FUNC( WAPI_APPENDMENU )
          uIDNewItem = ( UINT_PTR ) hb_parnint( 3 );
    }
 
-   if( lpNewItem )
-      uFlags |= MF_STRING;
-   else if( HB_ISNUM( 4 ) )
+   if( ( uFlags & MF_SEPARATOR ) == 0 )
    {
-      lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
       if( lpNewItem )
-         uFlags |= MF_OWNERDRAW;
+         uFlags |= MF_STRING;
+      else if( HB_ISNUM( 4 ) )
+      {
+         lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
+         if( lpNewItem )
+            uFlags |= MF_OWNERDRAW;
+      }
+      else if( hbwapi_is_HANDLE( 4 ) )
+      {
+         lpNewItem = ( LPCTSTR ) hbwapi_par_raw_HBITMAP( 4 );
+         if( lpNewItem )
+            uFlags |= MF_BITMAP;
+      }
+      else if( hb_pcount() <= 2 )
+         uFlags |= MF_SEPARATOR;
    }
-   else if( hbwapi_is_HANDLE( 4 ) )
-   {
-      lpNewItem = ( LPCTSTR ) hbwapi_par_raw_HBITMAP( 4 );
-      if( lpNewItem )
-         uFlags |= MF_BITMAP;
-   }
-   else if( hb_pcount() <= 2 )
-      uFlags |= MF_SEPARATOR;
 
    fResult = AppendMenu( hMenu, uFlags, uIDNewItem, lpNewItem );
    hbwapi_SetLastError( GetLastError() );
@@ -1084,6 +1090,27 @@ HB_FUNC( WAPI_SETTIMER )
    hb_retnint( result );
 }
 
+HB_FUNC( WAPI_POSTMESSAGE )  /* NOTE: unsafe function, may write past buffer */
+{
+   void *  hText;
+   HB_SIZE nLen;
+   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
+
+   HB_BOOL bResult;
+
+   if( szText )
+      szText = HB_STRUNSHARE( &hText, szText, nLen );
+
+   bResult = PostMessage( hbwapi_par_raw_HWND( 1 ),
+                          ( UINT ) hb_parni( 2 ),
+                          ( WPARAM ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
+                          szText ? ( LPARAM ) szText : ( LPARAM ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+
+   hb_strfree( hText );
+}
+
 HB_FUNC( WAPI_SENDMESSAGE )  /* NOTE: unsafe function, may write past buffer */
 {
    void *  hText;
@@ -1275,4 +1302,21 @@ HB_FUNC( WAPI_GETICONINFO )
 
    if( ! hb_itemParamStoreRelease( 2, aInfo ) )
       hb_itemRelease( aInfo );
+}
+
+HB_FUNC( WAPI_DEFWINDOWPROC )
+{
+   hbwapi_ret_LRESULT( DefWindowProc( hbwapi_par_raw_HWND( 1 ),
+                                      ( UINT ) hb_parni( 2 ),
+                                      hbwapi_par_WPARAM( 3 ),
+                                      hbwapi_par_LPARAM( 4 ) ) );
+}
+
+HB_FUNC( WAPI_CALLWINDOWPROC )
+{
+   hbwapi_ret_LRESULT( CallWindowProc( hbwapi_par_raw_WNDPROC( 1 ),
+                                       hbwapi_par_raw_HWND( 2 ),
+                                       ( UINT ) hb_parni( 3 ),
+                                       hbwapi_par_WPARAM( 4 ),
+                                       hbwapi_par_LPARAM( 5 ) ) );
 }

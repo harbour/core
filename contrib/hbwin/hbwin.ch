@@ -643,6 +643,7 @@
 #define WIN_HWND_BOTTOM                    1
 #define WIN_HWND_TOPMOST                   -1
 #define WIN_HWND_NOTOPMOST                 -2
+#define WIN_HWND_BROADCAST                 0xFFFF  /* for wapi_PostMessage() */
 
 /* window messages */
 #define WIN_WM_USER                        1024

@@ -29,6 +29,7 @@ DYNAMIC wapi_AddFontResourceEx
 DYNAMIC wapi_AppendMenu
 DYNAMIC wapi_Arc
 DYNAMIC wapi_BringWindowToTop
+DYNAMIC wapi_CallWindowProc
 DYNAMIC wapi_CheckDlgButton
 DYNAMIC wapi_CheckMenuItem
 DYNAMIC wapi_CheckMenuRadioItem
@@ -47,6 +48,7 @@ DYNAMIC wapi_CreatePen
 DYNAMIC wapi_CreatePopupMenu
 DYNAMIC wapi_CreateSolidBrush
 DYNAMIC wapi_CreateWindowEx
+DYNAMIC wapi_DefWindowProc
 DYNAMIC wapi_DeleteMenu
 DYNAMIC wapi_DestroyacceleratorTable
 DYNAMIC wapi_DestroyMenu
@@ -171,6 +173,7 @@ DYNAMIC wapi_MulDiv
 DYNAMIC wapi_OpenMutex
 DYNAMIC wapi_OutputDebugString
 DYNAMIC wapi_PlaySound
+DYNAMIC wapi_PostMessage
 DYNAMIC wapi_QueryPerformanceCounter
 DYNAMIC wapi_QueryPerformanceFrequency
 DYNAMIC wapi_Rectangle
