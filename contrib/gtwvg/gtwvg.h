@@ -273,7 +273,7 @@ typedef struct
    HWND      hDlgModeless[ WVT_DLGML_MAX ]; /* Handle to a modeless dialog */
    PHB_ITEM  pFunc[ WVT_DLGML_MAX ];        /* Function pointer for WndProc */
    /* TODO: pcbFunc is redundant and should be removed */
-   PHB_ITEM  pcbFunc[ WVT_DLGML_MAX ];      /*codeblock for WndProc */
+   PHB_ITEM  pcbFunc[ WVT_DLGML_MAX ];      /* codeblock for WndProc */
    int       iType[ WVT_DLGML_MAX ];        /* Type of Function Pointers - Function 1, Block 2, Method 3 */
    HWND      hDlgModal[ WVT_DLGMD_MAX ];    /* Handle to a modeless dialog */
    PHB_ITEM  pFuncModal[ WVT_DLGMD_MAX ];   /* Function pointer for WndProc */
@@ -297,14 +297,6 @@ typedef struct
    HB_THREAD_NO threadNO;                   /* Will hold the current THREAD No */
 
 } HB_GTWVT, * PHB_GTWVT;
-
-#if defined( HB_OS_WIN_CE ) && ! defined( __MINGW32CE__ )
-   BOOL SetMenu( HWND hWnd, HMENU hMenu );
-   HMENU GetMenu( HWND hWnd );
-
-   #define LR_LOADMAP3DCOLORS   0
-   #define SWP_NOREDRAW         0
-#endif
 
 extern HB_EXPORT POINT         hb_wvt_gtGetXYFromColRow( int col, int row );
 #if ! defined( HB_OS_WIN_CE )

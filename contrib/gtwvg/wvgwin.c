@@ -295,7 +295,7 @@ HB_FUNC( WVG_LBGETTEXT )
    int iLen = ListBox_GetTextLen( hWnd, iIndex );
    LPTSTR szText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
 
-   ListBox_GetText( hWnd, iIndex, szText );
+   ( void ) ListBox_GetText( hWnd, iIndex, szText );
 
    HB_RETSTRLEN( szText, iLen );
 }

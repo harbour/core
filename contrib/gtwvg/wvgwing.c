@@ -90,8 +90,10 @@
    #define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
-#if ! defined( GCLP_HBRBACKGROUND )
-   #define GCLP_HBRBACKGROUND     -10
+#if defined( HB_OS_WIN_CE )
+   #ifndef LR_LOADMAP3DCOLORS
+   #define LR_LOADMAP3DCOLORS   0
+   #endif
 #endif
 
 #define WIN_STATUSBAR_MAX_PARTS  256
@@ -860,6 +862,10 @@ HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
 HB_FUNC( WVG_SETCURRENTBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
+   #ifndef GCL_HBRBACKGROUND
+   #define GCL_HBRBACKGROUND  GCLP_HBRBACKGROUND
+   #endif
+
    SetClassLongPtr( hbwapi_par_raw_HWND( 1 ), GCL_HBRBACKGROUND, ( HB_PTRDIFF ) hbwapi_par_HBRUSH( 2 ) );
 #endif
 }
@@ -996,6 +1002,10 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 #else
    SetProp( hWnd, TEXT( "BLOCKCALLBACK" ), pBlock );
 #endif
+
+   #ifndef GWL_WNDPROC
+   #define GWL_WNDPROC  GWLP_WNDPROC
+   #endif
 
    hbwapi_ret_raw_HANDLE( ( WNDPROC ) SetWindowLongPtr( hWnd, GWL_WNDPROC, ( HB_PTRDIFF ) ControlWindowProcedure ) );
 }

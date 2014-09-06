@@ -1142,7 +1142,7 @@ HB_FUNC( WAPI_SENDMESSAGETIMEOUT )  /* NOTE: unsafe function, may write past buf
    void *    hText;
    HB_SIZE   nLen;
    LPCTSTR   szText = HB_PARSTR( 4, &hText, &nLen );
-   DWORD_PTR pdwResult = NULL;
+   DWORD_PTR pdwResult = 0;
 
    LRESULT result;
 

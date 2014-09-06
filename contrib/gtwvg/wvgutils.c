@@ -494,6 +494,10 @@ HB_FUNC( WVT_SETPOINTER )
          default: hCursor = LoadCursor( NULL, IDC_ARROW );
       }
 
+      #ifndef GCL_HCURSOR
+      #define GCL_HCURSOR  GCLP_HCURSOR
+      #endif
+
       SetClassLongPtr( _s->hWnd, GCL_HCURSOR, ( LONG_PTR ) hCursor );
    }
 }

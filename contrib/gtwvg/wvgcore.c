@@ -2233,6 +2233,9 @@ HB_FUNC( WVT_DRAWSCROLLBUTTON )
             xy.y       = iBottom - iOff + 1;
             Point[ 2 ] = xy;
             break;
+
+         default:
+            memset( &Point, 0, sizeof( Point ) );
       }
 
       SelectObject( _s->hdc, _s->pGUI->solidBrush );
