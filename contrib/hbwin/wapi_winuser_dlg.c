@@ -71,17 +71,27 @@ static BOOL CALLBACK wapi_DialogFuncProc( HWND hDlg, UINT message, WPARAM wParam
       hb_vmPushNil();
       hb_vmPushPointer( hDlg );
       hb_vmPushNumInt( message );
-      hb_vmPushNumInt( wParam );
-      hb_vmPushNumInt( lParam );
 
       if( message == WM_COMMAND )
       {
+         hb_vmPushNumInt( wParam );
+         if( HIWORD( wParam ) == 0 || HIWORD( wParam ) == 1 )
+            hb_vmPushNumInt( lParam );
+         else
+            hbwapi_vmPush_HANDLE( ( HWND ) lParam );
+         /* TODO: rethink this. Called proc can do this on its own,
+                  no need to pass calculated params. Or, think of
+                  some generic solution. */
          hb_vmPushInteger( ( int ) HIWORD( wParam ) );
          hb_vmPushInteger( ( int ) LOWORD( wParam ) );
          hb_vmDo( 6 );
       }
       else
+      {
+         hb_vmPushNumInt( wParam );
+         hb_vmPushNumInt( lParam );
          hb_vmDo( 4 );
+      }
    }
 
    return ( BOOL ) hb_parnl( -1 );

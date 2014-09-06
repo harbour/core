@@ -1390,7 +1390,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hIcon = hb_gt_wvw_SetWindowIconFromFile( wvw_win, HB_ITEMGETSTR( pInfo->pNewVal, &hName, NULL ) );
             hb_strfree( hName );
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) hIcon );
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, ( void * ) ( HB_PTRDIFF ) hIcon );
          break;
       }
 
@@ -1405,7 +1405,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hIcon = hb_gt_wvw_SetWindowIcon( wvw_win, hb_itemGetNI( pInfo->pNewVal ), NULL );
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) hIcon );
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, ( void * ) ( HB_PTRDIFF ) hIcon );
          break;
       }
 
@@ -5817,7 +5817,7 @@ HBITMAP hb_gt_wvw_PrepareBitmap( const char * szBitmap, HB_UINT uiBitmap, int iE
       if( ! hBitmap )
       {
          hBitmap = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ),
-                                          MAKEINTRESOURCE( ( WORD ) uiBitmap ),
+                                          MAKEINTRESOURCE( uiBitmap ),
                                           IMAGE_BITMAP,
                                           iExpWidth,
                                           iExpHeight,

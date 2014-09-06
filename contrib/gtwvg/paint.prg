@@ -805,3 +805,21 @@ FUNCTION wvt_MessageBox( ... )
    ENDIF
 
    RETURN wapi_MessageBox( hWnd, ... )
+
+/* wvt_DlgSetIcon( hDlg, ncIcon ) */
+FUNCTION wvt_DlgSetIcon( hDlg, ncIcon )
+
+   LOCAL hIcon
+
+   IF HB_ISNUMERIC( ncIcon )
+      hIcon := wapi_LoadIcon( wapi_GetModuleHandle(), ncIcon )
+   ELSEIF Empty( hIcon := wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON, 0, 0, WIN_LR_LOADFROMFILE ) )
+      hIcon := wapi_LoadImage( wapi_GetModuleHandle(), ncIcon, WIN_IMAGE_ICON )
+   ENDIF
+
+   IF ! Empty( hIcon )
+      wapi_SendMessage( hDlg, WIN_WM_SETICON, WIN_ICON_SMALL, hIcon )  /* Titlebar icon */
+      wapi_SendMessage( hDlg, WIN_WM_SETICON, WIN_ICON_BIG  , hIcon )  /* Tasklist icon */
+   ENDIF
+
+   RETURN hIcon

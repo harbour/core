@@ -1256,4 +1256,8 @@
 #define WIN_AD_COUNTERCLOCKWISE            1
 #define WIN_AD_CLOCKWISE                   2
 
+/* WIN_WM_SETICON / WIN_WM_GETICON types */
+#define WIN_ICON_SMALL                     0
+#define WIN_ICON_BIG                       1
+
 #endif /* HBWIN_CH_ */

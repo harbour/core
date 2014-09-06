@@ -1006,7 +1006,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
 
                case 1:
                   hDlg = CreateDialog( GetModuleHandle( NULL ),
-                                       MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
+                                       MAKEINTRESOURCE( hb_parni( 1 ) ),
                                        hb_parl( 2 ) ? _s->hWnd : NULL,
                                        ( DLGPROC ) hb_wvt_gtDlgProcMLess );
                   break;
@@ -1118,7 +1118,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
 
             case 1:
                iResult = DialogBoxParam( GetModuleHandle( NULL ),
-                                         MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
+                                         MAKEINTRESOURCE( hb_parni( 1 ) ),
                                          hParent,
                                          ( DLGPROC ) hb_wvt_gtDlgProcModal,
                                          ( LPARAM ) ( DWORD ) iIndex + 1 );
@@ -1178,32 +1178,6 @@ HB_FUNC( WVT_CBADDSTRING )
 HB_FUNC( WVT_CBSETCURSEL )
 {
    hb_retni( ( int ) SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 ) );
-}
-
-/* wvt_DlgSetIcon( hDlg, ncIcon ) */
-HB_FUNC( WVT_DLGSETICON )
-{
-   HICON hIcon;
-
-   if( HB_ISNUM( 2 ) )
-      hIcon = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 2 ) ) );
-   else
-   {
-      void * hName;
-      LPCTSTR szName = HB_PARSTR( 2, &hName, NULL );
-      hIcon = ( HICON ) LoadImage( NULL, szName, IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-      if( ! hIcon )
-         hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), szName, IMAGE_ICON, 0, 0, 0 );
-      hb_strfree( hName );
-   }
-
-   if( hIcon )
-   {
-      SendMessage( hbwapi_par_raw_HWND( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
-      SendMessage( hbwapi_par_raw_HWND( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
-   }
-
-   hbwapi_ret_raw_HANDLE( hIcon );
 }
 
 HB_FUNC( WVT_GETFONTHANDLE )

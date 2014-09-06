@@ -3303,7 +3303,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( hIconToFree )
                DestroyIcon( hIconToFree );
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, ( void * ) ( HB_PTRDIFF ) pWVT->hIcon );
          break;
 
       case HB_GTI_ICONRES:
@@ -3331,9 +3331,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
 
             pWVT->bIconToFree = HB_FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    MAKEINTRESOURCE( ( HB_MAXINT )
-                                         hb_itemGetNInt( pInfo->pNewVal ) ) );
+            pWVT->hIcon = LoadIcon( pWVT->hInstance, MAKEINTRESOURCE( hb_itemGetNI( pInfo->pNewVal ) ) );
 
             if( pWVT->hWnd )
             {
@@ -3344,7 +3342,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( hIconToFree )
                DestroyIcon( hIconToFree );
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, ( void * ) ( HB_PTRDIFF ) pWVT->hIcon );
          break;
 
       case HB_GTI_VIEWMAXWIDTH:
@@ -3761,11 +3759,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      hb_strfree( hText );
                   }
                   else if( iIconType == 2 )
-                  {
-                     hIcon = LoadIcon( pWVT->hInstance,
-                                          MAKEINTRESOURCE( ( HB_MAXINT )
-                                                      hb_arrayGetNInt( pInfo->pNewVal2, 3 ) ) );
-                  }
+                     hIcon = LoadIcon( pWVT->hInstance, MAKEINTRESOURCE( hb_arrayGetNI( pInfo->pNewVal2, 3 ) ) );
+
                   tnid.cbSize           = sizeof( tnid );
                   tnid.hWnd             = pWVT->hWnd;
                   tnid.uID              = HB_ID_NOTIFYICON;

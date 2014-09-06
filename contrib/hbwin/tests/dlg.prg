@@ -16,17 +16,15 @@ PROCEDURE Main()
    IF Empty( win_LoadResource( IDD_DIALOG1, WIN_RT_DIALOG ) )
       wapi_MessageBox( , "Resources not linked. Use 'hbmk2 dlg.hbp' to link resources at build time." )
    ELSE
-      wapi_DialogBoxParam( 0, IDD_DIALOG1, 0, @DialogFunc() )
+      wapi_DialogBoxParam( , IDD_DIALOG1,, @DialogFunc() )
    ENDIF
 
    RETURN
 
 // Main function to control the user interaction
-STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
+STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam )
 
-   HB_SYMBOL_UNUSED( wParam )
    HB_SYMBOL_UNUSED( lParam )
-   HB_SYMBOL_UNUSED( wPHigh )
 
    SWITCH nMessage
    CASE WIN_WM_INITDIALOG
@@ -48,9 +46,9 @@ STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
       RETURN .T.
 
    CASE WIN_WM_COMMAND
-      SWITCH wPLow
+      SWITCH WIN_LOWORD( wParam )
       CASE IDC_BUTTON1
-         wapi_MessageBox( 0, "Hello [" + wapi_GetDlgItemText( hWnd, IDC_EDIT1 ) + "]!" + Chr( 13 ) + "How are you?", "Hi!", WIN_MB_ICONASTERISK )
+         wapi_MessageBox( , "Hello [" + wapi_GetDlgItemText( hWnd, IDC_EDIT1 ) + "]!" + Chr( 13 ) + "How are you?", "Hi!", WIN_MB_ICONASTERISK )
          RETURN .T.
       ENDSWITCH
    ENDSWITCH

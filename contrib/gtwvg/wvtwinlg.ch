@@ -641,3 +641,7 @@
 #define WM_CHOOSEFONT_GETLOGFONT                  WIN_WM_CHOOSEFONT_GETLOGFONT
 #define WM_CHOOSEFONT_SETLOGFONT                  WIN_WM_CHOOSEFONT_SETLOGFONT
 #define WM_CHOOSEFONT_SETFLAGS                    WIN_WM_CHOOSEFONT_SETFLAGS
+
+/* WIN_WM_SETICON / WIN_WM_GETICON Type Codes */
+#define ICON_SMALL                                WIN_ICON_SMALL
+#define ICON_BIG                                  WIN_ICON_BIG

@@ -1250,7 +1250,7 @@ HB_FUNC( WAPI_LOADBITMAP )
 {
    void * hName = NULL;
    hbwapi_ret_raw_HANDLE( LoadBitmap( hbwapi_par_raw_HINSTANCE( 1 ),
-                                      HB_ISNUM( 2 ) ? MAKEINTRESOURCE( hb_parni( 2 ) ) : HB_PARSTR( 2, &hName, NULL ) ) );
+                                      HB_ISNUM( 2 ) ? MAKEINTRESOURCE( hbwapi_par_INT( 2 ) ) : HB_PARSTR( 2, &hName, NULL ) ) );
    hb_strfree( hName );
 }
 
@@ -1258,7 +1258,7 @@ HB_FUNC( WAPI_LOADICON )
 {
    void * hName = NULL;
    HICON h = LoadIcon( hbwapi_par_raw_HINSTANCE( 1 ),
-                       HB_ISNUM( 2 ) ? MAKEINTRESOURCE( hb_parni( 2 ) ) : HB_PARSTR( 2, &hName, NULL ) );
+                       HB_ISNUM( 2 ) ? MAKEINTRESOURCE( hbwapi_par_INT( 2 ) ) : HB_PARSTR( 2, &hName, NULL ) );
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_raw_HANDLE( h );
    hb_strfree( hName );

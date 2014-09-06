@@ -545,10 +545,6 @@
 #define SYSTEM_FIXED_FONT                         16
 #define DEFAULT_GUI_FONT                          17
 
-/* WIN_WM_SETICON / WIN_WM_GETICON Type Codes */
-#define ICON_SMALL                                0
-#define ICON_BIG                                  1
-
 // Pen Styles
 #define PS_ENDCAP_ROUND                           0
 #define PS_ENDCAP_SQUARE                          256

@@ -131,7 +131,7 @@ HB_FUNC( WIN_LOADRESOURCE )
 
       if( HB_ISNUM( 1 ) )
       {
-         szName = MAKEINTRESOURCE( hb_parni( 1 ) );
+         szName = MAKEINTRESOURCE( hbwapi_par_INT( 1 ) );
          hName = NULL;
       }
       else
@@ -139,7 +139,7 @@ HB_FUNC( WIN_LOADRESOURCE )
 
       if( HB_ISNUM( 2 ) )
       {
-         szType = MAKEINTRESOURCE( hb_parni( 2 ) );
+         szType = MAKEINTRESOURCE( hbwapi_par_INT( 2 ) );
          hType = NULL;
       }
       else
