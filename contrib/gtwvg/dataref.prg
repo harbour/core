@@ -98,7 +98,7 @@ METHOD WvgDataRef:getData()
       EXIT
 
    CASE "EDIT"
-      ::sl_editBuffer := wvg_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
+      ::sl_editBuffer := wvg_GetMessageText( ::hWnd, WIN_WM_GETTEXT, ::bufferLength + 1 )
       EXIT
 
    CASE "LISTBOX"
@@ -155,7 +155,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    CASE "EDIT"
       IF HB_ISSTRING( ::sl_editBuffer )
-         wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
+         wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
       EXIT
 

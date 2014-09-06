@@ -201,191 +201,6 @@
 #define CCM_SETWINDOWTHEME                        0x200b
 #define CCM_DPISCALE                              0x200c
 
-/* Window Messages */
-#define WM_USER                                   1024
-
-#define WM_CREATE                                 1
-#define WM_DESTROY                                2
-#define WM_MOVE                                   3
-#define WM_SIZE                                   5
-#define WM_ACTIVATE                               6
-#define WM_SETFOCUS                               7
-#define WM_KILLFOCUS                              8
-#define WM_ENABLE                                 10
-#define WM_SETREDRAW                              11
-#define WM_SETTEXT                                12
-#define WM_GETTEXT                                13
-#define WM_GETTEXTLENGTH                          14
-#define WM_PAINT                                  15
-#define WM_CLOSE                                  16   // 0x0010
-#define WM_QUIT                                   18   // 0x0012
-#define WM_ERASEBKGND                             20   // 0x0014
-#define WM_SYSCOLORCHANGE                         21   // 0x0015
-#define WM_SHOWWINDOW                             24   // 0x0018
-#define WM_WININICHANGE                           26   // 0x001A
-#define WM_DEVMODECHANGE                          27   // 0x001B
-#define WM_ACTIVATEAPP                            28   // 0x001C
-#define WM_FONTCHANGE                             29   // 0x001D
-#define WM_TIMECHANGE                             30   // 0x001E
-#define WM_CANCELMODE                             31   // 0x001F
-#define WM_SETCURSOR                              32   // 0x0020
-#define WM_MOUSEACTIVATE                          33   // 0x0021
-#define WM_CHILDACTIVATE                          34   // 0x0022
-#define WM_QUEUESYNC                              35   // 0x0023
-#define WM_GETMINMAXINFO                          36
-
-#define WM_PAINTICON                              38
-#define WM_ICONERASEBKGND                         39
-#define WM_NEXTDLGCTL                             40
-#define WM_SPOOLERSTATUS                          42
-#define WM_DRAWITEM                               43   // 0x002B
-#define WM_MEASUREITEM                            44
-#define WM_DELETEITEM                             45
-#define WM_VKEYTOITEM                             46
-#define WM_CHARTOITEM                             47
-#define WM_SETFONT                                48
-#define WM_GETFONT                                49
-#define WM_SETHOTKEY                              50
-#define WM_GETHOTKEY                              51
-#define WM_QUERYDRAGICON                          55
-#define WM_COMPAREITEM                            57
-#define WM_GETOBJECT                              61
-#define WM_COMPACTING                             65   // 0x0041
-#define WM_COMMNOTIFY                             68   // 0x0044  /* no longer suported */
-#define WM_WINDOWPOSCHANGING                      70   // 0x0046
-#define WM_WINDOWPOSCHANGED                       71   // 0x0047
-#define WM_POWER                                  72
-#define WM_NOTIFY                                 78   // 0x004E
-#define WM_INPUTLANGCHANGEREQUEST                 79   // 0x0050
-#define WM_INPUTLANGCHANGE                        80   // 0x0051
-#define WM_TCARD                                  81   // 0x0052
-#define WM_HELP                                   82   // 0x0053
-#define WM_USERCHANGED                            83   // 0x0054
-#define WM_NOTIFYFORMAT                           84   // 0x0055
-
-#define WM_CONTEXTMENU                            123  // 0x007B
-#define WM_STYLECHANGING                          124  // 0x007C
-#define WM_STYLECHANGED                           125  // 0x007D
-#define WM_DISPLAYCHANGE                          126  // 0x007E
-#define WM_GETICON                                127  // 0x007F
-#define WM_SETICON                                128  // 0x0080
-
-#define WM_NCCREATE                               129
-#define WM_NCDESTROY                              130
-#define WM_NCCALCSIZE                             131
-#define WM_NCHITTEST                              132
-#define WM_NCPAINT                                133
-#define WM_NCACTIVATE                             134
-#define WM_GETDLGCODE                             135
-
-#define WM_NCMOUSEMOVE                            160
-#define WM_NCLBUTTONDOWN                          161
-#define WM_NCLBUTTONUP                            162
-#define WM_NCLBUTTONDBLCLK                        163
-#define WM_NCRBUTTONDOWN                          164
-#define WM_NCRBUTTONUP                            165
-#define WM_NCRBUTTONDBLCLK                        166
-#define WM_NCMBUTTONDOWN                          167
-#define WM_NCMBUTTONUP                            168
-#define WM_NCMBUTTONDBLCLK                        169
-
-#define WM_KEYDOWN                                256  // 0x0100
-#define WM_KEYUP                                  257  // 0x0101
-
-#define WM_KEYFIRST                               256
-#define WM_CHAR                                   258
-#define WM_DEADCHAR                               259
-#define WM_SYSKEYDOWN                             260
-#define WM_SYSKEYUP                               261
-#define WM_SYSCHAR                                262
-#define WM_SYSDEADCHAR                            263
-#define WM_KEYLAST                                264
-
-#define WM_INITDIALOG                             272
-#define WM_COMMAND                                273
-#define WM_SYSCOMMAND                             274
-#define WM_TIMER                                  275
-#define WM_HSCROLL                                276
-#define WM_VSCROLL                                277
-
-#define WM_INITMENUPOPUP                          279
-#define WM_MENUSELECT                             287
-#define WM_MENUCOMMAND                            294
-
-#define WM_CTLCOLORMSGBOX                         306
-#define WM_CTLCOLOREDIT                           307
-#define WM_CTLCOLORLISTBOX                        308
-#define WM_CTLCOLORBTN                            309
-#define WM_CTLCOLORDLG                            310
-#define WM_CTLCOLORSCROLLBAR                      311
-#define WM_CTLCOLORSTATIC                         312
-
-#define WM_MOUSEFIRST                             512
-#define WM_MOUSEMOVE                              512
-#define WM_LBUTTONDOWN                            513
-#define WM_LBUTTONUP                              514
-#define WM_LBUTTONDBLCLK                          515
-#define WM_RBUTTONDOWN                            516
-#define WM_RBUTTONUP                              517
-#define WM_RBUTTONDBLCLK                          518
-#define WM_MBUTTONDOWN                            519
-#define WM_MBUTTONUP                              520
-#define WM_MBUTTONDBLCLK                          521
-#define WM_MOUSEWHEEL                             522
-#define WM_XBUTTONDOWN                            523
-#define WM_XBUTTONUP                              524
-#define WM_XBUTTONDBLCLK                          525
-#define WM_MOUSEHOVER                             0x2A1
-#define WM_MOUSELEAVE                             0x2A3
-
-
-#define WM_PARENTNOTIFY                           528
-#define WM_ENTERMENULOOP                          529
-#define WM_EXITMENULOOP                           530
-
-#define WM_NEXTMENU                               531
-#define WM_SIZING                                 532
-#define WM_CAPTURECHANGED                         533
-#define WM_MOVING                                 534
-#define WM_POWERBROADCAST                         536
-
-#define WM_MDICREATE                              544
-#define WM_MDIDESTROY                             545
-#define WM_MDIACTIVATE                            546
-#define WM_MDIRESTORE                             547
-#define WM_MDINEXT                                548
-#define WM_MDIMAXIMIZE                            549
-#define WM_MDITILE                                550
-#define WM_MDICASCADE                             551
-#define WM_MDIICONARRANGE                         552
-#define WM_MDIGETACTIVE                           553
-
-#define WM_MDISETMENU                             560
-#define WM_ENTERSIZEMOVE                          561
-#define WM_EXITSIZEMOVE                           562
-#define WM_DROPFILES                              563
-#define WM_MDIREFRESHMENU                         564
-
-#define WM_CUT                                    768
-#define WM_COPY                                   769
-#define WM_PASTE                                  770
-#define WM_CLEAR                                  771
-#define WM_UNDO                                   772
-#define WM_RENDERFORMAT                           773
-#define WM_RENDERALLFORMATS                       774
-#define WM_DESTROYCLIPBOARD                       775
-#define WM_DRAWCLIPBOARD                          776
-#define WM_PAINTCLIPBOARD                         777
-#define WM_VSCROLLCLIPBOARD                       778
-#define WM_SIZECLIPBOARD                          779
-#define WM_ASKCBFORMATNAME                        780
-#define WM_CHANGECBCHAIN                          781
-#define WM_HSCROLLCLIPBOARD                       782
-#define WM_QUERYNEWPALETTE                        783
-#define WM_PALETTEISCHANGING                      784
-#define WM_PALETTECHANGED                         785
-#define WM_HOTKEY                                 786
-
 /* Dialog styles */
 #define DS_ABSALIGN                               0x01
 #define DS_SYSMODAL                               0x02
@@ -730,7 +545,7 @@
 #define SYSTEM_FIXED_FONT                         16
 #define DEFAULT_GUI_FONT                          17
 
-/* WM_SETICON / WM_GETICON Type Codes */
+/* WIN_WM_SETICON / WIN_WM_GETICON Type Codes */
 #define ICON_SMALL                                0
 #define ICON_BIG                                  1
 
@@ -784,68 +599,68 @@
 #define STATUSCLASSNAME                           "msctls_statusbar32"
 
 /* Toolbar messages */
-#define TB_ADDBITMAP                              ( WM_USER + 19 )
-#define TB_SAVERESTOREA                           ( WM_USER + 26 )
-#define TB_SAVERESTOREW                           ( WM_USER + 76 )
-#define TB_CUSTOMIZE                              ( WM_USER + 27 )
-#define TB_ADDSTRINGA                             ( WM_USER + 28 )
-#define TB_ADDSTRINGW                             ( WM_USER + 77 )
-#define TB_GETITEMRECT                            ( WM_USER + 29 )
-#define TB_BUTTONSTRUCTSIZE                       ( WM_USER + 30 )
-#define TB_SETBUTTONSIZE                          ( WM_USER + 31 )
-#define TB_SETBITMAPSIZE                          ( WM_USER + 32 )
-#define TB_AUTOSIZE                               ( WM_USER + 33 )
-#define TB_GETTOOLTIPS                            ( WM_USER + 35 )
-#define TB_SETTOOLTIPS                            ( WM_USER + 36 )
-#define TB_SETPARENT                              ( WM_USER + 37 )
-#define TB_SETROWS                                ( WM_USER + 39 )
-#define TB_GETROWS                                ( WM_USER + 40 )
-#define TB_GETBITMAPFLAGS                         ( WM_USER + 41 )
-#define TB_SETCMDID                               ( WM_USER + 42 )
-#define TB_CHANGEBITMAP                           ( WM_USER + 43 )
-#define TB_GETBITMAP                              ( WM_USER + 44 )
-#define TB_GETBUTTONTEXTA                         ( WM_USER + 45 )
-#define TB_GETBUTTONTEXTW                         ( WM_USER + 75 )
-#define TB_REPLACEBITMAP                          ( WM_USER + 46 )
-#define TB_SETINDENT                              ( WM_USER + 47 )
-#define TB_SETIMAGELIST                           ( WM_USER + 48 )
-#define TB_GETIMAGELIST                           ( WM_USER + 49 )
-#define TB_LOADIMAGES                             ( WM_USER + 50 )
-#define TB_GETRECT                                ( WM_USER + 51 )    // wParam is the Cmd instead of index
-#define TB_SETHOTIMAGELIST                        ( WM_USER + 52 )
-#define TB_GETHOTIMAGELIST                        ( WM_USER + 53 )
-#define TB_SETDISABLEDIMAGELIST                   ( WM_USER + 54 )
-#define TB_GETDISABLEDIMAGELIST                   ( WM_USER + 55 )
-#define TB_SETSTYLE                               ( WM_USER + 56 )
-#define TB_GETSTYLE                               ( WM_USER + 57 )
-#define TB_GETBUTTONSIZE                          ( WM_USER + 58 )
-#define TB_SETBUTTONWIDTH                         ( WM_USER + 59 )
-#define TB_SETMAXTEXTROWS                         ( WM_USER + 60 )
-#define TB_GETTEXTROWS                            ( WM_USER + 61 )
+#define TB_ADDBITMAP                              ( WIN_WM_USER + 19 )
+#define TB_SAVERESTOREA                           ( WIN_WM_USER + 26 )
+#define TB_SAVERESTOREW                           ( WIN_WM_USER + 76 )
+#define TB_CUSTOMIZE                              ( WIN_WM_USER + 27 )
+#define TB_ADDSTRINGA                             ( WIN_WM_USER + 28 )
+#define TB_ADDSTRINGW                             ( WIN_WM_USER + 77 )
+#define TB_GETITEMRECT                            ( WIN_WM_USER + 29 )
+#define TB_BUTTONSTRUCTSIZE                       ( WIN_WM_USER + 30 )
+#define TB_SETBUTTONSIZE                          ( WIN_WM_USER + 31 )
+#define TB_SETBITMAPSIZE                          ( WIN_WM_USER + 32 )
+#define TB_AUTOSIZE                               ( WIN_WM_USER + 33 )
+#define TB_GETTOOLTIPS                            ( WIN_WM_USER + 35 )
+#define TB_SETTOOLTIPS                            ( WIN_WM_USER + 36 )
+#define TB_SETPARENT                              ( WIN_WM_USER + 37 )
+#define TB_SETROWS                                ( WIN_WM_USER + 39 )
+#define TB_GETROWS                                ( WIN_WM_USER + 40 )
+#define TB_GETBITMAPFLAGS                         ( WIN_WM_USER + 41 )
+#define TB_SETCMDID                               ( WIN_WM_USER + 42 )
+#define TB_CHANGEBITMAP                           ( WIN_WM_USER + 43 )
+#define TB_GETBITMAP                              ( WIN_WM_USER + 44 )
+#define TB_GETBUTTONTEXTA                         ( WIN_WM_USER + 45 )
+#define TB_GETBUTTONTEXTW                         ( WIN_WM_USER + 75 )
+#define TB_REPLACEBITMAP                          ( WIN_WM_USER + 46 )
+#define TB_SETINDENT                              ( WIN_WM_USER + 47 )
+#define TB_SETIMAGELIST                           ( WIN_WM_USER + 48 )
+#define TB_GETIMAGELIST                           ( WIN_WM_USER + 49 )
+#define TB_LOADIMAGES                             ( WIN_WM_USER + 50 )
+#define TB_GETRECT                                ( WIN_WM_USER + 51 )    // wParam is the Cmd instead of index
+#define TB_SETHOTIMAGELIST                        ( WIN_WM_USER + 52 )
+#define TB_GETHOTIMAGELIST                        ( WIN_WM_USER + 53 )
+#define TB_SETDISABLEDIMAGELIST                   ( WIN_WM_USER + 54 )
+#define TB_GETDISABLEDIMAGELIST                   ( WIN_WM_USER + 55 )
+#define TB_SETSTYLE                               ( WIN_WM_USER + 56 )
+#define TB_GETSTYLE                               ( WIN_WM_USER + 57 )
+#define TB_GETBUTTONSIZE                          ( WIN_WM_USER + 58 )
+#define TB_SETBUTTONWIDTH                         ( WIN_WM_USER + 59 )
+#define TB_SETMAXTEXTROWS                         ( WIN_WM_USER + 60 )
+#define TB_GETTEXTROWS                            ( WIN_WM_USER + 61 )
 
 #define TB_GETBUTTONTEXT                          TB_GETBUTTONTEXTW
 #define TB_SAVERESTORE                            TB_SAVERESTOREW
 #define TB_ADDSTRING                              TB_ADDSTRINGW
 
-#define TB_GETOBJECT                              ( WM_USER + 62 )    // wParam == IID, lParam void **ppv
-#define TB_GETHOTITEM                             ( WM_USER + 71 )
-#define TB_SETHOTITEM                             ( WM_USER + 72 )    // wParam == iHotItem
-#define TB_SETANCHORHIGHLIGHT                     ( WM_USER + 73 )    // wParam == TRUE/FALSE
-#define TB_GETANCHORHIGHLIGHT                     ( WM_USER + 74 )
-#define TB_MAPACCELERATORA                        ( WM_USER + 78 )    // wParam == ch, lParam int * pidBtn
+#define TB_GETOBJECT                              ( WIN_WM_USER + 62 )    // wParam == IID, lParam void **ppv
+#define TB_GETHOTITEM                             ( WIN_WM_USER + 71 )
+#define TB_SETHOTITEM                             ( WIN_WM_USER + 72 )    // wParam == iHotItem
+#define TB_SETANCHORHIGHLIGHT                     ( WIN_WM_USER + 73 )    // wParam == TRUE/FALSE
+#define TB_GETANCHORHIGHLIGHT                     ( WIN_WM_USER + 74 )
+#define TB_MAPACCELERATORA                        ( WIN_WM_USER + 78 )    // wParam == ch, lParam int * pidBtn
 
 
-#define TB_GETINSERTMARK                          ( WM_USER + 79 )    // lParam == LPTBINSERTMARK
-#define TB_SETINSERTMARK                          ( WM_USER + 80 )    // lParam == LPTBINSERTMARK
-#define TB_INSERTMARKHITTEST                      ( WM_USER + 81 )    // wParam == LPPOINT lParam == LPTBINSERTMARK
-#define TB_MOVEBUTTON                             ( WM_USER + 82 )
-#define TB_GETMAXSIZE                             ( WM_USER + 83 )    // lParam == LPSIZE
-#define TB_SETEXTENDEDSTYLE                       ( WM_USER + 84 )    // For TBSTYLE_EX_*
-#define TB_GETEXTENDEDSTYLE                       ( WM_USER + 85 )    // For TBSTYLE_EX_*
-#define TB_GETPADDING                             ( WM_USER + 86 )
-#define TB_SETPADDING                             ( WM_USER + 87 )
-#define TB_SETINSERTMARKCOLOR                     ( WM_USER + 88 )
-#define TB_GETINSERTMARKCOLOR                     ( WM_USER + 89 )
+#define TB_GETINSERTMARK                          ( WIN_WM_USER + 79 )    // lParam == LPTBINSERTMARK
+#define TB_SETINSERTMARK                          ( WIN_WM_USER + 80 )    // lParam == LPTBINSERTMARK
+#define TB_INSERTMARKHITTEST                      ( WIN_WM_USER + 81 )    // wParam == LPPOINT lParam == LPTBINSERTMARK
+#define TB_MOVEBUTTON                             ( WIN_WM_USER + 82 )
+#define TB_GETMAXSIZE                             ( WIN_WM_USER + 83 )    // lParam == LPSIZE
+#define TB_SETEXTENDEDSTYLE                       ( WIN_WM_USER + 84 )    // For TBSTYLE_EX_*
+#define TB_GETEXTENDEDSTYLE                       ( WIN_WM_USER + 85 )    // For TBSTYLE_EX_*
+#define TB_GETPADDING                             ( WIN_WM_USER + 86 )
+#define TB_SETPADDING                             ( WIN_WM_USER + 87 )
+#define TB_SETINSERTMARKCOLOR                     ( WIN_WM_USER + 88 )
+#define TB_GETINSERTMARKCOLOR                     ( WIN_WM_USER + 89 )
 
 #define TB_SETCOLORSCHEME                         CCM_SETCOLORSCHEME  // lParam is color scheme
 #define TB_GETCOLORSCHEME                         CCM_GETCOLORSCHEME  // fills in COLORSCHEME pointed to by lParam
@@ -853,7 +668,7 @@
 #define TB_SETUNICODEFORMAT                       CCM_SETUNICODEFORMAT
 #define TB_GETUNICODEFORMAT                       CCM_GETUNICODEFORMAT
 
-#define TB_MAPACCELERATORW                        ( WM_USER + 90 )    // wParam == ch, lParam int * pidBtn
+#define TB_MAPACCELERATORW                        ( WIN_WM_USER + 90 )    // wParam == ch, lParam int * pidBtn
 #define TB_MAPACCELERATOR                         TB_MAPACCELERATORW
 
 #define TBIMHT_AFTER                              1                   // TRUE = insert After iButton, otherwise before
@@ -874,22 +689,22 @@
 #define TBBUTTONINFO                              TBBUTTONINFOW
 #define LPTBBUTTONINFO                            LPTBBUTTONINFOW
 
-#define TB_GETBUTTONINFOW                         ( WM_USER + 63 )
-#define TB_SETBUTTONINFOW                         ( WM_USER + 64 )
-#define TB_GETBUTTONINFOA                         ( WM_USER + 65 )
-#define TB_SETBUTTONINFOA                         ( WM_USER + 66 )
+#define TB_GETBUTTONINFOW                         ( WIN_WM_USER + 63 )
+#define TB_SETBUTTONINFOW                         ( WIN_WM_USER + 64 )
+#define TB_GETBUTTONINFOA                         ( WIN_WM_USER + 65 )
+#define TB_SETBUTTONINFOA                         ( WIN_WM_USER + 66 )
 #define TB_GETBUTTONINFO                          TB_GETBUTTONINFOW
 #define TB_SETBUTTONINFO                          TB_SETBUTTONINFOW
 
-#define TB_INSERTBUTTONW                          ( WM_USER + 67 )
-#define TB_ADDBUTTONSW                            ( WM_USER + 68 )
-#define TB_ADDBUTTONSA                            ( WM_USER + 20 )
-#define TB_HITTEST                                ( WM_USER + 69 )
+#define TB_INSERTBUTTONW                          ( WIN_WM_USER + 67 )
+#define TB_ADDBUTTONSW                            ( WIN_WM_USER + 68 )
+#define TB_ADDBUTTONSA                            ( WIN_WM_USER + 20 )
+#define TB_HITTEST                                ( WIN_WM_USER + 69 )
 #define TB_INSERTBUTTON                           TB_INSERTBUTTONW
 #define TB_ADDBUTTONS                             TB_ADDBUTTONSW
 
-#define TB_SETDRAWTEXTFLAGS                       ( WM_USER + 70 )
-#define TB_GETSTRING                              ( WM_USER + 92 )
+#define TB_SETDRAWTEXTFLAGS                       ( WIN_WM_USER + 70 )
+#define TB_GETSTRING                              ( WIN_WM_USER + 92 )
 
 #define TBN_FIRST                                 -700
 #define TBN_GETBUTTONINFOA                        ( TBN_FIRST - 0 )
@@ -986,12 +801,6 @@
 #define SBARS_SIZEGRIP                            256
 #define SBARS_TOOLTIPS                            2048
 
-/* - */
-
-#define WM_CHOOSEFONT_GETLOGFONT                  ( WM_USER + 1 )
-#define WM_CHOOSEFONT_SETLOGFONT                  ( WM_USER + 101 )
-#define WM_CHOOSEFONT_SETFLAGS                    ( WM_USER + 102 )
-
 // SCROLLBARS
 
 #define SB_HORZ                                   0
@@ -1029,12 +838,12 @@
 #define SBS_VERT                                  1
 
 
-#define SB_SETTEXTA                               ( WM_USER + 1 )
-#define SB_SETTEXTW                               ( WM_USER + 11 )
-#define SB_GETTEXTA                               ( WM_USER + 2 )
-#define SB_GETTEXTW                               ( WM_USER + 13 )
-#define SB_GETTEXTLENGTHA                         ( WM_USER + 3 )
-#define SB_GETTEXTLENGTHW                         ( WM_USER + 12 )
+#define SB_SETTEXTA                               ( WIN_WM_USER + 1 )
+#define SB_SETTEXTW                               ( WIN_WM_USER + 11 )
+#define SB_GETTEXTA                               ( WIN_WM_USER + 2 )
+#define SB_GETTEXTW                               ( WIN_WM_USER + 13 )
+#define SB_GETTEXTLENGTHA                         ( WIN_WM_USER + 3 )
+#define SB_GETTEXTLENGTHW                         ( WIN_WM_USER + 12 )
 
 #define SB_GETTEXT                                SB_GETTEXTW
 #define SB_SETTEXT                                SB_SETTEXTW
@@ -1042,19 +851,19 @@
 #define SB_SETTIPTEXT                             SB_SETTIPTEXTW
 #define SB_GETTIPTEXT                             SB_GETTIPTEXTW
 
-#define SB_SETPARTS                               ( WM_USER + 4 )
-#define SB_GETPARTS                               ( WM_USER + 6 )
-#define SB_GETBORDERS                             ( WM_USER + 7 )
-#define SB_SETMINHEIGHT                           ( WM_USER + 8 )
-#define SB_SIMPLE                                 ( WM_USER + 9 )
-#define SB_GETRECT                                ( WM_USER + 10 )
-#define SB_ISSIMPLE                               ( WM_USER + 14 )
-#define SB_SETICON                                ( WM_USER + 15 )
-#define SB_SETTIPTEXTA                            ( WM_USER + 16 )
-#define SB_SETTIPTEXTW                            ( WM_USER + 17 )
-#define SB_GETTIPTEXTA                            ( WM_USER + 18 )
-#define SB_GETTIPTEXTW                            ( WM_USER + 19 )
-#define SB_GETICON                                ( WM_USER + 20 )
+#define SB_SETPARTS                               ( WIN_WM_USER + 4 )
+#define SB_GETPARTS                               ( WIN_WM_USER + 6 )
+#define SB_GETBORDERS                             ( WIN_WM_USER + 7 )
+#define SB_SETMINHEIGHT                           ( WIN_WM_USER + 8 )
+#define SB_SIMPLE                                 ( WIN_WM_USER + 9 )
+#define SB_GETRECT                                ( WIN_WM_USER + 10 )
+#define SB_ISSIMPLE                               ( WIN_WM_USER + 14 )
+#define SB_SETICON                                ( WIN_WM_USER + 15 )
+#define SB_SETTIPTEXTA                            ( WIN_WM_USER + 16 )
+#define SB_SETTIPTEXTW                            ( WIN_WM_USER + 17 )
+#define SB_GETTIPTEXTA                            ( WIN_WM_USER + 18 )
+#define SB_GETTIPTEXTW                            ( WIN_WM_USER + 19 )
+#define SB_GETICON                                ( WIN_WM_USER + 20 )
 #define SB_SETUNICODEFORMAT                       CCM_SETUNICODEFORMAT
 #define SB_GETUNICODEFORMAT                       CCM_GETUNICODEFORMAT
 
@@ -1403,51 +1212,51 @@
 #define TTI_WARNING                               2
 #define TTI_ERROR                                 3
 
-#define TTM_ACTIVATE                              ( WM_USER + 1 )
-#define TTM_SETDELAYTIME                          ( WM_USER + 3 )
-#define TTM_ADDTOOLA                              ( WM_USER + 4 )
-#define TTM_ADDTOOLW                              ( WM_USER + 50 )
-#define TTM_DELTOOLA                              ( WM_USER + 5 )
-#define TTM_DELTOOLW                              ( WM_USER + 51 )
-#define TTM_NEWTOOLRECTA                          ( WM_USER + 6 )
-#define TTM_NEWTOOLRECTW                          ( WM_USER + 52 )
-#define TTM_RELAYEVENT                            ( WM_USER + 7 )
+#define TTM_ACTIVATE                              ( WIN_WM_USER + 1 )
+#define TTM_SETDELAYTIME                          ( WIN_WM_USER + 3 )
+#define TTM_ADDTOOLA                              ( WIN_WM_USER + 4 )
+#define TTM_ADDTOOLW                              ( WIN_WM_USER + 50 )
+#define TTM_DELTOOLA                              ( WIN_WM_USER + 5 )
+#define TTM_DELTOOLW                              ( WIN_WM_USER + 51 )
+#define TTM_NEWTOOLRECTA                          ( WIN_WM_USER + 6 )
+#define TTM_NEWTOOLRECTW                          ( WIN_WM_USER + 52 )
+#define TTM_RELAYEVENT                            ( WIN_WM_USER + 7 )
 
-#define TTM_GETTOOLINFOA                          ( WM_USER + 8 )
-#define TTM_GETTOOLINFOW                          ( WM_USER + 53 )
+#define TTM_GETTOOLINFOA                          ( WIN_WM_USER + 8 )
+#define TTM_GETTOOLINFOW                          ( WIN_WM_USER + 53 )
 
-#define TTM_SETTOOLINFOA                          ( WM_USER + 9 )
-#define TTM_SETTOOLINFOW                          ( WM_USER + 54 )
+#define TTM_SETTOOLINFOA                          ( WIN_WM_USER + 9 )
+#define TTM_SETTOOLINFOW                          ( WIN_WM_USER + 54 )
 
-#define TTM_HITTESTA                              ( WM_USER + 10 )
-#define TTM_HITTESTW                              ( WM_USER + 55 )
-#define TTM_GETTEXTA                              ( WM_USER + 11 )
-#define TTM_GETTEXTW                              ( WM_USER + 56 )
-#define TTM_UPDATETIPTEXTA                        ( WM_USER + 12 )
-#define TTM_UPDATETIPTEXTW                        ( WM_USER + 57 )
-#define TTM_GETTOOLCOUNT                          ( WM_USER + 13 )
-#define TTM_ENUMTOOLSA                            ( WM_USER + 14 )
-#define TTM_ENUMTOOLSW                            ( WM_USER + 58 )
-#define TTM_GETCURRENTTOOLA                       ( WM_USER + 15 )
-#define TTM_GETCURRENTTOOLW                       ( WM_USER + 59 )
-#define TTM_WINDOWFROMPOINT                       ( WM_USER + 16 )
-#define TTM_TRACKACTIVATE                         ( WM_USER + 17 )  // wParam = TRUE/FALSE start end  lparam = LPTOOLINFO
-#define TTM_TRACKPOSITION                         ( WM_USER + 18 )  // lParam = dwPos
-#define TTM_SETTIPBKCOLOR                         ( WM_USER + 19 )
-#define TTM_SETTIPTEXTCOLOR                       ( WM_USER + 20 )
-#define TTM_GETDELAYTIME                          ( WM_USER + 21 )
-#define TTM_GETTIPBKCOLOR                         ( WM_USER + 22 )
-#define TTM_GETTIPTEXTCOLOR                       ( WM_USER + 23 )
-#define TTM_SETMAXTIPWIDTH                        ( WM_USER + 24 )
-#define TTM_GETMAXTIPWIDTH                        ( WM_USER + 25 )
-#define TTM_SETMARGIN                             ( WM_USER + 26 )  // lParam = lprc
-#define TTM_GETMARGIN                             ( WM_USER + 27 )  // lParam = lprc
-#define TTM_POP                                   ( WM_USER + 28 )
-#define TTM_UPDATE                                ( WM_USER + 29 )
-#define TTM_GETBUBBLESIZE                         ( WM_USER + 30 )
-#define TTM_ADJUSTRECT                            ( WM_USER + 31 )
-#define TTM_SETTITLEA                             ( WM_USER + 32 )  // wParam = TTI_*, lParam = char* szTitle
-#define TTM_SETTITLEW                             ( WM_USER + 33 )  // wParam = TTI_*, lParam = wchar* szTitle
+#define TTM_HITTESTA                              ( WIN_WM_USER + 10 )
+#define TTM_HITTESTW                              ( WIN_WM_USER + 55 )
+#define TTM_GETTEXTA                              ( WIN_WM_USER + 11 )
+#define TTM_GETTEXTW                              ( WIN_WM_USER + 56 )
+#define TTM_UPDATETIPTEXTA                        ( WIN_WM_USER + 12 )
+#define TTM_UPDATETIPTEXTW                        ( WIN_WM_USER + 57 )
+#define TTM_GETTOOLCOUNT                          ( WIN_WM_USER + 13 )
+#define TTM_ENUMTOOLSA                            ( WIN_WM_USER + 14 )
+#define TTM_ENUMTOOLSW                            ( WIN_WM_USER + 58 )
+#define TTM_GETCURRENTTOOLA                       ( WIN_WM_USER + 15 )
+#define TTM_GETCURRENTTOOLW                       ( WIN_WM_USER + 59 )
+#define TTM_WINDOWFROMPOINT                       ( WIN_WM_USER + 16 )
+#define TTM_TRACKACTIVATE                         ( WIN_WM_USER + 17 )  // wParam = TRUE/FALSE start end  lparam = LPTOOLINFO
+#define TTM_TRACKPOSITION                         ( WIN_WM_USER + 18 )  // lParam = dwPos
+#define TTM_SETTIPBKCOLOR                         ( WIN_WM_USER + 19 )
+#define TTM_SETTIPTEXTCOLOR                       ( WIN_WM_USER + 20 )
+#define TTM_GETDELAYTIME                          ( WIN_WM_USER + 21 )
+#define TTM_GETTIPBKCOLOR                         ( WIN_WM_USER + 22 )
+#define TTM_GETTIPTEXTCOLOR                       ( WIN_WM_USER + 23 )
+#define TTM_SETMAXTIPWIDTH                        ( WIN_WM_USER + 24 )
+#define TTM_GETMAXTIPWIDTH                        ( WIN_WM_USER + 25 )
+#define TTM_SETMARGIN                             ( WIN_WM_USER + 26 )  // lParam = lprc
+#define TTM_GETMARGIN                             ( WIN_WM_USER + 27 )  // lParam = lprc
+#define TTM_POP                                   ( WIN_WM_USER + 28 )
+#define TTM_UPDATE                                ( WIN_WM_USER + 29 )
+#define TTM_GETBUBBLESIZE                         ( WIN_WM_USER + 30 )
+#define TTM_ADJUSTRECT                            ( WIN_WM_USER + 31 )
+#define TTM_SETTITLEA                             ( WIN_WM_USER + 32 )  // wParam = TTI_*, lParam = char* szTitle
+#define TTM_SETTITLEW                             ( WIN_WM_USER + 33 )  // wParam = TTI_*, lParam = wchar* szTitle
 
 #define TTM_ADDTOOL                               TTM_ADDTOOLW
 #define TTM_DELTOOL                               TTM_DELTOOLW
@@ -1467,11 +1276,11 @@
 
 /* - */
 
-#define PBM_SETRANGE                              ( WM_USER + 1 )
-#define PBM_SETPOS                                ( WM_USER + 2 )
-#define PBM_DELTAPOS                              ( WM_USER + 3 )
-#define PBM_SETSTEP                               ( WM_USER + 4 )
-#define PBM_STEPIT                                ( WM_USER + 5 )
+#define PBM_SETRANGE                              ( WIN_WM_USER + 1 )
+#define PBM_SETPOS                                ( WIN_WM_USER + 2 )
+#define PBM_DELTAPOS                              ( WIN_WM_USER + 3 )
+#define PBM_SETSTEP                               ( WIN_WM_USER + 4 )
+#define PBM_STEPIT                                ( WIN_WM_USER + 5 )
 #define PBM_SETRANGE32                            1030
 #define PBM_GETRANGE                              1031
 #define PBM_GETPOS                                1032

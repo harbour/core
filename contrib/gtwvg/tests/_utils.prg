@@ -60,7 +60,7 @@ PROCEDURE WvtSetKeys( lSet )
    RETURN
 
 // wvt_Paint() must be a FUNCTION in your application
-// as it is called when Window gets WM_PAINT message.
+// as it is called when Window gets WIN_WM_PAINT message.
 
 FUNCTION wvt_Paint()  /* must be a public function */
 
@@ -73,7 +73,7 @@ FUNCTION wvt_Paint()  /* must be a public function */
    RETURN 0
 
 // wvt_SetFocus() must be a FUNCTION in your application
-// needs to process messages sent through WM_SETFOCUS message
+// needs to process messages sent through WIN_WM_SETFOCUS message
 // received by the window.
 
 #if 0
@@ -92,7 +92,7 @@ PROCEDURE wvt_SetFocus()  /* must be a public function */
 #endif
 
 // wvt_KillFocus() must be a FUNCTION in your application
-// needs to process messages sent through WM_KILLFOCUS message
+// needs to process messages sent through WIN_WM_KILLFOCUS message
 // received by the window.
 
 #if 0

@@ -120,7 +120,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
    DO CASE
 
    CASE nMessage == HB_GTE_RESIZED
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
       RETURN 0
 
    CASE nMessage == HB_GTE_COMMAND

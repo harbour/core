@@ -11,11 +11,6 @@
 #define IDC_EDIT1           1003
 #define IDC_COMBO1          1006
 
-#define WM_INITDIALOG       0x0110
-#define WM_COMMAND          0x0111
-#define WM_SYSCOMMAND       0x0112
-#define WM_CLOSE            0x0010
-
 PROCEDURE Main()
 
    IF Empty( win_LoadResource( IDD_DIALOG1, WIN_RT_DIALOG ) )
@@ -34,7 +29,7 @@ STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
    HB_SYMBOL_UNUSED( wPHigh )
 
    SWITCH nMessage
-   CASE WM_INITDIALOG
+   CASE WIN_WM_INITDIALOG
 
       wapi_SetDlgItemText( hWnd, IDC_STATIC1, "Hi! " + Time() )
       wapi_SetDlgItemText( hWnd, IDC_EDIT1, "Harbour" )
@@ -48,11 +43,11 @@ STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
       wapi_SetFocus( hWnd, wapi_GetDlgItem( hWnd, IDC_EDIT1 ) )
       RETURN .T.
 
-   CASE WM_CLOSE
+   CASE WIN_WM_CLOSE
       wapi_EndDialog( hWnd, 3 )
       RETURN .T.
 
-   CASE WM_COMMAND
+   CASE WIN_WM_COMMAND
       SWITCH wPLow
       CASE IDC_BUTTON1
          wapi_MessageBox( 0, "Hello [" + wapi_GetDlgItemText( hWnd, IDC_EDIT1 ) + "]!" + Chr( 13 ) + "How are you?", "Hi!", WIN_MB_ICONASTERISK )

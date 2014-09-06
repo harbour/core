@@ -163,7 +163,7 @@ METHOD WvgSLE:handleEvent( nMessage, aNM )
          ::oParent:setFocus()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
@@ -198,17 +198,17 @@ METHOD WvgSLE:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_ANY
       DO CASE
-      CASE aNM[ NMH_code ] == WM_KILLFOCUS
+      CASE aNM[ NMH_code ] == WIN_WM_KILLFOCUS
          IF HB_ISEVALITEM( ::sl_killInputFocus )
             Eval( ::sl_killInputFocus, , , Self )
          ENDIF
 
-      CASE aNM[ NMH_code ] == WM_SETFOCUS
+      CASE aNM[ NMH_code ] == WIN_WM_SETFOCUS
          IF HB_ISEVALITEM( ::sl_setInputFocus )
             Eval( ::sl_setInputFocus, , , Self )
          ENDIF
 
-      CASE aNM[ NMH_code ] == WM_KEYDOWN
+      CASE aNM[ NMH_code ] == WIN_WM_KEYDOWN
 
          DO CASE
          CASE aNM[ 2 ] == K_ENTER

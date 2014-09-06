@@ -136,7 +136,7 @@ METHOD WvgScrollBar:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF ! Empty( ::hBrushBG )

@@ -204,28 +204,28 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
 
          DO CASE
-         CASE aNM[ NMH_code ] == WM_KEYDOWN
+         CASE aNM[ NMH_code ] == WIN_WM_KEYDOWN
             IF aNM[ 2 ] == WIN_VK_TAB
                ::oParent:setFocus()
                RETURN EVENT_HANDLED
             ENDIF
 
-         CASE aNM[ NMH_code ] == WM_KILLFOCUS
+         CASE aNM[ NMH_code ] == WIN_WM_KILLFOCUS
             IF HB_ISEVALITEM( ::sl_killInputFocus )
                Eval( ::sl_killInputFocus, , , Self )
             ENDIF
 
-         CASE aNM[ NMH_code ] == WM_SETFOCUS
+         CASE aNM[ NMH_code ] == WIN_WM_SETFOCUS
             IF HB_ISEVALITEM( ::sl_setInputFocus )
                Eval( ::sl_setInputFocus, , , Self )
             ENDIF
 
-         CASE aNM[ NMH_code ] == WM_HSCROLL
+         CASE aNM[ NMH_code ] == WIN_WM_HSCROLL
             IF HB_ISEVALITEM( ::sl_hScroll )
                Eval( ::sl_hScroll, , , Self )
             ENDIF
 
-         CASE aNM[ NMH_code ] == WM_VSCROLL
+         CASE aNM[ NMH_code ] == WIN_WM_VSCROLL
             IF HB_ISEVALITEM( ::sl_vScroll )
                Eval( ::sl_vScroll, , , Self )
             ENDIF

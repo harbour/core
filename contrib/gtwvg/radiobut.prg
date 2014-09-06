@@ -143,7 +143,7 @@ METHOD WvgRadioButton:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

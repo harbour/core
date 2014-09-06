@@ -118,11 +118,11 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
    SWITCH nMsg
 
-   CASE WM_TIMER
+   CASE WIN_WM_TIMER
       wvg_SetDlgItemText( hDlg, ID_EDT_TIME, Time() )
       EXIT
 
-   CASE WM_COMMAND
+   CASE WIN_WM_COMMAND
 
       DO CASE
       CASE wParam == ID_CHK_SATIS
@@ -163,7 +163,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       ENDCASE
       EXIT
 
-   CASE WM_CTLCOLOREDIT
+   CASE WIN_WM_CTLCOLOREDIT
       DO CASE
       CASE wvg_GetDlgItem( hDlg, ID_MLE ) == wvg_n2p( lParam )
          wvg_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 255 ) )
@@ -176,7 +176,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       ENDCASE
       EXIT
 
-   CASE WM_CTLCOLORSTATIC
+   CASE WIN_WM_CTLCOLORSTATIC
 #if 0
       IF wvg_GetDlgItem( hDlg, ID_STA_TEXT ) == wvg_n2p( lParam )
          wvg_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
@@ -186,7 +186,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 #endif
       EXIT
 
-   CASE WM_INITDIALOG
+   CASE WIN_WM_INITDIALOG
       wvg_SetTimer( hDlg, 5001, 1000 ) // 1 sec
 
       IF Empty( aHFonts := SetFonts() )
@@ -196,7 +196,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       ENDIF
 
       IF Len( aHFonts ) > 0
-         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_MLE ), WM_SETFONT, ahFonts[ 1 ], 0 )
+         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_MLE ), WIN_WM_SETFONT, ahFonts[ 1 ], 0 )
       ENDIF
 
       IF Empty( SetIcons() )
@@ -240,7 +240,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
       EXIT
 
-   CASE WM_DESTROY
+   CASE WIN_WM_DESTROY
       // Do whatevert you want to do with cText
       // Each box will retrieve its own text.
       /* cText := */
@@ -300,15 +300,15 @@ STATIC FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    SWITCH nMsg
 
-   CASE WM_INITDIALOG
+   CASE WIN_WM_INITDIALOG
       DrawSlide( hDlg, t_nSlide )
       EXIT
 
-   CASE WM_PAINT
+   CASE WIN_WM_PAINT
       DrawSlide( hDlg, t_nSlide )
       EXIT
 
-   CASE WM_TIMER
+   CASE WIN_WM_TIMER
       t_nSlide++
       IF t_nSlide > Len( t_aSlides )
          t_nSlide := 1

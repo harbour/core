@@ -646,7 +646,192 @@
 #define WIN_HWND_BROADCAST                 0xFFFF  /* for wapi_PostMessage() */
 
 /* window messages */
+#define WIN_WM_CREATE                      1
+#define WIN_WM_DESTROY                     2
+#define WIN_WM_MOVE                        3
+#define WIN_WM_SIZE                        5
+#define WIN_WM_ACTIVATE                    6
+#define WIN_WM_SETFOCUS                    7
+#define WIN_WM_KILLFOCUS                   8
+#define WIN_WM_ENABLE                      10
+#define WIN_WM_SETREDRAW                   11
+#define WIN_WM_SETTEXT                     12
+#define WIN_WM_GETTEXT                     13
+#define WIN_WM_GETTEXTLENGTH               14
+#define WIN_WM_PAINT                       15
+#define WIN_WM_CLOSE                       16
+#define WIN_WM_QUIT                        18
+#define WIN_WM_ERASEBKGND                  20
+#define WIN_WM_SYSCOLORCHANGE              21
+#define WIN_WM_SHOWWINDOW                  24
+#define WIN_WM_WININICHANGE                26
+#define WIN_WM_DEVMODECHANGE               27
+#define WIN_WM_ACTIVATEAPP                 28
+#define WIN_WM_FONTCHANGE                  29
+#define WIN_WM_TIMECHANGE                  30
+#define WIN_WM_CANCELMODE                  31
+#define WIN_WM_SETCURSOR                   32
+#define WIN_WM_MOUSEACTIVATE               33
+#define WIN_WM_CHILDACTIVATE               34
+#define WIN_WM_QUEUESYNC                   35
+#define WIN_WM_GETMINMAXINFO               36
+
+#define WIN_WM_PAINTICON                   38
+#define WIN_WM_ICONERASEBKGND              39
+#define WIN_WM_NEXTDLGCTL                  40
+#define WIN_WM_SPOOLERSTATUS               42
+#define WIN_WM_DRAWITEM                    43
+#define WIN_WM_MEASUREITEM                 44
+#define WIN_WM_DELETEITEM                  45
+#define WIN_WM_VKEYTOITEM                  46
+#define WIN_WM_CHARTOITEM                  47
+#define WIN_WM_SETFONT                     48
+#define WIN_WM_GETFONT                     49
+#define WIN_WM_SETHOTKEY                   50
+#define WIN_WM_GETHOTKEY                   51
+#define WIN_WM_QUERYDRAGICON               55
+#define WIN_WM_COMPAREITEM                 57
+#define WIN_WM_GETOBJECT                   61
+#define WIN_WM_COMPACTING                  65
+#define WIN_WM_COMMNOTIFY                  68  /* obsolete */
+#define WIN_WM_WINDOWPOSCHANGING           70
+#define WIN_WM_WINDOWPOSCHANGED            71
+#define WIN_WM_POWER                       72
+#define WIN_WM_NOTIFY                      78
+#define WIN_WM_INPUTLANGCHANGEREQUEST      79
+#define WIN_WM_INPUTLANGCHANGE             80
+#define WIN_WM_TCARD                       81
+#define WIN_WM_HELP                        82
+#define WIN_WM_USERCHANGED                 83
+#define WIN_WM_NOTIFYFORMAT                84
+
+#define WIN_WM_CONTEXTMENU                 123
+#define WIN_WM_STYLECHANGING               124
+#define WIN_WM_STYLECHANGED                125
+#define WIN_WM_DISPLAYCHANGE               126
+#define WIN_WM_GETICON                     127
+#define WIN_WM_SETICON                     128
+
+#define WIN_WM_NCCREATE                    129
+#define WIN_WM_NCDESTROY                   130
+#define WIN_WM_NCCALCSIZE                  131
+#define WIN_WM_NCHITTEST                   132
+#define WIN_WM_NCPAINT                     133
+#define WIN_WM_NCACTIVATE                  134
+#define WIN_WM_GETDLGCODE                  135
+
+#define WIN_WM_NCMOUSEMOVE                 160
+#define WIN_WM_NCLBUTTONDOWN               161
+#define WIN_WM_NCLBUTTONUP                 162
+#define WIN_WM_NCLBUTTONDBLCLK             163
+#define WIN_WM_NCRBUTTONDOWN               164
+#define WIN_WM_NCRBUTTONUP                 165
+#define WIN_WM_NCRBUTTONDBLCLK             166
+#define WIN_WM_NCMBUTTONDOWN               167
+#define WIN_WM_NCMBUTTONUP                 168
+#define WIN_WM_NCMBUTTONDBLCLK             169
+
+#define WIN_WM_KEYDOWN                     256
+#define WIN_WM_KEYFIRST                    256
+#define WIN_WM_KEYUP                       257
+#define WIN_WM_CHAR                        258
+#define WIN_WM_DEADCHAR                    259
+#define WIN_WM_SYSKEYDOWN                  260
+#define WIN_WM_SYSKEYUP                    261
+#define WIN_WM_SYSCHAR                     262
+#define WIN_WM_SYSDEADCHAR                 263
+#define WIN_WM_KEYLAST                     264
+
+#define WIN_WM_INITDIALOG                  272
+#define WIN_WM_COMMAND                     273
+#define WIN_WM_SYSCOMMAND                  274
+#define WIN_WM_TIMER                       275
+#define WIN_WM_HSCROLL                     276
+#define WIN_WM_VSCROLL                     277
+
+#define WIN_WM_INITMENUPOPUP               279
+#define WIN_WM_MENUSELECT                  287
+#define WIN_WM_MENUCOMMAND                 294
+
+#define WIN_WM_CTLCOLORMSGBOX              306
+#define WIN_WM_CTLCOLOREDIT                307
+#define WIN_WM_CTLCOLORLISTBOX             308
+#define WIN_WM_CTLCOLORBTN                 309
+#define WIN_WM_CTLCOLORDLG                 310
+#define WIN_WM_CTLCOLORSCROLLBAR           311
+#define WIN_WM_CTLCOLORSTATIC              312
+
+#define WIN_WM_MOUSEFIRST                  512
+#define WIN_WM_MOUSEMOVE                   512
+#define WIN_WM_LBUTTONDOWN                 513
+#define WIN_WM_LBUTTONUP                   514
+#define WIN_WM_LBUTTONDBLCLK               515
+#define WIN_WM_RBUTTONDOWN                 516
+#define WIN_WM_RBUTTONUP                   517
+#define WIN_WM_RBUTTONDBLCLK               518
+#define WIN_WM_MBUTTONDOWN                 519
+#define WIN_WM_MBUTTONUP                   520
+#define WIN_WM_MBUTTONDBLCLK               521
+#define WIN_WM_MOUSEWHEEL                  522
+#define WIN_WM_XBUTTONDOWN                 523
+#define WIN_WM_XBUTTONUP                   524
+#define WIN_WM_XBUTTONDBLCLK               525
+
+#define WIN_WM_PARENTNOTIFY                528
+#define WIN_WM_ENTERMENULOOP               529
+#define WIN_WM_EXITMENULOOP                530
+
+#define WIN_WM_NEXTMENU                    531
+#define WIN_WM_SIZING                      532
+#define WIN_WM_CAPTURECHANGED              533
+#define WIN_WM_MOVING                      534
+#define WIN_WM_POWERBROADCAST              536
+
+#define WIN_WM_MDICREATE                   544
+#define WIN_WM_MDIDESTROY                  545
+#define WIN_WM_MDIACTIVATE                 546
+#define WIN_WM_MDIRESTORE                  547
+#define WIN_WM_MDINEXT                     548
+#define WIN_WM_MDIMAXIMIZE                 549
+#define WIN_WM_MDITILE                     550
+#define WIN_WM_MDICASCADE                  551
+#define WIN_WM_MDIICONARRANGE              552
+#define WIN_WM_MDIGETACTIVE                553
+
+#define WIN_WM_MDISETMENU                  560
+#define WIN_WM_ENTERSIZEMOVE               561
+#define WIN_WM_EXITSIZEMOVE                562
+#define WIN_WM_DROPFILES                   563
+#define WIN_WM_MDIREFRESHMENU              564
+
+#define WIN_WM_MOUSEHOVER                  673
+#define WIN_WM_MOUSELEAVE                  675
+
+#define WIN_WM_CUT                         768
+#define WIN_WM_COPY                        769
+#define WIN_WM_PASTE                       770
+#define WIN_WM_CLEAR                       771
+#define WIN_WM_UNDO                        772
+#define WIN_WM_RENDERFORMAT                773
+#define WIN_WM_RENDERALLFORMATS            774
+#define WIN_WM_DESTROYCLIPBOARD            775
+#define WIN_WM_DRAWCLIPBOARD               776
+#define WIN_WM_PAINTCLIPBOARD              777
+#define WIN_WM_VSCROLLCLIPBOARD            778
+#define WIN_WM_SIZECLIPBOARD               779
+#define WIN_WM_ASKCBFORMATNAME             780
+#define WIN_WM_CHANGECBCHAIN               781
+#define WIN_WM_HSCROLLCLIPBOARD            782
+#define WIN_WM_QUERYNEWPALETTE             783
+#define WIN_WM_PALETTEISCHANGING           784
+#define WIN_WM_PALETTECHANGED              785
+#define WIN_WM_HOTKEY                      786
+
 #define WIN_WM_USER                        1024
+
+#define WIN_WM_CHOOSEFONT_GETLOGFONT       ( WIN_WM_USER + 1 )
+#define WIN_WM_CHOOSEFONT_SETLOGFONT       ( WIN_WM_USER + 101 )
+#define WIN_WM_CHOOSEFONT_SETFLAGS         ( WIN_WM_USER + 102 )
 
 /* window styles */
 #define WIN_WS_OVERLAPPED                  0x00000000

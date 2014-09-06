@@ -91,7 +91,7 @@ PROCEDURE demoxbp()
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20, 440 }, { 80, 30 } )
-   oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
+   oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WIN_WM_SIZE, 0, 0 ) }
 
    // --- TreeView ---
 
@@ -167,7 +167,7 @@ PROCEDURE demoxbp()
    oXbp:caption     := "Hide"
    oXbp:caption     := "Hide"
    oXbp:create( , , { 430, 275 }, { 60, 25 } )
-   oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
+   oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WIN_WM_SIZE, 0, 0 ) }
 
    oRadio := WvgRadioButton():new( oStatic2, , { 10, 10 }, { 100, 15 } )
    oRadio:caption   := "Com 1"
@@ -237,12 +237,12 @@ PROCEDURE demoxbp()
       iif( oBtn:caption == "Show", oStatic:show(), NIL ), ;
       iif( oBtn:caption == "Tools", oStatic2:show():toFront(), NIL ), ;
       iif( oBtn:caption == "FontDlg", ExeFontDialog( oCrt ), NIL ), ;
-      iif( oBtn:caption $ "Hide,Show", oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ), ;
+      iif( oBtn:caption $ "Hide,Show", oCrt:sendMessage( WIN_WM_SIZE, 0, 0 ), NIL ), ;
       oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
 
    oCrt:resize := {|| ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr ) }
 
-   oCrt:sendMessage( WM_SIZE, 0, 0 )
+   oCrt:sendMessage( WIN_WM_SIZE, 0, 0 )
    oCrt:show()
 
    DO WHILE Inkey( 0 ) != K_ESC
@@ -307,7 +307,7 @@ STATIC PROCEDURE BuildMenuXbp( oCrt, oStatic, oStatic2 )
    oSubMenu       := WvgMenu():new( oMenuBar ):create()
    oSubMenu:title := "F~eatures"
    oSubMenu:addItem( { "~Hide or Show Left Panel" , {|| iif( oStatic:isVisible, ;
-      oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WM_SIZE, 0, 0 ) } } )
+      oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WIN_WM_SIZE, 0, 0 ) } } )
    oSubMenu:addItem( { "~Show My Panel" , {|| oStatic2:show():toFront() } } )
    oSubMenu:addItem()
    oSubMenu:addItem( { "~Font Dialog"   , {|| ExeFontDialog( oCrt ) } } )

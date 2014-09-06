@@ -188,7 +188,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
       RETURN EVENT_HANDLED
 
    CASE HB_GTE_COMMAND

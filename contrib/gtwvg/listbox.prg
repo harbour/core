@@ -166,7 +166,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
@@ -236,7 +236,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_ANY               /* This will never be reached */
       DO CASE
-      CASE aNM[ 1 ] == WM_LBUTTONUP
+      CASE aNM[ 1 ] == WIN_WM_LBUTTONUP
          ::nCurSelected := wvg_lbGetCurSel( ::hWnd ) + 1
          IF HB_ISEVALITEM( ::sl_itemMarked )
             IF ::isParentCrt()
@@ -248,7 +248,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      CASE aNM[ 1 ] == WM_LBUTTONDBLCLK
+      CASE aNM[ 1 ] == WIN_WM_LBUTTONDBLCLK
          ::editBuffer := ::nCurSelected
          IF HB_ISEVALITEM( ::sl_itemSelected )
             IF ::isParentCrt()
@@ -261,7 +261,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             RETURN EVENT_HANDLED
          ENDIF
 
-      CASE aNM[ 1 ] == WM_KEYUP
+      CASE aNM[ 1 ] == WIN_WM_KEYUP
          IF ::nCurSelected != wvg_lbGetCurSel( ::hWnd ) + 1
             ::nCurSelected := wvg_lbGetCurSel( ::hWnd ) + 1
             IF HB_ISEVALITEM( ::sl_itemMarked )

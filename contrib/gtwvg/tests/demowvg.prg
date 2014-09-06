@@ -3,9 +3,9 @@
  *
  *       Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
  *
- *     I have tried to simulate the gui controls through GDI
+ *     I have tried to simulate the GUI controls through GDI
  *      functions and found a way to refresh those controls
- *        through WM_PAINT message issued to the Window.
+ *       through WIN_WM_PAINT message issued to the Window.
  *                             and
  *           I feel that IF this functionality is built
  *               into the GT itself, what a wonder!

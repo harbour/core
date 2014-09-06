@@ -270,7 +270,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
 
    DO CASE
    CASE ::type == WVGSTATIC_TYPE_TEXT
-      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
 
    CASE ::type == WVGSTATIC_TYPE_BITMAP
       IF ::hBitmap != NIL

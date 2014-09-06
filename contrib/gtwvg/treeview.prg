@@ -133,7 +133,7 @@ METHOD WvgTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::createControl()
 
 #if 0
-   ::SetWindowProcCallback()  /* Let parent control the events because all notifications are posted via WM_NOTIFY */
+   ::SetWindowProcCallback()  /* Let parent control the events because all notifications are posted via WIN_WM_NOTIFY */
 #endif
 
    ::oRootItem       := WvgTreeViewItem():New()
@@ -157,7 +157,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
 
    CASE HB_GTE_COMMAND
       IF HB_ISEVALITEM( ::sl_lbClick )
@@ -212,7 +212,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 
 #if 0  /* It must never reach here */
    CASE HB_GTE_ANY
-      IF aNM[ 1 ] == WM_LBUTTONDOWN
+      IF aNM[ 1 ] == WIN_WM_LBUTTONDOWN
          aHdr := wvg_GetNMTreeViewInfo( aNM[ 3 ] )
          ::getSelectionInfo( aNM[ 2 ] )
          IF HB_ISEVALITEM( ::sl_lbClick )
@@ -226,7 +226,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
          ENDIF
          RETURN EVENT_HANDLED
 
-      ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK .OR. ( aNM[ 1 ] == WM_KEYDOWN .AND. aNM[ 2 ] == K_ENTER )
+      ELSEIF aNM[ 1 ] == WIN_WM_LBUTTONDBLCLK .OR. ( aNM[ 1 ] == WIN_WM_KEYDOWN .AND. aNM[ 2 ] == K_ENTER )
          ::editBuffer := ::oItemSelected
          IF HB_ISEVALITEM( ::sl_itemSelected )
             IF ::isParentCrt()

@@ -140,7 +140,7 @@ METHOD WvgTabPage:handleEvent( nMessage, aNM )
 
 
    CASE nMessage == HB_GTE_RESIZED
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
       RETURN EVENT_HANDLED
 
    CASE nMessage == HB_GTE_NOTIFY

@@ -151,7 +151,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
       IF HB_ISEVALITEM( ::sl_resize )
          Eval( ::sl_resize, , , self )
       ENDIF
@@ -171,7 +171,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
-      // Will never be issued because pushbutton sends WM_COMMAND
+      // Will never be issued because pushbutton sends WIN_WM_COMMAND
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
@@ -184,7 +184,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
 #if 0  /* Must not reach here if WndProc is not installed */
    CASE nMessage == HB_GTE_ANY
-      IF aNM[ 1 ] == WM_LBUTTONUP
+      IF aNM[ 1 ] == WIN_WM_LBUTTONUP
          IF HB_ISEVALITEM( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
@@ -231,7 +231,7 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
          wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( ::caption, nLoadFromDiskFile, WIN_IMAGE_BITMAP ) )
          EXIT
       OTHERWISE
-         wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+         wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
       ENDSWITCH
 
    CASE HB_ISNUMERIC( xCaption )  /* Handle to the bitmap */
@@ -240,7 +240,7 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
    CASE HB_ISARRAY( xCaption )
       ASize( xCaption, 4 )
       IF HB_ISCHAR( xCaption[ 1 ] )
-         wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, xCaption[ 1 ] )
+         wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, xCaption[ 1 ] )
       ENDIF
       IF ! Empty( xCaption[ 2 ] )
          SWITCH xCaption[ 2 ]

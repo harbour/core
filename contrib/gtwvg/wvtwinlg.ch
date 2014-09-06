@@ -453,3 +453,191 @@
 #define SWP_NOCOPYBITS                            WIN_SWP_NOCOPYBITS
 #define SWP_NOOWNERZORDER                         WIN_SWP_NOOWNERZORDER    /* Don't do owner Z ordering */
 #define SWP_NOSENDCHANGING                        WIN_SWP_NOSENDCHANGING   /* Don't send WM_WINDOWPOSCHANGING */
+
+/* Window Messages */
+#define WM_CREATE                                 WIN_WM_CREATE
+#define WM_DESTROY                                WIN_WM_DESTROY
+#define WM_MOVE                                   WIN_WM_MOVE
+#define WM_SIZE                                   WIN_WM_SIZE
+#define WM_ACTIVATE                               WIN_WM_ACTIVATE
+#define WM_SETFOCUS                               WIN_WM_SETFOCUS
+#define WM_KILLFOCUS                              WIN_WM_KILLFOCUS
+#define WM_ENABLE                                 WIN_WM_ENABLE
+#define WM_SETREDRAW                              WIN_WM_SETREDRAW
+#define WM_SETTEXT                                WIN_WM_SETTEXT
+#define WM_GETTEXT                                WIN_WM_GETTEXT
+#define WM_GETTEXTLENGTH                          WIN_WM_GETTEXTLENGTH
+#define WM_PAINT                                  WIN_WM_PAINT
+#define WM_CLOSE                                  WIN_WM_CLOSE
+#define WM_QUIT                                   WIN_WM_QUIT
+#define WM_ERASEBKGND                             WIN_WM_ERASEBKGND
+#define WM_SYSCOLORCHANGE                         WIN_WM_SYSCOLORCHANGE
+#define WM_SHOWWINDOW                             WIN_WM_SHOWWINDOW
+#define WM_WININICHANGE                           WIN_WM_WININICHANGE
+#define WM_DEVMODECHANGE                          WIN_WM_DEVMODECHANGE
+#define WM_ACTIVATEAPP                            WIN_WM_ACTIVATEAPP
+#define WM_FONTCHANGE                             WIN_WM_FONTCHANGE
+#define WM_TIMECHANGE                             WIN_WM_TIMECHANGE
+#define WM_CANCELMODE                             WIN_WM_CANCELMODE
+#define WM_SETCURSOR                              WIN_WM_SETCURSOR
+#define WM_MOUSEACTIVATE                          WIN_WM_MOUSEACTIVATE
+#define WM_CHILDACTIVATE                          WIN_WM_CHILDACTIVATE
+#define WM_QUEUESYNC                              WIN_WM_QUEUESYNC
+#define WM_GETMINMAXINFO                          WIN_WM_GETMINMAXINFO
+
+#define WM_PAINTICON                              WIN_WM_PAINTICON
+#define WM_ICONERASEBKGND                         WIN_WM_ICONERASEBKGND
+#define WM_NEXTDLGCTL                             WIN_WM_NEXTDLGCTL
+#define WM_SPOOLERSTATUS                          WIN_WM_SPOOLERSTATUS
+#define WM_DRAWITEM                               WIN_WM_DRAWITEM
+#define WM_MEASUREITEM                            WIN_WM_MEASUREITEM
+#define WM_DELETEITEM                             WIN_WM_DELETEITEM
+#define WM_VKEYTOITEM                             WIN_WM_VKEYTOITEM
+#define WM_CHARTOITEM                             WIN_WM_CHARTOITEM
+#define WM_SETFONT                                WIN_WM_SETFONT
+#define WM_GETFONT                                WIN_WM_GETFONT
+#define WM_SETHOTKEY                              WIN_WM_SETHOTKEY
+#define WM_GETHOTKEY                              WIN_WM_GETHOTKEY
+#define WM_QUERYDRAGICON                          WIN_WM_QUERYDRAGICON
+#define WM_COMPAREITEM                            WIN_WM_COMPAREITEM
+#define WM_GETOBJECT                              WIN_WM_GETOBJECT
+#define WM_COMPACTING                             WIN_WM_COMPACTING
+#define WM_COMMNOTIFY                             WIN_WM_COMMNOTIFY
+#define WM_WINDOWPOSCHANGING                      WIN_WM_WINDOWPOSCHANGING
+#define WM_WINDOWPOSCHANGED                       WIN_WM_WINDOWPOSCHANGED
+#define WM_POWER                                  WIN_WM_POWER
+#define WM_NOTIFY                                 WIN_WM_NOTIFY
+#define WM_INPUTLANGCHANGEREQUEST                 WIN_WM_INPUTLANGCHANGEREQUEST
+#define WM_INPUTLANGCHANGE                        WIN_WM_INPUTLANGCHANGE
+#define WM_TCARD                                  WIN_WM_TCARD
+#define WM_HELP                                   WIN_WM_HELP
+#define WM_USERCHANGED                            WIN_WM_USERCHANGED
+#define WM_NOTIFYFORMAT                           WIN_WM_NOTIFYFORMAT
+
+#define WM_CONTEXTMENU                            WIN_WM_CONTEXTMENU
+#define WM_STYLECHANGING                          WIN_WM_STYLECHANGING
+#define WM_STYLECHANGED                           WIN_WM_STYLECHANGED
+#define WM_DISPLAYCHANGE                          WIN_WM_DISPLAYCHANGE
+#define WM_GETICON                                WIN_WM_GETICON
+#define WM_SETICON                                WIN_WM_SETICON
+
+#define WM_NCCREATE                               WIN_WM_NCCREATE
+#define WM_NCDESTROY                              WIN_WM_NCDESTROY
+#define WM_NCCALCSIZE                             WIN_WM_NCCALCSIZE
+#define WM_NCHITTEST                              WIN_WM_NCHITTEST
+#define WM_NCPAINT                                WIN_WM_NCPAINT
+#define WM_NCACTIVATE                             WIN_WM_NCACTIVATE
+#define WM_GETDLGCODE                             WIN_WM_GETDLGCODE
+
+#define WM_NCMOUSEMOVE                            WIN_WM_NCMOUSEMOVE
+#define WM_NCLBUTTONDOWN                          WIN_WM_NCLBUTTONDOWN
+#define WM_NCLBUTTONUP                            WIN_WM_NCLBUTTONUP
+#define WM_NCLBUTTONDBLCLK                        WIN_WM_NCLBUTTONDBLCLK
+#define WM_NCRBUTTONDOWN                          WIN_WM_NCRBUTTONDOWN
+#define WM_NCRBUTTONUP                            WIN_WM_NCRBUTTONUP
+#define WM_NCRBUTTONDBLCLK                        WIN_WM_NCRBUTTONDBLCLK
+#define WM_NCMBUTTONDOWN                          WIN_WM_NCMBUTTONDOWN
+#define WM_NCMBUTTONUP                            WIN_WM_NCMBUTTONUP
+#define WM_NCMBUTTONDBLCLK                        WIN_WM_NCMBUTTONDBLCLK
+
+#define WM_KEYDOWN                                WIN_WM_KEYDOWN
+#define WM_KEYUP                                  WIN_WM_KEYUP
+
+#define WM_KEYFIRST                               WIN_WM_KEYFIRST
+#define WM_CHAR                                   WIN_WM_CHAR
+#define WM_DEADCHAR                               WIN_WM_DEADCHAR
+#define WM_SYSKEYDOWN                             WIN_WM_SYSKEYDOWN
+#define WM_SYSKEYUP                               WIN_WM_SYSKEYUP
+#define WM_SYSCHAR                                WIN_WM_SYSCHAR
+#define WM_SYSDEADCHAR                            WIN_WM_SYSDEADCHAR
+#define WM_KEYLAST                                WIN_WM_KEYLAST
+
+#define WM_INITDIALOG                             WIN_WM_INITDIALOG
+#define WM_COMMAND                                WIN_WM_COMMAND
+#define WM_SYSCOMMAND                             WIN_WM_SYSCOMMAND
+#define WM_TIMER                                  WIN_WM_TIMER
+#define WM_HSCROLL                                WIN_WM_HSCROLL
+#define WM_VSCROLL                                WIN_WM_VSCROLL
+
+#define WM_INITMENUPOPUP                          WIN_WM_INITMENUPOPUP
+#define WM_MENUSELECT                             WIN_WM_MENUSELECT
+#define WM_MENUCOMMAND                            WIN_WM_MENUCOMMAND
+
+#define WM_CTLCOLORMSGBOX                         WIN_WM_CTLCOLORMSGBOX
+#define WM_CTLCOLOREDIT                           WIN_WM_CTLCOLOREDIT
+#define WM_CTLCOLORLISTBOX                        WIN_WM_CTLCOLORLISTBOX
+#define WM_CTLCOLORBTN                            WIN_WM_CTLCOLORBTN
+#define WM_CTLCOLORDLG                            WIN_WM_CTLCOLORDLG
+#define WM_CTLCOLORSCROLLBAR                      WIN_WM_CTLCOLORSCROLLBAR
+#define WM_CTLCOLORSTATIC                         WIN_WM_CTLCOLORSTATIC
+
+#define WM_MOUSEFIRST                             WIN_WM_MOUSEFIRST
+#define WM_MOUSEMOVE                              WIN_WM_MOUSEMOVE
+#define WM_LBUTTONDOWN                            WIN_WM_LBUTTONDOWN
+#define WM_LBUTTONUP                              WIN_WM_LBUTTONUP
+#define WM_LBUTTONDBLCLK                          WIN_WM_LBUTTONDBLCLK
+#define WM_RBUTTONDOWN                            WIN_WM_RBUTTONDOWN
+#define WM_RBUTTONUP                              WIN_WM_RBUTTONUP
+#define WM_RBUTTONDBLCLK                          WIN_WM_RBUTTONDBLCLK
+#define WM_MBUTTONDOWN                            WIN_WM_MBUTTONDOWN
+#define WM_MBUTTONUP                              WIN_WM_MBUTTONUP
+#define WM_MBUTTONDBLCLK                          WIN_WM_MBUTTONDBLCLK
+#define WM_MOUSEWHEEL                             WIN_WM_MOUSEWHEEL
+#define WM_XBUTTONDOWN                            WIN_WM_XBUTTONDOWN
+#define WM_XBUTTONUP                              WIN_WM_XBUTTONUP
+#define WM_XBUTTONDBLCLK                          WIN_WM_XBUTTONDBLCLK
+#define WM_MOUSEHOVER                             WIN_WM_MOUSEHOVER
+#define WM_MOUSELEAVE                             WIN_WM_MOUSELEAVE
+
+#define WM_PARENTNOTIFY                           WIN_WM_PARENTNOTIFY
+#define WM_ENTERMENULOOP                          WIN_WM_ENTERMENULOOP
+#define WM_EXITMENULOOP                           WIN_WM_EXITMENULOOP
+
+#define WM_NEXTMENU                               WIN_WM_NEXTMENU
+#define WM_SIZING                                 WIN_WM_SIZING
+#define WM_CAPTURECHANGED                         WIN_WM_CAPTURECHANGED
+#define WM_MOVING                                 WIN_WM_MOVING
+#define WM_POWERBROADCAST                         WIN_WM_POWERBROADCAST
+
+#define WM_MDICREATE                              WIN_WM_MDICREATE
+#define WM_MDIDESTROY                             WIN_WM_MDIDESTROY
+#define WM_MDIACTIVATE                            WIN_WM_MDIACTIVATE
+#define WM_MDIRESTORE                             WIN_WM_MDIRESTORE
+#define WM_MDINEXT                                WIN_WM_MDINEXT
+#define WM_MDIMAXIMIZE                            WIN_WM_MDIMAXIMIZE
+#define WM_MDITILE                                WIN_WM_MDITILE
+#define WM_MDICASCADE                             WIN_WM_MDICASCADE
+#define WM_MDIICONARRANGE                         WIN_WM_MDIICONARRANGE
+#define WM_MDIGETACTIVE                           WIN_WM_MDIGETACTIVE
+
+#define WM_MDISETMENU                             WIN_WM_MDISETMENU
+#define WM_ENTERSIZEMOVE                          WIN_WM_ENTERSIZEMOVE
+#define WM_EXITSIZEMOVE                           WIN_WM_EXITSIZEMOVE
+#define WM_DROPFILES                              WIN_WM_DROPFILES
+#define WM_MDIREFRESHMENU                         WIN_WM_MDIREFRESHMENU
+
+#define WM_CUT                                    WIN_WM_CUT
+#define WM_COPY                                   WIN_WM_COPY
+#define WM_PASTE                                  WIN_WM_PASTE
+#define WM_CLEAR                                  WIN_WM_CLEAR
+#define WM_UNDO                                   WIN_WM_UNDO
+#define WM_RENDERFORMAT                           WIN_WM_RENDERFORMAT
+#define WM_RENDERALLFORMATS                       WIN_WM_RENDERALLFORMATS
+#define WM_DESTROYCLIPBOARD                       WIN_WM_DESTROYCLIPBOARD
+#define WM_DRAWCLIPBOARD                          WIN_WM_DRAWCLIPBOARD
+#define WM_PAINTCLIPBOARD                         WIN_WM_PAINTCLIPBOARD
+#define WM_VSCROLLCLIPBOARD                       WIN_WM_VSCROLLCLIPBOARD
+#define WM_SIZECLIPBOARD                          WIN_WM_SIZECLIPBOARD
+#define WM_ASKCBFORMATNAME                        WIN_WM_ASKCBFORMATNAME
+#define WM_CHANGECBCHAIN                          WIN_WM_CHANGECBCHAIN
+#define WM_HSCROLLCLIPBOARD                       WIN_WM_HSCROLLCLIPBOARD
+#define WM_QUERYNEWPALETTE                        WIN_WM_QUERYNEWPALETTE
+#define WM_PALETTEISCHANGING                      WIN_WM_PALETTEISCHANGING
+#define WM_PALETTECHANGED                         WIN_WM_PALETTECHANGED
+#define WM_HOTKEY                                 WIN_WM_HOTKEY
+
+#define WM_USER                                   WIN_WM_USER
+
+#define WM_CHOOSEFONT_GETLOGFONT                  WIN_WM_CHOOSEFONT_GETLOGFONT
+#define WM_CHOOSEFONT_SETLOGFONT                  WIN_WM_CHOOSEFONT_SETLOGFONT
+#define WM_CHOOSEFONT_SETFLAGS                    WIN_WM_CHOOSEFONT_SETFLAGS

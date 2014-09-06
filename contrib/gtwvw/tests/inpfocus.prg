@@ -6,6 +6,8 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
+#include "hbwin.ch"
+
 // icon indexes for standard bitmap (from commctrl.h)
 #define STD_DELETE              5
 #define STD_FILENEW             6
@@ -191,10 +193,6 @@ STATIC PROCEDURE typing( ch )
 
    RETURN
 
-// from winuser.h
-#define WM_COMMAND                      0x0111
-#define WM_CHAR                         0x0102
-
 /* WVW_INPUTFOCUS() is a special, callback function
  * This function will be called by GTWVW everytime input occurs on
  * non-topmost window.
@@ -216,7 +214,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
    HB_SYMBOL_UNUSED( lParam )
 
    // did user perform a menu/toolbar action on Main Window?
-   IF message == WM_COMMAND .AND. nWinNum == 0  // menu,toolbar,pushbutton
+   IF message == WIN_WM_COMMAND .AND. nWinNum == 0  // menu,toolbar,pushbutton
       nCommand := wParamLow
       MenuAction( 0, nCommand )
       RETURN .T.
@@ -233,7 +231,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
    // (TODO: create a sample of pushbutton event here)
 
    DO CASE
-   CASE message == WM_CHAR
+   CASE message == WIN_WM_CHAR
       ch := wParam
       Eval( s_akeyhandlers[ nWinNum ], nWinNum, ch )
       RETURN .T.

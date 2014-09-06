@@ -290,7 +290,7 @@ METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
 
    DO CASE
 
-   CASE nMessage == WM_INITDIALOG
+   CASE nMessage == WIN_WM_INITDIALOG
       ::hWnd := hWnd
 
       IF ! Empty( ::title )
@@ -328,7 +328,7 @@ METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
 
       RETURN 1
 
-   CASE nMessage == WM_COMMAND
+   CASE nMessage == WIN_WM_COMMAND
       nL := wvg_LOWORD( nwParam )
       nH := wvg_HIWORD( nwParam )
 

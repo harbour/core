@@ -124,7 +124,7 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
@@ -154,7 +154,7 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 #if 0  /* This should never be reached as parent is processing the events */
    CASE nMessage == HB_GTE_ANY
       IF ::isParentCrt()
-         IF aNM[ 1 ] == WM_LBUTTONUP
+         IF aNM[ 1 ] == WIN_WM_LBUTTONUP
             IF HB_ISEVALITEM( ::sl_lbClick )
                ::oParent:setFocus()
                ::sendMessage( BM_SETCHECK, iif( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED, BST_UNCHECKED, BST_CHECKED ), 0 )
@@ -185,7 +185,7 @@ METHOD WvgCheckBox:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

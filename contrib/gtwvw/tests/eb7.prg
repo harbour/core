@@ -21,6 +21,8 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
+#include "hbwin.ch"
+
 #define EN_SETFOCUS         0x0100
 #define EN_KILLFOCUS        0x0200
 #define EN_CHANGE           0x0300
@@ -29,28 +31,6 @@
 #define EN_MAXTEXT          0x0501
 #define EN_HSCROLL          0x0601
 #define EN_VSCROLL          0x0602
-
-#define WM_KEYFIRST                     0x0100
-#define WM_KEYDOWN                      0x0100
-#define WM_KEYUP                        0x0101
-#define WM_CHAR                         0x0102
-#define WM_DEADCHAR                     0x0103
-#define WM_SYSKEYDOWN                   0x0104
-#define WM_SYSKEYUP                     0x0105
-#define WM_SYSCHAR                      0x0106
-#define WM_SYSDEADCHAR                  0x0107
-#define WM_KEYLAST                      0x0108
-#define WM_INITDIALOG                   0x0110
-#define WM_COMMAND                      0x0111
-#define WM_SYSCOMMAND                   0x0112
-#define WM_TIMER                        0x0113
-#define WM_HSCROLL                      0x0114
-#define WM_VSCROLL                      0x0115
-#define WM_INITMENU                     0x0116
-#define WM_INITMENUPOPUP                0x0117
-#define WM_MENUSELECT                   0x011F
-#define WM_MENUCHAR                     0x0120
-#define WM_ENTERIDLE                    0x0121
 
 #command @ <row>, <col> EBGET <var> ;
       [LABEL <label>] ;
@@ -882,7 +862,7 @@ STATIC FUNCTION IsBadDate( cBuffer )
 /* --- WVW_INPUTFOCUS --- */
 
 // this is a simple sample of WVW_INPUTFOCUS
-// only handles WM_CHAR, thus not all input characters are accepted
+// only handles WIN_WM_CHAR, thus not all input characters are accepted
 FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    LOCAL bhandler
@@ -893,7 +873,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
 
    // did user perform a menu/toolbar action on Main Window?
 #if 0
-   IF message == WM_COMMAND .AND. nWinNum == 0  // menu,toolbar,pushbutton
+   IF message == WIN_WM_COMMAND .AND. nWinNum == 0  // menu,toolbar,pushbutton
       RETURN .F.
    ENDIF
 #endif
@@ -901,7 +881,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
    // now we handle input on other non-topmost windows
 
    DO CASE
-   CASE message == WM_CHAR
+   CASE message == WIN_WM_CHAR
       bhandler := inp_handler( nWinNum )
       IF HB_ISEVALITEM( bhandler )
          Eval( bhandler, nWinNum, wParam )

@@ -235,81 +235,81 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
    CASE nEvent == HB_GTE_MOUSE
 
       DO CASE
-      CASE xParams[ 1 ] == WM_MOUSEHOVER
+      CASE xParams[ 1 ] == WIN_WM_MOUSEHOVER
          aPos := { xParams[ 3 ], xParams[ 4 ] }
-      CASE xParams[ 1 ] == WM_MOUSELEAVE
+      CASE xParams[ 1 ] == WIN_WM_MOUSELEAVE
          /* Nothing */
       OTHERWISE
          aPos := iif( ::mouseMode == 2, { xParams[ 3 ], xParams[ 4 ] }, { xParams[ 5 ], xParams[ 6 ] } )
       ENDCASE
 
       SWITCH xParams[ 1 ]
-      CASE WM_MOUSEHOVER
+      CASE WIN_WM_MOUSEHOVER
          IF HB_ISEVALITEM( ::sl_enter )
             Eval( ::sl_enter, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_MOUSELEAVE
+      CASE WIN_WM_MOUSELEAVE
          IF HB_ISEVALITEM( ::sl_leave )
             Eval( ::sl_leave, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_RBUTTONDOWN
+      CASE WIN_WM_RBUTTONDOWN
          IF HB_ISEVALITEM( ::sl_rbDown )
             Eval( ::sl_rbDown, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_LBUTTONDOWN
+      CASE WIN_WM_LBUTTONDOWN
          IF HB_ISEVALITEM( ::sl_lbDown )
             Eval( ::sl_lbDown, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_RBUTTONUP
+      CASE WIN_WM_RBUTTONUP
          IF HB_ISEVALITEM( ::sl_rbUp )
             Eval( ::sl_rbUp, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_LBUTTONUP
+      CASE WIN_WM_LBUTTONUP
          IF HB_ISEVALITEM( ::sl_lbUp )
             Eval( ::sl_lbUp, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_RBUTTONDBLCLK
+      CASE WIN_WM_RBUTTONDBLCLK
          IF HB_ISEVALITEM( ::sl_rbDblClick )
             Eval( ::sl_rbDblClick, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_LBUTTONDBLCLK
+      CASE WIN_WM_LBUTTONDBLCLK
          IF HB_ISEVALITEM( ::sl_lbDblClick )
             Eval( ::sl_lbDblClick, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_MBUTTONDOWN
+      CASE WIN_WM_MBUTTONDOWN
          IF HB_ISEVALITEM( ::sl_mbDown )
             Eval( ::sl_mbDown, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_MBUTTONUP
+      CASE WIN_WM_MBUTTONUP
          IF HB_ISEVALITEM( ::sl_mbClick )
             Eval( ::sl_mbClick, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_MBUTTONDBLCLK
+      CASE WIN_WM_MBUTTONDBLCLK
          IF HB_ISEVALITEM( ::sl_mbDblClick )
             Eval( ::sl_mbDblClick, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_MOUSEMOVE
+      CASE WIN_WM_MOUSEMOVE
          IF HB_ISEVALITEM( ::sl_motion )
             Eval( ::sl_motion, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_MOUSEWHEEL
+      CASE WIN_WM_MOUSEWHEEL
          IF HB_ISEVALITEM( ::sl_wheel )
             Eval( ::sl_wheel, aPos, , Self )
          ENDIF
          EXIT
-      CASE WM_NCMOUSEMOVE
+      CASE WIN_WM_NCMOUSEMOVE
          EXIT
       ENDSWITCH
 
@@ -444,13 +444,13 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    SWITCH nMessage
 
-   CASE WM_ERASEBKGND
+   CASE WIN_WM_ERASEBKGND
       IF ::objType == objTypeDA .AND. ! Empty( ::hBrushBG )
          ::handleEvent( HB_GTE_CTLCOLOR, { wvg_n2p( nwParam ), wvg_n2p( nlParam ) } )
       ENDIF
       EXIT
 
-   CASE WM_COMMAND
+   CASE WIN_WM_COMMAND
       nCtrlID   := wvg_LOWORD( nwParam )
       nNotifctn := wvg_HIWORD( nwParam )
       hWndCtrl  := wvg_n2p( nlParam )
@@ -476,7 +476,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       ENDIF
       EXIT
 
-   CASE WM_NOTIFY
+   CASE WIN_WM_NOTIFY
       IF ( nObj := AScan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
          nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, wvg_n2p( nlParam ) } )
          IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_HANDLED
@@ -487,13 +487,13 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       ENDIF
       EXIT
 
-   CASE WM_CTLCOLORLISTBOX
-   CASE WM_CTLCOLORMSGBOX
-   CASE WM_CTLCOLOREDIT
-   CASE WM_CTLCOLORBTN
-   CASE WM_CTLCOLORDLG
-   CASE WM_CTLCOLORSCROLLBAR
-   CASE WM_CTLCOLORSTATIC
+   CASE WIN_WM_CTLCOLORLISTBOX
+   CASE WIN_WM_CTLCOLORMSGBOX
+   CASE WIN_WM_CTLCOLOREDIT
+   CASE WIN_WM_CTLCOLORBTN
+   CASE WIN_WM_CTLCOLORDLG
+   CASE WIN_WM_CTLCOLORSCROLLBAR
+   CASE WIN_WM_CTLCOLORSTATIC
       oObj := ::findObjectByHandle( wvg_n2p( nlParam ) )
       IF HB_ISOBJECT( oObj )
          nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { wvg_n2p( nwParam ), wvg_n2p( nlParam ) } )
@@ -505,20 +505,20 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       ENDIF
       EXIT
 
-   CASE WM_HSCROLL
+   CASE WIN_WM_HSCROLL
       ::handleEvent( HB_GTE_HSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), wvg_n2p( nlParam ) } )
       RETURN 0
 
-   CASE WM_VSCROLL
+   CASE WIN_WM_VSCROLL
       IF ::handleEvent( HB_GTE_VSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), wvg_n2p( nlParam ) } ) == EVENT_HANDLED
          RETURN 0
       ENDIF
       EXIT
 
-   CASE WM_CAPTURECHANGED
+   CASE WIN_WM_CAPTURECHANGED
       EXIT
 #if 0
-   CASE WM_MOUSEMOVE
+   CASE WIN_WM_MOUSEMOVE
       IF ::objType == objTypeScrollBar
          IF ! ::lTracking
             ::lTracking := wvg_BeginMouseTracking( ::hWnd )
@@ -526,7 +526,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       ENDIF
       EXIT
 
-   CASE WM_MOUSEHOVER
+   CASE WIN_WM_MOUSEHOVER
       IF ::objType == objTypeScrollBar
          IF ::oParent:objType == objTypeCrt
             wapi_SetFocus( ::oParent:pWnd )
@@ -535,7 +535,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       ENDIF
       EXIT
 
-   CASE WM_MOUSELEAVE
+   CASE WIN_WM_MOUSELEAVE
       IF ::objType == objTypeScrollBar
          ::lTracking := .F.
          IF ::oParent:objType == objTypeCrt
@@ -545,8 +545,8 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       EXIT
 #endif
 
-   CASE WM_VKEYTOITEM
-   CASE WM_CHARTOITEM
+   CASE WIN_WM_VKEYTOITEM
+   CASE WIN_WM_CHARTOITEM
       ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, wvg_n2p( nlParam ) } )
       EXIT
 

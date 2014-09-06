@@ -130,7 +130,7 @@ METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::createControl()
 
 #if 0
-   ::SetWindowProcCallback()   /* Let parent control the events - WM_COMMAND */
+   ::SetWindowProcCallback()   /* Let parent control the events - WIN_WM_COMMAND */
 #endif
 
    IF ::visible
@@ -181,7 +181,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
       DO CASE

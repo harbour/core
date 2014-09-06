@@ -75,7 +75,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oXbp    := WvgPushButton():new( oStatic2 )
    oXbp:caption     := "Hide"
    oXbp:create( , , { 430, 275 }, { 60, 25 } )
-   oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
+   oXbp:activate    := {|| oStatic2:hide(), oCrt:sendMessage( WIN_WM_SIZE, 0, 0 ) }
 
    oRadio  := WvgRadioButton():new( oStatic2, , { 10, 10 }, { 100, 15 } )
    oRadio:caption   := "Com 1"
@@ -170,7 +170,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20, 440 }, { 80, 30 } )
-   oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
+   oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WIN_WM_SIZE, 0, 0 ) }
 
    // --- TreeView ---
    oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[ 1 ] - 160, oTBar:currentSize()[ 2 ] + 3 }, ;
@@ -207,7 +207,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oTBar:buttonClick := {| oBtn | iif( oBtn:caption == "Hide", oStatic:hide(), NIL ), ;
       iif( oBtn:caption == "Show", oStatic:show(), NIL ), ;
       iif( oBtn:caption == "Tools", oStatic2:show():toFront(), NIL ), ;
-      iif( oBtn:caption $ "Hide,Show", oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ), ;
+      iif( oBtn:caption $ "Hide,Show", oCrt:sendMessage( WIN_WM_SIZE, 0, 0 ), NIL ), ;
       oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
    oDA:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
 
@@ -215,7 +215,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    // --- Active-X ---
    oCom := BuildActiveXControl( nActiveX, oDA )
    IF HB_ISOBJECT( oCom )
-      oCrt:sendMessage( WM_SIZE, 0, 0 )
+      oCrt:sendMessage( WIN_WM_SIZE, 0, 0 )
       oCrt:show()
       ExeActiveX( nActiveX, oCom, xParam )
    ENDIF
@@ -285,7 +285,7 @@ STATIC PROCEDURE ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    oSubMenu       := WvgMenu():new( oMenuBar ):create()
    oSubMenu:title := "F~eatures"
    oSubMenu:addItem( { "~Hide or Show Left Panel", {|| iif( oStatic:isVisible, ;
-      oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WM_SIZE, 0, 0 ) } } )
+      oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WIN_WM_SIZE, 0, 0 ) } } )
    oSubMenu:addItem( { "~Show My Panel", {|| oStatic2:show() } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
@@ -329,7 +329,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
          oCom:showAboutBox() ;
          } )
 
-      oCom:mapEvent( evBtnUp, {| nBtn | iif( nBtn == 2, oCom:oParent:sendMessage( WM_CLOSE, 0, 0 ), NIL ) } )
+      oCom:mapEvent( evBtnUp, {| nBtn | iif( nBtn == 2, oCom:oParent:sendMessage( WIN_WM_CLOSE, 0, 0 ), NIL ) } )
       EXIT
 
    CASE 3
