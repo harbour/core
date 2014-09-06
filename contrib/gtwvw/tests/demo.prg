@@ -72,7 +72,7 @@ STATIC s_nrepeatdelay := 0.5
 PROCEDURE Main()
 
    LOCAL nCurWindow
-   LOCAL hMenu, hPopupmenu
+   LOCAL hMenu, hPopupmenu, hSubMenu
    LOCAL cLabel := "This is the Main Window"
    LOCAL nCursor
    LOCAL kF1, kF2, kF3
@@ -122,40 +122,48 @@ PROCEDURE Main()
 
    hMenu := wvw_CreateMenu()
    hPopupMenu := wvw_CreateMenu()
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_GET, "~GET demo"  )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
-   // wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_SEPARATOR )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
-   wvw_AppendMenu( hMenu, WIN_MF_ENABLED + WIN_MF_POPUP, hPopupMenu, "~Demos",  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_DEMO_GET, "~GET demo"  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_DEMO_BROWSE, "~BROWSE demo" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
+#if 0
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_DEMO_COLOR, "~COLOR demo" )
+#endif
+   wvw_AppendMenu( hPopupMenu )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_DEMO_EXIT, "E~xit"  )
+   wvw_AppendMenu( hMenu, WIN_MF_ENABLED, hPopupMenu, "~Demos",  )
+
+   hSubMenu := wvw_CreateMenu()
+   wvw_AppendMenu( hSubMenu, WIN_MF_ENABLED, 900, "Sub~1"  )
+   wvw_AppendMenu( hSubMenu, WIN_MF_ENABLED, 901, "Sub~2"  )
 
    hPopupMenu := wvw_CreateMenu()
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_SEPARATOR )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
-   wvw_AppendMenu( hMenu, WIN_MF_ENABLED + WIN_MF_POPUP, hPopupMenu, "~Toolbar",  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
+   wvw_AppendMenu( hPopupMenu )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
+   wvw_AppendMenu( hPopupMenu )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, hSubMenu, "~Submenus" )
+   wvw_AppendMenu( hMenu, WIN_MF_ENABLED, hPopupMenu, "~Toolbar",  )
 
    hPopupMenu := wvw_CreateMenu()
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_SEPARATOR )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
-   wvw_AppendMenu( hMenu, WIN_MF_ENABLED + WIN_MF_POPUP, hPopupMenu, "~Window",  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
+   wvw_AppendMenu( hPopupMenu )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
+   wvw_AppendMenu( hMenu, WIN_MF_ENABLED, hPopupMenu, "~Window",  )
 
    hPopupMenu := wvw_CreateMenu()
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_SEPARATOR )
-   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED + WIN_MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
-   wvw_AppendMenu( hMenu, WIN_MF_ENABLED + WIN_MF_POPUP, hPopupMenu, "~Help",  )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_HELP_HELP, "~Help (F1)"  )
+   wvw_AppendMenu( hPopupMenu )
+   wvw_AppendMenu( hPopupMenu, WIN_MF_ENABLED, IDM_HELP_INFO, "~Info (F2)"  )
+   wvw_AppendMenu( hMenu, WIN_MF_ENABLED, hPopupMenu, "~Help",  )
 
    wvw_SetMenu( , hMenu )
 
    // end menu definitions
 
-   nCurWindow := wvw_nNumWindows() - 1 // == 0, Main Window
+   nCurWindow := wvw_nNumWindows() - 1  // == 0, Main Window
 
    CreateToolbar( nCurWindow )
 

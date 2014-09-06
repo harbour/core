@@ -631,26 +631,39 @@ HB_FUNC( WAPI_REMOVEMENU )
 HB_FUNC( WAPI_INSERTMENU )
 {
    BOOL fResult;
-   HMENU hMenu = hbwapi_par_raw_HMENU( 1 ),
-         hSubMenu = hbwapi_par_raw_HMENU( 4 );
-   UINT uPosition = hbwapi_par_UINT( 2 ),
-        uFlags = hbwapi_par_UINT( 3 );
+   HMENU hMenu = hbwapi_par_raw_HMENU( 1 );
+   UINT uFlags = hbwapi_par_UINT( 3 ), uPosition = hbwapi_par_UINT( 2 );
    HB_PTRUINT uIDNewItem;
    void * hNewItemStr;
    LPCTSTR lpNewItem = HB_PARSTR( 5, &hNewItemStr, NULL );
 
-   if( hSubMenu )
-   {
-      uFlags |= MF_POPUP;
-      uIDNewItem = ( HB_PTRUINT ) hSubMenu;
-   }
+   if( ( uFlags & MF_POPUP ) == MF_POPUP )
+      uIDNewItem = ( UINT_PTR ) hbwapi_par_raw_HMENU( 4 );
    else
-      uIDNewItem = HB_ISPOINTER( 4 ) ? ( HB_PTRUINT ) hb_parptr( 4 ) :
-                                       ( HB_PTRUINT ) hb_parnint( 4 );
+   {
+      if( HB_ISPOINTER( 4 ) )  /* NOTE: assumes that pointer cannot be numeric */
+      {
+         uFlags |= MF_POPUP;
+         uIDNewItem = ( UINT_PTR ) hbwapi_par_raw_HMENU( 4 );
+      }
+      else
+         uIDNewItem = ( UINT_PTR ) hb_parnint( 4 );
+   }
+
    if( lpNewItem )
       uFlags |= MF_STRING;
-   else
-      lpNewItem = ( LPCTSTR ) hb_parptr( 5 );
+   else if( HB_ISNUM( 5 ) )
+   {
+      uFlags |= MF_OWNERDRAW;
+      lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 5 );
+   }
+   else if( hbwapi_is_HANDLE( 5 ) )
+   {
+      uFlags |= MF_BITMAP;
+      lpNewItem = ( LPCTSTR ) hbwapi_par_raw_HBITMAP( 5 );
+   }
+   else if( hb_pcount() <= 3 )
+      uFlags |= MF_SEPARATOR;
 
    fResult = InsertMenu( hMenu, uPosition, uFlags, uIDNewItem, lpNewItem );
    hbwapi_SetLastError( GetLastError() );
@@ -661,25 +674,39 @@ HB_FUNC( WAPI_INSERTMENU )
 HB_FUNC( WAPI_APPENDMENU )
 {
    BOOL fResult;
-   HMENU hMenu = hbwapi_par_raw_HMENU( 1 ),
-         hSubMenu = hbwapi_par_raw_HMENU( 3 );
+   HMENU hMenu = hbwapi_par_raw_HMENU( 1 );
    UINT uFlags = hbwapi_par_UINT( 2 );
    HB_PTRUINT uIDNewItem;
    void * hNewItemStr;
    LPCTSTR lpNewItem = HB_PARSTR( 4, &hNewItemStr, NULL );
 
-   if( hSubMenu )
-   {
-      uFlags |= MF_POPUP;
-      uIDNewItem = ( HB_PTRUINT ) hSubMenu;
-   }
+   if( ( uFlags & MF_POPUP ) == MF_POPUP )
+      uIDNewItem = ( UINT_PTR ) hbwapi_par_raw_HMENU( 3 );
    else
-      uIDNewItem = HB_ISPOINTER( 3 ) ? ( HB_PTRUINT ) hb_parptr( 3 ) :
-                                       ( HB_PTRUINT ) hb_parnint( 3 );
+   {
+      if( HB_ISPOINTER( 3 ) )  /* NOTE: assumes that pointer cannot be numeric */
+      {
+         uFlags |= MF_POPUP;
+         uIDNewItem = ( UINT_PTR ) hbwapi_par_raw_HMENU( 3 );
+      }
+      else
+         uIDNewItem = ( UINT_PTR ) hb_parnint( 3 );
+   }
+
    if( lpNewItem )
       uFlags |= MF_STRING;
-   else
-      lpNewItem = ( LPCTSTR ) hb_parptr( 4 );
+   else if( HB_ISNUM( 4 ) )
+   {
+      uFlags |= MF_OWNERDRAW;
+      lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
+   }
+   else if( hbwapi_is_HANDLE( 4 ) )
+   {
+      uFlags |= MF_BITMAP;
+      lpNewItem = ( LPCTSTR ) hbwapi_par_raw_HBITMAP( 4 );
+   }
+   else if( hb_pcount() <= 2 )
+      uFlags |= MF_SEPARATOR;
 
    fResult = AppendMenu( hMenu, uFlags, uIDNewItem, lpNewItem );
    hbwapi_SetLastError( GetLastError() );

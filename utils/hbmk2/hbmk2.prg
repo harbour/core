@@ -62,6 +62,7 @@
 
    Markdown syntax:
       https://daringfireball.net/projects/markdown/syntax
+      https://jgm.github.io/stmd/spec.html (CommonMark)
 
    Markdown to man page converter:
       https://github.com/sunaku/md2man
