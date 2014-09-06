@@ -654,13 +654,15 @@ HB_FUNC( WAPI_INSERTMENU )
       uFlags |= MF_STRING;
    else if( HB_ISNUM( 5 ) )
    {
-      uFlags |= MF_OWNERDRAW;
       lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 5 );
+      if( lpNewItem )
+         uFlags |= MF_OWNERDRAW;
    }
    else if( hbwapi_is_HANDLE( 5 ) )
    {
-      uFlags |= MF_BITMAP;
       lpNewItem = ( LPCTSTR ) hbwapi_par_raw_HBITMAP( 5 );
+      if( lpNewItem )
+         uFlags |= MF_BITMAP;
    }
    else if( hb_pcount() <= 3 )
       uFlags |= MF_SEPARATOR;
@@ -697,13 +699,15 @@ HB_FUNC( WAPI_APPENDMENU )
       uFlags |= MF_STRING;
    else if( HB_ISNUM( 4 ) )
    {
-      uFlags |= MF_OWNERDRAW;
       lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
+      if( lpNewItem )
+         uFlags |= MF_OWNERDRAW;
    }
    else if( hbwapi_is_HANDLE( 4 ) )
    {
-      uFlags |= MF_BITMAP;
       lpNewItem = ( LPCTSTR ) hbwapi_par_raw_HBITMAP( 4 );
+      if( lpNewItem )
+         uFlags |= MF_BITMAP;
    }
    else if( hb_pcount() <= 2 )
       uFlags |= MF_SEPARATOR;

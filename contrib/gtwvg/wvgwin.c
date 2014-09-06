@@ -224,40 +224,6 @@ HB_FUNC( WVG_SETMENU )
    hb_retl( bSet );
 }
 
-HB_FUNC( WVG_APPENDMENU )
-{
-   if( HB_ISCHAR( 4 ) )
-   {
-      void * hBuffer;
-      hb_retl( AppendMenu( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ),
-         ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-         HB_PARSTR( 4, &hBuffer, NULL ) ) );
-      hb_strfree( hBuffer );
-   }
-   else /* It is a SEPARATOR or Submenu */
-      hb_retl( AppendMenu( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ),
-         ( UINT_PTR ) ( HB_ISPOINTER( 3 ) ? ( HB_PTRDIFF ) hb_parptr( 3 ) : hb_parnint( 3 ) ),
-         HB_ISNUM( 4 ) ? ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 ) : ( LPCTSTR ) hbwapi_par_raw_HANDLE( 4 ) ) );
-}
-
-HB_FUNC( WVG_INSERTMENU )
-{
-   UINT flags = hb_parni( 3 );
-
-   if( HB_ISCHAR( 5 ) )
-   {
-      void * hBuffer;
-      hb_retl( InsertMenu( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ), flags,
-         ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
-         HB_PARSTR( 5, &hBuffer, NULL ) ) );
-      hb_strfree( hBuffer );
-   }
-   else /* It is a SEPARATOR or Submenu */
-      hb_retl( InsertMenu( hbwapi_par_raw_HMENU( 1 ), ( UINT ) hb_parni( 2 ), flags,
-         ( UINT_PTR ) ( HB_ISPOINTER( 4 ) ? ( HB_PTRDIFF ) hb_parptr( 4 ) : hb_parnint( 4 ) ),
-         ( LPCTSTR ) hbwapi_par_raw_HANDLE( 5 ) ) );
-}
-
 HB_FUNC( WVG_ISMENUITEMCHECKED )
 {
    MENUITEMINFO lpmii;
