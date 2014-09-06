@@ -751,7 +751,7 @@ FUNCTION wvg_LoadIcon( ncIcon )
       RETURN wapi_LoadIcon( wapi_GetModuleHandle(), ncIcon )
    ENDIF
 
-   RETURN wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON, 0, 0, WIN_LR_LOADFROMFILE )
+   RETURN wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON,,, WIN_LR_LOADFROMFILE )
 
 FUNCTION wvg_SetDCBrushColor( hDC, nRGB )
    RETURN wapi_SetDCBrushColor( hDC, nRGB )
@@ -760,32 +760,32 @@ FUNCTION wvg_SetDCPenColor( hDC, nRGB )
    RETURN wapi_SetDCPenColor( hDC, nRGB )
 
 FUNCTION wvg_SetWindowPosToBack( hWnd )
-   RETURN wapi_SetWindowPos( hWnd, WIN_HWND_BOTTOM, 0, 0, 0, 0, ;
+   RETURN wapi_SetWindowPos( hWnd, WIN_HWND_BOTTOM,,,,, ;
       hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) )
 
 FUNCTION wvg_SetWindowPosToTop( hWnd )
-   RETURN wapi_SetWindowPos( hWnd, WIN_HWND_TOP, 0, 0, 0, 0, ;
+   RETURN wapi_SetWindowPos( hWnd, WIN_HWND_TOP,,,,, ;
       hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) )
 
 FUNCTION wvg_SetWindowSize( hWnd, w, h, lPaint )
    RETURN wapi_SetWindowPos( hWnd,, 0, 0, w, h, ;
-      iif( hb_defaultValue( lPaint, .F. ), 0, ;
+      iif( hb_defaultValue( lPaint, .F. ),, ;
       hb_bitOr( WIN_SWP_NOREDRAW, WIN_SWP_NOZORDER, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) ) )
 
 FUNCTION wvg_SetWindowPosition( hWnd, x, y, lPaint )
    RETURN wapi_SetWindowPos( hWnd,, x, y, 0, 0, ;
-      iif( hb_defaultValue( lPaint, .F. ), 0, ;
+      iif( hb_defaultValue( lPaint, .F. ),, ;
       hb_bitOr( WIN_SWP_NOREDRAW, WIN_SWP_NOZORDER, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) ) )
 
 FUNCTION wvg_SetWindowPosAndSize( hWnd, x, y, w, h, lPaint )
    RETURN wapi_SetWindowPos( hWnd,, x, y, w, h, ;
-      iif( hb_defaultValue( lPaint, .F. ), 0, ;
+      iif( hb_defaultValue( lPaint, .F. ),, ;
       hb_bitOr( WIN_SWP_NOREDRAW, WIN_SWP_NOZORDER, WIN_SWP_NOACTIVATE, WIN_SWP_FRAMECHANGED ) ) )
 
 PROCEDURE wvg_ForceWindowToTop( hWnd )
 
-   wapi_SetWindowPos( hWnd, WIN_HWND_TOPMOST, 0, 0, 0, 0, hb_bitOr( WIN_SWP_NOMOVE, WIN_SWP_NOSIZE ) )
-   wapi_SetWindowPos( hWnd, WIN_HWND_NOTOPMOST, 0, 0, 0, 0, hb_bitOr( WIN_SWP_NOMOVE, WIN_SWP_NOSIZE ) )
+   wapi_SetWindowPos( hWnd, WIN_HWND_TOPMOST,,,,, hb_bitOr( WIN_SWP_NOMOVE, WIN_SWP_NOSIZE ) )
+   wapi_SetWindowPos( hWnd, WIN_HWND_NOTOPMOST,,,,, hb_bitOr( WIN_SWP_NOMOVE, WIN_SWP_NOSIZE ) )
 
    RETURN
 
@@ -813,7 +813,7 @@ FUNCTION wvt_DlgSetIcon( hDlg, ncIcon )
 
    IF HB_ISNUMERIC( ncIcon )
       hIcon := wapi_LoadIcon( wapi_GetModuleHandle(), ncIcon )
-   ELSEIF Empty( hIcon := wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON, 0, 0, WIN_LR_LOADFROMFILE ) )
+   ELSEIF Empty( hIcon := wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON,,, WIN_LR_LOADFROMFILE ) )
       hIcon := wapi_LoadImage( wapi_GetModuleHandle(), ncIcon, WIN_IMAGE_ICON )
    ENDIF
 

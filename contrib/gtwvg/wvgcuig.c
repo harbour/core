@@ -126,9 +126,9 @@ HB_FUNC( WVG_CLEARGUIOBJECTS )
          if( pWVT->gObjs->bBlock )
             hb_itemRelease( pWVT->gObjs->bBlock );
 #if ! defined( HB_OS_WIN_CE )
-         if( pWVT->gObjs->iPicture )
+         if( pWVT->gObjs->pPicture )
             if( pWVT->gObjs->bDestroyPicture )
-               HB_VTBL( pWVT->gObjs->iPicture )->Release( HB_THIS( pWVT->gObjs->iPicture ) );
+               HB_VTBL( pWVT->gObjs->pPicture )->Release( HB_THIS( pWVT->gObjs->pPicture ) );
 #endif
          hb_xfree( pWVT->gObjs );
          pWVT->gObjs = gObj;
@@ -199,40 +199,40 @@ HB_FUNC( WVG_SETGOBJDATA )
 #if ! defined( HB_OS_WIN_CE )
                case GOBJ_OBJDATA_PICTUREEX:
                   if( hbwapi_is_HANDLE( 3 )  )
-                     gObj->iPicture = ( IPicture * ) hbwapi_par_raw_HANDLE( 3 );
+                     gObj->pPicture = ( IPicture * ) hbwapi_par_raw_HANDLE( 3 );
                   break;
                case GOBJ_OBJDATA_PICTURE:
-                  if( hb_parni( 3 ) >= 1 && hb_parni( 3 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
-                     gObj->iPicture = pWVT->pGUI->iPicture[ hb_parni( 3 ) - 1 ];
+                  if( hb_parni( 3 ) >= 1 && hb_parni( 3 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->pPicture ) )
+                     gObj->pPicture = pWVT->pGUI->pPicture[ hb_parni( 3 ) - 1 ];
                   break;
                case GOBJ_OBJDATA_IMAGE:
                {
-                  IPicture * iPicture = NULL;
+                  IPicture * pPicture = NULL;
 
                   if( HB_ISNUM( 3 ) )
                   {
-                     if( hb_parni( 3 ) >= 1 && hb_parni( 3 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
-                        iPicture = pWVT->pGUI->iPicture[ hb_parni( 3 ) - 1 ];
+                     if( hb_parni( 3 ) >= 1 && hb_parni( 3 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->pPicture ) )
+                        pPicture = pWVT->pGUI->pPicture[ hb_parni( 3 ) - 1 ];
                   }
                   else
                   {
                      void * hPic;
-                     iPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 3, &hPic, NULL ) );
+                     pPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 3, &hPic, NULL ) );
                      hb_strfree( hPic );
-                     if( ! iPicture )
+                     if( ! pPicture )
                      {
                         void * hRes;
                         void * hSec;
-                        iPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 3, &hRes, NULL ), HB_PARSTR( 4, &hSec, NULL ) );
+                        pPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 3, &hRes, NULL ), HB_PARSTR( 4, &hSec, NULL ) );
                         hb_strfree( hRes );
                         hb_strfree( hSec );
                      }
                   }
-                  if( iPicture )
+                  if( pPicture )
                   {
-                     if( gObj->bDestroyPicture && gObj->iPicture )
-                        HB_VTBL( gObj->iPicture )->Release( HB_THIS( gObj->iPicture ) );
-                     gObj->iPicture        = iPicture;
+                     if( gObj->bDestroyPicture && gObj->pPicture )
+                        HB_VTBL( gObj->pPicture )->Release( HB_THIS( gObj->pPicture ) );
+                     gObj->pPicture        = pPicture;
                      gObj->bDestroyPicture = HB_TRUE;
                   }
                   break;
@@ -1316,7 +1316,7 @@ HB_FUNC( WVG_PICTURE )
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT pWVT = hb_wvt_gtGetWVT();
 
-   if( hb_parni( 6 ) >= 1 && hb_parni( 6 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
+   if( hb_parni( 6 ) >= 1 && hb_parni( 6 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->pPicture ) )
    {
       HB_GOBJS * gObj = hb_wvg_ObjectNew( pWVT );
 
@@ -1332,7 +1332,7 @@ HB_FUNC( WVG_PICTURE )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = pWVT->pGUI->iPicture[ hb_parni( 6 ) - 1 ];
+      gObj->pPicture        = pWVT->pGUI->pPicture[ hb_parni( 6 ) - 1 ];
       gObj->iData           = hb_parl( 7 ) ? 1 : 0;
       gObj->bDestroyPicture = HB_FALSE;
 
@@ -1362,7 +1362,7 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = ( IPicture * ) hbwapi_par_raw_HANDLE( 6 );
+      gObj->pPicture        = ( IPicture * ) hbwapi_par_raw_HANDLE( 6 );
       gObj->iData           = hb_parl( 7 ) ? 1 : 0;
       gObj->bDestroyPicture = HB_FALSE;
 
@@ -1378,19 +1378,19 @@ HB_FUNC( WVG_IMAGE )
 #if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT  pWVT     = hb_wvt_gtGetWVT();
    int        iSource  = hb_parni( 6 );
-   IPicture * iPicture = NULL;
+   IPicture * pPicture = NULL;
 
    switch( iSource )
    {
       case GOBJ_IMAGESOURCE_SLOT:
-         if( hb_parni( 7 ) >= 1 && hb_parni( 7 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->iPicture ) )
-            iPicture = pWVT->pGUI->iPicture[ hb_parni( 7 ) - 1 ];
+         if( hb_parni( 7 ) >= 1 && hb_parni( 7 ) <= ( int ) HB_SIZEOFARRAY( pWVT->pGUI->pPicture ) )
+            pPicture = pWVT->pGUI->pPicture[ hb_parni( 7 ) - 1 ];
          break;
       case GOBJ_IMAGESOURCE_RESOURCE:
       {
          void * hPic;
          void * hRes;
-         iPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 7, &hPic, NULL ), HB_PARSTR( 8, &hRes, NULL ) );
+         pPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 7, &hPic, NULL ), HB_PARSTR( 8, &hRes, NULL ) );
          hb_strfree( hPic );
          hb_strfree( hRes );
          break;
@@ -1398,13 +1398,13 @@ HB_FUNC( WVG_IMAGE )
       case GOBJ_IMAGESOURCE_FILE:
       {
          void * hPic;
-         iPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 7, &hPic, NULL ) );
+         pPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 7, &hPic, NULL ) );
          hb_strfree( hPic );
          break;
       }
    }
 
-   if( iPicture )
+   if( pPicture )
    {
       HB_GOBJS * gObj = hb_wvg_ObjectNew( pWVT );
 
@@ -1420,7 +1420,7 @@ HB_FUNC( WVG_IMAGE )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = iPicture;
+      gObj->pPicture        = pPicture;
       gObj->iData           = hb_parl( 9 ) ? 1 : 0;
 
       if( iSource == GOBJ_IMAGESOURCE_SLOT )
@@ -1438,9 +1438,9 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 {
 #if ! defined( HB_OS_WIN_CE )
 
-   IPicture * iPicture = gObj->iPicture;
+   IPicture * pPicture = gObj->pPicture;
 
-   if( iPicture )
+   if( pPicture )
    {
       OLE_XSIZE_HIMETRIC nWidth;
       OLE_YSIZE_HIMETRIC nHeight;
@@ -1454,9 +1454,9 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
       memset( &rc_dummy, 0, sizeof( rc_dummy ) );
 
-      if( HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &nWidth ) != S_OK )
+      if( HB_VTBL( pPicture )->get_Width( HB_THIS_( pPicture ) &nWidth ) != S_OK )
          nWidth = 0;
-      if( HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &nHeight ) != S_OK )
+      if( HB_VTBL( pPicture )->get_Height( HB_THIS_( pPicture ) &nHeight ) != S_OK )
          nHeight = 0;
 
       x = iLeft;
@@ -1481,7 +1481,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
       hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
       SelectClipRgn( hdc, hrgn1 );
 
-      HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, nHeight, nWidth, -nHeight, &rc_dummy );
+      HB_VTBL( pPicture )->Render( HB_THIS_( pPicture ) hdc, x, y, wd, ht, 0, nHeight, nWidth, -nHeight, &rc_dummy );
 
       SelectClipRgn( hdc, NULL );
       DeleteObject( hrgn1 );

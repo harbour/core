@@ -1113,7 +1113,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
       HB_BOOL  fUseBrush  = hb_parl( 8 );
       LOGBRUSH lb;
       HBRUSH   hBrush;
-      RECT     xyRect;
+      RECT     rcXY;
 
       hb_gt_wvw_HBFUNCPrologue( wvw_win, &iTop, &iLeft, &iBottom, &iRight );
 
@@ -1125,10 +1125,10 @@ HB_FUNC( WVW_FILLRECTANGLE )
       iBottom = xy.y - wvw_win->iLineSpacing - 1 + 1 + iOffBottom;
       iRight  = xy.x - 1 + 1 + iOffRight;
 
-      xyRect.left   = iLeft;
-      xyRect.top    = iTop;
-      xyRect.right  = iRight;
-      xyRect.bottom = iBottom;
+      rcXY.left   = iLeft;
+      rcXY.top    = iTop;
+      rcXY.right  = iRight;
+      rcXY.bottom = iBottom;
 
       memset( &lb, 0, sizeof( lb ) );
 
@@ -1138,7 +1138,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
 
       hBrush = fUseBrush ? hbwapi_par_HBRUSH( 6 ) : CreateBrushIndirect( &lb );
 
-      FillRect( wvw_win->hdc, &xyRect, hBrush );
+      FillRect( wvw_win->hdc, &rcXY, hBrush );
 
       if( ! fUseBrush )
       {

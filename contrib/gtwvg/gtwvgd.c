@@ -304,9 +304,9 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
          if( pWVT->gObjs->bBlock )
             hb_itemRelease( pWVT->gObjs->bBlock );
 #if ! defined( HB_OS_WIN_CE )
-         if( pWVT->gObjs->iPicture )
+         if( pWVT->gObjs->pPicture )
             if( pWVT->gObjs->bDestroyPicture )
-               HB_VTBL( pWVT->gObjs->iPicture )->Release( HB_THIS( pWVT->gObjs->iPicture ) );
+               HB_VTBL( pWVT->gObjs->pPicture )->Release( HB_THIS( pWVT->gObjs->pPicture ) );
 #endif
          hb_xfree( pWVT->gObjs );
          pWVT->gObjs = gObj;
@@ -4304,12 +4304,12 @@ static void hb_wvt_gtReleaseGuiData( void )
       s_guiData->hUser32 = NULL;
    }
 #if ! defined( HB_OS_WIN_CE )
-   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_guiData->iPicture ); i++ )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_guiData->pPicture ); i++ )
    {
-      if( s_guiData->iPicture[ i ] )
+      if( s_guiData->pPicture[ i ] )
       {
-         HB_VTBL( s_guiData->iPicture[ i ] )->Release( HB_THIS( s_guiData->iPicture[ i ] ) );
-         s_guiData->iPicture[ i ] = NULL;
+         HB_VTBL( s_guiData->pPicture[ i ] )->Release( HB_THIS( s_guiData->pPicture[ i ] ) );
+         s_guiData->pPicture[ i ] = NULL;
       }
    }
 #endif

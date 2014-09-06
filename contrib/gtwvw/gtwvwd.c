@@ -5401,12 +5401,12 @@ IPicture * hb_gt_wvw_LoadPicture( const char * szImage )
 
             if( ReadFile( hFile, hGlobal, nFileSize, &nReadByte, NULL ) )
             {
-               IStream * iStream;
+               IStream * pStream;
 
-               if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK && iStream )
+               if( CreateStreamOnHGlobal( hGlobal, TRUE, &pStream ) == S_OK && pStream )
                {
-                  OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
-                  HB_VTBL( iStream )->Release( HB_THIS( iStream ) );
+                  OleLoadPicture( pStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
+                  HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
                }
             }
             GlobalFree( hGlobal );

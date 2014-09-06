@@ -110,7 +110,7 @@ typedef struct _tag_GOBJS
    HPEN           hPen;
    HBRUSH         hBrush;
 #if ! defined( HB_OS_WIN_CE )
-   IPicture     * iPicture;
+   IPicture     * pPicture;
 #endif
    HB_BOOL        bDestroyFont;
    HB_BOOL        bDestroyPen;
@@ -136,7 +136,7 @@ typedef struct
    HBRUSH    solidBrush;                    /* Handle to solid brush */
    HBRUSH    whiteBrush;                    /* Wvt specific White colored brush */
 #if ! defined( HB_OS_WIN_CE )
-   IPicture * iPicture[ 50 ];               /* Array to hold the Picture Streams to avoid recurring loading and unloading */
+   IPicture * pPicture[ 50 ];               /* Array to hold the Picture Streams to avoid recurring loading and unloading */
 #endif
    HFONT     hUserFonts[ 50 ];              /* User defined font handles */
    HPEN      hUserPens[ 50 ];               /* User defined pens */
