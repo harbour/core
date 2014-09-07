@@ -16592,6 +16592,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
                   FOR EACH tmp IN aValue
                      IF ! Empty( tmp )
                         AAdd( aDst, "-D" + tmp )
+                        AAdd( aDst, "-cflag=-D" + tmp )
                      ENDIF
                   NEXT
                   EXIT
@@ -16757,15 +16758,20 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
                   EXIT
                CASE "Define"
                   FOR EACH tmp IN aValue
-                     IF hb_LeftEq( tmp, "-D" )
-                        tmp := SubStr( tmp, 2 + 1 )
+                     IF ! Empty( tmp )
+                        IF hb_LeftEq( tmp, "-D" )
+                           tmp := SubStr( tmp, 2 + 1 )
+                        ENDIF
+                        AAdd( aDst, "-D" + tmp )
+                        AAdd( aDst, "-cflag=-D" + tmp )
                      ENDIF
-                     AAdd( aDst, "-D" + tmp )
                   NEXT
                   EXIT
                CASE "Params"
                   FOR EACH tmp IN aValue
-                     AAdd( aDst, "-runflag=" + tmp )
+                     IF Empty( tmp )
+                        AAdd( aDst, "-runflag=" + tmp )
+                     ENDIF
                   NEXT
                   EXIT
                ENDSWITCH

@@ -105,11 +105,10 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
    BITMAPFILEHEADER bmfh;
    BITMAPINFO *     pbmi;
    HB_BOOL          bSuccess;
-   DWORD  dwPackedDibSize, dwBytesRead;
-   HANDLE hFile;
+   DWORD dwPackedDibSize, dwBytesRead;
 
-   hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
-                       OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+   HANDLE hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
+                              OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
 
    if( hFile == INVALID_HANDLE_VALUE )
       return NULL;
