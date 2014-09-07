@@ -1172,10 +1172,10 @@ STATIC PROCEDURE MyError( e )
 
 #include "hbclass.ch"
 
-#define _DEFAULT_CAPTION_FONT   "Tahoma"
-#define _DEFAULT_CAPTION_HEIGHT 16
+#define _DEFAULT_CAPTION_FONT    "Tahoma"
+#define _DEFAULT_CAPTION_HEIGHT  16
 
-// CLIPPER COLOR CONSTANTS
+// Cl*pper color constants
 #define _IDX_BLACK               0
 #define _IDX_BLUE                1
 #define _IDX_GREEN               2
@@ -1186,12 +1186,12 @@ STATIC PROCEDURE MyError( e )
 #define _IDX_WHITE               7
 #define _IDX_LIGHT_GRAY          8
 #define _IDX_BRIGHT_BLUE         9
-#define _IDX_BRIGHT_GREEN       10
-#define _IDX_BRIGHT_CYAN        11
-#define _IDX_BRIGHT_RED         12
-#define _IDX_BRIGHT_MAGENTA     13
-#define _IDX_YELLOW             14
-#define _IDX_BRIGHT_WHITE       15
+#define _IDX_BRIGHT_GREEN        10
+#define _IDX_BRIGHT_CYAN         11
+#define _IDX_BRIGHT_RED          12
+#define _IDX_BRIGHT_MAGENTA      13
+#define _IDX_YELLOW              14
+#define _IDX_BRIGHT_WHITE        15
 
 // mouse object types
 #define _MOBJECT_BUTTON  0      // mouse button

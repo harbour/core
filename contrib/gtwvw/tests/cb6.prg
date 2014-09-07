@@ -10,8 +10,8 @@
 #include "inkey.ch"
 
 /* Two different keyboard handling method
-   (notes: WVW_CB_KBD_CLIPPER doesn't mimic anything from Clipper
-           it just 'feels like Clipper' to me) */
+   (notes: WVW_CB_KBD_CLIPPER doesn't mimic anything from Cl*pper
+           it just 'feels like Cl*pper' to me) */
 #define WVW_CB_KBD_STANDARD  0
 #define WVW_CB_KBD_CLIPPER   1
 

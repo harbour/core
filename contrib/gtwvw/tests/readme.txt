@@ -6,7 +6,7 @@ To run samples:
 BRIEF DESCRIPTIONS:
 
 As described in http://www.csacomputer.com/gtwvw/
-prog0.prg    : to be compiled with Clipper
+prog0.prg    : to be compiled with Cl*pper
 prog1.prg    : 1st evolution with GTWVW
 prog2.prg    : 2nd evolution with GTWVW
 

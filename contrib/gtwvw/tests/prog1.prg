@@ -5,15 +5,15 @@
 
    This quick and dirty approach is making use of GTWVW's MainCoord Mode.
    Instead of specifying to which window we are writing output, we simply
-   specify "screen-wide" coordinates like we do in Clipper. In GTWVW's
+   specify "screen-wide" coordinates like we do in Cl*pper. In GTWVW's
    MainCoord Mode, a coordinate (row,col) are processed to find which window
    does it belong to and the output commands then is directed to operate on
    that window.
 
    This way we don't have to change a single coordinate from the original
-   Clipper code.
+   Cl*pper code.
 
-   Since the original Clipper code uses ZNEWWINDOW() and ZREVWINDOW() to
+   Since the original Cl*pper code uses ZNEWWINDOW() and ZREVWINDOW() to
    open and close any window, we only have to change these two functions
    and let all other functions unchanged (xGet1(), xBrowse1(), ...). */
 
