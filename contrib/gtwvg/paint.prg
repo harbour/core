@@ -745,14 +745,6 @@ FUNCTION wvg_CreateBrush( ... )  /* TOFIX: causes problems due to the GC collect
    RETURN wapi_CreateBrushIndirect( { ... } )
 #endif
 
-FUNCTION wvg_LoadIcon( ncIcon )
-
-   IF HB_ISNUMERIC( ncIcon )
-      RETURN wapi_LoadIcon( wapi_GetModuleHandle(), ncIcon )
-   ENDIF
-
-   RETURN wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON,,, WIN_LR_LOADFROMFILE )
-
 FUNCTION wvg_SetDCBrushColor( hDC, nRGB )
    RETURN wapi_SetDCBrushColor( hDC, nRGB )
 
@@ -824,17 +816,23 @@ FUNCTION wvt_DlgSetIcon( hDlg, ncIcon )
 
    RETURN hIcon
 
+FUNCTION wvg_LoadIcon( ncIcon )
+
+   IF HB_ISNUMERIC( ncIcon )
+      RETURN wapi_LoadIcon( wapi_GetModuleHandle(), ncIcon )
+   ENDIF
+
+   RETURN wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON,,, WIN_LR_LOADFROMFILE )
+
 /* nSource: 0 ResourceIdByNumber
    nSource: 1 ResourceIdByName
    nSource: 2 ImageFromDiskFile */
 FUNCTION wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight )
 
-   hb_default( @nBmpOrIcon, WIN_IMAGE_BITMAP )
-
    SWITCH hb_defaultValue( nSource, 0 )
    CASE 0
    CASE 1
-      IF nBmpOrIcon == WIN_IMAGE_ICON
+      IF hb_defaultValue( nBmpOrIcon, WIN_IMAGE_BITMAP ) == WIN_IMAGE_ICON
          RETURN wapi_LoadIcon( wapi_GetModuleHandle(), ncImage )
       ELSE
          RETURN wapi_LoadBitmap( wapi_GetModuleHandle(), ncImage )
