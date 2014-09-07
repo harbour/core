@@ -823,3 +823,62 @@ FUNCTION wvt_DlgSetIcon( hDlg, ncIcon )
    ENDIF
 
    RETURN hIcon
+
+/* nSource: 0 ResourceIdByNumber
+   nSource: 1 ResourceIdByName
+   nSource: 2 ImageFromDiskFile */
+FUNCTION wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight )
+
+   hb_default( @nBmpOrIcon, WIN_IMAGE_BITMAP )
+
+   SWITCH hb_defaultValue( nSource, 0 )
+   CASE 0
+   CASE 1
+      IF nBmpOrIcon == WIN_IMAGE_ICON
+         RETURN wapi_LoadIcon( wapi_GetModuleHandle(), ncImage )
+      ELSE
+         RETURN wapi_LoadBitmap( wapi_GetModuleHandle(), ncImage )
+      ENDIF
+   CASE 2
+      RETURN wapi_LoadImage( , ncImage, nBmpOrIcon, nWidth, nHeight, WIN_LR_LOADFROMFILE )
+   ENDSWITCH
+
+   RETURN NIL
+
+FUNCTION wvg_TrackPopupMenu( hMenu, nFlags, x, y, hWnd )
+
+   LOCAL xy
+
+   IF ! HB_ISNUMERIC( x ) .OR. ! HB_ISNUMERIC( y )
+      xy := { => }
+      wapi_GetCursorPos( @xy )
+      x := xy[ "x" ]
+      y := xy[ "y" ]
+   ENDIF
+
+   RETURN wapi_TrackPopupMenu( hMenu, ;
+      hb_defaultValue( nFlags, hb_bitOr( WIN_TPM_CENTERALIGN, WIN_TPM_RETURNCMD ) ), ;
+      x, y, 0, ;
+      hb_defaultValue( hWnd, wapi_GetActiveWindow() ) )
+
+FUNCTION wvt_TrackPopupMenu( hMenu )
+
+   LOCAL hWnd := wvg_hWnd()
+   LOCAL xy
+
+   IF Empty( hWnd )
+      RETURN 0
+   ENDIF
+
+   xy := { => }
+   wapi_GetCursorPos( @xy )
+
+   RETURN wapi_TrackPopupMenu( hMenu, ;
+      hb_bitOr( WIN_TPM_CENTERALIGN, WIN_TPM_RETURNCMD ), ;
+      xy[ "x" ], xy[ "y" ], 0, hWnd )
+
+FUNCTION wvt_GetMenu()
+
+   LOCAL hWnd := wvg_hWnd()
+
+   RETURN iif( Empty( hWnd ),, wapi_GetMenu( hWnd ) )

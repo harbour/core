@@ -5,10 +5,10 @@ To run samples:
 
 BRIEF DESCRIPTIONS:
 
-AS described in http://www.csacomputer.com/gtwvw/
-prog0.prg    : to be compiled with clipper
-prog1.prg    : 1st evolution with gtwvw
-prog2.prg    : 2nd evolution with gtwvw
+As described in http://www.csacomputer.com/gtwvw/
+prog0.prg    : to be compiled with Clipper
+prog1.prg    : 1st evolution with GTWVW
+prog2.prg    : 2nd evolution with GTWVW
 
 Supporting files:
 some .gif
@@ -16,6 +16,6 @@ some .bmp
 some .ico
 
 Main programs:
-wvwtest9.prg : demo of several gtwvw features.
+wvwtest9.prg : demo of several GTWVW features.
 maincoor.prg : to show differences of MainCoord and Standard Mode.
 inpfocus.prg : demo of how to handle input on non topmost window.

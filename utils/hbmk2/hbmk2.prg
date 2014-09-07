@@ -16357,10 +16357,6 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := hb_FNameExtSet( cSrcName, ".hbp" )
    ENDIF
 
-   AAdd( aDst, hb_StrFormat( "# Automatically converted by %1$s from hbmake project:", _SELF_NAME_ ) )
-   AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
-   AAdd( aDst, "" )
-
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cSrc := StrTran( cSrc, Chr( 9 ), " " )
 
@@ -16457,10 +16453,19 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
 
    cDst := ""
    FOR EACH tmp IN aDst
+      IF " " $ tmp .OR. hb_LeftEq( tmp, "#" )
+         tmp := '"' + tmp + '"'
+      ENDIF
       cDst += tmp + hb_eol()
    NEXT
 
+   cDst := ;
+      hb_StrFormat( "# Automatically converted by %1$s from hbmake project:", _SELF_NAME_ ) + hb_eol() + ;
+      hb_StrFormat( "# %1$s", cSrcName ) + hb_eol() + ;
+      hb_eol() + cDst
+
    _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Saving as .hbp file: %1$s" ), cDstName ) )
+   _hbmk_OutStd( hbmk, I_( "Verify the result and apply any touch-up as required." ) )
 
    hb_MemoWrit( cDstName, cDst )
 
@@ -16487,9 +16492,6 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := hb_FNameExtSet( cSrcName, ".hbp" )
    ENDIF
 
-   AAdd( aDst, hb_StrFormat( "# Automatically converted by %1$s from xbuild project:", _SELF_NAME_ ) )
-   AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
-   AAdd( aDst, "" )
    AAdd( aDst, "-inc" )
 
    DO CASE
@@ -16505,7 +16507,24 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
    FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
       IF Left( cLine, 1 ) == "[" .AND. Right( cLine, 1 ) == "]"
          lGlobalSection := .F.
-         AAdd( aDst, SubStr( cLine, 2, Len( cLine ) - 2 ) )
+         cLine := SubStr( cLine, 2, Len( cLine ) - 2 )
+         /* This is not a foolproof method if the same libname
+            is used under different libpaths. */
+         IF Lower( hb_FNameExt( cLine ) ) == ".lib" .OR. ;
+            Lower( hb_FNameExt( cLine ) ) == ".a"
+            AAddNew( aDst, "-L" + hb_FNameDir( cLine ) )
+            IF Lower( hb_FNameExt( cLine ) ) == ".a"
+               cLine := hb_FNameName( cLine )
+               IF hb_LeftEqI( cLine, "lib" )
+                  cLine := SubStr( cLine, Len( "lib" ) + 1 )
+               ENDIF
+            ELSE
+               cLine := hb_FNameName( cLine )
+            ENDIF
+            AAdd( aDst, "-l" + cLine )
+         ELSE
+            AAdd( aDst, cLine )
+         ENDIF
       ELSEIF lGlobalSection
          IF ( tmp := At( " =", cLine ) ) > 0
             cSetting := AllTrim( Left( cLine, tmp - 1 ) )
@@ -16513,6 +16532,11 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
             aValue := hb_ATokens( cValue )
             IF ! Empty( cValue )
                SWITCH cSetting
+               CASE "LAUTORUN"
+                  IF cValue == ".T."
+                     AAdd( aDst, "-run" )
+                  ENDIF
+                  EXIT
                CASE "LDEBUG"
                   IF cValue == ".T."
                      AAdd( aDst, "-debug" )
@@ -16544,38 +16568,55 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
                   ENDIF
                   EXIT
                CASE "LIBFOLDERS"
-                  FOR EACH tmp IN aValue
-                     AAdd( aDst, "-L" + tmp )
+                  FOR EACH tmp IN hb_ATokens( cValue, ";" )
+                     IF ! Empty( tmp )
+                        AAddNew( aDst, "-L" + tmp )
+                     ENDIF
                   NEXT
                   EXIT
                CASE "INCLUDEFOLDERS"
-                  FOR EACH tmp IN aValue
-                     AAdd( aDst, "-incpath=" + tmp )
+                  FOR EACH tmp IN hb_ATokens( cValue, ";" )
+                     IF ! Empty( tmp )
+                        AAdd( aDst, "-incpath=" + tmp )
+                     ENDIF
                   NEXT
                   EXIT
                CASE "MYC_FLAGS"
                   FOR EACH tmp IN aValue
-                     AAdd( aDst, "-cflag=" + tmp )
+                     IF ! Empty( tmp )
+                        AAdd( aDst, "-cflag=" + tmp )
+                     ENDIF
                   NEXT
                   EXIT
                CASE "MYDEFINES"
                   FOR EACH tmp IN aValue
-                     AAdd( aDst, "-D" + tmp )
+                     IF ! Empty( tmp )
+                        AAdd( aDst, "-D" + tmp )
+                     ENDIF
                   NEXT
                   EXIT
                CASE "MYLINK_FLAGS"
                   FOR EACH tmp IN aValue
-                     AAdd( aDst, "-ldflag=" + tmp )
+                     IF Empty( tmp )
+                     ELSEIF Lower( tmp ) == "-map"
+                        AAddNew( aDst, "-map" )
+                     ELSE
+                        AAdd( aDst, "-ldflag=" + tmp )
+                     ENDIF
                   NEXT
                   EXIT
                CASE "MYRC_FLAGS"
                   FOR EACH tmp IN aValue
-                     AAdd( aDst, "-resflag=" + tmp )
+                     IF ! Empty( tmp )
+                        AAdd( aDst, "-resflag=" + tmp )
+                     ENDIF
                   NEXT
                   EXIT
                CASE "MYPRG_FLAGS"
                   FOR EACH tmp IN aValue
-                     AAdd( aDst, tmp )
+                     IF ! Empty( tmp )
+                        AAdd( aDst, tmp )
+                     ENDIF
                   NEXT
                   EXIT
                ENDSWITCH
@@ -16586,10 +16627,19 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
 
    cDst := ""
    FOR EACH tmp IN aDst
+      IF " " $ tmp .OR. hb_LeftEq( tmp, "#" )
+         tmp := '"' + tmp + '"'
+      ENDIF
       cDst += tmp + hb_eol()
    NEXT
 
+   cDst := ;
+      hb_StrFormat( "# Automatically converted by %1$s from xbuild project:", _SELF_NAME_ ) + hb_eol() + ;
+      hb_StrFormat( "# %1$s", cSrcName ) + hb_eol() + ;
+      hb_eol() + cDst
+
    _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Saving as .hbp file: %1$s" ), cDstName ) )
+   _hbmk_OutStd( hbmk, I_( "Verify the result and apply any touch-up as required." ) )
 
    hb_MemoWrit( cDstName, cDst )
 
@@ -16619,9 +16669,6 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := hb_FNameExtSet( cSrcName, ".hbp" )
    ENDIF
 
-   AAdd( aDst, hb_StrFormat( "# Automatically converted by %1$s from xMate project:", _SELF_NAME_ ) )
-   AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
-   AAdd( aDst, "" )
    AAdd( aDst, "-inc" )
 
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
@@ -16733,10 +16780,19 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
 
    cDst := ""
    FOR EACH tmp IN aDst
+      IF " " $ tmp .OR. hb_LeftEq( tmp, "#" )
+         tmp := '"' + tmp + '"'
+      ENDIF
       cDst += tmp + hb_eol()
    NEXT
 
+   cDst := ;
+      hb_StrFormat( "# Automatically converted by %1$s from xMate project:", _SELF_NAME_ ) + hb_eol() + ;
+      hb_StrFormat( "# %1$s", cSrcName ) + hb_eol() + ;
+      hb_eol() + cDst
+
    _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Saving as .hbp file: %1$s" ), cDstName ) )
+   _hbmk_OutStd( hbmk, I_( "Verify the result and apply any touch-up as required." ) )
 
    hb_MemoWrit( cDstName, cDst )
 

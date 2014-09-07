@@ -39,8 +39,6 @@ REQUEST DBFNTX
    ANNOUNCE Hb_NoStartUpWindow
 #endif
 
-MEMVAR cCdxExp, First, Last, City
-
 THREAD STATIC t_wvtScreen := {}
 
 EXIT PROCEDURE CleanHandles()

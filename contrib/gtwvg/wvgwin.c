@@ -61,8 +61,10 @@
 
 #include <windowsx.h>
 
-#if ! defined( CB_GETCOMBOBOXINFO ) && ! defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
+   #ifndef CB_GETCOMBOBOXINFO
    #define CB_GETCOMBOBOXINFO  0x0164
+   #endif
 #endif
 
 HB_FUNC( WVG_GETSTOCKOBJECT )
@@ -78,46 +80,6 @@ HB_FUNC( WVG_DELETEOBJECT )
 HB_FUNC( WVG_SELECTOBJECT )
 {
    hbwapi_ret_raw_HANDLE( SelectObject( hbwapi_par_raw_HDC( 1 ), hbwapi_par_raw_HGDIOBJ( 2 ) ) );
-}
-
-/* wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
- *   nSource == 0 ResourceIdByNumber
- *   nSource == 1 ResourceIdByName
- *   nSource == 2 ImageFromDiskFile
- */
-HB_FUNC( WVG_LOADIMAGE )
-{
-   HANDLE  hImage = 0;
-   void *  hBuffer;
-   LPCTSTR lpBuffer = HB_PARSTR( 1, &hBuffer, NULL );
-   int     iSource  = hb_parni( 2 );
-
-   switch( iSource )
-   {
-      case 0:   /* Image from resource by numeric id */
-         if( hb_parni( 3 ) == IMAGE_ICON )
-            hImage = LoadIcon( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
-         else
-            hImage = LoadBitmap( GetModuleHandle( NULL ), MAKEINTRESOURCE( hb_parni( 1 ) ) );
-         break;
-
-      case 1:   /* image from resource by name */
-         if( hb_parni( 3 ) == IMAGE_ICON )
-            hImage = LoadIcon( GetModuleHandle( NULL ), lpBuffer );
-         else
-            hImage = LoadBitmap( GetModuleHandle( NULL ), lpBuffer );
-         break;
-
-      case 2:   /* Image from disk file */
-         if( hb_parni( 3 ) == IMAGE_ICON )
-            hImage = ( HICON ) LoadImage( NULL, lpBuffer, IMAGE_ICON, hb_parni( 4 ), hb_parni( 5 ), LR_LOADFROMFILE );
-         else
-            hImage = ( HBITMAP ) LoadImage( NULL, lpBuffer, IMAGE_BITMAP, hb_parni( 4 ), hb_parni( 5 ), LR_LOADFROMFILE );
-         break;
-   }
-
-   hb_strfree( hBuffer );
-   hbwapi_ret_raw_HANDLE( hImage );
 }
 
 HB_FUNC( WVG_GETDC )
@@ -142,25 +104,6 @@ HB_FUNC( WVG_CREATEBRUSH )
 #else
    hbwapi_ret_raw_HANDLE( CreateSolidBrush( lb.lbColor ) );
 #endif
-}
-
-HB_FUNC( WVG_TRACKPOPUPMENU )
-{
-   HMENU hMenu  = hbwapi_par_raw_HMENU( 1 );
-   UINT  uFlags = hb_parnldef( 2, TPM_CENTERALIGN | TPM_RETURNCMD );
-   HWND  hWnd   = hbwapi_is_HANDLE( 5 ) ? hbwapi_par_raw_HWND( 5 ) : GetActiveWindow();
-
-   POINT xy = { 0, 0 };
-
-   if( HB_ISNUM( 3 ) )
-   {
-      xy.x = hb_parni( 3 );
-      xy.y = hb_parni( 4 );
-   }
-   else
-      GetCursorPos( &xy );
-
-   hb_retnl( TrackPopupMenu( hMenu, uFlags, xy.x, xy.y, 0, hWnd, NULL ) );
 }
 
 HB_FUNC( WVG_CHOOSECOLOR )

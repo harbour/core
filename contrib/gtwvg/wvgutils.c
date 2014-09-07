@@ -693,42 +693,6 @@ HB_FUNC( WVT_CLIENTTOSCREEN )
    }
 }
 
-HB_FUNC( WVT_TRACKPOPUPMENU )
-{
-   PHB_GTWVT _s = hb_wvt_gtGetWVT();
-
-   if( _s )
-   {
-      POINT xy = { 0, 0 };
-
-      GetCursorPos( &xy );
-
-      hb_retnl( TrackPopupMenu( hbwapi_par_raw_HMENU( 1 ),
-                                TPM_CENTERALIGN | TPM_RETURNCMD,
-                                xy.x,
-                                xy.y,
-                                0,
-                                _s->hWnd,
-                                NULL ) );
-   }
-   else
-      hb_retnl( 0 );
-}
-
-HB_FUNC( WVT_GETMENU )
-{
-#if ! defined( HB_OS_WIN_CE )
-   PHB_GTWVT _s = hb_wvt_gtGetWVT();
-
-   if( _s )
-   {
-      hbwapi_ret_raw_HANDLE( GetMenu( _s->hWnd ) );
-      return;
-   }
-#endif
-   hbwapi_ret_raw_HANDLE( 0 );
-}
-
 /* Modeless Dialogs Implementation */
 
 static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )

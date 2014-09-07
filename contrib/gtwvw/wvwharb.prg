@@ -238,8 +238,9 @@ FUNCTION wvw_TrackPopupMenu( nWin, hMenu )
    xy := { => }
    wapi_GetCursorPos( @xy )
 
-   RETURN wapi_TrackPopupMenu( hMenu, hb_bitOr( WIN_TPM_CENTERALIGN, WIN_TPM_RETURNCMD, WIN_TPM_RECURSE ), ;
-                               xy[ "x" ], xy[ "y" ], 0, hWnd )
+   RETURN wapi_TrackPopupMenu( hMenu,
+      hb_bitOr( WIN_TPM_CENTERALIGN, WIN_TPM_RETURNCMD, WIN_TPM_RECURSE ), ;
+      xy[ "x" ], xy[ "y" ], 0, hWnd )
 
 FUNCTION win_LoadIcon( ncIcon )
 
