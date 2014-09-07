@@ -319,22 +319,21 @@ METHOD PROCEDURE WvgWindow:destroy()
       ::aChildren := {}
    ENDIF
 
-   wvg_ReleaseWindowProcBlock( ::pWnd )
+   wvg_ReleaseWindowProcBlock( ::hWnd )
 
-   IF wvg_IsWindow( ::hWndTT )
-      wvg_DestroyWindow( ::hWndTT )
+   IF wapi_IsWindow( ::hWndTT )
+      wapi_DestroyWindow( ::hWndTT )
    ENDIF
-   IF wvg_IsWindow( ::hWnd )
-      wvg_DestroyWindow( ::hWnd )
+   IF wapi_IsWindow( ::hWnd )
+      wapi_DestroyWindow( ::hWnd )
    ENDIF
 
    IF ! Empty( ::hBrushBG )
       wvg_DeleteObject( ::hBrushBG )
    ENDIF
 
-   ::hWnd                   := NIL
+   ::hWnd := ::pWnd         := NIL
    ::hWndTT                 := NIL
-   ::pWnd                   := NIL
    ::aPos                   := NIL
    ::aSize                  := NIL
    ::aPresParams            := NIL
@@ -398,7 +397,7 @@ METHOD PROCEDURE WvgWindow:destroy()
 
 METHOD WvgWindow:SetWindowProcCallback()
 
-   ::nOldProc := wvg_SetWindowProcBlock( ::pWnd, {| h, m, w, l | ::ControlWndProc( h, m, w, l ) } )
+   ::nOldProc := wvg_SetWindowProcBlock( ::hWnd, {| h, m, w, l | ::ControlWndProc( h, m, w, l ) } )
 
    RETURN Self
 
@@ -407,7 +406,7 @@ METHOD WvgWindow:captureMouse()
 
 METHOD WvgWindow:disable()
 
-   IF wvg_EnableWindow( ::hWnd, .F. )
+   IF wapi_EnableWindow( ::hWnd, .F. )
       ::is_enabled := .F.
       RETURN .T.
    ENDIF
@@ -416,7 +415,7 @@ METHOD WvgWindow:disable()
 
 METHOD WvgWindow:enable()
 
-   IF wvg_EnableWindow( ::hWnd, .T. )
+   IF wapi_EnableWindow( ::hWnd, .T. )
       ::is_enabled := .T.
       RETURN .T.
    ENDIF
@@ -425,8 +424,8 @@ METHOD WvgWindow:enable()
 
 METHOD WvgWindow:hide()
 
-   IF wvg_IsWindow( ::hWnd )
-      wvg_ShowWindow( ::hWnd, WIN_SW_HIDE )
+   IF wapi_IsWindow( ::hWnd )
+      wapi_ShowWindow( ::hWnd, WIN_SW_HIDE )
       ::is_hidden := .T.
    ENDIF
 
@@ -562,7 +561,7 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
 
 METHOD WvgWindow:show()
 
-   wvg_ShowWindow( ::hWnd, WIN_SW_NORMAL )
+   wapi_ShowWindow( ::hWnd, WIN_SW_NORMAL )
    ::is_hidden      := .F.
    ::lHasInputFocus := .T.
 
@@ -1099,12 +1098,12 @@ METHOD WvgWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD WvgWindow:setFocus()
 
-   wvg_SetFocus( ::hWnd )
+   wapi_SetFocus( ::hWnd )
 
    RETURN Self
 
 METHOD WvgWindow:sendMessage( nMessage, nlParam, nwParam )
-   RETURN wvg_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
+   RETURN wapi_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
 METHOD WvgWindow:findObjectByHandle( hWnd )
 
@@ -1172,7 +1171,7 @@ METHOD WvgWindow:toolTipText( cText )
 
    IF HB_ISSTRING( cText )
       ::s_toolTipText := cText
-      IF wvg_IsWindow( ::hWndTT )
+      IF wapi_IsWindow( ::hWndTT )
          wvg_SetToolTipText( ::hWnd, ::hWndTT, ::s_toolTipText )
       ENDIF
    ENDIF
@@ -1187,7 +1186,7 @@ METHOD WvgWindow:createControl()
 
    aPosSz := ::getPosAndSize( ::aPos, ::aSize )
 
-   hWnd := wvg_CreateWindowEx( ;
+   hWnd := wapi_CreateWindowEx( ;
       ::exStyle, ;
       ::className(), ;
       "", ;                              /* window name */
@@ -1199,9 +1198,8 @@ METHOD WvgWindow:createControl()
       NIL, ;                             /* hInstance   */
       NIL )                              /* lParam      */
 
-   IF wvg_IsWindow( hWnd )
-      ::hWnd := hWnd
-      ::pWnd := wvg_n2p( hWnd )
+   IF wapi_IsWindow( hWnd )
+      ::hWnd := ::pWnd := hWnd
       ::sendMessage( WIN_WM_SETFONT, wvg_GetStockObject( DEFAULT_GUI_FONT ), 1 )
       ::hWndTT := wvg_CreateToolTipWindow( ::hWnd )
    ENDIF

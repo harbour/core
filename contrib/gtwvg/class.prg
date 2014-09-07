@@ -874,7 +874,7 @@ METHOD WvtObject:Destroy()
    ENDIF
 
    IF ::hPopup != NIL
-      wvg_DestroyMenu( ::hPopup )
+      wapi_DestroyMenu( ::hPopup )
       ::hPopup := NIL
    ENDIF
 
@@ -885,14 +885,14 @@ METHOD WvtObject:CreatePopup()
    LOCAL i, nID
 
    IF ! Empty( ::aPopup ) .AND. ::hPopup == NIL
-      ::hPopup := wvg_CreatePopupMenu()
+      ::hPopup := wapi_CreatePopupMenu()
 
       FOR EACH i IN ::aPopup
 
          ASize( i, 3 )
          i[ 3 ] := nID := ::nPopupItemID++
 
-         wvg_AppendMenu( ::hPopup, WIN_MF_ENABLED + WIN_MF_STRING, nID, i[ 1 ] )
+         wapi_AppendMenu( ::hPopup, WIN_MF_ENABLED + WIN_MF_STRING, nID, i[ 1 ] )
       NEXT
    ENDIF
 
@@ -2909,7 +2909,7 @@ METHOD wvtMenu:Create( cCaption )
 
    ::aItems := {}
 
-   IF Empty( ::hMenu := wvg_CreateMenu() )
+   IF Empty( ::hMenu := wapi_CreateMenu() )
 #if 0
       Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Init()", "Create Menu Error", { cCaption, cCaption }, __FILE__ ) )
 #endif
@@ -2923,7 +2923,7 @@ METHOD wvtMenu:Destroy()
    IF ! Empty( ::hMenu )
       ::DelAllItems()
 
-      IF ! wvg_DestroyMenu( ::hMenu )
+      IF ! wapi_DestroyMenu( ::hMenu )
 #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {}, __FILE__ ) )
 #endif
@@ -2951,7 +2951,7 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
 #endif
       ENDIF
 
-      IF ! wvg_AppendMenu( ::hMenu, aItem[ WVT_MENU_TYPE ], aItem[ WVT_MENU_IDENTIFIER ], aItem[ WVT_MENU_CAPTION ] )
+      IF ! wapi_AppendMenu( ::hMenu, aItem[ WVT_MENU_TYPE ], aItem[ WVT_MENU_IDENTIFIER ], aItem[ WVT_MENU_CAPTION ] )
 #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction }, __FILE__ ) )
 #endif
@@ -2985,7 +2985,7 @@ METHOD wvtMenu:DelItem( nItemNum )
          ::aItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
-      IF ( lResult := wvg_DeleteMenu( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION ) ) /* Remember ZERO base */
+      IF ( lResult := wapi_DeleteMenu( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION ) ) /* Remember ZERO base */
          hb_ADel( ::aItems, nItemNum, .T. )
       ELSE
 #if 0
@@ -2999,7 +2999,7 @@ METHOD wvtMenu:DelItem( nItemNum )
 METHOD wvtMenu:EnableItem( nItemNum )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum >= 1
-      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_ENABLED )
+      RETURN wapi_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_ENABLED )
    ENDIF
 
    RETURN -1
@@ -3007,7 +3007,7 @@ METHOD wvtMenu:EnableItem( nItemNum )
 METHOD wvtMenu:DisableItem( nItemNum )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum >= 1
-      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_GRAYED )
+      RETURN wapi_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_GRAYED )
    ENDIF
 
    RETURN -1

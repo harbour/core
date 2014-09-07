@@ -144,7 +144,7 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
    ::wvgWindow:create( ::oParent, , , , ::aPresParams, ::visible )
 
-   ::hMenu := wvg_CreateMenu()
+   ::hMenu := wapi_CreateMenu()
 
    IF ! Empty( ::hMenu )
       /* TODO: check for if the parent already has a menu
@@ -157,8 +157,8 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 #if 0
       /* how to make menu invisible ? */
       IF ::visible
-         wvg_ShowWindow( ::oParent:getHWND(), SW_MINIMIZE )
-         wvg_ShowWindow( ::oParent:getHWND(), SW_NORMAL )
+         wapi_ShowWindow( ::oParent:getHWND(), SW_MINIMIZE )
+         wapi_ShowWindow( ::oParent:getHWND(), SW_NORMAL )
       ENDIF
 #endif
 
@@ -186,7 +186,7 @@ METHOD WvgMenuBar:destroy()
    IF ! Empty( ::hMenu )
       ::DelAllItems()
 
-      IF ! wvg_DestroyMenu( ::hMenu )
+      IF ! wapi_DestroyMenu( ::hMenu )
 #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {}, __FILE__ ) )
 #endif
@@ -218,7 +218,7 @@ METHOD WvgMenuBar:delItem( nItemNum )
          ::aMenuItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
-      IF ( lResult := wvg_DeleteMenu( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION ) ) /* Remember ZERO base */
+      IF ( lResult := wapi_DeleteMenu( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION ) ) /* Remember ZERO base */
          hb_ADel( ::aMenuItems, nItemNum, .T. )
       ELSE
 #if 0
@@ -288,7 +288,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    IF nPos <= 0
       AAdd( ::aMenuItems, aItem )
       nItemIndex := Len( ::aMenuItems )
-      wvg_AppendMenu( ::hMenu, ;
+      wapi_AppendMenu( ::hMenu, ;
          aItem[ 1 ], ;
          aItem[ 2 ], ;
          iif( HB_ISSTRING( aItem[ 3 ] ), StrTran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
@@ -296,7 +296,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
       nItemIndex := nPos
       IF hb_defaultValue( lInsert, .T. )
          ::aMenuItems := hb_AIns( ::aMenuItems, nPos, aItem, .T. )
-         wvg_InsertMenu( ::hMenu, ;
+         wapi_InsertMenu( ::hMenu, ;
             nItemIndex - 1, ;
             aItem[ 1 ] + WIN_MF_BYPOSITION, ;
             aItem[ 2 ], ;
@@ -320,7 +320,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
       ENDIF
    ELSE
       IF ::oParent:className() $ "WVGCRT,WVGDIALOG"
-         wvg_DrawMenuBar( ::oParent:getHWND() )
+         wapi_DrawMenuBar( ::oParent:getHWND() )
       ENDIF
    ENDIF
 
@@ -375,7 +375,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
    __defaultNIL( @lCheck, .T. )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
-      nRet := wvg_CheckMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + iif( lCheck, WIN_MF_CHECKED, WIN_MF_UNCHECKED ) )
+      nRet := wapi_CheckMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + iif( lCheck, WIN_MF_CHECKED, WIN_MF_UNCHECKED ) )
    ENDIF
 
    RETURN iif( nRet == -1, .F., .T. )
@@ -383,7 +383,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 METHOD WvgMenuBar:enableItem( nItemNum )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
-      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_ENABLED )
+      RETURN wapi_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_ENABLED )
    ENDIF
 
    RETURN .F.
@@ -391,7 +391,7 @@ METHOD WvgMenuBar:enableItem( nItemNum )
 METHOD WvgMenuBar:disableItem( nItemNum )
 
    IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
-      RETURN wvg_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_GRAYED )
+      RETURN wapi_EnableMenuItem( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION + WIN_MF_GRAYED )
    ENDIF
 
    RETURN .F.
@@ -523,7 +523,7 @@ METHOD WvgMenu:create( oParent, aPresParams, lVisible )
 
    ::className := "POPUPMENU"
 
-   ::hMenu := wvg_CreatePopupMenu()
+   ::hMenu := wapi_CreatePopupMenu()
 
    RETURN Self
 

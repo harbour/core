@@ -100,10 +100,10 @@ PROCEDURE Main()
    oLastMenu:disableItem( 11 )
    oLastMenu:checkItem( 1 )
    oLastMenu:insItem( 11, { "I am inserted later !", ;
-      {|| wvg_MessageBox( , "Hi " + iif( oLastMenu:isItemChecked( 1 ), "Yes", "No" ) + ;
+      {|| wapi_MessageBox( , "Hi " + iif( oLastMenu:isItemChecked( 1 ), "Yes", "No" ) + ;
       iif( oLastMenu:isItemEnabled( 12 ), " Yes", " No" ) ) } } )
 
-   oLastMenu:setItem( 14, { "This is Set Against Prev Menu", {|| wvg_MessageBox( , "Hi" ) } } )
+   oLastMenu:setItem( 14, { "This is Set Against Prev Menu", {|| wapi_MessageBox( , "Hi" ) } } )
 
    SetMode( MaxRow() + 1, MaxCol() + 1 )  /* Needed to accomodate attached menu */
 
@@ -534,7 +534,7 @@ STATIC PROCEDURE BuildButtons()
    oXbp:pointerFocus := .F.
    oXbp:caption := "Hi"
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -1 }, { -2, -4 } )
-   oXbp:activate := {|| wvg_MessageBox( , "Harbour!" ) }
+   oXbp:activate := {|| wapi_MessageBox( , "Harbour!" ) }
    oXbp:toolTipText := "Harbour CUI/GUI Console"
 
    oXbp := WvgPushButton():new()
@@ -686,7 +686,7 @@ STATIC FUNCTION FetchText( nMode )
    SWITCH nMode
    CASE 1
       RETURN ;
-         "Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! " + ;
+         "Do you know Harbour is gaining a popularity what Cl*pper enjoyed at one time! " + ;
          "Enjoy it."
    CASE 2
       RETURN ;

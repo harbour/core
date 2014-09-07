@@ -74,7 +74,7 @@ FUNCTION DynWinDialog( nInfo )
    aDlg   := wvt_AddDlgItem( aDlg,  7, 41,  4, 17, { 0, 0, 4, 0 }, ID_GRP_COMP, "BUTTON" , nStyle, "Compiler" )
    nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + BS_AUTORADIOBUTTON
    aDlg   := wvt_AddDlgItem( aDlg,  8, 43,  1, 14, {}, ID_RDO_XH    , "BUTTON" , nStyle, "Harbour"  )
-   aDlg   := wvt_AddDlgItem( aDlg,  9, 43,  1, 14, {}, ID_RDO_CLIP  , "BUTTON" , nStyle, "Clipper"  )
+   aDlg   := wvt_AddDlgItem( aDlg,  9, 43,  1, 14, {}, ID_RDO_CLIP  , "BUTTON" , nStyle, "Cl*pper"  )
    aDlg   := wvt_AddDlgItem( aDlg, 10, 43,  1, 14, {}, ID_RDO_XBASE , "BUTTON" , nStyle, "Xbase++"  )
 
    nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + SS_LEFT
@@ -90,9 +90,9 @@ FUNCTION DynWinDialog( nInfo )
    nStyle := WIN_WS_CHILD + WIN_WS_VISIBLE + WIN_WS_TABSTOP + BS_PUSHBUTTON
    aDlg   := wvt_AddDlgItem( aDlg, 18, 50, 1,  8, { -3, 0, 3, 0 }, ID_BTN_OK, "BUTTON" , nStyle, "OK" )
 
-   hMenu  := wvg_CreateMenu()
-   wvg_AppendMenu( hMenu, WIN_MF_STRING + WIN_MF_ENABLED, ID_MNU_FILE   , "File"     )
-   wvg_AppendMenu( hMenu, WIN_MF_STRING + WIN_MF_ENABLED, ID_MNU_CONTROL, "Controls" )
+   hMenu  := wapi_CreateMenu()
+   wapi_AppendMenu( hMenu, WIN_MF_STRING + WIN_MF_ENABLED, ID_MNU_FILE   , "File"     )
+   wapi_AppendMenu( hMenu, WIN_MF_STRING + WIN_MF_ENABLED, ID_MNU_CONTROL, "Controls" )
 
    lOnTop      := .F.
    cDlgIcon    := "v_notes.ico"
@@ -119,45 +119,45 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
    SWITCH nMsg
 
    CASE WIN_WM_TIMER
-      wvg_SetDlgItemText( hDlg, ID_EDT_TIME, Time() )
+      wapi_SetDlgItemText( hDlg, ID_EDT_TIME, Time() )
       EXIT
 
    CASE WIN_WM_COMMAND
 
       DO CASE
       CASE wParam == ID_CHK_SATIS
-         lClicked := ( wvg_IsDlgButtonChecked( hDlg, ID_CHK_SATIS ) == 1 )
-         wvg_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
+         lClicked := ( wapi_IsDlgButtonChecked( hDlg, ID_CHK_SATIS ) == 1 )
+         wapi_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
 
       CASE wParam == ID_RDO_XH
-         wvg_MessageBox( hDlg, "Harbour", "Compiler" )
+         wapi_MessageBox( hDlg, "Harbour", "Compiler" )
 
       CASE wParam == ID_RDO_CLIP
-         wvg_MessageBox( hDlg, "Clipper", "Compiler" )
+         wapi_MessageBox( hDlg, "Cl*pper", "Compiler" )
 
       CASE wParam == ID_RDO_XBASE
-         wvg_MessageBox( hDlg, "Xbase++", "Compiler" )
+         wapi_MessageBox( hDlg, "Xbase++", "Compiler" )
 
       CASE wParam == ID_MNU_FILE
-         wvg_MessageBox( hDlg, "Execute Menu Action!", "File" )
+         wapi_MessageBox( hDlg, "Execute Menu Action!", "File" )
 
       CASE wParam == ID_MNU_CONTROL
-         wvg_MessageBox( hDlg, "Controls are from Windows!", "Controls" )
+         wapi_MessageBox( hDlg, "Controls are from Windows!", "Controls" )
 
-      CASE wvg_LOWORD( wParam ) == ID_LST_LIST
-         IF wvg_HIWORD( wParam ) == LBN_SELCHANGE
-            nIndex  := wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETCURSEL, 0, 0 )
+      CASE wapi_LOWORD( wParam ) == ID_LST_LIST
+         IF wapi_HIWORD( wParam ) == LBN_SELCHANGE
+            nIndex  := wapi_SendMessage( wapi_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETCURSEL, 0, 0 )
             cPrompt := Space( 20 )
-            wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETTEXT, nIndex, @cPrompt )
-            wvg_MessageBox( hDlg, cPrompt, "ListBox" )
+            wapi_SendMessage( wapi_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETTEXT, nIndex, @cPrompt )
+            wapi_MessageBox( hDlg, cPrompt, "ListBox" )
          ENDIF
 
-      CASE wvg_LOWORD( wParam ) == ID_CMB_COMBO
-         IF wvg_HIWORD( wParam ) == CBN_SELCHANGE
-            nIndex  := wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETCURSEL, 0, 0 )
+      CASE wapi_LOWORD( wParam ) == ID_CMB_COMBO
+         IF wapi_HIWORD( wParam ) == CBN_SELCHANGE
+            nIndex  := wapi_SendMessage( wapi_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETCURSEL, 0, 0 )
             cPrompt := Space( 20 )
-            wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETLBTEXT, nIndex, @cPrompt )
-            wvg_MessageBox( hDlg, cPrompt, "Combo Box" )
+            wapi_SendMessage( wapi_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETLBTEXT, nIndex, @cPrompt )
+            wapi_MessageBox( hDlg, cPrompt, "Combo Box" )
          ENDIF
 
       ENDCASE
@@ -165,22 +165,22 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
    CASE WIN_WM_CTLCOLOREDIT
       DO CASE
-      CASE wvg_GetDlgItem( hDlg, ID_MLE ) == wvg_n2p( lParam )
-         wvg_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 255 ) )
-         wvg_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 200 ) )
+      CASE wapi_GetDlgItem( hDlg, ID_MLE ) == wvg_n2p( lParam )
+         wapi_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 255 ) )
+         wapi_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 200 ) )
          RETURN 1
-      CASE wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == wvg_n2p( lParam )
-         wvg_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
-         wvg_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 10, 200, 45 ) )
+      CASE wapi_GetDlgItem( hDlg, ID_EDT_TEXT ) == wvg_n2p( lParam )
+         wapi_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
+         wapi_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 10, 200, 45 ) )
          RETURN 1
       ENDCASE
       EXIT
 
    CASE WIN_WM_CTLCOLORSTATIC
 #if 0
-      IF wvg_GetDlgItem( hDlg, ID_STA_TEXT ) == wvg_n2p( lParam )
-         wvg_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
-         wvg_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 0 ) )
+      IF wapi_GetDlgItem( hDlg, ID_STA_TEXT ) == wvg_n2p( lParam )
+         wapi_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
+         wapi_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 0 ) )
          RETURN 1
       ENDIF
 #endif
@@ -196,14 +196,14 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       ENDIF
 
       IF Len( aHFonts ) > 0
-         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_MLE ), WIN_WM_SETFONT, ahFonts[ 1 ], 0 )
+         wapi_SendMessage( wapi_GetDlgItem( hDlg, ID_MLE ), WIN_WM_SETFONT, ahFonts[ 1 ], 0 )
       ENDIF
 
       IF Empty( SetIcons() )
          SetIcons( wvg_LoadIcon( "vr_1.ico" ) )
       ENDIF
       IF ! Empty( SetIcons() )
-         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, WIN_IMAGE_ICON, SetIcons()[ 1 ] )
+         wapi_SendMessage( wapi_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, WIN_IMAGE_ICON, SetIcons()[ 1 ] )
       ENDIF
 
 #if 0
@@ -211,13 +211,13 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
          t_hImage := wvg_LoadImage( "vouch1.bmp", 2 )
       ENDIF
       IF t_hImage != NIL .AND. ! Empty( t_hImage )
-         wvg_SendMessage( wvg_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, WIN_IMAGE_BITMAP, t_hImage )
+         wapi_SendMessage( wapi_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, WIN_IMAGE_BITMAP, t_hImage )
       ENDIF
 #endif
-      wvg_SetDlgItemText( hDlg, ID_MLE, GetEditText() )
-      wvg_CheckDlgButton( hDlg, ID_CHK_SATIS, .T. )
+      wapi_SetDlgItemText( hDlg, ID_MLE, GetEditText() )
+      wapi_CheckDlgButton( hDlg, ID_CHK_SATIS, .T. )
 
-      wvg_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
+      wapi_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
 
       wvt_LBAddString( hDlg, ID_LST_LIST, "Harbour"   )
       wvt_LBAddString( hDlg, ID_LST_LIST, "Gtwvt"     )
@@ -244,7 +244,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       // Do whatevert you want to do with cText
       // Each box will retrieve its own text.
       /* cText := */
-      wvg_GetDlgItemText( hDlg, ID_MLE )
+      wapi_GetDlgItemText( hDlg, ID_MLE )
       EXIT
    ENDSWITCH
 
@@ -259,7 +259,7 @@ STATIC FUNCTION GetEditText()
       "lightly, except for me, as I was aware that what " + ;
       "wonderful contribution to Harbour he has made, " + ;
       "what immense possibilities he has opened for Harbour " + ;
-      "developers, what limitations he has cleared for Clipper " + ;
+      "developers, what limitations he has cleared for Cl*pper " + ;
       "savvy user base." + ;
       hb_eol() + hb_eol() + ;
       "With a little effort I could extend GTWVT " + ;

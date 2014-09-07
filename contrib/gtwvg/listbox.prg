@@ -79,12 +79,12 @@ CREATE CLASS WvgListBox INHERIT WvgWindow, WvgDataRef
    METHOD setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
    METHOD setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex - 1, 0 )
 
-   METHOD addItem( cItem )                      INLINE  wvg_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
+   METHOD addItem( cItem )                      INLINE  wapi_SendMessage( ::hWnd, LB_ADDSTRING, 0, cItem )
    METHOD clear()
    METHOD delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex - 1, 0 )
    METHOD getItem( nIndex )                     INLINE  wvg_lbGetText( ::hWnd, nIndex - 1 )
    METHOD getTabstops()                         VIRTUAL
-   METHOD insItem( nIndex, cItem )              INLINE  wvg_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
+   METHOD insItem( nIndex, cItem )              INLINE  wapi_SendMessage( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
    METHOD setColumnWidth()                      VIRTUAL
    METHOD setItem( nIndex, cItem )              INLINE  ::delItem( nIndex ), ::insItem( nIndex, cItem )
    METHOD setTabstops()                         VIRTUAL
@@ -225,12 +225,12 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wapi_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
          RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wapi_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 

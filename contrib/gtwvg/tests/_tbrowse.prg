@@ -297,7 +297,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oTree:create( , , { -24, -1 }, { {|| -( MaxRow() - 1 - 24 ) }, -10 } )
    oTree:setColorFG( "W+" )
    oTree:setColorBG( "R*" )
-   oTree:itemSelected := {| oItem | wvg_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
+   oTree:itemSelected := {| oItem | wapi_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 

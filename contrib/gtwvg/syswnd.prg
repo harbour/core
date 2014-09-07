@@ -294,43 +294,43 @@ METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
       ::hWnd := hWnd
 
       IF ! Empty( ::title )
-         wvg_SetWindowText( ::hWnd, ::title )
+         wapi_SetWindowText( ::hWnd, ::title )
       ENDIF
       IF ! ::buttonCancel
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, WIN_IDCANCEL ), .F. )
+         wapi_EnableWindow( wapi_GetDlgItem( ::hWnd, WIN_IDCANCEL ), .F. )
       ENDIF
       IF ! ::buttonApply
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1026 ), .F. )
+         wapi_EnableWindow( wapi_GetDlgItem( ::hWnd, 1026 ), .F. )
       ENDIF
       IF ! ::buttonHelp
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1038 ), .F. )
+         wapi_EnableWindow( wapi_GetDlgItem( ::hWnd, 1038 ), .F. )
       ENDIF
       IF ! ::strikeOut
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1040 ), .F. )
+         wapi_EnableWindow( wapi_GetDlgItem( ::hWnd, 1040 ), .F. )
       ENDIF
       IF ! ::underscore
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1041 ), .F. )
+         wapi_EnableWindow( wapi_GetDlgItem( ::hWnd, 1041 ), .F. )
       ENDIF
       IF ! ::name
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1136 ), .F. )
+         wapi_EnableWindow( wapi_GetDlgItem( ::hWnd, 1136 ), .F. )
       ENDIF
       IF ! ::style
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1137 ), .F. )
+         wapi_EnableWindow( wapi_GetDlgItem( ::hWnd, 1137 ), .F. )
       ENDIF
       IF ! ::size
-         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1138 ), .F. )
+         wapi_EnableWindow( wapi_GetDlgItem( ::hWnd, 1138 ), .F. )
       ENDIF
 
       IF ::aPos[ 1 ] > 0 .OR. ::aPos[ 2 ] > 0
          aRect := wvg_GetWindowRect( ::hWnd )
-         wvg_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ], .F. )
+         wapi_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ], .F. )
       ENDIF
 
       RETURN 1
 
    CASE nMessage == WIN_WM_COMMAND
-      nL := wvg_LOWORD( nwParam )
-      nH := wvg_HIWORD( nwParam )
+      nL := wapi_LOWORD( nwParam )
+      nH := wapi_HIWORD( nwParam )
 
       HB_SYMBOL_UNUSED( nH )
 
@@ -367,7 +367,7 @@ METHOD WvgFontDialog:display( nMode )
    IF nMode == 0
       hWnd := ::oParent:hWnd
    ELSE
-      hWnd := wvg_GetDesktopWindow()
+      hWnd := wapi_GetDesktopWindow()
    ENDIF
 
    ::ok := .F.

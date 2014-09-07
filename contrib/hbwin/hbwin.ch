@@ -50,6 +50,20 @@
 #ifndef HBWIN_CH_
 #define HBWIN_CH_
 
+/* macros */
+#define WIN_LOWORD( dw )                   hb_bitAnd( dw, 0xFFFF )
+#define WIN_HIWORD( dw )                   hb_bitAnd( hb_bitShift( dw, -16 ), 0xFFFF )
+
+#define WIN_MAKEWORD( lb, hb )             hb_bitOr( hb_bitShift( hb_bitAnd( hb, 0xFF ), 8 ), hb_bitAnd( lb, 0xFF ) )
+#define WIN_MAKELONG( lw, hw )             hb_bitOr( hb_bitShift( hb_bitAnd( hw, 0xFFFF ), 16 ), hb_bitAnd( lw, 0xFFFF ) )
+
+#define WIN_MAKELPARAM( lw, hw )           WIN_MAKELONG( lw, hw )
+#define WIN_MAKEWPARAM( lw, hw )           WIN_MAKELONG( lw, hw )
+#define WIN_MAKELRESULT( lw, hw )          WIN_MAKELONG( lw, hw )
+
+#define WIN_RGB( nR, nG, nB )              ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+
+/* special color value */
 #define WIN_CLR_INVALID                    0xFFFFFFFF
 
 /* win_MAPISendMail() address types */
@@ -156,18 +170,6 @@
 #define HB_WIN_BITMAP_BMP                  1
 #define HB_WIN_BITMAP_JPEG                 2
 #define HB_WIN_BITMAP_PNG                  3
-
-#define WIN_LOWORD( dw )                   hb_bitAnd( dw, 0xFFFF )
-#define WIN_HIWORD( dw )                   hb_bitAnd( hb_bitShift( dw, -16 ), 0xFFFF )
-
-#define WIN_MAKEWORD( lb, hb )             hb_bitOr( hb_bitShift( hb_bitAnd( hb, 0xFF ), 8 ), hb_bitAnd( lb, 0xFF ) )
-#define WIN_MAKELONG( lw, hw )             hb_bitOr( hb_bitShift( hb_bitAnd( hw, 0xFFFF ), 16 ), hb_bitAnd( lw, 0xFFFF ) )
-
-#define WIN_MAKELPARAM( lw, hw )           WIN_MAKELONG( lw, hw )
-#define WIN_MAKEWPARAM( lw, hw )           WIN_MAKELONG( lw, hw )
-#define WIN_MAKELRESULT( lw, hw )          WIN_MAKELONG( lw, hw )
-
-#define WIN_RGB( nR, nG, nB )              ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 
 /* Color constants for convenience */
 #define HB_WIN_RGB_BLACK                   WIN_RGB( 0x00, 0x00, 0x00 )

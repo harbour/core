@@ -451,8 +451,8 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       EXIT
 
    CASE WIN_WM_COMMAND
-      nCtrlID   := wvg_LOWORD( nwParam )
-      nNotifctn := wvg_HIWORD( nwParam )
+      nCtrlID   := wapi_LOWORD( nwParam )
+      nNotifctn := wapi_HIWORD( nwParam )
       hWndCtrl  := wvg_n2p( nlParam )
 
       IF Empty( hWndCtrl )                   /* It is menu */
@@ -498,7 +498,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       IF HB_ISOBJECT( oObj )
          nReturn := oObj:handleEvent( HB_GTE_CTLCOLOR, { wvg_n2p( nwParam ), wvg_n2p( nlParam ) } )
          IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_UNHANDLED
-            RETURN wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+            RETURN wapi_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
          ELSE
             RETURN nReturn
          ENDIF
@@ -506,11 +506,11 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       EXIT
 
    CASE WIN_WM_HSCROLL
-      ::handleEvent( HB_GTE_HSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), wvg_n2p( nlParam ) } )
+      ::handleEvent( HB_GTE_HSCROLL, { wapi_LOWORD( nwParam ), wapi_HIWORD( nwParam ), wvg_n2p( nlParam ) } )
       RETURN 0
 
    CASE WIN_WM_VSCROLL
-      IF ::handleEvent( HB_GTE_VSCROLL, { wvg_LOWORD( nwParam ), wvg_HIWORD( nwParam ), wvg_n2p( nlParam ) } ) == EVENT_HANDLED
+      IF ::handleEvent( HB_GTE_VSCROLL, { wapi_LOWORD( nwParam ), wapi_HIWORD( nwParam ), wvg_n2p( nlParam ) } ) == EVENT_HANDLED
          RETURN 0
       ENDIF
       EXIT
@@ -558,4 +558,4 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    ENDSWITCH
 
-   RETURN wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
+   RETURN wapi_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )

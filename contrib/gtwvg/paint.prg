@@ -248,9 +248,9 @@ FUNCTION wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       hb_default( @aOffSet[ 3 ], 0 )
       hb_default( @aOffSet[ 4 ], 0 )
 
-      nBaseUnits  := wvg_GetDialogBaseUnits()
-      nBaseUnitsX := wvg_LOWORD( nBaseUnits )
-      nBaseUnitsY := wvg_HIWORD( nBaseUnits )
+      nBaseUnits  := wapi_GetDialogBaseUnits()
+      nBaseUnitsX := wapi_LOWORD( nBaseUnits )
+      nBaseUnitsY := wapi_HIWORD( nBaseUnits )
 
       nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
       nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
@@ -324,9 +324,9 @@ FUNCTION wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       hb_default( @aOffSet[ 3 ], 0 )
       hb_default( @aOffSet[ 4 ], 0 )
 
-      nBaseUnits  := wvg_GetDialogBaseUnits()
-      nBaseUnitsX := wvg_LOWORD( nBaseUnits )
-      nBaseUnitsY := wvg_HIWORD( nBaseUnits )
+      nBaseUnits  := wapi_GetDialogBaseUnits()
+      nBaseUnitsX := wapi_LOWORD( nBaseUnits )
+      nBaseUnitsY := wapi_HIWORD( nBaseUnits )
 
       aXY := wvt_GetXYFromRowCol( nTop, nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
@@ -377,7 +377,7 @@ FUNCTION wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
    nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
    IF HB_ISARRAY( acnDlg )
-      xTemplate := wvt__MakeDlgTemplate( hb_ArrayToParams( acnDlg ) )
+      xTemplate := __wapi_DLGTEMPLATE_Raw_New( hb_ArrayToParams( acnDlg ) )
    ELSE
       xTemplate := acnDlg
    ENDIF
@@ -411,14 +411,14 @@ FUNCTION wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
    IF HB_ISARRAY( acnDlg )
-      xTemplate := wvt__MakeDlgTemplate( hb_ArrayToParams( acnDlg ) )
+      xTemplate := __wapi_DLGTEMPLATE_Raw_New( hb_ArrayToParams( acnDlg ) )
    ELSE
       xTemplate := acnDlg
    ENDIF
 
    nResult := wvt_CreateDialogModal( xTemplate, .F., cbDlgProc, nDlgMode, hWndParent )
 
-   wvg_SetFocus( hWndParent )
+   wapi_SetFocus( hWndParent )
 
    RETURN nResult
 

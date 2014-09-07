@@ -182,7 +182,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oGet:AddGets( 12, nGetCol, "GTWvt               ", "@! ", "W+/B*,N/W*" )
    oGet:AddGets( 14, nGetCol, Date() )
    oGet:AddGets( 16, nGetCol, 2122.57, "@Z 99999999.99", "w+/R,GR+/B" )
-   oGet:Tooltip   := "WvtGets():New() - ReadModal() like Clipper"
+   oGet:Tooltip   := "WvtGets():New() - ReadModal() like Cl*pper"
    oGet:cDesc     := "Normal Get Box"
    oGet:bOnCreate := bBlock
    oDlg:AddObject( oGet )

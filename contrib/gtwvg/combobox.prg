@@ -70,7 +70,7 @@ CREATE CLASS WvgComboBox INHERIT WvgWindow, WvgDataRef
    METHOD destroy()
    METHOD handleEvent( nMessage, aNM )
 
-   METHOD sendCBMessage( nMsg, wParam, lParam ) INLINE wvg_SendCBMessage( ::pWnd, nMsg, wParam, lParam )
+   METHOD sendCBMessage( nMsg, wParam, lParam ) INLINE wvg_SendCBMessage( ::hWnd, nMsg, wParam, lParam )
    METHOD listBoxFocus( lFocus )
    METHOD listBoxSize()
    METHOD sleSize()
@@ -232,12 +232,12 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wapi_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
          RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wapi_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 

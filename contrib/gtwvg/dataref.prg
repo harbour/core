@@ -149,19 +149,19 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    CASE "SysTreeView32"
       IF ::sl_editBuffer != NIL .AND. ::sl_editBuffer:hItem != NIL
-         wvg_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
+         wapi_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
       EXIT
 
    CASE "EDIT"
       IF HB_ISSTRING( ::sl_editBuffer )
-         wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::sl_editBuffer )
+         wapi_SendMessage( ::hWnd, WIN_WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
       EXIT
 
    CASE "SCROLLBAR"
       IF ::sl_editBuffer != NIL
-         wapi_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .T. )
+         wapi_SetScrollPos( ::hWnd, SB_CTL, ::sl_editBuffer, .T. )
       ENDIF
       EXIT
 

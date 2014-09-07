@@ -114,7 +114,7 @@ METHOD WvgTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    __defaultNIL( @::caption, " " )
 
-   wapi_TabCtrl_InsertItem( ::pWnd, 0, ::caption )
+   wapi_TabCtrl_InsertItem( ::hWnd, 0, ::caption )
 
    IF ::visible
       ::show()

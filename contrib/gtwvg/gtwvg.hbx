@@ -232,7 +232,6 @@ DYNAMIC WvtTextBox
 DYNAMIC WvtToolBar
 DYNAMIC WvtToolButton
 DYNAMIC wvt_AddDlgItem
-DYNAMIC wvt_AppendMenu
 DYNAMIC wvt_CBAddString
 DYNAMIC wvt_CBSetCurSel
 DYNAMIC wvt_CenterWindow
@@ -244,10 +243,6 @@ DYNAMIC wvt_CreateDialog
 DYNAMIC wvt_CreateDialogDynamic
 DYNAMIC wvt_CreateDialogModal
 DYNAMIC wvt_CreateFont
-DYNAMIC wvt_CreateMenu
-DYNAMIC wvt_CreatePopupMenu
-DYNAMIC wvt_DeleteMenu
-DYNAMIC wvt_DestroyMenu
 DYNAMIC wvt_DestroyPicture
 DYNAMIC wvt_DialogBox
 DYNAMIC wvt_DlgSetIcon
@@ -283,7 +278,6 @@ DYNAMIC wvt_DrawShadedRect
 DYNAMIC wvt_DrawStatusBar
 DYNAMIC wvt_DrawTextBox
 DYNAMIC wvt_DrawToolButtonState
-DYNAMIC wvt_EnableMenuItem
 DYNAMIC wvt_EnableShortcuts
 DYNAMIC wvt_GetCursorPos
 DYNAMIC wvt_GetFontHandle

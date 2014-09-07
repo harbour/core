@@ -306,7 +306,7 @@ PROCEDURE DoModalWindow()
 
    pGT := SetGT( 3, hb_gtSelect() )
 
-   // Here goes the Clipper Code
+   // Here goes the Cl*pper Code
    SetColor( "N/W" )
    CLS
    DO WHILE .T.

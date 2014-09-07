@@ -175,10 +175,10 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wapi_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF ! Empty( ::hBrushBG )
-         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wapi_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 
@@ -225,43 +225,43 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
 
       SWITCH Lower( hb_FNameExt( ::caption ) )
       CASE ".ico"
-         wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_ICON, wvg_LoadImage( ::caption, nLoadFromDiskFile, WIN_IMAGE_ICON ) )
+         wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_ICON, wvg_LoadImage( ::caption, nLoadFromDiskFile, WIN_IMAGE_ICON ) )
          EXIT
       CASE ".bmp"
-         wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( ::caption, nLoadFromDiskFile, WIN_IMAGE_BITMAP ) )
+         wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( ::caption, nLoadFromDiskFile, WIN_IMAGE_BITMAP ) )
          EXIT
       OTHERWISE
-         wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
+         wapi_SendMessage( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
       ENDSWITCH
 
    CASE HB_ISNUMERIC( xCaption )  /* Handle to the bitmap */
-      wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, ::caption )
+      wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, ::caption )
 
    CASE HB_ISARRAY( xCaption )
       ASize( xCaption, 4 )
       IF HB_ISCHAR( xCaption[ 1 ] )
-         wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, xCaption[ 1 ] )
+         wapi_SendMessage( ::hWnd, WIN_WM_SETTEXT, 0, xCaption[ 1 ] )
       ENDIF
       IF ! Empty( xCaption[ 2 ] )
          SWITCH xCaption[ 2 ]
          CASE WVG_IMAGE_ICONFILE
-            wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_ICON, wvg_LoadImage( xCaption[ 3 ], nLoadFromDiskFile, WIN_IMAGE_ICON ) )
+            wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_ICON, wvg_LoadImage( xCaption[ 3 ], nLoadFromDiskFile, WIN_IMAGE_ICON ) )
             EXIT
          CASE WVG_IMAGE_ICONRESOURCE
             IF HB_ISSTRING( xCaption[ 3 ] )
-               wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_ICON, wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdName, WIN_IMAGE_ICON ) )
+               wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_ICON, wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdName, WIN_IMAGE_ICON ) )
             ELSE
-               wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_ICON, wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdNumber, WIN_IMAGE_ICON ) )
+               wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_ICON, wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdNumber, WIN_IMAGE_ICON ) )
             ENDIF
             EXIT
          CASE WVG_IMAGE_BITMAPFILE
-            wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( xCaption[ 3 ], nLoadFromDiskFile, WIN_IMAGE_BITMAP ) )
+            wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( xCaption[ 3 ], nLoadFromDiskFile, WIN_IMAGE_BITMAP ) )
             EXIT
          CASE WVG_IMAGE_BITMAPRESOURCE
             IF HB_ISSTRING( xCaption[ 3 ] )
-               wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdName, WIN_IMAGE_BITMAP ) )
+               wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdName, WIN_IMAGE_BITMAP ) )
             ELSE
-               wvg_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdNumber, WIN_IMAGE_BITMAP ) )
+               wapi_SendMessage( ::hWnd, BM_SETIMAGE, WIN_IMAGE_BITMAP, wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdNumber, WIN_IMAGE_BITMAP ) )
             ENDIF
             EXIT
          ENDSWITCH

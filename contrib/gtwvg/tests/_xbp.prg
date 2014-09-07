@@ -33,7 +33,7 @@ PROCEDURE demoxbp()
 
    // --- StatusBar ---
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .T. )
-   oSBar:panelClick := {| oPanel | wvg_MessageBox( , oPanel:caption ) }
+   oSBar:panelClick := {| oPanel | wapi_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := "My Root Panel"
    oPanel1 := oSBar:addItem()
@@ -84,7 +84,7 @@ PROCEDURE demoxbp()
    AAdd( aParts, "DataRef"           )
 
    AEval( aParts, {| e | oListBox:addItem( e ) } )
-   oListBox:itemSelected := {|| wvg_MessageBox( , oListBox:getCurItem() ) }
+   oListBox:itemSelected := {|| wapi_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected "XbpToolBar"
 
    // --- PushButton ---
@@ -104,7 +104,7 @@ PROCEDURE demoxbp()
    oTree:create()
    oTree:setColorBG( WIN_RGB( 120, 15, 240 ) )
    oTree:setColorFG( WIN_RGB( 15, 240, 120 ) )
-   oTree:itemSelected := {| oItem | iif( oItem != NIL, wvg_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {| oItem | iif( oItem != NIL, wapi_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -172,7 +172,7 @@ PROCEDURE demoxbp()
    oRadio := WvgRadioButton():new( oStatic2, , { 10, 10 }, { 100, 15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {| m1, m2, obj | m1 := m1, m2 := m2, wvg_MessageBox( , obj:caption + iif( obj:selection, "< S >", "< N >" ) ) }
+   oRadio:selected  := {| m1, m2, obj | m1 := m1, m2 := m2, wapi_MessageBox( , obj:caption + iif( obj:selection, "< S >", "< N >" ) ) }
    oRadio:create()
 
    oRadio := WvgRadioButton():new( oStatic2, , { 10, 35 }, { 100, 15 } )
@@ -182,7 +182,7 @@ PROCEDURE demoxbp()
    oCheck := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100, 15 }, , .T. )
    oCheck:caption   := "Checkbox A"
    oCheck:create()
-   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, wvg_MessageBox( , iif( o:getData(), "I am selected", "I am not selected" ) ) }
+   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, wapi_MessageBox( , iif( o:getData(), "I am selected", "I am not selected" ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp  := Wvg3State():new()
@@ -196,7 +196,7 @@ PROCEDURE demoxbp()
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1, m2, oBtn | m1 := m1, m2 := m2, wvg_MessageBox( , "3State B", aState[ oBtn:getData() + 1 ] ) }
+   oXbp:selected := {| m1, m2, oBtn | m1 := m1, m2 := m2, wapi_MessageBox( , "3State B", aState[ oBtn:getData() + 1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -362,7 +362,7 @@ STATIC PROCEDURE MyFunctionXbp( nMode )
       EXIT
 
    CASE 3
-      wvg_MessageBox( , "Button clicked!" )
+      wapi_MessageBox( , "Button clicked!" )
       EXIT
 
    CASE 101  // Charge
@@ -396,7 +396,7 @@ STATIC PROCEDURE ExeFontDialog( oCrt )
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .F.
 #if 0
-   oFontDlg:activateOk       := {|| wvg_MessageBox( , "activateOK Event Handled in Windows!" ) }
+   oFontDlg:activateOk       := {|| wapi_MessageBox( , "activateOK Event Handled in Windows!" ) }
 #endif
    oFontDlg:nominalPointSize := 12
 

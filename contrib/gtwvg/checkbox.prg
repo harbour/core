@@ -142,12 +142,12 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wapi_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
          RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wapi_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 
@@ -185,7 +185,7 @@ METHOD WvgCheckBox:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
+      wapi_SendMessage( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

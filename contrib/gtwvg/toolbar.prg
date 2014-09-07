@@ -252,7 +252,7 @@ METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    RETURN Self
 
 METHOD WvgToolBar:sendToolbarMessage( nMsg, p1, p2 )
-   RETURN wvg_SendToolBarMessage( ::pWnd, nMsg, p1, p2 )
+   RETURN wvg_SendToolBarMessage( ::hWnd, nMsg, p1, p2 )
 
 METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
 
@@ -310,7 +310,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
          wvg_DeleteObject( pBitmap )
       ENDIF
 
-      wvg_AddToolBarButton( ::pWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
+      wvg_AddToolBarButton( ::hWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
 
       /* Set Button Size */
       ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth, ::buttonHeight )
@@ -320,7 +320,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 #endif
       ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE
-      wvg_AddToolBarButton( ::pWnd, , , oBtn:command, 3, .F. )
+      wvg_AddToolBarButton( ::hWnd, , , oBtn:command, 3, .F. )
 
    ENDIF
 

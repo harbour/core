@@ -228,12 +228,12 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wapi_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF Empty( ::hBrushBG )
          RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         wvg_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wapi_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
          RETURN ::hBrushBG
       ENDIF
 
@@ -270,7 +270,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
 
    DO CASE
    CASE ::type == WVGSTATIC_TYPE_TEXT
-      wvg_SendMessageText( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
+      wapi_SendMessage( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
 
    CASE ::type == WVGSTATIC_TYPE_BITMAP
       IF ::hBitmap != NIL
@@ -279,7 +279,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
 
       ::hBitmap := wvg_LoadImage( ::caption, iif( HB_ISNUMERIC( ::caption ), 1, 2 ) )
 
-      wvg_SendMessage( ::hWnd, STM_SETIMAGE, WIN_IMAGE_BITMAP, ::hBitmap )
+      wapi_SendMessage( ::hWnd, STM_SETIMAGE, WIN_IMAGE_BITMAP, ::hBitmap )
 
    ENDCASE
 
