@@ -222,8 +222,10 @@ static void hb_dbgActivate( HB_DEBUGINFO * info )
       for( i = 0; i < info->nCallStackLen; i++ )
       {
          HB_CALLSTACKINFO * pEntry = &info->aCallStack[ i ];
-         PHB_ITEM aEntry = hb_itemArrayNew( 6 );
-         PHB_ITEM pItem;
+         PHB_ITEM aEntry, pItem;
+
+         aEntry = hb_arrayGetItemPtr( aCallStack, info->nCallStackLen - i );
+         hb_arrayNew( aEntry, 6 );
 
          hb_arraySetC( aEntry, 1, pEntry->szModule );
          hb_arraySetC( aEntry, 2, pEntry->szFunction );
@@ -237,9 +239,6 @@ static void hb_dbgActivate( HB_DEBUGINFO * info )
          pItem = hb_dbgActivateVarArray( pEntry->nStatics, pEntry->aStatics );
          hb_arraySet( aEntry, 6, pItem );
          hb_itemRelease( pItem );
-
-         hb_arraySet( aCallStack, info->nCallStackLen - i, aEntry );
-         hb_itemRelease( aEntry );
       }
 
       aModules = hb_dbgActivateModuleArray();
@@ -272,8 +271,9 @@ static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO * info )
 
    for( i = 0; i < info->nBreakPoints; i++ )
    {
-      PHB_ITEM pBreak = hb_itemArrayNew( 3 );
+      PHB_ITEM pBreak = hb_arrayGetItemPtr( pArray, i + 1 );
 
+      hb_arrayNew( pBreak, 3 );
       if( ! info->aBreak[ i ].szFunction )
       {
          hb_arraySetNI( pBreak, 1, info->aBreak[ i ].nLine );
@@ -281,9 +281,6 @@ static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO * info )
       }
       else
          hb_arraySetC( pBreak, 3, info->aBreak[ i ].szFunction );
-
-      hb_arraySet( pArray, i + 1, pBreak );
-      hb_itemRelease( pBreak );
    }
    return pArray;
 }
@@ -300,8 +297,9 @@ static PHB_ITEM hb_dbgActivateModuleArray( void )
 
    for( i = 0; i < s_common.nModules; i++ )
    {
-      PHB_ITEM pModule = hb_itemArrayNew( 4 );
-      PHB_ITEM item;
+      PHB_ITEM pModule = hb_arrayGetItemPtr( pArray, i + 1 ), item;
+
+      hb_arrayNew( pModule, 4 );
 
       hb_arraySetC( pModule, 1, s_common.aModules[ i ].szModule );
 
@@ -319,9 +317,6 @@ static PHB_ITEM hb_dbgActivateModuleArray( void )
                                      s_common.aModules[ i ].aExternGlobals );
       hb_arraySet( pModule, 4, item );
       hb_itemRelease( item );
-
-      hb_arraySet( pArray, i + 1, pModule );
-      hb_itemRelease( pModule );
    }
 
    HB_DBGCOMMON_UNLOCK();
@@ -337,7 +332,9 @@ static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO * aVars )
 
    for( i = 0; i < nVars; i++ )
    {
-      PHB_ITEM aVar = hb_itemArrayNew( 4 );
+      PHB_ITEM aVar = hb_arrayGetItemPtr( pArray, i + 1 );
+
+      hb_arrayNew( aVar, 4 );
 
       hb_arraySetC( aVar, 1, aVars[ i ].szName );
       hb_arraySetNL( aVar, 2, aVars[ i ].nIndex );
@@ -346,9 +343,6 @@ static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO * aVars )
          hb_arraySet( aVar, 4, aVars[ i ].frame.ptr );
       else
          hb_arraySetNL( aVar, 4, aVars[ i ].frame.num );
-
-      hb_arraySet( pArray, i + 1, aVar );
-      hb_itemRelease( aVar );
    }
    return pArray;
 }
@@ -441,7 +435,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
 
             xValue = hb_dbgEval( info, &info->aWatch[ tp->nIndex ] );
 
-            if( ! ( xValue == NULL && tp->xValue == NULL ) &&
+            if( xValue != tp->xValue &&
                 ( xValue == NULL || tp->xValue == NULL ||
                   HB_ITEM_TYPE( xValue ) != HB_ITEM_TYPE( tp->xValue ) ||
                   ! hb_dbgEqual( xValue, tp->xValue ) ) )
@@ -856,6 +850,14 @@ static void hb_dbgClearWatch( HB_WATCHPOINT * pWatch )
 }
 
 
+static int hb_dbgCountWatch( void * handle )
+{
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+
+   return info->nWatchPoints;
+}
+
+
 void hb_dbgDelBreak( void * handle, int nBreak )
 {
    HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
@@ -877,29 +879,32 @@ void hb_dbgDelBreak( void * handle, int nBreak )
 void hb_dbgDelWatch( void * handle, int nWatch )
 {
    HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
-   HB_WATCHPOINT * pWatch = &info->aWatch[ nWatch ];
-   int i;
 
-   hb_dbgClearWatch( pWatch );
-   ARRAY_DEL( HB_WATCHPOINT, info->aWatch, info->nWatchPoints, nWatch );
-
-   for( i = 0; i < info->nTracePoints; i++ )
+   if( nWatch >= 0 && nWatch < info->nWatchPoints )
    {
-      HB_TRACEPOINT * pTrace = &info->aTrace[ i ];
+      HB_WATCHPOINT * pWatch = &info->aWatch[ nWatch ];
+      int i;
 
-      if( pTrace->nIndex == nWatch )
+      hb_dbgClearWatch( pWatch );
+      ARRAY_DEL( HB_WATCHPOINT, info->aWatch, info->nWatchPoints, nWatch );
+
+      for( i = 0; i < info->nTracePoints; i++ )
       {
-         if( pTrace->xValue )
-            hb_itemRelease( pTrace->xValue );
+         HB_TRACEPOINT * pTrace = &info->aTrace[ i ];
 
-         ARRAY_DEL( HB_TRACEPOINT, info->aTrace, info->nTracePoints, i );
-         i--;
+         if( pTrace->nIndex == nWatch )
+         {
+            if( pTrace->xValue )
+               hb_itemRelease( pTrace->xValue );
+
+            ARRAY_DEL( HB_TRACEPOINT, info->aTrace, info->nTracePoints, i );
+            i--;
+         }
+         else if( pTrace->nIndex > nWatch )
+            pTrace->nIndex--;
       }
-      else if( pTrace->nIndex > nWatch )
-         pTrace->nIndex--;
    }
 }
-
 
 static void hb_dbgEndProc( HB_DEBUGINFO * info )
 {
@@ -936,12 +941,18 @@ static HB_BOOL hb_dbgEqual( PHB_ITEM pItem1, PHB_ITEM pItem2 )
       return hb_itemGetL( pItem1 ) == hb_itemGetL( pItem2 );
    if( HB_IS_POINTER( pItem1 ) )
       return hb_itemGetPtr( pItem1 ) == hb_itemGetPtr( pItem2 );
+   if( HB_IS_SYMBOL( pItem1 ) )
+      return hb_itemGetSymbol( pItem1 ) == hb_itemGetSymbol( pItem2 );
    if( HB_IS_STRING( pItem1 ) )
       return ! hb_itemStrCmp( pItem1, pItem2, HB_TRUE );
    if( HB_IS_NUMINT( pItem1 ) )
       return hb_itemGetNInt( pItem1 ) == hb_itemGetNInt( pItem2 );
    if( HB_IS_NUMERIC( pItem1 ) )
       return hb_itemGetND( pItem1 ) == hb_itemGetND( pItem2 );
+   if( HB_IS_DATE( pItem1 ) )
+      return hb_itemGetDL( pItem1 ) == hb_itemGetDL( pItem2 );
+   if( HB_IS_TIMESTAMP( pItem1 ) )
+      return hb_itemGetTD( pItem1 ) == hb_itemGetTD( pItem2 );
    if( HB_IS_ARRAY( pItem1 ) )
       return hb_arrayId( pItem1 ) == hb_arrayId( pItem2 );
    if( HB_IS_HASH( pItem1 ) )
@@ -963,11 +974,9 @@ static PHB_ITEM hb_dbgEval( HB_DEBUGINFO * info, HB_WATCHPOINT * watch )
    if( watch->pBlock )
    {
       PHB_ITEM aVars = hb_dbgEvalResolve( info, watch );
-      PHB_ITEM aNewVars = hb_itemArrayNew( watch->nVars );
+      PHB_ITEM aNewVars = hb_itemClone( aVars );
       HB_BOOL bInside = info->bInside;
       int i;
-
-      hb_arrayCopy( aVars, aNewVars, NULL, NULL, NULL );
 
       info->bInside = HB_TRUE;
       xResult = hb_itemDo( watch->pBlock, 1, aNewVars );
@@ -975,14 +984,11 @@ static PHB_ITEM hb_dbgEval( HB_DEBUGINFO * info, HB_WATCHPOINT * watch )
 
       for( i = 0; i < watch->nVars; i++ )
       {
-         PHB_ITEM xOldValue = hb_itemArrayGet( aVars, i + 1 );
-         PHB_ITEM xNewValue = hb_itemArrayGet( aNewVars, i + 1 );
+         PHB_ITEM xOldValue = hb_arrayGetItemPtr( aVars, i + 1 );
+         PHB_ITEM xNewValue = hb_arrayGetItemPtr( aNewVars, i + 1 );
 
          if( ! hb_dbgEqual( xOldValue, xNewValue ) )
             hb_dbgVarSet( &watch->aScopes[ i ], xNewValue );
-
-         hb_itemRelease( xOldValue );
-         hb_itemRelease( xNewValue );
       }
 
       hb_itemRelease( aVars );
@@ -1350,7 +1356,10 @@ PHB_ITEM hb_dbgGetWatchValue( void * handle, int nWatch )
 {
    HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
-   return hb_dbgEval( info, &( info->aWatch[ nWatch ] ) );
+   if( nWatch >= 0 && nWatch < info->nWatchPoints )
+      return hb_dbgEval( info, &( info->aWatch[ nWatch ] ) );
+   else
+      return NULL;
 }
 
 
@@ -1813,6 +1822,14 @@ HB_FUNC( __DBGSETWATCH )
 
    if( ptr )
       hb_dbgSetWatch( ptr, hb_parni( 2 ), hb_parc( 3 ), hb_parl( 4 ) );
+}
+
+HB_FUNC( __DBGCNTWATCH )
+{
+   void * ptr = hb_parptr( 1 );
+
+   if( ptr )
+      hb_retni( hb_dbgCountWatch( ptr ) );
 }
 
 HB_FUNC( __DBGGETMODULENAME )

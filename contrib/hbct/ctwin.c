@@ -1985,7 +1985,7 @@ static HB_BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
       {
          iWndRow = iRow - pWnd->iFirstRow;
          iWndCol = iCol - pWnd->iFirstCol;
-         iWndHeight = pWnd->iWidth;
+         iWndHeight = pWnd->iHeight;
          iWndWidth  = pWnd->iWidth;
       }
       else if( pWnd->fClip &&
