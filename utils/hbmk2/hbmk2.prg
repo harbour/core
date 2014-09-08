@@ -63,6 +63,7 @@
    Markdown syntax:
       https://daringfireball.net/projects/markdown/syntax
       https://jgm.github.io/stmd/spec.html (CommonMark)
+      http://johnmacfarlane.net/babelmark2/
 
    Markdown to man page converter:
       https://github.com/sunaku/md2man
@@ -16481,6 +16482,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
    LOCAL cSetting
    LOCAL cValue
    LOCAL aValue
+   LOCAL lHintShown := .F.
 
    LOCAL cMAIN := NIL
 
@@ -16525,12 +16527,12 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
          ELSE
             AAdd( aDst, cLine )
          ENDIF
-      ELSEIF lGlobalSection
-         IF ( tmp := At( " =", cLine ) ) > 0
-            cSetting := AllTrim( Left( cLine, tmp - 1 ) )
-            cValue := AllTrim( SubStr( cLine, tmp + Len( " =" ) ) )
-            aValue := hb_ATokens( cValue )
-            IF ! Empty( cValue )
+      ELSEIF ( tmp := At( " =", cLine ) ) > 0
+         cSetting := AllTrim( Left( cLine, tmp - 1 ) )
+         cValue := AllTrim( SubStr( cLine, tmp + Len( " =" ) ) )
+         aValue := hb_ATokens( cValue )
+         IF ! Empty( cValue )
+            IF lGlobalSection
                SWITCH cSetting
                CASE "LAUTORUN"
                   IF cValue == ".T."
@@ -16550,6 +16552,11 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
                CASE "LMT"
                   IF cValue == ".T."
                      AAdd( aDst, "-mt" )
+                  ENDIF
+                  EXIT
+               CASE "LPRG_DEBUG"
+                  IF cValue == ".T."
+                     AAdd( aDst, "-b" )  /* it's a guess */
                   ENDIF
                   EXIT
                CASE "LUSEDLL"
@@ -16592,7 +16599,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
                   FOR EACH tmp IN aValue
                      IF ! Empty( tmp )
                         AAdd( aDst, "-D" + tmp )
-                        AAdd( aDst, "-cflag=-D" + tmp )
+                        AAdd( aDst, "-cflag=" + "-D" + tmp )
                      ENDIF
                   NEXT
                   EXIT
@@ -16620,6 +16627,25 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
                      ENDIF
                   NEXT
                   EXIT
+               CASE "RUNARGUMENTS"
+                  FOR EACH tmp IN aValue
+                     IF ! Empty( tmp )
+                        AAdd( aDst, "-runflag=" + tmp )
+                     ENDIF
+                  NEXT
+                  EXIT
+               ENDSWITCH
+            ELSE
+               SWITCH cSetting
+               CASE "MYC_FLAGS"
+               CASE "MYDEFINES"
+               CASE "MYRC_FLAGS"
+               CASE "MYPRG_FLAGS"
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored per-file option (not supported in %1$s) in line %2$d: '%3$s'" ), _SELF_NAME_, cLine:__enumIndex(), cLine ) )
+                  IF ! lHintShown
+                     lHintShown := .T.
+                     _hbmk_OutErr( hbmk, I_( "Hint: Convert them to #pragma/#define or group files with common options into library subprojects." ) )
+                  ENDIF
                ENDSWITCH
             ENDIF
          ENDIF
@@ -16724,58 +16750,56 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
                EXIT
             ENDSWITCH
          ENDIF
-      ELSE
-         IF ( tmp := At( "=", cLine ) ) > 0
-            cSetting := AllTrim( Left( cLine, tmp - 1 ) )
-            cValue := AllTrim( SubStr( cLine, tmp + Len( "=" ) ) )
-            aValue := hb_ATokens( cValue )
-            IF ! Empty( cValue )
-               SWITCH cSetting
-               CASE "Create Map/List File"
-                  IF cValue == "Yes"
-                     AAdd( aDst, "-map" )
-                  ENDIF
-                  EXIT
-               CASE "Final Path"
-                  IF ! Empty( cValue )
-                     AAdd( aDst, "-o" + hb_DirSepAdd( StrTran( cValue, "%HOME%\" ) ) )
-                  ENDIF
-                  EXIT
-               CASE "Include"
-                  FOR EACH tmp IN hb_ATokens( cValue, ";" )
-                     IF !( "%HB_INSTALL%\" $ tmp )
-                        IF hb_LeftEq( tmp, "-I" )
-                           tmp := SubStr( tmp, 2 + 1 )
+      ELSEIF ( tmp := At( "=", cLine ) ) > 0
+         cSetting := AllTrim( Left( cLine, tmp - 1 ) )
+         cValue := AllTrim( SubStr( cLine, tmp + Len( "=" ) ) )
+         aValue := hb_ATokens( cValue )
+         IF ! Empty( cValue )
+            SWITCH cSetting
+            CASE "Create Map/List File"
+               IF cValue == "Yes"
+                  AAdd( aDst, "-map" )
+               ENDIF
+               EXIT
+            CASE "Final Path"
+               IF ! Empty( cValue )
+                  AAdd( aDst, "-o" + hb_DirSepAdd( StrTran( cValue, "%HOME%\" ) ) )
+               ENDIF
+               EXIT
+            CASE "Include"
+               FOR EACH tmp IN hb_ATokens( cValue, ";" )
+                  IF !( "%HB_INSTALL%\" $ tmp )
+                     IF hb_LeftEq( tmp, "-I" )
+                        tmp := SubStr( tmp, 2 + 1 )
+                     ENDIF
+                     tmp := hb_StrReplace( tmp, { '"', "%HOME%\" } )
+                     FOR EACH tmp1 IN hb_ATokens( tmp, ";" )
+                        IF ! Empty( tmp1 )
+                           AAdd( aDst, "-incpath=" + tmp1 )
                         ENDIF
-                        tmp := hb_StrReplace( tmp, { '"', "%HOME%\" } )
-                        FOR EACH tmp1 IN hb_ATokens( tmp, ";" )
-                           IF ! Empty( tmp1 )
-                              AAdd( aDst, "-incpath=" + tmp1 )
-                           ENDIF
-                        NEXT
+                     NEXT
+                  ENDIF
+               NEXT
+               EXIT
+            CASE "Define"
+               FOR EACH tmp IN aValue
+                  IF ! Empty( tmp )
+                     IF hb_LeftEq( tmp, "-D" )
+                        tmp := SubStr( tmp, 2 + 1 )
                      ENDIF
-                  NEXT
-                  EXIT
-               CASE "Define"
-                  FOR EACH tmp IN aValue
-                     IF ! Empty( tmp )
-                        IF hb_LeftEq( tmp, "-D" )
-                           tmp := SubStr( tmp, 2 + 1 )
-                        ENDIF
-                        AAdd( aDst, "-D" + tmp )
-                        AAdd( aDst, "-cflag=-D" + tmp )
-                     ENDIF
-                  NEXT
-                  EXIT
-               CASE "Params"
-                  FOR EACH tmp IN aValue
-                     IF Empty( tmp )
-                        AAdd( aDst, "-runflag=" + tmp )
-                     ENDIF
-                  NEXT
-                  EXIT
-               ENDSWITCH
-            ENDIF
+                     AAdd( aDst, "-D" + tmp )
+                     AAdd( aDst, "-cflag=" + "-D" + tmp )
+                  ENDIF
+               NEXT
+               EXIT
+            CASE "Params"
+               FOR EACH tmp IN aValue
+                  IF ! Empty( tmp )
+                     AAdd( aDst, "-runflag=" + tmp )
+                  ENDIF
+               NEXT
+               EXIT
+            ENDSWITCH
          ENDIF
       ENDIF
    NEXT
