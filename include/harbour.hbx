@@ -649,9 +649,9 @@ DYNAMIC hb_langErrMsg
 DYNAMIC hb_langMessage
 DYNAMIC hb_langName
 DYNAMIC hb_langNew
+DYNAMIC hb_langSelect
 DYNAMIC hb_LeftEq
 DYNAMIC hb_LeftEqI
-DYNAMIC hb_langSelect
 DYNAMIC hb_libError
 DYNAMIC hb_libExt
 DYNAMIC hb_libFree
@@ -949,6 +949,8 @@ DYNAMIC IndexKey
 DYNAMIC IndexOrd
 DYNAMIC Inkey
 DYNAMIC Int
+DYNAMIC IOUSR_Register
+DYNAMIC IOUSR_SetError
 DYNAMIC IsAffirm
 DYNAMIC IsAlpha
 DYNAMIC IsColor

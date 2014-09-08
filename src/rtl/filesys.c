@@ -719,8 +719,8 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
                   iMaxFD = 1024;
                for( hNullHandle = 3; hNullHandle < iMaxFD; ++hNullHandle )
                   hb_fsClose( hNullHandle );
-               ( void ) setuid( getuid() );
-               ( void ) setgid( getgid() );
+               if( setuid( getuid() ) == -1 ) {}
+               if( setgid( getgid() ) == -1 ) {}
 #if defined( __WATCOMC__ )
                HB_FAILURE_RETRY( iResult, execv( "/bin/sh", argv ) );
 #else

@@ -568,8 +568,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
          }
 
          /* reset extended process attributes */
-         ( void ) setuid( getuid() );
-         ( void ) setgid( getgid() );
+         if( setuid( getuid() ) == -1 ) {}
+         if( setgid( getgid() ) == -1 ) {}
 
          /* execute command */
          {
