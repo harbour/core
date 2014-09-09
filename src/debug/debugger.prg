@@ -444,6 +444,9 @@ METHOD PROCEDURE Activate() CLASS HBDebugger
       ENDIF
       lFirst := .T.
    ENDIF
+   IF ::lShowCallStack
+      ::oWndStack:Show()
+   ENDIF
 
    ::LoadVars()
    ::ShowVars()
