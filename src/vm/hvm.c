@@ -93,6 +93,7 @@
 
 
 HB_FUNC_EXTERN( SYSINIT );
+HB_FUNC_EXTERN( BREAK );
 
 /* PCode functions */
 
@@ -255,7 +256,9 @@ static const char * s_vm_pszLinkedMain = NULL; /* name of startup function set b
 
 /* virtual machine state */
 
-HB_SYMB hb_symEval = { "EVAL", { HB_FS_PUBLIC }, { hb_vmDoBlock }, NULL }; /* symbol to evaluate codeblocks */
+HB_SYMB hb_symEval = { "EVAL",  { HB_FS_PUBLIC }, { hb_vmDoBlock }, NULL }; /* symbol to evaluate codeblocks */
+static HB_SYMB  s_symBreak = { "BREAK", { HB_FS_PUBLIC }, { HB_FUNCNAME( BREAK ) }, NULL }; /* symbol to generate break */
+static PHB_ITEM s_breakBlock = NULL;
 
 static HB_BOOL  s_fHVMActive = HB_FALSE;  /* is HVM ready for PCODE executing */
 static HB_BOOL  s_fDoExitProc = HB_TRUE;  /* execute EXIT procedures */
@@ -281,6 +284,41 @@ static void * s_main_thread = NULL;
 static PHB_FUNC_LIST s_InitFunctions = NULL;
 static PHB_FUNC_LIST s_ExitFunctions = NULL;
 static PHB_FUNC_LIST s_QuitFunctions = NULL;
+
+static PHB_ITEM hb_breakBlock( void )
+{
+   if( s_breakBlock == NULL )
+   {
+      static const HB_BYTE s_pCode[ 8 ] = {
+                             HB_P_PUSHFUNCSYM, 0, 0,  /* BREAK */
+                             HB_P_PUSHLOCALNEAR, 1,   /* oErr */
+                             HB_P_FUNCTIONSHORT, 1,
+                             HB_P_ENDBLOCK };
+
+      s_breakBlock = hb_itemNew( NULL );
+      s_breakBlock->item.asBlock.value =
+         hb_codeblockNew( s_pCode,  /* pcode buffer         */
+                          0,        /* number of referenced local variables */
+                          NULL,     /* table with referenced local variables */
+                          &s_symBreak,
+                          sizeof( s_pCode ) );
+      s_breakBlock->type = HB_IT_BLOCK;
+      s_breakBlock->item.asBlock.paramcnt = 1;
+      s_breakBlock->item.asBlock.lineno = 0;
+      s_breakBlock->item.asBlock.hclass = 0;
+      s_breakBlock->item.asBlock.method = 0;
+   }
+   return s_breakBlock;
+}
+
+static void hb_breakBlockRelease( void )
+{
+   if( s_breakBlock != NULL )
+   {
+      hb_itemRelease( s_breakBlock );
+      s_breakBlock = NULL;
+   }
+}
 
 static void hb_vmAddModuleFunction( PHB_FUNC_LIST * pLstPtr, HB_INIT_FUNC pFunc, void * cargo )
 {
@@ -1010,10 +1048,13 @@ void hb_vmInit( HB_BOOL bStartMainProc )
    hb_cmdargUpdate();
 
    hb_clsInit();              /* initialize Classy/OO system */
-   hb_errInit();
 
-   /* initialize dynamic symbol for evaluating codeblocks */
+   hb_errInit();
+   hb_breakBlock();
+
+   /* initialize dynamic symbol for evaluating codeblocks and break function */
    hb_symEval.pDynSym = hb_dynsymGetCase( hb_symEval.szName );
+   s_symBreak.pDynSym = hb_dynsymGetCase( s_symBreak.szName );
 
    hb_conInit();
 
@@ -1188,6 +1229,7 @@ int hb_vmQuit( void )
    /* release thread specific data */
    hb_stackDestroyTSD();
 
+   hb_breakBlockRelease();
    hb_errExit();
    hb_clsReleaseAll();
 
@@ -8945,6 +8987,84 @@ HB_BOOL hb_vmRequestReenterExt( void )
    }
 
    return HB_TRUE;
+}
+
+HB_BOOL hb_vmTryEval( PHB_ITEM * pResult, PHB_ITEM pItem, HB_ULONG ulPCount, ... )
+{
+   HB_BOOL fResult;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_vmTryEval(%p, %lu)", pItem, ulPCount ) );
+
+   fResult = HB_FALSE;
+   *pResult = NULL;
+   if( s_fHVMActive )
+   {
+      PHB_SYMB pSymbol = NULL;
+
+      if( HB_IS_STRING( pItem ) )
+      {
+         PHB_DYNS pDynSym = hb_dynsymFindName( pItem->item.asString.value );
+
+         if( pDynSym )
+         {
+            pSymbol = pDynSym->pSymbol;
+            pItem = NULL;
+         }
+      }
+      else if( HB_IS_SYMBOL( pItem ) )
+      {
+         pSymbol = pItem->item.asSymbol.value;
+         pItem = NULL;
+      }
+      else if( HB_IS_BLOCK( pItem ) )
+      {
+         pSymbol = &hb_symEval;
+      }
+
+      if( pSymbol && hb_vmRequestReenter() )
+      {
+         hb_xvmSeqBegin();
+         hb_vmPush( hb_breakBlock() );
+         hb_vmSeqBlock();
+
+         hb_vmPushSymbol( pSymbol );
+         if( pItem )
+            hb_vmPush( pItem );
+         else
+            hb_vmPushNil();
+
+         if( ulPCount )
+         {
+            HB_ULONG ulParam;
+            va_list va;
+            va_start( va, ulPCount );
+            for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
+               hb_vmPush( va_arg( va, PHB_ITEM ) );
+            va_end( va );
+         }
+         if( pItem )
+            hb_vmSend( ( HB_USHORT ) ulPCount );
+         else
+            hb_vmProc( ( HB_USHORT ) ulPCount );
+
+         hb_stackPop();
+         if( hb_xvmSeqEndTest() )
+         {
+            hb_xvmSeqRecover();
+            *pResult = hb_itemNew( NULL );
+            hb_itemMove( *pResult, hb_stackItemFromTop( -1 ) );
+            hb_stackDec();
+            hb_stackSetActionRequest( 0 );
+         }
+         else
+         {
+            *pResult = hb_itemNew( hb_stackReturnItem() );
+            fResult = HB_TRUE;
+         }
+         hb_vmRequestRestore();
+      }
+   }
+   return fResult;
 }
 
 HB_BOOL hb_vmIsActive( void )
