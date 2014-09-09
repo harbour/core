@@ -988,3 +988,8 @@ HB_FUNC( WAPI_SETARCDIRECTION )
 {
    hb_retni( SetArcDirection( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ) ) );
 }
+
+HB_FUNC( WAPI_GETSTOCKOBJECT )
+{
+   hbwapi_ret_raw_HGDIOBJ( GetStockObject( hbwapi_par_INT( 1 ) ) );
+}

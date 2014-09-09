@@ -8977,6 +8977,7 @@ HB_BOOL hb_vmRequestReenterExt( void )
 
 HB_BOOL hb_vmTryEval( PHB_ITEM * pResult, PHB_ITEM pItem, HB_ULONG ulPCount, ... )
 {
+   HB_STACK_TLS_PRELOAD
    HB_BOOL fResult;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmTryEval(%p, %lu)", pItem, ulPCount ) );

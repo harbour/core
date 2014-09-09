@@ -51,11 +51,6 @@
 
 #include "hbapifs.h"
 
-HB_FUNC( WIN_GETSTOCKOBJECT )
-{
-   hbwapi_ret_raw_HANDLE( GetStockObject( hb_parni( 1 ) ) );
-}
-
 /* removed from GTWVT, so we remove it from here also. I really don't like doing it... */
 HB_FUNC( WVW_DELETEOBJECT )
 {

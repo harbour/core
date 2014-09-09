@@ -64,8 +64,6 @@
 
 #include "hbwin.ch"
 
-#define MM_TO_INCH                  25.4
-
 CREATE CLASS win_Prn
 
    METHOD New( cPrinter )
@@ -796,10 +794,10 @@ METHOD MaxCol() CLASS win_Prn
    RETURN Int( ( ( ::RightMargin - ::LeftMargin ) + 1 ) / ::CharWidth ) - 1
 
 METHOD MM_To_PosX( nMm ) CLASS win_Prn
-   RETURN Int( ( ( nMm * ::PixelsPerInchX ) / MM_TO_INCH ) - ::LeftMargin )
+   RETURN Int( ( ( nMm * ::PixelsPerInchX ) / WIN_MM_TO_INCH ) - ::LeftMargin )
 
 METHOD MM_To_PosY( nMm ) CLASS win_Prn
-   RETURN Int( ( ( nMm * ::PixelsPerInchY ) / MM_TO_INCH ) - ::TopMargin )
+   RETURN Int( ( ( nMm * ::PixelsPerInchY ) / WIN_MM_TO_INCH ) - ::TopMargin )
 
 METHOD Inch_To_PosX( nInch ) CLASS win_Prn
    RETURN Int( ( nInch * ::PixelsPerInchX  ) - ::LeftMargin )

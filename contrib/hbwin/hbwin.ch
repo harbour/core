@@ -63,6 +63,8 @@
 
 #define WIN_RGB( nR, nG, nB )              ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 
+#define WIN_MM_TO_INCH                     25.4
+
 /* special color value */
 #define WIN_CLR_INVALID                    0xFFFFFFFF
 
@@ -182,14 +184,125 @@
 #define HB_WIN_RGB_WHITE                   WIN_RGB( 0xFF, 0xFF, 0xFF )
 
 /* win_SetDocumentProperties() paper types */
+#define WIN_DMPAPER_FIRST                  DMPAPER_LETTER
 #define WIN_DMPAPER_LETTER                 1
+#define WIN_DMPAPER_LETTERSMALL            2
+#define WIN_DMPAPER_TABLOID                3
+#define WIN_DMPAPER_LEDGER                 4
 #define WIN_DMPAPER_LEGAL                  5
+#define WIN_DMPAPER_STATEMENT              6
 #define WIN_DMPAPER_EXECUTIVE              7
 #define WIN_DMPAPER_A3                     8
 #define WIN_DMPAPER_A4                     9
+#define WIN_DMPAPER_A4SMALL                10
 #define WIN_DMPAPER_A5                     11
 #define WIN_DMPAPER_B4                     12
 #define WIN_DMPAPER_B5                     13
+#define WIN_DMPAPER_FOLIO                  14
+#define WIN_DMPAPER_QUARTO                 15
+#define WIN_DMPAPER_10X14                  16
+#define WIN_DMPAPER_11X17                  17
+#define WIN_DMPAPER_NOTE                   18
+#define WIN_DMPAPER_ENV_9                  19
+#define WIN_DMPAPER_ENV_10                 20
+#define WIN_DMPAPER_ENV_11                 21
+#define WIN_DMPAPER_ENV_12                 22
+#define WIN_DMPAPER_ENV_14                 23
+#define WIN_DMPAPER_CSHEET                 24
+#define WIN_DMPAPER_DSHEET                 25
+#define WIN_DMPAPER_ESHEET                 26
+#define WIN_DMPAPER_ENV_DL                 27
+#define WIN_DMPAPER_ENV_C5                 28
+#define WIN_DMPAPER_ENV_C3                 29
+#define WIN_DMPAPER_ENV_C4                 30
+#define WIN_DMPAPER_ENV_C6                 31
+#define WIN_DMPAPER_ENV_C65                32
+#define WIN_DMPAPER_ENV_B4                 33
+#define WIN_DMPAPER_ENV_B5                 34
+#define WIN_DMPAPER_ENV_B6                 35
+#define WIN_DMPAPER_ENV_ITALY              36
+#define WIN_DMPAPER_ENV_MONARCH            37
+#define WIN_DMPAPER_ENV_PERSONAL           38
+#define WIN_DMPAPER_FANFOLD_US             39
+#define WIN_DMPAPER_FANFOLD_STD_GERMAN     40
+#define WIN_DMPAPER_FANFOLD_LGL_GERMAN     41
+#define WIN_DMPAPER_ISO_B4                 42
+#define WIN_DMPAPER_JAPANESE_POSTCARD      43
+#define WIN_DMPAPER_9X11                   44
+#define WIN_DMPAPER_10X11                  45
+#define WIN_DMPAPER_15X11                  46
+#define WIN_DMPAPER_ENV_INVITE             47
+#define WIN_DMPAPER_RESERVED_48            48
+#define WIN_DMPAPER_RESERVED_49            49
+#define WIN_DMPAPER_LETTER_EXTRA           50
+#define WIN_DMPAPER_LEGAL_EXTRA            51
+#define WIN_DMPAPER_TABLOID_EXTRA          52
+#define WIN_DMPAPER_A4_EXTRA               53
+#define WIN_DMPAPER_LETTER_TRANSVERSE      54
+#define WIN_DMPAPER_A4_TRANSVERSE          55
+#define WIN_DMPAPER_LETTER_EXTRA_TRANSVERSE  56
+#define WIN_DMPAPER_A_PLUS                 57
+#define WIN_DMPAPER_B_PLUS                 58
+#define WIN_DMPAPER_LETTER_PLUS            59
+#define WIN_DMPAPER_A4_PLUS                60
+#define WIN_DMPAPER_A5_TRANSVERSE          61
+#define WIN_DMPAPER_B5_TRANSVERSE          62
+#define WIN_DMPAPER_A3_EXTRA               63
+#define WIN_DMPAPER_A5_EXTRA               64
+#define WIN_DMPAPER_B5_EXTRA               65
+#define WIN_DMPAPER_A2                     66
+#define WIN_DMPAPER_A3_TRANSVERSE          67
+#define WIN_DMPAPER_A3_EXTRA_TRANSVERSE    68
+#define WIN_DMPAPER_DBL_JAPANESE_POSTCARD  69
+#define WIN_DMPAPER_A6                     70
+#define WIN_DMPAPER_JENV_KAKU2             71
+#define WIN_DMPAPER_JENV_KAKU3             72
+#define WIN_DMPAPER_JENV_CHOU3             73
+#define WIN_DMPAPER_JENV_CHOU4             74
+#define WIN_DMPAPER_LETTER_ROTATED         75
+#define WIN_DMPAPER_A3_ROTATED             76
+#define WIN_DMPAPER_A4_ROTATED             77
+#define WIN_DMPAPER_A5_ROTATED             78
+#define WIN_DMPAPER_B4_JIS_ROTATED         79
+#define WIN_DMPAPER_B5_JIS_ROTATED         80
+#define WIN_DMPAPER_JAPANESE_POSTCARD_ROTATED      81
+#define WIN_DMPAPER_DBL_JAPANESE_POSTCARD_ROTATED  82
+#define WIN_DMPAPER_A6_ROTATED             83
+#define WIN_DMPAPER_JENV_KAKU2_ROTATED     84
+#define WIN_DMPAPER_JENV_KAKU3_ROTATED     85
+#define WIN_DMPAPER_JENV_CHOU3_ROTATED     86
+#define WIN_DMPAPER_JENV_CHOU4_ROTATED     87
+#define WIN_DMPAPER_B6_JIS                 88
+#define WIN_DMPAPER_B6_JIS_ROTATED         89
+#define WIN_DMPAPER_12X11                  90
+#define WIN_DMPAPER_JENV_YOU4              91
+#define WIN_DMPAPER_JENV_YOU4_ROTATED      92
+#define WIN_DMPAPER_P16K                   93
+#define WIN_DMPAPER_P32K                   94
+#define WIN_DMPAPER_P32KBIG                95
+#define WIN_DMPAPER_PENV_1                 96
+#define WIN_DMPAPER_PENV_2                 97
+#define WIN_DMPAPER_PENV_3                 98
+#define WIN_DMPAPER_PENV_4                 99
+#define WIN_DMPAPER_PENV_5                 100
+#define WIN_DMPAPER_PENV_6                 101
+#define WIN_DMPAPER_PENV_7                 102
+#define WIN_DMPAPER_PENV_8                 103
+#define WIN_DMPAPER_PENV_9                 104
+#define WIN_DMPAPER_PENV_10                105
+#define WIN_DMPAPER_P16K_ROTATED           106
+#define WIN_DMPAPER_P32K_ROTATED           107
+#define WIN_DMPAPER_P32KBIG_ROTATED        108
+#define WIN_DMPAPER_PENV_1_ROTATED         109
+#define WIN_DMPAPER_PENV_2_ROTATED         110
+#define WIN_DMPAPER_PENV_3_ROTATED         111
+#define WIN_DMPAPER_PENV_4_ROTATED         112
+#define WIN_DMPAPER_PENV_5_ROTATED         113
+#define WIN_DMPAPER_PENV_6_ROTATED         114
+#define WIN_DMPAPER_PENV_7_ROTATED         115
+#define WIN_DMPAPER_PENV_8_ROTATED         116
+#define WIN_DMPAPER_PENV_9_ROTATED         117
+#define WIN_DMPAPER_PENV_10_ROTATED        118
 #define WIN_DMPAPER_USER                   256
 
 /* win_SetDocumentProperties() bin selections */
@@ -1261,5 +1374,27 @@
 /* WIN_WM_SETICON / WIN_WM_GETICON types */
 #define WIN_ICON_SMALL                     0
 #define WIN_ICON_BIG                       1
+
+/* wapi_GetStockObject() types */
+#define WIN_WHITE_BRUSH                    0
+#define WIN_LTGRAY_BRUSH                   1
+#define WIN_GRAY_BRUSH                     2
+#define WIN_DKGRAY_BRUSH                   3
+#define WIN_BLACK_BRUSH                    4
+#define WIN_NULL_BRUSH                     5
+#define WIN_HOLLOW_BRUSH                   NULL_BRUSH
+#define WIN_WHITE_PEN                      6
+#define WIN_BLACK_PEN                      7
+#define WIN_NULL_PEN                       8
+#define WIN_OEM_FIXED_FONT                 10
+#define WIN_ANSI_FIXED_FONT                11
+#define WIN_ANSI_VAR_FONT                  12
+#define WIN_SYSTEM_FONT                    13
+#define WIN_DEVICE_DEFAULT_FONT            14
+#define WIN_DEFAULT_PALETTE                15
+#define WIN_SYSTEM_FIXED_FONT              16
+#define WIN_DEFAULT_GUI_FONT               17
+#define WIN_DC_BRUSH                       18
+#define WIN_DC_PEN                         19
 
 #endif /* HBWIN_CH_ */

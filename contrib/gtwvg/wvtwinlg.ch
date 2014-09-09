@@ -645,3 +645,23 @@
 /* WIN_WM_SETICON / WIN_WM_GETICON Type Codes */
 #define ICON_SMALL                                WIN_ICON_SMALL
 #define ICON_BIG                                  WIN_ICON_BIG
+
+/* Stock Logical Objects */
+#define WHITE_BRUSH                               WIN_WHITE_BRUSH
+#define LTGRAY_BRUSH                              WIN_LTGRAY_BRUSH
+#define GRAY_BRUSH                                WIN_GRAY_BRUSH
+#define DKGRAY_BRUSH                              WIN_DKGRAY_BRUSH
+#define BLACK_BRUSH                               WIN_BLACK_BRUSH
+#define NULL_BRUSH                                WIN_NULL_BRUSH
+#define HOLLOW_BRUSH                              WIN_HOLLOW_BRUSH
+#define WHITE_PEN                                 WIN_WHITE_PEN
+#define BLACK_PEN                                 WIN_BLACK_PEN
+#define NULL_PEN                                  WIN_NULL_PEN
+#define OEM_FIXED_FONT                            WIN_OEM_FIXED_FONT
+#define ANSI_FIXED_FONT                           WIN_ANSI_FIXED_FONT
+#define ANSI_VAR_FONT                             WIN_ANSI_VAR_FONT
+#define SYSTEM_FONT                               WIN_SYSTEM_FONT
+#define DEVICE_DEFAULT_FONT                       WIN_DEVICE_DEFAULT_FONT
+#define DEFAULT_PALETTE                           WIN_DEFAULT_PALETTE
+#define SYSTEM_FIXED_FONT                         WIN_SYSTEM_FIXED_FONT
+#define DEFAULT_GUI_FONT                          WIN_DEFAULT_GUI_FONT

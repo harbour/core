@@ -151,7 +151,7 @@ METHOD WvgTabPage:handleEvent( nMessage, aNM )
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      RETURN wvg_GetStockObject( NULL_BRUSH )
+      RETURN wapi_GetStockObject( WIN_NULL_BRUSH )
 
    ENDCASE
 

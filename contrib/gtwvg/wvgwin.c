@@ -67,11 +67,6 @@
    #endif
 #endif
 
-HB_FUNC( WVG_GETSTOCKOBJECT )
-{
-   hbwapi_ret_raw_HANDLE( GetStockObject( hb_parni( 1 ) ) );
-}
-
 HB_FUNC( WVG_DELETEOBJECT )
 {
    hb_retl( DeleteObject( hbwapi_par_raw_HGDIOBJ( 1 ) ) );
