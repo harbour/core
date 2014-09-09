@@ -1316,7 +1316,6 @@ DYNAMIC __dbCreate
 DYNAMIC __dbCreatIndex
 DYNAMIC __dbDelete
 DYNAMIC __dbDelim
-DYNAMIC __dbgCntWatch
 DYNAMIC __dbgInvokeDebug
 DYNAMIC __dbGoBottom
 DYNAMIC __dbGoto

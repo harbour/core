@@ -155,7 +155,7 @@ PROCEDURE Main()
 
    ? ValType( bmpinfo:Devalue() )
    hb_traceLog( "bmpinfoheader", hb_ValToExp( bmpinfoheader ), ;
-      infoheader:SayMembers(, .T. ), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_DumpVar( bmpinfoheader:Array() ), hb_DumpVar( bmpinfoheader:acMembers ) )
+      infoheader:SayMembers( , .T. ), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_DumpVar( bmpinfoheader:Array() ), hb_DumpVar( bmpinfoheader:acMembers ) )
 
    hb_traceLog( "line 179" )
    iccprofile:Pointer( fi_GetICCProfile( im ) )

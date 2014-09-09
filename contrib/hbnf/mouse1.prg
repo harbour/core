@@ -185,7 +185,7 @@ PROCEDURE ft_MYLimit( nMin, nMax )
 
    LOCAL nLeft, nRight
 
-   hb_MGetBounds(, @nLeft,, @nRight )
+   hb_MGetBounds( , @nLeft,, @nRight )
    MSetBounds( nMin, nLeft, nMax, nRight )
 
    RETURN

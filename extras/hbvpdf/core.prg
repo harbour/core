@@ -2637,7 +2637,7 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )  /* TODO: replace with hb_Deser
       CASE "N" ; aRay[ nDepth ] := Val( cData ) ; EXIT
       CASE "D" ; aRay[ nDepth ] := hb_SToD( cData ) ; EXIT
       CASE "L" ; aRay[ nDepth ] := ( cData == "T" ) ; EXIT
-      CASE "A" ; aRay[ nDepth ] := File2Array(, nDataLen, hFile ) ; EXIT
+      CASE "A" ; aRay[ nDepth ] := File2Array( , nDataLen, hFile ) ; EXIT
       ENDSWITCH
    ENDDO
    IF cFile != NIL

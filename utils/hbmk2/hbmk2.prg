@@ -10929,7 +10929,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
                IF hb_asciiIsDigit( SubStr( cExt, 2, 1 ) )
                   cLibNameCooked += cExtNew
                ELSE
-                  cLibNameCooked := hb_FNameMerge(, cName, cExtNew )
+                  cLibNameCooked := hb_FNameMerge( , cName, cExtNew )
                ENDIF
             ENDIF
             AAdd( aLIB, cLibNameCooked )

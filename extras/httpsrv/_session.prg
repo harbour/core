@@ -250,7 +250,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
    // Should we send a cookie?
    IF lSendCookie
-      ::oCookie:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, uhttpd_DateToGMT(,,, ::nCookie_LifeTime ), ::lCookie_Secure )
+      ::oCookie:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, uhttpd_DateToGMT( ,,, ::nCookie_LifeTime ), ::lCookie_Secure )
    ENDIF
 
    // Should we define the SID?
@@ -384,7 +384,7 @@ METHOD RegenerateID() CLASS uhttpd_Session
 
    ::cSID := ::GenerateSID()
    IF ::lUse_Cookies
-      ::oCookie:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, uhttpd_DateToGMT(,,, ::nCookie_LifeTime ), ::lCookie_Secure )
+      ::oCookie:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, uhttpd_DateToGMT( ,,, ::nCookie_LifeTime ), ::lCookie_Secure )
    ENDIF
 
    RETURN ::cSID

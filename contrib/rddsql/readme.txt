@@ -18,7 +18,7 @@ emulated by creating additional table columns to store delete flag. Some
 record and file locks in DBF style. The idea of SQL query is also lost. If
 you do a simple loop
 
- dbUseArea(, "select * from my_table" )
+ dbUseArea( , "select * from my_table" )
  DO WHILE ! Eof()
     somefunc( FIELD->some_sql_field )
     dbSkip()
@@ -55,7 +55,7 @@ queries should be made explicitly by programmer. SSI gives access to query
 result via RDD interface, it does not tries to emulate DBF and be
 "plug-and-play" solution for DBF to SQL migration. If you do
 
- dbUseArea(, "select * from my_table")
+ dbUseArea( , "select * from my_table")
 
 all query (it could contain millions of records!) will be cached.
 

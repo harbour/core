@@ -224,7 +224,7 @@ METHOD ErrorText() CLASS win_Com
 
    /* WinPortError clears the error - don't call it twice */
    cMsg := Space( 256 )
-   wapi_FormatMessage(,, nError := win_comError( ::nPort ),, @cMsg )
+   wapi_FormatMessage( ,, nError := win_comError( ::nPort ),, @cMsg )
 
    RETURN cString + "error (" + hb_ntos( nError ) + ") : " + cMsg
 

@@ -11,12 +11,12 @@ PROCEDURE Main()
 
    LOCAL oMSCAL
 
-#if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVT" )
 #endif
 
-   WAIT "Make sure we are 'Active Window'"
-   oMSCAL := HActiveX():Init( wapi_GetActiveWindow(), "MSCAL.Calendar", 0, 0, 300, 300 )
+   ? "ActiveX demo"  /* do not remove this line, we need it to have the window appear */
+   oMSCAL := HActiveX():Init( hb_gtInfo( HB_GTI_WINHANDLE ), "MSCAL.Calendar", 0, 0, 300, 300 )
    WAIT "Press any key to exit"
 
    HB_SYMBOL_UNUSED( oMSCAL )

@@ -165,7 +165,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
 
 HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
 {
-   HWND hWnd = ( HWND ) hb_parptr( 1 );
+   HWND hWnd = hbwapi_par_raw_HWND( 1 );
 
    if( ! hWnd )
       hb_errRT_OLE( EG_ARG, 1012, 0, NULL, HB_ERR_FUNCNAME );
@@ -175,7 +175,7 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
 
 HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 {
-   HWND       hWnd = ( HWND ) hb_parptr( 1 );
+   HWND       hWnd = hbwapi_par_raw_HWND( 1 );
    IUnknown * pUnk = NULL;
    HRESULT    lOleError;
 
