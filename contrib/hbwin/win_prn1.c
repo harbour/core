@@ -392,10 +392,14 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
                HB_BOOL fUserDialog;
                int iProp, iProp2;
 
-               fUserDialog = HB_ISBYREF( 3 ) || HB_ISBYREF( 4 ) ||
-                             HB_ISBYREF( 5 ) || HB_ISBYREF( 6 ) ||
-                             HB_ISBYREF( 7 ) || HB_ISBYREF( 8 ) ||
-                             HB_ISBYREF( 9 ) || HB_ISBYREF( 10 );
+               fUserDialog = HB_ISBYREF( 3 ) ||
+                             HB_ISBYREF( 4 ) ||
+                             HB_ISBYREF( 5 ) ||
+                             HB_ISBYREF( 6 ) ||
+                             HB_ISBYREF( 7 ) ||
+                             HB_ISBYREF( 8 ) ||
+                             HB_ISBYREF( 9 ) ||
+                             HB_ISBYREF( 10 );
 
                if( ( iProp = hb_parni( 3 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
                {

@@ -144,7 +144,7 @@ CREATE CLASS win_Prn
    VAR HavePrinted      INIT .F.
    VAR PageInit         INIT .F.
    VAR PageNumber       INIT 0
-   VAR hPrinterDc       INIT 0
+   VAR hPrinterDc       INIT NIL
 
    VAR AskProperties    INIT .F.
 
@@ -158,7 +158,7 @@ CREATE CLASS win_Prn
    VAR PaperWidth       INIT 0                           //   "    "    "     "       "     "
 
    VAR SetFontOk        INIT .F.
-   VAR hFont            INIT 0
+   VAR hFont            INIT NIL
    VAR FontName         INIT ""                          // Current Point size for font
    VAR FontPointSize    INIT 12                          // Point size for font
    VAR FontWidth        INIT { 0, 0 }                    // { Mul, Div } Calc width: nWidth := wapi_MulDiv( nMul, win_GetDeviceCaps( HDC, WIN_LOGPIXELSX ), nDiv )
@@ -201,7 +201,7 @@ CREATE CLASS win_Prn
 
    VAR BkMode
 
-   VAR hPen             INIT 0
+   VAR hPen             INIT NIL
    VAR PenStyle
    VAR PenWidth
    VAR PenColor

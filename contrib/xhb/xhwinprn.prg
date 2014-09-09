@@ -58,10 +58,7 @@ FUNCTION Win32Bmp()
 #else
 
 #include "hbclass.ch"
-
-#define TA_LEFT               0
-#define TA_BOTTOM             8
-#define FORM_CUSTOM           256
+#include "hbwin.ch"
 
 CREATE CLASS Win32Prn FROM win_Prn
 
@@ -74,8 +71,8 @@ CREATE CLASS Win32Prn FROM win_Prn
       nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
       lUpdatePosX, nColor, nAlignHori, nAlignVert )
 
-   VAR SetTextHori      INIT TA_LEFT      // Default horizontal alignment SetTextAlign() (TEXTOUT)
-   VAR SetTextVert      INIT TA_BOTTOM    // Default vertical alignment for SetTextAlign() (TEXTOUT)
+   VAR SetTextHori      INIT WIN_TA_LEFT      // Default horizontal alignment SetTextAlign() (TextOut())
+   VAR SetTextVert      INIT WIN_TA_BOTTOM    // Default vertical alignment for SetTextAlign() (TextOut())
 
 #if 0
    /* not implemented */
@@ -88,7 +85,7 @@ ENDCLASS
 METHOD Create() CLASS WIN32PRN
 
    IF ::PaperLength > 0 .AND. ::PaperWidth > 0
-      ::FormType := FORM_CUSTOM
+      ::FormType := WIN_DMPAPER_USER
    ENDIF
 
    RETURN ::win_Prn:Create()
@@ -96,7 +93,7 @@ METHOD Create() CLASS WIN32PRN
 METHOD StartPage() CLASS WIN32PRN
 
    IF ::PaperLength > 0 .AND. ::PaperWidth > 0
-      ::FormType := FORM_CUSTOM
+      ::FormType := WIN_DMPAPER_USER
    ENDIF
 
    RETURN ::win_Prn:StartPage()
