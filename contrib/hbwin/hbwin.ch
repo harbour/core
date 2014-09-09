@@ -184,7 +184,7 @@
 #define HB_WIN_RGB_WHITE                   WIN_RGB( 0xFF, 0xFF, 0xFF )
 
 /* win_SetDocumentProperties() paper types */
-#define WIN_DMPAPER_FIRST                  DMPAPER_LETTER
+#define WIN_DMPAPER_FIRST                  WIN_DMPAPER_LETTER
 #define WIN_DMPAPER_LETTER                 1
 #define WIN_DMPAPER_LETTERSMALL            2
 #define WIN_DMPAPER_TABLOID                3
@@ -1382,10 +1382,12 @@
 #define WIN_DKGRAY_BRUSH                   3
 #define WIN_BLACK_BRUSH                    4
 #define WIN_NULL_BRUSH                     5
-#define WIN_HOLLOW_BRUSH                   NULL_BRUSH
+#define WIN_HOLLOW_BRUSH                   WIN_NULL_BRUSH
+
 #define WIN_WHITE_PEN                      6
 #define WIN_BLACK_PEN                      7
 #define WIN_NULL_PEN                       8
+
 #define WIN_OEM_FIXED_FONT                 10
 #define WIN_ANSI_FIXED_FONT                11
 #define WIN_ANSI_VAR_FONT                  12
