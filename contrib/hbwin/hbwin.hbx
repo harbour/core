@@ -157,6 +157,7 @@ DYNAMIC wapi_IsUserAnAdmin
 DYNAMIC wapi_IsValidCodePage
 DYNAMIC wapi_IsWindow
 DYNAMIC wapi_IsZoomed
+DYNAMIC wapi_KillTimer
 DYNAMIC wapi_LineTo
 DYNAMIC wapi_LoadBitmap
 DYNAMIC wapi_LoadIcon

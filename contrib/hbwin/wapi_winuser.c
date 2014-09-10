@@ -1090,6 +1090,13 @@ HB_FUNC( WAPI_SETTIMER )
    hb_retnint( result );
 }
 
+HB_FUNC( WAPI_KILLTIMER )
+{
+   UINT_PTR result = KillTimer( hbwapi_par_raw_HWND( 1 ), ( UINT_PTR ) hb_parnint( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retnint( result );
+}
+
 HB_FUNC( WAPI_POSTMESSAGE )  /* NOTE: unsafe function, may write past buffer */
 {
    void *  hText;
