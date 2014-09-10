@@ -79,7 +79,6 @@ Download source archive from any of these links and unpack:
 * [Web](https://github.com/vszakats/harbour-core/commits/master)
 * [RSS](https://github.com/vszakats/harbour-core/commits/master.atom)
 * [Mac app](https://itunes.apple.com/us/app/committed/id560767719)
-* [Mac tool](https://github.com/marcocampana/git-notifier)
 
 ### Harbour unstable with Homebrew (OS X)
 
