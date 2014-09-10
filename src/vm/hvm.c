@@ -9010,6 +9010,8 @@ HB_BOOL hb_vmTryEval( PHB_ITEM * pResult, PHB_ITEM pItem, HB_ULONG ulPCount, ...
 
       if( pSymbol && hb_vmRequestReenter() )
       {
+         HB_STACK_TLS_PRELOAD
+
          hb_xvmSeqBegin();
          hb_vmPush( hb_breakBlock() );
          hb_vmSeqBlock();
