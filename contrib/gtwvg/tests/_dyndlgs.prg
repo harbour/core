@@ -104,7 +104,7 @@ FUNCTION DynWinDialog( nInfo )
 
    IF nInfo == 2
       // Modal Dialog
-      hDlg := wvt_DialogBox( aDlg, @DynDlgProc(), wvt_GetWindowHandle() )
+      hDlg := wvt_DialogBox( aDlg, @DynDlgProc(), hb_gtInfo( HB_GTI_WINHANDLE ) )
    ELSE
       // Modeless Dialog
       hDlg := wvt_CreateDialog( aDlg, lOnTop, @DynDlgProc(), cDlgIcon, nTimerTicks, hMenu )

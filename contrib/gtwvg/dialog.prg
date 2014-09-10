@@ -115,7 +115,7 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, WIN_SW_HIDE )
    ENDIF
 
-   ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
+   ::hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
 
    hb_gtInfo( HB_GTI_RESIZABLE, ::resizable )
    hb_gtInfo( HB_GTI_CLOSABLE, ::closable  )

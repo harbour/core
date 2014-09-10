@@ -191,6 +191,7 @@ DYNAMIC wapi_SelectObject
 DYNAMIC wapi_SendDlgItemMessage
 DYNAMIC wapi_SendMessage
 DYNAMIC wapi_SendMessageTimeout
+DYNAMIC wapi_SendNotifyMessage
 DYNAMIC wapi_SetActiveWindow
 DYNAMIC wapi_SetArcDirection
 DYNAMIC wapi_SetBkColor

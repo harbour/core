@@ -291,7 +291,6 @@ DYNAMIC wvt_GetSaveFileName
 DYNAMIC wvt_GetToolTipBkColor
 DYNAMIC wvt_GetToolTipTextColor
 DYNAMIC wvt_GetToolTipWidth
-DYNAMIC wvt_GetWindowHandle
 DYNAMIC wvt_GetXYFromRowCol
 DYNAMIC wvt_Hide
 DYNAMIC wvt_InvalidateRect

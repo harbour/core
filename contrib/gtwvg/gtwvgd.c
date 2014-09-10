@@ -3784,9 +3784,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
                if( pWVT->hWnd )
                {
-                  int iSpec = hb_itemGetNI( pInfo->pNewVal2 );
-
-                  switch( iSpec )
+                  switch( hb_itemGetNI( pInfo->pNewVal2 ) )
                   {
                      case HB_GTS_WS_SETONTOP:
                      {

@@ -1657,6 +1657,11 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
          }
          break;
+
+      case HB_GTI_WINHANDLE:
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, pWVT->hWnd );
+         break;
+
       case HB_GTI_SPEC:
       {
          int iMessage = hb_itemGetNI( pInfo->pNewVal );
@@ -1706,7 +1711,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   UpdateWindow( pWVT->hWnd );   /* hb_gt_wvt_ResetWindowSize( pWVT ); */
                break;
             case HB_GTS_SETTIMER:
-               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_ARRAY && pWVT->hWnd )
+               if( ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_ARRAY ) && pWVT->hWnd )
                   SetTimer( pWVT->hWnd, hb_arrayGetNI( pInfo->pNewVal2, 1 ), hb_arrayGetNI( pInfo->pNewVal2, 2 ), NULL );
                break;
             case HB_GTS_KILLTIMER:
@@ -1794,9 +1799,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             case HB_GTS_WNDSTATE:
                if( pWVT->hWnd )
                {
-                  int iSpec = hb_itemGetNI( pInfo->pNewVal2 );
-
-                  switch( iSpec )
+                  switch( hb_itemGetNI( pInfo->pNewVal2 ) )
                   {
                      case HB_GTS_WS_SETONTOP:
                      {

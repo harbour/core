@@ -1111,6 +1111,27 @@ HB_FUNC( WAPI_POSTMESSAGE )  /* NOTE: unsafe function, may write past buffer */
    hb_strfree( hText );
 }
 
+HB_FUNC( WAPI_SENDNOTIFYMESSAGE )  /* NOTE: unsafe function, may write past buffer */
+{
+   void *  hText;
+   HB_SIZE nLen;
+   LPCTSTR szText = HB_PARSTR( 4, &hText, &nLen );
+
+   HB_BOOL bResult;
+
+   if( szText )
+      szText = HB_STRUNSHARE( &hText, szText, nLen );
+
+   bResult = SendNotifyMessage( hbwapi_par_raw_HWND( 1 ),
+                                hbwapi_par_UINT( 2 ),
+                                hbwapi_par_WPARAM( 3 ),
+                                szText ? ( LPARAM ) szText : hbwapi_par_LPARAM( 4 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+
+   hb_strfree( hText );
+}
+
 HB_FUNC( WAPI_SENDMESSAGE )  /* NOTE: unsafe function, may write past buffer */
 {
    void *  hText;

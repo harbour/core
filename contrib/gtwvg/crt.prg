@@ -315,7 +315,7 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* CreateWindow() be forced to execute */
    CLS
-   ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
+   ::hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
    ::setFocus()
 
    hb_gtInfo( HB_GTI_CLOSABLE  , ::closable  )

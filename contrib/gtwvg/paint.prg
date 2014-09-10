@@ -615,8 +615,12 @@ FUNCTION wvt_GetScreenHeight()
 
 #endif
 
+#ifdef HB_LEGACY_LEVEL5
+
 FUNCTION wvt_GetWindowHandle()
-   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
+   RETURN hb_gtInfo( HB_GTI_WINHANDLE )
+
+#endif
 
 FUNCTION wvt_CenterWindow( lCenter, lRePaint )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { hb_defaultValue( lCenter, .T. ), hb_defaultValue( lRePaint, .F. ) } )
@@ -661,11 +665,25 @@ PROCEDURE wvt_PasteFromClipboard()
 FUNCTION wvt_ResetWindow()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
-FUNCTION wvt_SetTimer( nTimerID, nMiliSeconds )
-   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
+PROCEDURE wvt_SetTimer( nTimerID, nMiliSeconds )
 
-FUNCTION wvt_KillTimer( nTimerID )
-   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
+   LOCAL hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
+
+   IF ! Empty( hWnd )
+      wapi_SetTimer( hWnd, nTimerID, nMiliSeconds )
+   ENDIF
+
+   RETURN
+
+PROCEDURE wvt_KillTimer( nTimerID )
+
+   LOCAL hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
+
+   IF ! Empty( hWnd )
+      wapi_KillTimer( hWnd, nTimerID )
+   ENDIF
+
+   RETURN
 
 FUNCTION wvt_SetOnTop()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
