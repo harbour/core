@@ -545,17 +545,6 @@
 #define PRINTER_FONTTYPE                          0x4000
 #define SIMULATED_FONTTYPE                        0x8000
 
-// flags (CHOOSECOLOR structure)
-#define CC_RGBINIT                                0x00000001
-#define CC_FULLOPEN                               0x00000002
-#define CC_PREVENTFULLOPEN                        0x00000004
-#define CC_SHOWHELP                               0x00000008
-#define CC_ENABLEHOOK                             0x00000010
-#define CC_ENABLETEMPLATE                         0x00000020
-#define CC_ENABLETEMPLATEHANDLE                   0x00000040
-#define CC_SOLIDCOLOR                             0x00000080  // WINVER >= 0x0400
-#define CC_ANYCOLOR                               0x00000100  // WINVER >= 0x0400
-
 /* Common Control Constants */
 #define CCS_TOP                                   1
 #define CCS_NOMOVEY                               2

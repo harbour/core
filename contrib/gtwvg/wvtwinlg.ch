@@ -665,3 +665,14 @@
 #define DEFAULT_PALETTE                           WIN_DEFAULT_PALETTE
 #define SYSTEM_FIXED_FONT                         WIN_SYSTEM_FIXED_FONT
 #define DEFAULT_GUI_FONT                          WIN_DEFAULT_GUI_FONT
+
+// flags (CHOOSECOLOR structure)
+#define CC_RGBINIT                                WIN_CC_RGBINIT
+#define CC_FULLOPEN                               WIN_CC_FULLOPEN
+#define CC_PREVENTFULLOPEN                        WIN_CC_PREVENTFULLOPEN
+#define CC_SHOWHELP                               WIN_CC_SHOWHELP
+#define CC_ENABLEHOOK                             WIN_CC_ENABLEHOOK
+#define CC_ENABLETEMPLATE                         WIN_CC_ENABLETEMPLATE
+#define CC_ENABLETEMPLATEHANDLE                   WIN_CC_ENABLETEMPLATEHANDLE
+#define CC_SOLIDCOLOR                             WIN_CC_SOLIDCOLOR
+#define CC_ANYCOLOR                               WIN_CC_ANYCOLOR

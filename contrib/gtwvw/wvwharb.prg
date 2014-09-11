@@ -463,3 +463,15 @@ FUNCTION win_CreateBrush( ... )
 FUNCTION win_CreateFont( cFontName, nWidth, nHeight, nWeight, nCharSet, lItalic, lUnderline, lStrikeOut )
    RETURN wapi_CreateFont( nHeight, nWidth,,, nWeight, lItalic, lUnderline, lStrikeOut, nCharSet, 0, 0, 0, 0, cFontName )
 #endif
+
+FUNCTION wvw_ChooseColor( nColor, aColor, nFlags )
+
+   LOCAL hWnd
+
+   IF Empty( hWnd := wvw_Get_hnd_Window( wvw_nNumWindows() ) )
+      RETURN -1
+   ENDIF
+
+   RETURN win_ChooseColor( hWnd,, nColor, ;
+      hb_defaultValue( aColor, AFill( Array( 16 ), wapi_GetSysColor( WIN_COLOR_BTNFACE ) ) ), ;
+      hb_defaultValue( nFlags, hb_bitOr( WIN_CC_ANYCOLOR, WIN_CC_RGBINIT, WIN_CC_FULLOPEN ) ) )

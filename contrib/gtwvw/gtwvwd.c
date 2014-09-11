@@ -1693,7 +1693,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
                hb_vmPushNumInt( wParam );
                hb_vmPushNumInt( lParam );
                hb_vmDo( 4 );
-               bReturn = ( hb_parnl( -1 ) != 0 );
+               bReturn = ( hbwapi_par_RESULT( -1 ) != 0 );
                hb_vmRequestRestore();
             }
             break;
@@ -1819,7 +1819,7 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
                hb_vmPushNumInt( wParam );
                hb_vmPushNumInt( lParam );
                hb_vmDo( 4 );
-               bReturn = ( hb_parnl( -1 ) != 0 );
+               bReturn = ( hbwapi_par_RESULT( -1 ) != 0 );
                hb_vmRequestRestore();
             }
             break;
@@ -3267,11 +3267,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             hb_vmPushNumInt( wParam  );
             hb_vmPushNumInt( lParam  );
             hb_vmDo( 2 );
-            if( HB_ISPOINTER( -1 ) )
-               res = ( LRESULT ) ( HB_PTRDIFF ) hb_parptr( -1 );
-            else
-               res = ( LRESULT ) hb_parnint( -1 );
-
+            res = ( LRESULT ) hbwapi_par_RESULT( -1 );
             if( res != -1 )
                return res;
          }
@@ -4616,7 +4612,7 @@ static void hb_gt_wvwInputNotAllowed( int nWin, UINT message, WPARAM wParam, LPA
          hb_vmPushNumInt( lParam  );
          hb_vmDo( 5 );
 
-         fHandled = ( hb_parnl( -1 ) != 0 );
+         fHandled = ( hbwapi_par_RESULT( -1 ) != 0 );
          hb_vmRequestRestore();
       }
 

@@ -49,6 +49,7 @@ wce_smsc.c
 win_bmp.c
 win_bmpd.c
 win_com.c
+win_commdlg.c
 win_dlg.c
 win_evnt.c
 win_misc.c

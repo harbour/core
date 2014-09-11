@@ -64,14 +64,6 @@
    #define TTM_SETTITLE  TTM_SETTITLEA
 #endif
 
-#if defined( __MINGW32CE__ )
-/* ChooseColorW() problem is fixed in current devel MINGW32CE version but
- * people who use recent official release (0.50) needs it
- */
-#undef ChooseColor
-BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
-#endif
-
 /* Pritpal Bedi <bedipritpal@hotmail.com> */
 
 /* wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
@@ -158,38 +150,6 @@ HB_FUNC( WVT_CHOOSEFONT )
 
       hb_itemReturnRelease( ary );
    }
-}
-
-/* wvt_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
-HB_FUNC( WVT_CHOOSECOLOR )
-{
-   PHB_GTWVT _s = hb_wvt_gtGetWVT();
-
-   if( _s )
-   {
-      CHOOSECOLOR cc;
-      COLORREF    crCustClr[ 16 ];
-      int         i;
-
-      memset( &cc, 0, sizeof( cc ) );
-
-      for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-         crCustClr[ i ] = HB_ISARRAY( 2 ) ? hbwapi_parv_COLORREF( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
-
-      cc.lStructSize  = sizeof( cc );
-      cc.hwndOwner    = _s->hWnd;
-      cc.rgbResult    = hbwapi_par_COLORREF( 1 );
-      cc.lpCustColors = crCustClr;
-      cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
-
-      if( ChooseColor( &cc ) )
-      {
-         hbwapi_ret_COLORREF( cc.rgbResult );
-         return;
-      }
-   }
-
-   hbwapi_ret_COLORREF( -1 );
 }
 
 /* Tooltips */
@@ -695,10 +655,10 @@ HB_FUNC( WVT_CLIENTTOSCREEN )
 
 /* Modeless Dialogs Implementation */
 
-static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+static INT_PTR CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT _s      = hb_wvt_gtGetWVT();
-   long      lReturn = 0;
+   INT_PTR   lReturn = 0;
 
    if( _s )
    {
@@ -734,7 +694,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wPar
                   hb_vmPushNumInt( wParam );
                   hb_vmPushNumInt( lParam );
                   hb_vmDo( 4 );
-                  lReturn = hb_parnl( -1 );
+                  lReturn = ( INT_PTR ) hbwapi_par_RESULT( -1 );
                   hb_vmRequestRestore();
                }
                break;
@@ -752,7 +712,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wPar
                      hb_vmPushNumInt( wParam );
                      hb_vmPushNumInt( lParam );
                      hb_vmSend( 4 );
-                     lReturn = hb_parnl( -1 );
+                     lReturn = ( INT_PTR ) hbwapi_par_RESULT( -1 );
                      hb_vmRequestRestore();
                   }
                }
@@ -799,10 +759,10 @@ static BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wPar
    return lReturn;
 }
 
-static BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+static INT_PTR CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT _s      = hb_wvt_gtGetWVT();
-   long      lReturn = 0;
+   INT_PTR   lReturn = 0;
 
    if( _s )
    {
@@ -846,7 +806,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wPar
                   hb_vmPushNumInt( wParam );
                   hb_vmPushNumInt( lParam );
                   hb_vmDo( 4 );
-                  lReturn = hb_parnl( -1 );
+                  lReturn = ( INT_PTR ) hbwapi_par_RESULT( -1 );
                   hb_vmRequestRestore();
                }
                break;
@@ -864,7 +824,7 @@ static BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wPar
                      hb_vmPushNumInt( wParam );
                      hb_vmPushNumInt( lParam );
                      hb_vmSend( 4 );
-                     lReturn = hb_parnl( -1 );
+                     lReturn = ( INT_PTR ) hbwapi_par_RESULT( -1 );
                      hb_vmRequestRestore();
                   }
                }

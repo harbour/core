@@ -813,7 +813,7 @@ static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 #endif
 }
 
-HWND hb_getConsoleWindowHandle( void )
+static HWND hb_getConsoleWindowHandle( void )
 {
    TCHAR oldTitle[ 256 ], tmpTitle[ 32 ];
    HWND hWnd = NULL;

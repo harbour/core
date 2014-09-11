@@ -651,9 +651,9 @@ static PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf )
 /* An Alternative to WndProc Callbacks */
 
 #if ! defined( HB_OS_WIN_CE )
-BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
+static UINT_PTR CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-   HB_BOOL  bret  = HB_FALSE;
+   UINT_PTR bret  = 0;
    HB_BOOL  binit = HB_FALSE;
    PHB_ITEM block;
 
@@ -676,7 +676,8 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
       hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
       hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
       hb_vmDo( 4 );
-      bret = hb_parnl( -1 );
+
+      bret = ( UINT_PTR ) hbwapi_par_RESULT( -1 );
 
       if( msg == WM_NCDESTROY )
       {
@@ -686,7 +687,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
    }
 
    if( binit )
-      return HB_TRUE;
+      return 1;
    else
       return bret;
 }
@@ -985,7 +986,7 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
       hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
       hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
       hb_vmDo( 4 );
-      return ( LRESULT ) hb_parnint( -1 );
+      return ( LRESULT ) hbwapi_par_RESULT( -1 );
    }
    return DefWindowProc( hwnd, msg, wParam, lParam );
 }

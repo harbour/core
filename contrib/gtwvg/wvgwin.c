@@ -101,29 +101,6 @@ HB_FUNC( WVG_CREATEBRUSH )
 #endif
 }
 
-HB_FUNC( WVG_CHOOSECOLOR )
-{
-   CHOOSECOLOR cc;
-   COLORREF    crCustClr[ 16 ];
-   int         i;
-
-   for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
-      crCustClr[ i ] = HB_ISARRAY( 2 ) ? hbwapi_parv_COLORREF( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
-
-   memset( &cc, 0, sizeof( cc ) );
-
-   cc.lStructSize  = sizeof( cc );
-   cc.hwndOwner    = hbwapi_par_raw_HWND( 4 );
-   cc.rgbResult    = hbwapi_par_COLORREF( 1 );
-   cc.lpCustColors = crCustClr;
-   cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
-
-   if( ChooseColor( &cc ) )
-      hbwapi_ret_COLORREF( cc.rgbResult );
-   else
-      hbwapi_ret_COLORREF( -1 );
-}
-
 /* Menu manipulations */
 
 HB_FUNC( WVG_SETMENU )

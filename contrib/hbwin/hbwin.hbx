@@ -340,6 +340,7 @@ DYNAMIC win_bitmapIsSupported
 DYNAMIC win_BitmapsOK
 DYNAMIC win_bitmapType
 DYNAMIC win_BMP
+DYNAMIC win_ChooseColor
 DYNAMIC win_com
 DYNAMIC win_comClose
 DYNAMIC win_comDebugDCB

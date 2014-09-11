@@ -1006,39 +1006,6 @@ HB_FUNC( WVW_CHOOSEFONT )
    hb_itemReturnRelease( aRet );
 }
 
-/* wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected */
-HB_FUNC( WVW_CHOOSECOLOR )
-{
-   PWVW_GLO wvw     = hb_gt_wvw();
-   PWVW_WIN wvw_top = hb_gt_wvw_win_top();
-
-   if( wvw && wvw_top )
-   {
-      CHOOSECOLOR cc;
-      COLORREF    crCustClr[ 16 ];
-      int         i;
-
-      for( i = 0; i < 16; ++i )
-         crCustClr[ i ] = HB_ISARRAY( 2 ) ? hbwapi_parv_COLORREF( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE );
-
-      memset( &cc, 0, sizeof( cc ) );
-
-      cc.lStructSize  = sizeof( cc );
-      cc.hwndOwner    = wvw_top->hWnd;
-      cc.rgbResult    = hbwapi_par_COLORREF( 1 );
-      cc.lpCustColors = crCustClr;
-      cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
-
-      if( ChooseColor( &cc ) )
-      {
-         hbwapi_ret_COLORREF( cc.rgbResult );
-         return;
-      }
-   }
-
-   hbwapi_ret_COLORREF( -1 );
-}
-
 /* wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based
    What's the difference with GT_FUNC( mouse_SetPos ) ???
    this func is able to position cursor on any window

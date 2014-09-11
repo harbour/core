@@ -1399,4 +1399,15 @@
 #define WIN_DC_BRUSH                       18
 #define WIN_DC_PEN                         19
 
+/* win_ChooseColor() flags */
+#define WIN_CC_RGBINIT                     0x00000001
+#define WIN_CC_FULLOPEN                    0x00000002
+#define WIN_CC_PREVENTFULLOPEN             0x00000004
+#define WIN_CC_SHOWHELP                    0x00000008
+#define WIN_CC_ENABLEHOOK                  0x00000010
+#define WIN_CC_ENABLETEMPLATE              0x00000020
+#define WIN_CC_ENABLETEMPLATEHANDLE        0x00000040
+#define WIN_CC_SOLIDCOLOR                  0x00000080  /* WINVER >= 0x0400 */
+#define WIN_CC_ANYCOLOR                    0x00000100  /* WINVER >= 0x0400 */
+
 #endif /* HBWIN_CH_ */

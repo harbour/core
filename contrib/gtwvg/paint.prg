@@ -898,3 +898,20 @@ FUNCTION wvt_GetMenu()
    LOCAL hWnd := wvg_hWnd()
 
    RETURN iif( Empty( hWnd ),, wapi_GetMenu( hWnd ) )
+
+FUNCTION wvg_ChooseColor( nColor, aColor, nFlags, hWnd )
+   RETURN win_ChooseColor( hWnd,, nColor, ;
+      hb_defaultValue( aColor, AFill( Array( 16 ), wapi_GetSysColor( WIN_COLOR_BTNFACE ) ) ), ;
+      hb_defaultValue( nFlags, hb_bitOr( WIN_CC_ANYCOLOR, WIN_CC_RGBINIT, WIN_CC_FULLOPEN ) ) )
+
+FUNCTION wvt_ChooseColor( nColor, aColor, nFlags )
+
+   LOCAL hWnd := wvg_hWnd()
+
+   IF Empty( hWnd )
+      RETURN -1
+   ENDIF
+
+   RETURN win_ChooseColor( hWnd,, nColor, ;
+      hb_defaultValue( aColor, AFill( Array( 16 ), wapi_GetSysColor( WIN_COLOR_BTNFACE ) ) ), ;
+      hb_defaultValue( nFlags, hb_bitOr( WIN_CC_ANYCOLOR, WIN_CC_RGBINIT, WIN_CC_FULLOPEN ) ) )
