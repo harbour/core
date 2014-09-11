@@ -181,9 +181,6 @@ typedef struct
 
 static HB_DBGCOMMONINFO s_common = { 0, NULL, NULL };
 
-static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO * info );
-static PHB_ITEM hb_dbgActivateModuleArray( void );
-static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO * aVars );
 static void     hb_dbgAddLocal( HB_DEBUGINFO * info, const char * szName, int nIndex, int nFrame );
 static void     hb_dbgAddModule( const char * szName );
 static void     hb_dbgAddStack( HB_DEBUGINFO * info, const char * szName, int nLine, int nProcLevel );
@@ -201,68 +198,6 @@ static void     hb_dbgQuit( HB_DEBUGINFO * info );
 static void     hb_dbgRelease( void );
 static PHB_ITEM hb_dbgVarGet( HB_VARINFO * scope );
 static void     hb_dbgVarSet( HB_VARINFO * scope, PHB_ITEM xNewValue );
-
-static void hb_dbgActivate( HB_DEBUGINFO * info )
-{
-   if( ! info->pDbgEntry )
-   {
-      info->pDbgEntry = hb_dynsymFind( "__DBGENTRY" );
-      if( info->pDbgEntry && ! hb_dynsymIsFunction( info->pDbgEntry ) )
-         info->pDbgEntry = NULL;
-   }
-
-   if( info->pDbgEntry )
-   {
-      PHB_ITEM aCallStack = hb_itemArrayNew( info->nCallStackLen );
-      PHB_ITEM aModules;
-      PHB_ITEM aBreak;
-      HB_BOOL bInside = info->bInside;
-      int i;
-
-      for( i = 0; i < info->nCallStackLen; i++ )
-      {
-         HB_CALLSTACKINFO * pEntry = &info->aCallStack[ i ];
-         PHB_ITEM aEntry, pItem;
-
-         aEntry = hb_arrayGetItemPtr( aCallStack, info->nCallStackLen - i );
-         hb_arrayNew( aEntry, 6 );
-
-         hb_arraySetC( aEntry, 1, pEntry->szModule );
-         hb_arraySetC( aEntry, 2, pEntry->szFunction );
-         hb_arraySetNL( aEntry, 3, pEntry->nLine );
-         hb_arraySetNL( aEntry, 4, pEntry->nProcLevel );
-
-         pItem = hb_dbgActivateVarArray( pEntry->nLocals, pEntry->aLocals );
-         hb_arraySet( aEntry, 5, pItem );
-         hb_itemRelease( pItem );
-
-         pItem = hb_dbgActivateVarArray( pEntry->nStatics, pEntry->aStatics );
-         hb_arraySet( aEntry, 6, pItem );
-         hb_itemRelease( pItem );
-      }
-
-      aModules = hb_dbgActivateModuleArray();
-      aBreak = hb_dbgActivateBreakArray( info );
-
-      hb_vmPushDynSym( info->pDbgEntry );
-      hb_vmPushNil();
-      hb_vmPushLong( HB_DBG_ACTIVATE );
-      hb_vmPushPointer( info );
-      hb_vmPushLong( info->nProcLevel );
-      hb_vmPush( aCallStack );
-      hb_vmPush( aModules );
-      hb_vmPush( aBreak );
-
-      hb_itemRelease( aCallStack );
-      hb_itemRelease( aModules );
-      hb_itemRelease( aBreak );
-
-      info->bInside = HB_TRUE;
-      hb_vmDo( 6 );
-      info->bInside = bInside;
-   }
-}
-
 
 static PHB_ITEM hb_dbgActivateBreakArray( HB_DEBUGINFO * info )
 {
@@ -315,45 +250,6 @@ static PHB_ITEM hb_dbgActivateWatchArray( HB_DEBUGINFO * info )
 }
 
 
-static PHB_ITEM hb_dbgActivateModuleArray( void )
-{
-   PHB_ITEM pArray;
-   int i;
-
-   HB_DBGCOMMON_LOCK();
-
-   pArray = hb_itemArrayNew( s_common.nModules );
-
-   for( i = 0; i < s_common.nModules; i++ )
-   {
-      PHB_ITEM pModule = hb_arrayGetItemPtr( pArray, i + 1 ), item;
-
-      hb_arrayNew( pModule, 4 );
-
-      hb_arraySetC( pModule, 1, s_common.aModules[ i ].szModule );
-
-      item = hb_dbgActivateVarArray( s_common.aModules[ i ].nStatics,
-                                     s_common.aModules[ i ].aStatics );
-      hb_arraySet( pModule, 2, item );
-      hb_itemRelease( item );
-
-      item = hb_dbgActivateVarArray( s_common.aModules[ i ].nGlobals,
-                                     s_common.aModules[ i ].aGlobals );
-      hb_arraySet( pModule, 3, item );
-      hb_itemRelease( item );
-
-      item = hb_dbgActivateVarArray( s_common.aModules[ i ].nExternGlobals,
-                                     s_common.aModules[ i ].aExternGlobals );
-      hb_arraySet( pModule, 4, item );
-      hb_itemRelease( item );
-   }
-
-   HB_DBGCOMMON_UNLOCK();
-
-   return pArray;
-}
-
-
 static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO * aVars )
 {
    int i;
@@ -374,6 +270,114 @@ static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO * aVars )
          hb_arraySetNL( aVar, 4, aVars[ i ].frame.num );
    }
    return pArray;
+}
+
+
+static PHB_ITEM hb_dbgActivateModuleArray( void )
+{
+   PHB_ITEM pArray;
+   int i;
+
+   HB_DBGCOMMON_LOCK();
+
+   pArray = hb_itemArrayNew( s_common.nModules );
+
+   for( i = 0; i < s_common.nModules; i++ )
+   {
+      PHB_ITEM pModule = hb_arrayGetItemPtr( pArray, i + 1 ), item;
+
+      hb_arrayNew( pModule, 4 );
+
+      hb_arraySetC( pModule, 1, s_common.aModules[ i ].szModule );
+
+      item = hb_dbgActivateVarArray( s_common.aModules[ i ].nStatics,
+                                     s_common.aModules[ i ].aStatics );
+      hb_arraySetForward( pModule, 2, item );
+      hb_itemRelease( item );
+
+      item = hb_dbgActivateVarArray( s_common.aModules[ i ].nGlobals,
+                                     s_common.aModules[ i ].aGlobals );
+      hb_arraySetForward( pModule, 3, item );
+      hb_itemRelease( item );
+
+      item = hb_dbgActivateVarArray( s_common.aModules[ i ].nExternGlobals,
+                                     s_common.aModules[ i ].aExternGlobals );
+      hb_arraySetForward( pModule, 4, item );
+      hb_itemRelease( item );
+   }
+
+   HB_DBGCOMMON_UNLOCK();
+
+   return pArray;
+}
+
+
+static PHB_ITEM hb_dbgActivateCallStackArray( HB_DEBUGINFO * info )
+{
+   PHB_ITEM aCallStack = hb_itemArrayNew( info->nCallStackLen );
+   int i;
+
+   for( i = 0; i < info->nCallStackLen; i++ )
+   {
+      HB_CALLSTACKINFO * pEntry = &info->aCallStack[ i ];
+      PHB_ITEM aEntry, pItem;
+
+      aEntry = hb_arrayGetItemPtr( aCallStack, info->nCallStackLen - i );
+      hb_arrayNew( aEntry, 6 );
+
+      hb_arraySetC( aEntry, 1, pEntry->szModule );
+      hb_arraySetC( aEntry, 2, pEntry->szFunction );
+      hb_arraySetNL( aEntry, 3, pEntry->nLine );
+      hb_arraySetNL( aEntry, 4, pEntry->nProcLevel );
+
+      pItem = hb_dbgActivateVarArray( pEntry->nLocals, pEntry->aLocals );
+      hb_arraySetForward( aEntry, 5, pItem );
+      hb_itemRelease( pItem );
+
+      pItem = hb_dbgActivateVarArray( pEntry->nStatics, pEntry->aStatics );
+      hb_arraySetForward( aEntry, 6, pItem );
+      hb_itemRelease( pItem );
+   }
+
+   return aCallStack;
+}
+
+
+static void hb_dbgActivate( HB_DEBUGINFO * info )
+{
+   if( ! info->pDbgEntry )
+   {
+      info->pDbgEntry = hb_dynsymFind( "__DBGENTRY" );
+      if( info->pDbgEntry && ! hb_dynsymIsFunction( info->pDbgEntry ) )
+         info->pDbgEntry = NULL;
+   }
+
+   if( info->pDbgEntry )
+   {
+      PHB_ITEM aCallStack, aModules, aBreak;
+      HB_BOOL bInside = info->bInside;
+
+      aCallStack = hb_dbgActivateCallStackArray( info );
+      aModules = hb_dbgActivateModuleArray();
+      aBreak = hb_dbgActivateBreakArray( info );
+
+      hb_vmPushDynSym( info->pDbgEntry );
+      hb_vmPushNil();
+      hb_vmPushLong( HB_DBG_ACTIVATE );
+      hb_vmPushPointer( info );
+      hb_vmPushLong( info->nProcLevel );
+      hb_vmPush( aCallStack );
+      hb_vmPush( aModules );
+      hb_vmPush( aBreak );
+
+      hb_itemRelease( aCallStack );
+      hb_itemRelease( aModules );
+      hb_itemRelease( aBreak );
+
+      info->bInside = HB_TRUE;
+      hb_vmDo( 6 );
+      info->bInside = bInside;
+   }
 }
 
 
