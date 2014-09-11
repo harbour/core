@@ -463,8 +463,8 @@ HB_FUNC( WVG_GETNMHDRINFO )
    PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
    hb_arraySetNI( pEvParams, 1, lpnmh->code );
-   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lpnmh->idFrom   );
-   hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lpnmh->hwndFrom );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lpnmh->idFrom );
+   hbwapi_arraySet_HANDLE( pEvParams, 3, lpnmh->hwndFrom );
 
    hb_itemReturnRelease( pEvParams );
 }
@@ -479,7 +479,7 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
 
    hb_arraySetNI( pEvParams, 1, nmh.code );
    hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom );
-   hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) nmh.hwndFrom );
+   hbwapi_arraySet_HANDLE( pEvParams, 3, nmh.hwndFrom );
    hb_arraySetNInt( pEvParams, 4, ( HB_PTRDIFF ) nmm->dwItemSpec );
 
    hb_itemReturnRelease( pEvParams );
@@ -495,7 +495,7 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
 
    hb_arraySetNI( pEvParams, 1, nmh.code );
    hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom );
-   hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) nmh.hwndFrom );
+   hbwapi_arraySet_HANDLE( pEvParams, 3, nmh.hwndFrom );
    hb_arraySetNI( pEvParams, 4, pnmtv->action );
 
    hb_itemReturnRelease( pEvParams );
@@ -826,7 +826,7 @@ HB_FUNC( WVG_FONTCREATE )
    if( hFont )
    {
       aFont = wvg_logfontTOarray( &lf );
-      hb_arraySetNInt( aFont, 15, ( HB_PTRDIFF ) hFont );
+      hbwapi_arraySet_HANDLE( aFont, 15, hFont );
    }
    else
    {

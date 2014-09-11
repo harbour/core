@@ -2825,7 +2825,7 @@ HB_FUNC( WVT_SAVESCREEN )
 
       hb_arraySetNI( info, 1, iWidth );
       hb_arraySetNI( info, 2, iHeight );
-      hb_arraySetNInt( info, 3, ( HB_PTRDIFF ) hBmp );
+      hbwapi_arraySet_HANDLE( info, 3, hBmp );
 
       hb_itemReturnRelease( info );
    }
