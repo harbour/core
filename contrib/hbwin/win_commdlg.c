@@ -60,6 +60,7 @@ BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
 
 #define _HB_CHOOSECOLOR_CB_PROP_  TEXT( "__hbwin_win_ChooseColor_CB" )
 
+#if ! defined( HB_OS_WIN_CE )
 static UINT_PTR CALLBACK CCHookProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
    UINT_PTR res;
@@ -68,8 +69,8 @@ static UINT_PTR CALLBACK CCHookProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 
    if( msg == WM_INITDIALOG )
    {
-      CHOOSEFONT * cf = ( CHOOSEFONT * ) lParam;
-      SetProp( hWnd, _HB_CHOOSECOLOR_CB_PROP_, hb_itemNew( ( PHB_ITEM ) cf->lCustData ) );
+      CHOOSECOLOR * cc = ( CHOOSECOLOR * ) lParam;
+      SetProp( hWnd, _HB_CHOOSECOLOR_CB_PROP_, hb_itemNew( ( PHB_ITEM ) cc->lCustData ) );
       fInit = HB_TRUE;
    }
 
@@ -103,6 +104,7 @@ static UINT_PTR CALLBACK CCHookProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 
    return fInit ? 1 : res;
 }
+#endif
 
 HB_FUNC( WIN_CHOOSECOLOR )
 {
@@ -119,12 +121,16 @@ HB_FUNC( WIN_CHOOSECOLOR )
 
    cc.lStructSize    = sizeof( cc );
    cc.hwndOwner      = hbwapi_par_raw_HWND( 1 );
+#if ! defined( HB_OS_WIN_CE )
    cc.hInstance      = hbwapi_par_raw_HWND( 2 );
+#endif
    cc.rgbResult      = hbwapi_par_COLORREF( 3 );
    cc.lpCustColors   = crCustClr;
    cc.Flags          = hbwapi_par_WORD( 5 );
+#if ! defined( HB_OS_WIN_CE )
    cc.lCustData      = ( LPARAM ) ( HB_PTRDIFF ) hb_param( 6, HB_IT_EVALITEM );
    cc.lpfnHook       = cc.lCustData ? CCHookProc : NULL;
+#endif
    cc.lpTemplateName = HB_PARSTR( 7, &hTpl, NULL );
 
    if( ChooseColor( &cc ) )

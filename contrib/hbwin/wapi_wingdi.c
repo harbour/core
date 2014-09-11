@@ -986,7 +986,11 @@ HB_FUNC( WAPI_SETDCPENCOLOR )
 
 HB_FUNC( WAPI_SETARCDIRECTION )
 {
+#if ! defined( HB_OS_WIN_CE )
    hb_retni( SetArcDirection( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ) ) );
+#else
+   hb_retni( 0 );
+#endif
 }
 
 HB_FUNC( WAPI_GETSTOCKOBJECT )
