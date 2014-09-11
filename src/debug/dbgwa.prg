@@ -182,7 +182,7 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
    /* Display labels */
 
-   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 15, "Alias:                Record:         ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 15, "Alias:              Record:           ", oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 15, "   BOF:         Deleted:              ", oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 15, "   EOF:           Found:              ", oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 15, "Filter:                               ", oDlg:cColor )
@@ -357,7 +357,7 @@ STATIC PROCEDURE UpdateInfo( oDlg, cAlias )
 
    dbSelectArea( cAlias )
 
-   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 20, PadR( cAlias, 11 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 22, PadR( cAlias, 12 ), oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 42, ;
       PadR( hb_ntos( RecNo() ) + "/" + hb_ntos( LastRec() ), 9 ), ;
       oDlg:cColor )
@@ -366,8 +366,8 @@ STATIC PROCEDURE UpdateInfo( oDlg, cAlias )
    hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 40, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 23, iif( Eof(), "Yes", "No " ), oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 40, iif( Found(), "Yes", "No " ), oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 23, PadR( dbFilter(), 29 ), oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 23, PadR( ordKey(), 29 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 23, PadR( dbFilter(), 30 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 23, PadR( ordKey(), 30 ), oDlg:cColor )
 
    dbSelectArea( nOldArea )
 
