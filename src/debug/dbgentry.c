@@ -1718,19 +1718,9 @@ static void hb_dbgVarSet( HB_VARINFO * scope, PHB_ITEM xNewValue )
          hb_itemCopy( hb_dbgVarGet( scope ), xNewValue );
          break;
       case 'M':
-      {
-         PHB_DYNS pDynSym = hb_dynsymFind( "__MVPUT" );
-
-         if( pDynSym && hb_dynsymIsFunction( pDynSym ) )
-         {
-            hb_vmPushDynSym( pDynSym );
-            hb_vmPushNil();
-            hb_vmPushString( scope->szName, strlen( scope->szName ) );
-            hb_vmPush( xNewValue );
-            hb_vmDo( 2 );
-         }
+         hb_memvarSetValue( hb_dynsymSymbol( hb_dynsymGet( scope->szName ) ),
+                            xNewValue );
          break;
-      }
    }
 }
 
