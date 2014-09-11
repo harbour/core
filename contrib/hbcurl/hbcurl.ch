@@ -298,15 +298,17 @@
 
 /* HB_CURLOPT_HTTPAUTH option */
 #define HB_CURLAUTH_NONE                      0                    /* nothing */
-#define HB_CURLAUTH_BASIC                     1                    /* Basic (default) */
-#define HB_CURLAUTH_DIGEST                    2                    /* Digest */
-#define HB_CURLAUTH_GSSNEGOTIATE              4                    /* GSS-Negotiate */
-#define HB_CURLAUTH_NTLM                      8                    /* NTLM */
+#define HB_CURLAUTH_BASIC                     hb_bitShift( 1, 0 )  /* Basic (default) */
+#define HB_CURLAUTH_DIGEST                    hb_bitShift( 1, 1 )  /* Digest */
+#define HB_CURLAUTH_NEGOTIATE                 hb_bitShift( 1, 2 )  /* Negotiate */
+#define HB_CURLAUTH_NTLM                      hb_bitShift( 1, 3 )  /* NTLM */
 #define HB_CURLAUTH_DIGEST_IE                 hb_bitShift( 1, 4 )  /* Digest with IE flavour */
 #define HB_CURLAUTH_NTLM_WB                   hb_bitShift( 1, 5 )  /* NTLM delegating to winbind helper */
 #define HB_CURLAUTH_ONLY                      hb_bitShift( 1, 31 ) /* used together with a single other type to force no auth or just that single type */
 #define HB_CURLAUTH_ANY                       hb_bitNot( 0 )       /* all types set */
 #define HB_CURLAUTH_ANYSAFE                   hb_bitNot( hb_bitOr( HB_CURLAUTH_BASIC, HB_CURLAUTH_DIGEST_IE ) )
+
+#define HB_CURLAUTH_GSSNEGOTIATE              HB_CURLAUTH_NEGOTIATE
 
 /* HB_CURLOPT_HTTP_VERSION option */
 #define HB_CURL_HTTP_VERSION_NONE             0  /* setting this means we don't care, and that we'd like the library to choose the best possible for us! */
@@ -496,7 +498,7 @@
 #define HB_CURLE_FTP_WEIRD_PASV_REPLY         13 /* */
 #define HB_CURLE_FTP_WEIRD_227_FORMAT         14 /* */
 #define HB_CURLE_FTP_CANT_GET_HOST            15 /* */
-#define HB_CURLE_OBSOLETE16                   16 /* NOT USED */
+#define HB_CURLE_HTTP2                        16 /* */
 #define HB_CURLE_FTP_COULDNT_SET_TYPE         17 /* */
 #define HB_CURLE_PARTIAL_FILE                 18 /* */
 #define HB_CURLE_FTP_COULDNT_RETR_FILE        19 /* */
@@ -570,5 +572,7 @@
 #define HB_CURLE_RTSP_SESSION_ERROR           86 /* mismatch of RTSP Session Identifiers */
 #define HB_CURLE_FTP_BAD_FILE_LIST            87 /* unable to parse FTP file list */
 #define HB_CURLE_CHUNK_FAILED                 88 /* chunk callback reported error */
+
+#define HB_CURLE_OBSOLETE16                   HB_CURLE_HTTP2
 
 #endif /* HBCURL_CH_ */
