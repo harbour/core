@@ -1773,7 +1773,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                {
                   hb_curl->ul_pos = 0;
                   hb_curl->ul_len = hb_parclen( 3 );
-                  hb_curl->ul_ptr = ( unsigned char * ) hb_xgrab( hb_curl->ul_len );
+                  hb_curl->ul_ptr = ( unsigned char * ) hb_xgrab( hb_curl->ul_len + 1 );
 
                   hb_xmemcpy( hb_curl->ul_ptr, hb_parc( 3 ), hb_curl->ul_len );
 
@@ -1787,7 +1787,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                hb_curl->dl_pos = 0;
                hb_curl->dl_len = hb_parnldef( 3, HB_CURL_DL_BUFF_SIZE_INIT );
-               hb_curl->dl_ptr = ( unsigned char * ) hb_xgrab( hb_curl->dl_len );
+               hb_curl->dl_ptr = ( unsigned char * ) hb_xgrab( hb_curl->dl_len + 1 );
 
                curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_buff_callback );
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, hb_curl );
