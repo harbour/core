@@ -524,8 +524,11 @@ HB_ERRCODE hb_rddGetFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
        * generate an error with retry possibility
        * (user created error handler can make this field accessible)
        */
-      PHB_ITEM pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, EDBCMD_NOVAR,
-                                      NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
+      PHB_ITEM pError;
+
+      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, EDBCMD_NOVAR,
+                             NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
+      hb_itemClear( pItem );
 
       while( hb_errLaunch( pError ) == E_RETRY )
       {

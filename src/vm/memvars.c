@@ -436,6 +436,7 @@ void hb_memvarGetValue( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                              NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
+      hb_itemClear( pItem );
 
       while( hb_errLaunch( pError ) == E_RETRY )
       {
@@ -483,6 +484,7 @@ void hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                                 NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
+         hb_itemClear( pItem );
 
          while( hb_errLaunch( pError ) == E_RETRY )
          {

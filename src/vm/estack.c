@@ -619,6 +619,8 @@ PHB_ITEM hb_stackAllocItem( void )
    if( ++hb_stack.pPos == hb_stack.pEnd )
       hb_stackIncrease();
 
+   ( *( hb_stack.pPos - 1 ) )->type = HB_IT_NIL;
+
    return *( hb_stack.pPos - 1 );
 }
 

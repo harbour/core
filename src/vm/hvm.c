@@ -7234,9 +7234,11 @@ static void hb_vmPushVariable( PHB_SYMB pVarSymb )
    if( hb_rddFieldGet( pItem, pVarSymb ) != HB_SUCCESS &&
        hb_memvarGet( pItem, pVarSymb ) != HB_SUCCESS )
    {
-      PHB_ITEM pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                                      NULL, pVarSymb->szName,
-                                      0, EF_CANRETRY );
+      PHB_ITEM pError;
+
+      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                             NULL, pVarSymb->szName, 0, EF_CANRETRY );
+      hb_itemClear( pItem );
 
       while( hb_errLaunch( pError ) == E_RETRY )
       {

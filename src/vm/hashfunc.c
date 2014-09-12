@@ -737,7 +737,12 @@ HB_FUNC( HB_HAUTOADD )
    if( pHash )
    {
       int iOldFlags = hb_hashGetFlags( pHash ) & HB_HASH_AUTOADD_MASK;
+
       hb_retni( iOldFlags );
+
+      if( hb_pcount() >= 3 )
+         hb_hashSetDefault( pHash, hb_param( 3, HB_IT_ANY ) );
+
       if( pValue )
       {
          if( HB_IS_LOGICAL( pValue ) )
@@ -757,8 +762,6 @@ HB_FUNC( HB_HAUTOADD )
                hb_hashSetFlags( pHash, iNewFlags );
          }
       }
-      if( hb_pcount() >= 3 )
-         hb_hashSetDefault( pHash, hb_param( 3, HB_IT_ANY ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
