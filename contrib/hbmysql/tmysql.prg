@@ -1339,7 +1339,7 @@ METHOD TableExists( cTable ) CLASS TMySQLServer
 
    cTable := Upper( cTable )
 
-   RETURN AScan( ::ListDBs(), {| tmp | cTable == Upper( tmp ) } ) > 0
+   RETURN AScan( mysql_list_dbs( ::nSocket ), {| tmp | cTable == Upper( tmp ) } ) > 0
 
 /* TOFIX: Conversion creates a .dbf with fields of wrong dimension (often) */
 METHOD TableStruct( cTable ) CLASS TMySQLServer
