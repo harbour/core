@@ -1100,6 +1100,7 @@ CREATE CLASS TMySQLServer
 
    METHOD ListDBs()                                        // returns an array with list of data bases available
    METHOD ListTables()                                     // returns an array with list of available tables in current database
+   METHOD TableExists( cTable )
 
    METHOD Query( cQuery )                                  // Gets a textual query and returns a TMySQLQuery or TMySQLTable object
 
@@ -1333,6 +1334,12 @@ METHOD ListDBs() CLASS TMySQLServer
 
 METHOD ListTables() CLASS TMySQLServer
    RETURN mysql_list_tables( ::nSocket )
+
+METHOD TableExists( cTable ) CLASS TMySQLServer
+
+   cTable := Upper( cTable )
+
+   RETURN AScan( ::ListDBs(), {| tmp | cTable == Upper( tmp ) } ) > 0
 
 /* TOFIX: Conversion creates a .dbf with fields of wrong dimension (often) */
 METHOD TableStruct( cTable ) CLASS TMySQLServer
