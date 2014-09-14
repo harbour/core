@@ -1145,7 +1145,7 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 
       if( ( double ) nNumber == dNumber )
       {
-         if( iWidth <= 0 || iWidth > 99 )
+         if( iWidth <= 0 || iWidth >= HB_DEFAULT_WIDTH )
             iWidth = HB_DBL_LENGTH( dNumber );
 
          return hb_itemPutNIntLen( pItem, nNumber, iWidth );
@@ -1167,7 +1167,7 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
    else
       pItem = hb_itemNew( NULL );
 
-   if( iWidth <= 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth >= HB_DEFAULT_WIDTH )
       iWidth = HB_DBL_LENGTH( dNumber );
 
    if( iDec < 0 )
@@ -1251,7 +1251,7 @@ PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
    else
       pItem = hb_itemNew( NULL );
 
-   if( iWidth <= 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth >= HB_DEFAULT_WIDTH )
       iWidth = HB_INT_LENGTH( iNumber );
 
    pItem->type = HB_IT_INTEGER;
@@ -1274,14 +1274,14 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
       pItem = hb_itemNew( NULL );
 
 #if HB_VMINT_MAX == LONG_MAX
-   if( iWidth <= 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth >= HB_DEFAULT_WIDTH )
       iWidth = HB_INT_LENGTH( lNumber );
 
    pItem->type = HB_IT_INTEGER;
    pItem->item.asInteger.value = ( int ) lNumber;
    pItem->item.asInteger.length = ( HB_USHORT ) iWidth;
 #else
-   if( iWidth <= 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth >= HB_DEFAULT_WIDTH )
       iWidth = HB_LONG_LENGTH( lNumber );
 
    pItem->type = HB_IT_LONG;
@@ -1306,7 +1306,7 @@ PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, HB_LONGLONG llNumber, int iWidth )
       pItem = hb_itemNew( NULL );
 
 #if HB_VMLONG_MAX >= LONGLONG_MAX
-   if( iWidth <= 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth >= HB_DEFAULT_WIDTH )
       iWidth = HB_LONG_LENGTH( llNumber );
 
    pItem->type = HB_IT_LONG;
@@ -1315,7 +1315,7 @@ PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, HB_LONGLONG llNumber, int iWidth )
 #else
    pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.value = ( double ) llNumber;
-   if( iWidth <= 0 || iWidth > 99 )
+   if( iWidth <= 0 || iWidth >= HB_DEFAULT_WIDTH )
       iWidth = HB_LONG_LENGTH( pItem->item.asDouble.value );
    pItem->item.asDouble.length = iWidth;
    pItem->item.asDouble.decimal = 0;
@@ -2411,7 +2411,7 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
    {
       double dNumber = hb_itemGetND( pNumber );
 
-      if( pNumber->item.asDouble.length == 99 || ! hb_isfinite( dNumber ) )
+      if( ! hb_isfinite( dNumber ) )
       {
          /* Numeric overflow */
          iPos = -1;

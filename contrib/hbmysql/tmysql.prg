@@ -1231,7 +1231,7 @@ CREATE CLASS TMySQLServer
    VAR lError                                              // .T. if occurred an error
    VAR cCreateQuery
 
-   METHOD New( cServer, cUser, cPassword, nPort )          // Opens connection to a server, returns a server object
+   METHOD New( cServer, cUser, cPassword, nPort, nFlags )  // Opens connection to a server, returns a server object
    METHOD Destroy()                                        // Closes connection to server
 
    METHOD SelectDB( cDBName )                              // Which data base I will use for subsequent queries
@@ -1259,13 +1259,13 @@ CREATE CLASS TMySQLServer
 ENDCLASS
 
 
-METHOD New( cServer, cUser, cPassword, nPort ) CLASS TMySQLServer
+METHOD New( cServer, cUser, cPassword, nPort, nFlags ) CLASS TMySQLServer
 
    ::cServer := cServer
    ::nPort := nPort
    ::cUser := cUser
    ::cPassword := cPassword
-   ::nSocket := mysql_real_connect( cServer, cUser, cPassword, nPort )
+   ::nSocket := mysql_real_connect( cServer, cUser, cPassword, nPort, nFlags )
    ::lError := .F.
 
    IF Empty( ::nSocket )
