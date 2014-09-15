@@ -247,14 +247,15 @@ HB_FUNC( WIN_GETCHARSIZE )
    hb_retnl( lResult );
 }
 
-HB_FUNC( WIN_GETDEVICECAPS )  /* DEPRECATED */
+#ifdef HB_LEGACY_LEVEL5
+HB_FUNC( WIN_GETDEVICECAPS )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retni( hDC && HB_ISNUM( 2 ) ? GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
 }
 
-HB_FUNC( WIN_SETMAPMODE )  /* DEPRECATED */
+HB_FUNC( WIN_SETMAPMODE )
 {
 #if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
@@ -264,6 +265,7 @@ HB_FUNC( WIN_SETMAPMODE )  /* DEPRECATED */
    hb_retni( 0 );
 #endif
 }
+#endif
 
 HB_FUNC( WIN_CREATEFONT )
 {
@@ -340,7 +342,8 @@ HB_FUNC( WIN_CREATEFONT )
       hb_retptr( NULL );
 }
 
-HB_FUNC( WIN_GETPRINTERFONTNAME )  /* DEPRECATED */
+#ifdef HB_LEGACY_LEVEL5
+HB_FUNC( WIN_GETPRINTERFONTNAME )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
@@ -355,6 +358,7 @@ HB_FUNC( WIN_GETPRINTERFONTNAME )  /* DEPRECATED */
    else
       hb_retc_null();
 }
+#endif
 
 HB_FUNC( WIN_BITMAPSOK )
 {
@@ -583,7 +587,8 @@ HB_FUNC( WIN_ENUMFONTFAMILIES )
    hb_itemReturnRelease( pArray );
 }
 
-HB_FUNC( WIN_SETCOLOR )  /* DEPRECATED */
+#ifdef HB_LEGACY_LEVEL5
+HB_FUNC( WIN_SETCOLOR )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
@@ -603,6 +608,7 @@ HB_FUNC( WIN_SETCOLOR )  /* DEPRECATED */
    else
       hb_retnint( CLR_INVALID );
 }
+#endif
 
 HB_FUNC( WIN_SETPEN )
 {
@@ -653,7 +659,8 @@ HB_FUNC( WIN_FILLRECT )
    hb_retl( fResult );
 }
 
-HB_FUNC( WIN_LINETO )  /* DEPRECATED */
+#ifdef HB_LEGACY_LEVEL5
+HB_FUNC( WIN_LINETO )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
@@ -663,7 +670,7 @@ HB_FUNC( WIN_LINETO )  /* DEPRECATED */
                                hb_parni( 5 ) /* y2 */ ) : HB_FALSE );
 }
 
-HB_FUNC( WIN_RECTANGLE )  /* DEPRECATED */
+HB_FUNC( WIN_RECTANGLE )
 {
    HDC hDC     = hbwapi_par_HDC( 1 );
    int x1      = hb_parni( 2 );
@@ -679,7 +686,7 @@ HB_FUNC( WIN_RECTANGLE )  /* DEPRECATED */
       hb_retl( hDC ? Rectangle( hDC, x1, y1, x2, y2 ) : HB_FALSE );
 }
 
-HB_FUNC( WIN_ARC )  /* DEPRECATED */
+HB_FUNC( WIN_ARC )
 {
 #if defined( HB_OS_WIN_CE )
    hb_retl( HB_FALSE );
@@ -698,7 +705,7 @@ HB_FUNC( WIN_ARC )  /* DEPRECATED */
 #endif
 }
 
-HB_FUNC( WIN_ELLIPSE )  /* DEPRECATED */
+HB_FUNC( WIN_ELLIPSE )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
@@ -709,7 +716,7 @@ HB_FUNC( WIN_ELLIPSE )  /* DEPRECATED */
                            hb_parni( 5 ) /* y2 */ ) : HB_FALSE );
 }
 
-HB_FUNC( WIN_SETBKMODE )  /* DEPRECATED */
+HB_FUNC( WIN_SETBKMODE )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
    int iMode = 0;
@@ -723,3 +730,4 @@ HB_FUNC( WIN_SETBKMODE )  /* DEPRECATED */
    }
    hb_retni( iMode );
 }
+#endif

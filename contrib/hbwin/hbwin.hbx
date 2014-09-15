@@ -115,6 +115,7 @@ DYNAMIC wapi_GetSystemMetrics
 DYNAMIC wapi_GetTextAlign
 DYNAMIC wapi_GetTextColor
 DYNAMIC wapi_GetTextFace
+DYNAMIC wapi_GetTextMetrics
 DYNAMIC wapi_GetVolumeInformation
 DYNAMIC wapi_GetWindowLongPtr
 DYNAMIC wapi_GetWindowRect
@@ -332,7 +333,6 @@ DYNAMIC wce_SmsSendMessage
 DYNAMIC win_AbortDoc
 DYNAMIC win_ANSIToOEM
 DYNAMIC win_ANSIToWide
-DYNAMIC win_Arc
 DYNAMIC win_axGetControl
 DYNAMIC win_axInit
 DYNAMIC win_bitmapDimensions
@@ -366,7 +366,6 @@ DYNAMIC win_CreateDC
 DYNAMIC win_CreateFont
 DYNAMIC win_DeleteDC
 DYNAMIC win_DrawBitmap
-DYNAMIC win_Ellipse
 DYNAMIC win_EndDoc
 DYNAMIC win_EndPage
 DYNAMIC win_EnumFontFamilies
@@ -376,15 +375,12 @@ DYNAMIC win_ErrorString
 DYNAMIC win_FillRect
 DYNAMIC win_GetCharSize
 DYNAMIC win_GetCommandLineParam
-DYNAMIC win_GetDeviceCaps
 DYNAMIC win_GetDocumentProperties
 DYNAMIC win_GetOpenFileName
-DYNAMIC win_GetPrinterFontName
 DYNAMIC win_GetSaveFileName
 DYNAMIC win_GetTextSize
 DYNAMIC win_hInstance
 DYNAMIC win_hPrevInstance
-DYNAMIC win_LineTo
 DYNAMIC win_LoadBitmapFile
 DYNAMIC win_LoadResource
 DYNAMIC win_MAPISendMail
@@ -427,7 +423,6 @@ DYNAMIC win_printerStatus
 DYNAMIC win_PrintFileRaw
 DYNAMIC win_Prn
 DYNAMIC win_QPCounter2Sec
-DYNAMIC win_Rectangle
 DYNAMIC win_regCloseKey
 DYNAMIC win_regCreateKeyEx
 DYNAMIC win_regDelete
@@ -451,10 +446,7 @@ DYNAMIC win_serviceSetExitCode
 DYNAMIC win_serviceSetStatus
 DYNAMIC win_serviceStart
 DYNAMIC win_serviceStop
-DYNAMIC win_SetBkMode
-DYNAMIC win_SetColor
 DYNAMIC win_SetDocumentProperties
-DYNAMIC win_SetMapMode
 DYNAMIC win_SetPen
 DYNAMIC win_ShellNotifyIcon
 DYNAMIC win_SHFileOperation

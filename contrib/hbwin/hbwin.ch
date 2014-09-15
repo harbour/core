@@ -1412,4 +1412,10 @@
 #define WIN_CC_SOLIDCOLOR                  0x00000080  /* WINVER >= 0x0400 */
 #define WIN_CC_ANYCOLOR                    0x00000100  /* WINVER >= 0x0400 */
 
+/* wapi_GetTextMetrics() "tmPitchAndFamily" values */
+#define WIN_TMPF_FIXED_PITCH               0x01
+#define WIN_TMPF_VECTOR                    0x02
+#define WIN_TMPF_DEVICE                    0x08
+#define WIN_TMPF_TRUETYPE                  0x04
+
 #endif /* HBWIN_CH_ */

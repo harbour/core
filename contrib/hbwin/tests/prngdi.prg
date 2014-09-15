@@ -15,6 +15,7 @@ PROCEDURE Main()
    LOCAL hRECT
    LOCAL aRECT
    LOCAL hOBJECT
+   LOCAL hTM
 
    pDEVMODE := __wapi_DEVMODE_New( cPrinterName )
    __wapi_DEVMODE_Set( pDEVMODE, { "dmPaperSize" => WIN_DMPAPER_A3 } )
@@ -53,6 +54,14 @@ PROCEDURE Main()
    hRECT[ "right" ] := 650
    hRECT[ "bottom" ] := 450
    ? wapi_DrawText( hDC, "4TEST", hRECT )
+
+   ? "out TEXTMETRIC"
+   hTM := { => }
+   ? wapi_GetTextMetrics( hDC, hTM )
+   ? hb_ValToExp( hTM )
+   hTM := NIL
+   ? wapi_GetTextMetrics( hDC, @hTM )
+   ? hb_ValToExp( hTM )
 
    ? wapi_EndPage( hDC )
    ? wapi_EndDoc( hDC )

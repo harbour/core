@@ -67,6 +67,17 @@ static void s_hb_hashSetCItemNL( PHB_ITEM pHash, const char * pszKey, long v )
    hb_itemRelease( pKey );
 }
 
+static void s_hb_hashSetCItemC( PHB_ITEM pHash, const char * pszKey, const TCHAR * v, HB_SIZE l )
+{
+   PHB_ITEM pKey = hb_itemPutC( NULL, pszKey );
+   PHB_ITEM pValue = HB_ITEMPUTSTRLEN( NULL, v, l );
+
+   hb_hashAdd( pHash, pKey, pValue );
+
+   hb_itemRelease( pValue );
+   hb_itemRelease( pKey );
+}
+
 POINT * hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
@@ -996,4 +1007,82 @@ HB_FUNC( WAPI_SETARCDIRECTION )
 HB_FUNC( WAPI_GETSTOCKOBJECT )
 {
    hbwapi_ret_raw_HGDIOBJ( GetStockObject( hbwapi_par_INT( 1 ) ) );
+}
+
+static void hbwapi_stor_TEXTMETRIC( const TEXTMETRIC * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   if( pStru )
+   {
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemNL( pStru, "tmHeight"           , p->tmHeight           );
+         s_hb_hashSetCItemNL( pStru, "tmAscent"           , p->tmAscent           );
+         s_hb_hashSetCItemNL( pStru, "tmDescent"          , p->tmDescent          );
+         s_hb_hashSetCItemNL( pStru, "tmInternalLeading"  , p->tmInternalLeading  );
+         s_hb_hashSetCItemNL( pStru, "tmExternalLeading"  , p->tmExternalLeading  );
+         s_hb_hashSetCItemNL( pStru, "tmAveCharWidth"     , p->tmAveCharWidth     );
+         s_hb_hashSetCItemNL( pStru, "tmMaxCharWidth"     , p->tmMaxCharWidth     );
+         s_hb_hashSetCItemNL( pStru, "tmWeight"           , p->tmWeight           );
+         s_hb_hashSetCItemNL( pStru, "tmOverhang"         , p->tmOverhang         );
+         s_hb_hashSetCItemNL( pStru, "tmDigitizedAspectX" , p->tmDigitizedAspectX );
+         s_hb_hashSetCItemNL( pStru, "tmDigitizedAspectY" , p->tmDigitizedAspectY );
+         s_hb_hashSetCItemC(  pStru, "tmFirstChar"        , &p->tmFirstChar   , 1 );
+         s_hb_hashSetCItemC(  pStru, "tmLastChar"         , &p->tmLastChar    , 1 );
+         s_hb_hashSetCItemC(  pStru, "tmDefaultChar"      , &p->tmDefaultChar , 1 );
+         s_hb_hashSetCItemC(  pStru, "tmBreakChar"        , &p->tmBreakChar   , 1 );
+         s_hb_hashSetCItemNL( pStru, "tmItalic"           , p->tmItalic           );
+         s_hb_hashSetCItemNL( pStru, "tmUnderlined"       , p->tmUnderlined       );
+         s_hb_hashSetCItemNL( pStru, "tmStruckOut"        , p->tmStruckOut        );
+         s_hb_hashSetCItemNL( pStru, "tmPitchAndFamily"   , p->tmPitchAndFamily   );
+         s_hb_hashSetCItemNL( pStru, "tmCharSet"          , p->tmCharSet          );
+      }
+      else
+      {
+         if( ! HB_IS_ARRAY( pStru ) )
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 20 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
+         else if( hb_arrayLen( pStru ) < 20 )
+            hb_arraySize( pStru, 20 );
+
+         hb_arraySetNL( pStru,  1 , p->tmHeight           );
+         hb_arraySetNL( pStru,  2 , p->tmAscent           );
+         hb_arraySetNL( pStru,  3 , p->tmDescent          );
+         hb_arraySetNL( pStru,  4 , p->tmInternalLeading  );
+         hb_arraySetNL( pStru,  5 , p->tmExternalLeading  );
+         hb_arraySetNL( pStru,  6 , p->tmAveCharWidth     );
+         hb_arraySetNL( pStru,  7 , p->tmMaxCharWidth     );
+         hb_arraySetNL( pStru,  8 , p->tmWeight           );
+         hb_arraySetNL( pStru,  9 , p->tmOverhang         );
+         hb_arraySetNL( pStru, 10 , p->tmDigitizedAspectX );
+         hb_arraySetNL( pStru, 11 , p->tmDigitizedAspectY );
+         HB_ARRAYSETSTRLEN( pStru, 12 , &p->tmFirstChar   , 1 );
+         HB_ARRAYSETSTRLEN( pStru, 13 , &p->tmLastChar    , 1 );
+         HB_ARRAYSETSTRLEN( pStru, 14 , &p->tmDefaultChar , 1 );
+         HB_ARRAYSETSTRLEN( pStru, 15 , &p->tmBreakChar   , 1 );
+         hb_arraySetNL( pStru, 16 , p->tmItalic           );
+         hb_arraySetNL( pStru, 17 , p->tmUnderlined       );
+         hb_arraySetNL( pStru, 18 , p->tmStruckOut        );
+         hb_arraySetNL( pStru, 19 , p->tmPitchAndFamily   );
+         hb_arraySetNL( pStru, 20 , p->tmCharSet          );
+      }
+   }
+}
+
+HB_FUNC( WAPI_GETTEXTMETRICS )
+{
+   TEXTMETRIC tm;
+   BOOL bResult;
+
+   memset( &tm, 0, sizeof( tm ) );
+
+   bResult = GetTextMetrics( hbwapi_par_HDC( 1 ), &tm );
+   hbwapi_SetLastError( GetLastError() );
+
+   hbwapi_stor_TEXTMETRIC( &tm, 2 );
+   hbwapi_ret_L( bResult );
 }

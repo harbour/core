@@ -1314,7 +1314,7 @@ HB_FUNC( WAPI_REDRAWWINDOW )
       hbwapi_par_UINT( 4 ) ) );             /* array of redraw flags */
 }
 
-HB_FUNC( WAPI_GETICONINFO )
+HB_FUNC( WAPI_GETICONINFO )  /* TODO: added support to return hash instead of array. See wapi_GetTextMetrics() */
 {
    PHB_ITEM aInfo = hb_itemArrayNew( 5 );
    ICONINFO ii;
