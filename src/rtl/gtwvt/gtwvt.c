@@ -3020,6 +3020,9 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
             {
                /* Create "Mark" prompt in SysMenu to allow console type copy operation */
                AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
+               /* CloseButton [x] and "Close" window menu item */
+               EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND |
+                               ( pWVT->CloseMode < 2 ? MF_ENABLED : MF_GRAYED ) );
             }
          }
          if( pWVT->bFullScreen )
