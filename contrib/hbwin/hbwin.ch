@@ -339,7 +339,7 @@
 #define WIN_DMORIENT_PORTRAIT              1
 #define WIN_DMORIENT_LANDSCAPE             2
 
-/* win_SetMapMode() parameters */
+/* wapi_SetMapMode() parameters */
 #define WIN_MM_TEXT                        1
 #define WIN_MM_LOMETRIC                    2
 #define WIN_MM_HIMETRIC                    3
@@ -350,7 +350,7 @@
 #define WIN_MM_ANISOTROPIC                 8
 #define WIN_MM_MAX_FIXEDSCALE              WIN_MM_TWIPS
 
-/* win_CreateFont() font weights */
+/* wapi_CreateFont() font weights */
 #define WIN_FW_DONTCARE                    0
 #define WIN_FW_THIN                        100
 #define WIN_FW_EXTRALIGHT                  200
@@ -386,7 +386,7 @@
 #define WIN_OUT_OUTLINE_PRECIS             8
 #define WIN_OUT_PS_ONLY_PRECIS             10
 
-/* win_SetBkMode() modes */
+/* wapi_SetBkMode() modes */
 #define WIN_TRANSPARENT                    1
 #define WIN_OPAQUE                         2
 
@@ -439,7 +439,7 @@
 #define WIN_FR_PRIVATE                     0x10
 #define WIN_FR_NOT_ENUM                    0x20
 
-/* Windows charset values (win_CreateFont()) */
+/* Windows charset values (wapi_CreateFont()) */
 #define WIN_ANSI_CHARSET                   0
 #define WIN_DEFAULT_CHARSET                1
 #define WIN_SYMBOL_CHARSET                 2
@@ -461,7 +461,7 @@
 #define WIN_EASTEUROPE_CHARSET             238
 #define WIN_OEM_CHARSET                    255
 
-/* win_GetDeviceCaps() parameters */
+/* wapi_GetDeviceCaps() parameters */
 #define WIN_HORZSIZE                       4     /* Horizontal size in millimeters */
 #define WIN_VERTSIZE                       6     /* Vertical size in millimeters */
 #define WIN_HORZRES                        8     /* Horizontal width in pixels */
@@ -576,7 +576,7 @@
 #define WIN_SM_REMOTECONTROL               8193
 #define WIN_SM_CARETBLINKINGENABLED        8194
 
-/* win_TextOut() text alignment modes */
+/* wapi_TextOut() text alignment modes */
 #define WIN_TA_NOUPDATECP                  0
 #define WIN_TA_UPDATECP                    1
 #define WIN_TA_LEFT                        0
@@ -1075,6 +1075,8 @@
 #define WIN_MB_DEFMASK                     0x00000F00
 #define WIN_MB_MODEMASK                    0x00003000
 #define WIN_MB_MISCMASK                    0x0000C000
+
+#define HB_WIN_MB_BEEP                     0xFFFFFFFF  /* Windows has no constant for that */
 
 /* wapi_MessageBox() return values */
 #define WIN_IDOK                           1

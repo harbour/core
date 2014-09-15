@@ -159,7 +159,7 @@ CREATE CLASS win_Prn
    VAR hFont            INIT NIL
    VAR FontName         INIT ""                          // Current Point size for font
    VAR FontPointSize    INIT 12                          // Point size for font
-   VAR FontWidth        INIT { 0, 0 }                    // { Mul, Div } Calc width: nWidth := wapi_MulDiv( nMul, win_GetDeviceCaps( HDC, WIN_LOGPIXELSX ), nDiv )
+   VAR FontWidth        INIT { 0, 0 }                    // { Mul, Div } Calc width: nWidth := wapi_MulDiv( nMul, wapi_GetDeviceCaps( HDC, WIN_LOGPIXELSX ), nDiv )
                                                          // If font width is specified it is in "characters per inch" to emulate DotMatrix
    VAR fBold            INIT 0                   HIDDEN  // font darkness weight (Bold). See wingdi.h or WIN SDK CreateFont() for valid values
    VAR fUnderLine       INIT .F.                 HIDDEN  // UnderLine is on or off
@@ -242,30 +242,30 @@ METHOD Create() CLASS win_Prn
       ENDIF
 
       IF lResult
-         IF ::BkMode != NIL
-            win_SetBkMode( ::hPrinterDc, ::BkMode )
+         IF HB_ISNUMERIC( ::BkMode )
+            wapi_SetBkMode( ::hPrinterDc, ::BkMode )
          ENDIF
          // Set mapping mode to pixels, topleft down
-         win_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
+         wapi_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
 #if 0
          win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
 #endif
          // Get Margins etc... here
-         ::PageWidth        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
-         ::PageHeight       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALHEIGHT )
-         ::LeftMargin       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETX )
+         ::PageWidth        := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
+         ::PageHeight       := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALHEIGHT )
+         ::LeftMargin       := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETX )
          ::RightMargin      := ( ::PageWidth - ::LeftMargin ) + 1
-         ::PixelsPerInchY   := win_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSY )
-         ::PixelsPerInchX   := win_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSX )
+         ::PixelsPerInchY   := wapi_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSY )
+         ::PixelsPerInchX   := wapi_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSX )
          ::LineHeight       := Int( ::PixelsPerInchY / 6 )  // Default 6 lines per inch == # of pixels per line
-         ::TopMargin        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETY )
+         ::TopMargin        := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETY )
          ::BottomMargin     := ( ::PageHeight - ::TopMargin ) + 1
 
          // Set .T. if can print bitmaps
          ::BitMapsOk := win_BitmapsOK( ::hPrinterDC )
 
          // supports Color
-         ::NumColors := win_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )
+         ::NumColors := wapi_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )
 
          // Set the standard font
          ::SetDefaultFont()
@@ -483,7 +483,9 @@ METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nChar
       ::CharWidth   := Abs( ::fCharWidth )
       ::CharHeight  := ::GetCharHeight()
    ENDIF
-   ::FontName := win_GetPrinterFontName( ::hPrinterDC )  // Get the font name that Windows actually used
+   IF ! Empty( ::hPrinterDC )
+      ::FontName := wapi_GetTextFace( ::hPrinterDC )  // Get the font name that Windows actually used
+   ENDIF
 
    RETURN ::SetFontOk
 
@@ -601,25 +603,38 @@ METHOD SetPos( nPosX, nPosY ) CLASS win_Prn
 
 METHOD SetColor( nClrText, nClrPane, nAlign ) CLASS win_Prn
 
-   IF HB_ISNUMERIC( nClrText )
-      ::TextColor := nClrText
-   ENDIF
-   IF HB_ISNUMERIC( nClrPane )
-      ::BkColor := nClrPane
-   ENDIF
-   IF HB_ISNUMERIC( nAlign )
-      ::TextAlign := nAlign
+   LOCAL nOldColor
+
+   IF ! Empty( ::hPrinterDc )
+      IF HB_ISNUMERIC( nClrText )
+         nOldColor := wapi_SetTextColor( ::hPrinterDC, ::TextColor := nClrText )
+      ELSE
+         nOldColor := wapi_GetTextColor( ::hPrinterDC )
+      ENDIF
+      IF HB_ISNUMERIC( nClrPane )
+         wapi_SetBkColor( ::hPrinterDC, ::BkColor := nClrPane )
+      ENDIF
+      IF HB_ISNUMERIC( nAlign )
+         wapi_SetTextAlign( ::hPrinterDC, ::TextAlign := nAlign )
+      ENDIF
+   ELSE
+      nOldColor := WIN_CLR_INVALID
    ENDIF
 
-   RETURN win_SetColor( ::hPrinterDC, nClrText, nClrPane, nAlign )
+   RETURN nOldColor
 
 METHOD SetBkMode( nMode ) CLASS win_Prn
 
-   IF HB_ISNUMERIC( nMode )
-      ::BkMode := nMode
+   IF ! Empty( ::hPrinterDc )
+      IF HB_ISNUMERIC( nMode )
+         ::BkMode := nMode
+         RETURN wapi_SetBkMode( ::hPrinterDc, nMode )
+      ELSE
+         RETURN wapi_GetBkMode( ::hPrinterDc )
+      ENDIF
    ENDIF
 
-   RETURN win_SetBkMode( ::hPrinterDc, nMode )
+   RETURN 0
 
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS win_Prn
 
@@ -655,7 +670,8 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
    LOCAL nDiv := 0
    LOCAL hFont
 
-   IF ::CheckPage()
+   IF ! Empty( ::hPrinterDc ) .AND. ;
+      ::CheckPage()
 
       IF HB_ISSTRING( cFont )
          DO CASE
@@ -669,7 +685,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
          ::hFont := win_CreateFont( ::hPrinterDC, cFont, hb_defaultValue( nPointSize, ::FontPointSize ), nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
       ENDIF
       IF HB_ISNUMERIC( nColor )
-         nColor := win_SetColor( ::hPrinterDC, nColor )
+         nColor := wapi_SetTextColor( ::hPrinterDC, nColor )
       ENDIF
 
       lResult := ::TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )
@@ -678,7 +694,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
          ::hFont := hFont  // Reset Font
       ENDIF
       IF HB_ISNUMERIC( nColor )
-         win_SetColor( ::hPrinterDC, nColor )  // Reset Color
+         wapi_SetTextColor( ::hPrinterDC, nColor )  // Reset Color
       ENDIF
    ELSE
       lResult := .F.
@@ -698,9 +714,13 @@ METHOD Line( nX1, nY1, nX2, nY2 ) CLASS win_Prn
 
    LOCAL lResult := .F.
 
-   IF ::CheckPage() .AND. ;
-      ( lResult := win_LineTo( ::hPrinterDC, nX1, nY1, nX2, nY2 ) )
-      ::HavePrinted := .T.
+   IF ! Empty( ::hPrinterDc ) .AND. ;
+      ::CheckPage()
+
+      IF ( lResult := ( wapi_MoveToEx( ::hPrinterDC, nX1, nY1 ) .AND. ;
+                        wapi_LineTo( ::hPrinterDC, nX2, nY2 ) ) )
+         ::HavePrinted := .T.
+      ENDIF
    ENDIF
 
    RETURN lResult
@@ -709,9 +729,21 @@ METHOD Box( nX1, nY1, nX2, nY2, nWidth, nHeight ) CLASS win_Prn
 
    LOCAL lResult := .F.
 
-   IF ::CheckPage() .AND. ;
-      ( lResult := win_Rectangle( ::hPrinterDC, nX1, nY1, nX2, nY2, nWidth, nHeight ) )
-      ::HavePrinted := .T.
+   IF ! Empty( ::hPrinterDc ) .AND. ;
+      ::CheckPage()
+
+      hb_default( @nWidth, 0 )
+      hb_default( @nHeight, 0 )
+
+      IF nWidth != 0 .AND. nHeight != 0
+         lResult := wapi_RoundRect( ::hPrinterDC, nX1, nY1, nX2, nY2, nWidth, nHeight )
+      ELSE
+         lResult := wapi_Rectangle( ::hPrinterDC, nX1, nY1, nX2, nY2 )
+      ENDIF
+
+      IF lResult
+         ::HavePrinted := .T.
+      ENDIF
    ENDIF
 
    RETURN lResult
@@ -720,8 +752,9 @@ METHOD Arc( nX1, nY1, nX2, nY2 ) CLASS win_Prn
 
    LOCAL lResult := .F.
 
-   IF ::CheckPage() .AND. ;
-      ( lResult := win_Arc( ::hPrinterDC, nX1, nY1, nX2, nY2 ) )
+   IF ! Empty( ::hPrinterDc ) .AND. ;
+      ::CheckPage() .AND. ;
+      ( lResult := wapi_Arc( ::hPrinterDC, nX1, nY1, nX2, nY2 ) )
       ::HavePrinted := .T.
    ENDIF
 
@@ -731,8 +764,9 @@ METHOD Ellipse( nX1, nY1, nX2, nY2 ) CLASS win_Prn
 
    LOCAL lResult := .F.
 
-   IF ::CheckPage() .AND. ;
-      ( lResult := win_Ellipse( ::hPrinterDC, nX1, nY1, nX2, nY2 ) )
+   IF ! Empty( ::hPrinterDc ) .AND. ;
+      ::CheckPage() .AND. ;
+      ( lResult := wapi_Ellipse( ::hPrinterDC, nX1, nY1, nX2, nY2 ) )
       ::HavePrinted := .T.
    ENDIF
 
@@ -806,4 +840,4 @@ METHOD Inch_To_PosY( nInch ) CLASS win_Prn
    RETURN Int( ( nInch * ::PixelsPerInchY ) - ::TopMargin )
 
 METHOD GetDeviceCaps( nCaps ) CLASS win_Prn
-   RETURN win_GetDeviceCaps( ::hPrinterDC, nCaps )
+   RETURN iif( Empty( ::hPrinterDc ), 0, wapi_GetDeviceCaps( ::hPrinterDC, nCaps ) )

@@ -65,12 +65,10 @@ HB_FUNC( WIN_CREATEDC )
    {
       void * hDevice;
 
-      HDC hDC = CreateDC( TEXT( "" ),
-                          HB_PARSTR( 1, &hDevice, NULL ),
-                          NULL,
-                          NULL );
-
-      hbwapi_ret_HDC( hDC );
+      hbwapi_ret_HDC( CreateDC( TEXT( "" ),
+                                HB_PARSTR( 1, &hDevice, NULL ),
+                                NULL,
+                                NULL ) );
 
       hb_strfree( hDevice );
    }
@@ -249,14 +247,14 @@ HB_FUNC( WIN_GETCHARSIZE )
    hb_retnl( lResult );
 }
 
-HB_FUNC( WIN_GETDEVICECAPS )
+HB_FUNC( WIN_GETDEVICECAPS )  /* DEPRECATED */
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retni( hDC && HB_ISNUM( 2 ) ? GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
 }
 
-HB_FUNC( WIN_SETMAPMODE )
+HB_FUNC( WIN_SETMAPMODE )  /* DEPRECATED */
 {
 #if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
@@ -342,7 +340,7 @@ HB_FUNC( WIN_CREATEFONT )
       hb_retptr( NULL );
 }
 
-HB_FUNC( WIN_GETPRINTERFONTNAME )
+HB_FUNC( WIN_GETPRINTERFONTNAME )  /* DEPRECATED */
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
@@ -585,7 +583,7 @@ HB_FUNC( WIN_ENUMFONTFAMILIES )
    hb_itemReturnRelease( pArray );
 }
 
-HB_FUNC( WIN_SETCOLOR )
+HB_FUNC( WIN_SETCOLOR )  /* DEPRECATED */
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
@@ -655,7 +653,7 @@ HB_FUNC( WIN_FILLRECT )
    hb_retl( fResult );
 }
 
-HB_FUNC( WIN_LINETO )
+HB_FUNC( WIN_LINETO )  /* DEPRECATED */
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
@@ -665,7 +663,7 @@ HB_FUNC( WIN_LINETO )
                                hb_parni( 5 ) /* y2 */ ) : HB_FALSE );
 }
 
-HB_FUNC( WIN_RECTANGLE )
+HB_FUNC( WIN_RECTANGLE )  /* DEPRECATED */
 {
    HDC hDC     = hbwapi_par_HDC( 1 );
    int x1      = hb_parni( 2 );
@@ -681,7 +679,7 @@ HB_FUNC( WIN_RECTANGLE )
       hb_retl( hDC ? Rectangle( hDC, x1, y1, x2, y2 ) : HB_FALSE );
 }
 
-HB_FUNC( WIN_ARC )
+HB_FUNC( WIN_ARC )  /* DEPRECATED */
 {
 #if defined( HB_OS_WIN_CE )
    hb_retl( HB_FALSE );
@@ -700,7 +698,7 @@ HB_FUNC( WIN_ARC )
 #endif
 }
 
-HB_FUNC( WIN_ELLIPSE )
+HB_FUNC( WIN_ELLIPSE )  /* DEPRECATED */
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
@@ -711,7 +709,7 @@ HB_FUNC( WIN_ELLIPSE )
                            hb_parni( 5 ) /* y2 */ ) : HB_FALSE );
 }
 
-HB_FUNC( WIN_SETBKMODE )
+HB_FUNC( WIN_SETBKMODE )  /* DEPRECATED */
 {
    HDC hDC = hbwapi_par_HDC( 1 );
    int iMode = 0;
