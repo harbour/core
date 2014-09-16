@@ -331,7 +331,6 @@ DYNAMIC wce_SimPhonebookStatus
 DYNAMIC wce_SimReadPhonebookEntry
 DYNAMIC wce_SimWritePhonebookEntry
 DYNAMIC wce_SmsSendMessage
-DYNAMIC win_AbortDoc
 DYNAMIC win_ANSIToOEM
 DYNAMIC win_ANSIToWide
 DYNAMIC win_axGetControl
@@ -363,17 +362,12 @@ DYNAMIC win_comSetTimeouts
 DYNAMIC win_comStatus
 DYNAMIC win_comWrite
 DYNAMIC win_comXonXoffFlow
-DYNAMIC win_CreateDC
 DYNAMIC win_CreateFont
-DYNAMIC win_DeleteDC
 DYNAMIC win_DrawBitmap
-DYNAMIC win_EndDoc
-DYNAMIC win_EndPage
 DYNAMIC win_EnumFontFamilies
 DYNAMIC win_EnumFonts
 DYNAMIC win_ErrorDesc
 DYNAMIC win_ErrorString
-DYNAMIC win_FillRect
 DYNAMIC win_GetCharSize
 DYNAMIC win_GetCommandLineParam
 DYNAMIC win_GetDocumentProperties
@@ -450,10 +444,7 @@ DYNAMIC win_SetDocumentProperties
 DYNAMIC win_SetPen
 DYNAMIC win_ShellNotifyIcon
 DYNAMIC win_SHFileOperation
-DYNAMIC win_StartDoc
-DYNAMIC win_StartPage
 DYNAMIC win_SysRefresh
-DYNAMIC win_TextOut
 DYNAMIC win_Unicode
 DYNAMIC win_UuidCreateString
 DYNAMIC win_WideToansi

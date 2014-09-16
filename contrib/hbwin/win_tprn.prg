@@ -219,7 +219,7 @@ METHOD Create() CLASS win_Prn
    LOCAL lResult := .F.
 
    ::Destroy()  // Finish current print job if any
-   IF ! Empty( ::hPrinterDC := win_CreateDC( ::PrinterName ) )
+   IF ! Empty( ::hPrinterDC := wapi_CreateDC( , ::PrinterName ) )
 
       // Set Form Type
       // Set Number of Copies
@@ -306,30 +306,37 @@ METHOD StartDoc( cDocName ) CLASS win_Prn
 
    LOCAL lResult
 
-   IF ! HB_ISSTRING( cDocName )
-      cDocName := hb_ProgName() + " [" + hb_DToC( Date(), "yyyy-mm-dd" ) + " - " + Time() + "]"
-   ENDIF
+   IF ! Empty( ::hPrinterDc )
 
-   IF ( lResult := win_StartDoc( ::hPrinterDc, cDocName ) )
-      IF ( lResult := ::StartPage( ::hPrinterDc ) )
-         ::Printing := .T.
-      ELSE
-         ::EndDoc( .T. )
+      IF ! HB_ISSTRING( cDocName )
+         cDocName := hb_ProgName() + " [" + hb_DToC( Date(), "yyyy-mm-dd" ) + " - " + Time() + "]"
       ENDIF
+
+      IF ( lResult := ( wapi_StartDoc( ::hPrinterDc, { "lpszDocName" => cDocName } ) > 0 ) )
+         IF ( lResult := ::StartPage( ::hPrinterDc ) )
+            ::Printing := .T.
+         ELSE
+            ::EndDoc( .T. )
+         ENDIF
+      ENDIF
+   ELSE
+      lResult := .F.
    ENDIF
 
    RETURN lResult
 
 METHOD EndDoc( lAbortDoc ) CLASS win_Prn
 
-   IF ! ::HavePrinted .OR. hb_defaultValue( lAbortDoc, .F. )
-      win_AbortDoc( ::hPrinterDC )
-   ELSE
-      ::EndPage( .F. )
-      win_EndDoc( ::hPrinterDC )
+   IF ! Empty( ::hPrinterDc )
+      IF ! ::HavePrinted .OR. hb_defaultValue( lAbortDoc, .F. )
+         wapi_AbortDoc( ::hPrinterDC )
+      ELSE
+         ::EndPage( .F. )
+         wapi_EndDoc( ::hPrinterDC )
+      ENDIF
+      ::HavePrinted := ::Printing := ::PageInit := .F.
+      ::PageNumber := 0
    ENDIF
-   ::HavePrinted := ::Printing := ::PageInit := .F.
-   ::PageNumber := 0
 
    RETURN .T.
 
@@ -342,57 +349,63 @@ METHOD StartPage() CLASS win_Prn
    LOCAL nLPrintQuality
    LOCAL nLPaperLength
    LOCAL nLPaperWidth
-   LOCAL lChangeDP := .F.
+   LOCAL lChangeDP
 
-   IF ::LandScape != ::fOldLandScape  // Direct-modify property
-      lLLandScape := ::fOldLandScape := ::LandScape
-      lChangeDP := .T.
+   IF ! Empty( ::hPrinterDc )
+
+      lChangeDP := .F.
+      IF ::LandScape != ::fOldLandScape  // Direct-modify property
+         lLLandScape := ::fOldLandScape := ::LandScape
+         lChangeDP := .T.
+      ENDIF
+      IF ::BinNumber != ::fOldBinNumber  // Direct-modify property
+         nLBinNumber := ::fOldBinNumber := ::BinNumber
+         lChangeDP := .T.
+      ENDIF
+      IF ::FormType != ::fOldFormType  // Direct-modify property
+         nLFormType := ::fOldFormType := ::FormType
+         lChangeDP := .T.
+      ENDIF
+      IF ::fDuplexType != ::fNewDuplexType  // Get/Set property
+         nLDuplexType := ::fDuplexType := ::fNewDuplexType
+         lChangeDP := .T.
+      ENDIF
+      IF ::fPrintQuality != ::fNewPrintQuality  // Get/Set property
+         nLPrintQuality := ::fPrintQuality := ::fNewPrintQuality
+         lChangeDP := .T.
+      ENDIF
+      IF ::fOldPaperLength != ::PaperLength .OR. ; // Get/Set property
+         ::fOldPaperWidth != ::PaperWidth          // Get/Set property
+         nLFormType := ::FormType
+         nLPaperLength := ::fOldPaperLength := ::PaperLength
+         nLPaperWidth := ::fOldPaperWidth := ::PaperWidth
+         lChangeDP := .T.
+      ENDIF
+      IF ::fOldPaperWidth != ::PaperWidth  // Get/Set property
+         lChangeDP := .T.
+      ENDIF
+      IF lChangeDP
+         win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
+            nLFormType, lLLandscape, , ;
+            nLBinNumber, nLDuplexType, nLPrintQuality, ;
+            nLPaperLength, nLPaperWidth )
+      ENDIF
+      wapi_StartPage( ::hPrinterDC )
+      ::PageNumber++
+      ::PageInit := .F.
+      ::PosX := ::LeftMargin
+      ::PosY := ::TopMargin
    ENDIF
-   IF ::BinNumber != ::fOldBinNumber  // Direct-modify property
-      nLBinNumber := ::fOldBinNumber := ::BinNumber
-      lChangeDP := .T.
-   ENDIF
-   IF ::FormType != ::fOldFormType  // Direct-modify property
-      nLFormType := ::fOldFormType := ::FormType
-      lChangeDP := .T.
-   ENDIF
-   IF ::fDuplexType != ::fNewDuplexType  // Get/Set property
-      nLDuplexType := ::fDuplexType := ::fNewDuplexType
-      lChangeDP := .T.
-   ENDIF
-   IF ::fPrintQuality != ::fNewPrintQuality  // Get/Set property
-      nLPrintQuality := ::fPrintQuality := ::fNewPrintQuality
-      lChangeDP := .T.
-   ENDIF
-   IF ::fOldPaperLength != ::PaperLength .OR. ; // Get/Set property
-      ::fOldPaperWidth != ::PaperWidth          // Get/Set property
-      nLFormType := ::FormType
-      nLPaperLength := ::fOldPaperLength := ::PaperLength
-      nLPaperWidth := ::fOldPaperWidth := ::PaperWidth
-      lChangeDP := .T.
-   ENDIF
-   IF ::fOldPaperWidth != ::PaperWidth  // Get/Set property
-      lChangeDP := .T.
-   ENDIF
-   IF lChangeDP
-      win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
-         nLFormType, lLLandscape, , ;
-         nLBinNumber, nLDuplexType, nLPrintQuality, ;
-         nLPaperLength, nLPaperWidth )
-   ENDIF
-   win_StartPage( ::hPrinterDC )
-   ::PageNumber++
-   ::PageInit := .F.
-   ::PosX := ::LeftMargin
-   ::PosY := ::TopMargin
 
    RETURN .T.
 
 METHOD CheckPage() CLASS win_Prn
 
-   IF ::PageInit
+   IF ! Empty( ::hPrinterDc ) .AND. ;
+      ::PageInit
+
       ::PageInit := .F.
-      win_StartPage( ::hPrinterDC )
+      wapi_StartPage( ::hPrinterDC )
       ::PageNumber++
       IF hb_osIsWin9x()  // Reset font on Win9x
          ::SetFont()
@@ -403,15 +416,17 @@ METHOD CheckPage() CLASS win_Prn
 
 METHOD EndPage( lStartNewPage ) CLASS win_Prn
 
-   win_EndPage( ::hPrinterDC )
-   IF hb_defaultValue( lStartNewPage, .T. )
-      IF ::PageInit
-         ::PosX := ::LeftMargin
-         ::PosY := ::TopMargin
-      ELSE
-         ::StartPage()
-         IF hb_osIsWin9x()  // Reset font on Win9X
-            ::SetFont()
+   IF ! Empty( ::hPrinterDc )
+      wapi_EndPage( ::hPrinterDC )
+      IF hb_defaultValue( lStartNewPage, .T. )
+         IF ::PageInit
+            ::PosX := ::LeftMargin
+            ::PosY := ::TopMargin
+         ELSE
+            ::StartPage()
+            IF hb_osIsWin9x()  // Reset font on Win9x
+               ::SetFont()
+            ENDIF
          ENDIF
       ENDIF
    ENDIF
@@ -639,12 +654,25 @@ METHOD SetBkMode( nMode ) CLASS win_Prn
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS win_Prn
 
    LOCAL lResult := .F.
+   LOCAL size
    LOCAL nPosX
 
-   IF HB_ISSTRING( cString ) .AND. ::CheckPage()
+   IF ! Empty( ::hPrinterDc ) .AND. ;
+      HB_ISSTRING( cString ) .AND. ! Empty( cString ) .AND. ;
+      ::CheckPage()
 
-      nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, Len( cString ), ;
-         ::fCharWidth, hb_defaultValue( nAlign, hb_bitOr( WIN_TA_BOTTOM, WIN_TA_LEFT ) ) )
+      wapi_SetTextAlign( ::hPrinterDC, hb_bitOr( WIN_TA_NOUPDATECP, hb_defaultValue( nAlign, hb_bitOr( WIN_TA_BOTTOM, WIN_TA_LEFT ) ) ) )
+
+      nPosX := 0
+      IF ::fCharWidth < 0
+         IF wapi_ExtTextOut( ::hPrinterDC, ::PosX, ::PosY,,, cString, AFill( Array( Len( cString ) ), -::fCharWidth ) )
+            nPosX := Len( cString ) * -::fCharWidth
+         ENDIF
+      ELSEIF wapi_ExtTextOut( ::hPrinterDC, ::PosX, ::PosY,,, cString )
+         size := { => }
+         wapi_GetTextExtentPoint32( ::hPrinterDC, cString, size )  /* Get the length of the text in device size */
+         nPosX := size[ "cx" ]  /* return the width so we can update the current pen position (::PosY) */
+      ENDIF
 
       ::HavePrinted := lResult := .T.
 
@@ -776,8 +804,9 @@ METHOD FillRect( nX1, nY1, nX2, nY2, nColor ) CLASS win_Prn
 
    LOCAL lResult := .F.
 
-   IF ::CheckPage() .AND. ;
-      ( lResult := win_FillRect( ::hPrinterDC, nX1, nY1, nX2, nY2, nColor ) )
+   IF ! Empty( ::hPrinterDc ) .AND. ;
+      ::CheckPage() .AND. ;
+      ( lResult := ( wapi_FillRect( ::hPrinterDC, { nX1, nY1, nX2, nY2 }, wapi_CreateSolidBrush( nColor ) ) != 0 ) )
       ::HavePrinted := .T.
    ENDIF
 
@@ -791,7 +820,7 @@ METHOD GetTextWidth( cString ) CLASS win_Prn
       RETURN Len( cString ) * ::CharWidth
    ELSEIF ! Empty( ::hPrinterDc )
       size := { => }
-      wapi_GetTextExtentPoint32( ::hPrinterDC, cString, @size )
+      wapi_GetTextExtentPoint32( ::hPrinterDC, cString, size )
       RETURN size[ "cx" ]  // Return width in device units
    ENDIF
 
@@ -803,7 +832,7 @@ METHOD GetTextHeight( cString ) CLASS win_Prn
 
    IF ! Empty( ::hPrinterDc )
       size := { => }
-      wapi_GetTextExtentPoint32( ::hPrinterDC, cString, @size )
+      wapi_GetTextExtentPoint32( ::hPrinterDC, cString, size )
       RETURN size[ "cy" ]  // Return height in device units
    ENDIF
 

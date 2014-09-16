@@ -27,7 +27,7 @@
 -depincpath=qt5:/usr/local/opt/qt5/include{darwin}
 -depfinish=qt5
 
-{!HBMK_HAS_QT5}-depurlbase=qt:https://qt-project.org/
+{!HBMK_HAS_QT5}-depurlbase=qt:https://www.qt.io/developers/
 {!HBMK_HAS_QT5}-depurlbase=qt:https://download.qt-project.org/official_releases/qt/
 {!HBMK_HAS_QT5&!darwin&!android}-deppkgname=qt:QtCore
 {!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h

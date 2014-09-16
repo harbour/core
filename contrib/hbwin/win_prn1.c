@@ -59,6 +59,7 @@
    #include <winspool.h>
 #endif
 
+#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_CREATEDC )
 {
    if( HB_ISCHAR( 1 ) )
@@ -122,8 +123,7 @@ HB_FUNC( WIN_ABORTDOC )
    hb_retl( hDC && AbortDoc( hDC ) > 0 );
 }
 
-/* Compatibility dummy */
-HB_FUNC( WIN_DELETEDC )
+HB_FUNC( WIN_DELETEDC )  /* Compatibility dummy */
 {
    hb_retni( 0 );
 }
@@ -194,7 +194,6 @@ HB_FUNC( WIN_TEXTOUT )
    hb_retnl( lResult );
 }
 
-#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_GETTEXTSIZE )
 {
    long lResult = 0;
@@ -638,6 +637,7 @@ HB_FUNC( WIN_SETPEN )
       hb_retptr( NULL );
 }
 
+#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_FILLRECT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
@@ -661,7 +661,6 @@ HB_FUNC( WIN_FILLRECT )
    hb_retl( fResult );
 }
 
-#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_LINETO )
 {
    HDC hDC = hbwapi_par_HDC( 1 );

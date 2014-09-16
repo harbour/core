@@ -58,20 +58,6 @@ FUNCTION hb_osNewLine()
 
 #if 0
 
-FUNCTION hb_ANSIToOEM( s )
-#if defined( __PLATFORM__WINDOWS )
-   RETURN win_ANSIToOEM( s )
-#else
-   RETURN s
-#endif
-
-FUNCTION hb_OEMToANSI( s )
-#if defined( __PLATFORM__WINDOWS )
-   RETURN win_OEMToANSI( s )
-#else
-   RETURN s
-#endif
-
 FUNCTION hb_PCodeVer()
    RETURN hb_Version( HB_VERSION_PCODE_VER_STR )
 
