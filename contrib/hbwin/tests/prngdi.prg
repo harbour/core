@@ -16,6 +16,7 @@ PROCEDURE Main()
    LOCAL aRECT
    LOCAL hOBJECT
    LOCAL hTM
+   LOCAL hSIZE
 
    pDEVMODE := __wapi_DEVMODE_New( cPrinterName )
    __wapi_DEVMODE_Set( pDEVMODE, { "dmPaperSize" => WIN_DMPAPER_A3 } )
@@ -62,6 +63,14 @@ PROCEDURE Main()
    hTM := NIL
    ? wapi_GetTextMetrics( hDC, @hTM )
    ? hb_ValToExp( hTM )
+
+   ? "out SIZE"
+   hSIZE := { => }
+   ? wapi_GetTextExtentPoint32( hDC, "Hello", hSIZE )
+   ? hb_ValToExp( hSIZE )
+   hSIZE := NIL
+   ? wapi_GetTextExtentPoint32( hDC, "Hello", @hSIZE )
+   ? hb_ValToExp( hSIZE )
 
    ? wapi_EndPage( hDC )
    ? wapi_EndDoc( hDC )

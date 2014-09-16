@@ -114,6 +114,7 @@ DYNAMIC wapi_GetSystemMenu
 DYNAMIC wapi_GetSystemMetrics
 DYNAMIC wapi_GetTextAlign
 DYNAMIC wapi_GetTextColor
+DYNAMIC wapi_GetTextExtentPoint32
 DYNAMIC wapi_GetTextFace
 DYNAMIC wapi_GetTextMetrics
 DYNAMIC wapi_GetVolumeInformation
@@ -378,7 +379,6 @@ DYNAMIC win_GetCommandLineParam
 DYNAMIC win_GetDocumentProperties
 DYNAMIC win_GetOpenFileName
 DYNAMIC win_GetSaveFileName
-DYNAMIC win_GetTextSize
 DYNAMIC win_hInstance
 DYNAMIC win_hPrevInstance
 DYNAMIC win_LoadBitmapFile

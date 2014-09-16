@@ -194,6 +194,7 @@ HB_FUNC( WIN_TEXTOUT )
    hb_retnl( lResult );
 }
 
+#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_GETTEXTSIZE )
 {
    long lResult = 0;
@@ -216,10 +217,10 @@ HB_FUNC( WIN_GETTEXTSIZE )
 
          GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );  /* Get the length of the text in device size */
 
-         if( ! hb_parldef( 4, HB_TRUE ) )
-            lResult = ( long ) sSize.cy;  /* return the height */
-         else
+         if( hb_parldef( 4, HB_TRUE ) )
             lResult = ( long ) sSize.cx;  /* return the width */
+         else
+            lResult = ( long ) sSize.cy;  /* return the height */
       }
 
       hb_strfree( hData );
@@ -227,6 +228,7 @@ HB_FUNC( WIN_GETTEXTSIZE )
 
    hb_retnl( lResult );
 }
+#endif
 
 HB_FUNC( WIN_GETCHARSIZE )
 {

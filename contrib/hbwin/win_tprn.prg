@@ -785,18 +785,29 @@ METHOD FillRect( nX1, nY1, nX2, nY2, nColor ) CLASS win_Prn
 
 METHOD GetTextWidth( cString ) CLASS win_Prn
 
-   LOCAL nWidth
+   LOCAL size
 
    IF ::FontWidth[ 2 ] < 0 .AND. ::FontWidth[ 1 ] != 0
-      nWidth := Len( cString ) * ::CharWidth
-   ELSE
-      nWidth := win_GetTextSize( ::hPrinterDC, cString, Len( cString ) )  // Return Width in device units
+      RETURN Len( cString ) * ::CharWidth
+   ELSEIF ! Empty( ::hPrinterDc )
+      size := { => }
+      wapi_GetTextExtentPoint32( ::hPrinterDC, cString, @size )
+      RETURN size[ "cx" ]  // Return width in device units
    ENDIF
 
-   RETURN nWidth
+   RETURN 0
 
 METHOD GetTextHeight( cString ) CLASS win_Prn
-   RETURN win_GetTextSize( ::hPrinterDC, cString, Len( cString ), .F. )  // Return Height in device units
+
+   LOCAL size
+
+   IF ! Empty( ::hPrinterDc )
+      size := { => }
+      wapi_GetTextExtentPoint32( ::hPrinterDC, cString, @size )
+      RETURN size[ "cy" ]  // Return height in device units
+   ENDIF
+
+   RETURN 0
 
 METHOD DrawBitmap( oBmp ) CLASS win_Prn
 

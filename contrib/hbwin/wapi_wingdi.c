@@ -104,6 +104,34 @@ POINT * hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory )
    return NULL;
 }
 
+void hbwapi_stor_SIZE( const SIZE * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   if( pStru )
+   {
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemNL( pStru, "cx", p->cx );
+         s_hb_hashSetCItemNL( pStru, "cy", p->cy );
+      }
+      else
+      {
+         if( ! HB_IS_ARRAY( pStru ) )
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 2 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
+         else if( hb_arrayLen( pStru ) < 2 )
+            hb_arraySize( pStru, 2 );
+
+         hb_arraySetNL( pStru, 1, p->cx );
+         hb_arraySetNL( pStru, 2, p->cy );
+      }
+   }
+}
+
 void hbwapi_stor_POINT( const POINT * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
@@ -627,6 +655,21 @@ HB_FUNC( WAPI_GETTEXTALIGN )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( WAPI_GETTEXTEXTENTPOINT32 )
+{
+   SIZE size;
+
+   void * hData;
+   HB_SIZE nDataLen;
+   LPCTSTR lpData = HB_PARSTR( 2, &hData, &nDataLen );
+
+   hbwapi_ret_L( GetTextExtentPoint32( hbwapi_par_HDC( 1 ), lpData, ( int ) nDataLen, &size ) );
+
+   hbwapi_stor_SIZE( &size, 3 );
+
+   hb_strfree( hData );
+}
+
 HB_FUNC( WAPI_TEXTOUT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
@@ -638,21 +681,21 @@ HB_FUNC( WAPI_TEXTOUT )
       LPCTSTR lpData = HB_PARSTR( 4, &hData, &nDataLen );
 
 #if ! defined( HB_OS_WIN_CE )
-      hb_retl( TextOut( hDC,
-                        hb_parni( 2 ) /* iRow */,
-                        hb_parni( 3 ) /* iCol */,
-                        lpData,
-                        ( int ) nDataLen ) );
+      hbwapi_ret_L( TextOut( hDC,
+                             hb_parni( 2 ) /* iRow */,
+                             hb_parni( 3 ) /* iCol */,
+                             lpData,
+                             ( int ) nDataLen ) );
 #else
       /* Emulating TextOut() using ExtTextOut(). [vszakats] */
-      hb_retl( ExtTextOut( hDC,
-                           hb_parni( 2 ) /* iRow */,
-                           hb_parni( 3 ) /* iCol */,
-                           0,
-                           NULL,
-                           lpData,
-                           ( UINT ) nDataLen,
-                           NULL ) );
+      hbwapi_ret_L( ExtTextOut( hDC,
+                                hb_parni( 2 ) /* iRow */,
+                                hb_parni( 3 ) /* iCol */,
+                                0,
+                                NULL,
+                                lpData,
+                                ( UINT ) nDataLen,
+                                NULL ) );
 #endif
 
       hb_strfree( hData );
@@ -694,15 +737,14 @@ HB_FUNC( WAPI_EXTTEXTOUT )
       else
          lpFontWidths = NULL;
 
-
-      hb_retl( ExtTextOut( hDC,
-                           hb_parni( 2 ) /* iRow */,
-                           hb_parni( 3 ) /* iCol */,
-                           hbwapi_par_UINT( 4 ) /* fuOptions */,
-                           hbwapi_par_RECT( &rc, 5, HB_FALSE ),
-                           lpData,
-                           ( UINT ) nDataLen,
-                           lpFontWidths ) );
+      hbwapi_ret_L( ExtTextOut( hDC,
+                                hb_parni( 2 ) /* iRow */,
+                                hb_parni( 3 ) /* iCol */,
+                                hbwapi_par_UINT( 4 ) /* fuOptions */,
+                                hbwapi_par_RECT( &rc, 5, HB_FALSE ),
+                                lpData,
+                                ( UINT ) nDataLen,
+                                lpFontWidths ) );
 
       if( lpFontWidths )
          hb_xfree( lpFontWidths );
@@ -878,12 +920,12 @@ HB_FUNC( WAPI_MOVETOEX )
 
       if( hbwapi_par_POINT( &xy, 4, HB_FALSE ) )
       {
-         hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &xy ) );
+         hbwapi_ret_L( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &xy ) );
 
          hbwapi_stor_POINT( &xy, 4 );
       }
       else
-         hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, NULL ) );
+         hbwapi_ret_L( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, NULL ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -894,7 +936,7 @@ HB_FUNC( WAPI_LINETO )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( LineTo( hDC, hb_parni( 2 ) /* XEnd */, hb_parni( 3 ) /* YEnd */ ) );
+      hbwapi_ret_L( LineTo( hDC, hb_parni( 2 ) /* XEnd */, hb_parni( 3 ) /* YEnd */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -916,13 +958,13 @@ HB_FUNC( WAPI_ROUNDRECT )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( RoundRect( hDC,
-                          hb_parni( 2 ) /* x1 */,
-                          hb_parni( 3 ) /* y1 */,
-                          hb_parni( 4 ) /* x2 */,
-                          hb_parni( 5 ) /* y2 */,
-                          hb_parni( 6 ) /* iWidth */,
-                          hb_parni( 7 ) /* iHeight */ ) );
+      hbwapi_ret_L( RoundRect( hDC,
+                               hb_parni( 2 ) /* x1 */,
+                               hb_parni( 3 ) /* y1 */,
+                               hb_parni( 4 ) /* x2 */,
+                               hb_parni( 5 ) /* y2 */,
+                               hb_parni( 6 ) /* iWidth */,
+                               hb_parni( 7 ) /* iHeight */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -932,11 +974,11 @@ HB_FUNC( WAPI_RECTANGLE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( Rectangle( hDC,
-                          hb_parni( 2 ) /* x1 */,
-                          hb_parni( 3 ) /* y1 */,
-                          hb_parni( 4 ) /* x2 */,
-                          hb_parni( 5 ) /* y2 */ ) );
+      hbwapi_ret_L( Rectangle( hDC,
+                               hb_parni( 2 ) /* x1 */,
+                               hb_parni( 3 ) /* y1 */,
+                               hb_parni( 4 ) /* x2 */,
+                               hb_parni( 5 ) /* y2 */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -949,15 +991,15 @@ HB_FUNC( WAPI_ARC )
 #if defined( HB_OS_WIN_CE )
       hb_retl( HB_FALSE );
 #else
-      hb_retl( Arc( hDC,
-                    hb_parni( 2 ) /* nLeftRect */,
-                    hb_parni( 3 ) /* nTopRect */,
-                    hb_parni( 4 ) /* nRightRect */,
-                    hb_parni( 5 ) /* nBottomRect */,
-                    hb_parni( 6 ) /* nXStartArc */,
-                    hb_parni( 7 ) /* nYStartArc */,
-                    hb_parni( 8 ) /* nXEndArc */,
-                    hb_parni( 9 ) /* nYEndArc */ ) );
+      hbwapi_ret_L( Arc( hDC,
+                         hb_parni( 2 ) /* nLeftRect */,
+                         hb_parni( 3 ) /* nTopRect */,
+                         hb_parni( 4 ) /* nRightRect */,
+                         hb_parni( 5 ) /* nBottomRect */,
+                         hb_parni( 6 ) /* nXStartArc */,
+                         hb_parni( 7 ) /* nYStartArc */,
+                         hb_parni( 8 ) /* nXEndArc */,
+                         hb_parni( 9 ) /* nYEndArc */ ) );
 #endif
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -968,11 +1010,11 @@ HB_FUNC( WAPI_ELLIPSE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( Ellipse( hDC,
-                        hb_parni( 2 ) /* nLeftRect */,
-                        hb_parni( 3 ) /* nTopRect */,
-                        hb_parni( 4 ) /* nRightRect */,
-                        hb_parni( 5 ) /* nBottomRect */ ) );
+      hbwapi_ret_L( Ellipse( hDC,
+                             hb_parni( 2 ) /* nLeftRect */,
+                             hb_parni( 3 ) /* nTopRect */,
+                             hb_parni( 4 ) /* nRightRect */,
+                             hb_parni( 5 ) /* nBottomRect */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

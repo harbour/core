@@ -168,6 +168,7 @@ extern HB_EXPORT LOGFONT *  hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL
 extern HB_EXPORT LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam );
 extern HB_EXPORT DOCINFO *  hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** h );
 
+extern HB_EXPORT void       hbwapi_stor_SIZE( const SIZE * p, int iParam );
 extern HB_EXPORT void       hbwapi_stor_POINT( const POINT * p, int iParam );
 extern HB_EXPORT void       hbwapi_stor_RECT( const RECT * p, int iParam );
 
