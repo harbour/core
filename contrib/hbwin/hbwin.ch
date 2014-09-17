@@ -462,17 +462,34 @@
 #define WIN_OEM_CHARSET                    255
 
 /* wapi_GetDeviceCaps() parameters */
+#define WIN_DRIVERVERSION                  0     /* Device driver version */
+#define WIN_TECHNOLOGY                     2     /* Device classification */
 #define WIN_HORZSIZE                       4     /* Horizontal size in millimeters */
 #define WIN_VERTSIZE                       6     /* Vertical size in millimeters */
 #define WIN_HORZRES                        8     /* Horizontal width in pixels */
 #define WIN_VERTRES                        10    /* Vertical height in pixels */
+#define WIN_BITSPIXEL                      12    /* Number of bits per pixel */
+#define WIN_PLANES                         14    /* Number of planes */
 #define WIN_NUMBRUSHES                     16    /* Number of brushes the device has */
 #define WIN_NUMPENS                        18    /* Number of pens the device has */
+#define WIN_NUMMARKERS                     20    /* Number of markers the device has */
 #define WIN_NUMFONTS                       22    /* Number of fonts the device has */
 #define WIN_NUMCOLORS                      24    /* Number of colors the device supports */
+#define WIN_PDEVICESIZE                    26    /* Size required for device descriptor */
+#define WIN_CURVECAPS                      28    /* Curve capabilities */
+#define WIN_LINECAPS                       30    /* Line capabilities */
+#define WIN_POLYGONALCAPS                  32    /* Polygonal capabilities */
+#define WIN_TEXTCAPS                       34    /* Text capabilities */
+#define WIN_CLIPCAPS                       36    /* Clipping capabilities */
 #define WIN_RASTERCAPS                     38    /* Bitblt capabilities */
+#define WIN_ASPECTX                        40    /* Length of the X leg */
+#define WIN_ASPECTY                        42    /* Length of the Y leg */
+#define WIN_ASPECTXY                       44    /* Length of the hypotenuse */
 #define WIN_LOGPIXELSX                     88    /* Logical pixels/inch in X */
 #define WIN_LOGPIXELSY                     90    /* Logical pixels/inch in Y */
+#define WIN_SIZEPALETTE                    104   /* Number of entries in physical palette */
+#define WIN_NUMRESERVED                    106   /* Number of reserved entries in palette */
+#define WIN_COLORRES                       108   /* Actual color resolution */
 #define WIN_PHYSICALWIDTH                  110   /* Physical Width in device units */
 #define WIN_PHYSICALHEIGHT                 111   /* Physical Height in device units */
 #define WIN_PHYSICALOFFSETX                112   /* Physical Printable Area x margin */
@@ -585,6 +602,8 @@
 #define WIN_TA_TOP                         0
 #define WIN_TA_BOTTOM                      8
 #define WIN_TA_BASELINE                    24
+#define WIN_TA_RTLREADING                  256
+#define WIN_TA_MASK                        ( TA_BASELINE + TA_CENTER + TA_UPDATECP + TA_RTLREADING )
 
 /* win_SetPen() pen styles */
 #define WIN_PS_SOLID                       0
@@ -735,6 +754,7 @@
 #define WIN_SND_SENTRY                     0x00080000
 #define WIN_SND_RING                       0x00100000
 #define WIN_SND_SYSTEM                     0x00200000
+#define WIN_SND_ALIAS_START                0
 
 /* wapi_SetWindowPos() flags */
 #define WIN_SWP_NOSIZE                     0x0001
