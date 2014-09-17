@@ -1418,4 +1418,23 @@
 #define WIN_TMPF_DEVICE                    0x08
 #define WIN_TMPF_TRUETYPE                  0x04
 
+/* wapi_GetDeviceCaps() WIN_RASTERCAPS bit positions */
+#define WIN_RC_NONE                        0x0000
+#define WIN_RC_BITBLT                      0x0001
+#define WIN_RC_BANDING                     0x0002
+#define WIN_RC_SCALING                     0x0004
+#define WIN_RC_BITMAP64                    0x0008
+#define WIN_RC_GDI20_OUTPUT                0x0010
+#define WIN_RC_GDI20_STATE                 0x0020
+#define WIN_RC_SAVEBITMAP                  0x0040
+#define WIN_RC_DI_BITMAP                   0x0080
+#define WIN_RC_PALETTE                     0x0100
+#define WIN_RC_DIBTODEV                    0x0200
+#define WIN_RC_BIGFONT                     0x0400
+#define WIN_RC_STRETCHBLT                  0x0800
+#define WIN_RC_FLOODFILL                   0x1000
+#define WIN_RC_STRETCHDIB                  0x2000
+#define WIN_RC_OP_DX_OUTPUT                0x4000
+#define WIN_RC_DEVBITS                     0x8000
+
 #endif /* HBWIN_CH_ */

@@ -359,7 +359,6 @@ HB_FUNC( WIN_GETPRINTERFONTNAME )
    else
       hb_retc_null();
 }
-#endif
 
 HB_FUNC( WIN_BITMAPSOK )
 {
@@ -367,6 +366,7 @@ HB_FUNC( WIN_BITMAPSOK )
 
    hb_retl( hDC && ( GetDeviceCaps( hDC, RASTERCAPS ) & RC_STRETCHDIB ) );
 }
+#endif
 
 HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 {

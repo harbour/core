@@ -262,7 +262,7 @@ METHOD Create() CLASS win_Prn
          ::BottomMargin     := ( ::PageHeight - ::TopMargin ) + 1
 
          // Set .T. if can print bitmaps
-         ::BitMapsOk := win_BitmapsOK( ::hPrinterDC )
+         ::BitMapsOk := hb_bitAnd( wapi_GetDeviceCaps( ::hPrinterDC, WIN_RASTERCAPS ), WIN_RC_STRETCHDIB ) != 0
 
          // supports Color
          ::NumColors := wapi_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )

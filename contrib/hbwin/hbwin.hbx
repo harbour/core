@@ -337,7 +337,6 @@ DYNAMIC win_axGetControl
 DYNAMIC win_axInit
 DYNAMIC win_bitmapDimensions
 DYNAMIC win_bitmapIsSupported
-DYNAMIC win_BitmapsOK
 DYNAMIC win_bitmapType
 DYNAMIC win_BMP
 DYNAMIC win_ChooseColor

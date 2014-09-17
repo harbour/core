@@ -96,6 +96,7 @@ xcstr.prg
 xdbmodst.prg
 xhbcomp.prg
 xhbdepr.prg
+xhbdll.prg
 xhberr.prg
 xhbfunp.prg
 xhbinkey.prg

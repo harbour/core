@@ -31,6 +31,7 @@ DYNAMIC AtI
 DYNAMIC AtSkipStrings
 DYNAMIC BackButton
 DYNAMIC BackFormButton
+DYNAMIC CallDll
 DYNAMIC CgiParseVar
 DYNAMIC CreateObject
 DYNAMIC CreateOleObject
