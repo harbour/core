@@ -70,30 +70,12 @@
 #include "setcurs.ch"
 
 
-/* Information structure stored in DATA aCallStack */
-#define CSTACK_MODULE           1  // module name (.prg file)
-#define CSTACK_FUNCTION         2  // function name
-#define CSTACK_LINE             3  // start line
-#define CSTACK_LEVEL            4  // eval stack level of the function
-#define CSTACK_LOCALS           5  // an array with local variables
-#define CSTACK_STATICS          6  // an array with static variables
-
-/* Information structure stored in aCallStack[ n ][ CSTACK_LOCALS ]
-   { cLocalName, nLocalIndex, "Local", ProcName( 1 ), nLevel } */
-#define VAR_NAME                1
-#define VAR_POS                 2
-#define VAR_TYPE                3
-#define VAR_LEVEL               4  // eval stack level of the function
+/* Public or Private created in ::LoadVars(), value stored in HB_DBG_VAR_INDEX */
+#define HB_DBG_VAR_MVALUE       HB_DBG_VAR_INDEX
 
 /* Information structure stored in ::aWatch (watchpoints) */
 #define WP_TYPE                 1  // wp: watchpoint, tr: tracepoint
 #define WP_EXPR                 2  // source of an expression
-
-/* Information structure stored in ::aModules */
-#define MODULE_NAME             1
-#define MODULE_STATICS          2
-#define MODULE_GLOBALS          3
-#define MODULE_EXTERNGLOBALS    4
 
 /* The dimensions of the debugger window */
 #define DEBUGGER_MINROW         0
@@ -102,7 +84,7 @@
 #define DEBUGGER_MAXCOL         77
 
 /* command window scroll history */
-#define DEBUGGER_CMDHIST_SIZE   64
+#define DEBUGGER_CMDHIST_SIZE   128
 
 THREAD STATIC t_oDebugger
 
@@ -304,7 +286,7 @@ CREATE CLASS HBDebugger
    METHOD ShowHelp( cTopic )
    METHOD ShowVars()
    METHOD LocatePrgPath( cPrgName )
-   METHOD Sort() INLINE ASort( ::aVars,,, {| x, y | x[ 1 ] < y[ 1 ] } ), ;
+   METHOD Sort() INLINE ASort( ::aVars,,, {| x, y | x[ HB_DBG_VAR_NAME ] < y[ HB_DBG_VAR_NAME ] } ), ;
       ::lSortVars := .T., ;
       iif( ::oBrwVars != NIL, ::oBrwVars:RefreshAll(), NIL ), ;
       iif( ::oWndVars != NIL .AND. ::oWndVars:lVisible, iif( ! ::lGo .AND. ::oBrwVars != NIL, ::oBrwVars:ForceStable(), NIL ), NIL )
@@ -456,7 +438,7 @@ METHOD PROCEDURE Activate() CLASS HBDebugger
    ENDIF
 
    // show the topmost procedure
-   ::ShowCodeLine( 1 ) // ::aCallStack[ 1 ][ CSTACK_LINE ], ::aCallStack[ 1 ][ CSTACK_MODULE ] )
+   ::ShowCodeLine( 1 ) // ::aCallStack[ 1 ][ HB_DBG_CS_LINE ], ::aCallStack[ 1 ][ HB_DBG_CS_MODULE ] )
 
    // Most commands can be executed only after activation
    IF lFirst
@@ -520,7 +502,7 @@ METHOD PROCEDURE BuildBrowseStack() CLASS HBDebugger
       ::oBrwStack:Cargo := 1 // Actual highligthed row
 
       ::oBrwStack:AddColumn( HBDbColumnNew( "", {|| iif( Len( ::aProcStack ) > 0, ;
-         PadC( ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_FUNCTION ], 14 ), Space( 14 ) ) } ) )
+         PadC( ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_FUNCTION ], 14 ), Space( 14 ) ) } ) )
    ENDIF
 
    RETURN
@@ -642,8 +624,8 @@ METHOD PROCEDURE CallStackProcessKey( nKey ) CLASS HBDebugger
       // jump to source line for a function
 
 #if 0
-      IF ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ] != NIL
-         ::ShowCodeLine( ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ], ::aCallStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ] )
+      IF ::aCallStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_LINE ] != NIL
+         ::ShowCodeLine( ::aCallStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_LINE ], ::aCallStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_MODULE ] )
       ELSE
          ::GotoLine( 1 )
       ENDIF
@@ -746,14 +728,15 @@ METHOD PROCEDURE Colors() CLASS HBDebugger
    oBrwColors:skipBlock := {| nPos | ( nPos := ArrayBrowseSkip( nPos, oBrwColors ), oBrwColors:cargo[ 1 ] := ;
       oBrwColors:cargo[ 1 ] + nPos, nPos ) }
 
-   oBrwColors:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( aColors[ oBrwColors:Cargo[ 1 ] ], 14 ) } ) )
+   oBrwColors:AddColumn( oCol := HBDbColumnNew( "", {|| aColors[ oBrwColors:Cargo[ 1 ] ] } ) )
+   oCol:Width := 14
    oCol:defColor := { 1, 2 }
    AAdd( oBrwColors:Cargo[ 2 ], aColors )
    oBrwColors:AddColumn( oCol := HBDbColumnNew( "", ;
       {|| PadR( '"' + ::aColors[ oBrwColors:Cargo[ 1 ] ] + '"', nWidth - 15 ) } ) )
    AAdd( oBrwColors:Cargo[ 2 ], aColors )
    oCol:defColor := { 1, 3 }
-   ocol:width := 50
+   oCol:Width := 50
    oBrwColors:autolite := .F.
 
    oWndColors:bPainted    := {|| oBrwColors:ForceStable(), RefreshVarsS( oBrwColors ) }
@@ -1287,7 +1270,8 @@ METHOD PROCEDURE EditColor( nColor, oBrwColors ) CLASS HBDebugger
    oBrwColors:RefreshCurrent()
    oBrwColors:ForceStable()
 
-   IF __dbgInput( Row(), Col() + 15, oBrwColors:getColumn( 2 ):Width, ;
+   IF __dbgInput( Row(), oBrwColors:nLeft + oBrwColors:GetColumn( 1 ):width + 1, ;
+                  oBrwColors:getColumn( 2 ):Width, ;
                   @cColor, __dbgExprValidBlock( "C" ), ;
                   SubStr( ::ClrModal(), 5 ) )
       ::aColors[ nColor ] := &cColor
@@ -1307,7 +1291,8 @@ METHOD PROCEDURE EditSet( nSet, oBrwSets ) CLASS HBDebugger
    oBrwSets:RefreshCurrent()
    oBrwSets:ForceStable()
 
-   IF __dbgInput( Row(), Col() + 13, oBrwSets:getColumn( 2 ):Width, ;
+   IF __dbgInput( Row(), oBrwSets:nLeft + oBrwSets:GetColumn( 1 ):width + 1, ;
+                  oBrwSets:getColumn( 2 ):Width, ;
                   @cSet, __dbgExprValidBlock( cType ), ;
                   SubStr( ::ClrModal(), 5 ), 256 )
       Set( nSet, &cSet )
@@ -1838,7 +1823,7 @@ METHOD PROCEDURE LoadCallStack() CLASS HBDebugger
 
    FOR i := nDebugLevel TO nCurrLevel
       nLevel := nCurrLevel - i + 1
-      IF ( nPos := AScan( ::aCallStack, {| a | a[ CSTACK_LEVEL ] == nLevel } ) ) > 0
+      IF ( nPos := AScan( ::aCallStack, {| a | a[ HB_DBG_CS_LEVEL ] == nLevel } ) ) > 0
          // a procedure with debug info
          ::aProcStack[ i - nDebugLevel + 1 ] := ::aCallStack[ nPos ]
       ELSE
@@ -1916,20 +1901,20 @@ METHOD PROCEDURE LoadVars() CLASS HBDebugger  // updates monitored variables
       ENDIF
    ENDIF
 
-   IF ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_LINE ] != NIL
+   IF ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_LINE ] != NIL
       IF ::lShowGlobals
-         cName := ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ]
+         cName := ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_MODULE ]
          FOR EACH n IN ::aModules
             IF ! ::lShowAllGlobals
-               IF ! ::ModuleMatch( n[ MODULE_NAME ], cName )
+               IF ! ::ModuleMatch( n[ HB_DBG_MOD_NAME ], cName )
                   LOOP
                ENDIF
             ENDIF
-            FOR EACH m IN n[ MODULE_GLOBALS ]
+            FOR EACH m IN n[ HB_DBG_MOD_GLOBALS ]
                AAdd( aBVars, m )
             NEXT
             IF ! ::lShowAllGlobals
-               FOR EACH m IN n[ MODULE_EXTERNGLOBALS ]
+               FOR EACH m IN n[ HB_DBG_MOD_EXTGLOBALS ]
                   AAdd( aBVars, m )
                NEXT
             ENDIF
@@ -1937,22 +1922,22 @@ METHOD PROCEDURE LoadVars() CLASS HBDebugger  // updates monitored variables
       ENDIF
 
       IF ::lShowStatics
-         cName := ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ]
-         IF ( n := AScan( ::aModules, {| a | ::ModuleMatch( a[ MODULE_NAME ], cName ) } ) ) > 0
-            FOR EACH m IN ::aModules[ n ][ MODULE_STATICS ]
+         cName := ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_MODULE ]
+         IF ( n := AScan( ::aModules, {| a | ::ModuleMatch( a[ HB_DBG_MOD_NAME ], cName ) } ) ) > 0
+            FOR EACH m IN ::aModules[ n ][ HB_DBG_MOD_STATICS ]
                AAdd( aBVars, m )
             NEXT
          ENDIF
-         FOR EACH n IN ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_STATICS ]
+         FOR EACH n IN ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_STATICS ]
             AAdd( aBVars, n )
          NEXT
       ENDIF
 
       IF ::lShowLocals
-         FOR EACH n IN ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_LOCALS ]
-            cName := n[ VAR_NAME ]
+         FOR EACH n IN ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_LOCALS ]
+            cName := n[ HB_DBG_VAR_NAME ]
             // Is there another var with this name ?
-            IF ( m := AScan( aBVars, {| aVar | aVar[ VAR_NAME ] == cName .AND. hb_LeftEq( aVar[ VAR_TYPE ], "S" ) } ) ) > 0
+            IF ( m := AScan( aBVars, {| aVar | aVar[ HB_DBG_VAR_NAME ] == cName .AND. aVar[ HB_DBG_VAR_TYPE ] == "S" } ) ) > 0
                aBVars[ m ] := n
             ELSE
                AAdd( aBVars, n )
@@ -2513,8 +2498,8 @@ METHOD PROCEDURE SaveSettings( cFileName ) CLASS HBDebugger
    ENDIF
 
    FOR EACH aBreak IN __dbgGetBreakPoints( ::pInfo )
-      cInfo += "BP " + hb_ntos( aBreak[ 1 ] ) + " " + ;
-               AllTrim( aBreak[ 2 ] ) + hb_eol()
+      cInfo += "BP " + hb_ntos( aBreak[ HB_DBG_BP_LINE ] ) + " " + ;
+               aBreak[ HB_DBG_BP_MODULE ] + hb_eol()
    NEXT
 
    FOR EACH aWatch IN ::aWatch
@@ -2715,12 +2700,12 @@ METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
          ::oBrwStack:RefreshAll()
       ENDIF
 
-      nLine := ::aProcStack[ nProc ][ CSTACK_LINE ]
-      cPrgName := ::aProcStack[ nProc ][ CSTACK_MODULE ]
+      nLine := ::aProcStack[ nProc ][ HB_DBG_CS_LINE ]
+      cPrgName := ::aProcStack[ nProc ][ HB_DBG_CS_MODULE ]
       IF nLine == NIL
          ::oBrwText := NIL
          ::oWndCode:Browser := NIL
-         ::oWndCode:SetCaption( ::aProcStack[ nProc ][ CSTACK_FUNCTION ] + ;
+         ::oWndCode:SetCaption( ::aProcStack[ nProc ][ HB_DBG_CS_FUNCTION ] + ;
             ": Code not available" )
          ::oWndCode:Refresh() // to force the window caption to update
          RETURN
@@ -2744,7 +2729,7 @@ METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
             IF ! hb_FileExists( cPrgName )
                ::oBrwText := NIL
                ::oWndCode:Browser := NIL
-               ::oWndCode:SetCaption( ::aProcStack[ nProc ][ CSTACK_MODULE ] + ;
+               ::oWndCode:SetCaption( ::aProcStack[ nProc ][ HB_DBG_CS_MODULE ] + ;
                   "  File not found" )
                ::oWndCode:Refresh()
                RETURN
@@ -3051,8 +3036,10 @@ METHOD BreakPointList() CLASS HBDebugger
    LOCAL aBreak, cType
 
    FOR EACH aBreak IN __dbgGetBreakPoints( ::pInfo )
-      cType := iif( aBreak[ 3 ] != NIL, aBreak[ 3 ], ;
-                    hb_ntos( aBreak[ 1 ] ) + " " + aBreak[ 2 ] )
+      cType := iif( aBreak[ HB_DBG_BP_FUNC ] != NIL, ;
+                    aBreak[ HB_DBG_BP_FUNC ], ;
+                    hb_ntos( aBreak[ HB_DBG_BP_LINE ] ) + " " + ;
+                    aBreak[ HB_DBG_BP_MODULE ] )
       ::CommandWindowDisplay( hb_ntos( aBreak:__enumIndex() - 1 ) + ") " + ;
                               cType, .F. )
    NEXT
@@ -3097,46 +3084,47 @@ METHOD VarGetInfo( aVar ) CLASS HBDebugger
    LOCAL uValue := ::VarGetValue( aVar )
    LOCAL cType
 
-   SWITCH Left( aVar[ VAR_TYPE ], 1 )
+   SWITCH aVar[ HB_DBG_VAR_TYPE ]
    CASE "G"  ; cType := "Global" ; EXIT
    CASE "L"  ; cType := "Local" ; EXIT
    CASE "S"  ; cType := "Static" ; EXIT
-   OTHERWISE ; cType := aVar[ VAR_TYPE ]
+   OTHERWISE ; cType := aVar[ HB_DBG_VAR_TYPE ]
    ENDSWITCH
 
-   RETURN aVar[ VAR_NAME ] + " <" + cType + ", " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
+   RETURN aVar[ HB_DBG_VAR_NAME ] + " <" + cType + ", " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
 
 
 METHOD VarGetValue( aVar ) CLASS HBDebugger
 
-   SWITCH Left( aVar[ VAR_TYPE ], 1 )
-   CASE "G" ; RETURN __dbgVMVarGGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
-   CASE "L" ; RETURN __dbgVMVarLGet( __dbgProcLevel() - aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
-   CASE "S" ; RETURN __dbgVMVarSGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
+   SWITCH aVar[ HB_DBG_VAR_TYPE ]
+   CASE "G" ; RETURN __dbgVMVarGGet( aVar[ HB_DBG_VAR_FRAME ], aVar[ HB_DBG_VAR_INDEX ] )
+   CASE "L" ; RETURN __dbgVMVarLGet( __dbgProcLevel() - aVar[ HB_DBG_VAR_FRAME ], aVar[ HB_DBG_VAR_INDEX ] )
+   CASE "S" ; RETURN __dbgVMVarSGet( aVar[ HB_DBG_VAR_FRAME ], aVar[ HB_DBG_VAR_INDEX ] )
    ENDSWITCH
 
-   RETURN aVar[ VAR_POS ]  // Public or Private
+   // Public or Private created in ::LoadVars(), value stored in HB_DBG_VAR_INDEX
+   RETURN aVar[ HB_DBG_VAR_MVALUE ]
 
 
 METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
 
    LOCAL nProcLevel
 
-   SWITCH Left( aVar[ VAR_TYPE ], 1 )
+   SWITCH aVar[ HB_DBG_VAR_TYPE ]
    CASE "G"
-      __dbgVMVarGSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
+      __dbgVMVarGSet( aVar[ HB_DBG_VAR_FRAME ], aVar[ HB_DBG_VAR_INDEX ], uValue )
       EXIT
    CASE "L"
-      nProcLevel := __dbgProcLevel() - aVar[ VAR_LEVEL ]  // skip debugger stack
-      __dbgVMVarLSet( nProcLevel, aVar[ VAR_POS ], uValue )
+      nProcLevel := __dbgProcLevel() - aVar[ HB_DBG_VAR_FRAME ]  // skip debugger stack
+      __dbgVMVarLSet( nProcLevel, aVar[ HB_DBG_VAR_INDEX ], uValue )
       EXIT
    CASE "S"
-      __dbgVMVarSSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
+      __dbgVMVarSSet( aVar[ HB_DBG_VAR_FRAME ], aVar[ HB_DBG_VAR_INDEX ], uValue )
       EXIT
    OTHERWISE
-      // Public or Private
-      aVar[ VAR_POS ] := uValue
-      &( aVar[ VAR_NAME ] ) := uValue
+      // Public or Private created in ::LoadVars(), value stored in HB_DBG_VAR_INDEX
+      aVar[ HB_DBG_VAR_MVALUE ] := uValue
+      &( aVar[ HB_DBG_VAR_NAME ] ) := uValue
    ENDSWITCH
 
    RETURN Self
@@ -3144,19 +3132,9 @@ METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
 
 METHOD PROCEDURE ViewSets() CLASS HBDebugger
 
-   LOCAL oWndSets := HBDbWindow():New( 1, 8, ::nMaxRow - 2, ::nMaxCol - 8, ;
-      "System Settings[1..47]", ::ClrModal() )
-   LOCAL aSets := { ;
-      "Exact", "Fixed", "Decimals", "DateFormat", "Epoch", "Path", ;
-      "Default", "Exclusive", "SoftSeek", "Unique", "Deleted", ;
-      "Cancel", "Debug", "TypeAhead", "Color", "Cursor", "Console", ;
-      "Alternate", "AltFile", "Device", "Extra", "ExtraFile", ;
-      "Printer", "PrintFile", "Margin", "Bell", "Confirm", "Escape", ;
-      "Insert", "Exit", "Intensity", "ScoreBoard", "Delimeters", ;
-      "DelimChars", "Wrap", "Message", "MCenter", "ScrollBreak", ;
-      "EventMask", "VideoMode", "MBlockSize", "MFileExt", ;
-      "StrictRead", "Optimize", "Autopen", "Autorder", "AutoShare" }
-
+   LOCAL aSets := __dbgGetSETs()
+   LOCAL oWndSets := HBDbWindow():New( 1, 7, ::nMaxRow - 2, ::nMaxCol - 7, ;
+      "System Settings[1.." + hb_ntos( aTail( aSets )[ HB_DBG_SET_POS ] ) + "]", ::ClrModal() )
    LOCAL oBrwSets := HBDbBrowser():new( oWndSets:nTop + 1, oWndSets:nLeft + 1, ;
       oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    LOCAL nWidth := oWndSets:nRight - oWndSets:nLeft - 1
@@ -3169,17 +3147,18 @@ METHOD PROCEDURE ViewSets() CLASS HBDebugger
    oBrwSets:goBottomBlock := {|| oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
    oBrwSets:skipBlock := {| nPos | ( nPos := ArrayBrowseSkip( nPos, oBrwSets ), oBrwSets:cargo[ 1 ] := ;
       oBrwSets:cargo[ 1 ] + nPos, nPos ) }
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( aSets[ oBrwSets:cargo[ 1 ] ], 12 ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| aSets[ oBrwSets:cargo[ 1 ] ][ HB_DBG_SET_NAME ] } ) )
    AAdd( oBrwSets:Cargo[ 2 ], aSets )
-   ocol:defcolor := { 1, 2 }
+   oCol:Width := 14
+   oCol:defcolor := { 1, 2 }
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "", ;
-      {|| PadR( __dbgValToExp( Set( oBrwSets:cargo[ 1 ] ) ), nWidth - 13 ) } ) )
-   ocol:defcolor := { 1, 3 }
-   ocol:width := 40
+      {|| PadR( __dbgValToExp( Set( aSets[ oBrwSets:cargo[ 1 ] ][ HB_DBG_SET_POS ] ) ), nWidth - 13 ) } ) )
+   oCol:defcolor := { 1, 3 }
+   oCol:width := 40
    oWndSets:bPainted := {|| oBrwSets:ForceStable(), RefreshVarsS( oBrwSets ) }
    oWndSets:bKeyPressed := {| nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ), ;
       oWndSets, "System Settings", ;
-      {|| ::EditSet( oBrwSets:Cargo[ 1 ], oBrwSets ) } ) }
+      {|| ::EditSet( aSets[ oBrwSets:Cargo[ 1 ] ][ HB_DBG_SET_POS ], oBrwSets ) } ) }
 
    oWndSets:ShowModal()
 

@@ -254,6 +254,7 @@ extern HB_EXPORT HB_BOOL      hb_setGetL( HB_set_enum set_specifier );
 extern HB_EXPORT const char * hb_setGetCPtr( HB_set_enum set_specifier );
 extern HB_EXPORT int          hb_setGetNI( HB_set_enum set_specifier );
 extern HB_EXPORT long         hb_setGetNL( HB_set_enum set_specifier );
+extern HB_EXPORT PHB_ITEM     hb_setGetItem( HB_set_enum set_specifier, PHB_ITEM pResult, PHB_ITEM pArg1, PHB_ITEM pArg2 );
 
 extern HB_EXPORT HB_BOOL      hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL      hb_setSetItem2( HB_set_enum set_specifier, PHB_ITEM pItem1, PHB_ITEM pItem2 );
