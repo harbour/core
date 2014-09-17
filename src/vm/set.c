@@ -479,92 +479,89 @@ static char * hb_set_PRINTFILE_default( void )
 #endif
 }
 
-HB_FUNC( SET )
+PHB_ITEM hb_setGetItem( HB_set_enum set_specifier, PHB_ITEM pResult,
+                        PHB_ITEM pArg1, PHB_ITEM pArg2 )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
-   int args = hb_pcount();
-   HB_set_enum set_specifier = ( args > 0 ) ? ( HB_set_enum ) hb_parni( 1 ) : HB_SET_INVALID_;
-   PHB_ITEM pArg2 = ( args > 1 ) ? hb_param( 2, HB_IT_ANY ) : NULL;
-   PHB_ITEM pArg3 = ( args > 2 ) ? hb_param( 3, HB_IT_ANY ) : NULL;
 
-   if( args > 1 )
+   if( pArg1 != NULL )
       hb_setListenerNotify( set_specifier, HB_SET_LISTENER_BEFORE );
 
    switch( set_specifier )
    {
       case HB_SET_ALTERNATE:
-         hb_retl( pSet->HB_SET_ALTERNATE );
-         if( args > 1 )
-            pSet->HB_SET_ALTERNATE = set_logical( pArg2, pSet->HB_SET_ALTERNATE );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_ALTERNATE );
+         if( pArg1 != NULL )
+            pSet->HB_SET_ALTERNATE = set_logical( pArg1, pSet->HB_SET_ALTERNATE );
          break;
       case HB_SET_ALTFILE:
-         hb_retc( pSet->HB_SET_ALTFILE );
-         if( pArg2 && HB_IS_STRING( pArg2 ) )
-            open_handle( pSet, hb_itemGetCPtr( pArg2 ), set_logical( pArg3, HB_FALSE ), HB_SET_ALTFILE );
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_ALTFILE );
+         if( pArg1 && HB_IS_STRING( pArg1 ) )
+            open_handle( pSet, hb_itemGetCPtr( pArg1 ), set_logical( pArg2, HB_FALSE ), HB_SET_ALTFILE );
          break;
       case HB_SET_AUTOPEN:
-         hb_retl( pSet->HB_SET_AUTOPEN );
-         if( args > 1 )
-            pSet->HB_SET_AUTOPEN = set_logical( pArg2, pSet->HB_SET_AUTOPEN );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_AUTOPEN );
+         if( pArg1 != NULL )
+            pSet->HB_SET_AUTOPEN = set_logical( pArg1, pSet->HB_SET_AUTOPEN );
          break;
       case HB_SET_AUTORDER:
-         hb_retni( pSet->HB_SET_AUTORDER );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_AUTORDER );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_AUTORDER ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_AUTORDER ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_AUTORDER = set_number( pArg2, pSet->HB_SET_AUTORDER );
+               pSet->HB_SET_AUTORDER = set_number( pArg1, pSet->HB_SET_AUTORDER );
          }
          break;
       case HB_SET_AUTOSHARE:
-         hb_retni( pSet->HB_SET_AUTOSHARE );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_AUTOSHARE );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_AUTOSHARE ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_AUTOSHARE ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_AUTOSHARE = set_number( pArg2, pSet->HB_SET_AUTOSHARE );
+               pSet->HB_SET_AUTOSHARE = set_number( pArg1, pSet->HB_SET_AUTOSHARE );
          }
          break;
       case HB_SET_BELL:
-         hb_retl( pSet->HB_SET_BELL );
-         if( args > 1 )
-            pSet->HB_SET_BELL = set_logical( pArg2, pSet->HB_SET_BELL );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_BELL );
+         if( pArg1 != NULL )
+            pSet->HB_SET_BELL = set_logical( pArg1, pSet->HB_SET_BELL );
          break;
       case HB_SET_CANCEL:
-         hb_retl( pSet->HB_SET_CANCEL );
-         if( args > 1 )
-            pSet->HB_SET_CANCEL = set_logical( pArg2, pSet->HB_SET_CANCEL );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_CANCEL );
+         if( pArg1 != NULL )
+            pSet->HB_SET_CANCEL = set_logical( pArg1, pSet->HB_SET_CANCEL );
          break;
       case HB_SET_COLOR:
-         hb_retc( hb_conSetColor( args >= 2 && HB_IS_STRING( pArg2 ) ? hb_itemGetCPtr( pArg2 ) : NULL ) );
+         pResult = hb_itemPutC( pResult, hb_conSetColor( pArg1 != NULL && HB_IS_STRING( pArg1 ) ? hb_itemGetCPtr( pArg1 ) : NULL ) );
          break;
       case HB_SET_CONFIRM:
-         hb_retl( pSet->HB_SET_CONFIRM );
-         if( args > 1 )
-            pSet->HB_SET_CONFIRM = set_logical( pArg2, pSet->HB_SET_CONFIRM );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_CONFIRM );
+         if( pArg1 != NULL )
+            pSet->HB_SET_CONFIRM = set_logical( pArg1, pSet->HB_SET_CONFIRM );
          break;
       case HB_SET_CONSOLE:
-         hb_retl( pSet->HB_SET_CONSOLE );
-         if( args > 1 )
-            pSet->HB_SET_CONSOLE = set_logical( pArg2, pSet->HB_SET_CONSOLE );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_CONSOLE );
+         if( pArg1 != NULL )
+            pSet->HB_SET_CONSOLE = set_logical( pArg1, pSet->HB_SET_CONSOLE );
          break;
       case HB_SET_CURSOR:
-         if( args >= 2 && HB_IS_NUMERIC( pArg2 ) )
-            hb_retni( hb_conSetCursor( HB_TRUE, hb_itemGetNI( pArg2 ) ) );
+         if( pArg1 != NULL && HB_IS_NUMERIC( pArg1 ) )
+            pResult = hb_itemPutNI( pResult, hb_conSetCursor( HB_TRUE, hb_itemGetNI( pArg1 ) ) );
          else
-            hb_retni( hb_conSetCursor( HB_FALSE, 0 ) );
+            pResult = hb_itemPutNI( pResult, hb_conSetCursor( HB_FALSE, 0 ) );
          break;
       case HB_SET_DATEFORMAT:
-         hb_retc( pSet->HB_SET_DATEFORMAT );
-         if( args > 1 )
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_DATEFORMAT );
+         if( pArg1 != NULL )
          {
             char * value;
             int year = 0;
 
-            value = pSet->HB_SET_DATEFORMAT = set_string( pArg2, pSet->HB_SET_DATEFORMAT );
+            value = pSet->HB_SET_DATEFORMAT = set_string( pArg1, pSet->HB_SET_DATEFORMAT );
             while( *value )
             {
                if( *value == 'Y' || *value == 'y' )
@@ -579,232 +576,232 @@ HB_FUNC( SET )
          }
          break;
       case HB_SET_TIMEFORMAT:
-         hb_retc( pSet->HB_SET_TIMEFORMAT );
-         if( args > 1 )
-            pSet->HB_SET_TIMEFORMAT = set_string( pArg2, pSet->HB_SET_TIMEFORMAT );
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_TIMEFORMAT );
+         if( pArg1 != NULL )
+            pSet->HB_SET_TIMEFORMAT = set_string( pArg1, pSet->HB_SET_TIMEFORMAT );
          break;
       case HB_SET_DEBUG:
-         hb_retl( pSet->HB_SET_DEBUG );
-         if( args > 1 )
-            pSet->HB_SET_DEBUG = set_logical( pArg2, pSet->HB_SET_DEBUG );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_DEBUG );
+         if( pArg1 != NULL )
+            pSet->HB_SET_DEBUG = set_logical( pArg1, pSet->HB_SET_DEBUG );
          break;
       case HB_SET_DECIMALS:
-         hb_retni( pSet->HB_SET_DECIMALS );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_DECIMALS );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_DECIMALS ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_DECIMALS ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_DECIMALS = set_number( pArg2, pSet->HB_SET_DECIMALS );
+               pSet->HB_SET_DECIMALS = set_number( pArg1, pSet->HB_SET_DECIMALS );
          }
          break;
       case HB_SET_DEFAULT:
-         hb_retc( pSet->HB_SET_DEFAULT );
-         if( args > 1 )
-            pSet->HB_SET_DEFAULT = set_string( pArg2, pSet->HB_SET_DEFAULT );
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_DEFAULT );
+         if( pArg1 != NULL )
+            pSet->HB_SET_DEFAULT = set_string( pArg1, pSet->HB_SET_DEFAULT );
          break;
       case HB_SET_DELETED:
-         hb_retl( pSet->HB_SET_DELETED );
-         if( args > 1 )
-            pSet->HB_SET_DELETED = set_logical( pArg2, pSet->HB_SET_DELETED );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_DELETED );
+         if( pArg1 != NULL )
+            pSet->HB_SET_DELETED = set_logical( pArg1, pSet->HB_SET_DELETED );
          break;
       case HB_SET_DELIMCHARS:
-         hb_retc( pSet->HB_SET_DELIMCHARS );
-         if( args > 1 )
-            pSet->HB_SET_DELIMCHARS = set_string( pArg2, pSet->HB_SET_DELIMCHARS );
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_DELIMCHARS );
+         if( pArg1 != NULL )
+            pSet->HB_SET_DELIMCHARS = set_string( pArg1, pSet->HB_SET_DELIMCHARS );
          break;
       case HB_SET_DELIMITERS:
-         hb_retl( pSet->HB_SET_DELIMITERS );
-         if( args > 1 )
-            pSet->HB_SET_DELIMITERS = set_logical( pArg2, pSet->HB_SET_DELIMITERS );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_DELIMITERS );
+         if( pArg1 != NULL )
+            pSet->HB_SET_DELIMITERS = set_logical( pArg1, pSet->HB_SET_DELIMITERS );
          break;
       case HB_SET_DEVICE:
-         hb_retc( pSet->HB_SET_DEVICE );
-         if( pArg2 && HB_IS_STRING( pArg2 ) )
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_DEVICE );
+         if( pArg1 && HB_IS_STRING( pArg1 ) )
          {
             /* If the print file is not already open, open it in overwrite mode. */
-            pSet->HB_SET_DEVICE = set_string( pArg2, pSet->HB_SET_DEVICE );
+            pSet->HB_SET_DEVICE = set_string( pArg1, pSet->HB_SET_DEVICE );
             pSet->hb_set_prndevice = strlen( pSet->HB_SET_DEVICE ) >= 4 &&
                                      hb_strnicmp( pSet->HB_SET_DEVICE, "PRIN", 4 ) == 0;
          }
          break;
       case HB_SET_EOF:
-         hb_retl( pSet->HB_SET_EOF );
-         if( args > 1 )
-            pSet->HB_SET_EOF = set_logical( pArg2, pSet->HB_SET_EOF );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_EOF );
+         if( pArg1 != NULL )
+            pSet->HB_SET_EOF = set_logical( pArg1, pSet->HB_SET_EOF );
          break;
       case HB_SET_EPOCH:
-         hb_retni( pSet->HB_SET_EPOCH );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_EPOCH );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_EPOCH ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_EPOCH ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_EPOCH = set_number( pArg2, pSet->HB_SET_EPOCH );
+               pSet->HB_SET_EPOCH = set_number( pArg1, pSet->HB_SET_EPOCH );
          }
          break;
       case HB_SET_ESCAPE:
-         hb_retl( pSet->HB_SET_ESCAPE );
-         if( args > 1 )
-            pSet->HB_SET_ESCAPE = set_logical( pArg2, pSet->HB_SET_ESCAPE );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_ESCAPE );
+         if( pArg1 != NULL )
+            pSet->HB_SET_ESCAPE = set_logical( pArg1, pSet->HB_SET_ESCAPE );
          break;
       case HB_SET_EVENTMASK:
-         hb_retni( pSet->HB_SET_EVENTMASK );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_EVENTMASK );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_EVENTMASK ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_EVENTMASK ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_EVENTMASK = set_number( pArg2, pSet->HB_SET_EVENTMASK );
+               pSet->HB_SET_EVENTMASK = set_number( pArg1, pSet->HB_SET_EVENTMASK );
          }
          break;
       case HB_SET_EXACT:
-         hb_retl( pSet->HB_SET_EXACT );
-         if( args > 1 )
-            pSet->HB_SET_EXACT = set_logical( pArg2, pSet->HB_SET_EXACT );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_EXACT );
+         if( pArg1 != NULL )
+            pSet->HB_SET_EXACT = set_logical( pArg1, pSet->HB_SET_EXACT );
          break;
       case HB_SET_EXCLUSIVE:
-         hb_retl( pSet->HB_SET_EXCLUSIVE );
-         if( args > 1 )
-            pSet->HB_SET_EXCLUSIVE = set_logical( pArg2, pSet->HB_SET_EXCLUSIVE );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_EXCLUSIVE );
+         if( pArg1 != NULL )
+            pSet->HB_SET_EXCLUSIVE = set_logical( pArg1, pSet->HB_SET_EXCLUSIVE );
          break;
       case HB_SET_EXIT:
-         hb_retl( pSet->HB_SET_EXIT );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_EXIT );
          /* NOTE: Otherwise ReadExit() will always set the value. [vszakats] */
-         if( pArg2 != NULL && ! HB_IS_NIL( pArg2 ) )
-            pSet->HB_SET_EXIT = set_logical( pArg2, pSet->HB_SET_EXIT );
+         if( pArg1 != NULL && ! HB_IS_NIL( pArg1 ) )
+            pSet->HB_SET_EXIT = set_logical( pArg1, pSet->HB_SET_EXIT );
          break;
       case HB_SET_EXTRA:
-         hb_retl( pSet->HB_SET_EXTRA );
-         if( args > 1 )
-            pSet->HB_SET_EXTRA = set_logical( pArg2, pSet->HB_SET_EXTRA );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_EXTRA );
+         if( pArg1 != NULL )
+            pSet->HB_SET_EXTRA = set_logical( pArg1, pSet->HB_SET_EXTRA );
          break;
       case HB_SET_EXTRAFILE:
-         hb_retc( pSet->HB_SET_EXTRAFILE );
-         if( pArg2 && HB_IS_STRING( pArg2 ) )
-            open_handle( pSet, hb_itemGetCPtr( pArg2 ), set_logical( pArg3, HB_FALSE ), HB_SET_EXTRAFILE );
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_EXTRAFILE );
+         if( pArg1 && HB_IS_STRING( pArg1 ) )
+            open_handle( pSet, hb_itemGetCPtr( pArg1 ), set_logical( pArg2, HB_FALSE ), HB_SET_EXTRAFILE );
          break;
       case HB_SET_FIXED:
-         hb_retl( pSet->HB_SET_FIXED );
-         if( args > 1 )
-            pSet->HB_SET_FIXED = set_logical( pArg2, pSet->HB_SET_FIXED );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_FIXED );
+         if( pArg1 != NULL )
+            pSet->HB_SET_FIXED = set_logical( pArg1, pSet->HB_SET_FIXED );
          break;
       case HB_SET_INSERT:
-         hb_retl( pSet->HB_SET_INSERT );
-         if( args > 1 )
-            pSet->HB_SET_INSERT = set_logical( pArg2, pSet->HB_SET_INSERT );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_INSERT );
+         if( pArg1 != NULL )
+            pSet->HB_SET_INSERT = set_logical( pArg1, pSet->HB_SET_INSERT );
          break;
       case HB_SET_INTENSITY:
-         hb_retl( pSet->HB_SET_INTENSITY );
-         if( args > 1 )
-            pSet->HB_SET_INTENSITY = set_logical( pArg2, pSet->HB_SET_INTENSITY );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_INTENSITY );
+         if( pArg1 != NULL )
+            pSet->HB_SET_INTENSITY = set_logical( pArg1, pSet->HB_SET_INTENSITY );
          break;
       case HB_SET_MARGIN:
-         hb_retni( pSet->HB_SET_MARGIN );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_MARGIN );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_MARGIN ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_MARGIN ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_MARGIN = set_number( pArg2, pSet->HB_SET_MARGIN );
+               pSet->HB_SET_MARGIN = set_number( pArg1, pSet->HB_SET_MARGIN );
          }
          break;
       case HB_SET_MBLOCKSIZE:
-         hb_retni( pSet->HB_SET_MBLOCKSIZE );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_MBLOCKSIZE );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_MBLOCKSIZE ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_MBLOCKSIZE ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_MBLOCKSIZE = set_number( pArg2, pSet->HB_SET_MBLOCKSIZE );
+               pSet->HB_SET_MBLOCKSIZE = set_number( pArg1, pSet->HB_SET_MBLOCKSIZE );
          }
          break;
       case HB_SET_MCENTER:
-         hb_retl( pSet->HB_SET_MCENTER );
-         if( args > 1 )
-            pSet->HB_SET_MCENTER = set_logical( pArg2, pSet->HB_SET_MCENTER );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_MCENTER );
+         if( pArg1 != NULL )
+            pSet->HB_SET_MCENTER = set_logical( pArg1, pSet->HB_SET_MCENTER );
          break;
       case HB_SET_MESSAGE:
-         hb_retni( pSet->HB_SET_MESSAGE );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_MESSAGE );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_MESSAGE ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_MESSAGE ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_MESSAGE = set_number( pArg2, pSet->HB_SET_MESSAGE );
+               pSet->HB_SET_MESSAGE = set_number( pArg1, pSet->HB_SET_MESSAGE );
          }
          break;
       case HB_SET_MFILEEXT:
-         hb_retc( pSet->HB_SET_MFILEEXT );
-         if( args > 1 )
-            pSet->HB_SET_MFILEEXT = set_string( pArg2, pSet->HB_SET_MFILEEXT );
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_MFILEEXT );
+         if( pArg1 != NULL )
+            pSet->HB_SET_MFILEEXT = set_string( pArg1, pSet->HB_SET_MFILEEXT );
          break;
       case HB_SET_OPTIMIZE:
-         hb_retl( pSet->HB_SET_OPTIMIZE );
-         if( args > 1 )
-            pSet->HB_SET_OPTIMIZE = set_logical( pArg2, pSet->HB_SET_OPTIMIZE );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_OPTIMIZE );
+         if( pArg1 != NULL )
+            pSet->HB_SET_OPTIMIZE = set_logical( pArg1, pSet->HB_SET_OPTIMIZE );
          break;
       case HB_SET_FORCEOPT:
-         hb_retl( pSet->HB_SET_FORCEOPT );
-         if( args > 1 )
-            pSet->HB_SET_FORCEOPT = set_logical( pArg2, pSet->HB_SET_FORCEOPT );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_FORCEOPT );
+         if( pArg1 != NULL )
+            pSet->HB_SET_FORCEOPT = set_logical( pArg1, pSet->HB_SET_FORCEOPT );
          break;
       case HB_SET_STRICTREAD:
-         hb_retl( pSet->HB_SET_STRICTREAD );
-         if( args > 1 )
-            pSet->HB_SET_STRICTREAD = set_logical( pArg2, pSet->HB_SET_STRICTREAD );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_STRICTREAD );
+         if( pArg1 != NULL )
+            pSet->HB_SET_STRICTREAD = set_logical( pArg1, pSet->HB_SET_STRICTREAD );
          break;
       case HB_SET_HARDCOMMIT:
-         hb_retl( pSet->HB_SET_HARDCOMMIT );
-         if( args > 1 )
-            pSet->HB_SET_HARDCOMMIT = set_logical( pArg2, pSet->HB_SET_HARDCOMMIT );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_HARDCOMMIT );
+         if( pArg1 != NULL )
+            pSet->HB_SET_HARDCOMMIT = set_logical( pArg1, pSet->HB_SET_HARDCOMMIT );
          break;
       case HB_SET_PATH:
-         hb_retc( pSet->HB_SET_PATH );
-         if( args > 1 )
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_PATH );
+         if( pArg1 != NULL )
          {
-            pSet->HB_SET_PATH = set_string( pArg2, pSet->HB_SET_PATH );
+            pSet->HB_SET_PATH = set_string( pArg1, pSet->HB_SET_PATH );
             hb_fsFreeSearchPath( pSet->hb_set_path );
             pSet->hb_set_path = NULL;
             hb_fsAddSearchPath( pSet->HB_SET_PATH, &pSet->hb_set_path );
          }
          break;
       case HB_SET_PRINTER:
-         hb_retl( pSet->HB_SET_PRINTER );
-         if( args > 1 )
-            pSet->HB_SET_PRINTER = set_logical( pArg2, pSet->HB_SET_PRINTER );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_PRINTER );
+         if( pArg1 != NULL )
+            pSet->HB_SET_PRINTER = set_logical( pArg1, pSet->HB_SET_PRINTER );
          break;
       case HB_SET_PRINTFILE:
-         hb_retc( pSet->HB_SET_PRINTFILE );
-         if( pArg2 && HB_IS_STRING( pArg2 ) )
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_PRINTFILE );
+         if( pArg1 && HB_IS_STRING( pArg1 ) )
          {
-            open_handle( pSet, hb_itemGetCPtr( pArg2 ), set_logical( pArg3, HB_FALSE ), HB_SET_PRINTFILE );
+            open_handle( pSet, hb_itemGetCPtr( pArg1 ), set_logical( pArg2, HB_FALSE ), HB_SET_PRINTFILE );
             /* With SET PRINTER TO or Set( _SET_PRINTFILE, "" ) are expected to activate the default printer [jarabal] */
             if( pSet->HB_SET_PRINTFILE == NULL )
                pSet->HB_SET_PRINTFILE = hb_set_PRINTFILE_default();
          }
          break;
       case HB_SET_SCOREBOARD:
-         hb_retl( pSet->HB_SET_SCOREBOARD );
-         if( args > 1 )
-            pSet->HB_SET_SCOREBOARD = set_logical( pArg2, pSet->HB_SET_SCOREBOARD );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_SCOREBOARD );
+         if( pArg1 != NULL )
+            pSet->HB_SET_SCOREBOARD = set_logical( pArg1, pSet->HB_SET_SCOREBOARD );
          break;
       case HB_SET_SCROLLBREAK:
-         hb_retl( pSet->HB_SET_SCROLLBREAK );
-         if( args > 1 )
-            pSet->HB_SET_SCROLLBREAK = set_logical( pArg2, pSet->HB_SET_SCROLLBREAK );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_SCROLLBREAK );
+         if( pArg1 != NULL )
+            pSet->HB_SET_SCROLLBREAK = set_logical( pArg1, pSet->HB_SET_SCROLLBREAK );
          break;
       case HB_SET_SOFTSEEK:
-         hb_retl( pSet->HB_SET_SOFTSEEK );
-         if( args > 1 )
-            pSet->HB_SET_SOFTSEEK = set_logical( pArg2, pSet->HB_SET_SOFTSEEK );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_SOFTSEEK );
+         if( pArg1 != NULL )
+            pSet->HB_SET_SOFTSEEK = set_logical( pArg1, pSet->HB_SET_SOFTSEEK );
          break;
       case HB_SET_TYPEAHEAD:
-         hb_retni( pSet->HB_SET_TYPEAHEAD );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_TYPEAHEAD );
+         if( pArg1 != NULL )
          {
             /* Set the value and limit the range */
-            pSet->HB_SET_TYPEAHEAD = set_number( pArg2, pSet->HB_SET_TYPEAHEAD );
+            pSet->HB_SET_TYPEAHEAD = set_number( pArg1, pSet->HB_SET_TYPEAHEAD );
             if( pSet->HB_SET_TYPEAHEAD == 0 )
                /* Do nothing */;
             else if( pSet->HB_SET_TYPEAHEAD < 16 )
@@ -816,63 +813,63 @@ HB_FUNC( SET )
          }
          break;
       case HB_SET_UNIQUE:
-         hb_retl( pSet->HB_SET_UNIQUE );
-         if( args > 1 )
-            pSet->HB_SET_UNIQUE = set_logical( pArg2, pSet->HB_SET_UNIQUE );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_UNIQUE );
+         if( pArg1 != NULL )
+            pSet->HB_SET_UNIQUE = set_logical( pArg1, pSet->HB_SET_UNIQUE );
          break;
       case HB_SET_VIDEOMODE:
-         hb_retni( pSet->HB_SET_VIDEOMODE );
-         if( args > 1 )
-            pSet->HB_SET_VIDEOMODE = set_number( pArg2, pSet->HB_SET_VIDEOMODE );
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_VIDEOMODE );
+         if( pArg1 != NULL )
+            pSet->HB_SET_VIDEOMODE = set_number( pArg1, pSet->HB_SET_VIDEOMODE );
          break;
       case HB_SET_WRAP:
-         hb_retl( pSet->HB_SET_WRAP );
-         if( args > 1 )
-            pSet->HB_SET_WRAP = set_logical( pArg2, pSet->HB_SET_WRAP );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_WRAP );
+         if( pArg1 != NULL )
+            pSet->HB_SET_WRAP = set_logical( pArg1, pSet->HB_SET_WRAP );
          break;
       case HB_SET_LANGUAGE:
-         hb_retc( hb_langID() );
-         if( args > 1 )
+         pResult = hb_itemPutC( pResult, hb_langID() );
+         if( pArg1 != NULL )
          {
-            if( HB_IS_STRING( pArg2 ) )
-               hb_langSelectID( hb_itemGetCPtr( pArg2 ) );
+            if( HB_IS_STRING( pArg1 ) )
+               hb_langSelectID( hb_itemGetCPtr( pArg1 ) );
             else
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
          }
          break;
       case HB_SET_CODEPAGE:
-         hb_retc( hb_cdpID() );
-         if( args > 1 )
+         pResult = hb_itemPutC( pResult, hb_cdpID() );
+         if( pArg1 != NULL )
          {
-            if( HB_IS_STRING( pArg2 ) )
-               hb_cdpSelectID( hb_itemGetCPtr( pArg2 ) );
+            if( HB_IS_STRING( pArg1 ) )
+               hb_cdpSelectID( hb_itemGetCPtr( pArg1 ) );
             else
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
          }
          break;
       case HB_SET_IDLEREPEAT:
-         hb_retl( pSet->HB_SET_IDLEREPEAT );
-         if( args > 1 )
-            pSet->HB_SET_IDLEREPEAT = set_logical( pArg2, pSet->HB_SET_IDLEREPEAT );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_IDLEREPEAT );
+         if( pArg1 != NULL )
+            pSet->HB_SET_IDLEREPEAT = set_logical( pArg1, pSet->HB_SET_IDLEREPEAT );
          break;
       case HB_SET_FILECASE:
-         hb_retni( pSet->HB_SET_FILECASE );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_FILECASE );
+         if( pArg1 != NULL )
          {
-            if( HB_IS_STRING( pArg2 ) )
+            if( HB_IS_STRING( pArg1 ) )
             {
-               if( ! hb_stricmp( hb_itemGetCPtr( pArg2 ), "LOWER" ) )
+               if( ! hb_stricmp( hb_itemGetCPtr( pArg1 ), "LOWER" ) )
                   pSet->HB_SET_FILECASE = HB_SET_CASE_LOWER;
-               else if( ! hb_stricmp( hb_itemGetCPtr( pArg2 ), "UPPER" ) )
+               else if( ! hb_stricmp( hb_itemGetCPtr( pArg1 ), "UPPER" ) )
                   pSet->HB_SET_FILECASE = HB_SET_CASE_UPPER;
-               else if( ! hb_stricmp( hb_itemGetCPtr( pArg2 ), "MIXED" ) )
+               else if( ! hb_stricmp( hb_itemGetCPtr( pArg1 ), "MIXED" ) )
                   pSet->HB_SET_FILECASE = HB_SET_CASE_MIXED;
                else
                   hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             }
-            else if( HB_IS_NUMERIC( pArg2 ) )
+            else if( HB_IS_NUMERIC( pArg1 ) )
             {
-               int iValue = set_number( pArg2, pSet->HB_SET_FILECASE );
+               int iValue = set_number( pArg1, pSet->HB_SET_FILECASE );
                if( iValue == HB_SET_CASE_LOWER ||
                    iValue == HB_SET_CASE_UPPER ||
                    iValue == HB_SET_CASE_MIXED )
@@ -885,23 +882,23 @@ HB_FUNC( SET )
          }
          break;
       case HB_SET_DIRCASE:
-         hb_retni( pSet->HB_SET_DIRCASE );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_DIRCASE );
+         if( pArg1 != NULL )
          {
-            if( HB_IS_STRING( pArg2 ) )
+            if( HB_IS_STRING( pArg1 ) )
             {
-               if( ! hb_stricmp( hb_itemGetCPtr( pArg2 ), "LOWER" ) )
+               if( ! hb_stricmp( hb_itemGetCPtr( pArg1 ), "LOWER" ) )
                   pSet->HB_SET_DIRCASE = HB_SET_CASE_LOWER;
-               else if( ! hb_stricmp( hb_itemGetCPtr( pArg2 ), "UPPER" ) )
+               else if( ! hb_stricmp( hb_itemGetCPtr( pArg1 ), "UPPER" ) )
                   pSet->HB_SET_DIRCASE = HB_SET_CASE_UPPER;
-               else if( ! hb_stricmp( hb_itemGetCPtr( pArg2 ), "MIXED" ) )
+               else if( ! hb_stricmp( hb_itemGetCPtr( pArg1 ), "MIXED" ) )
                   pSet->HB_SET_DIRCASE = HB_SET_CASE_MIXED;
                else
                   hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             }
-            else if( HB_IS_NUMERIC( pArg2 ) )
+            else if( HB_IS_NUMERIC( pArg1 ) )
             {
-               int iValue = set_number( pArg2, pSet->HB_SET_DIRCASE );
+               int iValue = set_number( pArg1, pSet->HB_SET_DIRCASE );
                if( iValue == HB_SET_CASE_LOWER ||
                    iValue == HB_SET_CASE_UPPER ||
                    iValue == HB_SET_CASE_MIXED )
@@ -918,70 +915,72 @@ HB_FUNC( SET )
          char szDirSep[ 2 ];
          szDirSep[ 0 ] = ( char ) pSet->HB_SET_DIRSEPARATOR;
          szDirSep[ 1 ] = '\0';
-         hb_retc( szDirSep );
-         if( args > 1 )
-            pSet->HB_SET_DIRSEPARATOR = set_char( pArg2, ( char ) pSet->HB_SET_DIRSEPARATOR );
+         pResult = hb_itemPutC( pResult, szDirSep );
+         if( pArg1 != NULL )
+            pSet->HB_SET_DIRSEPARATOR = set_char( pArg1, ( char ) pSet->HB_SET_DIRSEPARATOR );
          break;
       }
       case HB_SET_DBFLOCKSCHEME:
-         hb_retni( pSet->HB_SET_DBFLOCKSCHEME );
-         if( args > 1 )
+         pResult = hb_itemPutNI( pResult, pSet->HB_SET_DBFLOCKSCHEME );
+         if( pArg1 != NULL )
          {
-            if( set_number( pArg2, pSet->HB_SET_DBFLOCKSCHEME ) < 0 )
+            if( set_number( pArg1, pSet->HB_SET_DBFLOCKSCHEME ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             else
-               pSet->HB_SET_DBFLOCKSCHEME = set_number( pArg2, pSet->HB_SET_DBFLOCKSCHEME );
+               pSet->HB_SET_DBFLOCKSCHEME = set_number( pArg1, pSet->HB_SET_DBFLOCKSCHEME );
          }
          break;
       case HB_SET_DEFEXTENSIONS:
-         hb_retl( pSet->HB_SET_DEFEXTENSIONS );
-         if( args > 1 )
-            pSet->HB_SET_DEFEXTENSIONS = set_logical( pArg2, pSet->HB_SET_DEFEXTENSIONS );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_DEFEXTENSIONS );
+         if( pArg1 != NULL )
+            pSet->HB_SET_DEFEXTENSIONS = set_logical( pArg1, pSet->HB_SET_DEFEXTENSIONS );
          break;
       case HB_SET_EOL:
-         hb_retc( pSet->HB_SET_EOL );
-         if( args > 1 )
-            pSet->HB_SET_EOL = set_string( pArg2, pSet->HB_SET_EOL );
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_EOL );
+         if( pArg1 != NULL )
+            pSet->HB_SET_EOL = set_string( pArg1, pSet->HB_SET_EOL );
          break;
       case HB_SET_TRIMFILENAME:
-         hb_retl( pSet->HB_SET_TRIMFILENAME );
-         if( args > 1 )
-            pSet->HB_SET_TRIMFILENAME = set_logical( pArg2, pSet->HB_SET_TRIMFILENAME );
+         pResult = hb_itemPutL( pResult, pSet->HB_SET_TRIMFILENAME );
+         if( pArg1 != NULL )
+            pSet->HB_SET_TRIMFILENAME = set_logical( pArg1, pSet->HB_SET_TRIMFILENAME );
          break;
       case HB_SET_HBOUTLOG:
-         hb_retc( pSet->HB_SET_HBOUTLOG );
-         if( args > 1 && ( HB_IS_STRING( pArg2 ) || HB_IS_NIL( pArg2 ) ) )
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_HBOUTLOG );
+         if( pArg1 != NULL && ( HB_IS_STRING( pArg1 ) || HB_IS_NIL( pArg1 ) ) )
          {
             if( pSet->HB_SET_HBOUTLOG )
                hb_xfree( pSet->HB_SET_HBOUTLOG );
-            if( HB_IS_NIL( pArg2 ) )
+            if( HB_IS_NIL( pArg1 ) )
                pSet->HB_SET_HBOUTLOG = NULL;
             else
                /* Limit size of SET strings to 64K, truncating if source is longer */
-               pSet->HB_SET_HBOUTLOG = hb_strndup( hb_itemGetCPtr( pArg2 ), USHRT_MAX );
+               pSet->HB_SET_HBOUTLOG = hb_strndup( hb_itemGetCPtr( pArg1 ), USHRT_MAX );
             hb_xsetfilename( pSet->HB_SET_HBOUTLOG );
          }
          break;
       case HB_SET_HBOUTLOGINFO:
-         hb_retc( pSet->HB_SET_HBOUTLOGINFO );
-         if( args > 1 )
+         pResult = hb_itemPutC( pResult, pSet->HB_SET_HBOUTLOGINFO );
+         if( pArg1 != NULL )
          {
-            pSet->HB_SET_HBOUTLOGINFO = set_string( pArg2, pSet->HB_SET_HBOUTLOGINFO );
+            pSet->HB_SET_HBOUTLOGINFO = set_string( pArg1, pSet->HB_SET_HBOUTLOGINFO );
             hb_xsetinfo( pSet->HB_SET_HBOUTLOGINFO );
          }
          break;
       case HB_SET_OSCODEPAGE:
          if( pSet->hb_set_oscp )
-            hb_retc( ( ( PHB_CODEPAGE ) pSet->hb_set_oscp )->id );
+            pResult = hb_itemPutC( pResult, ( ( PHB_CODEPAGE ) pSet->hb_set_oscp )->id );
+         else if( pResult )
+            hb_itemClear( pResult );
          else
-            hb_ret();
-         if( args > 1 )
+            pResult = hb_itemNew( NULL );
+         if( pArg1 != NULL )
          {
-            if( HB_IS_NIL( pArg2 ) )
+            if( HB_IS_NIL( pArg1 ) )
                pSet->hb_set_oscp = NULL;
-            else if( HB_IS_STRING( pArg2 ) )
+            else if( HB_IS_STRING( pArg1 ) )
             {
-               PHB_CODEPAGE cdp = hb_cdpFindExt( hb_itemGetCPtr( pArg2 ) );
+               PHB_CODEPAGE cdp = hb_cdpFindExt( hb_itemGetCPtr( pArg1 ) );
                if( cdp )
                   pSet->hb_set_oscp = ( void * ) cdp;
             }
@@ -991,16 +990,18 @@ HB_FUNC( SET )
          break;
       case HB_SET_DBCODEPAGE:
          if( pSet->hb_set_dbcp )
-            hb_retc( ( ( PHB_CODEPAGE ) pSet->hb_set_dbcp )->id );
+            pResult = hb_itemPutC( pResult, ( ( PHB_CODEPAGE ) pSet->hb_set_dbcp )->id );
+         else if( pResult )
+            hb_itemClear( pResult );
          else
-            hb_ret();
-         if( args > 1 )
+            pResult = hb_itemNew( NULL );
+         if( pArg1 != NULL )
          {
-            if( HB_IS_NIL( pArg2 ) )
+            if( HB_IS_NIL( pArg1 ) )
                pSet->hb_set_dbcp = NULL;
-            else if( HB_IS_STRING( pArg2 ) )
+            else if( HB_IS_STRING( pArg1 ) )
             {
-               PHB_CODEPAGE cdp = hb_cdpFindExt( hb_itemGetCPtr( pArg2 ) );
+               PHB_CODEPAGE cdp = hb_cdpFindExt( hb_itemGetCPtr( pArg1 ) );
                if( cdp )
                   pSet->hb_set_dbcp = ( void * ) cdp;
             }
@@ -1022,8 +1023,18 @@ HB_FUNC( SET )
          break;
 #endif
    }
-   if( args > 1 )
+   if( pArg1 != NULL )
       hb_setListenerNotify( set_specifier, HB_SET_LISTENER_AFTER );
+
+   return pResult;
+}
+
+HB_FUNC( SET )
+{
+   HB_STACK_TLS_PRELOAD
+   hb_setGetItem( ( HB_set_enum ) hb_parnidef( 1, HB_SET_INVALID_ ),
+                  hb_stackReturnItem(),
+                  hb_param( 2, HB_IT_ANY ), hb_param( 3, HB_IT_ANY ) );
 }
 
 void hb_setInitialize( PHB_SET_STRUCT pSet )
