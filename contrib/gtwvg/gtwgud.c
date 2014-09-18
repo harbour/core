@@ -1650,6 +1650,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SETPOS_ROWCOL:
          if( pWVT->hWnd )
          {
+            int i1 = -1;
+            int i2 = -1;
             RECT rect = { 0, 0, 0, 0 };
             GetWindowRect( pWVT->hWnd, &rect );
 
@@ -1670,17 +1672,27 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
                               ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
             {
+               i1 = hb_itemGetNI( pInfo->pNewVal );
+               i2 = hb_itemGetNI( pInfo->pNewVal2 );
+            }
+            else if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
+            {
+               i1 = hb_arrayGetNI( pInfo->pNewVal, 1 );
+               i2 = hb_arrayGetNI( pInfo->pNewVal, 2 );
+            }
+            if( i1 >= -1 && i2 >= -1 )
+            {
                int x, y;
 
                if( iType == HB_GTI_SETPOS_ROWCOL )
                {
-                  y = hb_itemGetNI( pInfo->pNewVal ) * pWVT->fontHeight;
-                  x = hb_itemGetNI( pInfo->pNewVal2 ) * pWVT->fontWidth;
+                  y = i1 * pWVT->fontHeight;
+                  x = i2 * pWVT->fontWidth;
                }
                else
                {
-                  x = hb_itemGetNI( pInfo->pNewVal );
-                  y = hb_itemGetNI( pInfo->pNewVal2 );
+                  x = i1;
+                  y = i2;
                }
                hb_retl( SetWindowPos( pWVT->hWnd, NULL,
                                       x,
