@@ -925,21 +925,21 @@ long hb_timeUTCOffset( void ) /* in seconds */
    }
 #else
    {
-      struct tm timeinfo;
+      struct tm * timeinfo;
       time_t current, utc, local;
 
       time( &current );
 
 #if defined( HB_HAS_LOCALTIME_R )
-      utc = mktime( gmtime_r( &current, &timeinfo ) );
-      local = mktime( localtime_r( &current, &timeinfo ) );
+      utc = mktime( gmtime_r( &current, timeinfo ) );
+      local = mktime( localtime_r( &current, timeinfo ) );
 #else
-      timeinfo = *gmtime( &local );
-      utc = mktime( &timeinfo );
-      timeinfo = *localtime( &current );
-      local = mktime( &timeinfo );
+      timeinfo = gmtime( &local );
+      utc = mktime( timeinfo );
+      timeinfo = localtime( &current );
+      local = mktime( timeinfo );
 #endif
-      return ( long ) difftime( local, utc ) + ( timeinfo.tm_isdst > 0 ? 3600 : 0 );
+      return ( long ) difftime( local, utc ) + ( timeinfo->tm_isdst > 0 ? 3600 : 0 );
    }
 #endif
 }
