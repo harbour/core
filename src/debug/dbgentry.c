@@ -1916,7 +1916,9 @@ HB_FUNC( __DBGGETEXPRVALUE )
          pItem = hb_dbgGetWatchValue( ptr, hb_parni( 2 ) - 1 , &valid );
 
       hb_storl( valid, 3 );
-      hb_itemReturnRelease( pItem );
+
+      if( pItem )
+         hb_itemReturnRelease( pItem );
    }
 }
 
