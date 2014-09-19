@@ -253,6 +253,8 @@ typedef struct
    /* Mouse informations */
    int mouseCol;
    int mouseRow;
+   int mouseColPxl;
+   int mouseRowPxl;
    int mouseGotoCol;
    int mouseGotoRow;
    int mouseNumButtons;
@@ -3005,8 +3007,10 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
          if( evt->xmotion.time != CurrentTime )
             wnd->lastEventTime = evt->xmotion.time;
 
-         wnd->mouseCol = evt->xmotion.x / wnd->fontWidth;
-         wnd->mouseRow = evt->xmotion.y / wnd->fontHeight;
+         wnd->mouseColPxl = evt->xmotion.x;
+         wnd->mouseRowPxl = evt->xmotion.y;
+         wnd->mouseCol = wnd->mouseColPxl / wnd->fontWidth;
+         wnd->mouseRow = wnd->mouseRowPxl / wnd->fontHeight;
          if( wnd->fMarkMode )
          {
             hb_gt_xwc_InvalidateChar( wnd, wnd->markLeft, wnd->markTop,
@@ -5412,6 +5416,14 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_MOUSEPOS_XY:
+         if( ! pInfo->pResult )
+            pInfo->pResult = hb_itemNew( NULL );
+         hb_arrayNew( pInfo->pResult, 2 );
+         hb_arraySetNI( pInfo->pResult, 1, wnd->mouseColPxl );
+         hb_arraySetNI( pInfo->pResult, 2, wnd->mouseRowPxl );
+         break;
+
       case HB_GTI_SETPOS_XY:
       case HB_GTI_SETPOS_ROWCOL:
       {
@@ -5569,6 +5581,7 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
    PXWND_DEF wnd;
    int iRet = 1, iTmp;
    XColor color;
+   XImage * image;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
 
@@ -5588,7 +5601,6 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          break;
 
       case HB_GFX_MAKECOLOR:
-         /* TODO: */
          color.red = iTop * 256;
          color.green = iLeft * 256;
          color.blue = iBottom * 256;
@@ -5630,8 +5642,20 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          break;
 
       case HB_GFX_GETPIXEL:
-         /* TODO: */
-         iRet = 0;
+         HB_XWC_XLIB_LOCK();
+         image = XGetImage( wnd->dpy, wnd->drw, iLeft, iTop, 1, 1, AllPlanes, XYPixmap );
+         if( image )
+         {
+            color.pixel = XGetPixel( image, 0, 0 );
+            XQueryColor( wnd->dpy, wnd->colorsmap, &color );
+            iRet = ( ( color.red / 256 ) & 0xFF ) << 16 |
+                   ( ( color.green / 256 ) & 0xFF ) << 8 |
+                   ( ( color.blue / 256 ) & 0xFF );
+            XDestroyImage( image );
+         }
+         else
+            iRet = 0;
+         HB_XWC_XLIB_UNLOCK();
          break;
 
       case HB_GFX_PUTPIXEL:
