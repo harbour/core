@@ -1507,7 +1507,7 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO * info, HB_WATCHPOINT * watch )
 }
 
 
-PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char * expression )
+PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char * expression, HB_BOOL * valid )
 {
    HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
    PHB_ITEM result;
@@ -1517,7 +1517,7 @@ PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char * expression )
    point.pBlock = NULL;
    point.nVars = 0;
 
-   result = hb_dbgEval( info, &point, NULL );
+   result = hb_dbgEval( info, &point, valid );
 
    hb_dbgClearWatch( &point );
 
@@ -1525,12 +1525,12 @@ PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char * expression )
 }
 
 
-PHB_ITEM hb_dbgGetWatchValue( void * handle, int nWatch )
+PHB_ITEM hb_dbgGetWatchValue( void * handle, int nWatch, HB_BOOL * valid )
 {
    HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
 
    if( nWatch >= 0 && nWatch < info->nWatchPoints )
-      return hb_dbgEval( info, &info->aWatch[ nWatch ], NULL );
+      return hb_dbgEval( info, &info->aWatch[ nWatch ], valid );
    else
       return NULL;
 }
@@ -1908,19 +1908,15 @@ HB_FUNC( __DBGGETEXPRVALUE )
    if( ptr )
    {
       PHB_ITEM pItem;
+      HB_BOOL valid = HB_FALSE;
 
       if( HB_ISCHAR( 2 ) )
-         pItem = hb_dbgGetExpressionValue( ptr, hb_parc( 2 ) );
+         pItem = hb_dbgGetExpressionValue( ptr, hb_parc( 2 ), &valid );
       else
-         pItem = hb_dbgGetWatchValue( ptr, hb_parni( 2 ) - 1 );
+         pItem = hb_dbgGetWatchValue( ptr, hb_parni( 2 ) - 1 , &valid );
 
-      if( pItem )
-      {
-         hb_storl( HB_TRUE, 3 );
-         hb_itemReturnRelease( pItem );
-      }
-      else
-         hb_storl( HB_FALSE, 3 );
+      hb_storl( valid, 3 );
+      hb_itemReturnRelease( pItem );
    }
 }
 
