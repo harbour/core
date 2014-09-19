@@ -880,8 +880,8 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       IF aCmnd[ WP_TYPE ] == "??"
          IF lValid
             ::Inspect( aCmnd[ WP_EXPR ], cResult )
+            cResult := ""  // discard result
          ENDIF
-         cResult := ""  // discard result
       ELSEIF lValid
          cResult := __dbgValToStr( cResult )
       ENDIF
@@ -1347,20 +1347,20 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
 
    lValid := .F.
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      xResult := __dbgGetExprValue( ::pInfo, xExpr, @lValid )
-      IF ! lValid
+   xResult := __dbgGetExprValue( ::pInfo, xExpr, @lValid )
+   IF ! lValid
+      oErr := xResult
+      IF oErr:ClassName() == "ERROR"
+         xResult := oErr:operation + ": " + oErr:description
+         IF HB_ISARRAY( oErr:args )
+            xResult += "; arguments:"
+            AEval( oErr:args, {| x, i | xResult += iif( i == 1, " ", ", " ) + ;
+                                                   __dbgValToStr( x ) } )
+         ENDIF
+      ELSE
          xResult := "Syntax error"
       ENDIF
-   RECOVER USING oErr
-      xResult := oErr:operation + ": " + oErr:description
-      IF HB_ISARRAY( oErr:args )
-         xResult += "; arguments:"
-         AEval( oErr:args, {| x, i | xResult += iif( i == 1, " ", ", " ) + ;
-                                                AllTrim( __dbgValToStr( x ) ) } )
-      ENDIF
-      lValid := .F.
-   END SEQUENCE
+   ENDIF
 
    RETURN xResult
 
