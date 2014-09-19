@@ -72,9 +72,9 @@ extern HB_EXPORT void hb_dbgAddBreak( void * handle, const char * szModule, int 
 extern HB_EXPORT void hb_dbgAddWatch( void * handle, const char * szExpr, HB_BOOL bTrace );
 extern HB_EXPORT void hb_dbgDelBreak( void * handle, int nBreak );
 extern HB_EXPORT void hb_dbgDelWatch( void * handle, int nWatch );
-extern HB_EXPORT PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char * expression );
+extern HB_EXPORT PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char * expression, HB_BOOL * valid );
 extern HB_EXPORT PHB_ITEM hb_dbgGetSourceFiles( void * handle );
-extern HB_EXPORT PHB_ITEM hb_dbgGetWatchValue( void * handle, int nWatch );
+extern HB_EXPORT PHB_ITEM hb_dbgGetWatchValue( void * handle, int nWatch, HB_BOOL * valid );
 extern HB_EXPORT HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine );
 extern HB_EXPORT void hb_dbgSetCBTrace( void * handle, HB_BOOL bCBTrace );
 extern HB_EXPORT void hb_dbgSetGo( void * handle );
