@@ -460,6 +460,9 @@ typedef struct
    HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area      */
 
    HB_BOOL   bResizing;                     /* To know when it is in resizing mode                       */
+   HB_BOOL   bAlreadySizing;
+   HB_BOOL   bComposited;
+   int       CloseMode;
 
    PHB_GOBJS gObjs;                         /* Graphic Objects                                           */
 
