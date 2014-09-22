@@ -1502,7 +1502,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       [vszakats] */
    LOCAL l_lLIBGROUPING := .T.
 
-   LOCAL l_nJOBS := 1
+   LOCAL l_nJOBS := NumberOfCPUs()
 
    LOCAL aCOMPDET := NIL
 #ifdef HARBOUR_SUPPORT
@@ -3204,8 +3204,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hb_LeftEq( cParamL, "-jobs=" )
 
          cParam := SubStr( cParam, Len( "-jobs=" ) + 1 )
-         IF hb_mtvm() .AND. Val( cParam ) > 0
-            l_nJOBS := Val( cParam )
+         IF hb_mtvm() .AND. Val( cParam ) >= 1
+            l_nJOBS := Int( Val( cParam ) )
          ENDIF
 
       CASE hb_LeftEq( cParamL, "-lng=" )
@@ -13653,6 +13653,26 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
 
    RETURN nVer
 
+STATIC FUNCTION NumberOfCPUs()
+
+   LOCAL cCPU
+
+   #if defined( __PLATFORM__WINDOWS )
+      cCPU := GetEnv( "NUMBER_OF_PROCESSORS" )
+   #elif defined( __PLATFORM__BSD )
+      hb_processRun( "/sbin/sysctl -n hw.ncpu",, @cCPU )  /* in /usr/sbin/ on OS X */
+   #elif defined( __PLATFORM__SUNOS )
+      hb_processRun( "psrinfo -p",, @cCPU )
+   #elif defined( __PLATFORM__UNIX )
+      IF Empty( cCPU := GetEnv( "SC_NPROCESSORS_ONLN" ) )
+         hb_processRun( "getconf _NPROCESSORS_ONLN",, @cCPU )
+      ENDIF
+   #else
+      cCPU := ""
+   #endif
+
+   RETURN Max( Int( Val( hb_StrReplace( cCPU, Chr( 13 ) + Chr( 10 ) ) ) ), 1 )
+
 #define _VCS_UNKNOWN        0
 #define _VCS_SVN            1
 #define _VCS_GIT            2
@@ -17332,7 +17352,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-dflag+=<f>"        , I_( "pass single raw option to linker (dynamic library) after the library list. Use with caution." ) }, ;
       { "-3rd=<f>"           , hb_StrFormat( I_( "options/flags reserved for 3rd party tools, always ignored by %1$s itself" ), _SELF_NAME_ ) }, ;
       { "-env:<e>[<o>[<v>]]" , I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert." ) }, ;
-      { "-jobs=<n>"          , I_( "start n compilation threads (multiprocess platforms only)" ) }, ;
+      { "-jobs=<n>"          , hb_StrFormat( I_( "start n compilation threads (multiprocess platforms only) (default: number of processors available or 1 if not detectable/applicable; on this system: %1$d)" ), NumberOfCPUs() ) }, ;
       { "-head=<m>"          , I_( e"control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off" ) }, ;
       { "-rebuild"           , I_( "rebuild (in incremental build mode)" ) }, ;
       { "-rebuildall"        , I_( "rebuild with sub-projects (in incremental build mode)" ) }, ;
