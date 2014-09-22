@@ -1,9 +1,8 @@
 /* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 /* Adapted to OS independent hb_gfxFilledRect() 2014 elch
- * Choose a graphics-capable GT at link time.
- * Notice that in GTWVT graphics is not persistent
- */
+   Choose a graphics-capable GT at link time.
+   Notice that in GTWVT graphics is not persistent */
 
 #require "hbzebra"
 

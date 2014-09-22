@@ -3994,7 +3994,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( pGTp )
          {
             PHB_GTWVT pWVTp = HB_GTWVT_GET( pGTp );
-            EnableWindow( pWVTp->hWnd, TRUE );
+            if( pWVTp )
+               EnableWindow( pWVTp->hWnd, TRUE );
             hb_gt_BaseFree( pGTp );
          }
          break;
@@ -4005,7 +4006,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( pGTp )
          {
             PHB_GTWVT pWVTp = HB_GTWVT_GET( pGTp );
-            EnableWindow( pWVTp->hWnd, FALSE );
+            if( pWVTp )
+               EnableWindow( pWVTp->hWnd, FALSE );
             hb_gt_BaseFree( pGTp );
          }
          break;
@@ -4016,7 +4018,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( pGTp )
          {
             PHB_GTWVT pWVTp = HB_GTWVT_GET( pGTp );
-            SetFocus( pWVTp->hWnd );
+            if( pWVTp )
+               SetFocus( pWVTp->hWnd );
             hb_gt_BaseFree( pGTp );
          }
          break;
