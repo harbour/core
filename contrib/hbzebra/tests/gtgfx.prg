@@ -14,7 +14,7 @@
 PROCEDURE Main()
 
    SetMode( 21 * _SCALE_, 80 )
-   SetColor( "W+/N" )
+   SetColor( "B*/W" )  /* blink attribute for light white background in graphic GT */
 
    CLS
 
@@ -41,7 +41,7 @@ PROCEDURE Main()
 STATIC PROCEDURE DrawBarcode( nY, nX, nLineWidth, cType, cCode, nFlags )
 
    LOCAL hZebra, nLineHeight, cTxt, nYPixel
-   LOCAL nColor := hb_gfxMakeColor( 255, 255, 255 )  /* RGB white */
+   LOCAL nColor := hb_gfxMakeColor( 0, 0, 0 )  /* RGB black */
 
    IF nLineWidth < 1  /* smaller as one pixel impossible */
       nLineWidth := 1

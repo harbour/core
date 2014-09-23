@@ -1668,7 +1668,7 @@ Supported shells per host platforms:
   * [Homepage](https://vszakats.github.io/harbour-core/)
   * [How to contribute](CONTRIBUTING.md)
   * [Source code](https://github.com/vszakats/harbour-core)
-  * [Issues](https://github.com/vszakats/harbour-core/issues) ([Statistics](http://issuestats.com/github/vszakats/harbour-core))
+  * [Issues](https://github.com/vszakats/harbour-core/issues) ([Stats](http://issuestats.com/github/vszakats/harbour-core))
   * [Localization](https://www.transifex.com/projects/p/harbour/) (Resource [hbmk2-vszakats](https://www.transifex.com/projects/p/harbour/resource/hbmk2-vszakats/))
   * Documents:
      * [hbmk2 documentation](utils/hbmk2/doc/hbmk2.en.md)
