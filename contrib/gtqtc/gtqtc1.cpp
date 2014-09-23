@@ -3482,12 +3482,7 @@ QTCWindow::~QTCWindow( void )
 void QTCWindow::closeEvent( QCloseEvent * event )
 {
    if( qConsole->pQTC->iCloseMode == 0 )
-   {
-      PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
-      hb_setSetItem( HB_SET_CANCEL, pItem );
-      hb_itemRelease( pItem );
-      hb_vmRequestCancel();
-   }
+      hb_vmRequestQuit();
    else
       hb_gt_qtc_addKeyToInputQueue( qConsole->pQTC, HB_K_CLOSE );
 
