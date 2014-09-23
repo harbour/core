@@ -311,11 +311,18 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
          case MYSQL_TYPE_TIMESTAMP:
          case MYSQL_TYPE_DATETIME:
+#if MYSQL_VERSION_ID >= 50610
+         case MYSQL_TYPE_TIMESTAMP2:
+         case MYSQL_TYPE_DATETIME2:
+#endif
             pFieldInfo.uiType = HB_FT_TIMESTAMP;
             pFieldInfo.uiLen  = 8;
             break;
 
          case MYSQL_TYPE_TIME:
+#if MYSQL_VERSION_ID >= 50610
+         case MYSQL_TYPE_TIME2:
+#endif
             pFieldInfo.uiType = HB_FT_TIME;
             pFieldInfo.uiLen  = 4;
             break;
