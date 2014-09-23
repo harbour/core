@@ -2138,10 +2138,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 #if 1
                   hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
 #else
-                  PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
-                  hb_setSetItem( HB_SET_CANCEL, pItem );
-                  hb_itemRelease( pItem );
-                  hb_vmRequestCancel();
+                  hb_vmRequestQuit();
 #endif
                }
             }

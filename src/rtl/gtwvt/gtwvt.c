@@ -2886,20 +2886,20 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_MouseEvent( pWVT, message, wParam, lParam );
          return 0;
 
-      case WM_QUERYENDSESSION: /* Closing down computer */
-         hb_vmRequestQuit();
+      case WM_QUERYENDSESSION: /* check if we can shutdown or logoff */
+         return 1;
+
+      case WM_ENDSESSION: /* shutdown started */
+         if( wParam )
+            hb_vmRequestQuit();
          return 0;
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          if( pWVT->CloseMode == 0 )
-         {
-            PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
-            hb_setSetItem( HB_SET_CANCEL, pItem );
-            hb_itemRelease( pItem );
-            hb_vmRequestCancel();
-         }
+            hb_vmRequestQuit();
          else
             hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
+         return 0;
 
       case WM_QUIT:
       case WM_DESTROY:
@@ -4213,8 +4213,8 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          case HB_GFX_RECT:
             r.left   = HB_MIN( iLeft, iRight );
             r.top    = HB_MIN( iTop, iBottom );
-            r.right  = HB_MAX( iLeft, iRight ) + 1;
-            r.bottom = HB_MAX( iTop, iBottom ) + 1;
+            r.right  = HB_MAX( iLeft, iRight );
+            r.bottom = HB_MAX( iTop, iBottom );
 
             SetGFXContext( iColor );
 
@@ -4228,8 +4228,8 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
             r.left   = HB_MIN( iLeft, iRight );
             r.top    = HB_MIN( iTop, iBottom );
-            r.right  = HB_MAX( iLeft, iRight ) + 1;
-            r.bottom = HB_MAX( iTop, iBottom ) + 1;
+            r.right  = HB_MAX( iLeft, iRight );
+            r.bottom = HB_MAX( iTop, iBottom );
 
             iRet = Rectangle( hdc, r.left, r.top, r.right, r.bottom ) ? 1 : 0;
 
@@ -4239,7 +4239,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          case HB_GFX_CIRCLE:
             SetGFXContext( iRight );
 
-            iRet = Arc( hdc, iLeft - iBottom, iTop - iBottom, iLeft + iBottom + 1, iTop + iBottom + 1, 0, 0, 0, 0 ) ? 1 : 0;
+            iRet = Arc( hdc, iLeft - iBottom, iTop - iBottom, iLeft + iBottom, iTop + iBottom, 0, 0, 0, 0 ) ? 1 : 0;
 
             ClearGFXContext();
             break;
@@ -4247,7 +4247,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          case HB_GFX_FILLEDCIRCLE:
             SetGFXContext( iRight );
 
-            iRet = Ellipse( hdc, iLeft - iBottom, iTop - iBottom, iLeft + iBottom + 1, iTop + iBottom + 1 ) ? 1 : 0;
+            iRet = Ellipse( hdc, iLeft - iBottom, iTop - iBottom, iLeft + iBottom, iTop + iBottom ) ? 1 : 0;
 
             ClearGFXContext();
             break;
@@ -4255,7 +4255,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          case HB_GFX_ELLIPSE:
             SetGFXContext( iColor );
 
-            iRet = Arc( hdc, iLeft - iRight, iTop - iBottom, iLeft + iRight + 1, iTop + iBottom + 1, 0, 0, 0, 0 ) ? 1 : 0;
+            iRet = Arc( hdc, iLeft - iRight, iTop - iBottom, iLeft + iRight, iTop + iBottom, 0, 0, 0, 0 ) ? 1 : 0;
 
             ClearGFXContext();
             break;
