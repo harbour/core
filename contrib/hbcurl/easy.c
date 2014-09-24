@@ -188,7 +188,44 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
 
 #else
 
+<<<<<<< HEAD:contrib/hbcurl/easy.c
    #define hb_curl_StrHash( c, s )  ( s )
+=======
+#  define hb_curl_StrHash( c, s )  ( s )
+
+#endif /* HB_CURL_HASH_STRINGS */
+
+/* Global initialization/deinitialization */
+/* -------------------------------------- */
+
+static void * hb_curl_xgrab( size_t size )
+{
+   return size > 0 ? hb_xgrab( size ) : NULL;
+}
+
+static void hb_curl_xfree( void * p )
+{
+   if( p )
+      hb_xfree( p );
+}
+
+static void * hb_curl_xrealloc( void * p, size_t size )
+{
+   return size > 0 ? ( p ? hb_xrealloc( p, size ) : hb_xgrab( size ) ) : NULL;
+}
+
+static char * hb_curl_strdup( const char * s )
+{
+   return hb_strdup( s );
+}
+
+static void * hb_curl_calloc( size_t nelem, size_t elsize )
+{
+   size_t size = nelem * elsize;
+   void * ptr  = hb_xgrab( size );
+
+   memset( ptr, '\0', size );
+>>>>>>> 66f3f44a4e43ac55016d8c491b95aa7d9ca12567:contrib/hbcurl/core.c
 
 #endif  /* HB_CURL_HASH_STRINGS */
 

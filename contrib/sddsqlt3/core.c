@@ -330,6 +330,10 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
             pFieldInfo.uiType = HB_FT_BLOB;
             break;
 
+         case SQLITE_NULL:
+            pFieldInfo.uiType = HB_FT_ANY;
+            break;
+
          default:
 #if 0
             HB_TRACE( HB_TR_ALWAYS, ( "new sql type=%d", iDataType ) );
@@ -362,6 +366,10 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
                   pItem = hb_itemPutNLLen( NULL, 0, pFieldInfo.uiLen );
                else
                   pItem = hb_itemPutNDLen( NULL, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
+               break;
+
+            case HB_FT_ANY:
+               pItem  = hb_itemNew( NULL );
                break;
 
             default:
@@ -433,8 +441,28 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       {
          PHB_ITEM pItem  = NULL;
          LPFIELD  pField = pArea->area.lpFields + ui;
+         HB_USHORT uiType = pField->uiType;
 
-         switch( pField->uiType )
+         if( uiType == HB_FT_ANY )
+         {
+            switch( sqlite3_column_type( st, ui ) )
+            {
+               case SQLITE_TEXT:
+                  uiType = HB_FT_STRING;
+                  break;
+
+               case SQLITE_FLOAT:
+               case SQLITE_INTEGER:
+                  uiType = HB_FT_LONG;
+                  break;
+
+               case SQLITE_BLOB:
+                  uiType = HB_FT_BLOB;
+                  break;
+            }
+         }
+
+         switch( uiType )
          {
             case HB_FT_STRING:
                pItem = S_HB_ITEMPUTSTR( NULL, ( const char * ) sqlite3_column_text( st, ui ) );
