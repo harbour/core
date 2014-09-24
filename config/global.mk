@@ -681,6 +681,43 @@ ifeq ($(HB_COMPILER),)
                                  else
                                  ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-3.4*),)
                                     HB_COMPILER_VER := 0304
+                                 else
+                                    ifeq ($(HB_CPU),x86_64)
+                                       HB_COMPILER := mingw64
+                                    else
+                                       HB_COMPILER := mingw
+                                    endif
+                                    ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-gcc-4.9*),)
+                                       HB_COMPILER_VER := 0409
+                                    else
+                                    ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-gcc-4.8*),)
+                                       HB_COMPILER_VER := 0408
+                                    else
+                                    ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-gcc-4.7*),)
+                                       HB_COMPILER_VER := 0407
+                                    else
+                                    ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-gcc-4.6*),)
+                                       HB_COMPILER_VER := 0406
+                                    else
+                                    ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-gcc-4.5*),)
+                                       HB_COMPILER_VER := 0405
+                                    else
+                                    ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-gcc-4.4*),)
+                                       HB_COMPILER_VER := 0404
+                                    else
+                                    ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-gcc-4.3*),)
+                                       HB_COMPILER_VER := 0403
+                                    else
+                                    ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-w64-mingw32-gcc-3.4*),)
+                                       HB_COMPILER_VER := 0304
+                                    endif
+                                    endif
+                                    endif
+                                    endif
+                                    endif
+                                    endif
+                                    endif
+                                    endif
                                  endif
                                  endif
                                  endif
@@ -851,15 +888,14 @@ ifeq ($(HB_COMPILER),)
                                                                   ifneq ($(HB_COMP_PATH),)
                                                                      HB_COMPILER := dmc
                                                                   else
-                                                                     # mingw-w64 build
+                                                                     # mingw-w64 build (32-bit hosted)
                                                                      HB_COMP_PATH := $(call find_in_path,i686-w64-mingw32-gcc)
                                                                      ifneq ($(HB_COMP_PATH),)
                                                                         HB_CCPREFIX := i686-w64-mingw32-
-                                                                        ifeq ($(HB_CPU),x86)
-                                                                           HB_COMPILER := mingw
-                                                                        else
+                                                                        ifeq ($(HB_CPU),x86_64)
                                                                            HB_COMPILER := mingw64
-                                                                           HB_CPU := x86_64
+                                                                        else
+                                                                           HB_COMPILER := mingw
                                                                         endif
                                                                         ifneq ($(wildcard $(dir $(HB_COMP_PATH))$(HB_CCPREFIX)gcc-4.9*),)
                                                                            HB_COMPILER_VER := 0409
