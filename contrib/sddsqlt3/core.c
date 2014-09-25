@@ -326,7 +326,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
             break;
 
          case SQLITE_BLOB:
-         case SQLITE_NULL:
             pFieldInfo.uiType = HB_FT_BLOB;
             break;
 
