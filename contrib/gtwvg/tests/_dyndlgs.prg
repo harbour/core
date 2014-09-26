@@ -325,7 +325,7 @@ STATIC PROCEDURE DrawSlide( hDlg, nSlide )
    LOCAL hDC   := wvg_GetDC( hDlg )
    LOCAL aRect := wvg_GetClientRect( hDlg )
 
-   win_Rectangle( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - 10, aRect[ 4 ] - 10 )
+   wapi_Rectangle( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - 10, aRect[ 4 ] - 10 )
    wvg_DrawImage( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - aRect[ 1 ] - 20, ;
       aRect[ 4 ] - aRect[ 2 ] - 20, t_aSlides[ nSlide ] )
 
