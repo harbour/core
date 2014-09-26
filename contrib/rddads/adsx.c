@@ -477,7 +477,7 @@ static PMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM
    if( ulStartRec )
       AdsGotoRecord( pArea->adsarea.hTable, ulStartRec );
    else
-      AdsGotoTop( pArea->adsarea.hTable );
+      AdsGotoTop( hOrder );
    hb_adsUpdateAreaFlags( pArea );
 
    while( ! pArea->adsarea.area.fEof )
