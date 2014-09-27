@@ -3891,7 +3891,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cParam := tmp1 := MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] )
          cParam := PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            IF Empty( HBC_Find( hbmk, cParam ) )
+            IF Empty( HBC_FindAndProcess( hbmk, cParam ) )
                IF Empty( aParam[ _PAR_cFileName ] )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), tmp1 ) )
                ELSE
@@ -6415,7 +6415,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ELSE
                   _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Triggered by '%1$s' header: %2$s" ), cParam:__enumKey(), cParam ) )
                ENDIF
-               IF Empty( HBC_Find( hbmk, cParam ) )
+               IF Empty( HBC_FindAndProcess( hbmk, cParam ) )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cParam ) )
                ENDIF
             ENDIF
@@ -7691,6 +7691,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      ShowFunctionProviders( hbmk, ExtractHarbourSymbols( cStdOutErr ), .F. )
                   ENDIF
 #endif
+                  IF ! hbmk[ _HBMK_lQuiet ]
+                     HintHBC( hbmk )
+                  ENDIF
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -7811,6 +7814,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      ShowFunctionProviders( hbmk, ExtractHarbourSymbols( cStdOutErr ), .F. )
                   ENDIF
 #endif
+                  IF ! hbmk[ _HBMK_lQuiet ]
+                     HintHBC( hbmk )
+                  ENDIF
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -11206,14 +11212,34 @@ STATIC FUNCTION FNameHasWildcard( cFileName )
       "?" $ cFileName .OR. ;
       "*" $ cFileName
 
-STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
-
-   LOCAL cLibPath
-   LOCAL lFound
+STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile )
 
    LOCAL cDir
    LOCAL aFile
    LOCAL tmp
+
+   FOR EACH cDir IN { ;
+      hbmk[ _HBMK_cHB_INSTALL_CON ], ;
+      hbmk[ _HBMK_cHB_INSTALL_ADD ] }
+
+      IF ! Empty( cDir )
+         FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
+            IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." ) .AND. ;
+               hb_FileExists( tmp := hb_DirSepAdd( cDir ) + aFile[ F_NAME ] + hb_ps() + hb_FNameNameExt( cFile ) )
+
+               cFile := tmp
+               RETURN .T.
+            ENDIF
+         NEXT
+      ENDIF
+   NEXT
+
+   RETURN .F.
+
+STATIC FUNCTION HBC_FindAndProcess( hbmk, cFile, nNesting )
+
+   LOCAL cLibPath
+   LOCAL lFound
 
    hb_default( @nNesting, 1 )
 
@@ -11230,26 +11256,7 @@ STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
       NEXT
 
       IF ! lFound
-
-         FOR EACH cDir IN { ;
-            hbmk[ _HBMK_cHB_INSTALL_CON ], ;
-            hbmk[ _HBMK_cHB_INSTALL_ADD ] }
-
-            IF ! Empty( cDir )
-               FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
-                  IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." ) .AND. ;
-                     hb_FileExists( tmp := hb_DirSepAdd( cDir ) + aFile[ F_NAME ] + hb_ps() + hb_FNameNameExt( cFile ) )
-
-                     cFile := tmp
-                     lFound := .T.
-                     EXIT
-                  ENDIF
-               NEXT
-               IF lFound
-                  EXIT
-               ENDIF
-            ENDIF
-         NEXT
+         lFound := HBC_FindStd( hbmk, @cFile )
       ENDIF
    ENDIF
 
@@ -11258,6 +11265,19 @@ STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
    ENDIF
 
    RETURN ""
+
+STATIC PROCEDURE HintHBC( hbmk )
+
+   LOCAL cLib
+   LOCAL tmp
+
+   FOR EACH cLib IN hbmk[ _HBMK_aLIBUSER ]
+      IF HBC_FindStd( hbmk, tmp := hb_FNameName( cLib ) + ".hbc" )
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Hint: Use option '%1$s' instead of specifying raw library using '-l%2$s' or 'libs=%2$s'." ), tmp, cLib ) )
+      ENDIF
+   NEXT
+
+   RETURN
 
 /* shell dependent, but let's assume the platform default is used */
 STATIC FUNCTION EnvNotation( cEnvName )
@@ -11481,7 +11501,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             IF hb_FNameExt( cItem ) == ".hbc"
                cItem := PathMakeAbsolute( hb_DirSepToOS( cItem ), hb_FNameDir( cFileName ) )
                IF nNestingLevel < _HBMK_NEST_MAX
-                  IF Empty( HBC_Find( hbmk, cItem, nNestingLevel + 1 ) )
+                  IF Empty( HBC_FindAndProcess( hbmk, cItem, nNestingLevel + 1 ) )
                      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                   ENDIF
                ELSE
@@ -11534,7 +11554,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                   cItem := hb_FNameExtSet( cItem, ".hbc" )
                ENDIF
 
-               IF Empty( HBC_Find( hbmk, cItem, nNestingLevel + 1 ) )
+               IF Empty( HBC_FindAndProcess( hbmk, cItem, nNestingLevel + 1 ) )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                ENDIF
             ELSE
@@ -15116,9 +15136,9 @@ STATIC PROCEDURE __hbshell( cFile, ... )
             AAdd( aOPTPRG, "-b" )
          ENDIF
 
-         hbmk[ _HBMK_lDumpInfo ] := .T.  /* trick to suppress output from HBC_Find() call */
+         hbmk[ _HBMK_lDumpInfo ] := .T.  /* trick to suppress output from HBC_FindAndProcess() call */
          FOR EACH tmp IN aExtension
-            IF ! Empty( cVersion := HBC_Find( hbmk, hb_FNameExtSet( tmp, ".hbc" ) ) )
+            IF ! Empty( cVersion := HBC_FindAndProcess( hbmk, hb_FNameExtSet( tmp, ".hbc" ) ) )
                AAddNew( aOPTPRG, "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( tmp ) ) + "=" + cVersion )
             ENDIF
          NEXT
@@ -15314,7 +15334,7 @@ FUNCTION hbshell_ext_load( cName )
             hbsh[ _HBSH_hCH ][ cName ] := {}
             hbsh[ _HBSH_hOPTPRG ][ cName ] := {}
 
-            IF Empty( cVersion := HBC_Find( hbsh[ _HBSH_hbmk ], cHBC := hb_FNameExtSet( cName, ".hbc" ) ) )
+            IF Empty( cVersion := HBC_FindAndProcess( hbsh[ _HBSH_hbmk ], cHBC := hb_FNameExtSet( cName, ".hbc" ) ) )
                _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) )
             ELSE
                AEval( hbsh[ _HBSH_hbmk ][ _HBMK_aINCPATH ], {| tmp | AAdd( hbsh[ _HBSH_hINCPATH ][ cName ], tmp ) } )
