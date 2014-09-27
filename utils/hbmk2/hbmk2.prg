@@ -11212,15 +11212,19 @@ STATIC FUNCTION FNameHasWildcard( cFileName )
       "?" $ cFileName .OR. ;
       "*" $ cFileName
 
-STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile )
+STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile, lAddOns )
 
    LOCAL cDir
    LOCAL aFile
    LOCAL tmp
 
-   FOR EACH cDir IN { ;
-      hbmk[ _HBMK_cHB_INSTALL_CON ], ;
-      hbmk[ _HBMK_cHB_INSTALL_ADD ] }
+   LOCAL aDir := { hbmk[ _HBMK_cHB_INSTALL_CON ] }
+
+   IF hb_defaultValue( lAddOns, .T. )
+      AAdd( aDir, hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+   ENDIF
+
+   FOR EACH cDir IN aDir
 
       IF ! Empty( cDir )
          FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
@@ -11272,7 +11276,7 @@ STATIC PROCEDURE HintHBC( hbmk )
    LOCAL tmp
 
    FOR EACH cLib IN hbmk[ _HBMK_aLIBUSER ]
-      IF HBC_FindStd( hbmk, tmp := hb_FNameName( cLib ) + ".hbc" )
+      IF HBC_FindStd( hbmk, tmp := hb_FNameName( cLib ) + ".hbc", .F. )
          _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Hint: Use option '%1$s' instead of specifying raw library using '-l%2$s' or 'libs=%2$s'." ), tmp, cLib ) )
       ENDIF
    NEXT
