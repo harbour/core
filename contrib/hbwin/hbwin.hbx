@@ -87,6 +87,7 @@ DYNAMIC wapi_GetDialogBaseUnits
 DYNAMIC wapi_GetDlgItem
 DYNAMIC wapi_GetDlgItemText
 DYNAMIC wapi_GetFocus
+DYNAMIC WAPI_GetForegroundWindow
 DYNAMIC wapi_GetIconInfo
 DYNAMIC wapi_GetKeyboardLayout
 DYNAMIC wapi_GetKeyboardLayoutName

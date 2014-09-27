@@ -971,6 +971,11 @@ HB_FUNC( WAPI_BRINGWINDOWTOTOP )
    hbwapi_ret_L( bResult );
 }
 
+HB_FUNC( WAPI_GETFOREGROUNDWINDOW )
+{
+   hbwapi_ret_raw_HWND( GetForegroundWindow() );
+}
+
 HB_FUNC( WAPI_SETFOREGROUNDWINDOW )
 {
    hbwapi_ret_L( SetForegroundWindow( hbwapi_par_raw_HWND( 1 ) ) );
