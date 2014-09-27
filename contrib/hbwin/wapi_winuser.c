@@ -957,6 +957,13 @@ HB_FUNC( WAPI_MOVEWINDOW )
    hbwapi_ret_L( bResult );
 }
 
+HB_FUNC( WAPI_CLOSEWINDOW )
+{
+   BOOL bResult = CloseWindow( hbwapi_par_raw_HWND( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+}
+
 HB_FUNC( WAPI_SETPARENT )
 {
    HWND hWnd = SetParent( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HWND( 2 ) );

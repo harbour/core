@@ -35,6 +35,7 @@ DYNAMIC wapi_CheckMenuItem
 DYNAMIC wapi_CheckMenuRadioItem
 DYNAMIC wapi_CheckRadioButton
 DYNAMIC wapi_ClientToScreen
+DYNAMIC wapi_CloseWindow
 DYNAMIC wapi_ComboBox_AddString
 DYNAMIC wapi_CreateAcceleratorTable
 DYNAMIC wapi_CreateBrushIndirect
@@ -87,7 +88,7 @@ DYNAMIC wapi_GetDialogBaseUnits
 DYNAMIC wapi_GetDlgItem
 DYNAMIC wapi_GetDlgItemText
 DYNAMIC wapi_GetFocus
-DYNAMIC WAPI_GetForegroundWindow
+DYNAMIC wapi_GetForegroundWindow
 DYNAMIC wapi_GetIconInfo
 DYNAMIC wapi_GetKeyboardLayout
 DYNAMIC wapi_GetKeyboardLayoutName
