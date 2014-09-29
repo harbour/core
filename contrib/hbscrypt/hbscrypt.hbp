@@ -1,4 +1,4 @@
--stop{(!allgcc&!allmsvc&!watcom)|msvcarm}
+-stop{(!allgcc&!allmsvc&!watcom)|wce}
 
 -hblib
 -inc
