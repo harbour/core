@@ -2889,10 +2889,12 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_QUERYENDSESSION: /* check if we can shutdown or logoff */
          return 1;
 
+#if defined( WM_ENDSESSION )
       case WM_ENDSESSION: /* shutdown started */
          if( wParam )
             hb_vmRequestQuit();
          return 0;
+#endif
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          if( pWVT->CloseMode == 0 )
