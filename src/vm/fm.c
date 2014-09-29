@@ -285,7 +285,7 @@ static HB_BOOL s_fInitedFM = HB_FALSE;
 typedef struct _HB_MEMINFO
 {
    HB_U32    u32Signature;
-   HB_USHORT uiProcLine;
+   int       iProcLine;
    HB_USHORT uiReserved;
    HB_SIZE   nSize;
    char      szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
@@ -614,7 +614,7 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
           * function/line info - this is a location of code that called
           * hb_xalloc()/hb_xgrab()
           */
-         pMem->uiProcLine = pTrace->line; /* C line number */
+         pMem->iProcLine = pTrace->line;  /* C line number */
          if( pTrace->file )
             hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
          else
@@ -623,7 +623,9 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
       }
       else
       {
-         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
+         HB_USHORT uiProcLine = 0;
+         hb_stackBaseProcInfo( pMem->szProcName, &uiProcLine );
+         pMem->iProcLine = uiProcLine;
       }
 
       HB_FM_LOCK();
@@ -699,7 +701,7 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
           * function/line info - this is a location of code that called
           * hb_xalloc()/hb_xgrab()
           */
-         pMem->uiProcLine = pTrace->line; /* C line number */
+         pMem->iProcLine = pTrace->line;  /* C line number */
          if( pTrace->file )
             hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
          else
@@ -708,7 +710,9 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
       }
       else
       {
-         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
+         HB_USHORT uiProcLine = 0;
+         hb_stackBaseProcInfo( pMem->szProcName, &uiProcLine );
+         pMem->iProcLine = uiProcLine;
       }
 
       HB_FM_LOCK();
@@ -1056,16 +1060,16 @@ HB_SIZE hb_xsize( void * pMem ) /* returns the size of an allocated memory block
 /* NOTE: Debug function, it will always return NULL when HB_FM_STATISTICS is
          not defined, don't use it for final code */
 
-const char * hb_xinfo( void * pMem, HB_USHORT * puiLine )
+const char * hb_xinfo( void * pMem, int * piLine )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_xinfo(%p,%p)", pMem, puiLine ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xinfo(%p,%p)", pMem, piLine ) );
 
 #ifdef HB_FM_STATISTICS
    {
       PHB_MEMINFO pMemBlock = HB_FM_PTR( pMem );
 
-      if( puiLine )
-         *puiLine = pMemBlock->uiProcLine;
+      if( piLine )
+         *piLine = pMemBlock->iProcLine;
 
       return pMemBlock->szProcName;
    }
@@ -1073,8 +1077,8 @@ const char * hb_xinfo( void * pMem, HB_USHORT * puiLine )
 
    HB_SYMBOL_UNUSED( pMem );
 
-   if( puiLine )
-      *puiLine = 0;
+   if( piLine )
+      *piLine = 0;
 
    return NULL;
 #endif
@@ -1125,17 +1129,21 @@ static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
 
    nPrintable = 0;
    for( nIndex = 0; nIndex < nSize; nIndex++ )
+   {
       if( ( cMem[ nIndex ] & 0x60 ) != 0 )
          nPrintable++;
+   }
 
    if( nPrintable * 100 / nSize > 70 ) /* more then 70% printable chars */
    {
       /* format as string of original chars */
       for( nIndex = 0; nIndex < nSize; nIndex++ )
+      {
          if( cMem[ nIndex ] >= ' ' )
             membuffer[ nIndex ] = cMem[ nIndex ];
          else
             membuffer[ nIndex ] = '.';
+      }
       membuffer[ nIndex ] = '\0';
    }
    else
@@ -1143,9 +1151,8 @@ static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
       /* format as hex */
       for( nIndex = 0; nIndex < nSize; nIndex++ )
       {
-         int lownibble, hinibble;
-         hinibble = cMem[ nIndex ] >> 4;
-         lownibble = cMem[ nIndex ] & 0x0F;
+         HB_BYTE hinibble = cMem[ nIndex ] >> 4;
+         HB_BYTE lownibble = cMem[ nIndex ] & 0x0F;
          membuffer[ nIndex * 2 ]     = hinibble <= 9 ?
                                ( '0' + hinibble ) : ( 'A' + hinibble - 10 );
          membuffer[ nIndex * 2 + 1 ] = lownibble <= 9 ?
@@ -1214,7 +1221,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock, ++ui )
       {
          HB_TRACE( HB_TR_ERROR, ( "Block %i (size %" HB_PFS "u) %s(%i), \"%s\"", ui,
-            pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
+            pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->iProcLine,
             hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
                         HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) ) );
 
@@ -1222,7 +1229,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          {
             fprintf( hLog, HB_I_( "Block %i %p (size %" HB_PFS "u) %s(%i), \"%s\"\n" ), ui,
                      ( char * ) HB_MEM_PTR( pMemBlock ),
-                     pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
+                     pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->iProcLine,
                      hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
                                  HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) );
          }
