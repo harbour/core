@@ -959,9 +959,14 @@ HB_FUNC( WAPI_MOVEWINDOW )
 
 HB_FUNC( WAPI_CLOSEWINDOW )
 {
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   hbwapi_ret_L( FALSE );
+#else
    BOOL bResult = CloseWindow( hbwapi_par_raw_HWND( 1 ) );
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
+#endif
 }
 
 HB_FUNC( WAPI_SETPARENT )
