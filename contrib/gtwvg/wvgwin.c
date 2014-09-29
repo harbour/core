@@ -105,6 +105,7 @@ HB_FUNC( WVG_CREATEBRUSH )
 
 HB_FUNC( WVG_SETMENU )
 {
+#if ! defined( HB_OS_WIN_CE )
    HWND hWnd = hbwapi_par_raw_HWND( 1 );
 
    HB_BOOL bSet = SetMenu( hWnd, hbwapi_par_raw_HMENU( 2 ) );
@@ -126,6 +127,9 @@ HB_FUNC( WVG_SETMENU )
    #endif
 
    hb_retl( bSet );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
 
 HB_FUNC( WVG_ISMENUITEMCHECKED )

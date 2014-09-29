@@ -512,6 +512,7 @@ HB_FUNC( WVT_GETFONTINFO )
 
 HB_FUNC( WVT_SETMENU )
 {
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    if( _s )
@@ -539,6 +540,7 @@ HB_FUNC( WVT_SETMENU )
       }
       SetWindowPos( _s->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
    }
+#endif
 }
 
 HB_FUNC( WVT_SETPOPUPMENU )
