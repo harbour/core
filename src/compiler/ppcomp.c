@@ -399,7 +399,8 @@ void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
 
    if( HB_COMP_PARAM->pLex->pPP )
    {
-      hb_pp_init( HB_COMP_PARAM->pLex->pPP, HB_COMP_PARAM->fQuiet,
+      hb_pp_init( HB_COMP_PARAM->pLex->pPP,
+                  HB_COMP_PARAM->fQuiet, HB_COMP_PARAM->fGauge,
                   HB_COMP_PARAM->iMaxTransCycles,
                   HB_COMP_PARAM, pOpenFunc, NULL,
                   hb_pp_ErrorGen, hb_pp_Disp, hb_pp_PragmaDump,

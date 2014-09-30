@@ -84,6 +84,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
       "\n          -q               quiet",
       "\n          -q0              quiet and don't display program header",
       "\n          -q2              disable all output messages",
+      "\n          -ql              hide line counter gauge",
       "\n          -r:<max>         set maximum number of preprocessor iterations",
 /* TODO:   "\n          -r[<lib>]        request linker to search <lib> (or none)", */
       "\n          -s[m]            syntax check only [minimal for dependencies list]",

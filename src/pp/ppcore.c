@@ -707,7 +707,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
    }
    pState->iLineTot += iLine;
    iLine = ++pState->pFile->iCurrentLine / 100;
-   if( ! pState->fQuiet &&
+   if( ! pState->fQuiet && pState->fGauge &&
        iLine != pState->pFile->iLastDisp )
    {
       char szLine[ 12 ];
@@ -5534,13 +5534,14 @@ void hb_pp_free( PHB_PP_STATE pState )
 /*
  * initialize PP context
  */
-void hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet, int iCycles, void * cargo,
+void hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet, HB_BOOL fGauge, int iCycles, void * cargo,
                  PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                  PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
                  PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
                  PHB_PP_SWITCH_FUNC pSwitchFunc )
 {
    pState->fQuiet      = pState->fQuietSet = fQuiet;
+   pState->fGauge      = fGauge;
    pState->iMaxCycles  = pState->iMaxCyclesSet = ( iCycles > 0 ) ? iCycles : HB_PP_MAX_CYCLES;
    pState->cargo       = cargo;
    pState->pOpenFunc   = pOpenFunc;
@@ -6130,6 +6131,7 @@ PHB_PP_STATE hb_pp_lexNew( const char * pMacroString, HB_SIZE nLen )
    PHB_PP_STATE pState = hb_pp_new();
 
    pState->fQuiet = HB_TRUE;
+   pState->fGauge = HB_FALSE;
    pState->pFile = hb_pp_FileBufNew( pMacroString, nLen );
    hb_pp_getLine( pState );
    pState->pTokenOut = pState->pFile->pTokenList;

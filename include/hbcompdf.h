@@ -806,6 +806,7 @@ typedef struct _HB_COMP
    int               iErrorFmt;           /* error message formatting mode (default: Clipper) */
 
    HB_BOOL           fQuiet;              /* be quiet during compilation (-q) */
+   HB_BOOL           fGauge;              /* hide line counter gauge (-ql) */
    HB_BOOL           fFullQuiet;          /* be quiet during compilation disable all messages */
    HB_BOOL           fExit;               /* force breaking compilation process */
    HB_BOOL           fPPO;                /* flag indicating, is ppo output needed */

@@ -269,6 +269,7 @@ PHB_COMP hb_comp_new( void )
       pComp->fNoStartUp        = HB_FALSE;   /* C code generation embed HB_FS_FIRST or not */
       pComp->fCredits          = HB_FALSE;   /* print credits */
       pComp->fBuildInfo        = HB_FALSE;   /* print build info */
+      pComp->fGauge            = HB_TRUE;    /* line counter gauge */
       pComp->fLogo             = HB_TRUE;    /* print logo */
       pComp->fSingleModule     = HB_FALSE;
       pComp->fError            = HB_FALSE;

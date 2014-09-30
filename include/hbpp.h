@@ -588,6 +588,7 @@ typedef struct
 
    HB_BOOL   fQuietSet;             /* do not show standard information (default) */
    HB_BOOL   fQuiet;                /* do not show standard information (current) */
+   HB_BOOL   fGauge;                /* do not show line counter gauge */
    HB_BOOL   fEscStr;               /* use \ in strings as escape character */
    HB_BOOL   fMultiLineStr;         /* allow to define multiline [] and e"" strings using ; as line concatenator */
    HB_BOOL   fError;                /* indicates error in last operation */
@@ -646,7 +647,7 @@ typedef void * PHB_PP_STATE;
 extern HB_EXPORT PHB_PP_STATE hb_pp_new( void );
 extern HB_EXPORT void    hb_pp_free( PHB_PP_STATE pState );
 extern HB_EXPORT void    hb_pp_reset( PHB_PP_STATE pState );
-extern HB_EXPORT void    hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet,
+extern HB_EXPORT void    hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet, HB_BOOL fGauge,
                    int iCycles, void * cargo,
                    PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                    PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
