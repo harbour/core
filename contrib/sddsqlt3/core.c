@@ -172,6 +172,63 @@ static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
    return szRet;
 }
 
+
+static HB_USHORT sqlite3DeclType(sqlite3_stmt * st, HB_USHORT uiIndex )
+{
+   const char * szDeclType;
+
+   szDeclType = sqlite3_column_decltype( st, uiIndex );
+   /* the order of comparisons below is important to replicate
+    * type precedence used by SQLITE3
+    */
+   if( szDeclType != NULL )
+   {
+      HB_SIZE nLen = strlen( szDeclType );
+
+      if( hb_strAtI( "INT", 3, szDeclType, nLen ) != 0 )
+         return HB_FT_INTEGER;
+      if( hb_strAtI( "CHAR", 4, szDeclType, nLen ) != 0 ||
+          hb_strAtI( "TEXT", 4, szDeclType, nLen ) != 0 ||
+          hb_strAtI( "CLOB", 4, szDeclType, nLen ) != 0 )
+         return HB_FT_STRING;
+      if( hb_strAtI( "BLOB", 4, szDeclType, nLen ) != 0 )
+         return HB_FT_ANY;
+      if( hb_strAtI( "REAL", 4, szDeclType, nLen ) != 0 ||
+          hb_strAtI( "FLOA", 4, szDeclType, nLen ) != 0 ||
+          hb_strAtI( "DOUB", 4, szDeclType, nLen ) != 0 )
+         return HB_FT_LONG;
+   }
+
+#ifdef HB_SQLT3_MAP_UNDECLARED_TYPES_AS_ANY
+   return HB_FT_ANY;
+#else
+   switch( sqlite3_column_type( st, uiIndex ) )
+   {
+      case SQLITE_TEXT:
+         return HB_FT_STRING;
+         break;
+
+      case SQLITE_FLOAT:
+         return HB_FT_LONG;
+         break;
+
+      case SQLITE_INTEGER:
+         return HB_FT_INTEGER;
+         break;
+
+      case SQLITE_BLOB:
+         return HB_FT_BLOB;
+         break;
+
+      case SQLITE_NULL:
+         return HB_FT_ANY;
+         break;
+   }
+
+   return HB_FT_NONE;
+#endif
+}
+
 /* --- SDD METHODS --- */
 static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
@@ -287,7 +344,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    {
       DBFIELDINFO pFieldInfo;
 
-      int iDataType = sqlite3_column_type( st, uiIndex );
+      int iDataType = sqlite3DeclType( st, uiIndex );
       PHB_ITEM pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
       HB_USHORT uiNameLen = ( HB_USHORT ) hb_itemGetCLen( pName );
 
@@ -306,40 +363,23 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
          better. For better results, update apps to untie UI metrics from
          any database field/value widths. [vszakats] */
 
-      pFieldInfo.uiLen = 10;
+      pFieldInfo.uiType = ( HB_USHORT ) iDataType;
+      pFieldInfo.uiLen = 10;  /* sqlite3_column_bytes( st, uiIndex ) */
       pFieldInfo.uiDec = 0;
 
-      switch( iDataType )
+      switch( pFieldInfo.uiType )
       {
-         case SQLITE3_TEXT:
-            pFieldInfo.uiType = HB_FT_STRING;
-            break;
-
-         case SQLITE_FLOAT:
-            pFieldInfo.uiType = HB_FT_LONG;
+         case HB_FT_LONG:
             pFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
             pFieldInfo.uiLen += pFieldInfo.uiDec + 1;
             break;
 
-         case SQLITE_INTEGER:
-            pFieldInfo.uiType = HB_FT_LONG;
-            break;
-
-         case SQLITE_BLOB:
-            pFieldInfo.uiType = HB_FT_BLOB;
-            break;
-
-         case SQLITE_NULL:
-            pFieldInfo.uiType = HB_FT_ANY;
-            break;
-
-         default:
+         case HB_FT_NONE:
 #if 0
-            HB_TRACE( HB_TR_ALWAYS, ( "new sql type=%d", iDataType ) );
+            HB_TRACE( HB_TR_ALWAYS, ( "new sql type=%d", sqlite3_column_type( st, uiIndex ) ) );
 #endif
             bError  = HB_TRUE;
-            errCode = ( HB_ERRCODE ) iDataType;
-            pFieldInfo.uiType = 0;
+            errCode = ( HB_ERRCODE ) sqlite3_column_type( st, uiIndex );
             break;
       }
 
@@ -360,11 +400,12 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
                pItem = hb_itemPutC( NULL, NULL );
                break;
 
+            case HB_FT_INTEGER:
+               pItem = hb_itemPutNIntLen( NULL, 0, pFieldInfo.uiLen );
+               break;
+
             case HB_FT_LONG:
-               if( pFieldInfo.uiDec == 0 )
-                  pItem = hb_itemPutNLLen( NULL, 0, pFieldInfo.uiLen );
-               else
-                  pItem = hb_itemPutNDLen( NULL, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
+               pItem = hb_itemPutNDLen( NULL, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
                break;
 
             case HB_FT_ANY:
@@ -467,16 +508,13 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                pItem = S_HB_ITEMPUTSTR( NULL, ( const char * ) sqlite3_column_text( st, ui ) );
                break;
 
-            case HB_FT_LONG:
             case HB_FT_INTEGER:
-               if( pField->uiDec == 0 )
-#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-                  pItem = hb_itemPutNIntLen( NULL, sqlite3_column_int( st, ui ), pField->uiLen );
-#else
-                  pItem = hb_itemPutNIntLen( NULL, sqlite3_column_int64( st, ui ), pField->uiLen );
+#if HB_VMLONG_MAX > INT32_MAX && ! defined( HB_LONG_LONG_OFF )
+               pItem = hb_itemPutNIntLen( NULL, sqlite3_column_int64( st, ui ), pField->uiLen );
+               break;
 #endif
-               else
-                  pItem = hb_itemPutNDLen( NULL, sqlite3_column_double( st, ui ), pField->uiLen, pField->uiDec );
+            case HB_FT_LONG:
+               pItem = hb_itemPutNDLen( NULL, sqlite3_column_double( st, ui ), pField->uiLen, pField->uiDec );
                break;
 
             case HB_FT_BLOB:

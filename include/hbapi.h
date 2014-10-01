@@ -962,6 +962,7 @@ extern HB_EXPORT HB_BOOL   hb_strMatchCaseWildExact( const char * szString, cons
 extern HB_EXPORT HB_BOOL   hb_strEmpty( const char * szText, HB_SIZE nLen ); /* returns whether a string contains only white space */
 extern HB_EXPORT void      hb_strDescend( char * szStringTo, const char * szStringFrom, HB_SIZE nLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT HB_SIZE   hb_strAt( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen ); /* returns an index to a sub-string within another string */
+extern HB_EXPORT HB_SIZE   hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen ); /* returns an index to a sub-string within another, ignore the case of the characters */
 extern HB_EXPORT HB_ISIZ   hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_ISIZ n );
 
 /* Warning: this functions works only with byte oriented CPs */

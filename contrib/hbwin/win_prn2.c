@@ -360,7 +360,7 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
 
 HB_FUNC( WIN_PRINTFILERAW )
 {
-   int iResult = -1;
+   HB_ISIZ nResult = -1;
 
 #if ! defined( HB_OS_WIN_CE )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
@@ -374,11 +374,12 @@ HB_FUNC( WIN_PRINTFILERAW )
       if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) != 0 )
       {
          void * hDocName;
-
          DOC_INFO_1 DocInfo;
+
          DocInfo.pDocName = ( LPTSTR ) HB_PARSTR( HB_ISCHAR( 3 ) ? 3 : 2, &hDocName, NULL );
          DocInfo.pOutputFile = NULL;
          DocInfo.pDatatype = ( LPTSTR ) TEXT( "RAW" );
+
          if( StartDocPrinter( hPrinter, 1, ( LPBYTE ) &DocInfo ) != 0 )
          {
             if( StartPagePrinter( hPrinter ) != 0 )
@@ -390,11 +391,10 @@ HB_FUNC( WIN_PRINTFILERAW )
                   HB_BYTE * pbyBuffer = ( HB_BYTE * ) hb_xgrab( HB_PRINT_BUFFER_SIZE );
                   HB_SIZE nRead;
 
-                  iResult = 1;
-
+                  nResult = 1;
                   while( ( nRead = hb_fsReadLarge( fhnd, pbyBuffer, HB_PRINT_BUFFER_SIZE ) ) > 0 )
                   {
-                     DWORD nWritten = 0;
+                     HB_SIZE nWritten = 0;
 
 #if 0
                      /* TOFIX: This check seems wrong for any input file
@@ -412,12 +412,12 @@ HB_FUNC( WIN_PRINTFILERAW )
                                             ( DWORD ) ( nRead - nWritten ),
                                             &dwWritten ) )
                         {
-                           iResult = -7;
+                           nResult = -7;
                            break;
                         }
                         else if( dwWritten == 0 )
                         {
-                           iResult = -8;
+                           nResult = -8;
                            break;
                         }
                         nWritten += dwWritten;
@@ -430,29 +430,86 @@ HB_FUNC( WIN_PRINTFILERAW )
                   hb_xfree( pbyBuffer );
                }
                else
-                  iResult = -6;
+                  nResult = -6;
                EndPagePrinter( hPrinter );
             }
             else
-               iResult = -4;
+               nResult = -4;
             EndDocPrinter( hPrinter );
          }
          else
-            iResult = -3;
-
+            nResult = -3;
          ClosePrinter( hPrinter );
-
          hb_strfree( hDocName );
       }
       else
-         iResult = -2;
-
+         nResult = -2;
       hb_strfree( hDeviceName );
    }
 #endif
 
-   hb_retni( iResult );
+   hb_retns( nResult );
 }
+
+HB_FUNC( WIN_PRINTDATARAW )
+{
+   HB_ISIZ nResult = -1;
+
+#if ! defined( HB_OS_WIN_CE )
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   {
+      HANDLE hPrinter;
+      void * hDeviceName;
+      LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
+
+      if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) != 0 )
+      {
+         void * hDocName;
+         DOC_INFO_1 DocInfo;
+
+         DocInfo.pDocName = ( LPTSTR ) HB_PARSTR( 3, &hDocName, NULL );
+         DocInfo.pOutputFile = NULL;
+         DocInfo.pDatatype = ( LPTSTR ) TEXT( "RAW" );
+         if( DocInfo.pDocName == NULL )
+            DocInfo.pDocName = DocInfo.pDatatype;
+
+         if( StartDocPrinter( hPrinter, 1, ( LPBYTE ) &DocInfo ) != 0 )
+         {
+            if( StartPagePrinter( hPrinter ) != 0 )
+            {
+               HB_BYTE * pbData = ( HB_BYTE * ) hb_parc( 2 );
+               HB_SIZE nLen = hb_parclen( 2 );
+
+               nResult = 0;
+               while( ( HB_SIZE ) nResult < nLen )
+               {
+                  DWORD dwWritten = 0;
+                  if( ! WritePrinter( hPrinter, &pbData[ nResult ],
+                                      ( DWORD ) ( nLen - nResult ),
+                                      &dwWritten ) || dwWritten == 0 )
+                     break;
+                  nResult += dwWritten;
+               }
+               EndPagePrinter( hPrinter );
+            }
+            else
+               nResult = -4;
+            EndDocPrinter( hPrinter );
+         }
+         else
+            nResult = -3;
+         ClosePrinter( hPrinter );
+         hb_strfree( hDocName );
+      }
+      else
+         nResult = -2;
+      hb_strfree( hDeviceName );
+   }
+#endif
+
+   hb_retns( nResult );
+}
+
 
 /* Positions for win_printerList() array */
 
