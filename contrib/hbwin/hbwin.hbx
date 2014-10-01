@@ -366,6 +366,7 @@ DYNAMIC win_osNetRegOk
 DYNAMIC win_osNetVRedirOk
 DYNAMIC win_osVersionInfo
 DYNAMIC win_P2N
+DYNAMIC win_PrintDataRaw
 DYNAMIC win_PrintDlgDC
 DYNAMIC win_printerExists
 DYNAMIC win_printerGetDefault

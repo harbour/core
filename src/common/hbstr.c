@@ -106,6 +106,33 @@ HB_SIZE hb_strAt( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_S
    return 0;
 }
 
+HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strAt(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen ) );
+
+   if( nSubLen > 0 && nLen >= nSubLen )
+   {
+      HB_SIZE nPos = 0;
+      nLen -= nSubLen;
+      do
+      {
+         if( HB_TOUPPER( szText[ nPos ] ) == HB_TOUPPER( *szSub ) )
+         {
+            HB_SIZE nSubPos = nSubLen;
+            do
+            {
+               if( --nSubPos == 0 )
+                  return nPos + 1;
+            }
+            while( HB_TOUPPER( szText[ nPos + nSubPos ] ) == HB_TOUPPER( szSub[ nSubPos ] ) );
+         }
+      }
+      while( nPos++ < nLen );
+   }
+
+   return 0;
+}
+
 HB_BOOL hb_strEmpty( const char * szText, HB_SIZE nLen )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_strEmpty(%s, %" HB_PFS "u)", szText, nLen ) );

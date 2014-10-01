@@ -171,39 +171,6 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
    hb_retns( 0 );
 }
 
-/* Case insensitive hb_strAt() function */
-static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strAtI(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen ) );
-
-   if( nSubLen > 0 && nLen >= nSubLen )
-   {
-      HB_SIZE nPos    = 0;
-      HB_SIZE nSubPos = 0;
-
-      while( nPos < nLen && nSubPos < nSubLen )
-      {
-         if( HB_TOLOWER( ( HB_BYTE ) szText[ nPos ] ) == HB_TOLOWER( ( HB_BYTE ) szSub[ nSubPos ] ) )
-         {
-            nSubPos++;
-            nPos++;
-         }
-         else if( nSubPos )
-         {
-            /* Go back to the first character after the first match,
-               or else tests like "22345" $ "012223456789" will fail. */
-            nPos   -= ( nSubPos - 1 );
-            nSubPos = 0;
-         }
-         else
-            nPos++;
-      }
-      return ( nSubPos < nSubLen ) ? 0 : ( nPos - nSubLen + 1 );
-   }
-   else
-      return 0;
-}
-
 /* Case insensitive At() function */
 HB_FUNC( ATI )
 {
