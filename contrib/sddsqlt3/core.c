@@ -360,12 +360,11 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 
       pFieldInfo.uiType = ( HB_USHORT ) iDataType;
       pFieldInfo.uiLen = 10;  /* sqlite3_column_bytes( st, uiIndex ) */
-      pFieldInfo.uiDec = 0;
+      pFieldInfo.uiDec = iDataType == HB_FT_LONG ? ( HB_USHORT ) hb_setGetDecimals() : 0;;
 
       switch( pFieldInfo.uiType )
       {
          case HB_FT_LONG:
-            pFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
             pFieldInfo.uiLen += pFieldInfo.uiDec + 1;
             break;
 
@@ -505,11 +504,11 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
             case HB_FT_INTEGER:
 #if HB_VMLONG_MAX > INT32_MAX && ! defined( HB_LONG_LONG_OFF )
-               pItem = hb_itemPutNIntLen( NULL, sqlite3_column_int64( st, ui ), pField->uiLen );
+               pItem = hb_itemPutNInt( NULL, sqlite3_column_int64( st, ui ) );
                break;
 #endif
             case HB_FT_LONG:
-               pItem = hb_itemPutNDLen( NULL, sqlite3_column_double( st, ui ), pField->uiLen, pField->uiDec );
+               pItem = hb_itemPutNDDec( NULL, sqlite3_column_double( st, ui ), pField->uiDec );
                break;
 
             case HB_FT_BLOB:
