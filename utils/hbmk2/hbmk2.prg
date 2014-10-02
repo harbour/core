@@ -7686,7 +7686,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
 #ifdef HARBOUR_SUPPORT
                   /* Run failed linker command again to
-                     analyze its output and present hints */
+                     analyse its output and present hints */
                   IF ! hbmk[ _HBMK_lQuiet ]
                      ShowFunctionProviders( hbmk, ExtractHarbourSymbols( cStdOutErr ), .F. )
                   ENDIF
@@ -7809,7 +7809,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
 #ifdef HARBOUR_SUPPORT
                   /* Run failed linker command again to
-                     analyze its output and present hints */
+                     analyse its output and present hints */
                   IF ! hbmk[ _HBMK_lQuiet ]
                      ShowFunctionProviders( hbmk, ExtractHarbourSymbols( cStdOutErr ), .F. )
                   ENDIF
