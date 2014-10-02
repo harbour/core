@@ -50,6 +50,7 @@
 #include "hbapistr.h"
 #include "hbdate.h"
 #include "hbvm.h"
+#include "hbset.h"
 
 #include "hbrddsql.h"
 
@@ -299,7 +300,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    HB_SIZE        nQueryLen;
    void *         hQuery;
    HB_USHORT      uiFields, uiIndex;
-   PHB_ITEM       pItemEof, pItem;
+   PHB_ITEM       pItemEof, pItem, pName = NULL;
    HB_ERRCODE     errCode;
    char *         szError;
    HB_BOOL        bError;
@@ -338,95 +339,63 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    uiFields = ( HB_USHORT ) sqlite3_column_count( st );
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
-   pItemEof = hb_itemArrayNew( uiFields );
-
-#if 0
-   HB_TRACE( HB_TR_ALWAYS, ( "fieldcount=%d", iNameLen ) );
-#endif
-
    errCode = 0;
    bError  = HB_FALSE;
+   pItemEof = hb_itemArrayNew( uiFields );
    for( uiIndex = 0; uiIndex < uiFields; ++uiIndex )
    {
       DBFIELDINFO pFieldInfo;
 
-      PHB_ITEM pName;
-
-      int iDataType;
-      int iSize;
-      int iDec;
-
-      pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
+      memset( &pFieldInfo, 0, sizeof( pFieldInfo ) );
+      pName = S_HB_ITEMPUTSTR( pName, sqlite3_column_name( st, uiIndex ) );
       pFieldInfo.atomName = hb_itemGetCPtr( pName );
+      pFieldInfo.uiType = sqlite3DeclType( st, uiIndex );
+      pItem = hb_arrayGetItemPtr( pItemEof, uiIndex + 1 );
 
-      iDataType = sqlite3DeclType( st, uiIndex );
-      iSize = sqlite3_column_bytes( st, uiIndex );
-      iDec  = iDataType == HB_FT_LONG ? hb_setGetDecimals() : 0;
-
-      pFieldInfo.uiType = ( HB_USHORT ) iDataType;
-      pFieldInfo.uiLen = ( HB_USHORT ) iSize;
-      pFieldInfo.uiDec = ( HB_USHORT ) iDec;
-
-#if 0
-      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d nullable=%d", pFieldInfo.atomName, iDataType, iSize, iDec ) );
-#endif
-
-      if( pFieldInfo.uiType == HB_FT_NONE )
+      switch( pFieldInfo.uiType )
       {
-#if 0
-         HB_TRACE( HB_TR_ALWAYS, ( "new sql type=%d", iDataType ) );
-#endif
-         bError  = HB_TRUE;
-         errCode = ( HB_ERRCODE ) iDataType;
-         pFieldInfo.uiType = HB_FT_NONE;
+         case HB_FT_STRING:
+         {
+            int iSize = sqlite3_column_bytes( st, uiIndex );
+            char * pStr;
+
+            pFieldInfo.uiLen = ( HB_USHORT ) HB_MAX( iSize, 10 );
+            pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
+            memset( pStr, ' ', pFieldInfo.uiLen );
+            hb_itemPutCLPtr( pItem, pStr, pFieldInfo.uiLen );
+            break;
+         }
+         case HB_FT_BLOB:
+            pFieldInfo.uiLen = 4;
+            hb_itemPutC( pItem, NULL );
+            break;
+
+         case HB_FT_INTEGER:
+            pFieldInfo.uiLen = 8;
+            hb_itemPutNInt( pItem, 0 );
+            break;
+
+         case HB_FT_LONG:
+            pFieldInfo.uiLen = 20;
+            pFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
+            hb_itemPutNDDec( pItem, 0.0, pFieldInfo.uiDec );
+            break;
+
+         case HB_FT_ANY:
+            pFieldInfo.uiLen = 6;
+            break;
+
+         default:
+            bError = HB_TRUE;
       }
 
       if( ! bError )
-      {
-         switch( pFieldInfo.uiType )
-         {
-            case HB_FT_STRING:
-            {
-               char * pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
-               memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ] = '\0';
-
-               pItem = hb_itemPutCLPtr( NULL, pStr, pFieldInfo.uiLen );
-               break;
-            }
-            case HB_FT_BLOB:
-               pItem = hb_itemPutC( NULL, NULL );
-               break;
-
-            case HB_FT_INTEGER:
-               pItem = hb_itemPutNIntLen( NULL, 0, pFieldInfo.uiLen );
-               break;
-
-            case HB_FT_LONG:
-               pItem = hb_itemPutNDLen( NULL, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
-               break;
-
-            case HB_FT_ANY:
-               pItem  = hb_itemNew( NULL );
-               break;
-
-            default:
-               pItem  = hb_itemNew( NULL );
-               bError = HB_TRUE;
-         }
-
-         hb_arraySetForward( pItemEof, uiIndex + 1, pItem );
-         hb_itemRelease( pItem );
-
-         if( ! bError )
-            bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
-      }
-
-      hb_itemRelease( pName );
+         bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
 
       if( bError )
          break;
    }
+   hb_itemRelease( pName );
 
    if( bError )
    {
