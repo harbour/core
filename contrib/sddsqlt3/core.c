@@ -206,23 +206,18 @@ static HB_USHORT sqlite3DeclType(sqlite3_stmt * st, HB_USHORT uiIndex )
    {
       case SQLITE_TEXT:
          return HB_FT_STRING;
-         break;
 
       case SQLITE_FLOAT:
          return HB_FT_LONG;
-         break;
 
       case SQLITE_INTEGER:
          return HB_FT_INTEGER;
-         break;
 
       case SQLITE_BLOB:
          return HB_FT_BLOB;
-         break;
 
       case SQLITE_NULL:
          return HB_FT_ANY;
-         break;
    }
 
    return HB_FT_NONE;
