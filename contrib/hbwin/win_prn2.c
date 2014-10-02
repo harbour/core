@@ -427,25 +427,38 @@ HB_FUNC( WIN_PRINTFILERAW )
                      if( nWritten < nRead )
                         break;
                   }
+                  hbwapi_SetLastError( GetLastError() );
 
                   hb_fsClose( fhnd );
                   hb_xfree( pbyBuffer );
                }
                else
+               {
+                  hbwapi_SetLastError( hb_fsOsError() );
                   nResult = -6;
+               }
                EndPagePrinter( hPrinter );
             }
             else
+            {
+               hbwapi_SetLastError( GetLastError() );
                nResult = -4;
+            }
             EndDocPrinter( hPrinter );
          }
          else
+         {
+            hbwapi_SetLastError( GetLastError() );
             nResult = -3;
+         }
          ClosePrinter( hPrinter );
          hb_strfree( hDocName );
       }
       else
+      {
+         hbwapi_SetLastError( GetLastError() );
          nResult = -2;
+      }
       hb_strfree( hDeviceName );
    }
 #endif
@@ -492,19 +505,29 @@ HB_FUNC( WIN_PRINTDATARAW )
                      break;
                   nResult += dwWritten;
                }
+               hbwapi_SetLastError( GetLastError() );
                EndPagePrinter( hPrinter );
             }
             else
+            {
+               hbwapi_SetLastError( GetLastError() );
                nResult = -4;
+            }
             EndDocPrinter( hPrinter );
          }
          else
+         {
+            hbwapi_SetLastError( GetLastError() );
             nResult = -3;
+         }
          ClosePrinter( hPrinter );
          hb_strfree( hDocName );
       }
       else
+      {
+         hbwapi_SetLastError( GetLastError() );
          nResult = -2;
+      }
       hb_strfree( hDeviceName );
    }
 #endif
