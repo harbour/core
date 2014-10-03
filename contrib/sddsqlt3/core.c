@@ -334,12 +334,23 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    for( uiIndex = 0; uiIndex < uiFields; ++uiIndex )
    {
       DBFIELDINFO pFieldInfo;
+      HB_USHORT uiNameLen;
 
       memset( &pFieldInfo, 0, sizeof( pFieldInfo ) );
       pName = S_HB_ITEMPUTSTR( pName, sqlite3_column_name( st, uiIndex ) );
       pFieldInfo.atomName = hb_itemGetCPtr( pName );
       pFieldInfo.uiType = sqlite3DeclType( st, uiIndex );
       pItem = hb_arrayGetItemPtr( pItemEof, uiIndex + 1 );
+
+      uiNameLen = ( HB_USHORT ) hb_itemGetCLen( pName );
+      if( ( ( AREAP ) pArea )->uiMaxFieldNameLength < uiNameLen )
+         ( ( AREAP ) pArea )->uiMaxFieldNameLength = uiNameLen;
+
+      /* There are no field length limits stored in the SQLite3 database,
+         so we're resorting to setting some arbitrary default values to
+         make apps relying on these (f.e. Browse()/GET) to behave somewhat
+         better. For better results, update apps to untie UI metrics from
+         any database field/value widths. [vszakats] */
 
       switch( pFieldInfo.uiType )
       {

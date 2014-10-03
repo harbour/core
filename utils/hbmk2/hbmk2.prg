@@ -567,8 +567,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_cSignTime         161
 #define _HBMK_lCLI              162
 #define _HBMK_cPKGM             163
+#define _HBMK_aHBCCON           164
 
-#define _HBMK_MAX_              163
+#define _HBMK_MAX_              164
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1141,6 +1142,7 @@ STATIC PROCEDURE hbmk_init_stage2( hbmk )
    hbmk[ _HBMK_aRESSRC ] := {}
    hbmk[ _HBMK_aRESCMP ] := {}
    hbmk[ _HBMK_aLIBUSER ] := {}
+   hbmk[ _HBMK_aHBCCON ] := {}
    hbmk[ _HBMK_aLIBUSERFWK ] := {}
    hbmk[ _HBMK_aLIBUSERGT ] := {}
    hbmk[ _HBMK_aLIBUSERSYS ] := {}
@@ -11212,17 +11214,23 @@ STATIC FUNCTION FNameHasWildcard( cFileName )
       "?" $ cFileName .OR. ;
       "*" $ cFileName
 
-STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile, lAddOns )
+STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile )
 
+   LOCAL cLibPath
    LOCAL cDir
    LOCAL aFile
    LOCAL tmp
 
-   LOCAL aDir := { hbmk[ _HBMK_cHB_INSTALL_CON ] }
+   LOCAL aDir := { ;
+      hbmk[ _HBMK_cHB_INSTALL_CON ], ;
+      hbmk[ _HBMK_cHB_INSTALL_ADD ] }
 
-   IF hb_defaultValue( lAddOns, .T. )
-      AAdd( aDir, hbmk[ _HBMK_cHB_INSTALL_ADD ] )
-   ENDIF
+   FOR EACH cLibPath IN hbmk[ _HBMK_aLIBPATH ]
+      IF hb_FileExists( hb_DirSepAdd( hb_DirSepToOS( MacroProc( hbmk, cLibPath, cFile, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cFile ) )
+         cFile := hb_DirSepAdd( hb_DirSepToOS( MacroProc( hbmk, cLibPath, cFile, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cFile )
+         RETURN .T.
+      ENDIF
+   NEXT
 
    FOR EACH cDir IN aDir
 
@@ -11230,7 +11238,6 @@ STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile, lAddOns )
          FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
             IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." ) .AND. ;
                hb_FileExists( tmp := hb_DirSepAdd( cDir ) + aFile[ F_NAME ] + hb_ps() + hb_FNameNameExt( cFile ) )
-
                cFile := tmp
                RETURN .T.
             ENDIF
@@ -11242,25 +11249,16 @@ STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile, lAddOns )
 
 STATIC FUNCTION HBC_FindAndProcess( hbmk, cFile, nNesting )
 
-   LOCAL cLibPath
    LOCAL lFound
 
    hb_default( @nNesting, 1 )
 
-   lFound := .F.
    IF hb_FileExists( cFile )
       lFound := .T.
    ELSE
-      FOR EACH cLibPath IN hbmk[ _HBMK_aLIBPATH ]
-         IF hb_FileExists( hb_DirSepAdd( hb_DirSepToOS( MacroProc( hbmk, cLibPath, cFile, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cFile ) )
-            cFile := hb_DirSepAdd( hb_DirSepToOS( MacroProc( hbmk, cLibPath, cFile, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cFile )
-            lFound := .T.
-            EXIT
-         ENDIF
-      NEXT
-
-      IF ! lFound
-         lFound := HBC_FindStd( hbmk, @cFile )
+      lFound := HBC_FindStd( hbmk, @cFile )
+      IF lFound
+         AAddNew( hbmk[ _HBMK_aHBCCON ], hb_FNameName( hb_PathNormalize( cFile ) ) )
       ENDIF
    ENDIF
 
@@ -11273,11 +11271,13 @@ STATIC FUNCTION HBC_FindAndProcess( hbmk, cFile, nNesting )
 STATIC PROCEDURE HintHBC( hbmk )
 
    LOCAL cLib
-   LOCAL tmp
+   LOCAL cNameRaw
 
    FOR EACH cLib IN hbmk[ _HBMK_aLIBUSER ]
-      IF HBC_FindStd( hbmk, tmp := hb_FNameName( cLib ) + ".hbc", .F. )
-         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Hint: Use option '%1$s' instead of specifying raw library using '-l%2$s' or 'libs=%2$s'." ), tmp, cLib ) )
+      cNameRaw := hb_FNameName( cLib )
+      IF AScan( hbmk[ _HBMK_aHBCCON ], {| tmp | hb_FileMatch( tmp, cNameRaw ) } ) == 0 .AND. ;
+         HBC_FindStd( hbmk, cNameRaw + ".hbc" )
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Hint: Use option '%1$s' instead of specifying raw library using '-l%2$s' or 'libs=%2$s'." ), cNameRaw + ".hbc", cLib ) )
       ENDIF
    NEXT
 
