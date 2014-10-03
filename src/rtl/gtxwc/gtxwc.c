@@ -5655,7 +5655,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                              rx.left, rx.top, rx.right - rx.left + 1, rx.bottom - rx.top + 1 );
                   HB_XWC_XLIB_UNLOCK();
 
-                  hb_gt_xwc_InvalidatePts( wnd, rx.left, rx.top, rx.left, rx.top );
+                  hb_gt_xwc_InvalidatePts( wnd, rx.left, rx.top, rx.right, rx.bottom );
                   if( HB_GTSELF_DISPCOUNT( pGT ) == 0 )
                      hb_gt_xwc_RealRefresh( wnd, HB_FALSE );
                }
