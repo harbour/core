@@ -3929,6 +3929,9 @@ static HB_ERRCODE hb_dbfNewArea( DBFAREAP pArea )
    if( SUPER_NEW( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
+   /* set maximum fieldname length to 10 characters */
+   pArea->area.uiMaxFieldNameLength = 10;
+
    pArea->pDataFile = pArea->pMemoFile = pArea->pMemoTmpFile = NULL;
    pArea->fDataFlush = pArea->fMemoFlush = HB_FALSE;
    /* Index dirty read flag initialized to global RDD setting */

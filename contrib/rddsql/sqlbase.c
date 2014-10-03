@@ -781,19 +781,6 @@ static HB_ERRCODE sqlbaseInfo( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM p
 }
 
 
-static HB_ERRCODE sqlbaseNewArea( SQLBASEAREAP pArea )
-{
-   HB_ERRCODE errCode;
-
-   HB_TRACE( HB_TR_DEBUG, ( "sqlbaseNewArea(%p)", pArea ) );
-
-   errCode = SUPER_NEW( ( AREAP ) pArea );
-   pArea->area.uiMaxFieldNameLength = HB_SYMBOL_NAME_LEN;
-
-   return errCode;
-}
-
-
 static HB_ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    HB_ERRCODE errCode;
@@ -1146,7 +1133,7 @@ static RDDFUNCS sqlbaseTable =
    ( DBENTRYP_V ) sqlbaseClose,
    ( DBENTRYP_VO ) sqlbaseCreate,
    ( DBENTRYP_SI ) sqlbaseInfo,
-   ( DBENTRYP_V ) sqlbaseNewArea,
+   ( DBENTRYP_V ) NULL,              /* sqlbaseNewArea */
    ( DBENTRYP_VO ) sqlbaseOpen,
    ( DBENTRYP_V ) NULL,              /* sqlbaseRelease */
    ( DBENTRYP_SP ) sqlbaseStructSize,
