@@ -170,8 +170,7 @@ PROCEDURE Main()
    hb_gcAll( .T. )
 #endif
 
-   cStr := hb_MemoRead( IMAGES_IN + "sample1.jpg" )
-   IF FError() == 0
+   IF ! Empty( cStr := hb_MemoRead( IMAGES_IN + "sample1.jpg" ) )
       ? "Load JPEG from memory"
       im := fi_LoadFromMemory( FIF_JPEG, cStr, JPEG_DEFAULT )
 
