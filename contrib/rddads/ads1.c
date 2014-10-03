@@ -2076,16 +2076,18 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
 
 static HB_ERRCODE adsFieldName( ADSAREAP pArea, HB_USHORT uiIndex, void * szName )
 {
-   UNSIGNED16 u16Len = pArea->area.uiMaxFieldNameLength + 1;
-
    HB_TRACE( HB_TR_DEBUG, ( "adsFieldName(%p, %hu, %p)", pArea, uiIndex, szName ) );
 
-   if( uiIndex > pArea->area.uiFieldCount )
+   if( uiIndex <= pArea->area.uiFieldCount )
+   {
+      UNSIGNED16 u16Len = pArea->area.uiMaxFieldNameLength + 1;
+
+      AdsGetFieldName( pArea->hTable, uiIndex, ( UNSIGNED8 * ) szName, &u16Len );
+
+      return HB_SUCCESS;
+   }
+   else
       return HB_FAILURE;
-
-   AdsGetFieldName( pArea->hTable, uiIndex, ( UNSIGNED8 * ) szName, &u16Len );
-
-   return HB_SUCCESS;
 }
 
 static HB_ERRCODE adsFlush( ADSAREAP pArea )

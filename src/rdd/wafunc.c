@@ -201,28 +201,27 @@ void * hb_rddAllocWorkAreaAlias( const char * szAlias, int iArea )
  */
 HB_USHORT hb_rddFieldIndex( AREAP pArea, const char * szName )
 {
-   HB_USHORT uiCount = 0;
-   LPFIELD pField;
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_rddFieldIndex(%p, %s)", pArea, szName ) );
 
    while( HB_ISSPACE( *szName ) )
-   {
       ++szName;
-   }
 
    if( *szName )
    {
-      char szSym[ HB_SYMBOL_NAME_LEN + 1 ];
-      hb_strncpyUpperTrim( szSym, szName, sizeof( szSym ) - 1 );
+      PHB_DYNS pDynSym = hb_dynsymFindName( szName );
 
-      pField = pArea->lpFields;
-      while( pField )
+      if( pDynSym )
       {
-         ++uiCount;
-         if( strcmp( szSym, hb_dynsymName( ( PHB_DYNS ) pField->sym ) ) == 0 )
-            return uiCount;
-         pField = pField->lpfNext;
+         LPFIELD pField = pArea->lpFields;
+         HB_USHORT uiCount = 0;
+
+         while( pField )
+         {
+            ++uiCount;
+            if( pDynSym == ( PHB_DYNS ) pField->sym )
+               return uiCount;
+            pField = pField->lpfNext;
+         }
       }
    }
    return 0;

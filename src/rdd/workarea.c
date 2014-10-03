@@ -241,10 +241,9 @@ static HB_ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    /* Validate the name of field */
    szPtr = pFieldInfo->atomName;
    while( HB_ISSPACE( *szPtr ) )
-   {
       ++szPtr;
-   }
-   hb_strncpyUpperTrim( szFieldName, szPtr, sizeof( szFieldName ) - 1 );
+   hb_strncpyUpperTrim( szFieldName, szPtr,
+                        HB_MIN( HB_SYMBOL_NAME_LEN, pArea->uiMaxFieldNameLength ) );
    if( szFieldName[ 0 ] == 0 )
       return HB_FAILURE;
 
@@ -259,6 +258,7 @@ static HB_ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    pField->uiFlags = pFieldInfo->uiFlags;
    pField->uiArea = pArea->uiArea;
    pArea->uiFieldCount++;
+
    return HB_SUCCESS;
 }
 
@@ -845,7 +845,7 @@ static HB_ERRCODE hb_waNewArea( AREAP pArea )
    pArea->valResult = hb_itemNew( NULL );
    pArea->lpdbRelations = NULL;
    pArea->uiParents = 0;
-   pArea->uiMaxFieldNameLength = 10;
+   pArea->uiMaxFieldNameLength = HB_SYMBOL_NAME_LEN;
 
    return HB_SUCCESS;
 }

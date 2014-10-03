@@ -273,34 +273,61 @@ HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
 
 HB_FUNC( WAPI_FORMATMESSAGE )
 {
-   void * hBuffer;
-   HB_SIZE nBufferLen;
+   void * hSource = NULL;
+   LPTSTR lpAllocBuff = NULL;
+   LPTSTR lpBuffer = NULL;
+   HB_SIZE nSize = 0;
+   DWORD dwRetVal;
+   DWORD dwFlags;
 
-   ( void ) HB_PARSTR( 5, &hBuffer, &nBufferLen );
+   dwFlags = ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM );
 
-   if( nBufferLen > 0 )
+   if( HB_ISBYREF( 5 ) )
    {
-      void * hSource = NULL;
-      LPTSTR lpBuffer;
-      DWORD dwRetVal;
+      nSize = hb_parns( 6 );
+      if( ( dwFlags & FORMAT_MESSAGE_ALLOCATE_BUFFER ) == 0 )
+      {
+         if( nSize == 0 && ! HB_ISNUM( 6 ) )
+            nSize = hb_parclen( 5 );
+         if( nSize > 0 )
+            lpBuffer = ( LPTSTR ) hb_xgrab( nSize * sizeof( TCHAR ) );
+         else
+            dwFlags |= FORMAT_MESSAGE_ALLOCATE_BUFFER;
+      }
+   }
+   else
+      dwFlags = ( DWORD ) ~FORMAT_MESSAGE_ALLOCATE_BUFFER;
 
-      nBufferLen = HB_MIN( nBufferLen, 64 * 1024 * 1024 );
+   if( dwFlags & FORMAT_MESSAGE_ALLOCATE_BUFFER )
+      lpBuffer = ( LPTSTR ) &lpAllocBuff;
 
-      lpBuffer = ( LPTSTR ) hb_xgrab( nBufferLen * sizeof( TCHAR ) );
-
-      dwRetVal = FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,
+   if( lpBuffer )
+   {
+      dwRetVal = FormatMessage( dwFlags,
                                 HB_ISCHAR( 2 ) ? ( LPCVOID ) HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
                                 HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : hbwapi_GetLastError() /* dwMessageId */,
                                 ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
                                 lpBuffer,
-                                ( DWORD ) nBufferLen,
+                                ( DWORD ) nSize,
                                 NULL /* TODO: Add support for this parameter. */ );
 
       hbwapi_SetLastError( GetLastError() );
       hb_retnint( dwRetVal );
 
-      HB_STORSTR( dwRetVal ? lpBuffer : NULL, 5 );
-      hb_xfree( lpBuffer );
+      if( lpBuffer )
+      {
+         if( dwRetVal && ( dwFlags & FORMAT_MESSAGE_ALLOCATE_BUFFER ) )
+            lpBuffer = lpAllocBuff;
+         else
+            lpBuffer[ nSize - 1 ] = '\0';
+
+         HB_STORSTR( dwRetVal ? lpBuffer : NULL, 5 );
+
+         if( lpAllocBuff )
+            LocalFree( lpAllocBuff );
+         else if( lpBuffer )
+            hb_xfree( lpBuffer );
+      }
 
       hb_strfree( hSource );
    }
@@ -310,8 +337,6 @@ HB_FUNC( WAPI_FORMATMESSAGE )
       hbwapi_SetLastError( ERROR_EMPTY );
       hb_retnint( -1 );
    }
-
-   hb_strfree( hBuffer );
 }
 
 HB_FUNC( WAPI_MULDIV )
