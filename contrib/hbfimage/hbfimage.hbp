@@ -7,6 +7,8 @@
 
 -stop{dos|os2}
 
+hbwin.hbc{allwin}
+
 -depurlbase=freeimage:http://freeimage.sourceforge.net/
 -deppkgname=freeimage:libfreeimage-dev{deb}
 -deppkgname=freeimage:freeimage-devel{rpm}
@@ -24,4 +26,5 @@
 
 -hbx=${hb_name}
 
-fi_wrp.c
+core.c
+win.c{allwin}
