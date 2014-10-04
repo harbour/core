@@ -208,19 +208,33 @@ HB_USHORT hb_rddFieldIndex( AREAP pArea, const char * szName )
 
    if( *szName )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( szName );
+      HB_SIZE nLen = strlen( szName );
 
-      if( pDynSym )
+      while( HB_ISSPACE( szName[ nLen - 1 ] ) )
+         --nLen;
+
+      if( nLen <= HB_SYMBOL_NAME_LEN )
       {
-         LPFIELD pField = pArea->lpFields;
-         HB_USHORT uiCount = 0;
+         char szFieldName[ HB_SYMBOL_NAME_LEN + 1 ];
+         PHB_DYNS pDynSym;
 
-         while( pField )
+         szFieldName[ nLen ] = '\0';
+         while( nLen-- )
+            szFieldName[ nLen ] = HB_TOUPPER( szName[ nLen ] );
+
+         pDynSym = hb_dynsymFind( szFieldName );
+         if( pDynSym )
          {
-            ++uiCount;
-            if( pDynSym == ( PHB_DYNS ) pField->sym )
-               return uiCount;
-            pField = pField->lpfNext;
+            LPFIELD pField = pArea->lpFields;
+            HB_USHORT uiCount = 0;
+
+            while( pField )
+            {
+               ++uiCount;
+               if( pDynSym == ( PHB_DYNS ) pField->sym )
+                  return uiCount;
+               pField = pField->lpfNext;
+            }
          }
       }
    }

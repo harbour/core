@@ -2250,12 +2250,77 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_DISPIMAGE:
-         if( pInfo->pNewVal && HB_IS_STRING( pInfo->pNewVal ) && pQTC->qWnd )
+         if( pQTC->qWnd &&
+             ( hb_itemType( pInfo->pNewVal ) & ( HB_IT_STRING | HB_IT_ARRAY ) ) )
          {
+            QImage qImg = QImage();
+
+            /* filename or resource */
+            if( HB_IS_STRING( pInfo->pNewVal ) )
+            {
+               QString qStr;
+               hb_gt_qtc_itemGetQString( pInfo->pNewVal, &qStr );
+               qImg = QImage( qStr );
+            }
+            else if( hb_arrayLen( pInfo->pNewVal ) ==
+                     ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) &&
+                     ( hb_arrayGetType( pInfo->pNewVal, 1 ) & ( HB_IT_POINTER | HB_IT_STRING ) ) &&
+                     ( hb_arrayGetType( pInfo->pNewVal, 2 ) & HB_IT_NUMERIC ) &&
+                     ( hb_arrayGetType( pInfo->pNewVal, 3 ) & HB_IT_NUMERIC ) )
+            {
+               HB_SIZE nSize = hb_arrayGetCLen( pInfo->pNewVal, 1 );
+               int iWidth  = hb_arrayGetNI( pInfo->pNewVal, 2 );
+               int iHeight = hb_arrayGetNI( pInfo->pNewVal, 3 );
+               int iDepth  = hb_arrayGetNI( pInfo->pNewVal, 4 );
+               int iPitch  = 0;
+               const uchar * data = NULL;
+               QImage::Format format;
+
+               switch( iDepth )
+               {
+                  case 0:
+                     iDepth = 32;
+                  case 32:
+                     format = QImage::Format_RGB32;
+                     break;
+                  case 16:
+                     format = QImage::Format_RGB16;
+                     break;
+                  case 1:
+                     format = QImage::Format_Mono;
+                     break;
+                  default:
+                     format = QImage::Format_Invalid;
+                     break;
+               }
+
+               if( format != QImage::Format_Invalid && iWidth > 0 && iHeight > 0 )
+               {
+                  if( nSize > 0 )
+                  {
+                     int iPad = 32;
+                     while( data == NULL && iPad >= 8 )
+                     {
+                        iPitch = ( iWidth * iDepth + iPad - 1 ) / iPad;
+                        if( nSize == ( HB_SIZE ) ( iHeight * iPitch ) )
+                           data = ( const uchar * ) hb_arrayGetCPtr( pInfo->pNewVal, 1 );
+                        else
+                           iPad >>= 1;
+                     }
+                  }
+                  else
+                     data = ( const uchar * ) hb_arrayGetPtr( pInfo->pNewVal, 1 );
+               }
+               if( data != NULL )
+               {
+                  if( iPitch == 0 )
+                     qImg = QImage( data, iWidth, iHeight, QImage::Format_RGB32 );
+                  else
+                     qImg = QImage( data, iWidth, iHeight, iPitch, QImage::Format_RGB32 );
+               }
+            }
+
             QRect rx = pQTC->qWnd->qConsole->image->rect();
-            QString qStr;
-            hb_gt_qtc_itemGetQString( pInfo->pNewVal, &qStr );
-            QImage qImg( qStr );
 
             if( pInfo->pNewVal2 && HB_IS_ARRAY( pInfo->pNewVal2 ) )
             {
