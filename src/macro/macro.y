@@ -1,7 +1,7 @@
 %pure-parser
 %parse-param { PHB_MACRO pMacro }
 %lex-param   { PHB_MACRO pMacro }
-%name-prefix = "hb_macro_yy"
+%name-prefix "hb_macro_yy"
 
 %{
 /*

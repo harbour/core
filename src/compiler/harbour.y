@@ -1,7 +1,7 @@
 %pure-parser
 %parse-param { PHB_COMP pComp }
 %lex-param   { PHB_COMP pComp }
-%name-prefix = "hb_comp_yy"
+%name-prefix "hb_comp_yy"
 %{
 /*
  * Compiler YACC rules and actions
