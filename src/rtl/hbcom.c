@@ -100,6 +100,8 @@
 #  define INCL_DOSDEVICES
 #  define INCL_DOSDEVIOCTL
 #  include <os2.h>
+#elif defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && ( __WATCOMC__ <= 1290 )
+#  include <unistd.h>
 #endif
 
 #include "hbapifs.h"
