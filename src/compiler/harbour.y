@@ -46,6 +46,12 @@
 #elif defined( __WATCOMC__ )
 #  pragma warning 13 9
 #  pragma warning 368 9
+#elif defined( _MSC_VER )
+#  pragma warning( disable : 4065 )
+#  pragma warning( disable : 4244 )
+#  pragma warning( disable : 4309 )
+#  pragma warning( disable : 4701 )
+#  pragma warning( disable : 4702 )
 #endif
 
 #undef alloca
