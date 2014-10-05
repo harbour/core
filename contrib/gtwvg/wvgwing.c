@@ -1040,7 +1040,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
       toolInfo.cbSize   = sizeof( toolInfo );
       toolInfo.hwnd     = hbwapi_par_raw_HWND( 1 );
       toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-      toolInfo.uId      = ( UINT_PTR ) hb_parnint( 1 );
+      toolInfo.uId      = ( UINT_PTR ) toolInfo.hwnd;
       toolInfo.lpszText = ( LPTSTR ) TEXT( "" );
 
       if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
@@ -1063,7 +1063,7 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
    toolInfo.cbSize   = sizeof( toolInfo );
    toolInfo.hwnd     = hbwapi_par_raw_HWND( 1 );
    toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-   toolInfo.uId      = ( UINT_PTR ) hb_parnint( 1 );
+   toolInfo.uId      = ( UINT_PTR ) toolInfo.hwnd;
    toolInfo.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
    SendMessage( hbwapi_par_raw_HWND( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &toolInfo );

@@ -262,7 +262,7 @@ HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 
          ti.uFlags   = TTF_SUBCLASS | TTF_IDISHWND;
          ti.hwnd     = wvw_win->hWnd;
-         ti.uId      = hbwapi_par_UINT( 2 );
+         ti.uId      = ( UINT_PTR ) wvw_win->hWnd;
          ti.hinst    = GetModuleHandle( NULL );
          ti.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );  /* TOFIX: drops const */
 
