@@ -229,10 +229,19 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
    }
    else if( HB_IS_NUMINT( pValue ) )
    {
-      char buf[ 32 ];
+      char buf[ 24 ];
+      HB_MAXINT nVal = hb_itemGetNInt( pValue );
+      HB_BOOL fNeg = nVal < 0;
+      int i = 0;
 
-      hb_snprintf( buf, sizeof( buf ), "%" PFHL "d", hb_itemGetNInt( pValue ) );
-      _hb_jsonCtxAdd( pCtx, buf, strlen( buf ) );
+      if( fNeg )
+         nVal = -nVal;
+      do
+         buf[ sizeof( buf ) - ++i ] = ( nVal % 10 ) + '0';
+      while( ( nVal /= 10 ) != 0 );
+      if( fNeg )
+         buf[ sizeof( buf ) - ++i ] = '-';
+      _hb_jsonCtxAdd( pCtx, &buf[ sizeof( buf ) - i ], i );
    }
    else if( HB_IS_NUMERIC( pValue ) )
    {
