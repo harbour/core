@@ -639,7 +639,7 @@ HB_FUNC( WVW_SETBRUSH )
 
       lb.lbStyle = hbwapi_par_UINT( 1 );
       lb.lbColor = hbwapi_par_COLORREF( 2 );
-      switch( p->lbStyle )
+      switch( lb.lbStyle )
       {
          case BS_SOLID:
          case BS_HOLLOW:
