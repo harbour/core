@@ -639,7 +639,16 @@ HB_FUNC( WVW_SETBRUSH )
 
       lb.lbStyle = hbwapi_par_UINT( 1 );
       lb.lbColor = hbwapi_par_COLORREF( 2 );
-      lb.lbHatch = ( ULONG_PTR ) hb_parnint( 3 );
+      switch( p->lbStyle )
+      {
+         case BS_SOLID:
+         case BS_HOLLOW:
+         case BS_HATCHED:
+            lb.lbHatch = ( ULONG_PTR ) hb_parnint( 3 );
+            break;
+         default:
+            lb.lbHatch = ( ULONG_PTR ) hb_parptr( 3 );
+      }
 
       hBrush = CreateBrushIndirect( &lb );
 
