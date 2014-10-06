@@ -35,6 +35,8 @@
   * [source line](https://github.com/vszakats/harbour-core/blob/dd2c3b3e9c0e7db7f1c18be2a079dc92f983122e/tests/hello.prg#L5)
   * [source section](https://github.com/vszakats/harbour-core/blob/90ce13098244b0e27fc4b8c7af5586f892a09337/src/rtl/chruni.c#L101-L112)
   * [source directory](contrib/hbcurl/)
+  * [source - specific revision](https://github.com/vszakats/harbour-core/tree/e46f2fdb75c493ff5b4c777f5a0963d2e7d6f65b)
+  * [source - specific revision .zip archive](https://github.com/vszakats/harbour-core/archive/e46f2fdb75c493ff5b4c777f5a0963d2e7d6f65b.zip)
 
 
 # How to Participate
