@@ -4744,21 +4744,24 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
    hb_gt_xwc_SetResizing( wnd );
 
 #ifdef X_HAVE_UTF8_STRING
-   wnd->im = XOpenIM( wnd->dpy, NULL, NULL, NULL );
-   if( wnd->im )
+   if( ! wnd->im )
    {
-      wnd->ic = XCreateIC( wnd->im,
-                           XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
-                           XNClientWindow, wnd->window,
-                           XNFocusWindow, wnd->window,
-                           NULL );
-      if( ! wnd->ic )
+      wnd->im = XOpenIM( wnd->dpy, NULL, NULL, NULL );
+      if( wnd->im )
       {
-         XCloseIM( wnd->im );
-         wnd->im = NULL;
+         wnd->ic = XCreateIC( wnd->im,
+                              XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
+                              XNClientWindow, wnd->window,
+                              XNFocusWindow, wnd->window,
+                              NULL );
+         if( ! wnd->ic )
+         {
+            XCloseIM( wnd->im );
+            wnd->im = NULL;
+         }
+         else
+            wnd->fUTF8key = HB_TRUE;
       }
-      else
-         wnd->fUTF8key = HB_TRUE;
    }
 #ifdef XWC_DEBUG
    printf( "\nXIC=%p, XIC=%p\n", wnd->im, wnd->ic ); fflush( stdout );
