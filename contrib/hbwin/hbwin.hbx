@@ -37,6 +37,7 @@ DYNAMIC wapi_CheckRadioButton
 DYNAMIC wapi_ClientToScreen
 DYNAMIC wapi_CloseWindow
 DYNAMIC wapi_ComboBox_AddString
+DYNAMIC wapi_CopyFile
 DYNAMIC wapi_CreateAcceleratorTable
 DYNAMIC wapi_CreateBrushIndirect
 DYNAMIC wapi_CreateDC

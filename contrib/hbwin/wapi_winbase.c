@@ -494,8 +494,7 @@ HB_FUNC( WAPI_QUERYPERFORMANCECOUNTER )
    LARGE_INTEGER counter;
    BOOL result = QueryPerformanceCounter( &counter );
 
-   if( result )
-      hb_stornint( HBWAPI_GET_LARGEUINT( counter ), 1 );
+   hb_stornint( result ? HBWAPI_GET_LARGEUINT( counter ) : 0, 1 );
    hb_retl( result != 0 );
 }
 
@@ -504,8 +503,7 @@ HB_FUNC( WAPI_QUERYPERFORMANCEFREQUENCY )
    LARGE_INTEGER frequency;
    BOOL result = QueryPerformanceFrequency( &frequency );
 
-   if( result )
-      hb_stornint( HBWAPI_GET_LARGEUINT( frequency ), 1 );
+   hb_stornint( result ? HBWAPI_GET_LARGEUINT( frequency ) : 0, 1 );
    hb_retl( result != 0 );
 }
 
@@ -567,4 +565,20 @@ HB_FUNC( WAPI_GETVOLUMEINFORMATION )
 #else
    hb_retl( HB_FALSE );
 #endif
+}
+
+HB_FUNC( WAPI_COPYFILE )
+{
+   void * hSrc;
+   void * hDst;
+
+   BOOL bResult = CopyFile( HB_PARSTRDEF( 1, &hSrc, NULL ),
+                            HB_PARSTRDEF( 2, &hDst, NULL ),
+                            hbwapi_par_BOOL( 3 ) );
+
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+
+   hb_strfree( hSrc );
+   hb_strfree( hDst );
 }
