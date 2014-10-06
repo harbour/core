@@ -514,7 +514,7 @@ HB_FUNC( WAPI_QUERYPERFORMANCEFREQUENCY )
 
 HB_FUNC( WAPI_GETVOLUMEINFORMATION )
 {
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
    BOOL bResult;
    DWORD dwSerialNumber, dwMaxFileNameLen, dwFileSystemFlags;
    DWORD dwVolNameSize, dwFSNameSize;
@@ -569,16 +569,40 @@ HB_FUNC( WAPI_GETVOLUMEINFORMATION )
 
 HB_FUNC( WAPI_COPYFILE )
 {
-   void * hSrc;
-   void * hDst;
+#if ! defined( HB_OS_WIN_CE )
+   typedef BOOL ( WINAPI * _HB_COPYFILE )( LPCTSTR, LPCTSTR, BOOL );
 
-   BOOL bResult = CopyFile( HB_PARSTRDEF( 1, &hSrc, NULL ),
-                            HB_PARSTRDEF( 2, &hDst, NULL ),
-                            hbwapi_par_BOOL( 3 ) );
+   static _HB_COPYFILE s_pCopyFile = NULL;
 
-   hbwapi_SetLastError( GetLastError() );
-   hbwapi_ret_L( bResult );
+   if( ! s_pCopyFile )
+   {
+      HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
+      if( hModule )
+         s_pCopyFile = ( _HB_COPYFILE ) HB_WINAPI_GETPROCADDRESST( hModule, "CopyFile" );
+   }
 
-   hb_strfree( hSrc );
-   hb_strfree( hDst );
+   if( s_pCopyFile )
+   {
+      void * hSrc;
+      void * hDst;
+
+      BOOL bResult = s_pCopyFile( HB_PARSTRDEF( 1, &hSrc, NULL ),
+                                  HB_PARSTRDEF( 2, &hDst, NULL ),
+                                  hbwapi_par_BOOL( 3 ) );
+
+      hbwapi_SetLastError( GetLastError() );
+      hbwapi_ret_L( bResult );
+
+      hb_strfree( hSrc );
+      hb_strfree( hDst );
+   }
+   else
+   {
+      hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+      hbwapi_ret_L( FALSE );
+   }
+#else
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   hbwapi_ret_L( FALSE );
+#endif
 }

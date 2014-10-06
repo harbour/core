@@ -91,6 +91,7 @@ HB_FUNC( WAPI_SETWINDOWPOS )
 HB_FUNC( WAPI_ISICONIC )
 {
 #if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
    hbwapi_ret_L( FALSE );
 #else
    hbwapi_ret_L( IsIconic( hbwapi_par_raw_HWND( 1 ) ) );
@@ -100,6 +101,7 @@ HB_FUNC( WAPI_ISICONIC )
 HB_FUNC( WAPI_ISZOOMED )
 {
 #if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
    hbwapi_ret_L( FALSE );
 #else
    hbwapi_ret_L( IsZoomed( hbwapi_par_raw_HWND( 1 ) ) );
@@ -604,6 +606,7 @@ HB_FUNC( WAPI_CHECKMENURADIOITEM )
 HB_FUNC( WAPI_ENDMENU )
 {
 #if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
    hbwapi_ret_L( FALSE );
 #else
    BOOL fResult = EndMenu();
