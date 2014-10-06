@@ -5900,7 +5900,7 @@ yyreduce:
                   PHB_HCLASS pClass;
                   char       szSetData[ HB_SYMBOL_NAME_LEN + 1 ];
                   int        iLen;
-                  char       cVarType = (yyvsp[0].asVarType)->cVarType;
+                  HB_BYTE    cVarType = (yyvsp[0].asVarType)->cVarType;
 
                   /* List Type overrides if exists. */
                   if( HB_COMP_PARAM->cDataListType )

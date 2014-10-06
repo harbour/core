@@ -121,7 +121,7 @@ typedef struct HB_CBVAR_
 typedef struct _HB_VARTYPE
 {
    struct _HB_VARTYPE *   pNext;
-   char                   cVarType;
+   HB_BYTE                cVarType;
    const char *           szFromClass;
 } HB_VARTYPE, * PHB_VARTYPE;
 
@@ -788,8 +788,7 @@ typedef struct _HB_COMP
    char **           szStdChExt;          /* extended definitions file names (-u+<file>) */
    int               iStdChExt;           /* number of extended definition files (-u+<file>) */
 
-   char              cDataListType;       /* current declared variable list type */
-   char              cCastType;           /* current casting type */
+   HB_BYTE           cDataListType;       /* current declared variable list type */
 
    int               iErrorCount;
    int               iModulesCount;       /* number of compiled .prg modules */

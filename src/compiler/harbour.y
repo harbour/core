@@ -1289,7 +1289,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   PHB_HCLASS pClass;
                   char       szSetData[ HB_SYMBOL_NAME_LEN + 1 ];
                   int        iLen;
-                  char       cVarType = $3->cVarType;
+                  HB_BYTE    cVarType = $3->cVarType;
 
                   /* List Type overrides if exists. */
                   if( HB_COMP_PARAM->cDataListType )

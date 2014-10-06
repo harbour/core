@@ -1282,7 +1282,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
    }
 }
 
-PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char* szFromClass )
+PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, HB_BYTE cVarType, const char* szFromClass )
 {
    PHB_VARTYPE   pVT = HB_COMP_PARAM->pVarType;
    PHB_VARTYPE*  ppVT = &( HB_COMP_PARAM->pVarType );
