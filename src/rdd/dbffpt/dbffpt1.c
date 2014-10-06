@@ -2848,10 +2848,10 @@ static HB_ERRCODE hb_fptGetMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
                hb_itemPutDL( pItem, ( long ) HB_GET_LE_UINT32( pBuffer ) );
                break;
             case FPTIT_FLEX_CHAR:
-               hb_itemPutNI( pItem, ( signed char ) pBuffer[0] );
+               hb_itemPutNI( pItem, ( signed char ) pBuffer[ 0 ] );
                break;
             case FPTIT_FLEX_UCHAR:
-               hb_itemPutNI( pItem, ( unsigned char ) pBuffer[0] );
+               hb_itemPutNI( pItem, ( unsigned char ) pBuffer[ 0 ] );
                break;
             case FPTIT_FLEX_SHORT:
                hb_itemPutNI( pItem, ( short ) HB_GET_LE_UINT16( pBuffer ) );
@@ -4813,7 +4813,7 @@ static HB_ERRCODE hb_fptPack( FPTAREAP pArea )
             {
                HB_FOFFSET size = hb_fileSize( pArea->pMemoTmpFile );
                HB_ULONG ulNextBlock;
-               HB_BYTE buffer[4];
+               HB_BYTE buffer[ 4 ];
 
                ulNextBlock = ( HB_ULONG ) ( ( size + pArea->ulNewBlockSize - 1 ) /
                                             pArea->ulNewBlockSize );
