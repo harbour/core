@@ -4,9 +4,11 @@
 %name-prefix "hb_comp_yy"
 %{
 /*
+ * Harbour Project source code:
  * Compiler YACC rules and actions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +23,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their web site at http://www.gnu.org/).
  *
  */
 
@@ -47,10 +49,7 @@
 #  pragma warning 13 9
 #  pragma warning 368 9
 #elif defined( _MSC_VER )
-#  pragma warning( disable : 4065 )
 #  pragma warning( disable : 4244 )
-#  pragma warning( disable : 4309 )
-#  pragma warning( disable : 4701 )
 #  pragma warning( disable : 4702 )
 #endif
 
@@ -1290,7 +1289,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   PHB_HCLASS pClass;
                   char       szSetData[ HB_SYMBOL_NAME_LEN + 1 ];
                   int        iLen;
-                  char       cVarType = $3->cVarType;
+                  HB_BYTE    cVarType = $3->cVarType;
 
                   /* List Type overrides if exists. */
                   if( HB_COMP_PARAM->cDataListType )
