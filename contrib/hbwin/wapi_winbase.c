@@ -299,7 +299,7 @@ HB_FUNC( WAPI_FORMATMESSAGE )
       }
    }
    else
-      dwFlags = ~FORMAT_MESSAGE_ALLOCATE_BUFFER;
+      dwFlags = ( DWORD ) ~FORMAT_MESSAGE_ALLOCATE_BUFFER;
 
    if( dwFlags & FORMAT_MESSAGE_ALLOCATE_BUFFER )
       lpBuffer = ( LPTSTR ) &lpAllocBuff;

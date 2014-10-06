@@ -144,7 +144,7 @@ static PHB_IOUSR s_iousrAddNew( const char * pszPrefix )
       pIO = ( PHB_IOUSR ) hb_xgrab( sizeof( HB_IOUSR ) );
       memset( pIO, 0, sizeof( HB_IOUSR ) );
       pIO->prefix = hb_strdup( pszPrefix );
-      pIO->prefix_len = strlen( pszPrefix );
+      pIO->prefix_len = ( int ) strlen( pszPrefix );
       s_ioUsrs[ s_iCount++ ] = pIO;
    }
 

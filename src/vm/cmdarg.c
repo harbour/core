@@ -207,7 +207,7 @@ void hb_winmainArgVBuild( void )
                because in console apps the name may be truncated
                in some cases, and in GUI apps it's not filled
                at all. [vszakats] */
-      if( GetModuleFileName( NULL, lpArgV[ 0 ], nModuleName ) != 0 )
+      if( GetModuleFileName( NULL, lpArgV[ 0 ], ( DWORD ) nModuleName ) != 0 )
       {
          /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
          lpArgV[ 0 ][ nModuleName - 1 ] = 0;
