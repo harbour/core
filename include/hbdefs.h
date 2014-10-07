@@ -70,7 +70,10 @@
         defined( HB_OS_BSD ) || defined( HB_OS_SUNOS ) || \
         defined( HB_OS_BEOS ) || defined( HB_OS_QNX ) || \
         defined( HB_OS_VXWORKS ) || defined( HB_OS_MINIX ) ) )
-   #include <stdint.h>
+#  include <stdint.h>
+#  if defined( _MSC_VER ) && _MSC_VER >= 1400
+#  include <intrin.h>
+#  endif
    /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
 #  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && ! defined( _INTPTR_T )
 #     define _INTPTR_T
@@ -804,13 +807,25 @@ typedef HB_U32 HB_FATTR;
 #endif
 
 /* Macros to store/retrieve integer and double values at/from byte address */
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER >= 1400 ) )
 
 #  if ( __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) ) && \
       ! defined( __ICC ) && ! defined( __OPENCC__ ) && ! defined( __PCC__ )
-#     define HB_BUILTIN_BSWAP 1
+#     define HB_BUILTIN_BSWAP32( n )   __builtin_bswap32( n )
+#     define HB_BUILTIN_BSWAP64( n )   __builtin_bswap64( n )
+#  elif defined( _MSC_VER )
+#     define HB_BUILTIN_BSWAP32( n )   _byteswap_ulong( n )
+#     define HB_BUILTIN_BSWAP64( n )   _byteswap_uint64( n )
+#  endif
+
+#  if defined( _MSC_VER )
+#     define _HB_CAST16 ( HB_U16 )
+#     define _HB_CAST32 ( HB_U32 )
+#     define _HB_CAST64 ( HB_U64 )
 #  else
-#     define HB_BUILTIN_BSWAP 0
+#     define _HB_CAST16
+#     define _HB_CAST32
+#     define _HB_CAST64
 #  endif
 
    typedef union
@@ -847,40 +862,41 @@ typedef HB_U32 HB_FATTR;
    {
       double   val;
       HB_BYTE  buf[ 8 ];
-#  if ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
+#  if ( ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT ) ) && \
+      defined( HB_BUILTIN_BSWAP64 )
       HB_U64   i64;
 #  endif
    } HB_DBLCAST, * PHB_DBLCAST;
 
-   static __inline__ void * _hb_get_ptr( const HB_BYTE * buf )
+   static HB_FORCEINLINE void * _hb_get_ptr( const HB_BYTE * buf )
    {
       HB_PTRCAST u;
       memcpy( u.buf, buf, sizeof( void * ) );
       return u.val;
    }
 
-   static __inline__ void _hb_put_ptr( HB_BYTE * buf, void * val )
+   static HB_FORCEINLINE void _hb_put_ptr( HB_BYTE * buf, void * val )
    {
       HB_PTRCAST u;
       u.val = val;
       memcpy( buf, u.buf, sizeof( void * ) );
    }
 
-   static __inline__ HB_U16 _hb_get_std_uint16( const HB_BYTE * buf )
+   static HB_FORCEINLINE HB_U16 _hb_get_std_uint16( const HB_BYTE * buf )
    {
       HB_U16CAST u;
       memcpy( u.buf, buf, sizeof( u.buf ) );
       return u.val;
    }
 
-   static __inline__ void _hb_put_std_uint16( HB_BYTE * buf, HB_U16 val )
+   static HB_FORCEINLINE void _hb_put_std_uint16( HB_BYTE * buf, HB_U16 val )
    {
       HB_U16CAST u;
       u.val = val;
       memcpy( buf, u.buf, sizeof( u.buf ) );
    }
 
-   static __inline__ HB_U16 _hb_get_rev_uint16( const HB_BYTE * buf )
+   static HB_FORCEINLINE HB_U16 _hb_get_rev_uint16( const HB_BYTE * buf )
    {
       HB_U16CAST u;
       u.buf[ 0 ] = buf[ 1 ];
@@ -888,7 +904,7 @@ typedef HB_U32 HB_FATTR;
       return u.val;
    }
 
-   static __inline__ void _hb_put_rev_uint16( HB_BYTE * buf, HB_U16 val )
+   static HB_FORCEINLINE void _hb_put_rev_uint16( HB_BYTE * buf, HB_U16 val )
    {
       HB_U16CAST u;
       u.val = val;
@@ -896,26 +912,26 @@ typedef HB_U32 HB_FATTR;
       buf[ 1 ] = u.buf[ 0 ];
    }
 
-   static __inline__ HB_U32 _hb_get_std_uint32( const HB_BYTE * buf )
+   static HB_FORCEINLINE HB_U32 _hb_get_std_uint32( const HB_BYTE * buf )
    {
       HB_U32CAST u;
       memcpy( u.buf, buf, sizeof( u.buf ) );
       return u.val;
    }
 
-   static __inline__ void _hb_put_std_uint32( HB_BYTE * buf, HB_U32 val )
+   static HB_FORCEINLINE void _hb_put_std_uint32( HB_BYTE * buf, HB_U32 val )
    {
       HB_U32CAST u;
       u.val = val;
       memcpy( buf, u.buf, sizeof( u.buf ) );
    }
 
-   static __inline__ HB_U32 _hb_get_rev_uint32( const HB_BYTE * buf )
+   static HB_FORCEINLINE HB_U32 _hb_get_rev_uint32( const HB_BYTE * buf )
    {
       HB_U32CAST u;
-#  if HB_BUILTIN_BSWAP
+#  if defined( HB_BUILTIN_BSWAP32 )
       memcpy( u.buf, buf, sizeof( u.buf ) );
-      return __builtin_bswap32( u.val );
+      return HB_BUILTIN_BSWAP32( u.val );
 #  else
       u.buf[ 0 ] = buf[ 3 ];
       u.buf[ 1 ] = buf[ 2 ];
@@ -925,11 +941,11 @@ typedef HB_U32 HB_FATTR;
 #  endif
    }
 
-   static __inline__ void _hb_put_rev_uint32( HB_BYTE * buf, HB_U32 val )
+   static HB_FORCEINLINE void _hb_put_rev_uint32( HB_BYTE * buf, HB_U32 val )
    {
       HB_U32CAST u;
-#  if HB_BUILTIN_BSWAP
-      u.val = __builtin_bswap32( val );
+#  if defined( HB_BUILTIN_BSWAP32 )
+      u.val = HB_BUILTIN_BSWAP32( val );
       memcpy( buf, u.buf, sizeof( u.buf ) );
 #  else
       u.val = val;
@@ -941,26 +957,26 @@ typedef HB_U32 HB_FATTR;
    }
 
 #  if ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
-      static __inline__ HB_U64 _hb_get_std_uint64( const HB_BYTE * buf )
+      static HB_FORCEINLINE HB_U64 _hb_get_std_uint64( const HB_BYTE * buf )
       {
          HB_U64CAST u;
          memcpy( u.buf, buf, sizeof( u.buf ) );
          return u.val;
       }
 
-      static __inline__ void _hb_put_std_uint64( HB_BYTE * buf, HB_U64 val )
+      static HB_FORCEINLINE void _hb_put_std_uint64( HB_BYTE * buf, HB_U64 val )
       {
          HB_U64CAST u;
          u.val = val;
          memcpy( buf, u.buf, sizeof( u.buf ) );
       }
 
-      static __inline__ HB_U64 _hb_get_rev_uint64( const HB_BYTE * buf )
+      static HB_FORCEINLINE HB_U64 _hb_get_rev_uint64( const HB_BYTE * buf )
       {
          HB_U64CAST u;
-#  if HB_BUILTIN_BSWAP
+#     if defined( HB_BUILTIN_BSWAP64 )
          memcpy( u.buf, buf, sizeof( u.buf ) );
-         return __builtin_bswap64( u.val );
+         return HB_BUILTIN_BSWAP64( u.val );
 #     else
          u.buf[ 0 ] = buf[ 7 ];
          u.buf[ 1 ] = buf[ 6 ];
@@ -974,11 +990,11 @@ typedef HB_U32 HB_FATTR;
 #     endif
       }
 
-      static __inline__ void _hb_put_rev_uint64( HB_BYTE * buf, HB_U64 val )
+      static HB_FORCEINLINE void _hb_put_rev_uint64( HB_BYTE * buf, HB_U64 val )
       {
          HB_U64CAST u;
-#  if HB_BUILTIN_BSWAP
-         u.val = __builtin_bswap64( val );
+#     if defined( HB_BUILTIN_BSWAP64 )
+         u.val = HB_BUILTIN_BSWAP64( val );
          memcpy( buf, u.buf, sizeof( u.buf ) );
 #     else
          u.val = val;
@@ -994,27 +1010,27 @@ typedef HB_U32 HB_FATTR;
       }
 #  endif
 
-   static __inline__ double _hb_get_std_double( const HB_BYTE * buf )
+   static HB_FORCEINLINE double _hb_get_std_double( const HB_BYTE * buf )
    {
       HB_DBLCAST u;
       memcpy( u.buf, buf, sizeof( u.buf ) );
       return u.val;
    }
 
-   static __inline__ void _hb_put_std_double( HB_BYTE * buf, double val )
+   static HB_FORCEINLINE void _hb_put_std_double( HB_BYTE * buf, double val )
    {
       HB_DBLCAST u;
       u.val = val;
       memcpy( buf, u.buf, sizeof( u.buf ) );
    }
 
-   static __inline__ double _hb_get_rev_double( const HB_BYTE * buf )
+   static HB_FORCEINLINE double _hb_get_rev_double( const HB_BYTE * buf )
    {
       HB_DBLCAST u;
 #  if ( ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT ) ) && \
-      HB_BUILTIN_BSWAP
+      defined( HB_BUILTIN_BSWAP64 )
       memcpy( u.buf, buf, sizeof( u.buf ) );
-      u.i64 = __builtin_bswap64( u.i64 );
+      u.i64 = HB_BUILTIN_BSWAP64( u.i64 );
       return u.val;
 #  else
       u.buf[ 0 ] = buf[ 7 ];
@@ -1029,13 +1045,13 @@ typedef HB_U32 HB_FATTR;
 #  endif
    }
 
-   static __inline__ void _hb_put_rev_double( HB_BYTE * buf, double val )
+   static HB_FORCEINLINE void _hb_put_rev_double( HB_BYTE * buf, double val )
    {
       HB_DBLCAST u;
 #  if ( ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT ) ) && \
-      HB_BUILTIN_BSWAP
+      defined( HB_BUILTIN_BSWAP64 )
       u.val = val;
-      u.i64 = __builtin_bswap64( u.i64 );
+      u.i64 = HB_BUILTIN_BSWAP64( u.i64 );
       memcpy( buf, u.buf, sizeof( u.buf ) );
 #  else
       u.val = val;
@@ -1058,38 +1074,38 @@ typedef HB_U32 HB_FATTR;
 #  if defined( HB_BIG_ENDIAN )
 
 #     define HB_GET_BE_UINT16( p )        _hb_get_std_uint16( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT16( p, w )     _hb_put_std_uint16( ( HB_BYTE * ) ( p ), w )
+#     define HB_PUT_BE_UINT16( p, w )     _hb_put_std_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 w )
 #     define HB_GET_BE_UINT32( p )        _hb_get_std_uint32( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT32( p, l )     _hb_put_std_uint32( ( HB_BYTE * ) ( p ), l )
+#     define HB_PUT_BE_UINT32( p, l )     _hb_put_std_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 l )
 #     define HB_GET_BE_UINT64( p )        _hb_get_std_uint64( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT64( p, q )     _hb_put_std_uint64( ( HB_BYTE * ) ( p ), q )
+#     define HB_PUT_BE_UINT64( p, q )     _hb_put_std_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 q )
 
 #     define HB_GET_LE_UINT16( p )        _hb_get_rev_uint16( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT16( p, w )     _hb_put_rev_uint16( ( HB_BYTE * ) ( p ), w )
+#     define HB_PUT_LE_UINT16( p, w )     _hb_put_rev_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 w )
 #     define HB_GET_LE_UINT32( p )        _hb_get_rev_uint32( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT32( p, l )     _hb_put_rev_uint32( ( HB_BYTE * ) ( p ), l )
+#     define HB_PUT_LE_UINT32( p, l )     _hb_put_rev_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 l )
 #     define HB_GET_LE_UINT64( p )        _hb_get_rev_uint64( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT64( p, q )     _hb_put_rev_uint64( ( HB_BYTE * ) ( p ), q )
+#     define HB_PUT_LE_UINT64( p, q )     _hb_put_rev_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 q )
 
 #  else /* HB_LITTLE_ENDIAN */
 
 #     define HB_GET_BE_UINT16( p )        _hb_get_rev_uint16( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT16( p, w )     _hb_put_rev_uint16( ( HB_BYTE * ) ( p ), w )
+#     define HB_PUT_BE_UINT16( p, w )     _hb_put_rev_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 w )
 #     define HB_GET_BE_UINT32( p )        _hb_get_rev_uint32( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT32( p, l )     _hb_put_rev_uint32( ( HB_BYTE * ) ( p ), l )
+#     define HB_PUT_BE_UINT32( p, l )     _hb_put_rev_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 l )
 #     define HB_GET_BE_UINT64( p )        _hb_get_rev_uint64( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT64( p, q )     _hb_put_rev_uint64( ( HB_BYTE * ) ( p ), q )
+#     define HB_PUT_BE_UINT64( p, q )     _hb_put_rev_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 q )
 
 #     define HB_GET_LE_UINT16( p )        _hb_get_std_uint16( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT16( p, w )     _hb_put_std_uint16( ( HB_BYTE * ) ( p ), w )
+#     define HB_PUT_LE_UINT16( p, w )     _hb_put_std_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 w )
 #     define HB_GET_LE_UINT32( p )        _hb_get_std_uint32( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT32( p, l )     _hb_put_std_uint32( ( HB_BYTE * ) ( p ), l )
+#     define HB_PUT_LE_UINT32( p, l )     _hb_put_std_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 l )
 #     define HB_GET_LE_UINT64( p )        _hb_get_std_uint64( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT64( p, q )     _hb_put_std_uint64( ( HB_BYTE * ) ( p ), q )
+#     define HB_PUT_LE_UINT64( p, q )     _hb_put_std_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 q )
 
 #  endif
 
-#else /* ! __GNUC__ */
+#else /* ! __GNUC__ || _MSC_VER < 1400 */
 
 #  define HB_GET_STD_DOUBLE( p )    hb_get_std_double( ( const HB_BYTE * ) ( p ) )
 #  define HB_GET_REV_DOUBLE( p )    hb_get_rev_double( ( const HB_BYTE * ) ( p ) )
