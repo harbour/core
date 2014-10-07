@@ -5730,9 +5730,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF ! HBMK_ISCOMP( "icc|iccia64" )
             cBin_Res := "rc.exe"
             cOpt_Res := "{FR} -fo {OS} {IR}"
+#if 1
+            /* NOTE: Compiler version is not enough to detect supported parameters when Platform SDK rc.exe is used. */
             IF hbmk[ _HBMK_nCOMPVer ] >= 1600
                cOpt_Res := "-nologo " + cOpt_Res  /* NOTE: Only in MSVC 2010 and upper. [vszakats] */
             ENDIF
+#endif
             cResExt := ".res"
          ENDIF
 

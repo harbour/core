@@ -2262,7 +2262,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                hb_gt_qtc_itemGetQString( pInfo->pNewVal, &qStr );
                qImg = QImage( qStr );
             }
-            else if( hb_arrayLen( pInfo->pNewVal ) ==
+            else if( hb_arrayLen( pInfo->pNewVal ) == ( HB_SIZE )
                      ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) &&
                      ( hb_arrayGetType( pInfo->pNewVal, 1 ) & ( HB_IT_POINTER | HB_IT_STRING ) ) &&
                      ( hb_arrayGetType( pInfo->pNewVal, 2 ) & HB_IT_NUMERIC ) &&
