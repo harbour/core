@@ -5568,7 +5568,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_DISPIMAGE:
          if( wnd->window && pInfo->pNewVal && HB_IS_ARRAY( pInfo->pNewVal ) &&
-             hb_arrayLen( pInfo->pNewVal ) ==
+             hb_arrayLen( pInfo->pNewVal ) == ( HB_SIZE )
              ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) )
          {
             XImage * xImage = NULL;
