@@ -53,8 +53,8 @@
 
 HB_EXTERN_BEGIN
 
-extern char *  hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman );
-extern HB_SIZE hb_jsonDecode( const char * szSource, PHB_ITEM pValue );
+extern HB_EXPORT char *  hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman );
+extern HB_EXPORT HB_SIZE hb_jsonDecode( const char * szSource, PHB_ITEM pValue );
 
 HB_EXTERN_END
 
