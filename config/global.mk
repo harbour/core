@@ -782,7 +782,7 @@ ifeq ($(HB_COMPILER),)
                                                 ifneq ($(HB_COMP_PATH),)
                                                    HB_COMPILER := msvc64
                                                    HB_CPU := x86_64
-                                                   _C_VER := $(shell "$(HB_COMP_PATH)" 2>&1)
+                                                   _C_VER := $(shell "$(subst ml64.exe,cl.exe,$(HB_COMP_PATH))" 2>&1)
                                                    ifneq ($(findstring 14.,$(_C_VER)),)
                                                       HB_COMPILER_VER := 1400
                                                    else

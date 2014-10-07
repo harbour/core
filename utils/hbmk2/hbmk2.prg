@@ -2608,6 +2608,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. "clarm.exe" $ cPath_CompC
             hbmk[ _HBMK_nCOMPVer ] := 1310 /* Visual Studio .NET 2003 */
          ELSE
+            IF hbmk[ _HBMK_cCOMP ] == "msvc64"
+               cPath_CompC := StrTran( cPath_CompC, "ml64.exe", "cl.exe" )
+            ENDIF
             hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 1400 )
          ENDIF
       ENDCASE
@@ -5730,12 +5733,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF ! HBMK_ISCOMP( "icc|iccia64" )
             cBin_Res := "rc.exe"
             cOpt_Res := "{FR} -fo {OS} {IR}"
-#if 1
-            /* NOTE: Compiler version is not enough to detect supported parameters when Platform SDK rc.exe is used. */
-            IF hbmk[ _HBMK_nCOMPVer ] >= 1600
-               cOpt_Res := "-nologo " + cOpt_Res  /* NOTE: Only in MSVC 2010 and upper. [vszakats] */
+            IF msvc_rc_nologo_support( hbmk, cBin_Res )
+               cOpt_Res := "-nologo " + cOpt_Res
             ENDIF
-#endif
             cResExt := ".res"
          ENDIF
 
@@ -13679,6 +13679,18 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
    ENDCASE
 
    RETURN nVer
+
+STATIC FUNCTION msvc_rc_nologo_support( hbmk, cPath )
+
+   LOCAL cStdOutErr := ""
+
+   DO CASE
+   CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
+      hb_processRun( cPath + " -?",, @cStdOutErr, @cStdOutErr )
+      RETURN "nologo" $ Lower( cStdOutErr )
+   ENDCASE
+
+   RETURN .F.
 
 STATIC FUNCTION NumberOfCPUs()
 
