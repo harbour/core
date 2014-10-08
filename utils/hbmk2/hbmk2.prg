@@ -13684,11 +13684,10 @@ STATIC FUNCTION msvc_rc_nologo_support( hbmk, cPath )
 
    LOCAL cStdOutErr := ""
 
-   DO CASE
-   CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
+   IF HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
       hb_processRun( cPath + " -?",, @cStdOutErr, @cStdOutErr )
       RETURN "nologo" $ Lower( cStdOutErr )
-   ENDCASE
+   ENDIF
 
    RETURN .F.
 
