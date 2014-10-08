@@ -279,7 +279,7 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
                continue;
             }
          }
-         if( n == sizeof( rdbuf ) )
+         if( n == ( int ) sizeof( rdbuf ) )
             break;
          time = hb_dateMilliSeconds();
          if( time > end_timer )
