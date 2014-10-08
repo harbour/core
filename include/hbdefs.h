@@ -1076,34 +1076,34 @@ typedef HB_U32 HB_FATTR;
 #  if defined( HB_BIG_ENDIAN )
 
 #     define HB_GET_BE_UINT16( p )        _hb_get_std_uint16( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT16( p, w )     _hb_put_std_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 w )
+#     define HB_PUT_BE_UINT16( p, w )     _hb_put_std_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 ( w ) )
 #     define HB_GET_BE_UINT32( p )        _hb_get_std_uint32( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT32( p, l )     _hb_put_std_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 l )
+#     define HB_PUT_BE_UINT32( p, l )     _hb_put_std_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 ( l ) )
 #     define HB_GET_BE_UINT64( p )        _hb_get_std_uint64( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT64( p, q )     _hb_put_std_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 q )
+#     define HB_PUT_BE_UINT64( p, q )     _hb_put_std_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 ( q ) )
 
 #     define HB_GET_LE_UINT16( p )        _hb_get_rev_uint16( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT16( p, w )     _hb_put_rev_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 w )
+#     define HB_PUT_LE_UINT16( p, w )     _hb_put_rev_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 ( w ) )
 #     define HB_GET_LE_UINT32( p )        _hb_get_rev_uint32( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT32( p, l )     _hb_put_rev_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 l )
+#     define HB_PUT_LE_UINT32( p, l )     _hb_put_rev_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 ( l ) )
 #     define HB_GET_LE_UINT64( p )        _hb_get_rev_uint64( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT64( p, q )     _hb_put_rev_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 q )
+#     define HB_PUT_LE_UINT64( p, q )     _hb_put_rev_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 ( q ) )
 
 #  else /* HB_LITTLE_ENDIAN */
 
 #     define HB_GET_BE_UINT16( p )        _hb_get_rev_uint16( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT16( p, w )     _hb_put_rev_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 w )
+#     define HB_PUT_BE_UINT16( p, w )     _hb_put_rev_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 ( w ) )
 #     define HB_GET_BE_UINT32( p )        _hb_get_rev_uint32( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT32( p, l )     _hb_put_rev_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 l )
+#     define HB_PUT_BE_UINT32( p, l )     _hb_put_rev_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 ( l ) )
 #     define HB_GET_BE_UINT64( p )        _hb_get_rev_uint64( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_BE_UINT64( p, q )     _hb_put_rev_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 q )
+#     define HB_PUT_BE_UINT64( p, q )     _hb_put_rev_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 ( q ) )
 
 #     define HB_GET_LE_UINT16( p )        _hb_get_std_uint16( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT16( p, w )     _hb_put_std_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 w )
+#     define HB_PUT_LE_UINT16( p, w )     _hb_put_std_uint16( ( HB_BYTE * ) ( p ), _HB_CAST16 ( w ) )
 #     define HB_GET_LE_UINT32( p )        _hb_get_std_uint32( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT32( p, l )     _hb_put_std_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 l )
+#     define HB_PUT_LE_UINT32( p, l )     _hb_put_std_uint32( ( HB_BYTE * ) ( p ), _HB_CAST32 ( l ) )
 #     define HB_GET_LE_UINT64( p )        _hb_get_std_uint64( ( const HB_BYTE * ) ( p ) )
-#     define HB_PUT_LE_UINT64( p, q )     _hb_put_std_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 q )
+#     define HB_PUT_LE_UINT64( p, q )     _hb_put_std_uint64( ( HB_BYTE * ) ( p ), _HB_CAST64 ( q ) )
 
 #  endif
 
