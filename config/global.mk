@@ -1994,7 +1994,11 @@ ifneq ($(HB_INSTALL_PREFIX),)
       ifeq ($(HB_PLATFORM_UNIX),)
          export HB_INSTALL_DOC := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
       else
-         export HB_INSTALL_DOC := $(HB_INSTALL_PREFIX)$(DIRSEP)share$(DIRSEP)doc$(DIRSEP)harbour
+         ifeq ($(HB_SYSLOC),yes)
+            export HB_INSTALL_DOC := $(HB_INSTALL_PREFIX)$(DIRSEP)share$(DIRSEP)doc$(DIRSEP)harbour
+         else
+            export HB_INSTALL_DOC := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+         endif
       endif
    endif
    # Standard name: MANDIR
