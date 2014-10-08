@@ -7,6 +7,8 @@
 
 -hbx=${hb_name}
 
+hbnf.hbc
+
 bbabble.c
 dates.c
 ffind.c

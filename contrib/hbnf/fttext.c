@@ -98,7 +98,7 @@
    Minor adjustments to documentation block
 
       Rev 1.1   29 Apr 1991 08:00:26   GLENN
-   ft_flastrec() -- name was longer than 10 characters so linkers couldn't
+   ft_FLastRec() -- name was longer than 10 characters so linkers couldn't
    find the symbol.  Just hacked off the last "c" so it is really
    ft_FLastRe().  Sorry, folks.  -- Glenn
 
@@ -710,6 +710,8 @@ HB_FUNC( FT_FGOBOT )
    ft_text->isEof[ ft_text->area ]  = HB_FALSE;
 }
 
+HB_FUNC_TRANSLATE( FT_FGOBOTTOM, FT_FGOBOT )  /* HB_EXTENSION */
+
 HB_FUNC( FT_FSKIP )
 {
    if( HB_ISNUM( 1 ) )
@@ -978,6 +980,11 @@ HB_FUNC( FT_FLASTRE )
    ft_text->recno[ ft_text->area ]  = cur_rec;
    ft_text->offset[ ft_text->area ] = cur_offset;
 }
+
+/* Not marked as HB_EXTENSION as we're only making "official"
+   a 10+ long function name alias which was valid in Clipper
+   anyway, due its to function name length limit of 10. */
+HB_FUNC_TRANSLATE( FT_FLASTREC, FT_FLASTRE )
 
 HB_FUNC( FT_FEOF )
 {
