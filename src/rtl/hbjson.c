@@ -48,6 +48,7 @@
 #include "hbapiitm.h"
 #include "hbapistr.h"
 #include "hbset.h"
+#include "hbjson.h"
 
 /*
    The application/json Media Type for JavaScript Object Notation (JSON)

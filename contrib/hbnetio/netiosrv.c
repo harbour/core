@@ -482,7 +482,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, HB_BOOL rpc )
       {
          if( ! s_isDirSep( lsd->rootPath[ iLen - 1 ] ) )
          {
-            if( iLen == sizeof( lsd->rootPath ) - 1 )
+            if( iLen == ( int ) sizeof( lsd->rootPath ) - 1 )
                --iLen;
             lsd->rootPath[ iLen ] = HB_OS_PATH_DELIM_CHR;
          }
