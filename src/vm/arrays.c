@@ -1452,12 +1452,14 @@ HB_BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, HB_SIZE * pnStart,
          if( nTarget <= nDstLen )
          {
 #endif
+            if( pDstBaseArray->pItems + nTarget != pSrcBaseArray->pItems + nStart )
+            {
+               if( nCount > nDstLen - nTarget )
+                  nCount = nDstLen - nTarget + 1;
 
-            if( nCount > nDstLen - nTarget )
-               nCount = nDstLen - nTarget + 1;
-
-            for( nTarget--, nStart--; nCount > 0; nCount--, nStart++, nTarget++ )
-               hb_itemCopy( pDstBaseArray->pItems + nTarget, pSrcBaseArray->pItems + nStart );
+               for( nTarget--, nStart--; nCount > 0; nCount--, nStart++, nTarget++ )
+                  hb_itemCopy( pDstBaseArray->pItems + nTarget, pSrcBaseArray->pItems + nStart );
+            }
          }
       }
 
