@@ -115,7 +115,7 @@ _DET_VAR_INC_ := HB_INC_X11
 _DET_VAR_HAS_ := HB_HAS_X11
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include /usr/pkg/include /usr/pkg/X11R6/include
+_DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include /usr/pkg/include /usr/pkg/X11R6/include /opt/X11/include
 _DET_INC_HEAD := /X11/Xlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk

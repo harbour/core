@@ -4690,10 +4690,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hb_DirExists( "/usr/X11R6/lib64" )
                AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib64" )
             ENDIF
+            IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hb_DirExists( "/opt/X11/lib" )
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/opt/X11/lib" )
+            ENDIF
             IF hbmk[ _HBMK_cPLAT ] == "minix" .AND. hb_DirExists( "/usr/pkg/X11R6/lib" )
                AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/X11R6/lib" )
             ENDIF
-            AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/X11R6/lib" )
+            IF hb_DirExists( "/usr/pkg/X11R6/lib" )
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/X11R6/lib" )
+            ENDIF
             AAdd( l_aLIBSYS, "X11" )
          ENDIF
 

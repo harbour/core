@@ -22,7 +22,12 @@ ifneq ($(HB_LINKING_RTL),)
    endif
    ifneq ($(HB_HAS_X11),)
       SYSLIBS += X11
-      SYSLIBPATHS += /usr/X11R6/lib
+      ifneq ($(wildcard /usr/X11R6/lib),)
+         SYSLIBPATHS += /usr/X11R6/lib
+      endif
+      ifneq ($(wildcard /opt/X11/lib),)
+         SYSLIBPATHS += /opt/X11/lib
+      endif
    endif
    ifneq ($(HB_HAS_PCRE),)
       ifeq ($(HB_HAS_PCRE_LOCAL),)
