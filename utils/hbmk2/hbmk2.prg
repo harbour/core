@@ -15001,7 +15001,9 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       ENDIF
    #endif
 
-   Set( _SET_EXACT, .T. ) /* change the default for scripts */
+   /* change some defaults for scripts */
+   Set( _SET_EXACT, .T. )
+   Set( _SET_EOF, .F. )
 
    /* Save originals */
 
@@ -16359,6 +16361,7 @@ PROCEDURE hbshell_Clipper()
    hb_langSelect( "en" )
    Set( _SET_DATEFORMAT, "mm/dd/yy" )
    Set( _SET_EXACT, .F. )
+   Set( _SET_EOF, .T. )
 
    RETURN
 
@@ -17954,6 +17957,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          "core header 'hb.ch' is automatically #included at the interactive shell prompt. " + ;
          "The default date format is the ISO standard: yyyy-mm-dd. " + ;
          "SET EXACT is set to ON. " + ;
+         "Set( _SET_EOL ) is set to OFF. " + ;
          "The default GT is '%2$s', unless full-screen CUI calls " + ;
          "are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)." ), ;
          iif( hbmk[ _HBMK_lShellMode ], I_( ".hb, .prg, .hrb or .dbf" ), I_( ".hb, .hrb or .dbf" ) ), ;

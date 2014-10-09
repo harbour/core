@@ -21,9 +21,8 @@ STATIC PROCEDURE RunTxtBrowse( oTBrowse )
 
    DO WHILE lRun
       oTBrowse:forceStable()
-      nKey := Inkey( 0 )
 
-      SWITCH nKey
+      SWITCH nKey := Inkey( 0 )
       CASE K_LEFT
          IF oTBrowse:cargo > 1
             oTBrowse:cargo--
@@ -68,21 +67,17 @@ STATIC PROCEDURE RunTxtBrowse( oTBrowse )
 
 STATIC FUNCTION TxTBrowse( nT, nL, nB, nR )
 
-   LOCAL oTBrowse, oTBCol1, oTBCol2
+   LOCAL oTBrowse := TBrowseNew( nT, nL, nB, nR )
 
-   oTBrowse := TBrowseNew( nT, nL, nB, nR )
-   oTBrowse:cargo := 1
-
-   oTBCol1 := TBColumnNew( " ", {|| Str( ft_FRecNo(), 5 ) + ":" } )
-   oTBCol2 := TBColumnNew( " ", {|| PadR( SubStr( ft_FReadLn(), oTBrowse:cargo ), 72 ) } )
-
-   oTBrowse:addColumn( oTbCol1 )
-   oTBrowse:addColumn( oTbCol2 )
+   oTBrowse:addColumn( TBColumnNew( " ", {|| Str( ft_FRecNo(), 5 ) + ":" } ) )
+   oTBrowse:addColumn( TBColumnNew( " ", {|| PadR( SubStr( ft_FReadLn(), oTBrowse:cargo ), 72 ) } ) )
 
    oTBrowse:goTopBlock    := {|| ft_FGoTop() }
    oTBrowse:goBottomBlock := {|| ft_FGoBot() }
    oTBrowse:skipBlock     := {| n | TxtSkipper( n ) }
-   oTBrowse:colPos        := 2
+
+   oTBrowse:cargo  := 1
+   oTBrowse:colPos := 2
 
    RETURN oTBrowse
 
@@ -100,7 +95,7 @@ STATIC FUNCTION TxtSkipper( nRequest )
 
    CASE nRequest > 0
       DO WHILE nSkip < nRequest
-         ft_FSkip( 1 )
+         ft_FSkip()
          IF ft_FEof()
             EXIT
          ENDIF
