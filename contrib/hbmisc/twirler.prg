@@ -38,13 +38,12 @@ METHOD twirl() CLASS Twirler
 
    LOCAL nSeconds := Seconds()
 
-   IF Empty( ::nSeconds ) .OR. nSeconds - ::nSeconds >= ::nSmooth .OR. nSeconds < ::nSeconds
+   IF ::nSeconds == NIL .OR. nSeconds - ::nSeconds >= ::nSmooth .OR. nSeconds < ::nSeconds
       hb_DispOutAt( ::nRow, ::nCol, SubStr( ::cChars, ::nIndex, 1 ) )
-      ::nIndex++
-      if ::nIndex > Len( ::cChars )
+      IF ++::nIndex > Len( ::cChars )
          ::nIndex := 1
       ENDIF
-      IF ! Empty( ::nSeconds )
+      IF ::nSeconds != NIL
          ::nSeconds := nSeconds
       ENDIF
    ENDIF
@@ -54,8 +53,8 @@ METHOD twirl() CLASS Twirler
 METHOD show() CLASS Twirler
 
    ::nIndex := 1
-   IF ! Empty( ::nSmooth )
-      ::nSeconds := - ::nSmooth
+   IF ::nSmooth != 0
+      ::nSeconds := -::nSmooth
    ENDIF
    hb_DispOutAt( ::nRow, ::nCol - Len( ::cTitle ), ::cTitle )
 

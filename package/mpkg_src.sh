@@ -49,7 +49,7 @@ hb_collect_all_tree()
    exclude="/obj/|/lib/|/bin/.*/|\.tar|\.zip|\.exe|\.log|/linux/|/win|/config/"
    for f in `find -type f | grep -vE ${exclude}`
    do
-      echo ${f:2}
+      echo $(echo $f | awk '{ string=substr($0, 2); print string; }' )
    done
    for f in `find config -type f`
    do

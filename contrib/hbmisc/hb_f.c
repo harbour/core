@@ -35,21 +35,20 @@ HB_FUNC( HB_FINFO )  /* used for debugging - now a dummy function */
 }
 
 /* Warning: This is a rogue function! It is a first shot at adding the logic
-   to read .csv records that respect CRLF embedded within quotes.
+   to read .csv records that respect EOL embedded within quotes.
    It is very common, especially with Microsoft products, for
    comma-separated files to allow a field (usually an address field)
    to have hard returns within it. These records appear corrupted to any
    reader that presumes all hard returns are record separators.
 
    This function is useful right now to loop through a CSV file
-   DO WHILE ! hb_FAtEof(), but it does NOT recognize the same record count
+   DO WHILE ! ft_FEof(), but it does NOT recognize the same record count
    and positioning that the other functions in this file use.
    It does its own skip and read, so an entire file can be read
    sequentially with just this function.
-   -BH
- */
-HB_FUNC( HB_FREADANDSKIP )
+   [BH] */
+
+HB_FUNC( HB_FREADANDSKIP )  /* TODO: Rewrite with portable EOL support */
 {
-   /* TODO: Rewrite with portable EOF support */
    hb_retc_null();
 }
