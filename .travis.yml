@@ -26,16 +26,3 @@ notifications:
  email: false
 git:
  submodules: false
-env:
- global:
- # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
- #   via the "travis encrypt" command using the project repo's public key
- - secure: "UK9j6Rn8zk1XFE9QHs+5OGXaj8I9ZfhFx0k0kKJabciNYB8HdnIYesT24Lz1PRjAk20ftBtehZreGhiTqMLHRXbhNysWmLdONG9o+iMOqxmI9Qr3jpQg2rluejuX4UXXV8a+RMNUemm6ZSiO5NQCCrcbRwtZLcrje2b8D06/Nfk="
-addons:
- coverity_scan:
-  project:
-   name: "vszakats/harbour-core"
-   description: "Build submitted via Travis CI"
-  build_command_prepend: "make clean"
-  build_command: "make -j 2"
-  branch_pattern: coverity_scan
