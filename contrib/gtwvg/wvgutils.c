@@ -724,37 +724,37 @@ static INT_PTR CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM w
                }
                break;
          }
-      }
 
-      switch( message )
-      {
-         case WM_COMMAND:
-            switch( LOWORD( wParam ) )
-            {
-               case IDOK:
-                  DestroyWindow( hDlg );
-                  lReturn = 1;
-                  break;
+         switch( message )
+         {
+            case WM_COMMAND:
+               switch( LOWORD( wParam ) )
+               {
+                  case IDOK:
+                     DestroyWindow( hDlg );
+                     lReturn = 1;
+                     break;
 
-               case IDCANCEL:
-                  DestroyWindow( hDlg );
-                  lReturn = 0;
-                  break;
-            }
-            break;
+                  case IDCANCEL:
+                     DestroyWindow( hDlg );
+                     lReturn = 0;
+                     break;
+               }
+               break;
 
 #if ! defined( HB_OS_WIN_CE )
-         case WM_NCDESTROY:
+            case WM_NCDESTROY:
 #else
-         case WM_DESTROY:
+            case WM_DESTROY:
 #endif
-            if( _s->pFunc[ iIndex ] != NULL && _s->iType[ iIndex ] == 2 )
-               hb_itemRelease( ( PHB_ITEM ) _s->pFunc[ iIndex ] );
-            _s->hDlgModeless[ iIndex ] = NULL;
-            _s->pFunc[ iIndex ]        = NULL;
-            _s->iType[ iIndex ]        = 0;
-            lReturn = 0;
-            break;
+               if( _s->pFunc[ iIndex ] != NULL && _s->iType[ iIndex ] == 2 )
+                  hb_itemRelease( ( PHB_ITEM ) _s->pFunc[ iIndex ] );
+               _s->hDlgModeless[ iIndex ] = NULL;
+               _s->pFunc[ iIndex ]        = NULL;
+               _s->iType[ iIndex ]        = 0;
+               lReturn = 0;
+               break;
+         }
       }
    }
 
@@ -836,37 +836,37 @@ static INT_PTR CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM w
                }
                break;
          }
-      }
 
-      switch( message )
-      {
-         case WM_COMMAND:
-            switch( LOWORD( wParam ) )
-            {
-               case IDOK:
-                  EndDialog( hDlg, IDOK );
-                  lReturn = 0;
-                  break;
+         switch( message )
+         {
+            case WM_COMMAND:
+               switch( LOWORD( wParam ) )
+               {
+                  case IDOK:
+                     EndDialog( hDlg, IDOK );
+                     lReturn = 0;
+                     break;
 
-               case IDCANCEL:
-                  EndDialog( hDlg, IDCANCEL );
-                  lReturn = 0;
-                  break;
-            }
-            break;
+                  case IDCANCEL:
+                     EndDialog( hDlg, IDCANCEL );
+                     lReturn = 0;
+                     break;
+               }
+               break;
 
 #if ! defined( HB_OS_WIN_CE )
-         case WM_NCDESTROY:
+            case WM_NCDESTROY:
 #else
-         case WM_DESTROY:
+            case WM_DESTROY:
 #endif
-            if( _s->pFuncModal[ iIndex ] != NULL && _s->iTypeModal[ iIndex ] == 2 )
-               hb_itemRelease( ( PHB_ITEM ) _s->pFuncModal[ iIndex ] );
-            _s->hDlgModal[ iIndex ]  = NULL;
-            _s->pFuncModal[ iIndex ] = NULL;
-            _s->iTypeModal[ iIndex ] = 0;
-            lReturn = 0;
-            break;
+               if( _s->pFuncModal[ iIndex ] != NULL && _s->iTypeModal[ iIndex ] == 2 )
+                  hb_itemRelease( ( PHB_ITEM ) _s->pFuncModal[ iIndex ] );
+               _s->hDlgModal[ iIndex ]  = NULL;
+               _s->pFuncModal[ iIndex ] = NULL;
+               _s->iTypeModal[ iIndex ] = 0;
+               lReturn = 0;
+               break;
+         }
       }
    }
 

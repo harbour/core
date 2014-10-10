@@ -530,11 +530,14 @@ HB_FUNC( WAPI_STARTDOC )
    DOCINFO di;
 
    if( hDC && hbwapi_par_DOCINFO( &di, 2, HB_FALSE, &hDOCINFO ) )
+   {
       hb_retni( StartDoc( hDC, &di ) );
+
+      hbwapi_strfree_DOCINFO( hDOCINFO );
+      hb_xfree( hDOCINFO );
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-   hbwapi_strfree_DOCINFO( hDOCINFO );
 }
 
 HB_FUNC( WAPI_ENDDOC )

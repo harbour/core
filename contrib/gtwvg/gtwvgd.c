@@ -2467,7 +2467,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, HB_BOOL bResizable )
             pWVT->fontWeight        = pWVTp->fontWeight;
             pWVT->fontQuality       = pWVTp->fontQuality;
             pWVT->CodePage          = pWVTp->CodePage;
-            HB_STRNCPY( pWVT->fontFace, pWVTp->fontFace, sizeof( pWVTp->fontFace ) - 1 );
+            HB_STRNCPY( pWVT->fontFace, pWVTp->fontFace, HB_SIZEOFARRAY( pWVTp->fontFace ) - 1 );
             pWVT->hFont             =  hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight,
                            pWVT->fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
 

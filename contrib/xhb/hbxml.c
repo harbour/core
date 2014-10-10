@@ -399,7 +399,11 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL * ref, PHB_ITEM pDoc, PHB_ITE
    }
 
    if( ref->status != MXML_STATUS_OK )
+   {
+      mxml_sgs_destroy( buf_name );
+      mxml_sgs_destroy( buf_attrib );
       return ref->status;
+   }
 
    if( iStatus < 6 )
    {
@@ -2157,7 +2161,7 @@ static char * mxml_sgs_extract( MXML_SGS * sgs )
 
 /* HBXML lib - Error code routines */
 
-static const char * edesc[] =
+static const char * s_edesc[] =
 {
    "Input/output error",
    "Not enough memory",
@@ -2178,10 +2182,10 @@ static const char * mxml_error_desc( MXML_ERROR_CODE code )
 {
    int iCode = ( ( int ) code ) - 1;
 
-   if( iCode < 0 || iCode > ( signed ) ( sizeof( edesc ) / sizeof( char * ) ) )
-      return NULL;
+   if( iCode >= 0 && iCode < ( int ) HB_SIZEOFARRAY( s_edesc ) )
+      return s_edesc[ iCode ];
 
-   return edesc[ iCode ];
+   return NULL;
 }
 
 

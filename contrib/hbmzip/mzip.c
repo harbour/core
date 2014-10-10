@@ -970,6 +970,7 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
    else
    {
       /* get file name */
+      hb_xfree( szZipName );
       szZipName = hb_strdup( szFileName );
 
       nLen    = strlen( szZipName );

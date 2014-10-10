@@ -85,17 +85,10 @@ STATIC FUNCTION type_cb( node )
    CASE "to"
    CASE "from"
    CASE "heading"
-      nResult := MXML_TEXT
-      EXIT
-
+      RETURN MXML_TEXT
    CASE "body"
    CASE "opaque"
-      nResult := MXML_OPAQUE
-      EXIT
-
-   OTHERWISE
-      nResult := MXML_IGNORE
-      EXIT
+      RETURN MXML_OPAQUE
    ENDSWITCH
 
-   RETURN nResult
+   RETURN MXML_IGNORE

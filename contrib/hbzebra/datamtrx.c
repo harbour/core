@@ -422,6 +422,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 
    if( iDataCount > 3116 )
    {
+      hb_xfree( pCW );
       pZebra->iError = HB_ZEBRA_ERROR_TOOLARGE;
       return pZebra;
    }

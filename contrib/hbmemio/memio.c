@@ -211,6 +211,7 @@ static PHB_MEMFS_INODE memfsInodeAlloc( const char * szName )
 
    if( memfsInodeFind( szName, &ulInode ) )
    {
+      hb_xfree( pInode );
       hb_errInternal( 9999, "memfsInodeAlloc: Inode already exists", NULL, NULL );
       return NULL;
    }

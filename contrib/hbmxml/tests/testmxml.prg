@@ -586,9 +586,9 @@ STATIC FUNCTION type_cb( hNode )
    ENDIF
 
    SWITCH Lower( cType )
-   CASE "integer" ;  RETURN MXML_INTEGER
-   CASE "opaque"  ;  RETURN MXML_OPAQUE
-   CASE "real"    ;  RETURN MXML_REAL
+   CASE "integer" ; RETURN MXML_INTEGER
+   CASE "opaque"  ; RETURN MXML_OPAQUE
+   CASE "real"    ; RETURN MXML_REAL
    ENDSWITCH
 
    RETURN MXML_TEXT

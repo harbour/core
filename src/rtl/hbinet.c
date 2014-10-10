@@ -1408,7 +1408,7 @@ HB_FUNC( HB_INETDGRAMRECV )
       {
          fRepeat = HB_FALSE;
          if( socket->remote )
-            hb_xfree( socket->remote );
+            hb_xfree( socket->remote );  /* TOFIX: double free */
          iMax = hb_socketRecvFrom( socket->sd, buffer, iLen, 0,
                                    &socket->remote, &socket->remotelen,
                                    socket->iTimeout );

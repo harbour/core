@@ -1735,40 +1735,40 @@ BOOL CALLBACK hb_gt_wvw_DlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LP
 
             break;
       }
-   }
 
-   switch( message )
-   {
-      case WM_COMMAND:
-         switch( LOWORD( wParam ) )
-         {
-            case IDOK:
-               DestroyWindow( hDlg );
-               bReturn = TRUE;
-               break;
+      switch( message )
+      {
+         case WM_COMMAND:
+            switch( LOWORD( wParam ) )
+            {
+               case IDOK:
+                  DestroyWindow( hDlg );
+                  bReturn = TRUE;
+                  break;
 
-            case IDCANCEL:
-               DestroyWindow( hDlg );
-               bReturn = FALSE;
-               break;
-         }
-         break;
+               case IDCANCEL:
+                  DestroyWindow( hDlg );
+                  bReturn = FALSE;
+                  break;
+            }
+            break;
 
-      case WM_CLOSE:
-         DestroyWindow( hDlg );
-         bReturn = FALSE;
-         break;
+         case WM_CLOSE:
+            DestroyWindow( hDlg );
+            bReturn = FALSE;
+            break;
 
-      case WM_NCDESTROY:
-         if( s_wvw->a.pFunc[ iIndex ] != NULL && s_wvw->a.iType[ iIndex ] == 2 )
-            hb_itemRelease( s_wvw->a.pFunc[ iIndex ] );
+         case WM_NCDESTROY:
+            if( s_wvw->a.pFunc[ iIndex ] != NULL && s_wvw->a.iType[ iIndex ] == 2 )
+               hb_itemRelease( s_wvw->a.pFunc[ iIndex ] );
 
-         s_wvw->a.hDlgModeless[ iIndex ] = NULL;
+            s_wvw->a.hDlgModeless[ iIndex ] = NULL;
 
-         s_wvw->a.pFunc[ iIndex ] = NULL;
-         s_wvw->a.iType[ iIndex ] = 0;
-         bReturn = FALSE;
-         break;
+            s_wvw->a.pFunc[ iIndex ] = NULL;
+            s_wvw->a.iType[ iIndex ] = 0;
+            bReturn = FALSE;
+            break;
+      }
    }
 
    return bReturn;
@@ -1861,39 +1861,39 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
 
             break;
       }
-   }
 
-   switch( message )
-   {
-      case WM_COMMAND:
-         switch( LOWORD( wParam ) )
-         {
-            case IDOK:
-               EndDialog( hDlg, IDOK );
-               bReturn = TRUE;
-               break;
+      switch( message )
+      {
+         case WM_COMMAND:
+            switch( LOWORD( wParam ) )
+            {
+               case IDOK:
+                  EndDialog( hDlg, IDOK );
+                  bReturn = TRUE;
+                  break;
 
-            case IDCANCEL:
-               EndDialog( hDlg, IDCANCEL );
-               bReturn = FALSE;
-               break;
-         }
-         break;
+               case IDCANCEL:
+                  EndDialog( hDlg, IDCANCEL );
+                  bReturn = FALSE;
+                  break;
+            }
+            break;
 
-      case WM_CLOSE:
-         EndDialog( hDlg, IDCANCEL );
-         bReturn = FALSE;
-         break;
+         case WM_CLOSE:
+            EndDialog( hDlg, IDCANCEL );
+            bReturn = FALSE;
+            break;
 
-      case WM_NCDESTROY:
-         if( s_wvw->a.pFuncModal[ iIndex ] != NULL && s_wvw->a.iTypeModal[ iIndex ] == 2 )
-            hb_itemRelease( s_wvw->a.pFuncModal[ iIndex ] );
+         case WM_NCDESTROY:
+            if( s_wvw->a.pFuncModal[ iIndex ] != NULL && s_wvw->a.iTypeModal[ iIndex ] == 2 )
+               hb_itemRelease( s_wvw->a.pFuncModal[ iIndex ] );
 
-         s_wvw->a.hDlgModal[ iIndex ]  = NULL;
-         s_wvw->a.pFuncModal[ iIndex ] = NULL;
-         s_wvw->a.iTypeModal[ iIndex ] = 0;
-         bReturn = FALSE;
-         break;
+            s_wvw->a.hDlgModal[ iIndex ]  = NULL;
+            s_wvw->a.pFuncModal[ iIndex ] = NULL;
+            s_wvw->a.iTypeModal[ iIndex ] = 0;
+            bReturn = FALSE;
+            break;
+      }
    }
 
    return bReturn;
