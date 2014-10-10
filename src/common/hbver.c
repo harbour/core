@@ -467,7 +467,7 @@ char * hb_verPlatform( void )
 
          /* Add service pack/other info */
 
-         if( osVer.szCSDVersion )
+         if( osVer.szCSDVersion[ 0 ] != TEXT( '\0' ) )
          {
             char * pszCSDVersion = HB_OSSTRDUP( osVer.szCSDVersion );
             int i;

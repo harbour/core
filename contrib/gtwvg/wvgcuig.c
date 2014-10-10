@@ -1437,7 +1437,6 @@ HB_FUNC( WVG_IMAGE )
 static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, int iRight, int iBottom )
 {
 #if ! defined( HB_OS_WIN_CE )
-
    IPicture * pPicture = gObj->pPicture;
 
    if( pPicture )
@@ -1459,32 +1458,35 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
       if( HB_VTBL( pPicture )->get_Height( HB_THIS_( pPicture ) &nHeight ) != S_OK )
          nHeight = 0;
 
-      x = iLeft;
-      y = iTop;
-      wd = iRight - iLeft + 1;
-      ht = iBottom - iTop + 1;
-
-      if( gObj->iData == 1 )
+      if( nWidth && nHeight )
       {
-         int iHt = ( int ) ( ( float )  wd * nHeight / nWidth );
-         int iWd = ( int ) ( ( float ) iHt * nWidth / nHeight );
-         x  += abs( ( iWd - wd ) / 2 );
-         y  += abs( ( iHt - ht ) / 2 );
-         wd  = iWd;
-         ht  = iHt;
+         x = iLeft;
+         y = iTop;
+         wd = iRight - iLeft + 1;
+         ht = iBottom - iTop + 1;
+
+         if( gObj->iData == 1 )
+         {
+            int iHt = ( int ) ( ( float ) wd * nHeight / nWidth );
+            int iWd = ( int ) ( ( float ) iHt * nWidth / nHeight );
+            x  += abs( ( iWd - wd ) / 2 );
+            y  += abs( ( iHt - ht ) / 2 );
+            wd  = iWd;
+            ht  = iHt;
+         }
+         xe = x + wd ;
+         ye = y + ht ;
+
+         GetViewportOrgEx( hdc, &lpp );
+
+         hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
+         SelectClipRgn( hdc, hrgn1 );
+
+         HB_VTBL( pPicture )->Render( HB_THIS_( pPicture ) hdc, x, y, wd, ht, 0, nHeight, nWidth, -nHeight, &rc_dummy );
+
+         SelectClipRgn( hdc, NULL );
+         DeleteObject( hrgn1 );
       }
-      xe = x + wd ;
-      ye = y + ht ;
-
-      GetViewportOrgEx( hdc, &lpp );
-
-      hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
-      SelectClipRgn( hdc, hrgn1 );
-
-      HB_VTBL( pPicture )->Render( HB_THIS_( pPicture ) hdc, x, y, wd, ht, 0, nHeight, nWidth, -nHeight, &rc_dummy );
-
-      SelectClipRgn( hdc, NULL );
-      DeleteObject( hrgn1 );
    }
 #else
    HB_SYMBOL_UNUSED( pWVT );

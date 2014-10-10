@@ -67,7 +67,7 @@ static void hbwapi_mutex_ret( HANDLE hMutex )
 {
    if( hMutex )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HANDLE * ), &s_gc_hbwapi_mutex_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HANDLE ), &s_gc_hbwapi_mutex_funcs );
 
       *ph = hMutex;
       hb_retptrGC( ph );

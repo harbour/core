@@ -203,7 +203,8 @@ const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_forward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
                             pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos ) );
 
-   *( psMatchedCharPos ) = sCharSetLen;
+   if( psMatchedCharPos != NULL )
+      *psMatchedCharPos = sCharSetLen;
 
    if( sCharSetLen == 0 || sStrLen == 0 )
       return NULL;
@@ -217,7 +218,7 @@ const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
          if( *pcSet == *pcRet )
          {
             if( psMatchedCharPos != NULL )
-               *( psMatchedCharPos ) = pcSet - pcCharSet;
+               *psMatchedCharPos = pcSet - pcCharSet;
             return pcRet;
          }
       }
@@ -235,7 +236,8 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_backward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
                             pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos ) );
 
-   *( psMatchedCharPos ) = sCharSetLen;
+   if( psMatchedCharPos != NULL )
+      *psMatchedCharPos = sCharSetLen;
 
    if( sCharSetLen == 0 || sStrLen == 0 )
       return NULL;
@@ -248,7 +250,7 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
          if( *pcSet == *pcRet )
          {
             if( psMatchedCharPos != NULL )
-               *( psMatchedCharPos ) = pcSet - pcCharSet;
+               *psMatchedCharPos = pcSet - pcCharSet;
             return pcRet;
          }
       }

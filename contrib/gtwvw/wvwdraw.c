@@ -381,41 +381,44 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
       if( HB_VTBL( pPicture )->get_Height( HB_THIS_( pPicture ) & nHeight ) != S_OK )
          nHeight = 0;
 
-      if( dc == 0 )
-         dc = ( int ) ( ( float ) dr * nWidth / nHeight );
-      if( dr == 0 )
-         dr = ( int ) ( ( float ) dc * nHeight / nWidth );
-      if( tor == 0 )
-         tor = dr;
-      if( toc == 0 )
-         toc = dc;
-      x  = c;
-      y  = r;
-      xe = c + toc - 1;
-      ye = r + tor - 1;
-
-      memset( &lpp, 0, sizeof( lpp ) );
-
-      GetViewportOrgEx( wvw_win->hdc, &lpp );
-
-      hrgn1 = CreateRectRgn( c + lpp.x, r + lpp.y, xe + lpp.x, ye + lpp.y );
-      SelectClipRgn( wvw_win->hdc, hrgn1 );
-
-      while( x < xe )
+      if( nWidth && nHeight )
       {
-         while( y < ye )
-         {
-            HB_VTBL( pPicture )->Render( HB_THIS_( pPicture ) wvw_win->hdc, x, y, dc, dr, 0, ( OLE_YPOS_HIMETRIC ) nHeight, nWidth, -nHeight, &rc_dummy );
-            y += dr;
-         }
+         if( dc == 0 )
+            dc = ( int ) ( ( float ) dr * nWidth / nHeight );
+         if( dr == 0 )
+            dr = ( int ) ( ( float ) dc * nHeight / nWidth );
+         if( tor == 0 )
+            tor = dr;
+         if( toc == 0 )
+            toc = dc;
+         x  = c;
          y  = r;
-         x += dc;
+         xe = c + toc - 1;
+         ye = r + tor - 1;
+
+         memset( &lpp, 0, sizeof( lpp ) );
+
+         GetViewportOrgEx( wvw_win->hdc, &lpp );
+
+         hrgn1 = CreateRectRgn( c + lpp.x, r + lpp.y, xe + lpp.x, ye + lpp.y );
+         SelectClipRgn( wvw_win->hdc, hrgn1 );
+
+         while( x < xe )
+         {
+            while( y < ye )
+            {
+               HB_VTBL( pPicture )->Render( HB_THIS_( pPicture ) wvw_win->hdc, x, y, dc, dr, 0, ( OLE_YPOS_HIMETRIC ) nHeight, nWidth, -nHeight, &rc_dummy );
+               y += dr;
+            }
+            y  = r;
+            x += dc;
+         }
+
+         SelectClipRgn( wvw_win->hdc, NULL );
+         DeleteObject( hrgn1 );
+
+         fResult = HB_TRUE;
       }
-
-      SelectClipRgn( wvw_win->hdc, NULL );
-      DeleteObject( hrgn1 );
-
-      fResult = HB_TRUE;
    }
 
    return fResult;

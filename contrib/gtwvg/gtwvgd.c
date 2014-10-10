@@ -2014,6 +2014,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                }
                return 0;
             }
+            break;
          case WM_HSCROLL:
          {
             PHB_ITEM pEvParams = hb_itemArrayNew( 3 );

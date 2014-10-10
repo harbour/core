@@ -1182,13 +1182,17 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                /* is the window already opened? */
                if( wvw_win->hWnd )
                {
+                  PHB_GT pGT = hb_gt_Base();
+
                   /* resize the window based on new fonts */
                   hb_gt_wvw_ResetWindow( wvw_win );
 
                   /* force resize of caret */
                   hb_gt_wvw_KillCaret( wvw_win );
                   hb_gt_wvw_CreateCaret( wvw_win );
-                  HB_GTSELF_REFRESH( hb_gt_Base() );
+
+                  if( pGT )
+                     HB_GTSELF_REFRESH( pGT );
                }
 
                DeleteObject( hFont );
@@ -1506,7 +1510,11 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       default:
-         return HB_GTSUPER_INFO( hb_gt_Base(), iType, pInfo );
+      {
+         PHB_GT pGT = hb_gt_Base();
+         if( pGT )
+            return HB_GTSUPER_INFO( pGT, iType, pInfo );
+      }
    }
 
    return HB_TRUE;
@@ -2233,7 +2241,11 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
       hb_gt_wvw_SetCaretPos( wvw_win );
 
    if( wvw_win->nWinId == 0 )
-      HB_GTSELF_RESIZE( hb_gt_Base(), wvw_win->ROWS, wvw_win->COLS );
+   {
+      PHB_GT pGT = hb_gt_Base();
+      if( pGT )
+         HB_GTSELF_RESIZE( pGT, wvw_win->ROWS, wvw_win->COLS );
+   }
 }
 
 int hb_gt_wvw_key_ansi_to_oem( int c )
@@ -2460,6 +2472,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          }  /* editbox */
          else
             return 0;
+
+         break;
       }
 
       case WM_MENUSELECT:
@@ -3140,18 +3154,18 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             return 0;
          }
 
+#if 0
+         /* bdj note 2006-07-24:
+            We should put this line here, as per FSG change on 2006-06-26:
+              hb_gtHandleClose()
+            However, if there is no gtSetCloseHandler, ALT+C effect is not produced as it should.
+            So for now I put it back to the old behaviour with the following two lines, until hb_gtHandleClose() is fixed.
+          */
          if( nWin == 0 )
-            /* bdj note 2006-07-24:
-               We should put this line here, as per FSG change on 2006-06-26:
-                 hb_gtHandleClose()
-               However, if there is no gtSetCloseHandler, ALT+C effect is not produced as it should.
-               So for now I put it back to the old behaviour with the following two lines, until hb_gtHandleClose() is fixed.
-             */
-/*          hb_gt_wvw_AddCharToInputQueue( HB_BREAK_FLAG ); */
-            hb_gt_wvw_AddCharToInputQueue( K_ESC );
+            hb_gt_wvw_AddCharToInputQueue( HB_BREAK_FLAG );
+#endif
 
-         else
-            hb_gt_wvw_AddCharToInputQueue( K_ESC );
+         hb_gt_wvw_AddCharToInputQueue( K_ESC );
 
          return 0;
 
@@ -3491,7 +3505,7 @@ WPARAM hb_gt_wvw_ProcessMessages( PWVW_WIN wvw_win )
       else
       {
          s_wvw->iWrongButtonUp = 0;
-         PeekMessage( &msg, NULL, 0, 0, PM_REMOVE );
+         ( void ) PeekMessage( &msg, NULL, 0, 0, PM_REMOVE );
       }
 
       fProcessed = HB_FALSE;
@@ -4758,10 +4772,8 @@ static void hb_gt_wvw_FUNCPrologue( int iNumCoord, int * iRow1, int * iCol1, int
 
       wvw_win = s_wvw->pWin[ nWin ];
 
-      if( iRow1 )
-         *iRow1 -= hb_gt_wvw_RowOfs( wvw_win );
-      if( iCol1 )
-         *iCol1 -= hb_gt_wvw_ColOfs( wvw_win );
+      *iRow1 -= hb_gt_wvw_RowOfs( wvw_win );
+      *iCol1 -= hb_gt_wvw_ColOfs( wvw_win );
       if( iRow2 )
          *iRow2 -= hb_gt_wvw_RowOfs( wvw_win );
       if( iCol2 )
@@ -6256,7 +6268,7 @@ static void s_ReposControls( PWVW_WIN wvw_win, int nClass )
             if( wvw_ctl->nStyle == SBS_VERT )
             {
                iBottom = xy.y - 1 + wvw_ctl->offs.bottom;
-               iRight  = iLeft + wvw_win->PTEXTSIZE.y - 1 + wvw_ctl->offs.right;
+               iRight  = iLeft + wvw_win->PTEXTSIZE.x - 1 + wvw_ctl->offs.right;
             }
             else
             {

@@ -523,9 +523,9 @@ HB_FUNC( SQL_SPRINTF )
                   if( s )
                   {
                      if( ! cIntMod[ 0 ] )
-                        memcpy( cDTFrm, cDTFrm + 1, 26 );  /* LTrim 1 space if only Time */
+                        memmove( cDTFrm, cDTFrm + 1, 26 );  /* LTrim 1 space if only Time */
                      else if( cDTFrm[ s ] == ' ' )
-                        cDTFrm[ s ] = '\0';                /* RTrim 1 space if only Date */
+                        cDTFrm[ s ] = '\0';                 /* RTrim 1 space if only Date */
                   }
                }
                else

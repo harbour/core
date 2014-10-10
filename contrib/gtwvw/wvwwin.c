@@ -109,7 +109,6 @@ HB_FUNC( WVW_NOPENWINDOW )
 
       DWORD     dwStyle    = ( DWORD ) hb_parnldef( 6, WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN );
       int       iParentWin = hb_gt_wvw_nWin_N( 7 );
-      PHB_FNAME pFileName  = NULL;
 
       if( wvw->iNumWindows <= 0 )
       {
@@ -208,9 +207,6 @@ HB_FUNC( WVW_NOPENWINDOW )
 
          SendMessage( wvw_win->hWnd, WM_SETFOCUS, 0, 0 );
       }
-
-      if( pFileName )
-         hb_xfree( pFileName );
 
       hb_retni( nWin );
    }

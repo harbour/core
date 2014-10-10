@@ -122,20 +122,22 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
       return NULL;
    }
 
-   dwPackedDibSize = bmfh.bfSize - sizeof( BITMAPFILEHEADER );
-
-   pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
-
-   bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
-   CloseHandle( hFile );
-
-   if( ! bSuccess || dwBytesRead != dwPackedDibSize )
+   if( bmfh.bfSize > sizeof( BITMAPFILEHEADER ) )
    {
-      hb_xfree( pbmi );
-      return NULL;
+      dwPackedDibSize = bmfh.bfSize - sizeof( BITMAPFILEHEADER );
+
+      pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
+
+      bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
+      CloseHandle( hFile );
+
+      if( bSuccess && dwBytesRead == dwPackedDibSize )
+         return pbmi;
+      else
+         hb_xfree( pbmi );
    }
-   else
-      return pbmi;
+
+   return NULL;
 }
 
 #if ! defined( HB_OS_WIN_CE )

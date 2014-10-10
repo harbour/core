@@ -363,7 +363,7 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
       }
    }
 
-   fsetpos( fp, &pos );
+   ( void ) fsetpos( fp, &pos );
 
    return isTerm;
 }

@@ -47,26 +47,25 @@
 #include "hbwin.h"
 #include "hbapiitm.h"
 
-static void getwinver( OSVERSIONINFO * pOSvi )
+static HB_BOOL getwinver( OSVERSIONINFO * pOSvi )
 {
    pOSvi->dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( pOSvi );
+   return ( GetVersionEx( pOSvi ) == TRUE );
 }
 
 HB_FUNC( WIN_OSISNT )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT );
+   hb_retl( getwinver( &osvi ) && osvi.dwPlatformId == VER_PLATFORM_WIN32_NT );
 }
 
 HB_FUNC( WIN_OSISNT351 )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT &&
+   hb_retl( getwinver( &osvi ) &&
+            osvi.dwPlatformId == VER_PLATFORM_WIN32_NT &&
             osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 );
 }
 
@@ -74,8 +73,8 @@ HB_FUNC( WIN_OSISNT4 )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT &&
+   hb_retl( getwinver( &osvi ) &&
+            osvi.dwPlatformId == VER_PLATFORM_WIN32_NT &&
             osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
 }
 
@@ -83,88 +82,79 @@ HB_FUNC( WIN_OSIS2000ORUPPER )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion >= 5 );
+   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion >= 5 );
 }
 
 HB_FUNC( WIN_OSIS2000 )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0 );
+   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0 );
 }
 
 HB_FUNC( WIN_OSISXP )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1 );
+   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1 );
 }
 
 HB_FUNC( WIN_OSISWINXPORUPPER )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion > 5 || ( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 1 ) );
+   hb_retl( getwinver( &osvi ) &&
+            ( osvi.dwMajorVersion > 5 || ( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 1 ) ) );
 }
 
 HB_FUNC( WIN_OSIS2003 )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2 );
+   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2 );
 }
 
 HB_FUNC( WIN_OSISVISTA )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0 );
+   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0 );
 }
 
 HB_FUNC( WIN_OSISVISTAORUPPER )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion >= 6 );
+   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion >= 6 );
 }
 
 HB_FUNC( WIN_OSIS7 )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1 );
+   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1 );
 }
 
 HB_FUNC( WIN_OSIS8 )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 2 );
+   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 2 );
 }
 
 HB_FUNC( WIN_OSIS9X )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
+   hb_retl( getwinver( &osvi ) && osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
 }
 
 HB_FUNC( WIN_OSIS95 )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
+   hb_retl( getwinver( &osvi ) &&
+            osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
             osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
 }
 
@@ -172,8 +162,8 @@ HB_FUNC( WIN_OSIS98 )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
+   hb_retl( getwinver( &osvi ) &&
+            osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
             osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 );
 }
 
@@ -181,8 +171,8 @@ HB_FUNC( WIN_OSISME )
 {
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
+   hb_retl( getwinver( &osvi ) &&
+            osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
             osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 90 );
 }
 
@@ -191,8 +181,7 @@ HB_FUNC( WIN_OSISTSCLIENT )
    HB_BOOL bResult = HB_FALSE;
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
-   if( osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 4 )
+   if( getwinver( &osvi ) && osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 4 )
    {
       /* Only supported on NT 4.0 SP3 & higher */
       #ifndef SM_REMOTESESSION
@@ -208,7 +197,9 @@ HB_FUNC( WIN_OSVERSIONINFO )
    PHB_ITEM pArray = hb_itemArrayNew( 5 );
    OSVERSIONINFO osvi;
 
-   getwinver( &osvi );
+   if( ! getwinver( &osvi ) )
+      memset( &osvi, 0, sizeof( osvi ) );
+
    hb_arraySetNL( pArray, 1, osvi.dwMajorVersion );
    hb_arraySetNL( pArray, 2, osvi.dwMinorVersion );
    if( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )

@@ -144,13 +144,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
                      break;
                   else
                   {
-                     if( ! fDropped )
-                        SendMessage( hWnd, CB_SHOWDROPDOWN, ( WPARAM ) TRUE, 0 );
-                     else
-                     {
-                        SetFocus( hWndParent );
-                        PostMessage( hWndParent, message, wParam, lParam );
-                     }
+                     SendMessage( hWnd, CB_SHOWDROPDOWN, ( WPARAM ) TRUE, 0 );
                      return 0;
                   }
 
@@ -185,17 +179,8 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
                      break;
                   else
                   {
-                     if( ! fDropped )
-                     {
-                        SendMessage( hWnd, CB_SHOWDROPDOWN, ( WPARAM ) TRUE, 0 );
-                        return 0;
-                     }
-                     else
-                     {
-                        SetFocus( hWndParent );
-                        PostMessage( hWndParent, message, wParam, lParam );
-                        return 0;
-                     }
+                     SendMessage( hWnd, CB_SHOWDROPDOWN, ( WPARAM ) TRUE, 0 );
+                     return 0;
                   }
 
                case VK_ESCAPE:

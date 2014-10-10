@@ -577,7 +577,7 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
    while( nPos < nLen &&
           ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
                  cData[ nPos ] == ' ' || cData[ nPos ] == '\r' || cData[ nPos ] == '\n' ) ) ||
-            ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ nPos ] == '\t' ) ) )
+            ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMTABS && cData[ nPos ] == '\t' ) ) )
    {
       nPos++;
    }
@@ -631,7 +631,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
       while( nPos < nLen &&
              ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
                     cData[ nPos ] == ' ' || cData[ nPos ] == '\r' || cData[ nPos ] == '\n' ) ) ||
-               ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ nPos ] == '\t' ) ) )
+               ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMTABS && cData[ nPos ] == '\t' ) ) )
       {
          nPos++;
       }
