@@ -264,7 +264,8 @@ HB_FUNC( ADDMONTH )
       if( HB_ISTIMESTAMP( 1 ) )
       {
          fTimeStamp = HB_TRUE;
-         hb_partdt( &lJulian, &lMillisec, 1 );
+         if( ! hb_partdt( &lJulian, &lMillisec, 1 ) )
+            lJulian = lMillisec = 0;  /* to silence Coverity analyzer */
          hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
       }
       else if( HB_ISDATE( 1 ) )
@@ -288,9 +289,7 @@ HB_FUNC( ADDMONTH )
 
    iDays = ct_daysinmonth( iMonth, ct_isleap( iYear ) );
    if( iDay > iDays )
-   {
       iDay = iDays;
-   }
 
    lJulian = hb_dateEncode( iYear, iMonth, iDay );
    if( fTimeStamp )

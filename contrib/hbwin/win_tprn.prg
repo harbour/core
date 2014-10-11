@@ -923,11 +923,13 @@ STATIC FUNCTION win_GetCharSize( hDC, lHeight )
 
    LOCAL tm
 
-   IF ! Empty( hDC )
-      tm := { => }
-      wapi_GetTextMetrics( hDC, tm )
-      RETURN tm[ iif( hb_defaultValue( lHeight, .F. ), "tmHeight", "tmAveCharWidth" ) ]
+   IF Empty( hDC )
+      RETURN 0
    ENDIF
 
-   RETURN 0
+   tm := { => }
+   wapi_GetTextMetrics( hDC, tm )
+
+   RETURN tm[ iif( hb_defaultValue( lHeight, .F. ), "tmHeight", "tmAveCharWidth" ) ]
+
 #endif

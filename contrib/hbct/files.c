@@ -202,7 +202,10 @@ HB_FUNC( SETFDATI )
       long lJulian, lMillisec;
 
       if( HB_ISTIMESTAMP( 1 ) )
-         hb_partdt( &lJulian, &lMillisec, 1 );
+      {
+         if( ! hb_partdt( &lJulian, &lMillisec, 1 ) )
+            lJulian = lMillisec = 0;  /* to silence Coverity analyzer */
+      }
       else
       {
          pDate = hb_param( 2, HB_IT_DATE );
