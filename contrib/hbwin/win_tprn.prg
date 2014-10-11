@@ -917,3 +917,17 @@ STATIC FUNCTION __win_CreateFont( hDC, cName, nHeight, nMul, nWidth, nWeight, lU
    ENDIF
 
    RETURN hFont
+
+#if 0
+STATIC FUNCTION win_GetCharSize( hDC, lHeight )
+
+   LOCAL tm
+
+   IF ! Empty( hDC )
+      tm := { => }
+      wapi_GetTextMetrics( hDC, tm )
+      RETURN tm[ iif( hb_defaultValue( lHeight, .F. ), "tmHeight", "tmAveCharWidth" ) ]
+   ENDIF
+
+   RETURN 0
+#endif
