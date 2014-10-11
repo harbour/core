@@ -364,7 +364,6 @@ DYNAMIC win_comSetTimeouts
 DYNAMIC win_comStatus
 DYNAMIC win_comWrite
 DYNAMIC win_comXonXoffFlow
-DYNAMIC win_CreateFont
 DYNAMIC win_DrawBitmap
 DYNAMIC win_EnumFontFamilies
 DYNAMIC win_EnumFonts
@@ -471,6 +470,7 @@ DYNAMIC __wapi_DEVMODE_Get
 DYNAMIC __wapi_DEVMODE_New
 DYNAMIC __wapi_DEVMODE_Set
 DYNAMIC __wapi_DLGTEMPLATE_Raw_New
+DYNAMIC __wapi_Type
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBWIN__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

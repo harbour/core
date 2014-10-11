@@ -73,7 +73,7 @@ void hbwapi_ret_HDC( HDC p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC * ), &s_gc_HDC_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC ), &s_gc_HDC_funcs );
 
       *ph = p;
 
@@ -81,6 +81,11 @@ void hbwapi_ret_HDC( HDC p )
    }
    else
       hb_retptr( NULL );
+}
+
+HB_BOOL hbwapi_is_HDC( int iParam )
+{
+   return hb_parptrGC( &s_gc_HDC_funcs, iParam ) != NULL;
 }
 
 HDC hbwapi_par_HDC( int iParam )
@@ -115,7 +120,7 @@ void hbwapi_ret_HPEN( HPEN p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN * ), &s_gc_HPEN_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN ), &s_gc_HPEN_funcs );
 
       *ph = p;
 
@@ -123,6 +128,11 @@ void hbwapi_ret_HPEN( HPEN p )
    }
    else
       hb_retptr( NULL );
+}
+
+HB_BOOL hbwapi_is_HPEN( int iParam )
+{
+   return hb_parptrGC( &s_gc_HPEN_funcs, iParam ) != NULL;
 }
 
 HPEN hbwapi_par_HPEN( int iParam )
@@ -157,7 +167,7 @@ void hbwapi_ret_HBRUSH( HBRUSH p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HBRUSH * ), &s_gc_HBRUSH_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HBRUSH ), &s_gc_HBRUSH_funcs );
 
       *ph = p;
 
@@ -165,6 +175,11 @@ void hbwapi_ret_HBRUSH( HBRUSH p )
    }
    else
       hb_retptr( NULL );
+}
+
+HB_BOOL hbwapi_is_HBRUSH( int iParam )
+{
+   return hb_parptrGC( &s_gc_HBRUSH_funcs, iParam ) != NULL;
 }
 
 HBRUSH hbwapi_par_HBRUSH( int iParam )
@@ -199,7 +214,7 @@ void hbwapi_ret_HFONT( HFONT p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HFONT * ), &s_gc_HFONT_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HFONT ), &s_gc_HFONT_funcs );
 
       *ph = p;
 
@@ -207,6 +222,11 @@ void hbwapi_ret_HFONT( HFONT p )
    }
    else
       hb_retptr( NULL );
+}
+
+HB_BOOL hbwapi_is_HFONT( int iParam )
+{
+   return hb_parptrGC( &s_gc_HFONT_funcs, iParam ) != NULL;
 }
 
 HFONT hbwapi_par_HFONT( int iParam )
@@ -241,7 +261,7 @@ void hbwapi_ret_PDEVMODE( PDEVMODE p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( PDEVMODE * ), &s_gc_PDEVMODE_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( PDEVMODE ), &s_gc_PDEVMODE_funcs );
 
       *ph = p;
 
@@ -251,11 +271,27 @@ void hbwapi_ret_PDEVMODE( PDEVMODE p )
       hb_retptr( NULL );
 }
 
+HB_BOOL hbwapi_is_PDEVMODE( int iParam )
+{
+   return hb_parptrGC( &s_gc_PDEVMODE_funcs, iParam ) != NULL;
+}
+
 PDEVMODE hbwapi_par_PDEVMODE( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_PDEVMODE_funcs, iParam );
 
    return ph ? ( PDEVMODE ) *ph : NULL;
+}
+
+HB_FUNC( __WAPI_TYPE )
+{
+   if(      hbwapi_is_HDC( 1 ) )      hb_retc_const( "HDC" );
+   else if( hbwapi_is_HPEN( 1 ) )     hb_retc_const( "HPEN" );
+   else if( hbwapi_is_HBRUSH( 1 ) )   hb_retc_const( "HBRUSH" );
+   else if( hbwapi_is_HFONT( 1 ) )    hb_retc_const( "HFONT" );
+   else if( hbwapi_is_PDEVMODE( 1 ) ) hb_retc_const( "PDEVMODE" );
+   else if( HB_ISPOINTER( 1 ) )       hb_retc_const( "HANDLE" );
+   else                               hb_retc_null();
 }
 
 #if ! defined( __HBWIN_NO_UNSAFE_HANDLES )

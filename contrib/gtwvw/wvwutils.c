@@ -478,32 +478,6 @@ HB_FUNC( WVW_OPENBITMAP )
    hbwapi_ret_raw_HANDLE( hbm );
 }
 
-/* win_CreateFont( fontName, nWidth, hHeight, [fnWeight], [fdwCharSet],
-                   [fdwItalic], [fdwUnderline], [fdwStrikeOut] ) */
-HB_FUNC( WIN_CREATEFONT )
-{
-   void * hName;
-
-   hbwapi_ret_raw_HANDLE(
-      CreateFont(
-         hb_parni( 3 ),                     /* logical height of font */
-         hb_parni( 2 ),                     /* logical average character width */
-         0,                                 /* angle of escapement */
-         0,                                 /* base-line orientation angle */
-         hb_parni( 4 ),                     /* font weight */
-         ( DWORD ) hb_parnl( 6 ),           /* italic attribute flag */
-         ( DWORD ) hb_parnl( 7 ),           /* underline attribute flag */
-         ( DWORD ) hb_parnl( 8 ),           /* strikeout attribute flag */
-         ( DWORD ) hb_parnl( 5 ),           /* character set identifier */
-         0,                                 /* output precision */
-         0,                                 /* clipping precision */
-         0,                                 /* output quality */
-         0,                                 /* pitch and family */
-         HB_PARSTR( 1, &hName, NULL ) ) );  /* pointer to typeface name string */
-
-   hb_strfree( hName );
-}
-
 /* wvw_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
                    lStrikeout, nCharSet, nQuality, nEscapement ) */
 HB_FUNC( WVW_CREATEFONT )

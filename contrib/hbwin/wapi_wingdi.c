@@ -894,12 +894,12 @@ HB_FUNC( WAPI_SELECTOBJECT )
    HB_BOOL bRegion = HB_FALSE;
    HGDIOBJ h;
 
-   if(      ( h = hbwapi_par_HPEN( 2 ) ) != NULL ) {}
-   else if( ( h = hbwapi_par_HBRUSH( 2 ) ) != NULL ) {}
-   else if( ( h = hbwapi_par_HFONT( 2 ) ) != NULL ) {}
+   if(      hbwapi_is_HPEN( 2 ) )   h = hbwapi_par_HPEN( 2 );
+   else if( hbwapi_is_HBRUSH( 2 ) ) h = hbwapi_par_HBRUSH( 2 );
+   else if( hbwapi_is_HFONT( 2 ) )  h = hbwapi_par_HFONT( 2 );
    /* TODO: Add BITMAP, REGION */
    else
-      h = NULL;
+      h = hbwapi_par_raw_HGDIOBJ( 2 );
 
    if( hDC && h )
    {

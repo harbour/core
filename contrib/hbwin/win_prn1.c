@@ -266,7 +266,6 @@ HB_FUNC( WIN_SETMAPMODE )
    hb_retni( 0 );
 #endif
 }
-#endif
 
 HB_FUNC( WIN_CREATEFONT )
 {
@@ -284,22 +283,21 @@ HB_FUNC( WIN_CREATEFONT )
       LPCTSTR pfFaceName;
       HB_SIZE nLen;
 
-      iWeight = iWeight > 0 ? iWeight : FW_NORMAL;
+      if( iWeight <= 0 )
+         iWeight = FW_NORMAL;
 
-      if( hb_parl( 10 ) ) /* Ugly hack to enable full control for caller */
+      if( hb_parl( 10 ) )  /* Ugly hack to enable full control for caller */
       {
          iHeight = hb_parni( 3 );
          iWidth = hb_parni( 5 );
       }
       else
       {
-         int iMul = hb_parni( 4 );
-         int iDiv = hb_parni( 5 );
-
          iHeight = -MulDiv( hb_parni( 3 ), GetDeviceCaps( hDC, LOGPIXELSY ), 72 );
+         iWidth = hb_parni( 5 );
 
-         if( iDiv )
-            iWidth = MulDiv( abs( iMul ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iDiv ) );
+         if( iWidth )
+            iWidth = MulDiv( abs( hb_parni( 4 ) ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iWidth ) );
          else
             iWidth = 0;  /* Use the default font width */
       }
@@ -343,7 +341,6 @@ HB_FUNC( WIN_CREATEFONT )
       hb_retptr( NULL );
 }
 
-#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_GETPRINTERFONTNAME )
 {
    HDC hDC = hbwapi_par_HDC( 1 );

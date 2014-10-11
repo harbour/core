@@ -62,6 +62,7 @@
 
 #include "hbclass.ch"
 
+#include "hbver.ch"
 #include "hbwin.ch"
 
 CREATE CLASS win_Prn
@@ -493,7 +494,7 @@ METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nChar
    IF HB_ISNUMERIC( nCharSet )
       ::fCharSet := nCharSet
    ENDIF
-   IF ( ::SetFontOk := ! Empty( ::hFont := win_CreateFont( ::hPrinterDC, ::FontName, ::FontPointSize, ::FontWidth[ 1 ], ::FontWidth[ 2 ], ::fBold, ::fUnderLine, ::fItalic, ::fCharSet, lManualSize ) ) )
+   IF ( ::SetFontOk := ! Empty( ::hFont := __win_CreateFont( ::hPrinterDC, ::FontName, ::FontPointSize, ::FontWidth[ 1 ], ::FontWidth[ 2 ], ::fBold, ::fUnderLine, ::fItalic, ::fCharSet, lManualSize ) ) )
       ::fCharWidth  := ::GetCharWidth()
       ::CharWidth   := Abs( ::fCharWidth )
       ::CharHeight  := ::GetCharHeight()
@@ -710,7 +711,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
             nDiv := 1
          ENDCASE
          hFont := ::hFont
-         ::hFont := win_CreateFont( ::hPrinterDC, cFont, hb_defaultValue( nPointSize, ::FontPointSize ), nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
+         ::hFont := __win_CreateFont( ::hPrinterDC, cFont, hb_defaultValue( nPointSize, ::FontPointSize ), nDiv, nWidth, nBold, lUnderLine, lItalic, nCharSet )
       ENDIF
       IF HB_ISNUMERIC( nColor )
          nColor := wapi_SetTextColor( ::hPrinterDC, nColor )
@@ -881,3 +882,38 @@ METHOD Inch_To_PosY( nInch ) CLASS win_Prn
 
 METHOD GetDeviceCaps( nCaps ) CLASS win_Prn
    RETURN iif( Empty( ::hPrinterDc ), 0, wapi_GetDeviceCaps( ::hPrinterDC, nCaps ) )
+
+STATIC FUNCTION __win_CreateFont( hDC, cName, nHeight, nMul, nWidth, nWeight, lUnderline, lItalic, nCharSet, lManualSize )
+
+   LOCAL hFont
+
+   IF ! Empty( hDC )
+
+      nWeight := hb_defaultValue( nWeight, 0 )
+      IF nWeight <= 0
+         nWeight := WIN_FW_NORMAL
+      ENDIF
+
+      IF ! hb_defaultValue( lManualSize, .F. )  /* Ugly hack to enable full control for caller */
+         nHeight := -wapi_MulDiv( nHeight, wapi_GetDeviceCaps( hDC, WIN_LOGPIXELSY ), 72 )
+
+         IF nWidth != 0
+            nWidth := wapi_MulDiv( Abs( nMul ), wapi_GetDeviceCaps( hDC, WIN_LOGPIXELSX ), Abs( nWidth ) )
+         ELSE
+            nWidth := 0  /* Use the default font width */
+         ENDIF
+      ENDIF
+
+      hFont := wapi_CreateFont( ;
+         nHeight, nWidth, 0, 0, ;
+         nWeight, lItalic, lUnderline, .F., ;
+         nCharSet, ;
+         iif( hb_Version( HB_VERSION_PLATFORM ) == "WCE",, WIN_OUT_DEVICE_PRECIS ),, WIN_DRAFT_QUALITY,, ;
+         cName )
+
+      IF ! Empty( hFont )
+         wapi_SelectObject( hDC, hFont )
+      ENDIF
+   ENDIF
+
+   RETURN hFont

@@ -172,6 +172,12 @@ extern HB_EXPORT void       hbwapi_stor_SIZE( const SIZE * p, int iParam );
 extern HB_EXPORT void       hbwapi_stor_POINT( const POINT * p, int iParam );
 extern HB_EXPORT void       hbwapi_stor_RECT( const RECT * p, int iParam );
 
+extern HB_EXPORT HB_BOOL    hbwapi_is_HDC( int iParam );
+extern HB_EXPORT HB_BOOL    hbwapi_is_HPEN( int iParam );
+extern HB_EXPORT HB_BOOL    hbwapi_is_HBRUSH( int iParam );
+extern HB_EXPORT HB_BOOL    hbwapi_is_HFONT( int iParam );
+extern HB_EXPORT HB_BOOL    hbwapi_is_PDEVMODE( int iParam );
+
 extern HB_EXPORT HDC        hbwapi_par_HDC( int iParam );
 extern HB_EXPORT HPEN       hbwapi_par_HPEN( int iParam );
 extern HB_EXPORT HBRUSH     hbwapi_par_HBRUSH( int iParam );

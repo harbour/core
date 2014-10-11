@@ -459,10 +459,8 @@ FUNCTION win_InvalidateRect( w, e, l, t, r, b )
 FUNCTION win_CreateBrush( ... )
    RETURN wapi_CreateBrushIndirect( { ... } )
 
-#if 0
 FUNCTION win_CreateFont( cFontName, nWidth, nHeight, nWeight, nCharSet, lItalic, lUnderline, lStrikeOut )
    RETURN wapi_CreateFont( nHeight, nWidth,,, nWeight, lItalic, lUnderline, lStrikeOut, nCharSet, 0, 0, 0, 0, cFontName )
-#endif
 
 FUNCTION wvw_ChooseColor( nColor, aColor, nFlags )
 
