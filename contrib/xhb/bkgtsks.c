@@ -153,7 +153,7 @@ static HB_ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bA
             }
          }
       }
-      bkg->pBackgroundTasks = ( PHB_BACKGROUNDTASK * ) hb_xrealloc( bkg->pBackgroundTasks, sizeof( HB_BACKGROUNDTASK ) * ( bkg->uiBackgroundMaxTask ) );
+      bkg->pBackgroundTasks = ( PHB_BACKGROUNDTASK * ) hb_xrealloc( bkg->pBackgroundTasks, sizeof( HB_BACKGROUNDTASK ) * bkg->uiBackgroundMaxTask );
    }
    else
    {
@@ -179,7 +179,7 @@ static void hb_backgroundRun( void )
       if( bkg->uiBackgroundTask < bkg->uiBackgroundMaxTask )
       {
          double dCurrSeconds         = hb_dateSeconds();
-         PHB_BACKGROUNDTASK pBkgTask = ( PHB_BACKGROUNDTASK ) bkg->pBackgroundTasks[ bkg->uiBackgroundTask ];
+         PHB_BACKGROUNDTASK pBkgTask = bkg->pBackgroundTasks[ bkg->uiBackgroundTask ];
 
          /* check if hb_dateSeconds() is lower than pBkgTask->dSeconds, if so midnight is reached */
          if( ! pBkgTask->dSeconds || dCurrSeconds < pBkgTask->dSeconds )

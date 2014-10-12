@@ -1203,7 +1203,8 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
    if( pSet->HB_SET_HBOUTLOG )     pSet->HB_SET_HBOUTLOG     = hb_strdup( pSet->HB_SET_HBOUTLOG );
    if( pSet->HB_SET_HBOUTLOGINFO ) pSet->HB_SET_HBOUTLOGINFO = hb_strdup( pSet->HB_SET_HBOUTLOGINFO );
 
-   hb_fsAddSearchPath( pSet->HB_SET_PATH, &pSet->hb_set_path );
+   if( pSet->HB_SET_PATH )
+      hb_fsAddSearchPath( pSet->HB_SET_PATH, &pSet->hb_set_path );
 
    return pSet;
 }

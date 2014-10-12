@@ -352,6 +352,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 
       pName = D_HB_ITEMPUTSTR( NULL, OCI_ColumnGetName( col ) );
       pFieldInfo.atomName = hb_itemGetCPtr( pName );
+      pFieldInfo.uiFlags = 0;
 
       uiDataType = OCI_ColumnGetType( col );
       uiSize     = OCI_ColumnGetSize( col );

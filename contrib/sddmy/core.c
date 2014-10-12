@@ -413,7 +413,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
    pArea->ulRecCount = ( HB_ULONG ) mysql_num_rows( pSDDData->pResult );
 
-   pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
+   pArea->pRow      = ( void ** ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
    pArea->ulRecMax = pArea->ulRecCount + 1;
@@ -523,48 +523,29 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
          /* Do not expand strings */
-         if( pValue )
-            hb_itemPutCL( pItem, pValue, ulLen );
-         else
-            hb_itemPutC( pItem, NULL );
+         hb_itemPutCL( pItem, pValue, ulLen );
 #endif
          break;
       }
 
       case HB_FT_MEMO:
-         if( pValue )
-            hb_itemPutCL( pItem, pValue, ulLen );
-         else
-            hb_itemPutC( pItem, NULL );
-
+         hb_itemPutCL( pItem, pValue, ulLen );
          hb_itemSetCMemo( pItem );
          break;
 
       case HB_FT_INTEGER:
       case HB_FT_LONG:
       case HB_FT_DOUBLE:
-         if( pValue )
-         {
-            hb_strncpy( szBuffer, pValue, sizeof( szBuffer ) - 1 );
+         hb_strncpy( szBuffer, pValue, sizeof( szBuffer ) - 1 );
 
-            if( pField->uiDec )
-            {
-               hb_itemPutNDLen( pItem, atof( szBuffer ),
-                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                                ( int ) pField->uiDec );
-            }
-            else
-               hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
+         if( pField->uiDec )
+         {
+            hb_itemPutNDLen( pItem, atof( szBuffer ),
+                             ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
+                             ( int ) pField->uiDec );
          }
          else
-         {
-            if( pField->uiDec )
-               hb_itemPutNDLen( pItem, 0.0,
-                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                                ( int ) pField->uiDec );
-            else
-               hb_itemPutNLLen( pItem, 0, ( int ) pField->uiLen );
-         }
+            hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
          break;
 
       case HB_FT_DATE:

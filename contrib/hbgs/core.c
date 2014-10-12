@@ -112,6 +112,11 @@ HB_FUNC( HB_GS )
       for( pos = 1; pos < gsargc; ++pos )
          hb_strfree( gsargf[ pos ] );
       #endif
+
+      hb_xfree( gsargv );
+      #if defined( HB_GS_UTF8_SUPPORT )
+      hb_xfree( gsargf );
+      #endif
    }
 
    hb_retl( bResult );

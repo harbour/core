@@ -1543,7 +1543,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
 
             pKey = mixKeyEval( pTag, pArea );
 
-            if( ! mixFindKey( pTag, pKey, &ulKeyPos + 1 ) )
+            if( ! mixFindKey( pTag, pKey, &ulKeyPos ) )
                ulKeyPos = 0;
 
             mixKeyFree( pKey );

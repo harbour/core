@@ -3127,6 +3127,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       }
       if( uiFldLen >= uiLen )
       {
+         hb_xfree( ucfieldPtr );
          /* RT_ERROR; probably too many fields */
          return HB_FAILURE;
       }

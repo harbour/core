@@ -136,6 +136,8 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
       else
          hb_xfree( pbmi );
    }
+   else
+      CloseHandle( hFile );
 
    return NULL;
 }

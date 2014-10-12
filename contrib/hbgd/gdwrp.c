@@ -323,10 +323,10 @@ static void GDImageCreateFrom( int nType )
 
       /* Return image pointer */
       hb_retGdImage( im );
-
-      /* Free memory */
-      hb_xfree( iptr );
    }
+
+   if( iptr )
+      hb_xfree( iptr );
 }
 
 static void GDImageSaveTo( int nType )
