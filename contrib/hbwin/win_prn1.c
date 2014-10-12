@@ -298,8 +298,6 @@ HB_FUNC( WIN_CREATEFONT )
 
          if( iWidth )
             iWidth = MulDiv( abs( hb_parni( 4 ) ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iWidth ) );
-         else
-            iWidth = 0;  /* Use the default font width */
       }
 
       lf.lfHeight         = ( LONG ) iHeight;

@@ -331,14 +331,10 @@ static LRESULT CALLBACK hb_gt_wvw_TBProc( HWND hWnd, UINT message, WPARAM wParam
       case WM_MOUSEWHEEL:
       case WM_NCMOUSEMOVE:
 
-         if( ! hb_gt_wvw_AcceptingInput() || ( nWin != wvw->iNumWindows - 1 ) )
-            return 0;
-
-         hb_gt_wvw_TBMouseEvent( wvw_win, hWnd, message, wParam, lParam );
-#if 0
+         if( hb_gt_wvw_AcceptingInput() && ( nWin == wvw->iNumWindows - 1 ) )
+            hb_gt_wvw_TBMouseEvent( wvw_win, hWnd, message, wParam, lParam );
          return 0;
-         TB_ISBUTTONHIGHLIGHTED
-#endif
+
       case WM_PAINT:
       {
          HGDIOBJ hOldObj;

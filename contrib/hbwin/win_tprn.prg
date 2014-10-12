@@ -899,8 +899,6 @@ STATIC FUNCTION __win_CreateFont( hDC, cName, nHeight, nMul, nWidth, nWeight, lU
 
          IF nWidth != 0
             nWidth := wapi_MulDiv( Abs( nMul ), wapi_GetDeviceCaps( hDC, WIN_LOGPIXELSX ), Abs( nWidth ) )
-         ELSE
-            nWidth := 0  /* Use the default font width */
          ENDIF
       ENDIF
 
@@ -931,5 +929,4 @@ STATIC FUNCTION win_GetCharSize( hDC, lHeight )
    wapi_GetTextMetrics( hDC, tm )
 
    RETURN tm[ iif( hb_defaultValue( lHeight, .F. ), "tmHeight", "tmAveCharWidth" ) ]
-
 #endif
