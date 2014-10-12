@@ -1621,6 +1621,11 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_KNOWNHOSTS, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
                break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x072700
+            case HB_CURLOPT_PINNEDPUBLICKEY:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_PINNEDPUBLICKEY, hb_parc( 3 ) );
+               break;
+#endif
 
                /* Other options */
 
