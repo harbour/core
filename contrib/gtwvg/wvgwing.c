@@ -103,9 +103,8 @@
 static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
 {
    BITMAPFILEHEADER bmfh;
-   BITMAPINFO *     pbmi;
    HB_BOOL          bSuccess;
-   DWORD dwPackedDibSize, dwBytesRead;
+   DWORD            dwBytesRead;
 
    HANDLE hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
                               OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
@@ -113,20 +112,16 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
    if( hFile == INVALID_HANDLE_VALUE )
       return NULL;
 
-   bSuccess = ReadFile( hFile, &bmfh, sizeof( BITMAPFILEHEADER ), &dwBytesRead, NULL );
+   bSuccess = ReadFile( hFile, &bmfh, sizeof( bmfh ), &dwBytesRead, NULL );
 
-   if( ! bSuccess || dwBytesRead != sizeof( BITMAPFILEHEADER ) ||
-       bmfh.bfType != 0x4D42 /* "BM" */ )
+   if( bSuccess && dwBytesRead == sizeof( bmfh ) &&
+       bmfh.bfType != 0x4d42 /* "BM" */ &&
+       bmfh.bfSize > sizeof( bmfh ) &&
+       bmfh.bfSize <= ( 32 * 1024 * 1024 ) /* an arbitrary size limit */ )
    {
-      CloseHandle( hFile );
-      return NULL;
-   }
+      DWORD dwPackedDibSize = bmfh.bfSize - sizeof( bmfh );
 
-   if( bmfh.bfSize > sizeof( BITMAPFILEHEADER ) )
-   {
-      dwPackedDibSize = bmfh.bfSize - sizeof( BITMAPFILEHEADER );
-
-      pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
+      BITMAPINFO * pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
 
       bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
       CloseHandle( hFile );

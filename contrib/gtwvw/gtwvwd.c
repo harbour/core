@@ -5584,7 +5584,10 @@ static BITMAPINFO * PackedDibLoad( const char * szFileName )
    {
       BITMAPFILEHEADER bmfh;
 
-      if( ( size_t ) hb_fsReadLarge( fhnd, &bmfh, sizeof( bmfh ) ) == sizeof( bmfh ) && bmfh.bfType == 0x4d42 /* "BM" */ )
+      if( ( size_t ) hb_fsReadLarge( fhnd, &bmfh, sizeof( bmfh ) ) == sizeof( bmfh ) &&
+          bmfh.bfType == 0x4d42 /* "BM" */ &&
+          bmfh.bfSize > sizeof( bmfh ) &&
+          bmfh.bfSize <= ( 32 * 1024 * 1024 ) /* an arbitrary size limit */ )
       {
          DWORD dwPackedDibSize = bmfh.bfSize - sizeof( bmfh );
 
