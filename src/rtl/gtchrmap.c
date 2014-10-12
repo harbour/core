@@ -282,7 +282,7 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
    fpos_t pos;
 
    fgetpos( fp, &pos );
-   fseek( fp, 0, SEEK_SET );
+   ( void ) fseek( fp, 0, SEEK_SET );
 
    while( ! feof( fp ) && isTerm < 2 )
    {
