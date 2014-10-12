@@ -653,7 +653,8 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
                   pSink->pItemHandler = hb_itemNew( pItemBlock );
                   pSink->rriid = rriid;
                   pSink->uiClass = 0;
-                  lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
+                  if( ( lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie ) ) != S_OK )
+                     dwCookie = 0;
                   pSink->pConnectionPoint = pCP;
                   pSink->dwCookie = dwCookie;
 

@@ -325,7 +325,7 @@ HB_FUNC( WAPI_FORMATMESSAGE )
 
          if( lpAllocBuff )
             LocalFree( lpAllocBuff );
-         else if( lpBuffer )
+         else if( lpBuffer && ( dwFlags & FORMAT_MESSAGE_ALLOCATE_BUFFER ) == 0 )
             hb_xfree( lpBuffer );
       }
 
