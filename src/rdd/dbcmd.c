@@ -112,12 +112,14 @@ HB_FUNC( AFIELDS )
          uiFields = uiArrayLen;
    }
 
+#ifdef DBS_FLAG
    if( pFlags )
    {
       HB_USHORT uiArrayLen = ( HB_USHORT ) hb_arrayLen( pFlags );
       if( uiArrayLen < uiFields )
          uiFields = uiArrayLen;
    }
+#endif
 
    if( pName )
    {
