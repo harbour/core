@@ -49,9 +49,15 @@ else
       endif
       ifneq ($(HB_PLATFORM_UNIX),)
          DYNDIRLIST_BASE += src/rtl/gttrm
-         DYNDIRLIST_BASE += src/rtl/gtcrs
-         DYNDIRLIST_BASE += src/rtl/gtsln
-         DYNDIRLIST_BASE += src/rtl/gtxwc
+         ifneq ($(HB_HAS_CURSES),)
+            DYNDIRLIST_BASE += src/rtl/gtcrs
+         endif
+         ifneq ($(HB_HAS_SLANG),)
+            DYNDIRLIST_BASE += src/rtl/gtsln
+         endif
+         ifneq ($(HB_HAS_X11),)
+            DYNDIRLIST_BASE += src/rtl/gtxwc
+         endif
       endif
       ifeq ($(HB_COMPILER),watcom)
          DYNDIRLIST_BASE += src/vm/maindllh

@@ -5567,11 +5567,14 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_DISPIMAGE:
-         if( wnd->window && pInfo->pNewVal && HB_IS_ARRAY( pInfo->pNewVal ) &&
-             hb_arrayLen( pInfo->pNewVal ) == ( HB_SIZE )
-             ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) )
+         if( wnd->window && pInfo->pNewVal &&
+             ( ( HB_IS_ARRAY( pInfo->pNewVal ) &&
+                 hb_arrayLen( pInfo->pNewVal ) == ( HB_SIZE )
+                 ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) ) ||
+               HB_IS_STRING( pInfo->pNewVal ) ) )
          {
             XImage * xImage = NULL;
+            XWC_RECT rx;
 
             /* { pBitmap, iWidth, iHeight [, iDepth ] } */
             if( ( hb_arrayGetType( pInfo->pNewVal, 1 ) & ( HB_IT_POINTER | HB_IT_STRING ) ) &&
@@ -5604,64 +5607,75 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      pFreeImage = ( char * ) hb_arrayGetPtr( pInfo->pNewVal, 1 );
                }
                if( pFreeImage != NULL )
-               {
                   xImage = XCreateImage( wnd->dpy, DefaultVisual( wnd->dpy, DefaultScreen( wnd->dpy ) ),
                                          iDepth, ZPixmap, 0, pFreeImage, iWidth, iHeight, iPad, 0 );
-               }
             }
 
+            rx.left = rx.top = 0;
             if( xImage )
             {
-               XWC_RECT rx;
-
-               rx.left = rx.top = 0;
                rx.right = xImage->width;
                rx.bottom = xImage->height;
+            }
+            else
+            {
+               rx.right = wnd->width;
+               rx.bottom = wnd->height;
+            }
 
-               /* fetch & validate area for displaying */
-               if( pInfo->pNewVal2 && HB_IS_ARRAY( pInfo->pNewVal2 ) )
+            /* fetch & validate area for displaying */
+            if( pInfo->pNewVal2 && HB_IS_ARRAY( pInfo->pNewVal2 ) )
+            {
+               switch( hb_arrayLen( pInfo->pNewVal2 ) )
                {
-                  switch( hb_arrayLen( pInfo->pNewVal2 ) )
-                  {
-                     case 2:
-                        rx.left   = hb_arrayGetNI( pInfo->pNewVal2, 1 );
-                        rx.top    = hb_arrayGetNI( pInfo->pNewVal2, 2 );
+                  case 2:
+                     rx.left   = hb_arrayGetNI( pInfo->pNewVal2, 1 );
+                     rx.top    = hb_arrayGetNI( pInfo->pNewVal2, 2 );
+                     if( xImage )
+                     {
                         rx.right  += rx.left;
                         rx.bottom += rx.top;
-                        break;
-                     case 4:
-                        rx.left   = hb_arrayGetNI( pInfo->pNewVal2, 1 );
-                        rx.top    = hb_arrayGetNI( pInfo->pNewVal2, 2 );
-                        rx.right  = hb_arrayGetNI( pInfo->pNewVal2, 3 );
-                        rx.bottom = hb_arrayGetNI( pInfo->pNewVal2, 4 );
+                     }
+                     break;
+                  case 4:
+                     rx.left   = hb_arrayGetNI( pInfo->pNewVal2, 1 );
+                     rx.top    = hb_arrayGetNI( pInfo->pNewVal2, 2 );
+                     rx.right  = hb_arrayGetNI( pInfo->pNewVal2, 3 );
+                     rx.bottom = hb_arrayGetNI( pInfo->pNewVal2, 4 );
+                     if( xImage )
+                     {
                         if( rx.right >= rx.left + xImage->width )
                            rx.right = rx.left + xImage->width - 1;
                         if( rx.bottom >= rx.top + xImage->height )
                            rx.bottom = rx.top + xImage->height - 1;
-                        break;
-                  }
+                     }
+                     break;
                }
+            }
 
-               if( rx.left >= 0 && rx.top >= 0 &&
-                   rx.left <= rx.right && rx.top <= rx.bottom )
+            if( rx.right > wnd->width )
+               rx.right = wnd->width;
+            if( rx.bottom > wnd->height )
+               rx.bottom = wnd->height;
+
+            if( rx.left >= 0 && rx.top >= 0 &&
+                rx.left <= rx.right && rx.top <= rx.bottom )
+            {
+               HB_GTSELF_REFRESH( pGT );
+               if( xImage )
                {
-                  HB_GTSELF_REFRESH( pGT );
-
-                  if( rx.right > wnd->width )
-                     rx.right = wnd->width;
-                  if( rx.bottom > wnd->height )
-                     rx.bottom = wnd->height;
-
                   HB_XWC_XLIB_LOCK();
                   XPutImage( wnd->dpy, wnd->pm, wnd->gc, xImage, 0, 0,
                              rx.left, rx.top, rx.right - rx.left + 1, rx.bottom - rx.top + 1 );
                   HB_XWC_XLIB_UNLOCK();
-
-                  hb_gt_xwc_InvalidatePts( wnd, rx.left, rx.top, rx.right, rx.bottom );
-                  if( HB_GTSELF_DISPCOUNT( pGT ) == 0 )
-                     hb_gt_xwc_RealRefresh( wnd, HB_FALSE );
                }
+               hb_gt_xwc_InvalidatePts( wnd, rx.left, rx.top, rx.right, rx.bottom );
+               if( HB_GTSELF_DISPCOUNT( pGT ) == 0 )
+                  hb_gt_xwc_RealRefresh( wnd, HB_FALSE );
+            }
 
+            if( xImage )
+            {
                /* !NOT! use XDestroyImage(), char * xImage->data is [ eg hbfimage ] external managed */
                if( xImage->obdata )
                   XFree( xImage->obdata );
