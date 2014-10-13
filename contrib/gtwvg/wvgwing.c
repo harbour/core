@@ -102,6 +102,8 @@
 
 static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
 {
+   BITMAPINFO * pbmi = NULL;
+
    HANDLE hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
                               OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
 
@@ -113,27 +115,27 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
       HB_BOOL bSuccess = ReadFile( hFile, &bmfh, sizeof( bmfh ), &dwBytesRead, NULL );
 
       if( bSuccess && dwBytesRead == sizeof( bmfh ) &&
-          bmfh.bfType != 0x4d42 /* "BM" */ &&
+          bmfh.bfType == 0x4d42 /* "BM" */ &&
           bmfh.bfSize > sizeof( bmfh ) &&
           bmfh.bfSize <= ( 32 * 1024 * 1024 ) /* an arbitrary size limit */ )
       {
          DWORD dwPackedDibSize = bmfh.bfSize - sizeof( bmfh );
 
-         BITMAPINFO * pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
+         pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
 
          bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
-         CloseHandle( hFile );
 
-         if( bSuccess && dwBytesRead == dwPackedDibSize )
-            return pbmi;
-         else
+         if( ! bSuccess || dwBytesRead != dwPackedDibSize )
+         {
             hb_xfree( pbmi );
+            pbmi = NULL;
+         }
       }
-      else
-         CloseHandle( hFile );
+
+      CloseHandle( hFile );
    }
 
-   return NULL;
+   return pbmi;
 }
 
 #if ! defined( HB_OS_WIN_CE )
