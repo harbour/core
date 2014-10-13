@@ -3654,11 +3654,11 @@ static HB_U32 hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, HB_USHORT chr
 
 static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, int colStop, int rowStop )
 {
-   HB_USHORT irow, icol, scridx, startCol = 0, len, basex, basey, nsize;
+   HB_USHORT irow, icol, startCol = 0, len, basex, basey, nsize;
    HB_BYTE oldColor = 0, color, attr;
    HB_USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
    HB_U32 u32Curr = 0xFFFFFFFF;
-   int i, iColor;
+   int i, iColor, scridx;
    XWC_CharTrans * chTrans;
 
 #ifdef XWC_DEBUG
@@ -3677,7 +3677,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
    for( irow = rowStart; irow <= rowStop; irow++ )
    {
       icol = colStart;
-      scridx = icol +  irow * wnd->cols;
+      scridx = icol + irow * wnd->cols;
       len = 0;
       /* attribute may change mid line...
        * so buffer up text with same attrib, and output it
@@ -3887,6 +3887,21 @@ static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd,
     * it shouldn't hurt us)
     */
    wnd->fInvalidChr = HB_TRUE;
+}
+
+static void hb_gt_xwc_InvalidateFull( PXWND_DEF wnd,
+                                      int left, int top, int right, int bottom )
+{
+   int row, col, scridx;
+
+   for( row = top; row <= bottom; row++ )
+   {
+      scridx = row * wnd->cols + left;
+      for( col = left; col < right; col++, scridx++ )
+         wnd->pCurrScr[ scridx ] = 0xFFFFFFFF;
+   }
+
+   hb_gt_xwc_InvalidateChar( wnd, left, top, right, bottom );
 }
 
 /* *********************************************************************** */
@@ -5668,8 +5683,13 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   XPutImage( wnd->dpy, wnd->pm, wnd->gc, xImage, 0, 0,
                              rx.left, rx.top, rx.right - rx.left + 1, rx.bottom - rx.top + 1 );
                   HB_XWC_XLIB_UNLOCK();
+                  hb_gt_xwc_InvalidatePts( wnd, rx.left, rx.top, rx.right, rx.bottom );
                }
-               hb_gt_xwc_InvalidatePts( wnd, rx.left, rx.top, rx.right, rx.bottom );
+               else
+                  hb_gt_xwc_InvalidateFull( wnd, rx.left / wnd->fontWidth,
+                                                 rx.top / wnd->fontHeight,
+                                                 ( rx.right + wnd->fontWidth - 1 ) / wnd->fontWidth,
+                                                 ( rx.bottom + wnd->fontHeight - 1 ) / wnd->fontHeight );
                if( HB_GTSELF_DISPCOUNT( pGT ) == 0 )
                   hb_gt_xwc_RealRefresh( wnd, HB_FALSE );
             }
