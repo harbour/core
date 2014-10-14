@@ -31,10 +31,11 @@ po/hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl
 -lng=el,es,es_419,fr,gl,hu,it,pt_BR
 
+# localization update
+{HBMK_PO_UPDATE}-po=po/hbmk2.en.po
+{HBMK_PO_UPDATE}-rebuildpo
+
 # localization (for automatization with config/lang.hb)
 -3rd=_langhb_docext=.md
 -3rd=_langhb_docoption=-lang={LNG}
 -3rd=_langhb_docoption=-longhelpmd
-
-{HBMK_PO_UPDATE}-po=po/hbmk2.en.po
-{HBMK_PO_UPDATE}-rebuildpo
