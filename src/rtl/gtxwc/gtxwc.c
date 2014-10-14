@@ -3897,7 +3897,7 @@ static void hb_gt_xwc_InvalidateFull( PXWND_DEF wnd,
    for( row = top; row <= bottom; row++ )
    {
       scridx = row * wnd->cols + left;
-      for( col = left; col < right; col++, scridx++ )
+      for( col = left; col <= right; col++, scridx++ )
          wnd->pCurrScr[ scridx ] = 0xFFFFFFFF;
    }
 
@@ -5629,13 +5629,13 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             rx.left = rx.top = 0;
             if( xImage )
             {
-               rx.right = xImage->width;
-               rx.bottom = xImage->height;
+               rx.right = xImage->width - 1;
+               rx.bottom = xImage->height - 1;
             }
             else
             {
-               rx.right = wnd->width;
-               rx.bottom = wnd->height;
+               rx.right = wnd->width - 1;
+               rx.bottom = wnd->height - 1;
             }
 
             /* fetch & validate area for displaying */
@@ -5668,10 +5668,10 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
             }
 
-            if( rx.right > wnd->width )
-               rx.right = wnd->width;
-            if( rx.bottom > wnd->height )
-               rx.bottom = wnd->height;
+            if( rx.right >= wnd->width )
+               rx.right = wnd->width - 1;
+            if( rx.bottom >= wnd->height )
+               rx.bottom = wnd->height - 1;
 
             if( rx.left >= 0 && rx.top >= 0 &&
                 rx.left <= rx.right && rx.top <= rx.bottom )
@@ -5688,8 +5688,8 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                else
                   hb_gt_xwc_InvalidateFull( wnd, rx.left / wnd->fontWidth,
                                                  rx.top / wnd->fontHeight,
-                                                 ( rx.right + wnd->fontWidth - 1 ) / wnd->fontWidth,
-                                                 ( rx.bottom + wnd->fontHeight - 1 ) / wnd->fontHeight );
+                                                 rx.right / wnd->fontWidth,
+                                                 rx.bottom / wnd->fontHeight );
                if( HB_GTSELF_DISPCOUNT( pGT ) == 0 )
                   hb_gt_xwc_RealRefresh( wnd, HB_FALSE );
             }
