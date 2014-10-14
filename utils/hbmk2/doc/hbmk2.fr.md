@@ -116,7 +116,7 @@ Options:
  - **\-lng=&lt;languages&gt;** list of languages to be replaced in %\{hb\_lng\} macros in \.pot/\.po filenames and output \.hbl/\.po filenames\. Comma separated list:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** create/update \.po file from source\. Merge it with previous \.po file of the same name
- - **\-minipo\[\-\]** do \(not\) add Harbour version number and source file reference to \.po \(default: add them\)
+ - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
  - **\-rebuildpo** recreate \.po file, thus removing all obsolete entries in it
 
 

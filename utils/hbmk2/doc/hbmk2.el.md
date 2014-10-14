@@ -116,7 +116,7 @@ Copyright &copy; 1999\-2014, Viktor Szakáts
  - **\-lng=&lt;languages&gt;** λίστα των γλωσσών προς αντικατάσταση σε %\{hb\_lng\} macros σε \.pot/\.po filenames and output \.hbl/\.po filenames\. Λίστα διαχωριζόμενη με κόμμα:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** δημιουργία/ενημέρωση αρχείου \.po από το πηγαίο\. Συγχώνευσή του με προηγούμενο αρχείο \.po ίδιου ονόματος
- - **\-minipo\[\-\]** προσθήκη \(ή όχι\) αριθμού έκδοσης Harbour και ένδειξη πηγαίου αρχείου στο \.po \(προεπιλογή: πρόσθεσέ τα\)
+ - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
  - **\-rebuildpo** αναδημιουργία \.po αρχείου, απομακρύνοντας έτσι όλες τις παρωχημένες καταχωρίσεις
 
 

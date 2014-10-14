@@ -120,7 +120,7 @@ Opcións:
   
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** crear/actualizar arquivo \.po a partir dos fontes\. Mesturar co arquivo \.po anterior co mesmo nome
- - **\-minipo\[\-\]** engadir \(ou non\) o número de versión de Harbour e referencia ao nome de arquivo ao arquivo \.po \(predeterminado: engadir ambas\)
+ - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
  - **\-rebuildpo** recrear arquivo \.po, eliminando todas as entradas obsoletas
 
 

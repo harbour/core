@@ -116,7 +116,7 @@ Opciones:
  - **\-lng=&lt;languages&gt;** lista de idiomas a ser reemplazados en %\{hb\_lng\} macros en archivos \.pot/\.po y nombres de archivos y salida \.hbl/\.po\. Lista separada por comas:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** crear/actualizar archivo \.po desde fuentes\. Combinar con anterior archivo \.po del mismo nombre\.
- - **\-minipo\[\-\]** adicionar \(o no\) número de versión y referencia de archivo de origen a po\. \(por defecto: anadirlos\)
+ - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
  - **\-rebuildpo** recrea archivo \.po, eliminando todas las entradas obsoletas en el mismo\.
 
 

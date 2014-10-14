@@ -35,3 +35,7 @@ po/hbmk2.%{hb_lng}.po
 -3rd=_langhb_docext=.md
 -3rd=_langhb_docoption=-lang={LNG}
 -3rd=_langhb_docoption=-longhelpmd
+
+{HBMK_PO_UPDATE}-lng=en
+{HBMK_PO_UPDATE}-po=po/hbmk2.%{hb_lng}.po
+{HBMK_PO_UPDATE}-rebuildpo

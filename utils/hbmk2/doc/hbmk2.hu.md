@@ -116,7 +116,7 @@ Kapcsolók:
  - **\-lng=&lt;languages&gt;** nyelvek listája, amelyek a \.pot/\.po és \.hbl/\.po állományokban levő %\{hb\_lng\} makrókba kerülnek behelyettesítésre\. Vesszővel elválasztott lista:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** hozzon létre/frissítse a \.po fálj a forráskód alapján\. Használja a meglévő \.po fájlban levő fordításokat
- - **\-minipo\[\-\]** írja bele \(vagy ne\) a Harbour verizószámát és a forrásállomány referenciákat a \.po állományba \(alapértelmezés: írja\)
+ - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
  - **\-rebuildpo** Generálja újra a \.po fájlt, törölve ezáltal minden szükségtelen bejegyzést
 
 

@@ -13324,7 +13324,7 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
    LOCAL aTrans
 
    IF ( aTrans := LoadPOTFiles( hbmk, aFiles, cFileBase, .T. ) ) != NIL .AND. ;
-      ! __i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
+      ! __i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, .F., ! hbmk[ _HBMK_lMINIPO ] )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
    ENDIF
 
@@ -13338,7 +13338,7 @@ STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
    IF ( hTrans := LoadPOTFilesAsHash( hbmk, aFiles ) ) != NIL .AND. ;
       ! __i18n_potArraySave( cFileOut, ;
          __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
-                               hTrans ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
+                               hTrans ), @cErrorMsg, .F., ! hbmk[ _HBMK_lMINIPO ] )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
 
@@ -17411,7 +17411,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-hbl[=<output>]"    , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) }, ;
       { "-lng=<languages>"   , hb_StrFormat( I_( e"list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separated list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) }, ;
       { "-po=<output>"       , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) }, ;
-      { "-minipo[-]"         , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) }, ;
+      { "-minipo[-]"         , I_( "do (not) add source file reference to .po (default: add them)" ) }, ;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) }, ;
       , ;
       { "-hbx=<n[.hbx>]>"    , H_( "create Harbour header (in .hbx format) with all external symbols. Empty parameter will disable it. Default extension is .hbx. If set, <n> will be automatically added to the list of Harbour input files and built into the project. Therefore, the name part of <n> must not be the same as any other input file present in the project." ) }, ;

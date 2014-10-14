@@ -115,7 +115,7 @@ Opções:
  - **\-lng=&lt;languages&gt;** lista de idiomas à serem substituidos nas macros %\{hb\_lng\} nos arquivos \.pot/\.po e nos nomes de arquivos de saída \.hbl/\.po\. Lista separada por vírgula:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** criar/atualizar arquivo \.po à partir dos fontes\. Se um arquivo \.po com o mesmo nome existir, o arquivo será mesclado\.
- - **\-minipo\[\-\]** adicionar \(ou não\) a referência do número da versão do Harbour e o arquivo fonte ao \.po \(ativo por padrão\)
+ - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
  - **\-rebuildpo** recria o arquivo \.po removendo assim todas as entradas obsoletas no mesmo
 
 
