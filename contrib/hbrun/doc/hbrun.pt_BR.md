@@ -1,4 +1,4 @@
-Harbour Shell / Script Runner 3\.4\.0dev \(5890c33\) \(2014\-07\-21 01:51\)  
+Harbour Shell / Script Runner 3\.4\.0dev \(e7d0c2840d\) \(2014\-09\-23 10:39\)  
 Copyright &copy; 2007\-2014, Viktor Szakáts  
 Copyright &copy; 2003\-2007, Przemysław Czerpak  
 <https://github\.com/vszakats/harbour\-core/>  
@@ -52,7 +52,7 @@ Shell API disponível nos scripts em Harbour:
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
 Mudar GT\. Padrão \[\*\]: 'gtwin'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
-habilitar modo de compatibilidade Clipper \(non\-Unicode\)
+Enable Cl\*pper compatibility \(non\-Unicode\) mode\.
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Carregar cabeçalho "header" Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
@@ -75,7 +75,7 @@ Nome do script em execução\.
 Notas:  
 
 
-  - Arquivo \.hb, \.prg, \.hrb ou \.dbf passado como primeiro parâmetro será executado como script Harbour\. Se o nome do arquivo não contém componentes do caminho "path", ele será procurado no diretório de trabalho atual e em PATH\. Se não for dada a extensão, as extensões \.hb e \.hrb serão pesquisados nessa\. Aquivo \.dbf será aberto automaticamente no modo compartilhado e o shell interativo Harbour lançado\. Extensões fora do padrão será detectado automaticamente para a fonte e tipos de script pré\-compilados\.Note, para Harbour scripts a "codepage" é colocada em UTF\-8 por padrão\.O cabeção principal 'hb\.ch' será automaticamente incluido " \#included " no prompt shell interativo\. O formato de data padráo é o ISO yyyy\-mm\-dd\. SET EXACT é colocado para ON\. O GT padrá é 'gtcgi', a não ser que sejam detectados chamadas CUI em tela cheia, quando 'gtwin' \[\*\] é selecionado automaticamente \(exceto para INIT PROCEDUREs\)\.
+  - \.hb, \.prg, \.hrb ou \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. SET EXACT is set to ON\. Set\( \_SET\_EOL \) is set to OFF\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
   - Voce pode usar &lt;Alt\+V&gt; no "shell do Harbour" para colar um texto do clipboard\.
   - Valores marcados com \[\*\] pode ser plataforma hospedagem e/ou configuração dependente\. Esta ajuda foi gerada em 'win' plataforma de hospedagem\.
   

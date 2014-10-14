@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(5890c33\) \(2014\-07\-21 01:51\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(e7d0c2840d\) \(2014\-09\-23 10:39\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
 Traducción \(gl\): JLalín  
@@ -99,7 +99,7 @@ Opcións:
  - **\-dflag\+=&lt;f&gt;** pasar a opción tal cuál ao enlazador \(biblioteca dinámica\), tra\-la lista de bibliotecas\. Usar con precaución\.
  - **\-3rd=&lt;f&gt;** opcións/parámetros reservados para ferramentas externas, ignoradas sempre por hbmk2
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** modifica o ámbito local\. &lt;e&gt; é o nome de unha variable de ámbito para modificar\. &lt;o&gt; pode ser '=' para establecer, '\-' para eliminar, '\+' para engadir ao final, '\#' para insertar ao comezo\. &lt;v&gt; é o valor para establecer, engadir, insertar\.
- - **\-jobs=&lt;n&gt;** lanzar n fíos de compilación \(só en plataformas con multitarefa/multiproceso\)
+ - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\) \(default: number of processors available or 1 if not detectable/applicable; on this system: 1\)
  - **\-head=&lt;m&gt;** controla a análise dos fontes \(en modo de construcción incremental\)  
   
 &lt;m&gt; pode ser: native \(usa o compilador para extraer dependencias\), full \(predeterminado, usa análise sinxelo de texto no arquivo\), dep, off
@@ -167,9 +167,8 @@ crear enlace/copia de hbmk2 para hbcc para o mesmo resultado
  - **\-hb30** activar modo de compatibilidade Harbour 3\.0\.x
  - **\-xhb** activar o modo xhb
  - **\-hbc** activar modo C puro
- - **\-blinker** simular o comportamento de enlazador Clipper  
-  
-crear enlace/copia a hbmk2 para rtlink/blinker/exospace para o mesmo resultado
+ - **\-blinker** emulate Cl\*pper compatible linker behavior  
+create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\-exospace** see above
  - **\-rtlink** see above
 
@@ -234,10 +233,10 @@ Pode engadir un enlace simbólico/copia/renomear hbmk2 a os seguintes nomes para
  - **hbrun\*|\*hbrun** modo secuencia de comandos / intérprete interactivo
  - **hbrund|hbrun\*d** Modo secuencia de comandos / intérprete interactivo en modo depuración
  - **harbour** modo \-hbraw \(simular compilador Harbour \-tal cuál\-\)
- - **clipper** mode \-hbcmp \(emulación do compilador Clipper\)
- - **rtlink** Modo \-rtlink \(emular enlazador Clipper\)
- - **exospace** Modo \-rtlink \(emular enlazador Clipper\)
- - **blinker** Modo \-rtlink \(emular enlazador Clipper\)
+ - **clipper** mode \-hbcmp \(emulate Cl\*pper compiler\)
+ - **rtlink** mode \-rtlink \(emulate Cl\*pper linker\)
+ - **exospace** mode \-rtlink \(emulate Cl\*pper linker\)
+ - **blinker** mode \-rtlink \(emulate Cl\*pper linker\)
  - **\*10** opción \-hb10
  - **\*20** opción \-hb20
  - **\*30** opción \-hb30
@@ -567,7 +566,7 @@ Intérprete interactivo de Harbour dispoñible en guións:
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
 Cambiar controlador de terminal \(GT\)\. Predeterminado \[\*\]: 'gtwin'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
-Permitir modo de compatibilidade con Clipper \(non Unicode\)\.
+Enable Cl\*pper compatibility \(non\-Unicode\) mode\.
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Cargar cabeceira de Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
@@ -686,7 +685,7 @@ Tamén se poden combinar os filtros usando os operadores '&amp;' \(and\), '|' \(
   - '\.' \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
-  - \.hb, \.hrb ou \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. SET EXACT is set to ON\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
+  - \.hb, \.hrb ou \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. SET EXACT is set to ON\. Set\( \_SET\_EOL \) is set to OFF\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
   - Pose usar &lt;Alt\+V&gt; no modo de intérprete interactivo de Harbour para pegar texto dende o portapapéis\.
   - Os valores marcados con \[\*\] poden depender da plataforma anfitriona e/ou da configuración\. Esta axuda foi xenerada na plataforma 'win'\.
 
