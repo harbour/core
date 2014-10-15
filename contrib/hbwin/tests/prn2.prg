@@ -3,7 +3,7 @@
 PROCEDURE Main()
 
    LOCAL nPrn := 1
-   LOCAL cFileName := Space( 40 )
+   LOCAL cFileName := Space( 256 )
    LOCAL GetList := {}
 
    LOCAL aPrn := win_printerList()
@@ -16,7 +16,7 @@ PROCEDURE Main()
       DO WHILE nPrn != 0
          CLS
          @ 0, 0 SAY "win_PrintFileRaw() test program. Choose a printer to test"
-         @ 1, 0 SAY "File name:" GET cFileName PICTURE "@!K"
+         @ 1, 0 SAY "File name:" GET cFileName PICTURE "@KS40"
          READ
          @ 2, 0 TO MaxRow(), MaxCol()
          nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn )

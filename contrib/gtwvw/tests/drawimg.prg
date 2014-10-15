@@ -91,8 +91,8 @@ PROCEDURE Main()
    DO WHILE .T.
       CLS
       SetCursor( SC_NORMAL )
-      cpict := PadR( cpict, 40 )
-      @ 0, 0 SAY "FileName  :" GET cpict PICTURE "@K" VALID hb_FileExists( AllTrim( cpict ) )
+      cpict := PadR( cpict, 256 )
+      @ 0, 0 SAY "FileName  :" GET cpict PICTURE "@KS40" VALID hb_FileExists( AllTrim( cpict ) )
       @ 1, 0 SAY "Transpar? :" GET ltransp PICTURE "Y"
       @ 2, 0 SAY "Max Cache :" GET nMaxCache PICTURE "999"
       @ 3, 0 SAY "NumOfCache=" + Str( wvw_NumBMCache(), 3 ) + ", " + ;
@@ -110,7 +110,9 @@ PROCEDURE Main()
 
       cpict := AllTrim( cpict )
 
-      // wvw_LoadPicture( 1, cpict ) // 2006-07-07
+#if 0
+      wvw_LoadPicture( 1, cpict )  // 2006-07-07
+#endif
 
       SetCursor( SC_NONE )
       DispBegin()
@@ -209,7 +211,6 @@ METHOD PROCEDURE Draw() CLASS wPaintObj
             wvw_DrawImage( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
                ::cImage, ::aOffTLBR, ::lTransp )
          ENDIF
-
       OTHERWISE
          // lBoxErrMessage()
       ENDCASE

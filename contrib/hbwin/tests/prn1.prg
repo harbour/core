@@ -3,7 +3,7 @@
 PROCEDURE Main( cPar1 )
 
    LOCAL nPrn := 1
-   LOCAL cBMPFile := Space( 40 )
+   LOCAL cBMPFile := Space( 256 )
    LOCAL GetList := {}
 
    LOCAL aPrn := win_printerList()
@@ -14,7 +14,7 @@ PROCEDURE Main( cPar1 )
       DO WHILE nPrn != 0
          CLS
          @ 0, 0 SAY "win_Prn() Class test program. Choose a printer to test"
-         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICTURE "@K"
+         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICTURE "@KS40"
          READ
          @ 2, 0 TO MaxRow(), MaxCol()
          IF ( nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn ) ) != 0

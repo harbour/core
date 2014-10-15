@@ -42,7 +42,7 @@ PROCEDURE Main( nRow, nCol )
    Scroll( 7, 2, 19, 63, 0 )
    @ 7, 2 TO 20, 63
 
-   @ 17, 10 TO 19, 40 double
+   @ 17, 10 TO 19, 40 DOUBLE
 
    SetColor( "N/W" )
    @ 18, 11 SAY "  Double Click here to Quit  "
