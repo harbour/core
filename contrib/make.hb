@@ -489,6 +489,8 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
 
    LOCAL nErrorLevel
 
+   cProjectPath := hb_DirSepToOS( cProjectPath )
+
    hProject[ "cType" ] := ""
    hProject[ "aDept" ] := {}
    hProject[ "lChecked" ] := NIL
@@ -535,6 +537,8 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    LOCAL cOptionsLibDyn := ""
    LOCAL cCommand
 
+   cProjectPath := hb_DirSepToOS( cProjectPath )
+
    /* Making sure that user settings do not interfere with the std build process. */
    hb_SetEnv( "HBMK_OPTIONS" )
    hb_SetEnv( "HARBOUR" )
@@ -554,7 +558,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
       hb_SetEnv( "_HB_DYNSUFF" )
    ENDIF
 
-   hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( hb_DirSepToOS( cProjectPath ) ) )
+   hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( cProjectPath ) )
 
    cCommand := s_cBinDir + "hbmk2" + ;
       " -lang=en -quiet -width=0 -autohbm-" + ;
@@ -730,12 +734,14 @@ STATIC FUNCTION AddProject( hProjectList, cFileName )
 
       cFileName := hb_FNameMerge( cDir, cName, cExt )
 
-      IF hb_FileExists( s_cBase + s_cHome + cFileName )
+      IF hb_FileExists( hb_DirSepToOS( s_cBase + s_cHome + cFileName ) )
          cFileName := StrTran( cFileName, "\", "/" )
          IF ! cFileName $ hProjectList
             hProjectList[ cFileName ] := { => }
             RETURN .T.
          ENDIF
+      ELSE
+         OutStd( hb_StrFormat( "! Warning: Project not found, cannot be added: %1$s", hb_DirSepToOS( s_cBase + s_cHome + cFileName ) ) + hb_eol() )
       ENDIF
    ENDIF
 
