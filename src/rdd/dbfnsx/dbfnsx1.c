@@ -74,7 +74,7 @@ static HB_USHORT s_uiRddId;
 #define HB_INTCAST     int
 
 #define hb_nsxKeyFree( K )                hb_xfree( K )
-#define hb_nsxFileOffset( I, B )          ( ( B ) << ( ( I )->LargeFile ? NSX_PAGELEN_BITS : 0 ) )
+#define hb_nsxFileOffset( I, B )          ( ( HB_FOFFSET ) ( B ) << ( ( I )->LargeFile ? NSX_PAGELEN_BITS : 0 ) )
 #define hb_nsxGetRecSize( r )             ( ( r ) < 0x10000 ? 2 : ( ( r ) < 0x1000000 ? 3 : 4 ) )
 #define hb_nsxPageBuffer( p )             ( ( p )->data.buffer )
 #define hb_nsxIsLeaf( p )                 ( ( ( p )->data.buffer[ 0 ] & NSX_LEAFPAGE ) != 0 )
@@ -5887,13 +5887,12 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
          }
       }
 
-      fDirectRead = ! hb_setGetStrictRead() && /* ! pArea->dbfarea.area.lpdbRelations && */
-                    ( ! pArea->dbfarea.area.lpdbOrdCondInfo || pArea->dbfarea.area.lpdbOrdCondInfo->fAll ||
-                      ( pArea->lpCurTag == NULL && ! fUseFilter ) );
-
       pSort->ulSizeIO = ( 1 << 16 ) / NSX_PAGELEN;
       pSort->pBuffIO = ( HB_UCHAR * ) hb_xgrab( pSort->ulSizeIO * NSX_PAGELEN );
       iRecBufSize = ( pSort->ulSizeIO * NSX_PAGELEN ) / pArea->dbfarea.uiRecordLen;
+      fDirectRead = ! hb_setGetStrictRead() && iRecBufSize > 1 && /* ! pArea->dbfarea.area.lpdbRelations && */
+                    ( ! pArea->dbfarea.area.lpdbOrdCondInfo || pArea->dbfarea.area.lpdbOrdCondInfo->fAll ||
+                      ( pArea->lpCurTag == NULL && ! fUseFilter ) );
 
       if( ulStartRec == 0 && pArea->lpCurTag == NULL )
          ulStartRec = 1;
@@ -5925,16 +5924,24 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
                break;
             if( iRecBuff == 0 || iRecBuff >= iRecBufSize )
             {
+               HB_SIZE nSize;
+
                if( ulRecCount - ulRecNo >= ( HB_ULONG ) iRecBufSize )
                   iRec = iRecBufSize;
                else
                   iRec = ulRecCount - ulRecNo + 1;
                if( ulNextCount > 0 && ulNextCount < ( HB_ULONG ) iRec )
                   iRec = ( int ) ulNextCount;
-               hb_fileReadAt( pArea->dbfarea.pDataFile, pSort->pBuffIO, pArea->dbfarea.uiRecordLen * iRec,
-                              ( HB_FOFFSET ) pArea->dbfarea.uiHeaderLen +
-                              ( HB_FOFFSET ) ( ulRecNo - 1 ) *
-                              ( HB_FOFFSET ) pArea->dbfarea.uiRecordLen );
+               nSize = iRec * pArea->dbfarea.uiRecordLen;
+               if( hb_fileReadAt( pArea->dbfarea.pDataFile, pSort->pBuffIO, nSize,
+                                  ( HB_FOFFSET ) pArea->dbfarea.uiHeaderLen +
+                                  ( HB_FOFFSET ) ( ulRecNo - 1 ) *
+                                  ( HB_FOFFSET ) pArea->dbfarea.uiRecordLen ) != nSize )
+               {
+                  hb_nsxErrorRT( pTag->pIndex->pArea, EG_READ, EDBF_READ,
+                                 pTag->pIndex->IndexName, hb_fsError(), 0, NULL );
+                  break;
+               }
                iRecBuff = 0;
             }
             pArea->dbfarea.pRecord = pSort->pBuffIO + iRecBuff * pArea->dbfarea.uiRecordLen;

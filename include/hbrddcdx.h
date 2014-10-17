@@ -57,13 +57,17 @@ HB_EXTERN_BEGIN
 #define CDX_MAXKEY                                  240
 #define CDX_MAXEXP                                  255
 #define CDX_MAXTAGNAMELEN                            10
-#define CDX_PAGELEN                                 512
+#define CDX_PAGELEN_BITS                              9
+#define CDX_PAGELEN               (1<<CDX_PAGELEN_BITS)
 #define CDX_HEADERLEN                              1024
 #define CDX_HEADEREXPLEN          (CDX_HEADERLEN - 512)
 #define CDX_HEADERPAGES   ((CDX_HEADERLEN+CDX_PAGELEN-1)/CDX_PAGELEN)
 #define CDX_INT_FREESPACE              (CDX_PAGELEN-12) /* 500 */
 #define CDX_EXT_FREESPACE              (CDX_PAGELEN-24) /* 488 */
 #define CDX_DUMMYNODE                       0xFFFFFFFFL
+
+#define CDX_HARBOUR_SIGNATURE               0x52434842L /* Harbour index signature: RCHB */
+
 
 /* #define CDX_LOCKOFFSET                      0x7FFFFFFEL */
 /* #define CDX_LOCKSIZE                                 1L */
@@ -222,8 +226,6 @@ typedef struct _CDXINTNODE
    HB_BYTE     keyPool [ CDX_INT_FREESPACE ];
 } CDXINTNODE;
 typedef CDXINTNODE * LPCDXINTNODE;
-typedef CDXINTNODE CDXNODE;
-typedef CDXNODE * LPCDXNODE;
 
 /* Compact Index Exterior Node Record */
 typedef struct _CDXEXTNODE
@@ -312,7 +314,7 @@ typedef CDXSTACK * LPCDXSTACK;
 
 typedef struct _CDXLIST
 {
-   HB_ULONG ulAddr;
+   HB_ULONG nextPage;
    HB_BOOL  fStat;
    struct _CDXLIST * pNext;
 } CDXLIST;
@@ -389,6 +391,7 @@ typedef struct _CDXINDEX
    HB_BOOL    fShared;        /* Shared file */
    HB_BOOL    fReadonly;      /* Read only file */
    HB_BOOL    fDelete;        /* delete on close flag */
+   HB_BOOL    fLargeFile;     /* page numbers instead of page offsets in index file */
    HB_ULONG   nextAvail;      /* offset to next free page in the end of index file */
    HB_ULONG   freePage;       /* offset to next free page inside index file */
    LPCDXLIST  freeLst;        /* list of free pages in index file */
@@ -400,8 +403,8 @@ typedef struct _CDXINDEX
    HB_BOOL    WrLck;
 #endif
    HB_BOOL    fChanged;       /* changes written to index, need upadte ulVersion */
-   HB_ULONG   ulVersion;      /* network version/update flag */
    HB_BOOL    fFlush;         /* changes written to index, need upadte ulVersion */
+   HB_ULONG   ulVersion;      /* network version/update flag */
 } CDXINDEX;
 typedef CDXINDEX * LPCDXINDEX;
 

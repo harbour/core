@@ -76,6 +76,17 @@
 #include "hbregex.h"
 #include "hbapicdp.h"
 
+#if 1
+#define hb_cdxFilePageOffset( I, B )      ( ( HB_FOFFSET ) ( B ) << ( ( I )->fLargeFile ? CDX_PAGELEN_BITS : 0 ) )
+#define hb_cdxFilePageNum( I, O )         ( ( HB_ULONG ) ( ( O ) >> ( ( I )->fLargeFile ? CDX_PAGELEN_BITS : 0 ) ) )
+#define hb_cdxFilePageNext( I, C )        ( ( C ) << ( ( I )->fLargeFile ? 0 : CDX_PAGELEN_BITS ) )
+#define hb_cdxFilePageRootValid( I, B )   ( ( I )->fLargeFile ? CDX_PAGELEN != CDX_DUMMYNODE : ( ( B ) % CDX_PAGELEN == 0 ) )
+#else
+#define hb_cdxFilePageOffset( I, B )      ( ( HB_FOFFSET ) ( B ) )
+#define hb_cdxFilePageNum( I, O )         ( ( HB_ULONG ) ( O ) )
+#define hb_cdxFilePageNext( I, C )        ( ( C ) << CDX_PAGELEN_BITS )
+#define hb_cdxFilePageRootValid( I, B )   ( ( B ) % CDX_PAGELEN == 0 )
+#endif
 /*
  * Tag->fRePos = HB_TRUE means that rootPage->...->childLeafPage path is
  * bad and has to be reloaded
@@ -988,11 +999,11 @@ static void hb_cdxIndexLockFlush( LPCDXINDEX pIndex )
 /*
  * get free index page
  */
-static HB_ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, HB_BOOL bHeader )
+static HB_ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, HB_BOOL fHeader )
 {
    PHB_FILE pFile = pIndex->pFile;
    HB_BYTE byBuf[ 4 ];
-   HB_ULONG ulPos;
+   HB_ULONG ulPage;
 
    if( pIndex->fReadonly )
    {
@@ -1003,19 +1014,19 @@ static HB_ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, HB_BOOL bHeader )
       hb_errInternal( 9102, "hb_cdxIndexGetAvailPage on not locked index file.", NULL, NULL );
    }
 
-   if( pIndex->freePage != 0 && pIndex->freePage != CDX_DUMMYNODE && ! bHeader )
+   if( pIndex->freePage != 0 && pIndex->freePage != CDX_DUMMYNODE && ! fHeader )
    {
-      ulPos = pIndex->freePage;
+      ulPage = pIndex->freePage;
       if( pIndex->freeLst != NULL )
       {
          LPCDXLIST pLst = pIndex->freeLst;
-         pIndex->freePage = pLst->ulAddr;
+         pIndex->freePage = pLst->nextPage;
          pIndex->freeLst = pLst->pNext;
          hb_xfree( pLst );
       }
       else
       {
-         if( hb_fileReadAt( pFile, byBuf, 4, ulPos ) != 4 )
+         if( hb_fileReadAt( pFile, byBuf, 4, hb_cdxFilePageOffset( pIndex, ulPage ) ) != 4 )
             hb_errInternal( EDBF_READ, "hb_cdxIndexGetAvailPage: Read index page failed.", NULL, NULL );
          pIndex->freePage = HB_GET_LE_UINT32( byBuf );
 #ifdef HB_CDX_DBGUPDT
@@ -1025,19 +1036,19 @@ static HB_ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, HB_BOOL bHeader )
    }
    else
    {
-      int iCnt = ( bHeader ? CDX_HEADERPAGES : 1 );
+      int iCnt = ( fHeader ? CDX_HEADERPAGES : 1 );
 
-      if( pIndex->nextAvail != CDX_DUMMYNODE )
-         ulPos = pIndex->nextAvail;
-      else
-         ulPos = ( HB_ULONG ) hb_fileSize( pFile );
-      pIndex->nextAvail = ulPos + iCnt * CDX_PAGELEN;
+      if( pIndex->nextAvail == CDX_DUMMYNODE )
+         pIndex->nextAvail = hb_cdxFilePageNum( pIndex, hb_fileSize( pFile ) );
+
+      ulPage = pIndex->nextAvail;
+      pIndex->nextAvail += hb_cdxFilePageNext( pIndex, iCnt );
 
       /* TODO: ### */
-      if( bHeader )
+      if( fHeader )
       {
          HB_BYTE byPageBuf[ CDX_PAGELEN ];
-         HB_FOFFSET fOffset = ulPos;
+         HB_FOFFSET fOffset = hb_cdxFilePageOffset( pIndex, ulPage );
 
          hb_cdxIndexLockFlush( pIndex );
          memset( byPageBuf, 0, CDX_PAGELEN );
@@ -1051,17 +1062,17 @@ static HB_ULONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex, HB_BOOL bHeader )
          pIndex->fChanged = HB_TRUE;
       }
    }
-   return ulPos;
+   return ulPage;
 }
 
 /*
  * free index page
  */
-static void hb_cdxIndexPutAvailPage( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BOOL bHeader )
+static void hb_cdxIndexPutAvailPage( LPCDXINDEX pIndex, HB_ULONG ulPage, HB_BOOL fHeader )
 {
-   if( ulPos != 0 && ulPos != CDX_DUMMYNODE )
+   if( ulPage != 0 && ulPage != CDX_DUMMYNODE )
    {
-      int iCnt = ( bHeader ? CDX_HEADERPAGES : 1 );
+      int iCnt = ( fHeader ? CDX_HEADERPAGES : 1 );
       LPCDXLIST pLst;
 
       if( pIndex->fReadonly )
@@ -1069,16 +1080,17 @@ static void hb_cdxIndexPutAvailPage( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BOOL 
       if( pIndex->fShared && ! pIndex->lockWrite )
          hb_errInternal( 9102, "hb_cdxIndexPutAvailPage on not locked index file.", NULL, NULL );
 
-      while( iCnt-- )
+      do
       {
          pLst = ( LPCDXLIST ) hb_xgrab( sizeof( CDXLIST ) );
-         pLst->ulAddr = pIndex->freePage;
-         pIndex->freePage = ulPos;
+         pLst->nextPage = pIndex->freePage;
+         pIndex->freePage = ulPage;
          pLst->fStat = HB_TRUE;
          pLst->pNext = pIndex->freeLst;
          pIndex->freeLst = pLst;
-         ulPos += CDX_PAGELEN;
+         ulPage += hb_cdxFilePageNext( pIndex, 1 );
       }
+      while( --iCnt );
    }
 }
 
@@ -1089,16 +1101,16 @@ static void hb_cdxIndexFlushAvailPage( LPCDXINDEX pIndex )
 {
    LPCDXLIST pLst = pIndex->freeLst;
    HB_BYTE byPageBuf[ CDX_PAGELEN ];
-   HB_ULONG ulPos;
+   HB_ULONG ulPage;
    HB_BOOL fClean = HB_TRUE;
 
    if( pIndex->fReadonly )
-      hb_errInternal( 9101, "hb_cdxIndexPutAvailPage on readonly database.", NULL, NULL );
+      hb_errInternal( 9101, "hb_cdxIndexFlushAvailPage on readonly database.", NULL, NULL );
    if( pIndex->fShared && ! pIndex->lockWrite )
-      hb_errInternal( 9102, "hb_cdxIndexPutAvailPage on not locked index file.", NULL, NULL );
+      hb_errInternal( 9102, "hb_cdxIndexFlushAvailPage on not locked index file.", NULL, NULL );
    hb_cdxIndexLockFlush( pIndex );
 
-   ulPos = pIndex->freePage;
+   ulPage = pIndex->freePage;
    while( pLst && pLst->fStat )
    {
       if( fClean )
@@ -1106,13 +1118,12 @@ static void hb_cdxIndexFlushAvailPage( LPCDXINDEX pIndex )
          memset( byPageBuf, 0, CDX_PAGELEN );
          fClean = HB_FALSE;
       }
-      HB_PUT_LE_UINT32( byPageBuf, pLst->ulAddr );
-      if( hb_fileWriteAt( pIndex->pFile, byPageBuf, CDX_PAGELEN, ulPos ) != CDX_PAGELEN )
-      {
+      HB_PUT_LE_UINT32( byPageBuf, pLst->nextPage );
+      if( hb_fileWriteAt( pIndex->pFile, byPageBuf, CDX_PAGELEN,
+                          hb_cdxFilePageOffset( pIndex, ulPage ) ) != CDX_PAGELEN )
          hb_errInternal( EDBF_WRITE, "Write in index page failed.", NULL, NULL );
-      }
       pIndex->fChanged = HB_TRUE;
-      ulPos = pLst->ulAddr;
+      ulPage = pLst->nextPage;
       pLst->fStat = HB_FALSE;
       pLst = pLst->pNext;
 #ifdef HB_CDX_DBGUPDT
@@ -1139,16 +1150,19 @@ static void hb_cdxIndexDropAvailPage( LPCDXINDEX pIndex )
 /*
  * write index page
  */
-static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BYTE * pBuffer,
-                                  HB_USHORT uiSize )
+static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, HB_ULONG ulPage,
+                                  const HB_BYTE * pBuffer, HB_BOOL fHeader )
 {
+   HB_SIZE nSize = fHeader ? CDX_HEADERLEN : CDX_PAGELEN;
+
    if( pIndex->fReadonly )
       hb_errInternal( 9101, "hb_cdxIndexPageWrite on readonly database.", NULL, NULL );
    if( pIndex->fShared && ! pIndex->lockWrite )
       hb_errInternal( 9102, "hb_cdxIndexPageWrite on not locked index file.", NULL, NULL );
    hb_cdxIndexLockFlush( pIndex );
 
-   if( hb_fileWriteAt( pIndex->pFile, pBuffer, uiSize, ulPos ) != ( HB_SIZE ) uiSize )
+   if( hb_fileWriteAt( pIndex->pFile, pBuffer, nSize,
+                       hb_cdxFilePageOffset( pIndex, ulPage ) ) != nSize )
       hb_errInternal( EDBF_WRITE, "Write in index page failed.", NULL, NULL );
    pIndex->fChanged = HB_TRUE;
 #ifdef HB_CDX_DBGUPDT
@@ -1159,13 +1173,16 @@ static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BYTE * p
 /*
  * read index page
  */
-static void hb_cdxIndexPageRead( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BYTE * pBuffer,
-                                 HB_USHORT uiSize )
+static void hb_cdxIndexPageRead( LPCDXINDEX pIndex, HB_ULONG ulPage,
+                                 HB_BYTE * pBuffer, HB_BOOL fHeader )
 {
+   HB_SIZE nSize = fHeader ? CDX_HEADERLEN : CDX_PAGELEN;
+
    if( pIndex->fShared && ! ( pIndex->lockRead || pIndex->lockWrite ) )
       hb_errInternal( 9103, "hb_cdxIndexPageRead on not locked index file.", NULL, NULL );
 
-   if( hb_fileReadAt( pIndex->pFile, pBuffer, uiSize, ulPos ) != ( HB_SIZE ) uiSize )
+   if( hb_fileReadAt( pIndex->pFile, pBuffer, nSize,
+                      hb_cdxFilePageOffset( pIndex, ulPage ) ) != nSize )
       hb_errInternal( EDBF_READ, "hb_cdxIndexPageRead: Read index page failed.", NULL, NULL );
 #ifdef HB_CDX_DBGUPDT
    cdxReadNO++;
@@ -1569,7 +1586,7 @@ static HB_ULONG hb_cdxPageGetKeyPage( LPCDXPAGE pPage, int iKey )
 /*
  * get number of duplicated keys from key in leaf index page
  */
-static HB_BYTE hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, HB_SHORT iKey )
+static HB_BYTE hb_cdxPageGetKeyTrl( LPCDXPAGE pPage, int iKey )
 {
 #ifdef HB_CDX_DBGCODE_EXT
    if( iKey < 0 || iKey >= pPage->iKeys )
@@ -2261,7 +2278,8 @@ static void hb_cdxPageLoad( LPCDXPAGE pPage )
       pPage->pKeyBuf = NULL;
       pPage->fBufChanged = HB_FALSE;
    }
-   hb_cdxIndexPageRead( pPage->TagParent->pIndex, pPage->Page, ( HB_BYTE * ) &pPage->node, sizeof( CDXNODE ) );
+   hb_cdxIndexPageRead( pPage->TagParent->pIndex, pPage->Page,
+                        ( HB_BYTE * ) &pPage->node, HB_FALSE );
    pPage->PageType = ( HB_BYTE ) HB_GET_LE_UINT16( pPage->node.intNode.attr );
    pPage->Left = HB_GET_LE_UINT32( pPage->node.intNode.leftPtr );
    pPage->Right = HB_GET_LE_UINT32( pPage->node.intNode.rightPtr );
@@ -2340,7 +2358,8 @@ static void hb_cdxPageStore( LPCDXPAGE pPage )
       }
 #endif
    }
-   hb_cdxIndexPageWrite( pPage->TagParent->pIndex, pPage->Page, ( HB_BYTE * ) &pPage->node, sizeof( CDXNODE ) );
+   hb_cdxIndexPageWrite( pPage->TagParent->pIndex, pPage->Page,
+                         ( const HB_BYTE * ) &pPage->node, HB_FALSE );
 #ifdef HB_CDX_DBGCODE_EXT
    hb_cdxPageCheckKeys( pPage );
 #endif
@@ -3407,8 +3426,16 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
    memset( &tagHeader, 0, sizeof( tagHeader ) );
    HB_PUT_LE_UINT32( tagHeader.rootPtr, pTag->RootBlock );
    HB_PUT_LE_UINT16( tagHeader.keySize, pTag->uiLen );
+   HB_PUT_LE_UINT16( tagHeader.headerLen, CDX_HEADERLEN );
+   HB_PUT_LE_UINT16( tagHeader.pageLen, CDX_PAGELEN );
    tagHeader.indexOpt = pTag->OptFlags;
-   tagHeader.indexSig = 1;
+   if( pTag->TagBlock == 0 )
+   {
+      HB_PUT_LE_UINT32( tagHeader.signature, CDX_HARBOUR_SIGNATURE );
+      tagHeader.indexSig = pTag->pIndex->fLargeFile ? 0x21 : 0x01;
+   }
+   else
+      tagHeader.indexSig = 0x01;
    if( ! pTag->AscendKey )
       HB_PUT_LE_UINT16( tagHeader.ascendFlg, 1 );
    if( pTag->IgnoreCase )
@@ -3436,7 +3463,8 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
          memcpy( tagHeader.keyExpPool + uiKeyLen + 1, pTag->ForExpr, uiForLen );
       }
    }
-   hb_cdxIndexPageWrite( pTag->pIndex, pTag->TagBlock, ( HB_BYTE * ) &tagHeader, sizeof( CDXTAGHEADER ) );
+   hb_cdxIndexPageWrite( pTag->pIndex, pTag->TagBlock,
+                         ( const HB_BYTE * ) &tagHeader, HB_TRUE );
 }
 
 #if defined( HB_SIXCDX )
@@ -3460,12 +3488,17 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
    HB_ULONG ulRecNo;
 
    /* read the page from a file */
-   hb_cdxIndexPageRead( pTag->pIndex, pTag->TagBlock, ( HB_BYTE * ) &tagHeader, sizeof( CDXTAGHEADER ) );
+   hb_cdxIndexPageRead( pTag->pIndex, pTag->TagBlock,
+                        ( HB_BYTE * ) &tagHeader, HB_TRUE );
 
    uiForPos = HB_GET_LE_UINT16( tagHeader.forExpPos );
    uiForLen = HB_GET_LE_UINT16( tagHeader.forExpLen );
    uiKeyPos = HB_GET_LE_UINT16( tagHeader.keyExpPos );
    uiKeyLen = HB_GET_LE_UINT16( tagHeader.keyExpLen );
+
+   if( pTag->TagBlock == 0 &&
+       HB_GET_LE_UINT32( tagHeader.signature ) == CDX_HARBOUR_SIGNATURE )
+      pTag->pIndex->fLargeFile = tagHeader.indexSig == 0x21;
 
    pTag->RootBlock = HB_GET_LE_UINT32( tagHeader.rootPtr );
 
@@ -3474,8 +3507,8 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
     * invalid root page offset (position inside an index file)
     * invalid key value length
     */
-   if( pTag->RootBlock == 0 || pTag->RootBlock % CDX_PAGELEN != 0 ||
-       ( HB_FOFFSET ) pTag->RootBlock >= hb_fileSize( pTag->pIndex->pFile ) ||
+   if( pTag->RootBlock == 0 || ! hb_cdxFilePageRootValid( pTag->pIndex, pTag->RootBlock ) ||
+       hb_cdxFilePageOffset( pTag->pIndex, pTag->RootBlock ) >= hb_fileSize( pTag->pIndex->pFile ) ||
        HB_GET_LE_UINT16( tagHeader.keySize ) > CDX_MAXKEY ||
        uiKeyLen + uiForLen > CDX_HEADEREXPLEN ||
        uiForPos + uiForLen > CDX_HEADEREXPLEN ||
@@ -3527,7 +3560,8 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
 
    pTag->AscendKey = pTag->UsrAscend = ( HB_GET_LE_UINT16( tagHeader.ascendFlg ) == 0 );
    pTag->UsrUnique = HB_FALSE;
-   if( tagHeader.indexSig == 0x01 )
+
+   if( tagHeader.indexSig == 0x01 || tagHeader.indexSig == 0x21 )
       pTag->IgnoreCase = tagHeader.ignoreCase == 1;
    else
       pTag->IgnoreCase = HB_FALSE;
@@ -3697,7 +3731,8 @@ static void hb_cdxTagOpen( LPCDXTAG pTag )
 
    if( ! pTag->RootPage )
    {
-      hb_cdxIndexPageRead( pTag->pIndex, pTag->TagBlock, ( HB_BYTE * ) &tagHeader, sizeof( CDXTAGHEADER ) );
+      hb_cdxIndexPageRead( pTag->pIndex, pTag->TagBlock,
+                           ( HB_BYTE * ) &tagHeader, HB_TRUE );
       pTag->RootBlock = HB_GET_LE_UINT32( tagHeader.rootPtr );
       if( pTag->RootBlock && pTag->RootBlock != CDX_DUMMYNODE )
          pTag->RootPage = hb_cdxPageNew( pTag, NULL, pTag->RootBlock );
@@ -7753,6 +7788,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       if( pIndex->pCompound != NULL )
          hb_cdxTagFree( pIndex->pCompound );
       pIndex->nextAvail = pIndex->freePage = 0;
+      pIndex->fLargeFile = ( pIndex->pArea->dbfarea.bLockType == DB_DBFLOCK_HB64 );
       hb_cdxIndexCreateStruct( pIndex, szCpndTagName );
    }
 
@@ -8589,7 +8625,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
                   hb_cdxIndexUnLockRead( pTag->pIndex );
             }
             pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
-                                                 pTag->pIndex->lockRead > 0 );
+                                            pTag->pIndex->lockRead > 0 );
          }
          else
             pInfo->itmResult = hb_itemPutL( pInfo->itmResult, HB_FALSE );
@@ -8606,7 +8642,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
                   hb_cdxIndexUnLockWrite( pTag->pIndex );
             }
             pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
-                                                 pTag->pIndex->lockWrite > 0 );
+                                            pTag->pIndex->lockWrite > 0 );
          }
          else
             pInfo->itmResult = hb_itemPutL( pInfo->itmResult, HB_FALSE );
@@ -8619,7 +8655,7 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
             if( hb_cdxIndexLockRead( pTag->pIndex ) )
                hb_cdxIndexUnLockRead( pTag->pIndex );
             pInfo->itmResult = hb_itemPutNInt( pInfo->itmResult,
-                                                    pTag->pIndex->ulVersion );
+                                               pTag->pIndex->ulVersion );
          }
          else
             pInfo->itmResult = hb_itemPutNI( pInfo->itmResult, 0 );
@@ -8627,12 +8663,12 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
 
       case DBOI_SHARED:
          pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
-                                              pTag && pTag->pIndex->fShared );
+                                         pTag && pTag->pIndex->fShared );
          break;
 
       case DBOI_ISREADONLY:
          pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
-                                              pTag && pTag->pIndex->fReadonly );
+                                         pTag && pTag->pIndex->fReadonly );
          break;
 
       case DBOI_ISMULTITAG:
@@ -8641,12 +8677,13 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          break;
 
       case DBOI_LARGEFILE:
-         pInfo->itmResult = hb_itemPutL( pInfo->itmResult, HB_FALSE );
+         pInfo->itmResult = hb_itemPutL( pInfo->itmResult,
+                                         pTag && pTag->pIndex->fLargeFile );
          break;
 
       case DBOI_INDEXTYPE:
          pInfo->itmResult = hb_itemPutNI( pInfo->itmResult, pTag ?
-                                    DBOI_TYPE_COMPOUND : DBOI_TYPE_UNDEF );
+                                          DBOI_TYPE_COMPOUND : DBOI_TYPE_UNDEF );
          break;
 
       default:
@@ -9482,7 +9519,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
       HB_ULONG ulStartRec = 0, ulNextCount = 0;
       HB_BOOL fDirectRead, fUseFilter = HB_FALSE;
       HB_BYTE * pSaveRecBuff = pArea->dbfarea.pRecord, cTemp[ 8 ];
-      int iRecBuff = 0, iRecBufSize = USHRT_MAX / pArea->dbfarea.uiRecordLen, iRec;
+      int iRecBuff = 0, iRecBufSize, iRec;
 
       pForItem = pTag->pForItem;
       if( pTag->nField )
@@ -9530,7 +9567,9 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
             }
          }
       }
-      fDirectRead = ! hb_setGetStrictRead() && /* ! pArea->dbfarea.area.lpdbRelations && */
+
+      iRecBufSize = ( USHRT_MAX + 1 ) / pArea->dbfarea.uiRecordLen;
+      fDirectRead = ! hb_setGetStrictRead() && iRecBufSize > 1 && /* ! pArea->dbfarea.area.lpdbRelations && */
                     ( ! pArea->dbfarea.area.lpdbOrdCondInfo || pArea->dbfarea.area.lpdbOrdCondInfo->fAll ||
                       ( pArea->uiTag == 0 && ! fUseFilter ) );
 
@@ -9561,16 +9600,24 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
                break;
             if( iRecBuff == 0 || iRecBuff >= iRecBufSize )
             {
+               HB_SIZE nSize;
+
                if( ulRecCount - ulRecNo >= ( HB_ULONG ) iRecBufSize )
                   iRec = iRecBufSize;
                else
                   iRec = ulRecCount - ulRecNo + 1;
                if( ulNextCount > 0 && ulNextCount < ( HB_ULONG ) iRec )
                   iRec = ( int ) ulNextCount;
-               hb_fileReadAt( pArea->dbfarea.pDataFile, pSort->pRecBuff, pArea->dbfarea.uiRecordLen * iRec,
-                              ( HB_FOFFSET ) pArea->dbfarea.uiHeaderLen +
-                              ( HB_FOFFSET ) ( ulRecNo - 1 ) *
-                              ( HB_FOFFSET ) pArea->dbfarea.uiRecordLen );
+               nSize = iRec * pArea->dbfarea.uiRecordLen;
+               if( hb_fileReadAt( pArea->dbfarea.pDataFile, pSort->pRecBuff, nSize,
+                                  ( HB_FOFFSET ) pArea->dbfarea.uiHeaderLen +
+                                  ( HB_FOFFSET ) ( ulRecNo - 1 ) *
+                                  ( HB_FOFFSET ) pArea->dbfarea.uiRecordLen ) != nSize )
+               {
+                  hb_cdxErrorRT( pTag->pIndex->pArea, EG_READ, EDBF_READ,
+                                 pTag->pIndex->szFileName, hb_fsError(), 0, NULL );
+                  break;
+               }
                iRecBuff = 0;
             }
             pArea->dbfarea.pRecord = pSort->pRecBuff + iRecBuff * pArea->dbfarea.uiRecordLen;
