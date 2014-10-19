@@ -3752,6 +3752,9 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
          }
          break;
+
+      case HB_GTI_UNITRANS:
+         break;
 #else
       case HB_GTI_UNITRANS:
          if( pWVT->wcTrans )
@@ -3760,9 +3763,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             if( pWVT->wcTrans )
+            {
                hb_itemFreeC( ( char * ) pWVT->wcTrans );
+               pWVT->wcTrans = NULL;
+            }
             pWVT->wcTransLen = hb_itemGetCLen( pInfo->pNewVal ) / sizeof( HB_WCHAR );
-            pWVT->wcTrans = pWVT->wcTransLen == 0 ? NULL :
+            if( pWVT->wcTransLen > 0 )
+               pWVT->wcTrans = pWVT->wcTransLen == 0 ? NULL :
                                  ( HB_WCHAR * ) hb_itemGetC( pInfo->pNewVal );
          }
          break;
