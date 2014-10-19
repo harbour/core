@@ -253,6 +253,7 @@ EXTERNAL hbmk_KEYW
 #define _HBMODE_HB10            (  0x010000 )
 #define _HBMODE_HB20            (  0x020000 )
 #define _HBMODE_HB30            (  0x030000 )
+#define _HBMODE_HB32            (  0x030200 )
 #define _HBMODE_XHB             ( -0x010200 )
 #define _HBMODE_RAW_C           ( -1 )
 
@@ -793,6 +794,8 @@ STATIC PROCEDURE hbmk_local_entry( ... )
          hb_AIns( aArgsProc, 1, "-hb20", .T. )
       CASE Right( tmp, 2 ) == "30"
          hb_AIns( aArgsProc, 1, "-hb30", .T. )
+      CASE Right( tmp, 2 ) == "32"
+         hb_AIns( aArgsProc, 1, "-hb32", .T. )
       ENDCASE
 #endif
 
@@ -1745,6 +1748,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE cParamL             == "-hb10"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
       CASE cParamL             == "-hb20"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB20
       CASE cParamL             == "-hb30"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB30
+      CASE cParamL             == "-hb32"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB32
       CASE cParamL             == "-hbc"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
 #endif
 
@@ -2795,6 +2799,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            cParamL          == "-hb10" .OR. ; /* HARBOUR_SUPPORT */
            cParamL          == "-hb20" .OR. ; /* HARBOUR_SUPPORT */
            cParamL          == "-hb30" .OR. ; /* HARBOUR_SUPPORT */
+           cParamL          == "-hb32" .OR. ; /* HARBOUR_SUPPORT */
            cParamL          == "-hbc" .OR. ; /* HARBOUR_SUPPORT */
            cParamL          == "-clipper" .OR. ; /* HARBOUR_SUPPORT */
            cParamL          == "-rtlink" .OR. ; /* HARBOUR_SUPPORT */
@@ -14031,6 +14036,7 @@ FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
    CASE "hb10"     ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
    CASE "hb20"     ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB20
    CASE "hb30"     ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB30
+   CASE "hb32"     ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB32
    ENDSWITCH
 
    IF cKeyword == hbmk_CPU( hbmk ) .OR. ;
@@ -17452,6 +17458,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-hb10"              , H_( "enable Harbour 1.0.x compatibility mode" ) }, ;
       { "-hb20"              , H_( "enable Harbour 2.0.x compatibility mode" ) }, ;
       { "-hb30"              , H_( "enable Harbour 3.0.x compatibility mode" ) }, ;
+      { "-hb32"              , H_( "enable Harbour 3.2.0dev compatibility mode" ) }, ;
       { "-xhb"               , H_( "enable xhb mode" ) }, ;
       { "-hbc"               , H_( "enable pure C mode" ) }, ;
       { "-blinker"           , hb_StrFormat( H_( e"emulate Cl*pper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect" ), _SELF_NAME_ ) }, ;
@@ -17531,6 +17538,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "*10"           , hb_StrFormat( H_( "option %1$s" ), "-hb10" ) }, ;
       { "*20"           , hb_StrFormat( H_( "option %1$s" ), "-hb20" ) }, ;
       { "*30"           , hb_StrFormat( H_( "option %1$s" ), "-hb30" ) }, ;
+      { "*32"           , hb_StrFormat( H_( "option %1$s" ), "-hb32" ) }, ;
       { "x*"            , hb_StrFormat( H_( "option %1$s" ), "-xhb" ) }, ;
       { "hbcmp*|*hbcmp" , hb_StrFormat( H_( "mode %1$s (emulate Harbour compiler producing a binary object)" ), "-hbcmp" ) }, ;
       { "hbcc*|*hbcc"   , hb_StrFormat( I_( "mode %1$s (emulate C compiler)" ), "-hbcc" ) }, ;
@@ -17700,6 +17708,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "{hb10}"                  , H_( "Harbour 1.0.x compatibility mode (see -hb10 option)" ) }, ;
       { "{hb20}"                  , H_( "Harbour 2.0.x compatibility mode (see -hb20 option)" ) }, ;
       { "{hb30}"                  , H_( "Harbour 3.0.x compatibility mode (see -hb30 option)" ) }, ;
+      { "{hb32}"                  , H_( "Harbour 3.2.0dev compatibility mode (see -hb32 option)" ) }, ;
       { "{xhb}"                   , H_( "xhb mode (see -xhb option)" ) }, ;
       { "{hb_ispath='<file|dir>'}", I_( "filter will pass if <file> or <dir> name exists on disk." ) }, ;
       { "{MACRO}"                 , I_( "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)" ) }, ;
