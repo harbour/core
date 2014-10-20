@@ -100,6 +100,7 @@
 #define RDDI_PASSWORD            42   /* Get/Set default password */
 #define RDDI_LOCKRETRY           43   /* Get/Set record and file lock timeout value */
 #define RDDI_DIRTYREAD           44   /* Get/Set index dirty read flag */
+#define RDDI_INDEXPAGESIZE       45   /* Get/Set default index page size */
 
 /* Constants for SELF_ORDINFO() */
 #define DBOI_CONDITION            1   /* The order's conditional expression */
@@ -195,6 +196,7 @@
 #define DBOI_USECURRENT         131  /* get/set "use current index" flag */
 #define DBOI_INDEXTYPE          132  /* current index type */
 #define DBOI_RESETPOS           133  /* rest logical and raw positions */
+#define DBOI_INDEXPAGESIZE      134  /* get index page size */
 
 /* return values for DBOI_OPTLEVEL */
 #define DBOI_OPTIMIZED_NONE       0

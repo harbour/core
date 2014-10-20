@@ -5956,6 +5956,16 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
          hb_itemPutL( pItem, fDirty );
          break;
       }
+      case RDDI_INDEXPAGESIZE:
+      {
+         int iPageSize = hb_itemGetNI( pItem );
+
+         hb_itemPutNI( pItem, pData->uiIndexPageSize );
+         if( iPageSize && iPageSize >= 0x200 && iPageSize <= 0x2000 &&
+             ( ( iPageSize - 1 ) & iPageSize ) == 0 )
+            pData->uiIndexPageSize = ( HB_USHORT ) iPageSize;
+         break;
+      }
       case RDDI_TRIGGER:
       {
          char * szTrigger = pData->szTrigger;

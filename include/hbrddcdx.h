@@ -61,16 +61,13 @@ HB_EXTERN_BEGIN
 #define CDX_PAGELEN               (1<<CDX_PAGELEN_BITS)
 #define CDX_HEADERLEN                              1024
 #define CDX_HEADEREXPLEN          (CDX_HEADERLEN - 512)
-#define CDX_HEADERPAGES   ((CDX_HEADERLEN+CDX_PAGELEN-1)/CDX_PAGELEN)
-#define CDX_INT_FREESPACE              (CDX_PAGELEN-12) /* 500 */
-#define CDX_EXT_FREESPACE              (CDX_PAGELEN-24) /* 488 */
-#define CDX_DUMMYNODE                       0xFFFFFFFFL
+#define CDX_INT_HEADSIZE                             12
+#define CDX_EXT_HEADSIZE                             24
+#define CDX_INT_FREESPACE     (CDX_PAGELEN-CDX_INT_HEADSIZE) /* 500 */
+#define CDX_EXT_FREESPACE     (CDX_PAGELEN-CDX_EXT_HEADSIZE) /* 488 */
 
 #define CDX_HARBOUR_SIGNATURE               0x52434842L /* Harbour index signature: RCHB */
 
-
-/* #define CDX_LOCKOFFSET                      0x7FFFFFFEL */
-/* #define CDX_LOCKSIZE                                 1L */
 #define CDX_STACKSIZE                                64
 #define CDX_PAGECACHESIZE                             8
 #define CDX_NODE_BRANCH                               0
@@ -79,6 +76,7 @@ HB_EXTERN_BEGIN
 #define CDX_NODE_UNUSED                            0xFF
 #define CDX_IGNORE_REC_NUM                         0x0L
 #define CDX_MAX_REC_NUM                     0xFFFFFFFFL
+#define CDX_DUMMYNODE                       0xFFFFFFFFL
 #define CDX_BALANCE_LEAFPAGES                         3
 #define CDX_BALANCE_INTPAGES                          3
 
@@ -193,7 +191,7 @@ typedef struct _CDXTAGHEADER
 {
    HB_BYTE     rootPtr  [ 4 ];   /* offset of the root node */
    HB_BYTE     freePtr  [ 4 ];   /* offset of list of free pages or -1 */
-   HB_BYTE     reserved1[ 4 ];   /* Version number ??? */
+   HB_BYTE     counter  [ 4 ];   /* update counter (in root node) */
    HB_BYTE     keySize  [ 2 ];   /* key length */
    HB_BYTE     indexOpt;         /* index options see CDX_TYPE_* */
    HB_BYTE     indexSig;         /* index signature */
@@ -269,12 +267,8 @@ typedef struct _CDXPAGE
    HB_ULONG  Left;
    HB_ULONG  Right;
 
-   HB_BYTE   PageType;
    int       iKeys;
    int       iCurKey;
-
-   HB_BOOL   fChanged;
-   HB_BYTE   bUsed;
 
    HB_ULONG  RNMask;
    HB_BYTE   ReqByte;
@@ -283,7 +277,20 @@ typedef struct _CDXPAGE
    HB_BYTE   TCBits;
    HB_BYTE   DCMask;
    HB_BYTE   TCMask;
+
+   HB_BYTE   PageType;
+   HB_BYTE   bUsed;
+   HB_BOOL   fChanged;
    HB_BOOL   fBufChanged;
+
+   HB_BYTE * pKeyBuf;                      /* pointer to uncompressed leaf page key pool  */
+
+   struct _CDXPAGE * Owner;
+   struct _CDXPAGE * Child;
+   struct _CDXTAG  * TagParent;
+   struct _CDXPAGE * pPoolPrev;
+   struct _CDXPAGE * pPoolNext;
+
    union
    {
       CDXEXTNODE extNode;
@@ -294,14 +301,6 @@ typedef struct _CDXPAGE
    HB_SHORT  bufKeyPos;                    /* they have to be just after the node */
    HB_SHORT  bufKeyLen;                    /* and maybe temporary overwriten when adding */
    HB_SHORT  iFree;                        /* new key to interior node record. */
-   HB_BYTE * pKeyBuf;                      /* pointer to uncompressed leaf page key pool */
-   /* HB_SHORT iKeyInBuf; */
-
-   struct _CDXPAGE * Owner;
-   struct _CDXPAGE * Child;
-   struct _CDXTAG  * TagParent;
-   struct _CDXPAGE * pPoolPrev;
-   struct _CDXPAGE * pPoolNext;
 } CDXPAGE;
 typedef CDXPAGE * LPCDXPAGE;
 
@@ -392,6 +391,9 @@ typedef struct _CDXINDEX
    HB_BOOL    fReadonly;      /* Read only file */
    HB_BOOL    fDelete;        /* delete on close flag */
    HB_BOOL    fLargeFile;     /* page numbers instead of page offsets in index file */
+   HB_USHORT  uiHeaderLen;    /* length of tag header */
+   HB_USHORT  uiPageLen;      /* length of index page */
+   HB_UINT    uiPageBits;     /* length of index page in bits */
    HB_ULONG   nextAvail;      /* offset to next free page in the end of index file */
    HB_ULONG   freePage;       /* offset to next free page inside index file */
    LPCDXLIST  freeLst;        /* list of free pages in index file */

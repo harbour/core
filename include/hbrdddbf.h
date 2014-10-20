@@ -141,6 +141,7 @@ typedef struct _DBFDATA
    HB_BYTE   bMemoType;        /* DB_MEMO_FPT */
    HB_BYTE   bMemoExtType;     /* DB_MEMOVER_FLEX */
    HB_USHORT uiDirtyRead;      /* HB_IDXREAD_CLEANMASK */
+   HB_USHORT uiIndexPageSize;  /* 0 */
    HB_ULONG  ulMemoBlockSize;  /* 0 */
 
    HB_BOOL   fSortRecNo;
