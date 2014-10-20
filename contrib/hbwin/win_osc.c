@@ -182,6 +182,11 @@ HB_FUNC( WIN_OSIS81 )
    hb_retl( s_hb_win_is_ver( 6, 3 ) );
 }
 
+HB_FUNC( WIN_OSIS10 )
+{
+   hb_retl( s_hb_win_is_ver( 6, 4 ) );
+}
+
 HB_FUNC( WIN_OSIS9X )
 {
    OSVERSIONINFO osvi;

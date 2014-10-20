@@ -1205,6 +1205,7 @@ extern HB_EXPORT HB_BOOL hb_iswin2k3( void );   /* return HB_TRUE if OS == Windo
 extern HB_EXPORT HB_BOOL hb_iswinvista( void ); /* return HB_TRUE if OS == Windows Vista or newer */
 extern HB_EXPORT HB_BOOL hb_iswin8( void );     /* return HB_TRUE if OS == Windows 8 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin81( void );    /* return HB_TRUE if OS == Windows 8.1 or newer */
+extern HB_EXPORT HB_BOOL hb_iswin10( void );    /* return HB_TRUE if OS == Windows 10 or newer */
 extern HB_EXPORT HB_BOOL hb_iswince( void );    /* return HB_TRUE if OS is Windows CE or Windows Mobile */
 
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );

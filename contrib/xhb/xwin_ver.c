@@ -62,6 +62,7 @@ HB_FUNC_TRANSLATE( OS_ISWINVISTA_OR_LATER , WIN_OSISVISTAORUPPER )
 HB_FUNC_TRANSLATE( OS_ISWIN7              , WIN_OSIS7            )
 HB_FUNC_TRANSLATE( OS_ISWIN8              , WIN_OSIS8            )
 HB_FUNC_TRANSLATE( OS_ISWIN81             , WIN_OSIS81           )
+HB_FUNC_TRANSLATE( OS_ISWIN10             , WIN_OSIS10           )
 HB_FUNC_TRANSLATE( OS_ISWIN9X             , WIN_OSIS9X           )
 HB_FUNC_TRANSLATE( OS_ISWIN95             , WIN_OSIS95           )
 HB_FUNC_TRANSLATE( OS_ISWIN98             , WIN_OSIS98           )
@@ -86,6 +87,7 @@ HB_FUNC( OS_ISWINVISTA_OR_LATER ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN7              ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN8              ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN81             ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN10             ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN9X             ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN95             ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN98             ) { hb_retl( HB_FALSE ); }

@@ -521,6 +521,7 @@ char * hb_verPlatform( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin10    = HB_FALSE;
 static HB_BOOL s_fWin81    = HB_FALSE;
 static HB_BOOL s_fWin8     = HB_FALSE;
 static HB_BOOL s_fWinVista = HB_FALSE;
@@ -590,7 +591,10 @@ static void s_hb_winVerInit( void )
 #endif
 
       if( s_fWin8 )
+      {
          s_fWin81 = s_hb_win_has_ver( 6, 3 );
+         s_fWin10 = s_hb_win_has_ver( 6, 4 );
+      }
    }
    s_fWinVerInit = HB_TRUE;
 }
@@ -599,6 +603,7 @@ static void s_hb_winVerInit( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin10    = HB_FALSE;
 static HB_BOOL s_fWin81    = HB_FALSE;
 static HB_BOOL s_fWin8     = HB_FALSE;
 static HB_BOOL s_fWinVista = HB_FALSE;
@@ -612,6 +617,7 @@ static void s_hb_winVerInit( void )
    union REGS regs;
 
    /* TODO */
+   s_fWin10    = HB_FALSE;
    s_fWin81    = HB_FALSE;
    s_fWin8     = HB_FALSE;
    s_fWinVista = HB_FALSE;
@@ -645,6 +651,17 @@ static void s_hb_winVerInit( void )
 }
 
 #endif
+
+HB_BOOL hb_iswin10( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin10;
+#else
+   return HB_FALSE;
+#endif
+}
 
 HB_BOOL hb_iswin81( void )
 {
