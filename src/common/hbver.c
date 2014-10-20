@@ -9,7 +9,7 @@
  *    hb_verCompiler() (support for determining some compiler version/revision)
  * Copyright 2000-2009 Viktor Szakats (vszakats.net/harbour)
  *    hb_verCPU()
- *    hb_verPlatform() (support for detecting Windows NT on DOS)
+ *    hb_verPlatform() (support for detecting Windows NT on DOS, Windows 8.1, Windows 10)
  *    hb_verPlatform() (rearrangment and cleanup)
  *    hb_verPlatform() (Wine detection and some more)
  *    hb_verHostBitWidth()
@@ -458,12 +458,34 @@ char * hb_verPlatform( void )
                break;
          }
 
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
-                      pszName,
-                      pszWine,
-                      osVer.dwMajorVersion,
-                      osVer.dwMinorVersion,
-                      LOWORD( osVer.dwBuildNumber ) );
+         if( hb_iswin10() )
+         {
+            pszName = " 10";
+            osVer.dwMajorVersion = 6;
+            osVer.dwMinorVersion = 4;
+            osVer.dwBuildNumber = 0;
+         }
+         else if( hb_iswin81() )
+         {
+            pszName = " 8.1";
+            osVer.dwMajorVersion = 6;
+            osVer.dwMinorVersion = 3;
+            osVer.dwBuildNumber = 0;
+         }
+
+         if( osVer.dwBuildNumber )
+            hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
+                         pszName,
+                         pszWine,
+                         osVer.dwMajorVersion,
+                         osVer.dwMinorVersion,
+                         LOWORD( osVer.dwBuildNumber ) );
+         else
+            hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu",
+                         pszName,
+                         pszWine,
+                         osVer.dwMajorVersion,
+                         osVer.dwMinorVersion );
 
          /* Add service pack/other info */
 
