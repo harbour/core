@@ -7264,6 +7264,9 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
                           DBOI_TYPE_COMPOUND : DBOI_TYPE_NONCOMPACT );
 #endif
             break;
+         case DBOI_INDEXPAGESIZE:
+            hb_itemPutNI( pInfo->itmResult, NTXBLOCKSIZE );
+            break;
       }
    }
    else if( pInfo->itmResult )
@@ -7388,6 +7391,7 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          case DBOI_ORDERCOUNT:
          case DBOI_SCOPEEVAL:
          case DBOI_UPDATECOUNTER:
+         case DBOI_INDEXPAGESIZE:
             hb_itemPutNI( pInfo->itmResult, 0 );
             break;
          case DBOI_FILEHANDLE:

@@ -7652,6 +7652,9 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
             pInfo->itmResult = hb_itemPutNI( pInfo->itmResult,
                pTag->pIndex->iTags > 1 ? DBOI_TYPE_COMPOUND : DBOI_TYPE_COMPACT );
             break;
+         case DBOI_INDEXPAGESIZE:
+            pInfo->itmResult = hb_itemPutNI( pInfo->itmResult, NSX_PAGELEN );
+            break;
       }
    }
    else if( pInfo->itmResult )
@@ -7776,6 +7779,7 @@ static HB_ERRCODE hb_nsxOrderInfo( NSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
          case DBOI_ORDERCOUNT:
          case DBOI_SCOPEEVAL:
          case DBOI_UPDATECOUNTER:
+         case DBOI_INDEXPAGESIZE:
             hb_itemPutNI( pInfo->itmResult, 0 );
             break;
          case DBOI_FILEHANDLE:
