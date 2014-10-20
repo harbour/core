@@ -11220,7 +11220,19 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    aFileList := {}
 
    FOR EACH aFile IN Directory( cFileName )
-      AAdd( aFilelist, hb_FNameMerge( hb_FNameDir( cFileName ), aFile[ F_NAME ] ) )
+#if defined( __PLATFORM__WINDOWS )
+      /* Partial workaround for Windows filename matching behavior,
+         where '*.ext' will match '*.ext*' because 8.3 matches are
+         also considered valid by the OS (Thanks Microsoft):
+         https://blogs.msdn.com/b/oldnewthing/archive/2005/07/20/440918.aspx
+         [vszakats] */
+      IF FNameHasWildcard( hb_FNameExt( cFileName ) ) .OR. ;
+         hb_FileMatch( hb_FNameExt( aFile[ F_NAME ] ), hb_FNameExt( cFileName ) )
+#endif
+         AAdd( aFilelist, hb_FNameMerge( hb_FNameDir( cFileName ), aFile[ F_NAME ] ) )
+#if defined( __PLATFORM__WINDOWS )
+      ENDIF
+#endif
    NEXT
 
    RETURN aFileList
