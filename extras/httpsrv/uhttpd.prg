@@ -2705,8 +2705,8 @@ STATIC FUNCTION UHTTPD_UTCOFFSET()
    LOCAL nOffset := hb_UTCOffset()
 
    RETURN iif( nOffset < 0, "-", "+" ) + ;
-      StrZero( Int( nOffset / 3600 ), 2 ) + ;
-      StrZero( Int( ( nOffset % 3600 ) / 60 ), 2 )
+      StrZero( Int( Abs( nOffset ) / 3600 ), 2 ) + ;
+      StrZero( Int( Abs( nOffset ) % 3600 / 60 ), 2 )
 
 STATIC FUNCTION hb_HashI()
 

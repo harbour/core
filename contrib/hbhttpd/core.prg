@@ -929,7 +929,7 @@ STATIC FUNCTION HttpDateFormat( tDate )
       hb_StrFormat( "UTC%1$s%2$02d%3$02d", ;
          iif( nOffset < 0, "-", "+" ), ;
          Int( Abs( nOffset ) / 3600 ), ;
-         Int( ( Abs( nOffset ) / 3600 ) - Int( Abs( nOffset ) / 3600 ) ) * 60 )
+         Int( Abs( nOffset ) % 3600 / 60 ) )
 
 STATIC FUNCTION HttpDateUnformat( cDate, /* @ */ tDate )
 

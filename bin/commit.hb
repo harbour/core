@@ -281,7 +281,7 @@ STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog )
       hb_TToC( hb_DateTime(), "yyyy-mm-dd", "HH:MM" ), ;
       iif( nOffset < 0, "-", "+" ), ;
       Int( Abs( nOffset ) / 3600 ), ;
-      Int( ( ( Abs( nOffset ) / 3600 ) - Int( Abs( nOffset ) / 3600 ) ) * 60 ), ;
+      Int( Abs( nOffset ) % 3600 / 60 ), ;
       cMyName ) + hb_eol()
 
    LOCAL cLine

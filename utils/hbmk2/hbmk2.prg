@@ -1,5 +1,5 @@
 /*
- * Harbour Make (alias hbmk/hbmk2/hbrun)
+ * Harbour Make (alias mk/hbmk/hbmk2/hbrun)
  *
  * Copyright 1999-2014 Viktor Szakats (vszakats.net/harbour)
  *
@@ -360,6 +360,9 @@ EXTERNAL hbmk_KEYW
 #define HB_ISALPHA( c )         hb_asciiIsAlpha( c )
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == "_" )
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR( c ) .OR. hb_asciiIsDigit( c ) )
+
+#define hb_RightEq( s, c )      ( Right( s, Len( c ) ) == c )
+#define hb_RightEqI( s, c )     hb_RightEq( Lower( s ), Lower( c ) )
 
 /* Logic (hack) to automatically add some libs to their
    right place in the liblist. In case of 'unicows' lib,
@@ -738,7 +741,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
 #ifdef HARBOUR_SUPPORT
    cParam1L := iif( PCount() >= 1, Lower( hb_PValue( 1 ) ), "" )
-   IF ( Right( Lower( hb_FNameName( hb_ProgName() ) ), Len( "hbrun" ) ) == "hbrun" .OR. ;
+   IF ( hb_RightEqI( hb_FNameName( hb_ProgName() ), "hbrun" ) .OR. ;
         hb_LeftEqI( hb_FNameName( hb_ProgName() ), "hbrun" ) .OR. ;
         cParam1L == "." .OR. ;
         hb_FNameExt( cParam1L ) == ".dbf" .OR. ;
@@ -788,13 +791,13 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       CASE hb_LeftEq( tmp, "x" )
          tmp := SubStr( tmp, Len( "x" ) + 1 )
          hb_AIns( aArgsProc, 1, "-xhb", .T. )
-      CASE Right( tmp, 2 ) == "10"
+      CASE hb_RightEq( tmp, "10" )
          hb_AIns( aArgsProc, 1, "-hb10", .T. )
-      CASE Right( tmp, 2 ) == "20"
+      CASE hb_RightEq( tmp, "20" )
          hb_AIns( aArgsProc, 1, "-hb20", .T. )
-      CASE Right( tmp, 2 ) == "30"
+      CASE hb_RightEq( tmp, "30" )
          hb_AIns( aArgsProc, 1, "-hb30", .T. )
-      CASE Right( tmp, 2 ) == "32"
+      CASE hb_RightEq( tmp, "32" )
          hb_AIns( aArgsProc, 1, "-hb32", .T. )
       ENDCASE
 #endif
@@ -802,27 +805,27 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       DO CASE
 #ifdef HARBOUR_SUPPORT
       CASE tmp == "harbour"                ; hb_AIns( aArgsProc, 1, "-hbraw", .T. )
-      CASE Right( tmp, Len( "hbcmp" ) ) == "hbcmp" .OR. ;
+      CASE hb_RightEq( tmp, "hbcmp" ) .OR. ;
            hb_LeftEq( tmp, "hbcmp" ) .OR. ;
            tmp == "clipper"                ; hb_AIns( aArgsProc, 1, "-hbcmp", .T. )
 #endif
-      CASE Right( tmp, Len( "hbcc" ) ) == "hbcc" .OR. ;
+      CASE hb_RightEq( tmp, "hbcc" ) .OR. ;
            hb_LeftEq( tmp, "hbcc" )        ; hb_AIns( aArgsProc, 1, "-hbcc", .T. )
-      CASE Right( tmp, Len( "hblnk" ) ) == "hblnk" .OR. ;
+      CASE hb_RightEq( tmp, "hblnk" ) .OR. ;
            hb_LeftEq( tmp, "hblnk" )       ; hb_AIns( aArgsProc, 1, "-hblnk", .T. )
 #ifdef HARBOUR_SUPPORT
       CASE tmp == "rtlink" .OR. ;
            tmp == "exospace" .OR. ;
            tmp == "blinker"                ; hb_AIns( aArgsProc, 1, "-rtlink", .T. )
 #endif
-      CASE Right( tmp, Len( "hbexe" ) ) == "hbexe" .OR. ;
+      CASE hb_RightEq( tmp, "hbexe" ) .OR. ;
            hb_LeftEq( tmp, "hbexe" )       ; AAdd( aArgsProc, "-hbexe" )
-      CASE Right( tmp, Len( "hblib" ) ) == "hblib" .OR. ;
+      CASE hb_RightEq( tmp, "hblib" ) .OR. ;
            hb_LeftEq( tmp, "hblib" )       ; AAdd( aArgsProc, "-hblib" )
-      CASE Right( tmp, Len( "hbdyn" ) ) == "hbdyn" .OR. ;
+      CASE hb_RightEq( tmp, "hbdyn" ) .OR. ;
            hb_LeftEq( tmp, "hbdyn" )       ; AAdd( aArgsProc, "-hbdyn" )
 #ifdef HARBOUR_SUPPORT
-      CASE Right( tmp, Len( "hbhrb" ) ) == "hbhrb" .OR. ;
+      CASE hb_RightEq( tmp, "hbhrb" ) .OR. ;
            hb_LeftEq( tmp, "hbhrb" )       ; AAdd( aArgsProc, "-hbhrb" )
 #endif
       ENDCASE
@@ -8433,7 +8436,7 @@ STATIC FUNCTION CheckParamLib( hbmk, cLibName, lHBC, aParam )
 
       cOpt := hb_FNameName( cLibName )
       /* readd empty extension */
-      IF Right( hb_FNameNameExt( cLibName ), 1 ) == "."
+      IF hb_RightEq( hb_FNameNameExt( cLibName ), "." )
          cOpt += "."
       ENDIF
       IF cExtL == ".a" .AND. hb_LeftEqI( cOpt, "lib" )
@@ -9334,8 +9337,8 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                         inline comments.
                         Other minor differences might be also possible. */
                cHeader := tmp[ 2 ]
-               IF Left( cHeader, 1 ) + Right( cHeader, 1 ) == "''" .OR. ;
-                  Left( cHeader, 1 ) + Right( cHeader, 1 ) == '""'
+               IF ( hb_LeftEq( cHeader, "'" ) .AND. hb_RightEq( cHeader, "'" ) ) .OR. ;
+                  ( hb_LeftEq( cHeader, '"' ) .AND. hb_RightEq( cHeader, '"' ) )
                   cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
                ENDIF
                cHeader := hb_FNameExtSetDef( cHeader, ".prg" )
@@ -9532,7 +9535,7 @@ STATIC FUNCTION deplst_read( hbmk, hDeps, cFileName )
    FOR EACH cLine IN hb_ATokens( cFileBody, Chr( 10 ) )
       ++nLine
       cLine := AllTrim( cLine )
-      IF cLine == "\" .OR. Right( cLine, 2 ) == " \"
+      IF cLine == "\" .OR. hb_RightEq( cLine, " \" )
          cList += hb_StrShrink( cLine )
       ELSE
          cList += cLine
@@ -11121,7 +11124,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
    CASE _ESC_DBLQUOTE
       IF " " $ cFileName .OR. "-" $ cFileName
          /* Sloppy */
-         IF Right( cFileName, 1 ) == "\"
+         IF hb_RightEq( cFileName, "\" )
             cFileName += "\"
          ENDIF
          RETURN '"' + cFileName + '"'
@@ -11130,7 +11133,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
    CASE _ESC_SGLQUOTE_WATCOM
       IF " " $ cFileName
          /* Sloppy */
-         IF Right( cFileName, 1 ) == "\"
+         IF hb_RightEq( cFileName, "\" )
             cFileName += "\"
          ENDIF
          RETURN "'" + cFileName + "'"
@@ -12110,7 +12113,7 @@ STATIC FUNCTION StrStripQuote( cString )
 
    hb_default( @cString, "" )
 
-   RETURN iif( Left( cString, 1 ) == '"' .AND. Right( cString, 1 ) == '"', ;
+   RETURN iif( hb_LeftEq( cString, '"' ) .AND. hb_RightEq( cString, '"' ), ;
                SubStr( cString, 2, Len( cString ) - 2 ), ;
                cString )
 
@@ -14999,7 +15002,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    /* get this before doing anything else */
    LOCAL lDebug := ;
       hb_argCheck( "debug" ) .OR. ;
-      Right( Lower( hb_FNameName( hb_ProgName() ) ), 1 ) == "d"
+      hb_RightEqI( hb_FNameName( hb_ProgName() ), "d" )
 
    #if ! __pragma( b )
       IF ! lDebug
@@ -16579,7 +16582,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
    cSrc := StrTran( cSrc, Chr( 9 ), " " )
 
    FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
-      IF Left( cLine, 1 ) == "[" .AND. Right( cLine, 1 ) == "]"
+      IF hb_LeftEq( cLine, "[" ) .AND. hb_RightEq( cLine, "]" )
          lGlobalSection := .F.
          cLine := SubStr( cLine, 2, Len( cLine ) - 2 )
          /* This is not a foolproof method if the same libname
