@@ -2,7 +2,7 @@
  * xhb compatibility functions
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (optimization and fixes)
- * Copyright 2012 Viktor Szakats (vszakats.net/harbour) (rework, xhb__Run())
+ * Copyright 2012 Viktor Szakats (vszakats.net/harbour) (rework, xhb__Run(), os_IsWin81())
  * Copyright 2004 Eduardo Fernandes <modalsist@yahoo.com.br> (original)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -72,3 +72,10 @@ PROCEDURE xhb__Run( cCmd, /* @ */ nErrorLevel )
    nErrorLevel := hb_run( cCmd )
 
    RETURN
+
+FUNCTION os_IsWin81()
+#if defined( __PLATFORM__WINDOWS ) .AND. ! defined( __PLATFORM__WINCE )
+   RETURN Val( win_regRead( "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\CurrentVersion" ) ) >= 6.3
+#else
+   RETURN .F.
+#endif

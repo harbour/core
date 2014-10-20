@@ -521,12 +521,39 @@ char * hb_verPlatform( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin81    = HB_FALSE;
 static HB_BOOL s_fWin8     = HB_FALSE;
 static HB_BOOL s_fWinVista = HB_FALSE;
 static HB_BOOL s_fWin2K3   = HB_FALSE;
 static HB_BOOL s_fWin2K    = HB_FALSE;
 static HB_BOOL s_fWinNT    = HB_FALSE;
 static HB_BOOL s_fWin9x    = HB_FALSE;
+
+#if ! defined( HB_OS_WIN_CE ) && defined( VER_SET_CONDITION )
+   #define HB_IS_VERIFYVERSIONINFO
+#else
+   #undef HB_IS_VERIFYVERSIONINFO
+#endif
+
+#if defined( HB_IS_VERIFYVERSIONINFO )
+typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEX, DWORD, DWORDLONG );
+
+static HB_BOOL s_hb_win_has_ver( _HB_VERIFYVERSIONINFO pVerifyVersionInfo, DWORD dwMajorVersion, DWORD dwMinorVersion )
+{
+    OSVERSIONINFOEX ver;
+    DWORDLONG dwlConditionMask = 0;
+
+    ZeroMemory( &ver, sizeof( ver ) );
+    ver.dwOSVersionInfoSize = sizeof( ver );
+    ver.dwMajorVersion = dwMajorVersion;
+    ver.dwMinorVersion = dwMinorVersion;
+
+    VER_SET_CONDITION( dwlConditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL );
+    VER_SET_CONDITION( dwlConditionMask, VER_MINORVERSION, VER_GREATER_EQUAL );
+
+    return pVerifyVersionInfo( &ver, VER_MAJORVERSION | VER_MINORVERSION, dwlConditionMask );
+}
+#endif
 
 static void s_hb_winVerInit( void )
 {
@@ -553,6 +580,24 @@ static void s_hb_winVerInit( void )
             s_fWin2K3 = ( osVerEx.wProductType != VER_NT_WORKSTATION );
       }
 #endif
+
+      if( s_fWin8 )
+      {
+#if defined( HB_IS_VERIFYVERSIONINFO )
+         static _HB_VERIFYVERSIONINFO s_pVerifyVersionInfo = NULL;
+
+         if( ! s_pVerifyVersionInfo )
+         {
+            HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
+            if( hModule )
+               s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESST( hModule,
+                  "VerifyVersionInfo" );
+         }
+
+         if( s_pVerifyVersionInfo )
+            s_fWin81 = s_hb_win_has_ver( s_pVerifyVersionInfo, 6, 3 );
+#endif
+      }
    }
    s_fWinVerInit = HB_TRUE;
 }
@@ -561,6 +606,7 @@ static void s_hb_winVerInit( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin81    = HB_FALSE;
 static HB_BOOL s_fWin8     = HB_FALSE;
 static HB_BOOL s_fWinVista = HB_FALSE;
 static HB_BOOL s_fWin2K3   = HB_FALSE;
@@ -573,6 +619,7 @@ static void s_hb_winVerInit( void )
    union REGS regs;
 
    /* TODO */
+   s_fWin81    = HB_FALSE;
    s_fWin8     = HB_FALSE;
    s_fWinVista = HB_FALSE;
    s_fWin2K3   = s_fWinVista;
@@ -605,6 +652,17 @@ static void s_hb_winVerInit( void )
 }
 
 #endif
+
+HB_BOOL hb_iswin81( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin81;
+#else
+   return HB_FALSE;
+#endif
+}
 
 HB_BOOL hb_iswin8( void )
 {
