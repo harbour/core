@@ -66,7 +66,7 @@ endif
 
 # The rule to compile an Swift source file.
 ifeq ($(SWIFT_RULE),)
-   SWIFT := xcrun swift
+   SWIFT := swift
    SWIFT_RULE = $(SWIFT) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.swift=$(OBJ_EXT)) $(CC_IN) $<
 endif
 
