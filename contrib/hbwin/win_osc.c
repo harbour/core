@@ -1,6 +1,7 @@
 /*
  * Windows OS version information
  *
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour) (s_hb_win_is_ver(), win_osIs81())
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,6 +47,40 @@
 
 #include "hbwin.h"
 #include "hbapiitm.h"
+
+typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEX, DWORD, DWORDLONG );
+
+static HB_BOOL s_hb_win_is_ver( DWORD dwMajorVersion, DWORD dwMinorVersion )
+{
+#if ! defined( HB_OS_WIN_CE ) && defined( VER_SET_CONDITION )
+   static _HB_VERIFYVERSIONINFO s_pVerifyVersionInfo = NULL;
+
+   if( ! s_pVerifyVersionInfo )
+   {
+      HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
+      if( hModule )
+         s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESST( hModule,
+            "VerifyVersionInfo" );
+   }
+
+   if( s_pVerifyVersionInfo )
+   {
+      OSVERSIONINFOEX ver;
+      DWORDLONG dwlConditionMask = 0;
+
+      ZeroMemory( &ver, sizeof( ver ) );
+      ver.dwOSVersionInfoSize = sizeof( ver );
+      ver.dwMajorVersion = dwMajorVersion;
+      ver.dwMinorVersion = dwMinorVersion;
+
+      VER_SET_CONDITION( dwlConditionMask, VER_MAJORVERSION, VER_EQUAL );
+      VER_SET_CONDITION( dwlConditionMask, VER_MINORVERSION, VER_EQUAL );
+
+      return s_pVerifyVersionInfo( &ver, VER_MAJORVERSION | VER_MINORVERSION, dwlConditionMask );
+   }
+#endif
+   return HB_FALSE;
+}
 
 static HB_BOOL getwinver( OSVERSIONINFO * pOSvi )
 {
@@ -140,6 +175,11 @@ HB_FUNC( WIN_OSIS8 )
    OSVERSIONINFO osvi;
 
    hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 2 );
+}
+
+HB_FUNC( WIN_OSIS81 )
+{
+   hb_retl( s_hb_win_is_ver( 6, 3 ) );
 }
 
 HB_FUNC( WIN_OSIS9X )

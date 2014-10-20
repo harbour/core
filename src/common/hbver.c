@@ -529,31 +529,39 @@ static HB_BOOL s_fWin2K    = HB_FALSE;
 static HB_BOOL s_fWinNT    = HB_FALSE;
 static HB_BOOL s_fWin9x    = HB_FALSE;
 
-#if ! defined( HB_OS_WIN_CE ) && defined( VER_SET_CONDITION )
-   #define HB_IS_VERIFYVERSIONINFO
-#else
-   #undef HB_IS_VERIFYVERSIONINFO
-#endif
-
-#if defined( HB_IS_VERIFYVERSIONINFO )
 typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEX, DWORD, DWORDLONG );
 
-static HB_BOOL s_hb_win_has_ver( _HB_VERIFYVERSIONINFO pVerifyVersionInfo, DWORD dwMajorVersion, DWORD dwMinorVersion )
+static HB_BOOL s_hb_win_has_ver( DWORD dwMajorVersion, DWORD dwMinorVersion )
 {
-    OSVERSIONINFOEX ver;
-    DWORDLONG dwlConditionMask = 0;
+#if ! defined( HB_OS_WIN_CE ) && defined( VER_SET_CONDITION )
+   static _HB_VERIFYVERSIONINFO s_pVerifyVersionInfo = NULL;
 
-    ZeroMemory( &ver, sizeof( ver ) );
-    ver.dwOSVersionInfoSize = sizeof( ver );
-    ver.dwMajorVersion = dwMajorVersion;
-    ver.dwMinorVersion = dwMinorVersion;
+   if( ! s_pVerifyVersionInfo )
+   {
+      HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
+      if( hModule )
+         s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESST( hModule,
+            "VerifyVersionInfo" );
+   }
 
-    VER_SET_CONDITION( dwlConditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL );
-    VER_SET_CONDITION( dwlConditionMask, VER_MINORVERSION, VER_GREATER_EQUAL );
+   if( s_pVerifyVersionInfo )
+   {
+      OSVERSIONINFOEX ver;
+      DWORDLONG dwlConditionMask = 0;
 
-    return pVerifyVersionInfo( &ver, VER_MAJORVERSION | VER_MINORVERSION, dwlConditionMask );
-}
+      ZeroMemory( &ver, sizeof( ver ) );
+      ver.dwOSVersionInfoSize = sizeof( ver );
+      ver.dwMajorVersion = dwMajorVersion;
+      ver.dwMinorVersion = dwMinorVersion;
+
+      VER_SET_CONDITION( dwlConditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL );
+      VER_SET_CONDITION( dwlConditionMask, VER_MINORVERSION, VER_GREATER_EQUAL );
+
+      return s_pVerifyVersionInfo( &ver, VER_MAJORVERSION | VER_MINORVERSION, dwlConditionMask );
+   }
 #endif
+   return HB_FALSE;
+}
 
 static void s_hb_winVerInit( void )
 {
@@ -582,22 +590,7 @@ static void s_hb_winVerInit( void )
 #endif
 
       if( s_fWin8 )
-      {
-#if defined( HB_IS_VERIFYVERSIONINFO )
-         static _HB_VERIFYVERSIONINFO s_pVerifyVersionInfo = NULL;
-
-         if( ! s_pVerifyVersionInfo )
-         {
-            HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
-            if( hModule )
-               s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESST( hModule,
-                  "VerifyVersionInfo" );
-         }
-
-         if( s_pVerifyVersionInfo )
-            s_fWin81 = s_hb_win_has_ver( s_pVerifyVersionInfo, 6, 3 );
-#endif
-      }
+         s_fWin81 = s_hb_win_has_ver( 6, 3 );
    }
    s_fWinVerInit = HB_TRUE;
 }

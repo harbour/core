@@ -393,6 +393,7 @@ DYNAMIC win_osIs2000OrUpper
 DYNAMIC win_osIs2003
 DYNAMIC win_osIs7
 DYNAMIC win_osIs8
+DYNAMIC win_osIs81
 DYNAMIC win_osIs95
 DYNAMIC win_osIs98
 DYNAMIC win_osIs9x
