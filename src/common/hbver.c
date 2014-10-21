@@ -7,12 +7,9 @@
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_verPlatform() (support for determining many Windows flavours)
  *    hb_verCompiler() (support for determining some compiler version/revision)
- * Copyright 2000-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_verCPU()
- *    hb_verPlatform() (support for detecting Windows NT on DOS, Windows 8.1, Windows 10)
- *    hb_verPlatform() (rearrangment and cleanup)
- *    hb_verPlatform() (Wine detection and some more)
- *    hb_verHostBitWidth()
+ * Copyright 2000-2014 Viktor Szakats (vszakats.net/harbour)
+ *    hb_verCPU(), hb_verHostBitWidth(), hb_iswinver()
+ *    hb_verPlatform() (support for detecting Windows NT on DOS, Wine, post-Windows 8, cleanups)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
