@@ -12290,7 +12290,6 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
                               nResult := __hbmk( aArgs, hbmk[ _HBMK_nArgTarget ], hbmk[ _HBMK_nLevel ] + 1, @hbmk[ _HBMK_lPause ] )
                               IF nResult != _EXIT_OK .AND. ;
                                  nResult != _EXIT_STOP
-                                 _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Project reference (%1$s) ignored. File not found." ), cHBP ) )
                                  RETURN nResult
                               ENDIF
                            ELSE
