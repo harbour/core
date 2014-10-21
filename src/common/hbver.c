@@ -469,7 +469,7 @@ char * hb_verPlatform( void )
             osVer.dwMinorVersion = 3;
             osVer.dwBuildNumber = 0;
          }
-         else if( hb_iswinver( 6, 3, VER_NT_SERVER, HB_FALSE ) )
+         else if( hb_iswinver( 6, 3, 0, HB_FALSE ) )  /* this must come after 6.3 workstation check */
          {
             pszName = " 2012 R2";
             osVer.dwMajorVersion = 6;
@@ -570,17 +570,9 @@ static void s_hb_winVerInit( void )
       s_fWinNT    = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
       s_fWin9x    = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
 
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
-      ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
-
-      if( ! s_fWin2K3 && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 2 )
-      {
-         OSVERSIONINFOEX osVerEx;
-         osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
-         if( GetVersionEx( ( OSVERSIONINFO * ) &osVerEx ) )
-            s_fWin2K3 = ( osVerEx.wProductType != VER_NT_WORKSTATION );
-      }
-#endif
+      s_fWin2K3 =
+         hb_iswinver( 5, 2, VER_NT_SERVER, HB_TRUE ) ||
+         hb_iswinver( 5, 2, VER_NT_DOMAIN_CONTROLLER, HB_TRUE );
 
       if( s_fWin8 )
       {
@@ -646,7 +638,9 @@ static void s_hb_winVerInit( void )
 
 HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fOrUpper )
 {
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN ) && \
+    ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
+    ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
    typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEX, DWORD, DWORDLONG );
    typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
 
@@ -681,7 +675,7 @@ HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fO
       if( iType )
       {
          dwTypeMask |= VER_PRODUCT_TYPE;
-         ver.wProductType = ( WORD ) iType;
+         ver.wProductType = ( BYTE ) iType;
          dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_PRODUCT_TYPE, VER_EQUAL );
       }
 
