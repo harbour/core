@@ -12288,7 +12288,9 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
                               aArgs := AClone( hbmk[ _HBMK_aArgs ] )
                               aArgs[ hbmk[ _HBMK_nArgTarget ] ] := cHBP
                               nResult := __hbmk( aArgs, hbmk[ _HBMK_nArgTarget ], hbmk[ _HBMK_nLevel ] + 1, @hbmk[ _HBMK_lPause ] )
-                              IF nResult != 0
+                              IF nResult != _EXIT_OK .AND. ;
+                                 nResult != _EXIT_STOP
+                                 _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Project reference (%1$s) ignored. File not found." ), cHBP ) )
                                  RETURN nResult
                               ENDIF
                            ELSE
@@ -17397,6 +17399,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-depimplib[-]"      , I_( "enable (or disable) import library generation for import library sources specified in -depimplibs= options (default: yes)" ) }, ;
       { "-stop[=<text>]"     , I_( "stop without doing anything and display <text> if specified" ) }, ;
       { "-echo=<text>"       , I_( "echo text on screen" ) }, ;
+      { "-skip"              , I_( "skip processing the rest of the project file (filters not supported)" ) }, ;
       { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) }, ;
       { "-exitstr"           , I_( "show error result as human readable text on exit" ) }, ;
       { "-info"              , I_( "turn on informational messages" ) }, ;
