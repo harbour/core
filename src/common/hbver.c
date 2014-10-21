@@ -638,9 +638,25 @@ static void s_hb_winVerInit( void )
 
 HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fOrUpper )
 {
-#if defined( HB_OS_WIN ) && \
-    ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
-    ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+
+   #if defined( __DMC__ ) || ( defined( _MSC_VER ) && _MSC_VER < 1400 )
+   typedef struct _OSVERSIONINFOEXW
+   {
+      DWORD dwOSVersionInfoSize;
+      DWORD dwMajorVersion;
+      DWORD dwMinorVersion;
+      DWORD dwBuildNumber;
+      DWORD dwPlatformId;
+      WCHAR szCSDVersion[ 128 ];
+      WORD  wServicePackMajor;
+      WORD  wServicePackMinor;
+      WORD  wSuiteMask;
+      BYTE  wProductType;
+      BYTE  wReserved;
+   } OSVERSIONINFOEXW;
+   #endif
+
    typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEX, DWORD, DWORDLONG );
    typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
 

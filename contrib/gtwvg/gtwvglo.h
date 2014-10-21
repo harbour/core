@@ -131,8 +131,8 @@ HB_EXTERN_BEGIN
       #if ! defined( INITCOMMONCONTROLSEX )
          typedef struct tagINITCOMMONCONTROLSEX
          {
-             DWORD dwSize;             /* size of this structure */
-             DWORD dwICC;              /* flags indicating which classes to be initialized */
+            DWORD dwSize;             /* size of this structure */
+            DWORD dwICC;              /* flags indicating which classes to be initialized */
          } INITCOMMONCONTROLSEX, * LPINITCOMMONCONTROLSEX;
       #endif
       #if ! defined( InitCommonControlsEx )
@@ -142,8 +142,8 @@ HB_EXTERN_BEGIN
 
    typedef struct _GRADIENT_RECT
    {
-       ULONG UpperLeft;
-       ULONG LowerRight;
+      ULONG UpperLeft;
+      ULONG LowerRight;
    } GRADIENT_RECT, * PGRADIENT_RECT, * LPGRADIENT_RECT;
 
    #ifndef TTM_SETTIPBKCOLOR

@@ -1,7 +1,7 @@
 /*
  * Windows OS version information
  *
- * Copyright 2014 Viktor Szakats (vszakats.net/harbour) (s_hb_win_is_ver(), win_osIs81())
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour) (win_osIs81(), win_osIs10())
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  *
  * This program is free software; you can redistribute it and/or modify
@@ -79,68 +79,49 @@ HB_FUNC( WIN_OSISNT4 )
             osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
 }
 
-HB_FUNC( WIN_OSIS2000ORUPPER )
-{
-   OSVERSIONINFO osvi;
-
-   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion >= 5 );
-}
-
 HB_FUNC( WIN_OSIS2000 )
 {
-   OSVERSIONINFO osvi;
+   hb_retl( hb_iswinver( 5, 0, 0, HB_FALSE ) );
+}
 
-   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0 );
+HB_FUNC( WIN_OSIS2000ORUPPER )
+{
+   hb_retl( hb_iswinver( 5, 0, 0, HB_TRUE ) );
 }
 
 HB_FUNC( WIN_OSISXP )
 {
-   OSVERSIONINFO osvi;
-
-   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1 );
+   hb_retl( hb_iswinver( 5, 1, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSISWINXPORUPPER )
 {
-   OSVERSIONINFO osvi;
-
-   hb_retl( getwinver( &osvi ) &&
-            ( osvi.dwMajorVersion > 5 || ( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 1 ) ) );
+   hb_retl( hb_iswinver( 5, 1, 0, HB_TRUE ) );
 }
 
 HB_FUNC( WIN_OSIS2003 )
 {
-   OSVERSIONINFO osvi;
-
-   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2 );
+   hb_retl( hb_iswinver( 5, 2, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSISVISTA )
 {
-   OSVERSIONINFO osvi;
-
-   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0 );
+   hb_retl( hb_iswinver( 6, 0, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSISVISTAORUPPER )
 {
-   OSVERSIONINFO osvi;
-
-   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion >= 6 );
+   hb_retl( hb_iswinver( 6, 0, 0, HB_TRUE ) );
 }
 
 HB_FUNC( WIN_OSIS7 )
 {
-   OSVERSIONINFO osvi;
-
-   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1 );
+   hb_retl( hb_iswinver( 6, 1, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSIS8 )
 {
-   OSVERSIONINFO osvi;
-
-   hb_retl( getwinver( &osvi ) && osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 2 );
+   hb_retl( hb_iswinver( 6, 2, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSIS81 )
