@@ -145,12 +145,12 @@ HB_FUNC( WIN_OSIS8 )
 
 HB_FUNC( WIN_OSIS81 )
 {
-   hb_retl( hb_iswinver( 6, 3, HB_FALSE ) );
+   hb_retl( hb_iswinver( 6, 3, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSIS10 )
 {
-   hb_retl( hb_iswinver( 6, 4, HB_FALSE ) );
+   hb_retl( hb_iswinver( 6, 4, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSIS9X )
