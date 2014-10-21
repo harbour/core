@@ -11399,7 +11399,8 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
                               aArgs := AClone( hbmk[ _HBMK_aArgs ] )
                               aArgs[ hbmk[ _HBMK_nArgTarget ] ] := cHBP
                               nResult := __hbmk( aArgs, hbmk[ _HBMK_nArgTarget ], hbmk[ _HBMK_nLevel ] + 1, @hbmk[ _HBMK_lPause ] )
-                              IF nResult != 0
+                              IF nResult != _EXIT_OK .AND. ;
+                                 nResult != _EXIT_STOP
                                  RETURN nResult
                               ENDIF
                            ELSE
