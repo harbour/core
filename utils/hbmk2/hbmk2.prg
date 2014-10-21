@@ -812,7 +812,8 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       nResult := __hbmk( aArgsTarget, nTargetPos, 1, @lPause, @lExitStr )
 
       /* Exit on first failure */
-      IF nResult != _EXIT_OK
+      IF nResult != _EXIT_OK .AND. ;
+         nResult != _EXIT_STOP
          EXIT
       ENDIF
 
