@@ -244,6 +244,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       ::FName := "cgiout.htm"
    ELSE
       ::FName := cFile
+      ::nH := FCreate( cFile )
    ENDIF
    IF lCgi
       ::cStr += "Content-Type: text/html" + hb_eol() + hb_eol()
@@ -348,7 +349,6 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
          hb_eol() + ;
          "//-->" + hb_eol() + ;
          "</script>" + hb_eol()
-
    ENDIF
 
    IF HB_ISSTRING( cStyle )
