@@ -23,9 +23,7 @@ PROCEDURE Main( cURL, ... )
       IF oFTP:Open( cURL )
          FOR EACH cFile IN aFiles
             ? "Filename:", cFile
-            IF oFtp:DownloadFile( cFile )
-               lRetVal := .T.
-            ELSE
+            IF ! oFtp:DownloadFile( cFile )
                lRetVal := .F.
                EXIT
             ENDIF

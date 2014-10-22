@@ -25,9 +25,7 @@ PROCEDURE Main( cURL, cMask )
       IF oFTP:Open( cURL )
          FOR EACH aFile IN aFiles
             ? "Filename:", aFile[ F_NAME ]
-            IF oFtp:UploadFile( aFile[ F_NAME ] )
-               lRetVal := .T.
-            ELSE
+            IF ! oFtp:UploadFile( aFile[ F_NAME ] )
                lRetVal := .F.
                EXIT
             ENDIF
