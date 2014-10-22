@@ -156,18 +156,12 @@ HB_FUNC( WIN_OSISME )
 
 HB_FUNC( WIN_OSISTSCLIENT )
 {
-   HB_BOOL bResult = HB_FALSE;
-   OSVERSIONINFO osvi;
+   /* Only supported on NT 4.0 SP3 & higher */
+   #ifndef SM_REMOTESESSION
+      #define SM_REMOTESESSION  0x1000
+   #endif
 
-   if( hb_iswinnt() && getwinver( &osvi ) && osvi.dwMajorVersion >= 4 )
-   {
-      /* Only supported on NT 4.0 SP3 & higher */
-      #ifndef SM_REMOTESESSION
-         #define SM_REMOTESESSION  0x1000
-      #endif
-      bResult = ( GetSystemMetrics( SM_REMOTESESSION ) != 0 );
-   }
-   hb_retl( bResult );
+   hb_retl( GetSystemMetrics( SM_REMOTESESSION ) != 0 );
 }
 
 HB_FUNC( WIN_OSVERSIONINFO )

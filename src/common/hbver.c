@@ -64,10 +64,30 @@
    #endif
 
    #ifndef VER_PLATFORM_WIN32_WINDOWS
-      #define VER_PLATFORM_WIN32_WINDOWS  1
+   #define VER_PLATFORM_WIN32_WINDOWS  1
    #endif
    #ifndef VER_PLATFORM_WIN32_CE
-      #define VER_PLATFORM_WIN32_CE       3
+   #define VER_PLATFORM_WIN32_CE       3
+   #endif
+
+   #ifndef VER_NT_WORKSTATION
+   #define VER_NT_WORKSTATION  0x0000001
+   #endif
+
+   #ifndef VER_MINORVERSION
+   #define VER_MINORVERSION 0x0000001
+   #endif
+   #ifndef VER_MAJORVERSION
+   #define VER_MAJORVERSION 0x0000002
+   #endif
+   #ifndef VER_PRODUCT_TYPE
+   #define VER_PRODUCT_TYPE 0x0000080
+   #endif
+   #ifndef VER_EQUAL
+   #define VER_EQUAL 1
+   #endif
+   #ifndef VER_GREATER_EQUAL
+   #define VER_GREATER_EQUAL 3
    #endif
 
 #elif defined( HB_OS_OS2 )
@@ -364,10 +384,6 @@ char * hb_verPlatform( void )
                break;
 
             case VER_PLATFORM_WIN32_NT:
-
-               #ifndef VER_NT_WORKSTATION
-               #define VER_NT_WORKSTATION  0x0000001
-               #endif
 
                if( osVer.dwMajorVersion == 6 )
                {
