@@ -53,8 +53,6 @@
 #include "wvtwinlg.ch"
 #endif
 
-#define MAX_PATH                                  256
-
 /* wvt_DrawButton() constants */
 #define WVT_BTN_FORMAT_RAISED                     0  // Default
 #define WVT_BTN_FORMAT_RECESSED                   1

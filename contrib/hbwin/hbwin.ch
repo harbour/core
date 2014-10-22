@@ -65,6 +65,8 @@
 
 #define WIN_MM_TO_INCH                     25.4
 
+#define WIN_MAX_PATH                       260
+
 /* special color value */
 #define WIN_CLR_INVALID                    0xFFFFFFFF
 

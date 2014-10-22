@@ -11,6 +11,8 @@
 #endif
 #endif
 
+#define MAX_PATH                                  WIN_MAX_PATH
+
 // Menu Manipulation Constants
 #define MF_INSERT                                 WIN_MF_INSERT
 #define MF_CHANGE                                 WIN_MF_CHANGE
