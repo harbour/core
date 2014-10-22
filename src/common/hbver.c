@@ -560,26 +560,20 @@ static void s_hb_winVerInit( void )
 {
    OSVERSIONINFO osvi;
 
+   s_fWin10    = hb_iswinver( 6, 4, 0, HB_TRUE );
+   s_fWin81    = hb_iswinver( 6, 3, 0, HB_TRUE );
+   s_fWin8     = hb_iswinver( 6, 2, 0, HB_TRUE );
+   s_fWinVista = hb_iswinver( 6, 0, 0, HB_TRUE );
+   s_fWin2K3   = hb_iswinver( 5, 2, VER_NT_SERVER, HB_TRUE ) || hb_iswinver( 5, 2, VER_NT_DOMAIN_CONTROLLER, HB_TRUE );
+   s_fWin2K    = hb_iswinver( 5, 0, 0, HB_TRUE );
+
    osvi.dwOSVersionInfoSize = sizeof( osvi );
    if( GetVersionEx( &osvi ) )
    {
-      s_fWin8     = osvi.dwMajorVersion > 6 || ( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion >= 2 );
-      s_fWinVista = osvi.dwMajorVersion >= 6;
-      s_fWin2K3   = s_fWinVista;
-      s_fWin2K    = osvi.dwMajorVersion >= 5;
-      s_fWinNT    = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
-      s_fWin9x    = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
-
-      s_fWin2K3 =
-         hb_iswinver( 5, 2, VER_NT_SERVER, HB_TRUE ) ||
-         hb_iswinver( 5, 2, VER_NT_DOMAIN_CONTROLLER, HB_TRUE );
-
-      if( s_fWin8 )
-      {
-         s_fWin81 = hb_iswinver( 6, 3, 0, HB_TRUE );
-         s_fWin10 = hb_iswinver( 6, 4, 0, HB_TRUE );
-      }
+      s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
+      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
    }
+
    s_fWinVerInit = HB_TRUE;
 }
 
@@ -663,7 +657,8 @@ HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fO
    static _HB_VERIFYVERSIONINFO   s_pVerifyVersionInfo   = NULL;
    static _HB_VERSETCONDITIONMASK s_pVerSetConditionMask = NULL;
 
-   if( ! s_pVerifyVersionInfo )
+   if( ! s_pVerifyVersionInfo ||
+       ! s_pVerSetConditionMask )
    {
       HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
       if( hModule )

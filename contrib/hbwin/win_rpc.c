@@ -66,7 +66,9 @@ HB_FUNC( WIN_UUIDCREATESTRING )
    static _HB_UUIDTOSTRING  s_pUuidToString  = NULL;
    static _HB_RPCSTRINGFREE s_pRpcStringFree = NULL;
 
-   if( ! s_pUuidCreate )
+   if( ! s_pUuidCreate ||
+       ! s_pUuidToString ||
+       ! s_pRpcStringFree )
    {
       HMODULE hRpcrt4 = GetModuleHandle( TEXT( "rpcrt4.dll" ) );
 
