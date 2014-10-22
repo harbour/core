@@ -381,7 +381,8 @@ typedef struct _CDXINDEX
    HB_BOOL    fLargeFile;     /* page numbers instead of page offsets in index file */
    HB_USHORT  uiHeaderLen;    /* length of tag header */
    HB_USHORT  uiPageLen;      /* length of index page */
-   HB_UINT    uiPageBits;     /* length of index page in bits */
+   HB_USHORT  uiPageBits;     /* length of index page in bits */
+   HB_USHORT  uiMaxKeyLen;    /* maximum index key length */
    HB_ULONG   nextAvail;      /* offset to next free page in the end of index file */
    HB_ULONG   freePage;       /* offset to next free page inside index file */
    LPCDXLIST  freeLst;        /* list of free pages in index file */
