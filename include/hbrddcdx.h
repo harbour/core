@@ -126,7 +126,6 @@ HB_EXTERN_BEGIN
 #define CURKEY_REFRESH(pTag)
 */
 
-#define HB_CDXMAXKEY( x )     ( ( HB_USHORT ) ( ( x ) > CDX_MAXKEY ? CDX_MAXKEY : ( x ) ) )
 #define HB_CDXBITMASK( x )    ( ( HB_LONG ) ( ( 1L << ( x ) ) - 1 ) )
 
 /* #define FAST_GOCOLD( A )      ((A)->dbfarea.fRecordChanged || (A)->fCdxAppend ? (SELF_GOCOLD((AREAP)(A))) : HB_SUCCESS) */
@@ -430,7 +429,7 @@ typedef struct
    LPCDXPAGE  NodeList[ CDX_STACKSIZE ];  /* Stack of pages */
    HB_ULONG   ulFirst;
    HB_ULONG * pSortedPages;
-   HB_BYTE    pLastKey[ CDX_MAXKEY ];  /* last key val */
+   HB_BYTE *  pLastKey;       /* last key val */
    HB_ULONG   ulLastRec;
    HB_BYTE *  pRecBuff;
 #ifndef HB_CDX_PACKTRAIL
