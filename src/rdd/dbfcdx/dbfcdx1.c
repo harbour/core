@@ -3475,6 +3475,32 @@ static HB_BOOL hb_cdxIsTemplateFunc( const char * szKeyExpr )
 }
 #endif
 
+static HB_BOOL hb_cdxSetPageSize( LPCDXINDEX pIndex, HB_BOOL fLargeFile,
+                                  HB_USHORT uiPageSize, HB_USHORT uiHeaderSize )
+{
+   if( uiPageSize >= CDX_PAGELEN && uiPageSize <= CDX_PAGELEN_MAX &&
+       ( ( uiPageSize - 1 ) & uiPageSize ) == 0 && uiHeaderSize == CDX_HEADERLEN )
+   {
+      pIndex->fLargeFile  = fLargeFile;
+      pIndex->uiHeaderLen = uiHeaderSize;
+      pIndex->uiPageLen   = uiPageSize;
+      pIndex->uiPageBits  = CDX_PAGELEN_BITS;
+      pIndex->uiMaxKeyLen = CDX_MAXKEY;
+
+      if( uiPageSize > CDX_PAGELEN )
+      {
+         while( ( HB_INT ) ( 1 << pIndex->uiPageBits ) < uiPageSize )
+            ++pIndex->uiPageBits;
+         pIndex->uiMaxKeyLen = ( ( uiPageSize - CDX_INT_HEADSIZE ) >> 1 ) - 8;
+      }
+
+      pIndex->nextAvail = CDX_DUMMYNODE;
+
+      return HB_TRUE;
+   }
+   return HB_FALSE;
+}
+
 /*
  * Read a tag definition from the index file
  */
@@ -3497,28 +3523,18 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
 
    if( pTag->TagBlock == 0 )
    {
+      HB_BOOL fLargeFile = HB_FALSE;
+      HB_USHORT uiPageLen = CDX_PAGELEN, uiHeaderLen = CDX_HEADERLEN;
+
       if( HB_GET_LE_UINT32( tagHeader.signature ) == CDX_HARBOUR_SIGNATURE )
       {
-         pTag->pIndex->fLargeFile  = tagHeader.indexSig == 0x21;
-         pTag->pIndex->uiHeaderLen = HB_GET_LE_UINT16( tagHeader.headerLen );
-         pTag->pIndex->uiPageLen   = HB_GET_LE_UINT16( tagHeader.pageLen );
-         pTag->pIndex->uiPageBits  = CDX_PAGELEN_BITS;
-         while( ( 1 << pTag->pIndex->uiPageBits ) < pTag->pIndex->uiPageLen )
-            ++pTag->pIndex->uiPageBits;
+         fLargeFile  = tagHeader.indexSig == 0x21;
+         uiHeaderLen = HB_GET_LE_UINT16( tagHeader.headerLen );
+         uiPageLen   = HB_GET_LE_UINT16( tagHeader.pageLen );
+      }
 
-         if( pTag->pIndex->uiHeaderLen != CDX_HEADERLEN ||
-             pTag->pIndex->uiPageLen < CDX_PAGELEN ||
-             pTag->pIndex->uiPageLen > CDX_PAGELEN_MAX ||
-             ( ( pTag->pIndex->uiPageLen - 1 ) & pTag->pIndex->uiPageLen ) != 0 )
-            pTag->RootBlock = 0;
-      }
-      else
-      {
-         pTag->pIndex->fLargeFile  = HB_FALSE;
-         pTag->pIndex->uiHeaderLen = CDX_HEADERLEN;
-         pTag->pIndex->uiPageLen   = CDX_PAGELEN;
-         pTag->pIndex->uiPageBits  = CDX_PAGELEN_BITS;
-      }
+      if( ! hb_cdxSetPageSize( pTag->pIndex, fLargeFile, uiPageLen, uiHeaderLen ) )
+         pTag->RootBlock = 0;
    }
 
    /* Return if:
@@ -4800,21 +4816,20 @@ static void hb_cdxIndexReindex( LPCDXINDEX pIndex )
 static LPCDXINDEX hb_cdxIndexNew( CDXAREAP pArea )
 {
    LPCDXINDEX pIndex;
+   HB_USHORT uiPageSize;
 
    pIndex = ( LPCDXINDEX ) hb_xgrab( sizeof( CDXINDEX ) );
    memset( pIndex, 0, sizeof( CDXINDEX ) );
    pIndex->pFile = NULL;
    pIndex->pArea = pArea;
-   pIndex->nextAvail = CDX_DUMMYNODE;
-   pIndex->uiHeaderLen = CDX_HEADERLEN;
-   pIndex->uiPageLen = DBFAREA_DATA( &pArea->dbfarea )->uiIndexPageSize;
-   if( pIndex->uiPageLen < CDX_PAGELEN )
-      pIndex->uiPageLen = CDX_PAGELEN;
-   else if( pIndex->uiPageLen > CDX_PAGELEN_MAX )
-      pIndex->uiPageLen = CDX_PAGELEN_MAX;
-   pIndex->uiPageBits = CDX_PAGELEN_BITS;
-   while( ( 1 << pIndex->uiPageBits ) < pIndex->uiPageLen )
-      ++pIndex->uiPageBits;
+
+   uiPageSize = DBFAREA_DATA( &pArea->dbfarea )->uiIndexPageSize;
+   if( uiPageSize < CDX_PAGELEN )
+      uiPageSize = CDX_PAGELEN;
+   else if( uiPageSize > CDX_PAGELEN_MAX )
+      uiPageSize = CDX_PAGELEN_MAX;
+
+   hb_cdxSetPageSize( pIndex, HB_FALSE, uiPageSize, CDX_HEADERLEN );
 
    return pIndex;
 }
