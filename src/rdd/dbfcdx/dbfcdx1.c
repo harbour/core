@@ -3434,7 +3434,9 @@ static HB_BOOL hb_cdxSetPageSize( LPCDXINDEX pIndex, HB_BOOL fLargeFile,
       {
          while( ( HB_INT ) ( 1 << pIndex->uiPageBits ) < uiPageSize )
             ++pIndex->uiPageBits;
-#if 0 /* it needs new leaf node structure with more then byte */
+#if 0
+      /* it needs new leaf node structure with more then byte
+         for dup and trail bits */
          pIndex->uiMaxKeyLen = ( ( uiPageSize - CDX_INT_HEADSIZE ) >> 1 ) - 8;
 #else
          pIndex->uiMaxKeyLen = 255;

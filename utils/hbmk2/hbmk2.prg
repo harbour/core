@@ -812,24 +812,22 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       nResult := __hbmk( aArgsTarget, nTargetPos, 1, @lPause, @lExitStr )
 
       /* Exit on first failure */
-      IF nResult != _EXIT_OK .AND. ;
-         nResult != _EXIT_STOP
-         EXIT
+      IF nResult != _EXIT_OK
+         IF lExitStr
+            OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), "[" + cTargetName + "]", "" ) + ;
+                                  ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
+         ENDIF
+         IF nResult != _EXIT_STOP
+            IF lPause
+               OutStd( I_( "Press any key to continue..." ) )
+               Inkey( 0 )
+            ENDIF
+            EXIT
+         ENDIF
       ENDIF
 
       ++nTargetTO_DO
    ENDDO
-
-   IF nResult != _EXIT_OK
-      IF lExitStr
-         OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), "[" + cTargetName + "]", "" ) + ;
-                               ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
-      ENDIF
-      IF lPause
-         OutStd( I_( "Press any key to continue..." ) )
-         Inkey( 0 )
-      ENDIF
-   ENDIF
 
    ErrorLevel( nResult )
 
