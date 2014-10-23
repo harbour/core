@@ -1080,7 +1080,8 @@ static void hb_cdxIndexFlushAvailPage( LPCDXINDEX pIndex )
       {
          HB_PUT_LE_UINT32( byPageBuf, pLst->nextPage );
          if( hb_fileWriteAt( pIndex->pFile, byPageBuf, pIndex->uiPageLen,
-                             hb_cdxFilePageOffset( pIndex, ulPage ) ) != pIndex->uiPageLen )
+                             hb_cdxFilePageOffset( pIndex, ulPage ) ) !=
+             ( HB_SIZE ) pIndex->uiPageLen )
             hb_errInternal( EDBF_WRITE, "Write in index page failed.", NULL, NULL );
 #ifdef HB_CDX_DBGUPDT
          cdxWriteNO++;
