@@ -3348,23 +3348,23 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
 
    pTag->TagChanged = HB_FALSE;
    pTag->OptFlags &= ~( CDX_TYPE_UNIQUE | CDX_TYPE_FORFILTER |
-                        CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM );
+                        CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM );
    if( pTag->UniqueKey )
       pTag->OptFlags |= CDX_TYPE_UNIQUE;
    if( pTag->pForItem != NULL )
       pTag->OptFlags |= CDX_TYPE_FORFILTER;
 #if defined( HB_SIXCDX )
    if( pTag->Custom )
-      pTag->OptFlags |= CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM;
+      pTag->OptFlags |= CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM;
    else if( pTag->ChgOnly )
       pTag->OptFlags |= CDX_TYPE_CUSTOM;
    else if( pTag->Partial )
-      pTag->OptFlags |= CDX_TYPE_TEMPORARY;
+      pTag->OptFlags |= CDX_TYPE_PARTIAL;
 #else
-   if( pTag->Temporary )
-      pTag->OptFlags |= CDX_TYPE_TEMPORARY;
    if( pTag->Custom )
       pTag->OptFlags |= CDX_TYPE_CUSTOM;
+   if( pTag->Partial )
+      pTag->OptFlags |= CDX_TYPE_PARTIAL;
 #endif
 
    memset( &tagHeader, 0, sizeof( tagHeader ) );
@@ -3520,24 +3520,20 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
    pTag->OptFlags  = tagHeader.indexOpt;
    pTag->UniqueKey = ( pTag->OptFlags & CDX_TYPE_UNIQUE ) != 0;
 #if defined( HB_SIXCDX )
-   pTag->Temporary = HB_FALSE;
    pTag->Custom    = ( pTag->OptFlags & CDX_TYPE_CUSTOM ) != 0 &&
-                     ( pTag->OptFlags & CDX_TYPE_TEMPORARY ) != 0;
+                     ( pTag->OptFlags & CDX_TYPE_PARTIAL ) != 0;
    pTag->ChgOnly   = ( pTag->OptFlags & CDX_TYPE_CUSTOM ) != 0 &&
-                     ( pTag->OptFlags & CDX_TYPE_TEMPORARY ) == 0;
+                     ( pTag->OptFlags & CDX_TYPE_PARTIAL ) == 0;
    pTag->Partial   = ( pTag->OptFlags & CDX_TYPE_CUSTOM ) != 0 ||
-                     ( pTag->OptFlags & CDX_TYPE_TEMPORARY ) != 0;
+                     ( pTag->OptFlags & CDX_TYPE_PARTIAL ) != 0;
 
-   pTag->Template  = hb_cdxIsTemplateFunc( pTag->KeyExpr );
-   if( pTag->Template )
-      pTag->Custom = HB_TRUE;
+   pTag->Template  = pTag->Custom && hb_cdxIsTemplateFunc( pTag->KeyExpr );
    /* SIx3 does not support repeated key value for the same record */
    pTag->MultiKey  = HB_FALSE;
 #else
-   pTag->Temporary = ( pTag->OptFlags & CDX_TYPE_TEMPORARY ) != 0;
+   pTag->Partial   = ( pTag->OptFlags & CDX_TYPE_PARTIAL ) != 0;
    pTag->Custom    = ( pTag->OptFlags & CDX_TYPE_CUSTOM ) != 0;
    pTag->ChgOnly   = HB_FALSE;
-   pTag->Partial   = pTag->Temporary || pTag->Custom;
    pTag->Template  = pTag->MultiKey = pTag->Custom;
 #endif
 
@@ -9440,8 +9436,12 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
       pEvalItem = pArea->dbfarea.area.lpdbOrdCondInfo->itmCobEval;
       pWhileItem = pArea->dbfarea.area.lpdbOrdCondInfo->itmCobWhile;
       lStep = pArea->dbfarea.area.lpdbOrdCondInfo->lStep;
-      if( pArea->dbfarea.area.lpdbOrdCondInfo->fRest )
-         pTag->Temporary = HB_TRUE;
+      if( pArea->dbfarea.area.lpdbOrdCondInfo->lNextCount ||
+          pArea->dbfarea.area.lpdbOrdCondInfo->itmRecID ||
+          pArea->dbfarea.area.lpdbOrdCondInfo->fRest ||
+          pArea->dbfarea.area.lpdbOrdCondInfo->fUseCurrent ||
+          pArea->dbfarea.area.lpdbOrdCondInfo->fUseFilter )
+         pTag->Partial = HB_TRUE;
    }
 
    if( pTag->Custom || ( pTag->OptFlags & CDX_TYPE_STRUCTURE ) )
