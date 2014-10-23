@@ -1690,7 +1690,7 @@ HB_FUNC( ADSVERSION )
    UNSIGNED8  ucLetter;
    UNSIGNED8  ucDesc[ 128 ];
    UNSIGNED16 usDescLen = sizeof( ucDesc ) - 1;
-   char ucVersion[ 256 ];
+   char szVersion[ 256 ];
    int iPos;
 
    AdsGetVersion( &ulMajor,
@@ -1702,22 +1702,22 @@ HB_FUNC( ADSVERSION )
    switch( hb_parni( 1 ) /* iVersionType */ )
    {
       case 0:
-         hb_snprintf( ucVersion, sizeof( ucVersion ), "%lu.%lu%c",
+         hb_snprintf( szVersion, sizeof( szVersion ), "%lu.%lu%c",
                       ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
          break;
       case 3:
-         hb_snprintf( ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
+         hb_snprintf( szVersion, sizeof( szVersion ), "%s, v%lu.%lu%c",
                       ( char * ) ucDesc, ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
          break;
       default:
-         ucVersion[ 0 ] = '\0';
+         szVersion[ 0 ] = '\0';
    }
 
-   iPos = ( int ) strlen( ucVersion ) - 1;
-   while( iPos >= 0 && ucVersion[ iPos ] == ' ' )  /* remove trailing spaces */
-      ucVersion[ iPos-- ] = '\0';
+   iPos = ( int ) strlen( szVersion );
+   while( --iPos >= 0 && szVersion[ iPos ] == ' ' )  /* remove trailing spaces */
+      szVersion[ iPos ] = '\0';
 
-   hb_retc( ucVersion );
+   hb_retc( szVersion );
 }
 
 HB_FUNC( ADSCACHEOPENTABLES )
@@ -2480,7 +2480,7 @@ HB_FUNC( ADSSETINDEXDIRECTION )
 #if ADS_LIB_VERSION >= 900
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
-   if( pArea )
+   if( pArea && HB_ISNUM( 1 ) )
       nRet = AdsSetIndexDirection( pArea->hOrdCurrent, ( UNSIGNED16 ) hb_parni( 1 ) );
 #endif
    hb_retnl( nRet );

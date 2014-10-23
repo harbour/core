@@ -2776,7 +2776,11 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          commonError( pArea, EG_UNLOCKED, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
       else if( u32RetVal == AE_TABLE_READONLY )
          commonError( pArea, EG_READONLY, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
+#ifdef AE_VALUE_OVERFLOW /* ADS_LIB_VERSION >= 700 */
       else if( u32RetVal == AE_DATA_TOO_LONG || u32RetVal == AE_VALUE_OVERFLOW )
+#else
+      else if( u32RetVal == AE_DATA_TOO_LONG )
+#endif
          return commonError( pArea, EG_DATAWIDTH, ( HB_ERRCODE ) u32RetVal, 0, NULL, EF_CANDEFAULT, NULL ) == E_DEFAULT ? HB_SUCCESS : HB_FAILURE;
       else
          commonError( pArea, EG_WRITE, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
@@ -2932,7 +2936,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    ADSHANDLE hTable, hConnection;
    UNSIGNED32 uRetVal, u32Length, uiFldLen, uiLen;
    UNSIGNED8 *ucfieldDefs, *ucfieldPtr;
-   UNSIGNED8 ucBuffer[ MAX_STR_LEN + 1 ];
+   char szBuffer[ MAX_STR_LEN + 1 ];
    HB_USHORT uiCount;
    LPFIELD pField;
    const char * cType;
@@ -3084,7 +3088,10 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       }
 
       if( cType == NULL )
+      {
+         hb_xfree( ucfieldDefs );
          return HB_FAILURE;  /* RT_ERROR */
+      }
 
       switch( pField->uiType )
       {
@@ -3097,7 +3104,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_AUTOINC:
          case HB_FT_IMAGE:
          case HB_FT_BLOB:
-            uiFldLen = hb_snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s;",
+            uiFldLen = hb_snprintf( szBuffer, sizeof( szBuffer ), "%.*s,%s;",
                                     ( int ) pArea->area.uiMaxFieldNameLength,
                                     hb_dynsymName( ( PHB_DYNS ) pField->sym ),
                                     cType );
@@ -3107,31 +3114,27 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_INTEGER:
          case HB_FT_MEMO:
          case HB_FT_VARLENGTH:
-            uiFldLen = hb_snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s,%d;",
+            uiFldLen = hb_snprintf( szBuffer, sizeof( szBuffer ), "%.*s,%s,%d;",
                                     ( int ) pArea->area.uiMaxFieldNameLength,
                                     hb_dynsymName( ( PHB_DYNS ) pField->sym ),
                                     cType, pField->uiLen );
             break;
 
          default:
-            uiFldLen = hb_snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s,%d,%d;",
+            uiFldLen = hb_snprintf( szBuffer, sizeof( szBuffer ), "%.*s,%s,%d,%d;",
                                     ( int ) pArea->area.uiMaxFieldNameLength,
                                     hb_dynsymName( ( PHB_DYNS ) pField->sym ),
                                     cType, pField->uiLen, pField->uiDec );
             break;
       }
 
-      if( uiFldLen == 0 )
-      {
-         uiFldLen = ( UNSIGNED32 ) strlen( ( char * ) ucBuffer );  /* should have been set by hb_snprintf above. */
-      }
       if( uiFldLen >= uiLen )
       {
-         hb_xfree( ucfieldPtr );
+         hb_xfree( ucfieldDefs );
          /* RT_ERROR; probably too many fields */
          return HB_FAILURE;
       }
-      memcpy( ucfieldPtr, ucBuffer, uiFldLen );
+      memcpy( ucfieldPtr, szBuffer, uiFldLen );
       uiLen -= uiFldLen;
       ucfieldPtr += uiFldLen;
 
@@ -3303,13 +3306,13 @@ static HB_ERRCODE adsInfo( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
          UNSIGNED8  ucLetter;
          UNSIGNED8  ucDesc[ 128 ];
          UNSIGNED16 usDescLen = sizeof( ucDesc ) - 1;
-         UNSIGNED8  ucVersion[ 256 ];
+         char szVersion[ 256 ];
 
          AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen );
 
-         hb_snprintf( ( char * ) ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
+         hb_snprintf( szVersion, sizeof( szVersion ), "%s, v%lu.%lu%c",
                       ( char * ) ucDesc, ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
-         hb_itemPutC( pItem, ( char * ) ucVersion );
+         hb_itemPutC( pItem, szVersion );
          break;
       }
 

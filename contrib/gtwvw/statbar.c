@@ -49,8 +49,8 @@
 
 #include "hbgtwvw.h"
 
-#define WVW_MAX_STATUS_PARTS     40       /* max # of parts in Status Bar */
-#define WVW_SPACE_BETWEEN_PARTS  2        /* pixel space between Status Bar's parts */
+#define WVW_MAX_STATUS_PARTS     40  /* max # of parts in Status Bar */
+#define WVW_SPACE_BETWEEN_PARTS  2   /* pixel space between Status Bar's parts */
 
 /* wvw_sbCreate( [nWinNum] )
  * create status bar for window nWinNum, with one part.
