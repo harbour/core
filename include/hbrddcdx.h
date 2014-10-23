@@ -133,7 +133,7 @@ HB_EXTERN_BEGIN
 
 
 #define CDX_TYPE_UNIQUE        0x01    /* unique index */
-#define CDX_TYPE_TEMPORARY     0x02    /* temporary index */
+#define CDX_TYPE_PARTIAL       0x02    /* temporary index */
 #define CDX_TYPE_CUSTOM        0x04    /* custom index */
 #define CDX_TYPE_FORFILTER     0x08    /* for expression present */
 #define CDX_TYPE_BITVECTOR     0x10    /* SoftC? */
@@ -147,12 +147,12 @@ HB_EXTERN_BEGIN
 
 /*
  SIx3 order temperature flags:
-   switch ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) )
-      case CDX_TYPE_TEMPORARY:
+   switch ( indexOpt & ( CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM ) )
+      case CDX_TYPE_PARTIAL:
          PARTIAL_RYO
       case CDX_TYPE_CUSTOM:
          PARTIAL_RYO | CHGONLY_RYO
-      case CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM:
+      case CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM:
          PARTIAL_RYO | NOUPDATE_RYO
          if index key begin with:
             'sxChar(' or 'sxNum(' or 'sxDate(' or 'sxLog('
@@ -160,23 +160,23 @@ HB_EXTERN_BEGIN
             | TEMPLATE_RYO
 
    sx_Chill()  if ( ! NOUPDATE_RYO ) then set ( CHGONLY_RYO | PARTIAL_RYO )
-                  if ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) !=
-                        CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM )
+                  if ( indexOpt & ( CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM ) !=
+                        CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM )
                   {
                      indexOpt &= ~CDX_TYPE_CUSTOM;
-                     indexOpt |= CDX_TYPE_TEMPORARY
+                     indexOpt |= CDX_TYPE_PARTIAL
                   }
 
    sx_Warm()   if ( ! NOUPDATE_RYO ) then clear CHGONLY_RYO
-                  if ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) !=
-                        CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM )
+                  if ( indexOpt & ( CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM ) !=
+                        CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM )
                   {
                      indexOpt |= CDX_TYPE_CUSTOM;
-                     indexOpt &= ~CDX_TYPE_TEMPORARY
+                     indexOpt &= ~CDX_TYPE_PARTIAL
                   }
 
    sx_Freeze() set NOUPDATE_RYO
-                  indexOpt |= CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM;
+                  indexOpt |= CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM;
 */
 /*
  indexSig:
@@ -323,7 +323,6 @@ typedef struct _CDXTAG
    HB_BYTE   OptFlags;        /* index options flag */
    HB_BOOL   AscendKey;       /* ascending/descending order flag */
    HB_BOOL   UniqueKey;       /* unique order flag */
-   HB_BOOL   Temporary;       /* temporary order flag */
    HB_BOOL   Custom;          /* custom order flag */
    HB_BOOL   Template;        /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
    HB_BOOL   MultiKey;        /* repeated key values in custom indexes accepted */
