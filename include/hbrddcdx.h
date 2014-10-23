@@ -248,10 +248,10 @@ struct _CDXTAG;   /* forward declaration */
 
 typedef struct _CDXKEY
 {
-   HB_BYTE * val;
-   HB_USHORT len;
-   HB_USHORT mode;
    HB_ULONG  rec;
+   HB_USHORT mode;
+   HB_USHORT len;
+   HB_BYTE   val[ 1 ];
 } CDXKEY, * LPCDXKEY;
 
 typedef struct _CDXPAGE
