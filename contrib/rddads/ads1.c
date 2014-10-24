@@ -337,7 +337,9 @@ static int adsIndexPageSize( int iFileType )
 {
    switch( iFileType )
    {
+#if ADS_LIB_VERSION >= 900
       case ADS_VFP:
+#endif
       case ADS_CDX: return 512;
       case ADS_NTX: return 1024;
       case ADS_ADT: return hb_ads_getIndexPageSize();
