@@ -157,9 +157,14 @@ Evaluate these points before reporting an issue:
       <http://sscce.org/>
     * See more on how to report issues in an effective and useful way:
       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
-13. If your example or report contains human readable text, use
+13. Please do not report warnings or bugs, with the exception of build
+    _errors_, in 3rd party component hosted inside the Harbour source tree.
+    You can recognize these from their source path, which always contains
+    a subdirectory named: '/3rd/'. Report these to the respective component's
+    maintainers instead.
+14. If your example or report contains human readable text, use
     English only.
-14. If your example involves compatibility components, make sure to test
+15. If your example involves compatibility components, make sure to test
     it against original implementation (for example, test legacy Cl*pper
     core language elements against real CA-Cl*pper 5.2e or 5.3b, or hbct
     functions against CT3 library, etc)
