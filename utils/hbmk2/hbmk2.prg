@@ -12845,6 +12845,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
          AAdd( aDf, "__PLATFORM__AIX" )
          AAdd( aDf, "__PLATFORM__UNIX" )
+      CASE hbmk[ _HBMK_cPLAT ] == "android"
+         AAdd( aDf, "__PLATFORM__ANDROID" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       ENDCASE
 
       /* Setup those CPU flags which we can be sure about.
