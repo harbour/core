@@ -708,6 +708,11 @@ HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fO
 
       return ( HB_BOOL ) s_pVerifyVersionInfo( &ver, dwTypeMask, dwlConditionMask );
    }
+#else
+   HB_SYMBOL_UNUSED( iMajorVersion );
+   HB_SYMBOL_UNUSED( iMinorVersion );
+   HB_SYMBOL_UNUSED( iType );
+   HB_SYMBOL_UNUSED( fOrUpper );
 #endif
    return HB_FALSE;
 }
