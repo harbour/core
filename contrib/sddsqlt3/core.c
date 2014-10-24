@@ -337,7 +337,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    }
 
    uiFields = ( HB_USHORT ) sqlite3_column_count( st );
-   SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
+   SELF_SETFIELDEXTENT( &pArea->area, uiFields );
 
    errCode = 0;
    bError  = HB_FALSE;
@@ -390,7 +390,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       }
 
       if( ! bError )
-         bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
+         bError = ( SELF_ADDFIELD( &pArea->area, &pFieldInfo ) == HB_FAILURE );
 
       if( bError )
          break;

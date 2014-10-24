@@ -330,7 +330,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    rs = OCI_GetResultset( st );
 
    uiFields = ( HB_USHORT ) OCI_GetColumnCount( rs );
-   SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
+   SELF_SETFIELDEXTENT( &pArea->area, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
    pItem    = hb_itemNew( NULL );
@@ -480,7 +480,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
          hb_arraySetForward( pItemEof, uiIndex + 1, pItem );
 
          if( ! bError )
-            bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
+            bError = ( SELF_ADDFIELD( &pArea->area, &pFieldInfo ) == HB_FAILURE );
       }
 
       hb_itemRelease( pName );

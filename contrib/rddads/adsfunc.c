@@ -435,7 +435,7 @@ HB_FUNC( ADSISRECORDLOCKED )
       if( HB_ISNUM( 1 ) )
          ulRec = hb_parnl( 1 );
       else
-         SELF_RECNO( ( AREAP ) pArea, &ulRec );
+         SELF_RECNO( &pArea->area, &ulRec );
 
       if( AdsIsRecordLocked( pArea->hTable, ( UNSIGNED32 ) ulRec, &pbLocked ) == AE_SUCCESS )
          hb_retl( pbLocked != 0 );
@@ -718,7 +718,7 @@ HB_FUNC( ADSKEYCOUNT )
                   HB_ULONG ulRecNo;
                   UNSIGNED16 u16eof;
 
-                  SELF_RECNO( ( AREAP ) pArea, &ulRecNo );
+                  SELF_RECNO( &pArea->area, &ulRecNo );
                   AdsGotoTop( hIndex );
 
                   AdsAtEOF( pArea->hTable, &u16eof );
@@ -729,7 +729,7 @@ HB_FUNC( ADSKEYCOUNT )
                      pulKey++;
                   }
 
-                  SELF_GOTO( ( AREAP ) pArea, ulRecNo );
+                  SELF_GOTO( &pArea->area, ulRecNo );
                }
                else
                   AdsGetRecordCount( hIndex, usFilterOption, &pulKey );
@@ -968,7 +968,7 @@ HB_FUNC( ADSISRECORDVALID )
    {
       HB_BOOL fEof = HB_TRUE;
 
-      if( SELF_EOF( ( AREAP ) pArea, &fEof ) == HB_SUCCESS && ! fEof )
+      if( SELF_EOF( pArea, &fEof ) == HB_SUCCESS && ! fEof )
       {
          if( pArea->dbfi.itmCobExpr )
          {
@@ -1297,7 +1297,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
             pInfo.abName = "";
             pInfo.fReadonly = HB_TRUE;
             pArea->hTable = hCursor;
-            SELF_OPEN( ( AREAP ) pArea, &pInfo );
+            SELF_OPEN( &pArea->area, &pInfo );
          }
          else
             hb_adsCloseCursor( pArea );
@@ -1351,7 +1351,7 @@ HB_FUNC( ADSEXECUTESQL )
             pInfo.abName = "";
             pInfo.fReadonly = HB_TRUE;
             pArea->hTable = hCursor;
-            SELF_OPEN( ( AREAP ) pArea, &pInfo );
+            SELF_OPEN( &pArea->area, &pInfo );
          }
          else
             hb_adsCloseCursor( pArea );

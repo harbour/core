@@ -269,7 +269,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    pSDDData->pResult = pResult;
 
    uiFields = ( HB_USHORT ) PQnfields( pResult );
-   SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
+   SELF_SETFIELDEXTENT( &pArea->area, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
    pItem    = hb_itemNew( NULL );
@@ -446,7 +446,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
  */
 
          if( ! bError )
-            bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
+            bError = ( SELF_ADDFIELD( &pArea->area, &pFieldInfo ) == HB_FAILURE );
       }
 
       if( bError )
@@ -573,7 +573,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );
-      SELF_ERROR( ( AREAP ) pArea, pError );
+      SELF_ERROR( &pArea->area, pError );
       hb_itemRelease( pError );
       return HB_FAILURE;
    }
