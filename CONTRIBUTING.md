@@ -157,8 +157,8 @@ Evaluate these points before reporting an issue:
       <http://sscce.org/>
     * See more on how to report issues in an effective and useful way:
       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
-13. Please do not report warnings or bugs, with the exception of build
-    _errors_, in 3rd party component hosted inside the Harbour source tree.
+13. Please do not report warnings or bugs &ndash; with the exception of build
+    _errors_ &ndash; in 3rd party component hosted inside the Harbour source tree.
     You can recognize these from their source path, which always contains
     a subdirectory named: '/3rd/'. Report these to the respective component's
     maintainers instead.
