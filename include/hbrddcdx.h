@@ -264,12 +264,12 @@ typedef struct _CDXPAGE
    int       iCurKey;
 
    HB_ULONG  RNMask;
-   HB_BYTE   ReqByte;
+   HB_USHORT DCMask;
+   HB_USHORT TCMask;
    HB_BYTE   RNBits;
    HB_BYTE   DCBits;
    HB_BYTE   TCBits;
-   HB_BYTE   DCMask;
-   HB_BYTE   TCMask;
+   HB_BYTE   ReqByte;
 
    HB_BYTE   PageType;
    HB_BYTE   bUsed;

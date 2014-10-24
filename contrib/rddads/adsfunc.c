@@ -131,6 +131,7 @@ void hb_adsOemAnsiFree( char * pszSrc )
 typedef struct
 {
    ADSHANDLE hConnect;
+   int iIndexPageSize;
 #if ! defined( ADS_LINUX )
    PHB_ITEM pCallBack;
 #endif /* ! ADS_LINUX */
@@ -198,6 +199,16 @@ static void hb_ads_clrConnection( ADSHANDLE hConnect )
 
    if( hConnect == 0 || hConnect == pAdsData->hConnect )
       pAdsData->hConnect = 0;
+}
+
+int hb_ads_getIndexPageSize( void )
+{
+   return HB_ADS_CONN_DATA->iIndexPageSize;
+}
+
+void hb_ads_setIndexPageSize( int iIndexPageSize )
+{
+   HB_ADS_CONN_DATA->iIndexPageSize = iIndexPageSize;
 }
 
 #if ! defined( ADS_LINUX )
