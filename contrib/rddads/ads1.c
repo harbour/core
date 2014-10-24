@@ -333,6 +333,19 @@ static const char * adsIndexExt( int iFileType )
    return ".cdx";
 }
 
+static int adsIndexPageSize( int iFileType )
+{
+   switch( iFileType )
+   {
+      case ADS_VFP:
+      case ADS_CDX: return 512;
+      case ADS_NTX: return 1024;
+      case ADS_ADT: return hb_ads_getIndexPageSize();
+   }
+
+   return 0;
+}
+
 static ADSHANDLE hb_adsFindBag( ADSAREAP pArea, const char * szBagName )
 {
    /* This method seems to be most easy one though I'm doubt
@@ -4167,7 +4180,9 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
                                  ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
                                  ( pArea->area.lpdbOrdCondInfo && pArea->area.lpdbOrdCondInfo->abFor ) ?
                                  ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : ( UNSIGNED8 * ) "",
-                                 pucWhile, u32Options, ADS_DEFAULT, &hIndex );
+                                 pucWhile, u32Options,
+                                 adsGetFileType( pArea->area.rddID ) == ADS_ADT ? adsIndexPageSize( ADS_ADT ) : ADS_DEFAULT,
+                                 &hIndex );
 #else
    u32RetVal = AdsCreateIndex( hTableOrIndex,
                                ( UNSIGNED8 * ) pOrderInfo->abBagName,
@@ -5218,6 +5233,21 @@ static HB_ERRCODE adsRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConn
       case RDDI_ORDSTRUCTEXT:
          hb_itemPutC( pItem, adsIndexExt( adsGetFileType( pRDD->rddID ) ) );
          break;
+
+      case RDDI_INDEXPAGESIZE:
+      {
+         int iPageSize = hb_itemGetNI( pItem );
+
+         hb_itemPutNI( pItem, adsIndexPageSize( adsGetFileType( pRDD->rddID ) ) );
+
+         if( adsGetFileType( pRDD->rddID ) == ADS_ADT &&
+             iPageSize >= 0x200 && iPageSize <= 0x2000 &&
+             ( ( iPageSize - 1 ) & iPageSize ) == 0 )
+         {
+            hb_ads_setIndexPageSize( iPageSize );
+         }
+         break;
+      }
 
       default:
          return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );
