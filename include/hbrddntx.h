@@ -244,7 +244,7 @@ typedef struct _TAGINFO
    LPKEYINFO   HotKeyInfo;
    HB_BOOL     HotFor;
 
-   struct     _NTXINDEX * Owner;
+   struct     _NTXINDEX * pIndex;
 } TAGINFO;
 typedef TAGINFO * LPTAGINFO;
 
@@ -255,7 +255,7 @@ typedef struct _NTXINDEX
    HB_ULONG    Version;       /* The index VERSION filed to signal index updates for other stations */
    HB_ULONG    NextAvail;
    HB_ULONG    TagBlock;      /* Index attr, next free page */
-   struct     _NTXAREA * Owner;
+   struct     _NTXAREA * pArea;
    PHB_FILE    DiskFile;
    HB_BOOL     fDelete;       /* delete on close flag */
    HB_BOOL     fReadonly;

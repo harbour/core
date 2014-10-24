@@ -415,7 +415,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    }
 
    uiFields = ( HB_USHORT ) iNameLen;
-   SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
+   SELF_SETFIELDEXTENT( &pArea->area, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
 
@@ -604,7 +604,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          hb_itemRelease( pItem );
 
          if( ! bError )
-            bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
+            bError = ( SELF_ADDFIELD( &pArea->area, &pFieldInfo ) == HB_FAILURE );
       }
 
       hb_itemRelease( pName );
