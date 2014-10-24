@@ -185,6 +185,7 @@ DYNAMIC wvw_FillRectangle
 DYNAMIC wvw_gbCreate
 DYNAMIC wvw_GetBitmapSize
 DYNAMIC wvw_GetClipboard
+DYNAMIC wvw_GetCtrlHandle
 DYNAMIC wvw_GetCursorPos
 DYNAMIC wvw_GetFontInfo
 DYNAMIC wvw_GetIconSize

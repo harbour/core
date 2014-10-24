@@ -1545,6 +1545,17 @@ HB_FUNC( WVW_GETWINDOWHANDLE )
    hbwapi_ret_raw_HANDLE( wvw_win ? wvw_win->hWnd : NULL );
 }
 
+HB_FUNC( WVW_GETCTRLHANDLE )
+{
+   PWVW_WIN wvw_win = hb_gt_wvw_win_par();
+
+   int iStyle = 0;
+
+   hbwapi_ret_raw_HWND( hb_gt_wvw_FindControlHandle( wvw_win, hb_parni( 2 ), hb_parni( 3 ), &iStyle ) );
+
+   hb_storni( iStyle, 4 );
+}
+
 HB_FUNC( WVW_SETCODEPAGE )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win_par();
