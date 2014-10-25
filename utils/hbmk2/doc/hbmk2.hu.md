@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(e7d0c2840d\) \(2014\-09\-23 10:39\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(9b7752a635\) \(2014\-10\-16 08:15\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
 Magyar \(hu\) fordítás: Copyright &copy; 2009\-2013, Szakáts Viktor  
@@ -75,6 +75,7 @@ Kapcsolók:
  - **\-depimplib\[\-\]** enable \(or disable\) import library generation for import library sources specified in \-depimplibs= options \(default: yes\)
  - **\-stop\[=&lt;text&gt;\]** álljon meg anélkül hogy bármit csinálna
  - **\-echo=&lt;text&gt;** echo text on screen
+ - **\-skip** skip processing the rest of the project file \(filters not supported\)
  - **\-pause** várjon billentyűre sikertelen befejezés esetén\. \(csak alternatív GT használata esetén\)
  - **\-exitstr** show error result as human readable text on exit
  - **\-info** tájékoztató üzenetek bekapcsolása
@@ -159,6 +160,7 @@ create link/copy hbmk2 to hbcc for the same effect
  - **\-hb10** enable Harbour 1\.0\.x compatibility mode
  - **\-hb20** enable Harbour 2\.0\.x compatibility mode
  - **\-hb30** enable Harbour 3\.0\.x compatibility mode
+ - **\-hb32** enable Harbour 3\.2\.0dev compatibility mode
  - **\-xhb** kapcsolja be az xhb üzemmódot
  - **\-hbc** enable pure C mode
  - **\-blinker** emulate Cl\*pper compatible linker behavior  
@@ -199,9 +201,9 @@ Speciális érték:
  - **\-lang=&lt;lang&gt;** override default language\. &lt;lang&gt; is an ISO language code\.
  - **\-width=&lt;n&gt;** set output width to &lt;n&gt; characters \(0=unlimited\)\.
  - **\-shl** show sub\-project level in output lines
- - **\-viewhelp** long help in text viewer
- - **\-longhelp** teljes súgó
- - **\-longhelpmd** long help in [Markdown](https://daringfireball.net/projects/markdown/) format
+ - **\-viewhelp** full help in text viewer
+ - **\-fullhelp** full help
+ - **\-fullhelpmd** full help in [Markdown](https://daringfireball.net/projects/markdown/) format
  - **\-harbourhelp** Harbour compiler help \(all Harbour compiler options are accepted as is by hbmk2\)
  - **\-credits** Harbour compiler credits
  - **\-build** Harbour compiler build information
@@ -232,6 +234,7 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **\*10** \-hb10 kapcsoló
  - **\*20** \-hb20 kapcsoló
  - **\*30** \-hb30 kapcsoló
+ - **\*32** \-hb32 kapcsoló
  - **x\*** \-xhb kapcsoló
  - **hbcmp\*|\*hbcmp** mode \-hbcmp \(emulate Harbour compiler producing a binary object\)
  - **hbcc\*|\*hbcc** mode \-hbcc \(emulate C compiler\)
@@ -336,6 +339,7 @@ Filters \(you can combine and/or negate them\):
  - **\{hb10\}** Harbour 1\.0\.x compatibility mode \(see \-hb10 option\)
  - **\{hb20\}** Harbour 2\.0\.x compatibility mode \(see \-hb20 option\)
  - **\{hb30\}** Harbour 3\.0\.x compatibility mode \(see \-hb30 option\)
+ - **\{hb32\}** Harbour 3\.2\.0dev compatibility mode \(see \-hb32 option\)
  - **\{xhb\}** xhb mode \(see \-xhb option\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** filter will pass if &lt;file&gt; or &lt;dir&gt; name exists on disk\.
  - **\{MACRO\}** filter will pass if $\{MACRO\} value is not empty and not equal to '0' or 'no' \(case insensitive\)

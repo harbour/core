@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-06 11:42+0000\nLast-Translator: Pete_wg <pete_westg@yahoo.gr>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-10-14 22:50+0000\nLast-Translator: vszakats\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1087,10 +1087,6 @@ msgid "disable library grouping on gcc based compilers"
 msgstr "απενεργοποίηση ομαδοποίησης βιβλιοθηκών σε gcc μεταγλωττιστές"
 
 #, c-format
-msgid "do (not) add Harbour version number and source file reference to .po (default: add them)"
-msgstr "προσθήκη (ή όχι) αριθμού έκδοσης Harbour και ένδειξη πηγαίου αρχείου στο .po (προεπιλογή: πρόσθεσέ τα)"
-
-#, c-format
 msgid "do not add extra list of system libraries to default library list"
 msgstr "μη προσθέτετε επιπλέον λιστα βιβλιοθηκών συστήματος στην προεπιλεγμένη λιστα βιβλιοθηκών"
 
@@ -1283,10 +1279,6 @@ msgid "sign executable with <key> (Windows and Darwin only). On Windows signtool
 msgstr "σήμανση εκτελέσιμου με το <key> (μόνο σε Windows και Darwin). Σε περιβάλλον Windows χρησιμοποιείται το signtool.exe (περιέχεται στο MS Windows SDK) ή το posign.exe (περιέχεται στην Pelles C 7), με αυτή τη σειρά, αμφότερα ανιχνεύονται αυτόματα."
 
 #, c-format
-msgid "start n compilation threads (multiprocess platforms only)"
-msgstr "εκκίνηση <n> νημάτων #threads# μεταγλώττισης (μόνο σε πολυεπεξεργαστικές πλατφόρμες)"
-
-#, c-format
 msgid "stop without doing anything and display <text> if specified"
 msgstr "Τερματισμός χωρίς να κάνει οτιδήποτε και εμφάνιση του κειμένου <text> άν καθορίστηκε"
 
@@ -1345,10 +1337,6 @@ msgstr "μετατροπή έργου hbmake <file> σε αρχείο .hbp"
 #, c-format
 msgid "display version header only"
 msgstr "εμφάνιση κεφαλίδας έκδοσης μόνο"
-
-#, c-format
-msgid "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
-msgstr "προσομοίωσε σε Clipper συμβατή τη συμπεριφορά του linker \ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
 
 #, c-format
 msgid "enable (or disable) processing of %1$s in current directory (default: yes)"
@@ -1529,14 +1517,6 @@ msgstr "μοντέλο %1$s (προσομοίωση μεταγλωττιστή C
 #, c-format
 msgid "mode %1$s (emulate C linker)"
 msgstr "μοντέλο %1$s (προσομοίωση C συνδέτη)"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper compiler)"
-msgstr "κατάσταση λειτουργίας %1$s (προσομοίωση μεταγλωττιστή Clipper)"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper linker)"
-msgstr "κατάσταση λειτουργίας %1$s (προσομοίωση Clipper linker)"
 
 #, c-format
 msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
@@ -2105,10 +2085,6 @@ msgstr "Shell API διαθέσιμο σε σενάρια Harbour:"
 #, c-format
 msgid "Display list of loaded Harbour header."
 msgstr "Εμφάνιση λίστας των φορτωμένων Harbour header."
-
-#, c-format
-msgid "Enable Clipper compatibility (non-Unicode) mode."
-msgstr "Ενεργοποίηση κατάστασης συμβατότητας Clipper (όχι-Unicode)."
 
 #, c-format
 msgid "hb_DirBase() not mapped to script."

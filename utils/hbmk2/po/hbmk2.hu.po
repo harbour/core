@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-05 11:25+0000\nLast-Translator: vszakats\nLanguage-Team: Hungarian (http://www.transifex.com/projects/p/harbour/language/hu/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: hu\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-10-14 22:50+0000\nLast-Translator: vszakats\nLanguage-Team: Hungarian (http://www.transifex.com/projects/p/harbour/language/hu/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: hu\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -455,10 +455,6 @@ msgid "create/update .po file from source. Merge it with previous .po file of th
 msgstr "hozzon létre/frissítse a .po fálj a forráskód alapján. Használja a meglévő .po fájlban levő fordításokat"
 
 #, c-format
-msgid "do (not) add Harbour version number and source file reference to .po (default: add them)"
-msgstr "írja bele (vagy ne) a Harbour verizószámát és a forrásállomány referenciákat a .po állományba (alapértelmezés: írja)"
-
-#, c-format
 msgid "enable (or disable) single beep on successful exit, double beep on failure"
 msgstr "egyszeri sípolás sikeres végrehajtás esetén, dupla sípolás hiba esetén"
 
@@ -547,10 +543,6 @@ msgid "show commands to be executed, but do not execute them"
 msgstr "mutassa a végrehajtandó parancsokat, anélkül hogy végrehajtaná őket"
 
 #, c-format
-msgid "start n compilation threads (multiprocess platforms only)"
-msgstr "n szálon futtassa a fordítókat (csak támogatott platformokon)"
-
-#, c-format
 msgid "stop without doing anything and display <text> if specified"
 msgstr "álljon meg anélkül hogy bármit csinálna"
 
@@ -585,10 +577,6 @@ msgstr ".xhp (xMate) project állomány konvertálása .hbp állományba"
 #, c-format
 msgid "display version header only"
 msgstr "csak a verziószám kijelzése"
-
-#, c-format
-msgid "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
-msgstr "emuláljon Clipper kompatibilis szerkesztő üzemmódot.\nA %1$s program rtlink/blinker/exospace nevekre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #, c-format
 msgid "enable xhb mode"

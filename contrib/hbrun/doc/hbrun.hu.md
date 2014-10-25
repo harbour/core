@@ -1,4 +1,4 @@
-Harbour Shell / Script Runner 3\.4\.0dev \(e7d0c2840d\) \(2014\-09\-23 10:39\)  
+Harbour Shell / Script Runner 3\.4\.0dev \(9b7752a635\) \(2014\-10\-16 08:15\)  
 Copyright &copy; 2007\-2014, Viktor Szakáts  
 Copyright &copy; 2003\-2007, Przemysław Czerpak  
 <https://github\.com/vszakats/harbour\-core/>  
@@ -20,9 +20,9 @@ Options below are available on command\-line:
 
 
  - **\-help** ez a súgó
- - **\-viewhelp** long help in text viewer
- - **\-longhelp** teljes súgó
- - **\-longhelpmd** long help in [Markdown](https://daringfireball.net/projects/markdown/) format
+ - **\-viewhelp** full help in text viewer
+ - **\-fullhelp** full help
+ - **\-fullhelpmd** full help in [Markdown](https://daringfireball.net/projects/markdown/) format
   
 Fájlok:  
 

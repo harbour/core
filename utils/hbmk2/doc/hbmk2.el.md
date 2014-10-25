@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(e7d0c2840d\) \(2014\-09\-23 10:39\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(9b7752a635\) \(2014\-10\-16 08:15\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
@@ -75,6 +75,7 @@ Copyright &copy; 1999\-2014, Viktor Szakáts
  - **\-depimplib\[\-\]** ενεργοποίηση \(ή απενεργοποίηση\) δημιουργίας βιβλιοθήκης εισαγωγής για πηγαίες βιβλιοθήκες εισαγωγής που ορίστηκαν με τις επιλογές \-depimplibs= \(προεπιλογή: yes\)
  - **\-stop\[=&lt;text&gt;\]** Τερματισμός χωρίς να κάνει οτιδήποτε και εμφάνιση του κειμένου &lt;text&gt; άν καθορίστηκε
  - **\-echo=&lt;text&gt;** αντήχηση \-echo\- κειμένου στην οθόνη
+ - **\-skip** skip processing the rest of the project file \(filters not supported\)
  - **\-pause** υποχρεωση αναμονής για πάτημα πλήκτρου κατά την έξοδο σε περίπτωση αποτυχιας \(με εναλλακτικά GTs μόνο\)
  - **\-exitstr** εμφάνιση λαθών σε ανθρώπινη μορφή ανάγνωσης
  - **\-info** εμφάνιση των πληροφοριακών μηνυμάτων
@@ -159,6 +160,7 @@ Copyright &copy; 1999\-2014, Viktor Szakáts
  - **\-hb10** ενεργοποίηση συμβατότητας Harbour 1\.0\.x
  - **\-hb20** ενεργοποίηση συμβατότητας Harbour 2\.0\.x
  - **\-hb30** ενργοποίηση συμβατότητας Harbour 3\.0\.x
+ - **\-hb32** enable Harbour 3\.2\.0dev compatibility mode
  - **\-xhb** ενεργοποίηση xhb mode
  - **\-hbc** ενεργοποίηση καθαρού C mode
  - **\-blinker** emulate Cl\*pper compatible linker behavior  
@@ -199,9 +201,9 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\-lang=&lt;lang&gt;** υπερισχύει έναντι της προεπιλεγμένης γλώσσας\. Το &lt;lang&gt; είναι ένας κατά ISO κωδικός γλώσσας\.
  - **\-width=&lt;n&gt;** ορισμός του πλάτους εξόδου σε &lt;n&gt; χαρακτήρες \(0=απεριόριστο\)\.
  - **\-shl** εμφάνιση επιπέδου του υπο\-έργου στις γραμμές\-εξόδου
- - **\-viewhelp** εκτεταμένη βοήθεια σε προβολή κειμένου
- - **\-longhelp** εκτεταμένη βοήθεια
- - **\-longhelpmd** εκτεταμένη βοήθεια σε μορφή [Markdown](https://daringfireball.net/projects/markdown/)
+ - **\-viewhelp** full help in text viewer
+ - **\-fullhelp** full help
+ - **\-fullhelpmd** full help in [Markdown](https://daringfireball.net/projects/markdown/) format
  - **\-harbourhelp** Βοηθεια μεταγλωττιστή Harbour \(όλες οι επιλογές μεταγλωττιστή Harbour γίνονται δεκτές ως έχουν υπό hbmk2\)
  - **\-credits** Διαπιστευτήρια του μεταγλωτιστή Harbour
  - **\-build** Πληροφορία κατασκευής μεταγλωτιστή Harbour
@@ -232,6 +234,7 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\*10** επιλογή \-hb10
  - **\*20** επιλογή \-hb20
  - **\*30** επιλογή \-hb30
+ - **\*32** επιλογή \-hb32
  - **x\*** επιλογή \-xhb
  - **hbcmp\*|\*hbcmp** κατάσταση λειτουργίας \-hbcmp \(προσομοίωση μεταγλώτισης Harbour που δημιουργεί δυαδικό object\)
  - **hbcc\*|\*hbcc** μοντέλο \-hbcc \(προσομοίωση μεταγλωττιστή C\)
@@ -336,6 +339,7 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\{hb10\}** Κατάσταση συμβατότητας Harbour 1\.0\.x \(δες επιλογή \-hb10\)
  - **\{hb20\}** Κατάσταση συμβατότητας Harbour 2\.0\.x \(δες επιλογή \-hb20\)
  - **\{hb30\}** Κατάσταση συμβατότητας Harbour 3\.0\.x \(δες επιλογή \-hb30\)
+ - **\{hb32\}** Harbour 3\.2\.0dev compatibility mode \(see \-hb32 option\)
  - **\{xhb\}** xhb μοντέλο \(δες επιλογή \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** το φίλτρο θα περάσει αν το όνομα &lt;file&gt; ή &lt;dir&gt; υπάρχει στο δίσκο\.
  - **\{MACRO\}** το φίλτρο θα περάσει αν η τιμή $\{MACRO\} δεν είναι άδεια και όχι ίση με '0' ή 'no' \(πεζά/κεφαλαία: αδιάφορο\)

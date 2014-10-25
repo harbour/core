@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(e7d0c2840d\) \(2014\-09\-23 10:39\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(9b7752a635\) \(2014\-10\-16 08:15\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
 Traduzione \(it\): \(inserisci qui il tuo nome\)  
@@ -75,6 +75,7 @@ Opzioni:
  - **\-depimplib\[\-\]** abilita \(o disabilita\) la generazione della libreria d'importazione per i sorgenti della libreria d'importazione specificata nelle opzioni \-deimpslib= \(default: si\)
  - **\-stop\[=&lt;text&gt;\]** stop senza alcuna azione e visualizzazione di &lt;text&gt; se specificato
  - **\-echo=&lt;text&gt;** visualizzazione del testo sullo schermo
+ - **\-skip** skip processing the rest of the project file \(filters not supported\)
  - **\-pause** force waiting for a key on exit in case of failure \(with alternate GTs only\)
  - **\-exitstr** mostra gli errori all'uscita come testo leggibile
  - **\-info** abilitare i messaggi di informazione
@@ -158,6 +159,7 @@ create link/copy hbmk2 to hbcc for the same effect
  - **\-hb10** abilita la compatibilità Harbour 1\.0\.x
  - **\-hb20** abilita la compatibilità Harbour 2\.0\.x
  - **\-hb30** abilita la compatibilità Harbour 3\.0\.x
+ - **\-hb32** enable Harbour 3\.2\.0dev compatibility mode
  - **\-xhb** abilita modo xhb
  - **\-hbc** abilita modo C puro
  - **\-blinker** emulate Cl\*pper compatible linker behavior  
@@ -198,9 +200,9 @@ Valore speciale:
  - **\-lang=&lt;lang&gt;** ignora la lingua predefinita\. &lt;lang&gt; è un codice ISO di lingua\.
  - **\-width=&lt;n&gt;** imposta la larghezza dell'output a &lt;n&gt; caratteri \(0=illimitato\)
  - **\-shl** show sub\-project level in output lines
- - **\-viewhelp** Help esteso nel visualizzatore di testo
- - **\-longhelp** aiuto esteso
- - **\-longhelpmd** Help esteso in formato [Markdown](https://daringfireball.net/projects/markdown/)
+ - **\-viewhelp** full help in text viewer
+ - **\-fullhelp** full help
+ - **\-fullhelpmd** full help in [Markdown](https://daringfireball.net/projects/markdown/) format
  - **\-harbourhelp** Harbour compiler help \(all Harbour compiler options are accepted as is by hbmk2\)
  - **\-credits** Riconoscimenti del compilatore Harbour
  - **\-build** Informazioni del compilatore Harbour
@@ -231,6 +233,7 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **\*10** opzione \-hb10
  - **\*20** opzione \-hb20
  - **\*30** opzione \-hb30
+ - **\*32** opzione \-hb32
  - **x\*** opzione \-xhb
  - **hbcmp\*|\*hbcmp** modalità \-hbcmp \(emula il compilatore Harbour producendo un oggetto binario\)
  - **hbcc\*|\*hbcc** modo \-hbcc \(emulazione compilatore Clipper\)
@@ -335,6 +338,7 @@ Filtri \(è possibile combinarli e/o negarli\):
  - **\{hb10\}** modalità di comaptibilità Harbour 1\.0\.x \(vedi l'opzione \-hb10\)
  - **\{hb20\}** modalità di comaptibilità Harbour 2\.0\.x \(vedi l'opzione \-hb20\)
  - **\{hb30\}** modalità di comaptibilità Harbour 3\.0\.x \(vedi l'opzione \-hb30\)
+ - **\{hb32\}** Harbour 3\.2\.0dev compatibility mode \(see \-hb32 option\)
  - **\{xhb\}** modalità xhb \(vedi l'opzione \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** il filtro sarà soddisfatto se il esiste il nome &lt;file&gt; o &lt;dir&gt; sul disco\.
  - **\{MACRO\}** verrà soddisfatto il filtro se $\{MACRO\} è valorizzato e diverso da '0' or 'no' \(ignora maiuscole e minuscole\)

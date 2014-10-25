@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-05 11:25+0000\nLast-Translator: vszakats\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-10-14 22:50+0000\nLast-Translator: vszakats\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -791,14 +791,6 @@ msgid "mode %1$s (emulate C linker)"
 msgstr "modo %1$s (emulazione linker di Clipper)"
 
 #, c-format
-msgid "mode %1$s (emulate Clipper compiler)"
-msgstr "modalità %1$s (emulazione compilatore Clipper)"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper linker)"
-msgstr "modalità %1$s (emulazione linker di Clipper)"
-
-#, c-format
 msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
 msgstr "modalità %1$s (emula il compilatore Harbour producendo un oggetto binario)"
 
@@ -1277,10 +1269,6 @@ msgstr "Shell API disponibile negli Harbour scripts:"
 #, c-format
 msgid "Display list of loaded Harbour header."
 msgstr "Visualizza l'elenco di intestazione di Harbour caricato."
-
-#, c-format
-msgid "Enable Clipper compatibility (non-Unicode) mode."
-msgstr "Abilita la modialità di compatibilità Clipper (non-Unicode)"
 
 #, c-format
 msgid "List of loaded packages."

@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-11 20:13+0000\nLast-Translator: Sami Laham <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-10-14 22:50+0000\nLast-Translator: vszakats\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1079,10 +1079,6 @@ msgid "disable library grouping on gcc based compilers"
 msgstr "desativar agrupamento de LIBs em compiladores baseados no gcc."
 
 #, c-format
-msgid "do (not) add Harbour version number and source file reference to .po (default: add them)"
-msgstr "adicionar (ou não) a referência do número da versão do Harbour e o arquivo fonte ao .po (ativo por padrão)"
-
-#, c-format
 msgid "do not add extra list of system libraries to default library list"
 msgstr "não adicione bibliotecas extras do sistema à lista padrão de bibliotecas"
 
@@ -1287,10 +1283,6 @@ msgid "sign executable with <key> (Windows and Darwin only). On Windows signtool
 msgstr "assinar executável com <key> (somente Windows e Darwin). No Windows é usado signtool.exe (parte do MS Windows SDK) ou posign.exe (part do Pelles C 7), nesta ordem, ambos auto-detectados."
 
 #, c-format
-msgid "start n compilation threads (multiprocess platforms only)"
-msgstr "dispara <n> threads de compilação (apenas plataformas multiprocessadas)"
-
-#, c-format
 msgid "stop without doing anything and display <text> if specified"
 msgstr "parar sem fazer nada e mostrar <texto> se especificado"
 
@@ -1361,10 +1353,6 @@ msgstr "converte um projeto do hbmake para um arquivo .hbp"
 #, c-format
 msgid "display version header only"
 msgstr "exibir somente o cabeçalho com a versão do hbmk"
-
-#, c-format
-msgid "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
-msgstr "emula o comportamento de um linkeditor compatível com Clipper\ncriar um link ou copiar o %1$s para rtlink/blinker/exospace resultará no mesmo efeito"
 
 #, c-format
 msgid "enable (or disable) processing of %1$s in current directory (default: yes)"
@@ -1565,14 +1553,6 @@ msgstr "modo %1$s (emular compilador C)"
 #, c-format
 msgid "mode %1$s (emulate C linker)"
 msgstr "modo %1$s (emular linkeditor C)"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper compiler)"
-msgstr "modo %1$s (emular compilador Clipper)"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper linker)"
-msgstr "modo %1$s (emular linkeditor Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
@@ -2167,10 +2147,6 @@ msgid "Display list of loaded Harbour header."
 msgstr "Mostra a lista de cabeçalhos Harbour carregados."
 
 #, c-format
-msgid "Enable Clipper compatibility (non-Unicode) mode."
-msgstr "habilitar modo de compatibilidade Clipper (non-Unicode)"
-
-#, c-format
 msgid "hb_DirBase() not mapped to script."
 msgstr "hb_DirBase() não mapeado para script."
 
@@ -2413,10 +2389,6 @@ msgstr ".hb, .hrb ou .dbf"
 #, c-format
 msgid ".hb, .prg, .hrb or .dbf"
 msgstr ".hb, .prg, .hrb ou .dbf"
-
-#, c-format
-msgid "%1$s file passed as first parameter will be run as Harbour script. If the filename contains no path components, it will be searched in current working directory and in PATH. If not extension is given, .hb and .hrb extensions are searched, in that order. .dbf file will be opened automatically in shared mode and interactive Harbour shell launched. Non-standard extensions will be autodetected for source and precompiled script types. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included at the interactive shell prompt. The default date format is the ISO standard: yyyy-mm-dd. SET EXACT is set to ON. The default GT is '%2$s', unless full-screen CUI calls are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)."
-msgstr "Arquivo %1$s passado como primeiro parâmetro será executado como script Harbour. Se o nome do arquivo não contém componentes do caminho \"path\", ele será procurado no diretório de trabalho atual e em PATH. Se não for dada a extensão, as extensões .hb e .hrb serão pesquisados nessa. Aquivo .dbf será aberto automaticamente no modo compartilhado e o shell interativo Harbour lançado. Extensões fora do padrão será detectado automaticamente para a fonte e tipos de script pré-compilados.Note, para Harbour scripts a \"codepage\" é colocada em UTF-8 por padrão.O cabeção principal 'hb.ch' será automaticamente incluido \" #included \" no prompt shell interativo. O formato de data padráo é o ISO yyyy-mm-dd. SET EXACT é colocado para ON. O GT padrá é '%2$s', a não ser que sejam detectados chamadas CUI em tela cheia, quando '%3$s' [*] é selecionado automaticamente (exceto para INIT PROCEDUREs)."
 
 #, c-format
 msgid "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform."

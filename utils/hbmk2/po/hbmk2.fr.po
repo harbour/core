@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-05 11:25+0000\nLast-Translator: vszakats\nLanguage-Team: French (http://www.transifex.com/projects/p/harbour/language/fr/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: fr\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-10-14 22:50+0000\nLast-Translator: vszakats\nLanguage-Team: French (http://www.transifex.com/projects/p/harbour/language/fr/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: fr\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -785,14 +785,6 @@ msgstr "définir la taille de sortie de <n> caractères (0 = illimité)."
 #, c-format
 msgid "You can sym-link/copy/rename %1$s to the following names to alter default mode of operation:"
 msgstr "Vous pouvez créer un lien symbolique/copier/renommer %1$s pour les noms suivants pour modifier le mode de fonctionnement par défaut:"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper compiler)"
-msgstr "mode %1$s (émule le compilateur Clipper)"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper linker)"
-msgstr "mode %1$s (émule l'éditeur de lien de Clipper)"
 
 #, c-format
 msgid "mode script runner / interactive shell"

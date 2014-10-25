@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-08-05 11:25+0000\nLast-Translator: vszakats\nLanguage-Team: Galician (http://www.transifex.com/projects/p/harbour/language/gl/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: gl\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-10-14 22:50+0000\nLast-Translator: vszakats\nLanguage-Team: Galician (http://www.transifex.com/projects/p/harbour/language/gl/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: gl\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -967,10 +967,6 @@ msgid "disable library grouping on gcc based compilers"
 msgstr "desactivar agrupamento de bibliotecas para compiladores basados en gcc"
 
 #, c-format
-msgid "do (not) add Harbour version number and source file reference to .po (default: add them)"
-msgstr "engadir (ou non) o número de versión de Harbour e referencia ao nome de arquivo ao arquivo .po (predeterminado: engadir ambas)"
-
-#, c-format
 msgid "do not add extra list of system libraries to default library list"
 msgstr "non engadir lista extra de bibliotecas do sistema á lista predeterminada de bibliotecas"
 
@@ -1159,10 +1155,6 @@ msgid "sign executable with <key> (Windows and Darwin only). On Windows signtool
 msgstr "asinar executable con <key> (Só Windows e Darwin). En Windows úsase a ferramenta signtool.exe (pertence ao SDK de Windows) ou posign.exe (pertence a Pelles C 7), nesa orde, ambos autodetectados."
 
 #, c-format
-msgid "start n compilation threads (multiprocess platforms only)"
-msgstr "lanzar n fíos de compilación (só en plataformas con multitarefa/multiproceso)"
-
-#, c-format
 msgid "stop without doing anything and display <text> if specified"
 msgstr "deter sen facer nada e mostrar <text> cando se especifica"
 
@@ -1221,10 +1213,6 @@ msgstr "converter arquivo de proxecto hbmake a arquivo .hbp"
 #, c-format
 msgid "display version header only"
 msgstr "mostrar só información de versión"
-
-#, c-format
-msgid "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
-msgstr "simular o comportamento de enlazador Clipper\n\ncrear enlace/copia a %1$s para rtlink/blinker/exospace para o mesmo resultado"
 
 #, c-format
 msgid "enable (or disable) processing of %1$s in current directory (default: yes)"
@@ -1405,14 +1393,6 @@ msgstr "modo %1$s (simular compilador C)"
 #, c-format
 msgid "mode %1$s (emulate C linker)"
 msgstr "modo %1$s (simular enlazador C)"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper compiler)"
-msgstr "mode %1$s (emulación do compilador Clipper)"
-
-#, c-format
-msgid "mode %1$s (emulate Clipper linker)"
-msgstr "Modo %1$s (emular enlazador Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
@@ -1977,10 +1957,6 @@ msgstr "Intérprete interactivo de Harbour dispoñible en guións:"
 #, c-format
 msgid "Display list of loaded Harbour header."
 msgstr "Mostra a lista de cabeceiras de Harbour cargadas."
-
-#, c-format
-msgid "Enable Clipper compatibility (non-Unicode) mode."
-msgstr "Permitir modo de compatibilidade con Clipper (non Unicode)."
 
 #, c-format
 msgid "hb_DirBase() not mapped to script."
