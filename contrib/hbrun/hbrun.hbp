@@ -33,4 +33,4 @@
 -3rd=_langhb_entry=../../utils/hbmk2/
 -3rd=_langhb_docext=.md
 -3rd=_langhb_docoption=-lang={LNG}
--3rd=_langhb_docoption=-longhelpmdsh
+-3rd=_langhb_docoption=-fullhelpmdsh

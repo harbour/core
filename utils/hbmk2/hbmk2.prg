@@ -208,7 +208,7 @@ EXTERNAL hbmk_KEYW
 #define H_( x )                 "^"
 #define S_( x )                 I_( x )
 #endif
-#define R_( x )                 ( x ) /* marking for regexps */
+#define R_( x )                 ( x )  /* marking for regexps */
 
 #define _TARG_PLAT              1
 #define _TARG_COMP              2
@@ -219,11 +219,11 @@ EXTERNAL hbmk_KEYW
 #define _PAR_cFileName          2
 #define _PAR_nLine              3
 
-#define _WARN_DEF               0 /* Do not set any explicit warning level */
+#define _WARN_DEF               0  /* Do not set any explicit warning level */
 #define _WARN_MAX               1
-#define _WARN_YES               2 /* Default level in Harbour build */
-#define _WARN_LOW               3 /* Low level, used for 3rd party code in Harbour build */
-#define _WARN_NO                4 /* Explicitly disable warnings */
+#define _WARN_YES               2  /* Default level in Harbour build */
+#define _WARN_LOW               3  /* Low level, used for 3rd party code in Harbour build */
+#define _WARN_NO                4  /* Explicitly disable warnings */
 
 #define _COMPR_OFF              0
 #define _COMPR_DEF              1
@@ -238,9 +238,9 @@ EXTERNAL hbmk_KEYW
 
 #define _COMPDET_bBlock         1
 #define _COMPDET_cCOMP          2
-#define _COMPDET_cCCPREFIX      3 /* optional */
-#define _COMPDET_cCCSUFFIX      4 /* optional */
-#define _COMPDET_cPLAT          5 /* optional */
+#define _COMPDET_cCCPREFIX      3  /* optional */
+#define _COMPDET_cCCSUFFIX      4  /* optional */
+#define _COMPDET_cPLAT          5  /* optional */
 
 #define _COMPDETE_bBlock        1
 #define _COMPDETE_cPLAT         2
@@ -263,9 +263,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMODE_IS_XHB( n )     ( n <= _HBMODE_XHB )
 
 /* Not implemented yet */
-#define _CONF_RELEASE           0 /* No debug */
-#define _CONF_DEBUG             1 /* Harbour level debug */
-#define _CONF_FULLDEBUG         2 /* Harbour + C level debug */
+#define _CONF_RELEASE           0  /* No debug */
+#define _CONF_DEBUG             1  /* Harbour level debug */
+#define _CONF_FULLDEBUG         2  /* Harbour + C level debug */
 
 #define _ESC_NONE               0
 #define _ESC_DBLQUOTE           1
@@ -370,9 +370,9 @@ EXTERNAL hbmk_KEYW
    system libs. [vszakats] */
 #define _IS_AUTOLIBSYSPRE( c )  ( hbmk[ _HBMK_cPLAT ] == "win" .AND. Lower( hb_FNameName( c ) ) == "unicows" )
 
-#define _OUT_EOL                e"\n"     /* used when displaying text */
-#define _CHR_EOL                Chr( 10 ) /* used when consuming text files */
-#define _FIL_EOL                Chr( 10 ) /* used when creating source files */
+#define _OUT_EOL                e"\n"      /* used when displaying text */
+#define _CHR_EOL                Chr( 10 )  /* used when consuming text files */
+#define _FIL_EOL                Chr( 10 )  /* used when creating source files */
 
 #ifdef HB_LEGACY_LEVEL4
    #define _HBMK_PLUGIN_APIVER  2
@@ -527,28 +527,28 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_cPROGDIR          126
 #define _HBMK_cPROGNAME         127
 
-#define _HBMK_hAUTOHBC          128 /* trigger header => .hbc associations */
-#define _HBMK_hAUTOHBCFOUND     129 /* trigger headers found */
+#define _HBMK_hAUTOHBC          128  /* trigger header => .hbc associations */
+#define _HBMK_hAUTOHBCFOUND     129  /* trigger headers found */
 
-#define _HBMK_aDEPTHBC          130 /* .hbc references found */
-#define _HBMK_hDEPTSDIR         131 /* Header dirs found for dependencies */
+#define _HBMK_aDEPTHBC          130  /* .hbc references found */
+#define _HBMK_hDEPTSDIR         131  /* Header dirs found for dependencies */
 
 #define _HBMK_lStopAfterInit    132
 #define _HBMK_lStopAfterHarbour 133
 
 #define _HBMK_nCOMPVer          134
-#define _HBMK_lDEPIMPLIB        135 /* Generate import libs configured in dependecy specification */
-#define _HBMK_lInstForce        136 /* Force to install target even if was up to date */
-#define _HBMK_lAutoHBM          137 /* Toggles processing of '_HBMK_AUTOHBM_NAME' file in current directory */
-#define _HBMK_lContainer        138 /* Target type: container */
-#define _HBMK_lShowLevel        139 /* Show project nesting level in all output lines */
-#define _HBMK_hFiles            140 /* Cache for the header parser (common for C and Harbour) */
-#define _HBMK_cDynLibPrefix     141 /* Dynamic lib filename prefix */
-#define _HBMK_cDynLibExt        142 /* Dynamic lib filename extension */
-#define _HBMK_aLINK             143 /* Links to be created and pointing to the target */
-#define _HBMK_hDEPTMACRO        144 /* Links to be created and pointing to the target */
-#define _HBMK_cC                145 /* C dialect */
-#define _HBMK_cCPP              146 /* C++ dialect */
+#define _HBMK_lDEPIMPLIB        135  /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        136  /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          137  /* Toggles processing of '_HBMK_AUTOHBM_NAME' file in current directory */
+#define _HBMK_lContainer        138  /* Target type: container */
+#define _HBMK_lShowLevel        139  /* Show project nesting level in all output lines */
+#define _HBMK_hFiles            140  /* Cache for the header parser (common for C and Harbour) */
+#define _HBMK_cDynLibPrefix     141  /* Dynamic lib filename prefix */
+#define _HBMK_cDynLibExt        142  /* Dynamic lib filename extension */
+#define _HBMK_aLINK             143  /* Links to be created and pointing to the target */
+#define _HBMK_hDEPTMACRO        144  /* Links to be created and pointing to the target */
+#define _HBMK_cC                145  /* C dialect */
+#define _HBMK_cCPP              146  /* C++ dialect */
 #define _HBMK_aLIB_BASE_WARN    147
 
 #define _HBMK_aArgs             148
@@ -575,7 +575,7 @@ EXTERNAL hbmk_KEYW
 
 #define _HBMK_MAX_              164
 
-#define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
+#define _HBMK_DEP_CTRL_MARKER   ".control."  /* must be an invalid path */
 
 #define _HBMKDEP_cName          1
 #define _HBMKDEP_aURLBase       2
@@ -1766,7 +1766,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ShowHelp( hbmk, .T. )
          RETURN _EXIT_HELP
 
-      CASE cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
+      CASE cParamL == "-fullhelp" .OR. cParamL == "--fullhelp" .OR. ;
+           cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
            cParamL == "-hh" .OR. cParamL == "-??"
 
          ShowHeader( hbmk )
@@ -1789,7 +1790,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          RETURN _EXIT_HELP
 
-      CASE cParamL == "-longhelpmd" .OR. cParamL == "--longhelpmd"
+      CASE cParamL == "-fullhelpmd" .OR. cParamL == "--fullhelpmd"
 
          hbmk[ _HBMK_lMarkdown ] := .T.
 
@@ -1797,7 +1798,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ShowHelp( hbmk, .T., .T. )
          RETURN _EXIT_HELP
 
-      CASE cParamL == "-longhelpmdsh" .OR. cParamL == "--longhelpmdsh"
+      CASE cParamL == "-fullhelpmdsh" .OR. cParamL == "--fullhelpmdsh"
 
          hbmk[ _HBMK_lMarkdown ] := .T.
          hbmk[ _HBMK_lShellMode ] := .T.
@@ -15058,7 +15059,8 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          ShowHelp( hbmk, .T. )
          RETURN
 
-      CASE cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
+      CASE cParamL == "-fullhelp" .OR. cParamL == "--fullhelp" .OR. ;
+           cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
            cParamL == "-hh" .OR. cParamL == "-??"
 
          SetUILang( hbmk, GetUILang() )
@@ -15082,7 +15084,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
          RETURN
 
-      CASE cParamL == "-longhelpmd" .OR. cParamL == "--longhelpmd"
+      CASE cParamL == "-fullhelpmd" .OR. cParamL == "--fullhelpmd"
 
          hbmk[ _HBMK_lMarkdown ] := .T.
 
@@ -17510,9 +17512,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-lang=<lang>"       , I_( "override default language. <lang> is an ISO language code." ) }, ;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) }, ;
       { "-shl"               , I_( "show sub-project level in output lines" ) }, ;
-      { "-viewhelp"          , I_( "long help in text viewer" ) }, ;
-      { "-longhelp"          , I_( "long help" ) }, ;
-      { "-longhelpmd"        , I_( "long help in Markdown format" ) }, ;
+      { "-viewhelp"          , I_( "full help in text viewer" ) }, ;
+      { "-fullhelp"          , I_( "full help" ) }, ;
+      { "-fullhelpmd"        , I_( "full help in Markdown format" ) }, ;
       { "-harbourhelp"       , hb_StrFormat( H_( "Harbour compiler help (all Harbour compiler options are accepted as is by %1$s)" ), _SELF_NAME_ ) }, ;
       { "-credits"           , H_( "Harbour compiler credits" ) }, ;
       { "-build"             , H_( "Harbour compiler build information" ) }, ;
@@ -17523,9 +17525,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "--hb:debug"         , H_( "enable script debugging" ) }, ;
       , ;
       { "-help"              , I_( "this help" ) }, ;
-      { "-viewhelp"          , I_( "long help in text viewer" ) }, ;
-      { "-longhelp"          , I_( "long help" ) }, ;
-      { "-longhelpmd"        , I_( "long help in Markdown format" ) } }
+      { "-viewhelp"          , I_( "full help in text viewer" ) }, ;
+      { "-fullhelp"          , I_( "full help" ) }, ;
+      { "-fullhelpmd"        , I_( "full help in Markdown format" ) } }
 
    LOCAL aHdr_Opt_Internal := { ;
       "", ;
