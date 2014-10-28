@@ -1567,6 +1567,8 @@ Supported shells per host platforms:
         * <https://travis-ci.org/>
      * Read the Docs [online documentation creator, web service, free]
         * <https://readthedocs.org/>
+     * ReadMe.io [online documentation creator, web service, free plan]
+        * <https://readme.io/>
      * GNU Bison (grammer paser generator) [multiplatform, free, open-source]
         * Windows binary:
            * <http://gnuwin32.sourceforge.net/packages/bison.htm>
