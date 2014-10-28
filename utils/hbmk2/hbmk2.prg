@@ -6235,7 +6235,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             IF tmp4:__enumIsFirst()
                tmp += _FIL_EOL
             ENDIF
-            tmp += hb_StrFormat( '#define _HBMK_VCS_%1$s_%2$s_ "%3$s"', Upper( tmp2 ), Upper( tmp4:__enumKey() ), tmp4:__enumValue() ) + _FIL_EOL
+            IF HB_ISNUMERIC( tmp4:__enumValue() )
+               tmp += hb_StrFormat( '#define _HBMK_VCS_%1$s_%2$s_ %3$d', Upper( tmp2 ), Upper( tmp4:__enumKey() ), tmp4:__enumValue() ) + _FIL_EOL
+            ELSE
+               tmp += hb_StrFormat( '#define _HBMK_VCS_%1$s_%2$s_ "%3$s"', Upper( tmp2 ), Upper( tmp4:__enumKey() ), tmp4:__enumValue() ) + _FIL_EOL
+            ENDIF
          NEXT
 
          /* Update only if something changed to trigger rebuild only if really needed.
@@ -13888,6 +13892,11 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
                SubStr( aResult[ 3 ], 18, 2 )
             hCustom[ "AUTHOR_NAME" ] := aResult[ 4 ] /* UTF-8 */
             hCustom[ "AUTHOR_MAIL" ] := aResult[ 5 ] /* UTF-8 */
+
+            hb_processRun( "git rev-parse --abbrev-ref HEAD",, @tmp )
+            hb_processRun( hb_StrFormat( "git rev-list %1$s --count", hb_StrReplace( tmp, Chr( 13 ) + Chr( 10 ) ) ),, @cStdOut )
+            hCustom[ "COMMIT_COUNT" ] := hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) )
+            hCustom[ "COMMIT_COUNT_NUM" ] := Val( hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) )
          ENDIF
          EXIT
       CASE _VCS_MERCURIAL

@@ -742,7 +742,7 @@ PHB_EXPR hb_compExprNewMethodCall( PHB_EXPR pObject, PHB_EXPR pArgList )
    return pObject;
 }
 
-/* Create a new IIF() expression
+/* Create a new iif() expression
  * pExpr is a list of three expressions
  */
 PHB_EXPR hb_compExprNewIIF( PHB_EXPR pExpr )
@@ -1476,7 +1476,7 @@ void hb_compExprCBVarDel( PHB_CBVAR pVars )
 
 /* Creates a set/get codeblock for passed expression used in __GET
  *
- * {| ~1 | IIF( ~1 == NIL, <pExpr>, <pExpr> := ~1 ) }
+ * {| ~1 | iif( ~1 == NIL, <pExpr>, <pExpr> := ~1 ) }
  *
  * NOTE: "~1" is not a valid variable name so there will be no collisions
  */
