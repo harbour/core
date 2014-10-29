@@ -2354,25 +2354,34 @@ for multitag indexes or using record number as hidden part of index key
 and many others which are unique to [x]Harbour. In practice all of CDX
 extensions are supported by NTX in [x]Harbour.
 The NSX format in [x]Harbour is also limited by default to 4GB but like
-in NTX enabling 64bit locking extend it to 4TB. It also supports common
-to NTX and CDX set of features.
+in NTX enabling 64bit locking extend this limit to 4TB. It also supports
+common to NTX and CDX set of features.
 The CDX format is limited to 4GB by it's internal structure. In Harbour
 just like in NTX and NSX enabling 64bit locking slightly change the
-format extending increasing maximum index size to 2TB for standard
-CDX page length (512 bytes). So far xHarbour does not support this
-extended format in DBFCDX so it cannot read such indexes created by
-Harbour.
-When extended formats are used then above limits can be bigger in all
-RDDs if we introduce support for bigger index pages. I plan to add it
-in the future.
+format increasing maximum index size to 2TB for standard CDX page length
+(512 bytes). DBFCDX and SIXCDX RDDs in Harbour support also user defined
+index page size. It can be set as power of 2 value from 512 up to 8192.
+Longer index pages also increase maximum file size. For 8192 bytes pages
+maximum CDX file size in Harbour is 32TB. Enabling longer index pages
+automatically change internal index format to the same as used with
+64bit locking. Longer index pages allow to use longer index key and can
+interact with total index size and performance. User can make test with
+different values. Harbour RDDs automatically recognize index format so
+can open to work with all versions without any user settings.
+I plan to add support for defined by user index page size to NTX and
+NSX RDDs in the future.
+So far xHarbour does not support this extended format in DBFCDX so it
+cannot read such indexes created by Harbour.
+
 Of course all such extended formats are not binary compatible with
 original ones and so far can be used only by Harbour and xHarbour
-(except DBFCDX) RDDs though in ADS the .adi format is such extended
-CDX format so maybe in the future it will be possible to use .adi
-indexes in our CDX RDD.
+(except DBFCDX) RDDs. In ADS the .adi format is modified CDX format
+so Harbour can recognize them as modified CDX indexes anyhow in ADI
+indexes the key values are converted to follow collation rules when
+binary comparison is used and in Harbour doesn't.
 
-Of course all of the above sizes can be reduced by operating system (OS)
-or file system (FS) limitations so it's necessary to check what is
+All of the above sizes can be reduced by operating system (OS) or
+file system (FS) limitations so it's necessary to check what is
 supported by environment where [x]Harbour applications are executed.
 
 
