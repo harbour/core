@@ -12,6 +12,7 @@ encurlc.c
 mime.c
 misc.c
 
+base64u.prg
 cgi.prg
 client.prg
 encb64.prg

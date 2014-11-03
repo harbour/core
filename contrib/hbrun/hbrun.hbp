@@ -19,6 +19,7 @@
 {__HBMKDYN='yes'}-env:_HBMK_WITH_EXTS=hbct|hbexpat|hbmemio|hbmzip|hbnetio
 {__HBMKDYN='yes'&unix}-env:_HBMK_WITH_EXTS+|hbunix
 {__HBMKDYN='yes'&allwin}-env:_HBMK_WITH_EXTS+|hbwin
+{__HBMKDYN='yes'&darwin}-env:_HBMK_WITH_EXTS+|hbosx
 {__HBMKDYN='yes'}-DHBMK_WITH_EXTS=${_HBMK_WITH_EXTS}
 
 {!(__HBMKDYN='yes')}hbct.hbc         {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBCT__
@@ -28,6 +29,7 @@
 {!(__HBMKDYN='yes')}hbnetio.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBNETIO__
 {!(__HBMKDYN='yes')&unix}hbunix.hbc  {!(__HBMKDYN='yes')&unix}-request=__HBEXTERN__HBUNIX__
 {!(__HBMKDYN='yes')&allwin}hbwin.hbc {!(__HBMKDYN='yes')&allwin}-request=__HBEXTERN__HBWIN__
+{!(__HBMKDYN='yes')&darwin}hbosx.hbc {!(__HBMKDYN='yes')&darwin}-request=__HBEXTERN__HBOSX__
 
 # localization (for automatization with config/lang.hb)
 -3rd=_langhb_entry=../../utils/hbmk2/
