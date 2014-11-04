@@ -146,6 +146,20 @@ arguments are well known and can be calculated at compile time:
       ( <expr> )              => <expr>         // it allows to optimize
                                                 // expresions like: 1+(2)
 
+   - Harbour syntax extensions not supported by Clipper, enabled by -ko
+     compiler switch:
+         iif( <expr1>, <expr2>, <expr3> ) <op>= <expr4> => ;
+                  IF <expr1>                 ;
+                     <expr2> <op>= <expr4>   ;
+                  ELSE                       ;
+                     <expr3> <op>= <expr4>   ;
+                  ENDIF
+     i.e.:
+            iif( dData == NIL, dDate, aVal[ 1 ] ) := date()
+            iif( empty( x ), aVal[ 2 ], nTmp ) += 10
+            ? iif( f1(), nVal1, nVal2 ) ++
+            ? -- iif( f2(), aVal[ 1 ], hVal[ "abc" ] )
+
    - Harbour extensions which may disable RT errors in wrong expressions
      or can change used operators using basic math rules. Enabled by -ko
      compiler switch:

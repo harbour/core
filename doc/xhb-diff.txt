@@ -121,7 +121,7 @@ file system(s) and with different OS(s).
               "=>", x:__enumBase()[ x:__enumKey() ]
          NEXT
    f) it gives very flexible OOP mechanism to overload FOR EACH behavior
-      for user define objects adding to above enumerator methods also
+      for user defined classes adding to above enumerator methods also
       __enumStart(), __enumStop(), __enumSkip() methods what allows to
       implement many different enumeration algorithms depending on used
       data

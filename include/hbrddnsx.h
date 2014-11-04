@@ -335,11 +335,11 @@ typedef struct _NSXLEAFKEY
                                * if Size == n + 1 then key is fully duplicated
                                */
    HB_UCHAR DupCount[1];      /* number of bytes from previous key */
-   HB_UCHAR KeyData[l];       /* rest of key value with RLE compression:
+   HB_UCHAR KeyData[m];       /* rest of key value with RLE compression:
                                *    FF xx yy => Replicate(yy, xx)
                                *    FF 01    => FF
-                               * l = Size - n - 2
-                               * if l == KEY_SIZE - DupCount then key value
+                               * m = Size - n - 2
+                               * if m == KEY_SIZE - DupCount then key value
                                * is stored as raw data and can be copied as is
                                * if after decompression size of key value is
                                * smaller then KEY_SIZE then rest if filled with

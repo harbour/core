@@ -338,7 +338,7 @@ int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro )
                pLex->nSrc++;
                return EQ;
             }
-            else if( pLex->pString[ pLex->nSrc ] == '>' && HB_SUPPORT_HARBOUR )
+            else if( pLex->pString[ pLex->nSrc ] == '>' )
             {
                pLex->nSrc++;
                return HASHOP;
