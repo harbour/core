@@ -339,9 +339,9 @@ static HB_USHORT hb_nsxLeafPutKey( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT u
                                    HB_UCHAR * bPrevValue, HB_UCHAR * pKeyValue, HB_ULONG ulRecNo )
 {
    HB_UCHAR * ptr = ( HB_UCHAR * ) hb_nsxPageBuffer( pPage ) + uiOffset,
-         * pDst, * pSrc, * pEnd;
+            * pDst, * pSrc, * pEnd;
    HB_UCHAR ucSize = hb_nsxGetKeyRecSize( pPage ), ucDupCount = 0,
-         ucLen = ( HB_UCHAR ) pTag->KeyLength;
+            ucLen = ( HB_UCHAR ) pTag->KeyLength;
    int iMax;
 
    if( uiOffset + ucSize >= NSX_PAGELEN )
@@ -399,68 +399,66 @@ static HB_USHORT hb_nsxLeafPutKey( LPTAGINFO pTag, LPPAGEINFO pPage, HB_USHORT u
    }
 
    pDst = ptr + 2;
-   iMax = NSX_PAGELEN - uiOffset - ucSize;
-   if( iMax >= ( int ) ucLen )
-      iMax = ucLen - 1;
-
-   while( iMax > 0 && pSrc < pEnd )
+   iMax = NSX_PAGELEN - uiOffset - ucSize + 1;
+   if( iMax > ( int ) ucLen )
+      iMax = ucLen;
+   if( iMax > 0 )
    {
-      HB_UCHAR uc = *pSrc++;
-      if( pSrc < pEnd - 2 && uc == *pSrc && uc == pSrc[ 1 ] )
+      while( pSrc < pEnd )
       {
-         HB_UCHAR ucRepl = 3;
-         iMax -= 3;
-         if( iMax < 0 )
-            break;
-         pSrc += 2;
-         while( pSrc < pEnd && *pSrc == uc )
+         HB_UCHAR uc = *pSrc++;
+         if( uc == NSX_RLE_CHAR )
          {
-            ++pSrc;
-            ++ucRepl;
+            if( pSrc < pEnd && *pSrc == NSX_RLE_CHAR )
+            {
+               HB_UCHAR ucRepl = 2;
+               if( ( iMax -= 3 ) <= 0 )
+                  break;
+               ++pSrc;
+               while( pSrc < pEnd && *pSrc == NSX_RLE_CHAR )
+               {
+                  ++pSrc;
+                  ++ucRepl;
+               }
+               *pDst++ = NSX_RLE_CHAR;
+               *pDst++ = ucRepl;
+               *pDst++ = NSX_RLE_CHAR;
+            }
+            else
+            {
+               if( ( iMax -= 2 ) <= 0 )
+                  break;
+               *pDst++ = NSX_RLE_CHAR;
+               *pDst++ = 1;
+            }
          }
-         *pDst++ = NSX_RLE_CHAR;
-         *pDst++ = ucRepl;
-         *pDst++ = uc;
-      }
-      else if( uc == NSX_RLE_CHAR )
-      {
-         if( pSrc < pEnd && uc == *pSrc )
+         else if( pEnd - pSrc > 2 &&
+                  *pSrc == uc && pSrc[ 1 ] == uc && pSrc[ 2 ] == uc )
          {
-            HB_UCHAR ucRepl = 2;
-            iMax -= 3;
-            if( iMax < 0 )
+            HB_UCHAR ucRepl = 4;
+            if( ( iMax -= 3 ) <= 0 )
                break;
-            ++pSrc;
-            if( pSrc < pEnd && uc == pSrc[ 1 ] )
+            pSrc += 3;
+            while( pSrc < pEnd && *pSrc == uc )
             {
                ++pSrc;
                ++ucRepl;
             }
             *pDst++ = NSX_RLE_CHAR;
             *pDst++ = ucRepl;
-            *pDst++ = NSX_RLE_CHAR;
+            *pDst++ = uc;
          }
+         else if( --iMax == 0 )
+            break;
          else
-         {
-            iMax -= 2;
-            if( iMax < 0 )
-               break;
-            *pDst++ = NSX_RLE_CHAR;
-            *pDst++ = 1;
-         }
+            *pDst++ = uc;
       }
-      else
+      if( iMax > 0 )
       {
-         iMax--;
-         *pDst++ = uc;
+         ucSize += ( HB_UCHAR ) ( pDst - ( ptr + 2 ) );
+         *ptr = ucSize;
+         return uiOffset + ucSize;
       }
-   }
-
-   if( pSrc == pEnd )
-   {
-      ucSize += ( HB_UCHAR ) ( pDst - ( ptr + 2 ) );
-      *ptr = ucSize;
-      return uiOffset + ucSize;
    }
 
    uiOffset += ucSize + ucLen;
@@ -2021,7 +2019,7 @@ static HB_ERRCODE hb_nsxIndexHeaderSave( LPNSXINDEX pIndex )
    pIndex->Version++;
    pIndex->Version &= 0xFFFF;
    pIndex->HeaderBuff.Signature[ 0 ]  = pIndex->LargeFile ?
-                                      NSX_SIGNATURE_LARGE : NSX_SIGNATURE;
+                                        NSX_SIGNATURE_LARGE : NSX_SIGNATURE;
    pIndex->HeaderBuff.IndexFlags[ 0 ] = 0;
    HB_PUT_LE_UINT16( pIndex->HeaderBuff.TagCount, pIndex->iTags );
    HB_PUT_LE_UINT16( pIndex->HeaderBuff.Version,  pIndex->Version );
@@ -2548,8 +2546,7 @@ static LPPAGEINFO hb_nsxPageBottomMove( LPTAGINFO pTag, HB_ULONG ulPage )
          return NULL;
       if( hb_nsxIsLeaf( pPage ) )
       {
-         hb_nsxTagSetPageStack( pTag, pPage, pPage->uiKeys -
-                                             ( pPage->uiKeys == 0 ? 0 : 1 ) );
+         hb_nsxTagSetPageStack( pTag, pPage, ( pPage->uiKeys > 0 ? pPage->uiKeys - 1 : 0 ) );
          if( pPage->uiKeys == 0 && pTag->stackLevel > 1 && ! pTag->pIndex->pArea->pSort )
          {
             hb_nsxPageRelease( pTag, pPage );
