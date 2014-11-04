@@ -14,11 +14,17 @@ Follow are the various directories that exist under the Harbour tree.
 |   |
 |   +---<platform>      - Configuration files specific to <platform>.
 |
++---contrib             - Packages built as part of the default build process.
+|                         (see description of each package in their respective
+|                         .hbc file)
+|
 +---debian              - Packaging information for Debian GNU/Linux.
 |
 +---doc                 - Documentation and white-papers.
 |   |
 |   +---en              - English documentation.
+|
++---extras              - Examples, patches, libs and utils that didn't fit 'contrib'.
 |
 +---include             - Include files for both Harbour and C.
 |
