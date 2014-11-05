@@ -1,6 +1,6 @@
 diff -urN minixml.orig/config.h minixml/config.h
---- minixml.orig/config.h	2014-02-03 09:42:00.428080633 +0100
-+++ minixml/config.h	2014-02-03 09:42:00.428080633 +0100
+--- minixml.orig/config.h	2014-11-05 03:16:01.913770900 +0100
++++ minixml/config.h	2014-11-05 03:16:02.210146200 +0100
 @@ -18,62 +18,87 @@
   * Include necessary headers...
   */
@@ -122,9 +122,31 @@ diff -urN minixml.orig/config.h minixml/config.h
  /*
   * End of "$Id: config.h.in 451 2014-01-04 21:50:06Z msweet $".
   */
+diff -urN minixml.orig/mxml.h minixml/mxml.h
+--- minixml.orig/mxml.h	2014-11-05 03:16:01.944968300 +0100
++++ minixml/mxml.h	2014-11-05 03:16:02.210146200 +0100
+@@ -29,8 +29,16 @@
+ #  include <stdlib.h>
+ #  include <string.h>
+ #  include <ctype.h>
+-#  include <errno.h>
+-
++#  if defined( UNDER_CE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ ) || \
++      defined( _WINCE )
++#     include <io.h>
++#     if !defined( UNDER_CE )
++#        define UNDER_CE
++#     endif
++#     define strerror(e)      ""
++#  else
++#     include <errno.h>
++#  endif
+ 
+ /*
+  * Constants...
 diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
---- minixml.orig/mxml_fil.c	2014-02-03 09:42:00.432080632 +0100
-+++ minixml/mxml_fil.c	2014-02-03 09:42:00.432080632 +0100
+--- minixml.orig/mxml_fil.c	2014-11-05 03:16:01.929369600 +0100
++++ minixml/mxml_fil.c	2014-11-05 03:16:02.210146200 +0100
 @@ -294,8 +294,14 @@
      return (-1);
  
@@ -177,7 +199,7 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
      if (errno != EAGAIN)
  #endif /* EINTR */
        return (-1);
-@@ -2755,6 +2772,10 @@
+@@ -2759,6 +2776,10 @@
  
  	  if (global->wrap > 0 && (col + width) > global->wrap)
  	  {
@@ -188,7 +210,7 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
  	    if ((*putc_cb)('\n', p) < 0)
  	      return (-1);
  
-@@ -2865,6 +2886,10 @@
+@@ -2869,6 +2890,10 @@
  	{
  	  if (global->wrap > 0 && col > global->wrap)
  	  {
@@ -199,7 +221,7 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
  	    if ((*putc_cb)('\n', p) < 0)
  	      return (-1);
  
-@@ -2895,6 +2920,10 @@
+@@ -2899,6 +2924,10 @@
  	{
  	  if (global->wrap > 0 && col > global->wrap)
  	  {
@@ -210,7 +232,7 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
  	    if ((*putc_cb)('\n', p) < 0)
  	      return (-1);
  
-@@ -2918,6 +2947,10 @@
+@@ -2922,6 +2951,10 @@
  	{
  	  if (global->wrap > 0 && col > global->wrap)
  	  {
@@ -221,31 +243,9 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
  	    if ((*putc_cb)('\n', p) < 0)
  	      return (-1);
  
-diff -urN minixml.orig/mxml.h minixml/mxml.h
---- minixml.orig/mxml.h	2014-02-03 09:42:00.436080633 +0100
-+++ minixml/mxml.h	2014-02-03 09:42:00.436080633 +0100
-@@ -29,8 +29,16 @@
- #  include <stdlib.h>
- #  include <string.h>
- #  include <ctype.h>
--#  include <errno.h>
--
-+#  if defined( UNDER_CE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ ) || \
-+      defined( _WINCE )
-+#     include <io.h>
-+#     if !defined( UNDER_CE )
-+#        define UNDER_CE
-+#     endif
-+#     define strerror(e)      ""
-+#  else
-+#     include <errno.h>
-+#  endif
- 
- /*
-  * Constants...
 diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
---- minixml.orig/mxml_nod.c	2014-02-03 09:42:00.436080633 +0100
-+++ minixml/mxml_nod.c	2014-02-03 09:42:00.436080633 +0100
+--- minixml.orig/mxml_nod.c	2014-11-05 03:16:01.929369600 +0100
++++ minixml/mxml_nod.c	2014-11-05 03:16:02.210146200 +0100
 @@ -202,7 +202,11 @@
    */
  
@@ -260,8 +260,8 @@ diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
   /*
    * Now delete any node data...
 diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
---- minixml.orig/mxml_set.c	2014-02-03 09:42:00.436080633 +0100
-+++ minixml/mxml_set.c	2014-02-03 09:42:00.436080633 +0100
+--- minixml.orig/mxml_set.c	2014-11-05 03:16:01.944968300 +0100
++++ minixml/mxml_set.c	2014-11-05 03:16:02.210146200 +0100
 @@ -25,7 +25,7 @@
  /*
   * 'mxmlSetCDATA()' - Set the element name of a CDATA node.
@@ -405,8 +405,8 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
      return (-1);
  
 diff -urN minixml.orig/mxml_str.c minixml/mxml_str.c
---- minixml.orig/mxml_str.c	2014-02-03 09:42:00.436080633 +0100
-+++ minixml/mxml_str.c	2014-02-03 09:42:00.436080633 +0100
+--- minixml.orig/mxml_str.c	2014-11-05 03:16:01.944968300 +0100
++++ minixml/mxml_str.c	2014-11-05 03:16:02.210146200 +0100
 @@ -20,6 +20,9 @@
  
  #include "config.h"

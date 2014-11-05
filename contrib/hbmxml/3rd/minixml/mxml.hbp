@@ -27,7 +27,7 @@ mxml_set.c
 mxml_str.c
 
 # ORIGIN http://www.minixml.org
-# URL    https://www.msweet.org/files/project3/mxml-2.8.tar.gz
+# URL    https://www.msweet.org/files/project3/mxml-2.9.tar.gz
 # DIFF   minixml.dif
 #
 # MAP    COPYING
