@@ -57,6 +57,9 @@
 #pragma -ko+
 
 /*
+   Interesting C build overview from the author of a similar tool:
+      http://nethack4.org/blog/building-c.html
+
    Program Library HOWTO:
       http://www.linux.org/docs/ldp/howto/Program-Library-HOWTO/index.html
 
