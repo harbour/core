@@ -225,6 +225,7 @@ DYNAMIC wapi_SetWindowLongPtr
 DYNAMIC wapi_SetWindowPos
 DYNAMIC wapi_SetWindowText
 DYNAMIC wapi_ShellExecute
+DYNAMIC wapi_ShellExecuteEx
 DYNAMIC wapi_ShowScrollBar
 DYNAMIC wapi_ShowWindow
 DYNAMIC wapi_Sleep

@@ -1,7 +1,7 @@
 /*
  * Windows API functions (shellapi.h - shell32.dll)
  *
- * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2014 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,11 +45,40 @@
  */
 
 #include "hbwapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 #if defined( HB_OS_WIN_CE )
    #include "hbwince.h"
 #endif
 
+#if defined( __BORLANDC__ )
+   #if ! defined( NONAMELESSUNION )
+      #define NONAMELESSUNION
+   #endif
+   #if defined( DUMMYUNIONNAME )
+      #undef DUMMYUNIONNAME
+   #endif
+   #if defined( DUMMYUNIONNAME2 )
+      #undef DUMMYUNIONNAME2
+   #endif
+   #if defined( DUMMYUNIONNAME3 )
+      #undef DUMMYUNIONNAME3
+   #endif
+   #if defined( DUMMYUNIONNAME4 )
+      #undef DUMMYUNIONNAME4
+   #endif
+   #if defined( DUMMYUNIONNAME5 )
+      #undef DUMMYUNIONNAME5
+   #endif
+#endif
+
 #include <shellapi.h>
+
+#if defined( NONAMELESSUNION )
+   #define PHB_WIN_V_UNION( x, z )  ( ( x )->DUMMYUNIONNAME.z )
+#else
+   #define PHB_WIN_V_UNION( x, z )  ( ( x )->z )
+#endif
 
 HB_FUNC( WAPI_SHELLEXECUTE )
 {
@@ -75,6 +104,135 @@ HB_FUNC( WAPI_SHELLEXECUTE )
 #endif
 }
 
+static SHELLEXECUTEINFO * hbwapi_par_SHELLEXECUTEINFO( SHELLEXECUTEINFO * p, int iParam, void *** ph )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+   void ** h = ( void ** ) hb_xgrabz( 5 * sizeof( void * ) );
+
+   *ph = h;
+
+   memset( p, 0, sizeof( SHELLEXECUTEINFO ) );
+
+   p->cbSize = sizeof( SHELLEXECUTEINFO );
+
+   if( pStru && HB_IS_HASH( pStru ) )
+   {
+      PHB_ITEM pItem;
+
+      p->fMask        = ( ULONG     )                                   hb_itemGetNL( hb_hashGetCItemPtr( pStru, "fMask"        ) );
+      p->hwnd         = ( HWND      )                          hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hwnd"         ) );
+      p->lpVerb       = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpVerb"       ), &h[ 0 ], NULL );
+      p->lpFile       = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpFile"       ), &h[ 1 ], NULL );
+      p->lpParameters = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpParameters" ), &h[ 2 ], NULL );
+      p->lpDirectory  = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpDirectory"  ), &h[ 3 ], NULL );
+      p->nShow        = ( int       )                                   hb_itemGetNI( hb_hashGetCItemPtr( pStru, "nShow"        ) );
+      p->hInstApp     = ( HINSTANCE )                          hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hInstApp"     ) );
+      p->lpIDList     = ( LPVOID    )                          NULL;
+      p->lpClass      = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpClass"      ), &h[ 4 ], NULL );
+      p->hkeyClass    = ( HKEY      ) hbwapi_get_HKEY( ( HB_PTRUINT ) hb_itemGetNInt( hb_hashGetCItemPtr( pStru, "hkeyClass"    ) ) );
+      p->dwHotKey     = ( DWORD     )                                   hb_itemGetNL( hb_hashGetCItemPtr( pStru, "dwHotKey"     ) );
+      if( ( pItem = hb_hashGetCItemPtr( pStru, "hIcon" ) ) != NULL )
+         PHB_WIN_V_UNION( p, hIcon )   = hbwapi_itemGet_HANDLE( pItem );
+      if( ( pItem = hb_hashGetCItemPtr( pStru, "hMonitor" ) ) != NULL )
+         PHB_WIN_V_UNION( p, hMonitor ) = hbwapi_itemGet_HANDLE( pItem );
+      p->hProcess     =                                        hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hProcess"     ) );
+
+      return p;
+   }
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 14 )
+   {
+      p->fMask        = ( ULONG     )                                   hb_arrayGetNL( pStru, 1 );
+      p->hwnd         = ( HWND      )                          hbwapi_arrayGet_HANDLE( pStru, 2 );
+      p->lpVerb       = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 3, &h[ 0 ], NULL );
+      p->lpFile       = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 4, &h[ 1 ], NULL );
+      p->lpParameters = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 5, &h[ 2 ], NULL );
+      p->lpDirectory  = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 6, &h[ 3 ], NULL );
+      p->nShow        = ( int       )                                   hb_arrayGetNI( pStru, 7 );
+      p->hInstApp     = ( HINSTANCE )                          hbwapi_arrayGet_HANDLE( pStru, 8 );
+      p->lpIDList     = ( LPVOID    ) NULL;
+      p->lpClass      = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 10, &h[ 4 ], NULL );
+      p->hkeyClass    = ( HKEY      ) hbwapi_get_HKEY( ( HB_PTRUINT ) hb_arrayGetNInt( pStru, 11 ) );
+      p->dwHotKey     = ( DWORD     )                                   hb_arrayGetNL( pStru, 12 );
+      PHB_WIN_V_UNION( p, hIcon ) =                            hbwapi_arrayGet_HANDLE( pStru, 13 );
+      p->hProcess     =                                        hbwapi_arrayGet_HANDLE( pStru, 14 );
+
+      return p;
+   }
+
+   hb_xfree( h );
+   *ph = NULL;
+
+   return NULL;
+}
+
+static void s_hb_hashSetCItemHANDLE( PHB_ITEM pHash, const char * pszKey, HANDLE v )
+{
+   PHB_ITEM pKey = hb_itemPutC( NULL, pszKey );
+   PHB_ITEM pValue = hbwapi_itemPut_HANDLE( NULL, v );
+
+   hb_hashAdd( pHash, pKey, pValue );
+
+   hb_itemRelease( pValue );
+   hb_itemRelease( pKey );
+}
+
+static void hbwapi_stor_SHELLEXECUTEINFO( const SHELLEXECUTEINFO * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   if( pStru )
+   {
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemHANDLE( pStru, "hInstApp", p->hInstApp );
+         s_hb_hashSetCItemHANDLE( pStru, "hProcess", p->hProcess );
+      }
+      else
+      {
+         if( ! HB_IS_ARRAY( pStru ) )
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 14 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
+         else if( hb_arrayLen( pStru ) < 14 )
+            hb_arraySize( pStru, 14 );
+
+         hbwapi_arraySet_HANDLE( pStru, 8, p->hInstApp );
+         hbwapi_arraySet_HANDLE( pStru, 14, p->hProcess );
+      }
+   }
+}
+
+static void hbwapi_strfree_SHELLEXECUTEINFO( void ** h )
+{
+   if( h )
+   {
+      int i;
+      for( i = 0; i < 5; ++i )
+         hb_strfree( h[ i ] );
+   }
+}
+
+HB_FUNC( WAPI_SHELLEXECUTEEX )
+{
+   SHELLEXECUTEINFO p;
+   void ** hSHELLEXECUTEINFO = NULL;
+
+   if( hbwapi_par_SHELLEXECUTEINFO( &p, 1, &hSHELLEXECUTEINFO ) )
+   {
+      BOOL bResult = ShellExecuteEx( &p );
+      hbwapi_SetLastError( GetLastError() );
+      hbwapi_ret_L( bResult );
+      hbwapi_stor_SHELLEXECUTEINFO( &p, 1 );
+
+      hbwapi_strfree_SHELLEXECUTEINFO( hSHELLEXECUTEINFO );
+      hb_xfree( hSHELLEXECUTEINFO );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( WAPI_ISUSERANADMIN )
 {
    BOOL bResult = FALSE;
@@ -92,5 +250,5 @@ HB_FUNC( WAPI_ISUSERANADMIN )
       FreeLibrary( hLib );
    }
 
-   hb_retl( bResult );
+   hbwapi_ret_L( bResult );
 }
