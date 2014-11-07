@@ -119,42 +119,42 @@ static SHELLEXECUTEINFO * hbwapi_par_SHELLEXECUTEINFO( SHELLEXECUTEINFO * p, int
    {
       PHB_ITEM pItem;
 
-      p->fMask        = ( ULONG     )                                   hb_itemGetNL( hb_hashGetCItemPtr( pStru, "fMask"        ) );
-      p->hwnd         = ( HWND      )                          hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hwnd"         ) );
-      p->lpVerb       = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpVerb"       ), &h[ 0 ], NULL );
-      p->lpFile       = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpFile"       ), &h[ 1 ], NULL );
-      p->lpParameters = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpParameters" ), &h[ 2 ], NULL );
-      p->lpDirectory  = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpDirectory"  ), &h[ 3 ], NULL );
-      p->nShow        = ( int       )                                   hb_itemGetNI( hb_hashGetCItemPtr( pStru, "nShow"        ) );
-      p->hInstApp     = ( HINSTANCE )                          hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hInstApp"     ) );
-      p->lpIDList     = ( LPVOID    )                          NULL;
-      p->lpClass      = ( LPCTSTR   )                                  HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpClass"      ), &h[ 4 ], NULL );
-      p->hkeyClass    = ( HKEY      ) hbwapi_get_HKEY( ( HB_PTRUINT ) hb_itemGetNInt( hb_hashGetCItemPtr( pStru, "hkeyClass"    ) ) );
-      p->dwHotKey     = ( DWORD     )                                   hb_itemGetNL( hb_hashGetCItemPtr( pStru, "dwHotKey"     ) );
+      p->fMask        = ( ULONG     )                     hb_itemGetNL( hb_hashGetCItemPtr( pStru, "fMask"        ) );
+      p->hwnd         = ( HWND      )            hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hwnd"         ) );
+      p->lpVerb       = ( LPCTSTR   )                    HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpVerb"       ), &h[ 0 ], NULL );
+      p->lpFile       = ( LPCTSTR   )                    HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpFile"       ), &h[ 1 ], NULL );
+      p->lpParameters = ( LPCTSTR   )                    HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpParameters" ), &h[ 2 ], NULL );
+      p->lpDirectory  = ( LPCTSTR   )                    HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpDirectory"  ), &h[ 3 ], NULL );
+      p->nShow        =                                   hb_itemGetNI( hb_hashGetCItemPtr( pStru, "nShow"        ) );
+      p->hInstApp     = ( HINSTANCE )            hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hInstApp"     ) );
+      p->lpIDList     = ( LPVOID    ) NULL;
+      p->lpClass      = ( LPCTSTR   )                    HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpClass"      ), &h[ 4 ], NULL );
+      p->hkeyClass    = hbwapi_get_HKEY( ( HB_PTRUINT ) hb_itemGetNInt( hb_hashGetCItemPtr( pStru, "hkeyClass"    ) ) );
+      p->dwHotKey     = ( DWORD     )                     hb_itemGetNL( hb_hashGetCItemPtr( pStru, "dwHotKey"     ) );
       if( ( pItem = hb_hashGetCItemPtr( pStru, "hIcon" ) ) != NULL )
          PHB_WIN_V_UNION( p, hIcon )   = hbwapi_itemGet_HANDLE( pItem );
       if( ( pItem = hb_hashGetCItemPtr( pStru, "hMonitor" ) ) != NULL )
          PHB_WIN_V_UNION( p, hMonitor ) = hbwapi_itemGet_HANDLE( pItem );
-      p->hProcess     =                                        hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hProcess"     ) );
+      p->hProcess     =                          hbwapi_itemGet_HANDLE( hb_hashGetCItemPtr( pStru, "hProcess"     ) );
 
       return p;
    }
    else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 14 )
    {
-      p->fMask        = ( ULONG     )                                   hb_arrayGetNL( pStru, 1 );
-      p->hwnd         = ( HWND      )                          hbwapi_arrayGet_HANDLE( pStru, 2 );
-      p->lpVerb       = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 3, &h[ 0 ], NULL );
-      p->lpFile       = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 4, &h[ 1 ], NULL );
-      p->lpParameters = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 5, &h[ 2 ], NULL );
-      p->lpDirectory  = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 6, &h[ 3 ], NULL );
-      p->nShow        = ( int       )                                   hb_arrayGetNI( pStru, 7 );
-      p->hInstApp     = ( HINSTANCE )                          hbwapi_arrayGet_HANDLE( pStru, 8 );
+      p->fMask        = ( ULONG     )                     hb_arrayGetNL( pStru, 1 );
+      p->hwnd         = ( HWND      )            hbwapi_arrayGet_HANDLE( pStru, 2 );
+      p->lpVerb       = ( LPCTSTR   )                    HB_ARRAYGETSTR( pStru, 3, &h[ 0 ], NULL );
+      p->lpFile       = ( LPCTSTR   )                    HB_ARRAYGETSTR( pStru, 4, &h[ 1 ], NULL );
+      p->lpParameters = ( LPCTSTR   )                    HB_ARRAYGETSTR( pStru, 5, &h[ 2 ], NULL );
+      p->lpDirectory  = ( LPCTSTR   )                    HB_ARRAYGETSTR( pStru, 6, &h[ 3 ], NULL );
+      p->nShow        =                                   hb_arrayGetNI( pStru, 7 );
+      p->hInstApp     = ( HINSTANCE )            hbwapi_arrayGet_HANDLE( pStru, 8 );
       p->lpIDList     = ( LPVOID    ) NULL;
-      p->lpClass      = ( LPCTSTR   )                                  HB_ARRAYGETSTR( pStru, 10, &h[ 4 ], NULL );
-      p->hkeyClass    = ( HKEY      ) hbwapi_get_HKEY( ( HB_PTRUINT ) hb_arrayGetNInt( pStru, 11 ) );
-      p->dwHotKey     = ( DWORD     )                                   hb_arrayGetNL( pStru, 12 );
-      PHB_WIN_V_UNION( p, hIcon ) =                            hbwapi_arrayGet_HANDLE( pStru, 13 );
-      p->hProcess     =                                        hbwapi_arrayGet_HANDLE( pStru, 14 );
+      p->lpClass      = ( LPCTSTR   )                    HB_ARRAYGETSTR( pStru, 10, &h[ 4 ], NULL );
+      p->hkeyClass    = hbwapi_get_HKEY( ( HB_PTRUINT ) hb_arrayGetNInt( pStru, 11 ) );
+      p->dwHotKey     = ( DWORD     )                     hb_arrayGetNL( pStru, 12 );
+      PHB_WIN_V_UNION( p, hIcon ) =              hbwapi_arrayGet_HANDLE( pStru, 13 );
+      p->hProcess     =                          hbwapi_arrayGet_HANDLE( pStru, 14 );
 
       return p;
    }
