@@ -162,3 +162,26 @@ HINSTANCE hbwapi_Instance( void )
 
    return hInstance;
 }
+
+HKEY hbwapi_get_HKEY( HB_PTRUINT nKey )
+{
+   switch( nKey )
+   {
+      case 1:
+         return ( HKEY ) HKEY_CLASSES_ROOT;
+      /* NOTE: In xhb, zero value means HKEY_LOCAL_MACHINE. */
+      case 0:
+      case 2:
+         return ( HKEY ) HKEY_CURRENT_USER;
+#if ! defined( HB_OS_WIN_CE )
+      case 3:
+         return ( HKEY ) HKEY_CURRENT_CONFIG;
+#endif
+      case 4:
+         return ( HKEY ) HKEY_LOCAL_MACHINE;
+      case 5:
+         return ( HKEY ) HKEY_USERS;
+   }
+
+   return ( HKEY ) nKey;
+}
