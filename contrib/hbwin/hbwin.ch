@@ -151,6 +151,23 @@
 #define HB_WIN_COM_DBGQUEUE                0x20
 #define HB_WIN_COM_DBGALL                  0x3F
 
+/* win_comFuncLast() return values */
+#define HB_WIN_COM_FUN_CREATEFILE          1
+#define HB_WIN_COM_FUN_GETCOMMSTATE        2
+#define HB_WIN_COM_FUN_SETCOMMSTATE        3
+#define HB_WIN_COM_FUN_SETUPCOMM           4
+#define HB_WIN_COM_FUN_GETCOMMTIMEOUTS     5
+#define HB_WIN_COM_FUN_SETCOMMTIMEOUTS     6
+#define HB_WIN_COM_FUN_CLOSEHANDLE         7
+#define HB_WIN_COM_FUN_WRITEFILE           8
+#define HB_WIN_COM_FUN_READFILE            9
+#define HB_WIN_COM_FUN_GETCOMMMODEMSTATUS  10  /* win_com:Status() */
+#define HB_WIN_COM_FUN_PURGECOMM           11
+#define HB_WIN_COM_FUN_CLEARCOMMERROR      12  /* win_com:QueueStatus() */
+#define HB_WIN_COM_FUN_ESCAPECOMMFUNCTION  13
+#define HB_WIN_COM_FUN_GETCOMMPROPERTIES   14
+#define HB_WIN_COM_FUN_MAX                 14
+
 /* win_Prn() related values */
 
 /* win_printerList() positions for array returned */

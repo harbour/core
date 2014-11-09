@@ -45,7 +45,7 @@
  *
  */
 
-#include "hbwin.h"
+#include "hbwapi.h"
 #include "hbapiitm.h"
 
 static HB_BOOL getwinver( OSVERSIONINFO * pOSvi )

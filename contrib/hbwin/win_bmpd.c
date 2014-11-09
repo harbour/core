@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbwin.h"
+#include "hbwapi.h"
 #include "hbapiitm.h"
 
 #if defined( HB_HAS_PNG ) && defined( HB_HAS_ZLIB )

@@ -148,6 +148,12 @@
                                           ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
 #endif
 
+/* hbwin_bitmapType() return values */
+#define HB_WIN_BITMAP_UNKNOWN              0
+#define HB_WIN_BITMAP_BMP                  1
+#define HB_WIN_BITMAP_JPEG                 2
+#define HB_WIN_BITMAP_PNG                  3
+
 HB_EXTERN_BEGIN
 
 /* Intentionally not used HB_EXPORT. These are UNICODE setting dependent functions,
@@ -198,6 +204,8 @@ extern HB_EXPORT void *     hbwapi_arrayGet_HANDLE( PHB_ITEM pArray, HB_SIZE nIn
 
 extern HB_EXPORT void *     __hbwapi_par_handle( int n );
 extern HB_EXPORT void *     __hbwapi_parv_handle( int n, int i );
+
+extern HB_EXPORT int        hbwin_bitmapType( const void * pImgBuf, HB_SIZE size );
 
 HB_EXTERN_END
 

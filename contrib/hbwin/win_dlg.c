@@ -45,7 +45,6 @@
  *
  */
 
-#include "hbwin.h"
 #include "hbwapi.h"
 
 #if defined( __XCC__ )

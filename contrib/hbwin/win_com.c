@@ -44,9 +44,11 @@
  *
  */
 
-#include "hbwin.h"
+#include "hbwapi.h"
 #include "hbapierr.h"
 #include "hbinit.h"
+
+#include "hbwin.ch"
 
 static struct
 {

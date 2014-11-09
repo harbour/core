@@ -3,6 +3,7 @@
 #include "hbapi.h"
 
 /* legacy non-prefixed names mapped to proper local ones and to hbwin */
+#if 1
 HB_FUNC_TRANSLATE( ADDTOOLTIPEX           , WVW_ADDTOOLTIPEX           )
 HB_FUNC_TRANSLATE( BRINGTOTOP1            , WVW_BRINGTOTOP1            )
 HB_FUNC_TRANSLATE( CREATEFONT             , WIN_CREATEFONT             )
@@ -34,6 +35,7 @@ HB_FUNC_TRANSLATE( SETPARENT              , WVW_SETPARENT              )
 HB_FUNC_TRANSLATE( SETTEXTCOLOR           , WAPI_SETTEXTCOLOR          )
 HB_FUNC_TRANSLATE( TOOLBARADDBUTTONS      , WVW_TOOLBARADDBUTTONS      )
 HB_FUNC_TRANSLATE( WINDOW2BITMAP          , WVW_WINDOW2BITMAP          )
+#endif
 
 /* mappings to hbwin */
 HB_FUNC_TRANSLATE( WIN_CHECKDLGBUTTON     , WAPI_CHECKDLGBUTTON        )
