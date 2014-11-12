@@ -71,9 +71,8 @@ METHOD New( cFileName ) CLASS TIniFile
    LOCAL lDone, hFile, cFile, cLine, cIdent, nPos
    LOCAL CurrArray
 
-   IF Empty( cFileName )
+   IF ! HB_ISSTRING( cFileName ) .OR. Empty( cFileName )
       // raise an error?
-      ? "No filename passed to TIniFile():New()"
       RETURN NIL
    ELSE
       ::FileName := cFilename
@@ -165,8 +164,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
    LOCAL i, j, cFind
 
    IF Empty( cIdent )
-      ? "Must specify an identifier"
-
+      /* error */
    ELSEIF Empty( cSection )
       cFind := Lower( cIdent )
       IF ( j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } ) ) > 0
