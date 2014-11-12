@@ -1,6 +1,6 @@
 diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
 --- dbu52ori/dbu.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbu.prg	2013-03-02 02:00:25.000000000 +0100
++++ dbu52pat/dbu.prg	2014-11-12 01:31:55.000000000 +0100
 @@ -9,6 +9,10 @@
  *
  */
@@ -12,7 +12,19 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
  PROCEDURE Dbu( param1, param2, param3 )
     
     PUBLIC n_files,keystroke,lkey,frame,sframe,cur_dir,more_up,more_down,;
-@@ -60,6 +64,14 @@
+@@ -31,6 +35,11 @@
+    *  - file opening mode (for network support)
+    *     /E = exclusive use of files
+    *
++   *  - encryption:
++   *     /P<pw> = use password for table encryption
++   *              if <pw> is empty, read the password
++   *              from envvar DBU_PW
++   *
+    *  Parameters may be specified in any order
+    ******
+    
+@@ -60,6 +69,14 @@
     SAVE SCREEN                                   && the screen you save...
     SET SCOREBOARD OFF                            && who's keeping score, anyhow
     SET KEY 28 TO                                 && some folks need help
@@ -27,7 +39,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     IF (ISCOLOR() .OR. "/C" $ UPPER(param2)) .AND. .NOT. "/M" $ UPPER(param2)
        * make it pretty
-@@ -100,10 +112,10 @@
+@@ -100,10 +117,10 @@
     * system constants
     more_up = CHR(24)                             && visual up arrow
     more_down = CHR(25)                           && visual down arrow
@@ -42,7 +54,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     * global variables
     STORE .F. TO need_field,need_ntx,need_relat,need_filtr,box_open
-@@ -250,7 +262,7 @@
+@@ -250,7 +267,7 @@
     @ 0,0 SAY " F1        F2        F3        F4        F5        F6        " +;
     "F7        F8       "
     show_keys()
@@ -51,7 +63,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     error_msg(view_err)
     
     * when to bubble up
-@@ -346,14 +358,14 @@
+@@ -346,14 +363,14 @@
     help_title[22] = "REPLACE"
     
     * arrays for file names in default directory
@@ -70,7 +82,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     * default to set view
     local_func = 0                                && local menu
-@@ -370,7 +382,7 @@
+@@ -370,7 +387,7 @@
        
        DO CASE
           
@@ -79,7 +91,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
           * file extension entered
           IF .NOT. FILE(com_line)
              * file must exist
-@@ -378,13 +390,13 @@
+@@ -378,13 +395,13 @@
              
           ENDIF
           
@@ -97,7 +109,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
           
        OTHERWISE
           * file not found..ignore command line
-@@ -395,7 +407,7 @@
+@@ -395,7 +412,7 @@
        IF .NOT. EMPTY(com_line)
           * command line file exists
           
@@ -106,7 +118,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
              * assume a valid .VEW file
              view_file = com_line
              set_from(.F.)                        && restore view
-@@ -616,8 +628,8 @@
+@@ -616,8 +633,8 @@
              @ 0,0 SAY " F1        F2        F3        F4        " +;
              "F5        F6        F7        F8       "
              show_keys()
@@ -117,7 +129,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
              
              * accept command entry
              run_com = enter_rc(M->com_line,24,7,127,"@KS73",M->color1)
-@@ -646,18 +658,18 @@
+@@ -646,18 +663,18 @@
           @ 3,0 CLEAR
           
           * rebuild directory arrays..must keep current
@@ -140,7 +152,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
           cur_area = 0                            && re-draw view screen
           sysfunc = 0                             && back to the main view screen
           
-@@ -736,10 +748,10 @@
+@@ -736,10 +753,10 @@
        nPos  := AT( ";", cPath )
  
        // Account for backslash in path
@@ -410,8 +422,29 @@ diff -u dbu52ori/dbuindx.prg dbu52pat/dbuindx.prg
  
 diff -u dbu52ori/dbunet.prg dbu52pat/dbunet.prg
 --- dbu52ori/dbunet.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbunet.prg	2012-05-02 16:48:07.000000000 +0200
-@@ -333,7 +333,7 @@
++++ dbu52pat/dbunet.prg	2014-11-12 01:32:13.000000000 +0100
+@@ -10,6 +10,8 @@
+ */
+ 
+ #include "common.ch"
++#include "dbinfo.ch"
++
+ #define NET_WAIT  1
+ 
+ 
+@@ -110,6 +112,11 @@
+       ENDIF
+ 
+       IF !NETERR()                // If successful, let's get out of here
++
++         IF ! Empty( dbu_pw() )
++            dbInfo( DBI_PASSWORD, dbu_pw() )
++         ENDIF
++
+          lRet := .T.
+          EXIT
+       ENDIF
+@@ -333,7 +340,7 @@
     LOCAL nPos     // Used to locate position of search characters in string
  
     // Strip out the drive and path information, if any
@@ -420,6 +453,26 @@ diff -u dbu52ori/dbunet.prg dbu52pat/dbunet.prg
        cString := SUBSTR( cString, ++nPos )
     ENDIF
  
+@@ -343,3 +350,19 @@
+    ENDIF
+ 
+    RETURN ( cString )
++
++FUNCTION dbu_pw()
++
++   LOCAL tmp
++
++   FOR tmp := 1 TO hb_argc()
++      IF Lower( Left( hb_argv( tmp ), 2 ) ) == "-p"
++         tmp := SubStr( hb_argv( tmp ), 3 )
++         IF Empty( tmp )
++            tmp := GetEnv( "DBU_PW" )
++         ENDIF
++         RETURN tmp
++      ENDIF
++   NEXT
++
++   RETURN ""
 diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
 --- dbu52ori/dbustru.prg	1993-03-04 04:20:00.000000000 +0100
 +++ dbu52pat/dbustru.prg	2012-05-02 16:48:16.000000000 +0200
