@@ -1228,11 +1228,11 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
                                      iMsg != NETIO_PROC, HB_FALSE );
             if( fResult && ( iMsg == NETIO_FUNC || iMsg == NETIO_FUNCCTRL ) )
             {
-               HB_SIZE nResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
+               HB_SIZE nResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] ), nRecv = 0;
 
                if( nResult > 0 )
                {
-                  PHB_ITEM pItem;
+                  PHB_ITEM pItem = NULL;
 
                   if( nResult > size && buffer )
                   {
@@ -1241,14 +1241,12 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
                   }
                   if( buffer == NULL )
                      buffer = ( char * ) hb_xgrab( nResult );
-                  if( nResult == ( HB_SIZE ) s_fileRecvAll( conn, buffer, ( long ) nResult ) )
+                  nRecv = s_fileRecvAll( conn, buffer, ( long ) nResult );
+                  if( nResult == nRecv )
                   {
                      data = buffer;
                      pItem = hb_itemDeserialize( &data, &nResult );
                   }
-                  else
-                     pItem = NULL;
-
                   if( pItem )
                   {
                      if( iMsg == NETIO_FUNCCTRL )
@@ -1262,8 +1260,14 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
                   }
                   else
                   {
-                     conn->errcode = NETIO_ERR_WRONG_PARAM;
-                     hb_errRT_NETIO( EG_CORRUPTION, 1008, 0, NULL, HB_ERR_FUNCNAME );
+                     HB_ERRCODE errOsCode = 0;
+
+                     if( nResult != nRecv )
+                        conn->errcode = errOsCode = hb_socketGetError();
+                     else
+                        conn->errcode = NETIO_ERR_WRONG_PARAM;
+
+                     hb_errRT_NETIO( EG_CORRUPTION, 1008, errOsCode, NULL, HB_ERR_FUNCNAME );
                   }
                }
             }
@@ -1641,16 +1645,14 @@ static PHB_ITEM s_fileDirectory( PHB_FILE_FUNCS pFuncs, const char * pszDirSpec,
             hb_fsSetError( errCode );
             if( pDirArray == NULL )
             {
-               if( nRecv != nResult )
-               {
-                  conn->errcode = hb_socketGetError();
-                  hb_errRT_NETIO( EG_CORRUPTION, 1013, 0, NULL, HB_ERR_FUNCNAME );
-               }
+               HB_ERRCODE errOsCode = 0;
+
+               if( nResult != nRecv )
+                  conn->errcode = errOsCode = hb_socketGetError();
                else
-               {
                   conn->errcode = NETIO_ERR_WRONG_PARAM;
-                  hb_errRT_NETIO( EG_CORRUPTION, 1013, 0, NULL, HB_ERR_FUNCNAME );
-               }
+
+               hb_errRT_NETIO( EG_CORRUPTION, 1013, errOsCode, NULL, HB_ERR_FUNCNAME );
             }
          }
          if( pBuffer )
@@ -2052,7 +2054,7 @@ static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
             if( nRecv != nResult )
             {
                conn->errcode = hb_socketGetError();
-               hb_errRT_NETIO( EG_CORRUPTION, 1014, 0, NULL, HB_ERR_FUNCNAME );
+               hb_errRT_NETIO( EG_CORRUPTION, 1014, conn->errcode, NULL, HB_ERR_FUNCNAME );
             }
             hb_fsSetError( errCode );
          }
@@ -2485,7 +2487,7 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
          if( nRecv != nResult )
          {
             pFile->conn->errcode = hb_socketGetError();
-            hb_errRT_NETIO( EG_CORRUPTION, 1015, 0, NULL, HB_ERR_FUNCNAME );
+            hb_errRT_NETIO( EG_CORRUPTION, 1015, pFile->conn->errcode, NULL, HB_ERR_FUNCNAME );
             fResult = HB_FALSE;
          }
       }

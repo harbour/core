@@ -1369,6 +1369,7 @@ static PHB_GTQTC hb_gt_qtc_new( PHB_GT pGT )
    pQTC->fResizeInc    = HB_FALSE;
    pQTC->fAltEnter     = HB_FALSE;
    pQTC->fMaximized    = HB_FALSE;
+   pQTC->fMinimized    = HB_FALSE;
    pQTC->fFullScreen   = HB_FALSE;
    pQTC->fSelectCopy   = HB_FALSE;
    pQTC->fRepaint      = HB_TRUE;
@@ -1568,7 +1569,7 @@ static void hb_gt_qtc_setWindowFlags( PHB_GTQTC pQTC, Qt::WindowFlags flags, HB_
    }
 }
 
-static void hb_gt_qtc_setWindowState( PHB_GTQTC pQTC, Qt::WindowStates state, HB_BOOL fSet )
+static void hb_gt_qtc_setWindowState( PHB_GTQTC pQTC, Qt::WindowStates state, HB_BOOL fSet, HB_BOOL fShow )
 {
    Qt::WindowStates currState = pQTC->qWnd->windowState(), newState;
 
@@ -1580,9 +1581,12 @@ static void hb_gt_qtc_setWindowState( PHB_GTQTC pQTC, Qt::WindowStates state, HB
    if( newState != currState )
    {
       pQTC->qWnd->setWindowState( newState );
-      HB_QTC_LOCK();
-      pQTC->qWnd->show();
-      HB_QTC_UNLOCK();
+      if( fShow )
+      {
+         HB_QTC_LOCK();
+         pQTC->qWnd->show();
+         HB_QTC_UNLOCK();
+      }
    }
 }
 
@@ -2040,7 +2044,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             pQTC->fMaximized = ! pQTC->fMaximized;
             if( pQTC->qWnd )
-               hb_gt_qtc_setWindowState( pQTC, Qt::WindowMaximized, pQTC->fMaximized );
+               hb_gt_qtc_setWindowState( pQTC, Qt::WindowMaximized, pQTC->fMaximized, HB_TRUE );
          }
          break;
 
@@ -2053,7 +2057,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             pQTC->fFullScreen = ! pQTC->fFullScreen;
             if( pQTC->qWnd )
-               hb_gt_qtc_setWindowState( pQTC, Qt::WindowFullScreen, pQTC->fFullScreen );
+               hb_gt_qtc_setWindowState( pQTC, Qt::WindowFullScreen, pQTC->fFullScreen, HB_TRUE );
          }
          break;
 
@@ -2061,6 +2065,19 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pQTC->fAltEnter );
          if( pInfo->pNewVal && HB_IS_LOGICAL( pInfo->pNewVal ) )
             pQTC->fAltEnter = hb_itemGetL( pInfo->pNewVal );
+         break;
+
+      case HB_GTI_MINIMIZED:
+         if( pQTC->qWnd )
+            pQTC->fMinimized = ( pQTC->qWnd->windowState() & Qt::WindowMinimized ) != 0;
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pQTC->fMinimized );
+         if( pInfo->pNewVal && HB_IS_LOGICAL( pInfo->pNewVal ) &&
+             ( hb_itemGetL( pInfo->pNewVal ) ? ! pQTC->fMinimized : pQTC->fMinimized ) )
+         {
+            pQTC->fMinimized = ! pQTC->fMinimized;
+            if( pQTC->qWnd )
+               hb_gt_qtc_setWindowState( pQTC, Qt::WindowMinimized, pQTC->fMinimized, ! pQTC->fMinimized );
+         }
          break;
 
       case HB_GTI_CLOSABLE:
@@ -3266,7 +3283,7 @@ void QTConsole::keyPressEvent( QKeyEvent * event )
                                 ( iFlags & HB_KF_KEYPAD ) == 0 )
          {
             pQTC->fFullScreen = ( pQTC->qWnd->windowState() & Qt::WindowFullScreen ) == 0;
-            hb_gt_qtc_setWindowState( pQTC, Qt::WindowFullScreen, pQTC->fFullScreen );
+            hb_gt_qtc_setWindowState( pQTC, Qt::WindowFullScreen, pQTC->fFullScreen, HB_TRUE );
             return;
          }
          iKey = HB_KX_ENTER;
@@ -3519,10 +3536,12 @@ QTCWindow::QTCWindow( PHB_GTQTC pQTC )
     */
    resize( pQTC->cellX * pQTC->iCols, pQTC->cellY * pQTC->iRows );
 
-   if( pQTC->fMaximized )
-      setWindowState( windowState() | Qt::WindowMaximized );
    if( pQTC->fFullScreen )
       setWindowState( windowState() | Qt::WindowFullScreen );
+   else if( pQTC->fMaximized )
+      setWindowState( windowState() | Qt::WindowMaximized );
+   else if( pQTC->fMinimized )
+      setWindowState( windowState() | Qt::WindowMinimized );
 
    if( pQTC->qIcon )
       setWindowIcon( *pQTC->qIcon );

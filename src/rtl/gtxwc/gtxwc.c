@@ -113,6 +113,9 @@ static Atom s_atomCutBuffer0;
 static Atom s_atomText;
 static Atom s_atomCompoundText;
 static Atom s_atomFullScreen;
+static Atom s_atomMaximizedX;
+static Atom s_atomMaximizedY;
+static Atom s_atomActivate;
 static Atom s_atomState;
 static Atom s_atomMotifHints;
 static Atom s_atomFrameExtends;
@@ -189,6 +192,8 @@ typedef struct
    int     iCloseMode;
    HB_BOOL fResizable;
    HB_BOOL fFullScreen;
+   HB_BOOL fMaximized;
+   HB_BOOL fMinimized;
    HB_BOOL fAltEnter;
 
    /* mark & copy */
@@ -2493,6 +2498,43 @@ static void hb_gt_xwc_FullScreen( PXWND_DEF wnd )
                SubstructureRedirectMask, &evt );
 }
 
+static void hb_gt_xwc_MaximizeScreen( PXWND_DEF wnd )
+{
+   XEvent evt;
+
+   memset( &evt, 0, sizeof( evt ) );
+   evt.xclient.type = ClientMessage;
+   evt.xclient.message_type = s_atomState;
+   evt.xclient.display = wnd->dpy;
+   evt.xclient.window = wnd->window;
+   evt.xclient.format = 32;
+   evt.xclient.data.l[ 0 ] = wnd->fMaximized ? 1 : 0;
+   evt.xclient.data.l[ 1 ] = s_atomMaximizedX;
+   evt.xclient.data.l[ 2 ] = s_atomMaximizedY;
+
+   XSendEvent( wnd->dpy, DefaultRootWindow( wnd->dpy ), False,
+               SubstructureRedirectMask, &evt );
+}
+
+/* after de-iconifying set input focus back */
+static void hb_gt_xwc_ActivateScreen( PXWND_DEF wnd )
+{
+   XEvent evt;
+
+   memset( &evt, 0, sizeof( evt ) );
+   evt.xclient.type = ClientMessage;
+   evt.xclient.message_type = s_atomActivate;
+   evt.xclient.display = wnd->dpy;
+   evt.xclient.window = wnd->window;
+   evt.xclient.format = 32;
+   evt.xclient.data.l[ 0 ] = 1;
+   evt.xclient.data.l[ 1 ] = CurrentTime;
+   evt.xclient.data.l[ 2 ] = wnd->window;
+
+   XSendEvent( wnd->dpy, DefaultRootWindow( wnd->dpy ), False,
+               SubstructureRedirectMask, &evt );
+}
+
 /* *********************************************************************** */
 
 /* X11 Motif WM Properties and Resources */
@@ -4473,6 +4515,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fResizable = HB_TRUE;
    wnd->fWinResize = HB_FALSE;
    wnd->fFullScreen = HB_FALSE;
+   wnd->fMaximized = HB_FALSE;
+   wnd->fMinimized = HB_FALSE;
    wnd->fAltEnter = HB_FALSE;
 #if defined( HB_XWC_USE_LOCALE )
    wnd->fUTF8key = hb_gt_xwc_isUTF8();
@@ -4555,6 +4599,9 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
    s_atomText           = XInternAtom( wnd->dpy, "TEXT", False );
    s_atomCompoundText   = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
    s_atomFullScreen     = XInternAtom( wnd->dpy, "_NET_WM_STATE_FULLSCREEN", False );
+   s_atomMaximizedY     = XInternAtom( wnd->dpy, "_NET_WM_STATE_MAXIMIZED_VERT", False );
+   s_atomMaximizedX     = XInternAtom( wnd->dpy, "_NET_WM_STATE_MAXIMIZED_HORZ", False );
+   s_atomActivate       = XInternAtom( wnd->dpy, "_NET_ACTIVE_WINDOW", False );
    s_atomState          = XInternAtom( wnd->dpy, "_NET_WM_STATE", False );
    s_atomMotifHints     = XInternAtom( wnd->dpy, "_MOTIF_WM_HINTS", False );
    s_atomFrameExtends   = XInternAtom( wnd->dpy, "_NET_FRAME_EXTENTS", False );
@@ -4747,6 +4794,10 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
       hb_gt_xwc_FullScreen( wnd );
       wnd->fResizable = HB_TRUE;
    }
+   else if( wnd->fMinimized )
+      XIconifyWindow( wnd->dpy, wnd->window, DefaultScreen( wnd->dpy ) );
+   else if( wnd->fMaximized )
+      hb_gt_xwc_MaximizeScreen( wnd );
    else if( wnd->iNewPosX >= 0 && wnd->iNewPosY >= 0 )
       XMoveWindow( wnd->dpy, wnd->window, wnd->iNewPosX, wnd->iNewPosY );
 
@@ -5294,6 +5345,8 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_strfree( hString );
 
             wnd->fDspTitle = HB_TRUE;
+            if( wnd->window )
+               hb_gt_xwc_ProcessMessages( wnd, HB_FALSE );
          }
          break;
 
@@ -5366,6 +5419,41 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fAltEnter );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             wnd->fAltEnter = hb_itemGetL( pInfo->pNewVal );
+         break;
+
+      case HB_GTI_MAXIMIZED:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fMaximized );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            if( hb_itemGetL( pInfo->pNewVal ) != wnd->fMaximized )
+            {
+               wnd->fMaximized = hb_itemGetL( pInfo->pNewVal );
+               if( wnd->fInit )
+                  hb_gt_xwc_MaximizeScreen( wnd );
+            }
+         }
+         break;
+
+      case HB_GTI_MINIMIZED:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fMinimized );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+         {
+            if( hb_itemGetL( pInfo->pNewVal ) != wnd->fMinimized )
+            {
+               wnd->fMinimized = hb_itemGetL( pInfo->pNewVal );
+               if( wnd->fInit )
+               {
+                  if( wnd->fMinimized )
+                     XIconifyWindow( wnd->dpy, wnd->window, DefaultScreen( wnd->dpy ) );
+                  else
+                  {
+                     XMapWindow( wnd->dpy, wnd->window );
+                     XRaiseWindow( wnd->dpy, wnd->window );
+                     hb_gt_xwc_ActivateScreen( wnd );
+                  }
+               }
+            }
+         }
          break;
 
       case HB_GTI_CLOSABLE:
