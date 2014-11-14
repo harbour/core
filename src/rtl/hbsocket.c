@@ -2284,7 +2284,10 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
        */
       ret = hb_socketSelectWRE( sd, timeout );
       if( ret > 0 )
+      {
+         hb_socketSetRawError( 0 );
          ret = 0;
+      }
       else if( ret == 0 )
       {
          hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
