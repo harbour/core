@@ -260,10 +260,16 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
                pStream->crypt_size -= rec;
             }
          }
+
          pStream->rd.avail_in += ( uInt ) rec;
-         if( pStream->rd.avail_in == 0 )
-            break;
          rec = 0;
+         if( pStream->rd.avail_in == 0 )
+         {
+            if( pStream->rd.avail_out == ( uInt ) len )
+               continue;
+            else
+               break;
+         }
       }
       pStream->err = inflate( &pStream->rd, Z_SYNC_FLUSH );
 /*
