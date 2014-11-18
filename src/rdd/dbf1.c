@@ -3955,7 +3955,7 @@ static HB_ERRCODE hb_dbfNewArea( DBFAREAP pArea )
 static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    HB_ERRCODE errCode, errOsCode;
-   HB_USHORT uiFlags, uiFields, uiCount, uiSkip;
+   HB_USHORT uiFlags, uiFields, uiCount, uiSkip, uiDecimals;
    HB_SIZE nSize;
    HB_BOOL fRawBlob;
    PHB_ITEM pError, pItem;
@@ -4071,7 +4071,9 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    hb_itemClear( pItem );
    fRawBlob = SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_BLOB_SUPPORT, pOpenInfo->ulConnection, pItem ) == HB_SUCCESS &&
               hb_itemGetL( pItem );
-
+   hb_itemClear( pItem );
+   uiDecimals = SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_DECIMALS, pOpenInfo->ulConnection, pItem ) == HB_SUCCESS ?
+                hb_itemGetNI( pItem ) : 0;
    hb_itemRelease( pItem );
 
    if( fRawBlob )
@@ -4284,9 +4286,10 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
             dbFieldInfo.uiDec = pField->bDec;
             if( dbFieldInfo.uiLen != 8 )
                errCode = HB_FAILURE;
+            else if( dbFieldInfo.uiDec == 0 )
+               dbFieldInfo.uiDec = uiDecimals;
             break;
 
-         /* types which are not supported by VM - mapped to different ones */
          case 'T':
             if( dbFieldInfo.uiLen == 8 )
                dbFieldInfo.uiType = HB_FT_TIMESTAMP;
@@ -4296,6 +4299,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                errCode = HB_FAILURE;
             break;
 
+         /* types which are not supported by VM - mapped to different ones */
          case '@':
             dbFieldInfo.uiType = HB_FT_TIMESTAMP;
             if( dbFieldInfo.uiLen != 8 )
@@ -5967,6 +5971,15 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
          if( iPageSize >= 0x200 && iPageSize <= 0x2000 &&
              ( ( iPageSize - 1 ) & iPageSize ) == 0 )
             pData->uiIndexPageSize = ( HB_USHORT ) iPageSize;
+         break;
+      }
+      case RDDI_DECIMALS:
+      {
+         int iDecimals = HB_IS_NUMERIC( pItem ) ? hb_itemGetNI( pItem ) : -1;
+
+         hb_itemPutNI( pItem, pData->bDecimals );
+         if( iDecimals >= 0 && iDecimals <= 20 )
+            pData->bDecimals = ( HB_BYTE ) iDecimals;
          break;
       }
       case RDDI_TRIGGER:
