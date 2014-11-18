@@ -101,6 +101,7 @@
 #define RDDI_LOCKRETRY           43   /* Get/Set record and file lock timeout value */
 #define RDDI_DIRTYREAD           44   /* Get/Set index dirty read flag */
 #define RDDI_INDEXPAGESIZE       45   /* Get/Set default index page size */
+#define RDDI_DECIMALS            46   /* Get/Set default number of decimal places for numeric fields if it's undefined */
 
 /* Constants for SELF_ORDINFO() */
 #define DBOI_CONDITION            1   /* The order's conditional expression */
