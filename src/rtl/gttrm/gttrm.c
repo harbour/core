@@ -1063,6 +1063,32 @@ static void mouse_exit( PHB_GTTRM pTerm )
 #endif
 }
 
+static int read_bufch( PHB_GTTRM pTerm, int fd )
+{
+   int n = 0, i;
+
+   if( STDIN_BUFLEN > pTerm->stdin_inbuf )
+   {
+      unsigned char buf[ STDIN_BUFLEN ];
+
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+      n = read( fd, buf, STDIN_BUFLEN - pTerm->stdin_inbuf );
+#else
+      n = hb_fsRead( fd, buf, STDIN_BUFLEN - pTerm->stdin_inbuf );
+#endif
+
+      for( i = 0; i < n; i++ )
+      {
+         pTerm->stdin_buf[ pTerm->stdin_ptr_r++ ] = buf[ i ];
+         if( pTerm->stdin_ptr_r == STDIN_BUFLEN )
+            pTerm->stdin_ptr_r = 0;
+         pTerm->stdin_inbuf++;
+      }
+   }
+
+   return n;
+}
+
 static int get_inch( PHB_GTTRM pTerm, int milisec )
 {
    int nRet = 0, npfd = -1, nchk = pTerm->efds_no, lRead = 0;
@@ -1120,28 +1146,9 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
                if( pTerm->event_fds[ i ]->eventFunc == NULL )
                {
                   lRead = 1;
-                  if( STDIN_BUFLEN > pTerm->stdin_inbuf )
-                  {
-                     unsigned char buf[ STDIN_BUFLEN ];
-
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-                     n = read( pTerm->event_fds[ i ]->fd, buf,
-                               STDIN_BUFLEN - pTerm->stdin_inbuf );
-#else
-                     n = hb_fsRead( pTerm->event_fds[ i ]->fd, buf,
-                                    STDIN_BUFLEN - pTerm->stdin_inbuf );
-#endif
-                     if( n == 0 )
-                        pTerm->event_fds[ i ]->status = EVTFDSTAT_STOP;
-                     else
-                        for( i = 0; i < n; i++ )
-                        {
-                           pTerm->stdin_buf[ pTerm->stdin_ptr_r++ ] = buf[ i ];
-                           if( pTerm->stdin_ptr_r == STDIN_BUFLEN )
-                              pTerm->stdin_ptr_r = 0;
-                           pTerm->stdin_inbuf++;
-                        }
-                  }
+                  n = read_bufch( pTerm, pTerm->event_fds[ i ]->fd );
+                  if( n == 0 )
+                     pTerm->event_fds[ i ]->status = EVTFDSTAT_STOP;
                }
                else if( nRet == 0 && counter == pTerm->key_counter )
                {
