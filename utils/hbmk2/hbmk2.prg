@@ -11312,7 +11312,7 @@ STATIC PROCEDURE HintHBC( hbmk )
       cNameRaw := hb_FNameName( cLib )
       IF AScan( hbmk[ _HBMK_aHBCCON ], {| tmp | hb_FileMatch( tmp, cNameRaw ) } ) == 0 .AND. ;
          HBC_FindStd( hbmk, cNameRaw + ".hbc" )
-         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Hint: Use option '%1$s' instead of specifying raw library using '-l%2$s' or 'libs=%2$s'." ), cNameRaw + ".hbc", cLib ) )
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Hint: Add input file '%1$s' instead of specifying raw library using '-l%2$s' or 'libs=%2$s'." ), cNameRaw + ".hbc", cLib ) )
       ENDIF
    NEXT
 
@@ -14320,8 +14320,8 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
          aLib := LibReferenceToOption( hbmk, tmp:__enumKey() )
          _hbmk_OutStd( hbmk, hb_StrFormat( ;
             iif( aLib[ 2 ], ;
-               I_( "Hint: Add option '%1$s' for missing Harbour function(s): %2$s" ), ;
-               I_( "Hint: Install package %3$s and add option '%1$s' for missing Harbour function(s): %2$s" ) ), ;
+               I_( "Hint: Add input file '%1$s' for missing Harbour function(s): %2$s" ), ;
+               I_( "Hint: Install package %3$s and input file '%1$s' for missing Harbour function(s): %2$s" ) ), ;
             aLib[ 1 ], ;
             ArrayToList( tmp, ", ",,,, "()" ), ;
             hb_FNameName( aLib[ 1 ] ) ) )
@@ -17308,7 +17308,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aHdr_Syntax := { ;
       I_( "Syntax:" ), ;
       "", ;
-      "  " + hb_StrFormat( H_( "%1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>" ), _SELF_NAME_ ), ;
+      "  " + hb_StrFormat( H_( "%1$s [options] [<script[s]>] <src[s][.prg|.hbc|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>" ), _SELF_NAME_ ), ;
       "  " + hb_StrFormat( S_( "%1$s [options] [<script[s]>] <src[s][.c|.cpp|.m|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|.d]>" ), _SELF_NAME_ ) }
 
    LOCAL cShell := iif( hb_FNameName( hb_ProgName() ) == _SELF_NAME_, "hbrun", hb_FNameName( hb_ProgName() ) )
