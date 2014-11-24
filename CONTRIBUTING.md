@@ -129,10 +129,10 @@ Evaluate these points before reporting an issue:
 10. Do not alter the directory layout and files in Harbour and 3rd party
     packages and tools (including C compilers).
 11. If you are to report a build problem with a Harbour application,
-    all of the above points apply, plus make sure to use `-trace`
-    command-line option when running hbmk2 and redirect the result to
-    a file (see above how). Also include your full command-line in your
-    report.
+    all of the above points apply, plus make sure to use hbmk2 with
+    the `-trace` command-line option and redirect its output to
+    a file (see above how). Also include your full command-line and
+    any referenced build script in your report.
     It's good idea to first remove all manual references to Harbour
     core components from makefiles and custom environment. F.e. it's
     commom mistake to add C compiler header and/or lib dirs, Harbour core
