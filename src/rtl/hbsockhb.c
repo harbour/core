@@ -661,12 +661,14 @@ HB_FUNC( HB_SOCKETGETHOSTNAME )
 
 HB_FUNC( HB_SOCKETGETHOSTS )
 {
-   PHB_ITEM pItem;
+   const char * szAddr = hb_parc( 1 );
 
-   if( HB_ISCHAR( 1 ) )
+   if( szAddr )
    {
+      PHB_ITEM pItem;
+
       socket_init();
-      pItem = hb_socketGetHosts( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
+      pItem = hb_socketGetHosts( szAddr, hb_parnidef( 2, HB_SOCKET_AF_INET ) );
       if( pItem )
          hb_itemReturnRelease( pItem );
       else
@@ -680,12 +682,14 @@ HB_FUNC( HB_SOCKETGETHOSTS )
 /* This function is not implemented at C level, yet [Mindaugas] */
 HB_FUNC( HB_SOCKETGETALIASES )
 {
-   if( HB_ISCHAR( 1 ) )
+   const char * szAddr = hb_parc( 1 );
+
+   if( szAddr )
    {
       PHB_ITEM pItem;
 
       socket_init();
-      pItem = hb_socketGetAliases( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
+      pItem = hb_socketGetAliases( szAddr, hb_parnidef( 2, HB_SOCKET_AF_INET ) );
       if( pItem )
          hb_itemReturnRelease( pItem );
       else
