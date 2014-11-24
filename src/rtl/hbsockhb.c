@@ -52,7 +52,7 @@
  * hb_socketErrorString( [ nSocketErrror = hb_socketGetError() ] ) --> cError
  * hb_socketGetSockName( hSocket ) --> aAddr | NIL
  * hb_socketGetPeerName( hSocket ) --> aAddr | NIL
- * hb_socketOpen( [ nDomain = HB_SOCKET_AF_INET ] , [ nType = HB_SOCKET_PT_STREAM ], [ nProtocol = 0 ] ) --> hSocket
+ * hb_socketOpen( [ nDomain = HB_SOCKET_AF_INET ], [ nType = HB_SOCKET_PT_STREAM ], [ nProtocol = 0 ] ) --> hSocket
  * hb_socketClose( hSocket ) --> lSuccess
  * hb_socketShutdown( hSocket, [ nMode = HB_SOCKET_SHUT_RDWR ] ) --> lSuccess
  * hb_socketBind( hSocket, aAddr ) --> lSuccess
@@ -74,9 +74,9 @@
  * hb_socketGetSndBufSize( hSocket, @nValue ) --> lSuccess
  * hb_socketGetRcvBufSize( hSocket, @nValue ) --> lSuccess
  * hb_socketSetMulticast( hSocket, [ nFamily = HB_SOCKET_AF_INET ], cAddr ) --> lSuccess
- * hb_socketSelectRead( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
- * hb_socketSelectWrite( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
- * hb_socketSelectWriteEx( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelectRead( hSocket, [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelectWrite( hSocket, [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelectWriteEx( hSocket, [ nTimeout = FOREVER ] ) --> nRet
  * hb_socketSelect( aRead, lSetRead, aWrite, lSetWrite, aExcep, lSetExcep, [ nTimeout = FOREVER ] ) --> nRet
  * hb_socketResolveINetAddr( cAddr, nPort ) --> aAddr | NIL
  * hb_socketResolveAddr( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> cResolved
@@ -640,7 +640,7 @@ HB_FUNC( HB_SOCKETRESOLVEADDR )
    if( szAddr )
       hb_retc_buffer( szAddr );
    else
-      hb_retc( "" );
+      hb_retc_null();
 }
 
 HB_FUNC( HB_SOCKETGETHOSTNAME )
@@ -663,28 +663,42 @@ HB_FUNC( HB_SOCKETGETHOSTNAME )
 
 HB_FUNC( HB_SOCKETGETHOSTS )
 {
-   PHB_ITEM pItem;
+   const char * szAddr = hb_parc( 1 );
 
-   socket_init();
-   pItem = hb_socketGetHosts( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
-   if( pItem )
-      hb_itemReturnRelease( pItem );
+   if( szAddr )
+   {
+      PHB_ITEM pItem;
+
+      socket_init();
+      pItem = hb_socketGetHosts( szAddr, hb_parnidef( 2, HB_SOCKET_AF_INET ) );
+      if( pItem )
+         hb_itemReturnRelease( pItem );
+      else
+         hb_reta( 0 );
+   }
    else
-      hb_reta( 0 );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #if 0
 /* This function is not implemented at C level, yet [Mindaugas] */
 HB_FUNC( HB_SOCKETGETALIASES )
 {
-   PHB_ITEM pItem;
+   const char * szAddr = hb_parc( 1 );
 
-   socket_init();
-   pItem = hb_socketGetAliases( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
-   if( pItem )
-      hb_itemReturnRelease( pItem );
+   if( szAddr )
+   {
+      PHB_ITEM pItem;
+
+      socket_init();
+      pItem = hb_socketGetAliases( szAddr, hb_parnidef( 2, HB_SOCKET_AF_INET ) );
+      if( pItem )
+         hb_itemReturnRelease( pItem );
+      else
+         hb_reta( 0 );
+   }
    else
-      hb_reta( 0 );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 #endif
 

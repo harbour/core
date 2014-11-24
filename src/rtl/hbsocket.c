@@ -536,10 +536,10 @@ int hb_socketListen( HB_SOCKET sd, int iBacklog )
 HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
-   HB_SYMBOL_UNUSED( pSockAddr );
-   HB_SYMBOL_UNUSED( puiLen );
    HB_SYMBOL_UNUSED( timeout );
    hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   *pSockAddr = NULL;
+   *puiLen = 0;
    return HB_NO_SOCKET;
 }
 
@@ -594,10 +594,10 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
    HB_SYMBOL_UNUSED( data );
    HB_SYMBOL_UNUSED( len );
    HB_SYMBOL_UNUSED( flags );
-   HB_SYMBOL_UNUSED( pSockAddr );
-   HB_SYMBOL_UNUSED( puiSockLen );
    HB_SYMBOL_UNUSED( timeout );
    hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   *pSockAddr = NULL;
+   *puiLen = 0;
    return -1;
 }
 
@@ -2221,6 +2221,11 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    int ret, err;
 
    hb_vmUnlock();
+   if( pSockAddr && puiLen )
+   {
+      *pSockAddr = NULL;
+      *puiLen = 0;
+   }
    ret = hb_socketSelectRD( sd, timeout );
    if( ret > 0 )
    {
@@ -2235,26 +2240,20 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
 
       if( ret > 0 )
          hb_socketSetBlockingIO( sd, HB_TRUE );
-      if( pSockAddr && puiLen )
+      if( newsd != HB_NO_SOCKET )
       {
-         if( newsd == HB_NO_SOCKET )
-         {
-            *pSockAddr = NULL;
-            *puiLen = 0;
-         }
-         else
+         if( pSockAddr && puiLen )
          {
             *pSockAddr = memcpy( hb_xgrab( len + 1 ), &st.sa, len );
             *puiLen = ( unsigned ) len;
          }
-      }
-      /* it's not guarantied that socket returned by accept will use
-       * blocking IO operations. On some systems it inherits blocking IO
-       * from parent handler so we have to force blocking IO mode
-       * explicitly.
-       */
-      if( newsd != HB_NO_SOCKET )
+         /* it's not guarantied that socket returned by accept will use
+          * blocking IO operations. On some systems it inherits blocking
+          * IO from parent handler so we have to force blocking IO mode
+          * explicitly.
+          */
          hb_socketSetBlockingIO( newsd, HB_TRUE );
+      }
 
       hb_socketSetOsError( err );
    }
@@ -2431,6 +2430,12 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
 
    hb_vmUnlock();
 
+   if( pSockAddr && puiSockLen )
+   {
+      *pSockAddr = NULL;
+      *puiSockLen = 0;
+   }
+
    if( timeout >= 0 )
    {
       lReceived = hb_socketSelectRD( sd, timeout );
@@ -2455,18 +2460,10 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
       while( lReceived == -1 && HB_SOCK_IS_EINTR( iError ) &&
              hb_vmRequestQuery() == 0 );
 
-      if( pSockAddr && puiSockLen )
+      if( lReceived != -1 && pSockAddr && puiSockLen )
       {
-         if( lReceived == -1 )
-         {
-            *pSockAddr = NULL;
-            *puiSockLen = 0;
-         }
-         else
-         {
-            *pSockAddr = memcpy( hb_xgrab( salen + 1 ), &st.sa, salen );
-            *puiSockLen = ( unsigned ) salen;
-         }
+         *pSockAddr = memcpy( hb_xgrab( salen + 1 ), &st.sa, salen );
+         *puiSockLen = ( unsigned ) salen;
       }
    }
    hb_vmLock();
@@ -2553,7 +2550,7 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
 }
 
 /* NOTE: For notes on Windows, see:
-         http://paste.lisp.org/display/59751
+         https://msdn.microsoft.com/en-us/library/windows/desktop/ms740621.aspx
          [vszakats] */
 int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
 {
@@ -3243,7 +3240,7 @@ static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
    }
 }
 #endif
-#if defined( HB_OS_WIN ) && !defined( SIOCGIFCONF )
+#if defined( HB_OS_WIN ) && ! defined( SIOCGIFCONF )
 static HB_SIZE hb_socketArrayFindInetAddr( const char * szAddr,
                                            PHB_ITEM pArray, HB_SIZE nPos )
 {
@@ -3429,7 +3426,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                {
                   char hwaddr[ 24 ];
                   unsigned char * data;
-                  data = ( unsigned char * ) &pifr->ifr_hwaddr.sa_data[0];
+                  data = ( unsigned char * ) &pifr->ifr_hwaddr.sa_data[ 0 ];
                   hb_snprintf( hwaddr, sizeof( hwaddr ),
                                "%02X:%02X:%02X:%02X:%02X:%02X",
                                data[ 0 ], data[ 1 ], data[ 2 ],
@@ -3441,7 +3438,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                {
                   char hwaddr[ 24 ];
                   unsigned char * data;
-                  data = ( unsigned char * ) &pifr->ifr_enaddr[0];
+                  data = ( unsigned char * ) &pifr->ifr_enaddr[ 0 ];
                   hb_snprintf( hwaddr, sizeof( hwaddr ),
                                "%02X:%02X:%02X:%02X:%02X:%02X",
                                data[ 0 ], data[ 1 ], data[ 2 ],
