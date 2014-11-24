@@ -4072,8 +4072,8 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    fRawBlob = SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_BLOB_SUPPORT, pOpenInfo->ulConnection, pItem ) == HB_SUCCESS &&
               hb_itemGetL( pItem );
    hb_itemClear( pItem );
-   uiDecimals = SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_DECIMALS, pOpenInfo->ulConnection, pItem ) == HB_SUCCESS ?
-                hb_itemGetNI( pItem ) : 0;
+   uiDecimals = ( HB_USHORT ) ( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_DECIMALS, pOpenInfo->ulConnection, pItem ) == HB_SUCCESS ?
+                                hb_itemGetNI( pItem ) : 0 );
    hb_itemRelease( pItem );
 
    if( fRawBlob )
