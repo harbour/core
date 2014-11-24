@@ -1228,7 +1228,7 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
                                      iMsg != NETIO_PROC, HB_FALSE );
             if( fResult && ( iMsg == NETIO_FUNC || iMsg == NETIO_FUNCCTRL ) )
             {
-               HB_SIZE nResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] ), nRecv = 0;
+               HB_SIZE nResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] ), nRecv;
 
                if( nResult > 0 )
                {
