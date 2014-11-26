@@ -933,7 +933,3 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
    ENDIF
 
    RETURN
-
-/*
- * vim: ts=3 expandtab ft=clipper
- */
