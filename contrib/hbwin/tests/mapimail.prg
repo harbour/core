@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    ? win_MAPISendMail( ;
       cSubject, ;                       // subject
-      cBody, ;                          // menssage
+      cBody, ;                          // message
       NIL, ;                            // type of message
       DToS( Date() ) + " " + Time(), ;  // send date
       "", ;                             // conversation ID
@@ -28,7 +28,7 @@ PROCEDURE Main()
 
    ? win_MAPISendMail( ;
       cSubject, ;                       // subject
-      cBody, ;                          // menssage
+      cBody, ;                          // message
       NIL, ;                            // type of message
       DToS( Date() ) + " " + Time(), ;  // send date
       "", ;                             // conversation ID

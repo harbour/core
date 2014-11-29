@@ -380,6 +380,16 @@ HB_FUNC( PQERRORMESSAGE )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( PQRESULTERRORFIELD )
+{
+   PGresult * res = hb_PGresult_par( 1 );
+
+   if( res )
+      hb_retc( PQresultErrorField( res, hb_parni( 2 ) ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( PQSTATUS )
 {
    PGconn * conn = hb_PGconn_par( 1 );

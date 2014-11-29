@@ -81,4 +81,23 @@
 #define HBPG_META_TABLECOL              6
 #define HBPG_META_LEN_                  6
 
+/* PQresultErrorField() parameters */
+#define PG_DIAG_SEVERITY                hb_BCode( "S" )
+#define PG_DIAG_SQLSTATE                hb_BCode( "C" )
+#define PG_DIAG_MESSAGE_PRIMARY         hb_BCode( "M" )
+#define PG_DIAG_MESSAGE_DETAIL          hb_BCode( "D" )
+#define PG_DIAG_MESSAGE_HINT            hb_BCode( "H" )
+#define PG_DIAG_STATEMENT_POSITION      hb_BCode( "P" )
+#define PG_DIAG_INTERNAL_POSITION       hb_BCode( "p" )
+#define PG_DIAG_INTERNAL_QUERY          hb_BCode( "q" )
+#define PG_DIAG_CONTEXT                 hb_BCode( "W" )
+#define PG_DIAG_SCHEMA_NAME             hb_BCode( "s" )
+#define PG_DIAG_TABLE_NAME              hb_BCode( "t" )
+#define PG_DIAG_COLUMN_NAME             hb_BCode( "c" )
+#define PG_DIAG_DATATYPE_NAME           hb_BCode( "d" )
+#define PG_DIAG_CONSTRAINT_NAME         hb_BCode( "n" )
+#define PG_DIAG_SOURCE_FILE             hb_BCode( "F" )
+#define PG_DIAG_SOURCE_LINE             hb_BCode( "L" )
+#define PG_DIAG_SOURCE_FUNCTION         hb_BCode( "R" )
+
 #endif
