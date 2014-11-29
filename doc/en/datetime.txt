@@ -26,7 +26,6 @@
    $DESCRIPTION$
       This function returns a character string of the day of the week,
       from a date expression <dDate> passed to it.
-      Returned values can be from 1 (Monday) to 7 (Sunday).
       If a NULL date is passed to the function, the value of the function
       will be a NULL byte.
    $EXAMPLES$
