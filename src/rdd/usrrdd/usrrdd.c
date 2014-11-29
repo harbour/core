@@ -2881,7 +2881,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
       for( uiCount = 1; uiCount <= RDDFUNCSCOUNT; ++uiCount )
       {
          *pFunction = *pRddFunction;
-         if( * pFunction == NULL && * pUsrFunction && uiCount <= uiSize &&
+         if( *pFunction == NULL && *pUsrFunction && uiCount <= uiSize &&
              hb_usrIsMethod( pMethods, uiCount ) )
          {
             *pFunction = *pUsrFunction;

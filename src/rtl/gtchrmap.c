@@ -371,7 +371,6 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
 static int hb_gt_chrmapread( const char * pszFile, const char * pszTerm, int * nTransTbl )
 {
    int isTerm = -1;
-
    FILE * fp = hb_fopen( pszFile, "r" );
 
    if( fp != NULL )

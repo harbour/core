@@ -105,7 +105,7 @@
    // recv sample
    DO WHILE ! ( lI := hb_lppRecv( hLPP, @cData, nTimeout ) ) .AND. ;
           hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
-   // draw progressbar using hb_lppRecvLen( hLPP )
+      // draw progressbar using hb_lppRecvLen( hLPP )
    ENDDO
    IF lI
       // Rcvd OK, data in cData

@@ -440,7 +440,7 @@ static void hb_dbfAllocNullFlag( DBFAREAP pArea, HB_USHORT uiField, HB_BOOL fLen
    if( ! pArea->pFieldBits )
    {
       HB_SIZE nSize = sizeof( HB_DBFFIELDBITS ) * pArea->area.uiFieldExtent;
-      pArea->pFieldBits = ( PHB_DBFFIELDBITS ) memset( hb_xgrab( nSize ), 0, nSize );
+      pArea->pFieldBits = ( PHB_DBFFIELDBITS ) hb_xgrabz( nSize );
    }
    if( fLength )
       pArea->pFieldBits[ uiField ].uiLengthBit = pArea->uiNullCount++;
@@ -2862,10 +2862,7 @@ static HB_ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, HB_USHORT uiFieldExtent 
 
    /* Alloc field offsets array */
    if( uiFieldExtent )
-   {
-      pArea->pFieldOffset = ( HB_USHORT * ) hb_xgrab( uiFieldExtent * sizeof( HB_USHORT ) );
-      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( HB_USHORT ) );
-   }
+      pArea->pFieldOffset = ( HB_USHORT * ) hb_xgrabz( uiFieldExtent * sizeof( HB_USHORT ) );
 
    return HB_SUCCESS;
 }

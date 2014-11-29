@@ -74,11 +74,11 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
       lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
    IF ! Empty( cToFileName )
-      IF Set( _SET_DEFEXTENSIONS )
-         cToFileName := hb_FNameExtSetDef( cToFileName, ".txt" )
-      ENDIF
       lOldExtra := Set( _SET_EXTRA, .T. )
-      cOldExtraFile := Set( _SET_EXTRAFILE, cToFileName )
+      cOldExtraFile := Set( _SET_EXTRAFILE, ;
+                            iif( Set( _SET_DEFEXTENSIONS ), ;
+                                 hb_FNameExtSetDef( cToFileName, ".txt" ), ;
+                                 cToFileName ) )
    ENDIF
 
    /* Do the job */

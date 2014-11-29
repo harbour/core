@@ -85,16 +85,15 @@ FUNCTION GetPairPos( cColor, nColor )
 
 FUNCTION GetPairLen( cColor, nColor )
 
-   LOCAL nPos := GetPairPos( cColor, nColor )
+   LOCAL nPos
    LOCAL nLen
 
-   IF nPos == 0
+   IF ( nPos := GetPairPos( cColor, nColor ) ) == 0
       RETURN 0
    ENDIF
 
    RETURN iif( ( nLen := At( ",", SubStr( cColor, nPos ) ) ) == 0, ;
-      Len( cColor ) - nPos + 1, ;
-      nLen - 1 )
+      Len( cColor ) - nPos + 1, nLen - 1 )
 
 FUNCTION GetClrFore( cColor )
 

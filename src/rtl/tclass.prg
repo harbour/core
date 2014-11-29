@@ -358,7 +358,9 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
       ENDSWITCH
    ENDIF
 
-   AAdd( QSelf():aClsDatas, { cData, xInit, cType, hb_bitOr( hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ), HB_OO_CLSTP_CLASS ) } )
+   AAdd( QSelf():aClsDatas, { cData, xInit, cType, ;
+                              hb_bitOr( hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ), ;
+                                        HB_OO_CLSTP_CLASS ) } )
 
    RETURN
 
@@ -388,7 +390,9 @@ STATIC PROCEDURE AddMethod( cMethod, sFuncSym, nScope )
 
 STATIC PROCEDURE AddClsMethod( cMethod, sFuncSym, nScope )
 
-   AAdd( QSelf():aClsMethods, { cMethod, sFuncSym, hb_bitOr( hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ), HB_OO_CLSTP_CLASS ) } )
+   AAdd( QSelf():aClsMethods, { cMethod, sFuncSym, ;
+                                hb_bitOr( hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ), ;
+                                          HB_OO_CLSTP_CLASS ) } )
 
    RETURN
 

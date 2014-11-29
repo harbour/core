@@ -81,7 +81,7 @@
 #include "ord.ch"
 #include "hbsxdef.ch"
 
-FUNCTION sxChar( nLen, xKeyVal )
+FUNCTION sxChar( nLen, /* @ */ xKeyVal )
 
    SWITCH ValType( xKeyVal )
    CASE "C"
@@ -104,51 +104,83 @@ FUNCTION sxChar( nLen, xKeyVal )
       EXIT
    ENDSWITCH
 
-   RETURN iif( HB_ISNUMERIC( nLen ), PadR( LTrim( xKeyVal ), nLen ), xKeyVal )
+   IF HB_ISNUMERIC( nLen )
+      xKeyVal := PadR( LTrim( xKeyVal ), nLen )
+   ENDIF
 
-FUNCTION sxNum( xKeyVal )
+   RETURN xKeyVal
 
-   SWITCH ValType( xKeyVal )
-   CASE "N" ; RETURN xKeyVal
-   CASE "C"
-   CASE "M" ; RETURN Val( xKeyVal )
-   CASE "D" ; RETURN xKeyVal - hb_SToD()
-   CASE "L" ; RETURN iif( xKeyVal, 1, 0 )
-   ENDSWITCH
-
-   RETURN 0.00
-
-FUNCTION sxDate( xKeyVal )
+FUNCTION sxNum( /* @ */ xKeyVal )
 
    SWITCH ValType( xKeyVal )
-   CASE "D" ; RETURN xKeyVal
-   CASE "T" ; RETURN hb_TToD( xKeyVal )
+   CASE "N"
+      EXIT
    CASE "C"
-   CASE "M" ; RETURN CToD( xKeyVal )
-   CASE "N" ; RETURN hb_SToD() + xKeyVal
+   CASE "M"
+      xKeyVal := Val( xKeyVal )
+      EXIT
+   CASE "T"
+   CASE "D"
+      xKeyVal := xKeyVal - hb_SToD()
+      EXIT
+   CASE "L"
+      xKeyVal := iif( xKeyVal, 1, 0 )
+      EXIT
+   OTHERWISE
+      xKeyVal := 0.00
+      EXIT
    ENDSWITCH
 
-   RETURN hb_SToD()
+   RETURN xKeyVal
 
-FUNCTION sxLog( xKeyVal )
+FUNCTION sxDate( /* @ */ xKeyVal )
+
+   SWITCH ValType( xKeyVal )
+   CASE "D"
+      EXIT
+   CASE "T"
+      xKeyVal := hb_TToD( xKeyVal )
+      EXIT
+   CASE "C"
+   CASE "M"
+      xKeyVal := CToD( xKeyVal )
+      EXIT
+   CASE "N"
+      xKeyVal := hb_SToD() + xKeyVal
+      EXIT
+   OTHERWISE
+      xKeyVal := hb_SToD()
+      EXIT
+   ENDSWITCH
+
+   RETURN xKeyVal
+
+FUNCTION sxLog( /* @ */ xKeyVal )
 
    SWITCH ValType( xKeyVal )
    CASE "L"
-      RETURN xKeyVal
+      EXIT
    CASE "C"
    CASE "M"
       SWITCH xKeyVal
       CASE  "T";  CASE  "t";  CASE  "Y";  CASE  "y"
       CASE ".T."; CASE ".t."; CASE ".Y."; CASE ".y."
-         RETURN .T.
+         xKeyVal := .T.
+         EXIT
       OTHERWISE
-         RETURN .F.
+         xKeyVal := .F.
+         EXIT
       ENDSWITCH
+      EXIT
    CASE "N"
-      RETURN xKeyVal != 0
+      xKeyVal := xKeyVal != 0
+      EXIT
+   OTHERWISE
+      xKeyVal := .F.
+      EXIT
    ENDSWITCH
 
-   RETURN .F.
+   RETURN xKeyVal
 
 FUNCTION sx_Compress( xVal )
 
@@ -317,8 +349,10 @@ FUNCTION sx_KillTag( xTag, xIndex )
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
             ENDIF
          ENDCASE
-         IF ! Empty( cIndex ) .AND. ordBagClear( cIndex )
-            lRet := FErase( cIndex ) != F_ERROR
+         IF ! Empty( cIndex )
+            IF ordBagClear( cIndex )
+               lRet := FErase( cIndex ) != F_ERROR
+            ENDIF
          ENDIF
       ENDIF
    ELSE

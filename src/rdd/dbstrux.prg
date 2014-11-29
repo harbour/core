@@ -107,7 +107,10 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
    LOCAL oError
 
    __defaultNIL( @lNew, .F. )
-   __defaultNIL( @cAlias, hb_FNameName( cFileName ) )
+
+   IF cAlias == NIL
+      hb_FNameSplit( cFileName, , @cAlias )
+   ENDIF
 
    IF Used() .AND. ! lNew
       dbCloseArea()

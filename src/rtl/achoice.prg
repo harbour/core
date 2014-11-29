@@ -209,7 +209,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             ELSE
                DispBegin()
                DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, Ach_Select( alSelect, nPos ), .F., nNumCols )
-               hb_Scroll( nTop, nLeft, nBottom, nRight, ( nNewPos - ( nAtTop + nNumRows - 1 ) ) )
+               hb_Scroll( nTop, nLeft, nBottom, nRight, nNewPos - ( nAtTop + nNumRows - 1 ) )
                nAtTop := nNewPos
                nPos   := Max( nPos, nAtTop + nNumRows - 1 )
                DO WHILE nPos > nNewPos
@@ -251,7 +251,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             ELSE
                DispBegin()
                DispLine( acItems[ nPos ], nTop + nPos - nAtTop, nLeft, Ach_Select( alSelect, nPos ), .F., nNumCols )
-               hb_Scroll( nTop, nLeft, nBottom, nRight, ( nNewPos - ( nAtTop + nNumRows - 1 ) ) )
+               hb_Scroll( nTop, nLeft, nBottom, nRight, nNewPos - ( nAtTop + nNumRows - 1 ) )
                nAtTop := nNewPos - nNumRows + 1
                nPos   := Max( nPos, nAtTop )
                DO WHILE nPos < nNewPos

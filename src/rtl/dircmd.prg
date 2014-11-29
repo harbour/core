@@ -71,18 +71,16 @@ PROCEDURE __Dir( cFileMask )
 #endif
 
       AEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ), ;
-         {| aDirEntry | PutDbf( aDirEntry ) } )
+             {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
-      IF Set( _SET_TRIMFILENAME )
-         cFileMask := AllTrim( cFileMask )
-      ENDIF
-      hb_FNameSplit( cFileMask, @cPath, @cName, @cExt )
+      hb_FNameSplit( iif( Set( _SET_TRIMFILENAME ), AllTrim( cFileMask ), cFileMask ), ;
+                     @cPath, @cName, @cExt )
       IF Empty( cPath )
          cPath := Set( _SET_DEFAULT )
       ENDIF
 
       AEval( Directory( hb_FNameMerge( cPath, cName, cExt ) ), ;
-         {| aDirEntry | PutNormal( aDirEntry ) } )
+             {| aDirEntry | PutNormal( aDirEntry ) } )
    ENDIF
 
    QOut()
@@ -108,7 +106,9 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
       IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BLeft( buffer, 1 ), _DBF_HEAD_MARK ) > 0
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
-         dLastUpdate := hb_Date( hb_BPeek( buffer, 2 ) + 1900, hb_BPeek( buffer, 3 ), hb_BPeek( buffer, 4 ) )
+         dLastUpdate := hb_Date( hb_BPeek( buffer, 2 ) + 1900, ;
+                                 hb_BPeek( buffer, 3 ), ;
+                                 hb_BPeek( buffer, 4 ) )
       ENDIF
 
       FClose( fhnd )

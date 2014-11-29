@@ -1196,14 +1196,10 @@ static LPPAGEINFO hb_ntxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
    }
 
    if( ! *pPagePtr )
-   {
       *pPagePtr = ( LPPAGEINFO ) hb_xgrabz( sizeof( HB_PAGEINFO ) );
-   }
 #ifdef HB_NTX_EXTERNAL_PAGEBUFFER
    if( ! hb_ntxPageBuffer( *pPagePtr ) )
-   {
       hb_ntxPageBuffer( *pPagePtr ) = ( char * ) hb_xgrabz( NTXBLOCKSIZE );
-   }
 #endif
    ( *pPagePtr )->pPrev = NULL;
    ( *pPagePtr )->Page  = ulPage;

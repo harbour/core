@@ -44,8 +44,6 @@
  *
  */
 
-#pragma -gc0
-
 #include "hbclass.ch"
 
 REQUEST Array
@@ -66,17 +64,19 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
 
    LOCAL nPos
    LOCAL cLine
+   LOCAL cProp
+   LOCAL uValue
+   LOCAL aWords
    LOCAL lStart := .T.
    LOCAL aObjects := { Self }
    LOCAL bError
-
-   PRIVATE m_oSelf
 
    IF Empty( cObjectText )
       RETURN .F.
    ENDIF
 
-   bError := iif( hb_defaultValue( lIgnoreErrors, .F. ), {| e | Break( e ) }, ErrorBlock() )
+   bError := iif( hb_defaultValue( lIgnoreErrors, .F. ), ;
+                  {| e | Break( e ) }, ErrorBlock() )
 
    FOR EACH cLine IN hb_ATokens( StrTran( cObjectText, Chr( 13 ) ), Chr( 10 ) )
 
@@ -84,37 +84,45 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
 
       BEGIN SEQUENCE WITH bError
 
-         DO CASE
-         CASE Empty( cLine ) .OR. hb_LeftEq( cLine, "//" )
+         cProp := NIL
+
+         IF Empty( cLine ) .OR. hb_LeftEq( cLine, "//" )
             /* ignore comments and empty lines */
+         ELSEIF hb_LeftEq( cLine, "::" )
 
-         CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "OBJECT"
-            IF lStart
-               lStart := .F.
-            ELSE
-               MEMVAR->m_oSelf := ATail( aObjects )
-               cLine := StrTran( SubStr( cLine, At( "::", cLine ) ), "::", "m_oSelf:",, 1 )
-               AAdd( aObjects, &( StrTran( cLine, " AS ", " := " ) + "():CreateNew()" ) )
+            IF ( nPos := At( ":=", cLine ) ) > 0
+               cProp := RTrim( SubStr( cLine, 3, nPos - 3 ) )
+               uValue := &( LTrim( SubStr( cLine, nPos + 2 ) ) )
+            ELSEIF ( nPos := At( "=", cLine ) ) > 0 /* fix for older versions */
+               cProp := RTrim( SubStr( cLine, 3, nPos - 3 ) )
+               uValue := &( LTrim( SubStr( cLine, nPos + 1 ) ) )
             ENDIF
+         ELSE
+            aWords := hb_ATokens( hb_asciiUpper( cLine ) )
+            SWITCH aWords[ 1 ]
+            CASE "OBJECT"
+               IF lStart
+                  lStart := .F.
+               ELSEIF aWords[ 3 ] == "AS" .AND. hb_LeftEq( aWords[ 2 ], "::" )
+                  cProp := SubStr( aWords[ 2 ], 3 )
+                  uValue := &( aWords[ 4 ] )():CreateNew()
+               ENDIF
+               EXIT
+            CASE "ENDOBJECT"
+               ASize( aObjects, Len( aObjects ) - 1 )
+               EXIT
+            CASE "ARRAY"
+               IF hb_LeftEq( aWords[ 2 ], "::" )
+                  cProp := SubStr( aWords[ 2 ], 3 )
+                  uValue := Array( Val( ATail( aWords ) ) )
+               ENDIF
+               EXIT
+            ENDSWITCH
+         ENDIF
 
-         CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
-            ASize( aObjects, Len( aObjects ) - 1 )
-
-         CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "ARRAY"
-            MEMVAR->m_oSelf := ATail( aObjects )
-            cLine := StrTran( SubStr( cLine, At( "::", cLine ) ), "::", "m_oSelf:",, 1 )
-            &( StrTran( cLine, " LEN ", " := Array( " ) + " )" )
-
-         CASE hb_LeftEq( cLine, "::" )
-            /* fix for older versions */
-            IF ( nPos := At( "=", cLine ) ) > 0 .AND. ;
-               !( SubStr( cLine, nPos - 1, 1 ) == ":" )
-               cLine := Stuff( cLine, nPos, 0, ":" )
-            ENDIF
-            MEMVAR->m_oSelf := ATail( aObjects )
-            &( StrTran( cLine, "::", "m_oSelf:",, 1 ) )
-
-         ENDCASE
+         IF ! Empty( cProp )
+            ATail( aObjects ):&cProp := uValue
+         ENDIF
 
       END SEQUENCE
 
@@ -128,7 +136,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
 METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
    LOCAL oNew := &( ::ClassName() + "()" ):CreateNew()
-   LOCAL prop
+   LOCAL cProp
    LOCAL uValue
    LOCAL uNewValue
    LOCAL cObject
@@ -149,23 +157,23 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
       "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
       ::ClassName() + hb_eol()
 
-   FOR EACH prop IN __clsGetProperties( ::ClassH )
+   FOR EACH cProp IN __clsGetProperties( ::ClassH )
 
-      uValue := __objSendMsg( Self, prop )
-      uNewValue := __objSendMsg( oNew, prop )
+      uValue := Self:&cProp
+      uNewValue := oNew:&cProp
 
       IF !( ( cType := ValType( uValue ) ) == ValType( uNewValue ) ) .OR. ;
          !( uValue == uNewValue )
 
          SWITCH cType
          CASE "A"
-            cObject += ArrayToText( uValue, prop, nIndent + _INDENT )
+            cObject += ArrayToText( uValue, cProp, nIndent + _INDENT )
             lSpacer := .T.
             EXIT
 
          CASE "O"
             IF __objDerivedFrom( uValue, "HBPersistent" )
-               cObject += uValue:SaveToText( prop, nIndent )
+               cObject += uValue:SaveToText( cProp, nIndent )
                lSpacer := .T.
             ENDIF
             EXIT
@@ -181,7 +189,7 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
                cObject += hb_eol()
             ENDIF
             cObject += Space( nIndent + _INDENT ) + "::" + ;
-               prop + " := " + hb_ValToExp( uValue ) + ;
+               cProp + " := " + hb_ValToExp( uValue ) + ;
                hb_eol()
          ENDSWITCH
       ENDIF
@@ -200,8 +208,8 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
       SWITCH ValType( uValue )
       CASE "A"
          cArray += ArrayToText( uValue, cName + ;
-            "[ " +  hb_ntos( uValue:__enumIndex() ) + " ]", nIndent + _INDENT ) + ;
-            hb_eol()
+            "[ " + hb_ntos( uValue:__enumIndex() ) + " ]", ;
+            nIndent + _INDENT ) + hb_eol()
          EXIT
 
       CASE "O"
@@ -221,8 +229,8 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
             cArray += hb_eol()
          ENDIF
          cArray += Space( nIndent + _INDENT ) + "::" + cName + ;
-            "[ " + hb_ntos( uValue:__enumIndex() ) + " ]" + ;
-            " := " + hb_ValToExp( uValue ) + hb_eol()
+            "[ " + hb_ntos( uValue:__enumIndex() ) + " ]" + " := " + ;
+            hb_ValToExp( uValue ) + hb_eol()
       ENDSWITCH
    NEXT
 

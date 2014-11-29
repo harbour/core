@@ -261,25 +261,18 @@ HB_FUNC( FREADSTR )
 HB_FUNC( HB_FREADLEN )
 {
    HB_ERRCODE uiError = 0;
+   HB_SIZE nToRead = hb_parns( 2 );
 
-   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   if( nToRead > 0 && HB_ISNUM( 1 ) )
    {
-      HB_SIZE nToRead = hb_parns( 2 );
+      HB_FHANDLE fhnd = hb_numToHandle( hb_parnint( 1 ) );
+      char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
+      HB_SIZE nRead;
 
-      if( nToRead > 0 )
-      {
-         HB_FHANDLE fhnd = hb_numToHandle( hb_parnint( 1 ) );
-         char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
-         HB_SIZE nRead;
+      nRead = hb_fsReadLarge( fhnd, buffer, nToRead );
+      uiError = hb_fsError();
 
-         nRead = hb_fsReadLarge( fhnd, buffer, nToRead );
-         uiError = hb_fsError();
-         buffer[ nRead ] = '\0';
-
-         hb_retclen_buffer( buffer, nRead );
-      }
-      else
-         hb_retc_null();
+      hb_retclen_buffer( buffer, nRead );
    }
    else
       hb_retc_null();

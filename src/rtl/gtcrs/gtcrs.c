@@ -1906,7 +1906,6 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
       {
          if( ioBase->out_transtbl == NULL )
             ioBase->out_transtbl = ( unsigned char * ) hb_xgrabz( 256 );
-
          ioBase->out_transtbl[ i ] = ch & A_CHARTEXT;
       }
    }
@@ -1926,7 +1925,6 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
             {
                if( ioBase->out_transtbl == NULL )
                   ioBase->out_transtbl = ( unsigned char * ) hb_xgrabz( 256 );
-
                ioBase->out_transtbl[ i ] = uc;
             }
          }

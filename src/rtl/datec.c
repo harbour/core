@@ -113,14 +113,7 @@ HB_FUNC( HB_CDAY )
    PHB_ITEM pDay = hb_param( 1, HB_IT_NUMERIC );
 
    if( pDay )
-   {
-      int nDay = hb_itemGetNI( pDay );
-
-      if( nDay > 0 )
-         hb_retc_const( hb_dateCDOW( nDay ) );
-      else
-         hb_retc_null();
-   }
+      hb_retc_const( hb_dateCDOW( hb_itemGetNI( pDay ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

@@ -1,77 +1,87 @@
 /*
- * UTF-8 encoding detection, based on filestr.cpp from Far Manager.
- * Harbour adaptation Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- */
-
-/*
-   Copyright (c) 1996 Eugene Roshal
-   Copyright (c) 2000 Far Group
-   All rights reserved.
-
-   Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
-   1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
-   2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
-   3. The name of the authors may not be used to endorse or promote products
-   derived from this software without specific prior written permission.
-
-   THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-   OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-   INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * hb_StrIsUTF8() function
+ *
+ * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.txt.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
  */
 
 #include "hbapi.h"
 
-static HB_BOOL hb_strIsUTF8( const char * pszString, HB_SIZE nLength )
-{
-   HB_BOOL fASCII  = HB_TRUE;
-   HB_UINT iOctets = 0;
-   HB_SIZE tmp;
-
-   for( tmp = 0; tmp < nLength; ++tmp )
-   {
-      HB_UCHAR c = ( HB_UCHAR ) pszString[ tmp ];
-
-      if( c & 0x80 )
-         fASCII = HB_FALSE;
-
-      if( iOctets )
-      {
-         if( ( c & 0xC0 ) != 0x80 )
-            return HB_FALSE;
-
-         iOctets--;
-      }
-      else if( c & 0x80 )
-      {
-         while( c & 0x80 )
-         {
-            c <<= 1;
-            iOctets++;
-         }
-
-         iOctets--;
-
-         if( ! iOctets )
-            return HB_FALSE;
-      }
-   }
-
-   return ! ( iOctets > 0 || fASCII );
-}
-
 HB_FUNC( HB_STRISUTF8 )
 {
-   hb_retl( hb_strIsUTF8( hb_parcx( 1 ), hb_parclen( 1 ) ) );
+   HB_SIZE nLen = hb_parclen( 1 );
+   HB_BOOL fUtf8 = HB_FALSE;
+
+   if( nLen > 0 )
+   {
+      const char * szText = hb_parc( 1 );
+
+      do
+      {
+         char c = *szText++;
+
+         if( c & 0x80 )
+         {
+            int i = 0;
+
+            while( ( c <<= 1 ) & 0x80  )
+               ++i;
+            if( i == 0 || ( HB_SIZE ) i >= nLen )
+               break;
+            nLen -= i;
+            do
+               if( ( *szText++ & 0xC0 ) != 0x80 )
+                  break;
+            while( --i );
+            if( i != 0 )
+               break;
+
+            fUtf8 = HB_TRUE;
+         }
+      }
+      while( --nLen );
+      if( nLen != 0 )
+         fUtf8 = HB_FALSE;
+   }
+
+   hb_retl( fUtf8 );
 }

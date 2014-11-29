@@ -3063,8 +3063,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    HB_GTWVT_LONG_PTR nExtendedStyle;
 
 /* Don't need this as Windows automatically maximizes to nearest [HVB] */
-#if 0
-#ifdef MONITOR_DEFAULTTONEAREST
+#if defined( MONITOR_DEFAULTTONEAREST ) && 0
    HMONITOR mon;
    MONITORINFO mi;
    typedef HMONITOR ( WINAPI * P_MFW )( HWND, DWORD );
@@ -3072,7 +3071,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    P_MFW pMonitorFromWindow;
    P_GMI pGetMonitorInfo;
 #endif
-#endif
+
    pWVT = HB_GTWVT_GET( pGT );
 
    nStyle = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
@@ -3829,7 +3828,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
 
             pWVT->bIconToFree = HB_FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance, MAKEINTRESOURCE( hb_itemGetNI( pInfo->pNewVal ) ) );
+            pWVT->hIcon = LoadIcon( pWVT->hInstance,
+                                    MAKEINTRESOURCE( hb_itemGetNI( pInfo->pNewVal ) ) );
 
             if( pWVT->hWnd )
             {

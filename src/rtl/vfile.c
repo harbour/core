@@ -594,7 +594,6 @@ HB_FUNC( HB_VFREADLEN )
 
          nRead = hb_fileRead( pFile, buffer, nToRead, hb_parnintdef( 3, -1 ) );
          uiError = hb_fsError();
-         buffer[ nRead ] = '\0';
 
          hb_retclen_buffer( buffer, nRead );
       }

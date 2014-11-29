@@ -784,11 +784,19 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                iHour = lt.tm_hour;
                iMin  = lt.tm_min;
                iSec  = lt.tm_sec;
-#if defined( HB_OS_LINUX ) && ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-    defined( __GLIBC__ ) && defined( __GLIBC_MINOR__ ) && \
-           ( __GLIBC__ > 2 || ( __GLIBC__ == 2 && __GLIBC_MINOR__ >= 6 ) )
+
+   #if defined( HB_OS_LINUX ) && \
+      defined( __GLIBC__ ) && defined( __GLIBC_MINOR__ ) && \
+      ( __GLIBC__ > 2 || ( __GLIBC__ == 2 && __GLIBC_MINOR__ >= 6 ) )
+      #if defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
+         ( __GLIBC_MINOR__ >= 12 && \
+           ( ( defined( _POSIX_C_SOURCE ) || _POSIX_C_SOURCE >= 200809L ) || \
+             ( defined( _XOPEN_SOURCE ) || _XOPEN_SOURCE >= 700 ) ) )
                iMSec = sStat.st_mtim.tv_nsec / 1000000;
-#endif
+      #else
+               iMSec = sStat.st_mtimensec / 1000000;
+      #endif
+   #endif
             }
             else
                bFound = HB_FALSE;

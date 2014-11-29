@@ -1229,7 +1229,7 @@ static LPHSXINFO hb_hsxNew( void )
    if( pTable->iHandleSize == 0 )
    {
       pTable->iHandleSize = HSX_HALLOC;
-      pTable->handleArray = ( LPHSXINFO * ) hb_xgrabz( sizeof( LPHSXINFO ) * pTable->iHandleSize );
+      pTable->handleArray = ( LPHSXINFO * ) hb_xgrabz( sizeof( LPHSXINFO ) * HSX_HALLOC );
    }
    else
    {
@@ -1632,7 +1632,7 @@ static int hb_hsxFilter( int iHandle, const char * pSeek, HB_SIZE nSeek,
             return HSX_BADPARMS;
          fDestroyExpr = HB_TRUE;
       }
-      else if( hb_itemType( pVerify ) != HB_IT_BLOCK )
+      else if( ! HB_IS_BLOCK( pVerify ) )
       {
          pVerify = NULL;
       }

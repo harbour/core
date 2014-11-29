@@ -52,7 +52,12 @@
 
 #include <zlib.h>
 
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#if ! defined( HB_NO_GZLIB ) && \
+    defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240
+   #define HB_NO_GZLIB
+#endif
+
+#ifndef HB_NO_GZLIB
 /* GZIP stream destructor */
 static HB_GARBAGE_FUNC( hb_gz_Destructor )
 {
@@ -90,7 +95,7 @@ static gzFile hb_gzParam( int iParam )
  */
 HB_FUNC( HB_GZOPEN )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    const char * cFile = hb_parc( 1 ), * cMode = hb_parc( 2 );
 
    if( cFile && cMode )
@@ -127,7 +132,7 @@ HB_FUNC( HB_GZOPEN )
  */
 HB_FUNC( HB_GZDOPEN )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    const char * cMode = hb_parc( 2 );
 
    if( HB_ISNUM( 1 ) && cMode )
@@ -156,7 +161,7 @@ HB_FUNC( HB_GZDOPEN )
  */
 HB_FUNC( HB_GZCLOSE )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    gzFile * gzHolder = ( gzFile * ) hb_parptrGC( &s_gcGZFuncs, 1 );
 
    if( gzHolder )
@@ -182,7 +187,7 @@ HB_FUNC( HB_GZCLOSE )
  */
 HB_FUNC( HB_GZSETPARAMS )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    if( HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -199,7 +204,7 @@ HB_FUNC( HB_GZSETPARAMS )
  */
 HB_FUNC( HB_GZREAD )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
    char * szBuffer;
    HB_SIZE nLen;
@@ -235,7 +240,7 @@ HB_FUNC( HB_GZREAD )
  */
 HB_FUNC( HB_GZWRITE )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    const char * szData = hb_parc( 2 );
 
    if( szData )
@@ -264,7 +269,7 @@ HB_FUNC( HB_GZWRITE )
  */
 HB_FUNC( HB_GZGETS )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    int iLen = hb_parni( 2 );
 
    if( iLen > 0 )
@@ -299,7 +304,7 @@ HB_FUNC( HB_GZGETS )
  */
 HB_FUNC( HB_GZPUTS )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    const char * szData = hb_parc( 2 );
 
    if( szData )
@@ -326,7 +331,7 @@ HB_FUNC( HB_GZPUTS )
  */
 HB_FUNC( HB_GZPUTC )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    if( HB_ISNUM( 2 ) )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -351,7 +356,7 @@ HB_FUNC( HB_GZPUTC )
  */
 HB_FUNC( HB_GZGETC )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -372,7 +377,7 @@ HB_FUNC( HB_GZGETC )
  */
 HB_FUNC( HB_GZUNGETC )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    if( HB_ISNUM( 1 ) )
    {
 #if ZLIB_VERNUM >= 0x1202
@@ -399,7 +404,7 @@ HB_FUNC( HB_GZUNGETC )
  */
 HB_FUNC( HB_GZFLUSH )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -420,7 +425,7 @@ HB_FUNC( HB_GZFLUSH )
  */
 HB_FUNC( HB_GZSEEK )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    if( HB_ISNUM( 2 ) )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -446,7 +451,7 @@ HB_FUNC( HB_GZSEEK )
  */
 HB_FUNC( HB_GZREWIND )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -467,7 +472,7 @@ HB_FUNC( HB_GZREWIND )
  */
 HB_FUNC( HB_GZTELL )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -488,7 +493,7 @@ HB_FUNC( HB_GZTELL )
  */
 HB_FUNC( HB_GZEOF )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -509,7 +514,7 @@ HB_FUNC( HB_GZEOF )
  */
 HB_FUNC( HB_GZDIRECT )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
 #if ZLIB_VERNUM >= 0x1230
    gzFile gz = hb_gzParam( 1 );
    if( gz )
@@ -531,7 +536,7 @@ HB_FUNC( HB_GZDIRECT )
  */
 HB_FUNC( HB_GZERROR )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -549,7 +554,7 @@ HB_FUNC( HB_GZERROR )
  */
 HB_FUNC( HB_GZCLEARERR )
 {
-#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240 )
+#ifndef HB_NO_GZLIB
 #if ZLIB_VERNUM >= 0x1202
    gzFile gz = hb_gzParam( 1 );
    if( gz )

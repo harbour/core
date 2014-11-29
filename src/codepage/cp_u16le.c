@@ -53,7 +53,7 @@ static HB_CDP_GET_FUNC( UTF16LE_get )
 
    if( *pnIndex + 1 < nLen )
    {
-      * wc = HB_GET_LE_UINT16( &pSrc[ *pnIndex ] );
+      *wc = HB_GET_LE_UINT16( &pSrc[ *pnIndex ] );
       *pnIndex += 2;
       return HB_TRUE;
    }

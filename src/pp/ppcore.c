@@ -5534,7 +5534,8 @@ void hb_pp_free( PHB_PP_STATE pState )
 /*
  * initialize PP context
  */
-void hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet, HB_BOOL fGauge, int iCycles, void * cargo,
+void hb_pp_init( PHB_PP_STATE pState,
+                 HB_BOOL fQuiet, HB_BOOL fGauge, int iCycles, void * cargo,
                  PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                  PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
                  PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,

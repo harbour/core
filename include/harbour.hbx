@@ -790,6 +790,7 @@ DYNAMIC hb_StrClear
 DYNAMIC hb_StrDecodEscape
 DYNAMIC hb_StrIsUTF8
 DYNAMIC hb_StrFormat
+DYNAMIC hb_StrIsUTF8
 DYNAMIC hb_StrReplace
 DYNAMIC hb_StrShrink
 DYNAMIC hb_StrToExp

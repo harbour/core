@@ -196,8 +196,9 @@ METHOD PROCEDURE ClosePopup( nPopup ) CLASS HBDbMenu
    IF nPopup != 0
       oPopup := ::aItems[ nPopup ]:bAction
       IF HB_ISOBJECT( oPopup )
-         RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2, ;
-            oPopup:cBackImage )
+         __dbgRestScreen( oPopup:nTop, oPopup:nLeft, ;
+                          oPopup:nBottom + 1, oPopup:nRight + 2, ;
+                          oPopup:cBackImage )
          oPopup:cBackImage := NIL
       ENDIF
       ::aItems[ nPopup ]:Display( ::cClrPopup, ::cClrHotKey )
@@ -218,7 +219,7 @@ METHOD PROCEDURE Display() CLASS HBDbMenu
    LOCAL oMenuItem
 
    IF ::lPopup
-      ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
+      ::cBackImage := __dbgSaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, HB_B_SINGLE_UNI, ::cClrPopup )
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ELSE

@@ -595,7 +595,7 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
    HB_SYMBOL_UNUSED( timeout );
    hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
    *pSockAddr = NULL;
-   *puiLen = 0;
+   *puiSockLen = 0;
    return -1;
 }
 

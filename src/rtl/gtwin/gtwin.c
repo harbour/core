@@ -941,13 +941,13 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
     * so I used this hack with checking OSTYPE environemnt variable. [druzus]
     */
    {
-      TCHAR lpOsType[ 10 ];
+      TCHAR lpOsType[ 16 ];
       DWORD dwLen;
 
       lpOsType[ 0 ] = lpOsType[ HB_SIZEOFARRAY( lpOsType ) - 1 ] = TEXT( '\0' );
-
-      dwLen = GetEnvironmentVariable( TEXT( "OSTYPE" ), lpOsType, HB_SIZEOFARRAY( lpOsType ) - 1 );
-      if( dwLen > 0 && dwLen < ( HB_SIZEOFARRAY( lpOsType ) - 1 ) )
+      dwLen = GetEnvironmentVariable( TEXT( "OSTYPE" ), lpOsType,
+                                      HB_SIZEOFARRAY( lpOsType ) - 1 );
+      if( dwLen > 0 && dwLen < HB_SIZEOFARRAY( lpOsType ) - 1 )
       {
          if( lstrcmp( lpOsType, TEXT( "msys" ) ) == 0 )
             FreeConsole();
