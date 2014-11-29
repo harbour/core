@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 REQUEST Array
