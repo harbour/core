@@ -254,7 +254,7 @@
       This function returns the number representing the day of the week
       for the date expressed as <dDate>.
       Returned value range is from 1 (Sunday) to 7 (Saturday).
-         $EXAMPLES$
+   $EXAMPLES$
       ? DoW( Date() )
       ? DoW( Date() - 6584 )
    $STATUS$
