@@ -134,10 +134,9 @@ static void * hb_gt_def_New( PHB_GT pGT )
    pGT->screenBuffer =
             ( PHB_SCREENCELL ) hb_xgrab( sizeof( HB_SCREENCELL ) * nSize );
    pGT->prevBuffer =
-            ( PHB_SCREENCELL ) hb_xgrab( sizeof( HB_SCREENCELL ) * nSize );
+            ( PHB_SCREENCELL ) hb_xgrabz( sizeof( HB_SCREENCELL ) * nSize );
    pGT->pLines = ( HB_BOOL * ) hb_xgrab( sizeof( HB_BOOL ) * pGT->iHeight );
 
-   memset( pGT->prevBuffer, 0, sizeof( HB_SCREENCELL ) * nSize );
    for( i = 0; i < pGT->iHeight; ++i )
       pGT->pLines[ i ] = HB_TRUE;
 
@@ -491,8 +490,7 @@ static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, in
    if( *piColorCount == 0 )
    {
       *piColorCount = HB_CLR_MAX_ + 1;
-      *pColorsPtr = ( int * ) hb_xgrab( *piColorCount * sizeof( int ) );
-      memset( *pColorsPtr, 0, *piColorCount * sizeof( int ) );
+      *pColorsPtr = ( int * ) hb_xgrabz( *piColorCount * sizeof( int ) );
    }
 
    pColors = *pColorsPtr;
@@ -1186,9 +1184,7 @@ static void hb_gt_def_WriteConW( PHB_GT pGT, const HB_WCHAR * szText, HB_SIZE nL
       if( bDisp || nIndex == nLength )
       {
          if( iLen )
-         {
             HB_GTSELF_WRITEW( pGT, szString, iLen );
-         }
 
          iLen = 0;
          if( iRow > iMaxRow )
@@ -1243,19 +1239,21 @@ static void hb_gt_def_Save( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 
    while( iTop <= iBottom )
    {
-      int iColor;
-      HB_BYTE bAttr;
-      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
+         int iColor;
+         HB_BYTE bAttr;
+         HB_USHORT usChar;
+
          if( ! HB_GTSELF_GETCHAR( pGT, iTop, iCol, &iColor, &bAttr, &usChar ) )
          {
             usChar = HB_GTSELF_GETCLEARCHAR( pGT );
             iColor = HB_GTSELF_GETCLEARCOLOR( pGT );
             bAttr  = 0x00;
          }
+
          if( pGT->fVgaCell )
          {
             *pbyBuffer++ = hb_cdpGetChar( cdp, usChar );
@@ -1281,13 +1279,14 @@ static void hb_gt_def_Rest( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
 
    while( iTop <= iBottom )
    {
-      int iColor;
-      HB_BYTE bAttr;
-      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
+         int iColor;
+         HB_BYTE bAttr;
+         HB_USHORT usChar;
+
          if( pGT->fVgaCell )
          {
             usChar = hb_cdpGetU16( cdp, *pbyBuffer++ );
@@ -1312,13 +1311,14 @@ static void hb_gt_def_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom
 {
    while( iTop <= iBottom )
    {
-      int iColorOld;
-      HB_BYTE bAttr;
-      HB_USHORT usChar;
       int iCol;
 
       for( iCol = iLeft; iCol <= iRight; ++iCol )
       {
+         int iColorOld;
+         HB_BYTE bAttr;
+         HB_USHORT usChar;
+
          if( ! HB_GTSELF_GETCHAR( pGT, iTop, iCol, &iColorOld, &bAttr, &usChar ) )
             break;
          if( ! HB_GTSELF_PUTCHAR( pGT, iTop, iCol, iColor, bAttr, usChar ) )
@@ -1553,7 +1553,7 @@ static void hb_gt_def_ScrollUp( PHB_GT pGT, int iRows, int iColor, HB_USHORT usC
 static void hb_gt_def_BoxW( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                             const HB_WCHAR * szFrame, int iColor )
 {
-   int iMaxRow, iMaxCol, iRows, iCols, iFirst, i;
+   int iMaxRow, iMaxCol, i;
 
    if( iTop > iBottom )
    {
@@ -1597,11 +1597,12 @@ static void hb_gt_def_BoxW( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
       else
       {
          HB_BYTE bAttr = HB_GT_ATTR_BOX;
-         iRows = ( iBottom > iMaxRow ? iMaxRow + 1 : iBottom ) -
-                 ( iTop < 0 ? -1 : iTop ) - 1;
-         iCols = ( iRight > iMaxCol ? iMaxCol + 1 : iRight ) -
-                 ( iLeft < 0 ? -1 : iLeft ) - 1;
-         iFirst = iLeft < 0 ? 0 : iLeft + 1;
+
+         int iRows  = ( iBottom > iMaxRow ? iMaxRow + 1 : iBottom ) -
+                      ( iTop < 0 ? -1 : iTop ) - 1;
+         int iCols  = ( iRight > iMaxCol ? iMaxCol + 1 : iRight ) -
+                      ( iLeft < 0 ? -1 : iLeft ) - 1;
+         int iFirst = iLeft < 0 ? 0 : iLeft + 1;
 
          if( iTop >= 0 )
          {
@@ -3646,21 +3647,21 @@ static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
 /* NOTE: Must be in sync with gtsys.c */
 #if defined( HB_GT_LIB )
-   const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
+   static const char * s_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined( HB_OS_WIN_CE )
-   const char * hb_gt_szNameDefault = "wvt";
+   static const char * s_szNameDefault = "wvt";
 #elif defined( HB_OS_WIN )
-   const char * hb_gt_szNameDefault = "win";
+   static const char * s_szNameDefault = "win";
 #elif defined( HB_OS_DOS )
-   const char * hb_gt_szNameDefault = "dos";
+   static const char * s_szNameDefault = "dos";
 #elif defined( HB_OS_OS2 )
-   const char * hb_gt_szNameDefault = "os2";
+   static const char * s_szNameDefault = "os2";
 #elif defined( HB_OS_VXWORKS ) || defined( HB_OS_SYMBIAN )
-   const char * hb_gt_szNameDefault = "std";
+   static const char * s_szNameDefault = "std";
 #elif defined( HB_OS_UNIX )
-   const char * hb_gt_szNameDefault = "trm";
+   static const char * s_szNameDefault = "trm";
 #else
-   const char * hb_gt_szNameDefault = "std";
+   static const char * s_szNameDefault = "std";
 #endif
 
 static const HB_GT_INIT * s_gtInit[ HB_GT_MAX_ ];
@@ -3707,7 +3708,7 @@ static int hb_gt_FindEntry( const char * pszID )
 void hb_gtSetDefault( const char * szGtName )
 {
    hb_strncpy( s_gtNameBuf, szGtName, sizeof( s_gtNameBuf ) - 1 );
-   hb_gt_szNameDefault = s_gtNameBuf;
+   s_szNameDefault = s_gtNameBuf;
 }
 
 HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
@@ -3735,8 +3736,7 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
          if( pGT || pSuperTable )
             hb_errInternal( 9996, "Harbour terminal (GT) initialization failure", NULL, NULL );
 
-         pGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
-         memset( pGT, 0, sizeof( HB_GT_BASE ) );
+         pGT = ( PHB_GT_BASE ) hb_xgrabz( sizeof( HB_GT_BASE ) );
          pGT->pFuncTable = ( PHB_GT_FUNCS ) hb_xgrab( sizeof( HB_GT_FUNCS ) );
          memcpy( pGT->pFuncTable, &s_gtCoreFunc, sizeof( HB_GT_FUNCS ) );
          pGT->iUsed++;
@@ -3748,8 +3748,7 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
 
          if( fNew )
          {
-            pGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
-            memset( pGT, 0, sizeof( HB_GT_BASE ) );
+            pGT = ( PHB_GT_BASE ) hb_xgrabz( sizeof( HB_GT_BASE ) );
             pGT->pFuncTable = ( PHB_GT_FUNCS ) hb_xgrab( sizeof( HB_GT_FUNCS ) );
             memcpy( pGT->pFuncTable, &s_gtCoreFunc, sizeof( HB_GT_FUNCS ) );
             pGT->iUsed++;
@@ -3914,7 +3913,7 @@ void hb_gtStartupInit( void )
       return;
    if( hb_gtTryInit( hb_gt_FindDefault(), HB_FALSE ) )
       return;
-   if( hb_gtTryInit( hb_gt_szNameDefault, HB_FALSE ) )
+   if( hb_gtTryInit( s_szNameDefault, HB_FALSE ) )
       return;
 
    if( hb_dynsymFind( "HB_GT_NUL" ) ) /* GTNUL was explicitly REQUESTed */

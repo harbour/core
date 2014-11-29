@@ -539,6 +539,10 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char * szSwitch )
             case 'Q':
                switch( *( s + 1 ) )
                {
+                  case 'l':
+                  case 'L':
+                     HB_COMP_PARAM->fGauge = HB_FALSE;
+                     break;
                   case '2':
                      HB_COMP_PARAM->fFullQuiet = HB_TRUE;
                   case '0':
@@ -945,7 +949,9 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'q':
                      case 'Q':
-                        if( HB_ISDIGIT( szSwitch[ j + 1 ] ) )
+                        if( HB_ISDIGIT( szSwitch[ j + 1 ] ) ||
+                            szSwitch[ j + 1 ] == 'l' ||
+                            szSwitch[ j + 1 ] == 'L' )
                         {
                            Switch[ 2 ] = szSwitch[ j + 1 ];
                            Switch[ 3 ] = '\0';

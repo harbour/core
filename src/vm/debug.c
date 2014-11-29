@@ -199,6 +199,7 @@ HB_FUNC( __DBGVMSTKLCOUNT )
 }
 
 /*
+ * __dbgVMStkLList() --> <aStack>
  * Returns the stack of the calling function
  * "[<symbol>]"  Means symbol.
  *
@@ -207,7 +208,6 @@ HB_FUNC( __DBGVMSTKLCOUNT )
  * [3 .. x]   Parameters
  * [x+1 .. y] Locals
  * [y+1 ..]   Pushed data
- * __dbgVMStkLList() --> <aStack>
  */
 HB_FUNC( __DBGVMSTKLLIST )
 {

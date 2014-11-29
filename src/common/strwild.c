@@ -107,7 +107,7 @@ static HB_BOOL hb_strMatchWildRaw( const char * szString, const char * szPattern
       }
       else if( fFile && nPosV == nLen && nPosP < nSize &&
                szPattern[ nPosP ] == '.' &&
-               ( nPosP + 1 == nSize || 
+               ( nPosP + 1 == nSize ||
                  ( nPosP + 2 == nSize && szPattern[ nPosP + 1 ] == '*' ) ) )
       {
          break;
@@ -216,7 +216,7 @@ static HB_BOOL hb_strMatchWildCDP( const char * szString, const char * szPattern
 
       if( fFile && nPosV == nLen && nPosP < nSize &&
           szPattern[ nPosP ] == '.' &&
-          ( nPosP + 1 == nSize || 
+          ( nPosP + 1 == nSize ||
             ( nPosP + 2 == nSize && szPattern[ nPosP + 1 ] == '*' ) ) )
       {
          break;

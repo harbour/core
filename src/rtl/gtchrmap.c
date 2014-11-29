@@ -165,7 +165,6 @@ static void skip_blank( char ** buf )
 static int get_val( char ** buf )
 {
    int n = -1;
-   char c;
 
    if( ( *buf )[ 0 ] == '\'' && ( *buf )[ 1 ] != '\0' && ( *buf )[ 2 ] == '\'' )
    {
@@ -178,16 +177,16 @@ static int get_val( char ** buf )
       *buf += 2;
       for(; ( **buf >= '0' && **buf <= '9' ) ||
             ( **buf >= 'A' && **buf <= 'F' ) ||
-            ( **buf >= 'a' && **buf <= 'f' ); ( *buf )++ )
+            ( **buf >= 'a' && **buf <= 'f' ); ++( *buf ) )
       {
-         c = **buf | 0x20;
+         char c = **buf | 0x20;
          n = ( n << 4 ) + c - ( c > '9' ? ( 'a' - 10 ) : '0' );
       }
    }
    else if( **buf >= '0' && **buf <= '9' )
    {
       n = 0;
-      for(; ( **buf >= '0' && **buf <= '9' ); ( *buf )++ )
+      for(; ( **buf >= '0' && **buf <= '9' ); ++( *buf ) )
          n = n * 10 + ( **buf - '0' );
    }
    return n > 0xff ? -1 : n;
@@ -258,8 +257,8 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
                             s[ 1 ] == '|' || s[ 1 ] == '^' || s[ 1 ] == '=' ||
                             s[ 1 ] == ' ' ) )
          {
-            *op = s[1];
-            s+=2;
+            *op = s[ 1 ];
+            s += 2;
          }
          *val = *op == ' ' ? 0 : get_val( &s );
          if( *val >= 0 )
@@ -278,15 +277,16 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
 static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const char * pszFile )
 {
    int line = 0, from = 0, to = 0, val = 0, mod = 0, i, n;
-   char buf[ 256 ], * s, op = 0;
+   char * s, op = 0;
    int isTerm = 0;
    fpos_t pos;
 
    fgetpos( fp, &pos );
-   fseek( fp, 0, SEEK_SET );
+   ( void ) fseek( fp, 0, SEEK_SET );
 
    while( ! feof( fp ) && isTerm < 2 )
    {
+      char buf[ 256 ];
       ++line;
       if( fgets( buf, sizeof( buf ), fp ) != NULL )
       {
@@ -363,21 +363,20 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
       }
    }
 
-   fsetpos( fp, &pos );
+   ( void ) fsetpos( fp, &pos );
 
    return isTerm;
 }
 
 static int hb_gt_chrmapread( const char * pszFile, const char * pszTerm, int * nTransTbl )
 {
-   FILE * fp;
-   char buf[ 256 ], * ptr, * pTerm;
    int isTerm = -1;
-
-   fp = hb_fopen( pszFile, "r" );
+   FILE * fp = hb_fopen( pszFile, "r" );
 
    if( fp != NULL )
    {
+      char buf[ 256 ], * ptr, * pTerm;
+
       hb_strncpy( buf, pszTerm, sizeof( buf ) - 1 );
       isTerm = 0;
       pTerm = buf;
@@ -399,7 +398,7 @@ static int hb_gt_chrmapread( const char * pszFile, const char * pszTerm, int * n
 
 int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 {
-   char * pszFree = NULL, * pszFile, szFile[ HB_PATH_MAX ];
+   char * pszFree = NULL;
    int nRet = -1;
 
    chrmap_init( piTransTbl );
@@ -415,7 +414,9 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 
    if( pszTerm != NULL && *pszTerm != '\0' )
    {
-      pszFile = hb_getenv( "HB_CHARMAP" );
+      char szFile[ HB_PATH_MAX ];
+      char * pszFile = hb_getenv( "HB_CHARMAP" );
+
       if( pszFile != NULL && *pszFile != '\0' )
          nRet = hb_gt_chrmapread( pszFile, pszTerm, piTransTbl );
       if( nRet == -1 )
@@ -453,7 +454,7 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 }
 
 #if 0
-int main(int argc, char **argv)
+int main( int argc, char ** argv )
 {
    int piTransTbl[ 256 ], i;
 
@@ -463,7 +464,7 @@ int main(int argc, char **argv)
       exit( 1 );
    }
 
-   for( i = 0; i < 256; i++ )
+   for( i = 0; i < 256; ++i )
       printf( "%3d -> %3d : %d\n", i, piTransTbl[ i ] & 0xff, piTransTbl[ i ] >> 16 );
 
    return 0;

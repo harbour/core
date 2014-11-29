@@ -226,14 +226,9 @@ METHOD New( cFrmName AS STRING, ;
    // Set output devices
 
    lPrintOn   := iif( lPrinter, Set( _SET_PRINTER, lPrinter ), Set( _SET_PRINTER ) )
-
    lConsoleOn := iif( lNoConsole, Set( _SET_CONSOLE, .F. ), Set( _SET_CONSOLE ) )
 
-   IF lPrinter                   // To the printer
-      ::lFormFeeds := .T.
-   ELSE
-      ::lFormFeeds := .F.
-   ENDIF
+   ::lFormFeeds := lPrinter
 
    IF ! Empty( cAltFile )        // To file
       lExtraState := Set( _SET_EXTRA, .T. )
@@ -266,7 +261,7 @@ METHOD New( cFrmName AS STRING, ;
       // ::aReportData[ RPT_LMARGIN ] += Set( _SET_MARGIN )
 
       ::nPageNumber := 1                  // Set the initial page number
-      ::lFirstPass  := .T.             // Set the first pass flag
+      ::lFirstPass  := .T.                // Set the first pass flag
 
       ::nLinesLeft  := ::aReportData[ RPT_LINES ]
 

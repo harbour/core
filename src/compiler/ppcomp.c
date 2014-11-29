@@ -311,6 +311,19 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             }
          }
       }
+      else if( hb_strnicmp( szSwitch, "gc", 2 ) == 0 )
+      {
+         if( fSet )
+         {
+            if( iValue == HB_COMPGENC_REALCODE ||
+                iValue == HB_COMPGENC_VERBOSE ||
+                iValue == HB_COMPGENC_NORMAL ||
+                iValue == HB_COMPGENC_COMPACT )
+               HB_COMP_PARAM->iGenCOutput = iValue;
+         }
+         else
+            iValue = HB_COMP_PARAM->iGenCOutput;
+      }
       else if( hb_strnicmp( szSwitch, "es", 2 ) == 0 )
       {
          if( fSet )
@@ -385,7 +398,8 @@ void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
 
    if( HB_COMP_PARAM->pLex->pPP )
    {
-      hb_pp_init( HB_COMP_PARAM->pLex->pPP, HB_COMP_PARAM->fQuiet,
+      hb_pp_init( HB_COMP_PARAM->pLex->pPP,
+                  HB_COMP_PARAM->fQuiet, HB_COMP_PARAM->fGauge,
                   HB_COMP_PARAM->iMaxTransCycles,
                   HB_COMP_PARAM, pOpenFunc, NULL,
                   hb_pp_ErrorGen, hb_pp_Disp, hb_pp_PragmaDump,

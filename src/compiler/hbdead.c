@@ -558,8 +558,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PHB_HFUNC pFunc )
    code_info.nPCodeSize = pFunc->nPCodePos;
    code_info.fFinished = HB_FALSE;
 
-   code_info.pCodeMark = ( HB_BYTE * ) hb_xgrab( code_info.nPCodeSize );
-   memset( code_info.pCodeMark, 0, code_info.nPCodeSize );
+   code_info.pCodeMark = ( HB_BYTE * ) hb_xgrabz( code_info.nPCodeSize );
 
    hb_compPCodeTrace( pFunc, ( const PHB_PCODE_FUNC * ) pFuncTable, ( void * ) &code_info );
 

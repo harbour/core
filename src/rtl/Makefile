@@ -4,7 +4,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_PLATFORM),wce)
    ifneq ($(HB_COMPILER),pcc)
-      HB_PRGFLAGS := -gc3
+      HB_PRGFLAGS += -gc3
    endif
 endif
 
@@ -156,6 +156,7 @@ C_SOURCES := \
    replic.c \
    right.c \
    round.c \
+   rtlshort.c \
    run.c \
    samples.c \
    saverest.c \
@@ -184,6 +185,7 @@ C_SOURCES := \
    strrepl.c \
    strtoexp.c \
    strtran.c \
+   strutf8.c \
    strxor.c \
    strzero.c \
    stuff.c \

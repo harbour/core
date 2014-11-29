@@ -91,7 +91,7 @@ typedef struct
    HB_INET_CFUNC  cleanFunc;
 } HB_SOCKET_STRUCT, * PHB_SOCKET_STRUCT;
 
-#define HB_INET_BUFFER_LEN  256
+#define HB_INET_BUFFER_LEN  1500
 
 #define HB_INET_INITIALIZE()  if( s_initialize ) hb_inetAutoInit()
 
@@ -610,7 +610,8 @@ HB_FUNC( HB_INETSETRCVBUFSIZE )
  * TCP receive and send functions
  ***/
 
-static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, HB_BOOL readahead )
+static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size,
+                        HB_BOOL readahead, HB_MAXINT timeout )
 {
    long rec = 0;
 
@@ -622,10 +623,10 @@ static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, HB_B
       if( socket->recvFunc )
          rec = socket->recvFunc( socket->stream, socket->sd,
                                  socket->buffer, socket->readahead,
-                                 socket->iTimeout );
+                                 timeout );
       else
          rec = hb_socketRecv( socket->sd, socket->buffer, socket->readahead,
-                              0, socket->iTimeout );
+                              0, timeout );
       socket->inbuffer = HB_MAX( 0, rec );
    }
    else
@@ -637,26 +638,22 @@ static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size, HB_B
       memcpy( buffer, socket->buffer + socket->posbuffer, rec );
       socket->posbuffer += rec;
       socket->inbuffer -= rec;
-      if( size > rec && ! readahead )
-      {
-         if( socket->recvFunc )
-            rec = socket->recvFunc( socket->stream, socket->sd,
-                                    buffer + rec, size - rec,
-                                    socket->iTimeout );
-         else
-            size = hb_socketRecv( socket->sd, buffer + rec, size - rec, 0, 0 );
-
-         if( size > 0 )
-            rec += size;
-      }
    }
-   else if( ! readahead )
+
+   if( size > rec && ! readahead )
    {
       if( socket->recvFunc )
-         rec = socket->recvFunc( socket->stream, socket->sd,
-                                 buffer, size, socket->iTimeout );
+         size = socket->recvFunc( socket->stream, socket->sd,
+                                  buffer + rec, size - rec,
+                                  rec ? 0 : timeout );
       else
-         rec = hb_socketRecv( socket->sd, buffer, size, 0, socket->iTimeout );
+         size = hb_socketRecv( socket->sd, buffer + rec, size - rec, 0,
+                               rec ? 0 : timeout );
+
+      if( rec == 0 )
+         rec = size;
+      else if( size > 0 )
+         rec += size;
    }
 
    return rec;
@@ -701,7 +698,8 @@ static void s_inetRecvInternal( int iMode )
       socket->iError = HB_INET_ERR_OK;
       do
       {
-         iLen = s_inetRecv( socket, buffer + iReceived, iMaxLen - iReceived, HB_FALSE );
+         iLen = s_inetRecv( socket, buffer + iReceived, iMaxLen - iReceived,
+                            HB_FALSE, socket->iTimeout );
          if( iLen >= 0 )
          {
             iReceived += iLen;
@@ -795,7 +793,7 @@ static void s_inetRecvPattern( const char * const * patterns, int * patternsizes
          buffer = ( char * ) hb_xrealloc( buffer, iAllocated );
       }
 
-      iLen = s_inetRecv( socket, &cChar, 1, HB_TRUE );
+      iLen = s_inetRecv( socket, &cChar, 1, HB_TRUE, socket->iTimeout );
       if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
       {
          iLen = -2;     /* this signals timeout */
@@ -936,7 +934,6 @@ HB_FUNC( HB_INETRECVENDBLOCK )
 HB_FUNC( HB_INETDATAREADY )
 {
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
-   int iVal;
 
    if( socket == NULL || ( hb_pcount() >= 2 && ! HB_ISNUM( 2 ) ) )
       hb_inetErrRT();
@@ -944,12 +941,29 @@ HB_FUNC( HB_INETDATAREADY )
       hb_retni( -1 );
    else
    {
+      int iVal;
+
       socket->iError = HB_INET_ERR_OK;
       if( socket->inbuffer > 0 )
          iVal = 1;
       else
       {
-         iVal = hb_socketSelectRead( socket->sd, hb_parnint( 2 ) /* default to 0 */ );
+         HB_MAXINT timeout = hb_parnint( 2 );   /* default to 0 */
+
+         if( socket->readahead > 0 && socket->recvFunc )
+         {
+            char buffer[ 1 ];
+
+            iVal = ( int ) s_inetRecv( socket, buffer, 1, HB_TRUE, timeout );
+            if( iVal == 1 )
+            {
+               socket->posbuffer--;
+               socket->inbuffer++;
+            }
+         }
+         else
+            iVal = hb_socketSelectRead( socket->sd, timeout );
+
          if( iVal < 0 )
             hb_inetGetError( socket );
       }

@@ -81,8 +81,8 @@
 
 /* TODO:
  *
- * o Handle any TODO: items in the source.
- * o Document the classes and the class hierarchy.
+ * - Handle any TODO: items in the source.
+ * - Document the classes and the class hierarchy.
  *
  */
 
@@ -241,9 +241,7 @@ METHOD reset() CLASS HBProfile
 
 METHOD ignoreSymbol( cSymbol ) CLASS HBProfile
 
-   LOCAL cProfPrefix := "HBPROFILE"
-
-   RETURN Left( cSymbol, Len( cProfPrefix ) ) == cProfPrefix .OR. cSymbol == "__SETPROFILER"
+   RETURN hb_LeftEq( cSymbol, "HBPROFILE" ) .OR. cSymbol == "__SETPROFILER"
 
 METHOD gatherFunctions() CLASS HBProfile
 
@@ -452,7 +450,7 @@ METHOD gatherOPCodes() CLASS HBProfileLowLevel
    // Loop over all the harbour OP codes. Note that they start at 0.
    FOR nOP := 0 TO nMax - 1
       // If we're not ignoring this opcode.
-      IF ! ::ignoreSymbol( cName := "OPCODE( " + PadL( nOP, 3 ) + " )" )
+      IF ! ::ignoreSymbol( cName := "OPCODE( " + Str( nOP, 3 ) + " )" )
          // Add it to the profile.
          AAdd( ::aProfile, HBProfileOpcode():new( cName, __opGetPrf( nOP ) ) )
       ENDIF
@@ -517,8 +515,8 @@ METHOD line( oEntity ) CLASS HBProfileReport
    RETURN { ;
       PadR( oEntity:cName,      35 ) + " " + ;
       PadR( oEntity:describe(),  8 ) + " " + ;
-      PadL( oEntity:nCalls,     10 ) + " " + ;
-      PadL( oEntity:nTicks,     11 ) + " " + ;
+      Str( oEntity:nCalls,      10 ) + " " + ;
+      Str( oEntity:nTicks,      11 ) + " " + ;
       Str( oEntity:nSeconds,    11, 2 ) }
 
 METHOD emitLine( oEntity ) CLASS HBProfileReport
@@ -570,9 +568,7 @@ METHOD generate( bFilter, cFile ) CLASS HBProfileReportToFile
 
    LOCAL lProfile := __SetProfiler( .F. )
 
-   hb_default( @cFile, "hbprof.txt" )
-
-   IF ( ::hFile := FCreate( cFile ) ) != F_ERROR
+   IF ( ::hFile := FCreate( hb_defaultValue( cFile, "hbprof.txt" ) ) ) != F_ERROR
       ::super:generate( bFilter )
       FClose( ::hFile )
    ELSE

@@ -821,7 +821,7 @@ static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 #endif
 }
 
-HWND hb_getConsoleWindowHandle( void )
+static HWND hb_getConsoleWindowHandle( void )
 {
    TCHAR oldTitle[ 256 ], tmpTitle[ 32 ];
    HWND hWnd = NULL;
@@ -949,10 +949,13 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
     * so I used this hack with checking OSTYPE environemnt variable. [druzus]
     */
    {
-      TCHAR lpOsType[ 10 ];
+      TCHAR lpOsType[ 16 ];
+      DWORD dwLen;
 
-      lpOsType[ 0 ] = lpOsType[ 9 ] = 0;
-      if( GetEnvironmentVariable( TEXT( "OSTYPE" ), lpOsType, 9 ) > 0 )
+      lpOsType[ 0 ] = lpOsType[ HB_SIZEOFARRAY( lpOsType ) - 1 ] = TEXT( '\0' );
+      dwLen = GetEnvironmentVariable( TEXT( "OSTYPE" ), lpOsType,
+                                      HB_SIZEOFARRAY( lpOsType ) - 1 );
+      if( dwLen > 0 && dwLen < HB_SIZEOFARRAY( lpOsType ) - 1 )
       {
          if( lstrcmp( lpOsType, TEXT( "msys" ) ) == 0 )
             FreeConsole();
@@ -1458,7 +1461,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
+   /* First check for Ctrl+Break, which is handled by gtwin.c */
    if( s_bBreak )
    {
       /* Reset the global Ctrl+Break flag */

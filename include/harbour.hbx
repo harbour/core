@@ -334,6 +334,7 @@ DYNAMIC hb_ByteSwapL
 DYNAMIC hb_ByteSwapLL
 DYNAMIC hb_ByteSwapU
 DYNAMIC hb_ByteSwapW
+DYNAMIC hb_CDay
 DYNAMIC hb_cdpCharMax
 DYNAMIC hb_cdpExists
 DYNAMIC hb_cdpInfo
@@ -402,6 +403,7 @@ DYNAMIC hb_DirBase
 DYNAMIC hb_DirBuild
 DYNAMIC hb_DirCreate
 DYNAMIC hb_DirDelete
+DYNAMIC hb_Directory
 DYNAMIC hb_DirExists
 DYNAMIC hb_DirScan
 DYNAMIC hb_DirSepAdd
@@ -447,6 +449,7 @@ DYNAMIC hb_FNameName
 DYNAMIC hb_FNameNameExt
 DYNAMIC hb_FNameSplit
 DYNAMIC hb_ForNext
+DYNAMIC hb_FReadLen
 DYNAMIC hb_FSetAttr
 DYNAMIC hb_FSetDateTime
 DYNAMIC hb_FSetDevMode
@@ -815,6 +818,7 @@ DYNAMIC hb_StrCDecode
 DYNAMIC hb_StrClear
 DYNAMIC hb_StrDecodEscape
 DYNAMIC hb_StrFormat
+DYNAMIC hb_StrIsUTF8
 DYNAMIC hb_StrReplace
 DYNAMIC hb_StrShrink
 DYNAMIC hb_StrToExp
@@ -907,6 +911,7 @@ DYNAMIC hb_vfLockTest
 DYNAMIC hb_vfOpen
 DYNAMIC hb_vfRead
 DYNAMIC hb_vfReadAt
+DYNAMIC hb_vfReadLen
 DYNAMIC hb_vfRename
 DYNAMIC hb_vfSeek
 DYNAMIC hb_vfSize

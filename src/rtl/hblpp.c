@@ -57,8 +57,7 @@ PHB_LPP hb_lppCreate( HB_SOCKET sd )
 {
    PHB_LPP pSocket;
 
-   pSocket = ( PHB_LPP ) hb_xgrab( sizeof( HB_LPP ) );
-   memset( pSocket, 0, sizeof( HB_LPP ) );
+   pSocket = ( PHB_LPP ) hb_xgrabz( sizeof( HB_LPP ) );
    pSocket->sd = sd;
    pSocket->nLimit = 1024;
    return pSocket;

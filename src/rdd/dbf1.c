@@ -442,7 +442,7 @@ static void hb_dbfAllocNullFlag( DBFAREAP pArea, HB_USHORT uiField, HB_BOOL fLen
    if( ! pArea->pFieldBits )
    {
       HB_SIZE nSize = sizeof( HB_DBFFIELDBITS ) * pArea->area.uiFieldExtent;
-      pArea->pFieldBits = ( PHB_DBFFIELDBITS ) memset( hb_xgrab( nSize ), 0, nSize );
+      pArea->pFieldBits = ( PHB_DBFFIELDBITS ) hb_xgrabz( nSize );
    }
    if( fLength )
       pArea->pFieldBits[ uiField ].uiLengthBit = pArea->uiNullCount++;
@@ -2864,10 +2864,7 @@ static HB_ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, HB_USHORT uiFieldExtent 
 
    /* Alloc field offsets array */
    if( uiFieldExtent )
-   {
-      pArea->pFieldOffset = ( HB_USHORT * ) hb_xgrab( uiFieldExtent * sizeof( HB_USHORT ) );
-      memset( pArea->pFieldOffset, 0, uiFieldExtent * sizeof( HB_USHORT ) );
-   }
+      pArea->pFieldOffset = ( HB_USHORT * ) hb_xgrabz( uiFieldExtent * sizeof( HB_USHORT ) );
 
    return HB_SUCCESS;
 }
@@ -3107,8 +3104,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    nSize = ( HB_SIZE ) pArea->area.uiFieldCount * sizeof( DBFFIELD ) +
            ( pArea->bTableType == DB_DBF_VFP ? 1 : 2 );
-   pBuffer = ( HB_BYTE * ) hb_xgrab( nSize + sizeof( DBFFIELD ) + 1 );
-   memset( pBuffer, 0, nSize + sizeof( DBFFIELD ) + 1 );
+   pBuffer = ( HB_BYTE * ) hb_xgrabz( nSize + sizeof( DBFFIELD ) + 1 );
    pThisField = ( DBFFIELD * ) pBuffer;
 
    pArea->fHasMemo = fError = HB_FALSE;
@@ -4561,7 +4557,7 @@ static HB_ERRCODE hb_dbfPack( DBFAREAP pArea )
       return HB_FAILURE;
 
    /* This is bad hack but looks that people begins to use it :-(
-    * so I'll add workaround to make it m ore safe
+    * so I'll add workaround to make it more safe
     */
    if( pArea->area.valResult && HB_IS_ARRAY( pArea->area.valResult ) &&
        hb_arrayLen( pArea->area.valResult ) == 2 &&

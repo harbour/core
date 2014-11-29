@@ -49,7 +49,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 
-#define _DIR_HEADER             1
+#define _DIR_HEADER  1
 
 PROCEDURE __Dir( cFileMask )
 
@@ -61,7 +61,7 @@ PROCEDURE __Dir( cFileMask )
 
       /* NOTE: Although Cl*pper has this string in the national language
                module, it will not use it from there.
-               This is hard wired to English. So this is a small
+               This is hard-wired to English. So this is a small
                incompatibility. */
 
 #ifdef HB_CLP_STRICT
@@ -71,21 +71,28 @@ PROCEDURE __Dir( cFileMask )
 #endif
 
       AEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ), ;
-         {| aDirEntry | PutDbf( aDirEntry ) } )
+             {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
 
-      hb_FNameSplit( LTrim( cFileMask ), @cPath, @cName, @cExt )
+      hb_FNameSplit( iif( Set( _SET_TRIMFILENAME ), AllTrim( cFileMask ), cFileMask ), ;
+                     @cPath, @cName, @cExt )
       IF Empty( cPath )
          cPath := Set( _SET_DEFAULT )
       ENDIF
 
       AEval( Directory( hb_FNameMerge( cPath, cName, cExt ) ), ;
-         {| aDirEntry | PutNormal( aDirEntry ) } )
+             {| aDirEntry | PutNormal( aDirEntry ) } )
    ENDIF
 
    QOut()
 
    RETURN
+
+#define _DBF_HEAD_MARK  hb_BChar( 0x03 ) + hb_BChar( 0x06 ) + ;
+                        hb_BChar( 0x30 ) + hb_BChar( 0x31 ) + ;
+                        hb_BChar( 0x83 ) + hb_BChar( 0x86 ) + ;
+                        hb_BChar( 0xE5 ) + hb_BChar( 0xE6 ) + ;
+                        hb_BChar( 0xF5 ) + hb_BChar( 0xF6 )
 
 STATIC PROCEDURE PutDBF( aDirEntry )
 
@@ -96,18 +103,13 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
    IF ( fhnd := FOpen( aDirEntry[ F_NAME ] ) ) != F_ERROR
 
-      buffer := Space( 8 )
+      buffer := hb_FReadLen( fhnd, 8 )
 
-      IF FRead( fhnd, @buffer, 8 ) == 8 .AND. ;
-         AScan( { 0x03, 0x06, 0x30, 0x31, 0x83, 0x86, 0xE5, 0xE6, 0xF5, 0xF6 }, ;
-         hb_BCode( buffer ) ) != 0
-
+      IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BLeft( buffer, 1 ), _DBF_HEAD_MARK ) > 0
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
-         dLastUpdate := hb_SToD( ;
-            StrZero( hb_BCode( hb_BSubStr( buffer, 2, 1 ) ) + 1900, 4 ) + ;
-            StrZero( hb_BCode( hb_BSubStr( buffer, 3, 1 ) ), 2 ) + ;
-            StrZero( hb_BCode( hb_BSubStr( buffer, 4, 1 ) ), 2 ) )
-
+         dLastUpdate := hb_Date( hb_BPeek( buffer, 2 ) + 1900, ;
+                                 hb_BPeek( buffer, 3 ), ;
+                                 hb_BPeek( buffer, 4 ) )
       ENDIF
 
       FClose( fhnd )
@@ -124,18 +126,17 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
 STATIC PROCEDURE PutNormal( aDirEntry )
 
-   LOCAL cName
-   LOCAL cExt
+   LOCAL cName, cExt
 
-   hb_FNameSplit( aDirEntry[ F_NAME ], NIL, @cName, @cExt )
+   hb_FNameSplit( aDirEntry[ F_NAME ],, @cName, @cExt )
 
-   /* strict MS-DOS like formatting, it does not play well with long
-      file names which do not stick to 8.3 MS-DOS convention */
+   /* Strict MS-DOS like formatting, it does not play well with long
+      filenames which do not stick to 8.3 MS-DOS convention */
 
    QOut( ;
       PadR( cName, 8 ), ;
       PadR( SubStr( cExt, 2 ), 3 ), ;
       Str( aDirEntry[ F_SIZE ], 8 ), "", ;
-      DToC( aDirEntry[ F_DATE ] ) )
+      aDirEntry[ F_DATE ] )
 
    RETURN

@@ -242,10 +242,8 @@ PHB_COMP hb_comp_new( void )
 
    if( pPP )
    {
-      pComp = ( PHB_COMP ) hb_xgrab( sizeof( HB_COMP ) );
-      memset( pComp, 0, sizeof( HB_COMP ) );
-      pComp->pLex = ( PHB_COMP_LEX ) hb_xgrab( sizeof( HB_COMP_LEX ) );
-      memset( pComp->pLex, 0, sizeof( HB_COMP_LEX ) );
+      pComp = ( PHB_COMP ) hb_xgrabz( sizeof( HB_COMP ) );
+      pComp->pLex = ( PHB_COMP_LEX ) hb_xgrabz( sizeof( HB_COMP_LEX ) );
 
       /* initialize default settings */
       pComp->mode = HB_MODE_COMPILER;
@@ -269,9 +267,11 @@ PHB_COMP hb_comp_new( void )
       pComp->fAutoMemvarAssume = HB_FALSE;   /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
       pComp->fForceMemvars     = HB_FALSE;   /* holds if memvars are assumed when accesing undeclared variable (-v)*/
       pComp->fDebugInfo        = HB_FALSE;   /* holds if generate debugger required info */
+      pComp->fHideSource       = HB_FALSE;   /* do not stor .prg file names in PCODE */
       pComp->fNoStartUp        = HB_FALSE;   /* C code generation embed HB_FS_FIRST or not */
       pComp->fCredits          = HB_FALSE;   /* print credits */
       pComp->fBuildInfo        = HB_FALSE;   /* print build info */
+      pComp->fGauge            = HB_TRUE;    /* line counter gauge */
       pComp->fLogo             = HB_TRUE;    /* print logo */
       pComp->fSingleModule     = HB_FALSE;
       pComp->fError            = HB_FALSE;

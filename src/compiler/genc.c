@@ -439,15 +439,11 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
 static void hb_writeEndInit( HB_COMP_DECL, FILE * yyc, const char * szModulname, const char * szSourceFile )
 {
-#if 0
-   HB_SYMBOL_UNUSED( szSourceFile );
-   fprintf( yyc,
-            "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n\n",
-                 HB_COMP_PARAM->szPrefix, szModulname );
-#endif
    fprintf( yyc,
             "\nHB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_%s%s, ",
             HB_COMP_PARAM->szPrefix, szModulname );
+   if( HB_COMP_PARAM->fHideSource )
+      szSourceFile = "";
    hb_compGenCString( yyc, ( const HB_BYTE * ) szSourceFile, strlen( szSourceFile ) );
    fprintf( yyc, ", 0x%lx, 0x%04x )\n\n", 0L, HB_PCODE_VER );
 
@@ -2532,7 +2528,7 @@ static HB_GENC_FUNC( hb_p_pushaparams )
    return 1;
 }
 
-/* NOTE: The  order of functions have to match the order of opcodes
+/* NOTE: The order of functions have to match the order of opcodes
  *       mnemonics
  */
 static const PHB_GENC_FUNC s_verbose_table[] = {

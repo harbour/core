@@ -898,9 +898,7 @@ static void hb_dbgAddStopLines( PHB_ITEM pItem )
                const char * pNewBuffer = hb_arrayGetCPtr( pEntry, 3 );
                HB_ISIZ nLen = ( ( nMax - nMin ) >> 3 ) + 1;
                HB_ISIZ k;
-               char * pBuffer = ( char * ) hb_xgrab( nLen + 1 );
-
-               hb_xmemset( pBuffer, 0, nLen );
+               char * pBuffer = ( char * ) hb_xgrabz( nLen + 1 );
 
                /* the bitfields with line numbers should use
                 * 8bit alignment so it's safe to use byte copy

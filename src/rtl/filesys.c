@@ -834,7 +834,7 @@ int hb_fsIsPipeOrSock( HB_FHANDLE hPipeHandle )
    }
    return 0;
 }
-#elif defined( HB_OS_WIN )
+#elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 {
    return ( GetFileType( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ) ) ==
             FILE_TYPE_PIPE ) ? 1 : 0;
@@ -1553,7 +1553,7 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
       fResult = hFile != FS_ERROR;
       if( fResult )
       {
-         FILETIME ft, local_ft;
+         FILETIME local_ft;
          SYSTEMTIME st;
 
          if( lJulian <= 0 || lMillisec < 0 )
@@ -1574,9 +1574,16 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
             st.wSecond = ( WORD ) iSecond;
             st.wMilliseconds = ( WORD ) iMSec;
          }
-         SystemTimeToFileTime( &st, &local_ft );
-         LocalFileTimeToFileTime( &local_ft, &ft );
-         fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
+
+         if( SystemTimeToFileTime( &st, &local_ft ) )
+         {
+            FILETIME ft;
+            LocalFileTimeToFileTime( &local_ft, &ft );
+            fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
+         }
+         else
+            fResult = HB_FALSE;
+
          hb_fsSetIOError( fResult, 0 );
          hb_fsClose( hFile );
       }

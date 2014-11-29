@@ -85,16 +85,15 @@ FUNCTION GetPairPos( cColor, nColor )
 
 FUNCTION GetPairLen( cColor, nColor )
 
-   LOCAL nPos := GetPairPos( cColor, nColor )
+   LOCAL nPos
    LOCAL nLen
 
-   IF nPos == 0
+   IF ( nPos := GetPairPos( cColor, nColor ) ) == 0
       RETURN 0
    ENDIF
 
-   nLen := At( ",", SubStr( cColor, nPos ) )
-
-   RETURN iif( nLen == 0, Len( cColor ) - nPos + 1, nLen - 1 )
+   RETURN iif( ( nLen := At( ",", SubStr( cColor, nPos ) ) ) == 0, ;
+               Len( cColor ) - nPos + 1, nLen - 1 )
 
 FUNCTION GetClrFore( cColor )
 
@@ -104,7 +103,7 @@ FUNCTION GetClrFore( cColor )
       RETURN ""
    ENDIF
 
-   RETURN SubStr( cColor, 1, nPos - 1 )
+   RETURN Left( cColor, nPos - 1 )
 
 FUNCTION GetClrBack( cColor )
 
@@ -164,11 +163,12 @@ FUNCTION ApplyDefau( cColor, xClr1, xClr2, xClr3, xClr4, xClr5, xClr6, xClr7, xC
    LOCAL xNewColor
    LOCAL n
 
-   IF PCount() == 0
+   SWITCH PCount()
+   CASE 0
       RETURN ""
-   ELSEIF PCount() == 1
+   CASE 1
       RETURN cColor
-   ENDIF
+   ENDSWITCH
 
    cSetColor := SetColor()
 

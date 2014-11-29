@@ -79,9 +79,6 @@ static const char * s_hb_padGet( PHB_CODEPAGE cdp, HB_SIZE * pnPad )
 /* right-pads a date, number, or string with spaces or supplied character */
 HB_FUNC( PADR )
 {
-   HB_SIZE nSize;
-   HB_BOOL bFreeReq;
-   char * szText;
    HB_ISIZ nLen = hb_parns( 2 );
 
    if( nLen > 0 )
@@ -96,7 +93,10 @@ HB_FUNC( PADR )
       }
       else
       {
-         szText = hb_itemPadConv( pItem, &nSize, &bFreeReq );
+         HB_SIZE nSize;
+         HB_BOOL bFreeReq;
+         char * szText = hb_itemPadConv( pItem, &nSize, &bFreeReq );
+
          if( szText )
          {
             if( HB_CDP_ISCHARIDX( cdp ) )

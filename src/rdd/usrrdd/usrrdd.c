@@ -805,8 +805,7 @@ static HB_ERRCODE hb_usrInit( LPRDDNODE pRDD )
       while( ++s_uiUsrNodes <= pRDD->rddID );
    }
 
-   s_pUsrRddNodes[ pRDD->rddID ] = pNode = ( LPUSRRDDNODE ) hb_xgrab( sizeof( USRRDDNODE ) );
-   memset( pNode, 0, sizeof( USRRDDNODE ) );
+   s_pUsrRddNodes[ pRDD->rddID ] = pNode = ( LPUSRRDDNODE ) hb_xgrabz( sizeof( USRRDDNODE ) );
    pNode->pSuperTable = &pRDD->pSuperTable;
    pNode->pMethods = ( PHB_ITEM ) pRDD->pTable.whoCares;
    pRDD->pTable.whoCares = pRDD->pSuperTable.whoCares;
@@ -2874,7 +2873,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
       DBENTRYP_V * pFunction;
       const DBENTRYP_V * pUsrFunction, * pRddFunction;
 
-      * puiCount = RDDFUNCSCOUNT;
+      *puiCount = RDDFUNCSCOUNT;
       uiSize = ( HB_USHORT ) hb_arrayLen( pMethods );
 
       pUsrFunction = usrFuncTable.funcentries;
@@ -2883,11 +2882,11 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
 
       for( uiCount = 1; uiCount <= RDDFUNCSCOUNT; ++uiCount )
       {
-         * pFunction = * pRddFunction;
-         if( * pFunction == NULL && * pUsrFunction && uiCount <= uiSize &&
+         *pFunction = *pRddFunction;
+         if( *pFunction == NULL && *pUsrFunction && uiCount <= uiSize &&
              hb_usrIsMethod( pMethods, uiCount ) )
          {
-            * pFunction = * pUsrFunction;
+            *pFunction = *pUsrFunction;
          }
          ++pUsrFunction;
          ++pRddFunction;

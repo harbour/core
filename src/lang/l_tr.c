@@ -1,4 +1,4 @@
-/* Last Translator: hbtest */
+/* Last Translator: vszakats */
 
 #include "hbapilng.h"
 

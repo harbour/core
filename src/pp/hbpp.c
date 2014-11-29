@@ -800,7 +800,7 @@ int main( int argc, char * argv[] )
       if( ! szRuleFile && ! szVerFile )
          fWrite = HB_TRUE;
 
-      hb_pp_init( pState, iQuiet != 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
+      hb_pp_init( pState, iQuiet != 0, HB_TRUE, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
 
       szInclude = hb_getenv( "INCLUDE" );
       if( szInclude )

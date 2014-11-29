@@ -51,6 +51,7 @@
 
 FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
                    cRDD, nConnection, cCodePage )
+
    LOCAL nOldArea
    LOCAL nToArea
    LOCAL aStruct
@@ -66,7 +67,7 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
 
    BEGIN SEQUENCE
 
-      dbCreate( cToFileName, aStruct, cRDD, .T., "", NIL, cCodePage, nConnection )
+      dbCreate( cToFileName, aStruct, cRDD, .T., "", , cCodePage, nConnection )
       nToArea := Select()
       dbSelectArea( nOldArea )
       __dbArrange( nToArea, aStruct, bFor, bWhile, nNext, nRecord, lRest, aFields )

@@ -57,7 +57,7 @@ HB_EXTERN_BEGIN
 #define FS_ERROR ( HB_FHANDLE ) F_ERROR
 
 /* File locking flags */
-#define FL_LOCK       0x0000   /* Lock a region   */
+#define FL_LOCK       0x0000   /* Lock a region */
 #define FL_UNLOCK     0x0001   /* Unlock a region */
 #define FL_MASK       0x00FF   /* Mask for lock type */
 
@@ -188,7 +188,7 @@ extern HB_EXPORT HB_BOOL    hb_fsFileExists  ( const char * pszFileName ); /* ch
 extern HB_EXPORT HB_BOOL    hb_fsDirExists   ( const char * pszDirName ); /* check if a directory exists (wildcard chars not accepted). */
 extern HB_EXPORT HB_BOOL    hb_fsCopy        ( const char * pszSource, const char * pszDest ); /* copy file */
 extern HB_EXPORT double     hb_fsDiskSpace   ( const char * pszDirName, HB_USHORT uiType );
-extern HB_EXPORT PHB_ITEM   hb_fsDirectory   ( const char * pszDirSpec, const char * pszAttributes );
+extern HB_EXPORT PHB_ITEM   hb_fsDirectory   ( const char * pszDirSpec, const char * pszAttributes, HB_BOOL fDateTime );
 extern HB_EXPORT HB_BOOL    hb_fsLink        ( const char * pszExisting, const char * pszNewFile ); /* create hard link */
 extern HB_EXPORT HB_BOOL    hb_fsLinkSym     ( const char * pszTarget, const char * pszNewFile ); /* create symbolic (soft) link */
 extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* returns the link pointed to */
@@ -252,9 +252,10 @@ extern HB_EXPORT HB_FHANDLE hb_spCreateEx( const char * pszFileName, HB_FATTR ul
 typedef struct
 {
    char        szName[ HB_PATH_MAX ];
-   long        lDate;
    char        szDate[ 9 ]; /* in YYYYMMDD format */
    char        szTime[ 9 ]; /* in HH:MM:SS format */
+   long        lDate;
+   long        lTime;
    HB_FATTR    attr;
    HB_FOFFSET  size;
 
@@ -305,7 +306,7 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
 
 #if defined( _HB_FILE_IMPLEMENTATION_ ) || defined( _HB_FILE_INTERNAL_ )
 
-#  define HB_FILE_TYPE_MAX    64
+#  define HB_FILE_TYPE_MAX    128
 
    struct _HB_FILE;
    typedef struct _HB_FILE * PHB_FILE;

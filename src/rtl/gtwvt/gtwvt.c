@@ -1585,7 +1585,7 @@ static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
       {
          pWVT->CaretSize = iCaretSize;
          pWVT->CaretWidth = pWVT->PTEXTSIZE.x;
-         pWVT->CaretExist = CreateCaret( pWVT->hWnd, ( HBITMAP ) NULL, pWVT->PTEXTSIZE.x,
+         pWVT->CaretExist = CreateCaret( pWVT->hWnd, NULL, pWVT->PTEXTSIZE.x,
                                          pWVT->CaretSize < 0 ? - pWVT->CaretSize : pWVT->CaretSize );
       }
       if( pWVT->CaretExist )
@@ -2901,10 +2901,12 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_QUERYENDSESSION: /* check if we can shutdown or logoff */
          return 1;
 
+#if defined( WM_ENDSESSION )
       case WM_ENDSESSION: /* shutdown started */
          if( wParam )
             hb_vmRequestQuit();
          return 0;
+#endif
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          if( pWVT->CloseMode == 0 )
@@ -3072,8 +3074,8 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    HB_GTWVT_LONG_PTR nStyle;
    HB_GTWVT_LONG_PTR nExtendedStyle;
 
-/* Don't need this as Windows automatically maximizes to nearest [HVB]
-#ifdef MONITOR_DEFAULTTONEAREST
+/* Don't need this as Windows automatically maximizes to nearest [HVB] */
+#if defined( MONITOR_DEFAULTTONEAREST ) && 0
    HMONITOR mon;
    MONITORINFO mi;
    typedef HMONITOR ( WINAPI * P_MFW )( HWND, DWORD );
@@ -3081,7 +3083,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    P_MFW pMonitorFromWindow;
    P_GMI pGetMonitorInfo;
 #endif
-*/
+
    pWVT = HB_GTWVT_GET( pGT );
 
    nStyle = GetWindowLongPtr( pWVT->hWnd, GWL_STYLE );
@@ -3833,8 +3835,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             pWVT->bIconToFree = HB_FALSE;
             pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    MAKEINTRESOURCE( ( HB_MAXINT )
-                                         hb_itemGetNInt( pInfo->pNewVal ) ) );
+                                    MAKEINTRESOURCE( hb_itemGetNI( pInfo->pNewVal ) ) );
 
             if( pWVT->hWnd )
             {
@@ -4160,11 +4161,11 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 #define SetGFXContext( c ) \
    do { \
-      COLORREF color = RGB( ( c ) >> 16, ( ( c ) & 0xFF00 ) >> 8, ( c ) & 0xFF ); \
+      COLORREF color = RGB( HB_ULBYTE( c ), HB_HIBYTE( c ), HB_LOBYTE( c ) ); \
       hdc       = GetDC( pWVT->hWnd ); \
       hPen      = CreatePen( PS_SOLID, 1, color ); \
       hOldPen   = ( HPEN ) SelectObject( hdc, hPen ); \
-      hBrush    = ( HBRUSH ) CreateSolidBrush( color ); \
+      hBrush    = CreateSolidBrush( color ); \
       hOldBrush = ( HBRUSH ) SelectObject( hdc, hBrush ); \
    } while( 0 )
 

@@ -123,8 +123,8 @@ METHOD PROCEDURE Clear() CLASS HBDbWindow
 
 METHOD PROCEDURE Hide() CLASS HBDbWindow
 
-   RestScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ), ;
-      ::nRight + iif( ::lShadow, 2, 0 ), ::cBackImage )
+   __dbgRestScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ), ;
+                    ::nRight + iif( ::lShadow, 2, 0 ), ::cBackImage )
    ::cBackImage := NIL
    ::lVisible := .F.
 
@@ -191,8 +191,9 @@ METHOD PROCEDURE Refresh() CLASS HBDbWindow
 
 METHOD PROCEDURE Show( lFocused ) CLASS HBDbWindow
 
-   ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ), ;
-      ::nRight + iif( ::lShadow, 2, 0 ) )
+   ::cBackImage := __dbgSaveScreen( ::nTop, ::nLeft, ;
+                                    ::nBottom + iif( ::lShadow, 1, 0 ), ;
+                                    ::nRight + iif( ::lShadow, 2, 0 ) )
    hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,,, ::cColor )
    ::SetFocus( hb_defaultValue( lFocused, ::lFocused ) )
 
@@ -264,7 +265,7 @@ METHOD PROCEDURE Move() CLASS HBDbWindow
    LOCAL nKey
 
    DO WHILE .T.
-      RestScreen( ,,,, ::cBackImage )
+      __dbgRestScreen( ,,,, ::cBackImage )
       hb_DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " ", ::cColor )
 
       SWITCH nKey := __dbgInkey()

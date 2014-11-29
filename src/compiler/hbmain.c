@@ -1882,10 +1882,7 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
  */
 static PHB_HFUNC hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBOLSCOPE cScope )
 {
-   PHB_HFUNC pFunc;
-
-   pFunc = ( PHB_HFUNC ) hb_xgrab( sizeof( HB_HFUNC ) );
-   memset( pFunc, 0, sizeof( HB_HFUNC ) );
+   PHB_HFUNC pFunc = ( PHB_HFUNC ) hb_xgrabz( sizeof( HB_HFUNC ) );
 
    pFunc->szName         = szName;
    pFunc->cScope         = cScope;
@@ -1899,9 +1896,7 @@ static PHB_HFUNC hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBO
 
 static PHB_HINLINE hb_compInlineNew( HB_COMP_DECL, const char * szName, int iLine )
 {
-   PHB_HINLINE pInline;
-
-   pInline = ( PHB_HINLINE ) hb_xgrab( sizeof( HB_HINLINE ) );
+   PHB_HINLINE pInline = ( PHB_HINLINE ) hb_xgrab( sizeof( HB_HINLINE ) );
 
    pInline->szName     = szName;
    pInline->pCode      = NULL;
@@ -4105,6 +4100,7 @@ static void hb_compGenIncluded( HB_COMP_DECL )
 static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 {
    pSwitches->fDebugInfo        = HB_COMP_PARAM->fDebugInfo;
+   pSwitches->fHideSource       = HB_COMP_PARAM->fHideSource;
    pSwitches->fAutoMemvarAssume = HB_COMP_PARAM->fAutoMemvarAssume;
    pSwitches->fI18n             = HB_COMP_PARAM->fI18n;
    pSwitches->fLineNumbers      = HB_COMP_PARAM->fLineNumbers;
@@ -4114,6 +4110,7 @@ static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    pSwitches->fForceMemvars     = HB_COMP_PARAM->fForceMemvars;
    pSwitches->iStartProc        = HB_COMP_PARAM->iStartProc;
    pSwitches->iWarnings         = HB_COMP_PARAM->iWarnings;
+   pSwitches->iGenCOutput       = HB_COMP_PARAM->iGenCOutput;
    pSwitches->iExitLevel        = HB_COMP_PARAM->iExitLevel;
    pSwitches->iHidden           = HB_COMP_PARAM->iHidden;
    pSwitches->supported         = HB_COMP_PARAM->supported;
@@ -4122,6 +4119,7 @@ static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 {
    HB_COMP_PARAM->fDebugInfo        = pSwitches->fDebugInfo;
+   HB_COMP_PARAM->fHideSource       = pSwitches->fHideSource;
    HB_COMP_PARAM->fAutoMemvarAssume = pSwitches->fAutoMemvarAssume;
    HB_COMP_PARAM->fI18n             = pSwitches->fI18n;
    HB_COMP_PARAM->fLineNumbers      = pSwitches->fLineNumbers;
@@ -4131,6 +4129,7 @@ static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    HB_COMP_PARAM->fForceMemvars     = pSwitches->fForceMemvars;
    HB_COMP_PARAM->iStartProc        = pSwitches->iStartProc;
    HB_COMP_PARAM->iWarnings         = pSwitches->iWarnings;
+   HB_COMP_PARAM->iGenCOutput       = pSwitches->iGenCOutput;
    HB_COMP_PARAM->iExitLevel        = pSwitches->iExitLevel;
    HB_COMP_PARAM->iHidden           = pSwitches->iHidden;
    HB_COMP_PARAM->supported         = pSwitches->supported;

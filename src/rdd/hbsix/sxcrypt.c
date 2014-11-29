@@ -64,7 +64,7 @@ static HB_U32 hb_sxInitSeed( const char * pKeyVal, HB_U16 * puiKey )
    for( i = 0; i < 7; i++ )
    {
       ulSeed = ( ( ( ulSeed >> 16 ) + ( ulSeed << 16 ) ) * 17 ) +
-               HB_GET_LE_UINT16( &pKeyVal[i] );
+               HB_GET_LE_UINT16( &pKeyVal[ i ] );
    }
    ulSeed |= 1;
    *puiKey = ( HB_U16 ) ulSeed;

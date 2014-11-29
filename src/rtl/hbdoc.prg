@@ -48,11 +48,14 @@
 
 #include "directry.ch"
 #include "fileio.ch"
+#include "hbserial.ch"
 
 #define _HBDOC_SRC_SUBDIR       "doc"
 #define _HBDOC_SRC_EXT          ".txt"
 
 #define _HBDOC_ADD_MSG( a, m )  IF HB_ISARRAY( a ); AAdd( a, m ); ENDIF
+
+REQUEST hb_ZCompress
 
 FUNCTION __hbdoc_FromSource( cFile, aErrMsg )
 
@@ -174,7 +177,7 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
 
    /* Preselect the default template based on source filename */
    FOR EACH tmp IN aFilenameTemplateMap
-      IF Lower( Left( cFileName, Len( tmp ) ) ) == tmp
+      IF hb_LeftEqI( cFileName, tmp )
          hMeta[ "TEMPLATE" ] := tmp:__enumKey()
       ENDIF
    NEXT
@@ -237,13 +240,13 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
                hEntry[ cSection ] := ""
             ENDIF
          ELSEIF ! Empty( cSection )
-            IF ! Empty( hEntry[ cSection ] )
-               hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
-            ELSE
+            IF Empty( hEntry[ cSection ] )
                /* some "heuristics" to detect in which column the real content starts,
                   we assume the first line of content is correct, and use this with all
                   consecutive lines. [vszakats] */
                nStartCol := Len( cLine ) - Len( LTrim( cLine ) ) + 1
+            ELSE
+               hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
             ENDIF
             hEntry[ cSection ] += SubStr( cLine, nStartCol )
          ELSEIF ! Empty( cLine )
@@ -271,8 +274,7 @@ FUNCTION __hbdoc_ToSource( aEntry )
          cSource += hb_eol()
          cSource += "/* $DOC$" + hb_eol()
          FOR EACH item IN hEntry
-            IF HB_ISSTRING( item ) .AND. ;
-               !( Left( item:__enumKey(), 1 ) == "_" )
+            IF HB_ISSTRING( item ) .AND. ! hb_LeftEq( item:__enumKey(), "_" )
                cSource += "   $" + item:__enumKey() + "$" + hb_eol()
                FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
                   cLineOut := iif( Len( cLine ) == 0, "", Space( 4 ) + cLine )
@@ -365,10 +367,9 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE )
-      IF fhnd != F_ERROR
+      IF ( fhnd := hb_FCreate( cFileName,, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != F_ERROR
          FWrite( fhnd, _HBDOC_SIGNATURE )
-         FWrite( fhnd, hb_ZCompress( hb_Serialize( aEntry ) ) )
+         FWrite( fhnd, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
          FClose( fhnd )
          RETURN .T.
       ENDIF
@@ -389,19 +390,16 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      fhnd := FOpen( cFileName, FO_READ )
-      IF fhnd != F_ERROR
+      IF ( fhnd := FOpen( cFileName ) ) != F_ERROR
 
-         cBuffer := Space( _HBDOC_SIG_LEN )
-         FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
-         IF cBuffer == _HBDOC_SIGNATURE
+         IF hb_FReadLen( fhnd, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
 
             cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBDOC_SIG_LEN )
             FSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )
             FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
             FClose( fhnd )
 
-            aEntry := hb_Deserialize( hb_ZUncompress( cBuffer ) )
+            aEntry := hb_Deserialize( cBuffer )
             cBuffer := NIL
 
             IF ! HB_ISARRAY( aEntry )

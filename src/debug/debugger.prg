@@ -1681,7 +1681,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
    IF hb_defaultValue( lEditable, .T. )
 
       IF ! cType == "C" .OR. Len( uValue ) < nWidth
-         uTemp := PadR( iif( cType == "N", hb_NToS( uValue ), ;
+         uTemp := PadR( iif( cType == "N", hb_ntos( uValue ), ;
                                            uValue ), nWidth )
       ENDIF
       IF bValid == NIL .AND. cType $ "N"
@@ -2138,7 +2138,7 @@ METHOD OpenPPO() CLASS HBDebugger
 
 METHOD PROCEDURE OSShell() CLASS HBDebugger
 
-   LOCAL cImage := SaveScreen()
+   LOCAL cImage := __dbgSaveScreen()
    LOCAL cColors := SetColor()
    LOCAL oE
 
@@ -2166,7 +2166,7 @@ METHOD PROCEDURE OSShell() CLASS HBDebugger
    END SEQUENCE
 
    SetCursor( SC_NONE )
-   RestScreen( ,,,, cImage )
+   __dbgRestScreen( ,,,, cImage )
    SetColor( cColors )
 
    RETURN
@@ -3708,6 +3708,26 @@ FUNCTION __dbgInkey()
    Set( _SET_DEBUG, lDebug )
 
    RETURN nKey
+
+
+FUNCTION __dbgSaveScreen( ... )
+
+   LOCAL lAppCompatBuffer := hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
+   LOCAL cScreen := SaveScreen( ... )
+
+   hb_gtInfo( HB_GTI_COMPATBUFFER, lAppCompatBuffer )
+
+   RETURN cScreen
+
+
+FUNCTION __dbgRestScreen( ... )
+
+   LOCAL lAppCompatBuffer := hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
+
+   RestScreen( ... )
+   hb_gtInfo( HB_GTI_COMPATBUFFER, lAppCompatBuffer )
+
+   RETURN NIL
 
 
 FUNCTION __dbgTextToArray( cString )

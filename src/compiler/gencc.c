@@ -2391,8 +2391,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
       label_info.pnLabels = NULL;
    else
    {
-      label_info.pnLabels = ( HB_SIZE * ) hb_xgrab( pFunc->nPCodePos * sizeof( HB_SIZE ) );
-      memset( label_info.pnLabels, 0, pFunc->nPCodePos * sizeof( HB_SIZE ) );
+      label_info.pnLabels = ( HB_SIZE * ) hb_xgrabz( pFunc->nPCodePos * sizeof( HB_SIZE ) );
       hb_compGenLabelTable( pFunc, &label_info );
    }
 

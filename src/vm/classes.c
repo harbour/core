@@ -469,8 +469,7 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
          hb_errInternal( 6002, "Unable to realloc class message in __clsDictRealloc()", NULL, NULL );
 
 #ifdef HB_MSG_POOL
-      puiMsgIdx = ( HB_USHORT * ) hb_xgrab( ( nNewHashKey << BUCKETBITS ) * sizeof( HB_USHORT ) );
-      memset( puiMsgIdx, 0, ( nNewHashKey << BUCKETBITS ) * sizeof( HB_USHORT ) );
+      puiMsgIdx = ( HB_USHORT * ) hb_xgrabz( ( nNewHashKey << BUCKETBITS ) * sizeof( HB_USHORT ) );
 
       for( n = 0; n < nLimit; n++ )
       {
@@ -508,8 +507,7 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
 
 #else
 
-      pNewMethods = ( PMETHOD ) hb_xgrab( ( nNewHashKey << BUCKETBITS ) * sizeof( METHOD ) );
-      memset( pNewMethods, 0, ( nNewHashKey << BUCKETBITS ) * sizeof( METHOD ) );
+      pNewMethods = ( PMETHOD ) hb_xgrabz( ( nNewHashKey << BUCKETBITS ) * sizeof( METHOD ) );
 
       for( n = 0; n < nLimit; n++ )
       {
@@ -559,16 +557,13 @@ static void hb_clsDictInit( PCLASS pClass, HB_USHORT uiHashKey )
    pClass->uiHashKey = uiHashKey;
 #ifdef HB_MSG_POOL
    nSize = ( ( ( HB_SIZE ) uiHashKey + 1 ) << BUCKETBITS ) * sizeof( HB_USHORT );
-   pClass->puiMsgIdx = ( HB_USHORT * ) hb_xgrab( nSize );
-   memset( pClass->puiMsgIdx, 0, nSize );
+   pClass->puiMsgIdx = ( HB_USHORT * ) hb_xgrabz( nSize );
 
    pClass->uiMethodCount = 1;
-   pClass->pMethods = ( PMETHOD ) hb_xgrab( sizeof( METHOD ) );
-   memset( pClass->pMethods, 0, sizeof( METHOD ) );
+   pClass->pMethods = ( PMETHOD ) hb_xgrabz( sizeof( METHOD ) );
 #else
    nSize = ( ( ( HB_SIZE ) uiHashKey + 1 ) << BUCKETBITS ) * sizeof( METHOD );
-   pClass->pMethods = ( PMETHOD ) hb_xgrab( nSize );
-   memset( pClass->pMethods, 0, nSize );
+   pClass->pMethods = ( PMETHOD ) hb_xgrabz( nSize );
 #endif
 }
 
@@ -2375,8 +2370,7 @@ static void hb_objSuperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
    char * pcClasses;
    HB_USHORT uiClass;
 
-   pcClasses = ( char * ) hb_xgrab( ( HB_SIZE ) s_uiClasses + 1 );
-   memset( pcClasses, 0, s_uiClasses + 1 );
+   pcClasses = ( char * ) hb_xgrabz( ( HB_SIZE ) s_uiClasses + 1 );
 
    do
    {
@@ -3459,8 +3453,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
    uiSuper  = ( HB_USHORT ) ( pSuperArray ? hb_arrayLen( pSuperArray ) : 0 );
    pClassFunc = hb_vmGetRealFuncSym( pClassFunc );
 
-   pNewCls = ( PCLASS ) hb_xgrab( sizeof( CLASS ) );
-   memset( pNewCls, 0, sizeof( CLASS ) );
+   pNewCls = ( PCLASS ) hb_xgrabz( sizeof( CLASS ) );
 
    HB_CLASS_LOCK();
 
@@ -5176,8 +5169,7 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
    pClass = s_pClasses[ uiClass ];
    nLen = nCount = hb_arrayLen( pObject );
    nSize = 0;
-   pIndex = ( PHB_IVARINFO ) hb_xgrab( nLen * sizeof( HB_IVARINFO ) );
-   memset( pIndex, 0, nLen * sizeof( HB_IVARINFO ) );
+   pIndex = ( PHB_IVARINFO ) hb_xgrabz( nLen * sizeof( HB_IVARINFO ) );
 
    if( fChanged && pClass->uiInitDatas )
    {
@@ -5422,7 +5414,6 @@ HB_FUNC( __OBJRESTOREIVARS )
  * if second parameter <lAllExported> is true and message has corresponding
  * assign message (with "_" prefix)
  */
-
 HB_FUNC( __CLSGETPROPERTIES )
 {
    HB_USHORT uiClass = ( HB_USHORT ) hb_parni( 1 );

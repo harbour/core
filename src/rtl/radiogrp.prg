@@ -71,7 +71,7 @@ CREATE CLASS RadioGroup FUNCTION HBRadioGroup
    METHOD addItem( oRadioButton )
    METHOD delItem( nPos )
    METHOD display()
-   METHOD getAccel( xValue )
+   METHOD getAccel( xKey )
    METHOD getItem( nPos )
    METHOD hitTest( nMRow, nMCol )
    METHOD insItem( nPos, oRadioButton )
@@ -180,7 +180,7 @@ METHOD display() CLASS RadioGroup
 
    IF ! Empty( cCaption := ::cCaption )
 
-      IF !( ( nPos := At( "&", cCaption ) ) == 0 )
+      IF ( nPos := At( "&", cCaption ) ) > 0
          IF nPos == Len( cCaption )
             nPos := 0
          ELSE
@@ -190,7 +190,7 @@ METHOD display() CLASS RadioGroup
 
       hb_DispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, 1 ) )
 
-      IF nPos != 0
+      IF nPos > 0
          hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
       ENDIF
 
@@ -202,21 +202,21 @@ METHOD display() CLASS RadioGroup
 
    RETURN Self
 
-METHOD getAccel( xValue ) CLASS RadioGroup
+METHOD getAccel( xKey ) CLASS RadioGroup
 
-   LOCAL cValue
+   LOCAL cKey
 
-   IF HB_ISSTRING( xValue )
-      cValue := xValue
-   ELSEIF HB_ISNUMERIC( xValue )
-      cValue := hb_keyChar( xValue )
+   IF HB_ISSTRING( xKey )
+      cKey := xKey
+   ELSEIF HB_ISNUMERIC( xKey )
+      cKey := hb_keyChar( xKey )
    ELSE
       RETURN 0
    ENDIF
 
-   IF Len( cValue ) > 0
-      cValue := Lower( cValue )
-      RETURN AScan( ::aItems, {| o | o:isAccel( cValue ) } )
+   IF Len( cKey ) > 0
+      cKey := Lower( cKey )
+      RETURN AScan( ::aItems, {| o | o:isAccel( cKey ) } )
    ENDIF
 
    RETURN 0
@@ -264,8 +264,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS RadioGroup
 
    nLen := Len( ::cCaption )
 
-   IF ( nPos := At( "&", ::cCaption ) ) == 0
-   ELSEIF nPos < nLen
+   IF ( nPos := At( "&", ::cCaption ) ) > 0 .AND. nPos < nLen
       nLen--
    ENDIF
 
@@ -401,11 +400,11 @@ METHOD prevItem() CLASS RadioGroup
 
 METHOD select( xValue ) CLASS RadioGroup
 
-   LOCAL cType := ValType( xValue )
    LOCAL nPos
    LOCAL nLen
 
-   IF cType == "C"
+   SWITCH ValType( xValue )
+   CASE "C"
 
       nLen := ::nItemCount
       FOR nPos := 1 TO nLen
@@ -424,16 +423,20 @@ METHOD select( xValue ) CLASS RadioGroup
       IF nPos > nLen
          ::xBuffer := xValue
       ENDIF
+      EXIT
 
-   ELSEIF cType == "N" .AND. xValue >= 1 .AND. xValue <= ::nItemCount
+   CASE "N"
 
-      IF ::xBuffer == NIL
-         ::xBuffer := 0
+      IF xValue >= 1 .AND. xValue <= ::nItemCount
+         IF ::xBuffer == NIL
+            ::xBuffer := 0
+         ENDIF
+
+         ::changeButton( ::nValue, xValue )
       ENDIF
+      EXIT
 
-      ::changeButton( ::nValue, xValue )
-
-   ENDIF
+   ENDSWITCH
 
    RETURN Self
 
@@ -636,9 +639,9 @@ FUNCTION RadioGroup( nTop, nLeft, nBottom, nRight )
 
 FUNCTION _RADIOGRP_( nTop, nLeft, nBottom, nRight, xValue, aItems, cCaption, cMessage, cColorSpec, bFBlock )
 
-   LOCAL o := RadioGroup( nTop, nLeft, nBottom, nRight )
+   LOCAL o
 
-   IF o != NIL
+   IF ( o := RadioGroup( nTop, nLeft, nBottom, nRight ) ) != NIL
 
       o:caption := cCaption
       o:message := cMessage

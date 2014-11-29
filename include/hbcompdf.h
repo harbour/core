@@ -807,6 +807,7 @@ typedef struct _HB_COMP
    int               iErrorFmt;           /* error message formatting mode (default: Clipper) */
 
    HB_BOOL           fQuiet;              /* be quiet during compilation (-q) */
+   HB_BOOL           fGauge;              /* hide line counter gauge (-ql) */
    HB_BOOL           fFullQuiet;          /* be quiet during compilation disable all messages */
    HB_BOOL           fExit;               /* force breaking compilation process */
    HB_BOOL           fPPO;                /* flag indicating, is ppo output needed */
@@ -816,6 +817,7 @@ typedef struct _HB_COMP
    HB_BOOL           fAutoMemvarAssume;   /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
    HB_BOOL           fForceMemvars;       /* holds if memvars are assumed when accesing undeclared variable (-v)*/
    HB_BOOL           fDebugInfo;          /* holds if generate debugger required info */
+   HB_BOOL           fHideSource;         /* do not embed original source filename into generated source code */
    HB_BOOL           fNoStartUp;          /* C code generation embed HB_FS_FIRST or not */
    HB_BOOL           fCredits;            /* print credits */
    HB_BOOL           fBuildInfo;          /* print build info */
@@ -832,6 +834,7 @@ typedef struct _HB_COMP
 typedef struct
 {
    HB_BOOL  fDebugInfo;
+   HB_BOOL  fHideSource;
    HB_BOOL  fAutoMemvarAssume;
    HB_BOOL  fI18n;
    HB_BOOL  fLineNumbers;
@@ -841,6 +844,7 @@ typedef struct
    HB_BOOL  fForceMemvars;
    int      iStartProc;
    int      iWarnings;
+   int      iGenCOutput;
    int      iExitLevel;
    int      iHidden;
    int      supported;
@@ -849,7 +853,7 @@ typedef struct
 extern PHB_COMP hb_comp_new( void );
 extern void hb_comp_free( PHB_COMP );
 
-#endif /* ! HB_MACRO_SUPPORT  */
+#endif /* ! HB_MACRO_SUPPORT */
 
 typedef struct _HB_COMP_FUNCS
 {

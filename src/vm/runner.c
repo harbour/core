@@ -423,8 +423,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
 
       if( pHrbBody->ulFuncs )
       {
-         pDynFunc = ( PHB_DYNF ) hb_xgrab( pHrbBody->ulFuncs * sizeof( HB_DYNF ) );
-         memset( pDynFunc, 0, pHrbBody->ulFuncs * sizeof( HB_DYNF ) );
+         pDynFunc = ( PHB_DYNF ) hb_xgrabz( pHrbBody->ulFuncs * sizeof( HB_DYNF ) );
          pHrbBody->pDynFunc = pDynFunc;
 
          for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )

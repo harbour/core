@@ -94,14 +94,14 @@
 
 
 /* warning messages */
-static const char * const hb_pp_szWarnings[] =
+static const char * const s_pp_szWarnings[] =
 {
    "1%s",                                                               /* C10?? */
    "1Redefinition or duplicate definition of #define %s"                /* C1005 */
 };
 
 /* error messages */
-static const char * const hb_pp_szErrors[] =
+static const char * const s_pp_szErrors[] =
 {
    "Illegal character '\\x%s'",                                         /* C2004 */
    "Unterminated string '%s'",                                          /* C2007 */
@@ -214,7 +214,7 @@ static void hb_pp_disp( PHB_PP_STATE pState, const char * szMessage )
 
 static void hb_pp_error( PHB_PP_STATE pState, char type, int iError, const char * szParam )
 {
-   const char * const * szMsgTable = type == 'W' ? hb_pp_szWarnings : hb_pp_szErrors;
+   const char * const * szMsgTable = type == 'W' ? s_pp_szWarnings : s_pp_szErrors;
 
    if( pState->pErrorFunc )
    {
@@ -709,7 +709,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
    }
    pState->iLineTot += iLine;
    iLine = ++pState->pFile->iCurrentLine / 100;
-   if( ! pState->fQuiet &&
+   if( ! pState->fQuiet && pState->fGauge &&
        iLine != pState->pFile->iLastDisp )
    {
       char szLine[ 12 ];
@@ -2034,8 +2034,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
          ( pState->pIncFunc )( pState->cargo, szFileName );
    }
 
-   pFile = ( PHB_PP_FILE ) hb_xgrab( sizeof( HB_PP_FILE ) );
-   memset( pFile, '\0', sizeof( HB_PP_FILE ) );
+   pFile = ( PHB_PP_FILE ) hb_xgrabz( sizeof( HB_PP_FILE ) );
 
    pFile->szFileName = hb_strdup( szFileName );
    pFile->file_in = file_in;
@@ -2049,10 +2048,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
 
 static PHB_PP_FILE hb_pp_FileBufNew( const char * pLineBuf, HB_SIZE nLineBufLen )
 {
-   PHB_PP_FILE pFile;
-
-   pFile = ( PHB_PP_FILE ) hb_xgrab( sizeof( HB_PP_FILE ) );
-   memset( pFile, '\0', sizeof( HB_PP_FILE ) );
+   PHB_PP_FILE pFile = ( PHB_PP_FILE ) hb_xgrabz( sizeof( HB_PP_FILE ) );
 
    pFile->fFree = HB_FALSE;
    pFile->pLineBuf = pLineBuf;
@@ -2126,9 +2122,7 @@ static void hb_pp_TraceFileFree( PHB_PP_STATE pState )
 
 static PHB_PP_STATE hb_pp_stateNew( void )
 {
-   PHB_PP_STATE pState = ( PHB_PP_STATE ) hb_xgrab( sizeof( HB_PP_STATE ) );
-
-   memset( pState, '\0', sizeof( HB_PP_STATE ) );
+   PHB_PP_STATE pState = ( PHB_PP_STATE ) hb_xgrabz( sizeof( HB_PP_STATE ) );
 
    /* create new line buffer */
    pState->pBuffer = hb_membufNew();
@@ -2913,8 +2907,7 @@ static void hb_pp_defineNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken, HB_BOOL f
          if( usPCount )
          {
             /* create regular match and result markers from parameters */
-            pMarkers = ( PHB_PP_MARKER ) hb_xgrab( usPCount * sizeof( HB_PP_MARKER ) );
-            memset( pMarkers, '\0', usPCount * sizeof( HB_PP_MARKER ) );
+            pMarkers = ( PHB_PP_MARKER ) hb_xgrabz( usPCount * sizeof( HB_PP_MARKER ) );
          }
       }
       hb_pp_defineAdd( pState, HB_PP_CMP_CASE, usPCount, pMarkers, pMatch, pResult );
@@ -3559,8 +3552,7 @@ static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
       if( fValid && usPCount )
       {
          /* create regular match and result markers from parameters */
-         pMarkers = ( PHB_PP_MARKER ) hb_xgrab( usPCount * sizeof( HB_PP_MARKER ) );
-         memset( pMarkers, '\0', usPCount * sizeof( HB_PP_MARKER ) );
+         pMarkers = ( PHB_PP_MARKER ) hb_xgrabz( usPCount * sizeof( HB_PP_MARKER ) );
       }
 
       /* free marker index list */
@@ -5456,8 +5448,7 @@ void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
          HB_USHORT marker;
          HB_ULONG ulBit;
 
-         pMarkers = ( PHB_PP_MARKER ) hb_xgrab( pDefRule->markers * sizeof( HB_PP_MARKER ) );
-         memset( pMarkers, '\0', pDefRule->markers * sizeof( HB_PP_MARKER ) );
+         pMarkers = ( PHB_PP_MARKER ) hb_xgrabz( pDefRule->markers * sizeof( HB_PP_MARKER ) );
          for( marker = 0, ulBit = 1; marker < pDefRule->markers; ++marker, ulBit <<= 1 )
          {
             if( pDefRule->repeatbits & ulBit )
@@ -5545,13 +5536,15 @@ void hb_pp_free( PHB_PP_STATE pState )
 /*
  * initialize PP context
  */
-void hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet, int iCycles, void * cargo,
+void hb_pp_init( PHB_PP_STATE pState,
+                 HB_BOOL fQuiet, HB_BOOL fGauge, int iCycles, void * cargo,
                  PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                  PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC pDispFunc,
                  PHB_PP_DUMP_FUNC pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,
                  PHB_PP_SWITCH_FUNC pSwitchFunc )
 {
    pState->fQuiet      = pState->fQuietSet = fQuiet;
+   pState->fGauge      = fGauge;
    pState->iMaxCycles  = pState->iMaxCyclesSet = ( iCycles > 0 ) ? iCycles : HB_PP_MAX_CYCLES;
    pState->cargo       = cargo;
    pState->pOpenFunc   = pOpenFunc;
@@ -5654,19 +5647,19 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs )
 
    if( fArchDefs )
    {
-      static const char * szPlatform = "__PLATFORM__%s";
+      static const char * s_szPlatform = "__PLATFORM__%s";
 
       if( hb_verPlatformMacro() )
       {
-         hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, hb_verPlatformMacro() );
+         hb_snprintf( szDefine, sizeof( szDefine ), s_szPlatform, hb_verPlatformMacro() );
          hb_pp_addDefine( pState, szDefine, NULL );
       }
 #if defined( HB_OS_UNIX )
-      hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, "UNIX" );
+      hb_snprintf( szDefine, sizeof( szDefine ), s_szPlatform, "UNIX" );
       hb_pp_addDefine( pState, szDefine, NULL );
 #endif
 #if defined( HB_OS_WIN_CE )
-      hb_snprintf( szDefine, sizeof( szDefine ), szPlatform, "WINDOWS" );
+      hb_snprintf( szDefine, sizeof( szDefine ), s_szPlatform, "WINDOWS" );
       hb_pp_addDefine( pState, szDefine, NULL );
 #endif
 
@@ -6141,6 +6134,7 @@ PHB_PP_STATE hb_pp_lexNew( const char * pMacroString, HB_SIZE nLen )
    PHB_PP_STATE pState = hb_pp_new();
 
    pState->fQuiet = HB_TRUE;
+   pState->fGauge = HB_FALSE;
    pState->pFile = hb_pp_FileBufNew( pMacroString, nLen );
    hb_pp_getLine( pState );
    pState->pTokenOut = pState->pFile->pTokenList;

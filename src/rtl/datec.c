@@ -108,3 +108,13 @@ HB_FUNC( CDOW )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC( HB_CDAY )
+{
+   PHB_ITEM pDay = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pDay )
+      hb_retc_const( hb_dateCDOW( hb_itemGetNI( pDay ) ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

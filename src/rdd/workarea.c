@@ -628,10 +628,7 @@ static HB_ERRCODE hb_waSetFieldExtent( AREAP pArea, HB_USHORT uiFieldExtent )
 
    /* Alloc field array */
    if( uiFieldExtent )
-   {
-      pArea->lpFields = ( LPFIELD ) hb_xgrab( uiFieldExtent * sizeof( FIELD ) );
-      memset( pArea->lpFields, 0, uiFieldExtent * sizeof( FIELD ) );
-   }
+      pArea->lpFields = ( LPFIELD ) hb_xgrabz( uiFieldExtent * sizeof( FIELD ) );
 
    return HB_SUCCESS;
 }
@@ -2144,8 +2141,7 @@ int hb_rddRegister( const char * szDriver, HB_USHORT uiType )
       return 2;              /* Not valid RDD */
 
    /* Create a new RDD node */
-   pRddNewNode = ( LPRDDNODE ) hb_xgrab( sizeof( RDDNODE ) );
-   memset( pRddNewNode, 0, sizeof( RDDNODE ) );
+   pRddNewNode = ( LPRDDNODE ) hb_xgrabz( sizeof( RDDNODE ) );
 
    /* Fill the new RDD node */
    hb_strncpy( pRddNewNode->szName, szDriver, sizeof( pRddNewNode->szName ) - 1 );

@@ -1165,9 +1165,8 @@ static LPPAGEINFO hb_ntxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
       pIndex->ulPages = 1;
       pIndex->ulPageLast = 0;
       pIndex->ulPagesDepth = NTX_PAGES_PER_TAG;
-      pIndex->pages = ( LPPAGEINFO * ) hb_xgrab( sizeof( LPPAGEINFO ) * NTX_PAGES_PER_TAG );
-      memset( pIndex->pages, 0, sizeof( LPPAGEINFO ) * NTX_PAGES_PER_TAG );
-      pPagePtr = &pIndex->pages[0];
+      pIndex->pages = ( LPPAGEINFO * ) hb_xgrabz( sizeof( LPPAGEINFO ) * NTX_PAGES_PER_TAG );
+      pPagePtr = &pIndex->pages[ 0 ];
    }
    else
    {
@@ -1199,16 +1198,10 @@ static LPPAGEINFO hb_ntxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
    }
 
    if( ! *pPagePtr )
-   {
-      *pPagePtr = ( LPPAGEINFO ) hb_xgrab( sizeof( HB_PAGEINFO ) );
-      memset( *pPagePtr, 0, sizeof( HB_PAGEINFO ) );
-   }
+      *pPagePtr = ( LPPAGEINFO ) hb_xgrabz( sizeof( HB_PAGEINFO ) );
 #ifdef HB_NTX_EXTERNAL_PAGEBUFFER
    if( ! hb_ntxPageBuffer( *pPagePtr ) )
-   {
-      hb_ntxPageBuffer( *pPagePtr ) = ( char * ) hb_xgrab( NTXBLOCKSIZE );
-      memset( hb_ntxPageBuffer( *pPagePtr ), 0, NTXBLOCKSIZE );
-   }
+      hb_ntxPageBuffer( *pPagePtr ) = ( char * ) hb_xgrabz( NTXBLOCKSIZE );
 #endif
    ( *pPagePtr )->pPrev = NULL;
    ( *pPagePtr )->Page  = ulPage;
@@ -1442,8 +1435,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX pIndex,
 {
    LPTAGINFO pTag;
 
-   pTag = ( LPTAGINFO ) hb_xgrab( sizeof( TAGINFO ) );
-   memset( pTag, 0, sizeof( TAGINFO ) );
+   pTag = ( LPTAGINFO ) hb_xgrabz( sizeof( TAGINFO ) );
    pTag->TagName = hb_strndup( szTagName, NTX_MAX_TAGNAME );
    pTag->fTagName = fTagName;
    pTag->pIndex = pIndex;
@@ -1801,8 +1793,7 @@ static LPNTXINDEX hb_ntxIndexNew( NTXAREAP pArea )
 {
    LPNTXINDEX pIndex;
 
-   pIndex = ( LPNTXINDEX ) hb_xgrab( sizeof( NTXINDEX ) );
-   memset( pIndex, 0, sizeof( NTXINDEX ) );
+   pIndex = ( LPNTXINDEX ) hb_xgrabz( sizeof( NTXINDEX ) );
 
    pIndex->DiskFile = NULL;
    pIndex->pArea = pArea;
@@ -1987,7 +1978,7 @@ static HB_ERRCODE hb_ntxIndexHeaderRead( LPNTXINDEX pIndex )
                         pIndex->IndexName, 0, 0, NULL );
          return HB_FAILURE;
       }
-      pTag = pIndex->iTags ? pIndex->lpTags[0] : NULL;
+      pTag = pIndex->iTags ? pIndex->lpTags[ 0 ] : NULL;
 
       ulVersion = HB_GET_LE_UINT16( lpNTX->version );
       ulRootPage = HB_GET_LE_UINT32( lpNTX->root );
@@ -5020,8 +5011,7 @@ static LPNTXSORTINFO hb_ntxSortNew( LPTAGINFO pTag, HB_ULONG ulRecCount )
    if( ulRecCount == 0 )
       ulRecCount = 1;
 
-   pSort = ( LPNTXSORTINFO ) hb_xgrab( sizeof( NTXSORTINFO ) );
-   memset( pSort, 0, sizeof( NTXSORTINFO ) );
+   pSort = ( LPNTXSORTINFO ) hb_xgrabz( sizeof( NTXSORTINFO ) );
 
    ulMin = ( HB_ULONG ) ceil( sqrt( ( double ) ulRecCount ) );
    ulMax = ( ( HB_ULONG ) ceil( sqrt( ( double ) ulRecCount / ( iLen + 4 ) ) ) ) << 7;
@@ -5090,8 +5080,7 @@ static LPNTXSORTINFO hb_ntxSortNew( LPTAGINFO pTag, HB_ULONG ulRecCount )
    /* check for overflow on 32 bit machines when number of records is nearly 2^32 */
    if( ! pSort->ulPages )
       pSort->ulPages = ulRecCount / pSort->ulPgKeys + 1;
-   pSort->pSwapPage = ( LPNTXSWAPPAGE ) hb_xgrab( sizeof( NTXSWAPPAGE ) * pSort->ulPages );
-   memset( pSort->pSwapPage, 0, sizeof( NTXSWAPPAGE ) * pSort->ulPages );
+   pSort->pSwapPage = ( LPNTXSWAPPAGE ) hb_xgrabz( sizeof( NTXSWAPPAGE ) * pSort->ulPages );
    return pSort;
 }
 
@@ -7450,7 +7439,7 @@ static HB_ERRCODE hb_ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
                       &fProd, szFileName, szTagName );
 
 /*
-   if( ! szTagName[0] )
+   if( ! szTagName[ 0 ] )
       return HB_FAILURE;
  */
 
@@ -7517,7 +7506,7 @@ static HB_ERRCODE hb_ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    if( ! pArea->lpCurTag && pIndex->iTags )
    {
-      pArea->lpCurTag = pIndex->lpTags[0];
+      pArea->lpCurTag = pIndex->lpTags[ 0 ];
       errCode = SELF_GOTOP( &pArea->dbfarea.area );
    }
    return errCode;

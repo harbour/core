@@ -74,7 +74,7 @@ FUNCTION ShowMsg( aMsg, lMode )
 *  ShortCut processing for initial Get or Menu Item.
 *
 ***/
-FUNCTION IsShortcut( oMenu, nKey, nID )
+FUNCTION IsShortcut( oMenu, nKey, /* @ */ nID )
 
    LOCAL nItem
    LOCAL nTotal
@@ -135,7 +135,7 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
 *  Current if more than one uses the same ShortCut.
 *
 ***/
-FUNCTION IsQuick( oMenu, nKey, nID )
+FUNCTION IsQuick( oMenu, nKey, /* @ */ nID )
 
    LOCAL nItem
    LOCAL nTotal

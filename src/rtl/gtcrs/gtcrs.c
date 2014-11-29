@@ -361,14 +361,14 @@ static int getClipKey( int nKey )
          if( n >= 0 && n < NO_STDKEYS )
          {
             if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                 stdKeyTab[n].shift_key != 0 )
-               nRet = stdKeyTab[n].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[n].alt_key != 0 )
-               nRet = stdKeyTab[n].alt_key;
-            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[n].ctrl_key != 0 )
-               nRet = stdKeyTab[n].ctrl_key;
+                 stdKeyTab[ n ].shift_key != 0 )
+               nRet = stdKeyTab[ n ].shift_key;
+            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[ n ].alt_key != 0 )
+               nRet = stdKeyTab[ n ].alt_key;
+            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[ n ].ctrl_key != 0 )
+               nRet = stdKeyTab[ n ].ctrl_key;
             else
-               nRet = stdKeyTab[n].key;
+               nRet = stdKeyTab[ n ].key;
          }
          else
             nRet = nKey;
@@ -1906,10 +1906,7 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
           ( ioBase->std_chmap[ i ] & A_ALTCHARSET ) == 0 )
       {
          if( ioBase->out_transtbl == NULL )
-         {
-            ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
-            memset( ioBase->out_transtbl, 0, 256 );
-         }
+            ioBase->out_transtbl = ( unsigned char * ) hb_xgrabz( 256 );
          ioBase->out_transtbl[ i ] = ch & A_CHARTEXT;
       }
    }
@@ -1928,10 +1925,7 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
             if( i != ( int ) uc )
             {
                if( ioBase->out_transtbl == NULL )
-               {
-                  ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
-                  memset( ioBase->out_transtbl, 0, 256 );
-               }
+                  ioBase->out_transtbl = ( unsigned char * ) hb_xgrabz( 256 );
                ioBase->out_transtbl[ i ] = uc;
             }
          }
@@ -1947,8 +1941,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
    unsigned int i, n;
    char buf[ 256 ], * ptr, * crsterm = NULL;
 
-   ioBase = ( InOutBase * ) hb_xgrab( sizeof( InOutBase ) );
-   memset( ioBase, 0, sizeof( InOutBase ) );
+   ioBase = ( InOutBase * ) hb_xgrabz( sizeof( InOutBase ) );
 
    if( ! term || ! *term )
       term = getenv( "HB_TERM" );

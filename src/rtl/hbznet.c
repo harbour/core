@@ -112,9 +112,7 @@ void hb_znetClose( PHB_ZNETSTREAM pStream )
  */
 PHB_ZNETSTREAM hb_znetOpen( int level, int strategy )
 {
-   PHB_ZNETSTREAM pStream = ( PHB_ZNETSTREAM ) hb_xgrab( sizeof( HB_ZNETSTREAM ) );
-
-   memset( pStream, 0, sizeof( HB_ZNETSTREAM ) );
+   PHB_ZNETSTREAM pStream = ( PHB_ZNETSTREAM ) hb_xgrabz( sizeof( HB_ZNETSTREAM ) );
 
    if( level != Z_DEFAULT_COMPRESSION &&
        !( level >= Z_NO_COMPRESSION && level <= Z_BEST_COMPRESSION ) )

@@ -2825,7 +2825,7 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
                iSize += ( iMaxReq - childs[ i ]->ReqByte ) * childs[ i ]->iKeys;
                if( iSize != childs[ i ]->iFree )
                {
-                  printf( "\r\ninserting, iSize=%d, childs[i]->iFree=%d", iSize, childs[ i ]->iFree ); fflush( stdout );
+                  printf( "\r\ninserting, iSize=%d, childs[ i ]->iFree=%d", iSize, childs[ i ]->iFree ); fflush( stdout );
                   printf( "\r\niKeys=%d, iMaxReq=%d", iKeys, iMaxReq ); fflush( stdout );
                   hb_cdxErrInternal( "hb_cdxPageGetChild: index corrupted." );
                }
@@ -2847,7 +2847,7 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, int iChildRet )
             childs[ i - 1 ]->fChanged = HB_TRUE;
             if( lpTmpPage != NULL )
             {
-               lpTmpPage->Left = childs[i]->Page;
+               lpTmpPage->Left = childs[ i ]->Page;
                lpTmpPage->fChanged = HB_TRUE;
                hb_cdxPageFree( lpTmpPage, HB_FALSE );
             }
@@ -3085,7 +3085,7 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
       if( iBlncKeys == 1 && iKeys > pPage->TagParent->MaxKeys &&
           childs[ 0 ]->Right != CDX_DUMMYNODE )
       {
-         lpTmpPage = hb_cdxPageNew( pPage->TagParent, pPage, childs[0]->Right );
+         lpTmpPage = hb_cdxPageNew( pPage->TagParent, pPage, childs[ 0 ]->Right );
          iKeys += lpTmpPage->iKeys;
          childs[ iBlncKeys++ ] = lpTmpPage;
          if( iFirstKey + iBlncKeys > pPage->iKeys )
@@ -3262,7 +3262,7 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, int iChildRet )
          if( iNodeKeys > pPage->TagParent->MaxKeys )
             hb_cdxErrInternal( "hb_cdxPageKeyIntBalance: iNodeKeys calculated wrong!" );
 #endif
-         /* TODO: do nothing if iNodeKeys == childs[i]->iKeys && i == iSkip */
+         /* TODO: do nothing if iNodeKeys == childs[ i ]->iKeys && i == iSkip */
          memcpy( hb_cdxPageIntKeyPool( childs[ i ] ), pPtr, iNodeKeys * iLen );
          childs[ i ]->iKeys    = iNodeKeys;
          childs[ i ]->fChanged = HB_TRUE;
@@ -7313,7 +7313,7 @@ static HB_ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
                       &fProd, szFileName, szBaseName );
 
 /*
-   if( ! szBaseName[0] )
+   if( ! szBaseName[ 0 ] )
       return HB_FAILURE;
  */
    pIndex = hb_cdxFindBag( pArea, szFileName );
@@ -9589,7 +9589,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
       HB_USHORT uiSaveTag = pArea->uiTag;
       HB_ULONG ulStartRec = 0, ulNextCount = 0;
       HB_BOOL fDirectRead, fUseFilter = HB_FALSE;
-      HB_BYTE * pSaveRecBuff = pArea->dbfarea.pRecord, cTemp[8];
+      HB_BYTE * pSaveRecBuff = pArea->dbfarea.pRecord, cTemp[ 8 ];
       int iRecBuff = 0, iRecBufSize, iRec;
 
       pForItem = pTag->pForItem;

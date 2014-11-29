@@ -337,7 +337,7 @@ char * hb_xstrcat( char * szDest, const char * szSrc, ... )
 /*
    AJ: 2004-02-23
    Concatenates multiple strings into a single result.
-   Eg. hb_xstrcpy (buffer, "A", "B", NULL) stores "AB" in buffer.
+   Eg. hb_xstrcpy( buffer, "A", "B", NULL ) stores "AB" in buffer.
    Returns szDest.
    Any existing contents of szDest are cleared. If the szDest buffer is NULL,
    allocates a new buffer with the required length and returns that. The

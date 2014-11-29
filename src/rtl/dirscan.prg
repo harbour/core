@@ -54,7 +54,7 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
    LOCAL lMatch
    LOCAL aResult := {}
 
-   FOR EACH aFile IN Directory( cPath + hb_osFileMask(), cAttr + "D" )
+   FOR EACH aFile IN hb_Directory( cPath + hb_osFileMask(), cAttr + "D" )
       lMatch := hb_FileMatch( aFile[ F_NAME ], cMask )
       IF "D" $ aFile[ F_ATTR ]
          IF lMatch .AND. "D" $ cAttr
@@ -73,10 +73,7 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
    RETURN aResult
 
 FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
-
-   hb_default( @cPath, "" )
-
-   RETURN HB_DoScan( hb_DirSepAdd( cPath ), ;
+   RETURN HB_DoScan( hb_DirSepAdd( hb_defaultValue( cPath, "" ) ), ;
       iif( HB_ISSTRING( cFileMask ), cFileMask, hb_osFileMask() ), ;
-      iif( HB_ISSTRING( cAttr ), cAttr, "" ), ;
+      hb_defaultValue( cAttr, "" ), ;
       hb_ps() )

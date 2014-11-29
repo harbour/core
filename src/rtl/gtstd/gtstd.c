@@ -193,9 +193,7 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
-   pGTSTD = ( PHB_GTSTD ) hb_xgrab( sizeof( HB_GTSTD ) );
-   memset( pGTSTD, 0, sizeof( HB_GTSTD ) );
-   HB_GTLOCAL( pGT ) = pGTSTD;
+   HB_GTLOCAL( pGT ) = pGTSTD = ( PHB_GTSTD ) hb_xgrabz( sizeof( HB_GTSTD ) );
 
    pGTSTD->hStdin  = hFilenoStdin;
    pGTSTD->hStdout = hFilenoStdout;

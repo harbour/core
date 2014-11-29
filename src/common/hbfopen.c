@@ -63,7 +63,7 @@ FILE * hb_fopen( const char * path, const char * mode )
 {
    FILE * file;
 
-#if defined( HB_OS_WIN ) && defined( UNICODE ) && !defined( __XCC__ )
+#if defined( HB_OS_WIN ) && defined( UNICODE ) && ! defined( __XCC__ )
    LPCTSTR lpPath, lpMode;
    LPTSTR lpFreeP, lpFreeM;
 

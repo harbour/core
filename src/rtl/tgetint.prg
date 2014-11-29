@@ -75,7 +75,7 @@ FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
     */
    Eval( bSetGet )
 
-   oGet := GetNew(,, bSetGet, cVarName, cPicture )
+   oGet := GetNew( ,, bSetGet, cVarName, cPicture )
 
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
@@ -105,7 +105,7 @@ FUNCTION __GetA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
       RETURN NIL
    ENDIF
 
-   oGet := GetNew(,, bGetArray, cVarName, cPicture )
+   oGet := GetNew( ,, bGetArray, cVarName, cPicture )
    oGet:SubScript := aIndex
 
    oGet:PreBlock := bWhen

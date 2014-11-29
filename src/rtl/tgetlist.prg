@@ -172,7 +172,7 @@ METHOD ReadModal() CLASS HBGetList
    ::nReadProcLine := ProcLine( 2 )
 
 #ifdef HB_COMPAT_C53
-   ::nPos := ::Settle( iif( HB_ISNUMERIC( nPos ), nPos, 0 ), .T. )
+   ::nPos := ::Settle( hb_defaultValue( nPos, 0 ), .T. )
 
    IF ( lMsgFlag := HB_ISNUMERIC( nMsgRow ) .AND. ;
                     HB_ISNUMERIC( nMsgLeft ) .AND. ;
@@ -547,7 +547,7 @@ METHOD GetPreValidate( oGet, aMsg ) CLASS HBGetList
 
    IF oGet:preBlock != NIL
 
-      lUpdated  := ::lUpdated
+      lUpdated := ::lUpdated
 
       lWhen := Eval( oGet:preBlock, oGet, aMsg )
 
@@ -652,8 +652,6 @@ METHOD GetDoSetKey( bKeyBlock, oGet ) CLASS HBGetList
 
    lSetKey := Eval( bKeyBlock, ::cReadProcName, ::nReadProcLine, ::ReadVar() )
 
-   hb_default( @lSetKey, .T. )
-
    ::ShowScoreboard()
    oGet:updateBuffer()
 
@@ -665,18 +663,17 @@ METHOD GetDoSetKey( bKeyBlock, oGet ) CLASS HBGetList
       oGet:exitState := GE_ESCAPE
    ENDIF
 
-   RETURN lSetKey
+   RETURN hb_defaultValue( lSetKey, .T. )
 
 METHOD Settle( nPos, lInit ) CLASS HBGetList
 
    LOCAL nExitState
 
    hb_default( @nPos, ::nPos )
-   hb_default( @lInit, .F. )
 
    IF nPos == 0
       nExitState := GE_DOWN
-   ELSEIF nPos > 0 .AND. lInit /* NOTE: Never .T. in C5.2 mode. */
+   ELSEIF nPos > 0 .AND. hb_defaultValue( lInit, .F. )  /* NOTE: Never .T. in C5.2 mode. */
       nExitState := GE_NOEXIT
    ELSE
       nExitState := ::aGetList[ nPos ]:exitState
@@ -912,14 +909,14 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
 
       // De-activate the GET
       SWITCH oGUI:ClassName()
-         CASE "LISTBOX"
-         CASE "RADIOGROUP"
-            IF HB_ISNUMERIC( oGet:varGet() )
-               oGet:varPut( oGUI:value )
-               EXIT
-            ENDIF
-         OTHERWISE
-            oGet:varPut( oGUI:buffer )
+      CASE "LISTBOX"
+      CASE "RADIOGROUP"
+         IF HB_ISNUMERIC( oGet:varGet() )
+            oGet:varPut( oGUI:value )
+            EXIT
+         ENDIF
+      OTHERWISE
+         oGet:varPut( oGUI:buffer )
       ENDSWITCH
       oGUI:killFocus()
 
@@ -1186,14 +1183,14 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
    IF !( oGUI:ClassName() == "TBROWSE" )
       xOldValue := oGet:varGet()
       SWITCH oGUI:ClassName()
-         CASE "LISTBOX"
-         CASE "RADIOGROUP"
-            IF HB_ISNUMERIC( oGet:varGet() )
-               xNewValue := oGUI:value
-               EXIT
-            ENDIF
-         OTHERWISE
-            xNewValue := oGUI:buffer
+      CASE "LISTBOX"
+      CASE "RADIOGROUP"
+         IF HB_ISNUMERIC( oGet:varGet() )
+            xNewValue := oGUI:value
+            EXIT
+         ENDIF
+      OTHERWISE
+         xNewValue := oGUI:buffer
       ENDSWITCH
    ENDIF
 

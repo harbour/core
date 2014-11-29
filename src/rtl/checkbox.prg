@@ -151,7 +151,6 @@ METHOD killFocus() CLASS CheckBox
 
       ::display()
       SetCursor( ::nCursor )
-
    ENDIF
 
    RETURN Self
@@ -217,7 +216,6 @@ METHOD display() CLASS CheckBox
          hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
             hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
-
    ENDIF
 
    DispEnd()
@@ -328,11 +326,11 @@ METHOD New( nRow, nCol, cCaption ) CLASS CheckBox
 
    __defaultNIL( @cCaption, "" )
 
-   ::caption  := cCaption
-   ::capRow   := nRow
-   ::capCol   := nCol + 3 + 1
-   ::row      := nRow
-   ::col      := nCol
+   ::caption := cCaption
+   ::capRow  := nRow
+   ::capCol  := nCol + 3 + 1
+   ::row     := nRow
+   ::col     := nCol
 
    IF IsDefColor()
       ::cColorSpec := "W/N,W+/N,W/N,W+/N"

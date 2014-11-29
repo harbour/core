@@ -53,9 +53,6 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    LOCAL lOldPrinter
    LOCAL lOldExtra
    LOCAL cOldExtraFile
-   LOCAL cPath
-   LOCAL cName
-   LOCAL cExt
 
    LOCAL oError
    LOCAL lError := .F.
@@ -77,12 +74,11 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
       lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
    IF ! Empty( cToFileName )
-      hb_FNameSplit( cToFileName, @cPath, @cName, @cExt )
-      IF Set( _SET_DEFEXTENSIONS ) .AND. Empty( cExt )
-         cExt := ".txt"
-      ENDIF
       lOldExtra := Set( _SET_EXTRA, .T. )
-      cOldExtraFile := Set( _SET_EXTRAFILE, hb_FNameMerge( cPath, cName, cExt ) )
+      cOldExtraFile := Set( _SET_EXTRAFILE, ;
+                            iif( Set( _SET_DEFEXTENSIONS ), ;
+                                 hb_FNameExtSetDef( cToFileName, ".txt" ), ;
+                                 cToFileName ) )
    ENDIF
 
    /* Do the job */

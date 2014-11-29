@@ -4,7 +4,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_PLATFORM),wce)
    ifneq ($(HB_COMPILER),pcc)
-      HB_PRGFLAGS := -gc3
+      HB_PRGFLAGS += -gc3
    endif
 endif
 
@@ -28,11 +28,11 @@ C_SOURCES := \
    wacore.c \
    wafunc.c \
    rddinfo.c \
+   rddshort.c \
    sdf1.c \
 
 PRG_SOURCES := \
    dbdelim.prg \
-   dbfuncs.prg \
    dbjoin.prg \
    dblist.prg \
    dbsdf.prg \

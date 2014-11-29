@@ -60,7 +60,7 @@ ENDCLASS
 /* Creates a new line of text */
 METHOD New( cLine, lSoftCR ) CLASS HBTextLine
 
-   ::cText := iif( HB_ISSTRING( cLine ), cLine, "" )
-   ::lSoftCR := iif( HB_ISLOGICAL( lSoftCR ), lSoftCR, .F. )
+   ::cText := hb_defaultValue( cLine, "" )
+   ::lSoftCR := hb_defaultValue( lSoftCR, .F. )
 
    RETURN Self
