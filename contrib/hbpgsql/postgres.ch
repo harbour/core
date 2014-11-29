@@ -81,7 +81,7 @@
 #define HBPG_META_TABLECOL              6
 #define HBPG_META_LEN_                  6
 
-/* PQresultErrorField() parameters */
+/* PQresultErrorField() fieldcode parameters */
 #define PG_DIAG_SEVERITY                hb_BCode( "S" )
 #define PG_DIAG_SQLSTATE                hb_BCode( "C" )
 #define PG_DIAG_MESSAGE_PRIMARY         hb_BCode( "M" )

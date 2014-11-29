@@ -382,12 +382,16 @@ HB_FUNC( PQERRORMESSAGE )
 
 HB_FUNC( PQRESULTERRORFIELD )
 {
+#if PG_VERSION_NUM >= 70400
    PGresult * res = hb_PGresult_par( 1 );
 
    if( res )
       hb_retc( PQresultErrorField( res, hb_parni( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retc_null();
+#endif
 }
 
 HB_FUNC( PQSTATUS )
