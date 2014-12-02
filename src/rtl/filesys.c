@@ -350,12 +350,17 @@ static HB_BOOL s_fUseWaitLocks = HB_TRUE;
 
 static int fs_win_get_drive( void )
 {
-   TCHAR lpBuffer[ HB_PATH_MAX ];
+   TCHAR pBuffer[ HB_PATH_MAX ];
+   LPTSTR lpBuffer = pBuffer;
    DWORD dwResult;
    int iDrive = 0;
 
-   lpBuffer[ 0 ] = TEXT( '\0' );
-   dwResult = GetCurrentDirectory( HB_SIZEOFARRAY( lpBuffer ), lpBuffer );
+   dwResult = GetCurrentDirectory( HB_SIZEOFARRAY( pBuffer ), lpBuffer );
+   if( dwResult > HB_SIZEOFARRAY( lpBuffer ) )
+   {
+      lpBuffer = ( TCHAR * ) hb_xgrab( dwResult * sizeof( TCHAR ) );
+      dwResult = GetCurrentDirectory( dwResult, lpBuffer );
+   }
    hb_fsSetIOError( dwResult != 0, 0 );
    if( dwResult >= 2 && lpBuffer[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
    {
@@ -365,6 +370,8 @@ static int fs_win_get_drive( void )
       else
          iDrive = 0;
    }
+   if( lpBuffer != pBuffer )
+      hb_xfree( lpBuffer );
    return iDrive;
 }
 

@@ -52,6 +52,7 @@
 #define HB_SOCKET_CH_
 
 /* Harbour socket error codes */
+#define HB_SOCKET_ERR_NONE                0
 #define HB_SOCKET_ERR_PIPE                1
 #define HB_SOCKET_ERR_TIMEOUT             2
 #define HB_SOCKET_ERR_WRONGADDR           3

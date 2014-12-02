@@ -2341,7 +2341,7 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAX
       do
       {
          lSent = send( sd, ( const char * ) data, len, flags );
-         iError = HB_SOCK_GETERROR();
+         iError = lSent > 0 ? 0 : HB_SOCK_GETERROR();
          hb_socketSetOsError( iError );
       }
       while( lSent == -1 && HB_SOCK_IS_EINTR( iError ) &&
@@ -2380,7 +2380,7 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
       {
          lSent = sendto( sd, ( const char * ) data, len, flags,
                          ( const struct sockaddr * ) pSockAddr, ( socklen_t ) uiSockLen );
-         iError = HB_SOCK_GETERROR();
+         iError = lSent > 0 ? 0 : HB_SOCK_GETERROR();
          hb_socketSetOsError( iError );
       }
       while( lSent == -1 && HB_SOCK_IS_EINTR( iError ) &&
@@ -2413,7 +2413,7 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_MAXINT ti
       do
       {
          lReceived = recv( sd, ( char * ) data, len, flags );
-         iError = HB_SOCK_GETERROR();
+         iError = lReceived > 0 ? 0 : HB_SOCK_GETERROR();
          hb_socketSetOsError( iError );
       }
       while( lReceived == -1 && HB_SOCK_IS_EINTR( iError ) &&
@@ -2454,7 +2454,7 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
       do
       {
          lReceived = recvfrom( sd, ( char * ) data, len, flags, &st.sa, &salen );
-         iError = HB_SOCK_GETERROR();
+         iError = lReceived > 0 ? 0 : HB_SOCK_GETERROR();
          hb_socketSetOsError( iError );
       }
       while( lReceived == -1 && HB_SOCK_IS_EINTR( iError ) &&
@@ -3604,8 +3604,6 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
       hb_xfree( pBuffer );
       hb_socketClose( sd );
    }
-   else
-      iError = HB_SOCK_GETERROR();
 #else
    int iTODO;
    HB_SYMBOL_UNUSED( af );
