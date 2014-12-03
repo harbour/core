@@ -55,9 +55,6 @@
 #include "fileio.ch"
 #include "inkey.ch"
 
-#define F_OK            0       // No error
-#define F_EMPTY         -3      // File is empty
-
 #define _LF_SAMPLES     2       // "Do you want more samples?"
 #define _LF_YN          12      // "Y/N"
 
@@ -106,7 +103,7 @@ CREATE CLASS HBLabelForm
    VAR nCurrentCol  AS NUMERIC  // The current column in the band
 
    METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-      bWhile, nNext, nRecord, lRest, lSample )
+               bWhile, nNext, nRecord, lRest, lSample )
 
    METHOD ExecuteLabel()
    METHOD SampleLabels()
@@ -330,7 +327,6 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    LOCAL cBuff      := Space( BUFFSIZE )  // File buffer
    LOCAL nHandle                          // File handle
    LOCAL nOffset    := FILEOFFSET         // Offset into file
-   LOCAL nFileError                       // File error
    LOCAL cFieldText                       // Text expression container
    LOCAL err                              // error object
 
@@ -349,63 +345,56 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    aLabel[ LBL_FIELDS ]  := {}             // Array of label fields
 
    // Open the label file
-   nHandle := FOpen( cLblFile )
-
-   IF ( nFileError := FError() ) != F_OK .AND. Empty( hb_FNameDir( cLblFile ) )
+   IF ( nHandle := FOpen( cLblFile ) ) == F_ERROR .AND. ;
+      Empty( hb_FNameDir( cLblFile ) )
 
       // Search through default path; attempt to open label file
-      FOR EACH cPath IN ListAsArray( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
-         nHandle := FOpen( hb_DirSepAdd( cPath ) + cLblFile )
-         // if no error is reported, we have our label file
-         IF ( nFileError := FError() ) == F_OK
+      FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
+         IF ( nHandle := FOpen( hb_DirSepAdd( cPath ) + cLblFile ) ) != F_ERROR
             EXIT
          ENDIF
       NEXT
    ENDIF
 
    // File error
-   IF nFileError != F_OK
+   IF nHandle == F_ERROR
       err := ErrorNew()
       err:severity := ES_ERROR
       err:genCode := EG_OPEN
       err:subSystem := "FRMLBL"
-      err:osCode := nFileError
+      err:osCode := FError()
       err:filename := cLblFile
       Eval( ErrorBlock(), err )
+   ELSE
+      IF FRead( nHandle, @cBuff, BUFFSIZE ) > 0 .AND. FError() == 0
+         // Load label dimension into aLabel
+         aLabel[ LBL_REMARK  ] := hb_BSubStr( cBuff, REMARKOFFSET, REMARKSIZE )
+         aLabel[ LBL_HEIGHT  ] := Bin2W( hb_BSubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
+         aLabel[ LBL_WIDTH   ] := Bin2W( hb_BSubStr( cBuff, WIDTHOFFSET, WIDTHSIZE ) )
+         aLabel[ LBL_LMARGIN ] := Bin2W( hb_BSubStr( cBuff, LMARGINOFFSET, LMARGINSIZE ) )
+         aLabel[ LBL_LINES   ] := Bin2W( hb_BSubStr( cBuff, LINESOFFSET, LINESSIZE ) )
+         aLabel[ LBL_SPACES  ] := Bin2W( hb_BSubStr( cBuff, SPACESOFFSET, SPACESSIZE ) )
+         aLabel[ LBL_ACROSS  ] := Bin2W( hb_BSubStr( cBuff, ACROSSOFFSET, ACROSSSIZE ) )
+
+         FOR i := 1 TO aLabel[ LBL_HEIGHT ]
+
+            // Get the text of the expression
+            cFieldText := RTrim( hb_BSubStr( cBuff, nOffset, FIELDSIZE ) )
+            nOffset += FIELDSIZE
+
+            IF Empty( cFieldText )
+               AAdd( aLabel[ LBL_FIELDS ], NIL )
+            ELSE
+               AAdd( aLabel[ LBL_FIELDS ], { ;
+                  /* LF_EXP */ hb_macroBlock( cFieldText ), ;
+                  /* LF_TEXT */ cFieldText, ;
+                  /* LF_BLANK */ .T. } )
+            ENDIF
+         NEXT
+      ENDIF
+
+      FClose( nHandle )  // Close file
    ENDIF
-
-   // If we got this far, assume the label file is open and ready to go
-   // and so go ahead and read it
-   // READ ok?
-   IF iif( FRead( nHandle, @cBuff, BUFFSIZE ) == 0, F_EMPTY, FError() ) == F_OK
-
-      // Load label dimension into aLabel
-      aLabel[ LBL_REMARK  ] := hb_BSubStr( cBuff, REMARKOFFSET, REMARKSIZE )
-      aLabel[ LBL_HEIGHT  ] := Bin2W( hb_BSubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
-      aLabel[ LBL_WIDTH   ] := Bin2W( hb_BSubStr( cBuff, WIDTHOFFSET, WIDTHSIZE ) )
-      aLabel[ LBL_LMARGIN ] := Bin2W( hb_BSubStr( cBuff, LMARGINOFFSET, LMARGINSIZE ) )
-      aLabel[ LBL_LINES   ] := Bin2W( hb_BSubStr( cBuff, LINESOFFSET, LINESSIZE ) )
-      aLabel[ LBL_SPACES  ] := Bin2W( hb_BSubStr( cBuff, SPACESOFFSET, SPACESSIZE ) )
-      aLabel[ LBL_ACROSS  ] := Bin2W( hb_BSubStr( cBuff, ACROSSOFFSET, ACROSSSIZE ) )
-
-      FOR i := 1 TO aLabel[ LBL_HEIGHT ]
-
-         // Get the text of the expression
-         cFieldText := RTrim( hb_BSubStr( cBuff, nOffset, FIELDSIZE ) )
-         nOffset += FIELDSIZE
-
-         IF Empty( cFieldText )
-            AAdd( aLabel[ LBL_FIELDS ], NIL )
-         ELSE
-            AAdd( aLabel[ LBL_FIELDS ], { ;
-               /* LF_EXP */ hb_macroBlock( cFieldText ), ;
-               /* LF_TEXT */ cFieldText, ;
-               /* LF_BLANK */ .T. } )
-         ENDIF
-      NEXT
-   ENDIF
-
-   FClose( nHandle )  // Close file
 
    RETURN aLabel
 
@@ -423,35 +412,3 @@ STATIC PROCEDURE PrintIt( cString )
    QOut()
 
    RETURN
-
-STATIC FUNCTION ListAsArray( cList, cDelimiter )
-
-   LOCAL nPos
-   LOCAL aList := {}  // Define an empty array
-   LOCAL lDelimLast := .F.
-
-   hb_default( @cDelimiter, "," )
-
-   DO WHILE Len( cList ) != 0
-
-      IF ( nPos := At( cDelimiter, cList ) ) == 0
-         nPos := Len( cList )
-      ENDIF
-
-      IF SubStr( cList, nPos, 1 ) == cDelimiter
-         lDelimLast := .T.
-         AAdd( aList, Left( cList, nPos - 1 ) )  // Add a new element
-      ELSE
-         lDelimLast := .F.
-         AAdd( aList, Left( cList, nPos ) )  // Add a new element
-      ENDIF
-
-      cList := SubStr( cList, nPos + 1 )
-
-   ENDDO
-
-   IF lDelimLast
-      AAdd( aList, "" )
-   ENDIF
-
-   RETURN aList  // Return the array

@@ -372,7 +372,9 @@ METHOD findData( xData, nPos, lCaseSensitive, lExact ) CLASS ListBox
       ENDIF
    ELSE
       IF lCaseSensitive
-         bSearch := {| aItem, xItemData | xItemData := _LISTBOX_ITEMDATA( aItem ), iif( HB_ISSTRING( xItemData ), hb_LeftEq( xItemData, xData ), xItemData == xData ) }
+         bSearch := {| aItem, xItemData | xItemData := _LISTBOX_ITEMDATA( aItem ), ;
+            iif( HB_ISSTRING( xItemData ), hb_LeftEq( xItemData, xData ), ;
+                                           xItemData == xData ) }
       ELSE
          /* Cl*pper will also RTE here, if xData is not a string */
          bSearch := {| aItem | hb_LeftEqI( _LISTBOX_ITEMDATA( aItem ), xData ) }

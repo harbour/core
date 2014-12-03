@@ -301,11 +301,13 @@ METHOD GotoLine( nRow ) CLASS HBEditor
 
    IF nRow <= ::naTextLen .AND. nRow > 0
 
-      DO CASE
-      CASE ::nRow == nRow + 1
+      SWITCH ::nRow - nRow
+      CASE 1
          ::MoveCursor( K_UP )  // Back one line
-      CASE ::nRow == nRow - 1
+         EXIT
+      CASE -1
          ::MoveCursor( K_DOWN )
+         EXIT
       OTHERWISE
          // I need to move cursor if is past requested line number and if requested line is
          // inside first screen of text otherwise ::nFirstRow would be wrong
@@ -326,7 +328,7 @@ METHOD GotoLine( nRow ) CLASS HBEditor
          ENDIF
 
          ::display()
-      ENDCASE
+      ENDSWITCH
    ENDIF
 
    RETURN Self
