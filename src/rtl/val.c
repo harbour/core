@@ -63,7 +63,7 @@ HB_FUNC( VAL )
       HB_MAXINT lValue;
       double dValue;
 
-      fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue , &iDec, &iWidth );
+      fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue, &iDec, &iWidth );
 
       if( ! fDbl )
          hb_retnintlen( lValue, iWidth );
@@ -89,7 +89,7 @@ HB_FUNC( HB_VAL )
       fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue , &iDec, &iWidth );
 
       if( HB_ISNUM( 2 ) )
-         iLen = ( int ) hb_parni( 2 );
+         iLen = hb_parni( 2 );
 
       if( fDbl && iDec > 0 )
          iLen -= iDec + 1;

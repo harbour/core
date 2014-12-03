@@ -134,8 +134,8 @@ HB_EXTERN_BEGIN
 #define HB_IS_SYMBOL( p )     HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
 #define HB_IS_POINTER( p )    HB_IS_OF_TYPE( p, HB_IT_POINTER )
 #define HB_IS_HASH( p )       HB_IS_OF_TYPE( p, HB_IT_HASH )
-#define HB_IS_MEMVAR( p )     HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_MEMO( p )       HB_IS_OF_TYPE( p, HB_IT_MEMO )
+#define HB_IS_MEMVAR( p )     HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_ENUM( p )       HB_IS_OF_TYPE( p, HB_IT_ENUM )
 #define HB_IS_EXTREF( p )     HB_IS_OF_TYPE( p, HB_IT_EXTREF )
 #define HB_IS_STRING( p )     ( ( HB_ITEM_TYPE( p ) & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
@@ -238,6 +238,7 @@ HB_EXTERN_BEGIN
 #define HB_ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )
 #define HB_ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )
 #define HB_ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )
+#define HB_ISEVALITEM( n )    ( hb_param( n, HB_IT_EVALITEM ) != NULL )
 #define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )
 
 /* Compatibility #defines, deprecated */
@@ -1057,7 +1058,7 @@ extern HB_EXPORT char *        hb_cmdargBaseProgName( void ); /* return applicat
 extern           int           hb_cmdargPushArgs( void ); /* places application parameters on the HVM stack */
 extern           void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
-extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
+extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //GT:cgi) */
 extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
 extern           void          hb_cmdargProcess( void ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN )
@@ -1202,7 +1203,11 @@ extern HB_EXPORT HB_BOOL hb_iswinnt( void );    /* return HB_TRUE if OS == Windo
 extern HB_EXPORT HB_BOOL hb_iswin2k( void );    /* return HB_TRUE if OS == Windows 2000 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin2k3( void );   /* return HB_TRUE if OS == Windows 2003 Server or newer */
 extern HB_EXPORT HB_BOOL hb_iswinvista( void ); /* return HB_TRUE if OS == Windows Vista or newer */
+extern HB_EXPORT HB_BOOL hb_iswin8( void );     /* return HB_TRUE if OS == Windows 8 or newer */
+extern HB_EXPORT HB_BOOL hb_iswin81( void );    /* return HB_TRUE if OS == Windows 8.1 or newer */
+extern HB_EXPORT HB_BOOL hb_iswin10( void );    /* return HB_TRUE if OS == Windows 10 or newer */
 extern HB_EXPORT HB_BOOL hb_iswince( void );    /* return HB_TRUE if OS is Windows CE or Windows Mobile */
+extern HB_EXPORT HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fOrUpper );
 
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 

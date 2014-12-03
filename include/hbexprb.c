@@ -1922,12 +1922,13 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   case HB_F_I18N_NGETTEXT_NOOP:
                   case HB_F_I18N_NGETTEXT_STRICT:
                   {
-                     PHB_EXPR     pArg = pParms->value.asList.pExprList,
-                                  pCount = NULL, pBadParam = NULL;
+                     PHB_EXPR     pCount = NULL, pBadParam = NULL, pArg;
                      int          iWarning = 0;
                      const char * szExpect = NULL;
                      const char * szContext = NULL;
                      HB_BOOL      fStrict, fNoop, fPlural;
+
+                     pArg = usCount ? pParms->value.asList.pExprList : NULL;
 
                      fStrict = funcID == HB_F_I18N_GETTEXT_STRICT ||
                                funcID == HB_F_I18N_NGETTEXT_STRICT;

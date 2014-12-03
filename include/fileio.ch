@@ -127,6 +127,12 @@
 /* File system error codes */
 #define F_ERROR            ( -1 )      /* Unspecified error */
 
+/* hb_FLock() extended file locking flags */
+#define HB_FLX_EXCLUSIVE   0x0000      /* Exclusive lock */
+#define HB_FLX_SHARED      0x0100      /* Shared lock */
+#define HB_FLX_NO_WAIT     0x0000      /* Do not wait for successful lock */
+#define HB_FLX_WAIT        0x0200      /* Wait for lock until success */
+
 /* hb_DiskSpace() types */
 #define HB_DISK_AVAIL      0
 #define HB_DISK_FREE       1

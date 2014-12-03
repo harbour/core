@@ -562,8 +562,9 @@ DECLARE HBClass ;
    #xcommand SYNC METHOD <!MethodName1!>[([<params,...>])], <!MethodName2!>[([<params,...>])] [, <!MethodNameN!>[([<params,...>])]] => ;
              SYNC METHOD <MethodName1> [ ; SYNC METHOD <MethodName2> ] [ ; SYNC METHOD <MethodNameN> ]
 
-   #xcommand METHOD <!className!>:<!methodName!>[([<params,...>])] => ;
-             METHOD <methodName>( <params> ) CLASS <className>
+   /* FUNCTION/PROCEDURE is a Harbour extension */
+   #xcommand METHOD [<type: FUNCTION, PROCEDURE>] <!className!>:<!methodName!>[([<params,...>])] => ;
+             METHOD <type> <methodName>( <params> ) CLASS <className>
 
 #endif /* HB_CLS_XPP */
 

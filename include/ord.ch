@@ -74,7 +74,7 @@
 
 /*
  * This pseudofunction is only document in CL5.3 NG but not implemented
- * in Clipper
+ * in Cl*pper
  */
 
 #ifdef HB_COMPAT_C53
