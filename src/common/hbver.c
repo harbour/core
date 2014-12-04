@@ -1,9 +1,15 @@
 /*
- * Harbour Project source code:
  * Version detection functions
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
+ * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+ *    hb_verPlatform() (support for determining the Windows version)
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    hb_verPlatform() (support for determining many Windows flavours)
+ *    hb_verCompiler() (support for determining some compiler version/revision)
+ * Copyright 2000-2014 Viktor Szakats (vszakats.net/harbour)
+ *    hb_verCPU(), hb_verHostBitWidth(), hb_iswinver()
+ *    hb_verPlatform() (support for detecting Windows NT on DOS, Wine, post-Windows 8, cleanups)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -43,28 +49,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    hb_verPlatform() (support for determining the Windows version)
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_verPlatform() (support for determining many Windows flavours)
- *    hb_verCompiler() (support for determining some compiler version/revision)
- *
- * Copyright 2000-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_verCPU()
- *    hb_verPlatform() (support for detecting Windows NT on DOS)
- *    hb_verPlatform() (rearrangment and cleanup)
- *    hb_verPlatform() (Wine detection and some more)
- *    hb_verHostBitWidth()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
