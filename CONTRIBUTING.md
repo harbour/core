@@ -141,7 +141,7 @@ Evaluate these points before reporting an issue:
     by hbmk2. IOW start simple and don't be overbusy with *fine-tuning*
     your configuration. If you need to, the problem is most probably
     elsewhere. It's also good idea to try with latest Harbour revision
-    or Harbour's mainstream branch first.
+    or Harbour's mainline branch first.
 12. If you are to report a problem with Harbour itself, provide
     self-contained, minimal source code example. Do not use xhb contrib
     library, or any 3rd party Harbour libraries. The example shall reproduce

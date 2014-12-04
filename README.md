@@ -39,12 +39,12 @@ and interfaces to popular APIs.
 
 # How to Get
 
-## Stable versions (non-fork/upstream)
+## Stable versions (non-fork/mainline)
 
 ### Harbour stable binary download
 
 You can find links to the latest stable release (3.0.0)
-of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md#stable-versions) of the upstream source.
+of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md#stable-versions) of the mainline source.
 
 
 ## Unstable versions
@@ -1656,7 +1656,7 @@ Supported shells per host platforms:
      * [Italian](https://groups.google.com/forum/#!forum/harbourita)
 
   * Product-specific:
-     * [Harbour upstream development](https://groups.google.com/forum/#!forum/harbour-devel)
+     * [Harbour mainline development](https://groups.google.com/forum/#!forum/harbour-devel)
      * [HMG](http://hmgforum.com/viewforum.php?f=7)
      * [hbqt](https://groups.google.com/forum/#!forum/qtcontribs)
      * [FiveWin](http://forums.fivetechsupport.com/viewforum.php?f=3)
