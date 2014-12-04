@@ -81,7 +81,7 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * define and effectively enables lseek64/flock64/ftruncate64 functions
        * on 32bit machines.
        */
       #define HB_USE_LARGEFILE64
@@ -237,7 +237,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 
 /* NOTE: szFileName buffer must be at least HB_PATH_MAX long.
  *       Because some freign code may not be updated yet then
- *       hb_fsFNameMerge() efectively uses only HB_PATH_MAX buffer
+ *       hb_fsFNameMerge() effectively uses only HB_PATH_MAX buffer
  *       but it will be changed in the future.
  */
 
@@ -299,7 +299,6 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
       HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:   szPath: |%s|", pFileName->szPath ) );
       HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:   szName: |%s|", pFileName->szName ) );
       HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:    szExt: |%s|", pFileName->szExtension ) );
-      HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:  szDrive: |%s|", pFileName->szDrive ) );
       HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge: Filename: |%s|", pszFileName ) );
    }
 

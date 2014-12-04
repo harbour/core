@@ -124,7 +124,7 @@
       <lMode>  Designates whether the time should also be set in the
       CMOS-RAM of an AT.  The default is do not write to CMOS-RAM. Note that in
       Windows platform this adjust is automatic, therefore this parameter is
-      without efect.
+      without effect.
    $RETURNS$
       The FUNCTION RETURNs .T. when the time is set successfully.
    $DESCRIPTION$
@@ -172,8 +172,8 @@
 
       <lMode>  Designates whether the date should also be set in the CMOS-
       RAM of an AT.  The default is do not write (.F.). Note that in Windows
-      plataform this adjust is automatic, therefore this parameter is without
-      efect.
+      platform this adjust is automatic, therefore this parameter is without
+      effect.
    $RETURNS$
       SetDate() RETURNs .T. when the date is successfully set.
    $DESCRIPTION$

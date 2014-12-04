@@ -62,7 +62,7 @@
    original bytes from input string instead of position and match length in
    the ring buffer when the match length does not reach some limit. In SIX
    the minimum match length is 3 and it is used to increase to match length
-   in 4 bit offset by adding 3 also so the efective maximum match length is
+   in 4 bit offset by adding 3 also so the effective maximum match length is
    18. Of course we have to store the information about the type of item in
    compressed data to know it is (offset+length) pair or simple byte.
    SIX put 1 byte in compressed data which inform about the type of next
