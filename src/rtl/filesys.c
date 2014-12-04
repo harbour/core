@@ -332,7 +332,7 @@ static int fs_win_get_drive( void )
    int iDrive = 0;
 
    dwResult = GetCurrentDirectory( HB_SIZEOFARRAY( pBuffer ), lpBuffer );
-   if( dwResult > HB_SIZEOFARRAY( lpBuffer ) )
+   if( dwResult > HB_SIZEOFARRAY( pBuffer ) )
    {
       lpBuffer = ( TCHAR * ) hb_xgrab( dwResult * sizeof( TCHAR ) );
       dwResult = GetCurrentDirectory( dwResult, lpBuffer );
