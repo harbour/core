@@ -4562,7 +4562,7 @@ void hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue )
        hb_objHasOperator( pBase, HB_OO_OP_ENUMSTOP ) )
    {
       hb_stackPushReturn();
-      hb_vmPushNil();
+      HB_VM_PUSHNIL();
       hb_objOperatorCall( HB_OO_OP_ENUMSTOP, hb_stackItemFromTop( -1 ),
                           pBase, NULL, NULL );
       hb_stackPop();
@@ -4698,7 +4698,7 @@ static void hb_vmEnumStart( int nVars, int nDescend )
       {
          pEnum->item.asEnum.offset = 0;
          pEnum->item.asEnum.valuePtr = hb_itemNew( NULL );
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
          hb_vmPushLogical( nDescend == 0 );
          hb_objOperatorCall( HB_OO_OP_ENUMSTART, hb_stackItemFromTop( -2 ),
                              pBase, pEnumRef, hb_stackItemFromTop( -1 ) );
@@ -4780,7 +4780,7 @@ static void hb_vmEnumNext( void )
              hb_objHasOperator( pBase, HB_OO_OP_ENUMSKIP ) )
          {
             ++pEnum->item.asEnum.offset;
-            hb_vmPushNil();
+            HB_VM_PUSHNIL();
             hb_vmPushLogical( HB_FALSE );
             hb_objOperatorCall( HB_OO_OP_ENUMSKIP, hb_stackItemFromTop( -2 ),
                                 pBase, pEnumRef, hb_stackItemFromTop( -1 ) );
@@ -4860,7 +4860,7 @@ static void hb_vmEnumPrev( void )
              hb_objHasOperator( pBase, HB_OO_OP_ENUMSKIP ) )
          {
             --pEnum->item.asEnum.offset;
-            hb_vmPushNil();
+            HB_VM_PUSHNIL();
             hb_vmPushLogical( HB_TRUE );
             hb_objOperatorCall( HB_OO_OP_ENUMSKIP, hb_stackItemFromTop( -2 ),
                                 pBase, pEnumRef, hb_stackItemFromTop( -1 ) );
@@ -5435,10 +5435,10 @@ static void hb_vmArrayGen( HB_SIZE nElements ) /* generates an nElements Array a
 /* This function creates an array item using 'uiDimension' as an index
  * to retrieve the number of elements from the stack
  */
-static void hb_vmArrayNew( PHB_ITEM pArray, HB_USHORT uiDimension )
+static HB_BOOL hb_vmArrayNew( PHB_ITEM pArray, HB_USHORT uiDimension )
 {
    HB_STACK_TLS_PRELOAD
-   HB_SIZE  nElements;
+   HB_ISIZ  nElements;
    PHB_ITEM pDim;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmArrayNew(%p, %hu)", pArray, uiDimension ) );
@@ -5447,11 +5447,11 @@ static void hb_vmArrayNew( PHB_ITEM pArray, HB_USHORT uiDimension )
 
    /* use the proper type of number of elements */
    if( HB_IS_INTEGER( pDim ) )
-      nElements = ( HB_SIZE ) pDim->item.asInteger.value;
+      nElements = ( HB_ISIZ ) pDim->item.asInteger.value;
    else if( HB_IS_LONG( pDim ) )
-      nElements = ( HB_SIZE ) pDim->item.asLong.value;
+      nElements = ( HB_ISIZ ) pDim->item.asLong.value;
    else if( HB_IS_DOUBLE( pDim ) )
-      nElements = ( HB_SIZE ) pDim->item.asDouble.value;
+      nElements = ( HB_ISIZ ) pDim->item.asDouble.value;
    else
       /* NOTE: Clipper creates empty array if non-numeric value is
        * specified as dimension and stops further processing.
@@ -5459,16 +5459,23 @@ static void hb_vmArrayNew( PHB_ITEM pArray, HB_USHORT uiDimension )
        */
       nElements = 0;
 
-   /* create an array */
-   hb_arrayNew( pArray, nElements );
-
-   if( --uiDimension )
+   if( nElements >= 0 )
    {
-      /* call self recursively to create next dimensions
-       */
-      while( nElements-- )
-         hb_vmArrayNew( pArray->item.asArray.value->pItems + nElements, uiDimension );
+      /* create an array */
+      hb_arrayNew( pArray, nElements );
+
+      if( --uiDimension )
+      {
+         /* call self recursively to create next dimensions */
+         while( nElements-- )
+            if( ! hb_vmArrayNew( pArray->item.asArray.value->pItems + nElements, uiDimension ) )
+               return HB_FALSE;
+      }
+      return HB_TRUE;
    }
+
+   hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), 0 );
+   return HB_FALSE;
 }
 
 static void hb_vmArrayDim( HB_USHORT uiDimensions ) /* generates an uiDimensions Array and initialize those dimensions from the stack values */
@@ -5482,9 +5489,7 @@ static void hb_vmArrayDim( HB_USHORT uiDimensions ) /* generates an uiDimensions
    hb_itemMove( hb_stackItemFromTop( ( int ) ( -1 - uiDimensions ) ),
                 hb_stackItemFromTop( -1 ) );
    do
-   {
       hb_stackPop();
-   }
    while( --uiDimensions );
 }
 
@@ -5564,7 +5569,7 @@ static void hb_vmMacroPushIndex( void )
       hb_itemRelease( pIndexArray );
    }
    else if( nIndexes == 0 )
-      hb_vmPushNil();   /* It will force RT error later in array push or pop */
+      HB_VM_PUSHNIL();  /* It will force RT error later in array push or pop */
 }
 
 /*
@@ -6250,7 +6255,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, const char * szName, int nInd
    {
       case HB_DBG_MODULENAME:
          hb_vmPushDynSym( s_pDynsDbgEntry );
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
          hb_vmPushInteger( HB_DBG_MODULENAME );
          hb_vmPushString( szName, strlen( szName ) );
          hb_vmProc( 2 );
@@ -6258,7 +6263,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, const char * szName, int nInd
 
       case HB_DBG_LOCALNAME:
          hb_vmPushDynSym( s_pDynsDbgEntry );
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
          hb_vmPushInteger( HB_DBG_LOCALNAME );
          hb_vmPushInteger( nIndex );
          hb_vmPushString( szName, strlen( szName ) );
@@ -6267,7 +6272,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, const char * szName, int nInd
 
       case HB_DBG_STATICNAME:
          hb_vmPushDynSym( s_pDynsDbgEntry );
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
          hb_vmPushInteger( HB_DBG_STATICNAME );
          hb_vmPush( pFrame );                   /* current static frame */
          hb_vmPushInteger( nIndex );            /* variable index */
@@ -6277,7 +6282,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, const char * szName, int nInd
 
       case HB_DBG_SHOWLINE:
          hb_vmPushDynSym( s_pDynsDbgEntry );
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
          hb_vmPushInteger( HB_DBG_SHOWLINE );
          hb_vmPushInteger( nLine );
          hb_vmProc( 2 );
@@ -6286,7 +6291,7 @@ static void hb_vmDebugEntry( int nMode, int nLine, const char * szName, int nInd
       case HB_DBG_ENDPROC:
          hb_stackPushReturn();      /* saves the previous returned value */
          hb_vmPushDynSym( s_pDynsDbgEntry );
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
          hb_vmPushInteger( HB_DBG_ENDPROC );
          hb_vmProc( 1 );
          hb_stackPopReturn();       /* restores the previous returned value */
@@ -6295,14 +6300,14 @@ static void hb_vmDebugEntry( int nMode, int nLine, const char * szName, int nInd
       case HB_DBG_GETENTRY:
          /* Try to get C dbgEntry() function pointer */
          hb_vmPushDynSym( s_pDynsDbgEntry );
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
          hb_vmPushInteger( HB_DBG_GETENTRY );
          hb_vmProc( 1 );
          break;
 
       case HB_DBG_VMQUIT:
          hb_vmPushDynSym( s_pDynsDbgEntry );
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
          hb_vmPushInteger( HB_DBG_VMQUIT );
          hb_vmPushInteger( nIndex );
          hb_vmProc( 2 );
@@ -6416,7 +6421,7 @@ static void hb_vmFrame( HB_USHORT usLocals, unsigned char ucParams )
    {
       iTotal -= pBase->item.asSymbol.paramcnt;
       while( --iTotal >= 0 )
-         hb_vmPushNil();
+         HB_VM_PUSHNIL();
    }
 #else
    pBase->item.asSymbol.paramdeclcnt = ucParams;
@@ -6426,14 +6431,8 @@ static void hb_vmFrame( HB_USHORT usLocals, unsigned char ucParams )
       iTotal = 0;
    iTotal += usLocals;
 
-   if( iTotal )
-   {
-      do
-      {
-         hb_vmPushNil();
-      }
-      while( --iTotal > 0 );
-   }
+   while( --iTotal >= 0 )
+      HB_VM_PUSHNIL();
 #endif
 }
 
@@ -6454,14 +6453,8 @@ static void hb_vmVFrame( HB_USHORT usLocals, unsigned char ucParams )
       iTotal = 0;
    iTotal += usLocals;
 
-   if( iTotal )
-   {
-      do
-      {
-         hb_vmPushNil();
-      }
-      while( --iTotal > 0 );
-   }
+   while( --iTotal >= 0 )
+      HB_VM_PUSHNIL();
 }
 
 static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a function */

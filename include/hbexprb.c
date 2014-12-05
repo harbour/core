@@ -2113,14 +2113,22 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          HB_BOOL fArgsList = HB_FALSE;
          HB_USHORT usCount = 0;
 
+         /* NOTE: pParms will be NULL in 'DO procname' (if there is
+          * no WITH keyword)
+          */
+         if( pSelf->value.asFunCall.pParms )
+         {
+            usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
+            fArgsList = pSelf->value.asFunCall.pParms->ExprType == HB_ET_MACROARGLIST;
+         }
+
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
          {
-            if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_ARRAYTOPARAMS )
+            if( ! fArgsList )
             {
-               usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
-               if( usCount == 1 &&
-                   ( pSelf->value.asFunCall.pFunName->value.asSymbol.flags & HB_FN_MULTIARG ) != 0 &&
-                   pSelf->value.asFunCall.pParms->ExprType != HB_ET_MACROARGLIST )
+               if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_ARRAYTOPARAMS &&
+                   usCount == 1 &&
+                   ( pSelf->value.asFunCall.pFunName->value.asSymbol.flags & HB_FN_MULTIARG ) != 0 )
                {
                   HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
                   HB_GEN_FUNC1( PCode1, HB_P_PUSHAPARAMS );
@@ -2136,16 +2144,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             HB_GEN_FUNC1( PCode1, HB_P_PUSHNIL );
          }
 
-         /* NOTE: pParms will be NULL in 'DO procname' (if there is
-          * no WITH keyword)
-          */
-         if( pSelf->value.asFunCall.pParms )
-         {
-            usCount = ( HB_USHORT ) hb_compExprParamListCheck( HB_COMP_PARAM, pSelf->value.asFunCall.pParms );
-            fArgsList = pSelf->value.asFunCall.pParms->ExprType == HB_ET_MACROARGLIST;
-            if( usCount )
-               HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
-         }
+         if( usCount )
+            HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
 
          if( fArgsList )
          {
