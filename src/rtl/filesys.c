@@ -338,8 +338,7 @@ static int fs_win_get_drive( void )
       dwResult = GetCurrentDirectory( dwResult, lpBuffer );
    }
    hb_fsSetIOError( dwResult != 0, 0 );
-   if( dwResult >= 2 && dwResult < HB_SIZEOFARRAY( lpBuffer ) &&
-       lpBuffer[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
+   if( dwResult >= 2 && lpBuffer[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
    {
       iDrive = HB_TOUPPER( lpBuffer[ 0 ] );
       if( iDrive >= 'A' && iDrive <= 'Z' )

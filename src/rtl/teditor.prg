@@ -1102,11 +1102,10 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
 
          DO WHILE Len( cLine ) > 0
 
-            nPos := 1
             nBreakPos := nBreakPosSplit := 0
             cSplitLine := ""
 
-            DO WHILE nPos <= Len( cLine )
+            FOR nPos := 1 TO Len( cLine )
 
                SWITCH SubStr( cLine, nPos, 1 )
                CASE Chr( 9 )
@@ -1130,9 +1129,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
                   ENDIF
                   EXIT
                ENDIF
-
-               ++nPos
-            ENDDO
+            NEXT
 
             AAdd( aArray, HBTextLine():New( cSplitLine, nPos <= Len( cLine ) ) )
 
