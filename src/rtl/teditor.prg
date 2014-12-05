@@ -740,7 +740,6 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
             IF ::lWordWrap .AND. ::nCol > ::nWordWrapCol
                ::MoveCursor( K_DOWN )
                ::MoveCursor( K_HOME )
-
             ELSE
                ::lDirty := .T.
                // If I'm on last char of a line and there are more lines, append next line to current one
@@ -772,13 +771,15 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
             ::RefreshLine()
 
          CASE nKey == K_BS
-            ::lDirty := .T.
-            // delete previous character
-            ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, --::nCol, 1, "" )
-            // correct column position for next call to MoveCursor()
-            ::nCol++
-            ::MoveCursor( K_LEFT )
-            ::RefreshLine()
+            IF ::nCol > 1
+               ::lDirty := .T.
+               // delete previous character
+               ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, --::nCol, 1, "" )
+               // correct column position for next call to MoveCursor()
+               ::nCol++
+               ::MoveCursor( K_LEFT )
+               ::RefreshLine()
+            ENDIF
 
          CASE nKey == K_CTRL_Y
             ::lDirty := .T.
@@ -1051,8 +1052,8 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
       ::nFirstRow := ::naTextLen
    ENDIF
 
-   IF ( ::nFirstRow + nWndRow ) > ::naTextLen
-      DO WHILE ( ::nFirstRow + ( --nWndRow ) ) > ::naTextLen
+   IF ::nFirstRow + nWndRow > ::naTextLen
+      DO WHILE ::nFirstRow + --nWndRow > ::naTextLen
       ENDDO
    ENDIF
 
@@ -1105,29 +1106,24 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
 
-         DO WHILE ! Empty( cLine )
+         DO WHILE Len( cLine ) > 0
 
             // Split line at nWordWrapCol boundary
             IF Len( cLine ) > nWordWrapCol
 
-               nFirstSpace := nWordWrapCol
+               nFirstSpace := nWordWrapCol + 1
                DO WHILE !( SubStr( cLine, --nFirstSpace, 1 ) == " " ) .AND. nFirstSpace > 1
                ENDDO
 
-               IF nFirstSpace > 1
-                  cSplitLine := Left( cLine, nFirstSpace )
-               ELSE
-                  cSplitLine := Left( cLine, nWordWrapCol )
-               ENDIF
-
-               AAdd( aArray, HBTextLine():New( cSplitLine, .T. ) )
+               AAdd( aArray, HBTextLine():New( cSplitLine := ;
+                  Left( cLine, iif( nFirstSpace > 1, nFirstSpace, nWordWrapCol + 1 ) ), .T. ) )
             ELSE
                // remainder of line is shorter than split point
-               cSplitLine := cLine
-               AAdd( aArray, HBTextLine():New( cSplitLine, .F. ) )
+               AAdd( aArray, HBTextLine():New( cSplitLine := ;
+                  cLine, .F. ) )
             ENDIF
 
-            cLine := Right( cLine, Len( cLine ) - Len( cSplitLine ) )
+            cLine := SubStr( cLine, Len( cSplitLine ) + 1 )
          ENDDO
       ELSE
          AAdd( aArray, HBTextLine():New( cLine, .F. ) )
