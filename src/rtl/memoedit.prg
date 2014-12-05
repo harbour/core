@@ -313,8 +313,7 @@ FUNCTION MemoEdit( ;
    hb_default( @nWindowColumn   , nTextBuffColumn )
    hb_default( @cString         , "" )
 
-   /* Original MemoEdit() converts tabs into spaces */
-   oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), ;
+   oEd := HBMemoEditor():New( cString, ;
       hb_defaultValue( nTop, 0 ), ;
       nLeft, ;
       hb_defaultValue( nBottom, MaxRow() ), ;

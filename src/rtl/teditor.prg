@@ -139,7 +139,7 @@ CREATE CLASS HBEditor
    VAR nNumCols       AS NUMERIC     INIT 1              // How many columns / rows can be displayed inside editor window
    VAR nNumRows       AS NUMERIC     INIT 1
 
-   VAR nTabWidth      AS NUMERIC     INIT 8              // Size of Tab chars
+   VAR nTabWidth      AS NUMERIC     INIT 4              // Size of Tab chars
    VAR lEditAllow     AS LOGICAL     INIT .T.            // Are changes to text allowed?
    VAR lSaved         AS LOGICAL     INIT .F.            // True if user exited editor with K_CTRL_W
    VAR lWordWrap      AS LOGICAL     INIT .F.            // True if word wrapping is active
@@ -209,7 +209,7 @@ METHOD LoadFile( cFileName ) CLASS HBEditor
       cString := ""
    ENDIF
 
-   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ) )
+   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ), ::nTabWidth )
    ::naTextLen := Len( ::aText )
 
    IF ::naTextLen == 0
@@ -224,7 +224,7 @@ METHOD LoadFile( cFileName ) CLASS HBEditor
 
 METHOD LoadText( cString ) CLASS HBEditor
 
-   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ) )
+   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ), ::nTabWidth )
    ::naTextLen := Len( ::aText )
 
    IF ::naTextLen == 0
@@ -373,23 +373,14 @@ METHOD SplitLine( nRow ) CLASS HBEditor
             DO WHILE !( SubStr( cLine, --nFirstSpace, 1 ) == " " ) .AND. nFirstSpace > 1
             ENDDO
 
-            // If there is a space before beginning of line split there
-            IF nFirstSpace > 1
-               cSplitLine := Left( cLine, nFirstSpace )
-            ELSE
-               // else split at current cursor position
-               cSplitLine := Left( cLine, ::nCol - 1 )
-            ENDIF
-
-            ::InsertLine( cSplitLine, .T., nStartRow++ )
-
+            ::InsertLine( cSplitLine := ;
+               Left( cLine, iif( nFirstSpace > 1, nFirstSpace, ::nCol - 1 ) ), .T., nStartRow++ )
          ELSE
             // remainder of line
-            cSplitLine := cLine
-            ::InsertLine( cSplitLine, .F., nStartRow++ )
+            ::InsertLine( cSplitLine := cLine, .F., nStartRow++ )
          ENDIF
 
-         cLine := Right( cLine, Len( cLine ) - Len( cSplitLine ) )
+         cLine := SubStr( cLine, Len( cSplitLine ) + 1 )
       ENDDO
 
       IF lMoveToNextLine
@@ -1004,7 +995,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
       nLineLength := NIL
    ENDIF
 
-   ::aText := Text2Array( hb_defaultValue( cString, "" ), nLineLength )
+   ::aText := Text2Array( hb_defaultValue( cString, "" ), nLineLength, ::nTabWidth )
    ::naTextLen := Len( ::aText )
 
    IF ::naTextLen == 0
@@ -1085,7 +1076,7 @@ STATIC FUNCTION WhichEOL( cString )
    RETURN hb_eol()
 
 // Converts a string to an array of strings splitting input string at EOL boundaries
-STATIC FUNCTION Text2Array( cString, nWordWrapCol )
+STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
 
    LOCAL aArray := {}
    LOCAL cEOL := WhichEOL( cString )
@@ -1095,8 +1086,11 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    LOCAL nTokPos := 0
 
    LOCAL cLine
-   LOCAL nFirstSpace
    LOCAL cSplitLine
+
+   LOCAL nPos
+   LOCAL nBreakPos
+   LOCAL nBreakPosSplit
 
    DO WHILE nRetLen < ncSLen
 
@@ -1108,22 +1102,41 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
          DO WHILE Len( cLine ) > 0
 
-            // Split line at nWordWrapCol boundary
-            IF Len( cLine ) > nWordWrapCol
+            nPos := 1
+            nBreakPos := nBreakPosSplit := 0
+            cSplitLine := ""
 
-               nFirstSpace := nWordWrapCol + 1
-               DO WHILE !( SubStr( cLine, --nFirstSpace, 1 ) == " " ) .AND. nFirstSpace > 1
-               ENDDO
+            DO WHILE nPos <= Len( cLine )
 
-               AAdd( aArray, HBTextLine():New( cSplitLine := ;
-                  Left( cLine, iif( nFirstSpace > 1, nFirstSpace, nWordWrapCol + 1 ) ), .T. ) )
-            ELSE
-               // remainder of line is shorter than split point
-               AAdd( aArray, HBTextLine():New( cSplitLine := ;
-                  cLine, .F. ) )
-            ENDIF
+               SWITCH SubStr( cLine, nPos, 1 )
+               CASE Chr( 9 )
+                  nBreakPos := nPos
+                  nBreakPosSplit := Len( cSplitLine )
+                  cSplitLine += Space( nTabWidth - Mod( nBreakPosSplit, nTabWidth ) )
+                  EXIT
+               CASE " "
+                  nBreakPos := nPos
+                  nBreakPosSplit := Len( cSplitLine )
+                  cSplitLine += " "
+                  EXIT
+               OTHERWISE
+                  cSplitLine += SubStr( cLine, nPos, 1 )
+               ENDSWITCH
 
-            cLine := SubStr( cLine, Len( cSplitLine ) + 1 )
+               IF Len( cSplitLine ) >= nWordWrapCol + 1
+                  IF nBreakPosSplit > 0
+                     cSplitLine := Left( cSplitLine, nBreakPosSplit )
+                     nPos := nBreakPos
+                  ENDIF
+                  EXIT
+               ENDIF
+
+               ++nPos
+            ENDDO
+
+            AAdd( aArray, HBTextLine():New( cSplitLine, nPos <= Len( cLine ) ) )
+
+            cLine := SubStr( cLine, nPos + 1 )
          ENDDO
       ELSE
          AAdd( aArray, HBTextLine():New( cLine, .F. ) )
