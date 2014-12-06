@@ -1058,31 +1058,12 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
 /* --- */
 
-// Returns EOL char (be it either CR or LF or both)
-STATIC FUNCTION WhichEOL( cString )
-
-   LOCAL nCRPos := At( Chr( 13 ), cString )
-   LOCAL nLFPos := At( Chr( 10 ), cString )
-
-   DO CASE
-   CASE nCRPos > 0 .AND. nLFPos == 0
-      RETURN Chr( 13 )
-   CASE nCRPos == 0 .AND. nLFPos > 0
-      RETURN Chr( 10 )
-   CASE nCRPos > 0 .AND. nLFPos == nCRPos + 1
-      RETURN Chr( 13 ) + Chr( 10 )
-   ENDCASE
-
-   RETURN hb_eol()
-
 // Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
 
    LOCAL aArray := {}
-   LOCAL cEOL := WhichEOL( cString )
-   LOCAL nEOLLen := Len( cEOL )
    LOCAL nRetLen := 0
-   LOCAL ncSLen := Len( cString )
+   LOCAL nStringLen
    LOCAL nTokPos := 0
 
    LOCAL cLine
@@ -1092,11 +1073,26 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
    LOCAL nBreakPos
    LOCAL nBreakPosSplit
 
-   DO WHILE nRetLen < ncSLen
+   LOCAL cEOL
+
+   #define _EOL_LEN  1
+
+   /* CR EOL */
+   IF hb_BAt( Chr( 13 ), cString ) > 0 .AND. ;
+      hb_BAt( Chr( 10 ), cString ) == 0
+      cEOL := Chr( 13 )
+   ELSE  /* everything else */
+      cString := StrTran( cString, Chr( 13 ) )
+      cEOL := Chr( 10 )
+   ENDIF
+
+   nStringLen := Len( cString )
+
+   DO WHILE nRetLen < nStringLen
 
       cLine := hb_tokenPtr( @cString, @nTokPos, cEOL )
 
-      nRetLen += Len( cLine ) + nEOLLen
+      nRetLen += Len( cLine ) + _EOL_LEN
 
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
 
@@ -1108,15 +1104,15 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
             FOR nPos := 1 TO Len( cLine )
 
                SWITCH SubStr( cLine, nPos, 1 )
-               CASE Chr( 9 )
-                  nBreakPos := nPos
-                  nBreakPosSplit := Len( cSplitLine )
-                  cSplitLine += Space( nTabWidth - Mod( nBreakPosSplit, nTabWidth ) )
-                  EXIT
                CASE " "
                   nBreakPos := nPos
                   nBreakPosSplit := Len( cSplitLine )
                   cSplitLine += " "
+                  EXIT
+               CASE Chr( 9 )
+                  nBreakPos := nPos
+                  nBreakPosSplit := Len( cSplitLine )
+                  cSplitLine += Space( nTabWidth - Mod( nBreakPosSplit, nTabWidth ) )
                   EXIT
                OTHERWISE
                   cSplitLine += SubStr( cLine, nPos, 1 )
