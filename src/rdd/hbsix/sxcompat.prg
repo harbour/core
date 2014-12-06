@@ -227,12 +227,12 @@ FUNCTION sx_TagInfo( cIndex )
          nFirst := 1
       ENDIF
       FOR i := nFirst TO nOrds
-         aInfo[ i, 1 ] := ordName( i )
-         aInfo[ i, 2 ] := ordKey( i )
-         aInfo[ i, 3 ] := ordFor( i )
-         aInfo[ i, 4 ] := ordIsUnique( i )
-         aInfo[ i, 5 ] := ordDescend( i )
-         aInfo[ i, 6 ] := ordCustom( i )
+         aInfo[ i ][ 1 ] := ordName( i )
+         aInfo[ i ][ 2 ] := ordKey( i )
+         aInfo[ i ][ 3 ] := ordFor( i )
+         aInfo[ i ][ 4 ] := ordIsUnique( i )
+         aInfo[ i ][ 5 ] := ordDescend( i )
+         aInfo[ i ][ 6 ] := ordCustom( i )
       NEXT
       RETURN aInfo
    ENDIF
@@ -246,8 +246,7 @@ FUNCTION sx_TagCount( xIndex )
    IF Used()
       DO CASE
       CASE HB_ISNUMERIC( xIndex )
-         nOrder := sx_TagOrder( 1, xIndex )
-         IF nOrder != 0
+         IF ( nOrder := sx_TagOrder( 1, xIndex ) ) != 0
             cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
          ENDIF
       CASE HB_ISSTRING( xIndex ) .AND. ! Empty( xIndex )
@@ -374,8 +373,7 @@ FUNCTION sx_KillTag( xTag, xIndex )
          ELSEIF HB_ISSTRING( xIndex )
             nOrder := sx_TagOrder( xTag, xIndex )
          ELSE
-            nOrder := sx_TagOrder( 1, xIndex )
-            IF nOrder != 0
+            IF ( nOrder := sx_TagOrder( 1, xIndex ) ) != 0
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
                IF Empty( cIndex )
                   nOrder := 0
@@ -490,8 +488,7 @@ FUNCTION sx_dbCreate( cFileName, aStruct, cRDD )
 
    LOCAL aField, aDbStruct
 
-   aDbStruct := AClone( aStruct )
-   FOR EACH aField IN aDbStruct
+   FOR EACH aField IN aDbStruct := AClone( aStruct )
       SWITCH aField[ DBS_TYPE ]
       CASE "V"
          aField[ DBS_LEN ] += 6
