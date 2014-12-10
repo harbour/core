@@ -1,11 +1,11 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(9b7752a635\) \(2014\-10\-16 08:15\)  
-Copyright &copy; 1999\-2014, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(e36b743\) \(2014\-10\-12 00:14\)  
+Copyright &copy; 1999\-2015, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
 Traducción \(gl\): JLalín  
 
 Sintaxe:  
   
-  hbmk2 \[opcións\] \[&lt;guión\(s\)&gt;\] &lt;fonte\(s\)\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
+  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.hbc|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
   
 Descripción:  
 
