@@ -1,6 +1,6 @@
 diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
 --- dbu52ori/dbu.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbu.prg	2014-11-12 01:31:55.000000000 +0100
++++ dbu52pat/dbu.prg	2014-12-10 17:20:46.000000000 +0100
 @@ -9,6 +9,10 @@
  *
  */
@@ -54,6 +54,34 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     * global variables
     STORE .F. TO need_field,need_ntx,need_relat,need_filtr,box_open
+@@ -135,7 +152,7 @@
+    **
+    *  Arrays declared in main module are considered public and
+    *  may be accessed or altered by any module in the system. The
+-   *  matrix defines 6 work areas with 7 indexes and 64 fields
++   *  matrix defines 6 work areas with 7 indexes and 128 fields
+    *  for each. 15 relations are also provided. All elements are
+    *  initialized to avoid a type mismatch.
+    **
+@@ -157,12 +174,12 @@
+    DECLARE t_relate[15]                          && target of relation
+    
+    * individual field names for active list
+-   DECLARE field_n1[64]
+-   DECLARE field_n2[64]
+-   DECLARE field_n3[64]
+-   DECLARE field_n4[64]
+-   DECLARE field_n5[64]
+-   DECLARE field_n6[64]
++   DECLARE field_n1[128]
++   DECLARE field_n2[128]
++   DECLARE field_n3[128]
++   DECLARE field_n4[128]
++   DECLARE field_n5[128]
++   DECLARE field_n6[128]
+    
+    * master field list..128 fields overall max
+    DECLARE field_list[128]
 @@ -250,7 +267,7 @@
     @ 0,0 SAY " F1        F2        F3        F4        F5        F6        " +;
     "F7        F8       "
