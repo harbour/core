@@ -1,7 +1,7 @@
 /*
  * Harbour Make (alias mk/hbmk/hbmk2/hbrun)
  *
- * Copyright 1999-2014 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15466,7 +15466,7 @@ STATIC FUNCTION __plugin_ext()
 /*
  * Extension manager plugin
  *
- * Copyright 2012-2014 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2012-2015 Viktor Szakats (vszakats.net/harbour)
  */
 
 FUNCTION __hbshell_plugin()
@@ -17220,7 +17220,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    IF hbmk[ _HBMK_lShellMode ]
       cText := ;
          "Harbour Shell / Script Runner " + HBRawVersion() + e"\n" + ;
-         "Copyright © 2007-2014, Viktor Szakáts" + e"\n" + ;
+         "Copyright © 2007-2015, Viktor Szakáts" + e"\n" + ;
          "Copyright © 2003-2007, Przemysław Czerpak" + e"\n"
    ELSE
 #endif
@@ -17229,7 +17229,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
          cText += " (" + _SELF_NAME_ + ")"
       ENDIF
       cText += " " + HBRawVersion() + e"\n" + ;
-         "Copyright © 1999-2014, Viktor Szakáts" + e"\n"
+         "Copyright © 1999-2015, Viktor Szakáts" + e"\n"
 #ifdef HARBOUR_SUPPORT
    ENDIF
 #endif

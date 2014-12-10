@@ -173,6 +173,6 @@ Evaluate these points before reporting an issue:
 
 
 ---
-This document Copyright &copy;&nbsp;2009&ndash;2014 Viktor Szakáts (vszakats.net/harbour)<br />
+This document Copyright &copy;&nbsp;2009&ndash;2015 Viktor Szakáts (vszakats.net/harbour)<br />
 Licensed under [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/)<br />
 See [COPYING](COPYING.txt).
