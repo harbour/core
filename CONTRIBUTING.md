@@ -18,11 +18,11 @@
 
 # How to Share
 
-  Share by **linking** to this project. Link to commits, issues or source
-  files, or whatever else you find worthy to pass to someone. This is the
-  easiest, most useful and self-updating way of referring to this project.
-  It's also the best form of crediting and appreciating this work without
-  donating or participating directly.
+  Share by **linking** to this project from your forum, blog or Twitter.
+  Link to commits, issues or source files, or whatever else you find worthy
+  to pass to someone. This is the easiest, most useful and self-updating
+  way of referring to this project. It's also the best form of crediting
+  and appreciating this work without donating or participating directly.
 
   Examples:
 
