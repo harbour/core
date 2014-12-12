@@ -242,7 +242,6 @@ static HB_BOOL hb_tokenParam( int iParam, HB_SIZE nSkip,
       else if( hb_parl( iParam ) )
       {
          iFlags |= _HB_TOK_EOL_DELIM;
-         nDelim = 1;
       }
       else
       {
