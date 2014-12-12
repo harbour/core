@@ -2130,6 +2130,14 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   HB_GEN_FUNC1( PCode1, HB_P_PUSHAPARAMS );
                   break;
                }
+               else if( pSelf->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_ARRAY &&
+                        HB_SUPPORT_EXTOPT )
+               {
+                  if( usCount )
+                     HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+                  HB_GEN_FUNC3( PCode3, HB_P_ARRAYDIM, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+                  break;
+               }
             }
             HB_GEN_FUNC2( PushFunCall, pSelf->value.asFunCall.pFunName->value.asSymbol.name,
                                        pSelf->value.asFunCall.pFunName->value.asSymbol.flags );

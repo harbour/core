@@ -2707,6 +2707,8 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
          case HB_K_LOSTFOCUS:
          case HB_K_CONNECT:
          case HB_K_DISCONNECT:
+         case HB_K_TERMINATE:
+         case HB_K_MENU:
             iMask = HB_INKEY_GTEVENT;
             break;
          default:

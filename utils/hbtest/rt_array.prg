@@ -208,8 +208,15 @@ PROCEDURE Main_ARRAY()
 #endif
    HBTEST Array( 1 )                      IS "{.[1].}"
    HBTEST Array( -1 )                     IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
+#ifdef __HARBOUR__
+   /* disable Harbour extended optimizations to test correct RTE message */
+   #pragma -ko-
+#endif
    HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
    HBTEST Array( 1, 0, "A" )              IS NIL
+#ifdef __HARBOUR__
+   #pragma -ko+
+#endif
    HBTEST Array( 1, 0, 2 )                IS "{.[1].}"
    HBTEST Array( 4, 3, 2 )                IS "{.[4].}"
    HBTEST Array( 0, 3, 2 )                IS "{.[0].}"

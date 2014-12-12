@@ -248,6 +248,7 @@ typedef enum
    HB_F_UDF = 0,
    HB_F_AADD,
    HB_F_ABS,
+   HB_F_ARRAY,
    HB_F_ASC,
    HB_F_AT,
    HB_F_BOF,
