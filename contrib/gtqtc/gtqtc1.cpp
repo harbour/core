@@ -2690,8 +2690,8 @@ void QTConsole::setFontSize( int iFH, int iFW )
       if( ! image->isNull() &&
           ( pQTC->iResizeMode == HB_GTI_RESIZEMODE_ROWS ||
             ( pQTC->qWnd->windowState() & ( Qt::WindowMaximized | Qt::WindowFullScreen ) ) != 0 ) )
-         hb_gt_qtc_setWindowSize( pQTC, image->height() / pQTC->cellY,
-                                        image->width() / pQTC->cellX );
+         hb_gt_qtc_setWindowSize( pQTC, pQTC->qWnd->height() / pQTC->cellY,
+                                        pQTC->qWnd->width() / pQTC->cellX );
    }
    setImageSize();
 }
