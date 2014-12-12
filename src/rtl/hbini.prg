@@ -153,9 +153,7 @@ STATIC FUNCTION hb_iniFileLow( cFileSpec )
 
 STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
 
-   LOCAL nLen
    LOCAL aKeyVal, hCurrentSection
-   LOCAL nLineEnd
    LOCAL cLine
    LOCAL reComment, reInclude, reSection, reSplitters
 
@@ -168,45 +166,29 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
    hCurrentSection := iif( lAutoMain, hIni[ "MAIN" ], hIni )
 
    cLine := ""
-   DO WHILE Len( cData ) > 0
-      nLen := 2
-      IF ( nLineEnd := At( Chr( 13 ) + Chr( 10 ), cData ) ) == 0 .AND. ;
-         ( nLineEnd := At( Chr( 10 ) + Chr( 13 ), cData ) ) == 0
-         nLen := 1
-         IF ( nLineEnd := At( Chr( 10 ), cData ) ) == 0 .AND. ;
-            ( nLineEnd := At( Chr( 13 ), cData ) ) == 0
-            nLineEnd := Len( cData ) + 1
+   FOR EACH cData IN hb_ATokens( cData, .T. )
+      cLine += AllTrim( cData )
+
+      /* Sum up lines terminating with "<space>||" ...*/
+      IF Right( cLine, 3 ) == " ||"
+         cLine := hb_StrShrink( cLine, 2 )
+         /* ... but proceed if stream over */
+         IF ! cData:__enumIsLast()
+            LOOP
          ENDIF
       ENDIF
-
-      /* Get the current line */
-      cLine += AllTrim( Left( cData, nLineEnd - 1 ) )
-      /* remove current line */
-      cData := SubStr( cData, nLineEnd + nLen )
 
       /* Skip void lines */
       IF Empty( cLine )
          LOOP
       ENDIF
 
-      /* Sum up lines terminating with "<space>||" ...*/
-      IF Len( cLine ) > 3 .AND. Right( cLine, 3 ) == " ||"
-
-         cLine := hb_StrShrink( cLine, 2 )
-         /* ... but proceed if stream over */
-         IF Len( cData ) > 0
-            LOOP
-         ENDIF
-      ENDIF
-
       /* remove eventual comments */
       IF ! Empty( aKeyVal := hb_regexSplit( reComment, cLine ) )
-         cLine := AllTrim( aKeyVal[ 1 ] )
-      ENDIF
-
-      /* Skip all comment lines */
-      IF Empty( cLine )
-         LOOP
+         IF Empty( cLine := AllTrim( aKeyVal[ 1 ] ) )
+            /* Skip all comment lines */
+            LOOP
+         ENDIF
       ENDIF
 
       /* Is it an "INCLUDE" statement ? */
@@ -217,12 +199,8 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
             LOOP
          ENDIF
          hb_iniStringLow( hIni, hb_iniFileLow( aKeyVal[ 2 ] ), lKeyCaseSens, cSplitters, lAutoMain )
-         cLine := ""
-         LOOP
-      ENDIF
-
       /* Is it a NEW section? */
-      IF ! Empty( aKeyVal := hb_regex( reSection, cLine ) )
+      ELSEIF ! Empty( aKeyVal := hb_regex( reSection, cLine ) )
          cLine := AllTrim( aKeyVal[ 2 ] )
          IF Len( cLine ) != 0
             hCurrentSection := { => }
@@ -231,25 +209,19 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
             ENDIF
             hIni[ cLine ] := hCurrentSection
          ENDIF
-         cLine := ""
-         LOOP
-      ENDIF
-
       /* Is it a valid key */
-      IF Len( aKeyVal := hb_regexSplit( reSplitters, cLine,,, 1 ) ) == 1
+      ELSEIF Len( aKeyVal := hb_regexSplit( reSplitters, cLine,,, 1 ) ) == 1
          /* TODO: Signal error */
-         cLine := ""
-         LOOP
+      ELSE
+         /* If not case sensitive, use upper keys */
+         IF ! lKeyCaseSens
+            aKeyVal[ 1 ] := Upper( aKeyVal[ 1 ] )
+         ENDIF
+         hCurrentSection[ AllTrim( aKeyVal[ 1 ] ) ] := AllTrim( aKeyVal[ 2 ] )
       ENDIF
 
-      /* If not case sensitive, use upper keys */
-      IF ! lKeyCaseSens
-         aKeyVal[ 1 ] := Upper( aKeyVal[ 1 ] )
-      ENDIF
-
-      hCurrentSection[ AllTrim( aKeyVal[ 1 ] ) ] := AllTrim( aKeyVal[ 2 ] )
       cLine := ""
-   ENDDO
+   NEXT
 
    RETURN hIni
 
