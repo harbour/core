@@ -57,10 +57,10 @@ static  HB_GT_FUNCS     SuperTable;
 
 
 #if defined( HB_OS_UNIX )
-   #if !defined( HB_QT_NEEDLOCKS )
+   #if ! defined( HB_QT_NEEDLOCKS )
       #define HB_QT_NEEDLOCKS
    #endif
-   #if !defined( HB_XLIB_NEEDLOCKS )
+   #if ! defined( HB_XLIB_NEEDLOCKS )
 /*    #define HB_XLIB_NEEDLOCKS */
    #endif
 #endif
@@ -1609,7 +1609,7 @@ static void hb_gt_qtc_initWindow( PHB_GTQTC pQTC, HB_BOOL fCenter )
 static void hb_gt_qtc_createConsoleWindow( PHB_GTQTC pQTC )
 {
    pQTC->qWnd = new QTCWindow( pQTC );
-   if( !pQTC->qWnd )
+   if( ! pQTC->qWnd )
       hb_errInternal( 10002, "Failed to create QTC window", NULL, NULL );
 
    hb_gt_qtc_initWindow( pQTC, HB_FALSE );
@@ -2346,7 +2346,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   case 2:
                      rx.setLeft( hb_arrayGetNI( pInfo->pNewVal2, 1 ) );
                      rx.setTop( hb_arrayGetNI( pInfo->pNewVal2, 2 ) );
-                     if( !qImg.isNull() )
+                     if( ! qImg.isNull() )
                         rx.setSize( qImg.size() );
                      break;
                   case 4:
@@ -2356,7 +2356,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                    hb_arrayGetNI( pInfo->pNewVal2, 4 ) );
                }
             }
-            else if( !qImg.isNull() && hb_itemGetL( pInfo->pNewVal2 ) )
+            else if( ! qImg.isNull() && hb_itemGetL( pInfo->pNewVal2 ) )
             {
                iVal = qImg.height() * rx.width() / qImg.width();
                if( iVal <= rx.height() )
@@ -2793,7 +2793,7 @@ void QTConsole::copySelection( void )
          HB_BYTE bAttr;
          HB_USHORT usChar;
 
-         if( !HB_GTSELF_GETSCRCHAR( pQTC->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
+         if( ! HB_GTSELF_GETSCRCHAR( pQTC->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
          qStr += ( QChar ) usChar;
       }
@@ -2827,7 +2827,7 @@ void QTConsole::repaintChars( const QRect & rx )
 
       while( iCol <= rc.right() )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pQTC->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
+         if( ! HB_GTSELF_GETSCRCHAR( pQTC->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
 
          if( ( pQTC->fontAttribute & HB_GTI_FONTA_CTRLCHARS ) == 0 )
@@ -2978,7 +2978,7 @@ void QTConsole::timerEvent( QTimerEvent * event )
    {
       if( hasFocus() )
       {
-         pQTC->cursorVisible = !pQTC->cursorVisible;
+         pQTC->cursorVisible = ! pQTC->cursorVisible;
          hb_gt_qtc_updateCursor( pQTC );
       }
    }
@@ -3008,7 +3008,7 @@ void QTConsole::mouseMoveEvent( QMouseEvent * event )
        ( event->buttons() & Qt::LeftButton ) &&
        ( event->modifiers() & Qt::ShiftModifier ) )
    {
-      if( !selectMode )
+      if( ! selectMode )
       {
          selectMode = true;
          selectRect.setCoords( event->x(), event->y(), event->x(), event->y() );
@@ -3624,7 +3624,7 @@ void QTCWindow::setResizing( void )
       if( qConsole->pQTC->iResizeMode == HB_GTI_RESIZEMODE_ROWS )
       {
          setMinimumSize( qConsole->pQTC->cellX << 1, qConsole->pQTC->cellY << 1 );
-         if( !qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
+         if( ! qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
             setSizeIncrement( 0, 0 );
          else
             setSizeIncrement( qConsole->pQTC->cellX, qConsole->pQTC->cellY );
@@ -3632,7 +3632,7 @@ void QTCWindow::setResizing( void )
       else
       {
          setMinimumSize( qConsole->pQTC->iCols << 1, qConsole->pQTC->iRows << 2 );
-         if( !qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
+         if( ! qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
             setSizeIncrement( 0, 0 );
          else
             setSizeIncrement( qConsole->pQTC->iCols, qConsole->pQTC->iRows );
