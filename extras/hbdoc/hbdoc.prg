@@ -1006,7 +1006,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
    hb_default( @lRaw, .F. )
 
    IF nWidth == 0 .OR. lRaw
-      aText := hb_ATokens( cText, hb_eol() )
+      aText := hb_ATokens( cText, .T. )
       idx := 99999
       AEval( aText, {| c | iif( Empty( c ), , idx := Min( idx, Len( c ) - Len( LTrim( c ) ) ) ) } )
       AEval( aText, {| c, n | aText[ n ] := Space( nLeftMargin ) + SubStr( c, idx + 1 ) } )

@@ -20,7 +20,7 @@ procedure Main( cURLList )
       hb_run( 'grep -R -H -I -n -o "http://[a-zA-Z0-9/\.\~\%\?&\+=@:-]*" * > ' + cURLList )
    endif
 
-   for each url in hb_ATokens( StrTran( hb_MemoRead( cURLList ), Chr( 13 ) ), Chr( 10 ) )
+   for each url in hb_ATokens( hb_MemoRead( cURLList ), .T. )
       if Len( url := hb_ATokens( url, ":" ) ) >= 4
          if ! Empty( url[ 4 ] ) .and. ;
             ! url[ 4 ] $ { "//" => } .and. ;

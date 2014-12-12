@@ -256,7 +256,7 @@ STATIC FUNCTION GetLines( cString )
       cString := hb_StrShrink( cString, Len( Chr( 13 ) + Chr( 10 ) ) )
    ENDIF
 
-   FOR EACH tmp IN hb_ATokens( StrTran( cString, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH tmp IN hb_ATokens( cString, .T. )
       AAdd( aLine, tmp )
    NEXT
 

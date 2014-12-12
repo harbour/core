@@ -38,7 +38,7 @@ procedure main()
    nMinCh := nMinUp := nMinLo := 0xFFFF
    nUppers := nLowers := 0
 
-   for each cLine in hb_ATokens( StrTran( hb_MemoRead( "UnicodeData.txt" ), Chr( 13 ) ), Chr( 10 ) )
+   for each cLine in hb_ATokens( hb_MemoRead( "UnicodeData.txt" ), .T. )
       if ! Empty( cLine )
          aLine := hb_ATokens( cLine, ";" )
          if Len( aLine ) == 15

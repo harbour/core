@@ -195,11 +195,8 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
    LOCAL nLine
    LOCAL nStartCol
 
-   cFile := StrTran( cFile, Chr( 13 ) )
-   cFile := StrTran( cFile, Chr( 9 ), " " )
-
    nLine := 0
-   FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 9 ), " " ), .T. )
 
       cLine := SubStr( cLine, 4 )
       ++nLine
@@ -274,7 +271,7 @@ FUNCTION __hbdoc_ToSource( aEntry )
          FOR EACH item IN hEntry
             IF HB_ISSTRING( item ) .AND. ! hb_LeftEq( item:__enumKey(), "_" )
                cSource += "   $" + item:__enumKey() + "$" + hb_eol()
-               FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
+               FOR EACH cLine IN hb_ATokens( item, .T. )
                   cLineOut := iif( Len( cLine ) == 0, "", Space( 4 ) + cLine )
                   cSource += iif( Empty( cLineOut ), "", "  " + cLineOut ) + hb_eol()
                NEXT
@@ -295,10 +292,7 @@ FUNCTION __hbdoc_FilterOut( cFile )
    LOCAL nToSkip := 0
    LOCAL nEmpty := 0
 
-   cFile := StrTran( cFile, Chr( 13 ) )
-   cFile := StrTran( cFile, Chr( 9 ), " " )
-
-   FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 9 ), " " ), .T. )
 
       SWITCH AllTrim( SubStr( cLine, 4 ) )
       CASE "$DOC$"

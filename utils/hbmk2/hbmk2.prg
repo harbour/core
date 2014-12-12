@@ -374,7 +374,6 @@ EXTERNAL hbmk_KEYW
 #define _IS_AUTOLIBSYSPRE( c )  ( hbmk[ _HBMK_cPLAT ] == "win" .AND. Lower( hb_FNameName( c ) ) == "unicows" )
 
 #define _OUT_EOL                e"\n"      /* used when displaying text */
-#define _CHR_EOL                Chr( 10 )  /* used when consuming text files */
 #define _FIL_EOL                Chr( 10 )  /* used when creating source files */
 
 #ifdef HB_LEGACY_LEVEL4
@@ -9536,10 +9535,7 @@ STATIC FUNCTION deplst_read( hbmk, hDeps, cFileName )
    LOCAL cLine
    LOCAL nLine := 0
 
-   cFileBody := StrTran( cFileBody, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
-   cFileBody := StrTran( cFileBody, Chr( 9 ), " " )
-
-   FOR EACH cLine IN hb_ATokens( cFileBody, Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cFileBody, Chr( 9 ), " " ), .T. )
       ++nLine
       cLine := AllTrim( cLine )
       IF cLine == "\" .OR. hb_RightEq( cLine, " \" )
@@ -11390,7 +11386,6 @@ STATIC PROCEDURE HBC_ProcessAuto( hbmk )
 
 STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
-   LOCAL cFile
    LOCAL cLine
    LOCAL cLineOri
    LOCAL cLineL
@@ -11416,16 +11411,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
    AAddNew( hbmk[ _HBMK_aDEPTHBC ], { cFileName, nNestingLevel - 1 } )
 
-   cFile := hbmk_MemoRead( cFileName ) /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
-
-   IF !( hb_eol() == _CHR_EOL )
-      cFile := StrTran( cFile, hb_eol(), _CHR_EOL )
-   ENDIF
-   IF !( hb_eol() == Chr( 13 ) + Chr( 10 ) )
-      cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _CHR_EOL )
-   ENDIF
-
-   FOR EACH cLine IN hb_ATokens( cFile, _CHR_EOL )
+   FOR EACH cLine IN hb_ATokens( hbmk_MemoRead( cFileName ), .T. )  /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
 
       cLineOri := cLine := AllTrim( ArchCompFilter( hbmk, AllTrim( cLine ), cFileName ) )
       cLineL := Lower( cLine )
@@ -12225,14 +12211,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
          cFile := hbmk_MemoRead( cFileName ) /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
       ENDIF
 
-      IF !( hb_eol() == _CHR_EOL )
-         cFile := StrTran( cFile, hb_eol(), _CHR_EOL )
-      ENDIF
-      IF !( hb_eol() == Chr( 13 ) + Chr( 10 ) )
-         cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _CHR_EOL )
-      ENDIF
-
-      FOR EACH cLine IN hb_ATokens( cFile, _CHR_EOL )
+      FOR EACH cLine IN hb_ATokens( cFile, .T. )
          IF ! hb_LeftEq( cLine, "#" )
             FOR EACH cParam IN hb_ATokens( cLine,, .T. )
                cParam := StrStripQuote( cParam )
@@ -12686,7 +12665,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
    IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|gccomf|clang" )
       cExt := hb_FNameExt( cFile )
       IF cExt == ".c"
-         FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
+         FOR EACH cLine IN hb_ATokens( hb_MemoRead( cFile ), .T. )
             cLine := AllTrim( cLine )
             IF hb_LeftEq( cLine, '{ "' ) .AND. "HB_FS_FIRST" $ cLine .AND. !( "HB_FS_STATIC" $ cLine )
                n := 4
@@ -13054,15 +13033,12 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
                                aLibList, aLibPath, aPrevFiles )
 
    LOCAL cLine, cWord
-   LOCAL nMode
 
-   cCommands := StrTran( StrTran( cCommands, Chr( 13 ) ), "//", "# " )
-
-   nMode := RTLNK_MODE_NONE
+   LOCAL nMode := RTLNK_MODE_NONE
 
    hb_default( @aPrevFiles, {} )
 
-   FOR EACH cLine IN hb_ATokens( cCommands, Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cCommands, "//", "# " ), .T. )
       cLine := AllTrim( cLine )
       IF ! Empty( cLine )
          FOR EACH cWord IN rtlnk_tokens( cLine )
@@ -13673,13 +13649,11 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
          "LIBRARY " + '"' + hb_FNameNameExt( cSourceDLL ) + '"' + hb_eol() + ;
          "EXPORTS" + hb_eol()
 
-      cExports := StrTran( cExports, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
-
       IF ( tmp := At( "ordinal hint", cExports ) ) > 0
          cExports := SubStr( cExports, tmp + Len( "ordinal hint" ) )
       ENDIF
 
-      FOR EACH cLine IN hb_ATokens( cExports, Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( cExports, .T. )
          IF ! Empty( cLine ) .AND. Len( aCols := hb_ATokens( cLine ) ) >= 4
             cFuncList += aCols[ 4 ] + hb_eol()
          ENDIF
@@ -13881,7 +13855,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
             2013-04-26 02:12:08 +0200
             Foo Bar
             foobar@foobaz */
-         IF Len( aResult := hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) ) ) >= 5
+         IF Len( aResult := hb_ATokens( cStdOut, .T. ) ) >= 5
             cResult := aResult[ 1 ]
             hCustom[ "COMMIT_HASH" ] := aResult[ 2 ]
             hCustom[ "AUTHOR_DATE_ISO" ] := aResult[ 3 ]
@@ -14466,7 +14440,7 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
    LOCAL cOldCP := hb_cdpSelect( "cp437" )
 
    IF ! Empty( pRegex := hb_regexComp( R_( "HB_FUN_([A-Z_][A-Z_0-9]*)" ), .T., .T. ) )
-      FOR EACH cLine IN hb_ATokens( StrTran( cString, Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( cString, .T. )
          IF AScan( sc_aException, {| tmp | tmp $ Lower( cLine ) } ) == 0
             FOR EACH tmp IN hb_regexAll( pRegex, cLine,,,,, .T. )
                AAddNew( aList, tmp[ 2 ] )
@@ -14596,7 +14570,7 @@ STATIC FUNCTION hbmk__hbdoc_ToSource( hEntry )
          cSource += ;
             item:__enumKey() + hb_eol() + ;
             Replicate( "-", Len( item:__enumKey() ) ) + hb_eol()
-         FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
+         FOR EACH cLine IN hb_ATokens( item, .T. )
             cSource += cLine + hb_eol()
          NEXT
          cSource += hb_eol()
@@ -15294,7 +15268,7 @@ STATIC PROCEDURE __hbshell_LoadExtFromFile( aExtension, cFileName )
 
    LOCAL cItem
 
-   FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cItem IN hb_ATokens( MemoRead( cFileName ), .T. )
       IF "#" $ cItem
          cItem := Left( cItem, At( "#", cItem ) - 1 )
       ENDIF
@@ -16117,7 +16091,7 @@ STATIC PROCEDURE __hbshell_HistoryLoad()
       IF hb_LeftEq( cHistory, _HISTORY_DISABLE_LINE + Chr( 10 ) )
          hbsh[ _HBSH_lPreserveHistory ] := .F.
       ELSE
-         FOR EACH cLine IN hb_ATokens( StrTran( cHistory, Chr( 13 ) ), Chr( 10 ) )
+         FOR EACH cLine IN hb_ATokens( cHistory, .T. )
             IF ! Empty( cLine )
                AAdd( hbsh[ _HBSH_aHistory ], PadR( cLine, HB_LINE_LEN ) )
             ENDIF
@@ -16462,10 +16436,7 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := hb_FNameExtSet( cSrcName, ".hbp" )
    ENDIF
 
-   cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
-   cSrc := StrTran( cSrc, Chr( 9 ), " " )
-
-   FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cSrc, Chr( 9 ), " " ), .T. )
       IF ( tmp := At( " =", cLine ) ) > 0
          cSetting := AllTrim( Left( cLine, tmp - 1 ) )
          cValue := AllTrim( SubStr( cLine, tmp + Len( " =" ) ) )
@@ -16607,10 +16578,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
       AAdd( aDst, "-hbdyn" )
    ENDCASE
 
-   cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
-   cSrc := StrTran( cSrc, Chr( 9 ), " " )
-
-   FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cSrc, Chr( 9 ), " " ), .T. )
       IF hb_LeftEq( cLine, "[" ) .AND. hb_RightEq( cLine, "]" )
          lGlobalSection := .F.
          cLine := SubStr( cLine, 2, Len( cLine ) - 2 )
@@ -16802,10 +16770,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
 
    AAdd( aDst, "-inc" )
 
-   cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
-   cSrc := StrTran( cSrc, Chr( 9 ), " " )
-
-   FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cSrc, Chr( 9 ), " " ), .T. )
       IF cLine == "[Files]"
          lFileSection := .T.
       ELSEIF lFileSection
@@ -17077,7 +17042,7 @@ STATIC FUNCTION RemoveEndingWhitespace( cFile )
    LOCAL cResult := ""
    LOCAL cLine
 
-   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( cFile, .T. )
       cResult += RTrim( cLine )
       IF ! cLine:__enumIsLast()
          cResult += hb_eol()

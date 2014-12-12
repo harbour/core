@@ -561,7 +561,7 @@ METHOD MGet( cSpec, cLocalPath ) CLASS TIPClientFTP
    cStr := ::ReadAuxPort()
 
    IF cStr != NIL
-      FOR EACH cFile IN hb_ATokens( StrTran( cStr, Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cFile IN hb_ATokens( cStr, .T. )
          IF ! Empty( cFile )
             ::Downloadfile( cLocalPath + RTrim( cFile ), RTrim( cFile ) )
          ENDIF
@@ -683,7 +683,7 @@ METHOD ListFiles( cFileSpec ) CLASS TIPClientFTP
       RETURN {}
    ENDIF
 
-   aList := hb_ATokens( StrTran( cList, Chr( 13 ) ), Chr( 10 ) )
+   aList := hb_ATokens( cList, .T. )
 
    FOR EACH cEntry IN aList DESCEND
 

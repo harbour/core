@@ -835,7 +835,7 @@ METHOD ReadIni( cIniName ) CLASS HBFormatCode
    LOCAL i, nLen, aIni, c
 
    IF hb_FileExists( cIniName )
-      aIni := hb_ATokens( StrTran( MemoRead( cIniName ), Chr( 13 ) + Chr( 10 ), Chr( 10 ) ), Chr( 10 ) )
+      aIni := hb_ATokens( MemoRead( cIniName ), .T. )
       nLen := Len( aIni )
       FOR i := 1 TO nLen
          IF ! Empty( aIni[ i ] := AllTrim( aIni[ i ] ) ) .AND. ;
@@ -859,7 +859,7 @@ METHOD Source2Array( cSource ) CLASS HBFormatCode
       ENDIF
    ENDIF
 
-   RETURN hb_ATokens( StrTran( cSource, Chr( 13 ) + Chr( 10 ), Chr( 10 ) ), Chr( 10 ) )
+   RETURN hb_ATokens( cSource, .T. )
 
 METHOD Array2Source( aSource ) CLASS HBFormatCode
 

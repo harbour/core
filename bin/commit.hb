@@ -300,7 +300,7 @@ STATIC FUNCTION IsLastEntryEmpty( cLog, cLogName, /* @ */ lChangeLog )
 
    lChangeLog := .F.
 
-   FOR EACH cLine IN hb_ATokens( StrTran( cLog, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( cLog, .T. )
       IF ! cLine:__enumIsFirst()
          IF Empty( Left( cLine, 2 ) ) .AND. ! Empty( SubStr( cLine, 3, 1 ) )
             IF SubStr( cLine, 5 ) == hb_FNameNameExt( cLogName )
@@ -371,7 +371,7 @@ STATIC FUNCTION GitFileList()
 
    LOCAL cStdOut
    LOCAL nResult := hb_processRun( "git ls-files",, @cStdOut )
-   LOCAL aList := iif( nResult == 0, hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) ), {} )
+   LOCAL aList := iif( nResult == 0, hb_ATokens( cStdOut, .T. ), {} )
    LOCAL cItem
 
    FOR EACH cItem IN aList DESCEND
@@ -524,7 +524,7 @@ STATIC FUNCTION Changes( cVCS )
    CASE "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status -s" ),, @cStdOut ) ; EXIT
    ENDSWITCH
 
-   RETURN hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) )
+   RETURN hb_ATokens( cStdOut, .T. )
 
 STATIC FUNCTION LaunchCommand( cCommand, cArg )
 
@@ -949,7 +949,7 @@ STATIC FUNCTION EndingWhitespace( cFile )
 
    LOCAL cLine
 
-   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( cFile, .T. )
       IF Right( cLine, 1 ) == " "
          RETURN .T.
       ENDIF
@@ -962,7 +962,7 @@ STATIC FUNCTION RemoveEndingWhitespace( cFile, cEOL, lRTrim )
    LOCAL cResult := ""
    LOCAL cLine
 
-   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( cFile, .T. )
       cResult += iif( lRTrim, RTrim( cLine ), cLine )
       IF ! cLine:__enumIsLast()
          cResult += cEOL
@@ -1106,7 +1106,7 @@ STATIC FUNCTION LoadGitignore( cFileName )
          "!*/3rd/*/*.hbp", ;
          "!*/3rd/*/Makefile" }
 
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( hb_MemoRead( cFileName ), .T. )
          IF ! Empty( cLine ) .AND. ! hb_LeftEq( cLine, "#" )
             /* TODO: clean this */
             AAdd( t_aIgnore, ;
@@ -1139,7 +1139,7 @@ STATIC FUNCTION LoadGitattributes( cFileName, /* @ */ aIdent, /* @ */ hFlags )
       t_hExt := { => }
       t_aIdent := {}
       t_hFlags := { => }
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( hb_MemoRead( cFileName ), .T. )
          IF hb_LeftEq( cLine, "*." )
              cLine := SubStr( cLine, 2 )
              IF ( tmp := At( " ", cLine ) ) > 0

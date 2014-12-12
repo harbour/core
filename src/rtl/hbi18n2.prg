@@ -55,7 +55,6 @@
 
 #define _I18N_ITEM         { "", {}, {}, .F., NIL }
 
-#define _I18N_EOL          Chr( 10 )
 #define _I18N_DELIM        ( Chr( 0 ) + Chr( 3 ) + Chr( 0 ) )
 
 STATIC FUNCTION __i18n_fileName( cFileName )
@@ -114,13 +113,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
    IF hb_utf8Asc( cValue ) == _BOM_VALUE
       cValue := SubStr( cValue, Len( _UTF8_BOM ) + 1 )
    ENDIF
-   IF ! hb_eol() == _I18N_EOL
-      cValue := StrTran( cValue, hb_eol(), _I18N_EOL )
-   ENDIF
-   IF ! hb_eol() == Chr( 13 ) + Chr( 10 )
-      cValue := StrTran( cValue, Chr( 13 ) + Chr( 10 ), _I18N_EOL )
-   ENDIF
-   aLines := hb_ATokens( cValue, _I18N_EOL )
+   aLines := hb_ATokens( cValue, .T. )
 
    cErrorMsg := NIL
    lCont := .F.

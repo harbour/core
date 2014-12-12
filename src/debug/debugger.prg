@@ -3731,7 +3731,7 @@ FUNCTION __dbgRestScreen( ... )
 
 
 FUNCTION __dbgTextToArray( cString )
-   RETURN hb_ATokens( StrTran( cString, Chr( 13 ) ), Chr( 10 ) )
+   RETURN hb_ATokens( cString, .T. )
 
 FUNCTION __dbgValToStr( uVal )
 

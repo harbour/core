@@ -8,8 +8,8 @@ PROCEDURE Main( cFileName )
    LOCAL pPP := __pp_Init()
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      FOR EACH cLine IN hb_ATokens( StrTran( __pp_Process( pPP, ;
-            hb_MemoRead( hb_defaultValue( cFileName, hb_FNameExtSet( __FILE__, ".dat" ) ) ) ), Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( __pp_Process( pPP, ;
+            hb_MemoRead( hb_defaultValue( cFileName, hb_FNameExtSet( __FILE__, ".dat" ) ) ) ), .T. )
          BEGIN SEQUENCE
             IF ! Empty( cLine )
                &cLine

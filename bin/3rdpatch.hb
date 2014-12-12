@@ -324,7 +324,7 @@ PROCEDURE Main( ... )
 
    nMemoLine := 0
 
-   FOR EACH cMemoLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cMemoLine IN hb_ATokens( cFile, .T. )
 
       cMemoLine := AllTrim( cMemoLine )
       nMemoLine++

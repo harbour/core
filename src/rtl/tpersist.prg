@@ -80,7 +80,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
    bError := iif( hb_defaultValue( lIgnoreErrors, .F. ), ;
                   {| e | Break( e ) }, ErrorBlock() )
 
-   FOR EACH cLine IN hb_ATokens( StrTran( cObjectText, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( cObjectText, .T. )
 
       cLine := AllTrim( cLine )
 

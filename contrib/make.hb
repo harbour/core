@@ -506,7 +506,7 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
       hProject[ "cDynSuffix" ] := hbmk2_hbinfo_getitem( hInfo, "dynsuffix" )
       hProject[ "cPlatform" ] := hbmk2_hbinfo_getitem( hInfo, "platform" )
 
-      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( hInfo, "hbctree" ), Chr( 10 ) )
+      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( hInfo, "hbctree" ), .T. )
          IF ! Empty( tmp )
 #ifdef __PLATFORM__DOS
             /* Ignore long filenames on MS-DOS hosts */
@@ -764,7 +764,7 @@ STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
             AddProject( hProjectList, tmp )
          ENDIF
          IF hb_FileExists( tmp := ( cDir + aFile[ F_NAME ] + hb_ps() + "makesub.txt" ) )
-            FOR EACH tmp IN hb_ATokens( StrTran( hb_MemoRead( tmp ), Chr( 13 ) ), Chr( 10 ) )
+            FOR EACH tmp IN hb_ATokens( hb_MemoRead( tmp ), .T. )
                IF ! Empty( tmp )
                   AddProject( hProjectList, aFile[ F_NAME ] + hb_ps() + hb_DirSepToOS( tmp ) )
                ENDIF
