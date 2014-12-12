@@ -2356,6 +2356,15 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                    hb_arrayGetNI( pInfo->pNewVal2, 4 ) );
                }
             }
+            else if( !qImg.isNull() && hb_itemGetL( pInfo->pNewVal2 ) )
+            {
+               iVal = qImg.height() * rx.width() / qImg.width();
+               if( iVal <= rx.height() )
+                  rx.setHeight( iVal );
+               else
+                  rx.setWidth( qImg.width() * rx.height() / qImg.height() );
+               rx.moveCenter( pQTC->qWnd->qConsole->image->rect().center() );
+            }
 
             if( qImg.isNull() )
                pQTC->qWnd->qConsole->repaintChars( rx );
@@ -2676,7 +2685,14 @@ void QTConsole::setFontSize( int iFH, int iFW )
    pQTC->cellY = pQTC->fontHeight;
 
    if( pQTC->fRepaint )
+   {
       hb_gt_qtc_resetBoxCharBitmaps( pQTC );
+      if( ! image->isNull() &&
+          ( pQTC->iResizeMode == HB_GTI_RESIZEMODE_ROWS ||
+            ( pQTC->qWnd->windowState() & ( Qt::WindowMaximized | Qt::WindowFullScreen ) ) != 0 ) )
+         hb_gt_qtc_setWindowSize( pQTC, image->height() / pQTC->cellY,
+                                        image->width() / pQTC->cellX );
+   }
    setImageSize();
 }
 
@@ -3287,6 +3303,9 @@ void QTConsole::keyPressEvent( QKeyEvent * event )
             return;
          }
          iKey = HB_KX_ENTER;
+         break;
+      case Qt::Key_Menu:
+         hb_gt_qtc_addKeyToInputQueue( pQTC, HB_K_MENU );
          break;
       case Qt::Key_Clear:
          iKey = HB_KX_CENTER;

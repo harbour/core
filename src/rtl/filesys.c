@@ -328,17 +328,19 @@ static int fs_win_get_drive( void )
 {
    TCHAR pBuffer[ HB_PATH_MAX ];
    LPTSTR lpBuffer = pBuffer;
-   DWORD dwResult;
+   DWORD dwResult, dwSize;
    int iDrive = 0;
 
-   dwResult = GetCurrentDirectory( HB_SIZEOFARRAY( pBuffer ), lpBuffer );
-   if( dwResult > HB_SIZEOFARRAY( pBuffer ) )
+   dwSize = HB_SIZEOFARRAY( pBuffer );
+   dwResult = GetCurrentDirectory( dwSize, lpBuffer );
+   if( dwResult > dwSize )
    {
-      lpBuffer = ( TCHAR * ) hb_xgrab( dwResult * sizeof( TCHAR ) );
-      dwResult = GetCurrentDirectory( dwResult, lpBuffer );
+      dwSize = dwResult;
+      lpBuffer = ( TCHAR * ) hb_xgrab( dwSize * sizeof( TCHAR ) );
+      dwResult = GetCurrentDirectory( dwSize, lpBuffer );
    }
    hb_fsSetIOError( dwResult != 0, 0 );
-   if( dwResult >= 2 && dwResult < HB_SIZEOFARRAY( pBuffer ) &&
+   if( dwResult >= 2 && dwResult < dwSize &&
        lpBuffer[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
    {
       iDrive = HB_TOUPPER( lpBuffer[ 0 ] );

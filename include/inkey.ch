@@ -98,6 +98,8 @@
 #define HB_K_LOSTFOCUS          1104
 #define HB_K_CONNECT            1105
 #define HB_K_DISCONNECT         1106
+#define HB_K_TERMINATE          1107
+#define HB_K_MENU               1108
 
 /* Cursor movement keys */
 

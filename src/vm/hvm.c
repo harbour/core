@@ -5484,13 +5484,18 @@ static void hb_vmArrayDim( HB_USHORT uiDimensions ) /* generates an uiDimensions
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmArrayDim(%hu)", uiDimensions ) );
 
-   hb_vmArrayNew( hb_stackAllocItem(), uiDimensions );
+   if( uiDimensions )
+   {
+      hb_vmArrayNew( hb_stackAllocItem(), uiDimensions );
 
-   hb_itemMove( hb_stackItemFromTop( ( int ) ( -1 - uiDimensions ) ),
-                hb_stackItemFromTop( -1 ) );
-   do
-      hb_stackPop();
-   while( --uiDimensions );
+      hb_itemMove( hb_stackItemFromTop( ( int ) ( -1 - uiDimensions ) ),
+                   hb_stackItemFromTop( -1 ) );
+      do
+         hb_stackPop();
+      while( --uiDimensions );
+   }
+   else
+      HB_VM_PUSHNIL();
 }
 
 static void hb_vmHashGen( HB_SIZE nElements ) /* generates an nElements Hash and fills it from the stack values */

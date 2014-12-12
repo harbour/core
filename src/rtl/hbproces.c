@@ -1023,7 +1023,10 @@ int hb_fsProcessRun( const char * pszFileName,
          {
             if( nOutBuf == nOutSize )
             {
-               nOutSize += HB_STD_BUFFER_SIZE;
+               if( nOutSize == 0 )
+                  nOutSize = HB_STD_BUFFER_SIZE;
+               else
+                  nOutSize += nOutSize >> 1;
                pOutBuf = ( char * ) hb_xrealloc( pOutBuf, nOutSize + 1 );
             }
             nLen = hb_fsReadLarge( hStdout, pOutBuf + nOutBuf, nOutSize - nOutBuf );
@@ -1042,7 +1045,10 @@ int hb_fsProcessRun( const char * pszFileName,
          {
             if( nErrBuf == nErrSize )
             {
-               nErrSize += HB_STD_BUFFER_SIZE;
+               if( nErrSize == 0 )
+                  nErrSize = HB_STD_BUFFER_SIZE;
+               else
+                  nErrSize += nErrSize >> 1;
                pErrBuf = ( char * ) hb_xrealloc( pErrBuf, nErrSize + 1 );
             }
             nLen = hb_fsReadLarge( hStderr, pErrBuf + nErrBuf, nErrSize - nErrBuf );
@@ -1160,7 +1166,10 @@ int hb_fsProcessRun( const char * pszFileName,
             {
                if( nOutBuf == nOutSize )
                {
-                  nOutSize += HB_STD_BUFFER_SIZE;
+                  if( nOutSize == 0 )
+                     nOutSize = HB_STD_BUFFER_SIZE;
+                  else
+                     nOutSize += nOutSize >> 1;
                   pOutBuf = ( char * ) hb_xrealloc( pOutBuf, nOutSize + 1 );
                }
                ul = hb_fsReadLarge( hStdout, pOutBuf + nOutBuf, nOutSize - nOutBuf );
@@ -1180,7 +1189,10 @@ int hb_fsProcessRun( const char * pszFileName,
             {
                if( nErrBuf == nErrSize )
                {
-                  nErrSize += HB_STD_BUFFER_SIZE;
+                  if( nErrSize == 0 )
+                     nErrSize = HB_STD_BUFFER_SIZE;
+                  else
+                     nErrSize += nErrSize >> 1;
                   pErrBuf = ( char * ) hb_xrealloc( pErrBuf, nErrSize + 1 );
                }
                ul = hb_fsReadLarge( hStderr, pErrBuf + nErrBuf, nErrSize - nErrBuf );
