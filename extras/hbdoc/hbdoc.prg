@@ -601,7 +601,6 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
          ENDIF
          AAdd( sc_hConstraint[ "categories" ][ idxCategory ][ 3 ][ idxSubCategory ], o )
       ENDIF
-
    ENDIF
 
    RETURN
@@ -1001,20 +1000,18 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
    LOCAL cResult := ""
    LOCAL idx
    LOCAL cLine
-   LOCAL aText
+
+   LOCAL aText := hb_ATokens( cText, .T. )
 
    hb_default( @lRaw, .F. )
 
    IF nWidth == 0 .OR. lRaw
-      aText := hb_ATokens( cText, .T. )
       idx := 99999
       AEval( aText, {| c | iif( Empty( c ), , idx := Min( idx, Len( c ) - Len( LTrim( c ) ) ) ) } )
       AEval( aText, {| c, n | aText[ n ] := Space( nLeftMargin ) + SubStr( c, idx + 1 ) } )
       cResult := Join( aText, hb_eol() ) + hb_eol() + hb_eol()
    ELSE
-      DO WHILE Len( cText ) > 0
-         cLine := Parse( @cText, hb_eol() )
-
+      FOR EACH cLine IN aText
          IF cLine == "<table>"
             lRaw := .T.
          ELSEIF cLine == "</table>"
@@ -1070,7 +1067,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
 
             cResult += hb_eol()
          ENDIF
-      ENDDO
+      NEXT
    ENDIF
 
    RETURN cResult
