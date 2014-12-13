@@ -545,8 +545,8 @@ moment.
 
 In my personal web site () you can download an example of application,
 screen shots of converted applications and some sample of code, exploring
-a lot of interesting features (menus, google maps, skype, crystal reports,
-MSN, etc.). And of course, you can download this little documentation.
+a lot of interesting features. And of course, you can download this little
+documentation.
 Enjoy it !
 
 

@@ -181,7 +181,7 @@ STATIC PROCEDURE WvtConsoleGets( nMode )
    IF hb_mtvm()
       hb_threadStart( {| oCrt | hb_gtReload( "WVT" ), ;
          oCrt := hb_gtSelect(), ;
-         iif( hb_defaultValue( nMode, 0 ) == 0, WvtNextGetsConsole(), GoogleMap() ), ;
+         iif( hb_defaultValue( nMode, 0 ) == 0, WvtNextGetsConsole(), OnlineMap() ), ;
          oCrt := NIL } )
    ENDIF
 
@@ -438,7 +438,7 @@ STATIC FUNCTION BuildMainMenu()
    oMenu:AddItem( "-" )
    oMenu:AddItem( "Wvt Lines . Main Window"     , {|| WvtLines()          } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Google Maps"                 , {|| WvtConsoleGets( 1 ) } )
+   oMenu:AddItem( "Online Maps"                 , {|| WvtConsoleGets( 1 ) } )
    oMenu:AddItem( "-" )
    oMenu:AddItem( "Wvg Console with GCUI"       , {|| ExecGCUI()          } )
    oMenu:AddItem( "-" )
@@ -488,7 +488,7 @@ STATIC FUNCTION BuildMainMenu()
 
    RETURN oMenu  /* The last submenu item */
 
-STATIC PROCEDURE GoogleMap()
+STATIC PROCEDURE OnlineMap()
 
    LOCAL mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
    LOCAL getlist := {}
@@ -496,7 +496,7 @@ STATIC PROCEDURE GoogleMap()
    SetMode( 22, 65 )
    SetColor( "N/W,N/GR*,,,N/W*" )
    cls
-   hb_gtInfo( HB_GTI_WINTITLE, "Google Maps" )
+   hb_gtInfo( HB_GTI_WINTITLE, "Online Maps" )
 
    mfrom1 := mto1 := Space( 20 )
    mfrom2 := mto2 := Space( 40 )
