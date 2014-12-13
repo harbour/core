@@ -323,7 +323,16 @@ HB_FUNC( HB_TOKENPTR )
       szToken = hb_tokenGet( szLine, nLen, szDelim, nDelim, iFlags,
                              1, &nToken );
       if( szToken && nLen > nToken )
+      {
+         if( nDelim == 0 && ( iFlags & _HB_TOK_EOL_DELIM ) != 0 )
+         {
+            ++nDelim;
+            if( nToken + nDelim < nLen &&
+                szToken[ nToken + nDelim ] == ( szToken[ nToken ] == '\n' ? '\r' : '\n' ) )
+               ++nDelim;
+         }
          nSkip = szToken - hb_parc( 1 ) + nToken + nDelim;
+      }
       else
          nSkip = hb_parclen( 1 ) + 1;
 
