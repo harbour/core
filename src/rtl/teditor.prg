@@ -1062,7 +1062,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
 
    LOCAL aArray := {}
-   LOCAL nStringLen
+   LOCAL nStringLen := Len( cString )
    LOCAL nTokPos := 0
 
    LOCAL cLine
@@ -1072,22 +1072,9 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
    LOCAL nBreakPos
    LOCAL nBreakPosSplit
 
-   LOCAL cEOL
-
-   /* CR EOL */
-   IF hb_BAt( Chr( 13 ), cString ) > 0 .AND. ;
-      hb_BAt( Chr( 10 ), cString ) == 0
-      cEOL := Chr( 13 )
-   ELSE  /* everything else */
-      cString := StrTran( cString, Chr( 13 ) )
-      cEOL := Chr( 10 )
-   ENDIF
-
-   nStringLen := Len( cString )
-
    DO WHILE nTokPos < nStringLen
 
-      cLine := hb_tokenPtr( @cString, @nTokPos, cEOL )
+      cLine := hb_tokenPtr( @cString, @nTokPos, .T. )
 
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
 

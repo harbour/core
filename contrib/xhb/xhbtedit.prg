@@ -2707,25 +2707,6 @@ METHOD SaveFile() CLASS XHBEditor
 
    RETURN ! ::lChanged
 
-// Utility Functions
-
-// Returns EOL char (be it either CR or LF or both)
-STATIC FUNCTION WhichEOL( cString )
-
-   LOCAL nCRPos := hb_BAt( Chr( 13 ), cString )
-   LOCAL nLFPos := hb_BAt( Chr( 10 ), cString )
-
-   DO CASE
-   CASE nCRPos > 0 .AND. nLFPos == 0
-      RETURN Chr( 13 )
-   CASE nCRPos == 0 .AND. nLFPos > 0
-      RETURN Chr( 10 )
-   CASE nCRPos > 0 .AND. nLFPos == nCRPos + 1
-      RETURN Chr( 13 ) + Chr( 10 )
-   ENDCASE
-
-   RETURN hb_eol()
-
 // Converts a string to an array of strings splitting input string at EOL boundaries
 
 STATIC FUNCTION Text2Array( cString, nWordWrapCol )
@@ -2739,21 +2720,17 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
    LOCAL nFirstSpace
 
-   LOCAL cEOL
-
    // 2005-07-19 - E.F. - SoftCR must be removed before convert string to
    //                     array. It will be treated by HBEditor.
    IF __SoftCR() $ cString
       cString := StrTran( cString, __SoftCR() )
    ENDIF
 
-   cEOL := WhichEOL( cString )
-
    nStringLen := Len( cString )
 
    DO WHILE nTokPos < nStringLen
 
-      cLine := hb_tokenPtr( @cString, @nTokPos, cEOL )
+      cLine := hb_tokenPtr( @cString, @nTokPos, .T. )
 
       IF HB_ISNUMERIC( nWordWrapCol ) .AND. Len( cLine ) > nWordWrapCol
          DO WHILE .T.
