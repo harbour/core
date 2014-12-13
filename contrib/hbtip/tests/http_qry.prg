@@ -1,4 +1,4 @@
-/* Sends a query to Google and displays the links from the response HTML page */
+/* Makes an Internet search and displays the links from the response HTML page */
 
 #require "hbssl"
 #require "hbtip"
@@ -9,17 +9,16 @@ REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main()
 
-   LOCAL cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com/search"
+   LOCAL cURL := iif( tip_SSL(), "https://", "http://" ) + "duckduckgo.com/html/"
    LOCAL oHTTP := TIPClientHTTP():New( cURL )
-   LOCAL cHtml, oNode, oDoc
+   LOCAL cHtml, oNode, oDoc, tmp
 
    ? "URL:", cURL
 
-   /* build the Google query and add it to the TUrl object */
+   /* build the search query and add it to the TUrl object */
    oHTTP:oURL:addGetForm( { ;
-      "q"    => "Harbour", ;
-      "hl"   => "en", ;
-      "btnG" => "Google+Search" } )
+      "q"  => "Harbour+Project", ;
+      "kl" => "us-en" } )
 
    /* Connect to the HTTP server */
    IF ! oHTTP:Open()
@@ -27,23 +26,21 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   /* download the Google response */
+   /* download the response */
    cHtml := oHTTP:ReadAll()
    oHTTP:Close()
    ? hb_ntos( Len( cHtml ) ), "bytes received"
+   ?
 
    oDoc := THtmlDocument():New( cHtml )
 
    oDoc:writeFile( "result.htm" )
 
-   /* ":a" retrieves the first <a href="url"> text </a> tag */
-   oNode := oDoc:body:a
-   ? oNode:getText( "" ), oNode:href
-
-   /* ":divs(5)" returns the 5th <div> tag */
    /* "aS" is the plural of "a" and returns all <a href="url"> tags */
-   FOR EACH oNode IN oDoc:body:divs( 5 ):aS
-      ? tip_HtmlToStr( oNode:getText( "" ) ), oNode:href
+   FOR EACH oNode IN oDoc:body:div( "links" ):aS
+      IF oNode:class == "large"
+         ? tip_HtmlToStr( oNode:getText( "" ) ), oNode:href
+      ENDIF
    NEXT
 
    RETURN

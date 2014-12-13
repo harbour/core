@@ -7,7 +7,7 @@ REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main( cProxy )
 
-   LOCAL cURL := iif( tip_SSL(), "https://duckduckgo.com", "http://example.com" )
+   LOCAL cURL := iif( tip_SSL(), "https://", "http://" ) + "example.com"
    LOCAL oHTTP := TIPClientHTTP():New( cURL, .T. )
 
    ? "URL:", cURL
