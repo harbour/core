@@ -1058,11 +1058,21 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
 /* --- */
 
+/* NOTE: Cl*pper's "soft CR" byte can occur in valid
+         UTF-8 byte sequence, f.e.:
+            https://codepoints.net/U+014D
+         so it's not a safe byte to use with this encoding.
+         This can be used instead:
+            https://codepoints.net/U+2028
+         [vszakats] */
+STATIC FUNCTION __SoftCR()
+   RETURN iif( hb_cdpIsUTF8(), hb_UChar( 0x2028 ), hb_BChar( 141 ) ) + Chr( 10 )
+
 // Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
 
    LOCAL aArray := {}
-   LOCAL nStringLen := Len( cString )
+   LOCAL nStringLen
    LOCAL nTokPos := 0
 
    LOCAL cLine
@@ -1071,6 +1081,12 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
    LOCAL nPos
    LOCAL nBreakPos
    LOCAL nBreakPosSplit
+
+   IF hb_BAt( __SoftCR(), cString ) > 0
+      cString := StrTran( cString, __SoftCR() )
+   ENDIF
+
+   nStringLen := Len( cString )
 
    DO WHILE nTokPos < nStringLen
 
