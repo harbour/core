@@ -2712,8 +2712,8 @@ METHOD SaveFile() CLASS XHBEditor
 // Returns EOL char (be it either CR or LF or both)
 STATIC FUNCTION WhichEOL( cString )
 
-   LOCAL nCRPos := At( Chr( 13 ), cString )
-   LOCAL nLFPos := At( Chr( 10 ), cString )
+   LOCAL nCRPos := hb_BAt( Chr( 13 ), cString )
+   LOCAL nLFPos := hb_BAt( Chr( 10 ), cString )
 
    DO CASE
    CASE nCRPos > 0 .AND. nLFPos == 0
@@ -2730,16 +2730,16 @@ STATIC FUNCTION WhichEOL( cString )
 
 STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
-   LOCAL cLine
-   LOCAL aArray
-   LOCAL cEOL
-   LOCAL nEOLLen
-   LOCAL nRetLen
-   LOCAL ncSLen
-   LOCAL nFirstSpace
-   LOCAL cSplittedLine
+   LOCAL aArray := {}
+   LOCAL nStringLen
    LOCAL nTokPos := 0
-   LOCAL lTokenized := .F.
+
+   LOCAL cLine
+   LOCAL cSplittedLine
+
+   LOCAL nFirstSpace
+
+   LOCAL cEOL
 
    // 2005-07-19 - E.F. - SoftCR must be removed before convert string to
    //                     array. It will be treated by HBEditor.
@@ -2747,38 +2747,13 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
       cString := StrTran( cString, __SoftCR() )
    ENDIF
 
-   aArray := {}
+   cEOL := WhichEOL( cString )
 
-   cEOL    := WhichEOL( cString )
-   nEOLLen := Len( cEOL )
+   nStringLen := Len( cString )
 
-   // hb_tokenPtr() needs that string to be tokenized be terminated with a token delimiter
-   IF !( Right( cString, Len( cEOL ) ) == cEOL )
-      cString += cEOL
-      // so we don't add a blank line by accident at the end of this. [GAD]
-      lTokenized := .T.
-   ENDIF
+   DO WHILE nTokPos < nStringLen
 
-   nRetLen := 0
-   ncSLen  := Len( cString )
-
-   // If cString starts with EOL delimiters I have to add empty lines since hb_tokenPtr()
-   // gives back _next_ token and would skip these first EOL delimiters
-   DO WHILE SubStr( cString, nTokPos + 1, nEOLLen ) == cEOL
-      AAdd( aArray, HBTextLine():New( cLine, .F. ) )
-      nTokPos += nEOLLen
-      nRetLen += nEOLLen
-   ENDDO
-
-   DO WHILE nRetLen < ncSLen
-      /* TOFIX: Note that hb_tokenGet() is not able to cope with delimiters longer than one char */
-      // MS-DOS - OS/2 - Windows have CRLF as EOL
-      IF nEOLLen > 1
-         cLine := StrTran( hb_tokenPtr( @cString, @nTokPos, cEOL ), SubStr( cEOL, 2 ) )
-      ELSE
-         cLine := hb_tokenPtr( @cString, @nTokPos, cEOL )
-      ENDIF
-      nRetLen += Len( cLine ) + nEOLLen
+      cLine := hb_tokenPtr( @cString, @nTokPos, cEOL )
 
       IF HB_ISNUMERIC( nWordWrapCol ) .AND. Len( cLine ) > nWordWrapCol
          DO WHILE .T.
@@ -2802,19 +2777,13 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
                IF Len( cLine ) > 0
                   AAdd( aArray, HBTextLine():New( cLine, .F. ) )
                ENDIF
-               // Done.
-               EXIT
+               EXIT  // Done
             ENDIF
          ENDDO
       ELSE
          AAdd( aArray, HBTextLine():New( cLine, .F. ) )
       ENDIF
    ENDDO
-
-   // If string ends with EOL delimeters we have to add it here.
-   IF ! lTokenized .AND. Right( cString, nEOLLen ) == cEOL
-      AAdd( aArray, HBTextLine():New( , .F. ) )
-   ENDIF
 
    RETURN aArray
 
