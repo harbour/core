@@ -423,9 +423,11 @@ See contrib-specific dependencies and build notes in the projects'
 1. Install [Homebrew](http://brew.sh/)
 2. Install packages:
 
-        $ brew install pcre slang upx uncrustify ack optipng jpegoptim
+        $ brew install brew-cask pcre slang upx uncrustify ack optipng jpegoptim
 
 3. Install [X11](https://xquartz.macosforge.org/landing/) (optional, for gtxwc)
+
+        $ brew cask install xquartz
 
 
 ## Linux (.deb based distros: Debian, Ubuntu)
@@ -1651,9 +1653,9 @@ Supported shells per host platforms:
 
   * Generic:
      * [English](https://groups.google.com/forum/#!forum/harbour-users)
+     * [Italian](https://groups.google.com/forum/#!forum/harbourita)
      * [Portuguese](http://pctoledo.com.br/forum/viewforum.php?f=4)
      * [Russian](http://clipper.borda.ru/?0-4)
-     * [Italian](https://groups.google.com/forum/#!forum/harbourita)
 
   * Product-specific:
      * [Harbour mainline development](https://groups.google.com/forum/#!forum/harbour-devel)
