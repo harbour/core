@@ -135,7 +135,7 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       ELSE
          DO WHILE .T.
             nKey := ft_SInkey( 0 )
-            IF At( iif( Empty( hb_keyChar( nKey ) ), hb_BChar( nKey ), Upper( hb_keyChar( nKey ) ) ), Upper( cKey ) ) > 0
+            IF iif( Empty( hb_keyChar( nKey ) ), hb_BChar( nKey ), Upper( hb_keyChar( nKey ) ) ) $ Upper( cKey )
                EXIT
             ENDIF
          ENDDO

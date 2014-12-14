@@ -1082,7 +1082,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
    LOCAL nBreakPos
    LOCAL nBreakPosSplit
 
-   IF hb_BAt( __SoftCR(), cString ) > 0
+   IF __SoftCR() $ cString
       cString := StrTran( cString, __SoftCR() )
    ENDIF
 

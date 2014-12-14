@@ -2722,7 +2722,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
    // 2005-07-19 - E.F. - SoftCR must be removed before convert string to
    //                     array. It will be treated by HBEditor.
-   IF hb_BAt( __SoftCR(), cString ) > 0
+   IF __SoftCR() $ cString
       cString := StrTran( cString, __SoftCR() )
    ENDIF
 

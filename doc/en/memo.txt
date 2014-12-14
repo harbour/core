@@ -135,7 +135,7 @@
       cString := MemoRead( cFile )
       cCopyright := "Melina"
 
-      IF At( "Melina", cString ) == 0            // check for copyright
+      IF ! cCopyright $ cString                     // check for copyright
          MemoWrit( cFile, cCopyright + cString ) // if not, add it!
       ENDIF
    $STATUS$
@@ -205,7 +205,7 @@
       cString := hb_MemoRead( cFile )
       cCopyright := "Melina"
 
-      IF At( "Melina", cString ) == 0               // check for copyright
+      IF ! cCopyright $ cString                     // check for copyright
          hb_MemoWrit( cFile, cCopyright + cString ) // if not, add it!
       ENDIF
    $STATUS$
@@ -266,7 +266,7 @@
       cFile   := "account.prg"
       cString := MemoRead( cFile )
 
-      IF At( "Melina", cString ) == 0            // check for copyright
+      IF ! cCopyright $ cString                     // check for copyright
          MemoWrit( cFile, cCopyright + cString ) // if not, add it!
       ENDIF
    $STATUS$
@@ -340,7 +340,7 @@
       cString := hb_MemoRead( cFile )
       cCopyright := "Melina"
 
-      IF At( "Melina", cString ) == 0               // check for copyright
+      IF ! cCopyright $ cString                     // check for copyright
          hb_MemoWrit( cFile, cCopyright + cString ) // if not, add it!
       ENDIF
    $STATUS$
