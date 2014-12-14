@@ -120,10 +120,9 @@ static HB_TSD_NEW( s_oleData, sizeof( HB_OLEDATA ), hb_oleDataInit, hb_oleDataRe
 HB_FUNC_EXTERN( WIN_OLEAUTO );
 
 
-void hb_oleInit( void )
+HB_BOOL hb_oleInit( void )
 {
-   if( hb_getOleData()->iInit == 0 )
-      hb_oleDataInit( hb_getOleData() );
+   return hb_getOleData()->iInit != 0;
 }
 
 void hb_oleSetError( HRESULT lOleError )
