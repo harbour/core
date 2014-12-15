@@ -104,10 +104,10 @@ static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE nLen,
 }
 
 static const char * hb_tokenGet( const char * szLine, HB_SIZE nLen,
-                                 const char * szDelim, HB_SIZE nDelim,
+                                 const char * szDelim, HB_SIZE * pnDelim,
                                  int iFlags, HB_SIZE nToken, HB_SIZE * pnLen )
 {
-   HB_SIZE ul, nStart;
+   HB_SIZE ul, nStart, nDelim = *pnDelim;
    char cQuote = 0;
 
    for( ul = nStart = 0; ul < nLen; ++ul )
@@ -127,13 +127,15 @@ static const char * hb_tokenGet( const char * szLine, HB_SIZE nLen,
       else if( ( iFlags & _HB_TOK_EOL_DELIM ) != 0 &&
                ( ch == '\n' || ch == '\r' ) )
       {
+         HB_SIZE nL = ( ul + 1 < nLen &&
+                        szLine[ ul + 1 ] == ( ch == '\n' ? '\r' : '\n' ) ) ? 1 : 0;
          if( --nToken == 0 )
          {
+            *pnDelim = nL + 1;
             *pnLen = ul - nStart;
             return szLine + nStart;
          }
-         if( ul + 1 < nLen && szLine[ ul + 1 ] == ( ch == '\n' ? '\r' : '\n' ) )
-            ++ul;
+         ul += nL;
          nStart = ul + 1;
       }
       else if( nDelim && ch == szDelim[ 0 ] &&
@@ -300,7 +302,7 @@ HB_FUNC( HB_TOKENGET )
 
    if( hb_tokenParam( 3, 0, &szLine, &nLen, &szDelim, &nDelim, &iFlags ) )
    {
-      szLine = hb_tokenGet( szLine, nLen, szDelim, nDelim, iFlags,
+      szLine = hb_tokenGet( szLine, nLen, szDelim, &nDelim, iFlags,
                             hb_parns( 2 ), &nLen );
       hb_retclen( szLine, nLen );
    }
@@ -320,19 +322,10 @@ HB_FUNC( HB_TOKENPTR )
 
    if( hb_tokenParam( 3, hb_parns( 2 ), &szLine, &nLen, &szDelim, &nDelim, &iFlags ) )
    {
-      szToken = hb_tokenGet( szLine, nLen, szDelim, nDelim, iFlags,
+      szToken = hb_tokenGet( szLine, nLen, szDelim, &nDelim, iFlags,
                              1, &nToken );
       if( szToken && nLen > nToken )
-      {
-         if( nDelim == 0 && ( iFlags & _HB_TOK_EOL_DELIM ) != 0 )
-         {
-            ++nDelim;
-            if( nToken + nDelim < nLen &&
-                szToken[ nToken + nDelim ] == ( szToken[ nToken ] == '\n' ? '\r' : '\n' ) )
-               ++nDelim;
-         }
          nSkip = szToken - hb_parc( 1 ) + nToken + nDelim;
-      }
       else
          nSkip = hb_parclen( 1 ) + 1;
 
