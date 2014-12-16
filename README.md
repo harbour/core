@@ -1631,7 +1631,7 @@ Supported shells per host platforms:
 
         OS/2 binary:
 
-         * <http://os2ports.smedley.info/index.php?page=build-environment>
+         * <http://os2ports.smedley.id.au/index.php?page=tools-utilities>
          * <http://download.smedley.info/buildenv_20071022.zip>
           <br />(included in Harbour as [os2mkdir.exe](config/os2mkdir.exe), [os2rm.exe](config/os2rm.exe), [os2cp.exe](config/os2cp.exe))
 
@@ -1647,7 +1647,7 @@ Supported shells per host platforms:
        * <http://heiner-eichmann.de/autotools/using_gettext.html>
      * [GitHub Guides](https://guides.github.com)
      * [GitHub flavoured Markdown](https://help.github.com/articles/github-flavored-markdown)
-     * [A practical git introduction](https://mrchlblng.me/2014/09/practical-git-introduction/)
+     * [A practical git introduction](http://mrchlblng.me/2014/09/practical-git-introduction/)
 
 * Community forums:
 
