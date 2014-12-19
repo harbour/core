@@ -663,7 +663,7 @@ EXTERNAL hb_ZUncompress
 
 EXTERNAL __dbgEntry
 
-#define HB_HISTORY_LEN          500
+#define HB_HISTORY_LEN          2000
 #define HB_LINE_LEN             256
 
 #define _HBSH_cDirBase          1
