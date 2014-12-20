@@ -1507,7 +1507,7 @@ Supported shells per host platforms:
      * Cygwin [win, free, open-source]
         * <https://cygwin.com/>
      * OS/2 GCC [os2, free, open-source]
-        * <http://os2ports.smedley.id.au/index.php?page=gcc-v4-4-x>
+        * <http://os2ports.smedley.info/index.php?page=gcc-v4-4-x>
      * DJGPP [dos, *nix, free, open-source]
         * <http://www.delorie.com/djgpp/>
      * Open Watcom [win, dos, os2, linux, free, open-source]
@@ -1631,7 +1631,7 @@ Supported shells per host platforms:
 
         OS/2 binary:
 
-         * <http://os2ports.smedley.id.au/index.php?page=tools-utilities>
+         * <http://os2ports.smedley.info/index.php?page=tools-utilities>
          * <http://download.smedley.info/buildenv_20071022.zip>
           <br />(included in Harbour as [os2mkdir.exe](config/os2mkdir.exe), [os2rm.exe](config/os2rm.exe), [os2cp.exe](config/os2cp.exe))
 
