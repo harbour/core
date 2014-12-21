@@ -48,10 +48,7 @@ hb_collect_all_tree()
    do
       echo "$f" | awk '{ string=substr($0, 2); print string; }'
    done
-   for f in $(find config -type f)
-   do
-      echo "${f}"
-   done
+   find config -type f -exec echo {} \;
 }
 
 hb_rmflst="yes"

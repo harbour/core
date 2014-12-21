@@ -29,8 +29,7 @@ get_rpmmacro()
          X="${R}"
       fi
    done
-   # TOFIX: '-n' not POSIX compatible
-   echo -n "${R}"
+   printf %s "${R}"
 }
 
 for d in /usr /usr/local /usr/local/mingw32 /opt/xmingw /opt/cross
