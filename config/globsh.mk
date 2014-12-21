@@ -40,39 +40,39 @@ TRUE := TRUE=true
 FALSE := false
 
 dirbase::
-	@[ -d "$(OBJ_DIR)" ] || $(MDP) $(OBJ_DIR)
-	@[ -z "$(LIB_FILE)" ] || [ -d "$(LIB_DIR)" ] || $(MDP) $(LIB_DIR)
-	@[ -z "$(BIN_FILE)" ] || [ -d "$(BIN_DIR)" ] || $(MDP) $(BIN_DIR)
-	@[ -z "$(DYN_FILE)" ] || [ -d "$(DYN_DIR)" ] || $(MDP) $(DYN_DIR)
-	@[ -z "$(IMP_FILE)" ] || [ -d "$(IMP_DIR)" ] || $(MDP) $(IMP_DIR)
+	@[ -d "$(OBJ_DIR)" ] || $(MDP) "$(OBJ_DIR)"
+	@[ -z "$(LIB_FILE)" ] || [ -d "$(LIB_DIR)" ] || $(MDP) "$(LIB_DIR)"
+	@[ -z "$(BIN_FILE)" ] || [ -d "$(BIN_DIR)" ] || $(MDP) "$(BIN_DIR)"
+	@[ -z "$(DYN_FILE)" ] || [ -d "$(DYN_DIR)" ] || $(MDP) "$(DYN_DIR)"
+	@[ -z "$(IMP_FILE)" ] || [ -d "$(IMP_DIR)" ] || $(MDP) "$(IMP_DIR)"
 
 clean::
 	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE) $(DYN_FILE) $(IMP_FILE); \
 	if [ -n "$(LIB_FILE)" ]; then \
-	   $(RM) $(basename $(LIB_FILE)).bak; \
-	   [ "`$(ECHO) $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) $(LIB_DIR); \
+	   $(RM) "$(basename $(LIB_FILE)).bak"; \
+	   [ "`$(ECHO) $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) "$(LIB_DIR)"; \
 	fi ; \
 	if [ -n "$(BIN_FILE)" ]; then \
-	   $(RM) $(basename $(BIN_FILE)).tds; \
-	   $(RM) $(basename $(BIN_FILE)).pch; \
-	   $(RM) $(basename $(BIN_FILE)).pdb; \
-	   $(RM) $(basename $(BIN_FILE)).ilk; \
-	   [ "`$(ECHO) $(BIN_DIR)/*`" != "$(BIN_DIR)/*" ] || $(RDP) $(BIN_DIR); \
+	   $(RM) "$(basename $(BIN_FILE)).tds"; \
+	   $(RM) "$(basename $(BIN_FILE)).pch"; \
+	   $(RM) "$(basename $(BIN_FILE)).pdb"; \
+	   $(RM) "$(basename $(BIN_FILE)).ilk"; \
+	   [ "`$(ECHO) $(BIN_DIR)/*`" != "$(BIN_DIR)/*" ] || $(RDP) "$(BIN_DIR)"; \
 	fi ; \
 	if [ -n "$(DYN_FILE)" ]; then \
-	   $(RM) $(basename $(DYN_FILE)).tds; \
-	   $(RM) $(basename $(DYN_FILE)).pch; \
-	   $(RM) $(basename $(DYN_FILE)).pdb; \
-	   $(RM) $(basename $(DYN_FILE)).ilk; \
-	   $(RM) $(basename $(DYN_FILE)).def; \
-	   $(RM) $(basename $(DYN_FILE)).exp; \
-	   $(RM) $(DYN_FILE_NVR); \
-	   $(RM) $(DYN_FILE_CPT); \
-	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) $(DYN_DIR); \
+	   $(RM) "$(basename $(DYN_FILE)).tds"; \
+	   $(RM) "$(basename $(DYN_FILE)).pch"; \
+	   $(RM) "$(basename $(DYN_FILE)).pdb"; \
+	   $(RM) "$(basename $(DYN_FILE)).ilk"; \
+	   $(RM) "$(basename $(DYN_FILE)).def"; \
+	   $(RM) "$(basename $(DYN_FILE)).exp"; \
+	   $(RM) "$(DYN_FILE_NVR)"; \
+	   $(RM) "$(DYN_FILE_CPT)"; \
+	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) "$(DYN_DIR)"; \
 	fi ; \
 	if [ -n "$(IMP_FILE)" ]; then \
 	   $(RM) $(basename $(IMP_FILE)).exp; \
-	   [ "`$(ECHO) $(IMP_DIR)/*`" != "$(IMP_DIR)/*" ] || $(RDP) $(IMP_DIR); \
+	   [ "`$(ECHO) $(IMP_DIR)/*`" != "$(IMP_DIR)/*" ] || $(RDP) "$(IMP_DIR)"; \
 	fi
 
 endif
