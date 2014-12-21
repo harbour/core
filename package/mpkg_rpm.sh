@@ -41,8 +41,8 @@ done
 if [ "$HB_WITH_ADS" != "no" ]
 then
    if [ -f /usr/local/ads/acesdk/ace.h ] || \
-      [ -f ${HOME}/ads/acesdk/ace.h ] || \
-      [ -f ${HB_WITH_ADS}/ace.h ]
+      [ -f "${HOME}/ads/acesdk/ace.h" ] || \
+      [ -f "${HB_WITH_ADS}/ace.h" ]
    then
       INST_PARAM="${INST_PARAM} --with ads"
    fi
@@ -137,7 +137,7 @@ done
 
 if [ -z "${TOINST_LST}" ] || [ "${FORCE}" = "yes" ]
 then
-   cd `dirname $0`
+   cd "`dirname "$0"`"
    . ./mpkg_src.sh
    stat="$?"
    if [ -z "${hb_filename}" ]
@@ -148,20 +148,20 @@ then
    then
       echo "Error during packing the sources in ./mpkg_src.sh"
       exit 1
-   elif [ -f ${hb_filename} ]
+   elif [ -f "${hb_filename}" ]
    then
-      if [ `id -u` != 0 ] && [ ! -f ${HOME}/.rpmmacros ]
+      if [ "`id -u`" != 0 ] && [ ! -f "${HOME}/.rpmmacros" ]
       then
          RPMDIR="${HOME}/RPM"
-         mkdir -p ${RPMDIR}/SOURCES ${RPMDIR}/RPMS ${RPMDIR}/SRPMS \
-                  ${RPMDIR}/BUILD ${RPMDIR}/SPECS
-         echo "%_topdir ${RPMDIR}" > ${HOME}/.rpmmacros
+         mkdir -p "${RPMDIR}/SOURCES" "${RPMDIR}/RPMS" "${RPMDIR}/SRPMS" \
+                  "${RPMDIR}/BUILD" "${RPMDIR}/SPECS"
+         echo "%_topdir ${RPMDIR}" > "${HOME}/.rpmmacros"
       else
          RPMDIR=`rpm --eval %_topdir`
       fi
 
-      mv -f ${hb_filename} ${RPMDIR}/SOURCES/
-      cp harbour.spec ${RPMDIR}/SPECS/
+      mv -f "${hb_filename}" "${RPMDIR}/SOURCES/"
+      cp harbour.spec "${RPMDIR}/SPECS/"
 
       if which rpmbuild >/dev/null 2>&1
       then
@@ -169,7 +169,7 @@ then
       else
          RPMBLD="rpm"
       fi
-      cd ${RPMDIR}/SPECS
+      cd "${RPMDIR}/SPECS"
       ${RPMBLD} -ba harbour.spec ${INST_PARAM}
    else
       echo "Cannot find archive file: ${hb_filename}"

@@ -53,7 +53,7 @@ fi
 HB_CCPREFIX="$TARGET-"
 HB_CCPATH="$MINGW_DIR/bin"
 
-cd `dirname $0`
+cd "`dirname "$0"`"
 . ./mpkg_ver.sh
 hb_ver=`get_hbver`
 hb_verstat=`get_hbverstat`
@@ -63,7 +63,6 @@ NEED_RPM="make gcc binutils"
 
 FORCE=""
 
-LAST=""
 while [ $# -gt 0 ]
 do
    if [ "$1" = "--force" ]
@@ -72,7 +71,6 @@ do
    else
       INST_PARAM="${INST_PARAM} $1"
    fi
-   LAST="$1"
    shift
 done
 
@@ -94,30 +92,30 @@ then
    then
       echo "Error during packing the sources in ./mpkg_src.sh"
       exit 1
-   elif [ -f ${hb_filename} ]
+   elif [ -f "${hb_filename}" ]
    then
-      if [ `id -u` != 0 ] && [ ! -f ${HOME}/.rpmmacros ]
+      if [ "`id -u`" != 0 ] && [ ! -f "${HOME}/.rpmmacros" ]
       then
          RPMDIR="${HOME}/RPM"
-         mkdir -p ${RPMDIR}/SOURCES ${RPMDIR}/RPMS ${RPMDIR}/SRPMS \
-                  ${RPMDIR}/BUILD ${RPMDIR}/SPECS
-         echo "%_topdir ${RPMDIR}" > ${HOME}/.rpmmacros
+         mkdir -p "${RPMDIR}/SOURCES" "${RPMDIR}/RPMS" "${RPMDIR}/SRPMS" \
+                  "${RPMDIR}/BUILD" "${RPMDIR}/SPECS"
+         echo "%_topdir ${RPMDIR}" > "${HOME}/.rpmmacros"
       else
          RPMDIR=`get_rpmmacro "_topdir"`
       fi
-      mv ${hb_filename} ${RPMDIR}/SOURCES/
+      mv "${hb_filename}" "${RPMDIR}/SOURCES/"
       sed -e "s|^%define version .*$|%define version   ${hb_ver}|g" \
           -e "s|^%define releasen .*$|%define releasen  ${hb_verstat}|g" \
           -e "s|^%define hb_ccpath .*$|%define hb_ccpath ${HB_CCPATH}|g" \
           -e "s|^%define hb_ccpref .*$|%define hb_ccpref ${HB_CCPREFIX}|g" \
-         harbour-win.spec.in > ${RPMDIR}/SPECS/harbour-win.spec
+         harbour-win.spec.in > "${RPMDIR}/SPECS/harbour-win.spec"
       if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"
       else
          RPMBLD="rpm"
       fi
-      cd ${RPMDIR}/SPECS
+      cd "${RPMDIR}/SPECS"
       ${RPMBLD} -ba harbour-win.spec ${INST_PARAM}
    else
       echo "Cannot find archive file: ${hb_filename}"

@@ -32,7 +32,7 @@ get_rpmmacro()
    echo -n "${R}"
 }
 
-cd `dirname $0`
+cd "`dirname "$0"`"
 . ./mpkg_ver.sh
 hb_ver=`get_hbver`
 hb_verstat=`get_hbverstat`
@@ -42,7 +42,6 @@ NEED_RPM="make gcc binutils cegcc-mingw32ce"
 
 FORCE=""
 
-LAST=""
 while [ $# -gt 0 ]
 do
    if [ "$1" = "--force" ]
@@ -51,7 +50,6 @@ do
    else
       INST_PARAM="${INST_PARAM} $1"
    fi
-   LAST="$1"
    shift
 done
 
@@ -73,28 +71,28 @@ then
    then
       echo "Error during packing the sources in ./mpkg_src.sh"
       exit 1
-   elif [ -f ${hb_filename} ]
+   elif [ -f "${hb_filename}" ]
    then
-      if [ `id -u` != 0 ] && [ ! -f ${HOME}/.rpmmacros ]
+      if [ "`id -u`" != 0 ] && [ ! -f "${HOME}/.rpmmacros" ]
       then
          RPMDIR="${HOME}/RPM"
-         mkdir -p ${RPMDIR}/SOURCES ${RPMDIR}/RPMS ${RPMDIR}/SRPMS \
-                  ${RPMDIR}/BUILD ${RPMDIR}/SPECS
-         echo "%_topdir ${RPMDIR}" > ${HOME}/.rpmmacros
+         mkdir -p "${RPMDIR}/SOURCES" "${RPMDIR}/RPMS" "${RPMDIR}/SRPMS" \
+                  "${RPMDIR}/BUILD" "${RPMDIR}/SPECS"
+         echo "%_topdir ${RPMDIR}" > "${HOME}/.rpmmacros"
       else
          RPMDIR=`get_rpmmacro "_topdir"`
       fi
-      mv ${hb_filename} ${RPMDIR}/SOURCES/
+      mv "${hb_filename}" "${RPMDIR}/SOURCES/"
       sed -e "s/^%define version .*$/%define version   ${hb_ver}/g" \
           -e "s/^%define releasen .*$/%define releasen  ${hb_verstat}/g" \
-         harbour-wce.spec.in > ${RPMDIR}/SPECS/harbour-wce.spec
+         harbour-wce.spec.in > "${RPMDIR}/SPECS/harbour-wce.spec"
       if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"
       else
          RPMBLD="rpm"
       fi
-      cd ${RPMDIR}/SPECS
+      cd "${RPMDIR}/SPECS"
       ${RPMBLD} -ba harbour-wce.spec ${INST_PARAM}
    else
       echo "Cannot find archive file: ${hb_filename}"
