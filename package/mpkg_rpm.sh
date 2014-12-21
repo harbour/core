@@ -77,7 +77,7 @@ then
 fi
 if test_reqrpm "gd-devel" && [ "$HB_WITH_GD" != "no" ]
 then
-   v=`rpm -q --whatprovides gd-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g"`
+   v=$(rpm -q --whatprovides gd-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g")
    [ "$v" -ge 2 ] && INST_PARAM="${INST_PARAM} --with gd"
 fi
 if ( test_reqrpm "libmariadbd-devel" || test_reqrpm "libmysqlclient-devel" || test_reqrpm "MySQL-devel" || test_reqrpm "mysql-devel" ) && \
@@ -137,7 +137,7 @@ done
 
 if [ -z "${TOINST_LST}" ] || [ "${FORCE}" = "yes" ]
 then
-   cd "`dirname "$0"`"
+   cd "$(dirname "$0")"
    . ./mpkg_src.sh
    stat="$?"
    if [ -z "${hb_filename}" ]
@@ -150,14 +150,14 @@ then
       exit 1
    elif [ -f "${hb_filename}" ]
    then
-      if [ "`id -u`" != 0 ] && [ ! -f "${HOME}/.rpmmacros" ]
+      if [ "$(id -u)" != 0 ] && [ ! -f "${HOME}/.rpmmacros" ]
       then
          RPMDIR="${HOME}/RPM"
          mkdir -p "${RPMDIR}/SOURCES" "${RPMDIR}/RPMS" "${RPMDIR}/SRPMS" \
                   "${RPMDIR}/BUILD" "${RPMDIR}/SPECS"
          echo "%_topdir ${RPMDIR}" > "${HOME}/.rpmmacros"
       else
-         RPMDIR=`rpm --eval %_topdir`
+         RPMDIR=$(rpm --eval %_topdir)
       fi
 
       mv -f "${hb_filename}" "${RPMDIR}/SOURCES/"

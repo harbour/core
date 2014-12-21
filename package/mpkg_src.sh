@@ -14,7 +14,7 @@ else
    echo "Warning!!! Cannot find 'GNU tar'"
 fi
 
-hb_currdir=`pwd`
+hb_currdir=$(pwd)
 
 hb_archopt="-czf"
 [ -n "${hb_ext}" ] || hb_ext=".tar.gz"
@@ -22,12 +22,12 @@ hb_archopt="-czf"
 if [ -f mpkg_ver.sh ]; then
    hb_rootdir=".."
 else
-   hb_rootdir=`dirname "$0"`
-   hb_rootdir=`dirname "${hb_rootdir}"`
+   hb_rootdir=$(dirname "$0")
+   hb_rootdir=$(dirname "${hb_rootdir}")
 fi
 . "${hb_rootdir}/package/mpkg_ver.sh"
 
-hb_ver=`get_hbver "${hb_rootdir}"`
+hb_ver=$(get_hbver "${hb_rootdir}")
 hb_filename="${hb_currdir}/harbour-${hb_ver}.src${hb_ext}"
 rm -f "$hb_filename"
 
@@ -35,7 +35,7 @@ rm -f "$hb_filename"
 
 hb_collect_all_git()
 {
-   for f in `git ls-tree HEAD -r --name-only`
+   for f in $(git ls-tree HEAD -r --name-only)
    do
       [ -f "$f" ] && echo "$f"
    done
@@ -44,11 +44,11 @@ hb_collect_all_git()
 hb_collect_all_tree()
 {
    exclude="/obj/|/lib/|/bin/.*/|\.tar|\.zip|\.exe|\.log|/linux/|/win|/config/"
-   for f in `find -type f | grep -vE "${exclude}"`
+   for f in $(find -type f | grep -vE "${exclude}")
    do
       echo "$f" | awk '{ string=substr($0, 2); print string; }'
    done
-   for f in `find config -type f`
+   for f in $(find config -type f)
    do
       echo "${f}"
    done

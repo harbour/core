@@ -16,15 +16,15 @@ get_rpmmacro()
 {
    local R X Y
 
-   R=`rpm --showrc|sed -e "/^-14:.${1}[^a-z0-9A-Z_]/ !d" -e "s/^-14: ${1}.//"`
-   X=`echo "${R}"|sed -e "s/.*\(%{\([^}]*\)}\).*/\2/"`
+   R=$(rpm --showrc|sed -e "/^-14:.${1}[^a-z0-9A-Z_]/ !d" -e "s/^-14: ${1}.//")
+   X=$(echo "${R}"|sed -e "s/.*\(%{\([^}]*\)}\).*/\2/")
    while [ "${X}" != "${R}" ]
    do
-      Y=`get_rpmmacro "$X"`
+      Y=$(get_rpmmacro "$X")
       if [ -n "${Y}" ]
       then
-         R=`echo "${R}"|sed -e "s!%{${X}}!${Y}!g"`
-         X=`echo "${R}"|sed -e "s/.*\(%{\([^}]*\)}\).*/\2/"`
+         R=$(echo "${R}"|sed -e "s!%{${X}}!${Y}!g")
+         X=$(echo "${R}"|sed -e "s/.*\(%{\([^}]*\)}\).*/\2/")
       else
          X="${R}"
       fi
@@ -33,10 +33,10 @@ get_rpmmacro()
    echo -n "${R}"
 }
 
-cd "`dirname "$0"`"
+cd "$(dirname "$0")"
 . ./mpkg_ver.sh
-hb_ver=`get_hbver`
-hb_verstat=`get_hbverstat`
+hb_ver=$(get_hbver)
+hb_verstat=$(get_hbverstat)
 [ -n "${hb_verstat}" ] || hb_verstat="0"
 
 NEED_RPM="make gcc binutils cegcc-mingw32ce"
@@ -74,14 +74,14 @@ then
       exit 1
    elif [ -f "${hb_filename}" ]
    then
-      if [ "`id -u`" != 0 ] && [ ! -f "${HOME}/.rpmmacros" ]
+      if [ "$(id -u)" != 0 ] && [ ! -f "${HOME}/.rpmmacros" ]
       then
          RPMDIR="${HOME}/RPM"
          mkdir -p "${RPMDIR}/SOURCES" "${RPMDIR}/RPMS" "${RPMDIR}/SRPMS" \
                   "${RPMDIR}/BUILD" "${RPMDIR}/SPECS"
          echo "%_topdir ${RPMDIR}" > "${HOME}/.rpmmacros"
       else
-         RPMDIR=`get_rpmmacro "_topdir"`
+         RPMDIR=$(get_rpmmacro "_topdir")
       fi
       mv "${hb_filename}" "${RPMDIR}/SOURCES/"
       sed -e "s/^%define version .*$/%define version   ${hb_ver}/g" \
