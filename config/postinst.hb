@@ -319,7 +319,7 @@ PROCEDURE Main( ... )
                      '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"' + Chr( 10 ) + ;
                      '   exit' + Chr( 10 ) + ;
                      'fi' + Chr( 10 ) + ;
-                     'if [ \`id -u\` != 0 ]; then' + Chr( 10 ) + ;
+                     'if [ "\$(id -u\)" != 0 ]; then' + Chr( 10 ) + ;
                      '   echo "This package has to be installed from root account."' + Chr( 10 ) + ;
                      '   exit 1' + Chr( 10 ) + ;
                      'fi' + Chr( 10 ) + ;
@@ -512,7 +512,7 @@ STATIC FUNCTION unix_name()
    CASE ! Empty( tmp := query_rpm( "openSUSE-release"    , "sus" ) ) ; RETURN tmp
    /* TODO: Rewrite this in Harbour */
    CASE hb_FileExists( "/etc/pld-release" )
-      RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'` */
+      RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/' */
    ENDCASE
 
    RETURN StrTran( Lower( query_stdout( "uname -s" ) ), " ", "_" )
