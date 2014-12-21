@@ -29,6 +29,7 @@ get_rpmmacro()
          X="${R}"
       fi
    done
+   # TOFIX: '-n' not POSIX compatible
    echo -n "${R}"
 }
 
