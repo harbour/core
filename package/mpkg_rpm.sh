@@ -80,12 +80,16 @@ then
    v=$(rpm -q --whatprovides gd-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*\([0-9]*\).*/\1/g")
    [ "$v" -ge 2 ] && INST_PARAM="${INST_PARAM} --with gd"
 fi
-if ( test_reqrpm "libmariadbd-devel" || test_reqrpm "libmysqlclient-devel" || test_reqrpm "MySQL-devel" || test_reqrpm "mysql-devel" ) && \
+if ( test_reqrpm "libmariadbd-devel" || \
+     test_reqrpm "libmysqlclient-devel" || \
+     test_reqrpm "MySQL-devel" || \
+     test_reqrpm "mysql-devel" ) && \
    [ "$HB_WITH_MYSQL" != "no" ]
 then
    INST_PARAM="${INST_PARAM} --with mysql"
 fi
-if ( test_reqrpm "unixodbc-devel" || test_reqrpm "unixODBC-devel" ) && \
+if ( test_reqrpm "unixodbc-devel" || \
+     test_reqrpm "unixODBC-devel" ) && \
    [ "$HB_WITH_ODBC" != "no" ]
 then
    INST_PARAM="${INST_PARAM} --with odbc"
@@ -99,7 +103,8 @@ if [ "${HB_BUILD_NOGPLLIB}" = "yes" ]
 then
    INST_PARAM="${INST_PARAM} --without gpllib"
 fi
-if [ "${HB_BUILD_NOGPLLIB}" = "yes" ] || [ "$HB_WITH_GPM" = "no" ] || \
+if [ "${HB_BUILD_NOGPLLIB}" = "yes" ] || \
+   [ "${HB_WITH_GPM}" = "no" ] || \
    ! test_reqrpm "gpm-devel"
 then
    INST_PARAM="${INST_PARAM} --without gpm"
@@ -108,22 +113,26 @@ if ! test_reqrpm "XFree86-devel" && [ "$HB_WITH_X11" != "no" ]
 then
    INST_PARAM="${INST_PARAM} --without X11"
 fi
-if ! test_reqrpm ncurses || ! test_reqrpm ncurses-devel || \
+if ! test_reqrpm ncurses || \
+   ! test_reqrpm ncurses-devel || \
    [ "$HB_WITH_CURSES" != "no" ]
 then
    INST_PARAM="${INST_PARAM} --without curses"
 fi
-if ! test_reqrpm slang || ! test_reqrpm slang-devel || \
+if ! test_reqrpm slang || \
+   ! test_reqrpm slang-devel || \
    [ "$HB_WITH_SLANG" != "no" ]
 then
    INST_PARAM="${INST_PARAM} --without slang"
 fi
-if ( [ ! -f /usr/include/zlib.h ] && [ ! -f /usr/local/include/zlib.h ] ) || \
+if ( [ ! -f /usr/include/zlib.h ] && \
+     [ ! -f /usr/local/include/zlib.h ] ) || \
    [ "$HB_WITH_ZLIB" = "local" ]
 then
    INST_PARAM="${INST_PARAM} --with localzlib"
 fi
-if ( [ ! -f /usr/include/pcre.h ] && [ ! -f /usr/local/include/pcre.h ] ) || \
+if ( [ ! -f /usr/include/pcre.h ] && \
+     [ ! -f /usr/local/include/pcre.h ] ) || \
    [ "$HB_WITH_PCRE" = "local" ]
 then
    INST_PARAM="${INST_PARAM} --with localpcre"

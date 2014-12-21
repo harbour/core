@@ -43,6 +43,7 @@ hb_collect_all_git()
 
 hb_collect_all_tree()
 {
+   local exclude
    exclude="/obj/|/lib/|/bin/.*/|\.tar|\.zip|\.exe|\.log|/linux/|/win|/config/"
    for f in $(find -type f | grep -vE "${exclude}")
    do
