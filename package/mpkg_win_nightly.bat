@@ -19,7 +19,7 @@ rem   - remote admin (via RDP protocol)
 
 pushd
 
-cd %~dp0
+cd "%~dp0"
 
 echo ! Self: %0
 
@@ -31,10 +31,10 @@ echo ! Downloading Harbour sources...
 
 if exist core-master rd /q /s core-master
 del master.
-%_HB_DIR_TOOL%curl -L -O https://github.com/vszakats/harbour-core/archive/master.zip
+"%_HB_DIR_TOOL%curl" -L -O https://github.com/vszakats/harbour-core/archive/master.zip
 if errorlevel 1 goto _EXIT
 
-%_HB_DIR_TOOL%unzip master.
+"%_HB_DIR_TOOL%unzip" master.
 cd core-master
 
 echo ! Setting up generic build parameters...

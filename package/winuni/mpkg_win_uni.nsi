@@ -5,8 +5,6 @@
 ; See COPYING.txt for licensing terms.
 ;
 
-; TODO: option: install .dlls to system paths
-
 SetCompressor /solid lzma
 
   !include "MUI2.nsh"

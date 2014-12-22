@@ -1,7 +1,4 @@
-/*
- * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
- * See COPYING.txt for licensing terms.
- */
+/* Copyright 2011 Viktor Szakats (vszakats.net/harbour) */
 
 #include "hbver.h"
 
