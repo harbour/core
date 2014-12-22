@@ -316,7 +316,7 @@ PROCEDURE Main( ... )
                      hb_StrFormat( tgz_sfx_sh(), ;
                         hb_FSize( cTar_Path ), ;
                         cTar_NameExt, ;
-                        iif( GetEnvC( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) ) + ;
+                        iif( GetEnvC( "HB_PLATFORM" ) == "linux", " && ldconfig", "" ) ) + ;
                      hb_MemoRead( cTar_Path ) )
 
                   hb_FGetAttr( tmp, @nAttr )
@@ -370,7 +370,7 @@ read ASK
 if [ "${ASK}" != 'y' ] && [ "${ASK}" != 'Y' ]; then
    exit 1
 fi
-(tail -c %1$d "$0" | gzip -cd | (cd /;tar xvpf -)) %3$s
+(tail -c %1$d "$0" | gzip -cd | (cd /;tar xvpf -))%3$s
 exit $?
 HB_INST_EOF
 #pragma __endtext
