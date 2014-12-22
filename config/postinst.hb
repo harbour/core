@@ -45,7 +45,6 @@ PROCEDURE Main( ... )
    LOCAL lGNU_Tar
    LOCAL cOwner
    LOCAL cGroup
-   LOCAL cSH_Script
    LOCAL nAttr
 
    LOCAL cDynVersionFull
@@ -313,26 +312,12 @@ PROCEDURE Main( ... )
 
                   /* In the generated script always use tar because we can't be sure
                      if cBin_Tar exists in the installation environment */
-                  cSH_Script := ;
-                     '#!/bin/sh' + Chr( 10 ) + ;
-                     'if [ "\$1" = "--extract" ]; then' + Chr( 10 ) + ;
-                     '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"' + Chr( 10 ) + ;
-                     '   exit' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     'if [ "\$(id -u\)" != 0 ]; then' + Chr( 10 ) + ;
-                     '   echo "This package has to be installed from root account."' + Chr( 10 ) + ;
-                     '   exit 1' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     'echo "Do you want to install Harbour (y/n)"' + Chr( 10 ) + ;
-                     'read ASK' + Chr( 10 ) + ;
-                     'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then' + Chr( 10 ) + ;
-                     '   exit 1' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnvC( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 ) + ;
-                     'exit \$?' + Chr( 10 ) + ;
-                     'HB_INST_EOF' + Chr( 10 )
-
-                  hb_MemoWrit( tmp, cSH_Script + hb_MemoRead( cTar_Path ) )
+                  hb_MemoWrit( tmp, ;
+                     hb_StrFormat( tgz_sfx_sh(), ;
+                        hb_FSize( cTar_Path ), ;
+                        cTar_NameExt, ;
+                        iif( GetEnvC( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) ) + ;
+                     hb_MemoRead( cTar_Path ) )
 
                   hb_FGetAttr( tmp, @nAttr )
                   hb_FSetAttr( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
@@ -368,6 +353,27 @@ PROCEDURE Main( ... )
    ErrorLevel( nErrorLevel )
 
    RETURN
+
+STATIC FUNCTION tgz_sfx_sh()
+#pragma __cstream | RETURN %s
+#!/bin/sh
+if [ "$1" = '--extract' ]; then
+   tail -c %1$d "$0" > "%2$s"
+   exit
+fi
+if [ "$(id -u)" != 0 ]; then
+   echo 'This package has to be installed from root account.'
+   exit 1
+fi
+echo 'Do you want to install Harbour (y/n)'
+read ASK
+if [ "${ASK}" != 'y' ] && [ "${ASK}" != 'Y' ]; then
+   exit 1
+fi
+(tail -c %1$d "$0" | gzip -cd | (cd /;tar xvpf -)) %3$s
+exit $?
+HB_INST_EOF
+#pragma __endtext
 
 STATIC FUNCTION mk_hbl( cIn, cOut )
 
