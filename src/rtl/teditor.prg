@@ -46,7 +46,7 @@
 
 #pragma -gc0
 
-/* TODO: add missing support for soft-newlines: hb_BChar( 141 ) + hb_BChar( 10 ) */
+/* TODO: add missing support for soft-newlines: __SoftCR() */
 
 #include "hbclass.ch"
 
@@ -1030,7 +1030,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    ::nFirstRow := Max( 1, nTextRow - nWndRow )
    ::nFirstCol := nTextCol - nWndCol + 1
-   IF ::nFirstCol <  1
+   IF ::nFirstCol < 1
       nTextCol -= ::nFirstCol - 1
       ::nFirstCol := 1
    ENDIF

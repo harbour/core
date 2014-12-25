@@ -133,9 +133,7 @@ METHOD Edit() CLASS HBMemoEditor
 
          // Is it a configurable key?
          IF AScan( aConfigurableKeys, nKey ) > 0
-            IF ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
-
-            ENDIF
+            ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
          ELSE
             ::super:Edit( nKey )
          ENDIF

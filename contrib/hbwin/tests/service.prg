@@ -46,7 +46,7 @@
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-#define _SERVICE_NAME "Harbour_Test_Service"
+#define _SERVICE_NAME  "Harbour_Test_Service"
 
 PROCEDURE Main( cMode )
 
@@ -93,9 +93,10 @@ STATIC PROCEDURE SrvMain( cParam1, cParam2 )
    LOCAL fhnd := hb_FCreate( hb_FNameExtSet( hb_ProgName(), ".out" ),, FO_DENYNONE + FO_WRITE )
    LOCAL cParam
 
-   FWrite( fhnd, "Startup" + hb_eol() )
-   FWrite( fhnd, "|" + hb_CmdLine() + "|" + hb_eol() )
-   FWrite( fhnd, "|" + hb_defaultValue( cParam1, "" ) + "|" + hb_defaultValue( cParam2, "" ) + "|" + hb_eol() )
+   FWrite( fhnd, ;
+      "Startup" + hb_eol() + ;
+      "|" + hb_CmdLine() + "|" + hb_eol() + ;
+      "|" + hb_defaultValue( cParam1, "" ) + "|" + hb_defaultValue( cParam2, "" ) + "|" + hb_eol() )
 
    FOR EACH cParam IN hb_AParams()
       FWrite( fhnd, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_eol() )
