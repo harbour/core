@@ -269,7 +269,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 /* TOFIX: Luiz please review it */
    ::cStr += ;
       "   <link title=" + '"' + hb_defaultValue( cLinkTitle, cTitle ) + '"' + hb_eol() + ;
-      '                href="mailto:mail@example.net">' + hb_eol() + ;
+      '                href="mailto:mail@example.org">' + hb_eol() + ;
       '   <meta http-equiv="Content-Type" content="text/html; charset=' + hb_defaultValue( cCharset, "UTF-8" ) + '"' + " />" + hb_eol() )
 #else
    HB_SYMBOL_UNUSED( cLinkTitle )

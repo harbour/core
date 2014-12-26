@@ -21,10 +21,10 @@ PROCEDURE Main()
    ? "---"
 
    socket := hb_socketOpen()
-   ? "hb_socketConnect()", hb_socketConnect( socket, { HB_SOCKET_AF_INET, hb_socketResolveAddr( "www.fortify.net" ), 80 } )
+   ? "hb_socketConnect()", hb_socketConnect( socket, { HB_SOCKET_AF_INET, hb_socketResolveAddr( "example.org" ), 80 } )
    ? "hb_socketGetError()", hb_socketGetError( socket )
    ? "hb_socketGetFD()", hb_socketGetFD( socket )
-   ? "hb_socketSend()", hb_socketSend( socket, "GET / http/1.1" + CRLF + "Host: " + "www.fortify.net" + CRLF + CRLF )
+   ? "hb_socketSend()", hb_socketSend( socket, "GET / HTTP/1.1" + CRLF + "Host: " + "example.org" + CRLF + CRLF )
    ? "hb_socketGetError()", hb_socketGetError( socket )
    buffer := Space( 1024 )
    ? "hb_socketRecv()", hb_socketRecv( socket, @buffer,,, 500 )
@@ -34,7 +34,7 @@ PROCEDURE Main()
    ? "---"
 
    socket := hb_socketOpen()
-   ? hb_socketConnect( socket, { HB_SOCKET_AF_INET, hb_socketResolveAddr( "www.fortify.net" ), 443 } )
+   ? hb_socketConnect( socket, { HB_SOCKET_AF_INET, hb_socketResolveAddr( "example.org" ), 443 } )
    ? hb_socketGetError( socket )
 
    //
@@ -82,7 +82,7 @@ PROCEDURE Main()
    ? "SSL_CIPHER_get_bits()", SSL_CIPHER_get_bits( cipher, @bits ), bits
    ? "SSL_CIPHER_description()", SSL_CIPHER_description( cipher )
 
-   ? "SSL_write()", tmp := SSL_write( ssl, "GET / http/1.1" + CRLF + "Host: " + "www.fortify.net" + CRLF + CRLF )
+   ? "SSL_write()", tmp := SSL_write( ssl, "GET / HTTP/1.1" + CRLF + "Host: " + "example.org" + CRLF + CRLF )
    ? "SSL_get_error()", SSL_get_error( ssl, tmp )
    buffer := Space( 1024 )
    ? "SSL_read()", tmp := SSL_read( ssl, @buffer )

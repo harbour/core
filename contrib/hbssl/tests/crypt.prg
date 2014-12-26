@@ -35,33 +35,38 @@ PROCEDURE Main()
 
    OpenSSL_add_all_ciphers()
 
+   ? "encrypt"
+
    ctx := hb_EVP_CIPHER_ctx_create()
    EVP_CIPHER_CTX_init( ctx )
 
-   EVP_EncryptInit( ctx, "AES-192-OFB", cKey )
+   ? EVP_EncryptInit( ctx, "AES256", cKey, hb_rand32( 40 ) )
    ? EVP_CIPHER_CTX_cipher( ctx )
    ? EVP_CIPHER_block_size( EVP_CIPHER_CTX_cipher( ctx ) )
 
    encrypted := ""
    result := ""
-   EVP_EncryptUpdate( ctx, @result, "sample text" )
+   ? EVP_EncryptUpdate( ctx, @result, "sample text" )
    encrypted += result
-   EVP_EncryptFinal( ctx, @result )
+   ? EVP_EncryptFinal( ctx, @result )
    encrypted += result
-   ? "ENCRYTPTED", ">" + hb_StrToHex( encrypted ) + "<"
+   ? "ENCRYPTED", ">" + hb_StrToHex( encrypted ) + "<"
    ? ">" + encrypted + "<"
+
+   ? "decrypt"
 
    ctx := hb_EVP_CIPHER_ctx_create()
 
-   EVP_DecryptInit( ctx, "AES-192-OFB", cKey )
+   ? EVP_DecryptInit( ctx, "AES256", cKey )
 
    decrypted := ""
    result := ""
-   EVP_DecryptUpdate( ctx, @result, encrypted )
+   ? EVP_DecryptUpdate( ctx, @result, encrypted )
    decrypted += result
-   EVP_DecryptFinal( ctx, @result )
+   /* TOFIX: this fails sometimes */
+   ? EVP_DecryptFinal( ctx, @result )
    decrypted += result
-   ? "DECRYTPTED", ">" + decrypted + "<"
+   ? "DECRYPTED", ">" + decrypted + "<"
 
    ? ERR_load_PEM_strings()
    ? OpenSSL_add_all_algorithms()
@@ -81,7 +86,7 @@ PROCEDURE Main()
 
    ? pub := PEM_READ_BIO_PUBKEY( "pubkey.pem", "test" )
 
-   ? "EVP_SealInit()", EVP_SealInit( ctx, "AES-192-OFB", @a, @iv, { pub } )
+   ? "EVP_SealInit()", EVP_SealInit( ctx, "AES256", @a, @iv, { pub } )
    ? ValType( a ), Len( a )
    ? ValType( a[ 1 ] ), ">" + hb_StrToHex( a[ 1 ] ) + "<"
    ? ValType( iv ), ">" + hb_StrToHex( iv ) + "<"

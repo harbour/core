@@ -173,6 +173,9 @@ const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam )
       case HB_EVP_CIPHER_RC5_32_12_16_OFB:     p = EVP_rc5_32_12_16_ofb();    break;
 #endif
 #ifndef OPENSSL_NO_AES
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+      case HB_EVP_CIPHER_AES_128_GCM:          p = EVP_aes_128_gcm();         break;
+#endif
       case HB_EVP_CIPHER_AES_128_ECB:          p = EVP_aes_128_ecb();         break;
       case HB_EVP_CIPHER_AES_128_CBC:          p = EVP_aes_128_cbc();         break;
       case HB_EVP_CIPHER_AES_128_CFB1:         p = EVP_aes_128_cfb1();        break;
@@ -180,6 +183,9 @@ const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam )
       case HB_EVP_CIPHER_AES_128_CFB128:       p = EVP_aes_128_cfb128();      break;
       case HB_EVP_CIPHER_AES_128_CFB:          p = EVP_aes_128_cfb();         break;
       case HB_EVP_CIPHER_AES_128_OFB:          p = EVP_aes_128_ofb();         break;
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+      case HB_EVP_CIPHER_AES_192_GCM:          p = EVP_aes_192_gcm();         break;
+#endif
       case HB_EVP_CIPHER_AES_192_ECB:          p = EVP_aes_192_ecb();         break;
       case HB_EVP_CIPHER_AES_192_CBC:          p = EVP_aes_192_cbc();         break;
       case HB_EVP_CIPHER_AES_192_CFB1:         p = EVP_aes_192_cfb1();        break;
@@ -187,6 +193,9 @@ const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam )
       case HB_EVP_CIPHER_AES_192_CFB128:       p = EVP_aes_192_cfb128();      break;
       case HB_EVP_CIPHER_AES_192_CFB:          p = EVP_aes_192_cfb();         break;
       case HB_EVP_CIPHER_AES_192_OFB:          p = EVP_aes_192_ofb();         break;
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+      case HB_EVP_CIPHER_AES_256_GCM:          p = EVP_aes_256_gcm();         break;
+#endif
       case HB_EVP_CIPHER_AES_256_ECB:          p = EVP_aes_256_ecb();         break;
       case HB_EVP_CIPHER_AES_256_CBC:          p = EVP_aes_256_cbc();         break;
       case HB_EVP_CIPHER_AES_256_CFB1:         p = EVP_aes_256_cfb1();        break;

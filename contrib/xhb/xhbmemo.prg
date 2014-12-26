@@ -169,25 +169,25 @@ METHOD Edit() CLASS xhb_TMemoEditor
       ENDIF
 
       /* 2005-10-24 - <maurilio.longo@libero.it>
-                      Taken from Cl*pper norton guide:
+         Taken from Cl*pper Norton Guide:
 
-                        The user function: <cUserFunction>, a user-defined function
-                        specified as an argument, handles key exceptions and reconfigures
-                        special keys.  The user function is called at various times by
-                        MemoEdit(), most often in response to keys it does not recognize.
-                        Keys that instigate a key exception are all available control keys,
-                        function keys, and Alt keys.  Since these keys are not processed by
-                        MemoEdit(), they can be reconfigured.  Some of these keys have a
-                        default action assigned to them.  In the user function, you perform
-                        various actions, depending on the current MemoEdit() mode, then
-                        RETURN a value telling MemoEdit() what to do next.
+         The user function: <cUserFunction>, a user-defined function
+         specified as an argument, handles key exceptions and reconfigures
+         special keys.  The user function is called at various times by
+         MemoEdit(), most often in response to keys it does not recognize.
+         Keys that instigate a key exception are all available control keys,
+         function keys, and Alt keys.  Since these keys are not processed by
+         MemoEdit(), they can be reconfigured.  Some of these keys have a
+         default action assigned to them.  In the user function, you perform
+         various actions, depending on the current MemoEdit() mode, then
+         RETURN a value telling MemoEdit() what to do next.
 
-                        When the user function argument is specified, MemoEdit() defines two
-                        classes of keys: nonconfigurable and key exceptions.  When a
-                        nonconfigurable key is pressed, MemoEdit() executes it, otherwise a
-                        key exception is generated and the user function is called.  When
-                        there are no keys left in the keyboard buffer for MemoEdit() to
-                        process, the user function is called once again. */
+         When the user function argument is specified, MemoEdit() defines two
+         classes of keys: nonconfigurable and key exceptions.  When a
+         nonconfigurable key is pressed, MemoEdit() executes it, otherwise a
+         key exception is generated and the user function is called.  When
+         there are no keys left in the keyboard buffer for MemoEdit() to
+         process, the user function is called once again. */
 
       IF ::bKeyBlock == NIL
 
