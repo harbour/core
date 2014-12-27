@@ -50,6 +50,53 @@
 #include "fileio.ch"
 #include "error.ch"
 
+/* test code */
+
+REQUEST HB_IOTCP
+
+PROCEDURE Main( cAddr )
+
+   LOCAL hFile, cData, cSend, cEOL, nLen
+
+   IF Empty( cAddr )
+      cAddr := "tcp:smtp.gmail.com:587:10000"
+   ENDIF
+
+   ? "open:", cAddr
+   IF Empty( hFile := hb_vfOpen( cAddr, FO_READWRITE ) )
+      ? "Open error:", FError()
+   ELSE
+      cData := Space( 1024 )
+      cEOL := e"\r\n"
+      IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
+         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
+      ENDIF
+      cSend := "EHLO" + cEOL
+      nLen := hb_vfWrite( hFile, cSend,, 1000 )
+      ? ">>", StrTran( hb_BLeft( cSend, nLen ), cEOL, cEOL + ">> " )
+      IF nLen != hb_BLen( cSend )
+         ? "WRITE ERROR:", FError()
+      ENDIF
+      IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
+         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
+      ENDIF
+      cSend := "QUIT" + cEOL
+      nLen := hb_vfWrite( hFile, cSend,, 1000 )
+      ? ">>", StrTran( hb_BLeft( cSend, nLen ), cEOL, cEOL + ">> " )
+      IF nLen != hb_BLen( cSend )
+         ? "WRITE ERROR:", FError()
+      ENDIF
+      IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
+         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
+      ENDIF
+      hb_vfClose( hFile )
+      ? "closed, error:", FError()
+   ENDIF
+   ?
+   WAIT
+
+   RETURN
+
 ANNOUNCE HB_IOTCP
 
 #define IOTCP_SOCKET          1
@@ -221,54 +268,5 @@ INIT PROCEDURE CLIPINIT
    aMethods[ IOUSR_HANDLE    ] := @IOTCP_Handle()
 
    IOUSR_Register( aMethods, "tcp:" )
-
-   RETURN
-
-
-
-/* test code */
-
-REQUEST HB_IOTCP
-
-PROCEDURE Main( cAddr )
-
-   LOCAL hFile, cData, cSend, cEOL, nLen
-
-   IF Empty( cAddr )
-      cAddr := "tcp:smtp.gmail.com:25:10000"
-   ENDIF
-
-   ? "open:", cAddr
-   IF Empty( hFile := hb_vfOpen( cAddr, FO_READWRITE ) )
-      ? "Open error:", FError()
-   ELSE
-      cData := Space( 1024 )
-      cEOL := e"\r\n"
-      IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
-         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
-      ENDIF
-      cSend := "EHLO" + cEOL
-      nLen := hb_vfWrite( hFile, cSend,, 1000 )
-      ? ">>", StrTran( hb_BLeft( cSend, nLen ), cEOL, cEOL + ">> " )
-      IF nLen != hb_BLen( cSend )
-         ? "WRITE ERROR:", FError()
-      ENDIF
-      IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
-         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
-      ENDIF
-      cSend := "QUIT" + cEOL
-      nLen := hb_vfWrite( hFile, cSend,, 1000 )
-      ? ">>", StrTran( hb_BLeft( cSend, nLen ), cEOL, cEOL + ">> " )
-      IF nLen != hb_BLen( cSend )
-         ? "WRITE ERROR:", FError()
-      ENDIF
-      IF ( nLen := hb_vfRead( hFile, @cData,, 10000 ) ) > 0
-         ? "<<", StrTran( hb_BLeft( cData, nLen ), cEOL, cEOL + "<< " )
-      ENDIF
-      hb_vfClose( hFile )
-      ? "closed, error:", FError()
-   ENDIF
-   ?
-   WAIT
 
    RETURN
