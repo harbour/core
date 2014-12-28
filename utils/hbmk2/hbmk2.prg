@@ -15040,7 +15040,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       CASE cParamL == "-help" .OR. cParamL == "--help" .OR. ;
            cParamL == "-h" .OR. cParamL == "-?"
 
-         SetUILang( hbmk, GetUILang() )
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T. )
          RETURN
@@ -15049,7 +15048,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
            cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
            cParamL == "-hh" .OR. cParamL == "-??"
 
-         SetUILang( hbmk, GetUILang() )
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
          RETURN
@@ -15074,7 +15072,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
          hbmk[ _HBMK_lMarkdown ] := .T.
 
-         SetUILang( hbmk, GetUILang() )
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
          RETURN
@@ -15224,19 +15221,17 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
 STATIC FUNCTION __hbshell_FileSig( cFile )
 
-   LOCAL hFile
-   LOCAL cBuff, cExt
+   LOCAL hFile, cBuff
 
-   cExt := ".hb"
    IF ( hFile := FOpen( cFile ) ) != F_ERROR
       cBuff := hb_FReadLen( hFile, hb_BLen( hb_hrbSignature() ) )
       FClose( hFile )
       IF cBuff == hb_hrbSignature()
-         cExt := ".hrb"
+         RETURN ".hrb"
       ENDIF
    ENDIF
 
-   RETURN cExt
+   RETURN ".hb"
 
 STATIC FUNCTION __hbshell_ConfigDir( lForDocOutput )
 
@@ -15956,17 +15951,17 @@ STATIC PROCEDURE __hbshell_Info( cCommand )
    ENDIF
    IF Used()
       hb_DispOutAt( 1, 0, PadR( ;
-         "RDD: " + PadR( rddName(), 6 ) +;
-         " | Area:" + Str( Select(), 3 ) +;
-         " | Dbf: " + PadR( Alias(), 10 ) +;
-         " | Index: " + PadR( ordName( IndexOrd() ), 8 ) +;
+         "RDD: " + PadR( rddName(), 6 ) + ;
+         " | Area:" + Str( Select(), 3 ) + ;
+         " | Dbf: " + PadR( Alias(), 10 ) + ;
+         " | Index: " + PadR( ordName( IndexOrd() ), 8 ) + ;
          " | # " + Str( RecNo(), 7 ) + "/" + Str( LastRec(), 7 ), MaxCol() + 1 ), "N/BG" )
    ELSE
       hb_DispOutAt( 1, 0, PadR( ;
-         "RDD: " + Space( 6 ) +;
-         " | Area:" + Space( 3 ) +;
-         " | Dbf: " + Space( 10 ) +;
-         " | Index: " + Space( 8 ) +;
+         "RDD: " + Space( 6 ) + ;
+         " | Area:" + Space( 3 ) + ;
+         " | Dbf: " + Space( 10 ) + ;
+         " | Index: " + Space( 8 ) + ;
          " | # " + Space( 7 ) + "/" + Space( 7 ), MaxCol() + 1 ), "N/BG" )
    ENDIF
    IF hbsh[ _HBSH_lPreserveHistory ]

@@ -351,7 +351,7 @@ HB_FUNC( SQL_SPRINTF )
 
          if( IsIndW )   /* Get Par Indirectly Width Item */
          {
-            pItmPar = hb_param( ( iIndWidth ? iIndWidth + 1 :  p++ + 2 ), HB_IT_INTEGER );
+            pItmPar = hb_param( iIndWidth ? iIndWidth + 1 : p++ + 2, HB_IT_INTEGER );
             if( pItmPar )
             {
                if( ( iIndWidth = hb_itemGetNI( pItmPar ) ) < 0 )
@@ -368,7 +368,7 @@ HB_FUNC( SQL_SPRINTF )
 
          if( IsIndP )   /* Get Par Indirectly Precision Item */
          {
-            pItmPar = hb_param( ( iIndPrec ? iIndPrec + 1 : p++ + 2 ), HB_IT_INTEGER );
+            pItmPar = hb_param( iIndPrec ? iIndPrec + 1 : p++ + 2, HB_IT_INTEGER );
             if( pItmPar )
             {
                iIndPrec = hb_itemGetNI( pItmPar );
@@ -390,7 +390,7 @@ HB_FUNC( SQL_SPRINTF )
             i--;
          }  /* i == strlen( cParFrm ) */
 
-         pItmPar = hb_param( ( arg ? arg + 1 : p++ + 2 ), HB_IT_ANY );   /* Get Par Item */
+         pItmPar = hb_param( arg ? arg + 1 : p++ + 2, HB_IT_ANY );   /* Get Par Item */
          if( ! pItmPar )
          {
             iErrorPar = 1;
@@ -514,12 +514,12 @@ HB_FUNC( SQL_SPRINTF )
                if( HB_IS_TIMESTAMP( pItmPar ) )
                {
                   hb_itemGetTDT( pItmPar, &lDate, &lTime );
-                  hb_timeStampFormat(  cDTFrm,
-                                       ( s ? cIntMod : ( IsType ? "YYYY-MM-DD" :
-                                                         hb_setGetDateFormat() ) ),
-                                       ( s ? cIntMod +
-                                         f : ( IsType ? "HH:MM:SS" : hb_setGetTimeFormat() ) ),
-                                       lDate, lTime );
+                  hb_timeStampFormat( cDTFrm,
+                                      s ? cIntMod : ( IsType ? "YYYY-MM-DD" :
+                                                      hb_setGetDateFormat() ),
+                                      s ? cIntMod + f : ( IsType ? "HH:MM:SS" :
+                                                      hb_setGetTimeFormat() ),
+                                      lDate, lTime );
                   if( s )
                   {
                      if( ! cIntMod[ 0 ] )
@@ -530,7 +530,7 @@ HB_FUNC( SQL_SPRINTF )
                }
                else
                   hb_dateFormat( hb_itemGetDS( pItmPar, cDTBuf ), cDTFrm,
-                                 ( s ? cIntMod : ( IsType ? "YYYY-MM-DD" : hb_setGetDateFormat() ) ) );
+                                 s ? cIntMod : ( IsType ? "YYYY-MM-DD" : hb_setGetDateFormat() ) );
 
                /* 27 + 2 if %t and change format time */
                if( ( f = i + HB_MAX( ulWidth, 29 ) ) > ulMaxBuf )
@@ -544,9 +544,9 @@ HB_FUNC( SQL_SPRINTF )
                {
                   /* Empty DATE, DATETIME print DEFAULT for T converter or DK_EMPTYDATE, DK_EMPTYDATETIME for t converter */
                   if( *cDTFrm == ' ' )
-                     hb_itemPutC( pItmCpy, ( HB_IS_TIMESTAMP( pItmPar ) ?
-                                             ( IsType == 2 ? "DEFAULT" : DK_EMPTYDATETIME ) :
-                                             ( IsType == 2 ? "DEFAULT" : DK_EMPTYDATE ) ) );
+                     hb_itemPutC( pItmCpy, HB_IS_TIMESTAMP( pItmPar ) ?
+                                           ( IsType == 2 ? "DEFAULT" : DK_EMPTYDATETIME ) :
+                                           ( IsType == 2 ? "DEFAULT" : DK_EMPTYDATE ) );
                   else
                      STAItm( pItmCpy );
                }
@@ -571,15 +571,13 @@ HB_FUNC( SQL_SPRINTF )
                   hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar );
                   pItmPar = pItmCpy;
                   hb_itemPutC( pItmPar,
-                               ( hb_itemGetL( pItmPar ) ? ( s ? cIntMod : "TRUE" ) : ( s ? cIntMod
-                                                                                       + f :
-                                                                                       "FALSE" ) ) );
+                               hb_itemGetL( pItmPar ) ? ( s ? cIntMod : "TRUE" ) :
+                                                        ( s ? cIntMod + f : "FALSE" ) );
                }
                if( ( f = i +
                          ( iCOut ==
-                           's' ? HB_MAX( ulWidth, ( s ? s : 6 ) ) : HB_MAX( ulWidth,
-                                                                            DK_BLKBUF ) ) ) >
-                   ulMaxBuf )
+                           's' ? HB_MAX( ulWidth, s ? s : 6 ) :
+                                 HB_MAX( ulWidth, DK_BLKBUF ) ) ) > ulMaxBuf )
                {
                   ulMaxBuf += f + DK_INCBUF;   /* size of "FALSE" == 6 */
                   cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
