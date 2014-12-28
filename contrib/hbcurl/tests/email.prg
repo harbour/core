@@ -13,6 +13,7 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
    LOCAL cMessage
 
    LOCAL cHost
+   LOCAL lSTARTTLS
 
    IF hb_AScan( curl_version_info()[ 8 ], "smtps",,, .T. ) == 0
       ? "Error: Requires libcurl 7.20.0 or newer, built with SSL and smtp protocol support"
@@ -24,17 +25,23 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
    hb_default( @cTo      , "to@example.com" )
    hb_default( @cProvider, "" )
 
+   lSTARTTLS := .F.
+
    DO CASE
+   CASE cProvider == "apple" .OR. "@icloud.com" $ cFrom .OR. "@mac.com" $ cFrom .OR. "@me.com" $ cFrom
+      cHost := "smtp://smtp.mail.me.com:587"; lSTARTTLS := .T.
    CASE cProvider == "fastmail" .OR. "@fastmail.com" $ cFrom .OR. "@fastmail.fm" $ cFrom
       cHost := "smtps://mail.messagingengine.com"
+   CASE cProvider == "gmx" .OR. "@gmx" $ cFrom
+      cHost := "smtp://mail.gmx.net:587"; lSTARTTLS := .T.
    CASE cProvider == "google" .OR. "@gmail.com" $ cFrom .OR. "@googlemail.com" $ cFrom
-      cHost := "smtps://smtp.gmail.com:465"
+      cHost := "smtps://smtp.gmail.com"
    CASE cProvider == "microsoft" .OR. "@hotmail.com" $ cFrom
-      cHost := "smtp://smtp-mail.outlook.com:587"
+      cHost := "smtp://smtp-mail.outlook.com:587"; lSTARTTLS := .T.
       // cHost := "smtp://smtp-mail.outlook.com:25"
       // cHost := "smtp://smtp.office365.com:587"
    CASE cProvider == "yahoo" .OR. "@yahoo.com" $ cFrom
-      cHost := "smtps://smtp.mail.yahoo.com:465"
+      cHost := "smtps://smtp.mail.yahoo.com"
    OTHERWISE
       ? "Error: Unknown provider"
       RETURN
@@ -68,6 +75,9 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
          ENDIF
          curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
       #endif
+      IF lSTARTTLS
+         curl_easy_setopt( curl, HB_CURLOPT_USE_SSL, HB_CURLUSESSL_ALL )
+      ENDIF
       curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       curl_easy_setopt( curl, HB_CURLOPT_URL, cHost )
       curl_easy_setopt( curl, HB_CURLOPT_USERNAME, cFrom )
