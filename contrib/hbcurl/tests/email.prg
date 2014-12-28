@@ -36,7 +36,7 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
       cHost := "smtp://mail.gmx.net:587"; lSTARTTLS := .T.
    CASE cProvider == "google" .OR. "@gmail.com" $ cFrom .OR. "@googlemail.com" $ cFrom
       cHost := "smtps://smtp.gmail.com"
-   CASE cProvider == "microsoft" .OR. "@hotmail.com" $ cFrom
+   CASE cProvider == "microsoft" .OR. "@outlook.com" $ cFrom .OR. "@hotmail.com" $ cFrom
       cHost := "smtp://smtp-mail.outlook.com:587"; lSTARTTLS := .T.
       // cHost := "smtp://smtp-mail.outlook.com:25"
       // cHost := "smtp://smtp.office365.com:587"
