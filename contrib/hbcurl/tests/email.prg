@@ -25,21 +25,34 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
    hb_default( @cTo      , "to@example.com" )
    hb_default( @cProvider, "" )
 
+   cProvider := Lower( cProvider )
+
    lSTARTTLS := .F.
+
+   /* NOTE: Consult your provider for updated settings
+            and make a pull request if necessary. */
 
    DO CASE
    CASE cProvider == "apple" .OR. "@icloud.com" $ cFrom .OR. "@mac.com" $ cFrom .OR. "@me.com" $ cFrom
       cHost := "smtp://smtp.mail.me.com:587"; lSTARTTLS := .T.
    CASE cProvider == "fastmail" .OR. "@fastmail.com" $ cFrom .OR. "@fastmail.fm" $ cFrom
       cHost := "smtps://mail.messagingengine.com"
-   CASE cProvider == "gmx" .OR. "@gmx" $ cFrom
+   CASE cProvider == "gmx.net" .OR. "@gmx.net" $ cFrom .OR. "@gmx.ch" $ cFrom .OR. "@gmx.de" $ cFrom
       cHost := "smtp://mail.gmx.net:587"; lSTARTTLS := .T.
    CASE cProvider == "google" .OR. "@gmail.com" $ cFrom .OR. "@googlemail.com" $ cFrom
       cHost := "smtps://smtp.gmail.com"
-   CASE cProvider == "microsoft" .OR. "@outlook.com" $ cFrom .OR. "@hotmail.com" $ cFrom
+   CASE cProvider == "mail.ru" .OR. "@mail.ru" $ cFrom
+      cHost := "smtps://smtp.mail.ru"
+   CASE cProvider == "netease" .OR. "@163.com" $ cFrom
+      cHost := "smtps://smtp.163.com"
+   CASE cProvider == "office365"
+      cHost := "smtp://smtp.office365.com:587"; lSTARTTLS := .T.
+   CASE cProvider == "outlook" .OR. "@outlook.com" $ cFrom .OR. "@hotmail.com" $ cFrom
       cHost := "smtp://smtp-mail.outlook.com:587"; lSTARTTLS := .T.
-      // cHost := "smtp://smtp-mail.outlook.com:25"
-      // cHost := "smtp://smtp.office365.com:587"
+   CASE cProvider == "sina" .OR. "@sina.com" $ cFrom
+      cHost := "smtps://smtp.vip.sina.com"
+   CASE cProvider == "uol" .OR. "@uol.com.br" $ cFrom
+      cHost := "smtps://smtps.uol.com.br"
    CASE cProvider == "yahoo" .OR. "@yahoo.com" $ cFrom
       cHost := "smtps://smtp.mail.yahoo.com"
    OTHERWISE

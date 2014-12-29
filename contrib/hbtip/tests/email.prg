@@ -11,9 +11,9 @@ REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
 
-   LOCAL cSMTPHost
-   LOCAL nSMTPPort
-   LOCAL lTLS
+   LOCAL cHost
+   LOCAL nPort := 465
+   LOCAL lTLS := .T.
 
    IF ! tip_SSL()
       ? "Error: Requires SSL support"
@@ -25,21 +25,31 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
    hb_default( @cTo      , "to@example.com" )
    hb_default( @cProvider, "" )
 
+   cProvider := Lower( cProvider )
+
    DO CASE
    CASE cProvider == "fastmail" .OR. "@fastmail.com" $ cFrom .OR. "@fastmail.fm" $ cFrom
-      lTLS := .T.; nSMTPPort := 465; cSMTPHost := "mail.messagingengine.com"
+      cHost := "mail.messagingengine.com"
    CASE cProvider == "google" .OR. "@gmail.com" $ cFrom .OR. "@googlemail.com" $ cFrom
-      lTLS := .T.; nSMTPPort := 465; cSMTPHost := "smtp.gmail.com"
+      cHost := "smtp.gmail.com"
+   CASE cProvider == "mail.ru" .OR. "@mail.ru" $ cFrom
+      cHost := "smtp.mail.ru"
+   CASE cProvider == "netease" .OR. "@163.com" $ cFrom
+      cHost := "smtp.163.com"
+   CASE cProvider == "sina" .OR. "@sina.com" $ cFrom
+      cHost := "smtp.vip.sina.com"
+   CASE cProvider == "uol" .OR. "@uol.com.br" $ cFrom
+      cHost := "smtps.uol.com.br"
    CASE cProvider == "yahoo" .OR. "@yahoo.com" $ cFrom
-      lTLS := .T.; nSMTPPort := 465; cSMTPHost := "smtp.mail.yahoo.com"
+      cHost := "smtp.mail.yahoo.com"
    OTHERWISE
       ? "Error: Unknown provider"
       RETURN
    ENDCASE
 
    ? tip_MailSend( ;
-      cSMTPHost, ;
-      nSMTPPort, ;
+      cHost, ;
+      nPort, ;
       cFrom, ;
       cTo, ;
       NIL /* CC */, ;

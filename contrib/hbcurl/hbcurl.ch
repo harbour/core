@@ -574,6 +574,8 @@
 #define HB_CURLE_RTSP_SESSION_ERROR           86 /* mismatch of RTSP Session Identifiers */
 #define HB_CURLE_FTP_BAD_FILE_LIST            87 /* unable to parse FTP file list */
 #define HB_CURLE_CHUNK_FAILED                 88 /* chunk callback reported error */
+#define HB_CURLE_NO_CONNECTION_AVAILABLE      89 /* No connection available, the session will be queued */
+#define HB_CURLE_SSL_PINNEDPUBKEYNOTMATCH     90 /* specified pinned public key did not match */
 
 #define HB_CURLE_OBSOLETE16                   HB_CURLE_HTTP2
 
