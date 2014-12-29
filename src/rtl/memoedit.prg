@@ -133,9 +133,7 @@ METHOD Edit() CLASS HBMemoEditor
 
          // Is it a configurable key?
          IF AScan( aConfigurableKeys, nKey ) > 0
-            IF ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
-
-            ENDIF
+            ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
          ELSE
             ::super:Edit( nKey )
          ENDIF
@@ -201,8 +199,8 @@ METHOD IdleHook() CLASS HBMemoEditor
 
 METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
-   DO CASE
-   CASE nUdfReturn == ME_DEFAULT
+   SWITCH nUdfReturn
+   CASE ME_DEFAULT
 
       // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
 
@@ -219,8 +217,9 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
       ELSE
          RETURN .F.
       ENDIF
+      EXIT
 
-   CASE nUdfReturn == ME_DATA
+   CASE ME_DATA
       IF HB_ISNUMERIC( nKey )
          IF nKey <= 256
             ::super:Edit( nKey )
@@ -228,25 +227,35 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
       ELSE
          RETURN .F.
       ENDIF
+      EXIT
 
-   CASE nUdfReturn == ME_TOGGLEWRAP
+   CASE ME_TOGGLEWRAP
       ::lWordWrap := ! ::lWordWrap
+      EXIT
 
-   CASE nUdfReturn == ME_TOGGLESCROLL
+   CASE ME_TOGGLESCROLL
       // TODO: HBEditor does not support vertical scrolling of text inside window without moving cursor position
+      EXIT
 
-   CASE nUdfReturn == ME_WORDRIGHT
+   CASE ME_WORDRIGHT
       ::MoveCursor( K_CTRL_RIGHT )
+      EXIT
 
-   CASE nUdfReturn == ME_BOTTOMRIGHT
+   CASE ME_BOTTOMRIGHT
       ::MoveCursor( K_CTRL_END )
+      EXIT
 
 #ifndef HB_CLP_STRICT
-   CASE nUdfReturn == ME_PASTE  /* Xbase++ compatibility */
+   CASE ME_PASTE  /* Xbase++ compatibility */
       hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
+      EXIT
 #endif
 
-   CASE nUdfReturn != ME_IGNORE
+   CASE ME_IGNORE
+      /* do nothing */
+      EXIT
+
+   OTHERWISE
 
       // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
       IF HB_ISNUMERIC( nKey ) .AND. ( ( nKey >= 1 .AND. nKey <= 31 ) .OR. nKey == K_ALT_W )
@@ -255,7 +264,7 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
          RETURN .F.
       ENDIF
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN .T.
 
@@ -313,8 +322,7 @@ FUNCTION MemoEdit( ;
    hb_default( @nWindowColumn   , nTextBuffColumn )
    hb_default( @cString         , "" )
 
-   /* Original MemoEdit() converts tabs into spaces */
-   oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), ;
+   oEd := HBMemoEditor():New( cString, ;
       hb_defaultValue( nTop, 0 ), ;
       nLeft, ;
       hb_defaultValue( nBottom, MaxRow() ), ;

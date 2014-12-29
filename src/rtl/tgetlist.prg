@@ -915,6 +915,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
             oGet:varPut( oGUI:value )
             EXIT
          ENDIF
+         /* fall through */
       OTHERWISE
          oGet:varPut( oGUI:buffer )
       ENDSWITCH
@@ -942,6 +943,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
    LOCAL nMRow
    LOCAL nMCol
    LOCAL nButton
+   LOCAL cKey
 
    // Check for SET KEY first
    IF ( bKeyBlock := SetKey( nKey ) ) != NIL
@@ -1011,7 +1013,8 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
             nKey := 0
          ENDIF
 
-      ELSEIF ( nButton := oGUI:FindText( hb_keyChar( nKey ), oGUI:Value + 1, .F., .F. ) ) != 0
+      ELSEIF !( ( cKey := hb_keyChar( nKey ) ) == "" ) .AND. ;
+             ( nButton := oGUI:FindText( cKey, oGUI:Value + 1, .F., .F. ) ) != 0
          oGUI:Select( nButton )
 
       ENDIF
@@ -1189,6 +1192,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
             xNewValue := oGUI:value
             EXIT
          ENDIF
+         /* fall through */
       OTHERWISE
          xNewValue := oGUI:buffer
       ENDSWITCH
@@ -1210,7 +1214,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
       SetPos( oGet:row, oGet:col )
 
       ::ShowScoreBoard()
-      IF ! ( oGUI:ClassName() == "TBROWSE" )
+      IF !( oGUI:ClassName() == "TBROWSE" )
          oGUI:Select( oGet:varGet() )
       ENDIF
 
@@ -1219,7 +1223,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
       __GetListLast( Self )
 
       IF ::lKillRead
-         oGet:exitState := GE_ESCAPE      // Provokes ReadModal() exit
+         oGet:exitState := GE_ESCAPE  // Provokes ReadModal() exit
          lValid := .T.
       ENDIF
 
