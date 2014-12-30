@@ -189,7 +189,7 @@ PROCEDURE Main( ... )
 
       /* Creating language files */
 
-      IF ! Empty( GetEnvC( "HB_INSTALL_BIN" ) ) .AND. ;
+      IF ! Empty( GetEnvC( "HB_INSTALL_DOC" ) ) .AND. ;
          ! GetEnvC( "HB_BUILD_PARTS" ) == "lib"
 
          OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
@@ -198,7 +198,7 @@ PROCEDURE Main( ... )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
                FOR EACH aFile IN Directory( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/*.po" ) )
                   mk_hbl( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/" + aFile[ F_NAME ] ), ;
-                     hb_DirSepToOS( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+                     hb_DirSepToOS( GetEnvC( "HB_INSTALL_DOC" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
                NEXT
             ENDIF
          NEXT

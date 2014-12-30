@@ -1333,44 +1333,44 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
    /* Add default search paths for .hbc files */
    AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
    AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
-#if defined( __PLATFORM__UNIX )
-   IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "/share/harbour" )
-      IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
-         hbmk[ _HBMK_cHB_INSTALL_CON ] := tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB
-         hbmk[ _HBMK_cHB_INSTALL_ADD ] := tmp + hb_ps() + _HBMK_SPECDIR_ADDONS
-         hbmk[ _HBMK_cHB_INSTALL_DOC ] := tmp + hb_ps() + _HBMK_SPECDIR_DOC
+   #if defined( __PLATFORM__UNIX )
+      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "/share/harbour" )
+         IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+            hbmk[ _HBMK_cHB_INSTALL_CON ] := tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB
+            hbmk[ _HBMK_cHB_INSTALL_ADD ] := tmp + hb_ps() + _HBMK_SPECDIR_ADDONS
+            hbmk[ _HBMK_cHB_INSTALL_DOC ] := tmp + hb_ps() + _HBMK_SPECDIR_DOC
+         ENDIF
+         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
+         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
       ENDIF
-      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
-   ENDIF
-   IF hb_DirExists( tmp := "/opt/harbour" )
-      IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
-         hbmk[ _HBMK_cHB_INSTALL_CON ] := tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB
-         hbmk[ _HBMK_cHB_INSTALL_ADD ] := tmp + hb_ps() + _HBMK_SPECDIR_ADDONS
-         hbmk[ _HBMK_cHB_INSTALL_DOC ] := tmp + hb_ps() + _HBMK_SPECDIR_DOC
+      IF hb_DirExists( tmp := "/opt/harbour" )
+         IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+            hbmk[ _HBMK_cHB_INSTALL_CON ] := tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB
+            hbmk[ _HBMK_cHB_INSTALL_ADD ] := tmp + hb_ps() + _HBMK_SPECDIR_ADDONS
+            hbmk[ _HBMK_cHB_INSTALL_DOC ] := tmp + hb_ps() + _HBMK_SPECDIR_DOC
+         ENDIF
+         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
+         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
       ENDIF
-      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
-   ENDIF
-   IF hb_DirExists( tmp := "/usr/local/share/harbour" )
-      IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
-         hbmk[ _HBMK_cHB_INSTALL_CON ] := tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB
-         hbmk[ _HBMK_cHB_INSTALL_ADD ] := tmp + hb_ps() + _HBMK_SPECDIR_ADDONS
-         hbmk[ _HBMK_cHB_INSTALL_DOC ] := tmp + hb_ps() + _HBMK_SPECDIR_DOC
+      IF hb_DirExists( tmp := "/usr/local/share/harbour" )
+         IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+            hbmk[ _HBMK_cHB_INSTALL_CON ] := tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB
+            hbmk[ _HBMK_cHB_INSTALL_ADD ] := tmp + hb_ps() + _HBMK_SPECDIR_ADDONS
+            hbmk[ _HBMK_cHB_INSTALL_DOC ] := tmp + hb_ps() + _HBMK_SPECDIR_DOC
+         ENDIF
+         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
+         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
       ENDIF
-      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
-   ENDIF
-   IF hb_DirExists( tmp := "/usr/share/harbour" )
-      IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
-         hbmk[ _HBMK_cHB_INSTALL_CON ] := tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB
-         hbmk[ _HBMK_cHB_INSTALL_ADD ] := tmp + hb_ps() + _HBMK_SPECDIR_ADDONS
-         hbmk[ _HBMK_cHB_INSTALL_DOC ] := tmp + hb_ps() + _HBMK_SPECDIR_DOC
+      IF hb_DirExists( tmp := "/usr/share/harbour" )
+         IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+            hbmk[ _HBMK_cHB_INSTALL_CON ] := tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB
+            hbmk[ _HBMK_cHB_INSTALL_ADD ] := tmp + hb_ps() + _HBMK_SPECDIR_ADDONS
+            hbmk[ _HBMK_cHB_INSTALL_DOC ] := tmp + hb_ps() + _HBMK_SPECDIR_DOC
+         ENDIF
+         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
+         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
       ENDIF
-      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
-   ENDIF
-#endif
+   #endif
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
       hbmk[ _HBMK_cHB_INSTALL_CON ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_CONTRIB
       hbmk[ _HBMK_cHB_INSTALL_ADD ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_ADDONS
@@ -1395,6 +1395,32 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
 
    RETURN
 #endif
+
+/* Cleaned up version of core logic.
+   Not fully compatible, goal is to move toward
+   a cleaner version even for core logic. */
+STATIC FUNCTION hbmk_harbour_docdir_detect()
+
+   LOCAL tmp
+
+   #if defined( __PLATFORM__UNIX )
+   FOR EACH tmp IN { ;
+      hb_DirBase() + "../share/harbour", ;
+      "/share/harbour", ;
+      "/opt/harbour", ;
+      "/usr/local/share/harbour", ;
+      "/usr/share/harbour" }
+      IF hb_DirExists( tmp )
+         RETURN hb_DirSepAdd( tmp ) + _HBMK_SPECDIR_DOC
+      ENDIF
+   NEXT
+   #else
+   IF hb_DirExists( tmp := hb_DirBase() + ".." )
+      RETURN hb_DirSepAdd( tmp ) + _HBMK_SPECDIR_DOC
+   ENDIF
+   #endif
+
+   RETURN ""
 
 STATIC FUNCTION DetectPackageManager()
 
@@ -14456,15 +14482,15 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
 STATIC FUNCTION GetListOfFunctionsKnown( hbmk, lIncludeCore )
 
    LOCAL hAll := { => }
-   LOCAL aDir
+   LOCAL cDir
    LOCAL aFile
    LOCAL hHash
 
    hb_HCaseMatch( hAll, .F. )
 
-   FOR EACH aDir IN { hbmk[ _HBMK_cHB_INSTALL_CON ], hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_DirBase() }
-      FOR EACH aFile IN Directory( aDir + "*.hbr" )
-         IF HB_ISHASH( hHash := hb_Deserialize( hb_MemoRead( aDir + aFile[ F_NAME ] ) ) )
+   FOR EACH cDir IN { hbmk[ _HBMK_cHB_INSTALL_CON ], hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_DirBase() }
+      FOR EACH aFile IN Directory( cDir + "*.hbr" )
+         IF HB_ISHASH( hHash := hb_Deserialize( hb_MemoRead( cDir + aFile[ F_NAME ] ) ) )
             /* TOFIX: To handle function names present in multiple containers */
             hb_HMerge( hAll, hHash )
          ENDIF
@@ -17070,6 +17096,8 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
    LOCAL cFileName
    LOCAL cFile
    LOCAL aFile
+   LOCAL aDir
+   LOCAL cDir
 
    /* Setup input CP of the translation */
    hb_cdpSelect( "UTF8EX" )
@@ -17088,32 +17116,38 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
    ELSE
       AAddNew( aLang := { cUILNG }, Left( cUILNG, 2 ) )
       AAdd( aLang, Left( cUILNG, 2 ) + "*" )
-      FOR EACH cLang IN aLang
-         #define _LANG_TO_HBL( cLang )  hb_DirSepAdd( hb_DirBase() ) + _SELF_NAME_ + "." + StrTran( cLang, "-", "_" ) + ".hbl"
-         IF "*" $ cLang
-            IF Empty( aFile := Directory( _LANG_TO_HBL( cLang ) ) )
-               cFileName := NIL
+      aDir := {}
+      IF ! Empty( cDir := hbmk_harbour_docdir_detect() )
+         AAdd( aDir, cDir )
+      ENDIF
+      AAdd( aDir, hb_DirBase() )
+      FOR EACH cDir IN aDir
+         FOR EACH cLang IN aLang
+            #define _LANG_TO_HBL( cDir, cLang )  hb_DirSepAdd( cDir ) + _SELF_NAME_ + "." + StrTran( cLang, "-", "_" ) + ".hbl"
+            IF "*" $ cLang
+               IF Empty( aFile := Directory( _LANG_TO_HBL( cDir, cLang ) ) )
+                  cFileName := NIL
+               ELSE
+                  ASort( aFile,,, {| tmp, tmp1 | tmp[ F_NAME ] < tmp1[ F_NAME ] } )
+                  cFileName := aFile[ 1 ][ F_NAME ]
+                  cLang := StrTran( SubStr( hb_FNameExt( hb_FNameName( cFileName ) ), 2 ), "_", "-" )
+               ENDIF
             ELSE
-               ASort( aFile,,, {| tmp, tmp1 | tmp[ F_NAME ] < tmp1[ F_NAME ] } )
-               cFileName := aFile[ 1 ][ F_NAME ]
-               cLang := StrTran( SubStr( hb_FNameExt( hb_FNameName( cFileName ) ), 2 ), "_", "-" )
+               cFileName := _LANG_TO_HBL( cDir, cLang )
             ENDIF
-         ELSE
-            cFileName := _LANG_TO_HBL( cLang )
-         ENDIF
-         IF ! Empty( cFileName ) .AND. ;
-            hb_i18n_Check( cFile := hb_MemoRead( cFileName ) )
-            hb_i18n_Set( hb_i18n_RestoreTable( cFile ) )
-            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
-               hb_langSelect( hbmk[ _HBMK_cUILNG ] := cLang )
-            END /* SEQUENCE */
-            EXIT
-         ELSEIF cLang:__enumIsLast()
-            hb_i18n_Set( NIL )
-            hb_langSelect( hbmk[ _HBMK_cUILNG ] := "en" )
-            EXIT
-         ENDIF
+            IF ! Empty( cFileName ) .AND. ;
+               hb_i18n_Check( cFile := hb_MemoRead( cFileName ) )
+               hb_i18n_Set( hb_i18n_RestoreTable( cFile ) )
+               BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+                  hb_langSelect( hbmk[ _HBMK_cUILNG ] := cLang )
+               END /* SEQUENCE */
+               RETURN
+            ENDIF
+         NEXT
       NEXT
+      /* not found anything on disk */
+      hb_i18n_Set( NIL )
+      hb_langSelect( hbmk[ _HBMK_cUILNG ] := "en" )
    ENDIF
 
    RETURN

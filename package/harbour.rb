@@ -15,8 +15,6 @@ class Harbour < Formula
     ENV.deparallelize
 
     system "make", "install"
-
-    rm Dir[bin/"hbmk2.*.hbl"]
   end
 
   test do
