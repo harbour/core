@@ -98,8 +98,8 @@ CREATE CLASS HBEditor
    METHOD DeHilite()                                     // Stop Hilighting
 
    METHOD SetPos( nRow, nCol )                           // Updates ::nPhysRow, ::nPhysCol and then calls SetPos() to move hardware cursor
-   METHOD Row()                                          // Same as clipper ones, returns ::nPhysRow
-   METHOD Col()                                          // Same as clipper ones, returns ::nPhysCol
+   METHOD Row()                                          // Same as Cl*pper ones, returns ::nPhysRow
+   METHOD Col()                                          // Same as Cl*pper ones, returns ::nPhysCol
    METHOD RowPos()                                       // Returns ::nRow
    METHOD ColPos()                                       // Returns ::nCol value
    METHOD Saved()                                        // Returns ::lSaved
@@ -805,7 +805,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
             /* TODO: Implement delete word right */
 
          CASE nKey == K_ALT_W
-            /* TOFIX: Not clipper compatible */
+            /* TOFIX: Not Cl*pper compatible */
             ::lSaved := .T.
             ::lExitEdit := .T.
 
@@ -887,11 +887,11 @@ METHOD SetPos( nRow, nCol ) CLASS HBEditor
 
    RETURN ::nPhysRow
 
-// Same as clipper ones, returns ::nPhysRow value
+// Same as Cl*pper ones, returns ::nPhysRow value
 METHOD Row() CLASS HBEditor
    RETURN ::nPhysRow
 
-// Same as clipper ones, returns ::nPhysCol value
+// Same as Cl*pper ones, returns ::nPhysCol value
 METHOD Col() CLASS HBEditor
    RETURN ::nPhysCol
 
@@ -1083,9 +1083,9 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
    FOR EACH cLine IN hb_ATokens( cString, .T. )
 
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
-         nLines := MLCount( cLine, nWordWrapCol, nTabWidth )
+         nLines := MLCount( cLine, nWordWrapCol + 1, nTabWidth )
          FOR nLine := 1 TO nLines
-            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol, nLine, nTabWidth ), ;
+            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol + 1, nLine, nTabWidth ), ;
                                             nLine < nLines ) )
          NEXT
       ELSE
