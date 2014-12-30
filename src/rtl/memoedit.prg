@@ -258,8 +258,8 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
    OTHERWISE
 
       // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
-      IF HB_ISNUMERIC( nKey ) .AND. ( ( nKey >= 1 .AND. nKey <= 31 ) .OR. nKey == K_ALT_W )
-         ::super:Edit( nKey )
+      IF ( nUdfReturn >= 1 .AND. nUdfReturn <= 31 ) .OR. nUdfReturn == K_ALT_W
+         ::super:Edit( nUdfReturn )
       ELSE
          RETURN .F.
       ENDIF
