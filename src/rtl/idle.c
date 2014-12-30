@@ -189,7 +189,7 @@ HB_FUNC( HB_IDLEADD )
 
       /* return a pointer as a handle to this idle task
        */
-      hb_retptr( ( void * ) hb_codeblockId( pBlock ) );    /* TODO: access to pointers from harbour code */
+      hb_retptr( ( void * ) hb_codeblockId( pBlock ) );    /* TODO: access to pointers from Harbour code */
    }
 }
 

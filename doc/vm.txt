@@ -74,7 +74,7 @@ runtime.
 
 The macro subsystem: it implements a reduced compiler that may be used at
 runtime to generate pcode to be used by the application. In fact it is a
-portion of the harbour yacc specifications.
+portion of the Harbour yacc specifications.
 
 The workareas subsystem: Responsible for databases management. It defines
 the locations where the used workareas will be stored and provides all the

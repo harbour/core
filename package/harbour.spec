@@ -390,7 +390,7 @@ make %{?_smp_mflags}
 ## Install.
 ######################################################################
 
-# Install harbour itself.
+# Install Harbour itself.
 
 %install
 %{hb_env}
@@ -753,7 +753,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Thu Jan 17 2002 Dave Pearson <davep@davep.org>
 - Removed the use of the /etc/profile.d scripts for setting the
-  harbour environment variables. The settings are now placed
+  Harbour environment variables. The settings are now placed
   directly in gharbour and harbour-link. This means that this .spec
   file should be more useful on RPM using platforms other than RedHat.
 
@@ -786,8 +786,8 @@ rm -rf $RPM_BUILD_ROOT
 - Added README.RPM to the documentation directory.
 
 * Sat Jan 06 2001 Dave Pearson <davep@davep.org>
-- The gharbour script now passes the harbour include directory, using -I,
-  to harbour.
+- The gharbour script now passes the Harbour include directory, using -I,
+  to Harbour.
 
 * Thu Aug 24 2000 Dave Pearson <davep@davep.org>
 - Changed the files section so that hbrun doesn't get installed. It isn't
@@ -808,13 +808,13 @@ rm -rf $RPM_BUILD_ROOT
 - Added 'bash' and 'sh-utils' to the list of required packages.
 
 * Tue Aug 01 2000 Dave Pearson <davep@davep.org>
-- Added harbour environment scripts to /etc/profile.d.
+- Added Harbour environment scripts to /etc/profile.d.
 - Added generation of gharbour and harbour-link commands.
 
 * Mon Jul 31 2000 Dave Pearson <davep@davep.org>
 - Re-worked the layout of the spec file to make it cleaner and easier to
   read and maintain.
-- The latest harbour ChangeLog.txt is now installed into the RPM's doc
+- The latest Harbour ChangeLog.txt is now installed into the RPM's doc
   directory.
 - The content of the RPM's doc directory reflects the layout and content of
-  the harbour source's doc directory.
+  the Harbour source's doc directory.

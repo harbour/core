@@ -18,7 +18,7 @@ procedure main()
    hb_cdpSelect( "cp437" )
    hb_SetTermCP( "cp437" )
 
-   /* Set font size */
+   /* set font size */
    hb_gtInfo( HB_GTI_FONTWIDTH, 6 )
    hb_gtInfo( HB_GTI_FONTSIZE, 12 )
 
@@ -37,7 +37,7 @@ procedure main()
    ? "cols =", hb_ntos( MaxCol() + 1 )
    Inkey( 0 )
 
-   /* display infomration aboout used OS, harbour version and GT driver */
+   /* display information about used OS, Harbour version and GT driver */
    Alert( OS() + ";" + Version() + ";GT" + hb_gtVersion() )
 
    /* database test */

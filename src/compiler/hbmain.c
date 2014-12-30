@@ -2531,7 +2531,7 @@ static void hb_compGenVariablePCode( HB_COMP_DECL, HB_BYTE bPCode, const char * 
     * is popped (a value is asssigned to a variable).
     */
    if( HB_SUPPORT_HARBOUR )
-      bGenCode = HB_COMP_PARAM->fForceMemvars;    /* harbour compatibility */
+      bGenCode = HB_COMP_PARAM->fForceMemvars;    /* Harbour compatibility */
    else
       bGenCode = ( HB_COMP_PARAM->fForceMemvars || bPCode == HB_P_POPVARIABLE );
 

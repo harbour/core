@@ -55,7 +55,7 @@
  * and/or cPath parameter passed to DirectoryRecurse() but
  * reverted conversion may not be possible in some cases.
  * The 3-rd xHarbour parameter <lCaseMach> is ignored because
- * harbour uses platform native rules to check filename mask
+ * Harbour uses platform native rules to check filename mask
  * respecting SET FILECASE and SET DIRCASE settings.
  * xHarbour does not add "D" to attribute list used for directory
  * tree scanning so user always have to add it manually and later

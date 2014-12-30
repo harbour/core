@@ -75,7 +75,7 @@ CCCC c
 /* ---------------------------------------------------------------------*/
 #define clas( x )   (x)
 #ifdef __HARBOUR__
-/* <!name!> is harbour extension match marker used to allow identifiers
+/* <!name!> is Harbour extension match marker used to allow identifiers
  * only
  */
 #xtranslate ( <!name!>{ [<p,...>] } => (<name>():New(<p>)

@@ -48,7 +48,7 @@
 #ifndef HB_MATH_CH_
 #define HB_MATH_CH_
 
-/* map the C math lib error definitions to harbour constants */
+/* map the C math lib error definitions to Harbour constants */
 #define HB_MATH_ERR_UNKNOWN              -1
 #define HB_MATH_ERR_NONE                  0
 #define HB_MATH_ERR_DOMAIN                1

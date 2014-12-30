@@ -62,7 +62,7 @@ HB_EXTERN_BEGIN
 #define HB_PP_STREAM_OFF      0 /* standard preprocessing */
 #define HB_PP_STREAM_COMMENT  1 /* multiline comment */
 #define HB_PP_STREAM_DUMP_C   2 /* pragma BEGINDUMP */
-#define HB_PP_STREAM_CLIPPER  3 /* clipper compatible TEXT/ENDTEXT */
+#define HB_PP_STREAM_CLIPPER  3 /* Cl*pper compatible TEXT/ENDTEXT */
 #define HB_PP_STREAM_PRG      4 /* TEXT/ENDTEXT lines joined with LF */
 #define HB_PP_STREAM_C        5 /* TEXT/ENDTEXT lines joined and ESC seq processed */
 #define HB_PP_STREAM_INLINE_C 6 /* hb_inLIne() {...} data, should not be preprocessed */

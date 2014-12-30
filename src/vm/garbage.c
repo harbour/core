@@ -381,7 +381,7 @@ void hb_gcGripDrop( PHB_ITEM pItem )
 }
 
 /* Lock a memory pointer so it will not be released if stored
-   outside of harbour variables
+   outside of Harbour variables
  */
 void * hb_gcLock( void * pBlock )
 {
@@ -404,7 +404,7 @@ void * hb_gcLock( void * pBlock )
 }
 
 /* Unlock a memory pointer so it can be released if there is no
-   references inside of harbour variables
+   references inside of Harbour variables
  */
 void * hb_gcUnlock( void * pBlock )
 {

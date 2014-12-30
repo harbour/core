@@ -10,7 +10,7 @@ By Przemyslaw Czerpak (druzus/at/priv.onet.pl)
    Please check if all your files are unmodified. You can redirect
    stdout output from cvs command to a file to see if all files are
    exactly the same.
-2. Update files which contain harbour release number. Now these are:
+2. Update files which contain Harbour release number. Now these are:
     harbour.spec
     include/hbver.h
 3. Set proper release date in NEWS (found as doc/oldnews.txt) and

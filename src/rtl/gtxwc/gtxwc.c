@@ -2842,7 +2842,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
          ikey = HB_KX_F12;
          break;
 
-      /* Keys with special meanings to clipper */
+      /* Keys with special meanings to Cl*pper */
       case XK_Pause:
          ikey = HB_KX_PAUSE;
          break;

@@ -87,7 +87,7 @@ make %{?_smp_mflags}
 
 %install
 
-# Install harbour itself.
+# Install Harbour itself.
 
 unset HB_COMPILER
 

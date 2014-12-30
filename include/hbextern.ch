@@ -1,5 +1,5 @@
 /*
- * The declarations for all harbour defined functions/procedures. (Compatibility header)
+ * The declarations for all Harbour defined functions/procedures. (Compatibility header)
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>

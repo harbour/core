@@ -5,7 +5,7 @@ This is list of PRG functions available for programmer.
 
    REQUEST __pp_StdRules
       It forces including standard std.ch rules in static binaries.
-      Dynamic binaries linked with harbour dynamic library always
+      Dynamic binaries linked with Harbour dynamic library always
       includes standard PP rules.
 
 

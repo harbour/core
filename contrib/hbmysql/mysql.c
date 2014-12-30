@@ -59,7 +59,7 @@
 #include "mysql.h"
 
 /* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build which has st and mt
-         versions of client library. I'm using ST version since harbour is single threaded.
+         versions of client library. I'm using ST version since Harbour is single threaded.
          You need also .h files from same distribution. */
 
 /* GC object handlers */

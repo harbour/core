@@ -52,7 +52,7 @@
  * 2) Taking a snapshot of an application's profile information.
  * 3) Reporting on the data gathered in the snapshot.
  *
- * Point 1 is handled in harbour's virtual machine. This source aims to
+ * Point 1 is handled in Harbour's virtual machine. This source aims to
  * provide code for performing points 2 and 3. A class is provided to
  * gather, hold and manipulate the profile snapshot and a hierarchy of
  * classes exist for reporting on that snapshot. The reporting classes are
@@ -72,7 +72,7 @@
  * in the profiler.
  *
  * Many of the "PROTECTED:" scope specifiers in the source have been
- * commented out where there's a problem with scope in harbour's class
+ * commented out where there's a problem with scope in Harbour's class
  * system. Note that those comments will be removed when the bug is fixed.
  */
 
@@ -418,7 +418,7 @@ METHOD gatherOPCodes() CLASS HBProfileLowLevel
    LOCAL cName
    LOCAL nOP
 
-   // Loop over all the harbour OP codes. Note that they start at 0.
+   // Loop over all the Harbour OP codes. Note that they start at 0.
    FOR nOP := 0 TO nMax - 1
       // If we're not ignoring this opcode.
       IF ! ::ignoreSymbol( cName := "OPCODE( " + Str( nOP, 3 ) + " )" )

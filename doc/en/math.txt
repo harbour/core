@@ -468,7 +468,7 @@
    $SUBCATEGORY$
       Math
    $ONELINER$
-      Check if harbour math error handling is available
+      Check if Harbour math error handling is available
    $SYNTAX$
       C Prototype
 
@@ -506,7 +506,7 @@
    $SUBCATEGORY$
       Math
    $ONELINER$
-      set the harbour math handler
+      set the Harbour math handler
    $SYNTAX$
       C Prototype
 

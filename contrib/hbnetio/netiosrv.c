@@ -130,7 +130,7 @@ HB_LISTENSD, * PHB_LISTENSD;
 
 static HB_BOOL s_isDirSep( char c )
 {
-   /* intentionally used explicit values instead of harbour macros
+   /* intentionally used explicit values instead of Harbour macros
     * because client can use different OS
     */
    return c == '/' || c == '\\';

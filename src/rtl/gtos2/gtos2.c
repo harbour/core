@@ -118,7 +118,7 @@ static int s_iCursorStyle;
 static int    s_iLineBufSize = 0;
 static char * s_sLineBuf;
 
-/* Code page ID of active codepage at the time harbour program was start */
+/* Code page ID of active codepage at the time Harbour program was start */
 static HB_USHORT s_usOldCodePage;
 
 /* Instead of calling VioGetMode() every time I need MaxRow() or MaxCol() I

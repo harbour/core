@@ -125,7 +125,7 @@ General
 - Cygwin renamed from gcc to cygwin. (NOTE: Cygwin doesn't work since
   some versions, and support may be removed in the future.)
 - Fixed #pragma -k? options to be case-insensitive.
-- Explicitly bind system libraries with harbour shared library.
+- Explicitly bind system libraries with Harbour shared library.
   RPM/DEB packages should automatically detect these dependencies.
 - Warning cleanup (minors) for Intel compiler.
 - Pelles C workarounds for compiler bugs.
@@ -308,7 +308,7 @@ Core
 - Added support for automatic adding 1-st function with the same name
   as compiled .prg file if some code statements are used before 1-st
   function/procedure declared explicitly in .prg file. Such mode can
-  be enabled by -n2 new harbour compiler switch. This switch is used
+  be enabled by -n2 new Harbour compiler switch. This switch is used
   by default by new hbmk tool.
 - speedtst updated to work with CA-Cl*pper.
 - Added protection against pushing new private variable on HVM stack
@@ -1639,7 +1639,7 @@ The compiler
 - New compiler flag -ks was added to enable support for
   strings as array of bytes. (Notice that support for strings
   as array of bytes is disabled by default both in the Harbour compiler
-  and in harbour's runtime modules)
+  and in Harbour's runtime modules)
 - Added a new compiler switch -kJ to disable jump optimalization and
   NOOP pcode removal (optimalization is enabled by default).
 - When Xbase++ mode is not used (-kc or -kch) then compiler doesn't
@@ -1659,7 +1659,7 @@ The compiler
   passed argument has the same name as declared parameter.
 - Fixed parsing of nested #defines in command/translate
 - Macro - Added HB_SM_ARRSTR support.
-- Clipper preproceses '**' into '^' - harbour too
+- Clipper preproceses '**' into '^' - Harbour too
 - Added HB_COUNTER and HB_PTRDIFF types - first for reference counters and
   second for any pointer differences and pointer to integer conversions.
 - HB_EXPORT is added to ITEM API, FILE API and some other function

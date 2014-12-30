@@ -397,7 +397,7 @@ HB_FUNC( WALIAS )
    int iWindow = hb_parnidef( 1, -1 );
 
    /* 255 is original CT3 limit,
-    * harbour CTWIN does not have such intenral limits
+    * Harbour CTWIN does not have such internal limits
     */
    if( iWindow >= 0 && iWindow <= 255 )
       iWindow = hb_ctwChangeWindowHandle( iWindow );

@@ -361,7 +361,7 @@ HB_FUNC( HB_BACKGROUNDRUN )
    if( bkg->pBackgroundTasks )
    {
       if( HB_ISNUM( 1 ) )
-         hb_backgroundRunSingle( hb_parnl( 1 ) );  /* TODO: access to pointers from harbour code */
+         hb_backgroundRunSingle( hb_parnl( 1 ) );  /* TODO: access to pointers from Harbour code */
       else
          hb_backgroundRun();
    }
@@ -407,7 +407,7 @@ HB_FUNC( HB_BACKGROUNDDEL )
 
    if( bkg->pBackgroundTasks && HB_ISNUM( 1 ) )
    {
-      /* TODO: access to pointers from harbour code */
+      /* TODO: access to pointers from Harbour code */
       PHB_ITEM pItem = hb_backgroundDelFunc( hb_parnl( 1 ) );
 
       if( pItem )
@@ -424,7 +424,7 @@ HB_FUNC( HB_BACKGROUNDACTIVE )
 
    if( bkg->pBackgroundTasks && HB_ISNUM( 1 ) )
    {
-      /* TODO: access to pointers from harbour code */
+      /* TODO: access to pointers from Harbour code */
       bOldActive = hb_backgroundActive( hb_parnl( 1 ), hb_parldef( 2, HB_TRUE ) );
    }
    else
@@ -442,7 +442,7 @@ HB_FUNC( HB_BACKGROUNDTIME )
 
    if( bkg->pBackgroundTasks && HB_ISNUM( 1 ) )
    {
-      /* TODO: access to pointers from harbour code */
+      /* TODO: access to pointers from Harbour code */
       nOldMillisec = hb_backgroundTime( hb_parnl( 1 ), hb_parnidef( 2, 1000 ) );
    }
    else

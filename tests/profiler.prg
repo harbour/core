@@ -1,4 +1,4 @@
-/* Test code for the harbour profiler API and the profile reporting classes */
+/* Test code for the Harbour profiler API and the profile reporting classes */
 
 #include "inkey.ch"
 

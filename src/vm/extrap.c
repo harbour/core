@@ -613,7 +613,7 @@ void hb_vmUnsetExceptionHandler( void )
    {
       APIRET rc;                             /* Return code                   */
 
-      /* I don't do any check on return code since harbour is exiting in any case */
+      /* I don't do any check on return code since Harbour is exiting in any case */
       rc = DosUnsetExceptionHandler( &s_regRec );
       HB_SYMBOL_UNUSED( rc );
    }

@@ -361,7 +361,7 @@
    $RETURNS$
       <xRetVal> A value that was returned from called function.
    $DESCRIPTION$
-      This function can be called either by the harbour compiler or by user.
+      This function can be called either by the Harbour compiler or by user.
       The compiler always passes the item of IT_SYMBOL type that stores the
       name of procedure specified in DO <proc> WITH ... statement.
 
