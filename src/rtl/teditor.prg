@@ -1072,66 +1072,25 @@ STATIC FUNCTION __SoftCR()
 STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
 
    LOCAL aArray := {}
-   LOCAL nStringLen
-   LOCAL nTokPos := 0
-
    LOCAL cLine
-   LOCAL cSplitLine
-
-   LOCAL nPos
-   LOCAL nBreakPos
-   LOCAL nBreakPosSplit
+   LOCAL nLines
+   LOCAL nLine
 
    IF __SoftCR() $ cString
       cString := StrTran( cString, __SoftCR() )
    ENDIF
 
-   nStringLen := Len( cString )
-
-   DO WHILE nTokPos < nStringLen
-
-      cLine := hb_tokenPtr( @cString, @nTokPos, .T. )
+   FOR EACH cLine IN hb_ATokens( cString, .T. )
 
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
-
-         DO WHILE Len( cLine ) > 0
-
-            nBreakPos := nBreakPosSplit := 0
-            cSplitLine := ""
-
-            FOR nPos := 1 TO Len( cLine )
-
-               SWITCH SubStr( cLine, nPos, 1 )
-               CASE " "
-                  nBreakPos := nPos
-                  nBreakPosSplit := Len( cSplitLine )
-                  cSplitLine += " "
-                  EXIT
-               CASE Chr( 9 )
-                  nBreakPos := nPos
-                  nBreakPosSplit := Len( cSplitLine )
-                  cSplitLine += Space( nTabWidth - Mod( nBreakPosSplit, nTabWidth ) )
-                  EXIT
-               OTHERWISE
-                  cSplitLine += SubStr( cLine, nPos, 1 )
-               ENDSWITCH
-
-               IF Len( cSplitLine ) >= nWordWrapCol + 1
-                  IF nBreakPosSplit > 0
-                     cSplitLine := Left( cSplitLine, nBreakPosSplit )
-                     nPos := nBreakPos
-                  ENDIF
-                  EXIT
-               ENDIF
-            NEXT
-
-            AAdd( aArray, HBTextLine():New( cSplitLine, nPos <= Len( cLine ) ) )
-
-            cLine := SubStr( cLine, nPos + 1 )
-         ENDDO
+         nLines := MLCount( cLine, nWordWrapCol, nTabWidth )
+         FOR nLine := 1 TO nLines
+            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol, nLine, nTabWidth ), ;
+                                            nLine < nLines ) )
+         NEXT
       ELSE
          AAdd( aArray, HBTextLine():New( cLine, .F. ) )
       ENDIF
-   ENDDO
+   NEXT
 
    RETURN aArray

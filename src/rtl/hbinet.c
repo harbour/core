@@ -58,12 +58,6 @@
 #include "hbthread.h"
 #include "hbznet.h"
 
-#define HB_INET_ERR_OK            0
-#define HB_INET_ERR_TIMEOUT       ( -1 )
-#define HB_INET_ERR_CLOSEDCONN    ( -2 )
-#define HB_INET_ERR_BUFFOVERRUN   ( -3 )
-#define HB_INET_ERR_CLOSEDSOCKET  ( -4 )
-
 typedef struct
 {
    HB_SOCKET      sd;
@@ -79,10 +73,12 @@ typedef struct
    int            iTimeLimit;
    PHB_ITEM       pPeriodicBlock;
    PHB_ZNETSTREAM stream;
-   HB_INET_RFUNC  recvFunc;
-   HB_INET_SFUNC  sendFunc;
-   HB_INET_FFUNC  flushFunc;
-   HB_INET_CFUNC  cleanFunc;
+   HB_INET_RDFUNC recvFunc;
+   HB_INET_WRFUNC sendFunc;
+   HB_INET_FLFUNC flushFunc;
+   HB_INET_CLFUNC cleanFunc;
+   HB_INET_ERFUNC errorFunc;
+   HB_INET_ESFUNC errstrFunc;
 } HB_SOCKET_STRUCT, * PHB_SOCKET_STRUCT;
 
 #define HB_INET_BUFFER_LEN  1500
@@ -137,20 +133,29 @@ static HB_BOOL hb_inetIsOpen( PHB_SOCKET_STRUCT socket )
    return HB_TRUE;
 }
 
-static int hb_inetCloseSocket( PHB_SOCKET_STRUCT socket )
+static int s_inetGetError( PHB_SOCKET_STRUCT socket )
 {
-   int ret = hb_socketClose( socket->sd );
+   int iError;
 
-   socket->sd       = HB_NO_SOCKET;
-   socket->inbuffer = 0;
-   return ret;
+   if( socket->errorFunc )
+      iError = socket->errorFunc( socket->stream );
+   else
+   {
+      iError = hb_socketGetError();
+      if( iError == HB_SOCKET_ERR_TIMEOUT )
+         iError = HB_INET_ERR_TIMEOUT;
+   }
+   return iError;
+}
+
+static HB_BOOL s_inetIsTimeout( PHB_SOCKET_STRUCT socket )
+{
+   return s_inetGetError( socket ) == HB_SOCKET_ERR_TIMEOUT;
 }
 
 static void hb_inetGetError( PHB_SOCKET_STRUCT socket )
 {
-   socket->iError = hb_socketGetError();
-   if( socket->iError == HB_SOCKET_ERR_TIMEOUT )
-      socket->iError = HB_INET_ERR_TIMEOUT;
+   socket->iError = s_inetGetError( socket );
 }
 
 static void hb_inetCloseStream( PHB_SOCKET_STRUCT socket )
@@ -165,15 +170,30 @@ static void hb_inetCloseStream( PHB_SOCKET_STRUCT socket )
    socket->stream = NULL;
 }
 
+static int hb_inetCloseSocket( PHB_SOCKET_STRUCT socket, HB_BOOL fShutDown )
+{
+   int ret;
+
+   hb_inetCloseStream( socket );
+
+   if( fShutDown )
+      hb_socketShutdown( socket->sd, HB_SOCKET_SHUT_RDWR );
+
+   ret = hb_socketClose( socket->sd );
+
+   socket->sd       = HB_NO_SOCKET;
+   socket->inbuffer = 0;
+   return ret;
+}
+
 static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
 {
    PHB_SOCKET_STRUCT socket = ( PHB_SOCKET_STRUCT ) Cargo;
 
    if( socket->sd != HB_NO_SOCKET )
-   {
-      hb_socketShutdown( socket->sd, HB_SOCKET_SHUT_RDWR );
-      hb_inetCloseSocket( socket );
-   }
+      hb_inetCloseSocket( socket, HB_TRUE );
+   else
+      hb_inetCloseStream( socket );
 
    if( socket->pPeriodicBlock )
    {
@@ -190,7 +210,6 @@ static HB_GARBAGE_FUNC( hb_inetSocketFinalize )
       hb_xfree( socket->buffer );
       socket->buffer = NULL;
    }
-   hb_inetCloseStream( socket );
 }
 
 static HB_GARBAGE_FUNC( hb_inetSocketMark )
@@ -225,11 +244,25 @@ static void hb_inetAutoInit( void )
    }
 }
 
+HB_SOCKET hb_znetInetFD( PHB_ITEM pItem, HB_BOOL fError )
+{
+   PHB_SOCKET_STRUCT socket = ( PHB_SOCKET_STRUCT ) hb_itemGetPtrGC( pItem, &s_gcInetFuncs );
+
+   if( socket )
+      return socket->sd;
+   else if( fError )
+      hb_inetErrRT();
+
+   return HB_NO_SOCKET;
+}
+
 HB_BOOL hb_znetInetInitialize( PHB_ITEM pItem, PHB_ZNETSTREAM pStream,
-                               HB_INET_RFUNC recvFunc,
-                               HB_INET_SFUNC sendFunc,
-                               HB_INET_FFUNC flushFunc,
-                               HB_INET_CFUNC cleanFunc )
+                               HB_INET_RDFUNC recvFunc,
+                               HB_INET_WRFUNC sendFunc,
+                               HB_INET_FLFUNC flushFunc,
+                               HB_INET_CLFUNC cleanFunc,
+                               HB_INET_ERFUNC errorFunc,
+                               HB_INET_ESFUNC errstrFunc )
 {
    PHB_SOCKET_STRUCT socket = ( PHB_SOCKET_STRUCT ) hb_itemGetPtrGC( pItem, &s_gcInetFuncs );
 
@@ -241,6 +274,8 @@ HB_BOOL hb_znetInetInitialize( PHB_ITEM pItem, PHB_ZNETSTREAM pStream,
       socket->sendFunc = sendFunc;
       socket->flushFunc = flushFunc;
       socket->cleanFunc = cleanFunc;
+      socket->errorFunc = errorFunc;
+      socket->errstrFunc = errstrFunc;
       socket->stream = pStream;
       return HB_TRUE;
    }
@@ -294,8 +329,7 @@ HB_FUNC( HB_INETCLOSE )
    {
       if( socket->sd != HB_NO_SOCKET )
       {
-         hb_socketShutdown( socket->sd, HB_SOCKET_SHUT_RDWR );
-         hb_retni( hb_inetCloseSocket( socket ) );
+         hb_retni( hb_inetCloseSocket( socket, HB_TRUE ) );
 #ifdef HB_INET_LINUX_INTERRUPT
          kill( 0, HB_INET_LINUX_INTERRUPT );
 #endif
@@ -382,7 +416,10 @@ HB_FUNC( HB_INETERRORDESC )
          case HB_INET_ERR_CLOSEDSOCKET : hb_retc_const( "Closed socket" ); return;
          case HB_INET_ERR_BUFFOVERRUN  : hb_retc_const( "Buffer overrun" ); return;
          default:
-            hb_retc( hb_socketErrorStr( socket->iError ) );
+            if( socket->errstrFunc )
+               hb_retc( socket->errstrFunc( socket->stream, socket->iError ) );
+            else
+               hb_retc( hb_socketErrorStr( socket->iError ) );
       }
    }
    else
@@ -700,7 +737,7 @@ static void s_inetRecvInternal( int iMode )
             if( iMode == 0 ) /* Called from hb_inetRecv()? */
                break;
          }
-         else if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
+         else if( iLen == -1 && s_inetIsTimeout( socket ) )
          {
             /* timed out; let's see if we have to run a cb routine */
             iTimeElapsed += socket->iTimeout;
@@ -788,7 +825,7 @@ static void s_inetRecvPattern( const char * const * patterns, int * patternsizes
       }
 
       iLen = s_inetRecv( socket, &cChar, 1, HB_TRUE, socket->iTimeout );
-      if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )
+      if( iLen == -1 && s_inetIsTimeout( socket ) )
       {
          iLen = -2;     /* this signals timeout */
          iTimeElapsed += socket->iTimeout;
@@ -1024,7 +1061,7 @@ static void s_inetSendInternal( HB_BOOL lAll )
 
       if( socket->flushFunc && ( lLastSnd > 0 || ( lLastSnd == -1 &&
              socket->iTimeout >= 0 && socket->iTimeout < 10000 &&
-             hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT ) ) )
+             s_inetIsTimeout( socket ) ) ) )
       {
          /* TODO: safe information about unflushed data and try to call
                   flush before entering receive wait sate */
@@ -1132,7 +1169,7 @@ HB_FUNC( HB_INETSERVER )
    if( ! socket )
       HB_SOCKET_INIT( socket, pSocket );
    else if( socket->sd != HB_NO_SOCKET )
-      hb_inetCloseSocket( socket );
+      hb_inetCloseSocket( socket, HB_FALSE );
    socket->sd = hb_socketOpen( HB_SOCKET_PF_INET, HB_SOCKET_PT_STREAM, 0 );
    if( socket->sd == HB_NO_SOCKET )
       hb_inetGetError( socket );
@@ -1149,7 +1186,7 @@ HB_FUNC( HB_INETSERVER )
           hb_socketListen( socket->sd, iListen ) != 0 )
       {
          hb_inetGetError( socket );
-         hb_inetCloseSocket( socket );
+         hb_inetCloseSocket( socket, HB_FALSE );
       }
       else
          socket->iError = HB_INET_ERR_OK;
@@ -1213,7 +1250,7 @@ static void hb_inetConnectInternal( HB_BOOL fResolve )
       if( ! socket )
          HB_SOCKET_INIT( socket, pSocket );
       else if( socket->sd != HB_NO_SOCKET )
-         hb_inetCloseSocket( socket );
+         hb_inetCloseSocket( socket, HB_FALSE );
 
       if( fResolve )
          szHost = szAddr = hb_socketResolveAddr( szHost, HB_SOCKET_AF_INET );
@@ -1304,7 +1341,7 @@ HB_FUNC( HB_INETDGRAMBIND )
        s_inetBind( socket, socket->remote, socket->remotelen ) != 0 )
    {
       hb_inetGetError( socket );
-      hb_inetCloseSocket( socket );
+      hb_inetCloseSocket( socket, HB_FALSE );
    }
    else if( hb_pcount() >= 4 )
    {

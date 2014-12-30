@@ -932,6 +932,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
    LOCAL nMRow
    LOCAL nMCol
    LOCAL nButton
+   LOCAL cKey
 
    // Check for SET KEY first
    IF ( bKeyBlock := SetKey( nKey ) ) != NIL
@@ -1001,7 +1002,8 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
             nKey := 0
          ENDIF
 
-      ELSEIF !( hb_keyChar( nKey ) == "" ) .AND. ( nButton := oGUI:FindText( hb_keyChar( nKey ), oGUI:Value + 1, .F., .F. ) ) != 0
+      ELSEIF !( ( cKey := hb_keyChar( nKey ) ) == "" ) .AND. ;
+             ( nButton := oGUI:FindText( cKey, oGUI:Value + 1, .F., .F. ) ) != 0
          oGUI:Select( nButton )
 
       ENDIF
