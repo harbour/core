@@ -14456,16 +14456,19 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
 STATIC FUNCTION GetListOfFunctionsKnown( hbmk, lIncludeCore )
 
    LOCAL hAll := { => }
+   LOCAL aDir
    LOCAL aFile
    LOCAL hHash
 
    hb_HCaseMatch( hAll, .F. )
 
-   FOR EACH aFile IN Directory( hb_DirBase() + "*.hbr" )
-      IF HB_ISHASH( hHash := hb_Deserialize( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
-         /* TOFIX: To handle function names present in multiple containers */
-         hb_HMerge( hAll, hHash )
-      ENDIF
+   FOR EACH aDir IN { hbmk[ _HBMK_cHB_INSTALL_CON ], hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_DirBase() }
+      FOR EACH aFile IN Directory( aDir + "*.hbr" )
+         IF HB_ISHASH( hHash := hb_Deserialize( hb_MemoRead( aDir + aFile[ F_NAME ] ) ) )
+            /* TOFIX: To handle function names present in multiple containers */
+            hb_HMerge( hAll, hHash )
+         ENDIF
+      NEXT
    NEXT
 
    IF lIncludeCore

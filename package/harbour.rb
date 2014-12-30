@@ -17,12 +17,10 @@ class Harbour < Formula
     system "make", "install"
 
     rm Dir[bin/"hbmk2.*.hbl"]
-    rm bin/"contrib.hbr"
-    rm bin/"harbour.ucf"
   end
 
   test do
-    (testpath/"hello_world.prg").write("procedure Main();?'Hello, world!';?;?OS();?Version();return")
-    system "#{bin}/hbmk2", "-run", "hello_world.prg"
+    (testpath/"hello.prg").write("procedure Main();?'Hello, world!';?;?OS();?Version();return")
+    system "#{bin}/hbmk2", "-run", "hello.prg"
   end
 end

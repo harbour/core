@@ -101,8 +101,7 @@ PROCEDURE Main( ... )
          /* public Harbour scripts */
          FOR EACH tmp IN { ;
             "bin/3rdpatch.hb", ;
-            "bin/commit.hb", ;
-            "bin/harbour.ucf" }
+            "bin/commit.hb" }
             mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps() )
          NEXT
       ENDIF
@@ -216,7 +215,7 @@ PROCEDURE Main( ... )
 
       /* Creating compressed archives of available contrib functions */
 
-      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_BIN" ) )
+      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_CONTRIB" ) )
 
          OutStd( "! Compiling list of contrib functions (.hbr)..." + hb_eol() )
 
