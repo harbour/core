@@ -326,11 +326,10 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 #if 0
    // 2006-07-20 - E.F. - We should not replace SoftCR with " " (space)
    //                     See Text2Array function for more details.
-   IF hb_BChar( 141 ) $ cString
-      acsn := " " + hb_BChar( 141 ) + Chr( 10 )
-      cString := StrTran( cString, acsn, " " )
-      acsn := hb_BChar( 141 ) + Chr( 10 )
-      cString := StrTran( cString, acsn, " " )
+   IF __SoftCR() $ cString
+      cString := hb_StrReplace( cString, { ;
+         " " + __SoftCR() => " ", ;
+               __SoftCR() => " " } )
    ENDIF
 #endif
 
@@ -2816,4 +2815,4 @@ METHOD PROCEDURE BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
    RETURN
 
 STATIC FUNCTION __SoftCR()
-   RETURN hb_BChar( 141 ) + Chr( 10 )  /* TOFIX: Won't work in UTF-8 mode */
+   RETURN iif( hb_cdpIsUTF8(), hb_UChar( 141 ), hb_BChar( 141 ) ) + Chr( 10 )

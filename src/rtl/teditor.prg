@@ -46,7 +46,7 @@
 
 #pragma -gc0
 
-/* TODO: add missing support for soft-newlines: __SoftCR() */
+/* TODO: add support for soft-newlines where missing */
 
 #include "hbclass.ch"
 
@@ -1058,16 +1058,6 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
 /* --- */
 
-/* NOTE: Cl*pper's "soft CR" byte can occure in valid
-         UTF-8 byte sequence, f.e.:
-            https://codepoints.net/U+014D
-         so it's not a safe byte to use with this encoding.
-         This can be used instead:
-            https://codepoints.net/U+2028
-         [vszakats] */
-STATIC FUNCTION __SoftCR()
-   RETURN iif( hb_cdpIsUTF8(), hb_UChar( 0x2028 ), hb_BChar( 141 ) ) + Chr( 10 )
-
 // Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
 
@@ -1075,10 +1065,6 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
    LOCAL cLine
    LOCAL nLines
    LOCAL nLine
-
-   IF __SoftCR() $ cString
-      cString := StrTran( cString, __SoftCR() )
-   ENDIF
 
    FOR EACH cLine IN hb_ATokens( cString, .T. )
 
