@@ -52,17 +52,20 @@
 
 HB_FUNC( REPLICATE )
 {
-   const char * szText = hb_parc( 1 );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
-   if( szText && HB_ISNUM( 2 ) )
+   if( pItem && HB_ISNUM( 2 ) )
    {
-      HB_SIZE nLen = hb_parclen( 1 );
+      HB_SIZE nLen = hb_itemGetCLen( pItem );
       HB_ISIZ nTimes = hb_parns( 2 );
 
       if( nLen > 0 && nTimes > 0 )
       {
-         if( ( double ) nLen *  nTimes < HB_SIZE_MAX )
+         if( nTimes == 1 )
+            hb_itemReturn( pItem );
+         else if( ( double ) nLen * nTimes < HB_SIZE_MAX )
          {
+            const char * szText = hb_itemGetCPtr( pItem );
             HB_SIZE nSize = nLen * nTimes;
             char * szResult, * szPtr;
 

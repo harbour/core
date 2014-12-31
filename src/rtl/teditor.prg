@@ -1058,7 +1058,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
 /* --- */
 
-/* NOTE: Cl*pper's "soft CR" byte can occur in valid
+/* NOTE: Cl*pper's "soft CR" byte can occure in valid
          UTF-8 byte sequence, f.e.:
             https://codepoints.net/U+014D
          so it's not a safe byte to use with this encoding.
@@ -1085,7 +1085,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
          nLines := MLCount( cLine, nWordWrapCol + 1, nTabWidth )
          FOR nLine := 1 TO nLines
-            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol + 1, nLine, nTabWidth ), ;
+            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol + 1, nLine, nTabWidth,,, .T. ), ;
                                             nLine < nLines ) )
          NEXT
       ELSE
