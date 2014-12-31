@@ -71,7 +71,7 @@ clean::
 	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) "$(DYN_DIR)"; \
 	fi ; \
 	if [ -n "$(IMP_FILE)" ]; then \
-	   $(RM) $(basename $(IMP_FILE)).exp; \
+	   $(RM) "$(basename $(IMP_FILE)).exp"; \
 	   [ "`$(ECHO) $(IMP_DIR)/*`" != "$(IMP_DIR)/*" ] || $(RDP) "$(IMP_DIR)"; \
 	fi
 

@@ -18,7 +18,7 @@ class Harbour < Formula
   end
 
   test do
-    (testpath/"hello.prg").write("procedure Main();?'Hello, world!';?;?OS();?Version();return")
-    system "#{bin}/hbmk2", "-run", "hello.prg"
+    (testpath/"hello.prg").write("procedure Main();? 'Hello, world!';? OS();? Version();return")
+    system "#{bin}/hbmk2", "hello.prg", "-run"
   end
 end

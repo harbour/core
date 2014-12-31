@@ -369,7 +369,7 @@ read ASK
 if [ "${ASK}" != 'y' ] && [ "${ASK}" != 'Y' ]; then
    exit 1
 fi
-(tail -c %1$d "$0" | gzip -cd | (cd /;tar xvpf -))%3$s
+( tail -c %1$d "$0" | gzip -cd | ( cd /; tar xvpf - ) )%3$s
 exit $?
 HB_INST_EOF
 #pragma __endtext
