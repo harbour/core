@@ -92,13 +92,19 @@ METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
 
    IF ::UserFunctionIsValid()
 
-      // Keep calling user function until it returns ME_DEFAULT
-      DO WHILE ( nUdfReturn := ::xDo( ME_INIT ) ) != ME_DEFAULT
-         // At this time there is no input from user of MemoEdit() only handling
-         // of values returned by ::xUserFunction, so I pass NIL as the key code.
-         IF ! ::HandleUserKey( , nUdfReturn )
-            EXIT
-         ENDIF
+      DO WHILE .T.
+         SWITCH nUdfReturn := ::xDo( ME_INIT )
+         // Tested with CL52 that only these 3 actions are processed and
+         // then ME_INIT call repeated
+         CASE K_INS
+         CASE ME_TOGGLEWRAP
+         CASE ME_TOGGLESCROLL
+            // At this time there is no input from user of MemoEdit() only handling
+            // of values returned by ::xUserFunction, so I pass NIL as the key code.
+            ::HandleUserKey( , nUdfReturn )
+            LOOP
+         ENDSWITCH
+         EXIT
       ENDDO
    ENDIF
 

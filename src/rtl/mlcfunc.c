@@ -304,12 +304,17 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
 /* MemoLine( <cString>, [ <nLineLength>=79 ],
  *           [ <nLineNumber>=1 ],
  *           [ <nTabSize>=4 ], [ <lWrap>=.T. ],
- *           [ <cEOL>|<acEOLs> ] ) -> <cLine>
+ *           [ <cEOL>|<acEOLs> ],
+ *           [ <lPad>=.T. ] ) -> <cLine>
+ *
+ * NOTE: <lPad> is undocumented parameter and will be removed and
+ *       replaced by other solution in the future.
  */
 HB_FUNC( MEMOLINE )
 {
    HB_MLC_INFO MLC;
    HB_ISIZ nLine = hb_parnsdef( 3, 1 );
+   HB_BOOL fPad = hb_parldef( 7, 1 );
    char * szLine = NULL;
    HB_SIZE nIndex, nLen = 0, nSize, nCol;
 
@@ -380,7 +385,7 @@ HB_FUNC( MEMOLINE )
                   }
                }
             }
-            if( nCol < MLC.nLineLength )
+            if( nCol < MLC.nLineLength && fPad )
             {
                nCol = MLC.nLineLength - nCol;
                if( nCol > nSize - nLen )

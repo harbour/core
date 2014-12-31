@@ -1072,7 +1072,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
          nLines := MLCount( cLine, nWordWrapCol, nTabWidth )
          FOR nLine := 1 TO nLines
-            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol, nLine, nTabWidth ), ;
+            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol, nLine, nTabWidth,,, .T. ), ;
                                             nLine < nLines ) )
          NEXT
       ELSE
