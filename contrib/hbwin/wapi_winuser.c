@@ -49,6 +49,16 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
+#if defined( __MINGW32CE__ )
+/* Some versions of MINGW32CE miss these declarations
+   See: https://github.com/vszakats/harbour-core/issues/100 */
+#ifndef SendMessageTimeout
+#define SendMessageTimeout  SendMessageTimeoutW
+#endif
+WINUSERAPI LRESULT WINAPI SendMessageTimeoutW( HWND, UINT, WPARAM, LPARAM, UINT, UINT, PDWORD );
+WINUSERAPI BOOL WINAPI GetIconInfo( HICON, PICONINFO );
+#endif
+
 /* For: ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) */
 #ifndef WS_OVERLAPPEDWINDOW
 #define WS_OVERLAPPEDWINDOW  ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX )
