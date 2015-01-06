@@ -1,6 +1,6 @@
 class Harbour < Formula
   homepage "https://github.com/vszakats/harbour-core/"
-  url "https://github.com/vszakats/harbour-core/archive/master.tar.gz"
+  head "https://github.com/vszakats/harbour-core/core.git"
   version "3.4.0"
 
   depends_on "pcre"
