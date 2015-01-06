@@ -1,7 +1,10 @@
 class Harbour < Formula
   homepage "https://github.com/vszakats/harbour-core/"
-  head "https://github.com/vszakats/harbour-core/core.git"
+  url "https://github.com/vszakats/harbour-core/archive/9b7752a6355d992eb6c30cf0811771ced154922e.tar.gz"
+  sha256 "f8f708b93b7583bd8ae819a76dbdcc3a6192973f9aae4a49b612b88dbbd7b256"
   version "3.4.0"
+
+  head "https://github.com/vszakats/harbour-core/core.git"
 
   depends_on "pcre"
   depends_on :x11 => :recommended
