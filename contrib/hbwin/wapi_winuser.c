@@ -51,7 +51,7 @@
 
 #if defined( __MINGW32CE__ )
 /* MINGW32CE gets this wrong in its headers,
-   'W' postfix is not used in coredll for this function. */
+   'W' suffix is not used in coredll for this function. */
 #undef SendMessageTimeout
 WINUSERAPI LRESULT WINAPI SendMessageTimeout( HWND, UINT, WPARAM, LPARAM, UINT, UINT, PDWORD );
 #endif
