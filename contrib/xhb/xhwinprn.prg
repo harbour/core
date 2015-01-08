@@ -62,6 +62,7 @@ FUNCTION Win32Bmp()
 
 CREATE CLASS Win32Prn FROM win_Prn
 
+   METHOD New( cPrinter )
    METHOD Create()
    METHOD StartPage()
 
@@ -81,6 +82,12 @@ CREATE CLASS Win32Prn FROM win_Prn
 #endif
 
 ENDCLASS
+
+METHOD New( cPrinter ) CLASS WIN32PRN
+
+   ::PrinterName := iif( ! HB_ISSTRING( cPrinter ) .OR. Empty( cPrinter ), win_printerGetDefault(), cPrinter )
+
+   RETURN Self
 
 METHOD Create() CLASS WIN32PRN
 

@@ -23,9 +23,10 @@ class Harbour < Formula
 
     (testpath/"hello.prg").write <<-EOS.undent
       procedure Main()
-         OutStd( "Hello, world!" + hb_eol() )
-         OutStd( OS() + hb_eol() )
-         OutStd( Version() + hb_eol() )
+         OutStd( ;
+            "Hello, world!" + hb_eol() + ;
+            OS() + hb_eol() + ;
+            Version() + hb_eol() )
          return
     EOS
 
