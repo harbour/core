@@ -50,13 +50,10 @@
 #include "hbapiitm.h"
 
 #if defined( __MINGW32CE__ )
-/* Some versions of MINGW32CE miss these declarations
-   See: https://github.com/vszakats/harbour-core/issues/100 */
-#ifndef SendMessageTimeout
-#define SendMessageTimeout  SendMessageTimeoutW
-#endif
-WINUSERAPI LRESULT WINAPI SendMessageTimeoutW( HWND, UINT, WPARAM, LPARAM, UINT, UINT, PDWORD );
-WINUSERAPI BOOL WINAPI GetIconInfo( HICON, PICONINFO );
+/* MINGW32CE gets this wrong in its headers,
+   'W' postfix is not used in coredll for this function. */
+#undef SendMessageTimeout
+WINUSERAPI LRESULT WINAPI SendMessageTimeout( HWND, UINT, WPARAM, LPARAM, UINT, UINT, PDWORD );
 #endif
 
 /* For: ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) */
@@ -1352,8 +1349,14 @@ HB_FUNC( WAPI_GETICONINFO )  /* TODO: added support to return hash instead of ar
 
    memset( &ii, 0, sizeof( ii ) );
 
+/* MSDN doc says it's in icon.lib, but I can't find such lib in wce msvcarm/mingwarm. */
+#if defined( HB_OS_WIN_CE )
+   bResult = FALSE;
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+#else
    bResult = GetIconInfo( hbwapi_par_raw_HICON( 1 ), &ii );
    hbwapi_SetLastError( GetLastError() );
+#endif
    hbwapi_ret_L( bResult );
 
    hb_arraySetL( aInfo, 1, ii.fIcon );
