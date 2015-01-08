@@ -20,7 +20,15 @@ class Harbour < Formula
 
   test do
     system "#{bin}/hbtest"
-    (testpath/"hello.prg").write("procedure Main();? 'Hello, world!';? OS();? Version();return")
-    system "#{bin}/hbmk2", "hello.prg", "-run"
+
+    (testpath/"hello.prg").write <<-EOS.undent
+      procedure Main()
+         OutStd( "Hello, world!" + hb_eol() )
+         OutStd( OS() + hb_eol() )
+         OutStd( Version() + hb_eol() )
+         return
+    EOS
+
+    assert shell_output("#{bin}/hbmk2 hello.prg -run").include?("Hello, world!")
   end
 end
