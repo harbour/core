@@ -2181,7 +2181,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
       ScreenToClient( pWVT->hWnd, &xy );
 
    colrow = hb_gt_wvt_GetColRowFromXY( pWVT, xy.x, xy.y );
-   if( hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x ) )
+   if( ! pWVT->bBeingMarked &&
+       hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x ) )
       hb_gt_wvt_AddCharToInputQueue( pWVT,
                      HB_INKEY_NEW_MPOS( pWVT->MousePos.x, pWVT->MousePos.y ) );
 
