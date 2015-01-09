@@ -217,7 +217,7 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
          CASE nKey == K_ESC
             ::lSaved := .F.
             ::lExitEdit := .T.
-         CASE nKey <= 256 .OR. nKey == K_ALT_W
+         CASE nKey <= 256 .OR. nKey == K_ALT_W .OR. Len( hb_keyChar( nKey ) ) > 0
             ::super:Edit( nKey )
          ENDCASE
       ELSE
@@ -227,7 +227,7 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
    CASE ME_DATA
       IF HB_ISNUMERIC( nKey )
-         IF nKey <= 256
+         IF nKey <= 256 .OR. Len( hb_keyChar( nKey ) ) > 0
             ::super:Edit( nKey )
          ENDIF
       ELSE

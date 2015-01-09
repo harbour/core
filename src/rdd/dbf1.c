@@ -1392,7 +1392,6 @@ HB_BOOL hb_dbfLockIdxWrite( DBFAREAP pArea, PHB_FILE pFile,
       pLockData->tolock = 0;
    }
    return HB_TRUE;
-
 }
 
 /*

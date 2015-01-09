@@ -75,9 +75,10 @@ static HB_GT_FUNCS SuperTable;
 #endif
 
 /* mouse button mapping into Clipper keycodes */
-static const int s_mousePressKeys[ XWC_MAX_BUTTONS ]    = { K_LBUTTONDOWN, K_MBUTTONDOWN, K_RBUTTONDOWN, K_MWFORWARD, K_MWBACKWARD };
-static const int s_mouseReleaseKeys[ XWC_MAX_BUTTONS ]  = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
+static const int s_mousePressKeys   [ XWC_MAX_BUTTONS ] = { K_LBUTTONDOWN, K_MBUTTONDOWN, K_RBUTTONDOWN, K_MWFORWARD, K_MWBACKWARD };
+static const int s_mouseReleaseKeys [ XWC_MAX_BUTTONS ] = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
 static const int s_mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDBLCLK,     K_RDBLCLK    , K_MWFORWARD, K_MWBACKWARD };
+static const int s_mouseButtonBits  [ XWC_MAX_BUTTONS ] = { 1, 4, 2 };
 
 /* these are standard PC console colors in RGB */
 static const int s_rgb_values[] = {
@@ -3124,7 +3125,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
                      key = s_mouseDblPressKeys[ button ];
                   else
                      key = s_mousePressKeys[ button ];
-                  wnd->mouseButtonsState |= 1 << button;
+                  wnd->mouseButtonsState |= s_mouseButtonBits[ button ];
                   wnd->mouseButtonsTime[ button ] = evtTime;
                }
             }
@@ -3170,7 +3171,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
             else
             {
                key = s_mouseReleaseKeys[ button ];
-               wnd->mouseButtonsState &= ~( 1 << button );
+               wnd->mouseButtonsState &= ~s_mouseButtonBits[ button ];
             }
             if( key != 0 )
             {
