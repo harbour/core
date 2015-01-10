@@ -10,13 +10,11 @@
 -cflag=-DHAVE_CONFIG_H
 
 -depurlbase=scrypt:https://www.tarsnap.com/scrypt/
--deppkgname=scrypt:scrypt{homebrew}
 # Harbour specific short filename
 -depkeyhead=scrypt:scrypt_p.h
 -depcontrol=scrypt:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=scrypt:${HB_WITH_SCRYPT}
 -depincpath=scrypt:/usr/include
--depincpath=scrypt:/usr/local/include
 -depincpathlocal=scrypt:3rd/scrypt
 -depfinish=scrypt
 
@@ -25,7 +23,5 @@
 pbkdf2.c
 scrypt.c
 strcmpc.c
-
--cflag=-DHBSCRYPT_VANILLA{!HBMK_HAS_SCRYPT_LOCAL}
 
 3rd/scrypt/scrypt.hbc{HBMK_HAS_SCRYPT_LOCAL}
