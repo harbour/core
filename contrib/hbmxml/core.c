@@ -52,7 +52,6 @@
 #include "hbvm.h"
 
 #include "mxml.h"
-#include "config.h"
 
 #define MXML_ERR_ARGS()  ( hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, \
                                                  HB_ERR_ARGS_BASEPARAMS ) )
@@ -248,7 +247,11 @@ static void mxml_index_ret( mxml_index_t * index )
 
 HB_FUNC( HB_MXMLVERSION )
 {
-   hb_retc( MXML_VERSION );
+   char buffer[ 32 ];
+
+   hb_snprintf( buffer, sizeof( buffer ), "Mini-XML v%d.%d", MXML_MAJOR_VERSION, MXML_MINOR_VERSION );
+
+   hb_retc( buffer );
 }
 
 /* MXML_... wrapper funcs */

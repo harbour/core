@@ -21,6 +21,8 @@
 #ifndef _mxml_h_
 #  define _mxml_h_
 
+#include "config.h"
+
 /*
  * Include necessary headers...
  */

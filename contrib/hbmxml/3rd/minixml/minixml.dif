@@ -1,7 +1,7 @@
 diff -urN minixml.orig/config.h minixml/config.h
---- minixml.orig/config.h	2014-11-05 03:16:01.913770900 +0100
-+++ minixml/config.h	2014-11-05 03:16:02.210146200 +0100
-@@ -18,62 +18,87 @@
+--- minixml.orig/config.h	2015-01-10 04:27:39.593864400 +0100
++++ minixml/config.h	2015-01-10 04:27:39.593864400 +0100
+@@ -18,12 +18,30 @@
   * Include necessary headers...
   */
  
@@ -37,13 +37,7 @@ diff -urN minixml.orig/config.h minixml/config.h
  
  /*
   * Version number...
-  */
- 
--#define MXML_VERSION	""
-+#define MXML_VERSION "Mini-XML v2.7"
- 
- 
- /*
+@@ -36,44 +54,51 @@
   * Inline function support...
   */
  
@@ -123,9 +117,18 @@ diff -urN minixml.orig/config.h minixml/config.h
   * End of "$Id: config.h.in 451 2014-01-04 21:50:06Z msweet $".
   */
 diff -urN minixml.orig/mxml.h minixml/mxml.h
---- minixml.orig/mxml.h	2014-11-05 03:16:01.944968300 +0100
-+++ minixml/mxml.h	2014-11-05 03:16:02.210146200 +0100
-@@ -29,8 +29,16 @@
+--- minixml.orig/mxml.h	2015-01-10 04:27:39.640662000 +0100
++++ minixml/mxml.h	2015-01-10 04:27:39.640662000 +0100
+@@ -21,6 +21,8 @@
+ #ifndef _mxml_h_
+ #  define _mxml_h_
+ 
++#include "config.h"
++
+ /*
+  * Include necessary headers...
+  */
+@@ -29,8 +31,16 @@
  #  include <stdlib.h>
  #  include <string.h>
  #  include <ctype.h>
@@ -144,9 +147,20 @@ diff -urN minixml.orig/mxml.h minixml/mxml.h
  
  /*
   * Constants...
+diff -urN minixml.orig/mxml_att.c minixml/mxml_att.c
+--- minixml.orig/mxml_att.c	2015-01-10 04:27:39.593864400 +0100
++++ minixml/mxml_att.c	2015-01-10 04:27:39.593864400 +0100
+@@ -18,7 +18,6 @@
+  * Include necessary headers...
+  */
+ 
+-#include "config.h"
+ #include "mxml.h"
+ 
+ 
 diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
---- minixml.orig/mxml_fil.c	2014-11-05 03:16:01.929369600 +0100
-+++ minixml/mxml_fil.c	2014-11-05 03:16:02.210146200 +0100
+--- minixml.orig/mxml_fil.c	2015-01-10 04:27:39.609463600 +0100
++++ minixml/mxml_fil.c	2015-01-10 04:27:39.609463600 +0100
 @@ -294,8 +294,14 @@
      return (-1);
  
@@ -243,10 +257,40 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
  	    if ((*putc_cb)('\n', p) < 0)
  	      return (-1);
  
+diff -urN minixml.orig/mxml_get.c minixml/mxml_get.c
+--- minixml.orig/mxml_get.c	2015-01-10 04:27:39.609463600 +0100
++++ minixml/mxml_get.c	2015-01-10 04:27:39.625062800 +0100
+@@ -18,7 +18,6 @@
+  * Include necessary headers...
+  */
+ 
+-#include "config.h"
+ #include "mxml.h"
+ 
+ 
+diff -urN minixml.orig/mxml_ind.c minixml/mxml_ind.c
+--- minixml.orig/mxml_ind.c	2015-01-10 04:27:39.625062800 +0100
++++ minixml/mxml_ind.c	2015-01-10 04:27:39.625062800 +0100
+@@ -18,7 +18,6 @@
+  * Include necessary headers...
+  */
+ 
+-#include "config.h"
+ #include "mxml.h"
+ 
+ 
 diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
---- minixml.orig/mxml_nod.c	2014-11-05 03:16:01.929369600 +0100
-+++ minixml/mxml_nod.c	2014-11-05 03:16:02.210146200 +0100
-@@ -202,7 +202,11 @@
+--- minixml.orig/mxml_nod.c	2015-01-10 04:27:39.625062800 +0100
++++ minixml/mxml_nod.c	2015-01-10 04:27:39.625062800 +0100
+@@ -18,7 +18,6 @@
+  * Include necessary headers...
+  */
+ 
+-#include "config.h"
+ #include "mxml.h"
+ 
+ 
+@@ -202,7 +201,11 @@
    */
  
    while (node->child)
@@ -259,10 +303,39 @@ diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
  
   /*
    * Now delete any node data...
+diff -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
+--- minixml.orig/mxml_pri.h	2015-01-10 04:27:39.625062800 +0100
++++ minixml/mxml_pri.h	2015-01-10 04:27:39.625062800 +0100
+@@ -18,7 +18,6 @@
+  * Include necessary headers...
+  */
+ 
+-#include "config.h"
+ #include "mxml.h"
+ 
+ 
+diff -urN minixml.orig/mxml_sea.c minixml/mxml_sea.c
+--- minixml.orig/mxml_sea.c	2015-01-10 04:27:39.640662000 +0100
++++ minixml/mxml_sea.c	2015-01-10 04:27:39.640662000 +0100
+@@ -19,7 +19,6 @@
+  * Include necessary headers...
+  */
+ 
+-#include "config.h"
+ #include "mxml.h"
+ 
+ 
 diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
---- minixml.orig/mxml_set.c	2014-11-05 03:16:01.944968300 +0100
-+++ minixml/mxml_set.c	2014-11-05 03:16:02.210146200 +0100
-@@ -25,7 +25,7 @@
+--- minixml.orig/mxml_set.c	2015-01-10 04:27:39.640662000 +0100
++++ minixml/mxml_set.c	2015-01-10 04:27:39.640662000 +0100
+@@ -18,14 +18,13 @@
+  * Include necessary headers...
+  */
+ 
+-#include "config.h"
+ #include "mxml.h"
+ 
+ 
  /*
   * 'mxmlSetCDATA()' - Set the element name of a CDATA node.
   *
@@ -271,7 +344,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
   *
   * @since Mini-XML 2.3@
   */
-@@ -38,12 +38,6 @@
+@@ -38,12 +37,6 @@
    * Range check input...
    */
  
@@ -284,7 +357,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
    if (!node || node->type != MXML_ELEMENT || !data ||
        strncmp(node->value.element.name, "![CDATA[", 8))
      return (-1);
-@@ -64,7 +58,7 @@
+@@ -64,7 +57,7 @@
  /*
   * 'mxmlSetCustom()' - Set the data and destructor of a custom data node.
   *
@@ -293,7 +366,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
   *
   * @since Mini-XML 2.1@
   */
-@@ -79,10 +73,6 @@
+@@ -79,10 +72,6 @@
    * Range check input...
    */
  
@@ -304,7 +377,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
    if (!node || node->type != MXML_CUSTOM)
      return (-1);
  
-@@ -133,7 +123,7 @@
+@@ -133,7 +122,7 @@
  /*
   * 'mxmlSetInteger()' - Set the value of an integer node.
   *
@@ -313,7 +386,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
   */
  
  int					/* O - 0 on success, -1 on failure */
-@@ -144,10 +134,6 @@
+@@ -144,10 +133,6 @@
    * Range check input...
    */
  
@@ -324,7 +397,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
    if (!node || node->type != MXML_INTEGER)
      return (-1);
  
-@@ -164,7 +150,7 @@
+@@ -164,7 +149,7 @@
  /*
   * 'mxmlSetOpaque()' - Set the value of an opaque node.
   *
@@ -333,7 +406,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
   */
  
  int					/* O - 0 on success, -1 on failure */
-@@ -175,10 +161,6 @@
+@@ -175,10 +160,6 @@
    * Range check input...
    */
  
@@ -344,7 +417,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
    if (!node || node->type != MXML_OPAQUE || !opaque)
      return (-1);
  
-@@ -198,7 +180,7 @@
+@@ -198,7 +179,7 @@
  /*
   * 'mxmlSetReal()' - Set the value of a real number node.
   *
@@ -353,7 +426,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
   */
  
  int					/* O - 0 on success, -1 on failure */
-@@ -209,10 +191,6 @@
+@@ -209,10 +190,6 @@
    * Range check input...
    */
  
@@ -364,7 +437,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
    if (!node || node->type != MXML_REAL)
      return (-1);
  
-@@ -229,7 +207,7 @@
+@@ -229,7 +206,7 @@
  /*
   * 'mxmlSetText()' - Set the value of a text node.
   *
@@ -373,7 +446,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
   */
  
  int					/* O - 0 on success, -1 on failure */
-@@ -241,10 +219,6 @@
+@@ -241,10 +218,6 @@
    * Range check input...
    */
  
@@ -384,7 +457,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
    if (!node || node->type != MXML_TEXT || !string)
      return (-1);
  
-@@ -265,7 +239,7 @@
+@@ -265,7 +238,7 @@
  /*
   * 'mxmlSetTextf()' - Set the value of a text node to a formatted string.
   *
@@ -393,7 +466,7 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
   */
  
  int					/* O - 0 on success, -1 on failure */
-@@ -281,10 +255,6 @@
+@@ -281,10 +254,6 @@
    * Range check input...
    */
  
@@ -405,11 +478,14 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
      return (-1);
  
 diff -urN minixml.orig/mxml_str.c minixml/mxml_str.c
---- minixml.orig/mxml_str.c	2014-11-05 03:16:01.944968300 +0100
-+++ minixml/mxml_str.c	2014-11-05 03:16:02.210146200 +0100
-@@ -20,6 +20,9 @@
+--- minixml.orig/mxml_str.c	2015-01-10 04:27:39.640662000 +0100
++++ minixml/mxml_str.c	2015-01-10 04:27:39.640662000 +0100
+@@ -18,8 +18,11 @@
+  * Include necessary headers...
+  */
  
- #include "config.h"
+-#include "config.h"
++#include "mxml.h"
  
 +#ifndef HAVE_VSNPRINTF
 +#  include <ctype.h>
