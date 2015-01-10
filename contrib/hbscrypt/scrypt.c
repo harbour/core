@@ -47,7 +47,11 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-#include "c_scrypt.h"
+#if defined( HBSCRYPT_VANILLA )
+   #include "crypto_scrypt.h"
+#else
+   #include "c_scrypt.h"
+#endif
 
 /* hb_scrypt( <cPassword>, <cSalt>, <nCPU>, <nMem>, <nParallel>, <nKeyLen> ) -> <cKey> */
 HB_FUNC( HB_SCRYPT )

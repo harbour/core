@@ -9,10 +9,12 @@
 -depurlbase=curl:http://curl.haxx.se/
 -deppkgname=curl:libcurl4-openssl-dev{deb}
 -deppkgname=curl:curl-devel{rpm}
+-deppkgname=curl:curl{homebrew}
 -depkeyhead=curl:curl/curl.h
 -depcontrol=curl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=curl:${HB_WITH_CURL}
 -depincpath=curl:/usr/include
+-depincpath=curl:/usr/local/include
 
 date.c
 easy.c
