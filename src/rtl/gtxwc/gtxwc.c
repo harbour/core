@@ -78,7 +78,7 @@ static HB_GT_FUNCS SuperTable;
 static const int s_mousePressKeys   [ XWC_MAX_BUTTONS ] = { K_LBUTTONDOWN, K_MBUTTONDOWN, K_RBUTTONDOWN, K_MWFORWARD, K_MWBACKWARD };
 static const int s_mouseReleaseKeys [ XWC_MAX_BUTTONS ] = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
 static const int s_mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDBLCLK,     K_RDBLCLK    , K_MWFORWARD, K_MWBACKWARD };
-static const int s_mouseButtonBits  [ XWC_MAX_BUTTONS ] = { 1, 4, 2 };
+static const int s_mouseButtonBits  [ XWC_MAX_BUTTONS ] = { 1 << HB_MBUTTON_LEFT, 1 << HB_MBUTTON_MIDDLE, 1 << HB_MBUTTON_RIGHT };
 
 /* these are standard PC console colors in RGB */
 static const int s_rgb_values[] = {
@@ -2850,6 +2850,10 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
       case XK_Print:
          ikey = HB_KX_PRTSCR;
          break;
+
+      case XK_Menu:
+         ikey = HB_K_MENU;
+         break;
    }
    if( ikey )
    {
@@ -5237,7 +5241,15 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->fontHeight );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 ) /* TODO */
+         {
             wnd->fontHeight = iVal;
+            if( wnd->fInit )
+            {
+               hb_gt_xwc_SetFont( wnd, wnd->szFontName, wnd->fontWeight,
+                                  wnd->fontHeight, wnd->szFontEncoding );
+               hb_gt_xwc_CreateWindow( wnd );
+            }
+         }
          break;
 
       case HB_GTI_FONTWIDTH:
@@ -5276,11 +5288,13 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szFontSel );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
+            HB_BOOL fInit;
             HB_XWC_XLIB_LOCK();
-            if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), 0, 0, NULL ) &&
-                wnd->fInit )
-               hb_gt_xwc_CreateWindow( wnd );
+            fInit = hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), 0, 0, NULL ) &&
+                    wnd->fInit;
             HB_XWC_XLIB_UNLOCK();
+            if( fInit )
+               hb_gt_xwc_CreateWindow( wnd );
          }
          break;
 
@@ -5295,6 +5309,13 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             wnd->fFixMetric = ( iVal & HB_GTI_FONTA_FIXMETRIC ) != 0;
             wnd->fClearBkg  = ( iVal & HB_GTI_FONTA_CLRBKG    ) != 0;
             wnd->fDrawBox   = ( iVal & HB_GTI_FONTA_DRAWBOX   ) != 0;
+            if( wnd->fInit )
+            {
+               HB_XWC_XLIB_LOCK();
+               hb_gt_xwc_ResetCharTrans( wnd );
+               hb_gt_xwc_InvalidateFull( wnd, 0, 0, wnd->cols - 1, wnd->rows );
+               HB_XWC_XLIB_UNLOCK();
+            }
          }
          break;
 

@@ -238,6 +238,8 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    AAdd( aKeys, { "HB_K_LOSTFOCUS",  HB_K_LOSTFOCUS,  "focus lost"                       } )
    AAdd( aKeys, { "HB_K_CONNECT",    HB_K_CONNECT,    "remote terminal connected"        } )
    AAdd( aKeys, { "HB_K_DISCONNECT", HB_K_DISCONNECT, "remote terminal disconnected"     } )
+   AAdd( aKeys, { "HB_K_TERMINATE",  HB_K_TERMINATE,  "terminate signal from system"     } )
+   AAdd( aKeys, { "HB_K_MENU",       HB_K_MENU,       "MENU key pressed"                 } )
 #endif
 
 #ifdef __HARBOUR__
