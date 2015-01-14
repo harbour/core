@@ -1505,6 +1505,11 @@ static int hb_gt_qtc_getKeyFlags( Qt::KeyboardModifiers keyFlags )
    if( keyFlags & Qt::KeypadModifier  ) iFlags |= HB_KF_KEYPAD;
 #ifdef HB_OS_DARWIN
    if( keyFlags & Qt::MetaModifier )    iFlags |= HB_KF_CTRL;
+#elif defined( HB_OS_ANDROID )
+   if( ( keyFlags & Qt::AltModifier ) != 0 &&
+       ( keyFlags & Qt::ShiftModifier ) != 0 &&
+       ( keyFlags & Qt::ControlModifier ) == 0 )
+      iFlags = ( iFlags & ~( HB_KF_ALT | HB_KF_SHIFT ) ) | HB_KF_CTRL;
 #endif
 
    return iFlags;
@@ -2552,6 +2557,7 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent 
 
    setAttribute( Qt::WA_StaticContents );
    setAttribute( Qt::WA_OpaquePaintEvent );
+   setAttribute( Qt::WA_NoSystemBackground );
    /* Warning! Qt::WA_KeyCompression attribute creates problems when
     * barcode readers are used - some characters are eaten [druzus]
     */
@@ -2688,9 +2694,7 @@ void QTConsole::setFontSize( int iFH, int iFW )
    if( pQTC->fRepaint )
    {
       hb_gt_qtc_resetBoxCharBitmaps( pQTC );
-      if( ! image->isNull() &&
-          ( pQTC->iResizeMode == HB_GTI_RESIZEMODE_ROWS ||
-            ( pQTC->qWnd->windowState() & ( Qt::WindowMaximized | Qt::WindowFullScreen ) ) != 0 ) )
+      if( ! image->isNull() && pQTC->iResizeMode == HB_GTI_RESIZEMODE_ROWS )
          hb_gt_qtc_setWindowSize( pQTC, pQTC->qWnd->height() / pQTC->cellY,
                                         pQTC->qWnd->width() / pQTC->cellX );
    }
@@ -3058,6 +3062,12 @@ void QTConsole::mouseDoubleClickEvent( QMouseEvent * event )
    switch( event->button() )
    {
       case Qt::LeftButton:
+#if defined( HB_OS_ANDROID ) || defined( HB_OS_WIN_CE )
+         {
+            QEvent reqSIPevent( QEvent::RequestSoftwareInputPanel );
+            QApplication::sendEvent( pQTC->qWnd, &reqSIPevent );
+         }
+#endif
          iKey = K_LDBLCLK;
          break;
 
@@ -3084,12 +3094,6 @@ void QTConsole::mousePressEvent( QMouseEvent * event )
    switch( event->button() )
    {
       case Qt::LeftButton:
-#if defined( HB_OS_ANDROID ) || defined( HB_OS_WIN_CE )
-         {
-            QEvent reqSIPevent( QEvent::RequestSoftwareInputPanel );
-            QApplication::sendEvent( pQTC->qWnd, &reqSIPevent );
-         }
-#endif
          iKey = K_LBUTTONDOWN;
          break;
 

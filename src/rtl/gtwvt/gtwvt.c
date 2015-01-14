@@ -2568,6 +2568,11 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                   iKey = '?';
                break;
 #endif
+#ifdef VK_APPS
+            case VK_APPS:
+               iKey = HB_K_MENU;
+               break;
+#endif
          }
          if( iKeyPad != 0 )
          {
