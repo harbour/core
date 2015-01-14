@@ -467,6 +467,7 @@ DYNAMIC __oleIsDisp
 DYNAMIC __oleVariantGetType
 DYNAMIC __oleVariantGetValue
 DYNAMIC __oleVariantNew
+DYNAMIC __oleVariantNullDate
 DYNAMIC __wapi_DbgUnsafeHandles
 DYNAMIC __wapi_DEVMODE_Get
 DYNAMIC __wapi_DEVMODE_New
