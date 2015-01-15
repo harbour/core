@@ -1693,9 +1693,8 @@ METHOD IsEditable( nPos ) CLASS Get
       RETURN .T.
    ENDIF
 
-   cChar := SubStr( ::cPicMask, nPos, 1 )
-
    IF ::cType != NIL
+      cChar := SubStr( ::cPicMask, nPos, 1 )
       SWITCH ::cType
       CASE "C" ; RETURN hb_asciiUpper( cChar ) $ "!ANX9#LY"
       CASE "N" ; RETURN cChar $ "9#$*"
