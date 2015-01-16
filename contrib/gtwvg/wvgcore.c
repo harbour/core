@@ -144,7 +144,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
                {
                   IStream * pStream = NULL;
 
-                  if( CreateStreamOnHGlobal( hGlobal, TRUE, &pStream ) == S_OK && pStream )
+                  if( CreateStreamOnHGlobal( hGlobal, FALSE, &pStream ) == S_OK && pStream )
                   {
                      OleLoadPicture( pStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
                      HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
@@ -184,7 +184,7 @@ IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
             {
                IStream * pStream = NULL;
 
-               if( CreateStreamOnHGlobal( hGlobal, TRUE, &pStream ) == S_OK && pStream )
+               if( CreateStreamOnHGlobal( hGlobal, FALSE, &pStream ) == S_OK && pStream )
                {
                   OleLoadPicture( pStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
                   HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
@@ -324,7 +324,7 @@ static HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR 
                IStream *  pStream;
                IPicture * pPicture = NULL;
 
-               if( CreateStreamOnHGlobal( hGlobal, TRUE, &pStream ) == S_OK && pStream )
+               if( CreateStreamOnHGlobal( hGlobal, FALSE, &pStream ) == S_OK && pStream )
                   OleLoadPicture( pStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
 
                if( pPicture )
