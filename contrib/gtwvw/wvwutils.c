@@ -360,9 +360,9 @@ HB_FUNC( WVW_OPENIMAGE )
       IPicture * pPicture = NULL;
       IStream *  pStream  = NULL;
 
-      if( CreateStreamOnHGlobal( hG, 0, &pStream ) == S_OK && pStream )
+      if( CreateStreamOnHGlobal( hG, FALSE, &pStream ) == S_OK && pStream )
       {
-         OleLoadPicture( pStream, 0, 0, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
+         OleLoadPicture( pStream, 0, FALSE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
          HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
       }
 

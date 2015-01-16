@@ -567,7 +567,7 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
             hb_fsSeek( fhnd, 0, FS_SET );
             hb_fsReadLarge( fhnd, pGlobal, nFileSize );
 
-            if( CreateStreamOnHGlobal( hGlobal, TRUE, &pStream ) == S_OK && pStream )
+            if( CreateStreamOnHGlobal( hGlobal, FALSE, &pStream ) == S_OK && pStream )
                OleLoadPicture( pStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
 
             GlobalUnlock( hGlobal );
