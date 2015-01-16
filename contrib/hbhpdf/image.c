@@ -87,17 +87,8 @@ HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 HB_FUNC( HPDF_LOADPNGIMAGEFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   HPDF_UINT   size = ( HPDF_UINT ) hb_parclen( 2 );
-   HPDF_BYTE * buffer;
-
-   buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
-
-   hb_retptr( ( HPDF_Image ) HPDF_LoadPngImageFromMem( hb_HPDF_Doc_par( 1 ), buffer, size ) );
-
-   if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
-      hb_xfree( buffer );
+   hb_retptr( ( HPDF_Image ) HPDF_LoadPngImageFromMem( hb_HPDF_Doc_par( 1 ), ( const HPDF_BYTE * ) hb_parcx( 2 ), ( HPDF_UINT ) hb_parclen( 2 ) ) );
 #else
-   hb_storc( NULL, 2 );
    hb_retptr( NULL );
 #endif
 }
@@ -109,17 +100,8 @@ HB_FUNC( HPDF_LOADPNGIMAGEFROMMEM )
 HB_FUNC( HPDF_LOADJPEGIMAGEFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   HPDF_UINT   size = ( HPDF_UINT ) hb_parclen( 2 );
-   HPDF_BYTE * buffer;
-
-   buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
-
-   hb_retptr( ( HPDF_Image ) HPDF_LoadJpegImageFromMem( hb_HPDF_Doc_par( 1 ), buffer, size ) );
-
-   if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
-      hb_xfree( buffer );
+   hb_retptr( ( HPDF_Image ) HPDF_LoadJpegImageFromMem( hb_HPDF_Doc_par( 1 ), ( const HPDF_BYTE * ) hb_parcx( 2 ), ( HPDF_UINT ) hb_parclen( 2 ) ) );
 #else
-   hb_storc( NULL, 2 );
    hb_retptr( NULL );
 #endif
 }
