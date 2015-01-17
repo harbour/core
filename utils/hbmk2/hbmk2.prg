@@ -2653,7 +2653,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "pocc64" ) .OR. ; /* NOTE: Cross-platform: win/amd64 on win/x86 */
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "poccarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
 
-         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0700 )
+         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0450 )
 
       ENDCASE
    ENDIF
