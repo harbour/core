@@ -611,8 +611,8 @@ sensitive.
 
    - `HB_COMPILER_VER=[<ver>]`
 
-     Set C compiler version. This is used with win/msvc,
-     win/mingw and cygwin/gcc targets currently.
+     Set C compiler version. This is used with win/msvc*,
+     win/mingw*, win/pocc* and cygwin/gcc targets currently.
      `<ver>` format:
 
          <15><00> = <major><minor>

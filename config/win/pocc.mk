@@ -31,6 +31,15 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
 endif
 
+ifeq ($(filter $(HB_COMPILER_VER),0450),)
+   LDFLAGS += -nxcompat
+   DFLAGS += -nxcompat
+endif
+ifeq ($(filter $(HB_COMPILER_VER),0450 0500 0600 0700),)
+   LDFLAGS += -dynamicbase -fixed:no
+   DFLAGS += -dynamicbase
+endif
+
 RC := porc.exe
 RC_OUT := -fo$(subst x,x, )
 RCFLAGS += -I. -I$(TOP) -I$(HB_HOST_INC)

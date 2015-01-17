@@ -2648,6 +2648,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
             hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 1400 )
          ENDIF
+
+      CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "pocc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "pocc64" ) .OR. ; /* NOTE: Cross-platform: win/amd64 on win/x86 */
+           ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "poccarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
+
+         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0700 )
+
       ENDCASE
    ENDIF
 
@@ -5891,6 +5898,19 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt }
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 #endif
+         IF hbmk[ _HBMK_lHARDEN ]
+            IF hbmk[ _HBMK_cPLAT ] == "win"
+               IF hbmk[ _HBMK_nCOMPVer ] >= 0500
+                  AAdd( hbmk[ _HBMK_aOPTD ], "-nxcompat" )
+                  AAdd( hbmk[ _HBMK_aOPTL ], "-nxcompat" )
+               ENDIF
+               IF hbmk[ _HBMK_nCOMPVer ] >= 0800
+                  AAdd( hbmk[ _HBMK_aOPTL ], "-dynamicbase" )
+                  AAdd( hbmk[ _HBMK_aOPTL ], "-fixed:no" ) /* is this useful? */
+                  AAdd( hbmk[ _HBMK_aOPTD ], "-dynamicbase" )
+               ENDIF
+            ENDIF
+         ENDIF
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "sunos" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" )
@@ -13705,7 +13725,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
    LOCAL tmp, tmp1
 
    DO CASE
-   CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
+   CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm|pocc|pocc64|poccarm" )
       hb_processRun( cPath_CompC,, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "cp437" )
       IF ( tmp1 := hb_AtX( R_( "Version [0-9][0-9]\.[0-9]" ), cStdOutErr ) ) != NIL
@@ -14042,6 +14062,10 @@ FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
       RETURN .T.
    ENDIF
 
+   IF cKeyword == "x64"  /* FUTURE */
+      cKeyword := "x86_64"
+   ENDIF
+
    SWITCH cKeyword
    CASE "mt"       ; RETURN hbmk[ _HBMK_lMT ]
    CASE "st"       ; RETURN ! hbmk[ _HBMK_lMT ]
@@ -14136,6 +14160,10 @@ STATIC PROCEDURE ParseCOMPPLATCPU( hbmk, cString, nMainTarget )
             EXIT
          ENDIF
       NEXT
+   ENDIF
+
+   IF hbmk[ _HBMK_cCPU ] == "x64"  /* FUTURE */
+      hbmk[ _HBMK_cCPU ] := "x86_64"
    ENDIF
 
    RETURN
