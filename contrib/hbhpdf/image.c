@@ -87,7 +87,9 @@ HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 HB_FUNC( HPDF_LOADPNGIMAGEFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   hb_retptr( ( HPDF_Image ) HPDF_LoadPngImageFromMem( hb_HPDF_Doc_par( 1 ), ( const HPDF_BYTE * ) hb_parcx( 2 ), ( HPDF_UINT ) hb_parclen( 2 ) ) );
+   hb_retptr( ( HPDF_Image ) HPDF_LoadPngImageFromMem( hb_HPDF_Doc_par( 1 ),
+                                          ( const HPDF_BYTE * ) hb_parcx( 2 ),
+                                          ( HPDF_UINT ) hb_parclen( 2 ) ) );
 #else
    hb_retptr( NULL );
 #endif
@@ -100,7 +102,9 @@ HB_FUNC( HPDF_LOADPNGIMAGEFROMMEM )
 HB_FUNC( HPDF_LOADJPEGIMAGEFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   hb_retptr( ( HPDF_Image ) HPDF_LoadJpegImageFromMem( hb_HPDF_Doc_par( 1 ), ( const HPDF_BYTE * ) hb_parcx( 2 ), ( HPDF_UINT ) hb_parclen( 2 ) ) );
+   hb_retptr( ( HPDF_Image ) HPDF_LoadJpegImageFromMem( hb_HPDF_Doc_par( 1 ),
+                                          ( const HPDF_BYTE * ) hb_parcx( 2 ),
+                                          ( HPDF_UINT ) hb_parclen( 2 ) ) );
 #else
    hb_retptr( NULL );
 #endif
