@@ -331,7 +331,7 @@ STATIC FUNCTION XToStrX( xValue )
 STATIC PROCEDURE cmdAbout( netiocli )
 
    hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) )
-   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2013, Viktor Szakats" )
+   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2015, Viktor Szakats" )
    hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
 
    RETURN

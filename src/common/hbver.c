@@ -664,10 +664,10 @@ HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fO
       WORD  wSuiteMask;
       BYTE  wProductType;
       BYTE  wReserved;
-   } OSVERSIONINFOEXW;
+   } OSVERSIONINFOEXW, * LPOSVERSIONINFOEXW;
    #endif
 
-   typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEX, DWORD, DWORDLONG );
+   typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEXW, DWORD, DWORDLONG );
    typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
 
    static _HB_VERIFYVERSIONINFO   s_pVerifyVersionInfo   = NULL;

@@ -372,8 +372,21 @@ METHOD end() CLASS Get
    LOCAL nFor
 
    IF ::hasFocus
-      nLastCharPos := Min( Len( RTrim( ::cBuffer ) ) + 1, ::nMaxEdit )
-      IF ::nPos != nLastCharPos
+      nLastCharPos := Len( RTrim( ::cBuffer ) ) + 1
+      /* check for spaces before non-template chars */
+      IF nLastCharPos > 2 .AND. ! ::IsEditable( nLastCharPos - 1 )
+         FOR nFor := nLastCharPos - 2 TO ::FirstEditable() STEP -1
+            IF ::IsEditable( nFor )
+               IF Empty( SubStr( ::cBuffer, nFor, 1 ) )
+                  nLastCharPos := nFor
+               ELSE
+                  EXIT
+               ENDIF
+            ENDIF
+         NEXT
+      ENDIF
+      nLastCharPos := Min( nLastCharPos, ::nMaxEdit )
+      IF ::nPos < nLastCharPos .OR. ::nPos == ::LastEditable()
          nPos := nLastCharPos
       ELSE
          nPos := ::nMaxEdit
@@ -1586,9 +1599,8 @@ METHOD backSpaceLow() CLASS Get
 
       /* To delete the parenthesis (negative indicator) in a non editable position */
 
-      nMinus := At( "(", SubStr( ::cBuffer, 1, nPos - 1 ) )
-
-      IF nMinus > 0 .AND. !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
+      IF ( nMinus := At( "(", Left( ::cBuffer, nPos - 1 ) ) ) > 0 .AND. ;
+         !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
 
          ::cBuffer := Stuff( ::cBuffer, nMinus, 1, " " )
 
@@ -1686,9 +1698,8 @@ METHOD IsEditable( nPos ) CLASS Get
       RETURN .T.
    ENDIF
 
-   cChar := SubStr( ::cPicMask, nPos, 1 )
-
    IF ::cType != NIL
+      cChar := SubStr( ::cPicMask, nPos, 1 )
       SWITCH ::cType
       CASE "C" ; RETURN hb_asciiUpper( cChar ) $ "!ANX9#LY"
       CASE "N" ; RETURN cChar $ "9#$*"
