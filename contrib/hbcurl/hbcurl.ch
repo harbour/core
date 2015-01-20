@@ -261,6 +261,7 @@
 #define HB_CURLOPT_PROXYHEADER                214
 #define HB_CURLOPT_PINNEDPUBLICKEY            215
 #define HB_CURLOPT_UNIX_SOCKET_PATH           216
+#define HB_CURLOPT_SSL_VERIFYSTATUS           217
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
