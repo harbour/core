@@ -68,8 +68,9 @@
   use this [free service](https://transfer.sh).
 - See this good guideline on how to contribute:
   <https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md>
-- And this:
+- And these:
   <https://guides.github.com/overviews/os-contributing/>
+  <https://github.com/blog/1943-how-to-write-the-perfect-pull-request>
 - You can also participate in localization:<br />
   [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2-vszakats/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
 
