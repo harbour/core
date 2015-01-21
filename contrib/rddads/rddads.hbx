@@ -160,6 +160,7 @@ DYNAMIC AdsSetServerType
 DYNAMIC AdsShowError
 DYNAMIC AdsStmtSetTableLockType
 DYNAMIC AdsStmtSetTablePassword
+DYNAMIC AdsStmtSetTableReadOnly
 DYNAMIC AdsTestLogin
 DYNAMIC AdsTestRecLocks
 DYNAMIC AdsUnlockRecord

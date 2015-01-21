@@ -1253,6 +1253,19 @@ HB_FUNC( ADSSTMTSETTABLELOCKTYPE )
                                      ( UNSIGNED16 ) hb_parni( 1 ) /* usLockType */ ) == AE_SUCCESS );
 }
 
+HB_FUNC( ADSSTMTSETTABLEREADONLY )
+{
+#if ADS_LIB_VERSION >= 900
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   hb_retl( pArea && pArea->hStatement &&
+            AdsStmtSetTableReadOnly( pArea->hStatement,
+                                     ( UNSIGNED16 ) hb_parnidef( 1, ADS_CURSOR_READONLY ) ) == AE_SUCCESS );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
 HB_FUNC( ADSCREATESQLSTATEMENT )
 {
    HB_BOOL fResult = HB_FALSE;
