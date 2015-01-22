@@ -13,13 +13,13 @@
 -depurlbase=openssl:http://wiki.opensslfoundation.com/
 -deppkgname=openssl:libssl-dev{deb}
 -deppkgname=openssl:openssl-devel{rpm}
--deppkgname=openssl:libressl{homebrew}
 -deppkgname=openssl:openssl{homebrew}
+-deppkgname=openssl:libressl{homebrew}
 -depkeyhead=openssl:openssl/ssl.h
 -depcontrol=openssl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=openssl:${HB_WITH_OPENSSL}
--depincpath=openssl:/usr/local/opt/libressl/include
 -depincpath=openssl:/usr/local/opt/openssl/include
+-depincpath=openssl:/usr/local/opt/libressl/include
 -depincpath=openssl:/usr/include
 -depincpath=openssl:/usr/local/include
 -depincpath=openssl:/usr/local/ssl/include
