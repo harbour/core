@@ -18,20 +18,20 @@
 -cpp=no
 -pic
 
--cflag=-DSQLITE_ENABLE_FTS3
--cflag=-DSQLITE_ENABLE_FTS3_PARENTHESIS
+-cflag=-DSQLITE_ENABLE_FTS3=1
+-cflag=-DSQLITE_ENABLE_FTS3_PARENTHESIS=1
 
--cflag=-DSQLITE_OMIT_DEPRECATED
--cflag=-DSQLITE_ENABLE_COLUMN_METADATA
+-cflag=-DSQLITE_OMIT_DEPRECATED=1
+-cflag=-DSQLITE_ENABLE_COLUMN_METADATA=1
 -cflag=-D_WIN32_WCE=0x0300{wce}
 # DJGPP and OpenWatcom in DOS aren't correctly recognized by SQLite,
 # so we're forcing the next best available option. This will cause missing
 # externals though. [vszakats]
--cflag=-DSQLITE_OS_OTHER{dos}
+-cflag=-DSQLITE_OS_OTHER=1{dos}
 # Watcom Linux builds cannot use system header files
--cflag=-DSQLITE_OS_OTHER{linux&watcom}
+-cflag=-DSQLITE_OS_OTHER=1{linux&watcom}
 # OS/2 builds do not support pthreads and some other system headers
--cflag=-DSQLITE_OS_OTHER{os2}
+-cflag=-DSQLITE_OS_OTHER=1{os2}
 
 -cflag=-DSQLITE_THREADSAFE=0{minix}
 -cflag=-DSQLITE_OMIT_LOAD_EXTENSION=1{minix}
