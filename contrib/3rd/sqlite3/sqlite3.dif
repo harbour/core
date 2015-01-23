@@ -1,19 +1,19 @@
 diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2014-12-10 21:41:05.936918000 +0100
-+++ sqlite3/sqlite3.c	2014-12-10 21:41:06.701283700 +0100
-@@ -28522,7 +28522,11 @@
-       ** is the same technique used by glibc to implement posix_fallocate()
-       ** on systems that do not have a real fallocate() system call.
+--- sqlite3.orig/sqlite3.c	2015-01-23 03:44:32.022665400 +0100
++++ sqlite3/sqlite3.c	2015-01-23 03:44:32.085061400 +0100
+@@ -28873,7 +28873,11 @@
+       ** This is a similar technique to that used by glibc on systems
+       ** that do not have a real fallocate() call.
        */
 +#if __minix
 +      int nBlk = 4096;            /* MFS default; good enough for now */
 +#else
        int nBlk = buf.st_blksize;  /* File-system block size */
 +#endif
+       int nWrite = 0;             /* Number of bytes written by seekAndWrite */
        i64 iWrite;                 /* Next offset to write to */
  
-       if( robust_ftruncate(pFile->h, nSize) ){
-@@ -34509,6 +34513,11 @@
+@@ -34870,6 +34874,11 @@
  ** create a substitute.
  */
  /* #include <time.h> */
@@ -25,7 +25,7 @@ diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
  struct tm *__cdecl localtime(const time_t *t)
  {
    static struct tm y;
-@@ -34516,7 +34525,7 @@
+@@ -34877,7 +34886,7 @@
    SYSTEMTIME pTm;
    sqlite3_int64 t64;
    t64 = *t;
