@@ -1,0 +1,28 @@
+diff -urN pcre2.orig/p2jicomp.c pcre2/p2jicomp.c
+--- pcre2.orig/p2jicomp.c	2015-01-23 04:08:34.405570500 +0100
++++ pcre2/p2jicomp.c	2015-01-23 04:08:35.169921500 +0100
+@@ -71,7 +71,7 @@
+ allocator->free(ptr, allocator->memory_data);
+ }
+ 
+-#include "sljit/sljitLir.c"
++#include "sjlir.c"
+ 
+ #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
+ #error Unsupported architecture
+diff -urN pcre2.orig/sjconfi.h pcre2/sjconfi.h
+--- pcre2.orig/sjconfi.h	2015-01-23 04:08:34.592758500 +0100
++++ pcre2/sjconfi.h	2015-01-23 04:08:35.185520500 +0100
+@@ -472,8 +472,12 @@
+ 
+ #if defined(__GNUC__) && !defined(__APPLE__)
+ 
++#if ( __GNUC__ > 3 ) || ( ( __GNUC__ == 3 ) && ( __GNUC_MINOR__ >= 4 ) )
+ #define SLJIT_CALL __attribute__ ((fastcall))
+ #define SLJIT_X86_32_FASTCALL 1
++#else
++#define SLJIT_CALL
++#endif
+ 
+ #elif defined(_MSC_VER)
+ 

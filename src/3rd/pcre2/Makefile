@@ -72,7 +72,7 @@ endif
 
 # ORIGIN http://pcre.org/
 # URL    https://downloads.sourceforge.net/pcre/pcre2/10.00/pcre2-10.00.tar.gz
-# DIFF   pcre.dif
+# DIFF   pcre2.dif
 #
 # MAP    LICENCE
 # MAP    src/config.h.generic                  config.h
