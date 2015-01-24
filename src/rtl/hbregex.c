@@ -51,13 +51,18 @@
 #include "hbapierr.h"
 #include "hbinit.h"
 
-#if defined( HB_HAS_PCRE )
+/* TODO: finish PCRE2 support */
+
+#if defined( HB_HAS_PCRE ) || defined( HB_HAS_PCRE2 )
    static int s_iUTF8Enabled;
 #endif
 
 static void hb_regfree( PHB_REGEX pRegEx )
 {
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   if( pRegEx->re_pcre )
+      pcre2_code_free( pRegEx->re_pcre );
+#elif defined( HB_HAS_PCRE )
    ( pcre_free )( pRegEx->re_pcre );
 #elif defined( HB_POSIX_REGEX )
    regfree( &pRegEx->reg );
@@ -68,7 +73,27 @@ static void hb_regfree( PHB_REGEX pRegEx )
 
 static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
 {
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   int iError = 0;
+   PCRE2_SIZE iErrOffset = 0;
+   int iCFlags = ( ( pRegEx->iFlags & HBREG_ICASE   ) ? PCRE2_CASELESS  : 0 ) |
+                 ( ( pRegEx->iFlags & HBREG_NEWLINE ) ? PCRE2_MULTILINE : 0 ) |
+                 ( ( pRegEx->iFlags & HBREG_DOTALL  ) ? PCRE2_DOTALL    : 0 );
+
+   pRegEx->iEFlags = ( ( pRegEx->iFlags & HBREG_NOTBOL ) ? PCRE2_NOTBOL : 0 ) |
+                     ( ( pRegEx->iFlags & HBREG_NOTEOL ) ? PCRE2_NOTEOL : 0 );
+
+   /* use UTF8 in pcre when available and HVM CP is also UTF8. */
+   if( s_iUTF8Enabled && hb_cdpIsUTF8( NULL ) )
+      iCFlags |= PCRE2_UTF;
+
+   pRegEx->re_pcre = pcre2_compile( ( PCRE2_SPTR ) szRegEx,
+                                    strlen( szRegEx ),
+                                    ( PCRE2_SIZE ) iCFlags,
+                                    &iError,
+                                    &iErrOffset, NULL );
+   return pRegEx->re_pcre ? 0 : -1;
+#elif defined( HB_HAS_PCRE )
    const unsigned char * pCharTable = NULL;
    const char * szError = NULL;
    int iErrOffset = 0;
@@ -104,7 +129,25 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
 static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen,
                        int iMatches, HB_REGMATCH * aMatches )
 {
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   PCRE2_SIZE iResult, i;
+
+   iResult = pcre2_match( pRegEx->re_pcre,
+                          ( PCRE2_SPTR ) szString,
+                          ( PCRE2_SIZE ) nLen,
+                          ( PCRE2_SIZE ) 0 /* startoffset */,
+                          ( uint32_t ) pRegEx->iEFlags,
+                          aMatches, NULL );
+   if( iResult == 0 )
+   {
+      for( i = 0; i < ( PCRE2_SIZE ) iMatches; i++ )
+      {
+         if( HB_REGMATCH_EO( aMatches, i ) != -1 )
+            iResult = i + 1;
+      }
+   }
+   return ( int ) iResult;
+#elif defined( HB_HAS_PCRE )
    int iResult, i;
 
    iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
@@ -541,19 +584,41 @@ HB_FUNC( HB_REGEXALL )
       hb_reta( 0 );
 }
 
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+#if 0
+static void * hb_pcre_grab( PCRE2_SIZE size, void * data )
+{
+   HB_SYMBOL_UNUSED( data );
+   return size > 0 ? hb_xgrab( size ) : NULL;
+}
+static void hb_pcre_free( void * ptr, void * data )
+{
+   HB_SYMBOL_UNUSED( data );
+   if( ptr )
+      hb_xfree( ptr );
+}
+#endif
+#elif defined( HB_HAS_PCRE )
 static void * hb_pcre_grab( size_t size )
 {
-   return hb_xgrab( size );
+   return size > 0 ? hb_xgrab( size ) : NULL;
 }
 static void hb_pcre_free( void * ptr )
 {
-   hb_xfree( ptr );
+   if( ptr )
+      hb_xfree( ptr );
 }
 #endif
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_regex_init_ )
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   /* detect UTF-8 support.
+    * In BCC builds this code also forces linking newer PCRE versions
+    * then the one included in BCC RTL.
+    */
+   if( pcre2_config( PCRE2_CONFIG_UNICODE, &s_iUTF8Enabled ) != 0 )
+      s_iUTF8Enabled = 0;
+#elif defined( HB_HAS_PCRE )
    /* detect UTF-8 support.
     * In BCC builds this code also forces linking newer PCRE versions
     * then the one included in BCC RTL.

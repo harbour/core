@@ -51,7 +51,10 @@
 
 #if defined( _HB_REGEX_INTERNAL_ )
 
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   #include <pcre2.h>
+   #undef HB_POSIX_REGEX
+#elif defined( HB_HAS_PCRE )
    #include <pcre.h>
    #undef HB_POSIX_REGEX
 #elif defined( HB_OS_UNIX )
@@ -70,7 +73,9 @@ typedef struct
    HB_BOOL     fFree;
    int         iFlags;
    int         iEFlags;
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   pcre2_code  * re_pcre;
+#elif defined( HB_HAS_PCRE )
    pcre        * re_pcre;
 #elif defined( HB_POSIX_REGEX )
    regex_t     reg;
@@ -78,7 +83,12 @@ typedef struct
 } HB_REGEX;
 typedef HB_REGEX * PHB_REGEX;
 
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   #define HB_REGMATCH              pcre2_match_data
+   #define HB_REGMATCH_SIZE( n )    ( ( n ) * 3 )           /* TODO */
+   #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]      /* TODO */
+   #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]  /* TODO */
+#elif defined( HB_HAS_PCRE )
    #define HB_REGMATCH              int
    #define HB_REGMATCH_SIZE( n )    ( ( n ) * 3 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]
