@@ -178,6 +178,8 @@ static HB_BOOL amf3_encode_int( amfContext * context, int value )
       tmp[ 2 ] = ( char ) ( ( value >> 8 ) & 0x7f ) | 0x80; /* Shift bits by 8, since we can use all bits in the 4th byte */
       tmp[ 3 ] = ( char ) ( value & 0xff );
    }
+   else
+      return HB_FALSE;
 
    if( ( HB_SIZE ) writeBuffer( context, tmp, tmp_size ) != tmp_size )
       return HB_FALSE;
