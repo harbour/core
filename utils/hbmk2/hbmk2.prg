@@ -1739,8 +1739,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hb_LeftEq( cParamL, "-comp=" )      ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 6 + 1 ), _TARG_COMP )
       CASE hb_LeftEq( cParamL, "-plat=" )      ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 6 + 1 ), _TARG_PLAT )
 #ifdef HB_LEGACY_LEVEL4
-      CASE hb_LeftEq( cParamL, "-compiler=" )  ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 10 + 1 ), _TARG_COMP ) ; LegacyWarning( hbmk, _PAR_NEW( cParam, "", 0 ), "-plat" )
-      CASE hb_LeftEq( cParamL, "-platform=" )  ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 10 + 1 ), _TARG_PLAT ) ; LegacyWarning( hbmk, _PAR_NEW( cParam, "", 0 ), "-comp" )
+      CASE hb_LeftEq( cParamL, "-compiler=" )  ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 10 + 1 ), _TARG_COMP ) ; LegacyWarning( hbmk, _PAR_NEW( cParam, "", 0 ), "-comp" )
+      CASE hb_LeftEq( cParamL, "-platform=" )  ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 10 + 1 ), _TARG_PLAT ) ; LegacyWarning( hbmk, _PAR_NEW( cParam, "", 0 ), "-plat" )
 #endif
       CASE hb_LeftEq( cParamL, "-cpu=" )       ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 5 + 1 ), _TARG_CPU )
       CASE hb_LeftEq( cParamL, "-build=" )     ; hbmk[ _HBMK_cBUILD ] := StrTran( hb_DirSepToOS( SubStr( cParam, 7 + 1 ) ), hb_ps() )
