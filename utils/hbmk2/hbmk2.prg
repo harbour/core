@@ -1477,6 +1477,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL aLIB_BASE_3
    LOCAL aLIB_BASE_3_MT
    LOCAL cLIB_BASE_PCRE
+   LOCAL cLIB_BASE_PCRE2
    LOCAL cLIB_BASE_ZLIB
 
    LOCAL l_cHRBSTUB
@@ -1994,6 +1995,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       aLIB_BASE_3       := { "hbmacro", "hbcplr", "hbpp", "hbcommon" }
       aLIB_BASE_3_MT    := aLIB_BASE_3
       cLIB_BASE_PCRE    := "hbpcre"
+      cLIB_BASE_PCRE2   := "hbpcre2"
       cLIB_BASE_ZLIB    := "hbzlib"
    ELSE
 
@@ -2014,6 +2016,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       aLIB_BASE_3       := { "macro"  , "pp", "common" }
       aLIB_BASE_3_MT    := { "macromt", "pp", "common" }
       cLIB_BASE_PCRE    := "pcrepos"
+      cLIB_BASE_PCRE2   := ""
       cLIB_BASE_ZLIB    := "zlib"
 
       /* NOTE: 'dbfnsx' was added to xhb on 2009-01-08. We chose to prioritize
@@ -2034,7 +2037,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       aLIB_BASE_CPLR   , ;
       aLIB_BASE_3      , ;
       aLIB_BASE_3_MT   , ;
-      { cLIB_BASE_PCRE }, ;
+      { cLIB_BASE_PCRE, cLIB_BASE_PCRE2 }, ;
       { cLIB_BASE_ZLIB } } )
 #endif
 
@@ -4353,6 +4356,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          aLIB_BASE_3 := {}
          aLIB_BASE_3_MT := {}
          cLIB_BASE_PCRE := NIL
+         cLIB_BASE_PCRE2 := NIL
          cLIB_BASE_ZLIB := NIL
 
          hbmk[ _HBMK_aLIBCOREGT ] := {}
@@ -4687,13 +4691,20 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDCASE
 
 #ifdef HARBOUR_SUPPORT
-            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
+            DO CASE
+            CASE ! Empty( cLIB_BASE_PCRE2 ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE2 ) )
+               IF hbmk[ _HBMK_cPLAT ] == "bsd"
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
+               ENDIF
+               AAdd( l_aLIBSYS, "pcre2" )
+               cLIB_BASE_PCRE := NIL
+            CASE ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                IF hbmk[ _HBMK_cPLAT ] == "bsd"
                   AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
                ENDIF
                AAdd( l_aLIBSYS, "pcre" )
                cLIB_BASE_PCRE := NIL
-            ENDIF
+            ENDCASE
             IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
                AAdd( l_aLIBSYS, "z" )
                cLIB_BASE_ZLIB := NIL
@@ -6034,10 +6045,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDCASE
 
 #ifdef HARBOUR_SUPPORT
-            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
+            DO CASE
+            CASE ! Empty( cLIB_BASE_PCRE2 ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE2 ) )
+               AAdd( l_aLIBSYS, "pcre2" )
+               cLIB_BASE_PCRE := NIL
+            CASE ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                AAdd( l_aLIBSYS, "pcre" )
                cLIB_BASE_PCRE := NIL
-            ENDIF
+            ENDCASE
             IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
                AAdd( l_aLIBSYS, "z" )
                cLIB_BASE_ZLIB := NIL
@@ -6165,10 +6180,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #ifdef HARBOUR_SUPPORT
          /* Add system libraries */
          IF ! hbmk[ _HBMK_lSHARED ]
-            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
+            DO CASE
+            CASE ! Empty( cLIB_BASE_PCRE2 ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE2 ) )
+               AAdd( l_aLIBSYS, "pcre2" )
+               cLIB_BASE_PCRE := NIL
+            CASE ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                AAdd( l_aLIBSYS, "pcre" )
                cLIB_BASE_PCRE := NIL
-            ENDIF
+            ENDCASE
             IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
                AAdd( l_aLIBSYS, "z" )
                cLIB_BASE_ZLIB := NIL
@@ -7079,9 +7098,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
 
          IF ! hbmk[ _HBMK_lSHARED ]
-            IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
+            DO CASE
+            CASE ! Empty( cLIB_BASE_PCRE2 ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE2 ) )
+               AAdd( l_aLIBSYS, cLIB_BASE_PCRE2 )
+            CASE ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                AAdd( l_aLIBSYS, cLIB_BASE_PCRE )
-            ENDIF
+            ENDCASE
             IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
                AAdd( l_aLIBSYS, cLIB_BASE_ZLIB )
             ENDIF
