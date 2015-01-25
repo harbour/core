@@ -52,6 +52,7 @@
 HB_EXTERN_BEGIN
 #if defined( __MINGW32__ )
 int _CRT_glob = 0;
+HB_EXPORT_ATTR void __hb_force_reloc( void ) {}
 #elif defined( __DJGPP__ )
 
 #include <crt0.h>

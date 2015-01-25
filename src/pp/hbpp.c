@@ -944,3 +944,7 @@ int main( int argc, char * argv[] )
 #if defined( HB_OS_WIN_CE ) && ! defined( __CEGCC__ )
    #include "hbwmain.c"
 #endif
+
+#if defined( __MINGW32__ )
+   HB_EXPORT_ATTR void __hb_force_reloc( void ) {}
+#endif
