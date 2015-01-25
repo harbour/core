@@ -62,18 +62,21 @@ _DET_INC_HEAD := /pcre2.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
-# Detect pcre
+ifeq ($(HB_HAS_PCRE2),)
 
-_DET_DSP_NAME := pcre
-_DET_VAR_INC_ := HB_INC_PCRE
-_DET_VAR_HAS_ := HB_HAS_PCRE
-_DET_FLT_PLAT :=
-_DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /usr/pkg/include /opt/csw/include
-_DET_INC_LOCL := src/3rd/pcre
-_DET_INC_HEAD := /pcre.h
+   # Detect pcre
 
-include $(TOP)$(ROOT)config/detfun.mk
+   _DET_DSP_NAME := pcre
+   _DET_VAR_INC_ := HB_INC_PCRE
+   _DET_VAR_HAS_ := HB_HAS_PCRE
+   _DET_FLT_PLAT :=
+   _DET_FLT_COMP :=
+   _DET_INC_DEFP := /usr/include /usr/local/include /usr/pkg/include /opt/csw/include
+   _DET_INC_LOCL := src/3rd/pcre
+   _DET_INC_HEAD := /pcre.h
+
+   include $(TOP)$(ROOT)config/detfun.mk
+endif
 
 # Detect GPM mouse
 

@@ -74,7 +74,8 @@ typedef struct
    int         iFlags;
    int         iEFlags;
 #if defined( HB_HAS_PCRE2 )
-   pcre2_code  * re_pcre;
+   pcre2_code       * re_pcre;
+   pcre2_match_data * re_match_data;
 #elif defined( HB_HAS_PCRE )
    pcre        * re_pcre;
 #elif defined( HB_POSIX_REGEX )
@@ -85,24 +86,28 @@ typedef HB_REGEX * PHB_REGEX;
 
 #if defined( HB_HAS_PCRE2 )
    #define HB_REGMATCH              pcre2_match_data
-   #define HB_REGMATCH_SIZE( n )    ( ( n ) * 3 )           /* TODO */
-   #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]      /* TODO */
-   #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]  /* TODO */
+   #define HB_REGMATCH_SIZE( n )    ( n )
+   #define HB_REGMATCH_SO( p, n )   pcre2_get_ovector_pointer( p )[ ( n ) * 2 ]
+   #define HB_REGMATCH_EO( p, n )   pcre2_get_ovector_pointer( p )[ ( n ) * 2 + 1 ]
+   #define HB_REGMATCH_UNSET        PCRE2_UNSET
 #elif defined( HB_HAS_PCRE )
    #define HB_REGMATCH              int
    #define HB_REGMATCH_SIZE( n )    ( ( n ) * 3 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]
    #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]
+   #define HB_REGMATCH_UNSET        ( -1 )
 #elif defined( HB_POSIX_REGEX )
    #define HB_REGMATCH              regmatch_t
    #define HB_REGMATCH_SIZE( n )    ( n )
    #define HB_REGMATCH_SO( p, n )   ( p )[ n ].rm_so
    #define HB_REGMATCH_EO( p, n )   ( p )[ n ].rm_eo
+   #define HB_REGMATCH_UNSET        ( -1 )
 #else
    #define HB_REGMATCH              int
    #define HB_REGMATCH_SIZE( n )    ( ( n ) * 2 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]
    #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]
+   #define HB_REGMATCH_UNSET        ( -1 )
 #endif
 
 typedef void ( * HB_REG_FREE )( PHB_REGEX );

@@ -6,6 +6,7 @@ HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
 C_SOURCES := \
+   chartabs.c \
    p2autopo.c \
    p2compil.c \
    p2config.c \
@@ -30,7 +31,7 @@ C_SOURCES := \
 
 LIBNAME := hbpcre2
 
-ifneq ($(HB_HAS_PCRE_LOCAL2),)
+ifneq ($(HB_HAS_PCRE2_LOCAL),)
 
    HB_CFLAGS += -DPCRE2_CODE_UNIT_WIDTH=8
    # only needed for win/wce, for other platforms this is noop
