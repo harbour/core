@@ -38,6 +38,10 @@ endif
 ifeq ($(filter $(HB_COMPILER_VER),0450 0500 0600 0700),)
    LDFLAGS += -dynamicbase -fixed:no
    DFLAGS += -dynamicbase
+   ifeq ($(HB_COMPILER),pocc64)
+      LDFLAGS += -highentropyva
+      DFLAGS += -highentropyva
+   endif
 endif
 
 RC := porc.exe

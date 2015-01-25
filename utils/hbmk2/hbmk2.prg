@@ -4849,6 +4849,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--dynamicbase" )
                   AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--nxcompat" )
                   AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--dynamicbase" )
+                  IF hbmk[ _HBMK_cCOMP ] == "mingw64"
+                     IF hbmk[ _HBMK_nCOMPVer ] >= 0500  /* binutils 2.25 */
+                        AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--high-entropy-va" )
+                        AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--high-entropy-va" )
+                     ENDIF
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF
@@ -5708,6 +5714,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTL ], "-fixed:no" ) /* is this useful? */
                   AAdd( hbmk[ _HBMK_aOPTD ], "-nxcompat" )
                   AAdd( hbmk[ _HBMK_aOPTD ], "-dynamicbase" )
+                  IF hbmk[ _HBMK_nCOMPVer ] >= 1700 .AND. HBMK_ISCOMP( "msvc64|msvcia64|iccia64" )
+                     AAdd( hbmk[ _HBMK_aOPTL ], "-highentropyva" )
+                     AAdd( hbmk[ _HBMK_aOPTD ], "-highentropyva" )
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF
@@ -5908,6 +5918,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTL ], "-dynamicbase" )
                   AAdd( hbmk[ _HBMK_aOPTL ], "-fixed:no" ) /* is this useful? */
                   AAdd( hbmk[ _HBMK_aOPTD ], "-dynamicbase" )
+                  IF hbmk[ _HBMK_cCOMP ] == "pocc64"
+                     AAdd( hbmk[ _HBMK_aOPTD ], "-highentropyva" )
+                     AAdd( hbmk[ _HBMK_aOPTD ], "-highentropyva" )
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF
