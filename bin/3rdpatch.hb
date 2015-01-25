@@ -38,19 +38,19 @@
  * ORIGIN
  *   Takes one argument, the URL of component's home page. Not currently used,
  *   but greatly helps locating resources regarding the component.
- *   Example: for PCRE, it is `http://pcre.org/'.
+ *   Example: for PCRE2, it is `http://pcre.org/'.
  *
  * VER
  *   Takes one argument, the version number of the component currently in the
  *   Harbour tree. Not currently used, but greatly helps checking whether the
  *   component needs an update.
- *   Example: for PCRE, at the time of this writing, it is `8.02'.
+ *   Example: for PCRE2, at the time of this writing, it is `10.00'.
  *
  * URL
  *   Takes one argument, the URL to the archive to the currently installed
  *   version of the component. Used by 3rdpatch.
- *   Example: for PCRE, at the time of this writing, it is
- *   `https://downloads.sourceforge.net/pcre/pcre/8.34/pcre-8.34.tar.gz'.
+ *   Example: for PCRE2, at the time of this writing, it is
+ *   `https://downloads.sourceforge.net/pcre/pcre2/10.00/pcre2-10.00.tar.gz'.
  *   3rdpatch can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
  *   `tbz2', `tar.xz', `txz' and `zip' archives -- one of these must be chosen.
  *
@@ -66,7 +66,7 @@
  *   Takes one argument, the file name of the diff file containing local changes
  *   needed by Harbour. In `rediff' mode, this parameter is optional; if not
  *   specified, defaults to `$(component).dif'.
- *   Example: for PCRE, it is `pcre.dif'.
+ *   Example: for PCRE2, it is `pcre2.dif'.
  *
  * MAP
  *   Takes one or two arguments, specifying the correspondence of the file names
@@ -82,7 +82,7 @@
  *   # MAP LICENCE
  *
  *      The file named `LICENCE' needs to be brought over from the upstream tree
- *      to the Harbour tree unchanged. In case of PCRE, `MAP LICENCE' being the
+ *      to the Harbour tree unchanged. In case of PCRE2, `MAP LICENCE' being the
  *      first `MAP' line also means that 3rdpatch will use the directory
  *      containing this file as a base for all other files occurring later.
  *      Accordingly, the first `MAP' entry must be flat even on the source side.

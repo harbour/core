@@ -64,7 +64,7 @@
 %define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
 %define hb_x11    export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
 %define hb_ssl    export HB_WITH_OPENSSL=%{?_with_openssl:yes}%{!?_with_openssl:no}
-%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
+%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE2=%{?_with_localpcre2:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
 %define hb_proot  export HB_INSTALL_PKG_ROOT=${RPM_BUILD_ROOT}
 %define hb_bdir   export HB_INSTALL_BIN=${RPM_BUILD_ROOT}%{_bindir}
 %define hb_ldir   export HB_INSTALL_LIB=${RPM_BUILD_ROOT}%{_libdir}/%{name}
@@ -482,6 +482,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbusrrdd.a
 %{_libdir}/%{name}/libhbuddall.a
 %{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
+%{?_with_localpcre2:%{_libdir}/%{name}/libhbpcre2.a}
 %{?_with_localpcre:%{_libdir}/%{name}/libhbpcre.a}
 
 %files lib

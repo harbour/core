@@ -59,8 +59,12 @@ HB_DYN_LIBS := \
    $(_HB_VM) \
    hbmaindllh
 
+ifneq ($(HB_HAS_PCRE2_LOCAL),)
+   HB_DYN_LIBS += hbpcre2
+else
 ifneq ($(HB_HAS_PCRE_LOCAL),)
    HB_DYN_LIBS += hbpcre
+endif
 endif
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    HB_DYN_LIBS += hbzlib

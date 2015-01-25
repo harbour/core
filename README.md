@@ -318,6 +318,7 @@ You can fine-tune the build with these options:
 
     --with static      - link all binaries with static libs
     --with localzlib   - build local copy of zlib library
+    --with localpcre2  - build local copy of pcre2 library
     --with localpcre   - build local copy of pcre library
     --without x11      - do not build components dependent on x11 (gtxwc)
     --without curses   - do not build components dependent on curses (gtcrs)
@@ -391,6 +392,7 @@ the build. Make sure to adjust them to your own directories:
     HB_WITH_CURSES= (on *nix systems and DJGPP, autodetected on both)
     HB_WITH_GPM= (on Linux only)
     HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
+    HB_WITH_PCRE2=C:\pcre2
     HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
     HB_WITH_PNG=C:\libpng (defaults to locally hosted version if not found)
     HB_WITH_SLANG= (on *nix systems)
@@ -1535,7 +1537,7 @@ Supported shells per host platforms:
 
      * HB_WITH_JPEG - jpeglib [multiplatform, free, open-source]
         * <http://ijg.org/>
-     * HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
+     * HB_WITH_PCRE2, HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
         * <http://pcre.org/>
      * HB_WITH_PNG - libpng [multiplatform, free, open-source]
         * <http://libpng.org/pub/png/libpng.html>

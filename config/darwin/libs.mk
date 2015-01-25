@@ -29,10 +29,16 @@ ifneq ($(HB_LINKING_RTL),)
          SYSLIBPATHS += /opt/X11/lib
       endif
    endif
+   ifneq ($(HB_HAS_PCRE2),)
+      ifeq ($(HB_HAS_PCRE2_LOCAL),)
+         SYSLIBS += pcre2
+      endif
+   else
    ifneq ($(HB_HAS_PCRE),)
       ifeq ($(HB_HAS_PCRE_LOCAL),)
          SYSLIBS += pcre
       endif
+   endif
    endif
    ifeq ($(HB_HAS_ZLIB_LOCAL),)
       SYSLIBS += z

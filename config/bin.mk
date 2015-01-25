@@ -65,8 +65,12 @@ else
       hbpp \
       hbcommon
 
+   ifneq ($(HB_HAS_PCRE2_LOCAL),)
+      HB_LIBS_TPL += hbpcre2
+   else
    ifneq ($(HB_HAS_PCRE_LOCAL),)
       HB_LIBS_TPL += hbpcre
+   endif
    endif
    ifneq ($(HB_HAS_ZLIB_LOCAL),)
       HB_LIBS_TPL += hbzlib

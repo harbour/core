@@ -137,6 +137,12 @@ if ( [ ! -f /usr/include/pcre.h ] && \
 then
    INST_PARAM="${INST_PARAM} --with localpcre"
 fi
+if ( [ ! -f /usr/include/pcre2.h ] && \
+     [ ! -f /usr/local/include/pcre2.h ] ) || \
+   [ "$HB_WITH_PCRE2" = 'local' ]
+then
+   INST_PARAM="${INST_PARAM} --with localpcre2"
+fi
 
 TOINST_LST=''
 for i in ${NEED_RPM}
