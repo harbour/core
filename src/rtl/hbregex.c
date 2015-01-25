@@ -255,7 +255,7 @@ HB_FUNC( HB_ATX )
          {
             const char * pszString = hb_itemGetCPtr( pString );
 #if defined( HB_HAS_PCRE2 )
-            HB_REGMATCH * aMatches = pRegEx->re_match_data = pcre2_match_data_create( 1 + 1, NULL );
+            HB_REGMATCH * aMatches = pRegEx->re_match_data = pcre2_match_data_create( 1, NULL );
 #else
             HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
 #endif
