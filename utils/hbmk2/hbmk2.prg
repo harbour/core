@@ -7085,7 +7085,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
 
          IF ! hbmk[ _HBMK_lSHARED ]
-            IF! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
+            IF ! Empty( cLIB_BASE_PCRE ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                AAdd( l_aLIBSYS, cLIB_BASE_PCRE )
             ENDIF
             IF ! Empty( cLIB_BASE_ZLIB ) .AND. hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
