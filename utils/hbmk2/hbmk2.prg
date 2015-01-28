@@ -265,6 +265,8 @@ EXTERNAL hbmk_KEYW
 #define _HBMODE_IS_OLDHB( n )   ( n >= _HBMODE_HB10 .AND. n < _HBMODE_NATIVE )
 #define _HBMODE_IS_XHB( n )     ( n <= _HBMODE_XHB )
 
+#define HB_HAS_OPTION( str )    ( " " + ( str ) + " " $ " " + hb_Version( HB_VERSION_OPTIONS ) + " " )
+
 /* Not implemented yet */
 #define _CONF_RELEASE           0  /* No debug */
 #define _CONF_DEBUG             1  /* Harbour level debug */
@@ -620,8 +622,6 @@ EXTERNAL hbmk_KEYW
 #define _EXIT_STOP              50
 
 #define HBMK_IS_IN( str, list ) ( "|" + ( str ) + "|" $ "|" + ( list ) + "|" )
-
-#define HB_HAS_OPTION( str )    ( " " + ( str ) + " " $ " " + hb_Version( HB_VERSION_OPTIONS ) + " " )
 
 #define HBMK_ISPLAT( list )     HBMK_IS_IN( hbmk[ _HBMK_cPLAT ], list )
 #define HBMK_ISCOMP( list )     HBMK_IS_IN( hbmk[ _HBMK_cCOMP ], list )
