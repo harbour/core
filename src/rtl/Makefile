@@ -328,6 +328,9 @@ ifneq ($(HB_HAS_ZLIB),)
    ifneq ($(HB_HAS_WATT),)
       HB_CFLAGS += -DHB_HAS_WATT $(foreach d,$(HB_HAS_WATT),-I$(d))
    endif
+   ifneq ($(HB_HAS_GPM),)
+      HB_CFLAGS += -DHB_HAS_GPM
+   endif
 
    include $(TOP)$(ROOT)config/lib.mk
    include $(TOP)$(ROOT)config/dir.mk
