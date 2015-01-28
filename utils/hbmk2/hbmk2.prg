@@ -621,6 +621,8 @@ EXTERNAL hbmk_KEYW
 
 #define HBMK_IS_IN( str, list ) ( "|" + ( str ) + "|" $ "|" + ( list ) + "|" )
 
+#define HB_HAS_OPTION( str )    ( " " + ( str ) + " " $ " " + hb_Version( HB_VERSION_OPTIONS ) + " " )
+
 #define HBMK_ISPLAT( list )     HBMK_IS_IN( hbmk[ _HBMK_cPLAT ], list )
 #define HBMK_ISCOMP( list )     HBMK_IS_IN( hbmk[ _HBMK_cCOMP ], list )
 
@@ -1994,16 +1996,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       aLIB_BASE_3       := { "hbmacro", "hbcplr", "hbpp", "hbcommon" }
       aLIB_BASE_3_MT    := aLIB_BASE_3
       DO CASE
-      CASE "pcre2" $ hb_Version( HB_VERSION_OPTIONS ) ; cLIB_BASE_PCRE := "hbpcre2"
-      CASE "pcre1" $ hb_Version( HB_VERSION_OPTIONS ) .OR. ;
-           hbmk[ _HBMK_nHBMODE ] != _HBMODE_NATIVE    ; cLIB_BASE_PCRE := "hbpcre"
-      OTHERWISE                                       ; cLIB_BASE_PCRE := ""
+      CASE HB_HAS_OPTION( "pcre2" ) ; cLIB_BASE_PCRE := "hbpcre2"
+      CASE HB_HAS_OPTION( "pcre1" ) .OR. hbmk[ _HBMK_nHBMODE ] != _HBMODE_NATIVE ; cLIB_BASE_PCRE := "hbpcre"
+      OTHERWISE ; cLIB_BASE_PCRE := ""
       ENDCASE
-      IF "zlib" $ hb_Version( HB_VERSION_OPTIONS )
-         cLIB_BASE_ZLIB := "hbzlib"
-      ELSE
-         cLIB_BASE_ZLIB := ""
-      ENDIF
+      cLIB_BASE_ZLIB    := iif( HB_HAS_OPTION( "zlib" ), "hbzlib", "" )
    ELSE
 
       cDL_Version_Alter := ""
@@ -2737,7 +2734,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
       IF ! Empty( tmp )
-         IF "watt" $ hb_Version( HB_VERSION_OPTIONS )
+         IF HB_HAS_OPTION( "watt" )
             AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
             IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
                AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
@@ -4700,7 +4697,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                IF hbmk[ _HBMK_cPLAT ] == "bsd"
                   AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
                ENDIF
-               AAdd( l_aLIBSYS, iif( "pcre2" $ hb_Version( HB_VERSION_OPTIONS ), "pcre2", "pcre" ) )
+               AAdd( l_aLIBSYS, iif( HB_HAS_OPTION( "pcre2" ), "pcre2", "pcre" ) )
                cLIB_BASE_PCRE := NIL
             ENDIF
             IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
@@ -6044,7 +6041,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
 #ifdef HARBOUR_SUPPORT
             IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
-               AAdd( l_aLIBSYS, iif( "pcre2" $ hb_Version( HB_VERSION_OPTIONS ), "pcre2", "pcre" ) )
+               AAdd( l_aLIBSYS, iif( HB_HAS_OPTION( "pcre2" ), "pcre2", "pcre" ) )
                cLIB_BASE_PCRE := NIL
             ENDIF
             IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
@@ -6175,7 +6172,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          /* Add system libraries */
          IF ! hbmk[ _HBMK_lSHARED ]
             IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
-               AAdd( l_aLIBSYS, iif( "pcre2" $ hb_Version( HB_VERSION_OPTIONS ), "pcre2", "pcre" ) )
+               AAdd( l_aLIBSYS, iif( HB_HAS_OPTION( "pcre2" ), "pcre2", "pcre" ) )
                cLIB_BASE_PCRE := NIL
             ENDIF
             IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
@@ -7175,17 +7172,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                 gpm using dynamic information instead of using
                 build-time default HB_HAS_GPM value.
                 [vszakats] */
-      IF "gpm" $ hb_Version( HB_VERSION_OPTIONS )
-         IF hbmk[ _HBMK_cPLAT ] == "linux"
-            FOR EACH tmp IN l_aLIBHB
-               IF tmp == "gtcrs" .OR. ;
-                  tmp == "gtsln" .OR. ;
-                  tmp == "gttrm"
-                  AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "gpm" )
-                  EXIT
-               ENDIF
-            NEXT
-         ENDIF
+      IF HB_HAS_OPTION( "gpm" ) .AND. hbmk[ _HBMK_cPLAT ] == "linux"
+         FOR EACH tmp IN l_aLIBHB
+            IF tmp == "gtcrs" .OR. ;
+               tmp == "gtsln" .OR. ;
+               tmp == "gttrm"
+               AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "gpm" )
+               EXIT
+            ENDIF
+         NEXT
       ENDIF
 #endif
 
