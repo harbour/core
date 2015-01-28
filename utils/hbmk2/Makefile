@@ -14,13 +14,6 @@ LIBS = $(HB_LIBS_MT_RDD)
 
 HB_PRGFLAGS += -u -i$(TOP)
 
-ifneq ($(HB_HAS_GPM),)
-   HB_PRGFLAGS += -DHB_HAS_GPM
-endif
-ifneq ($(HB_HAS_WATT),)
-   HB_PRGFLAGS += -DHB_HAS_WATT
-endif
-
 # Not possible to override default entry
 # function cleanly when using plain GNU Make
 # to build, so we're using _APPMAIN(), which

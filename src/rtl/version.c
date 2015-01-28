@@ -131,6 +131,33 @@ HB_FUNC( HB_VERSION )
       case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
       case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
       case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
+      case HB_VERSION_OPTIONS:
+      {
+         char pszOptions[ 64 ];
+
+         pszOptions[ 0 ] = '\0';
+
+         #if defined( HB_HAS_PCRE2 )
+            hb_strncat( pszOptions, " pcre2", sizeof( pszOptions ) - 1 );
+         #elif defined( HB_HAS_PCRE )
+            hb_strncat( pszOptions, " pcre1", sizeof( pszOptions ) - 1 );
+         #elif defined( HB_POSIX_REGEX )
+            hb_strncat( pszOptions, " posix_regex", sizeof( pszOptions ) - 1 );
+         #endif
+         #if defined( HB_HAS_ZLIB )
+            hb_strncat( pszOptions, " zlib", sizeof( pszOptions ) - 1 );
+         #endif
+         #if defined( HB_HAS_GPM )
+            hb_strncat( pszOptions, " gpm", sizeof( pszOptions ) - 1 );
+         #endif
+         #if defined( HB_HAS_WATT )
+            hb_strncat( pszOptions, " watt", sizeof( pszOptions ) - 1 );
+         #endif
+
+         hb_retc( pszOptions + ( pszOptions[ 0 ] == ' ' ? 1 : 0 ) );
+
+         break;
+      }
       case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
       case HB_VERSION_MT:             hb_retl( hb_vmIsMt() ); break;
 

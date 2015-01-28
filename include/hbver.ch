@@ -78,8 +78,9 @@
 #define HB_VERSION_CPU              24
 #define HB_VERSION_COMPILER_CPP     25
 #define HB_VERSION_URL_BASE         27
-#define HB_VERSION_URL_SOURCE       28  /* Latest value. Continue from here. */
-#define HB_VERSION_MAX_             28
+#define HB_VERSION_URL_SOURCE       28
+#define HB_VERSION_OPTIONS          29  /* Latest value. Continue from here. */
+#define HB_VERSION_MAX_             29
 
 #if defined( HB_LEGACY_LEVEL5 )
 #define HB_VERSION_CHANGELOG_LAST   HB_VERSION_COMMIT_INFO
