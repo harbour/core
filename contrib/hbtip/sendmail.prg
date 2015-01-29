@@ -4,6 +4,7 @@
  *
  * Copyright 2007 Luiz Rafael Culik Guimaraes and Patrick Mast
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
+ * Copyright 2015 Jean Lefebvre (TLS support) 
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,7 +53,7 @@
 FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
       xTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;
-      lTLS, cSMTPPass, cCharset, cEncoding, cClientHost )
+      lSSL, cSMTPPass, cCharset, cEncoding, cClientHost )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
@@ -74,6 +75,10 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    lNoAuth    -> Optional. Disable Autentication methods
    nTimeOut   -> Optional. Number os ms to wait default 10000 (10s)
    cReplyTo   -> Optional.
+   lSSl       -> Optional. Need SSL at connect time (TLS need this param set to False)
+   cSMTPPass  -> Optional.
+   cCharset   -> Optional.
+   cEncoding  -> Optional.
    cClientHost-> Optional. Domain name of the SMTP client in the format smtp.example.com OR client IP surrounded by brackets as in [200.100.100.5]
                            Note: This parameter is optional for backwards compatibility, but should be provided to comply with RFC 2812.
    */
@@ -90,8 +95,8 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    LOCAL lConnectPlain := .F.
    LOCAL lReturn       := .T.
-   LOCAL lAuthLogin    := .F.
-   LOCAL lAuthPlain    := .F.
+   //LOCAL lAuthLogin    := .F.
+   //LOCAL lAuthPlain    := .F.
    LOCAL lAuthTLS      := .F.
    LOCAL lConnect      := .T.
    LOCAL oPop
@@ -111,7 +116,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    hb_default( @lPopAuth, .T. )
    hb_default( @lNoAuth, .F. )
    hb_default( @nTimeOut, 10000 )
-   hb_default( @lTLS, .F. )
+   hb_default( @lSSL, .F. )
    hb_default( @cSMTPPass, cPass )
 
    // cTo
@@ -181,7 +186,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    IF cPopServer != NIL .AND. lPopAuth
       BEGIN SEQUENCE
-         oUrl1 := TUrl():New( iif( lTLS, "pop3s://", "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
+         oUrl1 := TUrl():New( iif( lSSL, "pop3s://", "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
          oUrl1:cUserid := StrTran( cUser, "&at;", "@" )
          oPop := TIPClientPOP():New( oUrl1, xTrace )
          IF oPop:Open()
@@ -199,7 +204,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    ENDIF
 
    BEGIN SEQUENCE
-      oUrl := TUrl():New( iif( lTLS, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer )
+      oUrl := TUrl():New( iif( lSSL, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer )
    RECOVER
       lReturn := .F.
    END SEQUENCE
@@ -227,26 +232,12 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    IF ! lNoAuth
 
-      IF oInMail:OpenSecure()
+      IF oInMail:OpenSecure( NIL, lSSL)
 
-         DO WHILE .T.
-            IF ! oInMail:GetOk()
-               EXIT
-            ENDIF
-            IF oInMail:cReply == NIL
-               EXIT
-            ELSEIF "LOGIN" $ oInMail:cReply
-               lAuthLogin := .T.
-            ELSEIF "PLAIN" $ oInMail:cReply
-               lAuthPlain := .T.
-            ELSEIF oInMail:HasSSL() .AND. "STARTTLS" $ oInMail:cReply
-               lAuthTLS := .T.
-            ELSEIF Left( oInMail:cReply, 4 ) == "250 "
-               EXIT
-            ENDIF
-         ENDDO
+         lAuthTls := oInMail:lTLS 
+ 
+         IF oInMail:lAuthLogin
 
-         IF lAuthLogin
             IF ! oInMail:Auth( cUser, cSMTPPass )
                lConnect := .F.
             ELSE
@@ -254,7 +245,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
             ENDIF
          ENDIF
 
-         IF lAuthPlain .AND. ! lConnect
+         IF oInMail:lAuthPlain .AND. ! lConnect
             IF ! oInMail:AuthPlain( cUser, cSMTPPass )
                lConnect := .F.
             ENDIF
@@ -290,13 +281,13 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       ENDIF
 
       DO WHILE .T.
-         IF Left( oInMail:cReply, 4 ) == "250 "
-            EXIT
-         ENDIF
          IF ! oInMail:GetOk()
             EXIT
          ENDIF
          IF oInMail:cReply == NIL
+            EXIT
+         ENDIF
+         IF Left( oInMail:cReply, 4 ) == "250 "
             EXIT
          ENDIF
       ENDDO
