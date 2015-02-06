@@ -2691,7 +2691,7 @@ void QTConsole::setFontSize( int iFH, int iFW )
    pQTC->cellX = pQTC->fontWidth;
    pQTC->cellY = pQTC->fontHeight;
 
-   if( pQTC->fRepaint )
+   if( pQTC->fRepaint || image->isNull() )
    {
       hb_gt_qtc_resetBoxCharBitmaps( pQTC );
       if( ! image->isNull() && pQTC->iResizeMode == HB_GTI_RESIZEMODE_ROWS )

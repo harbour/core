@@ -222,6 +222,10 @@
 #  include <sys/types.h>
 #  include <sys/socket.h>
 #  include <sys/ioctl.h>
+#  if defined( HB_OS_BSD )
+#     include <ifaddrs.h>
+#     include <net/if_dl.h>
+#  endif
 #  if defined( HB_OS_BEOS )
 #     include <sys/sockio.h>
 #  endif
@@ -3256,6 +3260,40 @@ static HB_SIZE hb_socketArrayFindInetAddr( const char * szAddr,
    return 0;
 }
 #endif
+#if defined( SIOCGIFCONF ) && defined( HB_OS_BSD ) && \
+    ! defined( SIOCGIFHWADDR ) && ! defined( SIOCGENADDR )
+static char * hb_getMAC( const char * pszIfName )
+{
+   struct ifaddrs * ifap = NULL;
+   char * pszMAC = NULL;
+
+   if( getifaddrs( &ifap ) == 0 && ifap )
+   {
+      struct ifaddrs * ifa = ifap;
+
+      while( ifa != NULL )
+      {
+         if( ifa->ifa_addr != NULL && ifa->ifa_addr->sa_family == AF_LINK &&
+             ifa->ifa_name && strcmp( ifa->ifa_name, pszIfName ) == 0 )
+         {
+            struct sockaddr_dl * sdl = ( struct sockaddr_dl * ) ifa->ifa_addr;
+            unsigned char * data = ( unsigned char * ) LLADDR( sdl );
+            char hwaddr[ 24 ];
+
+            hb_snprintf( hwaddr, sizeof( hwaddr ),
+                         "%02X:%02X:%02X:%02X:%02X:%02X",
+                         data[ 0 ], data[ 1 ], data[ 2 ],
+                         data[ 3 ], data[ 4 ], data[ 5 ] );
+            pszMAC = hb_strdup( hwaddr );
+            break;
+         }
+         ifa = ifa->ifa_next;
+      }
+      freeifaddrs( ifap );
+   }
+   return pszMAC;
+}
+#endif
 
 PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 {
@@ -3444,6 +3482,12 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                                data[ 0 ], data[ 1 ], data[ 2 ],
                                data[ 3 ], data[ 4 ], data[ 5 ] );
                   hb_arraySetC( pItem, HB_SOCKET_IFINFO_HWADDR, hwaddr );
+               }
+#  elif defined( HB_OS_BSD )
+               {
+                  char * hwaddr = hb_getMAC( pifr->ifr_name );
+                  if( hwaddr != NULL )
+                     hb_arraySetCPtr( pItem, HB_SOCKET_IFINFO_HWADDR, hwaddr );
                }
 #  endif
             }

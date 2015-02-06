@@ -97,8 +97,8 @@ HB_FUNC( CSETSAFETY )
       ct_setsafety( hb_parl( 1 ) );
 }
 
-static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE nLen, HB_BOOL bOverwrite, HB_FOFFSET nOffset,
-                           HB_BOOL bTrunc )
+static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE nLen,
+                           HB_BOOL bOverwrite, HB_FOFFSET nOffset, HB_BOOL bTrunc )
 {
    HB_FHANDLE hFile;
    HB_BOOL bOpen = HB_FALSE;

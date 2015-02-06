@@ -386,26 +386,18 @@ HB_FUNC( WIN_PRINTFILERAW )
          {
             if( StartPagePrinter( hPrinter ) != 0 )
             {
-               HB_FHANDLE fhnd = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
-
-               if( fhnd != FS_ERROR )
+               PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
+                                                FO_READ | FO_SHARED | FO_PRIVATE |
+                                                FXO_SHARELOCK, NULL, NULL );
+               if( pFile != NULL )
                {
                   HB_BYTE * pbyBuffer = ( HB_BYTE * ) hb_xgrab( HB_PRINT_BUFFER_SIZE );
                   HB_SIZE nRead;
 
                   nResult = 1;
-                  while( ( nRead = hb_fsReadLarge( fhnd, pbyBuffer, HB_PRINT_BUFFER_SIZE ) ) > 0 )
+                  while( ( nRead = hb_fileRead( pFile, pbyBuffer, HB_PRINT_BUFFER_SIZE, -1 ) ) > 0 )
                   {
                      HB_SIZE nWritten = 0;
-
-#if 0
-                     /* TOFIX: This check seems wrong for any input file
-                               larger than our read buffer, in such case it
-                               will strip Chr( 26 ) from inside the file, which
-                               means it will corrupt it. [vszakats] */
-                     if( pbyBuffer[ nRead - 1 ] == 26 )
-                        --nRead;  /* Skip the EOF character */
-#endif
 
                      while( nWritten < nRead )
                      {
@@ -429,7 +421,7 @@ HB_FUNC( WIN_PRINTFILERAW )
                   }
                   hbwapi_SetLastError( GetLastError() );
 
-                  hb_fsClose( fhnd );
+                  hb_fileClose( pFile );
                   hb_xfree( pbyBuffer );
                }
                else

@@ -4698,17 +4698,14 @@ static void hb_vmEnumStart( int nVars, int nDescend )
       hb_itemMove( &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->oldvalue,
                    pEnum );
 
-      pBase = &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->basevalue;
-      if( HB_IS_BYREF( pBase ) )
-         pBase = hb_itemUnRef( pBase );
-
-      if( HB_IS_COMPLEX( pEnum ) )
-         hb_itemClear( pEnum );
-
       /* set the iterator value */
       pEnum->type = HB_IT_BYREF | HB_IT_ENUM;
-      pEnum->item.asEnum.basePtr = &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->basevalue;
+      pEnum->item.asEnum.basePtr =
+         pBase = &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->basevalue;
       pEnum->item.asEnum.valuePtr = NULL;
+
+      if( HB_IS_BYREF( pBase ) )
+         pBase = hb_itemUnRef( pBase );
 
       if( HB_IS_OBJECT( pBase ) && hb_objHasOperator( pBase, HB_OO_OP_ENUMSTART ) )
       {

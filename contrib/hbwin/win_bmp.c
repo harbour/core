@@ -87,34 +87,39 @@ HB_FUNC( WIN_BITMAPTYPE )
    hb_retni( hbwin_bitmapType( hb_parc( 1 ), hb_parclen( 1 ) ) );
 }
 
+#define HB_MAX_BMP_SIZE       ( 32 * 1024 * 1024 )
+
 HB_FUNC( WIN_LOADBITMAPFILE )
 {
-   HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
-
-   /* Set default return value */
-   hb_retc_null();
-
-   if( fhnd != FS_ERROR )
+   char * pBuffer = NULL;
+   PHB_FILE pFile = hb_fileExtOpen( hb_parcx( 1 ), NULL,
+                                    FO_READ | FO_SHARED | FO_PRIVATE |
+                                    FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                    NULL, NULL );
+   if( pFile != NULL )
    {
-      HB_SIZE nSize = hb_fsSeek( fhnd, 0, FS_END );
+      HB_SIZE nSize = ( HB_SIZE ) hb_fileSize( pFile );
 
       /* TOFIX: No check is done on read data from disk which is a large security hole
                 and may cause GPF even in simple error cases, like invalid file content.
                 [vszakats] */
-      if( nSize > 2 && nSize <= ( 32 * 1024 * 1024 ) )
+      if( nSize > 2 && nSize <= HB_MAX_BMP_SIZE )
       {
-         void * pbmfh = hb_xgrab( nSize + 1 );
+         char * pBuffer = hb_xgrab( nSize + 1 );
 
-         hb_fsSeek( fhnd, 0, FS_SET );
-
-         if( hb_fsReadLarge( fhnd, pbmfh, nSize ) == nSize && hbwin_bitmapType( pbmfh, nSize ) != HB_WIN_BITMAP_UNKNOWN )
-            hb_retclen_buffer( ( char * ) pbmfh, nSize );
+         if( hb_fileReadAt( pFile, pBuffer, nSize, 0 ) != nSize ||
+             hbwin_bitmapType( pBuffer, nSize ) == HB_WIN_BITMAP_UNKNOWN )
+         {
+            hb_xfree( pBuffer );
+            pBuffer = NULL;
+         }
          else
-            hb_xfree( pbmfh );
+            hb_retclen_buffer( pBuffer, nSize );
       }
-
-      hb_fsClose( fhnd );
+      hb_fileClose( pFile );
    }
+   if( pBuffer == NULL )
+      hb_retc_null();
 }
 
 /* Some compilers don't implement these define [jarabal] */
