@@ -21,6 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC ACTIVATESSL
 DYNAMIC ANSIToHtml
 DYNAMIC hb_MailAssemble
 DYNAMIC hb_SendMail
