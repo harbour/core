@@ -12322,6 +12322,11 @@ HB_FUNC( __VMMODULESVERIFY )
    hb_vmVerifySymbols( hb_stackReturnItem() );
 }
 
+HB_FUNC( __BREAKBLOCK )
+{
+   hb_itemReturn( hb_breakBlock() );
+}
+
 HB_FUNC( HB_ARRAYTOPARAMS )
 {
    HB_STACK_TLS_PRELOAD

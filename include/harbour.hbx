@@ -1300,6 +1300,7 @@ DYNAMIC __AtPrompt
 DYNAMIC __Box
 DYNAMIC __BoxD
 DYNAMIC __BoxS
+DYNAMIC __BreakBlock
 DYNAMIC __CapLength
 DYNAMIC __CapMetrics
 DYNAMIC __Caption

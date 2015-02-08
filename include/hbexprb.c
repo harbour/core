@@ -430,8 +430,30 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
+      {
+         PHB_EXPR pExpr = pSelf->value.asCodeblock.pExprList;
+
+         if( pExpr && pExpr->pNext == NULL && pExpr->ExprType == HB_ET_FUNCALL &&
+             pExpr->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
+             pExpr->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_BREAK &&
+             pSelf->value.asCodeblock.pLocals != NULL )
+         {
+            PHB_EXPR pParms = pExpr->value.asFunCall.pParms;
+            if( hb_compExprParamListLen( pParms ) == 1 &&
+                pParms->value.asList.pExprList->ExprType == HB_ET_VARIABLE &&
+                strcmp( pSelf->value.asCodeblock.pLocals->szName,
+                        pParms->value.asList.pExprList->value.asSymbol.name ) == 0 )
+            {
+               HB_COMP_EXPR_FREE( pSelf );
+               pSelf = HB_COMP_EXPR_NEW( HB_ET_FUNCALL );
+               pSelf->value.asFunCall.pParms = NULL;
+               pSelf->value.asFunCall.pFunName = hb_compExprNewFunName( "__BREAKBLOCK", HB_COMP_PARAM );
+               break;
+            }
+         }
          pSelf->value.asCodeblock.flags |= HB_BLOCK_REDUCE;
          break;
+      }
       case HB_EA_ARRAY_AT:
          HB_COMP_ERROR_TYPE( pSelf );
          break;
@@ -4541,9 +4563,9 @@ static HB_BOOL hb_compExprCodeblockPush( PHB_EXPR pSelf, int iEarlyEvalPass, HB_
          pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
       }
 
-      /* store next expression in case the current  will be reduced
+      /* store next expression in case the current will be reduced
        * NOTE: During reduction the expression can be replaced by the
-       *    new one - this will break the linked list of expressions.
+       *       new one - this will break the linked list of expressions.
        */
       pNext = pExpr->pNext; /* store next expression in case the current will be reduced */
       if( ( pSelf->value.asCodeblock.flags & HB_BLOCK_REDUCE ) != 0 ||
