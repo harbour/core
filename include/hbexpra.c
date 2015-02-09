@@ -532,7 +532,8 @@ PHB_EXPR hb_compExprNewArrayAt( PHB_EXPR pArray, PHB_EXPR pIndex, HB_COMP_DECL )
 
 /* List of functions which can be used as static initializers */
 static const char * s_szStaticFun[] = {
-   "HB_MUTEXCREATE"
+   "HB_MUTEXCREATE",
+   "__BREAKBLOCK"
 };
 
 #define STATIC_FUNCTIONS  ( sizeof( s_szStaticFun ) / sizeof( char * ) )
