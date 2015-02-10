@@ -478,7 +478,6 @@ DYNAMIC _Character
 DYNAMIC _Hash
 DYNAMIC _Numeric
 DYNAMIC __ActiveStructure
-DYNAMIC __BreakBlock
 DYNAMIC __CStr_CopyTo
 DYNAMIC __ErrorBlock
 DYNAMIC __init_LONGLONGs
