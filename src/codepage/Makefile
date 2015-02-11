@@ -32,6 +32,7 @@ C_SOURCES := \
    cpeswin.c \
    cpfi850.c \
    cpfr850.c \
+   cpfr850c.c \
    cpfr850m.c \
    cpfriso.c \
    cpfrwin.c \
