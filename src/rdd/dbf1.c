@@ -119,7 +119,7 @@ static HB_ERRCODE hb_dbfErrorRT( DBFAREAP pArea,
    return errCode;
 }
 
-static HB_MAXINT hb_dbfGetRowVer( DBFAREAP pArea, HB_USHORT uiField, HB_MAXINT * pValue )
+static HB_MAXINT hb_dbfRowVerGet( DBFAREAP pArea, HB_USHORT uiField, HB_MAXINT * pValue )
 {
    DBFFIELD dbField;
    HB_BOOL fLck = HB_FALSE;
@@ -151,7 +151,7 @@ static HB_MAXINT hb_dbfGetRowVer( DBFAREAP pArea, HB_USHORT uiField, HB_MAXINT *
    return HB_SUCCESS;
 }
 
-static void hb_dbfSetRowVer( DBFAREAP pArea, HB_USHORT uiField, HB_MAXINT nValue )
+static void hb_dbfRowVerSet( DBFAREAP pArea, HB_USHORT uiField, HB_MAXINT nValue )
 {
    DBFFIELD dbField;
 
@@ -180,7 +180,13 @@ static HB_BOOL hb_dbfIsAutoIncField( LPFIELD pField )
    return HB_FALSE;
 }
 
-static HB_MAXINT hb_dbfGetNextValue( DBFAREAP pArea, HB_USHORT uiField, HB_BOOL fUpdate )
+static void hb_dbfNextValueInit( LPDBFFIELD pDbField )
+{
+   HB_PUT_LE_UINT32( pDbField->bCounter, 1 );
+   pDbField->bStep = 1;
+}
+
+static HB_MAXINT hb_dbfNextValueGet( DBFAREAP pArea, HB_USHORT uiField, HB_BOOL fUpdate )
 {
    HB_MAXINT nValue = 0;
    DBFFIELD dbField;
@@ -201,7 +207,7 @@ static HB_MAXINT hb_dbfGetNextValue( DBFAREAP pArea, HB_USHORT uiField, HB_BOOL 
    return nValue;
 }
 
-static HB_MAXINT hb_dbfSetNextValue( DBFAREAP pArea, HB_USHORT uiField, HB_MAXINT nValue )
+static HB_MAXINT hb_dbfNextValueSet( DBFAREAP pArea, HB_USHORT uiField, HB_MAXINT nValue )
 {
    DBFFIELD dbField;
    HB_MAXINT nPrevValue = 0;
@@ -218,7 +224,7 @@ static HB_MAXINT hb_dbfSetNextValue( DBFAREAP pArea, HB_USHORT uiField, HB_MAXIN
    return nPrevValue;
 }
 
-static int hb_dbfAtoincStep( DBFAREAP pArea, HB_USHORT uiField, int iStep )
+static int hb_dbfNextValueStep( DBFAREAP pArea, HB_USHORT uiField, int iStep )
 {
    DBFFIELD dbField;
    int iPrevStep = 0;
@@ -264,7 +270,7 @@ static void hb_dbfUpdateStampFields( DBFAREAP pArea )
          {
             HB_BYTE * pPtr = pArea->pRecord + pArea->pFieldOffset[ uiCount ];
             if( nRowVer == 0 )
-               hb_dbfGetRowVer( pArea, uiCount, &nRowVer );
+               hb_dbfRowVerGet( pArea, uiCount, &nRowVer );
             HB_PUT_LE_UINT64( pPtr, nRowVer );
             break;
          }
@@ -381,7 +387,7 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
          }
          else if( bNext == HB_BLANK_AUTOINC )
          {
-            HB_MAXINT nValue = hb_dbfGetNextValue( pArea, uiCount, HB_TRUE );
+            HB_MAXINT nValue = hb_dbfNextValueGet( pArea, uiCount, HB_TRUE );
             if( pField->uiType == HB_FT_INTEGER ||
                 pField->uiType == HB_FT_AUTOINC )
             {
@@ -3224,10 +3230,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bDec = ( HB_BYTE ) pField->uiDec;
             if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
-            {
-               HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
-               pThisField->bStep = 1;
-            }
+               hb_dbfNextValueInit( pThisField );
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -3236,10 +3239,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bDec = ( HB_BYTE ) pField->uiDec;
             if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
-            {
-               HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
-               pThisField->bStep = 1;
-            }
+               hb_dbfNextValueInit( pThisField );
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -3250,10 +3250,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bDec = ( HB_BYTE ) pField->uiDec;
             if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
-            {
-               HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
-               pThisField->bStep = 1;
-            }
+               hb_dbfNextValueInit( pThisField );
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -3270,10 +3267,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bDec = ( HB_BYTE ) pField->uiDec;
             if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
-            {
-               HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
-               pThisField->bStep = 1;
-            }
+               hb_dbfNextValueInit( pThisField );
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -3330,8 +3324,6 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = '^';
             pField->uiLen = 8;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
-            HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
-            pThisField->bStep = 1;
             /* HB_PUT_LE_UINT64( pThisField->bReserved2, 0 ); */
             pArea->uiRecordLen += pField->uiLen;
             pArea->fModStamp = HB_TRUE;
@@ -3341,8 +3333,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = '+';
             pField->uiLen = 4;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
-            HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
-            pThisField->bStep = 1;
+            hb_dbfNextValueInit( pThisField );
             pArea->uiRecordLen += pField->uiLen;
             pArea->fAutoInc = HB_TRUE;
             break;
@@ -3760,10 +3751,10 @@ static HB_ERRCODE hb_dbfFieldInfo( DBFAREAP pArea, HB_USHORT uiIndex, HB_USHORT 
                fLck = HB_TRUE;
             }
             if( HB_IS_NUMERIC( pItem ) )
-               nValue = hb_dbfSetNextValue( pArea, uiIndex - 1,
+               nValue = hb_dbfNextValueSet( pArea, uiIndex - 1,
                                             hb_itemGetNInt( pItem ) );
             else
-               nValue = hb_dbfGetNextValue( pArea, uiIndex - 1, HB_FALSE );
+               nValue = hb_dbfNextValueGet( pArea, uiIndex - 1, HB_FALSE );
 
             if( fLck )
                SELF_RAWLOCK( &pArea->area, HEADER_UNLOCK, 0 );
@@ -3783,13 +3774,13 @@ static HB_ERRCODE hb_dbfFieldInfo( DBFAREAP pArea, HB_USHORT uiIndex, HB_USHORT 
                      return HB_FAILURE;
                   fLck = HB_TRUE;
                }
-               iValue = hb_dbfAtoincStep( pArea, uiIndex - 1,
-                                          hb_itemGetNI( pItem ) );
+               iValue = hb_dbfNextValueStep( pArea, uiIndex - 1,
+                                             hb_itemGetNI( pItem ) );
                if( fLck )
                   SELF_RAWLOCK( &pArea->area, HEADER_UNLOCK, 0 );
             }
             else
-               iValue = hb_dbfAtoincStep( pArea, uiIndex - 1, 0 );
+               iValue = hb_dbfNextValueStep( pArea, uiIndex - 1, 0 );
          }
          hb_itemPutNI( pItem, iValue );
          return HB_SUCCESS;
@@ -4948,9 +4939,9 @@ static HB_ERRCODE hb_dbfZap( DBFAREAP pArea )
    for( uiField = 0; uiField < pArea->area.uiFieldCount; uiField++ )
    {
       if( hb_dbfIsAutoIncField( &pArea->area.lpFields[ uiField ] ) )
-         hb_dbfSetNextValue( pArea, uiField, 1 );
+         hb_dbfNextValueSet( pArea, uiField, 1 );
       else if( pArea->area.lpFields[ uiField ].uiType == HB_FT_ROWVER )
-         hb_dbfSetRowVer( pArea, uiField, 0 );
+         hb_dbfRowVerSet( pArea, uiField, 0 );
    }
 
    /* Zap memo file */
