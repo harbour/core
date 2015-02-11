@@ -100,7 +100,7 @@ License:        GPL (plus exception)
 Group:          Development/Languages
 URL:            http://harbour-project.org/
 Source:         %{name}-%{version}.src.tar.gz
-BuildPrereq:    gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
+BuildRequires:  gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name} harbour lib%{name}.so
 BuildRoot:      /tmp/%{name}-%{version}-root
@@ -412,10 +412,11 @@ make install %{?_smp_mflags}
 rm -fR %{!?hb_ldconf:$HB_INSTALL_ETC/ld.so.conf.d}
 rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so*}
 rm -f $RPM_BUILD_ROOT/%{_bindir}/{3rdpatch.hb,check.hb,commit.hb,harbour.ucf}
-rm -f $HB_INSTALL_LIB/libbz2.a \
-      $HB_INSTALL_LIB/libjpeg.a \
-      $HB_INSTALL_LIB/liblibhpdf.a \
+rm -f $HB_INSTALL_LIB/libjpeg.a \
       $HB_INSTALL_LIB/libpng.a \
+      $HB_INSTALL_LIB/libtiff.a \
+      $HB_INSTALL_LIB/libbz2.a \
+      $HB_INSTALL_LIB/liblibhpdf.a \
       $HB_INSTALL_LIB/libsqlite3.a \
       $HB_INSTALL_LIB/libexpat.a \
       $HB_INSTALL_LIB/liblzf.a \
