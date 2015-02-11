@@ -382,11 +382,12 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
          else if( bNext == HB_BLANK_AUTOINC )
          {
             HB_MAXINT nValue = hb_dbfGetNextValue( pArea, uiCount, HB_TRUE );
-            if( pField->uiDec )
-               nValue = ( HB_MAXINT ) hb_numDecConv( ( double ) nValue, -( int ) pField->uiDec );
             if( pField->uiType == HB_FT_INTEGER ||
                 pField->uiType == HB_FT_AUTOINC )
             {
+               if( pField->uiDec )
+                  nValue = ( HB_MAXINT ) hb_numDecConv( ( double ) nValue,
+                                                        -( int ) pField->uiDec );
                if( uiLen == 1 )
                   *pPtr = ( signed char ) nValue;
                else if( uiLen == 2 )
@@ -410,7 +411,9 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
                   pPtr[ --ui ] = ( HB_BYTE ) nValue % 10 + '0';
                   nValue /= 10;
                }
-               while( ui && nValue >= 1 );
+               while( ui && nValue > 0 );
+               while( ui )
+                  pPtr[ --ui ] = ' ';
             }
             pPtr += uiLen;
          }
@@ -3220,6 +3223,11 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = 'N';
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bDec = ( HB_BYTE ) pField->uiDec;
+            if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
+            {
+               HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
+               pThisField->bStep = 1;
+            }
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -3227,6 +3235,11 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = 'F';
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bDec = ( HB_BYTE ) pField->uiDec;
+            if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
+            {
+               HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
+               pThisField->bStep = 1;
+            }
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -3236,6 +3249,11 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pField->uiLen = 8;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bDec = ( HB_BYTE ) pField->uiDec;
+            if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
+            {
+               HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
+               pThisField->bStep = 1;
+            }
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -3251,6 +3269,11 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             }
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bDec = ( HB_BYTE ) pField->uiDec;
+            if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
+            {
+               HB_PUT_LE_UINT32( pThisField->bCounter, 1 );
+               pThisField->bStep = 1;
+            }
             pArea->uiRecordLen += pField->uiLen;
             break;
 
