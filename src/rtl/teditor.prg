@@ -77,7 +77,7 @@ CREATE CLASS HBEditor
    METHOD GotoLine( nRow )                               // Put line nRow at cursor position
    METHOD LineCount()                                    // Returns number of lines in text.
 
-   METHOD GetText()                                      // Returns aText as a string (for MemoEdit())
+   METHOD GetText( lSoftCR )                             // Returns aText as a string (for MemoEdit())
 
    METHOD display()                                      // Redraw a window
    METHOD RefreshLine()                                  // Redraw a line
@@ -281,13 +281,15 @@ METHOD LineLen( nRow ) CLASS HBEditor
    RETURN iif( nRow >= 1 .AND. nRow <= Len( ::aText ), Len( ::aText[ nRow ]:cText ), 0 )
 
 // Converts an array of text lines to a String
-METHOD GetText() CLASS HBEditor
+METHOD GetText( lSoftCR ) CLASS HBEditor
 
    LOCAL cString := ""
    LOCAL cEOL := hb_eol()
+   LOCAL cSoftCR
 
    IF ::lWordWrap
-      AEval( ::aText, {| cItem | cString += cItem:cText + iif( cItem:lSoftCR, "", cEOL ) },, ::naTextLen - 1 )
+      cSoftCR := iif( hb_defaultValue( lSoftCR, .F. ), Chr( 141 ) + Chr( 10 ), "" )
+      AEval( ::aText, {| cItem | cString += cItem:cText + iif( cItem:lSoftCR, cSoftCR, cEOL ) },, ::naTextLen - 1 )
    ELSE
       AEval( ::aText, {| cItem | cString += cItem:cText + cEOL },, ::naTextLen - 1 )
    ENDIF
@@ -1072,7 +1074,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol, nTabWidth )
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
          nLines := MLCount( cLine, nWordWrapCol + 1, nTabWidth )
          FOR nLine := 1 TO nLines
-            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol + 1, nLine, nTabWidth,,, .T. ), ;
+            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol + 1, nLine, nTabWidth,,, .F. ), ;
                                             nLine < nLines ) )
          NEXT
       ELSE

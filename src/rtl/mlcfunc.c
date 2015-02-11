@@ -385,11 +385,15 @@ HB_FUNC( MEMOLINE )
                   }
                }
             }
-            if( nCol < MLC.nLineLength && fPad )
+            if( nCol < MLC.nLineLength )
             {
                nCol = MLC.nLineLength - nCol;
                if( nCol > nSize - nLen )
                   nCol = nSize - nLen;
+               if( ! fPad && nCol > 0 )
+                  nCol = nIndex < MLC.nLen &&
+                         ( MLC.pszString[ nIndex ] == ' ' ||
+                           MLC.pszString[ nIndex ] == HB_CHAR_HT ) ? 1 : 0;
                memset( szLine + nLen, ' ', nCol );
                nLen += nCol;
             }

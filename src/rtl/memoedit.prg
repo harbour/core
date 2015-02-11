@@ -349,7 +349,7 @@ FUNCTION MemoEdit( ;
       nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
       oEd:Edit()
       IF oEd:Changed() .AND. oEd:Saved()
-         cString := oEd:GetText()
+         cString := oEd:GetText( .T. )
       ENDIF
       SetCursor( nOldCursor )
    ENDIF
