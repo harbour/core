@@ -69,6 +69,7 @@ CREATE CLASS HBMemoEditor INHERIT HBEditor
    METHOD xDo( nStatus )                     // Calls xUserFunction saving and restoring cursor position and shape
 
    METHOD MoveCursor( nKey )                 // Redefined to properly managed CTRL-W
+   METHOD InsertState( lInsState )           // Redefined for _SET_SCOREBOARD messages
 
    PROTECTED:
 
@@ -170,16 +171,16 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
    ELSEIF nKey == K_ESC
 
       IF ::lDirty .AND. Set( _SET_SCOREBOARD )
-         cBackScr := SaveScreen( 0, MaxCol() - 18, 0, MaxCol() )
+         cBackScr := SaveScreen( 0, MaxCol() - 19, 0, MaxCol() )
 
          nRow := Row()
          nCol := Col()
-         hb_DispOutAt( 0, MaxCol() - 18, "Abort Edit? (Y/N)" )
-         SetPos( 0, MaxCol() - 1 )
+         hb_DispOutAt( 0, MaxCol() - 19, "Abort Edit? (Y/N)" )
+         SetPos( 0, MaxCol() - 2 )
 
          nYesNoKey := Inkey( 0 )
 
-         RestScreen( 0, MaxCol() - 18, 0, MaxCol(), cBackScr )
+         RestScreen( 0, MaxCol() - 19, 0, MaxCol(), cBackScr )
          SetPos( nRow, nCol )
 
          IF Upper( hb_keyChar( nYesNoKey ) ) == "Y"
@@ -282,16 +283,14 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
    LOCAL xResult := Do( ::xUserFunction, nStatus, ::nRow, ::nCol - 1 )
 
-   ::SetPos( nOldRow, nOldCol )
+   SetPos( nOldRow, nOldCol )
    SetCursor( nOldCur )
 
    RETURN hb_defaultValue( xResult, ME_DEFAULT )
 
 METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
-   IF nKey == K_CTRL_END .OR. ;
-      nKey == K_CTRL_W
-
+   IF nKey == K_CTRL_W
       ::lSaved := .T.
       ::lExitEdit := .T.
    ELSE
@@ -299,6 +298,18 @@ METHOD MoveCursor( nKey ) CLASS HBMemoEditor
    ENDIF
 
    RETURN .F.
+
+METHOD InsertState( lInsState ) CLASS HBMemoEditor
+
+   IF HB_ISLOGICAL( lInsState ) .AND. ::lEditAllow
+      Set( _SET_INSERT, lInsState )
+      SetCursor( iif( lInsState, SC_INSERT, SC_NORMAL ) )
+      IF SET( _SET_SCOREBOARD )
+         hb_dispOutAt( 0, MaxCol() - 19, iif( lInsState, "<insert>", "        " ) )
+      ENDIF
+   ENDIF
+
+   RETURN Self
 
 /* ------------------------------------------ */
 
@@ -346,7 +357,8 @@ FUNCTION MemoEdit( ;
    /* Contrary to what the NG says, any logical value will make it pass
       through without any editing. */
    IF ! HB_ISLOGICAL( xUserFunction )
-      nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
+      nOldCursor := SetCursor()
+      oEd:InsertState( Set( _SET_INSERT ) )
       oEd:Edit()
       IF oEd:Changed() .AND. oEd:Saved()
          cString := oEd:GetText( .T. )
