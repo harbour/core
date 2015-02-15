@@ -1349,6 +1349,29 @@ HB_FUNC( SQLITE3_COLUMN_TEXT )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SQLITE3_LOAD_EXTENSION )
+{
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
+   HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
+
+   if( pHbSqlite3 && pHbSqlite3->db )
+   {
+      char * zErrMsg = NULL;
+
+      hb_retni( sqlite3_load_extension( pHbSqlite3->db, hb_parcx( 2 ), hb_parc( 3 ), &zErrMsg ) );
+
+      hb_storc( zErrMsg, 4 );
+
+      sqlite3_free( zErrMsg );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retni( -1 );
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
+
+}
+
 /**
    Enable Or Disable Extension Loading
 

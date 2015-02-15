@@ -66,8 +66,12 @@ else
          DYNDIRLIST_BASE += src/vm/maindllh
       endif
 
+      ifneq ($(HB_HAS_PCRE2_LOCAL),)
+         DYNDIRLIST_BASE += src/3rd/pcre2
+      else
       ifneq ($(HB_HAS_PCRE_LOCAL),)
          DYNDIRLIST_BASE += src/3rd/pcre
+      endif
       endif
       ifneq ($(HB_HAS_ZLIB_LOCAL),)
          DYNDIRLIST_BASE += src/3rd/zlib
