@@ -1,6 +1,6 @@
 /*
  * xHarbour default error handler and error functions:
- *    xhb_ErrorSys(), __BreakBlock(), __ErrorBlock(),
+ *    xhb_ErrorSys(), __ErrorBlock(),
  *    __MinimalErrorHandler(), xhb_ErrorNew()
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
@@ -462,9 +462,6 @@ STATIC FUNCTION Arguments( oErr )
    ENDIF
 
    RETURN RTrim( cArguments )
-
-FUNCTION __BreakBlock()
-   RETURN {| e | Break( e ) }
 
 FUNCTION __ErrorBlock()
    RETURN {| e | __MinimalErrorHandler( e ) }

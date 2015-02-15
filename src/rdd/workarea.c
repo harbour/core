@@ -269,8 +269,9 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
    HB_USHORT uiItems, uiCount, uiLen, uiDec;
    HB_ERRCODE errCode = HB_SUCCESS;
-   DBFIELDINFO pFieldInfo;
+   DBFIELDINFO dbFieldInfo;
    PHB_ITEM pFieldDesc;
+   const char * szType;
    int iData;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_waCreateFields(%p, %p)", pArea, pStruct ) );
@@ -281,83 +282,125 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
-      pFieldInfo.uiTypeExtended = 0;
+      dbFieldInfo.uiTypeExtended = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
-      pFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
+      dbFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
       iData = hb_arrayGetNI( pFieldDesc, DBS_LEN );
       if( iData < 0 )
          iData = 0;
-      uiLen = pFieldInfo.uiLen = ( HB_USHORT ) iData;
+      uiLen = dbFieldInfo.uiLen = ( HB_USHORT ) iData;
       iData = hb_arrayGetNI( pFieldDesc, DBS_DEC );
       if( iData < 0 )
          iData = 0;
       uiDec = ( HB_USHORT ) iData;
-      pFieldInfo.uiDec = 0;
+      dbFieldInfo.uiDec = 0;
+      szType = hb_arrayGetCPtr( pFieldDesc, DBS_TYPE );
+      iData = HB_TOUPPER( *szType );
 #ifdef DBS_FLAG
-      pFieldInfo.uiFlags = hb_arrayGetNI( pFieldDesc, DBS_FLAG );
+      dbFieldInfo.uiFlags = hb_arrayGetNI( pFieldDesc, DBS_FLAG );
 #else
-      pFieldInfo.uiFlags = 0;
+      dbFieldInfo.uiFlags = 0;
+      while( *++szType )
+      {
+         if( *szType == ':' )
+         {
+            while( *++szType )
+            {
+               switch( HB_TOUPPER( *szType ) )
+               {
+                  case 'N':
+                     dbFieldInfo.uiFlags |= HB_FF_NULLABLE;
+                     break;
+                  case 'B':
+                     dbFieldInfo.uiFlags |= HB_FF_BINARY;
+                     break;
+                  case '+':
+                     dbFieldInfo.uiFlags |= HB_FF_AUTOINC;
+                     break;
+                  case 'Z':
+                     dbFieldInfo.uiFlags |= HB_FF_COMPRESSED;
+                     break;
+                  case 'E':
+                     dbFieldInfo.uiFlags |= HB_FF_ENCRYPTED;
+                     break;
+                  case 'U':
+                     dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+                     break;
+               }
+            }
+            break;
+         }
+      }
 #endif
-      iData = HB_TOUPPER( hb_arrayGetCPtr( pFieldDesc, DBS_TYPE )[ 0 ] );
       switch( iData )
       {
          case 'C':
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen = uiLen;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen = uiLen;
 /* Too many people reported the behavior with code below as a
-   Clipper compatibility bug so I commented this code. Druzus.
+   Clipper compatibility bug so I commented this code, Druzus.
 #ifdef HB_CLP_STRICT
-            pFieldInfo.uiLen = uiLen;
+            dbFieldInfo.uiLen = uiLen;
 #else
-            pFieldInfo.uiLen = uiLen + uiDec * 256;
+            dbFieldInfo.uiLen = uiLen + uiDec * 256;
 #endif
 */
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
             break;
 
          case 'L':
-            pFieldInfo.uiType = HB_FT_LOGICAL;
-            pFieldInfo.uiLen = 1;
+            dbFieldInfo.uiType = HB_FT_LOGICAL;
+            dbFieldInfo.uiLen = 1;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case 'D':
-            pFieldInfo.uiType = HB_FT_DATE;
-            pFieldInfo.uiLen = ( uiLen == 3 || uiLen == 4 ) ? uiLen : 8;
+            dbFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiLen = ( uiLen == 3 || uiLen == 4 ) ? uiLen : 8;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case 'I':
-            pFieldInfo.uiType = HB_FT_INTEGER;
-            pFieldInfo.uiLen = ( ( uiLen > 0 && uiLen <= 4 ) || uiLen == 8 ) ? uiLen : 4;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiLen = ( ( uiLen > 0 && uiLen <= 4 ) || uiLen == 8 ) ? uiLen : 4;
+            dbFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'Y':
-            pFieldInfo.uiType = HB_FT_CURRENCY;
-            pFieldInfo.uiLen = 8;
-            pFieldInfo.uiDec = 4;
+            dbFieldInfo.uiType = HB_FT_CURRENCY;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = 4;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case 'Z':
-            pFieldInfo.uiType = HB_FT_CURDOUBLE;
-            pFieldInfo.uiLen = 8;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_CURDOUBLE;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case '2':
          case '4':
-            pFieldInfo.uiType = HB_FT_INTEGER;
-            pFieldInfo.uiLen = ( HB_USHORT ) ( iData - '0' );
+            dbFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiLen = ( HB_USHORT ) ( iData - '0' );
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'B':
          case '8':
-            pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiLen = 8;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'N':
-            pFieldInfo.uiType = HB_FT_LONG;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_LONG;
+            dbFieldInfo.uiDec = uiDec;
             /* DBASE documentation defines maximum numeric field size as 20
              * but Clipper alows to create longer fileds so I remove this
              * limit, Druzus
@@ -367,77 +410,96 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             */
             if( uiLen > 255 )
                errCode = HB_FAILURE;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'F':
-            pFieldInfo.uiType = HB_FT_FLOAT;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_FLOAT;
+            dbFieldInfo.uiDec = uiDec;
             /* see note above */
             if( uiLen > 255 )
                errCode = HB_FAILURE;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'T':
             if( uiLen == 8 )
             {
-               pFieldInfo.uiType = HB_FT_TIMESTAMP;
-               pFieldInfo.uiLen = 8;
+               dbFieldInfo.uiType = HB_FT_TIMESTAMP;
+               dbFieldInfo.uiLen = 8;
             }
             else
             {
-               pFieldInfo.uiType = HB_FT_TIME;
-               pFieldInfo.uiLen = 4;
+               dbFieldInfo.uiType = HB_FT_TIME;
+               dbFieldInfo.uiLen = 4;
             }
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case '@':
-            pFieldInfo.uiType = HB_FT_TIMESTAMP;
-            pFieldInfo.uiLen = 8;
+            dbFieldInfo.uiType = HB_FT_TIMESTAMP;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case '=':
-            pFieldInfo.uiType = HB_FT_MODTIME;
-            pFieldInfo.uiLen = 8;
+            dbFieldInfo.uiType = HB_FT_MODTIME;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiFlags = 0;
             break;
 
          case '^':
-            pFieldInfo.uiType = HB_FT_ROWVER;
-            pFieldInfo.uiLen = 8;
+            dbFieldInfo.uiType = HB_FT_ROWVER;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiFlags = 0;
             break;
 
          case '+':
-            pFieldInfo.uiType = HB_FT_AUTOINC;
-            pFieldInfo.uiLen = 4;
+            dbFieldInfo.uiType = HB_FT_AUTOINC;
+            dbFieldInfo.uiLen = 4;
+            dbFieldInfo.uiFlags = 0;
             break;
 
          case 'Q':
-            pFieldInfo.uiType = HB_FT_VARLENGTH;
-            pFieldInfo.uiLen = uiLen > 255 ? 255 : ( uiLen == 0 ? 1 : uiLen );
-            break;
-
-         case 'M':
-            pFieldInfo.uiType = HB_FT_MEMO;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiType = HB_FT_VARLENGTH;
+            dbFieldInfo.uiLen = uiLen > 255 ? 255 : ( uiLen == 0 ? 1 : uiLen );
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
             break;
 
          case 'V':
-            pFieldInfo.uiType = HB_FT_ANY;
-            pFieldInfo.uiLen = ( uiLen < 3 || uiLen == 5 ) ? 6 : uiLen;
+            dbFieldInfo.uiType = HB_FT_ANY;
+            dbFieldInfo.uiLen = ( uiLen < 3 || uiLen == 5 ) ? 6 : uiLen;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
+            break;
+
+         case 'M':
+            dbFieldInfo.uiType = HB_FT_MEMO;
+            dbFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
             break;
 
          case 'P':
-            pFieldInfo.uiType = HB_FT_IMAGE;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiType = HB_FT_IMAGE;
+            dbFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_BINARY;
             break;
 
          case 'W':
-            pFieldInfo.uiType = HB_FT_BLOB;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiType = HB_FT_BLOB;
+            dbFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_BINARY;
             break;
 
          case 'G':
-            pFieldInfo.uiType = HB_FT_OLE;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiType = HB_FT_OLE;
+            dbFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_BINARY;
             break;
 
          default:
@@ -451,7 +513,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
          return errCode;
       }
       /* Add field */
-      else if( SELF_ADDFIELD( pArea, &pFieldInfo ) != HB_SUCCESS )
+      else if( SELF_ADDFIELD( pArea, &dbFieldInfo ) != HB_SUCCESS )
          return HB_FAILURE;
    }
    return HB_SUCCESS;
@@ -488,94 +550,140 @@ static HB_ERRCODE hb_waFieldInfo( AREAP pArea, HB_USHORT uiIndex, HB_USHORT uiTy
          break;
 
       case DBS_TYPE:
+      {
+         HB_USHORT uiFlags = 0;
+         char szType[ 8 ];
+         char cType;
+         int iLen = 0;
+
          switch( pField->uiType )
          {
             case HB_FT_STRING:
-               hb_itemPutC( pItem, "C" );
+               cType = 'C';
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_COMPRESSED |
+                         HB_FF_ENCRYPTED | HB_FF_UNICODE;
                break;
 
             case HB_FT_LOGICAL:
-               hb_itemPutC( pItem, "L" );
+               cType = 'L';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_DATE:
-               hb_itemPutC( pItem, "D" );
+               cType = 'D';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_LONG:
-               hb_itemPutC( pItem, "N" );
+               cType = 'N';
+               uiFlags = HB_FF_NULLABLE | HB_FF_AUTOINC;
                break;
 
             case HB_FT_INTEGER:
-               hb_itemPutC( pItem, "I" );
+               cType = 'I';
+               uiFlags = HB_FF_NULLABLE | HB_FF_AUTOINC;
                break;
 
             case HB_FT_DOUBLE:
-               hb_itemPutC( pItem, "B" );
+               cType = 'B';
+               uiFlags = HB_FF_NULLABLE | HB_FF_AUTOINC;
                break;
 
             case HB_FT_FLOAT:
-               hb_itemPutC( pItem, "F" );
+               cType = 'F';
+               uiFlags = HB_FF_NULLABLE | HB_FF_AUTOINC;
                break;
 
             case HB_FT_TIME:
-               hb_itemPutC( pItem, "T" );
+               cType = 'T';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_TIMESTAMP:
-               hb_itemPutC( pItem, "@" );
+               cType = '@';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_MODTIME:
-               hb_itemPutC( pItem, "=" );
+               cType = '=';
                break;
 
             case HB_FT_ROWVER:
-               hb_itemPutC( pItem, "^" );
+               cType = '^';
                break;
 
             case HB_FT_AUTOINC:
-               hb_itemPutC( pItem, "+" );
+               cType = '+';
+               uiFlags = HB_FF_AUTOINC;
                break;
 
             case HB_FT_CURRENCY:
-               hb_itemPutC( pItem, "Y" );
+               cType = 'Y';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_CURDOUBLE:
-               hb_itemPutC( pItem, "Z" );
+               cType = 'Z';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_VARLENGTH:
-               hb_itemPutC( pItem, "Q" );
-               break;
-
-            case HB_FT_MEMO:
-               hb_itemPutC( pItem, "M" );
+               cType = 'Q';
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_COMPRESSED |
+                         HB_FF_ENCRYPTED | HB_FF_UNICODE;
                break;
 
             case HB_FT_ANY:
-               hb_itemPutC( pItem, "V" );
+               cType = 'V';
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_COMPRESSED |
+                         HB_FF_ENCRYPTED | HB_FF_UNICODE;
+               break;
+
+            case HB_FT_MEMO:
+               cType = 'M';
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_COMPRESSED |
+                         HB_FF_ENCRYPTED | HB_FF_UNICODE;
                break;
 
             case HB_FT_IMAGE:
-               hb_itemPutC( pItem, "P" );
+               cType = 'P';
                break;
 
             case HB_FT_BLOB:
-               hb_itemPutC( pItem, "W" );
+               cType = 'W';
                break;
 
             case HB_FT_OLE:
-               hb_itemPutC( pItem, "G" );
+               cType = 'G';
                break;
 
             default:
-               hb_itemPutC( pItem, "U" );
+               cType = 'U';
                break;
          }
+         szType[ iLen++ ] = cType;
+         uiFlags &= pField->uiFlags;
+         if( uiFlags != 0 )
+         {
+#ifndef DBS_FLAG
+            szType[ iLen++ ] = ':';
+            if( uiFlags & HB_FF_NULLABLE )
+               szType[ iLen++ ] = 'N';
+            if( uiFlags & HB_FF_BINARY )
+               szType[ iLen++ ] = 'B';
+            if( uiFlags & HB_FF_AUTOINC )
+               szType[ iLen++ ] = '+';
+            if( uiFlags & HB_FF_COMPRESSED )
+               szType[ iLen++ ] = 'Z';
+            if( uiFlags & HB_FF_ENCRYPTED )
+               szType[ iLen++ ] = 'E';
+            if( uiFlags & HB_FF_UNICODE )
+               szType[ iLen++ ] = 'U';
+#endif
+         }
+         hb_itemPutCL( pItem, szType, iLen );
          break;
-
+      }
       case DBS_LEN:
          hb_itemPutNL( pItem, pField->uiLen );
          break;

@@ -1514,9 +1514,10 @@ static HB_ERRCODE adsAppend( ADSAREAP pArea, HB_BOOL fUnLockAll )
 static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 {
    HB_USHORT uiItems, uiCount, uiLen, uiDec;
+   HB_ERRCODE errCode = HB_SUCCESS;
    DBFIELDINFO dbFieldInfo;
    PHB_ITEM pFieldDesc;
-   const char *szFieldType;
+   const char * szFieldType, * szType;
    int iData, iNameLen;
 
    HB_TRACE( HB_TR_DEBUG, ( "adsCreateFields(%p, %p)", pArea, pStruct ) );
@@ -1529,274 +1530,380 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
       dbFieldInfo.uiTypeExtended = 0;
-      dbFieldInfo.uiFlags = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
-      dbFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, 1 );
-      iData = hb_arrayGetNI( pFieldDesc, 3 );
+      dbFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
+      iData = hb_arrayGetNI( pFieldDesc, DBS_LEN );
       if( iData < 0 )
          iData = 0;
       uiLen = dbFieldInfo.uiLen = ( HB_USHORT ) iData;
-      iData = hb_arrayGetNI( pFieldDesc, 4 );
+      iData = hb_arrayGetNI( pFieldDesc, DBS_DEC );
       if( iData < 0 )
          iData = 0;
       uiDec = ( HB_USHORT ) iData;
       dbFieldInfo.uiDec = 0;
-      szFieldType = hb_arrayGetCPtr( pFieldDesc, 2 );
+      szFieldType = szType = hb_arrayGetCPtr( pFieldDesc, DBS_TYPE );
       iNameLen = ( int ) strlen( szFieldType );
       iData = HB_TOUPPER( szFieldType[ 0 ] );
+#ifdef DBS_FLAG
+      dbFieldInfo.uiFlags = hb_arrayGetNI( pFieldDesc, DBS_FLAG );
+#else
+      dbFieldInfo.uiFlags = 0;
+      while( *++szType )
+      {
+         if( *szType == ':' )
+         {
+            iNameLen = 1;
+            while( *++szType )
+            {
+               switch( HB_TOUPPER( *szType ) )
+               {
+                  case 'N':
+                     dbFieldInfo.uiFlags |= HB_FF_NULLABLE;
+                     break;
+                  case 'B':
+                     dbFieldInfo.uiFlags |= HB_FF_BINARY;
+                     break;
+                  case '+':
+                     dbFieldInfo.uiFlags |= HB_FF_AUTOINC;
+                     break;
+                  case 'Z':
+                     dbFieldInfo.uiFlags |= HB_FF_COMPRESSED;
+                     break;
+                  case 'E':
+                     dbFieldInfo.uiFlags |= HB_FF_ENCRYPTED;
+                     break;
+                  case 'U':
+                     dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+                     break;
+               }
+            }
+            break;
+         }
+      }
+#endif
+      while( iNameLen > 0 && szFieldType[ iNameLen - 1 ] == ' ' )
+         --iNameLen;
+
+      if( iNameLen > 1 )
+      {
+         if ( ! hb_strnicmp( szFieldType, "autoinc", 2 ) )
+            iData = '+';
+         else if ( ! hb_strnicmp( szFieldType, "binary", 2 ) )
+            iData = 'W';
+         else if( ! hb_strnicmp( szFieldType, "character", 2 ) )
+            iData = 'C';
+#if ADS_LIB_VERSION >= 710
+         else if ( ! hb_strnicmp( szFieldType, "cicharacter", 2 ) )
+            iData = 'c';
+#endif
+         else if ( ! hb_strnicmp( szFieldType, "curdouble", 2 ) )
+            iData = 'Z';
+         else if( ! hb_strnicmp( szFieldType, "date", 2 ) )
+            iData = 'D';
+         else if( ! hb_strnicmp( szFieldType, "double", 2 ) )
+            iData = 'B';
+         else if ( ! hb_strnicmp( szFieldType, "image", 2 ) )
+            iData = 'P';
+         else if ( ! hb_strnicmp( szFieldType, "integer", 2 ) )
+            iData = 'I';
+         else if ( ! hb_strnicmp( szFieldType, "logical", 3 ) )
+            iData = 'L';
+#if ADS_LIB_VERSION >= 700
+         else if ( ! hb_strnicmp( szFieldType, "longlong", 3 ) )
+         {
+            iData = 'I';
+            uiLen = 8;
+         }
+#endif
+         else if ( ! hb_strnicmp( szFieldType, "memo", 3 ) )
+            iData = 'M';
+#if ADS_LIB_VERSION >= 800
+         else if ( ! hb_strnicmp( szFieldType, "modtime", 3 ) )
+            iData = '=';
+#endif
+#if ADS_LIB_VERSION >= 700
+         else if ( ! hb_strnicmp( szFieldType, "money", 3 ) )
+            iData = 'Y';
+#endif
+         else if ( ! hb_strnicmp( szFieldType, "numeric", 2 ) )
+            iData = 'N';
+#if ADS_LIB_VERSION >= 1000
+         else if ( ! hb_strnicmp( szFieldType, "nchar", 2 ) )
+         {
+            iData = 'C';
+            dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+         }
+         else if ( ! hb_strnicmp( szFieldType, "nmemo", 2 ) )
+         {
+            iData = 'M';
+            dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+         }
+         else if ( ! hb_strnicmp( szFieldType, "nvarchar", 2 ) )
+         {
+            iData = 'Q';
+            dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+         }
+#endif
+         else if ( ! hb_strnicmp( szFieldType, "shortdate", 6 ) )
+         {
+            iData = 'D';
+#if ADS_LIB_VERSION >= 900
+            uiLen = ( pArea->iFileType == ADS_ADT ||
+                      pArea->iFileType == ADS_VFP ) ? 4 : 3;
+#else
+            uiLen = pArea->iFileType == ADS_ADT ? 4 : 3;
+#endif
+         }
+         else if ( ! hb_strnicmp( szFieldType, "shortint", 6 ) )
+         {
+            iData = 'I';
+            uiLen = 2;
+         }
+         else if ( ! hb_stricmp( szFieldType, "time" ) )
+         {
+            iData = 'T';
+            uiLen = 4;
+         }
+         else if ( ! hb_strnicmp( szFieldType, "timestamp", 5 ) )
+         {
+            iData = '@';
+            uiLen = 8;
+         }
+         else if ( ! hb_strnicmp( szFieldType, "raw", 2 ) )
+         {
+            iData = 'C';
+            dbFieldInfo.uiFlags |= HB_FF_BINARY;
+         }
+         else if ( ! hb_strnicmp( szFieldType, "rowversion", 2 ) )
+            iData = '^';
+         else if ( ! hb_strnicmp( szFieldType, "varchar", 4 ) )
+         {
+            iData = 'Q';
+         }
+         else if ( ! hb_strnicmp( szFieldType, "varbinary", 4 ) )
+         {
+            iData = 'Q';
+            dbFieldInfo.uiFlags |= HB_FF_BINARY;
+         }
+         else
+            iData = 0;
+      }
 
       switch( iData )
       {
-         case 'C':
-         case 'Z':
-            if( ( iNameLen == 1 && iData == 'C' ) || ! hb_strnicmp( szFieldType, "character", 2 ) )
+#if ADS_LIB_VERSION >= 710
+         case 'c':
+            if( pArea->iFileType == ADS_ADT )
             {
                dbFieldInfo.uiType = HB_FT_STRING;
-               dbFieldInfo.uiTypeExtended = ADS_STRING;
+               dbFieldInfo.uiTypeExtended = ADS_CISTRING;
                dbFieldInfo.uiLen = uiLen;
+               dbFieldInfo.uiFlags = 0;
             }
-            else if( pArea->iFileType == ADS_ADT &&
-                     ( ! hb_strnicmp( szFieldType, "curdouble", 2 ) || ( iNameLen == 1 && iData == 'Z' ) ) )
+            else
+               errCode = HB_FAILURE;
+            break;
+#endif
+
+         case 'C':
+            dbFieldInfo.uiType = HB_FT_STRING;
+#if ADS_LIB_VERSION >= 1000
+            if( dbFieldInfo.uiFlags & HB_FF_UNICODE )
+               dbFieldInfo.uiTypeExtended = ADS_NCHAR;
+            else
+#endif
+            if( dbFieldInfo.uiFlags & HB_FF_BINARY )
+               dbFieldInfo.uiTypeExtended = ADS_RAW;
+            else
+               dbFieldInfo.uiTypeExtended = ADS_STRING;
+            dbFieldInfo.uiLen = uiLen;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
+            break;
+
+         case 'M':
+            dbFieldInfo.uiType = HB_FT_MEMO;
+#if ADS_LIB_VERSION >= 1000
+            if( dbFieldInfo.uiFlags & HB_FF_UNICODE )
+               dbFieldInfo.uiTypeExtended = ADS_NMEMO;
+            else
+#endif
+            if( dbFieldInfo.uiFlags & HB_FF_BINARY )
+               dbFieldInfo.uiTypeExtended = ADS_BINARY;
+            else
+               dbFieldInfo.uiTypeExtended = ADS_MEMO;
+#if ADS_LIB_VERSION >= 900
+            if( pArea->iFileType == ADS_VFP )
+                  dbFieldInfo.uiLen = 4;
+            else
+#endif
+               dbFieldInfo.uiLen = pArea->iFileType == ADS_ADT ? 9 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
+            break;
+
+         case 'Q':
+            dbFieldInfo.uiType = HB_FT_VARLENGTH;
+#if ADS_LIB_VERSION >= 1000
+            if( dbFieldInfo.uiFlags & HB_FF_UNICODE )
+               dbFieldInfo.uiTypeExtended = ADS_NVARCHAR;
+            else
+#endif
+#if ADS_LIB_VERSION >= 900
+            if( pArea->iFileType == ADS_VFP )
+            {
+               if( dbFieldInfo.uiFlags & HB_FF_BINARY )
+                  dbFieldInfo.uiTypeExtended = ADS_VARBINARY_FOX;
+               else
+                  dbFieldInfo.uiTypeExtended = ADS_VARCHAR_FOX;
+            }
+            else
+#endif
+            /* TOCHECK: I've used ADS_VARBINARY_FOX here since there is no
+                        better constant for this [Mindaugas] */
+            if( dbFieldInfo.uiFlags & HB_FF_BINARY )
+#if ADS_LIB_VERSION >= 900
+               dbFieldInfo.uiTypeExtended = ADS_VARBINARY_FOX;
+#else
+               dbFieldInfo.uiTypeExtended = ADS_RAW;
+#endif
+            else
+               dbFieldInfo.uiTypeExtended = ADS_VARCHAR;
+            dbFieldInfo.uiLen = uiLen;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
+            break;
+
+         case 'W':
+            dbFieldInfo.uiType = HB_FT_BLOB;
+            dbFieldInfo.uiTypeExtended = ADS_BINARY;
+            dbFieldInfo.uiFlags = HB_FF_BINARY;
+#if ADS_LIB_VERSION >= 900
+            if( pArea->iFileType == ADS_VFP )
+                  dbFieldInfo.uiLen = 4;
+            else
+#endif
+               dbFieldInfo.uiLen = pArea->iFileType == ADS_ADT ? 9 : 10;
+            break;
+
+         case 'P':
+            dbFieldInfo.uiType = HB_FT_IMAGE;
+            dbFieldInfo.uiTypeExtended = ADS_IMAGE;
+            dbFieldInfo.uiFlags = HB_FF_BINARY;
+#if ADS_LIB_VERSION >= 900
+            if( pArea->iFileType == ADS_VFP )
+                  dbFieldInfo.uiLen = 4;
+            else
+#endif
+               dbFieldInfo.uiLen = pArea->iFileType == ADS_ADT ? 9 : 10;
+            break;
+
+         case 'D':
+            dbFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT || uiLen == 4 ) ?
+                                4 : ( uiLen == 3 ? 3 : 8 );
+            dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 3 ?
+                                         ADS_COMPACTDATE : ADS_DATE;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+            break;
+
+         case 'L':
+            dbFieldInfo.uiType = HB_FT_LOGICAL;
+            dbFieldInfo.uiTypeExtended = ADS_LOGICAL;
+            dbFieldInfo.uiLen = 1;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+            break;
+
+         case 'T':
+            if( pArea->iFileType == ADS_ADT && uiLen != 8 )
+            {
+               dbFieldInfo.uiType = HB_FT_TIME;
+               dbFieldInfo.uiTypeExtended = ADS_TIME;
+               dbFieldInfo.uiLen = 4;
+               dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+               break;
+            }
+            /* no break */
+
+         case '@':
+#if ADS_LIB_VERSION >= 900
+            if( pArea->iFileType == ADS_ADT || pArea->iFileType == ADS_VFP )
+#else
+            if( pArea->iFileType == ADS_ADT )
+#endif
+            {
+               dbFieldInfo.uiType = HB_FT_TIMESTAMP;
+               dbFieldInfo.uiTypeExtended = ADS_TIMESTAMP;
+               dbFieldInfo.uiLen = 8;
+               dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+            }
+            else
+               errCode = HB_FAILURE;
+            break;
+
+         case 'N':
+            dbFieldInfo.uiType = HB_FT_LONG;
+            dbFieldInfo.uiTypeExtended = ADS_NUMERIC;
+            dbFieldInfo.uiLen = uiLen;
+            dbFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+            if( uiLen > 32 )
+               errCode = HB_FAILURE;
+            break;
+
+         case 'I':
+            dbFieldInfo.uiType = HB_FT_INTEGER;
+#if ADS_LIB_VERSION >= 700
+            dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT && uiLen == 2 ) ?
+                                2 : ( uiLen == 8 ? 8 : 4 );
+            dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 2 ? ADS_SHORTINT :
+                                         ( dbFieldInfo.uiLen == 8 ? ADS_LONGLONG :
+                                           ADS_INTEGER );
+#else
+            dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT && uiLen == 2 ) ? 2 : 4;
+            dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 2 ?
+                                         ADS_SHORTINT : ADS_INTEGER;
+#endif
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+            break;
+
+#if ADS_LIB_VERSION >= 700
+         case 'Y':
+            dbFieldInfo.uiType = HB_FT_CURRENCY;
+            dbFieldInfo.uiTypeExtended = ADS_MONEY;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = 4;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+            break;
+#endif
+
+         case 'Z':
+            if( pArea->iFileType == ADS_ADT )
             {
                dbFieldInfo.uiType = HB_FT_CURDOUBLE;
                dbFieldInfo.uiTypeExtended = ADS_CURDOUBLE;
                dbFieldInfo.uiLen = 8;
                dbFieldInfo.uiDec = uiDec;
-            }
-#if ADS_LIB_VERSION >= 710
-            else if( pArea->iFileType == ADS_ADT && ! hb_strnicmp( szFieldType, "cicharacter", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_STRING;
-               dbFieldInfo.uiTypeExtended = ADS_CISTRING;
-               dbFieldInfo.uiLen = uiLen;
-            }
-#endif
-            else
-               return HB_FAILURE;
-            break;
-
-         case 'N':
-            if( iNameLen == 1 || ! hb_strnicmp( szFieldType, "numeric", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_LONG;
-               dbFieldInfo.uiTypeExtended = ADS_NUMERIC;
-               dbFieldInfo.uiDec = uiDec;
-               if( uiLen > 32 )
-                  return HB_FAILURE;
-            }
-#if ADS_LIB_VERSION >= 1000
-            else if( ! hb_strnicmp( szFieldType, "nchar", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_STRING;
-               dbFieldInfo.uiFlags = HB_FF_UNICODE;
-               dbFieldInfo.uiTypeExtended = ADS_NCHAR;
-               dbFieldInfo.uiLen = uiLen;
-            }
-            else if( ! hb_strnicmp( szFieldType, "nvarchar", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_VARLENGTH;
-               dbFieldInfo.uiFlags = HB_FF_UNICODE;
-               dbFieldInfo.uiTypeExtended = ADS_NVARCHAR;
-               dbFieldInfo.uiLen = uiLen;
-            }
-            else if( ! hb_strnicmp( szFieldType, "nmemo", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_MEMO;
-               dbFieldInfo.uiFlags = HB_FF_UNICODE;
-               dbFieldInfo.uiTypeExtended = ADS_NMEMO;
-               dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT ) ? 9 : ( uiLen == 4 ? 4 : 10 );
-            }
-#endif
-            else
-               return HB_FAILURE;
-            break;
-
-         case 'D':
-            if( iNameLen == 1 || ! hb_strnicmp( szFieldType, "date", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_DATE;
-               dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT || uiLen == 4 ) ? 4 : ( uiLen == 3 ? 3 : 8 );
-               dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 3 ? ADS_COMPACTDATE : ADS_DATE;
-            }
-            else if( ! hb_strnicmp( szFieldType, "double", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_DOUBLE;
-               dbFieldInfo.uiTypeExtended = ADS_DOUBLE;
-               dbFieldInfo.uiLen = 8;
-               dbFieldInfo.uiDec = uiDec;
-               if( uiDec > 20 )
-                  return HB_FAILURE;
+               dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             }
             else
-               return HB_FAILURE;
+               errCode = HB_FAILURE;
             break;
 
-         case 'L':
-            if( iNameLen == 1 || ! hb_strnicmp( szFieldType, "logical", 3 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_LOGICAL;
-               dbFieldInfo.uiTypeExtended = ADS_LOGICAL;
-               dbFieldInfo.uiLen = 1;
-            }
-#if ADS_LIB_VERSION >= 700
-            else if( ! hb_strnicmp( szFieldType, "longlong", 3 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_INTEGER;
-               dbFieldInfo.uiTypeExtended = ADS_LONGLONG;
-               dbFieldInfo.uiLen = 8;
-            }
-#endif
-            else
-               return HB_FAILURE;
-            break;
-
-         case 'M':
-         case '=':
-         case 'Y':
-            if( ( iNameLen == 1 && iData == 'M' ) || ! hb_strnicmp( szFieldType, "memo", 3 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_MEMO;
-               dbFieldInfo.uiTypeExtended = ADS_MEMO;
-               dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT ) ? 9 : ( uiLen == 4 ? 4 : 10 );
-            }
-#if ADS_LIB_VERSION >= 700
-            else if( ! hb_strnicmp( szFieldType, "money", 3 ) || ( iNameLen == 1 && iData == 'Y' ) )
-            {
-               dbFieldInfo.uiType = HB_FT_CURRENCY;
-               dbFieldInfo.uiTypeExtended = ADS_MONEY;
-               dbFieldInfo.uiLen = 8;
-               dbFieldInfo.uiDec = 4;
-            }
-#endif
-#if ADS_LIB_VERSION >= 800
-            else if( pArea->iFileType == ADS_ADT &&
-                     ( ! hb_strnicmp( szFieldType, "modtime", 3 ) || ( iNameLen == 1 && iData == '=' ) ) )
-            {
-               dbFieldInfo.uiType = HB_FT_MODTIME;
-               dbFieldInfo.uiTypeExtended = ADS_MODTIME;
-               dbFieldInfo.uiLen = 8;
-            }
-#endif
-            else
-               return HB_FAILURE;
-            break;
-
-         case 'I':
-         case 'P':
-            if( ( iNameLen == 1 && iData == 'I' ) || ! hb_strnicmp( szFieldType, "integer", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_INTEGER;
-#if ADS_LIB_VERSION >= 700
-               dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT && uiLen == 2 ) ? 2 : ( uiLen == 8 ? 8 : 4 );
-               dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 4 ? ADS_INTEGER :
-                                            ( dbFieldInfo.uiLen == 2 ? ADS_SHORTINT : ADS_LONGLONG );
-#else
-               dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT && uiLen == 2 ) ? 2 : 4;
-               dbFieldInfo.uiTypeExtended = dbFieldInfo.uiLen == 4 ? ADS_INTEGER : ADS_SHORTINT;
-#endif
-            }
-            else if( ! hb_strnicmp( szFieldType, "image", 2 ) || ( iNameLen == 1 && iData == 'P' ) )
-            {
-               dbFieldInfo.uiType = HB_FT_IMAGE;
-               dbFieldInfo.uiTypeExtended = ADS_IMAGE;
-               dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT ) ? 9 : 10;
-               dbFieldInfo.uiFlags = HB_FF_BINARY;
-            }
-            else
-               return HB_FAILURE;
-            break;
-
-         case 'S':
-            if( pArea->iFileType != ADS_ADT && ! hb_strnicmp( szFieldType, "shortdate", 6 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_DATE;
-               dbFieldInfo.uiLen = 3;
-               dbFieldInfo.uiTypeExtended = ADS_COMPACTDATE;
-            }
-            else if( pArea->iFileType == ADS_ADT && ! hb_strnicmp( szFieldType, "shortint", 6 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_INTEGER;
-               dbFieldInfo.uiTypeExtended = ADS_SHORTINT;
-               dbFieldInfo.uiLen = 2;
-            }
-            else
-               return HB_FAILURE;
-            break;
-
+         case '8':
          case 'B':
-         case 'W':
-            if( iNameLen == 1 && iData == 'B' )
-            {
-               dbFieldInfo.uiType = HB_FT_DOUBLE;
-               dbFieldInfo.uiTypeExtended = ADS_DOUBLE;
-               dbFieldInfo.uiLen = 8;
-               dbFieldInfo.uiDec = uiDec;
-               if( uiDec > 20 )
-                  return HB_FAILURE;
-            }
-            else if( ! hb_strnicmp( szFieldType, "binary", 2 ) || ( iNameLen == 1 && iData == 'W' ) )
-            {
-               dbFieldInfo.uiType = HB_FT_BLOB;
-               dbFieldInfo.uiTypeExtended = ADS_BINARY;
-               dbFieldInfo.uiFlags = HB_FF_BINARY;
-               if( pArea->iFileType == ADS_ADT )
-                  dbFieldInfo.uiLen = 9;
-#if ADS_LIB_VERSION >= 900
-               else if( pArea->iFileType == ADS_VFP )
-                  dbFieldInfo.uiLen = 4;
-#endif
-               else
-                  dbFieldInfo.uiLen = 10;
-            }
-            else
-               return HB_FAILURE;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiTypeExtended = ADS_DOUBLE;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+            if( uiDec > 20 )
+               errCode = HB_FAILURE;
             break;
 
-         case 'T':
-         case '@':
-            if( iNameLen == 1 )
-            {
-               if( pArea->iFileType == ADS_ADT && iData == 'T' && uiLen == 4 )
-               {
-                  dbFieldInfo.uiType = HB_FT_TIME;
-                  dbFieldInfo.uiTypeExtended = ADS_TIME;
-                  dbFieldInfo.uiLen = 4;
-               }
-#if ADS_LIB_VERSION >= 900
-               else if( pArea->iFileType == ADS_ADT || pArea->iFileType == ADS_VFP )
-#else
-               else if( pArea->iFileType == ADS_ADT )
-#endif
-               {
-                  dbFieldInfo.uiType = HB_FT_TIMESTAMP;
-                  dbFieldInfo.uiTypeExtended = ADS_TIMESTAMP;
-                  dbFieldInfo.uiLen = 8;
-               }
-               else
-                  return HB_FAILURE;
-            }
-            else if( pArea->iFileType == ADS_ADT && ! hb_stricmp( szFieldType, "time" ) )
-            {
-               dbFieldInfo.uiType = HB_FT_TIME;
-               dbFieldInfo.uiTypeExtended = ADS_TIME;
-               dbFieldInfo.uiLen = 4;
-            }
-#if ADS_LIB_VERSION >= 900
-            else if( ( pArea->iFileType == ADS_ADT || pArea->iFileType == ADS_VFP ) &&
-#else
-            else if( ( pArea->iFileType == ADS_ADT ) &&
-#endif
-                     ! hb_strnicmp( szFieldType, "timestamp", 5 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_TIMESTAMP;
-               dbFieldInfo.uiTypeExtended = ADS_TIMESTAMP;
-               dbFieldInfo.uiLen = 8;
-            }
-            else
-               return HB_FAILURE;
-            break;
-
-         case 'A':
          case '+':
 #if ADS_LIB_VERSION >= 900
             if( pArea->iFileType == ADS_ADT || pArea->iFileType == ADS_VFP )
@@ -1807,85 +1914,52 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiType = HB_FT_AUTOINC;
                dbFieldInfo.uiTypeExtended = ADS_AUTOINC;
                dbFieldInfo.uiLen = 4;
+               dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             }
             else
-               return HB_FAILURE;
+               errCode = HB_FAILURE;
             break;
 
-         case 'R':
-         case '^':
-            if( pArea->iFileType == ADS_ADT && ! hb_strnicmp( szFieldType, "raw", 2 ) )
-            {
-               dbFieldInfo.uiType = HB_FT_STRING;
-               dbFieldInfo.uiTypeExtended = ADS_RAW;
-               dbFieldInfo.uiFlags = HB_FF_BINARY;
-            }
 #if ADS_LIB_VERSION >= 800
-            else if( pArea->iFileType == ADS_ADT &&
-                     ( ! hb_strnicmp( szFieldType, "rowversion", 2 ) || ( iNameLen == 1 && iData == '^' ) ) )
+         case '=':
+            if( pArea->iFileType == ADS_ADT )
+            {
+               dbFieldInfo.uiType = HB_FT_MODTIME;
+               dbFieldInfo.uiTypeExtended = ADS_MODTIME;
+               dbFieldInfo.uiLen = 8;
+               dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
+            }
+            else
+               errCode = HB_FAILURE;
+            break;
+
+         case '^':
+            if( pArea->iFileType == ADS_ADT )
             {
                dbFieldInfo.uiType = HB_FT_ROWVER;
                dbFieldInfo.uiTypeExtended = ADS_ROWVERSION;
                dbFieldInfo.uiLen = 8;
-            }
-#endif
-            else
-               return HB_FAILURE;
-            break;
-
-         case 'V':
-         case 'Q':
-#if ADS_LIB_VERSION >= 900
-            if( pArea->iFileType == ADS_VFP )
-            {
-               if( ! hb_strnicmp( szFieldType, "varchar", 5 ) || ( iNameLen == 1 && iData == 'Q' ) )
-               {
-                  dbFieldInfo.uiType = HB_FT_VARLENGTH;
-                  dbFieldInfo.uiTypeExtended = ADS_VARCHAR_FOX;
-               }
-               else if( ! hb_strnicmp( szFieldType, "varbinary", 5 ) )
-               {
-                  dbFieldInfo.uiType = HB_FT_VARLENGTH;
-                  dbFieldInfo.uiTypeExtended = ADS_VARBINARY_FOX;
-                  dbFieldInfo.uiFlags = HB_FF_BINARY;
-               }
-               else
-                  return HB_FAILURE;
+               dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             }
             else
-#endif
-            {
-               if( ! hb_strnicmp( szFieldType, "varchar", 5 ) || ( iNameLen == 1 && iData == 'Q' ) )
-               {
-                  dbFieldInfo.uiType = HB_FT_VARLENGTH;
-                  dbFieldInfo.uiTypeExtended = ADS_VARCHAR;
-               }
-               else if( ! hb_strnicmp( szFieldType, "varbinary", 5 ) )
-               {
-                  /* TOCHECK: I've used ADS_VARBINARY_FOX here since there is no better constant for this [Mindaugas] */
-                  dbFieldInfo.uiType = HB_FT_VARLENGTH;
-#if ADS_LIB_VERSION >= 900
-                  dbFieldInfo.uiTypeExtended = ADS_VARBINARY_FOX;
-#else
-                  dbFieldInfo.uiTypeExtended = ADS_RAW;
-#endif
-                  dbFieldInfo.uiFlags = HB_FF_BINARY;
-               }
-               else
-                  return HB_FAILURE;
-            }
+               errCode = HB_FAILURE;
             break;
+#endif
 
          default:
-            return HB_FAILURE;
+            errCode = HB_FAILURE;
+            break;
+      }
+
+      if( errCode != HB_SUCCESS )
+      {
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
+         return errCode;
       }
       /* Add field */
       if( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE )
-      {
          return HB_FAILURE;
-      }
    }
-
    return HB_SUCCESS;
 }
 
@@ -1955,8 +2029,6 @@ static HB_ERRCODE adsFieldCount( ADSAREAP pArea, HB_USHORT * uiFields )
 
 static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiType, PHB_ITEM pItem )
 {
-   LPFIELD pField;
-
    HB_TRACE( HB_TR_DEBUG, ( "adsFieldInfo(%p, %hu, %hu, %p)", pArea, uiIndex, uiType, pItem ) );
 
    if( uiIndex > pArea->area.uiFieldCount )
@@ -1988,101 +2060,44 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
       }
 
       case DBS_TYPE:
+      {
+         LPFIELD pField = pArea->area.lpFields + uiIndex - 1;
+         const char * szType = NULL;
 
-         pField = pArea->area.lpFields + uiIndex - 1;
          switch( pField->uiType )
          {
             case HB_FT_STRING:
                if( pField->uiFlags & HB_FF_BINARY )
-                  hb_itemPutC( pItem, "RAW" );
+                  szType = "RAW";
                else if( pField->uiFlags & HB_FF_UNICODE )
-                  hb_itemPutC( pItem, "NCHAR" );
+                  szType = "NCHAR";
 #if ADS_LIB_VERSION >= 710
                else if( pField->uiTypeExtended == ADS_CISTRING )
-                  hb_itemPutC( pItem, "CICHARACTER" );
+                  szType = "CICHARACTER";
 #endif
-               else
-                  hb_itemPutC( pItem, "C" );
-               break;
-
-            case HB_FT_LOGICAL:
-               hb_itemPutC( pItem, "L" );
-               break;
-
-            case HB_FT_DATE:
-               hb_itemPutC( pItem, "D" );
-               break;
-
-            case HB_FT_LONG:
-               hb_itemPutC( pItem, "N" );
-               break;
-
-            case HB_FT_INTEGER:
-               hb_itemPutC( pItem, "I" );
-               break;
-
-            case HB_FT_DOUBLE:
-               hb_itemPutC( pItem, "B" );
-               break;
-
-            case HB_FT_TIME:
-               hb_itemPutC( pItem, "T" );
-               break;
-
-            case HB_FT_TIMESTAMP:
-               hb_itemPutC( pItem, "@" );
-               break;
-
-            case HB_FT_MODTIME:
-               hb_itemPutC( pItem, "=" );
-               break;
-
-            case HB_FT_ROWVER:
-               hb_itemPutC( pItem, "^" );
-               break;
-
-            case HB_FT_AUTOINC:
-               hb_itemPutC( pItem, "+" );
-               break;
-
-            case HB_FT_CURRENCY:
-               hb_itemPutC( pItem, "Y" );
-               break;
-
-            case HB_FT_CURDOUBLE:
-               hb_itemPutC( pItem, "Z" );
                break;
 
             case HB_FT_VARLENGTH:
                if( pField->uiFlags & HB_FF_BINARY )
-                  hb_itemPutC( pItem, "VARBINARY" );
+                  szType = "VARBINARY";
                else if( pField->uiFlags & HB_FF_UNICODE )
-                  hb_itemPutC( pItem, "NVARCHAR" );
+                  szType = "NVARCHAR";
                else
-                  hb_itemPutC( pItem, "Q" );
+                  szType = "VARCHAR";
                break;
 
             case HB_FT_MEMO:
                if( pField->uiFlags & HB_FF_UNICODE )
-                  hb_itemPutC( pItem, "NMEMO" );
-               else
-                  hb_itemPutC( pItem, "M" );
-               break;
-
-            case HB_FT_IMAGE:
-               hb_itemPutC( pItem, "P" );
-               break;
-
-            case HB_FT_BLOB:
-               hb_itemPutC( pItem, "W" );
-               break;
-
-            default:
-               hb_itemPutC( pItem, "U" );
+                  szType = "NMEMO";
                break;
          }
-         break;
-
+         if( szType != NULL )
+         {
+            hb_itemPutC( pItem, szType );
+            break;
+         }
+         /* no break */
+      }
       default:
          return SUPER_FIELDINFO( &pArea->area, uiIndex, uiType, pItem );
    }

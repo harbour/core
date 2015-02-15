@@ -44,6 +44,7 @@
 -c=gnu90
 
 ssl_hb.c
+ssl_inet.c
 bio.c
 err.c
 evp.c
