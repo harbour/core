@@ -3,6 +3,7 @@
  *
  * Copyright 2007 Luiz Rafael Culik Guimaraes and Patrick Mast
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
+ * Copyright 2015 Jean Lefebvre (STARTTLS support)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,13 +72,17 @@ FUNCTION hb_SendMail( ... )
    lNoAuth     -> Optional. Disable Autentication methods
    nTimeOut    -> Optional. Number os ms to wait default 10000 (10s)
    cReplyTo    -> Optional.
+   lSSl        -> Optional. Need SSL at connect time (TLS need this param set to False)
+   cSMTPPass   -> Optional.
+   cCharset    -> Optional.
+   cEncoding   -> Optional.
    cClientHost -> Optional. Domain name of the SMTP client in the format smtp.example.com OR client IP surrounded by brackets as in [200.100.100.5]
                             Note: This parameter is optional for backwards compatibility, but should be provided to comply with RFC 2812.
  */
 FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
       xTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;
-      lTLS, cSMTPPass, cCharset, cEncoding, cClientHost )
+      lSSL, cSMTPPass, cCharset, cEncoding, cClientHost )
 
    LOCAL cTmp
    LOCAL cTo
@@ -91,8 +96,6 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    LOCAL lBodyHTML     := .F.
    LOCAL lConnectPlain := .F.
-   LOCAL lAuthLogin    := .F.
-   LOCAL lAuthPlain    := .F.
    LOCAL lAuthTLS      := .F.
    LOCAL lConnect      := .T.
    LOCAL oPop
@@ -112,7 +115,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    hb_default( @lPopAuth, .T. )
    hb_default( @lNoAuth, .F. )
    hb_default( @nTimeOut, 10000 )
-   hb_default( @lTLS, .F. )
+   hb_default( @lSSL, .F. )
    hb_default( @cSMTPPass, cPass )
 
    // cTo
@@ -180,7 +183,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    IF HB_ISSTRING( cPopServer ) .AND. lPopAuth
 
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-         oUrl1 := TUrl():New( iif( lTLS, "pop3s://", "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
+         oUrl1 := TUrl():New( iif( lSSL, "pop3s://", "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
          oUrl1:cUserid := StrTran( cUser, "&at;", "@" )
          oPop := TIPClientPOP():New( oUrl1, xTrace )
       RECOVER
@@ -195,7 +198,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    ENDIF
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      oUrl := TUrl():New( iif( lTLS, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer )
+      oUrl := TUrl():New( iif( lSSL, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer )
    RECOVER
       RETURN .F.
    END SEQUENCE
@@ -216,27 +219,11 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    oInmail:nConnTimeout := nTimeOut
 
-   IF ! lNoAuth .AND. oInMail:OpenSecure()
+   IF ! lNoAuth .AND. oInMail:OpenSecure( , lSSL )
 
-      DO WHILE .T.
-         IF ! oInMail:GetOk()
-            EXIT
-         ENDIF
-         DO CASE
-         CASE oInMail:cReply == NIL
-            EXIT
-         CASE "LOGIN" $ oInMail:cReply
-            lAuthLogin := .T.
-         CASE "PLAIN" $ oInMail:cReply
-            lAuthPlain := .T.
-         CASE oInMail:HasSSL() .AND. "STARTTLS" $ oInMail:cReply
-            lAuthTLS := .T.
-         CASE hb_LeftEq( oInMail:cReply, "250 " )
-            EXIT
-         ENDCASE
-      ENDDO
+      lAuthTLS := oInMail:lTLS
 
-      IF lAuthLogin
+      IF oInMail:lAuthLogin
          IF oInMail:Auth( cUser, cSMTPPass )
             lConnectPlain := .T.
          ELSE
@@ -244,7 +231,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
          ENDIF
       ENDIF
 
-      IF lAuthPlain .AND. ! lConnect
+      IF oInMail:lAuthPlain .AND. ! lConnect
          IF ! oInMail:AuthPlain( cUser, cSMTPPass )
             lConnect := .F.
          ENDIF
@@ -275,13 +262,13 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       ENDIF
 
       DO WHILE .T.
-         IF hb_LeftEq( oInMail:cReply, "250 " )
-            EXIT
-         ENDIF
          IF ! oInMail:GetOk()
             EXIT
          ENDIF
          IF oInMail:cReply == NIL
+            EXIT
+         ENDIF
+         IF hb_LeftEq( oInMail:cReply, "250 " )
             EXIT
          ENDIF
       ENDDO

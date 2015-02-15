@@ -4,6 +4,7 @@
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (sendMail())
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
+ * Copyright 2015 Jean Lefebvre (STARTTLS support)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,8 +53,12 @@
 
 CREATE CLASS TIPClientSMTP FROM TIPClient
 
+   VAR lAuthLOGIN INIT .F.
+   VAR lAuthPLAIN INIT .F.
+   VAR lTLS       INIT .F.
+
    METHOD New( oUrl, xTrace, oCredentials, cClientHost )
-   METHOD Open( cUrl, lTLS )
+   METHOD Open( cUrl, lSSL )
    METHOD Close()
    METHOD Write( cData, nLen, bCommit )
    METHOD Mail( cFrom )
@@ -65,10 +70,12 @@ CREATE CLASS TIPClientSMTP FROM TIPClient
    METHOD SendMail( oTIpMail )
 
    /* Methods for smtp server that require login */
-   METHOD OpenSecure( cUrl, lTLS )
+   METHOD OpenSecure( cUrl, lSSL )
    METHOD Auth( cUser, cPass )      /* Auth by login method */
    METHOD AuthPlain( cUser, cPass ) /* Auth by plain method */
    METHOD ServerSuportSecure( lAuthPlain, lAuthLogin )
+   METHOD StartTLS()
+   METHOD DetectSecurity()
 
    HIDDEN:
 
@@ -88,7 +95,7 @@ METHOD New( oUrl, xTrace, oCredentials, cClientHost ) CLASS TIPClientSMTP
 
    RETURN Self
 
-METHOD Open( cUrl, lTLS ) CLASS TIPClientSMTP
+METHOD Open( cUrl, lSSL ) CLASS TIPClientSMTP
 
    IF ! ::super:Open( cUrl )
       RETURN .F.
@@ -98,18 +105,19 @@ METHOD Open( cUrl, lTLS ) CLASS TIPClientSMTP
       RETURN .F.
    ENDIF
 
-   IF hb_defaultValue( lTLS, .F. )
-      ::inetSendAll( ::SocketCon, "STARTTLS" + ::cCRLF )
-      IF ::GetOk()
-         ::EnableTLS( .T. )
-      ENDIF
+   IF hb_defaultValue( lSSL, .F. )
+      ::EnableSSL( .T. )
+      ::lAuthLogin := .T.
+      ::lAuthPlain := .T.
    ENDIF
 
    ::inetSendAll( ::SocketCon, "HELO " + iif( Empty( ::cClientHost ), "TIPClientSMTP", ::cClientHost ) + ::cCRLF )
 
    RETURN ::GetOk()
 
-METHOD OpenSecure( cUrl, lTLS ) CLASS TIPClientSMTP
+METHOD OpenSecure( cUrl, lSSL ) CLASS TIPClientSMTP
+
+   LOCAL lOk
 
    IF ! ::super:Open( cUrl )
       RETURN .F.
@@ -119,16 +127,21 @@ METHOD OpenSecure( cUrl, lTLS ) CLASS TIPClientSMTP
       RETURN .F.
    ENDIF
 
-   IF hb_defaultValue( lTLS, .F. )
-      ::inetSendAll( ::SocketCon, "STARTTLS" + ::cCRLF )
-      IF ::GetOk()
-         ::EnableTLS( .T. )
-      ENDIF
+   IF hb_defaultValue( lSSL, .F. )
+      ::EnableSSL( .T. )
+      ::lAuthLogin := .T.
+      ::lAuthPlain := .T.
    ENDIF
 
    ::inetSendAll( ::SocketCon, "EHLO " + iif( Empty( ::cClientHost ), "TIPClientSMTP", ::cClientHost ) + ::cCRLF )
 
-   RETURN ::GetOk()
+   lOk := ::DetectSecurity()
+
+   IF lOk .AND. ! lSSL
+      lOk := ::StartTLS()
+   ENDIF
+
+   RETURN lOk
 
 METHOD GetOk() CLASS TIPClientSMTP
 
@@ -138,6 +151,51 @@ METHOD GetOk() CLASS TIPClientSMTP
    ENDIF
 
    RETURN .T.
+
+METHOD StartTLS() CLASS TIPClientSMTP
+
+   ::inetSendAll( ::SocketCon, "STARTTLS" + ::cCRLF )
+
+   IF ::GetOk()
+      ::EnableSSL( .T. )
+      __tip_SSLConnectFD( ::ssl, hb_inetFD( ::SocketCon ) )
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+METHOD DetectSecurity() CLASS TIPClientSMTP
+
+   LOCAL lOk
+
+   DO WHILE .T.
+      IF !( lOk := ::GetOk() )
+         EXIT
+      ENDIF
+      IF ::cReply == NIL
+         EXIT
+      ENDIF
+      IF "LOGIN" $ ::cReply
+         ::lAuthLogin := .T.
+      ENDIF
+      IF "PLAIN" $ ::cReply
+         ::lAuthPlain := .T.
+      ENDIF
+      IF ::HasSSL() .AND. "STARTTLS" $ ::cReply
+         ::lTLS := .T.
+         ::lAuthLogin := .T.
+         ::lAuthPlain := .T.
+      ENDIF
+
+      DO CASE
+      CASE hb_LeftEq( ::cReply, "250-" )
+         LOOP
+      CASE hb_LeftEq( ::cReply, "250 " )
+         EXIT
+      ENDCASE
+   ENDDO
+
+   RETURN lOk
 
 METHOD Close() CLASS TIPClientSMTP
 

@@ -6,6 +6,7 @@
  * Copyright 2007 Toninho@fwi (::nWrite to work like ::nRead)
  * Copyright 2009 Luiz Rafael Culik (luiz at xharbour dot com dot br) (Proxy connection)
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
+ * Copyright 2015 Jean Lefebvre (STARTTLS support)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,7 +98,7 @@ CREATE CLASS TIPClient
 
    VAR exGauge              /* Gauge control; it can be a codeblock or a function pointer. */
 
-   VAR lTLS              INIT .F.
+   VAR lSSL              INIT .F.
 
    VAR lHasSSL           INIT tip_SSL()
    VAR ssl_ctx
@@ -115,7 +116,7 @@ CREATE CLASS TIPClient
    METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )
 
-   METHOD EnableTLS( lEnable )
+   METHOD EnableSSL( lEnable )
 
    METHOD Read( nLen )
    METHOD ReadToFile( cFile, nMode, nSize )
@@ -204,13 +205,13 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
    ENDIF
 
    IF ::lHasSSL .AND. hb_AScan( aProtoSSL, oURL:cProto,,, .T. ) > 0
-      ::EnableTLS( .T. )
+      ::EnableSSL( .T. )
    ENDIF
 
    ::oUrl         := oUrl
    ::oCredentials := oCredentials
 
-   RETURN self
+   RETURN Self
 
 METHOD Open( cUrl ) CLASS TIPClient
 
@@ -238,11 +239,11 @@ METHOD Open( cUrl ) CLASS TIPClient
 
    RETURN .T.
 
-METHOD EnableTLS( lEnable ) CLASS TIPClient
+METHOD EnableSSL( lEnable ) CLASS TIPClient
 
    LOCAL lSuccess
 
-   IF ::lTLS == lEnable
+   IF ::lSSL == lEnable
       RETURN .T.
    ENDIF
 
@@ -250,14 +251,14 @@ METHOD EnableTLS( lEnable ) CLASS TIPClient
       IF ::lHasSSL
          ::ssl_ctx := SSL_CTX_new()
          ::ssl := SSL_new( ::ssl_ctx )
-         ::lTLS := .T.
+         ::lSSL := .T.
          lSuccess := .T.
       ELSE
          lSuccess := .F.
       ENDIF
    ELSE
       IF ::lHasSSL
-         ::lTLS := .F.
+         ::lSSL := .F.
          lSuccess := .T.
       ELSE
          lSuccess := .T.
@@ -335,7 +336,7 @@ METHOD Close() CLASS TIPClient
    ELSE
       nRet := hb_inetClose( ::SocketCon )
 
-      IF ::lTLS .AND. ::lHasSSL
+      IF ::lSSL .AND. ::lHasSSL
          SSL_shutdown( ::ssl )
          ::ssl := NIL
          ::ssl_ctx := NIL
@@ -388,7 +389,7 @@ METHOD Read( nLen ) CLASS TIPClient
       // read an amount of data
       cStr0 := Space( nLen )
 
-      IF ::lTLS .AND. ::lHasSSL
+      IF ::lSSL .AND. ::lHasSSL
          /* Getting around implementing the hack used in non-SSL branch for now.
             IMO the proper fix would have been done to hb_inetRecvAll(). [vszakats] */
          ::nLastRead := ::inetRecvAll( ::SocketCon, @cStr0, nLen )
@@ -549,7 +550,7 @@ METHOD inetSendAll( SocketCon, cData, nLen ) CLASS TIPClient
       nLen := hb_BLen( cData )
    ENDIF
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
 #if defined( _SSL_DEBUG_TEMP )
          ? "SSL_write()", cData
@@ -583,7 +584,7 @@ METHOD inetRecv( SocketCon, cStr1, len ) CLASS TIPClient
 
    LOCAL nRet
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
 #if defined( _SSL_DEBUG_TEMP )
          ? "SSL_read()"
@@ -607,7 +608,7 @@ METHOD inetRecvLine( SocketCon, nRet, size ) CLASS TIPClient
 
    LOCAL cRet
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
          nRet := hb_SSL_read_line( ::ssl, @cRet, size, ::nConnTimeout )
 #if defined( _SSL_DEBUG_TEMP )
@@ -635,7 +636,7 @@ METHOD inetRecvAll( SocketCon, cRet, size ) CLASS TIPClient
 
    LOCAL nRet
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
          nRet := hb_SSL_read_all( ::ssl, @cRet, size, ::nConnTimeout )
 #if defined( _SSL_DEBUG_TEMP )
@@ -663,7 +664,7 @@ METHOD inetErrorCode( SocketCon ) CLASS TIPClient
 
    LOCAL nRet
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
          nRet := iif( ::nSSLError == 0, 0, SSL_get_error( ::ssl, ::nSSLError ) )
       ELSE
@@ -686,7 +687,7 @@ METHOD inetErrorDesc( SocketCon ) CLASS TIPClient
    hb_default( @SocketCon, ::SocketCon )
 
    IF ! Empty( SocketCon )
-      IF ::lTLS
+      IF ::lSSL
          IF ::lHasSSL .AND. ::nSSLError != 0
             RETURN ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
          ENDIF
@@ -697,7 +698,7 @@ METHOD inetErrorDesc( SocketCon ) CLASS TIPClient
 
    RETURN ""
 
-/* BROKEN, should test number of parameters and act accordingly, see doc\inet.txt */
+/* BROKEN, should test number of parameters and act accordingly, see doc/inet.txt */
 METHOD PROCEDURE inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
 
    hb_inetConnect( cServer, nPort, SocketCon )
@@ -716,10 +717,8 @@ METHOD PROCEDURE inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
       ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 
-   IF ::lTLS .AND. ::lHasSSL
-      SSL_set_mode( ::ssl, HB_SSL_MODE_AUTO_RETRY )
-      SSL_set_fd( ::ssl, hb_inetFD( SocketCon ) )
-      SSL_connect( ::ssl )
+   IF ::lSSL .AND. ::lHasSSL
+      __tip_SSLConnectFD( ::ssl, hb_inetFD( SocketCon ) )
       /* TODO: Add error handling */
    ENDIF
 
@@ -814,3 +813,13 @@ METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS TIPC
 
 FUNCTION tip_SSL()
    RETURN hb_IsFunction( "__HBEXTERN__HBSSL__" )
+
+FUNCTION __tip_SSLConnectFD( ssl, fd )
+
+   SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY )
+   SSL_set_fd( ssl, fd )
+   SSL_connect( ssl )
+
+   /* TODO: Add error handling */
+
+   RETURN .T.
