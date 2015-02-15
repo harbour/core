@@ -1,7 +1,4 @@
-/*
- * Copyright 2015 Przemyslaw Czerpak (druzus/at/poczta.onet.pl)
- * www - http://harbour-project.org
- */
+/* Copyright 2015 Przemyslaw Czerpak (druzus/at/poczta.onet.pl) */
 
 #require "hbssl"
 
@@ -9,25 +6,26 @@
 #define EOL             e"\r\n"
 #define PEM_CERT_FILE   "inetssl.pem"
 
-STATIC s_lReady := .f.
-STATIC s_lStop := .f.
+STATIC s_lReady := .F.
+STATIC s_lStop := .F.
 
-STATIC s_lDelaySrv := .f.
-STATIC s_lDelayCli := .f.
+STATIC s_lDelaySrv := .F.
+STATIC s_lDelayCli := .F.
 
 REQUEST HB_MT
 
 PROCEDURE Main( delay )
+
    LOCAL thrd
 
-   if !empty( delay )
-      s_lDelayCli := "C" $ upper( delay )
-      s_lDelaySrv := "S" $ upper( delay )
-   endif
+   IF ! Empty( delay )
+      s_lDelayCli := "C" $ Upper( delay )
+      s_lDelaySrv := "S" $ Upper( delay )
+   ENDIF
 
    /* initialize SSL library */
    SSL_init()
-   RAND_seed( Time() + hb_tsToStr( hb_dateTime() ) + hb_DirBase() + NetName() )
+   RAND_seed( Time() + hb_TSToStr( hb_DateTime() ) + hb_DirBase() + NetName() )
 
    /* start server thread */
    thrd := hb_threadStart( @Server() )
@@ -45,14 +43,14 @@ PROCEDURE Main( delay )
    Client()
 
    /* inform server it should finish and wait for it */
-   s_lStop := .t.
+   s_lStop := .T.
    hb_threadJoin( thrd )
    ?
 
    RETURN
 
+STATIC PROCEDURE Client()
 
-FUNCTION Client()
    LOCAL sock, ssl_ctx, ssl, nResult, nErr, cLine
 
    ssl_ctx := SSL_CTX_new()
@@ -62,7 +60,7 @@ FUNCTION Client()
    hb_inetTimeout( sock, 5000 )
 
    ? "CLIENT: connecting..."
-   IF empty( hb_inetConnectIP( "127.0.0.1", N_PORT, sock ) )
+   IF Empty( hb_inetConnectIP( "127.0.0.1", N_PORT, sock ) )
       ? "CLIENT: cannot connect to server."
    ELSE
       ? "CLIENT: connected to the server."
@@ -76,29 +74,29 @@ FUNCTION Client()
       ? "CLIENT: SSL CONNECT..."
       nResult := hb_inetSSL_CONNECT( sock, ssl )
       nErr := ERR_get_error()
-      ?? hb_strFormat( e"\nCLIENT: hb_inetSSL_CONNECT()=>%d (%d), '%s'\n", ;
+      ?? hb_StrFormat( e"\nCLIENT: hb_inetSSL_CONNECT()=>%d (%d), '%s'\n", ;
                        nResult, nErr, ;
                        ERR_error_string( nErr ) )
       IF nResult == 1
-         ? "CLIENT: connected with " + SSL_get_cipher( ssl ) + " encryption."
+         ? "CLIENT: connected with", SSL_get_cipher( ssl ), "encryption."
          DipsCertInfo( ssl, "CLIENT: " )
 
-         hb_inetSendAll( sock, hb_tsToStr( hb_dateTime() ) + EOL )
-         DO WHILE ! empty( cLine := hb_inetRecvLine( sock ) )
-            ? "CLIENT: RECV:", hb_valToExp( cLine )
+         hb_inetSendAll( sock, hb_TSToStr( hb_DateTime() ) + EOL )
+         DO WHILE ! Empty( cLine := hb_inetRecvLine( sock ) )
+            ? "CLIENT: RECV:", hb_ValToExp( cLine )
          ENDDO
       ENDIF
-
    ENDIF
+
    hb_inetClose( sock )
 
-   RETURN NIL
+   RETURN
 
+STATIC PROCEDURE Server()
 
-FUNCTION Server()
    LOCAL sockSrv, sockConn, ssl_ctx, ssl, nResult, nErr, cLine
 
-   ? "SERVER: create listen socekt..."
+   ? "SERVER: create listen socket..."
    IF Empty( sockSrv := hb_inetServer( N_PORT ) )
       ? "SERVER: cannot create listen socket."
    ELSE
@@ -107,9 +105,9 @@ FUNCTION Server()
       LoadCertificates( ssl_ctx, PEM_CERT_FILE, PEM_CERT_FILE )
       ssl := SSL_new( ssl_ctx )
 
-      ? "SERVER: waiting for connecitons..."
+      ? "SERVER: waiting for connections..."
       hb_inetTimeout( sockSrv, 100 )
-      s_lReady := .t.
+      s_lReady := .T.
       DO WHILE ! s_lStop
          IF !Empty( sockConn := hb_inetAccept( sockSrv ) )
             ? "SERVER: accepted new connection."
@@ -123,18 +121,18 @@ FUNCTION Server()
             ? "SERVER: SSL ACCEPT..."
             nResult := hb_inetSSL_ACCEPT( sockConn, ssl )
             nErr := ERR_get_error()
-            ?? hb_strFormat( e"\nSERVER: hb_inetSSL_ACCEPT()=>%d (%d), '%s'\n", ;
+            ?? hb_StrFormat( e"\nSERVER: hb_inetSSL_ACCEPT()=>%d (%d), '%s'\n", ;
                              nResult, nErr, ;
                              ERR_error_string( nErr ) )
 
             IF nResult == 1
                cLine := hb_inetRecvLine( sockConn )
-               ? "SERVER: RECV:", hb_valToExp( cLine )
+               ? "SERVER: RECV:", hb_ValToExp( cLine )
                hb_inetSendAll( sockConn, ;
                                "ECHO[ " + cLine + " ]" + EOL + ;
-                               hb_tsToStr( hb_dateTime() ) + EOL + ;
+                               hb_TSToStr( hb_DateTime() ) + EOL + ;
                                OS() + EOL + ;
-                               VERSION() + EOL + ;
+                               Version() + EOL + ;
                                EOL )
             ENDIF
 
@@ -143,21 +141,19 @@ FUNCTION Server()
          ENDIF
       ENDDO
 
-      s_lReady := .f.
-
+      s_lReady := .F.
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-
-FUNCTION LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
+STATIC PROCEDURE LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
 
    /* Server using hb_inetSSL_ACCEPT() needs certificates,
       they can be generated using the following command:
          openssl req -x509 -nodes -days 365 -newkey rsa:1024 \
                  -out <cCertFile> -keyout <cKeyFile>
     */
-   IF ! hb_fileExists( cCertFile ) .AND. ! hb_fileExists( cKeyFile )
+   IF ! hb_FileExists( cCertFile ) .AND. ! hb_FileExists( cKeyFile )
       ? "SERVER: generating certificates..."
       hb_run( "openssl req -x509 -nodes -days 365 -newkey rsa:1024 " + ;
               "-out " + cCertFile + " -keyout " + cKeyFile )
@@ -165,14 +161,14 @@ FUNCTION LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
 
    /* set the local certificate from CertFile */
    IF SSL_CTX_use_certificate_file( ssl_ctx, cCertFile, HB_SSL_FILETYPE_PEM ) <= 0
-      OutErr( hb_strFormat( e"SERVER: SSL_CTX_use_certificate_file()=> '%s'\n", ;
+      OutErr( hb_StrFormat( e"SERVER: SSL_CTX_use_certificate_file()=> '%s'\n", ;
                             ERR_error_string( ERR_get_error() ) ) )
       QUIT
    ENDIF
 
    /* set the private key from KeyFile (may be the same as CertFile) */
    IF SSL_CTX_use_PrivateKey_file( ssl_ctx, cKeyFile, HB_SSL_FILETYPE_PEM ) <= 0
-      OutErr( hb_strFormat( e"SERVER: SSL_CTX_use_PrivateKey_file()=> '%s'\n", ;
+      OutErr( hb_StrFormat( e"SERVER: SSL_CTX_use_PrivateKey_file()=> '%s'\n", ;
                             ERR_error_string( ERR_get_error() ) ) )
       QUIT
    ENDIF
@@ -183,18 +179,18 @@ FUNCTION LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
       QUIT
    ENDIF
 
-   RETURN NIL
+   RETURN
 
+STATIC PROCEDURE DipsCertInfo( ssl, cWho )
 
-FUNCTION DipsCertInfo( ssl, cWho )
    LOCAL cert
 
-   IF !Empty( cert := SSL_get_peer_certificate( ssl ) )
+   IF ! Empty( cert := SSL_get_peer_certificate( ssl ) )
       ? cWho + "Server certificates:"
-      ? cWho + "Subject:", X509_NAME_oneline( X509_get_subject_name( cert ), 0, 0 )
-      ? cWho + "Issuer:", X509_NAME_oneline( X509_get_issuer_name( cert ), 0, 0 )
+      ? cWho + "Subject:", X509_name_oneline( X509_get_subject_name( cert ), 0, 0 )
+      ? cWho + "Issuer:", X509_name_oneline( X509_get_issuer_name( cert ), 0, 0 )
    ELSE
       ? cWho + "No certificates."
    ENDIF
 
-   RETURN NIL
+   RETURN
