@@ -4204,7 +4204,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                       HB_GET_LE_UINT32( &pField->bReserved2[ 4 ] ) != 0 ||
                       HB_GET_LE_UINT32( pField->bCounter ) != 0 ||
                       pField->bStep != 0 ||
-                      ( pField->bFieldFlags & ~uiFlags ) != 0 )
+                      ( pField->bFieldFlags & ~( HB_FF_NULLABLE | HB_FF_BINARY ) ) != 0 )
                      uiFlags = 0;
                   break;
                default:
