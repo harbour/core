@@ -1549,7 +1549,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
          WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
          DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
 
-         HB_BOOL bNotHandled = HB_TRUE;
+         HB_BOOL bHandled = HB_FALSE;
 
          /* Only process key down events */
 
@@ -1573,7 +1573,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                    ( dwState & NUMLOCK_ON ) )
                {
                   s_altisdown = HB_TRUE;
-                  bNotHandled = HB_FALSE;
+                  bHandled = HB_TRUE;
 #ifdef _TRACE
                   printf( "alt went down\n" );
 #endif
@@ -1581,12 +1581,16 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             }
          }
 
-         if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown && bNotHandled )
+         if( bHandled )
+         {
+            /* key event already processed */
+         }
+         else if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
          {
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
 #else
-            ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+            ch = ( HB_UCHAR ) s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
 #endif
 
             /*
@@ -1684,8 +1688,6 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                clipKey = &s_stdKeyTab[ ch - K_SPACE ];
             else if( ch > 0 && ch < K_SPACE && ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
                clipKey = &s_stdKeyTab[ ch + '@' ];
-            else if( ch < 0 ) /* international keys */
-               ch += 256;
 
             if( extKey > -1 )
                clipKey = &extKeyTab[ extKey ];
@@ -1722,6 +1724,28 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                   ch = HB_INKEY_NEW_UNICODE( u );
             }
 #endif
+         }
+         else if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode == 0x12 &&
+                  s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode == 0x38 )
+         {
+#if defined( UNICODE )
+            ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
+#else
+            ch = ( HB_UCHAR ) s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+#endif
+            if( ch != 0 )
+            {
+#if defined( UNICODE )
+               if( ch >= 127 )
+                  ch = HB_INKEY_NEW_UNICODE( ch );
+#else
+               int u = HB_GTSELF_KEYTRANS( pGT, ch );
+               if( u )
+                  ch = HB_INKEY_NEW_UNICODE( u );
+#endif
+            }
+            else
+               ch = 0;
          }
       }
       else if( s_bMouseEnable &&
