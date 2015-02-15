@@ -1369,7 +1369,6 @@ HB_FUNC( SQLITE3_LOAD_EXTENSION )
 #else
    hb_retni( -1 );
 #endif /* SQLITE_OMIT_LOAD_EXTENSION */
-
 }
 
 /**
