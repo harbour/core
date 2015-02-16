@@ -274,6 +274,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    RETURN
 
 STATIC PROCEDURE TBRAssign( xVar )
+
    LOCAL o
 
    s_xVar := xVar
@@ -314,6 +315,7 @@ STATIC PROCEDURE TBRAssign( xVar )
    RETURN
 
 STATIC PROCEDURE TBCAssign( xVar )
+
    LOCAL o
 
    s_xVar := xVar
@@ -339,6 +341,7 @@ STATIC PROCEDURE TBCAssign( xVar )
    RETURN
 
 STATIC PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
+
    LOCAL xResult
    LOCAL bOldError
    LOCAL oError
@@ -364,6 +367,7 @@ STATIC PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
    RETURN
 
 STATIC PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
+
    LOCAL xResult
    LOCAL bOldError
    LOCAL oError
@@ -393,6 +397,7 @@ STATIC PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
    RETURN
 
 STATIC PROCEDURE LogMe( data, desc )
+
    LOCAL nLevel
    LOCAL cStack
 
@@ -422,6 +427,7 @@ STATIC PROCEDURE LogMe( data, desc )
    RETURN
 
 STATIC PROCEDURE LogTBRVars( o, desc, xResult )
+
    LOCAL nLevel
    LOCAL cStack
 
@@ -518,6 +524,7 @@ STATIC PROCEDURE LogTBRVars( o, desc, xResult )
    RETURN
 
 STATIC PROCEDURE LogTBCVars( o, desc, xResult )
+
    LOCAL nLevel
    LOCAL cStack
 
@@ -577,6 +584,7 @@ STATIC PROCEDURE LogTBCVars( o, desc, xResult )
    RETURN
 
 STATIC FUNCTION XToStr( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -603,6 +611,7 @@ STATIC FUNCTION XToStr( xValue )
    RETURN ""
 
 STATIC FUNCTION ArrayToList( a )
+
    LOCAL tmp
    LOCAL cString := ""
 
@@ -616,6 +625,7 @@ STATIC FUNCTION ArrayToList( a )
    RETURN cString
 
 STATIC FUNCTION XToStrE( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -642,6 +652,7 @@ STATIC FUNCTION XToStrE( xValue )
    RETURN ""
 
 STATIC FUNCTION XToStrX( xValue )
+
    LOCAL cType := ValType( xValue )
 
    LOCAL tmp
@@ -683,6 +694,7 @@ STATIC FUNCTION XToStrX( xValue )
    RETURN ""
 
 STATIC FUNCTION ArrayToEList( a )
+
    LOCAL tmp
    LOCAL cString := ""
 
@@ -696,6 +708,7 @@ STATIC FUNCTION ArrayToEList( a )
    RETURN cString
 
 STATIC FUNCTION ErrorMessage( oError )
+
    LOCAL cMessage
    LOCAL tmp
 

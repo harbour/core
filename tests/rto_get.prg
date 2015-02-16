@@ -833,6 +833,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    RETURN
 
 STATIC PROCEDURE TGetTOVS( o, aKeys, lInsert )
+
    LOCAL tmp, tmp1
 
    IF !( ValType( lInsert ) == "L" )
@@ -876,6 +877,7 @@ STATIC FUNCTION TGetTIns( o, aKeys )
 #endif
 
 STATIC PROCEDURE TGetAssign( xVar )
+
    LOCAL o
    LOCAL nInt01 := 76
    LOCAL cStr01 := "AbC DeF 974"
@@ -1447,6 +1449,7 @@ STATIC PROCEDURE TGetAssign( xVar )
    RETURN
 
 STATIC PROCEDURE TGetTest( xVar, cPic )
+
    LOCAL bOldBlock
    LOCAL o
 
@@ -1563,6 +1566,7 @@ STATIC PROCEDURE TGetTest( xVar, cPic )
    RETURN
 
 STATIC PROCEDURE TEST_CALL( o, cBlock, bBlock )
+
    LOCAL xResult
    LOCAL bOldError
    LOCAL oError
@@ -1584,6 +1588,7 @@ STATIC PROCEDURE TEST_CALL( o, cBlock, bBlock )
    RETURN
 
 STATIC FUNCTION CallStack()
+
    LOCAL tmp := 1
    LOCAL cString := ""
 
@@ -1595,6 +1600,7 @@ STATIC FUNCTION CallStack()
    RETURN RTrim( cString )
 
 STATIC PROCEDURE LogMe( nPCount, data, desc )
+
    LOCAL nLevel
    LOCAL cStack
 
@@ -1624,6 +1630,7 @@ STATIC PROCEDURE LogMe( nPCount, data, desc )
    RETURN
 
 STATIC PROCEDURE LogGETVars( o, desc, xResult )
+
    LOCAL nLevel
    LOCAL cStack
 
@@ -1699,6 +1706,7 @@ STATIC PROCEDURE LogGETVars( o, desc, xResult )
    RETURN
 
 STATIC FUNCTION XToStr( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -1725,6 +1733,7 @@ STATIC FUNCTION XToStr( xValue )
    RETURN ""
 
 STATIC FUNCTION ArrayToList( a )
+
    LOCAL tmp
    LOCAL cString := ""
 
@@ -1738,6 +1747,7 @@ STATIC FUNCTION ArrayToList( a )
    RETURN cString
 
 STATIC FUNCTION XToStrE( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -1764,6 +1774,7 @@ STATIC FUNCTION XToStrE( xValue )
    RETURN ""
 
 STATIC FUNCTION XToStrX( xValue )
+
    LOCAL cType := ValType( xValue )
 
    LOCAL tmp
@@ -1805,6 +1816,7 @@ STATIC FUNCTION XToStrX( xValue )
    RETURN ""
 
 STATIC FUNCTION ErrorMessage( oError )
+
    LOCAL cMessage
    LOCAL tmp
 
