@@ -10,7 +10,7 @@ PROCEDURE Main()
 
    FOR EACH cFunc IN FuncList()
       OutStd( cFunc:__enumIndex(), Len( cFunc:__enumBase() ), cFunc + hb_eol() )
-      BEGIN SEQUENCE WITH {| e | Break( e ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          Do( cFunc )
       END SEQUENCE
    NEXT

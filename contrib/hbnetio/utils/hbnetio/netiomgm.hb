@@ -185,7 +185,7 @@ STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread
       IF ! Empty( netiocli[ _NETIOCLI_pConnection ] )
          IF hb_MilliSeconds() > nLastPing + 5000
             /* Is connection alive? */
-            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+            BEGIN SEQUENCE WITH __BreakBlock()
                netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_ping" )
             RECOVER
                hbnetiocon_dispevent( netiocli, "Connection lost." )

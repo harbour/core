@@ -10313,7 +10313,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
          /* Optimization: Do not try to load it as .hrb if the extension is .prg, .hb (Harbour script) */
          IF !( Lower( cExt ) == ".prg" ) .AND. ;
             !( Lower( cExt ) == ".hb" )
-            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+            BEGIN SEQUENCE WITH __BreakBlock()
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
                cType := I_( "(compiled)" )
                lOK := .T.
@@ -12472,7 +12472,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          cRetVal := ""
 
          /* Evaluate filter */
-         BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+         BEGIN SEQUENCE WITH __BreakBlock()
             bFilter := &( "{| hbmk, cFileName |" + cFilterHarb + "}" )
             IF hb_defaultValue( Eval( bFilter, hbmk, cFileName ), .F. )
                cRetVal := cItem
@@ -15638,7 +15638,7 @@ STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
       ENDIF
 
       IF ! Empty( cFile )
-         BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+         BEGIN SEQUENCE WITH __BreakBlock()
             plugin[ _PLUGIN_hHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
             IF Empty( hHRBEntry := hb_hrbGetFunSym( plugin[ _PLUGIN_hHRB ], "__hbshell_plugin" ) )
                plugin[ _PLUGIN_hHRB ] := NIL
@@ -16354,7 +16354,7 @@ STATIC FUNCTION __hbshell_TryHeader( cName )
 
    LOCAL lRetVal := .F.
 
-   BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
 
       IF ! Empty( hb_compileFromBuf( "", hbmk_CoreHeaderFiles(), hb_ProgName(), "-q2", ;
                                      "-i" + hbsh[ _HBSH_hbmk ][ _HBMK_cHB_INSTALL_INC ], ;
@@ -17184,7 +17184,7 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
             IF ! Empty( cFileName ) .AND. ;
                hb_i18n_Check( cFile := hb_MemoRead( cFileName ) )
                hb_i18n_Set( hb_i18n_RestoreTable( cFile ) )
-               BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+               BEGIN SEQUENCE WITH __BreakBlock()
                   hb_langSelect( hbmk[ _HBMK_cUILNG ] := cLang )
                END /* SEQUENCE */
                RETURN

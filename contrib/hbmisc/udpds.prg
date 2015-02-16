@@ -119,7 +119,7 @@ STATIC PROCEDURE UDPDS( hSocket, cName, cVersion )
 
    DO WHILE .T.
       cBuffer := Space( 2000 )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, 1000 )
       RECOVER
          nLen := NIL
@@ -138,7 +138,7 @@ STATIC PROCEDURE UDPDS( hSocket, cName, cVersion )
           *   Server response: ACK, ServerName, NUL, Version
           */
          IF hb_BLeft( cBuffer, nLen ) == hb_BChar( 5 ) + cName + hb_BChar( 0 )
-            BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+            BEGIN SEQUENCE WITH __BreakBlock()
                hb_socketSendTo( hSocket, hb_BChar( 6 ) + cName + hb_BChar( 0 ) + cVersion, , , aAddr )
             END SEQUENCE
          ENDIF

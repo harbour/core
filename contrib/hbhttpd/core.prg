@@ -1029,14 +1029,14 @@ STATIC FUNCTION GetErrorDesc( oErr )
       cRet += "Database areas:" + hb_eol()
       cRet += "    Current: " + hb_ntos( Select() ) + "  " + Alias() + hb_eol()
 
-      BEGIN SEQUENCE WITH {| o | Break( o ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          IF Used()
             cRet += ;
                "    Filter: " + dbFilter() + hb_eol() + ;
                "    Relation: " + dbRelation() + hb_eol() + ;
                "    Index expression: " + ordKey( ordSetFocus() ) + hb_eol() + ;
                hb_eol()
-            BEGIN SEQUENCE WITH {| o | Break( o ) }
+            BEGIN SEQUENCE WITH __BreakBlock()
                FOR nI := 1 TO FCount()
                   cRet += Str( nI, 6 ) + " " + PadR( FieldName( nI ), 14 ) + ": " + hb_ValToExp( FieldGet( nI ) ) + hb_eol()
                NEXT
@@ -1050,7 +1050,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
       END SEQUENCE
 
       hb_WAEval( {||
-         BEGIN SEQUENCE WITH {| o | Break( o ) }
+         BEGIN SEQUENCE WITH __BreakBlock()
             cRet += Str( Select(), 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + " " + ;
                Str( RecNo() ) + "/" + Str( LastRec() ) + ;
                iif( Empty( ordSetFocus() ), "", " Index " + ordSetFocus() + "(" + hb_ntos( ordNumber() ) + ")" ) + hb_eol()

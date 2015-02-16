@@ -401,7 +401,7 @@ METHOD Next() CLASS THtmlIterator
    LOCAL oFound, lExit := .F.
 
    DO WHILE ! lExit
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          oFound := ::aNodes[ ++::nCurrent ]
          IF ::MatchCriteria( oFound )
             ::oNode := oFound
@@ -639,7 +639,7 @@ METHOD isType( nType ) CLASS THtmlNode
 
    LOCAL lRet
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       lRet := hb_bitAnd( ::htmlTagType[ 2 ], nType ) != 0
    RECOVER
       lRet := .F.
@@ -1079,7 +1079,7 @@ METHOD attrToString() CLASS THtmlNode
       cAttr := " " + ::htmlAttributes
    ELSE
       // attributes are parsed into a Hash
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          aAttr := ::htmlTagType[ 1 ]:exec()
       RECOVER
          aAttr := {}  // Tag has no attributes
@@ -1170,7 +1170,7 @@ METHOD getAttribute( cName ) CLASS THtmlNode
       RETURN hHash
    ENDIF
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       cValue := hHash[ cName ]
    RECOVER
       cValue := NIL
@@ -1313,7 +1313,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       aAttr := ::htmlTagType[ 1 ]:exec()
    RECOVER
       // Tag has no attributes
@@ -1347,7 +1347,7 @@ METHOD delAttribute( cName ) CLASS THtmlNode
    LOCAL lRet := .F.
 
    IF xVal != NIL
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          hb_HDel( ::htmlAttributes, cName )
          lRet := .T.
       RECOVER
@@ -1369,7 +1369,7 @@ METHOD isAttribute( cName ) CLASS THtmlNode
 
    LOCAL lRet
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       lRet := cName $ ::getAttributes()
    RECOVER
       lRet := .F.
@@ -1592,7 +1592,7 @@ FUNCTION THtmlTagType( cTagName )
       THtmlInit()
    ENDIF
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       aType := t_hHT[ cTagName ]
    RECOVER
       aType := t_hHT[ "_text_" ]
@@ -1608,7 +1608,7 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
       THtmlInit()
    ENDIF
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       aValue := t_hHT[ cTagName ]
       IF cAttrName != NIL
          aValue := aValue[ 1 ]:exec()

@@ -2591,7 +2591,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
    LOCAL cHRBBody, pHRB, oError
    LOCAL cCurPath
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       // Lock HRB to avoid MT race conditions
       IF ! HRB_ACTIVATE_CACHE
          cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )

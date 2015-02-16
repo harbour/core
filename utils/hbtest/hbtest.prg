@@ -192,7 +192,7 @@ STATIC PROCEDURE Main_LAST()
 
 STATIC PROCEDURE TEST_BEGIN( cParam )
 
-   LOCAL bErrorOld
+   LOCAL bOldError
 
    s_nStartTime := Seconds()
 
@@ -284,7 +284,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    // rddSetDefault( "DBFCDX" )
 #endif
 
-   bErrorOld := ErrorBlock( {| oError | Break( oError ) } )
+   bOldError := ErrorBlock( {| oError | Break( oError ) } )
    BEGIN SEQUENCE
       dbCreate( "_hbtmp_.dbf", { ;
          { "TYPE_C"   , "C", 15, 0 }, ;
@@ -319,7 +319,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 
       s_lDBFAvail := .T.
    END SEQUENCE
-   ErrorBlock( bErrorOld )
+   ErrorBlock( bOldError )
 
    IF ! s_lDBFAvail
       OutMsg( s_nFhnd, "WARNING ! Test .dbf could not be created. Related tests will be skipped." + hb_eol() )

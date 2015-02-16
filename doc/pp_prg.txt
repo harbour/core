@@ -65,7 +65,7 @@ it's lines by macro compiler:
    PROCEDURE Main()
       LOCAL cLine, pPP, oErr
       pPP := __pp_Init()
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          FOR EACH cLine IN hb_ATokens( __pp_Process( pPP, ;
                hb_MemoRead( "macro.dat" ) ), .T. )
             BEGIN SEQUENCE

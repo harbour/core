@@ -392,7 +392,7 @@ STATIC PROCEDURE Exm_CDO()
       oCDOMsg:Subject := "Test message"
       oCDOMsg:TextBody := "Test message body"
 
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          oCDOMsg:Send()
       RECOVER
          ? "Error: CDO send error.", win_oleErrorText()

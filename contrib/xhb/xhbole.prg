@@ -76,8 +76,6 @@ FUNCTION OleDefaultArg()
 #define EG_OLEEXCEPTION 1001
 #define DISPID_VALUE    0
 
-STATIC s_bBreak := {| oError | Break( oError ) }
-
 STATIC FUNCTION s_oleOpError( cOperator, ... )
 
    STATIC sc_hErrCode := { ;
@@ -222,7 +220,7 @@ METHOD _OleValue( xValue ) CLASS TOleAuto
 #xcommand OLE OPERATOR <op> METHOD <!mth!> [WITH <!arg!>] IS <exp> => ;
    METHOD <mth>( <arg> ) CLASS TOleAuto                     ;;
    LOCAL xRet                                               ;;
-   BEGIN SEQUENCE WITH s_bBreak                             ;;
+   BEGIN SEQUENCE WITH __BreakBlock()                       ;;
       xRet := ( <exp> )                                     ;;
    RECOVER                                                  ;;
       RETURN Throw( s_oleOpError( <op>, Self [, <arg>] ) )  ;;

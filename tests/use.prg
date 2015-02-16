@@ -46,7 +46,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE mkTest( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
 
-   LOCAL cbErr := ErrorBlock( {| oErr | Break( oErr ) } ), oErr
+   LOCAL cbErr := ErrorBlock( __BreakBlock() ), oErr
 
    NetErr( .F. )
    BEGIN SEQUENCE

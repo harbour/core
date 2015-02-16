@@ -144,7 +144,7 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
       hbtest_Banner()
    ENDIF
 
-   BEGIN SEQUENCE WITH ErrorBlock( {| oError | Break( oError ) } )
+   BEGIN SEQUENCE WITH __BreakBlock()
       xResult := Eval( bBlock )
       lRTE := .F.
    RECOVER USING oError

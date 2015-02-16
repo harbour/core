@@ -1318,7 +1318,7 @@ METHOD PROCEDURE EditVar( nVar ) CLASS HBDebugger
       cVarStr := ::InputBox( cVarName, __dbgValToExp( uVarValue ), __dbgExprValidBlock() )
 
       IF LastKey() != K_ESC
-         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+         BEGIN SEQUENCE WITH __BreakBlock()
             ::VarSetValue( ::aVars[ nVar ], &cVarStr )
          RECOVER USING oErr
             __dbgAlert( oErr:description )
@@ -2147,7 +2147,7 @@ METHOD PROCEDURE OSShell() CLASS HBDebugger
    QOut( "Type 'exit' to RETURN to the Debugger" )
    SetCursor( SC_NORMAL )     // standard cursor for OS shell
 
-   BEGIN SEQUENCE WITH {| objErr | Break( objErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
 
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;

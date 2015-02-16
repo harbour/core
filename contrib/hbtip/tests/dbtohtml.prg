@@ -9,7 +9,7 @@ PROCEDURE Main()
 
    LOCAL cFileName := hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" )
 
-   BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       USE ( cFileName )
    RECOVER
       ? "Error: Database not found", cFileName

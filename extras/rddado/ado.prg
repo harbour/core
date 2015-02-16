@@ -208,12 +208,12 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
    ENDCASE
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       oConnection:Execute( "DROP TABLE " + cTableName )
    RECOVER
    END SEQUENCE
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       IF Lower( hb_FNameExt( cDataBase ) ) == ".fdb"
          oConnection:Execute( "CREATE TABLE " + cTableName + " (" + hb_StrReplace( aWAData[ WA_SQLSTRUCT ], "[]", '""' ) + ")" )
       ELSE
@@ -410,14 +410,14 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       oRecordSet:Open( aWAData[ WA_QUERY ], aWAData[ WA_CONNECTION ] )
    ENDIF
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       aWAData[ WA_CATALOG ] := win_oleCreateObject( "ADOX.Catalog" )
       aWAData[ WA_CATALOG ]:ActiveConnection := aWAData[ WA_CONNECTION ]
    RECOVER
    END SEQUENCE
 
    IF Empty( aWAData[ WA_CATALOG ] )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          aWAData[ WA_CATALOG ] := aWAData[ WA_CONNECTION ]:OpenSchema( adSchemaIndexes )
       RECOVER
       END SEQUENCE
@@ -457,7 +457,7 @@ STATIC FUNCTION ADO_CLOSE( nWA )
    LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       oRecordSet:Close()
       IF ! Empty( aWAData[ WA_CONNOPEN ] )
          IF aWAData[ WA_CONNECTION ]:State != adStateClosed
@@ -584,7 +584,7 @@ STATIC FUNCTION ADO_SKIPRAW( nWA, nToSkip )
          ADO_GOBOTTOM( nWA )
          ++nToSkip
       ENDIF
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          IF aWAData[ WA_CONNECTION ]:State != adStateClosed
             IF nToSkip < 0 .AND. oRecordSet:AbsolutePosition <= - nToSkip
                oRecordSet:MoveFirst()
@@ -618,7 +618,7 @@ STATIC FUNCTION ADO_EOF( nWA, /* @ */ lEof )
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
    LOCAL nResult := HB_SUCCESS
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       IF USRRDD_AREADATA( nWA )[ WA_CONNECTION ]:State != adStateClosed
          lEof := ( oRecordSet:AbsolutePosition == -3 )
       ENDIF
@@ -632,7 +632,7 @@ STATIC FUNCTION ADO_DELETED( nWA, /* @ */ lDeleted )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       lDeleted := ( oRecordSet:Status == adRecDeleted )
    RECOVER
       lDeleted := .F.
@@ -655,7 +655,7 @@ STATIC FUNCTION ADO_RECNO( nWA, /* @ */ nRecNo )
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
    LOCAL nResult := HB_SUCCESS
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       IF USRRDD_AREADATA( nWA )[ WA_CONNECTION ]:State != adStateClosed
          nRecno := iif( oRecordSet:AbsolutePosition == -3, oRecordSet:RecordCount() + 1, oRecordSet:AbsolutePosition )
       ELSE
@@ -685,7 +685,7 @@ STATIC FUNCTION ADO_PUTVALUE( nWA, nField, xValue )
 
    IF ! aWAData[ WA_EOF ] .AND. !( oRecordSet:Fields( nField - 1 ):Value == xValue )
       oRecordSet:Fields( nField - 1 ):Value := xValue
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          oRecordSet:Update()
       RECOVER
       END SEQUENCE
@@ -701,7 +701,7 @@ STATIC FUNCTION ADO_APPEND( nWA, lUnLockAll )
 
    oRecordSet:AddNew()
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       oRecordSet:Update()
    RECOVER
    END SEQUENCE
@@ -712,7 +712,7 @@ STATIC FUNCTION ADO_FLUSH( nWA )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       oRecordSet:Update()
    RECOVER
    END SEQUENCE
@@ -829,7 +829,7 @@ STATIC FUNCTION ADO_FIELDNAME( nWA, nField, /* @ */ cFieldName )
    LOCAL nResult := HB_SUCCESS
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       cFieldName := oRecordSet:Fields( nField - 1 ):Name
    RECOVER
       cFieldName := ""
@@ -1007,7 +1007,7 @@ STATIC FUNCTION ADO_CLEARFILTER( nWA )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       oRecordSet:Filter := ""
    RECOVER
    END SEQUENCE
@@ -1020,7 +1020,7 @@ STATIC FUNCTION ADO_ZAP( nWA )
    LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
 
    IF aWAData[ WA_CONNECTION ] != NIL .AND. aWAData[ WA_TABLENAME ] != NIL
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          aWAData[ WA_CONNECTION ]:Execute( "TRUNCATE TABLE " + aWAData[ WA_TABLENAME ] )
       RECOVER
          aWAData[ WA_CONNECTION ]:Execute( "DELETE * FROM " + aWAData[ WA_TABLENAME ] )
@@ -1056,7 +1056,7 @@ STATIC FUNCTION ADO_CLEARREL( nWA )
    LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL nKeys := 0, cKeyName
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       nKeys := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count
    RECOVER
    END SEQUENCE
@@ -1074,7 +1074,7 @@ STATIC FUNCTION ADO_RELAREA( nWA, nRelNo, /* @ */ nRelArea )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       IF nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
          nRelArea := Select( aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):RelatedTable )
       ENDIF
@@ -1088,7 +1088,7 @@ STATIC FUNCTION ADO_RELTEXT( nWA, nRelNo, /* @ */ cExpr )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       IF nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
          cExpr := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):Columns( 0 ):RelatedColumn
       ENDIF
@@ -1105,7 +1105,7 @@ STATIC FUNCTION ADO_SETREL( nWA, aRelInfo )
    LOCAL cChild := Alias( aRelInfo[ UR_RI_CHILD ] )
    LOCAL cKeyName := cParent + "_" + cChild
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Append( cKeyName, adKeyForeign, ;
          aRelInfo[ UR_RI_CEXPR ], cChild, aRelInfo[ UR_RI_CEXPR ] )
    RECOVER
@@ -1165,7 +1165,7 @@ STATIC FUNCTION ADO_ORDLSTADD( nWA, aOrderInfo )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       oRecordSet:Index := aOrderInfo[ UR_ORI_BAG ]
    RECOVER
    END SEQUENCE
@@ -1176,7 +1176,7 @@ STATIC FUNCTION ADO_ORDLSTCLEAR( nWA )
 
    LOCAL oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       oRecordSet:Index := ""
    RECOVER
    END SEQUENCE
@@ -1198,7 +1198,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
       NEXT
    ENDIF
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == NIL .OR. ! lFound
          oIndex := win_oleCreateObject( "ADOX.Index" )
          oIndex:Name := iif( Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_CKEY ], aOrderCreateInfo[ UR_ORCR_TAGNAME ] )
@@ -1264,7 +1264,7 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
    HB_SYMBOL_UNUSED( ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
 #if 0
          n := aRData[ WA_CATALOG ]:Tables( cTable )
 #endif
@@ -1272,7 +1272,7 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
       RECOVER
       END SEQUENCE
       IF ! Empty( cIndex )
-         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+         BEGIN SEQUENCE WITH __BreakBlock()
 #if 0
             n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
 #endif
@@ -1295,7 +1295,7 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
    HB_SYMBOL_UNUSED( ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
 #if 0
          n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
 #endif
@@ -1303,7 +1303,7 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
       RECOVER
       END SEQUENCE
       IF ! Empty( cIndex )
-         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+         BEGIN SEQUENCE WITH __BreakBlock()
 #if 0
             n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
 #endif

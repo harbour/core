@@ -35,6 +35,7 @@
 #xtranslate hb_osPathDelimiters()          => "\:"
 #xtranslate hb_osPathListSeparator()       => ";"
 #xtranslate hb_UserName()                  => GetEnv( "USERNAME" )
+#xtranslate __BreakBlock()                 => {| o | Break( o ) }
 
 #xtranslate hb_DirSepToOS( <d> )           => StrTran( <d>, "/", "\" )
 

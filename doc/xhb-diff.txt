@@ -193,7 +193,7 @@ file system(s) and with different OS(s).
       [ FINALLY ]
       END
    TRY gives exactly the same functionality as:
-      BEGIN SEQUENCE WITH {| e | Break( e ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
 
 With the exception to SWITCH implementation, in all other statements
 described above, xHarbour causes performance reduction in PCODE evaluation

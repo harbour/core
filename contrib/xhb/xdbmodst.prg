@@ -67,7 +67,7 @@ FUNCTION dbModifyStructure( cFile )
    LOCAL nSourceArea
    LOCAL cDateTime
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
 
       // Open exclusively, get name info, and create the structure db.
       USE ( cFile ) ALIAS ModifySource EXCLUSIVE NEW
@@ -203,7 +203,7 @@ FUNCTION dbMerge( xSource, lAppend )
       nSourcePos := ( nSource )->( FieldPos( cField ) )
 
       IF nSourcePos > 0
-         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+         BEGIN SEQUENCE WITH __BreakBlock()
             // Save
             xField := FieldGet( cField:__enumIndex() )
 
@@ -218,7 +218,7 @@ FUNCTION dbMerge( xSource, lAppend )
          RECOVER
             cTargetType := ValType( FieldGet( cField:__enumIndex() ) )
 
-            BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+            BEGIN SEQUENCE WITH __BreakBlock()
                // Test type compatability
                FieldPut( cField:__enumIndex(), ValToType( ( nSource )->( FieldGet( nSourcePos ) ), cTargetType ) )
 

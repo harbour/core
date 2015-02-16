@@ -13,7 +13,7 @@
 
 procedure main()
 
-   local o := myclass4():new(), i, cbErr
+   local o := myclass4():new(), i
 
    ? OS(), Version(), Date(), Time()
    ?
@@ -21,13 +21,11 @@ procedure main()
    ? "myclass1 class vars:", Str( __cls_CntClsData( o:myclass1:classH ), 3 ), "  => should be:   3"
    ? "myclass2 class vars:", Str( __cls_CntClsData( o:myclass2:classH ), 3 ), "  => should be:   6"
    ? "myclass3 class vars:", Str( __cls_CntClsData( o:myclass3:classH ), 3 ), "  => should be:   9"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "myclass4 class vars:", Str( __cls_CntClsData( o:myclass4:classH ), 3 ), "  => should be:  12"
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "myclass4 class vars:", Str( __cls_CntClsData( o:classH ), 3 ), "  => should be:  12"
    ?
 
@@ -48,8 +46,7 @@ procedure main()
    ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: (x1) (y1) (z1)"
    ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: (x2) (y2) (z2)"
    ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: (x3) (y3) (z3)"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be:  X1   Y1   Z1"
       ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be:  X2   Y2   Z2"
       ? "[4] MYCLASS3 VARS:", o:myclass4:x3, o:myclass4:y3, o:myclass4:z3, "  => should be:  X3   Y3   Z3"
@@ -57,7 +54,6 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "    MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be:  X1   Y1   Z1"
    ? "    MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be:  X2   Y2   Z2"
    ? "    MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be:  X3   Y3   Z3"
@@ -79,8 +75,7 @@ procedure main()
    ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: (x1) (y1) (z1)"
    ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: (x2) (y2) (z2)"
    ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: (x3) (y3) (z3)"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be:  X1   Y1   Z1"
       ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be:  X2   Y2   Z2"
       ? "[4] MYCLASS3 VARS:", o:myclass4:x3, o:myclass4:y3, o:myclass4:z3, "  => should be:  X3   Y3   Z3"
@@ -88,7 +83,6 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "    MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be:  X1   Y1   Z1"
    ? "    MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be:  X2   Y2   Z2"
    ? "    MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be:  X3   Y3   Z3"
@@ -108,8 +102,7 @@ procedure main()
    ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: (x1) (y1) (z1)"
    ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: (x2) (y2) (z2)"
    ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: (x3) (y3) (z3)"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be:  X1   Y1   Z1"
       ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be:  X2   Y2   Z2"
       ? "[4] MYCLASS3 VARS:", o:myclass4:x3, o:myclass4:y3, o:myclass4:z3, "  => should be:  X3   Y3   Z3"
@@ -117,7 +110,6 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "    MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be:  X1   Y1   Z1"
    ? "    MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be:  X2   Y2   Z2"
    ? "    MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be:  X3   Y3   Z3"
@@ -140,8 +132,7 @@ procedure main()
    ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: <X1> <Y1> <Z1>"
    ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: <X2> <Y2> <Z2>"
    ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: <X3> <Y3> <Z3>"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be:  X1   Y1   Z1"
       ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be:  X2   Y2   Z2"
       ? "[4] MYCLASS3 VARS:", o:myclass4:x3, o:myclass4:y3, o:myclass4:z3, "  => should be:  X3   Y3   Z3"
@@ -149,7 +140,6 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "    MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be:  X1   Y1   Z1"
    ? "    MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be:  X2   Y2   Z2"
    ? "    MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be:  X3   Y3   Z3"
@@ -160,8 +150,7 @@ procedure main()
 
 
    ? "Setting MYCLASS4 class variables..."
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       o:myclass4:x1 := "|X1|"
       o:myclass4:y1 := "|Y1|"
       o:myclass4:z1 := "|Z1|"
@@ -177,15 +166,13 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "[1] MYCLASS1 VARS:", o:myclass1:x1, o:myclass1:y1, o:myclass1:z1, "  => should be: [X1] [Y1] [Z1]"
    ? "[2] MYCLASS1 VARS:", o:myclass2:x1, o:myclass2:y1, o:myclass2:z1, "  => should be: {X1} {Y1} {Z1}"
    ? "[2] MYCLASS2 VARS:", o:myclass2:x2, o:myclass2:y2, o:myclass2:z2, "  => should be: {X2} {Y2} {Z2}"
    ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: <X1> <Y1> <Z1>"
    ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: <X2> <Y2> <Z2>"
    ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: <X3> <Y3> <Z3>"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: |X1| |Y1| |Z1|"
       ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: |X2| |Y2| |Z2|"
       ? "[4] MYCLASS3 VARS:", o:myclass4:x3, o:myclass4:y3, o:myclass4:z3, "  => should be: |X3| |Y3| |Z3|"
@@ -193,7 +180,6 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "    MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be: |X1| |Y1| |Z1|"
    ? "    MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be: |X2| |Y2| |Z2|"
    ? "    MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be: |X3| |Y3| |Z3|"
@@ -211,8 +197,7 @@ procedure main()
    ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: <X1> <Y1> <Z1>"
    ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: <X2> <Y2> <Z2>"
    ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: <X3> <Y3> <Z3>"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: |X1| |Y1| |Z1|"
       ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: |X2| |Y2| |Z2|"
       ? "[4] MYCLASS3 VARS:", o:myclass4:x3, o:myclass4:y3, o:myclass4:z3, "  => should be: |X3| |Y3| |Z3|"
@@ -220,7 +205,6 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "    MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be: |X1| |Y1| |Z1|"
    ? "    MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be: |X2| |Y2| |Z2|"
    ? "    MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be: |X3| |Y3| |Z3|"
@@ -240,8 +224,7 @@ procedure main()
    ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: <X1> <Y1> <Z1>"
    ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: <X2> <Y2> <Z2>"
    ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: <X3> <Y3> <Z3>"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: |X1| |Y1| |Z1|"
       ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: |X2| |Y2| |Z2|"
       ? "[4] MYCLASS3 VARS:", o:myclass4:x3, o:myclass4:y3, o:myclass4:z3, "  => should be: |X3| |Y3| |Z3|"
@@ -249,7 +232,6 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "    MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be: |X1| |Y1| |Z1|"
    ? "    MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be: |X2| |Y2| |Z2|"
    ? "    MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be: |X3| |Y3| |Z3|"
@@ -272,8 +254,7 @@ procedure main()
    ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: *X1* *Y1* *Z1*"
    ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: *X2* *Y2* *Z2*"
    ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: *X3* *Y3* *Z3*"
-   cbErr := ErrorBlock( {| oErr | Break( oErr ) } )
-   begin sequence
+   begin sequence with __BreakBlock()
       ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: |X1| |Y1| |Z1|"
       ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: |X2| |Y2| |Z2|"
       ? "[4] MYCLASS3 VARS:", o:myclass4:x3, o:myclass4:y3, o:myclass4:z3, "  => should be: |X3| |Y3| |Z3|"
@@ -281,7 +262,6 @@ procedure main()
    recover
       ? "ERROR: no selfclass casting"
    end sequence
-   ErrorBlock( cbErr )
    ? "    MYCLASS1 VARS:", o:x1, o:y1, o:z1, "  => should be: |X1| |Y1| |Z1|"
    ? "    MYCLASS2 VARS:", o:x2, o:y2, o:z2, "  => should be: |X2| |Y2| |Z2|"
    ? "    MYCLASS3 VARS:", o:x3, o:y3, o:z3, "  => should be: |X3| |Y3| |Z3|"

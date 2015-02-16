@@ -7,7 +7,7 @@ PROCEDURE Main( cFileName )
 
    LOCAL pPP := __pp_Init()
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       FOR EACH cLine IN hb_ATokens( __pp_Process( pPP, ;
             hb_MemoRead( hb_defaultValue( cFileName, hb_FNameExtSet( __FILE__, ".dat" ) ) ) ), .T. )
          BEGIN SEQUENCE
