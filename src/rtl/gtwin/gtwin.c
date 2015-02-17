@@ -1717,8 +1717,8 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             }
 #endif
          }
-         else if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode == 0x12 &&
-                  s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode == 0x38 )
+         else if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode == VK_MENU )
+            /* && s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode == 0x38 */
          {
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
