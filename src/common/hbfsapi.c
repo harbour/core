@@ -100,18 +100,16 @@ void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
    HB_BOOL fFree = HB_TRUE;
 
    while( *pSearchList )
-   {
       pSearchList = &( *pSearchList )->pNext;
-   }
 
    pPath = hb_strdup( szPath );
    while( ( pDelim = strchr( pPath, HB_OS_PATH_LIST_SEP_CHR ) ) != NULL )
    {
       *pDelim = '\0';
       *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
-      (*pSearchList)->szPath = pPath;
-      (*pSearchList)->fFree  = fFree;
-      pSearchList = &(*pSearchList)->pNext;
+      ( *pSearchList )->szPath = pPath;
+      ( *pSearchList )->fFree  = fFree;
+      pSearchList = &( *pSearchList )->pNext;
       pPath = pDelim + 1;
       fFree = HB_FALSE;
    }

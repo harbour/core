@@ -2591,16 +2591,46 @@ int     hb_setGetFileCase( void )
    return hb_stackSetStruct()->HB_SET_FILECASE;
 }
 
+void hb_setSetFileCase( int iFileCase )
+{
+   HB_STACK_TLS_PRELOAD
+   hb_stackSetStruct()->HB_SET_FILECASE = iFileCase;
+}
+
 int     hb_setGetDirCase( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DIRCASE;
 }
 
+void hb_setSetDirCase( int iDirCase )
+{
+   HB_STACK_TLS_PRELOAD
+   hb_stackSetStruct()->HB_SET_DIRCASE = iDirCase;
+}
+
 int     hb_setGetDirSeparator( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_DIRSEPARATOR;
+}
+
+void hb_setSetDirSeparator( int iSeparator )
+{
+   HB_STACK_TLS_PRELOAD
+   hb_stackSetStruct()->HB_SET_DIRSEPARATOR = iSeparator;
+}
+
+HB_BOOL hb_setGetTrimFileName( void )
+{
+   HB_STACK_TLS_PRELOAD
+   return hb_stackSetStruct()->HB_SET_TRIMFILENAME;
+}
+
+void hb_setSetTrimFileName( HB_BOOL fTrim )
+{
+   HB_STACK_TLS_PRELOAD
+   hb_stackSetStruct()->HB_SET_TRIMFILENAME = fTrim;
 }
 
 int     hb_setGetVideoMode( void )
@@ -2643,12 +2673,6 @@ const char * hb_setGetEOL( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->HB_SET_EOL;
-}
-
-HB_BOOL hb_setGetTrimFileName( void )
-{
-   HB_STACK_TLS_PRELOAD
-   return hb_stackSetStruct()->HB_SET_TRIMFILENAME;
 }
 
 const char * hb_setGetHBOUTLOG( void )

@@ -613,7 +613,7 @@ METHOD BrowseText( nPassedKey ) CLASS HBEditor
       nKeyStd := hb_keyStd( nKey )
       IF ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock )
-      ELSEIF  nKeyStd == K_ESC
+      ELSEIF nKeyStd == K_ESC
          ::lExitEdit := .T.
       ELSEIF ! ::MoveCursor( nKey )
          ::KeyboardHook( nKey )

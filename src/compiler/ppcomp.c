@@ -391,8 +391,7 @@ static void hb_pp_fileIncluded( void * cargo, const char * szFileName )
    *pIncFilePtr = pIncFile;
 }
 
-void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
-                    PHB_PP_OPEN_FUNC pOpenFunc )
+void hb_compInitPP( HB_COMP_DECL, PHB_PP_OPEN_FUNC pOpenFunc )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_compInitPP()" ) );
 
@@ -419,7 +418,7 @@ void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
       hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, ! HB_COMP_PARAM->fNoArchDefs );
 
       /* Add /D and /undef: command line or envvar defines */
-      hb_compChkDefines( HB_COMP_PARAM, argc, argv );
+      hb_compChkSetDefines( HB_COMP_PARAM );
 
       /* add extended definitions files (-u+<file>) */
       if( HB_COMP_PARAM->iStdChExt > 0 )

@@ -72,9 +72,7 @@ extern void hb_compPCodeTrace( PHB_HFUNC, const PHB_PCODE_FUNC *, void * );
 extern void hb_compGenLabelTable( PHB_HFUNC pFunc, PHB_LABEL_INFO label_info );
 extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );
 
-extern void hb_compChkFileSwitches( int argc, char * argv[] );
-
-extern void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[], PHB_PP_OPEN_FUNC pOpenFunc );
+extern void hb_compInitPP( HB_COMP_DECL, PHB_PP_OPEN_FUNC pOpenFunc );
 extern void hb_compCompileEnd( HB_COMP_DECL );
 
 extern int  hb_comp_yyparse( HB_COMP_DECL );
@@ -294,9 +292,10 @@ extern void hb_compCodeBlockRewind( HB_COMP_DECL );                     /* resta
 extern HB_SIZE hb_compExprListEval( HB_COMP_DECL, PHB_EXPR pExpr, PHB_COMP_CARGO_FUNC pEval );
 extern HB_SIZE hb_compExprListEval2( HB_COMP_DECL, PHB_EXPR pExpr1, PHB_EXPR pExpr2, PHB_COMP_CARGO2_FUNC pEval );
 
-extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const args[] );
-extern void hb_compChkPaths( HB_COMP_DECL );
-extern void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const args[] );
+extern void hb_compChkCommandLine( HB_COMP_DECL, int argc, const char * const argv[] );
+extern void hb_compChkEnvironment( HB_COMP_DECL );
+extern void hb_compChkAddIncPaths( HB_COMP_DECL );
+extern void hb_compChkSetDefines( HB_COMP_DECL );
 
 extern void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf );
 extern void hb_compPrintCredits( HB_COMP_DECL );

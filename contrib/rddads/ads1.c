@@ -170,9 +170,7 @@ static HB_ERRCODE commonError( ADSAREAP pArea,
 
          AdsGetLastError( &ulErrCode, aucError, &usLength );
          if( ulErrCode != ( UNSIGNED32 ) errSubCode )
-         {
             AdsGetErrorString( ( UNSIGNED32 ) errSubCode, aucError, &usLength );
-         }
          hb_errPutDescription( pError, ( char * ) aucError );
       }
       else
@@ -1597,65 +1595,65 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 
       if( iNameLen > 1 )
       {
-         if ( ! hb_strnicmp( szFieldType, "autoinc", 2 ) )
+         if( ! hb_strnicmp( szFieldType, "autoinc", 2 ) )
             iData = '+';
-         else if ( ! hb_strnicmp( szFieldType, "binary", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "binary", 2 ) )
             iData = 'W';
          else if( ! hb_strnicmp( szFieldType, "character", 2 ) )
             iData = 'C';
 #if ADS_LIB_VERSION >= 710
-         else if ( ! hb_strnicmp( szFieldType, "cicharacter", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "cicharacter", 2 ) )
             iData = 'c';
 #endif
-         else if ( ! hb_strnicmp( szFieldType, "curdouble", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "curdouble", 2 ) )
             iData = 'Z';
          else if( ! hb_strnicmp( szFieldType, "date", 2 ) )
             iData = 'D';
          else if( ! hb_strnicmp( szFieldType, "double", 2 ) )
             iData = 'B';
-         else if ( ! hb_strnicmp( szFieldType, "image", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "image", 2 ) )
             iData = 'P';
-         else if ( ! hb_strnicmp( szFieldType, "integer", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "integer", 2 ) )
             iData = 'I';
-         else if ( ! hb_strnicmp( szFieldType, "logical", 3 ) )
+         else if( ! hb_strnicmp( szFieldType, "logical", 3 ) )
             iData = 'L';
 #if ADS_LIB_VERSION >= 700
-         else if ( ! hb_strnicmp( szFieldType, "longlong", 3 ) )
+         else if( ! hb_strnicmp( szFieldType, "longlong", 3 ) )
          {
             iData = 'I';
             uiLen = 8;
          }
 #endif
-         else if ( ! hb_strnicmp( szFieldType, "memo", 3 ) )
+         else if( ! hb_strnicmp( szFieldType, "memo", 3 ) )
             iData = 'M';
 #if ADS_LIB_VERSION >= 800
-         else if ( ! hb_strnicmp( szFieldType, "modtime", 3 ) )
+         else if( ! hb_strnicmp( szFieldType, "modtime", 3 ) )
             iData = '=';
 #endif
 #if ADS_LIB_VERSION >= 700
-         else if ( ! hb_strnicmp( szFieldType, "money", 3 ) )
+         else if( ! hb_strnicmp( szFieldType, "money", 3 ) )
             iData = 'Y';
 #endif
-         else if ( ! hb_strnicmp( szFieldType, "numeric", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "numeric", 2 ) )
             iData = 'N';
 #if ADS_LIB_VERSION >= 1000
-         else if ( ! hb_strnicmp( szFieldType, "nchar", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "nchar", 2 ) )
          {
             iData = 'C';
             dbFieldInfo.uiFlags |= HB_FF_UNICODE;
          }
-         else if ( ! hb_strnicmp( szFieldType, "nmemo", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "nmemo", 2 ) )
          {
             iData = 'M';
             dbFieldInfo.uiFlags |= HB_FF_UNICODE;
          }
-         else if ( ! hb_strnicmp( szFieldType, "nvarchar", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "nvarchar", 2 ) )
          {
             iData = 'Q';
             dbFieldInfo.uiFlags |= HB_FF_UNICODE;
          }
 #endif
-         else if ( ! hb_strnicmp( szFieldType, "shortdate", 6 ) )
+         else if( ! hb_strnicmp( szFieldType, "shortdate", 6 ) )
          {
             iData = 'D';
 #if ADS_LIB_VERSION >= 900
@@ -1665,33 +1663,33 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             uiLen = pArea->iFileType == ADS_ADT ? 4 : 3;
 #endif
          }
-         else if ( ! hb_strnicmp( szFieldType, "shortint", 6 ) )
+         else if( ! hb_strnicmp( szFieldType, "shortint", 6 ) )
          {
             iData = 'I';
             uiLen = 2;
          }
-         else if ( ! hb_stricmp( szFieldType, "time" ) )
+         else if( ! hb_stricmp( szFieldType, "time" ) )
          {
             iData = 'T';
             uiLen = 4;
          }
-         else if ( ! hb_strnicmp( szFieldType, "timestamp", 5 ) )
+         else if( ! hb_strnicmp( szFieldType, "timestamp", 5 ) )
          {
             iData = '@';
             uiLen = 8;
          }
-         else if ( ! hb_strnicmp( szFieldType, "raw", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "raw", 2 ) )
          {
             iData = 'C';
             dbFieldInfo.uiFlags |= HB_FF_BINARY;
          }
-         else if ( ! hb_strnicmp( szFieldType, "rowversion", 2 ) )
+         else if( ! hb_strnicmp( szFieldType, "rowversion", 2 ) )
             iData = '^';
-         else if ( ! hb_strnicmp( szFieldType, "varchar", 4 ) )
+         else if( ! hb_strnicmp( szFieldType, "varchar", 4 ) )
          {
             iData = 'Q';
          }
-         else if ( ! hb_strnicmp( szFieldType, "varbinary", 4 ) )
+         else if( ! hb_strnicmp( szFieldType, "varbinary", 4 ) )
          {
             iData = 'Q';
             dbFieldInfo.uiFlags |= HB_FF_BINARY;
