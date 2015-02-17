@@ -45,7 +45,6 @@
  *
  */
 
-
 #include "hbpp.h"
 #include "hbcomp.h"
 #include "hbdate.h"

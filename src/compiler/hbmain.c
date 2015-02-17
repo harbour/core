@@ -63,11 +63,12 @@ int hb_compMainExt( int argc, const char * const argv[],
    HB_COMP_PARAM->pOutPath = NULL;
 
    /* First check the environment variables */
-   hb_compChkCompilerSwitch( HB_COMP_PARAM, 0, NULL );
+   hb_compChkEnvironment( HB_COMP_PARAM );
 
    /* Then check command line arguments
       This will override duplicated environment settings */
-   hb_compChkCompilerSwitch( HB_COMP_PARAM, argc, argv );
+   hb_compChkCommandLine( HB_COMP_PARAM, argc, argv );
+
    if( ! HB_COMP_PARAM->fExit )
    {
       if( HB_COMP_PARAM->iTraceInclude == 0 &&
@@ -103,10 +104,10 @@ int hb_compMainExt( int argc, const char * const argv[],
 
       /* Set Search Path */
       if( HB_COMP_PARAM->fINCLUDE )
-         hb_compChkPaths( HB_COMP_PARAM );
+         hb_compChkAddIncPaths( HB_COMP_PARAM );
 
       /* Set standard rules */
-      hb_compInitPP( HB_COMP_PARAM, argc, argv, pOpenFunc );
+      hb_compInitPP( HB_COMP_PARAM, pOpenFunc );
 
       /* Prepare the table of identifiers */
       hb_compIdentifierOpen( HB_COMP_PARAM );
@@ -3938,6 +3939,15 @@ void hb_compCompileEnd( HB_COMP_DECL )
 
       HB_COMP_PARAM->incfiles = pIncFile->pNext;
       hb_xfree( pIncFile );
+   }
+
+   while( HB_COMP_PARAM->ppdefines )
+   {
+      PHB_PPDEFINE pDefine = HB_COMP_PARAM->ppdefines;
+
+      HB_COMP_PARAM->ppdefines = pDefine->pNext;
+      hb_xfree( pDefine->szName );
+      hb_xfree( pDefine );
    }
 
    while( HB_COMP_PARAM->inlines.pFirst )

@@ -109,7 +109,7 @@ STATIC PROCEDURE Server()
       hb_inetTimeout( sockSrv, 100 )
       s_lReady := .T.
       DO WHILE ! s_lStop
-         IF !Empty( sockConn := hb_inetAccept( sockSrv ) )
+         IF ! Empty( sockConn := hb_inetAccept( sockSrv ) )
             ? "SERVER: accepted new connection."
             hb_inetTimeout( sockConn, 3000 )
 

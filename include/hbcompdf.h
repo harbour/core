@@ -532,6 +532,14 @@ typedef struct _HB_HFUNC
    HB_USHORT         wWithObjectCnt;
 } HB_HFUNC, * PHB_HFUNC;
 
+/* structure to hold PP #define variables passed as command line parameters */
+typedef struct _HB_PPDEFINE
+{
+   char * szName;                         /* name of PP #define variable */
+   const char * szValue;                  /* value of PP #define variable */
+   struct _HB_PPDEFINE * pNext;           /* pointer to the next var */
+} HB_PPDEFINE, * PHB_PPDEFINE;
+
 /* structure to hold an INLINE block of source */
 typedef struct _HB_HINLINE
 {
@@ -748,6 +756,7 @@ typedef struct _HB_COMP
    PHB_MODULE        modules;
    PHB_VARTYPE       pVarType;
    PHB_INCLST        incfiles;
+   PHB_PPDEFINE      ppdefines;
 
    PHB_HDECLARED     pFirstDeclared;
    PHB_HDECLARED     pLastDeclared;
@@ -781,7 +790,6 @@ typedef struct _HB_COMP
    const char *      szAnnounce;
    const char *      szDeclaredFun;
    const char *      szFile;              /* Source file name of compiled module */
-   char              szPrefix[ 20 ];      /* holds the prefix added to the generated symbol init function name (in C output currently) */
    char *            szDepExt;            /* destination file extension used in decencies list */
    char *            szStdCh;             /* standard definitions file name (-u) */
    char **           szStdChExt;          /* extended definitions file names (-u+<file>) */
