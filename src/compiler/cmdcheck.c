@@ -819,7 +819,9 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
    {
       if( szSwPtr - szSwitch <= 1 ||
           ( *szSwPtr != '\0' && *szSwPtr != ' ' && ! HB_ISOPTSEP( *szSwPtr ) ) )
-         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, szSwitch, NULL );
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F',
+                          fEnv ? HB_COMP_ERR_BADOPTION : HB_COMP_ERR_BADPARAM,
+                          szSwitch, NULL );
       else
          return szSwPtr;
    }
