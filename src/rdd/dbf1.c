@@ -4228,6 +4228,16 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                case 'N':
                   if( pField->bFieldFlags & ~( HB_FF_NULLABLE | HB_FF_AUTOINC ) )
                      uiFlags = 0;
+                  else if( ( pField->bFieldFlags & HB_FF_AUTOINC ) != 0 )
+                  {
+                     if( HB_GET_LE_UINT32( pField->bReserved1 ) != 0 ||
+                         ( pField->bLen - ( pField->bDec ? pField->bDec + 1 : 0 ) > 9 ?
+                           HB_GET_LE_UINT32( pField->bCounter ) != 0 :
+                           ( ( uiCount > 0 && HB_GET_LE_UINT32( pField->bReserved2 ) != 0 ) ||
+                             HB_GET_LE_UINT32( &pField->bReserved2[ 4 ] ) != 0 ) ) )
+                        uiFlags = 0;
+                     break;
+                  }
                case 'C':
                case 'M':
                case 'V':
