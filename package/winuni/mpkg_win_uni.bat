@@ -77,7 +77,6 @@ xcopy /y       "%HB_DIR_UPX%upx.exe"                                            
  copy /y       "%HB_DIR_UPX%LICENSE"                                                      "%HB_ABSROOT%bin\upx_LICENSE.txt"
 
 xcopy /y /s /e "%HB_DIR_MINGW%"                                                           "%HB_ABSROOT%comp\mingw\"
-rem del "%HB_ABSROOT%comp\mingw\tdm-mingw-1.908.0-4.4.1-2.exe"
 
 xcopy /y       "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"                                    "%HB_ABSROOT%bin\"
 xcopy /y       "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll"                                   "%HB_ABSROOT%bin\"
