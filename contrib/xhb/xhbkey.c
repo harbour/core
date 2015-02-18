@@ -93,7 +93,7 @@ static int hb_inkeyKeyXHB( int iKey )
           HB_INKEY_ISCHAR( iKey ) ||
           HB_INKEY_ISUNICODE( iKey ) )
       {
-         if( ( iFlags & (  HB_KF_CTRL | HB_KF_ALT ) ) == HB_KF_CTRL )
+         if( ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) == HB_KF_CTRL )
          {
             if( iValue >= 'A' && iValue <= 'Z' )
                return 512 + ( iValue - 'A' ) + 1;
