@@ -62,8 +62,7 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://zlib.net/
-# URL    https://downloads.sourceforge.net/libpng/zlib128.zip
+# URL    http://zlib.net/zlib128.zip
 # DIFF   zlib.dif
 #
 # MAP    README

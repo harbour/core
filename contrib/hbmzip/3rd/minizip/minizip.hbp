@@ -26,8 +26,7 @@ unzip.c
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../../../src/3rd/zlib
 
-# ORIGIN http://zlib.net/
-# URL    https://downloads.sourceforge.net/libpng/zlib128.zip
+# URL    http://zlib.net/zlib128.zip
 # DIFF   minizip.dif
 #
 # MAP    README
