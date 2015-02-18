@@ -50,14 +50,14 @@
  *   Takes one argument, the URL to the archive to the currently installed
  *   version of the component. Used by 3rdpatch.
  *   Example: for PCRE2, at the time of this writing, it is
- *   `https://downloads.sourceforge.net/pcre/pcre2/10.00/pcre2-10.00.tar.gz'.
+ *   `http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre2-10.00.tar.bz2'.
  *   3rdpatch can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
  *   `tbz2', `tar.xz', `txz' and `zip' archives -- one of these must be chosen.
  *
  *   3rdpatch will also use the URL parameter to figure out what type of
  *   file it is working with, so a URL containing this sort if information must
- *   be picked. As an example, SourceForge-style distributed download URLs like
- *   `https://downloads.sourceforge.net/libpng/libpng-1.6.6.tar.gz'
+ *   be picked. As an example, download URLs like
+ *   `https://github.com/glennrp/libpng/archive/v1.6.16.tar.gz'
  *   are OK, but `https://example.com/download/latest' is not, even if latter
  *   would ultimately result (perhaps by the server using Content-Disposition
  *   or similar headers) in a file named `example-pkg-54.tar.gz'.
