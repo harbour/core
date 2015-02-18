@@ -78,8 +78,7 @@
                                                  should be printed. */
 #define CM_OMITST                   0x200000  /* Elements that cannot be omitted. */
 
-/* Constants for HTML attributes adopted from Tidy library
-   https://sourceforge.net/projects/tidy/ */
+/* Constants for HTML attributes adopted from Tidy library */
 
 #define HTML_ATTR_ABBR              1
 #define HTML_ATTR_ACCEPT            2

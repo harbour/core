@@ -2,7 +2,6 @@
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br
  *
  * Thanks to Robert F Greer, PHP original version
- * https://sourceforge.net/projects/excelwriterxml/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,3 +1,5 @@
+description=Harbour port of https://sourceforge.net/projects/excelwriterxml/
+
 incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
 

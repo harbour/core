@@ -1754,8 +1754,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
 
    RETURN
 
-/* HTML Tag attribute data are adopted for Harbour from Tidy
-   https://sourceforge.net/projects/tidy/ */
+/* HTML Tag attribute data are adopted for Harbour from Tidy */
 
 STATIC PROCEDURE _Init_Html_Attributes
 
