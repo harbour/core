@@ -1,4 +1,4 @@
-description=Harbour port of https://sourceforge.net/projects/excelwriterxml/
+description=Harbour port of http://excelwriterxml.sourceforge.net/
 
 incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
