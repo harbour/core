@@ -4,11 +4,8 @@
  *
  * You should install PDFCreator to be able to run this test
  *
- * Download site:
- * https://sourceforge.net/projects/pdfcreator/
- *
  * COM interface docs:
- * http://www.pdfforge.org/content/com-interface
+ * https://www.pdfforge.org/pdfcreator/manual/com-interface
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
  *
