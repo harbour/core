@@ -1603,7 +1603,7 @@ Supported shells per host platforms:
          * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/>
          * <https://downloads.sourceforge.net/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma>
          * <https://downloads.sourceforge.net/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma>
-         * `cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/sources/make co make`
+         * `git clone ssh://git.sv.gnu.org/srv/git/make.git`
           <br />(included in Harbour as [win-make.exe](win-make.exe))
 
         MS-DOS binary + source:
