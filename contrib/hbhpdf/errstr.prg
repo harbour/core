@@ -47,8 +47,7 @@
 #include "harupdf.ch"
 
 /* NOTE: Error descriptions here:
-            https://github.com/libharu/libharu/wiki/Error-handling
-            http://libharu.sourceforge.net/error_handling.html
+         https://github.com/libharu/libharu/wiki/Error-handling
  */
 
 FUNCTION hb_HPDF_GetErrorString( nStatus )
