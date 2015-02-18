@@ -78,10 +78,12 @@ xcopy /y       "%HB_DIR_UPX%upx.exe"                                            
 
 xcopy /y /s /e "%HB_DIR_MINGW%"                                                           "%HB_ABSROOT%comp\mingw\"
 
-xcopy /y       "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"                                    "%HB_ABSROOT%bin\"
-xcopy /y       "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll"                                   "%HB_ABSROOT%bin\"
-xcopy /y       "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"                                    "%HB_ABSROOT%bin\"
-xcopy /y       "%HB_DIR_MINGW%\bin\mingwm10.dll"                                          "%HB_ABSROOT%bin\"
+rem NOTE: In multi-target distros these may not match the platform of
+rem       the Harbour installation we're about to create.
+if exist "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  "%HB_ABSROOT%bin\"
+if exist "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" "%HB_ABSROOT%bin\"
+if exist "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  "%HB_ABSROOT%bin\"
+if exist "%HB_DIR_MINGW%\bin\mingwm10.dll"        xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"        "%HB_ABSROOT%bin\"
 
 rem Create unified installer
 

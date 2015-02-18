@@ -299,7 +299,7 @@ static HB_BOOL file_read( FILE * stream, char * string, int * iCharCount )
    {
       ch = fgetc( stream );
 
-      if( ( ch == '\n' ) || ( ch == EOF ) || ( ch == 26 ) )
+      if( ch == '\n' || ch == EOF || ch == 26 )
       {
          *iCharCount    = cnbr;
          string[ cnbr ] = '\0';
