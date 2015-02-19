@@ -145,14 +145,15 @@ Evaluate these points before reporting an issue:
     or Harbour's mainline branch first.
 12. If you are to report a problem with Harbour itself, provide
     self-contained, minimal source code example. Do not use xhb contrib
-    library, or any 3rd party Harbour libraries. The example shall reproduce
-    the problem using the latest Harbour revision at the time of the report.
-    Do not post links to executables and other binary files. If your source
-    contains non-ASCII and non-UTF-8 national, accented, special chars, make
-    sure to mark the codepage/encoding used and use `Chr()`/`hb_BCode()` calls
-    to form the strings. UTF-8 is recommended. Notice that code examples
-    are likely to be executed as hbrun scripts for testing, so it's
-    a good idea to make them work this way.<br />
+    library (including `hbcompat.ch`), nor any 3rd party Harbour libraries.
+    The example shall reproduce the problem using the latest Harbour revision
+    at the time of the report. Do not post links to executables and other
+    binary files. If your source contains non-ASCII and non-UTF-8 national,
+    accented, special chars, make sure to mark the codepage/encoding used
+    and use `Chr()`/`hb_BCode()` calls to form the strings. UTF-8 is
+    recommended. Notice that code examples are likely to be executed as
+    hbrun scripts for testing, so it's a good idea to make them work this
+    way.<br />
     Also make sure not to report multiple issues under one GitHub Issue.<br />
     * See more on self-contained examples:
       <http://sscce.org/>
