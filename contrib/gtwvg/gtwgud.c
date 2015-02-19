@@ -1680,7 +1680,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                i1 = hb_arrayGetNI( pInfo->pNewVal, 1 );
                i2 = hb_arrayGetNI( pInfo->pNewVal, 2 );
             }
-            if( i1 >= -1 && i2 >= -1 )
+            else
+               break;
+
+            if( i1 > -1 && i2 > -1 )
             {
                int x, y;
 
