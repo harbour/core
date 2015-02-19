@@ -125,28 +125,6 @@ mod_remove_empty_return                  = true     # false/true
 
 
 #
-# inter-character spacing options
-#
-
-# sp_return_paren   = force     # "return (1);" vs "return(1);"
-sp_sizeof_paren     = remove    # "sizeof (int)" vs "sizeof(int)"
-sp_before_sparen    = remove    # "if (" vs "if("
-sp_after_sparen     = force     # "if () {" vs "if (){"
-sp_after_cast       = force     # "(int) a" vs "(int)a"
-sp_inside_braces    = add       # "{ 1 }" vs "{1}"
-sp_inside_braces_struct = add       # "{ 1 }" vs "{1}"
-sp_inside_braces_enum   = add       # "{ 1 }" vs "{1}"
-sp_assign       = add
-sp_arith        = add
-sp_bool         = add
-sp_compare      = add
-sp_assign       = add
-sp_after_comma      = add
-sp_func_def_paren   = remove    # "int foo (){" vs "int foo(){"
-sp_func_call_paren  = remove    # "foo (" vs "foo("
-sp_func_proto_paren = remove    # "int foo ();" vs "int foo();"
-
-#
 # Spacing options
 #
 
@@ -268,7 +246,7 @@ sp_inside_sparen                         = force    # ignore/add/remove/force
 sp_inside_sparen_close                   = ignore   # ignore/add/remove/force
 
 # Add or remove space after ')' of 'if', 'for', 'switch', and 'while'
-sp_after_sparen                          = ignore   # ignore/add/remove/force
+sp_after_sparen                          = force    # ignore/add/remove/force
 
 # Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while'
 sp_sparen_brace                          = ignore   # ignore/add/remove/force
@@ -400,7 +378,7 @@ sp_func_call_user_paren                  = ignore   # ignore/add/remove/force
 sp_func_class_paren                      = ignore   # ignore/add/remove/force
 
 # Add or remove space between 'return' and '('
-sp_return_paren                          = ignore   # ignore/add/remove/force
+sp_return_paren                          = force    # ignore/add/remove/force
 
 # Add or remove space between '__attribute__' and '('
 sp_attribute_paren                       = ignore   # ignore/add/remove/force
