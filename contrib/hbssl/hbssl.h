@@ -65,17 +65,17 @@
    /* #error "unsupported OpenSSL version, required 0.9.6 or higher" */
 #endif
 
-#if OPENSSL_VERSION_NUMBER < 0x0090806fL
+#if OPENSSL_VERSION_NUMBER < 0x00908060L
    #ifndef OPENSSL_NO_SEED
       #define OPENSSL_NO_SEED
    #endif
 #endif
-#if OPENSSL_VERSION_NUMBER < 0x0090803fL
+#if OPENSSL_VERSION_NUMBER < 0x00908030L
    #ifndef OPENSSL_NO_CAMELLIA
       #define OPENSSL_NO_CAMELLIA
    #endif
 #endif
-#if OPENSSL_VERSION_NUMBER < 0x0090800fL
+#if OPENSSL_VERSION_NUMBER < 0x00908000L
    #ifndef OPENSSL_NO_DGRAM
       #define OPENSSL_NO_DGRAM
    #endif
@@ -143,7 +143,7 @@
 
 #endif
 #if OPENSSL_VERSION_NUMBER < 0x00908000L
-   #if OPENSSL_VERSION_NUMBER < 0x0090708fL || ! defined( OPENSSL_FIPS )
+   #if OPENSSL_VERSION_NUMBER < 0x00907080L || ! defined( OPENSSL_FIPS )
       #ifndef OPENSSL_NO_SHA256
          #define OPENSSL_NO_SHA256
       #endif
