@@ -1260,7 +1260,7 @@ HB_FUNC( SSL_SET_MTU )
 {
    if( hb_SSL_is( 1 ) )
    {
-#if ! defined( HB_OPENSSL_OLD_OSX_ )
+#if OPENSSL_VERSION_NUMBER >= 0x00908000L && ! defined( HB_OPENSSL_OLD_OSX_ )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
@@ -1507,6 +1507,7 @@ HB_FUNC( SSL_USE_PRIVATEKEY )
 /* Callback */
 /* -------- */
 
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
 static void hb_ssl_msg_callback( int write_p, int version, int content_type, const void * buf, size_t len, SSL * ssl, void * userdata )
 {
    HB_SYMBOL_UNUSED( ssl );
@@ -1524,6 +1525,7 @@ static void hb_ssl_msg_callback( int write_p, int version, int content_type, con
       hb_vmRequestRestore();
    }
 }
+#endif
 
 HB_FUNC( SSL_SET_MSG_CALLBACK )
 {
@@ -1533,6 +1535,7 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
 
       if( ssl )
       {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          PHB_ITEM pCallback = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
 
          if( pCallback )
@@ -1548,6 +1551,7 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
             SSL_set_msg_callback_arg( ssl, NULL );
             SSL_set_msg_callback( ssl, NULL );
          }
+#endif
       }
    }
    else
