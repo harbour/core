@@ -587,8 +587,8 @@ HB_FUNC( EVP_ENCRYPTINIT )
       if( ctx )
          hb_retni( EVP_EncryptInit( ctx,
                                     cipher,
-                                    ( const unsigned char * ) hb_parc( 3 ),
-                                    ( const unsigned char * ) hb_parc( 4 ) ) );
+                                    ( HB_SSL_CONST unsigned char * ) hb_parc( 3 ),
+                                    ( HB_SSL_CONST unsigned char * ) hb_parc( 4 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -629,7 +629,7 @@ HB_FUNC( EVP_ENCRYPTUPDATE )
          hb_retni( EVP_EncryptUpdate( ctx,
                                       buffer,
                                       &size,
-                                      ( const unsigned char * ) hb_parcx( 3 ),
+                                      ( HB_SSL_CONST unsigned char * ) hb_parcx( 3 ),
                                       ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
@@ -719,8 +719,8 @@ HB_FUNC( EVP_DECRYPTINIT )
       if( ctx )
          hb_retni( EVP_DecryptInit( ctx,
                                     cipher,
-                                    ( const unsigned char * ) hb_parc( 3 ),
-                                    ( const unsigned char * ) hb_parc( 4 ) ) );
+                                    ( HB_SSL_CONST unsigned char * ) hb_parc( 3 ),
+                                    ( HB_SSL_CONST unsigned char * ) hb_parc( 4 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -761,7 +761,7 @@ HB_FUNC( EVP_DECRYPTUPDATE )
          hb_retni( EVP_DecryptUpdate( ctx,
                                       buffer,
                                       &size,
-                                      ( const unsigned char * ) hb_parcx( 3 ),
+                                      ( HB_SSL_CONST unsigned char * ) hb_parcx( 3 ),
                                       ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
@@ -851,8 +851,8 @@ HB_FUNC( EVP_CIPHERINIT )
       if( ctx )
          hb_retni( EVP_CipherInit( ctx,
                                    cipher,
-                                   ( const unsigned char * ) hb_parc( 3 ),
-                                   ( const unsigned char * ) hb_parc( 4 ),
+                                   ( HB_SSL_CONST unsigned char * ) hb_parc( 3 ),
+                                   ( HB_SSL_CONST unsigned char * ) hb_parc( 4 ),
                                    hb_parni( 5 ) ) );
    }
    else
@@ -895,7 +895,7 @@ HB_FUNC( EVP_CIPHERUPDATE )
          hb_retni( EVP_CipherUpdate( ctx,
                                      buffer,
                                      &size,
-                                     ( const unsigned char * ) hb_parcx( 3 ),
+                                     ( HB_SSL_CONST unsigned char * ) hb_parcx( 3 ),
                                      ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
@@ -1015,7 +1015,7 @@ HB_FUNC( EVP_SEALINIT )
             }
 
             hb_retni( EVP_SealInit( ctx,
-                                    cipher,
+                                    ( HB_SSL_CONST EVP_CIPHER * ) cipher,
                                     ek,
                                     ekl,
                                     iv,
@@ -1062,7 +1062,7 @@ HB_FUNC( EVP_SEALUPDATE )
          hb_retni( EVP_SealUpdate( ctx,
                                    buffer,
                                    &size,
-                                   ( const unsigned char * ) hb_parcx( 3 ),
+                                   ( HB_SSL_CONST unsigned char * ) hb_parcx( 3 ),
                                    ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
@@ -1126,10 +1126,10 @@ HB_FUNC( EVP_OPENINIT )
 
       if( ctx && priv )
          hb_retni( EVP_OpenInit( ctx,
-                                 cipher,
-                                 ( const unsigned char * ) hb_parcx( 3 ),
+                                 ( HB_SSL_CONST EVP_CIPHER * ) cipher,
+                                 ( HB_SSL_CONST unsigned char * ) hb_parcx( 3 ),
                                  ( int ) hb_parclen( 3 ),
-                                 ( HB_ISCHAR( 4 ) && ( int ) hb_parclen( 4 ) == EVP_CIPHER_iv_length( cipher ) ) ? ( const unsigned char * ) hb_parc( 4 ) : NULL,
+                                 ( HB_ISCHAR( 4 ) && ( int ) hb_parclen( 4 ) == EVP_CIPHER_iv_length( cipher ) ) ? ( HB_SSL_CONST unsigned char * ) hb_parc( 4 ) : NULL,
                                  priv ) );
    }
    else
@@ -1150,7 +1150,7 @@ HB_FUNC( EVP_OPENUPDATE )
          hb_retni( EVP_OpenUpdate( ctx,
                                    buffer,
                                    &size,
-                                   ( const unsigned char * ) hb_parcx( 3 ),
+                                   ( HB_SSL_CONST unsigned char * ) hb_parcx( 3 ),
                                    ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )

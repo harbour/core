@@ -157,6 +157,14 @@
    #define SSL_get_wfd  SSL_get_fd
 #endif
 
+/* use macro to pacify warnings with missing 'const' in some function
+   declarations in OpenSSL prior 0.9.8 */
+#if OPENSSL_VERSION_NUMBER < 0x0090800fL
+   #define HB_SSL_CONST
+#else
+   #define HB_SSL_CONST const
+#endif
+
 HB_EXTERN_BEGIN
 
 extern const SSL_METHOD * hb_ssl_method_id_to_ptr( int n );
