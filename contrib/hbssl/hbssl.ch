@@ -240,6 +240,7 @@
 #define HB_EVP_CIPHER_RC5_32_12_16_CFB64                    49
 #define HB_EVP_CIPHER_RC5_32_12_16_CFB                      50
 #define HB_EVP_CIPHER_RC5_32_12_16_OFB                      51
+#define HB_EVP_CIPHER_AES_128_GCM                           99
 #define HB_EVP_CIPHER_AES_128_ECB                           52
 #define HB_EVP_CIPHER_AES_128_CBC                           53
 #define HB_EVP_CIPHER_AES_128_CFB1                          54
@@ -247,6 +248,7 @@
 #define HB_EVP_CIPHER_AES_128_CFB128                        56
 #define HB_EVP_CIPHER_AES_128_CFB                           57
 #define HB_EVP_CIPHER_AES_128_OFB                           58
+#define HB_EVP_CIPHER_AES_192_GCM                           100
 #define HB_EVP_CIPHER_AES_192_ECB                           59
 #define HB_EVP_CIPHER_AES_192_CBC                           60
 #define HB_EVP_CIPHER_AES_192_CFB1                          61
@@ -255,6 +257,7 @@
 #define HB_EVP_CIPHER_AES_192_CFB                           64
 #define HB_EVP_CIPHER_AES_192_OFB                           65
 #define HB_EVP_CIPHER_AES_256_ECB                           66
+#define HB_EVP_CIPHER_AES_256_GCM                           101  /* highest */
 #define HB_EVP_CIPHER_AES_256_CBC                           67
 #define HB_EVP_CIPHER_AES_256_CFB1                          68
 #define HB_EVP_CIPHER_AES_256_CFB8                          69

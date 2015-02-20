@@ -32,6 +32,7 @@ DYNAMIC BIO_free_all
 DYNAMIC BIO_gets
 DYNAMIC BIO_get_close
 DYNAMIC BIO_get_conn_hostname
+DYNAMIC BIO_get_conn_int_port
 DYNAMIC BIO_get_conn_ip
 DYNAMIC BIO_get_conn_port
 DYNAMIC BIO_get_fd

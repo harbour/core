@@ -70,7 +70,7 @@ HB_FUNC( HB_SSL_READ_ALL )
          int    iAllocated = 0;
          char * retval     = NULL;
 
-         for(;; )
+         for( ;; )
          {
             char buffer[ 1 ];
             int  iLen;
@@ -140,7 +140,7 @@ HB_FUNC( HB_SSL_READ_LINE )
          int    iAllocated = 0;
          char * retval     = NULL;
 
-         for(;; )
+         for( ;; )
          {
             char buffer[ 1 ];
             int  iLen;
