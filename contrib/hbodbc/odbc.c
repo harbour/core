@@ -94,8 +94,11 @@
 #include <sqlext.h>
 
 #if ! defined( HB_OS_WIN )
-   #if ! defined( SQLLEN ) && ! defined( SQLTCHAR )
+   #if ! defined( SQLLEN ) && ! defined( SQLTCHAR ) && \
+       ! defined( UODBCINT64 ) && ! defined( SIZEOF_LONG_INT )
       typedef unsigned char SQLTCHAR;
+      typedef long          SQLLEN;
+      typedef unsigned long SQLULEN;
    #endif
 #endif
 
