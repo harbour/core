@@ -462,7 +462,7 @@ HB_FUNC( EVP_CIPHER_KEY_MODE )
 #if OPENSSL_VERSION_NUMBER < 0x00906040L
    /* fix for typo in macro definition in openssl/evp.h */
    #undef EVP_CIPHER_mode
-   #define EVP_CIPHER_mode(e) ((e)->flags & EVP_CIPH_MODE)
+   #define EVP_CIPHER_mode(e)  ((e)->flags & EVP_CIPH_MODE)
 #endif
    hb_retni( cipher ? EVP_CIPHER_mode( cipher ) : 0 );
 }
@@ -517,12 +517,16 @@ HB_FUNC( EVP_CIPHER_CTX_SET_PADDING )
 {
    if( hb_EVP_CIPHER_CTX_is( 1 ) )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_CIPHER_CTX_set_padding( ctx, hb_parni( 2 ) ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -607,16 +611,20 @@ HB_FUNC( EVP_ENCRYPTINIT_EX )
 
    if( hb_EVP_CIPHER_CTX_is( 1 ) && cipher )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_EncryptInit_ex( ctx,
                                        cipher,
                                        ( ENGINE * ) hb_parptr( 3 ),
                                        ( const unsigned char * ) hb_parc( 4 ),
                                        ( const unsigned char * ) hb_parc( 5 ) ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -708,6 +716,9 @@ HB_FUNC( EVP_ENCRYPTFINAL_EX )
             hb_xfree( buffer );
             hb_storc( NULL, 2 );
          }
+#else
+         hb_retni( 0 );
+         hb_storc( NULL, 2 );
 #endif
       }
    }
@@ -739,16 +750,20 @@ HB_FUNC( EVP_DECRYPTINIT_EX )
 
    if( hb_EVP_CIPHER_CTX_is( 1 ) && cipher )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_DecryptInit_ex( ctx,
                                        cipher,
                                        ( ENGINE * ) hb_parptr( 3 ),
                                        ( const unsigned char * ) hb_parc( 4 ),
                                        ( const unsigned char * ) hb_parc( 5 ) ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -840,6 +855,9 @@ HB_FUNC( EVP_DECRYPTFINAL_EX )
             hb_xfree( buffer );
             hb_storc( NULL, 2 );
          }
+#else
+         hb_retni( 0 );
+         hb_storc( NULL, 2 );
 #endif
       }
    }
@@ -872,17 +890,21 @@ HB_FUNC( EVP_CIPHERINIT_EX )
 
    if( hb_EVP_CIPHER_CTX_is( 1 ) && cipher )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_CipherInit_ex( ctx,
                                       cipher,
                                       ( ENGINE * ) hb_parptr( 3 ),
                                       ( const unsigned char * ) hb_parc( 4 ),
                                       ( const unsigned char * ) hb_parc( 5 ),
                                       hb_parni( 6 ) ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -974,6 +996,9 @@ HB_FUNC( EVP_CIPHERFINAL_EX )
             hb_xfree( buffer );
             hb_storc( NULL, 2 );
          }
+#else
+         hb_retni( 0 );
+         hb_storc( NULL, 2 );
 #endif
       }
    }

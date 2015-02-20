@@ -278,12 +278,16 @@ HB_FUNC( EVP_MD_CTX_CLEANUP )
 {
    if( hb_EVP_MD_CTX_is( 1 ) )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_MD_CTX_cleanup( ctx ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -320,13 +324,17 @@ HB_FUNC( EVP_MD_CTX_COPY_EX )
 {
    if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_CTX_is( 2 ) )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_MD_CTX * ctx_out = hb_EVP_MD_CTX_par( 1 );
       EVP_MD_CTX * ctx_in  = hb_EVP_MD_CTX_par( 2 );
 
       if( ctx_out && ctx_in )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_MD_CTX_copy_ex( ctx_out, ctx_in ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -360,12 +368,16 @@ HB_FUNC( EVP_DIGESTINIT_EX )
 
    if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_DigestInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -477,12 +489,16 @@ HB_FUNC( EVP_SIGNINIT_EX )
 
    if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_SignInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -565,12 +581,16 @@ HB_FUNC( EVP_VERIFYINIT_EX )
 
    if( hb_EVP_MD_CTX_is( 1 ) && md )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_VerifyInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
+#else
+         hb_retni( 0 );
 #endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

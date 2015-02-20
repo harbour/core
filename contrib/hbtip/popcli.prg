@@ -384,7 +384,7 @@ METHOD getTop( nMsgId ) CLASS TIPClientPOP
       RETURN NIL
    ENDIF
 
-   xRet := ""
+   xRet := cStr := ""
    DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
       cStr := ::inetRecvLine( ::SocketCon, @nPos, 1024 )
       IF !( cStr == "." )

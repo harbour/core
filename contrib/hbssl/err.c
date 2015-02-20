@@ -80,6 +80,8 @@ HB_FUNC( ERR_PEEK_LAST_ERROR )
 {
 #if OPENSSL_VERSION_NUMBER >= 0x00907000L
    hb_retnint( ERR_peek_last_error() );
+#else
+   hb_retnint( -1 );
 #endif
 }
 
@@ -141,6 +143,11 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE )
 
    hb_storc( file, 1 );
    hb_storni( line, 2 );
+#else
+   hb_retnint( -1 );
+
+   hb_storc( NULL, 1 );
+   hb_storni( 0, 2 );
 #endif
 }
 
@@ -188,6 +195,13 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
    hb_storni( line, 2 );
    hb_storc( data, 3 );
    hb_storni( flags, 4 );
+#else
+   hb_retnint( -1 );
+
+   hb_storc( NULL, 1 );
+   hb_storni( 0, 2 );
+   hb_storc( NULL, 3 );
+   hb_storni( 0, 4 );
 #endif
 }
 
