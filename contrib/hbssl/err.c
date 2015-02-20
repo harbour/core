@@ -78,7 +78,9 @@ HB_FUNC( ERR_PEEK_ERROR )
 
 HB_FUNC( ERR_PEEK_LAST_ERROR )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
    hb_retnint( ERR_peek_last_error() );
+#endif
 }
 
 HB_FUNC( ERR_ERROR_STRING )
@@ -131,6 +133,7 @@ HB_FUNC( ERR_PEEK_ERROR_LINE )
 
 HB_FUNC( ERR_PEEK_LAST_ERROR_LINE )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
    const char * file = NULL;
    int          line = 0;
 
@@ -138,6 +141,7 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE )
 
    hb_storc( file, 1 );
    hb_storni( line, 2 );
+#endif
 }
 
 HB_FUNC( ERR_GET_ERROR_LINE_DATA )
@@ -172,6 +176,7 @@ HB_FUNC( ERR_PEEK_ERROR_LINE_DATA )
 
 HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
    const char * file  = NULL;
    int          line  = 0;
    const char * data  = NULL;
@@ -183,6 +188,7 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
    hb_storni( line, 2 );
    hb_storc( data, 3 );
    hb_storni( flags, 4 );
+#endif
 }
 
 HB_FUNC( ERR_FREE_STRINGS )

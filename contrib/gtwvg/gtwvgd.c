@@ -3707,7 +3707,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             else
                break;
 
-            if( i1 >= -1 && i2 >= -1 )
+            if( i1 > -1 && i2 > -1 )
             {
                int x, y;
 

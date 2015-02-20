@@ -1258,7 +1258,7 @@ HB_FUNC( SSL_SET_MTU )
 {
    if( hb_SSL_is( 1 ) )
    {
-#if ! defined( HB_OPENSSL_OLD_OSX_ )
+#if OPENSSL_VERSION_NUMBER >= 0x00908000L && ! defined( HB_OPENSSL_OLD_OSX_ )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
@@ -1467,7 +1467,7 @@ HB_FUNC( SSL_USE_PRIVATEKEY_ASN1 )
       SSL * ssl = hb_SSL_par( 2 );
 
       if( ssl )
-         hb_retni( SSL_use_PrivateKey_ASN1( hb_parni( 1 ), ssl, ( const unsigned char * ) hb_parc( 3 ), ( int ) hb_parclen( 3 ) ) );
+         hb_retni( SSL_use_PrivateKey_ASN1( hb_parni( 1 ), ssl, ( HB_SSL_CONST unsigned char * ) hb_parc( 3 ), ( int ) hb_parclen( 3 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1480,7 +1480,7 @@ HB_FUNC( SSL_USE_CERTIFICATE_ASN1 )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retni( SSL_use_certificate_ASN1( ssl, ( const unsigned char * ) hb_parc( 2 ), ( int ) hb_parclen( 2 ) ) );
+         hb_retni( SSL_use_certificate_ASN1( ssl, ( HB_SSL_CONST unsigned char * ) hb_parc( 2 ), ( int ) hb_parclen( 2 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1504,6 +1504,7 @@ HB_FUNC( SSL_USE_PRIVATEKEY )
 
 /* Callback */
 
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
 static void hb_ssl_msg_callback( int write_p, int version, int content_type, const void * buf, size_t len, SSL * ssl, void * userdata )
 {
    HB_SYMBOL_UNUSED( ssl );
@@ -1521,6 +1522,7 @@ static void hb_ssl_msg_callback( int write_p, int version, int content_type, con
       hb_vmRequestRestore();
    }
 }
+#endif
 
 HB_FUNC( SSL_SET_MSG_CALLBACK )
 {
@@ -1530,6 +1532,7 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
 
       if( ssl )
       {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          PHB_ITEM pCallback = hb_param( 2, HB_IT_EVALITEM );
 
          if( pCallback )
@@ -1545,6 +1548,7 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
             SSL_set_msg_callback_arg( ssl, NULL );
             SSL_set_msg_callback( ssl, NULL );
          }
+#endif
       }
    }
    else
