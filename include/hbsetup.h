@@ -130,7 +130,7 @@
  */
 
 /* Partially based on:
-      http://predef.sourceforge.net/prearch.html
+      https://sourceforge.net/p/predef/wiki/Home/
       http://poshlib.hookatooka.com/poshlib/trac.cgi/browser/posh.h
       [vszakats]
  */
