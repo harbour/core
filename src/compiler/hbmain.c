@@ -30,6 +30,7 @@
 
 #include "hbcomp.h"
 #include "hbhash.h"
+#include "hbset.h"
 
 static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuffer, int iStartLine );
 static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PHB_HFUNC pFunc, HB_BOOL fError );
@@ -43,11 +44,17 @@ int hb_compMainExt( int argc, const char * const argv[],
                                   PHB_PP_MSG_FUNC pMsgFunc )
 {
    HB_COMP_DECL;
-   int iStatus = EXIT_SUCCESS;
-   HB_BOOL bAnyFiles = HB_FALSE;
+   int iStatus = EXIT_SUCCESS, iFileCount = 0;
+   int iFileCase, iDirCase, iDirSep;
+   HB_BOOL fTrimFN;
    int i;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_compMain()" ) );
+
+   iFileCase = hb_setGetFileCase();
+   iDirCase = hb_setGetDirCase();
+   iDirSep = hb_setGetDirSeparator();
+   fTrimFN = hb_setGetTrimFileName();
 
    if( pBufPtr && pnSize )
    {
@@ -96,12 +103,6 @@ int hb_compMainExt( int argc, const char * const argv[],
       if( HB_COMP_PARAM->fCredits )
          hb_compPrintCredits( HB_COMP_PARAM );
 
-      if( HB_COMP_PARAM->fBuildInfo || HB_COMP_PARAM->fCredits )
-      {
-         hb_comp_free( HB_COMP_PARAM );
-         return iStatus;
-      }
-
       /* Set Search Path */
       if( HB_COMP_PARAM->fINCLUDE )
          hb_compChkAddIncPaths( HB_COMP_PARAM );
@@ -115,7 +116,7 @@ int hb_compMainExt( int argc, const char * const argv[],
 
    if( szSource )
    {
-      bAnyFiles = HB_TRUE;
+      iFileCount++;
       iStatus = hb_compCompile( HB_COMP_PARAM, "{SOURCE}", szSource, iStartLine );
    }
    else
@@ -126,7 +127,7 @@ int hb_compMainExt( int argc, const char * const argv[],
          HB_TRACE( HB_TR_DEBUG, ( "main LOOP(%i,%s)", i, argv[ i ] ) );
          if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
          {
-            bAnyFiles = HB_TRUE;
+            iFileCount++;
             iStatus = hb_compCompile( HB_COMP_PARAM, argv[ i ], NULL, 0 );
             if( iStatus != EXIT_SUCCESS )
                break;
@@ -134,27 +135,34 @@ int hb_compMainExt( int argc, const char * const argv[],
       }
    }
 
-   if( ! bAnyFiles && ! HB_COMP_PARAM->fQuiet && ! HB_COMP_PARAM->fExit )
+   if( iFileCount == 0 && ! HB_COMP_PARAM->fQuiet && ! HB_COMP_PARAM->fExit &&
+       ! HB_COMP_PARAM->fBuildInfo && ! HB_COMP_PARAM->fCredits )
    {
       hb_compPrintUsage( HB_COMP_PARAM, argv[ 0 ] );
       iStatus = EXIT_FAILURE;
    }
-
-   if( HB_COMP_PARAM->iErrorCount > 0 )
+   else if( HB_COMP_PARAM->iErrorCount > 0 )
       iStatus = EXIT_FAILURE;
 
-   if( iStatus == EXIT_SUCCESS )
+   if( iFileCount > 0 && iStatus == EXIT_SUCCESS )
+   {
       hb_compI18nSave( HB_COMP_PARAM, HB_TRUE );
 
-   if( pBufPtr && pnSize && iStatus == EXIT_SUCCESS )
-   {
-      *pBufPtr = HB_COMP_PARAM->pOutBuf;
-      *pnSize  = HB_COMP_PARAM->nOutBufSize;
-      HB_COMP_PARAM->pOutBuf = NULL;
-      HB_COMP_PARAM->nOutBufSize = 0;
+      if( pBufPtr && pnSize && iStatus == EXIT_SUCCESS )
+      {
+         *pBufPtr = HB_COMP_PARAM->pOutBuf;
+         *pnSize  = HB_COMP_PARAM->nOutBufSize;
+         HB_COMP_PARAM->pOutBuf = NULL;
+         HB_COMP_PARAM->nOutBufSize = 0;
+      }
    }
 
    hb_comp_free( HB_COMP_PARAM );
+
+   hb_setSetFileCase( iFileCase );
+   hb_setSetDirCase( iDirCase );
+   hb_setSetDirSeparator( iDirSep );
+   hb_setSetTrimFileName( fTrimFN );
 
    return iStatus;
 }

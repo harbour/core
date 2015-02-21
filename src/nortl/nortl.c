@@ -682,9 +682,24 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
 }
 #endif
 
+int hb_setGetFileCase( void )
+{
+   return s_iFileCase;
+}
+
+int hb_setGetDirCase( void )
+{
+   return s_iDirCase;
+}
+
 int hb_setGetDirSeparator( void )
 {
    return s_cDirSep;
+}
+
+HB_BOOL hb_setGetTrimFileName( void )
+{
+   return s_fFnTrim;
 }
 
 void hb_setSetFileCase( int iFileCase )
