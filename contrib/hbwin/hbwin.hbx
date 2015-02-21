@@ -384,6 +384,7 @@ DYNAMIC win_OEMToANSI
 DYNAMIC win_oleAuto
 DYNAMIC win_oleAuto___OnError
 DYNAMIC win_oleAuto___OpIndex
+DYNAMIC win_oleClassExists
 DYNAMIC win_oleCreateObject
 DYNAMIC win_oleError
 DYNAMIC win_oleErrorText

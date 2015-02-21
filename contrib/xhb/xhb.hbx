@@ -292,6 +292,7 @@ DYNAMIC IsDir
 DYNAMIC IsDirectory
 DYNAMIC IsGraph
 DYNAMIC IsLocked
+DYNAMIC IsOleObjectRegistered
 DYNAMIC IsPointer
 DYNAMIC IsPrint
 DYNAMIC IsPunct

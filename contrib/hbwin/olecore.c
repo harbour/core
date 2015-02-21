@@ -1495,6 +1495,25 @@ HB_FUNC( __OLEISDISP )
    hb_retl( hb_oleItemGet( hb_param( 1, HB_IT_ANY ) ) != NULL );
 }
 
+HB_FUNC( WIN_OLECLASSEXISTS )
+{
+   HB_BOOL fExists = HB_FALSE;
+   const char * cOleName = hb_parc( 1 );
+
+   if( cOleName )
+   {
+      CLSID ClassID;
+      wchar_t * cCLSID = AnsiToWide( cOleName );
+      if( cOleName[ 0 ] == '{' )
+         fExists = ( CLSIDFromString( ( LPOLESTR ) cCLSID, &ClassID ) == NOERROR );
+      else
+         fExists = ( CLSIDFromProgID( ( LPCOLESTR ) cCLSID, &ClassID ) == S_OK );
+      hb_xfree( cCLSID );
+   }
+
+   hb_retl( fExists );
+}
+
 HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
    wchar_t *    cCLSID;
