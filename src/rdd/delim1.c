@@ -538,6 +538,10 @@ static HB_ERRCODE hb_delimDeleteRec( DELIMAREAP pArea )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_delimDeleteRec(%p)", pArea ) );
 
+   HB_SYMBOL_UNUSED( pArea );
+
+   /* It's not Cl*pper compatible so I had to disable it [druzus] */
+#if 0
    if( pArea->fRecordChanged )
    {
       pArea->ulRecCount--;
@@ -545,6 +549,7 @@ static HB_ERRCODE hb_delimDeleteRec( DELIMAREAP pArea )
       pArea->fPositioned = pArea->fRecordChanged = HB_FALSE;
       hb_delimClearRecordBuffer( pArea );
    }
+#endif
 
    return HB_SUCCESS;
 }

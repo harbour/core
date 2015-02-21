@@ -351,6 +351,10 @@ static HB_ERRCODE hb_sdfDeleteRec( SDFAREAP pArea )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_sdfDeleteRec(%p)", pArea ) );
 
+   HB_SYMBOL_UNUSED( pArea );
+
+   /* It's not Cl*pper compatible so I had to disable it [druzus] */
+#if 0
    if( pArea->fRecordChanged )
    {
       pArea->ulRecCount--;
@@ -358,6 +362,7 @@ static HB_ERRCODE hb_sdfDeleteRec( SDFAREAP pArea )
       pArea->fPositioned = pArea->fRecordChanged = HB_FALSE;
       hb_sdfClearRecordBuffer( pArea );
    }
+#endif
 
    return HB_SUCCESS;
 }
