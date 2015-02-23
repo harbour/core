@@ -270,6 +270,7 @@ METHOD Open() CLASS TODBC
    LOCAL nNul
    LOCAL nResult
    LOCAL aCurRow
+   LOCAL oField
 
    DO WHILE .T.
 
@@ -309,20 +310,20 @@ METHOD Open() CLASS TODBC
          ::nRecCount := nRows
       ENDIF
 
-      ::Fields := {}
+      ::Fields := Array( nCols )
 
       FOR i := 1 TO nCols
 
          SQLDescribeCol( ::hStmt, i, @cColName, 255, @nNameLen, @nDataType, ;
             @nColSize, @nDecimals, @nNul )
 
-         AAdd( ::Fields, TODBCField():New() )
-         ::Fields[ Len( ::Fields ) ]:FieldID   := i
-         ::Fields[ Len( ::Fields ) ]:FieldName := cColName
-         ::Fields[ Len( ::Fields ) ]:DataSize  := nColsize
-         ::Fields[ Len( ::Fields ) ]:DataType  := nDataType
-         ::Fields[ Len( ::Fields ) ]:DataDecs  := nDecimals
-         ::Fields[ Len( ::Fields ) ]:AllowNull := ( nNul != 0 )
+         ::Fields[ i ] := oField := TODBCField():New()
+         oField:FieldID   := i
+         oField:FieldName := cColName
+         oField:DataSize  := nColsize
+         oField:DataType  := nDataType
+         oField:DataDecs  := nDecimals
+         oField:AllowNull := ( nNul != 0 )
 
       NEXT
 
@@ -331,9 +332,9 @@ METHOD Open() CLASS TODBC
          ::aRecordSet := {}
          DO WHILE ::Fetch( SQL_FETCH_NEXT, 1 ) == SQL_SUCCESS
 
-            aCurRow := {}
+            aCurRow := Array( nCols )
             FOR i := 1 TO nCols
-               AAdd( aCurRow, ::Fields[ i ]:value )
+               aCurRow[ i ] := ::Fields[ i ]:value
             NEXT
             AAdd( ::aRecordSet, aCurRow )
          ENDDO
@@ -650,7 +651,7 @@ METHOD LoadData( nPos ) CLASS TODBC
 
          CASE SQL_TIMESTAMP
          CASE SQL_DATE
-            uData := hb_SToD( SubStr( uData, 1, 4 ) + SubStr( uData, 6, 2 ) + SubStr( uData, 9, 2 ) )
+            uData := hb_odbcSToD( uData )
             EXIT
 
          CASE SQL_BIT
@@ -666,8 +667,9 @@ METHOD LoadData( nPos ) CLASS TODBC
          CASE SQL_INTEGER
          CASE SQL_FLOAT
          CASE SQL_REAL
-            uData := Round( Val( StrTran( uData, ",", "." ) ), ::Fields[ i ]:DataDecs )
-            uData := hb_odbcNumSetLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
+            uData := hb_odbcNumSetLen( Val( StrTran( uData, ",", "." ) ), ;
+                                       ::Fields[ i ]:DataSize, ;
+                                       ::Fields[ i ]:DataDecs )
             EXIT
 
          ENDSWITCH

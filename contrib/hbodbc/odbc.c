@@ -581,68 +581,46 @@ HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
 
    if( hStmt )
    {
-      SQLLEN      nLen;
-      SQLLEN      nInitBuff;
-      SQLLEN      nBuffLen = 0;
-      char *      buffer;
-      char *      outbuf    = NULL;
-      SQLSMALLINT iType     = ( SQLSMALLINT ) hb_parnidef( 3, SQL_BINARY );
-      int         iReallocs = 0;
-      SQLRETURN   result;
+      SQLUSMALLINT uiColumn = ( SQLUSMALLINT ) hb_parni( 2 );
+      SQLSMALLINT  iType    = ( SQLSMALLINT ) hb_parnidef( 3, SQL_BINARY );
+      SQLLEN       nLen     = ( SQLLEN ) hb_parnint( 4 );
+      SQLLEN       nInitBuff;
+      char *       buffer;
+      SQLRETURN    result;
 
-      nLen = ( SQLLEN ) hb_parnint( 4 );
-      if( nLen <= 0 )
+      /* driver does not check the nLen parameter for fixed length types
+         so caller has to provide enough space */
+      if( nLen < 64 )
          nLen = 64;
       nInitBuff = nLen;
-      buffer    = ( char * ) hb_xgrab( ( HB_SIZE ) nLen + 1 );
+      buffer = ( char * ) hb_xgrab( ( HB_SIZE ) nLen + 1 );
 
-      result = ! SQL_NO_DATA;
-      while( result != SQL_NO_DATA )
+      result = SQLGetData( hStmt, uiColumn, iType, ( SQLPOINTER ) buffer,
+                           nLen, &nLen );
+      if( result == SQL_SUCCESS_WITH_INFO )
       {
-         result = SQLGetData( hStmt,
-                              ( SQLUSMALLINT ) hb_parni( 2 ),
-                              ( SQLSMALLINT ) iType,
-                              ( SQLPOINTER ) buffer,
-                              ( SQLLEN ) nLen,
-                              ( SQLLEN * ) &nLen );
-
-         if( result == SQL_SUCCESS && iReallocs == 0 )
+         if( nLen > nInitBuff )
          {
-            hb_storclen( buffer, ( HB_SIZE ) ( nLen < 0 ? 0 : ( nLen < ( SQLLEN ) hb_parnint( 4 ) ? nLen : ( SQLLEN ) hb_parnint( 4 ) ) ), 5 );
-            break;
+            /* data right truncated! */
+            buffer = ( char * ) hb_xrealloc( buffer, ( HB_SIZE ) nLen + 1 );
+            result = SQLGetData( hStmt, uiColumn, iType,
+                                 ( SQLPOINTER ) ( buffer + nInitBuff ),
+                                 nLen - nInitBuff, &nInitBuff );
+            if( result == SQL_SUCCESS_WITH_INFO )
+               result = SQL_SUCCESS;
          }
-         else if( result == SQL_SUCCESS_WITH_INFO && iReallocs == 0 )
-         {
-            /* Perhaps a data truncation */
-            if( nLen >= nInitBuff )
-            {
-               /* data right truncated! */
-               nBuffLen = nLen;
-               outbuf   = ( char * ) hb_xgrab( ( HB_SIZE ) nBuffLen + 1 );
-               hb_strncpy( outbuf, buffer, nLen );
-               nLen   = nLen - nInitBuff + 2;
-               buffer = ( char * ) hb_xrealloc( buffer, ( HB_SIZE ) nLen );
-               iReallocs++;
-            }
-            else
-            {
-               hb_storclen( buffer, ( HB_SIZE ) ( nLen < 0 ? 0 : ( nLen < ( SQLLEN ) hb_parnint( 4 ) ? nLen : ( SQLLEN ) hb_parnint( 4 ) ) ), 5 );
-               break;
-            }
-         }
-         else if( ( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO ) && iReallocs > 0 )
-         {
-            hb_strncat( outbuf, buffer, nBuffLen );
-            hb_storclen( outbuf, ( HB_SIZE ) ( nLen + nInitBuff - 1 ), 5 );
+         else if( nLen == nInitBuff )
             result = SQL_SUCCESS;
-            break;
-         }
-         else
-            break;
       }
-      hb_xfree( buffer );
-      if( outbuf )
-         hb_xfree( outbuf );
+      if( result != SQL_SUCCESS && result != SQL_SUCCESS_WITH_INFO )
+         nLen = 0;
+      if( nInitBuff - nLen > 32 )
+         hb_storclen( buffer, ( HB_SIZE ) ( nLen < 0 ? 0 : nLen ), 5 );
+      else if( hb_storclen_buffer( buffer, nLen, 5 ) )
+         buffer = NULL;
+
+      if( buffer )
+         hb_xfree( buffer );
       hb_retni( result );
    }
    else
