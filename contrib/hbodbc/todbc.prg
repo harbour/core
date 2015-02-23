@@ -259,20 +259,19 @@ METHOD Open() CLASS TODBC
    // Get result information about fields and stores it on fields collection
    SQLNumResultCols( ::hStmt, @nCols )
 
-   ::Fields := {}
+   ::Fields := Array( nCols )
 
    FOR i := 1 TO nCols
       SQLDescribeCol( ::hStmt, i, @cName, 255,, @nType, @nLen, @nDec, @nNull )
-      AAdd( ::Fields, TODBCField():New( i, cName, nType, nLen, nDec, nNull != 0 ) )
+      ::Fields[ i ] := TODBCField():New( i, cName, nType, nLen, nDec, nNull != 0 )
    NEXT
 
    // Do we cache recordset?
    IF ::lCacheRS
       ::aRecordSet := {}
       DO WHILE ::Fetch( SQL_FETCH_NEXT, 1 ) == SQL_SUCCESS
-         aCurRow := {}
-         FOR EACH fld IN ::Fields
-            AAdd( aCurRow, fld:value )
+         FOR EACH i, fld IN aCurRow := Array( nCols ), ::Fields
+            i := fld:value
          NEXT
          AAdd( ::aRecordSet, aCurRow )
       ENDDO
