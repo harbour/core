@@ -1033,17 +1033,17 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 
    if( hwndTip )
    {
-      TOOLINFO toolInfo;
+      TOOLINFO ti;
 
-      memset( &toolInfo, 0, sizeof( toolInfo ) );
+      memset( &ti, 0, sizeof( ti ) );
 
-      toolInfo.cbSize   = sizeof( toolInfo );
-      toolInfo.hwnd     = hbwapi_par_raw_HWND( 1 );
-      toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-      toolInfo.uId      = ( UINT_PTR ) toolInfo.hwnd;
-      toolInfo.lpszText = ( LPTSTR ) TEXT( "" );
+      ti.cbSize   = sizeof( ti );
+      ti.hwnd     = hbwapi_par_raw_HWND( 1 );
+      ti.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
+      ti.uId      = ( UINT_PTR ) ti.hwnd;
+      ti.lpszText = ( LPTSTR ) TEXT( "" );
 
-      if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &toolInfo ) )
+      if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &ti ) )
       {
          hbwapi_ret_raw_HANDLE( hwndTip );
          return;
@@ -1055,18 +1055,18 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 
 HB_FUNC( WVG_SETTOOLTIPTEXT )
 {
-   TOOLINFO toolInfo;
+   TOOLINFO ti;
    void *   hText;
 
-   memset( &toolInfo, 0, sizeof( toolInfo ) );
+   memset( &ti, 0, sizeof( ti ) );
 
-   toolInfo.cbSize   = sizeof( toolInfo );
-   toolInfo.hwnd     = hbwapi_par_raw_HWND( 1 );
-   toolInfo.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
-   toolInfo.uId      = ( UINT_PTR ) toolInfo.hwnd;
-   toolInfo.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
+   ti.cbSize   = sizeof( ti );
+   ti.hwnd     = hbwapi_par_raw_HWND( 1 );
+   ti.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
+   ti.uId      = ( UINT_PTR ) ti.hwnd;
+   ti.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   SendMessage( hbwapi_par_raw_HWND( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &toolInfo );
+   SendMessage( hbwapi_par_raw_HWND( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &ti );
 
    hb_strfree( hText );
 }

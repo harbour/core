@@ -260,6 +260,7 @@ HB_FUNC( WVW_ADDTOOLTIPEX )  /* changed by MAG */
 
          memset( &ti, 0, sizeof( ti ) );
 
+         ti.cbSize   = sizeof( ti );
          ti.uFlags   = TTF_SUBCLASS | TTF_IDISHWND;
          ti.hwnd     = wvw_win->hWnd;
          ti.uId      = ( UINT_PTR ) wvw_win->hWnd;

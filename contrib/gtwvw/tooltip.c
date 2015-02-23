@@ -97,7 +97,7 @@ HB_FUNC( WVW_SETTOOLTIP )
 
       memset( &ti, 0, sizeof( ti ) );
 
-      ti.cbSize = sizeof( TOOLINFO );
+      ti.cbSize = sizeof( ti );
       ti.hwnd   = wvw_win->hWnd;
       ti.uId    = WVW_ID_BASE_TOOLTIP + wvw_win->nWinId;
 
@@ -137,7 +137,7 @@ HB_FUNC( WVW_SETTOOLTIPTEXT )
    {
       TOOLINFO ti;
 
-      ti.cbSize = sizeof( TOOLINFO );
+      ti.cbSize = sizeof( ti );
       ti.hwnd   = wvw_win->hWnd;
       ti.uId    = 100000;
 

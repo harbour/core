@@ -8,7 +8,6 @@ static const char * s_cSearch = "INEDTIERESTEON";
 static const char * s_cRepl   = "[\\]^_`a";
 
 /**
- *   Function: XForm()
  *    Purpose: Internal function to translate words to dictionary
  *  Arguments: cWord    - upper case word to format
  *    Returns: cXformed - translated word
@@ -72,7 +71,6 @@ HB_FUNC( XFORM )
 }
 
 /**
- *   Function: XUnForm()
  *    Purpose: Internal function to translate words from dictionary
  *  Arguments: cWord    - formatted word
  *    Returns: cXformed - unformatted word
@@ -127,7 +125,6 @@ HB_FUNC( XUNFORM )
 }
 
 /**
- *   Function: Sp_Rate()
  *     Syntax: cRating := Sp_Rate( cFound, cWord )
  *    Purpose: Returns a letter code indicating how similar the two
  *             words are.  This is primarily used to sort the list
@@ -185,7 +182,7 @@ HB_FUNC( SP_RATE )
  * Author: Clayton Neff
  * Copyright (c) 1992 by CoN Computer Consultants
  *
- * Revision: 1.0 Last Revised: 8/23/1992 at 16:47
+ * Revision: 1.0 Last Revised: 1992-08-23 at 16:47
  * Description: Original Creation.
  *---------------------------- ALL RIGHTS RESERVED ----------------------------*/
 

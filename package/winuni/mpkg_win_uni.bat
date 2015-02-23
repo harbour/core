@@ -85,6 +85,44 @@ if exist "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" xcopy /y "%HB_DIR_MINGW%\bin\l
 if exist "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  "%HB_ABSROOT%bin\"
 if exist "%HB_DIR_MINGW%\bin\mingwm10.dll"        xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"        "%HB_ABSROOT%bin\"
 
+rem Delete stuff from compiler folder we don't need
+
+rmdir /q /s "%HB_ABSROOT%comp\mingw\etc\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\opt\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\share\"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\gdb*.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\gfortran.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\gnat*.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgfortran-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll"
+
+rem 32-bit hosted
+for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
+rmdir /q /s "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adalib\"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\i686-w64-mingw32-gfortran.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgfortran-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnarl-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnat-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe"
+
+rem 64-bit hosted
+for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
+rmdir /q /s "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adalib\"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\x86_64-w64-mingw32-gfortran.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgfortran-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnarl-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnat-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe"
+
 rem Create unified installer
 
 pushd
