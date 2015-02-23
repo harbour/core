@@ -2399,17 +2399,15 @@ static HB_BOOL hb_gt_def_Resize( PHB_GT pGT, int iRows, int iCols )
          }
 
          pGT->screenBuffer =
-               ( PHB_SCREENCELL ) hb_xrealloc( pGT->screenBuffer,
+               ( PHB_SCREENCELL ) hb_xreallocz( pGT->screenBuffer,
                                              sizeof( HB_SCREENCELL ) * nLen );
          pGT->prevBuffer =
-               ( PHB_SCREENCELL ) hb_xrealloc( pGT->prevBuffer,
+               ( PHB_SCREENCELL ) hb_xreallocz( pGT->prevBuffer,
                                              sizeof( HB_SCREENCELL ) * nLen );
          pGT->pLines =
                ( HB_BOOL * ) hb_xrealloc( pGT->pLines,
                                              sizeof( HB_BOOL ) * iRows );
 
-         memset( pGT->screenBuffer, 0, sizeof( HB_SCREENCELL ) * nLen );
-         memset( pGT->prevBuffer, 0, sizeof( HB_SCREENCELL ) * nLen );
          for( i = 0; i < iRows; ++i )
             pGT->pLines[ i ] = HB_TRUE;
          for( nIndex = 0; nIndex < nLen; ++nIndex )

@@ -542,6 +542,7 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_S
 
 #define hb_xgrabz( n )        memset( hb_xgrab( ( n ) ), 0, ( n ) )
 #define hb_xmemdup( p, n )    memcpy( hb_xgrab( ( n ) ), ( p ), ( n ) )
+#define hb_xreallocz( p, n )  memset( hb_xrealloc( ( p ), ( n ) ), 0, ( n ) )
 
 /* #if UINT_MAX == ULONG_MAX */
 /* it fails on 64bit platforms where int has 32 bit and long has 64 bit.

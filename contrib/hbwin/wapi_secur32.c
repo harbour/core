@@ -56,7 +56,9 @@ HB_FUNC( WAPI_GETUSERNAMEEX )
 {
    HB_BOOL fResult = HB_FALSE;
 
-#if ! defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+#else
    {
       typedef int ( WINAPI * _HB_GETUSERNAMEEX )( EXTENDED_NAME_FORMAT, LPTSTR, PULONG );
 
@@ -75,6 +77,7 @@ HB_FUNC( WAPI_GETUSERNAMEEX )
          EXTENDED_NAME_FORMAT nFormat = ( EXTENDED_NAME_FORMAT ) hb_parnl( 1 );
          ULONG nLen = 256 + 1;
          DWORD dwError;
+         SetLastError( ERROR_SUCCESS );  /* This API call fails to reset the error code on success */
          LPTSTR pBuffer = ( LPTSTR ) hb_xgrab( nLen * sizeof( TCHAR ) );
          fResult = ( HB_BOOL ) s_pGetUserNameEx( nFormat, pBuffer, &nLen );
          hbwapi_SetLastError( dwError = GetLastError() );
@@ -82,12 +85,16 @@ HB_FUNC( WAPI_GETUSERNAMEEX )
          {
             pBuffer = ( LPTSTR ) hb_xrealloc( pBuffer, nLen * sizeof( TCHAR ) );
             fResult = ( HB_BOOL ) s_pGetUserNameEx( nFormat, pBuffer, &nLen );
-            hbwapi_SetLastError( GetLastError() );
+            hbwapi_SetLastError( dwError = GetLastError() );
          }
+         if( dwError != ERROR_SUCCESS )
+            fResult = HB_FALSE;
          if( fResult )
             HB_STORSTRLEN( pBuffer, nLen, 2 );
          hb_xfree( pBuffer );
       }
+      else
+         hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
    }
 #endif
 
