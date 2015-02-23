@@ -120,6 +120,7 @@ DYNAMIC wapi_GetTextColor
 DYNAMIC wapi_GetTextExtentPoint32
 DYNAMIC wapi_GetTextFace
 DYNAMIC wapi_GetTextMetrics
+DYNAMIC wapi_GetUserNameEx
 DYNAMIC wapi_GetVolumeInformation
 DYNAMIC wapi_GetWindowLongPtr
 DYNAMIC wapi_GetWindowRect

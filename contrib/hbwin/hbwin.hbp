@@ -35,6 +35,7 @@ wapi_commctrl.c
 wapi_err.c
 wapi_misc.c
 wapi_mmsystem.c
+wapi_secur32.c
 wapi_shellapi.c
 wapi_winbase.c
 wapi_winbase_mutex.c
