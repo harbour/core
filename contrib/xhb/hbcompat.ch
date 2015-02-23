@@ -66,6 +66,7 @@
    #xtranslate MaxRow( .T. )                   => gtInfo( HB_GTI_SCREENHEIGHT )
    #xtranslate MaxCol( .T. )                   => gtInfo( HB_GTI_SCREENWIDTH )
    #xtranslate hb_keyNext( [<x>] )             => NextKey( <x> )
+   #xtranslate hb_Alert( [<x,...>] )           => Alert( <x> )
 
    #xtranslate hb_osNewLine()                  => hb_eol()
    #xtranslate hb_osPathSeparator()            => hb_ps()
@@ -271,6 +272,7 @@
    #xtranslate MaxRow( .T. )                   => hb_gtInfo( HB_GTI_VIEWPORTHEIGHT )
    #xtranslate MaxCol( .T. )                   => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
    #xtranslate NextKey( [<x>] )                => hb_keyNext( <x> )
+   #xtranslate Alert( [<x,...>] )              => hb_Alert( <x> )
 
    #xtranslate Str( <x>, [<y>], [<y>], <z> )   => iif( <z>, hb_ntos( <x> ), Str( <x> ) )
 
