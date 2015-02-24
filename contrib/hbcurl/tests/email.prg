@@ -15,7 +15,7 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
    LOCAL cHost
    LOCAL lSTARTTLS
 
-   IF hb_AScan( curl_version_info()[ 8 ], "smtps",,, .T. ) == 0
+   IF hb_AScan( curl_version_info()[ HB_CURLVERINFO_PROTOCOLS ], "smtps",,, .T. ) == 0
       ? "Error: Requires libcurl 7.20.0 or newer, built with SSL and smtp protocol support"
       RETURN
    ENDIF

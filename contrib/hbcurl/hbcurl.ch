@@ -580,4 +580,19 @@
 
 #define HB_CURLE_OBSOLETE16                   HB_CURLE_HTTP2
 
+/* curl_version_info() returned array positions. */
+#define HB_CURLVERINFO_VERSION                1
+#define HB_CURLVERINFO_VERSION_NUM            2
+#define HB_CURLVERINFO_HOST                   3
+#define HB_CURLVERINFO_FEATURES               4
+#define HB_CURLVERINFO_SSLVERSION             5
+#define HB_CURLVERINFO_SSLVERSION_NUM         6
+#define HB_CURLVERINFO_LIBZ_VERSION           7
+#define HB_CURLVERINFO_PROTOCOLS              8  /* Array */
+#define HB_CURLVERINFO_ARES                   9
+#define HB_CURLVERINFO_ARES_NUM               10
+#define HB_CURLVERINFO_LIBIDN                 11
+#define HB_CURLVERINFO_ICONV_VER_NUM          12
+#define HB_CURLVERINFO_LIBSSH_VERSION         13
+
 #endif /* HBCURL_CH_ */

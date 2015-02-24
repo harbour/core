@@ -21,7 +21,7 @@ PROCEDURE Main( cDL, cUL )
    ? curl_getdate( "Sun, 1 Jun 2008 02:10:58 +0200" )
 
    FOR EACH tmp IN curl_version_info()
-      IF tmp:__enumIndex() == 8
+      IF tmp:__enumIndex() == HB_CURLVERINFO_PROTOCOLS
          ? tmp:__enumIndex(), ""
          FOR EACH tmp1 IN tmp
             ?? tmp1, ""
