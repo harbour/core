@@ -72,6 +72,7 @@
 #include "hbapierr.h"
 #include "hbapistr.h"
 #include "hbset.h"
+#include "hbdate.h"
 
 /* NOTE: This code using pointer items is a little bit more complicated
          then it has to be.
@@ -118,6 +119,15 @@
 typedef unsigned char SQLTCHAR;
 typedef long          SQLLEN;
 typedef unsigned long SQLULEN;
+#     ifndef SQL_WCHAR
+#        define SQL_WCHAR        (-8)
+#     endif
+#     ifndef SQL_WVARCHAR
+#        define SQL_WVARCHAR     (-9)
+#     endif
+#     ifndef SQL_WLONGVARCHAR
+#        define SQL_WLONGVARCHAR (-10)
+#     endif
 #  endif
 #endif
 
@@ -575,53 +585,195 @@ HB_FUNC( SQLFETCH ) /* hStmt --> nRetCode */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
+HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, [nMaxLen], @xValue --> nRetCode */
 {
    SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
    if( hStmt )
    {
-      SQLUSMALLINT uiColumn = ( SQLUSMALLINT ) hb_parni( 2 );
-      SQLSMALLINT  iType    = ( SQLSMALLINT ) hb_parnidef( 3, SQL_BINARY );
-      SQLLEN       nLen     = ( SQLLEN ) hb_parnint( 4 );
-      SQLLEN       nInitBuff;
-      char *       buffer;
-      SQLRETURN    result;
+      SQLUSMALLINT uiField = ( SQLUSMALLINT ) hb_parni( 2 );
+      SQLSMALLINT  iType   = ( SQLSMALLINT ) hb_parnidef( 3, SQL_BINARY );
+      SQLLEN       nLen    = 0;
+      SQLRETURN    res     = SQL_ERROR;
 
-      /* driver does not check the nLen parameter for fixed length types
-         so caller has to provide enough space */
-      if( nLen < 64 )
-         nLen = 64;
-      nInitBuff = nLen;
-      buffer = ( char * ) hb_xgrab( ( HB_SIZE ) nLen + 1 );
-
-      result = SQLGetData( hStmt, uiColumn, iType, ( SQLPOINTER ) buffer,
-                           nLen, &nLen );
-      if( result == SQL_SUCCESS_WITH_INFO )
+      switch( iType )
       {
-         if( nLen > nInitBuff )
+         case SQL_CHAR:
+         case SQL_VARCHAR:
+         case SQL_LONGVARCHAR:
+         case SQL_WCHAR:
+         case SQL_WVARCHAR:
+         case SQL_WLONGVARCHAR:
          {
-            /* data right truncated! */
-            buffer = ( char * ) hb_xrealloc( buffer, ( HB_SIZE ) nLen + 1 );
-            result = SQLGetData( hStmt, uiColumn, iType,
-                                 ( SQLPOINTER ) ( buffer + nInitBuff ),
-                                 nLen - nInitBuff, &nInitBuff );
-            if( result == SQL_SUCCESS_WITH_INFO )
-               result = SQL_SUCCESS;
-         }
-         else if( nLen == nInitBuff )
-            result = SQL_SUCCESS;
-      }
-      if( result != SQL_SUCCESS && result != SQL_SUCCESS_WITH_INFO )
-         nLen = 0;
-      if( nInitBuff - nLen > 32 )
-         hb_storclen( buffer, ( HB_SIZE ) ( nLen < 0 ? 0 : nLen ), 5 );
-      else if( hb_storclen_buffer( buffer, nLen, 5 ) )
-         buffer = NULL;
+            O_HB_CHAR * val = NULL;
+            O_HB_CHAR buffer[ 1 ];
+#if defined( UNICODE )
+            SQLSMALLINT iTargetType = SQL_C_WCHAR;
+#else
+            SQLSMALLINT iTargetType = SQL_C_CHAR;
+#endif
 
-      if( buffer )
-         hb_xfree( buffer );
-      hb_retni( result );
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, iTargetType, buffer, 0, &nLen ) ) )
+            {
+               if( nLen > 0 )
+               {
+                  SQLLEN nMaxLen = ( SQLLEN ) hb_parnint( 4 );
+
+#if defined( UNICODE )
+                  nMaxLen <<= 1;
+#endif
+                  if( nMaxLen > 0 && nMaxLen < nLen )
+                     nLen = nMaxLen;
+                  val = ( O_HB_CHAR * ) hb_xgrab( nLen + sizeof( O_HB_CHAR ) );
+                  if( ! SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, iTargetType, val, nLen + sizeof( O_HB_CHAR ), &nLen ) ) )
+                  {
+                     hb_xfree( val );
+                     val = NULL;
+                  }
+#if defined( UNICODE )
+                  else
+                     nLen >>= 1;
+#endif
+               }
+            }
+            if( val != NULL )
+            {
+               O_HB_STORSTRLEN( val, ( HB_SIZE ) nLen, 5 );
+               hb_xfree( val );
+            }
+            else
+               hb_storc( NULL, 5 );
+            break;
+         }
+
+         case SQL_BINARY:
+         case SQL_VARBINARY:
+         case SQL_LONGVARBINARY:
+         {
+            char * val = NULL;
+            char buffer[ 1 ];
+
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_BINARY, buffer, 0, &nLen ) ) )
+            {
+               if( nLen > 0 )
+               {
+                  SQLLEN nMaxLen = ( SQLLEN ) hb_parnint( 4 );
+
+                  if( nMaxLen > 0 && nMaxLen < nLen )
+                     nLen = nMaxLen;
+                  val = ( char * ) hb_xgrab( nLen + 1 );
+                  if( ! SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_BINARY, val, nLen + 1, &nLen ) ) )
+                  {
+                     hb_xfree( val );
+                     val = NULL;
+                  }
+               }
+            }
+            if( val )
+            {
+               if( ! hb_storclen_buffer( val, ( HB_SIZE ) nLen, 5 ) )
+                  hb_xfree( val );
+            }
+            else
+               hb_storc( NULL, 5 );
+            break;
+         }
+
+         case SQL_BIGINT:
+#if ODBCVER >= 0x0300
+         {
+            HB_I64 val = 0;
+            /* NOTE: SQL_C_SBIGINT not available before ODBC 3.0 */
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_SBIGINT, &val, sizeof( val ), &nLen ) ) )
+               hb_stornint( val, 5 );
+            else
+               hb_stornint( 0, 5 );
+            break;
+         }
+#endif
+         case SQL_TINYINT:
+         case SQL_SMALLINT:
+         case SQL_INTEGER:
+         {
+            SQLINTEGER val = 0;
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_LONG, &val, sizeof( val ), &nLen ) ) )
+               hb_stornint( val, 5 );
+            else
+               hb_stornint( 0, 5 );
+            break;
+         }
+
+         case SQL_DECIMAL:
+         case SQL_NUMERIC:
+         case SQL_REAL:
+         case SQL_FLOAT:
+         case SQL_DOUBLE:
+         {
+            double val = 0.0;
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_DOUBLE, &val, sizeof( val ), &nLen ) ) )
+               hb_stornd( val, 5 );
+            else
+               hb_stornd( 0.0, 5 );
+            break;
+         }
+
+         case SQL_BIT:
+         {
+            unsigned char val = 0;
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_BIT, &val, sizeof( val ), &nLen ) ) )
+               hb_storl( val != 0, 5 );
+            else
+               hb_storl( HB_FALSE, 5 );
+            break;
+         }
+
+         case SQL_DATE:
+#if ODBCVER >= 0x0300
+         case SQL_TYPE_DATE:
+#endif
+         {
+            DATE_STRUCT val = { 0, 0, 0 };
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_DATE, &val, sizeof( val ), &nLen ) ) )
+               hb_stordl( hb_dateEncode( val.year, val.month, val.day ), 5 );
+            else
+               hb_stordl( 0, 5 );
+            break;
+         }
+
+         case SQL_TIME:
+#if ODBCVER >= 0x0300
+         case SQL_TYPE_TIME:
+#endif
+         {
+            TIME_STRUCT val = { 0, 0, 0 };
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_TIME, &val, sizeof( val ), &nLen ) ) )
+               hb_stortdt( 0, hb_timeEncode( val.hour, val.minute, val.second, 0 ), 5 );
+            else
+               hb_stortdt( 0, 0, 5 );
+            break;
+         }
+
+         /*  SQL_DATETIME = SQL_DATE = 9 */
+         case SQL_TIMESTAMP:
+#if ODBCVER >= 0x0300
+         case SQL_TYPE_TIMESTAMP:
+#endif
+         {
+            TIMESTAMP_STRUCT val = { 0, 0, 0, 0, 0, 0, 0 };
+            if( SQL_SUCCEEDED( res = SQLGetData( hStmt, uiField, SQL_C_TIMESTAMP, &val, sizeof( val ), &nLen ) ) )
+               hb_stortdt( hb_dateEncode( val.year, val.month, val.day ),
+                           hb_timeEncode( val.hour, val.minute, val.second, val.fraction / 1000000 ), 5 );
+            else
+               hb_stortdt( 0, 0, 5 );
+            break;
+         }
+
+         default:
+            hb_stor( 5 );
+            break;
+      }
+
+      hb_retni( res );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1066,7 +1218,14 @@ HB_FUNC( HB_ODBCSTOD )
 
 HB_FUNC( HB_ODBCNUMSETLEN ) /* nValue, nSize, nDecimals --> nValue (nSize, nDec) */
 {
-   hb_retnlen( hb_parnd( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
+   PHB_ITEM pValue = hb_param( 1, HB_IT_NUMERIC );
+   int iLen = hb_parni( 2 );
+   int iDec = hb_parni( 3 );
+
+   if( pValue != NULL && HB_IS_NUMINT( pValue ) && iDec == 0 )
+      hb_retnintlen( hb_itemGetNInt( pValue ), iLen );
+   else
+      hb_retnlen( hb_itemGetND( pValue ), iLen, iDec );
 }
 
 HB_FUNC( HB_ODBCVER )

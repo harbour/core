@@ -344,45 +344,45 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    pItemEof = hb_itemArrayNew( uiFields );
    for( uiIndex = 0; uiIndex < uiFields; ++uiIndex )
    {
-      DBFIELDINFO pFieldInfo;
+      DBFIELDINFO dbFieldInfo;
 
-      memset( &pFieldInfo, 0, sizeof( pFieldInfo ) );
+      memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
       pName = S_HB_ITEMPUTSTR( pName, sqlite3_column_name( st, uiIndex ) );
-      pFieldInfo.atomName = hb_itemGetCPtr( pName );
-      pFieldInfo.uiType = sqlite3DeclType( st, uiIndex );
+      dbFieldInfo.atomName = hb_itemGetCPtr( pName );
+      dbFieldInfo.uiType = sqlite3DeclType( st, uiIndex );
       pItem = hb_arrayGetItemPtr( pItemEof, uiIndex + 1 );
 
-      switch( pFieldInfo.uiType )
+      switch( dbFieldInfo.uiType )
       {
          case HB_FT_STRING:
          {
             int iSize = sqlite3_column_bytes( st, uiIndex );
             char * pStr;
 
-            pFieldInfo.uiLen = ( HB_USHORT ) HB_MAX( iSize, 10 );
-            pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
-            memset( pStr, ' ', pFieldInfo.uiLen );
-            hb_itemPutCLPtr( pItem, pStr, pFieldInfo.uiLen );
+            dbFieldInfo.uiLen = ( HB_USHORT ) HB_MAX( iSize, 10 );
+            pStr = ( char * ) hb_xgrab( ( HB_SIZE ) dbFieldInfo.uiLen + 1 );
+            memset( pStr, ' ', dbFieldInfo.uiLen );
+            hb_itemPutCLPtr( pItem, pStr, dbFieldInfo.uiLen );
             break;
          }
          case HB_FT_BLOB:
-            pFieldInfo.uiLen = 4;
+            dbFieldInfo.uiLen = 4;
             hb_itemPutC( pItem, NULL );
             break;
 
          case HB_FT_INTEGER:
-            pFieldInfo.uiLen = 8;
+            dbFieldInfo.uiLen = 8;
             hb_itemPutNInt( pItem, 0 );
             break;
 
          case HB_FT_LONG:
-            pFieldInfo.uiLen = 20;
-            pFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
-            hb_itemPutNDDec( pItem, 0.0, pFieldInfo.uiDec );
+            dbFieldInfo.uiLen = 20;
+            dbFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
+            hb_itemPutNDDec( pItem, 0.0, dbFieldInfo.uiDec );
             break;
 
          case HB_FT_ANY:
-            pFieldInfo.uiLen = 6;
+            dbFieldInfo.uiLen = 6;
             break;
 
          default:
@@ -390,7 +390,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       }
 
       if( ! bError )
-         bError = ( SELF_ADDFIELD( &pArea->area, &pFieldInfo ) == HB_FAILURE );
+         bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
 
       if( bError )
          break;
