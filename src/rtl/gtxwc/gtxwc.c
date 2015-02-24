@@ -5350,8 +5350,10 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
 
       case HB_GTI_WINTITLE:
-         pInfo->pResult = hb_itemPutStrLenUTF8( pInfo->pResult, wnd->szTitle,
-                                                strlen( wnd->szTitle ) );
+         pInfo->pResult = wnd->szTitle ?
+                           hb_itemPutStrLenUTF8( pInfo->pResult, wnd->szTitle,
+                                                 strlen( wnd->szTitle ) ) :
+                           hb_itemPutC( pInfo->pResult, NULL );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             void * hString;
