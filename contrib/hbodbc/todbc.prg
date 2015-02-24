@@ -136,7 +136,7 @@ CREATE CLASS TODBC
    PROTECTED:
 
    METHOD LoadData( nPos )
-   METHOD ClearData() INLINE AEval( ::Fields, {| fld | fld:Value := Space( fld:DataSize ) } )
+   METHOD ClearData() INLINE AEval( ::Fields, {| oField | oField:Value := Space( oField:DataSize ) } )
    METHOD Fetch( nFetchType, nOffSet )
 
 ENDCLASS
@@ -227,8 +227,9 @@ METHOD RollBack() CLASS TODBC
 METHOD Open() CLASS TODBC
 
    LOCAL nCols
+   LOCAL i
    LOCAL aCurRow
-   LOCAL i, fld
+   LOCAL oField
 
    LOCAL cName
    LOCAL nType
@@ -270,8 +271,8 @@ METHOD Open() CLASS TODBC
    IF ::lCacheRS
       ::aRecordSet := {}
       DO WHILE ::Fetch( SQL_FETCH_NEXT, 1 ) == SQL_SUCCESS
-         FOR EACH i, fld IN aCurRow := Array( nCols ), ::Fields
-            i := fld:value
+         FOR EACH i, oField IN aCurRow := Array( nCols ), ::Fields
+            i := oField:value
          NEXT
          AAdd( ::aRecordSet, aCurRow )
       ENDDO
@@ -341,7 +342,7 @@ METHOD FieldByName( cField ) CLASS TODBC
 
    IF HB_ISSTRING( cField )
       cField := Upper( cField )
-      IF ( nPos := AScan( ::Fields, {| fld | Upper( fld:FieldName ) == cField } ) ) > 0
+      IF ( nPos := AScan( ::Fields, {| oField | Upper( oField:FieldName ) == cField } ) ) > 0
          RETURN ::Fields[ nPos ]
       ENDIF
    ENDIF
@@ -435,13 +436,12 @@ METHOD Next() CLASS TODBC
 
    DO CASE
    CASE nResult == SQL_SUCCESS
-      ::nRecNo++
-      IF ::nRecNo > ::nRecCount
+      IF ++::nRecNo > ::nRecCount
          ::nRecCount := ::nRecNo
       ENDIF
    CASE nResult == SQL_NO_DATA .AND. ::nRecNo == ::nRecCount
       // Permit skip on last row, so that Eof() can work properly
-      ::nRecNo++
+      ++::nRecNo
    OTHERWISE
       // TODO: Error handling
    ENDCASE
@@ -455,10 +455,10 @@ METHOD Prior() CLASS TODBC
 
    DO CASE
    CASE nResult == SQL_SUCCESS
-      ::nRecNo--
+      --::nRecNo
    CASE nResult == SQL_NO_DATA .AND. ::nRecNo == 1
       // Permit skip -1 on first row, so that Bof() can work properly
-      ::nRecNo--
+      --::nRecNo
       ::Next()
       ::lBof := .T.
    OTHERWISE
@@ -551,40 +551,45 @@ METHOD LastRec() CLASS TODBC
 // Loads current record data into the Fields collection
 METHOD PROCEDURE LoadData( nPos ) CLASS TODBC
 
-   LOCAL xData
-   LOCAL fld
+   LOCAL xValue
+   LOCAL oField
 
-   FOR EACH fld IN ::Fields
-
+   FOR EACH oField IN ::Fields
       IF ::lCacheRS .AND. ::Active
-         xData := iif( nPos >= 1 .AND. nPos <= ::nRecCount, ::aRecordSet[ nPos ][ fld:__enumIndex() ], Space( fld:DataSize ) )
+         xValue := iif( nPos >= 1 .AND. nPos <= ::nRecCount, ;
+            ::aRecordSet[ nPos ][ oField:__enumIndex() ], Space( oField:DataSize ) )
       ELSE
-         SQLGetData( ::hStmt, fld:FieldID, fld:DataType,, @xData )
+         SQLGetData( ::hStmt, oField:FieldID, oField:DataType,, @xValue )
 
-         SWITCH fld:DataType
+         SWITCH oField:DataType
          CASE SQL_CHAR
          CASE SQL_WCHAR
+         /* For TBrowse() friendliness */
          CASE SQL_VARCHAR
          CASE SQL_WVARCHAR
          CASE SQL_LONGVARCHAR
          CASE SQL_WLONGVARCHAR
-            xData := PadR( xData, fld:DataSize )
+            xValue := PadR( xValue, oField:DataSize )
             EXIT
+         CASE SQL_NUMERIC
+         CASE SQL_DECIMAL
          CASE SQL_DOUBLE
          CASE SQL_FLOAT
          CASE SQL_REAL
-            IF fld:DataDecs > 0
-               xData := hb_odbcNumSetLen( xData, fld:DataSize, fld:DataDecs )
-            ENDIF
+         CASE SQL_TINYINT
+         CASE SQL_SMALLINT
+         CASE SQL_BIGINT
+         CASE SQL_INTEGER
+            xValue := hb_odbcNumSetLen( xValue, oField:DataSize, oField:DataDecs )
             EXIT
          OTHERWISE
-            IF xData == NIL
-               xData := Space( fld:DataSize )
+            IF xValue == NIL
+               xValue := Space( oField:DataSize )
             ENDIF
          ENDSWITCH
       ENDIF
 
-      fld:Value := xData
+      oField:Value := xValue
    NEXT
 
    RETURN
