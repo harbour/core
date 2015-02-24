@@ -210,7 +210,6 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    XSQLDA ISC_FAR * pSqlda;
    XSQLVAR *        pVar;
    PHB_ITEM         pItemEof, pItem;
-   DBFIELDINFO      pFieldInfo;
    HB_BOOL          bError;
    HB_USHORT        uiFields, uiCount;
    int iType;
@@ -291,15 +290,17 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    bError = HB_FALSE;
    for( uiCount = 0, pVar = pSqlda->sqlvar; uiCount < uiFields; uiCount++, pVar++ )
    {
+      DBFIELDINFO dbFieldInfo;
+
       /* FIXME: if pVar->sqlname is ended with 0 byte then this hb_strndup()
        *        and hb_xfree() bewlow is redundant and
-       *          pFieldInfo.atomName = pVar->sqlname;
+       *          dbFieldInfo.atomName = pVar->sqlname;
        *        is enough.
        */
       char * szOurName = hb_strndup( pVar->sqlname, pVar->sqlname_length );
-      pFieldInfo.atomName = szOurName;
+      dbFieldInfo.atomName = szOurName;
 
-      pFieldInfo.uiDec = 0;
+      dbFieldInfo.uiDec = 0;
 
       iType = pVar->sqltype & ~1;
       switch( iType )
@@ -308,12 +309,12 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
          {
             char * pStr;
 
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = pVar->sqllen;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = pVar->sqllen;
             pVar->sqldata     = ( char * ) hb_xgrab( sizeof( char ) * pVar->sqllen + 2 );
 
-            pStr  = ( char * ) memset( hb_xgrab( pFieldInfo.uiLen ), ' ', pFieldInfo.uiLen );
-            pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+            pStr  = ( char * ) memset( hb_xgrab( dbFieldInfo.uiLen ), ' ', dbFieldInfo.uiLen );
+            pItem = hb_itemPutCL( NULL, pStr, dbFieldInfo.uiLen );
             hb_xfree( pStr );
             break;
          }
@@ -323,13 +324,13 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
          {
             char * pStr;
 
-            pFieldInfo.uiType = HB_FT_VARLENGTH;
-            pFieldInfo.uiLen  = pVar->sqllen;
+            dbFieldInfo.uiType = HB_FT_VARLENGTH;
+            dbFieldInfo.uiLen  = pVar->sqllen;
             /* pVar->sqltype = SQL_TEXT;  Coercing */
             pVar->sqldata = ( char * ) hb_xgrab( sizeof( char ) * pVar->sqllen + 2 );
 
-            pStr  = ( char * ) memset( hb_xgrab( pFieldInfo.uiLen ), ' ', pFieldInfo.uiLen );
-            pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+            pStr  = ( char * ) memset( hb_xgrab( dbFieldInfo.uiLen ), ' ', dbFieldInfo.uiLen );
+            pItem = hb_itemPutCL( NULL, pStr, dbFieldInfo.uiLen );
             hb_xfree( pStr );
             break;
          }
@@ -337,16 +338,16 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
          case SQL_SHORT:
             if( pVar->sqlscale < 0 )
             {
-               pFieldInfo.uiType = HB_FT_LONG;
-               pFieldInfo.uiLen  = 7;
-               pFieldInfo.uiDec  = -pVar->sqlscale;
+               dbFieldInfo.uiType = HB_FT_LONG;
+               dbFieldInfo.uiLen  = 7;
+               dbFieldInfo.uiDec  = -pVar->sqlscale;
 
-               pItem = hb_itemPutNDLen( NULL, 0.0, 6 - pFieldInfo.uiDec, ( int ) pFieldInfo.uiDec );
+               pItem = hb_itemPutNDLen( NULL, 0.0, 6 - dbFieldInfo.uiDec, ( int ) dbFieldInfo.uiDec );
             }
             else
             {
-               pFieldInfo.uiType = HB_FT_INTEGER;
-               pFieldInfo.uiLen  = 2;
+               dbFieldInfo.uiType = HB_FT_INTEGER;
+               dbFieldInfo.uiLen  = 2;
 
                pItem = hb_itemPutNILen( NULL, 0, 6 );
             }
@@ -356,16 +357,16 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
          case SQL_LONG:
             if( pVar->sqlscale < 0 )
             {
-               pFieldInfo.uiType = HB_FT_LONG;
-               pFieldInfo.uiLen  = 12;
-               pFieldInfo.uiDec  = -pVar->sqlscale;
+               dbFieldInfo.uiType = HB_FT_LONG;
+               dbFieldInfo.uiLen  = 12;
+               dbFieldInfo.uiDec  = -pVar->sqlscale;
 
-               pItem = hb_itemPutNDLen( NULL, 0.0, 11 - pFieldInfo.uiDec, ( int ) pFieldInfo.uiDec );
+               pItem = hb_itemPutNDLen( NULL, 0.0, 11 - dbFieldInfo.uiDec, ( int ) dbFieldInfo.uiDec );
             }
             else
             {
-               pFieldInfo.uiType = HB_FT_INTEGER;
-               pFieldInfo.uiLen  = 4;
+               dbFieldInfo.uiType = HB_FT_INTEGER;
+               dbFieldInfo.uiLen  = 4;
 
                pItem = hb_itemPutNLLen( NULL, 0, 11 );
             }
@@ -373,34 +374,34 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
             break;
 
          case SQL_FLOAT:
-            pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiLen  = 8;
-            pFieldInfo.uiDec  = -pVar->sqlscale;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiLen  = 8;
+            dbFieldInfo.uiDec  = -pVar->sqlscale;
             pVar->sqldata     = ( char * ) hb_xgrab( sizeof( float ) );
 
-            pItem = hb_itemPutNDLen( NULL, *( float * ) pVar->sqldata, 20 - pFieldInfo.uiDec, pFieldInfo.uiDec );
+            pItem = hb_itemPutNDLen( NULL, *( float * ) pVar->sqldata, 20 - dbFieldInfo.uiDec, dbFieldInfo.uiDec );
             break;
 
          case SQL_DOUBLE:
-            pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiLen  = 8;
-            pFieldInfo.uiDec  = -pVar->sqlscale;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiLen  = 8;
+            dbFieldInfo.uiDec  = -pVar->sqlscale;
             pVar->sqldata     = ( char * ) hb_xgrab( sizeof( double ) );
 
-            pItem = hb_itemPutNDLen( NULL, *( float * ) pVar->sqldata, 20 - pFieldInfo.uiDec, pFieldInfo.uiDec );
+            pItem = hb_itemPutNDLen( NULL, *( float * ) pVar->sqldata, 20 - dbFieldInfo.uiDec, dbFieldInfo.uiDec );
             break;
 
          case SQL_TIMESTAMP:
-            pFieldInfo.uiType = HB_FT_TIMESTAMP;
-            pFieldInfo.uiLen  = 8;
+            dbFieldInfo.uiType = HB_FT_TIMESTAMP;
+            dbFieldInfo.uiLen  = 8;
             pVar->sqldata     = ( char * ) hb_xgrab( sizeof( ISC_TIMESTAMP ) );
 
             pItem = hb_itemPutTDT( NULL, 0, 0 );
             break;
 
          default:  /* other fields as binary string */
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = pVar->sqllen;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = pVar->sqllen;
             pVar->sqldata     = ( char * ) hb_xgrab( sizeof( char ) * pVar->sqllen );
 
             pItem  = hb_itemNew( NULL );
@@ -415,7 +416,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
       hb_itemRelease( pItem );
 
       if( ! bError )
-         bError = ( SELF_ADDFIELD( &pArea->area, &pFieldInfo ) == HB_FAILURE );
+         bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
 
       hb_xfree( szOurName );
 

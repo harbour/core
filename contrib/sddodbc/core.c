@@ -439,7 +439,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    bError  = HB_FALSE;
    for( uiIndex = 0; uiIndex < uiFields; uiIndex++ )
    {
-      DBFIELDINFO pFieldInfo;
+      DBFIELDINFO dbFieldInfo;
 
       PHB_ITEM pName;
 
@@ -462,7 +462,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       }
 
       pName = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) cName, iNameLen );
-      pFieldInfo.atomName = hb_itemGetCPtr( pName );
+      dbFieldInfo.atomName = hb_itemGetCPtr( pName );
 
       /*
          We do mapping of many SQL types to one Harbour field type here, so, we need store
@@ -473,12 +473,12 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          or introduce our own unsigned SQL types.
          [Mindaugas]
        */
-      pFieldInfo.uiTypeExtended = ( HB_USHORT ) iDataType;
-      pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
-      pFieldInfo.uiDec = iDec;
+      dbFieldInfo.uiTypeExtended = ( HB_USHORT ) iDataType;
+      dbFieldInfo.uiLen = ( HB_USHORT ) uiSize;
+      dbFieldInfo.uiDec = iDec;
 
 #if 0
-      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d null=%d", pFieldInfo.atomName, iDataType, uiSize, iDec, iNull ) );
+      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d null=%d", dbFieldInfo.atomName, iDataType, uiSize, iDec, iNull ) );
 #endif
 
       switch( iDataType )
@@ -489,50 +489,50 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          case SQL_WCHAR:
          case SQL_WVARCHAR:
          case SQL_WLONGVARCHAR:
-            pFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiType = HB_FT_STRING;
             break;
 
          case SQL_BINARY:
          case SQL_VARBINARY:
          case SQL_LONGVARBINARY:
-            pFieldInfo.uiType  = HB_FT_STRING;
-            pFieldInfo.uiFlags = HB_FF_BINARY;
+            dbFieldInfo.uiType  = HB_FT_STRING;
+            dbFieldInfo.uiFlags = HB_FF_BINARY;
             break;
 
          case SQL_TINYINT:
          case SQL_SMALLINT:
          case SQL_BIGINT:
-            pFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiType = HB_FT_INTEGER;
             break;
 
          case SQL_INTEGER:
          case SQL_DECIMAL:
          case SQL_NUMERIC:
-            pFieldInfo.uiType = HB_FT_LONG;
+            dbFieldInfo.uiType = HB_FT_LONG;
             break;
 
          case SQL_REAL:
          case SQL_FLOAT:
          case SQL_DOUBLE:
-            pFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
             break;
 
          case SQL_BIT:
-            pFieldInfo.uiType = HB_FT_LOGICAL;
+            dbFieldInfo.uiType = HB_FT_LOGICAL;
             break;
 
          case SQL_DATE:
 #if ODBCVER >= 0x0300
          case SQL_TYPE_DATE:
 #endif
-            pFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiType = HB_FT_DATE;
             break;
 
          case SQL_TIME:
 #if ODBCVER >= 0x0300
          case SQL_TYPE_TIME:
 #endif
-            pFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiType = HB_FT_DATE;
             break;
 
          /*  SQL_DATETIME = SQL_DATE = 9 */
@@ -540,7 +540,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 #if ODBCVER >= 0x0300
          case SQL_TYPE_TIMESTAMP:
 #endif
-            pFieldInfo.uiType = HB_FT_TIMESTAMP;
+            dbFieldInfo.uiType = HB_FT_TIMESTAMP;
             break;
 
          default:
@@ -549,24 +549,24 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 #endif
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) iDataType;
-            pFieldInfo.uiType = 0;
-            pFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiType = 0;
+            dbFieldInfo.uiType = HB_FT_STRING;
             break;
       }
 
       if( ! bError )
       {
-         switch( pFieldInfo.uiType )
+         switch( dbFieldInfo.uiType )
          {
             case HB_FT_STRING:
             {
                char * pStr;
 
-               pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
-               memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ] = '\0';
+               pStr = ( char * ) hb_xgrab( ( HB_SIZE ) dbFieldInfo.uiLen + 1 );
+               memset( pStr, ' ', dbFieldInfo.uiLen );
+               pStr[ dbFieldInfo.uiLen ] = '\0';
 
-               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+               pItem = hb_itemPutCL( NULL, pStr, dbFieldInfo.uiLen );
                hb_xfree( pStr );
                break;
             }
@@ -580,14 +580,14 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
                break;
 
             case HB_FT_LONG:
-               if( pFieldInfo.uiDec == 0 )
-                  pItem = hb_itemPutNLLen( NULL, 0, pFieldInfo.uiLen );
+               if( dbFieldInfo.uiDec == 0 )
+                  pItem = hb_itemPutNLLen( NULL, 0, dbFieldInfo.uiLen );
                else
-                  pItem = hb_itemPutNDLen( NULL, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
+                  pItem = hb_itemPutNDLen( NULL, 0.0, dbFieldInfo.uiLen, dbFieldInfo.uiDec );
                break;
 
             case HB_FT_DOUBLE:
-               pItem = hb_itemPutNDLen( NULL, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
+               pItem = hb_itemPutNDLen( NULL, 0.0, dbFieldInfo.uiLen, dbFieldInfo.uiDec );
                break;
 
             case HB_FT_LOGICAL:
@@ -616,7 +616,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          hb_itemRelease( pItem );
 
          if( ! bError )
-            bError = ( SELF_ADDFIELD( &pArea->area, &pFieldInfo ) == HB_FAILURE );
+            bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
       }
 
       hb_itemRelease( pName );

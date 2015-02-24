@@ -236,7 +236,6 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    HB_USHORT     uiFields, uiCount;
    HB_ERRCODE    errCode = 0;
    HB_BOOL       bError;
-   DBFIELDINFO   pFieldInfo;
    MYSQL_FIELD * pMyField;
    void **       pRow;
 
@@ -265,48 +264,50 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    bError = HB_FALSE;
    for( uiCount = 0; uiCount < uiFields; uiCount++ )
    {
+      DBFIELDINFO dbFieldInfo;
+
       pMyField = mysql_fetch_field_direct( pSDDData->pResult, uiCount );
 
-      pFieldInfo.atomName = pMyField->name;
-      pFieldInfo.uiLen    = ( HB_USHORT ) pMyField->length;
-      pFieldInfo.uiDec    = 0;
+      dbFieldInfo.atomName = pMyField->name;
+      dbFieldInfo.uiLen    = ( HB_USHORT ) pMyField->length;
+      dbFieldInfo.uiDec    = 0;
 
       switch( pMyField->type )
       {
          case MYSQL_TYPE_TINY:
          case MYSQL_TYPE_SHORT:
-            pFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiType = HB_FT_INTEGER;
             break;
 
          case MYSQL_TYPE_LONG:
          case MYSQL_TYPE_LONGLONG:
          case MYSQL_TYPE_INT24:
-            pFieldInfo.uiType = HB_FT_LONG;
+            dbFieldInfo.uiType = HB_FT_LONG;
             break;
 
          case MYSQL_TYPE_DECIMAL:
          case MYSQL_TYPE_NEWDECIMAL:
          case MYSQL_TYPE_FLOAT:
          case MYSQL_TYPE_DOUBLE:
-            pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiDec  = ( HB_USHORT ) pMyField->decimals;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiDec  = ( HB_USHORT ) pMyField->decimals;
             break;
 
          case MYSQL_TYPE_STRING:
          case MYSQL_TYPE_VAR_STRING:
          case MYSQL_TYPE_ENUM:
-            pFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiType = HB_FT_STRING;
             break;
 
          case MYSQL_TYPE_DATE:
-            pFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiType = HB_FT_DATE;
             break;
 
          case MYSQL_TYPE_TINY_BLOB:
          case MYSQL_TYPE_MEDIUM_BLOB:
          case MYSQL_TYPE_LONG_BLOB:
          case MYSQL_TYPE_BLOB:
-            pFieldInfo.uiType = HB_FT_MEMO;
+            dbFieldInfo.uiType = HB_FT_MEMO;
             break;
 
          case MYSQL_TYPE_TIMESTAMP:
@@ -315,16 +316,16 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_TIMESTAMP2:
          case MYSQL_TYPE_DATETIME2:
 #endif
-            pFieldInfo.uiType = HB_FT_TIMESTAMP;
-            pFieldInfo.uiLen  = 8;
+            dbFieldInfo.uiType = HB_FT_TIMESTAMP;
+            dbFieldInfo.uiLen  = 8;
             break;
 
          case MYSQL_TYPE_TIME:
 #if MYSQL_VERSION_ID >= 50610
          case MYSQL_TYPE_TIME2:
 #endif
-            pFieldInfo.uiType = HB_FT_TIME;
-            pFieldInfo.uiLen  = 4;
+            dbFieldInfo.uiType = HB_FT_TIME;
+            dbFieldInfo.uiLen  = 4;
             break;
 
          case MYSQL_TYPE_NULL:
@@ -336,23 +337,23 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_GEOMETRY:
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) pMyField->type;
-            pFieldInfo.uiType = 0;
+            dbFieldInfo.uiType = 0;
             break;
       }
 
       if( ! bError )
       {
-         switch( pFieldInfo.uiType )
+         switch( dbFieldInfo.uiType )
          {
             case HB_FT_STRING:
             {
                char * pStr;
 
-               pStr = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
-               memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ] = '\0';
+               pStr = ( char * ) hb_xgrab( dbFieldInfo.uiLen + 1 );
+               memset( pStr, ' ', dbFieldInfo.uiLen );
+               pStr[ dbFieldInfo.uiLen ] = '\0';
 
-               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+               pItem = hb_itemPutCL( NULL, pStr, dbFieldInfo.uiLen );
                hb_xfree( pStr );
                break;
             }
@@ -392,12 +393,12 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          hb_itemRelease( pItem );
 
 #if 0
-         if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
-            pFieldInfo.uiType = HB_IT_LONG;
+         if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
+            dbFieldInfo.uiType = HB_IT_LONG;
 #endif
 
          if( ! bError )
-            bError = ( SELF_ADDFIELD( &pArea->area, &pFieldInfo ) == HB_FAILURE );
+            bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
       }
 
       if( bError )
