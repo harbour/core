@@ -350,9 +350,9 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
          return HB_FAILURE;
       }
 
+      memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
       pName = D_HB_ITEMPUTSTR( NULL, OCI_ColumnGetName( col ) );
       dbFieldInfo.atomName = hb_itemGetCPtr( pName );
-      dbFieldInfo.uiFlags = 0;
 
       uiDataType = OCI_ColumnGetType( col );
       uiSize     = OCI_ColumnGetSize( col );
@@ -406,8 +406,6 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 #endif
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) uiDataType;
-            dbFieldInfo.uiType = 0;
-            dbFieldInfo.uiType = HB_FT_STRING;
             break;
       }
 

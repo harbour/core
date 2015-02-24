@@ -461,6 +461,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          return HB_FAILURE;
       }
 
+      memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
+
       pName = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) cName, iNameLen );
       dbFieldInfo.atomName = hb_itemGetCPtr( pName );
 
@@ -476,6 +478,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       dbFieldInfo.uiTypeExtended = ( HB_USHORT ) iDataType;
       dbFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       dbFieldInfo.uiDec = iDec;
+      if( iNull == SQL_NULLABLE )
+         dbFieldInfo.uiFlags |= HB_FF_NULLABLE;
 
 #if 0
       HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d null=%d", dbFieldInfo.atomName, iDataType, uiSize, iDec, iNull ) );
@@ -486,26 +490,30 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          case SQL_CHAR:
          case SQL_VARCHAR:
          case SQL_LONGVARCHAR:
+            dbFieldInfo.uiType = HB_FT_STRING;
+            break;
+
          case SQL_WCHAR:
          case SQL_WVARCHAR:
          case SQL_WLONGVARCHAR:
             dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiFlags |= HB_FF_UNICODE;
             break;
 
          case SQL_BINARY:
          case SQL_VARBINARY:
          case SQL_LONGVARBINARY:
-            dbFieldInfo.uiType  = HB_FT_STRING;
-            dbFieldInfo.uiFlags = HB_FF_BINARY;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiFlags |= HB_FF_BINARY;
             break;
 
          case SQL_TINYINT:
          case SQL_SMALLINT:
+         case SQL_INTEGER:
          case SQL_BIGINT:
             dbFieldInfo.uiType = HB_FT_INTEGER;
             break;
 
-         case SQL_INTEGER:
          case SQL_DECIMAL:
          case SQL_NUMERIC:
             dbFieldInfo.uiType = HB_FT_LONG;
@@ -532,7 +540,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 #if ODBCVER >= 0x0300
          case SQL_TYPE_TIME:
 #endif
-            dbFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiType = HB_FT_TIME;
             break;
 
          /*  SQL_DATETIME = SQL_DATE = 9 */
@@ -549,8 +557,6 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 #endif
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) iDataType;
-            dbFieldInfo.uiType = 0;
-            dbFieldInfo.uiType = HB_FT_STRING;
             break;
       }
 
@@ -698,57 +704,50 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
          switch( pField->uiType )
          {
             case HB_FT_STRING:
-            {
-               if( pField->uiFlags == HB_FF_BINARY )
+               if( pField->uiType & HB_FF_BINARY )
                {
                   char buffer[ 1 ];
 
                   iLen = 0;
-
-                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BINARY, ( SQLPOINTER ) buffer, 0, &iLen ) ) )
+                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BINARY, buffer, 0, &iLen ) ) )
                   {
                      if( iLen >= 0 )
                      {
-                        SQLPOINTER val = ( SQLPOINTER ) hb_xgrab( iLen + 1 );
+                        char * val = ( char * ) hb_xgrab( iLen + 1 );
                         if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BINARY, val, iLen + 1, &iLen ) ) )
-                           pItem = hb_itemPutCLPtr( NULL, ( char * ) val, ( HB_SIZE ) iLen );
+                           pItem = hb_itemPutCLPtr( NULL, val, ( HB_SIZE ) iLen );
                         else
                            hb_xfree( val );
                      }
                   }
-                  break;
                }
                else
                {
-                  SQLSMALLINT iTargetType;
-                  char        buffer[ sizeof( O_HB_CHAR ) ];
-
-                  iLen = 0;
-
+                  O_HB_CHAR buffer[ 1 ];
 #if defined( UNICODE )
-                  iTargetType = SQL_C_WCHAR;
+                  SQLSMALLINT iTargetType = SQL_C_WCHAR;
 #else
-                  iTargetType = SQL_C_CHAR;
+                  SQLSMALLINT iTargetType = SQL_C_CHAR;
 #endif
 
-                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, ( SQLPOINTER ) buffer, 0, &iLen ) ) )
+                  iLen = 0;
+                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, buffer, 0, &iLen ) ) )
                   {
                      if( iLen >= 0 )
                      {
-                        SQLPOINTER val = ( SQLPOINTER ) hb_xgrab( iLen + sizeof( O_HB_CHAR ) );
+                        O_HB_CHAR * val = ( O_HB_CHAR * ) hb_xgrab( iLen + sizeof( O_HB_CHAR ) );
                         if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, val, iLen + sizeof( O_HB_CHAR ), &iLen ) ) )
                         {
 #if defined( UNICODE )
-                           iLen /= 2;
+                           iLen >>= 1;
 #endif
-                           pItem = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) val, ( HB_SIZE ) iLen );
+                           pItem = O_HB_ITEMPUTSTRLEN( NULL, val, ( HB_SIZE ) iLen );
                         }
                         hb_xfree( val );
                      }
                   }
-                  break;
                }
-            }
+               break;
 
             case HB_FT_INTEGER:
 #if ODBCVER >= 0x0300
@@ -762,16 +761,16 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                else
 #endif
                {
-                  long int val = 0;
+                  SQLINTEGER val = 0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
                      pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
                }
                break;
 
             case HB_FT_LONG:
-               if( pField->uiDec == 0 )
+               if( pField->uiDec == 0 && pField->uiLen < 10 )
                {
-                  long int val = 0;
+                  SQLINTEGER val = 0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
                      pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
                }

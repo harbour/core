@@ -277,8 +277,8 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    {
       DBFIELDINFO dbFieldInfo;
 
+      memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
       dbFieldInfo.atomName = PQfname( pResult, ( int ) uiCount );
-      dbFieldInfo.uiDec    = 0;
 
       switch( PQftype( pResult, ( int ) uiCount ) )
       {
@@ -381,12 +381,9 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
          case BYTEAOID:
             dbFieldInfo.uiType = HB_FT_STRING;
-            dbFieldInfo.uiLen  = 0;
             break;
 
          default:
-            dbFieldInfo.uiType = 0;
-            dbFieldInfo.uiLen  = 0;
             bError = HB_TRUE;
             break;
       }

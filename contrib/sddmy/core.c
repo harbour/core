@@ -268,9 +268,9 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
       pMyField = mysql_fetch_field_direct( pSDDData->pResult, uiCount );
 
+      memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
       dbFieldInfo.atomName = pMyField->name;
       dbFieldInfo.uiLen    = ( HB_USHORT ) pMyField->length;
-      dbFieldInfo.uiDec    = 0;
 
       switch( pMyField->type )
       {
@@ -337,7 +337,6 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_GEOMETRY:
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) pMyField->type;
-            dbFieldInfo.uiType = 0;
             break;
       }
 
