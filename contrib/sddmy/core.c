@@ -85,7 +85,7 @@ static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
-static SDDNODE mysqldd =
+static SDDNODE s_mysqldd =
 {
    NULL,
    "MYSQL",
@@ -104,7 +104,7 @@ static void hb_mysqldd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &mysqldd ) ||
+   if( ! hb_sddRegister( &s_mysqldd ) ||
        ( sizeof( MYSQL_ROW_OFFSET ) != sizeof( void * ) ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
@@ -314,20 +314,31 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
          case MYSQL_TYPE_TIMESTAMP:
          case MYSQL_TYPE_DATETIME:
+#if MYSQL_VERSION_ID >= 50610
+         case MYSQL_TYPE_TIMESTAMP2:
+         case MYSQL_TYPE_DATETIME2:
+#endif
             dbFieldInfo.uiType = HB_FT_TIMESTAMP;
             dbFieldInfo.uiLen  = 8;
             break;
 
          case MYSQL_TYPE_TIME:
+#if MYSQL_VERSION_ID >= 50610
+         case MYSQL_TYPE_TIME2:
+#endif
             dbFieldInfo.uiType = HB_FT_TIME;
             dbFieldInfo.uiLen  = 4;
             break;
 
 /*
+         case MYSQL_TYPE_NULL:
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
          case MYSQL_TYPE_ENUM:
          case MYSQL_TYPE_SET:
+         case MYSQL_TYPE_VARCHAR:
+         case MYSQL_TYPE_BIT:
+         case MYSQL_TYPE_GEOMETRY:
  */
 
          default:
@@ -407,18 +418,16 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    }
 
    pArea->ulRecCount = ( HB_ULONG ) mysql_num_rows( pSDDData->pResult );
+   pArea->ulRecMax   = pArea->ulRecCount + 1;
 
    pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-   pArea->ulRecMax = pArea->ulRecCount + 1;
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
    pRow = pArea->pRow;
 
-   *pRow = pItemEof;
+   *pRow++ = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
-   pRow++;
    for( ulIndex = 1; ulIndex <= pArea->ulRecCount; ulIndex++ )
    {
       *pRow++ = ( void * ) mysql_row_tell( pSDDData->pResult );
@@ -508,8 +517,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
          /* Expand strings to field length */
          pStr = ( char * ) hb_xgrab( pField->uiLen + 1 );
-         if( pValue )
-            memcpy( pStr, pValue, ulLen );
+         memcpy( pStr, pValue, ulLen );
 
          if( ( HB_SIZE ) pField->uiLen > ulLen )
             memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
@@ -518,48 +526,27 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
          /* Do not expand strings */
-         if( pValue )
-            hb_itemPutCL( pItem, pValue, ulLen );
-         else
-            hb_itemPutC( pItem, NULL );
+         hb_itemPutCL( pItem, pValue, ulLen );
 #endif
          break;
       }
 
       case HB_FT_MEMO:
-         if( pValue )
-            hb_itemPutCL( pItem, pValue, ulLen );
-         else
-            hb_itemPutC( pItem, NULL );
-
+         hb_itemPutCL( pItem, pValue, ulLen );
          hb_itemSetCMemo( pItem );
          break;
 
       case HB_FT_INTEGER:
       case HB_FT_LONG:
       case HB_FT_DOUBLE:
-         if( pValue )
-         {
-            hb_strncpy( szBuffer, pValue, sizeof( szBuffer ) - 1 );
+         hb_strncpy( szBuffer, pValue, sizeof( szBuffer ) - 1 );
 
-            if( pField->uiDec )
-            {
-               hb_itemPutNDLen( pItem, atof( szBuffer ),
-                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                                ( int ) pField->uiDec );
-            }
-            else
-               hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
-         }
+         if( pField->uiDec )
+            hb_itemPutNDLen( pItem, atof( szBuffer ),
+                             ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
+                             ( int ) pField->uiDec );
          else
-         {
-            if( pField->uiDec )
-               hb_itemPutNDLen( pItem, 0.0,
-                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                                ( int ) pField->uiDec );
-            else
-               hb_itemPutNLLen( pItem, 0, ( int ) pField->uiLen );
-         }
+            hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
          break;
 
       case HB_FT_DATE:

@@ -99,7 +99,7 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
-static SDDNODE pgsqldd = {
+static SDDNODE s_pgsqldd = {
    NULL,
    "POSTGRESQL",
    ( SDDFUNC_CONNECT ) pgsqlConnect,
@@ -117,7 +117,7 @@ static void hb_pgsqldd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &pgsqldd ) )
+   if( ! hb_sddRegister( &s_pgsqldd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
@@ -462,12 +462,12 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    }
 
    pArea->ulRecCount = ( HB_ULONG ) PQntuples( pResult );
+   pArea->ulRecMax   = pArea->ulRecCount + 1;
 
    pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
-   *pArea->pRow = pItemEof;
+   pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
    pArea->fFetched       = HB_TRUE;
 
@@ -505,6 +505,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    pField = pArea->area.lpFields + uiIndex;
 
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
+      /* TOFIX: it breaks defined field type */
       return HB_SUCCESS;
 
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );

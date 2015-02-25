@@ -80,7 +80,7 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
 
-static SDDNODE sqlt3dd =
+static SDDNODE s_sqlt3dd =
 {
    NULL,
    "SQLITE3",
@@ -103,7 +103,7 @@ static void hb_sqlt3dd_init( void * cargo )
    sqlite3_initialize();
 #endif
 
-   if( ! hb_sddRegister( &sqlt3dd ) )
+   if( ! hb_sddRegister( &s_sqlt3dd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
@@ -149,12 +149,13 @@ HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
 /*=====================================================================================*/
 static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   HB_USHORT uiAction;
    PHB_ITEM  pError;
+   HB_USHORT uiAction;
 
    pError   = hb_errRT_New( ES_ERROR, "SDDSQLITE3", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
    hb_itemRelease( pError );
+
    return uiAction;
 }
 
@@ -162,8 +163,7 @@ static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
 static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
 {
    char * szRet;
-
-   int iNativeErr = 9999;
+   int iNativeErr;
 
    if( pDb )
    {
@@ -174,7 +174,10 @@ static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
       iNativeErr = sqlite3_errcode( pDb );
    }
    else
+   {
       szRet = hb_strdup( "Unable to get error message" );
+      iNativeErr = 9999;
+   }
 
    if( pErrCode )
       *pErrCode = ( HB_ERRCODE ) iNativeErr;
@@ -251,6 +254,7 @@ static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
       sqlite3_close( db );
 
    hb_strfree( hConn );
+
    return db ? HB_SUCCESS : HB_FAILURE;
 }
 
@@ -276,7 +280,7 @@ static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
    if( sqlite3_get_table( pDb, S_HB_ITEMGETSTR( pItem, &hStatement, NULL ), &pResult, &iRow, &iCol, &pszErrMsg ) != SQLITE_OK )
    {
       hb_strfree( hStatement );
-      sqlite3GetError( pDb, &errCode );
+      hb_xfree( sqlite3GetError( pDb, &errCode ) );
       hb_errRT_SQLT3DD( EG_OPEN, ESQLDD_STMTALLOC, pszErrMsg, hb_itemGetCPtr( pItem ), errCode );
       hb_xfree( pszErrMsg );
       return HB_FAILURE;
@@ -409,9 +413,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    pArea->ulRecMax   = SQLDD_ROWSET_INIT;
 
    pArea->pRow = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
-   memset( pArea->pRow, 0, SQLDD_ROWSET_INIT * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
 
    pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
@@ -499,7 +501,7 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             hb_itemRelease( pItem );
          }
       }
-      if( pArea->ulRecCount + 1 <= pArea->ulRecMax )
+      if( pArea->ulRecCount + 1 >= pArea->ulRecMax )
       {
          pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
          pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
@@ -515,7 +517,6 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
          pArea->fFetched = HB_TRUE;
          break;
       }
-
    }
 
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )

@@ -592,6 +592,37 @@ HB_FUNC( ADSFILE2BLOB )
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, HB_ERR_FUNCNAME );
 }
 
+HB_FUNC( ADSGETRECORDCOUNT )
+{
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   if( pArea )
+   {
+      ADSHANDLE hHandle;
+      UNSIGNED32 ulKey = 0;
+
+      switch( hb_parnidef( 1, ADS_TABLE ) )
+      {
+         case ADS_INDEX_ORDER:
+            hHandle = pArea->hOrdCurrent;
+            break;
+         case ADS_STATEMENT:
+            hHandle = pArea->hStatement;
+            break;
+         default:
+            hHandle = pArea->hTable;
+      }
+
+      hb_retnl( ( long ) AdsGetRecordCount( hHandle,
+                                            ( UNSIGNED16 ) hb_parnidef( 2, ADS_RESPECTFILTERS ) /* usFilterOption */,
+                                            &ulKey ) );
+
+      hb_stornl( ( long ) ulKey, 3 );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
+}
+
 /* 2nd parameter: unsupported Bag Name. */
 HB_FUNC( ADSKEYNO )
 {
@@ -1224,6 +1255,19 @@ HB_FUNC( ADSSTMTSETTABLELOCKTYPE )
                                      ( UNSIGNED16 ) hb_parni( 1 ) /* usLockType */ ) == AE_SUCCESS );
 }
 
+HB_FUNC( ADSSTMTSETTABLEREADONLY )
+{
+#if ADS_LIB_VERSION >= 900
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   hb_retl( pArea && pArea->hStatement &&
+            AdsStmtSetTableReadOnly( pArea->hStatement,
+                                     ( UNSIGNED16 ) hb_parnidef( 1, ADS_CURSOR_READONLY ) ) == AE_SUCCESS );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
 HB_FUNC( ADSCREATESQLSTATEMENT )
 {
    HB_BOOL fResult = HB_FALSE;
@@ -1818,11 +1862,9 @@ HB_FUNC( ADSDDADDTABLE )
 HB_FUNC( ADSDDREMOVETABLE )
 {
 #if ADS_LIB_VERSION >= 600
-   /* TOFIX: Due to bad and very old typo, the connection handle is
-             taken from 4th parameter instead of 3rd. [vszakats] */
-   hb_retl( AdsDDRemoveTable( HB_ADS_PARCONNECTION( 4 ) /* hConnect */,
+   hb_retl( AdsDDRemoveTable( HB_ADS_PARCONNECTION( 3 ) /* hConnect */,
                               ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
-                              ( UNSIGNED16 ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : hb_parldef( 2, 0 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
+                              ( UNSIGNED16 ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : hb_parl( 2 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -2379,13 +2421,13 @@ HB_FUNC( ADSCREATEFTSINDEX )
                                    ( UNSIGNED32 )  hb_parnldef( 4, ADS_DEFAULT )  /* ulPageSize               */ ,
                                    ( UNSIGNED32 )  hb_parnldef( 5, 3 )            /* ulMinWordLen             */ ,
                                    ( UNSIGNED32 )  hb_parnldef( 6, 30 )           /* ulMaxWordLen             */ ,
-                                   ( UNSIGNED16 )  hb_parldef( 7, 1 )             /* usUseDefaultDelim        */ ,
+                                   ( UNSIGNED16 )  hb_parldef( 7, HB_TRUE )       /* usUseDefaultDelim        */ ,
                                    ( UNSIGNED8 * ) hb_parc( 8 )                   /* pucDelimiters            */ ,
-                                   ( UNSIGNED16 )  hb_parldef( 9, 1 )             /* usUseDefaultNoise        */ ,
+                                   ( UNSIGNED16 )  hb_parldef( 9, HB_TRUE )       /* usUseDefaultNoise        */ ,
                                    ( UNSIGNED8 * ) hb_parc( 10 )                  /* pucNoiseWords            */ ,
-                                   ( UNSIGNED16 )  hb_parldef( 11, 1 )            /* usUseDefaultDrop         */ ,
+                                   ( UNSIGNED16 )  hb_parldef( 11, HB_TRUE )      /* usUseDefaultDrop         */ ,
                                    ( UNSIGNED8 * ) hb_parc( 12 )                  /* pucDropChars             */ ,
-                                   ( UNSIGNED16 )  hb_parldef( 13, 1 )            /* usUseDefaultConditionals */ ,
+                                   ( UNSIGNED16 )  hb_parldef( 13, HB_TRUE )      /* usUseDefaultConditionals */ ,
                                    ( UNSIGNED8 * ) hb_parc( 14 )                  /* pucConditionalChars      */ ,
                                    ( UNSIGNED8 * ) hb_parc( 15 )                  /* pucReserved1             */ ,
                                    ( UNSIGNED8 * ) hb_parc( 16 )                  /* pucReserved2             */ ,

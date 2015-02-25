@@ -648,8 +648,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    pArea->ulRecCount = 0;
    pArea->ulRecMax   = SQLDD_ROWSET_INIT;
 
-   pArea->pRow = ( void ** ) hb_xgrabz( SQLDD_ROWSET_INIT * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
+   pArea->pRow = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
 
    pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
@@ -843,7 +843,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             hb_itemRelease( pItem );
          }
       }
-      if( pArea->ulRecCount + 1 <= pArea->ulRecMax )
+      if( pArea->ulRecCount + 1 >= pArea->ulRecMax )
       {
          pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
          pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );

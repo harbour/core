@@ -407,8 +407,7 @@ static PMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM
    PHB_ITEM            pItem, pEvalItem = NULL;
 
 
-   pTag = ( PMIXTAG ) hb_xgrab( sizeof( MIXTAG ) );
-   memset( pTag, 0, sizeof( MIXTAG ) );
+   pTag = ( PMIXTAG ) hb_xgrabz( sizeof( MIXTAG ) );
 
    pTag->szName = ( char * ) hb_xgrab( MIX_MAXTAGNAMELEN + 1 );
    hb_strncpyUpperTrim( pTag->szName, szTagName, MIX_MAXTAGNAMELEN );
@@ -1145,7 +1144,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
       else
          szKeyExpr[ 0 ] = '\0';
 
-      u32RetVal = AdsCreateIndex61( 
+      u32RetVal = AdsCreateIndex61(
          pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent ? pArea->adsarea.hOrdCurrent : pArea->adsarea.hTable,
          ( UNSIGNED8 * ) pOrderInfo->abBagName,
          ( UNSIGNED8 * ) pOrderInfo->atomBagName,
@@ -1378,7 +1377,6 @@ static HB_ERRCODE adsxOrderDestroy( ADSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    if( pTag )
    {
-
       if( pTag == pArea->pTagList )
          pArea->pTagList = pTag->pNext;
       else
@@ -1551,7 +1549,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
 
             pKey = mixKeyEval( pTag, pArea );
 
-            if( ! mixFindKey( pTag, pKey, &ulKeyPos + 1 ) )
+            if( ! mixFindKey( pTag, pKey, &ulKeyPos ) )
                ulKeyPos = 0;
 
             mixKeyFree( pKey );

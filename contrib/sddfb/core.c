@@ -80,7 +80,7 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea );
 static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
 
-static SDDNODE firebirddd = {
+static SDDNODE s_firebirddd = {
    NULL,
    "FIREBIRD",
    ( SDDFUNC_CONNECT ) fbConnect,
@@ -98,7 +98,7 @@ static void hb_firebirddd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &firebirddd ) || ( sizeof( isc_db_handle ) != sizeof( void * ) ) )
+   if( ! hb_sddRegister( &s_firebirddd ) || ( sizeof( isc_db_handle ) != sizeof( void * ) ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
@@ -434,10 +434,9 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    pArea->pRow      = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
    pArea->ulRecMax = SQLDD_ROWSET_INIT;
 
-   *pArea->pRow = pItemEof;
+   pArea->pRow[ 0 ] = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
    return HB_SUCCESS;
@@ -469,7 +468,6 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
    SDDDATA *        pSDDData = ( SDDDATA * ) pArea->pSDDData;
    ISC_STATUS_ARRAY status;
    XSQLVAR *        pVar;
-   PHB_ITEM         pItem, pArray;
    HB_USHORT        ui;
    ISC_STATUS       lErr;
    short iType;
@@ -483,6 +481,8 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
       if( lErr == 0 )
       {
+         PHB_ITEM pItem = NULL, pArray;
+
          pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
          for( ui = 0; ui < pArea->area.uiFieldCount; ui++ )
          {
@@ -497,51 +497,51 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             switch( iType )
             {
                case SQL_TEXT:
-                  pItem = hb_itemPutCL( NULL, pVar->sqldata, pVar->sqllen );
+                  pItem = hb_itemPutCL( pItem, pVar->sqldata, pVar->sqllen );
                   break;
 
                case SQL_VARYING:
-                  pItem = hb_itemPutCL( NULL, pVar->sqldata + 2, *( short * ) pVar->sqldata );
+                  pItem = hb_itemPutCL( pItem, pVar->sqldata + 2, *( short * ) pVar->sqldata );
                   break;
 
                case SQL_SHORT:
                   if( pField->uiDec == 0 )
-                     pItem = hb_itemPutNILen( NULL, *( short * ) pVar->sqldata, 6 );
+                     pItem = hb_itemPutNILen( pItem, *( short * ) pVar->sqldata, 6 );
                   else
-                     pItem = hb_itemPutNDLen( NULL, hb_numDecConv( *( short * ) pVar->sqldata, ( int ) pField->uiDec ),
+                     pItem = hb_itemPutNDLen( pItem, hb_numDecConv( *( short * ) pVar->sqldata, ( int ) pField->uiDec ),
                                               6 - pField->uiDec, ( int ) pField->uiDec );
                   break;
 
                case SQL_LONG:
                   if( pField->uiDec == 0 )
-                     pItem = hb_itemPutNLLen( NULL, *( short * ) pVar->sqldata, 11 );
+                     pItem = hb_itemPutNLLen( pItem, *( short * ) pVar->sqldata, 11 );
                   else
-                     pItem = hb_itemPutNDLen( NULL, hb_numDecConv( *( long * ) pVar->sqldata, ( int ) pField->uiDec ),
+                     pItem = hb_itemPutNDLen( pItem, hb_numDecConv( *( long * ) pVar->sqldata, ( int ) pField->uiDec ),
                                               11 - pField->uiDec, ( int ) pField->uiDec );
                   break;
 
                case SQL_FLOAT:
-                  pItem = hb_itemPutNDLen( NULL, *( float * ) pVar->sqldata, 20 - pField->uiDec, pField->uiDec );
+                  pItem = hb_itemPutNDLen( pItem, *( float * ) pVar->sqldata, 20 - pField->uiDec, pField->uiDec );
                   break;
 
                case SQL_DOUBLE:
-                  pItem = hb_itemPutNDLen( NULL, *( double * ) pVar->sqldata, 20 - pField->uiDec, pField->uiDec );
+                  pItem = hb_itemPutNDLen( pItem, *( double * ) pVar->sqldata, 20 - pField->uiDec, pField->uiDec );
                   break;
 
                case SQL_TIMESTAMP:
-                  pItem = hb_itemPutTDT( NULL, ( ( ISC_TIMESTAMP * ) pVar->sqldata )->timestamp_date + 2400001,
+                  pItem = hb_itemPutTDT( pItem, ( ( ISC_TIMESTAMP * ) pVar->sqldata )->timestamp_date + 2400001,
                                          ( ( ISC_TIMESTAMP * ) pVar->sqldata )->timestamp_time / 10 );
                   break;
 
                default:
-                  pItem = hb_itemNew( NULL );
+                  /* default value is NIL */
                   break;
             }
-            hb_arraySetForward( pArray, ui + 1, pItem );
-            hb_itemRelease( pItem );
+            if( pItem )
+               hb_arraySetForward( pArray, ui + 1, pItem );
          }
 
-         if( pArea->ulRecCount + 1 <= pArea->ulRecMax )
+         if( pArea->ulRecCount + 1 >= pArea->ulRecMax )
          {
             pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
             pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
@@ -551,8 +551,9 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
          pArea->ulRecCount++;
          pArea->pRow[ pArea->ulRecCount ]      = pArray;
          pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
+         hb_itemRelease( pItem );
       }
-      else if( lErr == 100L )
+      else if( lErr == 100 )
       {
          pArea->fFetched = HB_TRUE;
          if( isc_dsql_free_statement( status, phStmt, DSQL_drop ) )
