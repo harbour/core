@@ -1117,10 +1117,9 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    }
 
    if( bKeyADS && bForADS && bWhileADS )
-   {
       return SUPER_ORDCREATE( &pArea->adsarea.area, pOrderInfo );
-   }
 
+#if ADS_LIB_VERSION >= 610
    if( pArea->adsarea.area.lpdbOrdCondInfo &&
        ( ( bForADS && pArea->adsarea.area.lpdbOrdCondInfo->abFor ) ||
          ( bWhileADS && pArea->adsarea.area.lpdbOrdCondInfo->abWhile ) ) )
@@ -1172,6 +1171,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
          pArea->adsarea.area.lpdbOrdCondInfo->fRest = HB_FALSE;
       }
    }
+#endif
 
    /* Obtain key codeblock */
    if( pOrderInfo->itmCobExpr )

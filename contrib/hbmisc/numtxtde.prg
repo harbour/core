@@ -1,6 +1,7 @@
 /* This is an original work by Gary Baren and is placed in the public domain.
 
-   Adapted to german spelling, 2015    ELCH
+      Rev 1.2   2015                   ELCH
+   Adapted to German spelling
 
       Rev 1.1   15 Aug 1991 23:05:54   GLENN
    Forest Belt proofread/edited/cleaned up doc
@@ -38,7 +39,7 @@ STATIC FUNCTION grp_to_words_de( nGrp )
    STATIC sc_teens := { " Zehn", " Elf", " Zwölf", ;
       " Dreizehn", " Vierzehn", " Fünfzehn", " Sechszehn", " Siebzehn", " Achtzehn", " Neunzehn" }
    STATIC sc_tens :=  { "", "", ;
-      " Zwannzig", " Dreizig", " Vierzig", " Fünfzig", " Sechzig", " Siebzig", " Achtzig", " Neunzig" }
+      " Zwanzig", " Dreizig", " Vierzig", " Fünfzig", " Sechzig", " Siebzig", " Achtzig", " Neunzig" }
 
    LOCAL cResult, nTemp, nTmp, lEmpty
 

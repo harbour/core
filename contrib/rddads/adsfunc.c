@@ -1483,7 +1483,7 @@ HB_FUNC( ADSCONVERTTABLE )
 }
 
 #if ! defined( ADS_LINUX )
-#if ADS_LIB_VERSION >= 620
+#if ADS_LIB_VERSION >= 610
 UNSIGNED32 WINAPI hb_adsShowCallback( UNSIGNED16 usPercentDone, UNSIGNED32 ulCallbackID )
 #else
 UNSIGNED32 WINAPI hb_adsShowCallback( UNSIGNED16 usPercentDone )
@@ -1494,7 +1494,7 @@ UNSIGNED32 WINAPI hb_adsShowCallback( UNSIGNED16 usPercentDone )
    if( pCallBack )
    {
       PHB_ITEM pPercentDone = hb_itemPutNI( NULL, usPercentDone );
-#if ADS_LIB_VERSION >= 620
+#if ADS_LIB_VERSION >= 610
       PHB_ITEM pCallbackID = hb_itemPutNL( NULL, ulCallbackID );
       HB_BOOL fResult = hb_itemGetL( hb_vmEvalBlockV( pCallBack, 2, pPercentDone, pCallbackID ) );
       hb_itemRelease( pCallbackID );
@@ -1531,7 +1531,7 @@ HB_FUNC( ADSREGCALLBACK )
    if( pCallBack )
    {
       hb_ads_setCallBack( pCallBack );
-#if ADS_LIB_VERSION >= 620
+#if ADS_LIB_VERSION >= 610
       if( AdsRegisterCallbackFunction( hb_adsShowCallback, hb_parnl( 2 ) ) == AE_SUCCESS )
 #else
       if( AdsRegisterProgressCallback( hb_adsShowCallback ) == AE_SUCCESS )
@@ -1549,7 +1549,7 @@ HB_FUNC( ADSCLRCALLBACK )
 {
 #if ! defined( ADS_LINUX )
    hb_ads_setCallBack( NULL );
-#if ADS_LIB_VERSION >= 620
+#if ADS_LIB_VERSION >= 610
    hb_retnl( AdsClearCallbackFunction() );
 #else
    hb_retnl( AdsClearProgressCallback() );

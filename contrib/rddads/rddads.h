@@ -86,9 +86,11 @@
    #define _ADS_LIB_VERSION  710
 #elif defined( ADS_FTS_INDEX_ORDER )
    #define _ADS_LIB_VERSION  700
-#elif defined( ADS_COMPRESS_ALWAYS )
+#elif defined( ADS_TABLE_PERM_READ )
    #define _ADS_LIB_VERSION  620
-#elif defined( ADS_READ_ALL_COLUMNS )
+#elif defined( ADS_COMPRESS_ALWAYS )
+   #define _ADS_LIB_VERSION  612
+#elif defined( ADS_READ_ALL_COLUMNS )  /* tested with 6.11 */
    #define _ADS_LIB_VERSION  610
 #elif defined( ADS_USER_DEFINED )
    #define _ADS_LIB_VERSION  600
