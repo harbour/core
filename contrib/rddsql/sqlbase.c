@@ -129,7 +129,7 @@ static HB_ERRCODE sddGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM p
 static HB_ERRCODE sddGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength );
 
 
-static SDDNODE sddNull = {
+static const SDDNODE s_sddNull = {
    NULL,
    "NULL",
    ( SDDFUNC_CONNECT ) sddConnect,
@@ -235,21 +235,21 @@ int hb_sddRegister( PSDDNODE pSdd )
 
    /* "Inheritance" from NULL SDD */
    if( pSdd->Connect == NULL )
-      pSdd->Connect = sddNull.Connect;
+      pSdd->Connect = s_sddNull.Connect;
    if( pSdd->Disconnect == NULL )
-      pSdd->Disconnect = sddNull.Disconnect;
+      pSdd->Disconnect = s_sddNull.Disconnect;
    if( pSdd->Execute == NULL )
-      pSdd->Execute = sddNull.Execute;
+      pSdd->Execute = s_sddNull.Execute;
    if( pSdd->Open == NULL )
-      pSdd->Open = sddNull.Open;
+      pSdd->Open = s_sddNull.Open;
    if( pSdd->Close == NULL )
-      pSdd->Close = sddNull.Close;
+      pSdd->Close = s_sddNull.Close;
    if( pSdd->GoTo == NULL )
-      pSdd->GoTo = sddNull.GoTo;
+      pSdd->GoTo = s_sddNull.GoTo;
    if( pSdd->GetValue == NULL )
-      pSdd->GetValue = sddNull.GetValue;
+      pSdd->GetValue = s_sddNull.GetValue;
    if( pSdd->GetVarLen == NULL )
-      pSdd->GetVarLen = sddNull.GetVarLen;
+      pSdd->GetVarLen = s_sddNull.GetVarLen;
 
    while( pNode )
    {
@@ -504,13 +504,13 @@ static HB_ERRCODE sqlbaseGoHot( SQLBASEAREAP pArea )
    HB_USHORT us;
 
    pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
+   pItem = hb_itemNew( NULL );
    for( us = 1; us <= pArea->area.uiFieldCount; us++ )
    {
-      pItem = hb_itemNew( NULL );
       if( SELF_GETVALUE( &pArea->area, us, pItem ) == HB_SUCCESS )
          hb_arraySetForward( pArray, us, pItem );
-      hb_itemRelease( pItem );
    }
+   hb_itemRelease( pItem );
    pArea->pRecord        = pArray;
    pArea->bRecordFlags  |= SQLDD_FLAG_CACHED;
    pArea->fRecordChanged = HB_TRUE;
@@ -664,7 +664,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->pSDD = pArea->pConnection->pSDD;
    }
    else
-      pArea->pSDD = &sddNull;
+      pArea->pSDD = &s_sddNull;
 
    pItemEof = hb_itemArrayNew( pArea->area.uiFieldCount );
 
@@ -746,11 +746,11 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pArea->ulRecCount = 0;
 
-   pArea->pRow      = ( void ** ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( HB_BYTE ) );
+   pArea->pRow      = ( void ** ) hb_xgrab( SQLDD_ROWSET_RESIZE * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_RESIZE * sizeof( HB_BYTE ) );
    pArea->ulRecMax  = SQLDD_ROWSET_RESIZE;
 
-   *( pArea->pRow )      = pItemEof;
+   pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
    pArea->fFetched       = HB_TRUE;
 

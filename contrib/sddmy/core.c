@@ -328,6 +328,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
             dbFieldInfo.uiLen  = 4;
             break;
 
+#if 0
          case MYSQL_TYPE_NULL:
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
@@ -335,6 +336,8 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          case MYSQL_TYPE_VARCHAR:
          case MYSQL_TYPE_BIT:
          case MYSQL_TYPE_GEOMETRY:
+#endif
+         default:
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) pMyField->type;
             break;
@@ -412,18 +415,16 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    }
 
    pArea->ulRecCount = ( HB_ULONG ) mysql_num_rows( pSDDData->pResult );
+   pArea->ulRecMax   = pArea->ulRecCount + 1;
 
-   pArea->pRow      = ( void ** ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
+   pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-
-   pArea->ulRecMax = pArea->ulRecCount + 1;
 
    pRow = pArea->pRow;
 
-   *pRow = pItemEof;
+   *pRow++ = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
-   pRow++;
    for( ulIndex = 1; ulIndex <= pArea->ulRecCount; ulIndex++ )
    {
       *pRow++ = ( void * ) mysql_row_tell( pSDDData->pResult );
@@ -513,8 +514,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
          /* Expand strings to field length */
          pStr = ( char * ) hb_xgrab( pField->uiLen + 1 );
-         if( pValue )
-            memcpy( pStr, pValue, ulLen );
+         memcpy( pStr, pValue, ulLen );
 
          if( ( HB_SIZE ) pField->uiLen > ulLen )
             memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
@@ -539,11 +539,9 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
          hb_strncpy( szBuffer, pValue, sizeof( szBuffer ) - 1 );
 
          if( pField->uiDec )
-         {
             hb_itemPutNDLen( pItem, atof( szBuffer ),
                              ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
                              ( int ) pField->uiDec );
-         }
          else
             hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
          break;

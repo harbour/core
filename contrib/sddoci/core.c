@@ -486,8 +486,8 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    pArea->ulRecCount = 0;
    pArea->ulRecMax   = SQLDD_ROWSET_INIT;
 
-   pArea->pRow = ( void ** ) hb_xgrabz( SQLDD_ROWSET_INIT * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
+   pArea->pRow = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
 
    pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
@@ -518,6 +518,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
+      PHB_ITEM  pItem = NULL;
       PHB_ITEM  pArray;
       HB_USHORT ui;
 
@@ -531,7 +532,6 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
       for( ui = 1; ui <= pArea->area.uiFieldCount; ++ui )
       {
-         PHB_ITEM pItem  = NULL;
          LPFIELD  pField = pArea->area.lpFields + ui - 1;
 
          switch( pField->uiType )
@@ -543,13 +543,13 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                   memset( pStr, ' ', pField->uiLen );
                   pStr[ pField->uiLen ] = '\0';
 
-                  pItem = hb_itemPutCLPtr( NULL, pStr, pField->uiLen );
+                  pItem = hb_itemPutCLPtr( pItem, pStr, pField->uiLen );
                }
                else
                {
                   const dtext * val;
                   if( ( val = OCI_GetString( rs, ui ) ) != NULL )
-                     pItem = D_HB_ITEMPUTSTR( NULL, val );  /* TODO: Pad it to pField->uiLen size with spaces? */
+                     pItem = D_HB_ITEMPUTSTRLEN( pItem, val, ( HB_SIZE ) dtslen( val ) );  /* TODO: Pad it to pField->uiLen size with spaces? */
                }
                break;
 
@@ -557,12 +557,12 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             case HB_FT_INTEGER:
                if( pField->uiDec == 0 )
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-                  pItem = hb_itemPutNIntLen( NULL, OCI_GetInt( rs, ui ), pField->uiLen );
+                  pItem = hb_itemPutNIntLen( pItem, OCI_GetInt( rs, ui ), pField->uiLen );
 #else
-                  pItem = hb_itemPutNIntLen( NULL, OCI_GetBigInt( rs, ui ), pField->uiLen );
+                  pItem = hb_itemPutNIntLen( pItem, OCI_GetBigInt( rs, ui ), pField->uiLen );
 #endif
                else
-                  pItem = hb_itemPutNDLen( NULL, OCI_GetDouble( rs, ui ), pField->uiLen, pField->uiDec );
+                  pItem = hb_itemPutNDLen( pItem, OCI_GetDouble( rs, ui ), pField->uiLen, pField->uiDec );
                break;
 
             case HB_FT_VARLENGTH:
@@ -573,9 +573,9 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   unsigned int uiSize = OCI_LongGetSize( val );
                   if( OCI_LongGetType( val ) == OCI_CLONG )
-                     pItem = D_HB_ITEMPUTSTRLEN( NULL, OCI_LongGetBuffer( val ), uiSize );
+                     pItem = D_HB_ITEMPUTSTRLEN( pItem, ( D_HB_CHAR * ) OCI_LongGetBuffer( val ), uiSize );
                   else
-                     pItem = hb_itemPutCL( NULL, ( const char * ) OCI_LongGetBuffer( val ), uiSize );
+                     pItem = hb_itemPutCL( pItem, ( const char * ) OCI_LongGetBuffer( val ), uiSize );
                }
                break;
             }
@@ -586,7 +586,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             {
                OCI_Long * val = OCI_GetLong( rs, ui );
                if( val )
-                  pItem = hb_itemPutCL( NULL, ( const char * ) OCI_LongGetBuffer( val ), OCI_LongGetSize( val ) );
+                  pItem = hb_itemPutCL( pItem, ( const char * ) OCI_LongGetBuffer( val ), OCI_LongGetSize( val ) );
                break;
             }
 
@@ -595,7 +595,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             case HB_FT_FLOAT:
             case HB_FT_DOUBLE:
 
-               pItem = hb_itemPutNDLen( NULL, OCI_GetDouble( rs, ui ), pField->uiLen, pField->uiDec );
+               pItem = hb_itemPutNDLen( pItem, OCI_GetDouble( rs, ui ), pField->uiLen, pField->uiDec );
                break;
 
             case HB_FT_DATE:
@@ -603,7 +603,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                OCI_Date * date = OCI_GetDate( rs, ui );
                int        iYear, iMonth, iDay;
                if( date && OCI_DateGetDate( date, &iYear, &iMonth, &iDay ) )
-                  pItem = hb_itemPutD( NULL, iYear, iMonth, iDay );
+                  pItem = hb_itemPutD( pItem, iYear, iMonth, iDay );
                break;
             }
 
@@ -613,7 +613,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                int        iYear, iMonth, iDay, iHour, iMin, iSec;
 
                if( date && OCI_DateGetDateTime( date, &iYear, &iMonth, &iDay, &iHour, &iMin, &iSec ) )
-                  pItem = hb_itemPutTDT( NULL, hb_dateEncode( iYear, iMonth, iDay ),
+                  pItem = hb_itemPutTDT( pItem, hb_dateEncode( iYear, iMonth, iDay ),
                                          hb_timeEncode( iHour, iMin, iSec, 0 ) );
                break;
             }
@@ -623,19 +623,18 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                OCI_Timestamp * ts = OCI_GetTimestamp( rs, ui );
                int iYear, iMonth, iDay, iHour, iMin, iSec, iFSec;
                if( ts && OCI_TimestampGetDateTime( ts, &iYear, &iMonth, &iDay, &iHour, &iMin, &iSec, &iFSec ) )
-                  pItem = hb_itemPutTDT( NULL, hb_dateEncode( iYear, iMonth, iDay ),
+                  pItem = hb_itemPutTDT( pItem, hb_dateEncode( iYear, iMonth, iDay ),
                                          hb_timeEncode( iHour, iMin, iSec, iFSec / 1000000 ) );
                break;
             }
          }
 
          if( pItem )
-         {
             hb_arraySetForward( pArray, ui, pItem );
-            hb_itemRelease( pItem );
-         }
       }
-      if( pArea->ulRecCount + 1 <= pArea->ulRecMax )
+      hb_itemRelease( pItem );
+
+      if( pArea->ulRecCount + 1 >= pArea->ulRecMax )
       {
          pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
          pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );

@@ -464,11 +464,10 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    }
 
    pArea->ulRecCount = ( HB_ULONG ) PQntuples( pResult );
+   pArea->ulRecMax   = pArea->ulRecCount + 1;
 
-   pArea->pRow      = ( void ** ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
+   pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-
-   pArea->ulRecMax = pArea->ulRecCount + 1;
 
    pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
@@ -529,6 +528,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
    {
       hb_itemClear( pItem );
+      /* TOFIX: it breaks defined field type */
       return HB_SUCCESS;
    }
 

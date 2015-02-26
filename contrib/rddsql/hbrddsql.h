@@ -76,7 +76,7 @@ typedef struct _SQLBASEAREA
 
    HB_ULONG ulConnection;
    struct _SQLDDCONNECTION * pConnection;
-   struct _SDDNODE *         pSDD;
+   const struct _SDDNODE * pSDD;
 
    char * szQuery;                           /* SQL query */
 
