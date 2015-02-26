@@ -4205,8 +4205,8 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
                                  ( UNSIGNED8 * ) pOrderInfo->abBagName,
                                  ( UNSIGNED8 * ) pOrderInfo->atomBagName,
                                  ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
-                                 ( pArea->area.lpdbOrdCondInfo && pArea->area.lpdbOrdCondInfo->abFor ) ?
-                                 ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : ( UNSIGNED8 * ) "",
+                                 pArea->area.lpdbOrdCondInfo ?
+                                    ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : NULL,
                                  pucWhile, u32Options,
                                  adsGetFileType( pArea->area.rddID ) == ADS_ADT ? adsIndexPageSize( ADS_ADT ) : ADS_DEFAULT,
                                  &hIndex );
@@ -4215,9 +4215,10 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
                                ( UNSIGNED8 * ) pOrderInfo->abBagName,
                                ( UNSIGNED8 * ) pOrderInfo->atomBagName,
                                ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
-                               ( pArea->area.lpdbOrdCondInfo && pArea->area.lpdbOrdCondInfo->abFor ) ?
-                               ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : ( UNSIGNED8 * ) "",
-                               pucWhile, u32Options, &hIndex );
+                               pArea->area.lpdbOrdCondInfo ?
+                                 ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : NULL,
+                               pucWhile, u32Options,
+                               &hIndex );
 #endif
 
    SELF_ORDSETCOND( &pArea->area, NULL );
