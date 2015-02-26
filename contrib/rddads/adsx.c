@@ -1130,20 +1130,29 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
       UNSIGNED16 usLen = sizeof( szKeyExpr );
 
       if( pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent && pArea->adsarea.hOrdCurrent )
-      {
          AdsGetIndexExpr( pArea->adsarea.hOrdCurrent, szKeyExpr, &usLen );
-      }
       else
          szKeyExpr[ 0 ] = '\0';
 
+#if ADS_LIB_VERSION >= 610
       u32RetVal = AdsCreateIndex61(
          pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent ? pArea->adsarea.hOrdCurrent : pArea->adsarea.hTable,
          ( UNSIGNED8 * ) pOrderInfo->abBagName,
          ( UNSIGNED8 * ) pOrderInfo->atomBagName,
-         szKeyExpr[ 0 ] ? ( UNSIGNED8 * ) szKeyExpr : ( UNSIGNED8 * ) "1",
-         ( UNSIGNED8 * ) ( ( bForADS && pArea->adsarea.area.lpdbOrdCondInfo->abFor ) ? pArea->adsarea.area.lpdbOrdCondInfo->abFor : NULL ),
-         ( UNSIGNED8 * ) ( ( bWhileADS && pArea->adsarea.area.lpdbOrdCondInfo->abWhile ) ? pArea->adsarea.area.lpdbOrdCondInfo->abWhile : NULL ),
+         szKeyExpr[ 0 ] ? szKeyExpr : ( UNSIGNED8 * ) "1",
+         bForADS ? ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abFor : NULL,
+         bWhileADS ? ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abWhile : NULL,
          ADS_COMPOUND, ADS_DEFAULT, &hIndex );
+#else
+      u32RetVal = AdsCreateIndex(
+         pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent ? pArea->adsarea.hOrdCurrent : pArea->adsarea.hTable,
+         ( UNSIGNED8 * ) pOrderInfo->abBagName,
+         ( UNSIGNED8 * ) pOrderInfo->atomBagName,
+         szKeyExpr[ 0 ] ? szKeyExpr : ( UNSIGNED8 * ) "1",
+         bForADS ? ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abFor : NULL,
+         bWhileADS ? ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abWhile : NULL,
+         ADS_COMPOUND, &hIndex );
+#endif
 
       if( u32RetVal != AE_SUCCESS )
       {
