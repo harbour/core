@@ -42,7 +42,7 @@
 
 sqlite3.c
 
-# URL    https://sqlite.org/2015/sqlite-amalgamation-3080802.zip
+# URL    https://sqlite.org/2015/sqlite-amalgamation-3080803.zip
 # DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c
