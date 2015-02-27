@@ -77,8 +77,8 @@ HB_FUNC( WAPI_GETUSERNAMEEX )
          EXTENDED_NAME_FORMAT nFormat = ( EXTENDED_NAME_FORMAT ) hb_parnl( 1 );
          ULONG nLen = 256 + 1;
          DWORD dwError;
-         SetLastError( ERROR_SUCCESS );  /* This API call fails to reset the error code on success */
          LPTSTR pBuffer = ( LPTSTR ) hb_xgrab( nLen * sizeof( TCHAR ) );
+         SetLastError( ERROR_SUCCESS );  /* This API call fails to reset the error code on success */
          fResult = ( HB_BOOL ) s_pGetUserNameEx( nFormat, pBuffer, &nLen );
          hbwapi_SetLastError( dwError = GetLastError() );
          if( ! fResult && dwError == ERROR_MORE_DATA )
