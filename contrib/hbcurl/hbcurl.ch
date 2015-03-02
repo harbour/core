@@ -594,5 +594,6 @@
 #define HB_CURLVERINFO_LIBIDN                 11
 #define HB_CURLVERINFO_ICONV_VER_NUM          12
 #define HB_CURLVERINFO_LIBSSH_VERSION         13
+#define HB_CURLVERINFO_LEN                    13
 
 #endif /* HBCURL_CH_ */

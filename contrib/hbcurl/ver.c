@@ -52,6 +52,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+#include "hbcurl.ch"
+
 HB_FUNC( CURL_VERSION )
 {
    hb_retc( curl_version() );
@@ -63,36 +65,36 @@ HB_FUNC( CURL_VERSION_INFO )
 
    if( data )
    {
-      PHB_ITEM pArray = hb_itemArrayNew( 13 );
+      PHB_ITEM pArray = hb_itemArrayNew( HB_CURLVERINFO_LEN );
 
-      hb_arraySetC(  pArray, 1, data->version );                      /* LIBCURL_VERSION */
-      hb_arraySetNI( pArray, 2, data->version_num );                  /* LIBCURL_VERSION_NUM */
-      hb_arraySetC(  pArray, 3, data->host );                         /* OS/host/cpu/machine when configured */
-      hb_arraySetNI( pArray, 4, data->features );                     /* bitmask, see defines below */
-      hb_arraySetC(  pArray, 5, data->ssl_version );                  /* human readable string */
-      hb_arraySetNI( pArray, 6, data->ssl_version_num );              /* not used anymore, always 0 */
-      hb_arraySetC(  pArray, 7, data->libz_version );                 /* human readable string */
+      hb_arraySetC(  pArray, HB_CURLVERINFO_VERSION       , data->version );                      /* LIBCURL_VERSION */
+      hb_arraySetNI( pArray, HB_CURLVERINFO_VERSION_NUM   , data->version_num );                  /* LIBCURL_VERSION_NUM */
+      hb_arraySetC(  pArray, HB_CURLVERINFO_HOST          , data->host );                         /* OS/host/cpu/machine when configured */
+      hb_arraySetNI( pArray, HB_CURLVERINFO_FEATURES      , data->features );                     /* bitmask, see defines below */
+      hb_arraySetC(  pArray, HB_CURLVERINFO_SSLVERSION    , data->ssl_version );                  /* human readable string */
+      hb_arraySetNI( pArray, HB_CURLVERINFO_SSLVERSION_NUM, data->ssl_version_num );              /* not used anymore, always 0 */
+      hb_arraySetC(  pArray, HB_CURLVERINFO_LIBZ_VERSION  , data->libz_version );                 /* human readable string */
 #if defined( CURLVERSION_SECOND )
-      hb_arraySetC(  pArray, 9, data->age >= CURLVERSION_SECOND ? data->ares : NULL );
-      hb_arraySetNI( pArray, 10, data->age >= CURLVERSION_SECOND ? data->ares_num : 0 );
+      hb_arraySetC(  pArray, HB_CURLVERINFO_PROTOCOLS     , data->age >= CURLVERSION_SECOND ? data->ares : NULL );
+      hb_arraySetNI( pArray, HB_CURLVERINFO_ARES          , data->age >= CURLVERSION_SECOND ? data->ares_num : 0 );
 #else
-      hb_arraySetC(  pArray, 9, NULL );
-      hb_arraySetNI( pArray, 10, 0 );
+      hb_arraySetC(  pArray, HB_CURLVERINFO_PROTOCOLS     , NULL );
+      hb_arraySetNI( pArray, HB_CURLVERINFO_ARES          , 0 );
 #endif
 #if defined( CURLVERSION_THIRD )
-      hb_arraySetC(  pArray, 11, data->age >= CURLVERSION_THIRD ? data->libidn : NULL );
+      hb_arraySetC(  pArray, HB_CURLVERINFO_LIBIDN        , data->age >= CURLVERSION_THIRD ? data->libidn : NULL );
 #else
-      hb_arraySetC(  pArray, 11, NULL );
+      hb_arraySetC(  pArray, HB_CURLVERINFO_LIBIDN        , NULL );
 #endif
 #if defined( CURLVERSION_FOURTH )
-      hb_arraySetNI( pArray, 12, data->age >= CURLVERSION_FOURTH ? data->iconv_ver_num : 0 ); /* Same as '_libiconv_version' if built with HAVE_ICONV */
+      hb_arraySetNI( pArray, HB_CURLVERINFO_ICONV_VER_NUM , data->age >= CURLVERSION_FOURTH ? data->iconv_ver_num : 0 ); /* Same as '_libiconv_version' if built with HAVE_ICONV */
 #else
-      hb_arraySetNI( pArray, 12, 0 );
+      hb_arraySetNI( pArray, HB_CURLVERINFO_ICONV_VER_NUM , 0 );
 #endif
 #if defined( CURLVERSION_FOURTH ) && LIBCURL_VERSION_NUM >= 0x071001
-      hb_arraySetC(  pArray, 13, data->age >= CURLVERSION_FOURTH ? data->libssh_version : NULL ); /* human readable string */
+      hb_arraySetC(  pArray, HB_CURLVERINFO_LIBSSH_VERSION, data->age >= CURLVERSION_FOURTH ? data->libssh_version : NULL ); /* human readable string */
 #else
-      hb_arraySetC(  pArray, 13, NULL );
+      hb_arraySetC(  pArray, HB_CURLVERINFO_LIBSSH_VERSION, NULL );
 #endif
       {
          PHB_ITEM pProtocols;
@@ -102,7 +104,7 @@ HB_FUNC( CURL_VERSION_INFO )
          while( *( prot++ ) )
             nCount++;
 
-         pProtocols = hb_arrayGetItemPtr( pArray, 8 );
+         pProtocols = hb_arrayGetItemPtr( pArray, HB_CURLVERINFO_PROTOCOLS );
          hb_arrayNew( pProtocols, nCount );
 
          for( prot = data->protocols, nCount = 1; *prot; prot++ )
