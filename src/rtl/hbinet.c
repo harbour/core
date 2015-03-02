@@ -150,7 +150,7 @@ static int s_inetGetError( PHB_SOCKET_STRUCT socket )
 
 static HB_BOOL s_inetIsTimeout( PHB_SOCKET_STRUCT socket )
 {
-   return s_inetGetError( socket ) == HB_SOCKET_ERR_TIMEOUT;
+   return s_inetGetError( socket ) == HB_INET_ERR_TIMEOUT;
 }
 
 static void hb_inetGetError( PHB_SOCKET_STRUCT socket )
