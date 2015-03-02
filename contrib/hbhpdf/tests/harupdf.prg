@@ -168,7 +168,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
    // Comment out the following line if you need ASCII chart by Codepages
    Page_CodePages( pdf )
 
-   IF HPDF_SaveToFile( pdf, cFileToSave ) != 0
+   IF HPDF_SaveToFile( pdf, cFileToSave ) != HPDF_OK
       ? "0x" + hb_NumToHex( HPDF_GetError( pdf ), 4 ), hb_HPDF_GetErrorString( HPDF_GetError( pdf ) ), HPDF_GetErrorDetail( pdf )
    ENDIF
 
