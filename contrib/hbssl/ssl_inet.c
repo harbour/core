@@ -1,3 +1,4 @@
+/*
  * Harbour Project source code:
  *    SSL encryption for Harbour hb_inet*() connections
  *
