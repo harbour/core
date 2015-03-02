@@ -10725,15 +10725,15 @@ STATIC FUNCTION FindInPath( cFileName, xPath, aExtDef )
    IF HB_ISSTRING( cFileName )
 
       hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-      #if defined( __PLATFORM__WINDOWS ) .OR. ;
-          defined( __PLATFORM__DOS ) .OR. ;
-          defined( __PLATFORM__OS2 )
-         hb_default( @aExtDef, { ".exe" } )
-      #else
-         hb_default( @aExtDef, { cExt } )
-      #endif
       aExt := { cExt }
       IF Empty( cExt )
+         #if defined( __PLATFORM__WINDOWS ) .OR. ;
+             defined( __PLATFORM__DOS ) .OR. ;
+             defined( __PLATFORM__OS2 )
+            hb_default( @aExtDef, { ".exe" } )
+         #else
+            hb_default( @aExtDef, { cExt } )
+         #endif
          FOR EACH cExt IN aExtDef
             IF AScan( aExt, {| tmp | hb_FileMatch( tmp, cExt ) } ) == 0
                AAdd( aExt, cExt )
