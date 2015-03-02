@@ -1,4 +1,3 @@
-/*
  * Harbour Project source code:
  *    SSL encryption for Harbour hb_inet*() connections
  *
@@ -101,7 +100,7 @@ static long hb_inetReadSSL( PHB_ZNETSTREAM pStream, HB_SOCKET sd,
          iToRead = timeout < 0 ? 1 : hb_socketSelectRead( sd, timeout );
          if( iToRead <= 0 )
             pStream->error = iToRead == 0 ?
-                             HB_INET_ERR_TIMEOUT : hb_socketGetError();
+                             HB_SOCKET_ERR_TIMEOUT : hb_socketGetError();
          else
             iToRead = ( int ) len;
       }

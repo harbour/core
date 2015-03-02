@@ -143,20 +143,18 @@ static int s_inetGetError( PHB_SOCKET_STRUCT socket )
 {
    int iError;
 
-   if( socket->errorFunc )
-      iError = socket->errorFunc( socket->stream );
-   else
-   {
-      iError = hb_socketGetError();
-      if( iError == HB_SOCKET_ERR_TIMEOUT )
-         iError = HB_INET_ERR_TIMEOUT;
-   }
+   iError = socket->errorFunc ? socket->errorFunc( socket->stream ) :
+                                hb_socketGetError();
+
+   if( iError == HB_SOCKET_ERR_TIMEOUT )
+      iError = HB_INET_ERR_TIMEOUT;
+
    return iError;
 }
 
 static HB_BOOL s_inetIsTimeout( PHB_SOCKET_STRUCT socket )
 {
-   return s_inetGetError( socket ) == HB_SOCKET_ERR_TIMEOUT;
+   return s_inetGetError( socket ) == HB_INET_ERR_TIMEOUT;
 }
 
 static void hb_inetGetError( PHB_SOCKET_STRUCT socket )
