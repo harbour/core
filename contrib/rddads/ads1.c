@@ -2684,10 +2684,20 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          }
          break;
 
-      case HB_FT_LONG:
-      case HB_FT_INTEGER:
-      case HB_FT_DOUBLE:
+      case HB_FT_ROWVER:
       case HB_FT_AUTOINC:
+      case HB_FT_INTEGER:
+#if ADS_LIB_VERSION >= 700 && ! defined( HB_LONG_LONG_OFF )
+         if( HB_IS_NUMERIC( pItem ) )
+         {
+            bTypeError = HB_FALSE;
+            u32RetVal = AdsSetLongLong( pArea->hTable, ADSFIELD( uiIndex ), hb_itemGetNInt( pItem ) );
+            /* write to autoincrement field will gen error 5066 */
+         }
+         break;
+#endif
+      case HB_FT_LONG:
+      case HB_FT_DOUBLE:
       case HB_FT_CURDOUBLE:
       case HB_FT_CURRENCY:
          if( HB_IS_NUMERIC( pItem ) )

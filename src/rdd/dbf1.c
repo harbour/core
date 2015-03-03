@@ -171,6 +171,8 @@ static HB_BOOL hb_dbfIsAutoIncField( LPFIELD pField )
    if( pField->uiType == HB_FT_AUTOINC )
       return pField->uiLen - pField->uiDec > 4 ?
              HB_AUTOINC_LONG : HB_AUTOINC_STD;
+   else if( pField->uiType == HB_FT_ROWVER )
+      return HB_AUTOINC_LONG;
    else if( ( pField->uiFlags & HB_FF_AUTOINC ) != 0 )
    {
       switch( pField->uiType )
@@ -2625,13 +2627,14 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
             }
          }
          else if( pField->uiType == HB_FT_TIMESTAMP ||
-                  pField->uiType == HB_FT_TIME )
+                  pField->uiType == HB_FT_TIME ||
+                  ( pField->uiType == HB_FT_MODTIME && pArea->fTransRec ) )
          {
             long lDate, lTime;
 
             hb_itemGetTDT( pItem, &lDate, &lTime );
             ptr = pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
-            if( pField->uiType == HB_FT_TIMESTAMP )
+            if( pField->uiType != HB_FT_TIME )
             {
                HB_PUT_LE_UINT32( ptr, lDate );
                ptr += 4;
@@ -2662,7 +2665,9 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
                        '*', pField->uiLen );
             }
          }
-         else if( pField->uiType == HB_FT_INTEGER )
+         else if( pField->uiType == HB_FT_INTEGER ||
+                  ( pArea->fTransRec && ( pField->uiType == HB_FT_AUTOINC ||
+                                          pField->uiType == HB_FT_ROWVER ) ) )
          {
             HB_MAXINT lVal;
             double dVal;
@@ -3579,14 +3584,21 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
                ( HB_MAXINT ) ( HB_NHANDLE ) hb_fileHandle( pArea->pMemoFile ) );
          break;
 
+      case DBI_TRANSREC:
+      {
+         HB_BOOL fTransRec = pArea->fTransRec;
+
+         if( HB_IS_LOGICAL( pItem ) )
+            pArea->fTransRec = hb_itemGetL( pItem );
+         hb_itemPutL( pItem, fTransRec );
+         break;
+      }
       case DBI_SHARED:
       {
          HB_BOOL fShared = pArea->fShared;
 
          if( HB_IS_LOGICAL( pItem ) )
-         {
             pArea->fShared = hb_itemGetL( pItem );
-         }
          hb_itemPutL( pItem, fShared );
          break;
       }
@@ -3770,9 +3782,9 @@ static HB_ERRCODE hb_dbfFieldInfo( DBFAREAP pArea, HB_USHORT uiIndex, HB_USHORT 
             hb_dbfGetNullFlag( pArea, pArea->pFieldBits[ uiIndex ].uiNullBit ) );
          return HB_SUCCESS;
       case DBS_COUNTER:
-         nValue = 0;
          if( hb_dbfIsAutoIncField( pArea->area.lpFields + uiIndex - 1 ) != HB_AUTOINC_NONE )
          {
+            nValue = 0;
             fLck = HB_FALSE;
             if( pArea->fShared && ! pArea->fFLocked && ! pArea->fHeaderLocked )
             {
@@ -3788,13 +3800,15 @@ static HB_ERRCODE hb_dbfFieldInfo( DBFAREAP pArea, HB_USHORT uiIndex, HB_USHORT 
 
             if( fLck )
                SELF_RAWLOCK( &pArea->area, HEADER_UNLOCK, 0 );
+            hb_itemPutNInt( pItem, nValue );
+            return HB_SUCCESS;
          }
-         hb_itemPutNInt( pItem, nValue );
-         return HB_SUCCESS;
+         hb_itemClear( pItem );
+         return HB_FAILURE;
       case DBS_STEP:
-         iValue = 0;
          if( hb_dbfIsAutoIncField( pArea->area.lpFields + uiIndex - 1 ) != HB_AUTOINC_NONE )
          {
+            iValue = 0;
             if( HB_IS_NUMERIC( pItem ) )
             {
                fLck = HB_FALSE;
@@ -3811,9 +3825,11 @@ static HB_ERRCODE hb_dbfFieldInfo( DBFAREAP pArea, HB_USHORT uiIndex, HB_USHORT 
             }
             else
                iValue = hb_dbfNextValueStep( pArea, uiIndex - 1, 0 );
+            hb_itemPutNI( pItem, iValue );
+            return HB_SUCCESS;
          }
-         hb_itemPutNI( pItem, iValue );
-         return HB_SUCCESS;
+         hb_itemClear( pItem );
+         return HB_FAILURE;
       default:
          return SUPER_FIELDINFO( &pArea->area, uiIndex, uiType, pItem );
    }
@@ -4933,6 +4949,7 @@ static HB_ERRCODE hb_dbfTrans( DBFAREAP pArea, LPDBTRANSINFO pTransInfo )
          hb_itemRelease( pPutRec );
       }
    }
+
    return SUPER_TRANS( &pArea->area, pTransInfo );
 }
 
@@ -4978,10 +4995,10 @@ static HB_ERRCODE hb_dbfZap( DBFAREAP pArea )
    /* reset autoincrement and row version fields */
    for( uiField = 0; uiField < pArea->area.uiFieldCount; uiField++ )
    {
-      if( hb_dbfIsAutoIncField( &pArea->area.lpFields[ uiField ] ) != HB_AUTOINC_NONE )
-         hb_dbfNextValueSet( pArea, uiField, 1 );
-      else if( pArea->area.lpFields[ uiField ].uiType == HB_FT_ROWVER )
+      if( pArea->area.lpFields[ uiField ].uiType == HB_FT_ROWVER )
          hb_dbfRowVerSet( pArea, uiField, 0 );
+      else if( hb_dbfIsAutoIncField( &pArea->area.lpFields[ uiField ] ) != HB_AUTOINC_NONE )
+         hb_dbfNextValueSet( pArea, uiField, 1 );
    }
 
    /* Zap memo file */

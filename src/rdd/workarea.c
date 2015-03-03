@@ -560,8 +560,8 @@ static HB_ERRCODE hb_waFieldInfo( AREAP pArea, HB_USHORT uiIndex, HB_USHORT uiTy
          {
             case HB_FT_STRING:
                cType = 'C';
-               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_COMPRESSED |
-                         HB_FF_ENCRYPTED | HB_FF_UNICODE;
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_UNICODE |
+                         HB_FF_ENCRYPTED | HB_FF_COMPRESSED;
                break;
 
             case HB_FT_LOGICAL:
@@ -629,20 +629,20 @@ static HB_ERRCODE hb_waFieldInfo( AREAP pArea, HB_USHORT uiIndex, HB_USHORT uiTy
 
             case HB_FT_VARLENGTH:
                cType = 'Q';
-               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_COMPRESSED |
-                         HB_FF_ENCRYPTED | HB_FF_UNICODE;
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_UNICODE |
+                         HB_FF_ENCRYPTED | HB_FF_COMPRESSED;
                break;
 
             case HB_FT_ANY:
                cType = 'V';
-               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_COMPRESSED |
-                         HB_FF_ENCRYPTED | HB_FF_UNICODE;
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_UNICODE |
+                         HB_FF_ENCRYPTED | HB_FF_COMPRESSED;
                break;
 
             case HB_FT_MEMO:
                cType = 'M';
-               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_COMPRESSED |
-                         HB_FF_ENCRYPTED | HB_FF_UNICODE;
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_UNICODE |
+                         HB_FF_ENCRYPTED | HB_FF_COMPRESSED;
                break;
 
             case HB_FT_IMAGE:
@@ -788,6 +788,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
       case DBI_CANPUTREC:
       case DBI_ISFLOCK:
       case DBI_SHARED:
+      case DBI_TRANSREC:
          hb_itemPutL( pItem, HB_FALSE );
          break;
 

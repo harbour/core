@@ -1379,16 +1379,16 @@ HB_FUNC( SQLITE3_LOAD_EXTENSION )
 
 HB_FUNC( SQLITE3_ENABLE_LOAD_EXTENSION )
 {
-#ifndef SQLITE_OMIT_LOAD_EXTENSION
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
       hb_retni( sqlite3_enable_load_extension( pHbSqlite3->db, hb_parl( 2 ) ) );
+#else
+      hb_retni( -1 );
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-#else
-   hb_retni( -1 );
-#endif /* SQLITE_OMIT_LOAD_EXTENSION */
 }
 
 /**
@@ -1696,10 +1696,7 @@ HB_FUNC( SQLITE3_BLOB_READ )
       buffer = ( char * ) hb_xgrab( iLen + 1 );
 
       if( SQLITE_OK == sqlite3_blob_read( pBlob, ( void * ) buffer, iLen, hb_parni( 3 ) ) )
-      {
-         buffer[ iLen ] = '\0';
          hb_retclen_buffer( buffer, iLen );
-      }
       else
          hb_xfree( buffer );
    }

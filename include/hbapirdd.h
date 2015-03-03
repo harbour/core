@@ -1205,6 +1205,7 @@ extern HB_EXPORT HB_ERRCODE   hb_rddCreateTableTemp(
                                  const char * szAlias,
                                  const char * szCpId, HB_ULONG ulConnection,
                                  PHB_ITEM pStruct );
+extern HB_EXPORT HB_ERRCODE   hb_dbTransCounters( LPDBTRANSINFO lpdbTransInfo );
 extern HB_EXPORT HB_ERRCODE   hb_dbTransStruct(
                                  AREAP lpaSource, AREAP lpaDest,
                                  LPDBTRANSINFO lpdbTransInfo,
