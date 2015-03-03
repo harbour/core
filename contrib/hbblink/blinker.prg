@@ -241,14 +241,14 @@ FUNCTION BliMgrSts( nParam )
 
    SWITCH nParam
    CASE BliCacheLoc     ; RETURN BliCacheNone
-   CASE BliCacheSize    ; RETURN 0
-   CASE BliExtMemAvail  ; RETURN 0
    CASE BliHostMode     ; RETURN BliHostNone
    CASE BliMachineMode  ; RETURN BliMode286Prot
-   CASE BliOverlayLoc   ; RETURN 0
    CASE BliOverlaySize  ; RETURN Memory( HB_MEM_CHAR )
    CASE BliRealMemAvail ; RETURN Memory( HB_MEM_CHAR )
-   CASE BliVirMemAvail  ; RETURN 0
+   CASE BliCacheSize
+   CASE BliExtMemAvail
+   CASE BliOverlayLoc
+   CASE BliVirMemAvail  /* fall through */
    ENDSWITCH
 
    RETURN 0
@@ -381,7 +381,7 @@ FUNCTION SwpRunCmd( cCommand, nMem, cRunPath, cTempPath )
    HB_SYMBOL_UNUSED( cRunPath )
    HB_SYMBOL_UNUSED( cTempPath )
 
-   IF Empty( cCommand )
+   IF ! HB_ISSTRING( cCommand ) .OR. Empty( cCommand )
 #if defined( __PLATFORM__UNIX )
       cCommand := GetEnv( "SHELL" )
 #else
@@ -389,9 +389,7 @@ FUNCTION SwpRunCmd( cCommand, nMem, cRunPath, cTempPath )
 #endif
    ENDIF
 
-   t_nErrorLevel := hb_run( cCommand )
-
-   RETURN ( t_nErrorLevel != -1 )
+   RETURN ( t_nErrorLevel := hb_run( cCommand ) ) != -1
 
 FUNCTION SwpSetEnv( cString )
 
@@ -399,11 +397,8 @@ FUNCTION SwpSetEnv( cString )
    LOCAL tmp
 
    FOR EACH cPair IN hb_ATokens( cString, hb_BChar( 255 ) )
-      IF ! Empty( cPair )
-         tmp := At( "=", cPair )
-         IF tmp > 0
-            hb_SetEnv( Left( cPair, tmp - 1 ), SubStr( cPair, tmp + 1 ) )
-         ENDIF
+      IF ( tmp := At( "=", cPair ) ) > 0
+         hb_SetEnv( Left( cPair, tmp - 1 ), SubStr( cPair, tmp + 1 ) )
       ENDIF
    NEXT
 

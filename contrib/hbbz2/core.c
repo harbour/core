@@ -71,13 +71,16 @@ void bz_internal_error( int errcode )
 static void * hb_bz2Alloc( void * cargo, int nmemb, int size )
 {
    HB_SYMBOL_UNUSED( cargo );
-   return hb_xalloc( ( HB_SIZE ) nmemb * size );
+
+   return ( nmemb > 0 && size > 0 ) ? hb_xalloc( ( HB_SIZE ) nmemb * size ) : NULL;
 }
 
 static void hb_bz2Free( void * cargo, void * ptr )
 {
    HB_SYMBOL_UNUSED( cargo );
-   hb_xfree( ptr );
+
+   if( ptr )
+      hb_xfree( ptr );
 }
 
 static HB_SIZE hb_bz2CompressBound( HB_SIZE nLen )

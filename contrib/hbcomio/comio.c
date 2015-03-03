@@ -271,7 +271,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
           hb_comInit( iPort, iBaud, iParity, iSize, iStop ) == 0 &&
           hb_comFlowControl( iPort, NULL, iFlow ) == 0 )
       {
-         switch( uiExFlags & 0x3 )
+         switch( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
          {
             case FO_READ:
                fWrite = HB_FALSE;

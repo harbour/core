@@ -131,7 +131,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
                hb_socketSetKeepAlive( sd, HB_TRUE );
                if( hb_socketConnect( sd, pSockAddr, uiLen, timeout ) == 0 )
                {
-                  switch( uiExFlags & 0x3 )
+                  switch( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
                   {
                      case FO_READ:
                         hb_socketShutdown( sd, HB_SOCKET_SHUT_WR );
