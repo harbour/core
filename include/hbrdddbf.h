@@ -233,6 +233,7 @@ typedef struct _DBFAREA
    HB_BOOL     fFLocked;            /* HB_TRUE if file is locked */
    HB_BOOL     fHeaderLocked;       /* HB_TRUE if DBF header is locked */
    HB_BOOL     fPackMemo;           /* Pack memo file in pack operation */
+   HB_BOOL     fTransRec;           /* HB_TRUE if records are transfered to this area, allow to change autoupdate fields and disable their initialization */
    HB_BOOL     fTrigger;            /* Execute trigger function */
    LPDBOPENINFO lpdbOpenInfo;       /* Pointer to current dbOpenInfo structure in OPEN/CREATE methods */
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */

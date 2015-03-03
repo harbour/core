@@ -1104,6 +1104,9 @@ static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
          }
          break;
 
+      case HB_FT_LONG:
+         break;
+
       case HB_FT_FLOAT:
          pFieldInfo->uiType = HB_FT_LONG;
          break;
@@ -1140,9 +1143,6 @@ static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
          }
          break;
 
-      case HB_FT_LONG:
-         break;
-
       case HB_FT_TIME:
          pFieldInfo->uiType = HB_FT_TIMESTAMP;
          pFieldInfo->uiLen = 12;
@@ -1164,6 +1164,8 @@ static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
          pArea->fTransRec = HB_FALSE;
          break;
    }
+
+   pFieldInfo->uiFlags &= ~HB_FF_AUTOINC;
 
    /* Update field offset */
    pArea->pFieldOffset[ pArea->area.uiFieldCount ] = pArea->uiRecordLen;

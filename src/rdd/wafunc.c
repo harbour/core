@@ -870,6 +870,34 @@ static const char * hb_dbTransFieldPos( PHB_ITEM pFields, HB_USHORT uiField )
    return szField;
 }
 
+/* update counters for autoinc and rowver fields */
+HB_ERRCODE hb_dbTransCounters( LPDBTRANSINFO lpdbTransInfo )
+{
+   PHB_ITEM pItem = hb_itemNew( NULL );
+   HB_USHORT uiCount;
+
+   for( uiCount = 1; uiCount <= lpdbTransInfo->uiItemCount; ++uiCount )
+   {
+      LPDBTRANSITEM lpdbTransItem = &lpdbTransInfo->lpTransItems[ uiCount ];
+
+      if( SELF_FIELDINFO( lpdbTransInfo->lpaSource, lpdbTransItem->uiSource,
+                          DBS_COUNTER, pItem ) == HB_SUCCESS &&
+          SELF_FIELDINFO( lpdbTransInfo->lpaDest, lpdbTransItem->uiDest,
+                          DBS_COUNTER, pItem ) == HB_SUCCESS )
+      {
+         hb_itemClear( pItem );
+         if( SELF_FIELDINFO( lpdbTransInfo->lpaSource, lpdbTransItem->uiSource,
+                             DBS_STEP, pItem ) == HB_SUCCESS )
+             SELF_FIELDINFO( lpdbTransInfo->lpaDest, lpdbTransItem->uiDest,
+                             DBS_STEP, pItem );
+      }
+      hb_itemClear( pItem );
+   }
+   hb_itemRelease( pItem );
+
+   return HB_SUCCESS;
+}
+
 HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
                              LPDBTRANSINFO lpdbTransInfo,
                              PHB_ITEM * pStruct, PHB_ITEM pFields )
@@ -1085,6 +1113,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
    PHB_ITEM pStruct = NULL;
    DBTRANSINFO dbTransInfo;
    HB_USHORT uiPrevArea, uiCount, uiSwap;
+   HB_BOOL fUpdateCtr = HB_FALSE;
    HB_ERRCODE errCode;
 
    memset( &dbTransInfo, 0, sizeof( dbTransInfo ) );
@@ -1105,6 +1134,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
                                       szCpId, ulConnection, pStruct, pDelim );
          if( errCode == HB_SUCCESS )
          {
+            fUpdateCtr = HB_TRUE;
             dbTransInfo.lpaDest = lpaClose =
                                  ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
          }
@@ -1164,6 +1194,8 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
 
    if( errCode == HB_SUCCESS )
    {
+      PHB_ITEM pTransItm;
+
       hb_rddSelectWorkAreaNumber( dbTransInfo.lpaSource->uiArea );
 
       dbTransInfo.dbsci.itmCobFor   = pCobFor;
@@ -1180,7 +1212,15 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
       dbTransInfo.dbsci.fIgnoreDuplicates = HB_FALSE;
       dbTransInfo.dbsci.fBackward         = HB_FALSE;
 
+      pTransItm = hb_itemPutL( NULL, HB_TRUE );
+      SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+
       errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
+
+      SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+
+      if( errCode == HB_SUCCESS && fUpdateCtr )
+         errCode = hb_dbTransCounters( &dbTransInfo );
    }
 
    if( dbTransInfo.lpTransItems )

@@ -1973,6 +1973,8 @@ HB_FUNC( __DBTRANS )
                                      NULL, pFields );
          if( errCode == HB_SUCCESS )
          {
+            PHB_ITEM pTransItm;
+
             hb_rddSelectWorkAreaNumber( dbTransInfo.lpaSource->uiArea );
 
             dbTransInfo.dbsci.itmCobFor   = hb_param( 3, HB_IT_BLOCK );
@@ -1989,7 +1991,12 @@ HB_FUNC( __DBTRANS )
             dbTransInfo.dbsci.fIgnoreDuplicates = HB_FALSE;
             dbTransInfo.dbsci.fBackward         = HB_FALSE;
 
+            pTransItm = hb_itemPutL( NULL, HB_TRUE );
+            SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+
             errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
+
+            SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
          }
 
          if( dbTransInfo.lpTransItems )

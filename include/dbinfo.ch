@@ -292,6 +292,7 @@
 #define DBI_ISTEMPORARY         145  /* Is the table a temporary one? */
 #define DBI_LOCKTEST            146  /* record / file lock test */
 #define DBI_CODEPAGE            147  /* Codepage used */
+#define DBI_TRANSREC            148  /* Is it destination table of currently processed COPY TO or APPEND FROM operation? */
 
 /* RECORD MAP (RM) support */
 #define DBI_RM_SUPPORTED        150  /* has WA RDD record map support? */
