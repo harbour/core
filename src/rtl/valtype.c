@@ -116,7 +116,7 @@ HB_FUNC( HB_ISCHAR )
 
 HB_FUNC( HB_ISMEMO )
 {
-   hb_retl( ( hb_parinfo( 1 ) & HB_IT_MEMOFLAG ) != 0 );
+   hb_retl( HB_ISMEMO( 1 ) );
 }
 
 HB_FUNC( HB_ISARRAY )
