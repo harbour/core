@@ -228,7 +228,7 @@ HB_EXTERN_BEGIN
 #define HB_ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
 #define HB_ISDATE( n )        ( hb_param( n, HB_IT_DATE ) != NULL )
 #define HB_ISTIMESTAMP( n )   ( hb_param( n, HB_IT_TIMESTAMP ) != NULL )
-#define HB_ISMEMO( n )        ( hb_param( n, HB_IT_MEMO ) != NULL )
+#define HB_ISMEMO( n )        ( hb_param( n, HB_IT_MEMOFLAG ) != NULL )
 #define HB_ISBYREF( n )       ( ( hb_parinfo( n ) & HB_IT_BYREF ) != 0 )   /* NOTE: Intentionally using a different method */
 #define HB_ISARRAY( n )       ( hb_param( n, HB_IT_ARRAY ) != NULL )
 #define HB_ISOBJECT( n )      ( hb_extIsObject( n ) )
