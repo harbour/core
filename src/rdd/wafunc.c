@@ -162,40 +162,29 @@ HB_ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
  */
 void * hb_rddAllocWorkAreaAlias( const char * szAlias, int iArea )
 {
-   PHB_DYNS pSymAlias;
    int iDummyArea;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_rddAllocWorkAreaAlias(%s, %d)", szAlias, iArea ) );
 
    /* Verify if the alias name is valid symbol */
    if( hb_rddVerifyAliasName( szAlias ) != HB_SUCCESS )
-   {
       hb_errRT_DBCMD_Ext( EG_BADALIAS, EDBCMD_BADALIAS, NULL, szAlias, EF_CANDEFAULT );
-      return NULL;
-   }
    /* Verify if the alias is already in use */
-   if( hb_rddGetAliasNumber( szAlias, &iDummyArea ) == HB_SUCCESS )
-   {
+   else if( hb_rddGetAliasNumber( szAlias, &iDummyArea ) == HB_SUCCESS )
       hb_errRT_DBCMD_Ext( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, szAlias, EF_CANDEFAULT );
-      return NULL;
-   }
-
-   pSymAlias = hb_dynsymGet( szAlias );
-   if( hb_dynsymAreaHandle( pSymAlias ) != 0 )
-   {
-      pSymAlias = NULL;
-   }
    else
    {
-      hb_dynsymSetAreaHandle( pSymAlias, iArea );
-   }
+      PHB_DYNS pSymAlias = hb_dynsymGet( szAlias );
 
-   if( ! pSymAlias )
-   {
+      if( hb_dynsymAreaHandle( pSymAlias ) == 0 )
+      {
+         hb_dynsymSetAreaHandle( pSymAlias, iArea );
+         return pSymAlias;
+      }
       hb_errRT_DBCMD_Ext( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, szAlias, EF_CANDEFAULT );
    }
 
-   return pSymAlias;
+   return NULL;
 }
 
 /*

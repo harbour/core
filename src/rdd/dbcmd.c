@@ -1820,125 +1820,114 @@ HB_FUNC( DBSETRELATION )
 
 HB_FUNC( __DBARRANGE )
 {
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   AREAP pArea, pDestArea;
+   PHB_ITEM pStruct;
 
-   if( pArea )
+   pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   pDestArea = ( AREAP ) hb_rddGetWorkAreaPointer( ( HB_AREANO ) hb_parni( 1 ) );
+
+   /* Fields structure of source WorkArea */
+   pStruct = hb_param( 2, HB_IT_ARRAY );
+
+   /* TODO: check what Clipper does when pDestArea == NULL or pArea == pDestArea */
+   if( pArea && pDestArea && pArea != pDestArea && pStruct )
    {
-      HB_USHORT uiCount, uiDest;
-      HB_AREANO uiNewArea;
-      HB_SIZE nSize;
-      char * szFieldLine, * szPos;
-      PHB_ITEM pStruct, pFields;
       DBSORTINFO dbSortInfo;
+      HB_USHORT uiCount, uiDest;
 
       memset( &dbSortInfo, 0, sizeof( dbSortInfo ) );
-      dbSortInfo.dbtri.uiFlags = DBTF_PUTREC;
-      uiNewArea = ( HB_AREANO ) hb_parni( 1 );
 
-      /* Fields structure of source WorkArea */
-      pStruct = hb_param( 2, HB_IT_ARRAY );
-      if( pStruct )
+      dbSortInfo.dbtri.uiFlags = DBTF_PUTREC;
+      dbSortInfo.dbtri.lpaSource = pArea;
+      dbSortInfo.dbtri.lpaDest = pDestArea;
+
+      dbSortInfo.dbtri.dbsci.itmCobFor   = hb_param( 3, HB_IT_BLOCK );
+      dbSortInfo.dbtri.dbsci.lpstrFor    = NULL;
+      dbSortInfo.dbtri.dbsci.itmCobWhile = hb_param( 4, HB_IT_BLOCK );
+      dbSortInfo.dbtri.dbsci.lpstrWhile  = NULL;
+      dbSortInfo.dbtri.dbsci.lNext       = hb_param( 5, HB_IT_NUMERIC );
+      dbSortInfo.dbtri.dbsci.itmRecID    = HB_ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY );
+      dbSortInfo.dbtri.dbsci.fRest       = hb_param( 7, HB_IT_LOGICAL );
+
+      dbSortInfo.dbtri.dbsci.fIgnoreFilter     =
+      dbSortInfo.dbtri.dbsci.fLast             =
+      dbSortInfo.dbtri.dbsci.fIgnoreDuplicates =
+      dbSortInfo.dbtri.dbsci.fBackward         =
+      dbSortInfo.dbtri.dbsci.fOptimized        = HB_FALSE;
+      dbSortInfo.dbtri.dbsci.fIncludeDeleted   = HB_TRUE;
+
+      dbSortInfo.dbtri.uiItemCount = ( HB_USHORT ) hb_arrayLen( pStruct );
+      if( dbSortInfo.dbtri.uiItemCount > 0 )
       {
-         dbSortInfo.dbtri.uiItemCount = ( HB_USHORT ) hb_arrayLen( pStruct );
-         if( dbSortInfo.dbtri.uiItemCount > 0 )
+         dbSortInfo.dbtri.lpTransItems = ( LPDBTRANSITEM )
+               hb_xgrab( dbSortInfo.dbtri.uiItemCount * sizeof( DBTRANSITEM ) );
+         for( uiCount = 0; uiCount < dbSortInfo.dbtri.uiItemCount; ++uiCount )
          {
-            dbSortInfo.dbtri.lpTransItems = ( LPDBTRANSITEM )
-                                            hb_xgrab( dbSortInfo.dbtri.uiItemCount *
-                                                      sizeof( DBTRANSITEM ) );
-            for( uiCount = 0; uiCount < dbSortInfo.dbtri.uiItemCount; ++uiCount )
+            const char * szName = hb_arrayGetCPtr( hb_arrayGetItemPtr( pStruct,
+                                                            uiCount + 1 ), 1 );
+            dbSortInfo.dbtri.lpTransItems[ uiCount ].uiSource =
+                                       hb_rddFieldIndex( pArea, szName );
+            dbSortInfo.dbtri.lpTransItems[ uiCount ].uiDest =
+                                       hb_rddFieldIndex( pDestArea, szName );
+            if( dbSortInfo.dbtri.lpTransItems[ uiCount ].uiSource == 0 ||
+                dbSortInfo.dbtri.lpTransItems[ uiCount ].uiDest == 0 )
             {
-               pFields = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
-               if( HB_IS_ARRAY( pFields ) && hb_arrayLen( pFields ) > 0 )
-               {
-                  dbSortInfo.dbtri.lpTransItems[ uiCount ].uiSource =
-                  dbSortInfo.dbtri.lpTransItems[ uiCount ].uiDest =
-                     hb_rddFieldIndex( pArea, hb_arrayGetCPtr( pFields, 1 ) );
-               }
-               else
-               {
-                  hb_xfree( dbSortInfo.dbtri.lpTransItems );
-                  dbSortInfo.dbtri.lpTransItems = NULL;
-                  dbSortInfo.dbtri.uiItemCount = 0;
-                  break;
-               }
+               dbSortInfo.dbtri.uiItemCount = 0;
+               break;
             }
          }
       }
-      else
-         return;
-
-      /* Invalid fields structure? */
-      if( dbSortInfo.dbtri.uiItemCount == 0 )
-         return;
-
-      dbSortInfo.dbtri.dbsci.itmCobFor = hb_param( 3, HB_IT_BLOCK );
-      dbSortInfo.dbtri.dbsci.lpstrFor = NULL;
-      dbSortInfo.dbtri.dbsci.itmCobWhile = hb_param( 4, HB_IT_BLOCK );
-      dbSortInfo.dbtri.dbsci.lpstrWhile = NULL;
-      dbSortInfo.dbtri.dbsci.lNext = hb_param( 5, HB_IT_NUMERIC );
-      dbSortInfo.dbtri.dbsci.itmRecID = HB_ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY );
-      dbSortInfo.dbtri.dbsci.fRest = hb_param( 7, HB_IT_LOGICAL );
-      dbSortInfo.dbtri.dbsci.fIgnoreFilter =
-      dbSortInfo.dbtri.dbsci.fLast =
-      dbSortInfo.dbtri.dbsci.fIgnoreDuplicates =
-      dbSortInfo.dbtri.dbsci.fBackward =
-      dbSortInfo.dbtri.dbsci.fOptimized = HB_FALSE;
-      dbSortInfo.dbtri.dbsci.fIncludeDeleted = HB_TRUE;
-
-      pFields = hb_param( 8, HB_IT_ARRAY );
-      dbSortInfo.uiItemCount = pFields ? ( HB_USHORT ) hb_arrayLen( pFields ) : 0;
-      if( dbSortInfo.uiItemCount > 0 )
+      if( dbSortInfo.dbtri.uiItemCount > 0 )
       {
-         dbSortInfo.lpdbsItem = ( LPDBSORTITEM ) hb_xgrab( dbSortInfo.uiItemCount * sizeof( DBSORTITEM ) );
-         nSize = 0;
-         for( uiCount = 1; uiCount <= dbSortInfo.uiItemCount; ++uiCount )
+         PHB_ITEM pFields = hb_param( 8, HB_IT_ARRAY );
+
+         dbSortInfo.uiItemCount = pFields ? ( HB_USHORT ) hb_arrayLen( pFields ) : 0;
+         if( dbSortInfo.uiItemCount > 0 )
          {
-            HB_SIZE nLine = hb_arrayGetCLen( pFields, uiCount );
-            if( nLine > nSize )
-               nSize = nLine;
-         }
-         szFieldLine = ( char * ) hb_xgrab( nSize + 1 );
-         for( uiCount = uiDest = 0; uiCount < dbSortInfo.uiItemCount; ++uiCount )
-         {
-            dbSortInfo.lpdbsItem[ uiDest ].uiFlags = 0;
-            hb_strncpyUpper( szFieldLine, hb_arrayGetCPtr( pFields, uiCount + 1 ),
-                             hb_arrayGetCLen( pFields, uiCount + 1 ) );
-            szPos = strchr( szFieldLine, '/' );
-            if( szPos )
+            char * szFieldLine, * szPos;
+            HB_SIZE nSize = 0;
+
+            dbSortInfo.lpdbsItem = ( LPDBSORTITEM ) hb_xgrab( dbSortInfo.uiItemCount * sizeof( DBSORTITEM ) );
+            for( uiCount = 1; uiCount <= dbSortInfo.uiItemCount; ++uiCount )
             {
-               *szPos++ = 0;
-               if( strchr( szPos, 'D' ) > strchr( szPos, 'A' ) )
-                  dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_DESCEND;
+               HB_SIZE nLine = hb_arrayGetCLen( pFields, uiCount );
+               if( nLine > nSize )
+                  nSize = nLine;
+            }
+            szFieldLine = ( char * ) hb_xgrab( nSize + 1 );
+            for( uiDest = 0, uiCount = 1; uiCount <= dbSortInfo.uiItemCount; ++uiCount )
+            {
+               dbSortInfo.lpdbsItem[ uiDest ].uiFlags = 0;
+               hb_strncpyUpper( szFieldLine, hb_arrayGetCPtr( pFields, uiCount ),
+                                hb_arrayGetCLen( pFields, uiCount ) );
+               szPos = strchr( szFieldLine, '/' );
+               if( szPos )
+               {
+                  *szPos++ = 0;
+                  if( strchr( szPos, 'D' ) > strchr( szPos, 'A' ) )
+                     dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_DESCEND;
+                  else
+                     dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_ASCEND;
+                  if( strchr( szPos, 'C' ) != NULL )
+                     dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_CASE;
+               }
                else
                   dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_ASCEND;
-               if( strchr( szPos, 'C' ) != NULL )
-                  dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_CASE;
-            }
-            else
-            {
-               dbSortInfo.lpdbsItem[ uiDest ].uiFlags |= SF_ASCEND;
-            }
 
-            dbSortInfo.lpdbsItem[ uiDest ].uiField = hb_rddFieldExpIndex( pArea, szFieldLine );
-
-            /* Field found */
-            if( dbSortInfo.lpdbsItem[ uiDest ].uiField != 0 )
-            {
-               ++uiDest;
+               dbSortInfo.lpdbsItem[ uiDest ].uiField = hb_rddFieldExpIndex( pArea, szFieldLine );
+               /* Field found */
+               if( dbSortInfo.lpdbsItem[ uiDest ].uiField != 0 )
+                  ++uiDest;
             }
+            dbSortInfo.uiItemCount = uiDest;
+            hb_xfree( szFieldLine );
          }
-         dbSortInfo.uiItemCount = uiDest;
-         hb_xfree( szFieldLine );
+
+         if( dbSortInfo.uiItemCount == 0 )
+            SELF_TRANS( pArea, &dbSortInfo.dbtri );
+         else
+            SELF_SORT( pArea, &dbSortInfo );
       }
-
-      dbSortInfo.dbtri.lpaSource = pArea;
-      dbSortInfo.dbtri.lpaDest = ( AREAP ) hb_rddGetWorkAreaPointer( uiNewArea );
-      /* TODO: check what Clipper does when lpaDest == NULL or lpaDest == lpaSource */
-
-      if( dbSortInfo.uiItemCount == 0 )
-         SELF_TRANS( pArea, &dbSortInfo.dbtri );
-      else
-         SELF_SORT( pArea, &dbSortInfo );
 
       /* Free items */
       if( dbSortInfo.lpdbsItem )
@@ -1985,11 +1974,12 @@ HB_FUNC( __DBTRANS )
             dbTransInfo.dbsci.itmRecID    = HB_ISNIL( 6 ) ? NULL : hb_param( 6, HB_IT_ANY );
             dbTransInfo.dbsci.fRest       = hb_param( 7, HB_IT_LOGICAL );
 
-            dbTransInfo.dbsci.fIgnoreFilter     = HB_TRUE;
+            dbTransInfo.dbsci.fIgnoreFilter     =
+            dbTransInfo.dbsci.fLast             =
+            dbTransInfo.dbsci.fIgnoreDuplicates =
+            dbTransInfo.dbsci.fBackward         =
+            dbTransInfo.dbsci.fOptimized        = HB_FALSE;
             dbTransInfo.dbsci.fIncludeDeleted   = HB_TRUE;
-            dbTransInfo.dbsci.fLast             = HB_FALSE;
-            dbTransInfo.dbsci.fIgnoreDuplicates = HB_FALSE;
-            dbTransInfo.dbsci.fBackward         = HB_FALSE;
 
             pTransItm = hb_itemPutL( NULL, HB_TRUE );
             SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );

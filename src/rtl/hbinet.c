@@ -717,7 +717,7 @@ static void s_inetRecvInternal( int iMode )
       hb_retni( -1 );
    else
    {
-      int iLen, iMaxLen, iReceived = 0, iTimeElapsed = 0;
+      int iLen, iMaxLen, iReceived, iTimeElapsed;
       char * buffer;
       HB_SIZE nLen;
 
@@ -740,8 +740,7 @@ static void s_inetRecvInternal( int iMode )
       else
          iMaxLen = iLen;
 
-      iReceived = 0;
-      iTimeElapsed = 0;
+      iReceived = iTimeElapsed = 0;
       socket->iError = HB_INET_ERR_OK;
       do
       {
