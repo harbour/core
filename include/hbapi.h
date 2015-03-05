@@ -599,6 +599,7 @@ extern HB_EXPORT  void     hb_gcMark( void * pAlloc ); /* mark given block as us
 extern HB_EXPORT  void     hb_gcRefInc( void * pAlloc );  /* increment reference counter */
 extern HB_EXPORT  void     hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
 
+extern HB_EXPORT  void     hb_gcDummyClear( void * Cargo ); /* dummy GC clear function */
 extern HB_EXPORT  void     hb_gcDummyMark( void * Cargo ); /* dummy GC mark function */
 
 extern PHB_ITEM   hb_gcGripGet( PHB_ITEM pItem );

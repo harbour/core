@@ -279,6 +279,71 @@ static int hb_dbfNextValueStep( DBFAREAP pArea, HB_USHORT uiField, int iStep )
    return iPrevStep;
 }
 
+void hb_dbfTransCheckCounters( LPDBTRANSINFO lpdbTransInfo )
+{
+   HB_BOOL fCopyCtr = HB_TRUE;
+   HB_USHORT uiCount, uiDest;
+   DBFAREAP pArea = ( DBFAREAP ) lpdbTransInfo->lpaDest;
+
+   if( pArea->ulRecCount > 0 || ( pArea->fShared && ! pArea->fFLocked ) )
+      fCopyCtr = HB_FALSE;
+   else
+   {
+      PHB_ITEM pItem = NULL;
+
+      /* check if counters can be copied for all fields */
+      for( uiCount = 0; uiCount < lpdbTransInfo->uiItemCount; ++uiCount )
+      {
+         HB_USHORT uiField = lpdbTransInfo->lpTransItems[ uiCount ].uiDest;
+         LPFIELD pField = lpdbTransInfo->lpaDest->lpFields + uiField - 1;
+
+         if( hb_dbfIsAutoIncField( pField ) != HB_AUTOINC_NONE )
+         {
+            if( pItem == NULL )
+               pItem = hb_itemNew( NULL );
+            if( SELF_FIELDINFO( lpdbTransInfo->lpaSource,
+                                lpdbTransInfo->lpTransItems[ uiCount ].uiSource,
+                                DBS_COUNTER, pItem ) != HB_SUCCESS )
+            {
+               fCopyCtr = HB_FALSE;
+               break;
+            }
+         }
+      }
+      if( pItem != NULL )
+         hb_itemRelease( pItem );
+   }
+
+   if( fCopyCtr )
+      lpdbTransInfo->uiFlags |= DBTF_CPYCTR;
+   else
+   {
+      for( uiCount = uiDest = 0; uiCount < lpdbTransInfo->uiItemCount; ++uiCount )
+      {
+         HB_USHORT uiField = lpdbTransInfo->lpTransItems[ uiCount ].uiDest;
+         LPFIELD pField = lpdbTransInfo->lpaDest->lpFields + uiField - 1;
+
+         if( hb_dbfIsAutoIncField( pField ) == HB_AUTOINC_NONE &&
+             pField->uiType != HB_FT_MODTIME )
+         {
+            if( uiDest != uiCount )
+            {
+               lpdbTransInfo->lpTransItems[ uiDest ].uiSource =
+               lpdbTransInfo->lpTransItems[ uiCount ].uiSource;
+               lpdbTransInfo->lpTransItems[ uiDest ].uiDest =
+               lpdbTransInfo->lpTransItems[ uiCount ].uiDest;
+            }
+            ++uiDest;
+         }
+      }
+      if( uiDest < uiCount )
+      {
+         lpdbTransInfo->uiItemCount = uiDest;
+         lpdbTransInfo->uiFlags &= ~( DBTF_MATCH | DBTF_PUTREC );
+      }
+   }
+}
+
 static void hb_dbfUpdateStampFields( DBFAREAP pArea )
 {
    long lJulian = 0, lMilliSec = 0;
@@ -3592,6 +3657,19 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
 
          if( HB_IS_LOGICAL( pItem ) )
             pArea->fTransRec = hb_itemGetL( pItem );
+         else if( HB_IS_POINTER( pItem ) )
+         {
+            LPDBTRANSINFO lpdbTransInfo = hb_dbTransInfoGet( pItem );
+
+            if( lpdbTransInfo )
+            {
+               if( pArea->fShared && pArea->fFLocked )
+                  pArea->ulRecCount = hb_dbfCalcRecCount( pArea );
+
+               hb_dbfTransCheckCounters( lpdbTransInfo );
+               pArea->fTransRec = HB_TRUE;
+            }
+         }
          hb_itemPutL( pItem, fTransRec );
          break;
       }

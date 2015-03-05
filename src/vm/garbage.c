@@ -334,6 +334,11 @@ HB_COUNTER hb_gcRefCount( void * pBlock )
 }
 
 
+HB_GARBAGE_FUNC( hb_gcDummyClear )
+{
+   HB_SYMBOL_UNUSED( Cargo );
+}
+
 HB_GARBAGE_FUNC( hb_gcDummyMark )
 {
    HB_SYMBOL_UNUSED( Cargo );
