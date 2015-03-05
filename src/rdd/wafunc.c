@@ -857,13 +857,36 @@ static const char * hb_dbTransFieldPos( PHB_ITEM pFields, HB_USHORT uiField )
    return szField;
 }
 
+static const HB_GC_FUNCS s_gcTransInfo =
+{
+   hb_gcDummyClear,
+   hb_gcDummyMark
+};
+
+PHB_ITEM hb_dbTransInfoPut( PHB_ITEM pItem, LPDBTRANSINFO lpdbTransInfo )
+{
+   LPDBTRANSINFO * pHolder;
+
+   pHolder = ( LPDBTRANSINFO * ) hb_gcAllocate( sizeof( LPDBTRANSINFO ), &s_gcTransInfo );
+   *pHolder = lpdbTransInfo;
+
+   return hb_itemPutPtrGC( pItem, pHolder );
+}
+
+LPDBTRANSINFO hb_dbTransInfoGet( PHB_ITEM pItem )
+{
+   LPDBTRANSINFO * pHolder = ( LPDBTRANSINFO * ) hb_itemGetPtrGC( pItem, &s_gcTransInfo );
+
+   return pHolder ? * pHolder : NULL;
+}
+
 /* update counters for autoinc and rowver fields */
 HB_ERRCODE hb_dbTransCounters( LPDBTRANSINFO lpdbTransInfo )
 {
    PHB_ITEM pItem = hb_itemNew( NULL );
    HB_USHORT uiCount;
 
-   for( uiCount = 1; uiCount <= lpdbTransInfo->uiItemCount; ++uiCount )
+   for( uiCount = 0; uiCount < lpdbTransInfo->uiItemCount; ++uiCount )
    {
       LPDBTRANSITEM lpdbTransItem = &lpdbTransInfo->lpTransItems[ uiCount ];
 
@@ -1100,7 +1123,6 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
    PHB_ITEM pStruct = NULL;
    DBTRANSINFO dbTransInfo;
    HB_USHORT uiPrevArea, uiCount, uiSwap;
-   HB_BOOL fUpdateCtr = HB_FALSE;
    HB_ERRCODE errCode;
 
    memset( &dbTransInfo, 0, sizeof( dbTransInfo ) );
@@ -1120,11 +1142,8 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
                                       HB_TRUE,
                                       szCpId, ulConnection, pStruct, pDelim );
          if( errCode == HB_SUCCESS )
-         {
-            fUpdateCtr = HB_TRUE;
             dbTransInfo.lpaDest = lpaClose =
                                  ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-         }
       }
    }
    else
@@ -1199,15 +1218,22 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
       dbTransInfo.dbsci.fIgnoreDuplicates = HB_FALSE;
       dbTransInfo.dbsci.fBackward         = HB_FALSE;
 
-      pTransItm = hb_itemPutL( NULL, HB_TRUE );
-      SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
-
-      errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
-
-      SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
-
-      if( errCode == HB_SUCCESS && fUpdateCtr )
-         errCode = hb_dbTransCounters( &dbTransInfo );
+      pTransItm = hb_dbTransInfoPut( NULL, &dbTransInfo );
+      errCode = SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+      if( errCode == HB_SUCCESS )
+      {
+         errCode = dbTransInfo.uiItemCount == 0 ? HB_FAILURE :
+                   SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
+         /* we always call DBI_TRANSREC second time after TRANS() method
+          * even if TRANS() failed - it's for RDDs which may need to store
+          * pointer to dbTransInfo in first call and then release it and/or
+          * clean some structures allocated for transfer operation [druzus]
+          */
+         SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+         if( errCode == HB_SUCCESS && ( dbTransInfo.uiFlags & DBTF_CPYCTR ) )
+            errCode = hb_dbTransCounters( &dbTransInfo );
+      }
+      hb_itemRelease( pTransItm );
    }
 
    if( dbTransInfo.lpTransItems )

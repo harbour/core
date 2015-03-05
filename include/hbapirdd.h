@@ -123,6 +123,7 @@ HB_EXTERN_BEGIN
 
 #define DBTF_MATCH         0x0001
 #define DBTF_PUTREC        0x0002
+#define DBTF_CPYCTR        0x0004
 
 
 
@@ -1206,6 +1207,8 @@ extern HB_EXPORT HB_ERRCODE   hb_rddCreateTableTemp(
                                  const char * szCpId, HB_ULONG ulConnection,
                                  PHB_ITEM pStruct );
 extern HB_EXPORT HB_ERRCODE   hb_dbTransCounters( LPDBTRANSINFO lpdbTransInfo );
+extern HB_EXPORT PHB_ITEM     hb_dbTransInfoPut( PHB_ITEM pItem, LPDBTRANSINFO lpdbTransInfo );
+extern HB_EXPORT LPDBTRANSINFO hb_dbTransInfoGet( PHB_ITEM pItem );
 extern HB_EXPORT HB_ERRCODE   hb_dbTransStruct(
                                  AREAP lpaSource, AREAP lpaDest,
                                  LPDBTRANSINFO lpdbTransInfo,
