@@ -358,19 +358,25 @@ static void hb_dbfUpdateStampFields( DBFAREAP pArea )
          case HB_FT_MODTIME:
          {
             HB_BYTE * pPtr = pArea->pRecord + pArea->pFieldOffset[ uiCount ];
-            if( lJulian == 0 )
-               hb_timeStampGet( &lJulian, &lMilliSec );
-            HB_PUT_LE_UINT32( pPtr, lJulian );
-            pPtr += 4;
-            HB_PUT_LE_UINT32( pPtr, lMilliSec );
+            if( !pArea->fTransRec || HB_GET_LE_UINT64( pPtr ) == 0 )
+            {
+               if( lJulian == 0 )
+                  hb_timeStampGet( &lJulian, &lMilliSec );
+               HB_PUT_LE_UINT32( pPtr, lJulian );
+               pPtr += 4;
+               HB_PUT_LE_UINT32( pPtr, lMilliSec );
+            }
             break;
          }
          case HB_FT_ROWVER:
          {
             HB_BYTE * pPtr = pArea->pRecord + pArea->pFieldOffset[ uiCount ];
-            if( nRowVer == 0 )
-               hb_dbfRowVerGet( pArea, uiCount, &nRowVer );
-            HB_PUT_LE_UINT64( pPtr, nRowVer );
+            if( !pArea->fTransRec || HB_GET_LE_UINT64( pPtr ) == 0 )
+            {
+               if( nRowVer == 0 )
+                  hb_dbfRowVerGet( pArea, uiCount, &nRowVer );
+               HB_PUT_LE_UINT64( pPtr, nRowVer );
+            }
             break;
          }
       }
