@@ -20,6 +20,7 @@ C_SOURCES := \
    p2newlin.c \
    p2ord2ut.c \
    p2patter.c \
+   p2serial.c \
    p2string.c \
    p2study.c \
    p2substi.c \
@@ -72,7 +73,7 @@ else
 endif
 
 # ORIGIN http://pcre.org/
-# URL    http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre2-10.00.tar.bz2
+# URL    http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre2-10.10.tar.bz2
 # DIFF   pcre2.dif
 #
 # MAP    LICENCE
@@ -97,6 +98,7 @@ endif
 # MAP    src/pcre2_newline.c                   p2newlin.c
 # MAP    src/pcre2_ord2utf.c                   p2ord2ut.c
 # MAP    src/pcre2_pattern_info.c              p2patter.c
+# MAP    src/pcre2_serialize.c                 p2serial.c
 # MAP    src/pcre2_string_utils.c              p2string.c
 # MAP    src/pcre2_study.c                     p2study.c
 # MAP    src/pcre2_substitute.c                p2substi.c
