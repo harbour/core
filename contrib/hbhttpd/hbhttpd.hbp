@@ -13,3 +13,4 @@ log.prg
 
 -env:HB_DYNBIND_OPENSSL=yes
 hbssl.hbc
+hbtip.hbc
