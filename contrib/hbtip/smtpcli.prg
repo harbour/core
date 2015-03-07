@@ -127,7 +127,9 @@ METHOD OpenSecure( cUrl, lSSL ) CLASS TIPClientSMTP
       RETURN .F.
    ENDIF
 
-   IF hb_defaultValue( lSSL, .F. )
+   hb_default( @lSSL, .F. )
+
+   IF lSSL
       ::EnableSSL( .T. )
       ::lAuthLogin := .T.
       ::lAuthPlain := .T.
@@ -328,7 +330,8 @@ METHOD SendMail( oTIpMail ) CLASS TIPClientSmtp
 
    ::mail( oTIpMail:getFieldPart( "From" ) )
 
-   FOR EACH cTo IN hb_regexSplit( ",", hb_StrReplace( oTIpMail:getFieldPart( "To" ), { e"\r\n", Chr( 9 ), " " } ) )
+   FOR EACH cTo IN hb_regexSplit( ",", hb_StrReplace( oTIpMail:getFieldPart( "To" ), ;
+                                                      { tip_CRLF(), Chr( 9 ), " " } ) )
       ::rcpt( cTo )
    NEXT
 
