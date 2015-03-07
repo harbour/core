@@ -97,9 +97,9 @@ Evaluate these points before reporting an issue:
 4.  If you are doing a cross-build, make sure to have rebuilt the native
     Harbour executables for your host platform. See `HB_HOST_BIN`
     build messages to find their location.
-5.  Keep your PATH clean from old, mixed compiler tools or other Harbour
+5.  Keep your `PATH` clean from old, mixed compiler tools or other Harbour
     versions when building Harbour. The surest way to achieve this is to
-    leave only the C compiler directory in PATH:
+    leave only the C compiler directory in `PATH`:
 
         set PATH=C:\<c_compiler_bin_dir>
 

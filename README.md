@@ -58,8 +58,8 @@ of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md
 
 ### Harbour live source repository
 
-You'll need Git version control software installed on your system,
-and issue this command:
+You'll need Git version control software installed on your system
+and to issue this command:
 
     git clone https://github.com/vszakats/harbour-core.git harbour-core
 
@@ -99,18 +99,18 @@ Platform specific prerequisites:
 
 1. Windows 7 or upper system is recommended to build Harbour.
 2. Make sure to have your C compiler of choice installed
-   in PATH. Refer to your C compiler installation and setup
+   in `PATH`. Refer to your C compiler installation and setup
    instructions for details. It's recommended to make sure no tools
-   in your PATH belonging to other C compilers are interfering with
+   in your `PATH` belonging to other C compilers are interfering with
    your setup. It's also discouraged to keep multiple copies
    of the same compiler, or different versions of the same compiler
-   in PATH at the same time. For the list of supported compilers,
+   in `PATH` at the same time. For the list of supported compilers,
    look up [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers).
 3. GNU Make 3.81 or upper is required. A copy of this tool
    is included in the source package, so you don't have to do
    anything.
-   If you want to get it separately, you can find it [here](https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/)
-   Unpack it to your PATH or Harbour source root directory,
+   If you want to get it separately, you can find it [here](https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/).
+   Unpack it to your `PATH` or Harbour source root directory,
    and run it as `mingw32-make`.
 
 To build:
@@ -147,7 +147,7 @@ You should see `Hello, world!` on screen.
 
 ## on MS-DOS hosts (possible cross-build targets: Windows, OS/2, Linux)
 
-Make sure to have your C compiler of choice installed in PATH.
+Make sure to have your C compiler of choice installed in `PATH`.
 
 To build:
 
@@ -668,7 +668,7 @@ sensitive.
      Rebuild language parser sources. Typically
      you only need this if your are Harbour core
      developer modifying grammar rules (.y).
-     Requires GNU Bison 1.28 or upper in PATH.
+     Requires GNU Bison 1.28 or upper in `PATH`.
      Default: `no`
 
    - `HB_CCPATH=[<dir>/]`
@@ -1198,7 +1198,7 @@ For all platforms you'll need two things:
 
 * Supported ANSI C compiler
 
-    Your compiler of choice has to be placed in the PATH &ndash; and
+    Your compiler of choice has to be placed in the `PATH` &ndash; and
     configured appropriately according to instructions.
     If you use official Harbour binary distribution on Windows,
     you already have MinGW compiler embedded in the installation,
@@ -1206,7 +1206,7 @@ For all platforms you'll need two things:
     make any extra steps here.
 
 Use hbmk2 to build your app from source. It's recommended to put
-it in the PATH (f.e. by using `set PATH=C:\hb\bin;%PATH%` on Windows).
+it in the `PATH` (f.e. by using `set PATH=C:\hb\bin;%PATH%` on Windows).
 
 See hbmk2 [documentation, with examples](utils/hbmk2/doc/hbmk2.en.md).
 
