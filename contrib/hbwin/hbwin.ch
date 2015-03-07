@@ -1477,15 +1477,15 @@
 #define WIN_RC_DEVBITS                     0x8000
 
 /* wapi_GetUserNameEx() nNameFormats (EXTENDED_NAME_FORMAT) */
-#define WIN_ENF_NameUnknown                0
-#define WIN_ENF_NameFullyQualifiedDN       1
-#define WIN_ENF_NameSamCompatible          2
-#define WIN_ENF_NameDisplay                3
-#define WIN_ENF_NameUniqueId               6
-#define WIN_ENF_NameCanonical              7
-#define WIN_ENF_NameUserPrincipal          8
-#define WIN_ENF_NameCanonicalEx            9
-#define WIN_ENF_NameServicePrincipal       10
-#define WIN_ENF_NameDnsDomain              12
+#define HB_WIN_ENF_NameUnknown             0
+#define HB_WIN_ENF_NameFullyQualifiedDN    1
+#define HB_WIN_ENF_NameSamCompatible       2
+#define HB_WIN_ENF_NameDisplay             3
+#define HB_WIN_ENF_NameUniqueId            6
+#define HB_WIN_ENF_NameCanonical           7
+#define HB_WIN_ENF_NameUserPrincipal       8
+#define HB_WIN_ENF_NameCanonicalEx         9
+#define HB_WIN_ENF_NameServicePrincipal    10
+#define HB_WIN_ENF_NameDnsDomain           12
 
 #endif /* HBWIN_CH_ */

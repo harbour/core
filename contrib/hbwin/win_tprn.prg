@@ -94,17 +94,17 @@ CREATE CLASS win_Prn
    METHOD Bold( nWeight )
    METHOD UnderLine( lUnderline )
    METHOD Italic( lItalic )
-   METHOD SetDuplexType( nDuplexType )                // Get/Set current Duplexmode
-   METHOD SetPrintQuality( nPrintQuality )            // Get/Set Printquality
+   METHOD SetDuplexType( nDuplexType )                // Get/Set current duplex mode
+   METHOD SetPrintQuality( nPrintQuality )            // Get/Set print quality
    METHOD CharSet( nCharSet )
 
 
-   METHOD SetPos( nPosX, nPosY )                      // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD SetPos( nPosX, nPosY )                      // WARNING: ( Col, Row ) _NOT_ ( Row, Col )
    METHOD SetColor( nClrText, nClrPane, nAlign )
-   METHOD SetBkMode( nMode )                          // Set Background mode: WIN_TRANSPARENT or WIN_OPAQUE
+   METHOD SetBkMode( nMode )                          // Set background mode: WIN_TRANSPARENT or WIN_OPAQUE
 
    METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )  // nAlign : WIN_TA_*
-   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // Warning: ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // WARNING: ( Col, Row ) _NOT_ ( Row, Col )
 
 
    METHOD SetPen( nStyle, nWidth, nColor )
@@ -123,8 +123,8 @@ CREATE CLASS win_Prn
    METHOD SetPRC( nRow, nCol )   // Based on ::LineHeight and current ::CharWidth
    METHOD PRow()
    METHOD PCol()
-   METHOD MaxRow()               // Based on ::LineHeight and Form dimensions
-   METHOD MaxCol()               // Based on ::CharWidth and Form dimensions
+   METHOD MaxRow()               // Based on ::LineHeight and form dimensions
+   METHOD MaxCol()               // Based on ::CharWidth and form dimensions
 
    METHOD MM_TO_POSX( nMm )      // Convert position on page from MM to pixel location Column
    METHOD MM_TO_POSY( nMm )      //   "       "      "    "    "   "  "   "      "     Row
@@ -147,8 +147,8 @@ CREATE CLASS win_Prn
 
    VAR AskProperties    INIT .F.
 
-   // These next 6 variables must be set before calling ::Create() if
-   // you wish to alter the defaults
+   /* These next 6 variables must be set before calling ::Create() if
+      you wish to alter the defaults */
    VAR FormType         INIT 0
    VAR BinNumber        INIT 0
    VAR Landscape        INIT .F.
@@ -158,11 +158,11 @@ CREATE CLASS win_Prn
 
    VAR SetFontOk        INIT .F.
    VAR hFont            INIT NIL
-   VAR FontName         INIT ""                          // Current Point size for font
+   VAR FontName         INIT ""                          // Current point size for font
    VAR FontPointSize    INIT 12                          // Point size for font
    VAR FontWidth        INIT { 0, 0 }                    // { Mul, Div } Calc width: nWidth := wapi_MulDiv( nMul, wapi_GetDeviceCaps( HDC, WIN_LOGPIXELSX ), nDiv )
                                                          // If font width is specified it is in "characters per inch" to emulate DotMatrix
-   VAR fBold            INIT 0                   HIDDEN  // font darkness weight (Bold). See wingdi.h or WIN SDK CreateFont() for valid values
+   VAR fBold            INIT 0                   HIDDEN  // font darkness weight (Bold). See wingdi.h or Windows SDK CreateFont() for valid values.
    VAR fUnderLine       INIT .F.                 HIDDEN  // UnderLine is on or off
    VAR fItalic          INIT .F.                 HIDDEN  // Italic is on or off
    VAR fCharSet         INIT WIN_DEFAULT_CHARSET HIDDEN
@@ -249,7 +249,7 @@ METHOD Create() CLASS win_Prn
          // Set mapping mode to pixels, topleft down
          wapi_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
 #if 0
-         win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
+         win_SetTextCharacterExtra( ::hPrinterDC, 0 )  // do not add extra char spacing even if bold
 #endif
          // Get Margins etc... here
          ::PageWidth        := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
@@ -857,10 +857,10 @@ METHOD PROCEDURE SetPRC( nRow, nCol ) CLASS win_Prn
    RETURN
 
 METHOD PRow() CLASS win_Prn
-   RETURN Int( ( ::PosY - ::TopMargin ) / ::LineHeight )   // No test for Div by ZERO
+   RETURN Int( ( ::PosY - ::TopMargin ) / ::LineHeight )  // No test for division by zero
 
 METHOD PCol() CLASS win_Prn
-   RETURN Int( ( ::PosX - ::LeftMargin ) / ::CharWidth )   // Uses width of current character
+   RETURN Int( ( ::PosX - ::LeftMargin ) / ::CharWidth )  // Uses width of current character
 
 METHOD MaxRow() CLASS win_Prn
    RETURN Int( ( ( ::BottomMargin - ::TopMargin ) + 1 ) / ::LineHeight ) - 1
