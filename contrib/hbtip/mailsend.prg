@@ -72,7 +72,7 @@ FUNCTION hb_SendMail( ... )
    lNoAuth     -> Optional. Disable Autentication methods
    nTimeOut    -> Optional. Number os ms to wait default 10000 (10s)
    cReplyTo    -> Optional.
-   lSSl        -> Optional. Need SSL at connect time (TLS need this param set to False)
+   lSSL        -> Optional. Need SSL at connect time (TLS need this param set to False)
    cSMTPPass   -> Optional.
    cCharset    -> Optional.
    cEncoding   -> Optional.
