@@ -168,7 +168,8 @@ METHOD StartTLS() CLASS TIPClientSMTP
    IF ::GetOk() .AND. ::lHasSSL
       ::EnableSSL( .T. )
       ActivateSSL( Self )
-      RETURN .T.
+      ::inetSendAll( ::SocketCon, "EHLO " + iif( Empty( ::cClientHost ), "TIPClientSMTP", ::cClientHost ) + ::cCRLF )
+      RETURN ::GetOk()
    ENDIF
 
    RETURN .F.
@@ -263,7 +264,7 @@ METHOD Auth( cUser, cPass ) CLASS TIPClientSMTP
 
 METHOD AuthPlain( cUser, cPass ) CLASS TIPClientSMTP
 
-   ::inetSendAll( ::SocketCon, "AUTH PLAIN" + hb_base64Encode( hb_BChar( 0 ) + cUser + hb_BChar( 0 ) + cPass ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "AUTH PLAIN " + hb_base64Encode( hb_BChar( 0 ) + cUser + hb_BChar( 0 ) + cPass ) + ::cCRLF )
 
    RETURN ::isAuth := ::GetOk()
 
