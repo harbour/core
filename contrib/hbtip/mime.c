@@ -71,9 +71,8 @@ typedef struct tag_mime
 #define MIME_FLAG_TRIMTABS    0x0002
 #define MIME_FLAG_CASEINSENS  0x0004
 #define MIME_FLAG_CONTINUE    0x0008
-#define MIME_TABLE_SIZE       71
 
-static const MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
+static const MIME_ENTRY s_mimeTable[] =
 {
    /* MS-DOS/Windows executable */
    /*  0*/ { 0,  "MZ",                                "application/x-dosexec",         0, 0, 0                                                                },
@@ -206,11 +205,11 @@ typedef struct tag_mime_ext
    const char * mime_type; /* MIME type if complete */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE  325
-
 /* https://www.iana.org/assignments/media-types/media-types.xhtml */
 
-static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
+/* keep this table well sorted, it's necessary for binary search algorithm */
+
+static EXT_MIME_ENTRY s_extMimeTable[] =
 {
    { "3dm"     , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },
    { "3dmf"    , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },
@@ -246,6 +245,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "c"       , MIME_FLAG_CASEINSENS, "text/x-csrc" },
    { "c++"     , MIME_FLAG_CASEINSENS, "text/x-c++src" },
    { "cco"     , MIME_FLAG_CASEINSENS, "application/x-cocoa" },
+   { "ccs"     , MIME_FLAG_CASEINSENS, "text/ccs" },
    { "cdf"     , MIME_FLAG_CASEINSENS, "application/x-netcdf" },
    { "chat"    , MIME_FLAG_CASEINSENS, "application/x-chat" },
    { "che"     , MIME_FLAG_CASEINSENS, "application/x-up-cacheop" },
@@ -259,13 +259,12 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "cpio"    , MIME_FLAG_CASEINSENS, "application/x-cpio" },
    { "cpp"     , MIME_FLAG_CASEINSENS, "text/x-c++src" },
    { "crt"     , MIME_FLAG_CASEINSENS, "application/x-x509-ca-cert" },
-   { "cu"      , MIME_FLAG_CASEINSENS, "application/x-cu-seeme" },
-   { "cxx"     , MIME_FLAG_CASEINSENS, "text/x-c++src" },
-   { "ccs"     , MIME_FLAG_CASEINSENS, "text/ccs" },
    { "csh"     , MIME_FLAG_CASEINSENS, "application/x-csh" },
    { "csm"     , MIME_FLAG_CASEINSENS, "application/x-cu-seeme" },
    { "css"     , MIME_FLAG_CASEINSENS, "text/css" },
    { "csv"     , MIME_FLAG_CASEINSENS, "text/csv" },
+   { "cu"      , MIME_FLAG_CASEINSENS, "application/x-cu-seeme" },
+   { "cxx"     , MIME_FLAG_CASEINSENS, "text/x-c++src" },
    { "dbf"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
    { "dcr"     , MIME_FLAG_CASEINSENS, "application/x-director" },
    { "deb"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
@@ -539,26 +538,33 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "zpa"     , MIME_FLAG_CASEINSENS, "application/pcphoto" }
 };
 
-static const char * s_findExtMimeType( const char * cExt )
+static const char * s_findExtMimeType( const char * szFileExt )
 {
-   int iCount;
+   HB_UINT uiFirst = 0, uiLast = HB_SIZEOFARRAY( s_extMimeTable ), uiMiddle;
+   char szExt[ 16 ];
+   int i;
 
-   if( *cExt == '.' )
-      ++cExt;
+   if( *szFileExt == '.' )
+      ++szFileExt;
+   hb_strncpyLower( szExt, szFileExt, sizeof( szExt ) - 1 );
 
-   for( iCount = 0; iCount < EXT_MIME_TABLE_SIZE; iCount++ )
+   do
    {
-      if( s_extMimeTable[ iCount ].flags == MIME_FLAG_CASEINSENS )
+      uiMiddle = ( uiFirst + uiLast ) >> 1;
+      i = strcmp( szExt, s_extMimeTable[ uiMiddle ].pattern );
+      if( i == 0 )
       {
-         if( hb_stricmp( cExt, s_extMimeTable[ iCount ].pattern ) == 0 )
-            return s_extMimeTable[ iCount ].mime_type;
+         if( s_extMimeTable[ uiMiddle ].flags == MIME_FLAG_CASEINSENS ||
+             strcmp( szExt, szFileExt ) == 0 )
+            return s_extMimeTable[ uiMiddle ].mime_type;
+         break;
       }
-      else
-      {
-         if( strcmp( cExt, s_extMimeTable[ iCount ].pattern ) == 0 )
-            return s_extMimeTable[ iCount ].mime_type;
-      }
+      else if( i < 0 )
+         uiLast = uiMiddle;
+      else /* if( i > 0 ) */
+         uiFirst = uiMiddle + 1;
    }
+   while( uiFirst < uiLast );
 
    return NULL;
 }
@@ -616,11 +622,11 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
 
 static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
 {
-   int iCount;
+   unsigned int uiCount;
 
-   for( iCount = 0; iCount < MIME_TABLE_SIZE; iCount++ )
+   for( uiCount = 0; uiCount < HB_SIZEOFARRAY( s_mimeTable ); uiCount++ )
    {
-      const MIME_ENTRY * elem = s_mimeTable + iCount;
+      const MIME_ENTRY * elem = s_mimeTable + uiCount;
       HB_ISIZ nPos     = elem->pos;
       HB_ISIZ nDataLen = strlen( elem->pattern );
 
@@ -648,7 +654,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
          {
             /* is this the begin of a match tree? */
             if( elem->next != 0 )
-               return s_findMimeStringInTree( cData, nLen, iCount + elem->next );
+               return s_findMimeStringInTree( cData, nLen, uiCount + elem->next );
             else
                return elem->mime_type;
          }
@@ -658,7 +664,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
          if( ( *elem->pattern == 0 && cData[ nPos ] == 0 ) || strncmp( cData + nPos, elem->pattern, nDataLen ) == 0 )
          {
             if( elem->next != 0 )
-               return s_findMimeStringInTree( cData, nLen, iCount + elem->next );
+               return s_findMimeStringInTree( cData, nLen, uiCount + elem->next );
             else
                return elem->mime_type;
          }

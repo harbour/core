@@ -59,6 +59,8 @@ HB_FUNC( TIP_TIMESTAMP )
    int  iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
    long lOffset;
 
+   /* TOFIX: wrong result is returned when empty dates it's passed */
+
    if( HB_ISDATE( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
@@ -96,7 +98,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
       if( nLen )
       {
          const char * pszData = hb_parc( 1 );
-         char *       cRet;
+         char *       pszRet;
          HB_ISIZ      nPos    = 0;
          HB_ISIZ      nPosRet = 0;
 
@@ -104,7 +106,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
             nLen--;
 
          /* Giving maximum final length possible */
-         cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
+         pszRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
 
          while( nPos < nLen )
          {
@@ -112,71 +114,71 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
 
             if( cElem == '&' )
             {
-               cRet[ nPosRet++ ] = '&';
-               cRet[ nPosRet++ ] = 'a';
-               cRet[ nPosRet++ ] = 'm';
-               cRet[ nPosRet++ ] = 'p';
-               cRet[ nPosRet++ ] = ';';
+               pszRet[ nPosRet++ ] = '&';
+               pszRet[ nPosRet++ ] = 'a';
+               pszRet[ nPosRet++ ] = 'm';
+               pszRet[ nPosRet++ ] = 'p';
+               pszRet[ nPosRet++ ] = ';';
             }
             else if( cElem == '<' )
             {
-               cRet[ nPosRet++ ] = '&';
-               cRet[ nPosRet++ ] = 'l';
-               cRet[ nPosRet++ ] = 't';
-               cRet[ nPosRet++ ] = ';';
+               pszRet[ nPosRet++ ] = '&';
+               pszRet[ nPosRet++ ] = 'l';
+               pszRet[ nPosRet++ ] = 't';
+               pszRet[ nPosRet++ ] = ';';
             }
             else if( cElem == '>' )
             {
-               cRet[ nPosRet++ ] = '&';
-               cRet[ nPosRet++ ] = 'g';
-               cRet[ nPosRet++ ] = 't';
-               cRet[ nPosRet++ ] = ';';
+               pszRet[ nPosRet++ ] = '&';
+               pszRet[ nPosRet++ ] = 'g';
+               pszRet[ nPosRet++ ] = 't';
+               pszRet[ nPosRet++ ] = ';';
             }
             else if( cElem == '"' )
             {
-               cRet[ nPosRet++ ] = '&';
-               cRet[ nPosRet++ ] = 'q';
-               cRet[ nPosRet++ ] = 'u';
-               cRet[ nPosRet++ ] = 'o';
-               cRet[ nPosRet++ ] = 't';
-               cRet[ nPosRet++ ] = ';';
+               pszRet[ nPosRet++ ] = '&';
+               pszRet[ nPosRet++ ] = 'q';
+               pszRet[ nPosRet++ ] = 'u';
+               pszRet[ nPosRet++ ] = 'o';
+               pszRet[ nPosRet++ ] = 't';
+               pszRet[ nPosRet++ ] = ';';
             }
             else if( cElem == '\'' )
             {
-               cRet[ nPosRet++ ] = '&';
-               cRet[ nPosRet++ ] = '#';
-               cRet[ nPosRet++ ] = '0';
-               cRet[ nPosRet++ ] = '3';
-               cRet[ nPosRet++ ] = '9';
-               cRet[ nPosRet++ ] = ';';
+               pszRet[ nPosRet++ ] = '&';
+               pszRet[ nPosRet++ ] = '#';
+               pszRet[ nPosRet++ ] = '0';
+               pszRet[ nPosRet++ ] = '3';
+               pszRet[ nPosRet++ ] = '9';
+               pszRet[ nPosRet++ ] = ';';
             }
             else if( cElem == '\r' )
             {
-               cRet[ nPosRet++ ] = '&';
-               cRet[ nPosRet++ ] = '#';
-               cRet[ nPosRet++ ] = '0';
-               cRet[ nPosRet++ ] = '1';
-               cRet[ nPosRet++ ] = '3';
-               cRet[ nPosRet++ ] = ';';
+               pszRet[ nPosRet++ ] = '&';
+               pszRet[ nPosRet++ ] = '#';
+               pszRet[ nPosRet++ ] = '0';
+               pszRet[ nPosRet++ ] = '1';
+               pszRet[ nPosRet++ ] = '3';
+               pszRet[ nPosRet++ ] = ';';
             }
             else if( cElem == '\n' )
             {
-               cRet[ nPosRet++ ] = '&';
-               cRet[ nPosRet++ ] = '#';
-               cRet[ nPosRet++ ] = '0';
-               cRet[ nPosRet++ ] = '1';
-               cRet[ nPosRet++ ] = '0';
-               cRet[ nPosRet++ ] = ';';
+               pszRet[ nPosRet++ ] = '&';
+               pszRet[ nPosRet++ ] = '#';
+               pszRet[ nPosRet++ ] = '0';
+               pszRet[ nPosRet++ ] = '1';
+               pszRet[ nPosRet++ ] = '0';
+               pszRet[ nPosRet++ ] = ';';
             }
             else if( cElem >= ' ' )
             {
-               cRet[ nPosRet++ ] = cElem;
+               pszRet[ nPosRet++ ] = cElem;
             }
 
             nPos++;
          }
 
-         hb_retclen_buffer( cRet, nPosRet );
+         hb_retclen_buffer( ( char * ) hb_xrealloc( pszRet, nPosRet + 1 ), nPosRet );
       }
       else
          hb_retc_null();
@@ -199,7 +201,7 @@ HB_FUNC( TIP_JSONSPECIALCHARS )
       if( nLen )
       {
          const char * pszData = hb_parc( 1 );
-         char *       cRet;
+         char *       pszRet;
          HB_ISIZ      nPos    = 0;
          HB_ISIZ      nPosRet = 0;
 
@@ -207,7 +209,7 @@ HB_FUNC( TIP_JSONSPECIALCHARS )
             nLen--;
 
          /* Giving maximum final length possible */
-         cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
+         pszRet = ( char * ) hb_xgrab( nLen * 2 + 1 );
 
          while( nPos < nLen )
          {
@@ -215,53 +217,53 @@ HB_FUNC( TIP_JSONSPECIALCHARS )
 
             if( cElem == '"' )
             {
-               cRet[ nPosRet++ ] = '\\';
-               cRet[ nPosRet++ ] = '"';
+               pszRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = '"';
             }
             else if( cElem == '\\' )
             {
-               cRet[ nPosRet++ ] = '\\';
-               cRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = '\\';
             }
             else if( cElem == '/' )
             {
-               cRet[ nPosRet++ ] = '\\';
-               cRet[ nPosRet++ ] = '/';
+               pszRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = '/';
             }
             else if( cElem == '\b' )
             {
-               cRet[ nPosRet++ ] = '\\';
-               cRet[ nPosRet++ ] = 'b';
+               pszRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = 'b';
             }
             else if( cElem == '\f' )
             {
-               cRet[ nPosRet++ ] = '\\';
-               cRet[ nPosRet++ ] = 'f';
+               pszRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = 'f';
             }
             else if( cElem == '\r' )
             {
-               cRet[ nPosRet++ ] = '\\';
-               cRet[ nPosRet++ ] = 'r';
+               pszRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = 'r';
             }
             else if( cElem == '\n' )
             {
-               cRet[ nPosRet++ ] = '\\';
-               cRet[ nPosRet++ ] = 'n';
+               pszRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = 'n';
             }
             else if( cElem == '\t' )
             {
-               cRet[ nPosRet++ ] = '\\';
-               cRet[ nPosRet++ ] = 't';
+               pszRet[ nPosRet++ ] = '\\';
+               pszRet[ nPosRet++ ] = 't';
             }
             else if( cElem >= ' ' )
             {
-               cRet[ nPosRet++ ] = cElem;
+               pszRet[ nPosRet++ ] = cElem;
             }
 
             nPos++;
          }
 
-         hb_retclen_buffer( cRet, nPosRet );
+         hb_retclen_buffer( ( char * ) hb_xrealloc( pszRet, nPosRet + 1 ), nPosRet );
       }
       else
          hb_retc_null();
