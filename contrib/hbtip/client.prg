@@ -856,7 +856,7 @@ METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS TIPC
 
 FUNCTION tip_SSL()
    RETURN hb_IsFunction( "__HBEXTERN__HBSSL__" )
-   
+
 FUNCTION ActivateSSL(Self)
 LOCAL SocketCon
 
@@ -865,7 +865,7 @@ LOCAL SocketCon
    SSL_set_mode( ::ssl, HB_SSL_MODE_AUTO_RETRY )
    SSL_set_fd( ::ssl, hb_inetFD( SocketCon ) )
    SSL_connect( ::ssl )
-   
+
    /* TODO: Add error handling */
-   
+
    RETURN .T.
