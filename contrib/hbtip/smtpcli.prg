@@ -169,7 +169,7 @@ METHOD StartTLS() CLASS TIPClientSMTP
       ::EnableSSL( .T. )
       ActivateSSL( Self )
       ::inetSendAll( ::SocketCon, "EHLO " + iif( Empty( ::cClientHost ), "TIPClientSMTP", ::cClientHost ) + ::cCRLF )
-      RETURN ::GetOk()
+      RETURN ::DetectSecurity()
    ENDIF
 
    RETURN .F.
