@@ -197,7 +197,7 @@ METHOD DetectSecurity() CLASS TIPClientSMTP
       ENDIF
       IF hb_LeftEq( ::cReply, "250-" )
          LOOP
-      ELSEIF hb_LeftEq( ::cReply ) == "250 "
+      ELSEIF hb_LeftEq( ::cReply, "250 " )
          EXIT
       ENDIF
    ENDDO
