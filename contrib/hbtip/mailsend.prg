@@ -262,13 +262,9 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       ENDIF
 
       DO WHILE .T.
-         IF ! oInMail:GetOk()
-            EXIT
-         ENDIF
-         IF oInMail:cReply == NIL
-            EXIT
-         ENDIF
-         IF hb_LeftEq( oInMail:cReply, "250 " )
+         IF ! oInMail:GetOk() .OR. ;
+            oInMail:cReply == NIL .OR. ;
+            hb_LeftEq( oInMail:cReply, "250 " )
             EXIT
          ENDIF
       ENDDO

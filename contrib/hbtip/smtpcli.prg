@@ -172,10 +172,8 @@ METHOD DetectSecurity() CLASS TIPClientSMTP
    LOCAL lOk
 
    DO WHILE .T.
-      IF !( lOk := ::GetOk() )
-         EXIT
-      ENDIF
-      IF ::cReply == NIL
+      IF !( lOk := ::GetOk() ) .OR. ;
+         ::cReply == NIL
          EXIT
       ENDIF
       IF "LOGIN" $ ::cReply
@@ -190,12 +188,9 @@ METHOD DetectSecurity() CLASS TIPClientSMTP
          ::lAuthPlain := .T.
       ENDIF
 
-      DO CASE
-      CASE hb_LeftEq( ::cReply, "250-" )
-         LOOP
-      CASE hb_LeftEq( ::cReply, "250 " )
+      IF hb_LeftEq( ::cReply, "250 " )
          EXIT
-      ENDCASE
+      ENDIF
    ENDDO
 
    RETURN lOk
