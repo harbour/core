@@ -102,6 +102,8 @@ FUNCTION tip_MailAssemble( ;
       cCharsetCP := hb_cdpUniID( Lower( cCharset ) )
    ENDIF
 
+   cContentType := iif( lBodyHTML, "text/html", "text/plain" ) + "; charset=" + cCharset
+
    /* add ending EOL to body, if there wasn't any */
    IF !( Right( cBody, 2 ) == Chr( 13 ) + Chr( 10 ) )
       cBody += Chr( 13 ) + Chr( 10 )
@@ -116,22 +118,17 @@ FUNCTION tip_MailAssemble( ;
       cSubject := s_TransCP( cSubject, cCharsetCP )
    ENDIF
 
-   /* Start assembling mail */
-
    oMail := TIPMail():New()
    oMail:SetEncoder( cEncoding )
    oMail:SetCharset( cCharset )
-
-   cContentType := iif( lBodyHTML, "text/html", "text/plain" ) + "; charset=" + cCharset
-
    IF Empty( aFiles )
-      oMail:SetFieldPart( "Content-Type", cContentType )
+      oMail:hHeaders[ "Content-Type" ] := cContentType
       oMail:SetBody( cBody )
    ELSE
       oAttach := TIPMail():New()
       oAttach:SetEncoder( cEncoding )
       oAttach:SetCharset( cCharset )
-      oAttach:SetFieldPart( "Content-Type", cContentType )
+      oAttach:hHeaders[ "Content-Type" ] := cContentType
       oAttach:SetBody( cBody )
       oMail:Attach( oAttach )
 
@@ -163,23 +160,29 @@ FUNCTION tip_MailAssemble( ;
             LOOP
          ENDCASE
 
-         hb_default( @cMimeType, tip_FileNameMimeType( cFile, "application/octet-stream" ) )
-
+         IF cMimeType == NIL
+            cMimeType := tip_FileNameMimeType( cFile, "application/octet-stream" )
+         ENDIF
          cFile := s_TransCP( cFile, cCharsetCP )
 
          oAttach := TIPMail():New()
          oAttach:SetCharset( cCharset )
          oAttach:SetEncoder( iif( hb_LeftEq( cMimeType, "text/" ), cEncoding, "base64" ) )
-         oAttach:SetFieldPart( "Content-Disposition", "attachment" )
-         oAttach:SetFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFile ) )  // Usually, original filename is set here
-         oAttach:SetFieldPart( "Content-Type", cMimeType )
+
          IF cMimeType == "text/html"
-            oAttach:SetFieldOption( "Content-Type", "charset", cCharset )
+            cMimeType += "; charset=" + cCharset
+            IF !( Right( cData, 2 ) == Chr( 13 ) + Chr( 10 ) )
+               cData += Chr( 13 ) + Chr( 10 )
+            ENDIF
          ENDIF
-         oAttach:SetFieldOption( "Content-Type", "name", hb_FNameNameExt( cFile ) )  // Some e-mail clients use Content-Type to check for filename
+         // Some e-mail clients use Content-Type to check for filename
+         cMimeType += "; name=" + '"' + hb_FNameNameExt( cFile ) + '"'
          IF ( nAttr := __tip_FAttrToUmask( nAttr ) ) != 0
-            oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( nAttr, 4 ) )
+            cMimeType += "; x-unix-mode=" + '"' + hb_NumToHex( nAttr, 4 ) + '"'
          ENDIF
+         oAttach:hHeaders[ "Content-Type" ] := cMimeType
+         // Usually, original filename is set here
+         oAttach:hHeaders[ "Content-Disposition" ] := "attachment; filename=" + '"' + hb_FNameNameExt( cFile ) + '"'
          oAttach:SetBody( cData )
          oMail:Attach( oAttach )
       NEXT
@@ -195,15 +198,15 @@ FUNCTION tip_MailAssemble( ;
    ENDIF
 
    oMail:SetHeader( cSubject, cFrom, xTo, xCC )
-   oMail:SetFieldPart( "Date", tip_TimeStamp() )
+   oMail:hHeaders[ "Date" ] := tip_TimeStamp()
    IF ! Empty( cReplyTo )
-      oMail:SetFieldPart( "Reply-to", cReplyTo )
+      oMail:hHeaders[ "Reply-to" ] := cReplyTo
    ENDIF
    IF lRead
-      oMail:SetFieldPart( "Disposition-Notification-To", tip_GetRawEmail( cFrom ) )
+      oMail:hHeaders[ "Disposition-Notification-To" ] := tip_GetRawEmail( cFrom )
    ENDIF
-   IF Int( nPriority ) != 3
-      oMail:SetFieldPart( "X-Priority", hb_ntos( Int( nPriority ) ) )
+   IF nPriority != 3
+      oMail:hHeaders[ "X-Priority" ] := hb_ntos( nPriority )
    ENDIF
 
    RETURN iif( HB_ISSTRING( tmp ), oMail:HeadersToString() + tmp, oMail:ToString() )

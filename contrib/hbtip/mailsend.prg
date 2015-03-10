@@ -94,7 +94,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL oUrl
    LOCAL oUrl1
 
-   LOCAL lBodyHTML     := .F.
+   LOCAL lBodyHTML
    LOCAL lConnectPlain := .F.
    LOCAL lAuthTLS      := .F.
    LOCAL lConnect      := .T.
@@ -271,12 +271,17 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    ENDIF
 
    /* If the string is an existing HTML filename, load it. */
-   IF ( Lower( hb_FNameExt( cBody ) ) == ".htm" .OR. ;
-        Lower( hb_FNameExt( cBody ) ) == ".html" ) .AND. ;
-      hb_FileExists( cBody )
-      cBody := MemoRead( cBody )
-      lBodyHTML := .T.
-   ENDIF
+   SWITCH Lower( hb_FNameExt( cBody ) )
+   CASE ".htm"
+   CASE ".html"
+      IF hb_FileExists( cBody )
+         cBody := MemoRead( cBody )
+         lBodyHTML := .T.
+         EXIT
+      ENDIF
+   OTHERWISE
+      lBodyHTML := .F.
+   ENDSWITCH
 
    oInMail:oUrl:cUserid := tip_GetRawEmail( cFrom )
 

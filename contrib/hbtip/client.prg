@@ -68,7 +68,7 @@
 CREATE CLASS TIPClient
 
    CLASS VAR bInitSocks  INIT .F.
-   CLASS VAR cCRLF       INIT e"\r\n"
+   CLASS VAR cCRLF       INIT tip_CRLF()
 
    VAR oUrl                      /* url to wich to connect */
    VAR oCredentials              /* credential needed to access the service */
@@ -720,7 +720,6 @@ METHOD PROCEDURE inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
 
    IF ::lSSL .AND. ::lHasSSL
       __tip_SSLConnectFD( ::ssl, SocketCon )
-      /* TODO: Add error handling */
    ENDIF
 
    IF HB_ISEVALITEM( ::bTrace )
