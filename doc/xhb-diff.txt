@@ -551,14 +551,14 @@ generate runtime error
    Error BASE/1002  Alias does not exist: TABLE
 for the second QOUT() call. It means that it correctly recognized scope
 of both variables and also bound alias TABLE with field F though it was
-declared two lines below codeblock initialization.
+declared one line below codeblock initialization.
 
 In fact Clipper probably does not make two passes but parsing declarations
 which have to be at the beginning of function or module it stores names of
 variables which should be initialized with the initialization expressions.
 Then when all declarations are processed for each line with declared and
 initialized variables it generates code which pushes on VM stack results
-of initialization expressions and then code which pops it initializing
+of initialization expressions and then code which pops them initializing
 variables. As result in Clipper this code cannot work:
       local x := 10, y := x + 2
 because Clipper generate PCODE like:
@@ -602,13 +602,14 @@ initialization expressions but then it generates slightly different code
 initializing variables one by one without line groping like in Clipper.
 
 Please also note that in Clipper PRIVATE and PUBLIC declarations are
-executable statements so they are not used used as declarations by
+executable statements so they are not used as declarations by
 Clipper compiler even if -a compiler switch is used. So when we talk
 about initialization then it means that we are talking about LOCAL
 variables. STATIC variables are initialized in different way at
-application startup so cannot use local variables though due to but
-in Clipper in some cases compiler can accept local variables and then
-it may cause VM crash or runtime error, i.e. this code:
+application startup so cannot use local variables as initializers though
+due to bug in Clipper in some cases compiler can accept local variables
+in such context and then it may cause VM crash or error at runtime,
+i.e. this code:
 
       proc main()
          local n

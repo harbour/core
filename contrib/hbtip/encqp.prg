@@ -48,14 +48,7 @@
 
 #include "hbclass.ch"
 
-/* TOFIX: Removed TIPEncode as parent class to make it
-          work from a dynamically loaded hbtip library.
-          'VAR cName' was the only inherited item/logic.
-          This should be reverted once derived classes
-          work fine from dynamically loaded libs. */
-CREATE CLASS TIPEncoderQP
-
-   VAR cName
+CREATE CLASS TIPEncoderQP FROM TIPEncoder
 
    METHOD New() CONSTRUCTOR
    METHOD Encode( cData )
@@ -86,20 +79,24 @@ FUNCTION tip_QPEncode( cData )
    nLen := hb_BLen( cData )
    FOR nPos := 1 TO nLen
       c := hb_BSubStr( cData, nPos, 1 )
-      IF c == Chr( 13 )
+      IF c == Chr( 10 )
          cString += Chr( 13 ) + Chr( 10 )
          nLineLen := 0
-      ELSEIF hb_BCode( c ) > 126 .OR. ;
+      ELSEIF hb_BCode( c ) >= 127 .OR. ;
          c $ '=?!"#$@[\]^`{|}~' .OR. ;
          ( hb_BCode( c ) < 32 .AND. !( c $ Chr( 13 ) + Chr( 10 ) + Chr( 9 ) ) ) .OR. ;
          ( c $ " " + Chr( 9 ) .AND. hb_BSubStr( cData, nPos + 1, 1 ) $ Chr( 13 ) + Chr( 10 ) )
-         IF nLineLen + 3 > 76
+         IF nLineLen + 3 > 75
             cString += "=" + Chr( 13 ) + Chr( 10 )
             nLineLen := 0
          ENDIF
          cString += "=" + hb_NumToHex( hb_BCode( c ), 2 )
          nLineLen += 3
-      ELSEIF !( c == Chr( 10 ) )
+      ELSEIF !( c == Chr( 13 ) )
+         IF nLineLen + 3 > 75
+            cString += "=" + Chr( 13 ) + Chr( 10 )
+            nLineLen := 0
+         ENDIF
          cString += c
          nLineLen += 1
       ENDIF
@@ -116,7 +113,7 @@ FUNCTION tip_QPDecode( cData )
 
    /* delete soft line break. */
    cData := StrTran( cData, "=" + Chr( 13 ) + Chr( 10 ) )
-   cData := StrTran( cData, "=" + Chr( 10 ) ) /* also delete non-standard line breaks */
+   cData := StrTran( cData, "=" + Chr( 10 ) )  /* also delete non-standard line breaks */
 
    nLen := hb_BLen( cData )
    FOR nPos := 1 TO nLen
