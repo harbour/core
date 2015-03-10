@@ -53,7 +53,7 @@ FUNCTION hb_MailAssemble( ... )
 FUNCTION tip_MailAssemble( ;
       cFrom, ;       /* Required. Email address of the sender */
       xTo, ;         /* Required. Character string or array of email addresses to send the email to */
-      xCC, ;         /* Optional. Character string or array of email adresses for CC (Carbon Copy) */
+      xCC, ;         /* Optional. Character string or array of email addresses for CC (Carbon Copy) */
       cBody, ;       /* Optional. The body message of the email as text, or the filename of the HTML message to send. */
       cSubject, ;    /* Optional. Subject of the sending email */
       aFiles, ;      /* Optional. Array of attachments to the email to send */
@@ -70,7 +70,6 @@ FUNCTION tip_MailAssemble( ;
    LOCAL aThisFile
    LOCAL cMimeType
    LOCAL cFile
-   LOCAL cFileCP
    LOCAL cData
    LOCAL cContentType
    LOCAL nAttr
@@ -88,7 +87,7 @@ FUNCTION tip_MailAssemble( ;
    hb_default( @cBody, "" )
    hb_default( @cSubject, "" )
    hb_default( @aFiles, {} )
-   hb_default( @nPriority, 3 )
+   nPriority := Int( hb_defaultValue( nPriority, 3 ) )
    hb_default( @lRead, .F. )
    hb_default( @cReplyTo, "" )
    hb_default( @cCharset, "UTF-8" )
@@ -110,25 +109,11 @@ FUNCTION tip_MailAssemble( ;
 
    /* Convert input to the CP of the e-mail */
    IF ! Empty( cCharsetCP )
-      DO CASE
-      CASE HB_ISSTRING( xTo )
-         xTo := hb_Translate( xTo,, cCharsetCP )
-      CASE HB_ISARRAY( xTo )
-         FOR EACH tmp IN xTo
-            tmp := hb_Translate( tmp,, cCharsetCP )
-         NEXT
-      ENDCASE
-      DO CASE
-      CASE HB_ISSTRING( xCC )
-         xCC := hb_Translate( xCC,, cCharsetCP )
-      CASE HB_ISARRAY( xCC )
-         FOR EACH tmp IN xCC
-            tmp := hb_Translate( tmp,, cCharsetCP )
-         NEXT
-      ENDCASE
-      cFrom := hb_Translate( cFrom,, cCharsetCP )
-      cBody := hb_Translate( cBody,, cCharsetCP )
-      cSubject := hb_Translate( cSubject,, cCharsetCP )
+      xTo := s_TransCP( xTo, cCharsetCP )
+      xCC := s_TransCP( xCC, cCharsetCP )
+      cFrom := s_TransCP( cFrom, cCharsetCP )
+      cBody := s_TransCP( cBody, cCharsetCP )
+      cSubject := s_TransCP( cSubject, cCharsetCP )
    ENDIF
 
    /* Start assembling mail */
@@ -180,18 +165,18 @@ FUNCTION tip_MailAssemble( ;
 
          hb_default( @cMimeType, tip_FileNameMimeType( cFile, "application/octet-stream" ) )
 
-         cFileCP := iif( Empty( cCharsetCP ), cFile, hb_Translate( cFile,, cCharsetCP ) )
+         cFile := s_TransCP( cFile, cCharsetCP )
 
          oAttach := TIPMail():New()
          oAttach:SetCharset( cCharset )
          oAttach:SetEncoder( iif( hb_LeftEq( cMimeType, "text/" ), cEncoding, "base64" ) )
          oAttach:SetFieldPart( "Content-Disposition", "attachment" )
-         oAttach:SetFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFileCP ) )  // Usually, original filename is set here
+         oAttach:SetFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFile ) )  // Usually, original filename is set here
          oAttach:SetFieldPart( "Content-Type", cMimeType )
          IF cMimeType == "text/html"
             oAttach:SetFieldOption( "Content-Type", "charset", cCharset )
          ENDIF
-         oAttach:SetFieldOption( "Content-Type", "name", hb_FNameNameExt( cFileCP ) )  // Some e-mail clients use Content-Type to check for filename
+         oAttach:SetFieldOption( "Content-Type", "name", hb_FNameNameExt( cFile ) )  // Some e-mail clients use Content-Type to check for filename
          IF ( nAttr := __tip_FAttrToUmask( nAttr ) ) != 0
             oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( nAttr, 4 ) )
          ENDIF
@@ -222,3 +207,20 @@ FUNCTION tip_MailAssemble( ;
    ENDIF
 
    RETURN iif( HB_ISSTRING( tmp ), oMail:HeadersToString() + tmp, oMail:ToString() )
+
+STATIC FUNCTION s_TransCP( xData, cCP )
+
+   LOCAL tmp
+
+   IF ! Empty( cCP )
+      DO CASE
+      CASE HB_ISSTRING( xData )
+         RETURN hb_Translate( xData,, cCP )
+      CASE HB_ISARRAY( xData )
+         FOR EACH tmp IN xData
+            tmp := hb_Translate( tmp,, cCP )
+         NEXT
+      ENDCASE
+   ENDIF
+
+   RETURN xData

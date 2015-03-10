@@ -46,6 +46,7 @@
  */
 
 #include "hbclass.ch"
+#include "fileio.ch"
 
 #include "fileio.ch"
 

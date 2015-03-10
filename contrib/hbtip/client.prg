@@ -65,7 +65,6 @@
 #define SND_BUF_SIZE  Int( ::InetSndBufSize( ::SocketCon ) / 2 )
 
 /* Inet Client class */
-
 CREATE CLASS TIPClient
 
    CLASS VAR bInitSocks  INIT .F.
@@ -163,8 +162,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
 
    LOCAL oErr
    LOCAL oLog
-
-   LOCAL aProtoSSL := { "ftps", "https", "pop3s", "pops", "smtps" }
+   LOCAL lSSL
 
    DO CASE
    CASE HB_ISSTRING( xTrace ) .OR. hb_defaultValue( xTrace, .F. )
@@ -178,9 +176,23 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       oUrl := TUrl():New( oUrl )
    ENDIF
 
-   IF hb_AScan( { "ftp", "http", "pop", "smtp" }, oURL:cProto,,, .T. ) == 0 .AND. ;
-      ( ! ::lHasSSL .OR. hb_AScan( aProtoSSL, oURL:cProto,,, .T. ) == 0 )
-
+   SWITCH oURL:cProto
+   CASE "ftp"
+   CASE "http"
+   CASE "pop"
+   CASE "smtp"
+      lSSL := .F.
+      EXIT
+   CASE "ftps"
+   CASE "https"
+   CASE "pop3s"
+   CASE "pops"
+   CASE "smtps"
+      IF ::lHasSSL
+         lSSL := .T.
+         EXIT
+      ENDIF
+   OTHERWISE
       oErr := ErrorNew()
       oErr:Args          := { Self, oURL:cProto }
       oErr:CanDefault    := .F.
@@ -193,7 +205,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       oErr:SubCode       := 1081
       oErr:SubSystem     := "BASE"
       Eval( ErrorBlock(), oErr )
-   ENDIF
+   ENDSWITCH
 
    IF ! ::bInitSocks
       hb_inetInit()
@@ -204,7 +216,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       ::bInitSocks := .T.
    ENDIF
 
-   IF ::lHasSSL .AND. hb_AScan( aProtoSSL, oURL:cProto,,, .T. ) > 0
+   IF ::lHasSSL .AND. lSSL
       ::EnableSSL( .T. )
    ENDIF
 
@@ -292,8 +304,7 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPasswor
          ( tmp := At( " ", cResp ) ) > 0 .AND. ;
          Val( SubStr( cResp, tmp + 1 ) ) == 200
          lRet := .T.
-      ENDIF
-      IF ! lRet
+      ELSE
          ::close()
       ENDIF
    ELSE
@@ -304,24 +315,16 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPasswor
 
 METHOD ReadHTTPProxyResponse( /* @ */ cResponse ) CLASS TIPClient
 
-   LOCAL bMoreDataToRead := .T.
-   LOCAL nLength
    LOCAL cBuffer
 
-   DO WHILE bMoreDataToRead
-
+   DO WHILE .T.
       cBuffer := Space( 1 )
       IF ::inetRecv( ::SocketCon, @cBuffer, hb_BLen( cBuffer ) ) <= 0
          RETURN .F.
       ENDIF
       cResponse += cBuffer
-
-      IF ( nLength := hb_BLen( cResponse ) ) >= 4
-         bMoreDataToRead := ;
-            hb_BPeek( cResponse, nLength - 3 ) != 13 .OR. ;
-            hb_BPeek( cResponse, nLength - 2 ) != 10 .OR. ;
-            hb_BPeek( cResponse, nLength - 1 ) != 13 .OR. ;
-            hb_BPeek( cResponse, nLength - 0 ) != 10
+      IF hb_BRight( cResponse, 4 ) == e"\r\n\r\n"
+         EXIT
       ENDIF
    ENDDO
 
@@ -473,26 +476,23 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
    IF nFOut != NIL
       FClose( nFOut )
    ENDIF
-   IF ::inetErrorCode( ::SocketCon ) != 0
-      RETURN .F.
-   ENDIF
 
-   RETURN .T.
+   RETURN ::inetErrorCode( ::SocketCon ) == 0
 
 METHOD WriteFromFile( cFile ) CLASS TIPClient
 
-   LOCAL nFin
+   LOCAL nFIn
    LOCAL cData
    LOCAL nLen
    LOCAL nSize, nSent, nBufSize
 
    ::nWrite  := 0
    ::nStatus := 0
-   IF ( nFin := FOpen( cFile ) ) == F_ERROR
+   IF ( nFIn := FOpen( cFile ) ) == F_ERROR
       RETURN .F.
    ENDIF
-   nSize := FSeek( nFin, 0, FS_END )
-   FSeek( nFin, 0 )
+   nSize := FSeek( nFIn, 0, FS_END )
+   FSeek( nFIn, 0 )
 
    nBufSize := SND_BUF_SIZE
 
@@ -505,9 +505,9 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    ::nStatus := 1
    cData := Space( nBufSize )
-   DO WHILE ( nLen := FRead( nFin, @cData, nBufSize ) ) > 0
+   DO WHILE ( nLen := FRead( nFIn, @cData, nBufSize ) ) > 0
       IF ::Write( @cData, nLen ) != nLen
-         FClose( nFin )
+         FClose( nFIn )
          RETURN .F.
       ENDIF
       nSent += nLen
@@ -522,7 +522,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
    ENDIF
 
    ::nStatus := 2
-   FClose( nFin )
+   FClose( nFIn )
 
    RETURN .T.
 
@@ -710,15 +710,16 @@ METHOD PROCEDURE inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
       RETURN
    ENDIF
 
-   IF HB_ISNUMERIC( ::nDefaultSndBuffSize )
+   IF hb_defaultValue( ::nDefaultSndBuffSize, 0 ) > 0
       ::InetSndBufSize( SocketCon, ::nDefaultSndBuffSize )
    ENDIF
-   IF HB_ISNUMERIC( ::nDefaultRcvBuffSize )
+
+   IF hb_defaultValue( ::nDefaultRcvBuffSize, 0 ) > 0
       ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 
    IF ::lSSL .AND. ::lHasSSL
-      __tip_SSLConnectFD( ::ssl, hb_inetFD( SocketCon ) )
+      __tip_SSLConnectFD( ::ssl, SocketCon )
       /* TODO: Add error handling */
    ENDIF
 
@@ -781,12 +782,12 @@ METHOD Log( ... ) CLASS TIPClient
          ENDIF
 
          DO CASE
-         CASE xVar:__enumIndex() < Len( xVar:__enumBase() ) - 1
-            cMsg += ", "
-         CASE xVar:__enumIndex() == Len( xVar:__enumBase() ) - 1
-            cMsg += " )" + hb_eol() + ">> "
          CASE xVar:__enumIsLast()
             cMsg += " <<" + hb_eol() + hb_eol()
+         CASE xVar:__enumIndex() == PCount() - 1
+            cMsg += " )" + hb_eol() + ">> "
+         OTHERWISE
+            cMsg += ", "
          ENDCASE
       NEXT
 
@@ -797,7 +798,7 @@ METHOD Log( ... ) CLASS TIPClient
 
 METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS TIPClient
 
-   IF HB_ISOBJECT( cProxyHost ) .AND. cProxyHost:className() == "TURL"
+   IF __clsParent( cProxyHost:classH(), "TURL" )
       ::cProxyHost     := cProxyHost:cServer
       ::nProxyPort     := cProxyHost:nPort
       ::cProxyUser     := cProxyHost:cUserid
@@ -814,10 +815,10 @@ METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS TIPC
 FUNCTION tip_SSL()
    RETURN hb_IsFunction( "__HBEXTERN__HBSSL__" )
 
-FUNCTION __tip_SSLConnectFD( ssl, fd )
+FUNCTION __tip_SSLConnectFD( ssl, SocketCon )
 
    SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY )
-   SSL_set_fd( ssl, fd )
+   SSL_set_fd( ssl, hb_inetFD( SocketCon ) )
    SSL_connect( ssl )
 
    /* TODO: Add error handling */
