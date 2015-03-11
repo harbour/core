@@ -176,11 +176,7 @@ METHOD BuildAddress() CLASS TUrl
       cRet += "?" + ::cQuery
    ENDIF
 
-   IF Len( cRet ) == 0
-      RETURN NIL
-   ENDIF
-
-   RETURN ::cAddress := cRet
+   RETURN iif( Len( cRet ) == 0, NIL, ::cAddress := cRet )
 
 METHOD BuildQuery() CLASS TUrl
 
@@ -225,8 +221,5 @@ METHOD AddGetForm( xPostData ) CLASS TUrl
       cData := xPostData
    ENDCASE
 
-   IF Empty( cData )
-      RETURN NIL
-   ENDIF
-
-   RETURN ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData
+   RETURN iif( Empty( cData ), NIL, ;
+      ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData )
