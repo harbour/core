@@ -167,7 +167,7 @@ METHOD StartTLS() CLASS TIPClientSMTP
 
    IF ::GetOk() .AND. ::lHasSSL
       ::EnableSSL( .T. )
-      ActivateSSL( Self )
+      __tip_SSLConnectFD( ::ssl, ::SocketCon )
       ::inetSendAll( ::SocketCon, "EHLO " + iif( Empty( ::cClientHost ), "TIPClientSMTP", ::cClientHost ) + ::cCRLF )
       RETURN ::DetectSecurity()
    ENDIF
@@ -179,10 +179,8 @@ METHOD DetectSecurity() CLASS TIPClientSMTP
    LOCAL lOk
 
    DO WHILE .T.
-      IF ! ( lOk := ::GetOk() )
-         EXIT
-      ENDIF
-      IF ::cReply == NIL
+      IF !( lOk := ::GetOk() ) .OR. ;
+         ::cReply == NIL
          EXIT
       ENDIF
       IF "LOGIN" $ ::cReply

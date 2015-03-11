@@ -75,7 +75,7 @@ CREATE CLASS TIPClientHTTP FROM TIPClient
    METHOD Head( xPostData, cQuery )
    METHOD ReadHeaders( lClear )
    METHOD Read( nLen )
-   METHOD UseBasicAuth()                INLINE   ::cAuthMode := "Basic"
+   METHOD UseBasicAuth()                INLINE ::cAuthMode := "Basic"
    METHOD ReadAll()
    METHOD setCookie( cLine )
    METHOD getcookies( cHost, cPath )
@@ -95,7 +95,7 @@ ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientHTTP
 
-   ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "http", xTrace ), oCredentials )
+   ::super:new( oUrl, iif( hb_defaultValue( xTrace, .F. ), "http", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "https", 443, 80 )
    ::nConnTimeout := 5000
