@@ -297,21 +297,13 @@ METHOD Write( cData, nLen, bCommit ) CLASS TIPClientSMTP
 
 METHOD ServerSuportSecure( /* @ */ lAuthPlain, /* @ */ lAuthLogin ) CLASS TIPClientSMTP
 
-   lAuthLogin := .F.
-   lAuthPlain := .F.
-
    IF ::OpenSecure()
-      DO WHILE .T.
-         ::GetOk()
-         IF ::cReply == NIL
-            EXIT
-         ELSEIF "LOGIN" $ ::cReply
-            lAuthLogin := .T.
-         ELSEIF "PLAIN" $ ::cReply
-            lAuthPlain := .T.
-         ENDIF
-      ENDDO
+      lAuthLogin := ::lAuthLogin
+      lAuthPlain := ::lAuthPlain
       ::Close()
+   ELSE
+      lAuthLogin := .F.
+      lAuthPlain := .F.
    ENDIF
 
    RETURN lAuthLogin .OR. lAuthPlain

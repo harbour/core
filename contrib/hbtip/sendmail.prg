@@ -93,7 +93,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL oUrl
    LOCAL oUrl1
 
-   LOCAL lConnectPlain := .F.
    LOCAL lAuthTLS      := .F.
    LOCAL lConnect      := .T.
    LOCAL oPop
@@ -215,19 +214,8 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
       lAuthTLS := oInMail:lTLS
 
-      IF oInMail:lAuthLogin
-         IF oInMail:Auth( cUser, cSMTPPass )
-            lConnectPlain := .T.
-         ELSE
-            lConnect := .F.
-         ENDIF
-      ENDIF
-
-      IF oInMail:lAuthPlain .AND. ! lConnect
-         IF ! oInMail:AuthPlain( cUser, cSMTPPass )
-            lConnect := .F.
-         ENDIF
-      ELSEIF ! lConnectPlain
+      IF ! ( oInMail:lAuthLogin .AND. oInMail:Auth( cUser, cSMTPPass ) ) .AND. ;
+         ! ( oInMail:lAuthPlain .AND. oInMail:AuthPlain( cUser, cSMTPPass ) )
          lConnect := .F.
       ENDIF
    ELSE
