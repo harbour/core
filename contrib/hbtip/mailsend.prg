@@ -95,7 +95,6 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL oUrl1
 
    LOCAL lBodyHTML
-   LOCAL lConnectPlain := .F.
    LOCAL lAuthTLS      := .F.
    LOCAL lConnect      := .T.
    LOCAL oPop
@@ -223,19 +222,8 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
       lAuthTLS := oInMail:lTLS
 
-      IF oInMail:lAuthLogin
-         IF oInMail:Auth( cUser, cSMTPPass )
-            lConnectPlain := .T.
-         ELSE
-            lConnect := .F.
-         ENDIF
-      ENDIF
-
-      IF oInMail:lAuthPlain .AND. ! lConnect
-         IF ! oInMail:AuthPlain( cUser, cSMTPPass )
-            lConnect := .F.
-         ENDIF
-      ELSEIF ! lConnectPlain
+      IF !( oInMail:lAuthLogin .AND. oInMail:Auth( cUser, cSMTPPass ) ) .AND. ;
+         !( oInMail:lAuthPlain .AND. oInMail:AuthPlain( cUser, cSMTPPass ) )
          lConnect := .F.
       ENDIF
    ELSE
