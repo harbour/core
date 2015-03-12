@@ -12521,9 +12521,10 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
          ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + Len( cStart ) ) ) > 0
 
-      cMacro := MacroGet( hbmk, SubStr( cString, nStart + Len( cStart ), nEnd - nStart - Len( cStart ) ), cFileName )
-
-      cString := Left( cString, nStart - 1 ) + cMacro + SubStr( cString, nEnd + Len( _MACRO_CLOSE ) )
+      cString := ;
+         Left( cString, nStart - 1 ) + ;
+         MacroGet( hbmk, SubStr( cString, nStart + Len( cStart ), nEnd - nStart - Len( cStart ) ), cFileName ) + ;
+         SubStr( cString, nEnd + Len( _MACRO_CLOSE ) )
    ENDDO
 
    WHILE ( nStart := At( _CMDSUBST_OPEN, cString ) ) > 0 .AND. ;
