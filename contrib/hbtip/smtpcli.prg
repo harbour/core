@@ -104,6 +104,8 @@ METHOD New( oUrl, xTrace, oCredentials, cClientHost ) CLASS TIPClientSMTP
 
 METHOD Open( cUrl, lSSL ) CLASS TIPClientSMTP
 
+   LOCAL lOk
+
    IF ! ::super:Open( cUrl )
       RETURN .F.
    ENDIF
@@ -120,7 +122,14 @@ METHOD Open( cUrl, lSSL ) CLASS TIPClientSMTP
 
    ::inetSendAll( ::SocketCon, "HELO " + iif( Empty( ::cClientHost ), "TIPClientSMTP", ::cClientHost ) + ::cCRLF )
 
-   RETURN ::GetOk()
+   DO WHILE .T.
+      IF !( lOk := ::GetOk() ) .OR. ::cReply == NIL .OR. ;
+         hb_LeftEq( ::cReply, "250 " )
+         EXIT
+      ENDIF
+   ENDDO
+
+   RETURN lOk
 
 METHOD OpenSecure( cUrl, lSSL ) CLASS TIPClientSMTP
 

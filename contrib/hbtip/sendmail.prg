@@ -94,7 +94,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL oUrl1
 
    LOCAL lAuthTLS      := .F.
-   LOCAL lConnect      := .T.
+   LOCAL lConnect      := .F.
    LOCAL oPop
 
    /* consider any empty values invalid */
@@ -210,48 +210,33 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    oInmail:nConnTimeout := nTimeOut
 
-   IF ! lNoAuth .AND. oInMail:OpenSecure( , lSSL )
+   IF ! lNoAuth
+      IF oInMail:OpenSecure( , lSSL )
 
-      lAuthTLS := oInMail:lTLS
+         lAuthTLS := oInMail:lTLS
 
-      IF ! ( oInMail:lAuthLogin .AND. oInMail:Auth( cUser, cSMTPPass ) ) .AND. ;
-         ! ( oInMail:lAuthPlain .AND. oInMail:AuthPlain( cUser, cSMTPPass ) )
-         lConnect := .F.
+         IF ( oInMail:lAuthLogin .AND. oInMail:Auth( cUser, cSMTPPass ) ) .OR. ;
+            ( oInMail:lAuthPlain .AND. oInMail:AuthPlain( cUser, cSMTPPass ) )
+            lConnect := .T.
+         ENDIF
       ENDIF
-   ELSE
-      lConnect := .F.
+      IF ! lConnect
+         oInMail:Close()
+         BEGIN SEQUENCE WITH __BreakBlock()
+            oInmail := TIPClientSMTP():New( oUrl, xTrace,, cClientHost )
+         RECOVER
+            RETURN .F.
+         END SEQUENCE
+
+         oInmail:nConnTimeout := nTimeOut
+      ENDIF
    ENDIF
 
    IF ! lConnect
-
-      IF ! lNoAuth
-         oInMail:Close()
-      ENDIF
-
-      BEGIN SEQUENCE WITH __BreakBlock()
-         oInmail := TIPClientSMTP():New( oUrl, xTrace,, cClientHost )
-      RECOVER
-         RETURN .F.
-      END SEQUENCE
-
-      oInmail:nConnTimeout := nTimeOut
-
       IF ! oInMail:Open( NIL, lAuthTLS )
          oInmail:Close()
          RETURN .F.
       ENDIF
-
-      DO WHILE .T.
-         IF ! oInMail:GetOk()
-            EXIT
-         ENDIF
-         IF oInMail:cReply == NIL
-            EXIT
-         ENDIF
-         IF hb_LeftEq( oInMail:cReply, "250 " )
-            EXIT
-         ENDIF
-      ENDDO
    ENDIF
 
    oInMail:oUrl:cUserid := tip_GetRawEmail( cFrom )

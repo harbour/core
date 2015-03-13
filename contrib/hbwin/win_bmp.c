@@ -105,7 +105,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
                 [vszakats] */
       if( nSize > 2 && nSize <= HB_MAX_BMP_SIZE )
       {
-         char * pBuffer = ( char * ) hb_xgrab( nSize + 1 );
+         pBuffer = ( char * ) hb_xgrab( nSize + 1 );
 
          if( hb_fileReadAt( pFile, pBuffer, nSize, 0 ) != nSize ||
              hbwin_bitmapType( pBuffer, nSize ) == HB_WIN_BITMAP_UNKNOWN )
