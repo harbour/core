@@ -1,15 +1,15 @@
 @echo off
 
-rem ---------------------------------------------------------------
-rem Copyright 2009-2013 Viktor Szakats (vszakats.net/harbour)
-rem See COPYING.txt for licensing terms.
-rem ---------------------------------------------------------------
+:: ---------------------------------------------------------------
+:: Copyright 2009-2013 Viktor Szakats (vszakats.net/harbour)
+:: See COPYING.txt for licensing terms.
+:: ---------------------------------------------------------------
 
-rem - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
-rem   create required packages beforehand.
-rem - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
-rem - Run this from vanilla official source tree only.
-rem - Requires GNU sed tool in PATH
+:: - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
+::   create required packages beforehand.
+:: - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
+:: - Run this from vanilla official source tree only.
+:: - Requires GNU sed tool in PATH
 
 echo ! Self: %0
 
@@ -22,7 +22,7 @@ if "%HB_RT%" == "" set HB_RT=C:\hb\
 set HB_DR=hb%HB_VS%\
 set HB_ABSROOT=%HB_RT%%HB_DR%
 
-rem Assemble unified package from per-target builds
+:: Assemble unified package from per-target builds
 
 if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
 
@@ -53,11 +53,11 @@ xcopy /y /s    "%~dp0..\..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib"       
 xcopy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll"           "%HB_ABSROOT%bin\"
 xcopy /y       "%~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll"         "%HB_ABSROOT%bin\"
 
-rem Create special implibs for Borland (requires BCC in PATH)
-rem NOTE: Using intermediate .def files, because direct .dll to .lib conversion
-rem       is buggy in BCC55 and BCC58 (no other versions tested), leaving off
-rem       leading underscore from certain ("random") symbols, resulting in
-rem       unresolved externals, when trying to use it. [vszakats]
+:: Create special implibs for Borland (requires BCC in PATH)
+:: NOTE: Using intermediate .def files, because direct .dll to .lib conversion
+::       is buggy in BCC55 and BCC58 (no other versions tested), leaving off
+::       leading underscore from certain ("random") symbols, resulting in
+::       unresolved externals, when trying to use it. [vszakats]
 for %%a in ( "%HB_ABSROOT%bin\*-%HB_VS%.dll" ) do (
    "%HB_DIR_BCC_IMPLIB%impdef.exe" -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" "%%a"
    echo s/LIBRARY     %%~na.DLL/LIBRARY     "%%~na.dll"/Ig> _hbtemp.sed
@@ -78,14 +78,14 @@ xcopy /y       "%HB_DIR_UPX%upx.exe"                                            
 
 xcopy /y /s /e "%HB_DIR_MINGW%"                                                           "%HB_ABSROOT%comp\mingw\"
 
-rem NOTE: In multi-target distros these may not match the platform of
-rem       the Harbour installation we're about to create.
+:: NOTE: In multi-target distros these may not match the platform of
+::       the Harbour installation we're about to create.
 if exist "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  "%HB_ABSROOT%bin\"
 if exist "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" "%HB_ABSROOT%bin\"
 if exist "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  "%HB_ABSROOT%bin\"
 if exist "%HB_DIR_MINGW%\bin\mingwm10.dll"        xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"        "%HB_ABSROOT%bin\"
 
-rem Delete stuff from compiler folder we don't need
+:: Delete stuff from compiler folder we don't need
 
 rmdir /q /s "%HB_ABSROOT%comp\mingw\etc\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\opt\"
@@ -97,7 +97,7 @@ del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgfortran-*.dll"
 del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll"
 del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll"
 
-rem 32-bit hosted
+:: 32-bit hosted
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
 rmdir /q /s "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\"
@@ -110,7 +110,7 @@ del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnat-*.dll"
 del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe"
 del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe"
 
-rem 64-bit hosted
+:: 64-bit hosted
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
 rmdir /q /s "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\"
@@ -123,7 +123,7 @@ del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnat-*.dll"
 del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe"
 del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe"
 
-rem Create unified installer
+:: Create unified installer
 
 pushd
 
@@ -134,7 +134,7 @@ if exist "%HB_RT%harbour-%HB_VF%-win.exe" del "%HB_RT%harbour-%HB_VF%-win.exe"
 
 "%HB_DIR_NSIS%makensis.exe" %HB_OPT_NSIS% "%~dp0mpkg_win_uni.nsi" >> "%HB_RT%harbour-%HB_VF%-win-log.txt" 2>&1
 
-rem Create unified archive
+:: Create unified archive
 
 echo.> _hbfiles
 

@@ -1,21 +1,21 @@
 @echo off
 
-rem ---------------------------------------------------------------
-rem Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
-rem See COPYING.txt for licensing terms.
-rem ---------------------------------------------------------------
+:: ---------------------------------------------------------------
+:: Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
+:: See COPYING.txt for licensing terms.
+:: ---------------------------------------------------------------
 
-rem REQUIREMENTS FOR BUILD MACHINE:
-rem   - online 24/7 (reliable)
-rem   - Windows 7 or higher (server preferred)
-rem   - 8GB free disk space
-rem   - downstream internet traffic 20MB per day
-rem   - upstream internet traffic 100MB per day
-rem   - 1-5 hours CPU time per day
-rem   - multi-core CPU recommended
-rem   - admin rights for MSVC setup (optional)
-rem   - admin rights for Scheduled Task setup
-rem   - remote admin (via RDP protocol)
+:: REQUIREMENTS FOR BUILD MACHINE:
+::   - online 24/7 (reliable)
+::   - Windows 7 or higher (server preferred)
+::   - 8GB free disk space
+::   - downstream internet traffic 20MB per day
+::   - upstream internet traffic 100MB per day
+::   - 1-5 hours CPU time per day
+::   - multi-core CPU recommended
+::   - admin rights for MSVC setup (optional)
+::   - admin rights for Scheduled Task setup
+::   - remote admin (via RDP protocol)
 
 pushd
 
@@ -75,9 +75,9 @@ win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-mingw-log.t
 if errorlevel 1 goto _EXIT
 endlocal
 
-rem Non-unified packages are here:
-rem    harbour-nightly-win-mingw.exe
-rem    harbour-nightly-win-mingw.zip
+:: Non-unified packages are here:
+::    harbour-nightly-win-mingw.exe
+::    harbour-nightly-win-mingw.zip
 
 echo ! Creating unified Windows package...
 
@@ -85,15 +85,15 @@ call package\winuni\mpkg_win_uni.bat
 
 echo ! Uploading Harbour unified Windows package...
 
-rem Unified packages are here:
-rem    %HB_RT%harbour-nightly-win.exe
-rem    %HB_RT%harbour-nightly-win.7z
+:: Unified packages are here:
+::    %HB_RT%harbour-nightly-win.exe
+::    %HB_RT%harbour-nightly-win.7z
 
 :_EXIT
 
-rem Logs are here:
-rem    %HB_RT%harbour-nightly-win-log.txt
-rem    %HB_RT%harbour-nightly-win-mingw-log.txt
+:: Logs are here:
+::    %HB_RT%harbour-nightly-win-log.txt
+::    %HB_RT%harbour-nightly-win-mingw-log.txt
 
 echo ! Finished.
 
