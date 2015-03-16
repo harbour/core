@@ -1818,8 +1818,10 @@ HB_FUNC( DBSETRELATION )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
+/* __dbArrange( nToArea, aStruct, bFor, bWhile, nNext, nRecord, lRest, aFields ) */
 HB_FUNC( __DBARRANGE )
 {
+   HB_ERRCODE errCode = HB_FAILURE;
    AREAP pArea, pDestArea;
    PHB_ITEM pStruct;
 
@@ -1924,9 +1926,22 @@ HB_FUNC( __DBARRANGE )
          }
 
          if( dbSortInfo.uiItemCount == 0 )
-            SELF_TRANS( pArea, &dbSortInfo.dbtri );
+         {
+            PHB_ITEM pTransItm = hb_itemPutL( NULL, HB_TRUE );
+
+            errCode = SELF_INFO( dbSortInfo.dbtri.lpaDest, DBI_TRANSREC, pTransItm );
+            if( errCode == HB_SUCCESS )
+            {
+               errCode = dbSortInfo.dbtri.uiItemCount == 0 ? HB_FAILURE :
+                         SELF_TRANS( pArea, &dbSortInfo.dbtri );
+               SELF_INFO( dbSortInfo.dbtri.lpaDest, DBI_TRANSREC, pTransItm );
+               if( errCode == HB_SUCCESS && ( dbSortInfo.dbtri.uiFlags & DBTF_CPYCTR ) )
+                  errCode = hb_dbTransCounters( &dbSortInfo.dbtri );
+            }
+            hb_itemRelease( pTransItm );
+         }
          else
-            SELF_SORT( pArea, &dbSortInfo );
+            errCode = SELF_SORT( pArea, &dbSortInfo );
       }
 
       /* Free items */
@@ -1935,6 +1950,8 @@ HB_FUNC( __DBARRANGE )
       if( dbSortInfo.dbtri.lpTransItems )
          hb_xfree( dbSortInfo.dbtri.lpTransItems );
    }
+
+   hb_retl( errCode == HB_SUCCESS );
 }
 
 /* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) */
@@ -1981,12 +1998,22 @@ HB_FUNC( __DBTRANS )
             dbTransInfo.dbsci.fOptimized        = HB_FALSE;
             dbTransInfo.dbsci.fIncludeDeleted   = HB_TRUE;
 
-            pTransItm = hb_itemPutL( NULL, HB_TRUE );
-            SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
-
-            errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
-
-            SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+            pTransItm = hb_dbTransInfoPut( NULL, &dbTransInfo );
+            errCode = SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+            if( errCode == HB_SUCCESS )
+            {
+               errCode = dbTransInfo.uiItemCount == 0 ? HB_FAILURE :
+                         SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
+               /* we always call DBI_TRANSREC second time after TRANS() method
+                * even if TRANS() failed - it's for RDDs which may need to store
+                * pointer to dbTransInfo in first call and then release it and/or
+                * clean some structures allocated for transfer operation [druzus]
+                */
+               SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+               if( errCode == HB_SUCCESS && ( dbTransInfo.uiFlags & DBTF_CPYCTR ) )
+                  errCode = hb_dbTransCounters( &dbTransInfo );
+            }
+            hb_itemRelease( pTransItm );
          }
 
          if( dbTransInfo.lpTransItems )
