@@ -60,7 +60,7 @@ CREATE CLASS WvgPushButton INHERIT WvgWindow
 
    VAR    autosize                              INIT .F.
    VAR    border                                INIT .T.
-   VAR    caption                               INIT NIL
+   VAR    caption
    VAR    pointerFocus                          INIT .T.
    VAR    preSelect                             INIT .F.
    VAR    drawMode                              INIT WVG_DRAW_NORMAL

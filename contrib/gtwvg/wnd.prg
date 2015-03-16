@@ -153,7 +153,7 @@ CREATE CLASS WvgWindow INHERIT WvgPartHandler
 
    VAR    nID                                   INIT 0
    VAR    nControlID                            INIT 5000
-   VAR    nOldProc                              INIT NIL
+   VAR    nOldProc
 
    VAR    oMenu
 

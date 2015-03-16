@@ -358,7 +358,7 @@ CREATE CLASS TRPCServeCon
    /* Socket, mutex and thread */
    VAR skRemote
    VAR mtxBusy
-   VAR thSelf INIT NIL
+   VAR thSelf
 
    /* Assigned authorization level */
    VAR nAuthLevel
@@ -394,8 +394,8 @@ CREATE CLASS TRPCServeCon
    VAR cCryptKey
 
    /* Function execution data */
-   VAR thFunction   INIT NIL
-   VAR lCanceled    INIT  .F.
+   VAR thFunction
+   VAR lCanceled    INIT .F.
 
    METHOD RecvAuth( lEncrypt )
    METHOD RecvChallenge()
@@ -1184,7 +1184,7 @@ CREATE CLASS TRPCService
 
    VAR nUdpPort INIT 1139
    VAR nTcpPort INIT 1140
-   VAR cBindAddress INIT NIL
+   VAR cBindAddress
    VAR thAccept INIT 0
    VAR thUdp INIT 0
    VAR aServing INIT {}

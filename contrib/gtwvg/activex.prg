@@ -65,8 +65,8 @@ CREATE CLASS WvgActiveXControl FROM WvgWindow
 
    VAR    oOLE
    VAR    CLSID                              INIT ""
-   VAR    server                             INIT NIL
-   VAR    license                            INIT NIL
+   VAR    server
+   VAR    license
    VAR    controlFlags                       INIT 0
    VAR    default                            INIT .F.
    VAR    cancel                             INIT .F.

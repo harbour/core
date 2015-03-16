@@ -193,8 +193,8 @@ CREATE CLASS WvgFontDialog INHERIT WvgSysWindow
    VAR    previewBGClr                          INIT WIN_RGB( 255, 255, 255 )
    VAR    previewFGClr                          INIT WIN_RGB( 0, 0, 0 )
    VAR    previewString                         INIT " "
-   VAR    printerPS                             INIT NIL
-   VAR    screenPS                              INIT NIL
+   VAR    printerPS
+   VAR    screenPS
 
    VAR    synthesizeFonts                       INIT .T.
 

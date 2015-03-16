@@ -58,7 +58,7 @@
 
 CREATE CLASS WvgTabPage INHERIT WvgWindow
 
-   VAR    caption                               INIT NIL /* Character string, Numeric, Object ("")                                                                           */
+   VAR    caption                                        /* Character string, Numeric, Object ("")                                                                           */
    VAR    clipChildren                          INIT .T. /* Determines whether Xbase Parts in the child list are clipped during graphic output.                              */
    VAR    minimized                             INIT .T. /* Determines whether the XbpTabPage is minimized after it is created (the page is not visible).                    */
    VAR    postOffset                            INIT 80  /* Determines the distance between the end of the tab and the end of the page as a percentage of the page width.    */

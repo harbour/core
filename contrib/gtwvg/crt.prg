@@ -81,11 +81,11 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    autoMark                              INIT .T.
    VAR    dropFont                              INIT .T.
    VAR    dropZone                              INIT .F.
-   VAR    helpLink                              INIT NIL
+   VAR    helpLink
    VAR    maxCol                                INIT 79
    VAR    maxRow                                INIT 24
    VAR    mouseMode                             INIT 1          /* Determines whether mouse coordinates are given as graphics or text coordinates.*/
-   VAR    modalResult                           INIT NIL        /* Specifies the result of a modal dialog.                                        */
+   VAR    modalResult                                           /* Specifies the result of a modal dialog.                                        */
    VAR    aSyncFlush                            INIT .F.        /* Determines the display behavior of text-mode output.                           */
    VAR    tooltipText                           INIT ""
    VAR    useShortCuts                          INIT .F.        /* Enables shortcut keys for the system menu                                      */

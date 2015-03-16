@@ -59,11 +59,11 @@
 CREATE CLASS WvgDataRef
 
    VAR    changed                               INIT .F.
-   VAR    dataLink                              INIT NIL
+   VAR    dataLink
    VAR    lastValid                             INIT .T.
-   VAR    sl_undo                               INIT NIL
-   VAR    undoBuffer                            INIT NIL
-   VAR    sl_validate                           INIT NIL
+   VAR    sl_undo
+   VAR    undoBuffer
+   VAR    sl_validate
 
    METHOD new()
 

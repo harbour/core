@@ -62,7 +62,7 @@ CREATE CLASS WvgComboBox INHERIT WvgWindow, WvgDataRef
    VAR    drawMode                              INIT WVG_DRAW_NORMAL
    VAR    nCurSelected                          INIT 0
 
-   VAR    aInfo                                 INIT NIL
+   VAR    aInfo
 
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )

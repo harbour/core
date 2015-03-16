@@ -87,22 +87,22 @@ CREATE CLASS Thread
 
 EXPORTED:
    VAR active           AS LOGICAL READONLY  INIT .F.
-   VAR atEnd            AS USUAL             INIT NIL
-   VAR atStart          AS USUAL             INIT NIL
+   VAR atEnd            AS USUAL
+   VAR atStart          AS USUAL
    VAR cargo            AS USUAL
    VAR deltaTime        AS NUMERIC READONLY  INIT 0
-   VAR interval         AS USUAL   READONLY  INIT NIL
+   VAR interval         AS USUAL   READONLY
    VAR priority         AS NUMERIC READONLY  INIT 0
-   VAR result           AS USUAL             INIT NIL
+   VAR result           AS USUAL
    VAR startCount       AS NUMERIC READONLY  INIT 0
-   VAR startTime        AS USUAL   READONLY  INIT NIL
+   VAR startTime        AS USUAL   READONLY
    VAR threadID         AS NUMERIC READONLY  INIT 0
 
 PROTECTED:
    VAR maxStackSize     AS USUAL             INIT 50000
 
 HIDDEN:
-   VAR pThreadID        AS USUAL             INIT NIL
+   VAR pThreadID        AS USUAL
 
 EXPORTED:
    METHOD new( ... )

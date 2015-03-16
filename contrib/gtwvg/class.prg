@@ -697,7 +697,7 @@ CREATE CLASS WvtObject
    VAR    hFont
 
    VAR    aPopup                                  INIT {}
-   VAR    hPopup                                  INIT NIL
+   VAR    hPopup
    VAR    nPopupItemID                            INIT 700000
 
    VAR    nMRow                                   INIT 0

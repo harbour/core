@@ -270,7 +270,7 @@ CREATE CLASS WvgStatusBarPanel
    VAR    key                                   INIT ""
    VAR    style                                 INIT WVGSTATUSBAR_PANEL_TEXT
    VAR    sl_caption                            INIT ""
-   VAR    image                                 INIT NIL
+   VAR    image
    VAR    tooltipText                           INIT ""
    VAR    visible                               INIT .T.
    VAR    left                                  INIT 0

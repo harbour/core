@@ -137,10 +137,10 @@ CREATE CLASS TRPCClient
    VAR caPerCall
 
    VAR nUdpTimeBegin   INIT 0
-   VAR thUdpAccept     INIT NIL
+   VAR thUdpAccept
 
    VAR nTcpTimeBegin   INIT 0
-   VAR thTcpAccept     INIT NIL
+   VAR thTcpAccept
 
    /* XHB RPC Loop system */
    VAR nLoopMode

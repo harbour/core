@@ -398,9 +398,9 @@ CREATE CLASS WvgToolBarButton
    VAR    key                                   INIT ""
    VAR    style                                 INIT WVGTOOLBAR_BUTTON_DEFAULT
    VAR    caption                               INIT ""
-   VAR    image                                 INIT NIL
-   VAR    disabledImage                         INIT NIL
-   VAR    hotImage                              INIT NIL
+   VAR    image
+   VAR    disabledImage
+   VAR    hotImage
    VAR    mixedState                            INIT .F.
    VAR    pressed                               INIT .F.
    VAR    visible                               INIT .T.

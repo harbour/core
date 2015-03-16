@@ -323,7 +323,7 @@ METHOD WvgTreeView:itemSelected( xParam )
 CREATE CLASS WvgTreeViewItem
 
    VAR    caption                               INIT ""
-   VAR    dllName                               INIT NIL
+   VAR    dllName
    VAR    expandedImage                         INIT -1
    VAR    image                                 INIT -1
    VAR    markedImage                           INIT -1
