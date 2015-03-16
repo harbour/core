@@ -148,7 +148,7 @@ METHOD OpenSecure( cUrl, lSSL ) CLASS TIPClientSMTP
 
    lOk := ::DetectSecurity()
 
-   IF lOk .AND. ! lSSL
+   IF lOk .AND. ! lSSL .AND. ::lTLS
       lOk := ::StartTLS()
    ENDIF
 
