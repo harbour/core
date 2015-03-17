@@ -425,7 +425,7 @@ FUNCTION rdd_Info( xID )
       ENDIF
    CASE HB_ISSTRING( xID )
       cRDD := Upper( AllTrim( xID ) )
-      IF AScan( rddList(), {| x | Upper( x ) == cRDD } ) == 0
+      IF hb_AScanI( rddList(), cRDD,,, .T. ) == 0
          cRDD := NIL
       ENDIF
    CASE xID == NIL

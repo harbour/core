@@ -67,7 +67,7 @@ PROCEDURE Main( ... )
 
    /* Detect install build phase */
 
-   IF AScan( hb_AParams(), {| tmp | Lower( tmp ) == "install" } ) > 0
+   IF hb_AScan( hb_AParams(), "install",,, .T. ) > 0
 
       /* Installing some misc files */
       tmp := GetEnvC( "HB_INSTALL_DOC" )

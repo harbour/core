@@ -390,11 +390,11 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent )  /* this is a recursive proc
             !( file[ F_NAME ] == ".." )
 
             IF s_hSwitches[ "source" ] .OR. s_hSwitches[ "contribs" ]
-               /* .AND. AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( file[ F_NAME ] ) } ) == 0 */
+               /* .AND. hb_AScanI( s_aSkipDirs, file[ F_NAME ],,, .T. ) == 0 */
                ProcessFolder( cFolder + file[ F_NAME ], @aContent )
             ENDIF
          ENDIF
-      ELSEIF AScan( sc_aExclusions, {| f | Lower( f ) == Lower( file[ F_NAME ] ) } ) == 0
+      ELSEIF hb_AScanI( sc_aExclusions, file[ F_NAME ],,, .T. ) == 0
          IF Lower( hb_FNameExt( file[ F_NAME ] ) ) == ".txt" .AND. ;
             ! ProcessFile( cFolder + file[ F_NAME ], @aContent )
             EXIT

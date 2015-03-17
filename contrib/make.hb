@@ -46,6 +46,8 @@ STATIC s_cRoot
 STATIC s_cBinDir
 STATIC s_cReBase
 
+#define AScanL( aArray, cString )  hb_AScanI( aArray, cString,,, .T. )
+
 PROCEDURE Main( ... )
 
    LOCAL hProjectList
@@ -238,7 +240,7 @@ STATIC PROCEDURE GNUMake( aParams, hProjectList )
 
    /* Determine the mode of operation */
 
-   aGNUMakeParams := hb_ATokens( Lower( GetEnv( "HB_MAKECMDGOALS" ) ) )
+   aGNUMakeParams := hb_ATokens( GetEnv( "HB_MAKECMDGOALS" ) )
 
    DO CASE
    CASE AScanL( aParams, "clean" ) > 0
@@ -616,9 +618,6 @@ STATIC FUNCTION mk_hbd( cDir )
    ENDIF
 
    RETURN .F.
-
-STATIC FUNCTION AScanL( aArray, cString )
-   RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
 
 STATIC FUNCTION DirGetName( cDir )
 

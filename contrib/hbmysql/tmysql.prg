@@ -1336,10 +1336,7 @@ METHOD ListTables() CLASS TMySQLServer
    RETURN mysql_list_tables( ::nSocket )
 
 METHOD TableExists( cTable ) CLASS TMySQLServer
-
-   cTable := Upper( cTable )
-
-   RETURN AScan( mysql_list_dbs( ::nSocket ), {| tmp | cTable == Upper( tmp ) } ) > 0
+   RETURN hb_AScanI( mysql_list_dbs( ::nSocket ), cTable,,, .T. ) > 0
 
 /* TOFIX: Conversion creates a .dbf with fields of wrong dimension (often) */
 METHOD TableStruct( cTable ) CLASS TMySQLServer

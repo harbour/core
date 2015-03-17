@@ -3328,11 +3328,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ENDIF
             ENDIF
             IF ! Empty( cParam ) .AND. !( Lower( cParam ) == "gtnul" )
-               IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cParam ) } ) == 0 .AND. ;
-                  AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cParam ) } ) == 0
+               IF hb_AScanI( hbmk[ _HBMK_aLIBCOREGT ], cParam,,, .T. ) == 0 .AND. ;
+                  hb_AScanI( hbmk[ _HBMK_aLIBUSERGT ], cParam,,, .T. ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aLIBUSERGT ], hb_DirSepToOS( cParam ) )
                ENDIF
-               IF AScan( hbmk[ _HBMK_aGT ], {| tmp | Lower( tmp ) == Lower( cParam ) } ) == 0
+               IF hb_AScanI( hbmk[ _HBMK_aGT ], cParam,,, .T. ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aGT ], hb_DirSepToOS( cParam ) )
                ENDIF
             ENDIF
@@ -4334,11 +4334,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       /* Assemble library list */
 
       IF ! Empty( hbmk[ _HBMK_cGT ] ) .AND. !( Lower( hbmk[ _HBMK_cGT ] ) == "gtnul" )
-         IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( hbmk[ _HBMK_cGT ] ) } ) == 0 .AND. ;
-            AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( hbmk[ _HBMK_cGT ] ) } ) == 0
+         IF hb_AScanI( hbmk[ _HBMK_aLIBCOREGT ], hbmk[ _HBMK_cGT ],,, .T. ) == 0 .AND. ;
+            hb_AScanI( hbmk[ _HBMK_aLIBUSERGT ], hbmk[ _HBMK_cGT ],,, .T. ) == 0
             AAdd( hbmk[ _HBMK_aLIBUSERGT ], hbmk[ _HBMK_cGT ] )
          ENDIF
-         IF AScan( hbmk[ _HBMK_aGT ], {| tmp | Lower( tmp ) == Lower( hbmk[ _HBMK_cGT ] ) } ) == 0
+         IF hb_AScanI( hbmk[ _HBMK_aGT ], hbmk[ _HBMK_cGT ],,, .T. ) == 0
             AAddNotEmpty( hbmk[ _HBMK_aGT ], hbmk[ _HBMK_cGT ] )
          ENDIF
       ENDIF
@@ -8513,7 +8513,7 @@ STATIC FUNCTION CheckParamLib( hbmk, cLibName, lHBC, aParam )
          cOpt := SubStr( cOpt, Len( "lib" ) + 1 )
       ENDIF
       /* never suggest core libs */
-      IF AScan( hbmk[ _HBMK_aLIB_BASE_WARN ], {| tmp | Lower( tmp ) == Lower( cOpt ) } ) > 0
+      IF hb_AScanI( hbmk[ _HBMK_aLIB_BASE_WARN ], cOpt,,, .T. ) > 0
          cOpt := ""
       ENDIF
       IF ! Empty( cOpt )
@@ -8544,7 +8544,7 @@ STATIC FUNCTION CheckParamLib( hbmk, cLibName, lHBC, aParam )
 
    cLibName := Lower( hb_FNameName( cLibName ) )
 
-   IF AScan( hbmk[ _HBMK_aLIB_BASE_WARN ], {| tmp | Lower( tmp ) == cLibName } ) > 0
+   IF hb_AScanI( hbmk[ _HBMK_aLIB_BASE_WARN ], cLibName,,, .T. ) > 0
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)" ), cLibName, ParamToString( aParam ) ) )
       RETURN .F.
    ENDIF
@@ -11999,11 +11999,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                cLine := NIL
             ENDIF
             IF ! Empty( cLine ) .AND. !( Lower( cLine ) == "gtnul" )
-               IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0 .AND. ;
-                  AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0
+               IF hb_AScanI( hbmk[ _HBMK_aLIBCOREGT ], cLine,,, .T. ) == 0 .AND. ;
+                  hb_AScanI( hbmk[ _HBMK_aLIBUSERGT ], cLine,,, .T. ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aLIBUSERGT ], hb_DirSepToOS( cLine ) )
                ENDIF
-               IF AScan( hbmk[ _HBMK_aGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0
+               IF hb_AScanI( hbmk[ _HBMK_aGT ], cLine,,, .T. ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aGT ], hb_DirSepToOS( cLine ) )
                ENDIF
             ENDIF
@@ -12018,11 +12018,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                ENDIF
             ENDIF
             IF ! Empty( cLine ) .AND. !( Lower( cLine ) == "gtnul" )
-               IF AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0 .AND. ;
-                  AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0
+               IF hb_AScanI( hbmk[ _HBMK_aLIBCOREGT ], cLine,,, .T. ) == 0 .AND. ;
+                  hb_AScanI( hbmk[ _HBMK_aLIBUSERGT ], cLine,,, .T. ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aLIBUSERGT ], hb_DirSepToOS( cLine ) )
                ENDIF
-               IF AScan( hbmk[ _HBMK_aGT ], {| tmp | Lower( tmp ) == Lower( cLine ) } ) == 0
+               IF hb_AScanI( hbmk[ _HBMK_aGT ], cLine,,, .T. ) == 0
                   AAddNotEmpty( hbmk[ _HBMK_aGT ], hb_DirSepToOS( cLine ) )
                ENDIF
             ENDIF
@@ -12175,8 +12175,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
    /* Check if it is a core/user GT. */
    RETURN ;
-      AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cWhichGT ) } ) > 0 .OR. ;
-      AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cWhichGT ) } ) > 0
+      hb_AScanI( hbmk[ _HBMK_aLIBCOREGT ], cWhichGT,,, .T. ) > 0 .OR. ;
+      hb_AScanI( hbmk[ _HBMK_aLIBUSERGT ], cWhichGT,,, .T. ) > 0
 
 STATIC FUNCTION StrStripQuote( cString )
 
