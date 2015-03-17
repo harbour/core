@@ -278,6 +278,7 @@ DYNAMIC hb_argString
 DYNAMIC hb_argv
 DYNAMIC hb_ArrayToParams
 DYNAMIC hb_AScan
+DYNAMIC hb_AScanI
 DYNAMIC hb_asciiIsAlpha
 DYNAMIC hb_asciiIsDigit
 DYNAMIC hb_asciiIsLower

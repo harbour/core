@@ -256,7 +256,8 @@ HB_FUNC( ASCAN )
       hb_retns( hb_arrayScan( pArray, pValue,
                               HB_ISNUM( 3 ) ? &nStart : NULL,
                               HB_ISNUM( 4 ) ? &nCount : NULL,
-                              HB_FALSE ) );
+                              HB_FALSE,
+                              HB_TRUE ) );
    }
    else
       hb_retni( 0 );
@@ -276,7 +277,29 @@ HB_FUNC( HB_ASCAN )
       hb_retns( hb_arrayScan( pArray, pValue,
                               HB_ISNUM( 3 ) ? &nStart : NULL,
                               HB_ISNUM( 4 ) ? &nCount : NULL,
-                              hb_parl( 5 ) ) );
+                              hb_parl( 5 ),
+                              HB_TRUE ) );
+   }
+   else
+      hb_retni( 0 );
+}
+
+/* Same as hb_AScan() but with case-insensitive string comparison. */
+HB_FUNC( HB_ASCANI )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
+
+   if( pArray && pValue )
+   {
+      HB_SIZE nStart = hb_parns( 3 );
+      HB_SIZE nCount = hb_parns( 4 );
+
+      hb_retns( hb_arrayScan( pArray, pValue,
+                              HB_ISNUM( 3 ) ? &nStart : NULL,
+                              HB_ISNUM( 4 ) ? &nCount : NULL,
+                              hb_parl( 5 ),
+                              HB_FALSE ) );
    }
    else
       hb_retni( 0 );

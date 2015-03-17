@@ -1004,9 +1004,9 @@ HB_BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
       return HB_FALSE;
 }
 
-HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact )
+HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact, HB_BOOL fMatchCase )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_arrayScan(%p, %p, %p, %p, %d)", pArray, pValue, pnStart, pnCount, ( int ) fExact ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arrayScan(%p, %p, %p, %p, %d, %d)", pArray, pValue, pnStart, pnCount, ( int ) fExact, ( int ) fMatchCase ) );
 
    if( HB_IS_ARRAY( pArray ) )
    {
@@ -1049,13 +1049,17 @@ HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
             }
             else if( HB_IS_STRING( pValue ) )
             {
+               int ( * phb_itemStrCmp )( PHB_ITEM, PHB_ITEM, HB_BOOL ) =
+                  fMatchCase ? hb_itemStrCmp : hb_itemStrICmp;
+
                do
                {
                   PHB_ITEM pItem = pBaseArray->pItems + nStart++;
 
                   /* NOTE: The order of the pItem and pValue parameters passed to
-                           hb_itemStrCmp() is significant, please don't change it. [vszakats] */
-                  if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
+                           hb_itemStrCmp()/hb_itemStrICmp() is significant,
+                           please don't change it. [vszakats] */
+                  if( HB_IS_STRING( pItem ) && phb_itemStrCmp( pItem, pValue, fExact ) == 0 )
                      return nStart;
                }
                while( --nCount > 0 );
