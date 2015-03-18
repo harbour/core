@@ -103,10 +103,8 @@ FUNCTION Sp_Add( cWord )
 
       cWord := Upper( AllTrim( cWord ) )
 
-      //
       // If the auxiliary dictionary does not exist,
       // we will create it for the user
-      //
 
       IF ( nAuxHandle := iif( hb_FileExists( T_AUXILIARY_DICTIONARY ), FOpen( T_AUXILIARY_DICTIONARY, FO_READWRITE + FO_DENYWRITE ), FCreate( T_AUXILIARY_DICTIONARY ) ) ) != F_ERROR
 
@@ -398,9 +396,7 @@ FUNCTION Sp_Suggest( cWord )
       RETURN aRet_                    // single letter words
    ENDIF
 
-   //
    // Should the current word be included?
-   //
 
    IF Sp_Check( cWord )
       AAdd( aRet_, "A0AA" + cWord )
@@ -420,9 +416,7 @@ FUNCTION Sp_Suggest( cWord )
 
    IF T_SUGGEST_PREFERENCE $ "AB"
 
-      //
       // Step One - Do letter doubling
-      //
 
       FOR jj := 2 TO zz
          IF SubStr( cWord, jj, 1 ) $ "BCDEFGKLMNOPRSTZ"
@@ -432,10 +426,8 @@ FUNCTION Sp_Suggest( cWord )
                SubStr( cWord, jj, 1 ) + ;
                SubStr( cWord, jj + 1 )
 
-            //
             // If the word is not already in the list, then check
             // to see if it is a valid word.
-            //
 
             IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
                AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
@@ -443,25 +435,20 @@ FUNCTION Sp_Suggest( cWord )
          ENDIF
       NEXT
 
-      //
       // Step Two - Remove extra letters
-      //
 
       FOR jj := 1 TO zz
          cHold := Stuff( cWord, jj, 1, "" )
-         //
+
          // If the word is not already in the list, then check
          // to see if it is a valid word.
-         //
 
          IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
             AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
          ENDIF
       NEXT
 
-      //
       // Step Three - Transpose the letters
-      //
 
       FOR jj := 2 TO zz
          cHold := ;
@@ -474,18 +461,14 @@ FUNCTION Sp_Suggest( cWord )
          ENDIF
       NEXT
 
-      //
       // Step Four - Try adding a silent E to the end
-      //
 
       cHold := cWord + "E"
       IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
          AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
       ENDIF
 
-      //
       // Step Five - Do sound alike substitutions
-      //
 
       FOR EACH jj IN sc_aParts_
          IF jj[ 1 ] $ cWord
@@ -511,18 +494,15 @@ FUNCTION Sp_Suggest( cWord )
          ENDIF
       NEXT
 
-      //
       // At this point, we have a list of words in aRet_, which now need to
       // be checked for suffixes, prefixes, and plurals.
-      //
 
       FOR EACH jj IN aRet_
          cHold := RTrim( SubStr( jj, 5 ) )    // Extract the word
          zz    := Len( cHold )
-         //
+
          // Check suffixes
-         //
-         //
+
          IF T_ADD_SUFFIXES
             FOR EACH kk IN sc_aEnds
                cTemp := cHold + kk
@@ -531,9 +511,8 @@ FUNCTION Sp_Suggest( cWord )
                   AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             NEXT
-            //
+
             // Try doubling the last letter
-            //
 
             FOR EACH kk IN sc_aEnds
                cTemp := cHold + SubStr( cHold, zz, 1 ) + kk
@@ -542,9 +521,8 @@ FUNCTION Sp_Suggest( cWord )
                   AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             NEXT
-            //
+
             // Accomodate words ending in C
-            //
 
             IF Right( cHold, 1 ) == "C"
                FOR EACH kk IN sc_aEnds
@@ -555,9 +533,8 @@ FUNCTION Sp_Suggest( cWord )
                   ENDIF
                NEXT
             ENDIF
-            //
+
             // Accomodate words ending in ND
-            //
 
             IF Right( cHold, 2 ) == "ND"
                cTemp := Left( cHold, zz - 1 ) + "SE"
@@ -578,9 +555,8 @@ FUNCTION Sp_Suggest( cWord )
                   ENDIF
                NEXT
             ENDIF
-            //
+
             // Words ending in E, remove the E and try
-            //
 
             IF SubStr( cHold, zz, 1 ) == "E"
                FOR EACH kk IN sc_aEnds
@@ -637,10 +613,8 @@ FUNCTION Sp_Suggest( cWord )
       NEXT
    ENDIF
 
-   //
    // Check metaphone matches, only if T_SUGGEST_PREFERENCE is metafone or both,
    // because this search can slow things down a bit
-   //
 
    IF T_SUGGEST_PREFERENCE $ "MB"
       IF T_METAPHONE_SIZE == 0
@@ -746,9 +720,7 @@ FUNCTION Sp_Quick( cWord )
       RETURN {}                       // one or two letter words
    ENDIF
 
-   //
    // Step One - Do letter doubling
-   //
 
    FOR jj := 2 TO zz
       IF SubStr( cWord, jj, 1 ) $ "BCDEFGKLMNOPRSTZ"
@@ -756,10 +728,9 @@ FUNCTION Sp_Quick( cWord )
             Left( cWord, jj ) + ;
             SubStr( cWord, jj, 1 ) + ;
             SubStr( cWord, jj + 1 )
-         //
+
          // If the word is not already in the list, then check
          // to see if it is a valid word.
-         //
 
          IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
             AAdd( arr_, cHold )
@@ -767,25 +738,20 @@ FUNCTION Sp_Quick( cWord )
       ENDIF
    NEXT
 
-   //
    // Step Two - Remove extra letters
-   //
 
    FOR jj := 1 TO zz
       cHold := Stuff( cWord, jj, 1, "" )
-      //
+
       // If the word is not already in the list, then check
       // to see if it is a valid word.
-      //
 
       IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
          AAdd( arr_, cHold )
       ENDIF
    NEXT
 
-   //
    // Step Three - Transpose the letters
-   //
 
    FOR jj := 2 TO zz
       cHold := ;
@@ -798,18 +764,14 @@ FUNCTION Sp_Quick( cWord )
       ENDIF
    NEXT
 
-   //
    // Step Four - Try adding a silent E to the end
-   //
 
    cHold := cWord + "E"
    IF hb_AScan( arr_, cHold,,, .T. ) == 0 .AND. Sp_Check( cHold )
       AAdd( arr_, cHold )
    ENDIF
 
-   //
    // Step Five - Do sound alike substitutions
-   //
 
    FOR jj := 1 TO 6
       IF SubStr( "AEIOUT", jj, 1 ) $ cWord
@@ -896,7 +858,6 @@ FUNCTION Sp_WildCard( cPattern )
          nStart := Asc( SubStr( cPattern, 2, 1 ) ) - 64
          nEnd   := nStart
       ENDIF
-
 
       FOR z := nStart TO nEnd
          cTemp  := Sp_GetBuf( Left( cPattern, 1 ) + Chr( z + 64 ) )
@@ -1003,13 +964,12 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    LOCAL nSize
    LOCAL cOther := ""
    LOCAL nCurRec := 0
+   LOCAL cTempFile
 
    hb_default( @cDictionary, "dict.dic" )
    hb_default( @lTalk, .F. )
 
-   //
-   // See if the DBF file exists
-   //
+   // See if the .dbf file exists
 
    cDBF := hb_FNameExtSetDef( cDBF, ".dbf" )
 
@@ -1034,7 +994,9 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       nSize := DICT->( LastRec() )
    ENDIF
 
-   INDEX ON SubStr( field->word, 1, 2 ) + PadR( C_Metafone( AllTrim( field->word ), 5 ), 6 ) TO ( "$$temp" )
+   FClose( hb_FTempCreateEx( @cTempFile,,, IndexExt() ) )
+
+   INDEX ON SubStr( field->word, 1, 2 ) + PadR( C_Metafone( AllTrim( field->word ), 5 ), 6 ) TO ( cTempFile )
    dbGoTop()
 
    IF lTalk
@@ -1042,20 +1004,18 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       hb_DispOutAt( 10, 31, "Complete:        ", "W/R" )
    ENDIF
 
-   //
    // Create the dictionary file
-   //
 
    // ADDED - 1996-02-08 - JAMES
    IF t_nHandle != F_ERROR                // Is dictionary already open?
       FClose( t_nHandle )                 // Yes, close it
       t_nHandle := F_ERROR
-   ENDIF                                  // END OF ADDITION
+   ENDIF
+   // END OF ADDITION
 
    IF ( nH := FCreate( cDictionary ) ) != F_ERROR
-      //
+
       // Write out enough bytes to hold the index information
-      //
 
       FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( hb_BChar( 0 ), NSIZE ) + Space( 10 ) )
 
@@ -1071,13 +1031,16 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                   dbSkip()
                ENDDO
                DO WHILE SubStr( DICT->word, 2, 1 ) == Chr( j + 64 ) .AND. ! Eof()
-                  IF Len( RTrim( DICT->word ) ) == 3
+                  SWITCH Len( RTrim( DICT->word ) )
+                  CASE 3
                      bit( @cBits, Asc( SubStr( DICT->word, 3, 1 ) ) - 64, .T. )
-                  ELSEIF Len( RTrim( DICT->word ) ) == 2
+                     EXIT
+                  CASE 2
                      bit( @cBits, 27, .T. )
-                  ELSE
+                     EXIT
+                  OTHERWISE
                      temp += XForm( RTrim( DICT->word ) )
-                  ENDIF
+                  ENDSWITCH
                   dbSkip()
                   IF lTalk
                      nCurRec++
@@ -1114,7 +1077,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    ENDIF
 
    DICT->( dbCloseArea() )
-   FErase( "$$temp" + IndexExt() )
+   FErase( cTempFile )
 
    RETURN nStatus
 
@@ -1150,17 +1113,13 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
 
    T_DICTIONARY_NAME := cDictionary
 
-   //
    // Read the dictionary file
-   //
 
    IF ! Sp_Init()
       RETURN -2
    ENDIF
 
-   //
    // See if the DBF file exists
-   //
 
    cDBF := hb_FNameExtSetDef( cDBF, ".dbf" )
 
@@ -1329,9 +1288,8 @@ FUNCTION WildCard( cPattern, cString )
 
    cString := Upper( AllTrim( cString ) )
 
-   //
    // Do a * match
-   //
+
    DO CASE
    CASE ( x := At( "*", cPattern ) ) > 0
 
