@@ -4707,16 +4707,12 @@ static HB_BOOL hb_ntxQSort( LPNTXSORTINFO pSort, HB_BYTE * pSrc, HB_BYTE * pBuf,
 
 static void hb_ntxSortSortPage( LPNTXSORTINFO pSort )
 {
-   HB_ULONG ulSize = pSort->ulKeys * ( pSort->keyLen + 4 );
+   HB_SIZE nSize = ( HB_SIZE ) pSort->ulKeys * ( pSort->keyLen + 4 );
 
-   if( ! hb_ntxQSort( pSort, pSort->pKeyPool, &pSort->pKeyPool[ ulSize ], pSort->ulKeys ) )
-   {
-      pSort->pStartKey = &pSort->pKeyPool[ ulSize ];
-   }
+   if( ! hb_ntxQSort( pSort, pSort->pKeyPool, &pSort->pKeyPool[ nSize ], pSort->ulKeys ) )
+      pSort->pStartKey = &pSort->pKeyPool[ nSize ];
    else
-   {
       pSort->pStartKey = pSort->pKeyPool;
-   }
 }
 
 static void hb_ntxSortBufferFlush( LPNTXSORTINFO pSort )
@@ -4726,7 +4722,7 @@ static void hb_ntxSortBufferFlush( LPNTXSORTINFO pSort )
    if( pSort->ulPagesIO )
    {
       LPNTXINDEX pIndex = pSort->pTag->pIndex;
-      nSize = pSort->ulPagesIO * NTXBLOCKSIZE;
+      nSize = ( HB_SIZE ) pSort->ulPagesIO * NTXBLOCKSIZE;
       if( hb_fileWriteAt( pIndex->DiskFile, pSort->pBuffIO, nSize,
                      hb_ntxFileOffset( pIndex, pSort->ulFirstIO ) ) != nSize )
       {
@@ -4804,7 +4800,7 @@ static void hb_ntxSortAddNodeKey( LPNTXSORTINFO pSort, HB_BYTE * pKeyVal, HB_ULO
 
 static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
 {
-   HB_SIZE nSize = pSort->ulKeys * ( pSort->keyLen + 4 );
+   HB_SIZE nSize = ( HB_SIZE ) pSort->ulKeys * ( pSort->keyLen + 4 );
 
    hb_ntxSortSortPage( pSort );
 
@@ -4842,7 +4838,7 @@ static void hb_ntxSortGetPageKey( LPNTXSORTINFO pSort, HB_ULONG ulPage,
    if( pSort->pSwapPage[ ulPage ].ulKeyBuf == 0 )
    {
       HB_ULONG ulKeys = HB_MIN( pSort->ulPgKeys, pSort->pSwapPage[ ulPage ].ulKeys );
-      HB_SIZE nSize = ulKeys * ( iLen + 4 );
+      HB_SIZE nSize = ( HB_SIZE ) ulKeys * ( iLen + 4 );
 
       if( pSort->pTempFile != NULL &&
           hb_fileReadAt( pSort->pTempFile, pSort->pSwapPage[ ulPage ].pKeyPool,
@@ -5436,7 +5432,7 @@ static HB_ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
                   iRec = ulRecCount - ulRecNo + 1;
                if( ulNextCount > 0 && ulNextCount < ( HB_ULONG ) iRec )
                   iRec = ( int ) ulNextCount;
-               nSize = iRec * pArea->dbfarea.uiRecordLen;
+               nSize = ( HB_SIZE ) iRec * pArea->dbfarea.uiRecordLen;
                if( hb_fileReadAt( pArea->dbfarea.pDataFile, pSort->pBuffIO, nSize,
                                   ( HB_FOFFSET ) pArea->dbfarea.uiHeaderLen +
                                   ( HB_FOFFSET ) ( ulRecNo - 1 ) *
