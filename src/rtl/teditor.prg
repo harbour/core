@@ -655,11 +655,14 @@ METHOD ReformParagraph() CLASS HBEditor
       ::RemoveLine( ::nRow )
    ENDDO
    nLines := MLCount( cLine, ::nWordWrapCol + 1, ::nTabWidth )
+   aPos := MPosToLC( cLine, ::nWordWrapCol + 1, ::nCol, ::nTabWidth )
+   IF ::nRow + aPos[ 1 ] - 1 > ::LineCount + nLines
+      ++nLines
+   ENDIF
    FOR nLine := 1 TO nLines
       ::InsertLine( MemoLine( cLine, ::nWordWrapCol + 1, nLine, ::nTabWidth,,, .F. ), ;
                     nLine < nLines, ::nRow + nLine - 1 )
    NEXT
-   aPos := MPosToLC( cLine, ::nWordWrapCol + 1, ::nCol, ::nTabWidth )
 
    RETURN ::GoTo( ::nRow + aPos[ 1 ] - 1, aPos[ 2 ] + 1, _REFRESH_ALL )
 
