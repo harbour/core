@@ -52,8 +52,10 @@
 
 /* Workaround for unfixed 'w32api' (as of 3.17.2) bug:
    https://sourceforge.net/p/mingw/bugs/279/#efbc */
-#undef _WIN32_WINNT
-#define _WIN32_WINNT  0x0500
+#if ! defined( _WIN32_WINNT ) || _WIN32_WINNT < 0x0500
+   #undef _WIN32_WINNT
+   #define _WIN32_WINNT  0x0500
+#endif
 
 #include "security.h"
 
