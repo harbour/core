@@ -425,6 +425,7 @@ typedef struct
    HB_ULONG   ulPgKeys;       /* maximum number of key in page memory buffer */
    HB_ULONG   ulMaxKey;       /* maximum number of keys in single page */
    HB_BYTE *  pKeyPool;       /* memory buffer for current page then for pages */
+   HB_BYTE *  pStartKey;      /* begining of key pool after sorting */
    LPCDXSWAPPAGE pSwapPage;   /* list of pages */
    LPCDXPAGE  NodeList[ CDX_STACKSIZE ];  /* Stack of pages */
    HB_ULONG   ulFirst;

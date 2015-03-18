@@ -5087,28 +5087,24 @@ static HB_BOOL hb_nsxQSort( LPNSXSORTINFO pSort, HB_UCHAR * pSrc, HB_UCHAR * pBu
 
 static void hb_nsxSortSortPage( LPNSXSORTINFO pSort )
 {
-   HB_ULONG ulSize = pSort->ulKeys * ( pSort->keyLen + 4 );
+   HB_SIZE nSize = ( HB_SIZE ) pSort->ulKeys * ( pSort->keyLen + 4 );
 
-   if( ! hb_nsxQSort( pSort, pSort->pKeyPool, &pSort->pKeyPool[ ulSize ], pSort->ulKeys ) )
-   {
-      pSort->pStartKey = &pSort->pKeyPool[ ulSize ];
-   }
+   if( ! hb_nsxQSort( pSort, pSort->pKeyPool, &pSort->pKeyPool[ nSize ], pSort->ulKeys ) )
+      pSort->pStartKey = &pSort->pKeyPool[ nSize ];
    else
-   {
       pSort->pStartKey = pSort->pKeyPool;
-   }
 }
 
 static void hb_nsxSortBufferFlush( LPNSXSORTINFO pSort )
 {
-   HB_ULONG ulSize;
+   HB_SIZE nSize;
 
    if( pSort->ulPagesIO )
    {
       LPNSXINDEX pIndex = pSort->pTag->pIndex;
-      ulSize = pSort->ulPagesIO * NSX_PAGELEN;
-      if( hb_fileWriteAt( pIndex->pFile, pSort->pBuffIO, ulSize,
-                    hb_nsxFileOffset( pIndex, pSort->ulFirstIO ) ) != ulSize )
+      nSize = ( HB_SIZE ) pSort->ulPagesIO * NSX_PAGELEN;
+      if( hb_fileWriteAt( pIndex->pFile, pSort->pBuffIO, nSize,
+                    hb_nsxFileOffset( pIndex, pSort->ulFirstIO ) ) != nSize )
       {
          hb_nsxErrorRT( pIndex->pArea, EG_WRITE, EDBF_WRITE,
                         pIndex->IndexName, hb_fsError(), 0, NULL );
@@ -5236,7 +5232,7 @@ static void hb_nsxSortAddNodeKey( LPNSXSORTINFO pSort, HB_UCHAR * pKeyVal, HB_UL
 
 static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
 {
-   HB_SIZE nSize = pSort->ulKeys * ( pSort->keyLen + 4 );
+   HB_SIZE nSize = ( HB_SIZE ) pSort->ulKeys * ( pSort->keyLen + 4 );
 
    hb_nsxSortSortPage( pSort );
 
@@ -5274,7 +5270,7 @@ static void hb_nsxSortGetPageKey( LPNSXSORTINFO pSort, HB_ULONG ulPage,
    if( pSort->pSwapPage[ ulPage ].ulKeyBuf == 0 )
    {
       HB_ULONG ulKeys = HB_MIN( pSort->ulPgKeys, pSort->pSwapPage[ ulPage ].ulKeys );
-      HB_SIZE nSize = ulKeys * ( iLen + 4 );
+      HB_SIZE nSize = ( HB_SIZE ) ulKeys * ( iLen + 4 );
 
       if( pSort->pTempFile != NULL &&
           hb_fileReadAt( pSort->pTempFile, pSort->pSwapPage[ ulPage ].pKeyPool,
@@ -5931,7 +5927,7 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
                   iRec = ulRecCount - ulRecNo + 1;
                if( ulNextCount > 0 && ulNextCount < ( HB_ULONG ) iRec )
                   iRec = ( int ) ulNextCount;
-               nSize = iRec * pArea->dbfarea.uiRecordLen;
+               nSize = ( HB_SIZE ) iRec * pArea->dbfarea.uiRecordLen;
                if( hb_fileReadAt( pArea->dbfarea.pDataFile, pSort->pBuffIO, nSize,
                                   ( HB_FOFFSET ) pArea->dbfarea.uiHeaderLen +
                                   ( HB_FOFFSET ) ( ulRecNo - 1 ) *
