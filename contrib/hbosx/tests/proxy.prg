@@ -4,11 +4,11 @@
 
 PROCEDURE Main()
 
-   ? osx_ProxyGet()
-   ? osx_ProxyGet( "http" )
-   ? osx_ProxyGet( "https" )
-   ? osx_ProxyGet( "ftp" )
-   ? osx_ProxyGet( "gopher" )
-   ? osx_ProxyGet( "garbage" )
+   ? osx_ProxyDetect()
+   ? osx_ProxyDetect( "http" )
+   ? osx_ProxyDetect( "https" )
+   ? osx_ProxyDetect( "ftp" )
+   ? osx_ProxyDetect( "gopher" )
+   ? osx_ProxyDetect( "garbage" )
 
    RETURN

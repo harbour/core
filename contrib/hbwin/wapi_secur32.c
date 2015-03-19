@@ -63,9 +63,8 @@ HB_FUNC( WAPI_GETUSERNAMEEX )
 {
    HB_BOOL fResult = HB_FALSE;
 
-#if defined( HB_OS_WIN_CE )
-   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
-#else
+#if ! defined( HB_OS_WIN_CE ) && \
+    ! defined( __TINYC__ )
    {
       typedef int ( WINAPI * _HB_GETUSERNAMEEX )( EXTENDED_NAME_FORMAT, LPTSTR, PULONG );
 
@@ -103,6 +102,8 @@ HB_FUNC( WAPI_GETUSERNAMEEX )
       else
          hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
    }
+#else
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
 #endif
 
    if( ! fResult )

@@ -50,7 +50,7 @@
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
-HB_FUNC( __OSX_PROXYGET )
+HB_FUNC( __OSX_PROXYDETECT )
 {
    const char * protoreq = hb_parcx( 1 );
 

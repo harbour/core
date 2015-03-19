@@ -46,9 +46,9 @@
 
 /* TODO: merge this with the low-level code */
 
-FUNCTION osx_ProxyGet( cProto )
+FUNCTION osx_ProxyDetect( cProto )
 
    LOCAL nPort
 
-   RETURN __osx_ProxyGet( cProto, @nPort ) + ;
+   RETURN __osx_ProxyDetect( cProto, @nPort ) + ;
       iif( HB_ISNUMERIC( nPort ), ":" + hb_ntos( nPort ), "" )
