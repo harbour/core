@@ -46,15 +46,21 @@
 
 #include "hbwapi.h"
 
-#include "winhttp.h"
-
-HB_FUNC( __WIN_PROXYDETECT )
-{
+#undef HBWIN_HAS_WINHTTP
 #if ! defined( HB_OS_WIN_CE ) && \
     !( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) && \
     ! defined( __WATCOMC__ ) && \
     ! defined( __TINYC__ )
+   #define HBWIN_HAS_WINHTTP
+#endif
 
+#if defined( HBWIN_HAS_WINHTTP )
+   #include "winhttp.h"
+#endif
+
+HB_FUNC( __WIN_PROXYDETECT )
+{
+#if defined( HBWIN_HAS_WINHTTP )
    typedef HINTERNET ( WINAPI * _HB_WINHTTPOPEN )( LPCWSTR, DWORD, LPCWSTR, LPCWSTR, DWORD );
    typedef BOOL      ( WINAPI * _HB_WINHTTPSETTIMEOUTS )( HINTERNET, int, int, int, int );
    typedef BOOL      ( WINAPI * _HB_WINHTTPCLOSEHANDLE )( HINTERNET );
@@ -195,9 +201,13 @@ HB_FUNC( __WIN_PROXYDETECT )
       hb_retc_null();
       hb_storc( NULL, 2 );
    }
-#else
+#elif defined( HB_OS_WIN_CE )
    /* TODO: Proxy detection for WinCE */
-   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
+   hb_retc_null();
+   hb_storc( NULL, 2 );
+#else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
    hb_retc_null();
    hb_storc( NULL, 2 );
 #endif
