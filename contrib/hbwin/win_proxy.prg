@@ -46,9 +46,14 @@
 
 FUNCTION win_ProxyDetect( cURL, /* @ */ cByPass )
 
-   LOCAL cProxy := __win_ProxyDetect( cURL, @cByPass )
+   LOCAL cProxy
    LOCAL nPos
-   LOCAL cProtocol := iif( ( nPos := At( "://", cURL ) ) > 1, Left( cURL, nPos - 1 ), "http" )
+   LOCAL cProtocol
+
+   hb_default( @cURL, "" )
+
+   cProxy := __win_ProxyDetect( cURL, @cByPass )
+   cProtocol := iif( ( nPos := At( "://", cURL ) ) > 1, Lower( Left( cURL, nPos - 1 ) ), "http" )
 
    /* https://msdn.microsoft.com/en-us/library/windows/desktop/aa383912.aspx */
    FOR EACH cProxy IN hb_ATokens( cProxy, ";" )

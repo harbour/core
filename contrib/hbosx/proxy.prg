@@ -46,9 +46,12 @@
 
 /* TODO: merge this with the low-level code */
 
-FUNCTION osx_ProxyDetect( cProto )
+FUNCTION osx_ProxyDetect( cURL )
 
    LOCAL nPort
+   LOCAL nPos
 
-   RETURN __osx_ProxyDetect( cProto, @nPort ) + ;
+   hb_default( @cURL, "" )
+
+   RETURN __osx_ProxyDetect( iif( ( nPos := At( "://", cURL ) ) > 1, Left( cURL, nPos - 1 ), "http" ), @nPort ) + ;
       iif( HB_ISNUMERIC( nPort ), ":" + hb_ntos( nPort ), "" )
