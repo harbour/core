@@ -36,7 +36,6 @@ C_HEADERS := \
    hbdate.h \
    hbdbf.h \
    hbdbferr.h \
-   hbdbsort.h \
    hbdefs.h \
    hberrors.h \
    hbexprop.h \

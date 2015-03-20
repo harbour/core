@@ -21,7 +21,6 @@ C_SOURCES := \
    dbsql.c \
    delim1.c \
    fieldhb.c \
-   hbdbsort.c \
    ordcount.c \
    ordwldsk.c \
    workarea.c \
