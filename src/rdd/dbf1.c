@@ -3,6 +3,7 @@
  * DBF RDD module
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
+ * Copyright 2003-2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -49,7 +50,6 @@
 #define HB_TRIGVAR_BYREF
 
 #include "hbrdddbf.h"
-#include "hbdbsort.h"
 #include "hbapiitm.h"
 #include "hbapistr.h"
 #include "hbapierr.h"
@@ -4843,174 +4843,9 @@ static HB_ERRCODE hb_dbfPack( DBFAREAP pArea )
    return SELF_GOTO( &pArea->area, 1 );
 }
 
-void hb_dbfTranslateRec( DBFAREAP pArea, HB_BYTE * pBuffer, PHB_CODEPAGE cdp_src, PHB_CODEPAGE cdp_dest )
+static HB_ERRCODE hb_dbfTransCond( DBFAREAP pArea, LPDBTRANSINFO pTransInfo )
 {
-   char * pTmpBuf = NULL;
-   HB_SIZE nLen;
-   LPFIELD pField;
-   HB_USHORT uiIndex;
-
-   for( uiIndex = 0, pField = pArea->area.lpFields; uiIndex < pArea->area.uiFieldCount; uiIndex++, pField++ )
-   {
-      if( ( pField->uiFlags & ( HB_FF_BINARY | HB_FF_UNICODE ) ) == 0 &&
-          ( pField->uiType == HB_FT_STRING || pField->uiType == HB_FT_VARLENGTH ) )
-      {
-         if( pTmpBuf == NULL )
-            pTmpBuf = ( char * ) hb_xgrab( pArea->uiRecordLen );
-         nLen = pField->uiLen;
-         hb_cdpnDup2( ( char * ) pBuffer + pArea->pFieldOffset[ uiIndex ], nLen,
-                      pTmpBuf, &nLen, cdp_src, cdp_dest );
-         memcpy( pBuffer + pArea->pFieldOffset[ uiIndex ], pTmpBuf, nLen );
-         if( pField->uiType == HB_FT_STRING )
-         {
-            if( nLen < ( HB_SIZE ) pField->uiLen )
-               memset( pBuffer + pArea->pFieldOffset[ uiIndex ] + nLen,
-                       ' ', pField->uiLen - nLen );
-         }
-         else
-         {
-            if( nLen < ( HB_SIZE ) pField->uiLen )
-            {
-               pBuffer[ pArea->pFieldOffset[ uiIndex ] + pField->uiLen - 1 ] = ( HB_BYTE ) nLen;
-               hb_dbfSetNullFlag( pBuffer, pArea->uiNullOffset, pArea->pFieldBits[ uiIndex ].uiLengthBit );
-            }
-            else
-               hb_dbfClearNullFlag( pBuffer, pArea->uiNullOffset, pArea->pFieldBits[ uiIndex ].uiLengthBit );
-         }
-      }
-   }
-   if( pTmpBuf != NULL )
-      hb_xfree( pTmpBuf );
-}
-
-/*
- * Physically reorder a database.
- */
-static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
-{
-   HB_ULONG ulRecNo;
-   HB_USHORT uiCount;
-   HB_BOOL bMoreRecords, bLimited, bValidRecord;
-   HB_ERRCODE errCode;
-   DBQUICKSORT dbQuickSort;
-   HB_BYTE * pBuffer;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfSort(%p, %p)", pArea, pSortInfo ) );
-
-   if( SELF_GOCOLD( &pArea->area ) != HB_SUCCESS )
-      return HB_FAILURE;
-
-   if( ! hb_dbQSortInit( &dbQuickSort, pSortInfo, pArea->uiRecordLen ) )
-      return HB_FAILURE;
-
-   errCode = HB_SUCCESS;
-   uiCount = 0;
-   pBuffer = dbQuickSort.pBuffer;
-   ulRecNo = 1;
-   if( pSortInfo->dbtri.dbsci.itmRecID )
-   {
-      errCode = SELF_GOTOID( &pArea->area, pSortInfo->dbtri.dbsci.itmRecID );
-      bMoreRecords = bLimited = HB_TRUE;
-   }
-   else if( pSortInfo->dbtri.dbsci.lNext )
-   {
-      ulRecNo = hb_itemGetNL( pSortInfo->dbtri.dbsci.lNext );
-      bLimited = HB_TRUE;
-      bMoreRecords = ( ulRecNo > 0 );
-   }
-   else
-   {
-      if( ! pSortInfo->dbtri.dbsci.itmCobWhile &&
-          ( ! pSortInfo->dbtri.dbsci.fRest ||
-            ! hb_itemGetLX( pSortInfo->dbtri.dbsci.fRest ) ) )
-         errCode = SELF_GOTOP( &pArea->area );
-      bMoreRecords = HB_TRUE;
-      bLimited = HB_FALSE;
-   }
-
-   while( errCode == HB_SUCCESS && ! pArea->area.fEof && bMoreRecords )
-   {
-      if( pSortInfo->dbtri.dbsci.itmCobWhile )
-      {
-         if( SELF_EVALBLOCK( &pArea->area, pSortInfo->dbtri.dbsci.itmCobWhile ) != HB_SUCCESS )
-         {
-            hb_dbQSortExit( &dbQuickSort );
-            return HB_FAILURE;
-         }
-         bMoreRecords = hb_itemGetLX( pArea->area.valResult );
-      }
-
-      if( bMoreRecords && pSortInfo->dbtri.dbsci.itmCobFor )
-      {
-         if( SELF_EVALBLOCK( &pArea->area, pSortInfo->dbtri.dbsci.itmCobFor ) != HB_SUCCESS )
-         {
-            hb_dbQSortExit( &dbQuickSort );
-            return HB_FAILURE;
-         }
-         bValidRecord = hb_itemGetLX( pArea->area.valResult );
-      }
-      else
-         bValidRecord = bMoreRecords;
-
-      if( bValidRecord )
-      {
-         if( uiCount == dbQuickSort.uiMaxRecords )
-         {
-            if( ! hb_dbQSortAdvance( &dbQuickSort, uiCount ) )
-            {
-               hb_dbQSortExit( &dbQuickSort );
-               return HB_FAILURE;
-            }
-            pBuffer = dbQuickSort.pBuffer;
-            uiCount = 0;
-         }
-
-         /* Read record */
-         if( ! pArea->fValidBuffer && ! hb_dbfReadRecord( pArea ) )
-         {
-            hb_dbQSortExit( &dbQuickSort );
-            return HB_FAILURE;
-         }
-
-         /* Copy data */
-         memcpy( pBuffer, pArea->pRecord, pArea->uiRecordLen );
-
-         if( pArea->area.cdPage != hb_vmCDP() )
-         {
-            hb_dbfTranslateRec( pArea, pBuffer, pArea->area.cdPage, hb_vmCDP() );
-         }
-
-         pBuffer += pArea->uiRecordLen;
-         uiCount++;
-      }
-
-      if( bMoreRecords && bLimited )
-         bMoreRecords = ( --ulRecNo > 0 );
-      if( bMoreRecords )
-         errCode = SELF_SKIP( &pArea->area, 1 );
-   }
-
-   /* Copy last records */
-   if( uiCount > 0 )
-   {
-      if( ! hb_dbQSortAdvance( &dbQuickSort, uiCount ) )
-      {
-         hb_dbQSortExit( &dbQuickSort );
-         return HB_FAILURE;
-      }
-   }
-
-   /* Sort records */
-   hb_dbQSortComplete( &dbQuickSort );
-   return HB_SUCCESS;
-}
-
-/*
- * Copy one or more records from one WorkArea to another.
- */
-static HB_ERRCODE hb_dbfTrans( DBFAREAP pArea, LPDBTRANSINFO pTransInfo )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfTrans(%p, %p)", pArea, pTransInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfTransCond(%p, %p)", pArea, pTransInfo ) );
 
    if( pTransInfo->uiFlags & DBTF_MATCH )
    {
@@ -5034,7 +4869,671 @@ static HB_ERRCODE hb_dbfTrans( DBFAREAP pArea, LPDBTRANSINFO pTransInfo )
       }
    }
 
-   return SUPER_TRANS( &pArea->area, pTransInfo );
+   return HB_SUCCESS;
+}
+
+/* NOTE: For large tables the sorting algorithm may access source records
+         more then once. It means that results may be wrongly sorted when
+         table is changed online by other station during exporting. This
+         can be easy eliminated by copping source records to temporary
+         file anyhow it will introduce additional overhead in all cases
+         and user can easy eliminate the problem by simple FLOCK before
+         sort or making export to temporary file and then sorting this
+         file so I decided to not implement it.
+         I haven't tested what Cl*pper exactly does in such case so
+         I cannot say if current behavior is or isn't Cl*pper compatible.
+         [druzus]
+ */
+#define HB_SORTREC_ARRAYSIZE  0x10000
+#define HB_SORTREC_FIRSTALLOC 0x100
+#define HB_SORTREC_MINRECBUF  0x10
+
+#if HB_SORTREC_ARRAYSIZE <= 0x10000
+   typedef HB_U16 HB_SORTIDX;
+#else
+   typedef HB_U32 HB_SORTIDX;
+#endif
+typedef HB_U32 HB_DBRECNO;
+
+typedef struct
+{
+   HB_FOFFSET     nOffset;
+   HB_DBRECNO     nCount;
+   HB_DBRECNO     nInBuf;
+   HB_DBRECNO     nCurrent;
+   HB_DBRECNO *   pnRecords;
+}
+HB_DBSORTPAGE, * PHB_DBSORTPAGE;
+
+typedef struct
+{
+   LPDBSORTINFO   pSortInfo;
+
+   PHB_FILE       pTempFile;
+   char *         szTempFileName;
+
+   HB_SIZE        nPages;
+   HB_SIZE        nMaxPage;
+   PHB_DBSORTPAGE pSwapPages;
+
+   HB_DBRECNO     nCount;
+   HB_DBRECNO     nMaxRec;
+   HB_SORTIDX *   pnIndex;
+   HB_DBRECNO *   pnRecords;
+   HB_DBRECNO *   pnOrder;
+   PHB_ITEM       pSortArray;
+}
+DBSORTREC, * LPDBSORTREC;
+
+static HB_ERRCODE hb_dbfSortInit( LPDBSORTREC pSortRec, LPDBSORTINFO pSortInfo )
+{
+   HB_USHORT uiCount, uiDest;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfSortInit(%p, %p)", pSortInfo, pSortRec ) );
+
+   memset( pSortRec, 0, sizeof( DBSORTREC ) );
+   pSortRec->pSortInfo = pSortInfo;
+
+   for( uiCount = uiDest = 0; uiCount < pSortInfo->uiItemCount; ++uiCount )
+   {
+      LPFIELD pField = pSortInfo->dbtri.lpaSource->lpFields +
+                       pSortInfo->lpdbsItem[ uiCount ].uiField - 1;
+
+      switch( pField->uiType )
+      {
+         case HB_FT_ANY:
+            if( pField->uiLen == 4 )
+            {
+               pSortInfo->lpdbsItem[ uiCount ].uiFlags |= SF_LONG;
+               break;
+            }
+            if( pField->uiLen == 3 )
+               break;
+         case HB_FT_MEMO:
+         case HB_FT_IMAGE:
+         case HB_FT_BLOB:
+         case HB_FT_OLE:
+            pSortInfo->lpdbsItem[ uiCount ].uiField = 0;
+            break;
+
+         case HB_FT_INTEGER:
+         case HB_FT_CURRENCY:
+         case HB_FT_AUTOINC:
+         case HB_FT_ROWVER:
+            pSortInfo->lpdbsItem[ uiCount ].uiFlags |= pField->uiDec == 0 ?
+                                                       SF_LONG : SF_DOUBLE;
+            break;
+         case HB_FT_LONG:
+            if( pField->uiDec == 0 && pField->uiLen < 19 )
+            {
+               pSortInfo->lpdbsItem[ uiCount ].uiFlags |= SF_LONG;
+               break;
+            }
+         case HB_FT_FLOAT:
+         case HB_FT_DOUBLE:
+         case HB_FT_CURDOUBLE:
+            pSortInfo->lpdbsItem[ uiCount ].uiFlags |= SF_DOUBLE;
+            break;
+
+         case HB_FT_STRING:
+         case HB_FT_VARLENGTH:
+            break;
+
+         case HB_FT_DATE:
+         case HB_FT_TIME:
+         case HB_FT_MODTIME:
+         case HB_FT_TIMESTAMP:
+         case HB_FT_LOGICAL:
+            break;
+
+         default:
+            pSortInfo->lpdbsItem[ uiCount ].uiField = 0;
+            break;
+      }
+      switch( pField->uiType )
+      {
+         case HB_FT_STRING:
+         case HB_FT_VARLENGTH:
+            break;
+         default:
+            pSortInfo->lpdbsItem[ uiCount ].uiFlags &= ~SF_CASE;
+      }
+      if( pSortInfo->lpdbsItem[ uiCount ].uiField != 0 )
+      {
+         if( uiCount != uiDest )
+         {
+            pSortInfo->lpdbsItem[ uiDest ].uiField = pSortInfo->lpdbsItem[ uiCount ].uiField;
+            pSortInfo->lpdbsItem[ uiDest ].uiFlags = pSortInfo->lpdbsItem[ uiCount ].uiFlags;
+         }
+         ++uiDest;
+      }
+   }
+   pSortInfo->uiItemCount = uiDest;
+
+   return HB_SUCCESS;
+}
+
+static void hb_dbfSortFree( LPDBSORTREC pSortRec )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfSortFree(%p)", pSortRec ) );
+
+   if( pSortRec->pTempFile != NULL )
+      hb_fileClose( pSortRec->pTempFile );
+   if( pSortRec->szTempFileName )
+   {
+      hb_fileDelete( pSortRec->szTempFileName );
+      hb_xfree( pSortRec->szTempFileName );
+   }
+
+   if( pSortRec->pSortArray )
+      hb_itemRelease( pSortRec->pSortArray );
+   if( pSortRec->pnIndex )
+      hb_xfree( pSortRec->pnIndex );
+   if( pSortRec->pnRecords )
+      hb_xfree( pSortRec->pnRecords );
+   if( pSortRec->pnOrder )
+      hb_xfree( pSortRec->pnOrder );
+   if( pSortRec->pSwapPages )
+      hb_xfree( pSortRec->pSwapPages );
+}
+
+static int hb_dbfSortCmp( LPDBSORTREC pSortRec, PHB_ITEM pValue1, PHB_ITEM pValue2 )
+{
+   HB_USHORT uiCount;
+
+   for( uiCount = 0; uiCount < pSortRec->pSortInfo->uiItemCount; ++uiCount )
+   {
+      HB_USHORT uiFlags = pSortRec->pSortInfo->lpdbsItem[ uiCount ].uiFlags;
+      PHB_ITEM pItem1 = hb_arrayGetItemPtr( pValue1, uiCount + 1 );
+      PHB_ITEM pItem2 = hb_arrayGetItemPtr( pValue2, uiCount + 1 );
+      int i = 0;
+
+      if( uiFlags & SF_DOUBLE )
+      {
+         double dValue1 = hb_itemGetND( pItem1 ),
+                dValue2 = hb_itemGetND( pItem2 );
+         i = dValue1 < dValue2 ? -1 : ( dValue1 == dValue2 ? 0 : 1 );
+      }
+      else if( uiFlags & SF_LONG )
+      {
+         HB_MAXINT nValue1 = hb_itemGetNInt( pItem1 ),
+                   nValue2 = hb_itemGetNInt( pItem2 );
+         i = nValue1 < nValue2 ? -1 : ( nValue1 == nValue2 ? 0 : 1 );
+      }
+      else if( HB_IS_STRING( pItem1 ) )
+      {
+         if( ! HB_IS_STRING( pItem2 ) )
+            i = 1;
+         else if( uiFlags & SF_CASE )
+            i = hb_itemStrICmp( pItem1, pItem2, HB_TRUE );
+         else
+            i = hb_itemStrCmp( pItem1, pItem2, HB_TRUE );
+      }
+      else if( HB_IS_DATETIME( pItem1 ) )
+      {
+         double dValue1 = hb_itemGetTD( pItem1 ),
+                dValue2 = hb_itemGetTD( pItem2 );
+         i = dValue1 < dValue2 ? -1 : ( dValue1 == dValue2 ? 0 : 1 );
+      }
+      else if( HB_IS_LOGICAL( pItem1 ) )
+         i = hb_itemGetL( pItem1 ) ? ( hb_itemGetL( pItem2 ) ? 0 : 1 ) :
+                                     ( hb_itemGetL( pItem2 ) ? -1 : 0 );
+      if( i != 0 )
+         return ( uiFlags & SF_DESCEND ) ? -i : i;
+   }
+
+   return 0;
+}
+
+static int hb_dbfSortCompare( LPDBSORTREC pSortRec,
+                              HB_SORTIDX nIndex1, HB_SORTIDX nIndex2 )
+{
+   int i = hb_dbfSortCmp( pSortRec,
+                          hb_arrayGetItemPtr( pSortRec->pSortArray, nIndex1 + 1 ),
+                          hb_arrayGetItemPtr( pSortRec->pSortArray, nIndex2 + 1 ) );
+   return i == 0 ? ( nIndex1 < nIndex2 ? -1 : 1 ) : i;
+}
+
+static HB_BOOL hb_dbfSortQSort( LPDBSORTREC pSortRec, HB_SORTIDX * pSrc,
+                                HB_SORTIDX * pBuf, HB_DBRECNO nKeys )
+{
+   if( nKeys > 1 )
+   {
+      HB_DBRECNO n1, n2;
+      HB_SORTIDX * pPtr1, * pPtr2, * pDst;
+      HB_BOOL f1, f2;
+
+      n1 = nKeys >> 1;
+      n2 = nKeys - n1;
+      pPtr1 = &pSrc[ 0 ];
+      pPtr2 = &pSrc[ n1 ];
+
+      f1 = hb_dbfSortQSort( pSortRec, pPtr1, &pBuf[ 0 ], n1 );
+      f2 = hb_dbfSortQSort( pSortRec, pPtr2, &pBuf[ n1 ], n2 );
+      if( f1 )
+         pDst = pBuf;
+      else
+      {
+         pDst = pSrc;
+         pPtr1 = &pBuf[ 0 ];
+      }
+      if( ! f2 )
+         pPtr2 = &pBuf[ n1 ];
+      while( n1 > 0 && n2 > 0 )
+      {
+         if( hb_dbfSortCompare( pSortRec, *pPtr1, *pPtr2 ) <= 0 )
+         {
+            *pDst++ = *pPtr1++;
+            n1--;
+         }
+         else
+         {
+            *pDst++ = *pPtr2++;
+            n2--;
+         }
+      }
+      if( n1 > 0 )
+         memcpy( pDst, pPtr1, n1 * sizeof( HB_SORTIDX ) );
+      else if( n2 > 0 && f1 == f2 )
+         memcpy( pDst, pPtr2, n2 * sizeof( HB_SORTIDX ) );
+      return ! f1;
+   }
+   return HB_TRUE;
+}
+
+static HB_DBRECNO * hb_dbfSortSort( LPDBSORTREC pSortRec )
+{
+   HB_SORTIDX * pOrder;
+   HB_DBRECNO nCount;
+
+   if( pSortRec->pnIndex == NULL )
+      pSortRec->pnIndex = ( HB_SORTIDX * ) hb_xgrab(
+            ( ( HB_SIZE ) pSortRec->nCount << 1 ) * sizeof( HB_SORTIDX ) );
+   for( nCount = 0; nCount < pSortRec->nCount; ++nCount )
+      pSortRec->pnIndex[ nCount ] = nCount;
+
+   pOrder = pSortRec->pnIndex;
+   if( ! hb_dbfSortQSort( pSortRec, pOrder, &pSortRec->pnIndex[ pSortRec->nCount ],
+                          pSortRec->nCount ) )
+      pOrder += pSortRec->nCount;
+
+   if( pSortRec->pnOrder == NULL )
+      pSortRec->pnOrder = ( HB_DBRECNO * ) hb_xgrab(
+            ( HB_SIZE ) pSortRec->nCount * sizeof( HB_DBRECNO ) );
+   for( nCount = 0; nCount < pSortRec->nCount; ++nCount )
+      pSortRec->pnOrder[ nCount ] = pSortRec->pnRecords[ pOrder[ nCount ] ];
+
+   return pSortRec->pnOrder;
+}
+
+static void hb_dbfSortInsPage( LPDBSORTREC pSortRec, HB_SORTIDX * pIndex,
+                               HB_SORTIDX nFirst, HB_SORTIDX nLast,
+                               HB_SORTIDX nAt )
+{
+   while( nFirst < nLast )
+   {
+      HB_SORTIDX nMiddle = ( nFirst + nLast ) >> 1;
+      int i = hb_dbfSortCompare( pSortRec, pIndex[ nAt ], pIndex[ nMiddle ] );
+
+      if( i < 0 )
+         nLast = nMiddle;
+      else
+         nFirst = nMiddle + 1;
+   }
+   if( nAt == 0 )
+   {
+      if( nFirst > 1 )
+      {
+         nLast = pIndex[ 0 ];
+         memmove( pIndex, &pIndex[ 1 ], ( nFirst - 1 ) * sizeof( HB_SORTIDX ) );
+         pIndex[ nFirst - 1 ] = nLast;
+      }
+   }
+   else if( nFirst != nAt )
+   {
+      nLast = pIndex[ nAt ];
+      memmove( &pIndex[ nFirst + 1 ], &pIndex[ nFirst ],
+               ( nAt - nFirst ) * sizeof( HB_SORTIDX ) );
+      pIndex[ nFirst ] = nLast;
+   }
+}
+
+static HB_ERRCODE hb_dbfSortWritePage( LPDBSORTREC pSortRec )
+{
+   HB_DBRECNO * pData = hb_dbfSortSort( pSortRec );
+   HB_SIZE nSize = ( HB_SIZE ) pSortRec->nCount * sizeof( HB_DBRECNO );
+   AREAP pArea = pSortRec->pSortInfo->dbtri.lpaSource;
+
+   if( pSortRec->pTempFile == NULL )
+   {
+      char szName[ HB_PATH_MAX ];
+      pSortRec->pTempFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szName );
+      if( pSortRec->pTempFile == NULL )
+      {
+         hb_dbfErrorRT( ( DBFAREAP ) pArea, EG_CREATE, EDBF_CREATE_TEMP,
+                        szName, hb_fsError(), 0, NULL );
+         return HB_FAILURE;
+      }
+      pSortRec->szTempFileName = hb_strdup( szName );
+   }
+
+   if( pSortRec->nPages == pSortRec->nMaxPage )
+   {
+      pSortRec->nMaxPage += 8;
+      pSortRec->pSwapPages = ( PHB_DBSORTPAGE ) hb_xrealloc( pSortRec->pSwapPages,
+                           pSortRec->nMaxPage * sizeof( HB_DBSORTPAGE ) );
+   }
+   memset( &pSortRec->pSwapPages[ pSortRec->nPages ], 0, sizeof( HB_DBSORTPAGE ) );
+   pSortRec->pSwapPages[ pSortRec->nPages ].nCount = pSortRec->nCount;
+   pSortRec->pSwapPages[ pSortRec->nPages ].nOffset = hb_fileSize( pSortRec->pTempFile );
+
+   if( hb_fileWriteAt( pSortRec->pTempFile, pData, nSize,
+                       pSortRec->pSwapPages[ pSortRec->nPages ].nOffset ) != nSize )
+   {
+      hb_dbfErrorRT( ( DBFAREAP ) pArea, EG_WRITE, EDBF_WRITE_TEMP,
+                     pSortRec->szTempFileName, hb_fsError(), 0, NULL );
+      return HB_FAILURE;
+   }
+   pSortRec->nPages++;
+   pSortRec->nCount = 0;
+
+   return HB_SUCCESS;
+}
+
+static HB_ERRCODE hb_dbfSortReadRec( LPDBSORTREC pSortRec, PHB_ITEM pValue )
+{
+   AREAP pArea = pSortRec->pSortInfo->dbtri.lpaSource;
+   HB_SHORT uiCount;
+
+   if( HB_IS_NIL( pValue ) )
+      hb_arrayNew( pValue, pSortRec->pSortInfo->uiItemCount );
+   else
+      hb_arraySize( pValue, pSortRec->pSortInfo->uiItemCount );
+
+   for( uiCount = 0; uiCount < pSortRec->pSortInfo->uiItemCount; uiCount++ )
+   {
+      PHB_ITEM pItem = hb_arrayGetItemPtr( pValue, uiCount + 1 );
+      HB_USHORT uiField = pSortRec->pSortInfo->lpdbsItem[ uiCount ].uiField;
+      if( SELF_GETVALUE( pArea, uiField, pItem ) != HB_SUCCESS )
+         return HB_FAILURE;
+   }
+
+   return HB_SUCCESS;
+}
+
+static HB_ERRCODE hb_dbfSortReadPage( LPDBSORTREC pSortRec, PHB_DBSORTPAGE pPage )
+{
+   AREAP pArea = pSortRec->pSortInfo->dbtri.lpaSource;
+   HB_DBRECNO nCount = HB_MIN( pSortRec->nMaxRec, pPage->nCount );
+   HB_SIZE nSize = ( HB_SIZE ) nCount * sizeof( HB_DBRECNO );
+
+   if( hb_fileReadAt( pSortRec->pTempFile, pPage->pnRecords, nSize,
+                      pPage->nOffset ) != nSize )
+   {
+      hb_dbfErrorRT( ( DBFAREAP ) pArea, EG_READ, EDBF_READ_TEMP,
+                     pSortRec->szTempFileName, hb_fsError(), 0, NULL );
+      return HB_FAILURE;
+   }
+   pPage->nOffset += nSize;
+   pPage->nInBuf = nCount;
+   pPage->nCurrent = 0;
+
+   return HB_SUCCESS;
+}
+
+static HB_ERRCODE hb_dbfSortGetRec( LPDBSORTREC pSortRec, HB_DBRECNO * pnRecNo )
+{
+   HB_SORTIDX nPage = pSortRec->pnIndex[ 0 ];
+   PHB_DBSORTPAGE pPage = &pSortRec->pSwapPages[ nPage ];
+
+   *pnRecNo = pPage->pnRecords[ pPage->nCurrent++ ];
+   if( --pPage->nCount == 0 )
+   {
+      if( --pSortRec->nPages > 0 )
+         memmove( pSortRec->pnIndex, &pSortRec->pnIndex[ 1 ],
+                  pSortRec->nPages * sizeof( HB_SORTIDX ) );
+   }
+   else
+   {
+      if( pPage->nCurrent == pPage->nInBuf )
+      {
+         if( hb_dbfSortReadPage( pSortRec, pPage ) != HB_SUCCESS )
+            return HB_FAILURE;
+      }
+      if( pSortRec->nPages > 1 )
+      {
+         AREAP pArea = pSortRec->pSortInfo->dbtri.lpaSource;
+         if( SELF_GOTO( pArea, pPage->pnRecords[ pPage->nCurrent ] ) != HB_SUCCESS ||
+             hb_dbfSortReadRec( pSortRec, hb_arrayGetItemPtr( pSortRec->pSortArray,
+                                                              nPage + 1 ) ) != HB_SUCCESS )
+            return HB_FAILURE;
+         hb_dbfSortInsPage( pSortRec, pSortRec->pnIndex, 1, pSortRec->nPages, 0 );
+      }
+   }
+
+   return HB_SUCCESS;
+}
+
+static HB_ERRCODE hb_dbfSortFinish( LPDBSORTREC pSortRec )
+{
+   AREAP pArea = pSortRec->pSortInfo->dbtri.lpaSource;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfSortFinish(%p)", pSortRec ) );
+
+   if( pSortRec->nCount > 0 )
+   {
+      if( pSortRec->nPages > 0 )
+      {
+         HB_DBRECNO nCount, * pnOrder;
+         HB_SORTIDX nPage;
+
+         if( hb_dbfSortWritePage( pSortRec ) != HB_SUCCESS )
+            return HB_FAILURE;
+
+         if( pSortRec->pSortArray )
+            hb_itemRelease( pSortRec->pSortArray );
+         if( pSortRec->pnRecords )
+            hb_xfree( pSortRec->pnRecords );
+         if( pSortRec->pnIndex )
+            hb_xfree( pSortRec->pnIndex );
+         if( pSortRec->pnOrder )
+            hb_xfree( pSortRec->pnOrder );
+
+         if( pSortRec->nPages > HB_SORTREC_MINRECBUF )
+            pSortRec->nMaxRec = pSortRec->nMaxRec * HB_SORTREC_MINRECBUF /
+                                pSortRec->nPages;
+         nCount = pSortRec->pSwapPages[ pSortRec->nPages - 1 ].nCount;
+         if( nCount < pSortRec->nMaxRec )
+            nCount = pSortRec->nMaxRec - nCount;
+         else
+            nCount = 0;
+         nCount = pSortRec->nMaxRec * pSortRec->nPages - nCount;
+
+         pSortRec->pSortArray = hb_itemArrayNew( pSortRec->nPages );
+         pSortRec->pnRecords = ( HB_DBRECNO * ) hb_xgrab( pSortRec->nPages *
+                                                          sizeof( HB_DBRECNO ) );
+         pSortRec->pnIndex = ( HB_SORTIDX * ) hb_xgrab( pSortRec->nPages *
+                                                        sizeof( HB_SORTIDX ) );
+         pSortRec->pnOrder = pnOrder = ( HB_DBRECNO * )
+                                       hb_xgrab( nCount * sizeof( HB_DBRECNO ) );
+         for( nPage = 0; nPage < pSortRec->nPages; ++nPage, pnOrder += pSortRec->nMaxRec )
+         {
+            pSortRec->pSwapPages[ nPage ].pnRecords = pnOrder;
+            if( hb_dbfSortReadPage( pSortRec, &pSortRec->pSwapPages[ nPage ] ) != HB_SUCCESS ||
+                SELF_GOTO( pArea, pnOrder[ 0 ] ) != HB_SUCCESS ||
+                hb_dbfSortReadRec( pSortRec, hb_arrayGetItemPtr( pSortRec->pSortArray,
+                                                                 nPage + 1 ) ) != HB_SUCCESS )
+               return HB_FAILURE;
+
+            pSortRec->pnIndex[ nPage ] = nPage;
+            if( nPage > 0 )
+               hb_dbfSortInsPage( pSortRec, pSortRec->pnIndex, 0, nPage, nPage );
+         }
+      }
+      else
+      {
+         pSortRec->pSwapPages = ( PHB_DBSORTPAGE ) hb_xgrabz( sizeof( HB_DBSORTPAGE ) );
+         pSortRec->pSwapPages[ 0 ].nCount =
+         pSortRec->pSwapPages[ 0 ].nInBuf = pSortRec->nCount;
+         pSortRec->pSwapPages[ 0 ].pnRecords = hb_dbfSortSort( pSortRec );
+         pSortRec->nPages = 1;
+         pSortRec->pnIndex = ( HB_SORTIDX * ) hb_xrealloc( pSortRec->pnIndex, sizeof( HB_SORTIDX ) );
+         if( pSortRec->pSortArray )
+         {
+            hb_itemRelease( pSortRec->pSortArray );
+            pSortRec->pSortArray = NULL;
+         }
+         if( pSortRec->pnRecords )
+         {
+            hb_xfree( pSortRec->pnRecords );
+            pSortRec->pnRecords = NULL;
+         }
+      }
+   }
+
+   while( pSortRec->nPages > 0 )
+   {
+      HB_DBRECNO nRecNo;
+
+      if( hb_dbfSortGetRec( pSortRec, &nRecNo ) != HB_SUCCESS ||
+          SELF_GOTO( pArea, nRecNo ) != HB_SUCCESS ||
+          SELF_TRANSREC( pArea, &pSortRec->pSortInfo->dbtri ) != HB_SUCCESS )
+         return HB_FAILURE;
+   }
+
+   return HB_SUCCESS;
+}
+
+static HB_ERRCODE hb_dbfSortAdd( LPDBSORTREC pSortRec )
+{
+   AREAP pArea;
+   HB_ULONG ulRecNo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfSortAdd(%p)", pSortRec ) );
+
+   pArea = pSortRec->pSortInfo->dbtri.lpaSource;
+
+   if( pSortRec->nCount == pSortRec->nMaxRec )
+   {
+      if( pSortRec->nMaxRec < HB_SORTREC_ARRAYSIZE )
+      {
+         if( pSortRec->nMaxRec == 0 )
+            pSortRec->nMaxRec = HB_SORTREC_FIRSTALLOC;
+         else
+            pSortRec->nMaxRec <<= 1;
+         if( pSortRec->nMaxRec > HB_SORTREC_ARRAYSIZE )
+            pSortRec->nMaxRec = HB_SORTREC_ARRAYSIZE;
+
+         pSortRec->pnRecords = ( HB_DBRECNO * ) hb_xrealloc( pSortRec->pnRecords,
+               ( HB_SIZE ) pSortRec->nMaxRec * sizeof( HB_DBRECNO ) );
+         if( pSortRec->pSortArray )
+            hb_arraySize( pSortRec->pSortArray, pSortRec->nMaxRec );
+         else
+            pSortRec->pSortArray = hb_itemArrayNew( pSortRec->nMaxRec );
+      }
+      if( pSortRec->nCount == pSortRec->nMaxRec )
+      {
+         if( hb_dbfSortWritePage( pSortRec ) != HB_SUCCESS )
+            return HB_FAILURE;
+      }
+   }
+
+   if( SELF_RECNO( pArea, &ulRecNo ) != HB_SUCCESS ||
+       hb_dbfSortReadRec( pSortRec, hb_arrayGetItemPtr( pSortRec->pSortArray,
+                                          pSortRec->nCount + 1 ) ) != HB_SUCCESS )
+      return HB_FAILURE;
+   pSortRec->pnRecords[ pSortRec->nCount++ ] = ( HB_DBRECNO ) ulRecNo;
+
+   return HB_SUCCESS;
+}
+
+/*
+ * Export sorted records
+ */
+static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
+{
+   HB_ERRCODE errCode = HB_SUCCESS;
+   HB_LONG lNext = 1;
+   HB_BOOL fEof, fFor;
+   DBSORTREC dbSortRec;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfSort(%p, %p)", pArea, pSortInfo ) );
+
+   if( SELF_GOCOLD( &pArea->area ) != HB_SUCCESS )
+      return HB_FAILURE;
+
+   if( hb_dbfSortInit( &dbSortRec, pSortInfo ) != HB_SUCCESS )
+      return HB_FAILURE;
+
+   if( pSortInfo->uiItemCount == 0 )
+      return SELF_TRANS( &pArea->area, &pSortInfo->dbtri );
+
+   errCode = hb_dbfTransCond( pArea, &pSortInfo->dbtri );
+   if( errCode == HB_SUCCESS )
+   {
+      if( pSortInfo->dbtri.dbsci.itmRecID )
+         errCode = SELF_GOTOID( &pArea->area, pSortInfo->dbtri.dbsci.itmRecID );
+      else if( pSortInfo->dbtri.dbsci.lNext )
+         lNext = hb_itemGetNL( pSortInfo->dbtri.dbsci.lNext );
+      else if( ! pSortInfo->dbtri.dbsci.itmCobWhile &&
+               ! hb_itemGetLX( pSortInfo->dbtri.dbsci.fRest ) )
+         errCode = SELF_GOTOP( &pArea->area );
+   }
+
+   /* TODO: use SKIPSCOPE() method and fRest parameter */
+
+   while( errCode == HB_SUCCESS && lNext > 0 )
+   {
+      errCode = SELF_EOF( &pArea->area, &fEof );
+      if( errCode != HB_SUCCESS || fEof )
+         break;
+
+      if( pSortInfo->dbtri.dbsci.itmCobWhile )
+      {
+         errCode = SELF_EVALBLOCK( &pArea->area, pSortInfo->dbtri.dbsci.itmCobWhile );
+         if( errCode != HB_SUCCESS || ! hb_itemGetLX( pArea->area.valResult ) )
+            break;
+      }
+
+      if( pSortInfo->dbtri.dbsci.itmCobFor )
+      {
+         errCode = SELF_EVALBLOCK( &pArea->area, pSortInfo->dbtri.dbsci.itmCobFor );
+         if( errCode != HB_SUCCESS )
+            break;
+         fFor = hb_itemGetLX( pArea->area.valResult );
+      }
+      else
+         fFor = HB_TRUE;
+
+      if( fFor )
+         errCode = hb_dbfSortAdd( &dbSortRec );
+
+      if( errCode != HB_SUCCESS || pSortInfo->dbtri.dbsci.itmRecID ||
+          ( pSortInfo->dbtri.dbsci.lNext && --lNext < 1 ) )
+         break;
+
+      errCode = SELF_SKIP( &pArea->area, 1 );
+   }
+
+   if( errCode == HB_SUCCESS )
+      errCode = hb_dbfSortFinish( &dbSortRec );
+
+   hb_dbfSortFree( &dbSortRec );
+
+   return errCode;
+}
+
+/*
+ * Copy one or more records from one WorkArea to another.
+ */
+static HB_ERRCODE hb_dbfTrans( DBFAREAP pArea, LPDBTRANSINFO pTransInfo )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dbfTrans(%p, %p)", pArea, pTransInfo ) );
+
+   if( hb_dbfTransCond( pArea, pTransInfo ) != HB_SUCCESS )
+      return HB_FAILURE;
+   else
+      return SUPER_TRANS( &pArea->area, pTransInfo );
 }
 
 #define hb_dbfTransRec  NULL
