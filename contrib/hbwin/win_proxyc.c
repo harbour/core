@@ -46,21 +46,21 @@
 
 #include "hbwapi.h"
 
-#undef HBWIN_HAS_WINHTTP
+#undef HB_WIN_HAS_WINHTTP
 #if ! defined( HB_OS_WIN_CE ) && \
     !( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) && \
     ! defined( __WATCOMC__ ) && \
     ! defined( __TINYC__ )
-   #define HBWIN_HAS_WINHTTP
+   #define HB_WIN_HAS_WINHTTP
 #endif
 
-#if defined( HBWIN_HAS_WINHTTP )
+#if defined( HB_WIN_HAS_WINHTTP )
    #include "winhttp.h"
 #endif
 
 HB_FUNC( __WIN_PROXYDETECT )
 {
-#if defined( HBWIN_HAS_WINHTTP )
+#if defined( HB_WIN_HAS_WINHTTP )
    typedef HINTERNET ( WINAPI * _HB_WINHTTPOPEN )( LPCWSTR, DWORD, LPCWSTR, LPCWSTR, DWORD );
    typedef BOOL      ( WINAPI * _HB_WINHTTPSETTIMEOUTS )( HINTERNET, int, int, int, int );
    typedef BOOL      ( WINAPI * _HB_WINHTTPCLOSEHANDLE )( HINTERNET );

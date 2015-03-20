@@ -7,13 +7,13 @@
 
 #define _CA_FN_  "cacert.pem"
 
-PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
+PROCEDURE Main( cFrom, cPassword, cTo, cHost )
 
    LOCAL curl
    LOCAL cMessage
 
-   LOCAL cHost
-   LOCAL lSTARTTLS
+   /* Require STARTTLS on port 587 (true) or allow it to proceed without it (false) */
+   LOCAL lSTARTTLS_force
 
    IF hb_AScan( curl_version_info()[ HB_CURLVERINFO_PROTOCOLS ], "smtps",,, .T. ) == 0
       ? "Error: Requires libcurl 7.20.0 or newer, built with SSL and smtp protocol support"
@@ -23,42 +23,41 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
    hb_default( @cFrom    , "from@example.net" )
    hb_default( @cPassword, "password" )
    hb_default( @cTo      , "to@example.com" )
-   hb_default( @cProvider, "" )
+   hb_default( @cHost    , "localhost" )
 
-   cProvider := Lower( cProvider )
+   cHost := Lower( cHost )
 
-   lSTARTTLS := .F.
+   lSTARTTLS_force := .F.
 
    /* NOTE: Consult your provider for updated settings
             and make a pull request if necessary. */
 
    DO CASE
-   CASE cProvider == "apple" .OR. "@icloud.com" $ cFrom .OR. "@mac.com" $ cFrom .OR. "@me.com" $ cFrom
-      cHost := "smtp://smtp.mail.me.com:587"; lSTARTTLS := .T.
-   CASE cProvider == "fastmail" .OR. "@fastmail.com" $ cFrom .OR. "@fastmail.fm" $ cFrom
+   CASE cHost == "apple" .OR. "@icloud.com" $ cFrom .OR. "@mac.com" $ cFrom .OR. "@me.com" $ cFrom
+      cHost := "smtp://smtp.mail.me.com:587"; lSTARTTLS_force := .T.
+   CASE cHost == "fastmail" .OR. "@fastmail.com" $ cFrom .OR. "@fastmail.fm" $ cFrom
       cHost := "smtps://mail.messagingengine.com"
-   CASE cProvider == "gmx.net" .OR. "@gmx.net" $ cFrom .OR. "@gmx.ch" $ cFrom .OR. "@gmx.de" $ cFrom
-      cHost := "smtp://mail.gmx.net:587"; lSTARTTLS := .T.
-   CASE cProvider == "google" .OR. "@gmail.com" $ cFrom .OR. "@googlemail.com" $ cFrom
+   CASE cHost == "gmx.net" .OR. "@gmx.net" $ cFrom .OR. "@gmx.ch" $ cFrom .OR. "@gmx.de" $ cFrom
+      cHost := "smtp://mail.gmx.net:587"; lSTARTTLS_force := .T.
+   CASE cHost == "google" .OR. "@gmail.com" $ cFrom .OR. "@googlemail.com" $ cFrom
       cHost := "smtps://smtp.gmail.com"
-   CASE cProvider == "mail.ru" .OR. "@mail.ru" $ cFrom
+   CASE cHost == "mail.ru" .OR. "@mail.ru" $ cFrom
       cHost := "smtps://smtp.mail.ru"
-   CASE cProvider == "netease" .OR. "@163.com" $ cFrom
+   CASE cHost == "netease" .OR. "@163.com" $ cFrom
       cHost := "smtps://smtp.163.com"
-   CASE cProvider == "office365"
-      cHost := "smtp://smtp.office365.com:587"; lSTARTTLS := .T.
-   CASE cProvider == "outlook" .OR. "@outlook.com" $ cFrom .OR. "@hotmail.com" $ cFrom
-      cHost := "smtp://smtp-mail.outlook.com:587"; lSTARTTLS := .T.
-   CASE cProvider == "sina" .OR. "@sina.com" $ cFrom
+   CASE cHost == "office365"
+      cHost := "smtp://smtp.office365.com:587"; lSTARTTLS_force := .T.
+   CASE cHost == "outlook" .OR. "@outlook.com" $ cFrom .OR. "@hotmail.com" $ cFrom
+      cHost := "smtp://smtp-mail.outlook.com:587"; lSTARTTLS_force := .T.
+   CASE cHost == "sina" .OR. "@sina.com" $ cFrom
       cHost := "smtps://smtp.vip.sina.com"
-   CASE cProvider == "uol" .OR. "@uol.com.br" $ cFrom
+   CASE cHost == "uol" .OR. "@uol.com.br" $ cFrom
       cHost := "smtps://smtps.uol.com.br"
-   CASE cProvider == "yahoo" .OR. "@yahoo.com" $ cFrom
+   CASE cHost == "yahoo" .OR. "@yahoo.com" $ cFrom
       cHost := "smtps://smtp.mail.yahoo.com"
-   OTHERWISE
-      ? "Error: Unknown provider"
-      RETURN
    ENDCASE
+
+   ? "Host:", cHost, iif( lSTARTTLS_force, "(must STARTTLS)", "" )
 
    cMessage := tip_MailAssemble( cFrom, ;
       { cTo }, ;
@@ -88,9 +87,8 @@ PROCEDURE Main( cFrom, cPassword, cTo, cProvider )
          ENDIF
          curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
       #endif
-      IF lSTARTTLS
-         curl_easy_setopt( curl, HB_CURLOPT_USE_SSL, HB_CURLUSESSL_ALL )
-      ENDIF
+      curl_easy_setopt( curl, HB_CURLOPT_USE_SSL, ;
+         iif( lSTARTTLS_force, HB_CURLUSESSL_ALL, HB_CURLUSESSL_TRY ) )
       curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       curl_easy_setopt( curl, HB_CURLOPT_URL, cHost )
       curl_easy_setopt( curl, HB_CURLOPT_USERNAME, cFrom )
