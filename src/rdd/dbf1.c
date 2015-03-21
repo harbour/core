@@ -5378,6 +5378,7 @@ static HB_ERRCODE hb_dbfSortFinish( LPDBSORTREC pSortRec )
          pSortRec->pSwapPages[ 0 ].pnRecords = hb_dbfSortSort( pSortRec );
          pSortRec->nPages = 1;
          pSortRec->pnIndex = ( HB_SORTIDX * ) hb_xrealloc( pSortRec->pnIndex, sizeof( HB_SORTIDX ) );
+         pSortRec->pnIndex[ 0 ] = 0;
          if( pSortRec->pSortArray )
          {
             hb_itemRelease( pSortRec->pSortArray );
