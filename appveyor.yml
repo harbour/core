@@ -2,29 +2,21 @@ version: 3.4.{build}
 shallow_clone: true
 environment:
   matrix:
-    - HB_COMPILER: "mingw"
-    - HB_COMPILER: "mingw64"
-    - HB_COMPILER: "msvc"
-    - HB_COMPILER: "msvc64"
+    - HB_COMPILER: mingw
+    - HB_COMPILER: mingw64
+    - HB_COMPILER: msvc
+    - HB_COMPILER: msvc64
 install:
-  - md C:\hb\comp
-  - curl -L "https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v3-rev1.7z/download" -o C:\hb\comp\mingw.7z
-  - 7za x C:\hb\comp\mingw.7z -oC:\hb\comp\
+  - cmd: md "C:\hb\comp"
+  - cmd: curl -L "https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v3-rev1.7z/download" -o "C:\hb\comp\mingw.7z"
+  - cmd: 7z x "C:\hb\comp\mingw.7z" "-oC:\hb\comp\"
   - cinst mariadb
   - cinst openssl.light
   - cinst postgresql93
 build_script:
-  - if "%HB_COMPILER%" == "mingw" (
-       set PATH=C:\hb\comp\mingw64\bin;%PATH%
-    )
-  - if "%HB_COMPILER%" == "mingw64" (
-       set PATH=C:\hb\comp\mingw64\bin;%PATH%
-    )
-  - if "%HB_COMPILER%" == "msvc" (
-       if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-    )
-  - if "%HB_COMPILER%" == "msvc64" (
-       if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
-    )
-  - set HB_BUILD_STRIP=bin
-  - win-make.exe
+  - cmd: if "%HB_COMPILER%" == "mingw" set PATH=C:\hb\comp\mingw64\bin;%PATH%
+  - cmd: if "%HB_COMPILER%" == "mingw64" set PATH=C:\hb\comp\mingw64\bin;%PATH%
+  - cmd: if "%HB_COMPILER%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
+  - cmd: if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+  - cmd: set HB_BUILD_STRIP=bin
+  - cmd: win-make.exe
