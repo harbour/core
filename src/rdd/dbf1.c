@@ -4912,8 +4912,8 @@ typedef struct
    PHB_FILE       pTempFile;
    char *         szTempFileName;
 
-   HB_SIZE        nPages;
-   HB_SIZE        nMaxPage;
+   HB_SORTIDX     nPages;
+   HB_SORTIDX     nMaxPage;
    PHB_DBSORTPAGE pSwapPages;
 
    HB_DBRECNO     nCount;
@@ -5150,7 +5150,7 @@ static HB_DBRECNO * hb_dbfSortSort( LPDBSORTREC pSortRec )
       pSortRec->pnIndex = ( HB_SORTIDX * ) hb_xgrab(
             ( ( HB_SIZE ) pSortRec->nCount << 1 ) * sizeof( HB_SORTIDX ) );
    for( nCount = 0; nCount < pSortRec->nCount; ++nCount )
-      pSortRec->pnIndex[ nCount ] = nCount;
+      pSortRec->pnIndex[ nCount ] = ( HB_SORTIDX ) nCount;
 
    pOrder = pSortRec->pnIndex;
    if( ! hb_dbfSortQSort( pSortRec, pOrder, &pSortRec->pnIndex[ pSortRec->nCount ],
@@ -5221,7 +5221,7 @@ static HB_ERRCODE hb_dbfSortWritePage( LPDBSORTREC pSortRec )
    {
       pSortRec->nMaxPage += 8;
       pSortRec->pSwapPages = ( PHB_DBSORTPAGE ) hb_xrealloc( pSortRec->pSwapPages,
-                           pSortRec->nMaxPage * sizeof( HB_DBSORTPAGE ) );
+                             pSortRec->nMaxPage * sizeof( HB_DBSORTPAGE ) );
    }
    memset( &pSortRec->pSwapPages[ pSortRec->nPages ], 0, sizeof( HB_DBSORTPAGE ) );
    pSortRec->pSwapPages[ pSortRec->nPages ].nCount = pSortRec->nCount;
@@ -5453,10 +5453,10 @@ static HB_ERRCODE hb_dbfSortAdd( LPDBSORTREC pSortRec )
  */
 static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
 {
-   HB_ERRCODE errCode = HB_SUCCESS;
-   HB_LONG lNext = 1;
-   HB_BOOL fEof, fFor;
    DBSORTREC dbSortRec;
+   HB_BOOL fEof, fFor;
+   HB_ERRCODE errCode;
+   HB_LONG lNext = 1;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_dbfSort(%p, %p)", pArea, pSortInfo ) );
 
