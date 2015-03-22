@@ -1,5 +1,11 @@
+version: 3.4.{build}
 platform:
   - x86
   - x64
+install:
+  - cinst mariadb
+  - cinst openssl.light
+  - cinst postgresql93
 build_script:
+  - set HB_BUILD_STRIP=bin
   - win-make.exe
