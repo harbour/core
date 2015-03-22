@@ -1003,7 +1003,7 @@ sh -c make
 
 Same as 32-bit Windows, with the difference that you'll have to change
 `%ProgramFiles%` to `%ProgramFiles(x86)%` for 32-bit and mixed tools,
-that you can build for both x86 and x86_64 without building a native
+that you can build for both x86 and x86-64 without building a native
 target first, and potential differences with some compilers in using
 native binaries if they are available.
 

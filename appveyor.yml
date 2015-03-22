@@ -1,0 +1,9 @@
+branches:
+  only:
+    - master
+skip_tags: true
+platform:
+  - x86
+  - x64
+build_script:
+  - win-make.exe
