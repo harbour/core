@@ -1,7 +1,3 @@
-branches:
-  only:
-    - master
-skip_tags: true
 platform:
   - x86
   - x64
