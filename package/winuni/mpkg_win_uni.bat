@@ -71,6 +71,7 @@ del _hbtemp.sed
  copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbmk2.exe"     "%HB_ABSROOT%bin\hbmk2-x64.exe"
  copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbnetio.exe"   "%HB_ABSROOT%bin\hbnetio-x64.exe"
  copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbrun.exe"     "%HB_ABSROOT%bin\hbrun-x64.exe"
+ copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbspeed.exe"   "%HB_ABSROOT%bin\hbspeed-x64.exe"
  copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbtest.exe"    "%HB_ABSROOT%bin\hbtest-x64.exe"
 
 xcopy /y       "%HB_DIR_UPX%upx.exe"                                                      "%HB_ABSROOT%bin\"
@@ -157,6 +158,7 @@ echo.> _hbfiles
     echo "%HB_DR%bin\hbnetio.exe"                       >> _hbfiles
     echo "%HB_DR%bin\hbpp.exe"                          >> _hbfiles
     echo "%HB_DR%bin\hbrun.exe"                         >> _hbfiles
+    echo "%HB_DR%bin\hbspeed.exe"                       >> _hbfiles
     echo "%HB_DR%bin\hbtest.exe"                        >> _hbfiles
 if exist "%HB_DR%bin\*.hb"                          echo "%HB_DR%bin\*.hb"                          >> _hbfiles
 if exist "%HB_DR%bin\*.hbr"                         echo "%HB_DR%bin\*.hbr"                         >> _hbfiles
@@ -167,6 +169,7 @@ if exist "%HB_DR%bin\hbmk.hbc"                      echo "%HB_DR%bin\hbmk.hbc"  
     echo "%HB_DR%bin\hbmk2-x64.exe"                     >> _hbfiles
     echo "%HB_DR%bin\hbnetio-x64.exe"                   >> _hbfiles
     echo "%HB_DR%bin\hbrun-x64.exe"                     >> _hbfiles
+    echo "%HB_DR%bin\hbspeed-x64.exe"                   >> _hbfiles
     echo "%HB_DR%bin\hbtest-x64.exe"                    >> _hbfiles
     echo "%HB_DR%lib\win\mingw\*.*"                     >> _hbfiles
     echo "%HB_DR%lib\win\mingw64\*.*"                   >> _hbfiles

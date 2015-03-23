@@ -83,6 +83,7 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%bin\hbnetio.exe"
   File "$%HB_ABSROOT%bin\hbpp.exe"
   File "$%HB_ABSROOT%bin\hbrun.exe"
+  File "$%HB_ABSROOT%bin\hbspeed.exe"
   File "$%HB_ABSROOT%bin\hbtest.exe"
   File /nonfatal "$%HB_ABSROOT%bin\*.hb"
   File /nonfatal "$%HB_ABSROOT%bin\*.hbr"
@@ -118,6 +119,7 @@ Section /o "x64 tools" hb_main_x64
   File "$%HB_ABSROOT%bin\hbmk2-x64.exe"
   File "$%HB_ABSROOT%bin\hbnetio-x64.exe"
   File "$%HB_ABSROOT%bin\hbrun-x64.exe"
+  File "$%HB_ABSROOT%bin\hbspeed-x64.exe"
   File "$%HB_ABSROOT%bin\hbtest-x64.exe"
 SectionEnd
 !endif

@@ -143,6 +143,8 @@ Follow are the various directories that exist under the Harbour tree.
     |   |
     |   +---examples    - Usage examples.
     |
+    +---hbspeed         - Harbour speed tests.
+    |
     +---hbtest          - Regression tests for the Run-Time library.
 
 

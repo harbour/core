@@ -448,6 +448,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/harbour
 %{_bindir}/hbpp
 %{_bindir}/hbtest
+%{_bindir}/hbspeed
 %{_bindir}/hbrun
 %{_bindir}/hbi18n
 %{_bindir}/hbmk2

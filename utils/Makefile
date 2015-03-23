@@ -8,6 +8,7 @@ DIRS := \
 ifneq ($(HB_BUILD_PARTS),compiler)
 
    DIRS := \
+      hbspeed \
       hbtest \
       hbmk2 \
       hbi18n \
