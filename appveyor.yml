@@ -12,13 +12,13 @@ environment:
   - TARGET: mingw
 build_script:
 - if "%TARGET:~0,5%" == "mingw" set PATH=C:\mingw\bin;%PATH%
+- if "%TARGET%" == "mingw" set HBWIN_NO_WINHTTP_H=yes
 - if "%TARGET%" == "mingw" set HB_CPU=x86
 - if "%TARGET%" == "mingw64" set HB_CPU=x86_64
 - if "%TARGET%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
 - if "%TARGET%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+- if "%TARGET:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=no
 - set HB_BUILD_STRIP=bin
 - set HB_BUILD_DYN=no
 - set HB_BUILD_CONTRIB_DYN=no
-- set _HB_MSVC_ANALYZE=no
-- set HBWIN_NO_WINHTTP_H=yes
 - win-make.exe
