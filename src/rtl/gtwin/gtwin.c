@@ -96,10 +96,7 @@
 #  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE  /* Enable undocumented Windows API function call */
 #endif
 
-#if ( !( defined( NTDDI_VERSION ) && ( ( defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) || \
-                                       ( defined( NTDDI_LONGHORN ) && NTDDI_VERSION >= NTDDI_LONGHORN ) ) ) || \
-      defined( __POCC__ ) ) && \
-    ( ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 ) )
+#if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
    typedef struct _HB_CONSOLE_SCREEN_BUFFER_INFOEX
    {
       ULONG cbSize;
@@ -112,6 +109,8 @@
       BOOL bFullscreenSupported;
       COLORREF ColorTable[ 16 ];
    } HB_CONSOLE_SCREEN_BUFFER_INFOEX, * HB_PCONSOLE_SCREEN_BUFFER_INFOEX;
+   #undef CONSOLE_SCREEN_BUFFER_INFOEX
+   #undef PCONSOLE_SCREEN_BUFFER_INFOEX
    #define CONSOLE_SCREEN_BUFFER_INFOEX  HB_CONSOLE_SCREEN_BUFFER_INFOEX
    #define PCONSOLE_SCREEN_BUFFER_INFOEX HB_PCONSOLE_SCREEN_BUFFER_INFOEX
 #endif
