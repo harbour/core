@@ -200,7 +200,7 @@ rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"           >> _hbfiles
     echo "%HB_DR%contrib\*.*"                           >> _hbfiles
 
 if exist "%HB_RT%harbour-%HB_VF%-win.7z" del "%HB_RT%harbour-%HB_VF%-win.7z"
-"%HB_DIR_7Z%7za.exe" a -r "%HB_RT%harbour-%HB_VF%-win.7z" @_hbfiles >> "%HB_RT%harbour-%HB_VF%-win-log.txt" 2>&1
+"%HB_DIR_7Z%7z" a -r -mx "%HB_RT%harbour-%HB_VF%-win.7z" @_hbfiles >> "%HB_RT%harbour-%HB_VF%-win-log.txt" 2>&1
 
 del _hbfiles
 

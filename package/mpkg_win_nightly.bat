@@ -34,7 +34,7 @@ del master.
 "%_HB_DIR_TOOL%curl" -L -O https://github.com/vszakats/harbour-core/archive/master.zip
 if errorlevel 1 goto _EXIT
 
-"%_HB_DIR_TOOL%7za" x master.zip
+"%_HB_DIR_TOOL%7z" x master.zip
 cd harbour-core-master
 
 echo ! Setting up generic build parameters...

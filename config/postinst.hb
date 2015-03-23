@@ -235,7 +235,7 @@ PROCEDURE Main( ... )
 
             FErase( tmp )
 
-            mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7za" + ;
+            mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7z" + ;
                " a -bd -r -mx -tzip -x!*.tds -x!*.exp" + ;
                " " + FNameEscape( tmp ) + ;
                " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + "*" )

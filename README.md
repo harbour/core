@@ -428,7 +428,7 @@ See contrib-specific dependencies and build notes in the projects'
 
 You'll need these base packages to build/package/test/use Harbour:
 
-      bash git gcc binutils fakeroot debhelper valgrind upx uncrustify
+      bash git gcc binutils fakeroot debhelper valgrind upx uncrustify p7zip-full
 
 You'll need these packages to compile optional core Harbour features:
 
@@ -446,7 +446,7 @@ Optional, to override locally hosted sources:
 
 You'll need these base packages to build/package/test/use Harbour:
 
-      bash git gcc make glibc-devel rpm valgrind upx uncrustify
+      bash git gcc make glibc-devel rpm valgrind upx uncrustify p7zip
 
 You'll need these packages to compile optional core Harbour features:
 
