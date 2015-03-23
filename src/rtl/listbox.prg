@@ -1085,7 +1085,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown ) CLASS ListBox
 FUNCTION ListBox( nTop, nLeft, nBottom, nRight, lDropDown )
    RETURN HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
 
-FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
+FUNCTION _ListBox_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
                     cMessage, cColorSpec, bFBlock, bSBlock, lDropDown, lScrollBar, cBitmap )
 
    LOCAL o

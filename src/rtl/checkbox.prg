@@ -345,7 +345,7 @@ METHOD New( nRow, nCol, cCaption ) CLASS CheckBox
 
    RETURN Self
 
-FUNCTION _CHECKBOX_( lState, cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, aBitmaps )
+FUNCTION _CheckBox_( lState, cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, aBitmaps )
 
    LOCAL o := HBCheckBox():New( Row(), Col(), cCaption )
 

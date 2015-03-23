@@ -639,7 +639,7 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS RadioGroup
 FUNCTION RadioGroup( nTop, nLeft, nBottom, nRight )
    RETURN HBRadioGroup():New( nTop, nLeft, nBottom, nRight )
 
-FUNCTION _RADIOGRP_( nTop, nLeft, nBottom, nRight, xValue, aItems, cCaption, cMessage, cColorSpec, bFBlock )
+FUNCTION _RadioGrp_( nTop, nLeft, nBottom, nRight, xValue, aItems, cCaption, cMessage, cColorSpec, bFBlock )
 
    LOCAL o
 

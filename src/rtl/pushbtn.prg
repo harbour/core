@@ -364,7 +364,7 @@ METHOD New( nRow, nCol, cCaption ) CLASS PushButton
 FUNCTION PushButton( nRow, nCol, cCaption )
    RETURN HBPushButton():New( nRow, nCol, cCaption )
 
-FUNCTION _PUSHBUTT_( cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, nSizeX, nSizeY, nCapXOff, nCapYOff, cBitmap, nBmpXOff, nBmpYOff )
+FUNCTION _PushButt_( cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, nSizeX, nSizeY, nCapXOff, nCapYOff, cBitmap, nBmpXOff, nBmpYOff )
 
    LOCAL o := HBPushButton():New( Row(), Col(), cCaption )
 

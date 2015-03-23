@@ -87,9 +87,9 @@
 #command SET PROCEDURE TO     =>
 #command SET PROCEDURE TO <f> => _ProcReq_( <(f)> )
 #command SET FORMAT TO <id>            => ;
-         _ProcReq_( <(id)> + ".fmt" ) ; __SetFormat( {|| <id>()} )
+         _ProcReq_( <(id)> + ".fmt" ) ; __SetFormat( {|| <id>() } )
 #command SET FORMAT TO <id>.<ext>      => ;
-         _ProcReq_( <(id)> + "." + <(ext)> ) ; __SetFormat( {|| <id>()} )
+         _ProcReq_( <(id)> + "." + <(ext)> ) ; __SetFormat( {|| <id>() } )
 #command SET FORMAT TO <id:&>          => ;
          if ( Empty( <(id)> ) ) ; SET FORMAT TO ; else ;;
          __SetFormat( &( "{||" + <(id)> + "()}" ) ) ; end
@@ -178,11 +178,11 @@
 #command SET MESSAGE TO                => Set( _SET_MESSAGE, 0 ) ;;
                                           Set( _SET_MCENTER, .f. )
 #command SET TYPEAHEAD TO <x>          => Set( _SET_TYPEAHEAD, <x> )
-#command SET KEY <n> TO <f>            => SetKey( <n>, {|p, l, v| <f>( p, l, v ) } )
+#command SET KEY <n> TO <f>            => SetKey( <n>, {| p, l, v | <f>( p, l, v ) } )
 #command SET KEY <n> TO <f>([<p,...>]) => SET KEY <n> TO <f>
 #command SET KEY <n> TO <f:&>          => ;
          if ( Empty( <(f)> ) ) ; SetKey( <n>, NIL ) ; else ;;
-            SetKey( <n>, {|p, l, v| <f>( p, l, v ) } ) ; end
+            SetKey( <n>, {| p, l, v | <f>( p, l, v ) } ) ; end
 #command SET KEY <n> [TO]              => SetKey( <n>, NIL )
 #command SET FUNCTION <n> [TO] [<f>]   => __SetFunction( <n>, <f> )
 
@@ -253,7 +253,7 @@
 #command @ <row>, <col> PROMPT <prompt> [MESSAGE <msg>] => ;
          __AtPrompt( <row>, <col>, <prompt> , <msg> )
 #command MENU TO <v> => ;
-         <v> := __MenuTo( {|_1| iif( PCount() == 0, <v>, <v> := _1 ) }, #<v> )
+         <v> := __MenuTo( {| _1 | iif( PCount() == 0, <v>, <v> := _1 ) }, #<v> )
 
 #command WAIT [<msg>]                  => __Wait( <msg> )
 #command WAIT [<msg>] TO <v>           => <v> := __Wait( <msg> )
@@ -369,19 +369,19 @@
 #command REPLACE [ <f1> WITH <x1> [, <fN> WITH <xN>] ] ;
                  [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                  [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         dbEval( {|| _FIELD-><f1> := <x1> [, _FIELD-><fN> := <xN>]}, ;
+         dbEval( {|| _FIELD-><f1> := <x1> [, _FIELD-><fN> := <xN>] }, ;
                  <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 #command REPLACE <f1> WITH <v1> [, <fN> WITH <vN> ] => ;
          _FIELD-><f1> := <v1> [; _FIELD-><fN> := <vN>]
 
 #command DELETE [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                 [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         dbEval( {|| dbDelete()}, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
+         dbEval( {|| dbDelete() }, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 #command DELETE                  =>  dbDelete()
 
 #command RECALL [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                 [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         dbEval( {|| dbRecall()}, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
+         dbEval( {|| dbRecall() }, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 #command RECALL                  =>  dbRecall()
 
 #command CREATE <(db)> [FROM <(src)>] [VIA <rdd>] [ALIAS <a>] ;
@@ -448,7 +448,7 @@
 #command UPDATE [FROM <(alias)>] [ON <key>] [<rand:RANDOM>] ;
                 [REPLACE <f1> WITH <x1> [, <fN> WITH <xN>]] => ;
          __dbUpdate( <(alias)>, <{key}>, <.rand.>, ;
-                     {|| _FIELD-><f1> := <x1> [, _FIELD-><fN> := <xN>]} )
+                     {|| _FIELD-><f1> := <x1> [, _FIELD-><fN> := <xN>] } )
 
 #command JOIN [WITH <(alias)>] [TO <f>] [FIELDS <fields,...>] [FOR <for>] => ;
          __dbJoin( <(alias)>, <(f)>, { <(fields)> }, ;
@@ -457,14 +457,14 @@
 #command COUNT [TO <v>] ;
                [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         <v> := 0 ; dbEval( {|| <v> := <v> + 1}, ;
+         <v> := 0 ; dbEval( {|| <v> := <v> + 1 }, ;
                             <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
 #command SUM [ <x1> [, <xN>]  TO  <v1> [, <vN>] ] ;
              [FOR <for>] [WHILE <while>] [NEXT <next>] ;
              [RECORD <rec>] [<rest:REST>] [ALL] => ;
          <v1> := [ <vN> := ] 0 ;;
-         dbEval( {|| <v1> := <v1> + <x1> [, <vN> := <vN> + <xN> ]}, ;
+         dbEval( {|| <v1> := <v1> + <x1> [, <vN> := <vN> + <xN> ] }, ;
                  <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
 #command AVERAGE [ <x1> [, <xN>]  TO  <v1> [, <vN>] ] ;
@@ -593,7 +593,7 @@
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
          ATail( GetList ):Control := _CheckBox_( <v>, <cap>, ;
                      <msg>, <clr>, <{fb}>, <{sb}>, <stl>, <bmaps> ) ;;
-         ATail( GetList ):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
          ATail( GetList ):Control:Display()
 
@@ -607,7 +607,7 @@
          ATail( GetList ):Control := _ListBox_( ATail( Getlist ):row, ;
                ATail( Getlist ):col, <bottom>, <right>, <v>, <items>, <cap>, ;
                <msg>, <clr>, <{fb}>, <{sb}>, <.dd.>, <.sbar.>, <bmap> ) ;;
-         ATail( GetList ):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
          ATail( GetList ):Control:Display()
 
@@ -622,7 +622,7 @@
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
          ATail( GetList ):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>,;
                <{sb}>, <stl>, <sX>, <sY>, <cX>, <cY>, <bmap>, <bX>, <bY> ) ;;
-         ATail( GetList ):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
          ATail( GetList ):Control:Display()
 
@@ -636,7 +636,7 @@
          ATail( GetList ):Control := _RadioGrp_( ATail( Getlist ):row, ;
                ATail( Getlist ):col, <bottom>, <right>, <v>, <buttons>, <cap>,;
                <msg>, <clr>, <{fb}>, <stl> ) ;;
-         ATail( GetList ):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
          ATail( GetList ):Control:Display()
 
