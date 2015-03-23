@@ -50,12 +50,88 @@
 #if ! defined( HB_OS_WIN_CE ) && \
     !( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) && \
     ! defined( __WATCOMC__ ) && \
-    ! defined( __TINYC__ )
+    ! defined( __TINYC__ ) && \
+    ! defined( HBWIN_NO_WINHTTP_H )
    #define HB_WIN_HAS_WINHTTP
 #endif
 
 #if defined( HB_WIN_HAS_WINHTTP )
    #include "winhttp.h"
+#elif ! defined( HB_OS_WIN_CE )
+
+   #undef HINTERNET
+   #define HINTERNET  LPVOID
+
+   #ifdef _WIN64
+      #pragma pack( push, 8 )
+   #else
+      #pragma pack( push, 4 )
+   #endif
+
+   typedef struct
+   {
+      BOOL   fAutoDetect;
+      LPWSTR lpszAutoConfigUrl;
+      LPWSTR lpszProxy;
+      LPWSTR lpszProxyBypass;
+   } HB_WINHTTP_CURRENT_USER_IE_PROXY_CONFIG;
+
+   typedef struct
+   {
+      DWORD dwAccessType;
+      LPWSTR lpszProxy;
+      LPWSTR lpszProxyBypass;
+   } HB_WINHTTP_PROXY_INFO;
+
+   typedef struct
+   {
+      DWORD dwFlags;
+      DWORD dwAutoDetectFlags;
+      LPCWSTR lpszAutoConfigUrl;
+      LPVOID lpvReserved;
+      DWORD dwReserved;
+      BOOL fAutoLogonIfChallenged;
+   } HB_WINHTTP_AUTOPROXY_OPTIONS;
+
+   #pragma pack( pop )
+
+   #undef WINHTTP_PROXY_INFO
+   #undef WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
+   #undef WINHTTP_AUTOPROXY_OPTIONS
+   #define WINHTTP_PROXY_INFO                   HB_WINHTTP_PROXY_INFO
+   #define WINHTTP_CURRENT_USER_IE_PROXY_CONFIG HB_WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
+   #define WINHTTP_AUTOPROXY_OPTIONS            HB_WINHTTP_AUTOPROXY_OPTIONS
+
+   #ifndef WINHTTP_ACCESS_TYPE_DEFAULT_PROXY
+   #define WINHTTP_ACCESS_TYPE_DEFAULT_PROXY  0
+   #endif
+   #ifndef WINHTTP_NO_PROXY_NAME
+   #define WINHTTP_NO_PROXY_NAME  NULL
+   #endif
+   #ifndef WINHTTP_NO_PROXY_BYPASS
+   #define WINHTTP_NO_PROXY_BYPASS  NULL
+   #endif
+   #ifndef WINHTTP_AUTOPROXY_AUTO_DETECT
+   #define WINHTTP_AUTOPROXY_AUTO_DETECT  0x00000001
+   #endif
+   #ifndef WINHTTP_AUTOPROXY_CONFIG_URL
+   #define WINHTTP_AUTOPROXY_CONFIG_URL  0x00000002
+   #endif
+   #ifndef WINHTTP_AUTO_DETECT_TYPE_DHCP
+   #define WINHTTP_AUTO_DETECT_TYPE_DHCP  0x00000001
+   #endif
+   #ifndef WINHTTP_AUTO_DETECT_TYPE_DNS_A
+   #define WINHTTP_AUTO_DETECT_TYPE_DNS_A  0x00000002
+   #endif
+   #ifndef WINHTTP_ACCESS_TYPE_NO_PROXY
+   #define WINHTTP_ACCESS_TYPE_NO_PROXY  1
+   #endif
+   #ifndef ERROR_WINHTTP_LOGIN_FAILURE
+   #define ERROR_WINHTTP_LOGIN_FAILURE  12015
+   #endif
+
+   #define HB_WIN_HAS_WINHTTP
+
 #endif
 
 HB_FUNC( __WIN_PROXYDETECT )

@@ -18,4 +18,5 @@ build_script:
 - set HB_BUILD_STRIP=bin
 - set HB_BUILD_DYN=no
 - set _HB_MSVC_ANALYZE=no
+- set HBWIN_NO_WINHTTP_H=yes
 - win-make.exe

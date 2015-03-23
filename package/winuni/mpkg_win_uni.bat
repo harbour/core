@@ -80,10 +80,14 @@ xcopy /y /s /e "%HB_DIR_MINGW%"                                                 
 
 :: NOTE: In multi-target distros these may not match the platform of
 ::       the Harbour installation we're about to create.
-if exist "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  "%HB_ABSROOT%bin\"
-if exist "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" "%HB_ABSROOT%bin\"
-if exist "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  "%HB_ABSROOT%bin\"
-if exist "%HB_DIR_MINGW%\bin\mingwm10.dll"        xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"        "%HB_ABSROOT%bin\"
+::       Alternate mingw .dll folders:
+::          "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32"
+::          "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"
+set _MINGW_DLL_DIR=%HB_DIR_MINGW%\bin
+if exist "%_MINGW_DLL_DIR%\libgcc_s_seh-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  "%HB_ABSROOT%bin\"
+if exist "%_MINGW_DLL_DIR%\libgcc_s_sjlj-1.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" "%HB_ABSROOT%bin\"
+if exist "%_MINGW_DLL_DIR%\libgcc_s_dw2-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  "%HB_ABSROOT%bin\"
+if exist "%_MINGW_DLL_DIR%\mingwm10.dll"        xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"        "%HB_ABSROOT%bin\"
 
 :: Delete stuff from compiler folder we don't need
 
@@ -103,6 +107,7 @@ rmdir /q /s "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adalib\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\lib64\"
 del /q /f   "%HB_ABSROOT%comp\mingw\bin\i686-w64-mingw32-gfortran.exe"
 del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgfortran-*.dll"
 del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnarl-*.dll"
@@ -116,6 +121,7 @@ rmdir /q /s "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adalib\"
+rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\lib32\"
 del /q /f   "%HB_ABSROOT%comp\mingw\bin\x86_64-w64-mingw32-gfortran.exe"
 del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgfortran-*.dll"
 del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnarl-*.dll"
