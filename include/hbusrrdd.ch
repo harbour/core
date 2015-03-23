@@ -203,6 +203,7 @@
 #define DBTF_MATCH            0x0001
 #define DBTF_PUTREC           0x0002
 #define DBTF_CPYCTR           0x0004
+#define DBTF_RECALL           0x0008
 
 /* Codes for Locking methods */
 #define DBLM_EXCLUSIVE        1

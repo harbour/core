@@ -555,6 +555,18 @@ static HB_ERRCODE hb_delimDeleteRec( DELIMAREAP pArea )
 }
 
 /*
+ * Undelete the current record.
+ */
+static HB_ERRCODE hb_delimRecall( DELIMAREAP pArea )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_delimRecall(%p)", pArea ) );
+
+   HB_SYMBOL_UNUSED( pArea );
+
+   return HB_SUCCESS;
+}
+
+/*
  * Obtain the current value of a field.
  */
 static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
@@ -1518,7 +1530,7 @@ static const RDDFUNCS delimTable = { NULL /* hb_delimBof */,
                                    ( DBENTRYP_V ) hb_delimGoHot,
                                    ( DBENTRYP_P ) hb_delimPutRec,
                                    ( DBENTRYP_SI ) hb_delimPutValue,
-                                     NULL /* hb_delimRecall */,
+                                   ( DBENTRYP_V ) hb_delimRecall,
                                    ( DBENTRYP_ULP ) hb_delimRecCount,
                                      NULL /* hb_delimRecInfo */,
                                    ( DBENTRYP_ULP ) hb_delimRecNo,

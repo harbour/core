@@ -1859,6 +1859,9 @@ HB_FUNC( __DBARRANGE )
          dbSortInfo.dbtri.dbsci.fOptimized        = HB_FALSE;
          dbSortInfo.dbtri.dbsci.fIncludeDeleted   = HB_TRUE;
 
+         /* do not transfer record deleted flag to destination area */
+         dbSortInfo.dbtri.uiFlags |= DBTF_RECALL;
+
          dbSortInfo.uiItemCount = pFields ? ( HB_USHORT ) hb_arrayLen( pFields ) : 0;
          if( dbSortInfo.uiItemCount > 0 )
          {

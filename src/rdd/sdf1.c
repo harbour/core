@@ -368,6 +368,18 @@ static HB_ERRCODE hb_sdfDeleteRec( SDFAREAP pArea )
 }
 
 /*
+ * Undelete the current record.
+ */
+static HB_ERRCODE hb_sdfRecall( SDFAREAP pArea )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_sdfRecall(%p)", pArea ) );
+
+   HB_SYMBOL_UNUSED( pArea );
+
+   return HB_SUCCESS;
+}
+
+/*
  * Obtain the current value of a field.
  */
 static HB_ERRCODE hb_sdfGetValue( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
@@ -1247,7 +1259,7 @@ static const RDDFUNCS sdfTable = { NULL /* hb_sdfBof */,
                                    ( DBENTRYP_V ) hb_sdfGoHot,
                                    ( DBENTRYP_P ) hb_sdfPutRec,
                                    ( DBENTRYP_SI ) hb_sdfPutValue,
-                                   NULL /* hb_sdfRecall */,
+                                   ( DBENTRYP_V ) hb_sdfRecall,
                                    ( DBENTRYP_ULP ) hb_sdfRecCount,
                                    NULL /* hb_sdfRecInfo */,
                                    ( DBENTRYP_ULP ) hb_sdfRecNo,
