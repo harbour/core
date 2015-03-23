@@ -70,8 +70,8 @@
             [<ex: EXCLUSIVE>] [<sh: SHARED>] [<ro: READONLY>] ;
             [CODEPAGE <cp>] [INDEX <(index1)> [, <(indexN)>]] ;
             [TRIGGER <trig>] [PASSWORD <pass>] => ;
-         [sx_SetTrigger( TRIGGER_PENDING, <trig>, <rdd> ); ] <-trig-> ;
-         [sx_SetPass( <pass>, 1, <rdd> ); ] <-pass-> ;
+         [sx_SetTrigger( TRIGGER_PENDING, <trig>, <rdd> );] <-trig-> ;
+         [sx_SetPass( <pass>, 1, <rdd> );] <-pass-> ;
          dbUseArea( <.nw.>, <rdd>, <(db)>, <(a)>, ;
                     iif( <.sh.> .OR. <.ex.>, ! <.ex.>, NIL ), <.ro.> [, <cp>] ) ;
          [; dbSetIndex( <(index1)> )] ;
@@ -85,7 +85,7 @@
               [CODEPAGE <cp>] [<cur: USECURRENT>] [NOOPTIMIZE] => ;
          sx_SortOption(<.cur.>); ;
          __dbSort( <(f)>, { <(fields)> }, ;
-                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
+                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>,, <cp> )
 
 
 /* Seek using wildcards */
@@ -105,7 +105,7 @@
 #command REINDEX OPTION <eval> [STEP <step>]    => ;
          REINDEX EVAL <eval> [EVERY <step>]
 #command DELETE TAG <(tag1)> [OF <(bag1)>] [, <(tagN)> [OF <(bagN)>]] => ;
-         ordDestroy( <(tag1)>, <(bag1)> )[ ; ordDestroy( <(tagN)>, <(bagN)> ) ]
+         ordDestroy( <(tag1)>, <(bag1)> )[ ; ordDestroy( <(tagN)>, <(bagN)> )]
 #command DELETE TAG ALL [OF <(bag)>]            => sx_KillTag( .T., <(bag)> )
 
 
