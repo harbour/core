@@ -89,9 +89,9 @@
 #command SET PROCEDURE TO     =>
 #command SET PROCEDURE TO <f> => _ProcReq_( <(f)> )
 #command SET FORMAT TO <id>            => ;
-         _ProcReq_( <(id)> + ".fmt" ) ; __SetFormat( {|| <id>()} )
+         _ProcReq_( <(id)> + ".fmt" ) ; __SetFormat( {|| <id>() } )
 #command SET FORMAT TO <id>.<ext>      => ;
-         _ProcReq_( <(id)> + "." + <(ext)> ) ; __SetFormat( {|| <id>()} )
+         _ProcReq_( <(id)> + "." + <(ext)> ) ; __SetFormat( {|| <id>() } )
 #command SET FORMAT TO <id:&>          => ;
          if ( Empty( <(id)> ) ) ; SET FORMAT TO ; else ;;
          __SetFormat( &( "{||" + <(id)> + "()}" ) ) ; end
@@ -180,11 +180,11 @@
 #command SET MESSAGE TO                => Set( _SET_MESSAGE, 0 ) ;;
                                           Set( _SET_MCENTER, .f. )
 #command SET TYPEAHEAD TO <x>          => Set( _SET_TYPEAHEAD, <x> )
-#command SET KEY <n> TO <f>            => SetKey( <n>, {|p, l, v| <f>( p, l, v ) } )
+#command SET KEY <n> TO <f>            => SetKey( <n>, {| p, l, v | <f>( p, l, v ) } )
 #command SET KEY <n> TO <f>([<p,...>]) => SET KEY <n> TO <f>
 #command SET KEY <n> TO <f:&>          => ;
          if ( Empty( <(f)> ) ) ; SetKey( <n>, NIL ) ; else ;;
-            SetKey( <n>, {|p, l, v| <f>( p, l, v ) } ) ; end
+            SetKey( <n>, {| p, l, v | <f>( p, l, v ) } ) ; end
 #command SET KEY <n> [TO]              => SetKey( <n>, NIL )
 #command SET FUNCTION <n> [TO] [<f>]   => __SetFunction( <n>, <f> )
 
@@ -255,7 +255,7 @@
 #command @ <row>, <col> PROMPT <prompt> [MESSAGE <msg>] => ;
          __AtPrompt( <row>, <col>, <prompt> , <msg> )
 #command MENU TO <v> => ;
-         <v> := __MenuTo( {|_1| iif( PCount() == 0, <v>, <v> := _1 ) }, #<v> )
+         <v> := __MenuTo( {| _1 | iif( PCount() == 0, <v>, <v> := _1 ) }, #<v> )
 
 #command WAIT [<msg>]                  => __Wait( <msg> )
 #command WAIT [<msg>] TO <v>           => <v> := __Wait( <msg> )
@@ -289,7 +289,7 @@
 #command COPY FILE <(src)> TO <(dst)>  => __CopyFile( <(src)>, <(dst)> )
 #command DIR [<(mask)>]                => __Dir( <(mask)> )
 #command TYPE <(f)> [<prn:TO PRINTER>] [TO FILE <(dst)>] => ;
-         __TypeFile( <(f)>, <.prn.> ) [ ; COPY FILE <(f)> TO <(dst)> ]
+         __TypeFile( <(f)>, <.prn.> )[ ; COPY FILE <(f)> TO <(dst)>]
 #command TYPE <(f)> [<prn:TO PRINTER>] => __TypeFile( <(f)>, <.prn.> )
 
 #command REQUEST <func,...>      => EXTERNAL <func>
@@ -368,22 +368,22 @@
 #command SET FILTER TO <exp>     => dbSetFilter( <{exp}>, <"exp"> )
 #command SET FILTER TO <x:&>     => if ( Empty( <(x)> ) ) ; dbClearFilter() ;;
                                     else ; dbSetFilter( <{x}>, <(x)> ) ; end
-#command REPLACE [ <f1> WITH <x1> [, <fN> WITH <xN>] ] ;
+#command REPLACE [<f1> WITH <x1> [, <fN> WITH <xN>]] ;
                  [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                  [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         DBEval( {|| _FIELD-><f1> := <x1> [, _FIELD-><fN> := <xN>]}, ;
+         DBEval( {|| _FIELD-><f1> := <x1>[, _FIELD-><fN> := <xN>] }, ;
                  <{for}>, <{while}>, <next>, <rec>, <.rest.> )
-#command REPLACE <f1> WITH <v1> [, <fN> WITH <vN> ] => ;
+#command REPLACE <f1> WITH <v1>[, <fN> WITH <vN>] => ;
          _FIELD-><f1> := <v1> [; _FIELD-><fN> := <vN>]
 
 #command DELETE [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                 [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         DBEval( {|| dbDelete()}, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
+         DBEval( {|| dbDelete() }, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 #command DELETE                  =>  dbDelete()
 
 #command RECALL [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                 [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         DBEval( {|| dbRecall()}, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
+         DBEval( {|| dbRecall() }, <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 #command RECALL                  =>  dbRecall()
 
 #command CREATE <(db)> [FROM <(src)>] [VIA <rdd>] [ALIAS <a>] ;
@@ -411,7 +411,7 @@
               [FOR <for>] [WHILE <while>] [NEXT <next>] ;
               [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] [CODEPAGE <cp>] => ;
          __dbCopy( <(f)>, { <(fields)> }, ;
-                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
+                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>,, <cp> )
 
 #command APPEND [FROM <(f)>] [FIELDS <fields,...>] ;
                 [FOR <for>] [WHILE <while>] [NEXT <next>] ;
@@ -431,26 +431,26 @@
                 [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] ;
                 [CODEPAGE <cp>] => ;
          __dbApp( <(f)>, { <(fields)> }, ;
-                  <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
+                  <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>,, <cp> )
 
 #command SORT [TO <(f)>] [ON <fields,...>] ;
               [FOR <for>] [WHILE <while>] [NEXT <next>] ;
               [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] ;
               [CODEPAGE <cp>] => ;
          __dbSort( <(f)>, { <(fields)> }, ;
-                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
+                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>,, <cp> )
 
 #command TOTAL [TO <(f)>] [ON <key>] [FIELDS <fields,...>] ;
                [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] ;
                [CODEPAGE <cp>] => ;
          __dbTotal( <(f)>, <{key}>, { <(fields)> }, ;
-                    <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
+                    <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>,, <cp> )
 
 #command UPDATE [FROM <(alias)>] [ON <key>] [<rand:RANDOM>] ;
                 [REPLACE <f1> WITH <x1> [, <fN> WITH <xN>]] => ;
          __dbUpdate( <(alias)>, <{key}>, <.rand.>, ;
-                     {|| _FIELD-><f1> := <x1> [, _FIELD-><fN> := <xN>]} )
+                     {|| _FIELD-><f1> := <x1>[, _FIELD-><fN> := <xN>] } )
 
 #command JOIN [WITH <(alias)>] [TO <f>] [FIELDS <fields,...>] [FOR <for>] => ;
          __dbJoin( <(alias)>, <(f)>, { <(fields)> }, ;
@@ -459,24 +459,24 @@
 #command COUNT [TO <v>] ;
                [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         <v> := 0 ; DBEval( {|| <v> := <v> + 1}, ;
+         <v> := 0 ; DBEval( {|| <v> := <v> + 1 }, ;
                             <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
-#command SUM [ <x1> [, <xN>]  TO  <v1> [, <vN>] ] ;
+#command SUM [ <x1>[, <xN>]  TO  <v1> [, <vN>]] ;
              [FOR <for>] [WHILE <while>] [NEXT <next>] ;
              [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         <v1> := [ <vN> := ] 0 ;;
-         DBEval( {|| <v1> := <v1> + <x1> [, <vN> := <vN> + <xN> ]}, ;
+         <v1> :=[ <vN> :=] 0 ;;
+         DBEval( {|| <v1> := <v1> + <x1>[, <vN> := <vN> + <xN>] }, ;
                  <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
-#command AVERAGE [ <x1> [, <xN>]  TO  <v1> [, <vN>] ] ;
+#command AVERAGE [ <x1> [, <xN>]  TO  <v1>[, <vN>]] ;
                  [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                  [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         M->__Avg := <v1> := [ <vN> := ] 0 ;;
+         M->__Avg := <v1> :=[ <vN> :=] 0 ;;
          DBEval( {|| M->__Avg := M->__Avg + 1, ;
-                 <v1> := <v1> + <x1> [, <vN> := <vN> + <xN>] }, ;
+                 <v1> := <v1> + <x1>[, <vN> := <vN> + <xN>] }, ;
                  <{for}>, <{while}>, <next>, <rec>, <.rest.> ) ;;
-         <v1> := <v1> / M->__Avg [ ; <vN> := <vN> / M->__Avg ]
+         <v1> := <v1> / M->__Avg[ ; <vN> := <vN> / M->__Avg]
 
 #command LIST [<v,...>] [<off:OFF>] [<prn:TO PRINTER>] [TO FILE <(f)>] ;
               [FOR <for>] [WHILE <while>] [NEXT <next>] ;
@@ -507,7 +507,7 @@
                       <{for}>, <{while}>, <next>, <rec>, <.rest.>, <.smp.> )
 
 #command DELETE TAG <(tag1)> [IN <(bag1)>] [, <(tagN)> [IN <(bagN)>]] => ;
-         ordDestroy( <(tag1)>, <(bag1)> )[ ; ordDestroy( <(tagN)>, <(bagN)> ) ]
+         ordDestroy( <(tag1)>, <(bag1)> )[ ; ordDestroy( <(tagN)>, <(bagN)> )]
 
 #command INDEX ON <key> [TAG <(tag)>] TO <(bag)> ;
                [FOR <for>] [WHILE <while>] [NEXT <next>] ;
@@ -518,7 +518,7 @@
                [<noopt: NOOPTIMIZE>] [<mem: MEMORY, TEMPORARY>] ;
                [<filter: USEFILTER>] [<ex: EXCLUSIVE>] => ;
          ordCondSet( <"for">, <{for}>, [<.all.>], <{while}>, ;
-                     <{eval}>, <every>, RECNO(), <next>, <rec>, ;
+                     <{eval}>, <every>, RecNo(), <next>, <rec>, ;
                      [<.rest.>], [<.descend.>],, ;
                      [<.add.>], [<.cur.>], [<.cust.>], [<.noopt.>], ;
                      <"while">, [<.mem.>], [<.filter.>], [<.ex.>] ) ;;
@@ -533,7 +533,7 @@
                [<noopt: NOOPTIMIZE>] [<mem: MEMORY, TEMPORARY>] ;
                [<filter: USEFILTER>] [<ex: EXCLUSIVE>] => ;
          ordCondSet( <"for">, <{for}>, [<.all.>], <{while}>, ;
-                     <{eval}>, <every>, RECNO(), <next>, <rec>, ;
+                     <{eval}>, <every>, RecNo(), <next>, <rec>, ;
                      [<.rest.>], [<.descend.>],, ;
                      [<.add.>], [<.cur.>], [<.cust.>], [<.noopt.>], ;
                      <"while">, [<.mem.>], [<.filter.>], [<.ex.>] ) ;;
@@ -560,7 +560,7 @@
 
 #command @ <row>, <col> GET <v> [<exp,...>] RANGE <l>, <h> [<nextexp,...>] => ;
          @ <row>, <col> GET <v> [ <exp>] ;
-                        VALID {|_1| RangeCheck( _1, , <l>, <h> ) } [ <nextexp>]
+                        VALID {| _1 | RangeCheck( _1,, <l>, <h> ) } [ <nextexp>]
 
 #command @ <row>, <col> GET <v> [<exp,...>] COLOR <clr> [<nextexp,...>] => ;
          @ <row>, <col> GET <v> [ <exp>] SEND colorDisp( <clr> ) [ <nextexp>]
@@ -618,7 +618,7 @@
                   [CAPTION <cap>] [MESSAGE <msg>] [COLOR <clr>] ;
                   [FOCUS <fb>] [STATE <sb>] [STYLE <stl>] ;
                   [SEND <snd>] [GUISEND <gsnd>] [BITMAP <bmap>] ;
-                  [SIZE X <sX> Y <sY>] [CAPOFF X <cX> Y <cY> ] ;
+                  [SIZE X <sX> Y <sY>] [CAPOFF X <cX> Y <cY>] ;
                   [BMPOFF X <bX> Y <bY>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
