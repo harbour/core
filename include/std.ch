@@ -91,11 +91,11 @@
 #command SET FORMAT TO <id>.<ext>      => ;
          _ProcReq_( <(id)> + "." + <(ext)> ) ; __SetFormat( {|| <id>()} )
 #command SET FORMAT TO <id:&>          => ;
-         if ( Empty(<(id)>) ) ; SET FORMAT TO ; else ;;
-         __SetFormat( &("{||" + <(id)> + "()}") ) ; end
+         if ( Empty( <(id)> ) ) ; SET FORMAT TO ; else ;;
+         __SetFormat( &( "{||" + <(id)> + "()}" ) ) ; end
 #command SET FORMAT TO                 => __SetFormat()
 
-#define _DFSET(x, y) Set( _SET_DATEFORMAT, if(__SetCentury(), x, y) )
+#define _DFSET( x, y ) Set( _SET_DATEFORMAT, iif( __SetCentury(), x, y ) )
 #command SET DATE [TO] AMERICAN        => _DFSET( "mm/dd/yyyy", "mm/dd/yy" )
 #command SET DATE [TO] ANSI            => _DFSET( "yyyy.mm.dd", "yy.mm.dd" )
 #command SET DATE [TO] BRITISH         => _DFSET( "dd/mm/yyyy", "dd/mm/yy" )
@@ -159,8 +159,8 @@
 #command SET PRINTER TO <(file)> [<add: ADDITIVE>]    => ;
                Set( _SET_PRINTFILE, <(file)>, <.add.> )
 #command SET CURSOR <x:ON,OFF,&>       => ;
-               SetCursor( if(Upper(<(x)>) == "ON", 1, 0) )
-#command SET CURSOR (<x>)              => SetCursor( if(<x>, 1, 0) )
+               SetCursor( iif( Upper( <(x)> ) == "ON", 1, 0 ) )
+#command SET CURSOR (<x>)              => SetCursor( iif( <x>, 1, 0 ) )
 #command SET MARGIN TO <x>             => Set( _SET_MARGIN, <x> )
 #command SET MARGIN TO                 => Set( _SET_MARGIN, 0 )
 #command SET DEVICE TO SCREEN          => Set( _SET_DEVICE, "SCREEN" )
@@ -171,18 +171,18 @@
 #command SET ORDER TO <tg> [IN <(bg)>] => ordSetFocus( <tg> [, <(bg)>] )
 #command SET ORDER TO TAG <(tg)> [IN <(bg)>] => ordSetFocus( <(tg)> [, <(bg)>] )
 #command SET INDEX TO [<(i1)> [,<(iN)>]] [<add: ADDITIVE>] => ;
-         if !<.add.> ; ordListClear() ; end ;
+         if ! <.add.> ; ordListClear() ; end ;
          [ ; ordListAdd( <(i1)> )] [ ; ordListAdd( <(iN)> )]
 #command SET MESSAGE TO <n> [<cent: CENTER, CENTRE>] => ;
             Set( _SET_MESSAGE, <n> ) ; Set( _SET_MCENTER, <.cent.> )
 #command SET MESSAGE TO                => Set( _SET_MESSAGE, 0 ) ;;
                                           Set( _SET_MCENTER, .f. )
 #command SET TYPEAHEAD TO <x>          => Set( _SET_TYPEAHEAD, <x> )
-#command SET KEY <n> TO <f>            => SetKey( <n>, {|p, l, v| <f>(p, l, v)} )
+#command SET KEY <n> TO <f>            => SetKey( <n>, {|p, l, v| <f>( p, l, v ) } )
 #command SET KEY <n> TO <f>([<p,...>]) => SET KEY <n> TO <f>
 #command SET KEY <n> TO <f:&>          => ;
-         if ( Empty(<(f)>) ) ; SetKey( <n>, NIL ) ; else ;;
-            SetKey( <n>, {|p, l, v| <f>(p, l, v)} ) ; end
+         if ( Empty( <(f)> ) ) ; SetKey( <n>, NIL ) ; else ;;
+            SetKey( <n>, {|p, l, v| <f>( p, l, v ) } ) ; end
 #command SET KEY <n> [TO]              => SetKey( <n>, NIL )
 #command SET FUNCTION <n> [TO] [<f>]   => __SetFunction( <n>, <f> )
 
@@ -227,7 +227,7 @@
    #xcommand TEXTBLOCK <*cText*>    =>
 #endif
 
-#command CLS                        => Scroll() ; SetPos(0,0)
+#command CLS                        => Scroll() ; SetPos( 0, 0 )
 #command CLEAR SCREEN               => CLS
 #command SAVE SCREEN                => __XSaveScreen()
 #command RESTORE SCREEN             => __XRestScreen()
@@ -253,13 +253,13 @@
 #command @ <row>, <col> PROMPT <prompt> [MESSAGE <msg>] => ;
          __AtPrompt( <row>, <col>, <prompt> , <msg> )
 #command MENU TO <v> => ;
-         <v> := __MenuTo( {|_1| if(PCount() == 0, <v>, <v> := _1)}, #<v> )
+         <v> := __MenuTo( {|_1| iif( PCount() == 0, <v>, <v> := _1 ) }, #<v> )
 
 #command WAIT [<msg>]                  => __Wait( <msg> )
 #command WAIT [<msg>] TO <v>           => <v> := __Wait( <msg> )
 #command ACCEPT [<msg>] TO <v>         => <v> := __Accept( <msg> )
 #command INPUT [<msg>] TO <v>          => ;
-         if ( !Empty(__Accept(<msg>)) ) ; <v> := &( __AcceptStr() ) ; end
+         if ( ! Empty( __Accept( <msg> ) ) ) ; <v> := &( __AcceptStr() ) ; end
 #command KEYBOARD <x>                  => __Keyboard( <x> )
 #command CLEAR TYPEAHEAD               => __Keyboard()
 #command CLEAR MEMORY                  => __mvClear()
@@ -302,8 +302,8 @@
 #command CLOSE <a>               => <a>->( dbCloseArea() )
 #command CLOSE                   => dbCloseArea()
 #command CLOSE DATABASES         => dbCloseAll()
-#command CLOSE ALTERNATE         => Set(_SET_ALTFILE, "")
-#command CLOSE FORMAT            => __SetFormat(NIL)
+#command CLOSE ALTERNATE         => Set( _SET_ALTFILE, "" )
+#command CLOSE FORMAT            => __SetFormat( NIL )
 #command CLOSE INDEXES           => dbClearIndex()
 #command CLOSE PROCEDURE         =>
 #command CLOSE ALL               => CLOSE DATABASES ; SELECT 1 ; CLOSE FORMAT
@@ -313,13 +313,13 @@
                                     SET ALTERNATE OFF ; SET ALTERNATE TO
 
 #command SELECT <area>           => dbSelectArea( <(area)> )
-#command SELECT <f>([<p,...>])   => dbSelectArea( <f>(<p>) )
+#command SELECT <f>([<p,...>])   => dbSelectArea( <f>( <p> ) )
 #command USE                     => dbCloseArea()
 #command USE <(db)> [VIA <rdd>] [ALIAS <a>] [<nw: NEW>] ;
             [<ex: EXCLUSIVE>] [<sh: SHARED>] [<ro: READONLY>] ;
             [CODEPAGE <cp>] [INDEX <(index1)> [, <(indexN)>]] => ;
          dbUseArea( <.nw.>, <rdd>, <(db)>, <(a)>, ;
-                    if(<.sh.> .or. <.ex.>, !<.ex.>, NIL), <.ro.> [, <cp>] ) ;
+                    iif( <.sh.> .OR. <.ex.>, ! <.ex.>, NIL ), <.ro.> [, <cp>] ) ;
          [; dbSetIndex( <(index1)> )] ;
          [; dbSetIndex( <(indexN)> )]
 
@@ -329,26 +329,26 @@
 #command UNLOCK                  => dbUnlock()
 #command UNLOCK ALL              => dbUnlockAll()
 #command COMMIT                  => dbCommitAll()
-#command GOTO <x>                => dbGoto(<x>)
-#command GO <x>                  => dbGoto(<x>)
+#command GOTO <x>                => dbGoto( <x> )
+#command GO <x>                  => dbGoto( <x> )
 #command GOTO TOP                => dbGoTop()
 #command GO TOP                  => dbGoTop()
 #command GOTO BOTTOM             => dbGoBottom()
 #command GO BOTTOM               => dbGoBottom()
-#command SKIP                    => dbSkip(1)
+#command SKIP                    => dbSkip()
 #command SKIP <x>                => dbSkip( <x> )
-#command SKIP ALIAS <a>          => <a>->( dbSkip(1) )
-#command SKIP <x> ALIAS <a>      => <a>->( dbSkip(<x>) )
+#command SKIP ALIAS <a>          => <a>->( dbSkip() )
+#command SKIP <x> ALIAS <a>      => <a>->( dbSkip( <x> ) )
 #command FIND <*text*>           => dbSeek( <(text)> )
 #command FIND := <xpr>           => ( find := <xpr> )
 #command FIND = <xpr>            => ( find := <xpr> )
 #command CONTINUE                => __dbContinue()
 #ifdef HB_COMPAT_C53
    #command SEEK <exp> [<soft: SOFTSEEK>] [<last: LAST>] => ;
-            dbSeek( <exp>, if( <.soft.>, .T., NIL ), if( <.last.>, .T., NIL ) )
+            dbSeek( <exp>, iif( <.soft.>, .T., NIL ), iif( <.last.>, .T., NIL ) )
 #else
    #command SEEK <exp> [<soft: SOFTSEEK>] => ;
-            dbSeek( <exp>, if( <.soft.>, .T., NIL ) )
+            dbSeek( <exp>, iif( <.soft.>, .T., NIL ) )
 #endif
 #command LOCATE [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                 [RECORD <rec>] [<rest:REST>] [ALL] => ;
@@ -358,13 +358,13 @@
 #command SET RELATION [<add:ADDITIVE>] ;
                [TO  <exp1> INTO <(alias1)> [<scp1:SCOPED>];
             [, [TO] <expN> INTO <(aliasN)> [<scpN:SCOPED>]]] => ;
-         if ( !<.add.> ) ; dbClearRelation() ; end ;
+         if ( ! <.add.> ) ; dbClearRelation() ; end ;
            ; dbSetRelation( <(alias1)>, <{exp1}>, <"exp1">, <.scp1.> ) ;
          [ ; dbSetRelation( <(aliasN)>, <{expN}>, <"expN">, <.scpN.> )]
 
-#command SET FILTER TO           => dbClearFilter(NIL)
+#command SET FILTER TO           => dbClearFilter( NIL )
 #command SET FILTER TO <exp>     => dbSetFilter( <{exp}>, <"exp"> )
-#command SET FILTER TO <x:&>     => if ( Empty(<(x)>) ) ; dbClearFilter() ;;
+#command SET FILTER TO <x:&>     => if ( Empty( <(x)> ) ) ; dbClearFilter() ;;
                                     else ; dbSetFilter( <{x}>, <(x)> ) ; end
 #command REPLACE [ <f1> WITH <x1> [, <fN> WITH <xN>] ] ;
                  [FOR <for>] [WHILE <while>] [NEXT <next>] ;
@@ -433,15 +433,17 @@
 
 #command SORT [TO <(f)>] [ON <fields,...>] ;
               [FOR <for>] [WHILE <while>] [NEXT <next>] ;
-              [RECORD <rec>] [<rest:REST>] [ALL] [CODEPAGE <cp>] => ;
+              [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] ;
+              [CODEPAGE <cp>] => ;
          __dbSort( <(f)>, { <(fields)> }, ;
-                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, , , <cp> )
+                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
 
 #command TOTAL [TO <(f)>] [ON <key>] [FIELDS <fields,...>] ;
                [FOR <for>] [WHILE <while>] [NEXT <next>] ;
-               [RECORD <rec>] [<rest:REST>] [ALL] [CODEPAGE <cp>] => ;
+               [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] ;
+               [CODEPAGE <cp>] => ;
          __dbTotal( <(f)>, <{key}>, { <(fields)> }, ;
-                    <{for}>, <{while}>, <next>, <rec>, <.rest.>, , , <cp> )
+                    <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
 
 #command UPDATE [FROM <(alias)>] [ON <key>] [<rand:RANDOM>] ;
                 [REPLACE <f1> WITH <x1> [, <fN> WITH <xN>]] => ;
@@ -450,7 +452,7 @@
 
 #command JOIN [WITH <(alias)>] [TO <f>] [FIELDS <fields,...>] [FOR <for>] => ;
          __dbJoin( <(alias)>, <(f)>, { <(fields)> }, ;
-                   if(Empty(#<for>), {|| .T. }, <{for}> ) )
+                   iif( Empty( #<for> ), {|| .T. }, <{for}> ) )
 
 #command COUNT [TO <v>] ;
                [FOR <for>] [WHILE <while>] [NEXT <next>] ;
@@ -536,17 +538,17 @@
          ordCreate( <(bag)>, <(tag)>, <"key">, <{key}>, [<.unique.>] )
 
 #command INDEX ON <key> TO <(file)> [<u: UNIQUE>] => ;
-            dbCreateIndex( <(file)>, <"key">, <{key}>, if( <.u.>, .t., NIL ) )
+            dbCreateIndex( <(file)>, <"key">, <{key}>, iif( <.u.>, .t., NIL ) )
 
 #command REINDEX [EVAL <eval>] [EVERY <every>] [<lNoOpt: NOOPTIMIZE>] => ;
-            ordCondSet(,,,, <{eval}>, <every>,,,,,,,,,, <.lNoOpt.>) ;;
+            ordCondSet( ,,,, <{eval}>, <every>,,,,,,,,,, <.lNoOpt.> ) ;;
             ordListRebuild()
 #command REINDEX        => ordListRebuild()
 
 
-#command READ           => ReadModal(GetList) ; GetList := {} ; ( GetList )
-#command READ SAVE      => ReadModal(GetList)
-#command CLEAR GETS     => ReadKill(.T.) ; GetList := {} ; ( GetList )
+#command READ           => ReadModal( GetList ) ; GetList := {} ; ( GetList )
+#command READ SAVE      => ReadModal( GetList )
+#command CLEAR GETS     => ReadKill( .T. ) ; GetList := {} ; ( GetList )
 
 #xcommand @ [<exp,...>] COLOUR [<nextexp,...>] => @ [ <exp>] COLOR [ <nextexp>]
 
@@ -559,7 +561,7 @@
                         VALID {|_1| RangeCheck( _1, , <l>, <h> ) } [ <nextexp>]
 
 #command @ <row>, <col> GET <v> [<exp,...>] COLOR <clr> [<nextexp,...>] => ;
-         @ <row>, <col> GET <v> [ <exp>] SEND colorDisp(<clr>) [ <nextexp>]
+         @ <row>, <col> GET <v> [ <exp>] SEND colorDisp( <clr> ) [ <nextexp>]
 
 #ifdef HB_COMPAT_C53
 
@@ -577,11 +579,11 @@
                            [CAPTION <cap>] [MESSAGE <msg>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <"v">, <pic>, <{valid}>, <{when}> ) ) ;;
-       [ ATail(GetList):Caption := <cap> ;;
-         ATail(GetList):CapRow := ATail(Getlist):row ;;
-         ATail(GetList):CapCol := ATail(Getlist):col - __CapLength(<cap>) - 1 ;] ;
-       [ ATail(GetList):message := <msg> ;] [ ATail(GetList):<snd> ;] ;
-         ATail(GetList):Display()
+       [ ATail( GetList ):Caption := <cap> ;;
+         ATail( GetList ):CapRow := ATail( Getlist ):row ;;
+         ATail( GetList ):CapCol := ATail( Getlist ):col - __CapLength( <cap> ) - 1 ;] ;
+       [ ATail( GetList ):message := <msg> ;] [ ATail( GetList ):<snd> ;] ;
+         ATail( GetList ):Display()
 
    #command @ <row>, <col> GET <v> CHECKBOX [VALID <valid>] [WHEN <when>] ;
                            [CAPTION <cap>] [MESSAGE <msg>] [COLOR <clr>] ;
@@ -589,11 +591,11 @@
                            [SEND <snd>] [GUISEND <gsnd>] [BITMAPS <bmaps>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail(GetList):Control := _CHECKBOX_( <v>, <cap>, ;
+         ATail( GetList ):Control := _CheckBox_( <v>, <cap>, ;
                      <msg>, <clr>, <{fb}>, <{sb}>, <stl>, <bmaps> ) ;;
-         ATail(GetList):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
-       [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
-         ATail(GetList):Control:Display()
+         ATail( GetList ):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+       [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
+         ATail( GetList ):Control:Display()
 
    #command @ <top>, <left>, <bottom>, <right> GET <v> LISTBOX <items> ;
                   [VALID <valid>] [WHEN <when>] ;
@@ -602,12 +604,12 @@
                   [SEND <snd>] [GUISEND <gsnd>] [BITMAP <bmap>] => ;
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail(GetList):Control := _LISTBOX_( ATail(Getlist):row, ;
-               ATail(Getlist):col, <bottom>, <right>, <v>, <items>, <cap>, ;
+         ATail( GetList ):Control := _ListBox_( ATail( Getlist ):row, ;
+               ATail( Getlist ):col, <bottom>, <right>, <v>, <items>, <cap>, ;
                <msg>, <clr>, <{fb}>, <{sb}>, <.dd.>, <.sbar.>, <bmap> ) ;;
-         ATail(GetList):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
-       [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
-         ATail(GetList):Control:Display()
+         ATail( GetList ):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+       [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
+         ATail( GetList ):Control:Display()
 
    #command @ <row>, <col> GET <v> PUSHBUTTON ;
                   [VALID <valid>] [WHEN <when>] ;
@@ -618,11 +620,11 @@
                   [BMPOFF X <bX> Y <bY>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail(GetList):Control := _PUSHBUTT_( <cap>, <msg>, <clr>, <{fb}>,;
+         ATail( GetList ):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>,;
                <{sb}>, <stl>, <sX>, <sY>, <cX>, <cY>, <bmap>, <bX>, <bY> ) ;;
-         ATail(GetList):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
-       [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
-         ATail(GetList):Control:Display()
+         ATail( GetList ):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+       [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
+         ATail( GetList ):Control:Display()
 
    #command @ <top>, <left>, <bottom>, <right> GET <v> RADIOGROUP <buttons> ;
                   [VALID <valid>] [WHEN <when>] ;
@@ -631,38 +633,38 @@
                   [SEND <snd>] [GUISEND <gsnd>] => ;
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail(GetList):Control := _RADIOGRP_( ATail(Getlist):row, ;
-               ATail(Getlist):col, <bottom>, <right>, <v>, <buttons>, <cap>,;
+         ATail( GetList ):Control := _RadioGrp_( ATail( Getlist ):row, ;
+               ATail( Getlist ):col, <bottom>, <right>, <v>, <buttons>, <cap>,;
                <msg>, <clr>, <{fb}>, <stl> ) ;;
-         ATail(GetList):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
-       [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
-         ATail(GetList):Control:Display()
+         ATail( GetList ):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
+       [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
+         ATail( GetList ):Control:Display()
 
    #command @ <top>, <left>, <bottom>, <right> GET <v> TBROWSE <oBrowse> ;
                   [VALID <valid>] [WHEN <when>] ;
                   [MESSAGE <msg>] [SEND <snd>] [GUISEND <gsnd>] => ;
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         <oBrowse>:ntop := ATail(Getlist):row ;;
-         <oBrowse>:nleft := ATail(Getlist):col ;;
+         <oBrowse>:ntop := ATail( Getlist ):row ;;
+         <oBrowse>:nleft := ATail( Getlist ):col ;;
          <oBrowse>:nbottom := <bottom> ; <oBrowse>:nright := <right> ;;
-         <oBrowse>:Configure() ; ATail(GetList):Control := <oBrowse> ;;
-         ATail(GetList):reader := {| a, b, c, d | TBReader( a, b, c, d ) } ;
-     [ ; ATail(GetList):Control:Message := <msg>] ;
-     [ ; ATail(GetList):<snd>] [ ; ATail(GetList):Control:<gsnd>]
+         <oBrowse>:Configure() ; ATail( GetList ):Control := <oBrowse> ;;
+         ATail( GetList ):reader := {| a, b, c, d | TBReader( a, b, c, d ) } ;
+     [ ; ATail( GetList ):Control:Message := <msg>] ;
+     [ ; ATail( GetList ):<snd>] [ ; ATail( GetList ):Control:<gsnd>]
 
    #command @ <top>, <left>, <bottom>, <right> GET <v> TBROWSE <oBrowse> ;
                   ALIAS <a> [VALID <valid>] [WHEN <when>] ;
                   [MESSAGE <msg>] [SEND <snd>] [GUISEND <gsnd>] => ;
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         <oBrowse>:ntop := ATail(Getlist):row ;;
-         <oBrowse>:nleft := ATail(Getlist):col ;;
+         <oBrowse>:ntop := ATail( Getlist ):row ;;
+         <oBrowse>:nleft := ATail( Getlist ):col ;;
          <oBrowse>:nbottom := <bottom> ; <oBrowse>:nright := <right> ;;
-         <oBrowse>:Configure() ; ATail(GetList):Control := <oBrowse> ;;
-         ATail(GetList):reader := {| a, b, c, d | <a>->( TBReader( a, b, c, d ) ) } ;
-     [ ; ATail(GetList):Control:Message := <msg>] ;
-     [ ; ATail(GetList):<snd>] [ ; ATail(GetList):Control:<gsnd>]
+         <oBrowse>:Configure() ; ATail( GetList ):Control := <oBrowse> ;;
+         ATail( GetList ):reader := {| a, b, c, d | <a>->( TBReader( a, b, c, d ) ) } ;
+     [ ; ATail( GetList ):Control:Message := <msg>] ;
+     [ ; ATail( GetList ):<snd>] [ ; ATail( GetList ):Control:<gsnd>]
 
 #else
 
@@ -670,7 +672,7 @@
                            [VALID <valid>] [WHEN <when>] [SEND <snd>] => ;
          SetPos( <row>, <col> ) ; AAdd( GetList, ;
             _GET_( <v>, <"v">, <pic>, <{valid}>, <{when}> ):Display() ) ;
-      [; ATail(GetList):<snd>]
+      [; ATail( GetList ):<snd>]
 
 #endif /* HB_COMPAT_C53 */
 
