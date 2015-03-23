@@ -89,11 +89,11 @@
  */
 #command SORT [TO <(f)>] [ON <fields,...>] ;
               [FOR <for>] [WHILE <while>] [NEXT <next>] ;
-              [RECORD <rec>] [<rest:REST>] [<all:ALL>] ;
-              [<cur: USECURRENT>] [NOOPTIMIZE] => ;
+              [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] ;
+              [CODEPAGE <cp>] [<cur: USECURRENT>] [NOOPTIMIZE] => ;
          sx_SortOption(<.cur.>); ;
          __dbSort( <(f)>, { <(fields)> }, ;
-                   <{for}>, <{while}>, <next>, <rec>, <.rest.> )
+                   <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>, , <cp> )
 
 
 /*
