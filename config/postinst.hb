@@ -235,21 +235,10 @@ PROCEDURE Main( ... )
 
             FErase( tmp )
 
-            /* NOTE: Believe it or not this is the official method to zip a different dir with subdirs
-                     without including the whole root path in filenames; you have to 'cd' into it.
-                     Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
-                     no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
-                     first to avoid mixing in an existing .zip file. [vszakats] */
-
-            cOldDir := hb_cwd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
-
-            mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_ZIP" ) ) + "zip" + ;
-               " -q -9 -X -r -o" + ;
+            mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7za" + ;
+               " a -bd -r -mx -tzip -x!*.tds -x!*.exp" + ;
                " " + FNameEscape( tmp ) + ;
-               " . -i " + FNameEscape( GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" ) + ;
-               " -x *.tds -x *.exp" )
-
-            hb_cwd( cOldDir )
+               " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + "*" )
 
             IF GetEnvC( "HB_PLATFORM" ) $ "win|wce"
 

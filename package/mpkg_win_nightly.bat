@@ -34,7 +34,7 @@ del master.
 "%_HB_DIR_TOOL%curl" -L -O https://github.com/vszakats/harbour-core/archive/master.zip
 if errorlevel 1 goto _EXIT
 
-"%_HB_DIR_TOOL%unzip" master.
+"%_HB_DIR_TOOL%7za" x master.zip
 cd harbour-core-master
 
 echo ! Setting up generic build parameters...
@@ -49,7 +49,6 @@ set HB_BUILD_PKG=yes
 
 set HB_DIR_NSIS=%_HB_DIR_TOOL%nsis\
 set HB_OPT_NSIS=/DPKG_NO_COMP_BCC /DPKG_NO_COMP_MSVC /DPKG_NO_COMP_MSVC64 /DPKG_NO_COMP_MINGW64 /DPKG_NO_COMP_MINGWARM /DPKG_NO_PLAT_LINUX /DPKG_NO_PLAT_OS2 /DPKG_NO_PLAT_DOS /DPKG_NO_COMP_WATCOM
-set HB_DIR_ZIP=%_HB_DIR_TOOL%
 set HB_DIR_7Z=%_HB_DIR_TOOL%
 set HB_DIR_UPX=%_HB_DIR_TOOL%upx\
 set HB_DIR_MINGW=%_HB_DIR_COMP%mingw

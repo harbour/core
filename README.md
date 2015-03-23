@@ -339,15 +339,7 @@ You can fine-tune the build with these options:
 ## Binary .zip and .exe on Windows for all targets (except Linux)
 
     $ set HB_DIR_NSIS=%ProgramFiles%\NSIS\
-    $ set HB_DIR_ZIP=C:\info-zip\
-    $ set HB_BUILD_PKG=yes
-
-Then run build as usual with `clean install` options.
-See: [How to Build](#how-to-build)
-
-## Binary .zip on MS-DOS for all targets (except Linux)
-
-    $ set HB_DIR_ZIP=C:\info-zip\
+    $ set HB_DIR_7Z=C:\7-zip\
     $ set HB_BUILD_PKG=yes
 
 Then run build as usual with `clean install` options.
@@ -1596,8 +1588,6 @@ Supported shells per host platforms:
         * <http://nsis.sourceforge.net/>
      * 7-Zip [multiplatform, free, open-source]
         * <http://7-zip.org/>
-     * Info-ZIP [multiplatform, free, open-source]
-        * <http://info-zip.org/>
      * bzip2 [multiplatform, free, open-source]
          Windows binary:
            * <http://bzip.org/downloads.html>
