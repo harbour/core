@@ -1139,7 +1139,6 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    int      iVal;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Info(%p,%d,%p)", pGT, iType, pInfo ) );
-   HB_SYMBOL_UNUSED( pGT );
 
    switch( iType )
    {
@@ -1182,8 +1181,6 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                /* is the window already opened? */
                if( wvw_win->hWnd )
                {
-                  PHB_GT pGT = hb_gt_Base();
-
                   /* resize the window based on new fonts */
                   hb_gt_wvw_ResetWindow( wvw_win );
 
@@ -1511,7 +1508,6 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       default:
       {
-         PHB_GT pGT = hb_gt_Base();
          if( pGT )
             return HB_GTSUPER_INFO( pGT, iType, pInfo );
       }

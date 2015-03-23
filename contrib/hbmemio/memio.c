@@ -283,7 +283,7 @@ static HB_FHANDLE memfsHandleAlloc( PHB_MEMFS_FILE pFile )
       }
    }
 
-   s_fs.pFiles = ( PHB_MEMFS_FILE * ) hb_xrealloc( s_fs.pFiles, ( s_fs.ulFileAlloc << 1 ) * sizeof( PHB_MEMFS_FILE ) );
+   s_fs.pFiles = ( PHB_MEMFS_FILE * ) hb_xrealloc( s_fs.pFiles, ( ( HB_SIZE ) s_fs.ulFileAlloc << 1 ) * sizeof( PHB_MEMFS_FILE ) );
    memset( s_fs.pFiles + s_fs.ulFileAlloc, 0, s_fs.ulFileAlloc * sizeof( PHB_MEMFS_FILE ) );
    ul = s_fs.ulFileAlloc;
    s_fs.ulFileAlloc <<= 1;

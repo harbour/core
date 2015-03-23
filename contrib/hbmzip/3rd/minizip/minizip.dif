@@ -1,6 +1,6 @@
 diff -urN minizip.orig/crypt.h minizip/crypt.h
---- minizip.orig/crypt.h	2014-07-28 01:10:19.465546200 +0200
-+++ minizip/crypt.h	2014-07-28 01:10:19.465546200 +0200
+--- minizip.orig/crypt.h	2015-03-23 18:18:35.722710400 +0100
++++ minizip/crypt.h	2015-03-23 18:18:35.722710400 +0100
 @@ -38,6 +38,8 @@
                       * unpredictable manner on 16-bit systems; not a problem
                       * with any known compiler so far, though */
@@ -21,8 +21,8 @@ diff -urN minizip.orig/crypt.h minizip/crypt.h
      init_keys(passwd, pkeys, pcrc_32_tab);
      for (n = 0; n < RAND_HEAD_LEN-2; n++)
 diff -urN minizip.orig/ioapi.c minizip/ioapi.c
---- minizip.orig/ioapi.c	2014-07-28 01:10:19.465546200 +0200
-+++ minizip/ioapi.c	2014-07-28 01:10:19.465546200 +0200
+--- minizip.orig/ioapi.c	2015-03-23 18:18:35.722710400 +0100
++++ minizip/ioapi.c	2015-03-23 18:18:35.722710400 +0100
 @@ -27,6 +27,7 @@
  
  
@@ -144,8 +144,8 @@ diff -urN minizip.orig/ioapi.c minizip/ioapi.c
      pzlib_filefunc_def->zopen_file = fopen_file_func;
      pzlib_filefunc_def->zread_file = fread_file_func;
 diff -urN minizip.orig/ioapi.h minizip/ioapi.h
---- minizip.orig/ioapi.h	2014-07-28 01:10:19.465546200 +0200
-+++ minizip/ioapi.h	2014-07-28 01:10:19.481145400 +0200
+--- minizip.orig/ioapi.h	2015-03-23 18:18:35.722710400 +0100
++++ minizip/ioapi.h	2015-03-23 18:18:35.722710400 +0100
 @@ -21,30 +21,58 @@
  #ifndef _ZLIBIOAPI64_H
  #define _ZLIBIOAPI64_H
@@ -235,8 +235,8 @@ diff -urN minizip.orig/ioapi.h minizip/ioapi.h
  #define ZERROR64(filefunc,filestream)             ((*((filefunc).zfile_func64.zerror_file))  ((filefunc).zfile_func64.opaque,filestream))
  
 diff -urN minizip.orig/unzip.c minizip/unzip.c
---- minizip.orig/unzip.c	2014-07-28 01:10:19.481145400 +0200
-+++ minizip/unzip.c	2014-07-28 01:10:19.481145400 +0200
+--- minizip.orig/unzip.c	2015-03-23 18:18:35.722710400 +0100
++++ minizip/unzip.c	2015-03-23 18:18:35.738309400 +0100
 @@ -68,13 +68,21 @@
  #include <stdlib.h>
  #include <string.h>
@@ -272,7 +272,16 @@ diff -urN minizip.orig/unzip.c minizip/unzip.c
  #endif
  
  #define SIZECENTRALDIRITEM (0x2e)
-@@ -1090,19 +1098,14 @@
+@@ -1038,8 +1046,6 @@
+             /* ZIP64 extra fields */
+             if (headerId == 0x0001)
+             {
+-                                                        uLong uL;
+-
+                                                                 if(file_info.uncompressed_size == MAXU32)
+                                                                 {
+                                                                         if (unz64local_getLong64(&s->z_filefunc, s->filestream,&file_info.uncompressed_size) != UNZ_OK)
+@@ -1090,19 +1096,14 @@
  
          if (lSeek!=0)
          {
@@ -293,7 +302,7 @@ diff -urN minizip.orig/unzip.c minizip/unzip.c
  
  
      if ((err==UNZ_OK) && (pfile_info!=NULL))
-@@ -1177,7 +1180,7 @@
+@@ -1177,7 +1178,7 @@
  */
  extern int ZEXPORT unzGoToFirstFile (unzFile file)
  {
@@ -302,7 +311,7 @@ diff -urN minizip.orig/unzip.c minizip/unzip.c
      unz64_s* s;
      if (file==NULL)
          return UNZ_PARAMERROR;
-@@ -1472,7 +1475,7 @@
+@@ -1472,7 +1473,7 @@
  extern int ZEXPORT unzOpenCurrentFile3 (unzFile file, int* method,
                                              int* level, int raw, const char* password)
  {
@@ -311,7 +320,7 @@ diff -urN minizip.orig/unzip.c minizip/unzip.c
      uInt iSizeVar;
      unz64_s* s;
      file_in_zip64_read_info_s* pfile_in_zip_read_info;
-@@ -1529,6 +1532,7 @@
+@@ -1529,6 +1530,7 @@
          }
      }
  
@@ -319,7 +328,7 @@ diff -urN minizip.orig/unzip.c minizip/unzip.c
      if ((s->cur_file_info.compression_method!=0) &&
  /* #ifdef HAVE_BZIP2 */
          (s->cur_file_info.compression_method!=Z_BZIP2ED) &&
-@@ -1536,6 +1540,7 @@
+@@ -1536,6 +1538,7 @@
          (s->cur_file_info.compression_method!=Z_DEFLATED))
  
          err=UNZ_BADZIPFILE;
@@ -328,8 +337,8 @@ diff -urN minizip.orig/unzip.c minizip/unzip.c
      pfile_in_zip_read_info->crc32_wait=s->cur_file_info.crc;
      pfile_in_zip_read_info->crc32=0;
 diff -urN minizip.orig/zip.c minizip/zip.c
---- minizip.orig/zip.c	2014-07-28 01:10:19.481145400 +0200
-+++ minizip/zip.c	2014-07-28 01:10:19.481145400 +0200
+--- minizip.orig/zip.c	2015-03-23 18:18:35.738309400 +0100
++++ minizip/zip.c	2015-03-23 18:18:35.738309400 +0100
 @@ -29,16 +29,24 @@
  #include "zlib.h"
  #include "zip.h"
@@ -512,8 +521,8 @@ diff -urN minizip.orig/zip.c minizip/zip.c
    if(pData == NULL || *dataLen < 4)
      return ZIP_PARAMERROR;
 diff -urN minizip.orig/zip.h minizip/zip.h
---- minizip.orig/zip.h	2014-07-28 01:10:19.481145400 +0200
-+++ minizip/zip.h	2014-07-28 01:10:19.496744600 +0200
+--- minizip.orig/zip.h	2015-03-23 18:18:35.738309400 +0100
++++ minizip/zip.h	2015-03-23 18:18:35.738309400 +0100
 @@ -44,7 +44,7 @@
  extern "C" {
  #endif

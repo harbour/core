@@ -359,18 +359,17 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
       {
          HBITMAP hBitmap;
 
-         HB_VTBL( pPicture )->get_Handle( HB_THIS_ ( pPicture ) ( OLE_HANDLE * ) & hBitmap );
-
-         if( hBitmap )
+         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_ ( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK )
          {
-            HDC hDCTemp = GetDC( wvw_win->hWnd );
-            s_DrawTransparentBitmap( hDCTemp, hBitmap, x1, y1, wd, ht );
-            ReleaseDC( wvw_win->hWnd, hDCTemp );
+            if( hBitmap )
+            {
+               HDC hDCTemp = GetDC( wvw_win->hWnd );
+               s_DrawTransparentBitmap( hDCTemp, hBitmap, x1, y1, wd, ht );
+               ReleaseDC( wvw_win->hWnd, hDCTemp );
 
-            fResult = HB_TRUE;
+               fResult = HB_TRUE;
+            }
          }
-         else
-            fResult = HB_FALSE;
 
          return fResult;
       }
@@ -569,6 +568,8 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
 
             if( CreateStreamOnHGlobal( hGlobal, FALSE, &pStream ) == S_OK && pStream )
                OleLoadPicture( pStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
+            else
+               pStream = NULL;
 
             GlobalUnlock( hGlobal );
 
