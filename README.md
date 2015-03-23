@@ -1501,14 +1501,14 @@ Supported shells per host platforms:
 * C/C++ Compilers/Shells:
 
      * MinGW/MinGW-64 [win, *nix, free, open-source]
-        * <http://mingw-w64.yaxm.org/>, <https://sourceforge.net/projects/mingw-w64/> (recommended, look for nixman builds)
-          * Dual target for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
-            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/>
-            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/>
+        * <http://mingw-w64.yaxm.org/>, <https://sourceforge.net/projects/mingw-w64/> (recommended, look for niXman builds)
+          * Dual-target for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
+            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/>
+            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/>
           * x86:
-            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-win32/dwarf/>
+            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-posix/dwarf/>
           * x86-64:
-            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/seh/>
+            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/>
      * MinGW CEGCC [win, *nix, free, open-source]
         * <http://cegcc.sourceforge.net/>
      * Clang [multiplatform, free, open-source]
@@ -1601,6 +1601,8 @@ Supported shells per host platforms:
      * bzip2 [multiplatform, free, open-source]
          Windows binary:
            * <http://bzip.org/downloads.html>
+     * Win-builds [multiplatform, free, open-source]
+        * <http://win-builds.org/>
      * Chocolatey (Windows package manager) [free, open-source]
         * <https://chocolatey.org/>
      * GNU Make

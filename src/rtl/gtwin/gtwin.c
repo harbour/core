@@ -96,31 +96,27 @@
 #  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE  /* Enable undocumented Windows API function call */
 #endif
 
-#if ( defined( NTDDI_VERSION ) && ( ( defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) || \
-                                    ( defined( NTDDI_LONGHORN ) && NTDDI_VERSION >= NTDDI_LONGHORN ) ) ) && ! defined( __POCC__ )
-#  if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
-#     define HB_GTWIN_USE_PCONSOLEINFOEX
-#  endif
-#else
-#  if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
-      typedef struct _HB_CONSOLE_SCREEN_BUFFER_INFOEX
-      {
-         ULONG cbSize;
-         COORD dwSize;
-         COORD dwCursorPosition;
-         WORD wAttributes;
-         SMALL_RECT srWindow;
-         COORD dwMaximumWindowSize;
-         WORD wPopupAttributes;
-         BOOL bFullscreenSupported;
-         COLORREF ColorTable[ 16 ];
-      } HB_CONSOLE_SCREEN_BUFFER_INFOEX, * HB_PCONSOLE_SCREEN_BUFFER_INFOEX;
-      #define CONSOLE_SCREEN_BUFFER_INFOEX  HB_CONSOLE_SCREEN_BUFFER_INFOEX
-      #define PCONSOLE_SCREEN_BUFFER_INFOEX HB_PCONSOLE_SCREEN_BUFFER_INFOEX
-#  endif
-#  if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
-#     define HB_GTWIN_USE_PCONSOLEINFOEX
-#  endif
+#if ( !( defined( NTDDI_VERSION ) && ( ( defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) || \
+                                       ( defined( NTDDI_LONGHORN ) && NTDDI_VERSION >= NTDDI_LONGHORN ) ) ) || \
+      defined( __POCC__ ) ) && \
+    ( ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 ) )
+   typedef struct _HB_CONSOLE_SCREEN_BUFFER_INFOEX
+   {
+      ULONG cbSize;
+      COORD dwSize;
+      COORD dwCursorPosition;
+      WORD wAttributes;
+      SMALL_RECT srWindow;
+      COORD dwMaximumWindowSize;
+      WORD wPopupAttributes;
+      BOOL bFullscreenSupported;
+      COLORREF ColorTable[ 16 ];
+   } HB_CONSOLE_SCREEN_BUFFER_INFOEX, * HB_PCONSOLE_SCREEN_BUFFER_INFOEX;
+   #define CONSOLE_SCREEN_BUFFER_INFOEX  HB_CONSOLE_SCREEN_BUFFER_INFOEX
+   #define PCONSOLE_SCREEN_BUFFER_INFOEX HB_PCONSOLE_SCREEN_BUFFER_INFOEX
+#endif
+#if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
+#  define HB_GTWIN_USE_PCONSOLEINFOEX
 #endif
 
 #ifndef MOUSE_WHEELED
