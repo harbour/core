@@ -222,7 +222,7 @@ PROCEDURE Main( ... )
          mk_hbr( tmp )
       ENDIF
 
-      /* Creating install packages */
+      /* Creating release packages */
 
       IF GetEnvC( "HB_BUILD_PKG" ) == "yes" .AND. ;
          ! Empty( GetEnvC( "HB_TOP" ) )
@@ -231,7 +231,7 @@ PROCEDURE Main( ... )
 
             tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".zip"
 
-            OutStd( hb_StrFormat( "! Making Harbour .zip install package: '%1$s'", tmp ) + hb_eol() )
+            OutStd( hb_StrFormat( "! Making Harbour .zip release package: '%1$s'", tmp ) + hb_eol() )
 
             FErase( tmp )
 
@@ -244,7 +244,7 @@ PROCEDURE Main( ... )
 
                tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".exe"
 
-               OutStd( hb_StrFormat( "! Making Harbour .exe install package: '%1$s'", tmp ) + hb_eol() )
+               OutStd( hb_StrFormat( "! Making Harbour .exe release package: '%1$s'", tmp ) + hb_eol() )
 
                mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" + ;
                   " -V2" + ;
@@ -271,7 +271,7 @@ PROCEDURE Main( ... )
                cTar_NameExt := cTar_Name + iif( GetEnvC( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
                cTar_Path := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_NameExt
 
-               OutStd( hb_StrFormat( "! Making Harbour tar install package: '%1$s'", cTar_Path ) + hb_eol() )
+               OutStd( hb_StrFormat( "! Making Harbour tar release package: '%1$s'", cTar_Path ) + hb_eol() )
 
                FErase( cTar_Path )
 
@@ -296,7 +296,7 @@ PROCEDURE Main( ... )
 
                   tmp := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
 
-                  OutStd( hb_StrFormat( "! Making Harbour tar installer package: '%1$s'", tmp ) + hb_eol() )
+                  OutStd( hb_StrFormat( "! Making Harbour tar installer release package: '%1$s'", tmp ) + hb_eol() )
 
                   /* In the generated script always use tar because we can't be sure
                      if cBin_Tar exists in the installation environment */

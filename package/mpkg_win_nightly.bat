@@ -74,17 +74,17 @@ win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-mingw-log.t
 if errorlevel 1 goto _EXIT
 endlocal
 
-:: Non-unified packages are here:
+:: Non-unified release packages are here:
 ::    harbour-nightly-win-mingw.exe
 ::    harbour-nightly-win-mingw.zip
 
-echo ! Creating unified Windows package...
+echo ! Creating unified Windows release package...
 
 call package\winuni\mpkg_win_uni.bat
 
-echo ! Uploading Harbour unified Windows package...
+echo ! Uploading Harbour unified Windows release package...
 
-:: Unified packages are here:
+:: Unified release packages are here:
 ::    %HB_RT%harbour-nightly-win.exe
 ::    %HB_RT%harbour-nightly-win.7z
 

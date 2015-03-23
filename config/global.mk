@@ -1797,9 +1797,10 @@ ifeq ($(HB_BUILD_PKG),yes)
       endif
       endif
 
-      # HB_TOP              - dir where packages will be created (root of Harbour source tree)
+      # HB_TOP              - dir where release packages will be
+      #                       created (root of Harbour source tree)
       # HB_INSTALL_PKG_ROOT - dir which has to be packed
-      # HB_PKGNAME          - name of the install package
+      # HB_PKGNAME          - name of the release package
       # HB_INSTALL_PREFIX   - dir where Harbour dirs will be created
       #
       #   <HB_TOP><plat/comp  ><HB_BUILD_PKG_PREFIX>
