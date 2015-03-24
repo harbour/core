@@ -77,7 +77,7 @@ del _hbtemp.sed
 xcopy /y       "%HB_DIR_UPX%upx.exe"                                                      "%HB_ABSROOT%bin\"
  copy /y       "%HB_DIR_UPX%LICENSE"                                                      "%HB_ABSROOT%bin\upx_LICENSE.txt"
 
-xcopy /y /s /e "%HB_DIR_MINGW%"                                                           "%HB_ABSROOT%comp\mingw\"
+xcopy /q /y /s /e "%HB_DIR_MINGW%"                                                        "%HB_ABSROOT%comp\mingw\"
 
 :: Copy mingw runtime 32-bit .dlls
 

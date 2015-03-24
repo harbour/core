@@ -4,7 +4,7 @@ branches:
   - master
 skip_tags: true
 clone_depth: 8
-clone_folder: C:\hb
+clone_folder: C:\hb34
 environment:
   matrix:
   - TARGET: msvc64
@@ -12,6 +12,9 @@ environment:
 # - TARGET: mingw64
   - TARGET: mingw
 install:
+- md C:\upx\
+- curl -sS -L https://downloads.sourceforge.net/upx/upx/3.91/upx391w.zip -o C:\upx\upx.zip
+- 7z e -oC:\upx\ C:\upx\upx.zip -ir!*.exe -ir!LICENSE > nul
 - md C:\nsis\
 - curl -sS -L https://unsis.googlecode.com/files/nsis-2.46.5-Unicode-setup.exe -o C:\nsis\setup.exe
 - 7z x -oC:\nsis\ C:\nsis\setup.exe > nul
@@ -21,9 +24,10 @@ install:
 # Will unpack into C:\mingw64\
 - 7z x -oC:\ mingw.7z > nul
 build_script:
-- set HB_DIR_MINGW=C:\mingw64\
 - set HB_DIR_NSIS=C:\nsis\
-- if "%TARGET:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%bin;%PATH%
+- set HB_DIR_UPX=C:\upx\
+- set HB_DIR_MINGW=C:\mingw64
+- if "%TARGET:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
 # Required only for the default mingw distro in C:\mingw\
 #- if "%TARGET%" == "mingw" set HBWIN_NO_WINHTTP_H=yes
 - if "%TARGET%" == "mingw" set HB_CPU=x86
