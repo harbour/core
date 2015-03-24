@@ -742,6 +742,22 @@ HB_FUNC( HB_ARGSHIFT )
    }
 }
 
+HB_FUNC( HB_ACMDLINE )
+{
+   if( s_argc > 1 )
+   {
+      int iPos, iLen = s_argc - 1;
+      PHB_ITEM pArray = hb_itemArrayNew( iLen );
+
+      for( iPos = 1; iPos <= iLen; ++iPos )
+         hb_arraySetCPtr( pArray, iPos, hb_cmdargDup( iPos ) );
+
+      hb_itemReturnRelease( pArray );
+   }
+   else
+      hb_reta( 0 );
+}
+
 HB_FUNC( HB_CMDLINE )
 {
    if( s_argc > 1 )
