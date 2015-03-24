@@ -332,7 +332,7 @@ PROCEDURE Main( ... )
       GetEnvC( "HB_HOST_PLAT" ) == GetEnvC( "HB_PLATFORM" )
 
       IF nErrorLevel == 0
-         FOR EACH tmp IN GetEnvC( "HB_BUILD_POSTRUN" )
+         FOR EACH tmp IN hb_ATokens( GetEnvC( "HB_BUILD_POSTRUN" ),, .T. )
             IF ! Empty( tmp )
                cOldDir := hb_cwd( GetEnvC( "HB_HOST_BIN_DIR" ) )
                mk_hb_processRun( hb_DirSepAdd( "." ) + hb_FNameNameExt( hb_DirSepToOS( tmp ) ) )
