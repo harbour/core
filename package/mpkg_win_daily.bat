@@ -17,9 +17,7 @@
 ::   - admin rights for Scheduled Task setup
 ::   - remote admin (via RDP protocol)
 
-pushd
-
-cd /d "%~dp0"
+pushd "%~dp0"
 
 echo ! Self: %0
 
@@ -30,7 +28,6 @@ set _HB_DIR_TOOL=%~dp0tool\
 echo ! Downloading Harbour sources...
 
 if exist harbour-core-master rd /q /s harbour-core-master
-del master.
 "%_HB_DIR_TOOL%curl" -L -O https://github.com/vszakats/harbour-core/archive/master.zip
 if errorlevel 1 goto _EXIT
 

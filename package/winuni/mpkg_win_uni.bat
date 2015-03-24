@@ -135,9 +135,7 @@ del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1
 
 :: Create unified installer
 
-pushd
-
-cd /d "%HB_RT%"
+pushd "%HB_RT%"
 
 if exist "%HB_RT%harbour-%HB_VF%-win-log.txt" del "%HB_RT%harbour-%HB_VF%-win-log.txt"
 if exist "%HB_RT%harbour-%HB_VF%-win.exe" del "%HB_RT%harbour-%HB_VF%-win.exe"

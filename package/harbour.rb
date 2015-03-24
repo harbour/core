@@ -19,8 +19,6 @@ class Harbour < Formula
   end
 
   test do
-    system "#{bin}/hbtest"
-
     (testpath/"hello.prg").write <<-EOS.undent
       procedure Main()
          OutStd( ;
