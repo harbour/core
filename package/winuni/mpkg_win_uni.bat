@@ -1,7 +1,7 @@
 @echo off
 
 :: ---------------------------------------------------------------
-:: Copyright 2009-2013 Viktor Szakats (vszakats.net/harbour)
+:: Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
 :: See COPYING.txt for licensing terms.
 :: ---------------------------------------------------------------
 
@@ -79,12 +79,16 @@ xcopy /y       "%HB_DIR_UPX%upx.exe"                                            
 
 xcopy /y /s /e "%HB_DIR_MINGW%"                                                           "%HB_ABSROOT%comp\mingw\"
 
-:: NOTE: In multi-target distros these may not match the platform of
-::       the Harbour installation we're about to create.
-::       Alternate mingw .dll folders:
+:: Copy mingw runtime 32-bit .dlls
+
+:: NOTE: In multi-target distros the .dlls matching the
+::       non-host target are to be found here:
 ::          "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32"
 ::          "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"
+
 set _MINGW_DLL_DIR=%HB_DIR_MINGW%\bin
+if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32" set _MINGW_DLL_DIR=%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32
+
 if exist "%_MINGW_DLL_DIR%\libgcc_s_seh-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  "%HB_ABSROOT%bin\"
 if exist "%_MINGW_DLL_DIR%\libgcc_s_sjlj-1.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" "%HB_ABSROOT%bin\"
 if exist "%_MINGW_DLL_DIR%\libgcc_s_dw2-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  "%HB_ABSROOT%bin\"

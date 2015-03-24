@@ -1,7 +1,7 @@
 @echo off
 
 :: ---------------------------------------------------------------
-:: Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
+:: Copyright 2010-2015 Viktor Szakats (vszakats.net/harbour)
 :: See COPYING.txt for licensing terms.
 :: ---------------------------------------------------------------
 
@@ -39,7 +39,7 @@ cd harbour-core-master
 
 echo ! Setting up generic build parameters...
 
-set HB_VF=nightly
+set HB_VF=daily
 set HB_VL=%HB_VF%
 set HB_RT=%~dp0
 
@@ -70,13 +70,13 @@ setlocal
 echo ! Setting environment for using MinGW GCC
 set PATH=%_HB_DIR_COMP%mingw\bin
 set HB_CPU=x86
-win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-mingw-log.txt" 2>&1
+win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-daily-win-mingw-log.txt" 2>&1
 if errorlevel 1 goto _EXIT
 endlocal
 
 :: Non-unified release packages are here:
-::    harbour-nightly-win-mingw.exe
-::    harbour-nightly-win-mingw.zip
+::    harbour-daily-win-mingw.exe
+::    harbour-daily-win-mingw.zip
 
 echo ! Creating unified Windows release package...
 
@@ -85,14 +85,14 @@ call package\winuni\mpkg_win_uni.bat
 echo ! Uploading Harbour unified Windows release package...
 
 :: Unified release packages are here:
-::    %HB_RT%harbour-nightly-win.exe
-::    %HB_RT%harbour-nightly-win.7z
+::    %HB_RT%harbour-daily-win.exe
+::    %HB_RT%harbour-daily-win.7z
 
 :_EXIT
 
 :: Logs are here:
-::    %HB_RT%harbour-nightly-win-log.txt
-::    %HB_RT%harbour-nightly-win-mingw-log.txt
+::    %HB_RT%harbour-daily-win-log.txt
+::    %HB_RT%harbour-daily-win-mingw-log.txt
 
 echo ! Finished.
 
