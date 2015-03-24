@@ -173,7 +173,7 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 METHOD FieldType( nNum ) CLASS TMySQLRow
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
-      RETURN SQLTypeToHarb( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] )
+      RETURN SQLTypeToHarb( ::aFieldStruct[ nNum ] )
    ENDIF
 
    RETURN "U"
@@ -549,7 +549,7 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 METHOD FieldType( nNum ) CLASS TMySQLQuery
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
-      RETURN SQLTypeToHarb( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] )
+      RETURN SQLTypeToHarb( ::aFieldStruct[ nNum ] )
    ENDIF
 
    RETURN "U"
@@ -942,22 +942,26 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
 
       SWITCH ::aFieldStruct[ i ][ MYSQL_FS_TYPE ]
       CASE MYSQL_TYPE_STRING
+      CASE MYSQL_TYPE_TINY_BLOB
+      CASE MYSQL_TYPE_VARCHAR
       CASE MYSQL_TYPE_VAR_STRING
       CASE MYSQL_TYPE_BLOB
+      CASE MYSQL_TYPE_MEDIUM_BLOB
+      CASE MYSQL_TYPE_LONG_BLOB
          aRow[ i ] := ""
          EXIT
 
-      CASE MYSQL_TYPE_TINY
       CASE MYSQL_TYPE_SHORT
+      CASE MYSQL_TYPE_TINY
+      CASE MYSQL_TYPE_INT24
       CASE MYSQL_TYPE_LONG
       CASE MYSQL_TYPE_LONGLONG
-      CASE MYSQL_TYPE_INT24
       CASE MYSQL_TYPE_NEWDECIMAL
          aRow[ i ] := 0
          EXIT
 
-      CASE MYSQL_TYPE_DOUBLE
       CASE MYSQL_TYPE_FLOAT
+      CASE MYSQL_TYPE_DOUBLE
          aRow[ i ] := 0.0
          EXIT
 
@@ -965,6 +969,7 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
          aRow[ i ] := hb_SToD()
          EXIT
 
+      CASE MYSQL_TYPE_TIME
       CASE MYSQL_TYPE_DATETIME
       CASE MYSQL_TYPE_TIMESTAMP
          aRow[ i ] := hb_SToT()
@@ -1377,6 +1382,7 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
 
          CASE MYSQL_TYPE_TINY_BLOB  // max 2^8 char
          CASE MYSQL_TYPE_VARCHAR    // max 2^16 char
+         CASE MYSQL_TYPE_VAR_STRING
             IF aField[ MYSQL_FS_LENGTH ] <= 255
                aSField[ DBS_TYPE ] := "C"
             ELSE
@@ -1402,13 +1408,10 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
             EXIT
 
          CASE MYSQL_TYPE_TIME
-            aSField[ DBS_TYPE ] := "C"
-            aSField[ DBS_LEN ] := 8
-            EXIT
-
+         CASE MYSQL_TYPE_DATETIME
          CASE MYSQL_TYPE_TIMESTAMP  // '9999-12-31 23:59:59'
-            aSField[ DBS_TYPE ] := "C"
-            aSField[ DBS_LEN ] := 19
+            aSField[ DBS_TYPE ] := "T"
+            aSField[ DBS_LEN ] := 8
             EXIT
 
          CASE MYSQL_TYPE_BIT
@@ -1453,43 +1456,52 @@ STATIC FUNCTION HarbValueToSQL( Value )
    CASE "D" ; RETURN iif( Empty( Value ), "''", "'" + hb_DToC( Value, "yyyy-mm-dd" ) + "'" )
    CASE "T" ; RETURN iif( Empty( Value ), "''", "'" + hb_TToC( Value, "yyyy-mm-dd", "hh:mm:ss" ) + "'" )
    CASE "C"
-   CASE "M" ; RETURN iif( Empty( Value ), "''", "'" + mysql_escape_string( value ) + "'" )
+   CASE "M"
+   CASE "W" ; RETURN iif( Empty( Value ), "''", "'" + mysql_escape_string( value ) + "'" )
    CASE "L" ; RETURN iif( Value, "1", "0" )
    CASE "U" ; RETURN "NULL"
    ENDSWITCH
 
    RETURN "''"  // NOTE: Here we lose values we cannot convert
 
-STATIC FUNCTION SQLTypeToHarb( nType )
+STATIC FUNCTION SQLTypeToHarb( aField )
 
-   SWITCH nType
-   CASE MYSQL_TYPE_TINY
-   CASE MYSQL_TYPE_SHORT
-   CASE MYSQL_TYPE_LONG
-   CASE MYSQL_TYPE_LONGLONG
-   CASE MYSQL_TYPE_FLOAT
-   CASE MYSQL_TYPE_DOUBLE
-   CASE MYSQL_TYPE_NEWDECIMAL
-   CASE MYSQL_TYPE_INT24
-      RETURN "N"
-
-   CASE MYSQL_TYPE_VAR_STRING
+   SWITCH aField[ MYSQL_FS_TYPE ]
    CASE MYSQL_TYPE_STRING
       RETURN "C"
 
-   CASE MYSQL_TYPE_DATE
-      RETURN "D"
-
-   CASE MYSQL_TYPE_DATETIME
-   CASE MYSQL_TYPE_TIMESTAMP
-      RETURN "T"
+   CASE MYSQL_TYPE_TINY_BLOB
+   CASE MYSQL_TYPE_VARCHAR
+   CASE MYSQL_TYPE_VAR_STRING
+      RETURN iif( aField[ MYSQL_FS_LENGTH ] <= 255, "C", "M" )
 
    CASE MYSQL_TYPE_BLOB
    CASE MYSQL_TYPE_MEDIUM_BLOB
       RETURN "M"
 
+   CASE MYSQL_TYPE_LONG_BLOB
+      RETURN "W"
+
+   CASE MYSQL_TYPE_DATE
+      RETURN "D"
+
+   CASE MYSQL_TYPE_TIME
+   CASE MYSQL_TYPE_DATETIME
+   CASE MYSQL_TYPE_TIMESTAMP
+      RETURN "T"
+
    CASE MYSQL_TYPE_BIT
       RETURN "L"
+
+   CASE MYSQL_TYPE_SHORT
+   CASE MYSQL_TYPE_TINY
+   CASE MYSQL_TYPE_INT24
+   CASE MYSQL_TYPE_LONG
+   CASE MYSQL_TYPE_LONGLONG
+   CASE MYSQL_TYPE_FLOAT
+   CASE MYSQL_TYPE_DOUBLE
+   CASE MYSQL_TYPE_NEWDECIMAL
+      RETURN "N"
 
    ENDSWITCH
 

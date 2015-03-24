@@ -27,7 +27,6 @@ set HB_ABSROOT=%HB_RT%%HB_DR%
 
 if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
 
-xcopy /y       "%~dp0RELNOTES.txt"                                                          "%HB_ABSROOT%"
 xcopy /y /s /q "%~dp0..\..\extras\*.*"                                                      "%HB_ABSROOT%extras\"
 xcopy /y /s /q "%~dp0..\..\tests\*.*"                                                       "%HB_ABSROOT%tests\"
 xcopy /y       "%~dp0HARBOUR_README_ADDONS.txt"                                             "%HB_ABSROOT%addons\"
@@ -36,6 +35,10 @@ xcopy /y       "%~dp0HARBOUR_README_MINGW.txt"                                  
 xcopy /y       "%~dp0HARBOUR_README_MINGWARM.txt"                                           "%HB_ABSROOT%comp\mingwarm\"
 xcopy /y       "%~dp0HARBOUR_README_POCC.txt"                                               "%HB_ABSROOT%comp\pocc\"
 xcopy /y       "%~dp0HARBOUR_README_WATCOM.txt"                                             "%HB_ABSROOT%comp\watcom\"
+
+:: Burn current git revision into RELNOTES.txt
+for /f %%i in ('git rev-parse --short HEAD') do set _VCS_ID_=%%i
+sed -e "s/_VCS_ID_/%_VCS_ID_%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
 
 :: mingw 32-bit base system
 xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                         "%HB_ABSROOT%"
