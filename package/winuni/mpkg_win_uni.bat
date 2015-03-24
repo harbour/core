@@ -27,8 +27,8 @@ set HB_ABSROOT=%HB_RT%%HB_DR%
 if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
 
 xcopy /y       "%~dp0RELNOTES.txt"                                                          "%HB_ABSROOT%"
-xcopy /y /s    "%~dp0..\..\extras\*.*"                                                      "%HB_ABSROOT%extras\"
-xcopy /y /s    "%~dp0..\..\tests\*.*"                                                       "%HB_ABSROOT%tests\"
+xcopy /y /s /q "%~dp0..\..\extras\*.*"                                                      "%HB_ABSROOT%extras\"
+xcopy /y /s /q "%~dp0..\..\tests\*.*"                                                       "%HB_ABSROOT%tests\"
 xcopy /y       "%~dp0HARBOUR_README_ADDONS.txt"                                             "%HB_ABSROOT%addons\"
 xcopy /y       "%~dp0HARBOUR_README_DJGPP.txt"                                              "%HB_ABSROOT%comp\djgpp\"
 xcopy /y       "%~dp0HARBOUR_README_MINGW.txt"                                              "%HB_ABSROOT%comp\mingw\"
@@ -36,7 +36,7 @@ xcopy /y       "%~dp0HARBOUR_README_MINGWARM.txt"                               
 xcopy /y       "%~dp0HARBOUR_README_POCC.txt"                                               "%HB_ABSROOT%comp\pocc\"
 xcopy /y       "%~dp0HARBOUR_README_WATCOM.txt"                                             "%HB_ABSROOT%comp\watcom\"
 
-xcopy /y /s    "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                         "%HB_ABSROOT%"
+xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                         "%HB_ABSROOT%"
 
 xcopy /y /s    "%~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"               "%HB_ABSROOT%lib\linux\watcom\"
 xcopy /y /s    "%~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib"                                  "%HB_ABSROOT%lib\"
@@ -77,7 +77,7 @@ del _hbtemp.sed
 xcopy /y       "%HB_DIR_UPX%upx.exe"                                                      "%HB_ABSROOT%bin\"
  copy /y       "%HB_DIR_UPX%LICENSE"                                                      "%HB_ABSROOT%bin\upx_LICENSE.txt"
 
-xcopy /q /y /s /e "%HB_DIR_MINGW%"                                                        "%HB_ABSROOT%comp\mingw\"
+xcopy /y /s /q /e "%HB_DIR_MINGW%"                                                        "%HB_ABSROOT%comp\mingw\"
 
 :: Copy mingw runtime 32-bit .dlls
 
@@ -99,12 +99,12 @@ if exist "%_MINGW_DLL_DIR%\mingwm10.dll"        xcopy /y "%HB_DIR_MINGW%\bin\min
 rmdir /q /s "%HB_ABSROOT%comp\mingw\etc\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\opt\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\share\"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\gdb*.exe"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\gfortran.exe"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\gnat*.exe"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgfortran-*.dll"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\gdb*.exe" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\gfortran.exe" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\gnat*.exe" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgfortran-*.dll" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll" 2> nul
 
 :: 32-bit hosted
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
@@ -113,12 +113,12 @@ rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adalib\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\lib64\"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\i686-w64-mingw32-gfortran.exe"
-del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgfortran-*.dll"
-del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnarl-*.dll"
-del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnat-*.dll"
-del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe"
-del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\i686-w64-mingw32-gfortran.exe" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
 
 :: 64-bit hosted
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
@@ -127,18 +127,18 @@ rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adalib\"
 rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\lib32\"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\x86_64-w64-mingw32-gfortran.exe"
-del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgfortran-*.dll"
-del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnarl-*.dll"
-del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnat-*.dll"
-del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe"
-del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe"
+del /q /f   "%HB_ABSROOT%comp\mingw\bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
+del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
 
 :: Create unified installer
 
 pushd
 
-cd "%HB_RT%"
+cd /d "%HB_RT%"
 
 if exist "%HB_RT%harbour-%HB_VF%-win-log.txt" del "%HB_RT%harbour-%HB_VF%-win-log.txt"
 if exist "%HB_RT%harbour-%HB_VF%-win.exe" del "%HB_RT%harbour-%HB_VF%-win.exe"

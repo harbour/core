@@ -19,7 +19,7 @@
 
 pushd
 
-cd "%~dp0"
+cd /d "%~dp0"
 
 echo ! Self: %0
 

@@ -349,7 +349,7 @@ PROCEDURE Main( ... )
                   ENDIF
                NEXT
 
-               OutStd( hb_StrFormat( "! Running post command..." ) + hb_eol() )
+               OutStd( "! Running post command..." + hb_eol() )
 
                cOldDir := hb_cwd( GetEnvC( "HB_HOST_BIN_DIR" ) )
                mk_hb_processRun( cCmd )
