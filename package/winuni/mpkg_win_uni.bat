@@ -1,4 +1,4 @@
-@echo off
+rem @echo off
 
 :: ---------------------------------------------------------------
 :: Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
