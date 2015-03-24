@@ -970,6 +970,10 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
          aRow[ i ] := hb_SToT()
          EXIT
 
+      CASE MYSQL_TYPE_BIT
+         aRow[ i ] := .F.
+         EXIT
+
       OTHERWISE
          aRow[ i ] := NIL
 
@@ -1236,6 +1240,14 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
          ::cCreateQuery += fld[ DBS_NAME ] + " mediumint " + Eval( cNN, fld ) + ","
          EXIT
 
+      CASE "L"
+         ::cCreateQuery += fld[ DBS_NAME ] + " bit "  + Eval( cNN, fld ) + ","
+         EXIT
+
+      CASE "W"
+         ::cCreateQuery += fld[ DBS_NAME ] + " longblob " + Eval( cNN, fld ) + ","
+         EXIT
+
       OTHERWISE
          ::cCreateQuery += fld[ DBS_NAME ] + " char(" + hb_ntos( fld[ DBS_LEN ] ) + ")" + Eval( cNN, fld ) + ","
 
@@ -1343,8 +1355,6 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
 
    LOCAL aStruct := {}
 
-#if 0
-   /* TODO: rewrite for MySQL */
    LOCAL aField, aSField, i
    LOCAL res := mysql_list_fields( ::nSocket, cTable )
 
@@ -1355,59 +1365,83 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
          aField := mysql_fetch_field( res )
          aSField := Array( DBS_DEC )
 
-         // don't count indexes as real fields
-         IF aField[ MSQL_FS_TYPE ] <= MSQL_LAST_REAL_TYPE
+         aSField[ DBS_NAME ] := aField[ MYSQL_FS_NAME ]
+         aSField[ DBS_DEC ]  := 0
+         aSField[ DBS_LEN ]  := aField[ MYSQL_FS_LENGTH ]
 
-            aSField[ DBS_NAME ] := Left( aField[ MSQL_FS_NAME ], 10 )
-            aSField[ DBS_DEC ] := 0
+         SWITCH aField[ MYSQL_FS_TYPE ]
+         CASE MYSQL_TYPE_STRING
+            aSField[ DBS_TYPE ] := "C"
+            aSField[ DBS_LEN ] := aField[ MYSQL_FS_LENGTH ]
+            EXIT
 
-            SWITCH aField[ MSQL_FS_TYPE ]
-            CASE MSQL_INT_TYPE
-               aSField[ DBS_TYPE ] := "N"
-               aSField[ DBS_LEN ] := 11
-               EXIT
-
-            CASE MSQL_UINT_TYPE
-               aSField[ DBS_TYPE ] := "L"
-               aSField[ DBS_LEN ] := 1
-               EXIT
-
-            CASE MSQL_CHAR_TYPE
+         CASE MYSQL_TYPE_TINY_BLOB  // max 2^8 char
+         CASE MYSQL_TYPE_VARCHAR    // max 2^16 char
+            IF aField[ MYSQL_FS_LENGTH ] <= 255
                aSField[ DBS_TYPE ] := "C"
-               aSField[ DBS_LEN ] := aField[ MSQL_FS_LENGTH ]
-               EXIT
+            ELSE
+               aSField[ DBS_TYPE ] := "M"
+               aSField[ DBS_LEN ] := 10
+            ENDIF
+            EXIT
 
-            CASE MSQL_DATE_TYPE
-               aSField[ DBS_TYPE ] := "D"
-               aSField[ DBS_LEN ] := aField[ MSQL_FS_LENGTH ]
-               EXIT
+         CASE MYSQL_TYPE_BLOB         // 2^16 char
+         CASE MYSQL_TYPE_MEDIUM_BLOB  // 2^24 char
+            aSField[ DBS_TYPE ] := "M"
+            aSField[ DBS_LEN ] := 10
+            EXIT
 
-            CASE MSQL_REAL_TYPE
-               aSField[ DBS_TYPE ] := "N"
-               aSField[ DBS_LEN ] := 12
-               aSFIeld[ DBS_DEC ] := 8
-               EXIT
+         CASE MYSQL_TYPE_LONG_BLOB  // 2^32 char
+            aSField[ DBS_TYPE ] := "W"
+            aSField[ DBS_LEN ] := 10
+            EXIT
 
-            CASE MYSQL_TYPE_MEDIUM_BLOB
-               aSField[ DBS_TYPE ] := "B"
-               aSField[ DBS_LEN ] := aField[ MSQL_FS_LENGTH ]
-               EXIT
+         CASE MYSQL_TYPE_DATE
+            aSField[ DBS_TYPE ] := "D"
+            aSField[ DBS_LEN ] := 8
+            EXIT
 
-            CASE FIELD_TYPE_INT24
-               aSField[ DBS_TYPE ] := "I"
-               aSField[ DBS_LEN ] := aField[ MSQL_FS_LENGTH ]
-               aSFIeld[ DBS_DEC ] := aField[ MYSQL_FS_DECIMALS ]
-               EXIT
+         CASE MYSQL_TYPE_TIME
+            aSField[ DBS_TYPE ] := "C"
+            aSField[ DBS_LEN ] := 8
+            EXIT
 
-            ENDSWITCH
+         CASE MYSQL_TYPE_TIMESTAMP  // '9999-12-31 23:59:59'
+            aSField[ DBS_TYPE ] := "C"
+            aSField[ DBS_LEN ] := 19
+            EXIT
 
+         CASE MYSQL_TYPE_BIT
+            aSField[ DBS_TYPE ] := "L"
+            aSField[ DBS_LEN ] := 1
+            EXIT
+
+         CASE MYSQL_TYPE_SHORT  // INT_TYPE
+         CASE MYSQL_TYPE_TINY   // UINT_TYPE
+         CASE MYSQL_TYPE_INT24  // 3 BYTE INT
+         CASE MYSQL_TYPE_LONG   // 4 BYTE INT
+            aSField[ DBS_TYPE ] := "N"
+            EXIT
+
+         CASE MYSQL_TYPE_LONGLONG  // 8 BYTE INT
+            aSField[ DBS_TYPE ] := "N"
+            aSField[ DBS_LEN ] := Min( aField[ MYSQL_FS_LENGTH ], 16 )
+            EXIT
+
+         CASE MYSQL_TYPE_FLOAT  // with decimals
+         CASE MYSQL_TYPE_DOUBLE
+            aSField[ DBS_TYPE ] := "N"
+            aSField[ DBS_LEN ] := Min( aField[ MYSQL_FS_LENGTH ], 16 )
+            aSFIeld[ DBS_DEC ] := Min( aField[ MYSQL_FS_DECIMALS ], 14 )
+            EXIT
+
+         ENDSWITCH
+
+         IF aSField[ DBS_TYPE ] != NIL
             AAdd( aStruct, aSField )
          ENDIF
       NEXT
    ENDIF
-#else
-   HB_SYMBOL_UNUSED( cTable )
-#endif
 
    RETURN aStruct
 
@@ -1453,6 +1487,9 @@ STATIC FUNCTION SQLTypeToHarb( nType )
    CASE MYSQL_TYPE_BLOB
    CASE MYSQL_TYPE_MEDIUM_BLOB
       RETURN "M"
+
+   CASE MYSQL_TYPE_BIT
+      RETURN "L"
 
    ENDSWITCH
 
