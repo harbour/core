@@ -1,4 +1,5 @@
-rem @echo off
+@echo off
+echo on
 
 :: ---------------------------------------------------------------
 :: Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
