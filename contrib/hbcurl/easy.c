@@ -884,6 +884,11 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_UNIX_SOCKET_PATH, hb_parc( 3 ) );
                break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x072A00
+            case HB_CURLOPT_PATH_AS_IS:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_PATH_AS_IS, hb_parnl( 3 ) );
+               break;
+#endif
 
             /* Names and passwords options (Authentication) */
 
@@ -1608,6 +1613,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 #if LIBCURL_VERSION_NUM >= 0x072900
             case HB_CURLOPT_SSL_VERIFYSTATUS:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_VERIFYSTATUS, hb_parnl( 3 ) );
+               break;
+#endif
+#if LIBCURL_VERSION_NUM >= 0x072A00
+            case HB_CURLOPT_SSL_FALSESTART:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_FALSESTART, hb_parnl( 3 ) );
                break;
 #endif
 
