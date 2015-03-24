@@ -35,4 +35,5 @@ build_script:
 - set HB_BUILD_DYN=no
 - set HB_BUILD_CONTRIB_DYN=no
 - set HB_BUILD_PKG=yes
+- set HB_BUILD_POSTRUN=hbtest hbspeed
 - win-make.exe clean install

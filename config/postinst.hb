@@ -330,6 +330,17 @@ PROCEDURE Main( ... )
 
    IF Empty( GetEnvC( "HB_HOST_BIN" ) ) .AND. ;
       GetEnvC( "HB_HOST_PLAT" ) == GetEnvC( "HB_PLATFORM" )
+
+      IF nErrorLevel == 0
+         FOR EACH tmp IN GetEnvC( "HB_BUILD_POSTRUN" )
+            IF ! Empty( tmp )
+               cOldDir := hb_cwd( GetEnvC( "HB_HOST_BIN_DIR" ) )
+               mk_hb_processRun( hb_DirSepAdd( "." ) + hb_FNameNameExt( hb_DirSepToOS( tmp ) ) )
+               hb_cwd( cOldDir )
+            ENDIF
+         NEXT
+      ENDIF
+
       OutStd( hb_StrFormat( "! Built: %1$s using C compiler: %2$s", Version(), hb_Compiler() ) + hb_eol() )
    ENDIF
 

@@ -681,6 +681,13 @@ sensitive.
      compiler/linker tool name suffix &ndash; usually
      version number.
 
+   - `HB_BUILD_POSTRUN=[<l>]`
+
+     Run space separated `<l>` list of Harbour
+     commands after successfully finishing a non-cross
+     build. Commands will be run in the target binary
+     directory.
+
 ## Cross-builds
 
 You can build Harbour for target platforms different than host
