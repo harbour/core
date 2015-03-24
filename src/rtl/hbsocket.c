@@ -2671,10 +2671,19 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
       struct ip_mreq mreq;
       int ret;
 
+#if defined( HB_HAS_INET_PTON )
+      ret = inet_pton( AF_INET, szAddr, &mreq.imr_multiaddr ) > 0 ? 0 : -1;
+#elif defined( HB_HAS_INET_ATON )
+      ret = inet_aton( szAddr, &mreq.imr_multiaddr ) != 0 ? 0 : -1;
+#else
       mreq.imr_multiaddr.s_addr = inet_addr( szAddr );
+      ret = ( mreq.imr_multiaddr.s_addr != INADDR_NONE ||
+              strcmp( "255.255.255.255", szAddr ) == 0 ) ? 0 : -1; /* dirty hack */
+#endif
       mreq.imr_interface.s_addr = htonl( INADDR_ANY );
 
-      ret = setsockopt( sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, ( const char * ) &mreq, sizeof( mreq ) );
+      if( ret == 0 )
+         ret = setsockopt( sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, ( const char * ) &mreq, sizeof( mreq ) );
       hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
       return ret;
 #else
@@ -3097,9 +3106,20 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 #if ( defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) ) && \
     defined( HB_HAS_GETHOSTBYADDR )
       {
-         ULONG addr = inet_addr( szAddr );
-         if( addr != INADDR_NONE || strcmp( "255.255.255.255", szAddr ) == 0 )
-            he = gethostbyaddr( ( const char * ) &addr, sizeof( addr ), AF_INET );
+         struct in_addr sia;
+
+#if defined( HB_HAS_INET_PTON )
+         if( inet_pton( AF_INET, szAddr, &sia ) > 0 )
+#elif defined( HB_HAS_INET_ATON )
+         if( inet_aton( szAddr, &sia ) != 0 )
+#else
+         sia.s_addr = inet_addr( szAddr );
+         if( sia.s_addr != INADDR_NONE ||
+             strcmp( "255.255.255.255", szAddr ) == 0 )  /* dirty hack */
+#endif
+         {
+            he = gethostbyaddr( ( const char * ) &sia, sizeof( sia ), AF_INET );
+         }
       }
 #endif
       if( he == NULL )
