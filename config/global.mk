@@ -186,7 +186,7 @@ ifeq ($(HB_INIT_DONE),)
    endif
 
    $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source)
-   $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
+   $(info ! MAKE: $(MAKE) $(MAKE_VERSION) '$(SHELL)' $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
    ifneq ($(HB_USER_PRGFLAGS),)
       $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
    endif
