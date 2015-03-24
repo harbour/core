@@ -46,6 +46,7 @@ PROCEDURE Main( ... )
    LOCAL cOwner
    LOCAL cGroup
    LOCAL nAttr
+   LOCAL cCmd
 
    LOCAL cDynVersionFull
    LOCAL cDynVersionComp
@@ -235,7 +236,7 @@ PROCEDURE Main( ... )
 
             FErase( tmp )
 
-            mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7z" + ;
+            mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7z" ) + ;
                " a -bd -r -mx -tzip" + ;
                " -x!*.tds -x!*.exp" + ;  /* for win/bcc */
                " " + FNameEscape( tmp ) + ;
@@ -247,7 +248,7 @@ PROCEDURE Main( ... )
 
                OutStd( hb_StrFormat( "! Making Harbour .exe release package: '%1$s'", tmp ) + hb_eol() )
 
-               mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" + ;
+               mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" ) + ;
                   " -V2" + ;
                   " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
             ENDIF
@@ -334,8 +335,22 @@ PROCEDURE Main( ... )
       IF nErrorLevel == 0
          FOR EACH tmp IN hb_ATokens( GetEnvC( "HB_BUILD_POSTRUN" ),, .T. )
             IF ! Empty( tmp )
+               IF Left( tmp, 1 ) + Right( tmp, 1 ) == '""' .OR. ;
+                  Left( tmp, 1 ) + Right( tmp, 1 ) == "''"
+                  tmp := SubStr( tmp, 2, Len( tmp ) - 2 )
+               ENDIF
+
+               cCmd := ""
+               FOR EACH tmp1 IN hb_ATokens( tmp,, .T. )
+                  IF tmp1:__enumIsFirst()
+                     cCmd += FNameEscape( hb_DirSepToOS( tmp1 ) )
+                  ELSE
+                     cCmd += " " + tmp1
+                  ENDIF
+               NEXT
+
                cOldDir := hb_cwd( GetEnvC( "HB_HOST_BIN_DIR" ) )
-               mk_hb_processRun( hb_DirSepAdd( "." ) + hb_FNameNameExt( hb_DirSepToOS( tmp ) ) )
+               mk_hb_processRun( cCmd )
                hb_cwd( cOldDir )
             ENDIF
          NEXT

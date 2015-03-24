@@ -9,7 +9,6 @@
 -stop{!allwin}
 
 -cflag=-DWIN32_LEAN_AND_MEAN
--cflag=-DHBWIN_NO_WINHTTP_H{HBWIN_NO_WINHTTP_H='yes'}
 
 -depkeyhead=png:png.h
 -depcontrol=png:local{HB_BUILD_3RDEXT='no'}

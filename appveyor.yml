@@ -28,8 +28,6 @@ build_script:
 - set HB_DIR_UPX=C:\upx\
 - set HB_DIR_MINGW=C:\mingw64
 - if "%TARGET:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
-# Required only for the default mingw distro in C:\mingw\
-#- if "%TARGET%" == "mingw" set HBWIN_NO_WINHTTP_H=yes
 - if "%TARGET%" == "mingw" set HB_CPU=x86
 - if "%TARGET%" == "mingw64" set HB_CPU=x86_64
 - if "%TARGET%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
@@ -39,5 +37,5 @@ build_script:
 - set HB_BUILD_DYN=no
 - set HB_BUILD_CONTRIB_DYN=no
 - set HB_BUILD_PKG=yes
-- set HB_BUILD_POSTRUN=hbtest hbspeed
+- set HB_BUILD_POSTRUN=hbtest "hbspeed --stdout"
 - win-make.exe clean install

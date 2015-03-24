@@ -46,18 +46,13 @@
 
 #include "hbwapi.h"
 
-#undef HB_WIN_HAS_WINHTTP
-#if ! defined( HB_OS_WIN_CE ) && \
-    !( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) && \
-    ! defined( __WATCOMC__ ) && \
-    ! defined( __TINYC__ ) && \
-    ! defined( HBWIN_NO_WINHTTP_H )
-   #define HB_WIN_HAS_WINHTTP
-#endif
+#if ! defined( HB_OS_WIN_CE )
 
-#if defined( HB_WIN_HAS_WINHTTP )
-   #include "winhttp.h"
-#elif ! defined( HB_OS_WIN_CE )
+   /* Clone of relevant content of "winhttp.h" Windows header.
+      We're cloning it because its availability depends on
+      C compiler type, distro, SDK, so it can only be detected
+      by probing it, and if missing we'd need to plug its place
+      with the logic below anyway. [vszakats] */
 
    #undef HINTERNET
    #define HINTERNET  LPVOID
@@ -98,9 +93,9 @@
    #undef WINHTTP_PROXY_INFO
    #undef WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
    #undef WINHTTP_AUTOPROXY_OPTIONS
-   #define WINHTTP_PROXY_INFO                   HB_WINHTTP_PROXY_INFO
-   #define WINHTTP_CURRENT_USER_IE_PROXY_CONFIG HB_WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
-   #define WINHTTP_AUTOPROXY_OPTIONS            HB_WINHTTP_AUTOPROXY_OPTIONS
+   #define WINHTTP_PROXY_INFO                    HB_WINHTTP_PROXY_INFO
+   #define WINHTTP_CURRENT_USER_IE_PROXY_CONFIG  HB_WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
+   #define WINHTTP_AUTOPROXY_OPTIONS             HB_WINHTTP_AUTOPROXY_OPTIONS
 
    #ifndef WINHTTP_ACCESS_TYPE_DEFAULT_PROXY
    #define WINHTTP_ACCESS_TYPE_DEFAULT_PROXY  0
@@ -129,14 +124,11 @@
    #ifndef ERROR_WINHTTP_LOGIN_FAILURE
    #define ERROR_WINHTTP_LOGIN_FAILURE  12015
    #endif
-
-   #define HB_WIN_HAS_WINHTTP
-
 #endif
 
 HB_FUNC( __WIN_PROXYDETECT )
 {
-#if defined( HB_WIN_HAS_WINHTTP )
+#if ! defined( HB_OS_WIN_CE )
    typedef HINTERNET ( WINAPI * _HB_WINHTTPOPEN )( LPCWSTR, DWORD, LPCWSTR, LPCWSTR, DWORD );
    typedef BOOL      ( WINAPI * _HB_WINHTTPSETTIMEOUTS )( HINTERNET, int, int, int, int );
    typedef BOOL      ( WINAPI * _HB_WINHTTPCLOSEHANDLE )( HINTERNET );
@@ -277,12 +269,8 @@ HB_FUNC( __WIN_PROXYDETECT )
       hb_retc_null();
       hb_storc( NULL, 2 );
    }
-#elif defined( HB_OS_WIN_CE )
-   /* TODO: Proxy detection for WinCE */
-   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
-   hb_retc_null();
-   hb_storc( NULL, 2 );
 #else
+   /* TODO: Proxy detection for WinCE */
    hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
    hb_retc_null();
    hb_storc( NULL, 2 );
