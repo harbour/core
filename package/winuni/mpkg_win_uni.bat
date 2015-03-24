@@ -38,20 +38,20 @@ xcopy /y       "%~dp0HARBOUR_README_WATCOM.txt"                                 
 
 xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                         "%HB_ABSROOT%"
 
-xcopy /y /s    "%~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"               "%HB_ABSROOT%lib\linux\watcom\"
-xcopy /y /s    "%~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib"                                  "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\os2\watcom\harbour-%HB_VF%-os2-watcom\lib"                   "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\lib"               "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\win\bcc\harbour-%HB_VF%-win-bcc\lib"                         "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\win\bcc64\harbour-%HB_VF%-win-bcc64\lib"                     "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw\lib"                     "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\lib"                 "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\win\msvc\harbour-%HB_VF%-win-msvc\lib"                       "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\lib"                   "%HB_ABSROOT%lib\"
-xcopy /y /s    "%~dp0..\..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib"                   "%HB_ABSROOT%lib\"
+xcopy /y /s    "%~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"               "%HB_ABSROOT%lib\linux\watcom\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib"                                  "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\os2\watcom\harbour-%HB_VF%-os2-watcom\lib"                   "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\lib"               "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\win\bcc\harbour-%HB_VF%-win-bcc\lib"                         "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\win\bcc64\harbour-%HB_VF%-win-bcc64\lib"                     "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw\lib"                     "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\lib"                 "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\win\msvc\harbour-%HB_VF%-win-msvc\lib"                       "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\lib"                   "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib"                   "%HB_ABSROOT%lib\" 2> nul
 
-xcopy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll"           "%HB_ABSROOT%bin\"
-xcopy /y       "%~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll"         "%HB_ABSROOT%bin\"
+xcopy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll"           "%HB_ABSROOT%bin\" 2> nul
+xcopy /y       "%~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll"         "%HB_ABSROOT%bin\" 2> nul
 
 :: Create special implibs for Borland (requires BCC in PATH)
 :: NOTE: Using intermediate .def files, because direct .dll to .lib conversion
@@ -66,7 +66,7 @@ for %%a in ( "%HB_ABSROOT%bin\*-%HB_VS%.dll" ) do (
    del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw"
    del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
 )
-del _hbtemp.sed
+if exists _hbtemp.sed del _hbtemp.sed
 
  copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbmk2.exe"     "%HB_ABSROOT%bin\hbmk2-x64.exe"
  copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbnetio.exe"   "%HB_ABSROOT%bin\hbnetio-x64.exe"
@@ -89,50 +89,48 @@ xcopy /y /s /q /e "%HB_DIR_MINGW%"                                              
 set _MINGW_DLL_DIR=%HB_DIR_MINGW%\bin
 if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32" set _MINGW_DLL_DIR=%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32
 
-if exist "%_MINGW_DLL_DIR%\libgcc_s_seh-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_seh-1.dll"  "%HB_ABSROOT%bin\"
-if exist "%_MINGW_DLL_DIR%\libgcc_s_sjlj-1.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll" "%HB_ABSROOT%bin\"
-if exist "%_MINGW_DLL_DIR%\libgcc_s_dw2-1.dll"  xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"  "%HB_ABSROOT%bin\"
-if exist "%_MINGW_DLL_DIR%\mingwm10.dll"        xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"        "%HB_ABSROOT%bin\"
+if exist "%_MINGW_DLL_DIR%\libgcc_s_*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_*.dll" "%HB_ABSROOT%bin\"
+if exist "%_MINGW_DLL_DIR%\mingwm10.dll"   xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"   "%HB_ABSROOT%bin\"
 
 :: Delete stuff from compiler folder we don't need
 
-rmdir /q /s "%HB_ABSROOT%comp\mingw\etc\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\opt\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\share\"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\gdb*.exe" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\gfortran.exe" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\gnat*.exe" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgfortran-*.dll" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\etc\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\opt\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\share\" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\bin\gdb*.exe" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\bin\gfortran.exe" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\bin\gnat*.exe" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\bin\libgfortran-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll" 2> nul
 
 :: 32-bit hosted
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
-rmdir /q /s "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adalib\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\lib64\"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\i686-w64-mingw32-gfortran.exe" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adalib\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\lib64\" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\bin\i686-w64-mingw32-gfortran.exe" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
 
 :: 64-bit hosted
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
-rmdir /q /s "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adalib\"
-rmdir /q /s "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\lib32\"
-del /q /f   "%HB_ABSROOT%comp\mingw\bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
-del /q /f   "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adalib\" 2> nul
+rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\lib32\" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
+del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
 
 :: Create unified installer
 
@@ -149,62 +147,62 @@ if exist "%HB_RT%harbour-%HB_VF%-win.exe" del "%HB_RT%harbour-%HB_VF%-win.exe"
 
 echo.> _hbfiles
 
-    echo "%HB_DR%RELNOTES.txt"                          >> _hbfiles
-    echo "%HB_DR%README.md"                             >> _hbfiles
-    echo "%HB_DR%COPYING.txt"                           >> _hbfiles
-    echo "%HB_DR%ChangeLog*.txt"                        >> _hbfiles
-    echo "%HB_DR%bin\*-%HB_VS%.dll"                     >> _hbfiles
-    echo "%HB_DR%bin\harbour.exe"                       >> _hbfiles
-    echo "%HB_DR%bin\hbformat.exe"                      >> _hbfiles
-    echo "%HB_DR%bin\hbi18n.exe"                        >> _hbfiles
-    echo "%HB_DR%bin\hbmk2.exe"                         >> _hbfiles
-    echo "%HB_DR%bin\hbmk2.*.hbl"                       >> _hbfiles
-    echo "%HB_DR%bin\hbnetio.exe"                       >> _hbfiles
-    echo "%HB_DR%bin\hbpp.exe"                          >> _hbfiles
-    echo "%HB_DR%bin\hbrun.exe"                         >> _hbfiles
-    echo "%HB_DR%bin\hbspeed.exe"                       >> _hbfiles
-    echo "%HB_DR%bin\hbtest.exe"                        >> _hbfiles
-if exist "%HB_DR%bin\*.hb"                          echo "%HB_DR%bin\*.hb"                          >> _hbfiles
-if exist "%HB_DR%bin\*.hbr"                         echo "%HB_DR%bin\*.hbr"                         >> _hbfiles
-if exist "%HB_DR%bin\*.ucf"                         echo "%HB_DR%bin\*.ucf"                         >> _hbfiles
-if exist "%HB_DR%bin\hbmk.hbc"                      echo "%HB_DR%bin\hbmk.hbc"                      >> _hbfiles
-    echo "%HB_DR%bin\upx*.*"                            >> _hbfiles
-    echo "%HB_DR%include\*.*"                           >> _hbfiles
-    echo "%HB_DR%bin\hbmk2-x64.exe"                     >> _hbfiles
-    echo "%HB_DR%bin\hbnetio-x64.exe"                   >> _hbfiles
-    echo "%HB_DR%bin\hbrun-x64.exe"                     >> _hbfiles
-    echo "%HB_DR%bin\hbspeed-x64.exe"                   >> _hbfiles
-    echo "%HB_DR%bin\hbtest-x64.exe"                    >> _hbfiles
-    echo "%HB_DR%lib\win\mingw\*.*"                     >> _hbfiles
-    echo "%HB_DR%lib\win\mingw64\*.*"                   >> _hbfiles
-    echo "%HB_DR%lib\wce\mingwarm\*.*"                  >> _hbfiles
+    echo "%HB_DR%RELNOTES.txt"                              >> _hbfiles
+    echo "%HB_DR%README.md"                                 >> _hbfiles
+    echo "%HB_DR%COPYING.txt"                               >> _hbfiles
+    echo "%HB_DR%ChangeLog*.txt"                            >> _hbfiles
+    echo "%HB_DR%bin\*-%HB_VS%.dll"                         >> _hbfiles
+    echo "%HB_DR%bin\harbour.exe"                           >> _hbfiles
+    echo "%HB_DR%bin\hbformat.exe"                          >> _hbfiles
+    echo "%HB_DR%bin\hbi18n.exe"                            >> _hbfiles
+    echo "%HB_DR%bin\hbmk2.exe"                             >> _hbfiles
+    echo "%HB_DR%bin\hbmk2.*.hbl"                           >> _hbfiles
+    echo "%HB_DR%bin\hbnetio.exe"                           >> _hbfiles
+    echo "%HB_DR%bin\hbpp.exe"                              >> _hbfiles
+    echo "%HB_DR%bin\hbrun.exe"                             >> _hbfiles
+    echo "%HB_DR%bin\hbspeed.exe"                           >> _hbfiles
+    echo "%HB_DR%bin\hbtest.exe"                            >> _hbfiles
+if exist "%HB_DR%bin\*.hb"     echo "%HB_DR%bin\*.hb"       >> _hbfiles
+if exist "%HB_DR%bin\*.hbr"    echo "%HB_DR%bin\*.hbr"      >> _hbfiles
+if exist "%HB_DR%bin\*.ucf"    echo "%HB_DR%bin\*.ucf"      >> _hbfiles
+if exist "%HB_DR%bin\hbmk.hbc" echo "%HB_DR%bin\hbmk.hbc"   >> _hbfiles
+    echo "%HB_DR%bin\upx*.*"                                >> _hbfiles
+    echo "%HB_DR%include\*.*"                               >> _hbfiles
+    echo "%HB_DR%bin\hbmk2-x64.exe"                         >> _hbfiles
+    echo "%HB_DR%bin\hbnetio-x64.exe"                       >> _hbfiles
+    echo "%HB_DR%bin\hbrun-x64.exe"                         >> _hbfiles
+    echo "%HB_DR%bin\hbspeed-x64.exe"                       >> _hbfiles
+    echo "%HB_DR%bin\hbtest-x64.exe"                        >> _hbfiles
+    echo "%HB_DR%lib\win\mingw\*.*"                         >> _hbfiles
+    echo "%HB_DR%lib\win\mingw64\*.*"                       >> _hbfiles
+    echo "%HB_DR%lib\wce\mingwarm\*.*"                      >> _hbfiles
     echo "%HB_DR%addons\HARBOUR_README_ADDONS.txt"          >> _hbfiles
 rem echo "%HB_DR%comp\djgpp\HARBOUR_README_DJGPP.txt"       >> _hbfiles
     echo "%HB_DR%comp\watcom\HARBOUR_README_WATCOM.txt"     >> _hbfiles
     echo "%HB_DR%comp\pocc\HARBOUR_README_POCC.txt"         >> _hbfiles
     echo "%HB_DR%comp\mingw\HARBOUR_README_MINGW.txt"       >> _hbfiles
     echo "%HB_DR%comp\mingwarm\HARBOUR_README_MINGWARM.txt" >> _hbfiles
-rem echo "%HB_DR%lib\dos\djgpp\*.*"                     >> _hbfiles
-    echo "%HB_DR%lib\dos\watcom\*.*"                    >> _hbfiles
-    echo "%HB_DR%lib\linux\watcom\*.*"                  >> _hbfiles
-    echo "%HB_DR%lib\os2\watcom\*.*"                    >> _hbfiles
-    echo "%HB_DR%lib\win\msvc\*.*"                      >> _hbfiles
-    echo "%HB_DR%lib\win\msvc64\*.*"                    >> _hbfiles
-rem echo "%HB_DR%bin\harbour-%HB_VS%-bcc.dll"           >> _hbfiles
-    echo "%HB_DR%lib\win\bcc\*.*"                       >> _hbfiles
-    echo "%HB_DR%lib\win\bcc64\*.*"                     >> _hbfiles
-    echo "%HB_DR%lib\win\watcom\*.*"                    >> _hbfiles
-rem echo "%HB_DR%lib\win\pocc\*.*"                      >> _hbfiles
-rem echo "%HB_DR%lib\win\pocc64\*.*"                    >> _hbfiles
-rem echo "%HB_DR%lib\wce\poccarm\*.*"                   >> _hbfiles
-    echo "%HB_DR%bin\*-%HB_VS%-x64.dll"                 >> _hbfiles
-    echo "%HB_DR%bin\harbour-%HB_VS%-wce-arm.dll"       >> _hbfiles
-rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"           >> _hbfiles
-    echo "%HB_DR%tests\*.*"                             >> _hbfiles
-    echo "%HB_DR%doc\*.*"                               >> _hbfiles
-    echo "%HB_DR%comp\mingw\*"                          >> _hbfiles
-    echo "%HB_DR%extras\*.*"                            >> _hbfiles
-    echo "%HB_DR%contrib\*.*"                           >> _hbfiles
+rem echo "%HB_DR%lib\dos\djgpp\*.*"                         >> _hbfiles
+    echo "%HB_DR%lib\dos\watcom\*.*"                        >> _hbfiles
+    echo "%HB_DR%lib\linux\watcom\*.*"                      >> _hbfiles
+    echo "%HB_DR%lib\os2\watcom\*.*"                        >> _hbfiles
+    echo "%HB_DR%lib\win\msvc\*.*"                          >> _hbfiles
+    echo "%HB_DR%lib\win\msvc64\*.*"                        >> _hbfiles
+rem echo "%HB_DR%bin\harbour-%HB_VS%-bcc.dll"               >> _hbfiles
+    echo "%HB_DR%lib\win\bcc\*.*"                           >> _hbfiles
+    echo "%HB_DR%lib\win\bcc64\*.*"                         >> _hbfiles
+    echo "%HB_DR%lib\win\watcom\*.*"                        >> _hbfiles
+rem echo "%HB_DR%lib\win\pocc\*.*"                          >> _hbfiles
+rem echo "%HB_DR%lib\win\pocc64\*.*"                        >> _hbfiles
+rem echo "%HB_DR%lib\wce\poccarm\*.*"                       >> _hbfiles
+    echo "%HB_DR%bin\*-%HB_VS%-x64.dll"                     >> _hbfiles
+    echo "%HB_DR%bin\harbour-%HB_VS%-wce-arm.dll"           >> _hbfiles
+rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"               >> _hbfiles
+    echo "%HB_DR%tests\*.*"                                 >> _hbfiles
+    echo "%HB_DR%doc\*.*"                                   >> _hbfiles
+    echo "%HB_DR%comp\mingw\*"                              >> _hbfiles
+    echo "%HB_DR%extras\*.*"                                >> _hbfiles
+    echo "%HB_DR%contrib\*.*"                               >> _hbfiles
 
 if exist "%HB_RT%harbour-%HB_VF%-win.7z" del "%HB_RT%harbour-%HB_VF%-win.7z"
 "%HB_DIR_7Z%7z" a -r -mx "%HB_RT%harbour-%HB_VF%-win.7z" @_hbfiles >> "%HB_RT%harbour-%HB_VF%-win-log.txt" 2>&1
