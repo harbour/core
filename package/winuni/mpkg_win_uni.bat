@@ -36,6 +36,7 @@ xcopy /y       "%~dp0HARBOUR_README_MINGWARM.txt"                               
 xcopy /y       "%~dp0HARBOUR_README_POCC.txt"                                               "%HB_ABSROOT%comp\pocc\"
 xcopy /y       "%~dp0HARBOUR_README_WATCOM.txt"                                             "%HB_ABSROOT%comp\watcom\"
 
+:: mingw 32-bit base system
 xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                         "%HB_ABSROOT%"
 
 xcopy /y /s    "%~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"               "%HB_ABSROOT%lib\linux\watcom\" 2> nul
@@ -66,7 +67,7 @@ for %%a in ( "%HB_ABSROOT%bin\*-%HB_VS%.dll" ) do (
    del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw"
    del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
 )
-if exists _hbtemp.sed del _hbtemp.sed
+if exist _hbtemp.sed del _hbtemp.sed
 
  copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbmk2.exe"     "%HB_ABSROOT%bin\hbmk2-x64.exe"
  copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbnetio.exe"   "%HB_ABSROOT%bin\hbnetio-x64.exe"
