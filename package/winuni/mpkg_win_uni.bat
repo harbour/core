@@ -35,10 +35,6 @@ xcopy /y       "%~dp0HARBOUR_README_MINGWARM.txt"                               
 xcopy /y       "%~dp0HARBOUR_README_POCC.txt"                                               "%HB_ABSROOT%comp\pocc\"
 xcopy /y       "%~dp0HARBOUR_README_WATCOM.txt"                                             "%HB_ABSROOT%comp\watcom\"
 
-:: Burn current git revision into RELNOTES.txt
-for /f %%i in ('git rev-parse --short HEAD') do set _VCS_ID_=%%i
-sed -e "s/_VCS_ID_/%_VCS_ID_%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
-
 :: mingw 32-bit base system
 xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                         "%HB_ABSROOT%"
 
@@ -122,6 +118,8 @@ del /q /f "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
 
+if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
+
 :: 64-bit hosted
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
 rd /q /s  "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\" 2> nul
@@ -135,6 +133,13 @@ del /q /f "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
+
+if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
+
+:: Burn build information into RELNOTES.txt
+
+for /f %%i in ('git rev-parse --short HEAD') do set VCS_ID=%%i
+sed -e "s/_VCS_ID_/%VCS_ID%/g" -e "s/_HB_VF_/%HB_VF%/g" -e "s/_MINGW_VER_/%MINGW_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
 
 :: Create unified installer
 

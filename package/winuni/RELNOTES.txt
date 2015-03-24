@@ -1,4 +1,4 @@
-Harbour 3.4.0 (_VCS_ID_) source archives and Windows binary
+Harbour _HB_VF_ (_VCS_ID_) source archives and Windows binary
 release is available for download on this URL:
 
    https://github.com/vszakats/harbour-core/releases
@@ -26,7 +26,7 @@ Tool/lib Dependencies
 
    Tools
 
-   MinGW GNU C 4.9.2 (x86/x64) (included)
+   MinGW GNU C _MINGW_VER_ (x86/x64) (included)
 
    Libs
 
