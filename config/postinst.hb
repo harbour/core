@@ -226,7 +226,8 @@ PROCEDURE Main( ... )
       /* Creating release packages */
 
       IF GetEnvC( "HB_BUILD_PKG" ) == "yes" .AND. ;
-         ! Empty( GetEnvC( "HB_TOP" ) )
+         ! Empty( GetEnvC( "HB_TOP" ) ) .AND. ;
+         !( GetEnvC( "_HB_BUILD_PKG_ARCHIVES" ) == "no" )
 
          IF GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos"
 
