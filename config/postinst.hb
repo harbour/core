@@ -82,7 +82,7 @@ PROCEDURE Main( ... )
 
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
                FOR EACH aFile IN Directory( "Change*" )
-                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
+                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ) )
                NEXT
 
                mk_hb_FCopy( "COPYING.txt", tmp + hb_ps() )

@@ -33,6 +33,8 @@ if exist "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
    set BASE=mingw64
 )
 
+echo ! DEBUG: %BASE%
+
 :: Assemble unified package from per-target builds
 
 if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
@@ -46,8 +48,8 @@ xcopy /y       "%~dp0HARBOUR_README_MINGWARM.txt"                               
 xcopy /y       "%~dp0HARBOUR_README_POCC.txt"                                               "%HB_ABSROOT%comp\pocc\"
 xcopy /y       "%~dp0HARBOUR_README_WATCOM.txt"                                             "%HB_ABSROOT%comp\watcom\"
 
-if "%BASE%" == "32" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
-if "%BASE%" == "64" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
+if "%BASE%" == "32" xcopy /y /s "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
+if "%BASE%" == "64" xcopy /y /s "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
 
 xcopy /y /s    "%~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"               "%HB_ABSROOT%lib\linux\watcom\" 2> nul
 xcopy /y /s    "%~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib"                                  "%HB_ABSROOT%lib\" 2> nul
