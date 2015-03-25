@@ -585,7 +585,7 @@ STATIC FUNCTION ErrorMessage( oError )
       cMessage += "<" + oError:filename + "> "
    ENDIF
    IF ValType( oError:osCode ) == "N"
-      cMessage += "OS:" + LTrim( Str( oError:osCode ) ) + " "
+      cMessage += "OS:" + LTrim( Str( OSCodeToDOS( oError:osCode ) ) ) + " "
    ENDIF
    IF ValType( oError:tries ) == "N"
       cMessage += "#:" + LTrim( Str( oError:tries ) ) + " "
@@ -619,6 +619,18 @@ STATIC FUNCTION ErrorMessage( oError )
    ENDIF
 
    RETURN cMessage
+
+STATIC FUNCTION OSCodeToDOS( nError )
+
+#ifdef __HARBOUR__
+#ifdef __PLATFORM__WINDOWS
+   SWITCH nError
+   CASE 123 /* ERROR_INVALID_NAME */ ; RETURN 2 /* ERROR_FILE_NOT_FOUND */
+   ENDSWITCH
+#endif
+#endif
+
+   RETURN nError
 
 STATIC FUNCTION ListToNArray( cString )
 
