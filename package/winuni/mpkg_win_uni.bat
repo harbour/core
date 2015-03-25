@@ -148,7 +148,7 @@ pushd "%HB_RT%"
 if exist "%HB_RT%harbour-%HB_VF%-win-log.txt" del "%HB_RT%harbour-%HB_VF%-win-log.txt"
 if exist "%HB_RT%harbour-%HB_VF%-win.exe" del "%HB_RT%harbour-%HB_VF%-win.exe"
 
-"%HB_DIR_NSIS%makensis.exe" %HB_OPT_NSIS% "%~dp0mpkg_win_uni.nsi" >> "%HB_RT%harbour-%HB_VF%-win-log.txt" 2>&1
+"%HB_DIR_NSIS%makensis.exe" %HB_OPT_NSIS% "%~dp0mpkg_win_uni.nsi"
 
 :: Create unified archive
 
