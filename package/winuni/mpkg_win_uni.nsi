@@ -73,7 +73,7 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%RELNOTES.txt"
 
   SetOutPath $INSTDIR\bin
-  File "$%HB_ABSROOT%bin\*-$%HB_VS%.dll"
+  File "$%HB_ABSROOT%bin\*-$%HB_VS%*.dll"
   File "$%HB_ABSROOT%bin\harbour.exe"
   File "$%HB_ABSROOT%bin\hbformat.exe"
   File "$%HB_ABSROOT%bin\hbi18n.exe"

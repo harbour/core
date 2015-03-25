@@ -168,7 +168,7 @@ echo.> _hbfiles
     echo "%HB_DR%COPYING.txt"                               >> _hbfiles
     echo "%HB_DR%README.md"                                 >> _hbfiles
     echo "%HB_DR%RELNOTES.txt"                              >> _hbfiles
-    echo "%HB_DR%bin\*-%HB_VS%.dll"                         >> _hbfiles
+    echo "%HB_DR%bin\*-%HB_VS%*.dll"                        >> _hbfiles
     echo "%HB_DR%bin\harbour.exe"                           >> _hbfiles
     echo "%HB_DR%bin\hbformat.exe"                          >> _hbfiles
     echo "%HB_DR%bin\hbi18n.exe"                            >> _hbfiles
