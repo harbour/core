@@ -163,16 +163,12 @@ echo.> _hbfiles
     echo "%HB_DR%bin\hbformat.exe"                          >> _hbfiles
     echo "%HB_DR%bin\hbi18n.exe"                            >> _hbfiles
     echo "%HB_DR%bin\hbmk2.exe"                             >> _hbfiles
-    echo "%HB_DR%bin\hbmk2.*.hbl"                           >> _hbfiles
     echo "%HB_DR%bin\hbnetio.exe"                           >> _hbfiles
     echo "%HB_DR%bin\hbpp.exe"                              >> _hbfiles
     echo "%HB_DR%bin\hbrun.exe"                             >> _hbfiles
     echo "%HB_DR%bin\hbspeed.exe"                           >> _hbfiles
     echo "%HB_DR%bin\hbtest.exe"                            >> _hbfiles
 if exist "%HB_DR%bin\*.hb"     echo "%HB_DR%bin\*.hb"       >> _hbfiles
-if exist "%HB_DR%bin\*.hbr"    echo "%HB_DR%bin\*.hbr"      >> _hbfiles
-if exist "%HB_DR%bin\*.ucf"    echo "%HB_DR%bin\*.ucf"      >> _hbfiles
-if exist "%HB_DR%bin\hbmk.hbc" echo "%HB_DR%bin\hbmk.hbc"   >> _hbfiles
     echo "%HB_DR%bin\upx*.*"                                >> _hbfiles
     echo "%HB_DR%include\*.*"                               >> _hbfiles
     echo "%HB_DR%bin\hbmk2-x64.exe"                         >> _hbfiles
