@@ -77,7 +77,7 @@ endlocal
 
 echo ! Creating unified Windows release package...
 
-call package\winuni\mpkg_win_uni.bat
+call package\winuni\mpkg_win_uni.bat > "%~dp0harbour-daily-win-log.txt" 2>&1
 
 echo ! Uploading Harbour unified Windows release package...
 
