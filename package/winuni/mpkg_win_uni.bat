@@ -22,6 +22,17 @@ if "%HB_RT%" == "" set HB_RT=C:\hb\
 set HB_DR=hb%HB_VS%\
 set HB_ABSROOT=%HB_RT%%HB_DR%
 
+:: Autodetect the base bitness, by default it will be 32-bit,
+:: and 64-bit if it's the only one available.
+
+if exist "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
+   :: mingw 32-bit base system
+   set BASE=mingw
+) else if exist "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" (
+   :: mingw 64-bit base system
+   set BASE=mingw64
+)
+
 :: Assemble unified package from per-target builds
 
 if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
@@ -35,8 +46,8 @@ xcopy /y       "%~dp0HARBOUR_README_MINGWARM.txt"                               
 xcopy /y       "%~dp0HARBOUR_README_POCC.txt"                                               "%HB_ABSROOT%comp\pocc\"
 xcopy /y       "%~dp0HARBOUR_README_WATCOM.txt"                                             "%HB_ABSROOT%comp\watcom\"
 
-:: mingw 32-bit base system
-xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                         "%HB_ABSROOT%"
+if "%BASE%" == "32" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
+if "%BASE%" == "64" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
 
 xcopy /y /s    "%~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"               "%HB_ABSROOT%lib\linux\watcom\" 2> nul
 xcopy /y /s    "%~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib"                                  "%HB_ABSROOT%lib\" 2> nul
@@ -79,15 +90,13 @@ xcopy /y       "%HB_DIR_UPX%upx.exe"                                            
 
 xcopy /y /s /q /e "%HB_DIR_MINGW%"                                                        "%HB_ABSROOT%comp\mingw\"
 
-:: Copy mingw runtime 32-bit .dlls
+:: Copy mingw runtime .dlls
 
-:: NOTE: In multi-target distros the .dlls matching the
-::       non-host target are to be found here:
-::          "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32"
-::          "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"
-
+:: Pick the ones from a multi-target mingw distro
+:: that match the bitness of our base.
 set _MINGW_DLL_DIR=%HB_DIR_MINGW%\bin
-if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32" set _MINGW_DLL_DIR=%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32
+if "%BASE%" == "32" if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32" set _MINGW_DLL_DIR=%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32
+if "%BASE%" == "64" if exist "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"   set _MINGW_DLL_DIR=%HB_DIR_MINGW%\i686-w64-mingw32\lib64
 
 if exist "%_MINGW_DLL_DIR%\libgcc_s_*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_*.dll" "%HB_ABSROOT%bin\"
 if exist "%_MINGW_DLL_DIR%\mingwm10.dll"   xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"   "%HB_ABSROOT%bin\"
@@ -104,7 +113,7 @@ del /q /f "%HB_ABSROOT%comp\mingw\bin\libgfortran-*.dll" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll" 2> nul
 
-:: 32-bit hosted
+:: 32-bit hosted mingw
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
 rd /q /s  "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\" 2> nul
@@ -120,7 +129,7 @@ del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.e
 
 if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
 
-:: 64-bit hosted
+:: 64-bit hosted mingw
 for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
 rd /q /s  "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\" 2> nul
@@ -154,10 +163,11 @@ if exist "%HB_RT%harbour-%HB_VF%-win.exe" del "%HB_RT%harbour-%HB_VF%-win.exe"
 
 echo.> _hbfiles
 
-    echo "%HB_DR%RELNOTES.txt"                              >> _hbfiles
-    echo "%HB_DR%README.md"                                 >> _hbfiles
-    echo "%HB_DR%COPYING.txt"                               >> _hbfiles
     echo "%HB_DR%ChangeLog*.txt"                            >> _hbfiles
+    echo "%HB_DR%CONTRIBUTING.md"                           >> _hbfiles
+    echo "%HB_DR%COPYING.txt"                               >> _hbfiles
+    echo "%HB_DR%README.md"                                 >> _hbfiles
+    echo "%HB_DR%RELNOTES.txt"                              >> _hbfiles
     echo "%HB_DR%bin\*-%HB_VS%.dll"                         >> _hbfiles
     echo "%HB_DR%bin\harbour.exe"                           >> _hbfiles
     echo "%HB_DR%bin\hbformat.exe"                          >> _hbfiles
@@ -208,7 +218,7 @@ rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"               >> _hbfiles
     echo "%HB_DR%contrib\*.*"                               >> _hbfiles
 
 if exist "%HB_RT%harbour-%HB_VF%-win.7z" del "%HB_RT%harbour-%HB_VF%-win.7z"
-"%HB_DIR_7Z%7z" a -r -mx "%HB_RT%harbour-%HB_VF%-win.7z" @_hbfiles
+"%HB_DIR_7Z%7z" a -r -mx "%HB_RT%harbour-%HB_VF%-win.7z" @_hbfiles > nul
 
 del _hbfiles
 

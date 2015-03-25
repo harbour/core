@@ -66,12 +66,11 @@ Section "Main components" hb_main
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
-  File /nonfatal "$%HB_ABSROOT%RELNOTES.txt"
-
-  File /nonfatal "$%HB_ABSROOT%COPYING.txt"
-  File /nonfatal "$%HB_ABSROOT%CONTRIBUTING.md"
-  File /nonfatal "$%HB_ABSROOT%README.md"
-  File /nonfatal "$%HB_ABSROOT%ChangeLog.txt*"
+  File "$%HB_ABSROOT%ChangeLog*.txt"
+  File "$%HB_ABSROOT%CONTRIBUTING.md"
+  File "$%HB_ABSROOT%COPYING.txt"
+  File "$%HB_ABSROOT%README.md"
+  File "$%HB_ABSROOT%RELNOTES.txt"
 
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\*-$%HB_VS%.dll"
