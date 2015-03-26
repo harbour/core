@@ -39,7 +39,9 @@ if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
 
 xcopy /y /s /q "%~dp0..\..\extras\*.*"                                                      "%HB_ABSROOT%extras\"
 xcopy /y /s /q "%~dp0..\..\tests\*.*"                                                       "%HB_ABSROOT%tests\"
- copy /y       "%~dp0ADDONS.txt"                                                            "%HB_ABSROOT%addons\README.txt"
+
+:: Using xcopy to create the target subdir in the same step
+echo f | xcopy /y /q %~dp0ADDONS.txt"                                                       "%HB_ABSROOT%addons\README.txt"
 
 if "%BASE%" == "32" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
 if "%BASE%" == "64" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
