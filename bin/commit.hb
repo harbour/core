@@ -618,7 +618,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "README.md", ;
       "COPYING.txt", ;
       "*/RELNOTES.txt", ;
-      "*/HARBOUR_README_*.txt", ;
+      "*/ADDONS.txt", ;
       "ChangeLog.txt", ;
       "*/doc/*/*.txt", ;
       "*.po", ;

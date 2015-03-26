@@ -1509,7 +1509,16 @@ Supported shells per host platforms:
           * x86-64:
             * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/seh/>
      * MinGW CEGCC [win, *nix, free, open-source]
-        * <http://cegcc.sourceforge.net/>
+        * <https://sourceforge.net/projects/cegcc/files/cegcc/>
+          * To use this package, you'll also need Cygwin package
+            (from <https://cygwin.com>) installed and be in `PATH`
+            for the Cygwin runtime (cygwin1.dll).
+          * Unpack using these commands:
+
+               bzip2 -d cegcc_mingw32ce_cygwin1.7_r1399.tar.bz2
+               tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h
+
+          * Compiler will be inside /opt/mingw32ce directory.
      * Clang [multiplatform, free, open-source]
         * <http://llvm.org/builds/> (Windows snapshots)
      * Cygwin [win, free, open-source]

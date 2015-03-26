@@ -1,10 +1,17 @@
 ;
 ; NSIS installer script for Harbour
 ;
-; Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+; Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
 ; See COPYING.txt for licensing terms.
 ;
 
+; Requires these envvars to be set:
+; - HB_ABSROOT
+; - HB_VS
+; - HB_VM
+; - HB_RT
+
+;Unicode True
 SetCompressor /solid lzma
 
   !include "MUI2.nsh"
@@ -22,12 +29,52 @@ CRCCheck on
 
 RequestExecutionLevel user
 
-!define PKG_NO_CC_MINGWARM
-!define PKG_NO_COMP_DJGPP
-!define PKG_NO_COMP_POCC
-!define PKG_NO_COMP_POCC64
-!define PKG_NO_COMP_POCCARM
-!define PKG_NO_COMP_BCC64
+; See http://nsis.sourceforge.net/Check_if_a_file_exists_at_compile_time for documentation
+!macro !defineifexist _VAR_NAME _FILE_NAME
+  !tempfile _TEMPFILE
+  !ifdef NSIS_WIN32_MAKENSIS
+    ; Windows - cmd.exe
+    !system 'if exist "${_FILE_NAME}" echo !define ${_VAR_NAME} > "${_TEMPFILE}"'
+  !else
+    ; Posix - sh
+    !system 'if [ -e "${_FILE_NAME}" ]; then echo "!define ${_VAR_NAME}" > "${_TEMPFILE}"; fi'
+  !endif
+  !include '${_TEMPFILE}'
+  !delfile '${_TEMPFILE}'
+  !undef _TEMPFILE
+!macroend
+!define !defineifexist "!insertmacro !defineifexist"
+
+; C compilers
+${!defineifexist} PKG_CC_MINGW      "$%HB_ABSROOT%comp\mingw\*.*"
+${!defineifexist} PKG_CC_MINGWARM   "$%HB_ABSROOT%comp\mingwarm\*.*"
+${!defineifexist} PKG_CC_DJGPP      "$%HB_ABSROOT%comp\djgpp\*.*"
+${!defineifexist} PKG_CC_POCC       "$%HB_ABSROOT%comp\pocc\*.*"
+${!defineifexist} PKG_CC_WATCOM     "$%HB_ABSROOT%comp\watcom\*.*"
+
+; Harbour support for C compilers
+${!defineifexist} PKG_COMP_BCC      "$%HB_ABSROOT%lib\win\bcc\*.*"
+${!defineifexist} PKG_COMP_BCC64    "$%HB_ABSROOT%lib\win\bcc64\*.*"
+${!defineifexist} PKG_COMP_DJGPP    "$%HB_ABSROOT%lib\dos\djgpp\*.*"
+${!defineifexist} PKG_COMP_MINGW    "$%HB_ABSROOT%lib\win\mingw\*.*"
+${!defineifexist} PKG_COMP_MINGW64  "$%HB_ABSROOT%lib\win\mingw64\*.*"
+${!defineifexist} PKG_COMP_MINGWARM "$%HB_ABSROOT%lib\wce\mingwarm\*.*"
+${!defineifexist} PKG_COMP_MSVC     "$%HB_ABSROOT%lib\win\msvc\*.*"
+${!defineifexist} PKG_COMP_MSVC64   "$%HB_ABSROOT%lib\win\msvc64\*.*"
+${!defineifexist} PKG_COMP_POCC     "$%HB_ABSROOT%lib\win\pocc\*.*"
+${!defineifexist} PKG_COMP_POCC64   "$%HB_ABSROOT%lib\win\pocc64\*.*"
+${!defineifexist} PKG_COMP_POCCARM  "$%HB_ABSROOT%lib\wce\poccarm\*.*"
+${!defineifexist} PKG_COMP_WATCOM   "$%HB_ABSROOT%lib\win\watcom\*.*"
+${!defineifexist} PKG_PLAT_DOS      "$%HB_ABSROOT%lib\dos\watcom\*.*"
+${!defineifexist} PKG_PLAT_LINUX    "$%HB_ABSROOT%lib\linux\watcom\*.*"
+${!defineifexist} PKG_PLAT_OS2      "$%HB_ABSROOT%lib\os2\watcom\*.*"
+
+;!if /FileExists "$%HB_ABSROOT%lib\win\msvc\*.*"
+;   !define PKG_COMP_MSVC
+;!endif
+;!if /FileExists "$%HB_ABSROOT%lib\win\msvc64\*.*"
+;   !define PKG_COMP_MSVC64
+;!endif
 
 !define /date NOW "%Y%m%d"
 
@@ -73,7 +120,6 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%RELNOTES.txt"
 
   SetOutPath $INSTDIR\bin
-  File "$%HB_ABSROOT%bin\*-$%HB_VS%*.dll"
   File "$%HB_ABSROOT%bin\harbour.exe"
   File "$%HB_ABSROOT%bin\hbi18n.exe"
   File "$%HB_ABSROOT%bin\hbmk2.exe"
@@ -110,32 +156,42 @@ Section "Main components" hb_main
 
 SectionEnd
 
-!ifndef PKG_NO_COMP_MINGW64
-Section /o "x64 tools" hb_main_x64
-  SetOutPath $INSTDIR\bin
-  File "$%HB_ABSROOT%bin\hbmk2-x64.exe"
-  File "$%HB_ABSROOT%bin\hbnetio-x64.exe"
-  File "$%HB_ABSROOT%bin\hbrun-x64.exe"
-  File "$%HB_ABSROOT%bin\hbspeed-x64.exe"
-  File "$%HB_ABSROOT%bin\hbtest-x64.exe"
-SectionEnd
-!endif
-
-!ifndef PKG_NO_CC_MINGW
-Section "MinGW compiler" hb_mingw
+!ifdef PKG_CC_MINGW
+Section "MinGW compiler" hb_cc_mingw
   SetOutPath $INSTDIR\comp\mingw
   File /r "$%HB_ABSROOT%comp\mingw\*.*"
 SectionEnd
 !endif
 
-!ifndef PKG_NO_CC_MINGWARM
-Section "MinGW WinCE/ARM compiler" hb_mingwarm
+!ifdef PKG_CC_MINGWARM
+Section "MinGW WinCE/ARM compiler" hb_cc_mingwarm
   SetOutPath $INSTDIR\comp\mingwarm
   File /r "$%HB_ABSROOT%comp\mingwarm\*.*"
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_MINGW
+!ifdef PKG_CC_DJGPP
+Section "DJGPP MS-DOS compiler" hb_cc_djgpp
+  SetOutPath $INSTDIR\comp\djgpp
+  File /r "$%HB_ABSROOT%comp\djgpp\*.*"
+SectionEnd
+!endif
+
+!ifdef PKG_CC_POCC
+Section "Pelles C compiler" hb_cc_pocc
+  SetOutPath $INSTDIR\comp\pocc
+  File /r "$%HB_ABSROOT%comp\pocc\*.*"
+SectionEnd
+!endif
+
+!ifdef PKG_CC_WATCOM
+Section "Watcom C compiler" hb_cc_watcom
+  SetOutPath $INSTDIR\comp\watcom
+  File /r "$%HB_ABSROOT%comp\watcom\*.*"
+SectionEnd
+!endif
+
+!ifdef PKG_COMP_MINGW
 Section "Libs for MinGW" hb_lib_mingw
   SectionIn RO
   SetOutPath $INSTDIR\lib\win\mingw
@@ -145,14 +201,14 @@ Section "Libs for MinGW" hb_lib_mingw
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_MINGW64
+!ifdef PKG_COMP_MINGW64
 Section /o "Libs for MinGW x64" hb_lib_mingw64
   SetOutPath $INSTDIR\lib\win\mingw64
   File "$%HB_ABSROOT%lib\win\mingw64\*.*"
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_MINGWARM
+!ifdef PKG_COMP_MINGWARM
 Section /o "Libs for MinGW WinCE/ARM" hb_lib_mingwarm
   SetOutPath $INSTDIR\lib\wce\mingwarm
   File "$%HB_ABSROOT%lib\wce\mingwarm\*.*"
@@ -161,21 +217,21 @@ Section /o "Libs for MinGW WinCE/ARM" hb_lib_mingwarm
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_MSVC
+!ifdef PKG_COMP_MSVC
 Section "Libs for MSVC" hb_lib_msvc
   SetOutPath $INSTDIR\lib\win\msvc
   File "$%HB_ABSROOT%lib\win\msvc\*.*"
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_MSVC64
+!ifdef PKG_COMP_MSVC64
 Section /o "Libs for MSVC x64" hb_lib_msvc64
   SetOutPath $INSTDIR\lib\win\msvc64
   File "$%HB_ABSROOT%lib\win\msvc64\*.*"
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_BCC
+!ifdef PKG_COMP_BCC
 Section "Libs for Borland C" hb_lib_bcc
   SetOutPath $INSTDIR\bin
   ; File "$%HB_ABSROOT%bin\harbour-$%HB_VS%-bcc.dll"
@@ -184,7 +240,7 @@ Section "Libs for Borland C" hb_lib_bcc
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_BCC64
+!ifdef PKG_COMP_BCC64
 Section "Libs for Borland C x64" hb_lib_bcc64
   SetOutPath $INSTDIR\bin
   SetOutPath $INSTDIR\lib\win\bcc64
@@ -192,7 +248,7 @@ Section "Libs for Borland C x64" hb_lib_bcc64
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_WATCOM
+!ifdef PKG_COMP_WATCOM
 Section /o "Libs for Open Watcom" hb_lib_watcom
   SetOutPath $INSTDIR\lib\win\watcom
   File "$%HB_ABSROOT%lib\win\watcom\*.*"
@@ -201,7 +257,7 @@ Section /o "Libs for Open Watcom" hb_lib_watcom
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_POCC
+!ifdef PKG_COMP_POCC
 Section /o "Libs for Pelles C" hb_lib_pocc
   SetOutPath $INSTDIR\lib\win\pocc
   File "$%HB_ABSROOT%lib\win\pocc\*.*"
@@ -210,21 +266,21 @@ Section /o "Libs for Pelles C" hb_lib_pocc
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_POCC64
+!ifdef PKG_COMP_POCC64
 Section /o "Libs for Pelles C x64" hb_lib_pocc64
   SetOutPath $INSTDIR\lib\win\pocc64
   File "$%HB_ABSROOT%lib\win\pocc64\*.*"
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_POCCARM
+!ifdef PKG_COMP_POCCARM
 Section /o "Libs for Pelles C WinCE/ARM" hb_lib_poccarm
   SetOutPath $INSTDIR\lib\wce\poccarm
   File "$%HB_ABSROOT%lib\wce\poccarm\*.*"
 SectionEnd
 !endif
 
-!ifndef PKG_NO_PLAT_LINUX
+!ifdef PKG_PLAT_LINUX
 Section /o "Libs for Open Watcom Linux" hb_lib_linux
   SetOutPath $INSTDIR\lib\linux\watcom
   File "$%HB_ABSROOT%lib\linux\watcom\*.*"
@@ -233,7 +289,7 @@ Section /o "Libs for Open Watcom Linux" hb_lib_linux
 SectionEnd
 !endif
 
-!ifndef PKG_NO_PLAT_OS2
+!ifdef PKG_PLAT_OS2
 Section /o "Libs for Open Watcom OS/2" hb_lib_os2
   SetOutPath $INSTDIR\lib\os2\watcom
   File "$%HB_ABSROOT%lib\os2\watcom\*.*"
@@ -242,7 +298,7 @@ Section /o "Libs for Open Watcom OS/2" hb_lib_os2
 SectionEnd
 !endif
 
-!ifndef PKG_NO_PLAT_DOS
+!ifdef PKG_PLAT_DOS
 Section /o "Libs for Open Watcom MS-DOS" hb_lib_dos
   SetOutPath $INSTDIR\lib\dos\watcom
   File "$%HB_ABSROOT%lib\dos\watcom\*.*"
@@ -251,7 +307,7 @@ Section /o "Libs for Open Watcom MS-DOS" hb_lib_dos
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_DJGPP
+!ifdef PKG_COMP_DJGPP
 Section /o "Libs for DJGPP MS-DOS" hb_lib_djgpp
   SetOutPath $INSTDIR\lib\dos\djgpp
   File "$%HB_ABSROOT%lib\dos\djgpp\*.*"
@@ -260,14 +316,21 @@ Section /o "Libs for DJGPP MS-DOS" hb_lib_djgpp
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_MINGW64
+!ifdef PKG_COMP_MINGW
+Section /o "Dlls for x86" hb_dlls_x86
+  SetOutPath $INSTDIR\bin
+  File "$%HB_ABSROOT%bin\*-$%HB_VS%.dll"
+SectionEnd
+!endif
+
+!ifdef PKG_COMP_MINGW64
 Section /o "Dlls for x64" hb_dlls_x64
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\*-$%HB_VS%-x64.dll"
 SectionEnd
 !endif
 
-!ifndef PKG_NO_COMP_MINGWARM
+!ifdef PKG_COMP_MINGWARM
 Section /o "Dlls for WinCE/ARM" hb_dlls_arm
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\harbour-$%HB_VS%-wce-arm.dll"
@@ -275,7 +338,7 @@ SectionEnd
 !endif
 
 !ifdef _NEVER_
-!ifndef PKG_NO_PLAT_OS2
+!ifdef PKG_PLAT_OS2
 Section /o "Dlls for OS/2" hb_dlls_os2
   SetOutPath $INSTDIR\bin
   ; TOFIX: .dll name collision with MS-DOS
@@ -283,7 +346,7 @@ Section /o "Dlls for OS/2" hb_dlls_os2
 SectionEnd
 !endif
 
-!ifndef PKG_NO_PLAT_DOS
+!ifdef PKG_PLAT_DOS
 Section /o "Dlls for MS-DOS" hb_dlls_dos
   SetOutPath $INSTDIR\bin
   ; TOFIX: .dll name collision with OS/2
@@ -329,68 +392,81 @@ SectionEnd
   LangString DESC_hb_main         ${LANG_ENGLISH} "Harbour main components"
   LangString DESC_hb_shortcuts    ${LANG_ENGLISH} "Add icons to Start Menu and Desktop"
   LangString DESC_hb_examples     ${LANG_ENGLISH} "Harbour samples and tests"
-!ifndef PKG_NO_COMP_MINGW64
-  LangString DESC_hb_main_x64     ${LANG_ENGLISH} "Harbour x64 tools"
+!ifdef PKG_COMP_MINGW
+  LangString DESC_hb_dlls_x86     ${LANG_ENGLISH} "Harbour dlls for x86"
+!endif
+!ifdef PKG_COMP_MINGW64
   LangString DESC_hb_dlls_x64     ${LANG_ENGLISH} "Harbour dlls for x64"
 !endif
-!ifndef PKG_NO_COMP_MINGWARM
+!ifdef PKG_COMP_MINGWARM
   LangString DESC_hb_dlls_arm     ${LANG_ENGLISH} "Harbour dlls for WinCE/ARM"
 !endif
 !ifdef _NEVER_
-!ifndef PKG_NO_PLAT_OS2
+!ifdef PKG_PLAT_OS2
   LangString DESC_hb_dlls_os2     ${LANG_ENGLISH} "Harbour dlls for OS/2"
 !endif
-!ifndef PKG_NO_PLAT_DOS
+!ifdef PKG_PLAT_DOS
   LangString DESC_hb_dlls_dos     ${LANG_ENGLISH} "Harbour dlls for MS-DOS"
 !endif
 !endif
-!ifndef PKG_NO_CC_MINGW
-  LangString DESC_hb_mingw        ${LANG_ENGLISH} "MinGW compiler"
+!ifdef PKG_CC_MINGW
+  LangString DESC_hb_cc_mingw     ${LANG_ENGLISH} "MinGW compiler"
 !endif
-!ifndef PKG_NO_CC_MINGWARM
-  LangString DESC_hb_mingwarm     ${LANG_ENGLISH} "MinGW WinCE/ARM compiler"
+!ifdef PKG_CC_MINGWARM
+  LangString DESC_hb_cc_mingwarm  ${LANG_ENGLISH} "MinGW WinCE/ARM compiler"
 !endif
+!ifdef PKG_CC_DJGPP
+  LangString DESC_hb_cc_djgpp     ${LANG_ENGLISH} "DJGPP MS-DOS compiler"
+!endif
+!ifdef PKG_CC_POCC
+  LangString DESC_hb_cc_pocc      ${LANG_ENGLISH} "Pelles C compiler"
+!endif
+!ifdef PKG_CC_WATCOM
+  LangString DESC_hb_cc_watcom    ${LANG_ENGLISH} "Watcom C compiler"
+!endif
+!ifdef PKG_COMP_MINGW
   LangString DESC_hb_lib_mingw    ${LANG_ENGLISH} "Harbour libs for MinGW"
-!ifndef PKG_NO_COMP_MINGW64
+!endif
+!ifdef PKG_COMP_MINGW64
   LangString DESC_hb_lib_mingw64  ${LANG_ENGLISH} "Harbour libs for MinGW x64"
 !endif
-!ifndef PKG_NO_COMP_MINGWARM
+!ifdef PKG_COMP_MINGWARM
   LangString DESC_hb_lib_mingwarm ${LANG_ENGLISH} "Harbour libs for MinGW WinCE/ARM"
 !endif
-!ifndef PKG_NO_COMP_MSVC
+!ifdef PKG_COMP_MSVC
   LangString DESC_hb_lib_msvc     ${LANG_ENGLISH} "Harbour libs for MSVC"
 !endif
-!ifndef PKG_NO_COMP_MSVC64
+!ifdef PKG_COMP_MSVC64
   LangString DESC_hb_lib_msvc64   ${LANG_ENGLISH} "Harbour libs for MSVC x64"
 !endif
-!ifndef PKG_NO_COMP_BCC
+!ifdef PKG_COMP_BCC
   LangString DESC_hb_lib_bcc      ${LANG_ENGLISH} "Harbour libs for Borland C"
 !endif
-!ifndef PKG_NO_COMP_BCC64
+!ifdef PKG_COMP_BCC64
   LangString DESC_hb_lib_bcc64    ${LANG_ENGLISH} "Harbour libs for Borland C x64"
 !endif
-!ifndef PKG_NO_COMP_WATCOM
+!ifdef PKG_COMP_WATCOM
   LangString DESC_hb_lib_watcom   ${LANG_ENGLISH} "Harbour libs for Open Watcom"
 !endif
-!ifndef PKG_NO_COMP_POCC
+!ifdef PKG_COMP_POCC
   LangString DESC_hb_lib_pocc     ${LANG_ENGLISH} "Harbour libs for Pelles C"
 !endif
-!ifndef PKG_NO_COMP_POCC64
+!ifdef PKG_COMP_POCC64
   LangString DESC_hb_lib_pocc64   ${LANG_ENGLISH} "Harbour libs for Pelles C x64"
 !endif
-!ifndef PKG_NO_COMP_POCCARM
+!ifdef PKG_COMP_POCCARM
   LangString DESC_hb_lib_poccarm  ${LANG_ENGLISH} "Harbour libs for Pelles C WinCE/ARM"
 !endif
-!ifndef PKG_NO_PLAT_LINUX
+!ifdef PKG_PLAT_LINUX
   LangString DESC_hb_lib_linux    ${LANG_ENGLISH} "Harbour libs for Open Watcom Linux"
 !endif
-!ifndef PKG_NO_PLAT_OS2
+!ifdef PKG_PLAT_OS2
   LangString DESC_hb_lib_os2      ${LANG_ENGLISH} "Harbour libs for Open Watcom OS/2"
 !endif
-!ifndef PKG_NO_PLAT_DOS
+!ifdef PKG_PLAT_DOS
   LangString DESC_hb_lib_dos      ${LANG_ENGLISH} "Harbour libs for Open Watcom MS-DOS"
 !endif
-!ifndef PKG_NO_COMP_DJGPP
+!ifdef PKG_COMP_DJGPP
   LangString DESC_hb_lib_djgpp    ${LANG_ENGLISH} "Harbour libs for DJGPP MS-DOS"
 !endif
 
@@ -399,60 +475,73 @@ SectionEnd
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_main}         $(DESC_hb_main)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_shortcuts}    $(DESC_hb_shortcuts)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_examples}     $(DESC_hb_examples)
-!ifndef PKG_NO_COMP_MINGW64
-    !insertmacro MUI_DESCRIPTION_TEXT ${hb_main_x64}     $(DESC_hb_main_x64)
+!ifdef PKG_COMP_MINGW
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_x86}     $(DESC_hb_dlls_x86)
+!endif
+!ifdef PKG_COMP_MINGW64
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_x64}     $(DESC_hb_dlls_x64)
 !endif
-!ifndef PKG_NO_COMP_MINGWARM
+!ifdef PKG_COMP_MINGWARM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_arm}     $(DESC_hb_dlls_arm)
 !endif
-!ifndef PKG_NO_CC_MINGW
-    !insertmacro MUI_DESCRIPTION_TEXT ${hb_mingw}        $(DESC_hb_mingw)
+!ifdef PKG_CC_MINGW
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_cc_mingw}     $(DESC_hb_cc_mingw)
 !endif
-!ifndef PKG_NO_CC_MINGWARM
-    !insertmacro MUI_DESCRIPTION_TEXT ${hb_mingwarm}     $(DESC_hb_mingwarm)
+!ifdef PKG_CC_MINGWARM
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_cc_mingwarm}  $(DESC_hb_cc_mingwarm)
 !endif
+!ifdef PKG_CC_DJGPP
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_cc_djgpp}     $(DESC_hb_cc_djgpp)
+!endif
+!ifdef PKG_CC_POCC
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_cc_pocc}      $(DESC_hb_cc_pocc)
+!endif
+!ifdef PKG_CC_WATCOM
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_cc_watcom}    $(DESC_hb_cc_watcom)
+!endif
+!ifdef PKG_COMP_MINGW
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_mingw}    $(DESC_hb_lib_mingw)
-!ifndef PKG_NO_COMP_MINGW64
+!endif
+!ifdef PKG_COMP_MINGW64
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_mingw64}  $(DESC_hb_lib_mingw64)
 !endif
-!ifndef PKG_NO_COMP_MINGWARM
+!ifdef PKG_COMP_MINGWARM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_mingwarm} $(DESC_hb_lib_mingwarm)
 !endif
-!ifndef PKG_NO_COMP_MSVC
+!ifdef PKG_COMP_MSVC
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_msvc}     $(DESC_hb_lib_msvc)
 !endif
-!ifndef PKG_NO_COMP_MSVC64
+!ifdef PKG_COMP_MSVC64
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_msvc64}   $(DESC_hb_lib_msvc64)
 !endif
-!ifndef PKG_NO_COMP_BCC
+!ifdef PKG_COMP_BCC
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_bcc}      $(DESC_hb_lib_bcc)
 !endif
-!ifndef PKG_NO_COMP_BCC64
+!ifdef PKG_COMP_BCC64
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_bcc64}    $(DESC_hb_lib_bcc64)
 !endif
-!ifndef PKG_NO_COMP_WATCOM
+!ifdef PKG_COMP_WATCOM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_watcom}   $(DESC_hb_lib_watcom)
 !endif
-!ifndef PKG_NO_COMP_POCC
+!ifdef PKG_COMP_POCC
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_pocc}     $(DESC_hb_lib_pocc)
 !endif
-!ifndef PKG_NO_COMP_POCC64
+!ifdef PKG_COMP_POCC64
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_pocc64}   $(DESC_hb_lib_pocc64)
 !endif
-!ifndef PKG_NO_COMP_POCCARM
+!ifdef PKG_COMP_POCCARM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_poccarm}  $(DESC_hb_lib_poccarm)
 !endif
-!ifndef PKG_NO_PLAT_LINUX
+!ifdef PKG_PLAT_LINUX
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_linux}    $(DESC_hb_lib_linux)
 !endif
-!ifndef PKG_NO_PLAT_OS2
+!ifdef PKG_PLAT_OS2
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_os2}      $(DESC_hb_lib_os2)
 !endif
-!ifndef PKG_NO_PLAT_DOS
+!ifdef PKG_PLAT_DOS
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_dos}      $(DESC_hb_lib_dos)
 !endif
-!ifndef PKG_NO_COMP_DJGPP
+!ifdef PKG_COMP_DJGPP
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_djgpp}    $(DESC_hb_lib_djgpp)
 !endif
   !insertmacro MUI_FUNCTION_DESCRIPTION_END

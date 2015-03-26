@@ -73,6 +73,12 @@
    #ifndef VER_NT_WORKSTATION
    #define VER_NT_WORKSTATION  0x0000001
    #endif
+   #ifndef VER_NT_DOMAIN_CONTROLLER
+   #define VER_NT_DOMAIN_CONTROLLER  0x0000002
+   #endif
+   #ifndef VER_NT_SERVER
+   #define VER_NT_SERVER  0x0000003
+   #endif
 
    #ifndef VER_MINORVERSION
    #define VER_MINORVERSION  0x0000001
@@ -574,6 +580,7 @@ static HB_BOOL s_fWin9x    = HB_FALSE;
 
 static void s_hb_winVerInit( void )
 {
+#if ! defined( HB_OS_WIN_CE )
    OSVERSIONINFO osvi;
 
    s_fWin10    = hb_iswinver( 6, 4, 0, HB_TRUE );
@@ -586,9 +593,11 @@ static void s_hb_winVerInit( void )
    osvi.dwOSVersionInfoSize = sizeof( osvi );
    if( GetVersionEx( &osvi ) )
    {
+      /* NOTE: Value is VER_PLATFORM_WIN32_CE on WinCE */
       s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
       s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
    }
+#endif
 
    s_fWinVerInit = HB_TRUE;
 }

@@ -39,12 +39,7 @@ if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
 
 xcopy /y /s /q "%~dp0..\..\extras\*.*"                                                      "%HB_ABSROOT%extras\"
 xcopy /y /s /q "%~dp0..\..\tests\*.*"                                                       "%HB_ABSROOT%tests\"
-xcopy /y       "%~dp0HARBOUR_README_ADDONS.txt"                                             "%HB_ABSROOT%addons\"
-xcopy /y       "%~dp0HARBOUR_README_DJGPP.txt"                                              "%HB_ABSROOT%comp\djgpp\"
-xcopy /y       "%~dp0HARBOUR_README_MINGW.txt"                                              "%HB_ABSROOT%comp\mingw\"
-xcopy /y       "%~dp0HARBOUR_README_MINGWARM.txt"                                           "%HB_ABSROOT%comp\mingwarm\"
-xcopy /y       "%~dp0HARBOUR_README_POCC.txt"                                               "%HB_ABSROOT%comp\pocc\"
-xcopy /y       "%~dp0HARBOUR_README_WATCOM.txt"                                             "%HB_ABSROOT%comp\watcom\"
+ copy /y       "%~dp0ADDONS.txt"                                                            "%HB_ABSROOT%addons\README.txt"
 
 if "%BASE%" == "32" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
 if "%BASE%" == "64" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
@@ -79,16 +74,14 @@ for %%a in ( "%HB_ABSROOT%bin\*-%HB_VS%.dll" ) do (
 )
 if exist _hbtemp.sed del _hbtemp.sed
 
- copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbmk2.exe"     "%HB_ABSROOT%bin\hbmk2-x64.exe"
- copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbnetio.exe"   "%HB_ABSROOT%bin\hbnetio-x64.exe"
- copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbrun.exe"     "%HB_ABSROOT%bin\hbrun-x64.exe"
- copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbspeed.exe"   "%HB_ABSROOT%bin\hbspeed-x64.exe"
- copy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\hbtest.exe"    "%HB_ABSROOT%bin\hbtest-x64.exe"
+:: Copy upx
 
 xcopy /y       "%HB_DIR_UPX%upx.exe"                                                      "%HB_ABSROOT%bin\"
  copy /y       "%HB_DIR_UPX%LICENSE"                                                      "%HB_ABSROOT%bin\upx_LICENSE.txt"
 
-xcopy /y /s /q /e "%HB_DIR_MINGW%"                                                        "%HB_ABSROOT%comp\mingw\"
+:: Copy C compiler
+
+xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%comp\mingw\"
 
 :: Copy mingw runtime .dlls
 
@@ -101,7 +94,7 @@ if "%BASE%" == "64" if exist "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"   set _MING
 if exist "%_MINGW_DLL_DIR%\libgcc_s_*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_*.dll" "%HB_ABSROOT%bin\"
 if exist "%_MINGW_DLL_DIR%\mingwm10.dll"   xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"   "%HB_ABSROOT%bin\"
 
-:: Delete stuff from compiler folder we don't need
+:: Delete stuff from C compiler folder we don't need
 
 rd /q /s  "%HB_ABSROOT%comp\mingw\etc\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\opt\" 2> nul
@@ -157,7 +150,7 @@ pushd "%HB_RT%"
 if exist "%HB_RT%harbour-%HB_VF%-win-log.txt" del "%HB_RT%harbour-%HB_VF%-win-log.txt"
 if exist "%HB_RT%harbour-%HB_VF%-win.exe" del "%HB_RT%harbour-%HB_VF%-win.exe"
 
-"%HB_DIR_NSIS%makensis.exe" %HB_OPT_NSIS% "%~dp0mpkg_win_uni.nsi"
+"%HB_DIR_NSIS%makensis.exe" "%~dp0mpkg_win_uni.nsi"
 
 :: Create unified archive
 
@@ -165,58 +158,47 @@ echo.> _hbfiles
 
 if exist "%HB_DR%bin\hbformat.exe" echo "%HB_DR%bin\hbformat.exe" >> _hbfiles
 if exist "%HB_DR%bin\hbnetio.exe"  echo "%HB_DR%bin\hbnetio.exe"  >> _hbfiles
-if exist "%HB_DR%bin\*.hb"         echo "%HB_DR%bin\*.hb"         >> _hbfiles
 
-    echo "%HB_DR%ChangeLog*.txt"                            >> _hbfiles
-    echo "%HB_DR%CONTRIBUTING.md"                           >> _hbfiles
-    echo "%HB_DR%COPYING.txt"                               >> _hbfiles
-    echo "%HB_DR%README.md"                                 >> _hbfiles
-    echo "%HB_DR%RELNOTES.txt"                              >> _hbfiles
-    echo "%HB_DR%bin\*-%HB_VS%*.dll"                        >> _hbfiles
-    echo "%HB_DR%bin\harbour.exe"                           >> _hbfiles
-    echo "%HB_DR%bin\hbi18n.exe"                            >> _hbfiles
-    echo "%HB_DR%bin\hbmk2.exe"                             >> _hbfiles
-    echo "%HB_DR%bin\hbpp.exe"                              >> _hbfiles
-    echo "%HB_DR%bin\hbrun.exe"                             >> _hbfiles
-    echo "%HB_DR%bin\hbspeed.exe"                           >> _hbfiles
-    echo "%HB_DR%bin\hbtest.exe"                            >> _hbfiles
-    echo "%HB_DR%bin\upx*.*"                                >> _hbfiles
-    echo "%HB_DR%include\*.*"                               >> _hbfiles
-    echo "%HB_DR%bin\hbmk2-x64.exe"                         >> _hbfiles
-    echo "%HB_DR%bin\hbnetio-x64.exe"                       >> _hbfiles
-    echo "%HB_DR%bin\hbrun-x64.exe"                         >> _hbfiles
-    echo "%HB_DR%bin\hbspeed-x64.exe"                       >> _hbfiles
-    echo "%HB_DR%bin\hbtest-x64.exe"                        >> _hbfiles
-    echo "%HB_DR%lib\win\mingw\*.*"                         >> _hbfiles
-    echo "%HB_DR%lib\win\mingw64\*.*"                       >> _hbfiles
-    echo "%HB_DR%lib\wce\mingwarm\*.*"                      >> _hbfiles
-    echo "%HB_DR%addons\HARBOUR_README_ADDONS.txt"          >> _hbfiles
-rem echo "%HB_DR%comp\djgpp\HARBOUR_README_DJGPP.txt"       >> _hbfiles
-    echo "%HB_DR%comp\watcom\HARBOUR_README_WATCOM.txt"     >> _hbfiles
-    echo "%HB_DR%comp\pocc\HARBOUR_README_POCC.txt"         >> _hbfiles
-    echo "%HB_DR%comp\mingw\HARBOUR_README_MINGW.txt"       >> _hbfiles
-    echo "%HB_DR%comp\mingwarm\HARBOUR_README_MINGWARM.txt" >> _hbfiles
-rem echo "%HB_DR%lib\dos\djgpp\*.*"                         >> _hbfiles
-    echo "%HB_DR%lib\dos\watcom\*.*"                        >> _hbfiles
-    echo "%HB_DR%lib\linux\watcom\*.*"                      >> _hbfiles
-    echo "%HB_DR%lib\os2\watcom\*.*"                        >> _hbfiles
-    echo "%HB_DR%lib\win\msvc\*.*"                          >> _hbfiles
-    echo "%HB_DR%lib\win\msvc64\*.*"                        >> _hbfiles
-rem echo "%HB_DR%bin\harbour-%HB_VS%-bcc.dll"               >> _hbfiles
-    echo "%HB_DR%lib\win\bcc\*.*"                           >> _hbfiles
-    echo "%HB_DR%lib\win\bcc64\*.*"                         >> _hbfiles
-    echo "%HB_DR%lib\win\watcom\*.*"                        >> _hbfiles
-rem echo "%HB_DR%lib\win\pocc\*.*"                          >> _hbfiles
-rem echo "%HB_DR%lib\win\pocc64\*.*"                        >> _hbfiles
-rem echo "%HB_DR%lib\wce\poccarm\*.*"                       >> _hbfiles
-    echo "%HB_DR%bin\*-%HB_VS%-x64.dll"                     >> _hbfiles
-    echo "%HB_DR%bin\harbour-%HB_VS%-wce-arm.dll"           >> _hbfiles
-rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"               >> _hbfiles
-    echo "%HB_DR%tests\*.*"                                 >> _hbfiles
-    echo "%HB_DR%doc\*.*"                                   >> _hbfiles
-    echo "%HB_DR%comp\mingw\*"                              >> _hbfiles
-    echo "%HB_DR%extras\*.*"                                >> _hbfiles
-    echo "%HB_DR%contrib\*.*"                               >> _hbfiles
+echo "%HB_DR%ChangeLog*.txt"        >> _hbfiles
+echo "%HB_DR%CONTRIBUTING.md"       >> _hbfiles
+echo "%HB_DR%COPYING.txt"           >> _hbfiles
+echo "%HB_DR%README.md"             >> _hbfiles
+echo "%HB_DR%RELNOTES.txt"          >> _hbfiles
+echo "%HB_DR%bin\*-%HB_VS%*.dll"    >> _hbfiles
+echo "%HB_DR%bin\harbour.exe"       >> _hbfiles
+echo "%HB_DR%bin\hbi18n.exe"        >> _hbfiles
+echo "%HB_DR%bin\hbmk2.exe"         >> _hbfiles
+echo "%HB_DR%bin\hbpp.exe"          >> _hbfiles
+echo "%HB_DR%bin\hbrun.exe"         >> _hbfiles
+echo "%HB_DR%bin\hbspeed.exe"       >> _hbfiles
+echo "%HB_DR%bin\hbtest.exe"        >> _hbfiles
+echo "%HB_DR%bin\*.hb"              >> _hbfiles
+echo "%HB_DR%bin\upx*.*"            >> _hbfiles
+echo "%HB_DR%include\*.*"           >> _hbfiles
+echo "%HB_DR%lib\win\mingw\*.*"     >> _hbfiles
+echo "%HB_DR%lib\win\mingw64\*.*"   >> _hbfiles
+echo "%HB_DR%lib\wce\mingwarm\*.*"  >> _hbfiles
+echo "%HB_DR%lib\dos\djgpp\*.*"     >> _hbfiles
+echo "%HB_DR%lib\dos\watcom\*.*"    >> _hbfiles
+echo "%HB_DR%lib\linux\watcom\*.*"  >> _hbfiles
+echo "%HB_DR%lib\os2\watcom\*.*"    >> _hbfiles
+echo "%HB_DR%lib\win\msvc\*.*"      >> _hbfiles
+echo "%HB_DR%lib\win\msvc64\*.*"    >> _hbfiles
+echo "%HB_DR%lib\win\bcc\*.*"       >> _hbfiles
+echo "%HB_DR%lib\win\bcc64\*.*"     >> _hbfiles
+echo "%HB_DR%lib\win\watcom\*.*"    >> _hbfiles
+echo "%HB_DR%lib\win\pocc\*.*"      >> _hbfiles
+echo "%HB_DR%lib\win\pocc64\*.*"    >> _hbfiles
+echo "%HB_DR%lib\wce\poccarm\*.*"   >> _hbfiles
+echo "%HB_DR%tests\*.*"             >> _hbfiles
+echo "%HB_DR%doc\*.*"               >> _hbfiles
+echo "%HB_DR%comp\mingw\*"          >> _hbfiles
+echo "%HB_DR%comp\djgpp\*"          >> _hbfiles
+echo "%HB_DR%comp\pocc\*"           >> _hbfiles
+echo "%HB_DR%comp\watcom\*"         >> _hbfiles
+echo "%HB_DR%extras\*.*"            >> _hbfiles
+echo "%HB_DR%contrib\*.*"           >> _hbfiles
+echo "%HB_DR%addons\README.txt"     >> _hbfiles
 
 if exist "%HB_RT%harbour-%HB_VF%-win.7z" del "%HB_RT%harbour-%HB_VF%-win.7z"
 "%HB_DIR_7Z%7z" a -r -mx "%HB_RT%harbour-%HB_VF%-win.7z" @_hbfiles > nul
