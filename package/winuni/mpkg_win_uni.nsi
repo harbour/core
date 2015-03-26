@@ -141,7 +141,7 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%doc\*.*"
 
   SetOutPath $INSTDIR\addons
-  File "$%HB_ABSROOT%addons\HARBOUR_README_ADDONS.txt"
+  File "$%HB_ABSROOT%addons\README.txt"
 
   ; Write the installation path into the registry
 ; WriteRegStr HKLM "SOFTWARE\Harbour $%HB_VM%" "InstallDir" "$INSTDIR"
