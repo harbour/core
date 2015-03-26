@@ -75,15 +75,17 @@ Section "Main components" hb_main
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\*-$%HB_VS%*.dll"
   File "$%HB_ABSROOT%bin\harbour.exe"
-  File "$%HB_ABSROOT%bin\hbformat.exe"
   File "$%HB_ABSROOT%bin\hbi18n.exe"
   File "$%HB_ABSROOT%bin\hbmk2.exe"
-  File "$%HB_ABSROOT%bin\hbnetio.exe"
   File "$%HB_ABSROOT%bin\hbpp.exe"
   File "$%HB_ABSROOT%bin\hbrun.exe"
   File "$%HB_ABSROOT%bin\hbspeed.exe"
   File "$%HB_ABSROOT%bin\hbtest.exe"
+
+  File /nonfatal "$%HB_ABSROOT%bin\hbformat.exe"
+  File /nonfatal "$%HB_ABSROOT%bin\hbnetio.exe"
   File /nonfatal "$%HB_ABSROOT%bin\*.hb"
+
   File "$%HB_ABSROOT%bin\upx*.*"
 
   SetOutPath $INSTDIR\include

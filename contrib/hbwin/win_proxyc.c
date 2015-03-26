@@ -48,11 +48,11 @@
 
 #if ! defined( HB_OS_WIN_CE )
 
-   /* Clone of relevant content of "winhttp.h" Windows header.
-      We're cloning it because its availability depends on
-      C compiler type, distro, SDK, so it can only be detected
-      by probing it, and if missing we'd need to plug its place
-      with the logic below anyway. [vszakats] */
+   /* Clone relevant content of "winhttp.h" Windows header,
+      because its availability depends on C compiler type,
+      distro, SDK, so it can only be detected by probing it,
+      and if missing we'd need to plug its place with the
+      logic below anyway. [vszakats] */
 
    #undef HINTERNET
    #define HINTERNET  LPVOID

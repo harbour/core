@@ -163,6 +163,10 @@ if exist "%HB_RT%harbour-%HB_VF%-win.exe" del "%HB_RT%harbour-%HB_VF%-win.exe"
 
 echo.> _hbfiles
 
+if exist "%HB_DR%bin\hbformat.exe" echo "%HB_DR%bin\hbformat.exe" >> _hbfiles
+if exist "%HB_DR%bin\hbnetio.exe"  echo "%HB_DR%bin\hbnetio.exe"  >> _hbfiles
+if exist "%HB_DR%bin\*.hb"         echo "%HB_DR%bin\*.hb"         >> _hbfiles
+
     echo "%HB_DR%ChangeLog*.txt"                            >> _hbfiles
     echo "%HB_DR%CONTRIBUTING.md"                           >> _hbfiles
     echo "%HB_DR%COPYING.txt"                               >> _hbfiles
@@ -170,15 +174,12 @@ echo.> _hbfiles
     echo "%HB_DR%RELNOTES.txt"                              >> _hbfiles
     echo "%HB_DR%bin\*-%HB_VS%*.dll"                        >> _hbfiles
     echo "%HB_DR%bin\harbour.exe"                           >> _hbfiles
-    echo "%HB_DR%bin\hbformat.exe"                          >> _hbfiles
     echo "%HB_DR%bin\hbi18n.exe"                            >> _hbfiles
     echo "%HB_DR%bin\hbmk2.exe"                             >> _hbfiles
-    echo "%HB_DR%bin\hbnetio.exe"                           >> _hbfiles
     echo "%HB_DR%bin\hbpp.exe"                              >> _hbfiles
     echo "%HB_DR%bin\hbrun.exe"                             >> _hbfiles
     echo "%HB_DR%bin\hbspeed.exe"                           >> _hbfiles
     echo "%HB_DR%bin\hbtest.exe"                            >> _hbfiles
-if exist "%HB_DR%bin\*.hb"     echo "%HB_DR%bin\*.hb"       >> _hbfiles
     echo "%HB_DR%bin\upx*.*"                                >> _hbfiles
     echo "%HB_DR%include\*.*"                               >> _hbfiles
     echo "%HB_DR%bin\hbmk2-x64.exe"                         >> _hbfiles
