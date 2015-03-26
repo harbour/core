@@ -135,6 +135,7 @@ Section "MinGW WinCE/ARM compiler" hb_mingwarm
 SectionEnd
 !endif
 
+!ifndef PKG_NO_COMP_MINGW
 Section "Libs for MinGW" hb_lib_mingw
   SectionIn RO
   SetOutPath $INSTDIR\lib\win\mingw
@@ -142,6 +143,7 @@ Section "Libs for MinGW" hb_lib_mingw
   SetOutPath $INSTDIR\comp\mingw
   File "$%HB_ABSROOT%comp\mingw\HARBOUR_README_MINGW.txt"
 SectionEnd
+!endif
 
 !ifndef PKG_NO_COMP_MINGW64
 Section /o "Libs for MinGW x64" hb_lib_mingw64
