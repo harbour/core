@@ -66,29 +66,29 @@ setlocal
 echo ! Setting environment for using MinGW GCC
 set PATH=%_HB_DIR_COMP%mingw\bin
 set HB_CPU=x86
-win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-daily-win-mingw-log.txt" 2>&1
+win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-%HB_VF%-win-mingw-log.txt" 2>&1
 if errorlevel 1 goto _EXIT
 endlocal
 
 :: Non-unified release packages are here:
-::    harbour-daily-win-mingw.exe
-::    harbour-daily-win-mingw.zip
+::    harbour-%HB_VF%-win-mingw.exe
+::    harbour-%HB_VF%-win-mingw.zip
 
 echo ! Creating unified Windows release package...
 
-call package\winuni\mpkg_win_uni.bat > "%~dp0harbour-daily-win-log.txt" 2>&1
+call package\winuni\mpkg_win_uni.bat > "%~dp0harbour-%HB_VF%-win-log.txt" 2>&1
 
 echo ! Uploading Harbour unified Windows release package...
 
 :: Unified release packages are here:
-::    %HB_RT%harbour-daily-win.exe
-::    %HB_RT%harbour-daily-win.7z
+::    %HB_RT%harbour-%HB_VF%-win.exe
+::    %HB_RT%harbour-%HB_VF%-win.7z
 
 :_EXIT
 
 :: Logs are here:
-::    %HB_RT%harbour-daily-win-log.txt
-::    %HB_RT%harbour-daily-win-mingw-log.txt
+::    %HB_RT%harbour-%HB_VF%-win-log.txt
+::    %HB_RT%harbour-%HB_VF%-win-mingw-log.txt
 
 echo ! Finished.
 

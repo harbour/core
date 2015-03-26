@@ -11,7 +11,11 @@
 ; - HB_VM
 ; - HB_RT
 
-;Unicode True
+!ifdef NSIS_PACKEDVERSION
+  Unicode True
+  ManifestSupportedOS all
+  ManifestDPIAware true
+!endif
 SetCompressor /solid lzma
 
   !include "MUI2.nsh"
@@ -45,6 +49,74 @@ RequestExecutionLevel user
 !macroend
 !define !defineifexist "!insertmacro !defineifexist"
 
+; if NSIS 3.0 or upper
+!ifdef NSIS_PACKEDVERSION
+
+; C compilers
+!if /FileExists "$%HB_ABSROOT%comp\mingw\*.*"
+  !define PKG_CC_MINGW
+!endif
+!if /FileExists "$%HB_ABSROOT%comp\mingwarm\*.*"
+  !define PKG_CC_MINGWARM
+!endif
+!if /FileExists "$%HB_ABSROOT%comp\djgpp\*.*"
+  !define PKG_CC_DJGPP
+!endif
+!if /FileExists "$%HB_ABSROOT%comp\pocc\*.*"
+  !define PKG_CC_POCC
+!endif
+!if /FileExists "$%HB_ABSROOT%comp\watcom\*.*"
+  !define PKG_CC_WATCOM
+!endif
+
+; Harbour support for C compilers
+!if /FileExists "$%HB_ABSROOT%lib\win\bcc\*.*"
+  !define PKG_COMP_BCC
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\win\bcc64\*.*"
+  !define PKG_COMP_BCC64
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\dos\djgpp\*.*"
+  !define PKG_COMP_DJGPP
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\win\mingw\*.*"
+  !define PKG_COMP_MINGW
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\win\mingw64\*.*"
+  !define PKG_COMP_MINGW64
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\wce\mingwarm\*.*"
+  !define PKG_COMP_MINGWARM
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\win\msvc\*.*"
+  !define PKG_COMP_MSVC
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\win\msvc64\*.*"
+  !define PKG_COMP_MSVC64
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\win\pocc\*.*"
+  !define PKG_COMP_POCC
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\win\pocc64\*.*"
+  !define PKG_COMP_POCC64
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\wce\poccarm\*.*"
+  !define PKG_COMP_POCCARM
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\win\watcom\*.*"
+  !define PKG_COMP_WATCOM
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\dos\watcom\*.*"
+  !define PKG_PLAT_DOS
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\linux\watcom\*.*"
+  !define PKG_PLAT_LINUX
+!endif
+!if /FileExists "$%HB_ABSROOT%lib\os2\watcom\*.*"
+  !define PKG_PLAT_OS2
+!endif
+
+!else
 ; C compilers
 ${!defineifexist} PKG_CC_MINGW      "$%HB_ABSROOT%comp\mingw\*.*"
 ${!defineifexist} PKG_CC_MINGWARM   "$%HB_ABSROOT%comp\mingwarm\*.*"
@@ -68,13 +140,7 @@ ${!defineifexist} PKG_COMP_WATCOM   "$%HB_ABSROOT%lib\win\watcom\*.*"
 ${!defineifexist} PKG_PLAT_DOS      "$%HB_ABSROOT%lib\dos\watcom\*.*"
 ${!defineifexist} PKG_PLAT_LINUX    "$%HB_ABSROOT%lib\linux\watcom\*.*"
 ${!defineifexist} PKG_PLAT_OS2      "$%HB_ABSROOT%lib\os2\watcom\*.*"
-
-;!if /FileExists "$%HB_ABSROOT%lib\win\msvc\*.*"
-;   !define PKG_COMP_MSVC
-;!endif
-;!if /FileExists "$%HB_ABSROOT%lib\win\msvc64\*.*"
-;   !define PKG_COMP_MSVC64
-;!endif
+!endif
 
 !define /date NOW "%Y%m%d"
 
