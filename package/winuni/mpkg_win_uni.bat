@@ -1,5 +1,5 @@
 @echo off
-echo on
+
 :: ---------------------------------------------------------------
 :: Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
 :: See COPYING.txt for licensing terms.
@@ -110,7 +110,8 @@ del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll" 2> nul
 
 :: 32-bit hosted mingw
-for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
+if exist "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"^
+   for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
 rd /q /s  "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
@@ -126,7 +127,8 @@ del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.e
 if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
 
 :: 64-bit hosted mingw
-for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
+if exist "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"^
+   for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
 rd /q /s  "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
