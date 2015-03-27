@@ -611,7 +611,6 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
                hb_xfree( info->szToCursorModule );
             }
          }
-
          /* Check if we must skip every level above info->nTraceLevel */
          else if( info->bTraceOver )
          {
