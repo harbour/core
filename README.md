@@ -1516,8 +1516,8 @@ Supported shells per host platforms:
             for the Cygwin runtime (`cygwin1.dll`).
           * Unpack using these commands:
 
-                bzip2 -d cegcc_mingw32ce_cygwin1.7_r1399.tar.bz2
-                tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h
+            bzip2 -d cegcc_mingw32ce_cygwin1.7_r1399.tar.bz2
+            tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h
 
           * Compiler will be inside /opt/mingw32ce directory.
      * Clang [multiplatform, free, open-source]
