@@ -84,7 +84,7 @@ xcopy /y       "%HB_DIR_UPX%upx.exe"                                            
 
 :: Copy C compiler
 
-xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%comp\mingw\"
+rem xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%comp\mingw\"
 
 :: Copy mingw runtime .dlls
 
