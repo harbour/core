@@ -1513,11 +1513,11 @@ Supported shells per host platforms:
         * <https://sourceforge.net/projects/cegcc/files/cegcc/>
           * To use this package, you'll also need Cygwin package
             (from <https://cygwin.com>) installed and be in `PATH`
-            for the Cygwin runtime (cygwin1.dll).
+            for the Cygwin runtime (`cygwin1.dll`).
           * Unpack using these commands:
 
-               bzip2 -d cegcc_mingw32ce_cygwin1.7_r1399.tar.bz2
-               tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h
+                bzip2 -d cegcc_mingw32ce_cygwin1.7_r1399.tar.bz2
+                tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h
 
           * Compiler will be inside /opt/mingw32ce directory.
      * Clang [multiplatform, free, open-source]
