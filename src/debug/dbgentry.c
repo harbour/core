@@ -491,7 +491,6 @@ static void hb_dbgActivate( HB_DEBUGINFO * info )
 void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITEM pFrame )
 {
    int i;
-   HB_ULONG nProcLevel;
    char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
    HB_DEBUGINFO ** infoPtr = ( HB_DEBUGINFO ** ) hb_stackDebugInfo();
    HB_DEBUGINFO * info = *infoPtr;
@@ -560,20 +559,19 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
       case HB_DBG_SHOWLINE:
       {
          HB_CALLSTACKINFO * pTop = &info->aCallStack[ info->nCallStackLen - 1 ];
-         HB_BOOL bOldClsScope;
 
          HB_TRACE( HB_TR_DEBUG, ( "SHOWLINE %d", nLine ) );
 
-         nProcLevel = hb_dbg_ProcLevel();
-
          /* Check if we've hit a tracepoint */
-         bOldClsScope = hb_clsSetScope( HB_FALSE );
          for( i = 0; i < info->nTracePoints; i++ )
          {
             HB_TRACEPOINT * tp = &info->aTrace[ i ];
+            HB_BOOL bOldClsScope;
             PHB_ITEM xValue;
 
+            bOldClsScope = hb_clsSetScope( HB_FALSE );
             xValue = hb_dbgEval( info, &info->aWatch[ tp->nIndex ], NULL );
+            hb_clsSetScope( bOldClsScope );
 
             if( xValue != tp->xValue &&
                 ( xValue == NULL || tp->xValue == NULL ||
@@ -584,42 +582,38 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
                   hb_itemRelease( tp->xValue );
                tp->xValue = xValue;
 
-               pTop->nLine = nLine;
-               info->nProcLevel = nProcLevel - ( hb_dbgIsAltD() ? 2 : 0 );
-               info->bTraceOver = HB_FALSE;
                info->bCodeBlock = HB_FALSE;
+               info->bTraceOver = HB_FALSE;
+               info->bNextRoutine = HB_FALSE;
                info->bGo = HB_FALSE;
                if( info->bToCursor )
                {
                   info->bToCursor = HB_FALSE;
                   hb_xfree( info->szToCursorModule );
                }
-               info->bNextRoutine = HB_FALSE;
-
-               hb_dbgActivate( info );
-               return;
+               break;
             }
             if( xValue )
                hb_itemRelease( xValue );
          }
-         hb_clsSetScope( bOldClsScope );
 
-         if( hb_dbgIsBreakPoint( info, pTop->szModule, nLine ) >= 0 ||
-             hb_dbg_InvokeDebug( HB_FALSE ) ||
-             ( info->pFunInvoke && info->pFunInvoke() ) )
+         if( i >= info->nTracePoints &&
+             ( hb_dbgIsBreakPoint( info, pTop->szModule, nLine ) >= 0 ||
+               hb_dbg_InvokeDebug( HB_FALSE ) ||
+               ( info->pFunInvoke && info->pFunInvoke() ) ) )
          {
             info->bTraceOver = HB_FALSE;
+            info->bNextRoutine = HB_FALSE;
+            info->bGo = HB_FALSE;
             if( info->bToCursor )
             {
                info->bToCursor = HB_FALSE;
                hb_xfree( info->szToCursorModule );
             }
-            info->bNextRoutine = HB_FALSE;
-            info->bGo = HB_FALSE;
          }
 
          /* Check if we must skip every level above info->nTraceLevel */
-         if( info->bTraceOver )
+         else if( info->bTraceOver )
          {
             if( info->nTraceLevel < info->nCallStackLen )
                return;
@@ -653,7 +647,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
          pTop->nLine = nLine;
          if( ! info->bGo )
          {
-            info->nProcLevel = nProcLevel - ( hb_dbgIsAltD() ? 2 : 0 );
+            info->nProcLevel = hb_dbg_ProcLevel() - ( hb_dbgIsAltD() ? 2 : 0 );
             hb_dbgActivate( info );
          }
          return;
@@ -1558,10 +1552,10 @@ PHB_ITEM hb_dbgGetSourceFiles( void * handle )
 
 static HB_BOOL hb_dbgIsAltD( void )
 {
-   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+   HB_ISIZ nOffset = hb_stackBaseProcOffset( 1 );
 
-   hb_procinfo( 1, szName, NULL, NULL );
-   return ! strcmp( szName, "ALTD" );
+   return nOffset > 0 &&
+          strcmp( hb_itemGetSymbol( hb_stackItem( nOffset ) )->szName, "ALTD" );
 }
 
 

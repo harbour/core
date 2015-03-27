@@ -1731,8 +1731,6 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                   ch = HB_INKEY_NEW_UNICODE( u );
 #endif
             }
-            else
-               ch = 0;
          }
       }
       else if( s_bMouseEnable &&
