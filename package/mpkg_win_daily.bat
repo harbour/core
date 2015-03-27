@@ -28,7 +28,7 @@ set _HB_DIR_TOOL=%~dp0tool\
 echo ! Downloading Harbour sources...
 
 if exist harbour-core-master rd /q /s harbour-core-master
-"%_HB_DIR_TOOL%curl" -L -O https://github.com/vszakats/harbour-core/archive/master.zip
+git clone -q --depth=8 --branch=master https://github.com/vszakats/harbour-core.git harbore-core-master
 if errorlevel 1 goto _EXIT
 
 "%_HB_DIR_TOOL%7z" x master.zip

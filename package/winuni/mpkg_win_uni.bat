@@ -110,7 +110,7 @@ del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll" 2> nul
 del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll" 2> nul
 
 :: 32-bit hosted mingw
-if exist "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"^
+if exist "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*" ^
    for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
 rd /q /s  "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\" 2> nul
@@ -127,7 +127,7 @@ del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.e
 if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
 
 :: 64-bit hosted mingw
-if exist "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"^
+if exist "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*" ^
    for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
 rd /q /s  "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\" 2> nul
 rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\" 2> nul
@@ -146,7 +146,9 @@ if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
 :: Burn build information into RELNOTES.txt
 
 for /f %%i in ('git rev-parse --short HEAD') do set VCS_ID=%%i
-sed -e "s/_VCS_ID_/%VCS_ID%/g" -e "s/_HB_VF_/%HB_VF%/g" -e "s/_MINGW_VER_/%MINGW_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
+sed -e "s/_VCS_ID_/%VCS_ID%/g" ^
+    -e "s/_HB_VF_/%HB_VF%/g" ^
+    -e "s/_MINGW_VER_/%MINGW_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
 
 :: Create unified installer
 

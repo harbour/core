@@ -1,4 +1,4 @@
-# Welcome to Harbour [![Build Status](https://travis-ci.org/vszakats/harbour-core.svg)](https://travis-ci.org/vszakats/harbour-core) [![Build status](https://ci.appveyor.com/api/projects/status/d338bal77amxtyep?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core) [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208)
+# Welcome to Harbour [![Build Status](https://travis-ci.org/vszakats/harbour-core.svg)](https://travis-ci.org/vszakats/harbour-core) [![Build status](https://ci.appveyor.com/api/projects/status/d338bal77amxtyep?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core) [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208) [![Total views](https://sourcegraph.com/api/repos/github.com/vszakats/harbour-core/counters/views.svg)](https://sourcegraph.com/github.com/vszakats/harbour-core)
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
