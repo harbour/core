@@ -47,82 +47,85 @@
 #include "hbwapi.h"
 
 #if ! defined( HB_OS_WIN_CE )
-
-   /* Clone relevant content of "winhttp.h" Windows header,
-      because its availability depends on C compiler type,
-      distro, SDK, so it can only be detected by probing it,
-      and if missing we'd need to plug its place with the
-      logic below anyway. [vszakats] */
-
-   #undef HINTERNET
-   #define HINTERNET  LPVOID
-
-   #ifdef _WIN64
-      #pragma pack( push, 8 )
+   #if defined( HBWIN_HAS_WINHTTP_H )
+      #include "winhttp.h"
    #else
-      #pragma pack( push, 4 )
-   #endif
+      /* Clone relevant content of "winhttp.h" Windows header,
+         because its availability depends on C compiler type,
+         distro, SDK, so it can only be detected by probing it,
+         and if missing we'd need to plug its place with the
+         logic below anyway. [vszakats] */
 
-   typedef struct
-   {
-      BOOL   fAutoDetect;
-      LPWSTR lpszAutoConfigUrl;
-      LPWSTR lpszProxy;
-      LPWSTR lpszProxyBypass;
-   } HB_WINHTTP_CURRENT_USER_IE_PROXY_CONFIG;
+      #undef HINTERNET
+      #define HINTERNET  LPVOID
 
-   typedef struct
-   {
-      DWORD dwAccessType;
-      LPWSTR lpszProxy;
-      LPWSTR lpszProxyBypass;
-   } HB_WINHTTP_PROXY_INFO;
+      #ifdef _WIN64
+         #pragma pack( push, 8 )
+      #else
+         #pragma pack( push, 4 )
+      #endif
 
-   typedef struct
-   {
-      DWORD dwFlags;
-      DWORD dwAutoDetectFlags;
-      LPCWSTR lpszAutoConfigUrl;
-      LPVOID lpvReserved;
-      DWORD dwReserved;
-      BOOL fAutoLogonIfChallenged;
-   } HB_WINHTTP_AUTOPROXY_OPTIONS;
+      typedef struct
+      {
+         BOOL   fAutoDetect;
+         LPWSTR lpszAutoConfigUrl;
+         LPWSTR lpszProxy;
+         LPWSTR lpszProxyBypass;
+      } HB_WINHTTP_CURRENT_USER_IE_PROXY_CONFIG;
 
-   #pragma pack( pop )
+      typedef struct
+      {
+         DWORD dwAccessType;
+         LPWSTR lpszProxy;
+         LPWSTR lpszProxyBypass;
+      } HB_WINHTTP_PROXY_INFO;
 
-   #undef WINHTTP_PROXY_INFO
-   #undef WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
-   #undef WINHTTP_AUTOPROXY_OPTIONS
-   #define WINHTTP_PROXY_INFO                    HB_WINHTTP_PROXY_INFO
-   #define WINHTTP_CURRENT_USER_IE_PROXY_CONFIG  HB_WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
-   #define WINHTTP_AUTOPROXY_OPTIONS             HB_WINHTTP_AUTOPROXY_OPTIONS
+      typedef struct
+      {
+         DWORD dwFlags;
+         DWORD dwAutoDetectFlags;
+         LPCWSTR lpszAutoConfigUrl;
+         LPVOID lpvReserved;
+         DWORD dwReserved;
+         BOOL fAutoLogonIfChallenged;
+      } HB_WINHTTP_AUTOPROXY_OPTIONS;
 
-   #ifndef WINHTTP_ACCESS_TYPE_DEFAULT_PROXY
-   #define WINHTTP_ACCESS_TYPE_DEFAULT_PROXY  0
-   #endif
-   #ifndef WINHTTP_NO_PROXY_NAME
-   #define WINHTTP_NO_PROXY_NAME  NULL
-   #endif
-   #ifndef WINHTTP_NO_PROXY_BYPASS
-   #define WINHTTP_NO_PROXY_BYPASS  NULL
-   #endif
-   #ifndef WINHTTP_AUTOPROXY_AUTO_DETECT
-   #define WINHTTP_AUTOPROXY_AUTO_DETECT  0x00000001
-   #endif
-   #ifndef WINHTTP_AUTOPROXY_CONFIG_URL
-   #define WINHTTP_AUTOPROXY_CONFIG_URL  0x00000002
-   #endif
-   #ifndef WINHTTP_AUTO_DETECT_TYPE_DHCP
-   #define WINHTTP_AUTO_DETECT_TYPE_DHCP  0x00000001
-   #endif
-   #ifndef WINHTTP_AUTO_DETECT_TYPE_DNS_A
-   #define WINHTTP_AUTO_DETECT_TYPE_DNS_A  0x00000002
-   #endif
-   #ifndef WINHTTP_ACCESS_TYPE_NO_PROXY
-   #define WINHTTP_ACCESS_TYPE_NO_PROXY  1
-   #endif
-   #ifndef ERROR_WINHTTP_LOGIN_FAILURE
-   #define ERROR_WINHTTP_LOGIN_FAILURE  12015
+      #pragma pack( pop )
+
+      #undef WINHTTP_PROXY_INFO
+      #undef WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
+      #undef WINHTTP_AUTOPROXY_OPTIONS
+      #define WINHTTP_PROXY_INFO                    HB_WINHTTP_PROXY_INFO
+      #define WINHTTP_CURRENT_USER_IE_PROXY_CONFIG  HB_WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
+      #define WINHTTP_AUTOPROXY_OPTIONS             HB_WINHTTP_AUTOPROXY_OPTIONS
+
+      #ifndef WINHTTP_ACCESS_TYPE_DEFAULT_PROXY
+      #define WINHTTP_ACCESS_TYPE_DEFAULT_PROXY  0
+      #endif
+      #ifndef WINHTTP_NO_PROXY_NAME
+      #define WINHTTP_NO_PROXY_NAME  NULL
+      #endif
+      #ifndef WINHTTP_NO_PROXY_BYPASS
+      #define WINHTTP_NO_PROXY_BYPASS  NULL
+      #endif
+      #ifndef WINHTTP_AUTOPROXY_AUTO_DETECT
+      #define WINHTTP_AUTOPROXY_AUTO_DETECT  0x00000001
+      #endif
+      #ifndef WINHTTP_AUTOPROXY_CONFIG_URL
+      #define WINHTTP_AUTOPROXY_CONFIG_URL  0x00000002
+      #endif
+      #ifndef WINHTTP_AUTO_DETECT_TYPE_DHCP
+      #define WINHTTP_AUTO_DETECT_TYPE_DHCP  0x00000001
+      #endif
+      #ifndef WINHTTP_AUTO_DETECT_TYPE_DNS_A
+      #define WINHTTP_AUTO_DETECT_TYPE_DNS_A  0x00000002
+      #endif
+      #ifndef WINHTTP_ACCESS_TYPE_NO_PROXY
+      #define WINHTTP_ACCESS_TYPE_NO_PROXY  1
+      #endif
+      #ifndef ERROR_WINHTTP_LOGIN_FAILURE
+      #define ERROR_WINHTTP_LOGIN_FAILURE  12015
+      #endif
    #endif
 #endif
 
@@ -201,9 +204,9 @@ HB_FUNC( __WIN_PROXYDETECT )
             {
                options.dwFlags = WINHTTP_AUTOPROXY_AUTO_DETECT;
                options.dwAutoDetectFlags = WINHTTP_AUTO_DETECT_TYPE_DNS_A;
-               #if 0
-               /* This flag has issues, according to Chromium code. */
-               options.dwAutoDetectFlags |= WINHTTP_AUTO_DETECT_TYPE_DHCP;
+               #if defined( HBWIN_USE_WINHTTP_DHCP )
+                  /* This flag has issues, according to Chromium code. */
+                  options.dwAutoDetectFlags |= WINHTTP_AUTO_DETECT_TYPE_DHCP;
                #endif
             }
 
