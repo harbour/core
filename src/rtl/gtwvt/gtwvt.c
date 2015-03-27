@@ -2610,7 +2610,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                if( iKey >= 128 )
                   iKey = HB_INKEY_NEW_UNICODEF( iKey, iFlags );
                else
-                  iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+                  iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
 #else
                int u = HB_GTSELF_KEYTRANS( pWVT->pGT, iKey );
                if( u )
@@ -2619,7 +2619,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                {
                   if( pWVT->CodePage == OEM_CHARSET )
                      iKey = hb_gt_wvt_key_ansi_to_oem( iKey );
-                  iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+                  iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
                }
 #endif
             }
