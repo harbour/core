@@ -64,7 +64,7 @@ PROCEDURE Main( cInputFile )
    ? "Input file:", cInputFile
 
    BEGIN SEQUENCE WITH __BreakBlock()
-      USE ( cInputFile ) NEW READONLY SHARED ALIAS w_SRC
+      USE ( cInputFile ) NEW READONLY SHARED
    END SEQUENCE
 
    IF Used()
@@ -131,11 +131,7 @@ PROCEDURE Main( cInputFile )
 
       dbCloseArea()
 
-      IF hb_MemoWrit( __FILE__, cOutput )
-         ? "Saved OK:", __FILE__
-      ELSE
-         ? "Save error:", __FILE__
-      ENDIF
+      ? iif( hb_MemoWrit( __FILE__, cOutput ), "Saved OK:", "Save error:" ), __FILE__
    ELSE
       ? "Input file not found or invalid"
    ENDIF

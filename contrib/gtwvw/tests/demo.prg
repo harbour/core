@@ -566,8 +566,6 @@ STATIC PROCEDURE DEMO_Browse()
 
    dbCloseArea()
 
-   hb_dbDrop( "test1.ntx" )
-
    // epilogue
    // lboxmessage("Thanks for trying the BROWSE Demo!")
    wvw_lCloseWindow()

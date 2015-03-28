@@ -1,7 +1,7 @@
 /*
  * Windows Error Strings
  *
- * Copyright 2014 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2014-2015 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ PROCEDURE Main( cInputFile )
 
    hb_default( @cInputFile, ;
       hb_GetEnv( "ProgramFiles(x86)", hb_GetEnv( "ProgramFiles" ) ) + ;
-      "\Windows Kits\8.1\Include\shared\winerror.h" )
+      "\Windows Kits\10\Include\shared\winerror.h" )
 
    ? "Input file:", cInputFile
 
@@ -99,10 +99,8 @@ PROCEDURE Main( cInputFile )
 
       IF Empty( hWas )
          ? "No error definitions found in input file"
-      ELSEIF hb_MemoWrit( __FILE__, cOutput )
-         ? "Saved OK:", __FILE__
       ELSE
-         ? "Save error:", __FILE__
+         ? iif( hb_MemoWrit( __FILE__, cOutput ), "Saved OK:", "Save error:" ), __FILE__
       ENDIF
    ENDIF
 

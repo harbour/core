@@ -34,6 +34,7 @@ PROCEDURE Main()
 
    dbCloseArea()
 
+   /* test table */
    hbtest_Table_OK := hbtest_Table()
    HBTEST hbtest_Table_OK   IS .T.
    HBTEST LastRec()         IS 500

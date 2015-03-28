@@ -49,7 +49,7 @@ PROCEDURE WvtMyBrowse()
 STATIC PROCEDURE ExecBrowser( oCrt )
 
    LOCAL nKey, oBrowse, aLastPaint, i, pGT
-   LOCAL cFileIndex, nIndex, oTBar, cScr // , oLB
+   LOCAL nIndex, oTBar, cScr // , oLB
    LOCAL lEnd       := .F.
    LOCAL aBlocks    := {}
    LOCAL nTop       :=  4
@@ -81,15 +81,13 @@ STATIC PROCEDURE ExecBrowser( oCrt )
 
    pGT := SetGT( 2, hb_gtSelect() )
 
-   cFileIndex := "test.cdx"
-
    IF ! hbtest_Table( , "DBFCDX" )
       RETURN
    ENDIF
    IF FLock()
-      INDEX ON field->FIRST TAG "001" TO ( cFileIndex ) ADDITIVE
-      INDEX ON field->LAST  TAG "002" TO ( cFileIndex ) ADDITIVE
-      INDEX ON field->CITY  TAG "003" TO ( cFileIndex ) ADDITIVE
+      INDEX ON field->FIRST TAG "001" ADDITIVE
+      INDEX ON field->LAST  TAG "002" ADDITIVE
+      INDEX ON field->CITY  TAG "003" ADDITIVE
       dbUnlock()
       ordSetFocus( 1 )
    ENDIF
@@ -200,7 +198,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    SetCursor( nCursor )
 
    dbCloseArea()
-   hb_dbDrop( cFileIndex )
+
    IF oCrt == NIL
       RestScreen( 0, 0, MaxRow(), MaxCol(), cScr )
    ENDIF
