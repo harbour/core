@@ -49,7 +49,7 @@ PROCEDURE WvtMyBrowse()
 STATIC PROCEDURE ExecBrowser( oCrt )
 
    LOCAL nKey, oBrowse, aLastPaint, i, pGT
-   LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr // , oLB
+   LOCAL cFileIndex, nIndex, oTBar, cScr // , oLB
    LOCAL lEnd       := .F.
    LOCAL aBlocks    := {}
    LOCAL nTop       :=  4
@@ -81,23 +81,18 @@ STATIC PROCEDURE ExecBrowser( oCrt )
 
    pGT := SetGT( 2, hb_gtSelect() )
 
-   cRDD       := "DBFCDX"
-   cFileDbf   := hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" )
    cFileIndex := "test.cdx"
 
-   USE ( cFileDbf ) NEW SHARED READONLY VIA ( cRDD )
-   IF NetErr()
+   IF ! hbtest_Table( , "DBFCDX" )
       RETURN
    ENDIF
    IF FLock()
-      INDEX ON field->FIRST TAG "001" TO ( cFileIndex )
-      INDEX ON field->LAST  TAG "002" TO ( cFileIndex )
-      INDEX ON field->CITY  TAG "003" TO ( cFileIndex )
+      INDEX ON field->FIRST TAG "001" TO ( cFileIndex ) ADDITIVE
+      INDEX ON field->LAST  TAG "002" TO ( cFileIndex ) ADDITIVE
+      INDEX ON field->CITY  TAG "003" TO ( cFileIndex ) ADDITIVE
       dbUnlock()
+      ordSetFocus( 1 )
    ENDIF
-   SET INDEX TO
-   SET INDEX TO ( cFileIndex )
-   ordSetFocus( 1 )
    dbGoto( 50 )
 
    Popups( 2 )
@@ -131,7 +126,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    aLastPaint := WvtSetBlocks( aBlocks )
 
    hb_DispBox( 0, 0, MaxRow(), MaxCol(), "         ", "N/W" )
-   hb_DispOutAt( oBrowse:nTop - 2, oBrowse:nleft - 2, PadC( cFileDbf, oBrowse:nRight - oBrowse:nLeft + 5 ), "W+/B*" )
+   hb_DispOutAt( oBrowse:nTop - 2, oBrowse:nleft - 2, PadC( "Test table", oBrowse:nRight - oBrowse:nLeft + 5 ), "W+/B*" )
 
    oCom := BrwBuildActiveX( oCrt, oBrowse )
    oChk := BrwBuildCheckBox( oCrt, oBrowse, @t_lActiveX )
@@ -191,7 +186,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
       CASE BrwHandleKey( oBrowse, nKey, @lEnd )
 
       CASE nKey == HB_K_RESIZE
-         BrwHandleResize( oCrt, oBrowse, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, t_lActiveX, cFileDbf )
+         BrwHandleResize( oCrt, oBrowse, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, t_lActiveX )
 
       ENDCASE
    ENDDO
@@ -214,7 +209,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
 
    RETURN
 
-STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, lActiveX, cFileDbf )
+STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, lActiveX )
 
    HB_SYMBOL_UNUSED( oSle )
    HB_SYMBOL_UNUSED( oLBx )
@@ -228,7 +223,7 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
    oBrw:configure()
 
    hb_DispBox( 0, 0, MaxRow(), MaxCol(), "         ", "N/W" )
-   hb_DispOutAt( oBrw:nTop - 2, oBrw:nleft - 2, PadC( cFileDbf, oBrw:nRight - oBrw:nLeft + 5 ), "W+/B*" )
+   hb_DispOutAt( oBrw:nTop - 2, oBrw:nleft - 2, PadC( "Test table", oBrw:nRight - oBrw:nLeft + 5 ), "W+/B*" )
 
    oVBar:setPosAndSize()
    oHBar:setPosAndSize()

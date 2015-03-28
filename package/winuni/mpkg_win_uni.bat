@@ -27,10 +27,10 @@ set HB_ABSROOT=%HB_RT%%HB_DR%
 
 if exist "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
    :: mingw 32-bit base system
-   set BASE=32
+   set LIB_TARGET=32
 ) else if exist "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" (
    :: mingw 64-bit base system
-   set BASE=64
+   set LIB_TARGET=64
 )
 
 :: Assemble unified package from per-target builds
@@ -40,12 +40,12 @@ if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
 xcopy /y /s /q "%~dp0..\..\extras\*.*"                                                      "%HB_ABSROOT%extras\"
 xcopy /y /s /q "%~dp0..\..\tests\*.*"                                                       "%HB_ABSROOT%tests\"
 
-:: Using xcopy to create the target subdir in the same step
+:: Using xcopy to create the destination subdir in the same step
 xcopy /y /q    "%~dp0ADDONS.txt"                                                            "%HB_ABSROOT%addons\"
 mv "%HB_ABSROOT%addons\ADDONS.txt" "%HB_ABSROOT%addons\README.txt"
 
-if "%BASE%" == "32" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
-if "%BASE%" == "64" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
+if "%LIB_TARGET%" == "32" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
+if "%LIB_TARGET%" == "64" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
 
 xcopy /y /s    "%~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"               "%HB_ABSROOT%lib\linux\watcom\" 2> nul
 xcopy /y /s    "%~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib"                                  "%HB_ABSROOT%lib\" 2> nul
@@ -79,73 +79,86 @@ if exist _hbtemp.sed del _hbtemp.sed
 
 :: Copy upx
 
-xcopy /y       "%HB_DIR_UPX%upx.exe"                                                      "%HB_ABSROOT%bin\"
- copy /y       "%HB_DIR_UPX%LICENSE"                                                      "%HB_ABSROOT%bin\upx_LICENSE.txt"
+if not "%HB_DIR_UPX%" == "" (
+   xcopy /y "%HB_DIR_UPX%upx.exe" "%HB_ABSROOT%bin\"
+    copy /y "%HB_DIR_UPX%LICENSE" "%HB_ABSROOT%bin\upx_LICENSE.txt"
+)
 
 :: Copy C compiler
 
-rem xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%comp\mingw\"
+set MINGW_HOST=32
+if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32" set MINGW_HOST=64
+
+if "%MINGW_HOST%" == "32" set MINGW_ROOT=comp\mingw\
+if "%MINGW_HOST%" == "64" set MINGW_ROOT=comp\mingw64\
+
+rem xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%%MINGW_ROOT%"
 
 :: Copy mingw runtime .dlls
 
 :: Pick the ones from a multi-target mingw distro
-:: that match the bitness of our base.
+:: that match the bitness of our base target.
 set _MINGW_DLL_DIR=%HB_DIR_MINGW%\bin
-if "%BASE%" == "32" if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32" set _MINGW_DLL_DIR=%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32
-if "%BASE%" == "64" if exist "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"   set _MINGW_DLL_DIR=%HB_DIR_MINGW%\i686-w64-mingw32\lib64
+if "%LIB_TARGET%" == "32" if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32" set _MINGW_DLL_DIR=%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32
+if "%LIB_TARGET%" == "64" if exist "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"   set _MINGW_DLL_DIR=%HB_DIR_MINGW%\i686-w64-mingw32\lib64
 
 if exist "%_MINGW_DLL_DIR%\libgcc_s_*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_*.dll" "%HB_ABSROOT%bin\"
-if exist "%_MINGW_DLL_DIR%\mingwm10.dll"   xcopy /y "%HB_DIR_MINGW%\bin\mingwm10.dll"   "%HB_ABSROOT%bin\"
+if exist "%_MINGW_DLL_DIR%\mingwm*.dll"    xcopy /y "%HB_DIR_MINGW%\bin\mingwm*.dll"    "%HB_ABSROOT%bin\"
+:: for posix cc1.exe to run without putting mingw\bin into PATH
+rem if exist "%_MINGW_DLL_DIR%\libwinpthread-*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libwinpthread-*.dll" "%HB_ABSROOT%bin\"
 
 :: Delete stuff from C compiler folder we don't need
 
-rd /q /s  "%HB_ABSROOT%comp\mingw\etc\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\opt\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\share\" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\bin\gdb*.exe" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\bin\gfortran.exe" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\bin\gnat*.exe" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\bin\libgfortran-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnarl-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\bin\libgnat-*.dll" 2> nul
+rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%etc\" 2> nul
+rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%opt\" 2> nul
+rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%share\" 2> nul
+del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\gdb*.exe" 2> nul
+del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\gfortran.exe" 2> nul
+del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\gnat*.exe" 2> nul
+del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgfortran-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgnarl-*.dll" 2> nul
+del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgnat-*.dll" 2> nul
 
-:: 32-bit hosted mingw
-if exist "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"^
-   for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%i
-rd /q /s  "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib64\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\64\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\%_GCCVER%\adalib\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\i686-w64-mingw32\lib64\" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\bin\i686-w64-mingw32-gfortran.exe" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
+if "%MINGW_HOST%" == "32" (
 
-if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
+   for /f %%a in ('dir /b "%HB_DIR_MINGW%lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%a
+   if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
 
-:: 64-bit hosted mingw
-if exist "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"^
-   for /f %%i in ('dir /b "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%i
-rd /q /s  "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib32\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adalib\" 2> nul
-rd /q /s  "%HB_ABSROOT%comp\mingw\lib\gcc\x86_64-w64-mingw32\lib32\" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
-del /q /f "%HB_ABSROOT%comp\mingw\libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib64\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%_GCCVER%\64\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%_GCCVER%\adalib\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\lib64\" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\i686-w64-mingw32-gfortran.exe" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
 
-if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
+) else if "%MINGW_HOST%" == "64" (
+
+   for /f %%a in ('dir /b "%HB_DIR_MINGW%lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%a
+   if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
+
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib32\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adalib\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\lib32\" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
+)
+
+echo ! mingw version: %MINGW_VER% %MINGW_HOST%-bit hosted
 
 :: Burn build information into RELNOTES.txt
 
-for /f %%i in ('git rev-parse --short HEAD') do set VCS_ID=%%i
+for /f %%a in ('git rev-parse --short HEAD') do set VCS_ID=%%a
 sed -e "s/_VCS_ID_/%VCS_ID%/g"^
     -e "s/_HB_VF_/%HB_VF%/g"^
     -e "s/_MINGW_VER_/%MINGW_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
@@ -165,6 +178,12 @@ echo.> _hbfiles
 
 if exist "%HB_DR%bin\hbformat.exe" echo "%HB_DR%bin\hbformat.exe" >> _hbfiles
 if exist "%HB_DR%bin\hbnetio.exe"  echo "%HB_DR%bin\hbnetio.exe"  >> _hbfiles
+
+if exist "%HB_ABSROOT%%MINGW_ROOT%*" (
+   echo "%HB_DR%bin\libgcc_s_*.dll"      >> _hbfiles
+   echo "%HB_DR%bin\mingwm*.dll"         >> _hbfiles
+   echo "%HB_DR%bin\libwinpthread-*.dll" >> _hbfiles
+)
 
 echo "%HB_DR%ChangeLog*.txt"       >> _hbfiles
 echo "%HB_DR%CONTRIBUTING.md"      >> _hbfiles
@@ -200,6 +219,7 @@ echo "%HB_DR%lib\wce\poccarm\*.*"  >> _hbfiles
 echo "%HB_DR%tests\*.*"            >> _hbfiles
 echo "%HB_DR%doc\*.*"              >> _hbfiles
 echo "%HB_DR%comp\mingw\*"         >> _hbfiles
+echo "%HB_DR%comp\mingw64\*"       >> _hbfiles
 echo "%HB_DR%comp\djgpp\*"         >> _hbfiles
 echo "%HB_DR%comp\pocc\*"          >> _hbfiles
 echo "%HB_DR%comp\watcom\*"        >> _hbfiles

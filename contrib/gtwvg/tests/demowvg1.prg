@@ -3,6 +3,7 @@
 // Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
 
 #require "gtwvg"
+#require "hbtest"
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"

@@ -440,8 +440,7 @@ STATIC PROCEDURE DEMO_Browse()
    CLS
    SetColor( "N/W*,N/GR*,,,N/W*" )
 
-   USE "..\..\..\tests\test.dbf" NEW READONLY
-   IF NetErr()
+   IF ! hbtest_Table()
       wvw_lCloseWindow()
       RETURN
    ENDIF
@@ -483,7 +482,7 @@ STATIC PROCEDURE DEMO_Browse()
    nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
    nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ )
 
-   hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( "test.dbf", nRight - nLeft + 1 ), "W+/W" )
+   hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( "Test table", nRight - nLeft + 1 ), "W+/W" )
 
    oBrowse:ForceStable()
    RefreshHXB( oBrowse, nCurWindow, nHScrollBar )  // 2004-07-04

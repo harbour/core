@@ -40,8 +40,6 @@ set HB_VF=daily
 set HB_VL=%HB_VF%
 set HB_RT=%~dp0
 
-set _HB_MAKE_OPTION=HB_VERSION=%HB_VF%
-
 set HB_BUILD_PKG=yes
 
 set HB_DIR_NSIS=%_HB_DIR_TOOL%nsis\
@@ -66,7 +64,7 @@ setlocal
 echo ! Setting environment for using MinGW GCC
 set PATH=%_HB_DIR_COMP%mingw\bin
 set HB_CPU=x86
-win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-%HB_VF%-win-mingw-log.txt" 2>&1
+win-make clean install HB_VERSION=%HB_VF% > "%~dp0harbour-%HB_VF%-win-mingw-log.txt" 2>&1
 if errorlevel 1 goto _EXIT
 endlocal
 
@@ -87,8 +85,8 @@ echo ! Uploading Harbour unified Windows release package...
 :_EXIT
 
 :: Logs are here:
-::    %HB_RT%harbour-%HB_VF%-win-log.txt
-::    %HB_RT%harbour-%HB_VF%-win-mingw-log.txt
+::    %~dp0harbour-%HB_VF%-win-log.txt
+::    %~dp0harbour-%HB_VF%-win-mingw-log.txt
 
 echo ! Finished.
 

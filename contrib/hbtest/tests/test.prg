@@ -4,10 +4,9 @@
 
 PROCEDURE Main()
 
-   LOCAL cTable := hb_FNameExtSet( __FILE__, ".dbf" )
-   LOCAL tmp
+   LOCAL tmp, hbtest_Table_OK
 
-   dbCreate( cTable, { { "TESTM", "M", 10, 0 } }, , .T., "w_TEST" )
+   hb_dbCreateTemp( "w_TEST", { { "TESTM", "M", 10, 0 } } )
    dbAppend()
    w_TEST->TESTM := "hello"
 
@@ -33,6 +32,13 @@ PROCEDURE Main()
    HBTEST w_TEST->TESTM + 0 IS "E 1 BASE 1081 Argument error (+) OS:0 #:0 F:S"
    HBTEST {} + 0            IS "E 1 BASE 1081 Argument error (+) OS:0 #:0 F:S"
 
+   dbCloseArea()
+
+   hbtest_Table_OK := hbtest_Table()
+   HBTEST hbtest_Table_OK   IS .T.
+   HBTEST LastRec()         IS 500
+   dbCloseArea()
+
    /* mismatches */
    HBTEST hb_BChar( 254 )   IS hb_BChar( 255 )
    HBTEST 0d20111213        IS 0d20111214
@@ -44,8 +50,5 @@ PROCEDURE Main()
       ?? ValType( tmp )
    NEXT
    ?
-
-   dbCloseArea()
-   hb_dbDrop( cTable )
 
    RETURN

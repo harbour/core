@@ -8,6 +8,7 @@
    open and close every pseudo-windows respectively. */
 
 #require "gtwvw"
+#require "hbtest"
 
 #include "dbstruct.ch"
 #include "hbgtinfo.ch"
@@ -90,8 +91,7 @@ STATIC PROCEDURE xBrowse1()
    LOCAL nRight  := MaxCol() - 3
    LOCAL nCursor := SetCursor( SC_NONE )
 
-   USE "..\..\..\tests\test.dbf" NEW READONLY
-   IF NetErr()
+   IF ! hbtest_Table()
       RETURN
    ENDIF
 
@@ -110,7 +110,7 @@ STATIC PROCEDURE xBrowse1()
 
    oBrowse:configure()
 
-   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "Test table" )
 
    DO WHILE ! lEnd
       oBrowse:ForceStable()

@@ -17,6 +17,7 @@
  */
 
 #require "gtwvg"
+#require "hbtest"
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"

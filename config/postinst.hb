@@ -250,7 +250,6 @@ PROCEDURE Main( ... )
                OutStd( hb_StrFormat( "! Making Harbour .exe release package: '%1$s'", tmp ) + hb_eol() )
 
                mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" ) + ;
-                  " -V2" + ;
                   " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
             ENDIF
          ELSE

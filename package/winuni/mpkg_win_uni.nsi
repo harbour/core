@@ -12,7 +12,7 @@
 ; - HB_RT
 
 !ifdef NSIS_PACKEDVERSION
-  Unicode True
+  Unicode true
   ManifestSupportedOS all
   ManifestDPIAware true
 !endif
@@ -33,28 +33,15 @@ CRCCheck on
 
 RequestExecutionLevel user
 
-; See http://nsis.sourceforge.net/Check_if_a_file_exists_at_compile_time for documentation
-!macro !defineifexist _VAR_NAME _FILE_NAME
-  !tempfile _TEMPFILE
-  !ifdef NSIS_WIN32_MAKENSIS
-    ; Windows - cmd.exe
-    !system 'if exist "${_FILE_NAME}" echo !define ${_VAR_NAME} > "${_TEMPFILE}"'
-  !else
-    ; Posix - sh
-    !system 'if [ -e "${_FILE_NAME}" ]; then echo "!define ${_VAR_NAME}" > "${_TEMPFILE}"; fi'
-  !endif
-  !include '${_TEMPFILE}'
-  !delfile '${_TEMPFILE}'
-  !undef _TEMPFILE
-!macroend
-!define !defineifexist "!insertmacro !defineifexist"
-
 ; if NSIS 3.0 or upper
 !ifdef NSIS_PACKEDVERSION
 
 ; C compilers
 !if /FileExists "$%HB_ABSROOT%comp\mingw\*.*"
   !define PKG_CC_MINGW
+!endif
+!if /FileExists "$%HB_ABSROOT%comp\mingw64\*.*"
+  !define PKG_CC_MINGW64
 !endif
 !if /FileExists "$%HB_ABSROOT%comp\mingwarm\*.*"
   !define PKG_CC_MINGWARM
@@ -117,8 +104,26 @@ RequestExecutionLevel user
 !endif
 
 !else
+
+; See http://nsis.sourceforge.net/Check_if_a_file_exists_at_compile_time for documentation
+!macro !defineifexist _VAR_NAME _FILE_NAME
+  !tempfile _TEMPFILE
+  !ifdef NSIS_WIN32_MAKENSIS
+    ; Windows - cmd.exe
+    !system 'if exist "${_FILE_NAME}" echo !define ${_VAR_NAME} > "${_TEMPFILE}"'
+  !else
+    ; Posix - sh
+    !system 'if [ -e "${_FILE_NAME}" ]; then echo "!define ${_VAR_NAME}" > "${_TEMPFILE}"; fi'
+  !endif
+  !include '${_TEMPFILE}'
+  !delfile '${_TEMPFILE}'
+  !undef _TEMPFILE
+!macroend
+!define !defineifexist "!insertmacro !defineifexist"
+
 ; C compilers
 ${!defineifexist} PKG_CC_MINGW      "$%HB_ABSROOT%comp\mingw\*.*"
+${!defineifexist} PKG_CC_MINGW64    "$%HB_ABSROOT%comp\mingw64\*.*"
 ${!defineifexist} PKG_CC_MINGWARM   "$%HB_ABSROOT%comp\mingwarm\*.*"
 ${!defineifexist} PKG_CC_DJGPP      "$%HB_ABSROOT%comp\djgpp\*.*"
 ${!defineifexist} PKG_CC_POCC       "$%HB_ABSROOT%comp\pocc\*.*"
@@ -198,7 +203,13 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_ABSROOT%bin\hbnetio.exe"
   File /nonfatal "$%HB_ABSROOT%bin\*.hb"
 
-  File "$%HB_ABSROOT%bin\upx*.*"
+  !ifdef PKG_CC_MINGW | PKG_CC_MINGW64
+    File /nonfatal "$%HB_ABSROOT%bin\libgcc_s_*.dll"
+    File /nonfatal "$%HB_ABSROOT%bin\mingwm*.dll"
+    File /nonfatal "$%HB_ABSROOT%bin\libwinpthread-*.dll"
+  !endif
+
+  File /nonfatal "$%HB_ABSROOT%bin\upx*.*"
 
   SetOutPath $INSTDIR\include
   File "$%HB_ABSROOT%include\*.*"
@@ -226,6 +237,13 @@ SectionEnd
 Section "MinGW compiler" hb_cc_mingw
   SetOutPath $INSTDIR\comp\mingw
   File /r "$%HB_ABSROOT%comp\mingw\*.*"
+SectionEnd
+!endif
+
+!ifdef PKG_CC_MINGW64
+Section "MinGW compiler (64-bit hosted)" hb_cc_mingw64
+  SetOutPath $INSTDIR\comp\mingw64
+  File /r "$%HB_ABSROOT%comp\mingw64\*.*"
 SectionEnd
 !endif
 
@@ -269,6 +287,9 @@ SectionEnd
 
 !ifdef PKG_COMP_MINGW64
 Section /o "Libs for MinGW x64" hb_lib_mingw64
+  !ifndef PKG_COMP_MINGW
+    SectionIn RO
+  !endif
   SetOutPath $INSTDIR\lib\win\mingw64
   File "$%HB_ABSROOT%lib\win\mingw64\*.*"
 SectionEnd
@@ -478,6 +499,9 @@ SectionEnd
 !ifdef PKG_CC_MINGW
   LangString DESC_hb_cc_mingw     ${LANG_ENGLISH} "MinGW compiler"
 !endif
+!ifdef PKG_CC_MINGW64
+  LangString DESC_hb_cc_mingw64   ${LANG_ENGLISH} "MinGW compiler (64-bit hosted)"
+!endif
 !ifdef PKG_CC_MINGWARM
   LangString DESC_hb_cc_mingwarm  ${LANG_ENGLISH} "MinGW WinCE/ARM compiler"
 !endif
@@ -552,6 +576,9 @@ SectionEnd
 !endif
 !ifdef PKG_CC_MINGW
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_cc_mingw}     $(DESC_hb_cc_mingw)
+!endif
+!ifdef PKG_CC_MINGW64
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_cc_mingw64}   $(DESC_hb_cc_mingw64)
 !endif
 !ifdef PKG_CC_MINGWARM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_cc_mingwarm}  $(DESC_hb_cc_mingwarm)

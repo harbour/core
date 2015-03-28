@@ -271,7 +271,7 @@ STATIC PROCEDURE MyDialogOne( oCrt )
    oGet1:AddGets( nGetRow + 16, nGetCol, aGets_[ 9 ], "@Z 99"    , "N/W*,N/GR*" )
    oGet1:AddGets( nGetRow + 18, nGetCol, aGets_[ 10], "@Z 999999", "N/W*,N/GR*" )
    oGet1:AddGets( nGetRow + 20, nGetCol, aGets_[ 11], "@S35"     , "N/W*,N/GR*" )
-   oGet1:cDesc     := "test.dbf Fields"
+   oGet1:cDesc     := "Table Fields"
    oGet1:Tooltip   := "Double Click to Activate ReadModal()"
    oGet1:bOnCreate := bBlock1
    oDlg:AddObject( oGet1 )
@@ -286,21 +286,13 @@ STATIC PROCEDURE MyDialogOne( oCrt )
 
    oDlg:oMenu := g_oMenuBar
 
-   lOpen := .F.
-   cUseAlias := "TEST"
-   USE ( hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" ) ) NEW ALIAS ( cUseAlias ) SHARED
-   IF ! NetErr()
-      lOpen := .T.
-      oWvtBrw := ConfigBrowser( { 1, 7, 9, 10, 8 }, cUseAlias, { 6, 67, 36, 120 }, "test.dbf - 1,7,9,10,8", oDlg, "N/W*,N/GR*", 1001 )
+   IF ( lOpen := hbtest_Table( cUseAlias := "TEST" ) )
+      oWvtBrw := ConfigBrowser( { 1, 7, 9, 10, 8 }, cUseAlias, { 6, 67, 36, 120 }, "test table - 1,7,9,10,8", oDlg, "N/W*,N/GR*", 1001 )
       oDlg:AddObject( oWvtBrw )
    ENDIF
 
-   lOpen1 := .F.
-   cUseAlias1 := "TEST1"
-   USE ( hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" ) ) NEW ALIAS ( cUseAlias1 ) SHARED
-   IF ! NetErr()
-      lOpen1 := .T.
-      oWvtBrw1 := ConfigBrowser( { 1, 2, 3, 4, 5, 6 }, cUseAlias1, { 43, 4, 51, 120 }, "test.dbf - 1,2,3,4,5,6", oDlg, "N/BG*,N/W*", 1002 )
+   IF ( lOpen1 := hbtest_Table( cUseAlias1 := "TEST1" ) )
+      oWvtBrw1 := ConfigBrowser( { 1, 2, 3, 4, 5, 6 }, cUseAlias1, { 43, 4, 51, 120 }, "test table - 1,2,3,4,5,6", oDlg, "N/BG*,N/W*", 1002 )
       oDlg:AddObject( oWvtBrw1 )
    ENDIF
 

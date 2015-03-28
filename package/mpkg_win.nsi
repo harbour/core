@@ -8,7 +8,12 @@
 ; See README.md for further information.
 ;
 
-  SetCompressor /solid lzma
+!ifdef NSIS_PACKEDVERSION
+  Unicode true
+  ManifestSupportedOS all
+  ManifestDPIAware true
+!endif
+SetCompressor /solid lzma
 
   !include "MUI2.nsh"
 

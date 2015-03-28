@@ -159,7 +159,7 @@ extern HB_EXPORT HB_BOOL     hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, 
                                               HB_OLEOBJ_FUNC pObjFunc, HB_USHORT uiClass );
 extern HB_EXPORT void        hb_oleItemSetDestructor( PHB_ITEM pItem, HB_OLE_DESTRUCTOR_FUNC pFunc, void * cargo );
 
-/* activex control */
+/* ActiveX control */
 extern HB_EXPORT HB_BOOL     hb_oleAxInit( void );
 extern HB_EXPORT PHB_ITEM    hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
 

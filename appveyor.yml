@@ -17,12 +17,11 @@ install:
 - md C:\upx\
 - curl -sS -L https://downloads.sourceforge.net/upx/upx/3.91/upx391w.zip -o C:\upx\upx.zip
 - 7z e -oC:\upx\ C:\upx\upx.zip -ir!*.exe -ir!LICENSE > nul
-- md C:\nsis\
-- curl -sS -L https://unsis.googlecode.com/files/nsis-2.46.5-Unicode-setup.exe -o C:\nsis\setup.exe
-- 7z x -oC:\nsis\ C:\nsis\setup.exe > nul
-- xcopy /q /s /y C:\nsis\$_OUTDIR C:\nsis\Contrib\Graphics\
-# Long url: https://downloads.sourceforge.net/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-posix/sjlj/x86_64-4.9.2-release-posix-sjlj-rt_v4-rev2.7z
-- curl -sS -L https://bit.ly/1EDA3Hy -o mingw.7z
+# Long URL: https://downloads.sourceforge.net/nsis/NSIS%203%20Pre-release/3.0b1/nsis-3.0b1.zip
+- curl -sS -L https://bit.ly/19nfgzh -o nsis3.zip
+- 7z x -oC:\ nsis3.zip > nul
+# Long URL: https://downloads.sourceforge.net/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z
+- curl -sS -L https://bit.ly/1IFNw5O -o mingw.7z
 # Will unpack into C:\mingw64\
 - 7z x -oC:\ mingw.7z > nul
 build_script:

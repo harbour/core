@@ -1,20 +1,17 @@
 /* Demonstrating operator overloading for creating an HTML document */
 
 #require "hbtip"
+#require "hbtest"
 
 PROCEDURE Main()
 
    LOCAL oDoc, oNode, oTable, oRow, oCell
    LOCAL i, j
 
-   LOCAL cFileName := hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" )
-
-   BEGIN SEQUENCE WITH __BreakBlock()
-      USE ( cFileName )
-   RECOVER
-      ? "Error: Database not found", cFileName
+   IF ! hbtest_Table()
+      ? "Error: Test database couldn't be created"
       RETURN
-   END SEQUENCE
+   ENDIF
 
    oDoc          := THtmlDocument():New()
 
@@ -91,7 +88,7 @@ PROCEDURE Main()
    HB_SYMBOL_UNUSED( oNode )
    oNode := oDoc:body + "p"
 
-   oNode:text := "10 records from database " + Alias() + ".dbf"
+   oNode:text := "10 records from database " + Alias()
 
    dbCloseArea()
 

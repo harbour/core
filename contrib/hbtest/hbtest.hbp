@@ -8,3 +8,4 @@
 -hbx=${hb_name}
 
 core.prg
+table.prg

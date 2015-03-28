@@ -8,6 +8,7 @@
    Notes: GTWVW now also has native Windows Controls. See other samples. */
 
 #require "gtwvw"
+#require "hbtest"
 
 #include "dbstruct.ch"
 #include "inkey.ch"
@@ -105,8 +106,7 @@ STATIC PROCEDURE xBrowse1()
 
    LOCAL aColumnsSep, tmp
 
-   USE "..\..\..\tests\test.dbf" NEW READONLY
-   IF NetErr()
+   IF ! hbtest_Table()
       RETURN
    ENDIF
 
@@ -125,7 +125,7 @@ STATIC PROCEDURE xBrowse1()
 
    oBrowse:configure()
 
-   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
+   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "Test table" )
 
    wvw_SetPen( 0, 0, WIN_RGB( 210, 210, 210 ) )
 
