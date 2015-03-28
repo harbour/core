@@ -132,41 +132,35 @@ del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgnat-*.dll" 2> nul
 
 if "%MINGW_HOST%" == "32" (
 
-   dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*
-
-   for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%a
-   if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
+   for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*"') do set MINGW_VER=%%a
 
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib64\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%_GCCVER%\64\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%_GCCVER%\adalib\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\64\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\adainclude\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\adalib\" 2> nul
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\lib64\" 2> nul
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\i686-w64-mingw32-gfortran.exe" 2> nul
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%MINGW_VER%\f951.exe" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
 
 ) else if "%MINGW_HOST%" == "64" (
 
-   dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"
-
-   for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%a
-   if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
+   for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"') do set MINGW_VER=%%a
 
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib32\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%_GCCVER%\32\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adainclude\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%_GCCVER%\adalib\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\32\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\adainclude\" 2> nul
+   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\adalib\" 2> nul
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\lib32\" 2> nul
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\f951.exe" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\f951.exe" 2> nul
+   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
 )
 
 echo ! mingw version: %MINGW_VER% %MINGW_HOST%-bit hosted
