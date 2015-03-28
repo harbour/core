@@ -1,4 +1,5 @@
 @echo off
+echo on
 
 :: ---------------------------------------------------------------
 :: Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
@@ -131,6 +132,8 @@ del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgnat-*.dll" 2> nul
 
 if "%MINGW_HOST%" == "32" (
 
+   dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*
+
    for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%a
    if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
 
@@ -147,6 +150,8 @@ if "%MINGW_HOST%" == "32" (
    del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%_GCCVER%\gnat1.exe" 2> nul
 
 ) else if "%MINGW_HOST%" == "64" (
+
+   dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"
 
    for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%a
    if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%

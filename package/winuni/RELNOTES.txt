@@ -3,15 +3,13 @@ release is available for download on this URL:
 
    https://github.com/vszakats/harbour-core/releases
 
-Make sure to check README.md "Build Your Own Harbour App"
-section.
+Make sure to check README.md "Build Your Own Harbour App" section.
 
 Release Notes
 =============
 
 Unified Windows release for x86 and x64 platforms.
 
-Installed size: 100-200MB (Harbour) + 600MB (MinGW)
 Default components: MinGW compiler + x86 static/shared libs, examples.
 Options: x64 libs and tools.
 
@@ -26,7 +24,7 @@ Tool/lib Dependencies
 
    Tools
 
-   MinGW GNU C _MINGW_VER_ (x86/x64) (included)
+   MinGW GNU C _MINGW_VER_
 
    Libs
 
