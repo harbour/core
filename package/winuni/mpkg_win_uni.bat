@@ -131,7 +131,7 @@ del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgnat-*.dll" 2> nul
 
 if "%MINGW_HOST%" == "32" (
 
-   for /f %%a in ('dir /b "%HB_DIR_MINGW%lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%a
+   for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*"') do set _GCCVER=%%a
    if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
 
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib64\" 2> nul
@@ -148,7 +148,7 @@ if "%MINGW_HOST%" == "32" (
 
 ) else if "%MINGW_HOST%" == "64" (
 
-   for /f %%a in ('dir /b "%HB_DIR_MINGW%lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%a
+   for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"') do set _GCCVER=%%a
    if not "%_GCCVER%" == "" set MINGW_VER=%_GCCVER%
 
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib32\" 2> nul
