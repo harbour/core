@@ -98,7 +98,7 @@ if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32" set MINGW_HOST=64
 if "%MINGW_HOST%" == "32" set MINGW_ROOT=comp\mingw\
 if "%MINGW_HOST%" == "64" set MINGW_ROOT=comp\mingw64\
 
-rem xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%%MINGW_ROOT%"
+if not "%_HB_PKG_WINUNI_BUNDLE_C%" == "no" xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%%MINGW_ROOT%"
 
 :: Copy mingw runtime .dlls
 
