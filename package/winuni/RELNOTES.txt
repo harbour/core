@@ -1,4 +1,4 @@
-Harbour _HB_VF_ (_VCS_ID_) source archives and Windows binary
+Harbour _HB_VERSION_ (_VCS_ID_) source archives and Windows binary
 release is available for download on this URL:
 
    https://github.com/vszakats/harbour-core/releases
