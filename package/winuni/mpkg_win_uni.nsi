@@ -9,6 +9,7 @@
 ; - HB_ABSROOT
 ; - HB_VS
 ; - HB_VM
+; - HB_RT
 
 !ifdef NSIS_PACKEDVERSION
   Unicode true
@@ -149,7 +150,7 @@ ${!defineifexist} PKG_PLAT_OS2      "$%HB_ABSROOT%lib\os2\watcom\*.*"
 !define /date NOW "%Y%m%d"
 
 Name "Harbour $%HB_VM%"
-OutFile "harbour-$%HB_VF%-win.exe"
+OutFile "$%HB_RT%harbour-$%HB_VF%-win.exe"
 
 InstallDir C:\hb$%HB_VS%
 
