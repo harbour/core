@@ -116,7 +116,11 @@ _DET_VAR_HAS_ := HB_HAS_CURSES
 _DET_FLT_PLAT := !os2
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /usr/include/ncurses /usr/local/include /sw/include /opt/local/include /boot/develop/headers/3rdparty
+ifeq ($(HB_PLATFORM),win)
+_DET_INC_HEAD := /ncursesw/curses.h
+else
 _DET_INC_HEAD := /curses.h
+endif
 
 ifeq ($(HB_COMPILER),djgpp)
    _DET_INC_DEFP += $(foreach d, $(subst $(PTHSEP), ,$(PATH)), $(d)/../include)

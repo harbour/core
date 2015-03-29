@@ -60,7 +60,11 @@
 #if defined( HB_OS_HPUX )
 #  define _XOPEN_SOURCE_EXTENDED
 #endif
-#include <curses.h>
+#if defined( HB_OS_WIN )
+#  include <ncursesw/curses.h>
+#else
+#  include <curses.h>
+#endif
 #if defined( HB_OS_SUNOS ) || \
     defined( __PDCURSES__ ) || \
     defined( HB_OS_MINIX )
@@ -73,16 +77,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/ioctl.h>
-#include <sys/time.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/ioctl.h>
+#if ! defined( HB_OS_WIN )
+#  include <sys/ioctl.h>
+#  include <sys/time.h>
+#  include <sys/stat.h>
+#  include <sys/types.h>
+#  include <sys/wait.h>
+#endif
 #include <signal.h>
 #include <errno.h>
 #include <unistd.h>
-#include <termios.h>
+#if ! defined( HB_OS_WIN )
+#  include <termios.h>
+#endif
 #include <fcntl.h>
 #include <time.h>
 #if ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) || defined( HB_OS_MINIX ) ) && ! defined( __WATCOMC__ )
