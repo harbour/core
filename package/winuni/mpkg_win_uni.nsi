@@ -195,12 +195,12 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%bin\hbi18n.exe"
   File "$%HB_ABSROOT%bin\hbmk2.exe"
   File "$%HB_ABSROOT%bin\hbpp.exe"
-  File "$%HB_ABSROOT%bin\hbrun.exe"
   File "$%HB_ABSROOT%bin\hbspeed.exe"
   File "$%HB_ABSROOT%bin\hbtest.exe"
 
   File /nonfatal "$%HB_ABSROOT%bin\hbformat.exe"
   File /nonfatal "$%HB_ABSROOT%bin\hbnetio.exe"
+  File /nonfatal "$%HB_ABSROOT%bin\hbrun.exe"
   File /nonfatal "$%HB_ABSROOT%bin\*.hb"
 
   !ifdef PKG_CC_MINGW | PKG_CC_MINGW64

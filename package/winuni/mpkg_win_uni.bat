@@ -190,6 +190,7 @@ echo.> _hbfiles
 
 if exist "%HB_DR%bin\hbformat.exe" echo "%HB_DR%bin\hbformat.exe" >> _hbfiles
 if exist "%HB_DR%bin\hbnetio.exe"  echo "%HB_DR%bin\hbnetio.exe"  >> _hbfiles
+if exist "%HB_DR%bin\hbrun.exe"    echo "%HB_DR%bin\hbrun.exe"    >> _hbfiles
 
 if exist "%HB_ABSROOT%%MINGW_ROOT%*" (
    echo "%HB_DR%bin\libgcc_s_*.dll"      >> _hbfiles
@@ -207,7 +208,6 @@ echo "%HB_DR%bin\harbour.exe"      >> _hbfiles
 echo "%HB_DR%bin\hbi18n.exe"       >> _hbfiles
 echo "%HB_DR%bin\hbmk2.exe"        >> _hbfiles
 echo "%HB_DR%bin\hbpp.exe"         >> _hbfiles
-echo "%HB_DR%bin\hbrun.exe"        >> _hbfiles
 echo "%HB_DR%bin\hbspeed.exe"      >> _hbfiles
 echo "%HB_DR%bin\hbtest.exe"       >> _hbfiles
 echo "%HB_DR%bin\*.hb"             >> _hbfiles
