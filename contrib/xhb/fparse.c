@@ -291,13 +291,13 @@ static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharC
 
 static HB_BOOL file_read( FILE * stream, char * string, int * iCharCount )
 {
-   int ch, cnbr = 0;
+   int cnbr = 0;
 
    memset( string, ' ', MAX_READ );
 
    for( ;; )
    {
-      ch = fgetc( stream );
+      int ch = fgetc( stream );
 
       if( ch == '\n' || ch == EOF || ch == 26 )
       {
@@ -328,7 +328,6 @@ HB_FUNC( FPARSE )
    PHB_ITEM pArray;
    PHB_ITEM pItem;
    char *   string;
-   char **  tokens;
    int      iToken, iCharCount = 0;
    HB_BYTE  nByte;
 
@@ -371,7 +370,7 @@ HB_FUNC( FPARSE )
       /* parse the read line */
       int iWord = 0;
 
-      tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
+      char ** tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
 
       /* prepare empty array */
       hb_arrayNew( pItem, iWord );
@@ -469,7 +468,6 @@ HB_FUNC( FWORDCOUNT )
    FILE *   inFile;
    PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
    char *   string;
-   char **  tokens;
    int      iCharCount = 0;
    HB_BYTE  nByte      = ' ';
    HB_SIZE  nWordCount = 0;
@@ -505,7 +503,7 @@ HB_FUNC( FWORDCOUNT )
    {
       int iWord = 0;
 
-      tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
+      char ** tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
 
       nWordCount += iWord;
 

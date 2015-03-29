@@ -196,7 +196,7 @@ static int _code128_charno( char ch, int iCodeSet )
 PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags )
 {
    PHB_ZEBRA  pZebra;
-   int        i, j, k, csum, iCode, iCodeSet, iCodeLen, iLen = ( int ) nLen;
+   int        i, j, k, csum, iCodeSet, iCodeLen, iLen = ( int ) nLen;
    int *      pCode;
 
    HB_SYMBOL_UNUSED( iFlags );
@@ -257,7 +257,8 @@ PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags
       if you'll change encoder code, digit optimizer canm require adjustment also [Mindaugas] */
    for( i = 0; i < iLen; i++ )
    {
-      iCode = _code128_charno( szCode[ i ], iCodeSet );
+      int iCode = _code128_charno( szCode[ i ], iCodeSet );
+
       if( iCode != -1 )
          pCode[ iCodeLen++ ] = iCode;
       else

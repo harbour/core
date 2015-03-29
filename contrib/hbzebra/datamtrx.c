@@ -154,14 +154,14 @@ static int _datamatrix_encode( const char * szCode, int iLen, unsigned char * pC
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pEC, int iECLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
    int i, j;
-   unsigned char iM;
 
    for( i = 0; i < iECLen; i++ )
       pEC[ i ] = 0;
 
    for( i = 0; i < iDataLen; i++ )
    {
-      iM = pData[ i ] ^ pEC[ iECLen - 1 ];
+      unsigned char iM = pData[ i ] ^ pEC[ iECLen - 1 ];
+
       for( j = iECLen - 1; j > 0; j-- )
       {
          if( iM && pPoly[ j ] )

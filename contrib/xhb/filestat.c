@@ -204,7 +204,6 @@ HB_FUNC( FILESTATS )
       LPCTSTR lpFileName = HB_PARSTR( 1, &hFileName, NULL );
       DWORD   dwAttribs;
       WIN32_FIND_DATA ffind;
-      HANDLE          hFind;
       FILETIME        filetime;
       SYSTEMTIME      time;
 
@@ -212,6 +211,8 @@ HB_FUNC( FILESTATS )
       dwAttribs = GetFileAttributes( lpFileName );
       if( dwAttribs != INVALID_FILE_ATTRIBUTES )
       {
+         HANDLE hFind;
+
          hb_fsAttrDecode( hb_fsAttrFromRaw( dwAttribs ), szAttr );
 
          /* If file existed, do a findfirst */

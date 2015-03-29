@@ -56,7 +56,7 @@ static char _itf_checksum( const char * szCode )
    int i, sum = 0;
 
    for( i = 0; szCode[ i ]; i++ )
-      sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
+      sum += ( szCode[ i ] - '0' ) * ( ( i & 1 ) ? 1 : 3 );
    return '0' + ( 100000 - sum ) % 10;
 }
 
@@ -77,7 +77,7 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
          return pZebra;
       }
    }
-   if( ( iLen + ( iFlags & HB_ZEBRA_FLAG_CHECKSUM ? 1 : 0 ) ) & 1 )
+   if( ( iLen + ( ( iFlags & HB_ZEBRA_FLAG_CHECKSUM ) ? 1 : 0 ) ) & 1 )
    {
       pZebra->szCode = ( char * ) hb_xgrab( iLen + 2 );
       pZebra->szCode[ 0 ] = '0';
@@ -124,11 +124,11 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
    for( i = 0; szCode[ i ]; i += 2 )
    {
       char c1 = s_code[ szCode[ i ] - '0' ], c2 = szCode[ i + 1 ] ? s_code[ szCode[ i + 1 ] - '0' ] : csum;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );  c1 >>= 1;  c2 >>= 1;
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );  c1 >>= 1;  c2 >>= 1;
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );  c1 >>= 1;  c2 >>= 1;
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );  c1 >>= 1;  c2 >>= 1;
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );
       if( ! szCode[ i + 1 ] )
          break;
    }

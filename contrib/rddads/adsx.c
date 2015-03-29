@@ -554,7 +554,6 @@ static void mixTagDestroy( PMIXTAG pTag )
 
 static PMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
 {
-   char    szTag[ MIX_MAXTAGNAMELEN + 1 ];
    PMIXTAG pTag;
 
    if( HB_IS_NUMBER( pOrder ) )
@@ -571,6 +570,8 @@ static PMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
    }
    else
    {
+      char szTag[ MIX_MAXTAGNAMELEN + 1 ];
+
       hb_strncpyUpperTrim( szTag, hb_itemGetCPtr( pOrder ), MIX_MAXTAGNAMELEN );
       pTag = pArea->pTagList;
       while( pTag && hb_stricmp( szTag, pTag->szName ) )
@@ -928,12 +929,10 @@ static HB_ERRCODE adsxPutValue( ADSXAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
 
 static HB_ERRCODE adsxClose( ADSXAREAP pArea )
 {
-   PMIXTAG pTag;
-
    pArea->pTagCurrent = NULL;
    while( pArea->pTagList )
    {
-      pTag = pArea->pTagList;
+      PMIXTAG pTag = pArea->pTagList;
       pArea->pTagList = pArea->pTagList->pNext;
       mixTagDestroy( pTag );
    }

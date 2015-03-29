@@ -185,7 +185,7 @@ static void hbxml_doc_new_node( PHB_ITEM pDoc, int amount )
 
 static MXML_STATUS mxml_attribute_read( MXML_REFIL * ref, PHB_ITEM pDoc, PHB_ITEM pNode, PHBXML_ATTRIBUTE pDest, int style )
 {
-   int        chr, quotechr = '"';
+   int        quotechr = '"';
    MXML_SGS * buf_name;
    MXML_SGS * buf_attrib;
    int        iStatus   = 0;
@@ -198,7 +198,7 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL * ref, PHB_ITEM pDoc, PHB_ITE
 
    while( iStatus < 6 )
    {
-      chr = mxml_refil_getc( ref );
+      int chr = mxml_refil_getc( ref );
       if( chr == MXML_EOF )
          break;
 
@@ -744,7 +744,6 @@ static void mxml_node_read_data( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc,
    chr = mxml_refil_getc( ref );
    while( chr != MXML_EOF )
    {
-
       /* still in a data element */
       if( chr != '<' )
       {
@@ -863,7 +862,6 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL * ref, PHB_ITEM pNode, PHB_IT
    char *   buf;
    int      iAllocated;
    int      iPos = 0;
-   int      chr;
    int      iStatus = 0;
 
    buf        = ( char * ) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
@@ -871,7 +869,7 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL * ref, PHB_ITEM pNode, PHB_IT
 
    while( iStatus < 2 )
    {
-      chr = mxml_refil_getc( ref );
+      int chr = mxml_refil_getc( ref );
       if( chr == MXML_EOF )
          break;
 
@@ -984,14 +982,15 @@ static MXML_STATUS mxml_node_read_attributes( MXML_REFIL * ref,
 
 static void mxml_node_read_directive( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc )
 {
-   char * buf        = ( char * ) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
-   int    iAllocated = MXML_ALLOC_BLOCK;
-   int    iPos       = 0;
-   int    chr;
+   char * buf  = ( char * ) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
 
    if( mxml_node_read_name( ref, pNode, doc ) == MXML_STATUS_OK )
    {
-      chr = mxml_refil_getc( ref );
+      int iAllocated = MXML_ALLOC_BLOCK;
+      int iPos       = 0;
+
+      int chr = mxml_refil_getc( ref );
+
       while( chr != MXML_EOF && chr != '>' )
       {
          if( iPos > 0 || ( chr != ' ' && chr != '\t' && chr != '\r' && chr != '\n' ) )
@@ -1032,7 +1031,6 @@ static void mxml_node_read_directive( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM
 static void mxml_node_read_pi( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc )
 {
    int    iPos = 0, iAllocated;
-   int    chr;
    char * buf;
    int    iStatus = 0;
 
@@ -1047,7 +1045,7 @@ static void mxml_node_read_pi( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc )
 
    while( iStatus < 2 )
    {
-      chr = mxml_refil_getc( ref );
+      int chr = mxml_refil_getc( ref );
       if( chr == MXML_EOF )
          break;
 
@@ -1142,7 +1140,6 @@ static void mxml_node_read_tag( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc,
 static void mxml_node_read_comment( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc )
 {
    int      iPos = 0, iAllocated;
-   int      chr;
    char *   buf;
    int      iStatus = 0;
    PHB_ITEM pItem;
@@ -1157,7 +1154,7 @@ static void mxml_node_read_comment( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM d
 
    while( iStatus < 3 )
    {
-      chr = mxml_refil_getc( ref );
+      int chr = mxml_refil_getc( ref );
       if( chr == MXML_EOF )
          break;
 
@@ -1225,9 +1222,7 @@ static void mxml_node_read_comment( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM d
 
 static void mxml_node_read_cdata( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM pDoc )
 {
-   int      iPos = 0, iAllocated;
    int      chr;
-   char *   buf;
    int      iStatus = 0;
    PHB_ITEM pItem;
 
@@ -1305,10 +1300,11 @@ static void mxml_node_read_cdata( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM pDo
    }
    else
    {
-      iStatus = 0;
+      int iPos = 0, iAllocated = MXML_ALLOC_BLOCK;
 
-      buf        = ( char * ) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
-      iAllocated = MXML_ALLOC_BLOCK;
+      char * buf = ( char * ) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
+
+      iStatus = 0;
 
       /* now we can read the node */
       while( iStatus < 3 )
@@ -1422,13 +1418,12 @@ static MXML_STATUS mxml_node_read( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM do
 {
    PHB_ITEM node;
 
-   int chr;
    /* Stateful machine status */
    int iStatus = 0;
 
    while( iStatus >= 0 )
    {
-      chr = mxml_refil_getc( ref );
+      int chr = mxml_refil_getc( ref );
       if( chr == MXML_EOF )
          break;
 
@@ -1637,7 +1632,6 @@ static MXML_STATUS mxml_node_write( MXML_OUTPUT * out, PHB_ITEM pNode, int style
 {
    PHB_ITEM pChild, pItem;
    int      depth      = 0;
-   int      mustIndent = 0;
 
    pChild = hb_itemNew( NULL );
    pItem  = hb_itemNew( NULL );
@@ -1676,6 +1670,8 @@ static MXML_STATUS mxml_node_write( MXML_OUTPUT * out, PHB_ITEM pNode, int style
          }
          else
          {
+            int mustIndent = 0;
+
             mxml_output_char( out, '>' );
 
             if( ! HB_IS_NIL( pChild ) )
@@ -2203,7 +2199,7 @@ HB_FUNC( HBXML_DATAREAD )
    int        iStyle = hb_parni( 3 );
    PHB_ITEM   pRoot;
    MXML_REFIL refil;
-   char       buffer[ 512 ], * buf;
+   char *     buf;
    HB_SIZE    ulLen;
 
    if( pDoc == NULL || pParam == NULL ||
@@ -2217,6 +2213,8 @@ HB_FUNC( HBXML_DATAREAD )
       mxml_refil_setup( &refil, NULL, buf, ulLen, ulLen );
    else /* can only be an integer, that is, a file handle */
    {
+      char buffer[ 512 ];
+
       mxml_refil_setup( &refil,
                         mxml_refill_from_handle_func,
                         buffer, 0, 512 );

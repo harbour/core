@@ -455,11 +455,11 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
          /* hack for timestamp values, we need sth better yo detect timestamp indexes */
          if( pArea->iFileType == ADS_ADT && pKeyBuf[ 0 ] == 0 && ( iKeyLen == 8 || iKeyLen == 4 ) )
          {
-            long lDate, lTime;
+            long lDate;
             lDate = HB_GET_BE_UINT32( pKeyBuf );
             if( iKeyLen == 8 )
             {
-               lTime = HB_GET_BE_UINT32( &pKeyBuf[ 4 ] );
+               long lTime = HB_GET_BE_UINT32( &pKeyBuf[ 4 ] );
                /* ADS stores milliseconds in raw ADT form increased by one */
                if( lTime )
                   --lTime;
@@ -1517,8 +1517,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
    HB_ERRCODE errCode = HB_SUCCESS;
    DBFIELDINFO dbFieldInfo;
    PHB_ITEM pFieldDesc;
-   const char * szFieldType, * szType;
-   int iData, iNameLen;
+   const char * szType;
 
    HB_TRACE( HB_TR_DEBUG, ( "adsCreateFields(%p, %p)", pArea, pStruct ) );
 
@@ -1529,6 +1528,9 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
+      const char * szFieldType;
+      int iData, iNameLen;
+
       dbFieldInfo.uiTypeExtended = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
       dbFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
@@ -2979,7 +2981,6 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    char szBuffer[ MAX_STR_LEN + 1 ];
    HB_USHORT uiCount;
    LPFIELD pField;
-   const char * cType;
    HB_BOOL fUnicode;
 
    HB_TRACE( HB_TR_DEBUG, ( "adsCreate(%p, %p)", pArea, pCreateInfo ) );
@@ -3016,6 +3017,8 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    pField = pArea->area.lpFields;
    for( uiCount = 0; uiCount < pArea->area.uiFieldCount; uiCount++ )
    {
+      const char * cType;
+
       if( ( HB_ULONG ) pField->uiLen > pArea->maxFieldLen )
          pArea->maxFieldLen = pField->uiLen;
 
@@ -5566,7 +5569,6 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    UNSIGNED32 u32NumRecs = 0;
    UNSIGNED32 u32RetVal = ( UNSIGNED32 ) ~AE_SUCCESS;   /* initialize to something other than success */
    UNSIGNED16 u16Option = ADS_AOF_ADD_RECORD;
-   UNSIGNED32 * pu32Records;
 
    pArea = hb_adsGetWorkAreaPointer();
    if( pArea )
@@ -5589,7 +5591,8 @@ HB_FUNC( ADSCUSTOMIZEAOF )
 
       if( u32NumRecs )
       {
-         pu32Records = ( UNSIGNED32 * ) hb_xgrab( u32NumRecs * sizeof( UNSIGNED32 ) );
+         UNSIGNED32 * pu32Records = ( UNSIGNED32 * ) hb_xgrab( u32NumRecs * sizeof( UNSIGNED32 ) );
+
          if( HB_ISARRAY( 1 ) )           /* convert array of recnos to C array */
          {
             for( ulRecord = 0; ulRecord < u32NumRecs; ulRecord++ )

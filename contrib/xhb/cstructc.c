@@ -252,12 +252,13 @@ static HB_UINT SizeOfCStructure( PHB_ITEM aDef, HB_UINT uiAlign )
 
 HB_FUNC( HB_SIZEOFCSTRUCTURE )
 {
-   PHB_ITEM aDef   = hb_param( 1, HB_IT_ARRAY );
-   PHB_ITEM pAlign = hb_param( 2, HB_IT_INTEGER );
-   HB_UINT  uiAlign;
+   PHB_ITEM aDef = hb_param( 1, HB_IT_ARRAY );
 
    if( aDef )
    {
+      PHB_ITEM pAlign = hb_param( 2, HB_IT_INTEGER );
+      HB_UINT  uiAlign;
+
       if( pAlign )
          uiAlign = ( HB_BYTE ) pAlign->item.asInteger.value;
       else
@@ -1256,12 +1257,12 @@ HB_FUNC( HB_STRUCTURETOARRAY )
    PHB_ITEM pAlign    = hb_param( 3, HB_IT_INTEGER );
    PHB_ITEM pAdopt    = hb_param( 4, HB_IT_LOGICAL );
    PHB_ITEM pRet      = hb_param( 5, HB_IT_ARRAY );
-   HB_BOOL  bAdopt;
 
    if( Structure && aDef )
    {
       HB_BYTE * Buffer = ( HB_BYTE * ) Structure->item.asString.value;
       HB_UINT   uiAlign;
+      HB_BOOL   bAdopt;
 
       if( pAlign )
          uiAlign = ( HB_BYTE ) pAlign->item.asInteger.value;

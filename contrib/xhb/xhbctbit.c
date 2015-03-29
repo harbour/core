@@ -57,7 +57,6 @@ static void sizeofbits( HB_USHORT * pusBytes, HB_LONG * plPattern, HB_LONG * plT
 HB_ULONG hb_hextonum( const char * cHex )
 {
    HB_ULONG ulNum = 0;
-   char     c;
    int      iDigit;
 
    while( *cHex && *cHex == ' ' )
@@ -65,6 +64,8 @@ HB_ULONG hb_hextonum( const char * cHex )
 
    while( *cHex )
    {
+      char c;
+
       ulNum <<= 4;
 
       c     = *cHex;
@@ -262,7 +263,6 @@ static HB_LONG __numfun( int iPCount, HB_LONG ( * operation )( HB_LONG wNum1, HB
    HB_LONG   lNum1, lNum2;
    HB_LONG   lPattern, lTestMSB;
    HB_USHORT usBytes;
-   int       iFor;
 
    if( HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
    {
@@ -277,6 +277,8 @@ static HB_LONG __numfun( int iPCount, HB_LONG ( * operation )( HB_LONG wNum1, HB
             lNumOp = ( *operation )( lNum1, 0 );
 
          else
+         {
+            int iFor;
             for( iFor = 3; iFor <= iPCount; iFor++ )
             {
                if( HB_ISNUM( iFor ) || HB_ISCHAR( iFor ) )
@@ -298,10 +300,10 @@ static HB_LONG __numfun( int iPCount, HB_LONG ( * operation )( HB_LONG wNum1, HB
                /* Copy result to first parameter if multi operation */
                lNum1 = lNumOp;
             }
+         }
       }
       else
       {
-
          /*  If error in parameter then return -1 */
          *pbOk = HB_FALSE;
          return -1;

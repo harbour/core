@@ -212,7 +212,6 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    PHB_ITEM         pItemEof, pItem;
    HB_BOOL          bError;
    HB_USHORT        uiFields, uiCount;
-   int iType;
 
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
    pSDDData        = ( SDDDATA * ) pArea->pSDDData;
@@ -291,6 +290,8 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    for( uiCount = 0, pVar = pSqlda->sqlvar; uiCount < uiFields; uiCount++, pVar++ )
    {
       DBFIELDINFO dbFieldInfo;
+      int iType;
+
       /* FIXME: if pVar->sqlname is ended with 0 byte then this hb_strndup()
        *        and hb_xfree() bewlow is redundant and
        *          dbFieldInfo.atomName = pVar->sqlname;

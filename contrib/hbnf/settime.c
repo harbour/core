@@ -26,7 +26,7 @@
 HB_FUNC( FT_SETTIME )
 {
 #if defined( HB_OS_DOS )
-   int        iHour, iMinute, iSeconds;
+   int        iHour = 0, iMinute = 0, iSeconds = 0;
    union REGS regs;
 
    if( HB_ISCHAR( 1 ) )

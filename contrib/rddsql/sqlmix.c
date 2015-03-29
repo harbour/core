@@ -1112,15 +1112,15 @@ static PMIXTAG hb_mixFindTag( SQLMIXAREAP pArea, PHB_ITEM pOrder )
 
 static HB_ULONG hb_mixTagNodeKeyCount( PMIXNODE pNode )
 {
-   HB_ULONG     ulKeyCount;
-   unsigned int ui;
+   HB_ULONG ulKeyCount = pNode->KeyCount;
 
-   ulKeyCount = pNode->KeyCount;
    if( ! pNode->Leaf )
    {
+      unsigned int ui;
       for( ui = 0; ui <= pNode->KeyCount; ui++ )
          ulKeyCount += hb_mixTagNodeKeyCount( pNode->Child[ ui ] );
    }
+
    return ulKeyCount;
 }
 

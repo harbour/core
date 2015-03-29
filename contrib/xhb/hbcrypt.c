@@ -259,7 +259,7 @@ void nxs_xordecode(
 {
    HB_SIZE       pos    = 0;
    HB_USHORT     keypos = 0;
-   unsigned char c_bitrest, c_bitleft;
+   unsigned char c_bitleft;
 
    /* A very short block? */
    if( keylen > cipherlen - pos )
@@ -269,6 +269,8 @@ void nxs_xordecode(
 
    while( pos < cipherlen )
    {
+      unsigned char c_bitrest;
+
       cipher[ pos ] ^= key[ keypos ];
 
       c_bitrest       = cipher[ pos ] << 5;

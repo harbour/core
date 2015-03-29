@@ -53,12 +53,12 @@
 
 static HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   char cLastChar = ' ';
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_AtSkipStrings(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen ) );
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
+      char cLastChar = ' ';
+
       HB_SIZE nPos    = 0;
       HB_SIZE nSubPos = 0;
 

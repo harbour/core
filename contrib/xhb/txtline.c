@@ -186,7 +186,6 @@ HB_FUNC( HB_TABEXPAND )
    HB_SIZE      nTabLen   = hb_parns( 2 );
    HB_SIZE      nTabCount = 0;
    HB_ISIZ      nPos, nSize;
-   char *       szRet;
 
    for( nPos = 0; nPos < nStrLen; nPos++ )
    {
@@ -198,6 +197,7 @@ HB_FUNC( HB_TABEXPAND )
       hb_retc( szText );
    else
    {
+      char * szRet;
       nSize = nStrLen + nTabCount * ( nTabLen - 1 );
       szRet = ( char * ) hb_xgrab( nSize + 1 );
       memset( szRet, ' ', nSize );

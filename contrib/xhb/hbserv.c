@@ -871,10 +871,10 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
 
 HB_FUNC( HB_POPSIGNALHANDLER )
 {
-   int nLen;
-
    if( s_pHooks != NULL )
    {
+      int nLen;
+
       hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
       nLen = hb_arrayLen( s_pHooks );

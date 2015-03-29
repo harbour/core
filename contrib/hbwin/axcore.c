@@ -195,7 +195,7 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
       lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IOleObject ), ( void ** ) ( void * ) &lpOleObject );
       if( lOleError == S_OK )
       {
-         IOleClientSite * lpOleClientSite;
+         IOleClientSite * lpOleClientSite = NULL;
 
          lOleError = HB_VTBL( lpOleObject )->GetClientSite( HB_THIS_( lpOleObject ) & lpOleClientSite );
          if( lOleError == S_OK )
@@ -472,7 +472,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    hr = HB_VTBL( iDisp )->GetTypeInfo( HB_THIS_( iDisp ) 0, LOCALE_SYSTEM_DEFAULT, &iTI );
    if( hr == S_OK )
    {
-      ITypeLib * iTL;
+      ITypeLib * iTL = NULL;
       TYPEATTR * pTypeAttr2;
 
       hr = HB_VTBL( iTI )->GetContainingTypeLib( HB_THIS_( iTI ) & iTL, NULL );

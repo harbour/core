@@ -227,7 +227,6 @@ HB_FUNC( XDL_READ_MMFILE )
       PHB_ITEM pData = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
       char *   data;
       HB_SIZE  size;
-      long     lResult;
 
       if( pData )
       {
@@ -244,7 +243,8 @@ HB_FUNC( XDL_READ_MMFILE )
 
       if( data && size )
       {
-         lResult = xdl_read_mmfile( phb_mmf->mmf, data, ( long ) size );
+         long lResult = xdl_read_mmfile( phb_mmf->mmf, data, ( long ) size );
+
          if( lResult == -1 )
          {
             hb_retc_null();

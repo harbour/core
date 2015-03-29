@@ -358,13 +358,13 @@ static unsigned char * s_align[ 40 ] = {
 #ifdef DEBUG_CODE
 static int _qr_check_version_table( void )
 {
-   const QRVERSION * pQRVersion;
    int iV, iL;
    unsigned int uiSumD, uiSumE;
 
    for( iV = 1; iV <= 40; iV++ )
    {
-      pQRVersion = &s_version[ iV - 1 ];
+      const QRVERSION * pQRVersion = &s_version[ iV - 1 ];
+
       for( iL = 0; iL < 4; iL++ )
       {
          uiSumE = ( unsigned int ) ( pQRVersion->level[ iL ].block[ 0 ].uiCount ) * ( pQRVersion->level[ iL ].block[ 0 ].uiECC ) +
@@ -625,13 +625,12 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
    int i, iVersion, iMode;
    HB_ISIZ iLen, iDataLen, m;
    HB_SIZE n;
-   char ch;
 
    /* Select encoding mode */
    iMode = 1;  /* 1=Numeric, 2=Alphanumeric, 4=8-bit, 8=Kanji. Not modes: 0=termibator, 3=Structured append, 7=ECI, 5=FNC1(1), 9=FNC1(2)*/
    for( n = 0; n < nSize; n++ )
    {
-      ch = szCode[ n ];
+      char ch = szCode[ n ];
       if( '0' <= ch && ch <= '9' )
       {
       }
@@ -733,14 +732,14 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pECC, int iECCLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
    int i, j;
-   unsigned char iM;
 
    for( i = 0; i < iECCLen; i++ )
       pECC[ i ] = 0;
 
    for( i = 0; i < iDataLen; i++ )
    {
-      iM = s_rev[ pData[ i ] ] ^ pECC[ iECCLen - 1 ];
+      unsigned char iM = s_rev[ pData[ i ] ] ^ pECC[ iECCLen - 1 ];
+
       for( j = iECCLen - 1; j > 0; j-- )
       {
          if( iM && pPoly[ j ] )
@@ -857,7 +856,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 
 static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 {
-   int i, j, no, up, right, iLength;
+   int i, j, iLength;
    unsigned char * pi, * pj;
 
    HB_SYMBOL_UNUSED( pCWBits );
@@ -941,6 +940,8 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
    /* Draw data. Note: pCWBits == NULL is used only for debugging */
    if( pCWBits )
    {
+      int no, up, right;
+
       i = j = iLength - 1;
       right = 1;
       up = 1;
@@ -1142,10 +1143,12 @@ static void _qr_mask_pattern( PHB_BITBUFFER pBits, int iVersion, int iMask )
 
 static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
 {
-   int i, iPenaltyMin = 0, iMaskMin = 0, iPenalty;
+   int i, iPenaltyMin = 0, iMaskMin = 0;
 
    for( i = 0; i < 8; i++ )
    {
+      int iPenalty;
+
       _qr_mask_pattern( pBits, iVersion, i );
       iPenalty = _qr_penalty( pBits, iVersion );
 #ifdef DEBUG_CODE
