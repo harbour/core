@@ -842,17 +842,15 @@ static PHB_CONCLI s_fileConnect( const char ** pFileName,
 {
    PHB_CONCLI conn;
    HB_SOCKET sd;
+   char server[ NETIO_SERVERNAME_MAX ];
    char * pszIpAddres;
 
    s_fileGetConnParam( &pszServer, &iPort, &iTimeOut, &pszPasswd, &iPassLen );
 
    if( pFileName )
-   {
-      char server[ NETIO_SERVERNAME_MAX ];
       *pFileName = s_fileDecode( *pFileName, server,
                                  &pszServer, &iPort, &iTimeOut,
                                  &pszPasswd, &iPassLen, &iLevel, &iStrategy );
-   }
 
    if( iLevel == HB_ZLIB_COMPRESSION_DISABLE && iPassLen )
       iLevel = HB_ZLIB_COMPRESSION_DEFAULT;
