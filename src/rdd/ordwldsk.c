@@ -75,8 +75,6 @@ HB_FUNC( ORDWILDSEEK )
 
          if( ! fCont )
          {
-            const char * szKey;
-
             if( fBack )
                errCode = SELF_GOBOTTOM( pArea );
             else
@@ -86,10 +84,7 @@ HB_FUNC( ORDWILDSEEK )
             {
                errCode = SELF_ORDINFO( pArea, DBOI_KEYVAL, &OrderInfo );
                if( errCode == HB_SUCCESS )
-               {
-                  szKey = hb_itemGetCPtr( OrderInfo.itmResult );
-                  fFound = hb_strMatchWild( szKey, szPattern );
-               }
+                  fFound = hb_strMatchWild( hb_itemGetCPtr( OrderInfo.itmResult ), szPattern );
             }
          }
          if( ! fFound && errCode == HB_SUCCESS )

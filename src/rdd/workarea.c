@@ -267,12 +267,9 @@ static HB_ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
  */
 static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
-   HB_USHORT uiItems, uiCount, uiLen, uiDec;
+   HB_USHORT uiItems, uiCount;
    HB_ERRCODE errCode = HB_SUCCESS;
    DBFIELDINFO dbFieldInfo;
-   PHB_ITEM pFieldDesc;
-   const char * szType;
-   int iData;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_waCreateFields(%p, %p)", pArea, pStruct ) );
 
@@ -282,6 +279,11 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
+      HB_USHORT uiLen, uiDec;
+      PHB_ITEM pFieldDesc;
+      const char * szType;
+      int iData;
+
       dbFieldInfo.uiTypeExtended = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
       dbFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
@@ -2163,7 +2165,6 @@ PHB_ITEM hb_rddList( HB_USHORT uiType )
 {
    HB_USHORT uiCount, uiIndex, uiRdds;
    PHB_ITEM pRddArray;
-   LPRDDNODE pNode;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_rddList(%hu)", uiType ) );
 
@@ -2175,7 +2176,7 @@ PHB_ITEM hb_rddList( HB_USHORT uiType )
    pRddArray = hb_itemArrayNew( uiRdds );
    for( uiCount = uiIndex = 0; uiCount < s_uiRddCount && uiIndex < uiRdds; ++uiCount )
    {
-      pNode = s_RddList[ uiCount ];
+      LPRDDNODE pNode = s_RddList[ uiCount ];
       if( uiType == 0 || pNode->uiType == uiType )
          hb_arraySetC( pRddArray, ++uiIndex, pNode->szName );
    }

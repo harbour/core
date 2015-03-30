@@ -325,7 +325,6 @@ HB_FUNC( __DBGVMVARLSET )
       int iLevel = hb_parni( 1 ) + 1;
       int iLocal = hb_parni( 2 );
       HB_ISIZ nBaseOffset;
-      PHB_ITEM pLocal;
 
       nBaseOffset = hb_stackBaseOffset();
       while( iLevel-- > 0 && nBaseOffset > 1 )
@@ -333,6 +332,8 @@ HB_FUNC( __DBGVMVARLSET )
 
       if( iLevel < 0 )
       {
+         PHB_ITEM pLocal;
+
          if( iLocal > SHRT_MAX )
          {
             iLocal -= USHRT_MAX;

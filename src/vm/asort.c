@@ -178,10 +178,10 @@ static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb,
 
 static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, HB_ISIZ lb, HB_ISIZ ub, PHB_ITEM pBlock )
 {
-   HB_ISIZ m;
-
    while( lb < ub )
    {
+      HB_ISIZ m;
+
       if( ( HB_SIZE ) ub >= pBaseArray->nLen )
       {
          ub = pBaseArray->nLen - 1;
@@ -215,8 +215,6 @@ HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pnStart, HB_SIZE * pnCount, PHB
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       HB_SIZE nLen = pBaseArray->nLen;
       HB_SIZE nStart;
-      HB_SIZE nCount;
-      HB_SIZE nEnd;
 
       if( pnStart && *pnStart >= 1 )
          nStart = *pnStart;
@@ -225,6 +223,9 @@ HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pnStart, HB_SIZE * pnCount, PHB
 
       if( nStart <= nLen )
       {
+         HB_SIZE nCount;
+         HB_SIZE nEnd;
+
          if( pnCount && *pnCount >= 1 && ( *pnCount <= nLen - nStart ) )
             nCount = *pnCount;
          else

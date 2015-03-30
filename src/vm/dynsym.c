@@ -671,13 +671,12 @@ HB_FUNC( __DYNSGETNAME ) /* Get name of symbol: cSymbol = __dynsymGetName( dsInd
 HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
    HB_STACK_TLS_PRELOAD
-   PHB_DYNS pDynSym;
    HB_UINT uiPos = 0;
    const char * szName = hb_parc( 1 );
 
    if( szName )
    {
-      pDynSym = hb_dynsymFindName( szName );
+      PHB_DYNS pDynSym = hb_dynsymFindName( szName );
       if( pDynSym )
       {
          HB_DYNSYM_LOCK();

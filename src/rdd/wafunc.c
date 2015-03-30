@@ -58,10 +58,10 @@
  */
 HB_ERRCODE hb_rddVerifyAliasName( const char * szAlias )
 {
-   char c;
-
    if( szAlias )
    {
+      char c;
+
       /* Clipper ignores only trailing spaces */
 #if 0
       while( *szAlias == ' ' )
@@ -236,15 +236,13 @@ HB_USHORT hb_rddFieldIndex( AREAP pArea, const char * szName )
  */
 HB_USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
 {
-   int n;
-
    while( HB_ISSPACE( *szField ) )
       ++szField;
 
    if( strchr( szField, '>' ) != NULL )
    {
       char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
-      int i, j, l;
+      int j, l, n;
 
       n = 0;
       if( SELF_ALIAS( pArea, szAlias ) == HB_SUCCESS )
@@ -258,6 +256,7 @@ HB_USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
        */
       do
       {
+         int i;
          j = n;
          i = 0;
          if( HB_ISFIRSTIDCHAR( szField[ n ] ) )
@@ -929,9 +928,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
       uiSize = HB_MIN( uiSizeDst, uiSizeSrc );
    }
    else
-   {
       uiSize = uiSizeDst = uiSizeSrc;
-   }
 
    if( ! uiSize )
       return HB_FAILURE;
@@ -1122,7 +1119,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
    AREAP lpaClose = NULL;
    PHB_ITEM pStruct = NULL;
    DBTRANSINFO dbTransInfo;
-   HB_USHORT uiPrevArea, uiCount, uiSwap;
+   HB_USHORT uiPrevArea;
    HB_ERRCODE errCode;
 
    memset( &dbTransInfo, 0, sizeof( dbTransInfo ) );
@@ -1158,6 +1155,8 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
 
       if( pRddNode->uiType == RDT_TRANSFER )
       {
+         HB_USHORT uiCount;
+
          errCode = hb_dbTransStruct( pArea, NULL, &dbTransInfo,
                                      &pStruct, pFields );
 
@@ -1165,7 +1164,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
          dbTransInfo.lpaDest = dbTransInfo.lpaSource;
          for( uiCount = 0; uiCount < dbTransInfo.uiItemCount; ++uiCount )
          {
-            uiSwap = dbTransInfo.lpTransItems[ uiCount ].uiSource;
+            HB_USHORT uiSwap = dbTransInfo.lpTransItems[ uiCount ].uiSource;
             dbTransInfo.lpTransItems[ uiCount ].uiSource =
                                     dbTransInfo.lpTransItems[ uiCount ].uiDest;
             dbTransInfo.lpTransItems[ uiCount ].uiDest = uiSwap;

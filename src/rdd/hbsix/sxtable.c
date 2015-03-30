@@ -220,14 +220,14 @@ HB_FUNC( SX_RLOCK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    HB_BOOL fResult = HB_FALSE;
-   PHB_ITEM pResult = NULL, pRecords;
+   PHB_ITEM pResult = NULL;
 
    if( pArea )
    {
+      PHB_ITEM pRecords = hb_param( 1, HB_IT_ARRAY );
       DBLOCKINFO dbLockInfo;
       dbLockInfo.fResult = HB_FALSE;
       dbLockInfo.uiMethod = DBLM_MULTIPLE;
-      pRecords = hb_param( 1, HB_IT_ARRAY );
       if( pRecords )
       {
          HB_SIZE ul, nLen = hb_arrayLen( pRecords );

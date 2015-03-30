@@ -334,7 +334,7 @@ HB_FUNC( DBCREATE )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
    HB_USHORT uiSize, uiLen;
-   PHB_ITEM pStruct, pFieldDesc, pDelim;
+   PHB_ITEM pStruct, pDelim;
    HB_BOOL fKeepOpen, fCurrArea;
    HB_ULONG ulConnection;
 
@@ -376,7 +376,7 @@ HB_FUNC( DBCREATE )
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
-      pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
+      PHB_ITEM pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
 
       /* Validate items types of fields */
       if( hb_arrayLen( pFieldDesc ) < 4 ||
@@ -404,7 +404,7 @@ HB_FUNC( HB_DBCREATETEMP )
 {
    const char * szAlias, * szDriver, * szCpId;
    HB_USHORT uiSize, uiLen;
-   PHB_ITEM pStruct, pFieldDesc;
+   PHB_ITEM pStruct;
    HB_ULONG ulConnection;
 
    szAlias = hb_parc( 1 );
@@ -433,7 +433,7 @@ HB_FUNC( HB_DBCREATETEMP )
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
-      pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
+      PHB_ITEM pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
 
       /* Validate items types of fields */
       if( hb_arrayLen( pFieldDesc ) < 4 ||
@@ -468,7 +468,7 @@ HB_FUNC( __DBOPENSDF )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
    HB_USHORT uiSize, uiLen;
-   PHB_ITEM pStruct, pFieldDesc, pDelim;
+   PHB_ITEM pStruct, pDelim;
    HB_BOOL fKeepOpen, fCurrArea;
    HB_ULONG ulConnection;
    HB_ERRCODE errCode;
@@ -500,7 +500,7 @@ HB_FUNC( __DBOPENSDF )
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
-      pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
+      PHB_ITEM pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
 
       /* Validate items types of fields */
       if( hb_arrayLen( pFieldDesc ) < 4 ||
@@ -644,7 +644,6 @@ HB_FUNC( __DBCONTINUE )
 
 HB_FUNC( __DBPACK )
 {
-   PHB_ITEM pBlock, pEvery;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
@@ -653,9 +652,10 @@ HB_FUNC( __DBPACK )
        * Additional feature: __dbPack( [<bBlock>, [<nEvery>] )
        * Code Block to execute for every record.
        */
-      pBlock = hb_param( 1, HB_IT_BLOCK );
+      PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
       if( pBlock )
       {
+         PHB_ITEM pEvery;
          hb_itemRelease( pArea->valResult );
          pArea->valResult = hb_itemArrayNew( 2 );
          hb_arraySet( pArea->valResult, 1, pBlock );
@@ -963,7 +963,6 @@ HB_FUNC( FIELDGET )
 
 HB_FUNC( FIELDNAME )
 {
-   char * szName;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    HB_USHORT uiFields, uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
 
@@ -972,7 +971,7 @@ HB_FUNC( FIELDNAME )
       if( SELF_FIELDCOUNT( pArea, &uiFields ) == HB_SUCCESS &&
           uiIndex <= uiFields )
       {
-         szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
+         char * szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
          szName[ 0 ] = '\0';
          SELF_FIELDNAME( pArea, uiIndex, szName );
          hb_retc_buffer( szName );
@@ -1560,12 +1559,12 @@ HB_FUNC( RDDNAME )
 
 HB_FUNC( RDDREGISTER )
 {
-   HB_USHORT uiLen;
-   char szDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
+   HB_USHORT uiLen = ( HB_USHORT ) hb_parclen( 1 );
 
-   uiLen = ( HB_USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
+      char szDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
+
       if( uiLen > HB_RDD_MAX_DRIVERNAME_LEN )
          uiLen = HB_RDD_MAX_DRIVERNAME_LEN;
 
@@ -1770,7 +1769,6 @@ HB_FUNC( DBSETRELATION )
       DBRELINFO dbRelations;
       AREAP pChildArea;
       HB_AREANO uiChildArea;
-      char * szAlias = NULL;
 
       if( hb_pcount() < 2 ||
           hb_param( 1, HB_IT_NUMERIC | HB_IT_STRING ) == NULL ||
@@ -1799,7 +1797,7 @@ HB_FUNC( DBSETRELATION )
 
       if( ! pChildArea )
       {
-         hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 );
+         hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, NULL, 0 );
          return;
       }
 
@@ -1829,7 +1827,6 @@ HB_FUNC( __DBARRANGE )
    /* TODO: check what Clipper does when pDstArea == NULL or pSrcArea == pDstArea */
    if( pSrcArea && pDstArea && pSrcArea != pDstArea )
    {
-      HB_USHORT uiCount, uiDest;
       DBSORTINFO dbSortInfo;
       /* structure with fields copied copied from source WorkArea */
       PHB_ITEM pStruct = hb_param( 2, HB_IT_ARRAY );
@@ -1864,7 +1861,8 @@ HB_FUNC( __DBARRANGE )
          dbSortInfo.uiItemCount = pFields ? ( HB_USHORT ) hb_arrayLen( pFields ) : 0;
          if( dbSortInfo.uiItemCount > 0 )
          {
-            char * szFieldLine, * szPos;
+            HB_USHORT uiCount, uiDest;
+            char * szFieldLine;
             HB_SIZE nSize = 0;
 
             dbSortInfo.lpdbsItem = ( LPDBSORTITEM ) hb_xgrab( dbSortInfo.uiItemCount * sizeof( DBSORTITEM ) );
@@ -1877,6 +1875,7 @@ HB_FUNC( __DBARRANGE )
             szFieldLine = ( char * ) hb_xgrab( nSize + 1 );
             for( uiDest = 0, uiCount = 1; uiCount <= dbSortInfo.uiItemCount; ++uiCount )
             {
+               char * szPos;
                dbSortInfo.lpdbsItem[ uiDest ].uiFlags = 0;
                hb_strncpyUpper( szFieldLine, hb_arrayGetCPtr( pFields, uiCount ),
                                 hb_arrayGetCLen( pFields, uiCount ) );
@@ -2282,12 +2281,13 @@ HB_FUNC( __DBSKIPPER )
    if( pArea )
    {
       HB_LONG lSkipped = 0;
-      HB_LONG lRecs = 1;
       HB_BOOL fBEof;
       HB_ULONG ulRecords = 0;
 
       if( SELF_RECCOUNT( pArea, &ulRecords ) == HB_SUCCESS && ulRecords > 0 )
       {
+         HB_LONG lRecs = 1;
+
          if( HB_ISNUM( 1 ) )
             lRecs = hb_parnl( 1 );
 

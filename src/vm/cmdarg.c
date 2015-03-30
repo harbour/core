@@ -91,12 +91,11 @@ static HB_BOOL s_WinMainParam  = HB_FALSE;
 
 void hb_winmainArgVBuild( void )
 {
-   LPCTSTR lpCmdLine, lpSrc;
+   LPCTSTR lpCmdLine;
    LPTSTR * lpArgV;
    LPTSTR lpDst, lpArg, lpModuleName;
    HB_SIZE nSize, nModuleName;
    int iArgC;
-   HB_BOOL fQuoted;
 
    /* NOTE: MAX_PATH used intentionally instead of HB_MAX_PATH */
    lpModuleName = ( LPTSTR ) HB_WINARG_ALLOC( ( MAX_PATH + 1 ) * sizeof( TCHAR ) );
@@ -112,6 +111,9 @@ void hb_winmainArgVBuild( void )
 
    while( lpCmdLine && ! lpArgV && iArgC != 0 )
    {
+      HB_BOOL fQuoted;
+      LPCTSTR lpSrc;
+
       if( nSize != 0 )
       {
          lpArgV = ( LPTSTR * ) HB_WINARG_ALLOC( iArgC * sizeof( LPTSTR ) +

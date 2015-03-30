@@ -4761,11 +4761,12 @@ static void hb_vmEnumStart( int nVars, int nDescend )
 static void hb_vmEnumNext( void )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pEnumRef, pEnum, pBase;
    int i;
 
    for( i = ( int ) hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
+      PHB_ITEM pEnumRef, pEnum, pBase;
+
       pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
       pEnum = hb_itemUnRefOnce( pEnumRef );
       pBase = pEnum->item.asEnum.basePtr;
@@ -4841,11 +4842,12 @@ static void hb_vmEnumNext( void )
 static void hb_vmEnumPrev( void )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pEnumRef, pEnum, pBase;
    int i;
 
    for( i = hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
+      PHB_ITEM pEnumRef, pEnum, pBase;
+
       pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
       pEnum = hb_itemUnRefOnce( pEnumRef );
       pBase = pEnum->item.asEnum.basePtr;
@@ -5404,7 +5406,6 @@ static void hb_vmArrayGen( HB_SIZE nElements ) /* generates an nElements Array a
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
-   HB_SIZE  nPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmArrayGen(%" HB_PFS "u)", nElements ) );
 
@@ -5414,6 +5415,7 @@ static void hb_vmArrayGen( HB_SIZE nElements ) /* generates an nElements Array a
 
    if( nElements )
    {
+      HB_SIZE nPos;
       /* move items from HVM stack to created array */
       for( nPos = 0; nPos < nElements; nPos++ )
       {
@@ -5591,7 +5593,7 @@ static void hb_vmMacroPushIndex( void )
 static HB_LONG hb_vmArgsJoin( HB_LONG lLevel, HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lArgs, lRestArgs, lOffset;
+   HB_LONG lArgs;
    PHB_ITEM pArgs = hb_stackItemFromTop( lLevel ) ;
 
    lArgs = hb_itemGetNL( pArgs );
@@ -5600,6 +5602,8 @@ static HB_LONG hb_vmArgsJoin( HB_LONG lLevel, HB_USHORT uiArgSets )
 
    if( --uiArgSets )
    {
+      HB_LONG lRestArgs, lOffset;
+
       lRestArgs = lArgs;
       lArgs += hb_vmArgsJoin( lLevel - lArgs - 1, uiArgSets );
       lOffset = lLevel - lRestArgs - uiArgSets;
@@ -5688,17 +5692,19 @@ static void hb_vmPushVParams( void )
 static void hb_vmPushAParams( void )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pArray, pCount;
+   PHB_ITEM pArray;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmPushAParams()" ) );
 
    pArray = hb_stackItemFromTop( -1 );
    if( HB_IS_ARRAY( pArray ) )
    {
-      HB_SIZE nLen = pArray->item.asArray.value->nLen, ul;
+      HB_SIZE nLen = pArray->item.asArray.value->nLen;
 
       if( nLen )
       {
+         PHB_ITEM pCount;
+         HB_SIZE ul;
          for( ul = 1; ul < nLen; ++ul )
             hb_vmPush( pArray->item.asArray.value->pItems + ul );
          pCount = hb_stackAllocItem();
@@ -8802,14 +8808,14 @@ void hb_vmRequestCancel( void )
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
       char file[ HB_PATH_MAX ];
       HB_USHORT uiLine;
-      int iLevel = 0, l;
+      int iLevel = 0;
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "Cancelled at: ", 0 );
 
       while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
       {
-         l = ( int ) strlen( buffer );
+         int l = ( int ) strlen( buffer );
          hb_snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)%s%s", uiLine, *file ? HB_I_( " in " ) : "", file );
 
          hb_conOutErr( buffer, 0 );
@@ -10016,7 +10022,7 @@ HB_BOOL hb_xvmStaticAdd( HB_USHORT uiStatic )
 HB_BOOL hb_xvmMemvarAdd( PHB_SYMB pSymbol )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pMemVar, pVal1, pVal2;
+   PHB_ITEM pVal1, pVal2;
 
    HB_TRACE( HB_TR_INFO, ( "hb_xvmMemvarAdd(%p)", pSymbol ) );
 
@@ -10024,7 +10030,7 @@ HB_BOOL hb_xvmMemvarAdd( PHB_SYMB pSymbol )
    pVal2 = hb_stackItemFromTop( -1 );
    if( HB_IS_STRING( pVal1 ) && HB_IS_STRING( pVal2 ) )
    {
-      pMemVar = hb_memvarGetItem( pSymbol );
+      PHB_ITEM pMemVar = hb_memvarGetItem( pSymbol );
       if( pMemVar )
       {
          hb_vmPlus( pMemVar, pVal1, pVal2 );

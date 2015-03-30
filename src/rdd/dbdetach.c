@@ -94,19 +94,15 @@ HB_FUNC( HB_DBDETACH )
  */
 HB_FUNC( HB_DBREQUEST )
 {
-   const char * szAlias;
-   PHB_ITEM pCargo;
-   HB_BOOL fNewArea, fWait;
-   AREAP pArea;
-
    if( HB_ISNIL( 1 ) || HB_ISCHAR( 1 ) )
    {
-      szAlias = hb_parc( 1 );
-      fNewArea = hb_parl( 2 );
-      fWait = hb_parl( 4 );
-      pCargo = HB_ISBYREF( 3 ) ? hb_itemNew( NULL ) : NULL;
+      const char * szAlias = hb_parc( 1 );
+      HB_BOOL fNewArea = hb_parl( 2 );
+      HB_BOOL fWait = hb_parl( 4 );
+      PHB_ITEM pCargo = HB_ISBYREF( 3 ) ? hb_itemNew( NULL ) : NULL;
 
-      pArea = hb_rddRequestArea( szAlias, pCargo, fNewArea, fWait );
+      AREAP pArea = hb_rddRequestArea( szAlias, pCargo, fNewArea, fWait );
+
       if( pArea )
          hb_rddSelectWorkAreaNumber( pArea->uiArea );
 

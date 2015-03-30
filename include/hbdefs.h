@@ -1383,29 +1383,29 @@ typedef HB_U32 HB_FATTR;
                                       ( ( ( HB_I32 ) (( const HB_BYTE * )( p ))[ 0 ] ) | \
                                         ( ( HB_I32 ) (( const HB_BYTE * )( p ))[ 1 ] <<  8 ) | \
                                         ( ( HB_I32 ) (( const HB_BYTE * )( p ))[ 2 ] << 16 ) | \
-                                        ( ( HB_I32 ) ((( const HB_BYTE * )( p ))[ 2 ] & 0x80 ? 0xFF : 0x00 ) << 24 ) ) )
+                                        ( ( HB_I32 ) (((( const HB_BYTE * )( p ))[ 2 ] & 0x80 ) ? 0xFF : 0x00 ) << 24 ) ) )
 #define HB_GET_LE_UINT24( p )       ( ( HB_U32 ) \
                                       ( ( ( HB_U32 ) (( const HB_BYTE * )( p ))[ 0 ] ) | \
                                         ( ( HB_U32 ) (( const HB_BYTE * )( p ))[ 1 ] <<  8 ) | \
                                         ( ( HB_U32 ) (( const HB_BYTE * )( p ))[ 2 ] << 16 ) ) )
 #define HB_PUT_LE_UINT24( p, u )    do { \
                                        (( HB_BYTE * )( p ))[ 0 ] = ( HB_BYTE )( u ); \
-                                       (( HB_BYTE * )( p ))[ 1 ] = ( HB_BYTE )( (u) >>  8 ); \
-                                       (( HB_BYTE * )( p ))[ 2 ] = ( HB_BYTE )( (u) >> 16 ); \
+                                       (( HB_BYTE * )( p ))[ 1 ] = ( HB_BYTE )( ( u ) >>  8 ); \
+                                       (( HB_BYTE * )( p ))[ 2 ] = ( HB_BYTE )( ( u ) >> 16 ); \
                                     } while( 0 )
 #define HB_GET_BE_INT24( p )        ( ( HB_I32 ) \
                                       ( ( ( HB_I32 ) (( const HB_BYTE * )( p ))[ 2 ] ) | \
                                         ( ( HB_I32 ) (( const HB_BYTE * )( p ))[ 1 ] <<  8 ) | \
                                         ( ( HB_I32 ) (( const HB_BYTE * )( p ))[ 0 ] << 16 ) | \
-                                        ( ( HB_I32 ) ((( const HB_BYTE * )( p ))[ 0 ] & 0x80 ? 0xFF : 0x00 ) << 24 ) ) )
+                                        ( ( HB_I32 ) (((( const HB_BYTE * )( p ))[ 0 ] & 0x80 ) ? 0xFF : 0x00 ) << 24 ) ) )
 #define HB_GET_BE_UINT24( p )       ( ( HB_U32 ) \
                                       ( ( ( HB_U32 ) (( const HB_BYTE * )( p ))[ 2 ] ) | \
                                         ( ( HB_U32 ) (( const HB_BYTE * )( p ))[ 1 ] <<  8 ) | \
                                         ( ( HB_U32 ) (( const HB_BYTE * )( p ))[ 0 ] << 16 ) ) )
 #define HB_PUT_BE_UINT24( p, u )    do { \
                                        (( HB_BYTE * )( p ))[ 2 ] = ( HB_BYTE )( u ); \
-                                       (( HB_BYTE * )( p ))[ 1 ] = ( HB_BYTE )( (u) >>  8 ); \
-                                       (( HB_BYTE * )( p ))[ 0 ] = ( HB_BYTE )( (u) >> 16 ); \
+                                       (( HB_BYTE * )( p ))[ 1 ] = ( HB_BYTE )( ( u ) >>  8 ); \
+                                       (( HB_BYTE * )( p ))[ 0 ] = ( HB_BYTE )( ( u ) >> 16 ); \
                                     } while( 0 )
 
 

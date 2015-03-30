@@ -191,10 +191,12 @@ static const char * is_devicename( const char * szFileName )
             { "PRN", "CON", "LPT1", "LPT2", "LPT3",
               "COM1", "COM2", "COM3", "COM4", "COM5",
               "COM6", "COM7", "COM8", "COM9" };
-      int iLen = ( int ) strlen( szFileName ), iFrom, iTo;
+      int iLen = ( int ) strlen( szFileName );
 
       if( iLen >= 3 && iLen <= 4 )
       {
+         int iFrom, iTo;
+
          if( iLen == 3 )
          {
             iFrom = 0;
@@ -383,7 +385,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
     */
    if( old_century_setting != new_century_setting )
    {
-      int count, digit, size, y_size, y_start, y_stop;
+      int count, size, y_size, y_start, y_stop;
       char * szDateFormat, * szNewFormat;
 
       /* Convert to upper case and determine where year is */
@@ -392,7 +394,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
       size = ( int ) strlen( szDateFormat );
       for( count = 0; count < size; count++ )
       {
-         digit = HB_TOUPPER( ( HB_UCHAR ) szDateFormat[ count ] );
+         int digit = HB_TOUPPER( ( HB_UCHAR ) szDateFormat[ count ] );
          if( digit == 'Y' )
          {
             if( y_start == -1 )
@@ -1283,13 +1285,14 @@ int hb_setListenerRemove( int listener )
 HB_BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_SET_STRUCT pSet = hb_stackSetStruct();
    HB_BOOL fResult = HB_FALSE;
-   char * szValue;
-   int iValue;
 
    if( pItem )
    {
+      PHB_SET_STRUCT pSet = hb_stackSetStruct();
+      char * szValue;
+      int iValue;
+
       hb_setListenerNotify( set_specifier, HB_SET_LISTENER_BEFORE );
 
       switch( set_specifier )

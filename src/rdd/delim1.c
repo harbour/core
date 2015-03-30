@@ -100,7 +100,7 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
    HB_SIZE nSize;
    HB_USHORT uiField, uiLen;
    LPFIELD pField;
-   HB_BYTE * pBuffer, * pFieldBuf;
+   HB_BYTE * pBuffer;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_delimEncodeBuffer(%p)", pArea ) );
 
@@ -111,6 +111,7 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
    nSize = 0;
    for( uiField = 0; uiField < pArea->area.uiFieldCount; ++uiField )
    {
+      HB_BYTE * pFieldBuf;
       pField = pArea->area.lpFields + uiField;
       pFieldBuf = pArea->pRecord + pArea->pFieldOffset[ uiField ];
       if( nSize )
@@ -676,7 +677,6 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
  */
 static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
-   char szBuffer[ 256 ];
    HB_ERRCODE errCode;
    LPFIELD pField;
    HB_SIZE nSize;
@@ -696,6 +696,8 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
    pField = pArea->area.lpFields + uiIndex;
    if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
    {
+      char szBuffer[ 256 ];
+
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
       {
          if( pField->uiType == HB_FT_STRING )
@@ -891,13 +893,11 @@ static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
  */
 static HB_ERRCODE hb_delimGoHot( DELIMAREAP pArea )
 {
-   PHB_ITEM pError;
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_delimGoHot(%p)", pArea ) );
 
    if( pArea->fReadonly )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_READONLY );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READONLY ) );
       hb_errPutSubCode( pError, EDBF_READONLY );

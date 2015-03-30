@@ -2711,7 +2711,7 @@ static HB_USHORT hb_clsUpdateScope( HB_USHORT uiScope, HB_BOOL fAssign )
             instance variables, [druzus] */
 
          uiScope &= ~HB_OO_CLSTP_READONLY;
-         uiScope |= uiScope & HB_OO_CLSTP_PROTECTED ?
+         uiScope |= ( uiScope & HB_OO_CLSTP_PROTECTED ) ?
                        HB_OO_CLSTP_HIDDEN : HB_OO_CLSTP_PROTECTED;
       }
    }
@@ -4556,11 +4556,12 @@ HB_FUNC_STATIC( msgPerform )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
-   HB_USHORT uiPCount = hb_pcount(), uiParam;
-   PHB_SYMB pSym = NULL;
 
    if( pItem )
    {
+      HB_USHORT uiPCount = hb_pcount(), uiParam;
+      PHB_SYMB pSym = NULL;
+
       if( HB_IS_SYMBOL( pItem ) )
          pSym = pItem->item.asSymbol.value;
 
