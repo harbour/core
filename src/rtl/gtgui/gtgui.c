@@ -98,7 +98,6 @@ static int hb_gt_gui_optionId( const char * pszOption )
    if( pszOption )
    {
       HB_SIZE nSize;
-      int i;
 
       while( HB_ISSPACE( *pszOption ) )
          pszOption++;
@@ -108,6 +107,7 @@ static int hb_gt_gui_optionId( const char * pszOption )
 
       if( nSize >= 2 && nSize <= 9 )
       {
+         int i;
          for( i = 0; i < ( int ) _HB_BUTTON_COUNT; ++i )
          {
             if( nSize == s_buttons[ i ].len &&

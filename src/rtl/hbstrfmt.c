@@ -491,14 +491,16 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 
 HB_FUNC( HB_STRFORMAT )
 {
-   PHB_ITEM   pFormat = hb_param( 1, HB_IT_STRING );
-   int        i, iParams = hb_pcount();
-   PHB_ITEM * pItemArray = NULL;
+   PHB_ITEM pFormat = hb_param( 1, HB_IT_STRING );
 
    if( pFormat )
    {
+      int        iParams = hb_pcount();
+      PHB_ITEM * pItemArray = NULL;
+
       if( iParams > 1 )
       {
+         int i;
          pItemArray = ( PHB_ITEM * ) hb_xgrab( ( iParams - 1 ) * sizeof( PHB_ITEM ) );
          for( i = 1; i < iParams; i++ )
             pItemArray[ i - 1 ] = hb_param( i + 1, HB_IT_ANY );

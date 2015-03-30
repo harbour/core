@@ -478,7 +478,6 @@ static int hb_gt_def_ColorNum( PHB_GT pGT, const char * szColorString )
 static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, int ** pColorsPtr, int * piColorCount )
 {
    int * pColors;
-   int nPos = 0;
    int nColor;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_StringToColors(%p,%s,%p,%p)", pGT, szColorString, pColorsPtr, piColorCount ) );
@@ -503,6 +502,8 @@ static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, in
    }
    else
    {
+      int nPos = 0;
+
       do
       {
          szColorString = hb_gt_def_ColorDecode( szColorString, &nColor );
@@ -1365,7 +1366,7 @@ static void hb_gt_def_DrawShadow( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                               int iColor, HB_USHORT usChar, int iRows, int iCols )
 {
-   int iColOld, iColNew, iColSize, iColClear, iClrs, iLength, iFlag = 0;
+   int iColOld, iColNew, iColSize, iColClear, iClrs, iLength;
 
    iColSize = iRight - iLeft;
    iLength = iColSize + 1;
@@ -1388,6 +1389,7 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
    if( iLength > 0 && iTop <= iBottom )
    {
       void * pBuffer = NULL;
+      int iFlag = 0;
 
       if( ( iRows || iCols ) && iColSize >= 0 && ( iBottom - iTop >= iRows ) )
       {
@@ -1470,7 +1472,7 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 
          while( iTop <= iBottom )
          {
-            int iRowPos, i;
+            int iRowPos;
 
             if( iRows >= 0 )
                iRowPos = iTop++;
@@ -1480,6 +1482,8 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
             if( fMove && ( iRows == 0 ||
                 ( iRowPos + iRows >= iTop && iRowPos + iRows <= iBottom ) ) )
             {
+               int i;
+
                lIndex = ( long ) iRowPos * iWidth + iColNew;
                if( lOffset < 0 )
                {
@@ -2005,16 +2009,13 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
        pOptions && ( iOptions = ( int ) hb_arrayLen( pOptions ) ) > 0 )
    {
       HB_SIZE nLen;
-      void * hMessage, * hOpt;
-      const HB_WCHAR * szMessageW = hb_itemGetStrU16( pMessage, HB_CDP_ENDIAN_NATIVE, &hMessage, &nLen ),
-                     * szOptW;
+      void * hMessage;
+      const HB_WCHAR * szMessageW = hb_itemGetStrU16( pMessage, HB_CDP_ENDIAN_NATIVE, &hMessage, &nLen );
       HB_BOOL fScreen = HB_FALSE, fKeyBoard = HB_FALSE;
       PHB_CODEPAGE cdp = HB_GTSELF_HOSTCP( pGT );
       char szKey[ HB_MAX_CHAR_LEN ];
       HB_SIZE nChar;
-      int iKey, i, iDspCount, iStyle, iRows, iCols,
-          iRow, iCol, iTop, iLeft, iBottom, iRight, iMnuCol, iPos, iClr;
-      void * pBuffer = NULL;
+      int iKey, i, iRows, iCols;
       HB_GT_INFO gtInfo;
 
       memset( &gtInfo, 0, sizeof( gtInfo ) );
@@ -2036,6 +2037,8 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
       if( fScreen )
       {
+         void * pBuffer = NULL;
+         int iDspCount, iStyle, iRow, iCol, iTop, iLeft, iBottom, iRight, iPos, iClr;
          HB_UINT ulLines = 0, ulWidth = 0, ulCurrWidth = 0, ulMsg = 0, ulDst = 0,
                  ulLast = 0, ulSpace1 = 0, ulSpace2 = 0, ulDefWidth, ulMaxWidth;
          HB_WCHAR * szMsgDsp;
@@ -2194,10 +2197,13 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          iPos = 1;
          while( iRet == 0 )
          {
+            int iMnuCol;
             HB_GTSELF_DISPBEGIN( pGT );
             iMnuCol = iLeft + ( ( ulWidth - ulCurrWidth ) >> 1 ) + 3;
             for( i = 1; i <= iOptions; ++i )
             {
+               void * hOpt;
+               const HB_WCHAR * szOptW;
                iClr = i == iPos ? iClrHigh : iClrNorm;
                szOptW = hb_arrayGetStrU16( pOptions, i, HB_CDP_ENDIAN_NATIVE, &hOpt, &nLen );
                HB_GTSELF_PUTTEXTW( pGT, iBottom - 1, iMnuCol, iClr, s_szSpaceW, 1 );
@@ -2931,7 +2937,6 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
    HB_MAXUINT end_timer;
    PHB_ITEM pKey;
    HB_BOOL fPop;
-   int iKey;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyGet(%p,%d,%f,%d)", pGT, ( int ) fWait, dSeconds, iEventMask ) );
 
@@ -2939,6 +2944,7 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
 
    if( pGT->pInkeyReadBlock )
    {
+      int iKey;
       HB_GTSELF_UNLOCK( pGT );
       iKey = hb_itemGetNI( hb_vmEvalBlock( pGT->pInkeyReadBlock ) );
       HB_GTSELF_LOCK( pGT );
@@ -3725,11 +3731,9 @@ HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
 
 PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
 {
-   int iPos;
-
    if( szGtName )
    {
-      iPos = hb_gt_FindEntry( szGtName );
+      int iPos = hb_gt_FindEntry( szGtName );
 
       if( iPos == -1 )
       {

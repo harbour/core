@@ -154,10 +154,11 @@ PHB_PP_STATE hb_pp_Param( int iParam )
  */
 HB_FUNC( __PP_INIT )
 {
-   PHB_PP_STATE * pStatePtr, pState = hb_pp_new();
+   PHB_PP_STATE pState = hb_pp_new();
 
    if( pState )
    {
+      PHB_PP_STATE * pStatePtr;
       const char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
       HB_BOOL fArchDefs = hb_parldef( 3, HB_TRUE );
       PHB_ITEM ppItem;

@@ -306,9 +306,9 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             else
             {
                if( iValue )
-                  iValue = HB_COMP_PARAM->supported & iFlag ? 0 : 1;
+                  iValue = ( HB_COMP_PARAM->supported & iFlag ) ? 0 : 1;
                else
-                  iValue = HB_COMP_PARAM->supported & iFlag ? 1 : 0;
+                  iValue = ( HB_COMP_PARAM->supported & iFlag ) ? 1 : 0;
             }
          }
       }

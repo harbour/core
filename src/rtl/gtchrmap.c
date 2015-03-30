@@ -194,7 +194,7 @@ static int get_val( char ** buf )
 
 static int parse_line( char * buf, int * from, int * to, char * op, int * val, int * mod )
 {
-   char *s, *s2;
+   char *s;
    int ret = 0, ina = 0;
 
    s = buf;
@@ -225,6 +225,7 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
 
    if( *s == '@' )
    {
+      char *s2;
       ++s;
       s2 = buf;
       while( *s != '\0' && *s != ' ' )
@@ -414,13 +415,13 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 
    if( pszTerm != NULL && *pszTerm != '\0' )
    {
-      char szFile[ HB_PATH_MAX ];
       char * pszFile = hb_getenv( "HB_CHARMAP" );
 
       if( pszFile != NULL && *pszFile != '\0' )
          nRet = hb_gt_chrmapread( pszFile, pszTerm, piTransTbl );
       if( nRet == -1 )
       {
+         char szFile[ HB_PATH_MAX ];
          if( pszFile )
             hb_xfree( pszFile );
          pszFile = hb_getenv( "HB_ROOT" );

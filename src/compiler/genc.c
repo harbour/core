@@ -167,7 +167,6 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    PHB_HINLINE pInline;
    FILE *      yyc; /* file handle for C output */
    HB_BOOL     fHasHbInline = HB_FALSE;
-   int         iFuncSuffix;
 
    hb_fsFNameMerge( szFileName, pFileName );
    if( ! pFileName->szExtension )
@@ -210,6 +209,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
    if( pFunc )
    {
+      int iFuncSuffix;
+
       hb_compDumpFindCFunc( HB_COMP_PARAM );
 
       pInline = HB_COMP_PARAM->inlines.pFirst;

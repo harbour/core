@@ -1580,7 +1580,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
 {
    PHB_HFUNC     pFunc = HB_COMP_PARAM->functions.pLast;
    PHB_OPT_LOCAL pLocals;
-   PHB_HVAR      pVar, * ppVar;
+   PHB_HVAR      pVar;
    HB_USHORT     usLocalCount, usIndex;
    HB_BOOL       fBool;
 
@@ -1694,6 +1694,8 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
 
       if( fBool )
       {
+         PHB_HVAR * ppVar;
+
          usIndex = usLocalCount = 0;
          ppVar = & pFunc->pLocals;
          pVar = pFunc->pLocals;

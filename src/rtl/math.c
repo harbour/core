@@ -674,12 +674,13 @@ HB_FUNC( LOG )
    if( HB_ISNUM( 1 ) )
    {
       HB_MATH_EXCEPTION hb_exc;
-      double dResult, dArg = hb_parnd( 1 );
+      double dArg = hb_parnd( 1 );
 
       if( dArg <= 0 )
          hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
       else
       {
+         double dResult;
          hb_mathResetError( &hb_exc );
          dResult = log( dArg );
          if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
@@ -715,12 +716,13 @@ HB_FUNC( SQRT )
    if( HB_ISNUM( 1 ) )
    {
       HB_MATH_EXCEPTION hb_exc;
-      double dResult, dArg = hb_parnd( 1 );
+      double dArg = hb_parnd( 1 );
 
       if( dArg <= 0 )
          hb_retnd( 0.0 );
       else
       {
+         double dResult;
          hb_mathResetError( &hb_exc );
          dResult = sqrt( dArg );
          if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )

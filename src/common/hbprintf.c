@@ -409,8 +409,7 @@ static size_t put_octal( char *buffer, size_t bufsize, size_t size,
                          uintmax_t value, int flags, int width, int precision )
 {
    uintmax_t v = value;
-   int nums = 0, n;
-   char c;
+   int nums = 0;
 
    while( v )
    {
@@ -437,10 +436,10 @@ static size_t put_octal( char *buffer, size_t bufsize, size_t size,
    }
    if( nums )
    {
-      n = nums;
+      int n = nums;
       do
       {
-         c = ( char ) ( value & 0x7 ) + '0';
+         char c = ( char ) ( value & 0x7 ) + '0';
          value >>= 3;
          --n;
          if( size + n < bufsize )
@@ -465,8 +464,7 @@ static size_t put_dec( char *buffer, size_t bufsize, size_t size,
                        int sign )
 {
    uintmax_t v = value;
-   int nums = 0, n;
-   char c;
+   int nums = 0;
 
    while( v )
    {
@@ -497,15 +495,15 @@ static size_t put_dec( char *buffer, size_t bufsize, size_t size,
    if( ( flags & ( _F_SPACE | _F_SIGN ) ) || sign )
    {
       if( size < bufsize )
-         buffer[ size ] = sign ? '-' : ( flags & _F_SIGN ? '+' : ' ' );
+         buffer[ size ] = sign ? '-' : ( ( flags & _F_SIGN ) ? '+' : ' ' );
       ++size;
    }
    if( nums )
    {
-      n = nums;
+      int n = nums;
       do
       {
-         c = ( char ) ( value % 10 ) + '0';
+         char c = ( char ) ( value % 10 ) + '0';
          value /= 10;
          --n;
          if( size + n < bufsize )
@@ -569,7 +567,7 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
    while( value >= 1 );
    width -= nums;
    c = ( ( flags & ( _F_SPACE | _F_SIGN ) ) || sign ) ?
-       ( buffer[ size ] = sign ? '-' : ( flags & _F_SIGN ? '+' : ' ' ) ) : 0;
+       ( buffer[ size ] = sign ? '-' : ( ( flags & _F_SIGN ) ? '+' : ' ' ) ) : 0;
    if( ( flags & _F_LEFTADJUSTED ) == 0 && width > 0 )
    {
       if( c && ( flags & _F_ZEROPADED ) )
@@ -590,7 +588,7 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
    if( c )
    {
       if( size < bufsize )
-         buffer[ size ] = sign ? '-' : ( flags & _F_SIGN ? '+' : ' ' );
+         buffer[ size ] = sign ? '-' : ( ( flags & _F_SIGN ) ? '+' : ' ' );
       ++size;
    }
 
@@ -638,8 +636,7 @@ static size_t put_hex( char *buffer, size_t bufsize, size_t size,
                        int upper )
 {
    uintmax_t v = value;
-   int nums = 0, n;
-   char c;
+   int nums = 0;
 
    while( v )
    {
@@ -685,10 +682,10 @@ static size_t put_hex( char *buffer, size_t bufsize, size_t size,
    }
    if( nums )
    {
-      n = nums;
+      int n = nums;
       do
       {
-         c = ( char ) ( value & 0x0f ) + '0';
+         char c = ( char ) ( value & 0x0f ) + '0';
          if( c > '9' )
             c += upper ? 'A' - '9' - 1 : 'a' - '9' - 1;
          value >>= 4;
@@ -1231,14 +1228,14 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                      if( value & _HB_NUM_NAN )
                         size = put_str( buffer, bufsize, size,
                                         c == 'f' ?
-                                        ( flags & _F_SIGN ? "+nan": "nan" ) :
-                                        ( flags & _F_SIGN ? "+NAN": "NAN" ) ,
+                                        ( ( flags & _F_SIGN ) ? "+nan": "nan" ) :
+                                        ( ( flags & _F_SIGN ) ? "+NAN": "NAN" ) ,
                                         flags, width, -1 );
                      else if( value & _HB_NUM_PINF )
                         size = put_str( buffer, bufsize, size,
                                         c == 'f' ?
-                                        ( flags & _F_SIGN ? "+inf": "inf" ) :
-                                        ( flags & _F_SIGN ? "+INF": "INF" ),
+                                        ( ( flags & _F_SIGN ) ? "+inf": "inf" ) :
+                                        ( ( flags & _F_SIGN ) ? "+INF": "INF" ),
                                         flags, width, -1 );
                      else if( value & _HB_NUM_NINF )
                         size = put_str( buffer, bufsize, size,

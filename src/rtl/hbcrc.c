@@ -196,7 +196,7 @@ HB_MAXUINT hb_crc( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT pol
          crc ^= *ucbuf++;
          do
          {
-            crc = crc & 1 ? revp ^ ( crc >> 1 ) : crc >> 1;
+            crc = ( crc & 1 ) ? revp ^ ( crc >> 1 ) : crc >> 1;
          }
          while( --i );
       }
@@ -229,7 +229,7 @@ HB_MAXUINT hb_crcct( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT p
             crc ^= ( HB_MAXUINT ) ( *ucbuf++ );
             do
             {
-               crc = crc & mask ? poly ^ ( crc << 1 ) : crc << 1;
+               crc = ( crc & mask ) ? poly ^ ( crc << 1 ) : crc << 1;
             }
             while( --i );
          }
@@ -245,7 +245,7 @@ HB_MAXUINT hb_crcct( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT p
             crc ^= ( HB_MAXUINT ) ( *ucbuf++ ) << bits;
             do
             {
-               crc = crc & mask ? poly ^ ( crc << 1 ) : crc << 1;
+               crc = ( crc & mask ) ? poly ^ ( crc << 1 ) : crc << 1;
             }
             while( --i );
          }

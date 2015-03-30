@@ -216,7 +216,6 @@ HB_FUNC( HB_UTF8ASC )
 HB_FUNC( HB_STRTOUTF8 )
 {
    HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
-   const char * szString;
    char * szDest = NULL;
 
    if( nLen )
@@ -233,7 +232,7 @@ HB_FUNC( HB_STRTOUTF8 )
          }
          else
          {
-            szString = hb_parc( 1 );
+            const char * szString = hb_parc( 1 );
             nDest = hb_cdpStrAsUTF8Len( cdp, szString, nLen, 0 );
             szDest = ( char * ) hb_xgrab( nDest + 1 );
             hb_cdpStrToUTF8( cdp, szString, nLen, szDest, nDest + 1 );

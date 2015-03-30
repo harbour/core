@@ -326,7 +326,6 @@ static char * hb_pp_escapeString( char * szString )
 static int hb_pp_generateVerInfo( char * szVerFile, int iCommitRev, char * szCommitInfo, char * szCommitID )
 {
    int iResult = 0;
-   char * pszEnv;
    FILE * fout;
 
    fout = hb_fopen( szVerFile, "w" );
@@ -339,6 +338,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iCommitRev, char * szCom
    }
    else
    {
+      char * pszEnv;
       char * pszEscaped;
 
       fprintf( fout, "/*\n"
@@ -748,10 +748,10 @@ static void hb_pp_usage( char * szName )
 int main( int argc, char * argv[] )
 {
    char * szFile = NULL, * szRuleFile = NULL, * szVerFile = NULL;
-   char * szStdCh = NULL, * szLogFile = NULL, * szRepoVerFile = NULL, * szInclude;
+   char * szStdCh = NULL, * szLogFile = NULL, * szRepoVerFile = NULL;
    HB_BOOL fWrite = HB_FALSE, fChgLog = HB_FALSE, fRepoVer = HB_FALSE;
    char * szCommitID = NULL, * szCommitInfo = NULL;
-   int iCommitRev = 0, iResult = 0, iQuiet = 0, i;
+   int iCommitRev = 0, iResult = 0, iQuiet = 0;
    char * szPPRuleFuncName = NULL;
    PHB_PP_STATE pState;
 
@@ -759,6 +759,8 @@ int main( int argc, char * argv[] )
 
    if( argc >= 2 )
    {
+      int i;
+
       szFile = argv[ 1 ];
       for( i = 2; szFile && i < argc; i++ )
       {
@@ -875,6 +877,8 @@ int main( int argc, char * argv[] )
 
    if( szFile )
    {
+      char * szInclude;
+
       if( ! szRuleFile && ! szVerFile )
          fWrite = HB_TRUE;
 

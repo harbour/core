@@ -596,7 +596,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
       case CTRL_SHUTDOWN_EVENT:
       default:
 #if 0
-         printf( " Event %ld ", dwCtrlType );
+         printf( " Event %lu ", ( HB_ULONG ) dwCtrlType );
 #endif
          bHandled = FALSE;
    }
@@ -608,7 +608,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 
 static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 {
-   int iRow, iCol, i;
+   int iRow, iCol;
 
 #if ! defined( UNICODE )
    PHB_CODEPAGE cdp;
@@ -632,7 +632,7 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 
    for( iRow = psrWin->Top; iRow <= psrWin->Bottom; ++iRow )
    {
-      i = iRow * _GetScreenWidth() + psrWin->Left;
+      int i = iRow * _GetScreenWidth() + psrWin->Left;
       for( iCol = psrWin->Left; iCol <= psrWin->Right; ++iCol )
       {
 #if defined( UNICODE )
@@ -810,11 +810,13 @@ static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 
 static HWND hb_getConsoleWindowHandle( void )
 {
-   TCHAR oldTitle[ 256 ], tmpTitle[ 32 ];
+   TCHAR oldTitle[ 256 ];
    HWND hWnd = NULL;
 
    if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
    {
+      TCHAR tmpTitle[ 32 ];
+
       int iTmp = 0;
       DWORD dwVal;
 
@@ -1258,7 +1260,7 @@ static int Handle_Alt_Key( HB_BOOL * paltisdown, int * paltnum, WORD wKey, int c
          case 0x38:
             /* Alt key ... */
 #if 0
-            printf( " the state %ld\n", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
+            printf( " the state %lu\n", ( HB_ULONG ) s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
 #endif
 
             if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState &
@@ -1512,7 +1514,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                        "scan 0x%04x "
                        "achar %d "
                        "wchar %d "
-                       "state %ld "
+                       "state %lu "
                        "repeat %d\n",
                        s_irInBuf[ tmp ].EventType,
                        ( int ) s_irInBuf[ tmp ].Event.KeyEvent.bKeyDown,
@@ -1520,7 +1522,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                        s_irInBuf[ tmp ].Event.KeyEvent.wVirtualScanCode,  /* scan code */
                        s_irInBuf[ tmp ].Event.KeyEvent.uChar.AsciiChar,   /* char */
                        s_irInBuf[ tmp ].Event.KeyEvent.uChar.UnicodeChar, /* char unicode */
-                       s_irInBuf[ tmp ].Event.KeyEvent.dwControlKeyState, /* state */
+                       ( HB_ULONG ) s_irInBuf[ tmp ].Event.KeyEvent.dwControlKeyState, /* state */
                        s_irInBuf[ tmp ].Event.KeyEvent.wRepeatCount );
          }
 #endif
@@ -1616,7 +1618,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             if( s_wRepeated > 0 ) /* Might not be redundant */
                s_wRepeated--;
 #ifdef _TRACE
-            printf( "hb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d\n", dwState, wChar, wKey, ch );
+            printf( "hb_gt_ReadKey(): dwState is %lu, wChar is %d, wKey is %d, ch is %d\n", ( HB_ULONG ) dwState, wChar, wKey, ch );
 #endif
 
             if( wChar == 8 )                   /* VK_BACK */
@@ -1753,7 +1755,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
          else if( iEventMask & INKEY_MWHEEL &&
                   s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_WHEELED )
          {
-            ch = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState & 0xFF000000 ?
+            ch = ( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState & 0xFF000000 ) ?
                  K_MWBACKWARD : K_MWFORWARD;
          }
          else if( iEventMask & INKEY_LDOWN &&

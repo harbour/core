@@ -1473,7 +1473,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
    fd_set rfds;
-   int iResult, iError;
+   int iResult;
 
 #if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
@@ -1490,6 +1490,8 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
 
    for( ;; )
    {
+      int iError;
+
       FD_ZERO( &rfds );
       FD_SET( ( HB_SOCKET_T ) sd, &rfds );
 
@@ -1527,7 +1529,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
    fd_set wfds;
-   int iResult, iError;
+   int iResult;
 
 #if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
@@ -1544,6 +1546,8 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
 
    for( ;; )
    {
+      int iError;
+
       FD_ZERO( &wfds );
       FD_SET( ( HB_SOCKET_T ) sd, &wfds );
 
@@ -1580,7 +1584,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
 static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
-   fd_set wfds, * pefds;
+   fd_set wfds;
 
 #if defined( HB_OS_WIN )
    fd_set efds;
@@ -1602,6 +1606,8 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 
    for( ;; )
    {
+      fd_set * pefds;
+
       FD_ZERO( &wfds );
       FD_SET( ( HB_SOCKET_T ) sd, &wfds );
 #if defined( HB_OS_WIN )
@@ -2220,7 +2226,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    HB_SOCKET newsd = HB_NO_SOCKET;
    HB_SOCKADDR_STORAGE st;
    socklen_t len = sizeof( st );
-   int ret, err;
+   int ret;
 
    hb_vmUnlock();
    if( pSockAddr && puiLen )
@@ -2231,6 +2237,8 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    ret = hb_socketSelectRD( sd, timeout );
    if( ret > 0 )
    {
+      int err;
+
       /* it's necessary to set non blocking IO to be sure that application
        * will not be frozen inside accept(). It may happen if some asynchronous
        * network error appear after above Select() or when other thread
@@ -2267,7 +2275,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
 
 int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_MAXINT timeout )
 {
-   int ret, blk, err, rawerr;
+   int ret, blk, err;
 
    hb_vmUnlock();
 
@@ -2298,6 +2306,7 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
 
    if( blk > 0 )
    {
+      int rawerr;
       err = hb_socketGetOsError();
       rawerr = err ? 0 : hb_socketGetError();
 

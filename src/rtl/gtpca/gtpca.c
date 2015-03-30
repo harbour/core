@@ -189,9 +189,9 @@ static void hb_gt_pca_termOut( const char * szStr, int iLen )
 {
    if( s_iOutBufSize )
    {
-      int i;
       while( iLen > 0 )
       {
+         int i;
          if( s_iOutBufSize == s_iOutBufIndex )
             hb_gt_pca_termFlush();
          i = s_iOutBufSize - s_iOutBufIndex;
@@ -365,8 +365,8 @@ static void hb_gt_pca_AnsiSetAttributes( int iAttr )
 
       bg    = s_AnsiColors[ ( iAttr >> 4 ) & 0x07 ];
       fg    = s_AnsiColors[ iAttr & 0x07 ];
-      bold  = iAttr & 0x08 ? 1 : 0;
-      blink = iAttr & 0x80 ? 1 : 0;
+      bold  = ( iAttr & 0x08 ) ? 1 : 0;
+      blink = ( iAttr & 0x80 ) ? 1 : 0;
 
       if( s_iCurrentSGR == -1 )
       {

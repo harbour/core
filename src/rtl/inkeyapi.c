@@ -353,13 +353,13 @@ static int s_inkeyTransChar( int iKey, int iFlags, const HB_KEY_VALUE * pKeyVal 
                return KP_ALT_ENTER;
             break;
          case '+':
-            return iFlags & HB_KF_ALT ? KP_ALT_PLUS : KP_CTRL_PLUS;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_PLUS : KP_CTRL_PLUS;
          case '-':
-            return iFlags & HB_KF_ALT ? KP_ALT_MINUS : KP_CTRL_MINUS;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_MINUS : KP_CTRL_MINUS;
          case '*':
-            return iFlags & HB_KF_ALT ? KP_ALT_ASTERISK : KP_CTRL_ASTERISK;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_ASTERISK : KP_CTRL_ASTERISK;
          case '/':
-            return iFlags & HB_KF_ALT ? KP_ALT_SLASH : KP_CTRL_SLASH;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_SLASH : KP_CTRL_SLASH;
          case '.':
          case ',':
             if( iFlags & HB_KF_CTRL )

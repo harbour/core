@@ -246,12 +246,14 @@ HB_SIZE hb_strlentrim( const char * pszText )
 
 int hb_stricmp( const char * s1, const char * s2 )
 {
-   int rc = 0, c1, c2;
+   int rc = 0, c1;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_stricmp(%s, %s)", s1, s2 ) );
 
    do
    {
+      int c2;
+
       c1 = HB_TOUPPER( ( unsigned char ) *s1 );
       c2 = HB_TOUPPER( ( unsigned char ) *s2 );
 
@@ -269,7 +271,7 @@ int hb_stricmp( const char * s1, const char * s2 )
    return rc;
 }
 
-/* warning: It is not case sensitive */
+/* Warning: It is not case sensitive */
 int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 {
    HB_SIZE nCount;
@@ -961,7 +963,7 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
 {
    HB_SIZE ul = *pnLen, nStripped = 0;
-   char * ptr, * dst, ch;
+   char * ptr, * dst;
 
    ptr = dst = str;
    while( ul )
@@ -974,7 +976,7 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
 
    while( ul-- )
    {
-      ch = *ptr++;
+      char ch = *ptr++;
       if( ch == '\\' )
       {
          ++nStripped;

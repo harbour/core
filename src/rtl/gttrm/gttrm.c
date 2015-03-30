@@ -568,9 +568,9 @@ static void hb_gt_trm_termOut( PHB_GTTRM pTerm, const char * pStr, int iLen )
 {
    if( pTerm->iOutBufSize )
    {
-      int i;
       while( iLen > 0 )
       {
+         int i;
          if( pTerm->iOutBufSize == pTerm->iOutBufIndex )
             hb_gt_trm_termFlush( pTerm );
          i = pTerm->iOutBufSize - pTerm->iOutBufIndex;
@@ -714,10 +714,10 @@ static void del_efds( PHB_GTTRM pTerm, int fd )
 
 static void del_all_efds( PHB_GTTRM pTerm )
 {
-   int i;
-
    if( pTerm->event_fds != NULL )
    {
+      int i;
+
       for( i = 0; i < pTerm->efds_no; i++ )
          hb_xfree( pTerm->event_fds[ i ] );
 
@@ -1090,7 +1090,7 @@ static int read_bufch( PHB_GTTRM pTerm, int fd )
 static int get_inch( PHB_GTTRM pTerm, int milisec )
 {
    int nRet = 0, npfd = -1, nchk = pTerm->efds_no, lRead = 0;
-   int mode, i, n, counter;
+   int mode, i, n;
    struct timeval tv, * ptv;
    evtFD * pefd = NULL;
    fd_set rfds, wfds;
@@ -1108,6 +1108,8 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
 
    while( nRet == 0 && lRead == 0 )
    {
+      int counter;
+
       n = -1;
       FD_ZERO( &rfds );
       FD_ZERO( &wfds );
@@ -1600,8 +1602,8 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
       acsc  = ( iAttr & HB_GTTRM_ATTR_ACSC ) && ! pTerm->fUTF8 ? 1 : 0;
       bg    = s_AnsiColors[ ( iAttr >> 4 ) & 0x07 ];
       fg    = s_AnsiColors[ iAttr & 0x07 ];
-      bold  = iAttr & 0x08 ? 1 : 0;
-      blink = iAttr & 0x80 ? 1 : 0;
+      bold  = ( iAttr & 0x08 ) ? 1 : 0;
+      blink = ( iAttr & 0x80 ) ? 1 : 0;
 
       if( pTerm->iCurrentSGR == -1 )
       {
@@ -1945,11 +1947,11 @@ static void hb_gt_trm_AnsiSetAttributes( PHB_GTTRM pTerm, int iAttr )
       buff[ 0 ] = 0x1b;
       buff[ 1 ] = '[';
 
-      acsc  = iAttr & HB_GTTRM_ATTR_ACSC ? 1 : 0;
+      acsc  = ( iAttr & HB_GTTRM_ATTR_ACSC ) ? 1 : 0;
       bg    = s_AnsiColors[ ( iAttr >> 4 ) & 0x07 ];
       fg    = s_AnsiColors[ iAttr & 0x07 ];
-      bold  = iAttr & 0x08 ? 1 : 0;
-      blink = iAttr & 0x80 ? 1 : 0;
+      bold  = ( iAttr & 0x08 ) ? 1 : 0;
+      blink = ( iAttr & 0x80 ) ? 1 : 0;
 
       if( pTerm->iCurrentSGR == -1 )
       {
@@ -2252,15 +2254,15 @@ static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, int box )
 {
    PHB_CODEPAGE cdpTerm = HB_GTSELF_TERMCP( pTerm->pGT ),
                 cdpHost = HB_GTSELF_HOSTCP( pTerm->pGT );
-   int i, ch, mode;
+   int i;
 
    memset( pTerm->chrattr, 0, sizeof( pTerm->chrattr ) );
    memset( pTerm->boxattr, 0, sizeof( pTerm->boxattr ) );
 
    for( i = 0; i < 256; i++ )
    {
-      ch = pTerm->charmap[ i ] & 0xffff;
-      mode = ! pTerm->fUTF8 ? ( pTerm->charmap[ i ] >> 16 ) & 0xff : 1;
+      int ch = pTerm->charmap[ i ] & 0xffff;
+      int mode = ! pTerm->fUTF8 ? ( pTerm->charmap[ i ] >> 16 ) & 0xff : 1;
 
       switch( mode )
       {

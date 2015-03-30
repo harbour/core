@@ -1165,7 +1165,7 @@ static int s_uc_flags( int n )
       HB_BYTE v;
       v = s_ch_val[ ( s_ch_idx[ n >> HB_UCFL_BITS ] << ( HB_UCFL_BITS - 1 ) ) +
                     ( ( n & ( ( 1 << HB_UCFL_BITS ) - 1 ) ) >> 1 ) ];
-      return n & 1 ? v >> 4 : v & 0x0F;
+      return ( n & 1 ) ? v >> 4 : v & 0x0F;
    }
    return 0;
 }

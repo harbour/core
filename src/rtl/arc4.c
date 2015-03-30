@@ -322,14 +322,15 @@ static int arc4_seed_proc_sys_kernel_random_uuid( void )
     * but not /dev/urandom.  Let's try /proc/sys/kernel/random/uuid.
     * Its format is stupid, so we need to decode it from hex.
     */
-   int   fd;
    char  buf[ 128 ];
    HB_U8 entropy[ 64 ];
-   int   bytes, n, i, nybbles;
+   int   bytes, i, nybbles;
 
    for( bytes = 0; bytes < ADD_ENTROPY; )
    {
-      fd = open( "/proc/sys/kernel/random/uuid", O_RDONLY, 0 );
+      int fd = open( "/proc/sys/kernel/random/uuid", O_RDONLY, 0 );
+      int n;
+
       if( fd < 0 )
          return -1;
 
@@ -380,13 +381,16 @@ static int arc4_seed_urandom( void )
       "/dev/random",
       NULL
    };
-   HB_U8   buf[ ADD_ENTROPY ];
-   int     fd, i;
-   HB_SIZE n;
+
+   int i;
 
    for( i = 0; filenames[ i ]; ++i )
    {
-      fd = open( filenames[ i ], O_RDONLY, 0 );
+      HB_U8 buf[ ADD_ENTROPY ];
+      HB_SIZE n;
+
+      int fd = open( filenames[ i ], O_RDONLY, 0 );
+
       if( fd < 0 )
          continue;
 

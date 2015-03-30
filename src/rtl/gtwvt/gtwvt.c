@@ -478,7 +478,7 @@ static HBITMAP hb_gt_wvt_DefineBoxChar( PHB_GTWVT pWVT, HB_USHORT usCh )
    HBITMAP hBitMap = NULL;
    int cellx = pWVT->PTEXTSIZE.x;
    int celly = pWVT->PTEXTSIZE.y;
-   int i, y, x, yy, xx, skip, start, mod;
+   int i, y, x, yy, xx;
    POINT pts[ 3 ];
    RECT rc;
 
@@ -926,6 +926,9 @@ static HBITMAP hb_gt_wvt_DefineBoxChar( PHB_GTWVT pWVT, HB_USHORT usCh )
          case HB_BOXCH_FILLER1:
          case HB_BOXCH_FILLER2:
          case HB_BOXCH_FILLER3:
+         {
+            int skip, start, mod;
+
             hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
 
             if( usCh == HB_BOXCH_FILLER1 )
@@ -952,7 +955,7 @@ static HBITMAP hb_gt_wvt_DefineBoxChar( PHB_GTWVT pWVT, HB_USHORT usCh )
             if( usCh == HB_BOXCH_FILLER3 )
                hb_bm_invertrect( 0, 0, cellx, celly );
             break;
-
+         }
          case HB_BOXCH_ARROW_R:
             hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
 
@@ -1697,10 +1700,6 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    int borderHeight;
    int left;
    int top;
-   int i = 0;
-   int j = 0;
-   int iCalcWidth = 0;
-   int iCalcHeight = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_FitSize()" ) );
 
@@ -1728,6 +1727,11 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
       int   fontHeight;
       int   fontWidth;
       int   n;
+
+      int i = 0;
+      int j = 0;
+      int iCalcWidth = 0;
+      int iCalcHeight = 0;
 
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
@@ -2257,7 +2261,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 #if defined( UNICODE )
                      usChar = hb_cdpGetU16Ctrl( usChar );
 #else
-                     usChar = hb_cdpGetUC( bAttr & HB_GT_ATTR_BOX ? cdpBox : cdpHost, usChar, '?' );
+                     usChar = hb_cdpGetUC( ( bAttr & HB_GT_ATTR_BOX ) ? cdpBox : cdpHost, usChar, '?' );
 #endif
                      sBuffer[ n++ ] = ( TCHAR ) usChar;
                   }
@@ -2660,7 +2664,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
    PAINTSTRUCT ps;
    HDC         hdc;
    RECT        rcRect;
-   int         iRow, iCol, startCol, len;
+   int         iRow;
    int         iColor, iOldColor = 0;
    HB_BYTE     bAttr;
    HB_BOOL     fFixMetric = ( pWVT->fontAttribute & HB_GTI_FONTA_FIXMETRIC ) != 0;
@@ -2739,6 +2743,8 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
 
    for( iRow = rcRect.top; iRow <= rcRect.bottom; ++iRow )
    {
+      int iCol, startCol, len;
+
       iCol = startCol = rcRect.left;
       len = 0;
 
@@ -4181,9 +4187,6 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    PHB_GTWVT pWVT;
-   HDC       hdc;
-   HPEN      hPen, hOldPen;
-   HBRUSH    hBrush, hOldBrush;
    RECT      r;
    int       iRet = 0;
 
@@ -4193,6 +4196,10 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
    if( pWVT->hWnd )
    {
+      HDC    hdc;
+      HPEN   hPen, hOldPen;
+      HBRUSH hBrush, hOldBrush;
+
       if( pWVT->bComposited )
          hb_gt_wvt_Composited( pWVT, HB_FALSE );
 

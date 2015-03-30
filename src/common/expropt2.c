@@ -158,16 +158,14 @@ PHB_EXPR hb_compExprReduceMod( PHB_EXPR pSelf, HB_COMP_DECL )
          default:
             if( HB_SUPPORT_HARBOUR )
             {
-               double dValue, dDivisor;
-
-               dDivisor = pRight->value.asNum.NumType == HB_ET_LONG ?
-                          ( double ) pRight->value.asNum.val.l :
-                          pRight->value.asNum.val.d;
+               double dDivisor = pRight->value.asNum.NumType == HB_ET_LONG ?
+                                 ( double ) pRight->value.asNum.val.l :
+                                 pRight->value.asNum.val.d;
                if( dDivisor )
                {
-                  dValue = pLeft->value.asNum.NumType == HB_ET_LONG ?
-                           ( double ) pLeft->value.asNum.val.l :
-                           pLeft->value.asNum.val.d;
+                  double dValue = pLeft->value.asNum.NumType == HB_ET_LONG ?
+                                  ( double ) pLeft->value.asNum.val.l :
+                                  pLeft->value.asNum.val.d;
                   pSelf->value.asNum.val.d = fmod( dValue, dDivisor );
                   pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;

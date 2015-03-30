@@ -309,7 +309,7 @@ static function index_func04( cName, cNameInd, cNameConv, cMin, cMax, cBit )
              "[ n >> " + cBit + " ] << ( " + cBit + " - 1 ) ) +" + hb_eol() + ;
       Space( Len( cNameConv ) + 12 ) + ;
              "( ( n & ( ( 1 << " + cBit + " ) - 1 ) ) >> 1 ) ];" + hb_eol() + ;
-      "      return n & 1 ? v >> 4 : v & 0x0F;" + hb_eol() + ;
+      "      return ( n & 1 ) ? v >> 4 : v & 0x0F;" + hb_eol() + ;
       "   }" + hb_eol() + ;
       "   return 0;" + hb_eol() + ;
       "}" + hb_eol()
@@ -480,7 +480,7 @@ static function conv_get04( n, aInd, aVal, nMin, nMax, nBit )
 
 //    v = s_ch_val[ ( s_ch_idx[ n >> HB_UCFL_BITS ] << ( HB_UCFL_BITS - 1 ) ) +
 //                  ( ( n & ( ( 1 << HB_UCFL_BITS ) - 1 ) ) >> 1 ) ];
-//    return n & 1 ? v >> 4 : v & 0x0F;
+//    return ( n & 1 ) ? v >> 4 : v & 0x0F;
 
    endif
 

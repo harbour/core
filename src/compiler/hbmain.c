@@ -47,7 +47,6 @@ int hb_compMainExt( int argc, const char * const argv[],
    int iStatus = EXIT_SUCCESS, iFileCount = 0;
    int iFileCase, iDirCase, iDirSep;
    HB_BOOL fTrimFN;
-   int i;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_compMain()" ) );
 
@@ -121,6 +120,7 @@ int hb_compMainExt( int argc, const char * const argv[],
    }
    else
    {
+      int i;
       /* Process all files passed via the command line. */
       for( i = 1; i < argc && ! HB_COMP_PARAM->fExit; i++ )
       {
@@ -899,7 +899,7 @@ void hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_B
       if( szText[ n++ ] == '&' )
       {
          char szSymName[ HB_SYMBOL_NAME_LEN + 1 ];
-         int iSize = 0, iScope;
+         int iSize = 0;
 
          /* Check if macro operator is used inside a string
           * Macro operator is ignored if it is the last char or
@@ -925,6 +925,8 @@ void hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_B
 
          if( iSize )
          {
+            int iScope;
+
             szSymName[ iSize ] = '\0';
 
             /* NOTE: All variables are assumed memvars in macro compiler -
@@ -3532,7 +3534,6 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    HB_USHORT wLocals = 0;  /* number of referenced local variables */
    HB_USHORT wLocalsCnt, wLocalsLen;
    HB_USHORT wPos;
-   int iLocalPos;
    PHB_HVAR pVar;
 
    pCodeblock = HB_COMP_PARAM->functions.pLast;
@@ -3639,6 +3640,8 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    if( HB_COMP_PARAM->fDebugInfo )
    {
+      int iLocalPos;
+
       hb_compGenModuleName( HB_COMP_PARAM, pFuncName );
 
       /* generate the name of referenced local variables */
@@ -4163,7 +4166,6 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
           ( pModule || szBuffer ) )
    {
       char szFileName[ HB_PATH_MAX ];     /* filename to parse */
-      char szPpoName[ HB_PATH_MAX ];
       HB_BOOL fSkip = HB_FALSE;
 
       /* Clear and reinitialize preprocessor state */
@@ -4214,6 +4216,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
       if( ! fSkip )
       {
+         char szPpoName[ HB_PATH_MAX ];
+
          if( HB_COMP_PARAM->fPPT )
          {
             hb_compPpoFile( HB_COMP_PARAM, szFileName, ".ppt", szPpoName );

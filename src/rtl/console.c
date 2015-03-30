@@ -353,7 +353,6 @@ HB_FUNC( QOUT )
 
    if( ( pFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != NULL )
    {
-      char buf[ 256 ];
       PHB_PRNPOS pPrnPos = hb_prnPos();
 
       pPrnPos->row++;
@@ -361,6 +360,8 @@ HB_FUNC( QOUT )
 
       if( pPrnPos->col )
       {
+         char buf[ 256 ];
+
          if( pPrnPos->col > ( int ) sizeof( buf ) )
          {
             char * pBuf = ( char * ) hb_xgrab( pPrnPos->col );

@@ -778,14 +778,13 @@ static HB_BOOL hb_pp_canQuote( HB_BOOL fQuote, char * pBuffer, HB_SIZE nLen,
 static HB_BOOL hb_pp_hasCommand( char * pBuffer, HB_SIZE nLen, HB_SIZE * pnAt, int iCmds, ... )
 {
    HB_SIZE n = 0, nl;
-   char * cmd;
    va_list va;
    int i;
 
    va_start( va, iCmds );
    for( i = 0; i < iCmds && n < nLen; ++i )
    {
-      cmd = va_arg( va, char * );
+      char * cmd = va_arg( va, char * );
       nl = strlen( cmd );
       while( n < nLen && HB_PP_ISBLANK( pBuffer[ n ] ) )
          ++n;
@@ -4546,13 +4545,12 @@ static HB_BOOL hb_pp_processDefine( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPt
 
 static HB_BOOL hb_pp_processTranslate( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstPtr )
 {
-   PHB_PP_TOKEN * pTokenPtr;
    HB_BOOL fSubst = HB_FALSE, fRepeat;
    int iCycle = 0;
 
    do
    {
-      pTokenPtr = pFirstPtr;
+      PHB_PP_TOKEN * pTokenPtr = pFirstPtr;
       fRepeat = HB_FALSE;
       while( ! HB_PP_TOKEN_ISEOS( *pTokenPtr ) )
       {
@@ -5431,7 +5429,6 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
 void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
                       const HB_PP_DEFRULE pDefRules[], int iDefRules )
 {
-   const HB_PP_DEFRULE * pDefRule;
    PHB_PP_MARKER pMarkers;
    PHB_PP_RULE pRule;
 
@@ -5440,7 +5437,7 @@ void hb_pp_initRules( PHB_PP_RULE * pRulesPtr, int * piRules,
 
    while( --iDefRules >= 0 )
    {
-      pDefRule = pDefRules + iDefRules;
+      const HB_PP_DEFRULE * pDefRule = pDefRules + iDefRules;
       if( pDefRule->markers > 0 )
       {
          HB_USHORT marker;
@@ -5638,7 +5635,6 @@ void hb_pp_setStdBase( PHB_PP_STATE pState )
  */
 void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs )
 {
-   char szDefine[ 65 ];
    char szResult[ 65 ];
    int iYear, iMonth, iDay, i;
    long lDate, lTime;
@@ -5646,6 +5642,8 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState, HB_BOOL fArchDefs )
    if( fArchDefs )
    {
       static const char * s_szPlatform = "__PLATFORM__%s";
+
+      char szDefine[ 65 ];
 
       if( hb_verPlatformMacro() )
       {

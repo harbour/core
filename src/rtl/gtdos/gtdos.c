@@ -266,6 +266,7 @@ static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
          gettext( iCol + 1, iRow + 1, iCol + 1, iRow + 1, &ch_attr );
          bChar = ch_attr & 0xFF;
          bAttr = ch_attr >> 8;
+         HB_SYMBOL_UNUSED( pScreenPtr );
 #elif defined( __DJGPP__ )
          int iChar, iAttr;
          ScreenGetChar( &iChar, &iAttr, iCol, iRow );
@@ -925,6 +926,8 @@ static void hb_gt_dos_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    sound( ( unsigned ) dFrequency );
 #elif defined( __DJGPP__ )
    sound( ( int ) dFrequency );
+#else
+   HB_SYMBOL_UNUSED( dFrequency );
 #endif
 
    /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
@@ -1245,6 +1248,7 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          short ch_attr = ( ( short ) iColor << 8 ) | uc;
          puttext( iCol + iLen + 1, iRow + 1, iCol + iLen + 1, iRow + 1, &ch_attr );
+         HB_SYMBOL_UNUSED( pScreenPtr );
       }
 #elif defined( __DJGPP__ )
       ScreenPutChar( uc, iColor, iCol + iLen, iRow );

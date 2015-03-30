@@ -1109,11 +1109,6 @@ int hb_fsProcessRun( const char * pszFileName,
 
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 
-      fd_set rfds, wfds, *prfds, *pwfds;
-      HB_FHANDLE fdMax;
-      HB_SIZE ul;
-      int n;
-
       if( nStdInLen == 0 && hStdin != FS_ERROR )
       {
          hb_fsClose( hStdin );
@@ -1129,6 +1124,11 @@ int hb_fsProcessRun( const char * pszFileName,
 
       for( ;; )
       {
+         fd_set rfds, wfds, *prfds, *pwfds;
+         HB_FHANDLE fdMax;
+         HB_SIZE ul;
+         int n;
+
          fdMax = 0;
          prfds = pwfds = NULL;
          if( hStdout != FS_ERROR || hStderr != FS_ERROR )
@@ -1238,6 +1238,8 @@ int hb_fsProcessRun( const char * pszFileName,
       int iTODO;
 
       HB_SYMBOL_UNUSED( nStdInLen );
+      HB_SYMBOL_UNUSED( nOutSize );
+      HB_SYMBOL_UNUSED( nErrSize );
 
 #endif
       hb_vmLock();

@@ -138,16 +138,15 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen,
                        int iMatches, HB_REGMATCH * aMatches )
 {
 #if defined( HB_HAS_PCRE2 )
-   PCRE2_SIZE iResult, i;
-
-   iResult = pcre2_match( pRegEx->re_pcre,
-                          ( PCRE2_SPTR ) szString,
-                          ( PCRE2_SIZE ) nLen,
-                          ( PCRE2_SIZE ) 0 /* startoffset */,
-                          ( uint32_t ) pRegEx->iEFlags,
-                          aMatches, s_re_ctxm );
+   PCRE2_SIZE iResult = pcre2_match( pRegEx->re_pcre,
+                                     ( PCRE2_SPTR ) szString,
+                                     ( PCRE2_SIZE ) nLen,
+                                     ( PCRE2_SIZE ) 0 /* startoffset */,
+                                     ( uint32_t ) pRegEx->iEFlags,
+                                     aMatches, s_re_ctxm );
    if( iResult == 0 )
    {
+      PCRE2_SIZE i;
       for( i = 0; i < ( PCRE2_SIZE ) iMatches; i++ )
       {
          if( HB_REGMATCH_EO( aMatches, i ) != HB_REGMATCH_UNSET )
@@ -156,13 +155,12 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen,
    }
    return ( int ) iResult;
 #elif defined( HB_HAS_PCRE )
-   int iResult, i;
-
-   iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
-                        szString, ( int ) nLen, 0 /* startoffset */,
-                        pRegEx->iEFlags, aMatches, HB_REGMATCH_SIZE( iMatches ) );
+   int iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
+                            szString, ( int ) nLen, 0 /* startoffset */,
+                            pRegEx->iEFlags, aMatches, HB_REGMATCH_SIZE( iMatches ) );
    if( iResult == 0 )
    {
+      int i;
       for( i = 0; i < iMatches; i++ )
       {
          if( HB_REGMATCH_EO( aMatches, i ) != HB_REGMATCH_UNSET )
@@ -303,7 +301,7 @@ static HB_BOOL hb_regex( int iRequest )
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( REGEX_MAX_GROUPS ) ];
 #endif
    PHB_ITEM pRetArray, pMatch, pString;
-   int i, iMatches, iMaxMatch;
+   int iMatches, iMaxMatch;
    HB_BOOL fResult = HB_FALSE;
    PHB_REGEX pRegEx;
    const char * pszString;
@@ -332,6 +330,8 @@ static HB_BOOL hb_regex( int iRequest )
    iMatches = hb_regexec( pRegEx, pszString, nLen, iMaxMatch, aMatches );
    if( iMatches > 0 )
    {
+      int i;
+
       switch( iRequest )
       {
          case 0:

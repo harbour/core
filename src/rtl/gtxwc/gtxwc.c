@@ -467,7 +467,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
 
    int cellx = wnd->fontWidth;
    int celly = wnd->fontHeight;
-   int i, y, x, yy, xx, skip, start, mod;
+   int i, y, x, yy, xx;
 
    if( usCh >= HB_BOXCH_RC_MIN && usCh <= HB_BOXCH_RC_MAX )
       switch( usCh )
@@ -1325,6 +1325,9 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          case HB_BOXCH_FILLER1:
          case HB_BOXCH_FILLER2:
          case HB_BOXCH_FILLER3:
+         {
+            int skip, start, mod;
+
             if( usCh == HB_BOXCH_FILLER1 )
             {
                skip = 4;
@@ -1362,7 +1365,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             type = size == 0 ? CH_NONE : CH_PTS;
             break;
-
+         }
          case HB_BOXCH_ARROW_R:
             i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
             pts[ 0 ].x = ( ( cellx - i ) >> 1 );
@@ -3264,7 +3267,6 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
          if( evt->xselection.property != None )
          {
             XTextProperty text;
-            unsigned long nItem;
 
             if( XGetTextProperty( wnd->dpy, wnd->window, &text,
                                   evt->xselection.property ) != 0 )
@@ -3308,9 +3310,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
                else if( evt->xselection.target == s_atomTargets && text.format == 32 )
                {
                   Atom aValue;
-
+                  unsigned long nItem;
 #ifdef XWC_DEBUG
-                  printf( "text.nitems=%ld, text.format=%d\n", text.nitems, text.format ); fflush( stdout );
+                  printf( "text.nitems=%lu, text.format=%d\n", text.nitems, text.format ); fflush( stdout );
 #endif
                   for( nItem = 0; nItem < text.nitems; ++nItem )
                   {
@@ -3323,9 +3325,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
                         aNextRequest = s_atomText;
 #ifdef XWC_DEBUG
                      if( aValue )
-                        printf( "%ld, %8lx (%s)\n", nItem, aValue, XGetAtomName( wnd->dpy, aValue ) );
+                        printf( "%lu, %8lx (%s)\n", nItem, aValue, XGetAtomName( wnd->dpy, aValue ) );
                      else
-                        printf( "%ld, %8lx (NULL)\n", nItem, aValue );
+                        printf( "%lu, %8lx (NULL)\n", nItem, aValue );
                      fflush( stdout );
 #endif
                   }
@@ -3559,7 +3561,7 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor * pColor )
        * with ideas from David Tong's "noflash" library ;-)
        */
       int     i, iClosestColor;
-      double  dDiff, dDistance, dClosestColorDist = 0;
+      double  dDiff, dDistance;
       XColor *colorTable;
       HB_BYTE *checkTable;
 
@@ -3574,6 +3576,8 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor * pColor )
 
       do
       {
+         double dClosestColorDist;
+
          iClosestColor = -1;
          /*
           * Look for the color that best approximates the desired one
@@ -3709,7 +3713,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
    HB_BYTE oldColor = 0, color, attr;
    HB_USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
    HB_U32 u32Curr = 0xFFFFFFFF;
-   int i, iColor, scridx;
+   int i, iColor;
    XWC_CharTrans * chTrans;
 
 #ifdef XWC_DEBUG
@@ -3727,6 +3731,8 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
 
    for( irow = rowStart; irow <= rowStop; irow++ )
    {
+      int scridx;
+
       icol = colStart;
       scridx = icol + irow * wnd->cols;
       len = 0;
@@ -3943,11 +3949,11 @@ static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd,
 static void hb_gt_xwc_InvalidateFull( PXWND_DEF wnd,
                                       int left, int top, int right, int bottom )
 {
-   int row, col, scridx;
+   int row, col;
 
    for( row = top; row <= bottom; row++ )
    {
-      scridx = row * wnd->cols + left;
+      int scridx = row * wnd->cols + left;
       for( col = left; col <= right; col++, scridx++ )
          wnd->pCurrScr[ scridx ] = 0xFFFFFFFF;
    }
@@ -5698,7 +5704,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( wnd->window && pInfo->pNewVal &&
              ( ( HB_IS_ARRAY( pInfo->pNewVal ) &&
                  hb_arrayLen( pInfo->pNewVal ) == ( HB_SIZE )
-                 ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) ) ||
+                 ( ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ) ? 4 : 3 ) ) ||
                HB_IS_STRING( pInfo->pNewVal ) ) )
          {
             XImage * xImage = NULL;

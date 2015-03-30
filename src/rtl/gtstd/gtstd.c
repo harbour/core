@@ -696,10 +696,10 @@ static void hb_gt_std_Refresh( PHB_GT pGT )
    HB_GTSUPER_REFRESH( pGT );
    if( pGTSTD->fFullRedraw )
    {
-      int i;
-
       if( pGTSTD->iRow < iHeight - 1 )
       {
+         int i;
+
          for( i = pGTSTD->iRow + 1; i < iHeight; ++i )
             hb_gt_std_DispLine( pGT, i, 0, -1 );
       }

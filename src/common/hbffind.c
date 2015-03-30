@@ -168,7 +168,10 @@
 
 #else
 
-   typedef void HB_FFIND_INFO, * PHB_FFIND_INFO;
+   typedef struct
+   {
+      void * unused;
+   } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
 #endif
 

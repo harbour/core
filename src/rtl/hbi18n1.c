@@ -660,7 +660,7 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
                                          const char * szCdpID,
                                          HB_BOOL fBase, HB_BOOL fTranslate )
 {
-   const char * szOldCdpID = NULL, * szKey;
+   const char * szOldCdpID = NULL;
 
    if( pI18N )
    {
@@ -671,6 +671,8 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
          szOldCdpID = cdpage->id;
       if( cdp && cdp != cdpage )
       {
+         const char * szKey;
+
          if( fTranslate && cdpage )
          {
             HB_SIZE nHashLen = hb_hashLen( pI18N->context_table ), ul;
