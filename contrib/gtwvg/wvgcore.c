@@ -208,8 +208,8 @@ static HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * 
    {
       if( pPicture )
       {
-         OLE_XSIZE_HIMETRIC nWidth;
-         OLE_YSIZE_HIMETRIC nHeight;
+         OLE_XSIZE_HIMETRIC nWidth = 0;
+         OLE_YSIZE_HIMETRIC nHeight = 0;
 
          int   xe, ye;
          HRGN  hrgn1;
@@ -329,11 +329,9 @@ static HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR 
 
                if( pPicture )
                {
-                  OLE_XSIZE_HIMETRIC nWidth;
-                  OLE_YSIZE_HIMETRIC nHeight;
+                  OLE_XSIZE_HIMETRIC nWidth = 0;
+                  OLE_YSIZE_HIMETRIC nHeight = 0;
 
-                  int   xe, ye;
-                  HRGN  hrgn1;
                   POINT lpp = { 0, 0 };
 
                   RECT rc_dummy;
@@ -347,6 +345,9 @@ static HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR 
 
                   if( nWidth && nHeight )
                   {
+                     int  xe, ye;
+                     HRGN hrgn1;
+
                      if( bDoNotScale )
                      {
                         int iHt = ( int ) ( ( float ) wd * nHeight / nWidth );
@@ -907,7 +908,7 @@ HB_FUNC( WVT_DRAWLABEL )
          LPCTSTR  text  = HB_PARSTR( 3, &hText, &nLen );
          COLORREF fgClr = hb_wvt_FgColorParam( 6 );
          COLORREF bgClr = hb_wvt_BgColorParam( 7 );
-         HFONT    hOldFont, hOldFontGui;
+         HFONT    hOldFont;
 
          POINT xy;
 
@@ -926,6 +927,8 @@ HB_FUNC( WVT_DRAWLABEL )
          #if defined( __SETGUI__ )
          if( _s->bGui )
          {
+            HFONT hOldFontGui;
+
             SetBkColor( _s->hGuiDC, bgClr );
             SetTextColor( _s->hGuiDC, fgClr );
             SetTextAlign( _s->hGuiDC, hb_parnidef( 4, TA_LEFT ) );
@@ -1787,10 +1790,12 @@ HB_FUNC( WVT_DRAWGRIDVERT )
 
    if( _s )
    {
-      int iTabs = hb_parni( 4 ), i, x;
+      int iTabs = hb_parni( 4 );
 
       if( iTabs )
       {
+         int i, x;
+
          int iCharWidth  = _s->PTEXTSIZE.x;
          int iCharHeight = _s->PTEXTSIZE.y;
 
@@ -1841,7 +1846,6 @@ HB_FUNC( WVT_DRAWBUTTON )
       POINT xy;
       RECT  rc;
       int   iTop, iLeft, iBottom, iRight;
-      int   iAlign;
       int   iTextHeight;
 
       LOGBRUSH lb;
@@ -1904,6 +1908,7 @@ HB_FUNC( WVT_DRAWBUTTON )
 
       if( HB_ISCHAR( 5 ) )
       {
+         int     iAlign;
          void *  hText;
          HB_SIZE nLen;
          LPCTSTR text = HB_PARSTR( 5, &hText, &nLen );
@@ -1954,9 +1959,11 @@ HB_FUNC( WVT_DRAWBUTTON )
       else
          iTextHeight = -1;
 
+#if defined( HB_OS_WIN_CE )
+      HB_SYMBOL_UNUSED( iTextHeight );
+#else
       if( bImage )
       {
-#if ! defined( HB_OS_WIN_CE )
          int iImageWidth  = iRight - iLeft + 1 - 8;
          int iImageHeight = iBottom - iTop + 1 - 8 - iTextHeight;
 
@@ -1976,8 +1983,8 @@ HB_FUNC( WVT_DRAWBUTTON )
                hb_strfree( hImage );
             }
          }
-#endif
       }
+#endif
 
       hb_retl( HB_TRUE );
    }

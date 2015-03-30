@@ -265,15 +265,16 @@ HB_FUNC( RATE )
       double dCapital = hb_parnd( 1 );
       double dPayment = hb_parnd( 2 );
       double dTime = hb_parnd( 3 );
-      double dAux;              /* estimated payment to compare for */
       double dEpsilon = 0.00001;        /* mimimal to consider 2 numbers as equal */
       double dScale = 1.0;      /* fractional step */
-      double r;                 /* temptative rate */
       double j = 1.0;           /* index */
-      double dExp;
 
       while( j < 1020.0 )       /* maximum anual rate */
       {
+         double dAux;           /* estimated payment to compare for */
+         double r;              /* temptative rate */
+         double dExp;
+
          HB_MATH_EXCEPTION hb_exc;
          double dBase;
 

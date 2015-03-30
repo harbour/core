@@ -719,11 +719,12 @@ STDAPI DllRegisterServer( void )
    LPCTSTR lpValName;
    HRESULT hr = S_OK;
    HKEY hKey;
-   long err;
    int i;
 
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_regTable ); ++i )
    {
+      long err;
+
       s_getKeyValue( s_regTable[ i ][ 0 ], lpKeyName, MAX_REGSTR_SIZE );
       if( s_regTable[ i ][ 1 ] )
       {

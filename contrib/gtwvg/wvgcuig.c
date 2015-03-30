@@ -1497,11 +1497,9 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
    if( pPicture )
    {
-      OLE_XSIZE_HIMETRIC nWidth;
-      OLE_YSIZE_HIMETRIC nHeight;
+      OLE_XSIZE_HIMETRIC nWidth = 0;
+      OLE_YSIZE_HIMETRIC nHeight = 0;
 
-      int   xe, ye, x, y, wd, ht;
-      HRGN  hrgn1;
       POINT lpp = { 0, 0 };
       HDC   hdc = pWVT->hGuiDC;
 
@@ -1516,6 +1514,9 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
       if( nWidth && nHeight )
       {
+         int  xe, ye, x, y, wd, ht;
+         HRGN hrgn1;
+
          x  = iLeft;
          y  = iTop;
          wd = iRight - iLeft + 1;
@@ -1590,7 +1591,7 @@ static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
 
    if( iTabs > 0 )
    {
-      int     x, iTop, iBottom;
+      int     iTop, iBottom;
       HB_ISIZ i;
 
       iTop    = hb_arrayGetNI( pArray, 1 ) * ( int ) pWVT->PTEXTSIZE.y;
@@ -1599,6 +1600,7 @@ static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
       if( ( iTop >= uRect->top && iTop <= uRect->bottom ) ||
           ( iBottom >= uRect->top && iBottom <= uRect->bottom ) )
       {
+         int x;
          HDC hdc = pWVT->hGuiDC;
          SelectObject( hdc, pWVT->currentPen );
          for( i = 1; i <= iTabs; i++ )
@@ -1669,11 +1671,10 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT * uRect )
 
    while( gObj )
    {
-      int iObjType = 0;
-
       if( gObj->iState == GOBJ_OBJSTATE_ENABLED )
       {
          int iTop = 0, iLeft = 0, iBottom = 0, iRight = 0;
+         int iObjType = 0;
 
          if( gObj->iObjType == GOBJ_OBJTYPE_OBJECT )
          {

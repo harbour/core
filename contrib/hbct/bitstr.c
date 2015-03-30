@@ -101,7 +101,7 @@ HB_FUNC( BITTOC )
       {
          while( nPattern-- > 0 )
          {
-            *--pszResult = iValue & 1 ? pszPattern[ nPattern ] : ' ';
+            *--pszResult = ( iValue & 1 ) ? pszPattern[ nPattern ] : ' ';
             ++iLen;
             iValue >>= 1;
          }

@@ -323,9 +323,8 @@ static void hb_gt_alleg_ScreenUpdate( PHB_GT pGT )
 
 static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, HB_BOOL lClearInit )
 {
-   int       iRet  = 1, iWidth, iHeight; /* Don't remove iRet, ixFP and iyFP initializers! */
-   short     ixFP  = 0, iyFP = 0;
-   HB_BOOL   lMode = HB_FALSE, lPrev = s_fInit;
+   int     iWidth, iHeight;
+   HB_BOOL lMode = HB_FALSE, lPrev = s_fInit;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_InitializeScreen(%p,%d,%d,%d)", pGT, iRows, iCols, ( int ) lClearInit ) );
 
@@ -351,6 +350,12 @@ static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, H
 
    if( iRows > 11 && iCols > 23 && iRows < 129 && iCols < 257 )
    {
+      /* Don't remove iRet, ixFP and iyFP initializers! */
+      int   iRet = 1;
+      short ixFP = 0, iyFP = 0;
+
+      HB_SYMBOL_UNUSED( iRet );  /* to suppress a reinit warning */
+
 #if defined( AL_GFX_XWINDOWS )
       HB_TRACE( HB_TR_DEBUG, ( "trying X DGA2 mode" ) );
       iRet = al_set_gfx_mode( AL_GFX_XDGA2, iWidth, iHeight, 0, 0 );
@@ -592,7 +597,7 @@ static HB_BOOL hb_gt_alleg_SetMode( PHB_GT pGT, int iRows, int iCols )
 static int hb_gt_alleg_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int nKey = 0;
-   int i, iMseCol, iMseRow;
+   int iMseCol, iMseRow;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_ReadKey(%p,%d)", pGT, iEventMask ) );
 
@@ -657,6 +662,7 @@ static int hb_gt_alleg_ReadKey( PHB_GT pGT, int iEventMask )
 
       if( ( ( nKey & 255 ) == 2 || ( nKey & 255 ) == 3 ) && ( nKey >> 8 ) > 31 )   /* K_CTRL_ + navigation key */
       {
+         int i;
          for( i = 0; i < GT_CTRL_TABLE_SIZE; i++ )
          {
             if( ( nKey >> 8 ) == s_CtrlTable[ i ].al_key )
@@ -695,6 +701,7 @@ static int hb_gt_alleg_ReadKey( PHB_GT pGT, int iEventMask )
       }
       else if( nKey != 0 )
       {
+         int i;
          for( i = 0; i < GT_KEY_TABLE_SIZE; i++ )
          {
             if( ( nKey >> 8 ) == s_KeyTable[ i ].al_key )

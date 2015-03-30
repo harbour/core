@@ -1617,8 +1617,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SETPOS_ROWCOL:
          if( pWVT->hWnd )
          {
-            int i1 = -1;
-            int i2 = -1;
+            int i1;
+            int i2;
             RECT rect = { 0, 0, 0, 0 };
             GetWindowRect( pWVT->hWnd, &rect );
 

@@ -574,7 +574,6 @@ static HB_BOOL amf3_encode_array( amfContext * context, PHB_ITEM pItem )
    HB_SIZE  item_len = hb_arrayLen( pItem );
    PHB_ITEM pArrayItem;
    int      i;
-   int      result;
 
    if( ! amf3_encode_int( context, ( ( int ) item_len << 1 ) | REFERENCE_BIT ) )
       return HB_FALSE;
@@ -584,6 +583,8 @@ static HB_BOOL amf3_encode_array( amfContext * context, PHB_ITEM pItem )
 
    for( i = 1; i <= ( int ) item_len; i++ )
    {
+      int result;
+
       pArrayItem = hb_itemNew( NULL );
       hb_arrayGet( pItem, i, pArrayItem );
       if( ! pArrayItem )
@@ -1114,7 +1115,6 @@ HB_FUNC( AMF3_FROMWA )
    amfContext * outer_context = ( amfContext * ) hb_parptr( 7 );
 
    DBORDERINFO  pInfo;
-   int          iOrd;
    HB_USHORT    uiFields;
    HB_ULONG     uiRecCount     = 0;
    HB_ULONG     uiRecNo        = 0;
@@ -1124,7 +1124,6 @@ HB_FUNC( AMF3_FROMWA )
    PHB_ITEM     pItem;
    HB_USHORT    uiFieldCopy = 0;      /* GCC knows better (warns) */
    HB_USHORT    uiIter;
-   amfContext * context;
    HB_BOOL      bPredictLen = ( ! pWhile && ! pFor );
 
    HB_BOOL  bAsArray    = ! nPkg;
@@ -1133,6 +1132,9 @@ HB_FUNC( AMF3_FROMWA )
 
    if( pArea )
    {
+      int iOrd;
+      amfContext * context;
+
       memset( &pInfo, 0, sizeof( pInfo ) );
       pInfo.itmResult = hb_itemPutNI( NULL, 0 );
       SELF_ORDINFO( pArea, DBOI_NUMBER, &pInfo );

@@ -124,12 +124,11 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
    if( hb_iswin2k() )  /* Windows 2000 or later */
    {
       typedef BOOL( WINAPI * DEFPRINTER ) ( LPTSTR, LPDWORD );
-      DEFPRINTER fnGetDefaultPrinter;
       HMODULE hWinSpool = hbwapi_LoadLibrarySystem( TEXT( "winspool.drv" ) );
 
       if( hWinSpool )
       {
-         fnGetDefaultPrinter = ( DEFPRINTER ) HB_WINAPI_GETPROCADDRESST( hWinSpool,
+         DEFPRINTER fnGetDefaultPrinter = ( DEFPRINTER ) HB_WINAPI_GETPROCADDRESST( hWinSpool,
             "GetDefaultPrinter" );
 
          if( fnGetDefaultPrinter )
@@ -542,7 +541,7 @@ HB_FUNC( WIN_PRINTERLIST )
 #if ! defined( HB_OS_WIN_CE )
    HB_BOOL bPrinterNamesOnly = ! hb_parl( 1 );
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
-   DWORD dwNeeded = 0, dwReturned = 0, i;
+   DWORD dwNeeded = 0, dwReturned = 0;
 
    EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, NULL, 0, &dwNeeded, &dwReturned );
    if( dwNeeded )
@@ -553,6 +552,7 @@ HB_FUNC( WIN_PRINTERLIST )
       if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
       {
          PHB_ITEM pTempItem = hb_itemNew( NULL );
+         DWORD i;
 
          for( i = 0; i < dwReturned; ++i, ++pPrinterEnum )
          {

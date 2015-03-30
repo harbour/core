@@ -83,7 +83,6 @@ HB_FUNC( CHARREPL )
       for( sIndex = 0; sIndex < sSearchLen; sIndex++ )
       {
          HB_SIZE sMatchStrLen;
-         const char * pc;
          HB_SIZE sReplIndex = sIndex;
 
          if( sReplIndex > sReplaceLen - 1 )
@@ -93,7 +92,7 @@ HB_FUNC( CHARREPL )
          {
             /* no multiple replacements: searching in pcString,
                replacing in pcRet */
-            pc = pcString;
+            const char * pc = pcString;
 
             while( ( pc = ct_at_exact_forward( pc, sStrLen - ( pc - pcString ),
                                                pcSearch + sIndex, 1,

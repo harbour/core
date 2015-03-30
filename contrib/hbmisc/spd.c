@@ -215,22 +215,24 @@ HB_FUNC( SQL_SPRINTF )
    {
       static const char s_szToken[] = "stTcdiouxXaAeEfgGpnSC";
 
-      PHB_ITEM     pItmPar, pItmCpy;
-      char *       cIntMod, * cBuffer, * cParFrm;
-      const char * c;
-      int          p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
-      HB_UINT      s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes =
-         DK_INCRES;
+      HB_UINT ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
+
+      char * cIntMod, * cBuffer, * cParFrm;
+      int    p, iErrorPar = 0;
 
       cIntMod = NULL;
       cRes    = ( char * ) hb_xgrab( ulMaxRes );
       cBuffer = ( char * ) hb_xgrab( ulMaxBuf );
       cParFrm = ( char * ) hb_xgrab( ulItmFrm + sizeof( char ) );
 
-      for( p = 0; p < argc; /* Not p++ by support index & indirect arguments */ )
+      for( p = 0; p < argc;  /* Not p++ by support index & indirect arguments */ )
       {
+         PHB_ITEM pItmPar, pItmCpy;
+         int      arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec;
+         HB_UINT  s, f, i, ulWidth, ulParPos = 0;
 
-         c = cItmFrm + ulParPos;
+         const char * c = cItmFrm + ulParPos;
+
          s = f = i = ulWidth = arg = iCOut = IsType = IsIndW = iIndWidth = IsIndP = iIndPrec = 0;
          do    /* Get Par Format */
          {
@@ -500,7 +502,7 @@ HB_FUNC( SQL_SPRINTF )
             else if( HB_IS_DATETIME( pItmPar ) && iCOut == 's' )
             {
                long lDate, lTime;
-               char cDTBuf[ 9 ], cDTFrm[ 27 ];
+               char cDTFrm[ 27 ];
 
                if( s )  /* Internal Modifier */
                {
@@ -529,8 +531,11 @@ HB_FUNC( SQL_SPRINTF )
                   }
                }
                else
+               {
+                  char cDTBuf[ 9 ];
                   hb_dateFormat( hb_itemGetDS( pItmPar, cDTBuf ), cDTFrm,
                                  s ? cIntMod : ( IsType ? "YYYY-MM-DD" : hb_setGetDateFormat() ) );
+               }
 
                /* 27 + 2 if %t and change format time */
                if( ( f = i + HB_MAX( ulWidth, 29 ) ) > ulMaxBuf )
@@ -590,13 +595,13 @@ HB_FUNC( SQL_SPRINTF )
             }
             else if( iCOut == 's' )
             {
-               char *       cStr = hb_itemStr( pItmPar, NULL, NULL );
-               const char * cTrimStr;
+               char * cStr = hb_itemStr( pItmPar, NULL, NULL );
 
                if( cStr )
                {
                   HB_SIZE nLen = strlen( cStr );
-                  cTrimStr = hb_strLTrim( cStr, &nLen );
+                  const char * cTrimStr = hb_strLTrim( cStr, &nLen );
+
                   f        = ( HB_UINT ) nLen;
                   if( ( f = i + HB_MAX( ulWidth, f ) ) > ulMaxBuf )
                   {
@@ -615,7 +620,6 @@ HB_FUNC( SQL_SPRINTF )
                   iErrorPar = p + 2;
                   break;
                }
-
             }
             else if( HB_IS_NUMERIC( pItmPar ) || HB_IS_POINTER( pItmPar ) )
             {
@@ -626,7 +630,6 @@ HB_FUNC( SQL_SPRINTF )
                }
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec,
                           pItmPar );
-
             }
             else
             {

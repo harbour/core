@@ -187,7 +187,6 @@ HB_FUNC( POSINS )
    {
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      const char * pcInsert;
       HB_SIZE sInsLen;
 
       if( ( sInsLen = hb_parclen( 2 ) ) > 0 )
@@ -195,7 +194,7 @@ HB_FUNC( POSINS )
          HB_SIZE sStartPos;
          char * pcRet;
 
-         pcInsert = hb_parc( 2 );
+         const char * pcInsert = hb_parc( 2 );
 
          if( HB_ISNUM( 3 ) )
          {
@@ -264,7 +263,6 @@ HB_FUNC( POSREPL )
    {
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      const char * pcReplace;
       HB_SIZE sReplLen;
 
       if( ( sReplLen = hb_parclen( 2 ) ) > 0 )
@@ -273,7 +271,7 @@ HB_FUNC( POSREPL )
          char * pcRet;
          HB_SIZE sRetLen;
 
-         pcReplace = hb_parc( 2 );
+         const char * pcReplace = hb_parc( 2 );
 
          if( HB_ISNUM( 3 ) )
          {

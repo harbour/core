@@ -142,9 +142,8 @@ HB_FUNC( WVW_SBADDPART )
       int     iNumOfParts;
       RECT    rSB;
       WORD    displayFlags = ( WORD ) hb_parnl( 4 );
-      HICON   hIcon;
-      HB_BOOL fResetParts = hb_parl( 5 );
-      int     iWidth      = hb_parni( 3 ) <= 0 ? 5 * WVW_SPACE_BETWEEN_PARTS : hb_parni( 3 );
+      HB_BOOL fResetParts  = hb_parl( 5 );
+      int     iWidth       = hb_parni( 3 ) <= 0 ? 5 * WVW_SPACE_BETWEEN_PARTS : hb_parni( 3 );
 
       if( HB_ISCHAR( 2 ) )
       {
@@ -193,7 +192,9 @@ HB_FUNC( WVW_SBADDPART )
          int cy = rSB.bottom - rSB.top - 4;
          int cx = cy;
 
-         void * hName;
+         HICON hIcon;
+
+         void *  hName;
          LPCTSTR szName = HB_PARSTR( 6, &hName, NULL );
 
          hIcon = ( HICON ) LoadImage( 0, szName, IMAGE_ICON, cx, cy, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT | LR_DEFAULTSIZE );

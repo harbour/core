@@ -516,8 +516,7 @@ HB_FUNC( ED_CONFIG )
    if( pEd )
    {
       int     szer, wys;
-      int     nszer, nwys;
-      int     diff;
+      int     nwys;
       HB_ISIZ tmp;
       HB_ISIZ j;
 
@@ -593,6 +592,9 @@ HB_FUNC( ED_CONFIG )
 
       if( pEd->fIsConfigured )
       {
+         int nszer;
+         int diff;
+
          nszer = pEd->right - pEd->left + 1;
          nwys  = pEd->bottom - pEd->top + 1;
 
@@ -1091,7 +1093,6 @@ HB_FUNC( ED_DOWN )
 /* Moves the cursor to the previous line of text */
 static void Up( PHB_EDITOR pEd )
 {
-   int     j, i;
    HB_ISIZ jj, tmp;
    HB_ISIZ nEsc;
 
@@ -1108,6 +1109,8 @@ static void Up( PHB_EDITOR pEd )
       pEd->current_line = jj;
       if( ( ( --pEd->cursor_row ) + pEd->top ) < pEd->top )
       {
+         int j, i;
+
          /* the new line was not displayed yet */
          pEd->stabil = 1;  /* only one line needs redisplay - rest of lines will be scrolled */
 
@@ -1577,8 +1580,6 @@ static void FormatParagraph( PHB_EDITOR pEd )
    int     cr, cor;
    HB_ISIZ cc;
    HB_ISIZ dl, source, CrLine;
-   char    pom[ _MAX_LINE_LEN * 2 ];
-   char *  tmp;
    HB_ISIZ nEsc;
 
    cc  = pEd->cursor_col;
@@ -1592,6 +1593,9 @@ static void FormatParagraph( PHB_EDITOR pEd )
    if( rdl )
 #endif
    {
+      char   pom[ _MAX_LINE_LEN * 2 ];
+      char * tmp;
+
       dl = GetLineLength( pEd, pEd->current_line, &rdl );
       hb_strncpy( pom, pEd->begin + pEd->current_line, dl + rdl + 10 );
       pom[ pEd->line_length + rdl + 1 ] = '\0';
@@ -2048,7 +2052,6 @@ HB_FUNC( ED_PWORD )
 /* Format given line - returns it the line has changed */
 static HB_BOOL format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
 {
-   char    pom[ _MAX_LINE_LEN * 2 ];
    char *  p;
    HB_ISIZ podz, jj, i;
    HB_BOOL status;
@@ -2061,6 +2064,8 @@ static HB_BOOL format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
    status = HB_FALSE;  /* the line is not splitted yet */
    if( LineDl > pEd->line_length )
    {
+      char pom[ _MAX_LINE_LEN * 2 ];
+
       /* the line is longer then maximal allowed length  -
          wrap the line */
       status = HB_TRUE;  /* the line will be splitted */
@@ -2375,19 +2380,21 @@ HB_FUNC( ED_DELWORD )
 
    if( pEd )
    {
-      HB_ISIZ pos1, pos2, j;
-      HB_ISIZ cc, fc;
-      int     cr;
-      HB_ISIZ rdl;
-      HB_ISIZ fd, ld;
-      HB_ISIZ l;
+      HB_ISIZ j = pEd->current_line + pEd->cursor_col + pEd->first_col;
 
-      j = pEd->current_line + pEd->cursor_col + pEd->first_col;
       if( pEd->begin[ j ] != ' ' )
       {
+         HB_ISIZ rdl;
+
          if( ( pEd->cursor_col + pEd->first_col ) <
              GetLineLength( pEd, pEd->current_line, &rdl ) )
          {
+            HB_ISIZ pos1, pos2;
+            HB_ISIZ cc, fc;
+            int     cr;
+            HB_ISIZ fd, ld;
+            HB_ISIZ l;
+
             cc = pEd->cursor_col;
             cr = pEd->cursor_row;
             fc = pEd->first_col;

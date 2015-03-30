@@ -277,7 +277,6 @@ HB_FUNC( WAPI_FORMATMESSAGE )
    LPTSTR lpAllocBuff = NULL;
    LPTSTR lpBuffer = NULL;
    HB_SIZE nSize = 0;
-   DWORD dwRetVal;
    DWORD dwFlags;
 
    dwFlags = ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM );
@@ -303,13 +302,14 @@ HB_FUNC( WAPI_FORMATMESSAGE )
 
    if( lpBuffer )
    {
-      dwRetVal = FormatMessage( dwFlags,
-                                HB_ISCHAR( 2 ) ? ( LPCVOID ) HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
-                                HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : hbwapi_GetLastError() /* dwMessageId */,
-                                ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
-                                lpBuffer,
-                                ( DWORD ) nSize,
-                                NULL /* TODO: Add support for this parameter. */ );
+      DWORD dwRetVal =
+         FormatMessage( dwFlags,
+                        HB_ISCHAR( 2 ) ? ( LPCVOID ) HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
+                        HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : hbwapi_GetLastError() /* dwMessageId */,
+                        ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
+                        lpBuffer,
+                        ( DWORD ) nSize,
+                        NULL /* TODO: Add support for this parameter. */ );
 
       hbwapi_SetLastError( GetLastError() );
       hb_retnint( dwRetVal );

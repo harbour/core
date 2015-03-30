@@ -261,7 +261,7 @@ static HB_BOOL hb_gt_wvw_DrawImage( HWND hWnd, int x1, int y1, int wd, int ht, c
 
    if( ! hBitmap )
    {
-      HBITMAP hBitmapTemp;
+      HBITMAP hBitmapTemp = NULL;
       BITMAP  bmTemp;
 
       IPicture * pPicture = hb_gt_wvw_LoadPicture( image );
@@ -277,7 +277,7 @@ static HB_BOOL hb_gt_wvw_DrawImage( HWND hWnd, int x1, int y1, int wd, int ht, c
       iHeight = ( int ) lHeight;
       #endif
 
-      if( HB_VTBL( pPicture )->get_Handle( HB_THIS_ ( pPicture ) ( OLE_HANDLE * ) & hBitmapTemp ) == S_OK )
+      if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) & hBitmapTemp ) == S_OK && hBitmapTemp )
          hBitmap = ( HBITMAP ) CopyImage( hBitmapTemp, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG );
 
       hb_gt_wvw_DestroyPicture( pPicture );
@@ -336,18 +336,14 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
 
    if( pPicture )
    {
-      OLE_XSIZE_HIMETRIC nWidth;
-      OLE_YSIZE_HIMETRIC nHeight;
+      OLE_XSIZE_HIMETRIC nWidth  = 0;
+      OLE_YSIZE_HIMETRIC nHeight = 0;
 
-      int x, y, xe, ye;
-      int c   = x1;
-      int r   = y1;
-      int dc  = wd;
-      int dr  = ht;
-      int tor = 0;
-      int toc = 0;
+      int c  = x1;
+      int r  = y1;
+      int dc = wd;
+      int dr = ht;
 
-      HRGN  hrgn1;
       POINT lpp;
 
       RECT rc_dummy;
@@ -357,18 +353,15 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
       /* if bTransp, we use different method */
       if( bTransp )
       {
-         HBITMAP hBitmap;
+         HBITMAP hBitmap = NULL;
 
-         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_ ( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK )
+         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK && hBitmap )
          {
-            if( hBitmap )
-            {
-               HDC hDCTemp = GetDC( wvw_win->hWnd );
-               s_DrawTransparentBitmap( hDCTemp, hBitmap, x1, y1, wd, ht );
-               ReleaseDC( wvw_win->hWnd, hDCTemp );
+            HDC hDCTemp = GetDC( wvw_win->hWnd );
+            s_DrawTransparentBitmap( hDCTemp, hBitmap, x1, y1, wd, ht );
+            ReleaseDC( wvw_win->hWnd, hDCTemp );
 
-               fResult = HB_TRUE;
-            }
+            fResult = HB_TRUE;
          }
 
          return fResult;
@@ -382,6 +375,12 @@ static HB_BOOL hb_gt_wvw_RenderPicture( PWVW_WIN wvw_win, int x1, int y1, int wd
 
       if( nWidth && nHeight )
       {
+         int x, y, xe, ye;
+         int tor = 0;
+         int toc = 0;
+
+         HRGN hrgn1;
+
          if( dc == 0 )
             dc = ( int ) ( ( float ) dr * nWidth / nHeight );
          if( dr == 0 )
@@ -514,8 +513,8 @@ static IPicture * hb_gt_wvw_rr_LoadPictureFromResource( PWVW_GLO wvw, const char
 
       if( pPicture )
       {
-         OLE_XSIZE_HIMETRIC nWidth;
-         OLE_YSIZE_HIMETRIC nHeight;
+         OLE_XSIZE_HIMETRIC nWidth  = 0;
+         OLE_YSIZE_HIMETRIC nHeight = 0;
 
          if( HB_VTBL( pPicture )->get_Width( HB_THIS_( pPicture ) & nWidth ) != S_OK )
             nWidth = 0;
@@ -575,8 +574,8 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
 
             if( pPicture )
             {
-               OLE_XSIZE_HIMETRIC nWidth;
-               OLE_YSIZE_HIMETRIC nHeight;
+               OLE_XSIZE_HIMETRIC nWidth  = 0;
+               OLE_YSIZE_HIMETRIC nHeight = 0;
 
                if( HB_VTBL( pPicture )->get_Width( HB_THIS_( pPicture ) & nWidth ) != S_OK )
                   nWidth = 0;
@@ -1114,7 +1113,7 @@ HB_FUNC( WVW_DRAWIMAGE )
       if( ( fActBottom || fActRight ) && ! ( fActBottom && fActRight ) )
       {
          if( fActRight )
-            iRightNew = iLeft + ( int ) ( ( float ) iImgWidth / iImgHeight * ( iBottomNew - iTop + 1) ) - 1;  /* right corner (width) must be proportional to height */
+            iRightNew = iLeft + ( int ) ( ( float ) iImgWidth / iImgHeight * ( iBottomNew - iTop + 1 ) ) - 1;  /* right corner (width) must be proportional to height */
          else
             iBottomNew = iTop + ( int ) ( ( float ) iImgHeight / iImgWidth * ( iRightNew - iLeft + 1 ) ) - 1;  /* bottom corner (height) must be proportional to width */
       }

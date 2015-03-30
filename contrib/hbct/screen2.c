@@ -169,7 +169,7 @@ HB_FUNC( SAYMOVEIN )
    if( nLen )
    {
       HB_SIZE nChars, ul;
-      int iRow, iCol, iMaxRow, iMaxCol, iNewCol;
+      int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
       HB_BOOL fBack;
 
@@ -187,6 +187,7 @@ HB_FUNC( SAYMOVEIN )
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
          int iColor = hb_gtGetCurrColor();
+         int iNewCol;
 
          iNewCol = iCol + ( int ) nLen;
          if( fBack )
@@ -318,8 +319,8 @@ HB_FUNC( CLEARSLOW )  /* TODO: Unicode support */
 
 HB_FUNC( SCREENSTR )  /* TODO: Unicode support */
 {
-   int iRow, iCol, iMaxRow, iMaxCol, iC;
-   char * pBuffer, * szText;
+   int iRow, iCol, iMaxRow, iMaxCol;
+   char * pBuffer;
    HB_SIZE nSize, ulCount = HB_SIZE_MAX;
 
    hb_gtGetPos( &iRow, &iCol );
@@ -334,6 +335,7 @@ HB_FUNC( SCREENSTR )  /* TODO: Unicode support */
 
    if( iRow >= 0 && iRow <= iMaxRow && iCol >= 0 && iCol <= iMaxCol && ulCount )
    {
+      char * szText;
       nSize = ( HB_SIZE ) ( iMaxRow - iRow + 1 ) * ( iMaxCol - iCol + 1 );
       if( nSize > ulCount )
          nSize = ulCount;
@@ -342,7 +344,7 @@ HB_FUNC( SCREENSTR )  /* TODO: Unicode support */
       szText = pBuffer = ( char * ) hb_xgrab( nSize + 1 );
       do
       {
-         iC = iCol;
+         int iC = iCol;
          do
          {
             int iColor;
@@ -372,7 +374,7 @@ HB_FUNC( STRSCREEN )  /* TODO: Unicode support */
    if( nLen )
    {
       const char * szText = hb_parc( 1 );
-      int iRow, iCol, iMaxRow, iMaxCol, iC;
+      int iRow, iCol, iMaxRow, iMaxCol;
 
       hb_gtGetPos( &iRow, &iCol );
       if( HB_ISNUM( 2 ) )
@@ -387,7 +389,7 @@ HB_FUNC( STRSCREEN )  /* TODO: Unicode support */
          hb_gtBeginWrite();
          do
          {
-            iC = iCol;
+            int iC = iCol;
             do
             {
                HB_USHORT usChar = ( HB_UCHAR ) *szText++;

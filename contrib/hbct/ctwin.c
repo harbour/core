@@ -543,7 +543,7 @@ static int hb_ctw_Visible( PHB_GTCTW pCTW, int iWindow, int iVisible )
 
 static int hb_ctw_SetWindowLevel( PHB_GTCTW pCTW, int iWindow, int iLevel )
 {
-   int iResult = -1, iPos, i;
+   int iResult = -1;
    HB_BOOL fToTop;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_ctw_SetWindowLevel(%p,%d,%d)", pCTW, iWindow, iLevel ) );
@@ -557,6 +557,8 @@ static int hb_ctw_SetWindowLevel( PHB_GTCTW pCTW, int iWindow, int iLevel )
       if( iLevel >= HB_CTW_BOTTOM && iLevel <= HB_CTW_TOP &&
           pWnd->iLevel != iLevel )
       {
+         int iPos, i;
+
          /* update window level */
          fToTop = pWnd->iLevel < iLevel;
          pWnd->iLevel = iLevel;

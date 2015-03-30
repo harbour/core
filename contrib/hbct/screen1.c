@@ -79,7 +79,7 @@ HB_FUNC( SCREENMIX )
       const char * szText = hb_parc( 1 );
       const char * szAttr;
       HB_SIZE nAttr = hb_parclen( 2 ), ul = 0;
-      int iRow, iCol, i;
+      int iRow, iCol;
 
       if( nAttr == 0 )
       {
@@ -104,6 +104,7 @@ HB_FUNC( SCREENMIX )
          HB_WCHAR wc;
          PHB_CODEPAGE cdp = hb_gtHostCP();
          HB_SIZE nIndex = 0;
+         int i;
 
          hb_gtBeginWrite();
          i = iCol;
@@ -136,7 +137,7 @@ HB_FUNC( SAYSCREEN )
    if( nLen )
    {
       const char * szText = hb_parc( 1 );
-      int iRow, iCol, i;
+      int iRow, iCol;
 
       hb_gtGetPos( &iRow, &iCol );
       if( HB_ISNUM( 2 ) )
@@ -149,6 +150,7 @@ HB_FUNC( SAYSCREEN )
       {
          PHB_CODEPAGE cdp = hb_gtHostCP();
          HB_SIZE nIndex = 0;
+         int i;
 
          hb_gtBeginWrite();
          i = iCol;
@@ -419,11 +421,12 @@ HB_FUNC( COLORWIN )
 HB_FUNC( SCREENTEXT )  /* HB_EXTENSION */
 {
    int iTop, iLeft, iBottom, iRight;
-   char * pBuffer, * szText;
+   char * pBuffer;
    HB_SIZE nSize;
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
+      char * szText;
       nSize = ( HB_SIZE ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
       szText = pBuffer = ( char * ) hb_xgrab( nSize + 1 );
       while( iTop <= iBottom )
@@ -450,7 +453,7 @@ HB_FUNC( COLORREPL )
 {
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
-   int iRow = 0, iCol;
+   int iRow = 0;
    int iNewColor, iOldColor = 0;
    HB_BOOL fAll = HB_FALSE;
 
@@ -464,7 +467,7 @@ HB_FUNC( COLORREPL )
    hb_gtBeginWrite();
    while( iRow <= iMaxRow )
    {
-      iCol = 0;
+      int iCol = 0;
       while( iCol <= iMaxCol )
       {
          int iColor;

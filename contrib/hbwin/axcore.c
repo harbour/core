@@ -129,7 +129,6 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
 {
    IUnknown *  pUnk  = NULL;
    IDispatch * pDisp = NULL;
-   HRESULT     lOleError;
 
    if( pItem )
       hb_itemClear( pItem );
@@ -141,7 +140,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
    }
    else
    {
-      lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
+      HRESULT lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
 
       if( lOleError == S_OK )
       {

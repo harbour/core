@@ -58,7 +58,7 @@ HB_FUNC( RANGEREM )
       const unsigned char * pc;
       unsigned char ucChar1, ucChar2;
       HB_SIZE sRetIndex;
-      int iMode, iBool;
+      int iMode;
 
       if( HB_ISCHAR( 1 ) )
          ucChar1 = *( ( const unsigned char * ) hb_parc( 1 ) );
@@ -76,7 +76,8 @@ HB_FUNC( RANGEREM )
       sRetIndex = 0;
       for( pc = ( const unsigned char * ) pcString; pc < ( const unsigned char * ) pcString + sStrLen; pc++ )
       {
-         iBool = ( ( *pc ) >= ucChar1 );
+         int iBool = ( ( *pc ) >= ucChar1 );
+
          if( iMode )
             iBool |= ( ( *pc ) <= ucChar2 );
          else
@@ -125,7 +126,7 @@ HB_FUNC( RANGEREPL )
       const unsigned char * pc;
       unsigned char ucChar1, ucChar2, ucReplace;
       HB_SIZE sRetIndex;
-      int iMode, iBool;
+      int iMode;
 
       if( HB_ISCHAR( 1 ) )
          ucChar1 = *( ( const unsigned char * ) hb_parc( 1 ) );
@@ -148,7 +149,8 @@ HB_FUNC( RANGEREPL )
       sRetIndex = 0;
       for( pc = ( const unsigned char * ) pcString; pc < ( const unsigned char * ) pcString + sStrLen; pc++ )
       {
-         iBool = ( ( *pc ) >= ucChar1 );
+         int iBool = ( ( *pc ) >= ucChar1 );
+
          if( iMode )
             iBool |= ( ( *pc ) <= ucChar2 );
          else

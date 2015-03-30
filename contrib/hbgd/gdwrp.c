@@ -1506,10 +1506,10 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       if( flags != 0 )
       {
          extra.flags       = flags;
-         extra.linespacing = flags & gdFTEX_LINESPACE  ? linespacing : 1.05;
-         extra.charmap     = flags & gdFTEX_CHARMAP    ? charmap : gdFTEX_Unicode;
-         extra.hdpi        = flags & gdFTEX_RESOLUTION ? resolution : 96;
-         extra.vdpi        = flags & gdFTEX_RESOLUTION ? resolution : 96;
+         extra.linespacing = ( flags & gdFTEX_LINESPACE  ) ? linespacing : 1.05;
+         extra.charmap     = ( flags & gdFTEX_CHARMAP    ) ? charmap : gdFTEX_Unicode;
+         extra.hdpi        = ( flags & gdFTEX_RESOLUTION ) ? resolution : 96;
+         extra.vdpi        = ( flags & gdFTEX_RESOLUTION ) ? resolution : 96;
       }
 
       /* Write string */

@@ -183,7 +183,7 @@ static QBitmap * hb_gt_qtc_defineBoxChar( PHB_GTQTC pQTC, HB_USHORT usCh )
    QBitmap * qBitMap = NULL;
    int cellx = pQTC->cellX;
    int celly = pQTC->cellY;
-   int i, y, x, yy, xx, skip, start, mod;
+   int i, y, x, yy, xx;
    QPoint pts[ 3 ];
 
    if( usCh >= HB_BOXCH_RC_MIN && usCh <= HB_BOXCH_RC_MAX )
@@ -692,6 +692,9 @@ static QBitmap * hb_gt_qtc_defineBoxChar( PHB_GTQTC pQTC, HB_USHORT usCh )
          case HB_BOXCH_FILLER1:
          case HB_BOXCH_FILLER2:
          case HB_BOXCH_FILLER3:
+         {
+            int skip, start, mod;
+
             qBitMap = hb_gt_qtc_bitmap_char( cellx, celly );
             hb_bm_paint_begin( qBitMap );
 
@@ -720,7 +723,7 @@ static QBitmap * hb_gt_qtc_defineBoxChar( PHB_GTQTC pQTC, HB_USHORT usCh )
                hb_bm_invertrect( 0, 0, cellx, celly );
             hb_bm_paint_end();
             break;
-
+         }
          case HB_BOXCH_ARROW_R:
             qBitMap = hb_gt_qtc_bitmap_char( cellx, celly );
             hb_bm_paint_begin( qBitMap );
@@ -2285,7 +2288,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                qImg = QImage( qStr );
             }
             else if( hb_arrayLen( pInfo->pNewVal ) == ( HB_SIZE )
-                     ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) &&
+                     ( ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ) ? 4 : 3 ) &&
                      ( hb_arrayGetType( pInfo->pNewVal, 1 ) & ( HB_IT_POINTER | HB_IT_STRING ) ) &&
                      ( hb_arrayGetType( pInfo->pNewVal, 2 ) & HB_IT_NUMERIC ) &&
                      ( hb_arrayGetType( pInfo->pNewVal, 3 ) & HB_IT_NUMERIC ) )
@@ -2400,7 +2403,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 static int hb_gt_qtc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    PHB_GTQTC pQTC;
-   int iRet = 1, iTmp;
+   int iRet = 1;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
 
@@ -2408,6 +2411,8 @@ static int hb_gt_qtc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
    if( pQTC->qWnd )
    {
+      int iTmp;
+
       switch( iType )
       {
          case HB_GFX_MAKECOLOR:
@@ -2608,7 +2613,7 @@ void QTConsole::resetWindowSize( void )
 
 void QTConsole::setFontSize( int iFH, int iFW )
 {
-   int iDec = 0, iDir, iHeight, iWidth, iAscent;
+   int iDec = 0, iHeight, iWidth, iAscent;
    bool bStretch = ( pQTC->fontAttribute & HB_GTI_FONTA_NOSTRETCH ) == 0;
    bool bMaxSize = ( pQTC->qWnd->windowState() &
                      ( Qt::WindowMaximized | Qt::WindowFullScreen ) ) != 0;
@@ -2636,6 +2641,8 @@ void QTConsole::setFontSize( int iFH, int iFW )
 
       if( iWidth != iFW )
       {
+         int iDir;
+
          iDec = ( iFW * 100 ) / iWidth;
          if( iDec < 1 )
             iDec = 1;
@@ -2810,7 +2817,7 @@ void QTConsole::copySelection( void )
 
 void QTConsole::repaintChars( const QRect & rx )
 {
-   int       iCol, iRow, iStartCol, iLen, iColor, iTextColor = 0;
+   int       iRow, iColor, iTextColor = 0;
    HB_BYTE   bAttr;
    HB_USHORT usChar;
    bool      bClrBkg = ( pQTC->fontAttribute & HB_GTI_FONTA_CLRBKG ) != 0;
@@ -2826,6 +2833,8 @@ void QTConsole::repaintChars( const QRect & rx )
 
    for( iRow = rc.top(); iRow <= rc.bottom(); ++iRow )
    {
+      int iCol, iStartCol, iLen;
+
       iCol = iStartCol = rc.left();
       iLen = 0;
 
@@ -3192,8 +3201,7 @@ void QTConsole::keyReleaseEvent( QKeyEvent * event )
 
 void QTConsole::keyPressEvent( QKeyEvent * event )
 {
-   int iKey = 0, iFlags = hb_gt_qtc_getKeyFlags( event->modifiers() ),
-       iSize, i;
+   int iKey = 0, iFlags = hb_gt_qtc_getKeyFlags( event->modifiers() ), iSize;
 
    /* support for national characters */
    if( ( iSize = event->text().size() ) > 0 )
@@ -3203,6 +3211,8 @@ void QTConsole::keyPressEvent( QKeyEvent * event )
 
       if( iSize > 1 || ( wc >= 32 && wc != 127 ) )
       {
+         int i;
+
          if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_ALT ) != 0 )
             /* workaround for AltGR and German keyboard */
             iFlags &= ~( HB_KF_CTRL | HB_KF_ALT );

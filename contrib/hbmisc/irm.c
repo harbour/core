@@ -180,7 +180,7 @@ static void hb_irmMapMarkCallback( HB_ULONG ulRecNo, unsigned char * pKey, unsig
  */
 PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
 {
-   PHB_IRMMAP   pMap, * pMapArray;
+   PHB_IRMMAP * pMapArray;
    const char * szOper;
    HB_ULONG     ulLen, ulSize, ul, ul2;
    AREAP        pArea;
@@ -188,6 +188,8 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
 
    if( HB_IS_ARRAY( pItem ) && ( szOper = hb_arrayGetCPtr( pItem, 1 ) ) != NULL )
    {
+      PHB_IRMMAP pMap;
+
       /* Expression operators */
       if( ( ! strcmp( szOper, "&" ) || ! strcmp( szOper, "|" ) ) && ( ulLen = ( HB_ULONG ) hb_arrayLen( pItem ) ) > 1 )
       {

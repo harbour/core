@@ -134,11 +134,11 @@ static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_in
 
 static void hbmxml_relese( mxml_node_t * node )
 {
-   void * user_data;
-
    if( mxmlGetRefCount( node ) <= ( node->parent ? 2 : 1 ) )
    {
-      /* remove userData  when last HVM item with given node is cleared
+      void * user_data;
+
+      /* remove userData when last HVM item with given node is cleared
        * It's not nice solution because node can still exists and can
        * be extracted yet but there is not destructor for userData
        * in MXML library so we have no choice :-( [druzus]
@@ -1402,11 +1402,12 @@ HB_FUNC( MXMLSAVESTRING )
       {
          char *  buffer;
          HB_SIZE buffer_size;
-         int     bytes;
 
          if( hb_itemGetWriteCL( pBuffer, &buffer, &buffer_size ) )
          {
             HB_CBS_VAR * pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+
+            int bytes;
 
             if( HB_ISEVALITEM( 3 ) )
             {

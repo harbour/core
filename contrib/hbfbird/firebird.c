@@ -521,7 +521,6 @@ HB_FUNC( FBGETDATA )
       XSQLVAR *        var;
       XSQLDA *         sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
       ISC_STATUS_ARRAY status;
-      ISC_QUAD *       blob_id;
 
       int pos = hb_parni( 2 ) - 1;
 
@@ -588,10 +587,11 @@ HB_FUNC( FBGETDATA )
                break;
 
             case SQL_BLOB:
-               blob_id = ( ISC_QUAD * ) var->sqldata;
+            {
+               ISC_QUAD * blob_id = ( ISC_QUAD * ) var->sqldata;
                hb_retptr( ( void * ) blob_id );
                break;
-
+            }
             case SQL_SHORT:
             case SQL_LONG:
             case SQL_INT64:

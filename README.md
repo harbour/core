@@ -1593,6 +1593,8 @@ Supported shells per host platforms:
         * Windows binary:
            * <http://gnuwin32.sourceforge.net/packages/bison.htm>
                (not verified with current Harbour version)
+     * Cppcheck (static analysis) [multiplatform, free, open-source]
+        * <http://cppcheck.sourceforge.net/>
      * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
         * <http://valgrind.org/>
      * ack (programmer grep) [multiplatform, free, open-source]

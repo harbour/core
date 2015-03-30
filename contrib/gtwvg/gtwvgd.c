@@ -836,11 +836,9 @@ static HB_BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    }
 
    {  /* Just a block */
-      HFONT hOldFont;
       HFONT hFont;
       int   fontHeight;
       int   fontWidth;
-      int   n;
 
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
@@ -848,6 +846,7 @@ static HB_BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
       hFont = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
       if( hFont )
       {
+         HFONT      hOldFont;
          HDC        hdc;
          int        width;
          int        height;
@@ -868,6 +867,8 @@ static HB_BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
              tm.tmAveCharWidth >= 3 &&
              tm.tmHeight >= 4 )
          {
+            int n;
+
 #if ! defined( UNICODE )
             if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
                DeleteObject( pWVT->hFontBox );
@@ -1296,7 +1297,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 #if defined( UNICODE )
                      usChar = hb_cdpGetU16Ctrl( usChar );
 #else
-                     usChar = hb_cdpGetUC( bAttr & HB_GT_ATTR_BOX ? cdpBox : cdpHost, usChar, '?' );
+                     usChar = hb_cdpGetUC( ( bAttr & HB_GT_ATTR_BOX ) ? cdpBox : cdpHost, usChar, '?' );
 #endif
                      sBuffer[ j++ ] = ( TCHAR ) usChar;
                   }
@@ -1807,7 +1808,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    PAINTSTRUCT ps;
    HDC         hdc;
    RECT        rcRect;
-   int         iRow, iCol, startCol, len;
+   int         iRow;
    int         iColor, iOldColor = 0;
    HB_BYTE     bAttr;
 
@@ -1872,6 +1873,8 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 
    for( iRow = rcRect.top; iRow <= rcRect.bottom; ++iRow )
    {
+      int iCol, startCol, len;
+
       iCol = startCol = rcRect.left;
       len = 0;
 
@@ -2843,11 +2846,9 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 static HB_BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
                                   int iColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
-   PHB_GTWVT pWVT;
-
    if( HB_GTSUPER_PUTCHAR( pGT, iRow, iCol, iColor, bAttr, usChar ) )
    {
-      pWVT = HB_GTWVT_GET( pGT );
+      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
       if( pWVT->bGui )
          HB_GTSELF_TOUCHCELL( pGT, iRow, iCol );
       else
@@ -3429,8 +3430,6 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_SCREENSIZE:
       {
-         int iX, iY;
-
          if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
 
@@ -3440,8 +3439,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 )
          {
-            iY = hb_arrayGetNI( pInfo->pNewVal, 2 );
-            iX = hb_arrayGetNI( pInfo->pNewVal, 1 );
+            int iY = hb_arrayGetNI( pInfo->pNewVal, 2 );
+            int iX = hb_arrayGetNI( pInfo->pNewVal, 1 );
 
             if( iY > 0 )
             {
@@ -3675,8 +3674,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SETPOS_ROWCOL:
          if( pWVT->hWnd )
          {
-            int i1 = -1;
-            int i2 = -1;
+            int i1;
+            int i2;
             RECT rect = { 0, 0, 0, 0 };
             GetWindowRect( pWVT->hWnd, &rect );
 
@@ -4091,9 +4090,6 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    PHB_GTWVT pWVT;
-   HDC       hdc;
-   HPEN      hPen, hOldPen;
-   HBRUSH    hBrush, hOldBrush;
    RECT      r;
    int       iRet = 0;
 
@@ -4103,6 +4099,10 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
    if( pWVT->hWnd )
    {
+      HDC    hdc;
+      HPEN   hPen, hOldPen;
+      HBRUSH hBrush, hOldBrush;
+
       if( pWVT->bComposited )
          hb_gt_wvt_Composited( pWVT, HB_FALSE );
 

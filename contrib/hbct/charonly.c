@@ -69,8 +69,8 @@ static void do_charonly( int iSwitch )
       HB_SIZE sOnlySetLen = hb_parclen( 1 );
       char * pcRet;
       HB_SIZE sRetStrLen = 0;
-      int iShift, iBool;
-      const char * pcSub, * pc;
+      int iShift;
+      const char * pcSub;
 
       /* check for zero-length strings */
       switch( iSwitch )
@@ -109,9 +109,9 @@ static void do_charonly( int iSwitch )
 
       for( pcSub = pcString; pcSub < pcString + sStrLen + 1 - iShift; pcSub += iShift )
       {
-         pc = ct_at_exact_forward( pcOnlySet, sOnlySetLen, pcSub, iShift, NULL );
-         iBool = ( ( pc != NULL ) && ( ( ( pc - pcOnlySet ) % iShift ) == 0 ) );
-         if( iBool ? ( iSwitch == DO_CHARONLY_CHARONLY ||
+         const char * pc = ct_at_exact_forward( pcOnlySet, sOnlySetLen, pcSub, iShift, NULL );
+         HB_BOOL fBool = ( ( pc != NULL ) && ( ( ( pc - pcOnlySet ) % iShift ) == 0 ) );
+         if( fBool ? ( iSwitch == DO_CHARONLY_CHARONLY ||
                        iSwitch == DO_CHARONLY_WORDONLY )
                    : ( iSwitch == DO_CHARONLY_CHARREM ||
                        iSwitch == DO_CHARONLY_WORDREM ) )
@@ -131,10 +131,12 @@ static void do_charonly( int iSwitch )
    else
    {
       PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode(), iError = 0;
+      int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
+         int iError = 0;
+
          switch( iSwitch )
          {
             case DO_CHARONLY_CHARONLY:

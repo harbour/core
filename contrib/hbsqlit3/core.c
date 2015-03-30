@@ -415,7 +415,6 @@ static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
    if( pCallback && hb_vmRequestReenter() )
    {
       PHB_ITEM pResult;
-      int      i;
 
       hb_vmPushEvalSym();
       hb_vmPush( pCallback );
@@ -423,6 +422,8 @@ static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
 
       if( argc > 0 )
       {
+         int i;
+
          for( i = 0; i < argc; i++ )
          {
             switch( sqlite3_value_type( argv[ i ] ) )

@@ -931,7 +931,6 @@ static void hb_gt_wvw_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_
 {
    int iWidth;
    int iHeight;
-   int iRow;
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -959,6 +958,8 @@ static void hb_gt_wvw_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_
 
    if( iCol < iWidth )
    {
+      int iRow;
+
       if( iTop >= iHeight )
          iTop = iHeight - 1;
 
@@ -1547,9 +1548,6 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 static int hb_gt_wvw_gfxPrimitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    PWVW_WIN wvw_win = hb_gt_wvw_win( s_wvw->iCurWindow );
-   HDC      hdc;
-   HPEN     hPen, hOldPen;
-   HBRUSH   hBrush, hOldBrush;
    RECT     r;
    int      iRet = 0;
 
@@ -1557,6 +1555,10 @@ static int hb_gt_wvw_gfxPrimitive( PHB_GT pGT, int iType, int iTop, int iLeft, i
 
    if( wvw_win && wvw_win->hWnd )
    {
+      HDC    hdc;
+      HPEN   hPen, hOldPen;
+      HBRUSH hBrush, hOldBrush;
+
       switch( iType )
       {
          case HB_GFX_ACQUIRESCREEN:
@@ -2559,7 +2561,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             {
                int     iCol, startCol;
                HB_SIZE index, startIndex, len;
-               int     oldColor, color;
+               int     oldColor;
 
                iCol       = colStart;
                index      = hb_gt_wvw_GetIndexForTextBuffer( wvw_win, iCol, iRow );
@@ -2574,6 +2576,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
                while( iCol <= colStop )
                {
+                  int color;
+
                   if( index >= wvw_win->BUFFERSIZE )
                      break;
                   color = wvw_win->screenBuffer[ index ].c.bColor;
@@ -5338,9 +5342,9 @@ HICON hb_gt_wvw_SetWindowIconFromFile( PWVW_WIN wvw_win, LPCTSTR szIconName )
 
 HB_BOOL hb_gt_wvw_GetIPictDimension( IPicture * pPicture, int * piWidth, int * piHeight )
 {
-   HBITMAP hBitmap;
+   HBITMAP hBitmap = NULL;
 
-   if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK )
+   if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK && hBitmap )
    {
       BITMAP bm;
       GetObject( hBitmap, sizeof( bm ), ( LPVOID ) &bm );

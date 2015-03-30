@@ -413,10 +413,12 @@ static HB_BOOL s_fileSendMsg( PHB_CONCLI conn, HB_BYTE * msgbuf,
       }
       else if( fWait )
       {
-         int iMsg = HB_GET_LE_INT32( msgbuf ), iResult;
+         int iMsg = HB_GET_LE_INT32( msgbuf );
 
          for( ;; )
          {
+            int iResult;
+
             if( s_fileRecvAll( conn, msgbuf, NETIO_MSGLEN ) != NETIO_MSGLEN )
             {
                conn->errcode = hb_socketGetError();
@@ -475,11 +477,11 @@ static HB_BOOL s_fileProcessData( PHB_CONCLI conn )
    HB_BYTE msgbuf[ NETIO_MSGLEN ];
    HB_BOOL fResult = HB_TRUE;
    int iMsg, iStreamID;
-   long len;
 
    for( ;; )
    {
-      len = s_fileRecvTest( conn, msgbuf, NETIO_MSGLEN );
+      long len = s_fileRecvTest( conn, msgbuf, NETIO_MSGLEN );
+
       if( len == NETIO_MSGLEN )
       {
          iMsg = HB_GET_LE_INT32( msgbuf );
@@ -745,8 +747,6 @@ static const char * s_fileDecode( const char * pszFileName,
 
          if( pth || iLen == 0 || iLen > 1 )
          {
-            char port_buf[ 10 ], c;
-
             if( iLen >= NETIO_SERVERNAME_MAX )
                iLen = NETIO_SERVERNAME_MAX - 1;
             if( iLen > 0 )
@@ -757,6 +757,8 @@ static const char * s_fileDecode( const char * pszFileName,
             pszFileName = psz + 1;
             if( ! pth || psz < pth )
             {
+               char port_buf[ 10 ], c;
+
                iLen = 0;
                while( HB_ISDIGIT( pszFileName[ iLen ] ) &&
                       iLen < ( int ) sizeof( port_buf ) - 1 )
@@ -840,15 +842,17 @@ static PHB_CONCLI s_fileConnect( const char ** pFileName,
 {
    PHB_CONCLI conn;
    HB_SOCKET sd;
-   char server[ NETIO_SERVERNAME_MAX ];
    char * pszIpAddres;
 
    s_fileGetConnParam( &pszServer, &iPort, &iTimeOut, &pszPasswd, &iPassLen );
 
    if( pFileName )
+   {
+      char server[ NETIO_SERVERNAME_MAX ];
       *pFileName = s_fileDecode( *pFileName, server,
                                  &pszServer, &iPort, &iTimeOut,
                                  &pszPasswd, &iPassLen, &iLevel, &iStrategy );
+   }
 
    if( iLevel == HB_ZLIB_COMPRESSION_DISABLE && iPassLen )
       iLevel = HB_ZLIB_COMPRESSION_DEFAULT;
@@ -1163,14 +1167,14 @@ HB_FUNC( NETIO_TIMEOUT )
 static const char * s_netio_params( int iParam, int iMsg, const char * pszName, HB_U32 * pSize, char ** pFree )
 {
    int iPCount = iMsg == NETIO_PROCIS ? 0 : hb_pcount();
-   char * data = NULL, * itmData;
+   char * data = NULL;
    HB_SIZE size, itmSize;
 
    size = strlen( pszName ) + 1;
 
    while( ++iParam <= iPCount )
    {
-      itmData = hb_itemSerialize( hb_param( iParam, HB_IT_ANY ), HB_SERIALIZE_NUMSIZE, &itmSize );
+      char * itmData = hb_itemSerialize( hb_param( iParam, HB_IT_ANY ), HB_SERIALIZE_NUMSIZE, &itmSize );
       if( data == NULL )
          data = ( char * ) memcpy( hb_xgrab( size + itmSize ), pszName, size );
       else

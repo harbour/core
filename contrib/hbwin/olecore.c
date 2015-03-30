@@ -1111,7 +1111,7 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
       default:
          if( V_VT( pVariant ) & VT_ARRAY )
          {
-            SAFEARRAY * pSafeArray = V_VT( pVariant ) & VT_BYREF ?
+            SAFEARRAY * pSafeArray = ( V_VT( pVariant ) & VT_BYREF ) ?
                                      *V_ARRAYREF( pVariant ) :
                                      V_ARRAY( pVariant );
             if( pSafeArray )
@@ -1476,10 +1476,10 @@ static void PutParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_USHORT uiCla
 
 static void FreeParams( DISPPARAMS * dispparam )
 {
-   UINT ui;
-
    if( dispparam->cArgs > 0 )
    {
+      UINT ui;
+
       for( ui = 0; ui < dispparam->cArgs; ui++ )
          VariantClear( &dispparam->rgvarg[ ui ] );
 
@@ -1516,7 +1516,6 @@ HB_FUNC( WIN_OLECLASSEXISTS )
 
 HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
-   wchar_t *    cCLSID;
    GUID         ClassID, iid = IID_IDispatch;
    IDispatch *  pDisp = NULL;
    const char * cOleName = hb_parc( 1 );
@@ -1527,7 +1526,8 @@ HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
    if( cOleName )
    {
-      cCLSID = AnsiToWide( cOleName );
+      wchar_t * cCLSID = AnsiToWide( cOleName );
+
       if( cOleName[ 0 ] == '{' )
          lOleError = CLSIDFromString( ( LPOLESTR ) cCLSID, &ClassID );
       else

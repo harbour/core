@@ -82,13 +82,14 @@ HB_FUNC( XUNFORM )
    char cRet[ 128 ];
    char *       cPtr    = cRet;
    HB_ISIZ      iRetLen = 0;
-   char         c;
    const char * cWord    = hb_parc( 1 );
    HB_ISIZ      iWordLen = hb_parclen( 1 );
    HB_ISIZ      x;
 
    while( iWordLen > 0 && iRetLen < 128 )
    {
+      char c;
+
       iWordLen--;
       iRetLen++;
       c = *cWord++;
@@ -826,7 +827,6 @@ HB_FUNC( SP_LINE )
    HB_ISIZ      nWrap      = 0;
    HB_SIZE      nOffset    = 0;
    const char * cIn;
-   const char * p;
    HB_BYTE      cTest;
    HB_ISIZ      nLineLen;
    HB_SIZE      nStop;
@@ -844,6 +844,8 @@ HB_FUNC( SP_LINE )
 
       if( nOffset < nStop )                           /* In string somewhere */
       {
+         const char * p;
+
          /* Default line len to 75 */
          nLineLen = HB_ISNUM( 3 ) ? hb_parns( 3 ) - 1 : 75;
          p        = &cIn[ nOffset ];                  /* Starting pointer */

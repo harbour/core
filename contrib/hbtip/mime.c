@@ -542,7 +542,6 @@ static const char * s_findExtMimeType( const char * szFileExt )
 {
    HB_UINT uiFirst = 0, uiLast = HB_SIZEOFARRAY( s_extMimeTable ), uiMiddle;
    char szExt[ 16 ];
-   int i;
 
    if( *szFileExt == '.' )
       ++szFileExt;
@@ -550,6 +549,8 @@ static const char * s_findExtMimeType( const char * szFileExt )
 
    do
    {
+      int i;
+
       uiMiddle = ( uiFirst + uiLast ) >> 1;
       i = strcmp( szExt, s_extMimeTable[ uiMiddle ].pattern );
       if( i == 0 )
@@ -581,16 +582,16 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
 
    /* trim spaces if required */
    while( nPos < nLen &&
-          ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
+          ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) != 0 && (
                  cData[ nPos ] == ' ' || cData[ nPos ] == '\r' || cData[ nPos ] == '\n' ) ) ||
-            ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMTABS && cData[ nPos ] == '\t' ) ) )
+            ( ( elem->flags & MIME_FLAG_TRIMTABS ) != 0 && cData[ nPos ] == '\t' ) ) )
    {
       nPos++;
    }
 
    if( nPos < nLen && ( nLen - nPos ) >= nDataLen )
    {
-      if( ( elem->flags & MIME_FLAG_CASEINSENS ) == MIME_FLAG_CASEINSENS )
+      if( ( elem->flags & MIME_FLAG_CASEINSENS ) != 0 )
       {
          if( ( *elem->pattern == 0 && cData[ nPos ] == 0 ) || hb_strnicmp( cData + nPos, elem->pattern, nDataLen ) == 0 )
          {
@@ -630,14 +631,14 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
       HB_ISIZ nPos     = elem->pos;
       HB_ISIZ nDataLen = strlen( elem->pattern );
 
-      if( ( elem->flags & MIME_FLAG_CONTINUE ) == MIME_FLAG_CONTINUE )
+      if( ( elem->flags & MIME_FLAG_CONTINUE ) != 0 )
          continue;
 
       /* trim spaces if required */
       while( nPos < nLen &&
-             ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
+             ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) != 0 && (
                     cData[ nPos ] == ' ' || cData[ nPos ] == '\r' || cData[ nPos ] == '\n' ) ) ||
-               ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMTABS && cData[ nPos ] == '\t' ) ) )
+               ( ( elem->flags & MIME_FLAG_TRIMTABS ) != 0 && cData[ nPos ] == '\t' ) ) )
       {
          nPos++;
       }
@@ -648,7 +649,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
       if( nLen - nPos < nDataLen )
          continue;
 
-      if( ( elem->flags & MIME_FLAG_CASEINSENS ) == MIME_FLAG_CASEINSENS )
+      if( ( elem->flags & MIME_FLAG_CASEINSENS ) != 0 )
       {
          if( ( *elem->pattern == 0 && cData[ nPos ] == 0 ) || hb_strnicmp( cData + nPos, elem->pattern, nDataLen ) == 0 )
          {

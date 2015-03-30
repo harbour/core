@@ -226,16 +226,16 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
 
          if( szBitmap )
          {
-            int          iWidth, iHeight;
             BITMAPINFO * pPackedDib = NULL;
-            HDC          hdc;
 
             if( ! bMap3Dcolors )
                pPackedDib = PackedDibLoad( szBitmap );
 
             if( pPackedDib || bMap3Dcolors )
             {
-               hdc = GetDC( hCtrl );
+               int iWidth, iHeight;
+
+               HDC hdc = GetDC( hCtrl );
 
                if( ! bMap3Dcolors )
                {
@@ -702,7 +702,6 @@ HB_FUNC( WVG_CHOOSEFONT )
    DWORD      Flags = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
    LONG       PointSize = 0;
    HWND       hWnd      = hbwapi_par_raw_HWND( 1 );
-   TCHAR      szStyle[ MAX_PATH + 1 ];
 
    memset( &cf, 0, sizeof( cf ) );
    memset( &lf, 0, sizeof( lf ) );
@@ -758,7 +757,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 
    cf.lpTemplateName = NULL;
    cf.hInstance      = NULL;
-   cf.lpszStyle      = ( LPTSTR ) szStyle;
+   cf.lpszStyle      = NULL;
    cf.nFontType      = SCREEN_FONTTYPE;  /* ?? */
    cf.nSizeMin       = 0;
    cf.nSizeMax       = 0;

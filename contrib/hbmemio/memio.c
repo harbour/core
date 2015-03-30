@@ -167,12 +167,13 @@ static void memfsInit( void )
 static HB_ULONG memfsInodeFind( const char * szName, HB_ULONG * pulPos )
 {
    HB_ULONG ulLeft, ulRight, ulMiddle;
-   int i;
 
    ulLeft = 0;
    ulRight = s_fs.ulInodeCount;
    while( ulLeft < ulRight )
    {
+      int i;
+
       ulMiddle = ( ulLeft + ulRight ) >> 1;
       i = strcmp( szName, s_fs.pInodes[ ulMiddle ]->szName );
       if( i == 0 )
@@ -438,7 +439,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
       Compatibility mode == DenyNone.
     */
    uiFlags = ( uiFlags & ( FO_CREAT | FO_TRUNC | FO_EXCL ) ) |
-             ( uiFlags & FO_READWRITE ? FOX_READWRITE : ( uiFlags & FO_WRITE ? FOX_WRITE : FOX_READ ) ) |
+             ( ( uiFlags & FO_READWRITE ) ? FOX_READWRITE : ( ( uiFlags & FO_WRITE ) ? FOX_WRITE : FOX_READ ) ) |
              ( ( uiFlags & 0xf0 ) == FO_EXCLUSIVE ? FOX_EXCLUSIVE :
                ( ( uiFlags & 0xf0 ) == FO_DENYWRITE ? FOX_DENYWRITE :
                  ( ( uiFlags & 0xf0 ) == FO_DENYREAD ? FOX_DENYREAD : FOX_DENYNONE ) ) );

@@ -180,7 +180,6 @@ HB_FUNC( WVT_SETTOOLTIP )
       {
          TOOLINFO ti;
          POINT    xy = { 0, 0 };
-         int      iTop, iLeft, iBottom, iRight;
 
          memset( &ti, 0, sizeof( ti ) );
 
@@ -190,6 +189,7 @@ HB_FUNC( WVT_SETTOOLTIP )
 
          if( SendMessage( _s->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
          {
+            int iTop, iLeft, iBottom, iRight;
             void * hText;
 
             xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );

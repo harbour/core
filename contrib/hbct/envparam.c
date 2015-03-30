@@ -103,7 +103,7 @@ HB_FUNC( ENVPARAM )
       hb_retc_null();
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    LPTCH lpEnviron = GetEnvironmentStrings(), lpEnv;
-   LPTSTR lpResult = NULL, lpDst;
+   LPTSTR lpResult = NULL;
    HB_SIZE nSize = 0;
 
    if( lpEnviron )
@@ -116,6 +116,8 @@ HB_FUNC( ENVPARAM )
       }
       if( nSize > 0 )
       {
+         LPTSTR lpDst;
+
          lpResult = ( LPTSTR ) hb_xgrab( ( nSize + 1 ) * sizeof( TCHAR ) );
          for( lpEnv = lpEnviron, lpDst = lpResult; *lpEnv; lpEnv++ )
          {

@@ -371,9 +371,9 @@ HB_FUNC( WVW_OPENIMAGE )
 
       if( pPicture )
       {
-         HBITMAP hBitmap;
+         HBITMAP hBitmap = NULL;
 
-         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_ ( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK )
+         if( HB_VTBL( pPicture )->get_Handle( HB_THIS_( pPicture ) ( OLE_HANDLE * ) & hBitmap ) == S_OK && hBitmap )
             hbwapi_ret_raw_HANDLE( CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
          else
             hbwapi_ret_raw_HANDLE( NULL );

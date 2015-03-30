@@ -1487,7 +1487,6 @@ HB_FUNC( NETIO_SERVER )
                               HB_SIZE nSize = size - size2;
                               HB_USHORT uiPCount = 0;
                               HB_BOOL fSend = HB_FALSE;
-                              int iStreamType;
 
                               iStreamID = 0;
                               data += size2;
@@ -1511,6 +1510,8 @@ HB_FUNC( NETIO_SERVER )
                               }
                               if( uiMsg == NETIO_FUNCCTRL )
                               {
+                                 int iStreamType;
+
                                  iStreamID = HB_GET_LE_INT32( &msgbuf[ 8 ] );
                                  iStreamType = HB_GET_LE_INT32( &msgbuf[ 12 ] );
                                  hb_vmPush( hb_param( 1, HB_IT_ANY ) );

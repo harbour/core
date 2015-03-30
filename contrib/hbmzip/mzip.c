@@ -542,8 +542,6 @@ HB_FUNC( HB_UNZIPFILEINFO )
       char szFileName[ HB_PATH_MAX * 3 ];
       unz_file_info ufi;
       int  iResult;
-      char buf[ 16 ];
-      long lJulian, lMillisec;
 
       iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szFileName, sizeof( szFileName ) - 1,
                                        NULL, 0, NULL, 0 );
@@ -552,6 +550,8 @@ HB_FUNC( HB_UNZIPFILEINFO )
       if( iResult == UNZ_OK )
       {
          HB_BOOL fUnicode = ( ufi.flag & _ZIP_FLAG_UNICODE ) != 0;
+
+         long lJulian, lMillisec;
 
          szFileName[ sizeof( szFileName ) - 1 ] = '\0';
 
@@ -568,6 +568,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stortdt( lJulian, lMillisec, 3 );
          if( HB_ISBYREF( 4 ) )
          {
+            char buf[ 16 ];
             hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d",
                          ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
                          ufi.tmu_date.tm_sec );
@@ -1197,7 +1198,6 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
    char          szNameRaw[ HB_PATH_MAX * 3 ];
    char *        szName;
    HB_SIZE       nPos, nLen;
-   char          cSep, * pString;
    unz_file_info ufi;
    int           iResult;
    PHB_FILE      pFile;
@@ -1238,7 +1238,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
    nPos = 1;
    while( nPos < nLen )
    {
-      cSep = szName[ nPos ];
+      char cSep = szName[ nPos ];
 
       /* allow both path separators, ignore terminating path separator */
       if( ( cSep == '\\' || cSep == '/' ) && nPos < nLen - 1 )
@@ -1262,7 +1262,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
                               FXO_TRUNCATE | FXO_SHARELOCK, NULL, NULL );
       if( pFile != NULL )
       {
-         pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+         char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
 
          while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
             hb_fileWrite( pFile, pString, ( HB_SIZE ) iResult, -1 );
@@ -1348,8 +1348,8 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 
          fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
          fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
-         ulrc = DosSetPathInfo( ( PCSZ ) szNameOS, FIL_STANDARD,
-                                &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
+         ( void ) DosSetPathInfo( ( PCSZ ) szNameOS, FIL_STANDARD,
+                                  &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
 
       if( pszFree )
