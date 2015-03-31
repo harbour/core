@@ -193,7 +193,6 @@ HB_FUNC( TRANSFORM )
          const char * szExp = hb_itemGetCPtr( pValue );
          HB_SIZE nExpLen = hb_itemGetCLen( pValue );
          HB_SIZE nExpPos = 0;
-         HB_BOOL bFound  = HB_FALSE;
 
          /* Grab enough */
 
@@ -324,6 +323,8 @@ HB_FUNC( TRANSFORM )
 
             if( uiPicFlags & PF_EXCHANG )
             {
+               HB_BOOL bFound = HB_FALSE;
+
                while( nExpPos < nResultPos )
                {
                   if( szResult[ nExpPos ] == ',' )
@@ -393,7 +394,6 @@ HB_FUNC( TRANSFORM )
          int      iDec;                               /* Number of decimals       */
          int      iCount;
          HB_SIZE  i;
-         char     cPic;
          PHB_ITEM pNumber = NULL;
 
          double dValue = hb_itemGetND( pValue );
@@ -521,7 +521,7 @@ HB_FUNC( TRANSFORM )
 
             for( i = iCount = 0; i < nPicLen; i++ )
             {
-               cPic = szPic[ i ];
+               char cPic = szPic[ i ];
                if( cPic == '9' || cPic == '#' )
                {
                   szResult[ i ] = iCount < iWidth ? szStr[ iCount++ ] : ' ';

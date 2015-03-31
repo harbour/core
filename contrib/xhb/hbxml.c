@@ -1416,13 +1416,13 @@ static int mxml_node_read_closing( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM do
 
 static MXML_STATUS mxml_node_read( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc, int style )
 {
-   PHB_ITEM node;
-
    /* Stateful machine status */
    int iStatus = 0;
 
    while( iStatus >= 0 )
    {
+      PHB_ITEM node;
+
       int chr = mxml_refil_getc( ref );
       if( chr == MXML_EOF )
          break;

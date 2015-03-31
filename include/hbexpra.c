@@ -246,7 +246,6 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
          /* Reserved Clipper function used to handle GET variables
           */
          PHB_EXPR pArg, pNext;
-         HB_USHORT uiCount;
 
          /* pArg has to be reduced to eliminate possible problems with
           * cloned expressions in SETGET block
@@ -268,6 +267,8 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
 
          if( pArg->ExprType == HB_ET_ARRAYAT )
          {
+            HB_USHORT uiCount;
+
             /* replace:
                _GET_( a[1], "a[1]", , , )
                into:

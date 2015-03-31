@@ -182,7 +182,6 @@ HB_FUNC( ATI )
       HB_ISIZ  nLen   = hb_itemGetCLen( pText );
       HB_ISIZ  nStart = pStart ? hb_itemGetNS( pStart ) : 1;
       HB_ISIZ  nEnd   = pEnd ? hb_itemGetNS( pEnd ) : nLen;
-      HB_SIZE  nPos;
 
       if( nStart < 0 )
       {
@@ -203,8 +202,8 @@ HB_FUNC( ATI )
          hb_retns( 0 );
       else
       {
-         nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                           hb_itemGetCPtr( pText ) + nStart, nEnd - nStart );
+         HB_SIZE nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                                   hb_itemGetCPtr( pText ) + nStart, nEnd - nStart );
          hb_retns( nPos ? nPos + nStart : 0 );
       }
    }

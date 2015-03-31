@@ -1241,13 +1241,14 @@ HB_WCHAR hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
 char * hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE nLen,
                                HB_SIZE nFrom, HB_SIZE nCount, HB_SIZE * pulDest )
 {
-   HB_SIZE ul, nCnt, nDst = 0;
+   HB_SIZE nDst = 0;
    HB_WCHAR wc;
    int n;
    char * pDst = NULL;
 
    if( nCount && nLen )
    {
+      HB_SIZE ul;
       n = 0;
       for( ul = 0; ul < nLen && nFrom; )
       {
@@ -1259,6 +1260,7 @@ char * hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE nLen,
 
       if( ul < nLen )
       {
+         HB_SIZE nCnt;
          nFrom = ul;
          nCnt = nCount;
          n = 0;

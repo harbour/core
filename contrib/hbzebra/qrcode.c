@@ -466,7 +466,7 @@ static int _qr_versionlength( int iVersion )
 static int _qr_fixed( int iVersion, int iRow, int iCol )
 {
    int iLength = _qr_versionlength( iVersion );
-   unsigned char * pi, * pj;
+   unsigned char * pi;
 
    /* position detection markers and versino info */
    if( iRow < 9 && iCol < 9 )
@@ -484,7 +484,7 @@ static int _qr_fixed( int iVersion, int iRow, int iCol )
    pi = s_align[ iVersion - 1 ];
    for( ; *pi; pi++ )
    {
-      pj = s_align[ iVersion - 1 ];
+      unsigned char * pj = s_align[ iVersion - 1 ];
       for( ; *pj; pj++ )
       {
          if( iRow - 2 <= ( int ) *pi && ( int ) *pi <= iRow + 2 &&
@@ -857,7 +857,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 {
    int i, j, iLength;
-   unsigned char * pi, * pj;
+   unsigned char * pi;
 
    HB_SYMBOL_UNUSED( pCWBits );
 
@@ -900,7 +900,7 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
    pi = s_align[ iVersion - 1 ];
    for( ; *pi; pi++ )
    {
-      pj = s_align[ iVersion - 1 ];
+      unsigned char * pj = s_align[ iVersion - 1 ];
       for( ; *pj; pj++ )
       {
          if( ( *pi > 10 && *pi < iLength - 10 ) ||
@@ -995,13 +995,13 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 static int _qr_penalty( PHB_BITBUFFER pBits, int iVersion )
 {
    int i, j, k, iPenalty = 0, iLen = _qr_versionlength( iVersion );
-   HB_BOOL bBitLast, bBit;
+   HB_BOOL bBit;
 
    /* 1. Same color modules in row/column */
    for( i = 0; i < iLen; i++ )
    {
       /* Row */
-      bBitLast = hb_bitbuffer_get( pBits, i * iLen );
+      HB_BOOL bBitLast = hb_bitbuffer_get( pBits, i * iLen );
       k = 1;
       for( j = 1; j < iLen; j++ )
       {

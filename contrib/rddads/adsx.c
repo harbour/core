@@ -132,12 +132,11 @@ static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea,
                                  const char * filename, HB_ERRCODE errOsCode,
                                  HB_USHORT uiFlags )
 {
-   PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, errGenCode );
       hb_errPutSubCode( pError, errSubCode );
       hb_errPutOsCode( pError, errOsCode );

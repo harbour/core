@@ -1126,7 +1126,6 @@ int hb_fsProcessRun( const char * pszFileName,
       {
          fd_set rfds, wfds, *prfds, *pwfds;
          HB_FHANDLE fdMax;
-         HB_SIZE ul;
          int n;
 
          fdMax = 0;
@@ -1162,6 +1161,8 @@ int hb_fsProcessRun( const char * pszFileName,
          n = select( fdMax + 1, prfds, pwfds, NULL, NULL );
          if( n > 0 )
          {
+            HB_SIZE ul;
+
             if( hStdout != FS_ERROR && FD_ISSET( hStdout, &rfds ) )
             {
                if( nOutBuf == nOutSize )

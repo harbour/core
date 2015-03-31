@@ -1406,13 +1406,13 @@ static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char * str,
 
    if( ioBase->out_transtbl != NULL )
    {
-      unsigned char * buf, c;
+      unsigned char * buf;
       int i;
 
       buf = ( unsigned char * ) hb_xgrab( len );
       for( i = 0; i < len; ++i )
       {
-         c = str[ i ];
+         unsigned char c = str[ i ];
          if( c != 9 && c != 10 && c != 13 && ioBase->out_transtbl[ c ] )
             buf[ i ] = ioBase->out_transtbl[ c ];
          else
@@ -1940,7 +1940,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
 {
    InOutBase * ioBase;
    int bg, fg;
-   unsigned int i, n;
+   unsigned int i;
    char buf[ 256 ], * ptr, * crsterm = NULL;
 
    ioBase = ( InOutBase * ) hb_xgrabz( sizeof( InOutBase ) );
@@ -2095,6 +2095,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
 #endif
       for( i = 0; i < 256; i++ )
       {
+         unsigned int n;
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
          fg = ( i & 0x07 );      /* extract forground color bits 0-2 */
          n = bg * 8 + fg;
@@ -2304,7 +2305,7 @@ static int set_active_ioBase( int iNO_ioBase )
 
 static int add_new_ioBase( InOutBase * ioBase )
 {
-   int i, n, add = 0;
+   int i, add = 0;
 
    for( i = 0; i < s_iSize_ioBaseTab && ! add; ++i )
       if( ! s_ioBaseTab[ i ] )
@@ -2315,6 +2316,8 @@ static int add_new_ioBase( InOutBase * ioBase )
 
    if( ! add )
    {
+      int n;
+
       if( s_ioBaseTab == NULL )
          s_ioBaseTab = ( InOutBase ** ) hb_xgrab(
                         ( s_iSize_ioBaseTab += 10 ) * sizeof( InOutBase * ) );

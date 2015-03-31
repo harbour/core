@@ -130,12 +130,12 @@ static _HB_INLINE_ void arc4_init( void )
 
 static _HB_INLINE_ void arc4_addrandom( const HB_U8 * dat, int datlen )
 {
-   int   n;
-   HB_U8 si;
+   int n;
 
    rs.i--;
    for( n = 0; n < 256; ++n )
    {
+      HB_U8 si;
       rs.i         = ( rs.i + 1 );
       si           = rs.s[ rs.i ];
       rs.j         = rs.j + si + dat[ n % datlen ];
@@ -149,11 +149,10 @@ static _HB_INLINE_ void arc4_addrandom( const HB_U8 * dat, int datlen )
 static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 {
    HB_SIZE numread = 0;
-   HB_ISIZ result;
 
    while( numread < count )
    {
-      result = read( fd, buf + numread, count - numread );
+      HB_ISIZ result = read( fd, buf + numread, count - numread );
 
       if( result < 0 )
          return -1;

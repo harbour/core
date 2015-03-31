@@ -1347,10 +1347,11 @@ HB_ULONG hb_compExprParamListLen( PHB_EXPR pExpr )
 
 HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, PHB_EXPR pExpr )
 {
-   HB_SIZE nLen = 0, nItems = 0;
+   HB_SIZE nLen = 0;
 
    if( pExpr )
    {
+      HB_SIZE nItems = 0;
       PHB_EXPR pElem;
 
       pElem = pExpr->value.asList.pExprList;
@@ -1464,11 +1465,9 @@ PHB_EXPR hb_compExprCBVarAdd( PHB_EXPR pCB, const char * szVarName, HB_BYTE bTyp
  */
 void hb_compExprCBVarDel( PHB_CBVAR pVars )
 {
-   PHB_CBVAR pDel;
-
    while( pVars )
    {
-      pDel  = pVars;
+      PHB_CBVAR pDel = pVars;
       pVars = pVars->pNext;
       hb_xfree( pDel );
    }

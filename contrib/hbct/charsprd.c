@@ -63,8 +63,8 @@ HB_FUNC( CHARSPREAD )
       {
          const char * szText = hb_parc( 1 );
          char cDelim = ' ';
-         HB_ISIZ nTokens = 0, iRepl, iRest, iFirst, i;
-         HB_SIZE ul, nDst, nRest;
+         HB_ISIZ nTokens = 0;
+         HB_SIZE ul;
 
          if( HB_ISCHAR( 3 ) )
             cDelim = hb_parc( 3 )[ 0 ];
@@ -85,6 +85,8 @@ HB_FUNC( CHARSPREAD )
             hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
          else
          {
+            HB_ISIZ iRepl, iRest, iFirst;
+            HB_SIZE nDst, nRest;
             char * szDest;
 
             nRest = ( HB_SIZE ) nSize - nLen;
@@ -98,6 +100,8 @@ HB_FUNC( CHARSPREAD )
                szDest[ nDst++ ] = szText[ ul ];
                if( szText[ ul ] == cDelim )
                {
+                  HB_ISIZ i;
+
                   while( ul + 1 < nLen && szText[ ul + 1 ] == cDelim )
                      szDest[ nDst++ ] = szText[ ++ul ];
                   i = iRepl;

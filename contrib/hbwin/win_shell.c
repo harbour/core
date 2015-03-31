@@ -151,15 +151,18 @@ typedef struct
 
 static LPTSTR s_StringList( int iParam )
 {
-   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING ), pArrItem;
+   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING );
    LPTSTR lpStr = NULL;
 
    if( pItem )
    {
-      HB_SIZE nLen, nSize, nTotal, n, n1;
+      HB_SIZE nLen;
 
       if( HB_IS_ARRAY( pItem ) )
       {
+         HB_SIZE nSize, n, n1;
+         PHB_ITEM pArrItem;
+
          nSize = hb_arrayLen( pItem );
          for( n = nLen = 0; n < nSize; ++n )
          {
@@ -173,7 +176,7 @@ static LPTSTR s_StringList( int iParam )
          }
          if( nLen )
          {
-            nTotal = nLen + 1;
+            HB_SIZE nTotal = nLen + 1;
             lpStr = ( LPTSTR ) hb_xgrab( nTotal * sizeof( TCHAR ) );
             for( n = nLen = 0; n < nSize; ++n )
             {

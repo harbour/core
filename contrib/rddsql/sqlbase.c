@@ -104,11 +104,11 @@ void hb_rddsqlSetError( HB_ERRCODE errCode, const char * szError, const char * s
 
 static HB_ERRCODE hb_errRT_SQLBASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation )
 {
-   PHB_ITEM   pError;
    HB_ERRCODE iRet = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
+      PHB_ITEM pError;
       pError = hb_errRT_New( ES_ERROR, "SQLBASE", errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
       iRet   = hb_errLaunch( pError );
       hb_itemRelease( pError );
@@ -310,13 +310,11 @@ static HB_ERRCODE sqlbaseGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
 static HB_ERRCODE sqlbaseGoToId( SQLBASEAREAP pArea, PHB_ITEM pItem )
 {
-   PHB_ITEM pError;
-
    if( HB_IS_NUMERIC( pItem ) )
       return SELF_GOTO( &pArea->area, hb_itemGetNL( pItem ) );
    else
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );
@@ -900,12 +898,12 @@ static HB_ERRCODE sqlbaseInit( LPRDDNODE pRDD )
 
 static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
 {
-   HB_ULONG ul;
-
    HB_SYMBOL_UNUSED( pRDD );
 
    if( s_pConnection )
    {
+      HB_ULONG ul;
+
       /* Disconnect all connections */
       for( ul = 0; ul < s_ulConnectionCount; ul++ )
       {

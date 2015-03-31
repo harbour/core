@@ -1249,13 +1249,14 @@ static void hb_inetConnectInternal( HB_BOOL fResolve )
    const char * szHost = hb_parc( 1 );
    char * szAddr = NULL;
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 3 );
-   PHB_ITEM pSocket = NULL;
    int iPort = hb_parni( 2 );
 
    if( szHost == NULL || iPort == 0 || ( socket == NULL && ! HB_ISNIL( 3 ) ) )
       hb_inetErrRT();
    else
    {
+      PHB_ITEM pSocket = NULL;
+
       if( ! socket )
          HB_SOCKET_INIT( socket, pSocket );
       else if( socket->sd != HB_NO_SOCKET )

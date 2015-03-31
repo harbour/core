@@ -87,11 +87,10 @@ HB_FUNC( ADDASCII )
       if( iCarryOver )
       {
          HB_SIZE sCurrent;
-         HB_LONG lResult;
 
          for( sCurrent = sPos; sCurrent > 0 && lValue != 0; sCurrent-- )
          {
-            lResult = ( HB_LONG ) pcSource[ sCurrent - 1 ] + ( lValue % 256 );
+            HB_LONG lResult = ( HB_LONG ) pcSource[ sCurrent - 1 ] + ( lValue % 256 );
 
             lValue /= 256;
             if( lResult > 255 )

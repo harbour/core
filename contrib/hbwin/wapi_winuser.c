@@ -868,11 +868,12 @@ HB_FUNC( WAPI_CREATEACCELERATORTABLE )
 {
    HACCEL hAccel = NULL;
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-   int iEntries = pArray ? ( int ) hb_arrayLen( pArray ) : 0, i;
+   int iEntries = pArray ? ( int ) hb_arrayLen( pArray ) : 0;
 
    if( iEntries > 0 )
    {
       LPACCEL lpAccel = ( LPACCEL ) hb_xgrab( sizeof( ACCEL ) * iEntries );
+      int i;
 
       for( i = 0; i < iEntries; ++i )
       {

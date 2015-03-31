@@ -103,11 +103,10 @@ void hb_hashTableKill( PHB_HASH_TABLE pTable )
    {
       if( pTable->pItems[ nSize ] )
       {
-         PHB_HASH_ITEM pItem, pFree;
-         pItem = pTable->pItems[ nSize ];
+         PHB_HASH_ITEM pItem = pTable->pItems[ nSize ];
          while( pItem )
          {
-            pFree = pItem;
+            PHB_HASH_ITEM pFree = pItem;
             pItem = pItem->next;
             hb_hashItemDelete( pTable, pFree );
          }

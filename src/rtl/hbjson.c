@@ -175,14 +175,14 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
    if( HB_IS_STRING( pValue ) )
    {
       const char * szString = hb_itemGetCPtr( pValue );
-      HB_SIZE nPos, nPos2, nLen = hb_itemGetCLen( pValue );
+      HB_SIZE nPos, nLen = hb_itemGetCLen( pValue );
 
       _hb_jsonCtxAdd( pCtx, "\"", 1 );
 
       nPos = 0;
       while( nPos < nLen )
       {
-         nPos2 = nPos;
+         HB_SIZE nPos2 = nPos;
          while( *( ( const unsigned char * ) szString + nPos2 ) >= ' ' &&
                 szString[ nPos2 ] != '\\' && szString[ nPos2 ] != '\"' )
             nPos2++;

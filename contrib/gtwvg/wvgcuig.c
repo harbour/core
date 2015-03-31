@@ -1592,7 +1592,6 @@ static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
    if( iTabs > 0 )
    {
       int     iTop, iBottom;
-      HB_ISIZ i;
 
       iTop    = hb_arrayGetNI( pArray, 1 ) * ( int ) pWVT->PTEXTSIZE.y;
       iBottom = ( ( hb_arrayGetNI( pArray, 2 ) + 1 ) * ( int ) pWVT->PTEXTSIZE.y ) - 1;
@@ -1602,6 +1601,8 @@ static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
       {
          int x;
          HDC hdc = pWVT->hGuiDC;
+         HB_ISIZ i;
+
          SelectObject( hdc, pWVT->currentPen );
          for( i = 1; i <= iTabs; i++ )
          {

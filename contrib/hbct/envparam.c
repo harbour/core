@@ -75,10 +75,11 @@ HB_FUNC( ENVPARAM )
 #if defined( HB_OS_UNIX ) || defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
    char * const * pEnviron = environ, * const * pEnv;
    char * pResult = NULL, * pDst;
-   HB_SIZE nSize = 0;
 
    if( pEnviron )
    {
+      HB_SIZE nSize = 0;
+
       for( pEnv = pEnviron; *pEnv; pEnv++ )
          nSize += strlen( *pEnv ) + 2;
 

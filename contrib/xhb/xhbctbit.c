@@ -159,11 +159,11 @@ HB_FUNC( NUMNOTX )
 
 HB_FUNC( NUMROLX )
 {
-   HB_LONG   lNum1, lNumBak, lPattern, lTestRol;
-   HB_USHORT usBytes, usFor, usNum2;
-
    if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )
    {
+      HB_LONG   lNum1, lNumBak, lPattern, lTestRol;
+      HB_USHORT usBytes, usFor, usNum2;
+
       lNum1  = __getparam( 2 );               /* Number to do ROL */
       usNum2 = ( HB_USHORT ) __getparam( 3 ); /* Iterations */
 
@@ -195,11 +195,11 @@ HB_FUNC( NUMROLX )
 
 HB_FUNC( NUMMIRRX )
 {
-   HB_LONG   lNum1, lPattern, lTestMSB, lNumBak, lMirror = 0;
-   HB_USHORT usBytes, usFor;
-
    if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )
    {
+      HB_LONG   lNum1, lPattern, lTestMSB, lNumBak, lMirror = 0;
+      HB_USHORT usBytes, usFor;
+
       lNum1 = __getparam( 2 );
 
       sizeofbits( &usBytes, &lPattern, &lTestMSB );
@@ -245,7 +245,6 @@ static HB_LONG __numor( HB_LONG lNum1, HB_LONG lNum2 )
    return lNum1 | lNum2;
 }
 
-
 static HB_LONG __numxor( HB_LONG lNum1, HB_LONG lNum2 )
 {
    return lNum1 ^ lNum2;
@@ -259,13 +258,13 @@ static HB_LONG __numnot( HB_LONG lNum1, HB_LONG lNum2 )
 
 static HB_LONG __numfun( int iPCount, HB_LONG ( * operation )( HB_LONG wNum1, HB_LONG wNum2 ), HB_BOOL * pbOk )
 {
-   HB_LONG   lNumOp = 0;
-   HB_LONG   lNum1, lNum2;
-   HB_LONG   lPattern, lTestMSB;
-   HB_USHORT usBytes;
-
    if( HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
    {
+      HB_LONG   lNumOp = 0;
+      HB_LONG   lNum1, lNum2;
+      HB_LONG   lPattern, lTestMSB;
+      HB_USHORT usBytes;
+
       sizeofbits( &usBytes, &lPattern, &lTestMSB );
 
       if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )

@@ -394,13 +394,12 @@ static void hb_pp_tokenListFree( PHB_PP_TOKEN * pTokenPtr )
 
 static int hb_pp_tokenListFreeCmd( PHB_PP_TOKEN * pTokenPtr )
 {
-   PHB_PP_TOKEN pToken;
    HB_BOOL fStop = HB_FALSE;
    int iLines = 0;
 
    while( *pTokenPtr && ! fStop )
    {
-      pToken = *pTokenPtr;
+      PHB_PP_TOKEN pToken = *pTokenPtr;
       *pTokenPtr = pToken->pNext;
       if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_EOL )
          ++iLines;
@@ -777,13 +776,14 @@ static HB_BOOL hb_pp_canQuote( HB_BOOL fQuote, char * pBuffer, HB_SIZE nLen,
 
 static HB_BOOL hb_pp_hasCommand( char * pBuffer, HB_SIZE nLen, HB_SIZE * pnAt, int iCmds, ... )
 {
-   HB_SIZE n = 0, nl;
+   HB_SIZE n = 0;
    va_list va;
    int i;
 
    va_start( va, iCmds );
    for( i = 0; i < iCmds && n < nLen; ++i )
    {
+      HB_SIZE nl;
       char * cmd = va_arg( va, char * );
       nl = strlen( cmd );
       while( n < nLen && HB_PP_ISBLANK( pBuffer[ n ] ) )
@@ -883,8 +883,7 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
 static void hb_pp_getLine( PHB_PP_STATE pState )
 {
    PHB_PP_TOKEN * pInLinePtr, * pEolTokenPtr;
-   char * pBuffer, ch;
-   HB_SIZE nLen, n;
+   char * pBuffer;
    HB_BOOL fDump = HB_FALSE;
    int iLines = 0, iStartLine;
 
@@ -903,6 +902,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 
    do
    {
+      HB_SIZE nLen, n;
+
       hb_membufFlush( pState->pBuffer );
       hb_pp_readLine( pState );
       pBuffer = hb_membufPtr( pState->pBuffer );
@@ -935,7 +936,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
       n = 0;
       while( n < nLen || fDump )
       {
-         ch = pBuffer[ 0 ];
+         char ch = pBuffer[ 0 ];
          if( pState->iStreamDump )
          {
             fDump = HB_FALSE;
@@ -4204,15 +4205,14 @@ static PHB_PP_TOKEN * hb_pp_matchResultAdd( PHB_PP_STATE pState,
 {
    PHB_PP_RESULT pMarkerResult = hb_pp_matchResultGet( pRule, usMatch, pMatch->index );
    PHB_PP_TOKEN pToken, pStop;
-   HB_BOOL fSpaces, fFirst;
 
    if( HB_PP_TOKEN_TYPE( pMatch->type ) == HB_PP_RMARKER_REGULAR )
    {
       if( pMarkerResult )
       {
+         HB_BOOL fFirst = HB_TRUE;
          pToken = pMarkerResult->pFirstToken;
          pStop = pMarkerResult->pNextExpr;
-         fFirst = HB_TRUE;
          if( pToken != pStop )
          {
             do
@@ -4239,7 +4239,7 @@ static PHB_PP_TOKEN * hb_pp_matchResultAdd( PHB_PP_STATE pState,
          pStop = pMarkerResult->pNextExpr;
          if( pToken != pStop )
          {
-            fSpaces = HB_FALSE;
+            HB_BOOL fSpaces = HB_FALSE;
             do
             {
                hb_pp_tokenStr( pToken, pState->pBuffer, fSpaces, HB_FALSE, 0 );
@@ -4385,7 +4385,7 @@ static char * hb_pp_tokenListStr( PHB_PP_TOKEN pToken, PHB_PP_TOKEN pStop,
 static void hb_pp_patternReplace( PHB_PP_STATE pState, PHB_PP_RULE pRule,
                                   PHB_PP_TOKEN * pTokenPtr, const char * szType )
 {
-   PHB_PP_TOKEN pFinalResult = NULL, * pResultPtr, pToken, pSource;
+   PHB_PP_TOKEN pFinalResult = NULL, * pResultPtr, pSource;
 
    pResultPtr = hb_pp_patternStuff( pState, pRule, 0, pRule->pResult, &pFinalResult );
 
@@ -4420,7 +4420,7 @@ static void hb_pp_patternReplace( PHB_PP_STATE pState, PHB_PP_RULE pRule,
    /* Free the matched tokens */
    while( pSource != pRule->pNextExpr )
    {
-      pToken = pSource;
+      PHB_PP_TOKEN pToken = pSource;
       pSource = pSource->pNext;
       hb_pp_tokenFree( pToken );
    }
@@ -5723,7 +5723,6 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
    char szFileName[ HB_PATH_MAX ];
    PHB_PP_FILE pFile = pState->pFile;
    PHB_FNAME pFileName;
-   HB_BOOL fError = HB_FALSE;
 
    pFileName = hb_fsFNameSplit( szRulesFile );
    if( ! pFileName->szExtension )
@@ -5740,6 +5739,8 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
    }
    else
    {
+      HB_BOOL fError = HB_FALSE;
+
       pState->iFiles++;
       pState->usLastType = HB_PP_TOKEN_NUL;
       while( hb_pp_tokenGet( pState ) )

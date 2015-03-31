@@ -2503,7 +2503,6 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          int     ixbeyond;
          int     iybeyond;
          HB_BOOL bR = HB_FALSE;
-         HB_BOOL bB = HB_FALSE;
          HFONT   hOldFont;
 
          memset( &ci, 0, sizeof( ci ) );
@@ -2658,6 +2657,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
          if( IsZoomed( hWnd ) )
          {
+            HB_BOOL bB = HB_FALSE;
+
             if( updateRect.bottom == iybeyond )
             {
                GetClientRect( hWnd, &ci );

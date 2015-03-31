@@ -132,10 +132,11 @@ static void do_pos1( int iSwitch )
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
-      HB_ERRCODE iError = 0;
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
+         HB_ERRCODE iError = 0;
+
          switch( iSwitch )
          {
             case DO_POS1_POSALPHA:

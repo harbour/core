@@ -1992,9 +1992,10 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         }
                         if( iWarning == 0 )
                         {
-                           const char * szPlurals[ HB_I18N_PLURAL_MAX ];
                            if( usCount == 1 )
                            {
+                              const char * szPlurals[ HB_I18N_PLURAL_MAX ];
+
                               if( pArg->ExprType == HB_ET_STRING )
                               {
                                  if( HB_COMP_PARAM->fI18n && pArg->nLength > 0 )
@@ -5074,7 +5075,6 @@ static void hb_compExprUseOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
 #endif
       else if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_VARIABLE )
       {
-         HB_EXPRTYPE iOldType;
 #if defined( HB_MACRO_SUPPORT )
          {
 #else
@@ -5084,6 +5084,8 @@ static void hb_compExprUseOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
          if( iScope != HB_VS_LOCAL_FIELD && iScope != HB_VS_GLOBAL_FIELD &&
              iScope != HB_VS_UNDECLARED )
          {
+            HB_EXPRTYPE iOldType;
+
             if( iScope == HB_VS_LOCAL_VAR &&
                 pSelf->value.asOperator.pRight->ExprType == HB_ET_NUMERIC &&
                 ( bOpEq == HB_P_PLUS || bOpEq == HB_P_MINUS ) )

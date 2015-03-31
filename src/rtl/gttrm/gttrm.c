@@ -1063,11 +1063,12 @@ static void mouse_exit( PHB_GTTRM pTerm )
 
 static int read_bufch( PHB_GTTRM pTerm, int fd )
 {
-   int n = 0, i;
+   int n = 0;
 
    if( STDIN_BUFLEN > pTerm->stdin_inbuf )
    {
       unsigned char buf[ STDIN_BUFLEN ];
+      int i;
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
       n = read( fd, buf, STDIN_BUFLEN - pTerm->stdin_inbuf );

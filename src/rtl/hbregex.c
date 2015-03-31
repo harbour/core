@@ -300,7 +300,7 @@ static HB_BOOL hb_regex( int iRequest )
 #else
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( REGEX_MAX_GROUPS ) ];
 #endif
-   PHB_ITEM pRetArray, pMatch, pString;
+   PHB_ITEM pRetArray, pString;
    int iMatches, iMaxMatch;
    HB_BOOL fResult = HB_FALSE;
    PHB_REGEX pRegEx;
@@ -330,6 +330,7 @@ static HB_BOOL hb_regex( int iRequest )
    iMatches = hb_regexec( pRegEx, pszString, nLen, iMaxMatch, aMatches );
    if( iMatches > 0 )
    {
+      PHB_ITEM pMatch;
       int i;
 
       switch( iRequest )

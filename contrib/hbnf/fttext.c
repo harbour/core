@@ -345,7 +345,6 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
    char *     WriteBuff = ( char * ) hb_xgrab( BUFFSIZE );
    HB_FOFFSET fpRead, fpWrite;
    HB_ISIZ    WriteLen;
-   HB_ISIZ    SaveLen;
 
    /* initialize file pointers */
    fpWrite = ft_text->offset[ ft_text->area ];
@@ -360,6 +359,8 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
 
    while( WriteLen > 0 )
    {
+      HB_ISIZ SaveLen;
+
       /* position to beginning of write area */
       hb_fsSeekLarge( ft_text->handles[ ft_text->area ], fpWrite, FS_SET );
       SaveLen = hb_fsWriteLarge( ft_text->handles[ ft_text->area ], WriteBuff, WriteLen );
@@ -922,11 +923,13 @@ HB_FUNC( FT_FWRITELN )
       char * buffer = ( char * ) hb_xgrab( BUFFSIZE );
 
       HB_ISIZ iLineLen = 0;
-      HB_ISIZ iRead, iEOL;
+      HB_ISIZ iRead;
 
       /* find length of current line, loop if longer than buffer */
       do
       {
+         HB_ISIZ iEOL;
+
          iRead = hb_fsRead( ft_text->handles[ ft_text->area ], buffer, BUFFSIZE );
          iEOL  = _findeol( buffer, iRead, NULL );
          if( iEOL == 0 )

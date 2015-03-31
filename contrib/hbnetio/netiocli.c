@@ -841,7 +841,6 @@ static PHB_CONCLI s_fileConnect( const char ** pFileName,
                                  int iLevel, int iStrategy )
 {
    PHB_CONCLI conn;
-   HB_SOCKET sd;
    char server[ NETIO_SERVERNAME_MAX ];
    char * pszIpAddres;
 
@@ -862,7 +861,7 @@ static PHB_CONCLI s_fileConnect( const char ** pFileName,
    conn = s_fileConFind( pszIpAddres, iPort );
    if( conn == NULL )
    {
-      sd = hb_socketOpen( HB_SOCKET_PF_INET, HB_SOCKET_PT_STREAM, 0 );
+      HB_SOCKET sd = hb_socketOpen( HB_SOCKET_PF_INET, HB_SOCKET_PT_STREAM, 0 );
       if( sd != HB_NO_SOCKET )
       {
          void * pSockAddr;
@@ -1230,11 +1229,12 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
                                      iMsg != NETIO_PROC, HB_FALSE );
             if( fResult && ( iMsg == NETIO_FUNC || iMsg == NETIO_FUNCCTRL ) )
             {
-               HB_SIZE nResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] ), nRecv;
+               HB_SIZE nResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
 
                if( nResult > 0 )
                {
                   PHB_ITEM pItem = NULL;
+                  HB_SIZE nRecv;
 
                   if( nResult > size && buffer )
                   {

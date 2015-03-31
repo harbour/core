@@ -158,13 +158,12 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
 
 HB_FUNC( HB_FREADLINE )
 {
-   PHB_ITEM      pTerm1;
    HB_FHANDLE    hFileHandle = hb_numToHandle( hb_parnint( 1 ) );
    const char ** Term;
    char *        pBuffer;
    HB_ISIZ *     pnTermSizes;
    HB_ISIZ       nSize = hb_parns( 4 );
-   HB_ISIZ       i, nTerms;
+   HB_ISIZ       nTerms;
    HB_BOOL       bFound, bEOF;
 
    if( ! HB_ISBYREF( 2 ) || ! HB_ISNUM( 1 ) )
@@ -175,8 +174,12 @@ HB_FUNC( HB_FREADLINE )
 
    if( HB_ISARRAY( 3 ) || HB_ISCHAR( 3 ) )
    {
+      PHB_ITEM pTerm1;
+
       if( HB_ISARRAY( 3 ) )
       {
+         HB_ISIZ i;
+
          pTerm1 = hb_param( 3, HB_IT_ARRAY );
          nTerms = hb_arrayLen( pTerm1 );
 

@@ -185,7 +185,7 @@ HB_FUNC( HB_TABEXPAND )
    HB_ISIZ      nStrLen   = hb_parclen( 1 );
    HB_SIZE      nTabLen   = hb_parns( 2 );
    HB_SIZE      nTabCount = 0;
-   HB_ISIZ      nPos, nSize;
+   HB_ISIZ      nPos;
 
    for( nPos = 0; nPos < nStrLen; nPos++ )
    {
@@ -197,6 +197,7 @@ HB_FUNC( HB_TABEXPAND )
       hb_retc( szText );
    else
    {
+      HB_ISIZ nSize;
       char * szRet;
       nSize = nStrLen + nTabCount * ( nTabLen - 1 );
       szRet = ( char * ) hb_xgrab( nSize + 1 );
@@ -215,7 +216,6 @@ HB_FUNC( HB_READLINE )
    HB_SIZE *     pnTermSizes;
    HB_SIZE       nTabLen, nTerms;
    HB_SIZE       nLineSize = hb_parni( 3 );
-   HB_SIZE       i;
    HB_BOOL       bWrap = hb_parl( 5 );
    HB_BOOL       bFound, bEOF;
    HB_SIZE       nStartOffset;
@@ -255,6 +255,8 @@ HB_FUNC( HB_READLINE )
 
    if( HB_IS_ARRAY( pTerm1 ) )
    {
+      HB_SIZE i;
+
       nTerms      = hb_arrayLen( pTerm1 );
       pTerm       = ( const char ** ) hb_xgrab( sizeof( char * ) * nTerms );
       pnTermSizes = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) * nTerms );

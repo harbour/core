@@ -340,14 +340,15 @@ HB_FUNC( CAIRO_PATH_ITERATOR_GET_POINTS )
       if( pIterator->iPos < pPath->num_data && pIterator->iPos != -1 )
       {
          cairo_path_data_t * pData;
-         PHB_ITEM pItem, pArray;
+         PHB_ITEM pArray;
          int      i;
 
          pData  = pPath->data + pIterator->iPos;
          pArray = hb_itemArrayNew( pData->header.length - 1 );
          for( i = 1; i < pData->header.length; i++ )
          {
-            hb_arrayNew( pItem = hb_arrayGetItemPtr( pArray, i ), 2 );
+            PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, i );
+            hb_arrayNew( pItem, 2 );
             hb_arraySetND( pItem, 1, pData[ i ].point.x );
             hb_arraySetND( pItem, 2, pData[ i ].point.y );
          }
@@ -375,13 +376,12 @@ HB_FUNC( CAIRO_PATH_ITERATOR_SET_POINTS )
           ( HB_SIZE ) pPath->data[ pIterator->iPos ].header.length == nLen + 1 )
       {
          cairo_path_data_t * pData;
-         PHB_ITEM pItem;
-         int      i;
+         int i;
 
          pData = pPath->data + pIterator->iPos;
          for( i = 1; i < pData->header.length; i++ )
          {
-            pItem = hb_arrayGetItemPtr( pArray, i );
+            PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, i );
             if( hb_arrayLen( pItem ) == 2 )
             {
                pData[ i ].point.x = hb_arrayGetND( pItem, 1 );

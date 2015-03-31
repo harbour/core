@@ -891,22 +891,28 @@ HB_FUNC( WAPI_CREATEFONTINDIRECT )
 HB_FUNC( WAPI_SELECTOBJECT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
-   HB_BOOL bRegion = HB_FALSE;
    HGDIOBJ h;
+#if _TODO_REGION
+   HB_BOOL bRegion = HB_FALSE;
+#endif
 
    if(      hbwapi_is_HPEN( 2 ) )   h = hbwapi_par_HPEN( 2 );
    else if( hbwapi_is_HBRUSH( 2 ) ) h = hbwapi_par_HBRUSH( 2 );
    else if( hbwapi_is_HFONT( 2 ) )  h = hbwapi_par_HFONT( 2 );
+#if _TODO_REGION
    /* TODO: Add BITMAP, REGION */
+#endif
    else
       h = hbwapi_par_raw_HGDIOBJ( 2 );
 
    if( hDC && h )
    {
+#if _TODO_REGION
       /* TODO: Solve reference counting to 'h' handle. Also for returned one. */
       if( bRegion )
          hb_retnint( ( HB_PTRDIFF ) SelectObject( hDC, h ) );
       else
+#endif
          hb_retl( SelectObject( hDC, h ) != NULL );  /* NOTE: We don't return a raw pointer. */
    }
    else

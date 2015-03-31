@@ -488,7 +488,6 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char *    pValue;
    char      szBuffer[ 64 ];
    HB_BOOL   bError;
-   PHB_ITEM  pError;
    HB_SIZE   ulLen;
 
    bError = HB_FALSE;
@@ -618,7 +617,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
    if( bError )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );

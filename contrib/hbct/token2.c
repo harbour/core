@@ -238,7 +238,7 @@ HB_FUNC( TOKENINIT )
       HB_SIZE sStrLen = hb_parclen( 1 );
       const char * pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
-      HB_SIZE nSkipCnt, nSkip;
+      HB_SIZE nSkip;
       const char * pcSubStr, * pc;
       HB_SIZE sSubStrLen;
       TOKEN_ENVIRONMENT sTokenEnvironment;
@@ -285,6 +285,7 @@ HB_FUNC( TOKENINIT )
       for( ;; )
       {
          HB_SIZE sMatchedPos = sSeparatorStrLen;
+         HB_SIZE nSkipCnt;
 
          /* nSkip */
          nSkipCnt = 0;

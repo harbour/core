@@ -1407,8 +1407,8 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
 
 static void GetParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_BOOL fUseRef )
 {
-   VARIANTARG * pArgs = NULL, * pRefs;
-   UINT         uiArgCount, uiArg, uiRefs;
+   VARIANTARG * pArgs = NULL;
+   UINT         uiArgCount;
 
    uiArgCount = ( UINT ) hb_pcount();
    if( uiOffset > uiArgCount )
@@ -1418,6 +1418,9 @@ static void GetParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_BOOL fUseRef
 
    if( uiArgCount > 0 )
    {
+      VARIANTARG * pRefs;
+      UINT         uiArg, uiRefs;
+
       uiRefs = 0;
       if( fUseRef )
       {
@@ -1935,7 +1938,7 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
    VARIANTARG  variant;
    EXCEPINFO   excep;
    UINT        uiArgErr;
-   HRESULT     lOleError, lOleErrorEnum;
+   HRESULT     lOleError;
    HB_BOOL     fAssign;
    HB_USHORT   uiClass;
 
@@ -1998,6 +2001,8 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
 
    if( lOleError != S_OK )
    {
+      HRESULT lOleErrorEnum;
+
       /* Try to detect if object is a collection */
       char * szDescription = NULL;
       char * szSource = NULL;

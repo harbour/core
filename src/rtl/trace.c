@@ -114,11 +114,11 @@ HB_FUNC( HB_TRACELEVEL )
 
 HB_FUNC( HB_TRACELOGLEVEL )
 {
-   int iOldLevel = s_traceLogLevel, iLevel;
+   int iOldLevel = s_traceLogLevel;
 
    if( HB_ISNUM( 1 ) )
    {
-      iLevel = hb_parni( 1 );
+      int iLevel = hb_parni( 1 );
       if( iLevel >= HB_TR_ALWAYS && iLevel < HB_TR_LAST )
          s_traceLogLevel = iLevel;
    }

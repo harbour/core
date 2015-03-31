@@ -96,7 +96,7 @@ static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char * szText, c
 {
    PHB_I18NTABLE  pI18n;
    PHB_I18NSTRING pString;
-   HB_UINT        uiLeft, uiRight, uiMiddle;
+   HB_UINT        uiLeft, uiRight;
 
    if( ! HB_COMP_PARAM->pI18n )
       HB_COMP_PARAM->pI18n = hb_compI18nCreate();
@@ -126,6 +126,7 @@ static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char * szText, c
 
    while( uiLeft < uiRight )
    {
+      HB_UINT uiMiddle;
       int iCompare;
 
       uiMiddle = ( uiLeft + uiRight ) >> 1;

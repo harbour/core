@@ -388,15 +388,16 @@ static HB_BOOL s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 static HB_BOOL s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
-   long lSent = 0, lLast = 1, l;
-   HB_MAXUINT end_timer;
+   long lSent = 0, lLast = 1;
 
    if( ! conn->mutex || hb_threadMutexLock( conn->mutex ) )
    {
-      end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
+      HB_MAXUINT end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
 
       while( lSent < len && ! conn->stop )
       {
+         long l;
+
          if( conn->zstream )
             l = hb_znetWrite( conn->zstream, conn->sd, ptr + lSent, len - lSent, 1000, &lLast );
          else

@@ -1019,8 +1019,7 @@ static int _pdf417_encode_numeric( const char * szCode, int iLen, int * pCW, int
       digits in an effective way. I use more simple way and encode digits in groups
       not longer that 18 digits. 64bit integer arithmetics do this job */
 
-   HB_LONGLONG  ill;
-   int  i, j;
+   int i, j;
 
    HB_TRACE( HB_TR_DEBUG, ( "encode numeric len=%d", iLen ) );
    if( iLen == 0 )
@@ -1029,6 +1028,7 @@ static int _pdf417_encode_numeric( const char * szCode, int iLen, int * pCW, int
    i = 0;
    while( i < iLen )
    {
+      HB_LONGLONG ill;
       int k = iLen - i;
       if( k > 18 )
          k = 18;

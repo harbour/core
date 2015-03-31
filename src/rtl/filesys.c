@@ -626,12 +626,11 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
    {
-      HB_FHANDLE hPipeHandle[ 2 ], hNullHandle;
+      HB_FHANDLE hPipeHandle[ 2 ];
       pid_t pid;
       char * pszTmp;
       HB_BOOL fRead;
       HB_SIZE nLen;
-      int iMaxFD, iResult;
 
       nLen = strlen( pszFileName );
       if( pszMode && ( *pszMode == 'r' || *pszMode == 'w' ) )
@@ -680,6 +679,8 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
             }
             else
             {
+               HB_FHANDLE hNullHandle;
+               int iMaxFD, iResult;
                const char * argv[ 4 ];
                argv[ 0 ] = "sh";
                argv[ 1 ] = "-c";
@@ -3913,11 +3914,11 @@ HB_BOOL hb_fsEof( HB_FHANDLE hFileHandle )
 {
    HB_FOFFSET curPos;
    HB_FOFFSET endPos;
-   HB_FOFFSET newPos;
 
    curPos = hb_fsSeekLarge( hFileHandle, 0L, FS_RELATIVE );
    if( curPos != -1 )
    {
+      HB_FOFFSET newPos;
       endPos = hb_fsSeekLarge( hFileHandle, 0L, FS_END );
       newPos = hb_fsSeekLarge( hFileHandle, curPos, FS_SET );
       fResult = ( endPos != -1 && newPos == curPos );

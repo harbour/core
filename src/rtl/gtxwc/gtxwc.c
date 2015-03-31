@@ -3709,7 +3709,7 @@ static HB_U32 hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, HB_USHORT chr
 
 static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, int colStop, int rowStop )
 {
-   HB_USHORT irow, icol, startCol = 0, len, basex, basey, nsize;
+   HB_USHORT irow, startCol = 0, basex, basey, nsize;
    HB_BYTE oldColor = 0, color, attr;
    HB_USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
    HB_U32 u32Curr = 0xFFFFFFFF;
@@ -3731,6 +3731,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
 
    for( irow = rowStart; irow <= rowStop; irow++ )
    {
+      HB_USHORT icol, len;
       int scridx;
 
       icol = colStart;

@@ -40,7 +40,6 @@
 void hb_hmac_sha224_init(hmac_sha224_ctx *ctx, const void *keyv,
                          unsigned int key_size)
 {
-    unsigned int fill;
     unsigned int num;
 
     const unsigned char *key = ( const unsigned char * ) keyv;
@@ -52,6 +51,7 @@ void hb_hmac_sha224_init(hmac_sha224_ctx *ctx, const void *keyv,
         key_used = key;
         num = SHA224_BLOCK_SIZE;
     } else {
+        unsigned int fill;
         if (key_size > SHA224_BLOCK_SIZE){
             hb_sha224(key, key_size, key_temp);
             key_used = key_temp;
@@ -127,7 +127,6 @@ void hb_hmac_sha224(const void *key, unsigned int key_size,
 void hb_hmac_sha256_init(hmac_sha256_ctx *ctx, const void *keyv,
                       unsigned int key_size)
 {
-    unsigned int fill;
     unsigned int num;
 
     const unsigned char *key = ( const unsigned char * ) keyv;
@@ -139,6 +138,7 @@ void hb_hmac_sha256_init(hmac_sha256_ctx *ctx, const void *keyv,
         key_used = key;
         num = SHA256_BLOCK_SIZE;
     } else {
+        unsigned int fill;
         if (key_size > SHA256_BLOCK_SIZE){
             hb_sha256(key, key_size, key_temp);
             key_used = key_temp;
@@ -214,7 +214,6 @@ void hb_hmac_sha256(const void *key, unsigned int key_size,
 void hb_hmac_sha384_init(hmac_sha384_ctx *ctx, const void *keyv,
                       unsigned int key_size)
 {
-    unsigned int fill;
     unsigned int num;
 
     const unsigned char *key = ( const unsigned char * ) keyv;
@@ -226,6 +225,7 @@ void hb_hmac_sha384_init(hmac_sha384_ctx *ctx, const void *keyv,
         key_used = key;
         num = SHA384_BLOCK_SIZE;
     } else {
+        unsigned int fill;
         if (key_size > SHA384_BLOCK_SIZE){
             hb_sha384(key, key_size, key_temp);
             key_used = key_temp;
@@ -301,7 +301,6 @@ void hb_hmac_sha384(const void *key, unsigned int key_size,
 void hb_hmac_sha512_init(hmac_sha512_ctx *ctx, const void *keyv,
                       unsigned int key_size)
 {
-    unsigned int fill;
     unsigned int num;
 
     const unsigned char *key = ( const unsigned char * ) keyv;
@@ -313,6 +312,7 @@ void hb_hmac_sha512_init(hmac_sha512_ctx *ctx, const void *keyv,
         key_used = key;
         num = SHA512_BLOCK_SIZE;
     } else {
+        unsigned int fill;
         if (key_size > SHA512_BLOCK_SIZE){
             hb_sha512(key, key_size, key_temp);
             key_used = key_temp;

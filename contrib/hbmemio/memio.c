@@ -166,12 +166,13 @@ static void memfsInit( void )
 /* Note: returns 1 based index! */
 static HB_ULONG memfsInodeFind( const char * szName, HB_ULONG * pulPos )
 {
-   HB_ULONG ulLeft, ulRight, ulMiddle;
+   HB_ULONG ulLeft, ulRight;
 
    ulLeft = 0;
    ulRight = s_fs.ulInodeCount;
    while( ulLeft < ulRight )
    {
+      HB_ULONG ulMiddle;
       int i;
 
       ulMiddle = ( ulLeft + ulRight ) >> 1;
@@ -647,7 +648,6 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 {
    PHB_MEMFS_FILE  pFile;
    PHB_MEMFS_INODE pInode;
-   HB_FOFFSET      llNewAlloc;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
       return HB_FALSE;  /* invalid handle */
@@ -664,7 +664,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
    /* Reallocate if neccesary */
    if( pInode->llAlloc < llOffset )
    {
-      llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
+      HB_FOFFSET llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
 
       if( llNewAlloc < llOffset )
          llNewAlloc = llOffset;
@@ -942,7 +942,6 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
    HB_FHANDLE hFile;
    char       szNameNew[ HB_PATH_MAX + 1 ];
    HB_USHORT  uiFlags;
-   HB_SIZE    nLen;
 
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pPaths );
@@ -952,7 +951,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
 
    if( szDefExt )
    {
-      nLen = strlen( szNameNew );
+      HB_SIZE nLen = strlen( szNameNew );
       do
       {
          if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )

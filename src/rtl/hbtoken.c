@@ -314,12 +314,15 @@ HB_FUNC( HB_TOKENGET )
  */
 HB_FUNC( HB_TOKENPTR )
 {
-   const char * szLine, * szDelim, * szToken;
-   HB_SIZE nLen, nDelim, nSkip, nToken;
+   const char * szLine, * szDelim;
+   HB_SIZE nLen, nDelim;
    int iFlags;
 
    if( hb_tokenParam( 3, hb_parns( 2 ), &szLine, &nLen, &szDelim, &nDelim, &iFlags ) )
    {
+      const char * szToken;
+      HB_SIZE nSkip, nToken;
+
       szToken = hb_tokenGet( szLine, nLen, szDelim, &nDelim, iFlags,
                              1, &nToken );
       if( szToken && nLen > nToken )

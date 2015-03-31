@@ -49,14 +49,17 @@
 
 HB_FUNC( CTOBIT )
 {
-   HB_SIZE nString = hb_parclen( 1 ), nPattern, n;
+   HB_SIZE nString = hb_parclen( 1 );
    int iResult = 0;
 
    if( nString > 0 )
    {
-      nPattern = hb_parclen( 2 );
+      HB_SIZE nPattern = hb_parclen( 2 );
+
       if( nPattern >= 1 && nPattern <= 16 )
       {
+         HB_SIZE n;
+
          const char * pszString = hb_parc( 1 ),
                     * pszPattern = hb_parc( 2 );
 

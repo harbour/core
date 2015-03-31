@@ -292,12 +292,12 @@ static HB_BOOL amf3_deserialize_string( amfContext * context, PHB_ITEM pItem )
 /* Add the dynamic attributes of an encoded obj to a dict. */
 static HB_BOOL amf3_decode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 {
-   PHB_ITEM pKey;
-   PHB_ITEM pValue;
-   HB_BOOL  result;
-
    for( ;; )
    {
+      PHB_ITEM pKey;
+      PHB_ITEM pValue;
+      HB_BOOL  result;
+
       pKey = hb_itemNew( NULL );
       if( ! amf3_deserialize_string( context, pKey ) )
       {
@@ -800,9 +800,7 @@ static HB_BOOL amf3_deserialize_class_def( amfContext * context, PHB_ITEM pClass
 static HB_BOOL amf3_decode_obj_attrs( amfContext * context, PHB_ITEM pHash, PHB_ITEM pClass )
 {
    PHB_ITEM pArray;
-   PHB_ITEM pKey;
    PHB_ITEM pValue;
-   HB_BOOL  result;
    HB_SIZE  static_attr_len;
    HB_SIZE  i;
 
@@ -819,6 +817,9 @@ static HB_BOOL amf3_decode_obj_attrs( amfContext * context, PHB_ITEM pHash, PHB_
 
    for( i = 0; i < static_attr_len; i++ )
    {
+      PHB_ITEM pKey;
+      HB_BOOL  result;
+
       pValue = hb_itemNew( NULL );
       if( ! amf3_getItem( context, pValue ) )
       {

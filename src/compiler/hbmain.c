@@ -3126,8 +3126,6 @@ void hb_compGenPushString( const char * szText, HB_SIZE nStrLen, HB_COMP_DECL )
 
 void hb_compNOOPfill( PHB_HFUNC pFunc, HB_SIZE nFrom, HB_ISIZ nCount, HB_BOOL fPop, HB_BOOL fCheck )
 {
-   HB_SIZE n;
-
    while( nCount-- )
    {
       if( fPop )
@@ -3137,6 +3135,8 @@ void hb_compNOOPfill( PHB_HFUNC pFunc, HB_SIZE nFrom, HB_ISIZ nCount, HB_BOOL fP
       }
       else if( fCheck && pFunc->pCode[ nFrom ] == HB_P_NOOP && pFunc->nNOOPs )
       {
+         HB_SIZE n;
+
          for( n = 0; n < pFunc->nNOOPs; ++n )
          {
             if( pFunc->pNOOPs[ n ] == nFrom )
@@ -3160,7 +3160,6 @@ static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE nPos, HB_SIZE nCount,
                                 HB_BOOL fCanMove )
 {
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
-   HB_SIZE n;
 
    if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) || ! fCanMove )
    {
@@ -3173,6 +3172,8 @@ static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE nPos, HB_SIZE nCount,
    }
    else
    {
+      HB_SIZE n;
+
       memmove( pFunc->pCode + nPos, pFunc->pCode + nPos + nCount,
                pFunc->nPCodePos - nPos - nCount );
       pFunc->nPCodePos -= nCount;
@@ -3420,7 +3421,7 @@ static void hb_compStaticDefThreadSet( HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->pInitFunc )
    {
-      HB_USHORT uiCount = 0, uiVar = 0;
+      HB_USHORT uiCount = 0;
       PHB_HFUNC pFunc;
       PHB_HVAR pVar;
 
@@ -3436,10 +3437,12 @@ static void hb_compStaticDefThreadSet( HB_COMP_DECL )
          }
          pFunc = pFunc->pNext;
       }
+
       if( uiCount )
       {
          HB_SIZE nSize = ( ( HB_SIZE ) uiCount << 1 ) + 3;
          HB_BYTE * pBuffer = ( HB_BYTE * ) hb_xgrab( nSize ), *ptr;
+         HB_USHORT uiVar = 0;
          pBuffer[ 0 ] = HB_P_THREADSTATICS;
          pBuffer[ 1 ] = HB_LOBYTE( uiCount );
          pBuffer[ 2 ] = HB_HIBYTE( uiCount );
@@ -3533,7 +3536,6 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    HB_SIZE nSize;
    HB_USHORT wLocals = 0;  /* number of referenced local variables */
    HB_USHORT wLocalsCnt, wLocalsLen;
-   HB_USHORT wPos;
    PHB_HVAR pVar;
 
    pCodeblock = HB_COMP_PARAM->functions.pLast;
@@ -3632,7 +3634,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
       pVar = pCodeblock->pDetached;
       while( wLocals-- )
       {
-         wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
+         HB_USHORT wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
          hb_compGenPCode2( HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), HB_COMP_PARAM );
          pVar = pVar->pNext;
       }

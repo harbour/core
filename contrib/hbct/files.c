@@ -198,7 +198,6 @@ HB_FUNC( SETFDATI )
 
    if( szFile && *szFile )
    {
-      PHB_ITEM pDate, pTime;
       long lJulian, lMillisec;
 
       if( HB_ISTIMESTAMP( 1 ) )
@@ -208,6 +207,8 @@ HB_FUNC( SETFDATI )
       }
       else
       {
+         PHB_ITEM pDate, pTime;
+
          pDate = hb_param( 2, HB_IT_DATE );
          if( pDate )
             pTime = hb_param( 3, HB_IT_STRING );

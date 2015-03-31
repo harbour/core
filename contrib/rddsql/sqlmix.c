@@ -95,12 +95,11 @@ static RDDFUNCS sqlmixSuper;
 
 static HB_ERRCODE sqlmixErrorRT( SQLMIXAREAP pArea, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, char * filename, HB_ERRCODE errOsCode, HB_USHORT uiFlags )
 {
-   PHB_ITEM   pError;
    HB_ERRCODE iRet = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, errGenCode );
       hb_errPutSubCode( pError, errSubCode );
       hb_errPutOsCode( pError, errOsCode );

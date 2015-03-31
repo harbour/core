@@ -475,7 +475,6 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 #  endif
 #endif
    HB_BOOL fShared, fReadonly;
-   HB_FHANDLE hFile;
    char * pszFile;
 
    HB_SYMBOL_UNUSED( pFuncs );
@@ -541,7 +540,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    else
 #endif
    {
-      hFile = hb_fsExtOpen( pszFileName, pDefExt, uiExFlags, pPaths, pError );
+      HB_FHANDLE hFile = hb_fsExtOpen( pszFileName, pDefExt, uiExFlags, pPaths, pError );
       if( hFile != FS_ERROR )
       {
          HB_ULONG device = 0, inode = 0;

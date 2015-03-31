@@ -1842,6 +1842,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
             {
                int iTODO;
                szAddr = NULL;
+               HB_SYMBOL_UNUSED( sa );
             }
 #  endif
             if( szAddr )
@@ -2702,9 +2703,10 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    {
 #if defined( HB_HAS_INET_PTON )
       struct ipv6_mreq mreq;
-      int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr ), ret;
+      int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr );
       if( err > 0 )
       {
+         int ret;
          mreq.ipv6mr_interface = 0;
 #if ! defined( IPV6_JOIN_GROUP ) && defined( IPV6_ADD_MEMBERSHIP )
 #  define IPV6_JOIN_GROUP  IPV6_ADD_MEMBERSHIP
@@ -3059,7 +3061,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 
    if( iResult == 0 )
    {
-      int iCount = 0, i;
+      int iCount = 0;
       ai = res;
       while( ai )
       {
@@ -3076,6 +3078,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
             char * szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
             if( szResult )
             {
+               int i;
                for( i = 1; i <= iCount; ++i )
                {
                   if( strcmp( hb_arrayGetCPtr( pItem, i ), szResult ) == 0 )

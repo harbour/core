@@ -71,7 +71,7 @@ HB_FUNC( HB_MD5ENCRYPT )
 
    if( pData && hb_parclen( 2 ) > 0 )
    {
-      HB_SIZE nLen = hb_itemGetCLen( pData ), n;
+      HB_SIZE nLen = hb_itemGetCLen( pData );
 
       if( nLen )
       {
@@ -80,6 +80,7 @@ HB_FUNC( HB_MD5ENCRYPT )
          const char * pszKey = hb_parc( 2 );
          int iLen = ( int ) hb_parclen( 2 );
          char vect[ 16 ];
+         HB_SIZE n;
 
          hb_md5_init_seed( vect, pszKey, iLen );
 
@@ -105,7 +106,7 @@ HB_FUNC( HB_MD5DECRYPT )
 
    if( pData && hb_parclen( 2 ) > 0 )
    {
-      HB_SIZE nLen = hb_itemGetCLen( pData ), n;
+      HB_SIZE nLen = hb_itemGetCLen( pData );
 
       if( nLen )
       {
@@ -114,6 +115,7 @@ HB_FUNC( HB_MD5DECRYPT )
          const char * pszKey = hb_parc( 2 );
          int iLen = ( int ) hb_parclen( 2 );
          char vect[ 16 ];
+         HB_SIZE n;
 
          hb_md5_init_seed( vect, pszKey, iLen );
 

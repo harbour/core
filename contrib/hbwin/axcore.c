@@ -397,7 +397,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    TYPEATTR *  pTypeAttr;
    HREFTYPE    hRefType;
    HRESULT     hr;
-   int         iFlags, i, j;
+   int         iFlags, i;
 
    if( ! szEvent )
    {
@@ -427,9 +427,13 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
       {
          HB_TRACE( HB_TR_DEBUG, ( "_get_default_sink IProvideClassInfo OK" ) );
 
+         iTI = NULL;
+
          hr = HB_VTBL( iPCI )->GetClassInfo( HB_THIS_( iPCI ) & iTI );
          if( hr == S_OK )
          {
+            pTypeAttr = NULL;
+
             hr = HB_VTBL( iTI )->GetTypeAttr( HB_THIS_( iTI ) & pTypeAttr );
             if( hr == S_OK )
             {
@@ -490,6 +494,8 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                {
                   if( pTypeAttr->typekind == TKIND_COCLASS )
                   {
+                     int j;
+
                      for( j = 0; j < pTypeAttr->cImplTypes; j++ )
                      {
                         if( szEvent )

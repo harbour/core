@@ -63,7 +63,7 @@ HB_FUNC( HB_AT )
       const char * pszText     = hb_itemGetCPtr( pText );
       HB_SIZE      nTextLength = hb_itemGetCLen( pText );
       HB_SIZE      nStart      = hb_parns( 3 );
-      HB_SIZE      nFrom, nTo, nPos = 0;
+      HB_SIZE      nFrom, nPos = 0;
 
       if( nStart <= 1 )
          nStart = nFrom = 0;
@@ -74,6 +74,8 @@ HB_FUNC( HB_AT )
 
       if( nFrom < nTextLength )
       {
+         HB_SIZE nTo;
+
          pszText     += nFrom;
          nTextLength -= nFrom;
          if( HB_ISNUM( 4 ) )

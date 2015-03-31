@@ -146,11 +146,8 @@ static void s_signalHandler( int sig )
 static void s_signalHandler( int sig, siginfo_t * info, void * v )
 #endif
 {
-   HB_UINT  uiMask;
    HB_UINT  uiSig;
-   PHB_ITEM pFunction, pExecArray, pRet;
    HB_SIZE  nPos;
-   int      iRet;
 
    #if ! ( defined( HB_OS_OS2_GCC ) || defined( __WATCOMC__ ) )
    HB_SYMBOL_UNUSED( v );
@@ -173,10 +170,16 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
 
    while( nPos > 0 )
    {
+      PHB_ITEM pFunction;
+      HB_UINT  uiMask;
+
       pFunction = hb_arrayGetItemPtr( s_pHooks, nPos );
       uiMask    = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( uiMask & uiSig )
       {
+         PHB_ITEM pExecArray, pRet;
+         int iRet;
+
          /* we don't unlock the mutex now, even if it is
             a little dangerous. But we are in a signal hander...
             for now just 2 parameters */
@@ -404,10 +407,8 @@ static S_TUPLE s_sigTable[] = {
 /* Manager of signals for windows */
 static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 {
-   PHB_ITEM pFunction, pExecArray, pRet;
    HB_SIZE  nPos;
-   HB_UINT  uiSig, uiMask;
-   int      iRet;
+   HB_UINT  uiSig;
 
    /* let's find the right signal handler. */
    hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
@@ -426,10 +427,16 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 
    while( nPos > 0 )
    {
+      PHB_ITEM pFunction;
+      HB_UINT  uiMask;
+
       pFunction = hb_arrayGetItemPtr( s_pHooks, nPos );
       uiMask    = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( ( uiMask & uiSig ) == uiSig )
       {
+         PHB_ITEM pExecArray, pRet;
+         int      iRet;
+
          /* we don't unlock the mutex now, even if it is
             a little dangerous. But we are in a signal hander...
             for now just 2 parameters */
@@ -743,12 +750,10 @@ HB_FUNC( HB_STARTSERVICE )
 
    #if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS )
    {
-      int pid;
-
       /* Iconic? */
       if( hb_parl( 1 ) )
       {
-         pid = fork();
+         int pid = fork();
 
          if( pid != 0 )
          {

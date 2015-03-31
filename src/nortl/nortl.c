@@ -504,7 +504,6 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      HB_SIZE nLen;
 
       if( pszFree )
       {
@@ -528,6 +527,8 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
       {
+         HB_SIZE nLen;
+
          if( pFileName->szName )
          {
             nLen = strlen( pFileName->szName );
@@ -598,7 +599,6 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      HB_SIZE nLen;
 
       szFileName = pszBuffer = hb_strncpy( ( char * ) hb_xgrab( HB_PATH_MAX ),
                                            szFileName, HB_PATH_MAX - 1 );
@@ -619,6 +619,8 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
       {
+         HB_SIZE nLen;
+
          if( pFileName->szName )
          {
             nLen = strlen( pFileName->szName );

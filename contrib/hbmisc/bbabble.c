@@ -65,15 +65,15 @@ HB_FUNC( BUBBLEBABBLEENCODE )
    HB_ISIZ nPos = 0;
    HB_ISIZ i;
 
-   HB_BYTE byte1;
-   HB_BYTE byte2;
-
    int iSeed = 1;
 
    pszResult[ nPos++ ] = 'x';
 
    for( i = 0;; i += 2 )
    {
+      HB_BYTE byte1;
+      HB_BYTE byte2;
+
       if( i >= nInputLen )
       {
          pszResult[ nPos++ ] = s_szVowels[ iSeed % 6 ];

@@ -78,7 +78,7 @@ HB_FUNC( SCREENMIX )
    {
       const char * szText = hb_parc( 1 );
       const char * szAttr;
-      HB_SIZE nAttr = hb_parclen( 2 ), ul = 0;
+      HB_SIZE nAttr = hb_parclen( 2 );
       int iRow, iCol;
 
       if( nAttr == 0 )
@@ -103,7 +103,7 @@ HB_FUNC( SCREENMIX )
          HB_USHORT usChar;
          HB_WCHAR wc;
          PHB_CODEPAGE cdp = hb_gtHostCP();
-         HB_SIZE nIndex = 0;
+         HB_SIZE nIndex = 0, ul = 0;
          int i;
 
          hb_gtBeginWrite();
@@ -294,10 +294,11 @@ HB_FUNC( INVERTWIN )
 HB_FUNC( UNTEXTWIN )
 {
    int iTop, iLeft, iBottom, iRight;
-   HB_USHORT usRepl, usInit, usEnd;
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
+      HB_USHORT usRepl, usInit, usEnd;
+
       usRepl = ( HB_USHORT ) hb_ctGetClearChar( 5 );
 
       if( HB_ISNUM( 6 ) )
@@ -421,13 +422,12 @@ HB_FUNC( COLORWIN )
 HB_FUNC( SCREENTEXT )  /* HB_EXTENSION */
 {
    int iTop, iLeft, iBottom, iRight;
-   char * pBuffer;
-   HB_SIZE nSize;
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
+      char * pBuffer;
       char * szText;
-      nSize = ( HB_SIZE ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
+      HB_SIZE nSize = ( HB_SIZE ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
       szText = pBuffer = ( char * ) hb_xgrab( nSize + 1 );
       while( iTop <= iBottom )
       {

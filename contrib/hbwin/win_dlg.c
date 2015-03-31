@@ -104,16 +104,19 @@ HB_FUNC( WIN_PRINTDLGDC )
 
 static LPTSTR s_dialogPairs( int iParam, DWORD * pdwIndex )
 {
-   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING ), pArrItem;
+   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING );
    LPTSTR lpStr = NULL;
    DWORD dwMaxIndex = 0;
 
    if( pItem )
    {
-      HB_SIZE nLen, nSize, nTotal, n, n1, n2;
+      HB_SIZE nLen, n, n1;
 
       if( HB_IS_ARRAY( pItem ) )
       {
+         HB_SIZE nSize, n2;
+         PHB_ITEM pArrItem;
+
          nSize = hb_arrayLen( pItem );
          for( n = nLen = 0; n < nSize; ++n )
          {
@@ -134,7 +137,7 @@ static LPTSTR s_dialogPairs( int iParam, DWORD * pdwIndex )
          }
          if( nLen )
          {
-            nTotal = nLen + 1;
+            HB_SIZE nTotal = nLen + 1;
             lpStr = ( LPTSTR ) hb_xgrab( nTotal * sizeof( TCHAR ) );
             for( n = nLen = 0; n < nSize; ++n )
             {

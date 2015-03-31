@@ -306,14 +306,14 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
  */
 HB_FUNC( MEMOLINE )
 {
-   HB_MLC_INFO MLC;
    HB_ISIZ nLine = hb_parnsdef( 3, 1 );
-   HB_BOOL fPad = hb_parldef( 7, 1 );
    char * szLine = NULL;
-   HB_SIZE nIndex, nLen = 0, nSize, nCol;
+   HB_SIZE nLen = 0;
 
    if( nLine >= 1 )
    {
+      HB_MLC_INFO MLC;
+
       if( hb_mlInit( &MLC, 1 ) )
       {
          while( --nLine )
@@ -321,8 +321,12 @@ HB_FUNC( MEMOLINE )
             if( ! hb_mlGetLine( &MLC ) )
                break;
          }
+
          if( nLine == 0 )
          {
+            HB_BOOL fPad = hb_parldef( 7, 1 );
+            HB_SIZE nIndex, nSize, nCol;
+
             nIndex = MLC.nOffset;
 
             /* CA-Cl*pper also does not check if line exists and always

@@ -379,7 +379,7 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
 
    if( HB_IS_HASH( pTable ) )
    {
-      PHB_ITEM pKey, pContext, pDefContext = NULL, pValue;
+      PHB_ITEM pKey, pContext, pDefContext = NULL;
 
       pKey = hb_itemPutCConst( NULL, "CONTEXT" );
       pContext = hb_hashGetItemPtr( pTable, pKey, 0 );
@@ -391,6 +391,8 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
 
       if( pContext && pDefContext )
       {
+         PHB_ITEM pValue;
+
          pI18N = ( PHB_I18N_TRANS ) hb_xgrabz( sizeof( HB_I18N_TRANS ) );
          hb_atomic_set( &pI18N->iUsers, 1 );
          pI18N->table = pTable;
@@ -1038,9 +1040,10 @@ HB_FUNC( HB_I18N_ADDTEXT )
       {
          if( HB_IS_ARRAY( pTrans ) )
          {
-            HB_SIZE nLen = hb_arrayLen( pTrans ), n;
+            HB_SIZE nLen = hb_arrayLen( pTrans );
             if( nLen != 0 )
             {
+               HB_SIZE n;
                for( n = 1; n <= nLen; ++n )
                {
                   if( ! HB_IS_STRING( hb_arrayGetItemPtr( pTrans, n ) ) )

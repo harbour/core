@@ -144,11 +144,12 @@ static HB_ERRCODE commonError( ADSAREAP pArea,
                                HB_ERRCODE errOsCode, const char * szFileName,
                                HB_USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
-   PHB_ITEM pError;
    HB_ERRCODE errCode = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
+      PHB_ITEM pError;
+
       if( pErrorPtr )
       {
          if( ! *pErrorPtr )
@@ -954,13 +955,11 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, HB_ULONG ulRecNo )
 
 static HB_ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
 {
-   HB_ULONG ulRecNo;
-
    HB_TRACE( HB_TR_DEBUG, ( "adsGoToId(%p, %p)", pArea, pItem ) );
 
    if( HB_IS_NUMERIC( pItem ) )
    {
-      ulRecNo = hb_itemGetNL( pItem );
+      HB_ULONG ulRecNo = hb_itemGetNL( pItem );
       return SELF_GOTO( &pArea->area, ulRecNo );
    }
    else
@@ -1513,10 +1512,9 @@ static HB_ERRCODE adsAppend( ADSAREAP pArea, HB_BOOL fUnLockAll )
 
 static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 {
-   HB_USHORT uiItems, uiCount, uiLen, uiDec;
+   HB_USHORT uiItems, uiCount;
    HB_ERRCODE errCode = HB_SUCCESS;
    DBFIELDINFO dbFieldInfo;
-   PHB_ITEM pFieldDesc;
    const char * szType;
 
    HB_TRACE( HB_TR_DEBUG, ( "adsCreateFields(%p, %p)", pArea, pStruct ) );
@@ -1528,6 +1526,8 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
+      HB_USHORT uiLen, uiDec;
+      PHB_ITEM pFieldDesc;
       const char * szFieldType;
       int iData, iNameLen;
 
