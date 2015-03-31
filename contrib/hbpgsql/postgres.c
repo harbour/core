@@ -394,6 +394,11 @@ HB_FUNC( PQRESULTERRORFIELD )
 #endif
 }
 
+HB_FUNC( PQRESSTATUS )
+{
+   hb_retc( PQresStatus( ( ExecStatusType ) hb_parnl( 1 ) ) );
+}
+
 HB_FUNC( PQSTATUS )
 {
    PGconn * conn = hb_PGconn_par( 1 );

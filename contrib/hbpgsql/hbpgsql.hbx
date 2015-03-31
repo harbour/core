@@ -72,6 +72,7 @@ DYNAMIC PQputCopyData
 DYNAMIC PQputCopyEnd
 DYNAMIC PQrequestCancel
 DYNAMIC PQreset
+DYNAMIC PQresStatus
 DYNAMIC PQresult2array
 DYNAMIC PQresultErrorField
 DYNAMIC PQresultErrorMessage
