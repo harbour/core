@@ -1826,7 +1826,7 @@ static HB_ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 
    if( ! pArea->valResult )
       pArea->valResult = hb_itemNew( NULL );
-   hb_itemCopy( pArea->valResult, pItem );
+   hb_itemMove( pArea->valResult, pItem );
 
    hb_rddSelectWorkAreaNumber( iCurrArea );
 

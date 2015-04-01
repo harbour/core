@@ -3462,7 +3462,7 @@ static void hb_cdxTagHeaderStore( LPCDXTAG pTag )
    tagHeader.indexOpt = pTag->OptFlags;
    if( pTag->TagBlock == 0 )
    {
-      HB_PUT_LE_UINT32( tagHeader.signature, CDX_HARBOUR_SIGNATURE );
+      HB_PUT_BE_UINT32( tagHeader.signature, CDX_HARBOUR_SIGNATURE );
       tagHeader.indexSig = pTag->pIndex->fLargeFile ? 0x21 : 0x01;
    }
    else
@@ -3554,8 +3554,10 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
    {
       HB_BOOL fLargeFile = HB_FALSE;
       HB_USHORT uiPageLen = CDX_PAGELEN, uiHeaderLen = CDX_HEADERLEN;
+      HB_U32 u32Sig = HB_GET_BE_UINT32( tagHeader.signature );
 
-      if( HB_GET_LE_UINT32( tagHeader.signature ) == CDX_HARBOUR_SIGNATURE )
+      if( u32Sig == CDX_HARBOUR_SIGNATURE ||
+          u32Sig == HB_SWAP_UINT32( CDX_HARBOUR_SIGNATURE ) )
       {
          fLargeFile  = tagHeader.indexSig == 0x21;
          uiHeaderLen = HB_GET_LE_UINT16( tagHeader.headerLen );
