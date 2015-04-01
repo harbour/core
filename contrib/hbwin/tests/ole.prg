@@ -481,7 +481,7 @@ STATIC PROCEDURE Exm_CreateShortcut()
       oSC := oShell:CreateShortcut( hb_DirBase() + hb_ps() + "testole.lnk" )
       oSC:TargetPath := hb_ProgName()
       oSC:WorkingDirectory := hb_DirBase()
-      oSC:IconLocation := hb_ProgName() + ",0"
+      oSC:IconLocation := '"' + hb_ProgName() + '"' + ",0"
       oSC:Save()
    ELSE
       ? "Error: Shell not available. [" + win_oleErrorText() + "]"

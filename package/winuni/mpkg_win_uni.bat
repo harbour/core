@@ -74,8 +74,8 @@ xcopy /y       "%~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.d
 ::       is buggy in BCC55 and BCC58 (no other versions tested), leaving off
 ::       leading underscore from certain ("random") symbols, resulting in
 ::       unresolved externals, when trying to use it. [vszakats]
-for %%a in ( "%HB_ABSROOT%bin\*-%HB_VS%.dll" ) do (
-   "%HB_DIR_BCC_IMPLIB%impdef.exe" -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" "%%a"
+for %%I in ( "%HB_ABSROOT%bin\*-%HB_VS%.dll" ) do (
+   "%HB_DIR_BCC_IMPLIB%impdef.exe" -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" "%%I"
    echo s/LIBRARY     %%~na.DLL/LIBRARY     "%%~na.dll"/Ig> _hbtemp.sed
    sed -f _hbtemp.sed < "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" > "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
    "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib" "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
@@ -132,7 +132,7 @@ del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgnat-*.dll" 2> nul
 
 if "%MINGW_HOST%" == "32" (
 
-   for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*"') do set MINGW_VER=%%a
+   for /f %%I in ('dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*"') do set MINGW_VER=%%I
 
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib64\" 2> nul
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\64\" 2> nul
@@ -148,7 +148,7 @@ if "%MINGW_HOST%" == "32" (
 
 ) else if "%MINGW_HOST%" == "64" (
 
-   for /f %%a in ('dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"') do set MINGW_VER=%%a
+   for /f %%I in ('dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"') do set MINGW_VER=%%I
 
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib32\" 2> nul
    rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\32\" 2> nul
@@ -170,7 +170,7 @@ echo ! mingw version: %MINGW_VER% %MINGW_HOST%-bit hosted
 set _HB_VER=%HB_VF%
 if not "%HB_VF%" == "%HB_VF_DEF%" set _HB_VER=%HB_VF_DEF% %_HB_VER%
 
-for /f %%a in ('git rev-parse --short HEAD') do set VCS_ID=%%a
+for /f %%I in ('git rev-parse --short HEAD') do set VCS_ID=%%I
 sed -e "s/_VCS_ID_/%VCS_ID%/g"^
     -e "s/_HB_VERSION_/%_HB_VER%/g"^
     -e "s/_MINGW_VER_/%MINGW_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
