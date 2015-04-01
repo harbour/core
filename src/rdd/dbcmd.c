@@ -3,6 +3,7 @@
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2002 Horacio Roldan <harbour_ar@yahoo.com.ar> (hb_rddIterateWorkAreas(), hb_rddGetTempAlias())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,16 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following functions are added by
- *       Horacio Roldan <harbour_ar@yahoo.com.ar>
- *
- * hb_rddIterateWorkAreas()
- * hb_rddGetTempAlias()
- * hb_rddGetTempAlias()
  *
  */
 
@@ -169,11 +160,8 @@ HB_FUNC( AFIELDS )
 
 HB_FUNC( ALIAS )
 {
-   int iArea;
-   AREAP pArea;
+   AREAP pArea = ( AREAP ) hb_rddGetWorkAreaPointer( ( HB_AREANO ) hb_parni( 1 ) );
 
-   iArea = hb_parni( 1 );
-   pArea = ( AREAP ) hb_rddGetWorkAreaPointer( iArea );
    if( pArea )
    {
       char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
@@ -589,11 +577,12 @@ HB_FUNC( DBGOTOP )
 
 HB_FUNC( __DBLOCATE )
 {
-   DBSCOPEINFO dbScopeInfo;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
    {
+      DBSCOPEINFO dbScopeInfo;
+
       dbScopeInfo.itmCobFor   = hb_param( 1, HB_IT_BLOCK );
       dbScopeInfo.lpstrFor    = NULL;
       dbScopeInfo.itmCobWhile = hb_param( 2, HB_IT_BLOCK );
