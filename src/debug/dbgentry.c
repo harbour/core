@@ -1555,7 +1555,7 @@ static HB_BOOL hb_dbgIsAltD( void )
    HB_ISIZ nOffset = hb_stackBaseProcOffset( 1 );
 
    return nOffset > 0 &&
-          strcmp( hb_itemGetSymbol( hb_stackItem( nOffset ) )->szName, "ALTD" );
+          ! strcmp( hb_itemGetSymbol( hb_stackItem( nOffset ) )->szName, "ALTD" );
 }
 
 
