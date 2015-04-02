@@ -4071,14 +4071,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          cParam := PathMakeAbsolute( hb_DirSepToOS( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
 #ifdef HARBOUR_SUPPORT
-         IF Empty( hb_FNameExt( cParam ) )
+         DO CASE
+         CASE Empty( hb_FNameExt( cParam ) )
             cParam := hb_FNameExtSet( cParam, ".prg" )
-         ELSEIF hb_FNameExt( cParamL ) == ".hbx"
+         CASE hb_FNameExt( cParamL ) == ".hbx"
             IF hb_FileExists( cParam )
                AAdd( hbmk[ _HBMK_aPRG ], cParam )
             ENDIF
             LOOP
-         ENDIF
+         ENDCASE
 #endif
          AAdd( hbmk[ _HBMK_aPRG ], cParam )
          hb_default( @hbmk[ _HBMK_cFIRST ], cParam )

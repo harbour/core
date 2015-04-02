@@ -759,6 +759,10 @@ ifeq ($(HB_COMPILER),)
                                        else
                                        ifneq ($(findstring 18.,$(_C_VER)),)
                                           HB_COMPILER_VER := 1800
+                                       else
+                                       ifneq ($(findstring 19.,$(_C_VER)),)
+                                          HB_COMPILER_VER := 1900
+                                       endif
                                        endif
                                        endif
                                        endif
@@ -797,6 +801,10 @@ ifeq ($(HB_COMPILER),)
                                                    else
                                                    ifneq ($(findstring 18.,$(_C_VER)),)
                                                       HB_COMPILER_VER := 1800
+                                                   else
+                                                   ifneq ($(findstring 19.,$(_C_VER)),)
+                                                      HB_COMPILER_VER := 1900
+                                                   endif
                                                    endif
                                                    endif
                                                    endif
@@ -822,6 +830,10 @@ ifeq ($(HB_COMPILER),)
                                                       else
                                                       ifneq ($(findstring 18.,$(_C_VER)),)
                                                          HB_COMPILER_VER := 1800
+                                                      else
+                                                      ifneq ($(findstring 19.,$(_C_VER)),)
+                                                         HB_COMPILER_VER := 1900
+                                                      endif
                                                       endif
                                                       endif
                                                       endif
@@ -852,6 +864,10 @@ ifeq ($(HB_COMPILER),)
                                                          else
                                                          ifneq ($(findstring 18.,$(_C_VER)),)
                                                             HB_COMPILER_VER := 1800
+                                                         else
+                                                         ifneq ($(findstring 19.,$(_C_VER)),)
+                                                            HB_COMPILER_VER := 1900
+                                                         endif
                                                          endif
                                                          endif
                                                          endif
