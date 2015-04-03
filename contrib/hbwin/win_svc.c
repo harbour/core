@@ -200,9 +200,13 @@ HB_FUNC( WIN_SERVICEINSTALL )
 
          void * hServiceName;
          void * hDisplayName;
+         void * hAccountName;
+         void * hPassword;
 
          LPCTSTR lpServiceName = HB_PARSTRDEF( 1, &hServiceName, NULL );
-         LPCTSTR lpDisplayName = HB_PARSTRDEF( 2, &hDisplayName, NULL );
+         LPCTSTR lpDisplayName = HB_PARSTR( 2, &hDisplayName, NULL );
+         LPCTSTR lpAccountName = HB_PARSTR( 5, &hAccountName, NULL );
+         LPCTSTR lpPassword = HB_PARSTR( 6, &hPassword, NULL );
 
          schSrv = CreateService( schSCM,                    /* SCM database */
                                  lpServiceName,             /* name of service */
@@ -215,8 +219,8 @@ HB_FUNC( WIN_SERVICEINSTALL )
                                  NULL,                      /* no load ordering group */
                                  NULL,                      /* no tag identifier */
                                  NULL,                      /* no dependencies */
-                                 NULL,                      /* LocalSystem account */
-                                 NULL );                    /* no password */
+                                 lpAccountName,             /* default: LocalSystem account */
+                                 lpPassword );              /* default: no password */
 
          if( schSrv )
          {
@@ -229,6 +233,8 @@ HB_FUNC( WIN_SERVICEINSTALL )
 
          hb_strfree( hServiceName );
          hb_strfree( hDisplayName );
+         hb_strfree( hAccountName );
+         hb_strfree( hPassword );
 
          CloseServiceHandle( schSCM );
       }
