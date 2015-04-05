@@ -116,7 +116,7 @@ PROCEDURE Main( cDL, cUL )
 
       WAIT
 
-      hb_default( @cDL, "ftp://ftp.mozilla.org/README" )
+      hb_default( @cDL, "https://www.mozilla.org/README" )
 
       /* Now let's download to a file */
 
@@ -153,13 +153,11 @@ PROCEDURE Main( cDL, cUL )
 
       WAIT
 
-      hb_default( @cDL, "ftp://ftp.mozilla.org/" )
-
       /* Now let's download a dirlist to memory */
 
       ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_DIRLISTONLY )
-      ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
+      ? curl_easy_setopt( curl, HB_CURLOPT_URL, "ftp://ftp.mozilla.org/" )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
