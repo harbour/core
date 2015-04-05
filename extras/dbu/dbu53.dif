@@ -1030,4 +1030,3 @@ diff -u dbu53ori/dbuview.prg dbu53pat/dbuview.prg
  		* indicate new View has been set
  		keystroke = 13
  
-Only in dbu53pat: types.txt
