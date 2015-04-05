@@ -503,66 +503,71 @@ diff -u dbu52ori/dbunet.prg dbu52pat/dbunet.prg
 +   RETURN ""
 diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
 --- dbu52ori/dbustru.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbustru.prg	2015-04-05 20:49:57.000000000 +0200
++++ dbu52pat/dbustru.prg	2015-04-05 23:32:33.000000000 +0200
 @@ -32,8 +32,8 @@
  * local arrays..constant values
  DECLARE ffield[4]
  DECLARE field_col[4]
 -DECLARE data_type[5]
 -DECLARE l_usr[5]
-+DECLARE data_type[21]
-+DECLARE l_usr[21]
++DECLARE data_type[23]
++DECLARE l_usr[23]
  
  * field list for structure file
  ffield[1] = "field_name"
-@@ -53,13 +53,45 @@
+@@ -53,13 +53,49 @@
  data_type[3] = "Date     "
  data_type[4] = "Logical  "
  data_type[5] = "Memo     "
-+data_type[6] = "BLOB     " 
-+data_type[7] = "Image    " 
-+data_type[8] = "OLE      " 
-+data_type[9] = "Binary   " 
-+data_type[10] = "Float    "
-+data_type[11] = "Double   "
++data_type[6] = "BLOB     "
++data_type[7] = "Image    "
++data_type[8] = "OLE      "
++data_type[9] = "VarLength"
++data_type[10] = "Any      "
++data_type[11] = "Float    "
 +data_type[12] = "Double   "
-+data_type[13] = "Currency "
-+data_type[14] = "Integer  "
-+data_type[15] = "Integer  "
++data_type[13] = "Double   "
++data_type[14] = "Double   "
++data_type[15] = "Currency "
 +data_type[16] = "Integer  "
-+data_type[17] = "Autoinc  "
-+data_type[18] = "Modtime  "
-+data_type[19] = "Rowver   "
-+data_type[20] = "Timestamp"
-+data_type[21] = "Time/stmp"
++data_type[17] = "Integer  "
++data_type[18] = "Integer  "
++data_type[19] = "Autoinc  "
++data_type[20] = "Modtime  "
++data_type[21] = "Rowver   "
++data_type[22] = "Timestamp"
++data_type[23] = "Time/stmp"
  
  * last user definable ffield for each data type
  l_usr[1] = 3			&& character - variable len
  l_usr[2] = 4			&& numeric - variable len and dec
 -l_usr[3] = 2			&& date - fixed len - 8
-+l_usr[3] = 3			&& date - fixed len - 8
++l_usr[3] = 3			&& date - fixed len - 3, 4 or 8
  l_usr[4] = 2			&& logical - fixed len - 1
- l_usr[5] = 2			&& memo - fixed len - 10
-+l_usr[6] = 3			&& "W"
-+l_usr[7] = 3			&& "P"
-+l_usr[8] = 3			&& "G"
-+l_usr[9] = 3			&& "Q"
-+l_usr[10] = 4			&& "F" like "N"
-+l_usr[11] = 4			&& "8" len 8
-+l_usr[12] = 4			&& "B" len 8
-+l_usr[13] = 4			&& "Y" len 1-4 or 8, default 8
-+l_usr[14] = 4			&& "I" len 1-4 or 8, default 4
-+l_usr[15] = 2			&& "2" len 2 dec 0
-+l_usr[16] = 2			&& "4" len 4 dec 0
-+l_usr[17] = 2			&& "+" len 4 dec 0
-+l_usr[18] = 2			&& "=" len 8 dec 0
-+l_usr[19] = 2			&& "^" len 8 dec 0
-+l_usr[20] = 2			&& "@" len 8 dec 0
-+l_usr[21] = 3			&& "T" len 4 or 8 dec 0
+-l_usr[5] = 2			&& memo - fixed len - 10
++l_usr[5] = 3			&& memo - fixed len - 10 or 4
++l_usr[6] = 3			&& "W" - fixed len - 10 or 4
++l_usr[7] = 3			&& "P" - fixed len - 10 or 4
++l_usr[8] = 3			&& "G" - fixed len - 10 or 4
++l_usr[9] = 3			&& "Q" - variable len
++l_usr[10] = 3			&& "V" len 4 or 6 or above dec 0
++l_usr[11] = 4			&& "F" like "N"
++l_usr[12] = 4			&& "8" len 8
++l_usr[13] = 4			&& "B" len 8
++l_usr[14] = 4			&& "Z" len 8
++l_usr[15] = 2			&& "Y" len 8, dec 4
++l_usr[16] = 4			&& "I" len 1-4 or 8, default 4
++l_usr[17] = 2			&& "2" len 2 dec 0
++l_usr[18] = 2			&& "4" len 4 dec 0
++l_usr[19] = 2			&& "+" len 4 dec 0
++l_usr[20] = 2			&& "=" len 8 dec 0
++l_usr[21] = 2			&& "^" len 8 dec 0
++l_usr[22] = 2			&& "@" len 8 dec 0
++l_usr[23] = 3			&& "T" len 4 or 8 dec 0
  
  * initialize local variables
  type_n = 1				&& index into data types
-@@ -74,8 +106,8 @@
+@@ -74,8 +110,8 @@
  filename = ""			&& variable for "filebox" function
  
  * sigle row templates
@@ -573,7 +578,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
  IF .NOT. EMPTY(M->cur_dbf)
  	* modify structure
-@@ -133,11 +165,11 @@
+@@ -133,11 +169,11 @@
  * establish window heading
  @ 9,field_col[1];
  SAY "Structure of " + pad(IF(EMPTY(stru_name), "<new file>",;
@@ -588,49 +593,63 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
  DO WHILE .NOT. q_check()
  	* the big switch
-@@ -194,7 +226,7 @@
+@@ -194,7 +230,7 @@
  
  			IF n = 2
  				* field_type gets special treatment
 -				type_n = AT(field_type, "CNDLM")
-+				type_n = AT(field_type, "CNDLMWPGQF8BYI24+=^@T")
++				type_n = AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")
  
  			ELSE
  				* turn on cursor for GET
-@@ -233,9 +265,9 @@
+@@ -233,9 +269,9 @@
  
  					DO CASE
  
 -						CASE UPPER(CHR(keystroke)) $ "CNDLM"
-+						CASE UPPER(CHR(keystroke)) $ "CNDLMWPGQF8BYI24+=^@T"
++						CASE UPPER(CHR(keystroke)) $ "CNDLMWPGQVF8BZYI24+=^@T"
  							* set field type to one of C, N, D, L, or M
 -							type_n = AT(UPPER(CHR(keystroke)), "CNDLM")
-+							type_n = AT(UPPER(CHR(keystroke)), "CNDLMWPGQF8BYI24+=^@T")
++							type_n = AT(UPPER(CHR(keystroke)), "CNDLMWPGQVF8BZYI24+=^@T")
  							keystroke = 13
  
  						CASE keystroke = 32
-@@ -248,9 +280,9 @@
+@@ -248,9 +284,9 @@
  
  					ENDCASE
  
 -					IF m_item <> SUBSTR("CNDLM", type_n, 1)
-+					IF m_item <> SUBSTR("CNDLMWPGQF8BYI24+=^@T", type_n, 1)
++					IF m_item <> SUBSTR("CNDLMWPGQVF8BZYI24+=^@T", type_n, 1)
  						* set new field_type from type_n
 -						REPLACE field_type WITH SUBSTR("CNDLM", type_n, 1)
-+						REPLACE field_type WITH SUBSTR("CNDLMWPGQF8BYI24+=^@T", type_n, 1)
++						REPLACE field_type WITH SUBSTR("CNDLMWPGQVF8BZYI24+=^@T", type_n, 1)
  
  						DO CASE
  							* set field_len and field_dec according to type
-@@ -259,7 +291,7 @@
+@@ -259,7 +295,21 @@
  								* character..any len will do, but not any dec
  								REPLACE field_dec WITH 0
  
 -							CASE field_type = "N"
++							CASE field_type = "Q"
++								IF field_len > 255
++									REPLACE field_len WITH 255
++								ELSEIF field_len = 0
++									REPLACE field_len WITH 1
++								ENDIF
++								REPLACE field_dec WITH 0
++
++							CASE field_type = "V"
++								IF field_len <> 4 .AND. field_len < 6
++									REPLACE field_len WITH 6
++								ENDIF
++								REPLACE field_dec WITH 0
++
 +							CASE field_type $ "NF"
  								* numeric
  
  								IF m_item = "C" .AND. (field_dec <> 0 .OR.;
-@@ -269,24 +301,62 @@
+@@ -269,24 +319,62 @@
  
  								ENDIF
  
@@ -642,11 +661,9 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
 +								ENDIF
 +
 +							CASE field_type = "Y"
-+								IF field_len = 0 .OR. (field_len > 4 .AND. field_len <> 8)
-+									REPLACE field_len WITH 8
-+								ENDIF
++								REPLACE field_len WITH 8,field_dec WITH 4
 +
-+							CASE field_type $ "8B"
++							CASE field_type $ "8BZ"
 +								IF field_len <> 8
 +									REPLACE field_len WITH 8
 +								ENDIF
@@ -677,57 +694,61 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  								REPLACE field_len WITH 1,field_dec WITH 0
  
 -							CASE field_type = "M"
-+							CASE field_type $ "MWPGQ"
- 								* memo..always 10
- 								REPLACE field_len WITH 10,field_dec WITH 0
- 
+-								* memo..always 10
+-								REPLACE field_len WITH 10,field_dec WITH 0
++							CASE field_type $ "MVWPG"
++								IF field_len <> 10 .AND. field_len <> 4
++									REPLACE field_len WITH 10
++								ENDIF
++								REPLACE field_dec WITH 0
++
 +							CASE field_type = "+"
 +								REPLACE field_len WITH 4,field_dec WITH 0
 +
 +							CASE field_type $ "=^"
 +								REPLACE field_len WITH 8,field_dec WITH 0
-+
+ 
  						ENDCASE
  
  						* display new field_len
  						@ cur_row,field_col[3] SAY STR(field_len,4)
  
 -						IF field_type = "N"
-+						IF field_type $ "NFYI8B"
++						IF field_type $ "NFYI8BZ"
  							* display new field_dec
  							@ cur_row,field_col[4] SAY field_dec
  
-@@ -488,7 +558,7 @@
+@@ -488,7 +576,7 @@
  		CASE keystroke = 4
  			* right arrow
  
 -			IF n < l_usr[AT(field_type, "CNDLM")]
-+			IF n < l_usr[AT(field_type, "CNDLMWPGQF8BYI24+=^@T")]
++			IF n < l_usr[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
  				n = n + 1
  
  			ENDIF
-@@ -658,7 +728,7 @@
+@@ -658,7 +746,7 @@
  		CASE keystroke = 6 .OR. keystroke = 23
  			* end or ^end
  			keystroke = 0
 -			n = l_usr[AT(field_type, "CNDLM")]
-+			n = l_usr[AT(field_type, "CNDLMWPGQF8BYI24+=^@T")]
++			n = l_usr[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
  
  		CASE keystroke = 1 .OR. keystroke = 29
  			* home or ^home
-@@ -790,9 +860,9 @@
+@@ -790,9 +878,9 @@
  			* update field/record number on screen
  			@ 9,field_col[1] + 26 SAY "Field " + pad(LTRIM(STR(RECNO())), 5)
  
 -			IF n > l_usr[AT(field_type, "CNDLM")]
-+			IF n > l_usr[AT(field_type, "CNDLMWPGQF8BYI24+=^@T")]
++			IF n > l_usr[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
  				* check for n out of range
 -				n = l_usr[AT(field_type, "CNDLM")]
-+				n = l_usr[AT(field_type, "CNDLMWPGQF8BYI24+=^@T")]
++				n = l_usr[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
  
  			ENDIF
  
-@@ -811,7 +881,7 @@
+@@ -811,7 +899,7 @@
  			is_insert = .F.
  			filename = stru_name
  
@@ -736,7 +757,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  					   "do_modstru", .T., 13) <> 0
  				* structure created or altered
  				stru_name = filename
-@@ -819,7 +889,7 @@
+@@ -819,7 +907,7 @@
  				* re-write name at top of window
  				@ 9,field_col[1] + 13;
  				SAY pad(IF(EMPTY(stru_name), "<new file>",;
@@ -745,12 +766,12 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
  				IF aseek(dbf, filename) = 0
  					* bring new file into view
-@@ -904,18 +974,18 @@
+@@ -904,18 +992,18 @@
  PARAMETERS fill_row
  
  @ fill_row,field_col[1];
 -SAY field_name + " � " + data_type[AT(field_type, "CNDLM")] + " � "
-+SAY field_name + hb_UTF8ToStr( " │ " ) + data_type[AT(field_type, "CNDLMWPGQF8BYI24+=^@T")] + hb_UTF8ToStr( " │ " )
++SAY field_name + hb_UTF8ToStr( " │ " ) + data_type[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")] + hb_UTF8ToStr( " │ " )
  
  IF field_type = "C"
  	* display Clipper extended field length
@@ -764,29 +785,29 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
 +	@ fill_row,field_col[3] SAY STR(field_len, 4) + hb_UTF8ToStr( " │    " )
  
 -	IF field_type = "N"
-+	IF field_type $ "NFYI8B"
++	IF field_type $ "NFYI8BZ"
  		* display decimals for numeric field
  		@ fill_row,field_col[4] SAY field_dec
  
-@@ -940,7 +1010,7 @@
+@@ -940,7 +1028,7 @@
  
  	CASE n = 2
  		* display field_type as character string
 -		@ cur_row,field_col[2] SAY data_type[AT(field_type, "CNDLM")]
-+		@ cur_row,field_col[2] SAY data_type[AT(field_type, "CNDLMWPGQF8BYI24+=^@T")]
++		@ cur_row,field_col[2] SAY data_type[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
  
  	CASE n = 3
  
-@@ -1110,7 +1180,7 @@
+@@ -1110,7 +1198,7 @@
  	ENDIF
  ENDIF
  
 -IF field_type = "N" .AND. status = 0
-+IF field_type $ "NFYI8B" .AND. status = 0
++IF field_type $ "NFYI8BZ" .AND. status = 0
  	* test for valid field_dec
  
  	IF field_dec > IF(field_len < 3, 0, IF(field_len > 17, 15, field_len - 2))
-@@ -1215,7 +1285,7 @@
+@@ -1215,7 +1303,7 @@
  		USE
  
  		* remember if file existed in current directory before
@@ -795,7 +816,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
  		IF FILE(filename)
  			* file exists..modify structure and save old data
-@@ -1235,12 +1305,12 @@
+@@ -1235,12 +1323,12 @@
  			ENDIF
  
  			* establish temp filespec and dbt specs in same directory
@@ -812,7 +833,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
  			IF FILE(dbt_spec)
  				* data file contains memo fields
-@@ -1320,8 +1390,8 @@
+@@ -1320,8 +1408,8 @@
           CREATE &filename FROM ddbbuuuu.ext ALIAS cAlias
  			USE
  
