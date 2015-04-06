@@ -728,7 +728,7 @@ executables are required for a cross-build process to succeed.
 ```batchfile
 rem clang (alpha)
 call "%ProgramFiles%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
-set PATH="%ProgramFiles%\LLVM 3.6.svn";%PATH%
+set PATH=%ProgramFiles%\LLVM 3.6.svn;%PATH%
 win-make
 ```
 
@@ -1003,7 +1003,7 @@ win-make
 ```batchfile
 rem clang (alpha)
 call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
-set PATH="%ProgramFiles(x86)%\LLVM 3.6.svn";%PATH%
+set PATH=%ProgramFiles(x86)%\LLVM 3.6.svn;%PATH%
 win-make
 ```
 
