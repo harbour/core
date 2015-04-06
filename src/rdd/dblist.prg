@@ -61,10 +61,10 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    /* Choose the output style */
    IF lOff
-      bOutBlock := {|| QOut( iif( Deleted(), "*", " " ) ),;
+      bOutBlock := {|| QOut( iif( Deleted(), "*", " " ) ), ;
                        AEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
    ELSE
-      bOutBlock := {|| QOut( Str( RecNo(), 7 ), iif( Deleted(), "*", " " ) ),;
+      bOutBlock := {|| QOut( Str( RecNo(), 7 ), iif( Deleted(), "*", " " ) ), ;
                        AEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
    ENDIF
 

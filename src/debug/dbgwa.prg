@@ -72,7 +72,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    LOCAL nOldArea := Select()
 
-   hb_WAEval( {|| AAdd( aAlias, { select(), Alias() } ) } )
+   hb_WAEval( {|| AAdd( aAlias, { Select(), Alias() } ) } )
 
    IF Len( aAlias ) == 0
       __dbgAlert( "No workareas in use" )
@@ -86,7 +86,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    /* Window creation */
 
-   oDlg := HBDbWindow():New( 2, 3, 21, 76, "", cColor )
+   oDlg := HBDbWindow():New( 2, 2, 21, 79, "", cColor )
 
    oDlg:bKeyPressed := {| nKey | DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, @aStruc, @aInfo ) }
    oDlg:bPainted    := {|| DlgWorkAreaPaint( oDlg, aBrw ) }
@@ -135,7 +135,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    aStruc := ( aAlias[ n1 ][ 1 ] )->( dbStruct() )
 
-   aBrw[ 3 ] := HBDbBrowser():new( oDlg:nTop + 1, oDlg:nLeft + 54, oDlg:nBottom - 1, oDlg:nLeft + 72 )
+   aBrw[ 3 ] := HBDbBrowser():new( oDlg:nTop + 1, oDlg:nLeft + 54, oDlg:nBottom - 1, oDlg:nLeft + 76 )
 
    aBrw[ 3 ]:Cargo         := n3 := 1
    aBrw[ 3 ]:ColorSpec     := oDlg:cColor
@@ -146,7 +146,7 @@ PROCEDURE __dbgShowWorkAreas()
       Max( 1, n3 + nSkip ) ), n3 - nPos }
 
    aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| PadR( aStruc[ n3 ][ DBS_NAME ], 10 ) + " " + ;
-      PadR( aStruc[ n3 ][ DBS_TYPE ], 1 ) + " " + ;
+      PadR( aStruc[ n3 ][ DBS_TYPE ], 4 ) + " " + ;
       Str( aStruc[ n3 ][ DBS_LEN ], 3 ) + " " + ;
       Str( aStruc[ n3 ][ DBS_DEC ], 2 ) } ) )
 

@@ -54,8 +54,8 @@
          - won't crash with "No exported method: EVAL" if xKey is not
            block and table is not indexed. */
 
-FUNCTION __dbTotal( cFile, xKey, aFields,;
-                    xFor, xWhile, nNext, nRec, lRest,;
+FUNCTION __dbTotal( cFile, xKey, aFields, ;
+                    xFor, xWhile, nNext, nRec, lRest, ;
                     cRDD, nConnection, cCodePage )
 
    LOCAL nOldArea
@@ -111,7 +111,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    nOldArea := Select()
 
    aNewDbStruct := {}
-   AEval( dbStruct(), {| aField | iif( aField[ DBS_TYPE ] == "M", NIL, AAdd( aNewDbStruct, aField ) ) } )
+   AEval( dbStruct(), {| aField | iif( Left( aField[ DBS_TYPE ], 1 ) $ "MWPG", NIL, AAdd( aNewDbStruct, aField ) ) } )
    IF Empty( aNewDbStruct )
       RETURN .F.
    ENDIF

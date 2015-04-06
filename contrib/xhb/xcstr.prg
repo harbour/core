@@ -62,6 +62,12 @@ FUNCTION CStrToVal( cExp, cType )
       ELSE
          RETURN CToD( cExp )
       ENDIF
+   CASE "T"
+      IF Empty( hb_StrReplace( cExp, "0123456789" ) )
+         RETURN hb_SToT( cExp )
+      ELSE
+         RETURN hb_CToT( cExp )
+      ENDIF
    CASE "L" ; RETURN Left( cExp, 1 ) $ "TY" .OR. SubStr( cExp, 2, 1 ) $ "TY"
    CASE "N" ; RETURN Val( cExp )
    CASE "U" ; RETURN NIL
@@ -106,6 +112,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
    SWITCH ValType( xVal )
    CASE "C" ; RETURN StringToLiteral( xVal )
    CASE "D" ; RETURN "hb_SToD( '" + DToS( xVal ) + "' )"
+   CASE "T" ; RETURN "hb_SToT( '" + hb_TToS( xVal ) + "' )"
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "N" ; RETURN hb_ntos( xVal )
    CASE "A"
@@ -243,6 +250,7 @@ FUNCTION ValToDate( xVal )
          RETURN CToD( xVal )
       ENDIF
    CASE "D" ; RETURN xVal
+   CASE "T" ; RETURN hb_TToD( xVal )
    CASE "N"
    CASE "P" ; RETURN 0d19000101 + xVal
    ENDSWITCH
@@ -250,6 +258,31 @@ FUNCTION ValToDate( xVal )
    Throw( xhb_ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
 
    RETURN hb_SToD()
+
+FUNCTION ValToTimestamp( xVal )
+
+   SWITCH ValType( xVal )
+   CASE "A"
+   CASE "H"
+   CASE "L"
+   CASE "O"
+   CASE "U" ; EXIT
+   CASE "B" ; RETURN ValToTimestamp( Eval( xVal ) )
+   CASE "C"
+      IF Empty( hb_StrReplace( xVal, "0123456789" ) )
+         RETURN hb_SToD( xVal )
+      ELSE
+         RETURN CToD( xVal )
+      ENDIF
+   CASE "D"
+   CASE "T" ; RETURN xVal
+   CASE "N"
+   CASE "P" ; RETURN 0d19000101 + xVal
+   ENDSWITCH
+
+   Throw( xhb_ErrorNew( "VALTOTIMESTAMP", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+
+   RETURN hb_SToT()
 
 FUNCTION ValToHash( xVal )
 
@@ -264,6 +297,7 @@ FUNCTION ValToLogical( xVal )
    SWITCH ValType( xVal )
    CASE "A"
    CASE "D"
+   CASE "T"
    CASE "H"
    CASE "N"
    CASE "O"
@@ -293,7 +327,8 @@ FUNCTION ValToNumber( xVal )
    CASE "H" ; RETURN Len( xVal )
    CASE "B" ; RETURN ValToNumber( Eval( xVal ) )
    CASE "C" ; RETURN Val( xVal )
-   CASE "D" ; RETURN xVal - 0d19000101
+   CASE "D"
+   CASE "T" ; RETURN xVal - 0d19000101
    CASE "L" ; RETURN iif( xVal, 1, 0 )
    CASE "O" ; RETURN xVal:hClass
    CASE "N" ; RETURN xVal
@@ -312,6 +347,7 @@ FUNCTION ValToObject( xVal )
    CASE "B" ; ENABLE TYPE CLASS BLOCK ; EXIT
    CASE "C" ; ENABLE TYPE CLASS CHARACTER ; EXIT
    CASE "D" ; ENABLE TYPE CLASS DATE ; EXIT
+   CASE "T" ; ENABLE TYPE CLASS TIMESTAMP ; EXIT
    CASE "H" ; ENABLE TYPE CLASS HASH ; EXIT
    CASE "L" ; ENABLE TYPE CLASS LOGICAL ; EXIT
    CASE "N" ; ENABLE TYPE CLASS NUMERIC ; EXIT
@@ -331,6 +367,7 @@ FUNCTION ValToType( xVal, cType )
    CASE "B" ; RETURN ValToBlock( xVal )
    CASE "C" ; RETURN ValToCharacter( xVal )
    CASE "D" ; RETURN ValToDate( xVal )
+   CASE "T" ; RETURN ValToTimestamp( xVal )
    CASE "H" ; RETURN ValToHash( xVal )
    CASE "L" ; RETURN ValToLogical( xVal )
    CASE "N" ; RETURN ValToNumber( xVal )

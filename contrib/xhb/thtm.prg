@@ -1728,6 +1728,7 @@ FUNCTION HtmlAny2Str( xVal )
    CASE "N" ; RETURN hb_ntos( xVal )
    CASE "O" ; RETURN "<" + xVal:CLASSNAME() + ">"
    CASE "D" ; RETURN DToC( xVal )
+   CASE "T" ; RETURN hb_TToC( xVal )
    CASE "L" ; RETURN iif( xVal, "T", "F" )
    CASE "B" ; RETURN "{||...}"
    CASE "U" ; RETURN "NIL"

@@ -62,8 +62,8 @@ PROCEDURE Main()
    LOCAL lCreateTable := .F.
    LOCAL oServer, oTable, oRecord
    LOCAL cField
-   LOCAL sType
-   LOCAL dType
+   LOCAL cTypeDB
+   LOCAL cTypePG
    LOCAL cValue
    LOCAL nCommit := 100
    LOCAL nHandle
@@ -176,23 +176,24 @@ PROCEDURE Main()
 
       FOR i := 1 TO oTable:FCount()
          cField := Lower( oTable:FieldName( i ) )
-         sType := hb_FieldType( FieldPos( cField ) )
-         dType := oRecord:FieldType( i )
+         cTypeDB := Left( hb_FieldType( FieldPos( cField ) ), 1 )
+         cTypePG := oRecord:FieldType( i )
          cValue := FieldGet( FieldPos( cField ) )
 
          IF cValue != NIL
-            IF dType != sType
+            IF cTypePG != cTypeDB
                DO CASE
-               CASE dType == "C" .AND. sType == "N" ; cValue := hb_ntos( cValue )
-               CASE dType == "C" .AND. sType == "D" ; cValue := DToC( cValue )
-               CASE dType == "C" .AND. sType == "L" ; cValue := iif( cValue, "S", "N" )
-               CASE dType == "N" .AND. sType == "C" ; cValue := Val( cValue )
-               CASE dType == "N" .AND. sType == "D" ; cValue := Val( DToS( cValue ) )
-               CASE dType == "N" .AND. sType == "L" ; cValue := iif( cValue, 1, 0 )
-               CASE dType == "D" .AND. sType == "C" ; cValue := CToD( cValue )
-               CASE dType == "D" .AND. sType == "N" ; cValue := hb_SToD( hb_ntos( cValue ) )
-               CASE dType == "L" .AND. sType == "N" ; cValue := ! Empty( cValue )
-               CASE dType == "L" .AND. sType == "C" ; cValue := AllTrim( cValue ) $ "YySs1"
+               CASE cTypePG == "C" .AND. cTypeDB $ "NIYF8BZ24" ; cValue := hb_ntos( cValue )
+               CASE cTypePG == "C" .AND. cTypeDB == "D" ; cValue := DToC( cValue )
+               CASE cTypePG == "C" .AND. cTypeDB $ "T@" ; cValue := hb_TToC( cValue )
+               CASE cTypePG == "C" .AND. cTypeDB == "L" ; cValue := iif( cValue, "S", "N" )
+               CASE cTypePG == "N" .AND. cTypeDB $ "CQ" ; cValue := Val( cValue )
+               CASE cTypePG == "N" .AND. cTypeDB == "D" ; cValue := Val( DToS( cValue ) )
+               CASE cTypePG == "N" .AND. cTypeDB == "L" ; cValue := iif( cValue, 1, 0 )
+               CASE cTypePG == "D" .AND. cTypeDB $ "CQ" ; cValue := CToD( cValue )
+               CASE cTypePG == "D" .AND. cTypeDB $ "NIYF8BZ24" ; cValue := hb_SToD( hb_ntos( cValue ) )
+               CASE cTypePG == "L" .AND. cTypeDB $ "NIYF8BZ24" ; cValue := ! Empty( cValue )
+               CASE cTypePG == "L" .AND. cTypeDB $ "CQ" ; cValue := AllTrim( cValue ) $ "YySs1"
                ENDCASE
             ENDIF
 

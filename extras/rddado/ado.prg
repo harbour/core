@@ -254,7 +254,7 @@ STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
 
       aWAData[ WA_SQLSTRUCT ] += "[" + field[ DBS_NAME ] + "]"
 
-      SWITCH field[ DBS_TYPE ]
+      SWITCH Left( field[ DBS_TYPE ], 1 )
       CASE "C"
       CASE "Character"
          aWAData[ WA_SQLSTRUCT ] += " CHAR(" + hb_ntos( field[ DBS_LEN ] ) + ") NULL"

@@ -489,7 +489,7 @@ FUNCTION sx_dbCreate( cFileName, aStruct, cRDD )
    LOCAL aField, aDbStruct
 
    FOR EACH aField IN aDbStruct := AClone( aStruct )
-      SWITCH aField[ DBS_TYPE ]
+      SWITCH Left( aField[ DBS_TYPE ], 1 )
       CASE "V"
          aField[ DBS_LEN ] += 6
          EXIT
@@ -521,7 +521,7 @@ FUNCTION sx_VSigLen( xField )
       ENDCASE
       IF nField >= 1 .AND. nField <= FCount()
          nResult := hb_FieldLen( nField )
-         IF hb_FieldType( nField ) == "V" .AND. nResult >= 6
+         IF hb_LeftEq( hb_FieldType( nField ), "V" ) .AND. nResult >= 6
             nResult -= 6
          ENDIF
       ENDIF

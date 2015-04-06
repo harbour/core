@@ -178,6 +178,7 @@ STATIC FUNCTION DecEmptyValue( xVal )
    CASE "C"
    CASE "M" ; RETURN ""
    CASE "D" ; RETURN hb_SToD()
+   CASE "T" ; RETURN hb_SToT()
    CASE "L" ; RETURN .F.
    CASE "N" ; RETURN 0
    CASE "B" ; RETURN {|| NIL }

@@ -186,7 +186,7 @@ PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
 
       // --> put the formatted fields data...
       FOR EACH i IN aFlds
-         oHtm:newTableCell( iif( i[ DBS_TYPE ] == "N", "RIGHT", "CENTER" ), , , , "black" )
+         oHtm:newTableCell( iif( Left( i[ DBS_TYPE ], 1 ) $ "NIYF8BZ24", "RIGHT", "CENTER" ), , , , "black" )
          oHtm:WriteData( HtmlAny2Str( FieldGet( i:__enumIndex() ) ) )
          oHtm:EndTableCell()
       NEXT

@@ -88,8 +88,8 @@ PROCEDURE Main( cInputFile )
          cOutput += ;
             "      " + ;
             "{ " + PadR( '"' + fld[ DBS_NAME ] + '"', 12 ) + ", " + ;
-            '"' + fld[ DBS_TYPE ] + '"' + ", " + ;
-            Str( fld[ DBS_LEN ], 3 ) + ", " + ;
+            PadR( '"' + fld[ DBS_TYPE ] + '"', 8 ) + ", " + ;
+            Str( fld[ DBS_LEN ], 5 ) + ", " + ;
             Str( fld[ DBS_DEC ], 2 ) + " }" + ;
             iif( fld:__enumIsLast(), " }, ... )", ", ;" ) + hb_eol()
       NEXT
@@ -109,7 +109,7 @@ PROCEDURE Main( cInputFile )
             FOR tmp := 1 TO FCount()
                cOutput += ;
                   hb_ValToExp( ;
-                     iif( hb_FieldType( tmp ) == "C", RTrim( FieldGet( tmp ) ), FieldGet( tmp ) ) ) + ;
+                     iif( hb_LeftEq( hb_FieldType( tmp ), "C" ), RTrim( FieldGet( tmp ) ), FieldGet( tmp ) ) ) + ;
                   iif( tmp == FCount(), ;
                      iif( RecNo() == LastRec(), " } }", " }, ;" ) + hb_eol(), ", " )
             NEXT
@@ -147,17 +147,17 @@ FUNCTION hbtest_Table( cAlias, ... )
    LOCAL r, f
 
    IF ! hb_dbCreateTemp( hb_defaultValue( cAlias, "w_TEST" ), { ;
-      { "FIRST"     , "C",  20,  0 }, ;
-      { "LAST"      , "C",  20,  0 }, ;
-      { "STREET"    , "C",  30,  0 }, ;
-      { "CITY"      , "C",  30,  0 }, ;
-      { "STATE"     , "C",   2,  0 }, ;
-      { "ZIP"       , "C",  10,  0 }, ;
-      { "HIREDATE"  , "D",   8,  0 }, ;
-      { "MARRIED"   , "L",   1,  0 }, ;
-      { "AGE"       , "N",   2,  0 }, ;
-      { "SALARY"    , "N",   6,  0 }, ;
-      { "NOTES"     , "C",  70,  0 } }, ... )
+      { "FIRST"     , "C"     ,    20,  0 }, ;
+      { "LAST"      , "C"     ,    20,  0 }, ;
+      { "STREET"    , "C"     ,    30,  0 }, ;
+      { "CITY"      , "C"     ,    30,  0 }, ;
+      { "STATE"     , "C"     ,     2,  0 }, ;
+      { "ZIP"       , "C"     ,    10,  0 }, ;
+      { "HIREDATE"  , "D"     ,     8,  0 }, ;
+      { "MARRIED"   , "L"     ,     1,  0 }, ;
+      { "AGE"       , "N"     ,     2,  0 }, ;
+      { "SALARY"    , "N"     ,     6,  0 }, ;
+      { "NOTES"     , "C"     ,    70,  0 } }, ... )
       RETURN .F.
    ENDIF
 

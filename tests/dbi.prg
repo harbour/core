@@ -2,6 +2,9 @@
 #include "clipper.ch"
 #endif
 
+#include "dbinfo.ch"
+#include "dbstruct.ch"
+
 PROCEDURE Main()
 
    LOCAL i
@@ -13,14 +16,15 @@ PROCEDURE Main()
    FOR i := 1 TO 100
       cStr += Str( i ) + " " + XToStr( dbInfo( i ) ) + hb_eol()
    NEXT
-   cStr += Str(  101 ) + " " + XToStr( dbInfo(  101 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + XToStr( dbInfo(  101, 1 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + XToStr( dbInfo(  101, 2 ) ) + hb_eol()
-   cStr += Str(  102 ) + " " + XToStr( dbInfo(  102 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + XToStr( dbInfo(  102, 1 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + XToStr( dbInfo(  102, 2 ) ) + hb_eol()
-   cStr += Str(  999 ) + " " + XToStr( dbInfo(  999 ) ) + hb_eol()
-   cStr += Str( 1000 ) + " " + XToStr( dbInfo( 1000 ) ) + hb_eol()
+   cStr += ;
+      Str( DBI_DB_VERSION ) + " " + XToStr( dbInfo( DBI_DB_VERSION ) ) + hb_eol() + ;
+      Str( DBI_DB_VERSION ) + " " + XToStr( dbInfo( DBI_DB_VERSION, 1 ) ) + hb_eol() + ;
+      Str( DBI_DB_VERSION ) + " " + XToStr( dbInfo( DBI_DB_VERSION, 2 ) ) + hb_eol() + ;
+      Str( DBI_RDD_VERSION ) + " " + XToStr( dbInfo( DBI_RDD_VERSION ) ) + hb_eol() + ;
+      Str( DBI_RDD_VERSION ) + " " + XToStr( dbInfo( DBI_RDD_VERSION, 1 ) ) + hb_eol() + ;
+      Str( DBI_RDD_VERSION ) + " " + XToStr( dbInfo( DBI_RDD_VERSION, 2 ) ) + hb_eol() + ;
+      Str( 999 ) + " " + XToStr( dbInfo(  999 ) ) + hb_eol() + ;
+      Str( 1000 ) + " " + XToStr( dbInfo( 1000 ) ) + hb_eol()
 
 #ifdef __HARBOUR__
    MemoWrit( "dbi_hb.txt", cStr )
@@ -28,16 +32,16 @@ PROCEDURE Main()
    MemoWrit( "dbi_cl.txt", cStr )
 #endif
 
-   ? dbRecordInfo( 1 )
-   ? dbRecordInfo( 2 )
-   ? dbRecordInfo( 3 )
-   ? dbRecordInfo( 4 )
-   ? dbRecordInfo( 5 )
+   ? dbRecordInfo( DBRI_DELETED )
+   ? dbRecordInfo( DBRI_LOCKED )
+   ? dbRecordInfo( DBRI_RECSIZE )
+   ? dbRecordInfo( DBRI_RECNO )
+   ? dbRecordInfo( DBRI_UPDATED )
 
-   ? dbFieldInfo( 1, 1 )
-   ? dbFieldInfo( 2, 1 )
-   ? dbFieldInfo( 3, 1 )
-   ? dbFieldInfo( 4, 1 )
+   ? dbFieldInfo( DBS_NAME, 1 )
+   ? dbFieldInfo( DBS_TYPE, 1 )
+   ? dbFieldInfo( DBS_LEN, 1 )
+   ? dbFieldInfo( DBS_DEC, 1 )
 
    RETURN
 
@@ -50,6 +54,9 @@ STATIC FUNCTION XToStr( xValue )
         cType == "M" ; RETURN xValue
    CASE cType == "N" ; RETURN hb_ntos( xValue )
    CASE cType == "D" ; RETURN DToC( xValue )
+#ifdef __HARBOUR__
+   CASE cType == "T" ; RETURN hb_TToC( xValue )
+#endif
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "U" ; RETURN "NIL"
    CASE cType == "A" ; RETURN "{.}"

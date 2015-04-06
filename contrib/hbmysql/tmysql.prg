@@ -1197,7 +1197,7 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
 
    FOR EACH fld IN aStruct
 
-      SWITCH fld[ DBS_TYPE ]
+      SWITCH Left( fld[ DBS_TYPE ], 1 )
       CASE "C"
          ::cCreateQuery += fld[ DBS_NAME ] + " char(" + hb_ntos( fld[ DBS_LEN ] ) + ")" + Eval( cNN, fld ) + iif( fld[ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + ","
          EXIT

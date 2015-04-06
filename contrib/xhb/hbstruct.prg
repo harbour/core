@@ -54,6 +54,7 @@ PROCEDURE hb_HashAddMember( aName, cType, uInit, oObj )
       CASE "N" ; uInit := 0 ; EXIT
       CASE "L" ; uInit := .F. ; EXIT
       CASE "D" ; uInit := hb_SToD() ; EXIT
+      CASE "T" ; uInit := hb_SToT() ; EXIT
       CASE "C" ; uInit := {|| NIL } ; EXIT
       CASE "A" ; uInit := {} ; EXIT
       ENDSWITCH

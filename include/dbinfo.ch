@@ -225,10 +225,10 @@
 #define DBRI_RECSIZE              3
 #define DBRI_RECNO                4
 #define DBRI_UPDATED              5
-#define DBRI_ENCRYPTED            6
-#define DBRI_RAWRECORD            7
-#define DBRI_RAWMEMOS             8
-#define DBRI_RAWDATA              9
+#define DBRI_ENCRYPTED            6  /* Harbour extension */
+#define DBRI_RAWRECORD            7  /* Harbour extension */
+#define DBRI_RAWMEMOS             8  /* Harbour extension */
+#define DBRI_RAWDATA              9  /* Harbour extension */
 
 /* constants for dbInfo() */
 #define DBI_ISDBF                 1  /* Does this RDD support DBFs? */

@@ -426,6 +426,7 @@ DYNAMIC ValToNumber
 DYNAMIC ValToObject
 DYNAMIC ValToPrg
 DYNAMIC ValToPrgExp
+DYNAMIC ValToTimestamp
 DYNAMIC ValToType
 DYNAMIC WaitForThreads
 DYNAMIC WideToANSI
