@@ -620,7 +620,7 @@
                   [BMPOFF X <bX> Y <bY>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail( GetList ):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>,;
+         ATail( GetList ):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>, ;
                <{sb}>, <stl>, <sX>, <sY>, <cX>, <cY>, <bmap>, <bX>, <bY> ) ;;
          ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
@@ -634,7 +634,7 @@
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
          ATail( GetList ):Control := _RadioGrp_( ATail( Getlist ):row, ;
-               ATail( Getlist ):col, <bottom>, <right>, <v>, <buttons>, <cap>,;
+               ATail( Getlist ):col, <bottom>, <right>, <v>, <buttons>, <cap>, ;
                <msg>, <clr>, <{fb}>, <stl> ) ;;
          ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;

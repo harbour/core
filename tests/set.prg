@@ -80,8 +80,8 @@ PROCEDURE Main()
 STATIC PROCEDURE testline( c, n )
 
    ? ;
-      Str( n, 3 ),;
-      PadR( c, 20 ),;
+      Str( n, 3 ), ;
+      PadR( c, 20 ), ;
       Set( n )
 
    RETURN
