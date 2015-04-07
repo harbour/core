@@ -851,7 +851,8 @@ extern HB_EXPORT HB_BOOL      hb_arraySetPtr( PHB_ITEM pArray, HB_SIZE nIndex, v
 extern HB_EXPORT HB_BOOL      hb_arraySetPtrGC( PHB_ITEM pArray, HB_SIZE nIndex, void * pValue );
 extern HB_EXPORT HB_BOOL      hb_arraySetSymbol( PHB_ITEM pArray, HB_SIZE nIndex, PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount ); /* fill an array with a given item */
-extern HB_EXPORT HB_SIZE      hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact, HB_BOOL fMatchCase ); /* scan an array for a given item, or until code-block item returns HB_TRUE */
+extern HB_EXPORT HB_SIZE      hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact ); /* COMPATIBILITY */
+extern HB_EXPORT HB_SIZE      hb_arrayScanCase( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact, HB_BOOL fMatchCase ); /* scan an array for a given item, or until code-block item returns HB_TRUE */
 extern HB_EXPORT HB_SIZE      hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact ); /* scan an array for a given item, or until code-block item returns HB_TRUE in reverted order */
 extern HB_EXPORT HB_BOOL      hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, HB_SIZE * pnStart, HB_SIZE * pnCount ); /* execute a code-block for every element of an array item */
 extern HB_EXPORT HB_BOOL      hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_SIZE * pnTarget ); /* copy items from one array to another */

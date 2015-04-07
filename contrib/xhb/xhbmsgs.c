@@ -96,7 +96,7 @@ HB_FUNC( XHB_INCLUDE )
 
    if( HB_IS_ARRAY( pSelf ) )
    {
-      hb_retl( hb_arrayScan( pSelf, pKey, NULL, NULL, HB_TRUE, HB_TRUE ) != 0 );
+      hb_retl( hb_arrayScanCase( pSelf, pKey, NULL, NULL, HB_TRUE, HB_TRUE ) != 0 );
    }
    else if( HB_IS_HASH( pSelf ) && ( HB_IS_HASHKEY( pKey ) || hb_hashLen( pKey ) == 1 ) )
    {

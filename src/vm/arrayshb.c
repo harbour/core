@@ -253,11 +253,11 @@ HB_FUNC( ASCAN )
       HB_SIZE nStart = hb_parns( 3 );
       HB_SIZE nCount = hb_parns( 4 );
 
-      hb_retns( hb_arrayScan( pArray, pValue,
-                              HB_ISNUM( 3 ) ? &nStart : NULL,
-                              HB_ISNUM( 4 ) ? &nCount : NULL,
-                              HB_FALSE,
-                              HB_TRUE ) );
+      hb_retns( hb_arrayScanCase( pArray, pValue,
+                                  HB_ISNUM( 3 ) ? &nStart : NULL,
+                                  HB_ISNUM( 4 ) ? &nCount : NULL,
+                                  HB_FALSE,
+                                  HB_TRUE ) );
    }
    else
       hb_retni( 0 );
@@ -274,11 +274,11 @@ HB_FUNC( HB_ASCAN )
       HB_SIZE nStart = hb_parns( 3 );
       HB_SIZE nCount = hb_parns( 4 );
 
-      hb_retns( hb_arrayScan( pArray, pValue,
-                              HB_ISNUM( 3 ) ? &nStart : NULL,
-                              HB_ISNUM( 4 ) ? &nCount : NULL,
-                              hb_parl( 5 ),
-                              HB_TRUE ) );
+      hb_retns( hb_arrayScanCase( pArray, pValue,
+                                  HB_ISNUM( 3 ) ? &nStart : NULL,
+                                  HB_ISNUM( 4 ) ? &nCount : NULL,
+                                  hb_parl( 5 ),
+                                  HB_TRUE ) );
    }
    else
       hb_retni( 0 );
@@ -295,11 +295,11 @@ HB_FUNC( HB_ASCANI )
       HB_SIZE nStart = hb_parns( 3 );
       HB_SIZE nCount = hb_parns( 4 );
 
-      hb_retns( hb_arrayScan( pArray, pValue,
-                              HB_ISNUM( 3 ) ? &nStart : NULL,
-                              HB_ISNUM( 4 ) ? &nCount : NULL,
-                              hb_parl( 5 ),
-                              HB_FALSE ) );
+      hb_retns( hb_arrayScanCase( pArray, pValue,
+                                  HB_ISNUM( 3 ) ? &nStart : NULL,
+                                  HB_ISNUM( 4 ) ? &nCount : NULL,
+                                  hb_parl( 5 ),
+                                  HB_FALSE ) );
    }
    else
       hb_retni( 0 );
