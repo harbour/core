@@ -4512,6 +4512,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
             ENDSWITCH
          ENDIF
+         IF !( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ] )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-demangle" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-demangle" )
+         ENDIF
          IF hbmk[ _HBMK_lHARDEN ]
             IF HBMK_ISPLAT( "linux" )
                AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-z,relro,-z,now" )
@@ -4831,6 +4835,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTRES ], "--target=pe-i386" )
             EXIT
          ENDSWITCH
+         IF !( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ] )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-demangle" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-demangle" )
+         ENDIF
          IF hbmk[ _HBMK_lHARDEN ]
             IF hbmk[ _HBMK_cPLAT ] == "win"
                DO CASE
@@ -5100,6 +5108,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
             ENDIF
          ENDIF
+         IF !( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ] )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-demangle" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-demangle" )
+         ENDIF
          /* OS/2 needs a space between -o and file name following it */
          IF lStopAfterCComp
             IF ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
@@ -5204,6 +5216,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
                AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
             ENDIF
+         ENDIF
+         IF !( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ] )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-demangle" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-demangle" )
          ENDIF
          IF lStopAfterCComp
             IF ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
