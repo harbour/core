@@ -130,9 +130,9 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
          dbUseArea( lNew, , cFileFrom, "" )
 
          dbEval( {|| AAdd( aStruct, { ;
-            FIELD->FIELD_NAME , ;
-            FIELD->FIELD_TYPE , ;
-            FIELD->FIELD_LEN , ;
+            FIELD->FIELD_NAME, ;
+            FIELD->FIELD_TYPE, ;
+            FIELD->FIELD_LEN, ;
             FIELD->FIELD_DEC } ) } )
          dbCloseArea()
 

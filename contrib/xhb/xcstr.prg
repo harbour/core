@@ -270,11 +270,11 @@ FUNCTION ValToTimestamp( xVal )
    CASE "B" ; RETURN ValToTimestamp( Eval( xVal ) )
    CASE "C"
       IF Empty( hb_StrReplace( xVal, "0123456789" ) )
-         RETURN hb_SToD( xVal )
+         RETURN hb_SToT( xVal )
       ELSE
-         RETURN CToD( xVal )
+         RETURN hb_CToT( xVal )
       ENDIF
-   CASE "D"
+   CASE "D" ; RETURN hb_DToT( xVal )
    CASE "T" ; RETURN xVal
    CASE "N"
    CASE "P" ; RETURN 0d19000101 + xVal
