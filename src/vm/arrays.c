@@ -1006,7 +1006,7 @@ HB_BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
 /* COMPATIBILITY */
 HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact )
 {
-   return hb_arrayScan2( pArray, pValue, pnStart, pnCount, fExact, HB_TRUE );
+   return hb_arrayScanCase( pArray, pValue, pnStart, pnCount, fExact, HB_TRUE );
 }
 
 HB_SIZE hb_arrayScanCase( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact, HB_BOOL fMatchCase )
