@@ -176,6 +176,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
 
 static void s_fileClose( PHB_FILE pFile )
 {
+   hb_socketShutdown( pFile->sd, HB_SOCKET_SHUT_RDWR );
    hb_socketClose( pFile->sd );
    hb_fsSetError( hb_socketGetError() );
    hb_xfree( pFile );

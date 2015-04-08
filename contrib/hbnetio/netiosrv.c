@@ -238,6 +238,7 @@ static void s_consrv_disconnect( PHB_CONSRV conn )
 {
    if( conn->sd != HB_NO_SOCKET )
    {
+      hb_socketShutdown( conn->sd, HB_SOCKET_SHUT_RDWR );
       hb_socketClose( conn->sd );
       conn->sd = HB_NO_SOCKET;
    }
@@ -267,7 +268,10 @@ static void s_consrv_close( PHB_CONSRV conn )
       hb_itemRelease( conn->mutex );
 
    if( conn->sd != HB_NO_SOCKET )
+   {
+      hb_socketShutdown( conn->sd, HB_SOCKET_SHUT_RDWR );
       hb_socketClose( conn->sd );
+   }
 
    if( conn->zstream )
       hb_znetClose( conn->zstream );
