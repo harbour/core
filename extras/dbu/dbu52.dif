@@ -503,7 +503,7 @@ diff -u dbu52ori/dbunet.prg dbu52pat/dbunet.prg
 +   RETURN ""
 diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
 --- dbu52ori/dbustru.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbustru.prg	2015-04-05 23:32:33.000000000 +0200
++++ dbu52pat/dbustru.prg	2015-04-09 04:07:57.000000000 +0200
 @@ -32,8 +32,8 @@
  * local arrays..constant values
  DECLARE ffield[4]
@@ -598,7 +598,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  			IF n = 2
  				* field_type gets special treatment
 -				type_n = AT(field_type, "CNDLM")
-+				type_n = AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")
++				type_n = AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")
  
  			ELSE
  				* turn on cursor for GET
@@ -723,7 +723,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  			* right arrow
  
 -			IF n < l_usr[AT(field_type, "CNDLM")]
-+			IF n < l_usr[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
++			IF n < l_usr[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
  				n = n + 1
  
  			ENDIF
@@ -732,7 +732,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  			* end or ^end
  			keystroke = 0
 -			n = l_usr[AT(field_type, "CNDLM")]
-+			n = l_usr[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
++			n = l_usr[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
  
  		CASE keystroke = 1 .OR. keystroke = 29
  			* home or ^home
@@ -741,10 +741,10 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  			@ 9,field_col[1] + 26 SAY "Field " + pad(LTRIM(STR(RECNO())), 5)
  
 -			IF n > l_usr[AT(field_type, "CNDLM")]
-+			IF n > l_usr[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
++			IF n > l_usr[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
  				* check for n out of range
 -				n = l_usr[AT(field_type, "CNDLM")]
-+				n = l_usr[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
++				n = l_usr[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
  
  			ENDIF
  
@@ -771,7 +771,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  
  @ fill_row,field_col[1];
 -SAY field_name + " � " + data_type[AT(field_type, "CNDLM")] + " � "
-+SAY field_name + hb_UTF8ToStr( " │ " ) + data_type[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")] + hb_UTF8ToStr( " │ " )
++SAY field_name + hb_UTF8ToStr( " │ " ) + data_type[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")] + hb_UTF8ToStr( " │ " )
  
  IF field_type = "C"
  	* display Clipper extended field length
@@ -794,7 +794,7 @@ diff -u dbu52ori/dbustru.prg dbu52pat/dbustru.prg
  	CASE n = 2
  		* display field_type as character string
 -		@ cur_row,field_col[2] SAY data_type[AT(field_type, "CNDLM")]
-+		@ cur_row,field_col[2] SAY data_type[AT(field_type, "CNDLMWPGQVF8BZYI24+=^@T")]
++		@ cur_row,field_col[2] SAY data_type[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
  
  	CASE n = 3
  
