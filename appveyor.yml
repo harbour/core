@@ -20,8 +20,8 @@ install:
 # Long URL: https://downloads.sourceforge.net/nsis/NSIS%203%20Pre-release/3.0b1/nsis-3.0b1.zip
 - curl -sS -L https://bit.ly/19nfgzh -o nsis3.zip
 - 7z x -oC:\ nsis3.zip > nul
-# Long URL: https://downloads.sourceforge.net/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z
-- curl -sS -L https://bit.ly/1IFNw5O -o mingw.7z
+# Long URL: https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z
+- curl -sS -L https://bit.ly/1CmmFHA -o mingw.7z
 # Will unpack into C:\mingw64\
 - 7z x -oC:\ mingw.7z > nul
 build_script:

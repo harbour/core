@@ -19,7 +19,7 @@ xmltok.c
 {bcc}-cflag=-w-8066
 
 # ORIGIN http://www.libexpat.org
-# URL    https://downloads.sourceforge.net/expat/expat/2.1.0/expat-2.1.0.tar.gz
+# URL    https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/e/ex/expat/expat/2.1.0/expat-2.1.0.tar.gz
 # DIFF   expat.dif
 #
 # MAP    COPYING
