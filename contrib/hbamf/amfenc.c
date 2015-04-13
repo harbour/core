@@ -1240,8 +1240,8 @@ HB_FUNC( AMF3_FROMWA )
             hb_arrayNew( pFieldNames, uiFields );
             for( uiIter = 1; uiIter <= uiFields; uiIter++ )
             {
-               pField = hb_itemNew( NULL );
                char * szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
+               pField = hb_itemNew( NULL );
                szName[ 0 ] = '\0';
                SELF_FIELDNAME( pArea, uiIter, szName );
                hb_itemPutCPtr( pField, szName );
@@ -1254,8 +1254,8 @@ HB_FUNC( AMF3_FROMWA )
             hb_arrayNew( pFieldNames, uiFieldCopy );
             for( uiIter = 1; uiIter <= uiFieldCopy; uiIter++ )
             {
-               pField = hb_itemNew( NULL );
                char * szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
+               pField = hb_itemNew( NULL );
                szName[ 0 ] = '\0';
                SELF_FIELDNAME( pArea, ( HB_USHORT ) hb_itemGetNI( hb_arrayGetItemPtr( pFields, uiIter ) ), szName );
                hb_itemPutCPtr( pField, szName );
