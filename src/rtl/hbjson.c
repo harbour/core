@@ -72,8 +72,9 @@
               purposes. Returns 0 on error.
 
       Harbour level functions:
-        hb_jsonDecode( cJSON, @xValue ) --> nLengthDecoded
         hb_jsonEncode( xValue [, lHuman = .F. ] ) --> cJSON
+        hb_jsonDecode( cJSON ) --> xValue
+        hb_jsonDecode( cJSON, @xValue ) --> nLengthDecoded
 
       Note:
         - JSON encode functions are safe for recursive arrays and hashes.
@@ -700,8 +701,8 @@ HB_FUNC( HB_JSONENCODE )
    if( pItem )
    {
       HB_SIZE nLen;
-
       char * szRet = hb_jsonEncode( pItem, &nLen, hb_parl( 2 ) );
+
       hb_retclen_buffer( szRet, nLen );
    }
 }
@@ -709,8 +710,14 @@ HB_FUNC( HB_JSONENCODE )
 HB_FUNC( HB_JSONDECODE )
 {
    PHB_ITEM pItem = hb_itemNew( NULL );
+   HB_ISIZ nSize = ( HB_ISIZ ) hb_jsonDecode( hb_parc( 1 ), pItem );
 
-   hb_retns( ( HB_ISIZ ) hb_jsonDecode( hb_parc( 1 ), pItem ) );
-   hb_itemParamStoreForward( 2, pItem );
-   hb_itemRelease( pItem );
+   if( HB_ISBYREF( 2 ) )
+   {
+      hb_retns( nSize );
+      hb_itemParamStoreForward( 2, pItem );
+      hb_itemRelease( pItem );
+   }
+   else
+      hb_itemReturnRelease( pItem );
 }
