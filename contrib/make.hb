@@ -499,7 +499,7 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
 
    IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo",,, @cStdOut ) ) == 0
 
-      IF hb_jsonDecode( cStdOut, @hInfo ) == 0
+      IF ! HB_ISHASH( hInfo := hb_jsonDecode( cStdOut ) )
          OutStd( "! Warning: Received invalid result from 'hbmk2 --hbinfo'" + hb_eol() )
       ENDIF
 

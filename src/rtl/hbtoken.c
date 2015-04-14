@@ -54,7 +54,7 @@
 #define _HB_TOK_RESPECT_BQUOTE   0x04
 #define _HB_TOK_ISDELIM          0x08
 #define _HB_TOK_EOL_DELIM        0x10
-#define _HB_TOK_STRIP_QUUTE      0x20
+#define _HB_TOK_STRIP_QUOTE      0x20
 
 static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE nLen,
                               const char * szDelim, HB_SIZE nDelim,
