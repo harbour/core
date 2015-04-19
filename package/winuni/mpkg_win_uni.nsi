@@ -461,7 +461,7 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut     "$DESKTOP\Harbour $%HB_VM%.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateDirectory "$SMPROGRAMS\Harbour $%HB_VM%"
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Command line).lnk" "cmd.exe" "/k cd /d $INSTDIR\bin" "cmd.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Command line).lnk" "cmd.exe" '/k cd /d "$INSTDIR\bin"' "cmd.exe" 0
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour $%HB_VM%\Links"
