@@ -5,7 +5,6 @@
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  *    Exm_CDO(), Exm_OOOpen(), Exm_CreateShortcut()
- *
  */
 
 #require "hbwin"
@@ -35,7 +34,8 @@ PROCEDURE Main()
       ? "c) PocketSOAP client"
       ? "d) Internet Explorer with callback"
       ? "e) Create shortcut"
-      ? "0) Quit"
+      ? "f) HTTPS download"
+      ? "q) Quit"
       ? ">", ""
 
       nOption := Inkey( 0 )
@@ -56,7 +56,8 @@ PROCEDURE Main()
       CASE nOption == hb_keyCode( "c" ) ; Exm_PocketSOAP()
       CASE nOption == hb_keyCode( "d" ) ; Exm_IExplorer2()
       CASE nOption == hb_keyCode( "e" ) ; Exm_CreateShortcut()
-      CASE nOption == hb_keyCode( "0" ) ; EXIT
+      CASE nOption == hb_keyCode( "f" ) ; Exm_DownloadHTTPS()
+      CASE nOption == hb_keyCode( "q" ) ; EXIT
       ENDCASE
    ENDDO
 
@@ -485,6 +486,22 @@ STATIC PROCEDURE Exm_CreateShortcut()
       oSC:Save()
    ELSE
       ? "Error: Shell not available. [" + win_oleErrorText() + "]"
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE Exm_DownloadHTTPS()
+
+   LOCAL oHTTP
+
+   IF ( oHTTP := win_oleCreateObject( "WinHttp.WinHttpRequest.5.1" ) ) != NIL
+      oHTTP:Open( "GET", "https://example.com/index.html", .F. )
+      oHTTP:Send()
+      IF oHTTP:Status() == 200
+         ? "Downloaded", hb_ntos( hb_BLen( oHTTP:responseBody ) ), "byte(s)"
+      ENDIF
+   ELSE
+      ? "Error: WinHttp 5.1 not available. [" + win_oleErrorText() + "]"
    ENDIF
 
    RETURN

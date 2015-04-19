@@ -209,7 +209,7 @@ typedef struct tag_mime_ext
 
 /* keep this table well sorted, it's necessary for binary search algorithm */
 
-static EXT_MIME_ENTRY s_extMimeTable[] =
+static const EXT_MIME_ENTRY s_extMimeTable[] =
 {
    { "3dm"     , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },
    { "3dmf"    , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },

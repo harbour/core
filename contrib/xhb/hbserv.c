@@ -125,7 +125,7 @@ static int s_translateSignal( HB_UINT sig, HB_UINT subsig );
          static struct sigaction s_aOldAction[ SIGUSR2 + 1 ]; */
 
 /* Implementation of the signal translation table */
-static S_TUPLE s_sigTable[] =
+static const S_TUPLE s_sigTable[] =
 {
    { SIGHUP,  0, HB_SIGNAL_REFRESH   },
    { SIGINT,  0, HB_SIGNAL_INTERRUPT },
@@ -365,7 +365,7 @@ static UINT s_uiErrorMode = 0;
 /* implementation of the signal translation table
    Under windows, 0 is a system exception, while 1 is a user message
  */
-static S_TUPLE s_sigTable[] = {
+static const S_TUPLE s_sigTable[] = {
 
    /* memory/processor fault exception */
    { 0, EXCEPTION_ACCESS_VIOLATION,      HB_SIGNAL_FAULT     },

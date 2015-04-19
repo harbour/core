@@ -270,48 +270,48 @@ static const unsigned char s_rev[ 256 ] =
 
 
 /* zero terminated align patterns positions */
-static unsigned char s_align01[] = { 0 };
-static unsigned char s_align02[] = { 6, 18, 0 };
-static unsigned char s_align03[] = { 6, 22, 0 };
-static unsigned char s_align04[] = { 6, 26, 0 };
-static unsigned char s_align05[] = { 6, 30, 0 };
-static unsigned char s_align06[] = { 6, 34, 0 };
-static unsigned char s_align07[] = { 6, 22, 38, 0 };
-static unsigned char s_align08[] = { 6, 24, 42, 0 };
-static unsigned char s_align09[] = { 6, 26, 46, 0 };
-static unsigned char s_align00[] = { 6, 28, 50, 0 };
-static unsigned char s_align11[] = { 6, 30, 54, 0 };
-static unsigned char s_align12[] = { 6, 32, 58, 0 };
-static unsigned char s_align13[] = { 6, 34, 62, 0 };
-static unsigned char s_align14[] = { 6, 26, 46, 66, 0 };
-static unsigned char s_align15[] = { 6, 26, 48, 70, 0 };
-static unsigned char s_align16[] = { 6, 26, 50, 74, 0 };
-static unsigned char s_align17[] = { 6, 30, 54, 78, 0 };
-static unsigned char s_align18[] = { 6, 30, 56, 82, 0 };
-static unsigned char s_align19[] = { 6, 30, 58, 86, 0 };
-static unsigned char s_align10[] = { 6, 34, 62, 90, 0 };
-static unsigned char s_align21[] = { 6, 28, 50, 72,  94, 0 };
-static unsigned char s_align22[] = { 6, 26, 50, 74,  98, 0 };
-static unsigned char s_align23[] = { 6, 30, 54, 78, 102, 0 };
-static unsigned char s_align24[] = { 6, 28, 54, 80, 106, 0 };
-static unsigned char s_align25[] = { 6, 32, 58, 84, 110, 0 };
-static unsigned char s_align26[] = { 6, 30, 58, 86, 114, 0 };
-static unsigned char s_align27[] = { 6, 34, 62, 90, 118, 0 };
-static unsigned char s_align28[] = { 6, 26, 50, 74,  98, 122, 0 };
-static unsigned char s_align29[] = { 6, 30, 54, 78, 102, 126, 0 };
-static unsigned char s_align20[] = { 6, 26, 52, 78, 104, 130, 0 };
-static unsigned char s_align31[] = { 6, 30, 56, 82, 108, 134, 0 };
-static unsigned char s_align32[] = { 6, 34, 60, 86, 112, 138, 0 };
-static unsigned char s_align33[] = { 6, 30, 58, 86, 114, 142, 0 };
-static unsigned char s_align34[] = { 6, 34, 62, 90, 118, 146, 0 };
-static unsigned char s_align35[] = { 6, 30, 54, 78, 102, 126, 150, 0 };
-static unsigned char s_align36[] = { 6, 24, 50, 76, 102, 128, 154, 0 };
-static unsigned char s_align37[] = { 6, 28, 54, 80, 106, 132, 158, 0 };
-static unsigned char s_align38[] = { 6, 32, 58, 84, 110, 136, 162, 0 };
-static unsigned char s_align39[] = { 6, 26, 54, 82, 110, 138, 166, 0 };
-static unsigned char s_align40[] = { 6, 30, 58, 86, 114, 142, 170, 0 };
+static const unsigned char s_align01[] = { 0 };
+static const unsigned char s_align02[] = { 6, 18, 0 };
+static const unsigned char s_align03[] = { 6, 22, 0 };
+static const unsigned char s_align04[] = { 6, 26, 0 };
+static const unsigned char s_align05[] = { 6, 30, 0 };
+static const unsigned char s_align06[] = { 6, 34, 0 };
+static const unsigned char s_align07[] = { 6, 22, 38, 0 };
+static const unsigned char s_align08[] = { 6, 24, 42, 0 };
+static const unsigned char s_align09[] = { 6, 26, 46, 0 };
+static const unsigned char s_align00[] = { 6, 28, 50, 0 };
+static const unsigned char s_align11[] = { 6, 30, 54, 0 };
+static const unsigned char s_align12[] = { 6, 32, 58, 0 };
+static const unsigned char s_align13[] = { 6, 34, 62, 0 };
+static const unsigned char s_align14[] = { 6, 26, 46, 66, 0 };
+static const unsigned char s_align15[] = { 6, 26, 48, 70, 0 };
+static const unsigned char s_align16[] = { 6, 26, 50, 74, 0 };
+static const unsigned char s_align17[] = { 6, 30, 54, 78, 0 };
+static const unsigned char s_align18[] = { 6, 30, 56, 82, 0 };
+static const unsigned char s_align19[] = { 6, 30, 58, 86, 0 };
+static const unsigned char s_align10[] = { 6, 34, 62, 90, 0 };
+static const unsigned char s_align21[] = { 6, 28, 50, 72,  94, 0 };
+static const unsigned char s_align22[] = { 6, 26, 50, 74,  98, 0 };
+static const unsigned char s_align23[] = { 6, 30, 54, 78, 102, 0 };
+static const unsigned char s_align24[] = { 6, 28, 54, 80, 106, 0 };
+static const unsigned char s_align25[] = { 6, 32, 58, 84, 110, 0 };
+static const unsigned char s_align26[] = { 6, 30, 58, 86, 114, 0 };
+static const unsigned char s_align27[] = { 6, 34, 62, 90, 118, 0 };
+static const unsigned char s_align28[] = { 6, 26, 50, 74,  98, 122, 0 };
+static const unsigned char s_align29[] = { 6, 30, 54, 78, 102, 126, 0 };
+static const unsigned char s_align20[] = { 6, 26, 52, 78, 104, 130, 0 };
+static const unsigned char s_align31[] = { 6, 30, 56, 82, 108, 134, 0 };
+static const unsigned char s_align32[] = { 6, 34, 60, 86, 112, 138, 0 };
+static const unsigned char s_align33[] = { 6, 30, 58, 86, 114, 142, 0 };
+static const unsigned char s_align34[] = { 6, 34, 62, 90, 118, 146, 0 };
+static const unsigned char s_align35[] = { 6, 30, 54, 78, 102, 126, 150, 0 };
+static const unsigned char s_align36[] = { 6, 24, 50, 76, 102, 128, 154, 0 };
+static const unsigned char s_align37[] = { 6, 28, 54, 80, 106, 132, 158, 0 };
+static const unsigned char s_align38[] = { 6, 32, 58, 84, 110, 136, 162, 0 };
+static const unsigned char s_align39[] = { 6, 26, 54, 82, 110, 138, 166, 0 };
+static const unsigned char s_align40[] = { 6, 30, 58, 86, 114, 142, 170, 0 };
 
-static unsigned char * s_align[ 40 ] = {
+static const unsigned char * s_align[ 40 ] = {
    s_align01,
    s_align02,
    s_align03,
@@ -466,7 +466,7 @@ static int _qr_versionlength( int iVersion )
 static int _qr_fixed( int iVersion, int iRow, int iCol )
 {
    int iLength = _qr_versionlength( iVersion );
-   unsigned char * pi;
+   const unsigned char * pi;
 
    /* position detection markers and versino info */
    if( iRow < 9 && iCol < 9 )
@@ -484,7 +484,7 @@ static int _qr_fixed( int iVersion, int iRow, int iCol )
    pi = s_align[ iVersion - 1 ];
    for( ; *pi; pi++ )
    {
-      unsigned char * pj = s_align[ iVersion - 1 ];
+      const unsigned char * pj = s_align[ iVersion - 1 ];
       for( ; *pj; pj++ )
       {
          if( iRow - 2 <= ( int ) *pi && ( int ) *pi <= iRow + 2 &&
@@ -857,7 +857,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 {
    int i, j, iLength;
-   unsigned char * pi;
+   const unsigned char * pi;
 
    HB_SYMBOL_UNUSED( pCWBits );
 
@@ -900,7 +900,7 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
    pi = s_align[ iVersion - 1 ];
    for( ; *pi; pi++ )
    {
-      unsigned char * pj = s_align[ iVersion - 1 ];
+      const unsigned char * pj = s_align[ iVersion - 1 ];
       for( ; *pj; pj++ )
       {
          if( ( *pi > 10 && *pi < iLength - 10 ) ||
