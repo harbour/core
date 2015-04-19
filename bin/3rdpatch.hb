@@ -722,7 +722,8 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       OutStd( "E: Required `curl' was not found" + hb_eol() )
       RETURN .F.
    ENDIF
-   cCommand := hb_StrFormat( "%1$s -L -# -o %2$s %3$s", s_aTools[ "curl" ], ;
+   cCommand := hb_StrFormat( "%1$s -L %2$s -# -o %3$s %4$s", s_aTools[ "curl" ], ;
+      iif( hb_LeftEqI( cArchiveURL, "https:" ), "--proto-redir =https", "--proto-redir =https,http" ), ;
       CombinePath( s_cTempDir, cFileName ), FNameEscape( cArchiveURL ) )
    TRACE( "Running " + cCommand )
    nResult := hb_processRun( cCommand, , , @cStdErr, .F. )

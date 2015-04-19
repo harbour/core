@@ -156,7 +156,7 @@ STATIC PROCEDURE src_push( cMain )
       "content" => StrTran( cContent, hb_eol(), e"\n" ), ;
       "mimetype" => "text/x-po" } ) )
 
-   lang_hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
+   lang_hb_run( hb_StrFormat( 'curl -s -L --proto-redir =https --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;
@@ -207,7 +207,7 @@ STATIC PROCEDURE trs_pull( cMain )
 
       ?? "", cLang
 
-      lang_hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
+      lang_hb_run( hb_StrFormat( 'curl -s -L --proto-redir =https --user %1$s -X ' + ;
          "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/" + ;
          " -o %5$s", ;
          ParEscape( hPar[ "login" ] ), ;
@@ -408,7 +408,7 @@ STATIC PROCEDURE trs_push( cMain )
 
       hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
-      lang_hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
+      lang_hb_run( hb_StrFormat( 'curl -s -L --proto-redir =https --user %1$s -X ' + ;
          'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
          'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/translation/%5$s/' + ;
          ' -o %6$s', ;
