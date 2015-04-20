@@ -33,10 +33,10 @@ set HB_ABSROOT=%HB_RT%%HB_DR%
 :: Autodetect the base bitness, by default it will be 32-bit,
 :: and 64-bit if it's the only one available.
 
-if exist "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
+if exist "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
    :: mingw 32-bit base system
    set LIB_TARGET=32
-) else if exist "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" (
+) else if exist "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" (
    :: mingw 64-bit base system
    set LIB_TARGET=64
 )
@@ -45,30 +45,30 @@ if exist "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
 
 if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
 
-xcopy /y /s /q "%~dp0..\..\extras\*.*"                                                      "%HB_ABSROOT%extras\"
-xcopy /y /s /q "%~dp0..\..\tests\*.*"                                                       "%HB_ABSROOT%tests\"
+xcopy /y /s /q "%~dp0..\extras\*.*"                                               "%HB_ABSROOT%extras\"
+xcopy /y /s /q "%~dp0..\tests\*.*"                                                "%HB_ABSROOT%tests\"
 
 :: Using xcopy to create the destination subdir in the same step
-xcopy /y /q    "%~dp0ADDONS.txt"                                                            "%HB_ABSROOT%addons\"
+xcopy /y /q    "%~dp0ADDONS.txt"                                                  "%HB_ABSROOT%addons\"
 mv "%HB_ABSROOT%addons\ADDONS.txt" "%HB_ABSROOT%addons\README.txt"
 
-if "%LIB_TARGET%" == "32" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
-if "%LIB_TARGET%" == "64" xcopy /y /s /q "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
+if "%LIB_TARGET%" == "32" xcopy /y /s /q "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
+if "%LIB_TARGET%" == "64" xcopy /y /s /q "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
 
-xcopy /y /s    "%~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"               "%HB_ABSROOT%lib\linux\watcom\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib"                                  "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\os2\watcom\harbour-%HB_VF%-os2-watcom\lib"                   "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\lib"               "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\win\bcc\harbour-%HB_VF%-win-bcc\lib"                         "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\win\bcc64\harbour-%HB_VF%-win-bcc64\lib"                     "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw\lib"                     "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\lib"                 "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\win\msvc\harbour-%HB_VF%-win-msvc\lib"                       "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\lib"                   "%HB_ABSROOT%lib\" 2> nul
-xcopy /y /s    "%~dp0..\..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib"                   "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"        "%HB_ABSROOT%lib\linux\watcom\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\dos\watcom\hb%HB_VL%wa\lib"                           "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\os2\watcom\harbour-%HB_VF%-os2-watcom\lib"            "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\lib"        "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\win\bcc\harbour-%HB_VF%-win-bcc\lib"                  "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\win\bcc64\harbour-%HB_VF%-win-bcc64\lib"              "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw\lib"              "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\lib"          "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\win\msvc\harbour-%HB_VF%-win-msvc\lib"                "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\lib"            "%HB_ABSROOT%lib\" 2> nul
+xcopy /y /s    "%~dp0..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib"            "%HB_ABSROOT%lib\" 2> nul
 
-xcopy /y       "%~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll"           "%HB_ABSROOT%bin\" 2> nul
-xcopy /y       "%~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll"         "%HB_ABSROOT%bin\" 2> nul
+xcopy /y       "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll"    "%HB_ABSROOT%bin\" 2> nul
+xcopy /y       "%~dp0..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll"  "%HB_ABSROOT%bin\" 2> nul
 
 :: Create special implibs for Borland (requires BCC in PATH)
 :: NOTE: Using intermediate .def files, because direct .dll to .lib conversion
@@ -101,7 +101,7 @@ if not "%HB_DIR_7Z%" == "" (
 
 :: Copy core 3rd party headers
 
-xcopy /y /s /q /i "%~dp0..\..\src\3rd\*.h" "%HB_ABSROOT%src\3rd\"
+xcopy /y /s /q /i "%~dp0..\src\3rd\*.h" "%HB_ABSROOT%src\3rd\"
 
 :: Copy C compiler
 
@@ -259,13 +259,6 @@ if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
 pushd "%HB_DR%"
 "%HB_DIR_7Z%7za" a -r -mx "..\harbour-%HB_VF%-win.7z" @..\_hbfiles > nul
 popd
-
-:: Manual: http://7zsfx.info/en/
-
-:: NOTE: This does work with the standard 7-zip SFX modules
-::       as well, except that a dummy 'RunProgram' needs
-::       to be added to avoid the error trying to run 'setup.exe'
-::       on install.
 
 if exist "%HB_SFX_7Z%" (
 

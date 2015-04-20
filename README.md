@@ -337,18 +337,18 @@ You can fine-tune the build with these options:
 
     $ package/mpkg_rpm_wce.sh
 
-## Binary .zip and .exe on Windows for all targets (except Linux)
+## Binary .7z on Windows for all targets (except Linux)
 
-    $ set HB_DIR_NSIS=%ProgramFiles%\NSIS\
+    $ set HB_SFX_7Z=C:\7zsfx\7zsd.sfx
     $ set HB_DIR_7Z=C:\7-zip\
     $ set HB_BUILD_PKG=yes
 
 Then run build as usual with `clean install` options.
 See: [How to Build](#how-to-build)
 
-## Unified .7z and .exe installer for Windows
+## Unified .7z.exe installer for Windows
 
-    $ package\winuni\mpkg_win_uni.bat
+    $ package\mpkg_win_uni.bat
 
 > Read in-file instructions and do the necessary
 > steps before calling the script.
@@ -1579,10 +1579,10 @@ Supported shells per host platforms:
         * <http://uncrustify.sourceforge.net/>
      * UPX (executable compressor) [win, dos, *nix, free, open-source]
         * <http://upx.sourceforge.net/>
-     * Nullsoft Installer [win, free, open-source]
-        * <http://nsis.sourceforge.net/>
      * 7-Zip [multiplatform, free, open-source]
         * <http://7-zip.org/>
+     * 7-Zip SFX modules [win, free, open-source]
+        * <http://7zsfx.info/en/>
      * bzip2 [multiplatform, free, open-source]
          Windows binary:
            * <http://bzip.org/downloads.html>
