@@ -348,7 +348,7 @@ See: [How to Build](#how-to-build)
 
 ## Unified .7z.exe installer for Windows
 
-    $ package\mpkg_win_uni.bat
+    $ package\mpkg_win.bat
 
 > Read in-file instructions and do the necessary
 > steps before calling the script.

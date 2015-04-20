@@ -105,6 +105,12 @@ xcopy /y /s /q /i "%~dp0..\src\3rd\*.h" "%HB_ABSROOT%src\3rd\"
 
 :: Copy C compiler
 
+:: TODO: This whole section should only be relevant
+::       if the distro is mingw based. Much of it is
+::       useful only if mingw _is_ actually bundled
+::       with the package, which probably something
+::       that should be avoided in the future.
+
 set MINGW_HOST=32
 if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32" set MINGW_HOST=64
 
@@ -114,7 +120,7 @@ if "%MINGW_HOST%" == "64" set MINGW_ROOT=comp\mingw64\
 if "%_HB_PKG_WINUNI_BUNDLE_C%" == "yes" (
    xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%%MINGW_ROOT%"
 ) else (
-   xcopy /y /q "%~dp0install_mingw.bat" "%HB_ABSROOT%bin\"
+   xcopy /y /q "%~dp0getmingw.bat" "%HB_ABSROOT%bin\"
 )
 
 :: Copy mingw runtime .dlls
@@ -224,7 +230,7 @@ echo "bin\hbpp.exe"         >> _hbfiles
 echo "bin\hbspeed.exe"      >> _hbfiles
 echo "bin\hbtest.exe"       >> _hbfiles
 echo "bin\*.hb"             >> _hbfiles
-echo "bin\*.bat"            >> _hbfiles
+echo "bin\getmingw.bat"     >> _hbfiles
 echo "bin\upx*.*"           >> _hbfiles
 echo "bin\7z*.*"            >> _hbfiles
 echo "include\*.*"          >> _hbfiles
@@ -278,7 +284,7 @@ if exist "%HB_SFX_7Z%" (
    echo OverwriteMode=^"0^">> _7zconf
    echo InstallPath=^"C:\hb%HB_VS%^">> _7zconf
    echo Shortcut=^"Du,{cmd.exe},{/k cd /d \^"%%%%T\\bin\\\^"},{},{},{Harbour Shell},{%%%%T\\bin\\},{%%%%T\\bin\\hbmk2.exe},{0}^">> _7zconf
-   echo RunProgram=^"nowait:notepad.exe \^"%%%%T\\README.md\^"^">> _7zconf
+   echo RunProgram=^"nowait:notepad.exe \^"%%%%T\\RELNOTES.txt\^"^">> _7zconf
    echo ;RunProgram=^"hbmk2.exe \^"%%%%T\^"\\install.hb^">> _7zconf
    echo ;Delete=^"^">> _7zconf
    echo ;!@InstallEnd@!>> _7zconf

@@ -20,7 +20,7 @@ install:
 - 7z x -y -oC:\7zsfx 7zsfx.7z > nul
 - curl -sS -L --proto-redir =https https://fossies.org/windows/misc/upx391w.zip -o upx.zip
 - 7z e -y -oC:\upx\ upx.zip > nul
-# Long URL: https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z
+# Long URL: "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z"
 - curl -sS -L --proto-redir =https https://bit.ly/1CmmFHA -o mingw.7z
 # Will unpack into C:\mingw64\
 - 7z x -y -oC:\ mingw.7z > nul
@@ -56,7 +56,7 @@ artifacts:
 - path: harbour-daily-win.7z.exe
   name: win-uni
 before_deploy
-- call package\mpkg_win_uni.bat
+- call package\mpkg_win.bat
 deploy:
 - provider: S3
   artifact: win-msvc64, win-msvc, win-mingw64, win-mingw, win-uni
