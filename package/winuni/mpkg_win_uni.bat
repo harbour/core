@@ -1,5 +1,4 @@
-@echo off
-echo on
+@if not "%_HB_PKG_DEBUG%" == "yes" echo off
 
 :: ---------------------------------------------------------------
 :: Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
