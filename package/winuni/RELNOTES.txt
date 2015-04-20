@@ -10,14 +10,15 @@ Release Notes
 
 Unified Windows release for x86 and x64 platforms.
 
-Default components: MinGW compiler + x86 static/shared libs, examples.
-Options: x64 libs and tools.
+Default components: x86 tools, x86 static/shared libs, examples.
+Options: MinGW compiler, x64 libs and tools.
 
 Usage:
 1. install/unpack to any directory
-2. go to bin dir (optional if you specify path for hbmk2)
-3. For x86 executable, type: 'hbmk2 ../tests/hello.prg'
-4. For x64 executable, type: 'hbmk2 ../tests/hello.prg -cpu=x64'
+2. click "Harbour Shell" on your Desktop
+3. install MinGW compiler by typing: 'install_mingw.bat'
+4. for x86 executable, type: 'hbmk2 ../tests/hello.prg'
+5. for x64 executable, type: 'hbmk2 ../tests/hello.prg -cpu=x64'
 
 Tool/lib Dependencies
 =====================

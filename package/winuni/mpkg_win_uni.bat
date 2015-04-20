@@ -99,6 +99,10 @@ if not "%HB_DIR_7Z%" == "" (
    xcopy /y "%HB_DIR_7Z%7za.exe" "%HB_ABSROOT%bin\"
 )
 
+:: Copy core 3rd party headers
+
+xcopy /y /s /q /i "%~dp0..\..\src\3rd\*.h" "%HB_ABSROOT%src\3rd\"
+
 :: Copy C compiler
 
 set MINGW_HOST=32
@@ -222,6 +226,7 @@ echo "%HB_DR%bin\hbpp.exe"         >> _hbfiles
 echo "%HB_DR%bin\hbspeed.exe"      >> _hbfiles
 echo "%HB_DR%bin\hbtest.exe"       >> _hbfiles
 echo "%HB_DR%bin\*.hb"             >> _hbfiles
+echo "%HB_DR%bin\*.bat"            >> _hbfiles
 echo "%HB_DR%bin\upx*.*"           >> _hbfiles
 echo "%HB_DR%bin\7z*.*"            >> _hbfiles
 echo "%HB_DR%include\*.*"          >> _hbfiles
@@ -265,8 +270,8 @@ if exist "%HB_SFX_7Z%" (
 
    echo.> _7zconf
    echo ;!@Install@!UTF-8!> _7zconf
-   echo Title=^"Harbour %HB_VF% daily^">> _7zconf
-   echo BeginPrompt=^"Do you want to install Harbour %HB_VF% daily?^">> _7zconf
+   echo Title=^"Harbour %HB_VF%^">> _7zconf
+   echo BeginPrompt=^"Do you want to install Harbour %HB_VF%?^">> _7zconf
    echo CancelPrompt=^"Do you want to cancel installation?^">> _7zconf
    echo ExtractPathText=^"Select destination path^">> _7zconf
    echo ExtractPathTitle=^"Harbour %HB_VF%^">> _7zconf
