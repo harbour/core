@@ -392,6 +392,7 @@ OverwriteMode="0"
 InstallPath="C:\\$1%s"
 Shortcut="Du,{cmd.exe},{/k cd /d \\"%%T\\\\bin\\\\\\"},{},{},{Harbour Shell},{%%T\\\\bin\\\\},{%%T\\\\bin\\\\hbmk2.exe},{0}"
 RunProgram="nowait:notepad.exe \\"%%T\\\\README.md\\""
+;!@InstallEnd@!
 #pragma __endtext
 
 STATIC FUNCTION sfx_tgz_sh()
