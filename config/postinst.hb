@@ -233,10 +233,10 @@ PROCEDURE Main( ... )
 
             OutStd( "! Creating Harbour release package..." + hb_eol() )
 
-            FErase( tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".zip" )
+            FErase( tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".7z" )
 
             mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7z" ) + ;
-               " a -bd -r -mx -tzip" + ;
+               " a -bd -r -mx" + ;
                " -xr!*.tds -xr!*.exp" + ;  /* for win/bcc */
                " " + FNameEscape( tmp ) + ;
                " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + "*" )
@@ -247,11 +247,11 @@ PROCEDURE Main( ... )
                   hb_MemoRead( GetEnvC( "HB_SFX_7Z" ) ) + ;
                   hb_StrFormat( sfx_7z_conf(), GetEnvC( "HB_PKGNAMI" ) ) + ;
                   hb_MemoRead( tmp ) )
-
-               OutStd( hb_StrFormat( "! Created Harbour .exe release package: '%1$s'", tmp + ".exe" ) + hb_eol() )
-            ELSE
-               OutStd( hb_StrFormat( "! Created Harbour .zip release package: '%1$s'", tmp ) + hb_eol() )
+               FErase( tmp )
+               tmp += ".exe"
             ENDIF
+
+            OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s'", tmp ) + hb_eol() )
          ELSE
             cBin_Tar := "tar"
             lGNU_Tar := .T.
@@ -388,7 +388,7 @@ Progress="yes"
 GUIFlags="8+64+256+4096"
 GUIMode="1"
 OverwriteMode="0"
-InstallPath="C:\\$1%s"
+InstallPath="C:\\%1$s"
 Shortcut="Du,{cmd.exe},{/k cd /d \\"%%T\\\\bin\\\\\\"},{},{},{Harbour Shell},{%%T\\\\bin\\\\},{%%T\\\\bin\\\\hbmk2.exe},{0}"
 RunProgram="nowait:notepad.exe \\"%%T\\\\README.md\\""
 ;!@InstallEnd@!

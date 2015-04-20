@@ -69,7 +69,7 @@ if errorlevel 1 goto _EXIT
 endlocal
 
 :: Non-unified release package is here:
-::    harbour-%HB_VF%-win-mingw.zip[.exe]
+::    harbour-%HB_VF%-win-mingw.7z[.exe]
 
 echo ! Creating unified Windows release package...
 
