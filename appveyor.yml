@@ -14,7 +14,7 @@ environment:
 # - TARGET: mingw64
   - TARGET: mingw
 install:
-- curl -sS http://7zsfx.solta.ru/files/7zsd_150_2712.7z -o 7zsfx.7z
+- curl -sS http://7zsfx.info/files/7zsd_150_2712.7z -o 7zsfx.7z
 - 7z x -oC:\7zsfx 7zsfx.7z > nul
 - curl -sS -L --proto-redir =https,http https://downloads.sourceforge.net/upx/upx/3.91/upx391w.zip -o upx.zip
 - 7z e -oC:\upx\ upx.zip -ir!*.exe -ir!LICENSE > nul
@@ -41,19 +41,19 @@ build_script:
 artifacts:
 - path: harbour-daily-win-msvc64.zip
   name: win-msvc64.zip
-- path: harbour-daily-win-msvc64.exe
+- path: harbour-daily-win-msvc64.zip.exe
   name: win-msvc64.exe
 - path: harbour-daily-win-msvc.zip
   name: win-msvc.zip
-- path: harbour-daily-win-msvc.exe
+- path: harbour-daily-win-msvc.zip.exe
   name: win-msvc.exe
 - path: harbour-daily-win-mingw64.zip
   name: win-mingw64.zip
-- path: harbour-daily-win-mingw64.exe
+- path: harbour-daily-win-mingw64.zip.exe
   name: win-mingw64.exe
 - path: harbour-daily-win-mingw.zip
   name: win-mingw.zip
-- path: harbour-daily-win-mingw.exe
+- path: harbour-daily-win-mingw.zip.exe
   name: win-mingw.exe
 - path: harbour-daily-win.7z.exe
   name: harbour-daily-win.7z.exe

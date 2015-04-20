@@ -12,7 +12,7 @@ echo on
 :: - Run this from vanilla official source tree only.
 :: - Requires GNU sed and unix2dos tools in PATH
 :: - Optional HB_SFX_7Z envvar pointed to 7z SFX module
-::   found in: http://7zsfx.solta.ru/files/7zsd_150_2712.7z
+::   found in: http://7zsfx.info/files/7zsd_150_2712.7z
 
 echo ! Self: %0
 
@@ -254,14 +254,14 @@ echo "%HB_DR%addons\README.txt"    >> _hbfiles
 if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
 "%HB_DIR_7Z%7z" a -r -mx "harbour-%HB_VF%-win.7z" @_hbfiles > nul
 
+:: Manual: http://7zsfx.info/en/
+
+:: NOTE: This does work with the standard 7-zip SFX modules
+::       as well, except that a dummy 'RunProgram' needs
+::       to be added to avoid the error trying to run 'setup.exe'
+::       on install.
+
 if exist "%HB_SFX_7Z%" (
-
-   :: Manual: http://7zsfx.solta.ru/en/
-
-   :: NOTE: This does work with the standard 7-zip SFX modules
-   ::       as well, except that a dummy 'RunProgram' needs
-   ::       to be added to avoid the error trying to run 'setup.exe'
-   ::       on install.
 
    echo.> _7zconf
    echo ;!@Install@!UTF-8!> _7zconf
