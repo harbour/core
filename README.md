@@ -337,7 +337,7 @@ You can fine-tune the build with these options:
 
     $ package/mpkg_rpm_wce.sh
 
-## Binary .7z on Windows for all targets (except Linux)
+## Binary .7z.exe installer on Windows for all targets (except Linux)
 
     $ set HB_SFX_7Z=C:\7zsfx\7zsd.sfx
     $ set HB_DIR_7Z=C:\7-zip\
