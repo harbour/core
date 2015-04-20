@@ -2,9 +2,9 @@
 # (shell specific rules)
 
 # See option docs here:
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
+#    https://users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
+#    https://users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
+#    https://users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
 
 # NOTE: Hack to force no extension for Linux binaries created on non-Linux hosts.
 #       Otherwise they become '.elf'. [vszakats]
