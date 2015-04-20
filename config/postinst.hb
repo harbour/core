@@ -250,7 +250,7 @@ PROCEDURE Main( ... )
 
                hb_MemoWrit( tmp + ".exe", ;
                   hb_MemoRead( GetEnvC( "HB_SFX_7Z" ) ) + ;
-                  hb_StrFormat( sfx_7z_conf(), hb_GetEnvC( "HB_PKGNAMI" ) ) + ;
+                  hb_StrFormat( sfx_7z_conf(), GetEnvC( "HB_PKGNAMI" ) ) + ;
                   hb_MemoRead( tmp ) )
             ENDIF
          ELSE
