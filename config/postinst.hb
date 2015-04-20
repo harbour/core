@@ -235,7 +235,7 @@ PROCEDURE Main( ... )
 
             FErase( tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".7z" )
 
-            mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7z" ) + ;
+            mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7za" ) + ;
                " a -bd -r -mx" + ;
                " -xr!*.tds -xr!*.exp" + ;  /* for win/bcc */
                " " + FNameEscape( tmp ) + ;

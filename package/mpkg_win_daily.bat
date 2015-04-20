@@ -31,7 +31,7 @@ if exist harbour-core-master rd /q /s harbour-core-master
 git clone -q --depth=8 --branch=master https://github.com/vszakats/harbour-core.git harbore-core-master
 if errorlevel 1 goto _EXIT
 
-"%_HB_DIR_TOOL%7z" x master.zip
+"%_HB_DIR_TOOL%7za" x master.zip
 cd harbour-core-master
 
 echo ! Setting up generic build parameters...

@@ -257,7 +257,7 @@ echo "addons\README.txt"    >> _hbfiles
 
 if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
 pushd "%HB_DR%"
-"%HB_DIR_7Z%7z" a -r -mx "..\harbour-%HB_VF%-win.7z" @..\_hbfiles > nul
+"%HB_DIR_7Z%7za" a -r -mx "..\harbour-%HB_VF%-win.7z" @..\_hbfiles > nul
 popd
 
 :: Manual: http://7zsfx.info/en/
