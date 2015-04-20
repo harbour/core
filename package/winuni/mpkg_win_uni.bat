@@ -284,7 +284,7 @@ if exist "%HB_SFX_7Z%" (
    echo OverwriteMode=^"0^">> _7zconf
    echo InstallPath=^"C:\hb%HB_VS%^">> _7zconf
    echo Shortcut=^"Du,{cmd.exe},{/k cd /d \^"%%%%T\\bin\\\^"},{},{},{Harbour Shell},{%%%%T\\bin\\},{%%%%T\\bin\\hbmk2.exe},{0}^">> _7zconf
-   echo ;RunProgram=^"notepad.exe \^"%%%%T\\README.md\^"^">> _7zconf
+   echo ;RunProgram=^"nowait:notepad.exe \^"%%%%T\\README.md\^"^">> _7zconf
    echo ;RunProgram=^"hbmk2.exe \^"%%%%T\^"\\install.hb^">> _7zconf
    echo ;Delete=^"^">> _7zconf
    echo ;!@InstallEnd@!>> _7zconf
