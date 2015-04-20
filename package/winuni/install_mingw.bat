@@ -7,11 +7,12 @@ cd /d "%~dp0"
 set "_MINGW_32=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/4.9.2/threads-win32/sjlj/i686-4.9.2-release-win32-sjlj-rt_v4-rev2.7z"
 set "_MINGW_64=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z"
 
-:: Match mingw with the Harbour binaries
 set _URL_CLIENT=%_MINGW_32%
 harbour -build 2>&1 | findstr "64-bit" > nul 2>&1 && set _URL_CLIENT=%_MINGW_64%
 
-:: Download
+if "%_URL_CLIENT%" == "%_MINGW_32%" echo Downloading 32-bit hosted dual mingw...
+if "%_URL_CLIENT%" == "%_MINGW_64%" echo Downloading 64-bit hosted dual mingw...
+
 set _DL_URL=%_URL_CLIENT%
 set _DL_DST=%TEMP%\mingw.7z
 set _TMP=%TEMP%\_webdl.js
@@ -26,7 +27,11 @@ echo }>> "%_TMP%"
 cscript "%_TMP%" //Nologo
 del "%_TMP%"
 
-:: Unpack
+cd "%~dp0.."
+set _TRG=%CD%\comp\
+cd /d "%~dp0"
+
+echo Unpacking to '%_TRG%'...
 if exist "%TEMP%\mingw.7z" (
    7za x -y -o..\comp "%TEMP%\mingw.7z" > nul
    del "%TEMP%\mingw.7z"

@@ -229,6 +229,7 @@ echo "bin\*.bat"            >> _hbfiles
 echo "bin\upx*.*"           >> _hbfiles
 echo "bin\7z*.*"            >> _hbfiles
 echo "include\*.*"          >> _hbfiles
+echo "src\*.*"              >> _hbfiles
 echo "lib\win\mingw\*.*"    >> _hbfiles
 echo "lib\win\mingw64\*.*"  >> _hbfiles
 echo "lib\wce\mingwarm\*.*" >> _hbfiles

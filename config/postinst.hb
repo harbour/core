@@ -239,7 +239,7 @@ PROCEDURE Main( ... )
                " a -bd -r -mx" + ;
                " -xr!*.tds -xr!*.exp" + ;  /* for win/bcc */
                " " + FNameEscape( tmp ) + ;
-               " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + GetEnvC( "HB_PKGNAME" ) + "*" )
+               " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" )
 
             IF GetEnvC( "HB_PLATFORM" ) $ "win|wce" .AND. ;
                ! Empty( GetEnvC( "HB_SFX_7Z" ) ) .AND. ;
