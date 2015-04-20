@@ -14,18 +14,16 @@ environment:
 # - TARGET: mingw64
   - TARGET: mingw
 install:
-- md C:\upx\
-- curl -sS -L --proto-redir =https,http https://downloads.sourceforge.net/upx/upx/3.91/upx391w.zip -o C:\upx\upx.zip
-- 7z e -oC:\upx\ C:\upx\upx.zip -ir!*.exe -ir!LICENSE > nul
-# Long URL: https://downloads.sourceforge.net/nsis/NSIS%203%20Pre-release/3.0b1/nsis-3.0b1.zip
-- curl -sS -L --proto-redir =https,http https://bit.ly/19nfgzh -o nsis3.zip
-- 7z x -oC:\ nsis3.zip > nul
-# Long URL: https://downloads.sourceforge.net/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z
-- curl -sS -L --proto-redir =https,http https://bit.ly/1IFNw5O -o mingw.7z
+- curl -sS http://7zsfx.solta.ru/files/7zsd_150_2712.7z -o 7zsfx.7z
+- 7z x -oC:\7zsfx 7zsfx.7z > nul
+- curl -sS -L --proto-redir =https,http https://downloads.sourceforge.net/upx/upx/3.91/upx391w.zip -o upx.zip
+- 7z e -oC:\upx\ upx.zip -ir!*.exe -ir!LICENSE > nul
+# Long URL: https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z
+- curl -sS -L --proto-redir =https https://bit.ly/1CmmFHA -o mingw.7z
 # Will unpack into C:\mingw64\
 - 7z x -oC:\ mingw.7z > nul
 build_script:
-- set HB_DIR_NSIS=C:\nsis\
+- set HB_SFX_7Z=C:\7zsfx\7zsd.sfx
 - set HB_DIR_UPX=C:\upx\
 - set HB_DIR_MINGW=C:\mingw64
 - if "%TARGET:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
@@ -57,11 +55,8 @@ artifacts:
   name: win-mingw.zip
 - path: harbour-daily-win-mingw.exe
   name: win-mingw.exe
-- path: harbour-daily-win.7z
-  name: harbour-daily-win.7z
-- path: harbour-daily-win.exe
-  name: harbour-daily-win.exe
+- path: harbour-daily-win.7z.exe
+  name: harbour-daily-win.7z.exe
 before_deploy:
-- set HB_OPT_NSIS=/DPKG_NO_COMP_BCC /DPKG_NO_COMP_MINGWARM /DPKG_NO_PLAT_LINUX /DPKG_NO_PLAT_OS2 /DPKG_NO_PLAT_DOS /DPKG_NO_COMP_WATCOM
 - set HB_RT=%APPVEYOR_BUILD_FOLDER%
 - call package\winuni\mpkg_win_uni.bat

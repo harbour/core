@@ -10,7 +10,9 @@ echo on
 ::   create required packages beforehand.
 :: - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
 :: - Run this from vanilla official source tree only.
-:: - Requires GNU sed tool in PATH
+:: - Requires GNU sed and unix2dos tools in PATH
+:: - Optional HB_SFX_7Z envvar pointed to 7z SFX module
+::   found in: http://7zsfx.solta.ru/files/7zsd_150_2712.7z
 
 echo ! Self: %0
 
@@ -91,6 +93,12 @@ if not "%HB_DIR_UPX%" == "" (
     copy /y "%HB_DIR_UPX%LICENSE" "%HB_ABSROOT%bin\upx_LICENSE.txt"
 )
 
+:: Copy 7z
+
+if not "%HB_DIR_7Z%" == "" (
+   xcopy /y "%HB_DIR_7Z%7za.exe" "%HB_ABSROOT%bin\"
+)
+
 :: Copy C compiler
 
 set MINGW_HOST=32
@@ -99,7 +107,11 @@ if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32" set MINGW_HOST=64
 if "%MINGW_HOST%" == "32" set MINGW_ROOT=comp\mingw\
 if "%MINGW_HOST%" == "64" set MINGW_ROOT=comp\mingw64\
 
-if not "%_HB_PKG_WINUNI_BUNDLE_C%" == "no" xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%%MINGW_ROOT%"
+if "%_HB_PKG_WINUNI_BUNDLE_C%" == "yes" (
+   xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%%MINGW_ROOT%"
+) else (
+   xcopy /y /q "%~dp0install_mingw.bat" "%HB_ABSROOT%bin\"
+)
 
 :: Copy mingw runtime .dlls
 
@@ -175,16 +187,15 @@ sed -e "s/_VCS_ID_/%VCS_ID%/g"^
     -e "s/_HB_VERSION_/%_HB_VER%/g"^
     -e "s/_MINGW_VER_/%MINGW_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
 
-:: Create unified installer
+:: Convert EOLs
+
+unix2dos "%HB_ABSROOT%*.md"
+unix2dos "%HB_ABSROOT%*.txt"
+unix2dos "%HB_ABSROOT%addons\*.txt"
+
+:: Create unified installer/archive
 
 pushd "%HB_RT%"
-
-if exist "harbour-%HB_VF%-win-log.txt" del "harbour-%HB_VF%-win-log.txt"
-if exist "harbour-%HB_VF%-win.exe" del "harbour-%HB_VF%-win.exe"
-
-"%HB_DIR_NSIS%makensis.exe" "%~dp0mpkg_win_uni.nsi"
-
-:: Create unified archive
 
 echo.> _hbfiles
 
@@ -212,6 +223,7 @@ echo "%HB_DR%bin\hbspeed.exe"      >> _hbfiles
 echo "%HB_DR%bin\hbtest.exe"       >> _hbfiles
 echo "%HB_DR%bin\*.hb"             >> _hbfiles
 echo "%HB_DR%bin\upx*.*"           >> _hbfiles
+echo "%HB_DR%bin\7z*.*"            >> _hbfiles
 echo "%HB_DR%include\*.*"          >> _hbfiles
 echo "%HB_DR%lib\win\mingw\*.*"    >> _hbfiles
 echo "%HB_DR%lib\win\mingw64\*.*"  >> _hbfiles
@@ -241,6 +253,45 @@ echo "%HB_DR%addons\README.txt"    >> _hbfiles
 
 if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
 "%HB_DIR_7Z%7z" a -r -mx "harbour-%HB_VF%-win.7z" @_hbfiles > nul
+
+if exist "%HB_SFX_7Z%" (
+
+   :: Manual: http://7zsfx.solta.ru/en/
+
+   :: NOTE: This does work with the standard 7-zip SFX modules
+   ::       as well, except that a dummy 'RunProgram' needs
+   ::       to be added to avoid the error trying to run 'setup.exe'
+   ::       on install.
+
+   echo.> _7zconf
+   echo ;!@Install@!UTF-8!> _7zconf
+   echo Title=^"Harbour %HB_VF% daily^">> _7zconf
+   echo BeginPrompt=^"Do you want to install Harbour %HB_VF% daily?^">> _7zconf
+   echo CancelPrompt=^"Do you want to cancel installation?^">> _7zconf
+   echo ExtractPathText=^"Select destination path^">> _7zconf
+   echo ExtractPathTitle=^"Harbour %HB_VF%^">> _7zconf
+   echo ExtractTitle=^"Extracting^">> _7zconf
+   echo ExtractDialogText=^"Please wait...^">> _7zconf
+   echo ExtractCancelText=^"Abort^">> _7zconf
+   echo Progress=^"yes^">> _7zconf
+   echo GUIFlags=^"8+64+256+4096^">> _7zconf
+   echo GUIMode=^"1^">> _7zconf
+   echo OverwriteMode=^"0^">> _7zconf
+   echo InstallPath=^"C:\hb%HB_VS%^">> _7zconf
+   echo Shortcut=^"Du,{cmd.exe},{/k cd /d \^"%%%%T\\bin\\\^"},{},{},{Harbour Shell},{%%%%T\\bin\\},{%%%%T\\bin\\hbmk2.exe},{0}^">> _7zconf
+   echo ;RunProgram=^"notepad.exe \^"%%%%T\\README.md\^"^">> _7zconf
+   echo ;RunProgram=^"hbmk2.exe \^"%%%%T\^"\\install.hb^">> _7zconf
+   echo ;Delete=^"^">> _7zconf
+   echo ;!@InstallEnd@!>> _7zconf
+
+   copy /b "%HB_SFX_7Z%" + ^
+      _7zconf + ^
+      "harbour-%HB_VF%-win.7z" ^
+      "harbour-%HB_VF%-win.7z.exe"
+
+   del "harbour-%HB_VF%-win.7z"
+   del _7zconf
+)
 
 del _hbfiles
 

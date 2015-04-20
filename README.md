@@ -22,7 +22,7 @@ and interfaces to popular APIs.
 10. [Debugging Options](#debugging-options)
 11. [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers)
 12. [Platform Matrix](#platform-matrix)
-13. [External links](#external-links)
+13. [External Links](#external-links)
 14. [Harbour Links](#harbour-links)
 15. [Guarantees and Liability](#guarantees-and-liability)
 
@@ -44,7 +44,7 @@ and interfaces to popular APIs.
 
 ### Harbour stable binary download
 
-You can find links to the latest stable release (3.0.0)
+You can find URLs to the latest stable release (3.0.0)
 of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md#stable-versions) of the mainline source.
 
 
@@ -70,7 +70,7 @@ You can get subsequent updates using this command:
 
 ### Harbour unstable sources
 
-Download source archive from any of these links and unpack:
+Download source archive from any of these URLs and unpack:
 
 * <https://github.com/vszakats/harbour-core/archive/master.zip>
 * <https://github.com/vszakats/harbour-core/archive/master.tar.gz>
@@ -1259,7 +1259,7 @@ Press `<Alt+D>` in the app.
 * minix    - Minix 3 (tested on 3.2.1; earlier releases won't work)
 * aix      - IBM AIX
 * win      - MS Windows (all flavors)
-             (see [External links](#external-links) for Win9x requirements)
+             (see [External Links](#external-links) for Win9x requirements)
 * wce      - MS Windows CE
 * dos      - MS-DOS (32-bit protected mode only)
              (MS-DOS compatible systems also work, like dosemu)
@@ -1470,7 +1470,7 @@ Supported shells per host platforms:
 * *nix / POSIX shell
 
 
-# External links
+# External Links
 
 * C/C++ Compilers/Shells:
 
@@ -1595,9 +1595,8 @@ Supported shells per host platforms:
         Windows binary + source:
 
          * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/>
-         * <https://downloads.sourceforge.net/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma>
-         * <https://downloads.sourceforge.net/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma>
-         * `git clone ssh://git.sv.gnu.org/srv/git/make.git`
+         * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma>
+         * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma>         * `git clone ssh://git.sv.gnu.org/srv/git/make.git`
           <br />(included in Harbour as [win-make.exe](win-make.exe))
 
         MS-DOS binary + source:

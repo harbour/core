@@ -42,7 +42,7 @@ set HB_RT=%~dp0
 
 set HB_BUILD_PKG=yes
 
-set HB_DIR_NSIS=%_HB_DIR_TOOL%nsis\
+set HB_SFX_7Z=%_HB_DIR_TOOL%7zsd.sfx
 set HB_DIR_7Z=%_HB_DIR_TOOL%
 set HB_DIR_UPX=%_HB_DIR_TOOL%upx\
 set HB_DIR_MINGW=%_HB_DIR_COMP%mingw
@@ -78,9 +78,8 @@ call package\winuni\mpkg_win_uni.bat > "%~dp0harbour-%HB_VF%-win-log.txt" 2>&1
 
 echo ! Uploading Harbour unified Windows release package...
 
-:: Unified release packages are here:
-::    %HB_RT%harbour-%HB_VF%-win.exe
-::    %HB_RT%harbour-%HB_VF%-win.7z
+:: Unified release package is here:
+::    %HB_RT%harbour-%HB_VF%-win.7z.exe
 
 :_EXIT
 
