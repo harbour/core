@@ -82,12 +82,12 @@ PROCEDURE Main( ... )
 
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
                FOR EACH aFile IN Directory( "Change*" )
-                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ) )
+                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ), .T. )
                NEXT
 
-               mk_hb_FCopy( "COPYING.txt", tmp + hb_ps() )
-               mk_hb_FCopy( "CONTRIBUTING.md", tmp + hb_ps() )
-               mk_hb_FCopy( "README.md", tmp + hb_ps() )
+               mk_hb_FCopy( "COPYING.txt", tmp + hb_ps(), .T. )
+               mk_hb_FCopy( "CONTRIBUTING.md", tmp + hb_ps(), .T. )
+               mk_hb_FCopy( "README.md", tmp + hb_ps(), .T. )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -112,7 +112,7 @@ PROCEDURE Main( ... )
          OutStd( "! Copying *nix config files..." + hb_eol() )
 
          IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_ETC" ) ) )
-            mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnvC( "HB_INSTALL_ETC" ) + hb_ps(), .T. )
+            mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnvC( "HB_INSTALL_ETC" ) + hb_ps(),, .T. )
          ELSE
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_ETC" ) ) + hb_eol() )
          ENDIF
@@ -145,7 +145,7 @@ PROCEDURE Main( ... )
                "src/pp/hbpp.1" }
                mk_hb_FCopy( ;
                   hb_DirSepToOS( tmp ), ;
-                  hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1/" ), .T. )
+                  hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1/" ),, .T. )
             NEXT
          ELSE
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_MAN" ) ) + hb_eol() )
@@ -450,10 +450,20 @@ STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 STATIC FUNCTION FNameEscape( cFileName )
    RETURN '"' + cFileName + '"'
 
-/* Like hb_FCopy(), but accepts dir as target and can set attributes */
-STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
+STATIC FUNCTION EOLConv( cFile )
+
+   cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+
+   RETURN iif( GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos", ;
+      StrTran( cFile, Chr( 10 ), Chr( 13 ) + Chr( 10 ) ), ;
+      cFile )
+
+/* Like hb_FCopy(), but accepts dir as target, can set attributes
+   and translates EOL to target platform */
+STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644 )
 
    LOCAL cDir, cName, cExt
+   LOCAL cFile
 
    cSrc := hb_DirSepToOS( cSrc )
    cDst := hb_DirSepToOS( cDst )
@@ -464,7 +474,8 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
    ENDIF
    cDst := hb_FNameMerge( cDir, cName, cExt )
 
-   IF hb_FCopy( cSrc, cDst ) != F_ERROR
+   IF ! Empty( cFile := hb_MemoRead( cSrc ) ) .AND. ;
+      hb_MemoWrit( cDst, iif( hb_defaultValue( lEOL, .F. ), EOLConv( cFile ), cFile ) )
 #if 0
       OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
 #endif
