@@ -42,16 +42,16 @@ build_script:
 - set HB_BUILD_POSTRUN=hbtest "hbspeed --stdout"
 - win-make.exe clean install HB_VERSION=%HB_VF%
 artifacts:
-- path: harbour-daily-win-msvc64.zip.exe
+- path: harbour-daily-win-msvc64.7z.exe
   name: win-msvc64
-- path: harbour-daily-win-msvc.zip.exe
+- path: harbour-daily-win-msvc.7z.exe
   name: win-msvc
-- path: harbour-daily-win-mingw64.zip.exe
+- path: harbour-daily-win-mingw64.7z.exe
   name: win-mingw64
-- path: harbour-daily-win-mingw.zip.exe
+- path: harbour-daily-win-mingw.7z.exe
   name: win-mingw
 - path: harbour-daily-win.7z.exe
-  name: harbour-daily-win.7z
+  name: harbour-daily-win
 before_deploy:
 - set HB_RT=%APPVEYOR_BUILD_FOLDER%
 - call package\winuni\mpkg_win_uni.bat
