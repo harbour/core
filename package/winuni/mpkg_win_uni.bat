@@ -204,61 +204,61 @@ pushd "%HB_RT%"
 
 echo.> _hbfiles
 
-if exist "%HB_DR%bin\hbformat.exe" echo "%HB_DR%bin\hbformat.exe" >> _hbfiles
-if exist "%HB_DR%bin\hbnetio.exe"  echo "%HB_DR%bin\hbnetio.exe"  >> _hbfiles
-if exist "%HB_DR%bin\hbrun.exe"    echo "%HB_DR%bin\hbrun.exe"    >> _hbfiles
+if exist "bin\hbformat.exe" echo "bin\hbformat.exe" >> _hbfiles
+if exist "bin\hbnetio.exe"  echo "bin\hbnetio.exe"  >> _hbfiles
+if exist "bin\hbrun.exe"    echo "bin\hbrun.exe"    >> _hbfiles
 
-if exist "%HB_ABSROOT%%MINGW_ROOT%*" (
-   echo "%HB_DR%bin\libgcc_s_*.dll"      >> _hbfiles
-   echo "%HB_DR%bin\mingwm*.dll"         >> _hbfiles
-   echo "%HB_DR%bin\libwinpthread-*.dll" >> _hbfiles
-)
+echo "bin\libgcc_s_*.dll"      >> _hbfiles
+echo "bin\mingwm*.dll"         >> _hbfiles
+echo "bin\libwinpthread-*.dll" >> _hbfiles
 
-echo "%HB_DR%ChangeLog*.txt"       >> _hbfiles
-echo "%HB_DR%CONTRIBUTING.md"      >> _hbfiles
-echo "%HB_DR%COPYING.txt"          >> _hbfiles
-echo "%HB_DR%README.md"            >> _hbfiles
-echo "%HB_DR%RELNOTES.txt"         >> _hbfiles
-echo "%HB_DR%bin\*-%HB_VS%*.dll"   >> _hbfiles
-echo "%HB_DR%bin\harbour.exe"      >> _hbfiles
-echo "%HB_DR%bin\hbi18n.exe"       >> _hbfiles
-echo "%HB_DR%bin\hbmk2.exe"        >> _hbfiles
-echo "%HB_DR%bin\hbpp.exe"         >> _hbfiles
-echo "%HB_DR%bin\hbspeed.exe"      >> _hbfiles
-echo "%HB_DR%bin\hbtest.exe"       >> _hbfiles
-echo "%HB_DR%bin\*.hb"             >> _hbfiles
-echo "%HB_DR%bin\*.bat"            >> _hbfiles
-echo "%HB_DR%bin\upx*.*"           >> _hbfiles
-echo "%HB_DR%bin\7z*.*"            >> _hbfiles
-echo "%HB_DR%include\*.*"          >> _hbfiles
-echo "%HB_DR%lib\win\mingw\*.*"    >> _hbfiles
-echo "%HB_DR%lib\win\mingw64\*.*"  >> _hbfiles
-echo "%HB_DR%lib\wce\mingwarm\*.*" >> _hbfiles
-echo "%HB_DR%lib\dos\djgpp\*.*"    >> _hbfiles
-echo "%HB_DR%lib\dos\watcom\*.*"   >> _hbfiles
-echo "%HB_DR%lib\linux\watcom\*.*" >> _hbfiles
-echo "%HB_DR%lib\os2\watcom\*.*"   >> _hbfiles
-echo "%HB_DR%lib\win\msvc\*.*"     >> _hbfiles
-echo "%HB_DR%lib\win\msvc64\*.*"   >> _hbfiles
-echo "%HB_DR%lib\win\bcc\*.*"      >> _hbfiles
-echo "%HB_DR%lib\win\bcc64\*.*"    >> _hbfiles
-echo "%HB_DR%lib\win\watcom\*.*"   >> _hbfiles
-echo "%HB_DR%lib\win\pocc\*.*"     >> _hbfiles
-echo "%HB_DR%lib\win\pocc64\*.*"   >> _hbfiles
-echo "%HB_DR%lib\wce\poccarm\*.*"  >> _hbfiles
-echo "%HB_DR%tests\*.*"            >> _hbfiles
-echo "%HB_DR%doc\*.*"              >> _hbfiles
-echo "%HB_DR%comp\mingw\*"         >> _hbfiles
-echo "%HB_DR%comp\mingw64\*"       >> _hbfiles
-echo "%HB_DR%comp\djgpp\*"         >> _hbfiles
-echo "%HB_DR%comp\pocc\*"          >> _hbfiles
-echo "%HB_DR%comp\watcom\*"        >> _hbfiles
-echo "%HB_DR%extras\*.*"           >> _hbfiles
-echo "%HB_DR%contrib\*.*"          >> _hbfiles
-echo "%HB_DR%addons\README.txt"    >> _hbfiles
+echo "ChangeLog*.txt"       >> _hbfiles
+echo "CONTRIBUTING.md"      >> _hbfiles
+echo "COPYING.txt"          >> _hbfiles
+echo "README.md"            >> _hbfiles
+echo "RELNOTES.txt"         >> _hbfiles
+echo "bin\*-%HB_VS%*.dll"   >> _hbfiles
+echo "bin\harbour.exe"      >> _hbfiles
+echo "bin\hbi18n.exe"       >> _hbfiles
+echo "bin\hbmk2.exe"        >> _hbfiles
+echo "bin\hbpp.exe"         >> _hbfiles
+echo "bin\hbspeed.exe"      >> _hbfiles
+echo "bin\hbtest.exe"       >> _hbfiles
+echo "bin\*.hb"             >> _hbfiles
+echo "bin\*.bat"            >> _hbfiles
+echo "bin\upx*.*"           >> _hbfiles
+echo "bin\7z*.*"            >> _hbfiles
+echo "include\*.*"          >> _hbfiles
+echo "lib\win\mingw\*.*"    >> _hbfiles
+echo "lib\win\mingw64\*.*"  >> _hbfiles
+echo "lib\wce\mingwarm\*.*" >> _hbfiles
+echo "lib\dos\djgpp\*.*"    >> _hbfiles
+echo "lib\dos\watcom\*.*"   >> _hbfiles
+echo "lib\linux\watcom\*.*" >> _hbfiles
+echo "lib\os2\watcom\*.*"   >> _hbfiles
+echo "lib\win\msvc\*.*"     >> _hbfiles
+echo "lib\win\msvc64\*.*"   >> _hbfiles
+echo "lib\win\bcc\*.*"      >> _hbfiles
+echo "lib\win\bcc64\*.*"    >> _hbfiles
+echo "lib\win\watcom\*.*"   >> _hbfiles
+echo "lib\win\pocc\*.*"     >> _hbfiles
+echo "lib\win\pocc64\*.*"   >> _hbfiles
+echo "lib\wce\poccarm\*.*"  >> _hbfiles
+echo "tests\*.*"            >> _hbfiles
+echo "doc\*.*"              >> _hbfiles
+echo "comp\mingw\*"         >> _hbfiles
+echo "comp\mingw64\*"       >> _hbfiles
+echo "comp\djgpp\*"         >> _hbfiles
+echo "comp\pocc\*"          >> _hbfiles
+echo "comp\watcom\*"        >> _hbfiles
+echo "extras\*.*"           >> _hbfiles
+echo "contrib\*.*"          >> _hbfiles
+echo "addons\README.txt"    >> _hbfiles
 
 if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
-"%HB_DIR_7Z%7z" a -r -mx "harbour-%HB_VF%-win.7z" @_hbfiles > nul
+pushd "%HB_DR%"
+"%HB_DIR_7Z%7z" a -r -mx "..\harbour-%HB_VF%-win.7z" @..\_hbfiles > nul
+popd
 
 :: Manual: http://7zsfx.info/en/
 
@@ -285,7 +285,7 @@ if exist "%HB_SFX_7Z%" (
    echo OverwriteMode=^"0^">> _7zconf
    echo InstallPath=^"C:\hb%HB_VS%^">> _7zconf
    echo Shortcut=^"Du,{cmd.exe},{/k cd /d \^"%%%%T\\bin\\\^"},{},{},{Harbour Shell},{%%%%T\\bin\\},{%%%%T\\bin\\hbmk2.exe},{0}^">> _7zconf
-   echo ;RunProgram=^"nowait:notepad.exe \^"%%%%T\\README.md\^"^">> _7zconf
+   echo RunProgram=^"nowait:notepad.exe \^"%%%%T\\README.md\^"^">> _7zconf
    echo ;RunProgram=^"hbmk2.exe \^"%%%%T\^"\\install.hb^">> _7zconf
    echo ;Delete=^"^">> _7zconf
    echo ;!@InstallEnd@!>> _7zconf
