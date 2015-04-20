@@ -26,7 +26,6 @@
 *.md      text
 *.mft     text
 *.mk      text
-*.nsi     text
 *.pem     text
 *.po      text
 *.prg     text

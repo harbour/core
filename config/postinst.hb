@@ -243,14 +243,15 @@ PROCEDURE Main( ... )
                " " + FNameEscape( tmp ) + ;
                " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + "*" )
 
-            IF GetEnvC( "HB_PLATFORM" ) $ "win|wce"
+            IF GetEnvC( "HB_PLATFORM" ) $ "win|wce" .AND. ;
+               ! Empty( GetEnvC( "HB_SFX_7Z" ) )
 
-               tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".exe"
+               OutStd( hb_StrFormat( "! Making Harbour .exe release package: '%1$s'", tmp + ".exe" ) + hb_eol() )
 
-               OutStd( hb_StrFormat( "! Making Harbour .exe release package: '%1$s'", tmp ) + hb_eol() )
-
-               mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" ) + ;
-                  " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
+               hb_MemoWrit( tmp + ".exe", ;
+                  hb_MemoRead( GetEnvC( "HB_SFX_7Z" ) ) + ;
+                  hb_StrFormat( sfx_7z_conf(), hb_GetEnvC( "HB_PKGNAMI" ) ) + ;
+                  hb_MemoRead( tmp ) )
             ENDIF
          ELSE
             cBin_Tar := "tar"
@@ -303,7 +304,7 @@ PROCEDURE Main( ... )
                   /* In the generated script always use tar because we can't be sure
                      if cBin_Tar exists in the installation environment */
                   hb_MemoWrit( tmp, ;
-                     hb_StrFormat( tgz_sfx_sh(), ;
+                     hb_StrFormat( sfx_tgz_sh(), ;
                         hb_FSize( cTar_Path ), ;
                         cTar_NameExt, ;
                         iif( GetEnvC( "HB_PLATFORM" ) == "linux", " && ldconfig", "" ) ) + ;
@@ -373,7 +374,28 @@ PROCEDURE Main( ... )
 
    RETURN
 
-STATIC FUNCTION tgz_sfx_sh()
+STATIC FUNCTION sfx_7z_conf()
+#pragma __cstream | RETURN %s
+;!@Install@!UTF-8!
+Title="Harbour"
+BeginPrompt="Do you want to install Harbour?"
+CancelPrompt="Do you want to cancel installation?"
+ExtractPathText="Select destination path"
+ExtractPathTitle="Harbour"
+ExtractTitle="Extracting"
+ExtractDialogText="Please wait..."
+ExtractCancelText="Abort"
+Progress="yes"
+GUIFlags="8+64+256+4096"
+GUIMode="1"
+OverwriteMode="0"
+InstallPath="C:\$1%s"
+Shortcut="Du,{cmd.exe},{/k cd /d \"%%T\\bin\\\"},{},{},{Harbour Shell},{%%T\\bin\\},{%%T\\bin\\hbmk2.exe},{0}"
+RunProgram="notepad.exe \"%%T\\README.md\""
+;!@InstallEnd@!
+#pragma __endtext
+
+STATIC FUNCTION sfx_tgz_sh()
 #pragma __cstream | RETURN %s
 #!/bin/sh
 if [ "$1" = '--extract' ]; then
