@@ -96,7 +96,8 @@ if not "%HB_DIR_UPX%" == "" (
 :: Copy 7z
 
 if not "%HB_DIR_7Z%" == "" (
-   xcopy /y "%HB_DIR_7Z%7za.exe" "%HB_ABSROOT%bin\"
+   xcopy /y "%HB_DIR_7Z%7za.exe"     "%HB_ABSROOT%bin\"
+    copy /y "%HB_DIR_7Z%license.txt" "%HB_ABSROOT%bin\7za_LICENSE.txt"
 )
 
 :: Copy core 3rd party headers

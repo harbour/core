@@ -14,16 +14,19 @@ environment:
 # - TARGET: mingw64
   - TARGET: mingw
 install:
+- curl -sS -L http://www.7-zip.org/a/7za920.zip -o 7z.7z
+- 7z x -y -oC:\7z 7z.7z > nul
 - curl -sS http://7zsfx.info/files/7zsd_150_2712.7z -o 7zsfx.7z
-- 7z x -oC:\7zsfx 7zsfx.7z > nul
+- 7z x -y -oC:\7zsfx 7zsfx.7z > nul
 - curl -sS -L --proto-redir =https https://fossies.org/windows/misc/upx391w.zip -o upx.zip
-- 7z e -oC:\upx\ upx.zip -ir!*.exe -ir!LICENSE > nul
+- 7z e -y -oC:\upx\ upx.zip -ir!*.exe -ir!LICENSE > nul
 # Long URL: https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/x86_64-4.9.2-release-win32-sjlj-rt_v4-rev2.7z
 - curl -sS -L --proto-redir =https https://bit.ly/1CmmFHA -o mingw.7z
 # Will unpack into C:\mingw64\
-- 7z x -oC:\ mingw.7z > nul
+- 7z x -y -oC:\ mingw.7z > nul
 build_script:
 - set HB_SFX_7Z=C:\7zsfx\7zsd.sfx
+- set HB_DIR_7Z=C:\7z\
 - set HB_DIR_UPX=C:\upx\
 - set HB_DIR_MINGW=C:\mingw64
 - if "%TARGET:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
@@ -39,24 +42,16 @@ build_script:
 - set HB_BUILD_POSTRUN=hbtest "hbspeed --stdout"
 - win-make.exe clean install HB_VERSION=%HB_VF%
 artifacts:
-- path: harbour-daily-win-msvc64.zip
-  name: win-msvc64.zip
 - path: harbour-daily-win-msvc64.zip.exe
-  name: win-msvc64.exe
-- path: harbour-daily-win-msvc.zip
-  name: win-msvc.zip
+  name: win-msvc64
 - path: harbour-daily-win-msvc.zip.exe
-  name: win-msvc.exe
-- path: harbour-daily-win-mingw64.zip
-  name: win-mingw64.zip
+  name: win-msvc
 - path: harbour-daily-win-mingw64.zip.exe
-  name: win-mingw64.exe
-- path: harbour-daily-win-mingw.zip
-  name: win-mingw.zip
+  name: win-mingw64
 - path: harbour-daily-win-mingw.zip.exe
-  name: win-mingw.exe
+  name: win-mingw
 - path: harbour-daily-win.7z.exe
-  name: harbour-daily-win.7z.exe
+  name: harbour-daily-win.7z
 before_deploy:
 - set HB_RT=%APPVEYOR_BUILD_FOLDER%
 - call package\winuni\mpkg_win_uni.bat

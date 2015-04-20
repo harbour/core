@@ -231,11 +231,9 @@ PROCEDURE Main( ... )
 
          IF GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos"
 
-            tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".zip"
+            OutStd( "! Creating Harbour release package..." + hb_eol() )
 
-            OutStd( hb_StrFormat( "! Making Harbour .zip release package: '%1$s'", tmp ) + hb_eol() )
-
-            FErase( tmp )
+            FErase( tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".zip" )
 
             mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7z" ) + ;
                " a -bd -r -mx -tzip" + ;
@@ -244,14 +242,15 @@ PROCEDURE Main( ... )
                " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + "*" )
 
             IF GetEnvC( "HB_PLATFORM" ) $ "win|wce" .AND. ;
-               ! Empty( GetEnvC( "HB_SFX_7Z" ) )
-
-               OutStd( hb_StrFormat( "! Making Harbour .exe release package: '%1$s'", tmp + ".exe" ) + hb_eol() )
-
+               ! Empty( GetEnvC( "HB_SFX_7Z" ) ) .AND. ;
                hb_MemoWrit( tmp + ".exe", ;
                   hb_MemoRead( GetEnvC( "HB_SFX_7Z" ) ) + ;
                   hb_StrFormat( sfx_7z_conf(), GetEnvC( "HB_PKGNAMI" ) ) + ;
                   hb_MemoRead( tmp ) )
+
+               OutStd( hb_StrFormat( "! Created Harbour .exe release package: '%1$s'", tmp + ".exe" ) + hb_eol() )
+            ELSE
+               OutStd( hb_StrFormat( "! Created Harbour .zip release package: '%1$s'", tmp ) + hb_eol() )
             ENDIF
          ELSE
             cBin_Tar := "tar"

@@ -68,9 +68,8 @@ win-make clean install HB_VERSION=%HB_VF% > "%~dp0harbour-%HB_VF%-win-mingw-log.
 if errorlevel 1 goto _EXIT
 endlocal
 
-:: Non-unified release packages are here:
-::    harbour-%HB_VF%-win-mingw.exe
-::    harbour-%HB_VF%-win-mingw.zip
+:: Non-unified release package is here:
+::    harbour-%HB_VF%-win-mingw.zip[.exe]
 
 echo ! Creating unified Windows release package...
 
