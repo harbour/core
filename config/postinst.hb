@@ -227,7 +227,7 @@ PROCEDURE Main( ... )
 
       IF GetEnvC( "HB_BUILD_PKG" ) == "yes" .AND. ;
          ! Empty( GetEnvC( "HB_TOP" ) ) .AND. ;
-         !( GetEnvC( "_HB_BUILD_PKG_ARCHIVES" ) == "no" )
+         !( GetEnvC( "_HB_BUILD_PKG_ARCHIVE" ) == "no" )
 
          IF GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos"
 
@@ -251,7 +251,7 @@ PROCEDURE Main( ... )
                tmp += ".exe"
             ENDIF
 
-            OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s'", tmp ) + hb_eol() )
+            OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s' (%2$d bytes)", tmp, hb_FSize( tmp ) ) + hb_eol() )
          ELSE
             cBin_Tar := "tar"
             lGNU_Tar := .T.
@@ -389,8 +389,8 @@ GUIFlags="8+64+256+4096"
 GUIMode="1"
 OverwriteMode="0"
 InstallPath="C:\\%1$s"
-Shortcut="Du,{cmd.exe},{/k cd /d \\"%%T\\\\bin\\\\\\"},{},{},{Harbour Shell},{%%T\\\\bin\\\\},{%%T\\\\bin\\\\hbmk2.exe},{0}"
-RunProgram="nowait:notepad.exe \\"%%T\\\\README.md\\""
+Shortcut="Du,{cmd.exe},{/k cd /d \\"%%%%T\\\\bin\\\\\\"},{},{},{Harbour Shell},{%%%%T\\\\bin\\\\},{%%%%T\\\\bin\\\\hbmk2.exe},{0}"
+RunProgram="nowait:notepad.exe \\"%%%%T\\\\README.md\\""
 ;!@InstallEnd@!
 #pragma __endtext
 
