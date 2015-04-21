@@ -75,15 +75,17 @@ xcopy /y       "%~dp0..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll"
 ::       is buggy in BCC55 and BCC58 (no other versions tested), leaving off
 ::       leading underscore from certain ("random") symbols, resulting in
 ::       unresolved externals, when trying to use it. [vszakats]
-for %%I in ( "%HB_ABSROOT%bin\*-%HB_VS%.dll" ) do (
-   "%HB_DIR_BCC_IMPLIB%impdef.exe" -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" "%%I"
-   echo s/LIBRARY     %%~na.DLL/LIBRARY     "%%~na.dll"/Ig> _hbtemp.sed
-   sed -f _hbtemp.sed < "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" > "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
-   "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib" "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
-   del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw"
-   del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
+if exist "%HB_ABSROOT%lib\win\bcc" (
+   for %%I in ( "%HB_ABSROOT%bin\*-%HB_VS%.dll" ) do (
+      "%HB_DIR_BCC_IMPLIB%impdef.exe" -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" "%%I"
+      echo s/LIBRARY     %%~na.DLL/LIBRARY     "%%~na.dll"/Ig> _hbtemp.sed
+      sed -f _hbtemp.sed < "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" > "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
+      "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib" "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
+      del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw"
+      del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
+   )
+   if exist _hbtemp.sed del _hbtemp.sed
 )
-if exist _hbtemp.sed del _hbtemp.sed
 
 :: Copy upx
 
