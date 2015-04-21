@@ -46,7 +46,7 @@
 
 #include "fileio.ch"
 
-/* http://www.freedesktop.org/wiki/Specifications/trash-spec/ */
+/* https://wiki.freedesktop.org/www/Specifications/trash-spec/ */
 FUNCTION linux_MoveToTrash( cFileName )
 
    THREAD STATIC t_cTrashDirInfo
