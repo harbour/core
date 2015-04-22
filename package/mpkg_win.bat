@@ -200,7 +200,7 @@ sed -e "s/_VCS_ID_/%VCS_ID%/g"^
 
 :: Register build information
 
-harbour -build > "%HB_ABSROOT%BUILD.txt" 2>&1
+"%HB_ABSROOT%bin\harbour" -build > "%HB_ABSROOT%BUILD.txt" 2>&1
 set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_PLATFORM|HB_COMPILER|HB_CPU|HB_WITH_|HB_DIR_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
 echo --------------------------->> "%HB_ABSROOT%BUILD.txt"
 dir /s /b /ad "%HB_ABSROOT%lib\" >> "%HB_ABSROOT%BUILD.txt"
