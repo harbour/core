@@ -223,58 +223,22 @@ pushd "%HB_RT%"
 
 echo.> _hbfiles
 
-if exist "bin\hbformat.exe" echo "bin\hbformat.exe" >> _hbfiles
-if exist "bin\hbnetio.exe"  echo "bin\hbnetio.exe"  >> _hbfiles
-if exist "bin\hbrun.exe"    echo "bin\hbrun.exe"    >> _hbfiles
-
-echo "bin\libgcc_s_*.dll"      >> _hbfiles
-echo "bin\mingwm*.dll"         >> _hbfiles
-echo "bin\libwinpthread-*.dll" >> _hbfiles
-
-echo "ChangeLog*.txt"       >> _hbfiles
-echo "CONTRIBUTING.md"      >> _hbfiles
-echo "COPYING.txt"          >> _hbfiles
-echo "README.md"            >> _hbfiles
-echo "RELNOTES.txt"         >> _hbfiles
-echo "BUILD.txt"            >> _hbfiles
-echo "bin\*-%HB_VS%*.dll"   >> _hbfiles
-echo "bin\harbour.exe"      >> _hbfiles
-echo "bin\hbi18n.exe"       >> _hbfiles
-echo "bin\hbmk2.exe"        >> _hbfiles
-echo "bin\hbpp.exe"         >> _hbfiles
-echo "bin\hbspeed.exe"      >> _hbfiles
-echo "bin\hbtest.exe"       >> _hbfiles
-echo "bin\*.hb"             >> _hbfiles
-echo "bin\getmingw.bat"     >> _hbfiles
-echo "bin\upx*.*"           >> _hbfiles
-echo "bin\7z*.*"            >> _hbfiles
-echo "include\*.*"          >> _hbfiles
-echo "src\*.*"              >> _hbfiles
-echo "lib\win\mingw\*.*"    >> _hbfiles
-echo "lib\win\mingw64\*.*"  >> _hbfiles
-echo "lib\wce\mingwarm\*.*" >> _hbfiles
-echo "lib\dos\djgpp\*.*"    >> _hbfiles
-echo "lib\dos\watcom\*.*"   >> _hbfiles
-echo "lib\linux\watcom\*.*" >> _hbfiles
-echo "lib\os2\watcom\*.*"   >> _hbfiles
-echo "lib\win\msvc\*.*"     >> _hbfiles
-echo "lib\win\msvc64\*.*"   >> _hbfiles
-echo "lib\win\bcc\*.*"      >> _hbfiles
-echo "lib\win\bcc64\*.*"    >> _hbfiles
-echo "lib\win\watcom\*.*"   >> _hbfiles
-echo "lib\win\pocc\*.*"     >> _hbfiles
-echo "lib\win\pocc64\*.*"   >> _hbfiles
-echo "lib\wce\poccarm\*.*"  >> _hbfiles
-echo "tests\*.*"            >> _hbfiles
-echo "doc\*.*"              >> _hbfiles
-echo "comp\mingw\*"         >> _hbfiles
-echo "comp\mingw64\*"       >> _hbfiles
-echo "comp\djgpp\*"         >> _hbfiles
-echo "comp\pocc\*"          >> _hbfiles
-echo "comp\watcom\*"        >> _hbfiles
-echo "extras\*.*"           >> _hbfiles
-echo "contrib\*.*"          >> _hbfiles
-echo "addons\README.txt"    >> _hbfiles
+echo "*.md"         >> _hbfiles
+echo "*.txt"        >> _hbfiles
+echo "bin\*.bat"    >> _hbfiles
+echo "bin\*.dll"    >> _hbfiles
+echo "bin\*.exe"    >> _hbfiles
+echo "bin\*.hb"     >> _hbfiles
+echo "bin\*.txt"    >> _hbfiles
+echo "include\*"    >> _hbfiles
+echo "lib\*"        >> _hbfiles
+echo "src\*"        >> _hbfiles
+echo "doc\*"        >> _hbfiles
+echo "comp\*"       >> _hbfiles
+echo "contrib\*"    >> _hbfiles
+echo "extras\*"     >> _hbfiles
+echo "tests\*"      >> _hbfiles
+echo "addons\*.txt" >> _hbfiles
 
 if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
 pushd "%HB_DR%"
