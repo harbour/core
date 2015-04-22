@@ -13625,6 +13625,7 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
    LOCAL fhnd
 
    LOCAL lDefSource
+   LOCAL lNoDefSource := .F.
 
    /* ugly hack to make it configurable to force skip COFF .lib processing and
       skip to .def lookup, and if that fails, to .def generation */
@@ -13632,13 +13633,18 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
       cSourceDLL := hb_FNameExtSet( cSourceDLL, ".dll" )
       lDefSource := .T.
    ELSE
+      IF hb_FNameExt( cSourceDLL ) == ".nodef"
+         cSourceDLL := hb_FNameExtSet( cSourceDLL, ".dll" )
+         lNoDefSource := .T.
+      ENDIF
       lDefSource := .F.
       IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
          RETURN nResult
       ENDIF
    ENDIF
 
-   IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+   IF ! lNoDefSource .AND. ;
+      ( nResult := win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
       RETURN nResult
    ENDIF
 

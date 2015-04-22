@@ -5,11 +5,14 @@ hbcurl.hbm
 -depimplibs=curl:../libcurl.dll
 -depimplibs=curl:../bin/libcurl.dll
 -depimplibs=curl:../dlls/libcurl.dll
+-depimplibs=curl:../lib/libcurl.dll{!mingw}
+-depimplibs=curl:../lib/libcurl.nodef{mingw}
 -depfinish=curl
 
 -iflag={bcc}-a
 
 {hbdyn&win}-instfile=depimplibsrc:${HBMK_DIR_CURL}/../bin/*.dll
 {hbdyn&win}-instfile=depimplibsrc:${HBMK_DIR_CURL}/../dlls/*.dll
+{hbdyn&win}-instfile=depimplibsrc:${HBMK_DIR_CURL}/../lib/*.dll
 
 hbcurls.hbp

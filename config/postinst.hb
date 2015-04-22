@@ -241,16 +241,6 @@ PROCEDURE Main( ... )
                " " + FNameEscape( tmp ) + ;
                " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" )
 
-            IF GetEnvC( "HB_PLATFORM" ) $ "win|wce" .AND. ;
-               ! Empty( GetEnvC( "HB_SFX_7Z" ) ) .AND. ;
-               hb_MemoWrit( tmp + ".exe", ;
-                  hb_MemoRead( GetEnvC( "HB_SFX_7Z" ) ) + ;
-                  hb_StrFormat( sfx_7z_conf(), GetEnvC( "HB_PKGNAMI" ) ) + ;
-                  hb_MemoRead( tmp ) )
-               FErase( tmp )
-               tmp += ".exe"
-            ENDIF
-
             OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s' (%2$d bytes)", tmp, hb_FSize( tmp ) ) + hb_eol() )
          ELSE
             cBin_Tar := "tar"
@@ -372,27 +362,6 @@ PROCEDURE Main( ... )
    ErrorLevel( nErrorLevel )
 
    RETURN
-
-STATIC FUNCTION sfx_7z_conf()
-#pragma __cstream | RETURN %s
-;!@Install@!UTF-8!
-Title="Harbour"
-BeginPrompt="Do you want to install Harbour?"
-CancelPrompt="Do you want to cancel installation?"
-ExtractPathText="Select destination path"
-ExtractPathTitle="Harbour"
-ExtractTitle="Extracting"
-ExtractDialogText="Please wait..."
-ExtractCancelText="Abort"
-Progress="yes"
-GUIFlags="8+64+256+4096"
-GUIMode="1"
-OverwriteMode="0"
-InstallPath="C:\\%1$s"
-Shortcut="Du,{cmd.exe},{/k cd /d \\"%%%%T\\\\bin\\\\\\"},{},{},{Harbour Shell},{%%%%T\\\\bin\\\\},{%%%%T\\\\bin\\\\hbmk2.exe},{0}"
-RunProgram="nowait:notepad.exe \\"%%%%T\\\\README.md\\""
-;!@InstallEnd@!
-#pragma __endtext
 
 STATIC FUNCTION sfx_tgz_sh()
 #pragma __cstream | RETURN %s
