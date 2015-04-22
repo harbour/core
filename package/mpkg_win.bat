@@ -43,7 +43,7 @@ if exist "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
 
 :: Assemble unified package from per-target builds
 
-if exist "%HB_ABSROOT%" rd /q /s "%HB_ABSROOT%"
+if exist "%HB_ABSROOT%" rd /s /q "%HB_ABSROOT%"
 
 xcopy /y /s /q "%~dp0..\extras\*.*"                                               "%HB_ABSROOT%extras\"
 xcopy /y /s /q "%~dp0..\tests\*.*"                                                "%HB_ABSROOT%tests\"
@@ -144,47 +144,47 @@ rem if exist "%_MINGW_DLL_DIR%\libwinpthread-*.dll" xcopy /y "%HB_DIR_MINGW%\bin
 :: - gdb (along with Python)
 :: - 3rd party libraries
 
-rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%etc\" 2> nul
-rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%opt\" 2> nul
-rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%share\" 2> nul
-del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\gdb*.exe" 2> nul
-del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\gfortran.exe" 2> nul
-del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\gnat*.exe" 2> nul
-del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgfortran-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgnarl-*.dll" 2> nul
-del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\libgnat-*.dll" 2> nul
+rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%etc\" 2> nul
+rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%opt\" 2> nul
+rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%share\" 2> nul
+del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\gdb*.exe" 2> nul
+del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\gfortran.exe" 2> nul
+del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\gnat*.exe" 2> nul
+del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\libgfortran-*.dll" 2> nul
+del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\libgnarl-*.dll" 2> nul
+del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\libgnat-*.dll" 2> nul
 
 if "%MINGW_HOST%" == "32" (
 
    for /f %%I in ('dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*"') do set MINGW_VER=%%I
 
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib64\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\64\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\adainclude\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\adalib\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\lib64\" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\i686-w64-mingw32-gfortran.exe" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%MINGW_VER%\f951.exe" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib64\" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\64\" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\adainclude\" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\adalib\" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\lib64\" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\i686-w64-mingw32-gfortran.exe" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%MINGW_VER%\f951.exe" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
 
 ) else if "%MINGW_HOST%" == "64" (
 
    for /f %%I in ('dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"') do set MINGW_VER=%%I
 
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib32\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\32\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\adainclude\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\adalib\" 2> nul
-   rd /q /s  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\lib32\" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\f951.exe" 2> nul
-   del /q /f "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib32\" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\32\" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\adainclude\" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\adalib\" 2> nul
+   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\lib32\" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\f951.exe" 2> nul
+   del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
 )
 
 echo ! mingw version: %MINGW_VER% %MINGW_HOST%-bit hosted
@@ -203,7 +203,12 @@ sed -e "s/_VCS_ID_/%VCS_ID%/g"^
 "%HB_ABSROOT%bin\harbour" -build > "%HB_ABSROOT%BUILD.txt" 2>&1
 set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_PLATFORM|HB_COMPILER|HB_CPU|HB_WITH_|HB_DIR_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
 echo --------------------------->> "%HB_ABSROOT%BUILD.txt"
-dir /s /b /ad "%HB_ABSROOT%lib\" >> "%HB_ABSROOT%BUILD.txt"
+dir /s /b /ad "%HB_ABSROOT%lib\" > sed -e "s|%_SLF:\=.%.||g" >> "%HB_ABSROOT%BUILD.txt"
+
+:: Copy 3rd party binaries
+
+rem xcopy /y /s /q "%~dp0..\lib\3rd\*.*" "%HB_ABSROOT%lib\3rd\"
+rem del /f /s /q "%HB_ABSROOT%lib\3rd\Makefile"
 
 :: Convert EOLs
 
