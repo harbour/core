@@ -23,22 +23,7 @@ Usage:
 Tool/lib Dependencies
 =====================
 
-   Tools
-
-   MinGW GNU C _MINGW_VER_
-
-   Libs
-
-   ACE 11.00
-   Cairo 1.8.8
-   libcurl 7.40.0
-   Firebird 2.5.3
-   FreeImage 3.17.0
-   GD 2.0.35
-   MariaDB 10.0.12
-   OCILIB 3.12.1
-   OpenSSL 1.0.2a
-   PostgreSQL 9.3.0-1
+   See BUILD.txt
 
 Changes since previous (3.0.0) release
 ======================================
