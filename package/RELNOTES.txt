@@ -23,7 +23,7 @@ Usage:
 Tool/lib Dependencies
 =====================
 
-   See BUILD.txt
+  See BUILD.txt
 
 Changes since previous (3.0.0) release
 ======================================
