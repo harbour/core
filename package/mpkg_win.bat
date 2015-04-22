@@ -203,12 +203,12 @@ sed -e "s/_VCS_ID_/%VCS_ID%/g"^
 "%HB_ABSROOT%bin\harbour" -build > "%HB_ABSROOT%BUILD.txt" 2>&1
 set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_PLATFORM|HB_COMPILER|HB_CPU|HB_WITH_|HB_DIR_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
 echo --------------------------->> "%HB_ABSROOT%BUILD.txt"
-dir /s /b /ad "%HB_ABSROOT%lib\" > sed -e "s|%HB_ABSROOT:\=.%lib.||g" >> "%HB_ABSROOT%BUILD.txt"
+dir /s /b /ad "%HB_ABSROOT%lib\" | sed -e "s|%HB_ABSROOT:\=.%lib.||g" >> "%HB_ABSROOT%BUILD.txt"
 
 :: Copy 3rd party binaries
 
-if exist "%HB_ABSROOT%lib\win\bcc"   xcopy /y /s /q "%~dp0..\lib\3rd\win\bcc\*.*"   "%HB_ABSROOT%lib\3rd\"
-if exist "%HB_ABSROOT%lib\win\mingw" xcopy /y /s /q "%~dp0..\lib\3rd\win\mingw\*.*" "%HB_ABSROOT%lib\3rd\"
+if exist "%HB_ABSROOT%lib\win\bcc"   xcopy /y /s /q "%~dp0..\lib\3rd\win\bcc\*.*"   "%HB_ABSROOT%lib\3rd\win\bcc\"
+if exist "%HB_ABSROOT%lib\win\mingw" xcopy /y /s /q "%~dp0..\lib\3rd\win\mingw\*.*" "%HB_ABSROOT%lib\3rd\win\mingw\"
 del /f /s /q "%HB_ABSROOT%lib\3rd\Makefile"
 
 :: Convert EOLs
