@@ -810,39 +810,60 @@ static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 
 static HWND hb_getConsoleWindowHandle( void )
 {
-   TCHAR oldTitle[ 256 ];
-   HWND hWnd = NULL;
+   static HB_BOOL s_bChecked = HB_FALSE;
 
-   if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
+   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
+   static P_GETCONSOLEWINDOW s_pGetConsoleWindow = NULL;
+
+   HWND hWnd;
+
+   if( ! s_bChecked )
    {
-      TCHAR tmpTitle[ 32 ];
+      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+      if( hModule )
+         s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleWindow" );
+      s_bChecked = HB_TRUE;
+   }
 
-      int iTmp = 0;
-      DWORD dwVal;
+   if( s_pGetConsoleWindow )
+      hWnd = s_pGetConsoleWindow();
+   else
+   {
+      TCHAR oldTitle[ 256 ];
 
-      tmpTitle[ iTmp++ ] = TEXT( '>' );
-      tmpTitle[ iTmp++ ] = TEXT( '>' );
-      dwVal = GetCurrentProcessId();
-      do
-         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
-      while( ( dwVal /= 26 ) );
-      tmpTitle[ iTmp++ ] = TEXT( ':' );
-      dwVal = GetTickCount();
-      do
-         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
-      while( ( dwVal /= 26 ) );
-      tmpTitle[ iTmp++ ] = TEXT( '<' );
-      tmpTitle[ iTmp++ ] = TEXT( '<' );
-      tmpTitle[ iTmp ] = TEXT( '\0' );
+      hWnd = NULL;
 
-      if( SetConsoleTitle( tmpTitle ) )
+      if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
       {
-         HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
-         /* repeat in a loop to be sure title is changed */
+         TCHAR tmpTitle[ 32 ];
+
+         int iTmp = 0;
+         DWORD dwVal;
+
+         tmpTitle[ iTmp++ ] = TEXT( '>' );
+         tmpTitle[ iTmp++ ] = TEXT( '>' );
+         dwVal = GetCurrentProcessId();
          do
-            hWnd = FindWindow( NULL, tmpTitle );
-         while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
-         SetConsoleTitle( oldTitle );
+            tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+         while( ( dwVal /= 26 ) );
+         tmpTitle[ iTmp++ ] = TEXT( ':' );
+         dwVal = GetTickCount();
+         do
+            tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+         while( ( dwVal /= 26 ) );
+         tmpTitle[ iTmp++ ] = TEXT( '<' );
+         tmpTitle[ iTmp++ ] = TEXT( '<' );
+         tmpTitle[ iTmp ] = TEXT( '\0' );
+
+         if( SetConsoleTitle( tmpTitle ) )
+         {
+            HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
+            /* repeat in a loop to be sure title is changed */
+            do
+               hWnd = FindWindow( NULL, tmpTitle );
+            while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
+            SetConsoleTitle( oldTitle );
+         }
       }
    }
 
@@ -851,36 +872,9 @@ static HWND hb_getConsoleWindowHandle( void )
 
 static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 {
-   static HB_BOOL s_bChecked = HB_FALSE;
-
-   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
-   static P_GETCONSOLEWINDOW s_pGetConsoleWindow = NULL;
-
-#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
-   typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
-   static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose = NULL;
-#endif
-
    HB_BOOL bOldClosable = HB_TRUE;
-   HWND hWnd;
 
-   if( ! s_bChecked )
-   {
-      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
-      if( hModule )
-      {
-         s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleWindow" );
-#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
-         s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleMenuClose" );
-#endif
-      }
-      s_bChecked = HB_TRUE;
-   }
-
-   if( s_pGetConsoleWindow )
-      hWnd = s_pGetConsoleWindow();
-   else
-      hWnd = hb_getConsoleWindowHandle();
+   HWND hWnd = hb_getConsoleWindowHandle();
 
    if( hWnd )
    {
@@ -893,6 +887,19 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
          if( bSet )
          {
 #if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
+            typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
+
+            static HB_BOOL s_bChecked = HB_FALSE;
+            static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose = NULL;
+
+            if( ! s_bChecked )
+            {
+               HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+               if( hModule )
+                  s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleMenuClose" );
+               s_bChecked = HB_TRUE;
+            }
+
             if( s_pSetConsoleMenuClose )
                s_pSetConsoleMenuClose( bClosable );
 #endif
@@ -2099,6 +2106,10 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_gt_winapi_getClipboard( CF_OEMTEXT, pInfo->pResult );
 #endif
          }
+         break;
+
+      case HB_GTI_WINHANDLE:
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, hb_getConsoleWindowHandle() );
          break;
 
       default:
