@@ -793,10 +793,12 @@
 #define WIN_SWP_NOREPOSITION               WIN_SWP_NOOWNERZORDER
 
 /* wapi_SetWindowPos() predefined window IDs */
+#define WIN_HWND_DESKTOP                   0
 #define WIN_HWND_TOP                       0
 #define WIN_HWND_BOTTOM                    1
 #define WIN_HWND_TOPMOST                   -1
 #define WIN_HWND_NOTOPMOST                 -2
+#define WIN_HWND_MESSAGE                   -3
 #define WIN_HWND_BROADCAST                 0xFFFF  /* for wapi_PostMessage() */
 
 /* window messages */
