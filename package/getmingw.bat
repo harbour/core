@@ -27,7 +27,7 @@ echo }>> "%_TMP%"
 cscript "%_TMP%" //Nologo
 del "%_TMP%"
 
-cd "%~dp0.."
+cd /d "%~dp0.."
 set _TRG=%CD%\comp\
 cd /d "%~dp0"
 
