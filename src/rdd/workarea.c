@@ -1900,10 +1900,10 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_AUTOORDER:
-         fResult = hb_setGetAutOrder();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         iResult = hb_setGetAutOrder();
+         if( hb_itemType( pItem ) & HB_IT_NUMERIC )
             hb_setSetItem( HB_SET_AUTORDER, pItem );
-         hb_itemPutL( pItem, fResult );
+         hb_itemPutNI( pItem, iResult );
          break;
       case RDDI_AUTOSHARE:
          fResult = hb_setGetAutoShare();
