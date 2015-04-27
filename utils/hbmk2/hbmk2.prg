@@ -2613,44 +2613,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingwarm" )
 
-         DO CASE
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-5.1" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-5.1" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-5.1" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-5.1" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0501
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.9" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.9" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.9" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.9" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0409
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.8" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0408
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.7" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0407
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.6" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.6" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0406
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.5" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.5" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.5" + hb_osFileMask() ) .OR. ;
-              File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.5" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0405
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.4" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0404
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.3" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0403
-         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-3.4" + hb_osFileMask() )
-            hbmk[ _HBMK_nCOMPVer ] := 0304
-         ENDCASE
+         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0304 )
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. HBMK_ISCOMP( "msvc|msvc64|msvcia64|icc|iccia64" ) ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
@@ -2669,7 +2632,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "pocc64" ) .OR. ; /* NOTE: Cross-platform: win/amd64 on win/x86 */
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "poccarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
 
-         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0450 )
+         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0405 )
 
       ENDCASE
    ENDIF
@@ -2705,6 +2668,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using C compiler: %1$s" ), cPath_CompC ) )
          ELSE
             _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using C compiler: %1$s [%2$s...%3$s]" ), cPath_CompC, hbmk[ _HBMK_cCCPREFIX ], hbmk[ _HBMK_cCCSUFFIX ] ) )
+         ENDIF
+         IF hbmk[ _HBMK_nCOMPVer ] != 0
+            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using C compiler version: %1$s" ), StrZero( hbmk[ _HBMK_nCOMPVer ], 4, 0 ) ) )
          ENDIF
       ENDIF
    ENDIF
@@ -13781,10 +13747,18 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
 
    DO CASE
    CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm|pocc|pocc64|poccarm" )
-      hb_processRun( cPath_CompC,, @cStdOutErr, @cStdOutErr )
+      hb_processRun( '"' + cPath_CompC + '"',, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "cp437" )
       IF ( tmp1 := hb_AtX( R_( "Version [0-9][0-9]\.[0-9]" ), cStdOutErr ) ) != NIL
          nVer := Val( Stuff( SubStr( tmp1, Len( "Version " ) + 1 ), 3, 1, "" ) + "0" )
+      ENDIF
+      hb_cdpSelect( tmp )
+   CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
+      hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
+      tmp := hb_cdpSelect( "cp437" )
+      IF ( tmp1 := hb_AtX( "version ([0-9]*)\.([0-9]*)\.([0-9]*)", cStdOutErr ) ) != NIL
+         tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
+         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
       ENDIF
       hb_cdpSelect( tmp )
    ENDCASE
