@@ -54,7 +54,7 @@ ifneq ($(HB_COMPILER_VER),)
       LDFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
       DFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
       ifeq ($(HB_COMPILER),mingw64)
-         ifeq ($(filter $(HB_COMPILER_VER),0405 0406 0407 0408 0409),)
+         ifeq ($(filter $(HB_COMPILER_VER),0405 0406 0407 0408 0409 0501),)
             LDFLAGS += -Wl,--high-entropy-va
             DFLAGS += -Wl,--high-entropy-va
          endif
