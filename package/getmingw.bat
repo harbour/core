@@ -27,9 +27,9 @@ echo }>> "%_TMP%"
 cscript "%_TMP%" //Nologo
 del "%_TMP%"
 
-cd /d "%~dp0.."
+pushd ..
 set _TRG=%CD%\comp\
-cd /d "%~dp0"
+popd
 
 echo Unpacking to '%_TRG%'...
 if exist "%TEMP%\mingw.7z" (
