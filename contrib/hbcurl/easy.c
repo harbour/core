@@ -868,6 +868,14 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_SOCKS5_GSSAPI_NEC, HB_CURL_OPT_BOOL( 3 ) );
                break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x072B00
+            case HB_CURLOPT_PROXY_SERVICE_NAME:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXY_SERVICE_NAME, hb_parc( 3 ) );
+               break;
+            case HB_CURLOPT_SERVICE_NAME:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_SERVICE_NAME, hb_parc( 3 ) );
+               break;
+#endif
 #if LIBCURL_VERSION_NUM >= 0x071900
             case HB_CURLOPT_TCP_KEEPALIVE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_TCP_KEEPALIVE, hb_parnl( 3 ) );

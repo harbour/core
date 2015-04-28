@@ -264,6 +264,8 @@
 #define HB_CURLOPT_SSL_VERIFYSTATUS           217
 #define HB_CURLOPT_SSL_FALSESTART             218
 #define HB_CURLOPT_PATH_AS_IS                 219
+#define HB_CURLOPT_PROXY_SERVICE_NAME         220
+#define HB_CURLOPT_SERVICE_NAME               221
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
