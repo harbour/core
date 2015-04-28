@@ -2329,7 +2329,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
          else
             hb_itemPutNIntLen( pItem, lVal, ( int ) pField->uiLen );
          break;
-
+      }
       case HB_FT_FLOAT:
          pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
          dVal = hb_strVal( pszVal, pField->uiLen );
@@ -2352,7 +2352,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
                           ( int ) ( pField->uiLen - pField->uiDec - 1 ),
                           ( int ) pField->uiDec );
          break;
-      }
+
       case HB_FT_ANY:
          if( pField->uiLen == 3 )
             hb_itemPutDL( pItem, hb_sxPtoD( ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) );

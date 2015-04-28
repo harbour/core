@@ -18,8 +18,8 @@ Build-Depends: debhelper (>= 5.0.0),
  libmariadbd-dev | libmysqlclient-dev,
  libpq-dev,
  libsqlite3-dev,
- libssl-dev
- unixodbc-dev,
+ libssl-dev,
+ unixodbc-dev
 
 Standards-Version: 3.6.2
 
