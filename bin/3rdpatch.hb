@@ -50,7 +50,7 @@
  *   Takes one argument, the URL to the archive to the currently installed
  *   version of the component. Used by 3rdpatch.
  *   Example: for PCRE2, at the time of this writing, it is
- *   `http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre2-10.00.tar.bz2'.
+ *   `https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre2-10.00.tar.bz2'.
  *   3rdpatch can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
  *   `tbz2', `tar.xz', `txz' and `zip' archives -- one of these must be chosen.
  *
