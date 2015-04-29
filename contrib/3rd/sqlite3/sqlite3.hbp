@@ -40,6 +40,18 @@
 # mingw 4.5.0/4.5.1 revisions fail compiling in iso90 mode. It's fixed in 4.5.2.
 -c=gnu90{allgcc&HB_COMP_VER='45'}
 
+-depurlbase=icu:http://site.icu-project.org
+-deppkgname=icu:libicu-dev{deb}
+-deppkgname=icu:libicu-devel{rpm}
+-deppkgname=icu:icu4c{homebrew}
+-depcontrol=icu:${HB_WITH_ICU}
+-depkeyhead=icu:unicode/utypes.h
+-depoptional=icu:yes
+-depincpath=icu:/usr/include
+-depfinish=icu
+
+{HBMK_HAS_ICU}-cflag=-DSQLITE_ENABLE_ICU
+
 sqlite3.c
 
 # URL    https://sqlite.org/2015/sqlite-amalgamation-3080900.zip
