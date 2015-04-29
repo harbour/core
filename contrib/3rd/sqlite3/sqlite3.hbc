@@ -2,17 +2,4 @@ libs=${hb_name}
 
 cflags=-DSQLITE_OMIT_LOAD_EXTENSION=1{minix}
 
-depurlbase=icu:http://site.icu-project.org
-deppkgname=icu:libicu-dev{deb}
-deppkgname=icu:libicu-devel{rpm}
-deppkgname=icu:icu4c{homebrew}
-depcontrol=icu:${HB_WITH_ICU}
-depkeyhead=icu:unicode/utypes.h
-depoptional=icu:yes
-depincpath=icu:/usr/include
-depfinish=icu
-
-{HBMK_HAS_ICU&(allwin|os2)}libpaths=${HB_WITH_ICU}/../lib
-{HBMK_HAS_ICU&!HB_STATIC_ICU}libs=icuuc
-{HBMK_HAS_ICU& HB_STATIC_ICU}libs=sicuuc sicuin sicudt
-{HBMK_HAS_ICU& HB_STATIC_ICU&allgcc}libs=stdc++
+hbcs=hbicu.hbc

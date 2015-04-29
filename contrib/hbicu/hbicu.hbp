@@ -1,0 +1,21 @@
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-w3 -es2
+
+-depurlbase=icu:http://site.icu-project.org
+-deppkgname=icu:libicu-dev{deb}
+-deppkgname=icu:libicu-devel{rpm}
+-deppkgname=icu:icu4c{homebrew}
+-depcontrol=icu:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=icu:${HB_WITH_ICU}
+-depkeyhead=icu:unicode/utypes.h
+-depoptional=icu:yes
+-depincpath=icu:/usr/include
+-depfinish=icu
+
+-hbx=${hb_name}
+
+core.c
