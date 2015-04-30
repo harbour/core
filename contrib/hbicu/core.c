@@ -45,10 +45,25 @@
  */
 
 #include "unicode/utypes.h"
+#include "unicode/uversion.h"
 
 #include "hbapi.h"
 
 HB_FUNC( U_ERRORNAME )
 {
    hb_retc( u_errorName( ( UErrorCode ) hb_parnint( 1 ) ) );
+}
+
+HB_FUNC( HB_U_GETVERSION )
+{
+   UVersionInfo versionArray;
+   char szVersion[ U_MAX_VERSION_STRING_LENGTH ];
+
+   u_getVersion( versionArray );
+
+   szVersion[ 0 ] = '\0';
+
+   u_versionToString( versionArray, szVersion );
+
+   hb_retc( szVersion );
 }

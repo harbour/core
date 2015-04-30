@@ -12,7 +12,6 @@
 -depcontrol=icu:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=icu:${HB_WITH_ICU}
 -depkeyhead=icu:unicode/utypes.h
--depoptional=icu:yes
 -depincpath=icu:/usr/include
 -depfinish=icu
 

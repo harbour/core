@@ -21,6 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC hb_u_getVersion
 DYNAMIC u_errorName
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBICU__REQUEST )
