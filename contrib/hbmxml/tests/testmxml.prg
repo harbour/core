@@ -9,7 +9,7 @@
  * which should have been included with this file.  If this file is
  * missing or damaged, see the license at:
  *
- *     http://www.minixml.org/
+ *     https://www.msweet.org/projects.php?Z3
  *
  * Harbour port Copyright (c) 2011 Tamas TEVESZ <ice@extreme.hu>
  *

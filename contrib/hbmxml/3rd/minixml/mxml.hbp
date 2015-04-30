@@ -26,7 +26,7 @@ mxml_sea.c
 mxml_set.c
 mxml_str.c
 
-# ORIGIN http://www.minixml.org
+# ORIGIN https://www.msweet.org/projects.php?Z3
 # URL    https://www.msweet.org/files/project3/mxml-2.9.tar.gz
 # DIFF   minixml.dif
 #

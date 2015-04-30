@@ -62,7 +62,7 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# URL    http://zlib.net/zlib128.zip
+# URL    https://github.com/madler/zlib/archive/v1.2.8.zip
 # DIFF   zlib.dif
 #
 # MAP    README

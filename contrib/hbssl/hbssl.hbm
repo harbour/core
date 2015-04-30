@@ -10,7 +10,6 @@
 
 -depurlbase=openssl:https://www.openssl.org/
 -depurlbase=openssl:https://www.openssl.org/related/binaries.html
--depurlbase=openssl:http://wiki.opensslfoundation.com/
 -deppkgname=openssl:libssl-dev{deb}
 -deppkgname=openssl:openssl-devel{rpm}
 -deppkgname=openssl:openssl{homebrew}

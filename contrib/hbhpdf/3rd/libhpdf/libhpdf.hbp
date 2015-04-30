@@ -92,7 +92,7 @@ hpdfxref.c
 
 # For master head, use: https://github.com/libharu/libharu/archive/master.zip
 
-# ORIGIN http://libharu.org/
+# ORIGIN https://github.com/libharu/libharu
 # URL    https://github.com/libharu/libharu/archive/RELEASE_2_3_0RC3.zip
 # DIFF   libhpdf.dif
 #
