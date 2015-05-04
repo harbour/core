@@ -80,11 +80,11 @@ Download source archive from any of these URLs and unpack:
 
 ### Harbour unstable binaries (updated after each commit)
 
-#### Windows (mingw 32-bit, installer, 7-zip archive):
+#### Windows (mingw 32-bit, combined installer and 7-zip archive)
 
 * <https://dl.bintray.com/vszakats/hb/harbour-daily-win.7z.exe>
 
-#### Harbour unstable with Homebrew (OS X)
+#### OS X (using Homebrew)
 
     brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb
 
