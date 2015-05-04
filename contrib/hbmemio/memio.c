@@ -104,8 +104,8 @@ typedef struct _HB_MEMFS_FILE
 
 typedef struct _HB_MEMFS_FS
 {
-   HB_ULONG ulInodeCount;
-   HB_ULONG ulInodeAlloc;
+   HB_ULONG          ulInodeCount;
+   HB_ULONG          ulInodeAlloc;
    PHB_MEMFS_INODE * pInodes;
    HB_ULONG          ulFileAlloc;
    HB_ULONG          ulFileLast;
