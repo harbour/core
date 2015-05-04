@@ -110,8 +110,8 @@ typedef struct _HB_MEMFS_FILE
 
 typedef struct _HB_MEMFS_FS
 {
-   HB_ULONG ulInodeCount;
-   HB_ULONG ulInodeAlloc;
+   HB_ULONG          ulInodeCount;
+   HB_ULONG          ulInodeAlloc;
    PHB_MEMFS_INODE * pInodes;
    HB_ULONG          ulFileAlloc;
    HB_ULONG          ulFileLast;
@@ -413,7 +413,7 @@ HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char 
    pDirArray = hb_itemArrayNew( nLen );
    for( ul = 0; ( HB_SIZE ) ul < nLen; ul++ )
    {
-      PHB_ITEM pSubarray = hb_arrayGetItemPtr( pDirArray, ++nLen );
+      PHB_ITEM pSubarray = hb_arrayGetItemPtr( pDirArray, ul + 1 );
 
       hb_arrayNew    ( pSubarray, F_LEN );
       hb_arraySetCPtr( pSubarray, F_NAME, pDirEn[ ul ].szName );
