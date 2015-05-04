@@ -198,8 +198,8 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * 
 {
    int iDefs = 0, iTrans = 0, iCmds = 0;
 
-   fprintf( fout, "/*\n * $" "Id" "$\n */\n\n/*\n"
-            " * Build in preprocessor rules.\n"
+   fprintf( fout, "/*\n"
+            " * Built-in preprocessor rules.\n"
             " *\n"
             " * Copyright 2006-2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
             " *\n"
