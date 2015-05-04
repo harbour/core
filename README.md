@@ -82,7 +82,7 @@ Download source archive from any of these URLs and unpack:
 
 #### Windows (mingw 32-bit, combined installer and 7-zip archive)
 
-* <https://dl.bintray.com/vszakats/generic/harbour/harbour-daily-win.7z.exe>
+* <https://dl.bintray.com/vszakats/generic/harbour-daily-win.7z.exe>
 
 #### OS X (using Homebrew)
 
