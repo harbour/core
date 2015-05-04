@@ -668,7 +668,7 @@ ifeq ($(HB_COMPILER),)
                                  else
                                     HB_COMPILER := mingw
                                  endif
-                                 _C_VER := $(shell "$(dir $(HB_COMP_PATH))gcc)" -v 2>&1)
+                                 _C_VER := $(shell "$(dir $(HB_COMP_PATH))gcc" -v 2>&1)
                                  ifneq ($(findstring 5.1.,$(_C_VER)),)
                                     HB_COMPILER_VER := 0501
                                  else
