@@ -1,5 +1,5 @@
 # Welcome to Harbour
-[![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core) [![Build status](https://ci.appveyor.com/api/projects/status/k72qv26jnbtk25nm?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core-evxk0) [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208) [![Download](https://api.bintray.com/packages/vszakats/hb/daily/images/download.svg) ](https://bintray.com/vszakats/hb/daily/_latestVersion)
+[![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core) [![Build status](https://ci.appveyor.com/api/projects/status/k72qv26jnbtk25nm?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core-evxk0) [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208) [![Download](https://api.bintray.com/packages/vszakats/generic/harbour/images/download.svg) ](https://bintray.com/vszakats/generic/harbour/_latestVersion)
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
@@ -82,7 +82,7 @@ Download source archive from any of these URLs and unpack:
 
 #### Windows (mingw 32-bit, combined installer and 7-zip archive)
 
-* <https://dl.bintray.com/vszakats/hb/harbour-daily-win.7z.exe>
+* <https://dl.bintray.com/vszakats/generic/harbour/harbour-daily-win.7z.exe>
 
 #### OS X (using Homebrew)
 
