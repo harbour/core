@@ -47,6 +47,9 @@ and interfaces to popular APIs.
 You can find URLs to the latest stable release (3.0.0)
 of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md#stable-versions) of the mainline source.
 
+### Harbour stable source download
+
+<https://github.com/vszakats/harbour-core/archive/v3.0.0.zip>
 
 ## Unstable versions
 
@@ -75,15 +78,21 @@ Download source archive from any of these URLs and unpack:
 * <https://github.com/vszakats/harbour-core/archive/master.zip>
 * <https://github.com/vszakats/harbour-core/archive/master.tar.gz>
 
+### Harbour unstable binaries (updated after each commit)
+
+#### Windows (mingw 32-bit, installer, 7-zip archive):
+
+* <https://dl.bintray.com/vszakats/hb/harbour-daily-win.7z.exe>
+
+#### Harbour unstable with Homebrew (OS X)
+
+    brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb
+
 ### Follow commits using any of these facilities
 
 * [Web](https://github.com/vszakats/harbour-core/commits/master)
 * [RSS](https://github.com/vszakats/harbour-core/commits/master.atom)
 * [Mac app](https://itunes.apple.com/us/app/committed/id560767719)
-
-### Harbour unstable with Homebrew (OS X)
-
-    brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb
 
 
 # How to Build
