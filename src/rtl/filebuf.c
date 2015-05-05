@@ -1050,12 +1050,17 @@ static int s_iFileTypes = 0;
 
 static int s_fileFindDrv( const char * pszFileName )
 {
-   int i = s_iFileTypes;
+   int i = -1;
 
-   while( --i >= 0 )
+   if( pszFileName )
    {
-      if( s_pFileTypes[ i ]->Accept( s_pFileTypes[ i ], pszFileName ) )
-         break;
+      i = s_iFileTypes;
+
+      while( --i >= 0 )
+      {
+         if( s_pFileTypes[ i ]->Accept( s_pFileTypes[ i ], pszFileName ) )
+            break;
+      }
    }
 
    return i;
