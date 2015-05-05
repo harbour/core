@@ -270,7 +270,7 @@ HB_FUNC( HB_VFDIRSPACE )
 {
    HB_USHORT uiType = ( HB_USHORT ) hb_parnidef( 2, HB_DISK_AVAIL );
 
-   hb_retnlen( hb_fileDirSpace( hb_parcx( 1 ), uiType ), -1, 0 );
+   hb_retnlen( hb_fileDirSpace( hb_parc( 1 ), uiType ), -1, 0 );
    hb_fsSetFError( hb_fsError() );
 }
 
