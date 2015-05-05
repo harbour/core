@@ -8,7 +8,7 @@ Make sure to check README.md "Build Your Own Harbour App" section.
 Release Notes
 =============
 
-Unified Windows release for x86 and x64 platforms.
+Windows release for x86 and x64 platforms.
 
 Default components: x86 tools, x86 static/shared libs, examples.
 Options: MinGW compiler, x64 libs and tools.

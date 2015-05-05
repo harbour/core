@@ -354,7 +354,7 @@ You can fine-tune the build with these options:
 Then run build as usual with `clean install` options.
 See: [How to Build](#how-to-build)
 
-## Unified .7z.exe installer for Windows
+## Binary .7z.exe installer for Windows
 
     $ package\mpkg_win.bat
 

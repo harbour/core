@@ -41,7 +41,7 @@ if exist "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
    set LIB_TARGET=64
 )
 
-:: Assemble unified package from per-target builds
+:: Assemble package from per-target builds
 
 if exist "%HB_ABSROOT%" rd /s /q "%HB_ABSROOT%"
 
@@ -211,7 +211,7 @@ unix2dos "%HB_ABSROOT%*.md"
 unix2dos "%HB_ABSROOT%*.txt"
 unix2dos "%HB_ABSROOT%addons\*.txt"
 
-:: Create unified installer/archive
+:: Create installer/archive
 
 pushd "%HB_RT%"
 

@@ -68,16 +68,14 @@ win-make clean install HB_VERSION=%HB_VF% > "%~dp0harbour-%HB_VF%-win-mingw-log.
 if errorlevel 1 goto _EXIT
 endlocal
 
-:: Non-unified release package is here:
+:: Per-target release package is here:
 ::    harbour-%HB_VF%-win-mingw.7z[.exe]
 
-echo ! Creating unified Windows release package...
+echo ! Creating Windows release package...
 
 call package\mpkg_win.bat > "%~dp0harbour-%HB_VF%-win-log.txt" 2>&1
 
-echo ! Uploading Harbour unified Windows release package...
-
-:: Unified release package is here:
+:: Final release package is here:
 ::    %HB_RT%harbour-%HB_VF%-win.7z.exe
 
 :_EXIT

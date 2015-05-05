@@ -47,13 +47,13 @@ build_script:
 - set _HB_PKG_DEBUG=no
 - win-make.exe clean install HB_VERSION=%HB_VF%
 artifacts:
-- path: harbour-daily-win-mingw.7z.exe
+- path: harbour-daily-win-mingw.7z
   name: win-mingw
-- path: harbour-daily-win-mingw64.7z.exe
+- path: harbour-daily-win-mingw64.7z
   name: win-mingw64
-- path: harbour-daily-win-msvc.7z.exe
+- path: harbour-daily-win-msvc.7z
   name: win-msvc
-- path: harbour-daily-win-msvc64.7z.exe
+- path: harbour-daily-win-msvc64.7z
   name: win-msvc64
 - path: harbour-daily-win.7z.exe
   name: win-uni
