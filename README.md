@@ -80,7 +80,7 @@ Download source archive from any of these URLs and unpack:
 
 ### Harbour unstable binaries (updated after each commit)
 
-#### Windows (mingw 32-bit, combined installer and 7-zip archive)
+#### Windows (mingw, 32-bit, combined 7-zip archive and installer)
 
 * <https://dl.bintray.com/vszakats/generic/harbour-daily-win.7z.exe>
 

@@ -2743,7 +2743,8 @@ int  hb_ctwGetPosWindow( int iRow, int iCol )
 
    if( pCTW )
    {
-      if( iRow >= pCTW->iBoardTop  && iRow <= pCTW->iBoardBottom &&
+      if( pCTW->iMaxWindow > 0 &&
+          iRow >= pCTW->iBoardTop  && iRow <= pCTW->iBoardBottom &&
           iCol >= pCTW->iBoardLeft && iCol <= pCTW->iBoardRight )
       {
          long lIndex = ( long ) iRow * pCTW->iMapWidth + iCol;
