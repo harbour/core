@@ -77,10 +77,18 @@
 
 double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
 {
+   char szPathBuf[ 2 ];
    double dSpace = 0.0;
 
    if( uiType > HB_DISK_TOTAL )
       uiType = HB_DISK_AVAIL;
+
+   if( ! pszPath )
+   {
+      szPathBuf[ 0 ] = HB_OS_PATH_DELIM_CHR;
+      szPathBuf[ 1 ] = '\0';
+      pszPath = szPathBuf;
+   }
 
 #if defined( HB_OS_WIN )
    {
@@ -368,27 +376,25 @@ double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
 HB_FUNC( HB_DISKSPACE )
 {
    const char * pszPath = hb_parc( 1 );
-   char szPathBuf[ 4 ];
    HB_USHORT uiType = ( HB_USHORT ) hb_parnidef( 2, HB_DISK_AVAIL );
+
+#ifdef HB_OS_HAS_DRIVE_LETTER
+   char szPathBuf[ 4 ];
 
    if( ! pszPath )
    {
-#ifdef HB_OS_HAS_DRIVE_LETTER
-      if( HB_ISNUM( 1 ) )
+      int iDrive = hb_parni( 1 );
+
+      if( iDrive >= 1 && iDrive < 32 )
       {
-         szPathBuf[ 0 ] = ( char ) hb_parni( 1 ) + 'A' - 1;
+         szPathBuf[ 0 ] = ( char ) iDrive + 'A' - 1;
          szPathBuf[ 1 ] = HB_OS_DRIVE_DELIM_CHR;
          szPathBuf[ 2 ] = HB_OS_PATH_DELIM_CHR;
          szPathBuf[ 3 ] = '\0';
       }
-      else
-#endif
-      {
-         szPathBuf[ 0 ] = HB_OS_PATH_DELIM_CHR;
-         szPathBuf[ 1 ] = '\0';
-      }
       pszPath = szPathBuf;
    }
+#endif
 
    hb_retnlen( hb_fsDiskSpace( pszPath, uiType ), -1, 0 );
 }
