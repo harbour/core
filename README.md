@@ -44,7 +44,7 @@ and interfaces to popular APIs.
 
 ### Harbour stable binary download
 
-You can find URLs to the latest stable release (3.0.0)
+You can find URLs for the latest stable release (3.0.0)
 of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md#stable-versions) of the mainline source.
 
 ### Harbour stable source download
@@ -1501,7 +1501,7 @@ Supported shells per host platforms:
             `bzip2 -d cegcc_mingw32ce_cygwin1.7_r1399.tar.bz2`<br />
             `tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h`
 
-          * Compiler will be inside `\opt\mingw32ce` directory.
+          * Compiler will be inside the `opt\mingw32ce` subdirectory.
      * Clang [multiplatform, free, open-source]
         * <http://llvm.org/builds/> (Windows snapshots)
      * Cygwin [win, free, open-source]
@@ -1561,7 +1561,7 @@ Supported shells per host platforms:
 
      * Git (1.7 or upper) [multiplatform, free, open-source]
         * <http://git-scm.com/>
-        * Windows binaries
+        * Windows binaries:
            * <https://msysgit.github.io>
            * <https://github.com/msysgit/msysgit/releases>
      * GitHub Client [multiplatform, free]
@@ -1592,7 +1592,7 @@ Supported shells per host platforms:
      * 7-Zip SFX modules [win, free, open-source]
         * <http://7zsfx.info/en/>
      * bzip2 [multiplatform, free, open-source]
-         Windows binary:
+        * Windows binary:
            * <http://bzip.org/downloads.html>
      * Win-builds [multiplatform, free, open-source]
         * <http://win-builds.org/>
