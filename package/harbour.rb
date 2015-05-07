@@ -1,13 +1,25 @@
 class Harbour < Formula
   homepage "https://github.com/vszakats/harbour-core/"
-  url "https://github.com/vszakats/harbour-core/archive/9b7752a6355d992eb6c30cf0811771ced154922e.tar.gz"
-  sha256 "f8f708b93b7583bd8ae819a76dbdcc3a6192973f9aae4a49b612b88dbbd7b256"
-  version "3.4.0"
+
+  stable do
+    url "https://github.com/vszakats/harbour-core/archive/v3.0.0.tar.gz"
+    sha256 "34196df52c5f9994b57936fd231f09b7307462a63cfdaa42fe8d3e1a8a388dfd"
+
+    # Fix missing a header that was deprecated by libcurl @ version 7.12.0
+    # and deleted sometime after Harbour 3.0.0 release.
+    patch :DATA
+  end
+
+  devel do
+    url "https://github.com/vszakats/harbour-core/archive/141a288ab7ece839bda123b7008dcc60140ef9e5.tar.gz"
+    sha256 "959469eb09104e4210e3380347d618e7e6d00dbd4427a3156a3e5f4524a3d174"
+    version "3.4.0"
+  end
 
   head "https://github.com/vszakats/harbour-core/core.git"
 
   depends_on "pcre"
-  depends_on :x11 => :recommended
+  depends_on :x11 => :optional
 
   def install
     ENV["HB_INSTALL_PREFIX"] = prefix
@@ -16,6 +28,9 @@ class Harbour < Formula
     ENV.deparallelize
 
     system "make", "install"
+
+    # This is not longer needed in recent builds
+    rm Dir[bin/"hbmk2.*.hbl"] if build.stable?
   end
 
   test do
@@ -31,3 +46,24 @@ class Harbour < Formula
     assert_match /Hello, world!/, shell_output("#{bin}/hbmk2 hello.prg -run")
   end
 end
+
+__END__
+diff --git a/contrib/hbcurl/core.c b/contrib/hbcurl/core.c
+index 00caaa8..53618ed 100644
+--- a/contrib/hbcurl/core.c
++++ b/contrib/hbcurl/core.c
+@@ -53,8 +53,12 @@
+  */
+
+ #include <curl/curl.h>
+-#include <curl/types.h>
+-#include <curl/easy.h>
++#if LIBCURL_VERSION_NUM < 0x070A03
++#  include <curl/easy.h>
++#endif
++#if LIBCURL_VERSION_NUM < 0x070C00
++#  include <curl/types.h>
++#endif
+
+ #include "hbapi.h"
+ #include "hbapiitm.h"

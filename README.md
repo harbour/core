@@ -86,7 +86,7 @@ Download source archive from any of these URLs and unpack:
 
 #### OS X (using Homebrew)
 
-    brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb
+    brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb --HEAD
 
 ### Follow commits using any of these facilities
 
