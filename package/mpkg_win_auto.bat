@@ -69,7 +69,7 @@ if errorlevel 1 goto _EXIT
 endlocal
 
 :: Per-target release package is here:
-::    harbour-%HB_VF%-win-mingw.7z[.exe]
+::    harbour-%HB_VF%-win-mingw.7z
 
 echo ! Creating Windows release package...
 
@@ -77,12 +77,11 @@ call package\mpkg_win.bat > "%~dp0harbour-%HB_VF%-win-log.txt" 2>&1
 
 :: Final release package is here:
 ::    %HB_RT%harbour-%HB_VF%-win.7z.exe
-
-:_EXIT
-
 :: Logs are here:
 ::    %~dp0harbour-%HB_VF%-win-log.txt
 ::    %~dp0harbour-%HB_VF%-win-mingw-log.txt
+
+:_EXIT
 
 echo ! Finished.
 
