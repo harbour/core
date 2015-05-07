@@ -5,7 +5,7 @@ class Harbour < Formula
     url "https://github.com/vszakats/harbour-core/archive/v3.0.0.tar.gz"
     sha256 "34196df52c5f9994b57936fd231f09b7307462a63cfdaa42fe8d3e1a8a388dfd"
 
-    # Fix missing a header that was deprecated by libcurl @ version 7.12.0
+    # Fix missing header that was deprecated by libcurl @ version 7.12.0
     # and deleted sometime after Harbour 3.0.0 release.
     patch :DATA
   end
