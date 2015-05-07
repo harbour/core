@@ -625,7 +625,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
             {
                nSize++;
                nSize += hb_itemSerialSize( pDefVal, iFlags,
-                                            cdpIn, cdpOut, pRefList, nOffset + nSize );
+                                           cdpIn, cdpOut, pRefList, nOffset + nSize );
             }
             nLen = hb_hashLen( pItem );
             if( nLen <= 255 )
@@ -948,7 +948,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
             if( pDefVal )
             {
                pBuffer[ nOffset++ ] = HB_SERIAL_HASHDEFVAL;
-               nOffset = hb_serializeItem( pDefVal, iHashFlags,
+               nOffset = hb_serializeItem( pDefVal, iFlags,
                                            cdpIn, cdpOut, pBuffer, nOffset, pRefList );
             }
             nLen = hb_hashLen( pItem );
