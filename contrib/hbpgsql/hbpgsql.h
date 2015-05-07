@@ -55,6 +55,7 @@
 
 #define VARHDRSZ        4
 #define BOOLOID         16
+#define NAMEOID         19
 #define INT8OID         20
 #define INT2OID         21
 #define INT4OID         23

@@ -333,6 +333,16 @@ METHOD TableStruct( cTable ) CLASS TPQserver
             nSize := 10
             nDec  := 0
 
+         CASE "name" $ cType
+            cType := "C"
+            nSize := 64
+            nDec  := 0
+
+         CASE "oid" $ cType
+            cType := "N"
+            nSize := 19
+            nDec  := 0
+
          OTHERWISE
             /* Unsupported */
             cType := "U"
@@ -626,6 +636,14 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
                CASE "time" $ cType
                   cType := "C"
                   nSize := 10
+
+               CASE "name" $ cType
+                  cType := "C"
+                  nSize := 64
+
+               CASE "oid" $ cType
+                  cType := "N"
+                  nSize := 19
 
                OTHERWISE
                   /* Unsuported */
