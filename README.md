@@ -1,5 +1,5 @@
 # Welcome to Harbour
-[![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core) [![Build status](https://ci.appveyor.com/api/projects/status/k72qv26jnbtk25nm?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core-evxk0) [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208) [![Download](https://api.bintray.com/packages/vszakats/generic/harbour/images/download.svg) ](https://bintray.com/vszakats/generic/harbour/_latestVersion)
+[![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core) [![Build status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master) [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208) [![Download](https://api.bintray.com/packages/vszakats/generic/harbour/images/download.svg)](https://bintray.com/vszakats/generic/harbour/_latestVersion)
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
@@ -1569,6 +1569,8 @@ Supported shells per host platforms:
         * <https://mac.github.com/>
      * Travis CI [continuous integration, web service, free]
         * <https://travis-ci.org/>
+     * AppVeyor CI [continuous integration, web service, free]
+        * <http://www.appveyor.com/>
      * Read the Docs [online documentation creator, web service, free]
         * <https://readthedocs.org/>
      * ReadMe.io [online documentation creator, web service, free plan]
