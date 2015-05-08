@@ -3,6 +3,7 @@ branches:
   only:
   - master
 skip_tags: true
+os: Windows Server 2012 R2
 clone_depth: 8
 clone_folder: C:\hb\
 environment:
@@ -13,6 +14,12 @@ environment:
 # - TARGET: msvc
 # - TARGET: mingw64
   - TARGET: mingw
+    BINTRAY_APIKEY:
+      secure: ZrOhbhL3M2mVTZu+MU2WPDB/4rJArq4rEdND/eKa9iNHFCiLNUF49jvfbuXfnCGE
+    BINTRAY_USER:
+      secure: jfLq1ApyVLNouxv07skhrg==
+    BINTRAY_PATH:
+      secure: +CyA1IIhoPpI7EY54BsRADDxb1V62HDWLSekCX4mTxk=
 install:
 - curl -fsS -L http://www.7-zip.org/a/7za920.zip -o 7z.7z
 - 7z x -y -oC:\7z 7z.7z > nul
@@ -24,6 +31,14 @@ install:
 - curl -fsS -L --proto-redir =https https://goo.gl/3T7GWX -o mingw.7z
 # Will unpack into C:\mingw64\
 - 7z x -y -oC:\ mingw.7z > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-7.42.1-win32-mingw.zip -o curl-win-mingw.zip
+- 7z x -y -oC:\ curl-win-mingw.zip > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-1.0.2a-win32-mingw.zip -o openssl-win-mingw.zip
+- 7z x -y -oC:\ openssl-win-mingw.zip > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-7.42.1-win64-mingw.zip -o curl-win-mingw64.zip
+- 7z x -y -oC:\ curl-win-mingw64.zip > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-1.0.2a-win64-mingw.zip -o openssl-win-mingw64.zip
+- 7z x -y -oC:\ openssl-win-mingw64.zip > nul
 build_script:
 - set HB_SFX_7Z=C:\7zsfx\7zsd.sfx
 - set HB_DIR_7Z=C:\7z\
@@ -32,33 +47,31 @@ build_script:
 - if "%TARGET:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
 - if "%TARGET%" == "mingw" set HB_CPU=x86
 - if "%TARGET%" == "mingw64" set HB_CPU=x86_64
-- if "%TARGET%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
 - if "%TARGET%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-- if "%TARGET%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+- if "%TARGET%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
 - if "%TARGET%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+- if "%TARGET%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
 - if "%TARGET:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=no
+- if "%TARGET%" == "mingw" set HB_WITH_CURL=C:\curl-7.42.1-win32-mingw\include
+- if "%TARGET%" == "mingw" set HB_WITH_OPENSSL=C:\openssl-1.0.2a-win32-mingw\include
+- if "%TARGET%" == "mingw64" set HB_WITH_CURL=C:\curl-7.42.1-win64-mingw\include
+- if "%TARGET%" == "mingw64" set HB_WITH_OPENSSL=C:\openssl-1.0.2a-win64-mingw\include
+- set HB_INSTALL_3RDDYN=yes
 - set HB_BUILD_STRIP=bin
 - set HB_BUILD_DYN=no
-- set HB_BUILD_CONTRIB_DYN=no
+- set HB_BUILD_CONTRIB_DYN=yes
+- set HB_BUILD_CONTRIBS=hbrun hbnetio/utils/hbnetio hbformat/utils hbtest hbct hbhpdf hbmzip hbwin hbtip hbexpat hbnetio hbmemio rddsql hbtpathy hbzebra hbodbc hbhttpd hbmisc hbmxml hbxpp hbscrypt hbtcpio hbcomio sddodbc hbcurl
+- set HB_BUILD_OPTIM=yes
 - set HB_BUILD_PKG=yes
-- set HB_BUILD_POSTRUN=hbtest "hbspeed --stdout"
+- set HB_BUILD_POSTRUN=hbtest
+- rem "hbspeed --stdout"
 - set _HB_BUILD_PKG_ARCHIVE=no
 - set _HB_PKG_WINUNI_BUNDLE_C=no
-- set _HB_PKG_DEBUG=no
+#- set _HB_PKG_DEBUG=yes
 - win-make.exe clean install HB_VERSION=%HB_VF%
+- call package\mpkg_win.bat
 artifacts:
-- path: harbour-daily-win-mingw.7z
-  name: win-mingw
-- path: harbour-daily-win-mingw64.7z
-  name: win-mingw64
-- path: harbour-daily-win-msvc.7z
-  name: win-msvc
-- path: harbour-daily-win-msvc64.7z
-  name: win-msvc64
 - path: harbour-daily-win.7z.exe
   name: win-uni
-before_deploy
-- call package\mpkg_win.bat
-deploy:
-- provider: S3
-  artifact: win-msvc64, win-msvc, win-mingw64, win-mingw, win-uni
+after_deploy:
+- curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -L --proto-redir =http -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
