@@ -16061,7 +16061,15 @@ STATIC PROCEDURE __hbshell_Info( cCommand )
 STATIC FUNCTION __hbshell_CanLoadDyn()
    /* Can load them only in -shared builds on Windows,
       because dynlibs are built against harbour.dll. */
-   RETURN hb_Version( HB_VERSION_UNIX_COMPAT ) .OR. hb_Version( HB_VERSION_SHARED )
+   IF hb_Version( HB_VERSION_UNIX_COMPAT )
+      RETURN .T.
+   ENDIF
+
+#if defined( HBMK_SHARED )
+   RETURN .T.
+#else
+   RETURN .F.
+#endif
 
 STATIC PROCEDURE __hbshell_Err( oError, cCommand )
 

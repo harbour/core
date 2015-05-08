@@ -161,7 +161,10 @@ HB_FUNC( HB_VERSION )
       case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
       case HB_VERSION_MT:             hb_retl( hb_vmIsMt() ); break;
 
-      case HB_VERSION_SHARED:
+      case HB_VERSION_SHARED:  /* TOFIX: This only works when platforms has separate
+                                         compilation pass for harbour dynlib build -
+                                         it is 32-bit Windows. */
+
       #if defined( HB_DYNLIB )
          hb_retl( HB_TRUE );
       #else

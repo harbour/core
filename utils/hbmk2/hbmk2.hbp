@@ -35,6 +35,8 @@ po/hbmk2.%{hb_lng}.po
 {HBMK_PO_UPDATE}-po=po/hbmk2.en.po
 {HBMK_PO_UPDATE}-rebuildpo
 
+-DHBMK_SHARED{shared}
+
 # localization (for automatization with config/lang.hb)
 -3rd=_langhb_docext=.md
 -3rd=_langhb_docoption=-lang={LNG}
