@@ -56,6 +56,14 @@ build_script:
 - if "%TARGET%" == "mingw" set HB_WITH_OPENSSL=C:\openssl-1.0.2a-win32-mingw\include
 - if "%TARGET%" == "mingw64" set HB_WITH_CURL=C:\curl-7.42.1-win64-mingw\include
 - if "%TARGET%" == "mingw64" set HB_WITH_OPENSSL=C:\openssl-1.0.2a-win64-mingw\include
+#- set HB_WITH_ADS=C:\ads\acesdk
+#- set HB_WITH_CAIRO=C:\cairo\include\cairo
+#- set HB_WITH_FIREBIRD=C:\firebird\include
+#- set HB_WITH_FREEIMAGE=C:\freeimage\Dist
+#- set HB_WITH_GD=C:\gd\include
+#- set HB_WITH_MYSQL=C:\mariadb\include\mysql
+#- set HB_WITH_OCILIB=C:\ocilib\include
+#- set HB_WITH_PGSQL=C:\pgsql\include
 - set HB_INSTALL_3RDDYN=yes
 - set HB_BUILD_STRIP=bin
 - set HB_BUILD_DYN=no
