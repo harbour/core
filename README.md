@@ -80,7 +80,7 @@ Download source archive from any of these URLs and unpack:
 
 ### Harbour unstable binaries (updated after each commit)
 
-#### Windows (mingw, 32-bit, combined 7-zip archive and installer)
+#### Windows (mingw, 32-bit, 7-zip archive and installer combined)
 
 * <https://dl.bintray.com/vszakats/generic/harbour-daily-win.7z.exe>
 
@@ -1567,9 +1567,9 @@ Supported shells per host platforms:
      * GitHub Client [multiplatform, free]
         * <https://windows.github.com/>
         * <https://mac.github.com/>
-     * Travis CI [continuous integration, web service, free]
+     * Travis CI [continuous integration, web service, free plan]
         * <https://travis-ci.org/>
-     * AppVeyor CI [continuous integration, web service, free]
+     * AppVeyor CI [continuous integration, web service, free plan]
         * <http://www.appveyor.com/>
      * Read the Docs [online documentation creator, web service, free]
         * <https://readthedocs.org/>
