@@ -10,6 +10,9 @@ before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
   - if [ "$CC" = "gcc" ]; then sudo apt-get install -qq -m gcc-5 g++-5; export HB_CCSUFFIX=-5; fi
+  - sudo apt-get install -qq -m libmariadbclient-dev
+# - sudo apt-get install -qq -m libmariadbclient18
+# - sudo apt-get install -qq -m libmariadbclient18-dev
   - sudo apt-get install -qq -m firebird2.1-dev
   - sudo apt-get install -qq -m liballegro4.2-dev
   - sudo apt-get install -qq -m libcairo2-dev
@@ -21,7 +24,6 @@ before_install:
   - sudo apt-get install -qq -m libgs-dev
   - sudo apt-get install -qq -m libmagic-dev
 # - sudo apt-get install -qq -m libmysqlclient15-dev
-  - sudo apt-get install -qq -m libmariadb-client-lgpl-dev
   - sudo apt-get install -qq -m libncurses-dev
   - sudo apt-get install -qq -m libpq-dev
   - sudo apt-get install -qq -m libslang2-dev
