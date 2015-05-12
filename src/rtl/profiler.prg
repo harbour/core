@@ -543,7 +543,7 @@ METHOD generate( bFilter, cFile ) CLASS HBProfileReportToFile
 
    LOCAL lProfile := __SetProfiler( .F. )
 
-   IF ( ::hFile := hb_vfOpen( hb_defaultValue( cFile, "hbprof.txt" ), FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != NIL
+   IF ( ::hFile := hb_vfOpen( hb_defaultValue( cFile, "hbprof.txt" ), FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
       ::super:generate( bFilter )
       hb_vfClose( ::hFile )
    ELSE

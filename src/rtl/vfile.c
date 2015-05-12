@@ -285,7 +285,7 @@ HB_FUNC( HB_VFATTRGET )
    hb_stornl( nAttr, 2 );
 }
 
-/* hb_vfAttrSet( <cFileName>,  <nAttr> ) -> <lOK> */
+/* hb_vfAttrSet( <cFileName>, <nAttr> ) -> <lOK> */
 HB_FUNC( HB_VFATTRSET )
 {
    hb_retl( hb_fileAttrSet( hb_parcx( 1 ), ( HB_FATTR ) hb_parnl( 2 ) ) );
@@ -331,7 +331,7 @@ HB_FUNC( HB_VFTIMEGET )
    }
 }
 
-/* hb_vfTimeSet( <cFileName>,  <tsDateTime> ) -> <lOK> */
+/* hb_vfTimeSet( <cFileName>, <tsDateTime> ) -> <lOK> */
 HB_FUNC( HB_VFTIMESET )
 {
    long lDate = -1, lTime = -1;

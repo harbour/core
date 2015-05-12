@@ -29,18 +29,18 @@ FUNCTION ft_FlopTst( nDriveNum )
 
    cFileName := hb_DirSepAdd( cFileName ) + "nf$rwtst.tmp"
 
-   IF hb_FileExists( cFileName )
-      IF ( fhnd := FOpen( cFileName, FO_DENYNONE + FO_READWRITE ) ) == F_ERROR
+   IF hb_vfExists( cFileName )
+      IF ( fhnd := hb_vfOpen( cFileName, FO_DENYNONE + FO_READWRITE ) ) == NIL
          RETURN ERR_WRITE_PROTECTED
       ENDIF
-      FClose( fhnd )
+      hb_vfClose( fhnd )
    ELSE
-      IF ( fhnd := hb_FCreate( cFileName,, FO_DENYNONE + FO_READWRITE ) ) == F_ERROR
+      IF ( fhnd := hb_vfOpen( cFileName, FO_DENYNONE + FO_READWRITE + FO_CREAT ) ) == NIL
          RETURN ERR_WRITE_PROTECTED
       ENDIF
-      FClose( fhnd )
+      hb_vfClose( fhnd )
 
-      FErase( cFileName )
+      hb_vfErase( cFileName )
    ENDIF
 
    RETURN ERR_NO_ERROR

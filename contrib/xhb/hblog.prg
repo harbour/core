@@ -443,21 +443,15 @@ METHOD Open( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   IF hb_FileExists( ::cFileName )
-      IF ( ::nFileHandle := FOpen( ::cFileName, FO_READWRITE ) ) != F_ERROR
-         FSeek( ::nFileHandle, 0, FS_END )
-      ENDIF
-   ELSE
-      ::nFileHandle := hb_FCreate( ::cFileName,, FO_READWRITE )
-   ENDIF
-
-   IF ::nFileHandle == F_ERROR
+   IF ( ::nFileHandle := hb_vfOpen( ::cFileName, FO_CREAT + FO_WRITE ) ) == NIL
       RETURN .F.
    ENDIF
 
-   FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "start --", hb_eol() ) )
+   hb_vfSeek( ::nFileHandle, 0, FS_END )
+   hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "start --", hb_eol() ) )
 
-   hb_FCommit( ::nFileHandle )
+   hb_vfCommit( ::nFileHandle )
+
    ::lOpened := .T.
 
    RETURN .T.
@@ -468,10 +462,10 @@ METHOD close( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
+   hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
 
-   FClose( ::nFileHandle )
-   ::nFileHandle := F_ERROR
+   hb_vfClose( ::nFileHandle )
+   ::nFileHandle := NIL
 
    ::lOpened := .F.
 
@@ -481,27 +475,27 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
    LOCAL nCount
 
-   FWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPriority ) + hb_eol() )
-   hb_FCommit( ::nFileHandle )
+   hb_vfWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPriority ) + hb_eol() )
+   hb_vfCommit( ::nFileHandle )
 
    // see file limit and eventually swap file.
    IF ::nFileLimit > 0
-      IF FSeek( ::nFileHandle, 0, FS_RELATIVE ) > ::nFileLimit * 1024
-         FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
-         FClose( ::nFileHandle )
+      IF hb_vfSeek( ::nFileHandle, 0, FS_RELATIVE ) > ::nFileLimit * 1024
+         hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
+         hb_vfClose( ::nFileHandle )
 
          IF ::nBackup > 1
-            IF hb_FileExists( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
-               FErase( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
+            IF hb_vfExists( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
+               hb_vfErase( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
             ENDIF
             FOR nCount := ::nBackup - 1 TO 1 STEP -1
-               FRename( ::cFileName + "." + StrZero( nCount - 1, 3 ), ::cFileName + "." + StrZero( nCount, 3 ) )
+               hb_vfRename( ::cFileName + "." + StrZero( nCount - 1, 3 ), ::cFileName + "." + StrZero( nCount, 3 ) )
             NEXT
          ENDIF
 
-         IF FRename( ::cFileName, ::cFileName + ".000" ) != F_ERROR
-            ::nFileHandle := hb_FCreate( ::cFileName,, FO_READWRITE )
-            FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
+         IF hb_vfRename( ::cFileName, ::cFileName + ".000" ) != F_ERROR
+            ::nFileHandle := hb_vfOpen( ::cFileName, FO_CREAT + FO_TRUNC + FO_WRITE )
+            hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
          ENDIF
       ENDIF
    ENDIF

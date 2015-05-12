@@ -580,7 +580,7 @@ METHOD MPut( cFileSpec, cAttr ) CLASS TIPClientFTP
    ENDIF
 
    cStr := ""
-   FOR EACH aFile IN Directory( cFileSpec, cAttr )
+   FOR EACH aFile IN hb_vfDirectory( cFileSpec, cAttr )
       IF ::UploadFile( hb_FNameDir( cFileSpec ) + aFile[ F_NAME ] )
          cStr += e"\r\n" + aFile[ F_NAME ]
       ENDIF

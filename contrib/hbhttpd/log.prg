@@ -58,7 +58,7 @@ CREATE CLASS UHttpdLog
    PROTECTED:
 
    VAR cFileName
-   VAR fhnd      INIT F_ERROR
+   VAR fhnd      INIT NIL
 
 ENDCLASS
 
@@ -81,23 +81,23 @@ METHOD Add( cMsg ) CLASS UHttpdLog
       RETURN .F.
    ENDIF
 
-   IF ::fhnd == F_ERROR .AND. ! Empty( ::cFileName )
-      ::fhnd := hb_FCreate( ::cFileName,, FO_WRITE + FO_DENYNONE )
+   IF ::fhnd == NIL .AND. ! Empty( ::cFileName )
+      ::fhnd := hb_vfOpen( ::cFileName, FO_CREAT + FO_WRITE + FO_DENYNONE )
    ENDIF
 
-   RETURN ::fhnd != F_ERROR .AND. FWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
+   RETURN ::fhnd != NIL .AND. hb_vfWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
 
 METHOD Close() CLASS UHttpdLog
 
    LOCAL lRetVal
 
-   IF ::fhnd != F_ERROR
-      lRetVal := FClose( ::fhnd )
-      ::fhnd := F_ERROR
+   IF ::fhnd != NIL
+      lRetVal := hb_vfClose( ::fhnd )
+      ::fhnd := NIL
       RETURN lRetVal
    ENDIF
 
    RETURN .F.
 
 METHOD IsOpen() CLASS UHttpdLog
-   RETURN ::fhnd != F_ERROR
+   RETURN ::fhnd != NIL

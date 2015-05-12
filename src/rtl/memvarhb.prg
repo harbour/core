@@ -118,7 +118,7 @@ PROCEDURE hb_mvSave( cFileName, cMask, lIncludeMask )
 
       nRetries := 0
       DO WHILE .T.
-         IF ( fhnd := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) == NIL
+         IF ( fhnd := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR

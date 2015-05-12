@@ -16,6 +16,8 @@
    Initial revision.
  */
 
+#include "fileio.ch"
+
 /* Set <lDropCompatibility> to .T. if you don't mind, if the created
    file cannot be read back by Cl*pper applications using the original
    NFLIB, if they have any date value in them. This mode fixes the Y2K
@@ -26,10 +28,10 @@ FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /
 
    LOCAL nHandle, lRet
 
-   nHandle := FCreate( cFileName )
+   nHandle := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE )
    IF ( nErrorCode := FError() ) == 0
       lRet := _ftsavesub( aArray, nHandle, @nErrorCode, hb_defaultValue( lDropCompatibility, .F. ) )
-      FClose( nHandle )
+      hb_vfClose( nHandle )
       IF lRet .AND. FError() != 0
          nErrorCode := FError()
          lRet := .F.
@@ -45,10 +47,10 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
    LOCAL lRet := .T.
    LOCAL cValType := ValType( xMemVar )
 
-   IF FWrite( nHandle, cValType ) == hb_BLen( cValType )
+   IF hb_vfWrite( nHandle, cValType ) == hb_BLen( cValType )
       SWITCH cValType
       CASE "A"
-         IF FWrite( nHandle, L2Bin( Len( xMemVar ) ) ) == 4
+         IF hb_vfWrite( nHandle, L2Bin( Len( xMemVar ) ) ) == 4
             AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, nHandle,, lDropCompatibility ) },, 0x7FFFFFFF )
             EXIT
          ENDIF
@@ -59,9 +61,9 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
       CASE "N"
          xMemVar := Str( xMemVar )
          // fall through
-      CASE "C" ; FWrite( nHandle, L2Bin( Min( hb_BLen( xMemVar ), 0x7FFFFFFF ) ) + hb_BLeft( xMemVar, 0x7FFFFFFF ) ) ; EXIT
-      CASE "D" ; FWrite( nHandle, L2Bin( 8 ) + iif( lDropCompatibility, DToS( xMemVar ), hb_BLeft( DToC( xMemVar ), 8 ) ) ) ; EXIT
-      CASE "L" ; FWrite( nHandle, L2Bin( 1 ) + iif( xMemVar, "T", "F" ) ) ; EXIT
+      CASE "C" ; hb_vfWrite( nHandle, L2Bin( Min( hb_BLen( xMemVar ), 0x7FFFFFFF ) ) + hb_BLeft( xMemVar, 0x7FFFFFFF ) ) ; EXIT
+      CASE "D" ; hb_vfWrite( nHandle, L2Bin( 8 ) + iif( lDropCompatibility, DToS( xMemVar ), hb_BLeft( DToC( xMemVar ), 8 ) ) ) ; EXIT
+      CASE "L" ; hb_vfWrite( nHandle, L2Bin( 1 ) + iif( xMemVar, "T", "F" ) ) ; EXIT
       ENDSWITCH
    ELSE
       lRet := .F.
@@ -73,11 +75,11 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
 FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
 
    LOCAL aArray
-   LOCAL nHandle := FOpen( cFileName )
+   LOCAL nHandle := hb_vfOpen( cFileName )
 
    IF ( nErrorCode := FError() ) == 0
       aArray := _ftrestsub( nHandle, @nErrorCode )
-      FClose( nHandle )
+      hb_vfClose( nHandle )
    ELSE
       aArray := {}
    ENDIF
@@ -86,16 +88,16 @@ FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
 
 STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
 
-   LOCAL cValType := hb_FReadLen( nHandle, 1 ), xMemVar, tmp
-   LOCAL nLen := Bin2L( hb_FReadLen( nHandle, 4 ) )
+   LOCAL cValType := hb_vfReadLen( nHandle, 1 ), xMemVar, tmp
+   LOCAL nLen := Bin2L( hb_vfReadLen( nHandle, 4 ) )
 
    IF ( nErrorCode := FError() ) == 0
       SWITCH cValType
-      CASE "C" ; xMemVar := hb_FReadLen( nHandle, nLen ) ; EXIT
-      CASE "N" ; xMemVar := Val( hb_FReadLen( nHandle, nLen ) ) ; EXIT
-      CASE "L" ; xMemVar := ( hb_FReadLen( nHandle, 1 ) == "T" ) ; EXIT
+      CASE "C" ; xMemVar := hb_vfReadLen( nHandle, nLen ) ; EXIT
+      CASE "N" ; xMemVar := Val( hb_vfReadLen( nHandle, nLen ) ) ; EXIT
+      CASE "L" ; xMemVar := ( hb_vfReadLen( nHandle, 1 ) == "T" ) ; EXIT
       CASE "D"
-         xMemVar := hb_FReadLen( nHandle, 8 )
+         xMemVar := hb_vfReadLen( nHandle, 8 )
          // Fall back to CToD() to handle original Cl*pper NFLIB format:
          // not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load
          xMemVar := iif( Empty( hb_StrReplace( xMemVar, "0123456789" ) ), hb_SToD( xMemVar ), CToD( xMemVar ) )

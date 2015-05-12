@@ -361,7 +361,7 @@ STATIC PROCEDURE OpenLogFile( nWA )
    IF lActive .AND. nHandle == NIL
 
       /* Open Access Log File */
-      IF ( nHandle := hb_vfOpen( cFileName, FO_READWRITE + FO_SHARED + iif( hb_vfExists( cFileName ), 0, FO_CREAT + FO_TRUNC ) ) ) != NIL
+      IF ( nHandle := hb_vfOpen( cFileName, FO_CREAT + FO_WRITE + FO_SHARED ) ) != NIL
          /* Move to end of file */
          hb_vfSeek( nHandle, 0, FS_END )
       ENDIF

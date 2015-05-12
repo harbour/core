@@ -124,38 +124,32 @@ FUNCTION TraceLog( ... )
          so we have to make sure cFile contains path to avoid ambiguity */
       cFile := cWithPath( s_cSET_TRACEFILE )
 
-      IF hb_FileExists( cFile )
-         FileHandle := FOpen( cFile, FO_WRITE )
-      ELSE
-         FileHandle := FCreate( cFile )
-      ENDIF
+      IF ( FileHandle := hb_vfOpen( cFile, FO_WRITE + FO_CREAT ) ) != NIL
 
-      IF FileHandle != F_ERROR
-
-         FSeek( FileHandle, 0, FS_END )
+         hb_vfSeek( FileHandle, 0, FS_END )
 
          nLevel := s_nSET_TRACESTACK
 
          IF nLevel > 0
-            FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
+            hb_vfWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
          ENDIF
 
          IF nLevel > 1 .AND. !( ProcName( 2 ) == "" )
-            FWrite( FileHandle, " Called from:" + hb_eol() )
+            hb_vfWrite( FileHandle, " Called from:" + hb_eol() )
             nLevel := 1
             DO WHILE !( ( ProcName := ProcName( ++nLevel ) ) == "" )
-               FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
+               hb_vfWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
             ENDDO
          ELSE
-            FWrite( FileHandle, hb_eol() )
+            hb_vfWrite( FileHandle, hb_eol() )
          ENDIF
 
          FOR EACH xParam IN hb_AParams()
-            FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
+            hb_vfWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
          NEXT
 
-         FWrite( FileHandle, hb_eol() )
-         FClose( FileHandle )
+         hb_vfWrite( FileHandle, hb_eol() )
+         hb_vfClose( FileHandle )
       ENDIF
    ENDIF
 

@@ -50,7 +50,7 @@ METHOD New( cFile, nSize ) CLASS TFileRead
    ENDIF
 
    ::cFile     := cFile              // Save the file name
-   ::nHan      := F_ERROR            // It's not open yet
+   ::nHan      := NIL                // It's not open yet
    ::lEOF      := .T.                // So it must be at EOF
    ::nError    := 0                  // But there haven't been any errors
    ::nLastOp   := O_F_CREATE_OBJECT  // Because we just created the class
@@ -61,10 +61,10 @@ METHOD New( cFile, nSize ) CLASS TFileRead
 
 METHOD Open( nMode ) CLASS TFileRead
 
-   IF ::nHan == F_ERROR
+   IF ::nHan == NIL
       // Only open the file if it isn't already open.
       ::nLastOp := O_F_OPEN_FILE
-      IF ( ::nHan := FOpen( ::cFile, hb_defaultValue( nMode, FO_READ + FO_SHARED ) ) ) == F_ERROR
+      IF ( ::nHan := hb_vfOpen( ::cFile, hb_defaultValue( nMode, FO_READ + FO_SHARED ) ) ) == NIL
          ::nError := FError()       // It didn't work
          ::lEOF   := .T.            // So force EOF
       ELSE
@@ -73,7 +73,7 @@ METHOD Open( nMode ) CLASS TFileRead
       ENDIF
    ELSE
       // The file is already open, so rewind to the beginning.
-      IF FSeek( ::nHan, 0 ) == 0
+      IF hb_vfSeek( ::nHan, 0 ) == 0
          ::lEOF := .F.              // Definitely not at EOF
       ELSE
          ::nError := FError()       // Save error code if not at BOF
@@ -91,8 +91,8 @@ METHOD ReadLine() CLASS TFileRead
 
    ::nLastOp := O_F_READ_FILE
 
-   IF ::nHan == F_ERROR
-      ::nError := F_ERROR           // Set unknown error if file not open
+   IF ::nHan == NIL
+      ::nError := NIL          // Set unknown error if file not open
    ELSE
       // Is there a whole line in the readahead buffer?
       nPos := ::EOL_pos()
@@ -102,7 +102,7 @@ METHOD ReadLine() CLASS TFileRead
          // Maybe means that we found either a CR or an LF, but we don't
          // have enough characters to discriminate between the three types
          // of end of line conditions that the class recognizes (see below).
-         IF ( nRead := FRead( ::nHan, @cLine, hb_BLen( cLine ) ) ) == 0
+         IF ( nRead := hb_vfRead( ::nHan, @cLine, hb_BLen( cLine ) ) ) == 0
             // There was nothing more to be read. Why? (Error or EOF.)
             ::nError := FError()
             IF ::nError == 0
@@ -177,14 +177,14 @@ METHOD Close() CLASS TFileRead
    ::nLastOp := O_F_CLOSE_FILE
    ::lEOF := .T.
    // Is the file already closed.
-   IF ::nHan == F_ERROR
+   IF ::nHan == NIL
       // Yes, so indicate an unknown error.
-      ::nError := F_ERROR
+      ::nError := NIL
    ELSE
       // No, so close it already!
-      FClose( ::nHan )
+      hb_vfClose( ::nHan )
       ::nError := FError()
-      ::nHan   := F_ERROR           // The file is no longer open
+      ::nHan   := NIL               // The file is no longer open
       ::lEOF   := .T.               // So force an EOF condition
    ENDIF
 
@@ -196,7 +196,7 @@ METHOD Name() CLASS TFileRead
 
 // Returns .T. if the file is open.
 METHOD IsOpen() CLASS TFileRead
-   RETURN ::nHan != F_ERROR
+   RETURN ::nHan != NIL
 
 // Returns .T. if there is more to be read from either the file or the
 // readahead buffer. Only when both are exhausted is there no more to read.

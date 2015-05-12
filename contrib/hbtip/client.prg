@@ -443,12 +443,12 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
    DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! ::bEof
       IF ( cData := ::Read( RCV_BUF_SIZE ) ) == NIL
          IF nFOut != NIL
-            FClose( nFOut )
+            hb_vfClose( nFOut )
          ENDIF
          RETURN ::inetErrorCode( ::SocketCon ) == 0
       ENDIF
       IF ! lToMemory .AND. nFOut == NIL
-         IF ( nFOut := FCreate( cFile, nMode ) ) == F_ERROR
+         IF ( nFOut := FCreate( cFile, hb_bitOr( FO_CREAT + FO_TRUNC, hb_defaultValue( nMode, 0 ) ) ) ) == NIL
             ::nStatus := 0
             RETURN .F.
          ENDIF
@@ -456,8 +456,8 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
       IF lToMemory
          cFile += cData
-      ELSEIF FWrite( nFOut, cData ) != hb_BLen( cData )
-         FClose( nFOut )
+      ELSEIF hb_vfWrite( nFOut, cData ) != hb_BLen( cData )
+         hb_vfClose( nFOut )
          RETURN .F.
       ENDIF
 
@@ -474,7 +474,7 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
    ::nStatus := 2
    IF nFOut != NIL
-      FClose( nFOut )
+      hb_vfClose( nFOut )
    ENDIF
 
    RETURN ::inetErrorCode( ::SocketCon ) == 0
@@ -488,11 +488,11 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    ::nWrite  := 0
    ::nStatus := 0
-   IF ( nFIn := FOpen( cFile ) ) == F_ERROR
+   IF ( nFIn := hb_vfOpen( cFile ) ) == NIL
       RETURN .F.
    ENDIF
-   nSize := FSeek( nFIn, 0, FS_END )
-   FSeek( nFIn, 0 )
+   nSize := hb_vfSeek( nFIn, 0, FS_END )
+   hb_vfSeek( nFIn, 0 )
 
    nBufSize := SND_BUF_SIZE
 
@@ -505,9 +505,9 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    ::nStatus := 1
    cData := Space( nBufSize )
-   DO WHILE ( nLen := FRead( nFIn, @cData, nBufSize ) ) > 0
+   DO WHILE ( nLen := hb_vfRead( nFIn, @cData, nBufSize ) ) > 0
       IF ::Write( @cData, nLen ) != nLen
-         FClose( nFIn )
+         hb_vfClose( nFIn )
          RETURN .F.
       ENDIF
       nSent += nLen
@@ -522,7 +522,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
    ENDIF
 
    ::nStatus := 2
-   FClose( nFIn )
+   hb_vfClose( nFIn )
 
    RETURN .T.
 

@@ -413,7 +413,7 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSou
    NEXT
 
    __i18n_fileName( @cFile )
-   IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) == NIL
+   IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
       cErrorMsg := hb_StrFormat( "cannot create translation file: %1$s", cFile )
    ELSEIF hb_vfWrite( hFile, cPOT ) != hb_BLen( cPOT )
       cErrorMsg := hb_StrFormat( "cannot write to file: %1$s", cFile )
@@ -624,7 +624,7 @@ FUNCTION hb_i18n_SavePOT( cFile, pI18N, /* @ */ cErrorMsg )
       NEXT
 
       __i18n_fileName( @cFile )
-      IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) == NIL
+      IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
          cErrorMsg := hb_StrFormat( "cannot create translation file: %1$s", cFile )
          lRet := .F.
       ELSEIF hb_vfWrite( hFile, cPOT ) != hb_BLen( cPOT )

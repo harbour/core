@@ -96,19 +96,19 @@ PROCEDURE hb_ToLogFile( cLogFile, ... )
 
       hb_default( @cLogFile, "logfile.log" )
 
-      IF ! s_lEmptyLogFile .AND. hb_FileExists( cLogFile )
-         nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
+      IF ! s_lEmptyLogFile .AND. hb_vfExists( cLogFile )
+         nHandle := hb_vfOpen( cLogFile, FO_WRITE + FO_SHARED )
       ELSE
-         nHandle := hb_FCreate( cLogFile,, FO_READWRITE + FO_SHARED )
+         nHandle := hb_vfOpen( cLogFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_SHARED )
          s_lEmptyLogFile := .F.
       ENDIF
 
       // Writing
-      IF nHandle != F_ERROR
-         FSeek( nHandle, 0, FS_END )
-         FWrite( nHandle, sprintf( ... ) )
-         FWrite( nHandle, hb_eol() )
-         FClose( nHandle )
+      IF nHandle != NIL
+         hb_vfSeek( nHandle, 0, FS_END )
+         hb_vfWrite( nHandle, sprintf( ... ) )
+         hb_vfWrite( nHandle, hb_eol() )
+         hb_vfClose( nHandle )
       ENDIF
    ENDIF
 

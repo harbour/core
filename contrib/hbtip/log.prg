@@ -58,7 +58,7 @@ CREATE CLASS TIPLog
    PROTECTED:
 
    VAR cFileName
-   VAR fhnd      INIT F_ERROR
+   VAR fhnd      INIT NIL
 
 ENDCLASS
 
@@ -79,18 +79,18 @@ METHOD Add( cMsg ) CLASS TIPLog
    LOCAL cDir, cName, cExt
    LOCAL n
 
-   IF ::fhnd == F_ERROR
+   IF ::fhnd == NIL
 
       hb_FNameSplit( ::cFileName, @cDir, @cName, @cExt )
 
       n := 1
-      DO WHILE ( ::fhnd := hb_FCreate( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n++ ), cExt ),, FO_EXCL ) ) == F_ERROR .AND. ;
+      DO WHILE ( ::fhnd := hb_vfOpen( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n++ ), cExt ), FO_CREAT + FO_EXCL ) ) == NIL .AND. ;
          FError() != 3 /* path not found */
       ENDDO
    ENDIF
 
-   IF ::fhnd != F_ERROR
-      RETURN FWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
+   IF ::fhnd != NIL
+      RETURN hb_vfWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
    ENDIF
 
    RETURN .F.
@@ -99,13 +99,13 @@ METHOD Close() CLASS TIPLog
 
    LOCAL lRetVal
 
-   IF ::fhnd != F_ERROR
-      lRetVal := FClose( ::fhnd )
-      ::fhnd := F_ERROR
+   IF ::fhnd != NIL
+      lRetVal := hb_vfClose( ::fhnd )
+      ::fhnd := NIL
       RETURN lRetVal
    ENDIF
 
    RETURN .F.
 
 METHOD Clear() CLASS TIPLog
-   RETURN ::Close() .AND. FErase( ::cFileName ) != F_ERROR
+   RETURN ::Close() .AND. hb_vfErase( ::cFileName ) != NIL

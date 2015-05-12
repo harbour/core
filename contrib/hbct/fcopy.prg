@@ -60,9 +60,13 @@
 
 #include "fileio.ch"
 
-#define F_BLOCK   512
+#ifdef HB_CLP_STRICT
+   #define F_BLOCK  512
+#else
+   #define F_BLOCK  65536
+#endif
 
-THREAD STATIC t_hSrcFile := F_ERROR
+THREAD STATIC t_hSrcFile
 THREAD STATIC t_lSetDaTi := .T.
 THREAD STATIC t_fileTime
 
@@ -75,47 +79,47 @@ FUNCTION FileCopy( cSource, cDest, lMode )
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF t_hSrcFile != F_ERROR
-      FClose( t_hSrcFile )
+   IF t_hSrcFile != NIL
+      hb_vfClose( t_hSrcFile )
    ENDIF
-   IF ( t_hSrcFile := FOpen( cSource ) ) != F_ERROR
-      IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
+   IF ( t_hSrcFile := hb_vfOpen( cSource ) ) != NIL
+      IF ( hDstFile := hb_vfOpen( cDest, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
          hb_default( @lMode, .F. )
          cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            IF ( nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
+            IF ( nSrcBytes := hb_vfRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                lDone := .T.
                EXIT
             ENDIF
-            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) > 0
+            IF ( nDstBytes := hb_vfWrite( hDstFile, cBuffer, nSrcBytes ) ) > 0
                nTotBytes += nDstBytes
             ENDIF
             IF nDstBytes < nSrcBytes
                IF lMode
-                  FSeek( t_hSrcFile, nDstBytes - nSrcBytes, FS_RELATIVE )
+                  hb_vfSeek( t_hSrcFile, nDstBytes - nSrcBytes, FS_RELATIVE )
                ENDIF
                EXIT
             ENDIF
          ENDDO
-         FClose( hDstFile )
+         hb_vfClose( hDstFile )
          IF lDone .OR. ! lMode
-            FClose( t_hSrcFile )
-            t_hSrcFile := F_ERROR
+            hb_vfClose( t_hSrcFile )
+            t_hSrcFile := NIL
          ENDIF
-         hb_FGetDateTime( cSource, @t_fileTime )
+         hb_vfTimeGet( cSource, @t_fileTime )
          IF t_lSetDaTi .and. ! Empty( t_fileTime )
-            hb_FSetDateTime( cDest, t_fileTime )
+            hb_vfTimeSet( cDest, t_fileTime )
          ENDIF
       ELSE
-         FClose( t_hSrcFile )
-         t_hSrcFile := F_ERROR
+         hb_vfClose( t_hSrcFile )
+         t_hSrcFile := NIL
       ENDIF
    ENDIF
 
    RETURN nTotBytes
 
 FUNCTION FileCOpen()
-   RETURN t_hSrcFile != F_ERROR
+   RETURN t_hSrcFile != NIL
 
 FUNCTION FileCDaTi( lNewMode )
 
@@ -134,28 +138,28 @@ FUNCTION FileCCont( cDest )
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF t_hSrcFile != F_ERROR
-      IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
+   IF t_hSrcFile != NIL
+      IF ( hDstFile := hb_vfOpen( cDest, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
          cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            IF ( nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
+            IF ( nSrcBytes := hb_vfRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                lDone := .T.
                EXIT
             ENDIF
-            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) > 0
+            IF ( nDstBytes := hb_vfWrite( hDstFile, cBuffer, nSrcBytes ) ) > 0
                nTotBytes += nDstBytes
             ENDIF
             IF nDstBytes < nSrcBytes
                EXIT
             ENDIF
          ENDDO
-         FClose( hDstFile )
+         hb_vfClose( hDstFile )
          IF lDone
-            FClose( t_hSrcFile )
-            t_hSrcFile := F_ERROR
+            hb_vfClose( t_hSrcFile )
+            t_hSrcFile := NIL
          ENDIF
          IF t_lSetDaTi .and. ! Empty( t_fileTime )
-            hb_FSetDateTime( cDest, t_fileTime )
+            hb_vfTimeSet( cDest, t_fileTime )
          ENDIF
       ENDIF
    ENDIF
@@ -164,9 +168,9 @@ FUNCTION FileCCont( cDest )
 
 FUNCTION FileCCLose()
 
-   IF t_hSrcFile != F_ERROR
-      FClose( t_hSrcFile )
-      t_hSrcFile := F_ERROR
+   IF t_hSrcFile != NIL
+      hb_vfClose( t_hSrcFile )
+      t_hSrcFile := NIL
       RETURN .T.
    ENDIF
 
@@ -178,30 +182,30 @@ FUNCTION FileAppend( cSrc, cDest )
    LOCAL hSrcFile, hDstFile
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF ( hSrcFile := FOpen( cSrc ) ) != F_ERROR
+   IF ( hSrcFile := hb_vfOpen( cSrc ) ) != NIL
 
-      IF hb_FileExists( cDest )
-         IF ( hDstFile := FOpen( cDest, FO_WRITE ) ) != F_ERROR
-            FSeek( hDstFile, 0, FS_END )
+      IF hb_vfExists( cDest )
+         IF ( hDstFile := hb_vfOpen( cDest, FO_WRITE ) ) != NIL
+            hb_vfSeek( hDstFile, 0, FS_END )
          ENDIF
       ELSE
-         hDstFile := FCreate( cDest )
+         hDstFile := hb_vfOpen( cDest, FO_CREAT + FO_TRUNC + FO_WRITE )
       ENDIF
 
-      IF hDstFile != F_ERROR
+      IF hDstFile != NIL
          cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            IF ( nSrcBytes := FRead( hSrcFile, @cBuffer, F_BLOCK ) ) == 0
+            IF ( nSrcBytes := hb_vfRead( hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                EXIT
             ENDIF
-            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) < nSrcBytes
+            IF ( nDstBytes := hb_vfWrite( hDstFile, cBuffer, nSrcBytes ) ) < nSrcBytes
                EXIT
             ENDIF
             nTotBytes += nDstBytes
          ENDDO
-         FClose( hDstFile )
+         hb_vfClose( hDstFile )
       ENDIF
-      FClose( hSrcFile )
+      hb_vfClose( hSrcFile )
    ENDIF
 
    RETURN nTotBytes

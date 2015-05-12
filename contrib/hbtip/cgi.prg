@@ -180,12 +180,12 @@ METHOD Flush() CLASS TIPCgi
 
       cFile := ::cSessionSavePath + "SESSIONID_" + ::cSID
 
-      IF ( nH := FCreate( cFile ) ) != F_ERROR
+      IF ( nH := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
          cSession := ::SessionEncode()
-         IF FWrite( nH, cSession ) != hb_BLen( cSession )
+         IF hb_vfWrite( nH, cSession ) != hb_BLen( cSession )
             ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
          ENDIF
-         FClose( nH )
+         hb_vfClose( nH )
       ELSE
          ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
       ENDIF
@@ -221,17 +221,17 @@ METHOD StartSession( cSID ) CLASS TIPCgi
 
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
-      IF hb_FileExists( cFile )
-         IF ( nH := FOpen( cFile ) ) != F_ERROR
-            nFileSize := FSeek( nH, 0, FS_END )
-            FSeek( nH, 0, FS_SET )
+      IF hb_vfExists( cFile )
+         IF ( nH := hb_vfOpen( cFile ) ) != NIL
+            nFileSize := hb_vfSeek( nH, 0, FS_END )
+            hb_vfSeek( nH, 0, FS_SET )
             cBuffer := Space( nFileSize )
-            IF FRead( nH, @cBuffer, nFileSize ) != nFileSize
+            IF hb_vfRead( nH, @cBuffer, nFileSize ) != nFileSize
                ::ErrHandler( "ERROR: On reading session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             ELSE
                ::SessionDecode( cBuffer )
             ENDIF
-            FClose( nH )
+            hb_vfClose( nH )
          ENDIF
       ELSE
          ::ErrHandler( "ERROR: On opening session file: " + cFile + ", file not exist." )
