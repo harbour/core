@@ -20,7 +20,7 @@ before_install:
   - sudo apt-get install -qq -m libgpm-dev
   - sudo apt-get install -qq -m libgs-dev
   - sudo apt-get install -qq -m libmagic-dev
-  - sudo apt-get install -qq -m libmysqlclient15-dev
+  - sudo apt-get install -qq -m libmysqlclient-dev
   - sudo apt-get install -qq -m libncurses-dev
   - sudo apt-get install -qq -m libpq-dev
   - sudo apt-get install -qq -m libslang2-dev
